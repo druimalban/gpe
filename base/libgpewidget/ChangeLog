@@ -1,5 +1,9 @@
 2003-10-18  Philip Blundell  <philb@gnu.org>
 
+	* Version 0.74 released.
+	
+2003-10-18  Philip Blundell  <philb@gnu.org>
+
 	* gpeiconlist.gob (_button_release): Check for NULL item before
 	attempting to emit signal.  [Bug #1045, reported by Florian Boor.]
 
