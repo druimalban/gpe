@@ -20,6 +20,7 @@ typedef struct
   char* username;
 
   pthread_t thread;
+  sync_object_type newdbs;		/* XXX */
 
   GSList *db_list;
 } gpe_conn;
@@ -41,7 +42,6 @@ struct db
 
 #define GPE_DEBUG(conn, x) fprintf (stderr, "%s\n", (x))
 
-extern void gpe_do_connect (gpe_conn *conn);
 extern void gpe_disconnect (struct db *db);
 
 extern gboolean gpe_load_config (gpe_conn *conn);
@@ -55,3 +55,6 @@ extern gboolean store_tag_data (nsqlc *db, const gchar *table, guint id, GSList 
 extern void calendar_init (gpe_conn *conn);
 extern void todo_init (gpe_conn *conn);
 extern void contacts_init (gpe_conn *conn);
+
+extern void *gpe_do_get_changes (void *conn);
+extern void *gpe_do_connect (void *conn);

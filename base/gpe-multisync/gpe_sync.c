@@ -154,32 +154,9 @@ sync_disconnect (gpe_conn *conn)
 void 
 get_changes (gpe_conn *conn, sync_object_type newdbs) 
 {
-  GSList *i;
-  GList *changes = NULL;
-  sync_object_type retnewdbs = 0;
-  change_info *chinfo;
+  conn->newdbs = newdbs;
 
-  GPE_DEBUG(conn, "get_changes"); 
-
-  for (i = conn->db_list; i; i = i->next)
-    {
-      struct db *db = i->data;
-
-      nsqlc_get_time (db->db, &db->current_timestamp, NULL);
-
-      if (conn->commondata.object_types & db->type)
-	changes = db->get_changes (db, changes, newdbs & db->type);
-    }
-  
-  /* Allocate the change_info struct */
-  chinfo = g_malloc0 (sizeof (change_info));
-  chinfo->changes = changes;
-  
-  /* Did we detect any reset databases */
-  chinfo->newdbs = retnewdbs;
-  sync_set_requestdata (chinfo, conn->sync_pair);
-  
-  return;
+  pthread_create (&conn->thread, NULL, gpe_do_get_changes, conn);
 }
 
 /* syncobj_modify() 
