@@ -235,26 +235,23 @@ configure(GtkWidget *w, gpointer list)
   gtk_widget_show (window);
 }
 
-#if 0
 static void
 purge_completed(GtkWidget *w, gpointer list)
 {
-  struct todo_list *t = (struct todo_list *)list;
-  GList *iter = t->items;
+  GList *iter = curr_list->items;
   
   while (iter)
     {
       struct todo_item *i = iter->data;
       GList *new_iter = iter->next;
       if (i->state == COMPLETED)
-	delete_item (t, i);
+	delete_item (curr_list, i);
 
       iter = new_iter;
     }
 
-  gtk_widget_draw (t->widget, NULL);
+  gtk_widget_draw (g_draw, NULL);
 }
-#endif
 
 static gint
 draw_expose_event (GtkWidget *widget,
@@ -435,6 +432,13 @@ top_level (GtkWidget *window)
 			   _("Configure lists"), 
 			   _("Configure lists"),
 			   pw, configure, NULL);
+
+  pw = gpe_render_icon (window->style, gpe_find_icon ("clean"));
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), 
+			   _("Purge completed"), 
+			   _("Purge completed"), 
+			   _("Purge completed"),
+			   pw, purge_completed, NULL);
 
   pw = gpe_render_icon (window->style, gpe_find_icon ("exit"));
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar2), 
