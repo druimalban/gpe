@@ -403,6 +403,7 @@ void go_board_init(){
                          | GDK_BUTTON_PRESS_MASK
                          | GDK_BUTTON_RELEASE_MASK
                          );
+  gtk_widget_set_double_buffered(drawing_area, FALSE);
 
   go.board.drawing_area_pixmap_buffer = NULL;
 
