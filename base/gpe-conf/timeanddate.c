@@ -36,7 +36,7 @@ gchar *timezones[3]=
   {
     "UTC",
     "MET",
-	"GMT"
+    "GMT"
   };
 
 static struct 
@@ -70,7 +70,7 @@ static struct
   GtkWidget *ntpserver;
   GtkWidget *internet;
   GtkWidget *timezone;
-}self;
+} self;
 
 void GetInternetTime()
 {
