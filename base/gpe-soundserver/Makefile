@@ -2,7 +2,7 @@ PREFIX = /usr/local
 PACKAGE = gpe-soundserver
 DEBUG = no
 CVSBUILD = yes
-VERSION = 0.4
+VERSION = 0.4-1
 
 MEMBERS = server
 
