@@ -13,6 +13,8 @@
  * Dynamic interface configuration added by Florian Boor (florian.boor@kernelconcepts.de)
  *
  * Wireless LAN support added by Ole Reinhardt (ole.reinhardt@kernelconcepts.de)
+ * Some wireless code is taken from iwconfig.c (wireless tools) 
+ *     Copyright (c) 1997-2002 Jean Tourrilhes <jt@hpl.hp.com>
  *
  */
  
@@ -456,6 +458,102 @@ create_editable_entry_simple (GtkWidget * attach_to, gchar * name,
 			  gpe_boxspacing, gpe_boxspacing);
 }
 
+char *key2text(char* key)
+{
+	if ((key[0] == 's') && (key[1] == ':'))
+		return &key[2];
+	return key;
+}
+
+#define IW_ENCODING_TOKEN_MAX	32	/* 256 bits (for now) */
+
+
+char *text2key(char* text, char* buffer)
+{
+	char *	buff;
+	char *	hex;
+	char *	out;
+	char *	p;
+	int     ishex; // if true, this is a valid hex-code
+	char    temp[3];
+	int     keylen = 0;
+	int     count; 
+	ishex = TRUE;
+	
+	if (strlen(text) == 0) return text;
+	
+	/* Third case : as hexadecimal digits */
+	buff = malloc(IW_ENCODING_TOKEN_MAX + strlen(text) + 1);
+	if(buff == NULL)
+	{
+		fprintf(stderr, "Malloc failed (string too long ?)\n");
+	
+		return text;
+	}
+	/* Preserve original buffers (both in & out) */
+	hex = buff + IW_ENCODING_TOKEN_MAX;
+	strcpy(hex, text);
+	out = buff;
+
+	/* Parse */
+	p = strtok(hex, "-:;.,");
+	while((p != (char *) NULL) && (keylen < IW_ENCODING_TOKEN_MAX))
+	{
+		int	temph;
+		int	templ;
+		int	count;
+		int	len;
+		/* Get each char separatly (and not by two) so that we don't
+		* get confused by 'enc' (=> '0E'+'0C') and similar */
+		count = sscanf(p, "%1X%1X", &temph, &templ);
+		if(count < 1)
+		{
+			ishex = FALSE;
+			break;
+		}
+		/* Fixup odd strings such as '123' is '01'+'23' and not '12'+'03'*/
+		len = strlen(p);
+		if(len % 2)
+			count = 1;
+		/* Put back two chars as one byte */
+		if(count == 2)
+			templ |= temph << 4;
+		else
+			templ = temph;
+		out[keylen++] = (unsigned char) (templ & 0xFF);
+		/* Check where to get next char from */
+		if(len > count)	/* Token not finished yet */
+			p += count;
+		else
+			p = strtok((char *) NULL, "-:;.,");
+	}
+	if (!ishex)
+	{
+		sprintf(buffer, "s:%s", text);
+		return buffer;
+	} else
+	{
+		if ((keylen == 5) || (keylen == 13) || (keylen == 29))
+		{
+			buffer[0] = '\0';
+			
+			for (count = 0; count < keylen; count++)
+			{
+				sprintf(temp, "%02x", out[count]);
+				strcat(buffer, temp);
+				if ((count & 0x01) == 1) strcat(buffer, "-");
+			}
+			free (buff);
+			return buffer;
+		}
+		sprintf(buffer, "s:%s", text);
+		free(buff);
+		return buffer;
+      }
+}
+
+
+
 void
 show_wificonfig(GtkWidget *window, NWInterface_t *iface)
 {
@@ -467,7 +565,8 @@ show_wificonfig(GtkWidget *window, NWInterface_t *iface)
 
 	gchar *tmpval;
 	gint response;
-
+	char  tmp_key[256];
+	
 	dialog = gtk_dialog_new_with_buttons (_("WiFi config"),
 					GTK_WINDOW (window),
 					GTK_DIALOG_MODAL| GTK_DIALOG_DESTROY_WITH_PARENT,
@@ -662,7 +761,7 @@ show_wificonfig(GtkWidget *window, NWInterface_t *iface)
 	gtk_object_set_data_full (GTK_OBJECT (table), "key1" , label,
 				  (GtkDestroyNotify) gtk_widget_unref);
 	
-	gtk_entry_set_text (GTK_ENTRY (label), iface->key[0]);
+	gtk_entry_set_text (GTK_ENTRY (label), key2text(iface->key[0]));
 	gtk_entry_set_editable (GTK_ENTRY (label), TRUE);
 	gtk_table_attach (GTK_TABLE (ctable), label, 1, 2, 5, 6,
 			  (GtkAttachOptions) (GTK_FILL),
@@ -690,7 +789,7 @@ show_wificonfig(GtkWidget *window, NWInterface_t *iface)
 	gtk_object_set_data_full (GTK_OBJECT (table), "key2" , label,
 				  (GtkDestroyNotify) gtk_widget_unref);
 	
-	gtk_entry_set_text (GTK_ENTRY (label), iface->key[1]);
+	gtk_entry_set_text (GTK_ENTRY (label), key2text(iface->key[1]));
 	gtk_entry_set_editable (GTK_ENTRY (label), TRUE);
 	gtk_table_attach (GTK_TABLE (ctable), label, 1, 2, 6, 7,
 			  (GtkAttachOptions) (GTK_FILL),
@@ -718,7 +817,7 @@ show_wificonfig(GtkWidget *window, NWInterface_t *iface)
 	gtk_object_set_data_full (GTK_OBJECT (table), "key3" , label,
 				  (GtkDestroyNotify) gtk_widget_unref);
 	
-	gtk_entry_set_text (GTK_ENTRY (label), iface->key[2]);
+	gtk_entry_set_text (GTK_ENTRY (label), key2text(iface->key[2]));
 	gtk_entry_set_editable (GTK_ENTRY (label), TRUE);
 	gtk_table_attach (GTK_TABLE (ctable), label, 1, 2, 7, 8,
 			  (GtkAttachOptions) (GTK_FILL),
@@ -748,7 +847,7 @@ show_wificonfig(GtkWidget *window, NWInterface_t *iface)
 	gtk_object_set_data_full (GTK_OBJECT (table), "key4" , label,
 				  (GtkDestroyNotify) gtk_widget_unref);
 	
-	gtk_entry_set_text (GTK_ENTRY (label), iface->key[3]);
+	gtk_entry_set_text (GTK_ENTRY (label), key2text(iface->key[3]));
 	gtk_entry_set_editable (GTK_ENTRY (label), TRUE);
 	gtk_table_attach (GTK_TABLE (ctable), label, 1, 2, 8, 9,
 			  (GtkAttachOptions) (GTK_FILL),
@@ -768,16 +867,16 @@ show_wificonfig(GtkWidget *window, NWInterface_t *iface)
 		strncpy(iface->channel, gtk_editable_get_chars(GTK_EDITABLE (label), 0, -1), 31);		
 		
 		label = gtk_object_get_data (GTK_OBJECT (table), "key1");
-		strncpy(iface->key[0], gtk_editable_get_chars(GTK_EDITABLE (label), 0, -1), 127);
+		strncpy(iface->key[0], text2key(gtk_editable_get_chars(GTK_EDITABLE (label), 0, -1), tmp_key), 127);
 		
 		label = gtk_object_get_data (GTK_OBJECT (table), "key2");
-		strncpy(iface->key[1], gtk_editable_get_chars(GTK_EDITABLE (label), 0, -1), 127);
+		strncpy(iface->key[1], text2key(gtk_editable_get_chars(GTK_EDITABLE (label), 0, -1), tmp_key), 127);
 		
 		label = gtk_object_get_data (GTK_OBJECT (table), "key3");
-		strncpy(iface->key[2], gtk_editable_get_chars(GTK_EDITABLE (label), 0, -1), 127);
+		strncpy(iface->key[2], text2key(gtk_editable_get_chars(GTK_EDITABLE (label), 0, -1), tmp_key), 127);
 		
 		label = gtk_object_get_data (GTK_OBJECT (table), "key4");
-		strncpy(iface->key[3], gtk_editable_get_chars(GTK_EDITABLE (label), 0, -1), 127);
+		strncpy(iface->key[3], text2key(gtk_editable_get_chars(GTK_EDITABLE (label), 0, -1), tmp_key), 127);
 
 		label = gtk_object_get_data (GTK_OBJECT (table), "mode_managed");
 		iface->mode = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON (label)) ? MODE_MANAGED : MODE_ADHOC;
