@@ -15,14 +15,18 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/stat.h>
+#include <libintl.h>
 
 #include <gtk/gtk.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
 
-#include "errorbox.h"
-#include "render.h"
+#include <gpe/errorbox.h>
+#include <gpe/render.h>
+#include <gpe/picturebutton.h>
 
-#define BT_ICON "/usr/share/pixmaps/bt-logo.png"
+#define BT_ICON PREFIX "/share/pixmaps/bt-logo.png"
+
+#define _(x) gettext(x)
 
 static char *address;
 static char *name = "";
@@ -89,7 +93,7 @@ static void
 click_ok(GtkWidget *widget,
 	 GtkWidget *entry)
 {
-  char *pin = gtk_entry_get_text (GTK_ENTRY (entry));
+  const char *pin = gtk_entry_get_text (GTK_ENTRY (entry));
   gboolean save = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check));
 
   if (save && sqliteh)
@@ -111,7 +115,7 @@ click_ok(GtkWidget *widget,
 void
 ask_user (int outgoing, const char *address)
 {
-  GtkWidget *window = gtk_window_new (GTK_WINDOW_DIALOG);
+  GtkWidget *window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   GtkWidget *logo = NULL;
   GtkWidget *text1, *text2, *text3, *hbox, *vbox;
   GtkWidget *vbox_top;
@@ -120,19 +124,19 @@ ask_user (int outgoing, const char *address)
   GtkWidget *buttonok, *buttoncancel, *hbox_but;
   GdkPixbuf *pixbuf;
 
-  const char *dir = outgoing ? "Outgoing connection to" 
-    : "Incoming connection from";
+  const char *dir = outgoing ? _("Outgoing connection to") 
+    : _("Incoming connection from");
  
   gtk_widget_realize (window);
 
-  pixbuf = gdk_pixbuf_new_from_file (BT_ICON);
+  pixbuf = gdk_pixbuf_new_from_file (BT_ICON, NULL);
   if (pixbuf)
     logo = gpe_render_icon (window->style, pixbuf);
 
-  pin_label = gtk_label_new ("PIN:");
+  pin_label = gtk_label_new (_("PIN:"));
   entry = gtk_entry_new ();
 
-  check = gtk_check_button_new_with_label ("Save in database");
+  check = gtk_check_button_new_with_label (_("Save in database"));
 
   hbox = gtk_hbox_new (FALSE, 4);
   vbox = gtk_vbox_new (FALSE, 0);
@@ -159,8 +163,15 @@ ask_user (int outgoing, const char *address)
   gtk_box_pack_start (GTK_BOX (hbox_pin), entry, TRUE, TRUE, 0);
 
   hbox_but = gtk_hbox_new (FALSE, 0);
-  buttonok = gtk_button_new_with_label ("OK");
-  buttoncancel = gtk_button_new_with_label ("Cancel");
+
+#ifdef USE_LIBGPEWIDGET
+  gtk_widget_realize (window);
+  buttonok = gpe_picture_button (window->style, _("OK"), "ok");
+  buttoncancel = gpe_picture_button (window->style, _("Cancel"), "cancel");
+#else
+  buttonok = gtk_button_new_with_label (_("OK"));
+  buttoncancel = gtk_button_new_with_label (_("Cancel"));
+#endif
 
   gtk_box_pack_start (GTK_BOX (hbox_but), buttonok, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (hbox_but), buttoncancel, TRUE, TRUE, 0);
@@ -192,7 +203,7 @@ ask_user (int outgoing, const char *address)
 void
 usage(char *argv[])
 {
-  fprintf (stderr, "Usage: %s <in|out> <address>\n", argv[0]);
+  fprintf (stderr, _("Usage: %s <in|out> <address>\n"), argv[0]);
   exit (1);
 }
 
@@ -203,6 +214,11 @@ main(int argc, char *argv[])
   char *pin;
   gboolean gui_started;
   char *dpy = getenv (dpy);
+
+  setlocale (LC_ALL, "");
+
+  bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
+  textdomain (PACKAGE);
 
   if (dpy == NULL)
     {
