@@ -312,9 +312,9 @@ void
 button_clicked (GtkWidget *widget, gpointer udata)
 {
   FileInfomation *file_info;
-  printf ("You clicked on %s\n", file_info->vfs->name);
-
   file_info = (FileInfomation *) udata;
+
+  printf ("You clicked on %s\n", file_info->vfs->name);
 
   if (file_info->vfs->type == GNOME_VFS_FILE_TYPE_REGULAR)
     ask_open_with (file_info->filename);
