@@ -1,5 +1,7 @@
 2002-07-20  Colin Marquardt  <colin@marquardt-home.de>
 
+	* init.c (gpe_application_init): Free user_gtkrc_file.
+
 	* gtkrc: Rename gpe_login_incorrect to gpe_login_result.
 
 	* init.c: Fix user gtkrc file.

@@ -63,6 +63,7 @@ gpe_application_init (int *argc, char **argv[])
     }
 
   g_free (buf);
+  g_free (user_gtkrc_file);
 
   gpe_what_init ();
 
