@@ -1,3 +1,7 @@
+2004-10-06 Florian Boor <florian.boor@kernelconcepts.de>
+
+    * event-ui.c: Added warning if event starts in the past.
+
 2004-09-20 Florian Boor <florian.boor@kernelconcepts.de>
 
     * event-ui.c: Fixed event lossage if returning from reminder to appointment. 

@@ -318,7 +318,7 @@ click_ok (GtkWidget *widget, GtkWidget *d)
   struct edit_state *s = g_object_get_data (G_OBJECT (d), "edit_state");
   event_t ev;
   event_details_t ev_d;
-  struct tm tm_start, tm_end, tm_rend;
+  struct tm tm_start, tm_end, tm_rend, tm_daystart;
   time_t start_t, end_t, rend_t;
   gboolean new_event = FALSE;
   GtkTextIter start, end;
@@ -417,6 +417,31 @@ click_ok (GtkWidget *widget, GtkWidget *d)
       return;
     }
 
+  memset (&tm_daystart, 0, sizeof (struct tm));
+  tm_daystart.tm_year = GTK_DATE_COMBO (s->startdate)->year - 1900;
+  tm_daystart.tm_mon = GTK_DATE_COMBO (s->startdate)->month;
+  tm_daystart.tm_mday = GTK_DATE_COMBO (s->startdate)->day;
+      
+  if (((start_t < time(NULL)) && !(ev->flags & FLAG_UNTIMED))
+    || ((ev->flags & FLAG_UNTIMED) && (start_t < mktime(&tm_daystart))))
+    {
+      GtkWidget* dialog;
+      gint ret;
+      
+      dialog = gtk_message_dialog_new (GTK_WINDOW(d),
+                       GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+                       GTK_MESSAGE_WARNING,
+                       GTK_BUTTONS_YES_NO,
+                       _("Event starts in the past!\nSave anyway?"));
+      ret = gtk_dialog_run (GTK_DIALOG(dialog));
+      gtk_widget_destroy(dialog);
+      if (ret == GTK_RESPONSE_NO)
+        {
+          event_db_destroy (ev);
+          return;
+        }
+    }
+    
   ev->start = start_t;
   ev->duration = end_t - start_t;
 

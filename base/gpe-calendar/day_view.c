@@ -357,7 +357,6 @@ day_view_update ()
       if (day_events[hour]) 
         event_db_list_destroy (day_events[hour]);
       day_events[hour] = event_db_untimed_list_for_period (start, end-1, FALSE);
-      
       for (iter = day_events[hour]; iter; iter = iter->next)
 	    ((event_t)iter->data)->mark = FALSE;
     }
