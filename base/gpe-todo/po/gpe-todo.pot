@@ -1,0 +1,74 @@
+# Translation templates for gpe-todo
+# Copyright (C) 2002 Phil Blundell <pb@debian.org>
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2002-06-14 13:14+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: list-ui.c:91
+msgid "A list by that name already exists"
+msgstr ""
+
+#: list-ui.c:143 list-ui.c:177 list-ui.c:178
+msgid "New list"
+msgstr ""
+
+#: list-ui.c:183 list-ui.c:184
+msgid "Delete list"
+msgstr ""
+
+#: list-ui.c:387 list-ui.c:388 list-ui.c:393 list-ui.c:394
+msgid "New Contact"
+msgstr ""
+
+#: todo-ui.c:141
+msgid "Save"
+msgstr ""
+
+#: todo-ui.c:142
+msgid "Cancel"
+msgstr ""
+
+#: todo-ui.c:143
+msgid "Delete"
+msgstr ""
+
+#: todo-ui.c:146
+msgid "Summary:"
+msgstr ""
+
+#: todo-ui.c:147
+msgid "Details"
+msgstr ""
+
+#: todo-ui.c:152
+msgid "Not started"
+msgstr ""
+
+#: todo-ui.c:152
+msgid "In progress"
+msgstr ""
+
+#: todo-ui.c:153
+msgid "Completed"
+msgstr ""
+
+#: todo-ui.c:167
+msgid "Due:"
+msgstr ""
+
+#: todo-ui.c:234
+msgid "Edit item"
+msgstr ""
+
+#: todo-ui.c:241
+msgid "New item"
+msgstr ""
