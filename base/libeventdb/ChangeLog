@@ -1,3 +1,8 @@
+2003-01-13  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>
+
+	* event-db.c: add event_db_list_alarms_for_period + flag
+	* event-db.h: same
+
 2003-01-08  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>
 
 	* event-db.c: Change "event-db.h" for <gpe/event-db.h>

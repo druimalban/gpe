@@ -415,7 +415,8 @@ event_db_clone (event_t ev)
 
 static GSList *
 event_db_list_for_period_internal (time_t start, time_t end, gboolean untimed, 
-				   gboolean untimed_significant, guint max)
+				   gboolean untimed_significant, gboolean alarms, 
+				   guint max)
 {
   GSList *iter;
   GSList *list = NULL;
@@ -447,6 +448,10 @@ event_db_list_for_period_internal (time_t start, time_t end, gboolean untimed,
       if (end && fixed_start > end)
 	break;
       
+      /* Skip events without alarms when applicable */
+      if (alarms && !(ev->flags & FLAG_ALARM))
+	continue;
+
       /* Skip events that have finished already */
       if ((fixed_start + ev->duration < start)
 	  || (ev->duration && ((fixed_start + ev->duration == start))))
@@ -476,6 +481,10 @@ event_db_list_for_period_internal (time_t start, time_t end, gboolean untimed,
       if (end && fixed_start > end)
 	continue;
       
+      /* Skip events without alarms when applicable */
+      if (alarms && !(ev->flags & FLAG_ALARM))
+	continue;
+
       switch (r->type)
 	{
 	case RECUR_NONE:
@@ -487,6 +496,8 @@ event_db_list_for_period_internal (time_t start, time_t end, gboolean untimed,
 	    if (fixed_start >= start) 
 	      {
 		new_ev = event_db_clone (ev);
+		new_ev->start = fixed_start;
+	        if (alarms) new_ev->start-=60*ev->alarm;
 		new_ev->flags |= FLAG_RECUR;
 		list = g_slist_insert_sorted (list, new_ev, (GCompareFunc)event_sort_func);
 	      }
@@ -508,6 +519,7 @@ event_db_list_for_period_internal (time_t start, time_t end, gboolean untimed,
 		 (r->daymask & SUN && tm_event.tm_wday==0))) {
 	      new_ev = event_db_clone (ev);
 	      new_ev->start = fixed_start;
+	      if (alarms) new_ev->start-=60*ev->alarm;
 	      new_ev->flags |= FLAG_RECUR;
 	      list = g_slist_insert_sorted (list, new_ev, (GCompareFunc)event_sort_func);
 	    }
@@ -522,6 +534,7 @@ event_db_list_for_period_internal (time_t start, time_t end, gboolean untimed,
 	    if (fixed_start >= start) {
 	      new_ev = event_db_clone (ev);
 	      new_ev->start = fixed_start;
+	      if (alarms) new_ev->start-=60*ev->alarm;
 	      new_ev->flags |= FLAG_RECUR;
 	      list = g_slist_insert_sorted (list, new_ev, (GCompareFunc)event_sort_func);
 	    }
@@ -535,6 +548,7 @@ event_db_list_for_period_internal (time_t start, time_t end, gboolean untimed,
 	    localtime_r (&fixed_start, &tm_event);
 	    if (fixed_start >= start) {
 	      new_ev = event_db_clone (ev);
+	      new_ev->start = fixed_start;
 	      new_ev->start = fixed_start;
 	      new_ev->flags |= FLAG_RECUR;
 	      list = g_slist_insert_sorted (list, new_ev, (GCompareFunc)event_sort_func);
@@ -570,19 +584,25 @@ event_db_list_for_period_internal (time_t start, time_t end, gboolean untimed,
 GSList *
 event_db_list_for_period (time_t start, time_t end)
 {
-  return event_db_list_for_period_internal (start, end, FALSE, FALSE, 0);
+  return event_db_list_for_period_internal (start, end, FALSE, FALSE, FALSE, 0);
+}
+
+GSList *
+event_db_list_alarms_for_period (time_t start, time_t end)
+{
+  return event_db_list_for_period_internal (start, end, FALSE, FALSE, TRUE, 0);
 }
 
 GSList *
 event_db_untimed_list_for_period (time_t start, time_t end, gboolean yes)
 {
-  return event_db_list_for_period_internal (start, end, yes, TRUE, 0);
+  return event_db_list_for_period_internal (start, end, yes, TRUE, FALSE, 0);
 }
 
 GSList *
 event_db_list_for_future (time_t start, guint max)
 {
-  return event_db_list_for_period_internal (start, 0, FALSE, FALSE, max);
+  return event_db_list_for_period_internal (start, 0, FALSE, FALSE, FALSE, max);
 }
 
 #define insert_values(db, id, key, format, value)	\
