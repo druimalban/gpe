@@ -1,0 +1,3 @@
+?package(gpe-ataxx):needs=x11 section=Games\
+  title="Ataxx" command=gpe-ataxx
+  icon=/usr/share/pixmaps/gpe-ataxx.png

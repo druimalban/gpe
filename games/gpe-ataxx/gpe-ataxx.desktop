@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Ataxx
+Comment=GPE Ataxx
+Exec=gpe-ataxx
+Terminal=0
+Type=Application
+Icon=gpe-ataxx.png
+Categories=Games
+StartupNotify=True

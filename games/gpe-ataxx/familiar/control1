@@ -1,0 +1,8 @@
+Package: gpe-ataxx
+Version: 0.2
+Section: games
+Priority: optional
+Architecture: arm
+Depends: libgtk2.0-0, libgpewidget1
+Maintainer: Robert Mibus <mibus@handhelds.org>
+Description: An Ataxx clone using GTK, hacked from ugothello via gpe-othello.
