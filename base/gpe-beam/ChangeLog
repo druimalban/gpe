@@ -1,10 +1,16 @@
 2003-10-11	Florian Boor <florian.boor@kernelconcepts.de>
+	* Added Romanian translation by Laurentiu Buzdugan, thanks.
+	
+2003-10-11	Florian Boor <florian.boor@kernelconcepts.de>
 	* New translations added: German (Colin Marquardt), Swedish (Christian Rose)
 	* main.c: Fixed bug 1037 
 	
 2003-10-11  Colin Marquardt  <colin@marquardt-home.de>
 
 	* main.c: Fix some typos.
+
+2003-10-10	Florian Boor <florian.boor@kernelconcepts.de>
+	* Registered gpe-beam for translation project.
 
 09/16/2003		Florian Boor <florian.boor@kernelconcepts.de>
 	- main.c: Applied patch fixing typo.
