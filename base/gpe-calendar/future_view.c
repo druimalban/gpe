@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001, 2002 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2001, 2002, 2003 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -23,11 +23,8 @@
 GtkWidget *future_list;
 
 static void 
-selection_made( GtkWidget      *clist,
-		gint            row,
-		gint            column,
-		GdkEventButton *event,
-		GtkWidget      *widget)
+selection_made (GtkWidget *clist, int row, gint column,
+		GdkEventButton *event, GtkWidget *widget)
 {
   event_t ev;
     
@@ -38,10 +35,7 @@ selection_made( GtkWidget      *clist,
       ev = gtk_clist_get_row_data (GTK_CLIST (clist), row);
       
       if (ev)
-	{
-	  appt = edit_event (ev);
-	  gtk_widget_show (appt);
-	}
+	gtk_widget_show_all (edit_event (ev));
     }
 }
 

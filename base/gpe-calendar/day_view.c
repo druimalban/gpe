@@ -92,7 +92,7 @@ selection_made (GtkWidget      *clist,
       
       if (ev) 
 	{
-	  gtk_widget_show (edit_event (ev));
+	  gtk_widget_show_all (edit_event (ev));
 	}
       else 
 	{

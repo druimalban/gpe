@@ -1,5 +1,17 @@
 2003-01-19  Philip Blundell  <philb@gnu.org>
 
+	* event-ui.c (edit_finished): Re-enable window cache.
+	(gtk_box_pack_start_show): Delete.
+	(build_edit_event_window): Remove calls to gtk_widget_show.
+
+	* future_view.c (selection_made): Use gtk_widget_show_all with
+	event window.
+	* day_view.c (selection_made): Likewise.	
+	* day_popup.c (selection_made): Likewise.
+	* main.c (new_appointment): Likewise.
+
+2003-01-19  Philip Blundell  <philb@gnu.org>
+
 	* event-ui.c (build_edit_event_window): Don't realize window
 	explicitly.  Install "destroy" handler on new window.  Connect
 	cancel button to edit_finished directly.
