@@ -1025,7 +1025,6 @@ toggle_fullscreen ()
 
     gtk_widget_reparent (main_scrolled_window, fullscreen_window);
 
-//    gtk_widget_set_size_request (fullscreen_window, gdk_screen_width (), gdk_screen_height ());
     gtk_widget_show_all (fullscreen_window);
 
     gdk_window_fullscreen (GDK_WINDOW (fullscreen_window->window));
@@ -1141,7 +1140,6 @@ main (int argc, char *argv[])
 
   scrolled_window = gtk_scrolled_window_new (NULL, NULL);
   main_scrolled_window = scrolled_window;
-//  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window), GTK_POLICY_NEVER, GTK_POLICY_NEVER);
 
   image_widget = gtk_image_new_from_pixbuf (image_pixbuf);
   image_event_box = gtk_event_box_new ();
