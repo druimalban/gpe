@@ -1,21 +1,11 @@
 PREFIX = /usr/local
 PACKAGE = gpe-question
 CVSBUILD = yes
-VERSION = 0.02
+VERSION = 0.03
 
-GTKLDFLAGS = `pkg-config --libs gtk+-2.0`
-GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
-
-CFLAGS = $(GTKCFLAGS) -Os -Wall -fomit-frame-pointer
-CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
-
-ifeq ($(CVSBUILD),yes)
-CFLAGS += -I../libgpewidget
-LDFLAGS += -L../libgpewidget
-else
-CFLAGS += -I/usr/include/gpe
-endif
-LDFLAGS += -lgpewidget
+PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS)
+PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS)
+PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS)
 
 ifeq ($(CVSBUILD),yes)
 BUILD = ../build
@@ -23,10 +13,12 @@ else
 BUILD = build
 endif
 
+DEPS = $(PACKAGE).d
+
 all: $(PACKAGE)
 
 $(PACKAGE): $(PACKAGE).o
-	$(CC) -o $@ $^ $(LDFLAGS) $(GTKLDFLAGS) -lcrypt
+	$(CC) -o $@ $^ $(LDFLAGS) $(PACKAGE_LDFLAGS)
 
 install-program: all
 	install -Ds $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
@@ -36,3 +28,4 @@ clean:
 
 include $(BUILD)/Makefile.translation
 include $(BUILD)/Makefile.dpkg_ipkg
+-include $(DEPS)
