@@ -53,7 +53,6 @@ GdkCursor * cursor_eraser_large;
 GdkCursor * cursor_eraser_xlarge;
 GdkCursor * _eraser_cursors_new(gchar * bits, gint width, gint height);//gint diameter);
 
-void    reset_drawing_area       ();
 void    clear_drawing_area       ();
 
 void sketchpad_init(){

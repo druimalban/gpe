@@ -221,7 +221,9 @@ GtkWidget * sketchpad_build_drawing_toolbar(GtkWidget * window){
   color_group = gtk_radio_button_group (GTK_RADIO_BUTTON (radiobutton_color_blue));
 
   gtk_widget_set_usize (radiobutton_color_black, 10, 10);
-  //what's about the others? ...
+  gtk_widget_set_usize (radiobutton_color_red  , 10, 10);
+  gtk_widget_set_usize (radiobutton_color_green, 10, 10);
+  gtk_widget_set_usize (radiobutton_color_blue , 10, 10);
 
   //pixmaps
   pixbuf = gpe_find_icon ("color_black");
@@ -248,7 +250,12 @@ GtkWidget * sketchpad_build_drawing_toolbar(GtkWidget * window){
   gtk_table_attach (GTK_TABLE (table1), radiobutton_color_black, 0, 1, 0, 1,
                     (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
 
-  //signals connection
+  //--default tools //NOTE: maybe a preference
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (radiobutton_tools_pen),    TRUE);
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (radiobutton_color_black),  TRUE);
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (radiobutton_brush_medium), TRUE);
+
+  //--signals connection
   gtk_signal_connect (GTK_OBJECT (radiobutton_tools_eraser), "clicked",
                       GTK_SIGNAL_FUNC (on_radiobutton_tool_clicked), "eraser");
   gtk_signal_connect (GTK_OBJECT (radiobutton_tools_pen), "clicked",
@@ -270,7 +277,7 @@ GtkWidget * sketchpad_build_drawing_toolbar(GtkWidget * window){
   gtk_signal_connect (GTK_OBJECT (radiobutton_color_blue), "clicked",
                       GTK_SIGNAL_FUNC (on_radiobutton_color_clicked), "blue");
 
-  //don't show the toggle button
+  //--don't show the toggle button
   gtk_toggle_button_set_mode (GTK_TOGGLE_BUTTON (radiobutton_tools_pen),    FALSE);
   gtk_toggle_button_set_mode (GTK_TOGGLE_BUTTON (radiobutton_tools_eraser), FALSE);
   gtk_toggle_button_set_mode (GTK_TOGGLE_BUTTON (radiobutton_brush_small),  FALSE);
@@ -282,7 +289,7 @@ GtkWidget * sketchpad_build_drawing_toolbar(GtkWidget * window){
   gtk_toggle_button_set_mode (GTK_TOGGLE_BUTTON (radiobutton_color_green),  FALSE);
   gtk_toggle_button_set_mode (GTK_TOGGLE_BUTTON (radiobutton_color_blue),   FALSE);
 
-  //no relief
+  //--no relief
   gtk_button_set_relief (GTK_BUTTON (radiobutton_tools_pen),    GTK_RELIEF_NONE);
   gtk_button_set_relief (GTK_BUTTON (radiobutton_tools_eraser), GTK_RELIEF_NONE);
   gtk_button_set_relief (GTK_BUTTON (radiobutton_brush_small),  GTK_RELIEF_NONE);
@@ -293,12 +300,6 @@ GtkWidget * sketchpad_build_drawing_toolbar(GtkWidget * window){
   gtk_button_set_relief (GTK_BUTTON (radiobutton_color_red),    GTK_RELIEF_NONE);
   gtk_button_set_relief (GTK_BUTTON (radiobutton_color_green),  GTK_RELIEF_NONE);
   gtk_button_set_relief (GTK_BUTTON (radiobutton_color_blue),   GTK_RELIEF_NONE);
-
-  //--default tools //NOTE: maybe a preference
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (radiobutton_tools_pen),    TRUE);
-  //FIXME: segfault is something else than "small" ...
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (radiobutton_brush_small), TRUE);
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (radiobutton_color_black),  TRUE);
 
   //--packing
   hbox_drawtools = gtk_hbox_new (FALSE, 0);

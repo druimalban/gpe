@@ -29,12 +29,6 @@ void sketchpad_init();
 void window_sketchpad_init(GtkWidget * window_sketchpad);
 
 void reset_drawing_area();
-//--event handlers //FIXME: to move to sketchpad-cb
-gint configure_event_handler     (GtkWidget *_drawing_area, GdkEventConfigure *event);
-gint expose_event_handler        (GtkWidget *_drawing_area, GdkEventExpose *event);
-gint button_press_event_handler  (GtkWidget *_drawing_area, GdkEventButton *event);
-gint button_release_event_handler(GtkWidget *_drawing_area, GdkEventButton *event );
-gint motion_notify_event_handler (GtkWidget *_drawing_area, GdkEventMotion *event);
 
 void sketchpad_set_drawing_area(GtkWidget * a_drawing_area);
 void sketchpad_refresh_drawing_area();
@@ -68,8 +62,8 @@ extern gint color;
 #define GREEN  4
 #define BLUE   5
 #define YELLOW 6
-extern gint brush;
-#define SMALL  0
+extern gint brush; //value = diameter of the brush (pixels)
+#define SMALL  0   // 0 means 'minimum' (gdk uses a specific algo)
 #define MEDIUM 2
 #define LARGE  5
 #define XLARGE 20
