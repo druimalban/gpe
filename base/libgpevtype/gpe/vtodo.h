@@ -7,14 +7,14 @@
  * 2 of the License, or (at your option) any later version.
  */
 
-#ifndef GPE_VCARD_H
-#define GPE_VCARD_H
+#ifndef GPE_VTODO_H
+#define GPE_VTODO_H
 
 #include <glib.h>
-#include <mimedir/mimedir-vcard.h>
+#include <mimedir/mimedir-vtodo.h>
 
 #include <gpe/tag-db.h>
 
-extern MIMEDirVCard *vcard_from_tags (GSList *tags);
+extern MIMEDirVTodo *vtodo_from_tags (GSList *tags);
 
 #endif

@@ -14,7 +14,6 @@
 #include <libintl.h>
 #include <assert.h>
 
-#include <mimedir/mimedir-vcard.h>
 #include <gpe/vcard.h>
 
 #define _(x) gettext (x)
@@ -34,7 +33,7 @@ static struct tag_map map[] =
     { "honorific_suffix", "suffix" },
     { "nickname", NULL },
     { "comment", "note" },
-	{ "work_organization", "organization"},
+    { "work_organization", "organization"},
     { NULL, NULL }
   };
 
