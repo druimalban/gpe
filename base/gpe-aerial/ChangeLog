@@ -1,4 +1,4 @@
-06/12/2003		Florian Boor <florian.boor@kernelconcepts.de>
+06/27/2003		Florian Boor <florian.boor@kernelconcepts.de>
 
 	- prismstumbler.h	Updated from recent ps.
 	- main.c	Starts scanner in quiet mode now.
