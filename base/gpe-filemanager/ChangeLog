@@ -1,3 +1,9 @@
+
+2004-07-14  Florian Boor  <florian.boor@kernelconcepts.de>
+
+	* main.c: Open directory URI passed on command line instead 
+                  of $HOME.
+
 2004-07-05  Florian Boor  <florian.boor@kernelconcepts.de>
 	* main.c: Changed calling of external software fixing #1016
 	* main.c: Fixed bug causing wrong error messages.

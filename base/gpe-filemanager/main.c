@@ -1766,9 +1766,22 @@ main (int argc, char *argv[])
 						  
   gnome_vfs_mime_info_reload();
   gnome_vfs_application_registry_reload();
-
-  set_directory_home (NULL);
-
+  
+  if (argc < 2)
+    set_directory_home (NULL);
+  else
+    {
+      GnomeVFSResult res;
+      GnomeVFSDirectoryHandle *handle;
+      res = gnome_vfs_directory_open(&handle, argv[1], GNOME_VFS_FILE_INFO_DEFAULT);
+      if (res == GNOME_VFS_OK)
+        {
+          gnome_vfs_directory_close(handle);
+          browse_directory (argv[1]);
+        }
+      else
+        set_directory_home (NULL);
+    }
   gtk_main();
 
   return 0;
