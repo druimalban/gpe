@@ -100,7 +100,7 @@ struct Applet applets[]=
     { &Network_Build_Objects, &Network_Free_Objects, &Network_Save, &Network_Restore ,
 		"Network" ,"network","IP Addresses",PREFIX "/share/pixmaps/gpe-config-network.png"},
     { &Theme_Build_Objects, &Unimplemented_Free_Objects, &Theme_Save, &Theme_Restore ,
-		"Theme" ,"theme", "Global Appearance Setup",PREFIX "/share/pixmaps/gpe-config-theme.png"},
+		"Theme" ,"theme", "Appearance Settings",PREFIX "/share/pixmaps/gpe-config-theme.png"},
     { &Sleep_Build_Objects, &Unimplemented_Free_Objects, &Sleep_Save, &Sleep_Restore ,
 		"Sleep" ,"sleep","Sleep Configuration",PREFIX "/share/pixmaps/gpe-config-sleep.png"},
     { &Ownerinfo_Build_Objects, &Ownerinfo_Free_Objects, &Ownerinfo_Save, &Ownerinfo_Restore,
