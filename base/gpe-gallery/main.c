@@ -117,11 +117,11 @@ button_down (GtkWidget *w, GdkEventButton *b)
   x_start = b->x;
   y_start = b->y;
 
-  x_max = (gdk_pixbuf_get_width (GDK_PIXBUF (scaled_image_pixbuf))) - (scrolled_window->allocation.width - 10);
-  y_max = (gdk_pixbuf_get_height (GDK_PIXBUF (scaled_image_pixbuf))) - (scrolled_window->allocation.height - 10);
+  x_max = (gdk_pixbuf_get_width (GDK_PIXBUF (scaled_image_pixbuf))) - (scrolled_window->allocation.width - 2);
+  y_max = (gdk_pixbuf_get_height (GDK_PIXBUF (scaled_image_pixbuf))) - (scrolled_window->allocation.height - 2);
 
   gdk_pointer_grab (w->window, TRUE, GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK,
-		    NULL, NULL, b->time);
+		    w->window, NULL, b->time);
 }
 
 void
