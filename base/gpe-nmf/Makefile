@@ -20,7 +20,7 @@ LDFLAGS += -L../libgpewidget
 else
 CFLAGS += -I/usr/include/gpe
 endif
-LDFLAGS += -lgpewidget `gtk-config --libs` -lmad -L../vorbis-fixp/lib -lvorbis-fixp -lid3tag -lz
+LDFLAGS += -lgpewidget `gtk-config --libs` -lmad -L../vorbis-fixp/lib -lvorbis -lid3tag -lz
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 

@@ -9,15 +9,15 @@
 
 #include "player.h"
 #include "decoder.h"
+#include "stream.h"
 
 struct player
 {
   struct playlist_item *list;
   guint idx;
 
-  struct decoder *decoder;
-  decoder_context decoder_context;
-  struct stream *stream;
+  decoder_t decoder;
+  stream_t stream;
 };
 
 player_t
@@ -31,11 +31,11 @@ player_new (void)
 void
 player_destroy (player_t p)
 {
-  if (p->decoder_context)
-    p->decoder->close (p->decoder_context);
+  if (p->decoder)
+    decoder_close (p->decoder);
 
   if (p->stream)
-    p->stream->close (p->stream);
+    stream_close (p->stream);
  
   g_free (p);
 }
