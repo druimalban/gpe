@@ -1,5 +1,11 @@
 2004-02-15  Philip Blundell  <philb@gnu.org>
 
+	* main.c (create_main): Re-run search when selection made from
+	category menu.
+	(do_search): Fix warning.
+
+2004-02-15  Philip Blundell  <philb@gnu.org>
+
 	* editing.c (edit_window): Tweak packing of action buttons.  Add
 	"delete" button (currently inoperative).  Set sensible default
 	size on window.

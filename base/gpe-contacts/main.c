@@ -358,7 +358,6 @@ create_pageSetup ()
   return vbox9;
 }
 
-
 static void
 update_categories (void)
 {
@@ -823,7 +822,7 @@ static void
 do_search (GObject *obj, GtkWidget *entry)
 {
   gchar *text = g_utf8_strdown (gtk_entry_get_text (GTK_ENTRY (entry)), -1);
-  guint category = gtk_simple_menu_get_result (GTK_SIMPLE_MENU (categories_smenu));
+  guint category = gtk_option_menu_get_history (GTK_OPTION_MENU (categories_smenu));
   GSList *all_entries = db_get_entries (), *iter;
   struct category *c = NULL;
 
@@ -1014,6 +1013,8 @@ create_main (void)
 
   categories_smenu = gtk_simple_menu_new ();
   gtk_box_pack_start (GTK_BOX (hbox3), categories_smenu, TRUE, TRUE, 0);
+  g_signal_connect (G_OBJECT (categories_smenu), "changed", 
+		    G_CALLBACK (do_search), entry1);
 
   g_signal_connect (G_OBJECT (entry1), "activate", G_CALLBACK (do_search), entry1);
   g_signal_connect (G_OBJECT (entry1), "changed", G_CALLBACK (schedule_search), NULL);
