@@ -214,6 +214,8 @@ main (int argc, char *argv[])
   future = future_view ();
   year = year_view ();
 
+  event_ui_init ();
+
   main_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title (GTK_WINDOW(main_window), "Calendar");
   gtk_signal_connect (GTK_OBJECT (main_window), "destroy",

@@ -66,6 +66,8 @@ struct edit_state
   event_t ev;
 };
 
+static GtkWidget *cached_window;
+
 static void
 gtk_box_pack_start_show (GtkBox *box,
 			 GtkWidget *child,
@@ -221,6 +223,16 @@ unschedule_alarm(event_t ev)
 }
 
 static void
+edit_finished (GtkWidget *d)
+{
+  gtk_widget_hide (d);
+  if (cached_window)
+    gtk_widget_destroy (d);
+  else
+    cached_window = d;
+}
+
+static void
 click_delete (GtkWidget *widget, event_t ev)
 {
   GtkWidget *d = gtk_widget_get_toplevel (widget);
@@ -230,9 +242,8 @@ click_delete (GtkWidget *widget, event_t ev)
   
   event_db_remove (ev);
   update_current_view ();
-  
-  gtk_widget_hide (d);
-  gtk_widget_destroy (d);
+
+  edit_finished (d);
 }
 
 static void
@@ -343,8 +354,17 @@ click_ok (GtkWidget *widget, GtkWidget *d)
   if (ev_d->description)
     g_free (ev_d->description);
 
+#if GTK_MAJOR_VERSION < 2
   ev_d->description = gtk_editable_get_chars (GTK_EDITABLE (s->description), 
 						     0, -1);
+#else
+  {
+    GtkTextIter start, end;
+    GtkTextBuffer *buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (s->description));
+    gtk_text_buffer_get_bounds (buf, &start, &end);
+    ev_d->description = gtk_text_buffer_get_text (buf, &start, &end, FALSE);
+  }
+#endif
 
   if (ev_d->summary)
     g_free (ev_d->summary);
@@ -455,16 +475,14 @@ click_ok (GtkWidget *widget, GtkWidget *d)
   
   update_current_view ();
       
-  gtk_widget_hide (d);
-  gtk_widget_destroy (d);
+  edit_finished (d);
 }
 
 static void
 click_cancel (GtkWidget *widget,
 	      GtkWidget *d)
 {
-  gtk_widget_hide (d);
-  gtk_widget_destroy (d);
+  edit_finished (d);
 }
 
 static gboolean
@@ -478,7 +496,7 @@ set_notebook_page (GtkWidget *w, struct edit_state *s)
 }
 
 static GtkWidget *
-edit_event_window (void)
+build_edit_event_window (void)
 {
   static const nl_item days[] = { ABDAY_2, ABDAY_3, ABDAY_4, ABDAY_5, 
 				  ABDAY_6, ABDAY_7, ABDAY_1 };
@@ -516,7 +534,11 @@ edit_event_window (void)
   GtkWidget *hboxrecurtypes = gtk_hbox_new (FALSE, 0);
   GtkWidget *hboxendafter = gtk_hbox_new (FALSE, 0);
   
+#if GTK_MAJOR_VERSION < 2
   GtkWidget *description = gtk_text_new (NULL, NULL);
+#else
+  GtkWidget *description = gtk_text_view_new ();
+#endif
 
   GtkWidget *buttonbox = gtk_hbox_new (FALSE, 0);
   GtkWidget *buttonok;
@@ -583,7 +605,7 @@ edit_event_window (void)
   gtk_simple_menu_append_item (GTK_SIMPLE_MENU (s->optionmenutype), _("Appointment"));
   gtk_simple_menu_append_item (GTK_SIMPLE_MENU (s->optionmenutype), _("Reminder"));
   gtk_simple_menu_append_item (GTK_SIMPLE_MENU (s->optionmenutype), _("Task"));
-  gtk_signal_connect (GTK_OBJECT (s->optionmenutype), "changed", 
+  gtk_signal_connect (GTK_OBJECT (s->optionmenutype), "item-changed", 
 		      GTK_SIGNAL_FUNC (set_notebook_page), s);
 
   s->optionmenutask = gtk_simple_menu_new ();
@@ -648,8 +670,13 @@ edit_event_window (void)
   gtk_notebook_append_page (GTK_NOTEBOOK (s->notebooktype), vboxreminder, NULL);
   gtk_notebook_append_page (GTK_NOTEBOOK (s->notebooktype), vboxtask, NULL);
 
+#if GTK_MAJOR_VERSION < 2
   gtk_text_set_editable (GTK_TEXT (description), TRUE);
   gtk_text_set_word_wrap (GTK_TEXT (description), TRUE);
+#else
+  gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (description), GTK_WRAP_WORD);
+  gtk_text_view_set_editable (GTK_TEXT_VIEW (description), TRUE);
+#endif
   gtk_widget_set_usize (description, -1, 88);
 
   gtk_widget_realize (window);
@@ -1021,6 +1048,28 @@ edit_event_window (void)
   return window;
 }
 
+static GtkWidget *
+edit_event_window (void)
+{
+  GtkWidget *w;
+
+  if (cached_window)
+    {
+      w = cached_window;
+      cached_window = NULL;
+    }
+  else
+    w = build_edit_event_window ();
+
+  return w;
+}
+
+void
+event_ui_init (void)
+{
+  cached_window = build_edit_event_window ();
+}
+
 GtkWidget *
 new_event (time_t t, guint timesel)
 {
@@ -1047,6 +1096,12 @@ new_event (time_t t, guint timesel)
       gtk_date_combo_set_date (GTK_DATE_COMBO (s->enddate),
 			       tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
       
+      gtk_entry_set_text (GTK_ENTRY (s->summary), "");
+#if GTK_MAJOR_VERSION >= 2
+      gtk_text_buffer_set_text (gtk_text_view_get_buffer (GTK_TEXT_VIEW (s->description)), "", -1);
+#else
+#error needs fixing
+#endif
     }
 
   return w;
@@ -1069,8 +1124,13 @@ edit_event (event_t ev)
       gtk_signal_connect (GTK_OBJECT (s->deletebutton), "clicked",
 			  GTK_SIGNAL_FUNC (click_delete), ev);
       evd = event_db_get_details (ev);
+#if GTK_MAJOR_VERSION < 2
       gtk_text_insert (GTK_TEXT (s->description), NULL, NULL, NULL, 
 		       evd->description, -1);
+#else
+      gtk_text_buffer_set_text (gtk_text_view_get_buffer (GTK_TEXT_VIEW (s->description)),
+				evd->description, -1);
+#endif
       gtk_entry_set_text (GTK_ENTRY (s->summary), evd->summary);
       event_db_forget_details (ev);
       
@@ -1093,7 +1153,14 @@ edit_event (event_t ev)
 	  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->alarmbutton), TRUE);
 	  gtk_spin_button_set_value (GTK_SPIN_BUTTON (s->alarmspin), ev->alarm);
 	}
+      else
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->alarmbutton), FALSE);	
 
+      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->radiobuttondaily), FALSE);
+      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->radiobuttonweekly), FALSE);
+      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->radiobuttonmonthly), FALSE);
+      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->radiobuttonyearly), FALSE);
+	      
       if (ev->recur)
 	{
 	  recur_t r = ev->recur;
@@ -1133,10 +1200,16 @@ edit_event (event_t ev)
 				       tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
 	      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->radiobuttonendon), 
 					    TRUE);
+	      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->radiobuttonforever), 
+					    FALSE);
 	    }
-	  else 
-	    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->radiobuttonforever), 
-					  TRUE);
+	  else
+	    {
+	      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->radiobuttonendon), 
+					    FALSE);
+	      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->radiobuttonforever), 
+					    TRUE);
+	    }
 	}
 	  
 	s->ev = ev;

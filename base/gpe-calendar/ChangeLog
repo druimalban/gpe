@@ -1,3 +1,29 @@
+2002-11-30  Philip Blundell  <philb@gnu.org>
+
+	* event-ui.c (edit_event): Explicitly set state of more widgets.
+	(new_event): Likewise.
+
+	* event-ui.c (build_edit_event_window): Use GtkTextView for
+	description under GTK 2.
+	(click_ok): Likewise.
+	(new_event): Likewise.
+	(edit_event): Likewise.
+
+	* Makefile (GTKCFLAGS): Remove -DGTK_ENABLE_BROKEN.
+
+	* event-ui.c (build_edit_event_window): Adjust GtkSimpleMenu
+	signal naming.
+
+	* main.c (main): Call event_ui_init.
+	* event-ui.h (event_ui_init): Add prototype.
+	* event-ui.c (event_ui_init): New function.
+	(build_edit_event_window): Renamed from edit_event_window.
+	(edit_event_window): New function; wrap the above.
+	(edit_finished): New function.
+	(click_delete): Call it.
+	(click_ok): Likewise.
+	(click_cancel): Likewise.
+
 2002-11-29  Philip Blundell  <philb@gnu.org>
 
 	* day_view.c (selection_made): Set viewtime when a row is single
