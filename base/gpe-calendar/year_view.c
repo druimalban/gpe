@@ -34,11 +34,15 @@ static unsigned int day_event_bits[(366 / sizeof(unsigned int)) + 1];
 static void
 year_view_update (void)
 {
-  guint i, dy = 0, year;
+  guint i, dy = 0, year, month, day;
   time_t basetime;
   struct tm tm;
   localtime_r (&viewtime, &tm);
+  
   year = tm.tm_year + 1900;
+  month = tm.tm_mon;
+  day = tm.tm_mday;
+  
   tm.tm_mday = 1;
   tm.tm_mon = 0;
   tm.tm_yday = 0;
@@ -67,8 +71,10 @@ year_view_update (void)
     {
       guint md, days;
       gtk_calendar_freeze (GTK_CALENDAR (cal[i]));
-      gtk_calendar_select_month (GTK_CALENDAR (cal[i]),
-				 i, year);
+      gtk_calendar_select_month (GTK_CALENDAR (cal[i]), i, year);
+      if (i==month) gtk_calendar_select_day (GTK_CALENDAR (cal[i]), day);
+      else  gtk_calendar_select_day (GTK_CALENDAR (cal[i]), 0);
+      
       gtk_calendar_clear_marks (GTK_CALENDAR (cal[i]));
 
       days = days_in_month (year, i);

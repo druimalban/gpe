@@ -58,8 +58,10 @@ future_view_update ()
   gchar *line_info[2];
   GSList *events;
   GSList *iter;
-  guint width = 0;
+  guint width = 0, widget_width;
      
+  widget_width=future_list->allocation.width;
+		
   gtk_clist_freeze (GTK_CLIST (future_list));
   gtk_clist_clear (GTK_CLIST (future_list));
 
@@ -93,6 +95,7 @@ future_view_update ()
     } 
        
   gtk_clist_set_column_width (GTK_CLIST (future_list), 0, width + 4);
+  gtk_clist_set_column_width (GTK_CLIST (future_list), 1, widget_width - 20 - (width + 4));
 
   gtk_clist_sort (GTK_CLIST (future_list));
   gtk_clist_thaw (GTK_CLIST (future_list));
@@ -106,7 +109,7 @@ future_view(void)
   time_t t = time (NULL);
   struct tm tm;
   char buf[64];
-  
+     
   GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
   GtkWidget *scrolled_window = gtk_scrolled_window_new (NULL, NULL);
   GtkWidget *label;

@@ -101,10 +101,11 @@ month_view_update ()
   char buf[10];
   gchar *line_info[2];
   GSList *day_events[32];
-  guint width = 0, i;
   GSList *iter;
-  static gboolean width_set;
+  guint i, width = 0, widget_width;
   guint days;
+
+  widget_width=day_list->allocation.width;
 
   gtk_date_sel_set_time (GTK_DATE_SEL (datesel), viewtime);
   gtk_widget_draw (datesel, NULL);
@@ -203,13 +204,9 @@ month_view_update ()
       strftime (buf, sizeof (buf), MONTHTIMEFMT, &tm_start);
       line_info[0] = buf;
      
-      if (! width_set)
-	{
-	  w = gdk_string_width (time_style->font, buf);
-	  if (w > width)
-	    width = w;
-	}
-
+      w = gdk_string_width (time_style->font, buf);
+      if (w > width) width = w;
+	
       gtk_clist_append (GTK_CLIST (day_list), line_info);
 
       if (ev)
@@ -246,11 +243,8 @@ month_view_update ()
   for (i = 0; i < row; i++)
     gtk_clist_set_cell_style (GTK_CLIST (day_list), i, 0, time_style);
 
-  if (! width_set)
-    {
-      width_set = TRUE;
-      gtk_clist_set_column_width (GTK_CLIST (day_list), 0, width + 4);
-    }
+  gtk_clist_set_column_width (GTK_CLIST (day_list), 0, width + 4);
+  gtk_clist_set_column_width (GTK_CLIST (day_list), 1, widget_width - 20 - (width + 4));
 
   gtk_clist_thaw (GTK_CLIST (day_list));
   

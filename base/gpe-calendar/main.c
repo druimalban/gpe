@@ -27,7 +27,7 @@
 #include "year_view.h"
 #include "month_view.h"
 
-#define PIXMAPS_DIR "/usr/share/gpe-calendar/pixmaps"
+#define PIXMAPS_DIR "/home/ballotini/mccarthy/Ipaq/Devel/gpe/base/gpe-calendar/pixmaps"
 
 extern void about (void);
 
