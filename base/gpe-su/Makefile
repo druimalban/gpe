@@ -31,6 +31,8 @@ $(PACKAGE): $(OBJS)
 
 install: all
 	install -D $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
+	install -D $(PACKAGE).menu $(DESTDIR)$(PREFIX)/lib/menu/$(PACKAGE)
+	install -D $(PACKAGE).png $(DESTDIR)$(PREFIX)/share/pixmaps/$(PACKAGE).png
 	strip $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 
 upstream: clean

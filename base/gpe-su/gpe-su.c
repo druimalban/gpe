@@ -29,9 +29,9 @@
 #include "errorbox.h"
 
 static struct gpe_icon my_icons[] = {
-  { "ok", "ok" },
-  { "cancel", "cancel" },
-  { "lock", "lock" },
+  { "ok" },
+  { "cancel" },
+  { "lock", PREFIX "/share/pixmaps/gpe-su.png" },
   { NULL, NULL }
 };
 
