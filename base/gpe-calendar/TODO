@@ -1,0 +1,13 @@
+1. Implement recurring events
+
+2. Improve support for alarms.  When the alarm goes off, play a
+user-selected sound and display the summary for the appointment in
+question.
+
+3. Replace hardwired font names in main.c with something configurable.
+
+4. Add a preferences dialog to control day_view_combined_times,
+week_starts_monday, and maybe other flags.
+
+5. Do database access through usqld rather than direct
+
