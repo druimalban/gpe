@@ -1,0 +1,58 @@
+/*
+ * Copyright (C) 2002 Philip Blundell <philb@gnu.org>
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version
+ * 2 of the License, or (at your option) any later version.
+ */
+
+#include <gtk/gtk.h>
+#include <gdk_imlib.h>
+#include <libintl.h>
+
+#include "errorbox.h"
+
+#define ERROR_ICON "/usr/share/pixmaps/error.png"
+
+#define _(x) gettext(x)
+
+static GtkWidget *error_icon;
+
+void
+gpe_error_box (char *text)
+{
+  GtkWidget *label, *ok, *dialog;
+  GtkWidget *hbox;
+
+  if (error_icon == NULL)
+    {
+      GdkPixmap *error_pix;
+      GdkBitmap *error_pix_mask;
+
+      if (gdk_imlib_load_file_to_pixmap (ERROR_ICON, &error_pix, 
+					 &error_pix_mask))
+	error_icon = gtk_pixmap_new (error_pix, error_pix_mask);
+    }
+
+  dialog = gtk_dialog_new ();
+  label = gtk_label_new (text);
+  ok = gtk_button_new_with_label (_("OK"));
+  hbox = gtk_hbox_new (FALSE, 4);
+
+  gtk_signal_connect_object (GTK_OBJECT (ok), "clicked",
+			     GTK_SIGNAL_FUNC (gtk_widget_destroy), 
+			     (gpointer)dialog);
+
+  if (error_icon)
+    gtk_box_pack_start (GTK_BOX (hbox), error_icon, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 0);
+
+  gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog)->action_area), ok);
+  gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog)->vbox), hbox);
+
+  gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
+  gtk_window_set_position (GTK_WINDOW (dialog), GTK_WIN_POS_CENTER);
+
+  gtk_widget_show_all (dialog);
+}

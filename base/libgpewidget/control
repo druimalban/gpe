@@ -1,0 +1,8 @@
+Package: libgpewidget0
+Section: base
+Priority: optional
+Version: 0.02
+Architecture: arm
+Maintainer: Phil Blundell <pb@debian.org>
+Depends: libgtk1.2
+Description: Common widget set for GPE

@@ -1,6 +1,6 @@
 SONAME = libgpewidget.so.0
 
-MEMBERS = gtkdatesel gtkdatecombo
+MEMBERS = gtkdatesel gtkdatecombo errorbox
 
 CFLAGS = `gtk-config --cflags` -D_GNU_SOURCE -Wall -fPIC
 ifeq ($(DEBUG),yes)
@@ -25,7 +25,11 @@ install: $(SONAME)
 	strip $(DESTDIR)/usr/lib/$(SONAME)
 
 ipkg:
+	rm -rf dist
+	mkdir -p dist/CONTROL
+	cp control postinst dist/CONTROL
 	make DESTDIR=`pwd`/dist install
+	chown -R root.root dist
 	ipkg-build dist
 
 clean:
