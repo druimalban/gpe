@@ -1,6 +1,6 @@
 PACKAGE = gpe-calendar
 PREFIX = /usr/local
-DEBUG = yes
+DEBUG = no
 
 LINGUAS = de pt_PT
 

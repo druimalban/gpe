@@ -1,10 +1,22 @@
 2002-10-06  Philip Blundell  <philb@gnu.org>
 
+	* Version 0.23 released.
+
+2002-10-06  Philip Blundell  <philb@gnu.org>
+
 	* Makefile: Add support for GTK 2.
 	* day_view.c (day_view_update): Likewise.
 	* future_view.c (future_view_update): Likewise.
 	* month_view.c (draw_expose_event): Likewise.
 	* main.c (main): Likewise.
+	* familiar/control1: New file.
+
+	* Makefile (DEBUG): Default off.
+
+	* month_view.c (button_press): Reject clicks outside valid area.
+	[Bug #130]
+	(resize_table): Calculate height on the basis of 7 rows.  
+	[Bug #133]
 
 2002-10-04  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>
 

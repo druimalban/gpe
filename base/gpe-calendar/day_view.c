@@ -329,7 +329,9 @@ day_view_update ()
 
   gtk_clist_thaw (GTK_CLIST (day_list));
 
+#if GTK_MAJOR_VERSION >= 2
   g_object_unref (pl);
+#endif
   
   return TRUE;
 }

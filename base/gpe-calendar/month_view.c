@@ -49,6 +49,9 @@ button_press (GtkWidget *widget,
   guint y = event->y;
   struct render_ctl *c;
 
+  if (x < xp || y < ys)
+    return FALSE;
+
   x -= xp;
   x /= xs;
 
@@ -56,38 +59,39 @@ button_press (GtkWidget *widget,
   y -= 1;
 
   c = &rc[x + (y * 7)];
-  if (c->valid) {
-	      
-    if (event->type == GDK_BUTTON_PRESS)
+  if (c->valid) 
     {
-      if (pop_window) 
-	gtk_widget_destroy (pop_window);
-      if (c != c_old) 
+      if (event->type == GDK_BUTTON_PRESS)
 	{
-	  pop_window = day_popup (main_window, &c->popup);
-	  c_old = c;
-	}
-      else 
-	{
-	  pop_window = NULL;
-	  c_old = NULL;
-	}
-    }
-    
-    else if (event->type == GDK_2BUTTON_PRESS)
-    {
-	struct tm tm;
-	localtime_r (&viewtime, &tm);
-	tm.tm_year = c->popup.year - 1900;
-	tm.tm_mon = c->popup.month;
-	tm.tm_mday = c->popup.day;
-	viewtime = mktime (&tm);
-	if (pop_window) 
-	  gtk_widget_destroy (pop_window);
-        set_day_view ();    
-    }
-  }
+	  if (pop_window) 
+	    gtk_widget_destroy (pop_window);
 
+	  if (c != c_old) 
+	    {
+	      pop_window = day_popup (main_window, &c->popup);
+	      c_old = c;
+	    }
+	  else 
+	    {
+	      pop_window = NULL;
+	      c_old = NULL;
+	    }
+	}
+      
+      else if (event->type == GDK_2BUTTON_PRESS)
+	{
+	  struct tm tm;
+	  localtime_r (&viewtime, &tm);
+	  tm.tm_year = c->popup.year - 1900;
+	  tm.tm_mon = c->popup.month;
+	  tm.tm_mday = c->popup.day;
+	  viewtime = mktime (&tm);
+	  if (pop_window) 
+	    gtk_widget_destroy (pop_window);
+	  set_day_view ();    
+	}
+    }
+  
   return TRUE;
 }
 
@@ -294,7 +298,9 @@ draw_expose_event (GtkWidget *widget,
   gdk_gc_unref (light_gray_gc);
   gdk_gc_unref (dark_gray_gc);
 
+#if GTK_MAJOR_VERSION >= 2
   g_object_unref (pl);
+#endif
 
   return TRUE;
 }
@@ -421,8 +427,8 @@ update_hook_callback()
 }
 
 static void
-resize_table(GtkWidget *widget,
-	     gpointer d)
+resize_table (GtkWidget *widget,
+	      gpointer d)
 {
   static guint old_width, old_height;
   guint width = widget->allocation.width,
@@ -434,7 +440,7 @@ resize_table(GtkWidget *widget,
       old_height = height;
 
       xs = width / 7;
-      ys = height / 6;
+      ys = height / 7;
 
       if (ys > xs) 
 	ys = xs;
