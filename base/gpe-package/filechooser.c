@@ -49,6 +49,8 @@ GtkResponseType resp;
 		filter = gtk_file_filter_new();
 		gtk_file_filter_add_pattern (filter, "*.ipk");
 		gtk_file_filter_add_pattern (filter, "*.ipkg");
+		gtk_file_filter_add_pattern (filter, "*.IPK");
+		gtk_file_filter_add_pattern (filter, "*.IPKG");
 	}
 	gtk_file_chooser_set_filter(GTK_FILE_CHOOSER(fchooser), filter);
 
