@@ -29,6 +29,8 @@
 
 
 char buttons[7][1024];
+char *keylaunchrc = NULL;
+
 static struct{
   GtkWidget *button[5];
   GdkPixbuf *p;  
@@ -54,11 +56,16 @@ void init_buttons()
     char *slash;
     char btext[16];
     int i;
-
+	
+	if (getuid())
+		keylaunchrc = g_strdup_printf("%s/.keylaunchrc",getenv("HOME"));
+	else	
+		keylaunchrc = g_strdup("/etc/keylaunchrc");
+	
     strcpy(buttons[0],"");
  #warning	for user use $HOME/.keylaunchrc
     /* read from configfile and set buttons */
-    fd=fopen("/etc/keylaunchrc","r");
+    fd=fopen(keylaunchrc,"r");
     if (fd==NULL) {
 	/* defaults */
 	for (i=0;i<7;i++) {
@@ -220,9 +227,9 @@ void Keyctl_Save()
     int i;
     FILE *fd;
 
-    fd=fopen("/etc/keylaunchrc","w");
+    fd=fopen(keylaunchrc,"w");
     if (fd==NULL) {
-	gpe_error_box(_("ERROR: Can't open /etc/keylaunchrc for writing!\n"));
+	gpe_error_box(_("ERROR: Can't open keylaunchrc for writing!\n"));
 	return;
     }
     for (i=0;i<7;i++) {

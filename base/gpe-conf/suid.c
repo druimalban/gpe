@@ -93,7 +93,14 @@ void update_dns_server(const gchar* server)
 
 void update_time_from_net(const gchar* server)
 {
-	system_printf("/usr/sbin/ntpdate -b %s",server);
+	if (system_printf("/usr/sbin/ntpdate -b %s",server))
+	{
+		fprintf(stderr,"failed to execute ntpdate\n");
+	}
+	else // if ok, update rtc time
+	{
+		system("echo > /var/spool/at/trigger");
+	}
 }
 
 
@@ -352,6 +359,10 @@ suidloop (int write, int read)
 		if (stime (&t) == -1)
 		  fprintf (stderr, "error while setting the time: %d\n",
 			   errno);
+		else // if ok, update rtc time
+		{
+			system("echo > /var/spool/at/trigger");
+		}
 	      }
 	    /* of course it is a security hole */
 	    /* but certainly enough for PDA..  */
