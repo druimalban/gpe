@@ -18,14 +18,79 @@
 #include <gpe/errorbox.h>
 #include <gpe/question.h>
 
-#include <openobex/obex.h>
-
 #include "obexserver.h"
 
 #define _(x)  (x)
 
+static void
+select_file_done (GtkWidget *w, GtkWidget *filesel)
+{
+  gchar *data;
+  size_t len;
+  gchar *filename;
+  int fd;
+  gboolean error = FALSE;
+
+  data = g_object_get_data (G_OBJECT (filesel), "data");
+  len = g_object_get_data (G_OBJECT (filesel), "data_length");
+
+  filename = gtk_file_selection_get_filename (GTK_FILE_SELECTION (filesel));
+
+  fd = open (filename, O_WRONLY);
+  if (fd >= 0)
+    {
+      if (write (fd, data, len) < len)
+	gpe_perror_box (filename);
+
+      if (close (fd))
+	gpe_perror_box (filename);
+    }
+  else
+    gpe_perror_box (filename);
+  
+  gtk_widget_destroy (filesel);
+}
+
 void
 import_unknown (const char *name, const gchar *data, size_t len)
 {
-}
+  gchar *query;
 
+  query = g_strdup_printf (_("Received a file '%s'.  Save it?"), name ? name : _("<no name>"));
+  
+  if (gpe_question_ask (query, NULL, "bt-logo", "!gtk-cancel", NULL, "!gtk-ok", NULL, NULL))
+    {
+      GtkWidget *filesel;
+      gchar *home, *default_name;
+      gchar *datap;
+
+      datap = g_malloc (len);
+      memcpy (datap, data, len);
+
+      home = g_get_home_dir ();
+
+      if (name == NULL)
+	name = "OBEX.dat";
+
+      default_name = g_strdup_printf ("%s/%s", home, name);
+
+      filesel = gtk_file_selection_new (_("Save as ..."));
+
+      gtk_file_selection_set_filename (GTK_FILE_SELECTION (filesel), default_name);
+
+      g_free (default_name);
+
+      g_signal_connect_swapped (G_OBJECT (GTK_FILE_SELECTION (filesel)->cancel_button), 
+				"clicked", G_CALLBACK (gtk_widget_destroy), filesel);
+
+      g_signal_connect_swapped (G_OBJECT (filesel), "destroy", G_CALLBACK (g_free), datap);
+
+      g_signal_connect (G_OBJECT (GTK_FILE_SELECTION (filesel)->ok_button), 
+			"clicked", G_CALLBACK (select_file_done), fs);
+
+      g_object_set_data (G_OBJECT (filesel), "data", datap);
+      g_object_set_data (G_OBJECT (filesel), "data_length", len);
+
+      gtk_widget_show (filesel);
+    }
+}
