@@ -423,7 +423,8 @@ main (int argc, char *argv[])
 		  {
 		    printf ("key release event...\n");
 		    free_keys ();
-		    XTestFakeKeyEvent (dpy, ev.xkey.keycode, False, 5);
+		    XTestFakeKeyEvent (dpy, ev.xkey.keycode, True, 0);
+		    XTestFakeKeyEvent (dpy, ev.xkey.keycode, False, 0);
 		    printf ("faking key event\n");
 		    parse_rc (rc_file);
 		    k = lastkey;
