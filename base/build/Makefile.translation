@@ -28,7 +28,7 @@ $(DIR_PO)/%.po: $(DIR_PO)/$(PACKAGE).pot
 	if cmp -s $@.new $@; then rm $@.new; else mv $@.new $@; fi
 
 extract-po:
-	xgettext -k_ -o $(DIR_PO)/$(PACKAGE).pot.new $^
+	xgettext -k_ -o $(DIR_PO)/$(PACKAGE).pot.new $(SOURCES)
 	if cmp -s $(DIR_PO)/$(PACKAGE).pot.new $(PACKAGE).pot; then rm $(DIR_PO)/$(PACKAGE).pot.new; else mv $(DIR_PO)/$(PACKAGE).pot.new $(DIR_PO)/$(PACKAGE).pot; fi
 
 clean-po:

@@ -1,3 +1,7 @@
+2003-02-01  Philip Blundell  <philb@gnu.org>
+
+	* Makefile.translation (extract-po): Use $(SOURCES).
+
 2003-01-26  Philip Blundell  <philb@gnu.org>
 
 	* Makefile.translation (VERSION): Don't define here.
