@@ -173,6 +173,27 @@ todo_db_start (void)
   return 0;
 }
 
+int
+todo_db_refresh (void)
+{
+  char *err;
+  GSList *iter;
+
+  for (iter = todo_db_items; iter; iter = g_slist_next (iter))
+    todo_db_destroy_item (iter->data);
+  g_slist_free (todo_db_items);
+  todo_db_items = NULL;
+
+  if (sqlite_exec (sqliteh, "select uid from todo_urn", item_callback, NULL, &err))
+    {
+      gpe_error_box (err);
+      free (err);
+      return -1;
+    }
+
+  return 0;
+}
+
 void
 todo_db_stop (void)
 {

@@ -36,5 +36,6 @@ extern GSList *todo_db_get_items_list(void);
 
 extern int todo_db_start (void);
 extern void todo_db_stop (void);
+extern int todo_db_refresh (void);
 
 #endif
