@@ -1,5 +1,6 @@
 2004-08-15	Florian Boor  	<florian.boor@kernelconcepts.de>
 	
+	* sleep/callbacks.*: Started to change GUI from spinbuttons to sliders.
 	* users/interface.c: Improved access control checks.
 	* users/interface.c: Added standard headers. Some cleanups.
 	  users/callbaks.c

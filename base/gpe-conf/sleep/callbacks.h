@@ -3,7 +3,8 @@
 
 #include <gtk/gtk.h>
 
-//#include "conf.h"
+gchar*
+change_scale_label (GtkScale *scale, gdouble val);
 
 void
 start_button (GtkButton       *button,

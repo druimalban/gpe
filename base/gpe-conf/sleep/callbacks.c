@@ -8,6 +8,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
+#include <libintl.h>
 
 #include <gtk/gtk.h>
 
@@ -23,6 +24,34 @@ extern GtkWidget *dim_spin;
 extern GtkWidget *sleep_cpu_spin;
 
 
+gchar*
+change_scale_label (GtkScale *scale, gdouble val)
+{
+  int min; 
+  int sec;
+  gchar* buf;
+
+/*  if(val > 0.1)
+    sec=1+(int)exp(val/2.8208);// an exponentiel range from 0 to 20 min
+  else
+    sec = 0;
+  if(sec>60)
+    sec = sec - sec % 60;
+	*/
+	sec = val;
+  min = sec / 60;
+  
+  if(min > 0)
+    {
+      sec = min * 60;
+      buf = g_strdup_printf("%d %s",min,_("min"));
+    }
+  else 
+    buf = g_strdup_printf("%d %s",sec,_("sec"));
+  
+  return buf;
+}
+
 void
 on_sleep_idle_spin_activate (GtkEditable     *editable,
 			     gpointer         user_data)
@@ -30,7 +59,7 @@ on_sleep_idle_spin_activate (GtkEditable     *editable,
   GtkWidget	*wgt;
   ipaq_conf_t	*ISconf = (ipaq_conf_t *)user_data;
   wgt = sleep_idle_spin;
-  setConfigInt(ISconf, "auto-sleep_time", gtk_spin_button_get_value_as_int((GtkSpinButton *)wgt));
+  setConfigInt(ISconf, "auto-sleep_time", (int)gtk_range_get_value(GTK_RANGE(wgt)));
 }
 
 
@@ -41,7 +70,7 @@ on_sleep_idle_spin_changed (GtkEditable     *editable,
   GtkWidget	*wgt;
   ipaq_conf_t	*ISconf = (ipaq_conf_t *)user_data;
   wgt = sleep_idle_spin;
-  setConfigInt(ISconf, "auto-sleep_time", gtk_spin_button_get_value_as_int((GtkSpinButton *)wgt));
+  setConfigInt(ISconf, "auto-sleep_time", (int)gtk_range_get_value(GTK_RANGE(wgt)));
 }
 
 
@@ -53,9 +82,10 @@ AS_checked (GtkToggleButton *togglebutton,
   ipaq_conf_t	*ISconf = (ipaq_conf_t *)user_data;
   sleepSpin = sleep_idle_spin;;
   if(!gtk_toggle_button_get_active(togglebutton)) {
-    setConfigInt(ISconf, "auto-sleep_time", 0); gtk_spin_button_set_value((GtkSpinButton *)sleepSpin, 0);
+    setConfigInt(ISconf, "auto-sleep_time", 0); 
+	gtk_range_set_value(GTK_RANGE(sleepSpin), 0);
   }
-  else setConfigInt(ISconf, "auto-sleep_time", gtk_spin_button_get_value_as_int((GtkSpinButton *)sleepSpin));
+  else setConfigInt(ISconf, "auto-sleep_time", (int)gtk_range_get_value(GTK_RANGE(sleepSpin)));
   gtk_widget_set_sensitive(sleepSpin, gtk_toggle_button_get_active(togglebutton));
 }
 
@@ -66,7 +96,7 @@ on_dim_spin_activate (GtkEditable     *editable,
   GtkWidget	*wgt;
   ipaq_conf_t	*ISconf = (ipaq_conf_t *)user_data;
   wgt = dim_spin;
-  setConfigInt(ISconf, "dim_time", gtk_spin_button_get_value_as_int((GtkSpinButton *)wgt));
+  setConfigInt(ISconf, "dim_time", (int)gtk_range_get_value(GTK_RANGE(wgt)));
 }
 
 
@@ -77,7 +107,7 @@ on_dim_spin_changed (GtkEditable     *editable,
   GtkWidget	*wgt;
   ipaq_conf_t	*ISconf = (ipaq_conf_t *)user_data;
   wgt = dim_spin;
-  setConfigInt(ISconf, "dim_time", gtk_spin_button_get_value_as_int((GtkSpinButton *)wgt));
+  setConfigInt(ISconf, "dim_time", (int)gtk_range_get_value(GTK_RANGE(wgt)));
 }
 
 
@@ -89,9 +119,10 @@ AD_checked (GtkToggleButton *togglebutton,
   ipaq_conf_t	*ISconf = (ipaq_conf_t *)user_data;
   dimSpin = dim_spin;
   if(!gtk_toggle_button_get_active(togglebutton)) {
-    setConfigInt(ISconf, "dim_time", 0); gtk_spin_button_set_value((GtkSpinButton *)dimSpin, 0);
+    setConfigInt(ISconf, "dim_time", 0); 
+	gtk_range_set_value(GTK_RANGE(dimSpin), 0);
   }
-  else setConfigInt(ISconf, "dim_time", gtk_spin_button_get_value_as_int((GtkSpinButton *)dimSpin));
+  else setConfigInt(ISconf, "dim_time", (int)gtk_range_get_value(GTK_RANGE(dimSpin)));
   gtk_widget_set_sensitive(dimSpin, gtk_toggle_button_get_active(togglebutton));
 
 }
