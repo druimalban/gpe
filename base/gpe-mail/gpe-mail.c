@@ -16,7 +16,7 @@
 #include <gtk/gtk.h>
 #include "gtkcolombo.h"
 
-#define VERSION "0.0.5"
+#define VERSION "0.0.6"
 
 struct {
    char *path;
