@@ -8,6 +8,10 @@ IPKG_BUILD := ipkg-build
 
 TRANSLATION_SITE := http://www.iro.umontreal.ca/~gnutra/maint
 
+ifndef BUILD
+BUILD = ../build
+endif
+
 ifeq ($(DIR_PO),)
 DIR_PO := po
 endif
@@ -16,7 +20,11 @@ ifeq ($(BINPACKAGE),)
 BINPACKAGE := $(PACKAGE)
 endif
 
+#-- Overwrite LINGUAS variable
+ifeq ($(shell ls linguas > /dev/null 2>&1 && echo y), y)
 LINGUAS = $(shell cat linguas)
+endif
+
 
 mo-files = $(patsubst %,$(DIR_PO)/%.mo,$(LINGUAS))
 po-files = $(patsubst %,$(DIR_PO)/%.po,$(LINGUAS))
@@ -59,15 +67,17 @@ extract-po:
 	( SOURCES="$(SOURCES)"; for DESK in $(PACKAGE).desktop.in $(EXTRA_DESKTOPS); do if [ -f $$DESK ]; then intltool-extract --type=gettext/ini $$DESK; SOURCES="$$SOURCES $${DESK}.h"; fi; done; if [ "x$$SOURCES" != "x" ]; then xgettext --add-comments=TRANSLATORS: -k_ -kN_ -o $(DIR_PO)/$(PACKAGE).pot.new $$SOURCES; fi )
 	if [ -f $(DIR_PO)/$(PACKAGE).pot.new ]; then if cmp -s $(DIR_PO)/$(PACKAGE).pot.new $(PACKAGE).pot; then rm $(DIR_PO)/$(PACKAGE).pot.new; else mv $(DIR_PO)/$(PACKAGE).pot.new $(DIR_PO)/$(PACKAGE).pot; fi; fi
 
-clean: clean-po
+clean: clean-po clean-dist-translation
 
 clean-po:
+	rm -rf linguas
 	rm -rf $(DIR_PO)/*.mo
 	for i in $(desktop-files); do if [ -f $$i.in ]; then rm -f $$i; rm -f $$i.in.h; fi; done
 
 %.desktop: %.desktop.in $(patsubst %,$(DIR_PO)/%.po,$(LINGUAS))
 	intltool-merge -u -d $(DIR_PO) $< $@
 
+#-- Fetch .po files from TP
 freshen-po: linguas
 	rm -rf tmp-po
 	mkdir tmp-po
@@ -76,28 +86,31 @@ freshen-po: linguas
 	rm -rf tmp-po
 
 
+#-- Extract LINGUAS from TP stat file
 linguas: $(BUILD)/postats
 	$(BUILD)/extract-linguas $(BUILD)/postats $(PACKAGE) > linguas
+	@echo "linguas:::: " $(LINGUAS)
 
+#-- Fetch TP stat file
 $(BUILD)/postats: freshen-postats
 freshen-postats:
 	@echo "++++++++++++++++++++++++++++++++++++++"
 	@echo "Freshen "$(BUILD)"/postats:"
-	cd $(BUILD) && wget --timestamping http://www2.iro.umontreal.ca/~gnutra/po/data/postats
+	cd $(BUILD) && wget --timestamping http://www.iro.umontreal.ca/translation/data/postats
 	@echo "++++++++++++++++++++++++++++++++++++++"
 
 # ------------------------------------------------------------------------
 
 MAINTAINER = $(shell grep 'Maintainer: ' familiar/$(CONTROL) | cut -d ' ' -f 2-)
-ifndef BUILD
-BUILD = ../build
-endif
 
 transdist := familiar/dist-translation
 templates := $(BUILD)/familiar
 ipkglist  := translation-ipkgs.txt
 
-real-translation-package: all-mo
+clean-dist-translation:
+	rm -rf $(transdist) $(ipkglist)
+
+real-translation-package: linguas all-mo
 	rm -rf $(transdist) $(ipkglist)
 	for LINGUA in $(LINGUAS); do \
 		i=$$(echo $$LINGUA | tr '[A-Z_]' '[a-z+]'); \
@@ -106,8 +119,7 @@ real-translation-package: all-mo
 		install -m 644 po/$$LINGUA.mo $(transdist)/$$i$(PREFIX)/share/locale/$$LINGUA/LC_MESSAGES/$(PACKAGE).mo; \
 		sed -e "s/<maintainer>/$(MAINTAINER)/;s/<package>/$(BINPACKAGE)/;s/<version>/$(VERSION)/;s/<language>/$$i/;s!<source>!$(SOURCE)!" $(templates)/control.translation > $(transdist)/$$i/CONTROL/control; \
 		install $(templates)/postinst.translation $(transdist)/$$i/CONTROL/postinst; \
-		chown -R root.root $(transdist)/$$i; \
-		$(IPKG_BUILD) $(transdist)/$$i | sed 's/^Packaged .*into //; t 1; d; : 1; s:.*/::' >> $(ipkglist); \
+		$(IPKG_BUILD) -g 0 -o 0 $(transdist)/$$i | sed 's/^Packaged .*into //; t 1; d; : 1; s:.*/::' >> $(ipkglist); \
 	done
 
 translation-ipkg:
