@@ -28,7 +28,7 @@
   <position>GTK_WIN_POS_NONE</position>
   <modal>False</modal>
   <default_width>240</default_width>
-  <default_height>130</default_height>
+  <default_height>120</default_height>
   <allow_shrink>True</allow_shrink>
   <allow_grow>True</allow_grow>
   <auto_shrink>True</auto_shrink>
@@ -52,13 +52,13 @@
       <widget>
 	<class>GtkLabel</class>
 	<name>owner_name_label</name>
-	<label>Name:</label>
+	<label>Name</label>
 	<justify>GTK_JUSTIFY_LEFT</justify>
 	<wrap>False</wrap>
 	<xalign>0</xalign>
 	<yalign>0.5</yalign>
 	<xpad>5</xpad>
-	<ypad>3</ypad>
+	<ypad>0</ypad>
 	<child>
 	  <left_attach>0</left_attach>
 	  <right_attach>1</right_attach>
@@ -84,7 +84,7 @@
 	<xalign>0</xalign>
 	<yalign>0.5</yalign>
 	<xpad>5</xpad>
-	<ypad>2</ypad>
+	<ypad>0</ypad>
 	<child>
 	  <left_attach>1</left_attach>
 	  <right_attach>2</right_attach>
@@ -104,7 +104,7 @@
       <widget>
 	<class>GtkLabel</class>
 	<name>owner_email_label</name>
-	<label>E-Mail:</label>
+	<label>E-Mail</label>
 	<justify>GTK_JUSTIFY_LEFT</justify>
 	<wrap>False</wrap>
 	<xalign>0</xalign>
@@ -156,7 +156,7 @@
       <widget>
 	<class>GtkLabel</class>
 	<name>owner_phone_label</name>
-	<label>Phone:</label>
+	<label>Phone</label>
 	<justify>GTK_JUSTIFY_LEFT</justify>
 	<wrap>False</wrap>
 	<xalign>0</xalign>
@@ -208,7 +208,7 @@
       <widget>
 	<class>GtkLabel</class>
 	<name>owner_address_label</name>
-	<label>Address:</label>
+	<label>Address</label>
 	<justify>GTK_JUSTIFY_LEFT</justify>
 	<wrap>False</wrap>
 	<xalign>0</xalign>
@@ -234,7 +234,7 @@
       <widget>
 	<class>GtkScrolledWindow</class>
 	<name>scrolledwindow1</name>
-	<border_width>5</border_width>
+	<border_width>3</border_width>
 	<hscrollbar_policy>GTK_POLICY_AUTOMATIC</hscrollbar_policy>
 	<vscrollbar_policy>GTK_POLICY_AUTOMATIC</vscrollbar_policy>
 	<hupdate_policy>GTK_UPDATE_CONTINUOUS</hupdate_policy>

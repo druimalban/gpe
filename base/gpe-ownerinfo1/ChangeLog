@@ -1,3 +1,13 @@
+2002-07-25  Colin Marquardt  <colin@marquardt-home.de>
+
+	* .cvsignore (Module): Add some more files to ignore.
+
+	* src/main.c (main): Add geometry support (stolen from gpe-login).
+
+	* gpe-ownerinfo.glade: Remove horizontal padding.
+
+	* src/main.c (main): Read data from a file.
+
 2002-07-21  Colin Marquardt  <colin@marquardt-home.de>
 
 	* familiar/control,
