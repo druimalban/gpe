@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <sys/stat.h>
 
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
@@ -154,7 +155,30 @@ database_open (void)
 {
   DB *db;
   char *home = g_get_home_dir (), *file;
+  struct stat buf;
 
+  file = g_strdup_printf ("%s/.gpe", home);
+  if (stat (file, &buf) != 0)
+    {
+      if (mkdir (file, 0700) != 0)
+	{
+	  fprintf (stderr, "Cannot create ~/.gpe");
+	  g_free (file);
+	  return FALSE;
+	}
+    } 
+  else 
+    {
+      if (!S_ISDIR (buf.st_mode))
+	{
+	  fprintf (stderr, "ERROR: ~/.gpe is not a directory!");
+	  g_free (file);
+	  return FALSE;
+	}
+    }
+
+  g_free (file);
+  
   file = g_strdup_printf ("%s/.gpe/settings.db", home);
  
   if (db_create (&db, NULL, 0))
@@ -275,6 +299,29 @@ database_open (void)
   sqlite *db;
   const char *home = g_get_home_dir ();
   char *err, *file;
+  struct stat buf;
+
+  file = g_strdup_printf ("%s/.gpe", home);
+  if (stat (file, &buf) != 0)
+    {
+      if (mkdir (file, 0700) != 0)
+	{
+	  fprintf (stderr, "Cannot create ~/.gpe");
+	  g_free (file);
+	  return FALSE;
+	}
+    } 
+  else 
+    {
+      if (!S_ISDIR (buf.st_mode))
+	{
+	  fprintf (stderr, "ERROR: ~/.gpe is not a directory!");
+	  g_free (file);
+	  return FALSE;
+	}
+    }
+
+  g_free (file);
 
   file = g_strdup_printf ("%s/.gpe/settings", home);
  
