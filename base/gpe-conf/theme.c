@@ -82,7 +82,7 @@ tcsel;
 tcsel *csel;
 
 
-static char *matchboxpath = "/usr/share/themes";
+static char *matchboxpath = PREFIX "/share/themes";
 
 static GList *themeitems;
 static GtkWidget *colorbox;
@@ -705,9 +705,7 @@ on_matchbox_entry_changed (GtkWidget * menu, gpointer user_data)
     {
 	  if (use_xst)
 		system_printf (CMD_XST " write %s%s str %s", KEY_THEME, "ThemeName", tn);
-/*	  if (use_gconf)
-#warning here		system_printf (CMD_GCONF " write %s%s str %s", KEY_THEME, "ThemeName", tn);
-*/    }
+    }
   if (tn)
     g_free (tn);
 }
@@ -846,48 +844,48 @@ Theme_Save ()
 	/* background style*/  	
 	if (confstr != NULL)
 	{
-		system_printf ("xst write %s%s str %s", KEY_MATCHBOX, "Background", confstr);
+		system_printf (CMD_XST " write %s%s str %s", KEY_MATCHBOX, "Background", confstr);
 		free(confstr);
 	}
 	else /* theme default - erase settings */
 	{
-		system_printf ("xst delete %s%s", KEY_MATCHBOX, "Background");
+		system_printf (CMD_XST " delete %s%s", KEY_MATCHBOX, "Background");
 	}
 	
 	/* composite/performance setting */
 	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self.cPerformance)))
-		system_printf ("xst write %s%s str %s", KEY_MATCHBOX, "COMPOSITE", "on");
+		system_printf (CMD_XST " write %s%s str %s", KEY_MATCHBOX, "COMPOSITE", "on");
 	else
-		system_printf ("xst write %s%s str %s", KEY_MATCHBOX, "COMPOSITE", "off");
+		system_printf (CMD_XST " write %s%s str %s", KEY_MATCHBOX, "COMPOSITE", "off");
 			
 	/* desktop font type and size */
 	label = g_object_get_data (G_OBJECT (self.bFont), "label");
 	clabel = gtk_label_get_text(GTK_LABEL(label));
 	fs = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(self.spFS));
-	confstr = g_strdup_printf("xst write %s%s str \"%s-%i\"", KEY_MATCHBOX, "Desktop/Font", clabel,fs);
+	confstr = g_strdup_printf(CMD_XST " write %s%s str \"%s-%i\"", KEY_MATCHBOX, "Desktop/Font", clabel,fs);
 	system(confstr);
 	free(confstr);
 	
 	/* desktop font color */
 	confstr = get_color_from_widget(self.bColorFont);
-	system_printf ("xst write %s%s str %s", KEY_MATCHBOX, "Desktop/FontColor", confstr);
+	system_printf (CMD_XST " write %s%s str %s", KEY_MATCHBOX, "Desktop/FontColor", confstr);
 	free(confstr);
 	
 	/* application font type and size */
 	label = g_object_get_data (G_OBJECT (self.bFontApp), "label");
 	clabel = gtk_label_get_text(GTK_LABEL(label));
 	fs = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(self.spFSApp));
-	confstr = g_strdup_printf("xst write %s%s str \"%s %i\"", KEY_GTK, "FontName", clabel,fs);
+	confstr = g_strdup_printf(CMD_XST " write %s%s str \"%s %i\"", KEY_GTK, "FontName", clabel,fs);
 	system(confstr);
 	free(confstr);	
 
 	/* desktop icon size */
 	fs = (int)gtk_range_get_value(GTK_RANGE(self.slIconSize));
-	system_printf ("xst write %s%s int %d", KEY_MATCHBOX, "Desktop/IconSize", fs);
+	system_printf (CMD_XST " write %s%s int %d", KEY_MATCHBOX, "Desktop/IconSize", fs);
 	
 	/* toolbar icon size */
 	fs = (int)gtk_range_get_value(GTK_RANGE(self.slToolbarSize));
-	system_printf ("xst write %s%s int %d", KEY_GTK, "ToolbarIconSize", fs);
+	system_printf (CMD_XST " write %s%s int %d", KEY_GTK, "ToolbarIconSize", fs);
 	
 	/* toolbar style */
 	fs = GTK_TOOLBAR_ICONS;
@@ -897,13 +895,13 @@ Theme_Save ()
 		fs = GTK_TOOLBAR_BOTH;
 	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self.rbToolBothH)))
 		fs = GTK_TOOLBAR_BOTH_HORIZ;
-	system_printf ("xst write %s%s int %d", KEY_GTK, "ToolbarStyle", fs);
+	system_printf (CMD_XST " write %s%s int %d", KEY_GTK, "ToolbarStyle", fs);
 }
 
 void
 Theme_Restore ()
 {
-	system_printf ("xst write %s%s str %s", KEY_THEME, "ThemeName", self.themename);
+	system_printf (CMD_XST " write %s%s str %s", KEY_THEME, "ThemeName", self.themename);
 }
 
 /****************/

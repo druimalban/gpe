@@ -1,3 +1,7 @@
+2004-07-01	Florian Boor  	<florian.boor@kernelconcepts.de>
+	* theme.c, appmgr_setup.c: Applied several patches that fix hardcoded 
+	  pathes and gconf related breakage. Contributed by Jim Huang.
+
 2004-06-28	Florian Boor  	<florian.boor@kernelconcepts.de>
 
 	* ipaqscreen/main.c, brightness*, callbacks.*: Merged in new

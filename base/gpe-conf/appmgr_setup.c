@@ -278,9 +278,9 @@ void Appmgr_Free_Objects (void){
 	
 void Appmgr_Save (void)
 {
-	system_printf("xst write %s%s int %i",KEY_BASE,"SHOW-ALL-GROUP",gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(all_group_check)));
-	system_printf("xst write %s%s int %i",KEY_BASE,"AUTOHIDE-GROUP-LABELS",gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(auto_hide_group_labels_check)));
-	system_printf("xst write %s%s int %i",KEY_BASE,"SHOW-RECENT-APPS",gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(show_recent_check)));
+	system_printf(PREFIX "/bin/xst write %s%s int %i",KEY_BASE,"SHOW-ALL-GROUP",gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(all_group_check)));
+	system_printf(PREFIX "/bin/xst write %s%s int %i",KEY_BASE,"AUTOHIDE-GROUP-LABELS",gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(auto_hide_group_labels_check)));
+	system_printf(PREFIX "/bin/xst write %s%s int %i",KEY_BASE,"SHOW-RECENT-APPS",gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(show_recent_check)));
 	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(dont_launch_check)))
 	  system_printf("touch %s",dont_launch_file);
 	else if(file_exists(dont_launch_file))
