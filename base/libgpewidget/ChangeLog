@@ -1,3 +1,8 @@
+2002-12-15  Philip Blundell  <philb@gnu.org>
+
+	* gtksimplemenu.c (gtk_simple_menu_append_item): Add missing
+	gtk_widget_show.
+
 2002-12-14  Philip Blundell  <philb@gnu.org>
 
 	* errorbox.c (do_gpe_error_box): Renamed from gpe_error_box.  New

@@ -134,6 +134,7 @@ void
 gtk_simple_menu_append_item (GtkSimpleMenu *sm, const gchar *s)
 {
   GtkWidget *mi = gtk_menu_item_new_with_label (s);
+  gtk_widget_show (mi);
   gtk_signal_connect (GTK_OBJECT (mi), "activate", GTK_SIGNAL_FUNC (note_activation), sm);
   gtk_object_set_data (GTK_OBJECT (mi), "item", (gpointer)sm->nr++);
   gtk_menu_append (GTK_MENU (sm->menu), mi);
