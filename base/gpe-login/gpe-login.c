@@ -26,6 +26,7 @@
 #include <gtk/gtk.h>
 #include <gdk_imlib.h>
 #include <gdk/gdkx.h>
+#include <gdk/gdkkeysyms.h>
 
 #include "errorbox.h"
 #include "pixmaps.h"
@@ -71,7 +72,7 @@ static void
 read_key_events (void)
 {
   char buffer[1024];
-  FILE *fp = fopen (KEY_EVENTS_FILE);
+  FILE *fp = fopen (KEY_EVENTS_FILE, "r");
   if (fp)
     {
       while (!feof (fp))
@@ -79,7 +80,8 @@ read_key_events (void)
 	  char *p, *cmd = NULL;
 	  struct keymap *k;
 	  guint keyval;
-	  fgets (buffer, sizeof (buffer), fp);
+	  if (fgets (buffer, sizeof (buffer), fp) == NULL)
+	    break;
 	  p = buffer;
 	  while (*p)
 	    {
@@ -94,6 +96,8 @@ read_key_events (void)
 
 	  if (cmd == NULL)
 	    continue;
+
+	  cmd++;
 
 	  keyval = gdk_keyval_from_name (buffer);
 	  
@@ -381,6 +385,8 @@ main (int argc, char *argv[])
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
   textdomain (PACKAGE);
 
+  signal (SIGCHLD, SIG_IGN);
+
   gpe_load_icons (my_icons);
 
   read_key_events ();
@@ -527,11 +533,11 @@ main (int argc, char *argv[])
       gtk_container_set_border_width (GTK_CONTAINER (frame), 5);
       gtk_container_set_border_width (GTK_CONTAINER (vbox), 5);
       
-      gtk_signal_connect(GTK_OBJECT (entry), "activate",
+      gtk_signal_connect (GTK_OBJECT (entry), "activate",
 			 GTK_SIGNAL_FUNC (enter_callback), entry);
-      gtk_signal_connect(GTK_OBJECT (next_button), "clicked",
+      gtk_signal_connect (GTK_OBJECT (next_button), "clicked",
 			 GTK_SIGNAL_FUNC (enter_callback), entry);
-  
+
       focus = entry;
     }
   else
@@ -589,15 +595,15 @@ main (int argc, char *argv[])
       gtk_table_attach_defaults (GTK_TABLE (table), entry_confirm, 
 				 1, 2, 3, 4);
 
-      gtk_signal_connect(GTK_OBJECT (entry_username), "activate",
+      gtk_signal_connect (GTK_OBJECT (entry_username), "activate",
 			 GTK_SIGNAL_FUNC (move_callback), entry_fullname);
-      gtk_signal_connect(GTK_OBJECT (entry_fullname), "activate",
+      gtk_signal_connect (GTK_OBJECT (entry_fullname), "activate",
 			 GTK_SIGNAL_FUNC (move_callback), entry_password);
-      gtk_signal_connect(GTK_OBJECT (entry_password), "activate",
+      gtk_signal_connect (GTK_OBJECT (entry_password), "activate",
 			 GTK_SIGNAL_FUNC (move_callback), entry_confirm);
-      gtk_signal_connect(GTK_OBJECT (entry_confirm), "activate",
+      gtk_signal_connect (GTK_OBJECT (entry_confirm), "activate",
 			 GTK_SIGNAL_FUNC (enter_newuser_callback), NULL);
-      gtk_signal_connect(GTK_OBJECT (next_button), "clicked",
+      gtk_signal_connect (GTK_OBJECT (next_button), "clicked",
 			 GTK_SIGNAL_FUNC (enter_newuser_callback), NULL);
 
       frame = gtk_frame_new (_("New user"));
@@ -624,7 +630,8 @@ main (int argc, char *argv[])
   gtk_container_add (GTK_CONTAINER (window), vbox2);
 
   gtk_widget_add_events (GTK_WIDGET (window), GDK_BUTTON_PRESS_MASK);
-  gtk_signal_connect (GTK_OBJECT (window), "key-press-event", key_pressed, NULL)
+  gtk_signal_connect (GTK_OBJECT (window), "key-press-event",
+        GTK_SIGNAL_FUNC (key_pressed), NULL);
 
   gtk_widget_show_all (window);
 
