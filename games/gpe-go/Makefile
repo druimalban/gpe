@@ -1,4 +1,4 @@
-VERSION = 0.05-pre
+VERSION = 0.05
 
 PACKAGE = gpe-go
 

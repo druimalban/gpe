@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-10-26 23:57+0200\n"
+"POT-Creation-Date: 2003-11-09 21:55+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,68 +16,66 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: gpe-go.c:897
+#: gpe-go.c:754
 #, c-format
 msgid "B:%d  W:%d "
 msgstr ""
 
-#: gpe-go.c:1213
+#: gpe-go.c:1083
 #, c-format
 msgid "Cannot save the game into %s."
 msgstr ""
 
-#: gpe-go.c:1279
-msgid ""
-"On its way, wait...\n"
-"(the next release ;)"
-msgstr ""
-
-#: gpe-go.c:1280
-msgid "Warning"
-msgstr ""
-
-#: gpe-go.c:1281
-msgid "OK"
-msgstr ""
-
-#: gpe-go.c:1417
+#: gpe-go.c:1357
 msgid "New..."
 msgstr ""
 
-#: gpe-go.c:1418
+#: gpe-go.c:1358
 msgid "Save..."
 msgstr ""
 
-#: gpe-go.c:1419
+#: gpe-go.c:1359
 msgid "Load..."
 msgstr ""
 
-#: gpe-go.c:1489
+#: gpe-go.c:1419
 msgid "Game menu"
 msgstr ""
 
-#: gpe-go.c:1498
+#: gpe-go.c:1427
+msgid "First"
+msgstr ""
+
+#: gpe-go.c:1428 gpe-go.c:1429
+msgid "Go to the beginning of the game"
+msgstr ""
+
+#: gpe-go.c:1435
 msgid "Undo"
 msgstr ""
 
-#: gpe-go.c:1513
+#: gpe-go.c:1441
 msgid "Redo"
 msgstr ""
 
-#: gpe-go.c:1521
+#: gpe-go.c:1447
+msgid "Last"
+msgstr ""
+
+#: gpe-go.c:1448 gpe-go.c:1449
+msgid "Go to the end of the game"
+msgstr ""
+
+#: gpe-go.c:1457
 msgid "B:0  W:0 "
 msgstr ""
 
-#: gpe-go.c:1543
+#: gpe-go.c:1467
 msgid "Pass"
 msgstr ""
 
-#: gpe-go.c:1543
+#: gpe-go.c:1467
 msgid "Pass your turn"
-msgstr ""
-
-#: gpe-go.c:1547
-msgid "Save as..."
 msgstr ""
 
 #: gpe-go.desktop.in.h:1

@@ -1,6 +1,9 @@
 GPE go NEWS
 
 * cvs
+- 
+
+* 0.05 2003-11-09 "I am going to..."
 - added [first] [last] buttons
 - added load SGF (the scanner is still limited to a subset of SGF)
 - improved variation handeling (choose the main branch as default)
