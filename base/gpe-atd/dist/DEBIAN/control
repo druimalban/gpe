@@ -1,0 +1,8 @@
+Package: atd
+Priority: optional
+Version: 0.6-gpe
+Section: admin
+Architecture: arm
+Maintainer: Nils Faerber <nils@handhelds.org>
+Depends: libc6
+Description: Provides alarm services

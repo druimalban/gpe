@@ -1,0 +1,5 @@
+#!/bin/sh
+
+/etc/init.d/atd stop
+rm /var/spool/at/trigger
+rmdir /var/spool/at
