@@ -1,45 +1,46 @@
-# gpe-sketchbook (Portuguese)
+# Translation of gpe-sketchbook-0.2.7.po to Russian.
 # Copyright (C) 2003 Free Software Foundation, Inc.
-# Luis Oliveira <luismbo@netcabo.pt>, 2003.
+# This file is distributed under the same license as the gpe- sketchbook package.
+# Pavel Maryanov <acid_jack@ukr.net>, 2003.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-sketchbook 0.2.7\n"
 "POT-Creation-Date: 2003-10-12 20:45+0300\n"
-"PO-Revision-Date: 2003-10-16 20:17+0000\n"
-"Last-Translator: Luis Oliveira <luismbo@netcabo.pt>\n"
-"Language-Team: Portuguese <translation-team-pt@lists.sourceforge.net>\n"
+"PO-Revision-Date: 2003-10-29 22:07+0200\n"
+"Last-Translator: Pavel Maryanov <acid_jack@ukr.net>\n"
+"Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: src/gpe-sketchbook.c:115
 msgid "Sketchbook: preferences"
-msgstr "Sketchbook: preferências"
+msgstr "Альбом: параметры"
 
 #: src/gpe-sketchbook.c:119 gpe-sketchbook.desktop.in.h:2
 msgid "Sketchbook"
-msgstr "Sketchbook"
+msgstr "Альбом"
 
 #: src/preferences.c:93
 msgid ""
 "Cannot create XSettings client.\n"
 "Use default preferences."
 msgstr ""
-"Não foi possível criar o cliente XSettings.\n"
-"A usar as preferências de omissão."
+"Невозможно создать клиента XSettings.\n"
+"Используются параметры по умолчанию."
 
 #: src/preferences.c:188
 msgid ""
 "gpe-confd is not running.\n"
 "Cannot save the preferences."
 msgstr ""
-"gpe-confd não está a correr.\n"
-"Não foi possível guardar as preferências."
+"gpe-confd не запущен.\n"
+"Невозможно сохранить параметры."
 
 #: src/preferences.c:277
 msgid "Start with"
-msgstr "Começar com"
+msgstr "Запустить при помощи"
 
 #: src/preferences.c:280
 msgid "Sketchpad"
@@ -47,163 +48,160 @@ msgstr "Sketchpad"
 
 #: src/preferences.c:282
 msgid "Selector - list"
-msgstr ""
+msgstr "Переключатель - список"
 
 #: src/preferences.c:284
 msgid "Selector - icons table"
-msgstr ""
+msgstr "Переключатель - таблица со значками"
 
 #: src/preferences.c:300
 msgid "Use joypad scrolling"
-msgstr ""
+msgstr "Использовать прокрутку joypad"
 
 #: src/preferences.c:307
 msgid "Grow on scroll"
-msgstr "Crescer imagem automaticamente"
+msgstr "Увеличивать при прокрутке"
 
 #: src/preferences.c:316
 msgid "OK"
-msgstr "OK"
+msgstr "ОК"
 
 #: src/preferences.c:317 src/selector-cb.c:67 src/sketchpad-cb.c:244
 msgid "Cancel"
-msgstr "Cancelar"
+msgstr "Отмена"
 
 #: src/selector.c:88
 #, c-format
 msgid "Cannot read the sketchbook directory: %s. Exit."
-msgstr "Não foi possível ler a directoria do programa: %s. A sair."
+msgstr "Невозможно прочитать каталог sketchbook: %s. Выход."
 
 #. TRANSLATORS: %s are: [folder name] [error message]
 #: src/selector.c:95
 #, c-format
 msgid "Cannot create %s: %s. Exit."
-msgstr "Não foi possível criar %s: %s. A sair."
+msgstr "Невозможно создать %s: %s. Выход."
 
 #. TRANSLATORS: default sketch label based on [date] and [time]
 #. example: "2003 10 12  at  18:48:51"
 #: src/selector.c:179
 #, c-format
 msgid "%s  at  %s"
-msgstr "%s  em  %s"
+msgstr "%s  в  %s"
 
 #: src/selector-cb.c:66 src/sketchpad-cb.c:243
 msgid "Delete current sketch?"
-msgstr "Deseja apagar o desenho actual?"
+msgstr "Удалить текущий эскиз?"
 
 #: src/selector-cb.c:66 src/sketchpad-cb.c:47 src/sketchpad-cb.c:77
 #: src/sketchpad-cb.c:243
 msgid "Question"
-msgstr "Questão"
+msgstr "Вопрос"
 
 #: src/selector-cb.c:67 src/sketchpad-cb.c:244 src/sketchpad-gui.c:468
 msgid "Delete"
-msgstr "Apagar"
+msgstr "Удалить"
 
 #: src/selector-gui.c:102
 msgid "New sketch"
-msgstr "Novo sketch"
+msgstr "Новый эскиз"
 
 #: src/selector-gui.c:107
 msgid "Edit sketch"
-msgstr "Editar sketch"
+msgstr "Редактировать эскиз"
 
 #: src/selector-gui.c:115
 msgid "Delete selected sketch"
-msgstr "Apagar o sketch selecionado"
+msgstr "Удалить выбранный эскиз"
 
 #: src/selector-gui.c:123
 msgid "Import from image"
-msgstr "Importar de uma imagem"
+msgstr "Импортировать из изображения"
 
 #: src/selector-gui.c:132
 msgid "Toggle view"
-msgstr "Alternar modo de vista"
+msgstr "Переключить вид"
 
 #: src/selector-gui.c:146
 msgid "Preferences"
-msgstr "Preferências"
+msgstr "Параметры"
 
 #: src/sketchpad.c:184
 msgid "Sketch"
-msgstr "Sketch"
+msgstr "Эскиз"
 
 #: src/sketchpad.c:189
 msgid "new"
-msgstr "novo"
+msgstr "новый"
 
 #: src/sketchpad.c:220
 #, c-format
 msgid "Import of `%s' failed."
-msgstr "Importação de `%s' falhou."
+msgstr "Импортирование `%s' завершилось неудачей."
 
 #: src/sketchpad.c:237
 msgid "Image to import"
-msgstr "Imagem a importar"
+msgstr "Импортируемое изображение"
 
 #: src/sketchpad-cb.c:47
 msgid ""
 "Sketch modified,\n"
 "save before exiting?"
 msgstr ""
-"Desenho modificado,\n"
-"guardar antes de sair?"
+"Эскиз изменен,\n"
+"сохранить перед выходом?"
 
 #: src/sketchpad-cb.c:48 src/sketchpad-cb.c:78
 msgid "Discard"
-msgstr "Descartar"
+msgstr "Отказ"
 
 #: src/sketchpad-cb.c:48 src/sketchpad-cb.c:78 src/sketchpad-gui.c:467
 msgid "Save"
-msgstr "Guardar"
+msgstr "Сохранить"
 
 #: src/sketchpad-cb.c:77
 msgid "Save current sketch?"
-msgstr "Guardar o desenho actual?"
+msgstr "Сохранить текущий эскиз?"
 
 #: src/sketchpad-gui.c:266
 msgid "Select eraser"
-msgstr "Selecionar borracha"
+msgstr "Выбрать ластик"
 
 #: src/sketchpad-gui.c:268
 msgid "Select pencil"
-msgstr "Selecionar lápis"
+msgstr "Выбрать карандаш"
 
 #: src/sketchpad-gui.c:270
 msgid "Brush size"
-msgstr "Tamanho do pincel"
+msgstr "Размер кисти"
 
 #: src/sketchpad-gui.c:271
 msgid "Brush color"
-msgstr "Côr do pincel"
+msgstr "Цвет кисти"
 
 #: src/sketchpad-gui.c:430
 msgid "Sketch menu"
-msgstr "Menu de sketch's"
+msgstr "Меню эскиза"
 
 #: src/sketchpad-gui.c:439
 msgid "Show list"
-msgstr "Mostrar lista"
+msgstr "Показать список"
 
 #: src/sketchpad-gui.c:444
 msgid "Previous sketch"
-msgstr "Sketch anterior"
+msgstr "Предыдущий эскиз"
 
 #: src/sketchpad-gui.c:449
 msgid "Next sketch"
-msgstr "Próximo sketch"
+msgstr "Новый эскиз"
 
 #: src/sketchpad-gui.c:465
 msgid "New"
-msgstr "Novo"
+msgstr "Новый"
 
 #: src/sketchpad-gui.c:466
 msgid "Import"
-msgstr "Importar"
+msgstr "Импорт"
 
 #: gpe-sketchbook.desktop.in.h:1
 msgid "GPE Sketchbook"
-msgstr "GPE Sketchbook"
-
-#~ msgid "Properties"
-#~ msgstr "Propriedades"
+msgstr "Альбом GPE"

@@ -2,11 +2,11 @@ ifndef PREFIX
 PREFIX = /usr/local
 endif
 
-VERSION = 0.2.7
+VERSION = 0.2.7-1
 
 PACKAGE = gpe-sketchbook
 
-LINGUAS = fr pt de zh_TW ro sv nl cs sk
+LINGUAS = fr pt de zh_TW ro sv nl cs sk ru
 MEMBERS = \
 	gpe-sketchbook       \
         preferences          \
