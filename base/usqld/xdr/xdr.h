@@ -1,0 +1,162 @@
+#ifndef XDR_H
+#define XDR_H
+#include <sys/types.h>
+#define XDR_OK 0
+#define XDR_PMALLOC 1
+#define XDR_SCHEMA_VIOLATION 2
+#define XDR_IO_ERROR 3
+#define XDR_UNSUPPORTED 4
+typedef enum {
+  XDR_INT,
+  XDR_UINT,
+  XDR_ENUM,
+  XDR_BOOL,
+  XDR_HYPER,
+  XDR_UHYPER,
+  XDR_FLOAT,
+  XDR_DOUBLE,
+  XDR_LONGDOUBLE,
+  XDR_STRING,
+  XDR_FIXEDOPAQUE,
+  XDR_VAROPAQUE,
+  XDR_FIXEDARRAY,
+  XDR_VARARRAY,
+  XDR_STRUCT,
+  XDR_UNION,
+  XDR_VOID
+}XDR_type;
+
+
+
+typedef struct {
+  XDR_type type;
+}XDR_tree;
+
+/*
+ * rep for types of struct,array,union 
+ * union is a 2-element array with the discriminant as in INT in [0] 
+ * and the content as whatever in [1]
+ */
+typedef struct {
+  XDR_type type;
+  size_t nelems;
+  XDR_tree ** subelems;
+}XDR_tree_compound;
+
+
+typedef union {
+  int   boolVal;
+  int32_t intVal;
+  u_int32_t uintVal;
+  int64_t hypVal;
+  u_int64_t uhypVal;
+  float    floatVal;
+  double   doubleVal;
+  long double longDoubleVal;
+}XDR_tree_simple_val;
+/*
+ *rep for all other types.
+ */
+typedef struct {
+  XDR_type type;
+  XDR_tree_simple_val val;
+}XDR_tree_simple;
+
+typedef struct  {
+  XDR_type type;
+  size_t len; 
+  unsigned char * data;
+}XDR_tree_str;
+
+typedef struct {
+  XDR_type type;
+  unsigned char * data;
+}XDR_tree_string ;
+/*
+ * base type that all other types can be cast into, 
+ * also used for basic types, including VAROPAQUE
+ */
+typedef struct  
+{
+  XDR_type type;
+}XDR_typedesc;
+
+
+typedef struct
+{
+  XDR_typedesc base;
+  size_t num_elems; /*!=NULL*/
+} XDR_opaque;
+
+typedef struct 
+{
+  XDR_typedesc base;
+  size_t num_elems;
+  XDR_typedesc * elem_type;
+} XDR_array;
+
+typedef struct  
+{
+  XDR_typedesc base;
+  size_t num_elems;
+  XDR_typedesc ** elems;
+}XDR_struct;
+
+typedef struct {
+  XDR_typedesc * t;
+  unsigned int d;
+}XDR_union_discrim;
+
+typedef struct  
+{
+  XDR_typedesc base;
+  size_t num_alternatives;
+  XDR_union_discrim * elems;
+}XDR_type_union;
+
+
+
+#define mylloc(type) (type*) malloc(sizeof(type))
+#define myllocn(type,n) (type*) malloc(sizeof(type) * n)
+
+XDR_typedesc * XDR_schema_new_typedesc(XDR_type t);
+
+XDR_typedesc * XDR_schema_new_opaque(size_t len);
+XDR_typedesc * XDR_schema_new_array(XDR_typedesc *t,size_t len);
+XDR_typedesc * XDR_schema_new_struct(size_t num_elems,const XDR_typedesc **elems);
+XDR_typedesc * XDR_schema_new_type_union(size_t num_alternatives,const XDR_union_discrim *elems);
+
+#define XDR_schema_new_varopaque() XDR_schema_new_opaque(0)
+#define XDR_schema_new_fixedopaque(n) XDR_schema_new_opaque(n)
+#define XDR_schema_new_fixedarray(t,n) XDR_schema_new_array(t,n)
+#define XDR_schema_new_vararray(t) XDR_schema_new_array(t,0)
+
+#define XDR_schema_new_int() XDR_schema_new_typedesc(XDR_INT)
+#define XDR_schema_new_uint() XDR_schema_new_typedesc(XDR_UINT)
+#define XDR_schema_new_enum() XDR_schema_new_typedesc(XDR_ENUM)
+#define XDR_schema_new_bool() XDR_schema_new_typedesc(XDR_BOOL)
+#define XDR_schema_new_hyper() XDR_schema_new_typedesc(XDR_HYPER)
+#define XDR_schema_new_uhyper() XDR_schema_new_typedesc(XDR_UHYPER)
+#define XDR_schema_new_float() XDR_schema_new_typedesc(XDR_FLOAT)
+#define XDR_schema_new_double() XDR_schema_new_typedesc(XDR_DOUBLE)
+#define XDR_schema_new_longdouble() XDR_schema_new_typedesc(XDR_LONGDOUBLE)
+#define XDR_schema_new_string() XDR_schema_new_typedesc(XDR_STRING)
+#define XDR_schema_new_void() XDR_schema_new_typedesc(XDR_VOID)
+
+int  XDR_deserialize_elem(XDR_typedesc *s,int fd, XDR_tree **out_t);
+int  XDR_serialize_elem(XDR_typedesc *s, XDR_tree *t,int fd);
+
+
+int  XDR_tree_new_compound(XDR_type type,
+			   size_t nelems,
+			   XDR_tree_compound ** out_t);
+
+void XDR_tree_new_simple(XDR_type type,XDR_tree_simple ** out_t);
+
+int  XDR_tree_new_str (XDR_type type,
+		       size_t len,
+		       XDR_tree_str** out_t);
+			 
+void XDR_tree_free(XDR_tree * t);
+
+#endif 
