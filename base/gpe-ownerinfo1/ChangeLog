@@ -1,3 +1,9 @@
+2002-08-12  Colin Marquardt  <colin@marquardt-home.de>
+
+	* gpe-ownerinfo.glade (Module): Set address field width explicitly.
+
+	* src/interface.c (Module): Generated from the glade file.
+
 2002-08-06  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.02 released.

@@ -49,7 +49,6 @@ create_GPE_Ownerinfo (void)
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (frame1);
   gtk_container_add (GTK_CONTAINER (GPE_Ownerinfo), frame1);
-  gtk_frame_set_shadow_type (GTK_FRAME (frame1), GTK_SHADOW_NONE);
 
   table1 = gtk_table_new (4, 2, FALSE);
   gtk_widget_set_name (table1, "table1");
@@ -159,6 +158,7 @@ create_GPE_Ownerinfo (void)
   gtk_table_attach (GTK_TABLE (table1), scrolledwindow1, 1, 2, 2, 3,
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (GTK_FILL), 0, 0);
+  gtk_widget_set_usize (scrolledwindow1, 176, -2);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow1), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 
   viewport1 = gtk_viewport_new (NULL, NULL);
