@@ -33,6 +33,9 @@ libgpewidget.so: $(SONAME)
 $(SONAME): $(OBJS)
 	$(CC) -nostartfiles -shared -o $@ $^ -Wl,-soname -Wl,$(SONAME) `gtk-config --libs` `gdk-pixbuf-config --libs` $(LDFLAGS)
 
+.c.s:;
+	$(CC) $(CFLAGS) -S $<
+
 upstream: clean
 	( VERSION=`dpkg-parsechangelog | grep ^Version | cut -d\  -f2 | cut -d- -f1`; cd ..; cp -a libgpewidget libgpewidget-$$VERSION.orig; tar czf libgpewidget_$$VERSION.orig.tar.gz --exclude=libgpewidget-$$VERSION.orig/debian --exclude=libgpewidget-$$VERSION.orig/CVS --exclude=libgpewidget-$$VERSION.orig/familiar libgpewidget-$$VERSION.orig ; rm -rf libgpewidget-$$VERSION.orig )
 

@@ -24,7 +24,7 @@ gpe_render_pixmap(GdkColor *bgcol, GdkPixbuf *pixbuf, GdkPixmap **pixmap,
   if (gdk_pixbuf_get_has_alpha (pixbuf))	
     {
       GdkColorspace color = gdk_pixbuf_get_colorspace (pixbuf);
-      guint x, y, stride, sstride;
+      guint y, stride, sstride;
       GdkPixbuf *composited = gdk_pixbuf_new (color, TRUE, depth, width, height);
       guchar *ptr = gdk_pixbuf_get_pixels (composited);
       guchar *sptr = gdk_pixbuf_get_pixels (pixbuf);
@@ -41,10 +41,11 @@ gpe_render_pixmap(GdkColor *bgcol, GdkPixbuf *pixbuf, GdkPixmap **pixmap,
 	{
 	  guchar *p = ptr + (y * stride);
 	  guchar *sp = sptr + (y * sstride);
-	  for (x = 0; x < width; x++) 
+	  guchar *ep = p + (width * 4);
+	  while (p < ep)
 	    {
-	      guchar red, green, blue;
-	      guchar sr, sg, sb, sa;
+	      guint red, green, blue;
+	      guint sr, sg, sb, sa;
 	      
 	      sr = *sp++;
 	      sg = *sp++;
@@ -100,10 +101,13 @@ gpe_render_icon(GtkStyle *style, GdkPixbuf *pixbuf)
 		     &pixmap, &bitmap);
   
   widget = gtk_gpe_pixmap_new (pixmap, bitmap);
-  
-  gpe_render_pixmap (&style->bg[GTK_STATE_PRELIGHT], pixbuf,
-		     &pixmap, &bitmap);
-  gtk_gpe_pixmap_set_prelight (GTK_GPE_PIXMAP (widget), pixmap);
+
+  if (style->bg[GTK_STATE_NORMAL].pixel != style->bg[GTK_STATE_PRELIGHT].pixel)
+    {
+      gpe_render_pixmap (&style->bg[GTK_STATE_PRELIGHT], pixbuf,
+			 &pixmap, &bitmap);
+      gtk_gpe_pixmap_set_prelight (GTK_GPE_PIXMAP (widget), pixmap);
+    }
   
   return widget;
 }

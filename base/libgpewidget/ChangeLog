@@ -1,3 +1,12 @@
+2002-06-17  Philip Blundell  <pb@debian.org>
+
+	* render.c (gpe_render_pixmap): Tweak for better code generation.
+	Use high 8 bits of GdkColor information.
+	(gpe_render_icon): Don't render prelight if it would be the same
+	as the normal pixmap.
+
+	* picturebutton.c (gpe_picture_button): Add padding around label.
+
 2002-06-16  Philip Blundell  <pb@debian.org>
 
 	* Makefile (MEMBERS): Add picturebutton.

@@ -27,7 +27,7 @@ gpe_picture_button (GtkStyle *style, gchar *text, gchar *icon)
       gtk_box_pack_start (GTK_BOX (hbox), pw, TRUE, TRUE, 0);
       gtk_widget_show (pw);
     }
-  gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 4);
 
   gtk_widget_show (hbox);
   gtk_widget_show (label);
