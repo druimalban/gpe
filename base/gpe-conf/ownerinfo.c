@@ -23,6 +23,7 @@
 #include <gtk/gtk.h>
 #define _XOPEN_SOURCE /* For GlibC2 */
 #include <time.h>
+#include <libgen.h> /* for dirname() */
 
 #include <gpe/errorbox.h>
 #include <gpe/pixmaps.h>
@@ -67,7 +68,7 @@ GtkWidget *Ownerinfo_Build_Objects()
 
   /* ======================================================================== */
   /* get the data from the file if existant */
-  ownerphotofile = g_strdup ("/path/to/owner/photofile.png");
+  ownerphotofile = g_strdup (PREFIX "/share/gpe/pixmaps/default/tux-48.png");
   ownername      = g_strdup ("GPE User");
   owneremail     = g_strdup ("nobody@localhost.localdomain");
   ownerphone     = g_strdup ("+99 (9999) 999-9999");
@@ -151,8 +152,8 @@ GtkWidget *Ownerinfo_Build_Objects()
   name = gtk_entry_new ();
   gtk_entry_set_text (GTK_ENTRY (name), ownername);
   gtk_table_attach (GTK_TABLE (table), name, 1, 2, 0, 1,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
 
   /* ------------------------------------------------------------------------ */
   owner_email_label = gtk_label_new (_("E-Mail"));
@@ -166,8 +167,8 @@ GtkWidget *Ownerinfo_Build_Objects()
   email = gtk_entry_new ();
   gtk_entry_set_text (GTK_ENTRY (email), owneremail);
   gtk_table_attach (GTK_TABLE (table), email, 1, 2, 1, 2,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
 
   /* ------------------------------------------------------------------------ */
   owner_phone_label = gtk_label_new (_("Phone"));
@@ -181,8 +182,8 @@ GtkWidget *Ownerinfo_Build_Objects()
   phone = gtk_entry_new ();
   gtk_entry_set_text (GTK_ENTRY (phone), ownerphone);
   gtk_table_attach (GTK_TABLE (table), phone, 1, 2, 2, 3,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
 
   /* ------------------------------------------------------------------------ */
   owner_address_label = gtk_label_new (_("Address"));
@@ -196,8 +197,8 @@ GtkWidget *Ownerinfo_Build_Objects()
 
   scrolledwindow1 = gtk_scrolled_window_new (NULL, NULL);
   gtk_table_attach (GTK_TABLE (table), scrolledwindow1, 1, 2, 3, 4,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (GTK_FILL), 0, 0);
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow1),
 				  GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 
@@ -214,8 +215,8 @@ GtkWidget *Ownerinfo_Build_Objects()
   /* ------------------------------------------------------------------------ */
   owner_photofile_label = gtk_label_new (_("Photofile"));
   gtk_table_attach (GTK_TABLE (table), owner_photofile_label, 0, 1, 4, 5,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
   gtk_label_set_justify (GTK_LABEL (owner_photofile_label), GTK_JUSTIFY_LEFT);
   gtk_misc_set_alignment (GTK_MISC (owner_photofile_label), 0, 0.5);
   gtk_misc_set_padding (GTK_MISC (owner_photofile_label), 5, 0);
@@ -223,37 +224,36 @@ GtkWidget *Ownerinfo_Build_Objects()
   photofile = gtk_entry_new ();
   gtk_entry_set_text (GTK_ENTRY (photofile), ownerphotofile);
 
-  // hbox = gtk_hbox_new (FALSE, 0);
   gtk_table_attach (GTK_TABLE (table), photofile, 1, 2, 4, 5,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
 
   button = gtk_button_new ();
   gtk_table_attach (GTK_TABLE (table), button, 0, 2, 5, 6,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
   
 
   photo = create_pixmap (table, ownerphotofile);
   gtk_container_add (GTK_CONTAINER (button), photo);
-
-  //gtk_container_add (GTK_CONTAINER (hbox), photofile);
-//  button = gtk_button_new_with_label ("...");
-//
-//  gtk_container_add (GTK_CONTAINER (hbox), button);
-//  gtk_widget_set_usize (button, 20, 20);
 
   gtk_signal_connect (GTK_OBJECT (button), "clicked",
                       GTK_SIGNAL_FUNC (choose_photofile),
                       NULL);
 
   /*
-   * Check if we are even allowed to write to the owner data file.
+   * Check if we are even allowed to write to the owner data file
+   *    or create it if necessary.
    * FIXME:
    *    Gotta do the same at top level of gpe-conf since the buttons
    *    are not insensitive otherwise.
    */
-  if (access (GPE_OWNERINFO_DATA, W_OK) == 0)
+
+  /* either we can write to the file... */
+  if ((access (GPE_OWNERINFO_DATA, W_OK) == 0) ||
+      /* ...or we are allowed to write in this directory, and the file does not yet exist */
+      (((access (dirname(g_strdup(GPE_OWNERINFO_DATA)), W_OK)) == 0) &&
+       (access (GPE_OWNERINFO_DATA, F_OK) != 0)))
     gtk_widget_set_sensitive (table, TRUE);
   else 
     gtk_widget_set_sensitive (table, FALSE);
