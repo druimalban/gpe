@@ -1,5 +1,7 @@
 ## Process this file with automake to produce Makefile.in
 
+PREFIX = /usr/local
+
 SUBDIRS = po src
 
 EXTRA_DIST = \
@@ -17,6 +19,7 @@ install-data-local:
 	  done \
 	fi
 	$(INSTALL_DATA) contacts-layout.xml $(DESTDIR)$(pkgdatadir)/default-layout.xml
+	install -D gpe-contacts.menu $(DESTDIR)$(PREFIX)/lib/menu/gpe-contacts
 
 dist-hook:
 	if test -d pixmaps; then \
@@ -28,3 +31,4 @@ dist-hook:
 	  done \
 	fi
 
+include ../build/Makefile.dpkg_ipkg

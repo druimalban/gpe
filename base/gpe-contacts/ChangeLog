@@ -1,0 +1,11 @@
+2002-07-31  Colin Marquardt  <colin@marquardt-home.de>
+
+	* icons/gpe-contacts.png: New file.
+
+	* Makefile.am: Copy the menu, add the Makefile snippet for the
+	ipkg/dpkg targets.
+
+	* gpe-contacts.menu: New file.
+
+	* contacts-layout.xml: New structure.
+

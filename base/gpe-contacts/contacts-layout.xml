@@ -1,47 +1,66 @@
 <layout>
   <page>
-    <label>Contacts</label>
+    <label>Locations</label>
     <group>
-      <label>Phone</label>
+      <label>Home</label>
+      <multi-item>
+        <tag>HOME.ADDRESS</tag>
+        <label>Address</label>
+      </multi-item>
       <single-item>
-        <tag>TELEPHONE.HOME</tag>
-        <label>Home</label>
+        <tag>HOME.TELEPHONE</tag>
+        <label>Phone</label>
       </single-item>
       <single-item>
-        <tag>TELEPHONE.WORK</tag>
-        <label>Work</label>
-      </single-item>
-      <single-item>
-        <tag>TELEPHONE.MOBILE</tag>
+        <tag>HOME.MOBILE</tag>
         <label>Mobile</label>
       </single-item>
       <single-item>
-        <tag>TELEPHONE.FAX</tag>
+        <tag>HOME.FAX</tag>
         <label>Fax</label>
       </single-item>
-    </group>
-    <group>
-      <label>Internet</label>
       <single-item>
-        <tag>EMAIL</tag>
+        <tag>HOME.EMAIL</tag>
         <label>Mail</label>
       </single-item>
       <single-item>
-        <tag>WWW</tag>
+        <tag>HOME.WWW</tag>
+        <label>Web</label>
+      </single-item>
+    </group>
+    <group>
+      <label>Work</label>
+      <multi-item>
+        <tag>WORK.ADDRESS</tag>
+        <label>Address</label>
+      </multi-item>
+      <single-item>
+        <tag>WORK.TELEPHONE</tag>
+        <label>Phone</label>
+      </single-item>
+      <single-item>
+        <tag>WORK.MOBILE</tag>
+        <label>Mobile</label>
+      </single-item>
+      <single-item>
+        <tag>WORK.FAX</tag>
+        <label>Fax</label>
+      </single-item>
+      <single-item>
+        <tag>WORK.EMAIL</tag>
+        <label>Mail</label>
+      </single-item>
+      <single-item>
+        <tag>WORK.WWW</tag>
         <label>Web</label>
       </single-item>
     </group>
   </page>
   <page>
-    <label>Addresses</label>
-    <multi-item>
-      <tag>ADDRESS.HOME</tag>
-      <label>Home</label>
-    </multi-item>
-    <multi-item>
-      <tag>ADDRESS.WORK</tag>
-      <label>Work</label>
-    </multi-item>
+    <label>Photo</label>
+    <single-item>
+      <tag>PHOTO</tag>
+    </single-item>
   </page>
   <page>
     <label>Notes</label>
