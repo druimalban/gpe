@@ -8,7 +8,7 @@ VERSION = 0.32
 DEBUG = no
 MYPIXMAPSDIR = $(PREFIX)/share/gpe/pixmaps/default/$(PACKAGE)
 
-LINGUAS = de sv cs nl hu ro ru sr sk es
+LINGUAS = de sv cs nl hu ro ru sr sk es fr zh_CN
 
 ifeq ($(CVSBUILD),yes)
 BUILD = ../build

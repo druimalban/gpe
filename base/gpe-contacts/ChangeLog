@@ -1,3 +1,10 @@
+2004-11-07  Phil Blundell  <pb@nexus.co.uk>
+
+	* Makefile (LINGUAS): Add fr, zh_CN.
+	* po/ru.po: Updated, courtesy Pavel Maryanov.
+	* po/zh_CN.po: New file, courtesy Meng Jie.
+	* po/fr.po: New file, courtesy Luc Pionchon.
+
 2004-10-25  Florian Boor <florian.boor@kernelconcepts.de>
 
     * main.c (create_main): Changed tree selection mode to make sure that a

@@ -1,319 +1,320 @@
-# Translation of gpe-contacts-0.32.po to Russian
-# Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+# gpe-contacts (french)
+# Copyright (C) 2003 Luc Pionchon
 # This file is distributed under the same license as the gpe-contacts package.
-# Pavel Maryanov <acid_jack@ukr.net>, 2003, 2004.
+# Luc Pionchon <luc@handhelds.org>, 2003, 2004.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-contacts-0.32\n"
+"Project-Id-Version: gpe-contacts 0.32\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2004-10-17 00:23+0200\n"
-"PO-Revision-Date: 2004-11-05 12:02+0200\n"
-"Last-Translator: Pavel Maryanov <acid_jack@ukr.net>\n"
-"Language-Team: Russian <ru@li.org>\n"
+"PO-Revision-Date: 2004-11-06 11:05+0200\n"
+"Last-Translator: Luc Pionchon <luc@handhelds.org>\n"
+"Language-Team: French <traduc@traduc.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=ISO-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: KBabel 1.3\n"
 
 #: db.c:70
 msgid "Name"
-msgstr "Имя"
+msgstr "Nom"
 
 #: db.c:71
 msgid "Phone"
-msgstr "Телефон"
+msgstr "T�l."
 
 #: db.c:72
 msgid "EMail"
-msgstr "Эл. почта"
+msgstr "M�l."
 
 #: editing.c:108 main.c:1218
 msgid "Details"
-msgstr "Подробности"
+msgstr "D�tails"
 
 #: editing.c:227
 msgid "no year"
-msgstr "год не указан"
+msgstr "pas d'ann�e"
 
 #: editing.c:436 main.c:470 main.c:597
 msgid "Categories"
-msgstr "Категории"
+msgstr "Cat�gories"
 
 #: editing.c:972
 msgid "Select image"
-msgstr "Выбрать изображение"
+msgstr "S�lectionner une image"
 
 #: main.c:80 main.c:182
 msgid "Edit Contact"
-msgstr "Редактировать контакт"
+msgstr "Contact"
 
 #: main.c:86 main.c:198
 msgid "Really delete this contact?"
-msgstr "Действительно удалить этот контакт?"
+msgstr "Supprimer ce contact ?"
 
 #: main.c:86 main.c:198 structure.c:176
 msgid "Confirm"
-msgstr "Подтверждение"
+msgstr "Confirmer"
 
 #: main.c:138
 msgid "All categories"
-msgstr "Все категории"
+msgstr "Toutes les cat�gories"
 
 #: main.c:160
 msgid "New Contact"
-msgstr "Новый контакт"
+msgstr "Nouveau contact"
 
 #: main.c:481
 msgid "No contact selected."
-msgstr "Контакт не выбран."
+msgstr "Aucun contact s�lectionn�"
 
 #: main.c:553 main.c:1272 main.c:1338
 msgid "Contact"
-msgstr "Контакт"
+msgstr "Contact"
 
 #: main.c:1182 gpe-contacts.desktop.in.h:1
 msgid "Contacts"
-msgstr "Контакты"
+msgstr "Contacts"
 
 #: main.c:1195
 msgid "Tap this button to add a new contact."
-msgstr "Нажмите на эту кнопку, чтобы добавить новый контакт."
+msgstr "Cliquer ici pour ajouter un contact."
 
 #: main.c:1202
 msgid "Edit"
-msgstr "Редактировать"
+msgstr "Editer"
 
 #: main.c:1203
 msgid "Tap here to edit the selected contact."
-msgstr "Нажмите сюда, чтобы редактировать выбранный контакт."
+msgstr "Cliquer ici pour �diter le contact s�lectionn�."
 
 #: main.c:1209
 msgid "Tap here to delete the selected contact."
-msgstr "Нажмите сюда, чтобы редактировать удалить выбранный контакт."
+msgstr "Cliquer ici pour supprimer le contact s�lectionn�."
 
 #: main.c:1219
 msgid "Tap here to show contacts details."
-msgstr "Нажмите сюда, чтобы вывести подробности о контакте."
+msgstr "Cliquer ici pour afficher les d�tails."
 
 #: main.c:1228
 msgid "Find a contact by searching for any data."
-msgstr "Поиск контакта по любому типу данных."
+msgstr "Trouver un contact � partir de n'importe quelle donn�e."
 
 #: main.c:1233
 msgid "Properties"
-msgstr "Свойства"
+msgstr "Propri�t�s"
 
 #: main.c:1233
 msgid "Tap here to configure this program."
-msgstr "Нажмите сюда, чтобы настроить эту программу."
+msgstr "Cliquer ici pour configurer le programme."
 
 #: main.c:1239
 msgid "Close"
-msgstr "Закрыть"
+msgstr "Fermer"
 
 #: main.c:1239
 msgid "Tap here to exit gpe-contacts."
-msgstr "Нажмите сюда, чтобы выйти из gpe-contacts."
+msgstr "Cliquer ici pour quitter le programme."
 
 #: main.c:1298
 msgid "Find:"
-msgstr "Найти:"
+msgstr "Trouver :"
 
 #: main.c:1305
 msgid "in"
-msgstr "в"
+msgstr "pour"
 
 #: main.c:1491
 msgid "My Card"
-msgstr "Моя карточка"
+msgstr "Ma Carte"
 
 #: main.c:1494
 msgid "Saving vcard failed"
-msgstr "Не удалось сохранить v-карточку"
+msgstr "�chec de la sauvegarde au format vcard"
 
 #: structure.c:105 structure.c:235
 msgid "New page"
-msgstr "Новая страница"
+msgstr "Nouvelle page"
 
 #: structure.c:105 structure.c:124 structure.c:149
 msgid "Title"
-msgstr "Заголовок"
+msgstr "Titre"
 
 #: structure.c:124
 msgid "New group"
-msgstr "Новая группа"
+msgstr "Nouveau group"
 
 #: structure.c:136 structure.c:166
 msgid "No container selected"
-msgstr "Контейнер не выбран"
+msgstr "Aucun container s�lectionn�"
 
+# �tiquette
 #: structure.c:150
 msgid "Tag"
-msgstr "Тэг"
+msgstr "Tag"
 
 #: structure.c:152
 msgid "New field"
-msgstr "Новое поле"
+msgstr "Nouveau champ"
 
 #: structure.c:176
 msgid "Really delete this field?"
-msgstr "Действительно хотите удалить это поле?"
+msgstr "Supprimer ce champ ?"
 
 #: structure.c:177
 msgid "Delete"
-msgstr "Удалить"
+msgstr "Supprimer"
 
 #: structure.c:177
 msgid "Cancel"
-msgstr "Отмена"
+msgstr "Annuler"
 
 #: structure.c:234
 msgid "Page"
-msgstr "Страница"
+msgstr "Page"
 
 #: structure.c:235
 msgid "Tap here to add a page."
-msgstr "Нажмите сюда, чтобы добавить страницу."
+msgstr "Cliquer ici pour ajouter une page."
 
 #: structure.c:251
 msgid "Delete item"
-msgstr "Удалить пункт"
+msgstr "Supprimer l'objet"
 
 #: structure.c:251
 msgid "Tap here to delete the selected item."
-msgstr "Нажмите сюда, чтобы удалить выбранный пункт."
+msgstr "Cliquer ici pour supprimer l'objet s�lectionn�."
 
 #. TRANSLATORS: kB = kilo bytes
 #: configure.c:131 configure.c:337
 msgid "Current size:"
-msgstr "Текущий размер:"
+msgstr "Taille actuelle :"
 
 #: configure.c:132
 msgid "kB (optimised)"
-msgstr "кБ (оптимизирован)"
+msgstr "Ko (optimis�)"
 
 #: configure.c:177
 msgid "<b>Detail panel:</b>"
-msgstr "<b>Подробная панель:</b>"
+msgstr "<b>D�tails :</b>"
 
 #: configure.c:203
 msgid "NAME"
-msgstr "ИМЯ"
+msgstr "NOM"
 
 #: configure.c:213
 msgid "Add"
-msgstr "Добавить"
+msgstr "Ajouter"
 
+# Will probably not fit in the GUI...
 #: configure.c:220
 msgid "Remove"
-msgstr "Удалить"
+msgstr "Retirer"
 
 #: configure.c:242
 msgid "Label"
-msgstr "Метка"
+msgstr "Libell�"
 
 #: configure.c:247
 msgid "Data item"
-msgstr "Элемент данных"
+msgstr "Champ de donn�e"
 
 #: configure.c:291
 msgid "Screen Layout"
-msgstr "Размещение экрана"
+msgstr "Mise en page"
 
 #: configure.c:297
 msgid "List position"
-msgstr "Положение списка"
+msgstr "Last position"
 
 #: configure.c:300
 msgid "left"
-msgstr "слева"
+msgstr "gauche"
 
 #: configure.c:302
 msgid "right"
-msgstr "справа"
+msgstr "droite"
 
 #: configure.c:330
 msgid "Database Size"
-msgstr "Размер базы данных"
+msgstr "Taille de la base de donn�es"
 
 #: configure.c:337
 msgid "kB"
-msgstr "кБ"
+msgstr "Ko"
 
 #: configure.c:342
 msgid "Actions"
-msgstr "Действия"
+msgstr "Actions"
 
 #: configure.c:349
 msgid "Optimise database"
-msgstr "Оптимизировать БД"
+msgstr "Optimiser la base de donn�es"
 
 #: configure.c:352
 msgid "Run"
-msgstr "Запустить"
+msgstr ""
 
 #: configure.c:458
 msgid "Editing Layout"
-msgstr "Редактирование размещения"
+msgstr "Mise en page"
 
 #: configure.c:460
 msgid "Setup"
-msgstr "Установка"
+msgstr "D�tail"
 
 #: configure.c:461
 msgid "Database"
-msgstr "База данных"
+msgstr "Base de donn�es"
 
 #: configure.c:493
 msgid "Contacts: Configuration"
-msgstr "Контакты: Конфигурация"
+msgstr "Contacts : Configuration"
 
 #: export.c:158
 msgid "Save as..."
-msgstr "Сохранить как..."
+msgstr "Enregistrer sous..."
 
 #. TRANSLATORS: These abbreviations are a list of common titles used in a name
 #: namedetail.c:30
 msgid "Dr."
-msgstr "Д-р"
+msgstr ""
 
 #: namedetail.c:30
 msgid "Miss"
-msgstr "Г-жа"
+msgstr "Mlle"
 
 #: namedetail.c:30
 msgid "Mr."
-msgstr "Г-н"
+msgstr "M."
 
 #: namedetail.c:30
 msgid "Mrs."
-msgstr "Г-жа"
+msgstr "Mme"
 
 #: namedetail.c:30
 msgid "Ms."
-msgstr "Г-жа"
+msgstr "Mme"
 
 #: namedetail.c:30
 msgid "Prof."
-msgstr "Проф."
+msgstr ""
 
 #: namedetail.c:30
 msgid "Sir"
-msgstr "Сэр"
+msgstr ""
 
 #. TRANSLATORS: This is a list of common name suffixes
 #: namedetail.c:32
 msgid "Jr."
-msgstr "Мл."
+msgstr ""
 
 #: namedetail.c:32
 msgid "Esq."
-msgstr "Эсквайр"
+msgstr ""
 
 #: namedetail.c:32
 msgid "Sr."
-msgstr "Сестра"
+msgstr ""
 
 #: namedetail.c:32
 msgid "I"
@@ -329,44 +330,123 @@ msgstr "III"
 
 #: namedetail.c:61
 msgid "Edit Name Details"
-msgstr "Редактировать имя"
+msgstr ""
 
 #: namedetail.c:88
 msgid "First name:"
-msgstr "Имя:"
+msgstr "Pr�nom"
 
 #: namedetail.c:89
 msgid "Middle name:"
-msgstr "Второе имя (отчество):"
+msgstr ""
 
 #: namedetail.c:90
 msgid "Last name:"
-msgstr "Фамилия:"
+msgstr "Nom de famille"
 
 #: namedetail.c:91
 msgid "Suffix:"
-msgstr "Суффикс:"
+msgstr "Suffixe"
 
 #: namedetail.c:92
 msgid "Title:"
-msgstr "Заголовок:"
+msgstr "Titre"
 
 #: finddlg.c:37
 msgid "Find Contacts"
-msgstr "Найти контакт"
+msgstr "Rechercher"
 
 #: finddlg.c:49
 msgid "Search for:"
-msgstr "Поиск:"
+msgstr "Rechercher :"
 
 #: gpe-contacts.desktop.in.h:2
 msgid "GPE Contacts"
-msgstr "Контакты GPE"
+msgstr "GPE Contacts"
 
 #: edit-vcard.desktop.in.h:1
 msgid "Edit personal vcard"
-msgstr "Редактировать личную v-карточку"
+msgstr "�diter ma carte de visite (vcard)"
 
 #: edit-vcard.desktop.in.h:2
 msgid "My VCard"
-msgstr "Моя V-карточка"
+msgstr "Ma Carte"
+
+#~ msgid "more detailed name options"
+#~ msgstr "options avanc�es"
+
+#~ msgid "Summary"
+#~ msgstr "R�sum�"
+
+#~ msgid "Birthday"
+#~ msgstr "N�(e) le"
+
+#~ msgid "Image"
+#~ msgstr "Photo"
+
+# rappel, programmer
+#~ msgid "Schedule"
+#~ msgstr "rappel"
+
+#~ msgid "automatic appointment"
+#~ msgstr "Enregistre un �v�nement pour la date anniversaire"
+
+#~ msgid "click to choose file"
+#~ msgstr "Cliquer pour s�lectionner un fichier"
+
+#~ msgid "Personal"
+#~ msgstr "Personnel"
+
+#~ msgid "Pages"
+#~ msgstr "Pages"
+
+#~ msgid "New Category"
+#~ msgstr "Nouvelle cat�gorie"
+
+#~ msgid "Really delete this category?"
+#~ msgstr "Supprimer cette cat�gorie ?"
+
+#~ msgid "New category"
+#~ msgstr "Nouvelle cat�gorie"
+
+#~ msgid "Tap here to create a category."
+#~ msgstr "Cliquer ici pour cr�er une nouvelle cat�gorie."
+
+#~ msgid "Delete category"
+#~ msgstr "Effacer la cat�gorie"
+
+#~ msgid "Tap here to delete the selected category."
+#~ msgstr "Cliquer ici pour supprimer la cat�gorie s�lectionn�e."
+
+#~ msgid "Edit contact"
+#~ msgstr "�diter le contact"
+
+#~ msgid "Delete contact"
+#~ msgstr "Effacer le contact"
+
+#~ msgid "ABC"
+#~ msgstr "ABC"
+
+#~ msgid "DEF"
+#~ msgstr "DEF"
+
+#~ msgid "GHIJ"
+#~ msgstr "GHIJ"
+
+#~ msgid "KLMN"
+#~ msgstr "KLMN"
+
+#~ msgid "OPQR"
+#~ msgstr "OPQR"
+
+#~ msgid "STUV"
+#~ msgstr "STUV"
+
+#~ msgid "WXYZ"
+#~ msgstr "WXYZ"
+
+#~ msgid "Couldn't find pixmap file: %s"
+#~ msgstr "Impossible de trouver l'image : %s"
+
+#~ msgid "Error loading pixmap file: %s"
+#~ msgstr "Erreur en chargeant l'image : %s"
