@@ -17,6 +17,8 @@ popup_menu_close (GtkWidget *parent_button)
 {
   GtkWidget *parent_arrow;
 
+  if(g_object_get_data (G_OBJECT (parent_button), "active") == FALSE) return;
+
   parent_arrow = g_object_get_data (G_OBJECT (parent_button), "arrow");
 
   gtk_widget_destroy (g_object_get_data (G_OBJECT (parent_button), "window"));
