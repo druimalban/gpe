@@ -1,0 +1,24 @@
+Source: libgpewidget
+Priority: optional
+Maintainer: Phil Blundell <pb@debian.org>
+Build-Depends: debhelper (>> 3.0.0)
+Standards-Version: 3.5.2
+
+Package: libgpewidget-dev
+Section: devel
+Architecture: any
+Depends: libgpewidget1 (= ${Source-Version})
+Description: Development files for libgpewidget
+ This package contains headers and other files required to compile
+ GPE applications.
+
+Package: libgpewidget0
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}
+Suggests: gpe-icons
+Description: GNU Palmtop Environment widget library
+ This library contains Gtk+ widgets and other common code shared by
+ multiple GPE applications. 
+ .
+ For information about the GPE project, see http://gpe.handhelds.org

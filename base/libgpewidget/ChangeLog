@@ -1,5 +1,20 @@
 2002-06-16  Philip Blundell  <pb@debian.org>
 
+	* Makefile (install-devel, upstream, dpkg): New rules.
+	(clean): Remove libgpewidget.so symlink.
+	(ipkg): Expect files in familiar subdir.
+	(PREFIX): Default to /usr/local.
+	(PACKAGE, HEADERS): Define.
+	(install): Use $(PREFIX).
+	* control, postinst: Moved to...
+	* familiar/control, familiar/postinst: ... here.
+	* debian/changelog, debian/control, debian/dirs, debian/docs, 
+	debian/libgpewidget-dev.dirs, debian/libgpewidget-dev.files, 
+	debian/libgpewidget0.dirs, debian/libgpewidget0.files, 
+	debian/postinst, debian/postrm, debian/rules: New files.
+
+2002-06-16  Philip Blundell  <pb@debian.org>
+
 	* errorbox.c: Add missing #include <stdio.h>.
 	* control (Version): Set to 0.05
 

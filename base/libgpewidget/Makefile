@@ -1,3 +1,6 @@
+PREFIX = /usr/local
+PACKAGE = libgpewidget
+
 SONAME = libgpewidget.so.0
 
 MEMBERS = gtkdatesel gtkdatecombo errorbox init pixmaps gtksmallentry smallbox gtkminifilesel render
@@ -10,6 +13,8 @@ else
 CFLAGS += -Os -fomit-frame-pointer
 endif
 
+HEADERS = init.h render.h errorbox.h smallbox.h pixmaps.h gtkminifilesel.h gtkdatecombo.h gtkdatesel.h
+
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 
 all: libgpewidget.so
@@ -20,18 +25,28 @@ libgpewidget.so: $(SONAME)
 $(SONAME): $(OBJS)
 	$(CC) -nostartfiles -shared -o $@ $^ -Wl,-soname -Wl,$(SONAME) `gtk-config --libs` `gdk-pixbuf-config --libs` $(LDFLAGS)
 
+upstream: clean
+	( VERSION=`dpkg-parsechangelog | grep ^Version | cut -d\  -f2 | cut -d- -f1`; cd ..; cp -a libgpewidget libgpewidget-$$VERSION.orig; tar czf libgpewidget_$$VERSION.orig.tar.gz --exclude=libgpewidget-$$VERSION.orig/debian --exclude=libgpewidget-$$VERSION.orig/CVS --exclude=libgpewidget-$$VERSION.orig/familiar libgpewidget-$$VERSION.orig ; rm -rf libgpewidget-$$VERSION.orig )
+
+dpkg: upstream
+	( VERSION=`dpkg-parsechangelog | grep ^Version | cut -d\  -f2 | cut -d- -f1`; TMP=/var/tmp/debian/$(PACKAGE); PV=$(PACKAGE)-$$VERSION; rm -rf $$TMP; mkdir -p $$TMP; cp ../$(PACKAGE)_$$VERSION.orig.tar.gz $$TMP; (cd $$TMP; tar xzf $(PACKAGE)_$$VERSION.orig.tar.gz ; mv $$PV.orig $$PV ); mkdir -p $$TMP/$$PV/debian; cp debian/* $$TMP/$$PV/debian; cd $$TMP/$$PV; fakeroot dpkg-buildpackage )
+
 install: $(SONAME)
-	install -D $(SONAME) $(DESTDIR)/usr/lib/$(SONAME)
-	strip $(DESTDIR)/usr/lib/$(SONAME)
+	install -D $(SONAME) $(DESTDIR)$(PREFIX)/lib/$(SONAME)
+	strip $(DESTDIR)$(PREFIX)/lib/$(SONAME)
+
+install-devel:
+	for i in $(HEADERS); do install -D $$i $(DESTDIR)$(PREFIX)/include/gpe/$$i; done
+	ln -s $(SONAME) $(DESTDIR)$(PREFIX)/lib/libgpewidget.so
 
 ipkg:
-	rm -rf dist
-	mkdir -p dist/CONTROL
-	cp control postinst dist/CONTROL
-	make DESTDIR=`pwd`/dist install
-	chown -R root.root dist
-	ipkg-build dist
+	rm -rf familiar/dist
+	mkdir -p familiar/dist/CONTROL
+	cp familiar/control familiar/postinst familiar/dist/CONTROL
+	make DESTDIR=`pwd`/familiar/dist PREFIX=/usr install
+	chown -R root.root familiar/dist
+	ipkg-build familiar/dist
 
 clean:
-	rm -f $(OBJS) $(SONAME)
+	rm -f $(OBJS) $(SONAME) libgpewidget.so
 
