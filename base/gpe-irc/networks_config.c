@@ -34,8 +34,8 @@ enum
 {
   COLUMN_SERVER,
   COLUMN_PORT,
-  COLUMN_SQL_SERVER,
   COLUMN_EDITABLE2,
+  COLUMN_SQL_SERVER,
   NUM_COLUMNS2
 };
 
@@ -64,7 +64,7 @@ networks_config_add_from_sql ()
 }
 
 void
-networks_config_servers_add_from_sql (GtkListStore *list_store, struct sql_network *network)
+networks_config_add_servers_from_sql (GtkListStore *list_store, struct sql_network *network)
 {
   GSList *iter;
   GtkTreeIter tree_iter;
@@ -108,19 +108,21 @@ networks_config_edit_server_cell_edited (GtkCellRendererText *cell, const gchar 
   gchar *old_text;
   gint *column;
   struct sql_network_server *server;
+  struct sql_network *network;
   
   column = g_object_get_data (G_OBJECT (cell), "column");
+  network = g_object_get_data (G_OBJECT (cell), "irc_network");
   
   gtk_tree_model_get_iter (model, &iter, path);
 
   if (GPOINTER_TO_INT (column) == COLUMN_SERVER)
   {
-    gtk_tree_model_get (model, &iter, COLUMN_NETWORK, &old_text, -1);
+    gtk_tree_model_get (model, &iter, COLUMN_SERVER, &old_text, -1);
     g_free (old_text);
 
     gtk_tree_model_get (model, &iter, COLUMN_SQL_SERVER, &server, -1);
     server->name = g_strdup (new_text);
-    edit_sql_network_server (server);
+    edit_sql_network_server (server, network);
     
     gtk_list_store_set (GTK_LIST_STORE (model), &iter, COLUMN_SERVER, new_text, -1);
   }
@@ -128,7 +130,7 @@ networks_config_edit_server_cell_edited (GtkCellRendererText *cell, const gchar 
   {
     gtk_tree_model_get (model, &iter, COLUMN_SQL_SERVER, &server, -1);
     server->port = atoi (new_text);
-    edit_sql_network_server (server);
+    edit_sql_network_server (server, network);
     
     gtk_list_store_set (GTK_LIST_STORE (model), &iter, COLUMN_PORT, atoi (new_text), -1);
   }
@@ -154,11 +156,11 @@ networks_config_new_server (GtkWidget *widget, struct sql_network *network)
   GtkTreeIter iter;
 
   list_store = g_object_get_data (G_OBJECT (widget), "list_store");
-
+  printf ("network->id = %d\n", network->id);
   server = new_sql_network_server ("Untitled", 6667, network);
 
   gtk_list_store_append (list_store, &iter);
-  gtk_list_store_set (list_store, &iter, COLUMN_SERVER, "Untitled", COLUMN_PORT, "6667", COLUMN_EDITABLE, TRUE, COLUMN_SQL_SERVER, (gpointer) server, -1);
+  gtk_list_store_set (list_store, &iter, COLUMN_SERVER, "Untitled", COLUMN_PORT, 6667, COLUMN_EDITABLE2, TRUE, COLUMN_SQL_SERVER, (gpointer) server, -1);
 }
 
 void
@@ -288,11 +290,13 @@ networks_config_edit_window (struct sql_network *network)
   renderer = gtk_cell_renderer_text_new ();
   g_signal_connect (renderer, "edited", G_CALLBACK (networks_config_edit_server_cell_edited), GTK_TREE_MODEL (list_store));
   g_object_set_data (G_OBJECT (renderer), "column", (gint *) COLUMN_SERVER);
+  g_object_set_data (G_OBJECT (renderer), "irc_network", network);
   gtk_tree_view_insert_column_with_attributes (tree_view, -1, "Server", renderer, "text", COLUMN_SERVER, "editable", COLUMN_EDITABLE2, NULL);
 
   renderer = gtk_cell_renderer_text_new ();
   g_signal_connect (renderer, "edited", G_CALLBACK (networks_config_edit_server_cell_edited), GTK_TREE_MODEL (list_store));
   g_object_set_data (G_OBJECT (renderer), "column", (gint *) COLUMN_PORT);
+  g_object_set_data (G_OBJECT (renderer), "irc_network", network);
   gtk_tree_view_insert_column_with_attributes (tree_view, -1, "Port", renderer, "text", COLUMN_PORT, "editable", COLUMN_EDITABLE2, NULL);
 
   gtk_tree_view_set_headers_visible (tree_view, TRUE);
@@ -335,6 +339,8 @@ networks_config_edit_window (struct sql_network *network)
 
   if (gpe_find_icon_pixmap ("preferences", &pmap, &bmap))
     gdk_window_set_icon (window->window, NULL, pmap, bmap);
+
+  networks_config_add_servers_from_sql (list_store, network);
 
   gtk_widget_show_all (window);
   gtk_tree_view_columns_autosize (tree_view);

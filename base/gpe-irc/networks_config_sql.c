@@ -42,6 +42,7 @@ new_sql_network_internal (int id, const char *name, const char *nick, const char
   e->nick = nick;
   e->real_name = real_name;
   e->password = password;
+  e->servers = NULL;
 
   sql_networks = g_slist_append (sql_networks, e);
 
@@ -57,7 +58,7 @@ new_sql_network_server_internal (int id, const char *name, int port, struct sql_
   e->name = name;
   e->port = port;
 
-  parent_network->servers = g_slist_append (parent_network->servers, e);
+  parent_network->servers = g_list_append (parent_network->servers, e);
 
   return e;
 }
@@ -109,12 +110,12 @@ edit_sql_network (struct sql_network *network)
 
 
 void
-edit_sql_network_server (struct sql_network_server *network_server)
+edit_sql_network_server (struct sql_network_server *network_server, struct sql_network *network)
 {
   char *err;
 
-  if (sqlite_exec_printf (sqliteh, "replace into irc_servers (uid,name,port) values ('%d', '%q', '%d')",
-			  NULL, NULL, &err, network_server->id, network_server->name, network_server->port))
+  if (sqlite_exec_printf (sqliteh, "replace into irc_servers values ('%d', '%q', '%d', '%d')",
+			  NULL, NULL, &err, network_server->id, network_server->name, network_server->port, network->id))
     {
       gpe_error_box (err);
       free (err);
@@ -150,7 +151,7 @@ del_sql_network_server (struct sql_network *e, struct sql_network_server *s)
       free (err);
     }
 
-  e->servers = g_slist_remove (e->servers, s);
+  e->servers = g_list_remove (e->servers, s);
 }
 
 void
@@ -194,7 +195,8 @@ sql_network_server_callback (void *arg, int argc, char **argv, char **names)
   if (argc == 4 && argv[0] && argv[1])
   {
     server_network = g_slist_find_custom (sql_networks, (gconstpointer) atoi (argv[3]), find_network);
-    new_sql_network_server_internal (atoi (argv[0]), g_strdup (argv[1]), atoi (argv[2]), (struct sql_network *) server_network->data);
+    if (server_network != NULL)
+      new_sql_network_server_internal (atoi (argv[0]), g_strdup (argv[1]), atoi (argv[2]), (struct sql_network *) server_network->data);
   }
   return 0;
 }

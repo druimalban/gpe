@@ -203,7 +203,7 @@ join_channel (IRCServer *server, gchar *channel_name)
 
   if (channel_name[0] == '#' || channel_name[0] == '&')
   {
-    //irc_join (server, channel_name);
+    irc_join (server, channel_name);
 
     channel = g_malloc (sizeof (*channel));
     channel->name = g_strdup (channel_name);
@@ -232,9 +232,9 @@ join_channel (IRCServer *server, gchar *channel_name)
 }
 
 void
-part_channel (IRCServer *server, IRCChannel *channel)
+quit_channel (IRCServer *server, IRCChannel *channel)
 {
-  //irc_part (server, channel->name, "GPE IRC");
+  irc_part (server, channel->name, "GPE IRC");
   gtk_widget_destroy (channel->button);
   g_hash_table_remove (server->channel, (gconstpointer) channel->name);
   g_free (channel);
@@ -243,9 +243,9 @@ part_channel (IRCServer *server, IRCChannel *channel)
 }
 
 void
-part_channel_from_hash (gpointer key, gpointer value, gpointer data)
+quit_channel_from_hash (gpointer key, gpointer value, gpointer data)
 {
-  part_channel ((IRCServer *) data, (IRCChannel *) value);
+  quit_channel ((IRCServer *) data, (IRCChannel *) value);
 }
 
 void
@@ -260,7 +260,7 @@ disconnect_from_server (IRCServer *server)
   irc_quit (server, "GPE IRC");
   server->connected = FALSE;
   g_io_channel_shutdown (server->io_channel, FALSE, NULL);
-  g_hash_table_foreach (server->channel, part_channel_from_hash, (gpointer) server);
+  g_hash_table_foreach (server->channel, quit_channel_from_hash, (gpointer) server);
 
   servers = g_list_remove (servers, (gconstpointer) server);                                            
   if (servers != NULL)
@@ -285,11 +285,10 @@ close_button_clicked ()
     if (gtk_object_get_data (GTK_OBJECT (selected_button), "type") == IRC_SERVER)
       disconnect_from_server (selected_server);
     else
-      part_channel (selected_server, selected_channel);
+      quit_channel (selected_server, selected_channel);
   }
 }
 
-/*
 gboolean
 watch_disconnect_from_server (GIOChannel *source, GIOCondition condition, gpointer data)
 {
@@ -327,7 +326,6 @@ get_data_from_server (GIOChannel *source, GIOCondition condition, gpointer data)
 
   return TRUE;
 }
-*/
 
 void
 new_connection (GtkWidget *parent, GtkWidget *parent_window)
@@ -340,7 +338,6 @@ new_connection (GtkWidget *parent, GtkWidget *parent_window)
   server = g_malloc (sizeof (*server));
   server->user_info = g_malloc (sizeof (*server->user_info));
   server->text = g_string_new ("");
-  server->prefix = NULL;
   server->channel = g_hash_table_new (g_str_hash, g_str_equal);
 
   server_combo_entry = gtk_object_get_data (GTK_OBJECT (parent), "server_combo_entry");
@@ -379,12 +376,41 @@ new_connection (GtkWidget *parent, GtkWidget *parent_window)
   gtk_widget_destroy (parent_window);
 
   irc_server_connect (server);
-  /*
   g_io_add_watch (server->io_channel, G_IO_IN, get_data_from_server, (gpointer) server);
   g_io_add_watch (server->io_channel, G_IO_HUP, watch_disconnect_from_server, (gpointer) server);
-  */
 
-  //join_channel (server, "#gpe");
+  join_channel (server, "#gpe");
+}
+
+void
+select_servers_from_network (GtkWidget *entry, GHashTable *network_hash)
+{
+  GtkWidget *server_combo;
+  gchar *network_name;
+  GList *popdown_strings;
+
+  network_name = gtk_entry_get_text (GTK_ENTRY (entry));
+  server_combo = g_object_get_data (G_OBJECT (entry), "server_combo");
+  popdown_strings = g_hash_table_lookup (network_hash, (gconstpointer) network_name);
+
+  if (popdown_strings != NULL)
+    gtk_combo_set_popdown_strings (GTK_COMBO (server_combo), popdown_strings);
+}
+
+void
+get_networks (GtkWidget *combo, GHashTable *network_hash)
+{
+  GList *popdown_strings;
+  GSList *iter;
+ 
+  iter = sql_networks; 
+  while (iter)
+  {
+    popdown_strings = g_list_append (popdown_strings, ((struct sql_network *) iter->data)->name);
+    g_hash_table_insert (network_hash, (gpointer) ((struct sql_network *) iter->data)->name, (gpointer) ((struct sql_network *) iter->data)->servers);
+    iter = iter->next;
+  }
+  gtk_combo_set_popdown_strings (GTK_COMBO (combo), popdown_strings);
 }
 
 void
@@ -395,6 +421,9 @@ new_connection_dialog ()
   GtkWidget *connect_button, *close_button, *network_properties_button;
   GdkPixmap *pmap;
   GdkBitmap *bmap;
+
+  GHashTable *network_hash;
+  network_hash = g_hash_table_new (g_str_hash, g_str_equal);
 
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title (GTK_WINDOW (window), "IRC Client - New Connection");
@@ -453,6 +482,7 @@ new_connection_dialog ()
   g_object_set_data (G_OBJECT (connect_button), "nick_entry", (gpointer) nick_entry);
   g_object_set_data (G_OBJECT (connect_button), "real_name_entry", (gpointer) real_name_entry);
   g_object_set_data (G_OBJECT (connect_button), "password_entry", (gpointer) password_entry);
+  g_object_set_data (G_OBJECT (GTK_COMBO (network_combo)->entry), "server_combo", (gpointer) server_combo);
 
   g_signal_connect (G_OBJECT (connect_button), "clicked",
                              G_CALLBACK (new_connection), window);
@@ -460,6 +490,8 @@ new_connection_dialog ()
                              G_CALLBACK (kill_widget), window);
   g_signal_connect (GTK_OBJECT (network_properties_button), "clicked",
                              G_CALLBACK (networks_config_window), NULL);
+  g_signal_connect (G_OBJECT (GTK_COMBO (network_combo)->entry), "insert-text",
+                             G_CALLBACK (select_servers_from_network), network_hash);
 
   gtk_container_add (GTK_CONTAINER (window), GTK_WIDGET (vbox));
   gtk_box_pack_start (GTK_BOX (vbox), table, FALSE, FALSE, 0);
@@ -479,6 +511,8 @@ new_connection_dialog ()
   if (gpe_find_icon_pixmap ("globe", &pmap, &bmap))
     gdk_window_set_icon (window->window, NULL, pmap, bmap);
 
+  get_networks (network_combo, network_hash);
+
   gtk_widget_show_all (window);
 }
 
@@ -495,10 +529,8 @@ entry_key_press (GtkWidget *widget, GdkEventKey *event, gpointer data)
 
     if (event->keyval == GDK_Return && strlen (entry_text) > 0)
     {
-      GString *gstr = g_string_new(selected_server->user_info->nick);
-
       irc_privmsg (selected_server, selected_channel->name, entry_text);
-      display_text = g_strdup_printf ("%s: %s\n", selected_server->user_info->nick, entry_text);
+      display_text = g_strdup_printf ("\n%s: %s", selected_server->user_info->nick, entry_text);
       selected_server->text = g_string_append (selected_server->text, display_text);
       update_text_view (g_string_new (display_text));
       gtk_entry_set_text (GTK_ENTRY (main_entry), "");
