@@ -12,10 +12,12 @@ You are welcome to participate at gpe and gpe-conf.
 * Adaption to other hardware platforms than iPAQ. 
   - Button configuration and serial setup for SimPad.
   - Button configuration for Zaurus.
-  - Add config wizzard to network config tool.
-  - Change date/time setup tool to use timezone definition files.
-  - Fix proxy settup to work for all browsers and ipkg.
+  - Improve button and keyboard configuration support.
 
+* Add config wizzard to network config tool.
+* Change date/time setup tool to use timezone definition files.
+* Fix proxy settup to work for all browsers and ipkg.
+* Add translation support to definition files.
 
 -> Here are some instruction to add a new module (Applet) to gpe-conf.
 

@@ -87,17 +87,7 @@ t_buttondef buttondef[NUM_BUTTONS] = {
 	{NULL, "XF86Mail","???Pressed","gpe-taskmanager",0},
 	{NULL, "XF86Start","???Pressed","mbcontrol -desktop",0}};
 
-t_scommand commands[NUM_COMMANDS] =	{
-	{NULL,""},
-	{NULL,"gpe-soundbite record --autogenerate-filename $HOME_VOLATILE"},
-	{NULL,"gpe-calendar"},
-	{NULL,"gpe-contacts"},
-	{NULL,"gpe-taskmanager"},
-	{NULL,"gpe-nmf"},
-	{NULL,"dillo"},
-	{NULL,"gpe-todo"},
-	{NULL,"mbcontrol -desktop"}};
-
+t_scommand *commands = NULL;
 static int active_button = 0;
 
 struct gpe_icon local_icons[] = {
@@ -116,25 +106,39 @@ commands_load(void)
 	GKeyFile *cmdfile;
 	GError *err = NULL;
 	gchar **keys;
-	int i;
+	int i, cmdcnt;
 	
-	cmdfile = g_keyfile_new();
+	cmdfile = g_key_file_new();
 	
-	if (!g_key_file_load_from_file (G_KEY_FILE(cmdfile), FILE_COMMANDS,
-                                             G_KEY_FILE_KEEP_COMMENTS,
-                                             &err)
+	if (!g_key_file_load_from_file (cmdfile, FILE_COMMANDS,
+                                    G_KEY_FILE_KEEP_COMMENTS, &err))
 	{
+		gpe_error_box(err->message);
 		g_error_free(err);
 		return FALSE;
 	}
 	
-	keys = g_key_file_get_keys (cmdfile, "Commands",  &NUM_COMMANDS, &err);
+	keys = g_key_file_get_keys (cmdfile, "Commands",  &cmdcnt, &err);
 	if (keys)
 	{
-		for (i=0; i<NUM_COMMANDS; i++)
+		for (i=0; i < cmdcnt; i++)
 		{
-			commands = realloc(commands, i * sizeof(t_scommand));
-			
+			int cnt = 0;
+			gchar **vals;
+			commands = realloc(commands, (i+1) * sizeof(t_scommand));
+			vals = g_key_file_get_string_list (cmdfile, "Commands",
+                                               keys[i], &cnt, &err);
+			if (cnt == 2)
+			{
+				commands[i].title = vals[0];
+				commands[i].command = vals[1];
+				NUM_COMMANDS++;
+			}
+			else
+			{
+				if (vals)
+					g_strfreev(vals);
+			}
 		}
 		g_strfreev(keys);
 	}

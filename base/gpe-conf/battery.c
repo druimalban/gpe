@@ -270,24 +270,7 @@ gint update_bat_values(gpointer data)
 		/* read data from proc entry */
 		fclose(file_apm);
 		file_apm = fopen(PROC_APM, "r");
-/*//		1.16 1.2 0x03 0x01 0x00 0x01 100% -1 ?
-		{
-			char buf[255];
-			memset(buf, 0, 255);
-			fread(buf, 255, 1, file_apm);
-printf("b:%s:\n", buf);
-if (strchr(buf, '\n'))
-  	strchr(buf, '\r')[0] = '*';
-printf("#read %i\n", sscanf(buf,
-			       "%*f %*f %*s 0x%x 0x%x 0x%x %i%% %i %4s",
-		           &ac_connected,
-		           &status,
-		           &flags,
-		           &percent, 
-		           &remaining,
-		           unit));
-		}
-*/		if (fscanf(file_apm,
+		if (fscanf(file_apm,
 			       "%*f %*f %*s 0x%x 0x%x 0x%x %i%% %i %4s",
 		           &ac_connected,
 		           &status,
@@ -335,7 +318,10 @@ printf("#read %i\n", sscanf(buf,
 					break;
 				}
 			}
-			
+		
+            if (percent > 100) percent=100;
+            if (percent < 0 )  percent=0;
+
 			gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (batt_int.bar),
 			                               (float)percent/100.0);
 			toolbar_set_style (batt_int.bar, barstate);
@@ -346,8 +332,10 @@ printf("#read %i\n", sscanf(buf,
 			
 			if (ac_connected)
 				sprintf(tmp,"%s",_("AC connected"));
-			else
-				sprintf(tmp,"%s: %d min.",_("Lifetime"), remaining);
+			else if (remaining > 0)
+			     	sprintf(tmp,"%s: %d min.",_("Lifetime"), remaining);
+            	 else 
+            		sprintf(tmp,"");
 			gtk_label_set_text(GTK_LABEL(batt_int.llifetime),tmp);
 		}
 	}

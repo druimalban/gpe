@@ -1,0 +1,15 @@
+#
+# This file contains command definitions for key actions setup
+# 
+# Format is <title>;<command>
+
+[Commands]
+cmd1 = Record Memo;gpe-soundbite record --autogenerate-filename $HOME_VOLATILE
+cmd2 = Calendar;gpe-calendar
+cmd3 = Contacts;gpe-contacts
+cmd4 = To-do List;gpe-todo
+cmd5 = Taskmanager;gpe-taskmanager
+cmd6 = Audio Player;gpe-nmf
+cmd7 = Web Browser;dillo
+cmd8 = Toggle Desktop;mbcontrol -desktop
+cmd9 = Audio Mixer;gpe-mixer

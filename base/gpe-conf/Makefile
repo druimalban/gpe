@@ -169,6 +169,7 @@ install-program: all all-desktop
 	sed -e s/VERSION/$(VERSION)/ < familiar/control1 > $(DESTDIR)/CONTROL/control
 	mkdir -p $(DESTDIR)/etc/gpe
 	$(INSTALL) -m 644 familiar/gpe-config.conf $(DESTDIR)/etc/gpe/
+	$(INSTALL) -m 644 data/key-commands $(DESTDIR)/etc/gpe/
 	mkdir -p $(DESTDIR)/$(PREFIX)/bin
 	$(INSTALL) -m 4755 $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/gpe-conf
 	$(STRIP) $(DESTDIR)$(PREFIX)/bin/gpe-conf
