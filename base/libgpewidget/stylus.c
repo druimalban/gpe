@@ -27,6 +27,14 @@
 
 static int stylus_mode_flag;
 
+/**
+ * gpe_stylus_mode:
+ * 
+ * Determine if the user interface is set up to use a stylus 
+ * for user input or not.
+ * 
+ * Returns: YES if stylus mode is set, NO otherwise.
+ */
 gboolean
 gpe_stylus_mode (void)
 {
@@ -48,20 +56,20 @@ gpe_stylus_mode (void)
       stylus_mode_flag = NO;
 
       if (atom)
-	{
-	  XGetWindowProperty (dpy, root, atom, 0, 1, 0, XA_INTEGER,
-			      &type, &format, &nitems, &bytes,
-			      &prop);
-      
-	  if (nitems)
-	    stylus_mode_flag = YES;
-
-	  if (prop)
-	    XFree (prop);
-	}
+        {
+          XGetWindowProperty (dpy, root, atom, 0, 1, 0, XA_INTEGER,
+                      &type, &format, &nitems, &bytes,
+                      &prop);
+          
+          if (nitems)
+            stylus_mode_flag = YES;
+    
+          if (prop)
+            XFree (prop);
+        }
 
       if (getenv ("GPE_PRETEND_STYLUS") != NULL)
-	stylus_mode_flag = YES;
+        stylus_mode_flag = YES;
     }
 
   return stylus_mode_flag == YES;

@@ -1,21 +1,20 @@
 <!-- ##### SECTION Title ##### -->
-Spacing
+spacing
 
 <!-- ##### SECTION Short_Description ##### -->
-Application GUI spacings
+
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-For creating graphical user interfaces with an unified look and feel it is 
-important to have a set of functions to provide spacing information.
-The GPE spacing functions provide a basic set of functions for determining 
-the most frquently used sizes for GUI development.
+
 </para>
+
 
 <!-- ##### SECTION See_Also ##### -->
 <para>
 
 </para>
+
 
 <!-- ##### MACRO GPE_GNOME_SCALING ##### -->
 <para>
@@ -26,34 +25,33 @@ the most frquently used sizes for GUI development.
 
 <!-- ##### FUNCTION gpe_get_catspacing ##### -->
 <para>
-Returns spacing between categories.
+
 </para>
 
-@Returns: Size in pixels.
+@Returns: 
 
 
 <!-- ##### FUNCTION gpe_get_catindent ##### -->
 <para>
-Returns size for identing of GUI categories.
+
 </para>
 
-@Returns: Size in pixels.
+@Returns: 
 
 
 <!-- ##### FUNCTION gpe_get_border ##### -->
 <para>
-Get the size of borders around widgets. This is used for borders around windows 
-and dialogs mostly.
+
 </para>
 
-@Returns: Border size in pixels.
+@Returns: 
 
 
 <!-- ##### FUNCTION gpe_get_boxspacing ##### -->
 <para>
-Returns spacings used to separate contents of boxes and tables.
+
 </para>
 
-@Returns: Spacing in pixels.
+@Returns: 
 
 

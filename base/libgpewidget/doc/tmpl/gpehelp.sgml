@@ -1,33 +1,28 @@
 <!-- ##### SECTION Title ##### -->
-GPE simple help
+gpehelp
 
 <!-- ##### SECTION Short_Description ##### -->
-Call external help browser.
+
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-Simple interface to provide a call for an external application 
-to display help information. Currently this is fixed to a list
-of HTML browsers (gpe-helpviewer, dillo, minimo).
+
 </para>
+
 
 <!-- ##### SECTION See_Also ##### -->
 <para>
 
 </para>
 
+
 <!-- ##### FUNCTION gpe_show_help ##### -->
 <para>
-This function creates a filename and topic information from
-supplied parameters and calls an external application to display
-it. The filename is created from the 'book' parameter, the 'topic'
-parameter is passed as index for the help file.
-The resulting URL that is opened is constructed in this way:
-file://usr/share/doc/gpe/&lt;book&gt;.html#&lt;topic&gt;
+
 </para>
 
-@book: String describing help book file.
-@topic: String describing help topic.
-@Returns: TRUE if an error occured, FALSE otherwise.
+@book: 
+@topic: 
+@Returns: 
 
 

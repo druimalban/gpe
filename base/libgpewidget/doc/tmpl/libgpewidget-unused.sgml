@@ -1,29 +1,3 @@
-<!-- ##### STRUCT box_desc ##### -->
-<para>
-
-</para>
-
-@label: 
-@value: 
-
-<!-- ##### STRUCT box_desc2 ##### -->
-<para>
-
-</para>
-
-@label: 
-@value: 
-@suggestions: 
-
-<!-- ##### STRUCT gpe_icon ##### -->
-<para>
-
-</para>
-
-@shortname: 
-@filename: 
-@pixbuf: 
-
 <!-- ##### FUNCTION gpe_render_icon ##### -->
 <para>
 [obsolete, use gtk_image_new_from_pixbuf()]

@@ -1,19 +1,20 @@
 <!-- ##### SECTION Title ##### -->
-GpeTimeSel
+gpetimesel
 
 <!-- ##### SECTION Short_Description ##### -->
-Time selection widget
+
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-This widget is used to enter time values. It displays an editing field 
-for a time value and an extra button which opens a time selection popup.
+
 </para>
+
 
 <!-- ##### SECTION See_Also ##### -->
 <para>
 
 </para>
+
 
 <!-- ##### STRUCT GpeTimeSel ##### -->
 <para>
@@ -30,40 +31,36 @@ for a time value and an extra button which opens a time selection popup.
 @popup: 
 
 <!-- ##### STRUCT GpeTimeSelClass ##### -->
-<!--
 <para>
 
 </para>
--->
 
 
 <!-- ##### FUNCTION gpe_time_sel_new ##### -->
 <para>
-This method is used to create a new GpeTimeSel widget.
+
 </para>
 
-@Returns: New widget
+@Returns: 
 
 
 <!-- ##### FUNCTION gpe_time_sel_get_time ##### -->
 <para>
-Retrieve current time value from a GpeTimeSel. The time is split up into
-separate values for hour and minute.
+
 </para>
 
-@sel: Widget
-@hour: Value to hold selected hour.
-@minute: Value to hold selected minute.
+@sel: 
+@hour: 
+@minute: 
 
 
 <!-- ##### FUNCTION gpe_time_sel_set_time ##### -->
 <para>
-Set the time of the time selectior. We set hour and minute in separate 
-values passed to the method.
+
 </para>
 
-@sel: Widget
-@hour: Hour value to set.
-@minute: Minute value to set.
+@sel: 
+@hour: 
+@minute: 
 
 
