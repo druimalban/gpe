@@ -1,0 +1,11 @@
+#!/bin/sh
+SETUID=1
+
+if [ $SETUID -eq 1 ]; then
+  chown root.root /usr/bin/bl
+  chmod u+s /usr/bin/bl
+else
+  if [ -f /dev/touchscreen/0 ]; then chmod 666 /dev/touchscreen/0; fi
+fi
+exit 0
+

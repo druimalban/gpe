@@ -1,0 +1,790 @@
+<?xml version="1.0"?>
+<GTK-Interface>
+
+<project>
+  <name>Gpe-config-sleep</name>
+  <program_name>gpe-config-sleep</program_name>
+  <directory></directory>
+  <source_directory>src</source_directory>
+  <pixmaps_directory>pixmaps</pixmaps_directory>
+  <language>C</language>
+  <gnome_support>False</gnome_support>
+  <gettext_support>False</gettext_support>
+  <use_widget_names>True</use_widget_names>
+  <main_source_file>interface.z</main_source_file>
+  <main_header_file>interface.zh</main_header_file>
+  <handler_source_file>callbacks.z</handler_source_file>
+  <handler_header_file>callbacks.zh</handler_header_file>
+  <support_source_file>support.z</support_source_file>
+  <support_header_file>support.zh</support_header_file>
+</project>
+
+<widget>
+  <class>GtkWindow</class>
+  <name>GPE-ISgui</name>
+  <signal>
+    <name>delete_event</name>
+    <handler>gtk_main_quit</handler>
+    <last_modification_time>Fri, 02 Aug 2002 17:32:16 GMT</last_modification_time>
+  </signal>
+  <title>GPE-ISgui</title>
+  <type>GTK_WINDOW_TOPLEVEL</type>
+  <position>GTK_WIN_POS_NONE</position>
+  <modal>False</modal>
+  <allow_shrink>True</allow_shrink>
+  <allow_grow>True</allow_grow>
+  <auto_shrink>True</auto_shrink>
+
+  <widget>
+    <class>GtkTable</class>
+    <name>table1</name>
+    <rows>3</rows>
+    <columns>2</columns>
+    <homogeneous>False</homogeneous>
+    <row_spacing>0</row_spacing>
+    <column_spacing>0</column_spacing>
+
+    <widget>
+      <class>GtkFrame</class>
+      <name>sleep</name>
+      <border_width>1</border_width>
+      <label>Auto-sleep</label>
+      <label_xalign>0</label_xalign>
+      <shadow_type>GTK_SHADOW_ETCHED_IN</shadow_type>
+      <child>
+	<left_attach>0</left_attach>
+	<right_attach>1</right_attach>
+	<top_attach>0</top_attach>
+	<bottom_attach>1</bottom_attach>
+	<xpad>0</xpad>
+	<ypad>0</ypad>
+	<xexpand>True</xexpand>
+	<yexpand>True</yexpand>
+	<xshrink>True</xshrink>
+	<yshrink>True</yshrink>
+	<xfill>True</xfill>
+	<yfill>True</yfill>
+      </child>
+
+      <widget>
+	<class>GtkTable</class>
+	<name>table2</name>
+	<rows>2</rows>
+	<columns>2</columns>
+	<homogeneous>False</homogeneous>
+	<row_spacing>0</row_spacing>
+	<column_spacing>0</column_spacing>
+
+	<widget>
+	  <class>GtkSpinButton</class>
+	  <name>sleep_idle_spin</name>
+	  <tooltip>sleep timeout</tooltip>
+	  <can_focus>True</can_focus>
+	  <signal>
+	    <name>activate</name>
+	    <handler>on_sleep_idle_spin_activate</handler>
+	    <data>ISconf</data>
+	    <last_modification_time>Mon, 05 Aug 2002 13:58:18 GMT</last_modification_time>
+	  </signal>
+	  <signal>
+	    <name>changed</name>
+	    <handler>on_sleep_idle_spin_changed</handler>
+	    <data>ISconf</data>
+	    <last_modification_time>Mon, 05 Aug 2002 13:58:25 GMT</last_modification_time>
+	  </signal>
+	  <signal>
+	    <name>focus_out_event</name>
+	    <handler>on_sleep_idle_spin_focus_out_event</handler>
+	    <data>ISconf</data>
+	    <last_modification_time>Wed, 07 Aug 2002 20:15:11 GMT</last_modification_time>
+	  </signal>
+	  <climb_rate>1</climb_rate>
+	  <digits>0</digits>
+	  <numeric>True</numeric>
+	  <update_policy>GTK_UPDATE_ALWAYS</update_policy>
+	  <snap>False</snap>
+	  <wrap>False</wrap>
+	  <value>180</value>
+	  <lower>0</lower>
+	  <upper>1800</upper>
+	  <step>5</step>
+	  <page>10</page>
+	  <page_size>10</page_size>
+	  <child>
+	    <left_attach>0</left_attach>
+	    <right_attach>1</right_attach>
+	    <top_attach>1</top_attach>
+	    <bottom_attach>2</bottom_attach>
+	    <xpad>0</xpad>
+	    <ypad>0</ypad>
+	    <xexpand>True</xexpand>
+	    <yexpand>False</yexpand>
+	    <xshrink>True</xshrink>
+	    <yshrink>True</yshrink>
+	    <xfill>True</xfill>
+	    <yfill>False</yfill>
+	  </child>
+	</widget>
+
+	<widget>
+	  <class>GtkLabel</class>
+	  <name>sleep_idle_label</name>
+	  <label>idle(sec)</label>
+	  <justify>GTK_JUSTIFY_CENTER</justify>
+	  <wrap>False</wrap>
+	  <xalign>0</xalign>
+	  <yalign>0.5</yalign>
+	  <xpad>0</xpad>
+	  <ypad>0</ypad>
+	  <child>
+	    <left_attach>1</left_attach>
+	    <right_attach>2</right_attach>
+	    <top_attach>1</top_attach>
+	    <bottom_attach>2</bottom_attach>
+	    <xpad>0</xpad>
+	    <ypad>0</ypad>
+	    <xexpand>False</xexpand>
+	    <yexpand>False</yexpand>
+	    <xshrink>True</xshrink>
+	    <yshrink>True</yshrink>
+	    <xfill>True</xfill>
+	    <yfill>False</yfill>
+	  </child>
+	</widget>
+
+	<widget>
+	  <class>GtkCheckButton</class>
+	  <name>sleep_enable</name>
+	  <signal>
+	    <name>toggled</name>
+	    <handler>AS_checked</handler>
+	    <data>ISconf</data>
+	    <last_modification_time>Mon, 05 Aug 2002 13:57:37 GMT</last_modification_time>
+	  </signal>
+	  <label>enabled</label>
+	  <active>False</active>
+	  <draw_indicator>True</draw_indicator>
+	  <child>
+	    <left_attach>0</left_attach>
+	    <right_attach>2</right_attach>
+	    <top_attach>0</top_attach>
+	    <bottom_attach>1</bottom_attach>
+	    <xpad>0</xpad>
+	    <ypad>0</ypad>
+	    <xexpand>False</xexpand>
+	    <yexpand>False</yexpand>
+	    <xshrink>True</xshrink>
+	    <yshrink>True</yshrink>
+	    <xfill>True</xfill>
+	    <yfill>False</yfill>
+	  </child>
+	</widget>
+      </widget>
+    </widget>
+
+    <widget>
+      <class>GtkFrame</class>
+      <name>dim</name>
+      <border_width>1</border_width>
+      <label>Auto-dim</label>
+      <label_xalign>0</label_xalign>
+      <shadow_type>GTK_SHADOW_ETCHED_IN</shadow_type>
+      <child>
+	<left_attach>1</left_attach>
+	<right_attach>2</right_attach>
+	<top_attach>0</top_attach>
+	<bottom_attach>1</bottom_attach>
+	<xpad>0</xpad>
+	<ypad>0</ypad>
+	<xexpand>True</xexpand>
+	<yexpand>False</yexpand>
+	<xshrink>True</xshrink>
+	<yshrink>True</yshrink>
+	<xfill>True</xfill>
+	<yfill>True</yfill>
+      </child>
+
+      <widget>
+	<class>GtkTable</class>
+	<name>table3</name>
+	<rows>2</rows>
+	<columns>2</columns>
+	<homogeneous>False</homogeneous>
+	<row_spacing>0</row_spacing>
+	<column_spacing>0</column_spacing>
+
+	<widget>
+	  <class>GtkSpinButton</class>
+	  <name>dim_spin</name>
+	  <tooltip>backlight dim timeout</tooltip>
+	  <can_focus>True</can_focus>
+	  <signal>
+	    <name>activate</name>
+	    <handler>on_dim_spin_activate</handler>
+	    <data>ISconf</data>
+	    <last_modification_time>Mon, 05 Aug 2002 13:58:43 GMT</last_modification_time>
+	  </signal>
+	  <signal>
+	    <name>changed</name>
+	    <handler>on_dim_spin_changed</handler>
+	    <data>ISconf</data>
+	    <last_modification_time>Mon, 05 Aug 2002 13:58:50 GMT</last_modification_time>
+	  </signal>
+	  <signal>
+	    <name>focus_out_event</name>
+	    <handler>on_dim_spin_focus_out_event</handler>
+	    <data>ISconf</data>
+	    <last_modification_time>Wed, 07 Aug 2002 20:15:45 GMT</last_modification_time>
+	  </signal>
+	  <climb_rate>1</climb_rate>
+	  <digits>0</digits>
+	  <numeric>False</numeric>
+	  <update_policy>GTK_UPDATE_ALWAYS</update_policy>
+	  <snap>False</snap>
+	  <wrap>False</wrap>
+	  <value>60</value>
+	  <lower>0</lower>
+	  <upper>1800</upper>
+	  <step>5</step>
+	  <page>10</page>
+	  <page_size>10</page_size>
+	  <child>
+	    <left_attach>0</left_attach>
+	    <right_attach>1</right_attach>
+	    <top_attach>1</top_attach>
+	    <bottom_attach>2</bottom_attach>
+	    <xpad>0</xpad>
+	    <ypad>0</ypad>
+	    <xexpand>True</xexpand>
+	    <yexpand>False</yexpand>
+	    <xshrink>True</xshrink>
+	    <yshrink>True</yshrink>
+	    <xfill>True</xfill>
+	    <yfill>False</yfill>
+	  </child>
+	</widget>
+
+	<widget>
+	  <class>GtkLabel</class>
+	  <name>dim_idle_label</name>
+	  <label>idle(sec)</label>
+	  <justify>GTK_JUSTIFY_CENTER</justify>
+	  <wrap>False</wrap>
+	  <xalign>0</xalign>
+	  <yalign>0.5</yalign>
+	  <xpad>0</xpad>
+	  <ypad>0</ypad>
+	  <child>
+	    <left_attach>1</left_attach>
+	    <right_attach>2</right_attach>
+	    <top_attach>1</top_attach>
+	    <bottom_attach>2</bottom_attach>
+	    <xpad>0</xpad>
+	    <ypad>0</ypad>
+	    <xexpand>False</xexpand>
+	    <yexpand>False</yexpand>
+	    <xshrink>True</xshrink>
+	    <yshrink>True</yshrink>
+	    <xfill>True</xfill>
+	    <yfill>False</yfill>
+	  </child>
+	</widget>
+
+	<widget>
+	  <class>GtkCheckButton</class>
+	  <name>dim_enable</name>
+	  <signal>
+	    <name>toggled</name>
+	    <handler>AD_checked</handler>
+	    <data>ISconf</data>
+	    <last_modification_time>Mon, 05 Aug 2002 13:58:32 GMT</last_modification_time>
+	  </signal>
+	  <label>enabled</label>
+	  <active>False</active>
+	  <draw_indicator>True</draw_indicator>
+	  <child>
+	    <left_attach>0</left_attach>
+	    <right_attach>2</right_attach>
+	    <top_attach>0</top_attach>
+	    <bottom_attach>1</bottom_attach>
+	    <xpad>0</xpad>
+	    <ypad>0</ypad>
+	    <xexpand>False</xexpand>
+	    <yexpand>False</yexpand>
+	    <xshrink>True</xshrink>
+	    <yshrink>True</yshrink>
+	    <xfill>True</xfill>
+	    <yfill>False</yfill>
+	  </child>
+	</widget>
+      </widget>
+    </widget>
+
+    <widget>
+      <class>GtkFrame</class>
+      <name>frame5</name>
+      <border_width>1</border_width>
+      <label>Auto-sleep</label>
+      <label_xalign>0</label_xalign>
+      <shadow_type>GTK_SHADOW_ETCHED_IN</shadow_type>
+      <child>
+	<left_attach>0</left_attach>
+	<right_attach>1</right_attach>
+	<top_attach>1</top_attach>
+	<bottom_attach>2</bottom_attach>
+	<xpad>0</xpad>
+	<ypad>0</ypad>
+	<xexpand>False</xexpand>
+	<yexpand>True</yexpand>
+	<xshrink>True</xshrink>
+	<yshrink>True</yshrink>
+	<xfill>True</xfill>
+	<yfill>True</yfill>
+      </child>
+
+      <widget>
+	<class>GtkTable</class>
+	<name>table4</name>
+	<rows>4</rows>
+	<columns>3</columns>
+	<homogeneous>False</homogeneous>
+	<row_spacing>0</row_spacing>
+	<column_spacing>0</column_spacing>
+
+	<widget>
+	  <class>GtkCheckButton</class>
+	  <name>sleep_cpu</name>
+	  <tooltip>Sleep on cpu load</tooltip>
+	  <signal>
+	    <name>toggled</name>
+	    <handler>cpu_checked</handler>
+	    <data>ISconf</data>
+	    <last_modification_time>Mon, 05 Aug 2002 13:59:24 GMT</last_modification_time>
+	  </signal>
+	  <label>cpu</label>
+	  <active>False</active>
+	  <draw_indicator>True</draw_indicator>
+	  <child>
+	    <left_attach>0</left_attach>
+	    <right_attach>1</right_attach>
+	    <top_attach>1</top_attach>
+	    <bottom_attach>2</bottom_attach>
+	    <xpad>0</xpad>
+	    <ypad>0</ypad>
+	    <xexpand>False</xexpand>
+	    <yexpand>False</yexpand>
+	    <xshrink>True</xshrink>
+	    <yshrink>True</yshrink>
+	    <xfill>True</xfill>
+	    <yfill>False</yfill>
+	  </child>
+	</widget>
+
+	<widget>
+	  <class>GtkSpinButton</class>
+	  <name>sleep_cpu_spin</name>
+	  <can_focus>True</can_focus>
+	  <signal>
+	    <name>activate</name>
+	    <handler>on_sleep_cpu_spin_activate</handler>
+	    <data>ISconf</data>
+	    <last_modification_time>Mon, 05 Aug 2002 13:59:33 GMT</last_modification_time>
+	  </signal>
+	  <signal>
+	    <name>changed</name>
+	    <handler>on_sleep_cpu_spin_changed</handler>
+	    <data>ISconf</data>
+	    <last_modification_time>Mon, 05 Aug 2002 13:59:38 GMT</last_modification_time>
+	  </signal>
+	  <signal>
+	    <name>focus_out_event</name>
+	    <handler>on_sleep_cpu_spin_focus_out_event</handler>
+	    <data>ISconf</data>
+	    <last_modification_time>Wed, 07 Aug 2002 20:23:19 GMT</last_modification_time>
+	  </signal>
+	  <climb_rate>1</climb_rate>
+	  <digits>2</digits>
+	  <numeric>True</numeric>
+	  <update_policy>GTK_UPDATE_ALWAYS</update_policy>
+	  <snap>False</snap>
+	  <wrap>False</wrap>
+	  <value>0.05</value>
+	  <lower>0.01</lower>
+	  <upper>2</upper>
+	  <step>0.01</step>
+	  <page>0.05</page>
+	  <page_size>10</page_size>
+	  <child>
+	    <left_attach>1</left_attach>
+	    <right_attach>2</right_attach>
+	    <top_attach>1</top_attach>
+	    <bottom_attach>2</bottom_attach>
+	    <xpad>0</xpad>
+	    <ypad>0</ypad>
+	    <xexpand>True</xexpand>
+	    <yexpand>False</yexpand>
+	    <xshrink>True</xshrink>
+	    <yshrink>True</yshrink>
+	    <xfill>True</xfill>
+	    <yfill>False</yfill>
+	  </child>
+	</widget>
+
+	<widget>
+	  <class>GtkLabel</class>
+	  <name>sleep_cpu_label</name>
+	  <label>load</label>
+	  <justify>GTK_JUSTIFY_CENTER</justify>
+	  <wrap>False</wrap>
+	  <xalign>0</xalign>
+	  <yalign>0.5</yalign>
+	  <xpad>0</xpad>
+	  <ypad>0</ypad>
+	  <child>
+	    <left_attach>2</left_attach>
+	    <right_attach>3</right_attach>
+	    <top_attach>1</top_attach>
+	    <bottom_attach>2</bottom_attach>
+	    <xpad>0</xpad>
+	    <ypad>0</ypad>
+	    <xexpand>False</xexpand>
+	    <yexpand>False</yexpand>
+	    <xshrink>True</xshrink>
+	    <yshrink>True</yshrink>
+	    <xfill>True</xfill>
+	    <yfill>False</yfill>
+	  </child>
+	</widget>
+
+	<widget>
+	  <class>GtkButton</class>
+	  <name>sleep_choose_irq</name>
+	  <border_width>1</border_width>
+	  <signal>
+	    <name>clicked</name>
+	    <handler>irq_choose_but</handler>
+	    <data>ISconf</data>
+	    <last_modification_time>Mon, 05 Aug 2002 13:59:54 GMT</last_modification_time>
+	  </signal>
+	  <label>Choose IRQs</label>
+	  <relief>GTK_RELIEF_NORMAL</relief>
+	  <child>
+	    <left_attach>0</left_attach>
+	    <right_attach>3</right_attach>
+	    <top_attach>3</top_attach>
+	    <bottom_attach>4</bottom_attach>
+	    <xpad>0</xpad>
+	    <ypad>0</ypad>
+	    <xexpand>False</xexpand>
+	    <yexpand>False</yexpand>
+	    <xshrink>True</xshrink>
+	    <yshrink>True</yshrink>
+	    <xfill>True</xfill>
+	    <yfill>False</yfill>
+	  </child>
+	</widget>
+
+	<widget>
+	  <class>GtkCheckButton</class>
+	  <name>sleep_apm</name>
+	  <tooltip>Sleep on AC</tooltip>
+	  <signal>
+	    <name>toggled</name>
+	    <handler>on_sleep_apm_toggled</handler>
+	    <data>ISconf</data>
+	    <last_modification_time>Mon, 05 Aug 2002 13:59:15 GMT</last_modification_time>
+	  </signal>
+	  <label>apm</label>
+	  <active>False</active>
+	  <draw_indicator>True</draw_indicator>
+	  <child>
+	    <left_attach>0</left_attach>
+	    <right_attach>3</right_attach>
+	    <top_attach>0</top_attach>
+	    <bottom_attach>1</bottom_attach>
+	    <xpad>0</xpad>
+	    <ypad>0</ypad>
+	    <xexpand>False</xexpand>
+	    <yexpand>False</yexpand>
+	    <xshrink>True</xshrink>
+	    <yshrink>True</yshrink>
+	    <xfill>True</xfill>
+	    <yfill>False</yfill>
+	  </child>
+	</widget>
+
+	<widget>
+	  <class>GtkCheckButton</class>
+	  <name>sleep_probe_irq</name>
+	  <tooltip>Check IRQ activity</tooltip>
+	  <signal>
+	    <name>toggled</name>
+	    <handler>on_sleep_probe_irq_toggled</handler>
+	    <data>ISconf</data>
+	    <last_modification_time>Mon, 05 Aug 2002 13:59:45 GMT</last_modification_time>
+	  </signal>
+	  <label>probe IRQs</label>
+	  <active>False</active>
+	  <draw_indicator>True</draw_indicator>
+	  <child>
+	    <left_attach>0</left_attach>
+	    <right_attach>3</right_attach>
+	    <top_attach>2</top_attach>
+	    <bottom_attach>3</bottom_attach>
+	    <xpad>0</xpad>
+	    <ypad>0</ypad>
+	    <xexpand>False</xexpand>
+	    <yexpand>False</yexpand>
+	    <xshrink>True</xshrink>
+	    <yshrink>True</yshrink>
+	    <xfill>True</xfill>
+	    <yfill>False</yfill>
+	  </child>
+	</widget>
+      </widget>
+    </widget>
+
+    <widget>
+      <class>GtkFrame</class>
+      <name>frame6</name>
+      <border_width>1</border_width>
+      <label>Auto-dim level</label>
+      <label_xalign>0</label_xalign>
+      <shadow_type>GTK_SHADOW_ETCHED_IN</shadow_type>
+      <child>
+	<left_attach>1</left_attach>
+	<right_attach>2</right_attach>
+	<top_attach>1</top_attach>
+	<bottom_attach>2</bottom_attach>
+	<xpad>0</xpad>
+	<ypad>0</ypad>
+	<xexpand>False</xexpand>
+	<yexpand>False</yexpand>
+	<xshrink>True</xshrink>
+	<yshrink>True</yshrink>
+	<xfill>True</xfill>
+	<yfill>True</yfill>
+      </child>
+
+      <widget>
+	<class>GtkVBox</class>
+	<name>vbox2</name>
+	<homogeneous>False</homogeneous>
+	<spacing>0</spacing>
+
+	<widget>
+	  <class>GtkVScale</class>
+	  <name>dim_scale</name>
+	  <can_focus>True</can_focus>
+	  <signal>
+	    <name>button_release_event</name>
+	    <handler>bl_vscale_changed</handler>
+	    <data>ISconf</data>
+	    <last_modification_time>Mon, 05 Aug 2002 13:58:57 GMT</last_modification_time>
+	  </signal>
+	  <draw_value>True</draw_value>
+	  <value_pos>GTK_POS_TOP</value_pos>
+	  <digits>0</digits>
+	  <policy>GTK_UPDATE_CONTINUOUS</policy>
+	  <value>32</value>
+	  <lower>0</lower>
+	  <upper>255</upper>
+	  <step>1</step>
+	  <page>5</page>
+	  <page_size>0</page_size>
+	  <child>
+	    <padding>0</padding>
+	    <expand>True</expand>
+	    <fill>True</fill>
+	  </child>
+	</widget>
+      </widget>
+    </widget>
+
+    <widget>
+      <class>GtkHButtonBox</class>
+      <name>hbuttonbox1</name>
+      <layout_style>GTK_BUTTONBOX_DEFAULT_STYLE</layout_style>
+      <spacing>30</spacing>
+      <child_min_width>85</child_min_width>
+      <child_min_height>27</child_min_height>
+      <child_ipad_x>7</child_ipad_x>
+      <child_ipad_y>0</child_ipad_y>
+      <child>
+	<left_attach>0</left_attach>
+	<right_attach>2</right_attach>
+	<top_attach>2</top_attach>
+	<bottom_attach>3</bottom_attach>
+	<xpad>0</xpad>
+	<ypad>0</ypad>
+	<xexpand>False</xexpand>
+	<yexpand>True</yexpand>
+	<xshrink>True</xshrink>
+	<yshrink>True</yshrink>
+	<xfill>True</xfill>
+	<yfill>True</yfill>
+      </child>
+
+      <widget>
+	<class>GtkButton</class>
+	<name>start_but</name>
+	<border_width>1</border_width>
+	<can_default>True</can_default>
+	<can_focus>True</can_focus>
+	<signal>
+	  <name>clicked</name>
+	  <handler>start_button</handler>
+	  <data>ISconf</data>
+	  <last_modification_time>Mon, 05 Aug 2002 13:57:13 GMT</last_modification_time>
+	</signal>
+	<label>Start</label>
+	<relief>GTK_RELIEF_NORMAL</relief>
+      </widget>
+
+      <widget>
+	<class>GtkButton</class>
+	<name>stop_but</name>
+	<border_width>1</border_width>
+	<can_default>True</can_default>
+	<can_focus>True</can_focus>
+	<signal>
+	  <name>clicked</name>
+	  <handler>stop_button</handler>
+	  <data>ISconf</data>
+	  <last_modification_time>Fri, 02 Aug 2002 17:24:40 GMT</last_modification_time>
+	</signal>
+	<label>Stop</label>
+	<relief>GTK_RELIEF_NORMAL</relief>
+      </widget>
+
+      <widget>
+	<class>GtkButton</class>
+	<name>quit_but</name>
+	<border_width>1</border_width>
+	<can_default>True</can_default>
+	<signal>
+	  <name>clicked</name>
+	  <handler>mainquit</handler>
+	  <data>ISconf</data>
+	  <last_modification_time>Fri, 02 Aug 2002 17:24:21 GMT</last_modification_time>
+	</signal>
+	<label>Quit</label>
+	<relief>GTK_RELIEF_NORMAL</relief>
+      </widget>
+    </widget>
+  </widget>
+</widget>
+
+<widget>
+  <class>GtkWindow</class>
+  <name>irq-win</name>
+  <signal>
+    <name>delete_event</name>
+    <handler>gtk_widget_hide</handler>
+    <last_modification_time>Wed, 07 Aug 2002 18:39:32 GMT</last_modification_time>
+  </signal>
+  <signal>
+    <name>destroy_event</name>
+    <handler>gtk_widget_hide</handler>
+    <last_modification_time>Wed, 07 Aug 2002 18:39:41 GMT</last_modification_time>
+  </signal>
+  <title>Select IRQs</title>
+  <type>GTK_WINDOW_DIALOG</type>
+  <position>GTK_WIN_POS_NONE</position>
+  <modal>True</modal>
+  <default_width>200</default_width>
+  <default_height>150</default_height>
+  <allow_shrink>True</allow_shrink>
+  <allow_grow>True</allow_grow>
+  <auto_shrink>True</auto_shrink>
+
+  <widget>
+    <class>GtkVBox</class>
+    <name>vbox3</name>
+    <homogeneous>False</homogeneous>
+    <spacing>0</spacing>
+
+    <widget>
+      <class>GtkScrolledWindow</class>
+      <name>scrolledwindow1</name>
+      <hscrollbar_policy>GTK_POLICY_AUTOMATIC</hscrollbar_policy>
+      <vscrollbar_policy>GTK_POLICY_ALWAYS</vscrollbar_policy>
+      <hupdate_policy>GTK_UPDATE_CONTINUOUS</hupdate_policy>
+      <vupdate_policy>GTK_UPDATE_CONTINUOUS</vupdate_policy>
+      <child>
+	<padding>0</padding>
+	<expand>True</expand>
+	<fill>True</fill>
+      </child>
+
+      <widget>
+	<class>GtkCList</class>
+	<name>irqList</name>
+	<signal>
+	  <name>select_row</name>
+	  <handler>irq_select_row</handler>
+	  <data>ISconf</data>
+	  <last_modification_time>Wed, 07 Aug 2002 13:00:19 GMT</last_modification_time>
+	</signal>
+	<signal>
+	  <name>unselect_row</name>
+	  <handler>irq_select_row</handler>
+	  <data>ISconf</data>
+	  <last_modification_time>Wed, 07 Aug 2002 15:52:47 GMT</last_modification_time>
+	</signal>
+	<columns>2</columns>
+	<column_widths>34,80</column_widths>
+	<selection_mode>GTK_SELECTION_SINGLE</selection_mode>
+	<show_titles>True</show_titles>
+	<shadow_type>GTK_SHADOW_IN</shadow_type>
+
+	<widget>
+	  <class>GtkLabel</class>
+	  <child_name>CList:title</child_name>
+	  <name>irq_tog</name>
+	  <label>Active</label>
+	  <justify>GTK_JUSTIFY_LEFT</justify>
+	  <wrap>False</wrap>
+	  <xalign>0.5</xalign>
+	  <yalign>0.5</yalign>
+	  <xpad>0</xpad>
+	  <ypad>0</ypad>
+	</widget>
+
+	<widget>
+	  <class>GtkLabel</class>
+	  <child_name>CList:title</child_name>
+	  <name>irq_des</name>
+	  <label>Description</label>
+	  <justify>GTK_JUSTIFY_LEFT</justify>
+	  <wrap>False</wrap>
+	  <xalign>0.5</xalign>
+	  <yalign>0.5</yalign>
+	  <xpad>0</xpad>
+	  <ypad>0</ypad>
+	</widget>
+      </widget>
+    </widget>
+
+    <widget>
+      <class>GtkButton</class>
+      <name>irq_done</name>
+      <border_width>2</border_width>
+      <signal>
+	<name>clicked</name>
+	<handler>irq_done_clicked</handler>
+	<data>ISconf</data>
+	<last_modification_time>Mon, 05 Aug 2002 14:00:06 GMT</last_modification_time>
+      </signal>
+      <label>Done</label>
+      <relief>GTK_RELIEF_NORMAL</relief>
+      <child>
+	<padding>0</padding>
+	<expand>False</expand>
+	<fill>False</fill>
+      </child>
+    </widget>
+  </widget>
+</widget>
+
+</GTK-Interface>

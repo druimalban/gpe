@@ -1,0 +1,10 @@
+Package: gpe-config-sleep
+Version: 0.1
+Priority: optional
+Section: base
+Maintainer: Erik Karlin <e_karlin@yahoo.com>
+Depends: h3600-utils, ipaq-sleep, libgtk1.2
+Provides: isgui
+Replaces: gpe-isgui
+Architecture: arm
+Description: A front-end to ipaq-sleep, the auto-sleep, auto-dim daemon for the ipaq.
