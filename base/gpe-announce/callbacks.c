@@ -44,6 +44,9 @@
 /* Flag to stop alarm sound thread from playing		*/
 static gboolean PlayAlarmStop = TRUE;
 
+/* Flag for current sound configuration */
+static int sound_config;
+
 int fd;
 int curl, curr;	
 pthread_t SoundThread;
@@ -51,6 +54,8 @@ pthread_t SoundThread;
 int buzzerfd = -1;
 
 #define BUZZER_FILE "/dev/misc/buzzer"
+#define CFG_NOSOUND 	-2
+#define CFG_AUTOMATIC 	-1
 
 void open_buzzer (void)
 {
@@ -80,6 +85,57 @@ void buzzer_off (int sig)
 {
 	set_buzzer (0, 0);
 	exit (128 + sig);
+}
+
+
+/* 
+ * This reads configuration from configfile. 
+ * It returns a (positive) number from 0 to 100 to indicate a fixed volume
+ * or a negative constant to indicate automatic volume setting (default)
+ * or disabled alarm sound.
+ */
+int get_config (void)
+{
+	int result = CFG_AUTOMATIC;
+	char *filename = g_strdup_printf("%s/.gpe/alarm.conf", g_get_home_dir());
+	FILE *cfgfile;
+	int enabled = 1;
+	int automatic = 1;
+	int level = 0;
+	
+	cfgfile = fopen(filename, "r");
+	if (cfgfile)
+	{
+		int val = -1, ret;
+		char buf[128];
+		while (fgets(buf, 128, cfgfile))
+		{
+			ret = sscanf(buf, "enabled %d", &val);
+			if (ret)
+				enabled = val;
+			
+			ret = sscanf(buf, "automatic %d", &val);
+			if (ret)
+				automatic = val;
+			
+			ret = sscanf(buf, "level %d", &val);			
+			if (ret)
+			{
+				if ((val >= 0) && (val <=100))
+					level = val;
+			}
+		}
+		fclose(cfgfile);
+		
+		if (!enabled) 
+			result = CFG_NOSOUND;
+		else
+			if (!automatic)
+				result = level;
+	}
+	g_free(filename);
+	
+	return result;	
 }
 
 int get_vol(int *left, int *right)
@@ -135,6 +191,9 @@ void play_melody(guint Tone1Pitch, guint Tone1Duration,
 	int snd_dev=-1;
 	int i;
 	extern int times;
+	
+	if (sound_config == CFG_NOSOUND)
+		return;
 
 	for (i=0; i<5; i++) {
 		if ((snd_dev=soundgen_init()) == -1) {
@@ -159,7 +218,8 @@ void play_melody(guint Tone1Pitch, guint Tone1Duration,
 		}
 		soundgen_pause(snd_dev, TonePause);
 
-		switch (times) {
+		if (sound_config == CFG_AUTOMATIC)
+			switch (times) {
 				case 0:
 					set_vol(50,50);
 					break;
@@ -239,6 +299,8 @@ return (NULL);
 
 gint bells_and_whistles ()
 {
+	sound_config = get_config();
+	
 	open_buzzer ();
   
 	if(get_vol(&curl, &curr) == -1)
@@ -246,9 +308,16 @@ gint bells_and_whistles ()
 
 	signal (SIGINT, buzzer_off);
 
-	set_buzzer (1000, 500);
-
-	set_vol(50,50);
+	if (sound_config != CFG_NOSOUND)
+		set_buzzer (1000, 500);
+	
+	if (sound_config != CFG_NOSOUND)
+	{
+		if (sound_config == CFG_AUTOMATIC)
+			set_vol(50,50);
+		else
+			set_vol(sound_config, sound_config);
+	}
 	PlayAlarmStop = FALSE;
 	if (pthread_create(&SoundThread, NULL, play_alarm, NULL) != 0) {
 		g_print("pthread_create() failed\n");
