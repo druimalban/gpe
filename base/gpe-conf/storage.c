@@ -199,16 +199,17 @@ update_status ()
 		gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (meminfo.bar),
 					       (float) meminfo.used /
 					       (float) meminfo.total);
-		sprintf (cnew2, "%s : <i>%4.1f</i> MB", _("Free memory"),
+    /* TRANSLATORS: MB == Mega Bytes*/
+		sprintf (cnew2, "%s : <i>%4.1f</i> %s", _("Free memory"),
 			 ((float) meminfo.total -
-			  (float) meminfo.used) / 1024.0);
+			  (float) meminfo.used) / 1024.0, _("MB"));
 		gtk_label_set_markup (GTK_LABEL (meminfo.label3), cnew2);
 
-		fstr = g_strdup_printf ("%s %s %4.1f MB %s",
+		fstr = g_strdup_printf ("%s %s %4.1f %s %s",
 					"<span foreground=\"black\">",
 					_("Total:"),
 					(float) meminfo.total / 1024.0,
-					"</span>");
+					_("MB"), "</span>");
 		gtk_label_set_markup (GTK_LABEL (meminfo.label2), fstr);
 		g_free (fstr);
 		toolbar_set_style (meminfo.bar,
@@ -352,10 +353,10 @@ update_status ()
 					 (float) filesystems[fs_pos - 1].used /
 					 (float) filesystems[fs_pos - 1].total);
 				fstr = g_strdup_printf
-					("%s%s %4.1f MB, %s <i>%s</i> %s",
+					("%s%s %4.1f %s, %s <i>%s</i> %s",
 					 "<span foreground=\"black\">",
 					 _("Total:"),
-					 (float) filesystems[fs_pos - 1].total / 1024.0, 
+					 (float) filesystems[fs_pos - 1].total / 1024.0, _("MB"),
 					_("Mounted at "),
 					 filesystems[fs_pos - 1].mountpoint,
 					 "</span>");
@@ -363,10 +364,10 @@ update_status ()
 						      (filesystems[fs_pos - 1].label2),
 						      fstr);
 				g_free (fstr);
-				sprintf (cnew2, "%s: <i>%4.1f</i> MB",
+				sprintf (cnew2, "%s: <i>%4.1f</i> %s",
 					 _("Free space"),
 					 ((float) filesystems[fs_pos - 1].
-					  total - (float) filesystems[fs_pos - 1].used) / 1024.0);
+					  total - (float) filesystems[fs_pos - 1].used) / 1024.0, _("MB"));
 				gtk_label_set_markup (GTK_LABEL
 						      (filesystems[fs_pos - 1].label3),
 						      cnew2);
@@ -461,9 +462,9 @@ Storage_Build_Objects (void)
 		gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (bar_flash),
 					       (float) meminfo.used /
 					       (float) meminfo.total);
-		sprintf (cnew2, "%s: <i>%4.1f</i> MB", _("Free memory"),
+		sprintf (cnew2, "%s: <i>%4.1f</i> %s", _("Free memory"),
 			 ((float) meminfo.total -
-			  (float) meminfo.used) / 1024.0);
+			  (float) meminfo.used) / 1024.0, _("MB"));
 		label1 = gtk_label_new (NULL);
 		gtk_misc_set_alignment (GTK_MISC (label1), 0.0, 0.5);
 		meminfo.label3 = label1;
@@ -472,11 +473,11 @@ Storage_Build_Objects (void)
 
 		label1 = gtk_label_new (NULL);
 		meminfo.label2 = label1;
-		fstr = g_strdup_printf ("%s%s %4.1f MB %s",
+		fstr = g_strdup_printf ("%s%s %4.1f %s %s",
 					"<span foreground=\"black\">",
 					_("Total:"),
 					(float) meminfo.total / 1024.0,
-					"</span>");
+					_("MB"), "</span>");
 		gtk_label_set_markup (GTK_LABEL (label1), fstr);
 		g_free (fstr);
 		gtk_misc_set_alignment (GTK_MISC (label1), 0.0, 0.5);
@@ -573,11 +574,11 @@ Storage_Build_Objects (void)
 							     1].used /
 					 (float) filesystems[fs_count -
 							     1].total);
-				sprintf (cnew2, "%s: <i>%4.1f</i> MB",
+				sprintf (cnew2, "%s: <i>%4.1f</i> %s",
 					 _("Free space"),
 					 ((float) filesystems[fs_count - 1].
 					  total -
-					  (float) filesystems[fs_count - 1].used) / 1024.0);
+					  (float) filesystems[fs_count - 1].used) / 1024.0, _("MB"));
 				label1 = gtk_label_new (NULL);
 				filesystems[fs_count - 1].label3 = label1;
 				gtk_label_set_markup (GTK_LABEL (label1),
@@ -590,11 +591,11 @@ Storage_Build_Objects (void)
 				label1 = gtk_label_new (NULL);
 				filesystems[fs_count - 1].label2 = label1;
 				fstr = g_strdup_printf
-					("%s%s %4.1f MB, %s <i>%s</i> %s",
+					("%s%s %4.1f %s, %s <i>%s</i> %s",
 					 "<span foreground=\"black\">",
 					 _("Total:"),
 					 (float) filesystems[fs_count - 1].total /
-					 1024.0, _("Mounted at "),
+					 1024.0, _("MB"), _("Mounted at "),
 					 filesystems[fs_count - 1].mountpoint,
 					 "</span>");
 				gtk_label_set_markup (GTK_LABEL (label1),
