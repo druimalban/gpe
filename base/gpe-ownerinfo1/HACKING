@@ -1,0 +1,28 @@
+Data file formats
+=================
+
+
+Version 1 (no magic tag)
+------------------------
+
+line 1: <Name>
+line 2: <E-mail>
+line 3: <Phone Number>
+line 4: <Address>
+...
+line n: <Address>
+
+
+Version 2
+------------------------
+
+Line 1 verbatim!
+
+line 1: [gpe-ownerinfo data version 2]
+line 2: <Name>
+line 3: <E-mail>
+line 4: <Phone Number>
+line 5: <Photo>
+line 6: <Address>
+...
+line n: <Address>
