@@ -1,0 +1,8 @@
+Package: gpe-autostarter
+Version: VERSION
+Architecture: all
+Section: base
+Priority: optional
+Maintainer: Phil Blundell <pb@debian.org>
+Depends: hotplug-dbus, dbus-1
+Description: Watches for hotplug events and takes appropriate action

@@ -1,0 +1,48 @@
+PREFIX = /usr/local
+PACKAGE = gpe-autostarter
+DEBUG = no
+CVSBUILD = yes
+GTK2 = yes
+VERSION = 0.1
+
+MEMBERS = autostarter
+
+CFLAGS = `pkg-config --cflags glib-2.0` `pkg-config --cflags dbus-glib-1` -DDBUS_API_SUBJECT_TO_CHANGE
+
+CFLAGS += -D_GNU_SOURCE -Wall
+
+ifeq ($(DEBUG),yes)
+CFLAGS += -O2 -g
+LDFLAGS = -g #-lefence
+else
+CFLAGS += -Os -fomit-frame-pointer
+endif
+
+ifeq ($(CVSBUILD),yes)
+BUILD = ../build
+else
+BUILD = build
+endif
+LDFLAGS += `pkg-config --libs glib-2.0` `pkg-config --libs dbus-glib-1`
+
+CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
+
+OBJS = $(patsubst %,%.o,$(MEMBERS))
+SOURCES = $(patsubst %,%.c,$(MEMBERS))
+
+all: $(PACKAGE) all-mo
+
+$(PACKAGE): $(OBJS)
+	$(CC) -o $@ $^ $(LDFLAGS)
+
+install-program: all
+	mkdir -p $(DESTDIR)$(PREFIX)/bin
+	install -s $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/
+	mkdir -p $(DESTDIR)/etc/X11/Xsession.d
+	install $(PACKAGE).xsession $(DESTDIR)$(PREFIX)/50$(PACKAGE)
+
+clean:
+	rm -f $(PACKAGE) $(OBJS)
+
+include $(BUILD)/Makefile.translation
+include $(BUILD)/Makefile.dpkg_ipkg
