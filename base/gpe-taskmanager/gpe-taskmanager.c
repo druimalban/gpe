@@ -138,7 +138,7 @@ window_filter (GdkXEvent *xev, GdkEvent *gev, gpointer d)
 }
 
 gboolean
-send_delete_message (Display dpy, Window w)
+send_delete_message (Display *dpy, Window w)
 {
   XEvent e;
 
