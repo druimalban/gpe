@@ -152,7 +152,7 @@ get_file_extension (gchar *filename)
 static void
 run_program (gchar *exec, gchar *mime_name)
 {
-  gchar *command, *search_mime, *program_command;
+  gchar *command, *search_mime, *program_command = NULL;
   GSList *iter;
   //char *cmd[] = {"/bin/sh", "-c", ""};
 
@@ -172,21 +172,23 @@ run_program (gchar *exec, gchar *mime_name)
           if (strstr (mime_name, search_mime))
 	    program_command = g_strdup (program->command);
         }
-        else
+        else if (strcmp (mime_name, program->mime) == 0)
         {
-	if (strcmp (mime_name, program->mime) == 0)
 	  program_command = g_strdup (program->command);
         }
       }
     }
   }
 
-  command = g_strdup_printf ("%s %s &", program_command, exec);
-  //printf ("%s %s\n", program, exec);
-  //cmd[3] = g_strdup_printf ("%s", command);
-  //printf ("%s", cmd[3]);
-  //gnome_execute_async (NULL, 3, cmd);
-  system (command);
+  if (program_command)
+  {
+    command = g_strdup_printf ("%s %s &", program_command, exec);
+    //printf ("%s %s\n", program, exec);
+    //cmd[3] = g_strdup_printf ("%s", command);
+    //printf ("%s", cmd[3]);
+    //gnome_execute_async (NULL, 3, cmd);
+    system (command);
+  }
 }
 
 void static
