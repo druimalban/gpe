@@ -56,6 +56,8 @@ struct apm_reply {
 
 #endif
 
+#define USE_OVERRIDE_REDIRECT
+
 #define TIME_LEFT   0
 #define PERCENTAGE  1
 #define AC_POWER    2
@@ -365,8 +367,6 @@ main (int argc, char **argv)
   char *dpy_name = NULL;
   int xfd;
   fd_set fd;
-  XSetWindowAttributes attr;
-  Atom window_type_atom, window_type_splash_atom;
 
   setlocale (LC_ALL, "");
 
@@ -433,9 +433,21 @@ main (int argc, char **argv)
 
   popup_mask = XCreatePixmap (dpy, win_popup, popup_w, popup_h, 1);
 
-  window_type_atom = XInternAtom (dpy, "_NET_WM_WINDOW_TYPE", False);
-  window_type_splash_atom = XInternAtom (dpy, "_NET_WM_WINDOW_TYPE_SPLASH", False);
-  XChangeProperty (dpy, win_popup, window_type_atom, XA_ATOM, 32, PropModeReplace, &window_type_splash_atom, 1);
+#ifdef USE_OVERRIDE_REDIRECT
+  {
+    XSetWindowAttributes attr;
+    attr.override_redirect = True;
+    XChangeWindowAttributes (dpy, win_popup, CWOverrideRedirect, &attr);
+  }
+#else
+  {
+    Atom window_type_atom, window_type_splash_atom;
+    window_type_atom = XInternAtom (dpy, "_NET_WM_WINDOW_TYPE", False);
+    window_type_splash_atom = XInternAtom (dpy, "_NET_WM_WINDOW_TYPE_SPLASH", False);
+    XChangeProperty (dpy, win_popup, window_type_atom, XA_ATOM, 32, PropModeReplace, 
+		     &window_type_splash_atom, 1);
+  }
+#endif
 
   if ((msg_font = XftFontOpenName(dpy, screen,"sans,verdana-6:bold")) 
       == NULL)

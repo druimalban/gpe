@@ -1,6 +1,7 @@
 PACKAGE = minibat
 PREFIX = /usr/local
 DEBUG = no
+VERSION = 0.14
 
 LINGUAS = 
 
