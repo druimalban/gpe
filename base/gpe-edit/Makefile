@@ -1,11 +1,17 @@
 PREFIX = /usr/local
 PACKAGE = gpe-edit
-DEBUG = yes
+#DEBUG = yes
 CVSBUILD = yes
 
 MEMBERS = main
 
-CFLAGS = `gdk-pixbuf-config --cflags` `gtk-config --cflags` -D_GNU_SOURCE -Wall
+ifeq ($(GTK2),yes)
+CFLAGS = `pkg-config --cflags gtk+-2.0` -DGTK_ENABLE_BROKEN
+else
+CFLAGS = `gdk-pixbuf-config --cflags` `gtk-config --cflags` 
+endif
+
+CFLAGS += -D_GNU_SOURCE -Wall
 ifeq ($(DEBUG),yes)
 CFLAGS += -O2 -g
 LDFLAGS = -g #-lefence
@@ -20,6 +26,12 @@ else
 CFLAGS += -I/usr/include/gpe
 endif
 LDFLAGS += -lgpewidget
+
+ifeq ($(GTK2),yes)
+LDFLAGS += `pkg-config --libs gtk+-2.0`
+else
+LDFLAGS += `gtk-config --libs` `gdk-pixbuf-config --libs`
+endif
 
 CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 
@@ -40,7 +52,7 @@ po/gpe-edit.pot: $(SOURCES)
 	xgettext -k_ -o po/gpe-edit.pot $^
 
 gpe-edit: $(OBJS)
-	$(CC) -o $@ $^ `gtk-config --libs` `gdk-pixbuf-config --libs` $(LDFLAGS)
+	$(CC) -o $@ $^ $(LDFLAGS)
 
 install: all install-po
 	install -D gpe-edit $(DESTDIR)$(PREFIX)/bin/gpe-edit
@@ -58,7 +70,7 @@ ipkg:
 	rm -rf familiar/dist
 	mkdir -p familiar/dist/CONTROL
 	cp familiar/control familiar/dist/CONTROL
-	make DESTDIR=`pwd`/familiar/dist PREFIX=/usr install
+	make DESTDIR=`pwd`/familiar/dist PREFIX=/usr DEBUG=no install
 	chown -R root.root familiar/dist
 	ipkg-build familiar/dist
 

@@ -256,9 +256,15 @@ main (int argc, char *argv[])
 
   vbox = gtk_vbox_new (FALSE, 0);
 
+#if GTK_MAJOR_VERSION < 2
   toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, GTK_TOOLBAR_ICONS);
   gtk_toolbar_set_button_relief (GTK_TOOLBAR (toolbar), GTK_RELIEF_NONE);
   gtk_toolbar_set_space_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_SPACE_LINE);
+#else
+  toolbar = gtk_toolbar_new ();
+  gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);
+  gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
+#endif
 
   scroll = gtk_scrolled_window_new (NULL, NULL);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scroll), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
@@ -268,39 +274,39 @@ main (int argc, char *argv[])
 
   p = gpe_find_icon ("new");
   pw = gpe_render_icon (main_window->style, p);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("New document"), 
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("New"), 
 			   _("New document"), _("New document"), pw, new_file, NULL);
 
   p = gpe_find_icon ("open");
   pw = gpe_render_icon (main_window->style, p);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Open file"), 
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Open"), 
 			   _("Open file"), _("Open file"), pw, select_open_file, NULL);
 
   p = gpe_find_icon ("save");
   pw = gpe_render_icon (main_window->style, p);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Save current file"), 
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Save"), 
 			   _("Save current file"), _("Save current file"), pw, save_file, NULL);
 
   p = gpe_find_icon ("save_as");
   pw = gpe_render_icon (main_window->style, p);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Save current file as"), 
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Save as"), 
 			   _("Save current file as"), _("Save current file as"), pw, select_save_file_as, NULL);
 
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
 
   p = gpe_find_icon ("cut");
   pw = gpe_render_icon (main_window->style, p);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Cut the selection"), 
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Cut"), 
 			   _("Cut the selection"), _("Cut the selection"), pw, cut_selection, NULL);
 
   p = gpe_find_icon ("copy");
   pw = gpe_render_icon (main_window->style, p);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Copy the selection"), 
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Copy"), 
 			   _("Copy the selection"), _("Copy the selection"), pw, copy_selection, NULL);
 
   p = gpe_find_icon ("paste");
   pw = gpe_render_icon (main_window->style, p);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Paste the clipboard"), 
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Paste"), 
 			   _("Paste the clipboard"), _("Paste the clipboard"), pw, paste_clipboard, NULL);
 
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
