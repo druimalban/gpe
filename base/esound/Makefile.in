@@ -10,6 +10,8 @@
 # even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 # PARTICULAR PURPOSE.
 
+#SUBDIRS = docs
+
 
 SHELL = @SHELL@
 
@@ -93,62 +95,53 @@ WRAP_LIB = @WRAP_LIB@
 have_db2html = @have_db2html@
 have_db2ps = @have_db2ps@
 
-SUBDIRS = docs
-
 SPEC_FILE = esound.spec
 
-AUDIOFILE_LIBS = @AUDIOFILE_LIBS@
-LIBESDDSP = @LIBESDDSP@
-SOUND_LIBS = @SOUND_LIBS@
+INCLUDES = $(AUDIOFILE_CFLAGS) -DSYSCONFDIR=\"$(sysconfdir)\"
 
-INCLUDES = @AUDIOFILE_CFLAGS@ -DSYSCONFDIR="\"$(sysconfdir)\""
+@BUILD_ESDDSP_TRUE@ESDDSP = esddsp
+@BUILD_ESDDSP_TRUE@libesddsp_la = libesddsp.la
+@BUILD_ESDPLAY_TRUE@ESDPLAY = esdplay
 
-bin_SCRIPTS =  	@ESDDSP@		esd-config
+getopt_extra = getopt.c getopt1.c
 
+@NEED_GETOPT_TRUE@getopt_src = $(getopt_extra)
 
-EXTRA_SCRIPTS = esddsp
-
-EXTRA_DIST =  	esound.pc.in		esound.spec.in		esd-config.in	        esd.conf        	esd.m4 			TIPS 			test-script 		test.wav 		getopt.h 		TODO
-
-
-lib_LTLIBRARIES = libesd.la @LIBESDDSP@
-
-libesd_la_SOURCES =  	esdlib.c		esdmgr.c		esd_config.c		audio.c			genrand.c		genrand.h
+bin_SCRIPTS =  	$(ESDDSP)		esd-config
 
 
-libesd_la_LDFLAGS = -version-info @ESD_VERSION_INFO@
+lib_LTLIBRARIES = libesd.la $(libesddsp_la)
 
-libesd_la_LIBADD = @AUDIOFILE_LIBS@ @SOUND_LIBS@ -lm
+libesd_la_LDFLAGS = -version-info $(ESD_VERSION_INFO)
+#libesd_la_LIBADD = $(AUDIOFILE_LIBS) $(SOUND_LIBS)
+libesd_la_LIBADD = $(SOUND_LIBS)
 
-EXTRA_LTLIBRARIES =  	libesddsp.la
+libesd_la_SOURCES =  	esdlib.c		esdmgr.c		esd_config.c		audio.c			genrand.c		genrand.h		util.c
 
 
-libesddsp_la_LDFLAGS = -rpath $(libdir) -version-info @ESD_VERSION_INFO@
+# one of these gets included by audio.c
+AUDIO_BACKENDS =  	audio_aix.c		audio_alsa.c		audio_alsa09.c  	audio_hpux.c		audio_irix.c		audio_none.c		audio_oss.c		audio_mklinux.c		audio_solaris.c	
 
-libesddsp_la_LIBADD = @DL_LIB@ -lm
+
+libesddsp_la_LDFLAGS = -version-info $(ESD_VERSION_INFO)
+libesddsp_la_LIBADD = $(DL_LIB) -lm
 
 libesddsp_la_SOURCES =  	esddsp.c
-
-
-EXTRA_libesd_la_SOURCES =  	audio_aix.c		audio_alsa.c		audio_hpux.c		audio_irix.c		audio_none.c		audio_oss.c		audio_mklinux.c		audio_solaris.c	
 
 
 include_HEADERS =  	esd.h
 
 
-bin_PROGRAMS =  	esd			esdcat			esdctl			esdfilt			esdmon			esdrec			esdloop			@ESDPLAY@
+bin_PROGRAMS =  	esd			esdcat			esdctl			esdfilt			esdmon			esdrec			esdloop			$(ESDPLAY)
 
 
-EXTRA_PROGRAMS =  	esdplay
-
-
-esd_SOURCES =  	esd.c 			clients.c		filter.c		mix.c			players.c		proto.c			samples.c		esd-server.h
+esd_SOURCES =  	esd.c 			clients.c		filter.c		mix.c			players.c		proto.c			samples.c		$(getopt_src)   	util.c			esd-server.h
 
 
 esdcat_SOURCES =  	esdcat.c
 
 
-esdctl_SOURCES =  	esdctl.c
+esdctl_SOURCES =  	$(getopt_src) 	esdctl.c
 
 
 esdfilt_SOURCES =  	esdfilt.c
@@ -166,7 +159,8 @@ esdloop_SOURCES =  	esdloop.c
 esdplay_SOURCES =  	$(getopt_src) 	esdplay.c
 
 
-LDADD = libesd.la $(AUDIOFILE_LIBS)
+#LDADD = libesd.la $(AUDIOFILE_LIBS)
+LDADD = libesd.la
 
 esd_LDADD = $(WRAP_LIB) $(LDADD)
 
@@ -192,44 +186,60 @@ DEFS = @DEFS@ -I. -I$(srcdir) -I.
 CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
-libesddsp_la_DEPENDENCIES = 
-libesddsp_la_OBJECTS =  esddsp.lo
 libesd_la_DEPENDENCIES = 
 libesd_la_OBJECTS =  esdlib.lo esdmgr.lo esd_config.lo audio.lo \
-genrand.lo
+genrand.lo util.lo
+libesddsp_la_DEPENDENCIES = 
+libesddsp_la_OBJECTS =  esddsp.lo
+@BUILD_ESDPLAY_FALSE@bin_PROGRAMS =  esd$(EXEEXT) esdcat$(EXEEXT) \
+@BUILD_ESDPLAY_FALSE@esdctl$(EXEEXT) esdfilt$(EXEEXT) esdmon$(EXEEXT) \
+@BUILD_ESDPLAY_FALSE@esdrec$(EXEEXT) esdloop$(EXEEXT)
+@BUILD_ESDPLAY_TRUE@bin_PROGRAMS =  esd$(EXEEXT) esdcat$(EXEEXT) \
+@BUILD_ESDPLAY_TRUE@esdctl$(EXEEXT) esdfilt$(EXEEXT) esdmon$(EXEEXT) \
+@BUILD_ESDPLAY_TRUE@esdrec$(EXEEXT) esdloop$(EXEEXT) esdplay$(EXEEXT)
 PROGRAMS =  $(bin_PROGRAMS)
 
-esdplay_SOURCES = esdplay.c
-esdplay_OBJECTS =  esdplay.o
-esdplay_DEPENDENCIES =  @LIBOBJS@ libesd.la
-esdplay_LDFLAGS = 
-esd_OBJECTS =  esd.o clients.o filter.o mix.o players.o proto.o \
-samples.o
-esd_DEPENDENCIES =  @LIBOBJS@ libesd.la
+@NEED_GETOPT_FALSE@esd_OBJECTS =  esd.$(OBJEXT) clients.$(OBJEXT) \
+@NEED_GETOPT_FALSE@filter.$(OBJEXT) mix.$(OBJEXT) players.$(OBJEXT) \
+@NEED_GETOPT_FALSE@proto.$(OBJEXT) samples.$(OBJEXT) util.$(OBJEXT)
+@NEED_GETOPT_TRUE@esd_OBJECTS =  esd.$(OBJEXT) clients.$(OBJEXT) \
+@NEED_GETOPT_TRUE@filter.$(OBJEXT) mix.$(OBJEXT) players.$(OBJEXT) \
+@NEED_GETOPT_TRUE@proto.$(OBJEXT) samples.$(OBJEXT) getopt.$(OBJEXT) \
+@NEED_GETOPT_TRUE@getopt1.$(OBJEXT) util.$(OBJEXT)
+esd_DEPENDENCIES =  libesd.la
 esd_LDFLAGS = 
-esdcat_OBJECTS =  esdcat.o
+esdcat_OBJECTS =  esdcat.$(OBJEXT)
 esdcat_LDADD = $(LDADD)
 esdcat_DEPENDENCIES =  libesd.la
 esdcat_LDFLAGS = 
-esdctl_OBJECTS =  esdctl.o
-esdctl_DEPENDENCIES =  @LIBOBJS@ libesd.la
+@NEED_GETOPT_FALSE@esdctl_OBJECTS =  esdctl.$(OBJEXT)
+@NEED_GETOPT_TRUE@esdctl_OBJECTS =  getopt.$(OBJEXT) getopt1.$(OBJEXT) \
+@NEED_GETOPT_TRUE@esdctl.$(OBJEXT)
+esdctl_LDADD = $(LDADD)
+esdctl_DEPENDENCIES =  libesd.la
 esdctl_LDFLAGS = 
-esdfilt_OBJECTS =  esdfilt.o
+esdfilt_OBJECTS =  esdfilt.$(OBJEXT)
 esdfilt_LDADD = $(LDADD)
 esdfilt_DEPENDENCIES =  libesd.la
 esdfilt_LDFLAGS = 
-esdmon_OBJECTS =  esdmon.o
+esdmon_OBJECTS =  esdmon.$(OBJEXT)
 esdmon_LDADD = $(LDADD)
 esdmon_DEPENDENCIES =  libesd.la
 esdmon_LDFLAGS = 
-esdrec_OBJECTS =  esdrec.o
+esdrec_OBJECTS =  esdrec.$(OBJEXT)
 esdrec_LDADD = $(LDADD)
 esdrec_DEPENDENCIES =  libesd.la
 esdrec_LDFLAGS = 
-esdloop_OBJECTS =  esdloop.o
+esdloop_OBJECTS =  esdloop.$(OBJEXT)
 esdloop_LDADD = $(LDADD)
 esdloop_DEPENDENCIES =  libesd.la
 esdloop_LDFLAGS = 
+@NEED_GETOPT_FALSE@esdplay_OBJECTS =  esdplay.$(OBJEXT)
+@NEED_GETOPT_TRUE@esdplay_OBJECTS =  getopt.$(OBJEXT) getopt1.$(OBJEXT) \
+@NEED_GETOPT_TRUE@esdplay.$(OBJEXT)
+esdplay_LDADD = $(LDADD)
+esdplay_DEPENDENCIES =  libesd.la
+esdplay_LDFLAGS = 
 SCRIPTS =  $(bin_SCRIPTS)
 
 CFLAGS = @CFLAGS@
@@ -242,31 +252,28 @@ DATA =  $(esdconf_DATA) $(m4data_DATA) $(pkgconfig_DATA)
 HEADERS =  $(include_HEADERS)
 
 DIST_COMMON =  README ./stamp-h.in AUTHORS COPYING COPYING.LIB ChangeLog \
-INSTALL Makefile.am Makefile.in NEWS TODO acconfig.h acinclude.m4 \
-aclocal.m4 config.guess config.h.in config.sub configure configure.in \
-esd-config.in esddsp.in esound.pc.in esound.spec.in getopt.c getopt1.c \
-install-sh ltconfig ltmain.sh missing mkinstalldirs
+INSTALL Makefile.am Makefile.in NEWS TODO acconfig.h aclocal.m4 \
+config.guess config.h.in config.sub configure configure.in \
+esd-config.in esddsp.in esound.pc.in esound.spec.in install-sh \
+ltmain.sh missing mkinstalldirs
 
 
 DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
 
 TAR = tar
 GZIP_ENV = --best
-DEP_FILES =  .deps/audio.P .deps/audio_aix.P .deps/audio_alsa.P \
-.deps/audio_hpux.P .deps/audio_irix.P .deps/audio_mklinux.P \
-.deps/audio_none.P .deps/audio_oss.P .deps/audio_solaris.P \
-.deps/clients.P .deps/esd.P .deps/esd_config.P .deps/esdcat.P \
-.deps/esdctl.P .deps/esddsp.P .deps/esdfilt.P .deps/esdlib.P \
-.deps/esdloop.P .deps/esdmgr.P .deps/esdmon.P .deps/esdplay.P \
-.deps/esdrec.P .deps/filter.P .deps/genrand.P .deps/getopt.P \
-.deps/getopt1.P .deps/mix.P .deps/players.P .deps/proto.P \
-.deps/samples.P
-SOURCES = $(libesddsp_la_SOURCES) $(libesd_la_SOURCES) $(EXTRA_libesd_la_SOURCES) esdplay.c $(EXTRA_esdplay_SOURCES) $(esd_SOURCES) $(esdcat_SOURCES) $(esdctl_SOURCES) $(esdfilt_SOURCES) $(esdmon_SOURCES) $(esdrec_SOURCES) $(esdloop_SOURCES)
-OBJECTS = $(libesddsp_la_OBJECTS) $(libesd_la_OBJECTS) esdplay.o $(esd_OBJECTS) $(esdcat_OBJECTS) $(esdctl_OBJECTS) $(esdfilt_OBJECTS) $(esdmon_OBJECTS) $(esdrec_OBJECTS) $(esdloop_OBJECTS)
+DEP_FILES =  .deps/audio.P .deps/clients.P .deps/esd.P \
+.deps/esd_config.P .deps/esdcat.P .deps/esdctl.P .deps/esddsp.P \
+.deps/esdfilt.P .deps/esdlib.P .deps/esdloop.P .deps/esdmgr.P \
+.deps/esdmon.P .deps/esdplay.P .deps/esdrec.P .deps/filter.P \
+.deps/genrand.P .deps/getopt.P .deps/getopt1.P .deps/mix.P \
+.deps/players.P .deps/proto.P .deps/samples.P .deps/util.P
+SOURCES = $(libesd_la_SOURCES) $(libesddsp_la_SOURCES) $(esd_SOURCES) $(esdcat_SOURCES) $(esdctl_SOURCES) $(esdfilt_SOURCES) $(esdmon_SOURCES) $(esdrec_SOURCES) $(esdloop_SOURCES) $(esdplay_SOURCES)
+OBJECTS = $(libesd_la_OBJECTS) $(libesddsp_la_OBJECTS) $(esd_OBJECTS) $(esdcat_OBJECTS) $(esdctl_OBJECTS) $(esdfilt_OBJECTS) $(esdmon_OBJECTS) $(esdrec_OBJECTS) $(esdloop_OBJECTS) $(esdplay_OBJECTS)
 
 all: all-redirect
 .SUFFIXES:
-.SUFFIXES: .S .c .lo .o .s
+.SUFFIXES: .S .c .lo .o .obj .s
 $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
 	cd $(top_srcdir) && $(AUTOMAKE) --gnu Makefile
 
@@ -412,37 +419,37 @@ uninstall-binPROGRAMS:
 	  rm -f $(DESTDIR)$(bindir)/`echo $$p|sed 's/$(EXEEXT)$$//'|sed '$(transform)'|sed 's/$$/$(EXEEXT)/'`; \
 	done
 
-esdplay: $(esdplay_OBJECTS) $(esdplay_DEPENDENCIES)
-	@rm -f esdplay
-	$(LINK) $(esdplay_LDFLAGS) $(esdplay_OBJECTS) $(esdplay_LDADD) $(LIBS)
-
-esd: $(esd_OBJECTS) $(esd_DEPENDENCIES)
-	@rm -f esd
+esd$(EXEEXT): $(esd_OBJECTS) $(esd_DEPENDENCIES)
+	@rm -f esd$(EXEEXT)
 	$(LINK) $(esd_LDFLAGS) $(esd_OBJECTS) $(esd_LDADD) $(LIBS)
 
-esdcat: $(esdcat_OBJECTS) $(esdcat_DEPENDENCIES)
-	@rm -f esdcat
+esdcat$(EXEEXT): $(esdcat_OBJECTS) $(esdcat_DEPENDENCIES)
+	@rm -f esdcat$(EXEEXT)
 	$(LINK) $(esdcat_LDFLAGS) $(esdcat_OBJECTS) $(esdcat_LDADD) $(LIBS)
 
-esdctl: $(esdctl_OBJECTS) $(esdctl_DEPENDENCIES)
-	@rm -f esdctl
+esdctl$(EXEEXT): $(esdctl_OBJECTS) $(esdctl_DEPENDENCIES)
+	@rm -f esdctl$(EXEEXT)
 	$(LINK) $(esdctl_LDFLAGS) $(esdctl_OBJECTS) $(esdctl_LDADD) $(LIBS)
 
-esdfilt: $(esdfilt_OBJECTS) $(esdfilt_DEPENDENCIES)
-	@rm -f esdfilt
+esdfilt$(EXEEXT): $(esdfilt_OBJECTS) $(esdfilt_DEPENDENCIES)
+	@rm -f esdfilt$(EXEEXT)
 	$(LINK) $(esdfilt_LDFLAGS) $(esdfilt_OBJECTS) $(esdfilt_LDADD) $(LIBS)
 
-esdmon: $(esdmon_OBJECTS) $(esdmon_DEPENDENCIES)
-	@rm -f esdmon
+esdmon$(EXEEXT): $(esdmon_OBJECTS) $(esdmon_DEPENDENCIES)
+	@rm -f esdmon$(EXEEXT)
 	$(LINK) $(esdmon_LDFLAGS) $(esdmon_OBJECTS) $(esdmon_LDADD) $(LIBS)
 
-esdrec: $(esdrec_OBJECTS) $(esdrec_DEPENDENCIES)
-	@rm -f esdrec
+esdrec$(EXEEXT): $(esdrec_OBJECTS) $(esdrec_DEPENDENCIES)
+	@rm -f esdrec$(EXEEXT)
 	$(LINK) $(esdrec_LDFLAGS) $(esdrec_OBJECTS) $(esdrec_LDADD) $(LIBS)
 
-esdloop: $(esdloop_OBJECTS) $(esdloop_DEPENDENCIES)
-	@rm -f esdloop
+esdloop$(EXEEXT): $(esdloop_OBJECTS) $(esdloop_DEPENDENCIES)
+	@rm -f esdloop$(EXEEXT)
 	$(LINK) $(esdloop_LDFLAGS) $(esdloop_OBJECTS) $(esdloop_LDADD) $(LIBS)
+
+esdplay$(EXEEXT): $(esdplay_OBJECTS) $(esdplay_DEPENDENCIES)
+	@rm -f esdplay$(EXEEXT)
+	$(LINK) $(esdplay_LDFLAGS) $(esdplay_OBJECTS) $(esdplay_LDADD) $(LIBS)
 
 install-binSCRIPTS: $(bin_SCRIPTS)
 	@$(NORMAL_INSTALL)
@@ -535,61 +542,6 @@ uninstall-includeHEADERS:
 	  rm -f $(DESTDIR)$(includedir)/$$p; \
 	done
 
-# This directory's subdirectories are mostly independent; you can cd
-# into them and run `make' without going through this Makefile.
-# To change the values of `make' variables: instead of editing Makefiles,
-# (1) if the variable is set in `config.status', edit `config.status'
-#     (which will cause the Makefiles to be regenerated when you run `make');
-# (2) otherwise, pass the desired values on the `make' command line.
-
-@SET_MAKE@
-
-all-recursive install-data-recursive install-exec-recursive \
-installdirs-recursive install-recursive uninstall-recursive  \
-check-recursive installcheck-recursive info-recursive dvi-recursive:
-	@set fnord $(MAKEFLAGS); amf=$$2; \
-	dot_seen=no; \
-	target=`echo $@ | sed s/-recursive//`; \
-	list='$(SUBDIRS)'; for subdir in $$list; do \
-	  echo "Making $$target in $$subdir"; \
-	  if test "$$subdir" = "."; then \
-	    dot_seen=yes; \
-	    local_target="$$target-am"; \
-	  else \
-	    local_target="$$target"; \
-	  fi; \
-	  (cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) $$local_target) \
-	   || case "$$amf" in *=*) exit 1;; *k*) fail=yes;; *) exit 1;; esac; \
-	done; \
-	if test "$$dot_seen" = "no"; then \
-	  $(MAKE) $(AM_MAKEFLAGS) "$$target-am" || exit 1; \
-	fi; test -z "$$fail"
-
-mostlyclean-recursive clean-recursive distclean-recursive \
-maintainer-clean-recursive:
-	@set fnord $(MAKEFLAGS); amf=$$2; \
-	dot_seen=no; \
-	rev=''; list='$(SUBDIRS)'; for subdir in $$list; do \
-	  rev="$$subdir $$rev"; \
-	  test "$$subdir" != "." || dot_seen=yes; \
-	done; \
-	test "$$dot_seen" = "no" && rev=". $$rev"; \
-	target=`echo $@ | sed s/-recursive//`; \
-	for subdir in $$rev; do \
-	  echo "Making $$target in $$subdir"; \
-	  if test "$$subdir" = "."; then \
-	    local_target="$$target-am"; \
-	  else \
-	    local_target="$$target"; \
-	  fi; \
-	  (cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) $$local_target) \
-	   || case "$$amf" in *=*) exit 1;; *k*) fail=yes;; *) exit 1;; esac; \
-	done && test -z "$$fail"
-tags-recursive:
-	list='$(SUBDIRS)'; for subdir in $$list; do \
-	  test "$$subdir" = . || (cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) tags); \
-	done
-
 tags: TAGS
 
 ID: $(HEADERS) $(SOURCES) $(LISP)
@@ -600,14 +552,9 @@ ID: $(HEADERS) $(SOURCES) $(LISP)
 	here=`pwd` && cd $(srcdir) \
 	  && mkid -f$$here/ID $$unique $(LISP)
 
-TAGS: tags-recursive $(HEADERS) $(SOURCES) config.h.in $(TAGS_DEPENDENCIES) $(LISP)
+TAGS:  $(HEADERS) $(SOURCES) config.h.in $(TAGS_DEPENDENCIES) $(LISP)
 	tags=; \
 	here=`pwd`; \
-	list='$(SUBDIRS)'; for subdir in $$list; do \
-   if test "$$subdir" = .; then :; else \
-	    test -f $$subdir/TAGS && tags="$$tags -i $$here/$$subdir/TAGS"; \
-   fi; \
-	done; \
 	list='$(SOURCES) $(HEADERS)'; \
 	unique=`for i in $$list; do echo $$i; done | \
 	  awk '    { files[$$0] = 1; } \
@@ -677,16 +624,6 @@ distdir: $(DISTFILES)
 	    || cp -p $$d/$$file $(distdir)/$$file || :; \
 	  fi; \
 	done
-	for subdir in $(SUBDIRS); do \
-	  if test "$$subdir" = .; then :; else \
-	    test -d $(distdir)/$$subdir \
-	    || mkdir $(distdir)/$$subdir \
-	    || exit 1; \
-	    chmod 777 $(distdir)/$$subdir; \
-	    (cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) top_distdir=../$(distdir) distdir=../$(distdir)/$$subdir distdir) \
-	      || exit 1; \
-	  fi; \
-	done
 	$(MAKE) $(AM_MAKEFLAGS) top_distdir="$(top_distdir)" distdir="$(distdir)" dist-hook
 
 DEPS_MAGIC := $(shell mkdir .deps > /dev/null 2>&1 || :)
@@ -721,39 +658,38 @@ maintainer-clean-depend:
 	    >> .deps/$(*F).P; \
 	rm -f .deps/$(*F).pp
 info-am:
-info: info-recursive
+info: info-am
 dvi-am:
-dvi: dvi-recursive
+dvi: dvi-am
 check-am: all-am
-check: check-recursive
+check: check-am
 installcheck-am:
-installcheck: installcheck-recursive
+installcheck: installcheck-am
 all-recursive-am: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
 
 install-exec-am: install-libLTLIBRARIES install-binPROGRAMS \
 		install-binSCRIPTS
-install-exec: install-exec-recursive
+install-exec: install-exec-am
 
 install-data-am: install-esdconfDATA install-m4dataDATA \
 		install-pkgconfigDATA install-includeHEADERS
-install-data: install-data-recursive
+install-data: install-data-am
 
 install-am: all-am
 	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
-install: install-recursive
+install: install-am
 uninstall-am: uninstall-libLTLIBRARIES uninstall-binPROGRAMS \
 		uninstall-binSCRIPTS uninstall-esdconfDATA \
 		uninstall-m4dataDATA uninstall-pkgconfigDATA \
 		uninstall-includeHEADERS
-uninstall: uninstall-recursive
+uninstall: uninstall-am
 all-am: Makefile $(LTLIBRARIES) $(PROGRAMS) $(SCRIPTS) $(DATA) \
 		$(HEADERS) config.h
-all-redirect: all-recursive-am
+all-redirect: all-am
 install-strip:
 	$(MAKE) $(AM_MAKEFLAGS) AM_INSTALL_PROGRAM_FLAGS=-s install
-installdirs: installdirs-recursive
-installdirs-am:
+installdirs:
 	$(mkinstalldirs)  $(DESTDIR)$(libdir) $(DESTDIR)$(bindir) \
 		$(DESTDIR)$(bindir) $(DESTDIR)$(esdconfdir) \
 		$(DESTDIR)$(m4datadir) $(DESTDIR)$(pkgconfigdir) \
@@ -774,20 +710,20 @@ mostlyclean-am:  mostlyclean-hdr mostlyclean-libLTLIBRARIES \
 		mostlyclean-binPROGRAMS mostlyclean-tags \
 		mostlyclean-depend mostlyclean-generic
 
-mostlyclean: mostlyclean-recursive
+mostlyclean: mostlyclean-am
 
 clean-am:  clean-hdr clean-libLTLIBRARIES clean-compile clean-libtool \
 		clean-binPROGRAMS clean-tags clean-depend clean-generic \
 		mostlyclean-am
 
-clean: clean-recursive
+clean: clean-am
 
 distclean-am:  distclean-hdr distclean-libLTLIBRARIES distclean-compile \
 		distclean-libtool distclean-binPROGRAMS distclean-tags \
 		distclean-depend distclean-generic clean-am
 	-rm -f libtool
 
-distclean: distclean-recursive
+distclean: distclean-am
 	-rm -f config.status
 
 maintainer-clean-am:  maintainer-clean-hdr \
@@ -799,7 +735,7 @@ maintainer-clean-am:  maintainer-clean-hdr \
 	@echo "This command is intended for maintainers to use;"
 	@echo "it deletes files that may require special tools to rebuild."
 
-maintainer-clean: maintainer-clean-recursive
+maintainer-clean: maintainer-clean-am
 	-rm -f config.status
 
 .PHONY: mostlyclean-hdr distclean-hdr clean-hdr maintainer-clean-hdr \
@@ -813,19 +749,14 @@ clean-binPROGRAMS maintainer-clean-binPROGRAMS uninstall-binPROGRAMS \
 install-binPROGRAMS uninstall-binSCRIPTS install-binSCRIPTS \
 uninstall-esdconfDATA install-esdconfDATA uninstall-m4dataDATA \
 install-m4dataDATA uninstall-pkgconfigDATA install-pkgconfigDATA \
-uninstall-includeHEADERS install-includeHEADERS install-data-recursive \
-uninstall-data-recursive install-exec-recursive \
-uninstall-exec-recursive installdirs-recursive uninstalldirs-recursive \
-all-recursive check-recursive installcheck-recursive info-recursive \
-dvi-recursive mostlyclean-recursive distclean-recursive clean-recursive \
-maintainer-clean-recursive tags tags-recursive mostlyclean-tags \
+uninstall-includeHEADERS install-includeHEADERS tags mostlyclean-tags \
 distclean-tags clean-tags maintainer-clean-tags distdir \
 mostlyclean-depend distclean-depend clean-depend \
 maintainer-clean-depend info-am info dvi-am dvi check check-am \
 installcheck-am installcheck all-recursive-am install-exec-am \
 install-exec install-data-am install-data install-am install \
-uninstall-am uninstall all-redirect all-am all installdirs-am \
-installdirs mostlyclean-generic distclean-generic clean-generic \
+uninstall-am uninstall all-redirect all-am all installdirs \
+mostlyclean-generic distclean-generic clean-generic \
 maintainer-clean-generic clean mostlyclean distclean maintainer-clean
 
 

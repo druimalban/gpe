@@ -62,6 +62,7 @@ int esd_spawnfd = 0;           /* The PID of the process that spawned us (for us
 
 static char *programname = NULL;
 
+#ifdef BEEPS
 /*******************************************************************/
 /* just to create the startup tones for the fun of it */
 void set_audio_buffer( void *buf, esd_format_t format,
@@ -104,6 +105,7 @@ void set_audio_buffer( void *buf, esd_format_t format,
 
     return;
 }
+#endif
 
 /*******************************************************************/
 /* to properly handle signals */
@@ -786,6 +788,7 @@ int main ( int argc, char *argv[] )
 
     /* send some sine waves just to check the sound connection */
     i = 0;
+#ifdef BEEPS
     if ( esd_beeps ) {
 	magl = magr = ( (esd_audio_format & ESD_MASK_BITS) == ESD_BITS16)
 	    ? 30000 : 100;
@@ -801,6 +804,7 @@ int main ( int argc, char *argv[] )
 	    }
 	}
     }
+#endif
 
     /* put some stuff in sound driver before pausing */
     esd_audio_write( NULL, 0);

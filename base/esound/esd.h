@@ -1,6 +1,9 @@
 #ifndef ESD_H
 #define ESD_H
+
+#ifdef SUPPORT_AUDIOFILE
 #include <audiofile.h>
+#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -305,9 +308,11 @@ esd_standby_mode_t esd_get_standby_mode( int esd );
 /*******************************************************************/
 /* esdfile.c - audiofile wrappers for sane handling of files */
 
+#ifdef SUPPORT_AUDIOFILE
 int esd_send_file( int esd, AFfilehandle au_file, int frame_length );
 int esd_play_file( const char *name_prefix, const char *filename, int fallback );
 int esd_file_cache( int esd, const char *name_prefix, const char *filename );
+#endif
 
 
 /*******************************************************************/

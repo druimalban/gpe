@@ -43,7 +43,7 @@ genrand_dev(unsigned char *buffer, int buf_len)
 {
   int fd;
 
-  fd = open("/dev/random", O_RDONLY);
+  fd = open("/dev/urandom", O_RDONLY);
   if(fd < 0)
     return 0;
 

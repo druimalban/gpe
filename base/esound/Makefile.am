@@ -1,5 +1,5 @@
 
-SUBDIRS = docs
+#SUBDIRS = docs
 
 SPEC_FILE = esound.spec
 
@@ -26,7 +26,8 @@ bin_SCRIPTS = \
 lib_LTLIBRARIES = libesd.la $(libesddsp_la)
 
 libesd_la_LDFLAGS = -version-info $(ESD_VERSION_INFO)
-libesd_la_LIBADD = $(AUDIOFILE_LIBS) $(SOUND_LIBS)
+#libesd_la_LIBADD = $(AUDIOFILE_LIBS) $(SOUND_LIBS)
+libesd_la_LIBADD = $(SOUND_LIBS)
 
 libesd_la_SOURCES = \
 	esdlib.c	\
@@ -104,7 +105,8 @@ esdplay_SOURCES = \
 	$(getopt_src) \
 	esdplay.c
 
-LDADD = libesd.la $(AUDIOFILE_LIBS)
+#LDADD = libesd.la $(AUDIOFILE_LIBS)
+LDADD = libesd.la
 
 esd_LDADD = $(WRAP_LIB) $(LDADD)
 
