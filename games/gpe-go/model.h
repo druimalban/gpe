@@ -71,26 +71,36 @@ typedef enum {
   MARK_SPOT,
   //MARK_TRIANGLE
   MARK_LABEL
-} GoMark;
+} GoMark;//--> GoMarkType
+
+//struct {
+//  GoMarkType type;
+//  GdkColor * color;
+//  gchar * label;
+//  int col;
+//  int row;
+//} GoMark;
 
 typedef enum {
   PASS,
-  PLAY,
-  CAPTURE
+  PLAY, //USE: PLACE_STONE (includes handicaps), MAKE_MOVE, NONE (?)
+  CAPTURE //--> remove
 } GoAction;
 
 typedef struct {//FIXME: match SGF specs
+  //node type ? (root, setup, move, game-info, ...)
   GoAction action;
-  GoItem   item;
+  GoItem   item; //--> color
   int col;
   int row;
   //GList * captured; FIXME: to use
 
   gchar * comment;
+  //gchar * annotation;
   //GList * marks;
   //...
 
-  //char * unknown_properties;
+  //char * unknown_properties;//from loaded files, to save back
 } GoNode;
 
 #endif
