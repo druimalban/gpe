@@ -29,4 +29,9 @@ module <b>bluez-pin</b>.  Precompiled binaries for iPAQ are available
 in the Familiar <A href="http://familiar.handhelds.org/familiar/feeds/unstable/">unstable feed</A>.
 </P>
 
+<H2>Screenshot</H2>
+<P>
+<IMG SRC="../images/bluez-pin.png">
+</P>
+
 <!--#include virtual="/includes/foot.shtml"-->
