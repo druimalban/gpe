@@ -1,3 +1,7 @@
+2004-08-11  Florian Boor <florian.boor@kernelconcepts.de>
+
+	* main.c: Asks to save a modified file if "new" is clicked.
+                  Improved behaviour if a bad file name/location is chosen.
 
 2004-06-04  Florian Boor <florian.boor@kernelconcepts.de>
 	* Version 0.23 released

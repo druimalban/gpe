@@ -43,6 +43,10 @@ GtkWidget *text_area;
 GtkWidget *file_selector;
 GtkWidget *search_replace_vbox;
 
+/* some forwards */
+static void save_file (void);
+
+
 struct gpe_icon my_icons[] = {
   { "save_as", "save_as" },
   { "cut", "cut" },
@@ -125,6 +129,14 @@ text_changed (void)
 static void
 new_file (void)
 {
+  if (file_modified == 1)
+  {
+    if (gpe_question_ask (_("Current file is modified, save?"), 
+		                  _("Question"), "!gtk-question",
+ 					      _("Don't save"), "stop", "!gtk-save", 
+	                      NULL, NULL))
+      save_file ();
+  }
   clear_text_area ();
   if (filename) g_free(filename);
   filename = NULL;
@@ -246,12 +258,18 @@ do_save_file (gchar *filename)
 static void
 save_file_as (GtkFileSelection *selector, gpointer user_data)
 {
-  if (filename) g_free(filename);
+  if (filename) 
+	  g_free(filename);
   filename = g_strdup(gtk_file_selection_get_filename (GTK_FILE_SELECTION (file_selector)));
   
   do_save_file (filename);
 
   gtk_widget_destroy (file_selector);
+  if (access(filename,W_OK))
+    {
+	  g_free(filename);
+	  filename = NULL;
+	}
 }
 
 static void
