@@ -70,7 +70,7 @@ do_su (void)
   
   if (pid == 0)
     {
-      execl (SU, SU, "-", "-c", command, NULL);
+      execl (SU, SU, "-c", command, NULL);
       exit (1);
     }
 
