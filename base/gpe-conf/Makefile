@@ -1,5 +1,5 @@
 PACKAGE = gpe-conf
-VERSION = 0.1.19
+VERSION = 0.1.20
 CVSBUILD = yes
 DEBUG = no
 INSTALL = install
@@ -94,6 +94,7 @@ MEMBERS += tasks
 MEMBERS += users/passwd
 MEMBERS += sound/sound
 MEMBERS += sound/soundctrl
+MEMBERS += sound/alarmctrl
 
 MEMBERS_INFO  = main-info
 MEMBERS_INFO += storage

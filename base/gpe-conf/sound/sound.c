@@ -14,6 +14,7 @@
 
 /*
   ToDo
+  - move mixer icons to gpe-icons
   - Filtering for different platforms.
   - Additional settings.
   - Update settings from system.
@@ -34,8 +35,8 @@
 #include <gpe/spacing.h>
 
 #include "sound.h"
+#include "alarmctrl.h"
 #include "soundctrl.h"
-
 #define MAX_CHANNELS 24
 
 #warning needs gpe-mixer
@@ -63,12 +64,14 @@ struct
 	gint num_channels;
 	GtkWidget *cMute;
 	GtkWidget *slMain;
+	GtkWidget *slAlarm;
 	t_mixer *channels;
 	GtkWidget *slider[MAX_CHANNELS];
 }
 self;
 
 static gboolean level_changed = FALSE;
+
 
 static gboolean
 timeout_callback(void)
@@ -81,6 +84,23 @@ timeout_callback(void)
 	return TRUE;
 }
 
+
+static void
+do_change_alarm(GtkRange *range, gpointer data)
+{
+	set_alarm_level((int)gtk_range_get_value(range));
+}
+
+
+static void
+on_alarm_toggled(GtkToggleButton *tb, gpointer userdata)
+{
+	int alarm_enable = gtk_toggle_button_get_active(tb);
+	gtk_widget_set_sensitive(self.slAlarm, alarm_enable);
+	set_alarm_enabled(alarm_enable);
+}
+
+
 static void
 do_change_channel(GtkRange *range, gpointer data)
 {
@@ -90,7 +110,6 @@ do_change_channel(GtkRange *range, gpointer data)
 	set_volume (self.channels[cn].nr, self.channels[cn].value);
 	level_changed = TRUE;
 }
-
 
 static void
 on_mute_toggled(GtkToggleButton *tb, gpointer userdata)
@@ -120,7 +139,6 @@ on_mute_toggled(GtkToggleButton *tb, gpointer userdata)
 	}		
 }
 
-
 /* gpe-conf applet interface */
 
 void
@@ -132,27 +150,33 @@ void
 Sound_Save ()
 {
 	sound_save_settings();
+	alarm_save_settings();
 }
 
 void
 Sound_Restore ()
 {
 	sound_restore_settings();
+	alarm_restore_settings();
 }
 
 GtkWidget *
 Sound_Build_Objects (void)
 {
 	GtkWidget *table;
-	GtkWidget *tw;
+	GtkWidget *tw, *slider, *label;
+	GtkWidget *image;
+	GdkPixbuf *pbuf = NULL;
 	gchar *ts = NULL;
 	int i;
 	gboolean mute;
+	gchar *err = NULL;
 	
 	gpe_load_icons(mixer_icons);
 	
 	/* init devices */
 	sound_init();
+	alarm_init();
 	self.num_channels = sound_get_channels(&self.channels);
 	if (self.num_channels > MAX_CHANNELS)
 		self.num_channels = MAX_CHANNELS;
@@ -165,8 +189,9 @@ Sound_Build_Objects (void)
 	gtk_table_set_row_spacings(GTK_TABLE(table),gpe_get_boxspacing());
 	gtk_table_set_col_spacings(GTK_TABLE(table),gpe_get_boxspacing());
 	
+	/* audio settings section */ 
 	tw = gtk_label_new(NULL);
-	ts = g_strdup_printf("<b>%s</b>",_("Sound Settings"));
+	ts = g_strdup_printf("<b>%s</b>",_("Audio Settings"));
 	gtk_label_set_markup(GTK_LABEL(tw),ts);
 	gtk_misc_set_alignment(GTK_MISC(tw),0,0.5);
 	g_free(ts);
@@ -184,16 +209,12 @@ Sound_Build_Objects (void)
 	
 	for (i = 0; i < self.num_channels; i++)
 	{
-		GtkWidget *slider = gtk_hscale_new_with_range(0.0, 100.0, 1.0);
-		GtkWidget *label  = gtk_label_new(self.channels[i].label);
-		GtkWidget *image;
-		GdkPixbuf *pbuf = NULL;
-		gchar *err = NULL;
+		slider = gtk_hscale_new_with_range(0.0, 100.0, 1.0);
+		label  = gtk_label_new(self.channels[i].label);
 
 		pbuf = gpe_try_find_icon (self.channels[i].name, &err);
 		if (!pbuf)
 			pbuf = gpe_try_find_icon ("unkn", &err);
-
 		image = gtk_image_new_from_pixbuf(pbuf);
 		
 		gtk_misc_set_alignment(GTK_MISC(label), 0, 0.5);
@@ -213,9 +234,50 @@ Sound_Build_Objects (void)
 		gtk_table_attach(GTK_TABLE(table), slider, 2, 3, i + 2, i + 3, 
 		                 GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
 	}
-	g_timeout_add(1000, (GSourceFunc)timeout_callback, NULL);
 	
 	on_mute_toggled(GTK_TOGGLE_BUTTON(tw), FALSE);
 	
+	/* alarm settings section */ 
+	tw = gtk_label_new(NULL);
+	ts = g_strdup_printf("<b>%s</b>",_("Alarm Settings"));
+	gtk_label_set_markup(GTK_LABEL(tw),ts);
+	gtk_misc_set_alignment(GTK_MISC(tw),0,0.5);
+	g_free(ts);
+	gtk_table_attach(GTK_TABLE(table), tw, 0, 3, i + 3, i + 4, 
+	                 GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
+	
+	tw = gtk_check_button_new_with_label(_("Enable Alarm"));
+	gtk_table_attach(GTK_TABLE(table), tw, 0, 3, i + 4, i + 5, 
+	                 GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(tw), get_alarm_enabled());
+	g_signal_connect_after(G_OBJECT(tw), "toggled", 
+	                       G_CALLBACK(on_alarm_toggled), NULL);
+	
+	slider = gtk_hscale_new_with_range(0.0, 100.0, 1.0);
+	self.slAlarm = slider;
+	gtk_widget_set_sensitive(slider, get_alarm_enabled());
+	label  = gtk_label_new(_("Volume"));
+	
+	pbuf = gpe_try_find_icon ("alarm", &err);
+	if (!pbuf)
+		pbuf = gpe_try_find_icon ("unkn", &err);
+	image = gtk_image_new_from_pixbuf(pbuf);
+		
+	gtk_misc_set_alignment(GTK_MISC(label), 0, 0.5);
+	gtk_scale_set_draw_value(GTK_SCALE(slider), FALSE);
+	gtk_range_set_value(GTK_RANGE(slider), get_alarm_level());
+				
+	g_signal_connect (G_OBJECT(slider), "value-changed",
+	                  G_CALLBACK (do_change_alarm), NULL);
+	
+	gtk_table_attach(GTK_TABLE(table), image, 0, 1, i + 5, i + 6, 
+	                 GTK_FILL, GTK_FILL, 0, 0);
+	gtk_table_attach(GTK_TABLE(table), label, 1, 2, i + 5, i + 6, 
+	                 GTK_FILL, GTK_FILL, 0, 0);
+	gtk_table_attach(GTK_TABLE(table), slider, 2, 3, i + 5, i + 6, 
+	                 GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
+	
+	g_timeout_add(1000, (GSourceFunc)timeout_callback, NULL);
+		
 	return table;
 }

@@ -10,7 +10,7 @@
  *
  * Some bits are taken from gpe-mixer.
  *
- * GPE sound settings module, backend.
+ * GPE sound settings module, audio backend.
  *
  */
 
@@ -204,7 +204,7 @@ sound_save_settings(void)
 	if (cfgfile)
 	{
 		fprintf(cfgfile, 
-			"# mixer settings - file created by gpe-conf\n\n");
+		        "# mixer settings - file created by gpe-conf\n\n");
 		fprintf(cfgfile, "muted %d\n", muted);
 		for (i = 0; i < SOUND_MIXER_NRDEVICES; i++)
 			fprintf(cfgfile, "%d %d\n", i, 
@@ -233,8 +233,8 @@ sound_restore_settings(void)
 int
 set_volume (int channel, int volume)
 {
-  volume |= (volume << 8);
-  return ioctl(mixfd, MIXER_WRITE(channel), &volume);
+	volume |= (volume << 8);
+	return ioctl(mixfd, MIXER_WRITE(channel), &volume);
 }
 
 
