@@ -25,8 +25,8 @@
 #include "files.h"
 #include "sketchpad.h"
 
-#include "dialog.h"
 #include "about.h"
+#include "question.h"
 
 
 void switch_windows(GtkWidget * window_to_hide, GtkWidget * window_to_show){
@@ -55,7 +55,7 @@ void on_button_selector_open_clicked (GtkButton *button, gpointer user_data){
 void on_button_selector_delete_clicked (GtkButton *button, gpointer user_data){
   if(!is_current_sketch_selected || is_current_sketch_new) return;
   //--ask confirmation (maybe a preference)
-  if(confirm_action_dialog_box("Delete sketch?","Delete")){
+  if(gpe_question_ask_yn ("Delete sketch?") == 1){
     delete_current_sketch();
   }
 }
@@ -93,7 +93,7 @@ void on_button_sketchpad_view_clicked (GtkButton *button, gpointer user_data){
 }
 
 void on_button_selector_about_clicked (GtkButton *button, gpointer user_data){
-  about_box(PACKAGE,
+  gpe_about(PACKAGE,
             VERSION,
             //icon
             "this_app_icon",

@@ -342,10 +342,10 @@ GtkWidget * sketchpad_build_files_toolbar(GtkWidget * window){
   pixbuf = gpe_find_icon ("delete");
   pixmap = gpe_render_icon (window->style, pixbuf);
   gtk_container_add (GTK_CONTAINER (button_file_delete), pixmap);
-  pixbuf = gpe_find_icon ("prev");
+  pixbuf = gpe_find_icon ("left");
   pixmap = gpe_render_icon (window->style, pixbuf);
   gtk_container_add (GTK_CONTAINER (button_file_prev), pixmap);
-  pixbuf = gpe_find_icon ("next");
+  pixbuf = gpe_find_icon ("right");
   pixmap = gpe_render_icon (window->style, pixbuf);
   gtk_container_add (GTK_CONTAINER (button_file_next), pixmap);
   pixbuf = gpe_find_icon ("list");

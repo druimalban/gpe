@@ -34,30 +34,30 @@ gchar * sketchdir;
 static struct gpe_icon my_icons[] = {
   //Apps icon
   { "this_app_icon", PREFIX "/share/pixmaps/gpe-sketchbook.png" },
+  { "gpe-logo", PREFIX "/share/gpe/pixmaps/gpe-logo.png" },
 
   //GPE stock icons
   { "new",    "new"   },
   { "open",   "open"  },
   { "delete", "delete"},
   { "save",   "save"  },
-  //might be moved to GPE stock
-  { "prev",      PREFIX "/share/gpe-sketchbook/pixmaps/gprev.png"},
-  { "next",      PREFIX "/share/gpe-sketchbook/pixmaps/gnext.png"},
-  { "about",     PREFIX "/share/gpe-sketchbook/pixmaps/about.png" },
-  { "list",      PREFIX "/share/gpe-sketchbook/pixmaps/glist.png"},
-  { "sketchpad", PREFIX "/share/gpe-sketchbook/pixmaps/sketchpad.png" },
+  { "left",      "left"},
+  { "right",    "right"},
+  { "about",  "about" },
+  { "list",      "gpe-sketchbook/list"},
+  { "sketchpad", "gpe-sketchbook/sketchpad" },
 
   //own icons
-  { "pencil",       PREFIX "/share/gpe-sketchbook/pixmaps/tool_pencil.png"},
-  { "eraser",       PREFIX "/share/gpe-sketchbook/pixmaps/tool_eraser.png"},
-  { "brush_small",  PREFIX "/share/gpe-sketchbook/pixmaps/brush_small.png"},
-  { "brush_medium", PREFIX "/share/gpe-sketchbook/pixmaps/brush_medium.png"},
-  { "brush_large",  PREFIX "/share/gpe-sketchbook/pixmaps/brush_large.png"},
-  { "brush_xlarge", PREFIX "/share/gpe-sketchbook/pixmaps/brush_xlarge.png"},
-  { "color_black",  PREFIX "/share/gpe-sketchbook/pixmaps/color_black.png"},
-  { "color_red",    PREFIX "/share/gpe-sketchbook/pixmaps/color_red.png"},
-  { "color_green",  PREFIX "/share/gpe-sketchbook/pixmaps/color_green.png"},
-  { "color_blue",   PREFIX "/share/gpe-sketchbook/pixmaps/color_blue.png"},
+  { "pencil",       "gpe-sketchbook/tool_pencil"},
+  { "eraser",       "gpe-sketchbook/tool_eraser"},
+  { "brush_small", "gpe-sketchbook/brush_small"},
+  { "brush_medium", "gpe-sketchbook/brush_medium"},
+  { "brush_large",  "gpe-sketchbook/brush_large"},
+  { "brush_xlarge", "gpe-sketchbook/brush_xlarge"},
+  { "color_black",  "gpe-sketchbook/color_black"},
+  { "color_red",    "gpe-sketchbook/color_red"},
+  { "color_green", "gpe-sketchbook/color_green"},
+  { "color_blue",   "gpe-sketchbook/color_blue"},
 
   { NULL, NULL }
 };

@@ -26,12 +26,24 @@
 #include "selector.h"
 #include "selector-cb.h"
 
-#include "dialog.h"
+#include "question.h"
 
 //---------------------------------------------------------
 //--------------------- GENERAL ---------------------------
 void on_window_sketchpad_destroy(GtkObject *object, gpointer user_data){
-  app_quit();
+  int ret;
+  gtk_widget_show (GTK_WIDGET(object));
+  ret = gpe_question_ask_yn ("Save sketch?");
+  switch (ret) {
+    case 1:
+      on_button_file_save_clicked(NULL,NULL);
+    case 0:
+      app_quit();
+      break;
+    case -1:
+    default:
+      break;
+  }  
 }
 
 void on_button_list_view_clicked(GtkButton *button, gpointer user_data){
@@ -75,8 +87,7 @@ void on_button_file_new_clicked (GtkButton *button, gpointer user_data){
 
 void on_button_file_delete_clicked (GtkButton *button, gpointer user_data){
   if(is_current_sketch_new) return;
-  //--ask confirmation (maybe a preference)
-  if(confirm_action_dialog_box("Delete sketch?","Delete")){
+  if(gpe_question_ask_yn ("Delete sketch?") == 1){
     delete_current_sketch();
   }
 }
