@@ -1,4 +1,6 @@
 2004-06-03  Florian Boor  <florian.boor@kernelconcepts.de>
+	* Released V 0.91
+	* Pushed version to 0.91
 	* Makefile: Some more tweaks to work with oe.	
 
 2004-05-24  Florian Boor  <florian.boor@kernelconcepts.de>
