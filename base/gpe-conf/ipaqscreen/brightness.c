@@ -19,6 +19,8 @@
 #include <sys/wait.h>
 
 #include "brightness.h"
+#include "../applets.h"
+#include "../parser.h"
 
 void set_brightness (int brightness)
 {
