@@ -55,25 +55,23 @@
 SDL_Surface *scr_virtual, *scr_physical;
 
 static int dead, endlevel;
-static void *font1, *font2;
 
 void
 sdl_init(void)
 {
-  SDL_Init (SDL_INIT_AUDIO | SDL_INIT_VIDEO | SDL_INIT_TIMER);
+	SDL_Init (SDL_INIT_AUDIO | SDL_INIT_VIDEO | SDL_INIT_TIMER);
 
-  scr_physical = SDL_SetVideoMode (320, 200, 16, SDL_SWSURFACE);
-  if (scr_physical == NULL) 
-    {
-      fprintf (stderr, "Unable to set video mode\n");
-      exit (1);
-    }
+	scr_physical = SDL_SetVideoMode (320, 200, 16, SDL_SWSURFACE);
+	if (scr_physical == NULL) {
+		fprintf (stderr, "Unable to set video mode\n");
+		exit (1);
+	}
 }
 
 void
 sdl_done(void)
 {
-  SDL_Quit ();
+	SDL_Quit ();
 }
 
 /*
@@ -135,12 +133,51 @@ svgalib_draw_map(struct map_s *mptr)
 	SDL_UpdateRects (scr_physical, nrects, rect_list);
 }
 
-#define SCANCODE_CURSORLEFT 1
-#define SCANCODE_CURSORRIGHT 2
-#define SCANCODE_CURSORUP 3
-#define SCANCODE_CURSORDOWN 4
+int keydown[SDLK_LAST];
+int key_event;
+int wmouse_x, wmouse_y, wmouse_button, wmouse_oldbutton;
 
-int keydown[5];
+#define MOUSE_LEFTBUTTON 1
+#define MOUSE_RIGHTBUTTON 2
+
+void
+keyboard_update ()
+{
+	SDL_Event ev;
+
+	key_event = 0;
+	wmouse_oldbutton = wmouse_button;
+
+	if (SDL_PollEvent (&ev)) {
+		switch (ev.type)
+		{
+		case SDL_KEYDOWN:
+			key_event = 1;
+			keydown[ev.key.keysym.sym] = 1;
+			break;
+		case SDL_KEYUP:
+			keydown[ev.key.keysym.sym] = 0;
+			break;
+		case SDL_MOUSEBUTTONDOWN:
+			wmouse_x = ev.button.x;
+			wmouse_y = ev.button.y;
+			if (ev.button.button == SDL_BUTTON_LEFT)
+				wmouse_button |= MOUSE_LEFTBUTTON;
+			if (ev.button.button == SDL_BUTTON_RIGHT)
+				wmouse_button |= MOUSE_RIGHTBUTTON;
+			break;
+		case SDL_MOUSEBUTTONUP:
+			if (ev.button.button == SDL_BUTTON_LEFT)
+				wmouse_button &= ~MOUSE_LEFTBUTTON;
+			if (ev.button.button == SDL_BUTTON_RIGHT)
+				wmouse_button &= ~MOUSE_RIGHTBUTTON;
+			break;
+		default:
+			break;
+		}
+	}
+  
+}
 
 /*
  * Check the keyboard status and do what is need to do.
@@ -148,66 +185,29 @@ int keydown[5];
 static int
 check_keyboard(struct map_s *mptr)
 {
-  SDL_Event ev;
+	keyboard_update ();
 
-  if (SDL_PollEvent (&ev)) 
-    {
-      switch (ev.type)
-	{
-	case SDL_KEYDOWN:
-	case SDL_KEYUP:
-	  {
-	    int keycode = 0;
-
-	    switch (ev.key.keysym.sym)
-	      {
-	      case SDLK_UP:
-		keycode = SCANCODE_CURSORUP;
-		break;
-	      case SDLK_DOWN:
-		keycode = SCANCODE_CURSORDOWN;
-		break;
-	      case SDLK_LEFT:
-		keycode = SCANCODE_CURSORLEFT;
-		break;
-	      case SDLK_RIGHT:
-		keycode = SCANCODE_CURSORRIGHT;
-		break;
-	      default:
-		break;
-	      }
-
-	    if (keycode)
-	      keydown[keycode] = (ev.type == SDL_KEYDOWN);
-	  }
-	  break;
-	default:
-	  break;
-	}
-    }
-  
-	if (keydown[SCANCODE_CURSORLEFT]) {
+	if (keydown[SDLK_LEFT]) {
 		go_left(mptr);
 		svgalib_draw_map(mptr);
-	} else if (keydown[SCANCODE_CURSORRIGHT]) {
+	} else if (keydown[SDLK_RIGHT]) {
 		go_right(mptr);
 		svgalib_draw_map(mptr);
-	} else if (keydown[SCANCODE_CURSORUP]) {
+	} else if (keydown[SDLK_UP]) {
 		go_up(mptr);
 		svgalib_draw_map(mptr);
-	} else if (keydown[SCANCODE_CURSORDOWN]) {
+	} else if (keydown[SDLK_DOWN]) {
 		go_down(mptr);
 		svgalib_draw_map(mptr);
 	}
 #if 0
- else if (keyboard_keypressed(SCANCODE_M))
+	else if (keyboard_keypressed(SCANCODE_M))
 		showmap(mptr);
-	else if (keyboard_keypressed(SCANCODE_Q) || keyboard_keypressed(SCANCODE_ESCAPE))
-		return 1;
-    }
 #endif
+	else if (keydown[SDLK_q] || keydown[SDLK_ESCAPE])
+		return 1;
 
-  return 0;
+	return 0;
 }
 
 #define EGG_COUNT 3
@@ -311,11 +311,43 @@ load_image(char *filename)
 	SDL_UpdateRect (scr_physical, 0, 0, 0, 0);
 }
 
-#if 0
+#include "font_8x8.c"
+
+static void
+write_text (int x, int y, char *string)
+{
+	while (*string) {
+		char c = *string++;
+		char *d = fontdata_8x8 + (8 * c);
+		int i, j;
+
+		for (j = 0; j < 7; j++) {
+			unsigned char f = d[j];
+			for (i = 0; i < 7; i++) {
+				int b = f & (1 << (7 - i));
+				unsigned short *v = (unsigned short *)scr_physical->pixels;
+				
+				if (b)
+					v[x + i + ((y + j) * WIDTH)] = 0xffff;
+			}
+		}
+
+		x += 8;
+	}
+
+	SDL_UpdateRect (scr_physical, 0, 0, 0, 0);
+}
+
+static void
+clearscreen (void)
+{
+	memset (scr_physical->pixels, 0, WIDTH * HEIGHT * 2);
+
+	SDL_UpdateRect (scr_physical, 0, 0, 0, 0);
+}
 
 #define WRITE_CENTERED(y,buf) \
-	gl_write(WIDTH/2 - strlen(buf) * 8 / 2, y, buf)
-#endif
+	write_text(WIDTH/2 - strlen(buf) * 8 / 2, y, buf)
 
 static char *
 episode_name(char *episode)
@@ -336,24 +368,18 @@ redraw_main_screen(char *episode, int level)
 {
 	char buf[128];
 	load_image(PATH_BITMAPS "/main.bmp");
-#if 0
 	sprintf(buf, "Episode %s - Level %d", episode_name(episode), level+1);
-	gl_setwritemode(WRITEMODE_MASKED);
+//	gl_setwritemode(WRITEMODE_MASKED);
 	WRITE_CENTERED(190, buf);
-#endif
 }
 
 static void
 wait_until_event(void)
 {
 	for (;;) {
-		SDL_Event ev;
-		
-		if (SDL_PollEvent (&ev))
-		{
-			if (ev.type == SDL_KEYDOWN)
-				break;
-		}
+		keyboard_update ();
+		if (key_event)
+			break;
 	}
 }
 
@@ -401,14 +427,10 @@ make_episode_list(char *d)
 static int
 display_episode_list(struct episode_s *ep)
 {
-#if 0
 	int i;
 	char buf[128];
 
-	wmouse_hide();
-
-	gl_clearscreen(0);
-	gl_setwritemode(WRITEMODE_OVERWRITE);
+	clearscreen();
 	WRITE_CENTERED(180, "Select episode");
 
 	for (i = 0; ep != NULL; ep = ep->next, i++) {
@@ -420,9 +442,7 @@ display_episode_list(struct episode_s *ep)
 			strcpy(buf, episode_name(ep->filename));
 		WRITE_CENTERED(i*8, buf);
 	}
-	wmouse_show();
 	return i;
-#endif
 }
 
 static void
@@ -431,7 +451,6 @@ select_episode(char *file, int *level)
 	struct episode_s *ep, *ep1, *next;
 	int i, n;
 
-#if 0
 	ep = make_episode_list(PATH_MAPS);
 	for (ep1 = ep; ep1 != NULL; ep1 = ep1->next)
 		if (!strcmp(ep1->filename, file))
@@ -440,10 +459,9 @@ select_episode(char *file, int *level)
 	n = display_episode_list(ep);
 
 	for (;;) {
-		wmouse_update();
 		keyboard_update();
 
-		if (keyboard_keypressed(SCANCODE_Q) || keyboard_keypressed(SCANCODE_ESCAPE))
+		if (keydown[SDLK_q] || keydown[SDLK_ESCAPE])
 			break;
 		if (wmouse_button & MOUSE_RIGHTBUTTON && !wmouse_oldbutton)
 			break;
@@ -474,26 +492,20 @@ select_episode(char *file, int *level)
 		free(ep);
 		ep = next;
 	}
-#endif
 }
 
 static void
 select_password(char *file, int *level)
 {
-#if 0
 	char buf[128], pwd[9] = "";
 	int c, n = 0, i;
 
-	wmouse_hide();
-
 	load_image(PATH_BITMAPS "/passwd.bmp");
 
-	gl_setwritemode(WRITEMODE_OVERWRITE);
 	WRITE_CENTERED(35, episode_name(file));
 	WRITE_CENTERED(50, "Enter Password");
 
-	keyboard_close();
-
+#if 0
 	for (;;) {
 		gl_fillbox(100, 65, 100, 10, 0);
 		sprintf(buf, "[%s]", pwd);
@@ -536,72 +548,58 @@ select_password(char *file, int *level)
 			sound(SND_MOUSE);
 	}
 
-	wmouse_show();
-	keyboard_init();
+#endif
+
 	redraw_main_screen(file, *level);
 	usleep(250000);
-#endif
 }
 
 static void
 show_credits(char *file, int level)
 {
-#if 0
-	wmouse_hide();
 
 	load_image(PATH_BITMAPS "/credits.bmp");
-
-	wmouse_show();
 
 	wait_until_event();
 
 	redraw_main_screen(file, level);
 	usleep(250000);
-#endif
 }
 
 static void
 draw_end_level(void)
 {
-#if 0
 	int i, j;
 
-	wmouse_hide();
-
+#if 0
 	for (i = 0; i < WIDTH / FADE_NUM; i++) {
 		for (j = 0; j < FADE_NUM; j++)
 		gl_fillbox(i+(320/FADE_NUM)*j, 0, 1, HEIGHT, 0);
 		usleep(30000);
 	}
+#endif
 
 	load_image(PATH_BITMAPS "/endlevel.bmp");
 
-	wmouse_show();
-
 	wait_until_event();	
-#endif
 }
 
 static void
 draw_end_episode(void)
 {
-#if 0
 	int i, j;
 
-	wmouse_hide();
-
+#if 0
 	for (i = 0; i < WIDTH / FADE_NUM; i++) {
 		for (j = 0; j < FADE_NUM; j++)
 		gl_fillbox(i+(320/FADE_NUM)*j, 0, 1, HEIGHT, 0);
 		usleep(30000);
 	}
+#endif
 
 	load_image(PATH_BITMAPS "/endepis.bmp");
 
-	wmouse_show();
-
 	wait_until_event();	
-#endif
 }
 
 static void
@@ -618,31 +616,22 @@ start_level(char *file, int *level)
 
 	load_image(PATH_BITMAPS "/start.bmp");
 
-#if 0
 	sprintf(buf, "Episode %s", episode_name(file));
 	WRITE_CENTERED(45, buf);
 	sprintf(buf, "Level %d", *level+1);
 	WRITE_CENTERED(70, buf);
 	sprintf(buf, "Password %s", current_map->password);
 	WRITE_CENTERED(95, buf);
-#endif
 
 	sound(SND_START_LEVEL);
 	wait_until_event();
 
-#if 0
-	gl_clearscreen(0);
-
-	gl_setfont(8, 8, font1);
-#endif
+	clearscreen();
 
 	svgalib_loop(current_map);
 
 	//	gl_setfont(8, 8, font2);
 	free_map(current_map);
-
-#if 0
-	wmouse_show();
 
 	if (endlevel) {
 		if (*level < 7) {
@@ -656,7 +645,6 @@ start_level(char *file, int *level)
 	
 	redraw_main_screen(file, *level);
 	usleep(250000);
-#endif
 }
 
 #define START_BUTTON()	  (wmouse_x >= 69 && wmouse_y >= 72 && wmouse_x <= 259 && wmouse_y <= 98)
@@ -676,17 +664,18 @@ main_screen(void)
 	redraw_main_screen(episode, level);
 
 	for (;;) {
-#if 0
-		if (keyboard_keypressed(SCANCODE_Q) || keyboard_keypressed(SCANCODE_ESCAPE))
+		keyboard_update ();
+
+		if (keydown[SDLK_q] || keydown[SDLK_ESCAPE])
 			break;
 
-		if (keyboard_keypressed(SCANCODE_S))
+		if (keydown[SDLK_s])
 			start_level(episode, &level);
-		if (keyboard_keypressed(SCANCODE_E))
+		if (keydown[SDLK_e])
 			select_episode(episode, &level);
-		if (keyboard_keypressed(SCANCODE_P))
+		if (keydown[SDLK_p])
 			select_password(episode, &level);
-		if (keyboard_keypressed(SCANCODE_C))
+		if (keydown[SDLK_c])
 			show_credits(episode, level);
 
 		if (wmouse_button & MOUSE_LEFTBUTTON && !wmouse_oldbutton) {
@@ -703,9 +692,6 @@ main_screen(void)
 			else
 				sound(SND_MOUSE);
 		}
-#endif
-
-		start_level(episode, &level);
 
 	}
 	sdl_done();
