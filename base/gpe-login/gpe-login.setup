@@ -11,7 +11,7 @@ ipaq-sleep -u 60 -o 30 -n &
 if [ ! -e /etc/gpe/gpe-login-bg.dontshow ]; then
 # FIXME: if I wrap this in the check, I don't get the exit code I need. I suck at shell.
 #    if [ -x /usr/bin/gpe-setbg ]; then
-        gpe-setbg /etc/gpe/gpe-login-bg.png
+        gpe-setbg /usr/share/pixmaps/gpe-default-bg.png
 #    fi
 fi
 

@@ -1,3 +1,12 @@
+2002-12-17  Philip Blundell  <philb@gnu.org>
+
+	* gpe-session-scripts 0.29 released.
+
+2002-12-17  Philip Blundell  <philb@gnu.org>
+
+	* gpe-login.setup: Use /usr/share/pixmaps/gpe-default-bg.png as
+	background pixmap.
+
 2002-12-11  Philip Blundell  <philb@gnu.org>
 
 	* gpe-login 0.31 released.
