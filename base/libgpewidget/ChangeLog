@@ -1,8 +1,21 @@
 2004-05-22  Philip Blundell  <philb@gnu.org>
 
+	* gpewindowlist.c (gpe_window_list_list_changed): Make static.
+	(gpe_window_list_active_window_changed): Likewise.
+	(gpe_window_list_init): Install event filter on root window.
+	(gpe_window_list_fini): Uninstall it here.
+	* gpe/gpewindowlist.h (struct _GPEWindowList): Add
+	net_client_list_atom, net_active_window_list_atom.  Replace
+	display with screen.
+	(window_filter): Emit signals when list or active window changes.
+	(initialize, gpe_get_client_window_list, gpe_get_window_name,
+	gpe_get_window_icon): Move to ...
+	* gpewindowbits.c: ... here.  New file.	
+
 	* gpeiconlistview.c (_gpe_icon_list_view_expose): Avoid crash if
 	icon can't be loaded.
-
+	(_gpe_icon_list_view_realize): Delete unused variable.
+	
 2004-05-21  Philip Blundell  <philb@gnu.org>
 
 	* gpeiconlistview.c: Remove dependency on GtkDrawingArea.

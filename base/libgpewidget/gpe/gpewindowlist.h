@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2003, 2004 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -27,7 +27,9 @@ struct _GPEWindowList
 {
   GObject class;
 
-  Display *dpy;
+  GdkScreen *screen;
+  Atom net_client_list_atom;
+  Atom net_active_window_atom;
 };
 
 typedef struct _GPEWindowList	      GPEWindowList;
@@ -35,7 +37,7 @@ typedef struct _GPEWindowListClass    GPEWindowListClass;
 
 GtkType		 gpe_window_list_get_type (void);
 
-GObject         *gpe_window_list_new (GdkDisplay *);
+GObject         *gpe_window_list_new (GdkScreen *);
 
 gboolean         gpe_window_list_get_clients (GObject *, Window **, guint *nr);
 

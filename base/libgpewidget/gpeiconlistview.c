@@ -559,7 +559,6 @@ _gpe_icon_list_view_size_allocate (GtkWidget *widget, GtkAllocation *allocation)
 static void
 _gpe_icon_list_view_realize (GtkWidget *widget)
 {
-  GPEIconListView *view = GPE_ICON_LIST_VIEW (widget);
   GdkWindowAttr attributes;
   gint attributes_mask;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2004 Philip Blundell <philb@gnu.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,6 +19,7 @@
 
 #include <glib.h>
 #include <gdk/gdk.h>
+#include <gdk/gdkx.h>
 
 #include <X11/X.h>
 #include <X11/Xlib.h>
@@ -28,24 +29,6 @@
 
 static guint my_signals[2];
 
-static gboolean initialized;
-
-static Atom atoms[5];
-static char *atom_names[] = 
-  {
-    "_NET_CLIENT_LIST",
-    "_NET_WM_NAME",
-    "_NET_WM_ICON",
-    "UTF8_STRING",
-    "_NET_ACTIVE_WINDOW"
-  };
-
-#define _NET_CLIENT_LIST 0
-#define _NET_WM_NAME 1
-#define _NET_WM_ICON 2
-#define UTF8_STRING 3
-#define _NET_ACTIVE_WINDOW 4
-
 struct _GPEWindowListClass 
 {
   GObjectClass parent_class;
@@ -53,29 +36,37 @@ struct _GPEWindowListClass
   void (*active_window_changed)  (GPEWindowList *sm, Window w);
 };
 
+static GdkFilterReturn window_filter (GdkXEvent *xev, GdkEvent *gev, gpointer d);
+
 static void
-initialize (Display *dpy)
+gpe_window_list_init (GPEWindowList *list)
 {
-  if (initialized)
-    return;
+  GdkAtom net_client_list, net_active_window;
 
-  XInternAtoms (dpy, atom_names, 5, False, atoms);
+  net_client_list = gdk_atom_intern ("_NET_CLIENT_LIST", FALSE);
+  net_active_window = gdk_atom_intern ("_NET_ACTIVE_WINDOW", FALSE);
 
-  initialized = TRUE;
+  list->net_client_list_atom = gdk_x11_atom_to_xatom_for_display (gdk_screen_get_display (list->screen),
+								  net_client_list);
+  list->net_active_window_atom = gdk_x11_atom_to_xatom_for_display (gdk_screen_get_display (list->screen),
+								    net_active_window);
+
+  gdk_window_add_filter (gdk_screen_get_root_window (list->screen), window_filter, list);
 }
 
 static void
-gpe_window_list_init (GPEWindowList *item)
+gpe_window_list_fini (GPEWindowList *list)
 {
+  gdk_window_remove_filter (gdk_screen_get_root_window (list->screen), window_filter, list);
 }
 
-void
+static void
 gpe_window_list_list_changed (GPEWindowList *i)
 {
   g_signal_emit (G_OBJECT (i), my_signals[0], 0);
 }
 
-void
+static void
 gpe_window_list_active_window_changed (GPEWindowList *i, Window w)
 {
   g_signal_emit (G_OBJECT (i), my_signals[1], 0, w);
@@ -99,11 +90,6 @@ gpe_window_list_class_init (GPEWindowListClass * klass)
 				NULL, NULL,
 				gtk_marshal_VOID__INT,
 				G_TYPE_NONE, 1, G_TYPE_INT);
-}
-
-static void
-gpe_window_list_fini (GPEWindowList *item)
-{
 }
 
 GtkType
@@ -132,7 +118,7 @@ gpe_window_list_get_type (void)
 }
 
 GObject *
-gpe_window_list_new (GdkDisplay *dpy)
+gpe_window_list_new (GdkScreen *screen)
 {
   GObject *obj;
   GPEWindowList *w;
@@ -141,7 +127,7 @@ gpe_window_list_new (GdkDisplay *dpy)
 
   w = (GPEWindowList *)obj;
 
-  w->dpy = dpy;
+  w->screen = screen;
 
   return obj;
 }
@@ -151,144 +137,26 @@ window_filter (GdkXEvent *xev, GdkEvent *gev, gpointer d)
 {
   XEvent *ev = (XEvent *)xev;
   Display *dpy = ev->xany.display;
+  GPEWindowList *list = GPE_WINDOW_LIST (d);
 
-  if (ev->xany.type == PropertyNotify
-      && ev->xproperty.window == DefaultRootWindow (dpy))
+  if (ev->xany.type == PropertyNotify)
     {
-      if (ev->xproperty.atom == atoms[_NET_CLIENT_LIST])
-	;
-      else if (ev->xproperty.atom == atoms[_NET_ACTIVE_WINDOW])
-	;
+      if (ev->xproperty.atom == list->net_client_list_atom)
+	gpe_window_list_list_changed (list);
+      else if (ev->xproperty.atom == list->net_active_window_atom)
+	{
+	  Atom actual_type;
+	  int actual_format;
+	  unsigned long nitems, bytes_after = 0;
+	  Window *w;
+	  *w = None;
+	  XGetWindowProperty (dpy, ev->xproperty.window, list->net_active_window_atom,
+			      0, 1, False, XA_WINDOW, &actual_type, &actual_format,
+			      &nitems, &bytes_after, (unsigned char **)&w);
+	  gpe_window_list_active_window_changed (list, *w);
+	  XFree (w);
+	}
     }
 
   return GDK_FILTER_CONTINUE;
-}
-
-gboolean
-gpe_get_client_window_list (Display *dpy, Window **list, guint *nr)
-{
-  Atom actual_type;
-  int actual_format;
-  unsigned long nitems, bytes_after = 0;
-  unsigned char *prop = NULL;
-
-  initialize (dpy);
-  
-  if (XGetWindowProperty (dpy, DefaultRootWindow (dpy), atoms[_NET_CLIENT_LIST],
-			  0, G_MAXLONG, False, XA_WINDOW, &actual_type, &actual_format,
-			  &nitems, &bytes_after, &prop) != Success)
-    return FALSE;
-
-  *list = (Window *)prop;
-  *nr = (guint)nitems;
-
-  return TRUE;
-}
-
-gchar *
-gpe_get_window_name (Display *dpy, Window w)
-{
-  Atom actual_type;
-  int actual_format;
-  unsigned long nitems, bytes_after;
-  unsigned char *prop = NULL;
-  gchar *name = NULL;
-  int rc;
-
-  initialize (dpy);
-
-  gdk_error_trap_push ();
-
-  rc = XGetWindowProperty (dpy, w, atoms[_NET_WM_NAME],
-			  0, G_MAXLONG, False, atoms[UTF8_STRING], &actual_type, &actual_format,
-			  &nitems, &bytes_after, &prop);
-
-  gdk_error_trap_pop ();
-
-  if (rc != Success)
-    return FALSE;
-
-  if (nitems)
-    {
-      name = g_strdup (prop);
-      XFree (prop);
-    }
-  else
-    {
-      gdk_error_trap_push ();
-
-      rc = XGetWindowProperty (dpy, w, XA_WM_NAME,
-			       0, G_MAXLONG, False, XA_STRING, &actual_type, &actual_format,
-			       &nitems, &bytes_after, &prop);
-
-      if (gdk_error_trap_pop ())
-	return FALSE;
-
-      if (rc != Success)
-	return FALSE;
-
-      if (nitems)
-	{
-	  name = g_locale_to_utf8 (prop, -1, NULL, NULL, NULL);
-	  XFree (prop);
-	}
-    }
-
-  return name;
-}
-
-GdkPixbuf *
-gpe_get_window_icon (Display *dpy, Window w)
-{
-  Atom actual_type;
-  int actual_format;
-  unsigned long nitems, bytes_after;
-  gulong *prop = NULL;
-  int rc;
-  GdkPixbuf *pixbuf = NULL;
-
-  initialize (dpy);
-
-  gdk_error_trap_push ();
-
-  rc = XGetWindowProperty (dpy, w, atoms[_NET_WM_ICON],
-			  0, G_MAXLONG, False, XA_CARDINAL, &actual_type, &actual_format,
-			  &nitems, &bytes_after, (guchar **)&prop);
-
-  if (gdk_error_trap_pop ())
-    return FALSE;
-
-  if (rc != Success)
-    return FALSE;
-
-  if (nitems)
-    {
-      guint w = prop[0], h = prop[1];
-      guint i;
-      guchar *pixels = g_malloc (w * h * 4);
-      guchar *p = pixels;
-      
-      for (i = 0; i < w * h; i++)
-	{
-	  gulong l = prop[2 + i];
-	  *(p++) = (l & 0x00ff0000) >> 16;
-	  *(p++) = (l & 0x0000ff00) >> 8;
-	  *(p++) = (l & 0x000000ff);
-	  *(p++) = (l & 0xff000000) >> 24;
-	}
-      
-      pixbuf = gdk_pixbuf_new_from_data (pixels,
-					 GDK_COLORSPACE_RGB,
-					 TRUE,
-					 8,
-					 w, h,
-					 w * 4,
-					 (GdkPixbufDestroyNotify)g_free,
-					 NULL);
-    }
-
-  if (prop)
-    XFree (prop);
-
-  return pixbuf;
 }
