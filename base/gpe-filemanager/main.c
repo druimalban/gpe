@@ -503,7 +503,7 @@ make_view (gchar *view)
   GnomeVFSResult result, open_dir_result;
   loading_directory = 1;
 
-  loaded_icons = g_hash_table_new (NULL, NULL);
+  loaded_icons = g_hash_table_new (g_str_hash, g_str_equal);
   gpe_iconlist_clear (view_widget);
   gtk_widget_draw (view_widget, NULL);
 
