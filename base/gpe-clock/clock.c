@@ -39,9 +39,10 @@ update_time (GtkWidget *label)
   char buf[256];
   time_t t;
   struct tm tm;
+  const char *format;
+
   time (&t);
   localtime_r (&t, &tm);
-  const char *format;
 
   if (format_24)
     {
