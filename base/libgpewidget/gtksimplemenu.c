@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2002, 2004 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -14,8 +14,6 @@
 
 #include "link-warning.h"
 
-static guint my_signals[1];
-
 struct _GtkSimpleMenu
 {
   GtkOptionMenu optionmenu;
@@ -26,7 +24,6 @@ struct _GtkSimpleMenu
 struct _GtkSimpleMenuClass 
 {
   GtkOptionMenuClass parent_class;
-  void (* changed)      (GtkSimpleMenu *sm);
 };
 
 static GtkOptionMenuClass *parent_class = NULL;
@@ -65,14 +62,6 @@ gtk_simple_menu_class_init (GtkSimpleMenuClass * klass)
   widget_class = (GtkWidgetClass *) klass;
 
   widget_class->show = gtk_simple_menu_show;
-
-  my_signals[0] = gtk_signal_new ("item-changed",
-				  GTK_RUN_LAST,
-				  GTK_CLASS_TYPE (oclass),				  
-				  GTK_SIGNAL_OFFSET (GtkSimpleMenuClass, changed),
-				  gtk_marshal_NONE__NONE,
-				  GTK_TYPE_NONE, 0);
-
 }
 
 GtkType

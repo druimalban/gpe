@@ -1,3 +1,7 @@
+2004-02-15  Philip Blundell  <philb@gnu.org>
+
+	* gtksimplemenu.c: Delete redundant "item-changed" signal.
+
 2004-02-08  Phil Blundell  <pb@nexus.co.uk>
 
 	* gpeclockface.c (gpe_clock_face_expose): Tweak handling of 12am
