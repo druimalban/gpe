@@ -19,9 +19,9 @@ CFLAGS += -Os -fomit-frame-pointer
 endif
 CFLAGS += -Wall
 CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
-CFLAGS += -MD
+CFLAGS += -MD -I../../base/libgpewidget
 
-LDFLAGS += -lgpewidget
+LDFLAGS += -L../../base/libgpewidget -lgpewidget
 
 .SUFFIXES: .d
 
@@ -34,7 +34,7 @@ all: $(PACKAGE)
 $(PACKAGE): $(OBJS)
 	$(CC) -o $@ $^ $(LDFLAGS) $(GTKLDFLAGS)
 
-install: all 
+install-program: all 
 	install -D $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	strip $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	install -d $(DESTDIR)$(PREFIX)/share/pixmaps

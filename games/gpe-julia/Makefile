@@ -40,7 +40,7 @@ all: $(PACKAGE)
 $(PACKAGE): $(OBJS)
 	$(CC) -o $@ $^ $(LDFLAGS)
 
-install: all install-mo $(PACKAGE).desktop
+install-program: all install-mo $(PACKAGE).desktop
 	install -D $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	install -D $(PACKAGE).png $(DESTDIR)$(PREFIX)/share/pixmaps/$(PACKAGE).png
 	install -d $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/$(PACKAGE)

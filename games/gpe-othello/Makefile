@@ -41,7 +41,7 @@ all: $(PACKAGE)
 $(PACKAGE): $(OBJS)
 	$(CC) -o $@ $^  $(GTKLDFLAGS) $(LDFLAGS)
 
-install: all 
+install-program: all 
 	install -D $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	strip $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	install -d $(DESTDIR)$(PREFIX)/lib/menu
