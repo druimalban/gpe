@@ -3,7 +3,7 @@
  *
  * Copyright (C) 2001 Ken Lynch
  * Copyright (C) 2002 Stefan Pfetzing
- * Copyright (C) 2002 Moray Allan
+ * Copyright (C) 2002, 2003 Moray Allan
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -170,8 +170,8 @@ void
 create_new_key (char *key_string)
 {
   Key *k, *prevkey;
-  char *key_str;
-  char *sep1, *sep2;
+  char *key_str = NULL;
+  char *sep1 = NULL, *sep2 = NULL;
 
 #ifdef DEBUG
   printf ("create_new_key: %s\n", key_string);
@@ -214,7 +214,10 @@ create_new_key (char *key_string)
   if (sep2 == NULL)
     {
       k->window = NULL;
-      k->command = strdup (&sep1[1]);
+      if (strlen (&sep1[1]) > 0)
+	k->command = strdup (&sep1[1]);
+      else
+	k->command = NULL;
     }
   else
     {
@@ -242,7 +245,12 @@ create_new_key (char *key_string)
 	k->modifier = k->modifier | Mod1Mask;
     }
 
-  if ((strlen (key_str) > 11) && (strncmp (key_str+3, "Pressed ", 8) == 0))
+  if ((strlen (key_str) > 11) && (strncmp (key_str+3, "Released ", 9) == 0))
+    {
+      k->keycode = XKeysymToKeycode (dpy, XStringToKeysym (key_str + 12));
+      k->type = 3;
+    }
+  else if ((strlen (key_str) > 11) && (strncmp (key_str+3, "Pressed ", 8) == 0))
     {
       k->keycode = XKeysymToKeycode (dpy, XStringToKeysym (key_str + 11));
       k->type = 2;
@@ -285,6 +293,18 @@ create_new_key (char *key_string)
 #ifdef DEBUG
   fprintf (stderr, "new key: '%s' '%s' (%X) (%d) (%d)\n", k->window, k->command, k->keycode, k->modifier, k->type);
 #endif
+
+  if (k->type == 2)
+    {
+      char *def = malloc (strlen (&key_str[11]) + strlen ("key=Released ???:") + 1);
+#ifdef DEBUG
+      fprintf (stderr, "adding special definition so we propagate the end of a hold after a pressed event:\n");
+#endif
+      
+      sprintf (def, "???Released %s:", &key_str[11]);
+      create_new_key (def);
+    }
+
   return;
 }
 
@@ -382,11 +402,6 @@ fork_exec (char *cmd)
 {
   pid_t pid = fork ();
 
-#ifdef DEBUG
-  printf ("fork_exec\n");
-  printf ("  executing %s\n", cmd);
-#endif
-
   switch (pid)
     {
     case 0:
@@ -398,6 +413,11 @@ fork_exec (char *cmd)
       fprintf (stderr, "Fork failed.\n");
       break;
     }
+
+#ifdef DEBUG
+  printf ("fork_exec\n");
+  printf ("  executing %s\n", cmd);
+#endif
 }
 
 /*
@@ -498,6 +518,10 @@ void process_key (XEvent ev, int type)
 {
   Key *k;
 
+#ifdef DEBUG
+	  printf ("processing key event: %d %d\n", ev.xkey.keycode, type);
+#endif
+
 	  ev.xkey.state =
 	    ev.xkey.state & (Mod1Mask | ControlMask | ShiftMask);
 	  for (k = key; k != NULL; k = k->next)
@@ -506,11 +530,19 @@ void process_key (XEvent ev, int type)
 		    || k->modifier == ev.xkey.state)
 		&& (k->type == type))
 	      {
-	        if (k->window == NULL
+		if ((k->window == NULL) && (k->command == NULL))
+		  {
+		    XTestFakeKeyEvent (dpy, ev.xkey.keycode, True, 0);
+		    XTestFakeKeyEvent (dpy, ev.xkey.keycode, False, 0);
+#ifdef DEBUG
+		    printf ("*** faking key event following pressed event ***\n");
+#endif
+		  }
+		else if (k->window == NULL
 		    || (try_to_raise_window (dpy, k->window) != 0))
 		  {
 #ifdef DEBUG
-		    fprintf (stderr, "running program\n");
+		    printf ("running program\n");
 #endif
 		    fork_exec (k->command);
 		  }
@@ -583,6 +615,7 @@ main (int argc, char *argv[])
           else
 	    {
 	      key_press_time = time_now;
+	      process_key (ev, 2);
 	    }
 
 	  k = malloc (sizeof (struct key_event));
@@ -600,9 +633,6 @@ main (int argc, char *argv[])
 	    }
 	  else
 	    keys_down = k;
-
-	  process_key (ev, 2);
-
 	}
       else if (ev.type == KeyRelease
 	       && (key_press_time.tv_sec || key_press_time.tv_usec))
@@ -636,14 +666,14 @@ main (int argc, char *argv[])
 
 	  if (type == 0)
 	    process_key (ev, type);
+	  else
+	    process_key (ev, 3);
 
-          free_keys ();
-          XTestFakeKeyEvent (dpy, ev.xkey.keycode, True, 0);
-	  XTestFakeKeyEvent (dpy, ev.xkey.keycode, False, 0);
-#ifdef DEBUG
-	  printf ("faking key event\n");
-#endif
-	  parse_rc (rc_file);
+	  gettimeofday (&key_press_time, NULL);
+
+	  //          free_keys ();
+
+	  //	  parse_rc (rc_file);
 	}
 
 #ifdef CHECK_RC

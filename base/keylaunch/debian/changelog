@@ -1,3 +1,10 @@
+keylaunch (2.0.3) unstable; urgency=low
+
+  * Key releases handled differently; fake events are now only generated for
+    keys which have a 'Pressed' action defined.
+
+ -- Moray Allan <moray@sermisy.org>  Thu, 29 May 2003 22:38:32 +0100
+
 keylaunch (2.0.2) unstable; urgency=low
 
   * Brought keylaunchrc up to date for new gpe-taskmanager versions.
