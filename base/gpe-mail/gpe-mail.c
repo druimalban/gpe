@@ -18,6 +18,13 @@
 
 #define VERSION "0.0.7"
 
+#ifndef GTK1
+#define gtk_text_thaw(a) 
+#define Gtk_entry_set_text(a,b) gtk_entry_set_text(a,g_locale_to_utf8(b,-1,NULL,NULL,NULL))
+#else
+#define Gtk_entry_set_text(a,b) gtk_entry_set_text(a,b)
+#endif
+
 struct {
    char *path;
    char expanded_path[100];
@@ -63,6 +70,9 @@ struct {
    GtkWidget *foldermenu;
    GtkWidget *cl1;
    GtkWidget *mt;
+#ifndef GTK1
+   GtkTextBuffer *mtb;
+#endif
    GtkWidget *mtsb;
    GtkTooltips *tt;
 
@@ -79,6 +89,9 @@ struct {
        GtkWidget *hb;
        GtkWidget *t;
        GtkWidget *text;
+#ifndef GTK1
+       GtkTextBuffer *text_buffer;
+#endif
        GtkWidget *entries[5];
    }compose;
 
@@ -99,7 +112,10 @@ struct {
       char part;
       GtkWidget *win;
       GtkWidget *box1;
-      GtkWidget *t;
+      GtkWidget *t; // GtkTextView
+#ifndef GTK1
+      GtkTextBuffer *tb; // GtkTextBuffer
+#endif
    } sync;
 
    char cur_msg[32];
@@ -113,6 +129,10 @@ struct {
    GdkFont *heb_font;
 } self;
 
+#ifndef GTK1
+GtkTextIter start_iter, end_iter;
+#endif
+
 struct dirent * direntptr;
 DIR *dir;
 FILE *f;
@@ -120,11 +140,23 @@ FILE *f;
 void l2vml(char *src0,char *dst0);
 void heb_l2v(char *s)
 {
+#ifndef GTK1
+	return;
+#else
 	char *s2;
 	s2=(char *)malloc(strlen(s)+10);
 	l2vml(s,s2);
 	strcpy(s,s2);
 	free(s2);
+#endif
+}
+
+void my_locale_to_utf8(char *s)
+{
+	char *s2;
+        s2=g_locale_to_utf8(s,-1,NULL,NULL,NULL);
+	if (s2==NULL) {s[0]=0;return;};
+	strcpy(s,s2);
 }
 
 inline char file_exists(char *s)
@@ -251,6 +283,7 @@ void a2b_base64(char *s)
    static char initialized=0;
    static signed char conv[256];
 
+   //printf("a2b_base64: input(len=%d):\n%s\n",strlen(s),s);
    if (!initialized)
    {
       for(i=0;i<256;i++)
@@ -271,17 +304,20 @@ void a2b_base64(char *s)
       initialized=1;
    }
 
-   for(i=j=val=ofs=0;(s[j])&&(conv[s[j]]>=0);j++)
+   for(i=j=val=ofs=0;s[j];j++)
    {
       c=conv[s[j]];
-      if (!ofs)
+      if (c>=0)
       {
-      ofs=6;
-      val=c;
-      } else {
-         s[i++]=(val<<(8-ofs))|(c>>(ofs-2));
-      ofs=ofs-2;
-         val=c&((1<<ofs)-1);
+         if (!ofs)
+         {
+         ofs=6;
+         val=c;
+         } else {
+            s[i++]=(val<<(8-ofs))|(c>>(ofs-2));
+            ofs=ofs-2;
+            val=c&((1<<ofs)-1);
+         }
       }
    }
    s[i++]=0;
@@ -367,18 +403,25 @@ void q2b(char *s)
 {
    char *sp;
 
+   //printf("q2b: before: %s\n",s);
    sp=s;
    while (*sp)
    {
-      while (*sp&&*sp!='='&&*sp!='_') sp++;
-      if (*sp=='_') *sp=' ';
+      //printf("s=%s\n",s);
+      while (*sp&&(*sp!='=')&&(*sp!='_')) sp++;
+      if (*sp=='_') *sp++=' ';
       else if (*sp=='='&&is_hexchar(*(sp+1))&&is_hexchar(*(sp+2)))
       {
-         *(sp++)=16*hexchar(*(sp+1))+hexchar(*(sp+2));
+         *(sp)=16*hexchar(*(sp+1))+hexchar(*(sp+2));
+	 sp++;
          strcpy(sp,sp+2);
       } else sp++;
+      //printf("num=%u",(unsigned int)(*(sp-1)));
+      //printf(" = 0x%X",(unsigned int)(*(sp-1)));
+      //printf(" = '%c'\n",(unsigned char)(*(sp-1)));
       
    }
+   //printf("q2b: after: %s\n",s);
 }
 
 void convert(char *s)
@@ -451,9 +494,13 @@ GtkWidget *mkbutton(char *xpm_name, char *but_name,char *text)
    const char xpm_dirs[]="/usr/share/gpe-mail/icons|/home/erez/xpms|./xpms";
    char xpm_path[100];
    int i,j;
+#ifdef GTK1
    GdkPixmap *gdk_pixmap;
    GtkWidget *gtk_pixmap;
    GdkBitmap *gdk_mask;
+#else
+   GtkWidget *image;
+#endif
    GtkWidget *b;
 
    if (!*text) text=but_name;
@@ -465,20 +512,31 @@ GtkWidget *mkbutton(char *xpm_name, char *but_name,char *text)
       xpm_path[i-j]=0;
       j=i;
       strcat(xpm_path,xpm_name);
+#ifndef GTK1
+      if (file_exists(xpm_path)) j=-1;
+#else
       gdk_pixmap=gdk_pixmap_create_from_xpm(self.w->window,&gdk_mask,NULL,xpm_path);
       if (gdk_pixmap!=NULL) j=-1;
-
+#endif
    }
    if (j>=0) return gtk_button_new_with_label(but_name);
+#ifdef GTK1
    if (NULL==gdk_pixmap) printf("gdk_pixmap==NULL\n");
    if (NULL==gdk_mask) printf("gdk_mask==NULL\n");
    gtk_pixmap=gtk_pixmap_new(gdk_pixmap,gdk_mask);
    gdk_pixmap_unref(gdk_pixmap);
    gdk_pixmap_unref(gdk_mask);
+#endif
    //printf("using icon file: %s\n",xpm_path);
    b=gtk_button_new();
+#ifndef GTK1
+   image=gtk_image_new_from_file (xpm_path);
+   gtk_container_add (GTK_CONTAINER (b), image);
+   gtk_widget_show(image);
+#else
    gtk_container_add (GTK_CONTAINER (b), gtk_pixmap);
    gtk_widget_show(gtk_pixmap);
+#endif
    gtk_tooltips_set_tip(self.tt,b,text,NULL);
    return b;
    
@@ -660,9 +718,9 @@ void do_config(GtkButton *button, gpointer user_data)
             self.conf.e[j][i]=gtk_entry_new();
               gtk_box_pack_end (GTK_BOX (self.conf.hb[j][i]), self.conf.e[j][i], TRUE, TRUE, 0);
             if (j==0&&(0==strcmp(options.opts[j][i],"Password")))
-               gtk_entry_set_text(GTK_ENTRY(self.conf.e[j][i]),"***");
+               Gtk_entry_set_text(GTK_ENTRY(self.conf.e[j][i]),"***");
             else
-               gtk_entry_set_text(GTK_ENTRY(self.conf.e[j][i]),config.conf[j][i]);
+               Gtk_entry_set_text(GTK_ENTRY(self.conf.e[j][i]),config.conf[j][i]);
          }
            gtk_box_pack_start (GTK_BOX (self.conf.hb[j][i]), self.conf.l[j][i], TRUE, TRUE, 0);
       }
@@ -706,13 +764,25 @@ int update_sync_text()
       i=pclose(self.sync.f);
       if (!i&&self.sync.part==1)
       {
+#ifndef GTK1
+         gtk_text_buffer_insert_at_cursor((GtkTextBuffer *)self.sync.tb,"\n\n\nReceive:\n\n",-1);
+#else
          gtk_text_insert((GtkText *)self.sync.t,self.heb_font,self.heb_fg,self.heb_bg,"\n\n\nReceive:\n\n",-1);
+#endif
          gtk_idle_add(do_sync2,NULL);
       }
       else
       {
+#ifndef GTK1
+         if (!i) gtk_text_buffer_insert_at_cursor((GtkTextBuffer *)self.sync.tb,"\n\nDone\n",-1);
+#else
          if (!i) gtk_text_insert((GtkText *)self.sync.t,self.heb_font,self.heb_fg,self.heb_bg,"\n\nDone\n",-1);
+#endif
+#ifndef GTK1
+	 else gtk_text_buffer_insert_at_cursor((GtkTextBuffer *)self.sync.tb,"\n\nError occured !\n",-1);
+#else
       else gtk_text_insert((GtkText *)self.sync.t,self.heb_font,self.heb_fg,self.heb_bg,"\n\nError occured !\n",-1);
+#endif
          gtk_idle_add(hide_sync_win,NULL);
          gtk_idle_add(open_mailfolder,NULL);
       }
@@ -720,7 +790,11 @@ int update_sync_text()
       return 0;
    }
    s[i]=0;
+#ifndef GTK1
+   gtk_text_buffer_insert_at_cursor((GtkTextBuffer *)self.sync.tb,g_locale_to_utf8(s,-1,NULL,NULL,NULL),-1);
+#else
    gtk_text_insert((GtkText *)self.sync.t,self.heb_font,self.heb_fg,self.heb_bg,s,-1);
+#endif
    return 1;
 }
 
@@ -787,13 +861,26 @@ void do_sync(GtkButton *button, gpointer user_data)
       self.sync.win=gtk_window_new(GTK_WINDOW_TOPLEVEL);
       self.sync.box1=gtk_vbox_new(FALSE,0);
       gtk_container_add(GTK_CONTAINER(self.sync.win),self.sync.box1);
+#ifndef GTK1
+      self.sync.t=gtk_text_view_new();
+      self.sync.tb=gtk_text_view_get_buffer (GTK_TEXT_VIEW (self.sync.t));
+#else
       self.sync.t=gtk_text_new(NULL,NULL);
+#endif
       gtk_box_pack_start (GTK_BOX (self.sync.box1), self.sync.t, TRUE, TRUE, 0);
+#ifndef GTK1
+      gtk_text_buffer_insert_at_cursor((GtkTextBuffer *)self.sync.tb,"Sending mail:\n\nemailsync output:\n\nSend:\n",-1);
+#else
       gtk_text_insert((GtkText *)self.sync.t,self.heb_font,self.heb_fg,self.heb_bg,"Sending mail:\n\nemailsync output:\n\nSend:\n",-1);
+#endif
 
    }
+#ifndef GTK1
+   gtk_text_buffer_set_text (self.sync.tb, "", -1);
+#else
    gtk_text_forward_delete((GtkText *)self.sync.t,gtk_text_get_length((GtkText *)self.sync.t));
    gtk_text_backward_delete((GtkText *)self.sync.t,gtk_text_get_length((GtkText *)self.sync.t));
+#endif
    gtk_widget_show_all(self.sync.win);
    self.sigchild=0;
    signal(SIGCHLD,onsigchild);
@@ -821,10 +908,14 @@ void do_delete(GtkButton *button, gpointer user_data)
    //printf("system('%s')\n",s);
    system(s);
    self.cur_msg[0]=0;
+#ifndef GTK1
+   gtk_text_buffer_set_text(self.mtb, "", -1);
+#else
    gtk_text_freeze((GtkText *)self.mt);
    gtk_text_forward_delete((GtkText *)self.mt,gtk_text_get_length((GtkText *)self.mt));
    gtk_text_backward_delete((GtkText *)self.mt,gtk_text_get_length((GtkText *)self.mt));
    gtk_text_thaw((GtkText *)self.mt);
+#endif
 
    gtk_clist_freeze(GTK_CLIST(self.cl1));
    gtk_clist_remove(GTK_CLIST(self.cl1),self.cl1_row);
@@ -861,7 +952,7 @@ void compose_window_send(GtkButton *button, gpointer user_data)
    strcpy(s,gtk_entry_get_text(GTK_ENTRY(self.compose.entries[1])));
    if (!*s || 0==strcmp(s,"empty"))
    {
-      gtk_entry_set_text(GTK_ENTRY(self.compose.entries[1]),"empty");
+      Gtk_entry_set_text(GTK_ENTRY(self.compose.entries[1]),"empty");
       printf("recepient missing\n");
       gtk_entry_select_region(GTK_ENTRY(self.compose.entries[1]),0,-1);
       return;
@@ -900,7 +991,14 @@ void compose_window_send(GtkButton *button, gpointer user_data)
    fclose(f);
    strcpy(s2+strlen(s2)-4,"body");
    f=(FILE *)fopen(s2,"w");
+#ifndef GTK1
+   gtk_text_buffer_get_iter_at_offset (self.compose.text_buffer, &start_iter, 0);
+   gtk_text_buffer_get_iter_at_offset (self.compose.text_buffer, &end_iter, -1);
+   sp=gtk_text_buffer_get_text(self.compose.text_buffer,&start_iter,&end_iter,0);
+   sp=g_locale_from_utf8(sp,-1,NULL,NULL,NULL);
+#else
    sp=gtk_editable_get_chars(GTK_EDITABLE(self.compose.text),0,-1);
+#endif
    fwrite(sp,strlen(sp),1,f);
    fclose(f);
    if (0==strcmp(self.current_folder,"OUTBOX")) gtk_idle_add(open_mailfolder,NULL);
@@ -936,18 +1034,32 @@ void do_compose(GtkButton *button, gpointer user_data)
          gtk_table_attach_defaults(GTK_TABLE(self.compose.t),l,1,2,a+1,a+2);
 	 if (a>0&&a<4)
 	 {
+//#ifndef GTK1
+		 self.compose.entries[a]=gtk_entry_new();
+		 //fixme
+//#else
 		 self.compose.entries[a]=gtk_colombo_new();
 		 gtk_colombo_set_func(GTK_COLOMBO(self.compose.entries[a]),search_email);
+//#endif
 	 }
 	 else self.compose.entries[a]=gtk_entry_new();
          gtk_table_attach_defaults(GTK_TABLE(self.compose.t),self.compose.entries[a],2,3,a+1,a+2);
          if (0==strcmp(q[a],"From"))
-            gtk_entry_set_text(GTK_ENTRY(self.compose.entries[a]),get_config("Outgoing","Email Adress"));
+            Gtk_entry_set_text(GTK_ENTRY(self.compose.entries[a]),get_config("Outgoing","Email Adress"));
 
       }
+#ifndef GTK1
+      self.compose.text=gtk_text_view_new();
+      self.compose.text_buffer=gtk_text_view_get_buffer (GTK_TEXT_VIEW (self.compose.text));
+#else
       self.compose.text=gtk_text_new(NULL,NULL);
+#endif
       gtk_box_pack_start (GTK_BOX (self.compose.vb1), self.compose.text, TRUE, TRUE, 0);
+#ifndef GTK1
+      gtk_text_view_set_editable(GTK_TEXT_VIEW(self.compose.text),1);
+#else
       gtk_text_set_editable(GTK_TEXT(self.compose.text),1);
+#endif
       self.compose.hb=gtk_hbox_new(FALSE,0);
       gtk_box_pack_start (GTK_BOX (self.compose.vb1), self.compose.hb, TRUE, TRUE, 0);
       but1=gtk_button_new_with_label("Cancel");
@@ -959,6 +1071,9 @@ void do_compose(GtkButton *button, gpointer user_data)
       gtk_box_pack_start (GTK_BOX (self.compose.hb), but1, TRUE, TRUE, 0);
       gtk_box_pack_start (GTK_BOX (self.compose.hb), but2, TRUE, TRUE, 0);
    }
+   s2[0]=0;
+   for(a=1;a<5;a++)
+      Gtk_entry_set_text(GTK_ENTRY(self.compose.entries[a]),s2);
    if (button==GTK_BUTTON(self.forwardb))
    {
       sp=(char **)&s;
@@ -967,9 +1082,9 @@ void do_compose(GtkButton *button, gpointer user_data)
       if (starts_with(*sp,"Fwd:")) *sp+=4;
       while (**sp==' ') (*sp)++;
       sprintf(s2,"Fwd: %s",*sp);
-      gtk_entry_set_text(GTK_ENTRY(self.compose.entries[4]),s2);
+      Gtk_entry_set_text(GTK_ENTRY(self.compose.entries[4]),s2);
       s2[0]=0;
-      gtk_entry_set_text(GTK_ENTRY(self.compose.entries[1]),s2);
+      Gtk_entry_set_text(GTK_ENTRY(self.compose.entries[1]),s2);
    }
    if (button==GTK_BUTTON(self.replyb))
    {
@@ -979,29 +1094,46 @@ void do_compose(GtkButton *button, gpointer user_data)
       if (starts_with(*sp,"Re:")) *sp+=3;
       while (**sp==' ') (*sp)++;
       sprintf(s2,"Re: %s",*sp);
-      gtk_entry_set_text(GTK_ENTRY(self.compose.entries[4]),s2);
+      Gtk_entry_set_text(GTK_ENTRY(self.compose.entries[4]),s2);
       sp=(char **)&s;
       if (0==gtk_clist_get_text((GtkCList *)self.cl1,self.cl1_row,1,sp)) {printf("can not find file name in clist\n");return;}
-      gtk_entry_set_text(GTK_ENTRY(self.compose.entries[1]),*sp);
+      Gtk_entry_set_text(GTK_ENTRY(self.compose.entries[1]),*sp);
    }
+#ifndef GTK1
+   gtk_text_buffer_set_text (self.compose.text_buffer, "", -1);
+#else
    gtk_text_freeze(GTK_TEXT(self.compose.text));
    gtk_text_forward_delete((GtkText *)self.compose.text,gtk_text_get_length((GtkText *)self.compose.text));
    gtk_text_backward_delete((GtkText *)self.compose.text,gtk_text_get_length((GtkText *)self.compose.text));
+#endif
    if (button==GTK_BUTTON(self.composeb))
    {
       s2[0]=0;
-      gtk_entry_set_text(GTK_ENTRY(self.compose.entries[1]),s2);
-      gtk_entry_set_text(GTK_ENTRY(self.compose.entries[4]),s2);
+      Gtk_entry_set_text(GTK_ENTRY(self.compose.entries[1]),s2);
+      Gtk_entry_set_text(GTK_ENTRY(self.compose.entries[4]),s2);
    } else {
+#ifndef GTK1
+      gtk_text_buffer_insert_at_cursor((GtkTextBuffer *)self.compose.text_buffer,"\n\nOriginal Message:\n",-1);
+      gtk_text_buffer_get_iter_at_offset (self.mtb, &start_iter, 0);
+      gtk_text_buffer_get_iter_at_offset (self.mtb, &end_iter, -1);
+      sp2=gtk_text_buffer_get_text(self.mtb,&start_iter,&end_iter,0);
+#else
       gtk_text_insert((GtkText *)self.compose.text,self.heb_font,self.heb_fg,self.heb_bg,"\n\nOriginal Message:\n",-1);
       sp2=gtk_editable_get_chars(GTK_EDITABLE(self.mt),0,-1);
+#endif
       while (sp2!=NULL)
       {
          sp3=strchr(sp2,'\n');
          if (sp3!=NULL)
          {
+#ifndef GTK1
+      gtk_text_buffer_insert_at_cursor((GtkTextBuffer *)self.compose.text_buffer,"> ",-1);
+      //gtk_text_buffer_insert_at_cursor((GtkTextBuffer *)self.compose.text_buffer,g_locale_to_utf8(sp2,sp3-sp2+1,NULL,NULL,NULL),-1);
+      gtk_text_buffer_insert_at_cursor((GtkTextBuffer *)self.compose.text_buffer,sp2,sp3-sp2+1);
+#else
             gtk_text_insert((GtkText *)self.compose.text,self.heb_font,self.heb_fg,self.heb_bg,"> ",-1);
             gtk_text_insert((GtkText *)self.compose.text,self.heb_font,self.heb_fg,self.heb_bg,sp2,sp3-sp2+1);
+#endif
             sp2=sp3+1;
          } else sp2=NULL;
       }
@@ -1030,7 +1162,7 @@ void on_subj_sel (GtkCList *clist, gint row, gint column,
    char s3[500];
    char boundary[500];
    char heb;
-   char *sp2;
+   char *sp2,*sp3;
    char type;
    char alternative;
    char open_in_dillo;
@@ -1039,6 +1171,7 @@ void on_subj_sel (GtkCList *clist, gint row, gint column,
 
 
 
+   type=0;
    open_in_dillo=get_config_boolean("Misc","Open Alternative text/html as html in dillo");
    is_html=0;
    sp=(char **)&s;
@@ -1083,9 +1216,13 @@ void on_subj_sel (GtkCList *clist, gint row, gint column,
       return;
    }
    strcpy(self.cur_msg,s3);
+#ifndef GTK1
+   gtk_text_buffer_set_text (self.mtb, "", -1);
+#else
    gtk_text_freeze((GtkText *)self.mt);
    gtk_text_forward_delete((GtkText *)self.mt,gtk_text_get_length((GtkText *)self.mt));
    gtk_text_backward_delete((GtkText *)self.mt,gtk_text_get_length((GtkText *)self.mt));
+#endif
    //gtk_text_set_point((GtkText *)self.mt,0);
    //gtk_text_forward_delete((GtkText *)self.mt,1e9);
    //printf("row=%d\n",row);
@@ -1160,7 +1297,13 @@ void on_subj_sel (GtkCList *clist, gint row, gint column,
    if (0==gtk_clist_get_text((GtkCList *)self.cl1,row,2,sp)) {printf("can not find file name in clist\n");gtk_text_thaw((GtkText *)self.mt);return;}
    strcat(s3,*sp);
    strcat(s3,"\n\n");
+#ifndef GTK1
+   //printf("s3=%s\n",s3);
+   //gtk_text_buffer_insert_at_cursor((GtkTextBuffer *)self.mtb,g_locale_to_utf8(s3,-1,NULL,NULL,NULL),-1);
+   gtk_text_buffer_insert_at_cursor((GtkTextBuffer *)self.mtb,s3,-1);
+#else
    gtk_text_insert((GtkText *)self.mt,self.heb_font,self.heb_fg,self.heb_bg,s3,-1);
+#endif
 
    //printf("opening: '%s'\n",s2);
    f=(FILE *)fopen(s2,"r");
@@ -1196,15 +1339,15 @@ void on_subj_sel (GtkCList *clist, gint row, gint column,
 	 if (!*sp2) break;
 	 //printf(":%s",sp2);
 	 if (boundary[0])
-	 	if (strstr(sp2,boundary)) *sp2=0;
+	 {
+	 	if (NULL!=(sp3=strstr(sp2,boundary))) {sp2=sp3;*sp2=0;}
+	 }
       } while (*sp2);
       if (type=='B') a2b_base64(s2);
       else if (type=='Q') q2b(s2);
       if (heb)
       {
-         //printf("%s -> \n",s2);
          heb_l2v(s2);
-         //printf(" -> %s\n",s2);
       }
       fclose(f);
       if (!is_html) open_in_dillo=0;
@@ -1221,15 +1364,29 @@ void on_subj_sel (GtkCList *clist, gint row, gint column,
 		 fclose(f);
 		 if (open_in_dillo)
 		 {
+#ifndef GTK1
+   			gtk_text_buffer_insert_at_cursor((GtkTextBuffer *)self.mtb,"\n\n----------------------------\n Html mail opened in dillo\n----------------------------\n",-1);
+#else
       			gtk_text_insert((GtkText *)self.mt,self.heb_font,self.heb_fg,self.heb_bg,"\n\n----------------------------\n Html mail opened in dillo\n----------------------------\n",-1);
+#endif
 		  	system(s);
 		 }
 	 }
       }
       if (! open_in_dillo )
+#ifndef GTK1
+	//printf("s2=%s\n",s2);
+   	gtk_text_buffer_insert_at_cursor((GtkTextBuffer *)self.mtb,g_locale_to_utf8(s2,-1,NULL,NULL,NULL),-1);
+#else
       	gtk_text_insert((GtkText *)self.mt,self.heb_font,self.heb_fg,self.heb_bg,s2,-1);
+#endif
       //printf("body:\n%s\n",s2);
-   } else gtk_text_insert((GtkText *)self.mt,self.heb_font,self.heb_fg,self.heb_bg,"-----------------------------\n     body has not been\n  downloaded with message\n-----------------------------\n",-1);
+   } else
+#ifndef GTK1
+  	   gtk_text_buffer_insert_at_cursor((GtkTextBuffer *)self.mtb,"-----------------------------\n     body has not been\n  downloaded with message\n-----------------------------\n",-1);
+#else
+	   gtk_text_insert((GtkText *)self.mt,self.heb_font,self.heb_fg,self.heb_bg,"-----------------------------\n     body has not been\n  downloaded with message\n-----------------------------\n",-1);
+#endif
    gtk_text_thaw((GtkText *)self.mt);
 }
 
@@ -1238,10 +1395,14 @@ void on_mi_act (GtkMenuItem *menuitem, gpointer user_data)
    //printf("%s\n",(char *)user_data);
    strcpy(self.current_folder,(char *)user_data);
    open_mailfolder();
+#ifndef GTK1
+   gtk_text_buffer_set_text(self.mtb, "", -1);
+#else
    gtk_text_freeze((GtkText *)self.mt);
    gtk_text_forward_delete((GtkText *)self.mt,gtk_text_get_length((GtkText *)self.mt));
    gtk_text_backward_delete((GtkText *)self.mt,gtk_text_get_length((GtkText *)self.mt));
    gtk_text_thaw((GtkText *)self.mt);
+#endif
 }
 
 
@@ -1312,7 +1473,13 @@ int open_mailfolder()
             {
                s[0]=0;
                fgets(s,sizeof(s),f);
+	       //printf("s(before)=%s\n",s);
                convert(s);
+#ifndef GTK1
+	       //strcpy(s,g_locale_to_utf8(s,-1,NULL,NULL,NULL));
+	       my_locale_to_utf8(s);
+#endif
+	       //printf("s(after)=%s\n",s);
                if (starts_with(s,"Subject:")) strcpy(subj,s+9);
                if (starts_with(s,self.fromto)) strcpy(from,s+strlen(self.fromto)+1);
                if (starts_with(s,"Date:")) strcpy(date,s+6);
@@ -1500,14 +1667,26 @@ int main(int argc, char **argv)
       (GtkSignalFunc) on_col_click, NULL);
 
    // mst text
+#ifndef GTK1
+   self.mt=gtk_text_view_new();
+   self.mtb=gtk_text_view_get_buffer (GTK_TEXT_VIEW (self.mt));
+   gtk_text_view_set_editable(GTK_TEXT_VIEW(self.mt),FALSE);
+   // fixme gtk_text_view_set_word_wrap(GTK_TEXT_VIEW(self.mt),TRUE);
+   // fixme gtk_text_view_set_line_wrap(GTK_TEXT_VIEW(self.mt),TRUE);
+#else
    self.mt=gtk_text_new(NULL,NULL);
    gtk_text_set_editable(GTK_TEXT(self.mt),FALSE);
    gtk_text_set_word_wrap(GTK_TEXT(self.mt),TRUE);
    gtk_text_set_line_wrap(GTK_TEXT(self.mt),TRUE);
+#endif
      gtk_box_pack_start (GTK_BOX (self.hb3), self.mt, TRUE, TRUE, 0);
+#ifndef GTK1
+     //fixme
+#else
    self.mtsb=gtk_vscrollbar_new(GTK_TEXT(self.mt)->vadj);
      gtk_box_pack_start (GTK_BOX (self.hb3), self.mtsb, FALSE, FALSE, 0);
    gtk_widget_queue_resize(self.mtsb);
+#endif
    strcpy(self.heb_font_name,"-*-*-*-*-*--7-*-*-*-*-*-iso8859-8");
    self.heb_font=gdk_font_load(self.heb_font_name);
    gtk_style=gtk_widget_get_style(self.mt);
@@ -1517,8 +1696,12 @@ int main(int argc, char **argv)
       printf("using default encoding\n");
    else
    {
+#ifndef GTK1
+     //fixme
+#else
       printf("supporting %s\n",self.heb_font_name);
       gtk_style->font=self.heb_font;
+#endif
    }
 
 
