@@ -67,7 +67,8 @@ struct gpe_icon my_icons[] = {
 };
 
 /* dialogs */
-
+#warning todo panel
+#warning todo install
 GtkWidget *
 progress_dialog (gchar * text, GdkPixbuf * pixbuf)
 {
@@ -125,6 +126,9 @@ send_message (pkcontent_t ctype, pkcommand_t command, char* params, char* list)
 			case CMD_UPGRADE:
 				desc = _("Upgrading installed system");
 			break;
+			case CMD_INSTALL:
+				desc = _("Installing package");
+			break;
 			default:
 				desc = _("Working...");			
 			break;
@@ -173,6 +177,12 @@ void do_list(int prio,char* pkgname,char *desc, char *version, pkg_state_status_
 {
 	GtkTreeIter iter;
 	gboolean isinstalled;
+	char *color;
+	
+	if ((status == SS_INSTALLED) || (SS_NOT_INSTALLED))
+		color = NULL;
+	else
+		color = C_INCOMPLETE;
 	
 	isinstalled = (status==SS_INSTALLED);
 	switch (running_command)
@@ -184,7 +194,8 @@ void do_list(int prio,char* pkgname,char *desc, char *version, pkg_state_status_
 			    COL_DESCRIPTION, desc,
 				COL_VERSION, version,
 				COL_INSTALLED, isinstalled,
-//				COL_COLOR, calc_color(gnet[actual_rows].color),
+				COL_DESIREDSTATE, SW_UNKNOWN,
+				COL_COLOR, color,
 			    -1);
 		break;
 		default:
@@ -293,16 +304,40 @@ list_toggle_inst (GtkCellRendererToggle * cellrenderertoggle,
   GtkTreeIter iter;
   GtkTreePath *path = gtk_tree_path_new_from_string (path_str);
   gboolean inst;
+  pkg_state_want_t dstate;
+  char *color;
 	
-  /* get toggled iter */
+  /* get toggled iter and values */
   gtk_tree_model_get_iter (GTK_TREE_MODEL(store), &iter, path);
-  gtk_tree_model_get (GTK_TREE_MODEL(store), &iter, COL_INSTALLED, &inst, -1);
-
-  /* do something with the value */
+  gtk_tree_model_get (GTK_TREE_MODEL(store), &iter, COL_INSTALLED, &inst, 
+                                                    COL_DESIREDSTATE, &dstate, -1);
+  /* What do we want to do with it? */
+  if (dstate != SW_UNKNOWN)
+  {
+	  dstate = SW_UNKNOWN;
+	  color = NULL;
+  }
+  else
+  	if (inst)
+	{
+		dstate = SW_DEINSTALL;
+		color = C_INSTALL;
+	}
+	else
+	{
+		dstate = SW_INSTALL;
+		color = C_REMOVE;
+	}
+ 
+  /* invert displayed value */
   inst ^= 1;
 
-  gtk_tree_store_set (GTK_TREE_STORE(store), &iter, COL_INSTALLED,inst, -1);
-
+  /* write values */
+  gtk_tree_store_set (GTK_TREE_STORE(store), &iter, 
+                      COL_INSTALLED,inst,
+                      COL_DESIREDSTATE,dstate,
+                      COL_COLOR,color,-1);
+	
   /* clean up */
   gtk_tree_path_free (path);
 }
@@ -446,10 +481,11 @@ on_packages_update_clicked(GtkButton *button, gpointer user_data)
 void 
 on_package_install_clicked(GtkButton *button, gpointer user_data)
 {
+
 }
 
 
-/* --- gpe-conf interface --- */
+/* --- create mainform interface --- */
 
 
 void
@@ -472,7 +508,8 @@ create_fMain (void)
 					G_TYPE_STRING,
 					G_TYPE_INT,
 				    G_TYPE_STRING, 
-					G_TYPE_STRING
+					G_TYPE_STRING,
+					G_TYPE_INT
 	);
 
   fMain = gtk_window_new (GTK_WINDOW_TOPLEVEL);

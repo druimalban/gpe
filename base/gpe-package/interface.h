@@ -3,6 +3,13 @@
 
 int mainloop (int argc, char *argv[]);
 
+/* Colors */
+
+#define C_INSTALL 		"#88FF88"
+#define C_INCOMPLETE 	"#FF4444"
+#define C_REMOVE 		"#8888FF"
+
+/* IDs for data storage fields */
 enum
 {
 	COL_INSTALLED,
@@ -12,6 +19,7 @@ enum
 	COL_STATUS,
 	COL_VERSION,
 	COL_COLOR,
+	COL_DESIREDSTATE,
 	N_COLUMNS
 };
 

@@ -1,3 +1,8 @@
+2003-10-15 Florian Boor <florian.boor@kernelconcepts.de>
+	* interface.* improved comments.
+	* Desired status of packages is now stored in treestore.
+	* Special states are colored now.
+
 2003-10-09 Florian Boor <florian.boor@kernelconcepts.de>
 	* Added status dialogs.
 	* Added package update button.
