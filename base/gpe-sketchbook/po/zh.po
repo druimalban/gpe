@@ -1,0 +1,86 @@
+# traditional Chinese translation for gpe-sketchbook.
+# Copyright (C) 2003 Free Software Foundation, Inc.
+# Chao-Hsiung Liao <pesder.liao@msa.hinet.net>, 2003.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-sketchbook 0.2.5\n"
+"POT-Creation-Date: 2003-04-02 02:26+0300\n"
+"PO-Revision-Date: 2003-04-14 22:09+0800\n"
+"Last-Translator: Chao-Hsiung Liao <pesder.liao@msa.hinet.net>\n"
+"Language-Team: Chinese (traditional) <zh-l10n@linux.org.tw>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=Big5\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: gpe-sketchbook.desktop.in.h:2 src/gpe-sketchbook.c:108
+msgid "Sketchbook"
+msgstr "素描簿"
+
+#: src/selector.c:87
+#, c-format
+msgid "Cannot read the sketchbook directory: %s. Exit."
+msgstr "不能讀取素描簿目錄： %s。離開。"
+
+#: src/selector.c:93
+#, c-format
+msgid "Cannot create %s: %s. Exit."
+msgstr "不能建立 %s： %s。離開。"
+
+#: src/selector.c:164
+#, c-format
+msgid "%s  at  %s"
+msgstr "%s 於 %s"
+
+#: src/selector-cb.c:70 src/sketchpad-cb.c:197
+msgid "Delete current sketch?"
+msgstr "刪除目前的素描？"
+
+#: src/selector-cb.c:70 src/sketchpad-cb.c:46 src/sketchpad-cb.c:76
+#: src/sketchpad-cb.c:197
+msgid "Question"
+msgstr "問題"
+
+#: src/selector-cb.c:71 src/sketchpad-cb.c:198
+msgid "Cancel"
+msgstr "取消"
+
+#: src/selector-cb.c:71 src/sketchpad-cb.c:198 src/sketchpad-gui.c:428
+msgid "Delete"
+msgstr "刪除"
+
+#: src/sketchpad.c:184
+msgid "new"
+msgstr "新增"
+
+#: src/sketchpad-cb.c:46
+msgid ""
+"Sketch modified,\n"
+"save before exiting?"
+msgstr ""
+"素描已被修改過，\n"
+"是否在離開前儲存？"
+
+#: src/sketchpad-cb.c:47 src/sketchpad-cb.c:77
+msgid "Discard"
+msgstr "放棄"
+
+#: src/sketchpad-cb.c:47 src/sketchpad-cb.c:77 src/sketchpad-gui.c:427
+msgid "Save"
+msgstr "儲存"
+
+#: src/sketchpad-cb.c:76
+msgid "Save current sketch?"
+msgstr "儲存目前的素描？"
+
+#: src/sketchpad-gui.c:426
+msgid "New"
+msgstr "新增"
+
+#: src/sketchpad-gui.c:429
+msgid "Properties"
+msgstr "內容"
+
+#: gpe-sketchbook.desktop.in.h:1
+msgid "GPE Sketchbook"
+msgstr "GPE 素描簿"
