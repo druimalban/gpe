@@ -2,24 +2,25 @@ PACKAGE = gpe-othello
 PREFIX = /usr/local
 DEBUG = no
 LINGUAS = 
+VERSION = 0.2-1
 
 MEMBERS = callbacks gameutils moteur deepblue support globals main
 
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0` -DGTK_ENABLE_BROKEN
 GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
 
-CPPFLAGS = $(GTKCFLAGS) -D_GNU_SOURCE 
+PACKAGE_CPPFLAGS = $(GTKCFLAGS) -D_GNU_SOURCE 
 ifeq ($(DEBUG),yes)
-CFLAGS += -O2 -g
-LDFLAGS = -g #-lefence
+PACKAGE_CFLAGS += -O2 -g
+PACKAGE_LDFLAGS = -g
 else
-CFLAGS += -Os -fomit-frame-pointer
+PACKAGE_CFLAGS += -Os -fomit-frame-pointer
 endif
-CFLAGS += -Wall -I../../base/libgpewidget
-CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
-CFLAGS += -MD
+PACKAGE_CFLAGS += -Wall -I../../base/libgpewidget
+PACKAGE_CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
+PACKAGE_CFLAGS += -MD
 
-LDFLAGS += -L../../base/libgpewidget -lgpewidget
+PACKAGE_LDFLAGS += -L../../base/libgpewidget -lgpewidget
 
 .SUFFIXES: .d
 
@@ -32,7 +33,7 @@ PIXMAPS = bell.png
 all: $(PACKAGE)
 
 $(PACKAGE): $(OBJS)
-	$(CC) -o $@ $^  $(GTKLDFLAGS) $(LDFLAGS)
+	$(CC) -o $@ $^  $(GTKLDFLAGS) $(LDFLAGS) $(PACKAGE_LDFLAGS)
 
 install-program: all 
 	install -D $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)

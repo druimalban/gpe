@@ -1,8 +1,9 @@
 Package: gpe-othello 
-Version: 0.1
+Version: VERSION
 Section: games
 Priority: optional
 Architecture: arm
 Depends: libgtk2.0-0, libgpewidget1
 Maintainer: Joe McCarthy <mccarthy@engrng.pitt.edu>
 Description: An Othello clone using GTK, hacked from ugothello.
+Source: SOURCE
