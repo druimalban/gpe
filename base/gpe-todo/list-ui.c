@@ -290,6 +290,7 @@ void
 refresh_items (void)
 {
   GSList *iter;
+  guint nitems = 0;
 
   if (display_items)
     {
@@ -302,9 +303,13 @@ refresh_items (void)
       struct todo_item *i = iter->data;
       if (selected_category == NULL 
 	  || category_matches (i->categories, selected_category->id))
-	display_items = g_slist_append (display_items, i);
+	{
+	  display_items = g_slist_append (display_items, i);
+	  nitems++;
+	}
     }
 
+  gtk_widget_set_usize (g_draw, -1, 14 * nitems);
   gtk_widget_draw (g_draw, NULL);
 }
 
