@@ -4,7 +4,7 @@ Priority: optional
 Version: VERSION
 Architecture: arm
 Maintainer: Phil Blundell <pb@debian.org>
-Depends: libgpewidget1 (>= 0.33), gpe-icons (>= 0.15), libdm0, libtododb0
+Depends: libgpewidget1 (>= 0.33), gpe-icons (>= 0.15), libdm0, libtododb0, gpe-todo-locale*
 Description: GPE to-do list
 Provides: gpe-todo
 Replaces: gpe-todo

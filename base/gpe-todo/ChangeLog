@@ -1,5 +1,7 @@
 2003-03-08  Philip Blundell  <philb@gnu.org>
 
+	* familiar/control1 (Depends): Add gpe-todo-locale*
+
 	* po/id.po: New file from Translation Project.
 	* Makefile (LINGUAS): Add id.
 
