@@ -1,11 +1,18 @@
 PACKAGE = gpe-julia
-VERSION = 0.0.4
+VERSION = 0.0.5
 DEBUG = no
 CVSBUILD = yes
 GTK2 = yes
 PREFIX = /usr/local
 
 MEMBERS = main
+
+ifeq ($(CVSBUILD),yes)
+BUILD = ../../base/build
+else
+BUILD = build
+endif
+LDFLAGS += -lgpewidget
 
 ifeq ($(GTK2),yes)
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
@@ -48,11 +55,12 @@ install-program: all install-mo $(PACKAGE).desktop
 	install -m 644 pixmaps/zoom_out.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/$(PACKAGE)/zoom_out.png
 	install -D $(PACKAGE).menu $(DESTDIR)$(PREFIX)/lib/menu/$(PACKAGE)
 	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
-	install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications/$(PACKAGE)-play
+	install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications/$(PACKAGE).desktop
 	strip $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 
 clean:
 	rm -f $(PACKAGE) $(OBJS)
 
-include ../../base/build/Makefile.dpkg_ipkg
-include ../../base/build/Makefile.translation
+include $(BUILD)/Makefile.dpkg_ipkg
+include $(BUILD)/Makefile.translation
+-include $(DEPS)
