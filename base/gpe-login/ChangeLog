@@ -1,5 +1,9 @@
 2004-01-28  Philip Blundell  <philb@gnu.org>
 
+	* gpe-login 0.65 released.
+	
+2004-01-28  Philip Blundell  <philb@gnu.org>
+
 	* gpe-login.c (main): Remember $DISPLAY.
 	(do_login): Clear out the environment, then set DISPLAY as well as
 	HOME, USER, LANG and SHELL.
