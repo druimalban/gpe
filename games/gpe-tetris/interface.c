@@ -35,6 +35,8 @@ GtkWidget *spin_noise_level;
 GtkWidget *spin_noise_height;
 GtkWidget *spin_noise_height;
 GtkWidget *new_game_window;
+GtkWidget *new_highscore_window;
+GtkWidget *highscore_name_entry;
 gint timer;
 
 int level_speeds[NUM_LEVELS] = 
@@ -52,6 +54,13 @@ struct gpe_icon my_icons[] = {
   { "icon", PREFIX "/share/pixmaps/gpe-tetris.png" },
   {NULL, NULL}
 };
+
+static void
+close_window(GtkWidget *widget,
+	     GtkWidget *w)
+{
+  gtk_widget_destroy (w);
+}
 
 void update_game_values()
 {
@@ -150,16 +159,60 @@ void game_set_pause()
 		timer = gtk_timeout_add(level_speeds[current_level],(GtkFunction)game_loop,NULL);
 }
 
-void game_over_init()
+void add_new_highscore(GtkWidget *widget,gpointer *data)
 {
 	int high_dummy;
 	read_highscore();
-	if(current_score && (high_dummy = addto_highscore((char *)getenv("USER"),current_score)))
+	if(current_score && (high_dummy = addto_highscore((char *)gtk_entry_get_text(GTK_ENTRY (highscore_name_entry)),current_score)))
 	{
 		write_highscore();
 		show_highscore(high_dummy);
 	}
-	
+	gtk_widget_destroy(new_highscore_window);
+}
+
+void new_highscore_name()
+{
+  GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
+  GtkWidget *ok;
+  GtkWidget *buttons = gtk_hbox_new (FALSE, 0);
+  GtkWidget *label = gtk_label_new ("Your Name:");
+  GtkWidget *hbox = gtk_hbox_new (FALSE, 0);
+
+  new_highscore_window = gtk_window_new (GTK_WINDOW_DIALOG);
+  highscore_name_entry = gtk_entry_new ();
+  ok = gpe_picture_button (new_highscore_window->style, _("OK"), "ok");
+
+  gtk_widget_show (ok);
+  gtk_widget_show (buttons);
+  gtk_widget_show (label);
+  gtk_widget_show (hbox);
+  gtk_widget_show (highscore_name_entry);
+
+  gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox), highscore_name_entry, TRUE, TRUE, 2);
+
+  gtk_box_pack_end (GTK_BOX (buttons), ok, FALSE, FALSE, 2);
+
+  gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+  gtk_box_pack_end (GTK_BOX (vbox), buttons, FALSE, FALSE, 0);
+  
+  gtk_signal_connect (GTK_OBJECT (ok), "clicked",
+		      GTK_SIGNAL_FUNC (add_new_highscore), NULL);
+
+  gtk_widget_show (vbox);
+
+  gtk_window_set_title (GTK_WINDOW (new_highscore_window), _("Highscore"));
+
+  gtk_container_add (GTK_CONTAINER (new_highscore_window), vbox);
+  gtk_widget_show (new_highscore_window);
+  gtk_widget_grab_focus (highscore_name_entry);
+}
+
+void game_over_init()
+{
+	new_highscore_name();
+
 	game_over = TRUE;
 	gdk_draw_rectangle(game_area->window,
 		game_area->style->black_gc,
@@ -233,7 +286,8 @@ void show_help()
 	GtkWidget *help_window;
 	GtkWidget *help_label;
 	GtkWidget *help_border;
-	GtkWidget *hbox;
+	GtkWidget *vbox;
+	GtkWidget *button;
 	
 	help_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	gtk_window_set_title(GTK_WINDOW(help_window),"Help");
@@ -245,8 +299,8 @@ void show_help()
 	gtk_frame_set_shadow_type(GTK_FRAME(help_border),GTK_SHADOW_OUT);
 	gtk_container_add(GTK_CONTAINER(help_window),help_border);
 
-	hbox = gtk_hbox_new(FALSE,30);
-	gtk_container_add(GTK_CONTAINER(help_border),hbox);
+	vbox = gtk_vbox_new(FALSE,30);
+	gtk_container_add(GTK_CONTAINER(help_border),vbox);
 
 	help_label = gtk_label_new(	"Key:\n"
 					"Right and \"a\"\n"
@@ -269,7 +323,7 @@ void show_help()
 					"Drop bonus: rows*level\n");
 	gtk_misc_set_alignment(GTK_MISC(help_label),0,0);	
 	gtk_label_set_justify(GTK_LABEL(help_label),GTK_JUSTIFY_LEFT);
-	gtk_box_pack_start(GTK_BOX(hbox),help_label,TRUE,TRUE,TRUE);
+	gtk_box_pack_start(GTK_BOX(vbox),help_label,TRUE,TRUE,TRUE);
 
 	help_label = gtk_label_new(	"\n"
 					"move right\n"
@@ -282,7 +336,13 @@ void show_help()
 					"300\n1200\n");
 	gtk_misc_set_alignment(GTK_MISC(help_label),0,0);	
 	gtk_label_set_justify(GTK_LABEL(help_label),GTK_JUSTIFY_LEFT);
-	gtk_box_pack_start(GTK_BOX(hbox),help_label,TRUE,TRUE,TRUE);
+	gtk_box_pack_start(GTK_BOX(vbox),help_label,TRUE,TRUE,TRUE);
+	
+	button = gpe_picture_button (main_window->style, _("Close"), "cancel");
+	gtk_signal_connect(GTK_OBJECT(button),"clicked",
+				GTK_SIGNAL_FUNC(close_window),help_window);	
+	gtk_box_pack_start(GTK_BOX(vbox),button,FALSE,TRUE,0);
+  	GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
 	
 	gtk_widget_show_all(help_window);
 }
@@ -413,11 +473,8 @@ int main(int argc,char *argv[])
 	GtkWidget *right_side;
 	GtkWidget *game_border;	
 	GtkWidget *next_block_border;
-	GdkBitmap *mask;	
-	GtkAccelGroup *accel = gtk_accel_group_get_default();	
-	GtkWidget *menu;
-	GtkWidget *menu_bar;
 	GtkWidget *toolbar, *toolbar2, *toolbar_hbox;
+	GdkBitmap *mask;
 	GtkWidget *pw;
 	GdkPixbuf *p;
 	GdkPixmap *pmap;

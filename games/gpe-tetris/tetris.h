@@ -9,7 +9,7 @@
 #endif
 
 #define MAX_X 10
-#define MAX_Y 18
+#define MAX_Y 17
 
 #ifdef BIGBLOCKS
 #define BLOCK_WIDTH 22

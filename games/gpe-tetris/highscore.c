@@ -2,7 +2,13 @@
 #include <string.h>
 #include <gtk/gtk.h>
 
+#include "render.h"
+#include "pixmaps.h"
+#include "picturebutton.h"
+
 #include "tetris.h"
+
+#define _(_x) gettext (_x)
 
 struct item
 {
@@ -11,6 +17,13 @@ struct item
 };
 
 struct item highscore[NUM_HIGHSCORE];
+
+static void
+close_window(GtkWidget *widget,
+	     GtkWidget *w)
+{
+  gtk_widget_destroy (w);
+}
 
 void read_highscore()
 {
@@ -37,6 +50,8 @@ void show_highscore(int place)
 	GtkWidget *highscore_border;
 	GtkWidget *label;
 	GtkWidget *table;
+	GtkWidget *vbox;
+	GtkWidget *button;
 	GtkStyle *style;
 	GdkColormap *colormap;
 	GdkColor color;
@@ -53,8 +68,11 @@ void show_highscore(int place)
 	gtk_widget_show(highscore_border);
 	gtk_container_add(GTK_CONTAINER(highscore_window),highscore_border);
 
+	vbox = gtk_vbox_new(FALSE,30);
+	gtk_container_add(GTK_CONTAINER(highscore_border),vbox);
+
 	table = gtk_table_new(NUM_HIGHSCORE+1,3,FALSE);
-	gtk_container_add(GTK_CONTAINER(highscore_border),table);
+	gtk_box_pack_start(GTK_BOX(vbox),table,FALSE,TRUE,0);
 
 	label = gtk_label_new("#");
 	gtk_widget_show(label);
@@ -101,6 +119,12 @@ void show_highscore(int place)
 		gtk_table_attach_defaults(GTK_TABLE(table),label,2,3,temp+1,temp+2);
 		gtk_misc_set_alignment(GTK_MISC(label),0,0);
 	}
+	
+	button = gpe_picture_button (highscore_window->style, _("Close"), "cancel");
+	gtk_signal_connect(GTK_OBJECT(button),"clicked",
+				GTK_SIGNAL_FUNC(close_window),highscore_window);	
+	gtk_box_pack_start(GTK_BOX(vbox),button,FALSE,TRUE,0);
+  	GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
 	
 	gtk_widget_show_all(highscore_window);
 }
