@@ -256,6 +256,8 @@ gint update_bat_values(gpointer data)
 		int status; 
 		int flags; 
 		int ac_connected;
+		char unit[5];
+		int barstate = 0;
 		
 		/* apm knows only about one battery */
 		gtk_widget_hide(batt_ext.bar);
@@ -270,19 +272,21 @@ gint update_bat_values(gpointer data)
 		file_apm = fopen(PROC_APM,"r");
 
 		if (fscanf(file_apm,
-			       "%*f %*f %*s 0x%x 0x%x 0x%x %i%% %i",
+			       "%*f %*f %*s 0x%x 0x%x 0x%x %i%% %i %4s",
 		           &ac_connected,
 		           &status,
 		           &flags,
 		           &percent, 
-		           &remaining) >= 4)
+		           &remaining,
+		           unit) >= 4)
 		{
-			gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (batt_int.bar),
-			                               (float)percent/100.0);
-			toolbar_set_style (batt_int.bar,  90 - (percent));
-			sprintf(percstr,"%d %%",percent);
-			gtk_progress_bar_set_text(GTK_PROGRESS_BAR(batt_int.bar),percstr);
-			
+			if (ac_connected > 1)
+				ac_connected = 0;
+			if (strstr(unit,"sec"))
+				remaining /= 60;
+			else if (strstr(unit,"hou"))
+				remaining *= 60;
+						
 			/* apm says: */
 			if ((flags & 0x80) && (flags != 0xFF))
 			{
@@ -294,17 +298,18 @@ gint update_bat_values(gpointer data)
 				{
 					case 0x00:
 						if (ac_connected)
-							sprintf(tmp,"%s",_("Status: high"));
-						else
 							sprintf(tmp,"%s",_("Status: full"));
-						if (percent >=0 && percent <=25)
-							sprintf(tmp,"%s",_("Status: low"));
+						else
+							sprintf(tmp,"%s",_("Status: high"));
+						barstate = 0;
 					break;
 					case 0x01:
 						sprintf(tmp,"%s",_("Status: low"));
+						barstate = 85;
 					break;
 					case 0x02:
 						sprintf(tmp,"%s",_("Status: critical"));
+					    barstate = 99;
 					break;
 					case 0x03:
 						sprintf(tmp,"%s",_("Status: charging"));
@@ -315,12 +320,18 @@ gint update_bat_values(gpointer data)
 				}
 			}
 			
+			gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (batt_int.bar),
+			                               (float)percent/100.0);
+			toolbar_set_style (batt_int.bar, barstate);
+			sprintf(percstr,"%d %%",percent);
+			gtk_progress_bar_set_text(GTK_PROGRESS_BAR(batt_int.bar),percstr);
+			
 			gtk_label_set_text(GTK_LABEL(batt_int.lstate),tmp);
 			
 			if (ac_connected)
 				sprintf(tmp,"%s",_("AC connected"));
 			else
-				sprintf(tmp,"%s: %d min.",_("Lifetime"),remaining);
+				sprintf(tmp,"%s: %d min.",_("Lifetime"), remaining);
 			gtk_label_set_text(GTK_LABEL(batt_int.llifetime),tmp);
 		}
 	}
