@@ -19,7 +19,7 @@ ifeq ($(NATIVE),yes)
 STRIP=strip
 
 LDFLAGS += -lgpewidget `pkg-config --libs gtk+-2.0 gdk-pixbuf-2.0` -ldotdesktop #-lXinerama
-CFLAGS += `pkg-config --cflags gtk+-2.0 gdk-pixbuf-2.0` -Wall -DGTK2
+CFLAGS += `pkg-config --cflags gtk+-2.0 gdk-pixbuf-2.0` -Wall
 
 else #cross-compile!
 
@@ -28,7 +28,7 @@ STRIP=arm-linux-strip
 
 #LDFLAGS += -lgpewidget `pkg-config --libs gtk+-2.0 gdk-pixbuf-2.0 | sed "s/-L.*lib //"`
 LDFLAGS += -lgpewidget -lgtk-x11-2.0 -lgdk-x11-2.0 -latk-1.0 -lpangoxft-1.0 -lpangox-1.0 -lpango-1.0 -lgdk_pixbuf-2.0 -lm -lgobject-2.0 -lgmodule-2.0 -ldl -lglib-2.0 -lXinerama -ldotdesktop
-CFLAGS += `pkg-config --cflags gtk+-2.0 gdk-pixbuf-2.0` -Wall -DGTK2
+CFLAGS += `pkg-config --cflags gtk+-2.0 gdk-pixbuf-2.0` -Wall
 
 endif #native or cross-compile
 
