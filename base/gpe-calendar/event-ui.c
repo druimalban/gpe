@@ -62,6 +62,8 @@ struct edit_state
   GtkAdjustment *endspin_adj, *dailyspin_adj, *monthlyspin_adj, 
     *yearlyspin_adj;
 
+  GtkWidget *notebookrecur;
+
   guint page;
   
   event_t ev;
@@ -567,6 +569,8 @@ build_edit_event_window (void)
   GtkWidget *description = gtk_text_view_new ();
 #endif
 
+  GtkWidget *dailyhbox, *yearlyhbox;
+
   GtkWidget *buttonbox = gtk_hbox_new (FALSE, 0);
   GtkWidget *buttonok;
   GtkWidget *buttoncancel;
@@ -577,8 +581,8 @@ build_edit_event_window (void)
 
   GtkWidget *startdatebox = gtk_hbox_new (FALSE, 0);
   GtkWidget *enddatebox = gtk_hbox_new (FALSE, 0);
-  GtkWidget *startdatelabel = gtk_label_new (_("Start on:"));
-  GtkWidget *enddatelabel = gtk_label_new (_("End on:"));
+  GtkWidget *startdatelabel = gtk_label_new (_("Start:"));
+  GtkWidget *enddatelabel = gtk_label_new (_("End:"));
   GtkWidget *starttimelabel = gtk_label_new (_("at:"));
   GtkWidget *endtimelabel = gtk_label_new (_("at:"));
 
@@ -783,28 +787,28 @@ build_edit_event_window (void)
 		      GTK_SIGNAL_FUNC (recalculate_sensitivities), window);
   
 /* daily hbox */
-  s->dailybox = gtk_hbox_new (FALSE, 4);
-  gtk_box_pack_start (GTK_BOX (vboxrepeat), s->dailybox, 
-			   TRUE, FALSE, 0);
+  s->dailybox = gtk_vbox_new (FALSE, 0);
+  dailyhbox = gtk_hbox_new (FALSE, 4);
 
   /* "every" label */
   dailylabelevery = gtk_label_new (_("Every"));
-  gtk_box_pack_start (GTK_BOX (s->dailybox), dailylabelevery, 
+  gtk_box_pack_start (GTK_BOX (dailyhbox), dailylabelevery, 
 			   FALSE, FALSE, 0);
   
   /* daily spinner */
   dailyspin_adj = (GtkAdjustment *) gtk_adjustment_new (1, 1, 365, 1, 5, 5);
   dailyspin = gtk_spin_button_new (GTK_ADJUSTMENT (dailyspin_adj), 1, 0);
-  gtk_box_pack_start (GTK_BOX (s->dailybox), dailyspin, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (dailyhbox), dailyspin, FALSE, FALSE, 0);
 
   /* days label */
   dailylabels = gtk_label_new (_("day(s)"));
-  gtk_box_pack_start (GTK_BOX (s->dailybox), dailylabels, 
+  gtk_box_pack_start (GTK_BOX (dailyhbox), dailylabels, 
 			   FALSE, FALSE, 0);
+
+  gtk_box_pack_start (GTK_BOX (s->dailybox), dailyhbox, FALSE, FALSE, 0);
   
 /* weekly box */
   s->weeklybox = gtk_vbox_new (FALSE, 4);
-  gtk_box_pack_start (GTK_BOX (vboxrepeat), s->weeklybox, TRUE, FALSE, 0);
 
   /* weekly hbox3 */
   /*gtk_box_pack_start (GTK_BOX (s->weeklybox), weeklyhbox3, FALSE, FALSE, 0);*/
@@ -837,10 +841,9 @@ build_edit_event_window (void)
   
 
   s->monthlybox = gtk_vbox_new (FALSE, 4);
-  gtk_box_pack_start (GTK_BOX (vboxrepeat), s->monthlybox, FALSE, FALSE, 0);
 
-  gtk_box_pack_start (GTK_BOX (s->monthlybox), monthlyhbox1, TRUE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (s->monthlybox), monthlyhbox2, TRUE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (s->monthlybox), monthlyhbox1, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (s->monthlybox), monthlyhbox2, FALSE, FALSE, 0);
 
   /* "every" label */
   monthlylabelevery = gtk_label_new (_("Every"));
@@ -861,12 +864,9 @@ build_edit_event_window (void)
 
   snprintf (buf, sizeof(buf), _("on day %d"), 5);
   daybutton = gtk_radio_button_new_with_label (NULL, buf);
-  /*gtk_box_pack_start (GTK_BOX (s->monthlybox), daybutton, FALSE, FALSE, 0);*/
 
   radiogroup = gtk_radio_button_group (GTK_RADIO_BUTTON (daybutton));
   weekbutton = gtk_radio_button_new_with_label (radiogroup, _("on the"));
-
-  /*gtk_box_pack_start (GTK_BOX (monthlyhbox2), weekbutton, FALSE, FALSE, 0);*/
 
   optionmenu1 = gtk_option_menu_new ();
   optionmenu2 = gtk_option_menu_new ();
@@ -894,32 +894,37 @@ build_edit_event_window (void)
   gtk_widget_set_usize (optionmenu1, 60, -1);
   gtk_widget_set_usize (optionmenu2, 60, -1);
 
-      /*gtk_box_pack_start (GTK_BOX (monthlyhbox2), optionmenu1, FALSE, FALSE, 0);
-    gtk_box_pack_start (GTK_BOX (monthlyhbox2), optionmenu2, FALSE, FALSE, 0);*/
-    
   /* yearly hbox */
-  s->yearlybox = gtk_hbox_new (FALSE, 4);
-  gtk_box_pack_start (GTK_BOX (vboxrepeat), s->yearlybox, TRUE, FALSE, 0);
+  s->yearlybox = gtk_vbox_new (FALSE, 0);
+  yearlyhbox = gtk_hbox_new (FALSE, 4);
 
   /* "every" label */
   yearlylabelevery = gtk_label_new (_("Every"));
-  gtk_box_pack_start (GTK_BOX (s->yearlybox), yearlylabelevery, 
+  gtk_box_pack_start (GTK_BOX (yearlyhbox), yearlylabelevery, 
 			   FALSE, FALSE, 0);
   
   /* yearly spinner */
   yearlyspin_adj = (GtkAdjustment *) gtk_adjustment_new (1, 1, 365, 1, 5, 5);
   yearlyspin = gtk_spin_button_new (GTK_ADJUSTMENT (yearlyspin_adj), 1, 0);
-  gtk_box_pack_start (GTK_BOX (s->yearlybox), yearlyspin, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (yearlyhbox), yearlyspin, FALSE, FALSE, 0);
 
   /* years label */
   yearlylabels = gtk_label_new (_("year(s)"));
-  gtk_box_pack_start (GTK_BOX (s->yearlybox), yearlylabels, 
+  gtk_box_pack_start (GTK_BOX (yearlyhbox), yearlylabels, 
 			   FALSE, FALSE, 0);
-  
-  gtk_widget_hide (s->dailybox);
-  gtk_widget_hide (s->weeklybox);
-  gtk_widget_hide (s->monthlybox);
-  gtk_widget_hide (s->yearlybox);
+
+  gtk_box_pack_start (GTK_BOX (s->yearlybox), yearlyhbox, FALSE, FALSE, 0);
+
+  s->notebookrecur = gtk_notebook_new ();
+  gtk_notebook_set_show_tabs (GTK_NOTEBOOK (s->notebookrecur), FALSE);
+  gtk_notebook_set_show_border (GTK_NOTEBOOK (s->notebookrecur), FALSE);
+
+  gtk_notebook_append_page (GTK_NOTEBOOK (s->notebookrecur), s->dailybox, NULL);
+  gtk_notebook_append_page (GTK_NOTEBOOK (s->notebookrecur), s->weeklybox, NULL);
+  gtk_notebook_append_page (GTK_NOTEBOOK (s->notebookrecur), s->monthlybox, NULL);
+  gtk_notebook_append_page (GTK_NOTEBOOK (s->notebookrecur), s->yearlybox, NULL);
+
+  gtk_box_pack_start (GTK_BOX (vboxrepeat), s->notebookrecur, TRUE, TRUE, 0);
 
 /* Begin end-date vbox */
  
