@@ -7,4 +7,5 @@ Icon=/usr/share/pixmaps/gsoko.png
 Terminal=false
 Type=Application
 SingleInstance=true
+Categories=Games
 
