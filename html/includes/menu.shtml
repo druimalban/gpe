@@ -29,7 +29,7 @@
 <!--#else -->
 <A href="/linkres.shtml">Links/Resources</a>
 <!--#endif -->
-
+|
 <!--#if expr="x${pagename}=xdownload" -->
 <b>Download</b>
 <!--#else -->
