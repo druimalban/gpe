@@ -6,18 +6,18 @@
 <p>
 In short, if you are not (yet?) a developer, you do the following:
    <pre>
-      bash$ cd gpe_cvs
-      bash$ export CVSROOT=:pserver:anoncvs@cvs.handhelds.org:/cvs
-      bash$ cvs login
+      $ cd gpe_cvs
+      $ export CVSROOT=:pserver:anoncvs@cvs.handhelds.org:/cvs
+      $ cvs login
       Logging in to :pserver:anoncvs@cvs.handhelds.org:2401/cvs
       CVS Password: anoncvs
-      bash$ cvs checkout gpe
+      $ cvs checkout gpe
    </pre>
 You only have to do this one time. The next time you want to update
 your CVS, do:
    <pre>
-      bash$ cd gpe_cvs
-      bash$ cvs up
+      $ cd gpe_cvs
+      $ cvs up
    </pre>
 </p>
 <P>
@@ -29,5 +29,28 @@ here</a>.
 You can watch the CVS repository directly by following
 <A HREF="http://cvs.handhelds.org/cgi-bin/viewcvs.cgi/gpe/">this link</A>.
 </P>
+
+<H2>Building GPE CVS applications</H2>
+<p>
+There is no easy recipe for building GPE applications for the ARM
+architecture yet. It can be built like any other application for your
+desktop though.
+
+Prerequisites for building GPE applications are libgpewidget, gpe-icons
+and, for some applications, libsqlite (not in GPE CVS, but most likely
+available as a package for your distribution -- you need to get the
+libsqlite-dev(el) package in that case).
+
+So do the following before you attempt to compile one of the GPE
+applications:
+
+   <pre>
+      $ cd libgpewidget
+      $ make libgpewidget
+      $ make install libgpewidget
+      $ cd ../gpe-icons
+      $ make install gpe-icons
+   </pre>
+</p>
 
 <!--#include virtual="includes/foot.shtml"-->
