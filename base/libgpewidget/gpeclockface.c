@@ -41,7 +41,8 @@ struct _GpeClockFace
   guint x_offset, y_offset;
 
   GtkAdjustment *hour_adj, *minute_adj;
-  
+
+  gboolean can_render;
   XftDraw *draw;
   Picture image_pict, src_pict;
   GdkPixmap *backing_pixmap;
@@ -92,14 +93,31 @@ draw_hand (GpeClockFace *clock,
       poly[i].y = -y + clock->y_offset + clock->radius;
     }
 
-  XRenderCompositeDoublePoly (GDK_WINDOW_XDISPLAY (clock->widget.window),
-			      PictOpOver,
-			      clock->src_pict, 
-			      clock->image_pict,
-			      None,
-			      0, 0, 0, 0,
-			      poly, 5, 
-			      EvenOddRule);
+  if (clock->can_render)
+    {
+      XRenderCompositeDoublePoly (GDK_WINDOW_XDISPLAY (clock->widget.window),
+				  PictOpOver,
+				  clock->src_pict, 
+				  clock->image_pict,
+				  None,
+				  0, 0, 0, 0,
+				  poly, 5, 
+				  EvenOddRule);
+    }
+  else
+    {
+      for (i = 0; i < 5; i++)
+	{
+	  points[i].x = poly[i].x;
+	  points[i].y = poly[i].y;
+	}
+
+      gdk_draw_polygon (clock->backing_pixmap,
+			clock->backing_gc,
+			TRUE,
+			points,
+			5);
+    }
 }
 
 static GdkGC *
@@ -349,10 +367,6 @@ adjustment_value_changed (GObject *a, GtkWidget *w)
 static void
 gpe_clock_face_prepare_xrender (GtkWidget *widget)
 {
-  XRenderPictureAttributes att;
-  Display *dpy;
-  GdkVisual *gv;
-  GdkColormap *gcm;
   GpeClockFace *clock = GPE_CLOCK_FACE (widget);
 
   clock->backing_pixmap = gdk_pixmap_new (widget->window,
@@ -362,26 +376,36 @@ gpe_clock_face_prepare_xrender (GtkWidget *widget)
 
   clock->backing_gc = gdk_gc_new (clock->backing_pixmap);
 
-  dpy = GDK_WINDOW_XDISPLAY (widget->window);
-  gv = gdk_window_get_visual (widget->window);
-  gcm = gdk_drawable_get_colormap (widget->window);
+  if (clock->can_render)
+    {
+      XRenderPictureAttributes att;
+      Display *dpy;
+      GdkVisual *gv;
+      GdkColormap *gcm;
 
-  clock->draw = XftDrawCreate (dpy, GDK_WINDOW_XWINDOW (clock->backing_pixmap),
-			       gdk_x11_visual_get_xvisual (gv),
-			       gdk_x11_colormap_get_xcolormap (gcm));
+      dpy = GDK_WINDOW_XDISPLAY (widget->window);
+      gv = gdk_window_get_visual (widget->window);
+      gcm = gdk_drawable_get_colormap (widget->window);
+      
+      clock->draw = XftDrawCreate (dpy, GDK_WINDOW_XWINDOW (clock->backing_pixmap),
+				   gdk_x11_visual_get_xvisual (gv),
+				   gdk_x11_colormap_get_xcolormap (gcm));
+      
+      clock->image_pict = XftDrawPicture (clock->draw);
+      clock->src_pict = XftDrawSrcPicture (clock->draw, &color);
 
-  clock->image_pict = XftDrawPicture (clock->draw);
-  clock->src_pict = XftDrawSrcPicture (clock->draw, &color);
-
-  att.poly_edge = PolyEdgeSmooth;
-  XRenderChangePicture (dpy, clock->image_pict, CPPolyEdge, &att);
+      att.poly_edge = PolyEdgeSmooth;
+      XRenderChangePicture (dpy, clock->image_pict, CPPolyEdge, &att);
+    }
 }
 
 static void
 gpe_clock_face_realize (GtkWidget *widget)
 {
+  GpeClockFace *clock = GPE_CLOCK_FACE (widget);
   GdkWindowAttr attributes;
   gint attributes_mask;
+  int major, minor;
 
   GTK_WIDGET_SET_FLAGS (widget, GTK_REALIZED);
     
@@ -406,6 +430,13 @@ gpe_clock_face_realize (GtkWidget *widget)
   widget->style = gtk_style_attach (widget->style, widget->window);
   gtk_style_set_background (widget->style, widget->window, GTK_STATE_ACTIVE);
 
+  if (XRenderQueryVersion (GDK_WINDOW_XDISPLAY (widget->window), &major, &minor) &&
+      (major > 0 ||
+       (major == 0 && minor >= 4)))
+    clock->can_render = TRUE;
+  else
+    clock->can_render = FALSE;
+
   gpe_clock_face_prepare_xrender (widget);
 }
 
@@ -413,27 +444,15 @@ static void
 gpe_clock_face_unrealize (GtkWidget *widget)
 {
   GpeClockFace *clock = GPE_CLOCK_FACE (widget);
-  Display *dpy = GDK_WINDOW_XDISPLAY (widget->window);
 
-  if (clock->image_pict)
-    {
-      XRenderFreePicture (dpy, clock->image_pict);
-      clock->image_pict = 0;
-    }
-
-  if (clock->src_pict)
-    {
-      XRenderFreePicture (dpy, clock->src_pict);
-      clock->src_pict = 0;
-    }
-
-#if 0
-  if (clock->draw)
+  if (clock->can_render)
     {
       XftDrawDestroy (clock->draw);
+
+      clock->image_pict = 0;
+      clock->src_pict = 0;
       clock->draw = NULL;
     }
-#endif
   
   if (clock->backing_gc)
     {

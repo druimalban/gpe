@@ -1,5 +1,8 @@
 2003-04-12  Philip Blundell  <philb@gnu.org>
 
+	* gpeclockface.c (gpe_clock_face_unrealize): Reinstate
+	XftDrawDestroy.  Remove XRenderFreePicture calls.
+
 	* smallbox.c (smallbox_x2): Swap order of buttons.
 	(smallbox_x): Likewise.
 
