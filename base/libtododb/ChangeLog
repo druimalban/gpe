@@ -1,3 +1,11 @@
+2004-02-29  Phil Blundell  <pb@nexus.co.uk>
+
+	* Version 0.06 released.
+
+2004-02-29  Phil Blundell  <pb@nexus.co.uk>
+
+	* todo-db.c (item_data_callback): Fix cut and paste error.
+
 2004-02-23  Phil Blundell  <pb@nexus.co.uk>
 
 	* Version 0.05 released.

@@ -52,7 +52,7 @@ item_data_callback (void *arg, int argc, char **argv, char **names)
       else if (!strcasecmp (argv[0], "STATE"))
 	i->state = atoi (argv[1]);
       else if (!strcasecmp (argv[0], "PRIORITY"))
-	i->state = atoi (argv[1]);
+	i->priority = atoi (argv[1]);
       else if (!strcasecmp (argv[0], "CATEGORY"))
 	i->categories = g_slist_append (i->categories, (gpointer)atoi (argv[1]));
       else if (!strcasecmp (argv[0], "DUE"))
