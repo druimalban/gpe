@@ -820,7 +820,7 @@ dialog_driver_response (GtkDialog * dialog, gint response, gpointer param)
 			  free(config);
 			  config = tmp;
 		  }
-		  free(buf);
+		  g_strfreev(buf);
 		  free(ident);
 		  ident = strdup(gtk_entry_get_text(GTK_ENTRY(eDriver)));
 		  
@@ -847,7 +847,9 @@ static void do_driver_dialog (GtkWidget *parent_button)
   GtkWidget *w, *cb, *l;
   int i;
   char *identmsg = NULL;
-
+  char **idents;
+  char *str;
+	
   i = gtk_notebook_get_current_page(GTK_NOTEBOOK(notebook));
   cb = gtk_combo_new();
   gtk_widget_show(cb);
@@ -874,14 +876,19 @@ static void do_driver_dialog (GtkWidget *parent_button)
   gtk_widget_show(l);
   
   identmsg = user_get_card_ident(i);
-  l = gtk_text_view_new(); 
-  gtk_text_buffer_set_text(gtk_text_view_get_buffer(GTK_TEXT_VIEW(l)),identmsg,strlen(identmsg));
-  gtk_widget_set_size_request(l,-1,60);
+  idents = g_strsplit(identmsg,"\n",4);
+  l = gtk_label_new(NULL);
+  gtk_misc_set_alignment(GTK_MISC(l),0.0,0.5);
+  str = g_strdup_printf("<i>%s\n%s: %s\n%s: %s</i>",idents[0],_("Manuf. Id"),idents[2],_("Class"),idents[3]);
+  gtk_label_set_markup(GTK_LABEL(l),str);
+  free(str);
+  g_strfreev(idents);
   gtk_widget_show(l);
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (w)->vbox), l, FALSE, TRUE,gpe_get_boxspacing());
   
   gtk_object_set_data(GTK_OBJECT(w),"ident",identmsg);
   gtk_object_set_data(GTK_OBJECT(w),"driver",GTK_COMBO(cb)->entry);
+  
   /* connect response, submit socket as param */
   g_signal_connect (GTK_OBJECT (w), "response",
 		    (void *) dialog_driver_response, (void*)i);

@@ -114,6 +114,7 @@ PIXMAPS += menu-assign.png menu-eject.png menu-insert.png
 PIXMAPS += menu-reset2.png menu-reset.png menu-resume.png menu-suspend.png
 PIXMAPS += pccard-cdrom.png pccard-ide.png pccard-memory.png
 PIXMAPS += pccard-parport.png pccard-scsi.png pccard-unknown.png
+PIXMAPS += pccard-network.png
 
 all: $(PACKAGE) 
 

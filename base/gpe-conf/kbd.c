@@ -20,6 +20,7 @@
 #include <signal.h>
 #include <time.h>
 #include <libintl.h>
+#include <dirent.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <gtk/gtk.h>
@@ -31,7 +32,7 @@
 
 #include <gpe/spacing.h>
 
-#define XKBD_DIR "/usr/share/xkbd/"
+#define XKBD_DIR "/usr/share/xkbd"
 
 
 static GList *options;
@@ -130,7 +131,10 @@ GtkWidget *Kbd_Build_Objects()
   gchar *gpe_catindent = gpe_get_catindent ();
   guint gpe_boxspacing = gpe_get_boxspacing ();
   guint gpe_border     = gpe_get_border ();
- 
+
+  DIR *dir;
+  struct dirent *entry;
+	
   categories = gtk_vbox_new (FALSE, gpe_catspacing);
   gtk_container_set_border_width (GTK_CONTAINER (categories), gpe_border);
 
@@ -156,11 +160,27 @@ GtkWidget *Kbd_Build_Objects()
   controlvbox1 = gtk_vbox_new (FALSE, gpe_boxspacing);
   gtk_box_pack_start (GTK_BOX (catconthbox1), controlvbox1, TRUE, TRUE, 0);
   
-  opt1 = setup_kb (controlvbox1, NULL, _("Standard"), XKBD_DIR "en_GB.qwerty.xkbd");
-  setup_kb (controlvbox1,        opt1, _("Tiny"),     XKBD_DIR "en_GB.qwerty.tiny.xkbd");
-  setup_kb (controlvbox1,        opt1, _("US"),       XKBD_DIR "en_US.qwerty.xkbd"); 
-  setup_kb (controlvbox1,        opt1, _("Fitaly"),   XKBD_DIR "en_all.fitaly.xkbd");
-  setup_kb (controlvbox1,        opt1, _("Numbers only"),   XKBD_DIR "kbdconfig.numsonly");
+  opt1 = setup_kb (controlvbox1, NULL, _("standard"), XKBD_DIR "kbdconfig");
+  
+  dir = opendir (XKBD_DIR);
+  if(dir)
+    {
+      while ((entry = readdir (dir)))
+	{
+	  char *tmp;
+
+	  if (entry->d_name[0] == '.') 
+	    continue;
+	  if (!strcmp(entry->d_name,"kbdconfig")) 
+	    continue;
+      if (!strstr(entry->d_name,"kbdconfig."))
+		continue;	  
+	  tmp = g_strdup_printf ("%s/%s",XKBD_DIR , entry->d_name);
+      setup_kb (controlvbox1, opt1, strstr(entry->d_name,".")+1, tmp);
+	  free(tmp);
+	}
+      closedir (dir);
+    }
 
   /* If the user has a config in ~/.kbdconfig, add it */
   user_kbdrc = g_strdup_printf ("%s/.xkbdrc", g_get_home_dir());
