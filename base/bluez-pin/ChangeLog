@@ -1,3 +1,18 @@
+2004-03-08  Philip Blundell  <philb@gnu.org>
+
+	* Version 0.23 released.
+	
+2004-03-08  Philip Blundell  <philb@gnu.org>
+
+	* main.c: Support new "org.bluez.PinAgent" service as well as old
+	"org.handhelds.gpe" namespace.
+	* pin-dbus.c: Likewise.
+	* bluez.conf: Likewise.
+
+	* po/af.po po/de.po po/fi.po po/hu.po po/nl.po po/pl.po
+	po/pt_BR.po po/ro.po po/sk.po po/sr.po: New files.
+	* Makefile (LINGUAS): Add af de fi hu nl pt_BR ro sk sr.
+
 2004-01-19  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.22 released.

@@ -3,8 +3,8 @@ SYSCONFDIR=$(PREFIX)/etc
 PACKAGE = bluez-pin
 CVSBUILD = yes
 GTK2 = yes
-LINGUAS = eo fr id ga wa sv cs
-VERSION = 0.22
+LINGUAS = eo fr id ga wa sv cs af de fi hu nl pt_BR ro sk sr
+VERSION = 0.23
 
 ifeq ($(CVSBUILD),yes)
 BUILD = ../build

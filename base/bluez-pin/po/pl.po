@@ -1,0 +1,40 @@
+# Polish translation of bluez-pin
+# Copyright (C) 2003 The Free Software Foundation
+# This file is distributed under the same license as the bluez-pin package.
+# Arkadiusz Lipiec <alipiec@elka.pw.edu.pl>, 2003.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: bluez-pin 0.08\n"
+"POT-Creation-Date: 2003-02-21 00:12+0000\n"
+"PO-Revision-Date: 2003-10-13 22:32+0100\n"
+"Last-Translator: Arkadiusz Lipiec <A.Lipiec@elka.pw.edu.pl>\n"
+"Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-2\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: bluez-pin.c:127
+msgid "Outgoing connection to"
+msgstr "Wychodz±ce po³±czenie z"
+
+#: bluez-pin.c:128
+msgid "Incoming connection from"
+msgstr "Przychodz±ce po³±czenie z"
+
+#: bluez-pin.c:134
+msgid "PIN:"
+msgstr "PIN:"
+
+#: bluez-pin.c:137
+msgid "Save in database"
+msgstr "Zapisz w bazie danych"
+
+#: bluez-pin.c:179
+msgid "Bluetooth PIN"
+msgstr "PIN bluetooth"
+
+#: bluez-pin.c:191
+#, c-format
+msgid "Usage: %s <in|out> <address>\n"
+msgstr "U¿ycie: %s <in|out> <adres>\n"

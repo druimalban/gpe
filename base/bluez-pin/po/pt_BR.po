@@ -1,0 +1,40 @@
+# bluez-pin: translation to Brazilian Portuguese (pt_BR)
+# Copyright (C) 2004 Free Software Foundation, Inc.
+# This file is distributed under the same license as the bluez-pin package.
+# Alexandre Folle de Menezes <afmenez@terra.com.br>, 2004.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: bluez-pin 0.08\n"
+"POT-Creation-Date: 2003-02-21 00:12+0000\n"
+"PO-Revision-Date: 2004-02-09 02:30-0200\n"
+"Last-Translator: Alexandre Folle de Menezes <afmenez@terra.com.br>\n"
+"Language-Team: Brazilian Portuguese <ldp-br@bazar.conectiva.com.br>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Transfer-Encoding: 8-bit\n"
+
+#: bluez-pin.c:127
+msgid "Outgoing connection to"
+msgstr "Conexão saindo para"
+
+#: bluez-pin.c:128
+msgid "Incoming connection from"
+msgstr "Conexão vindo de"
+
+#: bluez-pin.c:134
+msgid "PIN:"
+msgstr "PIN:"
+
+#: bluez-pin.c:137
+msgid "Save in database"
+msgstr "Salvar no banco de dados"
+
+#: bluez-pin.c:179
+msgid "Bluetooth PIN"
+msgstr "PIN Bluetooth"
+
+#: bluez-pin.c:191
+#, c-format
+msgid "Usage: %s <in|out> <address>\n"
+msgstr "Uso: %s <in|out> <address>\n"

@@ -1,0 +1,40 @@
+# German translation for bluez-pin.
+# Copyright (C) 2004 Free Software Foundation, Inc.
+# This file is distributed under the same license as the bluez-pin package.
+# Roland Illig, <roland.illig@gmx.de>, 2004.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: bluez-pin 0.08\n"
+"POT-Creation-Date: 2003-02-21 00:12+0000\n"
+"PO-Revision-Date: 2004-03-01 14:24+0100\n"
+"Last-Translator: Roland Illig <roland.illig@gmx.de>\n"
+"Language-Team: German <de@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: bluez-pin.c:127
+msgid "Outgoing connection to"
+msgstr "Ausgehende Verbindung zu"
+
+#: bluez-pin.c:128
+msgid "Incoming connection from"
+msgstr "Eingehende Verbindung von"
+
+#: bluez-pin.c:134
+msgid "PIN:"
+msgstr "PIN:"
+
+#: bluez-pin.c:137
+msgid "Save in database"
+msgstr "In Datenbank speichern"
+
+#: bluez-pin.c:179
+msgid "Bluetooth PIN"
+msgstr "Bluetooth PIN"
+
+#: bluez-pin.c:191
+#, c-format
+msgid "Usage: %s <in|out> <address>\n"
+msgstr "Aufruf: %s [in|out] <Adresse>\n"

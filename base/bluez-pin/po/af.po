@@ -1,0 +1,41 @@
+# translation of bluez-pin-0.08.po to Afrikaans
+# Copyright (C) 2004 Free Software Foundation, Inc.
+# This file is distributed under the same license as the bluez-pin package.
+# Ysbeer <ysbeer@af.org.za>, 2004.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: bluez-pin 0.08\n"
+"POT-Creation-Date: 2003-02-21 00:12+0000\n"
+"PO-Revision-Date: 2004-01-15 22:48+0000\n"
+"Last-Translator: Ysbeer <ysbeer@af.org.za>\n"
+"Language-Team: Afrikaans <i18n@af.org.za>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.0.2\n"
+
+#: bluez-pin.c:127
+msgid "Outgoing connection to"
+msgstr "Uitgaande konneksies na"
+
+#: bluez-pin.c:128
+msgid "Incoming connection from"
+msgstr "Inkomende konneksies vanaf"
+
+#: bluez-pin.c:134
+msgid "PIN:"
+msgstr "PIN:"
+
+#: bluez-pin.c:137
+msgid "Save in database"
+msgstr "Stoor in databasis"
+
+#: bluez-pin.c:179
+msgid "Bluetooth PIN"
+msgstr "Bluetooth PIN"
+
+#: bluez-pin.c:191
+#, c-format
+msgid "Usage: %s <in|out> <address>\n"
+msgstr "Gebruik: %s <in|out> <adres>\n"

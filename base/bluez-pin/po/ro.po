@@ -1,0 +1,40 @@
+# Mesajele în limba românã pentru bluez-pin.
+# Copyright (C) 2003 Free Software Foundation, Inc.
+# Acest fiºier este distribuit sub aceeaºi licenþã ca ºi pachetul bluez-pin.
+# Eugen Hoanca <eugenh@urban-grafx.ro>, 2003.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: bluez-pin 0.08\n"
+"POT-Creation-Date: 2003-02-21 00:12+0000\n"
+"PO-Revision-Date: 2003-03-25 08:49+0200\n"
+"Last-Translator: Eugen Hoanca <eugenh@urban-grafx.ro>\n"
+"Language-Team: Romanian <translation-team-ro@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-2\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: bluez-pin.c:127
+msgid "Outgoing connection to"
+msgstr "Conexiune de ieºire cãtre"
+
+#: bluez-pin.c:128
+msgid "Incoming connection from"
+msgstr "Conexiune de intrare dinspre"
+
+#: bluez-pin.c:134
+msgid "PIN:"
+msgstr "PIN:"
+
+#: bluez-pin.c:137
+msgid "Save in database"
+msgstr "Salvare în baza de date"
+
+#: bluez-pin.c:179
+msgid "Bluetooth PIN"
+msgstr "PIN Bluetooth"
+
+#: bluez-pin.c:191
+#, c-format
+msgid "Usage: %s <in|out> <address>\n"
+msgstr "Folosire: %s <in|out> <adresa>\n"

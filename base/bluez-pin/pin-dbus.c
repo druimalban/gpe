@@ -26,11 +26,7 @@
 
 #include "pin-ui.h"
 
-#define PATH_NAME "/org/handhelds/gpe/bluez"
-#define INTERFACE_NAME "org.handhelds.gpe.bluez"
-#define METHOD_NAME "PinRequest"
-
-#define WRONG_ARGS_ERROR "org.handhelds.gpe.bluez.Error.WrongArgs"
+#define WRONG_ARGS_ERROR "org.bluez.Error.WrongArgs"
 
 struct pin_request_context
 {
