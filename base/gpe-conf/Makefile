@@ -86,6 +86,7 @@ MEMBERS += widgets/sp-color-slider
 MEMBERS += serial
 MEMBERS += logread
 MEMBERS += packages cardinfo
+MEMBERS += tools/interface
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))

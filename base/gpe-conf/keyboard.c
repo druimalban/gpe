@@ -208,10 +208,12 @@ void
 do_install (GtkWidget * button,
 		 int nr)
 {
+	gchar *packages;
 	gtk_widget_set_sensitive(button,FALSE);
-	suid_exec("PAIS",kbds[nr].package_name);
+	packages = g_strdup_printf("%s %s",kbds[nr].package_name,kbds[nr].support_package);
+	suid_exec("PAIS",packages);
+	g_free(packages);
 	gtk_timeout_add (1000, (GtkFunction) poll_log_pipe_generic, (void*)get_output);
-#warning	install support package
 }
 
 /* --- gpe-conf interface --- */

@@ -38,6 +38,7 @@
 #include "cfgfile.h"
 #include "misc.h"
 #include "suid.h"
+#include "tools/interface.h"
 
 #include <gpe/init.h>
 #include <gpe/pixmaps.h>
@@ -49,7 +50,7 @@
 #include <gpe/smallbox.h>
 #include <gpe/gtksimplemenu.h>
 
-// offset for global page(s)
+// offset for page to interface
 #define PAGE_OFFSET 1 
 
 
@@ -64,6 +65,49 @@ GtkWidget* create_nwppp_widgets(NWInterface_t iface);
 static guint not_added = 0;
 static gchar* cfgfile;
 static gboolean have_access = FALSE;
+
+
+static void 
+show_current_config(GtkWidget* button)
+{
+	char *buffer = g_strdup("");
+	char *tmp = NULL;
+	struct interface* ife;
+	struct interface* int_list;
+	GtkWidget *w, *label;
+	
+	int_list = if_getlist();
+		
+	for (ife = int_list; ife; ife = ife->next) {
+		if (ife->flags & IFF_UP)
+		{
+			tmp = if_to_infostr (ife);
+			buffer = realloc(buffer,strlen(tmp)+strlen(buffer)+1);
+			strcat(buffer,tmp);
+			free(tmp);
+		}
+	}
+
+	w = gtk_dialog_new_with_buttons (_("Current Config"), GTK_WINDOW (mainw),
+				   GTK_DIALOG_MODAL |
+				   GTK_DIALOG_DESTROY_WITH_PARENT,
+				   GTK_STOCK_CLOSE, GTK_RESPONSE_ACCEPT,
+				   NULL);
+
+	label = gtk_label_new(NULL);
+	gtk_label_set_markup(GTK_LABEL(label),buffer);
+	gtk_widget_show(label);
+    gtk_container_add (GTK_CONTAINER (GTK_DIALOG (w)->vbox), label);
+	g_signal_connect_swapped (GTK_OBJECT (w), 
+                             "response", 
+                             G_CALLBACK (gtk_widget_destroy),
+                             GTK_OBJECT (w));
+
+    gtk_dialog_run (GTK_DIALOG (w));
+	
+	free(buffer);
+}
+
 
 static GList* 
 get_unconfigured_interfaces()
@@ -155,8 +199,7 @@ static void
 remove_interface(GtkWidget *widget, gpointer d)
 {
 	G_CONST_RETURN gchar* ifname;
-	GtkWidget* page;
-	
+	GtkWidget* page;	
 	
 	page = gtk_notebook_get_nth_page(GTK_NOTEBOOK(table),gtk_notebook_get_current_page(GTK_NOTEBOOK(table)));
 	ifname = gtk_notebook_get_tab_label_text(GTK_NOTEBOOK(table),page);
@@ -798,6 +841,16 @@ GtkWidget *Network_Build_Objects()
 	if (!have_access) gtk_widget_set_sensitive(button,FALSE);
 		
 	gtk_toolbar_append_space(GTK_TOOLBAR(toolbar));	
+	
+	label = gtk_image_new_from_stock(GTK_STOCK_DIALOG_INFO,gtk_toolbar_get_icon_size(GTK_TOOLBAR(toolbar)));
+	button = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Information"), 
+			   _("Show current configuration."), _("Show current configuration."), 
+			   label, (GtkSignalFunc)show_current_config, NULL);
+	
+	if (!have_access) gtk_widget_set_sensitive(button,FALSE);
+	
+	gtk_toolbar_append_space(GTK_TOOLBAR(toolbar));	
+	
 	label = gtk_image_new_from_pixbuf(gpe_find_icon ("exit"));
 	gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Close"), 
 			   _("Close  network tool"), _("Close network tool"), 

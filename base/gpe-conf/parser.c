@@ -18,7 +18,8 @@
 #include <string.h>
 #include <gtk/gtk.h>
 
-       int vsscanf (const char *str, const char *format, va_list ap);
+int vsscanf (const char *str, const char *format, va_list ap);
+
 
 /* some very modest parser functions.. */
 
@@ -36,6 +37,7 @@ static int vparse(FILE *f, char *format, va_list ap)
     }
   return 1;
 }
+
 
 int parse_pipe(char *cmd,char *format,...)
 {
@@ -55,6 +57,7 @@ int parse_pipe(char *cmd,char *format,...)
   return rv;
 }
 
+
 int parse_file(char *file,char *format,...)
 {
   va_list ap;
@@ -72,6 +75,7 @@ int parse_file(char *file,char *format,...)
   va_end(ap);
   return rv;
 }
+
 
 int parse_file_and_gfree(char *file,char *format,...)
 {
@@ -91,6 +95,8 @@ int parse_file_and_gfree(char *file,char *format,...)
   g_free(file);
   return rv;
 }
+
+
 int parse_pipe_and_gfree(char *cmd,char *format,...)
 {
   va_list ap;

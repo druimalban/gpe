@@ -1,5 +1,10 @@
 When			Who				Where						What
 
+02.05.2003		Florian			network.c					Added dialog that hows current interface configuration.
+								tools/interface.*			New files, containing interface config collecting stuff.
+
+30.04.2003		Florian			keyboard.c					Added installation of second package. 
+
 29.04.2003		Florian			network.c					Fixed several bugs in gui, some improvements. 
 
 29.04.2003		Florian			timeanddate.c				Some GUI rework, fixes bug #753
