@@ -33,8 +33,9 @@ struct date
 struct sens
 {
   GtkWidget *frombutton;
-  GtkWidget *startentry;
-  GtkWidget *endentry;
+  GtkWidget *alldaybutton;
+  GtkWidget *startcombo;
+  GtkWidget *endcombo;
   GtkWidget *timeend;
 
   GtkWidget *alarmbutton;
@@ -59,7 +60,8 @@ struct sens
     *yearlyspin_adj;
   
   struct date start, end;
-  		 
+
+  event_t ev;
 };
 
 static void
@@ -102,14 +104,14 @@ recalculate_sensitivities(GtkWidget *widget,
 
   if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->frombutton)))
     {
-      gtk_widget_set_sensitive (s->startentry, 1);
-      gtk_widget_set_sensitive (s->endentry, 1);
+      gtk_widget_set_sensitive (s->startcombo, 1);
+      gtk_widget_set_sensitive (s->endcombo, 1);
       gtk_widget_set_sensitive (s->timeend, 1);
     }
   else
     {
-      gtk_widget_set_sensitive (s->startentry, 0);
-      gtk_widget_set_sensitive (s->endentry, 0);
+      gtk_widget_set_sensitive (s->startcombo, 0);
+      gtk_widget_set_sensitive (s->endcombo, 0);
       gtk_widget_set_sensitive (s->timeend, 0);
     }
 
@@ -204,9 +206,9 @@ click_ok(GtkWidget *widget,
   if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->frombutton)))
     {
       char *start = gtk_editable_get_chars (GTK_EDITABLE (GTK_COMBO 
-							  (s->startentry)->entry), 0, -1);
+							  (s->startcombo)->entry), 0, -1);
       char *end = gtk_editable_get_chars (GTK_EDITABLE (GTK_COMBO 
-						  (s->endentry)->entry),
+						  (s->endcombo)->entry),
 					  0, -1);
       struct tm tm_start, tm_end;
       if (strptime (start, "%X", &tm_start))
@@ -319,8 +321,8 @@ drop_calendar(GtkWidget *widget,
     }
 }
 
-GtkWidget *
-new_event(time_t t, guint timesel)
+static GtkWidget *
+edit_event_window(void)
 {
   static const nl_item days[] = { ABDAY_2, ABDAY_3, ABDAY_4, ABDAY_5, 
 				  ABDAY_6, ABDAY_7, ABDAY_1 };
@@ -374,8 +376,9 @@ new_event(time_t t, guint timesel)
   GtkWidget *timeend = gtk_label_new (_("to"));
 
   GtkWidget *buttonbox = gtk_hbox_new (FALSE, 0);
-  GtkWidget *buttonok = gtk_button_new_with_label (_("OK"));
+  GtkWidget *buttonok = gtk_button_new_with_label (_("Save"));
   GtkWidget *buttoncancel = gtk_button_new_with_label (_("Cancel"));
+  GtkWidget *buttondelete = gtk_button_new_with_label (_("Delete"));
 
   GtkWidget *startcombo = gtk_combo_new ();
   GtkWidget *endcombo = gtk_combo_new ();
@@ -390,8 +393,6 @@ new_event(time_t t, guint timesel)
 
   GtkWidget *window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   struct sens *s = g_malloc (sizeof (struct sens));
-  struct tm tm;
-  char buf[32];
 
   memset (s, 0, sizeof (*s));
 
@@ -417,33 +418,14 @@ new_event(time_t t, guint timesel)
   gtk_combo_set_popdown_strings (GTK_COMBO (startcombo), times);
   gtk_combo_set_popdown_strings (GTK_COMBO (endcombo), times);
 
-  localtime_r (&t, &tm);
-  strftime (buf, sizeof(buf), "%X", &tm);
-  gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (startcombo)->entry), buf);
-  tm.tm_hour++;
-  strftime (buf, sizeof(buf), "%X", &tm);
-  gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (endcombo)->entry), buf);
-  strftime (buf, sizeof(buf), "%x", &tm);
-  gtk_entry_set_text (GTK_ENTRY (startdateentry), buf);
-  gtk_entry_set_text (GTK_ENTRY (enddateentry), buf);
-  s->start.year = s->end.year = 1900 + tm.tm_year;
-  s->start.month = s->end.month = tm.tm_mon;
-  s->start.day = s->end.day = tm.tm_mday;
-
   gtk_container_add (GTK_CONTAINER (startdatebutton), 
 		     gtk_arrow_new (GTK_ARROW_DOWN, GTK_SHADOW_OUT));
   gtk_container_add (GTK_CONTAINER (enddatebutton), 
 		     gtk_arrow_new (GTK_ARROW_DOWN, GTK_SHADOW_OUT));
 
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (frombutton), timesel);
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (alldaybutton), ! timesel);
-
   gtk_text_set_editable (GTK_TEXT(text), TRUE);
   gtk_text_set_word_wrap (GTK_TEXT(text), TRUE);
   gtk_widget_set_usize (text, -1, 88);
-
-  gtk_widget_set_usize (buttonok, 60, -1);
-  gtk_widget_set_usize (buttoncancel, 60, -1);
 
   gtk_signal_connect (GTK_OBJECT (frombutton), "clicked",
 		     GTK_SIGNAL_FUNC (recalculate_sensitivities), window);
@@ -475,8 +457,9 @@ new_event(time_t t, guint timesel)
   gtk_box_pack_start (GTK_BOX (alarmhbox), alarmspin, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (alarmhbox), alarmoption, TRUE, TRUE, 2);
 
-  gtk_box_pack_end (GTK_BOX (buttonbox), buttoncancel, FALSE, FALSE, 4);
-  gtk_box_pack_end (GTK_BOX (buttonbox), buttonok, FALSE, FALSE, 4);
+  gtk_box_pack_start (GTK_BOX (buttonbox), buttondelete, TRUE, FALSE, 4);
+  gtk_box_pack_start (GTK_BOX (buttonbox), buttoncancel, TRUE, FALSE, 4);
+  gtk_box_pack_start (GTK_BOX (buttonbox), buttonok, TRUE, FALSE, 4);
 
   gtk_signal_connect (GTK_OBJECT (buttonok), "clicked",
 		      GTK_SIGNAL_FUNC (click_ok), window);
@@ -600,7 +583,7 @@ new_event(time_t t, guint timesel)
   /* monthly spinner */
   monthlyspin_adj = (GtkAdjustment *) gtk_adjustment_new (1, 1, 365, 1, 5, 5);
   monthlyspin = gtk_spin_button_new (GTK_ADJUSTMENT (monthlyspin_adj), 1, 0);
-  gtk_widget_set_usize(monthlyspin,50, 20);
+  gtk_widget_set_usize (monthlyspin, 50, 20);
   gtk_box_pack_start_show (GTK_BOX (monthlyvbox), monthlyspin, 
 			   FALSE, FALSE, 0);
 
@@ -688,11 +671,14 @@ new_event(time_t t, guint timesel)
   
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), vboxevent, labeleventpage);
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), vboxrepeattop, labelrecurpage);
+
+  gtk_widget_grab_focus (text);
   
   s->frombutton = frombutton;
-  s->startentry = startcombo;
+  s->alldaybutton = alldaybutton;
+  s->startcombo = startcombo;
   s->timeend = timeend;
-  s->endentry = endcombo;
+  s->endcombo = endcombo;
   s->alarmbutton = alarmbutton;
   s->alarmspin = alarmspin;
   s->alarmoption = alarmoption;
@@ -739,3 +725,35 @@ new_event(time_t t, guint timesel)
   return window;
 }
 
+GtkWidget *
+new_event(time_t t, guint timesel)
+{
+  GtkWidget *w = edit_event_window ();
+
+  if (w)
+    {
+      struct tm tm;
+      char buf[32];
+      struct sens *s = gtk_object_get_data (GTK_OBJECT (w), "sens_list");
+
+      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->frombutton), 
+				    timesel);
+      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->alldaybutton), 
+				    ! timesel);
+
+      localtime_r (&t, &tm);
+      strftime (buf, sizeof(buf), "%X", &tm);
+      gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (s->startcombo)->entry), buf);
+      tm.tm_hour++;
+      strftime (buf, sizeof(buf), "%X", &tm);
+      gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (s->endcombo)->entry), buf);
+      strftime (buf, sizeof(buf), "%x", &tm);
+      gtk_entry_set_text (GTK_ENTRY (s->start.entry), buf);
+      gtk_entry_set_text (GTK_ENTRY (s->end.entry), buf);
+      s->start.year = s->end.year = 1900 + tm.tm_year;
+      s->start.month = s->end.month = tm.tm_mon;
+      s->start.day = s->end.day = tm.tm_mday;
+    }
+
+  return w;
+}
