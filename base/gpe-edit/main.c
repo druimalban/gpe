@@ -66,8 +66,19 @@ void
 update_window_title (void)
 {
   gchar *window_title;
+  gchar *displayname;
 
-  const char *displayname = filename ? basename (filename) : _("Untitled");
+  if (filename == "")
+  {
+    displayname = g_malloc (strlen (_("Untitled")));
+    strcpy (displayname, _("Untitled"));
+  }
+  else
+  {
+    displayname = g_malloc (strlen (basename (filename)));
+    strcpy (displayname, basename (filename));
+  }
+
   window_title = g_malloc (strlen (WINDOW_NAME " - ") + strlen (displayname) + 1);
   strcpy (stpcpy (window_title, WINDOW_NAME " - "), displayname);
 
