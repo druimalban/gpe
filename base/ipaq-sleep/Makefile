@@ -2,7 +2,7 @@ PACKAGE = ipaq-sleep
 
 PREFIX = /usr/local
 
-VERSION = 0.7-9
+VERSION = 0.8
 
 CVSBUILD = yes
 

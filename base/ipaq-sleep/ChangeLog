@@ -1,5 +1,8 @@
 2004-08-18  Florian Boor <florian.boor@kernelconcepts.de>
 
+	* Version 0.8 released.
+	* ipaq-sleep.conf: Updated to have better defaults.
+	* ipaq-sleep.h: Added some useful definitions found in battfink.
 	* Started to teach ipaq-sleep the maning of "dim".
 
 2003-09-23  Philip Blundell  <philb@gnu.org>
