@@ -78,14 +78,77 @@ make_option_menu (gchar *tag_name)
 }
 
 static void
-window_close (GtkWidget *window)
+window_close (GtkWidget *widget, GtkWidget *window)
 {
   gtk_widget_destroy (window);
 }
 
 static void
-window_close_and_save (GtkWidget *window)
+save_in_sql (gchar *tag_name, gint value)
 {
+  switch (value)
+  {
+    case 0:
+    {
+      edit_sql_general_tag (tag_name, "black");
+    }
+    break;
+    case 1:
+    {
+      edit_sql_general_tag (tag_name, "white");
+    }
+    break;
+    case 2:
+    {
+      edit_sql_general_tag (tag_name, "red");
+    }
+    break;
+    case 3:
+    {
+      edit_sql_general_tag (tag_name, "blue");
+    }
+    break;
+    case 4:
+    {
+      edit_sql_general_tag (tag_name, "green");
+    }
+    break;
+    case 5:
+    {
+      edit_sql_general_tag (tag_name, "bold");
+    }
+    break;
+    case 6:
+    {
+      edit_sql_general_tag (tag_name, "italic");
+    }
+    break;
+  }
+}
+
+static void
+window_close_and_save (GtkWidget *widget, GtkWidget *window)
+{
+  GtkWidget *text_option_menu, *bg_option_menu, *nick_option_menu, *action_option_menu, *own_nick_option_menu, *channel_option_menu, *nick_ops_option_menu, *nick_highlight_option_menu;
+
+  text_option_menu = g_object_get_data (G_OBJECT (widget), "text_option_menu");
+  bg_option_menu = g_object_get_data (G_OBJECT (widget), "bg_option_menu");
+  action_option_menu = g_object_get_data (G_OBJECT (widget), "action_option_menu");
+  channel_option_menu = g_object_get_data (G_OBJECT (widget), "channel_option_menu");
+  nick_option_menu = g_object_get_data (G_OBJECT (widget), "nick_option_menu");
+  own_nick_option_menu = g_object_get_data (G_OBJECT (widget), "own_nick_option_menu");
+  nick_ops_option_menu = g_object_get_data (G_OBJECT (widget), "nick_ops_option_menu");
+  nick_highlight_option_menu = g_object_get_data (G_OBJECT (widget), "nick_highlight_option_menu");
+
+  save_in_sql ("tag_text", gtk_option_menu_get_history (GTK_OPTION_MENU (text_option_menu)));
+  save_in_sql ("tag_bg", gtk_option_menu_get_history (GTK_OPTION_MENU (bg_option_menu)));
+  save_in_sql ("tag_action", gtk_option_menu_get_history (GTK_OPTION_MENU (action_option_menu)));
+  save_in_sql ("tag_channel", gtk_option_menu_get_history (GTK_OPTION_MENU (channel_option_menu)));
+  save_in_sql ("tag_nick", gtk_option_menu_get_history (GTK_OPTION_MENU (nick_option_menu)));
+  save_in_sql ("tag_own_nick", gtk_option_menu_get_history (GTK_OPTION_MENU (own_nick_option_menu)));
+  save_in_sql ("tag_nick_ops", gtk_option_menu_get_history (GTK_OPTION_MENU (nick_ops_option_menu)));
+  save_in_sql ("tag_nick_highlight", gtk_option_menu_get_history (GTK_OPTION_MENU (nick_highlight_option_menu)));
+
   gtk_widget_destroy (window);
 }
 
@@ -192,7 +255,7 @@ general_config_window ()
   g_object_set_data (G_OBJECT (save_button), "nick_option_menu", (gpointer) nick_option_menu);
   g_object_set_data (G_OBJECT (save_button), "own_nick_option_menu", (gpointer) own_nick_option_menu);
   g_object_set_data (G_OBJECT (save_button), "nick_ops_option_menu", (gpointer) nick_ops_option_menu);
-  g_object_set_data (G_OBJECT (save_button), "nick_highlight_option_menu", (gpointer) nick_ops_option_menu);
+  g_object_set_data (G_OBJECT (save_button), "nick_highlight_option_menu", (gpointer) nick_highlight_option_menu);
 
   gtk_container_add (GTK_CONTAINER (window), GTK_WIDGET (vbox));
   gtk_box_pack_start (GTK_BOX (vbox), notebook, TRUE, TRUE, 0);

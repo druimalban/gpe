@@ -48,7 +48,6 @@ new_sql_general_tag (const char *property, const char *value)
     {
       gpe_error_box (err);
       free (err);
-      return NULL;
     }
 
   g_hash_table_insert (sql_general_config, (gpointer) property, (gpointer) value);
@@ -59,12 +58,11 @@ edit_sql_general_tag (const char *property, const char *value)
 {
   char *err;
 
-  if (sqlite_exec_printf (sqliteh, "replace into config values (NULL, '%q', '%q')",
-			  NULL, NULL, &err, property, value))
+  if (sqlite_exec_printf (sqliteh, "update config set value='%q' where property='%q'",
+			  NULL, NULL, &err, value, property))
     {
       gpe_error_box (err);
       free (err);
-      return NULL;
     }
 
   g_hash_table_insert (sql_general_config, (gpointer) property, (gpointer) value);
@@ -90,13 +88,14 @@ add_default_sql_tags (void)
   new_sql_general_tag ("tag_own_nick", "black");
   new_sql_general_tag ("tag_channel", "italic");
   new_sql_general_tag ("tag_nick_ops", "bold");
+  new_sql_general_tag ("tag_nick_highlight", "red");
 }
 
 int
 general_sql_start (void)
 {
   static const char *schema1_str = 
-    "create table networks (uid INTEGER PRIMARY KEY, property TEXT, value TEXT)";
+    "create table config (uid INTEGER PRIMARY KEY, property TEXT, value TEXT)";
 
   const char *home = getenv ("HOME");
   char *buf;
@@ -116,6 +115,8 @@ general_sql_start (void)
       g_free (buf);
       return -1;
     }
+
+  sql_general_config = g_hash_table_new (g_str_hash, g_str_equal);
 
   sqlite_exec (sqliteh, schema1_str, NULL, NULL, &err);
 

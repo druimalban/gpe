@@ -732,6 +732,9 @@ main (int argc, char *argv[])
   if (gpe_load_icons (my_icons) == FALSE)
     exit (1);
   
+  if (general_sql_start () == -1)
+    exit (1);
+  
   if (networks_sql_start () == -1)
     exit (1);
 
