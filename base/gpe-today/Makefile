@@ -4,7 +4,7 @@ VERSION = 0.07
 CVSBUILD = yes
 #DEBUG = yes
 #EFENCE = yes
-LINGUAS = pt de zh_TW
+LINGUAS = pt de zh_TW ga
 
 MEMBERS = main todo calendar date xsettings
 
