@@ -1,2 +1,3 @@
 #!/bin/sh
-gpe-login --autolock
+gpe-login --autolock &
+

@@ -64,7 +64,8 @@ install-scripts:
 	install -D X11/gpe-login.pre-session $(DESTDIR)/etc/X11/gpe-login.pre-session
 	for i in X11/Xsession-gpe.d X11/Xinit.d; do mkdir -p $(DESTDIR)/etc/$$i; FILES=`echo $$i/* | sed "s:$$i/CVS::"`; cp $$FILES $(DESTDIR)/etc/$$i/; done
 
-ipkg: all
+ipkg:
+	make PREFIX=/usr clean all
 	rm -rf familiar/dist.gpe-login
 	mkdir -p familiar/dist.gpe-login/CONTROL
 	cp familiar/control.gpe-login familiar/dist.gpe-login/CONTROL/control
