@@ -215,12 +215,12 @@ GtkWidget * sketchpad_build_drawing_toolbar(GtkWidget * window){
 
   //--packing
   gtk_toolbar_append_widget(GTK_TOOLBAR (toolbar),
-                            radiobutton_tool_eraser, _("Eraser"), NULL);
+                            radiobutton_tool_eraser, NULL, NULL);
   gtk_toolbar_append_widget(GTK_TOOLBAR (toolbar),
-                            radiobutton_tool_pencil, _("Pencil"), NULL);
+                            radiobutton_tool_pencil, NULL, NULL);
   //gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
-  gtk_toolbar_append_widget(GTK_TOOLBAR (toolbar), button_brushes, _("Brush type"), NULL);
-  gtk_toolbar_append_widget(GTK_TOOLBAR (toolbar), button_colors,  _("Color"), NULL);
+  gtk_toolbar_append_widget(GTK_TOOLBAR (toolbar), button_brushes, NULL, NULL);
+  gtk_toolbar_append_widget(GTK_TOOLBAR (toolbar), button_colors,  NULL, NULL);
 
   return toolbar;
 }//sketchpad_build_drawing_toolbar()
@@ -357,17 +357,17 @@ GtkWidget * sketchpad_build_files_toolbar(GtkWidget * window){
   pixbuf = gpe_find_icon ("new");
   pixmap = gpe_render_icon (window->style, pixbuf);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
-                           _("New sketch"), _("New sketch"),
+                           NULL, NULL,
                            pixmap, on_button_file_new_clicked, NULL);
   pixbuf = gpe_find_icon ("save");
   pixmap = gpe_render_icon (window->style, pixbuf);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
-                           _("Save sketch"), _("Save sketch"),
+                           NULL, NULL,
                            pixmap, on_button_file_save_clicked, NULL);
   pixbuf = gpe_find_icon ("delete");
   pixmap = gpe_render_icon (window->style, pixbuf);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
-                           _("Delete sketch"), _("Delete sketch"),
+                           NULL, NULL,
                            pixmap, on_button_file_delete_clicked, NULL);
 
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
@@ -375,17 +375,17 @@ GtkWidget * sketchpad_build_files_toolbar(GtkWidget * window){
   pixbuf = gpe_find_icon ("left");
   pixmap = gpe_render_icon (window->style, pixbuf);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
-                           _("Previous sketch"), _("Previous sketch"),
+                           NULL, NULL,
                            pixmap, on_button_file_prev_clicked, NULL);
   pixbuf = gpe_find_icon ("right");
   pixmap = gpe_render_icon (window->style, pixbuf);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
-                           _("Next sketch"), _("Next sketch"),
+                           NULL, NULL,
                            pixmap, on_button_file_next_clicked, NULL);
   pixbuf = gpe_find_icon ("list");
   pixmap = gpe_render_icon (window->style, pixbuf);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
-                           _("Sketch selector"), _("Sketch selector"),
+                           NULL, NULL,
                            pixmap, on_button_list_view_clicked, NULL);
 
   return toolbar;

@@ -85,22 +85,23 @@ GtkWidget * create_window_selector(){
   pixbuf = gpe_find_icon ("new");
   pixmap = gpe_render_icon (window_selector->style, pixbuf);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
-                           _("New sketch"), _("New sketch"),
+                           NULL, NULL,
                            pixmap, on_button_selector_new_clicked, NULL);
   pixbuf = gpe_find_icon ("open");
   pixmap = gpe_render_icon (window_selector->style, pixbuf);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
-                           _("Open selected sketch"), _("Open selected sketch"),
+                           NULL, NULL,
                            pixmap, on_button_selector_open_clicked, NULL);
   pixbuf = gpe_find_icon ("delete");
   pixmap = gpe_render_icon (window_selector->style, pixbuf);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
-                           _("Delete selected sketch"), _("Delete selected sketch"),
+                           NULL, NULL,
+                           //_("Delete selected sketch"), _("Delete selected sketch"),
                            pixmap, on_button_selector_delete_clicked, NULL);
   //pixbuf = gpe_find_icon ("sketchpad");
   //pixmap = gpe_render_icon (window_selector->style, pixbuf);
   //gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
-  //                         _("Switch to the sketchpad view"), _("Switch to the sketchpad view"),
+  //                         NULL, NULL,
   //                         pixmap, on_button_selector_sketchpad_view_clicked, NULL);
 
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
