@@ -4,7 +4,7 @@ DEBUG = no
 GTK2 = yes
 VERSION = 0.35
 
-LINGUAS = de
+LINGUAS = id
 
 MEMBERS = main day_view week_view future_view event-ui month_view day_popup xsettings
 

@@ -1,3 +1,11 @@
+2003-03-08  Philip Blundell  <philb@gnu.org>
+
+	* familiar/control1 (Depends): Remove libsqlite0.  Add 
+	gpe-calendar-locale*.
+
+	* Makefile (LINGUAS): Add id.
+	* po/id.po: New file from Translation Project.
+
 2003-03-03  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>
 
 	* version 0.35
