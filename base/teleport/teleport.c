@@ -17,6 +17,7 @@
 #include <stdio.h>
 #include <libintl.h>
 #include <string.h>
+#include <sys/stat.h>
 
 #include <gpe/init.h>
 #include <gpe/picturebutton.h>
