@@ -5,3 +5,4 @@ key=???XF86Mail:Running programs:gpe-taskmanager
 key=???XF86Start:mbcontrol -desktop
 key=???XF86PowerDown:apm --suspend
 key=???Held XF86PowerDown:bl toggle
+key=???Combine XF86Calendar XF86Start:gpe-keylock

@@ -45,6 +45,7 @@ typedef struct _Key Key;
 struct _Key
 {
   int keycode;
+  int keycode2;
   unsigned int modifier;
   char *command;
   int type; /* 0 - on release; 1 - on late release; 2 - on press */
@@ -260,6 +261,19 @@ create_new_key (char *key_string)
       k->keycode = XKeysymToKeycode (dpy, XStringToKeysym (key_str + 8));
       k->type = 1;
     }
+  else if ((strlen (key_str) > 11) && (strncmp (key_str+3, "Combine ", 8) == 0))
+    {
+      char *sep = strchr (key_str + 11, ' ');
+      if (sep)
+	{
+	  *sep = 0;
+	  k->keycode2 = XKeysymToKeycode (dpy, XStringToKeysym (sep + 1));
+	}
+      else
+	k->keycode2 = 0;
+      k->keycode = XKeysymToKeycode (dpy, XStringToKeysym (key_str + 11));
+      k->type = 4;
+    }
   else
     {
       k->keycode = XKeysymToKeycode (dpy, XStringToKeysym (key_str + 3));
@@ -287,6 +301,8 @@ create_new_key (char *key_string)
     }
 
   grab_key (k->keycode, k->modifier, root);
+  if (k->type == 4 && k->keycode2)
+    grab_key (k->keycode2, k->modifier, root);
 
   free (key_str);
 
@@ -551,6 +567,61 @@ void process_key (XEvent ev, int type)
 	      }
 }
 
+void
+process_combine (void)
+{
+  Key *k;
+
+  for (k = key; k != NULL; k = k->next)
+    {
+      if (k->type == 4)
+	{
+	  struct key_event **kp;
+	  struct key_event **ka = NULL, **kb = NULL;
+
+	  for (kp = &keys_down; *kp; kp = &(*kp)->next)
+	    {
+	      struct key_event *ke = *kp;
+	      if (ke->ev.xkey.keycode == k->keycode)
+		ka = kp;
+	      else if (ke->ev.xkey.keycode == k->keycode2)
+		kb = kp;
+	    }
+
+	  if (ka && kb)
+	    {
+	      XEvent ev;
+	      struct key_event *kpa, *kpb;
+
+	      kpa = *ka;
+	      kpb = *kb;
+
+	      if (kpa->next == kpb)
+		{
+		  *ka = kpb->next;
+		}
+	      else if (kpb->next == kpa)
+		{
+		  *kb = kpa->next;
+		}
+	      else
+		{
+		  *ka = kpa->next;
+		  *kb = kpb->next;
+		}
+
+	      free (kpa);
+	      free (kpb);
+
+	      ev.xkey.state = 0;
+	      ev.xkey.keycode = k->keycode;
+	      
+	      process_key (ev, 4);
+	    }
+	}
+    }
+}
+
 int
 main (int argc, char *argv[])
 {
@@ -603,36 +674,19 @@ main (int argc, char *argv[])
 
 	  gettimeofday (&time_now, NULL);
 
-	  timersub (&time_now, &key_press_time, &time_elapsed);
-	  if ((time_elapsed.tv_sec == 0) && (time_elapsed.tv_usec < 500000))
-	    {
-#ifdef DEBUG
-	      fprintf (stderr, "ignoring - too soon after previous\n");
-#endif
-	      key_press_time.tv_sec = 0;
-	      key_press_time.tv_usec = 0;
-	    }
-          else
-	    {
-	      key_press_time = time_now;
-	      process_key (ev, 2);
-	    }
+	  key_press_time = time_now;
+	  process_key (ev, 2);
 
 	  k = malloc (sizeof (struct key_event));
 	  memcpy (&k->ev, &ev, sizeof (ev));
-	  k->next = NULL;
 	  time_elapsed.tv_sec = 0;
 	  time_elapsed.tv_usec = 500000;
 	  timeradd (&time_now, &time_elapsed, &k->time);
 
-	  if (keys_down)
-	    {
-	      struct key_event *p;
-	      for (p = keys_down; p->next; p = p->next)
-		p->next = k;
-	    }
-	  else
-	    keys_down = k;
+	  k->next = keys_down;
+	  keys_down = k;
+
+	  process_combine ();
 	}
       else if (ev.type == KeyRelease
 	       && (key_press_time.tv_sec || key_press_time.tv_usec))
