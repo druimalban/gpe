@@ -1,3 +1,9 @@
+2003-08-08  Philip Blundell  <philb@gnu.org>
+
+	Bug #845:
+	* X11/gpe-login.pre-session: Remove chown of /dev/misc/apm_bios.
+	Reported by Russell Coker.
+
 2003-08-07  Philip Blundell  <philb@gnu.org>
 
 	* gpe-session-scripts 0.47 released.

@@ -10,10 +10,6 @@ if [ -e /dev/sound/mixer ]; then
 chown $USER /dev/sound/mixer
 fi
 
-if [ -e /dev/misc/apm_bios ]; then
-chown $USER /dev/misc/apm_bios
-fi
-
 if [ -e /dev/touchscreen/0raw ]; then
 chown $USER /dev/touchscreen/0raw
 fi
