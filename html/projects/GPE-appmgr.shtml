@@ -17,11 +17,9 @@ this project, please contact him directly.
 The application manager is the main window of the PDA. It allows to start-up
 applications and offers a kind of start-menu. Any application that a user
 should be able to access should also be available through the application
-manager. Thus any application has to provide at least a name that is
-displayed as label and optional an icon. It should also be possible to sort
-the aplications into different categories so that finding them is easier.
-This could be done in a tab-like fashion like it is shown in the above
-picture.
+manager. Every application has to provide a name and an icon to be displayed.
+Applications are sorted into different categories so that finding them is easier.
+This is done in a tab-like fashion; see the screenshot below.
 </P>
 <P>
 For certain application it is necessary that they can only be started once,
