@@ -20,6 +20,9 @@
 #include <libgen.h>
 #include <libgnomevfs/gnome-vfs.h>
 #include <libgnomevfs/gnome-vfs-mime-handlers.h>
+#include <libgnomevfs/gnome-vfs-module-callback.h>
+#include <libgnomevfs/gnome-vfs-standard-callbacks.h>
+
 
 #include <gpe/init.h>
 #include <gpe/errorbox.h>
@@ -129,6 +132,23 @@ static GtkItemFactoryEntry menu_items[] =
 };
 
 static int nmenu_items = sizeof (menu_items) / sizeof (menu_items[0]);
+
+
+
+static void auth_callback 
+                    (gconstpointer in,
+					 gsize         in_size,
+					 gpointer      out,
+					 gsize         out_size,
+					 gpointer      callback_data)
+{
+    const GnomeVFSModuleCallbackAuthenticationIn *q_in = in;
+    GnomeVFSModuleCallbackAuthenticationOut *q_out = out;
+    printf("URI: %s\n",q_in->uri);
+    q_out->username = NULL;
+    q_out->password = NULL;
+}
+
 
 static void
 hide_menu (void)
@@ -305,6 +325,7 @@ rename_file (GtkWidget *dialog_window, gint response_id)
   }
 
   gtk_widget_destroy (dialog_window);
+  refresh_current_directory();
 }
 
 static void
@@ -342,6 +363,8 @@ move_file (gchar *directory)
     gpe_error_box (error);
     g_free (error);
   }
+  else
+    refresh_current_directory();
 
   g_free (dest);
 }
@@ -355,8 +378,6 @@ popup_ask_move_file ()
   gtk_window_set_transient_for (GTK_WINDOW (dirbrowser_window), GTK_WINDOW (window));
 
   gtk_widget_show_all (dirbrowser_window);
-
-  refresh_current_directory();
 }
 
 static void
@@ -385,8 +406,6 @@ popup_ask_rename_file ()
   gtk_box_pack_start (GTK_BOX (vbox), entry, FALSE, FALSE, 0);
 
   gtk_widget_show_all (dialog_window);
-
-  refresh_current_directory();
 }
 
 static void
@@ -404,7 +423,7 @@ popup_ask_delete_file ()
       r = gnome_vfs_unlink_from_uri (gnome_vfs_uri_new (current_popup_file->filename));
 
       if (r != GNOME_VFS_OK)
-	gpe_error_box (gnome_vfs_result_to_string (r));
+        gpe_error_box (gnome_vfs_result_to_string (r));
       
       refresh_current_directory();
     }
@@ -595,7 +614,11 @@ button_clicked (GtkWidget *widget, gpointer udata)
       return;
     }
   }
-
+printf("Type: %s\n",file_info->vfs->mime_type);
+printf("Act: %i\n",gnome_vfs_mime_get_default_action_type(file_info->vfs->mime_type));
+if (!strcmp( file_info->vfs->mime_type,"application/x-gnome-app-info"))
+    browse_directory (file_info->filename);
+else    
   if (file_info->vfs->type == GNOME_VFS_FILE_TYPE_REGULAR || file_info->vfs->type == GNOME_VFS_FILE_TYPE_UNKNOWN)
   {
     if (file_info->vfs->mime_type)
@@ -725,6 +748,7 @@ make_view ()
   GnomeVFSResult result, open_dir_result;
   loading_directory = 1;
   GList *list = NULL, *iter;
+  gchar *error = NULL;
 
   loaded_icons = g_hash_table_new (g_str_hash, g_str_equal);
   gpe_iconlist_clear (GPE_ICONLIST (view_widget));
@@ -755,16 +779,38 @@ make_view ()
     }
 
     if (result != GNOME_VFS_OK)
+    {
+      gnome_vfs_directory_close (handle);
       break;
+    }
   }
 
+  if (open_dir_result != GNOME_VFS_OK)
+  {
+    switch (open_dir_result)
+    {
+    case GNOME_VFS_ERROR_READ_ONLY:
+      error = g_strdup ("Destination is read only.");
+      break;
+    case GNOME_VFS_ERROR_ACCESS_DENIED:
+      error = g_strdup ("Access denied.");
+      break;
+    case GNOME_VFS_ERROR_READ_ONLY_FILE_SYSTEM:
+      error = g_strdup ("Read only file system.");
+      break;
+    default:
+      error = g_strdup_printf ("Error: %s", gnome_vfs_result_to_string(result));
+      break;
+    }
+    gpe_error_box (error);
+    g_free (error);
+  }  
   for (iter = list; iter; iter = iter->next)
     add_icon (iter->data);
 
   g_list_free (iter);
   
   gtk_widget_draw (view_widget, NULL);
-  gnome_vfs_directory_close (handle);
   loading_directory = 0;
 }
 
@@ -775,7 +821,8 @@ goto_directory (GtkWidget *widget)
 
   safety_check ();
 
-  new_directory = gtk_editable_get_chars (GTK_EDITABLE (GTK_COMBO (combo)->entry), 0, -1);
+  new_directory = 
+    gtk_editable_get_chars (GTK_EDITABLE (GTK_COMBO (combo)->entry), 0, -1);
   browse_directory (new_directory);
 }
 
@@ -798,27 +845,37 @@ combo_button_released ()
 {
   combo_signal_id = gtk_signal_connect (GTK_OBJECT (GTK_COMBO (combo)->list), "selection-changed", GTK_SIGNAL_FUNC (goto_directory), NULL);
 }
-
+/*
+static void
+browse_uri (gchar *uri)
+{
+  current_directory = g_strdup (directory);
+  add_history (directory);
+  gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (combo)->entry), directory);
+  make_view ();
+}
+*/
 static void
 browse_directory (gchar *directory)
 {
   struct stat s;
 
-  if (stat (directory, &s) == 0)
+ // if (stat (directory, &s) == 0)
   {
-    if (S_ISDIR (s.st_mode))
+//    if (S_ISDIR (s.st_mode))
     {
+ #warning free old!       
       current_directory = g_strdup (directory);
       add_history (directory);
       gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (combo)->entry), directory);
       make_view ();
     }
-    else
+//    else
     {
       //gpe_error_box ("This file isn't a directory.");
     }
   }
-  else
+//  else
   {
     //gpe_error_box ("No such file or directory.");
   }
@@ -964,7 +1021,8 @@ main (int argc, char *argv[])
   hbox = gtk_hbox_new (FALSE, 0);
 
   combo = gtk_combo_new ();
-  combo_signal_id = gtk_signal_connect (GTK_OBJECT (GTK_COMBO (combo)->entry), "activate", GTK_SIGNAL_FUNC (goto_directory), NULL);
+  combo_signal_id = gtk_signal_connect (GTK_OBJECT (GTK_COMBO (combo)->entry),
+    "activate", GTK_SIGNAL_FUNC (goto_directory), NULL);
 
   view_widget = gpe_iconlist_new ();
   gtk_signal_connect (GTK_OBJECT (view_widget), "clicked",
@@ -1048,6 +1106,11 @@ main (int argc, char *argv[])
   gtk_widget_show (view_widget);
 
   gnome_vfs_init ();
+  gnome_vfs_module_callback_set_default (GNOME_VFS_MODULE_CALLBACK_AUTHENTICATION,
+						  (GnomeVFSModuleCallback*)auth_callback,
+						  NULL,
+						  NULL);
+ 
   set_directory_home (NULL);
 
   gtk_main();
