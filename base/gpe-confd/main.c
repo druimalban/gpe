@@ -289,17 +289,15 @@ load_defaults (XSettingsManager *manager, sqlite *db)
     {
       load_defaults_file (manager, db, file);
       g_free (file);
+      file = NULL;
 
       if (dir)
-	if ((entry = g_dir_read_name (dir)) != NULL)
-	  {
+	{
+	  if ((entry = g_dir_read_name (dir)) != NULL)
 	    file = g_build_filename (DEFAULT_DIR, entry, NULL);
-	  }
-	else
-	  {
-	    file = NULL;
+	  else
 	    g_dir_close (dir);
-	  }
+	}
     }
 }
 

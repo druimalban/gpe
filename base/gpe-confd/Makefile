@@ -2,7 +2,7 @@ PREFIX = /usr/local
 PACKAGE = gpe-confd
 DEBUG = no
 CVSBUILD = yes
-VERSION = 0.15
+VERSION = 0.16
 
 MEMBERS = main xsettings-manager
 
