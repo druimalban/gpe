@@ -41,4 +41,15 @@ Look at gpe/base/libgpewidget/Makefile for a real-world example.
 Makefile.translation
 --------------------
 
+Assuming your app's Makefile includes Makefile.translation,
+run 'make extract-po' (assumes you have a 'po' directory).
+
+Define the variable LINGUAS in your local Makefile with <langcode>.
+Copy 'po/foo.pot' to 'po/<langcode>.po'. Let the translators fill
+out 'po/<langcode>.po'.
+
+Run 'make translation-package'.
+
+
+
 See http://handhelds.org/z/wiki/IpkgHackForLocales

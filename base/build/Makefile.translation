@@ -1,5 +1,11 @@
 .SUFFIXES: .mo .po .pot .po8
 
+ifeq ($(GTK2),yes)
+CONTROL = control1
+else
+CONTROL = control
+endif
+
 # use ipkg-build or ipkg-deb-build
 IPKG_BUILD := ipkg-build
 
@@ -36,7 +42,7 @@ clean-po:
 
 # ------------------------------------------------------------------------
 
-MAINTAINER = $(shell grep 'Maintainer: ' familiar/control | cut -d ' ' -f 2-)
+MAINTAINER = $(shell grep 'Maintainer: ' familiar/$(CONTROL) | cut -d ' ' -f 2-)
 
 transdist := familiar/dist-translation
 templates := ../build/familiar

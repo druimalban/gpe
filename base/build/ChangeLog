@@ -1,5 +1,9 @@
 2003-02-12  Colin Marquardt  <colin@marquardt-home.de>
 
+	* Makefile.translation (CONTROL): Define variable depending on
+	GTK2 usage.
+	(MAINTAINER): Use $(CONTROL).
+
 	* Makefile.dpkg_ipkg (printtaginfo): Add info about uploading a
 	tarball.
 	(printinfo): New target, renamed from printtaginfo.
