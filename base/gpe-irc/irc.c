@@ -133,6 +133,7 @@ irc_server_login (IRCServer *server)
 {
   gchar *login_string;
 
+  printf ("Sending user info now...\n");
   if (server->user_info->password)
     login_string = g_strdup_printf ("PASS %s\r\nNICK %s\r\nUSER %s - - :%s\r\n", server->user_info->password, server->user_info->nick, server->user_info->username, server->user_info->real_name);
   else
@@ -140,7 +141,8 @@ irc_server_login (IRCServer *server)
 
   printf ("Now logging in...");
 
-  if (g_io_channel_write_chars (server->io_channel, login_string, -1, NULL, NULL) == G_IO_STATUS_NORMAL)
+  //  if (g_io_channel_write_chars (server->io_channel, login_string, -1, NULL, NULL) == G_IO_STATUS_NORMAL)
+  if (send (server->fd, login_string, strlen (login_string), 0) != -1)
   {
     printf ("Logged in.\n");
     irc_server_login_init (server);
@@ -175,6 +177,7 @@ irc_server_connect (IRCServer *server)
       {
 	server->fd = fd;
 	server->io_channel = g_io_channel_unix_new (fd);
+	g_io_channel_set_line_term (server->io_channel, "\r\n", 2);
 	break;
       }
     }

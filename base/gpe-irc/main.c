@@ -114,10 +114,10 @@ update_text_view (GString *text)
   GtkTextIter start, end;
   GtkAdjustment *vadjust;
 
-  text = remove_invalid_utf8_chars (text);
+  //text = remove_invalid_utf8_chars (text);
   if (text->str != NULL)
   {
-    //printf ("update_text_view's text\n----------------------------\n%s\n----------------------\n", text->str);
+    printf ("update_text_view's text\n----------------------------\n%s\n----------------------\n", text->str);
     text_buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (main_text_view));
     vadjust = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (scroll));
 
@@ -162,18 +162,33 @@ button_clicked (GtkWidget *button)
 }
 
 gboolean
-get_data_from_server (GIOChannel *source, GIOCondition condition, IRCServer *server)
+disconnect_from_server (GIOChannel *source, GIOCondition condition, gpointer data)
+{
+  ((IRCServer *) data)->connected = FALSE;
+  return FALSE;
+}
+
+gboolean
+get_data_from_server (GIOChannel *source, GIOCondition condition, gpointer data)
 {
   GString *new_text;
+  gchar *new_string;
+  gsize new_string_length;
 
   new_text = g_string_new ("");
 
+  if (((IRCServer *) data)->connected == FALSE)
+    return FALSE;
+
+  //if (g_io_channel_read_to_end (source, &new_string, &new_string_length, NULL) != G_IO_STATUS_NORMAL)
   if (g_io_channel_read_line_string (source, new_text, NULL, NULL) == G_IO_STATUS_NORMAL)
   {
-    if (server == selected_server)
+    if ((IRCServer *) data == selected_server)
     {
+      printf ("STRING -- %s\n", new_text->str);
+      //new_text = g_string_new (new_string);
       update_text_view (new_text);
-      server->text = g_string_append (server->text, new_text->str);
+      //server->text = g_string_append (server->text, new_text->str);
     }
   }
 
@@ -230,6 +245,7 @@ new_connection (GtkWidget *parent, GtkWidget *parent_window)
 
   irc_server_connect (server);
   g_io_add_watch (server->io_channel, G_IO_IN, get_data_from_server, server);
+  g_io_add_watch (server->io_channel, G_IO_HUP, disconnect_from_server, server);
 }
 
 void
