@@ -5,6 +5,7 @@ OBJS = gpe-exec.o xsi.o gpe-soundgen.o gpe-rtcd.o
 
 libgpe.so.0: $(OBJS)
 	$(CC) -nostartfiles -shared -Wl,-soname -Wl,libgpe.so.0 -o libgpe.so.0 $(OBJS)
+	ln -s libgpe.so.0 libgpe.so
 
 install: libgpe.so.0
 	install -D libgpe.so.0 $(DESTDIR)$(PREFIX)/lib/libgpe.so.0
