@@ -33,6 +33,110 @@
 
 #define OBEX_PUSH_HANDLE	10
 
+struct chan
+{
+  GIOChannel *chan;
+  int fd;
+  int source;
+};
+
+GList *channels;
+
+static void
+file_received (gchar *name, const uint8_t *data, size_t data_len)
+{
+  fprintf (stderr, "received file %s: %d bytes\n", name, data_len);
+}
+
+static void 
+put_done (obex_t *handle, obex_object_t *object)
+{
+  obex_headerdata_t hv;
+  uint8_t hi;
+  int hlen;
+
+  const uint8_t *body = NULL;
+  int body_len = 0;
+  char *name = NULL;
+
+  while (OBEX_ObjectGetNextHeader (handle, object, &hi, &hv, &hlen))	
+    {
+      switch(hi)	
+	{
+	case OBEX_HDR_BODY:
+	  body = hv.bs;
+	  body_len = hlen;
+	  break;
+
+	case OBEX_HDR_NAME:
+	  name = g_malloc (hlen / 2);
+	  OBEX_UnicodeToChar (name, hv.bs, hlen);
+	  break;
+	  
+	default:
+	  fprintf (stderr, "Skipped header %02x\n", hi);
+	}
+    }
+
+  if (body)
+    file_received (name, body, body_len);
+  
+  if (name)
+    g_free (name);
+}
+
+static void 
+handle_request (obex_t *handle, obex_object_t *object, int event, int cmd)
+{
+  switch(cmd)	
+    {
+    case OBEX_CMD_SETPATH:
+      OBEX_ObjectSetRsp (object, OBEX_RSP_CONTINUE, OBEX_RSP_SUCCESS);
+      break;
+    case OBEX_CMD_PUT:
+      OBEX_ObjectSetRsp (object, OBEX_RSP_CONTINUE, OBEX_RSP_SUCCESS);
+      put_done (handle, object);
+      break;
+    case OBEX_CMD_CONNECT:
+      OBEX_ObjectSetRsp (object, OBEX_RSP_SUCCESS, OBEX_RSP_SUCCESS);
+      break;
+    case OBEX_CMD_DISCONNECT:
+      OBEX_ObjectSetRsp (object, OBEX_RSP_SUCCESS, OBEX_RSP_SUCCESS);
+      break;
+    default:
+      fprintf (stderr, "Denied %02x request\n", cmd);
+      OBEX_ObjectSetRsp (object, OBEX_RSP_NOT_IMPLEMENTED, OBEX_RSP_NOT_IMPLEMENTED);
+      break;
+    }
+}
+
+static void
+handle_disconnect (obex_t *handle)
+{
+  int fd;
+  GList *i;
+
+  fd = OBEX_GetFD (handle);
+
+  for (i = channels; i; i = i->next)
+    {
+      struct chan *chan = i->data;
+
+      chan = i->data;
+
+      if (chan->fd == fd)
+	{
+	  channels = g_list_remove (channels, chan);
+
+	  g_source_remove (chan->source);
+
+	  g_io_channel_unref (chan->chan);
+
+	  g_free (chan);
+	}
+    }
+}
+
 static gboolean
 io_callback (GIOChannel *source, GIOCondition cond, gpointer data)
 {
@@ -46,8 +150,6 @@ io_callback (GIOChannel *source, GIOCondition cond, gpointer data)
 void
 obex_conn_event (obex_t *handle, obex_object_t *object, int mode, int event, int obex_cmd, int obex_rsp)
 {
-  printf ("obex event %d on connection\n", event);
-
   switch (event)
     {
     case OBEX_EV_REQHINT:
@@ -56,16 +158,21 @@ obex_conn_event (obex_t *handle, obex_object_t *object, int mode, int event, int
 	case OBEX_CMD_PUT:
 	case OBEX_CMD_CONNECT:
 	case OBEX_CMD_DISCONNECT:
-	  OBEX_ObjectSetRsp(object, OBEX_RSP_CONTINUE, OBEX_RSP_SUCCESS);
+	  OBEX_ObjectSetRsp (object, OBEX_RSP_CONTINUE, OBEX_RSP_SUCCESS);
 	  break;
 	default:
-	  OBEX_ObjectSetRsp(object, OBEX_RSP_NOT_IMPLEMENTED, OBEX_RSP_NOT_IMPLEMENTED);
+	  OBEX_ObjectSetRsp (object, OBEX_RSP_NOT_IMPLEMENTED, OBEX_RSP_NOT_IMPLEMENTED);
 	  break;
 	}
       break;
 
+    case OBEX_EV_REQ:
+      /* Comes when a server-request has been received. */
+      handle_request (handle, object, event, obex_cmd);
+      break;
+
     case OBEX_EV_LINKERR:
-      /* handle disconnection */
+      handle_disconnect (handle);
       break;
     }
 }
@@ -74,14 +181,16 @@ void
 obex_event (obex_t *handle, obex_object_t *object, int mode, int event, int obex_cmd, int obex_rsp)
 {
   obex_t *obex;
-  GIOChannel *chan;
+  struct chan *chan;
 
   switch (event)
     {
     case OBEX_EV_ACCEPTHINT:
+      chan = g_malloc (sizeof (*chan));
       obex = OBEX_ServerAccept (handle, obex_conn_event, NULL);
-      chan = g_io_channel_unix_new (OBEX_GetFD (obex));
-      g_io_add_watch (chan, G_IO_IN | G_IO_ERR | G_IO_HUP, io_callback, obex);
+      chan->chan = g_io_channel_unix_new (OBEX_GetFD (obex));
+      chan->source = g_io_add_watch (chan->chan, G_IO_IN | G_IO_ERR | G_IO_HUP, io_callback, obex);
+      channels = g_list_prepend (channels, chan);
       break;
 
     default:
@@ -143,19 +252,21 @@ add_opush (sdp_session_t *session, uint8_t chan)
   sdp_list_free(apseq, 0);
   sdp_list_free(aproto, 0);
   
-  for (i = 0; i < sizeof(formats); i++) {
-    dtds[i] = &dtd;
-    values[i] = &formats[i];
-  }
+  for (i = 0; i < sizeof(formats); i++) 
+    {
+      dtds[i] = &dtd;
+      values[i] = &formats[i];
+    }
   sflist = sdp_seq_alloc(dtds, values, sizeof(formats));
   sdp_attr_add(&record, SDP_ATTR_SUPPORTED_FORMATS_LIST, sflist);
   
   sdp_set_info_attr(&record, "OBEX Object Push", 0, 0);
   
-  if (0 > sdp_record_register(session, &record, SDP_RECORD_PERSIST)) {
-    printf("Service Record registration failed.\n");
-    return FALSE;
-  }
+  if (0 > sdp_record_register(session, &record, SDP_RECORD_PERSIST)) 
+    {
+      printf("Service Record registration failed.\n");
+      return FALSE;
+    }
   return TRUE;
 }
 
