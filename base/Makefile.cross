@@ -1,41 +1,39 @@
-ifndef PREFIX  # if not set assume /usr
-PREFIX = /usr
-endif
+PREFIX ?= /usr
 
 # build "host" settings
 HOSTCC = gcc
 HOSTCFLAGS = -Wall -Wstrict-prototypes -O2 -fomit-frame-pointer
-ifndef HOSTPREFIX  # if not set assume same as PREFIX
-HOSTPREFIX = $(PREFIX)
-endif
+HOSTPREFIX ?= $(PREFIX)
 
 NATIVE = no
 
-ifndef IPAQ  # if not set assume "1", ie. we are building for iPAQ
-IPAQ = 1
-endif
+IPAQ ?= 1
 
 CROSS_COMPILE = arm-linux-
 TARGET = arm-linux
-HOSTARCH=arm-linux
+HOSTARCH = arm-linux
 PKG_CONFIG_PATH = $(HOSTPREFIX)/arm-linux/lib:$(HOSTPREFIX)/arm-linux/lib/pkgconfig
+
+CFLAGS += $(if $(wildcard $(HOSTPREFIX)/arm-linux/X11R6), \
+    -I$(HOSTPREFIX)/arm-linux/X11R6/include)
 
 #
 # Include the make variables (CC, etc...)
 #
 
-AS		= $(CROSS_COMPILE)as
-LD		= $(CROSS_COMPILE)ld
-CC		= $(CROSS_COMPILE)gcc
-CPP		= $(CC) -E
-AR		= $(CROSS_COMPILE)ar
-NM		= $(CROSS_COMPILE)nm
-STRIP		= $(CROSS_COMPILE)strip
-OBJCOPY		= $(CROSS_COMPILE)objcopy
-OBJDUMP		= $(CROSS_COMPILE)objdump
+AS		:= $(CROSS_COMPILE)as
+LD		:= $(CROSS_COMPILE)ld
+CC		:= $(CROSS_COMPILE)gcc
+CPP		:= $(CC) -E
+AR		:= $(CROSS_COMPILE)ar
+NM		:= $(CROSS_COMPILE)nm
+STRIP		:= $(CROSS_COMPILE)strip
+OBJCOPY		:= $(CROSS_COMPILE)objcopy
+OBJDUMP		:= $(CROSS_COMPILE)objdump
 PERL		= perl
 
 export	PREFIX HOSTCC HOSTCFLAGS HOSTPREFIX NATIVE IPAQ CROSS_COMPILE TARGET \
-	HOSTARCH PKG_CONFIG_PATH AS LD CC CPP AR NM STRIP OBJCOPY OBJDUMP PERL
+	HOSTARCH PKG_CONFIG_PATH CFLAGS AS LD CC CPP AR NM STRIP OBJCOPY \
+	OBJDUMP PERL
 
 include Makefile.gpe
