@@ -35,13 +35,13 @@ struct {
    "",
    {
       {
-         "root","secret","localhost","auto",CONF_NO,CONF_YES,"5000","7",""
+         "root","secret","localhost","auto",CONF_NO,CONF_YES,"5000","7","30000",""
       },
       {
          "root@localhost","smtp","auto",CONF_NO,"","","","","",""
       },
       {
-         CONF_YES,CONF_NO,"","","","","","","",""
+         CONF_YES,CONF_NO,"/bin/sqlite","","","","","","",""
       }
    }
 };
@@ -52,9 +52,13 @@ struct {
 } options={
    {"Incoming","Outgoing","Misc",NULL},
    {
-      {"Username","Password","Server","Port","Use pop3 instead of imap","SSL","Size (bytes)","Since (days), imap only ",NULL,NULL},
-      {"Email Adress","Smtp Server","Port","SSL",NULL,NULL,NULL,NULL,NULL,NULL},
-      {"Mark msgs as seen when viewed","Open Alternative text/html as html in dillo",NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL}
+      {"Username","Password","Server","Port","Use pop3 instead of imap",
+       "SSL","Size (bytes)","Since (days), imap only ","Server Timeout in ms",NULL},
+      {"Email Adress","Smtp Server","Port","SSL",NULL,NULL,NULL,NULL,
+       NULL,NULL},
+      {"Mark msgs as seen when viewed",
+       "Open Alternative text/html as html in dillo",
+       "Path to Sqlite",NULL,NULL,NULL,NULL,NULL,NULL,NULL}
    }
 };
 
@@ -132,10 +136,7 @@ struct {
    int sigchild;
    char sortby_last;
    char current_folder[100];
-   char heb_font_name[100];
    char fromto[10];
-   GdkColor *heb_fg, *heb_bg;
-   GdkFont *heb_font;
 } self;
 
 GtkTextIter start_iter, end_iter;
@@ -200,23 +201,26 @@ char *b2a_base64(char *s)
    return s2;
 }
 
+char *get_config(char *section,char *param);
 
 FILE *search_email_open_file(char *key, char *database_path)
 {
 	int i=0;
 	char s[1000];
+	char sqlite[100];
 	FILE *f;
 
+	strncpy(sqlite,get_config("Misc","Path to Sqlite"),sizeof(sqlite));
 	if (!*key) return NULL;
-	if (!file_exists("/usr/bin/sqlite"))
+	if (!file_exists(sqlite))
 	{
-		if (!i) printf("sqlite not found\n");
+		if (!i) printf("sqlite not found at %s\n",sqlite);
 		i=1;
 		return NULL;
 	}
 	//sprintf(s,"'echo \"select * from contacts where tag like '\"'\"'%%EMAIL'\"'\"' and urn = ( select urn from contacts where (tag='\"'\"'NAME'\"'\"' and value like '\"'\"'%s%%'\"'\"') or ( tag like '\"'\"'%%EMAIL'\"'\"' and value like '\"'\"'%s%%'\"'\"'));\" |/usr/bin/sqlite %s|sed '\"'\"'s/|.*//'\"'\"' '",key,key,database_path);
 	//printf("key='%s'\n",key);
-	sprintf(s,"echo \"select * from contacts where tag like '%%EMAIL' and urn = ( select urn from contacts where (tag='NAME' and value like '%s%%') or ( tag like '%%EMAIL' and value like '%s%%'));\" |/usr/bin/sqlite %s|sed 's/.*|//' ",key,key,database_path);
+	sprintf(s,"echo \"select * from contacts where tag like '%%EMAIL' and urn = ( select urn from contacts where (tag='NAME' and value like '%s%%') or ( tag like '%%EMAIL' and value like '%s%%'));\" |%s %s|sed 's/.*|//' ",key,key,sqlite,database_path);
 	//printf("exeuting: %s\n",s);
 	f=(FILE *)popen(s,"r");
 	//printf("executed\n");
@@ -422,11 +426,9 @@ void convert(char *s)
    char *sp;
    char *sp2;
    char method;
-   char heb;
 
    //printf("\nconvert: got '%s', ",s);
    
-   heb=0;
    // skip spaces
    sp=s;
    while (*sp==' ') sp++;
@@ -435,7 +437,7 @@ void convert(char *s)
    // look for '=?', if not found do return
    if (NULL==(sp=strstr(s,"=?"))) return;
    sp2=sp;
-   if (starts_with(sp,"=?windows-1255?")) heb=1;
+   //if (starts_with(sp,"=?windows-1255?")) heb=1;
 
 
    sp+=2; // skip the =?
@@ -788,6 +790,11 @@ int do_sync2()
       strcat(s," size=");
       strcat(s,get_config("Incoming","Size (bytes)"));
    }
+   if (*get_config("Incoming","Server Timeout in ms"))
+   {
+      strcat(s," timeout=");
+      strcat(s,get_config("Incoming","Server Timeout in ms"));
+   }
    if (*get_config("Incoming","Since (days), imap only "))
    {
       i=0;
@@ -1137,7 +1144,6 @@ void on_subj_sel (GtkCList *clist, gint row, gint column,
    char s2[100000];
    char s3[500];
    char boundary[500];
-   char heb;
    char *sp2,*sp3;
    char type;
    char alternative;
@@ -1269,7 +1275,7 @@ void on_subj_sel (GtkCList *clist, gint row, gint column,
    //printf("openning: '%s'\n",s2);
    f=(FILE *)fopen(s2,"r");
    boundary[0]=0;
-   heb=0;
+   //heb=0;
    alternative=0;
    if (f)
    {
@@ -1291,7 +1297,7 @@ void on_subj_sel (GtkCList *clist, gint row, gint column,
 	       //printf("boundary=%s\n",boundary);
             }
          }
-	 if (NULL!=(sp2=strstr(s2,"charset=\"windows-1255\""))) heb=1;
+	 //if (NULL!=(sp2=strstr(s2,"charset=\"windows-1255\""))) heb=1;
 	 //if (NULL!=(sp2=strstr(s2,"charset="))) printf("%s\n",sp2);
       } while (s2[0]);
       fclose(f);
@@ -1359,7 +1365,7 @@ void on_subj_sel (GtkCList *clist, gint row, gint column,
 	    fgets(s2,sizeof(s2),f);
 	    if ((sp2=strstr(s2,"Content-Transfer-Encoding: base64"))!=NULL) type='B';
 	    if ((sp2=strstr(s2,"Content-Transfer-Encoding: quoted-printable"))!=NULL) type='Q';
-	    if (NULL!=(sp2=strstr(s2,"charset=\"windows-1255\""))) heb=1;
+	    //if (NULL!=(sp2=strstr(s2,"charset=\"windows-1255\""))) heb=1;
 	    if (starts_with(s2,"Content-Type: text/html")) is_html=1;
 	    //if (NULL!=(sp2=strstr(s2,"charset="))) printf("%s\n",sp2);
 	 }
@@ -1684,16 +1690,7 @@ int main(int argc, char **argv)
    gtk_text_view_set_editable(GTK_TEXT_VIEW(self.body.t),FALSE);
    gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(self.body.t),GTK_WRAP_WORD);
    gtk_container_add (GTK_CONTAINER (self.body.sw), self.body.t);
-   strcpy(self.heb_font_name,"-*-*-*-*-*--7-*-*-*-*-*-iso8859-8");
-   self.heb_font=gdk_font_load(self.heb_font_name);
    gtk_style=gtk_widget_get_style(self.body.t);
-   self.heb_fg=&(gtk_style->fg[0]);
-   self.heb_bg=&(gtk_style->bg[0]);
-   if (!self.heb_font)
-      printf("using default encoding\n");
-   else
-   {
-   }
 
 
 
