@@ -1,3 +1,8 @@
+2004-09-15  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * list-ui.c: Added patch by Chris Owen to add button for removing 
+                 completed items.
+
 2004-08-28  Phil Blundell  <pb@nexus.co.uk>
 
 	* Version 0.48 released.
@@ -767,4 +772,3 @@
 	* familiar/control, familiar/postinst: ... here.
 
 	* .cvsignore: New file.
-	

@@ -35,6 +35,7 @@ GtkWidget *item_menu;
 GdkPixbuf *tick_icon, *no_tick_icon;
 
 static struct todo_item *current_menu_item;
+extern GtkWidget *window;
 
 static void
 item_do_edit (void)
@@ -94,6 +95,46 @@ new_todo_item (GtkWidget *w, gpointer user_data)
 
   gtk_widget_show_all (todo);
 }
+
+
+static void
+delete_completed_items (GtkWidget *w, gpointer user_data)
+{
+  GtkWidget *dialog;
+
+  dialog = gtk_message_dialog_new (GTK_WINDOW (window),
+                                   GTK_DIALOG_MODAL 
+                                   | GTK_DIALOG_DESTROY_WITH_PARENT,
+                                   GTK_MESSAGE_ERROR, GTK_BUTTONS_YES_NO,
+                                   "Delete completed items?");
+
+  if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_YES)
+    {
+      GSList *list, *iter;
+    
+      list = g_slist_copy (todo_db_get_items_list ());
+    
+      for (iter = list; iter; iter = iter->next)
+        {
+          struct todo_item *i = iter->data;
+          gboolean complete;
+        
+          complete = (i->state == COMPLETED) ? TRUE : FALSE;
+        
+          if (complete && (selected_category == -1 ||
+            g_slist_find (i->categories, (gpointer)selected_category)))
+            {
+              todo_db_delete_item (i);
+            }
+        }
+    
+      g_slist_free (list);
+      refresh_items ();
+    }
+
+  gtk_widget_destroy (dialog);
+}
+
 
 void
 open_editing_window (GtkTreePath *path)
@@ -293,6 +334,10 @@ top_level (GtkWidget *window)
 			    _("New item"), _("Tap here to add a new item."),
 			    G_CALLBACK (new_todo_item), NULL, -1);
 
+  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_DELETE,
+                            _("Delete completed items"), 
+                            _("Tap here to delete completed items."),
+                            G_CALLBACK (delete_completed_items), NULL, -1);
   /* New */
   gtk_box_pack_start (GTK_BOX (hbox), toolbar, FALSE, FALSE, 0);
 
