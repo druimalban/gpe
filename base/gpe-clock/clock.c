@@ -185,8 +185,20 @@ static time_t
 extract_time (struct alarm_state *alarm)
 {
   struct tm tm;
+  time_t t;
 
   memset (&tm, 0, sizeof (tm));
+
+  tm.tm_year = alarm->year - 1900;
+  tm.tm_mon = alarm->month;
+  tm.tm_mday = alarm->day;
+  tm.tm_hour = alarm->hour;
+  tm.tm_min = alarm->minute;
+
+  t = mktime (&tm);
+
+  /* Break it out again to get DST right */
+  localtime_r (&t, &tm);
 
   tm.tm_year = alarm->year - 1900;
   tm.tm_mon = alarm->month;
@@ -456,8 +468,9 @@ alarm_window (void)
 
   scrolled_vbox = gtk_vbox_new (FALSE, 0);
   scrolled_window = gtk_scrolled_window_new (NULL, NULL);
-  gtk_scrolled_window_set_policy (scrolled_window, GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
-  gtk_container_set_border_relief (GTK_CONTAINER (scrolled_window), GTK_RELIEF_NONE);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window), 
+				  GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+  gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (scrolled_window), GTK_SHADOW_NONE);
 
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (ctx->window)->vbox), scrolled_window, TRUE, TRUE, 0);
   gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolled_window), scrolled_vbox);
