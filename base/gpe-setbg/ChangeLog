@@ -1,3 +1,7 @@
+2002-12-26  Philip Blundell  <philb@gnu.org>
+
+	* Makefile: Ship empty /etc/gpe since postinst needs it.
+
 2002-10-11  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.02 released.

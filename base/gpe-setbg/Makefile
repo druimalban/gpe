@@ -51,6 +51,7 @@ install: all
 	install -D $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 ##	install -D $(PACKAGE).menu $(DESTDIR)$(PREFIX)/lib/menu/$(PACKAGE)
 	install -D gpe-default-bg.png $(DESTDIR)$(PREFIX)/share/pixmaps/gpe-default-bg.png
+	mkdir -p $(DESTDIR)/etc/gpe
 	strip $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 
 clean:
