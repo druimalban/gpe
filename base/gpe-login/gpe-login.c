@@ -106,10 +106,10 @@ main(int argc, char *argv[])
   GdkPixmap *gpe_pix;
   GdkBitmap *gpe_pix_mask;
 
-  gtk_init(&argc, &argv);
-  gdk_imlib_init();
+  gtk_init (&argc, &argv);
+  gdk_imlib_init ();
   
-  window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+  window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 
   if (gdk_imlib_load_file_to_pixmap (GPE_ICON, &gpe_pix, &gpe_pix_mask))
     logo = gtk_pixmap_new (gpe_pix, gpe_pix_mask);
@@ -123,10 +123,10 @@ main(int argc, char *argv[])
 
   gtk_widget_set_usize (next_button, 48, -1);
 
-  option = gtk_option_menu_new();
-  menu = gtk_menu_new();
-  slurp_passwd(menu);
-  gtk_option_menu_set_menu(GTK_OPTION_MENU(option), menu);
+  option = gtk_option_menu_new ();
+  menu = gtk_menu_new ();
+  slurp_passwd (menu);
+  gtk_option_menu_set_menu (GTK_OPTION_MENU (option), menu);
   entry = gtk_entry_new ();
   gtk_entry_set_visibility (GTK_ENTRY (entry), FALSE);
 

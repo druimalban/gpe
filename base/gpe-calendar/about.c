@@ -26,7 +26,6 @@ about(void)
 {
   GtkWidget *window = gtk_window_new (GTK_WINDOW_DIALOG);
   GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
-  GtkWidget *logo;
   GdkPixmap *gpe_pix;
   GdkBitmap *gpe_pix_mask;
   GtkWidget *label_name = gtk_label_new ("GPE-Calendar");
@@ -39,7 +38,7 @@ about(void)
 
   if (gdk_imlib_load_file_to_pixmap (GPE_ICON, &gpe_pix, &gpe_pix_mask))
     {
-      logo = gtk_pixmap_new (gpe_pix, gpe_pix_mask);
+      GtkWidget *logo = gtk_pixmap_new (gpe_pix, gpe_pix_mask);
 
       gtk_box_pack_start (GTK_BOX (vbox), logo, FALSE, FALSE, 0);
     }
