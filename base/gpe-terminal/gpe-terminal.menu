@@ -1,1 +1,8 @@
-?package(gpe-terminal): needs=x11 title=Terminal command="rxvt -aa -fn mono-5.5:minspace=true" icon48=gpe-terminal.png section=Applications windowtitle=Terminal
+?package(gpe-terminal): \
+ needs=x11 \
+ title=Terminal \
+ logtitle=Terminal \
+ command="rxvt -aa -fn mono-5.5:minspace=true" \
+ icon48=/usr/share/pixmaps/gpe-terminal.png \
+ section=Utilities \
+ windowtitle=Terminal
