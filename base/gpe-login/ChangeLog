@@ -1,5 +1,9 @@
 2004-02-14  Philip Blundell  <philb@gnu.org>
 
+	* gpe-session-scripts 0.59 released.
+
+2004-02-14  Philip Blundell  <philb@gnu.org>
+
 	* standard.mbdock: Replace mbmenu with mb-applet-menu-launcher.
 
 2004-02-13  Phil Blundell  <pb@nexus.co.uk>

@@ -1,7 +1,7 @@
 Package: gpe-session-scripts
 Section: x11
 Priority: optional
-Version: 0.58
+Version: 0.59
 Architecture: all
 Source: SOURCE
 Maintainer: Phil Blundell <pb@debian.org>
