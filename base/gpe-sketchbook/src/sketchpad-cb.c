@@ -88,7 +88,7 @@ void on_button_list_view_clicked(GtkButton *button, gpointer user_data){
   
   if (_save_current_if_needed() == ACTION_CANCELED) return;
 
-  switch_windows(window_sketchpad, window_selector);
+  switch_to_page(PAGE_SELECTOR);
 
   if(is_current_sketch_new){
     gtk_clist_unselect_all(selector_clist);

@@ -18,7 +18,7 @@
 #include <gtk/gtk.h>
 #include "sketchpad-cb.h"
 
-void switch_windows(GtkWidget * window_to_hide, GtkWidget * window_to_show);
+void switch_to_page(guint page);
 
 //--toolbar
 void on_window_selector_destroy        (GtkObject *object, gpointer  user_data);

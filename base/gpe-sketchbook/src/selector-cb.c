@@ -32,15 +32,16 @@
 #include <libintl.h>
 #define _(_x) gettext (_x)
 
-void switch_windows(GtkWidget * window_to_hide, GtkWidget * window_to_show){
-  if(gtk_notebook_get_current_page(sketchbook.notebook) == PAGE_SELECTOR){
-    gtk_notebook_set_page(sketchbook.notebook, PAGE_SKETCHPAD);
-  }
-  else{
-    gtk_notebook_set_page(sketchbook.notebook, PAGE_SELECTOR);
+void switch_to_page(guint page){
+  switch(page){
+    case PAGE_SKETCHPAD:
+      gtk_notebook_set_page(sketchbook.notebook, PAGE_SKETCHPAD);
+      break;
+    case PAGE_SELECTOR:
+    default:
+      gtk_notebook_set_page(sketchbook.notebook, PAGE_SELECTOR);
   }
 }
-
 
 void on_window_selector_destroy (GtkObject *object, gpointer user_data){
   app_quit();
@@ -49,13 +50,13 @@ void on_window_selector_destroy (GtkObject *object, gpointer user_data){
 void on_button_selector_new_clicked (GtkButton *button, gpointer user_data){
   current_sketch = SKETCH_NEW;
   sketchpad_new_sketch();
-  switch_windows(window_selector, window_sketchpad);
+  switch_to_page(PAGE_SKETCHPAD);
 }
 
 void on_button_selector_open_clicked (GtkButton *button, gpointer user_data){
   if(!is_current_sketch_selected || is_current_sketch_new) return;
   open_indexed_sketch(current_sketch);
-  switch_windows(window_selector, window_sketchpad);
+  switch_to_page(PAGE_SKETCHPAD);
 }
 
 void on_button_selector_delete_clicked (GtkButton *button, gpointer user_data){
@@ -120,7 +121,7 @@ void on_clist_selector_select_row (GtkCList *clist, gint row, gint column,
     Note * note;
     note = gtk_clist_get_row_data(clist, row);
     sketchpad_open_file(note->fullpath_filename);
-    switch_windows(window_selector, window_sketchpad);
+    switch_to_page(PAGE_SKETCHPAD);
   }
 }
 
@@ -137,6 +138,6 @@ void on_button_sketchpad_view_clicked (GtkButton *button, gpointer user_data){
   if(!is_current_sketch_selected) current_sketch = SKETCH_NEW;
   if(is_current_sketch_new) sketchpad_new_sketch();
   else open_indexed_sketch(current_sketch);
-  switch_windows(window_selector, window_sketchpad);
+  switch_to_page(PAGE_SKETCHPAD);
 }
 
