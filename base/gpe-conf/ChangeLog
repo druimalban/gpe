@@ -1,3 +1,8 @@
+2005-03-15	Florian Boor  	<florian.boor@kernelconcepts.de>
+
+	* network.c: Removed possebility to remove global tab.
+	             Minor GUI layout fixes.
+
 2005-03-11	Florian Boor  	<florian.boor@kernelconcepts.de>
 
 	* Removed several obsolete inclusions of render.h.

@@ -320,6 +320,8 @@ remove_interface (GtkWidget * widget, gpointer d)
 	page = gtk_notebook_get_nth_page (GTK_NOTEBOOK (table),
 					  gtk_notebook_get_current_page
 					  (GTK_NOTEBOOK (table)));
+	if (!page) 
+		return;
 	ifname = gtk_notebook_get_tab_label_text (GTK_NOTEBOOK (table), page);
 	if (gpe_question_ask
 	    (_("Do you want to delete this interface?"), _("Question"),
@@ -457,7 +459,7 @@ create_editable_entry_simple (GtkWidget * attach_to, gchar * name,
 		gtk_entry_set_text (GTK_ENTRY (label), wdata);
 	gtk_entry_set_editable (GTK_ENTRY (label), TRUE);
 	gtk_table_attach (GTK_TABLE (attach_to), label, 1, 2, clnr, clnr + 1,
-			  (GtkAttachOptions) (GTK_FILL),
+			  (GtkAttachOptions) (GTK_FILL | GTK_EXPAND),
 			  (GtkAttachOptions) (GTK_FILL),
 			  gpe_boxspacing, gpe_boxspacing);
 }
