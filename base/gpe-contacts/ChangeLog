@@ -1,3 +1,9 @@
+2004-08-20  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * Released V 0.26
+    * Makefile: New version.
+    * editing.c: Implemented setting of name detail fields from name field.
+    
 2004-08-17  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * editing.c: Implemented filter to allow not to enter everythign in 

@@ -563,17 +563,20 @@ edit_person (struct person *p)
           gchar *tag = gtk_object_get_data (GTK_OBJECT (w), "db-tag");
           struct tag_value *v = db_find_tag (p, tag);
           guint pos = 0;
+          if (tag)
+            {
+               if (!strcasecmp(tag,"NAME"))
+                 {
+                   gtk_widget_grab_default(w);
+                   gtk_widget_grab_focus(w);
+                 }
+            }
           if (v && v->value)
             {
               if (GTK_IS_EDITABLE (w))
                 {
                   gtk_editable_insert_text (GTK_EDITABLE (w), v->value,
                           strlen (v->value), &pos);
-                  if (!strcasecmp(v->tag,"NAME"))
-                    {
-                      gtk_widget_grab_default(w);
-                      gtk_widget_grab_focus(w);
-                    }
                 }
               else if (GTK_IS_DATE_COMBO(w))
                 {
@@ -723,6 +726,7 @@ on_edit_save_clicked (GtkButton * button, gpointer user_data)
   GtkWidget *edit = (GtkWidget *) user_data;
   GSList *tags;
   struct person *p = g_object_get_data (G_OBJECT (edit), "person");
+  gchar *nametext = NULL;
   
   for (tags = g_object_get_data (G_OBJECT (edit), "tag-widgets");
        tags; tags = tags->next)
@@ -763,10 +767,63 @@ on_edit_save_clicked (GtkButton * button, gpointer user_data)
         }
       tag = g_object_get_data (G_OBJECT (w), "db-tag");
       db_set_data (p, tag, text);
+      
+      /* remember name */
+      if (!strcasecmp(tag, "NAME"))
+        {
+            nametext = text;
+        }
     }
 
   retrieve_special_fields (edit, p);
 
+    /* handle name details */
+    if (nametext)
+      {
+          char e1[101];
+          char e2[101];
+          char e3[101];
+          char e4[101];
+          int num_elements = sscanf(nametext, "%100s %100s %100s %100s", e1, e2, e3, e4);
+          if (num_elements == 2)
+            {
+              if (strstr(nametext, ","))
+                {
+                  if (strstr(e1,",")) 
+                    strstr(e1,",")[0] = 0;
+                  db_set_data(p, "GIVEN_NAME", g_strdup(e2));
+                  db_set_data(p, "FAMILY_NAME", g_strdup(e1));
+                }
+              else
+                {
+                  db_set_data(p, "GIVEN_NAME", g_strdup(e1));
+                  db_set_data(p, "FAMILY_NAME", g_strdup(e2));
+                }
+            }
+              
+          if (num_elements > 2)
+            {
+              db_set_data(p, "TITLE", g_strdup(e1));
+              if (strstr(nametext, ","))
+                {
+                  if (strstr(e2,",")) 
+                    strstr(e2,",")[0] = 0;
+                  db_set_data(p, "GIVEN_NAME", g_strdup(e3));
+                  db_set_data(p, "FAMILY_NAME", g_strdup(e2));
+                }
+              else
+                {
+                  db_set_data(p, "GIVEN_NAME", g_strdup(e2));
+                  db_set_data(p, "FAMILY_NAME", g_strdup(e3));
+                }
+            }
+          if (num_elements > 3)
+            {
+              db_set_data(p, "HONORIFIC_SUFFIX", g_strdup(e4));
+            }
+      }
+  
+  
   if (commit_person (p))
     {
       gtk_widget_destroy (edit);
