@@ -2,7 +2,8 @@
  * gpe-conf
  *
  * Copyright (C) 2002  Pierre TARDY <tardyp@free.fr>
- *	             2003  Florian Boor <florian.boor@kernelconcepts.de>
+ *	         2003  Florian Boor <florian.boor@kernelconcepts.de>
+ *               2004  Ole Reinhardt <ole.reinhardt@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -11,7 +12,10 @@
  *
  * Dynamic interface configuration added by Florian Boor (florian.boor@kernelconcepts.de)
  *
+ * Wireless LAN support added by Ole Reinhardt (ole.reinhardt@kernelconcepts.de)
+ *
  */
+ 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -68,6 +72,14 @@ static gboolean have_access = FALSE;
 static GtkTooltips *tooltips;
 
 static const char *help_devtype;
+static const char *help_wifi;
+static const char *help_wificonfig;
+static const char *help_essid;
+static const char *help_wifimode;
+static const char *help_encmode;
+static const char *help_wepkey;
+static const char *help_selectkey;
+static const char *help_channel;
 
 static void
 show_current_config (GtkWidget * button)
@@ -118,18 +130,32 @@ show_current_config (GtkWidget * button)
 static GList *
 get_unconfigured_interfaces ()
 {
+#define num_suggestions 3	
+	
 	GList *result = NULL;
-	struct if_nameindex *ifnames;
-	int i, j;
+	gint i,j;
 	gboolean found;
+	gchar buffer[256];
+	gchar *sep;
+	gchar *name;
+	FILE *fd;
+	gchar suggestions[num_suggestions][6] = {"eth0", "wlan0", "bnep0"};
+	
+	fd = fopen(_PATH_PROCNET_DEV, "r");
+	fgets(buffer, 256, fd);		// chuck first two lines;
+	fgets(buffer, 256, fd);
+	while (!feof(fd)) {
+		if (fgets(buffer, 256, fd) == NULL)
+			break;
+		name = buffer;
+		sep = strrchr(buffer, ':');
+		if (sep) *sep = 0;
+		while(*name == ' ') name++;
 
-	ifnames = if_nameindex ();
-	for (j = 0; ifnames[j].if_name != NULL; j++)
-	{
 		found = FALSE;
 		for (i = 0; i < iflen; i++)
 		{
-			if (!strcmp (ifnames[j].if_name, iflist[i].name))
+			if (!strcmp (name, iflist[i].name))
 			{
 				found = TRUE;
 				break;
@@ -137,12 +163,31 @@ get_unconfigured_interfaces ()
 		}
 		if (!found)
 		{
-			result = g_list_append (result,
-						g_strdup (ifnames[j].
-							  if_name));
+			result = g_list_append (result, g_strdup (name));
 		}
+
+
 	}
-	if_freenameindex (ifnames);
+	fclose(fd);
+	
+	for (j = 0; j < num_suggestions; j++)
+	{
+		found = FALSE;
+		for (i = 0; i < iflen; i++)
+		{
+			if (!strcmp (suggestions[j], iflist[i].name))
+			{
+				found = TRUE;
+				break;
+			}
+		}
+		if (!found)
+		{
+			result = g_list_append (result, g_strdup (suggestions[j]));
+		}
+
+	}
+	
 	return (result);
 }
 
@@ -156,21 +201,12 @@ add_interface (GtkWidget * widget, gpointer d)
 	gint i;
 	gint existing = -1;
 	struct box_desc2 ifbox[2];
+	gchar buffer[256];
+	gchar *sep;
+	gchar *name;
+	FILE *fd;	
 
 	ifbox[0].suggestions = get_unconfigured_interfaces ();
-
-	if (ifbox[0].suggestions == NULL)
-	{
-		ifbox[0].suggestions =
-			g_list_append (ifbox[0].suggestions,
-				       g_strdup ("eth0"));
-		ifbox[0].suggestions =
-			g_list_append (ifbox[0].suggestions,
-				       g_strdup ("wlan0"));
-		ifbox[0].suggestions =
-			g_list_append (ifbox[0].suggestions,
-				       g_strdup ("bnep0"));
-	}
 
 	ifbox[0].label = g_strdup (_("Name:"));
 	ifbox[0].value = ifbox[0].suggestions->data;
@@ -208,7 +244,30 @@ add_interface (GtkWidget * widget, gpointer d)
 			iflist[iflen - 1].isloop = FALSE;
 			iflist[iflen - 1].isdhcp = FALSE;
 			iflist[iflen - 1].isppp = FALSE;
+			
+			iflist[iflen-1].iswireless = FALSE;
+			strcpy(iflist[iflen-1].essid, "any");
+			iflist[iflen-1].mode = MODE_MANAGED;
+			iflist[iflen-1].encmode = ENC_OFF;
+			iflist[iflen-1].keynr = 1;
+			
 			i = iflen-1;
+			
+			fd = fopen(_PATH_PROCNET_WIRELESS, "r");
+			fgets(buffer, 256, fd);		// chuck first two lines;
+			fgets(buffer, 256, fd);
+			while (!feof(fd)) {
+				if (fgets(buffer, 256, fd) == NULL)
+					break;
+				name = buffer;
+				sep = strrchr(buffer, ':');
+				if (sep) *sep = 0;
+				while(*name == ' ') name++;
+		
+				if (!strcmp(name, ifname))
+					iflist[iflen - 1].iswireless = TRUE;
+			}
+			fclose(fd);
 		}
 		else
 			i = existing;
@@ -375,11 +434,391 @@ create_editable_entry_simple (GtkWidget * attach_to, gchar * name,
 			  gpe_boxspacing, gpe_boxspacing);
 }
 
+void
+show_wificonfig(GtkWidget *window, NWInterface_t *iface)
+{
+	GtkWidget *dialog;
+	GtkWidget *label, *rb, *container, *ctable;
+	guint gpe_boxspacing = gpe_get_boxspacing ();
+	guint gpe_border = gpe_get_border ();
+
+	gchar *tmpval;
+	gint response;
+
+	dialog = gtk_dialog_new_with_buttons (_("WiFi config"),
+					GTK_WINDOW (window),
+					GTK_DIALOG_MODAL| GTK_DIALOG_DESTROY_WITH_PARENT,
+					GTK_STOCK_CANCEL,
+					GTK_RESPONSE_REJECT,
+					GTK_STOCK_OK,
+					GTK_RESPONSE_OK,
+					NULL);
+
+	// page headers
+
+	ctable = gtk_table_new (8, 2, FALSE);
+
+	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox), ctable, FALSE, FALSE, 0);
+	gtk_container_set_border_width (GTK_CONTAINER (ctable), gpe_border);
+
+	label = gtk_label_new (NULL);
+	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
+	tmpval = g_strdup_printf (_("<b>WiFi config for %s</b>"),iface->name);
+	gtk_label_set_markup (GTK_LABEL (label), tmpval);
+	g_free (tmpval);
+	gtk_table_attach (GTK_TABLE (ctable), label, 0, 2, 0, 1,
+			  (GtkAttachOptions) (GTK_FILL),
+			  (GtkAttachOptions) (GTK_FILL),
+			  gpe_boxspacing, gpe_boxspacing);
+
+	// page items  
+	
+	label = gtk_label_new (_("ESSID"));
+	gtk_tooltips_set_tip (tooltips, label, help_essid, NULL);
+	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+	gtk_table_attach (GTK_TABLE (ctable), label, 0, 1, 1, 2,
+			  (GtkAttachOptions) (GTK_FILL),
+			  (GtkAttachOptions) (GTK_FILL),
+			  gpe_boxspacing, gpe_boxspacing);
+	label = gtk_entry_new ();
+	gtk_tooltips_set_tip (tooltips, label, help_essid, NULL);
+	gtk_widget_set_name (GTK_WIDGET (label), "essid");
+	gtk_widget_ref (label);
+	gtk_object_remove_data (GTK_OBJECT (table), "essid");
+	gtk_object_set_data_full (GTK_OBJECT (table), "essid" , label,
+				  (GtkDestroyNotify) gtk_widget_unref);
+	
+	gtk_entry_set_text (GTK_ENTRY (label), iface->essid);
+	gtk_entry_set_editable (GTK_ENTRY (label), TRUE);
+	gtk_table_attach (GTK_TABLE (ctable), label, 1, 2, 1, 2,
+			  (GtkAttachOptions) (GTK_FILL),
+			  (GtkAttachOptions) (GTK_FILL),
+			  gpe_boxspacing, gpe_boxspacing);
+			       
+	label = gtk_label_new(_("Mode:"));
+	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
+
+	gtk_table_attach (GTK_TABLE (ctable), label, 0, 1, 2, 3,
+			  (GtkAttachOptions) (GTK_FILL),
+			  (GtkAttachOptions) (GTK_FILL),
+			  gpe_boxspacing, gpe_boxspacing);
+	
+	container = gtk_hbox_new (TRUE, 0);
+	
+	label = gtk_radio_button_new_with_label_from_widget (NULL, _("managed"));
+	gtk_tooltips_set_tip (tooltips, label, help_wifimode, NULL);
+
+	gtk_widget_set_name (GTK_WIDGET (label), "mode_managed");
+	gtk_widget_ref (label);
+	gtk_object_set_data_full (GTK_OBJECT (table), "mode_managed", label,
+				  (GtkDestroyNotify) gtk_widget_unref);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (label),
+				      iface->mode == MODE_MANAGED ? TRUE : FALSE);
+	gtk_container_add (GTK_CONTAINER (container), label);
+
+	label = gtk_radio_button_new_with_label_from_widget (GTK_RADIO_BUTTON
+							     (label), _("ad-hoc"));
+	gtk_tooltips_set_tip (tooltips, label, help_wifimode, NULL);
+
+	gtk_widget_set_name (GTK_WIDGET (label), "mode_adhoc");
+	gtk_widget_ref (label);
+	gtk_object_set_data_full (GTK_OBJECT (table), "mode_adhoc", label,
+				  (GtkDestroyNotify) gtk_widget_unref);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (label),
+				      iface->mode != MODE_MANAGED ? TRUE : FALSE);
+	gtk_container_add (GTK_CONTAINER (container), label);
+
+	gtk_table_attach (GTK_TABLE (ctable), container, 1, 2, 2, 3,
+			  (GtkAttachOptions) (GTK_FILL),
+			  (GtkAttachOptions) (GTK_FILL),
+			  gpe_boxspacing, gpe_boxspacing);
+
+
+	label = gtk_label_new (_("Channel"));
+	gtk_tooltips_set_tip (tooltips, label, help_channel, NULL);
+	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+	gtk_table_attach (GTK_TABLE (ctable), label, 0, 1, 3, 4,
+			  (GtkAttachOptions) (GTK_FILL),
+			  (GtkAttachOptions) (GTK_FILL),
+			  gpe_boxspacing, gpe_boxspacing);
+	label = gtk_entry_new ();
+	gtk_tooltips_set_tip (tooltips, label, help_essid, NULL);
+	gtk_widget_set_name (GTK_WIDGET (label), "channel");
+	gtk_widget_ref (label);
+	gtk_object_remove_data (GTK_OBJECT (table), "channel");
+	gtk_object_set_data_full (GTK_OBJECT (table), "channel" , label,
+				  (GtkDestroyNotify) gtk_widget_unref);
+	
+	gtk_entry_set_text (GTK_ENTRY (label), iface->channel);
+	gtk_entry_set_editable (GTK_ENTRY (label), TRUE);
+	gtk_table_attach (GTK_TABLE (ctable), label, 1, 2, 3, 4,
+			  (GtkAttachOptions) (GTK_FILL),
+			  (GtkAttachOptions) (GTK_FILL),
+			  gpe_boxspacing, gpe_boxspacing);
+
+	label = gtk_label_new(_("WEP:"));
+	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
+
+	gtk_table_attach (GTK_TABLE (ctable), label, 0, 1, 4, 5,
+			  (GtkAttachOptions) (GTK_FILL),
+			  (GtkAttachOptions) (GTK_FILL),
+			  gpe_boxspacing, gpe_boxspacing);
+	
+	container = gtk_hbox_new (FALSE, 0);
+	
+	label = gtk_radio_button_new_with_label_from_widget (NULL, _("off"));
+	gtk_tooltips_set_tip (tooltips, label, help_encmode, NULL);
+
+	gtk_widget_set_name (GTK_WIDGET (label), "enc_off");
+	gtk_widget_ref (label);
+	gtk_object_set_data_full (GTK_OBJECT (table), "enc_off", label,
+				  (GtkDestroyNotify) gtk_widget_unref);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (label),
+				      iface->encmode == ENC_OFF ? TRUE : FALSE);
+	gtk_container_add (GTK_CONTAINER (container), label);
+
+	label = gtk_radio_button_new_with_label_from_widget (GTK_RADIO_BUTTON
+							     (label), _("open"));
+	gtk_tooltips_set_tip (tooltips, label, help_encmode, NULL);
+
+	gtk_widget_set_name (GTK_WIDGET (label), "enc_open");
+	gtk_widget_ref (label);
+	gtk_object_set_data_full (GTK_OBJECT (table), "enc_open", label,
+				  (GtkDestroyNotify) gtk_widget_unref);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (label),
+				      iface->encmode == ENC_OPEN ? TRUE : FALSE);
+	gtk_container_add (GTK_CONTAINER (container), label);
+
+	label = gtk_radio_button_new_with_label_from_widget (GTK_RADIO_BUTTON
+							     (label), _("restricted"));
+	gtk_tooltips_set_tip (tooltips, label, help_encmode, NULL);
+
+	gtk_widget_set_name (GTK_WIDGET (label), "enc_restricted");
+	gtk_widget_ref (label);
+	gtk_object_set_data_full (GTK_OBJECT (table), "enc_restricted", label,
+				  (GtkDestroyNotify) gtk_widget_unref);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (label),
+				      iface->encmode == ENC_RESTRICTED ? TRUE : FALSE);
+	gtk_container_add (GTK_CONTAINER (container), label);
+
+	gtk_table_attach (GTK_TABLE (ctable), container, 1, 2, 4, 5,
+			  (GtkAttachOptions) (GTK_FILL),
+			  (GtkAttachOptions) (GTK_FILL),
+			  gpe_boxspacing, gpe_boxspacing);
+
+	rb = gtk_radio_button_new_with_label_from_widget (NULL, _("Key 1"));
+	gtk_tooltips_set_tip (tooltips, rb, help_selectkey, NULL);
+	gtk_widget_set_name (GTK_WIDGET (rb), "key1select");
+	gtk_widget_ref (rb);
+	gtk_object_set_data_full (GTK_OBJECT (table), "key1select", rb,
+				  (GtkDestroyNotify) gtk_widget_unref);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (rb),
+				      iface->keynr == 1 ? TRUE : FALSE);
+
+	gtk_table_attach (GTK_TABLE (ctable), rb, 0, 1, 5, 6,
+			  (GtkAttachOptions) (GTK_FILL),
+			  (GtkAttachOptions) (GTK_FILL),
+			  gpe_boxspacing, gpe_boxspacing);
+	label = gtk_entry_new ();
+	gtk_tooltips_set_tip (tooltips, label, help_wepkey, NULL);
+	gtk_widget_set_name (GTK_WIDGET (label), "key1");
+	gtk_widget_ref (label);
+	gtk_object_remove_data (GTK_OBJECT (table), "key1");
+	gtk_object_set_data_full (GTK_OBJECT (table), "key1" , label,
+				  (GtkDestroyNotify) gtk_widget_unref);
+	
+	gtk_entry_set_text (GTK_ENTRY (label), iface->key[0]);
+	gtk_entry_set_editable (GTK_ENTRY (label), TRUE);
+	gtk_table_attach (GTK_TABLE (ctable), label, 1, 2, 5, 6,
+			  (GtkAttachOptions) (GTK_FILL),
+			  (GtkAttachOptions) (GTK_FILL),
+			  gpe_boxspacing, gpe_boxspacing);
+
+	rb = gtk_radio_button_new_with_label_from_widget (GTK_RADIO_BUTTON(rb), _("Key 2"));
+	gtk_tooltips_set_tip (tooltips, rb, help_selectkey, NULL);
+	gtk_widget_set_name (GTK_WIDGET (rb), "key2select");
+	gtk_widget_ref (rb);
+	gtk_object_set_data_full (GTK_OBJECT (table), "key2select", rb,
+				  (GtkDestroyNotify) gtk_widget_unref);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (rb),
+				      iface->keynr == 2 ? TRUE : FALSE);
+
+	gtk_table_attach (GTK_TABLE (ctable), rb, 0, 1, 6, 7,
+			  (GtkAttachOptions) (GTK_FILL),
+			  (GtkAttachOptions) (GTK_FILL),
+			  gpe_boxspacing, gpe_boxspacing);
+	label = gtk_entry_new ();
+	gtk_tooltips_set_tip (tooltips, label, help_wepkey, NULL);
+	gtk_widget_set_name (GTK_WIDGET (label), "key2");
+	gtk_widget_ref (label);
+	gtk_object_remove_data (GTK_OBJECT (table), "key2");
+	gtk_object_set_data_full (GTK_OBJECT (table), "key2" , label,
+				  (GtkDestroyNotify) gtk_widget_unref);
+	
+	gtk_entry_set_text (GTK_ENTRY (label), iface->key[1]);
+	gtk_entry_set_editable (GTK_ENTRY (label), TRUE);
+	gtk_table_attach (GTK_TABLE (ctable), label, 1, 2, 6, 7,
+			  (GtkAttachOptions) (GTK_FILL),
+			  (GtkAttachOptions) (GTK_FILL),
+			  gpe_boxspacing, gpe_boxspacing);
+
+	rb = gtk_radio_button_new_with_label_from_widget (GTK_RADIO_BUTTON(rb), _("Key 3"));
+	gtk_tooltips_set_tip (tooltips, rb, help_selectkey, NULL);
+	gtk_widget_set_name (GTK_WIDGET (rb), "key3select");
+	gtk_widget_ref (rb);
+	gtk_object_set_data_full (GTK_OBJECT (table), "key3select", rb,
+				  (GtkDestroyNotify) gtk_widget_unref);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (rb),
+				      iface->keynr == 3 ? TRUE : FALSE);
+
+	gtk_table_attach (GTK_TABLE (ctable), rb, 0, 1, 7, 8,
+			  (GtkAttachOptions) (GTK_FILL),
+			  (GtkAttachOptions) (GTK_FILL),
+			  gpe_boxspacing, gpe_boxspacing);
+	label = gtk_entry_new ();
+	gtk_tooltips_set_tip (tooltips, label, help_wepkey, NULL);
+	gtk_widget_set_name (GTK_WIDGET (label), "key3");
+	gtk_widget_ref (label);
+	gtk_object_remove_data (GTK_OBJECT (table), "key3");
+	gtk_object_set_data_full (GTK_OBJECT (table), "key3" , label,
+				  (GtkDestroyNotify) gtk_widget_unref);
+	
+	gtk_entry_set_text (GTK_ENTRY (label), iface->key[2]);
+	gtk_entry_set_editable (GTK_ENTRY (label), TRUE);
+	gtk_table_attach (GTK_TABLE (ctable), label, 1, 2, 7, 8,
+			  (GtkAttachOptions) (GTK_FILL),
+			  (GtkAttachOptions) (GTK_FILL),
+			  gpe_boxspacing, gpe_boxspacing);
+
+
+	rb = gtk_radio_button_new_with_label_from_widget (GTK_RADIO_BUTTON(rb), _("Key 4"));
+	gtk_tooltips_set_tip (tooltips, rb, help_selectkey, NULL);
+	gtk_widget_set_name (GTK_WIDGET (rb), "key4select");
+	gtk_widget_ref (rb);
+	gtk_object_set_data_full (GTK_OBJECT (table), "key4select", rb,
+				  (GtkDestroyNotify) gtk_widget_unref);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (rb),
+				      iface->keynr == 4 ? TRUE : FALSE);
+
+
+	gtk_table_attach (GTK_TABLE (ctable), rb, 0, 1, 8, 9,
+			  (GtkAttachOptions) (GTK_FILL),
+			  (GtkAttachOptions) (GTK_FILL),
+			  gpe_boxspacing, gpe_boxspacing);
+	label = gtk_entry_new ();
+	gtk_tooltips_set_tip (tooltips, label, help_wepkey, NULL);
+	gtk_widget_set_name (GTK_WIDGET (label), "key4");
+	gtk_widget_ref (label);
+	gtk_object_remove_data (GTK_OBJECT (table), "key4");
+	gtk_object_set_data_full (GTK_OBJECT (table), "key4" , label,
+				  (GtkDestroyNotify) gtk_widget_unref);
+	
+	gtk_entry_set_text (GTK_ENTRY (label), iface->key[3]);
+	gtk_entry_set_editable (GTK_ENTRY (label), TRUE);
+	gtk_table_attach (GTK_TABLE (ctable), label, 1, 2, 8, 9,
+			  (GtkAttachOptions) (GTK_FILL),
+			  (GtkAttachOptions) (GTK_FILL),
+			  gpe_boxspacing, gpe_boxspacing);
+
+			       
+	gtk_widget_show_all(dialog);
+	response = gtk_dialog_run (GTK_DIALOG (dialog));
+	
+	if (response == GTK_RESPONSE_OK)
+	{
+		label = gtk_object_get_data (GTK_OBJECT (table), "essid");
+		strncpy(iface->essid, gtk_editable_get_chars(GTK_EDITABLE (label), 0, -1), 31);
+		
+		label = gtk_object_get_data (GTK_OBJECT (table), "channel");
+		strncpy(iface->channel, gtk_editable_get_chars(GTK_EDITABLE (label), 0, -1), 31);		
+		
+		label = gtk_object_get_data (GTK_OBJECT (table), "key1");
+		strncpy(iface->key[0], gtk_editable_get_chars(GTK_EDITABLE (label), 0, -1), 127);
+		
+		label = gtk_object_get_data (GTK_OBJECT (table), "key2");
+		strncpy(iface->key[1], gtk_editable_get_chars(GTK_EDITABLE (label), 0, -1), 127);
+		
+		label = gtk_object_get_data (GTK_OBJECT (table), "key3");
+		strncpy(iface->key[2], gtk_editable_get_chars(GTK_EDITABLE (label), 0, -1), 127);
+		
+		label = gtk_object_get_data (GTK_OBJECT (table), "key4");
+		strncpy(iface->key[3], gtk_editable_get_chars(GTK_EDITABLE (label), 0, -1), 127);
+
+		label = gtk_object_get_data (GTK_OBJECT (table), "mode_managed");
+		iface->mode = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON (label)) ? MODE_MANAGED : MODE_ADHOC;
+		
+		label = gtk_object_get_data (GTK_OBJECT (table), "enc_off");
+		if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON (label)))
+		{
+			iface->encmode = ENC_OFF; 
+		} else 
+		{
+			label = gtk_object_get_data (GTK_OBJECT (table), "enc_open");
+			iface->encmode = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON (label)) ? ENC_OPEN : ENC_RESTRICTED;
+		}
+		
+		label = gtk_object_get_data (GTK_OBJECT (table), "key1select");
+		if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON (label)))
+		{
+			iface->keynr = 1;
+		} else
+		{
+			label = gtk_object_get_data (GTK_OBJECT (table), "key2select");
+			if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON (label)))
+			{
+				iface->keynr = 2;
+			} else
+			{
+				label = gtk_object_get_data (GTK_OBJECT (table), "key3select");
+				if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON (label)))
+				{
+					iface->keynr = 3;
+				} else 
+					iface->keynr = 4;
+			}
+		}
+		if (strlen(iface->essid) == 0) strcpy(iface->essid, "any");
+	
+	}
+
+	gtk_widget_destroy (dialog);
+}
+
+
+void
+changed_wifi (GtkToggleButton * togglebutton, gpointer user_data)
+{
+	GtkWidget *widget;
+	gchar wname[100];
+	gint ifnr = gtk_notebook_get_current_page (GTK_NOTEBOOK (table)) +
+		not_added - PAGE_OFFSET;
+
+	// look who called us...
+	strcpy (wname, "wificonfig");
+	strcat (wname, iflist[ifnr].name);
+	
+	iflist[ifnr].iswireless = gtk_toggle_button_get_active(togglebutton);
+	
+	widget = gtk_object_get_data (GTK_OBJECT (togglebutton), wname);
+	
+	gtk_widget_set_sensitive(widget, iflist[ifnr].iswireless);
+}
+
+void
+clicked_wificonfig (GtkButton *button, gpointer user_data)
+{
+	gint ifnr;
+	
+	ifnr = gtk_notebook_get_current_page (GTK_NOTEBOOK (table)) +
+		not_added - PAGE_OFFSET;
+
+	show_wificonfig(gtk_widget_get_toplevel(GTK_WIDGET(button)), &iflist[ifnr]);
+}
 
 GtkWidget *
 create_nwstatic_widgets (NWInterface_t iface)
 {
-	GtkWidget *label, *container, *ctable;
+	GtkWidget *label, *container, *ctable, *togglebutton;
 	guint gpe_boxspacing = gpe_get_boxspacing ();
 	guint gpe_border = gpe_get_border ();
 
@@ -388,7 +827,7 @@ create_nwstatic_widgets (NWInterface_t iface)
 
 	// page headers
 
-	ctable = gtk_table_new (3, 7, FALSE);
+	ctable = gtk_table_new (7, 2, FALSE);
 
 	container = gtk_hbox_new (TRUE, 0);
 
@@ -474,6 +913,40 @@ create_nwstatic_widgets (NWInterface_t iface)
 			       _
 			       ("Enter the IP Address of your default gateway here."),
 			       5);
+			       
+	container = gtk_hbox_new (TRUE, 0);
+	gtk_table_attach (GTK_TABLE (ctable), container, 0, 2, 6, 7,
+			  (GtkAttachOptions) (GTK_FILL),
+			  (GtkAttachOptions) (GTK_FILL),
+			  gpe_boxspacing, gpe_boxspacing);
+
+
+#ifndef NO_WIFI
+	togglebutton = gtk_check_button_new_with_label(_("WiFi device"));
+	gtk_container_add(GTK_CONTAINER(container), togglebutton);
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(togglebutton), iface.iswireless);
+	strcpy (wname, "wifi");
+	strcat (wname, iface.name);
+	gtk_widget_set_name(togglebutton, wname);
+	gtk_widget_ref (togglebutton);
+
+	label = gtk_button_new_with_label(_("Configure"));
+	gtk_container_add(GTK_CONTAINER(container), label);
+	gtk_widget_set_sensitive(label, iface.iswireless);
+	strcpy (wname, "wificonfig");
+	strcat (wname, iface.name);
+	gtk_widget_set_name(label, wname);
+	
+	gtk_object_set_data_full (GTK_OBJECT (togglebutton), wname, label,
+				  (GtkDestroyNotify) gtk_widget_unref);
+	gtk_signal_connect (GTK_OBJECT (togglebutton), "toggled",
+			    GTK_SIGNAL_FUNC (changed_wifi), NULL);
+	gtk_signal_connect (GTK_OBJECT (label), "clicked", 
+			    GTK_SIGNAL_FUNC (clicked_wificonfig), NULL);
+	gtk_widget_ref (label);
+	gtk_tooltips_set_tip (tooltips, togglebutton, help_wifi, NULL);
+	gtk_tooltips_set_tip (tooltips, label, help_wificonfig, NULL);
+#endif
 	return ctable;
 }
 
@@ -481,7 +954,7 @@ create_nwstatic_widgets (NWInterface_t iface)
 GtkWidget *
 create_nwdhcp_widgets (NWInterface_t iface)
 {
-	GtkWidget *label, *container, *ctable;
+	GtkWidget *label, *container, *ctable, *togglebutton;
 	guint gpe_boxspacing = gpe_get_boxspacing ();
 	guint gpe_border = gpe_get_border ();
 
@@ -489,7 +962,7 @@ create_nwdhcp_widgets (NWInterface_t iface)
 	gchar *tmpval;
 	// page headers
 
-	ctable = gtk_table_new (3, 7, FALSE);
+	ctable = gtk_table_new (7, 2, FALSE);
 	container = gtk_hbox_new (TRUE, 0);
 
 	gtk_container_set_border_width (GTK_CONTAINER (ctable), gpe_border);
@@ -559,6 +1032,40 @@ create_nwdhcp_widgets (NWInterface_t iface)
 			       _
 			       ("Enter your desired hostname here. This parameter is optional."),
 			       1);
+	container = gtk_hbox_new (TRUE, 0);
+	gtk_table_attach (GTK_TABLE (ctable), container, 0, 2, 6, 7,
+			  (GtkAttachOptions) (GTK_FILL),
+			  (GtkAttachOptions) (GTK_FILL),
+			  gpe_boxspacing, gpe_boxspacing);
+
+#ifndef NO_WIFI
+	togglebutton = gtk_check_button_new_with_label(_("WiFi device"));
+	gtk_container_add(GTK_CONTAINER(container), togglebutton);
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(togglebutton), iface.iswireless);
+	strcpy (wname, "wifi");
+	strcat (wname, iface.name);
+	gtk_widget_set_name(togglebutton, wname);
+	gtk_widget_ref (togglebutton);
+
+	label = gtk_button_new_with_label(_("Configure"));
+	gtk_container_add(GTK_CONTAINER(container), label);
+	gtk_widget_set_sensitive(label, iface.iswireless);
+	strcpy (wname, "wificonfig");
+	strcat (wname, iface.name);
+	gtk_widget_set_name(label, wname);
+	
+	gtk_object_set_data_full (GTK_OBJECT (togglebutton), wname, label,
+				  (GtkDestroyNotify) gtk_widget_unref);
+	gtk_signal_connect (GTK_OBJECT (togglebutton), "toggled",
+			    GTK_SIGNAL_FUNC (changed_wifi), NULL);
+
+	gtk_signal_connect (GTK_OBJECT (label), "clicked", 
+			    GTK_SIGNAL_FUNC (clicked_wificonfig), NULL);
+
+	gtk_widget_ref (label);
+	gtk_tooltips_set_tip (tooltips, togglebutton, help_wifi, NULL);
+	gtk_tooltips_set_tip (tooltips, label, help_wificonfig, NULL);
+#endif	       
 	return ctable;
 }
 
@@ -898,7 +1405,31 @@ Network_Build_Objects ()
 		  "your device.\nUse \"static\" for manual interface "
 		  "configuration, \"dhcp\" to use DHCP and \"ppp\" to make "
 		  "the device a point-to-point device.");
+	
+	help_wifi = 
+		_("Enable this option if your device is a WiFi device");
+	help_wificonfig = 
+		_("Click to set the wireless options for this device");
+	help_wifimode = 
+		_("Set the mode your WiFi card should work. (managed or ad-hoc).");
 
+	help_encmode = 
+		_("Set the enrcyption mode: off for no WEP encryption, "
+	          "open for open system and restricted for resticted WEP "
+		  "connections only.");
+		  
+	help_essid = 
+		_("Enter the essid of your WiFi network here.");
+	
+	help_wepkey = 
+		_("Enter your WEP key here in (iwconfig format), e.g.: \"s:12345\"");
+		
+	help_selectkey =
+		_("Select the WEP key to use.");
+		
+	help_channel =
+		_("Enter the channel number or frequency if needed. If not needed leave this field blank.");
+	
 	have_access = (access (NET_CONFIGFILE, W_OK) == 0);
 	if (!have_access)
 		have_access = !suid_exec ("CHEK", "");
