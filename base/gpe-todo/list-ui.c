@@ -17,6 +17,7 @@
 #include "todo.h"
 #include "pixmaps.h"
 #include "errorbox.h"
+#include "render.h"
 
 #include "tick.xpm"
 #include "box.xpm"
@@ -82,6 +83,13 @@ ui_create_new_list(GtkWidget *widget,
   gchar *line_info[1];
   guint row;
   struct todo_list *t;
+
+  if (title[0] == 0)
+    {
+      gpe_error_box (_("List title must not be blank"));
+      gtk_widget_destroy (d);
+      return;
+    }
   
   for (l = lists; l; l = l->next)
     {
@@ -114,9 +122,6 @@ new_list_box (GtkWidget *w, gpointer data)
   GtkWidget *label = gtk_label_new ("Name:");
   GtkWidget *name = gtk_entry_new ();
   GtkWidget *hbox = gtk_hbox_new (FALSE, 0);
-
-  if (lists == NULL)
-    gtk_entry_set_text (GTK_ENTRY (name), "My List");
 
   gtk_widget_show (ok);
   gtk_widget_show (buttons);
@@ -162,7 +167,6 @@ configure(GtkWidget *w, gpointer list)
   GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
   GtkWidget *clist = gtk_clist_new (1);
   GtkWidget *pw;
-  struct pix *p;
   GSList *l;
 
   for (l = lists; l; l = l->next)
@@ -178,22 +182,27 @@ configure(GtkWidget *w, gpointer list)
   
   gtk_toolbar_set_button_relief (GTK_TOOLBAR (toolbar), GTK_RELIEF_NONE);
 
-  p = gpe_find_pixmap ("new");
-  pw = gtk_pixmap_new (p->pixmap, p->mask);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("New list"), 
-			   _("New list"), _("New list"),
+  gtk_widget_realize (window);
+
+  pw = gpe_render_icon (window->style, gpe_find_icon ("new"));
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), 
+			   _("New"), 
+			   _("Create a new list"), 
+			   _("Create a new list"),
 			   pw, new_list_box, clist);
 
-  p = gpe_find_pixmap ("delete");
-  pw = gtk_pixmap_new (p->pixmap, p->mask);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Delete list"),
-			   _("Delete list"), _("Delete list"),
+  pw = gpe_render_icon (window->style, gpe_find_icon ("delete"));
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), 
+			   _("Delete"),
+			   _("Delete the selected list"), 
+			   _("Delete the selected list"),
 			   pw, ui_del_list, clist);
 
-  p = gpe_find_pixmap ("cancel");
-  pw = gtk_pixmap_new (p->pixmap, p->mask);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Close"),
-			   _("Close"), _("Close"),
+  pw = gpe_render_icon (window->style, gpe_find_icon ("cancel"));
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), 
+			   _("Close"),
+			   _("Close this window"), 
+			   _("Close this window"),
 			   pw, close_configure, window);
 
   gtk_widget_show (toolbar);
@@ -381,11 +390,12 @@ top_level (void)
   GtkWidget *toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, 
 					GTK_TOOLBAR_ICONS);
   GtkWidget *option = gtk_option_menu_new ();
-  struct pix *p;
   GtkWidget *pw;
   GtkWidget *draw = gtk_drawing_area_new();
   GtkWidget *scrolled = gtk_scrolled_window_new (NULL, NULL);
-
+  GdkPixmap *pixmap;
+  GdkBitmap *bitmap;
+  
   g_option = option;
   lists_menu ();
 
@@ -394,16 +404,20 @@ top_level (void)
 
   gtk_toolbar_set_button_relief (GTK_TOOLBAR (toolbar), GTK_RELIEF_NONE);
 
-  p = gpe_find_pixmap ("new");
-  pw = gtk_pixmap_new (p->pixmap, p->mask);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("New Contact"), 
-			   _("New Contact"), _("New Contact"),
+  gpe_find_icon_pixmap ("new", &pixmap, &bitmap);
+  pw = gtk_pixmap_new (pixmap, bitmap);
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), 
+			   _("New"), 
+			   _("Add a new item"), 
+			   _("Add a new item"),
 			   pw, new_todo_item, NULL);
 
-  p = gpe_find_pixmap ("properties");
-  pw = gtk_pixmap_new (p->pixmap, p->mask);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("New Contact"), 
-			   _("New Contact"), _("New Contact"),
+  gpe_find_icon_pixmap ("properties", &pixmap, &bitmap);
+  pw = gtk_pixmap_new (pixmap, bitmap);
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), 
+			   _("Configure"), 
+			   _("Configure lists"), 
+			   _("Configure lists"),
 			   pw, configure, NULL);
 
   gtk_widget_show (toolbar);

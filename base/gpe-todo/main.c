@@ -21,7 +21,9 @@
 #include "pixmaps.h"
 #include "init.h"
 
-struct pix my_pix[] = {
+static struct gpe_icon my_icons[] = {
+  { "ok", "ok" },
+  { "cancel", "cancel" },
   { "new", "new" },
   { "properties", "properties" },
   { "delete", "delete" },
@@ -64,7 +66,7 @@ main(int argc, char *argv[])
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
   textdomain (PACKAGE);
 
-  if (gpe_load_pixmaps (my_pix) == FALSE)
+  if (gpe_load_icons (my_icons) == FALSE)
     exit (1);
 
   if (sql_start ())

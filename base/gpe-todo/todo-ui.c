@@ -17,6 +17,8 @@
 #include "gtkdatecombo.h"
 #include "todo.h"
 #include "todo-sql.h"
+#include "pixmaps.h"
+#include "picturebutton.h"
 
 #define _(_x) gettext(_x)
 
@@ -138,9 +140,9 @@ edit_todo(struct todo_list *list, struct todo_item *item)
   GtkWidget *text = gtk_text_new (NULL, NULL);
   GtkWidget *duebox = gtk_hbox_new (FALSE, 0);
   GtkWidget *buttonbox = gtk_hbox_new (FALSE, 0);
-  GtkWidget *buttonok = gtk_button_new_with_label (_("Save"));
-  GtkWidget *buttoncancel = gtk_button_new_with_label (_("Cancel"));
-  GtkWidget *buttondelete = gtk_button_new_with_label (_("Delete"));
+  GtkWidget *buttonok;
+  GtkWidget *buttoncancel;
+    GtkWidget *buttondelete;
   GtkWidget *state = gtk_option_menu_new ();
   GtkWidget *state_menu = gtk_menu_new ();
   GtkWidget *label_summary = gtk_label_new (_("Summary:"));
@@ -156,6 +158,12 @@ edit_todo(struct todo_list *list, struct todo_item *item)
   guint i;
   struct tm tm;
   time_t the_time;
+
+  gtk_widget_realize (window);
+
+  buttonok = gpe_picture_button (window->style, _("Save"), "ok");
+  buttoncancel = gpe_picture_button (window->style, _("Cancel"), "cancel");
+  buttondelete = gpe_picture_button (window->style, _("Delete"), "delete");
  
   for (i = 0; i < 3; i++)
     {
