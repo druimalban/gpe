@@ -2,6 +2,7 @@
 
 	* main.c: Removed alot of errors and print statements.
 	(render_list_view_expose_event): Fixed a new leaking strings.
+	(render_list_view_free): Fixed the memory leak!
 
 2003-03-14  Damien Tanner  <dctanner@gekk>
 

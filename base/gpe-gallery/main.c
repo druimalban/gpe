@@ -477,14 +477,13 @@ render_list_view_free (GtkObject *object, GList *loaded_images)
   ImageInfo *image_info;
   GList *this_item;
 
-  printf ("Attempting to unref old pixmaps.\n");
-
   this_item = loaded_images;
   while (this_item)
   {
-    printf ("Unrefing pixbuf.\n");
     image_info = (ImageInfo *) this_item->data;
     g_object_unref (image_info->pixbuf);
+    g_free (image_info->file_name);
+    g_free (image_info);
 
     this_item = this_item->next;
   }
@@ -497,6 +496,7 @@ render_list_view ()
 {
   GtkWidget *scrolled_window, *drawing_area;
   GtkRequisition scrolled_window_requisition;
+  GdkPixbuf *pixbuf;
   ImageInfo *image_info;
   GList *loaded_images = NULL;
   GList *this_item;
@@ -538,7 +538,9 @@ render_list_view ()
 	  image_info->height = MAX_ICON_SIZE;
 	}
 
-	image_info->pixbuf = gdk_pixbuf_scale_simple (image_info->pixbuf, image_info->width, image_info->height, GDK_INTERP_HYPER);
+	pixbuf = gdk_pixbuf_scale_simple (image_info->pixbuf, image_info->width, image_info->height, GDK_INTERP_HYPER);
+	g_object_unref (image_info->pixbuf);
+	image_info->pixbuf = pixbuf;
       }
 
       loaded_images = g_list_append (loaded_images, image_info);
