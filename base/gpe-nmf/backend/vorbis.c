@@ -135,6 +135,11 @@ vorbis_play_loop (void *vv)
 
     ov_clear (&v->vf);
     v->s = player_next_stream (v->p);
+
+    v->time = 0;
+    v->total_time = 0;
+    v->bos = 1;
+
   } while (v->s);
 
   return NULL;

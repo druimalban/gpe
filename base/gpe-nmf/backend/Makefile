@@ -1,13 +1,13 @@
 .SUFFIXES: .so
 
-CFLAGS = -O2 -g -Wall
+CFLAGS = -Os -fomit-frame-pointer -Wall
 
 CFLAGS += `pkg-config --cflags glib-2.0` `pkg-config --cflags libxml-2.0` -DFILE_OFFSET_BITS=64
 LDFLAGS += `pkg-config --libs glib-2.0`
 
 CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\" -I../../vorbis-fixp/lib
 
-#LVORBIS = -L../../vorbis-fixp/lib
+LVORBIS = -L../../vorbis-fixp/lib
 
 CODECS = d-vorbis.so d-mad.so
 BACKEND = libgpenmf.so.0

@@ -222,6 +222,7 @@ mad_play_loop (void *d)
     c->finished = TRUE;
 
     c->s = player_next_stream (c->p);
+    c->time = c->total_time = 0;
   } while (c->s);
     
   return NULL;
