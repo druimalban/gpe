@@ -16,5 +16,6 @@
 #include <gpe/tag-db.h>
 
 extern MIMEDirVEvent *vevent_from_tags (GSList *tags);
+extern GSList *vevent_to_tags (MIMEDirVEvent *vevent);
 
 #endif

@@ -98,3 +98,24 @@ vevent_from_tags (GSList *tags)
 
   return vevent;
 }
+
+GSList *
+vevent_to_tags (MIMEDirVEvent *vevent)
+{
+  GSList *data = NULL;
+  struct tag_map *t = &map[0];
+
+  while (t->tag)
+    {
+      gchar *value;
+
+      g_object_get (G_OBJECT (vevent), t->vc ? t->vc : t->tag, &value, NULL);
+
+      if (value)
+	data = gpe_tag_list_prepend (data, t->tag, g_strstrip (value));
+
+      t++;
+    }
+
+  return data;
+}
