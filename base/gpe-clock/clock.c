@@ -25,6 +25,7 @@
 #include <gpe/spacing.h>
 #include <gpe/gtkdatecombo.h>
 #include <gpe/gtktimesel.h>
+#include <gpe/gpeclockface.h>
 
 GtkWidget *panel_window, *time_label;
 
@@ -140,14 +141,16 @@ alarm_window (void)
   GtkWidget *date_hbox = gtk_hbox_new (FALSE, 0);
   GtkWidget *time_hbox = gtk_hbox_new (FALSE, 0);
   GtkWidget *time_sel = gtk_time_sel_new ();
-  GtkWidget *clock = clock_widget (GTK_TIME_SEL (time_sel)->hour_adj, 
-				   GTK_TIME_SEL (time_sel)->minute_adj);
+  GtkWidget *clock;
   GtkWidget *weeklytable;
   int spacing = gpe_get_boxspacing ();
   GSList *radiogroup;
   static const nl_item days[] = { ABDAY_2, ABDAY_3, ABDAY_4, ABDAY_5,
                                   ABDAY_6, ABDAY_7, ABDAY_1 };
   int i;
+
+  clock = gpe_clock_face_new (GTK_ADJUSTMENT (GTK_TIME_SEL (time_sel)->hour_adj), 
+			      GTK_ADJUSTMENT (GTK_TIME_SEL (time_sel)->minute_adj));
 
   gtk_window_set_title (GTK_WINDOW (window), _("Set alarm"));
 
