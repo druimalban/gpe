@@ -7,12 +7,13 @@ ipaq-sleep -u 60 -o 30 -n &
 
 # check if the user wants a bg image at all:
 if [ ! -e /etc/gpe/gpe-login-bg.dontshow ]; then
-    if [ -x /usr/bin/gpe-setbg ]; then
-	gpe-setbg /etc/gpe/gpe-login-bg.png
-    fi
+# FIXME: if I wrap this in the check, I don't get the exit code I need. I suck at shell.
+#    if [ -x /usr/bin/gpe-setbg ]; then
+        gpe-setbg /etc/gpe/gpe-login-bg.png
+#    fi
 fi
 
-if [ $? -gt 1 ]; then
+if [ $? -gt 0 ]; then
   echo $?
   echo "Trying to fall back to background color."
    # the color "#bbc0d7" is taken from the GPE logo:

@@ -1,3 +1,8 @@
+2002-09-24  Colin Marquardt  <colin@marquardt-home.de>
+
+	* gpe-login.setup: Fallback to color should be working now, even
+	though it's ugly.
+
 2002-09-22  Colin Marquardt  <colin@marquardt-home.de>
 
 	* gpe-login.setup: Check for /etc/gpe/gpe-login-bg.dontshow and
