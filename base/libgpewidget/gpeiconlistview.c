@@ -346,17 +346,22 @@ _gpe_icon_list_view_button_press (GtkWidget *widget, GdkEventButton *event)
   GPEIconListItem *data;
   
   il = GPE_ICON_LIST_VIEW (widget);
-  
+
   _gpe_icon_list_view_get_rowcol (il, event->x, event->y, &(il->mcol), &(il->mrow));
   _gpe_icon_list_view_refresh_containing (il, il->mcol, il->mrow);
   
-  data = _gpe_icon_list_view_get_icon(il, il->mcol, il->mrow);
-  if (data) 
+  data = _gpe_icon_list_view_get_icon (il, il->mcol, il->mrow);
+
+  switch (event->button)
     {
-      gpe_icon_list_item_button_press (data, event);
-      
-      /* Register a popup if there is an icon under the cursor */
-      il->popup_timeout = gtk_timeout_add (500, _gpe_icon_list_view_popup, (gpointer)il);
+    case 1:
+      if (data) 
+	gpe_icon_list_item_button_press (data, event);
+      break;
+
+    case 3:
+      g_signal_emit (G_OBJECT (il), my_signals[1], 0, data ? data->udata : NULL);
+      break;
     }
   
   return TRUE;
