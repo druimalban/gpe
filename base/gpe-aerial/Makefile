@@ -83,8 +83,8 @@ install-program: $(PACKAGE)
 	mkdir -p $(DESTDIR)/$(PREFIX)/bin
 	$(INSTALL) $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/
 	$(STRIP) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
-	mkdir -p $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default
-	for i in $(PIXMAPS); do install -m 644 -D pixmaps/$$i $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/$$i; done
+	mkdir -p $(DESTDIR)$(PREFIX)/share/pixmaps/
+	for i in $(PIXMAPS); do install -m 644 -D pixmaps/$$i $(DESTDIR)$(PREFIX)/share/pixmaps/$$i; done
 	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
 	$(INSTALL) -m 644 *.desktop $(DESTDIR)$(PREFIX)/share/applications
 

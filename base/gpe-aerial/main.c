@@ -61,7 +61,7 @@ static GThread *scan_thread;
 struct gpe_icon my_icons[] = {
 	{"scan-on", "scan-on-16"},
 	{"scan-off", "scan-off-16"},
-	{"network", PREFIX "/share/pixmaps/pccard-network.png"},
+	{"network", "pccard-network.png"},
 	{"gpe-aerial"},
 	{NULL}
 };

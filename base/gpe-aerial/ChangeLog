@@ -1,4 +1,9 @@
 07/01/2003		Florian Boor <florian.boor@kernelconcepts.de>
+	- Makefile	Changed path for icons to /usr/share/pixmaps
+	- *.desktop	Removed absolute path to icon.
+	- main.c
+
+07/01/2003		Florian Boor <florian.boor@kernelconcepts.de>
 	- netdb.c	Fixed bug causing netmask to be saved wrong.
 
 06/30/2003		Florian Boor <florian.boor@kernelconcepts.de>
