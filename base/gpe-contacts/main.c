@@ -25,6 +25,7 @@
 #define MY_PIXMAPS_DIR PREFIX "/share/gpe-contacts/pixmaps"
 
 static GtkWidget *combo;
+static GtkWidget *clist;
 
 struct gpe_icon my_icons[] = {
   { "delete", },
@@ -314,6 +315,25 @@ configure(GtkWidget *widget, gpointer d)
   gtk_widget_show (window);
 }
 
+static void
+update_display (void)
+{
+  GSList *items = db_get_entries (), *iter;
+  gtk_clist_clear (GTK_CLIST (clist));
+  for (iter = items; iter; iter = iter->next)
+    {
+      struct person *p = iter->data;
+      gchar *text[2];
+      int row;
+      text[0] = p->name;
+      text[1] = NULL;
+      row = gtk_clist_append (GTK_CLIST (clist), text);
+      gtk_clist_set_row_data (GTK_CLIST (clist), row, (gpointer)p->uid);
+      discard_person (p);
+    }
+  g_slist_free (items);
+}
+
 int
 main (int argc, char *argv[])
 {
@@ -338,6 +358,8 @@ main (int argc, char *argv[])
   mainw = create_main ();
   combo = lookup_widget (GTK_WIDGET (mainw), "combo1");
   update_combo_categories ();
+  clist = lookup_widget (GTK_WIDGET (mainw), "clist1");
+  update_display ();
   gtk_widget_show (mainw);
 
   gtk_signal_connect (GTK_OBJECT (mainw), "destroy",

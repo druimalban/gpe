@@ -28,6 +28,8 @@ extern struct person *new_person (void);
 extern gboolean commit_person (struct person *);
 extern void discard_person (struct person *);
 extern void db_set_data (struct person *, gchar *tag, gchar *value);
+extern struct tag_value *db_find_tag (struct person *p, gchar *tag);
+extern GSList *db_get_entries (void);
 
 extern gboolean db_insert_category (gchar *, guint *);
 extern gboolean db_insert_attribute (gchar *, gchar *);

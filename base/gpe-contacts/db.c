@@ -132,8 +132,35 @@ new_person_id ()
   return 1;
 }
 
-void
-db_set_data (struct person *p, gchar *tag, gchar *value)
+static int
+read_one_entry (void *arg, int argc, char **argv, char **names)
+{
+  struct person *p = new_person ();
+  GSList **list = (GSList **)arg;
+
+  p->id = atoi (argv[0]);
+  p->name = g_strdup (argv[1]);
+
+  *list = g_slist_append (*list, p);
+
+  return 0;
+}
+
+GSList *
+db_get_entries (void)
+{
+  GSList *list = NULL;
+  char *err;
+  int r;
+
+  r = sqlite_exec (db, "select urn,value from contacts where tag='NAME'",
+		   read_one_entry, &list, &err);
+
+  return list;
+}
+
+struct tag_value *
+db_find_tag (struct person *p, gchar *tag)
 {
   struct tag_value *t = NULL;
   GSList *iter;
@@ -146,6 +173,13 @@ db_set_data (struct person *p, gchar *tag, gchar *value)
 	  break;
 	}
     }
+  return t;
+}
+
+void
+db_set_data (struct person *p, gchar *tag, gchar *value)
+{
+  struct tag_value *t = db_find_tag (p, tag);
 
   if (t)
     {
