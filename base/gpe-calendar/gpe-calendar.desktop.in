@@ -1,6 +1,6 @@
 [Desktop Entry]
-Name=Calendar
-Comment=GPE Calendar
+_Name=Calendar
+_Comment=GPE Calendar
 Exec=gpe-calendar
 Terminal=0
 Type=Application

@@ -1,3 +1,10 @@
+2003-02-17  Philip Blundell  <philb@gnu.org>
+
+	* Makefile (install): Depend on $(PACKAGE).desktop.
+
+	* gpe-calendar.desktop.in: New file.
+	* gpe-calendar.desktop: Deleted.
+
 2003-02-13  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.34 released.

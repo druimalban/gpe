@@ -4,7 +4,7 @@ DEBUG = no
 GTK2 = yes
 VERSION = 0.34
 
-LINGUAS = de pt_PT
+LINGUAS = de
 
 MEMBERS = main day_view week_view future_view event-ui month_view day_popup xsettings
 
@@ -39,7 +39,7 @@ all: $(PACKAGE) all-mo
 $(PACKAGE): $(OBJS)
 	$(CC) -o $@ $^ -L../libgpewidget -L../libeventdb -lgpewidget -leventdb -lsqlite $(LDFLAGS)
 
-install: all install-mo
+install: all install-mo $(PACKAGE).desktop
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
 	install $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	mkdir -p $(DESTDIR)$(PREFIX)/share/pixmaps
