@@ -205,6 +205,8 @@ void Appmgr_Save (void)
 	package_save (config, fn);
 	g_free (fn);
 
+	system("kill -HUP  `pidof gpe-appmgr`");
+
 }
 
 GtkWidget *Appmgr_Build_Objects()

@@ -200,8 +200,10 @@ Users_Build_Objects (void)
 
   hbuttonbox1 = gtk_hbutton_box_new ();
   gtk_hbutton_box_set_spacing_default (0);
-  gtk_hbutton_box_set_layout_default (GTK_BUTTONBOX_START);
-  
+  //  gtk_hbutton_box_set_layout_default (GTK_BUTTONBOX_START);
+  gtk_button_box_set_layout(hbuttonbox1,GTK_BUTTONBOX_START);
+  gtk_button_box_set_child_size(hbuttonbox1,20,-1);
+
   gtk_box_pack_start (GTK_BOX (vbox1), hbuttonbox1, FALSE, FALSE, 0);
 
   button1 = gpe_picture_button (wstyle, _("Add"), "new");
@@ -212,7 +214,7 @@ Users_Build_Objects (void)
 
   gtk_container_add (GTK_CONTAINER (hbuttonbox1), button2);
 
-  button3 = gpe_picture_button (wstyle, _("Delete"), "delete");
+  button3 = gpe_picture_button (wstyle, _("Del"), "delete");
 
   gtk_container_add (GTK_CONTAINER (hbuttonbox1), button3);
 

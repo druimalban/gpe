@@ -1,4 +1,4 @@
-VERSION = 0.0.4
+VERSION = 0.0.4-1
 
 ifndef PREFIX # simple test to recognise if we are from ipaq
 PREFIX = "/usr/local"
@@ -40,6 +40,7 @@ install: gpe-conf
 	./gpe-conf.pc jhdgkjhd | ./buildmenu.pl >$(DESTDIR)/usr/lib/menu/gpe-conf #build the menu
 	sudo chown root.root gpe-conf
 	sudo chmod a+s gpe-conf 
+	sudo chmod a+x gpe-conf 
 	install -D gpe-conf $(DESTDIR)/usr/bin/gpe-conf
 
 ipkg:
