@@ -1,7 +1,7 @@
 #
 # This file contains command definitions for key actions setup
 # 
-# Format is <title>;<command>
+# Format is cmd<nr> = <title>;<command>
 
 [Commands]
 cmd1 = Record Memo;gpe-soundbite record --autogenerate-filename $HOME_VOLATILE

@@ -16,28 +16,23 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <dirent.h>
-#include <pwd.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include <signal.h>
-#include <time.h>
+#include <libintl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+
 #include <gtk/gtk.h>
 #include <gdk/gdk.h>
-#include <libintl.h>
 
-#include <time.h>
 #include <gpe/pixmaps.h>
 #include <gpe/render.h>
 #include <gpe/errorbox.h>
 #include <gpe/question.h>
+#include <gpe/spacing.h>
 
 #include "applets.h"
 #include "keyctl.h"
-
-#include <gpe/spacing.h>
 
 static char *keylaunchrc = NULL;
 static char *bg_image = NULL;
@@ -48,6 +43,7 @@ static int NUM_BUTTONS = 0;
 #define KEYLAUNCH_BIN   PREFIX "/bin/keylaunch"
 #define FILE_COMMANDS   "/etc/gpe/key-commands"
 #define FILE_LAYOUT     "/etc/gpe/key-layout"
+#define ICON_PATH 		PREFIX "/share/pixmaps"
 
 /* local types */
 
@@ -82,27 +78,9 @@ static struct
 }
 self;
 
-/*
-t_buttondef buttondef[NUM_BUTTONS] = {
-	{NULL, "XF86AudioRecord","???Pressed","gpe-soundbite record --autogenerate-filename $HOME_VOLATILE",0},
-    {NULL, "XF86Calendar","???Pressed","gpe-calendar",0},
-	{NULL, "telephone","???Pressed","gpe-contacts",0},
-	{NULL, "XF86Mail","???Pressed","gpe-taskmanager",0},
-	{NULL, "XF86Start","???Pressed","mbcontrol -desktop",0}};
-*/
 t_scommand  *commands  = NULL;
-t_buttondef *buttondef = NULL;
+t_buttondef *buttondefs = NULL;
 static int active_button = 0;
-
-struct gpe_icon local_icons[] = {
-	{ "ipaq" , PREFIX "/share/pixmaps/ipaq-s1.png"},
-	{ "button1", PREFIX "/share/pixmaps/ibutton1.png" }, 
-	{ "button2", PREFIX "/share/pixmaps/ibutton2.png" }, 
-	{ "button3", PREFIX "/share/pixmaps/ibutton3.png" }, 
-	{ "button4", PREFIX "/share/pixmaps/ibutton4.png" }, 
-	{ "button5", PREFIX "/share/pixmaps/ibutton5.png" }, 
-	{ NULL, NULL }
-};
 
 static gboolean
 commands_load(void)
@@ -155,7 +133,7 @@ layout_load(void)
 	GKeyFile *layoutfile;
 	GError *err = NULL;
 	gchar **btndefs;
-	int i, btncnt, paramcnt;
+	int i, btncnt;
 	
 	layoutfile = g_key_file_new();
 	
@@ -169,7 +147,7 @@ layout_load(void)
 	
 	if (g_key_file_has_group(layoutfile, "Global"))
 	{
-		bg_image = g_key_file_get_string(layoutfile, "Global", "imagefile", &err);
+		bg_image = g_key_file_get_string(layoutfile, "Global", "image", &err);
 		if (err)
 			g_error_free(err);
 	}
@@ -179,58 +157,58 @@ layout_load(void)
 		return FALSE;
 	}
 	
-	btndefs = g_key_file_get_groups(layoutfile, &btncnt, &err);
+	btndefs = g_key_file_get_groups(layoutfile, &btncnt);
 	if (btndefs)
 	{
 		for (i=0; i < btncnt; i++)
 		{
-			if (!strstr(btndefs[i], "Global")) /* Ignore global section */
+			if (!strcmp(btndefs[i], "Global")) /* Ignore global section */
 				continue;
-			buttons = realloc(buttons, (NUM_BUTTONS+1) * sizeof(t_buttondef));
-			buttons[NUM_BUTTONS].title = 
+			buttondefs = realloc(buttondefs, (NUM_BUTTONS+1) * sizeof(t_buttondef));
+			buttondefs[NUM_BUTTONS].title = 
 				g_key_file_get_string(layoutfile, btndefs[i], "title", &err);
 			if (err)
 			{
 				g_error_free(err);
 				continue;
 			}
-			buttons[NUM_BUTTONS].symbol = 
-				g_key_file_get_string(layoutfile, btndefs[i], "symbolfile", &err);
+			buttondefs[NUM_BUTTONS].symbol = 
+				g_key_file_get_string(layoutfile, btndefs[i], "symbol", &err);
 			if (err)
 			{
 				g_error_free(err);
 				continue;
 			}
-			buttons[NUM_BUTTONS].key = 
+			buttondefs[NUM_BUTTONS].key = 
 				g_key_file_get_string(layoutfile, btndefs[i], "key", &err);
 			if (err)
 			{
 				g_error_free(err);
 				continue;
 			}
-			buttons[NUM_BUTTONS].modificator = 
+			buttondefs[NUM_BUTTONS].modificator = 
 				g_key_file_get_string(layoutfile, btndefs[i], "modificator", &err);
 			if (err)
 			{
 				g_error_free(err);
 				continue;
 			}
-			buttons[NUM_BUTTONS].symbol = 
+			buttondefs[NUM_BUTTONS].command = 
 				g_key_file_get_string(layoutfile, btndefs[i], "command", &err);
 			if (err)
 			{
 				g_error_free(err);
 				continue;
 			}
-			buttons[NUM_BUTTONS].x = 
-				g_key_file_get_string(layoutfile, btndefs[i], "xpos", &err);
+			buttondefs[NUM_BUTTONS].x = 
+				g_key_file_get_integer(layoutfile, btndefs[i], "xpos", &err);
 			if (err)
 			{
 				g_error_free(err);
 				continue;
 			}
-			buttons[NUM_BUTTONS].y = 
-				g_key_file_get_string(layoutfile, btndefs[i], "ypos", &err);
+			buttondefs[NUM_BUTTONS].y = 
+				g_key_file_get_integer(layoutfile, btndefs[i], "ypos", &err);
 			if (err)
 			{
 				g_error_free(err);
@@ -257,13 +235,8 @@ init_buttons ()
 	char *slash;
 	int i;
 	size_t len;
-#todo correlate read settings with defined buttons
+#warning todo correlate read settings with defined buttons, support combinations
 	active_button = 0;
-	
-	/* make string variables from initial constants */
-	/* modificators stay constant for now */
-	for (i=0;i<NUM_BUTTONS;i++)
-		buttondef[i].command = g_strdup(buttondef[i].command);
 	
 	/* default keylaunchrc in homedir */
 	keylaunchrc =
@@ -281,12 +254,12 @@ init_buttons ()
 	if (fd != NULL)
 	{
 		/* load from configfile */
-		while (getline(&buffer,&len,fd) > 0)
+		while (getline(&buffer, &len, fd) > 0)
 		{
-			for (i = 0;i < NUM_BUTTONS;i++)
+			for (i = 0; i < NUM_BUTTONS; i++)
 				if (strlen(buffer) && (buffer[0] !='#') && 
-					strstr(buffer,buttondef[i].ident) &&
-					!strstr(buffer,"???Combine"))
+					strstr(buffer, buttondefs[i].key) &&
+					!strstr(buffer, "???Combine"))
 				{
 					slash = strrchr (buffer, ':');
 					if (slash && ((slash - buffer) > 0))
@@ -294,8 +267,8 @@ init_buttons ()
 						slash++;
 						if (slash[strlen(slash)-1] == '\n')
 							slash[strlen(slash)-1] = 0;
-						g_free(buttondef[i].command);
-						buttondef[i].command = g_strdup(slash);
+						g_free(buttondefs[i].command);
+						buttondefs[i].command = g_strdup(slash);
 					}
 				}
 		}
@@ -322,22 +295,23 @@ on_button_select (GtkButton * button, gpointer user_data)
 		((active_button < 0) && (active_button >= NUM_BUTTONS)))
 		return;	
 	
-	g_free(buttondef[active_button].command);
-	buttondef[active_button].command = 
+	g_free(buttondefs[active_button].command);
+	buttondefs[active_button].command = 
 		g_strdup(gtk_entry_get_text(GTK_ENTRY(self.edit)));
-	gtk_entry_set_text(GTK_ENTRY(self.edit),buttondef[nr].command);
+	gtk_entry_set_text(GTK_ENTRY(self.edit), buttondefs[nr].command);
 	active_button = nr;
 	
-	bname = g_strdup_printf("button%i",nr+1);
-	gtk_image_set_from_pixbuf(GTK_IMAGE(self.icon),gpe_find_icon(bname));
+	bname = g_strdup_printf(PREFIX "/share/pixmaps/%s", buttondefs[nr].symbol);
+	gtk_image_set_from_file(GTK_IMAGE(self.icon), bname);
+	g_free(bname);
 	
-	for (i=1;i<NUM_COMMANDS;i++)
-		if (!strcmp(buttondef[nr].command,commands[i].command))
+	for (i = 1; i < NUM_COMMANDS; i++)
+		if (!strcmp(buttondefs[nr].command, commands[i].command))
 		{
-			gtk_option_menu_set_history(GTK_OPTION_MENU(self.select),i);
+			gtk_option_menu_set_history(GTK_OPTION_MENU(self.select), i);
 			return;
 		}
-	gtk_option_menu_set_history(GTK_OPTION_MENU(self.select),0);
+	gtk_option_menu_set_history(GTK_OPTION_MENU(self.select), 0);
 }
 
 
@@ -347,35 +321,35 @@ on_edit_changed (GtkWidget * edit, gpointer user_data)
 	int i;
 	
 	if (menuselect)
-	{
 		return;
-	}
 	
-	for (i=1;i<NUM_COMMANDS;i++)
-		if (!strcmp(buttondef[active_button].command,commands[i].command))
+	for (i = 1; i < NUM_COMMANDS; i++)
+		if (!strcmp(buttondefs[active_button].command, commands[i].command))
 		{
-			gtk_option_menu_set_history(GTK_OPTION_MENU(self.select),i);
+			gtk_option_menu_set_history(GTK_OPTION_MENU(self.select), i);
 			return;
 		}
-	gtk_option_menu_set_history(GTK_OPTION_MENU(self.select),0);
+	gtk_option_menu_set_history(GTK_OPTION_MENU(self.select), 0);
 }
 
 
 void
 on_defaults_clicked (GtkButton * button, gpointer user_data)
 {
-	if (gpe_question_ask
-	    (_("Reset button config to default?"), _("Question"), "question",
-	     "!gtk-no", NULL, "!gtk-yes", NULL, NULL))
+	if (gpe_question_ask(_("Reset button config to default?"), 
+		                 _("Question"), "question",
+	                     "!gtk-no", NULL, "!gtk-yes", NULL, NULL))
 	{
-		gtk_widget_grab_focus(self.button[0]);
-		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.button[0]),TRUE);
+#warning todo, reread from /etc		
+/*		gtk_widget_grab_focus(self.button[0]);
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.button[0]), TRUE);
 		buttondef[0].command = g_strdup("gpe-soundbite record --autogenerate-filename $HOME_VOLATILE");
     	buttondef[1].command = g_strdup("gpe-calendar");
 		buttondef[2].command = g_strdup("gpe-contacts");
 		buttondef[3].command = g_strdup("gpe-taskmanager");
 		buttondef[4].command = g_strdup("mbcontrol -desktop");
-		gtk_entry_set_text(GTK_ENTRY(self.edit),buttondef[0].command);
+*/		
+		gtk_entry_set_text(GTK_ENTRY(self.edit), buttondefs[0].command);
 	}
 }
 
@@ -386,7 +360,7 @@ on_menu_select (GtkOptionMenu *menu,  gpointer user_data)
 	
 	menuselect = TRUE;	
 	if (pos)
-		gtk_entry_set_text(GTK_ENTRY(self.edit),commands[pos].command);	
+		gtk_entry_set_text(GTK_ENTRY(self.edit), commands[pos].command);	
 	menuselect = FALSE;	
 }
 
@@ -394,96 +368,90 @@ on_menu_select (GtkOptionMenu *menu,  gpointer user_data)
 GtkWidget *
 Keyctl_Build_Objects ()
 {
-	GtkWidget *vbox = gtk_vbox_new(FALSE,0);
-	GtkWidget *layout1 = gtk_layout_new (NULL, NULL);
-	GtkWidget *bDefault = gtk_button_new_with_label (_("Defaults"));
-	GtkWidget *scroll =	gtk_scrolled_window_new (NULL,NULL);
+	GtkWidget *vbox = gtk_vbox_new(FALSE, 0);
+	GtkWidget *layout1 = gtk_layout_new(NULL, NULL);
+	GtkWidget *bDefault = gtk_button_new_with_label(_("Defaults"));
+	GtkWidget *scroll =	gtk_scrolled_window_new(NULL, NULL);
 	GtkWidget *bFile = gtk_button_new_from_stock(GTK_STOCK_OPEN);
-	GtkWidget *table = gtk_table_new(3,2,FALSE);
+	GtkWidget *table = gtk_table_new(3, 2, FALSE);
 	GtkWidget *cmenu = gtk_menu_new();
 	int i;
-	
-	gpe_load_icons(local_icons);
-	
+
+	self.buttons = NULL;	
 	commands_load();
 	layout_load();
 	
-	gtk_menu_set_screen(GTK_MENU(cmenu),NULL);
-	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scroll),
-					GTK_POLICY_NEVER,
-					GTK_POLICY_AUTOMATIC);
-	gtk_table_set_col_spacings(GTK_TABLE(table),2);
-	gtk_container_set_border_width (GTK_CONTAINER (table), 2);
+	gtk_menu_set_screen(GTK_MENU(cmenu), NULL);
+	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scroll),
+	                               GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+	gtk_table_set_col_spacings(GTK_TABLE(table), 2);
+	gtk_container_set_border_width (GTK_CONTAINER(table), 2);
 	
-	self.p = gpe_find_icon ("ipaq");
 	self.edit = gtk_entry_new();
-	self.icon = gtk_image_new_from_pixbuf(gpe_find_icon("button1"));
 	self.select = gtk_option_menu_new();
+	self.icon = gtk_image_new();
 	
-	for (i=0;i<NUM_COMMANDS;i++)
+	for (i = 0; i < NUM_COMMANDS; i++)
 		gtk_menu_shell_append(GTK_MENU_SHELL(cmenu),
 			gtk_menu_item_new_with_label(commands[i].title));
 	
-	gtk_option_menu_set_menu(GTK_OPTION_MENU(self.select),cmenu);
-	gtk_option_menu_set_history(GTK_OPTION_MENU(self.select),0);
+	gtk_option_menu_set_menu(GTK_OPTION_MENU(self.select), cmenu);
+	gtk_option_menu_set_history(GTK_OPTION_MENU(self.select), 0);
 	
-	gtk_box_pack_start(GTK_BOX(vbox),scroll,TRUE,TRUE,0);
-	gtk_box_pack_start(GTK_BOX(vbox),table,FALSE,TRUE,0);
+	gtk_box_pack_start(GTK_BOX(vbox), scroll, TRUE, TRUE, 0);
+	gtk_box_pack_start(GTK_BOX(vbox), table, FALSE, TRUE, 0);
 	
-	gtk_table_attach(GTK_TABLE(table),self.icon,0,1,0,2,GTK_FILL,GTK_EXPAND,0,0);
-	gtk_table_attach(GTK_TABLE(table),self.edit,1,2,1,2,GTK_FILL | GTK_EXPAND,GTK_FILL | GTK_EXPAND,0,0);
-	gtk_table_attach(GTK_TABLE(table),self.select,1,4,0,1,GTK_FILL | GTK_EXPAND ,GTK_FILL | GTK_EXPAND,0,0);
-	gtk_table_attach(GTK_TABLE(table),bFile,3,4,1,2,GTK_FILL ,GTK_FILL ,0,0);
+	gtk_table_attach(GTK_TABLE(table),self.icon, 0, 1, 0, 2, GTK_FILL | GTK_EXPAND, GTK_FILL | GTK_EXPAND, 0, 0);
+	gtk_table_attach(GTK_TABLE(table),self.edit, 1, 2, 1, 2, GTK_FILL | GTK_EXPAND, GTK_FILL | GTK_EXPAND, 0, 0);
+	gtk_table_attach(GTK_TABLE(table),self.select, 1, 4, 0, 1, GTK_FILL | GTK_EXPAND, GTK_FILL | GTK_EXPAND, 0, 0);
+	gtk_table_attach(GTK_TABLE(table),bFile, 3, 4, 1, 2, GTK_FILL, GTK_FILL, 0, 0);
 	
-	self.button[0] = gtk_radio_button_new(NULL);
-	self.button[1] = gtk_radio_button_new_from_widget(GTK_RADIO_BUTTON(self.button[0]));
-	self.button[2] = gtk_radio_button_new_from_widget(GTK_RADIO_BUTTON(self.button[0]));
-	self.button[3] = gtk_radio_button_new_from_widget(GTK_RADIO_BUTTON(self.button[0]));
-	self.button[4] = gtk_radio_button_new_from_widget(GTK_RADIO_BUTTON(self.button[0]));
-
+	if (NUM_BUTTONS)
+	{
+		self.buttons = g_malloc(NUM_BUTTONS * sizeof(GtkWidget*));
+		self.buttons[0] = gtk_radio_button_new(NULL);
+		for (i=1; i<NUM_BUTTONS; i++)
+			self.buttons[i] = 
+				gtk_radio_button_new_from_widget(GTK_RADIO_BUTTON(self.buttons[0]));
+	}
 	gtk_container_add (GTK_CONTAINER (scroll), layout1);
-
 	gtk_container_set_border_width (GTK_CONTAINER (layout1), 1);
 
-	if (self.p)
+	if (bg_image)
 	{
-		GtkWidget *pixmap1 = gtk_image_new_from_pixbuf (self.p);
-		gtk_layout_put (GTK_LAYOUT (layout1), pixmap1, 30, 5);
-
+		GtkWidget *pixmap1 = gtk_image_new_from_file(bg_image);
+		if (pixmap1) 
+			gtk_layout_put(GTK_LAYOUT(layout1), pixmap1, 30, 20);
 	}
 
-	gtk_layout_put (GTK_LAYOUT (layout1), self.button[0], 17, 33);
-	gtk_layout_put (GTK_LAYOUT (layout1), self.button[1], 44, 150);
-	gtk_layout_put (GTK_LAYOUT (layout1), self.button[2], 75, 170);
-	gtk_layout_put (GTK_LAYOUT (layout1), self.button[3], 125, 169);
-	gtk_layout_put (GTK_LAYOUT (layout1), self.button[4], 175, 152);
-	gtk_layout_put (GTK_LAYOUT (layout1), bDefault, 174, 3);
+	for (i = 0; i < NUM_BUTTONS; i++)
+	{
+		gtk_layout_put (GTK_LAYOUT (layout1), self.buttons[i], buttondefs[i].x, buttondefs[i].y);
+		g_signal_connect_after (G_OBJECT (self.buttons[i]), "clicked",
+		                        G_CALLBACK(on_button_select),(void *)i);
+	}	
+	
+	gtk_layout_put (GTK_LAYOUT (layout1), bDefault, 180, 3);
 
 	g_signal_connect_after (G_OBJECT (bFile), "clicked",
-				   G_CALLBACK(on_button_clicked),bFile);
-	
-	g_signal_connect_after (G_OBJECT (self.button[0]), "clicked",
-				   G_CALLBACK(on_button_select),(void *)0);
-	g_signal_connect_after (G_OBJECT (self.button[1]), "clicked",
-				   G_CALLBACK(on_button_select),(void *)1);
-	g_signal_connect_after (G_OBJECT (self.button[2]), "clicked",
-				   G_CALLBACK(on_button_select),(void *)2);
-	g_signal_connect_after (G_OBJECT (self.button[3]), "clicked",
-				   G_CALLBACK(on_button_select),(void *)3);
-	g_signal_connect_after (G_OBJECT (self.button[4]), "clicked",
-				   G_CALLBACK(on_button_select),(void *)4);
-	g_signal_connect (G_OBJECT (bDefault), "clicked",
-				   G_CALLBACK(on_defaults_clicked), NULL);
-	g_signal_connect (G_OBJECT (self.select), "changed",
-				   G_CALLBACK(on_menu_select), NULL);
-	g_signal_connect_after (G_OBJECT (self.edit), "changed",
-				   G_CALLBACK(on_edit_changed), NULL);
-	
-	gtk_widget_grab_focus(self.button[0]);
-	
+				   G_CALLBACK(on_button_clicked), bFile);
+	g_signal_connect(G_OBJECT(bDefault), "clicked",
+	                 G_CALLBACK(on_defaults_clicked), NULL);
+	g_signal_connect(G_OBJECT(self.select), "changed",
+	                 G_CALLBACK(on_menu_select), NULL);
+	g_signal_connect_after(G_OBJECT(self.edit), "changed",
+	                       G_CALLBACK(on_edit_changed), NULL);
 	init_buttons ();
-	gtk_entry_set_text(GTK_ENTRY(self.edit),buttondef[0].command);
-	
+	if (self.buttons && self.buttons[0])
+	{
+		gchar *bname;
+		
+		gtk_widget_grab_focus(self.buttons[0]);
+		gtk_entry_set_text(GTK_ENTRY(self.edit), buttondefs[0].command);
+		bname = g_strdup_printf(PREFIX "/share/pixmaps/%s", buttondefs[0].symbol);
+		gtk_image_set_from_file(GTK_IMAGE(self.icon), bname);
+		g_free(bname);
+	}
 	return vbox;
 }
 
@@ -503,8 +471,8 @@ Keyctl_Save ()
 	pid_t p_kl;
 
 	/* get current edit value */
-	g_free(buttondef[active_button].command);
-	buttondef[active_button].command = 
+	g_free(buttondefs[active_button].command);
+	buttondefs[active_button].command = 
 		g_strdup(gtk_entry_get_text(GTK_ENTRY(self.edit)));
 	
 	/* User will write to keylaunch in homedir, root global */	
@@ -523,7 +491,7 @@ Keyctl_Save ()
 	else
 		keylaunchrc = g_strdup ("/etc/keylaunchrc");
 
-	g_file_get_contents(keylaunchrc,&cont,&len,&err);
+	g_file_get_contents(keylaunchrc, &cont, &len, &err);
 	cfglines = g_strsplit(cont,"\n",255);
 	g_free(cont);
 	
@@ -531,17 +499,17 @@ Keyctl_Save ()
 	j = 0;
 	while (cfglines[j])
 	{
-		for (i=0;i<NUM_BUTTONS;i++)
+		for (i=0; i<NUM_BUTTONS; i++)
 		{
 			if (strlen(cfglines[j]) && (cfglines[j][0] !='#') && 
-				strstr(cfglines[j],buttondef[i].ident) &&
-				!strstr(cfglines[j],"???Combine"))
+				strstr(cfglines[j], buttondefs[i].key) &&
+				!strstr(cfglines[j], "???Combine"))
 			{
 				g_free(cfglines[j]);
 				cfglines[j] = 
-					g_strdup_printf("key=%s %s:-:%s",buttondef[i].modificator,
-						buttondef[i].ident,buttondef[i].command);
-				buttondef[i].type = 0xff;
+					g_strdup_printf("key=%s %s:-:%s", buttondefs[i].modificator,
+					                buttondefs[i].key, buttondefs[i].command);
+				buttondefs[i].type = 0xff;
 			}
 		}
 		j++;	
@@ -549,20 +517,20 @@ Keyctl_Save ()
 	
 	for (i=0;i<NUM_BUTTONS;i++)
 	{
-		if (buttondef[i].type != 0xff)
+		if (buttondefs[i].type != 0xff)
 		{
 			j++;
 			cfglines = realloc(cfglines,(j+1) * sizeof(char*));
 			cfglines[j-1] =
-				g_strdup_printf("key=%s %s:-:%s",buttondef[i].modificator,
-					buttondef[i].ident,buttondef[i].command);
+				g_strdup_printf("key=%s %s:-:%s", buttondefs[i].modificator,
+				                buttondefs[i].key, buttondefs[i].command);
 			cfglines[j] = NULL;
 		}
 	}
 	fd = fopen (keylaunchrc, "w");
 	if (fd == NULL)
 	{
-		gpe_error_box (_("Critical: Can't open keylaunchrc for writing!\n"));
+		gpe_error_box (_("Critical: Can't open keylaunchrc for writing!"));
 		return;
 	}
 	
@@ -584,10 +552,10 @@ Keyctl_Save ()
 	switch (p_kl)
 	{
 		case -1: 
-			gpe_error_box (_("Could not restart key handler!\n"));
+			gpe_error_box (_("Could not restart key handler!"));
 		break;
 		case  0: 
-			execlp(KEYLAUNCH_BIN,NULL);
+			execlp(KEYLAUNCH_BIN, NULL);
 		break;
 		default: 
 		break;
@@ -603,10 +571,10 @@ Keyctl_Restore ()
 void
 FileSelected (char *file, gpointer data)
 {
-	if (!strlen (file))
+	if (!strlen(file))
 		return;
-	if (access(file,X_OK))
+	if (access(file, X_OK))
 		gpe_error_box(_("The file you selected is not executable."));
 	else
-		gtk_entry_set_text (GTK_ENTRY (self.edit), file);
+		gtk_entry_set_text(GTK_ENTRY(self.edit), file);
 }
