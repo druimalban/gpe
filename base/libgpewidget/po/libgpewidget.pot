@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-02-01 16:44+0000\n"
+"POT-Creation-Date: 2003-03-30 15:25+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,66 +15,29 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: errorbox.c:58
-msgid "Error"
+#: errorbox.c:42
+#, c-format
+msgid "GPE-ERROR: %s\n"
 msgstr ""
 
-#: pixmaps.c:81
+#: pixmaps.c:82
 #, c-format
 msgid "Unable to load icon \"%s\""
 msgstr ""
 
-#: pixmaps.c:167
+#: pixmaps.c:168
 #, c-format
 msgid "Icon \"%s\" not loaded"
 msgstr ""
 
-#: dirbrowser.c:307
-msgid "OK"
+#: dirbrowser.c:166
+msgid "No directory is selected."
 msgstr ""
 
-#: dirbrowser.c:315
-msgid "Cancel"
-msgstr ""
-
-#: what.c:69
+#: what.c:78
 msgid "No help available."
 msgstr ""
 
-#: gtkdatesel.c:187
-msgid "%Y"
-msgstr ""
-
-#: gtkdatesel.c:196
-msgid "%b"
-msgstr ""
-
-#: gtkdatesel.c:199
-msgid "%B"
-msgstr ""
-
-#: gtkdatesel.c:202
-#, c-format
-msgid "%m"
-msgstr ""
-
-#: gtkdatesel.c:213
-msgid "Week %V"
-msgstr ""
-
-#: gtkdatesel.c:219
-#, c-format
-msgid "%a, %d"
-msgstr ""
-
-#: question.c:136
+#: question.c:175
 msgid "Question"
-msgstr ""
-
-#: question.c:137
-msgid "No"
-msgstr ""
-
-#: question.c:137
-msgid "Yes"
 msgstr ""
