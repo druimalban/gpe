@@ -36,7 +36,7 @@ create_mainwindow (void)
 
   mainwindow = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_object_set_data (GTK_OBJECT (mainwindow), "mainwindow", mainwindow);
-  gtk_window_set_title (GTK_WINDOW (mainwindow), _("Screen settings"));
+  gtk_window_set_title (GTK_WINDOW (mainwindow), _("Screen Settings"));
 
   vbox1 = gtk_vbox_new (FALSE, 0);
   gtk_widget_ref (vbox1);
