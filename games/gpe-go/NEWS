@@ -1,6 +1,8 @@
 GPE go NEWS
 
 * cvs
+- support for variations
+- support for colored marks
 - mark last played stone
 - basic support to mark stones
 

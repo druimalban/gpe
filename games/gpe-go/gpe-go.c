@@ -96,7 +96,10 @@ typedef struct _go {
   int col;
   int row;
 
-  GList * history;
+  GNode * history_root; //root node
+  GNode * history;      //current pointer
+
+  gboolean lock_variation_choice;
 
 } Go;
 
@@ -111,7 +114,7 @@ typedef enum {
 typedef enum {
   NO_MARK,
   MARK_SQUARE,
-  //MARK_SPOT,
+  MARK_SPOT,
   //MARK_TRIANGLE
 } GoMark;
 
@@ -126,6 +129,7 @@ typedef struct _hist_item{
   GoItem   item;
   int posx;
   int posy;
+  //GList * captured; FIXME: to use
 } Hitem;
 
 Hitem * new_hitem(){
@@ -138,8 +142,20 @@ void free_hitem(Hitem * hitem){
   if(hitem) free(hitem);
 }
 
+gboolean is_same_hitem(Hitem * a, Hitem * b){
+  if(1
+     && a->posx   == b->posx
+     && a->posy   == b->posy
+     && a->item   == b->item
+     && a->action == b->action) return TRUE;
+  return FALSE;
+}
+
 void append_hitem(GoAction action, GoItem item, int gox, int goy){
   Hitem * hitem;
+  Hitem * citem; //item to compare to
+  GNode * node;
+  gboolean found;
 
   hitem = new_hitem();
 
@@ -148,32 +164,23 @@ void append_hitem(GoAction action, GoItem item, int gox, int goy){
   hitem->posx   = gox;
   hitem->posy   = goy;
 
-  //if current is not the last, cut the old branch
-  if(go.history != g_list_last(go.history) || (go.turn == 1 && go.history)){
-    GList * c;
-    int turns_droped = 0;
-
-    if(go.turn == 1) c = go.history;
-    else c = go.history->next;
-
-    c->prev = NULL;
-    go.history->next = NULL; //cut the old branch!
-    while (c->next){//and destroy it.
-      if( ((Hitem *)(c->data))->action == PLAY) turns_droped++;
-      free_hitem(c->data);
-      c = g_list_delete_link (c, c);
+  // if the node/data exist, move to this node,
+  // do NOT create a new branch (child) (== no twins!)
+  // (in case undo, then replay on the same place)
+  node = g_node_first_child(go.history);
+  found = FALSE;
+  while(node && !found){
+    citem = node->data;
+    if(is_same_hitem(hitem, citem)){
+      go.history = node; //and that's it
+      found = TRUE;
     }
-    go.last_turn -= turns_droped;
+    node = node->next;
   }
+  if(!found) go.history = g_node_append_data(go.history, hitem);
 
-  //append item
-  go.history = g_list_append (go.history, hitem);
-
-  go.history = g_list_last(go.history);
+  go.last_turn = g_node_depth(go.history);
 }
-
-
-
 
 void app_init(int argc, char ** argv){
   int i,j;
@@ -218,7 +225,8 @@ void app_init(int argc, char ** argv){
   for(i=1; i<= go.game_size; i++) for(j=1; j<=go.game_size; j++) go.stamps[i][j]=0;
 
   //--init game
-  go.history = NULL;
+  go.history_root = g_node_new (NULL);
+  go.history = go.history_root;
 
   go.white_captures = 0;
   go.black_captures = 0;
@@ -228,6 +236,8 @@ void app_init(int argc, char ** argv){
 
   go.last_col = 0;
   go.last_row = 0;
+
+  go.lock_variation_choice = FALSE;
 
 }
 
@@ -243,7 +253,10 @@ void _print_grid(){
   for(j=1; j<= go.game_size; j++){
     g_print("%2d : ", j);
     for(i=1; i<=go.game_size; i++){
-      if(go.grid[i][j] == 0) g_print(" %c ",'-');
+      if(go.grid[i][j] == 0){
+        if(go.stamps[i][j]) g_print(" * ");
+        else                g_print(" - ");
+      }
       else{
         if(go.stamps[i][j]) g_print("*%d*",go.grid[i][j]);
         else g_print("%2d ",go.grid[i][j]);
@@ -270,18 +283,28 @@ void _print_hitem(Hitem * hitem){
   case WHITE_STONE: item = 'W'; break;
   default: item = ' ';
   }
-  g_print("%c %c: %d %d\n", action, item, hitem->posx, hitem->posy);
+  g_print("%c %c: %d %d", action, item, hitem->posx, hitem->posy);
 }
+
+gboolean _print_node(GNode *node, gpointer unused_data){
+  int i;
+  int depth;
+  depth = g_node_depth(node);
+  for(i=1; i<depth; i++) g_print("| ");
+  _print_hitem(node->data);
+  g_print ("\n");
+  return FALSE;
+}
+
 void _print_history(){
-  GList * c;
-  c =g_list_first(go.history);
-  if(!c) return;
-  do{
-    if (c == go.history) g_print("-----------\\\n");
-    _print_hitem(c->data);
-    if (c == go.history) g_print("-----------/\n");
-    c = c->next;
-  }while (c);
+  g_node_traverse ( go.history_root,
+                    //G_IN_ORDER, G_PRE_ORDER, G_POST_ORDER, or G_LEVEL_ORDER
+                    G_PRE_ORDER,
+                    //G_TRAVERSE_ALL, G_TRAVERSE_LEAFS and G_TRAVERSE_NON_LEAFS
+                    G_TRAVERSE_ALL,
+                    -1, //gint max_depth,
+                    _print_node,
+                    NULL);
 }
 
 void gui_init();
@@ -491,10 +514,11 @@ void unpaint_stone(int col, int row){
 
 void paint_mark(int col, int row, GoMark mark, GdkColor * color){
   GdkRectangle rect;
+  int position;
   int size;
 
-  rect.x = (col -1) * go.cell_size + go.margin + go.stone_space;
-  rect.y = (row -1) * go.cell_size + go.margin + go.stone_space;
+  rect.x = go.margin + (col -1) * go.cell_size + go.stone_space;
+  rect.y = go.margin + (row -1) * go.cell_size + go.stone_space;
   rect.width = rect.height = go.stone_size;
 
   TRACE("mark (%d %d) %s", col, row,
@@ -503,15 +527,29 @@ void paint_mark(int col, int row, GoMark mark, GdkColor * color){
   gdk_gc_set_foreground(gc, color);
   switch(mark){
     case MARK_SQUARE:
+      position = go.stone_size / 4;
       size = go.stone_size / 2;
       if( !((size - go.grid_stroke)%2) ) size++;
 
       gdk_draw_rectangle (go.drawing_area_pixmap_buffer,
                           gc,
                           FALSE,
-                          rect.x + go.stone_size / 4, rect.y + go.stone_size / 4,
+                          rect.x + position, rect.y + position,
                           size, size
                           );
+      break;
+    case MARK_SPOT:
+      size = go.stone_size / 1.5;
+      if( !((size - go.grid_stroke)%2) ) size++;
+      position = (go.cell_size - size ) / 2 -1;
+
+      gdk_draw_arc(go.drawing_area_pixmap_buffer,
+                   gc,
+                   TRUE,//filled
+                   rect.x + position,
+                   rect.y + position,
+                   size, size,
+                   0, 23040);//23040 == 360*64
       break;
     case NO_MARK:
     default:
@@ -823,6 +861,7 @@ void update_turn_label(){
 }
 #endif
 
+void redo_turn();
 void play_at(int gox, int goy){
   //TRACE("Play at %d %d", gox, goy);
   if( gox < 1 || go.game_size < gox ||
@@ -830,11 +869,15 @@ void play_at(int gox, int goy){
     //TRACE("--> out of bounds");
     return;
   }
+  if(go.lock_variation_choice){//variation choice
+    if(!is_stamped(gox, goy)) return;
+    redo_turn();
+    return;
+  }
   if(go.grid[gox][goy] != 0){
     //TRACE("--> not empty");
     return;
   }
-  //TRACE("");
 
   {
     GoItem color;
@@ -902,6 +945,7 @@ void play_at(int gox, int goy){
 void undo_turn(){
   Hitem * hitem;
 
+  if(go.lock_variation_choice) return;
   if(!go.history || go.turn == 0) return;
 
   hitem = go.history->data;
@@ -911,7 +955,7 @@ void undo_turn(){
     if(hitem->item == BLACK_STONE) go.white_captures--;
     else go.black_captures--;
 
-    if(go.history->prev) go.history = go.history->prev;
+    if(go.history->parent) go.history = go.history->parent;
     hitem = go.history->data;
   }
   update_capture_label();
@@ -927,16 +971,16 @@ void undo_turn(){
   update_turn_label();
 #endif
 
-  if(go.history->prev){
-    go.history = go.history->prev;
+  if(go.history->parent && !G_NODE_IS_ROOT(go.history->parent)){
+    go.history = go.history->parent;
 
     {
-      GList * hist;
+      GNode * hist;
       Hitem * item;
       hist = go.history;
       item = hist->data;
       while(item->action == CAPTURE){
-        hist = hist->prev;
+        hist = hist->parent;
         item = hist->data;
       } 
       update_last_played_mark_to(item->posx, item->posy);
@@ -945,17 +989,64 @@ void undo_turn(){
 }
 
 void redo_turn(){
+  int children;
   Hitem * hitem = NULL;
- 
-  TRACE("*************************************");
-  //**/_print_history();
 
-  if(!go.history || !go.history->next /*|| go.turn >= go.last_turn*/){
+  if(!go.history || G_NODE_IS_LEAF(go.history)){
     TRACE("================do nothing");
     return;
   }
 
-  if(go.turn >= 1 && go.history->next) go.history = go.history->next;
+  //check variations
+  children = g_node_n_children(go.history);
+  if(go.turn >= 1 && children >= 1){
+
+    GNode * choosen_child;
+    choosen_child = g_node_first_child (go.history);
+
+    if(children > 1){//variations
+      if(go.lock_variation_choice == FALSE){
+        int i;
+        GNode * child;
+        TRACE("VARIATIONS: %d", children -1);
+        
+        clear_stamps();
+        for(i=0; i<children; i++){
+          Hitem * item;
+          child = g_node_nth_child (go.history, i);
+          item = child->data;
+          
+          stamp(item->posx, item->posy);
+          paint_mark(item->posx, item->posy, MARK_SPOT, &red);
+        }
+        
+        go.lock_variation_choice = TRUE;
+        return;
+      }
+      else{
+        int i;
+        GNode * child;
+
+        if(!is_stamped(go.col, go.row)) return;
+        //select the child
+        
+        for(i=0; i<children; i++){
+          Hitem * item;
+          child = g_node_nth_child (go.history, i);
+          item = child->data;
+          if(item->posx == go.col && item->posy == go.row){
+            choosen_child = child;
+          }
+          //unpaint SPOTS
+          unpaint_stone(item->posx, item->posy);
+        }
+        clear_stamps();
+        go.lock_variation_choice = FALSE;
+      }
+    }//if variations
+    
+    go.history = choosen_child;
+  }
 
   hitem = go.history->data;
 
@@ -977,11 +1068,11 @@ void redo_turn(){
     go.turn++;
 
     {//revert capture if there are.
-      GList * c;
-      if(go.history->next){
+      GNode * node;
+      if(g_node_n_children(go.history) >= 1){
 
-        c = go.history->next;
-        hitem = c->data;
+        node = g_node_nth_child (go.history, 0);
+        hitem = node->data;
       
         while(hitem && hitem->action == CAPTURE){
           TRACE("***> remove %d %d", hitem->posx, hitem->posy);
@@ -989,10 +1080,10 @@ void redo_turn(){
           if(hitem->item == BLACK_STONE) go.white_captures++;
           else go.black_captures++;
           
-          go.history = c;
-          if(go.history->next){
-            c = go.history->next;
-            hitem = c->data;
+          go.history = node;
+          if(g_node_n_children(go.history) >= 1){
+            node = g_node_nth_child (go.history, 0);
+            hitem = node->data;
           }
           else hitem = NULL;
         }
@@ -1005,7 +1096,6 @@ void redo_turn(){
   update_turn_label();
 #endif
 
-  TRACE("*************************************");
 }
 
 gboolean
@@ -1022,34 +1112,45 @@ on_drawing_area_button_release_event(GtkWidget       *widget,
 /*
   Property index of FF[1]-FF[4]
   http://www.red-bean.com/sgf/proplist_ff.html
-  
-  (;GM[1]FF[3]
-  RU[Japanese]SZ[13]HA[0]KM[5.5]
-  PW[White]
-  PB[Black]
-  GN[White (W) vs. Black (B)]
-  DT[2003-09-02]
-  SY[Cgoban 1.9.14]TM[30:00(5x1:00)];B[am]BL[1791];W[al]WL[1799];B[em]
-  BL[1786];W[bm]WL[1799];B[dm]BL[1780]
-  )
 */
-void _save_hitem(FILE * f, Hitem * hitem){
+
+void _save_hitem_sgf(FILE * f, Hitem * hitem){
+//  ;B[am]BL[1791];W[al]WL[1799]
   char item;
 
   if(!hitem) return;
   if(hitem->item == BLACK_STONE) item = 'B'; else item = 'W';
-  if     (hitem->action == PASS) fprintf(f, "%c[tt];", item);//FIXME: support "[]"
-  else if(hitem->action == PLAY) fprintf(f, "%c[%c%c];", item,
+  if     (hitem->action == PASS) fprintf(f, ";%c[tt]", item);//FIXME: support "[]"
+  else if(hitem->action == PLAY) fprintf(f, ";%c[%c%c]", item,
                                          hitem->posx + 'a' -1,
                                          hitem->posy + 'a' -1);
+}
+
+void _save_tree_to_sgf_from (GNode *node, FILE * f){
+  gboolean has_siblings = FALSE;
+
+  if(node->parent && g_node_n_children(node->parent) > 1){
+    has_siblings = TRUE;
+    fprintf(f, "\n  (");
+  }
+
+  if(node->data) _save_hitem_sgf(f, node->data);
+
+  node = node->children;
+  while (node){
+      _save_tree_to_sgf_from (node, f);
+      node = node->next;
+  }
+
+  if(has_siblings) fprintf(f, ")\n");  
 }
 
 void save_game(){
   FILE * f;
   char * filename;
   char * filename_sgf;
-  GList * c;
 
+  //--Open file
   filename = g_strdup(gtk_file_selection_get_filename (GTK_FILE_SELECTION (go.file_selector)));
   if(g_str_has_suffix(filename, ".sgf") == FALSE){
     filename_sgf = g_strconcat (filename, ".sgf", NULL);
@@ -1067,22 +1168,22 @@ void save_game(){
   }
   g_free(filename_sgf);
 
-  c = g_list_first(go.history);
-  if(!c) return;
 
+  //--Save history
+
+  //headers
   fprintf(f, "(;GM[1]FF[3]\n");
-  fprintf(f, "RU[Japanese]SZ[%d]H[%d]KM[%f]\n", go.game_size, 0, 5.5);
+  fprintf(f, "RU[Japanese]SZ[%d]H[%d]KM[%f]\n", go.game_size, 0, 0.5/*komi*/);
   fprintf(f, "PW[%s]\n", "white");
   fprintf(f, "PB[%s]\n", "black");
   fprintf(f, "GN[%s]\n", "the game of the year");
   fprintf(f, "DT[%s]\n", "yyyy-mm-dd");
 
-  do{
-    _save_hitem(f, c->data);
-    c = c->next;
-  }while (c);
+  //history tree
+  _save_tree_to_sgf_from (go.history_root, f);
 
-  fprintf(f, "\n)");
+  //footer
+  fprintf(f, "\n)\n");
 
   fclose(f);
   gtk_widget_hide (go.file_selector);
@@ -1093,15 +1194,6 @@ void on_button_save_pressed (void){
 }
 
 void on_button_pref_pressed (void){
-  TRACE("-------------------------------------\\");
-  TRACE("Preferences.");
-  //**/_print_grid();
-  /**/_print_history();
-  TRACE("turn %d", go.turn);
-  TRACE("last %d", go.last_turn);
-  TRACE("list %d", g_list_length(g_list_first(go.history)));
-  TRACE("-------------------------------------/");
-
 }
 void on_button_prev_pressed (void){
   TRACE("prev");
@@ -1114,6 +1206,9 @@ void on_button_next_pressed (void){
 
 void on_button_pass_clicked (void){
   TRACE("pass");
+
+  if(go.lock_variation_choice) return;
+
   append_hitem(PASS, EMPTY, 0, 0);
   go.turn++;
   go.last_turn++;
