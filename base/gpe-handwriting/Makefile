@@ -26,8 +26,10 @@ CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR
 ifeq ($(CVSBUILD),yes)
 CFLAGS += -I../../base/libgpewidget
 LDFLAGS += -L../../base/libgpewidget
+BUILD = ../build
 else
 CFLAGS += -I/usr/include/gpe
+BUILD = build
 endif
 LDFLAGS += -lgpewidget $(GTKLDFLAGS)
 
@@ -40,7 +42,7 @@ $(PACKAGE): $(OBJS)
 	$(CC) -o $@ $^ $(LDFLAGS)
 
 install: all install-mo
-	install -D $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
+	install -Ds $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	install -D $(PACKAGE).png $(DESTDIR)$(PREFIX)/share/pixmaps/$(PACKAGE).png
 	install -d $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/$(PACKAGE)
 	install -m 644 pixmaps/zoom_in.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/$(PACKAGE)/zoom_in.png
@@ -48,10 +50,9 @@ install: all install-mo
 	install -D $(PACKAGE).menu $(DESTDIR)$(PREFIX)/lib/menu/$(PACKAGE)
 	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
 	install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications/$(PACKAGE)-play
-	strip $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 
 clean:
 	rm -f $(PACKAGE) $(OBJS)
 
-include ../../base/build/Makefile.dpkg_ipkg
-include ../../base/build/Makefile.translation
+include $(BUILD)/Makefile.translation
+include $(BUILD)/Makefile.dpkg_ipkg
