@@ -1551,7 +1551,7 @@ Theme_Build_Objects ()
   label = g_object_get_data (G_OBJECT (self.bFont), "label");
   gtk_label_set_text(GTK_LABEL(label),"Sans");	
 #endif
-  gtk_spin_button_set_value(GTK_SPIN_BUTTON(self.spFSApp),(float)9.0);
+  gtk_spin_button_set_value(GTK_SPIN_BUTTON(self.spFSApp),(float)8.0);
   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.cDefault),TRUE);
   label = g_object_get_data (G_OBJECT (self.bFontApp), "label");
   gtk_label_set_text(GTK_LABEL(label),"Sans");	
@@ -1576,7 +1576,7 @@ Theme_Build_Objects ()
 
   gtk_spin_button_set_value(GTK_SPIN_BUTTON(self.spFSTerminal), 
                             get_terminal_fontsize());
-  
+  gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self.cPerformance), TRUE);
   mb_start_xsettings ();
 
   return notebook;
