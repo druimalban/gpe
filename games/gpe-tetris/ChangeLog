@@ -1,3 +1,9 @@
+2004-09-18  Florian Boor <florian@kernelconcepts.de>
+
+	* Makefile: Update to latest standards.
+                    Increased version.
+        * familiar/control*: Added source field, minor fixes.
+
 2003-07-07  Moray Allan  <moray@sermisy.org>
 
 	* interface.c (main, new_highscore_name): Removed legacy GTK1 code.

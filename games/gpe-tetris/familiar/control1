@@ -8,4 +8,4 @@ Depends: libc6, xlibs, libgtk2.0-0, gpe-icons (>= 0.07), libgpewidget1 (>= 0.08)
 Description: GTK+ port of the well known games adapted to iPaq and GPE
 Provides: gpe-tetris
 Replaces: gpe-tetris
-
+Source: SOURCE

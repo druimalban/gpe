@@ -7,15 +7,14 @@ GROUP = games
 HIGHSCORE_FILE = $(HIGHSCORE_PATH)/highscore.dat
 DEBUG = yes
 CVSBUILD = yes
-VERSION = 0.6-1
+VERSION = 0.6-2
 
-CC = gcc
 
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
 GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
 
-CFLAGS = $(GTKCFLAGS) -DHIGHSCORE_FILE=\"$(HIGHSCORE_FILE)\" -DDOWN_DROPS -D_GNU_SOURCE -Wall -DPREFIX=\"$(PREFIX)\" -DPACKAGE=\"$(PROGRAM)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
-LDFLAGS = $(GTKLDFLAGS)
+PACKAGE_CFLAGS = $(GTKCFLAGS) -DHIGHSCORE_FILE=\"$(HIGHSCORE_FILE)\" -DDOWN_DROPS -D_GNU_SOURCE -Wall -DPREFIX=\"$(PREFIX)\" -DPACKAGE=\"$(PROGRAM)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
+PACKAGE_LDFLAGS = $(GTKLDFLAGS)
 
 ifeq ($(DEBUG),yes)
 CFLAGS += -O2 -g
@@ -25,15 +24,15 @@ CFLAGS += -Os -fomit-frame-pointer
 endif
 
 ifeq ($(CVSBUILD),yes)
-CFLAGS += -I../../base/libgpewidget
-LDFLAGS += -L../../base/libgpewidget
+PACKAGE_CFLAGS += -I../../base/libgpewidget
+PACKAGE_LDFLAGS += -L../../base/libgpewidget
 else
-CFLAGS += -I/usr/include/gpe
+PACKAGE_CFLAGS += -I/usr/include/gpe
 endif
-LDFLAGS += -lgpewidget
+PACKAGE_LDFLAGS += -lgpewidget
 
 all: $(OBJS)
-	$(CC) $(DEFINES) $(CFLAGS) $(OBJS) -o $(PROGRAM) $(LDFLAGS)
+	$(CC) $(DEFINES) $(CFLAGS) $(OBJS) -o $(PROGRAM) $(PACKAGE_LDFLAGS)
 
 clean: 
 	rm -f *.o $(PROGRAM)
@@ -55,9 +54,6 @@ uninstall:
 	rm -i $(BIN_PATH)/$(PROGRAM)
 	rm -i $(HIGHSCORE_FILE)
 	rmdir $(HIGHSCORE_PATH)
-
-dist:
-	-cd .. ; tar c gtktetris-0.5 | gzip -9 > gtktetris-0.5.tar.gz
 
 include ../../base/build/Makefile.dpkg_ipkg
 -include $(DEPS)
