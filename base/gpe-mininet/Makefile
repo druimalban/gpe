@@ -1,5 +1,5 @@
 PACKAGE = gpe-mininet
-VERSION = 0.4
+VERSION = 0.5
 NATIVE = yes
 CVSBUILD = yes
 DEBUG = no
