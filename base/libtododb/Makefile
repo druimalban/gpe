@@ -11,7 +11,7 @@ MEMBERS = todo-db old-db
 SONAME = libtododb.so.0
 
 PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS) -I.
-PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS) `pkg-config --cflags glib-2.0` -DG_DISABLE_DEPRECATED -I../libgpepimc
+PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS) `pkg-config --cflags glib-2.0` -DG_DISABLE_DEPRECATED -I../libgpepimc -fPIC
 PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS) `pkg-config --libs glib-2.0` -lsqlite -L../libgpepimc -lgpepimc
 
 HEADERS = gpe/todo-db.h
