@@ -16,7 +16,7 @@
 //#include <math.h>
 
 
-#define VERSION "0.0.10"
+#define VERSION "0.0.11"
 #define MIN(a,b)	(((a)<(b)) ? (a):(b))
 
 #define safe_strcpy(a,b) {siof=sizeof(a);a[siof-1]=0;strncpy(a,b,siof-1);}
