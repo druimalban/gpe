@@ -52,7 +52,7 @@ GTKLDFLAGS = `pkg-config --libs gtk+-2.0 gdk-2.0`
 
 PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS) -I.
 PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GTKCFLAGS) $(GPECFLAGS) -I.
-PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GTKLDFLAGS) $(GPELIBS) -lXsettings -lXsettings-client -lcrypt
+PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GTKLDFLAGS) $(GPELIBS) -lXsettings -lXsettings-client -lcrypt -L/usr/X11R6/lib -lXrandr
 
 ifeq ($(DEBUG),yes)
 PACKAGE_CFLAGS += -g -DDEBUG

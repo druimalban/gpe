@@ -27,7 +27,7 @@
 #include "../applets.h"
 
 extern char *RotationLabels;
-static Display *dpy;
+static Display *dpy = NULL;
 static int screen;
 static int current_rotation;
 
@@ -84,12 +84,13 @@ int get_rotation ()
 	XRRScreenConfiguration *rr_screen;
 	Rotation current_rotation;
 	
+	if (dpy == NULL) 
+		if (!check_init_rotation()) return 0;
+
 	rr_screen = XRRGetScreenInfo (dpy, RootWindow (dpy, screen));
 	XRRRotations (dpy, screen, &current_rotation);
 	XRRFreeScreenConfigInfo (rr_screen);
 
-	fprintf (stderr, "Current RANDR rotation is %d\n", current_rotation);
-	
 	switch (current_rotation)
 	{
 	case RR_Rotate_270:
@@ -121,11 +122,11 @@ void set_rotation (int rotation)
 	Rotation current_rotation;
 	int size;
 
+	if (dpy == NULL) 
+		if (!check_init_rotation()) return;
+	
 	scr_config =  XRRGetScreenInfo (dpy,RootWindow (dpy, screen));
 	size = XRRConfigCurrentConfiguration (scr_config, &current_rotation);	
-//	rr_screen = XRRGetScreenInfo (dpy, RootWindow (dpy, screen));
-//	XRRRotations (dpy, screen, &current_rotation);
-//	XRRFreeScreenConfigInfo (rr_screen);
 
 	switch (rotation)
 	{

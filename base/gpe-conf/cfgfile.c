@@ -55,7 +55,7 @@ gchar* get_file_var(const gchar *file, const gchar *var)
   gchar *delim;
   gint i = 0;
 
-  GError *err;
+  GError *err = NULL;
 
   delim = g_strdup ("\n");
   if (!g_file_get_contents (file, &content, &length, &err))
