@@ -30,6 +30,8 @@
 
 #include <gmp.h>
 
+#include "display.h"
+
 static char buf[256];
 static GtkWidget *display;
 
@@ -49,13 +51,14 @@ void do_equals (GtkWidget *w);
 void
 update_display (void)
 {
-  gtk_label_set_text (GTK_LABEL (display), buf[0] ? buf : "0");
+  display_result_set (buf[0] ? buf : "0");
+  gtk_widget_draw (display, NULL);
 }
 
 void
 error (void)
 {
-  gtk_label_set_text (GTK_LABEL (display), "Error");
+  //  gtk_label_set_text (GTK_LABEL (display), "Error");
   in_error = TRUE;
 }
 
@@ -238,7 +241,6 @@ number_button (int n)
     buf[0] = n + 'A' - 10;
   buf[1] = 0;
   w = gtk_button_new_with_label (buf);
-  gtk_widget_set_usize (w, 16, 16);
   gtk_signal_connect (GTK_OBJECT (w), "clicked",
 		      GTK_SIGNAL_FUNC (push_digit),
 		      (gpointer)n);
@@ -334,39 +336,31 @@ struct
   int arg;
 } op_buttons[] = 
   {
-    { NULL },
-    { NULL },
-    { "C", do_clear, 0 },
+    { "+", do_binop, '+' },
     { "AC", do_clear, 1 },
 
-    { NULL },
-    { NULL },
-    { NULL },
-    { NULL },
-
-    { "+", do_binop, '+' },
     { "-", do_binop, '-' },
-    { "*", do_binop, '*' },
-    { "/", do_binop, '/' },
+    { "C", do_clear, 0 },
 
-    { ".", do_point },
-    { NULL }, //{ "+/-", do_plusminus },
+    { "*", do_binop, '*' },
     { NULL },
+
+    { "/", do_binop, '/' },
     { "=", do_equals },
   };
 
 void
-make_button (GtkWidget *table, char *str, int x, int y, void *func, int arg)
+make_button (GtkWidget *table, char *str, int x, int y, void *func, int arg, int width)
 {
   if (str)
     {
       GtkWidget *w = gtk_button_new_with_label (str);
-      gtk_widget_set_usize (w, 32, 16);
-      gtk_table_attach_defaults (GTK_TABLE (table), w, x, x+1, y, y+1);
+
       if (func)
 	gtk_signal_connect (GTK_OBJECT (w), "clicked", GTK_SIGNAL_FUNC (func), (gpointer)arg);
       gtk_widget_show (w);
-      if (!strcmp (str, "AC"))
+ 
+     if (!strcmp (str, "AC") || !strcmp (str, "C"))
 	{
 	  gtk_widget_set_style (w, clear_button_style);
 	  gtk_widget_set_style (GTK_BIN (w)->child, clear_button_style);
@@ -376,6 +370,8 @@ make_button (GtkWidget *table, char *str, int x, int y, void *func, int arg)
 	  gtk_widget_set_style (w, button_style);
 	  gtk_widget_set_style (GTK_BIN (w)->child, button_style);
 	}
+
+     gtk_table_attach_defaults (GTK_TABLE (table), w, x, x+width, y, y+1);
     }
 }
 
@@ -385,13 +381,15 @@ build_ops (GtkWidget *table)
   int x, y;
   for (y = 0; y < 4; y++)
     {
-      for (x = 0; x < 4; x++)
+      for (x = 0; x < 2; x++)
 	{
-	  int n = x + (y * 4);
-	  make_button (table, op_buttons[n].str, x, y, op_buttons[n].func, op_buttons[n].arg);
+	  int n = x + (y * 2);
+	  make_button (table, op_buttons[n].str, (x * 2) + 6, y, op_buttons[n].func, op_buttons[n].arg, 2);
 	}
     }
 }
+
+static int numbers[4][5] = { { 7, 8, 9, 0xa, 0xb }, { 4, 5, 6, 0xc, 0xd }, { 1, 2, 3, 0xe, 0xf}, { -1, 0, -1, -1, -1,} };
 
 int
 main (int argc, char *argv[])
@@ -408,7 +406,6 @@ main (int argc, char *argv[])
   GtkWidget *optable;
   GtkStyle *black_style;
   GdkColor col;
-  GtkWidget *display_box;
 
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
@@ -446,32 +443,41 @@ main (int argc, char *argv[])
   vbox = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vbox);
   gtk_container_add (GTK_CONTAINER (window), vbox);
-  display_box = gtk_event_box_new ();
-  gtk_widget_show (display_box);
-  display = gtk_label_new ("");
+  display = gtk_text_view_new ();
   gtk_widget_show (display);
-  gtk_misc_set_alignment (GTK_MISC (display), 1.0, 0.5);
+  gtk_text_view_set_editable (GTK_TEXT_VIEW (display), FALSE);
+  gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (display), GTK_WRAP_WORD);
+  gtk_text_view_set_cursor_visible (GTK_TEXT_VIEW (display), FALSE);
+  gtk_text_view_set_left_margin (GTK_TEXT_VIEW (display), 10);
+  gtk_text_view_set_right_margin (GTK_TEXT_VIEW (display), 10);
+  display_init (display);
   gtk_container_set_border_width (GTK_CONTAINER (window), 2);
-  gtk_container_add (GTK_CONTAINER (display_box), display);
-  gtk_box_pack_start (GTK_BOX (vbox), display_box, FALSE, FALSE, 2);
-  table = gtk_table_new (4, 4, TRUE);
+  gtk_box_pack_start (GTK_BOX (vbox), display, FALSE, FALSE, 2);
+  table = gtk_table_new (4, 8, TRUE);
   gtk_widget_show (table);
   hbox = gtk_hbox_new (FALSE, 0);
   gtk_widget_show (hbox);
   gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
 
+  gtk_widget_set_usize (window, 240, -1);
+
   for (y = 0; y < 4; y++)
     {
-      for (x = 0; x < 4; x++)
+      for (x = 0; x < 5; x++)
 	{
-	  int n = x + ((3 - y) * 4);
-	  GtkWidget *b = number_button (n);
-	  gtk_widget_show (b);
-	  gtk_table_attach_defaults (GTK_TABLE (table), b, x, x+1, y, y+1);
+	  int n = numbers[y][x];
+	  if (n >= 0)
+	    {
+	      GtkWidget *b = number_button (n);
+	      gtk_widget_show (b);
+	      gtk_table_attach_defaults (GTK_TABLE (table), b, x, x+1, y, y+1);
+	    }
 	}
     }
 
-  gtk_box_pack_start (GTK_BOX (hbox), table, FALSE, FALSE, 0);
+  make_button (table, ".", 2, 3, do_point, NULL, 1);
+
+  gtk_box_pack_start (GTK_BOX (hbox), table, TRUE, TRUE, 0);
 
   vbox_base = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vbox_base);
@@ -481,12 +487,8 @@ main (int argc, char *argv[])
   base_button (vbox_base, "bin", 2);
   gtk_box_pack_end (GTK_BOX (hbox), vbox_base, FALSE, FALSE, 0);
 
-  optable = gtk_table_new (4, 4, TRUE);
-  gtk_box_pack_start (GTK_BOX (hbox), optable, FALSE, FALSE, 4);
-  gtk_widget_show (optable);
-  build_ops (optable);
+  build_ops (table);
 
-  clear (TRUE);
   mpf_init (dv);
   mpf_init (accum);
 
@@ -496,7 +498,9 @@ main (int argc, char *argv[])
   gtk_widget_set_style (window, black_style);
 
   gtk_widget_show (window);
-  
+
+  clear (TRUE);
+
   gtk_main ();
   
   exit (0);

@@ -1,10 +1,10 @@
 PREFIX = /usr/local
 PACKAGE = gpe-minicalc
-DEBUG = no
+DEBUG = yes
 CVSBUILD = yes
 GTK2 = yes
 
-MEMBERS = minicalc
+MEMBERS = minicalc display
 
 ifeq ($(GTK2),yes)
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
