@@ -1,5 +1,10 @@
 2003-10-09  Colin Marquardt  <colin@marquardt-home.de>
 
+	* main.c (main): Don't print CVS Revision, it's useless.
+
+	* Makefile (MEMBERS): Add gpe-ownerinfo so that all strings end up
+	in the pot file.
+
 	* familiar/control1 (Depends): Remove librootimage0.
 
 	* Makefile (VERSION): Bump up to version 0.22.

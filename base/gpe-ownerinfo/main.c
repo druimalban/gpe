@@ -40,7 +40,6 @@
 int
 main (int argc, char *argv[])
 {
-  gchar *package_revision = "$Revision$";
   GtkWidget *GPE_Ownerinfo, *notebook;
   
   gchar * geometry = NULL;
@@ -81,7 +80,7 @@ main (int argc, char *argv[])
 	flag_keep_on_top = TRUE;
 	break;
       case 'h':
-	printf (g_strdup_printf ("%s %s", _("GPE Owner Info"), package_revision));
+	printf (_("GPE Owner Info"));
 	printf ("\n");
 	printf (_("Valid options:\n"));
 	printf (_("   -g GEOMETRY  window geometry (default: 240x100+0+220)\n"));

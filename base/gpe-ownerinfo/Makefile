@@ -8,7 +8,7 @@ LINGUAS = de hu id pt fr zh_TW ro sv nl sk cs
 
 LIB_TARGET = libgpe-ownerinfo.a
 LIB_MEMBERS = $(PACKAGE)
-MEMBERS = main
+MEMBERS = main gpe-ownerinfo
 
 ifeq ($(CVSBUILD),yes)
 CFLAGS += -I../libgpewidget
