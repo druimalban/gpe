@@ -124,7 +124,7 @@ confirm_dialog (gchar **text, gchar *action, gchar *action2)
   frame = gtk_frame_new (_("Notes"));
   gtk_widget_show (frame);
 #if GTK_MAJOR_VERSION < 2
-  entry = gtk_text_new ();
+  entry = gtk_text_new (NULL, NULL);
 #else
   entry = gtk_text_view_new ();
 #endif

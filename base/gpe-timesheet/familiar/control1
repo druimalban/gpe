@@ -1,0 +1,10 @@
+Package: gpe-timesheet2
+Section: base
+Priority: optional
+Version: 0.10
+Architecture: arm
+Maintainer: Phil Blundell <pb@debian.org>
+Depends: sqlite, libgpewidget1 (>= 0.24), gpe-icons (>= 0.15)
+Description: GPE time tracker
+Provides: gpe-timesheet
+Replaces: gpe-timesheet

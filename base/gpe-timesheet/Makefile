@@ -31,15 +31,19 @@ DEPS = $(patsubst %,%.d,$(MEMBERS))
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
+all: gpe-timesheet
+
 gpe-timesheet: $(OBJS)
 	$(CC) -o $@ $^ $(LGPEWIDGET) $(GTKLDFLAGS) -lsqlite $(LDFLAGS)
 
-install: install-mo
+install: all install-mo
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
 	install gpe-timesheet $(DESTDIR)$(PREFIX)/bin/gpe-timesheet
 	mkdir -p $(DESTDIR)$(PREFIX)/share/pixmaps
 	install -m 644 gpe-timesheet.png $(DESTDIR)$(PREFIX)/share/pixmaps/gpe-timesheet.png
 	strip $(DESTDIR)$(PREFIX)/bin/gpe-timesheet
+	mkdir -p $(DESTDIR)$(PREFIX)/lib/menu
+	install -m 644 gpe-timesheet.menu $(DESTDIR)$(PREFIX)/lib/menu/gpe-timesheet
 
 clean:
 	rm -f gpe-timesheet $(OBJS)
