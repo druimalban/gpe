@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=File Manager
+Comment=GPE File Manager
+Exec=gpe-filemanager
+Terminal=0
+Type=Application
+Icon=gpe-filemanager.png
+Categories=Application;Utility;GPE
+StartupNotify=True
