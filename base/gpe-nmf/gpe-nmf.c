@@ -38,6 +38,48 @@ static struct gpe_icon my_icons[] = {
 
 #define _(x) gettext(x)
 
+static gint
+draw_expose_event (GtkWidget *widget,
+		   GdkEventExpose *event,
+		   gpointer user_data)
+{
+  GtkDrawingArea *darea;
+  GdkDrawable *drawable;
+  guint width, height;
+  GdkGC *black_gc;
+  GdkGC *gray_gc;
+  GdkGC *white_gc;
+
+  g_return_val_if_fail (widget != NULL, TRUE);
+  g_return_val_if_fail (GTK_IS_DRAWING_AREA (widget), TRUE);
+
+  white_gc = widget->style->white_gc;
+  gray_gc = widget->style->bg_gc[GTK_STATE_NORMAL];
+  black_gc = widget->style->black_gc;
+  
+  gdk_gc_set_clip_rectangle (black_gc, &event->area);
+  gdk_gc_set_clip_rectangle (gray_gc, &event->area);
+  gdk_gc_set_clip_rectangle (white_gc, &event->area);
+  
+  darea = GTK_DRAWING_AREA (widget);
+  drawable = widget->window;
+
+  width = widget->allocation.width;
+  height = widget->allocation.height;
+
+  gdk_draw_rectangle (drawable, white_gc, 1,
+		      0, 0, width, height);
+
+  gdk_draw_string (drawable, widget->style->font, black_gc, 
+		   4, 16, "Track information here");
+
+  gdk_gc_set_clip_rectangle (black_gc, NULL);
+  gdk_gc_set_clip_rectangle (gray_gc, NULL);
+  gdk_gc_set_clip_rectangle (white_gc, NULL);
+
+  return TRUE;
+}
+
 int
 main (int argc, char *argv[])
 {
@@ -49,6 +91,7 @@ main (int argc, char *argv[])
   GtkWidget *prev, *play, *pause, *stop, *next;
   GtkWidget *rewind, *forward;
   GtkWidget *vbox, *vol_slider;
+  GtkWidget *draw, *progress;
   GtkObject *vol_adjust;
 
   gchar *color = "gray80";
@@ -166,6 +209,18 @@ main (int argc, char *argv[])
 
   hbox2 = gtk_hbox_new (FALSE, 0);
   gtk_widget_show (hbox2);
+
+  draw = gtk_drawing_area_new ();
+  gtk_widget_show (draw);
+  gtk_signal_connect (GTK_OBJECT (draw), "expose-event",
+		      draw_expose_event, NULL);
+
+  gtk_box_pack_start (GTK_BOX (vbox), draw, TRUE, TRUE, 0);
+
+  progress = gtk_progress_bar_new ();
+  gtk_widget_show (progress);
+  gtk_widget_set_usize (progress, -1, 8);
+  gtk_box_pack_start (GTK_BOX (vbox), progress, FALSE, FALSE, 0);
 
   gtk_box_pack_end (GTK_BOX (hbox2), vol_slider, FALSE, FALSE, 0);
   gtk_box_pack_end (GTK_BOX (hbox2), vbox, TRUE, TRUE, 0);
