@@ -10,22 +10,22 @@ typedef struct
 typedef struct
 {
   gchar *name;
+  GString *text;
   gchar *topic;
   GList *users;
-  GQueue *queue_in;
 } IRCChannel;
 
 typedef struct
 {
   gchar *name;
+  GString *text;
   int fd;
   gboolean connected;
-  GList *channels;
-  GQueue *queue_in;
+  GHashTable *channel;
   IRCUserInfo *user_info;
 } IRCServer;
 
-extern gboolean irc_server_read (IRCServer *server, gchar *passback_message);
+extern gchar *irc_server_read (IRCServer *server);
 
 extern gboolean irc_channel_send_message (IRCServer *server, gchar *message);
 

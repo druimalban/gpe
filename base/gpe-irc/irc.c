@@ -21,12 +21,12 @@
 
 #define SERVICE "ircd"
 
-gboolean
-irc_server_read (IRCServer *server, gchar *passback_message)
+gchar *
+irc_server_read (IRCServer *server)
 {
   fd_set rfds;
-  int data_waiting, buf_len, char_num = 0, message_num = 0;
-  char buf[256];
+  int data_waiting, buf_len, char_num = 0, message_num = 1;
+  char buf[1];
   char *message = NULL;
   struct timeval tv;
   tv.tv_sec = 0;
@@ -38,11 +38,14 @@ irc_server_read (IRCServer *server, gchar *passback_message)
   if (server->fd == -1)
   {
     printf ("No socket open!\n");
-    return FALSE;
+    return NULL;
   }
 
   if (!select (server->fd + 1, &rfds, NULL, NULL, &tv))
     return FALSE;
+
+  message = g_malloc (2);
+  message[0] = '\n';
 
   while (1)
   {
@@ -52,39 +55,30 @@ irc_server_read (IRCServer *server, gchar *passback_message)
     FD_ZERO (&rfds);
     FD_SET (server->fd, &rfds);
     data_waiting = select (server->fd + 1, &rfds, NULL, NULL, &tv);
+    buf[0] = '\0';
 
     if (data_waiting)
     {
-      char_num = 0;
       buf_len = read (server->fd, buf, sizeof (buf));
       if (buf_len != -1)
       {
-	while (char_num < buf_len)
-	{
-	  message = g_realloc (message, message_num + 2);
-	  message[message_num] = buf[char_num];
+        if (buf[0] == '\n')
+        {
+          message[message_num - 1] = '\0';
+	  printf ("strlen %d -- %s", strlen (message), message);
+	  message_num = 1;
+          return message;
+        }
 
-	  message_num++;
+        message = g_realloc (message, message_num + 2);
+        message[message_num] = buf[0];
 
-          if (buf[char_num] == '\n')
-	  {
-	    message[message_num] = '\0';
-	    printf ("%s", message);
-	    message_num = 0;
-	    passback_message = g_strdup (message);
-	    return TRUE;
-	  }
-
-	  char_num++;
-	}
+        message_num++;
       }
     }
-
-    while (gtk_events_pending ())
-      gtk_main_iteration ();
   }
 
-  return FALSE;
+  return NULL;
 }
 
 /* Send a the users message to specified channel on specified server */

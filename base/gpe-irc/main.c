@@ -11,6 +11,7 @@
 #include <locale.h>
 #include <libintl.h>
 #include <time.h>
+#include <stdio.h>
 
 #include <gtk/gtk.h>
 
@@ -55,6 +56,7 @@ GtkListStore *users_list_store;
 GtkWidget *users_tree_view, *users_scroll;
 GtkWidget *nick_label;
 GtkTextBuffer *text_buffer;
+GtkWidget *scroll;
 
 void
 toggle_users_list ()
@@ -78,6 +80,7 @@ toggle_users_list ()
 gchar *selected_type;
 IRCServer *selected_server;
 IRCChannel *selected_channel;
+GtkWidget *selected_button;
 
 void
 kill_widget (GtkWidget *parent, GtkWidget *widget)
@@ -86,49 +89,42 @@ kill_widget (GtkWidget *parent, GtkWidget *widget)
 }
 
 void
-update_text_view ()
+update_text_view (gchar *text)
 {
   GtkTextBuffer *text_buffer;
   GtkTextIter start, end;
-  gchar *text;
+  GtkAdjustment *vadjust;
 
   text_buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (main_text_view));
+  vadjust = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (scroll));
 
-  while (1)
-  {
-    text = g_queue_pop_tail (selected_server->queue_in);
-    if (text != NULL)
-    {
-      gtk_text_buffer_get_bounds (text_buffer, &start, &end);
-      gtk_text_buffer_insert (text_buffer, &end, text, strlen (text));
-    }
-    else
-      break;
-  }
+  gtk_text_buffer_get_bounds (text_buffer, &start, &end);
+  gtk_text_buffer_insert (text_buffer, &end, text, strlen (text));
+  gtk_adjustment_set_value (vadjust, vadjust->upper);
 }
 
 void
 do_irc_iter ()
 {
-  gchar *text;
-  GList *iter;
+  gchar *text = NULL;
+  GList *iter = NULL;
 
-  while (servers)
+  iter = g_list_first (servers);
+
+  while (iter)
   {
-    iter = servers;
-    if (iter)
-      {
-    while (iter)
-    {
-      if (irc_server_read (((IRCServer *) iter->data), text) == TRUE)
-      {
-        g_queue_push_head (((IRCServer *) iter->data)->queue_in, (gpointer) g_strdup (text));
-      }
+    //printf ("----- Reading from irc server %s\n", ((IRCServer *) iter->data)->name);
+    text = irc_server_read ((IRCServer *) iter->data);
 
-      iter = servers->next;
+    if (text)
+    {
+      //if ((IRCServer *) iter->data == selected_server)
+      //update_text_view (text);
+
+      ((IRCServer *) iter->data)->text = g_string_append (((IRCServer *) iter->data)->text, text);
     }
-    update_text_view ();
-      }
+
+    iter = iter->next;
   }
 }
 
@@ -136,6 +132,52 @@ void
 connection_postinit ()
 {
   gtk_label_set_text (GTK_LABEL (nick_label), selected_server->user_info->nick);
+}
+
+void
+new_connection (GtkWidget *parent, GtkWidget *parent_window)
+{
+  GtkWidget *server_combo_entry, *nick_entry, *real_name_entry, *password_entry;
+  IRCServer *server;
+
+  server = g_malloc (sizeof (*server));
+  server->user_info = g_malloc (sizeof (*server->user_info));
+  server->text = g_malloc (sizeof (*server->text));
+  server->channel = g_hash_table_new (g_str_hash, g_str_equal);
+
+  server_combo_entry = gtk_object_get_data (GTK_OBJECT (parent), "server_combo_entry");
+  nick_entry = gtk_object_get_data (GTK_OBJECT (parent), "nick_entry");
+  real_name_entry = gtk_object_get_data (GTK_OBJECT (parent), "real_name_entry");
+  password_entry = gtk_object_get_data (GTK_OBJECT (parent), "password_entry");
+
+  server->name = g_strdup (gtk_entry_get_text (GTK_ENTRY (server_combo_entry)));
+  server->user_info->nick = g_strdup (gtk_entry_get_text (GTK_ENTRY (nick_entry)));
+  server->user_info->username = g_strdup (gtk_entry_get_text (GTK_ENTRY (nick_entry)));
+  server->user_info->real_name = g_strdup (gtk_entry_get_text (GTK_ENTRY (real_name_entry)));
+  if (strlen (gtk_entry_get_text (GTK_ENTRY (password_entry))) > 0)
+    server->user_info->password = g_strdup (gtk_entry_get_text (GTK_ENTRY (password_entry)));
+  else
+    server->user_info->password = NULL;
+
+  servers = g_list_append (servers, (gpointer) server);
+  selected_server = server;
+
+  if (selected_button)
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (selected_button), FALSE);
+
+  selected_button = gtk_toggle_button_new_with_label (server->name);
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (selected_button), TRUE);
+  gtk_box_pack_start (GTK_BOX (main_button_hbox), selected_button, FALSE, FALSE, 0);
+  gtk_widget_show (selected_button);
+
+  gtk_label_set_text (GTK_LABEL (nick_label), server->user_info->nick);
+
+  gtk_widget_destroy (parent_window);
+
+  while (gtk_events_pending ())
+    gtk_main_iteration ();
+
+  irc_server_connect (server);
 }
 
 void
@@ -200,8 +242,15 @@ new_connection_dialog ()
   close_button = gpe_picture_button (button_hbox->style, "Close", "close");
   network_properties_button = gpe_picture_button (button_hbox->style, NULL, "properties");
 
+  gtk_object_set_data (GTK_OBJECT (connect_button), "server_combo_entry", (gpointer) GTK_COMBO (server_combo)->entry);
+  gtk_object_set_data (GTK_OBJECT (connect_button), "nick_entry", (gpointer) nick_entry);
+  gtk_object_set_data (GTK_OBJECT (connect_button), "real_name_entry", (gpointer) real_name_entry);
+  gtk_object_set_data (GTK_OBJECT (connect_button), "password_entry", (gpointer) password_entry);
+
   gtk_signal_connect (GTK_OBJECT (close_button), "clicked",
     		      GTK_SIGNAL_FUNC (kill_widget), window);
+  gtk_signal_connect (GTK_OBJECT (connect_button), "clicked",
+    		      GTK_SIGNAL_FUNC (new_connection), window);
 
   gtk_container_add (GTK_CONTAINER (window), GTK_WIDGET (vbox));
   gtk_box_pack_start (GTK_BOX (vbox), table, FALSE, FALSE, 0);
@@ -227,11 +276,10 @@ new_connection_dialog ()
 int
 main (int argc, char *argv[])
 {
-  GtkWidget *vbox, *hbox, *users_button_vbox, *users_button_label, *scroll, *hsep;
+  GtkWidget *vbox, *hbox, *users_button_vbox, *users_button_label, *hsep;
   GtkWidget *users_button, *close_button, *new_connection_button;
   GdkPixmap *pmap;
   GdkBitmap *bmap;
-  IRCServer *server;
 
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
@@ -243,19 +291,6 @@ main (int argc, char *argv[])
   
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
   textdomain (PACKAGE);
-
-  server = g_malloc (sizeof (*server));
-  server->user_info = g_malloc (sizeof (*server->user_info));
-
-  /*
-  server->name = g_strdup ("irc.handhelds.org");
-  server->user_info->nick = g_strdup ("dc_1337-irc");
-  server->user_info->username = g_strdup ("dc_1337-irc");
-  server->user_info->real_name = g_strdup ("dc_1337-irc");
-  server->user_info->password = NULL;
-  server->queue_in = g_queue_new ();
-  irc_server_connect (server);
-  */
 
   main_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title (GTK_WINDOW (main_window), "IRC Client");
@@ -270,6 +305,9 @@ main (int argc, char *argv[])
   main_hbox = gtk_hbox_new (FALSE, 0);
   main_button_hbox = gtk_hbox_new (FALSE, 0);
   users_button_vbox = gtk_vbox_new (FALSE, 0);
+
+  gtk_box_set_spacing (GTK_BOX (main_button_hbox), 3);
+  gtk_box_set_spacing (GTK_BOX (hbox), 3);
 
   hsep = gtk_hseparator_new ();
 
@@ -333,7 +371,13 @@ main (int argc, char *argv[])
 
   //connection_init (server);
 
-  gtk_main ();
+  while (1)
+  {
+    do_irc_iter ();
+
+    while (gtk_events_pending ())
+      gtk_main_iteration ();
+  }
 
   return 0;
 }
