@@ -18,12 +18,13 @@
 #include <gtk/gtk.h>
 
 #include "pixmaps.h"
+#include "picturebutton.h"
+#include "gtkdatecombo.h"
+#include "errorbox.h"
+
 #include "globals.h"
 #include "event-db.h"
 #include "event-ui.h"
-#include "picturebutton.h"
-
-#include "gtkdatecombo.h"
 
 #define _(_x) gettext (_x)
 
@@ -194,33 +195,28 @@ unschedule_alarm(gint uid)
 }
 
 static void
-click_delete(GtkWidget *widget, event_t ev)
+click_delete (GtkWidget *widget, event_t ev)
 {
-  GtkWidget *d=gtk_widget_get_toplevel(widget);
+  GtkWidget *d = gtk_widget_get_toplevel (widget);
   
-  event_db_remove(ev);
-  if(ev->alarm!=-1) unschedule_alarm(ev->uid);
+  event_db_remove (ev);
+  if (ev->alarm != -1) 
+    unschedule_alarm (ev->uid);
   
   update_current_view ();
   
-  gtk_widget_hide(d);
-  gtk_widget_destroy(d);
+  gtk_widget_hide (d);
+  gtk_widget_destroy (d);
 }
 
 static void
-click_ok(GtkWidget *widget,
-	 GtkWidget *d)
+click_ok (GtkWidget *widget, GtkWidget *d)
 {
   struct edit_state *s = gtk_object_get_data (GTK_OBJECT (d), "edit_state");
   event_t ev;
   event_details_t ev_d;
   struct tm tm_start, tm_end;
-  char *start = gtk_editable_get_chars (GTK_EDITABLE (GTK_COMBO 
-						      (s->starttime)->entry), 
-					0, -1);
-  char *end = gtk_editable_get_chars (GTK_EDITABLE (GTK_COMBO 
-						    (s->endtime)->entry),
-				      0, -1);
+  time_t start_t, end_t;
 
   if (s->ev) 
     {
@@ -232,10 +228,6 @@ click_ok(GtkWidget *widget,
   
   ev = event_db_new ();
   ev_d = event_db_alloc_details (ev);
-  ev_d->description = gtk_editable_get_chars (GTK_EDITABLE (s->description), 
-						     0, -1);
-  ev_d->summary = gtk_editable_get_chars (GTK_EDITABLE (s->summary), 
-					  0, -1);
 
   memset(&tm_start, 0, sizeof (struct tm));
   memset(&tm_end, 0, sizeof (struct tm));
@@ -254,16 +246,22 @@ click_ok(GtkWidget *widget,
       ev->flags |= FLAG_UNTIMED;
 
       /* NB: all-day events use UTC here */
-      ev->start = timegm (&tm_start);
-      ev->duration = timegm (&tm_end) - ev->start;
+      start_t = timegm (&tm_start);
+      end_t = timegm (&tm_end);
     }
   else
     {
+      char *start = gtk_editable_get_chars (GTK_EDITABLE (GTK_COMBO 
+							  (s->starttime)->entry), 
+					    0, -1);
+      char *end = gtk_editable_get_chars (GTK_EDITABLE (GTK_COMBO 
+							(s->endtime)->entry),
+					  0, -1);
       strptime (start, TIMEFMT, &tm_start);
       strptime (end, TIMEFMT, &tm_end);
-
-      ev->start = mktime (&tm_start);
-      ev->duration = mktime (&tm_end) - ev->start;
+      
+      start_t = mktime (&tm_start);
+      end_t = mktime (&tm_end);
 
       /* If DST was in effect, mktime will have "helpfully" incremented the
 	 hour.  Knock it back and run the conversion again so it comes out
@@ -271,13 +269,27 @@ click_ok(GtkWidget *widget,
       if (tm_start.tm_isdst)
 	{
 	  tm_start.tm_hour --;
-	  ev->start = mktime (&tm_start);
+	  start_t = mktime (&tm_start);
 	}
+
+      g_free (end);
+      g_free (start);
     }
 
-  g_free (end);
-  g_free (start);
-
+  if (end_t < start_t)
+    {
+      gpe_error_box (_("End time must not be earlier than start time"));
+      event_db_destroy (ev);
+      return;
+    }
+  
+  ev->start = start_t;
+  ev->duration = end_t - start_t;
+      
+  ev_d->description = gtk_editable_get_chars (GTK_EDITABLE (s->description), 
+						     0, -1);
+  ev_d->summary = gtk_editable_get_chars (GTK_EDITABLE (s->summary), 
+					  0, -1);
   if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->alarmbutton)))
     ev->alarm = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (s->alarmspin));
   else

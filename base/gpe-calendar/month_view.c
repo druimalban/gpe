@@ -96,9 +96,11 @@ draw_expose_event (GtkWidget *widget,
   GdkGC *white_gc;
   GdkGC *cream_gc;
   GdkGC *light_gray_gc;
+  GdkGC *dark_gray_gc;
   GdkGC *red_gc;
   GdkColor cream;
   GdkColor light_gray;
+  GdkColor dark_gray;
   GdkColor red;
   GdkColormap *colormap;
   guint i, j;
@@ -132,6 +134,12 @@ draw_expose_event (GtkWidget *widget,
   gdk_colormap_alloc_color (colormap, &red, FALSE, TRUE);
   gdk_gc_set_foreground (red_gc, &red);
 
+  dark_gray_gc = gdk_gc_new (widget->window);
+  gdk_gc_copy (dark_gray_gc, widget->style->black_gc);
+  gdk_color_parse ("gray40", &dark_gray);
+  gdk_colormap_alloc_color (colormap, &dark_gray, FALSE, TRUE);
+  gdk_gc_set_foreground (dark_gray_gc, &dark_gray);
+
   white_gc = widget->style->white_gc;
   gray_gc = widget->style->bg_gc[GTK_STATE_NORMAL];
   black_gc = widget->style->black_gc;
@@ -141,6 +149,7 @@ draw_expose_event (GtkWidget *widget,
   gdk_gc_set_clip_rectangle (white_gc, &event->area);
   gdk_gc_set_clip_rectangle (cream_gc, &event->area);
   gdk_gc_set_clip_rectangle (light_gray_gc, &event->area);
+  gdk_gc_set_clip_rectangle (dark_gray_gc, &event->area);
   gdk_gc_set_clip_rectangle (red_gc, &event->area);
   
   darea = GTK_DRAWING_AREA (widget);
@@ -180,7 +189,7 @@ draw_expose_event (GtkWidget *widget,
 	      char buf[10];
 	      guint w;
 	      
-	      gdk_draw_rectangle (drawable, cream_gc, 
+	      gdk_draw_rectangle (drawable, c->popup.events ? dark_gray_gc : cream_gc, 
 				  TRUE,
 				  x, y, xs, ys);
 	      
@@ -190,7 +199,7 @@ draw_expose_event (GtkWidget *widget,
 	      snprintf (buf, sizeof (buf), "%d", c->popup.day);
 	      w = gdk_string_width (font, buf);
 	      
-	      gdk_draw_text (drawable, font, c->popup.events ? red_gc : black_gc, 
+	      gdk_draw_text (drawable, font, c->popup.events ? white_gc : black_gc, 
 			     x + (xs - w) / 2, y + (ys / 2) + font->ascent,
 			     buf, strlen (buf));
 	    } 
@@ -210,6 +219,11 @@ draw_expose_event (GtkWidget *widget,
   gdk_gc_set_clip_rectangle (black_gc, NULL);
   gdk_gc_set_clip_rectangle (gray_gc, NULL);
   gdk_gc_set_clip_rectangle (white_gc, NULL);
+
+  gdk_gc_unref (red_gc);
+  gdk_gc_unref (cream_gc);
+  gdk_gc_unref (light_gray_gc);
+  gdk_gc_unref (dark_gray_gc);
 
   return TRUE;
 }

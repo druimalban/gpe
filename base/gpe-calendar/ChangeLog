@@ -1,3 +1,14 @@
+2002-06-21  Philip Blundell  <pb@debian.org>
+
+	* month_view.c (draw_expose_event): Draw days with events as
+	gray60 background and white text.  Unref newly created GCs when
+	done with them.
+
+	* event-ui.c (click_ok): Disallow end time earlier than start time.
+
+	* familiar/control (Depends): Require libgpewidget 0.07.  Remove
+	explicit dependency on gdk-pixbuf2.
+
 2002-06-20  Philip Blundell  <pb@debian.org>
 
 	* main.c (main): Call what_init.
