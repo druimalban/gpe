@@ -1,9 +1,9 @@
 PACKAGE = minilite
-PREFIX = /usr/local
+PREFIX = /usr
 CVSBUILD = yes
 DEBUG = no
 VERSION = 0.31
-
+INSTALL = install
 LINGUAS = 
 
 MEMBERS = minilite
@@ -46,11 +46,11 @@ $(PACKAGE): $(OBJS)
 
 install-program: all
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
-	install -s $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
+	$(INSTALL) -s $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
-	install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications/$(PACKAGE).desktop
+	$(INSTALL) -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications/$(PACKAGE).desktop
 	mkdir -p $(DESTDIR)$(PREFIX)/share/pixmaps/
-	install -m 644 $(PACKAGE).png $(DESTDIR)$(PREFIX)/share/pixmaps/
+	$(INSTALL) -m 644 $(PACKAGE).png $(DESTDIR)$(PREFIX)/share/pixmaps/
 
 clean:
 	rm -f $(PACKAGE) $(OBJS) $(DEPS)
