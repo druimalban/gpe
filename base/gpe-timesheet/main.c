@@ -11,16 +11,18 @@
 #include <stdlib.h>
 #include <time.h>
 #include <libintl.h>
+#include <locale.h>
 
 #include <gtk/gtk.h>
 
 #include "pixmaps.h"
 #include "init.h"
+#include "sql.h"
 
 #define _(_x) gettext(_x)
 
-#define MY_PIXMAPS_DIR "/usr/share/gpe-timesheet/pixmaps"
-#define PIXMAPS_DIR "/usr/share/gpe/pixmaps"
+#define MY_PIXMAPS_DIR PREFIX "/share/gpe-timesheet/pixmaps"
+#define PIXMAPS_DIR PREFIX "/share/gpe/pixmaps"
 
 static const guint window_x = 240, window_y = 320;
 
@@ -109,7 +111,15 @@ main(int argc, char *argv[])
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
 
+  setlocale (LC_ALL, "");
+
+  bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
+  textdomain (PACKAGE);  
+
   if (load_pixmaps (my_pix) == FALSE)
+    exit (1);
+
+  if (sql_start () == FALSE)
     exit (1);
 
   toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, GTK_TOOLBAR_ICONS);
