@@ -1,5 +1,11 @@
 2003-01-06  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>
 
+	* gpe-calendar.session: add a Xsession.d file to schedule
+	next alarms at login time 
+	* Makefile: install new Xsession.d file
+
+2003-01-06  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>
+
 	* event-db.c (event_sort_func): add a "recur" sort_func so we
 	can reverse-sort recurring by enddate and skip ones with old
 	end dates, also add ALARM flag to cloned events 
