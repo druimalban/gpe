@@ -1,7 +1,14 @@
+2004-10-18 Florian Boor <florian.boor@kernelconcepts.de>
+
+	* main.c: Some formating changes and minor fixes.
+	* fileedit.[c/h]: New files implementing package feed management 
+	                  (unfinished).
+	* Makefile: Added new module, changes version number scheme.
+	            New version is 0.2.
 
 2004-10-01 Florian Boor <florian.boor@kernelconcepts.de>
 
-	* interfae.c: Changed main window title to "Package Manager".
+	* interface.c: Changed main window title to "Package Manager".
 
 2004-09-22 Florian Boor <florian.boor@kernelconcepts.de>
     * removed obsolete gpe-packages.desktop

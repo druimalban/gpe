@@ -1,5 +1,5 @@
 PACKAGE = gpe-package
-VERSION = 0.0.13
+VERSION = 0.2
 CVSBUILD = yes
 DEBUG = no
 INSTALL = install
@@ -18,7 +18,7 @@ else
 BUILD = build
 endif
 
-MEMBERS  = main interface packages filechooser
+MEMBERS  = main interface packages filechooser feededit
 
 ifeq ($(DEBUG),yes)
 CFLAGS += -g -DDEBUG

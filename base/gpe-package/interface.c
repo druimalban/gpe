@@ -42,8 +42,8 @@
 #include "packages.h"
 #include "interface.h"
 #include "main.h"
-//#include "filesel.h"
 #include "filechooser.h"
+#include "feededit.h"
 
 #define N_(x) (x)
 
@@ -65,7 +65,7 @@
 #define HELPMESSAGE "GPE-Package\nVersion " VERSION \
 		"\nGPE frontend for ipkg\n\nflorian@handhelds.org"
 
-#define NOHELPMESSAGE N_("Displaying help failed.")
+#define NOHELPMESSAGE N_("Help for this application is not installed.")
 
 /* --- module global variables --- */
 
@@ -97,7 +97,7 @@ static GtkWidget *bApply;
 static GtkWidget *miUpdate, *miSysUpgrade, *miSelectLocal, *miApply;
 static GtkWidget *miFilterInst, *miFilterNotInst;
 static GtkWidget *sbar;
-static GtkWidget *fMain;
+GtkWidget *fMain;
 static GtkWidget *dlgAction = NULL;
 static GtkWidget *dlgInfo = NULL;
 static GtkTextBuffer *infobuffer = NULL;
@@ -515,7 +515,7 @@ void do_end_command()
 
 void do_safe_exit(int sig)
 {
-GtkWidget *dialog;
+	GtkWidget *dialog;
 
 	if (pkg_selection_changed > 0) {
 		dialog = gtk_message_dialog_new (GTK_WINDOW (fMain),
@@ -737,9 +737,9 @@ void on_select_local(GtkButton *button, gpointer user_data)
 
 void on_package_info_clicked(GtkButton *button, gpointer user_data)
 {
-GtkTreeIter iter;
-GtkTreeSelection *sel;
-char *name = NULL;
+	GtkTreeIter iter;
+	GtkTreeSelection *sel;
+	char *name = NULL;
 	
 	sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
 	
@@ -887,14 +887,14 @@ return (gtk_item_factory_get_widget (itemfactory, "<main>"));
 
 void create_fMain (void)
 {
-GtkWidget *vbox;
-GtkWidget *cur;
-GtkWidget *toolbar;
-GtkWidget *pw;
-GtkTooltips *tooltips;
-GtkCellRenderer *renderer;
-GtkTreeViewColumn *column;
-char *tmp;
+	GtkWidget *vbox;
+	GtkWidget *cur;
+	GtkWidget *toolbar;
+	GtkWidget *pw;
+	GtkTooltips *tooltips;
+	GtkCellRenderer *renderer;
+	GtkTreeViewColumn *column;
+	char *tmp;
 
 	/* init tree storage stuff */
 	store = gtk_tree_store_new (N_COLUMNS,
@@ -1028,8 +1028,11 @@ char *tmp;
 	gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(txLog),GTK_WRAP_WORD);
 	gtk_container_add(GTK_CONTAINER(cur),txLog);
 	gtk_box_pack_start(GTK_BOX(vbox),cur,TRUE,TRUE,0);	
-  
-	g_signal_connect(G_OBJECT (fMain),"destroy",gtk_main_quit,NULL);
+
+	cur = gtk_label_new(_("Feeds"));
+	gtk_notebook_append_page(GTK_NOTEBOOK(notebook), create_feed_edit(), cur);
+
+	g_signal_connect(G_OBJECT (fMain), "destroy", gtk_main_quit, NULL);
   
 	gtk_widget_show_all(fMain);
 }
