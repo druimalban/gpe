@@ -65,15 +65,11 @@ static GtkWidget *icon;
 
 static pid_t hciattach_pid;
 
-static GtkWidget *menu, *device_menu;
+static GtkWidget *menu;
 static GtkWidget *menu_radio_on, *menu_radio_off;
 static GtkWidget *menu_devices;
 static GtkWidget *devices_window;
 static GtkWidget *iconlist;
-
-static GtkWidget *pan_connect, *pan_disconnect;
-static GtkWidget *lap_connect, *lap_disconnect;
-static GtkWidget *dun_connect, *dun_disconnect;
 
 static GSList *devices;
 
@@ -296,23 +292,60 @@ device_info (struct bt_device *bd)
 }
 
 static void
-show_device_info (void)
+show_device_info (GtkWidget *w, struct bt_device *this_device)
 {
   device_info (this_device);
 }
 
 static void
-device_clicked (GtkWidget *w, GdkEventButton *e, gpointer data)
+pan_connect_menu (GtkWidget *w, struct bt_device *this_device)
 {
-  this_device = (struct bt_device *)data;
+  start_pan (this_device);
+}
+
+static void
+pan_disconnect_menu (GtkWidget *w, struct bt_device *this_device)
+{
+  stop_pan (this_device);
+}
+
+static void
+lap_connect_menu (GtkWidget *w, struct bt_device *this_device)
+{
+  start_dun (this_device);
+}
+
+static void
+lap_disconnect_menu (GtkWidget *w, struct bt_device *this_device)
+{
+  stop_dun (this_device);
+}
+
+static void
+dun_connect_menu (GtkWidget *w, struct bt_device *this_device)
+{
+  start_dun (this_device);
+}
+
+static void
+dun_disconnect_menu (GtkWidget *w, struct bt_device *this_device)
+{
+  stop_dun (this_device);
+}
+
+static void
+device_clicked (GtkWidget *widget, GdkEventButton *e, gpointer data)
+{
   GSList *iter;
-  
-  gtk_widget_hide (pan_connect);
-  gtk_widget_hide (pan_disconnect);
-  gtk_widget_hide (lap_connect);
-  gtk_widget_hide (lap_disconnect);
-  gtk_widget_hide (dun_connect);
-  gtk_widget_hide (dun_disconnect);
+  GtkWidget *device_menu;
+  GtkWidget *details, *w;
+
+  device_menu = gtk_menu_new ();
+
+  details = gtk_menu_item_new_with_label (_("Details ..."));
+  g_signal_connect (G_OBJECT (details), "activate", G_CALLBACK (show_device_info), NULL);
+  gtk_widget_show (details);
+  gtk_menu_append (GTK_MENU (device_menu), details);
 
   for (iter = this_device->services; iter; iter = iter->next)
     {
@@ -320,18 +353,31 @@ device_clicked (GtkWidget *w, GdkEventButton *e, gpointer data)
       switch (sv->type)
 	{
 	case BT_DUN:
-	  gtk_widget_show (dun_connect);
+	  w = gtk_menu_item_new_with_label (_("Connect DUN"));
+	  g_signal_connect (G_OBJECT (w), "activate", G_CALLBACK (dun_connect_menu), data);
+	  gtk_widget_show (w);
+	  gtk_menu_append (GTK_MENU (device_menu), w);
 	  break;
+
 	case BT_LAP:
-	  gtk_widget_show (lap_connect);
+	  w = gtk_menu_item_new_with_label (_("Connect LAP"));
+	  g_signal_connect (G_OBJECT (w), "activate", G_CALLBACK (lap_connect_menu), data);
+	  gtk_widget_show (w);
+	  gtk_menu_append (GTK_MENU (device_menu), w);
 	  break;
+
 	case BT_NAP:
-	  gtk_widget_show (pan_connect);
+	  w = gtk_menu_item_new_with_label (_("Connect PAN"));
+	  g_signal_connect (G_OBJECT (w), "activate", G_CALLBACK (pan_connect_menu), data);
+	  gtk_widget_show (w);
+	  gtk_menu_append (GTK_MENU (device_menu), w);
 	  break;
 	}
     }
 
-  gtk_menu_popup (GTK_MENU (device_menu), NULL, NULL, NULL, w, 1, GDK_CURRENT_TIME);
+  g_signal_connect (G_OBJECT (device_menu), "hide", G_CALLBACK (g_object_unref), NULL);
+
+  gtk_menu_popup (GTK_MENU (device_menu), NULL, NULL, NULL, widget, 1, GDK_CURRENT_TIME);
 }
 
 static gboolean
@@ -419,42 +465,6 @@ clicked (GtkWidget *w, GdkEventButton *ev)
   gtk_menu_popup (GTK_MENU (menu), NULL, NULL, gpe_popup_menu_position, w, ev->button, ev->time);
 }
 
-static void
-pan_connect_menu (void)
-{
-  start_pan (this_device);
-}
-
-static void
-pan_disconnect_menu (void)
-{
-  stop_pan (this_device);
-}
-
-static void
-lap_connect_menu (void)
-{
-  start_dun (this_device);
-}
-
-static void
-lap_disconnect_menu (void)
-{
-  stop_dun (this_device);
-}
-
-static void
-dun_connect_menu (void)
-{
-  start_dun (this_device);
-}
-
-static void
-dun_disconnect_menu (void)
-{
-  stop_dun (this_device);
-}
-
 int
 main (int argc, char *argv[])
 {
@@ -512,35 +522,6 @@ main (int argc, char *argv[])
   gtk_menu_append (GTK_MENU (menu), menu_radio_off);
   gtk_menu_append (GTK_MENU (menu), menu_devices);
   gtk_menu_append (GTK_MENU (menu), menu_remove);
-
-  device_menu = gtk_menu_new ();
-  details = gtk_menu_item_new_with_label (_("Details ..."));
-
-  pan_connect = gtk_menu_item_new_with_label (_("Connect PAN"));
-  pan_disconnect = gtk_menu_item_new_with_label (_("Disconnect PAN"));
-  lap_connect = gtk_menu_item_new_with_label (_("Connect LAP"));
-  lap_disconnect = gtk_menu_item_new_with_label (_("Disconnect LAP"));
-  dun_connect = gtk_menu_item_new_with_label (_("Connect DUN"));
-  dun_disconnect = gtk_menu_item_new_with_label (_("Disconnect DUN"));
-
-  g_signal_connect (G_OBJECT (pan_connect), "activate", G_CALLBACK (pan_connect_menu), NULL);
-  g_signal_connect (G_OBJECT (pan_disconnect), "activate", G_CALLBACK (pan_disconnect_menu), NULL);
-  g_signal_connect (G_OBJECT (lap_connect), "activate", G_CALLBACK (lap_connect_menu), NULL);
-  g_signal_connect (G_OBJECT (lap_disconnect), "activate", G_CALLBACK (lap_disconnect_menu), NULL);
-  g_signal_connect (G_OBJECT (dun_connect), "activate", G_CALLBACK (dun_connect_menu), NULL);
-  g_signal_connect (G_OBJECT (dun_disconnect), "activate", G_CALLBACK (dun_disconnect_menu), NULL);
-
-  g_signal_connect (G_OBJECT (details), "activate", G_CALLBACK (show_device_info), NULL);
-
-  gtk_widget_show (details);
-
-  gtk_menu_append (GTK_MENU (device_menu), details);
-  gtk_menu_append (GTK_MENU (device_menu), pan_connect);
-  gtk_menu_append (GTK_MENU (device_menu), pan_disconnect);
-  gtk_menu_append (GTK_MENU (device_menu), lap_connect);
-  gtk_menu_append (GTK_MENU (device_menu), lap_disconnect);
-  gtk_menu_append (GTK_MENU (device_menu), dun_connect);
-  gtk_menu_append (GTK_MENU (device_menu), dun_disconnect);
 
   if (gpe_load_icons (my_icons) == FALSE)
     exit (1);
