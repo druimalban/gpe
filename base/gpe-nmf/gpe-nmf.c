@@ -104,10 +104,7 @@ select_file_done (GtkWidget *fs, gpointer d)
       struct playlist *p = playlist_new_list ();
       struct playlist *t = playlist_new_track ();
       t->data.track.url = s;
-      if (strstr (t->data.track.url, ".mp3"))
-	playlist_fill_id3_data (t);
-      else if (strstr (t->data.track.url, ".ogg"))
-	playlist_fill_ogg_data (t);
+      decoder_fill_in_playlist (t);
 
       if (t->title == NULL)
 	t->title = t->data.track.url;

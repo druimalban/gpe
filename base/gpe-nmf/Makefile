@@ -3,11 +3,7 @@ PACKAGE = gpe-nmf
 #DEBUG = yes
 CVSBUILD = yes
 
-MEMBERS = gpe-nmf
-
-DECODER_MEMBERS = decoder stream file_stream
-PLAYLIST_MEMBERS = playlist_db playlist_xml playlist_ogg playlist_id3
-LIBMEMBERS = player $(patsubst %,decoder/%,$(DECODER_MEMBERS)) $(patsubst %,playlist/%,$(PLAYLIST_MEMBERS))
+MEMBERS = gpe-nmf playlist_edit
 
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0` -DGTK_ENABLE_BROKEN
 GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
@@ -19,7 +15,7 @@ LDFLAGS = -g #-lefence
 else
 CFLAGS += -Os -fomit-frame-pointer
 endif
-CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\" -I../vorbis-fixp/lib -I./playlist -I./decoder
+CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\" -I../vorbis-fixp/lib -I./backend
 
 ifeq ($(CVSBUILD),yes)
 CFLAGS += -I../libgpewidget
@@ -27,20 +23,19 @@ LDFLAGS += -L../libgpewidget
 else
 CFLAGS += -I/usr/include/gpe
 endif
-LDFLAGS += -lgpewidget1 $(GTKLDFLAGS) -lxml -lvorbis -lid3tag -lesd
+LDFLAGS += -lgpewidget1 $(GTKLDFLAGS)
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
-LIBOBJS = $(patsubst %,%.o,$(LIBMEMBERS))
 
-LIB = libgpe-nmf.so.0
+.PHONY: backend
 
-all: $(PACKAGE)
+all: backend $(PACKAGE)
+
+backend:
+	make -C backend
 
 $(PACKAGE): $(OBJS) $(LIB)
-	$(CC) -o $@ $^ $(LDFLAGS)
-
-$(LIB): $(LIBOBJS)
-	$(CC) -shared -o $@ $^
+	$(CC) -o $@ $^ $(LDFLAGS) -Lbackend -lgpenmf
 
 install: all
 	install -D $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
