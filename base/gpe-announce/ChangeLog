@@ -1,3 +1,27 @@
+2003-04-20  Philip Blundell  <philb@gnu.org>
+
+	* Version 0.04 released.
+	
+2003-04-20  Philip Blundell  <philb@gnu.org>
+
+	* familiar/control1 (Depends): Depend on libschedule0.
+	* Makefile: Link with libschedule.  Remove unused -lesd.
+	(install-program): Don't ship bell.png; use the one from
+	gpe-icons.
+	* pixmaps/bell.png: Deleted.
+	* callbacks.c (schedule_alarm): Use libschedule.
+	(on_snooze_clicked): Use SNOOZE macro.
+	* interface.c (create_window): Omit comment field if text is
+	NULL.  Mark strings for translation.  Change "Acknowledge" button
+	to "Dismiss".  Provide icons for Dismiss and Snooze buttons.
+	Remove calls to gtk_widget_show.
+	* main.c (my_icons): Add clock-popup.
+	(times): Remove unneeded initialiser.
+	(main): Call bind_textdomain_codeset.  Don't supply default text
+	if no argument given, just leave it out.  Use
+	gtk_widget_show_all.  Use g_signal_connect in place of
+	gtk_signal_connext.
+
 2003-03-30  Philip Blundell  <philb@gnu.org>
 
 	* main.c (main): Remove redundant call to gtk_init.

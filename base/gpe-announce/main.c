@@ -24,7 +24,6 @@
 
 #include <gpe/init.h>
 #include <gpe/pixmaps.h>
-#include <gpe/render.h>
 
 #include "announce.h"
 
@@ -32,10 +31,11 @@
 
 struct gpe_icon my_icons[] = {
   { "bell" },
+  { "clock-popup" },
   { NULL, }
 };
 
-int times=0;
+int times;
 
 int
 main (int argc, char *argv[])
@@ -54,21 +54,23 @@ main (int argc, char *argv[])
   setlocale (LC_ALL, "");
 
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
+  bind_textdomain_codeset (PACKAGE, "UTF-8");
   textdomain (PACKAGE);
 
-  if (argc<2) {
-    announcetext = (char *)malloc(24+1);
-    strcpy(announcetext, "You have an appointment!");
-  }
+  if (argc >= 2)
+    announcetext = argv[1];
   else
-    announcetext=argv[1];
+    announcetext = NULL;
   
   window = create_window (announcetext);
-  gtk_widget_show (window);
-  gtk_signal_connect (GTK_OBJECT (window), "destroy",
-		      GTK_SIGNAL_FUNC (gtk_exit), NULL);
+
+  gtk_widget_show_all (window);
+
+  g_signal_connect (G_OBJECT (window), "destroy",
+		    G_CALLBACK (gtk_exit), NULL);
 
   gtk_main ();
+
   return 0;
 }
 

@@ -28,6 +28,7 @@
 #include <pthread.h>
 
 #include <gpe/soundgen.h>
+#include <gpe/schedule.h>
 
 #define MIXER "/dev/mixer"
 
@@ -43,38 +44,11 @@ int curl, curr;
 static void
 schedule_alarm(char *buf, time_t when)
 {
-char filename[256], command[256];
-FILE *f;
-	
-	sprintf(filename, "/var/spool/at/%d.1234", (int)when);
-	f=NULL;
-	f=fopen(filename, "w");
-	if (f != NULL) {
-		fprintf(f, "#!/bin/sh\n");
-		fprintf(f, "export DISPLAY=:0.0\n");
-		fprintf(f, "/usr/bin/gpe-announce '%s'\n", buf);
-		fprintf(f, "/bin/rm $0\n");
-		fclose(f);
-	} else
-		return;
-  
-#if 0
-	sprintf(command, "chmod 755 %s", filename);
-  		  
-	system(command);
-  
-	sprintf(command, "echo >/var/spool/at/trigger");
-  		  
-	system(command);
-#else
-	chmod (filename, S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH);
-	f=NULL;
-	f=fopen("/var/spool/at/trigger","w");
-	if (f != NULL) {
-		fprintf(f,"\n");
-		fclose(f);
-	}
-#endif
+  gchar *text;
+
+  text = g_strdup_printf ("/usr/bin/gpe-announce '%s'\n", buf);
+  schedule_set_alarm (1234, when, text);
+  g_free (text);
 }
 	
 void play_melody(guint Tone1Pitch, guint Tone1Duration,
@@ -192,7 +166,7 @@ on_snooze_clicked                     (GtkButton       *button,
 	time_t viewtime;
 
   	time (&viewtime);
-  	viewtime+=5*60;
+  	viewtime+=SNOOZE*60;
 		      
 	schedule_alarm(user_data, viewtime);
   

@@ -1,8 +1,8 @@
 Package: gpe-announce2
 Section: base
 Priority: optional
-Version: 0.03
+Version: VERSION
 Architecture: arm
 Maintainer: Joe McCarthy <mccarthy@engrng.pitt.edu>
-Depends: libgtk2.0-0, gpe-icons, libsoundgen1
+Depends: libgtk2.0-0, gpe-icons, libsoundgen1, libschedule0
 Description: GPE announce
