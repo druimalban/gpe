@@ -1,5 +1,8 @@
 2004-09-01  Florian Boor  <florian.boor@kernelconcepts.de>
 
+	* Released V 0.19.
+    * main.c: Implemented directory monitoring for automatic refresh.
+    * main.c: Some minor fixes and cleanups.
     * main.c: Changed click behaviour not to run an action on single click.
               Rewrote "open with" dialog.
     * Makefile: New version number.

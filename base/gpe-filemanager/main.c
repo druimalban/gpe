@@ -132,6 +132,9 @@ int history_place = 0;
 GList *history = NULL;
 
 gchar *current_directory = NULL;
+static GnomeVFSMonitorHandle *dir_monitor = NULL;
+static gboolean refresh_scheduled = FALSE;
+
 gchar *current_view = "icons";
 gint current_zoom = 36;
 static gboolean view_is_icons = FALSE;
@@ -1463,6 +1466,29 @@ add_history (gchar *directory)
   gtk_combo_set_popdown_strings (GTK_COMBO (combo), history);
 }
 
+static gboolean
+do_scheduled_refresh(void)
+{
+  refresh_current_directory();
+  refresh_scheduled = FALSE;
+  return FALSE;
+}
+
+void
+directory_changed (GnomeVFSMonitorHandle *handle,
+                   const gchar *monitor_uri,
+                   const gchar *info_uri,
+                   GnomeVFSMonitorEventType event_type,
+                   gpointer user_data)
+{
+  /* schedule timeout if necessary */
+  if (!refresh_scheduled)
+    {
+      g_timeout_add(2000, (GSourceFunc)do_scheduled_refresh, NULL);
+      refresh_scheduled = TRUE;
+    }
+}
+
 static void
 browse_directory (gchar *directory)
 {
@@ -1513,13 +1539,22 @@ browse_directory (gchar *directory)
   current_directory = g_strdup (directory);
   add_history (g_strdup(directory));
   gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (combo)->entry), directory);
+  
+  /* monitor current directory */
+  if (dir_monitor)
+	  gnome_vfs_monitor_cancel(dir_monitor);
+  if (gnome_vfs_monitor_add(&dir_monitor, 
+	                        directory, 
+                            GNOME_VFS_MONITOR_DIRECTORY, 
+                            (GnomeVFSMonitorCallback)directory_changed, 
+                            NULL) != GNOME_VFS_OK)
+      dir_monitor = NULL;
   make_view ();
 }
 
 static void
 refresh_current_directory (void)
 {
-  printf("trigg\n");
   browse_directory (g_strdup(current_directory));
 }
 
@@ -1680,9 +1715,9 @@ tree_button_release (GtkWidget *tree, GdkEventButton *b)
 					 &path, &col,
 					 NULL, NULL))
       {
-	    GtkTreeIter iter;
+	    /*GtkTreeIter iter;
         GtkTreeModel *store = gtk_tree_view_get_model(GTK_TREE_VIEW(tree));
-	    /*FileInformation *i;
+	    FileInformation *i;
 	    gtk_tree_model_get_iter (GTK_TREE_MODEL (store), &iter, path);
         */
         gtk_tree_view_set_cursor(GTK_TREE_VIEW(tree), path, NULL, FALSE);

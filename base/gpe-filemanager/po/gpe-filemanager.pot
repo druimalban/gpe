@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-03-06 20:00+0000\n"
+"POT-Creation-Date: 2004-08-15 12:17+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,80 +16,166 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: main.c:354
+#: main.c:69
+msgid "Displaying help failed."
+msgstr ""
+
+#: main.c:217
+msgid "/_File"
+msgstr ""
+
+#: main.c:218
+msgid "/_File/_Create Directory"
+msgstr ""
+
+#: main.c:219
+msgid "/_File/s1"
+msgstr ""
+
+#: main.c:220
+msgid "/_File/_Close"
+msgstr ""
+
+#: main.c:221
+msgid "/_Settings"
+msgstr ""
+
+#: main.c:222
+msgid "/_Settings/Directory Browser"
+msgstr ""
+
+#: main.c:223
+msgid "/_Settings/My Files only"
+msgstr ""
+
+#: main.c:224
+msgid "/_Help"
+msgstr ""
+
+#: main.c:225
+msgid "/_Help/Index"
+msgstr ""
+
+#: main.c:226
+msgid "/_Help/About"
+msgstr ""
+
+#: main.c:247
+msgid "/Settings/Directory Browser"
+msgstr ""
+
+#: main.c:249
+msgid "/Settings/My Files only"
+msgstr ""
+
+#: main.c:790
 msgid "Move to directory..."
 msgstr ""
 
-#: main.c:397
+#: main.c:830
 #, c-format
 msgid "Delete \"%s\"?"
 msgstr ""
 
-#: main.c:399
+#: main.c:832
 msgid "Confirm"
 msgstr ""
 
-#: main.c:527
+#: main.c:1053
 msgid "No available applications"
 msgstr ""
 
-#: main.c:985
+#: main.c:1136
+#, c-format
+msgid "Symbolic link %s leads to inaccessable file!"
+msgstr ""
+
+#: main.c:1144
+#, c-format
+msgid "Maximum symbolic link depth exceeded for %s"
+msgstr ""
+
+#: main.c:1710 main.c:1806
+msgid "Icon"
+msgstr ""
+
+#: main.c:1718
+msgid "Name"
+msgstr ""
+
+#: main.c:1727
+msgid "Size"
+msgstr ""
+
+#: main.c:1736
+msgid "Changed"
+msgstr ""
+
+#: main.c:1813
+msgid "Directory"
+msgstr ""
+
+#: main.c:1918
 msgid "Back"
 msgstr ""
 
-#: main.c:985
+#: main.c:1918
 msgid "Go back in history."
 msgstr ""
 
-#: main.c:989
+#: main.c:1922
 msgid "Forward"
 msgstr ""
 
-#: main.c:989
+#: main.c:1922
 msgid "Go forward in history."
 msgstr ""
 
-#: main.c:993
+#: main.c:1926
 msgid "Up one level"
 msgstr ""
 
-#: main.c:993
+#: main.c:1926
 msgid "Go up one level."
 msgstr ""
 
-#: main.c:999
-msgid "Stop"
-msgstr ""
-
-#: main.c:999
-msgid "Stop the current process."
-msgstr ""
-
-#: main.c:1003
+#: main.c:1932
 msgid "Home"
 msgstr ""
 
-#: main.c:1003
+#: main.c:1932
 msgid "Goto your home directory."
 msgstr ""
 
-#: main.c:1009
-msgid "Zoom in"
+#: main.c:1936
+msgid "Stop"
 msgstr ""
 
-#: main.c:1009
-msgid "Zoom in."
+#: main.c:1936
+msgid "Stop the current process."
 msgstr ""
 
-#: main.c:1013
-msgid "Zoom out"
+#: main.c:1943 main.c:1944
+msgid "Icon view"
 msgstr ""
 
-#: main.c:1013
-msgid "Zoom out."
+#: main.c:1944
+msgid "View files as icons"
 msgstr ""
 
-#: main.c:1018 main.c:1019
+#: main.c:1949 main.c:1950
+msgid "List view"
+msgstr ""
+
+#: main.c:1950
+msgid "View files in a list"
+msgstr ""
+
+#: main.c:1956
+msgid "Go!"
+msgstr ""
+
+#: main.c:1957
 msgid "Goto Location"
 msgstr ""
 
