@@ -1,4 +1,7 @@
 2003-11-11	Florian Boor  	<florian.boor@kernelconcepts.de>
+	* theme.c: Enabled removing of background settings.
+	* control1: Added dependency to new version of xst.
+	* Makefile: Released 0.1.3, updated version nr
 	* main.c: Fixed misnamed filename.
 	
 2003-11-04	Florian Boor  	<florian.boor@kernelconcepts.de>

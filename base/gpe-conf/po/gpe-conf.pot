@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-11-03 16:38+0100\n"
+"POT-Creation-Date: 2003-11-11 21:46+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -59,7 +59,7 @@ msgid ""
 "Please enter password."
 msgstr ""
 
-#: applets.c:405 ipaqscreen/calibrate.c:34
+#: applets.c:404 ipaqscreen/calibrate.c:34
 msgid "Sorry, wrong password."
 msgstr ""
 
@@ -389,7 +389,7 @@ msgstr ""
 msgid "Provider"
 msgstr ""
 
-#: network.c:633
+#: network.c:632
 msgid ""
 "Here you need to enter the name of the provider configuration to use for "
 "this interface."
@@ -403,7 +403,7 @@ msgstr ""
 msgid "Proxy"
 msgstr ""
 
-#: network.c:700
+#: network.c:699
 msgid ""
 "If you want/need to use a proxy, enter it here. (This only applies to dillo "
 "for now.)"
@@ -413,7 +413,7 @@ msgstr ""
 msgid "No proxy for"
 msgstr ""
 
-#: network.c:708
+#: network.c:707
 msgid ""
 "Here you should enter your local domain for that you don't want to use a "
 "proxy."
@@ -443,50 +443,50 @@ msgstr ""
 msgid "Enter the IP of the DNS(name-) server to use here."
 msgstr ""
 
-#: network.c:942
+#: network.c:940
 msgid ""
 "Here you may change the basic configuration type of your device.\n"
 "Use \"static\" for manual interface configuration, \"dhcp\" to use DHCP and "
 "\"ppp\" to make the device a point-to-point device."
 msgstr ""
 
-#: network.c:969 network.c:970
+#: network.c:967 network.c:968
 msgid "Add Interface"
 msgstr ""
 
-#: network.c:971
+#: network.c:969
 msgid "Add a new Interface"
 msgstr ""
 
-#: network.c:979 network.c:980
+#: network.c:977 network.c:978
 msgid "Remove Interface"
 msgstr ""
 
-#: network.c:981
+#: network.c:979
 msgid "Remove current Interface"
 msgstr ""
 
-#: network.c:994
+#: network.c:992
 msgid "Information"
 msgstr ""
 
-#: network.c:995 network.c:996
+#: network.c:993 network.c:994
 msgid "Show current configuration."
 msgstr ""
 
-#: network.c:1007
+#: network.c:1002
 msgid "Close"
 msgstr ""
 
-#: network.c:1008 network.c:1009
+#: network.c:1003 network.c:1004
 msgid "Close network tool"
 msgstr ""
 
-#: network.c:1024
+#: network.c:1019
 msgid "Couldn't read network configuration."
 msgstr ""
 
-#: network.c:1033
+#: network.c:1026
 msgid "global"
 msgstr ""
 
@@ -825,7 +825,7 @@ msgid ""
 " Please try again!"
 msgstr ""
 
-#: cfgfile.c:630
+#: cfgfile.c:632
 msgid "No write access to network configuration."
 msgstr ""
 

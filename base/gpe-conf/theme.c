@@ -743,7 +743,7 @@ Theme_Save ()
     /* background settings */
 	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self.cDefault)))
 	{
-		confstr = g_strdup(" ");
+		confstr = NULL;
 	}
 	else
 	{	
@@ -783,14 +783,18 @@ Theme_Save ()
 		}
 	
 	}
+	
 	/* background style*/  	
 	if (confstr)
 	{
 		system_printf ("xst write %s%s str %s", KEY_MATCHBOX, "Background", confstr);
 		free(confstr);
 	}
-	
-	
+	else /* theme default - erase settings */
+	{
+		system_printf ("xst delete %s%s", KEY_MATCHBOX, "Background");
+	}
+			
 	/* desktop font type and size */
 	label = g_object_get_data (G_OBJECT (self.bFont), "label");
 	clabel = gtk_label_get_text(GTK_LABEL(label));

@@ -401,8 +401,7 @@ suid_exec (const char *cmd, const char *params)
 					free (password);
 				password = NULL;
 				if (res != GTK_RESPONSE_REJECT)
-					gpe_error_box (_
-						       ("Sorry, wrong password."));
+					gpe_error_box (_("Sorry, wrong password."));
 			}
 		}
 		gtk_widget_destroy (dialog);

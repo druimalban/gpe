@@ -63,4 +63,3 @@ GtkWidget *Sleep_Build_Objects()
 
   return GPE_Config_Sleep;
 }
-
