@@ -5,52 +5,72 @@
 
 #include "irc.h"
 #include "irc_parse.h"
+#include "irc_reply.h"
 #include "ctcp.h"
 #include "main.h"
 
 #define NICK_MAXLEN			30
 
 
-static gboolean irc_parse_ping (IRCServer * server, gchar * prefix,
-                                gchar * params);
-static gboolean irc_parse_privmsg (IRCServer * server, gchar * prefix,
-                                   gchar * params);
-static gboolean irc_parse_notice (IRCServer * server, gchar * prefix,
-                                  gchar * params);
-static gboolean irc_parse_nick (IRCServer * server, gchar * prefix,
-                                gchar * params);
 
-static gboolean irc_parse_join (IRCServer * server, gchar * prefix,
-                                gchar * params);
-static gboolean irc_parse_part (IRCServer * server, gchar * prefix,
-                                gchar * params);
+/* IRC command parsing functions */
+static gboolean irc_cmd_parse_ping (IRCServer * server,
+	const gchar * prefix, const gchar * params);
+
+static gboolean irc_cmd_parse_privmsg (IRCServer * server,
+	const gchar * prefix, const gchar * params);
+
+static gboolean irc_cmd_parse_notice (IRCServer * server,
+	const gchar * prefix, const gchar * params);
+
+static gboolean irc_cmd_parse_nick (IRCServer * server,
+	const gchar * prefix, const gchar * params);
+
+static gboolean irc_cmd_parse_join (IRCServer * server,
+	const gchar * prefix, const gchar * params);
+
+static gboolean irc_cmd_parse_part (IRCServer * server,
+	const gchar * prefix, const gchar * params);
+
+static gboolean irc_cmd_parse_mode (IRCServer *server,
+	const gchar * prefix, const gchar * params);
+
+
+
 
 typedef struct
 {
-  gchar *cmd;
-    gboolean (*func) (IRCServer * server, gchar * prefix, gchar * params);
+    gchar *cmd;
+    gboolean (*func) (IRCServer * server,
+	    const gchar * prefix, const gchar * params);
 }
 msg_t;
 
 
 /* Table for messages from the server. */
 msg_t msgtable[] = {
-  {"PING", irc_parse_ping},
-  {"PRIVMSG", irc_parse_privmsg},
-  {"NICK", irc_parse_nick},
-  {"JOIN", irc_parse_join},
-  {"PART", irc_parse_part},
-  {"NOTICE", irc_parse_notice},
-  {NULL, NULL}
+  { "PING",	    irc_cmd_parse_ping },
+  { "PRIVMSG",	    irc_cmd_parse_privmsg },
+  { "NICK",	    irc_cmd_parse_nick },
+  { "JOIN",	    irc_cmd_parse_join },
+  { "PART",	    irc_cmd_parse_part },
+  { "NOTICE",	    irc_cmd_parse_notice },
+  { "MODE",	    irc_cmd_parse_mode},
+  { NULL, NULL }
 };
 
 
 
 gchar *
-irc_prefix_to_nick (gchar * prefix)
+irc_prefix_to_nick (const gchar * prefix)
 {
   gchar *nick = NULL;
   gchar buf[NICK_MAXLEN];
+
+  if (!prefix)
+    {
+      return NULL;
+    }
 
   if (sscanf (prefix, "%[^!]!%*s", buf) == 1)
     {
@@ -63,10 +83,10 @@ irc_prefix_to_nick (gchar * prefix)
 
 /* Split into 2, g_strfreev the returning gchar ** */
 static gchar **
-irc_params_split (gchar * params)
+irc_params_split (const gchar * params)
 {
   gchar **s;
-  if (s = g_strsplit (params, ":", 2))
+  if ((s = g_strsplit (params, ":", 2)))
     {
       g_strstrip (s[0]);
     }
@@ -75,7 +95,7 @@ irc_params_split (gchar * params)
 
 
 static gboolean
-irc_prefix_is_self (IRCServer * server, gchar * prefix)
+irc_prefix_is_self (IRCServer * server, const gchar * prefix)
 {
   gchar *nick;
   gboolean ret = FALSE;
@@ -94,9 +114,15 @@ irc_prefix_is_self (IRCServer * server, gchar * prefix)
 
 
 static gboolean
-irc_parse_reply (IRCServer * server, int reply_num, gchar * params)
+irc_parse_reply (IRCServer * server,
+	gchar * prefix, int reply_num, gchar * params)
 {
   gchar **str_array = NULL;
+
+  if(!params)
+    {
+      return FALSE;
+    }
 
   /* The first bit should be nick */
   if (!g_str_has_prefix (params, server->user_info->nick))
@@ -106,59 +132,63 @@ irc_parse_reply (IRCServer * server, int reply_num, gchar * params)
 
   params += strlen (server->user_info->nick) + 1;
 
-  str_array = irc_params_split (params);
+  STRIP_COLON (params);
 
-  if (str_array && *str_array && *(str_array + 1))
+  switch (reply_num)
     {
-      g_strstrip (str_array[0]);
+    case IRC_REPLY_FIRST:
+      if (!server->prefix && prefix)
+	{
+	  /* Hopefully the first prefixed message is the server */
+	  server->prefix = g_strdup (prefix);
+	}
+	append_to_buffer_printf (server, NULL, NULL, "%s\n", params);
 
-      switch (reply_num)
-        {
-        case 332:
-          /* Channel topic */
-          {
-            IRCChannel *channel =
-              irc_server_channel_get (server, str_array[0]);
-            if (channel)
-              {
-                channel->topic = g_strdup (str_array[1]);
-              }
+      break;
 
-          }
-          break;
+    case IRC_REPLY_CHANNEL_TOPIC:
+      /* Channel topic */
+      {
+	str_array = irc_params_split (params);
 
-        case 333:
-          /* Channel founder */
-          break;
+	IRCChannel *channel =
+	  irc_server_channel_get (server, str_array[0]);
+	if (channel)
+	  {
+	    channel->topic = g_strdup (str_array[1]);
+	  }
 
-        case 353:
-          /* Channel nick list */
-          break;
+      }
+      break;
 
-        case 433:
-          /* Duplicate nick */
-          break;
+    case IRC_REPLY_CHANNEL_FOUNDER:
+      break;
 
-        case 366:
-          /* Some messages that we don't care */
-          /* 366: End of /NAMES list */
-          break;
+    case IRC_REPLY_NAMES_DATA:
+      /* Could be reply from /names, /join */
+      break;
 
-        default:
+    case IRC_REPLY_NICK_ALREADYINUSE:
+      break;
 
-          break;
-        }
+    case IRC_REPLY_NAMES_END:
+      /* Some messages that we don't care */
+      break;
 
-      g_strfreev (str_array);
+    default:
+      append_to_buffer_printf (server, NULL, NULL, "%s\n", params);
+      break;
     }
 
+  g_strfreev (str_array);
 
   return TRUE;
 }
 
 
 static gboolean
-irc_parse_ping (IRCServer * server, gchar * prefix, gchar * params)
+irc_cmd_parse_ping (IRCServer * server,
+	const gchar * prefix, const gchar * params)
 {
   if (params)
     {
@@ -168,18 +198,69 @@ irc_parse_ping (IRCServer * server, gchar * prefix, gchar * params)
   return TRUE;
 }
 
+
 static gboolean
-irc_parse_notice (IRCServer * server, gchar * prefix, gchar * params)
+irc_cmd_parse_notice (IRCServer * server,
+	const gchar * prefix, const gchar * params)
 {
+  gboolean op_only = FALSE;
+
+  gchar *from = NULL;
+  gchar *channel = NULL;
+  gchar *msg = NULL;
+
+  gchar **str_array = NULL;
+
+  STRIP_COLON (params);
+  str_array = irc_params_split (params);
+
+  from = irc_prefix_to_nick (prefix);
+
+  if (from)
+    {
+      channel = str_array[0];
+      msg = str_array[1];
+
+      if (channel[0] == '@')
+	{
+	  /* Channel ops only message */
+	  op_only = TRUE;
+	  channel++;
+	}
+
+      if (!IS_CHANNEL(channel))
+	{
+	  /* User to user notice */
+	}
+
+      append_nick_to_buffer (server, channel, from);
+    }
+  else
+    {
+      /* If from == NULL, it's probably a server startup NOTICE */
+      msg = (char *) params;
+    }
+
+
+  /* TODO: Preference for server window or current window */
+
+  append_to_buffer (server, channel, msg, NULL);
+  append_to_buffer (server, channel, "\n", NULL);
+
+  g_free(from);
+  g_strfreev (str_array);
+
   return TRUE;
 }
 
+
 static gboolean
-irc_parse_privmsg (IRCServer * server, gchar * prefix, gchar * params)
+irc_cmd_parse_privmsg (IRCServer * server,
+	const gchar * prefix, const gchar * params)
 {
   gchar *nick = NULL;
   gchar **str_array = NULL;
-  GString *gstr = g_string_new ("");
+//  GString *gstr = g_string_new ("");
 
   nick = irc_prefix_to_nick (prefix);
 
@@ -191,9 +272,7 @@ irc_parse_privmsg (IRCServer * server, gchar * prefix, gchar * params)
       if (!ctcp_parse (server, prefix, str_array[0], str_array[1]))
         {
           /* TODO: Parse str_array[0] */
-          append_to_buffer (server, str_array[0], "<", "tag_nick");
-          append_to_buffer (server, str_array[0], nick, NULL);
-          append_to_buffer (server, str_array[0], "> ", "tag_nick");
+	  append_nick_to_buffer (server, str_array[0], nick);
           append_to_buffer (server, str_array[0], str_array[1], NULL);
           append_to_buffer (server, str_array[0], "\n", NULL);
         }
@@ -202,23 +281,24 @@ irc_parse_privmsg (IRCServer * server, gchar * prefix, gchar * params)
     }
 
   g_free (nick);
-  g_string_free (gstr, TRUE);
+//  g_string_free (gstr, TRUE);
 
   return TRUE;
 }
 
 
 static gboolean
-irc_parse_nick (IRCServer * server, gchar * prefix, gchar * params)
+irc_cmd_parse_nick (IRCServer * server,
+	const gchar * prefix, const gchar * params)
 {
-
   return TRUE;
 
 }
 
 
 static gboolean
-irc_parse_join (IRCServer * server, gchar * prefix, gchar * params)
+irc_cmd_parse_join (IRCServer * server,
+	const gchar * prefix, const gchar * params)
 {
   STRIP_COLON (params);
 
@@ -247,7 +327,67 @@ irc_parse_join (IRCServer * server, gchar * prefix, gchar * params)
 
 
 static gboolean
-irc_parse_part (IRCServer * server, gchar * prefix, gchar * params)
+irc_cmd_parse_mode (IRCServer * server,
+	const gchar * prefix, const gchar * params)
+{
+  gchar *from = NULL;
+  gchar *mode_target = NULL;
+  gchar *mode_params = NULL;
+  gchar **str_array = NULL;
+
+  STRIP_COLON (params);
+  str_array = g_strsplit (params, " ", 2);
+
+  if (!str_array)
+    {
+      return FALSE;
+    }
+
+  mode_target = str_array[0];
+  mode_params = str_array[1];
+
+  if (!IS_CHANNEL(mode_target))
+    {
+    }
+
+  from = irc_prefix_to_nick(prefix);
+
+#ifdef DEBUG
+  fprintf(stderr, "prefix [%s], from [%s]\n", prefix, from);
+#endif
+
+  if(from)
+    {
+      /* from is valid nick */
+
+      if (IS_CHANNEL(mode_target))
+        {
+	  /* Channel modes */
+	  append_nick_to_buffer (server, mode_target, from);
+	  append_to_buffer_printf (server, mode_target, NULL,
+		  (const char *) _(" sets mode %s\n"), mode_params);
+        }
+    }
+  else
+    {
+      /* Not a nick,
+       * it should be from a server telling us about channels MODES */
+      append_nick_to_buffer (server, mode_target, prefix);
+    }
+
+
+  /* TODO: Keep tracks of channels' and users' modes */
+
+  g_free(from);
+
+  return TRUE;
+}
+
+
+
+static gboolean
+irc_cmd_parse_part (IRCServer * server,
+	const gchar * prefix, const gchar * params)
 {
   gchar **str_array;
 
@@ -301,15 +441,13 @@ irc_parse_part (IRCServer * server, gchar * prefix, gchar * params)
 
 
 gboolean
-irc_server_parse (IRCServer * server, gchar * line)
+irc_server_parse (IRCServer * server, const gchar * line)
 {
   gchar *prefix = NULL;
   gchar *cmd = NULL;
   gchar *params = NULL;
 
   gchar **str_array = NULL;
-  gchar **tmp = NULL;
-  int cnt = 0;
 
   if (!line)
     {
@@ -317,89 +455,73 @@ irc_server_parse (IRCServer * server, gchar * line)
       return TRUE;
     }
 
-  if (line[0] == ':')
+  if (IS_PREFIXED(line))
     {
-      line++;
+      STRIP_COLON (line);
+      str_array = g_strsplit (line, " ", 3);
+      prefix = g_strdup(str_array[0]);
+      cmd = g_strdup(str_array[1]);
+      params = g_strdup(str_array[2]);
     }
   else
     {
-      /* No prefix */
-      cnt++;
+      str_array = g_strsplit (line, " ", 2);
+      cmd = g_strdup(str_array[0]);
+      params = g_strdup(str_array[1]);
     }
 
-  str_array = g_strsplit (line, " ", 3);
 
-  if (str_array && *str_array)
+#ifdef DEBUG
+  fprintf(stderr, "irc_server_parse [%s] [%s] [%s]\n",
+	  prefix, cmd, params);
+#endif
+
+  if (cmd)
     {
-      for (tmp = str_array; *tmp != NULL; tmp++, cnt++)
-        {
-          switch (cnt)
-            {
-            case 0:
-              prefix = g_strdup (*tmp);
-              break;
-            case 1:
-              cmd = g_strdup (*tmp);
-              break;
-            case 2:
-              params = g_strdup (*tmp);
-              break;
-            default:
-              break;
-            }
-        }
+      int m = 0;
+      gchar *t = NULL;
 
+      /* Look for the function */
+      for (; msgtable[m].cmd &&
+	   (g_ascii_strcasecmp (msgtable[m].cmd, cmd) != 0); m++);
 
-      if (cmd)
-        {
-          int m = 0;
-          gchar *t = NULL;
+      /* Remove new line */
+      while ((t = strchr (params, '\n')))
+	{
+	  *t = '\0';
+	}
 
-          /* Look for the function */
-          for (; msgtable[m].cmd &&
-               (g_ascii_strcasecmp (msgtable[m].cmd, cmd) != 0); m++);
+      while ((t = strchr (params, '\r')))
+	{
+	  *t = '\0';
+	}
 
-          /* Remove new line */
-          while ((t = strchr (params, '\n')))
-            {
-              *t = '\0';
-            }
+      if (msgtable[m].func)
+	{
+	  if (!msgtable[m].func (server, prefix, params))
+	    {
+	      /* TODO: It failed */
+	    }
+	}
+      else
+	{
+	  int reply_num = 0;
 
-          while ((t = strchr (params, '\r')))
-            {
-              *t = '\0';
-            }
+	  reply_num = atoi (cmd);
 
-          if (msgtable[m].func)
-            {
-              if (!msgtable[m].func (server, prefix, params))
-                {
-                  /* TODO: It failed */
-                }
-            }
-          else
-            {
-              if (!server->prefix && prefix)
-                {
-                  /* Hopefully the first prefixed message is the server */
-                  server->prefix = g_strdup (prefix);
-                }
-
-              if (atoi (cmd))
-                {
-                  if (!irc_parse_reply (server, atoi (cmd), params))
-                    {
-                      /* TODO: It failed */
-                    }
-                }
-            }
-        }
-
-      g_free (prefix);
-      g_free (cmd);
-      g_free (params);
-
+	  if (reply_num > 0)
+	    {
+	      if (!irc_parse_reply (server, prefix, reply_num, params))
+		{
+		  /* TODO: It failed */
+		}
+	    }
+	}
     }
+ 
+  g_free (prefix);
+  g_free (cmd);
+  g_free (params);
 
   g_strfreev (str_array);
 
