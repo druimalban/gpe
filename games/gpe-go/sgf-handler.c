@@ -129,6 +129,6 @@ void __print_hitem (Hitem * hitem)    {
   case WHITE_STONE: item = 'W'; break;
   default: item = ' ';
   }
-  g_print("***********> %c %c: %d %d\n", action, item, hitem->posx, hitem->posy);
+  g_print("***********> %c %c: %d %d\n", action, item, hitem->col, hitem->row);
 }
 #endif

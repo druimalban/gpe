@@ -101,8 +101,8 @@ typedef enum {
 typedef struct _hist_item{
   GoAction action;
   GoItem   item;
-  int posx;
-  int posy;
+  int col;
+  int row;
   //GList * captured; FIXME: to use
 } Hitem;
 

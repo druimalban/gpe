@@ -65,14 +65,14 @@ void free_hitem(Hitem * hitem){
 
 gboolean is_same_hitem(Hitem * a, Hitem * b){
   if(1
-     && a->posx   == b->posx
-     && a->posy   == b->posy
+     && a->col   == b->col
+     && a->row   == b->row
      && a->item   == b->item
      && a->action == b->action) return TRUE;
   return FALSE;
 }
 
-void append_hitem(GoAction action, GoItem item, int gox, int goy){
+void append_hitem(GoAction action, GoItem item, int col, int row){
   Hitem * hitem;
   Hitem * citem; //item to compare to
   GNode * node;
@@ -82,8 +82,8 @@ void append_hitem(GoAction action, GoItem item, int gox, int goy){
 
   hitem->action = action;
   hitem->item   = item;
-  hitem->posx   = gox;
-  hitem->posy   = goy;
+  hitem->col   = col;
+  hitem->row   = row;
 
   // if the node/data exist, move to this node,
   // do NOT create a new branch (child) (== no twins!)
@@ -259,7 +259,7 @@ void _print_hitem(Hitem * hitem){
   case WHITE_STONE: item = 'W'; break;
   default: item = ' ';
   }
-  g_print("%c %c: %d %d", action, item, hitem->posx, hitem->posy);
+  g_print("%c %c: %d %d", action, item, hitem->col, hitem->row);
 }
 
 gboolean _print_node(GNode *node, gpointer unused_data){
@@ -578,16 +578,16 @@ void update_last_played_mark_to(int next_col, int next_row){
   go.last_row = next_row;
 }
 
-void put_stone(GoItem color, int gox, int goy){
-  if(go.grid[gox][goy] != EMPTY) return;
-  go.grid[gox][goy] = color;
-  paint_stone(gox, goy, color);
+void put_stone(GoItem color, int col, int row){
+  if(go.grid[col][row] != EMPTY) return;
+  go.grid[col][row] = color;
+  paint_stone(col, row, color);
 }
 
-void remove_stone(int gox, int goy){
-  if(go.grid[gox][goy] == EMPTY) return;
-  go.grid[gox][goy] = EMPTY;
-  unpaint_stone(gox, goy);
+void remove_stone(int col, int row){
+  if(go.grid[col][row] == EMPTY) return;
+  go.grid[col][row] = EMPTY;
+  unpaint_stone(col, row);
 }
 
 
@@ -663,12 +663,12 @@ on_drawing_area_button_press_event(GtkWidget       *widget,
   return FALSE;
 }
 
-gboolean is_stamped (int gox, int goy){return go.stamps[gox][goy];}
-void stamp(int gox, int goy){
-  if(!go.stamps[gox][goy]) go.stamps[gox][goy] = 1;
+gboolean is_stamped (int col, int row){return go.stamps[col][row];}
+void stamp(int col, int row){
+  if(!go.stamps[col][row]) go.stamps[col][row] = 1;
 }
-void unstamp(int gox, int goy){
-  if(go.stamps[gox][goy]) go.stamps[gox][goy] = 0;
+void unstamp(int col, int row){
+  if(go.stamps[col][row]) go.stamps[col][row] = 0;
 }
 void clear_stamps(){
   int i,j;
@@ -679,117 +679,117 @@ void clear_stamps(){
   }
 }
 
-void stamp_group_of(int gox, int goy){
+void stamp_group_of(int col, int row){
   //**/char c;
   int x,y;
 
   int my_color;
-  my_color = go.grid[gox][goy];
+  my_color = go.grid[col][row];
 
-  stamp(gox,goy);
+  stamp(col,row);
 
-  //TRACE("Examining %d %d (%d)",gox,goy, my_color);
+  //TRACE("Examining %d %d (%d)",col,row, my_color);
   //**/_print_grid();
   //**/scanf("%c",&c);scanf("%c",&c);
 
-  x = gox;
-  y = goy - 1;
-  if(goy>1 && go.grid[x][y] == my_color && !go.stamps[x][y]){
+  x = col;
+  y = row - 1;
+  if(row>1 && go.grid[x][y] == my_color && !go.stamps[x][y]){
     //TRACE("Now examining %d %d (%d)",x,y, go.grid[x][y]);
     stamp_group_of(x,y);
   }
-  x = gox + 1;
-  y = goy;
-  if(gox<go.game_size && go.grid[x][y] == my_color && !go.stamps[x][y]){
+  x = col + 1;
+  y = row;
+  if(col<go.game_size && go.grid[x][y] == my_color && !go.stamps[x][y]){
     //TRACE("Now examining %d %d (%d)",x,y, go.grid[x][y]);
     stamp_group_of(x,y);
   }
-  x = gox;
-  y = goy + 1;
-  if(goy<go.game_size && go.grid[x][y] == my_color && !go.stamps[x][y]){
+  x = col;
+  y = row + 1;
+  if(row<go.game_size && go.grid[x][y] == my_color && !go.stamps[x][y]){
     //TRACE("Now examining %d %d (%d)",x,y, go.grid[x][y]);
     stamp_group_of(x,y);
   }
-  x = gox - 1;
-  y = goy;
-  if(gox>1 && go.grid[x][y] == my_color && !go.stamps[x][y]){
+  x = col - 1;
+  y = row;
+  if(col>1 && go.grid[x][y] == my_color && !go.stamps[x][y]){
     //TRACE("Now examining %d %d (%d)",x,y, go.grid[x][y]);
     stamp_group_of(x,y);
   }
 }
 
-int size_group_of(int gox, int goy){
+int size_group_of(int col, int row){
   //**/char c;
   int count = 1;
   int my_color;
   int x,y;
-  my_color = go.grid[gox][goy];
+  my_color = go.grid[col][row];
 
-  stamp(gox,goy);
+  stamp(col,row);
 
-  //TRACE("I am          %d %d (%d)",gox,goy, my_color);
+  //TRACE("I am          %d %d (%d)",col,row, my_color);
   //**/_print_grid();
   //**/scanf("%c",&c);scanf("%c",&c);
 
-  x = gox;
-  y = goy - 1;
-  if(goy>1 && go.grid[x][y] == my_color && !go.stamps[x][y]){
+  x = col;
+  y = row - 1;
+  if(row>1 && go.grid[x][y] == my_color && !go.stamps[x][y]){
     count += size_group_of(x,y);
   }
-  x = gox + 1;
-  y = goy;
-  if(gox<go.game_size && go.grid[x][y] == my_color && !go.stamps[x][y]){
+  x = col + 1;
+  y = row;
+  if(col<go.game_size && go.grid[x][y] == my_color && !go.stamps[x][y]){
     count += size_group_of(x,y);
   }
-  x = gox;
-  y = goy + 1;
-  if(goy<go.game_size && go.grid[x][y] == my_color && !go.stamps[x][y]){
+  x = col;
+  y = row + 1;
+  if(row<go.game_size && go.grid[x][y] == my_color && !go.stamps[x][y]){
     count += size_group_of(x,y);
   }
-  x = gox - 1;
-  y = goy;
-  if(gox>1 && go.grid[x][y] == my_color && !go.stamps[x][y]){
+  x = col - 1;
+  y = row;
+  if(col>1 && go.grid[x][y] == my_color && !go.stamps[x][y]){
     count += size_group_of(x,y);
   }
   return count;
 }
 
-gboolean is_alive_group_of(int gox, int goy){
+gboolean is_alive_group_of(int col, int row){
   //**/char c;
   int my_color;
   int x,y;
-  my_color = go.grid[gox][goy];
+  my_color = go.grid[col][row];
 
-  stamp(gox,goy);
+  stamp(col,row);
 
-  //TRACE("I am          %d %d (%d)",gox,goy, my_color);
+  //TRACE("I am          %d %d (%d)",col,row, my_color);
   //**/_print_grid();
   //**/scanf("%c",&c);scanf("%c",&c);
 
-  x = gox;     //NORTH
-  y = goy - 1;
-  if(goy>1 && !go.stamps[x][y]){
+  x = col;     //NORTH
+  y = row - 1;
+  if(row>1 && !go.stamps[x][y]){
     if(go.grid[x][y] == EMPTY) return TRUE;
     else if( go.grid[x][y] == my_color )
       if(is_alive_group_of(x,y)) return TRUE;
   }
-  x = gox + 1; //EAST
-  y = goy;
-  if(gox<go.game_size && !go.stamps[x][y]){
+  x = col + 1; //EAST
+  y = row;
+  if(col<go.game_size && !go.stamps[x][y]){
     if(go.grid[x][y] == EMPTY) return TRUE;
     else if( go.grid[x][y] == my_color )
       if(is_alive_group_of(x,y)) return TRUE;
   }
-  x = gox;     //SOUTH
-  y = goy + 1;
-  if(goy<go.game_size && !go.stamps[x][y]){
+  x = col;     //SOUTH
+  y = row + 1;
+  if(row<go.game_size && !go.stamps[x][y]){
     if(go.grid[x][y] == EMPTY) return TRUE;
     else if( go.grid[x][y] == my_color )
       if(is_alive_group_of(x,y)) return TRUE;
   }
-  x = gox - 1; //WEST
-  y = goy;
-  if(gox>1 && !go.stamps[x][y]){
+  x = col - 1; //WEST
+  y = row;
+  if(col>1 && !go.stamps[x][y]){
     if(go.grid[x][y] == EMPTY) return TRUE;
     else if( go.grid[x][y] == my_color )
       if(is_alive_group_of(x,y)) return TRUE;
@@ -798,13 +798,13 @@ gboolean is_alive_group_of(int gox, int goy){
   return FALSE;
 }
 
-int kill_group_of(int gox, int goy){//returns number of stones killed
+int kill_group_of(int col, int row){//returns number of stones killed
   int count;
   int i,j;
 
   count = 0;
   clear_stamps();
-  stamp_group_of(gox, goy);
+  stamp_group_of(col, row);
 
   for(i=1; i<= go.game_size; i++){
     for(j=1; j<=go.game_size; j++){
@@ -831,19 +831,19 @@ void update_capture_label(){
 }
 
 void redo_turn();
-void play_at(int gox, int goy){
-  //TRACE("Play at %d %d", gox, goy);
-  if( gox < 1 || go.game_size < gox ||
-      goy < 1 || go.game_size < goy ){
+void play_at(int col, int row){
+  //TRACE("Play at %d %d", col, row);
+  if( col < 1 || go.game_size < col ||
+      row < 1 || go.game_size < row ){
     //TRACE("--> out of bounds");
     return;
   }
   if(go.lock_variation_choice){//variation choice
-    if(!is_stamped(gox, goy)) return;
+    if(!is_stamped(col, row)) return;
     redo_turn();
     return;
   }
-  if(go.grid[gox][goy] != 0){
+  if(go.grid[col][row] != 0){
     //TRACE("--> not empty");
     return;
   }
@@ -852,11 +852,11 @@ void play_at(int gox, int goy){
     GoItem color;
     color = (go.turn%2)?WHITE_STONE:BLACK_STONE;
 
-    put_stone(color, gox, goy);
+    put_stone(color, col, row);
 
-    update_last_played_mark_to(gox, goy);
+    update_last_played_mark_to(col, row);
 
-    append_hitem(PLAY, color, gox, goy);
+    append_hitem(PLAY, color, col, row);
   }
 
   //--check if groups to kill
@@ -866,7 +866,7 @@ void play_at(int gox, int goy){
 
     int * captured;
 
-    if(go.grid[gox][goy] == WHITE_STONE){
+    if(go.grid[col][row] == WHITE_STONE){
       opp_color = BLACK_STONE;
       captured  = & go.white_captures;
     }
@@ -876,27 +876,27 @@ void play_at(int gox, int goy){
     }
 
     clear_stamps();
-    x = gox;
-    y = goy - 1;
-    if(goy>1 && go.grid[x][y] == opp_color && !is_alive_group_of(x,y)){
+    x = col;
+    y = row - 1;
+    if(row>1 && go.grid[x][y] == opp_color && !is_alive_group_of(x,y)){
       *captured += kill_group_of(x,y);
     }
     clear_stamps();
-    x = gox + 1;
-    y = goy;
-    if(gox<go.game_size && go.grid[x][y] == opp_color && !is_alive_group_of(x,y)){
+    x = col + 1;
+    y = row;
+    if(col<go.game_size && go.grid[x][y] == opp_color && !is_alive_group_of(x,y)){
       *captured += kill_group_of(x,y);
     }
     clear_stamps();
-    x = gox;
-    y = goy + 1;
-    if(goy<go.game_size && go.grid[x][y] == opp_color && !is_alive_group_of(x,y)){
+    x = col;
+    y = row + 1;
+    if(row<go.game_size && go.grid[x][y] == opp_color && !is_alive_group_of(x,y)){
       *captured += kill_group_of(x,y);
     }
     clear_stamps();
-    x = gox - 1;
-    y = goy;
-    if(gox>1 && go.grid[x][y] == opp_color && !is_alive_group_of(x,y)){
+    x = col - 1;
+    y = row;
+    if(col>1 && go.grid[x][y] == opp_color && !is_alive_group_of(x,y)){
       *captured += kill_group_of(x,y);
     }
   }
@@ -922,7 +922,7 @@ void undo_turn(){
       Hitem * item;
       child = g_node_nth_child (go.history, i);
       item = child->data;
-      unpaint_stone(item->posx, item->posy);
+      unpaint_stone(item->col, item->row);
     }
     clear_stamps();
     go.lock_variation_choice = FALSE;
@@ -938,7 +938,7 @@ void undo_turn(){
   hitem = go.history->data;
 
   while(hitem->action == CAPTURE){
-    put_stone(hitem->item, hitem->posx, hitem->posy);//FIXME: don't update screen each time!
+    put_stone(hitem->item, hitem->col, hitem->row);//FIXME: don't update screen each time!
     if(hitem->item == BLACK_STONE) go.white_captures--;
     else go.black_captures--;
 
@@ -948,7 +948,7 @@ void undo_turn(){
   update_capture_label();
 
   if(hitem->action == PLAY){
-    remove_stone(hitem->posx, hitem->posy);
+    remove_stone(hitem->col, hitem->row);
     go.turn--;
   }
   else if(hitem->action == PASS){
@@ -967,7 +967,7 @@ void undo_turn(){
         hist = hist->parent;
         item = hist->data;
       } 
-      update_last_played_mark_to(item->posx, item->posy);
+      update_last_played_mark_to(item->col, item->row);
     }
   }
 }
@@ -1001,11 +1001,11 @@ void redo_turn(){
           child = g_node_nth_child (go.history, i);
           item = child->data;
           
-          stamp(item->posx, item->posy);
-          paint_mark(item->posx, item->posy, MARK_SPOT, &red);
+          stamp(item->col, item->row);
+          paint_mark(item->col, item->row, MARK_SPOT, &red);
           if(is_on_main_branch(child)){
             //add extra mark on main branch's move
-            paint_mark(item->posx, item->posy, MARK_SQUARE, &blue);
+            paint_mark(item->col, item->row, MARK_SQUARE, &blue);
             go.variation_main_branch_node = child;
           }
 
@@ -1028,7 +1028,7 @@ void redo_turn(){
             Hitem * item;
             child = g_node_nth_child (go.history, i);
             item = child->data;
-            if(item->posx == go.col && item->posy == go.row){
+            if(item->col == go.col && item->row == go.row){
               choosen_child = child;
               i = children;
             }
@@ -1042,7 +1042,7 @@ void redo_turn(){
           Hitem * item;
           child = g_node_nth_child (go.history, i);
           item = child->data;
-          unpaint_stone(item->posx, item->posy);
+          unpaint_stone(item->col, item->row);
         }
         clear_stamps();
         go.lock_variation_choice = FALSE;
@@ -1064,10 +1064,10 @@ void redo_turn(){
     go.turn++;
   }
   else if(hitem->action == PLAY){
-    TRACE("***> rePLAY %d %d", hitem->posx, hitem->posy);
-    put_stone(hitem->item, hitem->posx, hitem->posy);
+    TRACE("***> rePLAY %d %d", hitem->col, hitem->row);
+    put_stone(hitem->item, hitem->col, hitem->row);
 
-    update_last_played_mark_to(hitem->posx, hitem->posy);
+    update_last_played_mark_to(hitem->col, hitem->row);
 
     go.turn++;
 
@@ -1079,8 +1079,8 @@ void redo_turn(){
         hitem = node->data;
       
         while(hitem && hitem->action == CAPTURE){
-          TRACE("***> remove %d %d", hitem->posx, hitem->posy);
-          remove_stone(hitem->posx, hitem->posy);//FIXME: don't update screen each time!
+          TRACE("***> remove %d %d", hitem->col, hitem->row);
+          remove_stone(hitem->col, hitem->row);//FIXME: don't update screen each time!
           if(hitem->item == BLACK_STONE) go.white_captures++;
           else go.black_captures++;
           
@@ -1123,8 +1123,8 @@ void _save_hitem_sgf(FILE * f, Hitem * hitem){
   if(hitem->item == BLACK_STONE) item = 'B'; else item = 'W';
   if     (hitem->action == PASS) fprintf(f, ";%c[tt]", item);//FIXME: support "[]"
   else if(hitem->action == PLAY) fprintf(f, ";%c[%c%c]", item,
-                                         hitem->posx + 'a' -1,
-                                         hitem->posy + 'a' -1);
+                                         hitem->col + 'a' -1,
+                                         hitem->row + 'a' -1);
 }
 
 void _save_tree_to_sgf_from (GNode *node, FILE * f){
