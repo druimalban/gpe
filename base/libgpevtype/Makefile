@@ -16,7 +16,7 @@ PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS) -DPREFIX=\"$(PREFIX)\" -DPACKAGE=\"$(PA
 
 PACKAGE_CPPFLAGS += -I.
 
-HEADERS = tag-db.h vcard.h
+HEADERS = tag-db.h vcard.h vtodo.h vevent.h
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
