@@ -21,9 +21,11 @@
 #include <grp.h>
 #include <errno.h>
 #include <sys/stat.h>
+#include <fcntl.h>
 
 #include <gtk/gtk.h>
 #include <gdk_imlib.h>
+#include <gdk/gdkx.h>
 
 #include "errorbox.h"
 
@@ -41,6 +43,7 @@ static const char *current_username;
 static GtkWidget *label_result;
 static gboolean have_users;
 static pid_t cpid;
+static const char *xkbd_path = "/usr/bin/xkbd";
 
 static GtkWidget *entry_username, *entry_fullname;
 static GtkWidget *entry_password, *entry_confirm;
@@ -247,6 +250,10 @@ main (int argc, char *argv[])
   GtkWidget *frame;
   GtkWidget *logo = NULL;
   GtkWidget *focus;
+  GtkWidget *socket;
+  pid_t kpid;
+  int fd[2];
+  guint xkbd_xid = 0;
 
   GdkPixmap *gpe_pix;
   GdkBitmap *gpe_pix_mask;
@@ -271,6 +278,45 @@ main (int argc, char *argv[])
   signal (SIGTERM, cleanup_children_and_exit);
   
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+
+  socket = gtk_socket_new ();
+
+  pipe (fd);
+  kpid = fork ();
+  if (kpid == 0)
+    {
+      close (fd[0]);
+      if (dup2 (fd[1], 1) < 0)
+	perror ("dup2");
+      close (fd[1]);
+      if (fcntl (1, F_SETFD, 0))
+	perror ("fcntl");
+      execl (xkbd_path, xkbd_path, "-xid", NULL);
+      _exit (1);
+    }
+
+  close (fd[1]);
+
+  {
+    char buf[256];
+    char c;
+    int a = 0;
+    size_t n;
+
+    do {
+      n = read (fd[0], &c, 1);
+      if (n)
+	{
+	  buf[a++] = c;
+	}
+    } while (n && (c != 10) && (a < (sizeof (buf) - 1)));
+
+    if (a)
+      {
+	buf[a] = 0;
+	xkbd_xid = atoi (buf);
+      }
+  }
 
   if (gdk_imlib_load_file_to_pixmap (GPE_ICON, &gpe_pix, &gpe_pix_mask))
     logo = gtk_pixmap_new (gpe_pix, gpe_pix_mask);
@@ -324,6 +370,7 @@ main (int argc, char *argv[])
       gtk_box_pack_start (GTK_BOX (vbox), hbox_user, FALSE, FALSE, 0);
       gtk_box_pack_start (GTK_BOX (vbox), hbox_password, FALSE, FALSE, 0);
       gtk_box_pack_start (GTK_BOX (vbox), label_result, FALSE, FALSE, 0);
+      gtk_box_pack_start (GTK_BOX (vbox), socket, TRUE, TRUE, 0);
       
       gtk_container_add (GTK_CONTAINER (frame), vbox);
       gtk_container_set_border_width (GTK_CONTAINER (frame), 5);
@@ -421,6 +468,9 @@ main (int argc, char *argv[])
   gtk_container_add (GTK_CONTAINER (window), vbox2);
 
   gtk_widget_show_all (window);
+
+  if (xkbd_xid)
+    gtk_socket_steal (socket, xkbd_xid);
 
   gtk_widget_grab_focus (focus);
 
