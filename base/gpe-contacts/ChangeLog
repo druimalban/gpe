@@ -1,5 +1,8 @@
 2002-12-01  Philip Blundell  <philb@gnu.org>
 
+	* src/main.c (selection_made): Make linkage global.
+	* src/callbacks.c (selection_made): Delete.
+
 	* src/Makefile (DIR_PO): Define.
 	* src/Makefile.in, src/Makefile.am: Delete autotools cruft.
 

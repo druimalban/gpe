@@ -205,24 +205,3 @@ on_nbList_switch_page                  (GtkNotebook     *notebook,
        break;	
     }
 }
-
-
-
-void
-selection_made                         (GtkCList        *clist,
-                                        gint             row,
-                                        gint             column,
-                                        GdkEvent        *event,
-                                        gpointer         user_data)
-{
-  guint id;
-	
-  if (event->type == GDK_2BUTTON_PRESS)
-    {
-      struct person *p;
-      id = (guint)gtk_clist_get_row_data (GTK_CLIST (clist), row);
-      p = db_get_by_uid (id);
-      edit_person (p);
-    }
-}
-

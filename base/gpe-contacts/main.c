@@ -318,7 +318,7 @@ show_details (struct person *p)
   return 0;
 }
 
-static void 
+void 
 selection_made (GtkWidget      *clist,
 		gint            row,
 		gint            column,
