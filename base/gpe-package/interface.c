@@ -127,7 +127,7 @@ send_message (pkcontent_t ctype, pkcommand_t command, char* params, char* list)
 				desc = _("Upgrading installed system");
 			break;
 			case CMD_INSTALL:
-				desc = _("Installing package");
+				desc = g_strdup_printf("%s %s", _("Installing"), list);
 			break;
 			default:
 				desc = _("Working...");			
@@ -176,24 +176,32 @@ update_check(GtkTreeModel *model, GtkTreePath *path,
 {
 	pkg_state_want_t dstate;
 	char *name;
-	
+
 	gtk_tree_model_get (GTK_TREE_MODEL(store), iter, 
 						COL_DESIREDSTATE, &dstate,
 						COL_NAME,&name,	-1);
 	switch (dstate)
 	{
 		case SW_INSTALL:
-			send_message(PK_COMMAND,CMD_INSTALL,name,"");
+			send_message(PK_COMMAND,CMD_INSTALL,"",name);
 			wait_command_finish();
+			gtk_tree_store_set (GTK_TREE_STORE(store), iter, 
+                      COL_INSTALLED,TRUE,
+                      COL_DESIREDSTATE,SW_UNKNOWN,
+                      COL_COLOR,NULL,-1);
 		break;
 		case SW_DEINSTALL:
-			send_message(PK_COMMAND,CMD_REMOVE, name,"");
+			send_message(PK_COMMAND,CMD_REMOVE,"",name);
 			wait_command_finish();
+			gtk_tree_store_set (GTK_TREE_STORE(store), iter, 
+                      COL_INSTALLED,FALSE,
+                      COL_DESIREDSTATE,SW_UNKNOWN,
+                      COL_COLOR,NULL,-1);
 		break;
 		default:
 		break;
 	}	
-	return TRUE;
+	return FALSE;
 }
 
 

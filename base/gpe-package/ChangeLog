@@ -1,5 +1,9 @@
+2003-10-17 Florian Boor <florian.boor@kernelconcepts.de>
+	* Now updating list display after install.
+
 2003-10-16 Florian Boor <florian.boor@kernelconcepts.de>
 	* Software install and removal.
+	* Now updating list display after install.
 	
 2003-10-15 Florian Boor <florian.boor@kernelconcepts.de>
 	* interface.* improved comments.
