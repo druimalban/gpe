@@ -1,7 +1,7 @@
 Package: gpe-bluetooth
 Section: x11
 Priority: optional
-Version: 0.14
+Version: VERSION
 Architecture: arm
 Maintainer: Phil Blundell <pb@debian.org>
 Depends: libgtk2.0-0, gpe-icons (>= 0.18), libgpewidget1 (>= 0.32), bluez-pin2, bluez-libs, bluez-utils, bluez-sdp

@@ -3,6 +3,7 @@ PACKAGE = gpe-bluetooth
 DEBUG = no
 CVSBUILD = yes
 GTK2 = yes
+VERSION = 0.15
 
 MEMBERS = main
 
