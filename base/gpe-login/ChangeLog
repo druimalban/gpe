@@ -6,6 +6,8 @@
 	
 2003-01-25  Philip Blundell  <philb@gnu.org>
 
+	* gpe-login.xinit: Break up exec line to work around busybox bug 547.
+
 	* familiar/gpe-logout.png: Move to ...
 	* gpe-logout.png: ... here.
 	* Makefile (ipkg): Don't install gpe-logout.png here.
