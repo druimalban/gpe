@@ -17,7 +17,7 @@ BUILD = ../../base/build
 else
 BUILD = build
 endif
-VERSION = 1.3-gpe0
+VERSION = 1.3-gpe1
 PACKAGE = repton
 
 BINDIR=		$(DESTDIR)$(PREFIX)/bin
@@ -66,6 +66,10 @@ install-program: $(PROG) $(MAPS) $(BMPS)
 	install -m 444 -o $(BINOWN) -g $(BINGRP) $(MAPS) $(LIBDIR)/repton/maps
 	install -m 444 -o $(BINOWN) -g $(BINGRP) $(BMPS) $(LIBDIR)/repton/bmps
 	install -m 444 -o $(BINOWN) -g $(BINGRP) $(SNDS) $(LIBDIR)/repton/snds
+	install -d $(DESTDIR)$(PREFIX)/share/applications
+	install -m 644 repton.desktop $(DESTDIR)$(PREFIX)/share/applications
+	install -d $(DESTDIR)$(PREFIX)/share/pixmaps
+	install -m 644 repton.png $(DESTDIR)$(PREFIX)/share/pixmaps
 
 uninstall:
 	rm -f $(BINDIR)/$(PROG)
