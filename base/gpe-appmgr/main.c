@@ -725,10 +725,6 @@ int refresh_list ()
 	/* Remove the tap-hold popup menu timeout if it's there */
 	popup_menu_cancel ();
 
-//	old_items = items;
-//	old_groups = groups;
-
-//	items = groups = NULL;
 	clean_up ();
 
 	/* flush old translations */
@@ -769,31 +765,32 @@ int refresh_list ()
 		}
 		closedir (dir);
 	}
+#define PREFIX "/gnome/head/INSTALL"
+	dir = opendir (PREFIX "/share/applications");
+	if (dir)
+	{
+		while ((entry = readdir (dir)))
+		{
+			char *temp;
+
+			if (entry->d_name[0] == '.')
+				continue;
+
+			/* read the file if we don't want to ignore it */
+			temp = g_strdup_printf ("%s/%s", PREFIX "/share/applications", entry->d_name);
+			if (g_list_find_custom (ignored_items, temp, (GCompareFunc)strcmp))
+			{
+				g_free (temp);
+				continue;
+			}
+
+			cb_package_add (package_from_dotdesktop (temp, NULL));
+			g_free (temp);
+		}
+		closedir (dir);
+	}
 
 	groups = g_list_concat (forced_groups, groups);
-
-#if 0
-	/* free the old data. note that we do it now so that
-	   any stuff that references it can't ever
-	   reference invalid data */
-	l = old_items;
-	while (l)
-	{
-		if (l->data)
-			package_free ((struct package *)l->data);
-		l = l->next;
-	}
-	g_list_free (old_items);
-
-	l = old_groups;
-	while (l)
-	{
-		if (l->data)
-			free (l->data);
-		l = l->next;
-	}
-	g_list_free (old_groups);
-#endif
 
 	/* We allocated a string for the user's menu dir; free it */
 	if (user_menu)

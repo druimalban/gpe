@@ -1,11 +1,10 @@
-GTK2 = yes
 NATIVE = no
 CVSBUILD = yes
 DEBUG = no
 
 ifeq ($(CVSBUILD),yes)
-LDFLAGS += -L../libgpewidget -L../libxsettings  -L../libxsettings-client
-CFLAGS += -I../libgpewidget -I../libxsettings-client -I../libxsettings
+LDFLAGS += -L../libgpewidget -L../libxsettings  -L../libxsettings-client -L../libdotdesktop
+CFLAGS += -I../libgpewidget -I../libxsettings-client -I../libxsettings -I../libdotdesktop
 else
 CFLAGS += -I/usr/include/gpe
 endif
@@ -19,29 +18,17 @@ endif
 ifeq ($(NATIVE),yes)
 STRIP=strip
 
-ifeq ($(GTK2),yes)
-LDFLAGS += -lgpewidget `pkg-config --libs gtk+-2.0 gdk-pixbuf-2.0` #-lXinerama
+LDFLAGS += -lgpewidget `pkg-config --libs gtk+-2.0 gdk-pixbuf-2.0` -ldotdesktop #-lXinerama
 CFLAGS += `pkg-config --cflags gtk+-2.0 gdk-pixbuf-2.0` -Wall -DGTK2
-else
-LDFLAGS += -lgpewidget `gtk-config --libs` `gdk-pixbuf-config --libs`
-CFLAGS += `gtk-config --cflags` `gdk-pixbuf-config --cflags` -Wall
-endif
 
 else #cross-compile!
 
 CC=arm-linux-gcc
 STRIP=arm-linux-strip
 
-ifeq ($(GTK2),yes)
 #LDFLAGS += -lgpewidget `pkg-config --libs gtk+-2.0 gdk-pixbuf-2.0 | sed "s/-L.*lib //"`
-LDFLAGS += -lgpewidget -lgtk-x11-2.0 -lgdk-x11-2.0 -latk-1.0 -lpangoxft-1.0 -lpangox-1.0 -lpango-1.0 -lgdk_pixbuf-2.0 -lm -lgobject-2.0 -lgmodule-2.0 -ldl -lglib-2.0 -lXinerama
+LDFLAGS += -lgpewidget -lgtk-x11-2.0 -lgdk-x11-2.0 -latk-1.0 -lpangoxft-1.0 -lpangox-1.0 -lpango-1.0 -lgdk_pixbuf-2.0 -lm -lgobject-2.0 -lgmodule-2.0 -ldl -lglib-2.0 -lXinerama -ldotdesktop
 CFLAGS += `pkg-config --cflags gtk+-2.0 gdk-pixbuf-2.0` -Wall -DGTK2
-
-else
-LDFLAGS += -L../libgpewidget -lgpewidget -L/usr/local/arm/arm-linux/lib -L/usr/local/arm/arm-linux/lib/X11 -lgtk -lgdk -rdynamic -lgmodule -lglib -ldl -lXext -lX11 -lm -lgdk_pixbuf
-CFLAGS += -I/usr/local/arm/arm-linux/include `gtk-config --cflags` -I/usr/include -Wall `gdk-pixbuf-config --cflags` -I../libgpewidget -I/usr/local/arm/arm-linux/include/X11/extensions
-
-endif #GTK2?
 
 endif #native or cross-compile
 

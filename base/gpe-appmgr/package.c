@@ -25,6 +25,9 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
+/* For .desktop files */
+#include <dotdesktop.h>
+
 #include "package.h"
 
 struct package *package_new ()
@@ -47,7 +50,8 @@ void package_free (struct package *p)
 		o = p;
 		p = p->next;
 		free (o->name);
-		free (o->data);
+		if (o->data)
+			free (o->data);
 		free (o);
 	}
 }
@@ -314,7 +318,10 @@ void package_set_data (struct package *p, char *name, char *data)
 		if (!strcmp (name, p->name))
 		{
 			free (p->data);
-			p->data = (char*) strdup (data);
+			if (data)
+				p->data = (char*) strdup (data);
+			else
+				p->data = NULL;
 			return;
 		}
 		op=p;
@@ -323,7 +330,10 @@ void package_set_data (struct package *p, char *name, char *data)
 	/* We aren't replacing an entry, tack it on the end */
 	op->next = package_new ();
 	op->next->name = (char*) strdup (name);
-	op->next->data = (char*)strdup (data);
+	if (data)
+		op->next->data = (char*) strdup (data);
+	else
+		op->next->data = NULL;
 }
 
 int package_compare (struct package *a, struct package *b)
@@ -332,4 +342,38 @@ int package_compare (struct package *a, struct package *b)
 	n1 = package_get_data (a, "title");
 	n2 = package_get_data (b, "title");
 	return strcasecmp (n1, n2);
+}
+
+struct package *package_from_dotdesktop (char *filename, char *lang)
+{
+	DotDesktop *dd;
+	struct package *p;
+
+	fprintf (stderr, "Loading %s\n", filename);
+	dd = dotdesktop_new_from_file(filename, lang, "[Desktop Entry]");
+
+	if (dd == NULL)
+		return NULL;
+
+	// want type == Application
+	{
+		char *t = dotdesktop_get (dd, "Type");
+		if (t == NULL || strcmp(t, "Application"))
+		{
+			dotdesktop_free (dd);
+			return NULL;
+		}
+	}
+
+	p = package_new ();
+	p->name = strdup ("dotdesktop");
+
+	package_set_data (p, "title", dotdesktop_get (dd, "Name"));
+	package_set_data (p, "command", dotdesktop_get (dd, "Exec"));
+	package_set_data (p, "icon", dotdesktop_get (dd, "Icon"));
+	package_set_data (p, "section", ".desktop"); //, dotdesktop_get (dd, "Categories")
+
+	dotdesktop_free (dd);
+
+	return p;
 }

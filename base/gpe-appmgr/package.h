@@ -54,4 +54,7 @@ void package_free (struct package *p);
    GLists of packages. Runs strcasecmp() on the two titles */
 int package_compare (struct package *a, struct package *b);
 
+/* Load a .desktop file */
+struct package *package_from_dotdesktop (char *filename, char *lang);
+
 #endif
