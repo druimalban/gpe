@@ -77,7 +77,7 @@ SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
 PIXMAPS = irda-16.png irda.png irda-on-16.png
 
-all: $(PACKAGE) vcard-export vcard-import vcard-import-file irsw
+all: $(PACKAGE) vcard-export vcard-import vcard-import-file irsw vcal-export
 
 $(PACKAGE): libircp.a $(OBJS)
 	$(CC) -g -o $@ $(OBJS) $(LDFLAGS) $(IRFLAGS)
@@ -86,6 +86,9 @@ irsw: irsw.o irsw.o
 	$(CC) -o $@ $^ $(LDFLAGS)
 
 CFLAGS += $(MIMECFLAGS)
+
+vcal-export: vcal-export.o
+	$(CC) -o $@ $^ $(LDFLAGS) $(MIMELDFLAGS)
 
 vcard-export: vcard-export.o
 	$(CC) -o $@ $^ $(LDFLAGS) $(MIMELDFLAGS)
