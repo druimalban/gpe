@@ -528,6 +528,7 @@ int main(int argc,char *argv[])
 	// toolbar
 #if GTK_MAJOR_VERSION >= 2
 	toolbar = gtk_toolbar_new ();
+	gtk_toolbar_set_style(GTK_TOOLBAR(toolbar), GTK_TOOLBAR_ICONS);
 	gtk_box_pack_start(GTK_BOX(toolbar_hbox),toolbar,FALSE,FALSE,0);
 	gtk_widget_show(toolbar);
 #else
@@ -563,7 +564,8 @@ int main(int argc,char *argv[])
 	// toolbar 2
 #if GTK_MAJOR_VERSION >= 2
 	toolbar2 = gtk_toolbar_new ();
-	gtk_box_pack_end(GTK_BOX(toolbar_hbox),toolbar2,FALSE,FALSE,0);
+	gtk_toolbar_set_style(GTK_TOOLBAR(toolbar2), GTK_TOOLBAR_ICONS);
+        gtk_box_pack_end(GTK_BOX(toolbar_hbox),toolbar2,FALSE,FALSE,0);
 	gtk_widget_show(toolbar2);
 #else
 	toolbar2 = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, GTK_TOOLBAR_ICONS);
