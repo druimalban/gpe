@@ -31,10 +31,14 @@
 #include "soundctrl.h"
 
 #define DEVNAME_MIXER "/dev/mixer"
-#define DEVNAME_AUDIO "/dev/audio"
+#define DEVNAME_AUDIO1 "/dev/audio"
+#define DEVNAME_AUDIO2 "/dev/dsp"
+#define DEVNAME_AUDIO3 "/dev/sound/dsp"
+
 static char* FILE_SETTINGS = NULL;
 
 static int initialized = FALSE;
+static int muted = FALSE;
 
 static char* mixer_names[] = SOUND_DEVICE_NAMES;
 static char* mixer_labels[] = SOUND_DEVICE_LABELS;
@@ -45,6 +49,29 @@ static int mixfd;
 static int active_channels = 0;
 
 static char* show_channels[] = {"vol", "pcm", "mic"};
+
+
+/* initialize device to the settings our sample file uses */
+static int 
+init_dsp(int dsp_fd)
+{
+	int i, p;
+
+	ioctl(dsp_fd, SNDCTL_DSP_RESET, 0);
+
+	p =  16;
+	i =  ioctl(dsp_fd, SOUND_PCM_WRITE_BITS, &p);
+
+	p =  1;
+	i += ioctl(dsp_fd, SOUND_PCM_WRITE_CHANNELS, &p);
+
+	p =  44100;
+	i += ioctl(dsp_fd, SOUND_PCM_WRITE_RATE, &p);
+
+	ioctl(dsp_fd, SNDCTL_DSP_SYNC, 0);
+
+	return i;
+}
 
 
 void
@@ -61,10 +88,14 @@ play_sample(char *filename)
 		len = read(fd_data, buf, 20000);	
 	close(fd_data);
 	
-	fd_dev = open(DEVNAME_AUDIO, O_WRONLY | O_NONBLOCK);
+	fd_dev = open(DEVNAME_AUDIO1, O_WRONLY | O_NONBLOCK);
+	if (fd_dev < 0) fd_dev = open(DEVNAME_AUDIO2, O_WRONLY | O_NONBLOCK);
+	if (fd_dev < 0) fd_dev = open(DEVNAME_AUDIO3, O_WRONLY | O_NONBLOCK);
+		
 	if (len > 0)
 		if (fd_dev >= 0)
 		{
+			init_dsp(fd_dev);
 			write(fd_dev, buf, len);
 			close(fd_dev);
 		}
@@ -79,7 +110,7 @@ channel_active(const gchar *name)
 	if (!name) 
 		return FALSE;
 
-	if (!show_channels)
+	if (show_channels)
 		return TRUE;
 	
 	while (show_channels[i])
@@ -88,6 +119,40 @@ channel_active(const gchar *name)
 		
 	return (FALSE);
 }
+
+
+/* mute sound system, we store current settings in backup */
+void 
+set_mute_status(int set_mute)
+{
+	int i;
+	muted = set_mute;
+	if (muted)
+	{
+		for (i = 0; i < active_channels; i++)
+		{
+			mchannels[i].backupval = mchannels[i].value;
+			mchannels[i].value = 0;
+			set_volume (mchannels[i].nr, 0);
+		}
+	}
+	else
+	{
+		for (i = 0; i < active_channels; i++)
+		{
+			mchannels[i].value = mchannels[i].backupval;
+			set_volume (mchannels[i].nr, mchannels[i].value);
+		}
+	}
+}
+
+
+int
+get_mute_status(void)
+{
+	return muted;
+}
+
 
 /* load and set values from file */
 void 
@@ -102,11 +167,25 @@ sound_load_settings(void)
 		char buf[128];
 		while (fgets(buf, 128, cfgfile))
 		{
+			ret = sscanf(buf, "muted %d", &nc);
+			if (ret)
+				muted = nc;
+			
 			ret = sscanf(buf, "%d %d", &nc, &val);			
 			if ((ret == 2) && (nc >= 0) && (nc <= SOUND_MIXER_NRDEVICES))
 			{
-				mchannels[nc].value = val;
-				set_volume(mchannels[nc].nr, val);
+				if (muted)
+				{
+					set_volume(mchannels[nc].nr, 0);
+					mchannels[nc].backupval = val;
+					mchannels[nc].value = val;
+				}
+				else
+				{
+					mchannels[nc].value = val;
+					set_volume(mchannels[nc].nr, val);
+				}
+	
 			}
 		}
 		fclose(cfgfile);
@@ -126,8 +205,10 @@ sound_save_settings(void)
 	{
 		fprintf(cfgfile, 
 			"# mixer settings - file created by gpe-conf\n\n");
+		fprintf(cfgfile, "muted %d\n", muted);
 		for (i = 0; i < SOUND_MIXER_NRDEVICES; i++)
-			fprintf(cfgfile, "%d %d\n", i, mchannels[i].value);
+			fprintf(cfgfile, "%d %d\n", i, 
+		            muted ? mchannels[i].backupval : mchannels[i].value);
 		fclose(cfgfile);
 	}
 }
@@ -143,11 +224,8 @@ sound_restore_settings(void)
 		
 	for (i = 0; i < SOUND_MIXER_NRDEVICES; i++)
 	{
-		if (((1 << i) & devmask) && channel_active(mixer_names[i])) 
-		{
-			mchannels[i].value = mchannels[i].initval;
-			set_volume(mchannels[i].nr, mchannels[i].value);
-		}
+		mchannels[i].value = mchannels[i].initval;
+		set_volume(mchannels[i].nr, mchannels[i].value);
 	}
 }
 
@@ -221,6 +299,11 @@ sound_init(void)
 	}
 	
 	initialized = TRUE;
+	
+	/* restore all settings from configfile, e.g. mute setting */
+	
+	sound_load_settings();
+	sound_restore_settings();
 }
 
 

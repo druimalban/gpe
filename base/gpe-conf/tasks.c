@@ -49,7 +49,8 @@ task_sound(char *action)
 	{
 		sound_init();
 		sound_load_settings();
-		sound_save_settings();
+		if (get_mute_status)
+			set_mute_status(TRUE);
 	}
 	else
 		fprintf(stderr, "Invalid argument given\n");

@@ -1,3 +1,12 @@
+2004-09-13	Florian Boor  	<florian.boor@kernelconcepts.de>
+
+	* sound.c: Added initialisation of audio device.
+	* sound/*: Implemented muting, restoring of mute status.
+	* tasks.c: Removed obsolete save line.
+	* sound*.c: Fixed several bugs.
+	* sound/soundsettings.sh: New script to restore sound settings.
+	* Makefile: Installation of script to Xsession.d.
+
 2004-09-12	Florian Boor  	<florian.boor@kernelconcepts.de>
 	
 	* sound.c: Added some comments.

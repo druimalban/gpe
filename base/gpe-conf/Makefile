@@ -195,6 +195,8 @@ install-program: all all-desktop
 	$(INSTALL) -m 644 *.desktop $(DESTDIR)$(PREFIX)/share/applications
 	$(INSTALL) -d $(DESTDIR)$(PREFIX)/share/gpe-conf
 	$(INSTALL) -m 644 data/activate.wav $(DESTDIR)$(PREFIX)/share/gpe-conf/activate.wav
+	$(INSTALL) -d $(DESTDIR)/etc/X11/Xsession.d
+	$(INSTALL) -m755 sound/soundsettings.sh $(DESTDIR)/etc/X11/Xsession.d/55soundsettings
 
 clean:
 	rm -f $(PACKAGE) gpe-info gpe-conf.pc $(OBJS) $(OBJS_INFO) *~ */*~ *.ipk *.o sleep/*.o *.upload.html *.asc *.desktop *.d

@@ -16,11 +16,9 @@
   ToDo
   - Filtering for different platforms.
   - Additional settings.
-  - Restore switch and session script.
   - Update settings from system.
-  - Disable widgets if mute toggled.
-  - Implement muting.
   - percentage to tooltips
+  - replace wav test code by player
  */
 #include <stdlib.h>
 #include <stdio.h>
@@ -37,6 +35,8 @@
 
 #include "sound.h"
 #include "soundctrl.h"
+
+#define MAX_CHANNELS 24
 
 #warning needs gpe-mixer
 struct gpe_icon mixer_icons[] = 
@@ -64,6 +64,7 @@ struct
 	GtkWidget *cMute;
 	GtkWidget *slMain;
 	t_mixer *channels;
+	GtkWidget *slider[MAX_CHANNELS];
 }
 self;
 
@@ -90,6 +91,38 @@ do_change_channel(GtkRange *range, gpointer data)
 	level_changed = TRUE;
 }
 
+
+static void
+on_mute_toggled(GtkToggleButton *tb, gpointer userdata)
+{
+	int i;
+	gboolean set_state = (gboolean)userdata;
+	
+	if (gtk_toggle_button_get_active(tb))
+	{
+		for (i = 0; i < self.num_channels; i++)
+		{
+			gtk_widget_set_sensitive(self.slider[i], FALSE);
+		}
+		if (set_state)
+			set_mute_status(TRUE);
+	}
+	else
+	{
+		if (set_state)
+			set_mute_status(FALSE);
+		for (i = 0; i < self.num_channels; i++)
+		{
+ 			gtk_widget_set_sensitive(self.slider[i], TRUE);
+			gtk_range_set_value(GTK_RANGE(self.slider[i]), 
+		                        self.channels[i].value);
+		}
+	}		
+}
+
+
+/* gpe-conf applet interface */
+
 void
 Sound_Free_Objects ()
 {
@@ -114,12 +147,16 @@ Sound_Build_Objects (void)
 	GtkWidget *tw;
 	gchar *ts = NULL;
 	int i;
+	gboolean mute;
 	
 	gpe_load_icons(mixer_icons);
 	
 	/* init devices */
 	sound_init();
 	self.num_channels = sound_get_channels(&self.channels);
+	if (self.num_channels > MAX_CHANNELS)
+		self.num_channels = MAX_CHANNELS;
+	mute = get_mute_status();
 	
 	/* build gui */
 	
@@ -139,6 +176,9 @@ Sound_Build_Objects (void)
 	tw = gtk_check_button_new_with_label(_("Mute everything"));
 	gtk_table_attach(GTK_TABLE(table), tw, 0, 3, 1, 2, GTK_FILL | GTK_EXPAND,
                      GTK_FILL, 0, 0);
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(tw), mute);
+	g_signal_connect_after(G_OBJECT(tw), "toggled", 
+	                       G_CALLBACK(on_mute_toggled), (gpointer)TRUE);
 	
 	/* create widgets for channels */
 	
@@ -158,10 +198,13 @@ Sound_Build_Objects (void)
 		
 		gtk_misc_set_alignment(GTK_MISC(label), 0, 0.5);
 		gtk_scale_set_draw_value(GTK_SCALE(slider), FALSE);
-		gtk_range_set_value(GTK_RANGE(slider), self.channels[i].value);
+		gtk_range_set_value(GTK_RANGE(slider), 
+		                    mute ? self.channels[i].backupval 
+		                         : self.channels[i].value);
 				
 		g_signal_connect (G_OBJECT(slider), "value-changed",
 		                  G_CALLBACK (do_change_channel), (gpointer)i);
+		self.slider[i] = slider;
 		
 		gtk_table_attach(GTK_TABLE(table), image, 0, 1, i + 2, i + 3, 
 		                 GTK_FILL, GTK_FILL, 0, 0);
@@ -171,5 +214,8 @@ Sound_Build_Objects (void)
 		                 GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
 	}
 	g_timeout_add(1000, (GSourceFunc)timeout_callback, NULL);
+	
+	on_mute_toggled(GTK_TOGGLE_BUTTON(tw), FALSE);
+	
 	return table;
 }

@@ -13,6 +13,7 @@ typedef struct
 	char *label;
 	int value;
 	int initval;
+	int backupval;
 }
 t_mixer;
 
@@ -26,6 +27,9 @@ void sound_save_settings(void);
 void sound_load_settings(void);
 void sound_restore_settings(void);
 void play_sample(char *filename);
+void set_mute_status(int set_mute);
+int get_mute_status(void);
+
 
 #ifdef __cplusplus
 }
