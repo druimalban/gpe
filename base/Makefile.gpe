@@ -1,0 +1,14 @@
+LIBS=libgpewidget libgpe libeventdb libtododb libxsettings libxsettings-client libdm librootimage libsoundgen
+APPS=gpe-calendar gpe-todo gpe-today gpe-edit gpe-nmf gpe-login gpe-conf gpe-confd gpe-announce gpe-contacts gpe-setbg gpe-setlocale gpe-soundbite gpe-soundserver gpe-taskmanager gpe-su gpe-timesheet gpe-what
+
+all:
+	for i in $(LIBS); do make -C $$i all; done
+	for i in $(APPS); do make -C $$i all; done
+
+ipkg:
+	for i in $(LIBS); do fakeroot make -C $$i ipkg; make -C $$i all; done
+	for i in $(APPS); do fakeroot make -C $$i ipkg; make -C $$i all; done
+
+clean:
+	for i in $(LIBS); do make -C $$i clean; done
+	for i in $(APPS); do make -C $$i clean; done
