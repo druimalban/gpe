@@ -7,6 +7,7 @@
 #include <unistd.h>
 #include <signal.h>
 #include <time.h>
+#include <libintl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <gtk/gtk.h>
@@ -37,12 +38,12 @@ void Kbd_Save ()
 		{
 			gchar *fn;
 			FILE *outp;
-			fn = g_strdup_printf ("%s/.gpe/gpe-kbd", g_get_home_dir());
+			fn = g_strdup_printf ("%s/.xkbd", g_get_home_dir());
 			outp = fopen (fn, "w");
 			g_free (fn);
 			if (!outp)
 			{
-				perror ("Can't write to ~/.gpe/gpe-kbd");
+				perror ("Can't write to ~/.xkbd");
 				exit (1);
 			}
 			fprintf (outp, "%s\n", file);
@@ -60,7 +61,7 @@ gboolean setup_current_option_is(char *file)
 	gchar *fn;
 	gboolean ret;
 
-	fn = g_strdup_printf ("%s/.gpe/gpe-kbd", g_get_home_dir());
+	fn = g_strdup_printf ("%s/.kbdconfig", g_get_home_dir());
 	inp = fopen (fn, "r");
 	g_free (fn);
 	if (!inp)
@@ -123,8 +124,8 @@ GtkWidget *Kbd_Build_Objects()
   /* -------------------------------------------------------------------------- */
   catvbox1 = gtk_vbox_new (FALSE, gpe_boxspacing);
   gtk_box_pack_start (GTK_BOX (categories), catvbox1, TRUE, TRUE, 0);
-
-  catlabel1 = gtk_label_new (_("Keyboard Geometry/Layout")); /* FIXME: GTK2: make this bold */
+  
+  catlabel1 = gtk_label_new (_("Keyboard Geometry/Layout")); 
   gtk_box_pack_start (GTK_BOX (catvbox1), catlabel1, FALSE, FALSE, 0);
   gtk_label_set_justify (GTK_LABEL (catlabel1), GTK_JUSTIFY_LEFT);
   gtk_misc_set_alignment (GTK_MISC (catlabel1), 0, 0.5);
@@ -139,16 +140,21 @@ GtkWidget *Kbd_Build_Objects()
   gtk_box_pack_start (GTK_BOX (catconthbox1), controlvbox1, TRUE, TRUE, 0);
   
   /* FIXME: this is an ugly mix between Keyboard Geometry and Keyboard Layout */
-  opt1 = setup_kb (controlvbox1, NULL, _("Standard"), XKBD_DIR "kbdconfig");
-  setup_kb (controlvbox1,        opt1, _("Tiny"),     XKBD_DIR "kbdconfig.tiny");
-  setup_kb (controlvbox1,        opt1, _("US"),       XKBD_DIR "kbdconfig.us"); /* FIXME: US? */
-  setup_kb (controlvbox1,        opt1, _("Fitaly"),   XKBD_DIR "kbdconfig.fitaly");
+  opt1 = setup_kb (controlvbox1, NULL, _("Standard"), XKBD_DIR "en_GB.qwerty.xkbd");
+  setup_kb (controlvbox1,        opt1, _("Tiny"),     XKBD_DIR "en_GB.qwerty.tiny.xkbd");
+  setup_kb (controlvbox1,        opt1, _("US"),       XKBD_DIR "en_US.qwerty.xkbd"); 
+  setup_kb (controlvbox1,        opt1, _("Fitaly"),   XKBD_DIR "en_all.fitaly.xkbd");
+  setup_kb (controlvbox1,        opt1, _("Numbers only"),   XKBD_DIR "kbdconfig.numsonly");
 
   /* If the user has a config in ~/.kbdconfig, add it */
-  user_kbdrc = g_strdup_printf ("%s/.kbdconfig", g_get_home_dir());
+  user_kbdrc = g_strdup_printf ("%s/.xkbdrc", g_get_home_dir());
   if (file_exists(user_kbdrc))
     setup_kb (controlvbox1, opt1, _("User defined"), user_kbdrc);
   g_free (user_kbdrc);
 
   return categories;
+}
+
+void Kbd_Restore()
+{
 }

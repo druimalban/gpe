@@ -20,6 +20,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <gtk/gtk.h>
+#include <libintl.h>
 #ifndef _XOPEN_SOURCE
 #define _XOPEN_SOURCE /* Pour GlibC2 */
 #endif
@@ -64,7 +65,7 @@ char * get_cur_matchboxtheme()
     }
   else
     {
-      gpe_error_box( "couldn't get matchbox theme\n");
+      gpe_error_box( "Couldn't get matchbox theme!");
     }
 
   return cur;
@@ -75,7 +76,7 @@ void get_gtkrc(char *cur)
 {
   char *home = getenv("HOME");
   if(strlen(home) > 240)
-      gpe_error_box( "bad $HOME !!");
+      gpe_error_box( "Bad home: $HOME !");
 
   sprintf(cur,"%s/.gtkrc",home);
 
@@ -125,7 +126,7 @@ char * get_cur_gtktheme()
 
   if(f==0 || !found)
     {
-      gpe_error_box( "your .gtkrc seems to be edited, change gtk theme at your own risk\n");
+      gpe_error_box( "Your .gtkrc seems to be edited,\n change of gtk theme at your own risk.");
       return 0;
     }
   return cur;
@@ -238,10 +239,13 @@ void Theme_Save()
 	  fclose(f);
 	}
     if(system_printf("gpe-setbg %s",file))
-	gpe_error_box("You need gpe-setbg installed\nto set the wallpaper!!");
+	gpe_error_box("You need gpe-setbg installed\nto set the wallpaper!");
     }
 }
 
+void Theme_Restore()
+{
+}
 
 /****************/
 /*  interface   */
@@ -282,12 +286,6 @@ GtkWidget *Theme_Build_Objects()
   table_attach_right_col_x = GTK_SHRINK | GTK_EXPAND | GTK_FILL;
   table_attach_right_col_y = GTK_FILL;
   
-  /*
-   * GTK_JUSTIFY_LEFT
-   * GTK_JUSTIFY_RIGHT
-   * GTK_JUSTIFY_CENTER (the default)
-   * GTK_JUSTIFY_FILL
-   */
   table_justify_left_col = GTK_JUSTIFY_LEFT;
   table_justify_right_col = GTK_JUSTIFY_RIGHT;
 
