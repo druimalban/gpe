@@ -40,7 +40,7 @@
 #define LIGHT_SIZE 40
 #define MAX_WIDTH 12
 #define MAX_HEIGHT 9
-#define GAME_EVENTS (GDK_EXPOSURE_MASK | GDK_BUTTON_PRESS_MASK)
+#define GAME_EVENTS (GDK_EXPOSURE_MASK | GDK_BUTTON_PRESS_MASK| GDK_BUTTON_RELEASE_MASK)
 
 enum game_types { CLASSIC, TWOK, DELUX, KEYCHAIN, CUBE, MERLIN };
 enum light_state { NO, ON, HALF, OFF };
@@ -934,19 +934,19 @@ main (int argc, char *argv[])
   gtk_window_set_title (GTK_WINDOW (window), _("Lights Out"));
 
   p = gpe_find_icon ("new");
-  pw = gpe_render_icon (window->style, p);
+  pw = gtk_image_new_from_pixbuf(p);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
 			   _("New"), _("New game"), _("Tap here to start a new game."),
 			   pw, GTK_SIGNAL_FUNC (new_game), NULL);
   
   p = gpe_find_icon ("preferences");
-  pw = gpe_render_icon (window->style, p);
+  pw = gtk_image_new_from_pixbuf(p);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
 			   _("Prefs"), _("Preferences"), _("Tap here to configure Lights Out."),
 			   pw, GTK_SIGNAL_FUNC (prefs), NULL);
 
   p = gpe_find_icon ("exit");
-  pw = gpe_render_icon (window->style, p);
+  pw = gtk_image_new_from_pixbuf(p);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Exit"), 
 			   _("Exit"), _("Exit the program."), pw, 
 			   GTK_SIGNAL_FUNC (gtk_exit), NULL);
