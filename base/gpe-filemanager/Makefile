@@ -2,6 +2,7 @@ PREFIX = /usr/local
 PACKAGE = gpe-filemanager
 DEBUG = yes
 CVSBUILD = yes
+VERSION = 0.08
 MIME_PIXMAPS = `cd pixmaps/document-icons && ls *.png`
 SPINNER_PIXMAPS = `cd pixmaps/spinner && ls *.png`
 GTK2 = yes
