@@ -5,7 +5,7 @@ Version: VERSION
 Source: SOURCE
 Architecture: arm
 Maintainer: Moray Allan <moray@handhelds.org>
-Depends: libgpewidget1, gpe-icons (>= 0.04), libgsm1, libesd0
+Depends: libgpewidget1, gpe-icons (>= 0.04), libglade2-0, libgsm1, libesd0
 Conflicts: gpe-soundbite
 Description: Audio note recorder for GPE.
  gpe-soundbite allows you to record and play back spoken notes. Audio files
