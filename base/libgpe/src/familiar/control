@@ -1,8 +1,8 @@
-Package: libgpe0
+Package: libsoundgen0
 Section: base
 Priority: optional
 Version: 0.1
 Architecture: arm
-Maintainer: Nils Faerber <nils@kernelconcepts.de>
+Maintainer: Joe McCarthy <mccarthy@engrng.pitt.edu>
 Depends: libglib1.2
-Description: Common functions for GPE
+Description: Sound generator 
