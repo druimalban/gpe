@@ -22,8 +22,8 @@
 static const char *fname = "/.gpe/timesheet";
 
 static const char *schema_str = 
-"create table tasks (id integer, description text, cftime integer, parent integer);
-create table log (action text, task integer, time integer, info text);";
+"create table tasks (id integer, description text, cftime integer, parent integer);"
+"create table log (action text, task integer, time integer, info text);";
 
 static sqlite *sqliteh;
 static guint max_task_id;

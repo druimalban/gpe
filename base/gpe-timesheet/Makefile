@@ -8,6 +8,7 @@ GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
 GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
 
 ifeq ($(CVSBUILD),yes)
+CPPFLAGS += -I../libgpewidget
 LGPEWIDGET = -L../libgpewidget
 endif
 

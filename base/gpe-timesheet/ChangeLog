@@ -1,3 +1,9 @@
+2003-07-27  Phil Blundell  <pb@nexus.co.uk>
+
+	* Makefile (CPPFLAGS) [CVSBUILD=yes]: Add -I../libgpewidget.
+
+	* sql.c: Make schema decl acceptable to GCC 3.3.
+
 2003-07-06  Moray Allan  <moray@sermisy.org>
 
 	* Makefile (install_program): Install .desktop file with .desktop
