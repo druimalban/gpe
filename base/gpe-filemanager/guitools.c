@@ -43,6 +43,7 @@ activate_item(int i)
 {
   if ((i < 0) || (i > num_storage-1))
     return;
+  
   if (GTK_IS_TOGGLE_BUTTON(storages[i].item))
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(storages[i].item), TRUE);
   else if (GTK_IS_RADIO_MENU_ITEM(storages[i].item))
@@ -53,15 +54,17 @@ void
 set_active_item(char* path)
 {
   int i;
-  printf("%s\n",path);
   
   if (g_str_has_prefix(path, storages[0].path)) /* are we in $HOME? */
-    activate_item(0);
-  else
+    {  
+      activate_item(0);
+      return;
+    }
+  else if (strcmp("/", path))
   {
     for (i = 2; i < num_storage; i++)
       {
-        if (g_str_has_prefix(path, storages[i].path));
+        if (g_str_has_prefix(path, storages[i].path))
           {
             activate_item(i);
             return;
@@ -76,7 +79,7 @@ static void
 filesystem_toggled (GtkToggleButton *togglebutton, gpointer user_data)
 {
   t_storage *st = user_data;
-  
+    
   if (GTK_IS_TOGGLE_BUTTON(togglebutton))
     {
       if (gtk_toggle_button_get_active(togglebutton))
@@ -150,7 +153,7 @@ build_storage_menu(gboolean wide)
       storages[0].item = item;
       gtk_toggle_button_set_mode(GTK_TOGGLE_BUTTON(item), FALSE);
       gtk_box_pack_start(GTK_BOX(vmenu), item, FALSE, TRUE, 0);
-      g_signal_connect(G_OBJECT(item), "toggled", G_CALLBACK(filesystem_toggled), &storages[0]);
+      g_signal_connect_after(G_OBJECT(item), "clicked", G_CALLBACK(filesystem_toggled), &storages[0]);
       
       for (i = 1; i < num_storage; i++)
         {
@@ -158,7 +161,7 @@ build_storage_menu(gboolean wide)
           storages[i].item = item;
           gtk_toggle_button_set_mode(GTK_TOGGLE_BUTTON(item), FALSE);
           gtk_box_pack_start(GTK_BOX(vmenu), item, FALSE, TRUE, 0);
-          g_signal_connect(G_OBJECT(item), "toggled", G_CALLBACK(filesystem_toggled), &storages[i]);
+          g_signal_connect_after(G_OBJECT(item), "clicked", G_CALLBACK(filesystem_toggled), &storages[i]);
         }
     }
   else
@@ -167,14 +170,14 @@ build_storage_menu(gboolean wide)
       item = gtk_radio_menu_item_new_with_label(NULL, storages[0].name);
       storages[0].item = item;
       gtk_menu_append(vmenu, item);
-      g_signal_connect(G_OBJECT(item), "toggled", G_CALLBACK(filesystem_toggled), &storages[0]);
+      g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK(filesystem_toggled), &storages[0]);
       
       for (i = 1; i < num_storage; i++)
         {
           item = gtk_radio_menu_item_new_with_label_from_widget(GTK_RADIO_MENU_ITEM(item), storages[i].name);
           storages[i].item = item;
           gtk_menu_append(vmenu, item);
-          g_signal_connect(G_OBJECT(item), "toggled", G_CALLBACK(filesystem_toggled), &storages[i]);
+          g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK(filesystem_toggled), &storages[i]);
         }
     }      
   

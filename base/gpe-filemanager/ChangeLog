@@ -1,5 +1,7 @@
 2004-09-17  Florian Boor  <florian.boor@kernelconcepts.de>
     
+    * guitools.c: Fixed several bugs.
+    * main.c: Limited size of directory browser.
     * main.c, guitools.c: Added tools for fast directory access.
     * main.c: Removed some old cruft.
     * guitools.*: New files for additional GUI elements.

@@ -1476,11 +1476,11 @@ browse_directory (gchar *directory)
 {
   gboolean enabled;
   /* disable "up" button if we are in homedir and view is limited */
-  enabled = (!limited_view || strcmp(directory,g_get_home_dir()));
+  enabled = (!limited_view || strcmp(directory, g_get_home_dir()));
   if (btnGoUp)
     gtk_widget_set_sensitive(btnGoUp,enabled);
   set_active_item(directory);  
-  
+
   /* some hacks to handle nasty smb urls */
   if (g_str_has_prefix(directory,"smb:"))
   {
@@ -1844,6 +1844,11 @@ create_dir_view_widget(void)
 							   "text",
 							   COL_DIRNAME,
 							   NULL);
+    /* min width = 20% */
+    gtk_tree_view_column_set_min_width(column, gdk_screen_width() / 5);
+    /* max width = 50% */
+    gtk_tree_view_column_set_max_width(column, gdk_screen_width() / 2);
+      
 	gtk_tree_view_column_set_resizable(GTK_TREE_VIEW_COLUMN(column),TRUE);
 	gtk_tree_view_append_column (GTK_TREE_VIEW (treeview), column);
 
