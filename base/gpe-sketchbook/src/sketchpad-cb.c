@@ -24,6 +24,7 @@
 
 #include "gpe-sketchbook.h"
 #include "files.h"
+#include "note.h"
 #include "selector.h"
 #include "selector-cb.h"
 
@@ -92,29 +93,33 @@ void on_button_list_view_clicked(GtkButton *button, gpointer user_data){
 //---------------------------------------------------------
 //--------------------- FILE TOOLBAR ----------------------
 void on_button_file_save_clicked(GtkButton *button, gpointer user_data){
-  gchar * fullpath_filename;
+  Note * note;
 
   if(!is_current_sketch_modified) return;
 
-  if(is_current_sketch_new) fullpath_filename = file_new_fullpath_filename();
-  else fullpath_filename = (gchar *) gtk_clist_get_row_data(selector_clist, current_sketch);
+  if(is_current_sketch_new){
+    note = note_new();
+    note->fullpath_filename = file_new_fullpath_filename();
+  }
+  else{
+    note =  gtk_clist_get_row_data(selector_clist, current_sketch);
+  }
 
-  file_save(fullpath_filename); //FIXME: should catch saving errors
+  file_save(note->fullpath_filename); //FIXME: should catch saving errors
   if(is_current_sketch_new){
     gchar * name[1];
 
     sketch_list_size++;
 
-    name[0] = make_label_from_filename(fullpath_filename);
+    name[0] = make_label_from_filename(note->fullpath_filename);
     current_sketch = gtk_clist_append(selector_clist, name);
     sketchpad_set_title(name[0]);
     g_free(name[0]);
-    gtk_clist_set_row_data_full(selector_clist, current_sketch, fullpath_filename, g_free);
+    gtk_clist_set_row_data_full(selector_clist, current_sketch, note, note_destroy);
     if(current_sketch%2) gtk_clist_set_background(selector_clist, current_sketch, &bg_color);
   }
   is_current_sketch_modified = FALSE;
 }
-
 
 void on_button_file_new_clicked (GtkButton *button, gpointer user_data){
   if(is_current_sketch_modified){

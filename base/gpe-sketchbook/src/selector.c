@@ -26,6 +26,7 @@
 #include <asm/errno.h>//mkdir
 
 #include "selector.h"
+#include "note.h"
 #include "files.h"
 #include "sketchpad.h"
 #include "gpe-sketchbook.h"
@@ -90,14 +91,20 @@ void window_selector_init(GtkWidget * window_selector){
     int i;
     
     for(i = 0; i < n; i++){
+      Note * note;
+
       line_text[0] = make_label_from_filename(direntries[i]->d_name);
-      line         = gtk_clist_append(selector_clist, line_text);
-      g_free(line_text[0]);
       fullpath_filename = g_strdup_printf("%s%s", sketchdir, direntries[i]->d_name);
-      gtk_clist_set_row_data_full(selector_clist, line, fullpath_filename, g_free);
+
+      line = gtk_clist_append(selector_clist, line_text);
+      note = note_new();
+      note->fullpath_filename = fullpath_filename;
+      gtk_clist_set_row_data_full(selector_clist, line, note, note_destroy);
       //do NOT g_free(fullpath_filename) now! :)
       if(i%2) gtk_clist_set_background(selector_clist, i, &bg_color);
       sketch_list_size++;
+
+      g_free(line_text[0]);
     }
     free(direntries);
   }//else
@@ -152,11 +159,11 @@ int _direntry_selector (const struct dirent * direntry){
 }
 
 void delete_current_sketch(){
-  gchar    * fullpath_filename;
+  Note * note;
   gboolean is_deleted = FALSE;
   
-  fullpath_filename = gtk_clist_get_row_data(selector_clist, current_sketch);
-  is_deleted = file_delete(fullpath_filename);
+  note = gtk_clist_get_row_data(selector_clist, current_sketch);
+  is_deleted = file_delete(note->fullpath_filename);
 
   if(is_deleted){
     _clist_update_alternate_colors_from(selector_clist, current_sketch);
@@ -176,12 +183,12 @@ void delete_current_sketch(){
 }
 
 void open_indexed_sketch(gint index){
-  gchar * fullpath_filename;
+  Note * note;
   gchar * title;
 
-  fullpath_filename = (gchar *) gtk_clist_get_row_data(selector_clist, index);
+  note = gtk_clist_get_row_data(selector_clist, index);
   gtk_clist_get_text(selector_clist, index, 0, &title);
-  sketchpad_open_file(fullpath_filename , title);
+  sketchpad_open_file(note->fullpath_filename , title);
 }
 
 void _clist_update_alternate_colors_from(GtkCList * clist, gint index){

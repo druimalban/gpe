@@ -23,6 +23,7 @@
 
 #include "gpe-sketchbook.h"
 #include "files.h"
+#include "note.h"
 #include "sketchpad.h"
 
 #include "gpe/about.h"
@@ -74,12 +75,12 @@ void on_clist_selector_select_row (GtkCList *clist, gint row, gint column,
   set_current_sketch_selected();
 
   if(event->type == GDK_2BUTTON_PRESS){//--> double click = open related sketch
-    gchar     * fullpath_filename;
+    Note * note;
     gchar     * title;
 
-    fullpath_filename = gtk_clist_get_row_data(clist, row);
+    note = gtk_clist_get_row_data(clist, row);
     gtk_clist_get_text(clist, row, 0, &title);
-    sketchpad_open_file(fullpath_filename, title);
+    sketchpad_open_file(note->fullpath_filename, title);
     switch_windows(window_selector, window_sketchpad);
   }
 }
