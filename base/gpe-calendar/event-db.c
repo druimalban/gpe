@@ -85,7 +85,7 @@ event_db_start (void)
 {
   static const char *schema_str = 
     "create table events (uid integer NOT NULL, start integer NOT NULL,"
-    " duration integer, alarm integer, description text, recur_type integer)";
+    " duration integer, alarm integer, description text, summary text, recur_type integer)";
   const char *home = getenv ("HOME");
   char *buf;
   char *err;
@@ -99,7 +99,7 @@ event_db_start (void)
   sqliteh = sqlite_open (buf, 0, &err);
   if (sqliteh == NULL)
     {
-      fprintf (stderr, "%s\n", err);
+      fprintf (stderr, "sqlite: %s\n", err);
       free (err);
       return FALSE;
     }
@@ -109,7 +109,7 @@ event_db_start (void)
   if (sqlite_exec (sqliteh, "select uid, start, duration, alarm, recur_type from events",
 		   load_callback, NULL, &err))
     {
-      fprintf (stderr, "%s\n", err);
+      fprintf (stderr, "sqlite: %s\n", err);
       free (err);
       return FALSE;
     }
@@ -125,16 +125,17 @@ event_db_get_details (event_t ev)
   char **results;
   event_details_t evd;
 
-  if (sqlite_get_table_printf (sqliteh, "select description from events where uid=%d", &results, &nrow, &ncol, &err, ev->uid))
+  if (sqlite_get_table_printf (sqliteh, "select summary,description from events where uid=%d", &results, &nrow, &ncol, &err, ev->uid))
     {
-      fprintf (stderr, "%s\n", err);
+      fprintf (stderr, "sqlite: %s\n", err);
       free (err);
       return NULL;
     }
 
   evd = g_malloc (sizeof (struct event_details_s));
   
-  evd->description = g_strdup (results[ncol]);
+  evd->summary = g_strdup (results[ncol]);
+  evd->description = g_strdup (results[ncol + 1]);
 
   sqlite_free_table (results);
 
@@ -151,6 +152,8 @@ event_db_forget_details (event_t ev)
       event_details_t evd = ev->details;
       if (evd->description)
 	g_free (evd->description);
+      if (evd->summary)
+	g_free (evd->summary);
       g_free (evd);
     }
 
@@ -195,10 +198,10 @@ event_db_list_for_period (time_t start, time_t end)
       if (ev->start > end)
 	break;
 
-      /* Skip dead events, ie if "repeat until" time is past 
+      /* Skip dead events, ie if "repeat until" time is past */
       if (ev->recur.end < start)
 	continue;
-*/
+
       /* this will need to be fixed.... */
       list = g_slist_append (list, ev);
     }
@@ -218,13 +221,14 @@ event_db_add (event_t ev)
     return FALSE;
   
   if (sqlite_exec_printf (sqliteh, 
-			  "insert into events values (%d, %d, %d, %d, '%q', %d)", 
+			  "insert into events values (%d, %d, %d, %d, '%q', '%q', %d)", 
 			  NULL, NULL, &err, 
 			  ev->uid, ev->start, ev->duration, ev->alarm, 
-			  ev->details->description, ev->recur.type))
+			  ev->details->description, ev->details->summary,
+			  ev->recur.type))
     {
       event_db_remove_internal (ev);
-      fprintf (stderr, "%s\n", err);
+      fprintf (stderr, "sqlite: %s\n", err);
       free (err);
       return FALSE;
     }
@@ -232,7 +236,8 @@ event_db_add (event_t ev)
   return TRUE;
 }
 
-/* Remove an event from both the in-memory list and the SQL database from ev pointer */
+/* Remove an event from both the in-memory list and the SQL database 
+   from ev pointer */
 gboolean
 event_db_remove (event_t ev)
 {
@@ -241,43 +246,6 @@ event_db_remove (event_t ev)
 
   sqlite_exec_printf (sqliteh, "delete from events where uid=%d", 
 		      NULL, NULL, NULL, ev->uid);
-
-  return TRUE;
-}
-
-/* Remove an event from both the in-memory list and the SQL database from uid  */
-gboolean
-event_db_remove_by_uid (gint uid)
-{
-  
-  GSList *iter;
-  
-  for (iter = single_events; iter; iter = g_slist_next (iter))
-    {
-      event_t ev = iter->data;
-      assert (ev->recur.type == RECUR_NONE);
-
-      if (ev->uid == uid) {
-	  event_db_remove_internal (ev);    
-	  break;
-      }
-
-    }
-
-  for (iter = recurring_events; iter; iter = g_slist_next (iter))
-    {
-      event_t ev = iter->data;
-      assert (ev->recur.type != RECUR_NONE);
-
-      if (ev->uid == uid) {
-	  event_db_remove_internal (ev);    
-	  break;
-      }
-      
-    }
-    
-  sqlite_exec_printf (sqliteh, "delete from events where uid=%d", 
-		      NULL, NULL, NULL, uid);
 
   return TRUE;
 }
@@ -306,5 +274,6 @@ event_details_t
 event_db_alloc_details (event_t ev)
 {
   ev->details = (event_details_t) g_malloc (sizeof (struct event_details_s));
+  memset (ev->details, 0, sizeof (ev->details));
   return ev->details;
 }
