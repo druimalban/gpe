@@ -7,6 +7,7 @@ IPAQ_INCLUDES = -I/home/fuchs/ipaq/linux/include
 INSTALL = install
 PREFIX = /usr/
 DESTDIR = /
+PACKAGETOOL = no
 
 LINGUAS = pt ro de fr cs nl sv sk ru
 EXTRA_DESKTOPS = \
@@ -21,7 +22,6 @@ EXTRA_DESKTOPS = \
 	gpe-conf-logread.desktop.in \
 	gpe-conf-network.desktop.in \
 	gpe-conf-ownerinfo.desktop.in \
-	gpe-conf-packages.desktop.in \
 	gpe-conf-serial.desktop.in \
 	gpe-conf-sleep.desktop.in \
 	gpe-conf-storage.desktop.in \
@@ -98,11 +98,17 @@ MEMBERS += storage
 MEMBERS += widgets/sp-color-slider
 MEMBERS += serial
 MEMBERS += logread
-MEMBERS += packages cardinfo
+MEMBERS += cardinfo
 MEMBERS += tools/interface
 MEMBERS += tasks
 MEMBERS += battery
 MEMBERS += sysinfo
+
+ifeq ($(PACKAGETOOL),yes)
+EXTRA_DESKTOP += gpe-conf-packages.desktop.in 
+MEMBERS += packages
+CFLAGS += -D PACKAGETOOL
+endif
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
@@ -128,7 +134,6 @@ PIXMAPS += gpe-config-login-setup.png
 PIXMAPS += gpe-config-admin.png
 PIXMAPS += gpe-config-storage.png
 PIXMAPS += gpe-config-serial.png
-PIXMAPS += gpe-config-packages.png
 PIXMAPS += gpe-config-cardinfo.png
 PIXMAPS += menu-assign.png menu-eject.png menu-insert.png 
 PIXMAPS += menu-reset2.png menu-reset.png menu-resume.png menu-suspend.png
@@ -148,6 +153,11 @@ PIXMAPS += ibutton5.png
 PIXMAPS += system-info.png
 PIXMAPS += familiar.png
 PIXMAPS += device-info.png
+
+ifeq ($(PACKAGETOOL),yes)
+PIXMAPS += gpe-config-packages.png
+endif
+
 
 all: $(PACKAGE)
 

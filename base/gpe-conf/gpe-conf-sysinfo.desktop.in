@@ -1,5 +1,5 @@
 [Desktop Entry]
-_Name=System Information
+_Name=System Info
 _Comment=System Information
 Exec=gpe-conf sysinfo
 Terminal=0

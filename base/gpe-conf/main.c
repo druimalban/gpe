@@ -44,7 +44,9 @@
 #include "storage.h"
 #include "serial.h"
 #include "logread.h"
+#ifdef PACKAGETOOL		
 #include "packages.h"
+#endif
 #include "cardinfo.h"
 #include "tasks.h"
 #include "battery.h"
@@ -120,8 +122,10 @@ struct Applet applets[]=
 		"Logread" ,"logread", "Logfile Viewer",PREFIX "/share/pixmaps/gpe-config-logread.png"},
     { &Cardinfo_Build_Objects, &Cardinfo_Free_Objects, &Unimplemented_Save, &Cardinfo_Restore ,
 		"Cardinfo" ,"cardinfo","PC/CF Card Info and Config",PREFIX "/share/pixmaps/gpe-config-cardinfo.png"},
+#ifdef PACKAGETOOL		
     { &Packages_Build_Objects, &Packages_Free_Objects, &Unimplemented_Save, &Packages_Restore ,
 		"Packages" ,"packages","Add and Remove packages",PREFIX "/share/pixmaps/gpe-config-packages.png"},
+#endif		
     { &Battery_Build_Objects, &Battery_Free_Objects, &Unimplemented_Save, &Battery_Restore ,
 		"Battery" ,"battery","Battery info", PREFIX "/share/pixmaps/gpe-config-battery.png"},
     { &Sysinfo_Build_Objects, &Sysinfo_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore ,

@@ -35,7 +35,9 @@
 #include "ownerinfo.h"
 #include "ipaqscreen/brightness.h"
 #include "ipaqscreen/rotation.h"
+#ifdef PACKAGETOOL		
 #include "packages.h"
+#endif
 #include "serial.h"
 #include "cardinfo.h"
 #include "keyboard.h"
@@ -50,11 +52,13 @@ int check_root_passwd (const char *passwd);
 int check_user_access (const char *cmd);
 
 
+#ifdef PACKAGETOOL		
 void
 update_packages ()
 {
 	do_package_update ();
 }
+#endif
 
 void
 update_light_status (int state)
@@ -454,6 +458,7 @@ suidloop (int write, int read)
 					fscanf (in, "%100s", arg2);	// username
 					create_homedir (arg1, arg2);
 				}
+#ifdef PACKAGETOOL		
 				else if (strcmp (cmd, "NWUD") == 0)  // run system packages update
 				{
 					fscanf (in, "%100s", arg1);
@@ -474,6 +479,7 @@ suidloop (int write, int read)
 					fscanf (in, "%100s", arg1);
 					do_package_install (arg1,FALSE);
 				}
+#endif				
 				else if (strcmp (cmd, "SERU") == 0)  // change serial port usage
 				{
 					fscanf (in, "%d", &numarg);

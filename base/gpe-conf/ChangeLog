@@ -1,3 +1,7 @@
+2003-12-04	Florian Boor  	<florian.boor@kernelconcepts.de>
+	* timeanddate.c: Removed some old stuff.
+	* suid.c, main.c, Makefile: Make package tool optional.
+
 2003-11-28	Florian Boor  	<florian.boor@kernelconcepts.de>
 	* Added flash info.
 	* Fixed several issues in CVS (wrong/missing files)

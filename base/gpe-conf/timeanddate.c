@@ -604,22 +604,6 @@ GtkWidget *Time_Build_Objects(gboolean nonroot)
   gtk_box_pack_start (GTK_BOX (hbox), self.dstlm, FALSE, TRUE, 0);
   gtk_tooltips_set_tip (tooltips, self.dstm, _("Select daylight saving time offset minutes here."), NULL);
   
-  /* ---- */
-/*  
-  label = gtk_label_new (NULL);
-  gtk_misc_set_alignment(GTK_MISC(label),0.0,0.9);
-  fstr = g_strdup_printf("<b>%s</b>",_("Advanced Settings"));
-  gtk_label_set_markup (GTK_LABEL(label),fstr); 
-  g_free(fstr);
-  gtk_table_attach (GTK_TABLE (table), label, 0, 3, 7, 8,
-		    GTK_FILL,GTK_FILL  | GTK_EXPAND,0,0);
-  
-  self.advanced = gtk_check_button_new_with_label(_("Use advanced settings"));
-  gtk_table_attach (GTK_TABLE (table), self.advanced, 0, 3, 8, 9,
-		    GTK_FILL,0,gpe_boxspacing,0);
-  gtk_tooltips_set_tip (tooltips, self.advanced, _("Check this if you want to use the advanced settings below."), NULL);
-  
-*/  
   /* -------------------------------------------------------------------------- */
   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.usedst),strlen(tzi.dstname));
 
