@@ -185,7 +185,7 @@ do_login (const char *name, uid_t uid, gid_t gid, char *dir, char *shell)
   setenv ("USER", name, 1);
   chdir (dir);
 
-  fd = open (".xsession-errors", O_WRONLY | O_CREAT | O_TRUNC);
+  fd = open (".xsession-errors", O_WRONLY | O_CREAT | O_TRUNC, 0600);
   if (fd)
     {
       dup2 (fd, 1);

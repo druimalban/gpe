@@ -1,5 +1,13 @@
 2002-07-21  Philip Blundell  <philb@gnu.org>
 
+	* gpe-login 0.16.1 released.
+
+2002-07-21  Philip Blundell  <philb@gnu.org>
+
+	* gpe-login.c (do_login): Open .xsession-errors with correct mode.
+
+2002-07-21  Philip Blundell  <philb@gnu.org>
+
 	* gpe-login 0.16 released.
 	* gpe-dm 0.15 released.
 	* gpe-session-scripts 0.12 released.
