@@ -5,7 +5,7 @@ if [ -f /etc/xcalibrate.conf ]; then
 		if [ -x /usr/X11R6/bin/xcalibrate ]; then
 			/usr/X11R6/bin/xcalibrate -cal `cat /etc/xcalibrate.conf`
 		fi
-	endif
+	fi
 else
 	sh /usr/bin/gpe-xcalibrate.sh
 fi

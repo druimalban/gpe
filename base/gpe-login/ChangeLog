@@ -1,5 +1,11 @@
 2003-08-08  Philip Blundell  <philb@gnu.org>
 
+	* gpe-session-scripts 0.48 released.
+
+2003-08-08  Philip Blundell  <philb@gnu.org>
+
+	* X11/Xinit.d/30xTs_Calibrate: Fix error in last change.
+
 	Bug #845:
 	* X11/gpe-login.pre-session: Remove chown of /dev/misc/apm_bios.
 	Reported by Russell Coker.
