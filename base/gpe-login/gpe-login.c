@@ -251,9 +251,10 @@ filter (GdkXEvent *xevp, GdkEvent *ev, gpointer p)
       if (xev->xproperty.atom == suspended_atom)
 	{
 	  gtk_label_set_text (GTK_LABEL (label_result), "");
+	  gtk_widget_set_usize (window, gdk_screen_width (), gdk_screen_height ());
 	  gtk_widget_show_all (window);
 	  gtk_widget_grab_focus (focus);
-	  gdk_keyboard_grab (window->window, TRUE, GDK_CURRENT_TIME);
+	  gdk_keyboard_grab (focus->window, TRUE, GDK_CURRENT_TIME);
 	  if (xkbd_xid && socket)
 	    gtk_socket_steal (GTK_SOCKET (socket), xkbd_xid);
 	}
@@ -428,10 +429,11 @@ int
 main (int argc, char *argv[])
 {
   GtkWidget *option, *menu;
-  GtkWidget *vbox, *hbox, *vbox2;
+  GtkWidget *vbox, *vbox2;
   GtkWidget *ok_button;
   GtkWidget *frame;
   GtkWidget *logo = NULL;
+  GtkWidget *calibrate_hint;
   GdkPixbuf *icon;
   Display *dpy;
   Window root;
@@ -497,7 +499,6 @@ main (int argc, char *argv[])
     {
       suspended_atom = XInternAtom (dpy, "GPE_DISPLAY_LOCKED", 0);
       gdk_window_set_override_redirect (window->window, TRUE);
-      gtk_widget_set_usize (window, gdk_screen_width (), gdk_screen_height ());
 
       current_username = getenv ("USER");
       if (current_username == NULL)
@@ -568,7 +569,7 @@ main (int argc, char *argv[])
   if (logo)
     gtk_box_pack_start (GTK_BOX (vbox2), logo, FALSE, FALSE, 0);
 
-  hbox = gtk_hbox_new (FALSE, 0);
+  calibrate_hint = gtk_label_new (_("Press Record to recalibrate touchscreen"));
 
   if (autolock_mode || have_users)
     {
@@ -642,6 +643,8 @@ main (int argc, char *argv[])
 	}
 
       focus = entry;
+      gtk_box_pack_start (GTK_BOX (vbox2), frame, FALSE, FALSE, 0);
+      gtk_box_pack_start (GTK_BOX (vbox2), calibrate_hint, FALSE, FALSE, 0);
     }
   else
     {
@@ -651,6 +654,7 @@ main (int argc, char *argv[])
       GtkWidget *hbox_password, *hbox_confirm;
       GtkWidget *table;
       GtkWidget *vbox;
+      GtkWidget *hbox = gtk_hbox_new (FALSE, 0);
 
       label_username = gtk_label_new (_("Username"));
       label_fullname = gtk_label_new (_("Full name"));
@@ -723,10 +727,10 @@ main (int argc, char *argv[])
       focus = entry_username;
 
       gtk_box_pack_end (GTK_BOX (hbox), ok_button, FALSE, FALSE, 5);
+      gtk_box_pack_start (GTK_BOX (vbox2), frame, FALSE, FALSE, 0);
+      gtk_box_pack_start (GTK_BOX (vbox2), hbox, FALSE, FALSE, 5);
+      gtk_box_pack_start (GTK_BOX (vbox2), calibrate_hint, FALSE, FALSE, 0);
     }
-
-  gtk_box_pack_start (GTK_BOX (vbox2), frame, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox2), hbox, FALSE, FALSE, 5);
 
   gtk_container_add (GTK_CONTAINER (window), vbox2);
 
@@ -741,6 +745,7 @@ main (int argc, char *argv[])
     {
       gtk_widget_show_all (window);
       gtk_widget_grab_focus (focus);
+      gdk_keyboard_grab (focus->window, TRUE, GDK_CURRENT_TIME);
       if (xkbd_xid && socket)
 	gtk_socket_steal (GTK_SOCKET (socket), xkbd_xid);
     }

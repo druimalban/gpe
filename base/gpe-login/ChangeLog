@@ -1,3 +1,10 @@
+2002-07-29  Philip Blundell  <philb@gnu.org>
+
+	* gpe-login.c (filter): Set window dimensions.  Grab keyboard into
+	widget with focus.
+	(main): Don't set window size if in autolock mode.  Add text
+	explaining about xcalibrate.  Grab keyboard into widget with focus.
+
 2002-07-29  Colin Marquardt  <colin@marquardt-home.de>
 
 	* gpe-login.c (main): Add some padding/alignment/justification
