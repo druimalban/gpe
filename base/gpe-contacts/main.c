@@ -55,6 +55,8 @@ GtkWidget *bluetooth_menu_item;
 guint menu_uid;
 gboolean mode_landscape;
 gboolean mode_large_screen;
+gboolean scroll_delay = FALSE;
+gboolean do_wrap = FALSE;
 
 struct gpe_icon my_icons[] = {
   {"edit"},
@@ -619,6 +621,14 @@ update_display (void)
 }
 
 static gboolean
+scroll_timeout(gpointer d)
+{
+  do_wrap = TRUE;
+  scroll_delay = FALSE;
+  return FALSE;
+}
+
+static gboolean
 window_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkTreeView *tree)
 {
   GtkTreePath *path;
@@ -640,6 +650,10 @@ window_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkTreeView *tree)
               new_contact(widget, NULL);
               return TRUE;
             break;
+            case GDK_d:
+              delete_contact(widget, NULL);
+              return TRUE;
+            break;
           }
     }
   
@@ -647,22 +661,61 @@ window_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkTreeView *tree)
     {
       gtk_tree_view_get_cursor(GTK_TREE_VIEW(tree),&path,NULL);
       if (path) 
+      {
+        GtkTreePath *p;
+        int count =
+          gtk_tree_model_iter_n_children(GTK_TREE_MODEL(list_store), NULL); /* count */
+        p = gtk_tree_path_copy(path);
         gtk_tree_path_prev(path);
+        if (!gtk_tree_path_compare(path, p))  /* same? wrap around */
+        {
+          if (do_wrap)
+            {
+              path = gtk_tree_path_new_from_indices(count - 1, -1);
+              do_wrap = FALSE;
+            }
+          else
+            if (!scroll_delay)
+              {
+                g_timeout_add(300, scroll_timeout, NULL);
+                scroll_delay = TRUE;
+              }
+        }
+        gtk_tree_path_free(p);  
+      }
       else
         path = gtk_tree_path_new_first();
-      gtk_tree_view_set_cursor(GTK_TREE_VIEW(tree),path,NULL,FALSE);
+      
+      gtk_tree_view_set_cursor(GTK_TREE_VIEW(tree), path, NULL, FALSE);
       gtk_tree_path_free(path);
+      do_wrap = FALSE;
       return TRUE;
     }
   if (k->keyval == GDK_Down)
     {
-      gtk_tree_view_get_cursor(GTK_TREE_VIEW(tree),&path,NULL);
+      gtk_tree_view_get_cursor(GTK_TREE_VIEW(tree), &path, NULL);
       if (path)
         gtk_tree_path_next(path);
-      else
-        path = gtk_tree_path_new_first();
-      gtk_tree_view_set_cursor(GTK_TREE_VIEW(tree),path,NULL,FALSE);
-      gtk_tree_path_free(path);
+      else /* wrap around */
+        {    
+          if (do_wrap)
+            {
+              path = gtk_tree_path_new_first();
+              do_wrap = FALSE;
+            }
+          else
+            if (!scroll_delay)
+              {
+                g_timeout_add(400, scroll_timeout, NULL);
+                scroll_delay = TRUE;
+              }
+        }
+      if (path)
+        {
+          gtk_tree_view_set_cursor(GTK_TREE_VIEW(tree), path, NULL, FALSE);
+          gtk_tree_path_free(path);
+        }
+      do_wrap = FALSE;
       return TRUE;
     }
 
