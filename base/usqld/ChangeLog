@@ -1,0 +1,5 @@
+v0.2.0: Initial version
+- re-wrote protocol using my own XDR (rfc1832) parser/writer code
+  (rather a handwritten version) 
+- implemented basic server driver (one sqlite* per thread atm)
+

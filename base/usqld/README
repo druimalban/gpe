@@ -1,0 +1,7 @@
+uSQLd
+-----
+(c) 2002 Owen Cliffe <zoot@zoot.org.uk> 
+
+Is an sql server which uses sqlite (A really neat and compact SQL
+engine library) as its backbone, and has a simple protocol for
+querying the database. 
