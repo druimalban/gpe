@@ -82,6 +82,12 @@ struct gpe_icon my_icons[] = {
   {NULL, NULL}
 };
 
+#if GTK_MAJOR_VERSION < 2
+#define gdk1_pixbuf_new_from_file(x)  gdk_pixbuf_new_from_file (x)
+#else
+#define gdk1_pixbuf_new_from_file(x)  gdk_pixbuf_new_from_file (x, NULL)
+#endif
+
 guint window_x = 240, window_y = 310;
 
 static void browse_directory (gchar *directory);
@@ -103,6 +109,8 @@ safety_check (void)
     sleep (0.2);
   }
 }
+
+#if GTK_MAJOR_VERSION < 2
 
 /* Limit the title to two lines at <68px wide
    Eeeevil and Uuuugly but it works just fine AFAIK */
@@ -166,11 +174,91 @@ void make_nice_title (GtkWidget *label, GdkFont *font, char *full_title)
 	g_free (title);
 }
 
+#else
+
+/* Limit the title to two lines at <68px wide
+   Eeeevil and Uuuugly but it works just fine AFAIK */
+void make_nice_title (GtkWidget *label, char *full_title)
+{
+	int i;
+	char *title;
+	char *last_break=NULL;
+	PangoLayout *l;
+	PangoRectangle pr;
+	PangoContext *pc;
+
+	g_assert (label != NULL);
+	g_assert (full_title != NULL);
+
+	/* Pango font rendering setup */
+	if ((pc = gtk_widget_get_pango_context (label)) == NULL)
+		pc = gtk_widget_create_pango_context (label);
+	
+	l = pango_layout_new (pc);
+
+	title = g_strdup (full_title);
+	for (i=0;i<strlen(title);i++)
+	{
+		pango_layout_set_text (l, title, i);
+		pango_layout_get_pixel_extents (l, &pr, NULL);
+		if (pr.width >= 68)
+		{
+			if (last_break)
+			{
+				char *t;
+				int k;
+				int done=0;
+				*last_break = '\n';
+				t = last_break+1;
+				for (k=0;k<strlen(t) && !done;k++)
+				{
+					pango_layout_set_text (l, t, k);
+					pango_layout_get_pixel_extents (l, &pr, NULL);
+					if (pr.width >= 68)
+					{
+						/* Cut the title short & make it end in "..." */
+						int j;
+						if (k > 0)
+							*(t + --k) = 0;
+						for (j=0;j<3;j++)
+							*(t + --k) = '.';
+						done = 1;
+					}
+				}
+				break;
+			} else
+			{
+				/* Cut the title short & make it end in "..." */
+				int j;
+				if (i > 0)
+					*(title + --i) = 0;
+				for (j=0;j<3;j++)
+					*(title + --i) = '.';
+				break;
+			}
+		}
+
+		/* Note if this character can be changed to a newline safely.
+		 * This is done now not at the top because bad wrapping can
+		 * occur if it is the "breakable character" pushes the string
+		 * past the 70 pixel width. */
+		if (title[i] == ' ')
+			last_break = title + i;
+	}
+
+	g_object_unref (l);
+
+	gtk_label_set_text (GTK_LABEL (label), title);
+	g_free (title);
+}
+
+#endif
+
 GtkWidget *create_icon_pixmap (GtkStyle *style, char *fn, int size)
 {
   GdkPixbuf *pixbuf, *spixbuf;
   GtkWidget *w;
-  pixbuf = gdk_pixbuf_new_from_file (fn);
+  pixbuf = gdk1_pixbuf_new_from_file (fn);
   if (pixbuf == NULL)
     return NULL;
 
@@ -314,7 +402,7 @@ ask_open_with (char *exec)
     gtk_clist_set_row_data (GTK_CLIST (clist), row_num, (gpointer) programs[i]);
 
     pixmap_file = g_strdup_printf ("%s/share/pixmaps/%s.png", PREFIX, programs[i]);
-    pixbuf = gdk_pixbuf_new_from_file (pixmap_file);
+    pixbuf = gdk1_pixbuf_new_from_file (pixmap_file);
     if (pixbuf != NULL)
     {
       spixbuf = gdk_pixbuf_scale_simple (pixbuf, 12, 12, GDK_INTERP_BILINEAR);
@@ -442,7 +530,9 @@ make_view (gchar *view)
   int loop_num = 0;
   gchar *fp, *buf, *extension, *file_type;
   gchar *previous_extension = "";
+#if GTK_MAJOR_VERSION < 2
   GdkFont *font; /* Font in the label */
+#endif
   GdkPixbuf *pixbuf = NULL, *spixbuf;
   GtkWidget *pixmap;
   GtkWidget *table, *button, *label, *box;
@@ -477,7 +567,7 @@ make_view (gchar *view)
         struct stat s;
         fp = g_strdup (d->d_name);
 
-          printf ("Filename: %s\n", fp);
+          //printf ("Filename: %s\n", fp);
 
         if (strcmp (current_directory, "/") == 0)
           buf = g_strdup_printf ("/%s", fp);
@@ -499,23 +589,23 @@ make_view (gchar *view)
           if (S_ISDIR (s.st_mode))
           {
             file_type = g_strdup ("directory");
-            pixbuf = gdk_pixbuf_new_from_file (PREFIX "/share/gpe/pixmaps/default/gpe-filemanager/document-icons/directory.png");
+            pixbuf = gdk1_pixbuf_new_from_file (PREFIX "/share/gpe/pixmaps/default/gpe-filemanager/document-icons/directory.png");
             previous_extension = "";
           }
           else if (__S_ISTYPE ((s.st_mode), __S_IEXEC))
           {
             file_type = g_strdup ("executable");
-            pixbuf = gdk_pixbuf_new_from_file (PREFIX "/share/gpe/pixmaps/default/gpe-filemanager/document-icons/executable.png");
+            pixbuf = gdk1_pixbuf_new_from_file (PREFIX "/share/gpe/pixmaps/default/gpe-filemanager/document-icons/executable.png");
             previous_extension = "";
           }
           else if (strcmp (fp, "COPYING") == 0)
           {
-            pixbuf = gdk_pixbuf_new_from_file (PREFIX "/share/gpe/pixmaps/default/gpe-filemanager/document-icons/gnome-text-x-copying.png");
+            pixbuf = gdk1_pixbuf_new_from_file (PREFIX "/share/gpe/pixmaps/default/gpe-filemanager/document-icons/gnome-text-x-copying.png");
             file_type = g_strdup ("copying");
           }
           else if (strcmp (fp, "CREDITS") == 0)
           {
-            pixbuf = gdk_pixbuf_new_from_file (PREFIX "/share/gpe/pixmaps/default/gpe-filemanager/document-icons/gnome-text-x-credits.png");
+            pixbuf = gdk1_pixbuf_new_from_file (PREFIX "/share/gpe/pixmaps/default/gpe-filemanager/document-icons/gnome-text-x-credits.png");
             file_type = g_strdup ("credits");
           }
           else
@@ -546,19 +636,14 @@ make_view (gchar *view)
               }
               if (file_mime == NULL)
               {
-                pixbuf = gdk_pixbuf_new_from_file (PREFIX "/share/gpe/pixmaps/default/gpe-filemanager/document-icons/regular.png");
+                pixbuf = gdk1_pixbuf_new_from_file (PREFIX "/share/gpe/pixmaps/default/gpe-filemanager/document-icons/regular.png");
                 previous_extension = "";
               }
               else if (strcmp (previous_extension, file_mime->extension))
               {
-                  pixbuf = gdk_pixbuf_new_from_file (g_strdup_printf ("%s/share/gpe/pixmaps/default/gpe-filemanager/document-icons/gnome-%s.png", PREFIX, file_mime->icon));
+                  pixbuf = gdk1_pixbuf_new_from_file (g_strdup_printf ("%s/share/gpe/pixmaps/default/gpe-filemanager/document-icons/gnome-%s.png", PREFIX, file_mime->icon));
                   previous_extension = g_strdup (file_mime->extension);
               }
-            }
-            else
-            {
-              pixbuf = gdk_pixbuf_new_from_file (PREFIX "/share/gpe/pixmaps/default/gpe-filemanager/document-icons/regular.png");
-              previous_extension = "";
             }
           }
 
@@ -568,6 +653,7 @@ make_view (gchar *view)
           /* Button label */
           label = gtk_label_new ("");
 
+#if GTK_MAJOR_VERSION < 2
           /* Get the font used by the label */
           if (gtk_rc_get_style (label))
             font = gtk_rc_get_style (label)->font;
@@ -584,6 +670,18 @@ make_view (gchar *view)
             gtk_label_set_text (GTK_LABEL (label), fp);
             gtk_widget_set_usize (label, 0, 16);
           }
+#else
+          if (strcmp (view, "icons") == 0)
+          {
+            make_nice_title (label, fp);
+          }
+          else
+          {
+            gtk_label_set_justify (GTK_LABEL (label), GTK_JUSTIFY_LEFT);
+            gtk_label_set_text (GTK_LABEL (label), fp);
+            gtk_widget_set_usize (label, 0, 16);
+          }
+#endif
 
           /* Button VBox */
           if (strcmp (view, "icons") == 0)
@@ -675,6 +773,18 @@ add_history (gchar *directory)
 }
 
 static void
+combo_button_pressed ()
+{
+  gtk_signal_disconnect (GTK_OBJECT (GTK_COMBO (combo)->list), combo_signal_id);
+}
+
+static void
+combo_button_released ()
+{
+  combo_signal_id = gtk_signal_connect (GTK_OBJECT (GTK_COMBO (combo)->list), "selection-changed", GTK_SIGNAL_FUNC (goto_directory), NULL);
+}
+
+static void
 browse_directory (gchar *directory)
 {
   struct stat s;
@@ -684,7 +794,7 @@ browse_directory (gchar *directory)
     if (S_ISDIR (s.st_mode))
     {
       current_directory = g_strdup (directory);
-      printf ("Current directory: %s\n", current_directory);
+      //printf ("Current directory: %s\n", current_directory);
       add_history (directory);
       gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (combo)->entry), directory);
       refresh_view ();
@@ -843,7 +953,6 @@ main (int argc, char *argv[])
   hbox2 = gtk_hbox_new (FALSE, 0);
 
   combo = gtk_combo_new ();
-  //combo_signal_id = gtk_signal_connect (GTK_OBJECT (GTK_COMBO (combo)->entry), "changed", GTK_SIGNAL_FUNC (goto_directory), combo);
 
   view_scrolld = gtk_scrolled_window_new (NULL, NULL);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (view_scrolld), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
@@ -864,6 +973,8 @@ main (int argc, char *argv[])
   gtk_signal_connect (GTK_OBJECT (view_menu_item), "activate", 
      (GtkSignalFunc) set_view, "list");
 
+
+#if GTK_MAJOR_VERSION < 2
   toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, GTK_TOOLBAR_ICONS);
   gtk_toolbar_set_button_relief (GTK_TOOLBAR (toolbar), GTK_RELIEF_NONE);
   gtk_toolbar_set_space_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_SPACE_LINE);
@@ -871,6 +982,15 @@ main (int argc, char *argv[])
   toolbar2 = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, GTK_TOOLBAR_ICONS);
   gtk_toolbar_set_button_relief (GTK_TOOLBAR (toolbar2), GTK_RELIEF_NONE);
   gtk_toolbar_set_space_style (GTK_TOOLBAR (toolbar2), GTK_TOOLBAR_SPACE_LINE);
+#else
+  toolbar = gtk_toolbar_new ();
+  gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);
+  gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
+
+  toolbar2 = gtk_toolbar_new ();
+  gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar2), GTK_ORIENTATION_HORIZONTAL);
+  gtk_toolbar_set_style (GTK_TOOLBAR (toolbar2), GTK_TOOLBAR_ICONS);
+#endif
 
   p = gpe_find_icon ("left");
   pw = gpe_render_icon (window->style, p);
@@ -909,7 +1029,7 @@ main (int argc, char *argv[])
 
   spinner_style = hbox2->style;
 
-  rest_pixbuf = gdk_pixbuf_new_from_file (g_strdup_printf ("%s/share/gpe/pixmaps/default/gpe-filemanager/spinner/rest.png", PREFIX));
+  rest_pixbuf = gdk1_pixbuf_new_from_file (g_strdup_printf ("%s/share/gpe/pixmaps/default/gpe-filemanager/spinner/rest.png", PREFIX));
   spinner_rest_pixbuf =  gdk_pixbuf_scale_simple (rest_pixbuf, 16, 16, GDK_INTERP_BILINEAR);
   gpe_render_pixmap (spinner_style ? &spinner_style->bg[GTK_STATE_NORMAL] : NULL,  spinner_rest_pixbuf, &rest_pixmap, &rest_bitmap);
   spinner = gtk_pixmap_new (rest_pixmap, rest_bitmap);
@@ -961,7 +1081,7 @@ main (int argc, char *argv[])
 
   while (i <= num_spinner_files)
   {
-    pixbuf = gdk_pixbuf_new_from_file (g_strdup_printf ("%s/share/gpe/pixmaps/default/gpe-filemanager/spinner/%s.png", PREFIX, spinner_file[i]));
+    pixbuf = gdk1_pixbuf_new_from_file (g_strdup_printf ("%s/share/gpe/pixmaps/default/gpe-filemanager/spinner/%s.png", PREFIX, spinner_file[i]));
     spinner_pixbuf[i] =  gdk_pixbuf_scale_simple (pixbuf, 16, 16, GDK_INTERP_BILINEAR);
 
     i++;

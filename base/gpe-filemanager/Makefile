@@ -4,6 +4,7 @@ DEBUG = yes
 CVSBUILD = yes
 MIME_PIXMAPS = `cd pixmaps/document-icons && ls *.png`
 SPINNER_PIXMAPS = `cd pixmaps/spinner && ls *.png`
+GTK2 = yes
 
 MEMBERS = main mime-sql
 
