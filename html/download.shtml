@@ -12,7 +12,8 @@ GPE packages are available for
 <li><a
 href="http://ipkgfind.handhelds.org/result.phtml?query=gpe*&searchtype=package&section=">List of
 packages in ipkgfind</a>
-<li><a href="ftp://ftp.handhelds.org/pub/projects/gpe/unstable/base/">GPE packages</a> (out of date)</li>
+<li><a href="http://handhelds.org/~pb/unstable/">bootgpe2 images</a>
+(marked unstable, but work quite well)</li>
 </ul>
 
 <h2>Source</h2>
