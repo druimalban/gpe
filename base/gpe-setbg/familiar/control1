@@ -1,0 +1,12 @@
+Package: gpe-setbg2
+Section: base
+Priority: optional
+Version: 0.02
+Architecture: arm
+Maintainer: Colin Marquardt <ipaq@marquardt-home.de>
+Depends: libgpewidget1
+Suggests: gpe-login (>= 0.23), gpe-conf (>= 0.05)
+Description: Set root window image using gdk-pixbuf.
+Provides: gpe-setbg
+Replaces: gpe-setbg
+
