@@ -101,10 +101,13 @@ draw_clock (GtkWidget *widget,
       gdk_gc_set_clip_rectangle (white_gc, &event->area);
     }
 
-  gdk_draw_arc (drawable, black_gc, TRUE, 
-		x_offset, y_offset,
-		clock_radius * 2, clock_radius * 2, 
-		0, 360 * 64);
+  if (event)
+    {
+      gdk_draw_arc (drawable, black_gc, TRUE, 
+		    x_offset, y_offset,
+		    clock_radius * 2, clock_radius * 2, 
+		    0, 360 * 64);
+    }
 
   gdk_draw_arc (drawable, white_gc, TRUE, 
 		x_offset + border, y_offset + border,
