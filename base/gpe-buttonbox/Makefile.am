@@ -6,8 +6,8 @@ LDADD = @BUTTONBOX_LIBS@
 EXTRA_DIST = show-desktop.png other-app.png
 
 install-data-local:
-	mkdir -p $(datadir)/gpe/pixmaps/default/gpe-buttonbox
-	install -m 0644 show-desktop.png $(datadir)/gpe/pixmaps/default/gpe-buttonbox/
-	install -m 0644 other-app.png $(datadir)/gpe/pixmaps/default/gpe-buttonbox/
+	mkdir -p $(DESTDIR)$(datadir)/gpe/pixmaps/default/gpe-buttonbox
+	install -m 0644 show-desktop.png $(DESTDIR)$(datadir)/gpe/pixmaps/default/gpe-buttonbox/
+	install -m 0644 other-app.png $(DESTDIR)$(datadir)/gpe/pixmaps/default/gpe-buttonbox/
 
 include gpe-dist.am
