@@ -1,3 +1,16 @@
+2003-03-06  Philip Blundell  <philb@gnu.org>
+
+	* Makefile (HEADERS): Add question.h, windows.h.
+	(install-devel): Use -f when linking.
+
+2003-03-05  Philip Blundell  <philb@gnu.org>
+
+	* windows.c (gpe_get_window_name): Check return code from
+	gdk_error_trap_pop.
+	(gpe_get_window_icon): Likewise.
+	
+	* what.c (send_text): Add error trapping.
+
 2003-03-04  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.50 released.

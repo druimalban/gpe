@@ -41,7 +41,13 @@ GSList *widgets;
 static void
 send_text (Display *dpy, Window w, char *text)
 {
+  gdk_error_trap_push ();
+
   XChangeProperty (dpy, w, help_xatom, string_xatom, 8, PropModeReplace, text, strlen (text));
+
+  XFlush (dpy);
+
+  gdk_error_trap_pop ();
 }
 
 static GdkFilterReturn 

@@ -47,7 +47,7 @@ CFLAGS += -MD
 
 CPPFLAGS += -I./gpe
 
-HEADERS = init.h render.h errorbox.h smallbox.h pixmaps.h gtkdatecombo.h gtkdatesel.h dirbrowser.h stylus.h picturebutton.h spacing.h translabel.h
+HEADERS = init.h render.h errorbox.h smallbox.h pixmaps.h gtkdatecombo.h gtkdatesel.h dirbrowser.h stylus.h picturebutton.h spacing.h translabel.h question.h windows.h
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
@@ -77,7 +77,7 @@ endif
 
 install-devel:
 	for i in $(HEADERS); do install -m 644 -D gpe/$$i $(DESTDIR)$(PREFIX)/include/gpe/$$i; done
-	ln -s $(SONAME) $(DESTDIR)$(PREFIX)/lib/libgpewidget.so
+	ln -sf $(SONAME) $(DESTDIR)$(PREFIX)/lib/libgpewidget.so
 
 clean: clean-po
 	rm -f $(OBJS) $(SONAME) libgpewidget.so $(DEPS)

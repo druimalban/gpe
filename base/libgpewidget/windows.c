@@ -72,7 +72,8 @@ gpe_get_window_name (Display *dpy, Window w)
 			       0, G_MAXLONG, False, XA_STRING, &actual_type, &actual_format,
 			       &nitems, &bytes_after, &prop);
 
-      gdk_error_trap_pop ();
+      if (gdk_error_trap_pop ())
+	return FALSE;
 
       if (rc != Success)
 	return FALSE;
@@ -104,7 +105,8 @@ gpe_get_window_icon (Display *dpy, Window w)
 			  0, G_MAXLONG, False, XA_CARDINAL, &actual_type, &actual_format,
 			  &nitems, &bytes_after, (guchar **)&prop);
 
-  gdk_error_trap_pop ();
+  if (gdk_error_trap_pop ())
+    return FALSE;
 
   if (rc != Success)
     return FALSE;
