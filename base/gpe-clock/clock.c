@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2003, 2004 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -139,6 +139,39 @@ flush_alarm_details (void)
     }
 }
 
+static gboolean
+time_past_already (struct alarm_state *state, struct tm *tm, gboolean use_date)
+{
+  if (use_date)
+    {
+      if (state->year < (tm->tm_year + 1900))
+	return TRUE;
+      if (state->year > (tm->tm_year + 1900))
+	return FALSE;
+
+      if (state->month < tm->tm_mon)
+	return TRUE;
+      if (state->month > tm->tm_mon)
+	return FALSE;
+
+      if (state->day < tm->tm_mday)
+	return TRUE;
+      if (state->day > tm->tm_mday)
+	return FALSE;
+    }
+
+  if (state->hour < tm->tm_hour)
+    return TRUE;
+  if (state->hour > tm->tm_hour)
+    return FALSE;
+
+  if (state->minute < tm->tm_min)
+    return TRUE;
+  /* if (state->minute > tm->tm_min) return FALSE; */
+
+  return FALSE;
+}
+
 static void
 load_alarm_details (void)
 {
@@ -185,6 +218,31 @@ load_alarm_details (void)
 	}
 
       fclose (fp);
+    }
+
+  if (state.date_flag)
+    {
+      time_t now;
+      struct tm tm;
+      time (&now);
+      localtime_r (&now, &tm);
+
+      if (time_past_already (&state, &tm, TRUE))
+	{
+	  state.active = FALSE;
+	  
+	  if (time_past_already (&state, &tm, FALSE))
+	    {
+	      /* Alarm time already passed for today.  Set it for
+		 tomorrow instead.  */
+	      now += 24 * 60 * 60;
+	      localtime_r (&now, &tm);
+	    }
+
+	  state.day = tm.tm_mday;
+	  state.month = tm.tm_mon;
+	  state.year = tm.tm_year + 1900;
+	}
     }
 }
 
