@@ -7,7 +7,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2002-12-01 00:04+0000\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2003-12-06 18:31+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,110 +16,102 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: main.c:531
+#: main.c:819
 msgid "Start"
 msgstr ""
 
-#: main.c:532
-msgid "Cancel"
-msgstr ""
-
-#: main.c:558
+#: main.c:858
 msgid "Select directory"
 msgstr ""
 
-#: main.c:670
+#: main.c:931
 msgid "Open"
 msgstr ""
 
-#: main.c:671
+#: main.c:932
 msgid "Open file"
 msgstr ""
 
-#: main.c:677
+#: main.c:937
 msgid "Previous"
 msgstr ""
 
-#: main.c:678
+#: main.c:938
 msgid "Previous image"
 msgstr ""
 
-#: main.c:682
+#: main.c:941
 msgid "Next"
 msgstr ""
 
-#: main.c:683
+#: main.c:942
 msgid "Next image"
 msgstr ""
 
-#: main.c:687 main.c:688
+#: main.c:945 main.c:946
 msgid "Close image"
 msgstr ""
 
-#: main.c:694 main.c:695
+#: main.c:952 main.c:953
 msgid "Slideshow"
 msgstr ""
 
-#: main.c:700
-msgid "Select View"
+#: main.c:959 main.c:960
+msgid "Icon view"
 msgstr ""
 
-#: main.c:704
+#: main.c:964 main.c:965
+msgid "List view"
+msgstr ""
+
+#: main.c:969
 msgid "Fullscreen"
 msgstr ""
 
-#: main.c:705
+#: main.c:970
 msgid "Toggle fullscreen"
 msgstr ""
 
-#: main.c:709 main.c:710
+#: main.c:976 main.c:977
 msgid "Zoom In"
 msgstr ""
 
-#: main.c:714 main.c:715
+#: main.c:981 main.c:982
 msgid "Zoom Out"
 msgstr ""
 
-#: main.c:719 main.c:720
+#: main.c:986 main.c:987
 msgid "Zoom 1:1"
 msgstr ""
 
-#: main.c:724 main.c:725
+#: main.c:991 main.c:992
 msgid "Zoom to Fit"
 msgstr ""
 
-#: main.c:729 main.c:730
+#: main.c:998 main.c:999
 msgid "Sharpen"
 msgstr ""
 
-#: main.c:734 main.c:735
+#: main.c:1003 main.c:1004
 msgid "Blur"
 msgstr ""
 
-#: main.c:739
-msgid "Pan"
-msgstr ""
-
-#: main.c:740
-msgid "Toggle Pan"
-msgstr ""
-
-#: main.c:744
+#: main.c:1008
 msgid "Rotate"
 msgstr ""
 
-#: main.c:745
+#: main.c:1009
 msgid "Toggle Rotate"
 msgstr ""
 
-#: main.c:748
+#: main.c:1012
 msgid "Loading..."
 msgstr ""
 
-#: main.c:751
+#: main.c:1015
 msgid "Progress"
 msgstr ""
 
-#: main.c:755 main.c:756
+#: main.c:1019 main.c:1020
 msgid "Stop Loading"
 msgstr ""

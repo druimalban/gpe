@@ -887,7 +887,7 @@ main (int argc, char *argv[])
   
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   update_window_title ();
-  gtk_widget_set_usize (GTK_WIDGET (window), window_x, window_y);
+  gtk_window_set_default_size (GTK_WINDOW (window), window_x, window_y);
   gtk_signal_connect (GTK_OBJECT (window), "destroy",
 		      GTK_SIGNAL_FUNC (gtk_exit), NULL);
 
@@ -963,6 +963,10 @@ main (int argc, char *argv[])
   toolbar_icon = gtk_image_new_from_pixbuf (p);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("List view"), 
 			   _("List view"), _("List view"), toolbar_icon, GTK_SIGNAL_FUNC (render_view), (gpointer) 1);
+
+  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_QUIT,
+			    _("Exit"), _("Tap here to exit the program"),
+			    G_CALLBACK (gtk_main_quit), NULL, -1);
 
   p = gpe_find_icon ("fullscreen");
   toolbar_icon = gtk_image_new_from_pixbuf (p);
