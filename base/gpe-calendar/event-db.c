@@ -15,9 +15,7 @@
 #include <sqlite.h>
 
 #include "event-db.h"
-
-#define SECONDS_IN_DAY (24*60*60)
-#define SECONDS_IN_WEEK (7*SECONDS_IN_DAY)
+#include "globals.h"
 
 static sqlite *sqliteh;
 
