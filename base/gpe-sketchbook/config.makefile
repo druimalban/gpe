@@ -4,7 +4,7 @@ VERSION = 0.2.7-pre
 
 PACKAGE = gpe-sketchbook
 
-LINGUAS = fr pt de zh
+LINGUAS = fr pt de zh_TW
 MEMBERS = \
 	gpe-sketchbook       \
         preferences          \
