@@ -5,7 +5,17 @@ CVSBUILD = yes
 
 MEMBERS = minicalc
 
-CFLAGS = `gtk-config --cflags` `gdk-pixbuf-config --cflags` -D_GNU_SOURCE -Wall
+ifeq ($(GTK2),yes)
+GTKCFLAGS = `pkg-config --cflags gtk+-2.0`-DGTK_ENABLE_BROKEN
+GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
+CONTROL = control1
+else
+GTKCFLAGS = `gtk-config --cflags` `gdk-pixbuf-config --cflags`
+GTKLDFLAGS = `gtk-config --libs`
+CONTROL = control
+endif
+
+CFLAGS = $(GTKCFLAGS) -D_GNU_SOURCE -Wall
 ifeq ($(DEBUG),yes)
 CFLAGS += -O2 -g
 LDFLAGS = -g #-lefence
@@ -20,7 +30,7 @@ LDFLAGS += -L../libgpewidget
 else
 CFLAGS += -I/usr/include/gpe
 endif
-LDFLAGS += -lgpewidget `gtk-config --libs` -lgmp
+LDFLAGS += -lgpewidget $(GTKLDFLAGS) -lgmp
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 
