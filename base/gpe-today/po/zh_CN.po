@@ -1,0 +1,39 @@
+# Simplified Chinese(zh-CN) messages for GnuPG
+# Copyright (C) 2003 Free Software Foundation, Inc.
+# This file is distributed under the same license as the gpe-today package.
+# Meng Jie <zuxyhere@eastday.com>, 2004.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-today 0.06\n"
+"POT-Creation-Date: 2003-04-21 04:30+0100\n"
+"PO-Revision-Date: 2004-11-02 23:56+0800\n"
+"Last-Translator: Meng Jie <zuxyhere@eastday.com>\n"
+"Language-Team: Chinese (simplified) <i18n-translation@lists.linux.net.cn>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: main.c:179 gpe-today.desktop.in.h:2
+msgid "Summary"
+msgstr "概要"
+
+#: todo.c:40
+msgid "No todo items"
+msgstr "没有待办事项"
+
+#: calendar.c:104
+msgid "No events today"
+msgstr "今天没有事件"
+
+#: calendar.c:132
+msgid "All day event"
+msgstr "全天事件"
+
+#: xsettings.c:80
+msgid "Cannot create XSettings client"
+msgstr "不能创建 XSettings 客户"
+
+#: gpe-today.desktop.in.h:1
+msgid "GPE Today"
+msgstr "GPE 今日"

@@ -1,0 +1,40 @@
+# Localización en castellano de gpe-today.
+# Copyright © 2004 Free Software Foundation, Inc.
+# This file is distributed under the same license as the gpe-today package.
+# J.Manrique <jsmanrique@asturlinux.org>, 2004.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-today 0.06\n"
+"POT-Creation-Date: 2003-04-21 04:30+0100\n"
+"PO-Revision-Date: 2004-06-21 17:00+0100\n"
+"Last-Translator: J.Manrique <jsmanrique@asturlinux.org>\n"
+"Language-Team: Spanish <es@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: main.c:179 gpe-today.desktop.in.h:2
+msgid "Summary"
+msgstr "Resumen"
+
+#: todo.c:40
+msgid "No todo items"
+msgstr "Sin tareas por hacer"
+
+#: calendar.c:104
+msgid "No events today"
+msgstr "Sin eventos hoy"
+
+#: calendar.c:132
+msgid "All day event"
+msgstr "Evento para día completo"
+
+#: xsettings.c:80
+msgid "Cannot create XSettings client"
+msgstr "No fue posible crear cliente XSettings"
+
+#: gpe-today.desktop.in.h:1
+msgid "GPE Today"
+msgstr "GPE Hoy"
