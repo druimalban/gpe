@@ -1,8 +1,8 @@
 PACKAGE = gpe-bootsplash
-VERSION = 1.13
+VERSION = 1.14
 CVSBUILD = yes
 
-PACKAGE_CFLAGS = `pkg-config --cflags gdk-pixbuf-2.0 librsvg-2.0` `pkg-config --libs gdk-pixbuf-2.0 librsvg-2.0` -DGTK2
+PACKAGE_CFLAGS = `pkg-config --cflags gdk-pixbuf-2.0 libsvg-cairo` `pkg-config --libs gdk-pixbuf-2.0 libsvg-cairo` -DGTK2
 CFLAGS = -fomit-frame-pointer -Os
 
 SPLASH = splash2.png
