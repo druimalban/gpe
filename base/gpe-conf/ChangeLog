@@ -1,3 +1,7 @@
+2004-10-07	Florian Boor  	<florian.boor@kernelconcepts.de>
+
+	* ipaqscreen/brightness.c: Added support for linux 2.6 sysfs interface.
+
 2004-10-01	Florian Boor  	<florian.boor@kernelconcepts.de>
 
 	* login-setup.c: Enable display locking only if a password is set.

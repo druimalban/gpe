@@ -37,7 +37,8 @@ typedef enum
 	P_INTEGRAL,
 	P_SIMPAD,
 	P_SIMPAD_NEW,
-    P_GENERIC
+    P_GENERIC,
+	P_SYSFS
 }t_platform;
 
 
@@ -69,7 +70,6 @@ struct h3600_ts_backlight {
 #define FL_IOCTL_STEP_CONTRAST    100
 
 /* Simpad, a little bit nasty - PWM reg. is set directly */
-
 #define SIMPAD_BACKLIGHT_REG	"/proc/driver/mq200/registers/PWM_CONTROL"
 #define SIMPAD_BACKLIGHT_MASK	0x00a10044
 
@@ -78,6 +78,14 @@ struct h3600_ts_backlight {
 
 /* Generic backight */
 #define GENERIC_PROC_DRIVER "/proc/driver/backlight"
+
+/* Linux 2.6 sysfs interface */
+#define SYS_POWER "/sys/class/backlight/fb0/power"
+#define SYS_BRIGHTNESS "/sys/class/backlight/fb0/brightness"
+#define SYS_LCDPOWER "/sys/class/lcd/fb0/power"
+#define SYS_STATE_ON  0
+#define SYS_STATE_OFF 4
+
 
 static t_platform platform = P_NONE;
 
@@ -98,6 +106,8 @@ detect_platform(void)
 		return P_SIMPAD;
 	if (!access(GENERIC_PROC_DRIVER,R_OK))
 		return P_GENERIC;
+	if (!access(SYS_BRIGHTNESS,R_OK))
+		return P_SYSFS;
 	return P_NONE;
 }
 
@@ -107,6 +117,52 @@ init_light(void)
 	platform = detect_platform();
 }
 
+
+int 
+sysfs_set_level(int level)
+{
+  FILE *f_light;
+  
+  f_light = fopen(SYS_BRIGHTNESS, "w");
+  if (f_light != NULL)
+  {
+    fprintf(f_light,"%d\n", level);
+  	fclose(f_light);
+  }
+  else
+	  return -1;
+  
+  f_light = fopen(SYS_POWER, "w");
+  if (f_light != NULL)
+  {
+    fprintf(f_light,"%d\n",  level ? SYS_STATE_ON : SYS_STATE_OFF);
+  	fclose(f_light);
+  }
+  f_light = fopen(SYS_LCDPOWER, "w");
+  if (f_light != NULL)
+  {
+    fprintf(f_light,"%d\n",  level ? SYS_STATE_ON : SYS_STATE_OFF);
+  	fclose(f_light);
+  }
+  
+  return level;
+}
+
+int 
+sysfs_get_level(void)
+{
+  FILE *f_light;
+  int level;
+  
+  f_light = fopen(SYS_BRIGHTNESS, "r");
+  if (f_light != NULL)
+  {
+  	fscanf(f_light,"%d", &level);
+  	fclose(f_light);
+	return level;
+  }
+  return -1;
+}  
 
 int 
 generic_set_level(int level)
@@ -383,6 +439,9 @@ void set_brightness (int brightness)
 	case P_GENERIC:
 		generic_set_level(brightness);
 	break;
+	case P_SYSFS:
+		sysfs_set_level(brightness);
+	break;
 	default:
 	break;
 	}
@@ -417,6 +476,9 @@ int get_brightness ()
 	break;
 	case P_GENERIC:
 		return generic_get_level();
+	break;
+	case P_SYSFS:
+		return sysfs_get_level();
 	break;
 	default:
 		return 0;
