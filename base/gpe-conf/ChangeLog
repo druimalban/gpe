@@ -1,3 +1,6 @@
+2003-10-10	Florian Boor  	<florian.boor@kernelconcepts.de>
+	* suid.c: Allow users to set the time.
+
 2003-10-06	Florian Boor  	<florian.boor@kernelconcepts.de>
 	* Updated translations:
 		- Slovak: contributed by Marcel Telka
