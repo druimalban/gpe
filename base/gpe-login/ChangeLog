@@ -1,6 +1,12 @@
+2002-07-22  Philip Blundell  <philb@gnu.org>
+
+	* gpe-login.keylaunchrc: Use full pathname for xcalibrate.
+
 2002-07-21  Philip Blundell  <philb@gnu.org>
 
 	* gpe-login.c (main): Move "OK" button next to password field.
+
+2002-07-21  Philip Blundell  <philb@gnu.org>
 
 	* gpe-login 0.16.1 released.
 
