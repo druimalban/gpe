@@ -2,6 +2,7 @@ PREFIX = /usr/local
 DEBUG = no
 VERSION = 0.3
 CVSBUILD = yes
+PACKAGE = libsoundgen
 
 MEMBERS = soundgen
 SONAME = libsoundgen.so.1
