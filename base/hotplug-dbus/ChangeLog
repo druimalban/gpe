@@ -1,0 +1,16 @@
+2003-09-21  Philip Blundell  <philb@gnu.org>
+
+	* Version 0.5 released.
+
+2003-09-21  Philip Blundell  <philb@gnu.org>
+
+	* familiar/control (Depends): Require dbus-1-utils, not dbus-1.
+
+2003-09-07  Philip Blundell  <philb@gnu.org>
+
+	* Version 0.4 released.
+	
+2003-09-07  Philip Blundell  <philb@gnu.org>
+
+	* hotplug-dbus: Support bluetooth events.
+	
