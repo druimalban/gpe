@@ -1,5 +1,9 @@
 2003-03-03  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>
 
+	* version 0.35
+
+2003-03-03  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>
+
 	* main.c: add an update_current_view to set_day_view
 	* event-ui.c: finally alarm things (disallow changing away from
 	"minutes before" for now, add user id to alarmname, dont

@@ -2,7 +2,7 @@ PACKAGE = gpe-calendar
 PREFIX = /usr/local
 DEBUG = no
 GTK2 = yes
-VERSION = 0.34
+VERSION = 0.35
 
 LINGUAS = de
 
@@ -19,7 +19,7 @@ endif
 CPPFLAGS = -D_GNU_SOURCE -I../libgpewidget -I../libeventdb
 ifeq ($(DEBUG),yes)
 CFLAGS += -O2 -g
-LDFLAGS = -g #-lefence
+LDFLAGS = -g -lefence
 else
 CFLAGS += -Os -fomit-frame-pointer
 endif
