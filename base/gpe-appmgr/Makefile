@@ -1,4 +1,4 @@
-NATIVE = no
+NATIVE = yes
 CVSBUILD = yes
 DEBUG = no
 
