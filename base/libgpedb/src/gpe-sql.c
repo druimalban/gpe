@@ -33,6 +33,7 @@ sql_list_tables(t_sql_handle* sqlh, char*** resvec)
 	return nrow;
 }
 
+
 t_sql_handle*
 sql_open (char *dbtoopen)
 {

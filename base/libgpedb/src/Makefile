@@ -1,10 +1,12 @@
 CC = gcc
 CFLAGS = -Wall -O2 -I../include `glib-config --cflags` -I../../libgpewidget
 
-ifdef USE_USQLD 
-CFLAGS+=-lusqld
-elseif 
-CFLAGS+=-lsqlite
+USE_USQLD = yes
+
+ifeq ($(USE_USQLD),yes) 
+CFLAGS += -DUSE_USQLD -lusqld -I../../usqld/src
+else 
+CFLAGS += -lsqlite
 endif
 
 OBJS = gpe-sql.o
