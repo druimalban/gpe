@@ -34,8 +34,6 @@ static char *name = "";
 static GtkWidget *check;
 static sqlite *sqliteh;
 
-static gboolean dbus_mode;
-
 struct req_context;
 
 static void send_reply (struct req_context *ctx, const char *pin);
@@ -215,14 +213,6 @@ ask_user_dialog (int outgoing, const char *address, struct req_context *ctx)
   gtk_widget_grab_focus (entry);
 }
 
-static void
-ask_user (int outgoing, const char *address)
-{
-  ask_user_dialog (outgoing, address, NULL);
-
-  gtk_main ();
-}
-
 struct req_context
 {
   DBusConnection *connection;
@@ -252,7 +242,7 @@ handle_request (DBusConnection *connection, DBusMessage *message)
   bdaddr_t bdaddr, sbdaddr;
   int type;
   int i;
-  char *address;
+  char *address, *pin;
   DBusMessage *reply;
   struct req_context *ctx;
 
@@ -290,7 +280,15 @@ handle_request (DBusConnection *connection, DBusMessage *message)
 
   baswap (&sbdaddr, &bdaddr);
   address = batostr (&sbdaddr);
-  ask_user_dialog (out, address, ctx);
+
+  if (lookup_in_list (out, address, &pin))
+    {
+      send_reply (ctx, pin);
+      g_free (pin);
+    }
+  else
+    ask_user_dialog (out, address, ctx);
+
   return;
 
  error:
@@ -339,6 +337,14 @@ bluez_pin_dbus_server_run (void)
 #ifdef MAIN
 
 void
+ask_user (int outgoing, const char *address)
+{
+  ask_user_dialog (outgoing, address, NULL);
+
+  gtk_main ();
+}
+
+void
 usage (char *argv[])
 {
   fprintf (stderr, _("Usage: %s <in|out> <address>\n"), argv[0]);
@@ -351,6 +357,7 @@ main (int argc, char *argv[])
   char *pin;
   gboolean gui_started;
   char *dpy = getenv (dpy);
+  gboolean dbus_mode = FALSE; 
 
   setlocale (LC_ALL, "");
 
