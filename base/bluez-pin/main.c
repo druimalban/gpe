@@ -89,9 +89,11 @@ usage (char *argv[])
 int 
 main (int argc, char *argv[])
 {
-  char *dpy = getenv (dpy);
+  char *dpy;
   gboolean dbus_mode = FALSE;
   gchar *address, *name = NULL;
+
+  dpy = getenv ("DISPLAY");
 
   setlocale (LC_ALL, "");
 

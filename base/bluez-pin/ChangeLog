@@ -1,3 +1,8 @@
+2003-10-26  Philip Blundell  <philb@gnu.org>
+
+	* main.c (main): Correctly query for DISPLAY in environment.
+	Patch from Sjoerd Simons <sjoerd@luon.net>
+
 2003-10-21  Bastien Nocera  <hadess@hadess.net>
 
 	* Makefile: updated
