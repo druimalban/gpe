@@ -51,15 +51,13 @@ struct gpe_icon my_icons[] =
     { NULL, NULL }
   };
 
-int window_open;
-
 void
 value_changed (GtkAdjustment *adj)
 {
   int value;
   
   value = gtk_adjustment_get_value (adj);
-  
+
   ioctl (mixerfd, SOUND_MIXER_WRITE_VOLUME, &value);
 }
 
@@ -74,15 +72,17 @@ read_old_level (void)
   return orig_vol;
 }
 
-static void
+static gboolean
 slider_clicked (GtkWidget *w, GdkEventButton *ev)
 {
   gdk_pointer_ungrab (ev->time);
 
   gtk_widget_hide (slider_window);
+
+  return FALSE;
 }
 
-static void
+static gboolean
 clicked (GtkWidget *w, GdkEventButton *ev)
 {
   int level;
@@ -95,11 +95,13 @@ clicked (GtkWidget *w, GdkEventButton *ev)
   level = read_old_level ();
 
   if (level != -1)
-    gtk_adjustment_set_value(gtk_range_get_adjustment(GTK_RANGE(slider)), level);
+    gtk_adjustment_set_value (gtk_range_get_adjustment (GTK_RANGE (slider)), level);
   
   gtk_widget_show (slider_window);
   
   gdk_pointer_grab (slider_window->window, TRUE, GDK_BUTTON_PRESS_MASK, NULL, NULL, ev->time);
+
+  return TRUE;
 }
 
 gboolean 
@@ -184,7 +186,6 @@ main (int argc, char **argv)
   g_signal_connect (G_OBJECT (slider_window), "button-press-event", G_CALLBACK (slider_clicked), NULL);
 
   gtk_widget_add_events (window, GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
-
   gtk_widget_add_events (slider_window, GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
 
   gtk_widget_show (slider);
