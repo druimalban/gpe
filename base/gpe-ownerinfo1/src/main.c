@@ -21,11 +21,8 @@
 #include <gtk/gtk.h>
 #include <gdk/gdkx.h>
 
-#include "errorbox.h"
-#include "init.h"
-
-/* Use this when libgewidget is fixed: */
-/* #include <gpe/init.h> */
+#include <gpe/errorbox.h>
+#include <gpe/init.h>
 
 #include "interface.h"
 #include "support.h"
@@ -160,9 +157,9 @@ main (int argc, char *argv[])
   gtk_label_set_text (GTK_LABEL (widget), ownerphone);
 
 
-  widget = lookup_widget (GPE_Ownerinfo, "frame1");
-  gtk_rc_parse_string ("widget '*gpe_ownerinfo' style 'gpe_ownerinfo_bg'");
-  gtk_widget_set_name (widget, "gpe_ownerinfo");
+  // widget = lookup_widget (GPE_Ownerinfo, "frame1");
+  // gtk_rc_parse_string ("widget '*gpe_ownerinfo' style 'gpe_ownerinfo_bg'");
+  // gtk_widget_set_name (widget, "gpe_ownerinfo");
 
   gtk_widget_show (GPE_Ownerinfo);
 
