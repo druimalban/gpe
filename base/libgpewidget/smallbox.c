@@ -11,6 +11,7 @@
 #include <libintl.h>
 
 #include "smallbox.h"
+#include "picturebutton.h"
 
 #define _(x) dgettext(PACKAGE, x)
 
@@ -43,13 +44,16 @@ gboolean
 smallbox_x (gchar *title, struct box_desc *d)
 {
   GtkWidget *window = gtk_dialog_new ();
-  GtkWidget *buttonok = gtk_button_new_with_label (_("OK"));
-  GtkWidget *buttoncancel = gtk_button_new_with_label (_("Cancel"));
   GtkWidget *table;
   GtkWidget **entry;
   gboolean destroyed = FALSE;
   guint i = 0;
   struct box_desc *di = d;
+  GtkWidget *buttonok, *buttoncancel;
+
+  gtk_widget_realize (window);
+  buttonok  = gpe_picture_button (window->style, _("OK"), "ok");
+  buttoncancel  = gpe_picture_button (window->style, _("Cancel"), "cancel");
 
   gtk_widget_show (buttonok);
   gtk_widget_show (buttoncancel);

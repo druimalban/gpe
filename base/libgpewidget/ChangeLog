@@ -1,3 +1,7 @@
+2002-10-06  Philip Blundell  <philb@gnu.org>
+
+	* smallbox.c (smallbox_x): Use picture buttons.
+
 2002-09-30  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.26 released.
