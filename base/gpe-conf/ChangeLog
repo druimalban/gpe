@@ -1,3 +1,6 @@
+2004-06-03	Florian Boor  	<florian.boor@kernelconcepts.de>
+	* Makefile: Several changes to to make it compatible with OE.
+
 2004-06-02	Florian Boor  	<florian.boor@kernelconcepts.de>
 	* Makefile, main.c: Disabled obsolete appmgr stuff.
 	* info-main.c: removed debug output.
