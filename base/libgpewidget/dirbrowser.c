@@ -1,358 +1,240 @@
-/*  XMMS - Cross-platform multimedia player
- *  Copyright (C) 1998-2002  Peter Alm, Mikael Alm, Olle Hallnas,
- *                           Thomas Nilsson and 4Front Technologies
+/*
+ * Copyright (C) 2001, 2002, 2003 Philip Blundell <philb@gnu.org>
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
  */
 
 #include <sys/types.h>
-#include <sys/stat.h>
-
 #include <dirent.h>
+#include <stdio.h>
 #include <libintl.h>
-#include <unistd.h>
-
-#include <string.h>
 
 #include <gtk/gtk.h>
-#include <stdio.h>
 
-#define _(x) gettext(x)
+#include "dirbrowser.h"
+#include "picturebutton.h"
+#include "pixmaps.h"
+#include "errorbox.h"
 
-/* XPM */
-static char *folder[] =
+#define _(x) dgettext(PACKAGE, x)
+
+enum
+  {
+    NAME_COLUMN,
+    PATH_COLUMN,
+    PIX_COLUMN,
+    SCANNED_COLUMN,
+    N_COLUMNS
+  };
+
+static GdkPixbuf *pix_closed, *pix_open;
+
+static void
+add_dir (GtkTreeStore *store, GtkTreeIter *iter, gchar *path, GtkTreeIter *result)
 {
-	"16 16 16 1",
-	" 	c None",
-	".	c #f4f7e4",
-	"X	c #dee4b5",
-	"o	c #e1e7b9",
-	"O	c #c6cba4",
-	"+	c #dce2b8",
-	"@	c #e9e9ec",
-	"#	c #d3d8ae",
-	"$	c #d8daca",
-	"%	c #b2b2b5",
-	"&	c #767862",
-	"*	c #e3e6c3",
-	"=	c #1b1b1a",
-	"-	c #939684",
-	";	c #555555",
-	":	c #000000",
-	"                ",
-	"                ",
-	"  ::::          ",
-	" :.@@O:         ",
-	":-&&&&&:::::    ",
-	":.@@@@@*$O#O=   ",
-	":@*+XXXX+##O:   ",
-	":.*#oooXXXXX:   ",
-	":@+XoXXXXXX#:   ",
-	":@*ooXXXXXX#:   ",
-	":@**XXXXXXX#:   ",
-	":@*XXXXXXXX%:   ",
-	":$.*OOOOOO%-:   ",
-	" ;:::::::::::   ",
-	"                ",
-	"                "};
+  gchar *leafname;
+  GtkTreeIter new;
 
-/* Icon by Jakub Steiner <jimmac@ximian.com> */
+  gtk_tree_store_append (store, &new, iter);
+  leafname = g_path_get_basename (path);
+  gtk_tree_store_set (store, &new, NAME_COLUMN, leafname, PATH_COLUMN, path, PIX_COLUMN, pix_closed, -1);
+  g_free (leafname);
 
-/* XPM */
-static char *ofolder[] =
-{
-	"16 16 16 1",
-	" 	c None",
-	".	c #a9ad93",
-	"X	c #60634d",
-	"o	c #dee4b5",
-	"O	c #9ca085",
-	"+	c #0c0d04",
-	"@	c #2f2f31",
-	"#	c #3b3d2c",
-	"$	c #c8cda2",
-	"%	c #e6e6e9",
-	"&	c #b3b5a5",
-	"*	c #80826d",
-	"=	c #292a1c",
-	"-	c #fefef6",
-	";	c #8f937b",
-	":	c #000000",
-	"                ",
-	"                ",
-	"  ::::          ",
-	" :-%%&:         ",
-	":-;;;OX:::::    ",
-	":-;;;;O;O;&.:   ",
-	":-*X##@@@@@=#:  ",
-	":%*+-%%ooooooO: ",
-	":%X;%ooooooo.*: ",
-	":.+-%oooooooO:  ",
-	":*O-oooooooo*:  ",
-	":O-oooooooo.:   ",
-	":*-%$$$$$$OX:   ",
-	" :::::::::::    ",
-	"                ",
-	"                "};
-
-static GdkPixmap *folder_pixmap = NULL, *ofolder_pixmap;
-static GdkBitmap *folder_mask, *ofolder_mask;
-
-typedef struct
-{
-	gboolean scanned;
-	gchar *path;
+  if (result)
+    memcpy (result, &new, sizeof (new));
 }
-DirNode;
 
-static gboolean check_for_subdir(gchar * path)
+static void
+scan_dir (GtkTreeStore *store, GtkTreeIter *iter, gchar *path)
 {
-	DIR *dir;
-	struct dirent *dirent;
-	struct stat statbuf;
-	gchar *npath;
+  DIR *dir;
+  struct dirent *de;
 
-	if ((dir = opendir(path)) != NULL)
+  dir = opendir (path);
+  if (dir == NULL)
+    {
+      fprintf (stderr, "Can't opendir %s\n", path);
+      return;
+    }
+
+  while (de = readdir (dir), de != NULL)
+    {
+      gchar *name;
+      if (de->d_name[0] == '.')
+	continue;
+      if (de->d_type != DT_DIR)
+	continue;
+      name = g_strdup_printf ("%s%s/", path, de->d_name);
+      add_dir (store, iter, name, NULL);
+      g_free (name);
+    }
+  closedir (dir);
+}
+
+static void
+row_expanded (GtkTreeView *tree_view, GtkTreeIter *iter, GtkTreePath *t_path, void *p)
+{
+  GtkTreeStore *store = GTK_TREE_STORE (p);
+  gchar *path;
+  GtkTreeIter child;
+
+  if (gtk_tree_model_iter_children (GTK_TREE_MODEL (store), &child, iter))
+    {
+      do
 	{
-		while ((dirent = readdir(dir)) != NULL)
-		{
-			if (dirent->d_name[0] != '.')
-			{
-				npath = g_strconcat(path, dirent->d_name, NULL);
-				if (stat(npath, &statbuf) != -1 && S_ISDIR(statbuf.st_mode))
-				{
-					g_free(npath);
-					closedir(dir);
-					return TRUE;
-				}
-				g_free(npath);
-			}
-		}
-		closedir(dir);
-	}
-	return FALSE;
+	  gboolean scanned;
+	  gtk_tree_model_get (GTK_TREE_MODEL (store), &child, SCANNED_COLUMN, &scanned, -1);
+	  if (scanned == FALSE)
+	    {
+	      gtk_tree_model_get (GTK_TREE_MODEL (store), &child, PATH_COLUMN, &path, -1);
+	      scan_dir (store, &child, path);
+	      g_free (path);
+	      gtk_tree_store_set (store, iter, SCANNED_COLUMN, TRUE, -1);
+	    }
+	} while (gtk_tree_model_iter_next (GTK_TREE_MODEL (store), &child));
+    }
+
+  gtk_tree_store_set (store, iter, PIX_COLUMN, pix_open, -1);
 }
 
-static void destroy_cb(gpointer data)
+static void
+row_collapsed (GtkTreeView *tree_view, GtkTreeIter *iter, GtkTreePath *path, void *p)
 {
-	DirNode *node = data;
+  GtkTreeStore *store = GTK_TREE_STORE (p);
 
-	g_free(node->path);
-	g_free(node);
+  gtk_tree_store_set (store, iter, PIX_COLUMN, pix_closed, -1);
 }
 
-static void expand_cb(GtkWidget * widget, GtkCTreeNode * parent_node)
+static void
+build_parent_directories (GtkTreeStore *store, GtkTreeIter *iter, gchar *path)
 {
-	DIR *dir;
-	struct dirent *dirent;
-	gchar *path, *text, *dummy = "dummy";
-	struct stat statbuf;
-	GtkCTreeNode *node, *sub_node;
-	DirNode *parent_dirnode, *dirnode;
-	gboolean has_subdir = FALSE;
+  gchar *leafname;
+  GtkTreeIter new;
+  
+  if (strcmp (path, ".") && strcmp (path, "/"))
+    {
+      gchar *parent = g_path_get_dirname (path);
+      build_parent_directories (store, iter, parent);
+      g_free (parent);
+      gtk_tree_store_append (store, &new, iter);
+    }
+  else
+    gtk_tree_store_append (store, &new, NULL);
 
-	parent_dirnode = gtk_ctree_node_get_row_data(GTK_CTREE(widget), parent_node);
-	if (!parent_dirnode->scanned)
-	{
-		gtk_clist_freeze(GTK_CLIST(widget));
-		node = gtk_ctree_find_by_row_data(GTK_CTREE(widget), parent_node, NULL);
-		gtk_ctree_remove_node(GTK_CTREE(widget), node);
-		if ((dir = opendir(parent_dirnode->path)) != NULL)
-		{
-			while ((dirent = readdir(dir)) != NULL)
-			{
-				path = g_strconcat(parent_dirnode->path, dirent->d_name, NULL);
-				if (stat(path, &statbuf) != -1 && S_ISDIR(statbuf.st_mode) && dirent->d_name[0] != '.')
-				{
-					dirnode = g_malloc0(sizeof (DirNode));
-					dirnode->path = g_strconcat(path, "/", NULL);
-					text = dirent->d_name;
-					if (check_for_subdir(dirnode->path))
-						has_subdir = TRUE;
-					else
-						has_subdir = FALSE;
-					node = gtk_ctree_insert_node(GTK_CTREE(widget), parent_node, NULL, &text, 4, folder_pixmap, folder_mask, ofolder_pixmap, ofolder_mask, !has_subdir, FALSE);
-					gtk_ctree_node_set_row_data_full(GTK_CTREE(widget), node, dirnode, destroy_cb);
-					if (has_subdir)
-						sub_node = gtk_ctree_insert_node(GTK_CTREE(widget), node, NULL, &dummy, 4, NULL, NULL, NULL, NULL, FALSE, FALSE);
-				}
-				g_free(path);
-			}
-			closedir(dir);
-			gtk_ctree_sort_node(GTK_CTREE(widget), parent_node);
-		}
-		gtk_clist_thaw(GTK_CLIST(widget));
-		parent_dirnode->scanned = TRUE;
-	}
+  leafname = g_path_get_basename (path);
+  gtk_tree_store_set (store, &new, NAME_COLUMN, leafname, PATH_COLUMN, path, PIX_COLUMN, pix_closed, -1);
+  g_free (leafname);
+
+  memcpy (iter, &new, sizeof (new));
 }
 
-static void select_row_cb(GtkWidget * widget, gint row, gint column, GdkEventButton * bevent, gpointer data)
+static void
+ok_clicked (GObject *obj, GObject *window)
 {
-	DirNode *dirnode;
-	GtkCTreeNode *node;
-	void (*handler) (gchar *);
+  GtkTreeView *view = g_object_get_data (window, "view");
+  void (*handler) (gchar *) = g_object_get_data (window, "handler");
+  GtkTreeSelection *selection = gtk_tree_view_get_selection (view);
+  GtkTreeModel *model;
+  GtkTreeIter iter;
+ 
+  if (gtk_tree_selection_get_selected (selection, &model, &iter))
+    {
+      gchar *path;
+      gtk_tree_model_get (model, &iter, PATH_COLUMN, &path, -1);      
+      handler (path);
+      g_free (path);
+      
+      gtk_widget_destroy (window);
+      return;
+    }
 
-	if (bevent)
-	{
-		if (bevent->type == GDK_2BUTTON_PRESS)
-		{
-			node = gtk_ctree_node_nth(GTK_CTREE(widget), row);
-			dirnode = gtk_ctree_node_get_row_data(GTK_CTREE(widget), node);
-			handler = (void (*)(gchar *)) gtk_object_get_user_data(GTK_OBJECT(widget));
-			if (handler)
-				handler(dirnode->path);
-		}
-	}
-
+  gpe_error_box (_("No directory is selected"));
 }
 
-static void ok_clicked(GtkWidget * widget, GtkWidget * tree)
+static void
+cancel_clicked (GObject *obj, GObject *window)
 {
-	GtkCTreeNode *node;
-	DirNode *dirnode;
-	GList *list_node;
-	GtkWidget *window;
-	void (*handler) (gchar *);
-
-	window = gtk_object_get_user_data(GTK_OBJECT(widget));
-	gtk_widget_hide(window);
-	list_node = GTK_CLIST(tree)->selection;
-	while (list_node)
-	{
-		node = list_node->data;
-		dirnode = gtk_ctree_node_get_row_data(GTK_CTREE(tree), node);
-		handler = (void (*)(gchar *)) gtk_object_get_user_data(GTK_OBJECT(tree));
-		if (handler)
-			handler(dirnode->path);
-		list_node = g_list_next(list_node);
-	}
-	gtk_widget_destroy(window);
-
+  gtk_widget_destroy (window);
 }
 
-static int filetreeent_compare_func(const void *a, const void *b)
+GtkWidget *
+gpe_create_dir_browser (gchar * title, gchar *current_path, 
+			GtkSelectionMode mode, void (*handler) (gchar *))
 {
-	if (!a || !b || !((DirNode *) a)->path)
-		return -1;
-	return strcmp(((DirNode *) a)->path, (gchar *) b);
-}
+  GtkWidget *window = gtk_dialog_new ();
+  GtkWidget *ok_button = gpe_button_new_from_stock (GTK_STOCK_OK, GPE_BUTTON_TYPE_BOTH);
+  GtkWidget *cancel_button = gpe_button_new_from_stock (GTK_STOCK_CANCEL, 
+							GPE_BUTTON_TYPE_BOTH);
+  GtkWidget *scrolled_window = gtk_scrolled_window_new (NULL, NULL);
+  GtkTreeStore *store = gtk_tree_store_new (N_COLUMNS, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_OBJECT, G_TYPE_BOOLEAN);
+  GtkWidget *tree_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (store));
+  GtkTreeIter iter;
+  GtkCellRenderer *renderer = gtk_cell_renderer_text_new ();
+  GtkCellRenderer *pix_renderer = gtk_cell_renderer_pixbuf_new ();
+  GtkTreeViewColumn *column = gtk_tree_view_column_new ();
+  GtkTreePath *path;
 
-GtkWidget *gpe_create_dir_browser(gchar * title, gchar * current_path, GtkSelectionMode mode, void (*handler) (gchar *))
-{
-	GtkWidget *window, *scroll_win, *tree, *vbox, *bbox, *ok, *cancel,
-	         *sep;
-	gchar *root_text = "/", *node_text = "dummy";
-	gchar *currentdir, *pos, *tpath, *tpathnew;
-	GtkCTreeNode *root_node, *node, *nextnode;
-	DirNode *dirnode;
-	gboolean leaf;
+  if (!pix_closed)
+    pix_closed = gpe_try_find_icon ("dir-closed", NULL);
+  if (!pix_open)
+    pix_open = gpe_try_find_icon ("dir-open", NULL);
 
-	window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-	gtk_window_set_title(GTK_WINDOW(window), title);
-	gtk_container_border_width(GTK_CONTAINER(window), 10);
+  gtk_tree_view_column_pack_start (column, pix_renderer, FALSE);
+  gtk_tree_view_column_set_attributes (column, pix_renderer, "pixbuf", PIX_COLUMN, NULL);
 
-	vbox = gtk_vbox_new(FALSE, 10);
-	gtk_container_add(GTK_CONTAINER(window), vbox);
+  gtk_tree_view_column_pack_start (column, renderer, TRUE);
+  gtk_tree_view_column_set_attributes (column, renderer, "text", NAME_COLUMN, NULL);
 
-	scroll_win = gtk_scrolled_window_new(NULL, NULL);
-	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scroll_win), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-	gtk_widget_set_usize(scroll_win, 250, 200);
-	gtk_box_pack_start(GTK_BOX(vbox), scroll_win, TRUE, TRUE, 0);
-	gtk_widget_show(scroll_win);
+  gtk_tree_view_append_column (GTK_TREE_VIEW (tree_view), column);
 
-	gtk_widget_realize(window);
-	if (!folder_pixmap)
-	{
-		folder_pixmap = gdk_pixmap_create_from_xpm_d(window->window, &folder_mask, NULL, folder);
-		ofolder_pixmap = gdk_pixmap_create_from_xpm_d(window->window, &ofolder_mask, NULL, ofolder);
-	}
+  g_signal_connect (G_OBJECT (tree_view), "row-expanded", G_CALLBACK (row_expanded), store);
+  g_signal_connect (G_OBJECT (tree_view), "row-collapsed", G_CALLBACK (row_collapsed), store);
 
-	tree = gtk_ctree_new(1, 0);
-	gtk_clist_set_column_auto_resize(GTK_CLIST(tree), 0, TRUE);
-	gtk_clist_set_selection_mode(GTK_CLIST(tree), mode);
-	gtk_ctree_set_line_style(GTK_CTREE(tree), GTK_CTREE_LINES_DOTTED);
-	gtk_signal_connect(GTK_OBJECT(tree), "tree_expand", GTK_SIGNAL_FUNC(expand_cb), NULL);
-	gtk_signal_connect(GTK_OBJECT(tree), "select_row", GTK_SIGNAL_FUNC(select_row_cb), NULL);
-	gtk_container_add(GTK_CONTAINER(scroll_win), tree);
-	gtk_object_set_user_data(GTK_OBJECT(tree), (gpointer) handler);
+  add_dir (store, NULL, "/", &iter);
+  scan_dir (store, &iter, "/");
 
-	root_node = gtk_ctree_insert_node(GTK_CTREE(tree), NULL, NULL, &root_text, 4, folder_pixmap, folder_mask, ofolder_pixmap, ofolder_mask, FALSE, FALSE);
-	dirnode = g_malloc0(sizeof (DirNode));
-	dirnode->path = g_strdup("/");
-	gtk_ctree_node_set_row_data_full(GTK_CTREE(tree), root_node, dirnode, destroy_cb);
-	node = gtk_ctree_insert_node(GTK_CTREE(tree), root_node, NULL, &node_text, 4, NULL, NULL, NULL, NULL, TRUE, TRUE);
-	gtk_ctree_expand(GTK_CTREE(tree), root_node);
-	gtk_widget_show(tree);
+  gtk_container_add (GTK_CONTAINER (scrolled_window), tree_view);
 
-	sep = gtk_hseparator_new();
-	gtk_box_pack_start(GTK_BOX(vbox), sep, FALSE, FALSE, 0);
-	gtk_widget_show(sep);
+  path = gtk_tree_path_new_first ();
+  gtk_tree_view_expand_row (GTK_TREE_VIEW (tree_view), path, TRUE);
+  gtk_tree_path_free (path);
 
-	bbox = gtk_hbutton_box_new();
-	gtk_button_box_set_layout(GTK_BUTTON_BOX(bbox), GTK_BUTTONBOX_END);
-	gtk_button_box_set_spacing(GTK_BUTTON_BOX(bbox), 5);
+  gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (tree_view), FALSE);
 
-	ok = gtk_button_new_with_label(_("OK"));
-	gtk_object_set_user_data(GTK_OBJECT(ok), window);
-	GTK_WIDGET_SET_FLAGS(ok, GTK_CAN_DEFAULT);
-	gtk_window_set_default(GTK_WINDOW(window), ok);
-	gtk_box_pack_start(GTK_BOX(bbox), ok, TRUE, TRUE, 0);
-	gtk_signal_connect(GTK_OBJECT(ok), "clicked", GTK_SIGNAL_FUNC(ok_clicked), tree);
-	gtk_widget_show(ok);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window), 
+				  GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 
-	cancel = gtk_button_new_with_label(_("Cancel"));
-	GTK_WIDGET_SET_FLAGS(cancel, GTK_CAN_DEFAULT);
-	gtk_box_pack_start(GTK_BOX(bbox), cancel, TRUE, TRUE, 0);
-	gtk_signal_connect_object(GTK_OBJECT(cancel), "clicked", GTK_SIGNAL_FUNC(gtk_widget_destroy), GTK_OBJECT(window));
-	gtk_widget_show(cancel);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), scrolled_window, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), ok_button, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), cancel_button, FALSE, FALSE, 0);
 
-	gtk_box_pack_start(GTK_BOX(vbox), bbox, FALSE, FALSE, 0);
-	gtk_widget_show(bbox);
-	gtk_widget_show(vbox);
+  gtk_widget_show (ok_button);
+  gtk_widget_show (cancel_button);
+  gtk_widget_show (scrolled_window);
+  gtk_widget_show (tree_view);
 
-	if (current_path && *current_path)
-	{
-		currentdir = g_strdup(current_path);
-		tpath = g_strdup("/");
-		pos = strtok(currentdir, "/");
-		node = gtk_ctree_find_by_row_data_custom(GTK_CTREE(tree), NULL, "/", filetreeent_compare_func);
-		do
-		{
-			tpathnew = g_strconcat(tpath, pos, "/", NULL);
-			g_free(tpath);
-			tpath = tpathnew;
-			nextnode = gtk_ctree_find_by_row_data_custom(GTK_CTREE(tree), node, tpath, filetreeent_compare_func);
-			if (!nextnode)
-				break;
-			node = nextnode;
-			pos = strtok(NULL, "/");
-			gtk_ctree_get_node_info(GTK_CTREE(tree), node, NULL, NULL, NULL, NULL, NULL, NULL, &leaf, NULL);
-			if (!leaf && pos)
-				gtk_ctree_expand(GTK_CTREE(tree), node);
-			else
-			{
-				gtk_ctree_select(GTK_CTREE(tree), node);
-				break;
-			}
-		}
-		while (pos);
-		g_free(tpath);
-		g_free(currentdir);
-	}
-	else
-		gtk_ctree_select(GTK_CTREE(tree), root_node);
+  gtk_window_set_default_size (GTK_WINDOW (window), 240, 320);
 
-	return window;
+  gtk_window_set_title (GTK_WINDOW (window), title);
+
+  g_object_set_data (G_OBJECT (window), "view", tree_view);
+  g_object_set_data (G_OBJECT (window), "handler", handler);
+
+  g_signal_connect (G_OBJECT (ok_button), "clicked", G_CALLBACK (ok_clicked), window);
+  g_signal_connect (G_OBJECT (cancel_button), "clicked", G_CALLBACK (cancel_clicked), window);
+
+  return window;
 }

@@ -1,5 +1,7 @@
 2003-02-15  Philip Blundell  <philb@gnu.org>
 
+	* dirbrowser.c: Rewrite.
+
 	* gtkdatesel.c (_): Use dgettext not gettext.
 	* gtksimplemenu.c (_): Deleted.
 
