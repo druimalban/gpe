@@ -40,11 +40,6 @@ endif
 
 CFLAGS += -I../libdm
 LDFLAGS += -L../libdm -ldm
-LDFLAGS += -L/skiff/local/arm-linux/lib -L/skiff/local/arm-linux/lib/X11
-LDFLAGS += -lgpewidget -lgtk-x11-2.0 -lgdk-x11-2.0 -latk-1.0 -lpangoxft-1.0
-LDFLAGS += -lpangox-1.0 -lpango-1.0 -lgdk_pixbuf-2.0 -lm -lgobject-2.0
-LDFLAGS += -lgmodule-2.0 -ldl -lglib-2.0 -ldotdesktop -lXinerama
-LDFLAGS += -lX11 -lXext -lXrender -lgdk-x11-2.0
 
 CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 

@@ -10,6 +10,7 @@
 2003-04-21  Philip Blundell  <philb@gnu.org>
 
 	* Makefile (clean): Also remove .desktop file.
+	(LDFLAGS): Remove spurious options.
 
 	* familiar/postinst: Deleted.
 
