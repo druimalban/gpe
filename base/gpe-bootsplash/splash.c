@@ -18,6 +18,7 @@
 #ifdef USE_SVG
 #include <librsvg/rsvg.h>
 #endif
+#include <errno.h>
 
 #define FB "/dev/fb/0"
 #define FB0 "/dev/fb0"
