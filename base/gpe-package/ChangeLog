@@ -1,3 +1,10 @@
+
+2004-09-22 Florian Boor <florian.boor@kernelconcepts.de>
+
+	* gpe-package.desktop.in: Turn startup notification on.
+	* interface.c: Fixed duplicate shortcuts.
+	* Makefile: Version update.
+
 2004-08-25 Florian Boor <florian.boor@kernelconcepts.de>
 
 	* Released V 0.0.12

@@ -123,7 +123,7 @@ static GtkItemFactoryEntry mMain_items[] = {
   { N_("/_File/s1"), NULL , NULL,    0, "<Separator>"},
   { N_("/File/_Close"),  NULL, do_safe_exit, MI_FILE_CLOSE, "<StockItem>", GTK_STOCK_QUIT },
   { N_("/_Packages"),         NULL,         NULL, MI_PACKAGES, "<Branch>" },
-  { N_("/Packages/Show _Installed"), "", on_tree_filter_changed, MI_FILTER_INST , "<CheckItem>"},
+  { N_("/Packages/Show Insta_lled"), "", on_tree_filter_changed, MI_FILTER_INST , "<CheckItem>"},
   { N_("/Packages/Show _Not Installed"), "", on_tree_filter_changed, MI_FILTER_NOTINST, "<CheckItem>"},
   { N_("/_Packages/s2"), NULL , NULL,    0, "<Separator>"},
   { N_("/Packages/Show _Info"), "<Control> I", on_package_info_clicked, MI_PACKAGES_INFO , "<Item>"},
