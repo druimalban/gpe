@@ -93,12 +93,16 @@ struct gpe_icon my_icons[] = {
 
 typedef struct {
   GdkPixbuf *pixbuf;
+  gchar *filename;
+  gint glist_position;
   gint orig_width;
   gint orig_height;
   gint width;
   gint height;
   PangoLayout *pango_layout;
   PangoRectangle pango_layout_rect;
+  GdkRectangle pixbuf_rect;
+  gint total_height;
 } ListItem;
 
 guint window_x = 240, window_y = 310;
@@ -175,16 +179,12 @@ motion_notify (GtkWidget *w, GdkEventMotion *m, GtkWidget *scrolled_window)
 }
 
 static void
-show_image (GtkWidget *widget, GList *loaded_filenames)
+show_image (GtkWidget *widget, GList *image_filename)
 {
-  gchar *filename;
-
-  image_filenames = loaded_filenames;
-  filename = loaded_filenames->data;
-
   gtk_widget_hide (view_widget);
 
-  image_pixbuf = gdk_pixbuf_new_from_file (filename, NULL);
+  image_filenames = image_filename;
+  image_pixbuf = gdk_pixbuf_new_from_file ((gchar *) image_filename->data, NULL);
   scaled_image_pixbuf = image_pixbuf;
 
   gtk_image_set_from_pixbuf (GTK_IMAGE (image_widget), image_pixbuf);
@@ -198,10 +198,9 @@ show_image (GtkWidget *widget, GList *loaded_filenames)
 static void
 open_from_file (gchar *filename)
 {
-  GList *buf = NULL;
-
-  buf = g_list_append (buf, (gpointer) filename);
-  show_image (NULL, buf);
+  image_filenames = NULL;
+  image_filenames = g_list_append (image_filenames, (gpointer) filename);
+  show_image (NULL, image_filenames);
 }
 
 static void
@@ -353,37 +352,33 @@ image_zoom_fit ()
 {
   gint width, height;
   gint widget_width, widget_height;
-  float ratio;
+  float width_ratio, height_ratio;
+  float scale_width_ratio, scale_height_ratio;
 
   if (!scaled_image_pixbuf)
     scaled_image_pixbuf = image_pixbuf;
 
-  widget_width = main_scrolled_window->allocation.width;
-  widget_height = main_scrolled_window->allocation.height;
+  widget_width = main_scrolled_window->allocation.width - 5;
+  widget_height = main_scrolled_window->allocation.height - 5;
 
   width = gdk_pixbuf_get_width (GDK_PIXBUF (image_pixbuf));
   height = gdk_pixbuf_get_height (GDK_PIXBUF (image_pixbuf));
 
-  if (height > width)
+  width_ratio = (float) width / (float) widget_width;
+  height_ratio = (float) height / (float) widget_height;
+
+  if (width_ratio >= height_ratio)
   {
-    if (width > widget_width)
-      ratio = (float) height / (float) widget_height;
-    else
-      ratio = (float) widget_height / (float) height;
-    height = widget_height;
-    width = width * ratio;
+    scale_width_ratio = 1;
+    scale_height_ratio = (float) height_ratio / (float) width_ratio;
   }
   else
   {
-    if (height > widget_height)
-      ratio = (float) width / (float) widget_width;
-    else
-      ratio = (float) widget_width / (float) width;
-    width = widget_width;
-    height = height * ratio;
+    scale_height_ratio = 1;
+    scale_width_ratio = (float) width_ratio / (float) height_ratio;
   }
 
-  scaled_image_pixbuf = gdk_pixbuf_scale_simple (GDK_PIXBUF (image_pixbuf), width, height, GDK_INTERP_HYPER);
+  scaled_image_pixbuf = gdk_pixbuf_scale_simple (GDK_PIXBUF (image_pixbuf), widget_width * scale_width_ratio, widget_height * scale_height_ratio, GDK_INTERP_HYPER);
   gtk_image_set_from_pixbuf (GTK_IMAGE (image_widget), GDK_PIXBUF (scaled_image_pixbuf));
 }
 
@@ -413,12 +408,75 @@ hide_image ()
 }
 
 static gboolean
+render_list_view_button_press_event (GtkWidget *widget, GdkEventButton *event, GList *loaded_images)
+{
+  GList *this_item;
+  ListItem *list_item = g_malloc (sizeof (ListItem *));
+  GdkPixbuf *pixbuf_with_alpha;
+  char *pixels;
+  guint current_y = 0;
+  guint target_y = event->y;
+
+  if (event->button != 1)
+    return FALSE;
+
+  this_item = loaded_images;
+
+  while (current_y <= target_y)
+  {
+    list_item = (ListItem *) this_item->data;
+
+    current_y = current_y + list_item->total_height;
+
+    this_item = this_item->next;
+  }
+
+  pixbuf_with_alpha = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, gdk_pixbuf_get_bits_per_sample (list_item->pixbuf), list_item->pixbuf_rect.width, list_item->pixbuf_rect.height);
+  pixels = gdk_pixbuf_get_pixels (pixbuf_with_alpha);
+  memset (pixels, 255, list_item->pixbuf_rect.width * list_item->pixbuf_rect.height * gdk_pixbuf_get_bits_per_sample (list_item->pixbuf) * 4 / 8);
+  gdk_pixbuf_composite (list_item->pixbuf, pixbuf_with_alpha, 0, 0, list_item->pixbuf_rect.width, list_item->pixbuf_rect.height, 0, 0, 1, 1, GDK_INTERP_BILINEAR, 100);
+
+  gdk_draw_rectangle (widget->window, widget->style->white_gc, TRUE, list_item->pixbuf_rect.x, list_item->pixbuf_rect.y, list_item->pixbuf_rect.width, list_item->pixbuf_rect.height);
+  gdk_pixbuf_render_to_drawable (pixbuf_with_alpha, widget->window, widget->style->white_gc, 0, 0, list_item->pixbuf_rect.x, list_item->pixbuf_rect.y, list_item->pixbuf_rect.width, list_item->pixbuf_rect.height, GDK_RGB_DITHER_NORMAL, 0, 0);
+
+  g_object_unref (pixbuf_with_alpha);
+
+  return TRUE;
+}
+
+static gboolean
+render_list_view_button_release_event (GtkWidget *widget, GdkEventButton *event, GList *loaded_images)
+{
+  GList *this_item;
+  ListItem *list_item = g_malloc (sizeof (ListItem *));
+  guint current_y = 0;
+  guint target_y = event->y;
+
+  if (event->button != 1)
+    return FALSE;
+
+  this_item = loaded_images;
+
+  while (current_y <= target_y)
+  {
+    list_item = (ListItem *) this_item->data;
+
+    current_y = current_y + list_item->total_height;
+
+    this_item = this_item->next;
+  }
+
+  show_image (NULL, g_list_nth (g_list_first (image_filenames), list_item->glist_position));
+  return TRUE;
+}
+
+static gboolean
 render_list_view_expose_event (GtkWidget *drawing_area, GdkEventExpose *event, GList *loaded_images)
 {
   ListItem *list_item;
   GList *this_item;
-  GdkRectangle pixbuf_rect, pixbuf_exposed_rect, layout_rect, layout_exposed_rect;
-  gint y = 0;
+  GdkRectangle pixbuf_exposed_rect, layout_rect, layout_exposed_rect;
+  gint y = 0, new_y = 0;
 
   this_item = loaded_images;
 
@@ -428,13 +486,13 @@ render_list_view_expose_event (GtkWidget *drawing_area, GdkEventExpose *event, G
   {
     list_item = (ListItem *) this_item->data;
 
-    pixbuf_rect.x = MARGIN_X;
-    pixbuf_rect.y = y + MARGIN_Y;
-    pixbuf_rect.width = list_item->width;
-    pixbuf_rect.height = list_item->height;
+    list_item->pixbuf_rect.x = MARGIN_X;
+    list_item->pixbuf_rect.y = y + MARGIN_Y;
+    list_item->pixbuf_rect.width = list_item->width;
+    list_item->pixbuf_rect.height = list_item->height;
 
-    if (gdk_rectangle_intersect (&event->area, &pixbuf_rect, &pixbuf_exposed_rect) == TRUE)
-      gdk_pixbuf_render_to_drawable (list_item->pixbuf, drawing_area->window, drawing_area->style->white_gc, 0, 0, pixbuf_rect.x, pixbuf_rect.y, pixbuf_rect.width, pixbuf_rect.height, GDK_RGB_DITHER_NORMAL, MARGIN_X, y + MARGIN_Y);
+    if (gdk_rectangle_intersect (&event->area, &list_item->pixbuf_rect, &pixbuf_exposed_rect) == TRUE)
+      gdk_pixbuf_render_to_drawable (list_item->pixbuf, drawing_area->window, drawing_area->style->white_gc, 0, 0, list_item->pixbuf_rect.x, list_item->pixbuf_rect.y, list_item->pixbuf_rect.width, list_item->pixbuf_rect.height, GDK_RGB_DITHER_NORMAL, 0, 0);
 
     layout_rect.x = (MARGIN_X * 3) + MAX_ICON_SIZE;
     layout_rect.y = y;
@@ -445,15 +503,19 @@ render_list_view_expose_event (GtkWidget *drawing_area, GdkEventExpose *event, G
       gdk_draw_layout (drawing_area->window, drawing_area->style->black_gc, layout_rect.x, layout_rect.y, list_item->pango_layout);
 
     if (list_item->pango_layout_rect.height >= MAX_ICON_SIZE)
-      y = y + list_item->pango_layout_rect.height;
+      new_y = list_item->pango_layout_rect.height;
     else
-      y = y + MAX_ICON_SIZE;
+      new_y = MAX_ICON_SIZE;
 
-    y = y + (MARGIN_Y * 2);
+    new_y = new_y + (MARGIN_Y * 2);
 
-    gdk_draw_line (drawing_area->window, drawing_area->style->black_gc, MARGIN_X, y, drawing_area->allocation.width - MARGIN_X, y);
+    gdk_draw_line (drawing_area->window, drawing_area->style->black_gc, MARGIN_X, y + new_y, drawing_area->allocation.width - MARGIN_X, y + new_y);
 
-    y = y + 1;
+    new_y = new_y + 1;
+
+    list_item->total_height = new_y;
+
+    y = y + new_y;
 
     this_item = this_item->next;
   }
@@ -489,7 +551,7 @@ render_list_view ()
   GList *loaded_images = NULL;
   GList *this_item;
   gint num_items = g_list_length (image_filenames);
-  gchar *file_name, *buf;
+  gchar *buf;
   gint file_size;
   time_t file_modified;
   struct stat file_stats;
@@ -509,14 +571,15 @@ render_list_view ()
   while (this_item)
   {
     list_item = g_malloc (sizeof (*list_item));
-    file_name = (gchar *) this_item->data;
-    list_item->pixbuf = gdk_pixbuf_new_from_file (file_name, NULL);
+    list_item->filename = (gchar *) this_item->data;
+    list_item->glist_position = g_list_position (image_filenames, this_item);
+    list_item->pixbuf = gdk_pixbuf_new_from_file (list_item->filename, NULL);
     list_item->orig_width = gdk_pixbuf_get_width (list_item->pixbuf);
     list_item->orig_height = gdk_pixbuf_get_height (list_item->pixbuf);
     list_item->width = gdk_pixbuf_get_width (list_item->pixbuf);
     list_item->height = gdk_pixbuf_get_height (list_item->pixbuf);
 
-    stat (file_name, &file_stats);
+    stat (list_item->filename, &file_stats);
     file_size = file_stats.st_size / 1024;
     file_modified = file_stats.st_mtime;
 
@@ -548,7 +611,7 @@ render_list_view ()
 
     list_item->pango_layout = gtk_widget_create_pango_layout (drawing_area, NULL);
     pango_layout_set_width (list_item->pango_layout, -1);
-    buf = g_strdup_printf ("<span size=\"small\" weight=\"bold\">%s</span>\n<span size=\"x-small\" foreground=\"#555555\">Dimensions: %dx%d</span>\n<span size=\"x-small\" foreground=\"#555555\">Size: %dk</span>\n<span size=\"x-small\" foreground=\"#555555\">Modified: %s</span>", basename (file_name), list_item->orig_width, list_item->orig_height, file_size, ctime (&file_modified));
+    buf = g_strdup_printf ("<span size=\"small\" weight=\"bold\">%s</span>\n<span size=\"x-small\" foreground=\"#555555\">Dimensions: %dx%d</span>\n<span size=\"x-small\" foreground=\"#555555\">Size: %dk</span>\n<span size=\"x-small\" foreground=\"#555555\">Modified: %s</span>", basename (list_item->filename), list_item->orig_width, list_item->orig_height, file_size, ctime (&file_modified));
     pango_layout_set_markup (list_item->pango_layout, buf, -1);
     g_free (buf);
     pango_layout_get_pixel_extents (list_item->pango_layout, &list_item->pango_layout_rect, NULL);
@@ -565,8 +628,14 @@ render_list_view ()
 
   g_signal_connect (G_OBJECT (drawing_area), "expose_event", 
                     G_CALLBACK (render_list_view_expose_event), loaded_images);
+  g_signal_connect (G_OBJECT (drawing_area), "button_press_event", 
+                    G_CALLBACK (render_list_view_button_press_event), loaded_images);
+  g_signal_connect (G_OBJECT (drawing_area), "button_release_event", 
+                    G_CALLBACK (render_list_view_button_release_event), loaded_images);
   g_signal_connect (G_OBJECT (scrolled_window), "destroy",
                     G_CALLBACK (render_list_view_free), loaded_images);
+
+  gtk_widget_add_events (GTK_WIDGET (drawing_area), GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
 
   return scrolled_window;
 }
@@ -586,7 +655,7 @@ render_icon_view ()
     image_filename = (gchar *) this_item->data;
     buf = g_strdup (image_filename);
 
-    gpe_iconlist_add_item (GPE_ICONLIST(il), basename (buf), image_filename, (gpointer) this_item);
+    gpe_iconlist_add_item (GPE_ICONLIST(il), basename (buf), image_filename, this_item);
 
     gtk_progress_bar_pulse (GTK_PROGRESS_BAR (loading_progress_bar));
 
@@ -596,6 +665,8 @@ render_icon_view ()
     this_item = this_item->next;
   }
 
+  gtk_signal_connect (GTK_OBJECT (il), "clicked",
+		      GTK_SIGNAL_FUNC (show_image), NULL);
   gtk_widget_show (il);
   return il;
 }
@@ -623,10 +694,7 @@ render_view (GtkWidget *parent, gint view)
   if (view == 1)
     view_widget = render_list_view ();
 
-  gtk_signal_connect (GTK_OBJECT (view_widget), "clicked",
-		      GTK_SIGNAL_FUNC (show_image), NULL);
   gtk_box_pack_start (GTK_BOX (vbox2), view_widget, TRUE, TRUE, 0);
-
   gtk_widget_hide (loading_toolbar);
 }
 
@@ -670,17 +738,32 @@ add_directory (gchar *directory)
 static gboolean
 next_image (gpointer data)
 {
-  GList *buf;
-
   if (image_widget)
   {
-    buf = image_filenames;
-    buf = g_list_next (image_filenames);
+    if (g_list_next (image_filenames) != NULL)
+      image_filenames = g_list_next (image_filenames);
+    else
+      image_filenames = g_list_first (image_filenames);
 
-    if (buf == NULL)
-      buf = g_list_first (image_filenames);
+    show_image (NULL, image_filenames);
 
-    show_image (NULL, (gpointer) buf);
+    return TRUE;
+  }
+  else
+    return FALSE;
+}
+
+static gboolean
+previous_image ()
+{
+  if (image_widget)
+  {
+    if (g_list_previous (image_filenames) != NULL)
+      image_filenames = g_list_previous (image_filenames);
+    else
+      image_filenames = g_list_last (image_filenames);
+
+    show_image (NULL, image_filenames);
 
     return TRUE;
   }
@@ -689,28 +772,12 @@ next_image (gpointer data)
 }
 
 static void
-previous_image ()
-{
-  GList *buf;
-
-  if (image_widget)
-  {
-    buf = image_filenames;
-    buf = g_list_previous (image_filenames);
-
-    if (buf == NULL)
-      buf = g_list_last (image_filenames);
-
-    show_image (NULL, (gpointer) buf);
-  }
-}
-
-static void
 start_slideshow (GtkWidget *widget, GtkWidget *spin_button)
 {
   if (slideshow_timer == 0)
   {
-    next_image (NULL);
+    image_filenames = g_list_first (image_filenames);
+    show_image (NULL, image_filenames);
     slideshow_timer = gtk_timeout_add (gtk_spin_button_get_value (GTK_SPIN_BUTTON (spin_button)) * 1000, next_image, NULL);
   }
   else
@@ -886,7 +953,7 @@ main (int argc, char *argv[])
 
   toolbar_icon = gtk_image_new_from_stock (GTK_STOCK_GO_BACK , GTK_ICON_SIZE_SMALL_TOOLBAR);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Previous"), 
-			   _("Previous image"), _("Previous image"), toolbar_icon, previous_image, NULL);
+			   _("Previous image"), _("Previous image"), toolbar_icon, GTK_SIGNAL_FUNC (previous_image), NULL);
 
   toolbar_icon = gtk_image_new_from_stock (GTK_STOCK_GO_FORWARD, GTK_ICON_SIZE_SMALL_TOOLBAR);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Next"), 

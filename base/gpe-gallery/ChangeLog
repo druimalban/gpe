@@ -1,3 +1,7 @@
+2003-03-23  Damien Tanner  <dctanner@dctanner>
+
+	* main.c (main): Fit to window code now works, removed compile time warnings.
+
 2003-03-23  Colin Marquardt  <colin@marquardt-home.de>
 
 	* Makefile (install-program): New name for 'install' ('install' is
