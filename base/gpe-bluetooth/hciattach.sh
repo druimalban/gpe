@@ -3,7 +3,7 @@
 if [ -f /etc/sysconfig/bluetooth ]; then
   . /etc/sysconfig/bluetooth
 
-  exec hciattach -n $BLUETOOTH_PORT $BLUETOOTH_PROTOCOL $BLUETOOTH_SPEED
+  exec /sbin/hciattach -n $BLUETOOTH_PORT $BLUETOOTH_PROTOCOL $BLUETOOTH_SPEED
 else
   echo "Bluetooth not configured"
   exit 1

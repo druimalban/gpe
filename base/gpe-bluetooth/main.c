@@ -185,7 +185,7 @@ do_stop_radio (void)
       hciattach_pid = 0;
     }
 
-  system ("hciconfig hci0 down");
+  system ("/sbin/hciconfig hci0 down");
 }
 
 static void
