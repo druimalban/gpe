@@ -5,35 +5,41 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-today 0.02\n"
-"POT-Creation-Date: 2003-03-28 15:54+0000\n"
-"PO-Revision-Date: 2003-04-05 06:07+0000\n"
+"Project-Id-Version: gpe-today 0.06\n"
+"POT-Creation-Date: 2003-04-21 04:30+0100\n"
+"PO-Revision-Date: 2003-04-24 02:37+0000\n"
 "Last-Translator: Luis Oliveira <luismbo@netcabo.pt>\n"
 "Language-Team: Portuguese <translation-team-pt@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-15\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: main.c:107 gpe-today.desktop.in.h:2
+#: main.c:179 gpe-today.desktop.in.h:2
 msgid "Summary"
-msgstr "Sumário"
+msgstr "Sum,ba(Brio"
 
-#: todo.c:143
-msgid "Error stating todo DB"
-msgstr "Erro ao ler a base de dados das tarefas"
+#: todo.c:40
+msgid "No todo items"
+msgstr "Não há tarefas"
 
 #: calendar.c:104
 msgid "No events today"
-msgstr "Nenhum compromisso hoje"
+msgstr "Nenhum compromisso"
 
 #: calendar.c:132
 msgid "All day event"
-msgstr "Evento de todo o dia"
+msgstr "Todo o dia"
 
-#: calendar.c:153
-msgid "Error stating calendar DB"
-msgstr "Error ao ler a base de dados do calendário"
+#: xsettings.c:80
+msgid "Cannot create XSettings client"
+msgstr "Nao foi possível criar o cliente XSettings"
 
 #: gpe-today.desktop.in.h:1
 msgid "GPE Today"
 msgstr "GPE Hoje"
+
+#~ msgid "Error stating todo DB"
+#~ msgstr "Erro ao ler a base de dados das tarefas"
+
+#~ msgid "Error stating calendar DB"
+#~ msgstr "Error ao ler a base de dados do calend,ba(Brio"
