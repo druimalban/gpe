@@ -112,7 +112,7 @@ void draw_position (GtkWidget *widget, int x, int y, GdkPixbuf *pixbuf)
                   pixbuf,
                   0,0,
                   x*PIECE_SIZE+xoff,y*PIECE_SIZE+yoff,
-                  gdk_pixbuf_get_width(pixbuf),gdk_pixbuf_get_height(pixbuf),
+                  -1,-1,
                   GDK_RGB_DITHER_NORMAL,
                   0,0);
 }
@@ -137,7 +137,7 @@ void draw_pieces (GtkWidget *widget)
 
 void
 redraw_piece (GtkWidget *widget, int x, int y) {
-   gtk_widget_queue_draw_area (widget, x*PIECE_SIZE, y*PIECE_SIZE, PIECE_SIZE, PIECE_SIZE);
+   gtk_widget_queue_draw_area (widget, x*PIECE_SIZE-5, y*PIECE_SIZE-5, PIECE_SIZE+10, PIECE_SIZE+10);
 }
 
 gboolean
@@ -165,7 +165,6 @@ expose_event_callback (GtkWidget *widget, GdkEventExpose *event, gpointer data)
   draw_pieces (widget);
   
   if (sel_x != -1) {
-	  printf ("SEL DRAW\n");
     draw_position (widget, sel_x, sel_y, pixbuf_peg_sel);
   }
   
