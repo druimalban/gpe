@@ -392,6 +392,7 @@ select_servers_from_network (GtkWidget *widget, GHashTable *network_hash)
 {
   GtkWidget *server_combo, *entry;
   gchar *network_name;
+  GList *servers = NULL;
   GList *popdown_strings = NULL;
 
   entry = g_object_get_data (G_OBJECT (widget), "entry");
@@ -400,10 +401,18 @@ select_servers_from_network (GtkWidget *widget, GHashTable *network_hash)
   network_name = gtk_entry_get_text (GTK_ENTRY (entry));
 
   if (strlen (network_name) > 0)
-    popdown_strings = g_hash_table_lookup (network_hash, (gconstpointer) network_name);
+    servers = g_hash_table_lookup (network_hash, (gconstpointer) network_name);
 
-  if (popdown_strings != NULL)
+  if (servers != NULL)
+  {
+	for(;servers && servers->data && ((struct sql_network_server *) servers->data)->name; servers = servers->next)
+	{
+		popdown_strings = g_list_append(popdown_strings, ((struct sql_network_server *) servers->data)->name);
+	}
+
     gtk_combo_set_popdown_strings (GTK_COMBO (server_combo), popdown_strings);
+	g_list_free(popdown_strings);
+  }
 }
 
 void
