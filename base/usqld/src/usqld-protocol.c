@@ -8,6 +8,32 @@
 #define USQLD_PROTOCOL_VERSION "0.2.0"
 #include "usqld-protocol.h"
 
+struct {
+  char * name;
+  unsigned int p_type;
+} protocol_elem_names[] = {
+  {"PICKLE_CONNECT", PICKLE_CONNECT},
+  {"PICKLE_DISCONNECT", PICKLE_DISCONNECT},
+  {"PICKLE_QUERY", PICKLE_QUERY},
+  {"PICKLE_ERROR", PICKLE_ERROR},
+  {"PICKLE_OK", PICKLE_OK },
+  {"PICKLE_STARTROWS", PICKLE_STARTROWS},
+  {"PICKLE_ROW", PICKLE_ROW},
+  {"PICKLE_EOF", PICKLE_EOF},
+  {"PICKLE_MAX", PICKLE_MAX},
+  {NULL,0x0}
+};
+
+
+char * usqld_find_packet_name(int packet_type){
+  int i; 
+  for(i= 0;protocol_elem_names[i].name!=NULL;i++){
+    if(protocol_elem_names[i].p_type==packet_type)
+      return protocol_elem_names[i].name;
+  }
+  return NULL;
+}
+
 /*
   a lock to prevent simultaneous instantiation of the protocol
  */
@@ -97,10 +123,26 @@ XDR_schema * usqld_get_protocol(){
    one of the possible XDR error codes for deserialization
  */
 int usqld_recv_packet(int fd,XDR_tree ** packet){
-  return XDR_deserialize_elem(usqld_get_protocol(),fd,packet);
+   int rv = XDR_deserialize_elem(usqld_get_protocol(),fd,packet);
+   if(rv==USQLD_OK)
+     {
+	fprintf(stderr,"got a %s packet\n",
+		usqld_find_packet_name(XDR_t_get_union_disc(*packet)));
+
+	XDR_tree_dump(*packet);
+     }else
+     {
+	fprintf(stderr,"packet recieve failed with code %d\n",rv);
+     }
+   
+   return rv;
 }
 
 int usqld_send_packet(int fd,XDR_tree* packet){
+
+  fprintf(stderr,"about to send a %s packet\n",
+	  usqld_find_packet_name(XDR_t_get_union_disc(packet)));
+   XDR_tree_dump(packet);
   return XDR_serialize_elem(usqld_get_protocol(),packet,fd);
 }
 
@@ -118,7 +160,6 @@ usqld_packet * usqld_error_packet(int errcode, const char * str){
 			 XDR_tree_new_struct(2,ep));
   return p;
 }
-
 usqld_packet * usqld_ok_packet(){
   XDR_tree * p;
   p = XDR_tree_new_union(PICKLE_OK,XDR_tree_new_void());

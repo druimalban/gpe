@@ -4,6 +4,7 @@
 #include <sys/un.h>
 #include <netinet/in.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <fcntl.h>
 #include <unistd.h> 
 #include <string.h>
@@ -17,12 +18,11 @@
 int main(int argc, char ** argv)
 {
   struct sockaddr_in myaddr,from_addr;   
-   int ssock_fd,lock_fd;
-   socklen_t len;
+   int ssock_fd;
    usqld_config *conf;
    int ssop;
 
-   conf = mylloc(usqld_config);
+   conf = XDR_malloc(usqld_config);
    conf->db_base_dir = strdup("/tmp/");
 
    if(-1==(ssock_fd = socket(PF_INET,SOCK_STREAM,0)))
@@ -53,7 +53,7 @@ int main(int argc, char ** argv)
 	usqld_conhand_init * new_thread_init;
 	csock =accept(ssock_fd, (struct sockaddr *) &from_addr,&sz);
 	printf("got connection spawning thread\n");
-	new_thread_init = mylloc(usqld_conhand_init);
+	new_thread_init = XDR_malloc(usqld_conhand_init);
 	new_thread_init->fd = csock;
 	new_thread_init->config = conf;
 	pthread_create(&new_thread,

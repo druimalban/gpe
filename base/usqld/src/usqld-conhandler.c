@@ -10,6 +10,7 @@
 #include <pthread.h>
 #include <sqlite.h>
 #include <assert.h>
+#include <stdlib.h>
 #include "usqld-server.h"
 #include "usqld-conhandler.h"
 #include "usqld-protocol.h"
@@ -47,13 +48,15 @@ int  usqld_do_connect(usqld_tc * tc,usqld_packet * p){
     reply = usqld_error_packet(USQLD_VERSION_MISMATCH,buf);
     goto connect_send_reply;
   }
+
   strncpy(fn_buf,tc->config->db_base_dir,512);
-  strcat(fn_buf,database);
+  strncat(fn_buf,database,512);
   
   if(NULL==(tc->db=sqlite_open(fn_buf,0644,&errmsg))){
     reply = usqld_error_packet(SQLITE_CANTOPEN,errmsg);
     goto connect_send_reply;
   }
+
   tc->database_name = strdup(database);
   /*we are set*/
   fprintf(stderr,"database:%s is now open,sending OK\n",database);
@@ -74,8 +77,8 @@ typedef struct{
 
 int usqld_send_row(usqld_row_context * rc,
 		   int nfields,
-		   char ** heads,
-		   char ** fields){
+		   char ** fields,
+		   char ** heads){
   XDR_tree * rowpacket = NULL,*field_elems;
   int i;
   int rv;
@@ -97,7 +100,7 @@ int usqld_send_row(usqld_row_context * rc,
 			  nfields,
 			  (XDR_tree_compound**)&head_elems);
     for( i =0;i<nfields;i++){
-      XDR_t_get_comp_elem(head_elems,i) = XDR_tree_new_string(heads[i]);
+      XDR_t_set_comp_elem(head_elems,i,XDR_tree_new_string(heads[i]));
     }
     
     
@@ -118,7 +121,7 @@ int usqld_send_row(usqld_row_context * rc,
 			(XDR_tree_compound**)&field_elems);
   
   for(i = 0;i<nfields;i++){
-    XDR_t_get_comp_elem(field_elems,i) = XDR_tree_new_string(fields[i]);
+    XDR_t_set_comp_elem(field_elems,i,XDR_tree_new_string(fields[i]));
   }
   rowpacket = XDR_tree_new_union(PICKLE_ROW,
 				 field_elems);
@@ -172,7 +175,6 @@ int usqld_do_query(usqld_tc * tc, usqld_packet * packet){
  query_send_reply:
   assert(reply!=NULL);
   rv =  usqld_send_packet(tc->client_fd,reply);
-  //XDR_tree_free(reply);
   return rv; 
   
 }
@@ -180,12 +182,15 @@ void * usqld_conhandler_main(usqld_conhand_init  * init){
   usqld_tc tc;
   usqld_packet * p = NULL;
   int rv,resp_rv = USQLD_OK;
-  tc.db =NULL;
-  tc.client_fd = init->fd;
-  tc.config = init->config;
-
-  free(init);
-  
+   bzero(&tc,sizeof(tc));
+   
+   tc.db =NULL;
+   tc.client_fd = init->fd;
+   tc.config = init->config;
+   
+   
+   free(init);
+   
   while(USQLD_OK==(rv=usqld_recv_packet(tc.client_fd,&p))){
     switch(usqld_get_packet_type(p)){
     case PICKLE_CONNECT:
@@ -210,17 +215,18 @@ void * usqld_conhandler_main(usqld_conhand_init  * init){
   if(rv!=USQLD_OK){
     fprintf(stderr,"error %d while demarshalling request\n",rv);
   }
-  
-
-  close(tc.client_fd);
-  if(tc.db){
-    sqlite_close(tc.db);
-  }
-  if(tc.database_name){
-    free(tc.database_name);
-  }
-
-  return NULL;
+   
+   
+   close(tc.client_fd);
+   if(tc.db){
+      sqlite_close(tc.db);
+   }
+   
+   if(tc.database_name){
+      free(tc.database_name);
+   }
+   
+   return NULL;
 }
 
 

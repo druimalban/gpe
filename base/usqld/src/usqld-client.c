@@ -12,6 +12,7 @@
 #include <sqlite.h>
 #include <assert.h>
 #include <netdb.h>
+#include <stdlib.h>
 
 #include "xdr.h"
 #include "usqld-protocol.h"
@@ -59,8 +60,8 @@ struct usqld_conn * usqld_connect(const char * server,
 			2,
 			(XDR_tree_compound**)&elems);
   
-  XDR_t_get_comp_elem(elems,0) = XDR_tree_new_string(USQLD_PROTOCOL_VERSION);
-  XDR_t_get_comp_elem(elems,1) = XDR_tree_new_string((char *)database);
+  XDR_t_set_comp_elem(elems,0,XDR_tree_new_string(USQLD_PROTOCOL_VERSION));
+  XDR_t_set_comp_elem(elems,1,XDR_tree_new_string((char *)database));
   
   p = XDR_tree_new_union(PICKLE_CONNECT,
 			 elems);
@@ -93,7 +94,7 @@ struct usqld_conn * usqld_connect(const char * server,
     }
   case PICKLE_OK:
     {
-      new_conn = mylloc(struct usqld_conn);
+      new_conn = XDR_malloc(struct usqld_conn);
       assert(new_conn!=NULL);
       new_conn->server_fd = sock_fd;
       XDR_tree_free(p);
@@ -163,10 +164,11 @@ int usqld_exec(
 	int i;
 	nrows = XDR_t_get_comp_len(XDR_t_get_union_t(p));
 	
-	heads = myllocn(char*,nrows);
+	heads = XDR_mallocn(char*,nrows);
 	bzero(heads,sizeof(char *)*nrows);
 
-	rowdata = myllocn(char*,nrows);
+	rowdata = XDR_mallocn(char*,nrows);
+	 assert(rowdata!=NULL);
 	bzero(rowdata,sizeof(char *)*nrows);
 	
 	for(i =0;i<nrows;i++){
@@ -193,7 +195,7 @@ int usqld_exec(
 	  
 	  int i;
 	  for(i =0;i<nrows;i++){
-	    rowdata[i] = XDR_t_get_comp_elem(XDR_t_get_union_t(p),i);
+	    rowdata[i] = XDR_t_get_string(XDR_t_get_comp_elem(XDR_t_get_union_t(p),i));
 	  }
 	  
 	  if(0!=cb(arg,nrows,heads,rowdata)){
@@ -204,8 +206,18 @@ int usqld_exec(
 	bzero(rowdata,sizeof(char *) * nrows);
       }
       break;
+     case PICKLE_ERROR:
+	 {
+	   complete =1;
+	   *errmsg = strdup(XDR_t_get_string(
+			   XDR_t_get_comp_elem(XDR_t_get_union_t(p),1)));
+	   rv =XDR_t_get_uint(XDR_t_get_comp_elem(XDR_t_get_union_t(p),0));
+	   
+	 }
+	 break;
     default:
       {
+	
 	rv = USQLD_PROTOCOL_ERROR;
 	*errmsg = strdup("usqld protocol: huh? what");
       }

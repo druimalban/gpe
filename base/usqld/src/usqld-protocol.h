@@ -3,15 +3,16 @@
 
 #include <xdr.h>
 
-#define PICKLE_CONNECT 0x1
-#define PICKLE_DISCONNECT 0x2
-#define PICKLE_QUERY 0x3
-#define PICKLE_ERROR 0x4
-#define PICKLE_OK 0x5
-#define PICKLE_STARTROWS 0x6
-#define PICKLE_ROW 0x7
-#define PICKLE_EOF 0x8
-#define PICKLE_MAX 0x9
+#define PICKLE_CONNECT 1
+#define PICKLE_DISCONNECT 2
+#define PICKLE_QUERY 3
+#define PICKLE_ERROR 4
+#define PICKLE_OK 5
+#define PICKLE_STARTROWS 6
+#define PICKLE_ROW 7
+#define PICKLE_EOF 8
+#define PICKLE_MAX 9
+
 #define USQLD_PROTOCOL_VERSION "USQLD_0.1.0"
 
 #define USQLD_SERVER_PORT 8322
