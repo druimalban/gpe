@@ -1,3 +1,10 @@
+2003-10-11  Andrey Tatarinov <elephantum@dezcom.mephi.ru>
+	
+	* db.c: add utf-8 support for tabs
+	* db.c: add sorting by name
+	* editing.c: add scrolled_window to "personal" tab in edit contact window
+	* main.c: enlarged length of symbols string in tab reading
+
 2003-10-09  Philip Blundell  <philb@gnu.org>
 
 	* Makefile (LINGUAS): Add cs.

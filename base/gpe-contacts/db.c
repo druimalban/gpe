@@ -270,7 +270,7 @@ db_get_entries (void)
 
 #ifdef USE_USQLD	
   r = usqld_exec (db, "select urn from contacts_urn",
-		   read_one_entry, &list, &err);
+		  read_one_entry, &list, &err);
 #else
   r = sqlite_exec (db, "select urn from contacts_urn",
 		   read_one_entry, &list, &err);
@@ -621,34 +621,61 @@ db_get_entries_alpha (const gchar * alphalist)
   char *err;
   int r, s, t;
 
-  s = strlen(alphalist);
-  command = g_strdup("");
+  const gchar *cursym;
+  gssize temp_char_len;
+  gchar *temp_char_low;
+  gchar *temp_char_up;
+
+  if (! g_utf8_validate (alphalist, -1, &cursym))
+    {
+      gpe_error_box ("Not a valid UTF-8 string");
+      return NULL;
+    }
+
+  s = g_utf8_strlen (alphalist, -1);
+  command = g_strdup ("");
 	
   if (alphalist[0] == '!')
-  {
-    t = 1;
-	modifier = g_strdup(" NOT ");
-  }	  
+    {
+      t = 1;
+      modifier = g_strdup (" NOT ");
+    }	  
   else
-  {
-	t = 0;  
-	modifier = g_strdup(" ");
-  }
-  for (r=t;r<s;r++)
-  {
-     tmp = g_strdup_printf("%s(value like '%c%%') or (value like '%c%%')",
-	   command,g_ascii_toupper(alphalist[r]),g_ascii_tolower(alphalist[r]));
-	 free(command); 
-	 if (r != s-1)
-	   command = g_strdup_printf("%s or",tmp);					 
-  }
+    {
+      t = 0;  
+      modifier = g_strdup (" ");
+    }
 
-  command = g_strdup_printf("select urn, value from  \
-  		contacts where ((( tag = 'NAME') or ( tag = 'name')) and%s(%s))",modifier,tmp);
-  free(tmp);
+  cursym = alphalist + t;
+
+  for (r = t; r < s; r++)
+    {
+      tmp = g_utf8_offset_to_pointer (cursym, 1);
+      temp_char_len = tmp - cursym;
+
+      temp_char_low = g_utf8_strdown (cursym, temp_char_len);
+      temp_char_up  = g_utf8_strup (cursym, temp_char_len);
+      
+      tmp = g_strdup_printf ("%s(value like '%s%%') or (value like '%s%%')",
+			     command, temp_char_up, temp_char_low);
+      
+      g_free (command);
+      g_free (temp_char_low);
+      g_free (temp_char_up);
+
+      if (r != s-1)
+	command = g_strdup_printf ("%s or", tmp);
+      
+      cursym = g_utf8_next_char (cursym);
+    }
+  
+  command = g_strdup_printf ("select urn, value from contacts "
+			     "where ((( tag = 'NAME') or ( tag = 'name')) and%s(%s)) "
+			     "order by value desc", modifier, tmp);
+  g_free (tmp);
 #ifdef USE_USQLD	
   r = usqld_exec (db, command,
-		   read_one_entry, &list, &err);
+		  read_one_entry, &list, &err);
 #else
   r = sqlite_exec (db, command,
 		   read_one_entry, &list, &err);
@@ -660,7 +687,7 @@ db_get_entries_alpha (const gchar * alphalist)
       free (err);
       return NULL;
     }
-
+  
   return list;
 }
 

@@ -161,6 +161,7 @@ create_edit (void)
   GtkWidget *catframe;
   GtkTooltips *tooltips;
   GtkWidget *topvbox;
+  GtkWidget *topscrolledwindow;
   GSList *categories = db_get_categories ();
   GtkWidget *vbox, *action_area;
 
@@ -185,8 +186,15 @@ create_edit (void)
   gtk_box_pack_start (GTK_BOX (vbox), notebook2, 
 		      TRUE, TRUE, 0);
 
+  topscrolledwindow = gtk_scrolled_window_new (NULL, NULL);
+
   topvbox = gtk_vbox_new (FALSE, 0);
-  gtk_container_add (GTK_CONTAINER (notebook2), topvbox);
+
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (topscrolledwindow),
+				  GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+  gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (topscrolledwindow), topvbox);
+
+  gtk_container_add (GTK_CONTAINER (notebook2), topscrolledwindow/*topvbox*/);
 
   table1 = gtk_table_new (4, 2, FALSE);
   gtk_box_pack_start (GTK_BOX (topvbox), table1, FALSE, FALSE, 2);
@@ -244,7 +252,10 @@ create_edit (void)
 
   catframe = gtk_frame_new (_("Categories"));
   scrolledwindow3 = gtk_scrolled_window_new (NULL, NULL);
-  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow3), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow3), 
+				  GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+
   gtk_container_add (GTK_CONTAINER (catframe), scrolledwindow3);
   gtk_box_pack_start (GTK_BOX (topvbox), catframe, TRUE, TRUE, 2);
 

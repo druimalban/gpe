@@ -81,7 +81,7 @@ load_tab_config ()
   char *localfile;
 	
   label = malloc(33);
-  chars = malloc(33);
+  chars = malloc(256);
   num_tabs = 0;
 
   localfile = g_strdup_printf ("%s/%s", g_get_home_dir (), TAB_CONFIG_LOCAL);
@@ -96,7 +96,7 @@ load_tab_config ()
   /* TAB=<label> <charlist> */
   if (fnew)
     {
-      while (!feof (fnew) && (2 == fscanf (fnew, "TAB=%32s %32s\n", label, chars)))
+      while (!feof (fnew) && (2 == fscanf (fnew, "TAB=%32s %255s\n", label, chars)))
 	{
 	  num_tabs++;
 	  tabdefs = realloc(tabdefs,num_tabs*sizeof(t_tabdef));
