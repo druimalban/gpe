@@ -80,6 +80,7 @@ GdkPixbuf *default_pixbuf;
 
 GtkWidget *create_tab (GList *all_items, char *current_group, tab_view_style style, GtkWidget *curr_sw);
 void create_recent_list ();
+void create_recent_box(GtkBox *cont);
 
 void nb_switch (GtkNotebook *nb, GtkNotebookPage *page, guint pagenum)
 {
@@ -420,6 +421,9 @@ void create_recent_list ()
 
 	TRACE("create_recent_list");
 
+	if (recent_tab == NULL)
+		return;
+
 	/* Remove the previous list */
 	cl = gtk_container_children(GTK_CONTAINER(recent_tab));
 	if (cl)
@@ -718,6 +722,10 @@ void refresh_tabs ()
 	if (old_tab != -1)
 		gtk_notebook_set_page (GTK_NOTEBOOK(notebook), old_tab);
 
+	l =  gtk_container_children (GTK_CONTAINER(window));
+	if (l && l->data)
+		create_recent_box (l->data);
+
 	TRACE ("refresh_tabs: <end>");
 }
 
@@ -982,10 +990,22 @@ void create_recent_box(GtkBox *cont)
 {
 	GdkAtom window_type;
 	GdkAtom window_type_dock;
-	GtkWidget *w;
+	static GtkWidget *w=NULL;
 	int can_dock=0;
 
 	TRACE ("create_recent_box");
+
+	if (w != NULL) {
+		gtk_widget_destroy (w);
+		w = NULL;
+	} else if (recent_tab != NULL) {
+		gtk_widget_destroy (recent_tab);
+		w = recent_tab = NULL;
+	}
+
+	if (cfg_options.show_recent_apps == 0)
+		return;
+
         recent_tab = gtk_vbox_new(0,0);
 
 	w = gtk_window_new(GTK_WINDOW_TOPLEVEL);
@@ -1098,9 +1118,6 @@ void create_main_window()
 	vbox = gtk_vbox_new(0,0);
 	gtk_container_add (GTK_CONTAINER (window), vbox);
 	gtk_box_pack_start (GTK_BOX(vbox), notebook, 1, 1, 0);
-
-	// REMOVE:: /* The two styles of recent lists, appmgr or standalone */
-	create_recent_box (GTK_BOX(vbox));
 
 	gtk_widget_show_all (window);
 
