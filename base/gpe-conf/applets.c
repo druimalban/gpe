@@ -285,7 +285,7 @@ int suid_exec(const char* cmd,const char* params)
 	
 	if ((password) || (check_user_access (cmd) == TRUE))
 	{
-		fprintf(suidout,"%s\n%s\n%s",cmd,"<none>",params);
+		fprintf(suidout,"%s\n%s\n%s\n",cmd,"<none>",params);
 		fflush(suidout);
 		return 0;
 	}

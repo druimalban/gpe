@@ -5,6 +5,7 @@
 
 
 #define NET_CONFIGFILE "/etc/network/interfaces"
+#define NET_NEWFILE "/tmp/interfaces"
 
 
 #define Saddress 	1
@@ -16,8 +17,8 @@
 #define Sclientid 	7
 #define Sprovider	8
 
-#define NWSTATE_REMOVED	1
-#define NWSTATE_NEW		2
+#define NWSTATE_REMOVED		1
+#define NWSTATE_NEW			2
 #define NWSTATE_FINISHED	3
 
 typedef struct {

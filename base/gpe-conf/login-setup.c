@@ -18,6 +18,7 @@
 #include <unistd.h>
 #include <signal.h>
 #include <time.h>
+#include <libintl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <gtk/gtk.h>
@@ -36,10 +37,6 @@
 #include "misc.h"
 #include "login-setup.h"
 
-#define GPE_OWNERINFO_DONTSHOW_FILE "/etc/gpe/gpe-ownerinfo.dontshow"
-#define GPE_LOGIN_BG_LINKED_FILE    "/etc/gpe/gpe-login-bg.png"
-#define GPE_LOGIN_BG_DONTSHOW_FILE  "/etc/gpe/gpe-login-bg.dontshow"
-#define GPE_LOGIN_LOCK_SCRIPT "/etc/suspend-scripts/S98lock-display"
  
 GtkWidget *login_bg_show_check  = NULL;
 GtkWidget *ownerinfo_show_check = NULL;
@@ -106,11 +103,9 @@ GtkWidget *Login_Setup_Build_Objects()
       login_bg_filename[bytes] = '\0';
     }
   g_message ("login-setup: File at end of symlink: %s", login_bg_filename);
-
-  /* FIXME: GTK2: use g_file_test(), not access()
-     (see http://developer.gnome.org/doc/API/2.0/glib/glib-file-utilities.html) */
-  
-  /* either we can write to the file... */
+#warning this 
+#if 0
+	/* either we can write to the file... */
   if ((access (GPE_LOGIN_BG_DONTSHOW_FILE, W_OK) == 0) ||
       /* ...or we are allowed to write in this directory, and the file does not yet exist */
       (((access (gpe_dirname (g_strdup (GPE_LOGIN_BG_DONTSHOW_FILE)), W_OK)) == 0) &&
@@ -136,7 +131,19 @@ GtkWidget *Login_Setup_Build_Objects()
   {
     login_lock_script_writable = FALSE;
   }
-  
+ #endif 
+  if (suid_exec("CHEK",""))
+  {
+    login_bg_show_writable = FALSE;
+    ownerinfo_show_writable = FALSE;
+    login_lock_script_writable = FALSE;
+  }
+  else
+  {
+    login_bg_show_writable = TRUE;
+    ownerinfo_show_writable = TRUE;
+    login_lock_script_writable = TRUE;
+  }
   /* ======================================================================== */
   /* draw the GUI */
 
@@ -149,7 +156,7 @@ GtkWidget *Login_Setup_Build_Objects()
   gtk_widget_show (rootwarn_hbox);
 
   /* FIXME: GTK2: make this text bold */
-  rootwarn_label = gtk_label_new (_("Some or all of these settings can only be changed by the user 'root'"));
+  rootwarn_label = gtk_label_new (_("Some or all of these settings can only be changed by the user 'root'."));
   gtk_widget_show (rootwarn_label);
   gtk_label_set_justify (GTK_LABEL (rootwarn_label), GTK_JUSTIFY_LEFT);
   gtk_label_set_line_wrap (GTK_LABEL (rootwarn_label), TRUE);
@@ -185,9 +192,9 @@ GtkWidget *Login_Setup_Build_Objects()
   gtk_box_pack_start (GTK_BOX (catconthbox1), controlvbox1, TRUE, TRUE, 0);
   
   ownerinfo_show_check =
-    gtk_check_button_new_with_label (_("Show owner information at login"));
+    gtk_check_button_new_with_label (_("Show owner information at login."));
   login_bg_show_check =
-    gtk_check_button_new_with_label (_("Use background image for login screen"));
+    gtk_check_button_new_with_label (_("Use background image for login screen."));
   login_lock_display_check =
     gtk_check_button_new_with_label (_("Lock display on suspend."));
 
@@ -278,10 +285,11 @@ Login_Setup_Free_Objects ()
 void
 Login_Setup_Save ()
 {
-  /* applying immediately without saving, no explicit save necessary */
-  system_printf("rm -f %s",GPE_LOGIN_BG_LINKED_FILE);
-  if (symlink(login_bg_filename,GPE_LOGIN_BG_LINKED_FILE))
-	  g_warning("Could not create link to %s\n",login_bg_filename);
+  char tmp[255];
+  /* other settings apply immediately without saving, no explicit save necessary */
+  /* here we should check if save is necessary */
+  snprintf(tmp,255,"%s",login_bg_filename);
+  suid_exec("ULBF",tmp);
 }
 
 void
@@ -299,12 +307,7 @@ Login_Setup_Restore ()
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(login_lock_display_check),
 				login_lock_display_initial);
   login_lock_display = login_lock_display_initial;
-
-/*  if (access(GPE_LOGIN_LOCK_SCRIPT,X_OK) < 0) 	
-    login_lock_display = FALSE;
-  else
-    login_lock_display = TRUE;
-*/}
+}
 
 
 void
@@ -336,7 +339,6 @@ File_Selected (char *file,
 
   strncpy (login_bg_filename, file, sizeof (login_bg_filename));
 
-  // FIXME: if dontshow is writeable but the png is not
   update_login_bg_show ();
 }
 
@@ -344,7 +346,7 @@ File_Selected (char *file,
 void
 get_initial_values ()
 {
-  g_message ("Checking the dontshow files to set initial values for the checkboxes");
+  g_message ("Checking the dontshow files to set initial values for the checkboxes.");
   /* check if the dontshow files are there */
   if (access (GPE_LOGIN_BG_DONTSHOW_FILE, F_OK) == 0)
     login_bg_show_initial = FALSE;
@@ -360,7 +362,7 @@ get_initial_values ()
     login_lock_display_initial = FALSE;
   else
     login_lock_display_initial = TRUE;
-
+    
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(login_bg_show_check),
 				login_bg_show_initial);
   
@@ -368,78 +370,36 @@ get_initial_values ()
 				ownerinfo_show_initial);
 
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(login_lock_display_check),
-				login_lock_display);
-  }
+				login_lock_display_initial);
+}
 
 
 void 
 update_login_bg_show ()
 {
+  char uc[3];
+	
   if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(login_bg_show_check)))
     login_bg_show = TRUE;
   else
     login_bg_show = FALSE;
-  
- /* if (login_bg_show &&
-      (access (GPE_LOGIN_BG_DONTSHOW_FILE, W_OK) == 0) &&
-      (access (gpe_dirname (g_strdup (GPE_LOGIN_BG_DONTSHOW_FILE)), W_OK) == 0))
-    {
-      gtk_widget_set_sensitive (login_bg_file_label, TRUE);
-      gtk_widget_set_sensitive (login_bg_file_entry, TRUE);
-      gtk_widget_set_sensitive (login_bg_file_button, TRUE);
-    }
-  else
-    {
-      gtk_widget_set_sensitive (login_bg_file_label, FALSE);
-      gtk_widget_set_sensitive (login_bg_file_entry, FALSE);
-      gtk_widget_set_sensitive (login_bg_file_button, FALSE);
-    }
-*/
-  if (login_bg_show) {
-    /* check if the dontshow file exists and is writable */
-    if (login_bg_show_writable) {
-      g_message("rm (GPE_LOGIN_BG_DONTSHOW_FILE);");
-      system_printf("rm -f %s", GPE_LOGIN_BG_DONTSHOW_FILE);
-    }
-    
-  }
-  else {
-    /* check if the dontshow file doesn't exist */
-    if (access (GPE_LOGIN_BG_DONTSHOW_FILE, F_OK) != 0) {
-      if (login_bg_show_writable) {
-	g_message("touch (GPE_LOGIN_BG_DONTSHOW_FILE);");
-	system_printf("touch %s", GPE_LOGIN_BG_DONTSHOW_FILE);
-      }
-    }
-  }
+
+  sprintf(uc,"%i",login_bg_show);
+  suid_exec("ULBS",uc);
 }
 
 void 
 update_ownerinfo_show ()
 {
+  char uc[3];
+	
   if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(ownerinfo_show_check)))
     ownerinfo_show = TRUE;
   else
     ownerinfo_show = FALSE;
-    
-  if (ownerinfo_show) {
-    /* check if the dontshow file exists and is writable */
-    if (access (GPE_OWNERINFO_DONTSHOW_FILE, W_OK) == 0) {
-      if (ownerinfo_show_writable) {
-	g_message("rm (GPE_OWNERINFO_DONTSHOW_FILE);");
-	system_printf("rm -f %s", GPE_OWNERINFO_DONTSHOW_FILE);
-      }
-    }
-  }
-  else {
-    /* check if the dontshow file doesn't exist */
-    if (access (GPE_OWNERINFO_DONTSHOW_FILE, F_OK) != 0) {
-      if (ownerinfo_show_writable) {
-	g_message("touch (GPE_OWNERINFO_DONTSHOW_FILE);");
-	system_printf("touch %s", GPE_OWNERINFO_DONTSHOW_FILE);
-      }
-    }
-  }
+
+  sprintf(uc,"%i",ownerinfo_show);
+  suid_exec("UOIS",uc);
 }
 
 
@@ -474,20 +434,9 @@ on_login_bg_file_button_size_allocate (GtkWidget       *widget,
 void 
 update_login_lock (GtkWidget *togglebutton,gpointer  user_data)
 {
+  char uc[3];
   login_lock_display = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(togglebutton));
-    
-  if (login_lock_display) {
-    if (access (GPE_LOGIN_LOCK_SCRIPT, W_OK) == 0) {
-      if (login_lock_script_writable) {
-		system_printf("chmod a+x %s", GPE_LOGIN_LOCK_SCRIPT);
-      }
-    }
-  }
-  else {
-    if (access (GPE_LOGIN_LOCK_SCRIPT, W_OK) == 0) {
-      if (login_lock_script_writable) {
-		system_printf("chmod a-x %s", GPE_LOGIN_LOCK_SCRIPT);
-      }
-    }
-  }
+
+  sprintf(uc,"%i",login_lock_display);
+  suid_exec("ULDS",uc);
 }

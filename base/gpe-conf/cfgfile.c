@@ -15,10 +15,12 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-
+#include <libintl.h>
 #include <gpe/errorbox.h>
 
 #include "cfgfile.h"
+
+#define _(x) gettext(x)
 
 static FILE* configfile;
 static gchar** configtext;
@@ -532,7 +534,7 @@ gint write_sections()
 	
 	
 	// write file
-	configfile = fopen(NET_CONFIGFILE,"w");
+	configfile = fopen(NET_NEWFILE,"w");
 	if (configfile)
 	{
 		for (i=0;i<configlen;i++)
@@ -548,7 +550,7 @@ gint write_sections()
 		fclose(configfile);
 	}
 	else
-		gpe_error_box( "No write access to network configuration.\n");
+		gpe_error_box(_("No write access to network configuration."));
 			
 	return l;	
 }

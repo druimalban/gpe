@@ -18,6 +18,7 @@
 #include <unistd.h>
 #include <signal.h>
 #include <time.h>
+#include <libintl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <gtk/gtk.h>

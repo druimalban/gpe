@@ -6,6 +6,11 @@
  * as published by the Free Software Foundation; either version
  * 2 of the License, or (at your option) any later version.
  */
+ 
+#define GPE_OWNERINFO_DONTSHOW_FILE "/etc/gpe/gpe-ownerinfo.dontshow"
+#define GPE_LOGIN_BG_LINKED_FILE    "/etc/gpe/gpe-login-bg.png"
+#define GPE_LOGIN_BG_DONTSHOW_FILE  "/etc/gpe/gpe-login-bg.dontshow"
+#define GPE_LOGIN_LOCK_SCRIPT "/etc/suspend-scripts/S98lock-display"
 
 GtkWidget *Login_Setup_Build_Objects();
 void Login_Setup_Free_Objects();

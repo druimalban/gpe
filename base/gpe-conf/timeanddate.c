@@ -12,7 +12,7 @@
 #include <sys/stat.h>
 #include <gtk/gtk.h>
 #ifndef _XOPEN_SOURCE
-#define _XOPEN_SOURCE /* Pour GlibC2 */
+#define _XOPEN_SOURCE /* For GlibC2 */
 #endif
 #include <time.h>
 #include "applets.h"
@@ -20,6 +20,7 @@
 #include "suid.h"
 
 #include <gpe/spacing.h>
+#include <gpe/errorbox.h>
 
 gchar *Ntpservers[6]=
   {
@@ -29,6 +30,13 @@ gchar *Ntpservers[6]=
     "ptbtime1.ptb.de",
     "ntp2c.mcc.ac.uk",
     "ntppub.tamu.edu"
+  };
+
+gchar *timezones[3]=
+  {
+    "UTC",
+    "MET",
+	"GMT"
   };
 
 static struct 
@@ -49,6 +57,11 @@ static struct
   GtkWidget *catconthbox3;
   GtkWidget *catindentlabel3;
   GtkWidget *controlvbox3;
+  GtkWidget *catvbox4;
+  GtkWidget *catlabel4;
+  GtkWidget *catconthbox4;
+  GtkWidget *catindentlabel4;
+  GtkWidget *controlvbox4;
   GtkWidget *cal;
   GtkWidget *hbox;
   GtkWidget *h;
@@ -56,11 +69,12 @@ static struct
   GtkWidget *s;
   GtkWidget *ntpserver;
   GtkWidget *internet;
+  GtkWidget *timezone;
 }self;
 
 void GetInternetTime()
 {
-	  if (suid_exec("NTPD",gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (self.ntpserver)->entry))))
+  suid_exec("NTPD",gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (self.ntpserver)->entry)));
   sleep(1);
   Time_Restore();
 }
@@ -69,6 +83,7 @@ GtkWidget *Time_Build_Objects()
 {  
   guint idx;
   GList *ntpsrv = NULL;
+  GList *tzones = NULL;
  
   GtkObject *adj;
   // get the time and the date.
@@ -81,6 +96,9 @@ GtkWidget *Time_Build_Objects()
   gchar *gpe_catindent = gpe_get_catindent ();
   guint gpe_border     = gpe_get_border ();
   guint gpe_boxspacing = gpe_get_boxspacing ();
+  
+  gchar *fstr = NULL;
+  guint mark = 0;
   
   ts.tm_year+=1900;
 
@@ -95,7 +113,10 @@ GtkWidget *Time_Build_Objects()
   self.catvbox1 = gtk_vbox_new (FALSE, gpe_boxspacing);
   gtk_box_pack_start (GTK_BOX (self.categories), self.catvbox1, TRUE, TRUE, 0);
 
-  self.catlabel1 = gtk_label_new (_("Date")); /* FIXME: GTK2: make this bold */
+  self.catlabel1 = gtk_label_new (NULL); 
+  fstr = g_strdup_printf("%s %s %s","<b>",_("Date"),"</b>");
+  gtk_label_set_markup (GTK_LABEL(self.catlabel1),fstr); 
+  g_free(fstr);
   gtk_box_pack_start (GTK_BOX (self.catvbox1), self.catlabel1, FALSE, FALSE, 0);
   gtk_label_set_justify (GTK_LABEL (self.catlabel1), GTK_JUSTIFY_LEFT);
   gtk_misc_set_alignment (GTK_MISC (self.catlabel1), 0, 0.5);
@@ -119,7 +140,10 @@ GtkWidget *Time_Build_Objects()
   self.catvbox2 = gtk_vbox_new (FALSE, gpe_boxspacing);
   gtk_box_pack_start (GTK_BOX (self.categories), self.catvbox2, TRUE, TRUE, 0);
 
-  self.catlabel2 = gtk_label_new (_("Time")); /* FIXME: GTK2: make this bold */
+  self.catlabel2 = gtk_label_new (NULL); /* FIXME: GTK2: make this bold */
+  fstr = g_strdup_printf("%s %s %s","<b>",_("Time"),"</b>");
+  gtk_label_set_markup (GTK_LABEL(self.catlabel2),fstr); 
+  g_free(fstr);
   gtk_box_pack_start (GTK_BOX (self.catvbox2), self.catlabel2, FALSE, FALSE, 0);
   gtk_label_set_justify (GTK_LABEL (self.catlabel2), GTK_JUSTIFY_LEFT);
   gtk_misc_set_alignment (GTK_MISC (self.catlabel2), 0, 0.5);
@@ -148,11 +172,59 @@ GtkWidget *Time_Build_Objects()
   self.s = gtk_spin_button_new (GTK_ADJUSTMENT(adj),1,0);
   gtk_container_add(GTK_CONTAINER(self.hbox),self.s);
 
+ /* -------------------------------------------------------------------------- */
+  self.catvbox4 = gtk_vbox_new (FALSE, gpe_boxspacing);
+  gtk_box_pack_start (GTK_BOX (self.categories), self.catvbox4, TRUE, TRUE, 0);
+
+  self.catlabel4 = gtk_label_new (NULL);
+  fstr = g_strdup_printf("%s %s %s","<b>",_("Timezone"),"</b>");
+  gtk_label_set_markup (GTK_LABEL(self.catlabel4),fstr); 
+  g_free(fstr);
+  
+  gtk_box_pack_start (GTK_BOX (self.catvbox4), self.catlabel4, FALSE, FALSE, 0);
+  gtk_label_set_justify (GTK_LABEL (self.catlabel4), GTK_JUSTIFY_LEFT);
+  gtk_misc_set_alignment (GTK_MISC (self.catlabel4), 0, 0.5);
+
+  self.catconthbox4 = gtk_hbox_new (FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (self.catvbox4), self.catconthbox4, TRUE, TRUE, 0);
+
+  self.catindentlabel4 = gtk_label_new (gpe_catindent);
+  gtk_box_pack_start (GTK_BOX (self.catconthbox4), self.catindentlabel4, FALSE, FALSE, 0);
+
+  self.controlvbox4 = gtk_vbox_new (FALSE, gpe_boxspacing);
+  gtk_box_pack_start (GTK_BOX (self.catconthbox4), self.controlvbox4, TRUE, TRUE, 0);
+
+
+  self.timezone = gtk_combo_new ();
+
+  fstr = getenv("TZ");
+  if (fstr) 
+	fstr=g_strdup(getenv("TZ"));
+  else
+    fstr=g_strdup("UTC");
+
+  for (idx=0; idx<3; idx++) {
+    tzones = g_list_append (tzones, timezones[idx]);
+    if (!strcmp(timezones[idx],fstr)) mark=idx;
+  }
+
+  gtk_combo_set_popdown_strings (GTK_COMBO (self.timezone), tzones);
+  gtk_box_pack_start(GTK_BOX(self.controlvbox4), self.timezone, FALSE, FALSE, 0); 
+
+  gtk_list_select_item(GTK_LIST(GTK_COMBO(self.timezone)->list),mark);
+  
+  g_free(fstr);
   /* -------------------------------------------------------------------------- */
+
+
   self.catvbox3 = gtk_vbox_new (FALSE, gpe_boxspacing);
   gtk_box_pack_start (GTK_BOX (self.categories), self.catvbox3, TRUE, TRUE, 0);
 
-  self.catlabel3 = gtk_label_new (_("Network")); /* FIXME: GTK2: make this bold */
+  self.catlabel3 = gtk_label_new (NULL);
+  fstr = g_strdup_printf("%s %s %s","<b>",_("Network"),"</b>");
+  gtk_label_set_markup (GTK_LABEL(self.catlabel3),fstr); 
+  g_free(fstr);
+  
   gtk_box_pack_start (GTK_BOX (self.catvbox3), self.catlabel3, FALSE, FALSE, 0);
   gtk_label_set_justify (GTK_LABEL (self.catlabel3), GTK_JUSTIFY_LEFT);
   gtk_misc_set_alignment (GTK_MISC (self.catlabel3), 0, 0.5);
@@ -176,12 +248,16 @@ GtkWidget *Time_Build_Objects()
   gtk_combo_set_popdown_strings (GTK_COMBO (self.ntpserver), ntpsrv);
   gtk_box_pack_start(GTK_BOX(self.controlvbox3), self.ntpserver, FALSE, FALSE, 0);
 
-  self.internet = gtk_button_new_with_label("Get time from network");
+  self.internet = gtk_button_new_with_label(_("Get time from network"));
   gtk_signal_connect (GTK_OBJECT(self.internet), "clicked",
 		      (GtkSignalFunc) GetInternetTime, NULL);
 
   gtk_box_pack_start(GTK_BOX(self.controlvbox3), self.internet, FALSE, FALSE, 0);
 
+  
+   /*------------------------------*/
+
+  
   gtk_widget_show_all(self.categories);
   return self.categories;
 }
@@ -210,9 +286,14 @@ void Time_Save()
   tm.tm_isdst = 0;
   t=mktime(&tm);
 
+  /* set time */
   snprintf(par,99,"%ld",t);
   suid_exec("STIM",par);
   free(par);
+  /* set timezone */
+  if (setenv("TZ",gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(self.timezone)->entry)),1))
+	  gpe_error_box(_("Could not set timezone."));
+  suid_exec("STZO",gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(self.timezone)->entry)));
 }
 
 void Time_Restore()

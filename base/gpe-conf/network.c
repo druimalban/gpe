@@ -27,6 +27,10 @@
 #define _XOPEN_SOURCE /* Pour GlibC2 */
 #endif
 #include <time.h>
+#include <libintl.h>
+
+#define _(x) gettext(x)
+
 #include "applets.h"
 #include "network.h"
 #include "parser.h"
@@ -405,7 +409,7 @@ void Network_Save()
 	gchar wname[100];
 	gchar* newval;
 	
-	if (!(access(NET_CONFIGFILE,W_OK) == 0)) return; // we are not allowed to write config
+	//if (!(access(NET_CONFIGFILE,W_OK) == 0)) return; // we are not allowed to write config
 	
 	// traverse all...
 	for (sect=0;sect<iflen;sect++)
@@ -492,11 +496,9 @@ void Network_Save()
 	// save to file
 	write_sections();
 	set_file_open(FALSE);
-	// activate changes
-	if (system("/sbin/ifdown -a") < 0)
-		gpe_error_box("Unable to activate changes.\n");
-	else
-		system("/sbin/ifup -a");
+	
+	// copy and activate config
+	suid_exec("CPIF","");
 }
 
 void Network_Restore()
@@ -511,7 +513,11 @@ GtkWidget *Network_Build_Objects()
 	gint row = 0;
 	gint num_int = 0;
 	GtkWidget *button;
-	gboolean have_access = (access(NET_CONFIGFILE,W_OK) == 0); // add this to sudo tasks
+	gboolean have_access = FALSE;
+	
+	have_access = (access(NET_CONFIGFILE,W_OK) == 0); 
+	if (!have_access) 
+		have_access = !suid_exec("CHEK","");
 	
 	tablebox = gtk_vbox_new(FALSE,0);
 	
@@ -552,7 +558,7 @@ GtkWidget *Network_Build_Objects()
 	gtk_container_add(GTK_CONTAINER(tablebox),table);
 
 	if (!set_file_open(TRUE))
-		gpe_error_box( "Couldn't read network configuration.\n");
+		gpe_error_box(_("Couldn't read network configuration."));
 	else
 	{
 		num_int = get_scheme_list();

@@ -20,13 +20,14 @@
 #include <time.h>
 #include <errno.h>
 #include <crypt.h>
+#include <glib.h>
 
 #include "suid.h"
 #include "applets.h"
 #include "gpe/pixmaps.h"
 #include "gpe/render.h"
 #include "gpe/picturebutton.h"
-
+#include "login-setup.h"
 
 static GtkWidget *passwd_entry;
 static int retv;
@@ -44,28 +45,103 @@ stime (time_t * t)
 }
 #endif
 
-int
-execlp1 (char *a1, char *a2, char *a3, char *a4)
+void
+update_login_bg_sh (char * setupinfo)
 {
-  printf ("%s %s %s\n", a1, a2, a3);
-  return 0;
+	if (atoi(setupinfo))
+      system_printf("rm -f %s", GPE_LOGIN_BG_DONTSHOW_FILE);
+    else 
+	  system_printf("touch %s", GPE_LOGIN_BG_DONTSHOW_FILE);
 }
 
-int
-execlp2 (char *a1, char *a2, char *a3, char *a4, char *a5)
+void
+update_ownerinfo_sh (char * setupinfo)
 {
-  printf ("%s %s %s %s\n", a1, a2, a3, a4);
-  return 0;
+	if (atoi(setupinfo)) 
+		system_printf("rm -f %s", GPE_OWNERINFO_DONTSHOW_FILE);
+  	else 
+		system_printf("touch %s", GPE_OWNERINFO_DONTSHOW_FILE);
 }
 
+void 
+update_login_lock_auto (char * setupinfo)
+{
+  if (atoi(setupinfo)) 
+	system_printf("chmod a+x %s", GPE_LOGIN_LOCK_SCRIPT);
+  else
+    system_printf("chmod a-x %s", GPE_LOGIN_LOCK_SCRIPT);
+}
+
+void 
+update_login_background (char * file)
+{
+  system_printf("rm -f %s",GPE_LOGIN_BG_LINKED_FILE);
+  if (symlink(file,GPE_LOGIN_BG_LINKED_FILE))
+	  g_warning("Could not create link to %s\n",file);
+}
+
+void
+set_timezone (gchar * zone)
+{
+  gchar *profile;
+  gchar **proflines;
+  gint length;
+  gchar *delim;
+  FILE *profnew;
+  gint i = 0;
+  gint j = 0;
+
+  GError *err;
+
+  delim = g_strdup ("\n");
+  g_file_get_contents ("/etc/profile", &profile, &length, &err);
+  proflines = g_strsplit (profile, delim, 255);
+  g_free (delim);
+  delim = NULL;
+  g_free (profile);
+
+  while (proflines[i])
+    {
+      if ((g_strrstr (proflines[i], "TZ"))
+	  && (g_strrstr (proflines[i], "export"))
+	  && (!g_strrstr (proflines[i], "#")))
+	{
+	  delim = proflines[i];
+	  proflines[i] = g_strdup_printf ("export TZ=%s", zone);
+	}
+      i++;
+    }
+
+  i--;
+
+  if (delim == NULL)
+    {
+      proflines = realloc (proflines, i * sizeof (gchar *));
+      proflines[i] = g_strdup_printf ("export TZ=%s", zone);
+      i++;
+    }
+  else
+    free (delim);
+
+  profnew = fopen ("/etc/profile", "w");
+
+  for (j = 0; j < i; j++)
+    {
+      fprintf (profnew, "%s\n", proflines[j]);
+    }
+  fclose (profnew);
+  g_strfreev (proflines);
+}
 
 /*
 	This will check if user is allowed to execute desired command. 
 */
-int check_user_access(const char *cmd)
+int
+check_user_access (const char *cmd)
 {
-	if (!geteuid()) return TRUE;
-	return FALSE; // this !allows everything
+  if (!geteuid ())
+    return TRUE;
+  return FALSE;			// this !allows everything
 }
 
 
@@ -87,89 +163,125 @@ suidloop (int write, int read)
   while (!feof (in))		// the prg exits with sigpipe
     {
       fflush (stdout);
-      fscanf (in, "%4s\n%s\n", cmd,passwd);
-  printf("cmd: \"%s\"\n",cmd);
-  //    if (!feof (in))
-	{
-	  cmd[4] = 0;
-	  bin = NULL;
-      if ((check_user_access(cmd) == TRUE) || (check_root_passwd(passwd))) // we want to know it exact
+      fscanf (in, "%4s\n%s\n", cmd, passwd);
+      printf ("cmd: \"%s\"\n", cmd);
+      //    if (!feof (in))
+      {
+	cmd[4] = 0;
+	bin = NULL;
+	if ((check_user_access (cmd) == TRUE) || (check_root_passwd (passwd)))	// we want to know it exact
 	  {
- 		  if (strcmp (cmd, "NTPD") == 0)
-			{
-			  bin = "/usr/sbin/ntpdate";
-			  sprintf (arg1, "-b");
-			  fscanf (in, "%100s", arg2);
-			  numarg = 2;
-			}
-		  else if (strcmp (cmd, "STIM") == 0)
-			{
-			  time_t t;
-			  fscanf (in, "%ld", &t);
-			  if (stime (&t) == -1)
-			  fprintf (stderr, "error while setting the time: %d\n", errno);
-	
-			}
-	
-		  /* of course it is a security hole */
-		  /* but certainly enough for PDA..  */
-	
-		  else if (strcmp (cmd, "CPPW") == 0)
-			{
-			  bin = "/bin/cp";
-			  strcpy (arg1, "/tmp/passwd");
-			  strcpy (arg2, "/etc/passwd");
-			  numarg = 2;
-			  system_printf("/bin/cp %s %s",arg1 ,arg2);
-			  system_printf("chmod 0644 %s",arg2);
-			  system_printf("/bin/rm -f %s",arg1);
-			}
-		  else if (strcmp (cmd, "XCAL") == 0)
-			{
-			  system ("/usr/X11R6/bin/xcalibrate");
-			}
-			
+	    /* if (strcmp (cmd, "CHEK") == 0)  we do nothing - just check root password */
+
+	    if (strcmp (cmd, "NTPD") == 0)
+	      {
+		bin = "/usr/sbin/ntpdate";
+		sprintf (arg1, "-b");
+		fscanf (in, "%100s", arg2);
+		numarg = 2;
+	      }
+	    else if (strcmp (cmd, "STIM") == 0)
+	      {
+		time_t t;
+		fscanf (in, "%ld", &t);
+		if (stime (&t) == -1)
+		  fprintf (stderr, "error while setting the time: %d\n",
+			   errno);
+	      }
+	    /* of course it is a security hole */
+	    /* but certainly enough for PDA..  */
+	    else if (strcmp (cmd, "CPPW") == 0)
+	      {
+		bin = "/bin/cp";
+		strcpy (arg1, "/tmp/passwd");
+		strcpy (arg2, "/etc/passwd");
+		numarg = 2;
+		system_printf ("/bin/cp %s %s", arg1, arg2);
+		system_printf ("chmod 0644 %s", arg2);
+		system_printf ("/bin/rm -f %s", arg1);
+	      }
+	    else if (strcmp (cmd, "CPIF") == 0)
+	      {
+		bin = "/bin/cp";
+		strcpy (arg1, "/tmp/interfaces");
+		strcpy (arg2, "/etc/network/interfaces");
+		numarg = 2;
+		system_printf ("/bin/cp %s %s", arg1, arg2);
+		system_printf ("chmod 0644 %s", arg2);
+		system_printf ("/bin/rm -f %s", arg1);
+		system ("/etc/init.d/networking restart");
+	      }
+	    else if (strcmp (cmd, "XCAL") == 0)
+	      {
+		system ("/usr/X11R6/bin/xcalibrate");
+	      }
+	    else if (strcmp (cmd, "STZO") == 0)
+	      {
+		fscanf (in, "%100s", arg2);
+		set_timezone (arg2);
+	      }
+	    else if (strcmp (cmd, "ULBS") == 0)
+	      {
+		fscanf (in, "%1s", arg2);
+		update_login_bg_sh (arg2);
+	      }
+	    else if (strcmp (cmd, "UOIS") == 0)
+	      {
+		fscanf (in, "%1s", arg2);
+		update_ownerinfo_sh (arg2);
+	      }
+	    else if (strcmp (cmd, "ULDS") == 0)
+	      {
+		fscanf (in, "%1s", arg2);
+		update_login_lock_auto (arg2);
+	      }
+	    else if (strcmp (cmd, "ULBF") == 0)
+	      {
+		fscanf (in, "%100s", arg2);
+		update_login_background (arg2);
+	      }
 #if 0
-			if (bin)		// fork and exec
-			{
-			  int PID;
-			  switch (PID = fork ())
-			{
-			case -1:
-			  fprintf (stderr, "cant fork\n");
-			  exit (errno);
-			case 0:
-			  switch (numarg)
-				{
-				case 1:
-				  execlp (bin, strrchr(bin,'/')+1, arg1, NULL);
-				  break;
-				case 2:
-				  execlp (bin, strrchr(bin,'/')+1, arg1, arg2, NULL);
-				  break;
-				}
-			  exit (0);
-			default:
-			  break;
-			}
-			}
-#endif			
-		} // if check_user_access
-		else // clear buffer
-		{
-		    if (strcmp (cmd, "NTPD") == 0)
-			  {
-			    fscanf (in, "%100s", arg2);
+	    if (bin)		// fork and exec
+	      {
+		int PID;
+		switch (PID = fork ())
+		  {
+		  case -1:
+		    fprintf (stderr, "cant fork\n");
+		    exit (errno);
+		  case 0:
+		    switch (numarg)
+		      {
+		      case 1:
+			execlp (bin, strrchr (bin, '/') + 1, arg1, NULL);
+			break;
+		      case 2:
+			execlp (bin, strrchr (bin, '/') + 1, arg1, arg2,
+				NULL);
+			break;
 		      }
-		    else if (strcmp (cmd, "STIM") == 0)
-			{
-			  time_t t;
-			  fscanf (in, "%ld", &t);
-			}			
-		}
-	} //if !feof
+		    exit (0);
+		  default:
+		    break;
+		  }
+	      }
+#endif
+	  }			// if check_user_access
+	else			// clear buffer
+	  {
+	    if (strcmp (cmd, "NTPD") == 0)
+	      {
+		fscanf (in, "%100s", arg2);
+	      }
+	    else if (strcmp (cmd, "STIM") == 0)
+	      {
+		time_t t;
+		fscanf (in, "%ld", &t);
+	      }
+	  }
+      }				//if !feof
     }
-//	gtk_exit(0);
+//      gtk_exit(0);
 }
 
 int

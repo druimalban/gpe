@@ -20,7 +20,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
-
+#include <libintl.h>
 /* for stat() */
 #include <sys/types.h>
 #include <sys/stat.h>
