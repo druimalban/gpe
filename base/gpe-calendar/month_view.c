@@ -77,11 +77,43 @@ draw_expose_event (GtkWidget *widget,
   GdkGC *black_gc;
   GdkGC *gray_gc;
   GdkGC *white_gc;
+  GdkGC *cream_gc;
+  GdkGC *light_gray_gc;
+  GdkGC *red_gc;
+  GdkColor cream;
+  GdkColor light_gray;
+  GdkColor red;
+  GdkColormap *colormap;
   guint i, j;
   GdkFont *font = widget->style->font;
 
   g_return_val_if_fail (widget != NULL, TRUE);
   g_return_val_if_fail (GTK_IS_DRAWING_AREA (widget), TRUE);
+
+  colormap = gdk_window_get_colormap (widget->window);
+  cream_gc = gdk_gc_new (widget->window);
+  gdk_gc_copy (cream_gc, widget->style->black_gc);
+  cream.red = 65535;
+  cream.green = 64005;
+  cream.blue = 61200;
+  gdk_colormap_alloc_color (colormap, &cream, FALSE, TRUE);
+  gdk_gc_set_foreground (cream_gc, &cream);
+
+  light_gray_gc = gdk_gc_new (widget->window);
+  gdk_gc_copy (light_gray_gc, widget->style->black_gc);
+  light_gray.red = 53040;
+  light_gray.green = 53040;
+  light_gray.blue = 53040;
+  gdk_colormap_alloc_color (colormap, &light_gray, FALSE, TRUE);
+  gdk_gc_set_foreground (light_gray_gc, &light_gray);
+
+  red_gc = gdk_gc_new (widget->window);
+  gdk_gc_copy (red_gc, widget->style->black_gc);
+  red.red = 65535;
+  red.green = 0;
+  red.blue = 0;
+  gdk_colormap_alloc_color (colormap, &red, FALSE, TRUE);
+  gdk_gc_set_foreground (red_gc, &red);
 
   white_gc = widget->style->white_gc;
   gray_gc = widget->style->bg_gc[GTK_STATE_NORMAL];
@@ -90,6 +122,9 @@ draw_expose_event (GtkWidget *widget,
   gdk_gc_set_clip_rectangle (black_gc, &event->area);
   gdk_gc_set_clip_rectangle (gray_gc, &event->area);
   gdk_gc_set_clip_rectangle (white_gc, &event->area);
+  gdk_gc_set_clip_rectangle (cream_gc, &event->area);
+  gdk_gc_set_clip_rectangle (light_gray_gc, &event->area);
+  gdk_gc_set_clip_rectangle (red_gc, &event->area);
   
   darea = GTK_DRAWING_AREA (widget);
   drawable = widget->window;
@@ -101,7 +136,7 @@ draw_expose_event (GtkWidget *widget,
 			 event->area.x, event->area.y,
 			 event->area.width, event->area.height);
 
-  gdk_draw_rectangle (drawable, black_gc, 1,
+  gdk_draw_rectangle (drawable, light_gray_gc, 1,
 		      0, ys / 2,
 		      width,
 		      ys / 2);
@@ -113,7 +148,7 @@ draw_expose_event (GtkWidget *widget,
 				      ABDAY_6, ABDAY_7, ABDAY_1 };
       gchar *s = nl_langinfo (days[i]);
       guint w = gdk_string_width (font, s);
-      gdk_draw_text (drawable, font, white_gc,
+      gdk_draw_text (drawable, font, black_gc,
 		     x + (xs - w) / 2, ys - font->descent,
 		     s, strlen (s));
  
@@ -128,20 +163,30 @@ draw_expose_event (GtkWidget *widget,
 	      char buf[10];
 	      guint w;
 	      
-	      gdk_draw_rectangle (drawable, c->events ? gray_gc : white_gc, 
+	      gdk_draw_rectangle (drawable, cream_gc, 
 				  TRUE,
 				  x, y, xs, ys);
 	      
-	      gdk_draw_rectangle (drawable, black_gc, FALSE,
+	      gdk_draw_rectangle (drawable, light_gray_gc, FALSE,
 				  x, y, xs, ys);
 	      
 	      snprintf (buf, sizeof (buf), "%d", c->nr);
 	      w = gdk_string_width (font, buf);
 	      
-	      gdk_draw_text (drawable, font, black_gc, 
+	      gdk_draw_text (drawable, font, c->events ? red_gc : black_gc, 
 			     x + (xs - w) / 2, y + (ys / 2) + font->ascent,
 			     buf, strlen (buf));
+	    } 
+	  else 
+	    {	      
+	      gdk_draw_rectangle (drawable, gray_gc, 
+				  TRUE,
+				  x, y, xs, ys);
+	      
+	      gdk_draw_rectangle (drawable, light_gray_gc, FALSE,
+				  x, y, xs, ys);
 	    }
+
 	}
     }
 
