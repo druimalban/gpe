@@ -6,7 +6,7 @@ GTK2 = yes
 VERSION = 0.18
 
 MEMBERS = main
-LINGUAS = id pt de zh_TW fr ro wa
+LINGUAS = id pt de zh_TW fr ro wa sv
 
 ifeq ($(GTK2),yes)
 CFLAGS = `pkg-config --cflags gtk+-2.0`

@@ -1,0 +1,123 @@
+# Swedish messages for gpe-edit. 
+# Copyright (C) 2003 Free Software Foundation, Inc.
+# Christian Rose <menthos@menthos.com>, 2003.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-edit 0.13\n"
+"POT-Creation-Date: 2003-02-20 20:31+0000\n"
+"PO-Revision-Date: 2003-07-06 18:54+0200\n"
+"Last-Translator: Christian Rose <menthos@menthos.com>\n"
+"Language-Team: Swedish <sv@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: main.c:88 main.c:89
+msgid "Untitled"
+msgstr "Namnlös"
+
+#: main.c:260
+msgid "Open File ..."
+msgstr "Öppna fil..."
+
+#: main.c:289
+msgid "Save as .."
+msgstr "Spara som..."
+
+#: main.c:327
+msgid "Save current file before exiting?"
+msgstr "Spara aktuell fil innan avslutande?"
+
+#: main.c:327
+msgid "Question"
+msgstr "Fråga"
+
+#: main.c:328
+msgid "Don't save"
+msgstr "Spara inte"
+
+#: main.c:328 main.c:616
+msgid "Save"
+msgstr "Spara"
+
+#: main.c:390
+msgid "Text not found"
+msgstr "Texten hittades inte"
+
+#: main.c:429
+msgid "Unable to replace text"
+msgstr "Kan inte ersätta text"
+
+#: main.c:443 main.c:492
+msgid "Search for:"
+msgstr "Sök efter:"
+
+#: main.c:446 main.c:498
+msgid "Find"
+msgstr "Sök"
+
+#: main.c:493
+msgid "Replace with:"
+msgstr "Ersätt med:"
+
+#: main.c:497 main.c:630
+msgid "Replace"
+msgstr "Ersätt"
+
+#: main.c:608
+msgid "New"
+msgstr "Nytt"
+
+#: main.c:609
+msgid "New document"
+msgstr "Nytt dokument"
+
+#: main.c:612
+msgid "Open"
+msgstr "Öppna"
+
+#: main.c:613
+msgid "Open file"
+msgstr "Öppna fil"
+
+#: main.c:617
+msgid "Save current file"
+msgstr "Spara aktuell fil"
+
+#: main.c:620
+msgid "Save as"
+msgstr "Spara som"
+
+#: main.c:621
+msgid "Save current file as"
+msgstr "Spara aktuell fil som"
+
+#: main.c:626
+msgid "Search"
+msgstr "Sök"
+
+#: main.c:627
+msgid "Search for a string"
+msgstr "Sök efter en sträng"
+
+#: main.c:631
+msgid "Replace a string"
+msgstr "Ersätt en sträng"
+
+#: gpe-edit.desktop.in.h:1
+msgid "GPE Text Editor"
+msgstr "GPE-textredigerare"
+
+#: gpe-edit.desktop.in.h:2
+msgid "Text Editor"
+msgstr "Textredigerare"
+
+#~ msgid "Open File..."
+#~ msgstr "Öppna fil..."
+
+#~ msgid "Save as ..."
+#~ msgstr "Spara som..."
+
+#~ msgid "Save as..."
+#~ msgstr "Spara som..."

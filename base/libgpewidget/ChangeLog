@@ -1,3 +1,8 @@
+2003-07-06  Philip Blundell  <philb@gnu.org>
+
+	* Makefile (LINGUAS): Add sv.
+	* po/sv.po: New file, courtesy Christian Rose.	
+
 2003-06-26  Philip Blundell  <philb@gnu.org>
 
 	* Makefile (LINGUAS): Add wa.
