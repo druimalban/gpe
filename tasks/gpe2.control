@@ -1,6 +1,6 @@
 Package: gpe2
-Provides: gpe
-Replaces: gpe
+Provides: gpe, gpe-apps2
+Replaces: gpe, gpe-apps2
 Section: GPE/tasks
 Priority: optional
 Version: _VERSION_

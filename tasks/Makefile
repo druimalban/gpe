@@ -22,7 +22,6 @@ VERSION = 0.43
 
 ALL_TASKS = \
     gpe2 \
-    gpe-apps2 \
     \
     gpe-collateral-gtk2 \
     \
@@ -73,15 +72,14 @@ clean:
 #====================================================
 #================= TASKS DEFINITION =================
 
-DEP_gpe2 = gpe-apps2 gpe-task-games
-
 #---Meta tasks
-DEP_gpe-apps2 = \
+DEP_gpe2 = \
     gpe-task-base, \
     gpe-task-comm, \
     gpe-task-mmedia, \
     gpe-task-pim, \
-    gpe-task-utils \
+    gpe-task-utils, \
+    gpe-task-games
 #    gpe-task-extra-apps \
 
 
