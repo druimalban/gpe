@@ -213,7 +213,7 @@ int ircp_cli_connect(ircp_client_t *cli)
 #else
 	ret = IrOBEX_TransportConnect(cli->obexhandle, "OBEX:IrXfer");
 #endif
-printf("connecting...%i",ret);
+printf("connecting...%i\n",ret);
 	if (ret < 0) {
 		cli->infocb(IRCP_EV_ERR, "");
 		return -1;

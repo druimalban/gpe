@@ -7,7 +7,7 @@ PREFIX = /usr/local
 DESTDIR = /
 CONTROL = control1
 
-LINGUAS = cs de sv ro nl pt ru fr sr es pt_BR
+LINGUAS = cs de sv ro nl pt ru fr sr es pt_BR zh_CN
 
 ifeq ($(CVSBUILD),yes)
 BUILD = ../build
