@@ -1,5 +1,9 @@
 2003-08-07  Philip Blundell  <philb@gnu.org>
 
+	* gpe-session-scripts 0.47 released.
+
+2003-08-07  Philip Blundell  <philb@gnu.org>
+
 	* X11/Xinit.d/30xTs_Calibrate: If xtscal is installed, use it in
 	preference to xcalibrate.
 
