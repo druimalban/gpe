@@ -20,6 +20,7 @@
 #include <errno.h>
 #include <sqlite.h>
 #include <netdb.h>
+#include <time.h>
 
 #ifdef USE_SASL
 #include <sasl/sasl.h>
@@ -117,6 +118,14 @@ do_open (struct nsql_context *ctx, char *cmdline, GError **error)
 }
 
 gboolean
+do_time (struct nsql_context *ctx)
+{
+  fprintf (ctx->ofp, "%s - %d\n", ctx->cmd_id, time (NULL));
+  
+  return TRUE;
+}
+
+gboolean
 dot_command (struct nsql_context *ctx, char *cmd, GError **error)
 {
   if (!strcasecmp (cmd, "quit"))
@@ -126,6 +135,8 @@ dot_command (struct nsql_context *ctx, char *cmd, GError **error)
     }
   else if (!strncasecmp (cmd, "open ", 5))
     return do_open (ctx, cmd + 5, error);
+  else if (!strncasecmp (cmd, "time", 4))
+    return do_time (ctx);
 
   g_set_error (error, NSQLD_ERROR, NSQLD_ERROR_BAD_COMMAND,
 	       "Command '%s' not understood", cmd);
