@@ -23,7 +23,7 @@ static guint x_offset, y_offset;
 static gboolean hand = TRUE;
 
 static GtkAdjustment *hour_adj, *minute_adj;
-static GdkPixbuf *clock_background;
+static GdkPixbuf *clock_background, *day_night_wheel;
 
 static void
 draw_hand (GdkDrawable *drawable, 
@@ -121,18 +121,20 @@ draw_clock (GtkWidget *widget,
   */
 
   if (event)
-    {
-      pixbuf_rect.x = x_offset;
-      pixbuf_rect.y = y_offset;
-      pixbuf_rect.width = gdk_pixbuf_get_width (clock_background);
-      pixbuf_rect.height = gdk_pixbuf_get_height (clock_background);
+  {
+    pixbuf_rect.x = x_offset;
+    pixbuf_rect.y = y_offset;
+    pixbuf_rect.width = gdk_pixbuf_get_width (clock_background);
+    pixbuf_rect.height = gdk_pixbuf_get_height (clock_background);
 
-      if (gdk_rectangle_intersect (&pixbuf_rect, &event->area, &intersect_rect) == TRUE)
-	gdk_pixbuf_render_to_drawable (clock_background, drawable, black_gc, intersect_rect.x - x_offset, intersect_rect.y - y_offset, intersect_rect.x, intersect_rect.y, intersect_rect.width, intersect_rect.height, GDK_RGB_DITHER_NONE, 0, 0);
-    }
+    if (gdk_rectangle_intersect (&pixbuf_rect, &event->area, &intersect_rect) == TRUE)
+      gdk_pixbuf_render_to_drawable (clock_background, drawable, black_gc, intersect_rect.x - x_offset, intersect_rect.y - y_offset, intersect_rect.x, intersect_rect.y, intersect_rect.width, intersect_rect.height, GDK_RGB_DITHER_NONE, 0, 0);
+  }
   else
     gdk_pixbuf_render_to_drawable (clock_background, drawable, black_gc, 0, 0, x_offset, y_offset, gdk_pixbuf_get_width (clock_background), gdk_pixbuf_get_height (clock_background), GDK_RGB_DITHER_NONE, 0, 0);
- 
+
+  gdk_pixbuf_render_to_drawable (day_night_wheel, drawable, white_gc, 0, 0, (x_offset + clock_radius) - (gdk_pixbuf_get_width (day_night_wheel) / 2), (y_offset + clock_radius) - (gdk_pixbuf_get_height (day_night_wheel) / 2), -1, -1, GDK_RGB_DITHER_NONE, 0, 0);
+
   minute_angle = gtk_adjustment_get_value (minute_adj) * 2 * M_PI / 60;
   hour_angle = gtk_adjustment_get_value (hour_adj) * 2 * M_PI / 12;
 
@@ -227,6 +229,7 @@ clock_widget (GtkAdjustment *hadj, GtkAdjustment *madj)
   GtkWidget *w = gtk_drawing_area_new ();
 
   clock_background = gdk_pixbuf_new_from_file ("./clock.png", NULL);
+  day_night_wheel = gdk_pixbuf_new_from_file ("./day-night-wheel.png", NULL);
 
   gtk_widget_set_usize (w, clock_radius * 2 + 4, clock_radius * 2 + 4);
 
