@@ -2,6 +2,7 @@ Package: gpe-calendar2
 Section: base
 Priority: optional
 Version: VERSION
+Source: SOURCE
 Architecture: arm
 Maintainer: Phil Blundell <pb@debian.org>
 Depends: gpe-icons (>= 0.14), libgpewidget1 (>= 0.08), atd, libxsettings-client0, libeventdb0 (>= 0.06), libdisplaymigration0, libschedule0, gpe-calendar-locale*
