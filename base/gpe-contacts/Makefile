@@ -22,7 +22,7 @@ else
 CFLAGS += -Os -fomit-frame-pointer
 endif
 
-CPPFLAGS += -D_GNU_SOURCE
+CPPFLAGS += -D_GNU_SOURCE -DENABLE_NLS
 
 CPPFLAGS += -I../libdisplaymigration
 LDFLAGS += -L../libdisplaymigration -ldisplaymigration

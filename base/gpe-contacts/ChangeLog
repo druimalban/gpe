@@ -1,3 +1,8 @@
+2003-07-29  Philip Blundell  <philb@gnu.org>
+
+	* Makefile (CPPFLAGS): Add -DENABLE_NLS.
+	* main.c (main): Add calls to setlocale and bindtextdomain_codeset.
+
 2003-07-27  Phil Blundell  <pb@nexus.co.uk>
 
 	* db.c: Make schema decls acceptable to GCC 3.3.

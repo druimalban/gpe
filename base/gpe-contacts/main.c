@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001, 2002 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2001, 2002, 2003 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -12,16 +12,13 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#  include <config.h>
-#endif
-
 #include <gtk/gtk.h>
 #include <libintl.h>
 #include <stdlib.h>
 #include <string.h>
 #include <libdisplaymigration/displaymigration.h>
 #include <unistd.h>
+#include <locale.h>
 
 #include <gpe/init.h>
 #include <gpe/pixmaps.h>
@@ -953,7 +950,10 @@ int
 main (int argc, char *argv[])
 {
 #ifdef ENABLE_NLS
+  setlocale (LC_ALL, "");
+
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
+  bind_textdomain_codeset (PACKAGE, "UTF-8");
   textdomain (PACKAGE);
 #endif
 	
