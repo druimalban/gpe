@@ -27,8 +27,8 @@ struct sens
 {
   GtkWidget *frombutton;
   GtkWidget *alldaybutton;
-  GtkWidget *startcombo;
-  GtkWidget *endcombo;
+  GtkWidget *starttime;
+  GtkWidget *endtime;
   GtkWidget *timeend;
   GtkWidget *deletebutton;
 
@@ -83,14 +83,14 @@ recalculate_sensitivities(GtkWidget *widget,
 
   if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->frombutton)))
     {
-      gtk_widget_set_sensitive (s->startcombo, 1);
-      gtk_widget_set_sensitive (s->endcombo, 1);
+      gtk_widget_set_sensitive (s->starttime, 1);
+      gtk_widget_set_sensitive (s->endtime, 1);
       gtk_widget_set_sensitive (s->timeend, 1);
     }
   else
     {
-      gtk_widget_set_sensitive (s->startcombo, 0);
-      gtk_widget_set_sensitive (s->endcombo, 0);
+      gtk_widget_set_sensitive (s->starttime, 0);
+      gtk_widget_set_sensitive (s->endtime, 0);
       gtk_widget_set_sensitive (s->timeend, 0);
     }
 
@@ -173,11 +173,10 @@ click_ok(GtkWidget *widget,
   ev_d->description = gtk_editable_get_chars (GTK_EDITABLE (s->text), 
 						     0, -1);
   memset(&tm, 0, sizeof(tm));
-#if 0
-  tm.tm_year = s->start.year - 1900;
-  tm.tm_mon = s->start.month;
-  tm.tm_mday = s->start.day;
-#endif
+
+  tm.tm_year = GTK_DATE_COMBO (s->startdate)->year - 1900;
+  tm.tm_mon = GTK_DATE_COMBO (s->startdate)->month;
+  tm.tm_mday = GTK_DATE_COMBO (s->startdate)->day;
   tm.tm_sec = 0;
 
   tm.tm_hour = 0;
@@ -187,9 +186,9 @@ click_ok(GtkWidget *widget,
   if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->frombutton)))
     {
       char *start = gtk_editable_get_chars (GTK_EDITABLE (GTK_COMBO 
-							  (s->startcombo)->entry), 0, -1);
+							  (s->starttime)->entry), 0, -1);
       char *end = gtk_editable_get_chars (GTK_EDITABLE (GTK_COMBO 
-						  (s->endcombo)->entry),
+						  (s->endtime)->entry),
 					  0, -1);
       struct tm tm_start, tm_end;
       if (strptime (start, "%X", &tm_start))
@@ -285,8 +284,8 @@ edit_event_window(void)
   GtkWidget *buttoncancel = gtk_button_new_with_label (_("Cancel"));
   GtkWidget *buttondelete = gtk_button_new_with_label (_("Delete"));
 
-  GtkWidget *startcombo = gtk_combo_new ();
-  GtkWidget *endcombo = gtk_combo_new ();
+  GtkWidget *starttime = gtk_combo_new ();
+  GtkWidget *endtime = gtk_combo_new ();
 
   GtkWidget *startdatebox = gtk_hbox_new (FALSE, 0);
   GtkWidget *enddatebox = gtk_hbox_new (FALSE, 0);
@@ -323,10 +322,10 @@ edit_event_window(void)
   gtk_option_menu_set_menu (GTK_OPTION_MENU (alarmoption), alarmmenu);
   gtk_widget_set_usize (alarmoption, 120, -1);
 
-  gtk_widget_set_usize (startcombo, 64, -1);
-  gtk_widget_set_usize (endcombo, 64, -1);
-  gtk_combo_set_popdown_strings (GTK_COMBO (startcombo), times);
-  gtk_combo_set_popdown_strings (GTK_COMBO (endcombo), times);
+  gtk_widget_set_usize (starttime, 64, -1);
+  gtk_widget_set_usize (endtime, 64, -1);
+  gtk_combo_set_popdown_strings (GTK_COMBO (starttime), times);
+  gtk_combo_set_popdown_strings (GTK_COMBO (endtime), times);
 
   s->startdate = gtk_date_combo_new ();
   s->enddate = gtk_date_combo_new ();
@@ -348,9 +347,9 @@ edit_event_window(void)
   gtk_box_pack_start (GTK_BOX (alldayhbox), alldaybutton, FALSE, FALSE, 5);
 
   gtk_box_pack_start (GTK_BOX (timehbox), frombutton, FALSE, FALSE, 5);
-  gtk_box_pack_start (GTK_BOX (timehbox), startcombo, FALSE, FALSE, 5);
+  gtk_box_pack_start (GTK_BOX (timehbox), starttime, FALSE, FALSE, 5);
   gtk_box_pack_start (GTK_BOX (timehbox), timeend, FALSE, FALSE, 5);
-  gtk_box_pack_start (GTK_BOX (timehbox), endcombo, FALSE, FALSE, 5);
+  gtk_box_pack_start (GTK_BOX (timehbox), endtime, FALSE, FALSE, 5);
 
   gtk_box_pack_start (GTK_BOX (alarmhbox), alarmbutton, FALSE, FALSE, 5);
   gtk_box_pack_start (GTK_BOX (alarmhbox), alarmspin, FALSE, FALSE, 0);
@@ -586,9 +585,9 @@ edit_event_window(void)
   s->deletebutton = buttondelete;
   s->frombutton = frombutton;
   s->alldaybutton = alldaybutton;
-  s->startcombo = startcombo;
+  s->starttime = starttime;
   s->timeend = timeend;
-  s->endcombo = endcombo;
+  s->endtime = endtime;
   s->alarmbutton = alarmbutton;
   s->alarmspin = alarmspin;
   s->alarmoption = alarmoption;
@@ -651,18 +650,15 @@ new_event(time_t t, guint timesel)
 
       localtime_r (&t, &tm);
       strftime (buf, sizeof(buf), "%X", &tm);
-      gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (s->startcombo)->entry), buf);
+      gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (s->starttime)->entry), buf);
       tm.tm_hour++;
       strftime (buf, sizeof(buf), "%X", &tm);
-      gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (s->endcombo)->entry), buf);
-      strftime (buf, sizeof(buf), "%x", &tm);
-#if 0
-      gtk_entry_set_text (GTK_ENTRY (s->start.entry), buf);
-      gtk_entry_set_text (GTK_ENTRY (s->end.entry), buf);
-      s->start.year = s->end.year = 1900 + tm.tm_year;
-      s->start.month = s->end.month = tm.tm_mon;
-      s->start.day = s->end.day = tm.tm_mday;
-#endif
+      gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (s->endtime)->entry), buf);
+
+      gtk_date_combo_set_date (GTK_DATE_COMBO (s->startdate),
+			       tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
+      gtk_date_combo_set_date (GTK_DATE_COMBO (s->enddate),
+			       tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
     }
 
   return w;

@@ -63,7 +63,7 @@ drop_calendar(GtkWidget *widget,
       screen_height = gdk_screen_height ();
       
       x = CLAMP (x - 2, 0, MAX (0, screen_width - requisition.width));
-      y = CLAMP (y - 2, 0, MAX (0, screen_height - requisition.height));
+      y = CLAMP (y + 4, 0, MAX (0, screen_height - requisition.height));
       
       gtk_widget_set_uposition (dp->calw, MAX (x, 0), MAX (y, 0));
       
@@ -197,3 +197,11 @@ gtk_date_combo_new (void)
   return GTK_WIDGET (gtk_type_new (gtk_date_combo_get_type ()));
 }
 
+void
+gtk_date_combo_set_date (GtkDateCombo *dp, guint year, guint month, guint day)
+{
+  dp->year = year;
+  dp->month = month;
+  dp->day = day;
+  update_text (dp);
+}

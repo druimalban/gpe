@@ -38,6 +38,9 @@ typedef struct _GtkDateComboClass  GtkDateComboClass;
 
 GtkType		gtk_date_combo_get_type	   (void);
 
-extern GtkWidget *gtk_date_combo_new (void);
+GtkWidget      *gtk_date_combo_new (void);
+
+void            gtk_date_combo_set_date (GtkDateCombo *,
+					 guint year, guint month, guint day);
 
 #endif
