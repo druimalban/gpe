@@ -1,5 +1,5 @@
 PACKAGE = gpe-conf
-VERSION = 0.1.8
+VERSION = 0.1.9
 NATIVE = yes
 CVSBUILD = yes
 DEBUG = no
@@ -7,8 +7,20 @@ INSTALL = install
 PREFIX = /usr/
 DESTDIR = /
 PACKAGETOOL = no
+MACHINE = other
 
 LINGUAS = pt ro de fr cs nl sv sk ru
+
+ifeq ($(MACHINE),ipaq)
+PACKAGE_CPPFLAGS += -DMACH_IPAQ
+PACKAGE_CFLAGS += -DMACH_IPAQ
+endif
+
+ifeq ($(MACHINE),simpad)
+PACKAGE_CPPFLAGS += -DMACH_SIMPAD
+PACKAGE_CFLAGS += -DMACH_SIMPAD
+endif
+
 EXTRA_DESKTOPS = \
 	gpe-conf-admin.desktop.in \
 	gpe-conf-cardinfo.desktop.in \
@@ -46,7 +58,7 @@ else
 PACKAGE_CFLAGS += -Os -fomit-frame-pointer
 endif
 
-PACKAGE_CFLAGS += -DVERSION=\"$(VERSION)\" -DPREFIX=\"$(PREFIX)\" -D_GNU_SOURCE
+PACKAGE_CFLAGS += -DVERSION=\"$(VERSION)\" -DPREFIX=\"$(PREFIX)\" -D_GNU_SOURCE 
 PACKAGE_CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-03-19 10:38+0100\n"
+"POT-Creation-Date: 2004-06-03 19:22+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -158,42 +158,6 @@ msgid ""
 "again."
 msgstr ""
 
-#: appmgr_setup.c:189 gpe-admin.c:86
-msgid "General"
-msgstr ""
-
-#: appmgr_setup.c:206
-msgid "Show 'All' group"
-msgstr ""
-
-#: appmgr_setup.c:214
-msgid "Auto-hide group labels"
-msgstr ""
-
-#: appmgr_setup.c:221
-msgid "Show 'Recent' tab"
-msgstr ""
-
-#: appmgr_setup.c:228
-msgid "Do not launch at startup"
-msgstr ""
-
-#: appmgr_setup.c:237
-msgid "Tab View"
-msgstr ""
-
-#: appmgr_setup.c:252
-msgid "Icon"
-msgstr ""
-
-#: appmgr_setup.c:256
-msgid "List"
-msgstr ""
-
-#: appmgr_setup.c:265
-msgid "Changes will take effect after relog"
-msgstr ""
-
 #: ipaqscreen/main.c:70
 msgid "Portrait"
 msgstr ""
@@ -282,7 +246,7 @@ msgstr ""
 msgid "Current Config"
 msgstr ""
 
-#: network.c:175 ownerinfo.c:221
+#: network.c:175 ownerinfo.c:226
 msgid "Name:"
 msgstr ""
 
@@ -449,119 +413,143 @@ msgstr ""
 msgid "global"
 msgstr ""
 
-#: theme.c:417
+#: theme.c:421
 msgid "Red"
 msgstr ""
 
-#: theme.c:422
+#: theme.c:426
 msgid "Green"
 msgstr ""
 
-#: theme.c:427
+#: theme.c:431
 msgid "Blue"
 msgstr ""
 
-#: theme.c:702
+#: theme.c:727
 msgid "Select color"
 msgstr ""
 
-#: theme.c:728 theme.c:800
+#: theme.c:753 theme.c:825
 msgid "You don't have read access to selected background image!"
 msgstr ""
 
-#: theme.c:899
+#: theme.c:933
 msgid "Theme"
 msgstr ""
 
-#: theme.c:908
+#: theme.c:942
 msgid "Desktop Theme"
 msgstr ""
 
-#: theme.c:920
+#: theme.c:954
 msgid "Name"
 msgstr ""
 
-#: theme.c:936
+#: theme.c:970
 msgid "Icon Size"
 msgstr ""
 
-#: theme.c:952
-msgid "Toolbar Icon Size"
-msgstr ""
-
-#: theme.c:968
+#: theme.c:986
 msgid "Visual Effects"
 msgstr ""
 
-#: theme.c:974
+#: theme.c:992
 msgid "Enable Visual Effects"
 msgstr ""
 
-#: theme.c:981
+#: theme.c:999
 msgid "Background"
 msgstr ""
 
-#: theme.c:992
+#: theme.c:1010
 msgid "Background Settings"
 msgstr ""
 
-#: theme.c:999
+#: theme.c:1017
 msgid "Theme Default"
 msgstr ""
 
-#: theme.c:1006
+#: theme.c:1024
 msgid "Solid color"
 msgstr ""
 
-#: theme.c:1020
+#: theme.c:1038
 msgid "Horizontal"
 msgstr ""
 
-#: theme.c:1024
+#: theme.c:1042
 msgid "Vertical"
 msgstr ""
 
-#: theme.c:1029 theme.c:1048 theme.c:1145 theme.c:1151
+#: theme.c:1047 theme.c:1066 theme.c:1219 theme.c:1225
 msgid "Color"
 msgstr ""
 
-#: theme.c:1039
+#: theme.c:1057
 msgid "Color gradient"
 msgstr ""
 
-#: theme.c:1059
+#: theme.c:1077
 msgid "Image"
 msgstr ""
 
-#: theme.c:1085
+#: theme.c:1103
 msgid "Centered"
 msgstr ""
 
-#: theme.c:1089
+#: theme.c:1107
 msgid "Tiled"
 msgstr ""
 
-#: theme.c:1092
+#: theme.c:1110
 msgid "Stretched"
 msgstr ""
 
-#: theme.c:1097
+#: theme.c:1116
+msgid "Toolbars"
+msgstr ""
+
+#: theme.c:1127
+msgid "Toolbar Style"
+msgstr ""
+
+#: theme.c:1134
+msgid "Icons"
+msgstr ""
+
+#: theme.c:1139
+msgid "Text"
+msgstr ""
+
+#: theme.c:1144
+msgid "Both"
+msgstr ""
+
+#: theme.c:1149
+msgid "Both H"
+msgstr ""
+
+#: theme.c:1156
+msgid "Toolbar Icon Size"
+msgstr ""
+
+#: theme.c:1171
 msgid "Fonts"
 msgstr ""
 
-#: theme.c:1106 theme.c:1126
+#: theme.c:1180 theme.c:1200
 msgid "Desktop Font"
 msgstr ""
 
-#: theme.c:1113 theme.c:1169
+#: theme.c:1187 theme.c:1243
 msgid "Family"
 msgstr ""
 
-#: theme.c:1133 theme.c:1189
+#: theme.c:1207 theme.c:1263
 msgid "Size"
 msgstr ""
 
-#: theme.c:1162 theme.c:1182
+#: theme.c:1236 theme.c:1256
 msgid "Application Font"
 msgstr ""
 
@@ -621,52 +609,51 @@ msgstr ""
 msgid "The file you selected is not executable."
 msgstr ""
 
-#: ownerinfo.c:197
-msgid "<b>Information about  the Owner</b>"
+#: ownerinfo.c:199
+msgid "Information about the Owner"
 msgstr ""
 
-#: ownerinfo.c:202
+#: ownerinfo.c:207
 msgid "Only the user 'root' is allowed to change this information"
 msgstr ""
 
-#: ownerinfo.c:236
+#: ownerinfo.c:241
 msgid "E-Mail:"
 msgstr ""
 
-#: ownerinfo.c:251
+#: ownerinfo.c:256
 msgid "Phone:"
 msgstr ""
 
-#: ownerinfo.c:266
+#: ownerinfo.c:271
 msgid "Address:"
 msgstr ""
 
-#: ownerinfo.c:292
+#: ownerinfo.c:297
 msgid "Photofile:"
 msgstr ""
 
-#: login-setup.c:130
+#: login-setup.c:131
 msgid "Some or all of these settings can only be changed by the user 'root'."
 msgstr ""
 
-#. TRANSLATORS: Please ignore the tags <>
-#: login-setup.c:153
-msgid "<b>General</b>"
+#: login-setup.c:154 gpe-admin.c:86
+msgid "General"
 msgstr ""
 
-#: login-setup.c:168
+#: login-setup.c:171
 msgid "Show owner information at login."
 msgstr ""
 
-#: login-setup.c:170
+#: login-setup.c:173
 msgid "Use background image for login screen."
 msgstr ""
 
-#: login-setup.c:172
+#: login-setup.c:175
 msgid "Lock display on suspend."
 msgstr ""
 
-#: login-setup.c:185
+#: login-setup.c:188
 msgid "Image:"
 msgstr ""
 
@@ -702,7 +689,7 @@ msgstr ""
 msgid "Auto sleep advanced controls"
 msgstr ""
 
-#: sleep/interface.c:164 sysinfo.c:490
+#: sleep/interface.c:164 sysinfo.c:491
 msgid "CPU"
 msgstr ""
 
@@ -934,187 +921,187 @@ msgstr ""
 msgid "Serial Port"
 msgstr ""
 
-#: cardinfo.c:104
+#: cardinfo.c:105
 msgid "/_Card"
 msgstr ""
 
-#: cardinfo.c:105
+#: cardinfo.c:106
 msgid "/Card/_Insert"
 msgstr ""
 
-#: cardinfo.c:106
+#: cardinfo.c:107
 msgid "/Card/_Eject"
 msgstr ""
 
-#: cardinfo.c:107
+#: cardinfo.c:108
 msgid "/Card/_Suspend"
 msgstr ""
 
-#: cardinfo.c:108
+#: cardinfo.c:109
 msgid "/Card/_Resume"
 msgstr ""
 
-#: cardinfo.c:109
+#: cardinfo.c:110
 msgid "/Card/_Reset"
 msgstr ""
 
-#: cardinfo.c:110
+#: cardinfo.c:111
 msgid "/Card/s1"
 msgstr ""
 
-#: cardinfo.c:111
+#: cardinfo.c:112
 msgid "/Card/_Assign Driver"
 msgstr ""
 
-#: cardinfo.c:112
+#: cardinfo.c:113
 msgid "/Card/s2"
 msgstr ""
 
-#: cardinfo.c:113
+#: cardinfo.c:114
 msgid "/Card/_Close"
 msgstr ""
 
-#: cardinfo.c:114
+#: cardinfo.c:115
 msgid "/_Help"
 msgstr ""
 
-#: cardinfo.c:115
+#: cardinfo.c:116
 msgid "/_Help/Index"
 msgstr ""
 
-#: cardinfo.c:116
+#: cardinfo.c:117
 msgid "/_Help/About"
 msgstr ""
 
-#: cardinfo.c:176 cardinfo.c:864
+#: cardinfo.c:177 cardinfo.c:865
 msgid "card not recognized"
 msgstr ""
 
-#: cardinfo.c:278 cardinfo.c:349
+#: cardinfo.c:279 cardinfo.c:350
 msgid "Could not write to temporal config file."
 msgstr ""
 
-#: cardinfo.c:555
+#: cardinfo.c:556
 msgid "Could not open pidfile:"
 msgstr ""
 
-#: cardinfo.c:561
+#: cardinfo.c:562
 msgid "Could not read pidfile"
 msgstr ""
 
-#: cardinfo.c:565
+#: cardinfo.c:566
 msgid "Could not signal cardmgr:"
 msgstr ""
 
-#: cardinfo.c:640
+#: cardinfo.c:641
 msgid "gpe-conf must be setuid root to use cardinfo feature."
 msgstr ""
 
-#: cardinfo.c:659
+#: cardinfo.c:660
 msgid "No PCMCIA driver in '/proc/devices'"
 msgstr ""
 
-#: cardinfo.c:662
+#: cardinfo.c:663
 msgid "Could not open '/proc/devices'"
 msgstr ""
 
-#: cardinfo.c:674
+#: cardinfo.c:675
 msgid "No sockets found\n"
 msgstr ""
 
-#: cardinfo.c:683
+#: cardinfo.c:684
 msgid "Card Services release does not match!"
 msgstr ""
 
-#: cardinfo.c:688
+#: cardinfo.c:689
 msgid "Could not get CS revision info!\n"
 msgstr ""
 
-#: cardinfo.c:851
+#: cardinfo.c:852
 msgid "flock(stabfile) failed"
 msgstr ""
 
-#: cardinfo.c:870
+#: cardinfo.c:871
 #, c-format
 msgid "no driver loaded"
 msgstr ""
 
-#: cardinfo.c:979
+#: cardinfo.c:980
 msgid "ready"
 msgstr ""
 
-#: cardinfo.c:997
+#: cardinfo.c:998
 msgid "not ready"
 msgstr ""
 
-#: cardinfo.c:1012
+#: cardinfo.c:1013
 msgid "suspended"
 msgstr ""
 
-#: cardinfo.c:1204
+#: cardinfo.c:1205
 msgid "Assign Driver"
 msgstr ""
 
-#: cardinfo.c:1213
+#: cardinfo.c:1214
 msgid ""
 "This dialog allows you to select/\n"
 "change the driver assignment for a\n"
 "PCMCIA or CF card."
 msgstr ""
 
-#: cardinfo.c:1223
+#: cardinfo.c:1224
 msgid "Your current card identifies itself as:"
 msgstr ""
 
-#: cardinfo.c:1237 cardinfo.c:1243
+#: cardinfo.c:1238 cardinfo.c:1244
 msgid "Manuf. Id"
 msgstr ""
 
-#: cardinfo.c:1237 cardinfo.c:1243
+#: cardinfo.c:1238 cardinfo.c:1244
 msgid "Class"
 msgstr ""
 
-#: cardinfo.c:1341 cardinfo.c:1354
+#: cardinfo.c:1342 cardinfo.c:1355
 msgid "PC/CF card socket information."
 msgstr ""
 
-#: cardinfo.c:1349
+#: cardinfo.c:1350
 msgid "Socket"
 msgstr ""
 
-#: cardinfo.c:1380
+#: cardinfo.c:1381
 msgid "Information for socket"
 msgstr ""
 
-#: cardinfo.c:1389
+#: cardinfo.c:1390
 msgid "State:"
 msgstr ""
 
-#: cardinfo.c:1390
+#: cardinfo.c:1391
 msgid "Device:"
 msgstr ""
 
-#: cardinfo.c:1391
+#: cardinfo.c:1392
 msgid "Driver:"
 msgstr ""
 
-#: cardinfo.c:1392
+#: cardinfo.c:1393
 msgid "Type:"
 msgstr ""
 
-#: cardinfo.c:1393
+#: cardinfo.c:1394
 msgid "I/O:"
 msgstr ""
 
-#: cardinfo.c:1394
+#: cardinfo.c:1395
 msgid "IRQ:"
 msgstr ""
 
-#: cardinfo.c:1401
+#: cardinfo.c:1402
 msgid "Flags:"
 msgstr ""
 
-#: cardinfo.c:1418
+#: cardinfo.c:1419
 msgid "PCMCIA initialisation failed"
 msgstr ""
 
@@ -1405,7 +1392,7 @@ msgid "Free memory"
 msgstr ""
 
 #: storage.c:186 storage.c:193 storage.c:339 storage.c:350 storage.c:455
-#: storage.c:468 sysinfo.c:499 sysinfo.c:508
+#: storage.c:468 sysinfo.c:500 sysinfo.c:509
 msgid "MB"
 msgstr ""
 
@@ -1566,49 +1553,50 @@ msgstr ""
 msgid "Version"
 msgstr ""
 
-#: sysinfo.c:430
+#. TRANSLATORS: "Familiar" is the name of the linux disrtribution.
+#: sysinfo.c:431
 msgid "Familiar Version"
 msgstr ""
 
-#: sysinfo.c:455
+#: sysinfo.c:456
 msgid "System"
 msgstr ""
 
-#: sysinfo.c:464
+#: sysinfo.c:465
 msgid "Device information"
 msgstr ""
 
-#: sysinfo.c:476
+#: sysinfo.c:477
 msgid "Device"
 msgstr ""
 
 #. TRANSLATORS: MB == Mega Bytes
-#: sysinfo.c:499
+#: sysinfo.c:500
 msgid "RAM"
 msgstr ""
 
 #. TRANSLATORS: MB == Mega Bytes
-#: sysinfo.c:508
+#: sysinfo.c:509
 msgid "Flash"
 msgstr ""
 
-#: sysinfo.c:515
+#: sysinfo.c:516
 msgid "Hardware"
 msgstr ""
 
-#: sysinfo.c:520
+#: sysinfo.c:521
 msgid "Battery"
 msgstr ""
 
-#: sysinfo.c:525
+#: sysinfo.c:526
 msgid "Storage"
 msgstr ""
 
-#: sysinfo.c:530
+#: sysinfo.c:531
 msgid "Networks"
 msgstr ""
 
-#: sysinfo.c:535
+#: sysinfo.c:536
 msgid "Syslog"
 msgstr ""
 
@@ -1697,7 +1685,7 @@ msgid "Setup Date and Time"
 msgstr ""
 
 #: gpe-conf-users.desktop.in.h:1
-msgid "Manage local users "
+msgid "Manage local users"
 msgstr ""
 
 #: gpe-conf-users.desktop.in.h:2

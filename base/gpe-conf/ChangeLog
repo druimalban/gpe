@@ -1,4 +1,6 @@
 2004-06-03	Florian Boor  	<florian.boor@kernelconcepts.de>
+	* Makefile, brightness.c: Some more changes to become more independent from 
+	  hardware platform.
 	* Makefile: Several changes to to make it compatible with OE.
 
 2004-06-02	Florian Boor  	<florian.boor@kernelconcepts.de>

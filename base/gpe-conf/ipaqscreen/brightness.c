@@ -23,7 +23,7 @@
 #include "../parser.h"
 
 #include <fcntl.h>
-#ifdef __arm__
+#ifdef MACH_IPAQ
 #include <sys/ioctl.h>
 #include <linux/h3600_ts.h>
 #define TS_DEV "/dev/touchscreen/0"
@@ -32,7 +32,7 @@ static FLITE_IN bl;
 
 void turn_light(int status)
 {
-#ifdef __arm__
+#ifdef MACH_IPAQ
   int fd;
   bl.mode=1;
   bl.pwr=status;
@@ -46,7 +46,7 @@ void turn_light(int status)
 
 int get_light_state ()
 {
-#ifndef __arm__
+#ifndef MACH_IPAQ
   return 10; // bl doesnt exit on i386 dev machines!
 #else
   struct h3600_ts_backlight tsbl;
@@ -83,7 +83,7 @@ int get_light_state ()
 
 void set_brightness (int brightness)
 {
-#ifdef __arm__
+#ifdef MACH_IPAQ
   int fd;
 	
   if (brightness) 
@@ -102,7 +102,7 @@ void set_brightness (int brightness)
 
 int get_brightness ()
 {
-#ifndef __arm__
+#ifndef MACH_IPAQ
   return 10; // bl doesnt exit on i386 dev machines!
 #else
   struct h3600_ts_backlight tsbl;

@@ -1,6 +1,9 @@
 #include <pwd.h>
 #include <sys/types.h>
 
+#if MACHINE == ipaq
+#endif
+
 #ifndef __arm__
 #define MINUSERUID 500
 #else
