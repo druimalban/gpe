@@ -1,4 +1,4 @@
-key=???XF86AudioRecord:Record Memo:gpe-soundbite record --autogenerate-filename
+key=???XF86AudioRecord:Record Memo:gpe-soundbite record --autogenerate-filename $HOME_VOLATILE
 key=???XF86Calendar:gpe-calendar:gpe-calendar
 key=???telephone:gpe-contacts:gpe-contacts
 key=???XF86Mail:gpe-mail:gpe-mail
