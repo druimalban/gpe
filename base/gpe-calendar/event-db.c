@@ -69,6 +69,27 @@ event_db_remove_internal (event_t ev)
   return TRUE;
 }
 
+static gboolean
+parse_date (char *s, time_t *t, gboolean *date_only)
+{
+  struct tm tm;
+
+  char *p;
+  memset (&tm, 0, sizeof (tm));
+  p = strptime (s, "%Y-%m-%d", &tm);
+  if (p == NULL)
+    {
+      fprintf (stderr, "Unable to parse date: %s\n", s);
+      return FALSE;
+    }
+
+  p = strptime (p, " %H:%M", &tm);
+  *date_only = (p == NULL) ? TRUE : FALSE;
+
+  *t = timegm (&tm);
+  return TRUE;
+}
+
 static int
 load_data_callback (void *arg, int argc, char **argv, char **names)
 {
@@ -78,20 +99,12 @@ load_data_callback (void *arg, int argc, char **argv, char **names)
      
       if (!strcasecmp (argv[0], "start"))
 	{
-	  struct tm tm;
-	  char *p;
-	  memset (&tm, 0, sizeof (tm));
-	  p = strptime (argv[1], "%Y-%m-%d", &tm);
-	  if (p == NULL)
-	    {
-	      fprintf (stderr, "Unable to parse date: %s\n", argv[1]);
-	      return 1;
-	    }
-	  p = strptime (p, " %H:%M", &tm);
-	  if (p == NULL)
+	  gboolean untimed;
+
+	  parse_date (argv[1], &ev->start, &untimed);
+
+	  if (untimed)
 	    ev->flags |= FLAG_UNTIMED;
-	  
-	  ev->start = timegm (&tm);
 	}
       else if (!strcasecmp (argv[0], "duration"))
 	{
