@@ -5,18 +5,18 @@
 <!--#set var="authoremail" value="gpe-web@marquardt-home.de"-->
 
 <h2>Getting involved</h2> 
-<P>
+<p>
 It is easy to become a GPE developer! For a list of open tasks, please
 take a look at the 
 <a href="http://www.handhelds.org/z/wiki/CurrentThingsToDo">CurrentThingsToDo
 wiki page</a>.
-</P>
+</p>
 
-<h2>Mailing List</h2> 
-<P>
+<h2>Mailing List/Usenet News</h2> 
+<p>
 The main point of contact for the GPE project is the mailing list
 <a href="mailto:gpe@handhelds.org">gpe@handhelds.org</a>.
-</P>
+</p>
 
 <p>
 To subscribe to the list go to
@@ -28,6 +28,17 @@ and follow the instructions.
 You can read past articles in the mailing list archive at
 <a href="http://handhelds.org/hypermail/gpe/current/">http://handhelds.org/hypermail/gpe/current/</a>.
 </p>
+
+<p>
+The mailing list is also accessible via a bi-directional Usenet News/mailing
+list gateway, provided by 
+<a href="http://gmane.org/">GMANE</a>: 
+<a href="news://gmane.comp.handhelds.gpe">news://gmane.comp.handhelds.gpe</a>.
+<a href="http://news.gmane.org/thread.php?group=gmane.comp.handhelds.gpe">HTTP
+view</a>.
+This is another way of accessing the archives.
+</p>
+
 
 <h2>IRC</h2> 
 <P>
