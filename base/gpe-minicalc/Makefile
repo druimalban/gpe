@@ -26,8 +26,10 @@ CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR
 ifeq ($(CVSBUILD),yes)
 CFLAGS += -I../libgpewidget
 LDFLAGS += -L../libgpewidget
+BUILD = ../build
 else
 CFLAGS += -I/usr/include/gpe
+BUILD = build
 endif
 LDFLAGS += -lgpewidget $(GTKLDFLAGS) -lgmp
 
@@ -38,7 +40,7 @@ all: $(PACKAGE)
 $(PACKAGE): $(OBJS)
 	$(CC) -o $@ $^ $(LDFLAGS)
 
-install: all
+install-program: all
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
 	install -s $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	mkdir -p $(DESTDIR)$(PREFIX)/share/matchbox/mbdock/
@@ -51,5 +53,5 @@ install: all
 clean:
 	rm -f $(PACKAGE) $(OBJS)
 
-include ../build/Makefile.dpkg_ipkg
-
+include $(BUILD)/Makefile.translation
+include $(BUILD)/Makefile.dpkg_ipkg

@@ -2,6 +2,7 @@ PACKAGE = gpe-taskmanager
 PREFIX = /usr/local
 DEBUG = no
 GTK2 = yes
+CVSBUILD = yes
 VERSION = 0.13
 
 LINGUAS = 
@@ -29,12 +30,18 @@ OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
+ifeq ($(CVSBUILD),yes)
+BUILD = ../build
+else
+BUILD = build
+endif
+
 all: $(PACKAGE) all-mo
 
 $(PACKAGE): $(OBJS)
 	$(CC) -o $@ $^ -L../libgpewidget -lgpewidget $(LDFLAGS)
 
-install: all install-mo
+install-program: all
 	install -d $(DESTDIR)$(PREFIX)/bin
 	install -s $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	install -d $(DESTDIR)$(PREFIX)/share/pixmaps
@@ -47,6 +54,6 @@ install: all install-mo
 clean:
 	rm -f $(PACKAGE) $(OBJS) $(DEPS)
 
-include ../build/Makefile.translation
-include ../build/Makefile.dpkg_ipkg
+include $(BUILD)/Makefile.translation
+include $(BUILD)/Makefile.dpkg_ipkg
 -include $(DEPS)
