@@ -1,0 +1,43 @@
+#style "my_window"
+#{
+#   bg_pixmap[NORMAL] = "background.xpm"
+#}
+
+style "transparent"
+{
+	bg_pixmap[NORMAL] = "<parent>"
+}
+
+style "date_box"
+{
+	bg[NORMAL] = { 0, 0, 0 } 
+}
+
+style "date_label"
+{
+	fg[NORMAL] = { 1.0, 1.0, 1.0 }
+}
+
+style "event_in_progress-summary"
+{
+	fg[NORMAL] = { 1.0, 0, 0 }
+	fontset = "-*-helvetica-bold-r-*-*-12-*-*-*-*-*-iso8859-1"
+}
+
+style "event_in_progress-time"
+{
+        fg[NORMAL] = { 1.0, 0, 0 }
+	fontset = "-*-helvetica-medium-r-*-*-12-*-*-*-p-*-iso8859-1"
+}
+
+style "calendar_time"
+{
+	fontset = "-*-helvetica-medium-r-*-*-12-*-*-*-p-*-iso8859-1"
+	fg[NORMAL] = { 0.0, 0.0, 0.0 }
+}
+
+style "calendar_summary"
+{
+	fontset = "-*-helvetica-bold-r-*-*-12-*-*-*-*-*-iso8859-1"
+        fg[NORMAL] = { 0.0, 0.0, 0.0 }
+}

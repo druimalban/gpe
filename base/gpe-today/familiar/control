@@ -1,0 +1,8 @@
+Package: gpe-today
+Section: base
+Priority: optional
+Version: 0.01
+Architecture: arm
+Maintainer: Luis Oliveira <luis@handhelds.org>
+Depends: libgtk1.2, libsqlite0, libgpewidget0, libgdk-pixbuf2
+Description: GPE today app 

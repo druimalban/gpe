@@ -1,0 +1,1 @@
+?package(gpe-todo): needs=x11 title=Today command=gpe-today icon48=gpe-today.png section=Applications windowtitle=gpe-today
