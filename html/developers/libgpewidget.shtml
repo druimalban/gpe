@@ -1,0 +1,113 @@
+
+<!--#set var="addtitle" value="Developer documentation - libgpewidget"-->
+<!--#set var="pagename" value="libgpewidget"-->
+<!--#set var="author" value="Damien Tanner"-->
+<!--#set var="authoremail" value="dctanner@handhelds.org"-->
+<!--#include virtual="../includes/head.shtml"-->
+
+<h1>Libgpewidget API Documentation</h1>
+<p>
+This document is intended as a detailed reference for the gui functions avalible in libgpewidget.
+</p>
+<p>
+Copyright 2003 Damien Tannner
+</p>
+<hr>
+
+<h2>Aplication initilisation</h2>
+<p>
+<table border="0" bgcolor="#EEEEEE">
+<tr><td>
+<code>gboolean gpe_application_init (int *argc, char **argv[]);</code>
+</td></tr>
+</table>
+</p>
+<p>
+Before any operations are done in your <code>main</code> function, you should first call <code>gpe_application_init</code>.
+This will set any locale varibles or such that are needed before any other libgpewidget functions are called.
+</p>
+
+<h2>Icon loading</h2>
+<p>
+<table border="0" bgcolor="#EEEEEE">
+<tr><td>
+<code>gboolean gpe_load_icons (struct gpe_icon *);</code>
+</td></tr>
+</table>
+</p>
+<p>
+This function should be called after <code>gpe_application_init</code> to load the appropriate pixmaps needed for your application. Previously this function was also used to load pixmaps for GtkButtons, but recently <code>gpe_button_new_from_stock</code> has replaced this. So <code>gpe_load_icons</code> should only be used for loading specialty icons like window title icons.
+</p>
+<p>
+The struct <code>gpe_icon</code> contains the data needed for gpe to be able to locate your icons. This structure should be defined out of your <code>main</code> function, prefferbly immediately after your <code>#include</code> calls.
+<br>
+An example of this structure is given below.
+</p>
+<p>
+<table border="0" bgcolor="#EEEEEE">
+<tr><td>
+<code>
+struct gpe_icon my_icons[] = {<br>
+&nbsp;&nbsp;{ "question", "question" },<br>
+&nbsp;&nbsp;{ "error", "error" },<br>
+&nbsp;&nbsp;{ "icon", PREFIX "/share/pixmaps/gpe-application.png" },<br>
+&nbsp;&nbsp;{NULL, NULL}<br>
+};<br>
+</code>
+</td></tr>
+</table>
+</p>
+<p>
+As shown above, for each entry in the structure there are two arguments. The first argument is a custom name for the icon, and the second isthe filename of the icon. This can be either just the name of the image file (excluding prefix) that is located in the PREFIX/share/gpe/pixmaps/default directory, or a full path to the filename.<br>
+It must also be noted that the structure must be end with a null entry.
+</p>
+<p>
+To access these preloaded images in your code you should use the following function.
+</p>
+<p>
+<table border="0" bgcolor="#EEEEEE">
+<tr><td>
+<code>GdkPixbuf *gpe_find_icon (const char *name);</code>
+</td></tr>
+</table>
+</p>
+<p>
+This function will attempt to locate the preloaded image called 'name' and return it as a GdkPixbuf. If the image cannot be found or has not been mentioned in the gpe_icon structure, a graphical error box will be shown describing the error.<br>
+If a graphical error is unalowed (such as in a library) gpe_find_icon's sister function gpe_try_find_icon can be used instead, its prototype is shown below.
+</p>
+<p>
+<table border="0" bgcolor="#EEEEEE">
+<tr><td>
+<code>GdkPixbuf *gpe_try_find_icon (const char *name, gchar **error);</code>
+</td></tr>
+</table>
+</p>
+
+<h2>Window titlebar icons</h2>
+<p>
+<table border="0" bgcolor="#EEEEEE">
+<tr><td>
+<code>gpe_set_window_icon (GtkWidget *window, gchar *icon);</code>
+</td></tr>
+</table>
+</p>
+<p>
+The above function is used to set the small icon displayed in an applications window manager title bar, although it's only shown if the current window manager's theme specifies.<br>
+When calling this function the <code>icon</code> argument should be the name of a preloaded image (an example of this was shown in the section named 'Icon loading').
+</p>
+
+<h2>Stock button</h2>
+<p>
+Stock buttons are a standard set of commonly used buttons defined in GTK+. They're used mainly as a convenience instead of having to pack buttons manualy, but on cross platform enviorments they can come in alot more use. Libgpewidget contains its own function for creating stock button, which will also resize and align the buttons appropriately for smaller screens. This function is aptly named gpe_button_new_from_stock.
+<p>
+<table border="0" bgcolor="#EEEEEE">
+<tr><td>
+<code>GtkWidget *gpe_button_new_from_stock (const gchar *stock_id, int type);</code>
+</td></tr>
+</table>
+</p>
+
+<!--#include virtual="/includes/foot.shtml"-->
+
+
+
