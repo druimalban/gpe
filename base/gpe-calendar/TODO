@@ -11,3 +11,21 @@ week_starts_monday, and maybe other flags.
 
 5. Do database access through usqld rather than direct
 
+6. Make week-view do something useful with mouse clicks
+
+7. Maybe move the GtkDateSels from the bottom of the window to the
+top. Rationale: it might look better that way, and I keep hitting xkbd by
+mistake when trying to change days. :-)
+
+8. Find a way to stop the GtkCalendars in year-view from highlighting
+their own "currently selected" day.
+
+9. Make it so that events can be rescheduled by dragging them around
+inside day_view and month_view.
+
+10. Make all-day events work properly.
+
+11. Replace pervasive use of time_t with some other time representation,
+so that dates prior to 1970 can be expressed.
+
+12. Allow timezone to be specified when scheduling an appointment.
