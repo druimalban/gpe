@@ -84,14 +84,14 @@ tag_with_type (MIMEDirVCard *card, const char *tag, const char *value, const cha
            || (!strcasecmp (tag, "pager"))
           )
     {
-      gchar *gtag = g_ascii_strdown(tag, -1);
+      gchar *dtag = g_ascii_strdown (tag, -1);
       MIMEDirVCardPhone *a = mimedir_vcard_phone_new ();
       set_type (G_OBJECT (a), type);
       g_object_set (G_OBJECT (a), "voice", FALSE, NULL);
       g_object_set (G_OBJECT (a), dtag, TRUE, NULL);
       g_object_set (G_OBJECT (a), "number", value, NULL);
       mimedir_vcard_append_phone (card, a);
-      g_free(dtag);
+      g_free (dtag);
       return TRUE;
     }
   else if (!strcasecmp (tag, "email"))
