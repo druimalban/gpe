@@ -26,7 +26,7 @@
 #include <unistd.h>
 
 /* For .desktop files */
-#include <gpe/dotdesktop.h>
+#include <dotdesktop.h>
 
 #include "package.h"
 
@@ -128,7 +128,7 @@ struct package *package_from_dotdesktop (char *filename, char *lang)
 	package_set_data (p, "title", dotdesktop_get (dd, "Name"));
 	package_set_data (p, "command", dotdesktop_get (dd, "Exec"));
 	package_set_data (p, "icon", dotdesktop_get (dd, "Icon"));
-	package_set_data (p, "section", "Other");
+	package_set_data (p, "section", "Others");
 	package_set_data (p, "Categories", dotdesktop_get (dd, "Categories"));
 
 	/* Hackish mapping onto familiar menu policy groups.
@@ -153,6 +153,8 @@ struct package *package_from_dotdesktop (char *filename, char *lang)
 			{"SystemSetup", "Configuration"},
 			{"Settings", "Configuration"},
 			{"Amusement", "Games"},
+			{"Office", "Office"},
+			{"Internet", "Internet"},
 
 			{NULL, NULL}
 		};
