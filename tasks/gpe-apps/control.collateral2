@@ -1,0 +1,9 @@
+Package: gpe-collateral-gtk2
+Section: base
+Priority: optional
+Version: 0.01
+Provides: gpe-collateral
+Architecture: all
+Maintainer: GPE Hackers <gpe@handhelds.org>
+Depends: libgtk2.0-0
+Description: GPE miscellanea: GTK 2 version
