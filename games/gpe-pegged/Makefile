@@ -2,7 +2,7 @@ PACKAGE = gpe-pegged
 PREFIX = /usr/local
 DEBUG = no
 LINGUAS = 
-LDFLAGS=-lXinerama
+LDFLAGS=-lgpewidget -lXinerama
 STRIP=strip
 
 MEMBERS = main
