@@ -1,3 +1,19 @@
+2003-01-13  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>
+
+	* main.c: change update_current_view to happen at
+	startup and then only when things change (rather than
+	with every view switch), small fixes for rescheduling
+	* event-ui.c: finally fix rescheduling of events, and
+	turn off the caching of event windows (for now)
+	* event-ui.h: remove event_ui_init prototype
+	* gpe-calendar.session: same
+	* day_popup.c : revert to old row bindings with check
+	for clones
+	* future_view.c : revert to old row bindings with check
+	for clones
+	* day_view.c : revert to old row bindings with check
+	for clones
+	
 2003-01-08  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>
 
 	* main.c: add "skip" time

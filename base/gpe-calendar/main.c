@@ -115,7 +115,6 @@ new_view (GtkWidget *widget)
       if (w == widget)
 	{
 	  current_view = w;
-	  update_current_view ();
 	  gtk_notebook_set_page (GTK_NOTEBOOK (notebook), i);
 	  return;
 	}
@@ -128,6 +127,19 @@ set_day_view (void)
 {
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (day_button), TRUE);
   new_view (day);
+}
+
+void
+init_views (void)
+{
+  new_view (day);
+  update_current_view ();
+  new_view (week);
+  update_current_view ();
+  new_view (month);
+  update_current_view ();
+  new_view (future);
+  update_current_view ();
 }
 
 static void
@@ -154,7 +166,7 @@ button_toggled (GtkWidget *widget, gpointer data)
 static void
 gpe_cal_exit()
 {
-  schedule_next(0);
+  schedule_next(0, 0);
   gtk_main_quit();	
 }
 		
@@ -165,8 +177,9 @@ main (int argc, char *argv[])
   GdkPixbuf *p;
   GtkWidget *pw;
 
-  guint hour, skip=0;
+  guint hour, skip=0, uid=0;
   int option_letter;
+  gboolean schedule_only=FALSE;
   extern char *optarg;
 
   if (gpe_application_init (&argc, &argv) == FALSE)
@@ -185,17 +198,21 @@ main (int argc, char *argv[])
   if (event_db_start () == FALSE)
     exit (1);
 
-  while ((option_letter = getopt(argc, argv, "s:")) != -1 ){
+  while ((option_letter = getopt(argc, argv, "s:e:")) != -1 ){
   
     if (option_letter == 's') {  
-      skip = atol(optarg);  
-      schedule_next(skip);
-      exit(0);     
+      skip = atol(optarg);
+      schedule_only=TRUE;   
+    } 
+    if (option_letter == 'e') {  
+      uid = atol(optarg);  
     }   
 
   }   
   
-  schedule_next(skip);
+  schedule_next(skip, uid);
+  
+  if (schedule_only) exit(0);
   
   for (hour = 0; hour < 24; hour++)
     {
@@ -327,8 +344,10 @@ main (int argc, char *argv[])
 
   gpe_calendar_start_xsettings ();
 
+  init_views();
+  
   set_day_view ();
-
+ 
   gtk_main ();
 
   return 0;

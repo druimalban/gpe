@@ -34,11 +34,8 @@ selection_made( GtkWidget      *clist,
   if (event->type == GDK_2BUTTON_PRESS)
     {
       GtkWidget *appt;
-      guint uid;
       
-      uid = (int)gtk_clist_get_row_data (GTK_CLIST (clist), row);
-
-      ev = event_db_find_by_uid (uid);
+      ev = gtk_clist_get_row_data (GTK_CLIST (clist), row);
       
       if (ev)
 	{
@@ -94,8 +91,10 @@ future_view_update ()
 #endif
       
       gtk_clist_append (GTK_CLIST (future_list), line_info);
-      gtk_clist_set_row_data (GTK_CLIST (future_list), row, (gpointer)(ev->uid));
-      
+      if (ev->flags & FLAG_CLONE)
+	gtk_clist_set_row_data (GTK_CLIST (future_list), row, event_db_find_by_uid (ev->uid));
+      else gtk_clist_set_row_data (GTK_CLIST (future_list), row, ev);
+    	
       row++;
     } 
 

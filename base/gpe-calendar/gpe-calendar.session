@@ -1,1 +1,1 @@
-gpe-calendar -s 0 &
+gpe-calendar -s 0 -e 0&

@@ -8,6 +8,7 @@
  */
 
 #include <sys/types.h>
+#include <sys/stat.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -179,13 +180,13 @@ schedule_alarm(event_t ev, time_t start)
 {
   time_t alarm_t;
   event_details_t ev_d;
-  char filename[256], command[256];
+  char filename[256];
   FILE *f;
 	
   alarm_t = start-60*ev->alarm;
   ev_d = event_db_get_details (ev);
   
-  sprintf(filename, "/var/spool/at/%d.1234", (int)alarm_t);
+  sprintf(filename, "/var/spool/at/%ld.%ld", (long)alarm_t, ev->uid);
   
   if (fopen(filename, "w"))
   {
@@ -194,18 +195,20 @@ schedule_alarm(event_t ev, time_t start)
       fprintf(f, "#!/bin/sh\n");
       fprintf(f, "export DISPLAY=:0.0\n");
       fprintf(f, "/usr/bin/gpe-announce '%s'\n", ev_d->summary);
-      fprintf(f, "/usr/bin/gpe-calendar -s %ld\n", (int)60*ev->alarm);
+      fprintf(f, "/usr/bin/gpe-calendar -s %ld -e %ld &\n", (long)alarm_t, ev->uid);
       fprintf(f, "/bin/rm $0\n");
 
       fclose(f);
 
-      sprintf(command, "chmod 755 %s", filename);
-        	      
-      system(command);
-
-      sprintf(command, "echo >/var/spool/at/trigger");
-        	      
-      system(command);
+      chmod (filename, S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH);
+      
+      f=NULL;
+      f=fopen("/var/spool/at/trigger","w");
+      if (f != NULL) 
+      {
+        fprintf(f,"\n");
+        fclose(f);
+      }
     }
     
   }
@@ -217,30 +220,36 @@ unschedule_alarm(event_t ev)
 {
   time_t alarm_t;
   char filename[256], command[256];
+  FILE *f;
   	
   alarm_t = ev->start-60*ev->alarm;
   
-  sprintf(filename, "/var/spool/at/%d.1234", (int)alarm_t);
+  sprintf(filename, "/var/spool/at/%ld.%ld", (long)alarm_t, ev->uid);
   sprintf(command, "rm %s", filename);
   system(command);
   
-  sprintf(command, "echo >/var/spool/at/trigger");
-  system(command);
+  f=NULL;
+  f=fopen("/var/spool/at/trigger","w");
+  if (f != NULL) 
+  {
+    fprintf(f,"\n");
+    fclose(f);
+  }
+
 }
 
 void
-schedule_next(guint skip)
+schedule_next(guint skip, guint uid)
 {
   GSList *events=NULL, *iter;
   struct tm tm;
   time_t end, start=time(NULL);
   
-  start+=skip;
   localtime_r (&start, &tm);
   tm.tm_year++;
   end=mktime (&tm);   
   
-  events = event_db_list_for_period (start, end);
+  events = event_db_list_alarms_for_period (start, end);
   
   for (iter = events; iter; iter = g_slist_next (iter))
     {
@@ -248,8 +257,11 @@ schedule_next(guint skip)
       
       if (ev->flags & FLAG_ALARM) {
 	ev_real = event_db_find_by_uid (ev->uid);
-	schedule_alarm (ev_real, ev->start);
-	break;
+	if (((int)(ev->start-60*ev->alarm) != (int)skip) && (uid!=ev->uid))
+	{
+	  schedule_alarm (ev_real, ev->start);
+	  break;
+        }
       }
       
     }
@@ -260,10 +272,15 @@ static void
 edit_finished (GtkWidget *d)
 {
   gtk_widget_hide (d);
+#if 0
   if (cached_window)
     gtk_widget_destroy (d);
   else
     cached_window = d;
+#else
+  gtk_widget_destroy (d);
+#endif
+  
 }
 
 static void
@@ -274,7 +291,7 @@ click_delete (GtkWidget *widget, event_t ev)
   if (ev->flags & FLAG_ALARM) 
   { 
     unschedule_alarm (ev);
-    schedule_next(0);
+    schedule_next(0,0);
   }
   
   event_db_remove (ev);
@@ -506,7 +523,7 @@ click_ok (GtkWidget *widget, GtkWidget *d)
     event_db_flush (ev);
 
   if (ev->flags & FLAG_ALARM)  
-    schedule_next(0);
+    schedule_next(0,0);
 
   event_db_forget_details (ev);
   
@@ -519,8 +536,6 @@ static void
 click_cancel (GtkWidget *widget,
 	      GtkWidget *d)
 {
-  update_current_view ();
-      
   edit_finished (d);
 }
 

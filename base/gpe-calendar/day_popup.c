@@ -62,11 +62,8 @@ selection_made (GtkWidget *clist, gint row, gint column,
     
   if (event->type == GDK_2BUTTON_PRESS)
     {
-      guint uid;
-      
-      uid = (int)gtk_clist_get_row_data (GTK_CLIST (clist), row);
-
-      ev = event_db_find_by_uid (uid);
+     
+      ev = gtk_clist_get_row_data (GTK_CLIST (clist), row);
       
       gtk_widget_show (edit_event (ev));
 
@@ -139,7 +136,9 @@ day_popup (GtkWidget *parent, struct day_popup *p)
 	  
 	  gtk_clist_append (GTK_CLIST (contents), lineinfo);
 
-	  gtk_clist_set_row_data (GTK_CLIST (contents), row, (gpointer)(ev->uid));
+	  if (ev->flags & FLAG_CLONE)
+	    gtk_clist_set_row_data (GTK_CLIST (contents), row, event_db_find_by_uid (ev->uid));
+	  else gtk_clist_set_row_data (GTK_CLIST (contents), row, ev);
 
 	  if ((ev->flags & FLAG_ALARM) && (ev->flags & FLAG_RECUR))
 	    {
