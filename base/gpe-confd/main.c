@@ -223,11 +223,14 @@ db_store_setting (sqlite *db, XSettingsSetting *setting)
       free (err);
     }
 
-  if (sqlite_exec_printf (db, "insert into xsettings values ('%q', '%q')", NULL, NULL, &err,
-			  setting->name, str))
+  if (setting->type != 0xff)
     {
-      fprintf (stderr, "sqlite: %s\n", err);
-      free (err);
+      if (sqlite_exec_printf (db, "insert into xsettings values ('%q', '%q')", NULL, NULL, &err,
+			      setting->name, str))
+	{
+	  fprintf (stderr, "sqlite: %s\n", err);
+	  free (err);
+	}
     }
 
   g_free (str);
@@ -392,6 +395,9 @@ write_setting (Display *dpy, Window w, unsigned long prop)
       setting.data.v_color.green = *((CARD16 *)p + 1);
       setting.data.v_color.blue = *((CARD16 *)p + 2);
       setting.data.v_color.alpha = *((CARD16 *)p + 3);
+      break;
+
+    case 0xff:
       break;
 
     default:

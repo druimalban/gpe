@@ -232,6 +232,9 @@ xsettings_manager_set_setting (XSettingsManager *manager,
       xsettings_list_delete (&settings, setting->name);
     }
 
+  if (setting->type == XSETTINGS_TYPE_NONE)
+    return XSETTINGS_SUCCESS;
+
   new_setting = xsettings_setting_copy (setting);
   if (!new_setting)
     return XSETTINGS_NO_MEM;
