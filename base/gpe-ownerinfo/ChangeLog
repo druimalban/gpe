@@ -1,3 +1,8 @@
+2003-10-09  Colin Marquardt  <colin@marquardt-home.de>
+
+	* gpe-ownerinfo.c (gpe_owner_info): Don't translate 
+	"nobody@localhost.localdomain".
+
 2003-10-08  Colin Marquardt  <colin@marquardt-home.de>
 
 	* Makefile (LINGUAS): Add 'cs'.

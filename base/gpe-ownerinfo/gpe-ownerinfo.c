@@ -352,7 +352,7 @@ gpe_owner_info (void)
   pango_lang_code = g_strdup (_("en"));
 
   ownername    = g_strdup (_("GPE User"));
-  owneremail   = g_strdup (_("nobody@localhost.localdomain"));
+  owneremail   = g_strdup ("nobody@localhost.localdomain");
   ownerphone   = g_strdup (_("+99 (9999) 999-9999"));
   owneraddress = g_strdup_printf ("%s\n"
 				  "<span font_desc='Italic'>%s</span>\n"
