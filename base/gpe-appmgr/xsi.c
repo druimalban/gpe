@@ -265,9 +265,6 @@ int run_program (char *exec, char *name)
 	// We just use the DISPLAY environment variable
 	char *disp = NULL;
 	int xid;
-	int killWindow = 0;
-	int toggleState = 0;
-	int c;
 
 	// Set up our connection to the X server
 	if ((display = XOpenDisplay(disp)) == NULL)
@@ -293,10 +290,8 @@ int run_program (char *exec, char *name)
 		gnome_execute_async (NULL, 3, cmd);
 	}
 	else
-	{
-		fprintf (stderr, "Raising window %d on display %d\n", xid, display->display_name);
 		raise_window(display, xid);
-	}
+
 	return 0;
 }
 
