@@ -1,3 +1,14 @@
+2002-06-20  Philip Blundell  <pb@debian.org>
+
+	* familiar/control.gpe-login (Version): Set to 0.12.
+
+	* gpe-login.c (main): Handle errors from fork.  Pass username to
+	do_login.  Call perror when execl of xkbd fails.
+	(add_one_user): New function, split out from slurp_passwd.
+	(slurp_passwd): Add root to the menu.
+	(pre_session): New function.
+	(do_login): Call it.
+
 2002-06-19  Philip Blundell  <philb@gnu.org>
 
 	* gpe-login.c (read_key_events): New function.

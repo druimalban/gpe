@@ -38,6 +38,7 @@
 #define GPE_ICON PREFIX "/share/gpe/pixmaps/gpe-logo.png"
 #define GPE_LOGIN_SETUP "/etc/X11/gpe-login.setup"
 #define KEY_EVENTS_FILE "/etc/X11/gpe-login.buttons"
+#define PRE_SESSION "/etc/X11/gpe-login.pre-session"
 #define PASSWORD_FILE "/etc/passwd"
 #define GROUP_FILE "/etc/group"
 #define SHELL "/bin/sh"
@@ -152,28 +153,35 @@ set_username (GtkWidget *widget, gpointer data)
 }
 
 static void
+add_one_user (const char *name, GtkWidget *menu)
+{
+  GtkWidget *item;
+  item = gtk_menu_item_new_with_label (name);
+  gtk_signal_connect (GTK_OBJECT(item), "activate", 
+		      GTK_SIGNAL_FUNC (set_username), (gpointer)name);
+  gtk_menu_append (GTK_MENU (menu), item);
+}
+
+static void
 slurp_passwd (GtkWidget *menu)
 {
   struct passwd *pw;
   while (pw = getpwent (), pw != NULL)
     {
       const char *name;
-      GtkWidget *item;
 
       if (pw->pw_uid < 100 || pw->pw_uid >= 65534)
 	continue;
 
       have_users = TRUE;
       name = g_strdup (pw->pw_name);
-      item = gtk_menu_item_new_with_label (name);
-
-      gtk_signal_connect (GTK_OBJECT(item), "activate", 
-			  GTK_SIGNAL_FUNC (set_username), (gpointer)name);
-      gtk_menu_append (GTK_MENU (menu), item);
+      add_one_user (name, menu);
 
       if (current_username == NULL)
 	current_username = name;
     }
+
+  add_one_user ("root", menu);
 }
 
 static void
@@ -183,9 +191,35 @@ move_callback (GtkWidget *widget, GtkWidget *entry)
 }
 
 static void
-do_login (uid_t uid, gid_t gid, char *dir)
+pre_session (const char *name)
+{
+  if (access (PRE_SESSION, X_OK) == 0)
+    {
+      pid_t spid = fork ();
+      switch (spid)
+	{
+	case 0:
+	  execl (PRE_SESSION, PRE_SESSION, name, NULL);
+	  _exit (1);
+	  break;
+
+	case -1:
+	  perror ("fork");
+	  break;
+
+	default:
+	  waitpid (spid, NULL, 0);
+	  break;
+	}
+    }
+}
+
+static void
+do_login (const char *name, uid_t uid, gid_t gid, char *dir)
 {
   cleanup_children ();
+
+  pre_session (name);
 
   /* become session leader */
   if (setsid ())
@@ -219,8 +253,8 @@ enter_callback (GtkWidget *widget, GtkWidget *entry)
   if (current_username == NULL)
     return;
 
-  pwstr = gtk_entry_get_text (GTK_ENTRY(entry));
-  gtk_entry_set_text (GTK_ENTRY(entry), "");
+  pwstr = gtk_entry_get_text (GTK_ENTRY (entry));
+  gtk_entry_set_text (GTK_ENTRY (entry), "");
 
   pwe = getpwnam (current_username);
   if (pwe == NULL)
@@ -234,7 +268,7 @@ enter_callback (GtkWidget *widget, GtkWidget *entry)
   if (strcmp (p, pwe->pw_passwd))
     goto login_incorrect;
   
-  do_login (pwe->pw_uid, pwe->pw_gid, pwe->pw_dir);
+  do_login (current_username, pwe->pw_uid, pwe->pw_gid, pwe->pw_dir);
   gtk_main_quit ();
   return;
 
@@ -334,7 +368,7 @@ enter_newuser_callback (GtkWidget *widget, gpointer h)
   fputs (buf, fp);
   fclose (fp);
 
-  do_login (uid, gid, home);
+  do_login (username, uid, gid, home);
 
   gtk_main_quit ();
 }
@@ -394,15 +428,24 @@ main (int argc, char *argv[])
   if (access (GPE_LOGIN_SETUP, X_OK) == 0)
     {
       setup_pid = fork ();
-      if (setup_pid == 0)
+      switch (setup_pid)
 	{
-	  pid_t mypid = getpid ();
-	  setpgid (0, mypid);
-	  system (GPE_LOGIN_SETUP);
-	  _exit (0);
+	case 0:
+	  {
+	    pid_t mypid = getpid ();
+	    setpgid (0, mypid);
+	    system (GPE_LOGIN_SETUP);
+	    _exit (0);
+	  }
+
+	case -1:
+	  perror ("fork");
+	  break;
+
+	default:
+	  waitpid (setup_pid, NULL, 0);
+	  break;
 	}
-      
-      waitpid (setup_pid, NULL, 0);
     }
 
   signal (SIGINT, cleanup_children_and_exit);
@@ -425,6 +468,7 @@ main (int argc, char *argv[])
 	  if (fcntl (1, F_SETFD, 0))
 	    perror ("fcntl");
 	  execl (xkbd_path, xkbd_path, "-xid", NULL);
+	  perror (xkbd_path);
 	  _exit (1);
 	}
 
