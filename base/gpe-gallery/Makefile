@@ -26,8 +26,10 @@ endif
 ifeq ($(CVSBUILD),yes)
 CFLAGS += -I../libgpewidget
 LDFLAGS += -L../libgpewidget
+BUILD = ../build
 else
 CFLAGS += -I/usr/include/gpe
+BUILD = build
 endif
 LDFLAGS += -lgpewidget
 
@@ -42,16 +44,16 @@ CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
-all: gpe-gallery
+all: $(PACKAGE)
 
-gpe-gallery: $(OBJS)
+$(PACKAGE): $(OBJS)
 	$(CC) -o $@ $^ $(LDFLAGS)
 
-install: all
-	install -D gpe-gallery $(DESTDIR)$(PREFIX)/bin/gpe-gallery
-	install -D -m 644 gpe-gallery.png $(DESTDIR)$(PREFIX)/share/pixmaps/gpe-gallery.png
-	install -D -m 644 gpe-gallery.menu $(DESTDIR)$(PREFIX)/lib/menu/gpe-gallery
-	install -D -m 644 gpe-gallery.mime $(DESTDIR)/etc/mime-handlers/gpe-gallery.mime
+install-program: all
+	install -Ds $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
+	install -D -m 644 $(PACKAGE).png $(DESTDIR)$(PREFIX)/share/pixmaps/$(PACKAGE).png
+	install -D -m 644 $(PACKAGE).menu $(DESTDIR)$(PREFIX)/lib/menu/$(PACKAGE)
+	install -D -m 644 $(PACKAGE).mime $(DESTDIR)/etc/mime-handlers/$(PACKAGE).mime
 	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
 	install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications/$(PACKAGE)
 	install -d $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/gallery
@@ -67,10 +69,9 @@ install: all
 	install -m 644 pixmaps/rotate.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/gallery/rotate.png
 	install -m 644 pixmaps/list_view.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/gallery/list_view.png
 	install -m 644 pixmaps/icon_view.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/gallery/icon_view.png
-	strip $(DESTDIR)$(PREFIX)/bin/gpe-gallery
 
 clean:
-	rm -f gpe-gallery $(OBJS)
+	rm -f $(PACKAGE) $(OBJS)
 
-include ../build/Makefile.dpkg_ipkg
-include ../build/Makefile.translation
+include $(BUILD)/Makefile.translation
+include $(BUILD)/Makefile.dpkg_ipkg

@@ -1,3 +1,12 @@
+2003-03-23  Colin Marquardt  <colin@marquardt-home.de>
+
+	* Makefile (install-program): New name for 'install' ('install' is
+	now provided by Makefile.dpkg_ipkg).  
+	(CVSBUILD): New variable.
+	(BUILD): New variable.
+	Use variable PACKAGE where possible. 
+	(install-program): Use install -s for the binary, get rid of strip call.
+
 2003-03-16  Damien Tanner  <dctanner@gekk>
 
 	* main.c: Working fullscreen toggle.
