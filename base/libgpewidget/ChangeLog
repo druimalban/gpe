@@ -1,3 +1,14 @@
+2004-10-12  Phil Blundell  <pb@nexus.co.uk>
+
+	* Version 0.94 released.
+
+2004-10-12  Phil Blundell  <pb@nexus.co.uk>
+
+	* gpeiconlistview.c (_gpe_icon_list_view_do_set_border): New
+	function.
+	(gpe_icon_list_view_set_border_color): Use it.
+	(_gpe_icon_list_view_realize): Likewise.
+
 2004-10-09  Phil Blundell  <pb@nexus.co.uk>
 
 	* Version 0.93 released.

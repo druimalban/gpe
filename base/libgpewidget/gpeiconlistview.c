@@ -125,6 +125,21 @@ gpe_icon_list_view_set_border_width (GPEIconListView *self, int width)
   gtk_widget_queue_resize (GTK_WIDGET (self));  
 }
 
+static void
+_gpe_icon_list_view_do_set_border (GPEIconListView *self)
+{
+  GdkColormap *gcm;
+
+  gcm = gdk_drawable_get_colormap (GTK_WIDGET (self)->window);
+  
+  if (!self->border_gc)
+    self->border_gc = gdk_gc_new (GTK_WIDGET (self)->window);
+
+  gdk_colormap_alloc_color (gcm, &self->border_color, FALSE, TRUE);
+  
+  gdk_gc_set_foreground (self->border_gc, &self->border_color);
+}
+
 void
 gpe_icon_list_view_set_border_color (GPEIconListView *self, guint32 color)
 {
@@ -136,15 +151,8 @@ gpe_icon_list_view_set_border_color (GPEIconListView *self, guint32 color)
   self->border_color.green |= (self->border_color.green << 8);
   self->border_color.blue |= (self->border_color.blue << 8);
 
-  self->border_color.pixel = color;
-
   if (GTK_WIDGET_REALIZED (GTK_WIDGET (self)))
-    {
-      if (!self->border_gc)
-	self->border_gc = gdk_gc_new (GTK_WIDGET (self)->window);
-
-      gdk_gc_set_foreground (self->border_gc, &self->border_color);
-    }
+    _gpe_icon_list_view_do_set_border (self);
 
   self->border_set = TRUE;
 }
@@ -804,11 +812,7 @@ _gpe_icon_list_view_realize (GtkWidget *widget)
   gtk_style_set_background (widget->style, widget->window, GTK_STATE_NORMAL);
 
   if (self->border_set)
-    {
-      self->border_gc = gdk_gc_new (GTK_WIDGET (self)->window);
-      
-      gdk_gc_set_foreground (self->border_gc, &self->border_color);
-    }
+    _gpe_icon_list_view_do_set_border (self);
 }
 
 static GPEIconListItem *
