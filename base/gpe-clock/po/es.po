@@ -1,0 +1,80 @@
+# Localización en castellano de gpe-clock.
+# Copyright © 2004 Free Software Foundation, Inc.
+# This file is distributed under the same license as the gpe-clock package.
+# J.Manrique <jsmanrique@asturlinux.org>, 2004.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-clock 0.6\n"
+"POT-Creation-Date: 2003-09-06 00:02+0100\n"
+"PO-Revision-Date: 2004-06-17 16:00+0100\n"
+"Last-Translator: J.Manrique <jsmanrique@asturlinux.org>\n"
+"Language-Team: Spanish <es@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: clock.c:261
+msgid "Unable to set alarm"
+msgstr "Imposible fijar alarma"
+
+#: clock.c:319
+msgid "Clock preferences"
+msgstr "Preferencias del reloj"
+
+#: clock.c:324
+msgid "12-hour format"
+msgstr "Formato 12-horas"
+
+#: clock.c:326
+msgid "24-hour format"
+msgstr "Formato 24-horas"
+
+#: clock.c:328
+msgid "Show seconds"
+msgstr "Mostrar segundos"
+
+#: clock.c:432
+msgid "Time:"
+msgstr "Hora:"
+
+#: clock.c:447
+msgid "Set alarm"
+msgstr "Fijar alarma"
+
+#: clock.c:453
+msgid "Alarm active"
+msgstr "Alarma activa"
+
+#: clock.c:465
+msgid "Date:"
+msgstr "Fecha:"
+
+#: clock.c:467
+msgid "Weekly, on:"
+msgstr "Semanalmente, a las:"
+
+#: clock.c:590
+msgid "Preferences"
+msgstr "Preferencias"
+
+#: clock.c:591
+msgid "Set the time"
+msgstr "Fijar hora"
+
+#: clock.c:592
+msgid "Alarm ..."
+msgstr "Alarma ..."
+
+#: clock.c:593
+msgid "Remove from panel"
+msgstr "Quitar del panel"
+
+#: clock.c:614
+msgid ""
+"This is the clock.\n"
+"Tap here to set the alarm, set the time, change the display format, or remove this program from the panel."
+msgstr ""
+"Este es el reloj.\n"
+"Pulse aquí para fijar alarmas, la hora, cambiar la presentación, o quitar este programa del panel."
