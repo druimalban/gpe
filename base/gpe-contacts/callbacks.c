@@ -1,5 +1,15 @@
-#include <gtk/gtk.h>
+/*
+ * Copyright (C) 2001, 2002, 2003, 2004 Philip Blundell <philb@gnu.org>
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version
+ * 2 of the License, or (at your option) any later version.
+ */
+
 #include <stdio.h>
+#include <string.h>
+#include <gtk/gtk.h>
 
 #include "interface.h"
 #include "support.h"
@@ -19,7 +29,7 @@ static gint panel_active_row = -1;
 void 
 store_filename (GtkWidget * w, GtkFileSelection * selector)
 {
-  gchar *selected_filename =
+  const gchar *selected_filename =
     gtk_file_selection_get_filename (GTK_FILE_SELECTION (selector));
 }
 

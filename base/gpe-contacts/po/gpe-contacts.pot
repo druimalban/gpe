@@ -7,7 +7,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-05-29 22:45+0100\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2004-02-15 01:32+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,199 +16,217 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: db.c:103 db.c:136 editing.c:196 main.c:511
+#: db.c:95 db.c:128 editing.c:204 main.c:541
 msgid "Name"
 msgstr ""
 
-#: db.c:104 db.c:137
+#: db.c:96 db.c:129
 msgid "Phone"
 msgstr ""
 
-#: db.c:105 db.c:138
+#: db.c:97 db.c:130
 msgid "EMail"
 msgstr ""
 
-#: editing.c:181
+#: editing.c:182
 msgid "Edit Contact"
 msgstr ""
 
-#: editing.c:200
+#: editing.c:208
 msgid "more detailed name options"
 msgstr ""
 
-#: editing.c:202
+#: editing.c:210
 msgid "Summary"
 msgstr ""
 
-#: editing.c:208
+#: editing.c:216
 msgid "Birthday"
 msgstr ""
 
-#: editing.c:214
+#: editing.c:222
 msgid "Image"
 msgstr ""
 
-#: editing.c:230
+#: editing.c:238
 msgid "Schedule"
 msgstr ""
 
-#: editing.c:234
+#: editing.c:242
 msgid "automatic appointment"
 msgstr ""
 
-#: editing.c:243
+#: editing.c:251
 msgid "click to choose file"
 msgstr ""
 
-#: editing.c:245 main.c:610
+#: editing.c:253 main.c:640
 msgid "Categories"
 msgstr ""
 
-#: editing.c:287
+#: editing.c:298
 msgid "Personal"
 msgstr ""
 
-#: interface.c:44 main.c:612
+#: interface.c:44 main.c:642
 msgid "Setup"
 msgstr ""
 
-#: interface.c:56 main.c:217
+#: interface.c:56 main.c:216
 msgid "Detail panel"
 msgstr ""
 
-#: interface.c:95 main.c:256
+#: interface.c:95 main.c:255
 msgid "NAME"
 msgstr ""
 
-#: interface.c:105 main.c:266
+#: interface.c:105 main.c:265
 msgid "Add"
 msgstr ""
 
-#: interface.c:113 main.c:274
+#: interface.c:113 main.c:273
 msgid "Remove"
 msgstr ""
 
-#: interface.c:141 main.c:304
+#: interface.c:141 main.c:303
 msgid "Data Field"
 msgstr ""
 
-#: interface.c:149 main.c:312
+#: interface.c:149 main.c:311
 msgid "Label"
 msgstr ""
 
-#: interface.c:157 main.c:320
+#: interface.c:157 main.c:319
 msgid "Pages"
 msgstr ""
 
-#: main.c:372
+#: main.c:371
 msgid "All categories"
 msgstr ""
 
-#: main.c:498
+#: main.c:482
+msgid "Export of VCARD failed."
+msgstr ""
+
+#: main.c:486
+msgid ""
+"VCARD exported to\n"
+"/tmp/vcard.vcf."
+msgstr ""
+
+#: main.c:528
 msgid "Really delete this contact?"
 msgstr ""
 
-#: main.c:498 main.c:531 structure.c:179
+#: main.c:528 main.c:561 structure.c:179
 msgid "Confirm"
 msgstr ""
 
-#: main.c:499 main.c:532 structure.c:180
+#: main.c:529 main.c:562 structure.c:180
 msgid "Delete"
 msgstr ""
 
-#: main.c:499 main.c:532 structure.c:180
+#: main.c:529 main.c:562 structure.c:180
 msgid "Cancel"
 msgstr ""
 
-#: main.c:511
+#: main.c:541
 msgid "New Category"
 msgstr ""
 
-#: main.c:531
+#: main.c:561
 msgid "Really delete this category?"
 msgstr ""
 
-#: main.c:561
+#: main.c:591
 msgid "New category"
 msgstr ""
 
-#: main.c:561
+#: main.c:591
 msgid "Tap here to create a category."
 msgstr ""
 
-#: main.c:565
+#: main.c:595
 msgid "Delete category"
 msgstr ""
 
-#: main.c:565
+#: main.c:595
 msgid "Tap here to delete the selected category."
 msgstr ""
 
-#: main.c:608
+#: main.c:638
 msgid "Editing Layout"
 msgstr ""
 
-#: main.c:633
+#: main.c:663
 msgid "Contacts: Configuration"
 msgstr ""
 
-#: main.c:841 gpe-contacts.desktop.in.h:1
+#: main.c:877 gpe-contacts.desktop.in.h:1
 msgid "Contacts"
 msgstr ""
 
-#: main.c:855
+#: main.c:891
 msgid "New contact"
 msgstr ""
 
-#: main.c:855
+#: main.c:891
 msgid "Tap here to add a new contact."
 msgstr ""
 
-#: main.c:861
+#: main.c:897
 msgid "Edit"
 msgstr ""
 
-#: main.c:862
+#: main.c:898
 msgid "Edit contact"
 msgstr ""
 
-#: main.c:862
+#: main.c:898
 msgid "Tap here to edit the selected contact."
 msgstr ""
 
-#: main.c:866
+#: main.c:902
 msgid "Delete contact"
 msgstr ""
 
-#: main.c:866
+#: main.c:902
 msgid "Tap here to delete the selected contact."
 msgstr ""
 
-#: main.c:870
+#: main.c:907 main.c:908
+msgid "Export"
+msgstr ""
+
+#: main.c:908
+msgid "Tap here to export this contact to VCARD."
+msgstr ""
+
+#: main.c:912
 msgid "Properties"
 msgstr ""
 
-#: main.c:870
+#: main.c:912
 msgid "Tap here to configure the program."
 msgstr ""
 
-#: main.c:876
+#: main.c:918
 msgid "Close"
 msgstr ""
 
-#: main.c:876
+#: main.c:918
 msgid "Tap here to exit gpe-contacts."
 msgstr ""
 
-#: main.c:908 main.c:932
+#: main.c:952 main.c:976
 msgid "Contact"
 msgstr ""
 
-#: main.c:915
+#: main.c:959
 msgid "Find:"
 msgstr ""
 
-#: main.c:921
+#: main.c:965
 msgid "in"
 msgstr ""
 

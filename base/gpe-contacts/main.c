@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001, 2002, 2003 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2001, 2002, 2003, 2004 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -830,7 +830,7 @@ do_search (GObject *obj, GtkWidget *entry)
       g_slist_free (l);
     }
 
-  all_entries = g_slist_sort (all_entries, sort_entries);
+  all_entries = g_slist_sort (all_entries, (GCompareFunc)sort_entries);
 
   gtk_list_store_clear (list_store);
 
@@ -852,6 +852,41 @@ do_search (GObject *obj, GtkWidget *entry)
   g_free (text);
 }
 
+#define SEARCH_DELAY  200
+
+static guint search_seq;
+
+struct search
+{
+  GtkWidget *widget;
+  guint seq;
+};
+
+static gboolean
+search_timer_func (gpointer data)
+{
+  struct search *s = (struct search *)data;
+
+  if (s->seq == search_seq)
+    do_search (G_OBJECT (s->widget), s->widget);
+
+  g_free (s);
+
+  return FALSE;
+}
+
+static void
+schedule_search (GObject *obj)
+{
+  struct search *s;
+
+  s = g_malloc0 (sizeof (*s));
+  s->seq = ++search_seq;
+  s->widget = GTK_WIDGET (obj);
+
+  g_timeout_add (SEARCH_DELAY, search_timer_func, s);
+}
+
 static GtkWidget*
 create_main (void)
 {
@@ -870,7 +905,6 @@ create_main (void)
   GtkTreeViewColumn *column;
   GtkTreeSelection *tree_sel;
   GtkWidget *scrolled_window;
-  GtkWidget *go_button;
   int i;
 
   main_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
@@ -968,10 +1002,8 @@ create_main (void)
   categories_smenu = gtk_simple_menu_new ();
   gtk_box_pack_start (GTK_BOX (hbox3), categories_smenu, TRUE, TRUE, 0);
 
-  go_button = gpe_button_new_from_stock (GTK_STOCK_OK, GPE_BUTTON_TYPE_ICON);
-  gtk_box_pack_start (GTK_BOX (hbox3), go_button, FALSE, FALSE, 0);  
-  g_signal_connect (G_OBJECT (go_button), "clicked", G_CALLBACK (do_search), entry1);
   g_signal_connect (G_OBJECT (entry1), "activate", G_CALLBACK (do_search), entry1);
+  g_signal_connect (G_OBJECT (entry1), "changed", G_CALLBACK (schedule_search), NULL);
 
   pDetail = gtk_frame_new (_("Contact"));
   gtk_box_pack_start (GTK_BOX (vbox1), pDetail, FALSE, TRUE, 0);

@@ -239,9 +239,7 @@ static int
 read_name (void *arg, int argc, char **argv, char **names)
 {
   struct person *p = (struct person *)arg;
-
-  //if (strcasecmp (argv[0], "NAME") == 0)
-    p->name = g_strdup (argv[1]);
+  p->name = g_strdup (argv[1]);
 
   return 0;
 }
@@ -253,7 +251,6 @@ read_one_entry (void *arg, int argc, char **argv, char **names)
   GSList **list = (GSList **) arg;
 
   p->id = atoi (argv[0]);
-/*
 #ifdef USE_USQLD	
   usqld_exec_printf (db, "select tag,value from contacts where (urn=%d) and ((tag='NAME') or (tag='name'))",
 		     read_name, p, NULL, p->id);
@@ -261,8 +258,7 @@ read_one_entry (void *arg, int argc, char **argv, char **names)
   sqlite_exec_printf (db, "select tag,value from contacts where (urn=%d) and ((tag='NAME') or (tag='name'))",
 		      read_name, p, NULL, p->id);
 #endif  
-*/
-  p->name = g_strdup (argv[1]);
+
   if (p->name)
     *list = g_slist_prepend (*list, p);
   else
@@ -630,6 +626,23 @@ db_get_categories (void)
   return list;
 }
 
+static int
+read_one_entry_alpha (void *arg, int argc, char **argv, char **names)
+{
+  struct person *p = new_person ();
+  GSList **list = (GSList **) arg;
+
+  p->id = atoi (argv[0]);
+  p->name = g_strdup (argv[1]);
+
+  if (p->name)
+    *list = g_slist_prepend (*list, p);
+  else
+    discard_person (p);
+
+  return 0;
+}
+
 GSList *
 db_get_entries_alpha (const gchar * alphalist)
 {
@@ -693,10 +706,10 @@ db_get_entries_alpha (const gchar * alphalist)
   g_free (tmp);
 #ifdef USE_USQLD	
   r = usqld_exec (db, command,
-		  read_one_entry, &list, &err);
+		  read_one_entry_alpha, &list, &err);
 #else
   r = sqlite_exec (db, command,
-		   read_one_entry, &list, &err);
+		   read_one_entry_alpha, &list, &err);
 #endif
 
   if (r)

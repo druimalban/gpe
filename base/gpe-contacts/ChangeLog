@@ -1,5 +1,20 @@
 2004-02-15  Philip Blundell  <philb@gnu.org>
 
+	* main.c (create_main): Remove "go" button from search panel;
+	replaced with interactive search-as-you-type.
+	(schedule_search): New.
+	(search_timer_func): Likewise.
+	(do_search): Fix warning.
+
+	* callbacks.c: Fix warnings.
+
+	* db.c (read_name): Remove commented-out code.
+	(read_one_entry): Uncomment SQL queries.
+	(read_one_entry_alpha): New.
+	(db_get_entries_alpha): Use read_one_entry_alpha.
+
+2004-02-15  Philip Blundell  <philb@gnu.org>
+
 	* Version 0.16 released.
 
 2004-02-15  Philip Blundell  <philb@gnu.org>
