@@ -248,6 +248,90 @@ day_update (GtkDateSel *sel, GtkWidget *w)
   format_text (&sel->time, w, _("%a, %d"));
 }
 
+static int
+get_max_month_width (GtkDateSel *sel)
+{
+  PangoLayout *layout;
+  PangoRectangle logical_rect;
+  int max_width, i;
+  gchar buffer[255];
+  struct tm tm;
+
+  localtime_r (&sel->time, &tm);
+
+  layout = gtk_widget_create_pango_layout (GTK_WIDGET (sel), NULL);
+
+  max_width = 0;
+  for (i = 0; i < 11; i++)
+    {
+      tm.tm_mon = i;
+
+      switch (sel->month_style)
+	{
+	case GTKDATESEL_MONTH_SHORT:
+	  strftime (buffer, sizeof (buffer), _("%b"), &tm);
+	  break;
+	case GTKDATESEL_MONTH_LONG:
+	  strftime (buffer, sizeof (buffer), _("%B"), &tm);
+	  break;
+	case GTKDATESEL_MONTH_NUMERIC:
+	  strftime (buffer, sizeof (buffer), _("%m"), &tm);
+	  break;
+	case GTKDATESEL_MONTH_ROMAN:
+	  /* NYS */
+	  break;
+	}
+      pango_layout_set_text (layout, buffer, -1);
+      pango_layout_get_pixel_extents (layout, NULL, &logical_rect);
+      max_width = MAX (max_width, logical_rect.width + 8);
+    }
+
+  g_object_unref (layout);
+
+  return max_width;
+}
+
+static int
+get_max_day_width (GtkDateSel *sel)
+{
+  PangoLayout *layout;
+  PangoRectangle logical_rect;
+  int max_width, i, w;
+  gchar buffer[255];
+  struct tm tm;
+
+  localtime_r (&sel->time, &tm);
+
+  layout = gtk_widget_create_pango_layout (GTK_WIDGET (sel), NULL);
+
+  max_width = 0;
+  for (i = 0; i < 31; i++)
+    {
+      tm.tm_mday = i;
+
+      strftime (buffer, sizeof (buffer), _("%d"), &tm);
+      pango_layout_set_text (layout, buffer, -1);
+      pango_layout_get_pixel_extents (layout, NULL, &logical_rect);
+      max_width = MAX (max_width, logical_rect.width + 8);
+    }
+  w = max_width;
+  
+  max_width = 0;
+  for (i = 0; i < 7; i++)
+    {
+      tm.tm_wday = i;
+
+      strftime (buffer, sizeof (buffer), _("%a"), &tm);
+      pango_layout_set_text (layout, buffer, -1);
+      pango_layout_get_pixel_extents (layout, NULL, &logical_rect);
+      max_width = MAX (max_width, logical_rect.width + 8);
+    }
+
+  g_object_unref (layout);
+
+  return w + max_width;
+}
+
 static void
 make_field (GtkDateSel *sel, struct elem *e, 
 	    void (*click)(GtkWidget *, GtkDateSel *),
@@ -298,7 +382,7 @@ gtk_date_sel_init (GtkDateSel *sel)
 {
   PangoLayout *layout;
   PangoRectangle logical_rect;
-  int max_year_width, i;
+  int max_year_width, i, max_day_width;
   gchar buffer[255];
 
   layout = gtk_widget_create_pango_layout (GTK_WIDGET (sel), NULL);
@@ -317,8 +401,10 @@ gtk_date_sel_init (GtkDateSel *sel)
       max_year_width = MAX (max_year_width, logical_rect.width + 8);
     }
 
-  make_field (sel, &sel->day, day_click, day_update, 72);
-  make_field (sel, &sel->week, week_click, week_update, 72);
+  max_day_width = get_max_day_width (sel);
+
+  make_field (sel, &sel->day, day_click, day_update, max_day_width);
+  make_field (sel, &sel->week, week_click, week_update, 0);
   make_field (sel, &sel->month, month_click, month_update, 0);
   make_field (sel, &sel->year, year_click, year_update, max_year_width);
 
@@ -456,42 +542,7 @@ gtk_date_sel_set_day(GtkDateSel *sel, int year, int month, int day)
 void
 gtk_date_sel_set_month_style (GtkDateSel *sel, GtkDateSelMonthStyle style)
 {
-  PangoLayout *layout;
-  PangoRectangle logical_rect;
-  int max_width, i;
-  gchar buffer[255];
-  struct tm tm;
-
-  localtime_r (&sel->time, &tm);
-
-  layout = gtk_widget_create_pango_layout (GTK_WIDGET (sel), NULL);
-
-  max_width = 0;
-  for (i = 0; i < 11; i++)
-    {
-      tm.tm_mon = i;
-
-      switch (style)
-	{
-	case GTKDATESEL_MONTH_SHORT:
-	  strftime (buffer, sizeof (buffer), _("%b"), &tm);
-	  break;
-	case GTKDATESEL_MONTH_LONG:
-	  strftime (buffer, sizeof (buffer), _("%B"), &tm);
-	  break;
-	case GTKDATESEL_MONTH_NUMERIC:
-	  strftime (buffer, sizeof (buffer), _("%m"), &tm);
-	  break;
-	case GTKDATESEL_MONTH_ROMAN:
-	  /* NYS */
-	  break;
-	}
-      pango_layout_set_text (layout, buffer, -1);
-      pango_layout_get_pixel_extents (layout, NULL, &logical_rect);
-      max_width = MAX (max_width, logical_rect.width + 8);
-    }
-
-  gtk_widget_set_usize (sel->month.text, max_width, -1);
   sel->month_style = style;
-  g_object_unref (layout);
+
+  gtk_widget_set_usize (sel->month.text, get_max_month_width (sel), -1);
 }
