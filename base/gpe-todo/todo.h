@@ -1,3 +1,15 @@
+/*
+ * Copyright (C) 2002 Philip Blundell <philb@gnu.org>
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version
+ * 2 of the License, or (at your option) any later version.
+ */
+
+#ifndef TODO_H
+#define TODO_H
+
 #include <sys/time.h>
 #include <gtk/gtk.h>
 
@@ -17,28 +29,30 @@ struct todo_item
   item_state state;
 };
 
-struct todo_list 
+struct todo_category
 {
   const char *title;
   int id;
-  GList *items;
 };
 
 extern GtkWidget *g_draw;
-
-extern GtkWidget *edit_todo(struct todo_list *list, struct todo_item *item);
-extern GSList *lists;
-extern struct todo_list *new_list (int id, const char *title);
 extern GtkWidget *the_notebook;
-extern void add_new_event(struct todo_list *list, time_t t, 
-			  const char *what, item_state state, 
-			  const char *summary, int uid);
-extern void sql_add_item (struct todo_item *i, int list_id);
-extern gint list_sort_func (gconstpointer a, gconstpointer b);
+extern GSList *categories, *items;
+
+extern struct todo_item *new_item (void);
+extern GtkWidget *edit_item (struct todo_item *item);
 extern void push_item (struct todo_item *i);
-extern void delete_item (struct todo_list *list, struct todo_item *i);
-extern int new_list_id (void);
-extern void sql_add_list (int id, const char *title);
-extern void del_list (struct todo_list *);
+extern void delete_item (struct todo_item *i);
+
+extern struct todo_category *new_category (const char *title);
+extern void del_category (struct todo_category *);
 
 extern int hide;
+
+extern void configure (GtkWidget *w, gpointer list);
+
+extern void categories_menu (void);
+
+extern void refresh_items (void);
+
+#endif

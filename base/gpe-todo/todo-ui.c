@@ -42,7 +42,7 @@ destroy_user_data (gpointer p)
 }
 
 static void
-due_toggle_clicked(GtkWidget *widget, struct edit_todo *t)
+due_toggle_clicked (GtkWidget *widget, struct edit_todo *t)
 {
   gtk_widget_set_sensitive (t->duedate, 
 		    gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON 
@@ -50,21 +50,21 @@ due_toggle_clicked(GtkWidget *widget, struct edit_todo *t)
 }
 
 static void
-click_cancel(GtkWidget *widget,
-	     GtkWidget *window)
+click_cancel (GtkWidget *widget,
+	      GtkWidget *window)
 {
   gtk_widget_hide (window);
   gtk_widget_destroy (window);
 }
 
 static void
-click_delete(GtkWidget *widget,
-	     GtkWidget *window)
+click_delete (GtkWidget *widget,
+	      GtkWidget *window)
 {
   struct edit_todo *t = gtk_object_get_data (GTK_OBJECT (window), "todo");
   
   if (t->item)
-    delete_item (t->list, t->item);
+    delete_item (t->item);
   
   gtk_widget_draw (g_draw, NULL);
 
@@ -88,7 +88,7 @@ click_ok(GtkWidget *widget,
       tm.tm_year = GTK_DATE_COMBO (t->duedate)->year - 1900;
       tm.tm_mon = GTK_DATE_COMBO (t->duedate)->month;
       tm.tm_mday = GTK_DATE_COMBO (t->duedate)->day;
-      when = mktime(&tm);
+      when = mktime (&tm);
     }
   else
     when = (time_t)0;
@@ -98,17 +98,29 @@ click_ok(GtkWidget *widget,
 
   if (t->item)
     {
-      g_free ((char *)t->item->what);
-      t->item->what = what;
-      g_free ((char *)t->item->summary);
-      t->item->summary = summary;
-      t->item->time = when;
-      t->item->state = t->state;
-      push_item (t->item);
-      t->list->items = g_list_sort (t->list->items, list_sort_func);
+      if (t->item->what)
+	{
+	  g_free ((char *)t->item->what);
+	  t->item->what = NULL;
+	}
+      if (t->item->summary)
+	{
+	  g_free ((char *)t->item->summary);
+	  t->item->summary = NULL;
+	}
     }
   else
-    add_new_item (t->list, when, what, t->state, summary, new_unique_id ());
+    t->item = new_item ();
+
+  if (what[0])
+    t->item->what = what;
+  if (summary[0])
+    t->item->summary = summary;
+  t->item->time = when;
+  t->item->state = t->state;
+  push_item (t->item);
+
+  refresh_items ();
 
   gtk_widget_draw (g_draw, NULL);
 
@@ -138,7 +150,7 @@ state_func_2(GtkMenuItem *w, gpointer p)
 }
 
 GtkWidget *
-edit_todo(struct todo_list *list, struct todo_item *item)
+edit_item (struct todo_item *item)
 {
   GtkWidget *window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
@@ -180,7 +192,6 @@ edit_todo(struct todo_list *list, struct todo_item *item)
   t->duetoggle = gtk_check_button_new_with_label (_("Due:"));
   t->duedate = gtk_date_combo_new ();
 
-  t->list = list;
   t->item = item;
   
   gtk_widget_set_usize (window, 240, 320);

@@ -17,6 +17,7 @@
 #include <sqlite.h>
 #include <unistd.h>
 #include <sys/stat.h>
+#include <glib.h>
 
 #include "errorbox.h"
 
@@ -25,126 +26,115 @@
 
 static sqlite *sqliteh;
 
-static const char *dname = "/.gpe";
-static const char *fname = "/todo";
+static const char *fname = "/.gpe/todo";
 
-static int next_uid;
+GSList *categories, *items;
 
-GSList *lists;
+static struct todo_category *
+new_category_internal (int id, const char *title)
+{
+  struct todo_category *t = g_malloc (sizeof (struct todo_category));
 
-struct todo_list *all_items;
+  t->title = title;
+  t->id = id;
 
-struct todo_item *
-add_new_item_internal(struct todo_list *list, time_t t, const char *what, 
-		      item_state state, const char *summary, int id);
+  categories = g_slist_append (categories, t);
+
+  return t;
+}
+
+struct todo_category *
+new_category (const char *title)
+{
+  char *err;
+
+  if (sqlite_exec_printf (sqliteh, "insert into todo_categories values (NULL, '%q')",
+			  NULL, NULL, &err, title))
+    {
+      gpe_error_box (err);
+      free (err);
+      return NULL;
+    }
+
+  return new_category_internal (sqlite_last_insert_rowid (sqliteh), title);
+}
+
+void
+del_category (struct todo_category *c)
+{
+  char *err;
+
+  if (sqlite_exec_printf (sqliteh, "delete from todo_categories where uid=%d",
+			  NULL, NULL, &err,
+			  c->id))
+    {
+      gpe_error_box (err);
+      free (err);
+    }
+
+  categories = g_slist_remove (categories, c);
+}
+
+/* ------ */
+
+static int
+item_data_callback (void *arg, int argc, char **argv, char **names)
+{
+  struct todo_item *i = (struct todo_item *)arg;
+
+  if (argc == 2 && argv[0] && argv[1])
+    {
+      if (!strcmp (argv[0], "SUMMARY"))
+	i->summary = g_strdup (argv[1]);
+      if (!strcmp (argv[0], "DESCRIPTION"))
+	i->what = g_strdup (argv[1]);
+      if (!strcmp (argv[0], "STATE"))
+	i->state = atoi (argv[1]);
+    }
+
+  return 0;
+}
 
 static int
 item_callback (void *arg, int argc, char **argv, char **names)
 {
-  if (argc == 6)
+  if (argc == 1 && argv[0])
     {
+      char *err;
       int id = atoi (argv[0]);
-      int list = atoi (argv[1]);
-      char *summary = argv[2];
-      char *description = argv[3];
-      int state = atoi (argv[4]);
-      char *due = argv[5];
-
-      GSList *iter;
-      time_t t = (time_t)0;
-
-      for (iter = lists; iter; iter = iter->next)
+      struct todo_item *i = g_malloc (sizeof (struct todo_item));
+      memset (i, 0, sizeof (*i));
+      if (sqlite_exec_printf (sqliteh, "select tag,value from todo where uid=%d",
+			      item_data_callback, i, &err, id))
 	{
-	  struct todo_list *l = iter->data;
-	  if (l->id == list)
-	    break;
+	  gpe_error_box (err);
+	  free (err);
+	  return 0;
 	}
-
-      /* ignore items belonging to deleted / bogus lists */
-      if (iter == NULL)
-	return 0;
-
-      if (next_uid < id)
-	next_uid = id;
-
-      if (due[0])
-	{
-	  struct tm tm;
-	  memset (&tm, 0, sizeof (tm));
-	  strptime (due, "%F", &tm);
-	  t = mktime (&tm);
-	}
-
-      add_new_item_internal ((struct todo_list *)iter->data, 
-			     t, g_strdup (description), state, 
-			     g_strdup (summary), id);
+      items = g_slist_append (items, i);
     }
-
   return 0;
 }
 
 static int
-list_callback (void *arg, int argc, char **argv, char **names)
+category_callback (void *arg, int argc, char **argv, char **names)
 {
-  if (argc == 2)
-    {
-      new_list (atoi (argv[0]), g_strdup (argv[1]));
-    }
+  if (argc == 2 && argv[0] && argv[1])
+    new_category_internal (atoi (argv[0]), g_strdup (argv[1]));
   return 0;
 }
 
-int
-new_unique_id (void)
-{
-  return ++next_uid;
-}
-
-int
-new_list_id (void)
-{
-  int id = 0;
-  int found;
-  do 
-    {
-      GSList *t;
-      id ++;
-      found = 0;
-      for (t = lists; t; t = t->next)
-	{
-	  if (((struct todo_list *)t->data)->id == id)
-	    {
-	      found = 1;
-	      break;
-	    }
-	}
-    } while (found);
-
-  return id;
-}
-
-struct todo_list *
-new_list (int id, const char *title)
-{
-  struct todo_list *t = g_malloc (sizeof (struct todo_list));
-  t->items = NULL;
-  t->title = title;
-  t->id = id;
-
-  lists = g_slist_append (lists, t);
-  return t;
-}
+/* --- */
 
 int
 sql_start (void)
 {
   static const char *schema1_str = 
-    "create table todo_lists (uid integer NOT NULL, description text)";
+    "create table todo_categories (uid INTEGER PRIMARY KEY, description text)";
   static const char *schema2_str = 
-    "create table todo_items (uid integer NOT NULL, list integer NOT NULL, "
-    "summary text, description text, state integer NOT NULL, " 
-    "due_by text, completed_at text)";
+    "create table todo (uid INTEGER NOT NULL, tag TEXT NOT NULL, value TEXT)";
   static const char *schema3_str = 
-    "create table next_uid (uid integer NOT NULL)";
+    "create table todo_urn (uid INTEGER PRIMARY KEY)";
 
   const char *home = getenv ("HOME");
   char *buf;
@@ -152,19 +142,9 @@ sql_start (void)
   size_t len;
   if (home == NULL) 
     home = "";
-  len = strlen (home) + strlen (dname) + strlen (fname) + 1;
+  len = strlen (home) + strlen (fname) + 1;
   buf = g_malloc (len);
   strcpy (buf, home);
-  strcat (buf, dname);
-  if (access (buf, F_OK))
-    {
-      if (mkdir (buf, 0700))
-	{
-	  gpe_perror_box (buf);
-	  g_free (buf);
-	  return -1;
-	}
-    }
   strcat (buf, fname);
   sqliteh = sqlite_open (buf, 0, &err);
   if (sqliteh == NULL)
@@ -179,17 +159,15 @@ sql_start (void)
   sqlite_exec (sqliteh, schema2_str, NULL, NULL, &err);
   sqlite_exec (sqliteh, schema3_str, NULL, NULL, &err);
 
-  if (sqlite_exec (sqliteh, "select uid,description from todo_lists",
-		   list_callback, NULL, &err))
+  if (sqlite_exec (sqliteh, "select uid,description from todo_categories",
+		   category_callback, NULL, &err))
     {
       gpe_error_box (err);
       free (err);
       return -1;
     }
 
-  if (sqlite_exec (sqliteh, 
-		   "select uid,list,summary,description,state,due_by from todo_items",
-		   item_callback, NULL, &err))
+  if (sqlite_exec (sqliteh, "select uid from todo_urn", item_callback, NULL, &err))
     {
       gpe_error_box (err);
       free (err);
@@ -203,44 +181,6 @@ void
 sql_close (void)
 {
   sqlite_close (sqliteh);
-}
-
-void
-sql_add_list (int id, const char *title)
-{
-  char *err;
-  if (sqlite_exec_printf (sqliteh, "insert into todo_lists values(%d,'%q')", 
-		      NULL, NULL, &err, id, title))
-    {
-      fprintf (stderr, "sqlite: %s\n", err);
-      free (err);
-    }
-}
-
-static void
-add_new_item_sql (struct todo_item *i, int list_id)
-{
-  char d_buf[32];
-  char *due, *err;
-
-  if (i->time)
-    {
-      struct tm tm;
-      localtime_r (&i->time, &tm);
-      strftime (d_buf, sizeof(d_buf), "%F", &tm);
-      due = d_buf;
-    }
-  else
-    due = "";
-      
-  if (sqlite_exec_printf (sqliteh, 
-			  "insert into todo_items values(%d,%d,'%q','%q',%d,'%q','%q')",
-			  NULL, NULL, &err, i->id, list_id, i->summary, i->what,
-			  i->state, due, ""))
-    {
-      fprintf (stderr, "sqlite: %s\n", err);
-      free (err);
-    }
 }
 
 gint
@@ -259,91 +199,83 @@ list_sort_func (gconstpointer a, gconstpointer b)
   return ia->time - ib->time;
 }
 
-struct todo_item *
-add_new_item_internal(struct todo_list *list, time_t t, const char *what, 
-		      item_state state, const char *summary, int id)
-{
-  struct todo_item *i = g_malloc (sizeof (struct todo_item));
-
-  i->id = id;
-  i->what = what;
-  i->time = t;
-  i->state = state;
-  i->summary = summary;
-
-  list->items = g_list_insert_sorted (list->items, i, list_sort_func);
-
-  return i;
-}
-
-void
-add_new_item (struct todo_list *list, time_t t, const char *what, 
-	      item_state state, const char *summary, int id)
-{
-  struct todo_item *i;
-  i = add_new_item_internal (list, t, what, state, summary, id);
-  add_new_item_sql (i, list->id);
-}
+#define insert_values(db, id, key, format, value)	\
+	sqlite_exec_printf (db, "insert into todo values (%d, '%q', '" ## format ## "')", \
+			    NULL, NULL, &err, id, key, value)
 
 void
 push_item (struct todo_item *i)
 {
-  char d_buf[32];
-  char *due, *err;
+  char *err;
+  int r;
+  gboolean rollback = FALSE;
+
+  if (sqlite_exec (sqliteh, "begin transaction", NULL, NULL, &err))
+    goto error;
+
+  rollback = TRUE;
+  
+  if (sqlite_exec_printf (sqliteh, "delete from todo where uid=%d",
+			  NULL, NULL, &err, i->id)
+      || insert_values (sqliteh, i->id, "SUMMARY", "%q", i->summary)
+      || insert_values (sqliteh, i->id, "DESCRIPTION", "%q", i->what)
+      || insert_values (sqliteh, i->id, "STATE", "%d", i->state))
+    goto error;
 
   if (i->time)
     {
+      char d_buf[32];
       struct tm tm;
       localtime_r (&i->time, &tm);
       strftime (d_buf, sizeof(d_buf), "%F", &tm);
-      due = d_buf;
+      if (insert_values (sqliteh, i->id, "DUE", "%q", d_buf))
+	goto error;
     }
-  else
-    due = "";
 
-  if (sqlite_exec_printf (sqliteh,
-			  "update todo_items set summary='%q',description='%q',state=%d,due_by='%q' where uid=%d",
-			  NULL, NULL, &err,
-			  i->summary, i->what, i->state, due, i->id))
-    {
-      fprintf (stderr, "sqlite: %s\n", err);
-      free (err);
-    }
+  if (sqlite_exec (sqliteh, "commit transaction", NULL, NULL, &err))
+    goto error;
+
+  return;
+
+ error:
+  if (rollback)
+    sqlite_exec (sqliteh, "rollback transaction", NULL, NULL, NULL);
+  gpe_error_box (err);
+  free (err);
+}
+
+struct todo_item *
+new_item (void)
+{
+  char *err;
+  struct todo_item *i;
+  if (sqlite_exec (sqliteh, "insert into todo_urn values (NULL)",
+		   NULL, NULL, &err))
+    return NULL;
+  
+  i = g_malloc (sizeof (struct todo_item));
+  memset (i, 0, sizeof (*i));
+
+  i->id = sqlite_last_insert_rowid (sqliteh);
+
+  items = g_slist_append (items, i);
+
+  return i;
 }
 
 void 
-delete_item (struct todo_list *list, struct todo_item *i)
+delete_item (struct todo_item *i)
 {
-  sqlite_exec_printf (sqliteh, "delete from todo_items where uid=%d",
+  sqlite_exec_printf (sqliteh, "delete from todo where uid=%d",
+		      NULL, NULL, NULL,
+		      i->id);
+  sqlite_exec_printf (sqliteh, "delete from todo_urn where uid=%d",
 		      NULL, NULL, NULL,
 		      i->id);
 
-  list->items = g_list_remove (list->items, i);
+  items = g_slist_remove (items, i);
 
   g_free ((gpointer)i->what);
   g_free ((gpointer)i->summary);
   g_free (i);
-}
-
-void
-del_list (struct todo_list *list)
-{
-  char *err;
-  if (sqlite_exec_printf (sqliteh, "delete from todo_items where list=%d",
-		      NULL, NULL, &err,
-			  list->id))
-    {
-      gpe_error_box (err);
-      free (err);
-    }
-
-  if (sqlite_exec_printf (sqliteh, "delete from todo_lists where uid=%d",
-		      NULL, NULL, &err,
-			  list->id))
-    {
-      gpe_error_box (err);
-      free (err);
-    }
-
-  lists = g_slist_remove (lists, list);
 }

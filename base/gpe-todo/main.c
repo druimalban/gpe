@@ -54,14 +54,12 @@ open_window (void)
 
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 
-  top = top_level(window);
+  top = top_level (window);
 
   gtk_container_add (GTK_CONTAINER (window), top);
 
   gtk_signal_connect (GTK_OBJECT (window), "destroy",
 		      GTK_SIGNAL_FUNC (gtk_exit), NULL);
-
-  gtk_widget_set_usize (window, 240, 320);
 
   gtk_widget_realize (window);
   if (gpe_find_icon_pixmap ("icon", &pmap, &bmap))

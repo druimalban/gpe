@@ -5,7 +5,7 @@ CFLAGS = `gtk-config --cflags` `gdk-pixbuf-config --cflags` -g -I../libgpewidget
 CFLAGS += -DPACKAGE=\"gpe-todo\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 CFLAGS += -MD
 
-MEMBERS = main todo-ui todo-sql list-ui
+MEMBERS = main todo-ui todo-sql list-ui configure
 
 DEPS = $(patsubst %,%.d,$(MEMBERS))
 OBJS = $(patsubst %,%.o,$(MEMBERS))

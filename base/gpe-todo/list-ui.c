@@ -34,248 +34,62 @@ static guint xcol = 18;
 GtkWidget *g_draw;
 
 static GtkWidget *g_option;
+static GSList *display_items = NULL;
 
-static struct todo_list *curr_list;
+static struct todo_category *selected_category = NULL;
 
 static void lists_menu (void);
 
 static void
-set_cur_list(GtkWidget *w, gpointer user_data)
+set_category (GtkWidget *w, gpointer user_data)
 {
-  curr_list = user_data;
+  selected_category = user_data;
   gtk_widget_draw (g_draw, NULL);
 }
 
-static void
-new_todo_item(GtkWidget *w, gpointer user_data)
+void
+categories_menu (void)
 {
-  if (curr_list)
-    {
-      GtkWidget *todo = edit_todo (curr_list, NULL);
-      gtk_widget_show_all (todo);
-    }
-  else
-    gpe_error_box (_("No list is selected"));
-}
-
-static void
-ui_del_list (GtkWidget *widget,
-	  gpointer user_data)
-{
-  GtkCList *clist = GTK_CLIST (user_data);
-  if (clist->selection)
-    {
-      guint row = (guint)clist->selection->data;
-      struct todo_list *t = gtk_clist_get_row_data (clist, row);
-      del_list (t);
-      gtk_clist_remove (clist, row);
-      gtk_widget_draw (GTK_WIDGET (clist), NULL);
-      lists_menu ();
-    }
-}
-
-static void
-ui_create_new_list(GtkWidget *widget,
-		   GtkWidget *d)
-{
-  GtkWidget *entry = gtk_object_get_data (GTK_OBJECT (d), "entry");
-  char *title = gtk_editable_get_chars (GTK_EDITABLE (entry), 0, -1);
-  int id;
-  GSList *l;
-  GtkWidget *clist = gtk_object_get_data (GTK_OBJECT (d), "clist");
-  gchar *line_info[1];
-  guint row;
-  struct todo_list *t;
-
-  if (title[0] == 0)
-    {
-      gpe_error_box (_("List title must not be blank"));
-      gtk_widget_destroy (d);
-      return;
-    }
-  
-  for (l = lists; l; l = l->next)
-    {
-      struct todo_list *t = l->data;
-      if (!strcmp (title, t->title))
-	{
-	  gpe_error_box (_("A list by that name already exists"));
-	  gtk_widget_destroy (d);
-	  return;
-	}
-    }
-
-  id = new_list_id ();
-  t = new_list (id, title);
-  sql_add_list (id, title);
-  line_info[0] = title;
-  row = gtk_clist_append (GTK_CLIST (clist), line_info);
-  gtk_clist_set_row_data (GTK_CLIST (clist), row, t);
-  lists_menu ();
-  gtk_widget_destroy (d);
-}
-
-static void
-close_window(GtkWidget *widget,
-	     GtkWidget *w)
-{
-  gtk_widget_destroy (w);
-}
-
-static void
-new_list_box (GtkWidget *w, gpointer data)
-{
-  GtkWidget *window = gtk_window_new (GTK_WINDOW_DIALOG);
-  GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
-  GtkWidget *ok;
-  GtkWidget *cancel;
-  GtkWidget *buttons = gtk_hbox_new (FALSE, 0);
-  GtkWidget *label = gtk_label_new ("Name:");
-  GtkWidget *name = gtk_entry_new ();
-  GtkWidget *hbox = gtk_hbox_new (FALSE, 0);
-  guint x, y;
-  guint screen_width, screen_height;
-  GtkRequisition requisition;
-
-  ok = gpe_picture_button (window->style, _("OK"), "ok");
-  cancel = gpe_picture_button (window->style, _("Cancel"), "cancel");
-
-  gtk_widget_show (ok);
-  gtk_widget_show (cancel);
-  gtk_widget_show (buttons);
-  gtk_widget_show (label);
-  gtk_widget_show (hbox);
-  gtk_widget_show (name);
-
-  gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (hbox), name, TRUE, TRUE, 2);
-
-  gtk_box_pack_end (GTK_BOX (buttons), ok, FALSE, FALSE, 2);
-  gtk_box_pack_end (GTK_BOX (buttons), cancel, FALSE, FALSE, 2);
-
-  gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
-  gtk_box_pack_end (GTK_BOX (vbox), buttons, FALSE, FALSE, 0);
-
-  gtk_object_set_data (GTK_OBJECT (window), "entry", name);
-  gtk_object_set_data (GTK_OBJECT (window), "clist", data);
-  
-  gtk_signal_connect (GTK_OBJECT (ok), "clicked",
-		      GTK_SIGNAL_FUNC (ui_create_new_list), window);
-  
-  gtk_signal_connect (GTK_OBJECT (cancel), "clicked",
-		      close_window, window);
-
-  gtk_widget_show (vbox);
-
-  gtk_window_set_title (GTK_WINDOW (window), _("New list"));
-
-  gtk_container_add (GTK_CONTAINER (window), vbox);
-
-  gtk_widget_realize (window);
-  gtk_widget_size_request (window, &requisition);  
-  gdk_window_get_pointer (NULL, &x, &y, NULL);
-  screen_width = gdk_screen_width ();
-  screen_height = gdk_screen_height ();
-
-  x = CLAMP (x - (requisition.width / 2), 0, MAX (0, screen_width - requisition.width));
-  y = CLAMP (y - 24, 0, MAX (0, screen_height - requisition.height));
-  gtk_widget_set_uposition (window, MAX (x, 0), MAX (y, 0));
-
-  gtk_widget_show (window);
-  gtk_widget_grab_focus (name);
-}
-
-static void
-close_configure (GtkWidget *w, gpointer data)
-{
-  gtk_widget_destroy (data);
-}
-
-static void
-configure(GtkWidget *w, gpointer list)
-{
-  GtkWidget *window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-  GtkWidget *toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, 
-					GTK_TOOLBAR_ICONS);
-  GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
-  GtkWidget *clist = gtk_clist_new (1);
-  GtkWidget *pw;
-  GtkWidget *frame = gtk_frame_new (_("Categories"));
-  GtkWidget *vboxtop = gtk_vbox_new (FALSE, 0);
-  GtkWidget *okbutton;
+  GtkWidget *menu = gtk_menu_new ();
   GSList *l;
 
-  for (l = lists; l; l = l->next)
+  for (l = categories; l; l = l->next)
     {
-      struct todo_list *t = l->data;
-      gchar *line_info[1];
-      guint row;
-      
-      line_info[0] = t->title;
-      row = gtk_clist_append (GTK_CLIST (clist), line_info);
-      gtk_clist_set_row_data (GTK_CLIST (clist), row, t);
+      struct todo_category *t = l->data;
+      GtkWidget *i = gtk_menu_item_new_with_label (t->title);
+      gtk_menu_append (GTK_MENU (menu), i);
+      gtk_signal_connect (GTK_OBJECT (i), "activate", set_category, t);
+      gtk_widget_show (i);
     }
-  
-  gtk_toolbar_set_button_relief (GTK_TOOLBAR (toolbar), GTK_RELIEF_NONE);
 
-  gtk_widget_realize (window);
+  gtk_widget_show (menu);
 
-  okbutton = gpe_picture_button (window->style, _("OK"), "ok");
-
-  gtk_signal_connect (GTK_OBJECT (okbutton), "clicked", close_configure, window);
-
-  pw = gpe_render_icon (window->style, gpe_find_icon ("new"));
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), 
-			   _("New"), 
-			   _("Create a new list"), 
-			   _("Create a new list"),
-			   pw, new_list_box, clist);
-
-  pw = gpe_render_icon (window->style, gpe_find_icon ("delete"));
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), 
-			   _("Delete"),
-			   _("Delete the selected list"), 
-			   _("Delete the selected list"),
-			   pw, ui_del_list, clist);
-
-  gtk_widget_show (toolbar);
-  gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, FALSE, 0);
-
-  gtk_widget_show (clist);
-  gtk_box_pack_start (GTK_BOX (vbox), clist, TRUE, TRUE, 0);
-
-  gtk_widget_show (vbox);
-  gtk_container_add (GTK_CONTAINER (frame), vbox);
-  gtk_widget_show (frame);
-  gtk_box_pack_start (GTK_BOX (vboxtop), frame, TRUE, TRUE, 0);
-  gtk_box_pack_start (GTK_BOX (vboxtop), okbutton, FALSE, FALSE, 0);
-  gtk_widget_show (vboxtop);
-  gtk_container_add (GTK_CONTAINER (window), vboxtop);
-  
-  gtk_widget_set_usize (window, 240, 320);
-
-  gtk_widget_show (window);
+  gtk_option_menu_set_menu (GTK_OPTION_MENU (g_option), menu);
 }
 
 static void
-purge_completed(GtkWidget *w, gpointer list)
+new_todo_item (GtkWidget *w, gpointer user_data)
 {
-  if (curr_list)
-    {
-      GList *iter = curr_list->items;
+  GtkWidget *todo = edit_item (NULL);
+  gtk_widget_show_all (todo);
+}
+
+static void
+purge_completed (GtkWidget *w, gpointer list)
+{
+  GSList *iter = items;
   
-      while (iter)
-	{
-	  struct todo_item *i = iter->data;
-	  GList *new_iter = iter->next;
-	  if (i->state == COMPLETED)
-	    delete_item (curr_list, i);
-	  
-	  iter = new_iter;
-	}
+  while (iter)
+    {
+      struct todo_item *i = iter->data;
+      GSList *new_iter = iter->next;
+      if (i->state == COMPLETED)
+	delete_item (i);
       
-      gtk_widget_draw (g_draw, NULL);
+      iter = new_iter;
     }
+  
+  gtk_widget_draw (g_draw, NULL);
 }
 
 static void
@@ -299,7 +113,7 @@ draw_expose_event (GtkWidget *widget,
   guint max_height;
   guint y;
   guint skew = 2;
-  GList *iter;
+  GSList *iter;
   GdkFont *font = widget->style->font;
 
   g_return_val_if_fail (widget != NULL, TRUE);
@@ -333,47 +147,45 @@ draw_expose_event (GtkWidget *widget,
 
   y = skew;
 
-  if (curr_list)
+  for (iter = display_items; iter; iter = iter->next)
     {
-      for (iter = curr_list->items; iter; iter = iter->next)
+      struct todo_item *i = iter->data;
+      
+      if (i->state != COMPLETED)
+	{
+	  gdk_draw_text (drawable, font, black_gc, xcol, y + font->ascent, 
+			 i->summary, strlen (i->summary));
+	  gdk_draw_pixmap (drawable, black_gc, box_pixmap,
+			   2, 0, 2, y - skew, 14, 14);
+	  i->pos=y/ystep;
+	  y += ystep;
+	}
+      
+    }
+  
+  if (!hide) 
+    {
+      for (iter = display_items; iter; iter = iter->next)
 	{
 	  struct todo_item *i = iter->data;
 	  
-	  if (i->state != COMPLETED)
+	  if (i->state == COMPLETED)
 	    {
 	      gdk_draw_text (drawable, font, black_gc, xcol, y + font->ascent, 
-			 i->summary, strlen (i->summary));
-	      gdk_draw_pixmap (drawable, black_gc, box_pixmap,
+			     i->summary, strlen (i->summary));
+	      
+	      gdk_draw_line (drawable, black_gc, xcol, 
+			     y + (font->ascent + font->descent) / 2, 
+			     18 + gdk_string_width (font, i->summary), 
+			     y + (font->ascent + font->descent) / 2);
+	      gdk_draw_pixmap (drawable, black_gc, tick_pixmap,
 			       2, 0, 2, y - skew, 14, 14);
 	      i->pos=y/ystep;
-	      y += ystep;
-	    }
-	  
-	}
-    
-      if (!hide) 
-      {
-        for (iter = curr_list->items; iter; iter = iter->next)
-	  {
-	   struct todo_item *i = iter->data;
-	   
-	   if (i->state == COMPLETED)
-	     {
-	       gdk_draw_text (drawable, font, black_gc, xcol, y + font->ascent, 
-	  		  i->summary, strlen (i->summary));
-	   
-	       gdk_draw_line (drawable, black_gc, xcol, 
-	  		      y + (font->ascent + font->descent) / 2, 
-	  		      18 + gdk_string_width (font, i->summary), 
-	  		      y + (font->ascent + font->descent) / 2);
-	       gdk_draw_pixmap (drawable, black_gc, tick_pixmap,
-	  			2, 0, 2, y - skew, 14, 14);
-	       i->pos=y/ystep;
 	       y += ystep;
-	     }
-           }
+	    }
 	}
     }
+
   return TRUE;
 }
 
@@ -384,61 +196,59 @@ draw_click_event (GtkWidget *widget,
 {
   unsigned int idx = event->y/ystep;
 
-  if (curr_list)
+  if (event->type == GDK_BUTTON_PRESS && event->x < xcol)
     {
-      if (event->type == GDK_BUTTON_PRESS && event->x < xcol)
+      GSList *iter;
+      for (iter = display_items; iter; iter = iter->next)
 	{
-	  GList *iter=NULL;
-  	  for (iter = curr_list->items; iter; iter = iter->next)
+	  struct todo_item *ti = iter->data;
+	  if (idx == ti->pos)
 	    {
-	      struct todo_item *ti = iter->data;
-	      if (idx == ti->pos)
-	      {
-	        if (ti->state == COMPLETED)
-	          ti->state = NOT_STARTED;
-	        else
-	          ti->state = COMPLETED;
-	        
-	        push_item (ti);
-	        gtk_widget_draw (g_draw, NULL);
-		break;
-	      }
-            }
+	      if (ti->state == COMPLETED)
+		ti->state = NOT_STARTED;
+	      else
+		ti->state = COMPLETED;
+	      
+	      push_item (ti);
+	      gtk_widget_draw (g_draw, NULL);
+	      break;
+	    }
 	}
-      else if (event->type == GDK_2BUTTON_PRESS)
+    }
+  else if (event->type == GDK_2BUTTON_PRESS && event->x > 18)
+    {
+      GSList *iter;
+      for (iter = display_items; iter; iter = iter->next)
 	{
-	  GList *iter=NULL;
-  	  for (iter = curr_list->items; iter; iter = iter->next)
-	   {
-	     struct todo_item *ti = iter->data;
-	     if (idx == ti->pos)
-	      {
-	        gtk_widget_show_all (edit_todo (curr_list, ti));
-	        break;
-              }
-           }
+	  struct todo_item *ti = iter->data;
+	  if (idx == ti->pos)
+	    {
+	      gtk_widget_show_all (edit_item (ti));
+	      break;
+	    }
 	}
     }
 }
 
-static void
-lists_menu (void)
+void
+refresh_items (void)
 {
-  GtkWidget *menu = gtk_menu_new ();
-  GSList *l;
+  GSList *iter;
 
-  for (l = lists; l; l = l->next)
+  if (display_items)
     {
-      struct todo_list *t = l->data;
-      GtkWidget *i = gtk_menu_item_new_with_label (t->title);
-      gtk_menu_append (GTK_MENU (menu), i);
-      gtk_signal_connect (GTK_OBJECT (i), "activate", set_cur_list, t);
-      gtk_widget_show (i);
+      g_slist_free (display_items);
+      display_items = NULL;
     }
 
-  gtk_widget_show (menu);
+  for (iter = items; iter; iter = iter->next)
+    {
+      struct todo_item *i = iter->data;
+      if (selected_category == NULL)
+	display_items = g_slist_append (display_items, i);
+    }
 
-  gtk_option_menu_set_menu (GTK_OPTION_MENU (g_option), menu);
+  gtk_widget_draw (g_draw, NULL);
 }
 
 GtkWidget *
@@ -457,10 +267,7 @@ top_level (GtkWidget *window)
   GtkWidget *scrolled = gtk_scrolled_window_new (NULL, NULL);
   
   g_option = option;
-  lists_menu ();
-
-  if (lists)
-    curr_list = lists->data;
+  categories_menu ();
 
   gtk_toolbar_set_button_relief (GTK_TOOLBAR (toolbar), GTK_RELIEF_NONE);
   gtk_toolbar_set_button_relief (GTK_TOOLBAR (toolbar2), GTK_RELIEF_NONE);
@@ -533,6 +340,8 @@ top_level (GtkWidget *window)
   gtk_widget_show (vbox);
 
   g_draw = draw;
+
+  refresh_items ();
 
   return vbox;
 }
