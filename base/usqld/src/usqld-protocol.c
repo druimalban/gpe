@@ -7,10 +7,8 @@
 #include <signal.h>
 #include "xdr.h"
 #include "usqld-protocol.h"
-char * USQLD_PROTOCOL_VERSION = "USQLD_0.2.0";
-char * USQLD_VERSION = "USQLD_0.2.0";
-
-
+char * USQLD_PROTOCOL_VERSION = "USQLD_0.2.1";
+char * USQLD_VERSION = "USQLD_0.2.1";
 
 struct {
   char * name;
@@ -27,6 +25,8 @@ struct {
   {"PICKLE_MAX", PICKLE_MAX},
   {"PICKLE_INTERRUPT", PICKLE_INTERRUPT},
   {"PICKLE_INTERRUPTED", PICKLE_INTERRUPTED},
+  {"PICKLE_REQUEST_ROWID", PICKLE_ROWID},
+  {"PICKLE_ROWID", PICKLE_ROWID},
   {NULL,0x0}
 };
 
@@ -57,12 +57,13 @@ void  usqld_init_protocol(){
     *start_rows_packet,
     *rows_packet,
     *eof_packet,
-    *error_packet;
+    *error_packet,
+	*rowid_packet;
   
   XDR_schema * connect_elems[2];
   XDR_schema * err_elems[2];
   
-  XDR_union_discrim  elems[10];
+  XDR_union_discrim  elems[12];
   
   elems[0].t = eof_packet = XDR_schema_new_void();
   elems[0].d = PICKLE_EOF;
@@ -98,7 +99,13 @@ void  usqld_init_protocol(){
    elems[9].t = XDR_schema_new_void();
    elems[9].d = PICKLE_INTERRUPTED;
 
-  usqld_protocol_schema = XDR_schema_new_type_union(10,elems);
+   elems[10].t = rowid_packet = XDR_schema_new_void();
+   elems[10].d = PICKLE_REQUEST_ROWID;
+
+   elems[11].t = rowid_packet = XDR_schema_new_uint();
+   elems[11].d = PICKLE_ROWID;
+
+	usqld_protocol_schema = XDR_schema_new_type_union(12,elems);
 }
 
 pthread_once_t init_protocol_once = PTHREAD_ONCE_INIT;
@@ -186,5 +193,11 @@ usqld_packet * usqld_error_packet(int errcode, const char * str){
 usqld_packet * usqld_ok_packet(){
   XDR_tree * p;
   p = XDR_tree_new_union(PICKLE_OK,XDR_tree_new_void());
+  return p;
+}
+
+usqld_packet * usqld_rowid_packet(int rowid){
+  XDR_tree * p;
+	p = XDR_tree_new_union(PICKLE_ROWID, XDR_tree_new_uint(rowid));
   return p;
 }

@@ -151,8 +151,6 @@ struct usqld_conn * usqld_connect(const char * server,
 }
 
 
-//typedef int (*usqld_callback)(void*,int,char**, char**);
-
 /*
   fairly icky hack probably will freeze, 
   might work
@@ -375,4 +373,33 @@ int usqld_complete(const char *zSql){
     zSql++;
   }
   return isComplete;
+}
+
+
+/*
+** Wrapper for sqlite_last_insert_rowid
+*/
+int usqld_last_insert_rowid(usqld_conn *con)
+{
+  usqld_packet *out_p,*in_p;
+	int ret;
+  out_p= XDR_tree_new_union(PICKLE_REQUEST_ROWID,
+			    XDR_tree_new_void());
+
+  if(USQLD_OK!=usqld_send_packet(con->server_fd,out_p)){
+    XDR_tree_free(out_p);
+    return -1;
+  }
+  if(USQLD_OK!=usqld_recv_packet(con->server_fd,&in_p)){
+    return -1;
+  }
+  
+	XDR_tree_dump(in_p);
+
+ ret = XDR_t_get_uint(
+          XDR_TREE_SIMPLE(
+	    XDR_t_get_comp_elem(XDR_TREE_COMPOUND(in_p),1)));
+
+  XDR_tree_free(in_p);
+  return ret;
 }

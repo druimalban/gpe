@@ -17,11 +17,11 @@
 #include "usqld-protocol.h"
 #include <errno.h>
 #include <signal.h>
-#define FILENAME_MAX 512
 
-void sigpipe_handler(int sig){
-  fprintf(stderr,"Broken pipe on FD \n");
-}
+#ifndef FILENAME_MAX
+#define FILENAME_MAX 512
+#endif 
+
 /*
   configuration structure for a thread
  */
@@ -31,6 +31,13 @@ typedef struct{
   char * database_name;
   usqld_config * config;
 }usqld_tc;
+
+int usqld_do_rowid(usqld_tc * tc, usqld_packet * packet);
+
+void sigpipe_handler(int sig){
+  fprintf(stderr,"Broken pipe on FD \n");
+}
+
 
 /*
   checks Incoming stream to see if a packet header is there
@@ -214,9 +221,6 @@ int usqld_do_query(usqld_tc * tc, usqld_packet * packet){
   sql = XDR_t_get_string(
           XDR_TREE_STR(
 	    XDR_t_get_comp_elem(XDR_TREE_COMPOUND(packet),1)));
-
-
-//  fprintf(stderr,"About to try and exec the sql: \"%s\"\n",sql);
  
   if(SQLITE_OK!=(rv=sqlite_exec(tc->db,
 				sql,
@@ -289,6 +293,9 @@ void * usqld_conhandler_main(usqld_conhand_init  * init){
     case PICKLE_DISCONNECT:
       terminate_now =1;
       break;
+    case PICKLE_REQUEST_ROWID:
+      resp_rv = usqld_do_rowid(&tc,p);
+      break;
     default:
       {
 	fprintf(stderr,"unsupported packet type %d\n",
@@ -319,6 +326,39 @@ void * usqld_conhandler_main(usqld_conhand_init  * init){
    return NULL;
 }
 
+
+/*
+  implements a the response to a rowid request
+ */
+int usqld_do_rowid(usqld_tc * tc, usqld_packet * packet){
+  XDR_tree * reply = NULL;
+  int rv =0;
+  usqld_row_context rc;
+  
+  rc.tc = tc;
+  rc.rv =0;
+  rc.headsent = 0;
+  rc.terminate_now = 0;
+  rc.interrupted = 0;
+  if(NULL==tc->db){
+    reply = usqld_error_packet(USQLD_NOT_OPEN,"You do not have a database connection.");
+    goto query_send_reply;
+  }
+ 
+	rv=sqlite_last_insert_rowid(tc->db);
+
+  reply = usqld_rowid_packet(rv);
+   
+  
+	query_send_reply:
+
+  if(reply){
+    usqld_send_packet(tc->client_fd,reply);
+    XDR_tree_free(reply);
+  }
+  
+  return SQLITE_OK; 
+}
 
   
  

@@ -733,7 +733,8 @@ char *usqld_vmprintf(const char *zFormat, va_list ap){
 
 /*
 ** The following four routines implement the varargs versions of the
-** usqld_exec() and usqld_get_table() interfaces.  See the sqlite.h
+** usqld_exec() and usqld_get_table(
+) interfaces.  See the sqlite.h
 ** header files for a more detailed description of how these interfaces
 ** work.
 **

@@ -14,6 +14,8 @@
 #define PICKLE_MAX 9
 #define PICKLE_INTERRUPT 10
 #define PICKLE_INTERRUPTED 11
+#define PICKLE_ROWID 12
+#define PICKLE_REQUEST_ROWID 13
 
 #define USQLD_SERVER_PORT 8322
 
@@ -34,6 +36,7 @@ int usqld_get_packet_type(usqld_packet *packet);
 
 usqld_packet * usqld_error_packet(int errcode, const char * str);
 usqld_packet * usqld_ok_packet();
+usqld_packet * usqld_rowid_packet(int rowid);
 
 
 #endif

@@ -10,6 +10,7 @@ typedef struct UsqldConHandInit
 }UsqldConHandInit;
 
 void * usql_conhandler_main(UsqldConHandInit * );
+int usqld_do_rowid(usqld_tc * tc, usqld_packet * packet);
 
 
   

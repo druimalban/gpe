@@ -73,6 +73,9 @@ int usqld_get_table(
 void usqld_free_table(
   char **azResult             /* Result returned from from sqlite_get_table() */
 );
+
+int usqld_last_insert_rowid(usqld_conn *con);
+
 #define SQLITE_OK           0   /* Successful result */
 #define SQLITE_ERROR        1   /* SQL error or missing database */
 #define SQLITE_INTERNAL     2   /* An internal logic error in SQLite */

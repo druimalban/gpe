@@ -16,7 +16,10 @@
 #include "usqld-server.h"
 #include "usqld-conhandler.h"
 #include "xdr.h"
-   
+#include "usql.h"
+#include "sqlite.h"
+
+void print_usage();
 
 int main(int argc, char * argv[])
 {
@@ -28,15 +31,24 @@ int main(int argc, char * argv[])
 
    int single_thread =0;
    char * database_dir = NULL;
+   char * pid_filename = NULL;
+
    int c;
    
-   while((c = getopt(argc,argv,"xd:"))!=EOF){
+   while((c = getopt(argc,argv,"xd:p:h"))!=EOF){
       switch(c){	 
        case 'x':
 	 single_thread = 1;
 	 break;
        case  'd':
 	 database_dir = optarg;
+	 break;
+       case  'p':
+	 pid_filename = optarg;
+	 break;
+       case  'h':
+	 print_usage();
+	 exit(1);
 	 break;
        case '?':
 	 if (isprint (optopt))
@@ -56,6 +68,8 @@ int main(int argc, char * argv[])
 	
    if(!database_dir)
      database_dir = USQLD_DATABASE_DIR;
+   if(!pid_filename)
+     pid_filename = USQLD_PID_FILE;
 
    printf("single-thread mode is :%s\n",(single_thread?"on":"off"));
    printf("database directory is:%s\n",database_dir);
@@ -84,21 +98,25 @@ int main(int argc, char * argv[])
    printf("listening on port %d\n",USQLD_SERVER_PORT);
 	
    
-   pid_file =fopen(PID_FILE,"w");
+   pid_file =fopen(pid_filename,"w");
    if(NULL==pid_file)
      {
-	fprintf(stderr,"couldn't open pid file: %s\n",PID_FILE);
+	fprintf(stderr,"couldn't open pid file: %s\n",pid_filename);
 	exit(1);
      }
    
-   if(fork()!=0)
+   //fork away from the terminal 
+   //for the time being we keep stdout and stderr open 
+   //for spurious nonsense
+   if(!single_thread)
      {
-	exit(0);
-     }
-   else
-     {
-	fprintf(pid_file,"%u\n",getpid());
-	fclose(pid_file);
+	if(fork()!=0)
+	  exit(0);
+	else
+	  {
+	     fprintf(pid_file,"%u\n",getpid());
+	     fclose(pid_file);
+	  }
      }
    
    
@@ -128,4 +146,23 @@ int main(int argc, char * argv[])
    
    
       
+}
+
+
+void print_usage()
+{
+   printf("usqld [-d <dir>] [-p <pidfile>] [-x] [-h]\n"
+	  "\t uSQL daemon version %s\n"
+	  "\t protocol version %s\n"
+	  "\t built against sqlite %s\n"
+	  "\t -d <dir>  - specifies database directory. default:%s\n"
+	  "\t -p <pidfile> - where to keep the pidfile. default:%s\n"
+	  "\t -x  - run in single threaded mode (don't detatch from termina)\n"
+	  "\t -h print this message\n",
+	  USQLD_VERSION,
+	  USQLD_PROTOCOL_VERSION,
+	  sqlite_version,
+	  USQLD_DATABASE_DIR,
+	  USQLD_PID_FILE);
+	  
 }
