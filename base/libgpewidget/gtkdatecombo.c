@@ -67,7 +67,7 @@ drop_calendar(GtkWidget *widget,
       
       gtk_widget_set_uposition (dp->calw, MAX (x, 0), MAX (y, 0));
       
-      gtk_widget_show_all (dp->calw);
+      gtk_widget_show (dp->calw);
       dp->cal_open = TRUE;
     }
 }
@@ -109,6 +109,7 @@ gtk_date_combo_init (GtkDateCombo *combo)
   combo->cal = gtk_calendar_new ();
   combo->calw = gtk_window_new (GTK_WINDOW_POPUP);
   combo->cal_open = FALSE;
+  gtk_widget_show (combo->cal);
   gtk_widget_ref (combo->calw);
   gtk_container_add (GTK_CONTAINER (combo->calw), combo->cal);
 
