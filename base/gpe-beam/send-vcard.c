@@ -57,7 +57,7 @@ export_one_vcard (int uid)
     {
       str = mimedir_vcard_write_to_string (vcard);
 
-      fprintf (stderr, "%s\n", str);
+      fprintf (stdout, "%s\n", str);
     }
   else
     fprintf (stderr, "Cannot generate vCard\n");
