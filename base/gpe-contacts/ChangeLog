@@ -1,3 +1,8 @@
+
+2004-07-16  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * Version 0.23 released
+
 2004-07-14  Florian Boor  <florian.boor@kernelconcepts.de>
     
     * main.c: Activate search field whenever main window is activated.
