@@ -41,7 +41,7 @@ int
 main (int argc, char *argv[])
 {
   gchar *package_revision = "$Revision$";
-  GtkWidget *GPE_Ownerinfo;
+  GtkWidget *GPE_Ownerinfo, *notebook;
   
   gchar * geometry = NULL;
   gboolean flag_keep_on_top = FALSE;
@@ -105,7 +105,20 @@ main (int argc, char *argv[])
       }
     }
 
-  GPE_Ownerinfo = gpe_owner_info ();
+  /* draw the GUI */
+  GPE_Ownerinfo = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+  gtk_widget_set_name (GPE_Ownerinfo, "GPE_Ownerinfo");
+  gtk_object_set_data (GTK_OBJECT (GPE_Ownerinfo), "GPE_Ownerinfo", GPE_Ownerinfo);
+  gtk_container_set_border_width (GTK_CONTAINER (GPE_Ownerinfo), 0);
+  gtk_window_set_title (GTK_WINDOW (GPE_Ownerinfo), _("GPE Owner Info"));
+
+  notebook = gpe_owner_info ();
+
+  gtk_container_add (GTK_CONTAINER (GPE_Ownerinfo), notebook);
+
+  gtk_signal_connect (GTK_OBJECT (GPE_Ownerinfo), "delete_event",
+                      GTK_SIGNAL_FUNC (gtk_main_quit),
+                      NULL);
 
   if (geometry)
     {

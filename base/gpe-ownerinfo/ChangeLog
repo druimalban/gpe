@@ -1,3 +1,8 @@
+2003-07-19  Philip Blundell  <philb@gnu.org>
+
+	* main.c (main): Create toplevel window here.
+	* gpe-ownerinfo.c (gpe_owner_info): Return the GtkNotebook.
+
 2003-07-18  Philip Blundell  <philb@gnu.org>
 
 	* gpe-ownerinfo.c: Remove transparency.  Make internal functions

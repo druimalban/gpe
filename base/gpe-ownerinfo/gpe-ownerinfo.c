@@ -322,7 +322,6 @@ translate_name_label (GtkWidget *namelabel, gpointer data)
 GtkWidget *
 gpe_owner_info (void)
 {
-  GtkWidget *GPE_Ownerinfo;
   GtkWidget *notebook;
   GtkWidget *mainvbox;
   GtkWidget *catlabel;
@@ -435,13 +434,6 @@ gpe_owner_info (void)
   /* FIXME: check error */
   photopixbuf = gdk_pixbuf_new_from_file (photofile, NULL);
 
-  /* draw the GUI */
-  GPE_Ownerinfo = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-  gtk_widget_set_name (GPE_Ownerinfo, "GPE_Ownerinfo");
-  gtk_object_set_data (GTK_OBJECT (GPE_Ownerinfo), "GPE_Ownerinfo", GPE_Ownerinfo);
-  gtk_container_set_border_width (GTK_CONTAINER (GPE_Ownerinfo), 0);
-  gtk_window_set_title (GTK_WINDOW (GPE_Ownerinfo), _("GPE Owner Info"));
-
   /* notebook with two pages;
    * page 1 holds the small photo and the info text,
    * page 2 just the big photo:
@@ -451,7 +443,6 @@ gpe_owner_info (void)
   GTK_WIDGET_UNSET_FLAGS (notebook, GTK_CAN_FOCUS);
   gtk_notebook_set_show_tabs (GTK_NOTEBOOK (notebook), FALSE);
   gtk_notebook_set_show_border (GTK_NOTEBOOK (notebook), FALSE);
-  gtk_container_add (GTK_CONTAINER (GPE_Ownerinfo), notebook);
 
   /*
    * The first notebook page
@@ -598,9 +589,6 @@ gpe_owner_info (void)
 					 ownerphone));
   gtk_label_set_selectable (GTK_LABEL (phone), TRUE);
     
-  gtk_signal_connect (GTK_OBJECT (GPE_Ownerinfo), "destroy",
-                      GTK_SIGNAL_FUNC (gtk_main_quit),
-                      NULL);
   gtk_signal_connect (GTK_OBJECT (smallphotobutton), "clicked",
 		      GTK_SIGNAL_FUNC (on_smallphotobutton_clicked),
 		      notebook);
@@ -608,5 +596,5 @@ gpe_owner_info (void)
 		      GTK_SIGNAL_FUNC (on_bigphotobutton_clicked),
 		      notebook);
 
-  return GPE_Ownerinfo;
+  return notebook;
 }
