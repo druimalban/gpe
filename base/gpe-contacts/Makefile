@@ -4,8 +4,9 @@ GTK2 = yes
 pkgdatadir = $(PREFIX)/share/$(PACKAGE)
 CVSBUILD = yes
 STRIP = strip
-VERSION = 0.20
+VERSION = 0.21
 DEBUG = no
+MYPIXMAPSDIR = $(PREFIX)/share/gpe/pixmaps/default/$(PACKAGE)
 
 LINGUAS = de sv cs nl hu ro ru sr sk
 
@@ -49,11 +50,11 @@ install-program: all $(PACKAGE).desktop
 	install -d $(DESTDIR)$(pkgdatadir)
 	install -m 644 contacts-layout.xml $(DESTDIR)$(pkgdatadir)/default-layout.xml
 	install -m 644 well-known-tags $(DESTDIR)$(pkgdatadir)/well-known-tags
-	install -d  $(DESTDIR)$(PREFIX)/share/pixmaps
-	install -m 644 icons/frame.png $(DESTDIR)$(PREFIX)/share/pixmaps/
-	install -m 644 icons/entry.png $(DESTDIR)$(PREFIX)/share/pixmaps/
-	install -m 644 icons/notebook.png $(DESTDIR)$(PREFIX)/share/pixmaps/
-	install -m 644 icons/export.png $(DESTDIR)$(PREFIX)/share/pixmaps/
+	install -d $(MYPIXMAPSDIR)
+	install -m 644 icons/frame.png $(MYPIXMAPSDIR)/frame.png
+	install -m 644 icons/entry.png $(MYPIXMAPSDIR)/entry.png
+	install -m 644 icons/notebook.png $(MYPIXMAPSDIR)/notebook.png
+	install -m 644 icons/export.png $(MYPIXMAPSDIR)/export.png
 
 include $(BUILD)/Makefile.dpkg_ipkg
 include $(BUILD)/Makefile.translation

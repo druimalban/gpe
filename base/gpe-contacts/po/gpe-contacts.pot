@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-02-29 19:20+0000\n"
+"POT-Creation-Date: 2004-05-04 23:39+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -68,75 +68,75 @@ msgstr ""
 msgid "Personal"
 msgstr ""
 
-#: main.c:74 main.c:173
+#: main.c:75 main.c:174
 msgid "Really delete this contact?"
 msgstr ""
 
-#: main.c:74 main.c:173 structure.c:176
+#: main.c:75 main.c:174 structure.c:176
 msgid "Confirm"
 msgstr ""
 
-#: main.c:126
+#: main.c:127
 msgid "All categories"
 msgstr ""
 
-#: main.c:474 gpe-contacts.desktop.in.h:1
+#: main.c:475 gpe-contacts.desktop.in.h:1
 msgid "Contacts"
 msgstr ""
 
-#: main.c:488
+#: main.c:489
 msgid "New contact"
 msgstr ""
 
-#: main.c:488
+#: main.c:489
 msgid "Tap here to add a new contact."
 msgstr ""
 
-#: main.c:494
+#: main.c:495
 msgid "Edit"
 msgstr ""
 
-#: main.c:495
+#: main.c:496
 msgid "Edit contact"
 msgstr ""
 
-#: main.c:495
+#: main.c:496
 msgid "Tap here to edit the selected contact."
 msgstr ""
 
-#: main.c:501
+#: main.c:502
 msgid "Delete contact"
 msgstr ""
 
-#: main.c:501
+#: main.c:502
 msgid "Tap here to delete the selected contact."
 msgstr ""
 
-#: main.c:507
+#: main.c:508
 msgid "Properties"
 msgstr ""
 
-#: main.c:507
+#: main.c:508
 msgid "Tap here to configure the program."
 msgstr ""
 
-#: main.c:513
+#: main.c:514
 msgid "Close"
 msgstr ""
 
-#: main.c:513
+#: main.c:514
 msgid "Tap here to exit gpe-contacts."
 msgstr ""
 
-#: main.c:530 main.c:562
+#: main.c:531 main.c:563
 msgid "Contact"
 msgstr ""
 
-#: main.c:537
+#: main.c:538
 msgid "Find:"
 msgstr ""
 
-#: main.c:543
+#: main.c:544
 msgid "in"
 msgstr ""
 
