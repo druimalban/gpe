@@ -22,7 +22,7 @@
 #include <math.h>
 
 #include "vorbis_codec.h"
-#include "vorbis/vorbisfile.h"
+#include "vorbisfile.h"
 
 #include "os.h"
 #include "misc.h"
@@ -1373,7 +1373,7 @@ static int host_is_big_endian() {
 
 	    *section) set to the logical bitstream number */
 
-long ov_read_float(OggVorbis_File *vf,float ***pcm_channels,int *bitstream){
+long ov_read_float(OggVorbis_File *vf,FIXP ***pcm_channels,int *bitstream){
 
   if(vf->ready_state<OPENED)return(OV_EINVAL);
 
@@ -1434,79 +1434,7 @@ long ov_read(OggVorbis_File *vf,char *buffer,int length,
     long bytespersample=word * channels;
     vorbis_fpu_control fpu;
     if(samples>length/bytespersample)samples=length/bytespersample;
-  
-#if 1
-    {
-      int val;
-      if(word==1){
-	int off=(sgned?0:128);
-	for(j=0;j<samples;j++)
-	  for(i=0;i<channels;i++){
-	    val=pcm[i][j] >> (FIXP_FRACBITS - 15);
-	    if(val>127)val=127;
-	    else if(val<-128)val=-128;
-	    *buffer++=val+off;
-	  }
-      }else{
-	int off=(sgned?0:32768);
-	
-	if(host_endian==bigendianp){
-	  if(sgned){
-	    
-	    for(i=0;i<channels;i++) { /* It's faster in this order */
-	      FIXP *src=pcm[i];
-	      short *dest=((short *)buffer)+i;
-	      for(j=0;j<samples;j++) {
-		val=src[j] >> (FIXP_FRACBITS - 15);
-		if(val>32767)val=32767;
-		else if(val<-32768)val=-32768;
-		*dest=val;
-		dest+=channels;
-	      }
-	    }
-	    
-	  }else{
-	    
-	    for(i=0;i<channels;i++) {
-	      FIXP *src=pcm[i];
-	      short *dest=((short *)buffer)+i;
-	      for(j=0;j<samples;j++) {
-		val=src[j] >> (FIXP_FRACBITS - 15);
-		if(val>32767)val=32767;
-		else if(val<-32768)val=-32768;
-		*dest=val+off;
-		dest+=channels;
-	      }
-	    }
-	    
-	  }
-	}else if(bigendianp){
-	  
-	  for(j=0;j<samples;j++)
-	    for(i=0;i<channels;i++){
-	      val = pcm[i][j] >> (FIXP_FRACBITS - 15);
-	      if(val>32767)val=32767;
-	      else if(val<-32768)val=-32768;
-	      val+=off;
-	      *buffer++=(val>>8);
-	      *buffer++=(val&0xff);
-	    }
-	  
-	}else{
-	  int val;
-	  for(j=0;j<samples;j++)
-	    for(i=0;i<channels;i++){
-	      val = pcm[i][j] >> (FIXP_FRACBITS - 15);
-	      if(val>32767)val=32767;
-	      else if(val<-32768)val=-32768;
-	      val+=off;
-	      *buffer++=(val&0xff);
-	      *buffer++=(val>>8);
-	  	}
-	}
-      }
-    }
-#else 
+    
     /* a tight loop to pack each size */
     {
       int val;
@@ -1529,10 +1457,16 @@ long ov_read(OggVorbis_File *vf,char *buffer,int length,
 	    
 	    vorbis_fpu_setround(&fpu);
 	    for(i=0;i<channels;i++) { /* It's faster in this order */
-	      float *src=pcm[i];
+	      FIXP *src=pcm[i];
 	      short *dest=((short *)buffer)+i;
 	      for(j=0;j<samples;j++) {
+		
+#ifndef FIXED_POINT	     
 		val=vorbis_ftoi(src[j]*32768.f);
+#else
+		val = src[j] >> (FIXP_FRACBITS - 15);
+#endif
+
 		if(val>32767)val=32767;
 		else if(val<-32768)val=-32768;
 		*dest=val;
@@ -1545,10 +1479,16 @@ long ov_read(OggVorbis_File *vf,char *buffer,int length,
 	    
 	    vorbis_fpu_setround(&fpu);
 	    for(i=0;i<channels;i++) {
-	      float *src=pcm[i];
+	      FIXP *src=pcm[i];
 	      short *dest=((short *)buffer)+i;
 	      for(j=0;j<samples;j++) {
+
+#ifndef FIXED_POINT	     
 		val=vorbis_ftoi(src[j]*32768.f);
+#else
+		val = src[j] >> (FIXP_FRACBITS - 15);
+#endif
+
 		if(val>32767)val=32767;
 		else if(val<-32768)val=-32768;
 		*dest=val+off;
@@ -1563,7 +1503,13 @@ long ov_read(OggVorbis_File *vf,char *buffer,int length,
 	  vorbis_fpu_setround(&fpu);
 	  for(j=0;j<samples;j++)
 	    for(i=0;i<channels;i++){
+
+#ifndef FIXED_POINT	     
 	      val=vorbis_ftoi(pcm[i][j]*32768.f);
+#else
+	      val = (pcm[i][j]) >> (FIXP_FRACBITS - 15);
+#endif
+
 	      if(val>32767)val=32767;
 	      else if(val<-32768)val=-32768;
 	      val+=off;
@@ -1577,7 +1523,12 @@ long ov_read(OggVorbis_File *vf,char *buffer,int length,
 	  vorbis_fpu_setround(&fpu);
 	  for(j=0;j<samples;j++)
 	    for(i=0;i<channels;i++){
+
+#ifndef FIXED_POINT	     
 	      val=vorbis_ftoi(pcm[i][j]*32768.f);
+#else
+	      val = (pcm[i][j]) >> (FIXP_FRACBITS - 15);
+#endif
 	      if(val>32767)val=32767;
 	      else if(val<-32768)val=-32768;
 	      val+=off;
@@ -1589,7 +1540,6 @@ long ov_read(OggVorbis_File *vf,char *buffer,int length,
 	}
       }
     }
-#endif
     
     vorbis_synthesis_read(&vf->vd,samples);
     vf->pcm_offset+=samples;
