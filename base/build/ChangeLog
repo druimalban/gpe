@@ -1,3 +1,8 @@
+2003-01-04  Philip Blundell  <philb@gnu.org>
+
+	* Makefile.translation: Don't rebuild .pot from sources
+	automatically, only on "make extract-po".
+
 2003-01-01  Philip Blundell  <philb@gnu.org>
 
 	* Makefile.dpkg_ipkg (ipkg): Pass DEBUG=no to make install.

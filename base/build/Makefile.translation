@@ -21,13 +21,13 @@ install-mo: all-mo
 .po.po8:;
 	CTYPE=`grep "^\"Content-Type:" $< | sed 's/^.*charset=//;s/\\\\.*//'`; recode $${CTYPE}..UTF-8 <$< >$@
 
-update-po: $(po-files) $(DIR_PO)/$(PACKAGE).pot
+update-po: $(po-files) $(DIR_PO)/$(PACKAGE).pot extract-po
 
 $(DIR_PO)/%.po: $(DIR_PO)/$(PACKAGE).pot
 	msgmerge -o $@.new $@ $^
 	if cmp -s $@.new $@; then rm $@.new; else mv $@.new $@; fi
 
-$(DIR_PO)/$(PACKAGE).pot: $(SOURCES)
+extract-po:
 	xgettext -k_ -o $(DIR_PO)/$(PACKAGE).pot.new $^
 	if cmp -s $(DIR_PO)/$(PACKAGE).pot.new $(PACKAGE).pot; then rm $(DIR_PO)/$(PACKAGE).pot.new; else mv $(DIR_PO)/$(PACKAGE).pot.new $(DIR_PO)/$(PACKAGE).pot; fi
 
