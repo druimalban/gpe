@@ -361,7 +361,7 @@ void restart_socket(void)
 	if (fd == NULL)
 	{
 		perror(_("Can't open stab file, is PCMCIA running? "));
-		exit(-2);
+		return;
 	}
 	
         if (flock (fileno (fd), LOCK_SH) != 0)

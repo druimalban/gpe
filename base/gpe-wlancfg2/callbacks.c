@@ -389,8 +389,6 @@ void get_changes(void)
 
 void get_changes_simple(void)
 {
-	
-	
 	GtkWidget 	*widget;
 	GtkWidget 	*menu;
 	gchar 		tempmode[20];
@@ -444,7 +442,8 @@ void get_changes_simple(void)
 	{
 		if (strncmp(CurrentScheme->EncMode, "open", 16)!=0)
 		{
-			HasChanged = TRUE;
+			if (strlen(CurrentScheme->EncMode)) 
+				HasChanged = TRUE;
 			if (CurrentScheme->lines[L_EncMode]==LINE_NOT_PRESENT)
 				CurrentScheme->lines[L_EncMode]=LINE_NEW;
 			strncpy(CurrentScheme->EncMode, "open", 16);	
@@ -521,7 +520,8 @@ void get_changes_simple(void)
 	{
 		if (strncmp(CurrentScheme->Encryption, "off", 4)!=0)
 		{
-			HasChanged = TRUE;
+			if (CurrentScheme->lines[L_Encryption]!=LINE_NOT_PRESENT)			
+				HasChanged = TRUE;
 			if (CurrentScheme->lines[L_Encryption]==LINE_NOT_PRESENT)
 				CurrentScheme->lines[L_Encryption]=LINE_NEW;
 			strncpy(CurrentScheme->Encryption, "off", 4);	
@@ -530,7 +530,8 @@ void get_changes_simple(void)
 		
 		if (strncmp(CurrentScheme->ActiveKey, "0", 4)!=0)
 		{
-			HasChanged = TRUE;
+			if (CurrentScheme->lines[L_ActiveKey]!=LINE_NOT_PRESENT)
+				HasChanged = TRUE;
 			if (CurrentScheme->lines[L_ActiveKey]==LINE_NOT_PRESENT)
 				CurrentScheme->lines[L_ActiveKey]=LINE_NEW;
 			strncpy(CurrentScheme->ActiveKey, "0", 4);	
@@ -810,7 +811,7 @@ void on_GPE_WLANCFG_show (GtkWidget *widget, gpointer user_data)
 		
 		EditSimple();
 	}
-
+    HasChanged = FALSE;
 }
 
 void on_btnDelete_clicked(GtkButton *button, gpointer user_data)
@@ -1199,7 +1200,7 @@ void on_btnHelp_clicked(GtkButton *button, gpointer user_data)
 	}
 	
 	/* scroll to first line of text */
-gtk_widget_show_all(HelpWin);	
+	gtk_widget_show_all(HelpWin);	
 	gtk_text_buffer_get_start_iter(buffer,&iter);
 	mark = gtk_text_buffer_create_mark(buffer,"start0",&iter,FALSE);
 	gtk_text_view_scroll_to_mark(GTK_TEXT_VIEW(textview),mark,0,FALSE,0,0);

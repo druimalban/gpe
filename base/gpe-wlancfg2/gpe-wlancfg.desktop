@@ -1,7 +1,9 @@
 [Desktop Entry]
 Name=WLAN Config
+Name[cs]=Nastavení WLAN
 Comment=GPE WLAN Config
-Exec=gpe-su -c gpe-wlancfg
+Comment[cs]=GPE Nastavení bezdrátových sítí
+Exec=gpe-su -c 'gpe-wlancfg > /dev/null 2>&1'
 Terminal=0
 Type=Application
 Icon=gpe-wlancfg.png
