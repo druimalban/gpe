@@ -1,3 +1,8 @@
+2004-08-10  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * main.c: Made tag search case insensitive, imported contacts are 
+              displayed correctly now.    
+    
 2004-08-08  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * main.c: match_for_search() Fixed fieldname.

@@ -204,7 +204,7 @@ get_tag_name_1(const gchar *tag, edit_thing_t e)
       case ITEM_IMAGE:
       case ITEM_SINGLE_LINE:
       case ITEM_MULTI_LINE:
-        if (!strcmp(tag,e->tag))
+        if (!strcasecmp(tag,e->tag))
           return e->name;
       break;
     } 
@@ -921,14 +921,14 @@ main (int argc, char *argv[])
         break;
       }
     if (arg == 'i')
-		ifile = optarg;
+		ifile = g_strdup(optarg);
   }    
 
   /* are we called to import a file? */
   if (ifile)
     {
 	  GtkWidget *dialog;
-      if (import_one_file(ifile))
+/*      if (import_one_file(ifile))
         dialog = gtk_message_dialog_new(NULL,0,GTK_MESSAGE_INFO,
 	                                    GTK_BUTTONS_OK,
 	                                    _("Could not import file %s."),
@@ -938,9 +938,9 @@ main (int argc, char *argv[])
 	                                      GTK_BUTTONS_OK,
 	                                      _("File %s imported sucessfully."),
 	                                      ifile);
-printf("file imported\n");	  
-     gtk_widget_show_all(dialog);
-     gtk_dialog_run(GTK_DIALOG(dialog));
+*/printf("file imported %i\n",import_one_file(ifile));	  
+   //  gtk_widget_show_all(dialog);
+   //  gtk_dialog_run(GTK_DIALOG(dialog));
 printf(_("rf\n"));	  
       exit (EXIT_SUCCESS);
     }
