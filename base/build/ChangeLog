@@ -1,3 +1,7 @@
+2003-07-31  Philip Blundell  <philb@gnu.org>
+
+	* x11.pc: New file.
+
 2003-07-07  Moray Allan  <moray@sermisy.org>
 
 	* Makefile.dpkg_ipkg, Makefile.translation: Use familiar/control1 if

@@ -1,0 +1,10 @@
+prefix=/usr
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/X11R6/include
+
+Name: X11
+Description: X Window System
+Version: R6
+Libs: -L${libdir} -lX11
+Cflags: -I${includedir}
