@@ -31,12 +31,29 @@ struct gpe_icon my_icons[] = {
   { "tick", },
   { "gpe-timesheet", PREFIX "/share/pixmaps/gpe-timesheet.png" },
   { "edit" },
+  { "journal", "list-view" },
   { NULL, NULL }
 };
 
 static GdkWindow *top_level_window;
 
 static GtkWidget *btn_con, *btn_coff;
+
+
+static void
+journal (GtkWidget *w, gpointer user_data)
+{
+  GtkCTree *ct = GTK_CTREE (user_data);
+  if (GTK_CLIST (ct)->selection)
+    {
+      GtkCTreeNode *node = GTK_CTREE_NODE (GTK_CLIST (ct)->selection->data);
+      struct task *t;
+      t = gtk_ctree_node_get_row_data (ct, node);
+	  /* here we go... */
+	  
+    }
+}
+
 
 static void
 set_active (int start, int stop) 
@@ -407,6 +424,12 @@ main(int argc, char *argv[])
 			   _("Note"), _("Note"),
 			   pw, (GtkSignalFunc)note, tree);
 
+  p = gpe_find_icon ("journal");
+  pw = gtk_image_new_from_pixbuf (p);
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Journal"),
+			   _("Show journal"), _("Show journal"),
+			   pw, (GtkSignalFunc)journal, tree);
+			   
   gtk_widget_show (toolbar);
   gtk_widget_show (vbox_top);
   gtk_widget_show (tree);
