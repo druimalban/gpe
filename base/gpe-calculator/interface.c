@@ -33,10 +33,6 @@ create_main_window (void)
   gint i, j;
   GtkWidget *main_window;
   GtkWidget *window_vbox;
-  GtkWidget *menubar1;
-  GtkWidget *menuitem1;
-  GtkWidget *menuitem1_menu;
-  GtkWidget *quit1;
   GtkWidget *table_all;
   GtkWidget *scrolledwindow1;
   GtkWidget *textview;
@@ -92,21 +88,6 @@ create_main_window (void)
   gtk_widget_show (window_vbox);
   gtk_container_add (GTK_CONTAINER (main_window), window_vbox);
 
-  menubar1 = gtk_menu_bar_new ();
-  gtk_widget_show (menubar1);
-  gtk_box_pack_start (GTK_BOX (window_vbox), menubar1, FALSE, FALSE, 0);
-
-  menuitem1 = gtk_menu_item_new_with_mnemonic (_("_File"));
-  gtk_widget_show (menuitem1);
-  gtk_container_add (GTK_CONTAINER (menubar1), menuitem1);
-
-  menuitem1_menu = gtk_menu_new ();
-  gtk_menu_item_set_submenu (GTK_MENU_ITEM (menuitem1), menuitem1_menu);
-
-  quit1 = gtk_image_menu_item_new_from_stock ("gtk-quit", accel_group);
-  gtk_widget_show (quit1);
-  gtk_container_add (GTK_CONTAINER (menuitem1_menu), quit1);
-
   scrolledwindow1 = gtk_scrolled_window_new (NULL, NULL);
   gtk_widget_show (scrolledwindow1);
   gtk_box_pack_start (GTK_BOX (window_vbox), scrolledwindow1, FALSE, FALSE, 0);
@@ -124,7 +105,7 @@ create_main_window (void)
 
   table_all = gtk_table_new (8, 5, FALSE);
   gtk_widget_show (table_all);
-  gtk_box_pack_start (GTK_BOX (window_vbox), table_all, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (window_vbox), table_all, TRUE, TRUE, 0);
   gtk_container_set_border_width (GTK_CONTAINER (table_all), SPACE);
   gtk_table_set_row_spacings (GTK_TABLE (table_all), SPACE);
   gtk_table_set_col_spacings (GTK_TABLE (table_all), SPACE);
@@ -135,8 +116,8 @@ create_main_window (void)
   button_reci = gtk_button_new_with_mnemonic (_("1/x"));
   gtk_widget_show (button_reci);
   gtk_table_attach (GTK_TABLE (table_all), button_reci, i, i+1, j, j+1,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
   gtk_widget_set_usize (button_reci, BUT_X, BUT_Y);
 
  /***************/
@@ -146,8 +127,8 @@ create_main_window (void)
   button_sq = gtk_button_new_with_mnemonic (_("x^2"));
   gtk_widget_show (button_sq);
   gtk_table_attach (GTK_TABLE (table_all), button_sq, i, i+1, j, j+1,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
   gtk_widget_set_usize (button_sq, BUT_X, BUT_Y);
 
  /***************/
@@ -157,8 +138,8 @@ create_main_window (void)
   button_sqrt = gtk_button_new_with_mnemonic (_("SQRT"));
   gtk_widget_show (button_sqrt);
   gtk_table_attach (GTK_TABLE (table_all), button_sqrt, i, i+1, j, j+1,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
   gtk_widget_set_usize (button_sqrt, BUT_X, BUT_Y);
 
  /***************/
@@ -168,8 +149,8 @@ create_main_window (void)
   button_clr = gtk_button_new_with_mnemonic (_("C"));
   gtk_widget_show (button_clr);
   gtk_table_attach (GTK_TABLE (table_all), button_clr, i, i+1, j, j+1,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
   gtk_widget_set_usize (button_clr, BUT_X, BUT_Y);
   
   gtk_widget_add_accelerator (button_clr, "clicked", accel_group,
@@ -183,8 +164,8 @@ create_main_window (void)
   button_allclr = gtk_button_new_with_mnemonic (_("AC"));
   gtk_widget_show (button_allclr);
   gtk_table_attach (GTK_TABLE (table_all), button_allclr, i, i+1, j, j+1,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
   gtk_widget_set_usize (button_allclr, BUT_X, BUT_Y);
   gtk_widget_add_accelerator (button_allclr, "clicked", accel_group,
                               GDK_Delete, GDK_CONTROL_MASK,
@@ -198,8 +179,8 @@ create_main_window (void)
   tbutton_inv = gtk_toggle_button_new_with_mnemonic (_("INV"));
   gtk_widget_show (tbutton_inv);
   gtk_table_attach (GTK_TABLE (table_all), tbutton_inv, i, i+1, j, j+1,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
   gtk_widget_set_usize (tbutton_inv, BUT_X, BUT_Y);
 
  /***************/
@@ -209,8 +190,8 @@ create_main_window (void)
   tbutton_hyp = gtk_toggle_button_new_with_mnemonic (_("HYP"));
   gtk_widget_show (tbutton_hyp);
   gtk_table_attach (GTK_TABLE (table_all), tbutton_hyp, i, i+1, j, j+1,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
   gtk_widget_set_usize (tbutton_hyp, BUT_X, BUT_Y);
 
  /***************/
@@ -220,8 +201,8 @@ create_main_window (void)
   button_sin = gtk_button_new_with_mnemonic (_("sin"));
   gtk_widget_show (button_sin);
   gtk_table_attach (GTK_TABLE (table_all), button_sin, i, i+1, j, j+1,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
   gtk_widget_set_usize (button_sin, BUT_X, BUT_Y);
 
  /***************/
@@ -231,8 +212,8 @@ create_main_window (void)
   button_cos = gtk_button_new_with_mnemonic (_("cos"));
   gtk_widget_show (button_cos);
   gtk_table_attach (GTK_TABLE (table_all), button_cos, i, i+1, j, j+1,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
   gtk_widget_set_usize (button_cos, BUT_X, BUT_Y);
 
  /***************/
@@ -242,8 +223,8 @@ create_main_window (void)
   button_tan = gtk_button_new_with_mnemonic (_("tan"));
   gtk_widget_show (button_tan);
   gtk_table_attach (GTK_TABLE (table_all), button_tan, i, i+1, j, j+1,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
   gtk_widget_set_usize (button_tan, BUT_X, BUT_Y);
 
  /***************/
@@ -254,8 +235,8 @@ create_main_window (void)
   button_econst = gtk_button_new_with_mnemonic (_("e"));
   gtk_widget_show (button_econst);
   gtk_table_attach (GTK_TABLE (table_all), button_econst, i, i+1, j, j+1,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
   gtk_widget_set_usize (button_econst, BUT_X, BUT_Y);
 
  /***************/
@@ -265,8 +246,8 @@ create_main_window (void)
   button_ee = gtk_button_new_with_mnemonic (_("EE"));
   gtk_widget_show (button_ee);
   gtk_table_attach (GTK_TABLE (table_all), button_ee, i, i+1, j, j+1,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
   gtk_widget_set_usize (button_ee, BUT_X, BUT_Y);
 
  /***************/
@@ -276,8 +257,8 @@ create_main_window (void)
   button_log = gtk_button_new_with_mnemonic (_("log"));
   gtk_widget_show (button_log);
   gtk_table_attach (GTK_TABLE (table_all), button_log, i, i+1, j, j+1,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
   gtk_widget_set_usize (button_log, BUT_X, BUT_Y);
 
  /***************/
@@ -288,7 +269,7 @@ create_main_window (void)
   gtk_widget_show (button_ln);
   gtk_table_attach (GTK_TABLE (table_all), button_ln, i, i+1, j, j+1,
                     (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
   gtk_widget_set_usize (button_ln, BUT_X, BUT_Y);
 
  /***************/
@@ -298,8 +279,8 @@ create_main_window (void)
   button_pow = gtk_button_new_with_mnemonic (_("x^y"));
   gtk_widget_show (button_pow);
   gtk_table_attach (GTK_TABLE (table_all), button_pow, i, i+1, j, j+1,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
   gtk_widget_set_usize (button_pow, BUT_X, BUT_Y);
   gtk_widget_add_accelerator (button_pow, "clicked", accel_group,
                               GDK_asciicircum, 0,
@@ -313,8 +294,8 @@ create_main_window (void)
   button_piconst = gtk_button_new_with_mnemonic (_("PI"));
   gtk_widget_show (button_piconst);
   gtk_table_attach (GTK_TABLE (table_all), button_piconst, i, i+1, j, j+1,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
   gtk_widget_set_usize (button_piconst, BUT_X, BUT_Y);
 
  /***************/
@@ -324,8 +305,8 @@ create_main_window (void)
   button_fac = gtk_button_new_with_mnemonic (_("n!"));
   gtk_widget_show (button_fac);
   gtk_table_attach (GTK_TABLE (table_all), button_fac, i, i+1, j, j+1,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
   gtk_widget_set_usize (button_fac, BUT_X, BUT_Y);
 
  /***************/
@@ -335,8 +316,8 @@ create_main_window (void)
   button_paropen = gtk_button_new_with_mnemonic (_("("));
   gtk_widget_show (button_paropen);
   gtk_table_attach (GTK_TABLE (table_all), button_paropen, i, i+1, j, j+1,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
   gtk_widget_set_usize (button_paropen, BUT_X, BUT_Y);
   gtk_widget_add_accelerator (button_paropen, "clicked", accel_group,
                               GDK_parenleft, 0,
@@ -349,8 +330,8 @@ create_main_window (void)
   button_parclose = gtk_button_new_with_mnemonic (_(")"));
   gtk_widget_show (button_parclose);
   gtk_table_attach (GTK_TABLE (table_all), button_parclose, i, i+1, j, j+1,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
   gtk_widget_set_usize (button_parclose, BUT_X, BUT_Y);
   gtk_widget_add_accelerator (button_parclose, "clicked", accel_group,
                               GDK_parenright, 0,
@@ -363,8 +344,8 @@ create_main_window (void)
   button_div = gtk_button_new_with_mnemonic (_("/"));
   gtk_widget_show (button_div);
   gtk_table_attach (GTK_TABLE (table_all), button_div, i, i+1, j, j+1,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
   gtk_widget_set_usize (button_div, BUT_X, BUT_Y);
   gtk_widget_add_accelerator (button_div, "clicked", accel_group,
                               GDK_KP_Divide, 0,
@@ -381,8 +362,8 @@ create_main_window (void)
   button_MS = gtk_button_new_with_mnemonic (_("MS"));
   gtk_widget_show (button_MS);
   gtk_table_attach (GTK_TABLE (table_all), button_MS, i, i+1, j, j+1,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
   gtk_widget_set_usize (button_MS, BUT_X, BUT_Y);
 
  /***************/
@@ -392,8 +373,8 @@ create_main_window (void)
   button_7 = gtk_button_new_with_mnemonic (_("7"));
   gtk_widget_show (button_7);
   gtk_table_attach (GTK_TABLE (table_all), button_7, i, i+1, j, j+1,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
   gtk_widget_set_usize (button_7, BUT_X, BUT_Y);
   gtk_widget_add_accelerator (button_7, "clicked", accel_group,
                               GDK_7, 0,
@@ -409,8 +390,8 @@ create_main_window (void)
   button_8 = gtk_button_new_with_mnemonic (_("8"));
   gtk_widget_show (button_8);
   gtk_table_attach (GTK_TABLE (table_all), button_8, i, i+1, j, j+1,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
   gtk_widget_set_usize (button_8, BUT_X, BUT_Y);
   gtk_widget_add_accelerator (button_8, "clicked", accel_group,
                               GDK_8, 0,
@@ -426,8 +407,8 @@ create_main_window (void)
   button_9 = gtk_button_new_with_mnemonic (_("9"));
   gtk_widget_show (button_9);
   gtk_table_attach (GTK_TABLE (table_all), button_9, i, i+1, j, j+1,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
   gtk_widget_set_usize (button_9, BUT_X, BUT_Y);
   gtk_widget_add_accelerator (button_9, "clicked", accel_group,
                               GDK_9, 0,
@@ -443,8 +424,8 @@ create_main_window (void)
   button_mult = gtk_button_new_with_mnemonic (_("*"));
   gtk_widget_show (button_mult);
   gtk_table_attach (GTK_TABLE (table_all), button_mult, i, i+1, j, j+1,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
   gtk_widget_set_usize (button_mult, BUT_X, BUT_Y);
   gtk_widget_add_accelerator (button_mult, "clicked", accel_group,
                               GDK_KP_Multiply, 0,
@@ -461,8 +442,8 @@ create_main_window (void)
   button_MR = gtk_button_new_with_mnemonic (_("MR"));
   gtk_widget_show (button_MR);
   gtk_table_attach (GTK_TABLE (table_all), button_MR, i, i+1, j, j+1,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
   gtk_widget_set_usize (button_MR, BUT_X, BUT_Y);
 
  /***************/
@@ -472,8 +453,8 @@ create_main_window (void)
   button_4 = gtk_button_new_with_mnemonic (_("4"));
   gtk_widget_show (button_4);
   gtk_table_attach (GTK_TABLE (table_all), button_4, i, i+1, j, j+1,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
   gtk_widget_set_usize (button_4, BUT_X, BUT_Y);
   gtk_widget_add_accelerator (button_4, "clicked", accel_group,
                               GDK_4, 0,
@@ -489,8 +470,8 @@ create_main_window (void)
   button_5 = gtk_button_new_with_mnemonic (_("5"));
   gtk_widget_show (button_5);
   gtk_table_attach (GTK_TABLE (table_all), button_5, i, i+1, j, j+1,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
   gtk_widget_set_usize (button_5, BUT_X, BUT_Y);
   gtk_widget_add_accelerator (button_5, "clicked", accel_group,
                               GDK_5, 0,
@@ -506,8 +487,8 @@ create_main_window (void)
   button_6 = gtk_button_new_with_mnemonic (_("6"));
   gtk_widget_show (button_6);
   gtk_table_attach (GTK_TABLE (table_all), button_6, i, i+1, j, j+1,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
   gtk_widget_set_usize (button_6, BUT_X, BUT_Y);
   gtk_widget_add_accelerator (button_6, "clicked", accel_group,
                               GDK_6, 0,
@@ -523,8 +504,8 @@ create_main_window (void)
   button_minus = gtk_button_new_with_mnemonic (_("-"));
   gtk_widget_show (button_minus);
   gtk_table_attach (GTK_TABLE (table_all), button_minus, i, i+1, j, j+1,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
   gtk_widget_set_usize (button_minus, BUT_X, BUT_Y);
   gtk_widget_add_accelerator (button_minus, "clicked", accel_group,
                               GDK_KP_Subtract, 0,
@@ -541,8 +522,8 @@ create_main_window (void)
   button_Mplus = gtk_button_new_with_mnemonic (_("M+"));
   gtk_widget_show (button_Mplus);
   gtk_table_attach (GTK_TABLE (table_all), button_Mplus, i, i+1, j, j+1,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
   gtk_widget_set_usize (button_Mplus, BUT_X, BUT_Y);
 
  /***************/
@@ -552,8 +533,8 @@ create_main_window (void)
   button_1 = gtk_button_new_with_mnemonic (_("1"));
   gtk_widget_show (button_1);
   gtk_table_attach (GTK_TABLE (table_all), button_1, i, i+1, j, j+1,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
   gtk_widget_set_usize (button_1, BUT_X, BUT_Y);
   gtk_widget_add_accelerator (button_1, "clicked", accel_group,
                               GDK_1, 0,
@@ -568,8 +549,8 @@ create_main_window (void)
   button_2 = gtk_button_new_with_mnemonic (_("2"));
   gtk_widget_show (button_2);
   gtk_table_attach (GTK_TABLE (table_all), button_2, i, i+1, j, j+1,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
   gtk_widget_set_usize (button_2, BUT_X, BUT_Y);
   gtk_widget_add_accelerator (button_2, "clicked", accel_group,
                               GDK_2, 0,
@@ -585,8 +566,8 @@ create_main_window (void)
   button_3 = gtk_button_new_with_mnemonic (_("3"));
   gtk_widget_show (button_3);
   gtk_table_attach (GTK_TABLE (table_all), button_3, i, i+1, j, j+1,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
   gtk_widget_set_usize (button_3, BUT_X, BUT_Y);
   gtk_widget_add_accelerator (button_3, "clicked", accel_group,
                               GDK_3, 0,
@@ -602,8 +583,8 @@ create_main_window (void)
   button_plus = gtk_button_new_with_mnemonic (_("+"));
   gtk_widget_show (button_plus);
   gtk_table_attach (GTK_TABLE (table_all), button_plus, i, i+1, j, j+1,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
   gtk_widget_set_usize (button_plus, BUT_X, BUT_Y);
   gtk_widget_add_accelerator (button_plus, "clicked", accel_group,
                               GDK_KP_Add, 0,
@@ -620,8 +601,8 @@ create_main_window (void)
   button_backspace = gtk_button_new_with_mnemonic (_("<-"));
   gtk_widget_show (button_backspace);
   gtk_table_attach (GTK_TABLE (table_all), button_backspace, i, i+1, j, j+1,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
   gtk_widget_set_usize (button_backspace, BUT_X, 22);
   gtk_widget_add_accelerator (button_backspace, "clicked", accel_group,
                               GDK_BackSpace, 0,
@@ -634,8 +615,8 @@ create_main_window (void)
   button_0 = gtk_button_new_with_mnemonic (_("0"));
   gtk_widget_show (button_0);
   gtk_table_attach (GTK_TABLE (table_all), button_0, i, i+1, j, j+1,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
   gtk_widget_set_usize (button_0, BUT_X, BUT_Y);
   gtk_widget_add_accelerator (button_0, "clicked", accel_group,
                               GDK_0, 0,
@@ -651,8 +632,8 @@ create_main_window (void)
   button_point = gtk_button_new_with_mnemonic (_("."));
   gtk_widget_show (button_point);
   gtk_table_attach (GTK_TABLE (table_all), button_point, i, i+1, j, j+1,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
   gtk_widget_set_usize (button_point, BUT_X, BUT_Y);
   gtk_widget_add_accelerator (button_point, "clicked", accel_group,
                               GDK_comma, 0,
@@ -671,8 +652,8 @@ create_main_window (void)
   button_sign = gtk_button_new_with_mnemonic (_("+/-"));
   gtk_widget_show (button_sign);
   gtk_table_attach (GTK_TABLE (table_all), button_sign, i, i+1, j, j+1,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
   gtk_widget_set_usize (button_sign, BUT_X, BUT_Y);
 
  /***************/
@@ -682,8 +663,8 @@ create_main_window (void)
   button_enter = gtk_button_new_with_mnemonic (_("="));
   gtk_widget_show (button_enter);
   gtk_table_attach (GTK_TABLE (table_all), button_enter, i, i+1, j, j+1,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (GTK_FILL), 0, 0);
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
   gtk_widget_set_usize (button_enter, BUT_X, BUT_Y);
   gtk_widget_add_accelerator (button_enter, "clicked", accel_group,
                               GDK_Return, 0,
@@ -704,9 +685,6 @@ create_main_window (void)
                       NULL);
   gtk_signal_connect (GTK_OBJECT (main_window), "key_press_event",
                       GTK_SIGNAL_FUNC (on_main_window_key_press_event),
-                      NULL);
-  gtk_signal_connect (GTK_OBJECT (quit1), "activate",
-                      GTK_SIGNAL_FUNC (on_quit1_activate),
                       NULL);
   gtk_signal_connect (GTK_OBJECT (button_backspace), "clicked",
                       GTK_SIGNAL_FUNC (on_gfunc_button_clicked),
@@ -832,10 +810,6 @@ create_main_window (void)
   /* Store pointers to all widgets, for use by lookup_widget(). */
   GLADE_HOOKUP_OBJECT_NO_REF (main_window, main_window, "main_window");
   GLADE_HOOKUP_OBJECT (main_window, window_vbox, "window_vbox");
-  GLADE_HOOKUP_OBJECT (main_window, menubar1, "menubar1");
-  GLADE_HOOKUP_OBJECT (main_window, menuitem1, "menuitem1");
-  GLADE_HOOKUP_OBJECT (main_window, menuitem1_menu, "menuitem1_menu");
-  GLADE_HOOKUP_OBJECT (main_window, quit1, "quit1");
   GLADE_HOOKUP_OBJECT (main_window, scrolledwindow1, "scrolledwindow1");
   GLADE_HOOKUP_OBJECT (main_window, textview, "textview");
   GLADE_HOOKUP_OBJECT (main_window, button_backspace, "button_backspace");
