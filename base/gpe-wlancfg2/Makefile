@@ -12,6 +12,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
+CROSSCOMPILE = no
 PACKAGE = gpe-wlancfg
 PREFIX = /usr/local
 DEBUG = yes
@@ -26,25 +27,36 @@ LEX  = flex
 CC   = gcc
 STRIP = strip
 
-CONTROL = control1
+ifeq ($(CROSSCOMPILE),yes)
 
-#GTKCFLAGS = `pkg-config --cflags gtk+-2.0` `pkg-config --cflags gthread-2.0` -DGTK_ENABLE_BROKEN
-#GTKLDFLAGS += `pkg-config --libs gtk+-2.0` `pkg-config --libs gthread-2.0`
-GTKCFLAGS = `pkg-config --cflags gtk+-2.0` 
-GTKLDFLAGS += `pkg-config --libs gtk+-2.0` -lfreetype 
-#-lXinerama
+CC      = arm-linux-gcc
+STRIP   = arm-linux-strip
 
-CPPFLAGS = $(GTKCFLAGS) -D_GNU_SOURCE -I../libgpewidget 
-ifeq ($(DEBUG),yes)
-CFLAGS += -O2 -g
+PKG_CONFIG_PATH=/skiff/local/arm-linux/lib/pkgconfig/
+
+LDFLAGS     += -L/skiff/local/arm-linux/lib
+LDFLAGS     += -L/skiff/local/arm-linux/lib/X11
+LDFLAGS     += -lX11 -lXtst -lXext -lm 
+
 else
-CFLAGS += -Os -fomit-frame-pointer 
-LDFLAGS = -L/skiff/local/arm-linux/lib/X11 -lgdk-x11-2.0 -lX11 -lXrender -lXext -lXinerama
+
+CC      = gcc
+STRIP   = strip
+
+LDFLAGS     += -L/usr/X11R6/lib -lX11 -lXtst -lm 
+
 endif
 
-CFLAGS += -Wall
-CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\" -DPACKAGE_DATA_DIR=\"$(PREFIX)/share/\" -DENABLE_NLS
-CFLAGS += -MD
+
+CFLAGS += -Os -Wall
+CFLAGS += -MD $(OPTIONS) -g  
+CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" 
+CFLAGS += -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\" 
+CFLAGS += -DPACKAGE_DATA_DIR=\"$(PREFIX)/share/\"
+CFLAGS += -DENABLE_NLS
+CFLAGS += $(GPECFLAGS)
+
+CONTROL = control1
 
 LEXFLAGS = -L
 YACCFLAGS = -ld
@@ -60,9 +72,9 @@ SOURCES = $(patsubst %,%.c,$(MEMBERS))
 PIXMAPS = 
 
 all: $(PACKAGE)
-
+	
 $(PACKAGE): $(OBJS)
-	$(CC) -o $@ $^ -L../libgpewidget -lgpewidget -lfl $(GTKLDFLAGS) $(LDFLAGS) 
+	$(CC) -o $@ $^ $(LDFLAGS) $(GPELIBS) -lfl -lXrender -lXinerama	
 
 .l.c:
 	$(LEX) $(LEXFLAGS) $< && mv $(LEX_OUTPUT_ROOT).c $@
@@ -83,21 +95,6 @@ install-program: all
 
 clean:
 	rm -f $(PACKAGE) $(OBJS) $(DEPS)
-
-ipkg-old: clean
-	rm -rf familiar/dist
-	mkdir -p familiar/dist/CONTROL
-	sed -e s/VERSION/$(VERSION)/ < familiar/$(CONTROL) > familiar/dist/CONTROL/control
-	if test -e familiar/conffiles; then install -m 644 familiar/conffiles familiar/dist/CONTROL; fi
-	if test -e familiar/preinst;   then install familiar/preinst   familiar/dist/CONTROL; fi
-	if test -e familiar/postinst;  then install familiar/postinst  familiar/dist/CONTROL; fi
-	if test -e familiar/prerm;     then install familiar/prerm     familiar/dist/CONTROL; fi
-	if test -e familiar/postrm;    then install familiar/postrm    familiar/dist/CONTROL; fi
-	make DESTDIR=`pwd`/familiar/dist PREFIX=/usr prefix=/usr DEBUG=no install
-	$(STRIP) familiar/dist/usr/bin/gpe-wlancfg
-	chown -R root.root familiar/dist
-	ipkg-build familiar/dist
-
 
 include $(BUILD)/Makefile.dpkg_ipkg
 include $(BUILD)/Makefile.translation
