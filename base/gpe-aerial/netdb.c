@@ -39,22 +39,6 @@
 static sqlite* netdb = NULL;
 static char **myresult;
 
-/*
-int getall_networks(sqlite_callback fCallback)
-{
-	char* errmsg = NULL;
-	int retval;
-
-	retval = sqlite_exec(netdb,SQL_GETALL,fCallback,NULL,&errmsg);
-	
-	if (retval){
-		printf("Error get networks: %s\n",errmsg);
-		free(errmsg);
-		return -1;
-	}
-	return 0;
-}
-*/
 
 usernetinfo_t* get_network(char* my_bssid)
 {
@@ -116,7 +100,6 @@ int save_network(usernetinfo_t* my_net)
 	int ncolumn = 0;
 	int ret;
 	static char ip[16],netmask[16],gateway[16];
-printf("save called...\n");
 	
 	if (netdb)
 	{

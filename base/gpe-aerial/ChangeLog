@@ -1,3 +1,8 @@
+05/26/2003		Florian Boor <florian.boor@kernelconcepts.de>
+	
+	- main.c	Changed path to scanner bin.
+	Released V 0.2.0
+
 05/23/2003		Florian Boor <florian.boor@kernelconcepts.de>
 
 	- main.c	Colored rows.

@@ -67,12 +67,12 @@ DEPS = $(patsubst %,%.d,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
 
-PIXMAPS = pixmaps/gpe-aerial.png
-PIXMAPS = pixmaps/scan-on.png
-PIXMAPS = pixmaps/scan-off.png
-PIXMAPS = pixmaps/scan-err.png
-PIXMAPS = pixmaps/wlan-net.png
-PIXMAPS = pixmaps/wlan-adhoc.png
+PIXMAPS = gpe-aerial.png
+PIXMAPS = scan-on-16.png
+PIXMAPS = scan-off-16.png
+#PIXMAPS = scan-err.png
+#PIXMAPS = wlan-net.png
+#PIXMAPS = wlan-adhoc.png
 
 all: $(PACKAGE) 
 
@@ -83,7 +83,7 @@ CFLAGS += $(MIMECFLAGS)
 
 
 install-program: $(PACKAGE)
-	sed -e s/VERSION/$(VERSION)/ <$(CONTROL).pre > $(CONTROL)
+#	sed -e s/VERSION/$(VERSION)/ <$(CONTROL).pre > $(CONTROL)
 	mkdir -p $(DESTDIR)/$(PREFIX)/bin
 	$(INSTALL) $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/
 	$(STRIP) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)

@@ -48,7 +48,7 @@
 #define _(x) gettext(x)
 
 /* we use the prismstumbler scan engine */
-#define SCANNER_EXEC "/tmp/prismstumbler"
+#define SCANNER_EXEC "/usr/bin/prismstumbler"
 
 #define CL_RED 		"red"
 #define CL_GREEN 	"green"
@@ -90,7 +90,6 @@ static GtkWidget *menu;
 static GtkWidget *menu_radio_on, *menu_radio_off;
 static GtkWidget *menu_devices;
 GtkWidget *devices_window;
-//static GtkWidget *iconlist;
 
 gboolean radio_is_on = FALSE;
 GdkWindow *dock_window;
