@@ -1,9 +1,11 @@
 <!--#set var="addtitle" value="Standards"-->
 <!--#set var="pagename" value="standards"-->
 <!--#include virtual="includes/head.shtml"-->
-One of the goals of the GPE project is to encourage developers for our platform
+
+<p>One of the goals of the GPE project is to encourage developers for our platform
 to conform to a number of standards separate from the core GPE
 software.
+</p>
 
 <h2>Desktop interoperability</h2>
 
