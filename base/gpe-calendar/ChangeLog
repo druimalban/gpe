@@ -1,3 +1,7 @@
+2004-09-02  Florian Boor <florian.boor@kernelconcepts.de>
+
+    * gtkdatesel.c: Increasing the arrow button sizes a little bit.
+
 2004-09-01  Florian Boor <florian.boor@kernelconcepts.de>
 
 	* main.c, event-ui.c: Make sure the correct widget has focus if we start 
