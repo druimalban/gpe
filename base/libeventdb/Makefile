@@ -1,13 +1,14 @@
 PREFIX = /usr/local
 PACKAGE = libeventdb
 #DEBUG = yes 
+CVSBUILD = yes
 VERSION = 0.05
 
 LINGUAS = 
 
 MEMBERS = event-db old-db 
 
-SONAME = libeventdb.so.0
+SONAME = $(PACKAGE).so.0
 CONTROL = control
 
 CFLAGS = `pkg-config --cflags glib-2.0` -DG_DISABLE_DEPRECATED
@@ -31,9 +32,15 @@ OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
-all: libeventdb.so
+ifeq ($(CVSBUILD),yes)
+BUILD = ../build
+else
+BUILD = build
+endif
 
-libeventdb.so: $(SONAME)
+all: $(PACKAGE).so
+
+$(PACKAGE).so: $(SONAME)
 	ln -sf $^ $@
 
 $(SONAME): $(OBJS)
@@ -44,15 +51,15 @@ $(SONAME): $(OBJS)
 
 install-devel:
 	for i in $(HEADERS); do install -m 644 -D $$i $(DESTDIR)$(PREFIX)/include/gpe/$$i; done
-	ln -s $(SONAME) $(DESTDIR)$(PREFIX)/lib/libeventdb.so
+	ln -s $(SONAME) $(DESTDIR)$(PREFIX)/lib/$(PACKAGE).so
 
 clean:
-	rm -f $(OBJS) $(SONAME) libeventdb.so $(DEPS)
+	rm -f $(OBJS) $(SONAME) $(PACKAGE).so $(DEPS)
 
-install: $(SONAME) install-mo
+install-program: $(SONAME)
 	install -D $(SONAME) $(DESTDIR)$(PREFIX)/lib/$(SONAME)
 	strip $(DESTDIR)$(PREFIX)/lib/$(SONAME)
 
-include ../build/Makefile.translation
-include ../build/Makefile.dpkg_ipkg
+include $(BUILD)/Makefile.translation
+include $(BUILD)/Makefile.dpkg_ipkg
 -include $(DEPS)

@@ -1,5 +1,6 @@
 PREFIX = /usr/local
 PACKAGE = librootimage0
+CVSBUILD = yes
 DEBUG = no
 
 .SUFFIXES: .os
@@ -21,6 +22,12 @@ OBJS = $(patsubst %,%.os,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
+ifeq ($(CVSBUILD),yes)
+BUILD = ../build
+else
+BUILD = build
+endif
+
 .c.os:;
 	$(CC) -o $@ -c $^ $(CFLAGS) -fPIC
 
@@ -32,7 +39,7 @@ librootimage.so: $(LIBROOTIMAGE_SO)
 $(LIBROOTIMAGE_SO): $(OBJS)
 	$(CC) -o $@ $^ -shared -Wl,-soname -Wl,$(LIBROOTIMAGE_SO) -nostartfiles -L/usr/X11R6/lib -lX11 
 
-install: $(LIBROOTIMAGE_SO)
+install-program: $(LIBROOTIMAGE_SO)
 	mkdir -p $(DESTDIR)$(PREFIX)/lib
 	install $(LIBROOTIMAGE_SO) $(DESTDIR)$(PREFIX)/lib/$(LIBROOTIMAGE_SO)
 	strip $(DESTDIR)$(PREFIX)/lib/$(LIBROOTIMAGE_SO)
@@ -41,6 +48,6 @@ clean:
 	rm -f $(LIBROOTIMAGE_SO) librootimage.so
 	rm -f $(OBJS) $(DEPS)
 
-include ../build/Makefile.translation
-include ../build/Makefile.dpkg_ipkg
+include $(BUILD)/Makefile.translation
+include $(BUILD)/Makefile.dpkg_ipkg
 -include $(DEPS)

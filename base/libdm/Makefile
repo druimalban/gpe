@@ -1,13 +1,14 @@
 PREFIX = /usr/local
 PACKAGE = libdm
 DEBUG = yes
+CVSBUILD = yes
 VERSION = 0.25
 
 LINGUAS = 
 
 MEMBERS = migrate auth crypt
 
-SONAME = libdm.so.0
+SONAME = $(PACKAGE).so.0
 CONTROL = control
 
 CFLAGS += -DPREFIX=\"$(PREFIX)\" -DPACKAGE=\"$(PACKAGE)\" -D_GNU_SOURCE -Wall -fPIC
@@ -26,9 +27,15 @@ OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
-all: libdm.so
+ifeq ($(CVSBUILD),yes)
+BUILD = ../build
+else
+BUILD = build
+endif
 
-libdm.so: $(SONAME)
+all: $(PACKAGE).so
+
+$(PACKAGE).so: $(SONAME)
 	ln -sf $^ $@
 
 $(SONAME): $(OBJS)
@@ -37,16 +44,17 @@ $(SONAME): $(OBJS)
 .c.s:;
 	$(CC) $(CFLAGS) -S $<
 
-install: $(SONAME)
+install-program: $(SONAME)
 	install -D $(SONAME) $(DESTDIR)$(PREFIX)/lib/$(SONAME)
 	strip $(DESTDIR)$(PREFIX)/lib/$(SONAME)
 
 install-devel:
 	for i in $(HEADERS); do install -m 644 -D $$i $(DESTDIR)$(PREFIX)/include/gpe/$$i; done
-	ln -s $(SONAME) $(DESTDIR)$(PREFIX)/lib/libdm.so
+	ln -s $(SONAME) $(DESTDIR)$(PREFIX)/lib/$(PACKAGE).so
 
 clean:
-	rm -f $(OBJS) $(SONAME) libdm.so $(DEPS)
+	rm -f $(OBJS) $(SONAME) $(PACKAGE).so $(DEPS)
 
+include $(BUILD)/Makefile.translation
+include $(BUILD)/Makefile.dpkg_ipkg
 -include $(DEPS)
--include ../build/Makefile.dpkg_ipkg

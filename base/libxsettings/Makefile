@@ -1,6 +1,7 @@
 PREFIX = /usr/local
 PACKAGE = libxsettings0
 DEBUG = no
+CVSBUILD = yes
 
 .SUFFIXES: .os
 
@@ -21,6 +22,11 @@ XSETTINGS_OBJS = $(patsubst %,%.os,$(XSETTINGS_MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS) $(XSETTINGS_MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS) $(XSETTINGS_MEMBERS))
 
+ifeq ($(CVSBUILD),yes)
+BUILD = ../build
+else
+BUILD = build
+endif
 .c.os:;
 	$(CC) -o $@ -c $^ $(CFLAGS) -fPIC
 
@@ -32,7 +38,7 @@ libXsettings.so: $(LIBXSETTINGS_SO)
 $(LIBXSETTINGS_SO): $(XSETTINGS_OBJS)
 	$(CC) -o $@ $^ -shared -Wl,-soname -Wl,$(LIBXSETTINGS_SO) -nostartfiles -L/usr/X11R6/lib -lX11 
 
-install: $(LIBXSETTINGS_SO)
+install-program: $(LIBXSETTINGS_SO)
 	mkdir -p $(DESTDIR)$(PREFIX)/lib
 	install $(LIBXSETTINGS_SO) $(DESTDIR)$(PREFIX)/lib/$(LIBXSETTINGS_SO)
 	strip $(DESTDIR)$(PREFIX)/lib/$(LIBXSETTINGS_SO)
@@ -41,6 +47,6 @@ clean:
 	rm -f $(LIBXSETTINGS_SO) libXsettings.so
 	rm -f $(XSETTINGS_OBJS) $(DEPS)
 
-include ../build/Makefile.translation
-include ../build/Makefile.dpkg_ipkg
+include $(BUILD)/Makefile.translation
+include $(BUILD)/Makefile.dpkg_ipkg
 -include $(DEPS)

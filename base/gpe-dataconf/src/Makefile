@@ -1,5 +1,6 @@
 PREFIX = /usr/local
 PACKAGE = gpe-dataconf
+CVSBUILD = yes
 USE_USQLD = yes
 
 DIR_PO := ../po
@@ -27,6 +28,12 @@ DEPS = $(patsubst %,%.d,$(MEMBERS))
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
+ifeq ($(CVSBUILD),yes)
+BUILD = ../build
+else
+BUILD = build
+endif
+
 all: gpe-dataconf all-mo
 
 $(PACKAGE): $(OBJS)
@@ -35,11 +42,10 @@ $(PACKAGE): $(OBJS)
 clean:
 	rm -f gpe-dataconf $(OBJS) $(DEPS)
 
-install: all install-mo
+install-program: all
 	install -D gpe-dataconf $(DESTDIR)$(PREFIX)/bin/gpe-dataconf
 	strip $(DESTDIR)$(PREFIX)/bin/gpe-dataconf
 
-include ../../build/Makefile.dpkg_ipkg
-include ../../build/Makefile.translation
-
+include $(BUILD)/Makefile.translation
+include $(BUILD)/Makefile.dpkg_ipkg
 -include $(DEPS)

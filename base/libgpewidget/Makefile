@@ -69,7 +69,7 @@ gpe-iconlist.c: gpeiconlist.gob
 libgpewidget.a: $(OBJS)
 	ar cq $@ $^
 
-install: $(SONAME)
+install-program: $(SONAME)
 	mkdir -p $(DESTDIR)$(PREFIX)/lib/
 	install -s $(SONAME) $(DESTDIR)$(PREFIX)/lib/
 ifneq ($(GTK2),yes)
@@ -85,5 +85,4 @@ clean: clean-po
 
 include $(BUILD)/Makefile.translation
 include $(BUILD)/Makefile.dpkg_ipkg
-
 -include $(DEPS)
