@@ -1,5 +1,9 @@
 2004-08-23  Florian Boor  <florian.boor@kernelconcepts.de>
     
+    * Released V 0.27
+    * contacts-alternate-bigscreen.xml: New file.
+    * Makefile: Added method to install alternate contact layout with broken 
+                down address field.
     * Makefile: V 0.27
     * db.c: Fixed "MODIFIED" tag multiplication.
     * editing.c: Removed obsolete store_special_fields(), retrieve_special_fields()

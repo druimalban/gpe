@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-08-20 16:00+0200\n"
+"POT-Creation-Date: 2004-08-23 14:57+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: db.c:76 main.c:289
+#: db.c:76 main.c:302
 msgid "Name"
 msgstr ""
 
@@ -40,11 +40,11 @@ msgstr ""
 msgid "Categories"
 msgstr ""
 
-#: main.c:81 main.c:180
+#: main.c:81 main.c:181
 msgid "Really delete this contact?"
 msgstr ""
 
-#: main.c:81 main.c:180 structure.c:176
+#: main.c:81 main.c:181 structure.c:176
 msgid "Confirm"
 msgstr ""
 
@@ -52,75 +52,75 @@ msgstr ""
 msgid "All categories"
 msgstr ""
 
-#: main.c:266
+#: main.c:279
 msgid "home"
 msgstr ""
 
-#: main.c:268
+#: main.c:281
 msgid "work"
 msgstr ""
 
-#: main.c:318
+#: main.c:331
 msgid "Birthday:"
 msgstr ""
 
-#: main.c:733 gpe-contacts.desktop.in.h:1
+#: main.c:749 gpe-contacts.desktop.in.h:1
 msgid "Contacts"
 msgstr ""
 
-#: main.c:746
+#: main.c:762
 msgid "New contact"
 msgstr ""
 
-#: main.c:746
+#: main.c:762
 msgid "Tap here to add a new contact."
 msgstr ""
 
-#: main.c:752
+#: main.c:768
 msgid "Edit"
 msgstr ""
 
-#: main.c:753
+#: main.c:769
 msgid "Edit contact"
 msgstr ""
 
-#: main.c:753
+#: main.c:769
 msgid "Tap here to edit the selected contact."
 msgstr ""
 
-#: main.c:759
+#: main.c:775
 msgid "Delete contact"
 msgstr ""
 
-#: main.c:759
+#: main.c:775
 msgid "Tap here to delete the selected contact."
 msgstr ""
 
-#: main.c:766
+#: main.c:782
 msgid "Properties"
 msgstr ""
 
-#: main.c:766
+#: main.c:782
 msgid "Tap here to configure the program."
 msgstr ""
 
-#: main.c:772
+#: main.c:788
 msgid "Close"
 msgstr ""
 
-#: main.c:772
+#: main.c:788
 msgid "Tap here to exit gpe-contacts."
 msgstr ""
 
-#: main.c:797 main.c:845
+#: main.c:813 main.c:861
 msgid "Contact"
 msgstr ""
 
-#: main.c:809
+#: main.c:825
 msgid "Find:"
 msgstr ""
 
-#: main.c:816
+#: main.c:832
 msgid "in"
 msgstr ""
 

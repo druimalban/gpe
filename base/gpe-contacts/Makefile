@@ -25,6 +25,13 @@ PACKAGE_CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LO
 PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS) `pkg-config --cflags libxml-2.0` `pkg-config --cflags mimedir-1.0` `pkg-config --cflags dbus-glib-1`
 PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS) -lsqlite `pkg-config --libs libxml-2.0` `pkg-config --libs mimedir-1.0` `pkg-config --libs dbus-glib-1` -ldisplaymigration -lgpepimc -lgpevtype
 
+ifeq ($(ALTERNATE_LAYOUT),yes)
+  LAYOUT_BIGSCREEN = contacts-alternate-bigscreen.xml 
+else
+  LAYOUT_BIGSCREEN = contacts-layout-bigscreen.xml
+endif
+
+
 MEMBERS = db editing main structure support configure old-db export namedetail import-vcard
 
 DEPS = $(patsubst %,%.d,$(MEMBERS))
@@ -49,7 +56,7 @@ install-program: all $(PACKAGE).desktop
 	install -m 644 icons/gpe-contacts.png $(DESTDIR)$(PREFIX)/share/pixmaps/gpe-contacts.png
 	install -d $(DESTDIR)$(pkgdatadir)
 	install -m 644 contacts-layout.xml $(DESTDIR)$(pkgdatadir)/default-layout.xml
-	install -m 644 contacts-layout-bigscreen.xml $(DESTDIR)$(pkgdatadir)/contacts-layout-bigscreen.xml
+	install -m 644 $(LAYOUT_BIGSCREEN) $(DESTDIR)$(pkgdatadir)/contacts-layout-bigscreen.xml
 	install -m 644 well-known-tags $(DESTDIR)$(pkgdatadir)/well-known-tags
 	install -d $(DESTDIR)$(MYPIXMAPSDIR)
 	install -m 644 icons/frame.png $(DESTDIR)$(MYPIXMAPSDIR)/frame.png
