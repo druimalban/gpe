@@ -31,7 +31,7 @@ struct gpe_icon my_icons[] = {
   { "delete", "delete" },
   { "clock", "clock" },
   { "stop_clock", "stop_clock" },
-  { "ok", "ok" },
+  { "tick", "tick" },
   { NULL, NULL }
 };
 
@@ -40,7 +40,7 @@ mark_started (GtkCTree *ct, GtkCTreeNode *node)
 {
   GdkPixmap *pixmap;
   GdkBitmap *bitmap;
-  gpe_find_icon_pixmap ("ok", &pixmap, &bitmap);
+  gpe_find_icon_pixmap ("tick", &pixmap, &bitmap);
   gtk_ctree_node_set_pixmap (ct, node, 1, pixmap, bitmap);
 }
 
@@ -168,9 +168,14 @@ main(int argc, char *argv[])
   if (sql_start () == FALSE)
     exit (1);
 
+#if GTK_MAJOR_VERSION < 2
   toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, GTK_TOOLBAR_ICONS);
-
   gtk_toolbar_set_button_relief (GTK_TOOLBAR (toolbar), GTK_RELIEF_NONE);
+#else
+  toolbar = gtk_toolbar_new ();
+  gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);
+  gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
+#endif
 
   tree = gtk_ctree_new (2, 0);
   chatter = gtk_label_new ("");
@@ -188,26 +193,25 @@ main(int argc, char *argv[])
   pw = gpe_render_icon (window->style, p);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("New task"), 
 			   _("New task"), _("New task"),
-			   pw, ui_new_task, tree);
+			   pw, (GtkSignalFunc)ui_new_task, tree);
 
   p = gpe_find_icon ("delete");
   pw = gpe_render_icon (window->style, p);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Delete task"),
 			   _("Delete task"), _("Delete task"),
-			   pw, ui_delete_task, tree);
+			   pw, (GtkSignalFunc)ui_delete_task, tree);
 
   p = gpe_find_icon ("clock");
   pw = gpe_render_icon (window->style, p);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Start timing"),
 			   _("Start timing"), _("Start timing"),
-			   pw, start_timing, tree);
+			   pw, (GtkSignalFunc)start_timing, tree);
   
   p = gpe_find_icon ("stop_clock");
   pw = gpe_render_icon (window->style, p);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Stop timing"),
 			   _("Stop timing"), _("Stop timing"),
-			   pw, stop_timing, tree);
-
+			   pw, (GtkSignalFunc)stop_timing, tree);
 
   gtk_widget_show (toolbar);
   gtk_widget_show (vbox_top);

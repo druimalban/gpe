@@ -1,8 +1,27 @@
 PREFIX = /usr/local
 PACKAGE = gpe-timesheet
+CVSBUILD = yes
 
-CFLAGS = `gdk-pixbuf-config --cflags` `gtk-config --cflags` -g -Wall
-CFLAGS += -MD
+ifeq ($(GTK2),yes)
+GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
+GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
+else
+GTKCFLAGS = `gtk-config --cflags` `gdk-pixbuf-config --cflags`
+GTKLDFLAGS = `gtk-config --libs`
+endif
+
+ifeq ($(CVSBUILD),yes)
+LGPEWIDGET = -L../libgpewidget
+endif
+
+ifeq ($(DEBUG), yes)
+CFLAGS += -g
+LDFLAGS += -g
+endif
+
+LGPEWIDGET += -lgpewidget 
+
+CFLAGS += -MD -Wall $(GTKCFLAGS)
 
 CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 
@@ -13,7 +32,7 @@ OBJS = $(patsubst %,%.o,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
 gpe-timesheet: $(OBJS)
-	$(CC) -o $@ $^ -lgpewidget `gdk-pixbuf-config --libs` `gtk-config --libs` -lsqlite -g
+	$(CC) -o $@ $^ $(LGPEWIDGET) $(GTKLDFLAGS) -lsqlite $(LDFLAGS)
 
 install:
 	strip gpe-timesheet
