@@ -392,7 +392,7 @@ Serial_Build_Objects (void)
 			  GTK_FILL, GTK_FILL, gpe_get_boxspacing (),
 			  gpe_get_boxspacing ());
 	gtk_tooltips_set_tip (tooltips, self.rbNMEA,
-			      _("The GPS receiver is a sends NMEA data. (default, no need to change for most receivers)"),
+			      _("The GPS receiver sends NMEA data (default, no need to change for most receivers)."),
 			      NULL);
 
 	self.rbEarthmate =
