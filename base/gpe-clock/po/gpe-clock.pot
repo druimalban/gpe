@@ -1,0 +1,68 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2003-04-20 14:10+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: clock.c:104
+msgid "Clock preferences"
+msgstr ""
+
+#: clock.c:109
+msgid "12-hour format"
+msgstr ""
+
+#: clock.c:111
+msgid "24-hour format"
+msgstr ""
+
+#: clock.c:113
+msgid "Show seconds"
+msgstr ""
+
+#: clock.c:173
+msgid "Time:"
+msgstr ""
+
+#: clock.c:187
+msgid "Set alarm"
+msgstr ""
+
+#: clock.c:193
+msgid "Alarm active"
+msgstr ""
+
+#: clock.c:197
+msgid "Date:"
+msgstr ""
+
+#: clock.c:199
+msgid "Weekly, on:"
+msgstr ""
+
+#: clock.c:277
+msgid "Preferences"
+msgstr ""
+
+#: clock.c:278
+msgid "Set the time"
+msgstr ""
+
+#: clock.c:279
+msgid "Alarm ..."
+msgstr ""
+
+#: clock.c:280
+msgid "Remove from panel"
+msgstr ""
