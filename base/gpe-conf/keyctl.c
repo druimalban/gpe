@@ -99,7 +99,7 @@ t_scommand commands[NUM_COMMANDS] =	{
 static int active_button = 0;
 
 struct gpe_icon local_icons[] = {
-	{ "ipaq" , "ipaq-s1"},
+	{ "ipaq" , PREFIX "/share/pixmaps/ipaq-s1.png"},
 	{ "button1", PREFIX "/share/pixmaps/ibutton1.png" }, 
 	{ "button2", PREFIX "/share/pixmaps/ibutton2.png" }, 
 	{ "button3", PREFIX "/share/pixmaps/ibutton3.png" }, 

@@ -26,7 +26,7 @@ EXTRA_DESKTOPS = \
 	gpe-conf-sysinfo.desktop.in	
 
 ifeq ($(CVSBUILD),yes)
-LDFLAGS += -L../libgpewidget -L../libxsettings  -L../libxsettings-client -L../libdotdesktop -L../libdisplaymigration -ldisplaymigration -L.
+LDFLAGS += -L../libgpewidget -L../libxsettings  -L../libxsettings-client -L../libdotdesktop  -L.
 CFLAGS += -Wall -I../libgpewidget -I../libxsettings-client -I../libxsettings -I../libdotdesktop
 BUILD = ../build
 else

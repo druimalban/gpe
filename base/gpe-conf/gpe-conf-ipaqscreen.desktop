@@ -2,7 +2,7 @@
 Name=Screen Setup
 Name[cs]=Nastavení displeje
 Name[de]=Bildschirmeinstellungen
-Name[fr]=Configuration de l'écran
+Name[fr]=Écran
 Name[nl]=Scherminstellingen
 Name[pt]=Configuração do Ecrã
 Name[ro]=Setare screen
@@ -12,7 +12,7 @@ Name[sv]=Konfiguration av skärm
 Comment=Screen Setup
 Comment[cs]=Nastavení displeje
 Comment[de]=Bildschirmeinstellungen
-Comment[fr]=Configuration de l'écran
+Comment[fr]=Écran
 Comment[nl]=Scherminstellingen
 Comment[pt]=Configuração do Ecrã
 Comment[ro]=Setare screen
