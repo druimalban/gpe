@@ -222,8 +222,8 @@ find_deepest_window (Display *dpy, Window grandfather, Window parent,
 
   if (child == None)
     {
-      *rx = x;
-      *ry = y;
+      *rx = dest_x;
+      *ry = dest_y;
 
       return parent;
     }
