@@ -2,7 +2,7 @@ PREFIX = /usr/local
 PACKAGE = libtododb
 #DEBUG = yes 
 CVSBUILD = yes
-VERSION = 0.02
+VERSION = 0.03
 
 LINGUAS =
 
