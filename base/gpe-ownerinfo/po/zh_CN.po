@@ -1,0 +1,65 @@
+# gpe-ownerinfo 的简体中文翻译
+# Copyright (C) 2004 Free Software Foundation, Inc.
+# This file is distributed under the same license as the gpe-ownerinfo package.
+# Meng Jie <zuxyhere@eastday.com>, 2004.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-ownerinfo 0.22\n"
+"POT-Creation-Date: 2003-10-10 00:14+0200\n"
+"PO-Revision-Date: 2004-11-03 00:07+0800\n"
+"Last-Translator: Meng Jie <zuxyhere@eastday.com>\n"
+"Language-Team: Chinese (simplified) <i18n-translation@lists.linux.net.cn>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: Chinese\n"
+"X-Poedit-Country: CHINA\n"
+
+#: main.c:83 main.c:112
+msgid "GPE Owner Info"
+msgstr "GPE 所有者信息"
+
+#: main.c:85
+msgid "Valid options:\n"
+msgstr "有效选项：\n"
+
+#: main.c:86
+msgid "   -g GEOMETRY  window geometry (default: 240x100+0+220)\n"
+msgstr "   -g 坐标      窗口坐标(默认：240x100+0+220)\n"
+
+#: main.c:87
+msgid "   -k           always keep window on top (override redirect)\n"
+msgstr "   -k           窗口始终在最前端(忽略重定向)\n"
+
+#: main.c:88
+msgid "   -h           this help text\n"
+msgstr "   -h           此帮助文本\n"
+
+#. TRANSLATORS: only a short word will look good
+#. here.  If the word is shorter than 5 letters,
+#. please fill it up with spaces.
+#: gpe-ownerinfo.c:326
+msgid "Owner"
+msgstr "所有者"
+
+#: gpe-ownerinfo.c:356
+msgid "GPE User"
+msgstr "GPE 用户"
+
+#. TRANSLATORS: you should make sure to not use a 'fantasy' domain
+#. which might actually exist (maybe in the future). You can
+#. replace the 'nobody' though, or use '@example.org' (see RFC 2606)
+#: gpe-ownerinfo.c:360
+msgid "nobody@localhost.localdomain"
+msgstr "nobody@localhost.localdomain"
+
+#: gpe-ownerinfo.c:361
+msgid "+99 (9999) 999-9999"
+msgstr "+99 (9999) 999-9999"
+
+#. TRANSLATORS: the translations below should match 'Owner
+#. Information' (in gpe-conf) and 'Settings' (in mbdesktop)
+#: gpe-ownerinfo.c:364
+msgid "Configurable with <i>Owner Information</i> under <i>Settings</i>."
+msgstr "可在 <i>设置</i> 下的 <i>所有者信息</i> 中配置"
