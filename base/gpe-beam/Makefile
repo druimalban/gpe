@@ -1,72 +1,53 @@
 PACKAGE = gpe-beam
-VERSION = 0.2.2
+VERSION = 0.2.3
 NATIVE = yes
 CVSBUILD = yes
 DEBUG = no
-GTK2 = yes
 INSTALL = install
-PREFIX = /usr
+PREFIX = /usr/local
 DESTDIR = /
 CONTROL = control1
 
 LINGUAS = cs de sv ro nl pt ru fr sr es
 
 ifeq ($(CVSBUILD),yes)
-LDFLAGS += -L../libgpewidget -L.
-CFLAGS += -Wall -I../libgpewidget 
 BUILD = ../build
 else
-CFLAGS += -I$(PREFIX)/include/gpe
 BUILD = build
 endif
 
 ifeq ($(DEBUG),yes)
-CFLAGS += -g -DDEBUG -DIRCP_DEBUG=9
+PACKAGE_CFLAGS += -g -DDEBUG -DIRCP_DEBUG=9
 else
-CFLAGS += -Os -fomit-frame-pointer 
+PACKAGE_CFLAGS += -Os -fomit-frame-pointer 
 endif
 
-CFLAGS += -DVERSION=\"$(VERSION)\" -DPREFIX=\"$(PREFIX)\" -D_GNU_SOURCE -DPACKAGE=\"$(PACKAGE)\" 
-CFLAGS += -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
+PACKAGE_CFLAGS += -DVERSION=\"$(VERSION)\" -DPREFIX=\"$(PREFIX)\" -D_GNU_SOURCE -DPACKAGE=\"$(PACKAGE)\" 
+PACKAGE_CFLAGS += -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 
-CPPFLAGS += -I.
+PACKAGE_CPPFLAGS += -I.
 
-GTKCFLAGS = `pkg-config --cflags gtk+-2.0` 
-GTKLDFLAGS += `pkg-config --libs gtk+-2.0` `pkg-config --libs gthread-2.0`
+MIMECFLAGS =`pkg-config --cflags mimedir-1.0`
+MIMELDFLAGS = $(GTKLDFLAGS) -lsqlite `pkg-config --libs mimedir-1.0`
 
-MIMECFLAGS =`pkg-config --cflags mimedir-1.0` -I/usr/local/include/mimedir-1.0 -I../libgpevtype
-MIMELDFLAGS = $(GTKLDFLAGS) -lsqlite -lmimedir -L../libgpevtype -lgpevtype
+ifeq ($(CVSBUILD),yes)
+MIMECFLAGS += $(shell PKG_CONFIG_PATH=../libgpevtype pkg-config --cflags libgpevtype-uninstalled)
+MIMELDFLAGS += $(shell PKG_CONFIG_PATH=../libgpevtype pkg-config --libs libgpevtype-uninstalled)
+else
+MIMECFLAGS += `pkg-config --cflags libgpevtype`
+MIMELDFLAGS += `pkg-config --libs libgpevtype`
+endif
 
 libircp_a_OBJECTS =  ircp/ircp_client.o ircp/ircp_server.o ircp/ircp_io.o ircp/dirtraverse.o
 IRFLAGS = -lopenobex libircp.a
-
-# setup how to compile
-ifeq ($(NATIVE),yes)
 
 STRIP=strip
 CC=gcc
 AR = ar
 RANLIB = ranlib
 
-CFLAGS +=  -Wall $(GTKCFLAGS)
-LDFLAGS += -lgpewidget $(GTKLDFLAGS)
-
-else # we do cross-compile...
-
-CC=arm-linux-gcc
-STRIP=arm-linux-strip
-AR = arm-linux-ar
-RANLIB = arm-linux-ranlib
-
-CFLAGS +=  -Wall $(GTKCFLAGS)
-LDFLAGS += -L/skiff/local/arm-linux/lib -L/skiff/local/arm-linux/lib/X11  
-LDFLAGS += -lgpewidget $(GTKLDFLAGS)
-LDFLAGS += -lm 
-LDFLAGS += -lgmodule-2.0 -ldl -lXinerama
-LDFLAGS += -lX11 -lXext -lXrender -lgdk-x11-2.0
-
-endif #native or cross-compile
-
+PACKAGE_CFLAGS +=  -Wall $(GPECFLAGS) $(GTKCFLAGS) `pkg-config --cflags gthread-2.0`
+PACKAGE_LDFLAGS += $(GPELIBS) $(GTKLIBS) `pkg-config --libs gthread-2.0`
 
 MEMBERS  = main filesel
 
@@ -77,15 +58,15 @@ SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
 PIXMAPS = irda-16.png irda.png irda-on-16.png
 
-all: $(PACKAGE) vcard-export vcard-import vcard-import-file irsw vcal-export
+all: $(PACKAGE) vcard-export vcard-import irsw vcal-export
 
 $(PACKAGE): libircp.a $(OBJS)
-	$(CC) -g -o $@ $(OBJS) $(LDFLAGS) $(IRFLAGS)
+	$(CC) -g -o $@ $(OBJS) $(LDFLAGS) $(IRFLAGS) $(PACKAGE_LDFLAGS)
 
 irsw: irsw.o irsw.o
 	$(CC) -o $@ $^ $(LDFLAGS)
 
-CFLAGS += $(MIMECFLAGS)
+PACKAGE_CFLAGS += $(MIMECFLAGS)
 
 vcal-export: vcal-export.o
 	$(CC) -o $@ $^ $(LDFLAGS) $(MIMELDFLAGS)
@@ -94,9 +75,6 @@ vcard-export: vcard-export.o
 	$(CC) -o $@ $^ $(LDFLAGS) $(MIMELDFLAGS)
 
 vcard-import: vcard-import.o
-	$(CC) -o $@ $^ $(LDFLAGS) $(MIMELDFLAGS)
-
-vcard-import-file: import-vcard-file.o vcard.o
 	$(CC) -o $@ $^ $(LDFLAGS) $(MIMELDFLAGS)
 
 libircp.a: $(libircp_a_OBJECTS) $(libircp_a_DEPENDENCIES)
@@ -112,7 +90,6 @@ install-program: all all-desktop
 	$(INSTALL) irsw $(DESTDIR)$(PREFIX)/bin/
 	$(INSTALL) vcard-export $(DESTDIR)$(PREFIX)/bin/
 	$(INSTALL) vcard-import $(DESTDIR)$(PREFIX)/bin/
-	$(INSTALL) vcard-import-file $(DESTDIR)$(PREFIX)/bin/
 	$(STRIP) $(DESTDIR)$(PREFIX)/bin/*
 	mkdir -p $(DESTDIR)$(PREFIX)/share/pixmaps
 	for i in $(PIXMAPS); do install -m 644 -D pixmaps/$$i $(DESTDIR)$(PREFIX)/share/pixmaps/$$i; done
@@ -120,7 +97,7 @@ install-program: all all-desktop
 	$(INSTALL) -m 644 *.desktop $(DESTDIR)$(PREFIX)/share/applications
 
 clean:
-	rm -f $(PACKAGE)  vcard-export vcard-import vcard-import-file  $(OBJS) *~ */*~ *.ipk *.o *.a ircp/*.o
+	rm -f $(PACKAGE) vcard-export vcard-import vcard-import-file irsw vcal-export $(OBJS) *~ */*~ *.ipk *.o *.a ircp/*.o
 
 include $(BUILD)/Makefile.dpkg_ipkg
 include $(BUILD)/Makefile.translation

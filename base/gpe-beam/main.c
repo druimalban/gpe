@@ -55,10 +55,10 @@
 
 
 struct gpe_icon my_icons[] = {
-	{"irda-on", "/usr/share/pixmaps/irda-on-16.png"},
-	{"irda-off", "/usr/share/pixmaps/irda-16.png"},
-	{"irda", "/usr/share/pixmaps/irda.png"},
-	{NULL}
+	{"irda-on", PREFIX "/share/pixmaps/irda-on-16.png"},
+	{"irda-off", PREFIX "/share/pixmaps/irda-16.png"},
+	{"irda", PREFIX "/share/pixmaps/irda.png"},
+	{NULL, NULL}
 };
 
 static GtkWidget *icon;
@@ -860,6 +860,29 @@ clicked (GtkWidget * w, GdkEventButton * ev)
 			gpe_popup_menu_position, w, ev->button, ev->time);
 }
 
+/* handle resizing */
+gboolean 
+external_event(GtkWindow *window, GdkEventConfigure *event, gpointer user_data)
+{
+  GdkBitmap *bitmap;
+  GdkPixbuf *sbuf, *dbuf;
+  int size;
+
+  if (event->type == GDK_CONFIGURE)
+  {
+    size = (event->width > event->height) ? event->height : event->width;
+    sbuf = gpe_find_icon (radio_is_on ? "irda-on" : "irda-off");
+    dbuf = gdk_pixbuf_scale_simple(sbuf,size, size,GDK_INTERP_HYPER);
+    gdk_pixbuf_render_pixmap_and_mask (dbuf, NULL, &bitmap, 128);
+    gtk_widget_shape_combine_mask (GTK_WIDGET(window), NULL, 1, 0);
+    gtk_widget_shape_combine_mask (GTK_WIDGET(window), bitmap, 1, 0);
+    gdk_bitmap_unref (bitmap);
+    gtk_image_set_from_pixbuf(GTK_IMAGE(icon),dbuf);
+	/* make sure we want to resize all the time */
+	gtk_widget_set_size_request(GTK_WIDGET(window),size+1,size);
+  }
+  return FALSE;
+}
 
 int
 main (int argc, char *argv[])
@@ -873,6 +896,8 @@ main (int argc, char *argv[])
 	g_thread_init (NULL);
 	gdk_threads_init ();
 	if (gpe_application_init (&argc, &argv) == FALSE)
+		exit (1);
+	if (gpe_load_icons (my_icons) == FALSE)
 		exit (1);
 	
 	setlocale (LC_ALL, "");
@@ -925,8 +950,7 @@ main (int argc, char *argv[])
 	gtk_menu_append (GTK_MENU (menu), menu_vcard);
 	gtk_menu_append (GTK_MENU (menu), menu_control);
 	gtk_menu_append (GTK_MENU (menu), menu_remove);
-	if (gpe_load_icons (my_icons) == FALSE)
-		exit (1);
+	
 	icon = gtk_image_new_from_pixbuf
 		(gpe_find_icon (radio_is_on ? "irda-on" : "irda-off"));
 	gdk_pixbuf_render_pixmap_and_mask
@@ -936,14 +960,15 @@ main (int argc, char *argv[])
 	gtk_widget_show (icon);
 	gpe_set_window_icon (window, "irda");
 	tooltips = gtk_tooltips_new ();
-	gtk_tooltips_set_tip
-		(GTK_TOOLTIPS (tooltips),
-		 window,
-		 _("This is the infrared communications control."), NULL);
-	g_signal_connect (G_OBJECT
-			  (window),
-			  "button-press-event", G_CALLBACK (clicked), NULL);
+	gtk_tooltips_set_tip (GTK_TOOLTIPS (tooltips),
+		                  window,
+		                  _("This is the infrared communications control."), 
+	                      NULL);
+	gtk_object_set_data(GTK_OBJECT(window),"tooltips",tooltips);
+	g_signal_connect (G_OBJECT(window),
+			          "button-press-event", G_CALLBACK (clicked), NULL);
 	gtk_widget_add_events (window, GDK_BUTTON_PRESS_MASK);
+    g_signal_connect (G_OBJECT (window), "configure-event", G_CALLBACK (external_event), NULL);
 	gtk_container_add (GTK_CONTAINER (window), icon);
 	dpy = GDK_WINDOW_XDISPLAY (window->window);
 	gtk_widget_show (window);

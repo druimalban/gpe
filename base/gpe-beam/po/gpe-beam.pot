@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-10-10 18:47+0200\n"
+"POT-Creation-Date: 2004-08-22 14:49+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -108,120 +108,120 @@ msgstr ""
 msgid "Could not transmit file"
 msgstr ""
 
-#: main.c:359 main.c:381
+#: main.c:359 main.c:378
 msgid "Unable to start file transmit."
 msgstr ""
 
-#: main.c:395
+#: main.c:393
 msgid "IR Receive and Transmit........."
 msgstr ""
 
-#: main.c:404 main.c:406
+#: main.c:402 main.c:404
 msgid "Error opening IR client."
 msgstr ""
 
-#: main.c:413
+#: main.c:411
 msgid "Select file to transmit"
 msgstr ""
 
-#: main.c:438
+#: main.c:436
 msgid "Could not start import tool."
 msgstr ""
 
-#: main.c:445
-msgid "VCARD was imported successfully."
+#: main.c:443
+msgid "vCard was imported successfully."
 msgstr ""
 
-#: main.c:453
-msgid "Import of VCARD failed."
+#: main.c:451
+msgid "Import of vCard failed."
 msgstr ""
 
-#: main.c:483
+#: main.c:480
 #, c-format
-msgid "The file %s looks like a VCARD, may i import it?"
+msgid "File '%s' looks like a vCard, do you want to import it?"
 msgstr ""
 
-#: main.c:503 main.c:566
+#: main.c:500 main.c:562
 msgid "Unable to start receiver."
 msgstr ""
 
-#: main.c:517
+#: main.c:514
 msgid "IR Receive and transmit control"
 msgstr ""
 
-#: main.c:527 main.c:530
+#: main.c:524 main.c:527
 msgid "Error opening IR server."
 msgstr ""
 
-#: main.c:543
+#: main.c:539
 msgid "Received file"
 msgstr ""
 
-#: main.c:659
+#: main.c:657
 msgid "Name:"
 msgstr ""
 
-#: main.c:660
+#: main.c:658
 msgid "Services:"
 msgstr ""
 
-#: main.c:661
+#: main.c:659
 msgid "Address:"
 msgstr ""
 
+#: main.c:666
+msgid "Peer Information"
+msgstr ""
+
 #: main.c:669
-msgid "<b>Peer Information</b>"
+msgid "Peer Actions"
 msgstr ""
 
-#: main.c:671
-msgid "<b>Peer Actions</b>"
-msgstr ""
-
-#: main.c:676
+#: main.c:677
 msgid "Send File"
 msgstr ""
 
-#: main.c:684
+#: main.c:685
 msgid "Receive File"
 msgstr ""
 
-#: main.c:734 main.c:810
+#: main.c:735 main.c:811
 msgid "IR transceiver on"
 msgstr ""
 
-#: main.c:736 main.c:833
+#: main.c:737 main.c:834
 msgid "IR transceiver off"
 msgstr ""
 
-#: main.c:747
+#: main.c:748
 msgid "Infrared Control"
 msgstr ""
 
-#: main.c:885 gpe-beam.desktop.in.h:1
+#: main.c:911 gpe-beam.desktop.in.h:1
 msgid "IrDa control"
 msgstr ""
 
-#: main.c:887
+#: main.c:913
 msgid "Switch IR on"
 msgstr ""
 
-#: main.c:888
+#: main.c:914
 msgid "Switch IR off"
 msgstr ""
 
-#: main.c:889
-msgid "Send vcard"
+#: main.c:915
+msgid "Send vCard"
 msgstr ""
 
-#: main.c:890
+#: main.c:916
 msgid "Controls..."
 msgstr ""
 
-#: main.c:891
+#: main.c:917
 msgid "Remove from dock"
 msgstr ""
 
-#: main.c:941
+#: main.c:965
 msgid "This is the infrared communications control."
 msgstr ""
 

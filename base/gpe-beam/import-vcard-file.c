@@ -5,10 +5,9 @@
 #include <libintl.h>
 
 #include <mimedir/mimedir-vcard.h>
+#include <gpe/vcard.h>
 
 #include <sqlite.h>
-
-#include "vcard.h"
 
 #define _(x) gettext (x)
 

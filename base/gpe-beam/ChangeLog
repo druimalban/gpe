@@ -1,3 +1,10 @@
+2004-08-22	Florian Boor <florian.boor@kernelconcepts.de>
+	
+	* Released V 0.2.3
+	* main.c: Added resizing capabilities.
+	* po: Added some translation files.
+	* Makefile: V 0.2.3, update to latest standards (OE).
+	* main.c: Include PREFIX to icon paths. Minor fixes.
 
 2004-06-21	Florian Boor <florian.boor@kernelconcepts.de>
 	* Added Spanish translation.

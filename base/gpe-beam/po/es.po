@@ -1,0 +1,230 @@
+# Localización en castellano de gpe-beam.
+# Copyright © 2004 Free Software Foundation, Inc.
+# This file is distributed under the same license as the gpe-beam package.
+# J.Manrique <jsmanrique@asturlinux.org>, 2004.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-beam 0.2.2\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2003-10-10 18:47+0200\n"
+"PO-Revision-Date: 2004-06-21 07:00+0100\n"
+"Last-Translator: J.Manrique <jsmanrique@asturlinux.org>\n"
+"Language-Team: Spanish <es@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: main.c:130
+msgid "Error"
+msgstr ""
+
+#: main.c:135
+msgid "Failed"
+msgstr "Fallo"
+
+#: main.c:138
+msgid "Done"
+msgstr "Hecho"
+
+#: main.c:141
+msgid "Connecting..."
+msgstr "Conectando..."
+
+#: main.c:145
+msgid "Disconnecting..."
+msgstr "Desconectando..."
+
+#: main.c:148
+msgid "Sending..."
+msgstr "Enviando..."
+
+#: main.c:151
+msgid "Receiving"
+msgstr "Recibiendo"
+
+#: main.c:160
+msgid "Waiting for incoming connection"
+msgstr "Esperando conexión entrante"
+
+#: main.c:163
+msgid "Connected"
+msgstr "Conectado"
+
+#: main.c:166
+msgid "Disconnecting"
+msgstr "Desconectando"
+
+#: main.c:187
+msgid "Telephony"
+msgstr "Telefonía"
+
+#: main.c:193
+msgid "File Server"
+msgstr "Servidor de archivos"
+
+#: main.c:199
+msgid "IrCOMM"
+msgstr ""
+
+#: main.c:205
+msgid "IrOBEX"
+msgstr ""
+
+#: main.c:214
+msgid "PnP"
+msgstr ""
+
+#: main.c:220
+msgid "PDA/Palmtop"
+msgstr ""
+
+#: main.c:226
+msgid "Computer"
+msgstr "Ordenador"
+
+#: main.c:232
+msgid "Printer"
+msgstr "Impresora"
+
+#: main.c:238
+msgid "Modem"
+msgstr ""
+
+#: main.c:244
+msgid "Fax"
+msgstr ""
+
+#: main.c:250
+msgid "LAN Access"
+msgstr "Acceso LAN"
+
+#: main.c:324
+msgid "Transmitted file"
+msgstr "Fichero transmitido"
+
+#: main.c:333
+msgid "Could not transmit file"
+msgstr "No se pudo transmitir fichero"
+
+#: main.c:359 main.c:381
+msgid "Unable to start file transmit."
+msgstr "Imposible comenzar transmisión."
+
+#: main.c:395
+msgid "IR Receive and Transmit........."
+msgstr "Recepción y transmisión IR........"
+
+#: main.c:404 main.c:406
+msgid "Error opening IR client."
+msgstr "Error abriendo cliente IR."
+
+#: main.c:413
+msgid "Select file to transmit"
+msgstr "Seleccionar fichero para transmitir"
+
+#: main.c:438
+msgid "Could not start import tool."
+msgstr "No pudo comenzar herramienta de importación."
+
+#: main.c:445
+msgid "VCARD was imported successfully."
+msgstr "VCARD importada satisfactoriamente."
+
+#: main.c:453
+msgid "Import of VCARD failed."
+msgstr "Importación de VCARD fallida."
+
+#: main.c:483
+#, c-format
+msgid "The file %s looks like a VCARD, may i import it?"
+msgstr "El fichero %s parece una VCARD, ¿debo importarla?"
+
+#: main.c:503 main.c:566
+msgid "Unable to start receiver."
+msgstr "Imposible comenzar receptor."
+
+#: main.c:517
+msgid "IR Receive and transmit control"
+msgstr "Control de IR para recepción y transmisión"
+
+#: main.c:527 main.c:530
+msgid "Error opening IR server."
+msgstr "Error abriendo servidor IR."
+
+#: main.c:543
+msgid "Received file"
+msgstr "Fichero recibido."
+
+#: main.c:659
+msgid "Name:"
+msgstr "Nombre:"
+
+#: main.c:660
+msgid "Services:"
+msgstr "Servicios:"
+
+#: main.c:661
+msgid "Address:"
+msgstr "Dirección:"
+
+#: main.c:669
+msgid "<b>Peer Information</b>"
+msgstr "<b>Información de punto</b>"
+
+#: main.c:671
+msgid "<b>Peer Actions</b>"
+msgstr "<b>Acciones de punto</b>"
+
+#: main.c:676
+msgid "Send File"
+msgstr "Enviar archivo"
+
+#: main.c:684
+msgid "Receive File"
+msgstr "Recibir archivo"
+
+#: main.c:734 main.c:810
+msgid "IR transceiver on"
+msgstr "Transmisor IR encendido"
+
+#: main.c:736 main.c:833
+msgid "IR transceiver off"
+msgstr "Transmisor IR apagado"
+
+#: main.c:747
+msgid "Infrared Control"
+msgstr "Control de infrarrojos"
+
+#: main.c:885 gpe-beam.desktop.in.h:1
+msgid "IrDa control"
+msgstr "Control IrDA"
+
+#: main.c:887
+msgid "Switch IR on"
+msgstr "Encender IR"
+
+#: main.c:888
+msgid "Switch IR off"
+msgstr "Apagar IR"
+
+#: main.c:889
+msgid "Send vcard"
+msgstr "Enviar vcard"
+
+#: main.c:890
+msgid "Controls..."
+msgstr "Controles..."
+
+#: main.c:891
+msgid "Remove from dock"
+msgstr "Quitar del panel"
+
+#: main.c:941
+msgid "This is the infrared communications control."
+msgstr "Este es el control de comunicaciones por infrarrojos"
+
+#: gpe-beam.desktop.in.h:2
+msgid "Panel based infrared communications control"
+msgstr "Control en panel de comunicaciones por infrarrojos"

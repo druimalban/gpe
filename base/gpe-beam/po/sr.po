@@ -1,0 +1,228 @@
+# Serbian translation of `gpe-beam'.
+# Copyright (C) 2004 Free Software Foundation, Inc.
+# This file is distributed under the same license as the `gpe-beam' package.
+# Aleksandar Jelenak <jelenak@netlinkplus.net>, 2004.
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-beam 0.2.2\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2003-10-10 18:47+0200\n"
+"PO-Revision-Date: 2004-03-05 14:20-0500\n"
+"Last-Translator: Aleksandar Jelenak <jelenak@netlinkplus.net>\n"
+"Language-Team: Serbian <gnu@prevod.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: main.c:130
+msgid "Error"
+msgstr "Грешка"
+
+#: main.c:135
+msgid "Failed"
+msgstr "Неуспешно"
+
+#: main.c:138
+msgid "Done"
+msgstr "Готово"
+
+#: main.c:141
+msgid "Connecting..."
+msgstr "Повезујем..."
+
+#: main.c:145
+msgid "Disconnecting..."
+msgstr "Прекидам..."
+
+#: main.c:148
+msgid "Sending..."
+msgstr "Шаљем..."
+
+#: main.c:151
+msgid "Receiving"
+msgstr "Примам"
+
+#: main.c:160
+msgid "Waiting for incoming connection"
+msgstr "Чекам улазну везу"
+
+#: main.c:163
+msgid "Connected"
+msgstr "Повезан"
+
+#: main.c:166
+msgid "Disconnecting"
+msgstr "Прекидам"
+
+#: main.c:187
+msgid "Telephony"
+msgstr "Телефонија"
+
+#: main.c:193
+msgid "File Server"
+msgstr "Сервер датотека"
+
+#: main.c:199
+msgid "IrCOMM"
+msgstr "IrCOMM"
+
+#: main.c:205
+msgid "IrOBEX"
+msgstr "IrOBEX"
+
+#: main.c:214
+msgid "PnP"
+msgstr "PnP"
+
+#: main.c:220
+msgid "PDA/Palmtop"
+msgstr "ЛДП/Палмтоп"
+
+#: main.c:226
+msgid "Computer"
+msgstr "Рачунар"
+
+#: main.c:232
+msgid "Printer"
+msgstr "Штампач"
+
+#: main.c:238
+msgid "Modem"
+msgstr "Модем"
+
+#: main.c:244
+msgid "Fax"
+msgstr "Факс"
+
+#: main.c:250
+msgid "LAN Access"
+msgstr "LAN приступ"
+
+#: main.c:324
+msgid "Transmitted file"
+msgstr "Пренета датотека"
+
+#: main.c:333
+msgid "Could not transmit file"
+msgstr "Не може да пренесе датотеку"
+
+#: main.c:359 main.c:381
+msgid "Unable to start file transmit."
+msgstr "Не могу да покренем пренос датотеке."
+
+#: main.c:395
+msgid "IR Receive and Transmit........."
+msgstr "IR пријем и пренос........."
+
+#: main.c:404 main.c:406
+msgid "Error opening IR client."
+msgstr "Грешка отварајући IR клијента."
+
+#: main.c:413
+msgid "Select file to transmit"
+msgstr "Изабери датотеку за пренос"
+
+#: main.c:438
+msgid "Could not start import tool."
+msgstr "Не може да покрене алатку за увоз"
+
+#: main.c:445
+msgid "VCARD was imported successfully."
+msgstr "VCARD је увезен успешно."
+
+#: main.c:453
+msgid "Import of VCARD failed."
+msgstr "Неуспео увоз VCARD."
+
+#: main.c:483
+#, c-format
+msgid "The file %s looks like a VCARD, may i import it?"
+msgstr "Датотека „%s“ изгледа као VCARD, да је увезем?"
+
+#: main.c:503 main.c:566
+msgid "Unable to start receiver."
+msgstr "Не могу да покренем пријемник."
+
+#: main.c:517
+msgid "IR Receive and transmit control"
+msgstr "Управљање IR пријемом и преносом"
+
+#: main.c:527 main.c:530
+msgid "Error opening IR server."
+msgstr "Грешка отварајући IR сервер."
+
+#: main.c:543
+msgid "Received file"
+msgstr "Примљена датотека"
+
+#: main.c:659
+msgid "Name:"
+msgstr "Име:"
+
+#: main.c:660
+msgid "Services:"
+msgstr "Услуге:"
+
+#: main.c:661
+msgid "Address:"
+msgstr "Адреса:"
+
+#: main.c:669
+msgid "<b>Peer Information</b>"
+msgstr "<b>Подаци о мрежном члану</b>"
+
+#: main.c:671
+msgid "<b>Peer Actions</b>"
+msgstr "<b>Радње мрежног члана</b>"
+
+#: main.c:676
+msgid "Send File"
+msgstr "Шаљи датотеку"
+
+#: main.c:684
+msgid "Receive File"
+msgstr "Прими датотеку"
+
+#: main.c:734 main.c:810
+msgid "IR transceiver on"
+msgstr "IR предајник укључен"
+
+#: main.c:736 main.c:833
+msgid "IR transceiver off"
+msgstr "IR предајник искључен"
+
+#: main.c:747
+msgid "Infrared Control"
+msgstr "IR управљач"
+
+#: main.c:885 gpe-beam.desktop.in.h:1
+msgid "IrDa control"
+msgstr "IrDa управљач"
+
+#: main.c:887
+msgid "Switch IR on"
+msgstr "Укључи IR"
+
+#: main.c:888
+msgid "Switch IR off"
+msgstr "Искључи IR"
+
+#: main.c:889
+msgid "Send vcard"
+msgstr "Шаљи vcard"
+
+#: main.c:890
+msgid "Controls..."
+msgstr "Подешавања..."
+
+#: main.c:891
+msgid "Remove from dock"
+msgstr "Уклони из дока"
+
+#: main.c:941
+msgid "This is the infrared communications control."
+msgstr "Ово је управљач инфрацрвених комуникација."
+
+#: gpe-beam.desktop.in.h:2
+msgid "Panel based infrared communications control"
+msgstr "Управљач инфрацрвеним комуникација на плочи"
