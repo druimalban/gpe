@@ -4,11 +4,11 @@ GTK2 = yes
 pkgdatadir = $(PREFIX)/share/$(PACKAGE)
 CVSBUILD = yes
 STRIP = strip
-VERSION = 0.35
+VERSION = 0.36
 DEBUG = no
 MYPIXMAPSDIR = $(PREFIX)/share/gpe/pixmaps/default/$(PACKAGE)
 
-LINGUAS = de sv cs nl hu ro ru sr sk es fr zh_CN
+# LINGUAS = de sv cs nl hu ro ru sr sk es fr zh_CN
 
 ifeq ($(CVSBUILD),yes)
 BUILD = ../build
@@ -69,5 +69,5 @@ install-program: all all-desktop
 	install -m 644 icons/export.png $(DESTDIR)$(MYPIXMAPSDIR)/export.png
 
 include $(BUILD)/Makefile.dpkg_ipkg
-include $(BUILD)/Makefile.translation
+include $(BUILD)/Makefile.translation-auto-linguas
 -include $(DEPS)

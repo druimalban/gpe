@@ -1,0 +1,371 @@
+# Vietnamese Translation for gpe-contacts-0.32.
+# Copyright (C) 2005 Free Software Foundation, Inc.
+# Clytie Siddall <clytie@riverland.net.au>, 2005.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-contacts 0.32\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2004-10-17 00:23+0200\n"
+"PO-Revision-Date: 2005-02-01 21:44+0930\n"
+"Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
+"Language-Team: Vietnamese <gnomevi-list@lists.sourceforge.net> \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: db.c:70
+msgid "Name"
+msgstr "Tên"
+
+#: db.c:71
+msgid "Phone"
+msgstr "Số đ.t."
+
+#: db.c:72
+msgid "EMail"
+msgstr "Thư điện tử"
+
+#: editing.c:108 main.c:1218
+msgid "Details"
+msgstr "Chi tiết"
+
+#: editing.c:227
+msgid "no year"
+msgstr "không có năm"
+
+#: editing.c:436 main.c:470 main.c:597
+msgid "Categories"
+msgstr "Loại"
+
+#: editing.c:972
+msgid "Select image"
+msgstr "Chọn ảnh"
+
+#: main.c:80 main.c:182
+msgid "Edit Contact"
+msgstr "Hiệu chỉnh liên hệ"
+
+#: main.c:86 main.c:198
+msgid "Really delete this contact?"
+msgstr "Thật xóa bỏ liên hệ này không?"
+
+#: main.c:86 main.c:198 structure.c:176
+msgid "Confirm"
+msgstr "Xác nhận"
+
+#: main.c:138
+msgid "All categories"
+msgstr "Tất cả loại"
+
+#: main.c:160
+msgid "New Contact"
+msgstr "Liên hệ mới"
+
+#: main.c:481
+msgid "No contact selected."
+msgstr "Chưa chọn liên hệ"
+
+#: main.c:553 main.c:1272 main.c:1338
+msgid "Contact"
+msgstr "Liên hệ"
+
+#: main.c:1182 gpe-contacts.desktop.in.h:1
+msgid "Contacts"
+msgstr "Liên hệ"
+
+#: main.c:1195
+msgid "Tap this button to add a new contact."
+msgstr "Bấm cái nút này để thêm liên hệ mới."
+
+#: main.c:1202
+msgid "Edit"
+msgstr "Hiệu chỉnh"
+
+#: main.c:1203
+msgid "Tap here to edit the selected contact."
+msgstr "Bấm ở đây để hiệu chỉnh liên hệ được chọn."
+
+#: main.c:1209
+msgid "Tap here to delete the selected contact."
+msgstr "Bấm ở đây để xóa bỏ liên hệ được chọn."
+
+#: main.c:1219
+msgid "Tap here to show contacts details."
+msgstr "Bấm ở đây để hiển thị thông tin liên hệ."
+
+#: main.c:1228
+msgid "Find a contact by searching for any data."
+msgstr "Tìm liên hệ bằng cách tìm kiếm bất cứ dữ liệu nào."
+
+#: main.c:1233
+msgid "Properties"
+msgstr "Đặc tính riêng"
+
+#: main.c:1233
+msgid "Tap here to configure this program."
+msgstr "Bấm ở đây để định cấu hình chương trình này."
+
+#: main.c:1239
+msgid "Close"
+msgstr "Đóng"
+
+#: main.c:1239
+msgid "Tap here to exit gpe-contacts."
+msgstr "Bấm ở đây để thoát trình gpe-contacts."
+
+#: main.c:1298
+msgid "Find:"
+msgstr "Tìm:"
+
+#: main.c:1305
+msgid "in"
+msgstr "trong"
+
+#: main.c:1491
+msgid "My Card"
+msgstr "vCard tôi"
+
+#: main.c:1494
+msgid "Saving vcard failed"
+msgstr "Không lưu vCard được"
+
+#: structure.c:105 structure.c:235
+msgid "New page"
+msgstr "Trang mới"
+
+#: structure.c:105 structure.c:124 structure.c:149
+msgid "Title"
+msgstr "Tên"
+
+#: structure.c:124
+msgid "New group"
+msgstr "Nhóm mới"
+
+#: structure.c:136 structure.c:166
+msgid "No container selected"
+msgstr "Chưa chọn điều chứa."
+
+#: structure.c:150
+msgid "Tag"
+msgstr "Thẻ"
+
+#: structure.c:152
+msgid "New field"
+msgstr "Trường mới"
+
+#: structure.c:176
+msgid "Really delete this field?"
+msgstr "Thật xóa bỏ trường này không?"
+
+#: structure.c:177
+msgid "Delete"
+msgstr "Xóa bỏ"
+
+#: structure.c:177
+msgid "Cancel"
+msgstr "Thôi"
+
+#: structure.c:234
+msgid "Page"
+msgstr "Trang"
+
+#: structure.c:235
+msgid "Tap here to add a page."
+msgstr "Bấm ở đây để thêm trang."
+
+#: structure.c:251
+msgid "Delete item"
+msgstr "Xóa bỏ mục"
+
+#: structure.c:251
+msgid "Tap here to delete the selected item."
+msgstr "Bấm ở đây để xóa bỏ mục được chọn."
+
+#. TRANSLATORS: kB = kilo bytes
+#: configure.c:131 configure.c:337
+msgid "Current size:"
+msgstr "Cỡ hiện:"
+
+#: configure.c:132
+msgid "kB (optimised)"
+msgstr "KB (tối ưu)"
+
+#: configure.c:177
+msgid "<b>Detail panel:</b>"
+msgstr "<b>Bảng chi tiết:</b>"
+
+#: configure.c:203
+msgid "NAME"
+msgstr "TÊN"
+
+#: configure.c:213
+msgid "Add"
+msgstr "Thêm"
+
+#: configure.c:220
+msgid "Remove"
+msgstr "Bỏ"
+
+#: configure.c:242
+msgid "Label"
+msgstr "Nhãn"
+
+#: configure.c:247
+msgid "Data item"
+msgstr "Mục dữ liệu"
+
+#: configure.c:291
+msgid "Screen Layout"
+msgstr "Bộ cục màn ảnh"
+
+#: configure.c:297
+msgid "List position"
+msgstr "Vị trí danh sách"
+
+#: configure.c:300
+msgid "left"
+msgstr "bên trái"
+
+#: configure.c:302
+msgid "right"
+msgstr "bên phải"
+
+#: configure.c:330
+msgid "Database Size"
+msgstr "Kích thước cơ sở dữ liệu"
+
+#: configure.c:337
+msgid "kB"
+msgstr "KB"
+
+#: configure.c:342
+msgid "Actions"
+msgstr "Hành động"
+
+#: configure.c:349
+msgid "Optimise database"
+msgstr "Tối ưu hóa cơ sở dữ liệu"
+
+#: configure.c:352
+msgid "Run"
+msgstr "Chạy"
+
+#: configure.c:458
+msgid "Editing Layout"
+msgstr "Đang hiệu chỉnh bố cục"
+
+#: configure.c:460
+msgid "Setup"
+msgstr "Thiệt lập"
+
+#: configure.c:461
+msgid "Database"
+msgstr "Cơ sở dữ liệu"
+
+#: configure.c:493
+msgid "Contacts: Configuration"
+msgstr "Liên hệ: cấu hình"
+
+#: export.c:158
+msgid "Save as..."
+msgstr "Lưu như..."
+
+#. TRANSLATORS: These abbreviations are a list of common titles used in a name
+#: namedetail.c:30
+msgid "Dr."
+msgstr "Bắc sĩ"
+
+#: namedetail.c:30
+msgid "Miss"
+msgstr "Cô"
+
+#: namedetail.c:30
+msgid "Mr."
+msgstr "Ông"
+
+#: namedetail.c:30
+msgid "Mrs."
+msgstr "Bà"
+
+#: namedetail.c:30
+msgid "Ms."
+msgstr "Cô/Bà"
+
+#: namedetail.c:30
+msgid "Prof."
+msgstr "Giáo sư"
+
+#: namedetail.c:30
+msgid "Sir"
+msgstr "Ngài"
+
+# không cần dịch: gần hết là Mỹ, không có nghĩa nào nữa
+#. TRANSLATORS: This is a list of common name suffixes
+#: namedetail.c:32
+msgid "Jr."
+msgstr "Jr."
+
+#: namedetail.c:32
+msgid "Esq."
+msgstr "Esq."
+
+#: namedetail.c:32
+msgid "Sr."
+msgstr "Sr."
+
+#: namedetail.c:32
+msgid "I"
+msgstr "I"
+
+#: namedetail.c:32
+msgid "II"
+msgstr "II"
+
+#: namedetail.c:32
+msgid "III"
+msgstr "III"
+
+#: namedetail.c:61
+msgid "Edit Name Details"
+msgstr "Hiệu chỉnh thông tin tên"
+
+#: namedetail.c:88
+msgid "First name:"
+msgstr "Tên:"
+
+#: namedetail.c:89
+msgid "Middle name:"
+msgstr "Tên đệm:"
+
+#: namedetail.c:90
+msgid "Last name:"
+msgstr "Họ:"
+
+#: namedetail.c:91
+msgid "Suffix:"
+msgstr "Hậu tố:"
+
+#: namedetail.c:92
+msgid "Title:"
+msgstr "Tước:"
+
+#: finddlg.c:37
+msgid "Find Contacts"
+msgstr "Tìm liên hệ"
+
+#: finddlg.c:49
+msgid "Search for:"
+msgstr "Tìm kiếm:"
+
+#: gpe-contacts.desktop.in.h:2
+msgid "GPE Contacts"
+msgstr "Liên hệ GPE"
+
+#: edit-vcard.desktop.in.h:1
+msgid "Edit personal vcard"
+msgstr "Hiệu chỉnh vCard cá nhân"
+
+#: edit-vcard.desktop.in.h:2
+msgid "My VCard"
+msgstr "vCard tôi"
