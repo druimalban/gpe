@@ -401,25 +401,34 @@ match_for_search (struct person *p, const gchar *text, struct gpe_pim_category *
 {
   gchar *gn;
   gchar *fn;
+  gchar *name;
   
   if (p->given_name)
-     gn = g_utf8_strdown(p->given_name, -1);
+    gn = g_utf8_strdown(p->given_name, -1);
   else
     gn = g_strdup("");
   
   if (p->family_name)
-     fn = g_utf8_strdown(p->family_name, -1);
+    fn = g_utf8_strdown(p->family_name, -1);
   else
     fn = g_strdup("");
   
-  if (!g_str_has_prefix(gn,text) && !g_str_has_prefix(fn,text))
+  if (p->name)
+    name = g_utf8_strdown(p->name, -1);
+  else
+    name = g_strdup("");
+  
+  if (!g_str_has_prefix(gn,text) && !g_str_has_prefix(fn,text) 
+	  && !g_str_has_prefix(fn,text))
     {
       if (gn) g_free(gn);
       if (fn) g_free(fn);
+      if (fn) g_free(name);
         return FALSE;
     }
   if (gn) g_free(gn);
   if (fn) g_free(fn);
+  if (fn) g_free(name);
     
 /* alternate method if nothing found 
   if ...

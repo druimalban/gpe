@@ -1,3 +1,7 @@
+2004-08-08  Florian Boor  <florian.boor@kernelconcepts.de>
+
+	* main.c: match_for_search() Added missing name field to look at.
+
 2004-08-05  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * editing.c: Fixed unclean creation of date combos.
