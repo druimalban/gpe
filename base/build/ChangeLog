@@ -1,0 +1,5 @@
+2002-07-22  Colin Marquardt  <colin@marquardt-home.de>
+
+	* Makefile.dpkg_ipkg (Module): New file containing the dpkg and
+	ipkg targets for inclusion in other Makefiles.
+
