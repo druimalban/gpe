@@ -1,9 +1,10 @@
 PREFIX = /usr/local
+PACKAGE = gpe-login
 
-CFLAGS = `gtk-config --cflags` -Os -Wall -fomit-frame-pointer -I../libgpewidget
-CFLAGS += -DPACKAGE=\"gpe-login\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
+CFLAGS = `gtk-config --cflags` `gdk-pixbuf-config --cflags` -Os -Wall -fomit-frame-pointer -I../libgpewidget
+CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 
-all: gpe-login mo
+all: $(PACKAGE) mo
 
 mo:
 	make -C po
@@ -11,16 +12,13 @@ mo:
 install-po:
 	make -C po install DESTDIR=$(DESTDIR) PREFIX=$(PREFIX)
 
-gpe-login: gpe-login.o
-	$(CC) -o $@ $< -lgpewidget `gtk-config --libs` -lcrypt -lgdk_imlib -L../libgpewidget
-
-gpe-login.o: gpe-login.c
-	$(CC) -c $(CFLAGS) -o $@ $<
+$(PACKAGE): gpe-login.o
+	$(CC) -o $@ $< -L../libgpewidget -lgpewidget `gtk-config --libs` -lcrypt
 
 install: install-po
-	install -D gpe-login $(DESTDIR)$(PREFIX)/bin/gpe-login
-	install -D gpe-login-setup $(DESTDIR)/etc/X11/gpe-login-setup
-	strip $(DESTDIR)$(PREFIX)/bin/gpe-login
+	install -D $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
+	install -D $(PACKAGE)-setup $(DESTDIR)/etc/X11/$(PACKAGE)-setup
+	strip $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 
 ipkg:
 	rm -rf dist
@@ -31,4 +29,4 @@ ipkg:
 	ipkg-build dist
 
 clean:
-	rm -f gpe-login gpe-login.o
+	rm -f $(PACKAGE) gpe-login.o

@@ -28,6 +28,9 @@
 #include <gdk/gdkx.h>
 
 #include "errorbox.h"
+#include "pixmaps.h"
+#include "picturebutton.h"
+#include "render.h"
 
 #define _(x) gettext(x)
 
@@ -48,6 +51,12 @@ static const char *xkbd_path = "/usr/bin/xkbd";
 
 static GtkWidget *entry_username, *entry_fullname;
 static GtkWidget *entry_password, *entry_confirm;
+
+static struct gpe_icon my_icons[] = {
+  { "logo", GPE_ICON },
+  { "ok", "ok" },
+  { NULL, NULL }
+};
 
 static void
 cleanup_children (void)
@@ -272,18 +281,17 @@ main (int argc, char *argv[])
   GtkWidget *socket = NULL;
   int fd[2];
   guint xkbd_xid = 0;
-
-  GdkPixmap *gpe_pix;
-  GdkBitmap *gpe_pix_mask;
-
+  GdkPixbuf *icon;
+  
   gtk_set_locale ();
   gtk_init (&argc, &argv);
-  gdk_imlib_init ();
 
   setlocale (LC_ALL, "");
 
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
   textdomain (PACKAGE);
+
+  gpe_load_icons (my_icons);
 
   if (access (GPE_LOGIN_SETUP, X_OK) == 0)
     {
@@ -346,13 +354,16 @@ main (int argc, char *argv[])
       }
   }
 
-  if (gdk_imlib_load_file_to_pixmap (GPE_ICON, &gpe_pix, &gpe_pix_mask))
-    logo = gtk_pixmap_new (gpe_pix, gpe_pix_mask);
+  gtk_widget_realize (window);
+
+  icon = gpe_find_icon ("logo");
+  if (icon)
+    logo = gpe_render_icon (window->style, icon);
 
   menu = gtk_menu_new ();
   slurp_passwd (menu);
 
-  next_button = gtk_button_new_with_label (_("OK"));
+  next_button = gpe_picture_button (window->style, _("OK"), "ok");
 
   vbox2 = gtk_vbox_new (FALSE, 0);
 
@@ -492,7 +503,6 @@ main (int argc, char *argv[])
       focus = entry_username;
     }
 
-  gtk_widget_set_usize (next_button, 48, -1);
   gtk_box_pack_end (GTK_BOX (hbox), next_button, FALSE, FALSE, 5);
       
   gtk_window_set_position (GTK_WINDOW (window), GTK_WIN_POS_CENTER);
