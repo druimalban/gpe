@@ -38,7 +38,9 @@ static void
 new_contact(GtkWidget *widget, gpointer d)
 {
   GtkWidget *w = edit_window ();
+  GtkWidget *entry = lookup_widget (w, "name_entry");
   gtk_widget_show (w);
+  gtk_widget_grab_focus (entry);
 }
 
 static void
@@ -225,6 +227,9 @@ main (int argc, char *argv[])
 
   mainw = create_main ();
   gtk_widget_show (mainw);
+
+  gtk_signal_connect (GTK_OBJECT (mainw), "destroy",
+		      gtk_main_quit, NULL);
 
   toolbar = lookup_widget (mainw, "toolbar1");
   p = find_pixmap ("new");
