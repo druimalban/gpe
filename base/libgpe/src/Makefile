@@ -3,8 +3,12 @@ CFLAGS = -Wall -O2 -I../include `glib-config --cflags`
 
 OBJS = gpe-exec.o xsi.o gpe-soundgen.o gpe-rtcd.o
 
-libgpe.so: $(OBJS)
+libgpe.so.0: $(OBJS)
 	$(CC) -nostartfiles -shared -Wl,-soname -Wl,libgpe.so.0 -o libgpe.so.0 $(OBJS)
+
+install: libgpe.so.0
+	install -D libgpe.so.0 $(DESTDIR)$(PREFIX)/lib/libgpe.so.0
+	strip $(DESTDIR)$(PREFIX)/lib/libgpe.so.0
 
 ipkg:
 	rm -rf familiar/dist
@@ -15,4 +19,4 @@ ipkg:
 	ipkg-build familiar/dist
 
 clean:
-	rm -f *.o *.so
+	rm -rf *.o *.so *.so.0 *.ipk familiar/dist
