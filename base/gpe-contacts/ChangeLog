@@ -1,3 +1,9 @@
+2004-07-28  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * main.c: Several changes to keyboard control, escape clears search.
+    * editing.c: Improved setting of default window size.
+    * editing.c: Keyboard control: Enter saves, escape discards changes.
+
 2004-07-24  Florian Boor  <florian.boor@kernelconcepts.de>
 
 	* editing.c: Some improvement in dialog layout.

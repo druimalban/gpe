@@ -548,9 +548,25 @@ static gboolean
 toolbar_key_press_event (GtkWidget *widget, GdkEventKey *k)
 {
   
-  if (k->keyval == GDK_Tab)
+  if ((k->keyval == GDK_Tab) || (k->keyval == GDK_Up))
   {
     gtk_widget_grab_focus(search_entry);
+    return TRUE;
+  }
+  return FALSE;
+}
+
+static gboolean
+search_entry_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *toolitem)
+{
+  if (k->keyval == GDK_Down)
+  {
+    gtk_widget_grab_focus(toolitem);
+    return TRUE;
+  }
+  if (k->keyval == GDK_Escape)
+  {
+    gtk_editable_delete_text(GTK_EDITABLE(widget),0,-1);
     return TRUE;
   }
   return FALSE;
@@ -649,7 +665,7 @@ create_main (gboolean show_config_button)
   GtkWidget *pDetail;
   GtkWidget *tabDetail;
   GtkWidget *toolbar, *pw;
-  GtkWidget *b;
+  GtkWidget *b, *btnNew;
   GtkCellRenderer *renderer;
   GtkTreeViewColumn *column;
   GtkTreeSelection *tree_sel;
@@ -677,7 +693,7 @@ create_main (gboolean show_config_button)
 
   gtk_box_pack_start (GTK_BOX (vbox1), toolbar, FALSE, FALSE, 0);
 
-  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_NEW,
+  btnNew = gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_NEW,
 			    _("New contact"), _("Tap here to add a new contact."),
 			    G_CALLBACK (new_contact), NULL, -1);
 
@@ -772,6 +788,8 @@ create_main (gboolean show_config_button)
 
   g_signal_connect (G_OBJECT (toolbar), "key_press_event", 
 		    G_CALLBACK (toolbar_key_press_event), NULL);
+  g_signal_connect (G_OBJECT (entry1), "key_press_event", 
+		    G_CALLBACK (search_entry_key_press_event), btnNew);
             
   search_entry = entry1;
 

@@ -36,6 +36,9 @@ void tv_move_cursor (GtkTextView *textview,
 gboolean tv_focus_in (GtkWidget *widget,
                       GdkEventFocus *event,
                       gpointer user_data);
+gboolean tv_focus_out (GtkWidget *widget,
+                       GdkEventFocus *event,
+                       gpointer user_data);
 void on_unknown_year_toggled (GtkToggleButton *togglebutton, gpointer user_data);
 
 static void
@@ -111,7 +114,7 @@ build_children (GtkWidget *vbox, GSList *children, GtkWidget *pw)
             g_free (markup);
             pop_singles (vbox, singles, pw);
             singles = NULL;
-            gtk_box_pack_start (GTK_BOX (vbox), w, FALSE, FALSE, 0);
+            gtk_box_pack_start (GTK_BOX (vbox), w, TRUE, TRUE, 0);
             build_children (vbox, e->children, pw);
           }
         break;
@@ -126,6 +129,8 @@ build_children (GtkWidget *vbox, GSList *children, GtkWidget *pw)
             G_CALLBACK(tv_move_cursor),NULL);
           g_signal_connect(G_OBJECT(ww),"focus-in-event",
             G_CALLBACK(tv_focus_in),NULL);
+          g_signal_connect(G_OBJECT(ww),"focus-out-event",
+            G_CALLBACK(tv_focus_out),NULL);
         
           gtk_widget_set_usize (GTK_WIDGET (ww), -1, 64);
           if (e->name)
@@ -227,6 +232,25 @@ notebook2_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *edit_sa
   return FALSE;
 }
 
+static gboolean
+edit_window_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *user_data)
+{
+  if (k->keyval == GDK_Escape) 
+  {
+    gtk_widget_destroy (GTK_WIDGET (user_data));
+    return TRUE;
+  }
+  if (k->keyval == GDK_Return) 
+  {
+    if (!g_object_get_data(G_OBJECT(widget),"inmultiline"))
+      {
+        on_edit_save_clicked (NULL, user_data);
+        return TRUE;
+      }
+  }
+  return FALSE;
+}
+
 static GtkWidget*
 create_edit (void)
 {
@@ -286,11 +310,23 @@ create_edit (void)
 		    G_CALLBACK (action_area_key_press_event), notebook2);
   g_signal_connect (G_OBJECT (notebook2), "key_press_event", 
 		    G_CALLBACK (notebook2_key_press_event), edit_save);
+  g_signal_connect (G_OBJECT (edit), "key_press_event", 
+		    G_CALLBACK (edit_window_key_press_event), edit);
 
   g_object_set_data (G_OBJECT (edit), "tooltips", tooltips);
   g_object_set_data (G_OBJECT (edit), "notebook2", notebook2);
 
-  gtk_window_set_default_size (GTK_WINDOW (edit), 240, 320);
+  if (mode_large_screen)
+    {
+        gtk_window_set_default_size (GTK_WINDOW (edit), 320, 480);
+    }
+  else
+    {
+      if (mode_landscape)
+        gtk_window_set_default_size (GTK_WINDOW (edit), 320, 240);
+      else
+        gtk_window_set_default_size (GTK_WINDOW (edit), 240, 320);
+    }
 
   return edit;
 }
@@ -316,7 +352,6 @@ edit_window (void)
       gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window),
 				      GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
       gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolled_window), vbox);
-
       gtk_notebook_append_page (GTK_NOTEBOOK (book), scrolled_window, label);
       
       /* add categories stuff to the last page */
@@ -671,6 +706,18 @@ tv_focus_in (GtkWidget *widget,
   GtkTextBuffer *buf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(widget));
   gtk_text_buffer_get_start_iter(buf,&iter);
   gtk_text_buffer_place_cursor(buf,&iter);
+  g_object_set_data(G_OBJECT(gtk_widget_get_toplevel(widget)),
+                    "inmultiline",(void*)1);  
+  return FALSE;
+}
+
+gboolean 
+tv_focus_out (GtkWidget *widget,
+             GdkEventFocus *event,
+             gpointer user_data)
+{
+  g_object_set_data(G_OBJECT(gtk_widget_get_toplevel(widget)),
+                    "inmultiline",(void*)0);  
   return FALSE;
 }
 
