@@ -1,6 +1,7 @@
 PREFIX = /usr/local
 PACKAGE = gpe-confd
 DEBUG = no
+VERSION = 0.12
 
 MEMBERS = main xsettings-manager
 
