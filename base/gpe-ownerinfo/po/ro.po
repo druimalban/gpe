@@ -31,9 +31,8 @@ msgid "GPE Owner Info"
 msgstr "Info Proprietar GPE"
 
 #: gpe-ownerinfo.c:410
-#, fuzzy
 msgid "Valid options:\n"
-msgstr "Opþiuni invalide:\n"
+msgstr "Opþiuni valide:\n"
 
 #: gpe-ownerinfo.c:411
 msgid "   -g GEOMETRY  window geometry (default: 240x100+0+220)\n"
@@ -80,6 +79,5 @@ msgid " Settings."
 msgstr "Setãri."
 
 #: gpe-ownerinfo.c:578
-#, fuzzy
 msgid "Address:"
 msgstr "Adresã:"
