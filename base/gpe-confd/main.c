@@ -192,6 +192,13 @@ db_store_setting (sqlite *db, XSettingsSetting *setting)
   gchar *str =  xsetting_stringize (setting);
   char *err;
 
+  if (sqlite_exec_printf (db, "delete from xsettings where key='%q'", NULL, NULL, &err,
+			  setting->name))
+    {
+      fprintf (stderr, "sqlite: %s\n", err);
+      free (err);
+    }
+
   if (sqlite_exec_printf (db, "insert into xsettings values ('%q', '%q')", NULL, NULL, &err,
 			  setting->name, str))
     {
@@ -214,19 +221,26 @@ load_defaults (XSettingsManager *manager, sqlite *db)
 	  if (fgets (buf, sizeof (buf), fp) && buf[0] != '#')
 	    {
 	      XSettingsSetting s;
-	      char *p = strchr (buf, ':');
+	      char *p;
+	      size_t l = strlen (buf);
+	      if (l == 0 || l == 1)
+		continue;
+	      buf[l - 1] = 0;
+	      p = strchr (buf, ':');
 	      if (!p)
 		{
 		  fprintf (stderr, "bad line in defaults file: \"%s\"\n", buf);
 		  continue;
 		}
 	      *(p++) = 0;
-	      if (xsettings_unstringize (p, &s))
+	      if (xsetting_unstringize (p, &s))
 		{
 		  s.name = g_strdup (buf);
 		  db_store_setting (db, &s);
 		  xsettings_manager_set_setting (manager, &s);
 		}
+	      else
+		fprintf (stderr, "couldn't unstringize \"%s\"\n", p);
 	    }
 	}
 
