@@ -99,6 +99,7 @@ static GtkWidget *dir_view_window;
 static GtkWidget *vbox, *main_paned;
 
 static GtkWidget *bluetooth_menu_item;
+static GtkWidget *irda_menu_item;
 static GtkWidget *copy_menu_item;
 static GtkWidget *paste_menu_item;
 static GtkWidget *open_menu_item;
@@ -187,6 +188,7 @@ static void popup_ask_delete_file (void);
 static void show_file_properties (void);
 static void refresh_current_directory (void);
 static void send_with_bluetooth (void);
+static void send_with_irda (void);
 static void copy_file_clip (void);
 static void paste_file_clip (void);
 static void create_directory_interactive(void);
@@ -204,6 +206,7 @@ static GtkItemFactoryEntry menu_items[] =
   { "/Open Wit_h",	 NULL, popup_ask_open_with,  0, "<StockItem>", GTK_STOCK_OPEN },
   { "/sep1",	         NULL, NULL,	             0, "<Separator>" },
   { "/Send via _Bluetooth", NULL, send_with_bluetooth, 0, "<Item>" },
+  { "/Send via _Infrared", NULL, send_with_irda, 0, "<Item>" },
   { "/_Copy",          NULL, copy_file_clip,         0, "<StockItem>", GTK_STOCK_COPY },
   { "/_Paste",          NULL, paste_file_clip,         0, "<StockItem>", GTK_STOCK_PASTE },
   { "/_Move",            NULL, popup_ask_move_file,            0, "<Item>" },
@@ -1150,6 +1153,12 @@ send_with_bluetooth (void)
 }
 
 static void
+send_with_irda (void)
+{
+  irda_send_file (current_popup_file->filename, current_popup_file->vfs);
+}
+
+static void
 popup_ask_open_with ()
 {
   ask_open_with (current_popup_file);
@@ -1167,6 +1176,7 @@ show_popup (GtkWidget *widget, gpointer udata)
     gtk_widget_set_sensitive(open_menu_item,FALSE);
     gtk_widget_set_sensitive(copy_menu_item,FALSE);
     gtk_widget_set_sensitive(bluetooth_menu_item,FALSE);
+    gtk_widget_set_sensitive(irda_menu_item,FALSE);
     gtk_widget_set_sensitive(move_menu_item,FALSE);
     gtk_widget_set_sensitive(rename_menu_item,FALSE);
     gtk_widget_set_sensitive(properties_menu_item,FALSE);
@@ -1187,6 +1197,10 @@ show_popup (GtkWidget *widget, gpointer udata)
       gtk_widget_set_sensitive (bluetooth_menu_item, TRUE);
     else
       gtk_widget_set_sensitive (bluetooth_menu_item, FALSE);
+    if (irda_available ())
+      gtk_widget_set_sensitive (irda_menu_item, TRUE);
+    else
+      gtk_widget_set_sensitive (irda_menu_item, FALSE);
   }
   if (file_clipboard)
     gtk_widget_set_sensitive (paste_menu_item, TRUE);
@@ -2126,6 +2140,7 @@ main (int argc, char *argv[])
     gtk_menu_item_set_submenu(GTK_MENU_ITEM(goto_menu_item), storage_menu);
   
   bluetooth_menu_item = gtk_item_factory_get_widget (item_factory, "<main>/Send via Bluetooth");
+  irda_menu_item = gtk_item_factory_get_widget (item_factory, "<main>/Send via Infrared");
   copy_menu_item = gtk_item_factory_get_widget (item_factory, "<main>/Copy");
   paste_menu_item = gtk_item_factory_get_widget (item_factory, "<main>/Paste");
   open_menu_item = gtk_item_factory_get_widget (item_factory, "<main>/Open With");

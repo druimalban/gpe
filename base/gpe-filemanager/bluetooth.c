@@ -21,6 +21,8 @@
 
 #include <dbus/dbus.h>
 #include <dbus/dbus-glib.h>
+#include <dbus/dbus-glib.h>
+#include <dbus/dbus-glib-lowlevel.h>
 
 #include <gpe/errorbox.h>
 
@@ -29,13 +31,15 @@
 static DBusConnection *connection;
 
 #define BLUETOOTH_SERVICE_NAME   "org.handhelds.gpe.bluez"
+#define IRDA_SERVICE_NAME	 "org.handhelds.gpe.irda"
 
 #define MAX_SIZE	(4 * 1024 * 1024)	/* 4MB */
 
 #define _(x) gettext(x)
 
-void
-bluetooth_send_file (const gchar *uri, GnomeVFSFileInfo *info)
+static void
+do_send_file (const gchar *service, const gchar *path, const gchar *method,
+	      const gchar *uri, GnomeVFSFileInfo *info)
 {
   DBusMessage *message;
   DBusMessageIter iter;
@@ -62,10 +66,7 @@ bluetooth_send_file (const gchar *uri, GnomeVFSFileInfo *info)
 
   gnome_vfs_close (handle);
 
-  message = dbus_message_new_method_call (BLUETOOTH_SERVICE_NAME,
-					  "/org/handhelds/gpe/bluez/OBEX",
-					  BLUETOOTH_SERVICE_NAME ".OBEX",
-					  "ObjectPush");
+  message = dbus_message_new_method_call (service, path, method, "ObjectPush");
 
   dbus_message_append_iter_init (message, &iter);
 
@@ -87,6 +88,37 @@ bluetooth_available (void)
     return FALSE;
 
   r = dbus_bus_service_exists (connection, BLUETOOTH_SERVICE_NAME, NULL);
+
+  return r ? TRUE : FALSE;
+}
+
+void
+bluetooth_send_file (const gchar *uri, GnomeVFSFileInfo *info)
+{
+  do_send_file (BLUETOOTH_SERVICE_NAME,
+		"/org/handhelds/gpe/bluez/OBEX",
+		BLUETOOTH_SERVICE_NAME ".OBEX",
+		uri, info);
+}
+
+void
+irda_send_file (const gchar *uri, GnomeVFSFileInfo *info)
+{
+  do_send_file (IRDA_SERVICE_NAME,
+		"/org/handhelds/gpe/irda/OBEX",
+		IRDA_SERVICE_NAME ".OBEX",
+		uri, info);
+}
+
+gboolean
+irda_available (void)
+{
+  dbus_bool_t r;
+
+  if (connection == NULL)
+    return FALSE;
+
+  r = dbus_bus_service_exists (connection, IRDA_SERVICE_NAME, NULL);
 
   return r ? TRUE : FALSE;
 }

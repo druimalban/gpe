@@ -1,3 +1,17 @@
+2004-10-16  Phil Blundell  <pb@nexus.co.uk>
+
+	* main.c (menu_items): Add 'Send via Infrared'.
+	(send_with_irda): New function.
+	(show_popup): Deal with IrDA menu item.
+	(main): Likewise.
+	* bluetooth.c: Include dbus-glib-lowlevel.h to fix warning.
+	(do_send_file): New function.
+	(bluetooth_send_file): Use it.
+	(irda_send_file): Likewise.  New function.
+	(irda_available): New function.
+	* bluetooth.h (irda_available): Add prototype.
+	(irda_send_file): Likewise.
+
 2004-10-15  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * guitools.c (is_mounted): Fixed activation of wrong mountpoints.
