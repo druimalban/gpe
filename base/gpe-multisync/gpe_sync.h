@@ -33,5 +33,16 @@ extern GList *sync_calendar (GList *data, gpe_conn *conn, int newdb);
 extern GList *sync_contacts (GList *data, gpe_conn *conn, int newdb);
 extern GList *sync_todo (GList *data, gpe_conn *conn, int newdb);
 
+extern gboolean push_calendar (gpe_conn *conn, const char *obj, const char *uid, 
+			       char *returnuid, int *returnuidlen);
+extern gboolean push_contact (gpe_conn *conn, const char *obj, const char *uid, 
+			      char *returnuid, int *returnuidlen);
+extern gboolean push_todo (gpe_conn *conn, const char *obj, const char *uid, 
+			   char *returnuid, int *returnuidlen);
+
+extern gboolean delete_calendar (gpe_conn *conn, const char *uid, gboolean soft);
+extern gboolean delete_contact (gpe_conn *conn, const char *uid, gboolean soft);
+extern gboolean delete_todo (gpe_conn *conn, const char *uid, gboolean soft);
+
 extern GSList *fetch_uid_list (nsqlc *db, const gchar *query, ...);
 extern GSList *fetch_tag_data (nsqlc *db, const gchar *query_str, guint id);

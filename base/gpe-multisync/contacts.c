@@ -28,7 +28,7 @@ sync_contacts (GList *data, gpe_conn *conn, int newdb)
   
   for (i = list; i; i = i->next)
     {
-      GSList *tags, *first;
+      GSList *tags;
       MIMEDirVCard *vcard;
       gchar *string;
       changed_object *obj;
@@ -52,4 +52,17 @@ sync_contacts (GList *data, gpe_conn *conn, int newdb)
   g_slist_free (list);
 
   return data;
+}
+
+gboolean
+push_contact (gpe_conn *conn, const char *obj, const char *uid, 
+	      char *returnuid, int *returnuidlen)
+{
+  return FALSE;
+}
+
+gboolean
+delete_contact (gpe_conn *conn, const char *uid, gboolean soft)
+{
+  return FALSE;
 }

@@ -120,7 +120,6 @@ sync_connect (sync_pair* handle, connection_type type,
 void 
 sync_disconnect (gpe_conn *conn) 
 {
-  GList* li;
   sync_pair *sync_pair = conn->sync_pair;
       
   GPE_DEBUG(conn, "sync_disconnect");    
@@ -128,13 +127,15 @@ sync_disconnect (gpe_conn *conn)
   gpe_disconnect (conn);
 
   /* cleanup memory from the connection */
-  if(conn->device_addr)
-    g_free(conn->device_addr);
-  if(conn->username)
-    g_free(conn->username);
-  g_free(conn);  
+  if (conn->device_addr)
+    g_free (conn->device_addr);
+
+  if (conn->username)
+    g_free (conn->username);
+
+  g_free (conn);  
   
-  sync_set_requestdone(sync_pair);
+  sync_set_requestdone (sync_pair);
 }
 
 
@@ -169,7 +170,6 @@ get_changes (gpe_conn *conn, sync_object_type newdbs)
   GList *changes = NULL;
   sync_object_type retnewdbs = 0;
   change_info *chinfo;
-  char* errmsg;
 
   GPE_DEBUG(conn, "get_changes"); 
   
@@ -214,34 +214,27 @@ void
 syncobj_modify (gpe_conn *conn, char* object, char *uid,
 		sync_object_type objtype, char *returnuid, int *returnuidlen) 
 {
-  gboolean found = FALSE;
-  GList* li;
-  char* errmsg;
-
-  GPE_DEBUG(conn, "syncobj_modify");  
+  GPE_DEBUG (conn, "syncobj_modify");  
   
   /* 
    * calendar
    */
-  if(objtype & (SYNC_OBJECT_TYPE_CALENDAR))
-  {
-  }
+  if (objtype & (SYNC_OBJECT_TYPE_CALENDAR))
+    push_calendar (conn, object, uid, returnuid, returnuidlen);
   
   /* 
    * phonebook
    */
-  else if(objtype & (SYNC_OBJECT_TYPE_PHONEBOOK))
-  {
-  }
+  else if (objtype & (SYNC_OBJECT_TYPE_PHONEBOOK))
+    push_contact (conn, object, uid, returnuid, returnuidlen);
   
   /* 
    * todo list
    */
-  else if(objtype & (SYNC_OBJECT_TYPE_TODO))
-  {
-  }
+  else if (objtype & (SYNC_OBJECT_TYPE_TODO))
+    push_todo (conn, object, uid, returnuid, returnuidlen);
   
-  sync_set_requestdone(conn->sync_pair);
+  sync_set_requestdone (conn->sync_pair);
 }
 
 
@@ -254,29 +247,36 @@ void
 syncobj_delete (gpe_conn *conn, char *uid, 
 		sync_object_type objtype, int softdelete) 
 {
-  gboolean found = FALSE;
-  GList* li;
-  char* errmsg;
-  
-  GPE_DEBUG(conn, "syncobj_delete");     
+  gboolean soft = softdelete ? TRUE : FALSE;
+
+  GPE_DEBUG (conn, "syncobj_delete");
    
-  if(!uid)
+  if (!uid)
   {
-    GPE_DEBUG(conn, "item to delete not specified by syncengine"); 
-    sync_set_requestfailed(conn->sync_pair); 
+    GPE_DEBUG (conn, "item to delete not specified by syncengine"); 
+    sync_set_requestfailed (conn->sync_pair); 
+    return;
   }
   
-  if(objtype & (SYNC_OBJECT_TYPE_CALENDAR))
-  {
-  }
-  else if(objtype & (SYNC_OBJECT_TYPE_PHONEBOOK))
-  {    
-  }
-  else if(objtype & (SYNC_OBJECT_TYPE_TODO))
-  {
-  }
+  /* 
+   * calendar
+   */
+  if (objtype & (SYNC_OBJECT_TYPE_CALENDAR))
+    delete_calendar (conn, uid, soft);
+
+  /* 
+   * phonebook
+   */
+  else if (objtype & (SYNC_OBJECT_TYPE_PHONEBOOK))
+    delete_contact (conn, uid, soft);
+
+  /* 
+   * todo list
+   */
+  else if (objtype & (SYNC_OBJECT_TYPE_TODO))
+    delete_todo (conn, uid, soft);
   
-  sync_set_requestdone(conn->sync_pair);
+  sync_set_requestdone (conn->sync_pair);
 }
 
 

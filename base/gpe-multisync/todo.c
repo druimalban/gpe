@@ -21,3 +21,16 @@ sync_todo (GList *data, gpe_conn *conn, int newdb)
 {
   return data;
 }
+
+gboolean
+push_todo (gpe_conn *conn, const char *obj, const char *uid, 
+	   char *returnuid, int *returnuidlen)
+{
+  return FALSE;
+}
+
+gboolean
+delete_todo (gpe_conn *conn, const char *uid, gboolean soft)
+{
+  return FALSE;
+}
