@@ -863,13 +863,14 @@ edit_event(event_t ev)
       localtime_r (&(ev->start), &tm);
       strftime (buf, sizeof(buf), TIMEFMT, &tm);
       gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (s->starttime)->entry), buf);
+      gtk_date_combo_set_date (GTK_DATE_COMBO (s->startdate),
+			       tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
+      
       end=ev->start+ev->duration;
       localtime_r (&end, &tm);
       strftime (buf, sizeof(buf), TIMEFMT, &tm);
       gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (s->endtime)->entry), buf);
       
-      gtk_date_combo_set_date (GTK_DATE_COMBO (s->startdate),
-			       tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
       gtk_date_combo_set_date (GTK_DATE_COMBO (s->enddate),
 			       tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
       
