@@ -27,6 +27,7 @@
 #include <gpe/init.h>
 #include <gpe/pixmaps.h>
 #include <gpe/render.h>
+#include <gpe/stylus.h>
 
 #include "callbacks.h"
 #include "interface.h"
@@ -224,18 +225,20 @@ main (int argc, char *argv[])
   gtk_widget_set_name (widget, "gpe_ownerinfo");
   */
 
-  /* make window transparent */
-  widget = lookup_widget (GPE_Ownerinfo, "viewport1");
-  widget->style->bg_pixmap[GTK_STATE_NORMAL] = (GdkPixmap*) GDK_PARENT_RELATIVE;
-  gtk_widget_set_style (GTK_WIDGET (widget), widget->style);
+  /* make window transparent if running on the iPAQ: */
+  if (gpe_stylus_mode ()) {
+    widget = lookup_widget (GPE_Ownerinfo, "viewport1");
+    widget->style->bg_pixmap[GTK_STATE_NORMAL] = (GdkPixmap*) GDK_PARENT_RELATIVE;
+    gtk_widget_set_style (GTK_WIDGET (widget), widget->style);
+    
+    GPE_Ownerinfo->style->bg_pixmap[GTK_STATE_NORMAL] = (GdkPixmap*) GDK_PARENT_RELATIVE;
+    gtk_widget_set_style (GTK_WIDGET (GPE_Ownerinfo), GPE_Ownerinfo->style);
+    
+    gtk_widget_realize (GPE_Ownerinfo);
+    gtk_widget_realize (widget);
+    gdk_window_set_back_pixmap (GTK_VIEWPORT (widget)->view_window, NULL, TRUE);
+  }
   
-  GPE_Ownerinfo->style->bg_pixmap[GTK_STATE_NORMAL] = (GdkPixmap*) GDK_PARENT_RELATIVE;
-  gtk_widget_set_style (GTK_WIDGET (GPE_Ownerinfo), GPE_Ownerinfo->style);
-
-  gtk_widget_realize (GPE_Ownerinfo);
-  gtk_widget_realize (widget);
-  gdk_window_set_back_pixmap (GTK_VIEWPORT (widget)->view_window, NULL, TRUE);
-
   gtk_widget_show (GPE_Ownerinfo);
 
   gtk_main ();
