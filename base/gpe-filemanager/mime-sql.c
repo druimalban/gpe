@@ -30,14 +30,13 @@ static const char *fname = "/.gpe/mime-types";
 GSList *mime_types;
 
 static struct mime_type *
-new_mime_type_internal (int id, const char *mime_name, const char *description, const char *extension, const char *program, const char *icon)
+new_mime_type_internal (int id, const char *mime_name, const char *description, const char *extension, const char *icon)
 {
   struct mime_type *e = g_malloc (sizeof (struct mime_type));
 
   e->mime_name = mime_name;
   e->description = description;
   e->extension = extension;
-  e->program = program;
   e->icon = icon;
 
   mime_types = g_slist_append (mime_types, e);
@@ -46,19 +45,19 @@ new_mime_type_internal (int id, const char *mime_name, const char *description, 
 }
 
 struct mime_type *
-new_mime_type (const char *mime_name, const char *description, const char *extension, const char *program, const char *icon)
+new_mime_type (const char *mime_name, const char *description, const char *extension, const char *icon)
 {
   char *err;
 
-  if (sqlite_exec_printf (sqliteh, "insert into mime_types values (NULL, '%q', '%q', '%q', '%q', '%q')",
-			  NULL, NULL, &err, mime_name, description, extension, program, icon))
+  if (sqlite_exec_printf (sqliteh, "insert into mime_types values (NULL, '%q', '%q', '%q', '%q')",
+			  NULL, NULL, &err, mime_name, description, extension, icon))
     {
       gpe_error_box (err);
       free (err);
       return NULL;
     }
 
-  return new_mime_type_internal (sqlite_last_insert_rowid (sqliteh), mime_name, description, extension, program, icon);
+  return new_mime_type_internal (sqlite_last_insert_rowid (sqliteh), mime_name, description, extension, icon);
 }
 
 void
@@ -81,7 +80,7 @@ static int
 mime_type_callback (void *arg, int argc, char **argv, char **names)
 {
   if (argc == 5 && argv[0] && argv[1])
-    new_mime_type_internal (atoi (argv[0]), g_strdup (argv[1]), g_strdup (argv[2]), g_strdup (argv[3]), g_strdup (argv[4]), g_strdup (argv[5]));
+    new_mime_type_internal (atoi (argv[0]), g_strdup (argv[1]), g_strdup (argv[2]), g_strdup (argv[3]), g_strdup (argv[4]));
   return 0;
 }
 
@@ -92,33 +91,33 @@ add_mime_types (void)
 {
   struct mime_type *e = g_malloc (sizeof (struct mime_type));
 
-  e = new_mime_type ("application/pdf", "Adobe PDF Document", "pdf", "gpe-pdf", "application-pdf");
-  e = new_mime_type ("application/x-compress", "Gzip Compressed File", "gz", "", "application-x-gzip");
-  e = new_mime_type ("application/zip", "Zip Compressed File", "zip", "", "application-x-compress");
-  e = new_mime_type ("application/x-ipk", "Ipkg File", "ipk", "", "application-x-ipk");
-  e = new_mime_type ("audio/x-gsm", "GSM Audio File", "gsm", "", "audio-x-gsm");
-  e = new_mime_type ("audio/mpeg", "MP3 Audio File", "mp3", "mpg123", "audio-mpeg");
-  e = new_mime_type ("application/x-ogg", "OGG Vorbis Audio File", "ogg", "ogg123", "application-x-ogg");
-  e = new_mime_type ("audio/x-wav", "WAV Audio File", "wav", "", "audio-x-wav");
-  e = new_mime_type ("font/ttf", "True Type Font", "ttf", "", "font-ttf");
-  e = new_mime_type ("image/jpeg", "JPEG Image File", "jpeg", "gpe-gallery", "image-jpeg");
-  e = new_mime_type ("image/jpeg", "JPEG Image File", "jpg", "gpe-gallery", "image-jpeg");
-  e = new_mime_type ("image/jpeg", "JPEG Image File", "jpe", "gpe-gallery", "image-jpeg");
-  e = new_mime_type ("image/png", "Portabe Image Graphics File", "png", "gpe-gallery", "image-png");
-  e = new_mime_type ("image/gif", "GIF Image File", "gif", "gpe-gallery", "image-gif");
-  e = new_mime_type ("image/xpm", "XPM Image File", "xpm", "gpe-gallery", "image-xpm");
-  e = new_mime_type ("text/html", "HTML Text Document", "html", "dillo", "text-html");
-  e = new_mime_type ("text/x-python", "Python Text Document", "py", "gpe-edit", "text-x-python");
-  e = new_mime_type ("video/mpeg", "MPEG Video File", "mpg", "mplayer", "video-mpeg");
-  e = new_mime_type ("video/mpeg", "MPEG Video File", "mpeg", "mplayer", "video-mpeg");
-  e = new_mime_type ("video/avi", "AVI Video File", "avi", "mplayer", "video-x-msvideo");
+  e = new_mime_type ("application/pdf", "Adobe PDF Document", "pdf", "application-pdf");
+  e = new_mime_type ("application/x-compress", "Gzip Compressed File", "gz", "application-x-gzip");
+  e = new_mime_type ("application/zip", "Zip Compressed File", "zip", "application-x-compress");
+  e = new_mime_type ("application/x-ipk", "Ipkg File", "ipk", "application-x-ipk");
+  e = new_mime_type ("audio/x-gsm", "GSM Audio File", "gsm", "audio-x-gsm");
+  e = new_mime_type ("audio/mpeg", "MP3 Audio File", "mp3", "audio-mpeg");
+  e = new_mime_type ("application/x-ogg", "OGG Vorbis Audio File", "ogg", "application-x-ogg");
+  e = new_mime_type ("audio/x-wav", "WAV Audio File", "wav", "audio-x-wav");
+  e = new_mime_type ("font/ttf", "True Type Font", "ttf", "font-ttf");
+  e = new_mime_type ("image/jpeg", "JPEG Image File", "jpeg", "image-jpeg");
+  e = new_mime_type ("image/jpeg", "JPEG Image File", "jpg", "image-jpeg");
+  e = new_mime_type ("image/jpeg", "JPEG Image File", "jpe", "image-jpeg");
+  e = new_mime_type ("image/png", "Portabe Image Graphics File", "png", "image-png");
+  e = new_mime_type ("image/gif", "GIF Image File", "gif", "image-gif");
+  e = new_mime_type ("image/xpm", "XPM Image File", "xpm", "image-xpm");
+  e = new_mime_type ("text/html", "HTML Text Document", "html", "text-html");
+  e = new_mime_type ("text/x-python", "Python Text Document", "py", "text-x-python");
+  e = new_mime_type ("video/mpeg", "MPEG Video File", "mpg", "video-mpeg");
+  e = new_mime_type ("video/mpeg", "MPEG Video File", "mpeg", "video-mpeg");
+  e = new_mime_type ("video/avi", "AVI Video File", "avi", "video-x-msvideo");
 }
 
 int
 sql_start (void)
 {
   static const char *schema1_str = 
-    "create table mime_types (uid INTEGER PRIMARY KEY, name TEXT, description TEXT, extension TEXT, program TEXT, icon TEXT)";
+    "create table mime_types (uid INTEGER PRIMARY KEY, name TEXT, description TEXT, extension TEXT, icon TEXT)";
 
   const char *home = getenv ("HOME");
   char *buf;
@@ -141,7 +140,7 @@ sql_start (void)
 
   sqlite_exec (sqliteh, schema1_str, NULL, NULL, &err);
 
-  if (sqlite_exec (sqliteh, "select uid,name,description,extension,program,icon from mime_types",
+  if (sqlite_exec (sqliteh, "select uid,name,description,extension,icon from mime_types",
 		   mime_type_callback, NULL, &err))
     {
       gpe_error_box (err);

@@ -28,6 +28,7 @@
 #include <gpe/gpe-iconlist.h>
 
 #include "mime-sql.h"
+#include "mime-programs-sql.h"
 
 #define _(x) dgettext(PACKAGE, x)
 
@@ -191,11 +192,9 @@ ask_open_with (char *exec)
   GdkPixbuf *pixbuf = NULL, *spixbuf;
   GdkPixmap *pixmap;
   GdkBitmap *bitmap;
-
-  int i = 5;
+  struct mime_program *file_program = NULL;
+  GSList *iter;
   int row_num = 0;
-  gchar *programs[] = {"GPE Edit", "gpe-edit", "Dillo", "dillo", "GPE Gallery", "gpe-gallery"};
-  gchar *row_text[2];
   gchar *pixmap_file;
 
   fakeparentwindow = gtk_window_new(GTK_WINDOW_TOPLEVEL);
@@ -248,128 +247,29 @@ ask_open_with (char *exec)
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), clist, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), entry, TRUE, TRUE, 4);
 
-  for ( ; i > 0; i = i - 2)
+  if (mime_programs)
   {
-    row_text[0] = 0;
-    row_text[1] = programs[i-1];
-    gtk_clist_append (GTK_CLIST (clist), row_text);
-    gtk_clist_set_row_data (GTK_CLIST (clist), row_num, (gpointer) programs[i]);
-
-    pixmap_file = g_strdup_printf ("%s/share/pixmaps/%s.png", PREFIX, programs[i]);
-    pixbuf = gdk1_pixbuf_new_from_file (pixmap_file);
-    if (pixbuf != NULL)
+    for (iter = mime_programs; iter; iter = iter->next)
     {
-      spixbuf = gdk_pixbuf_scale_simple (pixbuf, 12, 12, GDK_INTERP_BILINEAR);
-      gpe_render_pixmap (NULL, spixbuf, &pixmap, &bitmap);
-      gtk_clist_set_pixmap (GTK_CLIST (clist), row_num, 0, pixmap, bitmap);
-    }
+      struct mime_program *program = iter->data;
 
-    row_num++;
+      gtk_clist_append (GTK_CLIST (clist), program->name);
+      gtk_clist_set_row_data (GTK_CLIST (clist), row_num, (gpointer) program->command);
+
+      pixmap_file = g_strdup_printf ("%s/share/pixmaps/%s.png", PREFIX, program->command);
+      pixbuf = gdk1_pixbuf_new_from_file (pixmap_file);
+      if (pixbuf != NULL)
+      {
+        spixbuf = gdk_pixbuf_scale_simple (pixbuf, 12, 12, GDK_INTERP_BILINEAR);
+        gpe_render_pixmap (NULL, spixbuf, &pixmap, &bitmap);
+        gtk_clist_set_pixmap (GTK_CLIST (clist), row_num, 0, pixmap, bitmap);
+      }
+
+      row_num++;
+    }
   }
 
   gtk_widget_show_all (window);	
-}
-
-static gint
-unignore_press (gpointer data)
-{
-  ignore_press = 0;
-  return FALSE;
-}
-
-/* Callback for selecting a program to run */
-static gint
-button_released (GtkObject *button, gpointer data)
-{
-  struct mime_type *mime;
-  gchar *path, *type;
-
-  gtk_widget_set_state (GTK_WIDGET(button), GTK_STATE_NORMAL);
-
-  /* Clear the variables stating what button is down etc. 
-   * and close if we're not on the original button */
-  if (GTK_WIDGET (button) != current_button || !current_button_is_down)
-  {
-    current_button = NULL;
-    current_button_is_down = 0;
-    return TRUE;
-  }
-
-  if (!GTK_IS_EVENT_BOX (button)) /* Could be the notebook! */
-    return TRUE;
-
-  if (ignore_press)
-    return TRUE;
-
-  /* So we ignore a second press within 1000msec */
-  ignore_press = 1;
-  gtk_timeout_add (500, unignore_press, NULL);
-
-  mime = (struct mime_type *) gtk_object_get_data (GTK_OBJECT (button), "mime");
-  path = (gchar *) gtk_object_get_data (GTK_OBJECT (button), "path");
-  type = (gchar *) gtk_object_get_data (GTK_OBJECT (button), "type");
-
-  if (strcmp (type, "file") == 0)
-  {
-    if (mime)
-    {
-      run_program (path, (gpointer) mime->program);
-    }
-    else
-    {
-      ask_open_with (path);
-    }
-  }
-  else if (strcmp (type, "directory") == 0)
-    browse_directory (path);
-
-  return TRUE;	
-}
-
-static gint
-button_pressed (GtkWidget *button, GdkEventButton *event, gpointer data)
-{
-  /* We only want left mouse button events */
-  if (event && (!(event->button == 1)))
-    return TRUE;
-
-  if (ignore_press) /* Ignore double clicks! */ 
-  {
-    return TRUE;
-  }
-
-  current_button = button;
-  current_button_is_down = 1;
-
-  gtk_widget_set_state (button, GTK_STATE_SELECTED);
-
-  return TRUE;	
-}
-
-static gint
-button_enter (GtkWidget *button, GdkEventCrossing *event)
-{
-  /* We only want left mouse button events */
-  if (!(event->state & 256))
-  {
-    current_button = NULL;
-    return TRUE;
-  }
-
-  /* If we're moving onto the button that was last selected,
-     do the same as if we've just started pressing on it again */
-  if (button == current_button)
-    button_pressed (button, NULL, NULL);
-
-  return TRUE;
-}
-
-static gint
-button_leave (GtkWidget *button, GdkEventCrossing *event)
-{
-  gtk_widget_set_state (button, GTK_STATE_NORMAL);
-  current_button_is_down = 0;
-  return TRUE;
 }
 
 void
@@ -379,7 +279,7 @@ button_clicked (GtkWidget *widget, gpointer udata)
 
   if (strcmp (((struct file_infomation *) udata)->type, "file") == 0)
   {
-    run_program (((struct file_infomation *) udata)->filename,((struct file_infomation *) udata)->mime ->program);
+    run_program (((struct file_infomation *) udata)->filename,((struct file_infomation *) udata)->mime ->mime_name);
   }
   else if (strcmp (((struct file_infomation *) udata)->type, "regular") == 0)
   {
@@ -505,13 +405,6 @@ make_view (gchar *view)
 	printf ("Found file %s\n", filename);
 	filenames = g_list_append (filenames, filename);
 	//add_icon (basename (filename), filename);
-
-        /*
-        gtk_signal_connect( GTK_OBJECT (button), "button_release_event", GTK_SIGNAL_FUNC (button_released), NULL);
-        gtk_signal_connect( GTK_OBJECT (button), "button_press_event", GTK_SIGNAL_FUNC (button_pressed), NULL);
-        gtk_signal_connect( GTK_OBJECT (button), "enter_notify_event", GTK_SIGNAL_FUNC (button_enter), NULL);
-        gtk_signal_connect( GTK_OBJECT (button), "leave_notify_event", GTK_SIGNAL_FUNC (button_leave), NULL);
-	*/
       }
     }
     closedir (dir);
@@ -805,22 +698,25 @@ main (int argc, char *argv[])
   if (sql_start ())
     exit (1);
 
+  if (programs_sql_start ())
+    exit (1);
+
   gtk_option_menu_set_history (GTK_OPTION_MENU (view_option_menu), 0);
 
-  /*
+  
   if (mime_types)
   {
     GSList *iter;
 
-    printf ("|\textension\t\t|\tmime_name\t|\tprogram\t|\n\n");
+    printf ("|\textension\t\t|\tmime_name\t|\n\n");
 
     for (iter = mime_types; iter; iter = iter->next)
     {
       struct mime_type *c = iter->data;
 
-      printf ("|\t%s\t\t|\t%s\t|\t%s\t|\n", c->mime_name, c->extension, c->program);
+      printf ("|\t%s\t\t|\t%s\t|\n", c->mime_name, c->extension);
     }
-  */
+  }
 
   set_directory_home (NULL);
   //history_place--;

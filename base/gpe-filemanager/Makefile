@@ -6,7 +6,7 @@ MIME_PIXMAPS = `cd pixmaps/document-icons && ls *.png`
 SPINNER_PIXMAPS = `cd pixmaps/spinner && ls *.png`
 GTK2 = yes
 
-MEMBERS = main mime-sql
+MEMBERS = main mime-sql mime-programs-sql
 
 ifeq ($(GTK2),yes)
 CFLAGS = `pkg-config --cflags gtk+-2.0` -DGTK_ENABLE_BROKEN
