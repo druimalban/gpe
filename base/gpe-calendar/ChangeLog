@@ -1,5 +1,13 @@
 2002-08-31  Philip Blundell  <philb@gnu.org>
 
+	* month_view.c (c_old): Make static.
+	(button_press): Fix formatting.
+	(struct render_ctl): Add "today".
+	(draw_expose_event): Draw red border when c->today==TRUE.
+	(month_view_update): Set c->today appropriately.
+
+2002-08-31  Philip Blundell  <philb@gnu.org>
+
 	* month_view.c (TOTAL_DAYS): New macro.
 	(draw_expose_event): Use it.
 	(month_view_update): Likewise.

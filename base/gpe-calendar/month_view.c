@@ -27,12 +27,13 @@
 
 static GtkWidget *datesel, *draw;
 static guint xp, xs, ys;
-struct render_ctl *c_old;
+static struct render_ctl *c_old;
 
 struct render_ctl
 {
   struct day_popup popup;
   gboolean valid;
+  gboolean today;
 };
 
 #define TOTAL_DAYS (6 * 7)
@@ -40,7 +41,7 @@ struct render_ctl
 static struct render_ctl rc[TOTAL_DAYS];
 
 static gboolean
-button_press(GtkWidget *widget,
+button_press (GtkWidget *widget,
 	      GdkEventButton *event,
 	      gpointer d)
 {
@@ -59,15 +60,18 @@ button_press(GtkWidget *widget,
 	      
     if (event->type == GDK_BUTTON_PRESS)
     {
-      if (pop_window) gtk_widget_destroy (pop_window);
-      if (c!=c_old) {
-		pop_window=day_popup (main_window, &c->popup);
-		c_old=c;
-      }
-      else {
-		pop_window=NULL;
-		c_old=NULL;
-      }
+      if (pop_window) 
+	gtk_widget_destroy (pop_window);
+      if (c != c_old) 
+	{
+	  pop_window = day_popup (main_window, &c->popup);
+	  c_old = c;
+	}
+      else 
+	{
+	  pop_window = NULL;
+	  c_old = NULL;
+	}
     }
     
     else if (event->type == GDK_2BUTTON_PRESS)
@@ -78,7 +82,8 @@ button_press(GtkWidget *widget,
 	tm.tm_mon = c->popup.month;
 	tm.tm_mday = c->popup.day;
 	viewtime = mktime (&tm);
-	if (pop_window) gtk_widget_destroy (pop_window);
+	if (pop_window) 
+	  gtk_widget_destroy (pop_window);
         set_day_view ();    
     }
   }
@@ -219,6 +224,25 @@ draw_expose_event (GtkWidget *widget,
 	}
     }
 
+  for (i = 0; i < 7; i++)
+    {
+      guint x = xp + (i * xs);
+      for (j = 0; j < (TOTAL_DAYS / 7); j++)
+	{
+	  guint d = i + (7 * j);
+	  struct render_ctl *c = &rc[d];
+	  guint y = (j + 1) * ys;
+
+	  if (c->today)
+	    {
+	      gdk_draw_rectangle (drawable, red_gc, FALSE,
+				  x, y, xs, ys);
+	      gdk_draw_rectangle (drawable, red_gc, FALSE,
+				  x + 1, y + 1, xs - 2, ys - 2);
+	    }
+	}
+    }
+
   gdk_gc_set_clip_rectangle (black_gc, NULL);
   gdk_gc_set_clip_rectangle (gray_gc, NULL);
   gdk_gc_set_clip_rectangle (white_gc, NULL);
@@ -258,6 +282,11 @@ month_view_update ()
   guint days;
   guint year, month;
   guint wday;
+  struct tm today;
+  time_t t;
+
+  time (&t);
+  localtime_r (&t, &today);
 
   localtime_r (&viewtime, &tm_start);
   year = tm_start.tm_year + 1900;
@@ -314,6 +343,10 @@ month_view_update ()
 	  c->valid = TRUE;
 	  c->popup.events = day_events[rday];
 	}
+      
+      c->today = ((year == today.tm_year + 1900
+		   && month == today.tm_mon
+		   && rday == today.tm_mday)) ? TRUE : FALSE;
     }
 
   gtk_widget_draw (draw, NULL);
