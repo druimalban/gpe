@@ -508,7 +508,7 @@ main (int argc, char *argv[])
 {
   GtkWidget *window;
   GdkBitmap *bitmap;
-  GtkWidget *menu_remove, *menu_file;
+  GtkWidget *menu_remove;
   GtkTooltips *tooltips;
   int dd;
 
@@ -560,12 +560,10 @@ main (int argc, char *argv[])
 
   gtk_widget_show (menu_devices);
   gtk_widget_show (menu_remove);
-  gtk_widget_show (menu_file);
 
   gtk_menu_append (GTK_MENU (menu), menu_radio_on);
   gtk_menu_append (GTK_MENU (menu), menu_radio_off);
   gtk_menu_append (GTK_MENU (menu), menu_devices);
-  gtk_menu_append (GTK_MENU (menu), menu_file);
   gtk_menu_append (GTK_MENU (menu), menu_remove);
 
   if (gpe_load_icons (my_icons) == FALSE)
