@@ -417,32 +417,25 @@ static void
 _gpe_icon_list_view_recalc_size (GPEIconListView *self, GtkAllocation *allocation)
 {
   int count;
-  int da_new_height;
 
   /* only one col in list mode, calculate otherwise */
   if (self->textpos == GPE_TEXT_RIGHT) 
-      self->cols = 1;
+    self->cols = 1;
   else
-  {  
-    /* calculate number of columns that will fit.  If none will, use one anyway */
-    self->cols = allocation->width / il_col_width (self);
-    if (self->cols == 0)
-      self->cols = 1;
-  }  
+    {  
+      /* calculate number of columns that will fit.  If none will, use one anyway */
+      self->cols = allocation->width / il_col_width (self);
+      if (self->cols == 0)
+	self->cols = 1;
+    }  
   count = g_list_length (self->icons);
 
-  if (self->textpos == GPE_TEXT_BELOW)
-  {      
-    self->rows = (count - 1) / self->cols + 1;
-    if (self->rows_set && self->rows > self->rows_set)
-      self->rows = self->rows_set;
-  }
-  else
-  {
-    self->rows = 1;
-  }
-  da_new_height = self->rows * il_row_height (self) + TOP_MARGIN;
-  gtk_widget_set_usize (GTK_WIDGET (self), -1, da_new_height);
+  self->rows = (count - 1) / self->cols + 1;
+  if (self->rows_set && self->rows > self->rows_set)
+    self->rows = self->rows_set;
+
+  GTK_WIDGET (self)->requisition.height = self->rows * il_row_height (self) + TOP_MARGIN;
+  gtk_widget_queue_resize (GTK_WIDGET (self));
 }
 	
 static GObject *

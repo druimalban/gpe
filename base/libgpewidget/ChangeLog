@@ -1,3 +1,9 @@
+2004-06-07  Philip Blundell  <philb@gnu.org>
+
+	* gpeiconlistview.c (_gpe_icon_list_view_recalc_size): Don't call
+	gtk_widget_set_usize; just update the requisition and re-negotiate
+	with parent.  Correct logic in TEXT_BELOW case.
+
 2004-06-07  Florian Boor <florian.boor@kernelconcepts.de>
 	
 	* gpeiconlictview.[c,h]: Added new listview layout with text right
