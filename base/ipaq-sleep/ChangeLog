@@ -1,3 +1,7 @@
+2002-07-29  Colin Marquardt  <colin@marquardt-home.de>
+
+	* Makefile: Use "include ../build/Makefile.dpkg_ipkg".
+
 2002-07-22  Colin Marquardt  <colin@marquardt-home.de>
 
 	* familiar/control (Module): Change wording a bit. Add that it
