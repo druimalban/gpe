@@ -20,4 +20,4 @@ extern time_t viewtime;
 #define VERSION "0.0 (20020510)"
 
 extern void update_current_view (void);
-extern GtkWidget *day_list;
+extern GtkWidget *day_list, *future_list;

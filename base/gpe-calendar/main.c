@@ -30,7 +30,7 @@ extern GtkWidget *new_event (time_t t, guint timesel, event_t *ev);
 GdkFont *timefont;
 GdkFont *datefont;
 GdkFont *yearfont;
-GtkWidget *day_list;
+GtkWidget *day_list, *future_list;
 GList *times;
 time_t viewtime;
 

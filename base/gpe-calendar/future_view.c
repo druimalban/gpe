@@ -21,53 +21,86 @@
 #include "event-db.h"
 
 static gint
-draw_expose_event (GtkWidget *widget,
-		   GdkEvent  *event,
-		   gpointer   user_data)
+future_view_update ()
 {
-  GtkDrawingArea *darea;
-  GdkDrawable *drawable;
-  GdkGC *black_gc;
-  GdkGC *gray_gc;
-  GdkGC *white_gc;
-  guint max_width;
-  guint max_height;
+  
+  gint row=0;
+  time_t start=time(NULL);
+  time_t end;
+  event_t ev;
+  event_details_t evd;
   struct tm tm;
-  time_t t;
-  char buf[64];
-  guint x;
+  char buf[256];
+  gchar *line_info[2];
+  GSList *future_events[1];
+  GSList *iter;
+     
+  gtk_clist_freeze(GTK_CLIST(future_list));
+  gtk_clist_clear(GTK_CLIST(future_list));
 
-  g_return_val_if_fail (widget != NULL, TRUE);
-  g_return_val_if_fail (GTK_IS_DRAWING_AREA (widget), TRUE);
+  gtk_clist_set_column_width (GTK_CLIST(future_list), 0, 100);
+  gtk_clist_set_column_width (GTK_CLIST(future_list), 1, 55);
+  gtk_clist_set_sort_column (GTK_CLIST(future_list), 0);
+  
+  localtime_r (&start, &tm);
+  tm.tm_year++;
+  end=mktime (&tm);
+      
+  future_events[0] = event_db_list_for_period (start, end);
+      
+  for (iter = future_events[0]; iter; iter = iter->next)
+  {
+	  ev = (event_t) iter->data;
+	  evd = event_db_get_details (ev);
 
-  darea = GTK_DRAWING_AREA (widget);
-  drawable = widget->window;
-  white_gc = widget->style->white_gc;
-  gray_gc = widget->style->dark_gc[GTK_STATE_NORMAL];
-  black_gc = widget->style->black_gc;
-  max_width = widget->allocation.width;
-  max_height = widget->allocation.height;
-
-  gdk_draw_rectangle (drawable, white_gc, TRUE, 0, 0, max_width, max_height);
-
-  time(&t);
-  localtime_r(&t, &tm);
-  strftime (buf, sizeof(buf), "%A, %d %b %Y", &tm);
-  x = (max_width / 2) - (gdk_string_width (widget->style->font, buf) / 2);
-  gdk_draw_text (drawable, widget->style->font, black_gc, x, widget->style->font->ascent + widget->style->font->descent + 2, buf, strlen(buf));
-
+          line_info[1]=evd->description;
+          localtime_r (&(ev->start), &tm);
+  	  strftime (buf, sizeof (buf), "%F %R", &tm);
+          line_info[0]=buf;
+      
+          gtk_clist_append(GTK_CLIST(future_list), line_info);
+	  gtk_clist_set_row_data(GTK_CLIST(future_list), row, ev);
+	
+	  row++;
+	  
+  } 
+       
+  gtk_clist_sort (GTK_CLIST(future_list));
+  gtk_clist_thaw(GTK_CLIST(future_list));
+  
   return TRUE;
 }
 
 GtkWidget *
 future_view(void)
 {
-  GtkWidget *draw = gtk_drawing_area_new();
+  time_t t=time(NULL);
+  struct tm tm;
+  char buf[64];
   
-  gtk_drawing_area_size(GTK_DRAWING_AREA(draw), 240, 13 * 20);
-  gtk_signal_connect (GTK_OBJECT (draw),
-		      "expose_event",
-		      GTK_SIGNAL_FUNC (draw_expose_event),
-		      NULL);
-  return draw;
+  GtkWidget *vbox = gtk_vbox_new(FALSE, 0);
+  GtkWidget *scrolled_window = gtk_scrolled_window_new (NULL, NULL);
+  GtkWidget *label;
+  
+  localtime_r(&t, &tm);
+  strftime (buf, sizeof(buf), "%A, %d %b %Y", &tm);
+  
+  label = gtk_label_new (buf);
+  
+  future_list = gtk_clist_new(2);
+  
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window),
+		GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+  
+  future_view_update();
+  
+  gtk_container_add(GTK_CONTAINER(scrolled_window), future_list);
+  
+  gtk_box_pack_start (GTK_BOX(vbox), label, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX(vbox), scrolled_window, TRUE, TRUE, 0);
+  
+  gtk_object_set_data (GTK_OBJECT (vbox), "update_hook", 
+		       (gpointer) future_view_update);
+  
+ return vbox;
 }
