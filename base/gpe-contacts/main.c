@@ -739,7 +739,6 @@ do_search (GObject *obj, GtkWidget *entry)
   gchar *text = g_utf8_strdown (gtk_entry_get_text (GTK_ENTRY (entry)), -1);
   guint category = gtk_option_menu_get_history (GTK_OPTION_MENU (categories_smenu));
   gchar *cat_id = NULL;
-/*   GSList *all_entries = db_get_entries (), *iter = NULL; */
   GSList *sel_entries = NULL, *iter = NULL;
   struct gpe_pim_category *c = NULL;
   GtkTreePath *path;

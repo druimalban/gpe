@@ -1,3 +1,9 @@
+2005-02-14  Florian Boor <florian.boor@kernelconcepts.de>
+
+    * db.c (sort_entries): Sort by family name.
+    * db.c (read_one_entry): Removed obsolete queries.
+    * main.c: Minor cleanups.
+
 2005-02-08  Florian Boor <florian.boor@kernelconcepts.de>
 
 	* main.c: Show contact details on doubleclick on the contact list

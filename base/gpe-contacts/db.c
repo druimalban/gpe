@@ -228,7 +228,9 @@ new_person_id (guint * id)
 gint 
 sort_entries(struct person * a, struct person * b)
 {
-  return strcoll (a->name, b->name);
+  gint s = strcoll (a->family_name, b->family_name);
+  
+  return s ? s : strcoll (a->name, b->name);
 }
 
 static int
@@ -236,15 +238,6 @@ read_name (void *arg, int argc, char **argv, char **names)
 {
   struct person *p = (struct person *)arg;
   p->name = g_strdup (argv[1]);
-
-  return 0;
-}
-
-static int
-read_given_name (void *arg, int argc, char **argv, char **names)
-{
-  struct person *p = (struct person *)arg;
-  p->given_name = g_strdup (argv[1]);
 
   return 0;
 }
@@ -259,24 +252,6 @@ read_family_name (void *arg, int argc, char **argv, char **names)
 }
 
 static int
-read_middle_name (void *arg, int argc, char **argv, char **names)
-{
-  struct person *p = (struct person *)arg;
-  p->middle_name = g_strdup (argv[1]);
-
-  return 0;
-}
-static int
-
-read_company (void *arg, int argc, char **argv, char **names)
-{
-  struct person *p = (struct person *)arg;
-  p->company = g_strdup (argv[1]);
-
-  return 0;
-}
-
-static int
 read_one_entry (void *arg, int argc, char **argv, char **names)
 {
   struct person *p = new_person ();
@@ -285,15 +260,9 @@ read_one_entry (void *arg, int argc, char **argv, char **names)
   p->id = atoi (argv[0]);
   sqlite_exec_printf (db, "select tag,value from contacts where (urn=%d) and ((tag='NAME') or (tag='name'))",
 		      read_name, p, NULL, p->id);
-  sqlite_exec_printf (db, "select tag,value from contacts where (urn=%d) and ((tag='GIVEN_NAME') or (tag='given_name'))",
-		      read_given_name, p, NULL, p->id);
-  sqlite_exec_printf (db, "select tag,value from contacts where (urn=%d) and (tag='MIDDLE_NAME')",
-		      read_middle_name, p, NULL, p->id);
   sqlite_exec_printf (db, "select tag,value from contacts where (urn=%d) and ((tag='FAMILY_NAME') or (tag='family_name'))",
 		      read_family_name, p, NULL, p->id);
-  sqlite_exec_printf (db, "select tag,value from contacts where (urn=%d) and (tag='COMPANY')",
-		      read_company, p, NULL, p->id);
-
+  
   /* we support contacts without name now */
   if (!p->name) 
     p->name = g_strdup("");
@@ -488,10 +457,10 @@ db_find_tag (struct person *p, gchar * tag)
     {
       struct tag_value *id = (struct tag_value *) iter->data;
       if (!strcasecmp (id->tag, tag))
-	{
-	  t = id;
-	  break;
-	}
+       {
+         t = id;
+         break;
+       }
     }
   return t;
 }
