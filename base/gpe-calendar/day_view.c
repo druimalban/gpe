@@ -110,9 +110,6 @@ day_view_update ()
      
   widget_width=day_list->allocation.width;
 
-  gtk_date_sel_set_time (GTK_DATE_SEL (datesel), viewtime);
-  gtk_widget_draw (datesel, NULL);
-      
   if (! light_style)
     {
       guint j;
@@ -271,6 +268,15 @@ changed_callback(GtkWidget *widget,
   day_view_update ();
 }
 
+static void
+update_hook_callback()
+{
+  gtk_date_sel_set_time (GTK_DATE_SEL (datesel), viewtime);
+  gtk_widget_draw (datesel, NULL);
+      
+  day_view_update ();
+}
+
 GtkWidget *
 day_view(void)
 {
@@ -301,7 +307,7 @@ day_view(void)
 		     GTK_SIGNAL_FUNC (changed_callback), day_list);
   
   gtk_object_set_data (GTK_OBJECT (vbox), "update_hook", 
-		       (gpointer) day_view_update);
+		       (gpointer) update_hook_callback);
 
   return vbox;
 }

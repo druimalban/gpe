@@ -257,9 +257,6 @@ month_view_update ()
   guint year, month;
   guint wday;
 
-  gtk_date_sel_set_time (GTK_DATE_SEL (datesel), viewtime);
-  gtk_widget_draw (datesel, NULL);
-      
   localtime_r (&viewtime, &tm_start);
   year = tm_start.tm_year + 1900;
   month = tm_start.tm_mon;
@@ -331,6 +328,15 @@ changed_callback(GtkWidget *widget,
 }
 
 static void
+update_hook_callback()
+{
+  gtk_date_sel_set_time (GTK_DATE_SEL (datesel), viewtime);
+  gtk_widget_draw (datesel, NULL);
+      
+  month_view_update ();
+}
+
+static void
 resize_table(GtkWidget *widget,
 	     gpointer d)
 {
@@ -383,7 +389,7 @@ month_view(void)
 		     GTK_SIGNAL_FUNC (changed_callback), NULL);
   
   gtk_object_set_data (GTK_OBJECT (vbox), "update_hook", 
-		       (gpointer) month_view_update);
+		       (gpointer) update_hook_callback);
 
   return vbox;
 }

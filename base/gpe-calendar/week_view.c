@@ -78,9 +78,6 @@ week_view_update (void)
   struct tm tm;
   gchar *line_info[2];
 	      
-  gtk_date_sel_set_time (GTK_DATE_SEL (datesel), viewtime);
-  gtk_widget_draw (datesel, NULL);
-
   localtime_r (&t, &today);
 
   t = viewtime;
@@ -184,6 +181,15 @@ changed_callback(GtkWidget *widget,
   week_view_update ();
 }
 
+static void
+update_hook_callback()
+{
+  gtk_date_sel_set_time (GTK_DATE_SEL (datesel), viewtime);
+  gtk_widget_draw (datesel, NULL);
+
+  week_view_update ();
+}
+
 GtkWidget *
 week_view(void)
 {
@@ -233,7 +239,7 @@ week_view(void)
 		     GTK_SIGNAL_FUNC (changed_callback), NULL);
 
   gtk_object_set_data (GTK_OBJECT (vbox), "update_hook",
-                       (gpointer) week_view_update);
+                       (gpointer) update_hook_callback);
 
   week_view_vbox = vbox;
 

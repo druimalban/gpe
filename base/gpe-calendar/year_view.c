@@ -52,9 +52,6 @@ year_view_update (void)
   tm.tm_sec = 0;
   basetime = mktime (&tm);
 
-  gtk_date_sel_set_time (GTK_DATE_SEL (datesel), viewtime);
-  gtk_widget_draw (datesel, NULL);
-
   memset (day_event_bits, 0, sizeof (day_event_bits));
 
   for (i = 0; i < 367; i++)
@@ -101,6 +98,15 @@ changed_callback(GtkWidget *widget,
 		 gpointer d)
 {
   viewtime = gtk_date_sel_get_time (GTK_DATE_SEL (widget));
+  year_view_update ();
+}
+
+static void
+update_hook_callback()
+{
+  gtk_date_sel_set_time (GTK_DATE_SEL (datesel), viewtime);
+  gtk_widget_draw (datesel, NULL);
+
   year_view_update ();
 }
 
@@ -192,7 +198,7 @@ year_view(void)
   gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0); 
   gtk_box_pack_start (GTK_BOX (vbox), scrolled, TRUE, TRUE, 0);
   gtk_object_set_data (GTK_OBJECT (vbox), "update_hook", 
-		       (gpointer) year_view_update);
+		       (gpointer) update_hook_callback);
 
   g_table = table;
 
