@@ -951,6 +951,7 @@ create_main (gboolean show_config_button)
 
   displaymigration_mark_window (main_window);
 
+  
   return main_window;
 }
 
@@ -980,6 +981,7 @@ main (int argc, char *argv[])
   int arg;
   gboolean show_config_button = TRUE;
   gchar *ifile = NULL;
+  GtkTreePath *path;
   
 #ifdef ENABLE_NLS
   setlocale (LC_ALL, "");
@@ -1060,6 +1062,10 @@ main (int argc, char *argv[])
   gpe_set_window_icon (mainw, "icon");
   gtk_widget_show_all (mainw);
   gtk_widget_grab_focus (GTK_WIDGET (g_object_get_data (G_OBJECT (mainw), "entry")));
+
+  path = gtk_tree_path_new_first();
+  gtk_tree_view_set_cursor(GTK_TREE_VIEW(list_view), path, NULL, FALSE);
+  gtk_tree_path_free(path);
 
   gtk_main ();
   return 0;
