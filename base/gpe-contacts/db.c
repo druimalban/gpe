@@ -617,3 +617,36 @@ db_free_result (char **table)
 {
   sqlite_free_table (table);
 }
+
+gchar *
+db_compress (void)
+{
+  gchar *err = NULL;
+  gchar **list = NULL;
+  gint r, c;
+
+  sqlite_get_table_printf (db, "vacuum", &list, &r, &c, &err);
+  if (err)
+    {
+      fprintf (stderr,"e: %s\n", err);
+      return err;
+    }
+  if (list != NULL)
+    {
+      sqlite_free_table (list);
+    }
+  return NULL;
+}
+
+gint
+db_size (void)
+{
+  gchar *fn = g_strdup_printf("%s/" DB_NAME, g_get_home_dir());
+  int result = 0;
+  struct stat dat;
+  
+  if (!stat(fn, &dat))
+    result = dat.st_size / 1024;
+  g_free(fn);
+  return result;
+}

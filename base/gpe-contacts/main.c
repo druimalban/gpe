@@ -1093,7 +1093,7 @@ on_main_focus(GtkWindow *window,  GdkEventExpose *event,gpointer user_data)
 }
 
 static GtkWidget *
-create_main (gboolean show_config_button)
+create_main (gboolean edit_structure)
 {
   GtkWidget *main_window;
   GtkWidget *vbox1;
@@ -1165,10 +1165,9 @@ create_main (gboolean show_config_button)
       g_object_set_data (G_OBJECT (main_window), "details-button", btnDetails);
     }
 
-  if (show_config_button)
-    gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_PROPERTIES,
-			    _("Properties"), _("Tap here to configure the program."),
-  			    G_CALLBACK (configure), NULL, -1);
+  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_PROPERTIES,
+			    _("Properties"), _("Tap here to configure this program."),
+  			    G_CALLBACK (configure), (gpointer)edit_structure, -1);
 				
   gtk_toolbar_append_space(GTK_TOOLBAR(toolbar));
 
@@ -1340,7 +1339,7 @@ int
 main (int argc, char *argv[])
 {
   int arg;
-  gboolean show_config_button = TRUE;
+  gboolean edit_structure = TRUE;
   gchar *ifile = NULL;
   GtkTreePath *path;
   
@@ -1363,7 +1362,7 @@ main (int argc, char *argv[])
   {
     if (arg == 'n')
       {
-        show_config_button = FALSE;
+        edit_structure = FALSE;
         break;
       }
     if (arg == 'i')
@@ -1407,7 +1406,7 @@ main (int argc, char *argv[])
 
   list_store = gtk_list_store_new (2, G_TYPE_STRING, G_TYPE_INT);
 
-  mainw = create_main (show_config_button);
+  mainw = create_main (edit_structure);
   popup_menu = create_popup (mainw);
   update_categories ();
   show_details (NULL);

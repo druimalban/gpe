@@ -117,6 +117,23 @@ on_bDetRemove_clicked (GtkButton * button, GtkWidget *tree_view)
   g_slist_free (refs);
 }
 
+void
+on_compact_clicked (GtkButton *button, GtkWidget *lsize)
+{
+  gchar *str;
+  str = db_compress();
+  if (str) 
+    {
+      fprintf(stderr, "err %s\n", str);
+    }
+  else
+    {
+      str = g_strdup_printf("%s %d %s", _("Current size:"), db_size(), 
+                            _("kB (optimised)"));
+      gtk_label_set_text(GTK_LABEL(lsize), str);
+    }
+  g_free(str);
+}
 
 /* This create the setup for portrait displays to configure the details panel
    fields and order */
@@ -275,13 +292,15 @@ create_pageLandSetup (GObject *container)
   label = gtk_label_new(NULL);
   gtk_label_set_markup(GTK_LABEL(label), markup);
   g_free(markup);
-  gtk_table_attach(GTK_TABLE(table), label, 0, 3, 0, 1, GTK_EXPAND, GTK_EXPAND, 0, 0);
+  gtk_misc_set_alignment(GTK_MISC(label), 0.0, 0.5);
+  gtk_table_attach(GTK_TABLE(table), label, 0, 3, 0, 1, GTK_FILL, GTK_FILL, 0, 0);
   label = gtk_label_new(_("List position"));
-  gtk_table_attach(GTK_TABLE(table), label, 0, 1, 1, 2, GTK_EXPAND, GTK_EXPAND, 0, 0);
+  gtk_misc_set_alignment(GTK_MISC(label), 0.0, 0.5);
+  gtk_table_attach(GTK_TABLE(table), label, 0, 1, 1, 2, GTK_FILL, GTK_FILL, 0, 0);
   w = gtk_radio_button_new_with_label(NULL, _("left"));
-  gtk_table_attach(GTK_TABLE(table), w, 1, 2, 1, 2, GTK_EXPAND, GTK_EXPAND, 0, 0);
+  gtk_table_attach(GTK_TABLE(table), w, 1, 2, 1, 2, GTK_FILL, GTK_FILL, 0, 0);
   w = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(w), _("right"));
-  gtk_table_attach(GTK_TABLE(table), w, 2, 3, 1, 2, GTK_EXPAND, GTK_EXPAND, 0, 0);
+  gtk_table_attach(GTK_TABLE(table), w, 2, 3, 1, 2, GTK_FILL, GTK_FILL, 0, 0);
   cfgval = db_get_config_tag (CONFIG_LIST, "pos");
   if (cfgval)
     {
@@ -292,6 +311,48 @@ create_pageLandSetup (GObject *container)
       g_free(cfgval);
     }
   g_object_set_data (container, "rb-right", w);
+  return table;
+}
+
+/* This page contains database related controls. */
+
+GtkWidget *
+create_pageDatabase (GObject *container)
+{
+  GtkWidget *table = gtk_table_new(3, 3, FALSE);
+  GtkWidget *label, *w, *lsize;
+  gchar *markup;
+
+  gtk_container_set_border_width(GTK_CONTAINER(table), gpe_get_border());
+  gtk_table_set_col_spacings(GTK_TABLE(table), gpe_get_boxspacing());
+  gtk_table_set_row_spacings(GTK_TABLE(table), gpe_get_boxspacing());
+    
+  markup = g_strdup_printf("<b>%s</b>", _("Database Size"));
+  label = gtk_label_new(NULL);
+  gtk_label_set_markup(GTK_LABEL(label), markup);
+  gtk_misc_set_alignment(GTK_MISC(label), 0.0, 0.5);
+  g_free(markup);
+  gtk_table_attach(GTK_TABLE(table), label, 0, 3, 0, 1, GTK_FILL, GTK_FILL, 0, 0);
+  /* TRANSLATORS: kB = kilo bytes */
+  markup = g_strdup_printf("%s %d %s", _("Current size:"), db_size(), _("kB"));
+  lsize = gtk_label_new(markup);
+  gtk_misc_set_alignment(GTK_MISC(lsize), 0.0, 0.5);
+  gtk_table_attach(GTK_TABLE(table), lsize, 0, 3, 1, 2, GTK_FILL, GTK_FILL, 0, 0);
+  g_free(markup);
+  markup = g_strdup_printf("<b>%s</b>", _("Actions"));
+  label = gtk_label_new(NULL);
+  gtk_label_set_markup(GTK_LABEL(label), markup);
+  gtk_misc_set_alignment(GTK_MISC(label), 0.0, 0.5);
+  g_free(markup);
+  gtk_table_attach(GTK_TABLE(table), label, 0, 3, 2, 3, GTK_FILL, GTK_FILL, 0, 0);
+  
+  label = gtk_label_new(_("Optimise database"));
+  gtk_misc_set_alignment(GTK_MISC(label), 0.0, 0.5);
+  gtk_table_attach(GTK_TABLE(table), label, 0, 1, 3, 4, GTK_FILL, GTK_FILL, 0, 0);
+  w = gtk_button_new_with_label(_("Run"));
+  gtk_table_attach(GTK_TABLE(table), w, 1, 3, 3, 4, GTK_FILL, GTK_FILL, 0, 0);
+  g_signal_connect(G_OBJECT(w), "clicked", G_CALLBACK(on_compact_clicked), lsize);
+  
   return table;
 }
 
@@ -391,12 +452,14 @@ configure_ok_clicked (GtkWidget *widget, GtkWidget *window)
 void
 configure (GtkWidget * widget, gpointer d)
 {
+  gboolean enable_structure = (gboolean) d;
   GtkWidget *window = gtk_dialog_new ();
   GtkWidget *notebook = gtk_notebook_new ();
   GtkWidget *editlabel = gtk_label_new (_("Editing Layout"));
   GtkWidget *editbox = edit_structure ();
   GtkWidget *configlabel = gtk_label_new (_("Setup"));
-  GtkWidget *configbox;
+  GtkWidget *dblabel = gtk_label_new (_("Database"));
+  GtkWidget *configbox, *dbbox;
   GtkWidget *ok_button, *cancel_button;
 
   if (mode_landscape)
@@ -404,9 +467,12 @@ configure (GtkWidget * widget, gpointer d)
   else  
     configbox = create_pageSetup (G_OBJECT (window));
   
-
-  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), editbox, editlabel);
+  dbbox = create_pageDatabase (G_OBJECT (window));
+  
+  if (enable_structure)
+    gtk_notebook_append_page (GTK_NOTEBOOK (notebook), editbox, editlabel);
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), configbox, configlabel);
+  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), dbbox, dblabel);
 
   gtk_container_add (GTK_CONTAINER (GTK_DIALOG (window)->vbox), notebook);
 

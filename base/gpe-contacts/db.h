@@ -53,4 +53,7 @@ extern void db_free_result(char** table);
 
 extern gint sort_entries (struct person * a, struct person * b);
 
+gchar *db_compress (void);
+gint db_size (void);
+
 #endif

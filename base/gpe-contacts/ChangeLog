@@ -1,9 +1,13 @@
 2004-10-11  Florian Boor  <florian.boor@kernelconcepts.de>
 
+    * main.c: Reduced effect of "-n" switch to hide structure edit.
+    * configure.c: Added database tab provides database compacting and info.
+    * db.*: Added functions for database cleanup (db_compress) and database
+            size info (db_size);
     * main.c, configure.c: Implemented landscape mode list position config.
     * configure.c: Config values for portrait mode only shown if portrait
                    is active.
-    * db.c: Removed obsolete db_get_entries_alpha() and friends;
+    * db.*: Removed obsolete db_get_entries_alpha() and friends;
             Added function to update a config value. (db_update_config_values)
     * main.c (delete_contact): Fixed cursor positioning after delete. 
 
