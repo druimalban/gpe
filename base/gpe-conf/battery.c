@@ -39,9 +39,11 @@
 #include "storage.h"
 #include "applets.h"
 #include "suid.h"
+#include "parser.h"
 
 
 #define TS_DEV "/dev/touchscreen/0raw"
+#define PROC_BATTERY "/proc/asic/battery"
 
 /* local types and structs */
 
@@ -91,7 +93,12 @@ static struct h3600_battery battery_val;
 float bperc;
 gchar percstr[9];
 gchar tmp[128];
+gboolean islearning = FALSE;
 
+	parse_file(PROC_BATTERY," Is learning? %*s %s",tmp);
+	if (strstr(tmp,"yes"))
+		islearning = TRUE;
+	
 	if (ioctl(TSfd, GET_BATTERY_STATUS, &battery_val) != 0)
 		return TRUE;
 
@@ -127,33 +134,38 @@ gchar tmp[128];
 
 	switch (battery_val.battery[0].status) {
 		case H3600_BATT_STATUS_HIGH:
-			gtk_label_set_text(GTK_LABEL(batt_int.lstate),_("Status: high"));
+			sprintf(tmp,"%s",_("Status: high"));
 			break;
 		case H3600_BATT_STATUS_LOW:
-			gtk_label_set_text(GTK_LABEL(batt_int.lstate),_("Status: low"));
+			sprintf(tmp,"%s",_("Status: low"));
 			break;
 		case H3600_BATT_STATUS_CRITICAL:
-			gtk_label_set_text(GTK_LABEL(batt_int.lstate),_("Status: critical"));
+			sprintf(tmp,"%s",_("Status: critical"));
 			break;
 		case H3600_BATT_STATUS_CHARGING:
-			gtk_label_set_text(GTK_LABEL(batt_int.lstate),_("Status: charging"));
+			sprintf(tmp,"%s",_("Status: charging"));
 			break;
 		case H3600_BATT_STATUS_CHARGE_MAIN:
-			gtk_label_set_text(GTK_LABEL(batt_int.lstate),_("Status: charge main"));
+			sprintf(tmp,"%s",_("Status: charge main"));
 			break;
 		case H3600_BATT_STATUS_DEAD:
-			gtk_label_set_text(GTK_LABEL(batt_int.lstate),_("Status: dead"));
+			sprintf(tmp,"%s",_("Status: dead"));
 			break;
 		case H3600_BATT_STATUS_FULL:
-			gtk_label_set_text(GTK_LABEL(batt_int.lstate),_("Status: full"));
+			sprintf(tmp,"%s",_("Status: full"));
 			break;
 		case H3600_BATT_STATUS_NOBATT:
-			gtk_label_set_text(GTK_LABEL(batt_int.lstate),_("Status: no battery"));
+			sprintf(tmp,"%s",_("Status: no battery"));
 			break;
 		default:
-			gtk_label_set_text(GTK_LABEL(batt_int.lstate),_("Status: unknown"));
+			sprintf(tmp,"%s",_("Status: unknown"));
 			break;
 	};
+
+	if (islearning)
+		sprintf(tmp+strlen(tmp)," (%s)",_("learning"));
+	
+	gtk_label_set_text(GTK_LABEL(batt_int.lstate),tmp);
 
 	sprintf(tmp,"%s: %d mV",_("Voltage"),battery_val.battery[0].voltage * 5000 / 1024);
 	gtk_label_set_text(GTK_LABEL(batt_int.lvoltage),tmp);

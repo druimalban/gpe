@@ -102,6 +102,7 @@ MEMBERS_INFO += logread
 MEMBERS_INFO += tools/interface
 MEMBERS_INFO += battery
 MEMBERS_INFO += sysinfo
+MEMBERS_INFO += parser
 
 
 ifeq ($(PACKAGETOOL),yes)

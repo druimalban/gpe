@@ -1,3 +1,6 @@
+2004-02-18	Florian Boor  	<florian.boor@kernelconcepts.de>
+	* battery.c, Makefile: Battery status shows learning status now.
+	
 2004-02-17	Florian Boor  	<florian.boor@kernelconcepts.de>
 	* main.c, main-info.c: Changed button box border size.
 	
