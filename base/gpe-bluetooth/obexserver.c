@@ -20,7 +20,7 @@
 
 #include <gtk/gtk.h>
 #include <gpe/errorbox.h>
-#include <gpe/tray.h>
+#include <gpe/question.h>
 
 #include <bluetooth/bluetooth.h>
 #include <bluetooth/l2cap.h>
@@ -33,6 +33,8 @@
 
 #define OBEX_PUSH_HANDLE	10
 
+#define _(x)  (x)
+
 struct chan
 {
   GIOChannel *chan;
@@ -40,12 +42,24 @@ struct chan
   int source;
 };
 
-GList *channels;
+static GList *channels;
+
+extern void import_vcard (const gchar *data, size_t len);
 
 static void
 file_received (gchar *name, const uint8_t *data, size_t data_len)
 {
-  fprintf (stderr, "received file %s: %d bytes\n", name, data_len);
+  if (name)
+    {
+      /* Try to guess type of file */
+      gchar *lname;
+      lname = g_ascii_strdown (name, -1);
+      
+      if (strstr (lname, ".vcf"))
+	import_vcard (data, data_len);
+      
+      g_free (name);
+    }
 }
 
 static void 
@@ -74,7 +88,7 @@ put_done (obex_t *handle, obex_object_t *object)
 	  break;
 	  
 	default:
-	  fprintf (stderr, "Skipped header %02x\n", hi);
+	  break;
 	}
     }
 
