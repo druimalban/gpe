@@ -16,10 +16,8 @@
 #include <gtk/gtk.h>
 
 #include <gpe/pixmaps.h>
-#include <gpe/render.h>
 #include <gpe/init.h>
 #include <gpe/smallbox.h>
-#include <gpe/picturebutton.h>
 
 #include "sql.h"
 
@@ -28,13 +26,9 @@
 static const guint window_x = 240, window_y = 320;
 
 struct gpe_icon my_icons[] = {
-  { "new", "new" },
-  { "delete", },
   { "clock", },
   { "stop_clock", },
   { "tick", },
-  { "ok" },
-  { "cancel" },
   { "gpe-timesheet", PREFIX "/share/pixmaps/gpe-timesheet.png" },
   { "edit" },
   { NULL, NULL }
@@ -117,26 +111,22 @@ confirm_dialog (gchar **text, gchar *action, gchar *action2)
   pixbuf = gpe_find_icon ("gpe-timesheet");
   if (pixbuf)
     {
-      icon = gpe_render_icon (w->style, pixbuf);
+      icon = gtk_image_new_from_pixbuf (pixbuf);
       gtk_box_pack_end (GTK_BOX (hbox), icon, FALSE, FALSE, 0);
       gtk_widget_show (icon);
     }
 
   frame = gtk_frame_new (_("Notes"));
   gtk_widget_show (frame);
-#if GTK_MAJOR_VERSION < 2
-  entry = gtk_text_new (NULL, NULL);
-#else
   entry = gtk_text_view_new ();
-#endif
   gtk_widget_show (entry);
   gtk_container_add (GTK_CONTAINER (frame), entry);
 
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (w)->vbox), hbox, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (w)->vbox), frame, TRUE, TRUE, 0);
 
-  buttonok = gpe_picture_button (w->style, _("OK"), "ok");
-  buttoncancel = gpe_picture_button (w->style, _("Cancel"), "cancel");
+  buttonok = gtk_button_new_from_stock (GTK_STOCK_OK);
+  buttoncancel = gtk_button_new_from_stock (GTK_STOCK_CANCEL);
 
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (w)->action_area), 
 		      buttonok, TRUE, TRUE, 0);
@@ -152,7 +142,8 @@ confirm_dialog (gchar **text, gchar *action, gchar *action2)
 		      (GtkSignalFunc)confirm_note_destruction, &destroyed);
 
   gtk_window_set_modal (GTK_WINDOW (w), TRUE);
-  gtk_widget_show (w);
+  gtk_widget_show_all (w);
+  gtk_dialog_set_has_separator (GTK_DIALOG (w), FALSE);
 
   gtk_widget_grab_focus (GTK_WIDGET (entry));
 
@@ -161,16 +152,12 @@ confirm_dialog (gchar **text, gchar *action, gchar *action2)
   if (destroyed)
     return FALSE;
 
-#if GTK_MAJOR_VERSION < 2
-  *text = gtk_editable_get_chars (GTK_EDITABLE (entry), 0, -1);
-#else
   {
     GtkTextBuffer *buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (entry));
     GtkTextIter start, end;
     gtk_text_buffer_get_bounds (buf, &start, &end);
     *text = gtk_text_buffer_get_text (buf, &start, &end, FALSE);
   }
-#endif
 
   destroyed = TRUE;
   gtk_widget_destroy (w);
@@ -315,8 +302,6 @@ main(int argc, char *argv[])
   GtkWidget *tree;
   GtkWidget *chatter;
   GdkPixbuf *p;
-  GdkPixmap *pmap;
-  GdkBitmap *bmap;
 
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
@@ -332,14 +317,9 @@ main(int argc, char *argv[])
   if (sql_start () == FALSE)
     exit (1);
 
-#if GTK_MAJOR_VERSION < 2
-  toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, GTK_TOOLBAR_ICONS);
-  gtk_toolbar_set_button_relief (GTK_TOOLBAR (toolbar), GTK_RELIEF_NONE);
-#else
   toolbar = gtk_toolbar_new ();
   gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);
   gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
-#endif
 
   tree = gtk_ctree_new (2, 0);
   chatter = gtk_label_new ("");
@@ -354,32 +334,30 @@ main(int argc, char *argv[])
   gtk_widget_realize (window);
   top_level_window = window->window;
 
-  p = gpe_find_icon ("new");
-  pw = gpe_render_icon (window->style, p);
+  pw = gtk_image_new_from_stock (GTK_STOCK_NEW, GTK_ICON_SIZE_SMALL_TOOLBAR);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("New task"), 
 			   _("New task"), _("New task"),
 			   pw, (GtkSignalFunc)ui_new_task, tree);
 
-  p = gpe_find_icon ("delete");
-  pw = gpe_render_icon (window->style, p);
+  pw = gtk_image_new_from_stock (GTK_STOCK_DELETE, GTK_ICON_SIZE_SMALL_TOOLBAR);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Delete task"),
 			   _("Delete task"), _("Delete task"),
 			   pw, (GtkSignalFunc)ui_delete_task, tree);
 
   p = gpe_find_icon ("clock");
-  pw = gpe_render_icon (window->style, p);
+  pw = gtk_image_new_from_pixbuf (p);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Clock on"),
 			   _("Clock on"), _("Clock on"),
 			   pw, (GtkSignalFunc)start_timing, tree);
   
   p = gpe_find_icon ("stop_clock");
-  pw = gpe_render_icon (window->style, p);
+  pw = gtk_image_new_from_pixbuf (p);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Clock off"),
 			   _("Clock off"), _("Clock off"),
 			   pw, (GtkSignalFunc)stop_timing, tree);
 
   p = gpe_find_icon ("edit");
-  pw = gpe_render_icon (window->style, p);
+  pw = gtk_image_new_from_pixbuf (p);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Note"),
 			   _("Note"), _("Note"),
 			   pw, (GtkSignalFunc)note, tree);
@@ -400,8 +378,7 @@ main(int argc, char *argv[])
 
   gtk_widget_realize (window);
 
-  if (gpe_find_icon_pixmap ("gpe-timesheet", &pmap, &bmap))
-    gdk_window_set_icon (window->window, NULL, pmap, bmap);
+  gpe_set_window_icon (window, "gpe-timesheet");
 
   gtk_window_set_title (GTK_WINDOW (window), _("Time Tracker"));
 

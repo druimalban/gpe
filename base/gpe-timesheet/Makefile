@@ -2,6 +2,8 @@ PREFIX = /usr/local
 PACKAGE = gpe-timesheet
 CVSBUILD = yes
 VERSION = 0.11
+GTK2 = yes
+LINGUAS = id
 
 ifeq ($(GTK2),yes)
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0`

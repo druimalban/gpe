@@ -4,7 +4,7 @@ Priority: optional
 Version: 0.11
 Architecture: arm
 Maintainer: Phil Blundell <pb@debian.org>
-Depends: sqlite, libgpewidget1 (>= 0.24), gpe-icons (>= 0.15)
+Depends: sqlite, libgpewidget1 (>= 0.24), gpe-icons (>= 0.15), gpe-timesheet-locale*
 Description: GPE time tracker
 Provides: gpe-timesheet
 Replaces: gpe-timesheet
