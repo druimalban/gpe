@@ -1,3 +1,0 @@
-?package(gpe-calculator):needs=x11 section=Utilities\
-  title="Calculator" command=gpe-calculator
-  icon=/usr/share/pixmaps/gpe-calculator.png
