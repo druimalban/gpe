@@ -1,5 +1,8 @@
 2004-09-15  Florian Boor  <florian.boor@kernelconcepts.de>
     
+    * namedetail.c: Fixed minor bug causing wrong defaults and warnings.
+    * editing.c: Make name detail dialog work with new contacts. 
+                 Moved name splitter to separate function.
     * namedetail.c: Removed debug code and old name splitter.
     * *.xml: Some more design tweaks and naming changes.
     * editing.c: Implemented new name splitter.

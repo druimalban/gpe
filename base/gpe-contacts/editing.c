@@ -103,6 +103,7 @@ pop_singles (GtkWidget *vbox, GSList *list, GtkWidget *pw, gboolean visible)
               g_signal_connect(G_OBJECT(l),"clicked",
                                G_CALLBACK(on_name_clicked),
                                gtk_widget_get_toplevel(pw));
+              g_object_set_data(G_OBJECT(l), "edit", w);
               GTK_WIDGET_SET_FLAGS(w,GTK_CAN_DEFAULT);
             }
           gtk_table_attach (GTK_TABLE (table),
@@ -701,6 +702,145 @@ update_edit (struct person *p, GtkWidget *w)
 
 
 void
+store_name_fields(struct person *p, const char *nametext)
+{
+char e[4][100];
+int num_elements, i;
+gboolean has_title = FALSE, has_suffix = FALSE;
+char *sp;
+char *title = NULL;
+char *first = NULL;
+char *middle = NULL;
+char *last = NULL;
+char *suffix = NULL;
+    
+    sp = g_strdup(nametext);
+
+    /* scan first element for title */
+    if (sscanf(sp, "%s", e[0]))
+      {
+        i = 0;
+        struct tag_value *v;
+        while (titles[i])
+          {
+            if (!strcasecmp(e[0], titles[i]))
+              {
+                has_title = TRUE;
+                title = sp;
+                sp[strlen(e[0])] = 0;
+                sp += strlen(e[0])+1;
+                break;
+              }
+            i++;
+          }
+        if (!has_title) /* find user defined title */
+          {
+            v = db_find_tag(p, "TITLE");
+            if (v && !strcasecmp(e[0], v->value))
+              {
+                has_title = TRUE;
+                title = sp;
+                sp[strlen(v->value)] = 0;
+                sp += strlen(v->value)+1;
+              }
+          }
+      }
+    
+    /* strip trailing spaces */
+    while (strlen(sp) && isblank(sp[0]))
+      sp++;
+    
+    /* scan last element for suffix */
+    if ((long)(suffix = strrchr(sp, ' ') + 1) > 1)
+      {
+        i = 0;
+        while (suffixes[i])
+          {
+            if (!strcmp(suffix, suffixes[i]))
+              {
+                char *t;
+                has_suffix = TRUE;
+                t = strstr(sp, suffixes[i]);
+                if (t)
+                  {
+                    t--;
+                    t[0] = 0;
+                  }
+                break;
+              }
+            i++;
+          }
+      }
+    if (!has_suffix) 
+      suffix = NULL;
+   
+    /* count remaining elements */
+    num_elements = sscanf(sp, 
+                          "%100s %100s %100s %100s", 
+                          e[0], e[1], e[2], e[3]);
+    
+    switch (num_elements)
+      {
+        case 0: 
+        break;
+        case 1: 
+          last = e[0];
+        break;
+        case 2: 
+          if (strstr(sp, ","))
+            {
+              last = sp;
+              first = strstr(sp, ",") + 1;
+              while (strlen(first) && isblank(first[0]))
+                first++;
+              strstr(sp, ",")[0] = 0;
+            }
+          else
+            {
+              first = sp;
+              last = strrchr(sp, ' ') + 1;
+              while (strlen(last) && isblank(last[0]))
+                last++;
+              strrchr(sp, ' ')[0] = 0;
+            }
+        break;
+        default:
+          if (strstr(sp, ","))
+            {
+              last = sp;
+              first = strstr(sp, ",") + 1;
+              while (strlen(first) && isblank(first[0]))
+                first++;
+              strstr(sp, ",")[0] = 0;
+              
+              middle = strrchr(first, ' ') + 1;
+              while (strlen(middle) && isblank(middle[0]))
+                middle++;
+              strrchr(first, ' ')[0] = 0;
+            }
+          else
+            {
+              first = sp;
+              last = strrchr(sp, ' ') + 1;
+              while (strlen(last) && isblank(last[0]))
+                last++;
+              strrchr(sp, ' ')[0] = 0;
+              middle = strrchr(first, ' ') + 1;
+              while (strlen(middle) && isblank(middle[0]))
+                middle++;
+              strrchr(first, ' ')[0] = 0;
+            }
+        break;
+      }
+    db_set_data(p, "GIVEN_NAME", g_strdup(first));
+    db_set_data(p, "MIDDLE_NAME", g_strdup(middle));
+    db_set_data(p, "FAMILY_NAME", g_strdup(last));
+    db_set_data(p, "TITLE", g_strdup(title));
+    db_set_data(p, "HONORIFIC_SUFFIX", g_strdup(suffix));
+}
+
+
+void
 on_edit_save_clicked (GtkButton * button, gpointer user_data)
 {
   GtkWidget *edit = (GtkWidget *) user_data;
@@ -757,142 +897,7 @@ on_edit_save_clicked (GtkButton * button, gpointer user_data)
 
     /* handle name details */
     if (nametext)
-      {
-          char e[4][100];
-          int num_elements, i;
-          gboolean has_title = FALSE, has_suffix = FALSE;
-          char *sp;
-          char *title = NULL;
-          char *first = NULL;
-          char *middle = NULL;
-          char *last = NULL;
-          char *suffix = NULL;
-          
-          sp = g_strdup(nametext);
-      
-          /* scan first element for title */
-          if (sscanf(sp, "%s", e[0]))
-            {
-              i = 0;
-              struct tag_value *v;
-              while (titles[i])
-                {
-                  if (!strcmp(e[0], titles[i]))
-                    {
-                      has_title = TRUE;
-                      title = sp;
-                      sp[strlen(e[0])] = 0;
-                      sp += strlen(e[0])+1;
-                      break;
-                    }
-                  i++;
-                }
-              if (!has_title) /* find user defined title */
-                {
-                  v = db_find_tag(p, "TITLE");
-                  if (v && !strcmp(e[0], v->value))
-                    {
-                      has_title = TRUE;
-                      title = sp;
-                      sp[strlen(v->value)] = 0;
-                      sp += strlen(v->value)+1;
-                    }
-                }
-            }
-          
-          /* strip trailing spaces */
-          while (strlen(sp) && isblank(sp[0]))
-            sp++;
-          
-          /* scan last element for suffix */
-          if ((long)(suffix = strrchr(sp, ' ') + 1) > 1)
-            {
-              i = 0;
-              while (suffixes[i])
-                {
-                  if (!strcmp(suffix, suffixes[i]))
-                    {
-                      char *t;
-                      has_suffix = TRUE;
-                      t = strstr(sp, suffixes[i]);
-                      if (t)
-                        {
-                          t--;
-                          t[0] = 0;
-                        }
-                      break;
-                    }
-                  i++;
-                }
-            }
-          if (!has_suffix) 
-            suffix = NULL;
-         
-          /* count remaining elements */
-          num_elements = sscanf(sp, 
-                                "%100s %100s %100s %100s", 
-                                e[0], e[1], e[2], e[3]);
-          
-          switch (num_elements)
-            {
-              case 0: 
-              break;
-              case 1: 
-                last = e[0];
-              break;
-              case 2: 
-                if (strstr(sp, ","))
-                  {
-                    last = sp;
-                    first = strstr(sp, ",") + 1;
-                    while (strlen(first) && isblank(first[0]))
-                      first++;
-                    strstr(sp, ",")[0] = 0;
-                  }
-                else
-                  {
-                    first = sp;
-                    last = strrchr(sp, ' ') + 1;
-                    while (strlen(last) && isblank(last[0]))
-                      last++;
-                    strrchr(sp, ' ')[0] = 0;
-                  }
-              break;
-              default:
-                if (strstr(sp, ","))
-                  {
-                    last = sp;
-                    first = strstr(sp, ",") + 1;
-                    while (strlen(first) && isblank(first[0]))
-                      first++;
-                    strstr(sp, ",")[0] = 0;
-                    
-                    middle = strrchr(first, ' ') + 1;
-                    while (strlen(middle) && isblank(middle[0]))
-                      middle++;
-                    strrchr(first, ' ')[0] = 0;
-                  }
-                else
-                  {
-                    first = sp;
-                    last = strrchr(sp, ' ') + 1;
-                    while (strlen(last) && isblank(last[0]))
-                      last++;
-                    strrchr(sp, ' ')[0] = 0;
-                    middle = strrchr(first, ' ') + 1;
-                    while (strlen(middle) && isblank(middle[0]))
-                      middle++;
-                    strrchr(first, ' ')[0] = 0;
-                  }
-              break;
-            }
-          db_set_data(p, "GIVEN_NAME", g_strdup(first));
-          db_set_data(p, "MIDDLE_NAME", g_strdup(middle));
-          db_set_data(p, "FAMILY_NAME", g_strdup(last));
-          db_set_data(p, "TITLE", g_strdup(title));
-          db_set_data(p, "HONORIFIC_SUFFIX", g_strdup(suffix));
-      }
-  
+      store_name_fields(p, nametext);
   
   if (commit_person (p))
     {
@@ -1031,8 +1036,11 @@ void
 on_name_clicked (GtkButton *button, gpointer user_data)
 {
   GtkWindow *edit = user_data;
+  GtkEntry *e = g_object_get_data(G_OBJECT(button), "edit");
   struct person *p;
 
   p = g_object_get_data (G_OBJECT (edit), "person");
+  store_name_fields(p, gtk_entry_get_text(e));
+
   do_edit_name_detail(edit, p);
 }

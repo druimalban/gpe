@@ -121,18 +121,18 @@ do_edit_name_detail(GtkWindow *parent, struct person *p)
 
   /* fill in values */
   v = db_find_tag(p,"TITLE");
-  if (v) 
+  if (v && v->value) 
     gtk_entry_set_text(GTK_ENTRY(etitle),v->value);
   else
     gtk_entry_set_text(GTK_ENTRY(etitle),"");
   v = db_find_tag(p,"GIVEN_NAME");
-  if (v) gtk_entry_set_text(GTK_ENTRY(egiven),v->value);
+  if (v && v->value) gtk_entry_set_text(GTK_ENTRY(egiven),v->value);
   v = db_find_tag(p,"MIDDLE_NAME");
-  if (v) gtk_entry_set_text(GTK_ENTRY(emiddle),v->value);
+  if (v && v->value) gtk_entry_set_text(GTK_ENTRY(emiddle),v->value);
   v = db_find_tag(p,"FAMILY_NAME");
-  if (v) gtk_entry_set_text(GTK_ENTRY(efamily),v->value);
+  if (v && v->value) gtk_entry_set_text(GTK_ENTRY(efamily),v->value);
   v = db_find_tag(p,"HONORIFIC_SUFFIX");
-  if (v) 
+  if (v && v->value) 
     gtk_entry_set_text(GTK_ENTRY(esuffix),v->value);
   else
     gtk_entry_set_text(GTK_ENTRY(esuffix),"");
