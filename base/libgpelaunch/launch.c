@@ -24,6 +24,9 @@
 #include <gtk/gtk.h>
 #include <gdk/gdkx.h>
 
+#include <X11/Xlib.h>
+#include <X11/Xatom.h>
+
 #include <libsn/sn-launcher.h>
 #include <libsn/sn-monitor.h>
 
@@ -38,6 +41,9 @@ struct sn_display_map
 {
   Display *dpy;
   SnDisplay *sn_dpy;
+  GSList *client_map;
+  Atom client_map_atom;
+  GSList *pending_startups;
 };
 
 struct launch_record
@@ -47,7 +53,152 @@ struct launch_record
   SnLauncherContext *context;
 };
 
+struct startup_record
+{
+  const gchar *startup_id;
+  const gchar *binary;
+};
+
 static GSList *sn_display_list;
+
+struct client_map
+{
+  Window window;
+  const gchar *binary;
+};
+
+gboolean
+gpe_launch_startup_is_pending (Display *dpy, const gchar *binary)
+{
+  GSList *l;
+  struct sn_display_map *map;
+
+  for (l = sn_display_list; l; l = l->next)
+    {
+      map = l->data;
+      if (map->dpy == dpy)
+	break;
+    }
+
+  if (l == NULL)
+    return None;
+
+  for (l = map->pending_startups; l; l = l->next)
+    {
+      struct startup_record *r = l->data;
+
+      if (! strcmp (r->binary, binary))
+	return TRUE;
+    }
+
+  return FALSE;
+}
+
+Window
+gpe_launch_get_window_for_binary (Display *dpy, const gchar *binary)
+{
+  GSList *l;
+  struct sn_display_map *map;
+
+  for (l = sn_display_list; l; l = l->next)
+    {
+      map = l->data;
+      if (map->dpy == dpy)
+	break;
+    }
+
+  if (l == NULL)
+    return None;
+
+  for (l = map->client_map; l; l = l->next)
+    {
+      struct client_map *c = l->data;
+      if (! strcmp (c->binary, binary))
+	return c->window;
+    }
+  
+  return None;
+}
+
+static void
+read_client_map (struct sn_display_map *map)
+{
+  Atom type;
+  int format;
+  long bytes_after;
+  unsigned char *data = NULL;
+  long n_items;
+  int result;
+  unsigned char *p, *key = NULL, *value = NULL;
+  GSList *l;
+
+  /* flush old data */
+  for (l = map->client_map; l; l = l->next)
+    {
+      struct client_map *c = l->data;
+      g_free ((gchar *)c->binary);
+      g_free (c);
+    }
+
+  g_slist_free (map->client_map);
+  map->client_map = NULL;
+
+  result =  XGetWindowProperty (map->dpy, DefaultRootWindow (map->dpy),
+				map->client_map_atom,
+				0, 10000L,
+				False, XA_STRING,
+				&type, &format, &n_items,
+				&bytes_after, (unsigned char **)&data);
+
+  if (result != Success || data == NULL || n_items == 0)
+    {
+      if (data) 
+	XFree (data);
+      return;
+    }
+
+  p = data;
+
+  while (*p != '\0')
+    {
+      struct client_map *c;
+
+      key = p;
+      while (*p != '=' && *p != '\0') p++;
+
+      RETURN_NONE_IF_NULL(*p);
+
+      *p = '\0'; p++;
+
+      RETURN_NONE_IF_NULL(*p);
+
+      value = p;
+
+      while (*p != '|' && *p != '\0') p++;
+
+      RETURN_NONE_IF_NULL(*p);
+
+      *p = '\0';
+
+      c = g_malloc (sizeof (*c));
+      c->binary = g_strdup (key);
+      c->window = atoi (value);
+      map->client_map = g_slist_prepend (map->client_map, c);
+
+      p++;
+    }
+
+  XFree (data);  
+}
+
+static void
+client_map_process_event (struct sn_display_map *map, XEvent *xev)
+{
+  if (xev->type == PropertyNotify
+      && xev->xproperty.window == DefaultRootWindow (xev->xany.display)
+      && xev->xproperty.atom == map->client_map_atom)
+    read_client_map (map);
+}
 
 static GdkFilterReturn
 sn_event_filter (GdkXEvent *xevp, GdkEvent *ev, gpointer p)
@@ -67,8 +218,13 @@ sn_event_filter (GdkXEvent *xevp, GdkEvent *ev, gpointer p)
 	}
     }
 
-  if (sn_dpy && sn_display_process_event (sn_dpy, xev))
-    return GDK_FILTER_REMOVE;
+  if (sn_dpy)
+    {
+      if (sn_display_process_event (sn_dpy, xev))
+	return GDK_FILTER_REMOVE;
+
+      client_map_process_event (map, xev);
+    }
 
   return GDK_FILTER_CONTINUE;
 }
@@ -95,8 +251,18 @@ sn_display_for_display (Display *dpy)
   map = g_malloc (sizeof (*map));
   map->dpy = dpy;
   map->sn_dpy = sn_display_new (dpy, NULL, NULL);
+  map->client_map_atom = XInternAtom (dpy, "_MB_CLIENT_MAP", False);
+  map->client_map = NULL;
+  map->pending_startups = NULL;
+  read_client_map (map);
   sn_display_list = g_slist_prepend (sn_display_list, map);
   return map->sn_dpy;
+}
+
+void
+gpe_launch_monitor_display (Display *dpy)
+{
+  sn_display_for_display (dpy);
 }
 
 static void
