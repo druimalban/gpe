@@ -40,12 +40,12 @@
 #include <gpe/spacing.h>
 
 
-char buttons[7][1024];
+char buttons[9][1024];
 char *keylaunchrc = NULL;
 
 static struct
 {
-	GtkWidget *button[5];
+	GtkWidget *button[8];
 	GdkPixbuf *p;
 }
 self;
@@ -54,10 +54,11 @@ char *default_keyctl_conf[] = {
 	"key=???Pressed XF86AudioRecord:Record Memo:gpe-soundbite record --autogenerate-filename $HOME_VOLATILE",
 	"key=???XF86Calendar:Calendar:gpe-calendar",
 	"key=???telephone:Contacts:gpe-contacts",
-	"key=???XF86Mail:Mail:gpe-mail",
-	"key=???XF86Start:Files:gpe-filemanager",
-	"key=???XF86PowerDown:-:apm --suspend",
-	"key=???Held XF86PowerDown:-:bl toggle"
+	"key=???XF86Mail:Running programs:gpe-taskmanager",
+	"key=???XF86Start:mbcontrol -desktop",
+	"key=???XF86PowerDown:apm --suspend",
+	"key=???Held XF86PowerDown:-:bl toggle",
+	"key=???Combine XF86Calendar XF86Start:gpe-keylock"
 };
 
 void FileSelected (char *file, gpointer data);
@@ -72,11 +73,16 @@ init_buttons ()
 	char btext[16];
 	int i;
 
-	if (getuid ())
-		keylaunchrc =
-			g_strdup_printf ("%s/.keylaunchrc", getenv ("HOME"));
-	else
+	/* default keylaunchrc in homedir */
+	keylaunchrc =
+		g_strdup_printf ("%s/.keylaunchrc", getenv ("HOME"));
+	
+	/* if root or no keylaunchrc, we choose another */
+	if (!getuid() || access(keylaunchrc,R_OK))
+	{
+		g_free(keylaunchrc);
 		keylaunchrc = g_strdup ("/etc/keylaunchrc");
+	}
 
 	buttons[0][0] = 0;
 	
@@ -85,7 +91,7 @@ init_buttons ()
 	if (fd == NULL)
 	{
 		/* defaults */
-		for (i = 0; i < 5; i++)
+		for (i = 0; i < 8; i++)
 		{
 			strcpy (buttons[i], default_keyctl_conf[i]);
 			slash = strrchr (buttons[i], '/');
@@ -111,7 +117,7 @@ init_buttons ()
 	else
 	{
 		/* load from configfile */
-		for (i = 0; i < 5; i++)
+		for (i = 0; i < 8; i++)
 		{
 			fgets (buffer, 1023, fd);
 			slash = strchr (buffer, '\n');
@@ -140,8 +146,8 @@ init_buttons ()
 			gtk_button_set_label (GTK_BUTTON (target), btext);
 		}
 		fclose (fd);
-		strncpy (buttons[5], default_keyctl_conf[5], 1023);
-		strncpy (buttons[6], default_keyctl_conf[6], 1023);
+//		strncpy (buttons[5], default_keyctl_conf[5], 1023);
+//		strncpy (buttons[6], default_keyctl_conf[6], 1023);
 	}
 }
 
@@ -163,7 +169,7 @@ on_defaults_clicked (GtkButton * button, gpointer user_data)
 	    (_("Reset button config to default?"), _("Question"), "question",
 	     "!gtk-no", NULL, "!gtk-yes", NULL, NULL))
 	{
-		for (i = 0; i < 6; i++)
+		for (i = 0; i < 8; i++)
 		{
 			strcpy (buttons[i], default_keyctl_conf[i]);
 			slash = strrchr (buttons[i], '/');
@@ -216,8 +222,10 @@ Keyctl_Build_Objects ()
 	self.button[2] = button_3;
 	self.button[3] = button_4;
 	self.button[4] = button_5;
+	self.button[5] = gtk_button_new();
+	self.button[6] = gtk_button_new();
+	self.button[7] = gtk_button_new();
 
-//	gtk_widget_show (layout1);
 	gtk_container_add (GTK_CONTAINER (scroll), layout1);
 	gtk_layout_set_size (GTK_LAYOUT (layout1), 230, 220);
 
@@ -291,15 +299,23 @@ Keyctl_Save ()
 	/* save new config, force keyctl to reload, and exit */
 	int i;
 	FILE *fd;
+	
+	/* User will write to keylaunch in homedir, root global */	
+	if (getuid())
+	{
+		keylaunchrc =
+			g_strdup_printf ("%s/.keylaunchrc", getenv ("HOME"));
+	}
+	else
+		keylaunchrc = g_strdup ("/etc/keylaunchrc");
 
 	fd = fopen (keylaunchrc, "w");
 	if (fd == NULL)
 	{
-		gpe_error_box (_
-			       ("ERROR: Can't open keylaunchrc for writing!\n"));
+		gpe_error_box (_("ERROR: Can't open keylaunchrc for writing!\n"));
 		return;
 	}
-	for (i = 0; i < 7; i++)
+	for (i = 0; i < 8; i++)
 	{
 #ifdef DEBUG
 		printf ("button #%d => %s\n", i, buttons[i]);

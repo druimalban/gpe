@@ -1,3 +1,7 @@
+2003-10-21	Florian Boor  	<florian.boor@kernelconcepts.de>
+	* Fixed bug causing broken keylaunch config files.
+	  We note: keylaunch config is another tool that needs rework.
+	
 2003-10-19	Florian Boor  	<florian.boor@kernelconcepts.de>
 	* po/cs.po: New Czech translation.
 	* suid.c: Fixed a bug causing broken config files. 
