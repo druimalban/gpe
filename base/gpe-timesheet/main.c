@@ -57,16 +57,40 @@ stop_timing(GtkWidget *w, gpointer user_data)
 }
 
 static void
+delete_task(GtkWidget *w, gpointer user_data)
+{
+  GtkCTree *ct = GTK_CTREE (user_data);
+  if (GTK_CLIST (ct)->selection)
+    {
+      GtkCTreeNode *node = GTK_CTREE_NODE (GTK_CLIST (ct)->selection->data);
+      gtk_ctree_remove_node (ct, node);
+    }
+}
+
+static void
 new_task(GtkWidget *w, gpointer p)
 {
   GtkCTree *ctree = GTK_CTREE (p);
+  GtkCTreeNode *parent = NULL;
   GtkCTreeNode *node;
   gchar *text[2];
+
+  if (GTK_CLIST (ctree)->selection)
+    {
+      gchar *text;
+      gboolean leaf;
+      parent = GTK_CTREE_NODE (GTK_CLIST (ctree)->selection->data);
+      gtk_ctree_get_node_info (ctree, parent, &text, NULL,
+			       NULL, NULL, NULL, NULL, &leaf, NULL);
+      if (leaf)
+	gtk_ctree_set_node_info (ctree, parent, text, 0,
+				 NULL, NULL, NULL, NULL, FALSE, TRUE);
+    }
   
   text[0] = "New task";
   text[1] = "";
 
-  node = gtk_ctree_insert_node (ctree, NULL, NULL,
+  node = gtk_ctree_insert_node (ctree, parent, NULL,
 				text, 0, NULL, NULL, NULL, NULL,
 				TRUE, TRUE);
 }
@@ -111,7 +135,7 @@ main(int argc, char *argv[])
   pw = gtk_pixmap_new (p->pixmap, p->mask);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Delete task"),
 			   _("Delete task"), _("Delete task"),
-			   pw, NULL, NULL);
+			   pw, delete_task, tree);
 
   p = find_pixmap ("start");
   pw = gtk_pixmap_new (p->pixmap, p->mask);
@@ -134,6 +158,9 @@ main(int argc, char *argv[])
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_container_add (GTK_CONTAINER (window), vbox_top);
   gtk_widget_set_usize (window, window_x, window_y);
+
+  gtk_signal_connect (GTK_OBJECT (window), "destroy",
+		      gtk_main_quit, NULL);
 
   gtk_widget_realize (window);
 
