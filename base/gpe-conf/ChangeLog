@@ -1,5 +1,5 @@
 When			Who				Where						What
-
+01.08.2003		Luc			keyboard.c                                      cut string to avoid extra TABS in .pot	
 01.08.2003		Luc			cardinfo.c, network.c, storage.c              minor fix for i18n.
 	
 31.07.2003		Florian			po/fr.po					Updated French translation.

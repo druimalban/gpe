@@ -271,8 +271,8 @@ Keyboard_Build_Objects (void)
 
 	gtk_object_set_data (GTK_OBJECT (table), "tooltips", tooltips);
 	gtk_tooltips_set_tip (tooltips, table,
-			      _("External keyboard configuration. Disabled buttons \
-					are currently not installed."),
+			      _("External keyboard configuration. Disabled buttons "
+					"are currently not installed."),
 			      NULL);
 
 	label = gtk_label_new (NULL);
@@ -283,9 +283,9 @@ Keyboard_Build_Objects (void)
 			  GTK_FILL, GTK_FILL, 0, 0);
 
 	gtk_tooltips_set_tip (tooltips, label,
-			      _("Here you may select your external keyboard model. \
-				  To install software support connect your device to \
-				  internet and click the \"Install\" button."),
+			      _("Here you may select your external keyboard model. "
+				  "To install software support connect your device to "
+				  "internet and click the \"Install\" button."),
 			      NULL);
 
 	get_keyboard_defs ();
