@@ -1,3 +1,9 @@
+2003-04-04 Joe McCarthy <jjmcc@pitt.edu>
+
+        * event-db.c: erase destroy_clone and stop checking FLAG_CLONE in
+	list_destroy since all in list are now clones
+	* event-db.h: erase destroy_clone
+
 2003-04-03 Joe McCarthy <jjmcc@pitt.edu>
 
         * event-db.c: implement exceptions to recurrence in db, change

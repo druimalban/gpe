@@ -388,11 +388,6 @@ event_db_find_by_uid (guint uid)
 /*link_warning(event_db_find_by_uid, 
 	     "warning: event_db_find_by_uid is obsolescent: use the ev->cloned_ev pointer directly.");
 */
-void
-event_db_destroy_clone (event_t ev)
-{
-  event_db__free_event (ev);
-}
 
 void
 event_db_list_destroy (GSList *l)
@@ -402,9 +397,7 @@ event_db_list_destroy (GSList *l)
   for (iter = l; iter; iter = g_slist_next (iter))
     {
       event_t ev = iter->data;
-      
-      if (ev->flags & FLAG_CLONE) 
-	event_db_destroy_clone (ev);
+      event_db__free_event (ev);
     }
 	  
   g_slist_free (l);

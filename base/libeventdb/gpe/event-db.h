@@ -131,7 +131,6 @@ extern event_t event_db_clone (event_t);
 extern event_t event_db_new (void);
 extern event_t event_db_find_by_uid (guint uid);
 extern void event_db_destroy (event_t);
-extern void event_db_destroy_clone (event_t);
 
 extern event_details_t event_db_alloc_details (event_t);
 extern event_details_t event_db_get_details (event_t);
