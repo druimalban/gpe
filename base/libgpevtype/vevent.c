@@ -79,9 +79,13 @@ vevent_interpret_tag (MIMEDirVEvent *event, const char *tag, const char *value)
 	  MIMEDirDateTime *date;
 
 	  date = mimedir_datetime_new_from_date (tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday);
+	  if (!date_only)
+	    mimedir_datetime_set_time (date, tm.tm_hour, tm.tm_min, tm.tm_sec);
 
 	  g_object_set (G_OBJECT (event), "dtstart", date, NULL);
 	}
+      else
+	fprintf (stderr, "couldn't parse date '%s'\n", value);
 
       return TRUE;
     }

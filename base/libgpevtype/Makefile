@@ -1,6 +1,6 @@
 PREFIX = /usr/local
 PACKAGE = libgpevtype
-#DEBUG = yes 
+DEBUG = no
 CVSBUILD = yes
 VERSION = 0.2
 
