@@ -61,7 +61,7 @@ void app_init(int argc, char ** argv){
 }
 
 void app_quit(){
-  gtk_exit (0);
+  exit (0);
 }
 
 void gui_init();
@@ -214,17 +214,17 @@ void on_button_pass_clicked (void){
 }
 
 void on_button_newgame_cancel_clicked (void){
-  gtk_notebook_set_page(GTK_NOTEBOOK(go.ui.notebook), PAGE_BOARD);
+  gtk_notebook_set_current_page(GTK_NOTEBOOK(go.ui.notebook), PAGE_BOARD);
 }
 
 void on_button_newgame_ok_clicked (void){
   init_new_game(go.ui.selected_game_size);
-  gtk_notebook_set_page(GTK_NOTEBOOK(go.ui.notebook), PAGE_BOARD);
+  gtk_notebook_set_current_page(GTK_NOTEBOOK(go.ui.notebook), PAGE_BOARD);
 }
 
 void on_button_game_new_clicked(GtkButton *button, gpointer unused){
   popup_menu_close(go.ui.game_menu_popup_button);
-  gtk_notebook_set_page(GTK_NOTEBOOK(go.ui.notebook), PAGE_GAME_SETTINGS);
+  gtk_notebook_set_current_page(GTK_NOTEBOOK(go.ui.notebook), PAGE_GAME_SETTINGS);
 }
 void on_button_game_save_clicked(GtkButton *button, gpointer unused){
   popup_menu_close(go.ui.game_menu_popup_button);
@@ -331,19 +331,19 @@ GtkWidget * build_new_game_dialog(){
   gtk_box_pack_start (GTK_BOX (game_size), indented_box, TRUE, TRUE, 0);
 
   radiobutton1 = gtk_radio_button_new_with_label (group_game_size_group, "9");
-  group_game_size_group = gtk_radio_button_group (GTK_RADIO_BUTTON (radiobutton1));
+  group_game_size_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (radiobutton1));
   gtk_box_pack_start (GTK_BOX (vbox), radiobutton1, FALSE, FALSE, 0);
   g_signal_connect (G_OBJECT (radiobutton1), "clicked",
                     G_CALLBACK (on_radiobutton_size_clicked), GINT_TO_POINTER(9));
 
   radiobutton3 = gtk_radio_button_new_with_label (group_game_size_group, "13");
-  group_game_size_group = gtk_radio_button_group (GTK_RADIO_BUTTON (radiobutton3));
+  group_game_size_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (radiobutton3));
   gtk_box_pack_start (GTK_BOX (vbox), radiobutton3, FALSE, FALSE, 0);
   g_signal_connect (G_OBJECT (radiobutton3), "clicked",
                     G_CALLBACK (on_radiobutton_size_clicked), GINT_TO_POINTER(13));
 
   radiobutton4 = gtk_radio_button_new_with_label (group_game_size_group, "19");
-  group_game_size_group = gtk_radio_button_group (GTK_RADIO_BUTTON (radiobutton4));
+  group_game_size_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (radiobutton4));
   gtk_box_pack_start (GTK_BOX (vbox), radiobutton4, FALSE, FALSE, 0);
   g_signal_connect (G_OBJECT (radiobutton4), "clicked",
                     G_CALLBACK (on_radiobutton_size_clicked), GINT_TO_POINTER(19));
@@ -352,7 +352,7 @@ GtkWidget * build_new_game_dialog(){
   gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
 
   radiobutton2 = gtk_radio_button_new_with_label (group_game_size_group, "");
-  group_game_size_group = gtk_radio_button_group (GTK_RADIO_BUTTON (radiobutton2));
+  group_game_size_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (radiobutton2));
   gtk_box_pack_start (GTK_BOX (hbox), radiobutton2, FALSE, FALSE, 0);
   g_signal_connect (G_OBJECT (radiobutton2), "clicked",
                     G_CALLBACK (on_radiobutton_size_clicked), NULL);
@@ -418,7 +418,7 @@ void on_button_edit_comment_clicked(){
     gtk_text_buffer_set_text (go.ui.comment_buffer, "", -1);
   }
   go.ui.comment_edited = FALSE;
-  gtk_notebook_set_page(GTK_NOTEBOOK(go.ui.notebook), PAGE_COMMENT_EDITOR);
+  gtk_notebook_set_current_page(GTK_NOTEBOOK(go.ui.notebook), PAGE_COMMENT_EDITOR);
   gtk_widget_grab_focus(go.ui.comment_text_view);
 }
 
@@ -427,7 +427,7 @@ void on_textbuffer_changed (GtkTextBuffer * textbuffer, gpointer unused){
 }
 
 void on_button_comment_cancel_clicked (void){
-  gtk_notebook_set_page(GTK_NOTEBOOK(go.ui.notebook), PAGE_BOARD);
+  gtk_notebook_set_current_page(GTK_NOTEBOOK(go.ui.notebook), PAGE_BOARD);
 }
 
 void on_button_comment_ok_clicked (void){
@@ -450,7 +450,7 @@ void on_button_comment_ok_clicked (void){
     }
     status_update_current();
   }
-  gtk_notebook_set_page(GTK_NOTEBOOK(go.ui.notebook), PAGE_BOARD);
+  gtk_notebook_set_current_page(GTK_NOTEBOOK(go.ui.notebook), PAGE_BOARD);
 }
 
 GtkWidget * build_comment_editor(){
@@ -735,7 +735,7 @@ void gui_init(){
   gtk_container_add (GTK_CONTAINER (window), widget);
 
   gtk_widget_show_all (window);
-  gtk_notebook_set_page(GTK_NOTEBOOK(widget), PAGE_BOARD);
+  gtk_notebook_set_current_page(GTK_NOTEBOOK(widget), PAGE_BOARD);
 
 }//gui_init()
 

@@ -397,7 +397,8 @@ void go_board_init(){
 
   //--drawing area (Go Board)
   drawing_area = gtk_drawing_area_new ();
-  gtk_widget_set_usize (drawing_area, BOARD_SIZE, BOARD_SIZE);
+  gtk_widget_set_size_request(drawing_area, BOARD_SIZE, BOARD_SIZE);
+
   gtk_widget_set_events (drawing_area, 0
                          | GDK_EXPOSURE_MASK
                          | GDK_BUTTON_PRESS_MASK

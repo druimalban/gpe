@@ -21,10 +21,13 @@ MEMBERS = gpe-go sgf sgf-handler model board
 
 PIXMAPS = board white.png black.png
 
-GTKCFLAGS   = `pkg-config --cflags gtk+-2.0`
+GTKCFLAGS  += `pkg-config --cflags gtk+-2.0` 
 GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
 
-CPPFLAGS = $(GTKCFLAGS) -D_GNU_SOURCE 
+CPPFLAGS += $(GTKCFLAGS)
+CPPFLAGS += -DGTK_DISABLE_DEPRECATED
+CPPFLAGS += -D_GNU_SOURCE 
+
 ifeq ($(DEBUG),yes)
 CFLAGS  += -O2 -g -DDEBUG=yes
 LDFLAGS += -g
