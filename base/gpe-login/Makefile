@@ -29,7 +29,8 @@ install: install-dm install-login
 
 install-login: gpe-login install-po
 	install -D gpe-login $(DESTDIR)$(PREFIX)/bin/gpe-login
-	install -D gpe-login-setup $(DESTDIR)/etc/X11/gpe-login-setup
+	install -D gpe-login.setup $(DESTDIR)/etc/X11/gpe-login.setup
+	install -D -m 644 gpe-login.buttons $(DESTDIR)/etc/X11/gpe-login.buttons
 	strip $(DESTDIR)$(PREFIX)/bin/gpe-login
 
 install-dm: gpe-dm
@@ -65,4 +66,4 @@ ipkg:
 	ipkg-build familiar/dist.gpe-session-scripts
 
 clean:
-	rm -f $(PACKAGE) gpe-login.o
+	rm -f gpe-login gpe-login.o gpe-dm gpe-dm.o
