@@ -27,7 +27,6 @@
 #include <gpe/question.h>
 
 #include "mime-sql.h"
-#include "gnome-exec.h"
 
 #define _(x) dgettext(PACKAGE, x)
 
@@ -36,6 +35,7 @@
 #define SPINNER_TIMEOUT 3
 
 GtkWidget *window;
+GtkWidget *combo;
 GtkWidget *spinner;
 GtkWidget *view_scrolld;
 GtkWidget *view_widget;
@@ -51,6 +51,7 @@ int current_button_is_down=0;
 int ignore_press = 0;
 
 int loading_directory = 0;
+int combo_signal_id;
 
 int history_place = 0;
 GList *history = NULL;
@@ -83,7 +84,7 @@ struct gpe_icon my_icons[] = {
 
 guint window_x = 240, window_y = 310;
 
-static void set_directory (gchar *new_directory);
+static void browse_directory (gchar *directory);
 static void update_spinner (void);
 static void set_spinner_rest (void);
 
@@ -370,7 +371,7 @@ button_released (GtkObject *button, gpointer data)
   {
     if (mime)
     {
-      run_program (path, mime->program);
+      run_program (path, (gpointer) mime->program);
     }
     else
     {
@@ -378,7 +379,7 @@ button_released (GtkObject *button, gpointer data)
     }
   }
   else if (strcmp (type, "directory") == 0)
-    set_directory (path);
+    browse_directory (path);
 
   return TRUE;	
 }
@@ -474,7 +475,9 @@ make_view (gchar *view)
       if (d->d_name[0] != '.')
       {
         struct stat s;
-        fp = g_strdup_printf ("%s", d->d_name);
+        fp = g_strdup (d->d_name);
+
+          printf ("Filename: %s\n", fp);
 
         if (strcmp (current_directory, "/") == 0)
           buf = g_strdup_printf ("/%s", fp);
@@ -495,29 +498,29 @@ make_view (gchar *view)
 
           if (S_ISDIR (s.st_mode))
           {
-            file_type = g_strdup_printf ("directory");
+            file_type = g_strdup ("directory");
             pixbuf = gdk_pixbuf_new_from_file (PREFIX "/share/gpe/pixmaps/default/gpe-filemanager/document-icons/directory.png");
             previous_extension = "";
           }
           else if (__S_ISTYPE ((s.st_mode), __S_IEXEC))
           {
-            file_type = g_strdup_printf ("executable");
+            file_type = g_strdup ("executable");
             pixbuf = gdk_pixbuf_new_from_file (PREFIX "/share/gpe/pixmaps/default/gpe-filemanager/document-icons/executable.png");
             previous_extension = "";
           }
           else if (strcmp (fp, "COPYING") == 0)
           {
             pixbuf = gdk_pixbuf_new_from_file (PREFIX "/share/gpe/pixmaps/default/gpe-filemanager/document-icons/gnome-text-x-copying.png");
-            file_type = g_strdup_printf ("copying");
+            file_type = g_strdup ("copying");
           }
           else if (strcmp (fp, "CREDITS") == 0)
           {
             pixbuf = gdk_pixbuf_new_from_file (PREFIX "/share/gpe/pixmaps/default/gpe-filemanager/document-icons/gnome-text-x-credits.png");
-            file_type = g_strdup_printf ("credits");
+            file_type = g_strdup ("credits");
           }
           else
           {
-            file_type = g_strdup_printf ("file");
+            file_type = g_strdup ("file");
             extension = get_file_extension (fp);
 
             if (mime_types)
@@ -549,7 +552,7 @@ make_view (gchar *view)
               else if (strcmp (previous_extension, file_mime->extension))
               {
                   pixbuf = gdk_pixbuf_new_from_file (g_strdup_printf ("%s/share/gpe/pixmaps/default/gpe-filemanager/document-icons/gnome-%s.png", PREFIX, file_mime->icon));
-                  previous_extension = g_strdup_printf ("%s", file_mime->extension);
+                  previous_extension = g_strdup (file_mime->extension);
               }
             }
             else
@@ -593,7 +596,6 @@ make_view (gchar *view)
             gtk_box_pack_end_defaults (GTK_BOX (box), gtk_label_new (""));
           }
 
-          gtk_box_pack_end (GTK_BOX (box), label, FALSE, FALSE, 0);
 
           if (strcmp (view, "icons") == 0)
             spixbuf = gdk_pixbuf_scale_simple (pixbuf, 32, 32, GDK_INTERP_BILINEAR);
@@ -603,7 +605,8 @@ make_view (gchar *view)
           pixmap = gpe_render_icon (view_scrolld->style, spixbuf);
           gdk_pixbuf_unref (spixbuf);
 
-          gtk_box_pack_end (GTK_BOX (box), pixmap, FALSE, FALSE, 0);
+          gtk_box_pack_start (GTK_BOX (box), pixmap, FALSE, FALSE, 0);
+          gtk_box_pack_start (GTK_BOX (box), label, FALSE, FALSE, 0);
 
           /* The 'button' itself */
           button = gtk_event_box_new ();
@@ -653,52 +656,57 @@ refresh_view (void)
 }
 
 static void
-set_directory (gchar *new_directory)
-{
-  struct stat s;
-  GtkWidget *entry;
-
-  if (stat (new_directory, &s) == 0)
-  {
-    if (S_ISDIR (s.st_mode))
-    {
-      entry = (GtkWidget *) gtk_object_get_data (GTK_OBJECT (window), "entry");
-      current_directory = g_strdup_printf ("%s", new_directory);
-      gtk_entry_set_text (GTK_ENTRY (entry), current_directory);
-      history_place++;
-      history = g_list_insert (history, current_directory, history_place);
-      refresh_view ();
-    }
-    else
-    {
-      gpe_error_box ("This file isn't a directory.");
-    }
-  }
-  else
-  {
-    gpe_error_box ("No such file or directory.");
-  }
-}
-
-static void
-goto_directory (GtkWidget *widget, GtkWidget *entry)
+goto_directory (GtkWidget *widget)
 {
   gchar *new_directory;
 
   safety_check ();
 
-  new_directory = gtk_entry_get_text (GTK_ENTRY (entry));
-  set_directory (new_directory);
+  new_directory = gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (combo)->entry));
+  browse_directory (new_directory);
 }
 
 static void
-set_directory_home (GtkWidget *widget, gpointer data)
+add_history (gchar *directory)
 {
-  set_directory (g_get_home_dir ());
+  history_place++;
+  history = g_list_insert (history, directory, history_place);
+  gtk_combo_set_popdown_strings (GTK_COMBO (combo), history);
 }
 
 static void
-up_one_level (GtkWidget *widget, GtkWidget *entry)
+browse_directory (gchar *directory)
+{
+  struct stat s;
+
+  if (stat (directory, &s) == 0)
+  {
+    if (S_ISDIR (s.st_mode))
+    {
+      current_directory = g_strdup (directory);
+      printf ("Current directory: %s\n", current_directory);
+      add_history (directory);
+      gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (combo)->entry), directory);
+      refresh_view ();
+    }
+    else
+    {
+      //gpe_error_box ("This file isn't a directory.");
+    }
+  }
+  else
+  {
+    //gpe_error_box ("No such file or directory.");
+  }
+}
+static void
+set_directory_home (GtkWidget *widget)
+{
+  browse_directory (g_get_home_dir ());
+}
+
+static void
+up_one_level (GtkWidget *widget)
 {
   int i;
   int found_slash = 0;
@@ -706,7 +714,7 @@ up_one_level (GtkWidget *widget, GtkWidget *entry)
 
   safety_check ();
 
-  new_directory = gtk_entry_get_text (GTK_ENTRY (entry));
+  new_directory = gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (combo)->entry));
 
   for (i = strlen (new_directory); i > 0; i--)
   {
@@ -725,13 +733,13 @@ up_one_level (GtkWidget *widget, GtkWidget *entry)
     }
   }
 
-  set_directory (new_directory);
+  browse_directory (new_directory);
 }
 
 static void
-history_back (GtkWidget *widget, GtkWidget *entry)
+history_back (GtkWidget *widget)
 {
-  gchar *new_place;
+  gchar *new_directory;
 
   safety_check ();
 
@@ -739,17 +747,18 @@ history_back (GtkWidget *widget, GtkWidget *entry)
   {
     history_place--;
 
-    new_place = g_list_nth_data (history, history_place);
-    gtk_entry_set_text (GTK_ENTRY (entry), new_place);
-    current_directory = g_strdup_printf ("%s", new_place);
+    new_directory = g_list_nth_data (history, history_place);
+    gtk_combo_set_popdown_strings (GTK_COMBO (combo), history);
+    gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (combo)->entry), new_directory);
+    current_directory = g_strdup (new_directory);
     refresh_view ();
   }
 }
 
 static void
-history_forward (GtkWidget *widget, GtkWidget *entry)
+history_forward (GtkWidget *widget)
 {
-  gchar *new_place;
+  gchar *new_directory;
 
   safety_check ();
 
@@ -757,9 +766,10 @@ history_forward (GtkWidget *widget, GtkWidget *entry)
   {
     history_place++;
 
-    new_place = g_list_nth_data (history, history_place);
-    gtk_entry_set_text (GTK_ENTRY (entry), new_place);
-    current_directory = g_strdup_printf ("%s", new_place);
+    new_directory = g_list_nth_data (history, history_place);
+    gtk_combo_set_popdown_strings (GTK_COMBO (combo), history);
+    gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (combo)->entry), new_directory);
+    current_directory = g_strdup (new_directory);
     refresh_view ();
   }
 }
@@ -797,7 +807,7 @@ set_spinner_rest (void)
 int
 main (int argc, char *argv[])
 {
-  GtkWidget *vbox, *hbox, *hbox2, *toolbar, *toolbar2, *entry, *view_option_menu, *view_menu, *view_menu_item;
+  GtkWidget *vbox, *hbox, *hbox2, *toolbar, *toolbar2, *view_option_menu, *view_menu, *view_menu_item;
   GdkPixbuf *p;
   GtkWidget *pw;
   GdkPixmap *pmap;
@@ -832,8 +842,8 @@ main (int argc, char *argv[])
   hbox = gtk_hbox_new (FALSE, 0);
   hbox2 = gtk_hbox_new (FALSE, 0);
 
-  entry = gtk_entry_new ();
-  gtk_object_set_data (GTK_OBJECT (window), "entry", (gpointer) entry);
+  combo = gtk_combo_new ();
+  //combo_signal_id = gtk_signal_connect (GTK_OBJECT (GTK_COMBO (combo)->entry), "changed", GTK_SIGNAL_FUNC (goto_directory), combo);
 
   view_scrolld = gtk_scrolled_window_new (NULL, NULL);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (view_scrolld), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
@@ -865,17 +875,17 @@ main (int argc, char *argv[])
   p = gpe_find_icon ("left");
   pw = gpe_render_icon (window->style, p);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Back"), 
-			   _("Back"), _("Back"), pw, history_back, entry);
+			   _("Back"), _("Back"), pw, history_back, NULL);
 
   p = gpe_find_icon ("right");
   pw = gpe_render_icon (window->style, p);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Forward"), 
-			   _("Forward"), _("Forward"), pw, history_forward, entry);
+			   _("Forward"), _("Forward"), pw, history_forward, NULL);
 
   p = gpe_find_icon ("up");
   pw = gpe_render_icon (window->style, p);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Up one level"), 
-			   _("Up one level"), _("Up one level"), pw, up_one_level, entry);
+			   _("Up one level"), _("Up one level"), pw, up_one_level, NULL);
 
   p = gpe_find_icon ("stop");
   pw = gpe_render_icon (window->style, p);
@@ -895,7 +905,7 @@ main (int argc, char *argv[])
   p = gpe_find_icon ("dir-up");
   pw = gpe_render_icon (window->style, p);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar2), _("Goto Location"), 
-			   _("Goto Location"), _("Goto Location"), pw, goto_directory, entry);
+			   _("Goto Location"), _("Goto Location"), pw, goto_directory, NULL);
 
   spinner_style = hbox2->style;
 
@@ -910,7 +920,7 @@ main (int argc, char *argv[])
   gtk_box_pack_start (GTK_BOX (hbox), view_option_menu, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (hbox), spinner, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), hbox2, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (hbox2), entry, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox2), combo, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (hbox2), toolbar2, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), view_scrolld, TRUE, TRUE, 0);
 
@@ -923,7 +933,7 @@ main (int argc, char *argv[])
   gtk_widget_show (hbox2);
   gtk_widget_show (toolbar);
   gtk_widget_show (toolbar2);
-  gtk_widget_show (entry);
+  gtk_widget_show (combo);
   gtk_widget_show (view_option_menu);
   gtk_widget_show (view_menu);
   gtk_widget_show (view_scrolld);
@@ -932,11 +942,9 @@ main (int argc, char *argv[])
   if (sql_start ())
     exit (1);
 
-  set_directory_home (NULL, entry);
-  history_place--;
-
   gtk_option_menu_set_history (GTK_OPTION_MENU (view_option_menu), 0);
 
+  /*
   if (mime_types)
   {
     GSList *iter;
@@ -949,7 +957,7 @@ main (int argc, char *argv[])
 
       printf ("|\t%s\t\t|\t%s\t|\t%s\t|\n", c->mime_name, c->extension, c->program);
     }
-  }
+  */
 
   while (i <= num_spinner_files)
   {
@@ -958,6 +966,9 @@ main (int argc, char *argv[])
 
     i++;
   }
+
+  set_directory_home (NULL);
+  //history_place--;
 
   gtk_main();
 

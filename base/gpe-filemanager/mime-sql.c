@@ -94,6 +94,7 @@ add_mime_types (void)
 
   e = new_mime_type ("application/pdf", "Adobe PDF Document", "pdf", "gpe-pdf", "application-pdf");
   e = new_mime_type ("application/x-compress", "Gzip Compressed File", "gz", "", "application-x-gzip");
+  e = new_mime_type ("application/zip", "Zip Compressed File", "zip", "", "application-x-compress");
   e = new_mime_type ("application/x-ipk", "Ipkg File", "ipk", "", "application-x-ipk");
   e = new_mime_type ("audio/x-gsm", "GSM Audio File", "gsm", "", "audio-x-gsm");
   e = new_mime_type ("audio/mpeg", "MP3 Audio File", "mp3", "mpg123", "audio-mpeg");

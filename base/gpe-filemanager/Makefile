@@ -5,7 +5,7 @@ CVSBUILD = yes
 MIME_PIXMAPS = `cd pixmaps/document-icons && ls *.png`
 SPINNER_PIXMAPS = `cd pixmaps/spinner && ls *.png`
 
-MEMBERS = main mime-sql gnome-exec
+MEMBERS = main mime-sql
 
 ifeq ($(GTK2),yes)
 CFLAGS = `pkg-config --cflags gtk+-2.0` -DGTK_ENABLE_BROKEN
