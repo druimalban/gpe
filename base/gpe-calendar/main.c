@@ -50,6 +50,7 @@ gboolean force_today = FALSE;
 
 GtkWidget *main_window, *pop_window;
 GtkWidget *notebook;
+extern GtkWidget* day_list;
 
 struct gpe_icon my_icons[] = {
   { "future_view", "future_view" },
@@ -64,7 +65,7 @@ struct gpe_icon my_icons[] = {
 };
 
 static GtkWidget *day, *week, *month, *future, *current_view;
-static GtkWidget *day_button, *week_button, *month_button, *future_button;
+static GtkWidget *day_button, *week_button, *month_button, *future_button, *today_button;
 
 guint window_x = 240, window_y = 310;
 
@@ -86,6 +87,22 @@ days_in_month (guint year, guint month)
     }
 
   return nr_days[month];
+}
+
+time_t
+time_from_day(int year, int month, int day)
+{
+  struct tm tm;
+  time_t selected_time;
+  localtime_r (&viewtime, &tm);
+  tm.tm_year = year;
+  tm.tm_mon = month;
+  tm.tm_mday = day;
+  tm.tm_hour = 0;
+  tm.tm_min = 0;
+  tm.tm_sec = 0;
+  selected_time = mktime (&tm);
+  return selected_time;
 }
 
 void
@@ -142,11 +159,13 @@ new_view (GtkWidget *widget)
     {
       w = gtk_notebook_get_nth_page (GTK_NOTEBOOK (notebook), i);
       if (w == widget)
-	{
-	  current_view = w;
-	  gtk_notebook_set_page (GTK_NOTEBOOK (notebook), i);
-	  return;
-	}
+        {
+          current_view = w;
+          gtk_notebook_set_page (GTK_NOTEBOOK (notebook), i);
+          if (w == day) /* nasty hack to compensate missing update if clist */
+            update_current_view();
+          return;
+        }
       i++;
     } while (w != NULL);
 }
@@ -161,9 +180,20 @@ new_appointment (void)
 static void
 set_today(void)
 {
+  static time_t selected_time;
+
   force_today = !force_today;
-  time (&viewtime);
-  update_current_view ();
+  if (force_today)
+    {
+      selected_time = viewtime;
+      time (&viewtime);
+    } 
+  else
+    viewtime = selected_time;
+  
+  gtk_button_set_relief(GTK_BUTTON(today_button),
+                        force_today ? GTK_RELIEF_HALF : GTK_RELIEF_NONE);
+  set_time_all_views();
 }
 
 void
@@ -245,6 +275,15 @@ on_import_vcal (GtkWidget *widget, gpointer data)
   future_free_lists();   
   event_db_refresh();
   update_all_views();  
+}
+
+static void
+notebook_switch_page (GtkNotebook *notebook,
+                      GtkNotebookPage *page,
+                      guint page_num,
+                      gpointer user_data)
+{
+  set_time_all_views();
 }
 
 int
@@ -353,7 +392,7 @@ main (int argc, char *argv[])
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
 
   pw = gtk_image_new_from_stock (GTK_STOCK_HOME, gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Today"),
+  today_button = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Today"),
 			   _("Today"), _("Today"), pw, set_today, NULL);
 
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
@@ -411,6 +450,9 @@ main (int argc, char *argv[])
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), week, NULL);
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), month, NULL);
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), future, NULL);
+
+  g_signal_connect(G_OBJECT(notebook),"switch-page",
+                   G_CALLBACK(notebook_switch_page),NULL);
 
   gtk_widget_show (notebook);
 

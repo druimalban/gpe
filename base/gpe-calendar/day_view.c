@@ -34,7 +34,7 @@
 
 static GSList *strings;
 static GSList *day_events[24], *untimed_events;
-static GtkWidget *day_list;
+GtkWidget *day_list;
 static GtkWidget *datesel;
 static GtkAdjustment *scroll_adjustment;
 
@@ -420,7 +420,7 @@ day_view_update ()
 	
       /* don't display very early/late slots if they are not used */
       if (ev || ((hour > 5) && (hour < 23)))
-      {
+      {        
         gtk_clist_append (GTK_CLIST (day_list), line_info);
         gtk_clist_set_row_data (GTK_CLIST (day_list), row, ev);
       }
@@ -534,6 +534,14 @@ day_free_lists()
       }
 }
 
+
+gboolean
+list_exposed(GtkWidget *widget, GdkEventExpose *event, gpointer user_data)
+{
+  gtk_container_propagate_expose  (widget, day_list, event);
+  return FALSE;
+}
+
 GtkWidget *
 day_view(void)
 {
@@ -571,6 +579,8 @@ day_view(void)
 
   g_signal_connect (G_OBJECT (day_list), "key_press_event", 
 		    G_CALLBACK (list_key_press_event), NULL);
+  g_signal_connect (G_OBJECT (scrolled_window), "expose-event",
+            G_CALLBACK (list_exposed), NULL);
   g_object_set_data(G_OBJECT(day_list),"selected-row",(void *)0);
 
   g_object_set_data(G_OBJECT(main_window),"datesel-day",datesel);

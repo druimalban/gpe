@@ -27,6 +27,7 @@
 
 GSList *events;
 GtkWidget *future_list;
+GtkWidget *time_label;
 
 static void
 selection_made (GtkWidget *clist, int row, gint column,
@@ -49,14 +50,14 @@ selection_made (GtkWidget *clist, int row, gint column,
 static gint
 future_view_update ()
 {
-  
   gint row=0;
-  time_t start=time(NULL);
+  time_t start=viewtime;
   time_t end;
   event_t ev;
   event_details_t evd;
   struct tm tm;
   char buf[256];
+  gchar *sbuf;
   gchar *line_info[2];
   GSList *iter;
   guint widget_width;
@@ -69,9 +70,17 @@ future_view_update ()
   gtk_clist_set_sort_column (GTK_CLIST (future_list), 0);
   
   localtime_r (&start, &tm);
+
+  /* update label */
+  strftime (buf, sizeof (buf), "%A, %d %b %Y", &tm);
+  sbuf = g_locale_to_utf8 (buf, -1, NULL, NULL, NULL);
+  gtk_label_set_text(GTK_LABEL(time_label),sbuf);
+  g_free (sbuf);
+  
   tm.tm_year++;
   end = mktime (&tm);
-   
+  
+  /* update events */
   if (events) event_db_list_destroy (events);
      
   events = event_db_list_for_future (start, 15);
@@ -201,7 +210,6 @@ future_view (void)
 
   GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
   GtkWidget *scrolled_window = gtk_scrolled_window_new (NULL, NULL);
-  GtkWidget *label;
 
   gtk_widget_show (scrolled_window);
 
@@ -209,9 +217,9 @@ future_view (void)
   strftime (buf, sizeof (buf), "%A, %d %b %Y", &tm);
 
   sbuf = g_locale_to_utf8 (buf, -1, NULL, NULL, NULL);
-  label = gtk_label_new (sbuf);
+  time_label = gtk_label_new (sbuf);
   g_free (sbuf);
-  gtk_widget_show (label);
+  gtk_widget_show (time_label);
 
   future_list = gtk_clist_new (2);
   gtk_widget_show (future_list);
@@ -224,7 +232,7 @@ future_view (void)
 
   gtk_container_add (GTK_CONTAINER (scrolled_window), future_list);
 
-  gtk_box_pack_start (GTK_BOX(vbox), label, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX(vbox), time_label, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX(vbox), scrolled_window, TRUE, TRUE, 0);
 
   g_object_set_data (G_OBJECT (vbox), "update_hook",

@@ -55,22 +55,6 @@ struct week_day
 } week_days[7];
 
 
-time_t
-time_from_day(int year, int month, int day)
-{
-  struct tm tm;
-  time_t selected_time;
-  localtime_r (&viewtime, &tm);
-  tm.tm_year = year;
-  tm.tm_mon = month;
-  tm.tm_mday = day;
-  tm.tm_hour = 0;
-  tm.tm_min = 0;
-  tm.tm_sec = 0;
-  selected_time = mktime (&tm);
-  return selected_time;
-}
-
 static gint
 draw_expose_event (GtkWidget *widget,
 		   GdkEventExpose *event,
@@ -211,8 +195,7 @@ draw_expose_event (GtkWidget *widget,
 	    }
 	}
 
-	  if ((!force_today && week_days[day].is_active)
-          || (force_today && week_days[day].is_today))
+	  if (week_days[day].is_today)
         {
 	      gdk_draw_rectangle (drawable, red_gc, FALSE, 0, 
                               week_days[day].y0, max_width, 
@@ -254,7 +237,7 @@ static void
 week_view_update (void)
 {
   guint day;
-  time_t t = time (NULL);
+  time_t t = viewtime;
   struct tm tm;
   guint y = 0;
   PangoLayout *pl = gtk_widget_create_pango_layout (GTK_WIDGET (week_view_draw), NULL);
@@ -290,7 +273,7 @@ week_view_update (void)
       week_days[day].is_today = (tm.tm_mday == today.tm_mday 
 		       && tm.tm_mon == today.tm_mon 
 		       && tm.tm_year == today.tm_year);
-      if (!week_days[day].initialized)
+//      if (!week_days[day].initialized)
          {
            week_days[day].is_active = week_days[day].is_today;
            week_days[day].initialized = TRUE;
@@ -365,18 +348,18 @@ week_view_update (void)
       height = pr.height + 2;
 
       if (week_days[day].events)
-	{
-
-	  for (iter = week_days[day].events; iter; iter = iter->next)
-	    {
-	      event_t ev = iter->data;
-	      event_details_t evd = event_db_get_details (ev);
-	      pango_layout_set_width (pl_evt, available_width * PANGO_SCALE);
-	      pango_layout_set_text (pl_evt, evd->summary, -1);
-	      pango_layout_get_pixel_extents (pl_evt, &pr, NULL);
-	      height += pr.height + 2;
-	    }
-	}
+        {
+    
+          for (iter = week_days[day].events; iter; iter = iter->next)
+            {
+              event_t ev = iter->data;
+              event_details_t evd = event_db_get_details (ev);
+              pango_layout_set_width (pl_evt, available_width * PANGO_SCALE);
+              pango_layout_set_text (pl_evt, evd->summary, -1);
+              pango_layout_get_pixel_extents (pl_evt, &pr, NULL);
+              height += pr.height + 2;
+            }
+        }
 
     if (height < min_cell_height)
       height = min_cell_height;
@@ -444,12 +427,11 @@ week_view_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *data)
               week_days[i+1].is_active = TRUE;
               c = &week_days[i+1].rc;
               viewtime = time_from_day(c->popup.year,c->popup.month,c->popup.day);
-              set_time_all_views();
+              week_view_update();
             }
           else
             gtk_widget_child_focus(gtk_widget_get_toplevel(GTK_WIDGET(widget)),
 		                         GTK_DIR_DOWN);  
-          week_view_update ();
           break;
         }
     return TRUE;
@@ -465,12 +447,11 @@ week_view_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *data)
               week_days[i-1].is_active = TRUE;
               c = &week_days[i-1].rc;
               viewtime = time_from_day(c->popup.year,c->popup.month,c->popup.day);
-              set_time_all_views();
+              week_view_update();
             }
           else
             gtk_widget_child_focus(gtk_widget_get_toplevel(GTK_WIDGET(widget)),
 		                         GTK_DIR_UP);  
-          week_view_update ();
           break;
         }
     return TRUE;
@@ -563,7 +544,6 @@ week_view_button_press (GtkWidget *widget,
              week_days[i].is_active = FALSE;
           week_days[get_day_from_y(y)].is_active = TRUE;
           viewtime = time_from_day(c->popup.year,c->popup.month,c->popup.day);
-          set_time_all_views();
           week_view_update();
           
           if (pop_window) 

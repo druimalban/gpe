@@ -343,8 +343,6 @@ month_view_update ()
   struct tm today;
   time_t t;
 
-/* hack */
-  //time (&t);
   t = viewtime;
   localtime_r (&t, &today);
 
@@ -428,8 +426,7 @@ month_view_update ()
 }
 
 static void
-changed_callback(GtkWidget *widget,
-		 gpointer d)
+changed_callback(GtkWidget *widget, gpointer d)
 {
   viewtime = gtk_date_sel_get_time (GTK_DATE_SEL (widget));
   
@@ -480,16 +477,8 @@ month_view_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *user_d
         {
           if (pop_window) 
             gtk_widget_destroy (pop_window);
-          if (c != c_old) 
-            {
-              pop_window = day_popup (main_window, &c->popup, TRUE);
-              c_old = c;
-            }
-          else 
-            {
-              pop_window = NULL;
-              c_old = NULL;
-            }
+            pop_window = NULL;
+            c_old = NULL;
         }    
     }
     
@@ -498,11 +487,14 @@ month_view_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *user_d
       if ((active_day < TOTAL_DAYS) && (rc[active_day+1].valid))
         {
           active_day++;
+          viewtime = time_from_day(rc[active_day].popup.year,
+                                   rc[active_day].popup.month,
+                                   rc[active_day].popup.day);
+          month_view_update();
         }
       else
         gtk_widget_child_focus(gtk_widget_get_toplevel(GTK_WIDGET(widget)),
                              GTK_DIR_DOWN);  
-      month_view_update ();
       return TRUE;
     }
     
@@ -511,11 +503,14 @@ month_view_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *user_d
       if ((active_day) && (rc[active_day-1].valid))
         {
           active_day--;
+          viewtime = time_from_day(rc[active_day].popup.year,
+                                   rc[active_day].popup.month,
+                                   rc[active_day].popup.day);
+          month_view_update();
         }
       else
         gtk_widget_child_focus(gtk_widget_get_toplevel(GTK_WIDGET(widget)),
                              GTK_DIR_UP);  
-      month_view_update ();
       return TRUE;
     }
 
@@ -524,11 +519,14 @@ month_view_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *user_d
       if ((active_day < TOTAL_DAYS-7) && (rc[active_day+7].valid))
         {
           active_day+=7;
+          viewtime = time_from_day(rc[active_day].popup.year,
+                                   rc[active_day].popup.month,
+                                   rc[active_day].popup.day);
+          month_view_update();
         }
       else
         gtk_widget_child_focus(gtk_widget_get_toplevel(GTK_WIDGET(widget)),
                              GTK_DIR_DOWN);  
-      month_view_update ();
       return TRUE;
     }
     
@@ -537,11 +535,14 @@ month_view_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *user_d
       if ((active_day >= 7) && (rc[active_day-7].valid))
         {
           active_day -= 7;
+          viewtime = time_from_day(rc[active_day].popup.year,
+                                   rc[active_day].popup.month,
+                                   rc[active_day].popup.day);
+          month_view_update();
         }
       else
         gtk_widget_child_focus(gtk_widget_get_toplevel(GTK_WIDGET(widget)),
                              GTK_DIR_UP);  
-      month_view_update ();
       return TRUE;
     }
     

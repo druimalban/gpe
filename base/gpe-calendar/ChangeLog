@@ -1,5 +1,16 @@
+2004-07-23  Florian Boor <florian.boor@kernelconcepts.de>
+    
+    * Released V 0.54
+    * event_ui.c: Changes in keyboard control to use direction keys to navigate.
+    * main.c: Improved handling of updates and some feedback if the "today" 
+              button is active.
+    * future_view.c: Added updating of date label.
+    * *view.c: Some updates to day selection stuff.
+    * globals.h, main.c: Added some global routines.
+
 2004-07-22  Florian Boor <florian.boor@kernelconcepts.de>
     
+    * month_view.c: Change: "today" in update routine is set to "viewtime" now.
     * *view.c, main.c: Several hacks to keep active day global and up to date.
     * event_ui.c: Multiple optical uodates and small fixes.
                   Set default focus to text field, set some window parameters.

@@ -593,9 +593,14 @@ gboolean
 on_description_focus_in(GtkWidget* widget, GdkEventFocus *event,
                         gpointer user_data)
 {
+  GtkTextIter iter;
+  GtkTextBuffer *buf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(widget));
   GObject *window = user_data;
   
   g_object_set_data(window,"multiline",(void*)TRUE);
+  gtk_text_buffer_get_start_iter(buf,&iter);
+  gtk_text_buffer_place_cursor(buf,&iter);
+  
   return FALSE;
 }
 
@@ -607,6 +612,36 @@ on_description_focus_out(GtkWidget* widget, GdkEventFocus *event,
   
   g_object_set_data(window,"multiline",(void*)FALSE);
   return FALSE;
+}
+
+void        
+tv_move_cursor (GtkTextView *textview,
+                GtkMovementStep arg1,
+                gint arg2,
+                gboolean arg3,
+                gpointer user_data)
+{
+  GtkTextBuffer *buf = gtk_text_view_get_buffer(textview);
+  
+  int cnt = (int)g_object_get_data(G_OBJECT(textview),"cnt");
+  
+  if (arg1 == GTK_MOVEMENT_DISPLAY_LINES)
+    {
+      cnt += arg2;
+      if (cnt >= gtk_text_buffer_get_line_count(buf))
+        {
+          cnt = 0;
+          gtk_widget_child_focus(gtk_widget_get_toplevel(GTK_WIDGET(textview)),
+		                         GTK_DIR_DOWN);
+        }
+      else if (cnt < 0)
+        {
+          cnt = 0;
+          gtk_widget_child_focus(gtk_widget_get_toplevel(GTK_WIDGET(textview)),
+		                         GTK_DIR_UP);
+        }  
+      g_object_set_data(G_OBJECT(textview),"cnt",(void*)cnt);  
+    }
 }
 
 static gboolean
@@ -795,6 +830,8 @@ build_edit_event_window (void)
 
   gtk_combo_set_popdown_strings (GTK_COMBO (starttime), times);
   gtk_combo_set_popdown_strings (GTK_COMBO (endtime), times);
+  gtk_combo_set_use_arrows (GTK_COMBO(starttime), FALSE);
+  gtk_combo_set_use_arrows (GTK_COMBO(endtime), FALSE);
 
   startdatelabel      = gtk_label_new (_("Start at:"));
   enddatelabel        = gtk_label_new (_("End at:"));
@@ -844,6 +881,7 @@ build_edit_event_window (void)
 
   s->remindertime     = gtk_combo_new ();
   gtk_combo_set_popdown_strings (GTK_COMBO (s->remindertime), times);
+  gtk_combo_set_use_arrows (GTK_COMBO(s->remindertime), FALSE);
 
   gtk_table_attach (GTK_TABLE (datetimetable), datelabel, 0, 1, 0, 1,
                     0, GTK_EXPAND | GTK_FILL, 0, boxspacing);
@@ -893,6 +931,8 @@ build_edit_event_window (void)
                    G_CALLBACK(on_description_focus_in),window);
   g_signal_connect(G_OBJECT(description), "focus-out-event", 
                    G_CALLBACK(on_description_focus_out),window);
+  g_signal_connect(G_OBJECT(description),"move_cursor",
+                   G_CALLBACK(tv_move_cursor),NULL);
 
   descriptionlabel    = gtk_label_new (_("Description:"));
   gtk_misc_set_alignment(GTK_MISC (descriptionlabel), 0, 0.5);

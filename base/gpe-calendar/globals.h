@@ -23,6 +23,9 @@ extern gboolean week_starts_monday;
 extern guint week_offset;
 extern gboolean day_view_combined_times;
 extern void set_time_and_day_view(time_t selected_time);
+extern void set_time_all_views(void);
+extern time_t time_from_day(int year, int month, int day);
+
 
 extern GdkPixmap *close_pix, *day_pix;
 extern GdkBitmap *close_mask, *day_mask;
