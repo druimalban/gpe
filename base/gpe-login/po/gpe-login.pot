@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-01-17 11:24+0000\n"
+"POT-Creation-Date: 2004-01-28 19:42+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,35 +16,35 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: gpe-login.c:481 gpe-login.c:554
+#: gpe-login.c:484 gpe-login.c:557
 msgid "Login incorrect"
 msgstr ""
 
-#: gpe-login.c:575 gpe-login.c:657
+#: gpe-login.c:578 gpe-login.c:660
 msgid "Passwords don't match"
 msgstr ""
 
-#: gpe-login.c:584 gpe-login.c:666
+#: gpe-login.c:587 gpe-login.c:669
 msgid "Empty password not allowed"
 msgstr ""
 
-#: gpe-login.c:646
+#: gpe-login.c:649
 msgid "User already exists"
 msgstr ""
 
-#: gpe-login.c:1203
+#: gpe-login.c:1206
 msgid "Record"
 msgstr ""
 
-#: gpe-login.c:1204
+#: gpe-login.c:1207
 msgid "recalibrates touchscreen"
 msgstr ""
 
-#: gpe-login.c:1225
+#: gpe-login.c:1228
 msgid "<b>System setup</b>"
 msgstr ""
 
-#: gpe-login.c:1227
+#: gpe-login.c:1230
 msgid ""
 "Please choose a password for the\n"
 "<i>root</i> account.\n"
@@ -53,44 +53,44 @@ msgid ""
 "system administration.\n"
 msgstr ""
 
-#: gpe-login.c:1228 gpe-login.c:1291 gpe-login.c:1671
+#: gpe-login.c:1231 gpe-login.c:1294 gpe-login.c:1676
 msgid "Password"
 msgstr ""
 
-#: gpe-login.c:1229
+#: gpe-login.c:1232
 msgid "Confirm"
 msgstr ""
 
-#: gpe-login.c:1289 gpe-login.c:1649
+#: gpe-login.c:1292 gpe-login.c:1654
 msgid "Username"
 msgstr ""
 
-#: gpe-login.c:1290
+#: gpe-login.c:1293
 msgid "Full name"
 msgstr ""
 
-#: gpe-login.c:1292
+#: gpe-login.c:1295
 msgid "Confirm password"
 msgstr ""
 
-#: gpe-login.c:1293 gpe-login.c:1685
+#: gpe-login.c:1296 gpe-login.c:1690
 msgid "Language"
 msgstr ""
 
-#: gpe-login.c:1355
+#: gpe-login.c:1358
 msgid "<b>New user details</b>"
 msgstr ""
 
 #. TRANSLATORS: please replace this with your own Pango language code:
-#: gpe-login.c:1398
+#: gpe-login.c:1403
 msgid "en"
 msgstr ""
 
-#: gpe-login.c:1645
+#: gpe-login.c:1650
 msgid "Screen locked"
 msgstr ""
 
-#: gpe-login.c:1706
+#: gpe-login.c:1711
 msgid "Enter password with hard keys"
 msgstr ""
 
