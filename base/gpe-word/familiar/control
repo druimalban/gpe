@@ -1,0 +1,8 @@
+Package: gpe-word
+Section: base
+Priority: optional
+Version: 0.1
+Architecture: arm
+Maintainer: Damien Tanner <dctanner@magenet.com>
+Depends: libgpewidget0 (>= 0.47)
+Description: GPE Word Processer
