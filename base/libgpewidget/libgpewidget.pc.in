@@ -2,5 +2,5 @@ Name: libgpewidget
 Description: GPE Widget Library
 Version: VERSION
 Requires: gtk+-2.0
-Libs: PREFIX/lib/libgpewidget.so
+Libs: -lgpewidget
 Cflags: 
