@@ -26,6 +26,8 @@
 
 #include <gpe/errorbox.h>
 
+#include <X11/Xatom.h>
+
 #include "main.h"
 #include "launch.h"
 
@@ -37,7 +39,7 @@ struct sn_display_map
   SnDisplay *sn_dpy;
 };
 
-GSList *sn_display_list;
+static GSList *sn_display_list;
 
 static GdkFilterReturn
 sn_event_filter (GdkXEvent *xevp, GdkEvent *ev, gpointer p)
@@ -50,7 +52,7 @@ sn_event_filter (GdkXEvent *xevp, GdkEvent *ev, gpointer p)
   return GDK_FILTER_CONTINUE;
 }
 
-SnDisplay *
+static SnDisplay *
 sn_display_for_display (Display *dpy)
 {
   GSList *l;
@@ -71,8 +73,97 @@ sn_display_for_display (Display *dpy)
   return map->sn_dpy;
 }
 
+#define RETURN_NONE_IF_NULL(p) if ((p) == '\0') return None; 
+
+/* copied from libmatchbox */
+static Window
+single_instance_get_window (Display *dpy, char *bin_name)
+{
+  static Atom atom_exec_map = None;
+  Atom type;
+  int format;
+  long bytes_after;
+  unsigned char *data = NULL;
+  long n_items;
+  int result;
+  unsigned char *p, *key = NULL, *value = NULL;
+  Window win_found;
+
+  if (atom_exec_map == None)
+    atom_exec_map = XInternAtom (dpy, "_MB_CLIENT_EXEC_MAP", False);
+
+  result = XGetWindowProperty (dpy, RootWindow (dpy, DefaultScreen (dpy)), 
+			       atom_exec_map,
+			       0, 10000L,
+			       False, XA_STRING,
+			       &type, &format, &n_items,
+			       &bytes_after, (unsigned char **)&data);
+
+  if (result != Success || data == NULL || n_items == 0)
+    {
+      if (data) 
+	XFree (data);
+      return None;
+    }
+
+  p = data;
+
+  while (*p != '\0')
+    {
+      key = p;
+      while (*p != '=' && *p != '\0') p++;
+
+      RETURN_NONE_IF_NULL (*p);
+
+      *p = '\0'; p++;
+
+      RETURN_NONE_IF_NULL (*p);
+
+      value = p;
+
+      while (*p != '|' && *p != '\0') p++;
+
+      RETURN_NONE_IF_NULL (*p);
+
+      *p = '\0';      
+
+      if (!strcmp (key, bin_name))
+	{
+	  win_found = atoi (value); /* XXX should check window ID 
+				      actually exists */
+	  XFree (data);
+	  return ((win_found > 0) ? win_found : None);
+	}
+
+      p++;
+    }
+
+  XFree (data);
+
+  return None;
+}
+
+/* copied from libmatchbox */
+static void
+activate_window (Display *dpy, Window win)
+{
+  static Atom atom_net_active = None;
+  XEvent ev;
+
+  if (atom_net_active == None)
+    atom_net_active = XInternAtom (dpy, "_NET_ACTIVE_WINDOW", False);
+
+  memset (&ev, 0, sizeof ev);
+  ev.xclient.type = ClientMessage;
+  ev.xclient.window = win;
+  ev.xclient.message_type = atom_net_active;
+  ev.xclient.format = 32;
+
+  XSendEvent (dpy, RootWindow (dpy, DefaultScreen (dpy)), False, SubstructureRedirectMask, &ev);
+}
+
 /* Exec a command like the shell would.  */
-int 
+static int 
 do_exec (char *cmd)
 {
   char *p = cmd;
@@ -156,9 +247,17 @@ run_program (char *exec, char *name)
   SnDisplay *sn_dpy;
   int screen;
   pid_t pid;
+  Window win;
 
   dpy = GDK_WINDOW_XDISPLAY (window->window);
   screen = DefaultScreen (dpy);
+
+  win = single_instance_get_window (dpy, exec);
+  if (win != None)
+    {
+      activate_window (dpy, win);
+      return TRUE;
+    }
 
   sn_dpy = sn_display_for_display (dpy);
 
@@ -189,3 +288,4 @@ run_program (char *exec, char *name)
 
   return TRUE;
 }
+

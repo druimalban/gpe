@@ -58,9 +58,8 @@
 #include "package.h"
 #include "plugin.h"
 #include "popupmenu.h"
-#include "xsi.h"
-#include <dlfcn.h>
 #include "tray.h"
+#include "launch.h"
 
 //#define DEBUG
 #ifdef DEBUG
@@ -72,9 +71,10 @@
 #endif
 
 /* For not starting an app twice after a double click */
-int ignore_press = 0;
+static int ignore_press = 0;
 
-void cb_clicked (GtkWidget *il, gpointer udata, gpointer data) 
+static void 
+cb_clicked (GtkWidget *il, gpointer udata, gpointer data) 
 {
   struct package *p;
   p = udata;
@@ -82,7 +82,8 @@ void cb_clicked (GtkWidget *il, gpointer udata, gpointer data)
   run_package (p);
 }
 
-void cb_popup (GtkWidget *il, gpointer udata, gpointer data) 
+static void 
+cb_popup (GtkWidget *il, gpointer udata, gpointer data) 
 {
   struct package *p;
   p = udata;
@@ -90,7 +91,7 @@ void cb_popup (GtkWidget *il, gpointer udata, gpointer data)
   popup_menu_activate (udata, il);
 }
 
-void 
+static void 
 autohide_labels (int page) 
 {
   GtkWidget *hb;
@@ -127,19 +128,22 @@ autohide_labels (int page)
     }
 }
 
-void nb_switch (GtkNotebook *nb, GtkNotebookPage *page, guint pagenum)
+static void 
+nb_switch (GtkNotebook *nb, GtkNotebookPage *page, guint pagenum)
 {
   autohide_labels (pagenum);
 }
 
-gint unignore_press (gpointer data)
+static gint 
+unignore_press (gpointer data)
 {
   ignore_press = 0;
   return FALSE;
 }
 
 /* Remove the appmgr (not plugin) tabs from the notebook */
-void clear_appmgr_tabs ()
+static void 
+clear_appmgr_tabs (void)
 {
 	int i=0;
 	while (1) {
@@ -158,7 +162,8 @@ void clear_appmgr_tabs ()
  * Generally we only want one group, but NULL means
  * ignore group setting (ie. "All").
  */
-GtkWidget *create_tab (GList *all_items, char *current_group, tab_view_style style)
+static GtkWidget *
+create_tab (GList *all_items, char *current_group, tab_view_style style)
 {
 	GtkWidget *il;
 	GList *this_item;
@@ -198,7 +203,8 @@ GtkWidget *create_tab (GList *all_items, char *current_group, tab_view_style sty
 
 /* Creates the image/label combo for a tab.
  */
-GtkWidget *create_tab_label (char *name, char *icon_file, GtkStyle *style)
+static GtkWidget *
+create_tab_label (char *name, char *icon_file, GtkStyle *style)
 {
 	GtkWidget *img=NULL,*lbl,*hb;
 
@@ -223,7 +229,8 @@ GtkWidget *create_tab_label (char *name, char *icon_file, GtkStyle *style)
 /* Creates the image/label combo for the tab
  * of a specified group.
  */
-GtkWidget *create_group_tab_label (char *group, GtkStyle *style)
+static GtkWidget *
+create_group_tab_label (char *group, GtkStyle *style)
 {
 	GtkWidget *hb;
 	char *icon_file;
@@ -235,7 +242,8 @@ GtkWidget *create_group_tab_label (char *group, GtkStyle *style)
 	return hb;
 }
 
-void create_all_tab ()
+static void 
+create_all_tab ()
 {
 	TRACE ("create_all_tab");
 	DBG((stderr, "Show 'All' group? %s\n", cfg_options.show_all_group ? "Yes" : "No"));
@@ -248,7 +256,8 @@ void create_all_tab ()
 
 /* Wipe the old tabs / icons and replace them with whats
  * currently supposed to be there */
-void refresh_tabs ()
+static void 
+refresh_callback (void)
 {
 	GList *l;
 	int old_tab;
@@ -278,10 +287,6 @@ void refresh_tabs ()
 	if (old_tab != -1)
 		gtk_notebook_set_page (GTK_NOTEBOOK(notebook), old_tab);
 
-	l =  gtk_container_children (GTK_CONTAINER(window));
-	if (l && l->data)
-		create_recent_box (l->data);
-
 	gtk_widget_show_all (notebook);
 
 	autohide_labels (0);
@@ -289,7 +294,8 @@ void refresh_tabs ()
 	TRACE ("refresh_tabs: <end>");
 }
 
-void icons_page_up_down (int down)
+static void 
+icons_page_up_down (int down)
 {
   GtkWidget *sw;
   GtkAdjustment *adj;
@@ -353,6 +359,8 @@ create_tab_view (void)
 
   /* Send all key events to the one place */
   gtk_key_snooper_install ((GtkKeySnoopFunc)keysnoop,NULL);
+
+  g_object_set_data (G_OBJECT (notebook), "refresh_func", refresh_callback);
 
   return notebook;
 }

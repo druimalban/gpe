@@ -18,7 +18,7 @@ else
 BUILD = build
 endif
 
-OBJS=main.o popupmenu.o package.o properties.o xsettings.o row_view.o launch.o #tab_view.o
+OBJS=main.o popupmenu.o package.o properties.o xsettings.o row_view.o launch.o tab_view.o
 
 all: gpe-appmgr
 

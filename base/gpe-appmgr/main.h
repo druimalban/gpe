@@ -15,8 +15,10 @@
 
 #ifndef MAIN_H
 #define MAIN_H
+
 #include <gtk/gtk.h>
 
+#include "package.h"
 #include "cfg.h"
 
 /* main window */
@@ -31,22 +33,8 @@ GList *groups;
 /* Refresh the UI with the icons */
 void refresh_tabs (void);
 
-/* Creates the image/label combo for a tab */
-GtkWidget *create_tab_label (char *name, char *icon_file, GtkStyle *style);
-GtkWidget *create_group_tab_label (char *group, GtkStyle *style);
-
-/* Creates a tab */
-GtkWidget *create_tab (GList *all_items, char *current_group, tab_view_style style);
-
-/* Create and prepend the 'All' tab */
-void create_all_tab ();
-
-/* Refreshes the tab labels for autohide */
-void autohide_labels (int page);
-
-/* (Re)create the recent list */
-void create_recent_box();
-
 char *get_icon_fn (struct package *p, int iconsize);
+
+void run_package (struct package *p);
 
 #endif

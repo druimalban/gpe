@@ -73,7 +73,7 @@ run_callback (GObject *obj, GdkEventButton *ev, struct package *p)
  * Generally we only want one group, but NULL means
  * ignore group setting (ie. "All").
  */
-GtkWidget *
+static GtkWidget *
 create_row (GList *all_items, char *current_group)
 {
   GtkWidget *il;
@@ -83,6 +83,7 @@ create_row (GList *all_items, char *current_group)
   il = gpe_icon_list_view_new ();
 
   gpe_icon_list_view_set_rows (GPE_ICON_LIST_VIEW (il), 1);
+  gpe_icon_list_view_set_icon_xmargin (GPE_ICON_LIST_VIEW (il), 32);
   
   this_item = all_items;
   while (this_item)
@@ -109,8 +110,8 @@ create_row (GList *all_items, char *current_group)
   return il;
 }
 
-void 
-refresh_tabs (void)
+static void 
+refresh_callback (void)
 {
   GList *l;
   GSList *rows = NULL, *p;
@@ -143,6 +144,7 @@ refresh_tabs (void)
       p = p->next;
       l = l->next;
     }
+
   g_slist_free (rows);
 
   sep = gtk_vseparator_new ();
@@ -158,6 +160,8 @@ create_row_view (void)
   bin = gtk_vbox_new (FALSE, 0);
 
   gtk_widget_show (bin);
+
+  g_object_set_data (G_OBJECT (bin), "refresh_func", refresh_callback);
 
   return bin;
 }

@@ -74,7 +74,6 @@
 #define DBG(x) ;
 #endif
 
-GList *recent_items=NULL;
 GList *forced_groups=NULL;
 
 GtkWidget *current_button=NULL;
@@ -93,48 +92,38 @@ struct gpe_icon my_icons[] = {
   {NULL, NULL}
 };
 
-void create_recent_list ();
 char *translate_group_name (char *name);
 
 gboolean flag_desktop;
+gboolean flag_rows;
+GtkWidget *child;
 
 extern gboolean gpe_appmgr_start_xsettings (void);
 
-char *find_icon (char *base)
+char *
+find_icon (char *base)
 {
   char *temp;
-  FILE *inp;
   int i;
   
   char *directories[]=
     {
       "/usr/share/pixmaps",
-      "/usr/X11R6/include/X11/pixmaps",
-      "/mnt/ramfs/share/pixmaps",
-      "/mnt/hda/usr/share/pixmaps",
-      "/mnt/hda",
       NULL
     };
   
   if (!base)
     return NULL;
-  
-  inp = fopen (base, "r");
-  if (inp)
-    {
-      fclose (inp);
-      return (char *) strdup (base);
-    }
+
+  if (base[0] == '/')
+    return (char *) strdup (base);
   
   for (i=0;directories[i];i++)
     {
       temp = g_strdup_printf ("%s/%s", directories[i], base);
-      inp = fopen (temp, "r");
-      if (inp)
-	{
-	  fclose (inp);
-	  return temp;
-	}
+      if (access (temp, R_OK))
+	return temp;
+
       g_free (temp);
     }
 
@@ -144,20 +133,19 @@ char *find_icon (char *base)
 GtkWidget *
 create_icon_pixmap (GtkStyle *style, char *fn, int size)
 {
-	GdkPixbuf *pixbuf, *spixbuf;
-	GtkWidget *w;
+  GdkPixbuf *pixbuf, *spixbuf;
+  GtkWidget *w;
 
-	pixbuf = gdk_pixbuf_new_from_file (fn, NULL);
-
-	if (pixbuf == NULL)
-		return NULL;
-
-	spixbuf = gdk_pixbuf_scale_simple (pixbuf, size, size, 
-					   GDK_INTERP_BILINEAR);
-	gdk_pixbuf_unref (pixbuf);
-
-	w = gtk_image_new_from_pixbuf (spixbuf);
-	return w;
+  pixbuf = gdk_pixbuf_new_from_file (fn, NULL);
+  
+  if (pixbuf == NULL)
+    return NULL;
+  
+  spixbuf = gdk_pixbuf_scale_simple (pixbuf, size, size, GDK_INTERP_BILINEAR);
+  gdk_pixbuf_unref (pixbuf);
+  
+  w = gtk_image_new_from_pixbuf (spixbuf);
+  return w;
 }
 
 char *get_closest_icon (struct package *p, int iconsize)
@@ -217,21 +205,6 @@ run_package (struct package *p)
 
   printf ("Running: %s\n", package_get_data (p, "title"));
 
-  /* Add it to the recently-run list
-     Remove it first if it's already there
-     (so it moves to the front) */
-  if ((l = g_list_find (recent_items, p)))
-    recent_items = g_list_remove_link(recent_items, l);
-  recent_items = g_list_prepend (recent_items, p);
-  
-  /* Trim the list to the right length */
-  while (g_list_length (recent_items) > cfg_options.recent_apps_number)
-    recent_items = g_list_remove_link(recent_items,
-				      g_list_last (recent_items));
-  
-  /* Show the list */
-  create_recent_list();
-  
   /* Actually run the program */
   run_program (package_get_data (p, "command"), package_get_data (p, "title"));
 }
@@ -241,69 +214,6 @@ btn_clicked (GtkWidget *widget, GdkEventButton *event, gpointer user_data)
 {
   run_package ((struct package *)user_data);
   return TRUE;
-}
-
-void create_recent_list ()
-{
-	GtkWidget *hb;
-	GList *this_item;
-	GList *cl;
-	GtkWidget *w;
-
-	TRACE("create_recent_list");
-
-	if (recent_tab == NULL)
-		return;
-
-	/* Remove the previous list */
-	cl = gtk_container_children(GTK_CONTAINER(recent_tab));
-	if (cl)
-	{
-		w = cl->data;
-		gtk_widget_destroy (w);
-	}
-
-	hb = gtk_hbox_new (0,0);
-
-	gtk_container_add(GTK_CONTAINER(recent_tab),
-			  hb);
-
-	this_item = recent_items;
-
-	while (this_item)
-	{
-		struct package *p;
-		GtkWidget *btn;
-		GtkWidget *img=NULL;
-		char *icon;
-
-		p = (struct package *) this_item->data;
-		DBG((stderr, "recent info: %s\n", package_get_data (p, "title")));
-		/* Button picture */
-		icon = find_icon (get_closest_icon (p, 16));
-		if (icon)
-		{
-			img = create_icon_pixmap (recent_tab->style, icon, 16);
-			free (icon);
-		}
-		if (!img)
-			img = create_icon_pixmap (recent_tab->style,
-						 "/usr/share/pixmaps/menu_unknown_program16.png",
-						 16);
-
-		/* The button itself */
-		btn = gtk_event_box_new ();
-
-		gtk_container_add (GTK_CONTAINER(btn),img);
-		gtk_signal_connect (GTK_OBJECT (btn), "button_release_event",
-				    (GtkSignalFunc)btn_clicked, (gpointer)p);
-
-		gtk_box_pack_start (GTK_BOX(hb), btn, 0, 0, 0);
-
-		this_item = this_item->next;
-	}
-
-	gtk_widget_show_all (recent_tab);
 }
 
 GList *load_simple_list (char *fn)
@@ -499,14 +409,10 @@ int refresh_list ()
 	GList *ignored_items;
 	DIR *dir;
 	struct dirent *entry;
-	char *user_menu=NULL, *home_dir;
+	char *user_menu = NULL, *home_dir;
 	GSList *j;
 
 	TRACE ("refresh_list");
-
-	/* Wipe out 'recent' list */
-	recent_items = NULL;
-	create_recent_list ();
 
 	/* Remove the tap-hold popup menu timeout if it's there */
 	popup_menu_cancel ();
@@ -571,24 +477,12 @@ int refresh_list ()
    within Gtk, not sure though)
 */
 
-void cb_win_draw (GtkWidget *widget,
-		  gpointer user_data)
+void
+refresh_tabs (void)
 {
-	static int last_width = 0;
-	TRACE ("cb_win_draw");
-	if (last_width)
-		return;
-	DBG((stderr, "window: %p\n", window));
-	DBG((stderr, "last_width: %d\n", last_width));
-	DBG((stderr, "window->allocation.width: %d\n",
-	     window->allocation.width));
-
-	if (window && last_width != window->allocation.width)
-	{
-		refresh_tabs();
-		last_width = window->allocation.width;
-	}
-	TRACE("cb_win_draw: end");
+  void (*func)(void);
+  func = g_object_get_data (G_OBJECT (child), "refresh_func");
+  (*func) ();
 }
 
 /* run on SIGHUP
@@ -596,51 +490,12 @@ void cb_win_draw (GtkWidget *widget,
  * program was just added */
 static void catch_signal (int signo)
 {
-	TRACE ("catch_signal");
-	/* FIXME: transfer this if needed */
-	recent_items = NULL; /* won't this leak? */
+  TRACE ("catch_signal");
+  /* FIXME: transfer this if needed */
 
-	refresh_list ();
-	refresh_tabs();
-	last_update = time (NULL);
-}
-
-/* Create the 'recent' list as a dock app or normal widget */
-void create_recent_box()
-{
-	static GtkWidget *w=NULL;
-	TRACE ("create_recent_box");
-
-	if (cfg_options.show_recent_apps) {
-		if (w)
-			return;
-
-		w = gtk_plug_new (0);
-
-		gtk_widget_set_usize (w, 16*cfg_options.recent_apps_number, 16);
-		gtk_widget_realize (w);
-		gtk_container_add (GTK_CONTAINER(w), recent_tab = gtk_vbox_new(0,0));
-		gtk_window_set_title (GTK_WINDOW (w), "Recent apps");
-		gtk_widget_show_all (w);
-
-		gpe_system_tray_dock (w->window);
-	} else {
-		if (w)
-			gtk_widget_destroy (w);
-		w = NULL;
-		recent_tab = NULL;
-	}
-
-	TRACE ("create_recent_box: end");
-}
-
-void set_window_pixmap ()
-{
-  GdkPixmap *pmap;
-  GdkBitmap *bmap;
-
-  if (gpe_find_icon_pixmap ("icon", &pmap, &bmap))
-    gdk_window_set_icon (window->window, NULL, pmap, bmap);
+  refresh_list ();
+  refresh_tabs();
+  last_update = time (NULL);
 }
 
 void
@@ -658,7 +513,6 @@ extern GtkWidget * create_row_view (void);
 void 
 create_main_window (void)
 {
-  GtkWidget *child;
   int w = 640, h = 480;
 
   TRACE ("create_main_window");
@@ -677,17 +531,16 @@ create_main_window (void)
 
   gtk_window_set_default_size (GTK_WINDOW (window), w, h);
     
-  set_window_pixmap();
-
   g_signal_connect (G_OBJECT (window), "delete_event", G_CALLBACK (on_window_delete), NULL);
 
-  //child = create_tab_view ();
-  child = create_row_view ();
+  child = flag_rows ? create_row_view () : create_tab_view ();
   gtk_container_add (GTK_CONTAINER (window), child);
   
+  gpe_set_window_icon (window, "icon");
+
   gtk_widget_show_all (window);
 
-  cb_win_draw (NULL, NULL);
+  refresh_tabs ();
 }
 
 /* main():
@@ -712,16 +565,16 @@ main (int argc, char *argv[])
 
   while (1)
     {
-      int this_option_optind = optind ? optind : 1;
       int option_index = 0;
       int c;
 
       static struct option long_options[] = {
-	{"desktope", 0, 0, 'd'},
+	{"desktop", 0, 0, 'd'},
+	{"rows", 0, 0, 'r'},
 	{0, 0, 0, 0}
       };
       
-      c = getopt_long (argc, argv, "d",
+      c = getopt_long (argc, argv, "dr",
 		       long_options, &option_index);
       if (c == -1)
 	break;
@@ -730,6 +583,9 @@ main (int argc, char *argv[])
 	{
 	case 'd':
 	  flag_desktop = TRUE;
+	  break;
+	case 'r':
+	  flag_rows = TRUE;
 	  break;
 	}
     }
@@ -758,5 +614,5 @@ main (int argc, char *argv[])
   
   clean_up();
   
-  gtk_exit (0);
+  exit (0);
 }
