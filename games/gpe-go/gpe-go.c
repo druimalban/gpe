@@ -1314,23 +1314,40 @@ GtkWidget * build_new_game_dialog(){
   GtkWidget * radiobutton3;
   GtkWidget * radiobutton4;
   GSList    * group_game_size_group = NULL;
-  GtkWidget * hbox2;
+  GtkWidget * hbox;
   GtkWidget * radiobutton2;
   GtkObject * spinbutton1_adj;
   GtkWidget * spinbutton1;
 
+  GtkWidget * frame;
+  GtkWidget * image;
+  GdkPixbuf * pixbuf;
 
   //--title
   label = gtk_label_new (NULL);
   gtk_label_set_markup (GTK_LABEL (label), "<big><b>New Game</b></big>");
 
-  title = label;
-  
+  //image
+  pixbuf = gpe_find_icon ("this_app_icon");
+  image = gtk_image_new_from_pixbuf(pixbuf);
+  frame = gtk_frame_new (NULL);
+  gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_ETCHED_IN);
+  gtk_container_add (GTK_CONTAINER (frame), image);
+
+  //packing
+  hbox = gtk_hbox_new (FALSE, 20);
+  gtk_box_pack_start (GTK_BOX (hbox), frame, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
+
+  title = hbox;
+
+
   //--size choice
-  vbox = gtk_vbox_new (FALSE, 0);
+  vbox = gtk_vbox_new (FALSE, 5);
 
   label = gtk_label_new (NULL);
-  gtk_label_set_markup (GTK_LABEL (label), "<b>Size</b>");
+  gtk_label_set_markup (GTK_LABEL (label), "<b>Game Size</b>");
+  gtk_misc_set_alignment(GTK_MISC(label), 0, 0);
   gtk_box_pack_start (GTK_BOX (vbox), label, TRUE, TRUE, 0);
 
   radiobutton1 = gtk_radio_button_new_with_label (group_game_size_group, "9");
@@ -1351,12 +1368,12 @@ GtkWidget * build_new_game_dialog(){
   g_signal_connect (G_OBJECT (radiobutton4), "clicked",
                       G_CALLBACK (on_radiobutton_size_clicked), GINT_TO_POINTER(19));
 
-  hbox2 = gtk_hbox_new (FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), hbox2, FALSE, FALSE, 0);
+  hbox = gtk_hbox_new (FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
 
   radiobutton2 = gtk_radio_button_new_with_label (group_game_size_group, "");
   group_game_size_group = gtk_radio_button_group (GTK_RADIO_BUTTON (radiobutton2));
-  gtk_box_pack_start (GTK_BOX (hbox2), radiobutton2, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox), radiobutton2, FALSE, FALSE, 0);
   g_signal_connect (G_OBJECT (radiobutton2), "clicked",
                       G_CALLBACK (on_radiobutton_size_clicked), NULL);
 
@@ -1365,7 +1382,7 @@ GtkWidget * build_new_game_dialog(){
   g_signal_connect (G_OBJECT (spinbutton1), "value-changed",
                       G_CALLBACK (on_spinbutton_value_changed), radiobutton2);
 
-  gtk_box_pack_start (GTK_BOX (hbox2), spinbutton1, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox), spinbutton1, FALSE, FALSE, 0);
 
   //default
   go.selected_game_size = 19;
