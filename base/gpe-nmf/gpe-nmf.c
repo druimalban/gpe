@@ -229,9 +229,6 @@ main (int argc, char *argv[])
 
   gtk_widget_show (window);
 
-  playlist_add ("/mnt/ramfs/Vegas.mp3");
-  on_Start_clicked ();
-
   gtk_main ();
 
   exit (0);

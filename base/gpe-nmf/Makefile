@@ -3,7 +3,7 @@ PACKAGE = gpe-nmf
 #DEBUG = yes
 CVSBUILD = yes
 
-MEMBERS = gpe-nmf playlist io_madplay io_vorbis plugin_input callbacks
+MEMBERS = gpe-nmf
 
 CFLAGS = `gtk-config --cflags` `gdk-pixbuf-config --cflags` -D_GNU_SOURCE -Wall
 ifeq ($(DEBUG),yes)
