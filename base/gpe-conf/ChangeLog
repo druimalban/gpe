@@ -1,5 +1,8 @@
 2005-03-15	Florian Boor  	<florian.boor@kernelconcepts.de>
 
+	* keys.c: Implemented restarting of kbdd. 
+	* keyctl.c: Fixed some minor bugs, implemented removing of definitions.
+	* key-commands: Added definition for "no command".
 	* network.c: Removed possebility to remove global tab.
 	             Minor GUI layout fixes.
 

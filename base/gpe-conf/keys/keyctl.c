@@ -115,6 +115,12 @@ commands_load(void)
 				commands[NUM_COMMANDS].command = vals[1];
 				NUM_COMMANDS++;
 			}
+			else if (cnt == 1)
+			{
+				commands[NUM_COMMANDS].title = vals[0];
+				commands[NUM_COMMANDS].command = "";
+				NUM_COMMANDS++;
+			}
 			else
 			{
 				if (vals)
@@ -333,34 +339,16 @@ on_edit_changed (GtkWidget * edit, gpointer user_data)
 }
 
 
-void
-on_defaults_clicked (GtkButton * button, gpointer user_data)
-{
-	if (gpe_question_ask(_("Reset button config to default?"), 
-		                 _("Question"), "question",
-	                     "!gtk-no", NULL, "!gtk-yes", NULL, NULL))
-	{
-#warning todo, reread from /etc		
-/*		gtk_widget_grab_focus(self.button[0]);
-		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.button[0]), TRUE);
-		buttondef[0].command = g_strdup("gpe-soundbite record --autogenerate-filename $HOME_VOLATILE");
-    	buttondef[1].command = g_strdup("gpe-calendar");
-		buttondef[2].command = g_strdup("gpe-contacts");
-		buttondef[3].command = g_strdup("gpe-taskmanager");
-		buttondef[4].command = g_strdup("mbcontrol -desktop");
-*/		
-		gtk_entry_set_text(GTK_ENTRY(self.edit), buttondefs[0].command);
-	}
-}
-
 void 
 on_menu_select (GtkOptionMenu *menu,  gpointer user_data)
 {
 	int pos = gtk_option_menu_get_history(menu);
 	
 	menuselect = TRUE;	
-	if (pos)
-		gtk_entry_set_text(GTK_ENTRY(self.edit), commands[pos].command);	
+	if ((pos > 0) && (commands[pos].command))
+		gtk_entry_set_text(GTK_ENTRY(self.edit), commands[pos].command);
+	else
+		gtk_entry_set_text(GTK_ENTRY(self.edit), "");			
 	menuselect = FALSE;	
 }
 
@@ -370,7 +358,6 @@ Keyctl_Build_Objects ()
 {
 	GtkWidget *vbox = gtk_vbox_new(FALSE, 0);
 	GtkWidget *layout1 = gtk_layout_new(NULL, NULL);
-	GtkWidget *bDefault = gtk_button_new_with_label(_("Defaults"));
 	GtkWidget *scroll =	gtk_scrolled_window_new(NULL, NULL);
 	GtkWidget *bFile = gtk_button_new_from_stock(GTK_STOCK_OPEN);
 	GtkWidget *table = gtk_table_new(3, 2, FALSE);
@@ -431,12 +418,8 @@ Keyctl_Build_Objects ()
 		                        G_CALLBACK(on_button_select),(void *)i);
 	}	
 	
-	gtk_layout_put (GTK_LAYOUT (layout1), bDefault, 180, 3);
-
 	g_signal_connect_after (G_OBJECT (bFile), "clicked",
 				   G_CALLBACK(on_button_clicked), bFile);
-	g_signal_connect(G_OBJECT(bDefault), "clicked",
-	                 G_CALLBACK(on_defaults_clicked), NULL);
 	g_signal_connect(G_OBJECT(self.select), "changed",
 	                 G_CALLBACK(on_menu_select), NULL);
 	g_signal_connect_after(G_OBJECT(self.edit), "changed",
@@ -458,10 +441,10 @@ Keyctl_Build_Objects ()
 
 void Keyctl_Free_Objects ();
 
+/* save new config, force keyctl to reload, and exit */
 void
 Keyctl_Save ()
 {
-	/* save new config, force keyctl to reload, and exit */
 	int i,j;
 	FILE *fd;
 	char *cont = NULL;
@@ -479,10 +462,10 @@ Keyctl_Save ()
 	if (getuid())
 	{
 		keylaunchrc =
-			g_strdup_printf ("%s/.keylaunchrc", getenv ("HOME"));
-		if (access(keylaunchrc,F_OK))
+			g_strdup_printf ("%s/.keylaunchrc", g_get_home_dir());
+		if (access(keylaunchrc, F_OK))
 		{
-			cont = g_strdup_printf("/bin/cp /etc/keylaunchrc %s",keylaunchrc);
+			cont = g_strdup_printf("/bin/cp /etc/keylaunchrc %s", keylaunchrc);
 			system(cont);
 			g_free(cont);
 			cont = NULL;
@@ -501,22 +484,25 @@ Keyctl_Save ()
 	{
 		for (i=0; i<NUM_BUTTONS; i++)
 		{
-			if (strlen(cfglines[j]) && (cfglines[j][0] !='#') && 
+			if (cfglines[j] && strlen(cfglines[j]) && (cfglines[j][0] !='#') && 
 				strstr(cfglines[j], buttondefs[i].key) &&
 				!strstr(cfglines[j], "???Held") &&
 				!strstr(cfglines[j], "???Combine"))
 			{
 				g_free(cfglines[j]);
-				cfglines[j] = 
-					g_strdup_printf("key=%s %s:-:%s", buttondefs[i].modificator,
-					                buttondefs[i].key, buttondefs[i].command);
+				if ((buttondefs[i].command && strlen(buttondefs[i].command)))
+					cfglines[j] = 
+						g_strdup_printf("key=%s %s:-:%s", buttondefs[i].modificator,
+					    	            buttondefs[i].key, buttondefs[i].command);
+				else
+					cfglines[j] = NULL;
 				buttondefs[i].type = 0xff;
 			}
 		}
 		j++;	
 	}
 	
-	for (i=0;i<NUM_BUTTONS;i++)
+	for (i=0; i<NUM_BUTTONS; i++)
 	{
 		if (buttondefs[i].type != 0xff)
 		{

@@ -54,6 +54,7 @@
 
 #define DEFAULT_TTS "/dev/ttyS0"
 #define KBDD_CONFIG "/etc/kbdd.conf"
+#define KBDD_CMD PREFIX "/bin/kbdd"
 
 typedef struct
 {
@@ -181,11 +182,15 @@ keyboard_selected(GtkToggleButton *tb, gpointer data)
 		keyboard_type = keyboard;
 }
 
+/* this is run suid root apply the settings */
 void
 keyboard_save(char *type, char *port)
 {
 	change_cfg_value (KBDD_CONFIG, "type:", type, ' ');
 	change_cfg_value (KBDD_CONFIG, "port:", port, ' ');
+/* not nice, but kbdd doesn't have another mechanism */
+	system("killall kbdd");
+	runProg(KBDD_CMD);
 }
 
 /* --- gpe-conf interface --- */

@@ -4,6 +4,7 @@
 # Format is cmd<nr> = <title>;<command>
 
 [Commands]
+cmd0 = Nothing
 cmd1 = Record Memo;gpe-soundbite record --autogenerate-filename $HOME_VOLATILE
 cmd2 = Calendar;gpe-calendar
 cmd3 = Contacts;gpe-contacts
