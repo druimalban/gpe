@@ -120,6 +120,32 @@ gpe_launch_get_window_for_binary (Display *dpy, const gchar *binary)
   return None;
 }
 
+gchar *
+gpe_launch_get_binary_for_window (Display *dpy, Window w)
+{
+  GSList *l;
+  struct sn_display_map *map;
+
+  for (l = sn_display_list; l; l = l->next)
+    {
+      map = l->data;
+      if (map->dpy == dpy)
+	break;
+    }
+
+  if (l == NULL)
+    return NULL;
+
+  for (l = map->client_map; l; l = l->next)
+    {
+      struct client_map *c = l->data;
+      if (c->window == w)
+	return c->binary;
+    }
+  
+  return NULL;
+}
+
 static void
 read_client_map (struct sn_display_map *map)
 {

@@ -12,6 +12,6 @@ extern void gpe_launch_install_filter (void);
 
 extern gboolean gpe_launch_startup_is_pending (Display *dpy, const gchar *binary);
 extern Window gpe_launch_get_window_for_binary (Display *dpy, const gchar *binary);
+extern gchar *gpe_launch_get_binary_for_window (Display *dpy, Window w);
 extern void gpe_launch_monitor_display (Display *dpy);
-
 
