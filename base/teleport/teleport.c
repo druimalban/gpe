@@ -83,18 +83,26 @@ struct gpe_icon my_icons[] =
     { NULL }
   };
 
-static void
+static gboolean
 send_message (Display *dpy, Window w, char *host, gchar *method, gchar *data)
 {
   gchar *buf = g_strdup_printf ("%s %s %s", host, method, data);
+  gboolean rc = TRUE;
+
+  gdk_error_trap_push ();
   
   XChangeProperty (dpy, w, migrate_atom, string_atom, 8, PropModeReplace, buf, strlen (buf));
   XFlush (dpy);
 
+  if (gdk_error_trap_pop ())
+    rc = FALSE;
+
   g_free (buf);
+
+  return rc;
 }
 
-static void
+static gboolean
 migrate_to (Display *dpy, Window w, char *host, int display, int screen)
 {
   gchar *auth = "NONE";
@@ -104,6 +112,7 @@ migrate_to (Display *dpy, Window w, char *host, int display, int screen)
   unsigned long nitems, bytes_after;
   unsigned char *prop = NULL;
   gchar *target;
+  gboolean rc = TRUE;
 
   target = g_strdup_printf ("%s:%d.%d", host, display, screen);
 
@@ -118,19 +127,22 @@ migrate_to (Display *dpy, Window w, char *host, int display, int screen)
 	  g_free (target);
 	  if (prop)
 	    XFree (prop);
-	  return;
+	  return FALSE;
 	}
     }
 
   if (prop)
     XFree (prop);
 
-  send_message (dpy, w, target, auth, data ? data : "");
+  if (send_message (dpy, w, target, auth, data ? data : "") == FALSE)
+    rc = FALSE;
 
   g_free (target);
 
   if (data)
     g_free (data);
+
+  return rc;
 }
 
 static gboolean
@@ -149,7 +161,8 @@ can_migrate (Display *dpy, Window w)
 			   &actual_type, &actual_format,
 			   &nitems, &bytes_after, &prop);
 
-  gdk_error_trap_pop ();
+  if (gdk_error_trap_pop ())
+    return FALSE;
 
   if (rc != Success)
     return FALSE;
@@ -257,8 +270,12 @@ go_callback (GtkWidget *button, GtkWidget *the_combo)
 
   active_client = selected_client;
 
-  migrate_to (selected_client->dpy, selected_client->w,
-	      host, display_nr, screen_nr);
+  if (migrate_to (selected_client->dpy, selected_client->w,
+		  host, display_nr, screen_nr) == FALSE)
+    {
+      gpe_error_box (_("Unable to send migration request"));
+      active_client = NULL;
+    }
 }
 
 void
