@@ -1,3 +1,7 @@
+2004-08-10  Florian Boor <florian.boor@kernelconcepts.de>
+
+    * main.c: Typing opens "new event" dialog now.
+
 2004-08-08  Florian Boor <florian.boor@kernelconcepts.de>
 
 	* main.c: Implemented vcard import via command line switch "-i <file>"

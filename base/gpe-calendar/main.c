@@ -14,8 +14,10 @@
 #include <unistd.h>
 #include <getopt.h>
 #include <string.h>
+#include <ctype.h>
 
 #include <gtk/gtk.h>
+#include <gdk/gdkkeysyms.h>
 #include <libintl.h>
 
 #include <gpe/init.h>
@@ -297,6 +299,18 @@ notebook_switch_page (GtkNotebook *notebook,
   set_time_all_views();
 }
 
+
+static gboolean
+main_window_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *data)
+{
+  if (k->string && isalpha(k->string[0]))
+    {
+        new_appointment();
+        return TRUE;
+    }
+  return FALSE;
+}
+
 int
 main (int argc, char *argv[])
 {
@@ -484,6 +498,9 @@ main (int argc, char *argv[])
 
   g_signal_connect(G_OBJECT(notebook),"switch-page",
                    G_CALLBACK(notebook_switch_page),NULL);
+  g_signal_connect (G_OBJECT (main_window), "key_press_event", 
+		    G_CALLBACK (main_window_key_press_event), NULL);
+  gtk_widget_add_events (GTK_WIDGET (main_window), GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK);
 
   gtk_widget_show (notebook);
 
