@@ -2,6 +2,7 @@ Package: gpe-clock
 Section: base
 Priority: optional
 Version: VERSION
+Source: SOURCE
 Architecture: arm
 Maintainer: Phil Blundell <pb@debian.org>
 Depends: libgpewidget1 (>= 0.57), libschedule0

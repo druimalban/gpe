@@ -433,6 +433,8 @@ alarm_window (void)
   GtkWidget *date_hbox;
   GtkWidget *time_hbox;
   GtkWidget *weeklytable;
+  GtkWidget *scrolled_window;
+  GtkWidget *scrolled_vbox;
   int spacing;
   GSList *radiogroup;
   int i;
@@ -452,6 +454,14 @@ alarm_window (void)
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (ctx->window)->vbox), ctx->active_button, FALSE, FALSE, 0);
   g_signal_connect (G_OBJECT (ctx->active_button), "toggled", G_CALLBACK (button_toggled), ctx);
 
+  scrolled_vbox = gtk_vbox_new (FALSE, 0);
+  scrolled_window = gtk_scrolled_window_new (NULL, NULL);
+  gtk_scrolled_window_set_policy (scrolled_window, GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+  gtk_container_set_border_relief (GTK_CONTAINER (scrolled_window), GTK_RELIEF_NONE);
+
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (ctx->window)->vbox), scrolled_window, TRUE, TRUE, 0);
+  gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolled_window), scrolled_vbox);
+
   ctx->date_button = gtk_radio_button_new_with_label (NULL, _("Date:"));
   radiogroup = gtk_radio_button_group (GTK_RADIO_BUTTON (ctx->date_button));
   ctx->days_button = gtk_radio_button_new_with_label (radiogroup, _("Weekly, on:"));
@@ -467,9 +477,9 @@ alarm_window (void)
   gtk_box_pack_start (GTK_BOX (time_hbox), time_label, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (time_hbox), ctx->time_sel, TRUE, TRUE, 0);
 
-  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (ctx->window)->vbox), time_hbox, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (ctx->window)->vbox), date_hbox, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (ctx->window)->vbox), ctx->days_button, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (scrolled_vbox), time_hbox, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (scrolled_vbox), date_hbox, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (scrolled_vbox), ctx->days_button, FALSE, FALSE, 0);
 
   weeklytable = gtk_table_new (2, 4, FALSE);
   for (i = 0; i < 4; i++)
@@ -485,7 +495,7 @@ alarm_window (void)
       ctx->day_button[i] = b;
     }
   
-  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (ctx->window)->vbox), weeklytable, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (scrolled_vbox), weeklytable, FALSE, FALSE, 0);
 
   load_alarm_details ();
 
