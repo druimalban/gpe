@@ -1,6 +1,6 @@
 <layout>
   <page>
-    <label>Contact</label>
+    <label>Work Info</label>
       <single-item>
         <tag>NAME</tag>
         <label>Name:</label>
@@ -10,6 +10,10 @@
         <single-item>
           <tag>COMPANY</tag>
           <label>Company:</label>
+        </single-item>
+        <single-item>
+          <tag>WORK.TITLE</tag>
+          <label>Job Title:</label>
         </single-item>
         <single-item>
           <tag>WORK.TELEPHONE</tag>
@@ -36,8 +40,9 @@
           <label>Address</label>
         </multi-item>
       </group>
-      <group>
-        <label>Home</label>
+    </page>  
+    <page>
+      <label>Personal info</label>
         <single-item>
           <tag>HOME.TELEPHONE</tag>
           <label>Phone:</label>
@@ -62,10 +67,9 @@
           <tag>HOME.ADDRESS</tag>
           <label>Address</label>
         </multi-item>
-      </group>
   </page>
   <page>
-    <label>About</label>
+    <label>Other</label>
     <date-item>
       <tag>BIRTHDAY</tag>
       <label>Birthday:</label>
@@ -86,7 +90,11 @@
       </single-item>
       <single-item>
         <tag>GIVEN_NAME</tag>
-        <label>Given name</label>
+        <label>First name</label>
+      </single-item>
+      <single-item>
+        <tag>MIDDLE_NAME</tag>
+        <label>Middle name</label>
       </single-item>
       <single-item>
         <tag>FAMILY_NAME</tag>

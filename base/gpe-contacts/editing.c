@@ -341,7 +341,6 @@ create_edit (void)
       gtk_container_add (GTK_CONTAINER (edit), vbox);
     }
   
-  gtk_window_set_title (GTK_WINDOW (edit), _("Edit Contact"));
   gpe_set_window_icon (edit, "icon");
 
   notebook2 = gtk_notebook_new ();
@@ -510,11 +509,16 @@ update_categories_list (GtkWidget *ui, GSList *selected, GtkWidget *edit)
 }
 
 void
-edit_person (struct person *p)
+edit_person (struct person *p, gboolean isnew)
 {
   GtkWidget *catlabel, *w = edit_window ();
   gchar *str;
   
+  if (isnew)
+    gtk_window_set_title (GTK_WINDOW (w), _("New Contact"));
+  else
+    gtk_window_set_title (GTK_WINDOW (w), _("Edit Contact"));
+      
   if (p)
     {
       GSList *tags = gtk_object_get_data (GTK_OBJECT (w), "tag-widgets");
@@ -590,7 +594,7 @@ update_edit (struct person *p, GtkWidget *w)
   GtkWidget *nameentry[5];
   int namenum = 0;
   int i;
-  gchar *n1 = NULL, *n2 = NULL, *n3 = NULL, *n4 = NULL;
+  gchar *n1 = NULL, *n2 = NULL, *n3 = NULL, *n4 = NULL, *n5 = NULL;
   if (p)
     {
       GSList *tags = gtk_object_get_data (GTK_OBJECT (w), "tag-widgets");
@@ -608,10 +612,12 @@ update_edit (struct person *p, GtkWidget *w)
                 n1 = v->value;
               if (!strcmp(v->tag,"GIVEN_NAME"))
                 n2 = v->value;
-              if (!strcmp(v->tag,"FAMILY_NAME"))
+              if (!strcmp(v->tag,"MIDDLE_NAME"))
                 n3 = v->value;
-              if (!strcmp(v->tag,"HONORIFIC_SUFFIX"))
+              if (!strcmp(v->tag,"FAMILY_NAME"))
                 n4 = v->value;
+              if (!strcmp(v->tag,"HONORIFIC_SUFFIX"))
+                n5 = v->value;
               if (!strcmp(v->tag,"NAME"))
               {
                 nameentry[namenum] = w;
@@ -677,6 +683,12 @@ update_edit (struct person *p, GtkWidget *w)
       if (n4) 
         {
           n1 = g_strdup_printf("%s %s",ts,n4);
+          g_free(ts);
+          ts = n1;
+        }
+      if (n5) 
+        {
+          n1 = g_strdup_printf("%s %s",ts,n5);
           g_free(ts);
           ts = n1;
         }

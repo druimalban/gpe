@@ -28,8 +28,8 @@
 gboolean
 do_edit_name_detail(GtkWindow *parent, struct person *p)
 {
-  GtkWidget *dialog, *lgiven, *lfamily, *lsuffix, *ltitle;
-  GtkWidget *table, *egiven, *efamily, *esuffix, *etitle;
+  GtkWidget *dialog, *lgiven, *lfamily, *lsuffix, *ltitle, *lmiddle;
+  GtkWidget *table, *egiven, *efamily, *esuffix, *etitle, *emiddle;
   GtkWidget *btnOK;
   
   struct tag_value *v;
@@ -48,17 +48,20 @@ do_edit_name_detail(GtkWindow *parent, struct person *p)
   /* supply action area */
   
   egiven = gtk_entry_new();
+  emiddle = gtk_entry_new();
   efamily = gtk_entry_new();
   esuffix = gtk_entry_new();
   etitle = gtk_entry_new();
   
-  lgiven = gtk_label_new(_("Given name:"));
+  lgiven = gtk_label_new(_("First name:"));
+  lmiddle = gtk_label_new(_("Middle name:"));
   lfamily = gtk_label_new(_("Family name:"));
   lsuffix = gtk_label_new(_("Suffix:"));
   ltitle = gtk_label_new(_("Title:"));
   
   gtk_misc_set_alignment(GTK_MISC(lgiven),1,0.5);
   gtk_misc_set_alignment(GTK_MISC(lfamily),1,0.5);
+  gtk_misc_set_alignment(GTK_MISC(lmiddle),1,0.5);
   gtk_misc_set_alignment(GTK_MISC(lsuffix),1,0.5);
   gtk_misc_set_alignment(GTK_MISC(ltitle),1,0.5);
   
@@ -69,8 +72,9 @@ do_edit_name_detail(GtkWindow *parent, struct person *p)
   
   gtk_table_attach(GTK_TABLE(table),ltitle,0,1,0,1,GTK_FILL,GTK_FILL,0,0);
   gtk_table_attach(GTK_TABLE(table),lgiven,0,1,1,2,GTK_FILL,GTK_FILL,0,0);
-  gtk_table_attach(GTK_TABLE(table),lfamily,0,1,2,3,GTK_FILL,GTK_FILL,0,0);
-  gtk_table_attach(GTK_TABLE(table),lsuffix,0,1,3,4,GTK_FILL,GTK_FILL,0,0);
+  gtk_table_attach(GTK_TABLE(table),lmiddle,0,1,2,3,GTK_FILL,GTK_FILL,0,0);
+  gtk_table_attach(GTK_TABLE(table),lfamily,0,1,3,4,GTK_FILL,GTK_FILL,0,0);
+  gtk_table_attach(GTK_TABLE(table),lsuffix,0,1,4,5,GTK_FILL,GTK_FILL,0,0);
   
   gtk_table_attach(GTK_TABLE(table),etitle,1,2,0,1,GTK_FILL | GTK_EXPAND,
                    GTK_FILL,0,0);
@@ -78,7 +82,9 @@ do_edit_name_detail(GtkWindow *parent, struct person *p)
                    GTK_FILL,0,0);
   gtk_table_attach(GTK_TABLE(table),efamily,1,2,2,3,GTK_FILL | GTK_EXPAND,
                    GTK_FILL,0,0);
-  gtk_table_attach(GTK_TABLE(table),esuffix,1,2,3,4,GTK_FILL | GTK_EXPAND,
+  gtk_table_attach(GTK_TABLE(table),efamily,1,2,3,4,GTK_FILL | GTK_EXPAND,
+                   GTK_FILL,0,0);
+  gtk_table_attach(GTK_TABLE(table),esuffix,1,2,4,5,GTK_FILL | GTK_EXPAND,
                    GTK_FILL,0,0);
 
   /* fill in values */
@@ -86,6 +92,8 @@ do_edit_name_detail(GtkWindow *parent, struct person *p)
   if (v) gtk_entry_set_text(GTK_ENTRY(etitle),v->value);
   v = db_find_tag(p,"GIVEN_NAME");
   if (v) gtk_entry_set_text(GTK_ENTRY(egiven),v->value);
+  v = db_find_tag(p,"MIDDLE_NAME");
+  if (v) gtk_entry_set_text(GTK_ENTRY(emiddle),v->value);
   v = db_find_tag(p,"FAMILY_NAME");
   if (v) gtk_entry_set_text(GTK_ENTRY(efamily),v->value);
   v = db_find_tag(p,"HONORIFIC_SUFFIX");
@@ -99,6 +107,7 @@ do_edit_name_detail(GtkWindow *parent, struct person *p)
     /* save values */
     db_set_data(p, "TITLE", g_strdup(gtk_entry_get_text(GTK_ENTRY(etitle))));
     db_set_data(p, "GIVEN_NAME", g_strdup(gtk_entry_get_text(GTK_ENTRY(egiven))));
+    db_set_data(p, "MIDDLE_NAME", g_strdup(gtk_entry_get_text(GTK_ENTRY(emiddle))));
     db_set_data(p, "FAMILY_NAME", g_strdup(gtk_entry_get_text(GTK_ENTRY(efamily))));
     db_set_data(p, "HONORIFIC_SUFFIX", g_strdup(gtk_entry_get_text(GTK_ENTRY(esuffix))));
     db_set_data(p, "NAME", g_strdup(""));

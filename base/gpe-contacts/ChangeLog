@@ -1,3 +1,12 @@
+2004-09-14  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * editing.c, main.c: Added parameter to edit_person() to set different 
+                         window titles if editing or adding a contact.
+    * Makefile: Version update.
+    * namedetail.c, editing.c: Added middle name.
+    * *.xml: Some reordering and new fields.
+    * Removed contacts-tab.conf.de, it is not used anymore.
+    
 2004-09-04  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * namedetail.c: Changed packing.

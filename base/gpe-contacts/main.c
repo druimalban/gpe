@@ -72,7 +72,7 @@ menu_do_edit (void)
 {
   struct person *p;
   p = db_get_by_uid (menu_uid);
-  edit_person (p);
+  edit_person (p, FALSE);
 }
 
 static void
@@ -146,7 +146,7 @@ new_contact (GtkWidget * widget, gpointer d)
 {
   struct person *p;
   p = new_person ();
-  edit_person (p);
+  edit_person (p, TRUE);
 }
 
 static void
@@ -162,7 +162,7 @@ edit_contact (GtkWidget * widget, gpointer d)
       struct person *p;
       gtk_tree_model_get (GTK_TREE_MODEL (model), &iter, 1, &uid, -1);
       p = db_get_by_uid (uid);
-      edit_person (p);
+      edit_person (p, FALSE);
     }
 }
 

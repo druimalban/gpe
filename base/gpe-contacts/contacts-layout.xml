@@ -66,7 +66,7 @@
       </multi-item>
   </page>
    <page>
-    <label>About</label>
+    <label>Other</label>
     <date-item>
       <tag>BIRTHDAY</tag>
       <label>Birthday</label>
@@ -89,7 +89,11 @@
       </single-item>
       <single-item>
         <tag>GIVEN_NAME</tag>
-        <label>Given name</label>
+        <label>First name</label>
+      </single-item>
+      <single-item>
+        <tag>MIDDLE_NAME</tag>
+        <label>Middle name</label>
       </single-item>
       <single-item>
         <tag>FAMILY_NAME</tag>
