@@ -1,3 +1,8 @@
+2003-02-20  Philip Blundell  <pb@nexus.co.uk>
+
+	* po/de.po: New file from Translation Project.
+	* Makefile (LINGUAS): Add de.
+
 2003-02-19  Colin Marquardt  <colin@marquardt-home.de>
 
 	* spacing.c: Add link in comment. Change license to LGPL.
