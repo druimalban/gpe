@@ -50,7 +50,8 @@ filter_func (GdkXEvent *xev, GdkEvent *ev, gpointer p)
 	  && y >= widget->allocation.y && y < widget->allocation.y + widget->allocation.height)
 	{
 	  GtkTooltipsData *data = gtk_tooltips_data_get (widget);
-	  send_text (GDK_WINDOW_XDISPLAY (widget->window), sender, data->tip_text);
+	  send_text (GDK_WINDOW_XDISPLAY (widget->window), sender, 
+		     data->tip_private ? data->tip_private : data->tip_text);
 	  return GDK_FILTER_CONTINUE;
 	}
     }
@@ -77,21 +78,6 @@ gpe_what_mark_widget (GtkWidget *widget)
     }
   else
     g_signal_connect_after (widget, "realize", G_CALLBACK (gpe_what_mark_widget), NULL);
-}
-
-void
-gpe_what_handle_event (GdkEvent *event, GtkWidget *widget)
-{
-  fprintf (stderr, "handling event\n");
-
-  if (event->client.message_type == help_atom)
-    {
-      GtkTooltipsData *tooltipsdata;
-
-      tooltipsdata = gtk_tooltips_data_get (widget);
-
-      printf ("%s\n", tooltipsdata->tip_text);
-    }
 }
 
 void
