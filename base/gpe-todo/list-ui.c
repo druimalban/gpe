@@ -105,7 +105,7 @@ delete_completed_items (GtkWidget *w, gpointer user_data)
   dialog = gtk_message_dialog_new (GTK_WINDOW (window),
                                    GTK_DIALOG_MODAL 
                                    | GTK_DIALOG_DESTROY_WITH_PARENT,
-                                   GTK_MESSAGE_ERROR, GTK_BUTTONS_YES_NO,
+                                   GTK_MESSAGE_QUESTION, GTK_BUTTONS_YES_NO,
                                    "Delete completed items?");
 
   if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_YES)
@@ -226,6 +226,30 @@ sort_by_priority (gconstpointer a, gconstpointer b)
   return ib->priority - ia->priority;
 }
 
+int
+sort_more_complex (gconstpointer a, gconstpointer b)
+{
+  struct todo_item *ia, *ib;
+
+  ia = (struct todo_item *)a;
+  ib = (struct todo_item *)b;
+
+  /* both due date: sort by date */
+  if (ia->time && ib->time)
+    {
+      if (ia->time != ib->time)
+        return ((ia->time - ib->time ) > 0 ? 1 : -1);
+    }
+    
+  /* only one due date */  
+  if (ia->time != ib->time)
+     return ((ib->time - ia->time) > 0 ? 1 : -1);
+
+  /* no due date: sort by priority */  
+    
+  return ib->priority - ia->priority;
+}
+
 void
 refresh_items (void)
 {
@@ -236,7 +260,7 @@ refresh_items (void)
 
   list = g_slist_copy (todo_db_get_items_list ());
 
-  list = g_slist_sort (list, sort_by_priority);
+  list = g_slist_sort (list, sort_more_complex);
 
   for (iter = list; iter; iter = iter->next)
     {

@@ -1,3 +1,8 @@
+2004-09-21  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * list-ui.c (delete_completed_items): Changed type of dialog from 
+                                          "error" to "question".
+    * list-ui.c (sort_more_complex): New function providing improved sorting.
 
 2004-09-15  Florian Boor  <florian.boor@kernelconcepts.de>
 
