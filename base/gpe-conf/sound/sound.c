@@ -55,6 +55,7 @@ struct gpe_icon mixer_icons[] =
 	{ "pcm2" , PREFIX "/share/gpe-mixer/pcm.png"},
 	{ "mic" , PREFIX "/share/gpe-mixer/mic.png"},
 	{ "unkn" , PREFIX "/share/gpe-mixer/unkn.png"},
+	{ "alarm" , "bell" },
 	{NULL, NULL}
 };
 
@@ -93,10 +94,21 @@ do_change_alarm(GtkRange *range, gpointer data)
 
 
 static void
+on_auto_toggled(GtkToggleButton *tb, gpointer userdata)
+{
+	int alarm_auto = gtk_toggle_button_get_active(tb);
+	gtk_widget_set_sensitive(self.slAlarm, 
+	                         !alarm_auto && get_alarm_enabled());
+	set_alarm_automatic(alarm_auto);
+}
+
+
+static void
 on_alarm_toggled(GtkToggleButton *tb, gpointer userdata)
 {
 	int alarm_enable = gtk_toggle_button_get_active(tb);
-	gtk_widget_set_sensitive(self.slAlarm, alarm_enable);
+	gtk_widget_set_sensitive(self.slAlarm, 
+	                         alarm_enable && !get_alarm_automatic());
 	set_alarm_enabled(alarm_enable);
 }
 
@@ -253,9 +265,16 @@ Sound_Build_Objects (void)
 	g_signal_connect_after(G_OBJECT(tw), "toggled", 
 	                       G_CALLBACK(on_alarm_toggled), NULL);
 	
+	tw = gtk_check_button_new_with_label(_("Automatic Volume"));
+	gtk_table_attach(GTK_TABLE(table), tw, 0, 3, i + 5, i + 6, 
+	                 GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(tw), get_alarm_automatic());
+	g_signal_connect_after(G_OBJECT(tw), "toggled", 
+	                       G_CALLBACK(on_auto_toggled), NULL);
+						   
 	slider = gtk_hscale_new_with_range(0.0, 100.0, 1.0);
 	self.slAlarm = slider;
-	gtk_widget_set_sensitive(slider, get_alarm_enabled());
+	gtk_widget_set_sensitive(slider, get_alarm_enabled() && !get_alarm_automatic());
 	label  = gtk_label_new(_("Volume"));
 	
 	pbuf = gpe_try_find_icon ("alarm", &err);
@@ -270,11 +289,11 @@ Sound_Build_Objects (void)
 	g_signal_connect (G_OBJECT(slider), "value-changed",
 	                  G_CALLBACK (do_change_alarm), NULL);
 	
-	gtk_table_attach(GTK_TABLE(table), image, 0, 1, i + 5, i + 6, 
+	gtk_table_attach(GTK_TABLE(table), image, 0, 1, i + 6, i + 7, 
 	                 GTK_FILL, GTK_FILL, 0, 0);
-	gtk_table_attach(GTK_TABLE(table), label, 1, 2, i + 5, i + 6, 
+	gtk_table_attach(GTK_TABLE(table), label, 1, 2, i + 6, i + 7, 
 	                 GTK_FILL, GTK_FILL, 0, 0);
-	gtk_table_attach(GTK_TABLE(table), slider, 2, 3, i + 5, i + 6, 
+	gtk_table_attach(GTK_TABLE(table), slider, 2, 3, i + 6, i + 7, 
 	                 GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
 	
 	g_timeout_add(1000, (GSourceFunc)timeout_callback, NULL);

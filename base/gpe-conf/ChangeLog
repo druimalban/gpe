@@ -1,5 +1,7 @@
 2004-10-07	Florian Boor  	<florian.boor@kernelconcepts.de>
 
+	* sound/sound.c, alarmctl*: Switch for automatic volume setting.
+	                            Added icon for alarm volume slider.
 	* sound/sound.c, alarmctl*: Implemented alarm settings.
 	* sound/alarmctl.[c/h]: New files implementing alarm settings interface.
 	* Makefile: Version number, added new module.

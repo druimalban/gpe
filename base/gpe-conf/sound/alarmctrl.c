@@ -23,8 +23,10 @@
 
 static const char *FILE_SETTINGS = NULL;
 static int enabled = 1;
+static int automatic = 1;
 static int level = 80;
 static int old_enabled;
+static int old_automatic;
 static int old_level;
 
 
@@ -50,6 +52,7 @@ alarm_save_settings(void)
 		fprintf(cfgfile, 
 		        "# alarm settings - file created by gpe-conf\n\n");
 		fprintf(cfgfile, "enabled %d\n", enabled);
+		fprintf(cfgfile, "automatic %d\n", automatic);
 		fprintf(cfgfile, "level %d\n", level);
 		fclose(cfgfile);
 	}
@@ -72,6 +75,10 @@ alarm_load_settings(void)
 			if (ret)
 				enabled = val;
 			
+			ret = sscanf(buf, "automatic %d", &val);
+			if (ret)
+				automatic = val;
+			
 			ret = sscanf(buf, "level %d", &val);			
 			if (ret)
 			{
@@ -91,6 +98,7 @@ alarm_restore_settings(void)
 		return;
 	level = old_level;
 	enabled = old_enabled;
+	automatic = old_automatic;
 }
 
 int 
@@ -115,4 +123,16 @@ void
 set_alarm_enabled(int newenabled)
 {
 	enabled = newenabled;
+}
+
+int 
+get_alarm_automatic(void)
+{
+	return automatic;
+}
+
+void 
+set_alarm_automatic(int newauto)
+{
+	automatic = newauto;
 }

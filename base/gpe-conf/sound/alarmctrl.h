@@ -14,6 +14,8 @@ int get_alarm_level(void);
 void set_alarm_level(int newlevel);
 int get_alarm_enabled(void);
 void set_alarm_enabled(int newenabled);
+int get_alarm_automatic(void);
+void set_alarm_automatic(int newauto);
 
 void alarm_init(void);
 	
