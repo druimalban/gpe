@@ -1,3 +1,12 @@
+2004-05-03  Philip Blundell  <philb@gnu.org>
+
+	* Version 0.14 released.
+	
+2004-05-03  Philip Blundell  <philb@gnu.org>
+
+	* Makefile: Update to use PACKAGE_CFLAGS, etc.
+	(LINGUAS): Add nl, ga, ru, sr, sk, sv.
+
 2004-04-28  Florian Boor <florian.boor@kernelconcepts.de>
 
 	* Started implementing a display facility.

@@ -1,66 +1,67 @@
-# gpe-timesheet (french)
-# Copyright (C) 2003 Phil Blundell <pb@debian.org>
-# This file is distributed under GPL.
-# Luc Pionchon <luc@handhelds.org>, 2003.
+# Irish translations for gpe-timesheet.
+# Copyright (C) 2003 Free Software Foundation, Inc.
+# This file is distributed under the same license as the gpe-timesheet package.
+# Kevin Patrick Scannell <scannell@SLU.EDU>, 2003.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-timesheet 0.11\n"
 "POT-Creation-Date: 2003-02-20 20:25+0000\n"
-"PO-Revision-Date: 2004-01-25 00:24+0200\n"
-"Last-Translator: Luc Pionchon <luc@handhelds.org>\n"
-"Language-Team: French <traduc@traduc.org>\n"
+"PO-Revision-Date: 2003-04-27 12:35-0500\n"
+"Last-Translator: Kevin Patrick Scannell <scannell@SLU.EDU>\n"
+"Language-Team: Irish <ga@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: main.c:95 main.c:406 gpe-timesheet.desktop.in.h:2
 msgid "Time Tracker"
-msgstr "Pointeuse"
+msgstr "Coimhéadaí Ama"
 
 #: main.c:125
 msgid "Notes"
-msgstr "Notes"
+msgstr "Nótaí"
 
 #: main.c:138
 msgid "OK"
-msgstr "OK"
+msgstr "Ceart"
 
 #: main.c:139
 msgid "Cancel"
-msgstr "Annuler"
+msgstr "Cealaigh"
 
 #: main.c:191
 msgid "Clocking in:"
-msgstr "Décompter la tâche :"
+msgstr "Clogáil isteach:"
 
 #: main.c:210
 msgid "Clocking out:"
-msgstr "Interrompre la tâche :"
+msgstr "Clogáil amach:"
 
 #: main.c:272 main.c:359 main.c:360
 msgid "New task"
-msgstr "Nouvelle tâche"
+msgstr "Tasc nua"
 
 #: main.c:272
 msgid "Name"
-msgstr "Nom"
+msgstr "Ainm"
 
 #: main.c:365 main.c:366
 msgid "Delete task"
-msgstr "Supprimer la tâche"
+msgstr "Scrios tasc"
 
 #: main.c:371 main.c:372
 msgid "Clock on"
-msgstr "Commencer le comptage"
+msgstr "Cuir an chlog ar siúl"
 
 #: main.c:377 main.c:378
 msgid "Clock off"
-msgstr "Stopper le comptage"
+msgstr "Stop an chlog"
 
 #: main.c:383 main.c:384
 msgid "Note"
-msgstr "Note"
+msgstr "Nóta"
 
 #: gpe-timesheet.desktop.in.h:1
 msgid "GPE Timesheet"
-msgstr "GPE Pointeuse"
+msgstr "GPE Bileog Ama"

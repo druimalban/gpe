@@ -1,29 +1,13 @@
 PREFIX = /usr/local
 PACKAGE = gpe-timesheet
 CVSBUILD = yes
-VERSION = 0.13
+VERSION = 0.14
 
-#FIXME: add: nl ga ru sr sk sv
-LINGUAS = id pt zh_TW fr ro cs
+LINGUAS = id pt zh_TW fr ro cs nl ga ru sr sk sv
 
-GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
-GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
-
-ifeq ($(CVSBUILD),yes)
-CPPFLAGS += -I../libgpewidget
-LGPEWIDGET = -L../libgpewidget
-endif
-
-ifeq ($(DEBUG), yes)
-CFLAGS += -g
-LDFLAGS += -g
-endif
-
-LGPEWIDGET += -lgpewidget 
-
-CFLAGS += -MD -Wall $(GTKCFLAGS)
-
-CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
+PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS)
+PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS)
+PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS) -lsqlite
 
 MEMBERS = main sql
 
@@ -40,7 +24,7 @@ endif
 all: $(PACKAGE)
 
 $(PACKAGE): $(OBJS)
-	$(CC) -o $@ $^ $(LGPEWIDGET) $(GTKLDFLAGS) -lsqlite $(LDFLAGS)
+	$(CC) -o $@ $^ $(LDFLAGS) $(PACKAGE_LDFLAGS)
 
 install-program: all $(PACKAGE).desktop
 	mkdir -p $(DESTDIR)$(PREFIX)/bin

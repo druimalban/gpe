@@ -7,7 +7,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-02-20 20:25+0000\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2003-10-09 20:56+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,51 +16,43 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: main.c:95 main.c:406 gpe-timesheet.desktop.in.h:2
+#: main.c:105 main.c:428 gpe-timesheet.desktop.in.h:2
 msgid "Time Tracker"
 msgstr ""
 
-#: main.c:125
+#: main.c:135
 msgid "Notes"
 msgstr ""
 
-#: main.c:138
-msgid "OK"
-msgstr ""
-
-#: main.c:139
-msgid "Cancel"
-msgstr ""
-
-#: main.c:191
+#: main.c:194
 msgid "Clocking in:"
 msgstr ""
 
-#: main.c:210
+#: main.c:215
 msgid "Clocking out:"
 msgstr ""
 
-#: main.c:272 main.c:359 main.c:360
+#: main.c:279 main.c:381 main.c:382
 msgid "New task"
 msgstr ""
 
-#: main.c:272
+#: main.c:279
 msgid "Name"
 msgstr ""
 
-#: main.c:365 main.c:366
+#: main.c:386 main.c:387
 msgid "Delete task"
 msgstr ""
 
-#: main.c:371 main.c:372
+#: main.c:392 main.c:393
 msgid "Clock on"
 msgstr ""
 
-#: main.c:377 main.c:378
+#: main.c:398 main.c:399
 msgid "Clock off"
 msgstr ""
 
-#: main.c:383 main.c:384
+#: main.c:406 main.c:407
 msgid "Note"
 msgstr ""
 
