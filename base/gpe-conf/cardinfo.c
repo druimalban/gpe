@@ -32,6 +32,7 @@
 #include <sys/file.h>
 #include <stropts.h>
 #include <poll.h>
+#include <time.h>
 
 #include <pcmcia/version.h>
 #include <pcmcia/cs_types.h>
