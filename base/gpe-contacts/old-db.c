@@ -17,6 +17,8 @@
 #include <time.h>
 
 #include <gpe/pim-categories.h>
+#include <gpe/errorbox.h>
+
 #include <sqlite.h>
 
 struct map

@@ -1,3 +1,9 @@
+2004-03-08  Philip Blundell  <philb@gnu.org>
+
+	* old-db.c: Include <gpe/errorbox.h> to fix warning.
+	* Makefile (PACKAGE_CPPFLAGS, PACKAGE_CFLAGS, PACKAGE_LDFLAGS):
+	Define and use instead of CPPFLAGS, CFLAGS and LDFLAGS.
+
 2004-03-07  Moray Allan  <moray@sermisy.org>
 
 	* main.c: Use themeable names when loading application pixmaps.

@@ -9,32 +9,20 @@ DEBUG = no
 
 LINGUAS = de sv cs nl hu ro ru sr sk
 
-GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
-GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
-
 ifeq ($(CVSBUILD),yes)
 BUILD = ../build
 else
 BUILD = build
 endif
 
-ifeq ($(DEBUG),yes)
-LDFLAGS += -g
-CFLAGS += -O2 -g
-else
-CFLAGS += -Os -fomit-frame-pointer
+ifeq ($(CVSBUILD),yes)
+PACKAGE_CPPFLAGS += -I../libdisplaymigration -I../libgpepimc -I../libgpevtype
+PACKAGE_LDFLAGS += -L../libdisplaymigration -L../libgpepimc -L../libgpevtype
 endif
-
-CPPFLAGS += -D_GNU_SOURCE -DENABLE_NLS -DDBUS_API_SUBJECT_TO_CHANGE
-
-CPPFLAGS += -I../libdisplaymigration
-LDFLAGS += -L../libdisplaymigration -ldisplaymigration -L../libgpepimc -lgpepimc -L../libgpevtype -lgpevtype `pkg-config --libs mimedir-1.0` `pkg-config --libs dbus-glib-1`
-
-LDFLAGS += -lsqlite
-
-CFLAGS = $(GTKCFLAGS) -I../libgpepimc -I../libgpewidget -Wall `pkg-config --cflags libxml-2.0` -I../libgpevtype `pkg-config --cflags mimedir-1.0` `pkg-config --cflags dbus-glib-1`
-CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
-CFLAGS += -MD
+PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS) -DENABLE_NLS -DDBUS_API_SUBJECT_TO_CHANGE
+PACKAGE_CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
+PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS) `pkg-config --cflags libxml-2.0` `pkg-config --cflags mimedir-1.0` `pkg-config --cflags dbus-glib-1`
+PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS) -lsqlite `pkg-config --libs libxml-2.0` `pkg-config --libs mimedir-1.0` `pkg-config --libs dbus-glib-1` -ldisplaymigration -lgpepimc -lgpevtype
 
 MEMBERS = db editing main structure support configure old-db export
 
@@ -45,7 +33,7 @@ SOURCES = $(patsubst %,%.c,$(MEMBERS))
 all: gpe-contacts all-mo
 
 $(PACKAGE): $(OBJS)
-	$(CC) -o $@ $^ -L../libgpewidget -lgpewidget $(GTKLDFLAGS) `pkg-config --libs libxml-2.0` $(LDFLAGS)  
+	$(CC) -o $@ $^ $(LDFLAGS) $(PACKAGE_LDFLAGS)
 
 clean:
 	rm -f gpe-contacts $(OBJS) $(DEPS)
