@@ -817,7 +817,7 @@ Theme_Build_Objects ()
 
   label = gtk_label_new("none");
   gtk_misc_set_alignment(GTK_MISC(label),0.0,0.5);
-  tstr = g_strdup_printf ("<b>%s</b>", _("Matchbox Theme"));
+  tstr = g_strdup_printf ("<b>%s</b>", _("Desktop Theme"));
   gtk_label_set_markup (GTK_LABEL (label), tstr);
   g_free (tstr);
   gtk_table_attach (GTK_TABLE (table), label, 0, 2, 0, 1,
@@ -1262,4 +1262,3 @@ select_font_popup (GtkWidget *parent_button)
     gtk_widget_show (popup_window);
   }
 }
-

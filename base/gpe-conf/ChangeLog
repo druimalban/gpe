@@ -1,7 +1,12 @@
 When			Who				Where						What
 
+12.04.2003		Florian			main.c						Updated error handling, added error message if PCMCIA init fails.
+								cardinfo.c					Fixes Bug #742.
+								*.desktop					Changed that all to make applets are only allowed in one instance. Fixes bug #743
+								theme.c						Changed label, fixes #744
+
 11.04.2003		Florian			storage.c					Some cleanups.
-								timeanddate.c				Improved updatein of time in GUI (if got from network).
+								timeanddate.c				Improved updateing of time in GUI (if got from network).
 								Makefile					Changed permissions of installed files. Added missing logread icon.	
 								logread.c					Changed WrapMode for log.
 

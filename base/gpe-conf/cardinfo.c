@@ -56,6 +56,7 @@
 
 /* --- local types and constants --- */
 
+extern gchar* PCMCIA_ERROR;
 #define MAX_SOCK 4
 
 typedef enum s_state {
@@ -220,7 +221,7 @@ writefile:
   fnew = fopen (pcmcia_tmpcfgfile, "w");
   if (!fnew) 
   {
-     fprintf(stderr,"Could not write to file: %s.\n",pcmcia_tmpcfgfile);
+     gpe_error_box(_("Could not write to temporal config file."));
      return;
   }	  
   
@@ -310,8 +311,8 @@ static char* get_card_ident(int socket)
 			}
 */			if (strstr(buffer,"MANFID="))
 			{
-				result = realloc(result,strlen(result)+strlen(buffer)); // -1
-				strncat(result,"\n0x",3);								// 2
+				result = realloc(result,strlen(result)+strlen(buffer)); 
+				strncat(result,"\n0x",3);								
 				strncat(result,buffer+7,5);
 				strncat(result," 0x",3);
 				strncat(result,buffer+12,4);
@@ -463,7 +464,7 @@ init_pcmcia_suid()
     servinfo_t serv;
 
     if (geteuid() != 0) {
-	  fprintf(stderr, "gpe-conf must be setuid root to use cardinfo feature.\n");
+	  PCMCIA_ERROR = g_strdup(_("gpe-conf must be setuid root to use cardinfo feature."));
 	  return -1;
     }
 
@@ -476,9 +477,9 @@ init_pcmcia_suid()
     major = lookup_dev("pcmcia");
     if (major < 0) {
 	if (major == -ENODEV)
-	    fprintf(stderr, "no pcmcia driver in /proc/devices\n");
+	    PCMCIA_ERROR = g_strdup(_("No pcmcia driver in /proc/devices"));
 	else
-	    perror("could not open /proc/devices");
+	    PCMCIA_ERROR = g_strdup(_("Could not open /proc/devices"));
 	  return -1;
     }
     
@@ -487,15 +488,15 @@ init_pcmcia_suid()
 	if (st[ns].fd < 0) break;
     }
     if (ns == 0) {
-	fprintf(stderr, "no sockets found\n");
+	    PCMCIA_ERROR = g_strdup(_("No sockets found\n"));
 	  return -1;
     }
 
     if (ioctl(st[0].fd, DS_GET_CARD_SERVICES_INFO, &serv) == 0) {
 	if (serv.Revision != CS_RELEASE_CODE)
-	    fprintf(stderr, "Card Services release does not match!\n");
+	    PCMCIA_ERROR = g_strdup(_("Card Services release does not match!"));
     } else {
-	fprintf(stderr, "could not get CS revision info!\n");
+	    PCMCIA_ERROR = g_strdup(_("Could not get CS revision info!\n"));
 	  return -1;
     }
 	return 0;
@@ -927,6 +928,7 @@ Cardinfo_Build_Objects (void)
   gchar iname[100];
   GtkTooltips *tooltips;
   int i;
+  gchar *errmsg;
 	
   tooltips = gtk_tooltips_new();
   
@@ -1052,7 +1054,17 @@ Cardinfo_Build_Objects (void)
 	  
   }
   
-  get_driver_list();
-  gtk_timeout_add(500,(GtkFunction)do_update,NULL);
+  if (PCMCIA_ERROR)
+  {
+    errmsg = g_strdup_printf("%s\n%s",_("PCMCIA initialisation failed"),PCMCIA_ERROR);
+	gpe_error_box(errmsg);
+	free(errmsg);
+	free(PCMCIA_ERROR);
+  }
+  else
+  {
+    get_driver_list();
+    gtk_timeout_add(500,(GtkFunction)do_update,NULL);
+  }
   return bookbox;
 }

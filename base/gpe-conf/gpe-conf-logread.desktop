@@ -7,4 +7,5 @@ Type=Application
 Icon=gpe-config-logread.png
 Categories=Application;SystemSettings;GPE
 StartupNotify=False
+StartupNotify=False
 SingleInstance=True

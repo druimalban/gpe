@@ -59,6 +59,7 @@ int setresuid(uid_t ruid, uid_t euid, uid_t suid);
 int setresgid(gid_t rgid, gid_t egid, gid_t sgid);
 
 int suidPID;
+char* PCMCIA_ERROR = NULL;
 
 GtkStyle *wstyle;
 static struct {
@@ -312,7 +313,7 @@ int main(int argc, char **argv)
   if ((argc > 1) && (!strcmp("cardinfo",argv[1])))
   {
 	  if (init_pcmcia_suid() != 0)
-		  exit(EXIT_FAILURE);
+	  	perror(_("Warning: PCMCIA init failed."));
   }
 
   switch(suidPID = fork())

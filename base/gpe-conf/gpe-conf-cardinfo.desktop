@@ -7,3 +7,4 @@ Type=Application
 Icon=gpe-config-cardinfo.png
 Categories=Application;SystemSettings;GPE
 StartupNotify=False
+SingleInstance=True

@@ -6,4 +6,5 @@ Terminal=0
 Type=Application
 Icon=gpe-config-time.png
 Categories=Application;SystemSettings;GPE
-StartupNotify=True
+StartupNotify=False
+SingleInstance=True
