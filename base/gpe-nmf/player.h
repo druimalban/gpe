@@ -14,6 +14,13 @@
 
 typedef struct player *player_t;
 
+struct player_status
+{
+  struct playlist *item;
+  unsigned long long time;
+  gboolean finished;
+};
+
 extern player_t player_new (void);
 extern void player_destroy (player_t);
 extern void player_set_playlist (player_t, struct playlist *);
@@ -23,5 +30,7 @@ extern void player_stop (player_t);
 extern void player_pause (player_t);
 extern void player_next_track (player_t);
 extern void player_prev_track (player_t);
+
+extern void player_status (player_t, struct player_status *);
 
 #endif
