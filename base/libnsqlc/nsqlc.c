@@ -355,3 +355,21 @@ nsqlc_exec (nsqlc *ctx, const char *sql, nsqlc_callback cb, void *cb_data, char 
 
   return query.result;
 }
+
+int 
+nsqlc_exec_printf (nsqlc *ctx, const char *sql, nsqlc_callback cb, void *cb_data, char **err, ...)
+{
+  char *query;
+  va_list ap;
+  int rc;
+
+  va_start (ap, err);
+  vasprintf (&query, sql, ap);
+  va_end (ap);
+
+  rc = nsqlc_exec (ctx, query, cb, cb_data, err);
+
+  free (query);
+  
+  return rc;
+}
