@@ -208,7 +208,7 @@ int main (int argc, char *argv[])
   submenu = create_submenu (menubar, _("Game"), FALSE);
 
   menu_item = create_menu_item (submenu, _("New Game"), 
-				new_game_dialog, &game_board);
+				GTK_SIGNAL_FUNC(new_game_dialog), &game_board);
   gtk_widget_show (menu_item);
 
   menu_item = create_menu_item (submenu, NULL, NULL, NULL);
@@ -222,21 +222,21 @@ int main (int argc, char *argv[])
 
   menu_item = create_menu_radio (submenu, _("Beginner (6 colors)"), 
 				 &skill_group,
-				 set_skill_level, (gpointer) 6);
+				 GTK_SIGNAL_FUNC(set_skill_level), (gpointer) 6);
   gtk_signal_connect (GTK_OBJECT (menu_item), "toggled",
 		      GTK_SIGNAL_FUNC (reset_color_area), &game_board);
   gtk_widget_show (menu_item);
 
   menu_item = create_menu_radio (submenu, _("Intermediate (7 colors)"), 
 				 &skill_group,
-				 set_skill_level, (gpointer) 7);
+				 GTK_SIGNAL_FUNC(set_skill_level), (gpointer) 7);
   gtk_signal_connect (GTK_OBJECT (menu_item), "toggled",
 		      GTK_SIGNAL_FUNC (reset_color_area), &game_board);
   gtk_widget_show (menu_item);
 
   menu_item = create_menu_radio (submenu, _("Advanced (8 colors)"), 
 				 &skill_group,
-				 set_skill_level, (gpointer) 8);
+				 GTK_SIGNAL_FUNC(set_skill_level), (gpointer) 8);
   gtk_signal_connect (GTK_OBJECT (menu_item), "toggled",
 		      GTK_SIGNAL_FUNC (reset_color_area), &game_board);
   gtk_widget_show (menu_item);
@@ -525,7 +525,7 @@ void new_game_dialog (GtkWidget *widget, game_data *board)
 
       /* Display everything is a popup dialog box */
       display_yes_no_dialog (_("Start New Game?"), hbox, MESSAGE_SPACING,
-			     start_new_game, board, 
+			     GTK_SIGNAL_FUNC(start_new_game), board, 
 			     NULL, NULL, 
 			     FALSE, TRUE);
     }

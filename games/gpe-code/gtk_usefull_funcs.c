@@ -6,6 +6,7 @@
  */
 
 #include <gtk/gtk.h>
+#include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <libintl.h>
