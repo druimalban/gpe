@@ -12,6 +12,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <libintl.h>
 
 #include <gtk/gtk.h>
 
@@ -19,6 +20,8 @@
 #include "globals.h"
 #include "event-db.h"
 #include "week_view.h"
+
+#define _(x) gettext(x)
 
 static GtkWidget *week_view_draw;
 static struct tm today;
