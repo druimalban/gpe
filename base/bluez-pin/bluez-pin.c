@@ -15,8 +15,9 @@
 #include <string.h>
 
 #include <gtk/gtk.h>
+#include <gdk_imlib.h>
 
-#include "bt-logo.xpm"
+#define BT_ICON "/usr/share/pixmaps/bt-logo.png"
 
 char *address;
 GtkWidget *check;
@@ -114,7 +115,7 @@ ask_user (int outgoing, const char *address)
   GtkWidget *window = gtk_window_new (GTK_WINDOW_POPUP);
   GdkBitmap *logo_mask;
   GdkPixmap *logo_pixmap;
-  GtkWidget *logo;
+  GtkWidget *logo = NULL;
   GtkWidget *text1, *text2, *hbox, *vbox;
   GtkWidget *vbox_top;
   GtkWidget *hbox_pin;
@@ -126,10 +127,8 @@ ask_user (int outgoing, const char *address)
  
   gtk_widget_realize (window);
 
-  logo_pixmap = gdk_pixmap_create_from_xpm_d (window->window, 
-					      &logo_mask, NULL,
-					      bt_logo_xpm);
-  logo = gtk_pixmap_new (logo_pixmap, logo_mask);
+  if (gdk_imlib_load_file_to_pixmap (BT_ICON, &logo_pixmap, &logo_mask))
+    logo = gtk_pixmap_new (logo_pixmap, logo_mask);
 
   pin_label = gtk_label_new ("PIN:");
   entry = gtk_entry_new ();
@@ -150,7 +149,8 @@ ask_user (int outgoing, const char *address)
   gtk_box_pack_start (GTK_BOX (vbox), text1, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), text2, TRUE, TRUE, 0);
 
-  gtk_box_pack_start (GTK_BOX (hbox), logo, TRUE, TRUE, 0);
+  if (logo)
+    gtk_box_pack_start (GTK_BOX (hbox), logo, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (hbox), vbox, TRUE, TRUE, 0);
 
   gtk_box_pack_start (GTK_BOX (hbox_pin), pin_label, TRUE, TRUE, 0);
@@ -199,6 +199,7 @@ main(int argc, char *argv[])
   setenv ("DISPLAY", ":0", 0);
 
   gtk_init (&argc, &argv);
+  gdk_imlib_init ();
 
   if (argc != 3)
     usage (argv);
