@@ -1,5 +1,6 @@
 2004-08-25  Florian Boor <florian.boor@kernelconcepts.de>
 
+	* Released Version 0.28
 	* main.c: Fixed replace function.
 	* Makefile: Improved "clean" target.
 	* main.c: Search edit activates search button.
