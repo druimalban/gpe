@@ -203,7 +203,7 @@ join_channel (IRCServer *server, gchar *channel_name)
 
   if (channel_name[0] == '#' || channel_name[0] == '&')
   {
-    irc_join (server, channel_name);
+    //irc_join (server, channel_name);
 
     channel = g_malloc (sizeof (*channel));
     channel->name = g_strdup (channel_name);
@@ -289,6 +289,7 @@ close_button_clicked ()
   }
 }
 
+/*
 gboolean
 watch_disconnect_from_server (GIOChannel *source, GIOCondition condition, gpointer data)
 {
@@ -326,6 +327,7 @@ get_data_from_server (GIOChannel *source, GIOCondition condition, gpointer data)
 
   return TRUE;
 }
+*/
 
 void
 new_connection (GtkWidget *parent, GtkWidget *parent_window)
@@ -339,6 +341,7 @@ new_connection (GtkWidget *parent, GtkWidget *parent_window)
   server->user_info = g_malloc (sizeof (*server->user_info));
   server->text = g_string_new ("");
   server->channel = g_hash_table_new (g_str_hash, g_str_equal);
+  server->prefix = NULL;
 
   server_combo_entry = gtk_object_get_data (GTK_OBJECT (parent), "server_combo_entry");
   nick_entry = gtk_object_get_data (GTK_OBJECT (parent), "nick_entry");
@@ -376,8 +379,10 @@ new_connection (GtkWidget *parent, GtkWidget *parent_window)
   gtk_widget_destroy (parent_window);
 
   irc_server_connect (server);
+  /*
   g_io_add_watch (server->io_channel, G_IO_IN, get_data_from_server, (gpointer) server);
   g_io_add_watch (server->io_channel, G_IO_HUP, watch_disconnect_from_server, (gpointer) server);
+  */
 
   join_channel (server, "#gpe");
 }
@@ -535,7 +540,7 @@ entry_key_press (GtkWidget *widget, GdkEventKey *event, gpointer data)
     if (event->keyval == GDK_Return && strlen (entry_text) > 0)
     {
       irc_privmsg (selected_server, selected_channel->name, entry_text);
-      display_text = g_strdup_printf ("\n%s: %s", selected_server->user_info->nick, entry_text);
+      display_text = g_strdup_printf ("%s: %s\n", selected_server->user_info->nick, entry_text);
       selected_server->text = g_string_append (selected_server->text, display_text);
       update_text_view (g_string_new (display_text));
       gtk_entry_set_text (GTK_ENTRY (main_entry), "");
