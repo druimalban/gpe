@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-edit\n"
-"POT-Creation-Date: 2002-06-17 01:18+0200\n"
+"POT-Creation-Date: 2002-12-04 20:53+0000\n"
 "PO-Revision-Date: 2002-06-17 01:26+0200\n"
 "Last-Translator: Colin Marquardt <ipaq@marquardt-home.de>\n"
 "Language-Team: German <de@li.org>\n"
@@ -13,34 +13,124 @@ msgstr ""
 "Content-Type: text/plain; charset=iso-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: main.c:259 main.c:260
+#: main.c:87 main.c:88
+msgid "Untitled"
+msgstr ""
+
+#: main.c:258
+#, fuzzy
+msgid "Open File ..."
+msgstr "Öffne Datei"
+
+#: main.c:286
+msgid "Save as .."
+msgstr ""
+
+#: main.c:324
+#, fuzzy
+msgid "Save current file before exiting?"
+msgstr "Speichere aktuelle Datei"
+
+#: main.c:324
+msgid "Question"
+msgstr ""
+
+#: main.c:325
+msgid "Don't save"
+msgstr ""
+
+#: main.c:325 main.c:611
+msgid "Save"
+msgstr ""
+
+#: main.c:387
+msgid "Text not found"
+msgstr ""
+
+#: main.c:426
+msgid "Unable to replace text"
+msgstr ""
+
+#: main.c:440 main.c:489
+msgid "Search for:"
+msgstr ""
+
+#: main.c:443 main.c:495
+msgid "Find"
+msgstr ""
+
+#: main.c:490
+msgid "Replace with:"
+msgstr ""
+
+#: main.c:494 main.c:645
+msgid "Replace"
+msgstr ""
+
+#: main.c:601
+msgid "New"
+msgstr ""
+
+#: main.c:602
 msgid "New document"
 msgstr "Neues Dokument"
 
-#: main.c:264 main.c:265
+#: main.c:606
+#, fuzzy
+msgid "Open"
+msgstr "Öffne Datei"
+
+#: main.c:607
 msgid "Open file"
 msgstr "Öffne Datei"
 
-#: main.c:269 main.c:270
+#: main.c:612
 msgid "Save current file"
 msgstr "Speichere aktuelle Datei"
 
-#: main.c:274 main.c:275
+#: main.c:616
+msgid "Save as"
+msgstr ""
+
+#: main.c:617
 msgid "Save current file as"
 msgstr "Speichere aktuelle Datei als..."
 
-#: main.c:281 main.c:282
+#: main.c:623
+msgid "Cut"
+msgstr ""
+
+#: main.c:624
 msgid "Cut the selection"
 msgstr "Auswahl ausschneiden"
 
-#: main.c:286 main.c:287
+#: main.c:628
+msgid "Copy"
+msgstr ""
+
+#: main.c:629
 msgid "Copy the selection"
 msgstr "Auswahl kopieren"
 
-#: main.c:291 main.c:292
+#: main.c:633
+msgid "Paste"
+msgstr ""
+
+#: main.c:634
 msgid "Paste the clipboard"
 msgstr "Zwischenablage einfügen"
 
-#: main.c:298 main.c:299
-msgid "Exit"
-msgstr "Beenden"
+#: main.c:640
+msgid "Search"
+msgstr ""
+
+#: main.c:641
+msgid "Search for a string"
+msgstr ""
+
+#: main.c:646
+msgid "Replace a string"
+msgstr ""
+
+#~ msgid "Exit"
+#~ msgstr "Beenden"

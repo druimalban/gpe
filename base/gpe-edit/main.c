@@ -30,11 +30,11 @@
 #define WINDOW_NAME "Editor"
 #define _(_x) gettext (_x)
 
-gchar *buffer;
 gchar *filename = NULL;
 int file_modified = 0;
 int search_replace_open = 0;
 int last_found = 0;
+gboolean utf8_mode;
 
 GtkWidget *main_window;
 GtkWidget *text_area;
@@ -66,17 +66,12 @@ struct gpe_icon my_icons[] = {
 guint window_x = 240, window_y = 310;
 
 static void
-destroy_widget (GtkWidget *parent_widget, GtkWidget *widget)
-{
-  gtk_widget_destroy (widget);
-}
-
-static void
 clear_text_area (void)
 {
-  gtk_text_freeze (GTK_TEXT (text_area));
-  gtk_editable_delete_text ( GTK_EDITABLE (text_area), 0, gtk_text_get_length (GTK_TEXT (text_area)));
-  gtk_text_thaw (GTK_TEXT (text_area));
+  GtkTextIter start, end;
+  GtkTextBuffer *buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_area));
+  gtk_text_buffer_get_bounds (buf, &start, &end);
+  gtk_text_buffer_delete (buf, &start, &end);
 }
 
 static void
@@ -146,7 +141,6 @@ open_file (char *new_filename)
 {
   struct stat file_stat;
   FILE *fp;
-  int pos = 0;
 
   filename = g_strdup (new_filename);
 
@@ -156,6 +150,11 @@ open_file (char *new_filename)
   }
   else
   {
+    GtkTextIter start, end;
+    GtkTextBuffer *buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_area));
+    gchar *text, *buffer;
+    gsize size;
+
     stat (filename, &file_stat);
     buffer = g_malloc (file_stat.st_size);
     fread (buffer, file_stat.st_size, 1, fp);
@@ -163,8 +162,30 @@ open_file (char *new_filename)
 
     clear_text_area ();
 
-    file_modified = 1;
-    gtk_editable_insert_text (GTK_EDITABLE (text_area), buffer, file_stat.st_size, &pos);
+    if (utf8_mode)
+      {
+	text = buffer;
+	size = file_stat.st_size;
+      }
+    else
+      {
+	GError *error = NULL;
+	text = g_locale_to_utf8 (buffer, file_stat.st_size, NULL, &size, &error);
+	g_free (buffer);
+	if (error)
+	  {
+	    gpe_error_box (error->message);
+	    g_error_free (error);
+	  }
+      }
+
+    if (text)
+      {
+	gtk_text_buffer_get_bounds (buf, &start, &end);
+	gtk_text_buffer_insert (buf, &start, text, size);
+	g_free (text);
+      }
+ 
     file_modified = 0;
 
     update_window_title ();
@@ -176,18 +197,17 @@ open_file_from_filesel (GtkFileSelection *selector, gpointer user_data)
 {
 
   filename = gtk_mini_file_selection_get_filename (GTK_MINI_FILE_SELECTION (file_selector));
-  open_file (filename);
 
   gtk_widget_destroy (file_selector);
+
+  open_file (filename);
 }
 
 static void
-save_file_as (GtkFileSelection *selector, gpointer user_data)
+do_save_file (gchar *filename)
 {
   guint text_length;
   FILE *fp;
-
-  filename = gtk_mini_file_selection_get_filename (GTK_MINI_FILE_SELECTION (file_selector));
 
   if ( (fp = fopen(filename, "w")) == NULL)
   {
@@ -195,17 +215,39 @@ save_file_as (GtkFileSelection *selector, gpointer user_data)
   }
   else
   {
-    text_length = gtk_text_get_length (GTK_TEXT (text_area));
-    buffer = g_malloc (text_length);
-    buffer = gtk_editable_get_chars (GTK_EDITABLE (text_area), 0, text_length);
+    GtkTextIter start, end;
+    GtkTextBuffer *buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_area));
+    gchar *text;
 
-    fwrite (buffer, 1, text_length, fp);
-    fclose (fp);
-    g_free (buffer);
+    gtk_text_buffer_get_bounds (buf, &start, &end);
+    text = gtk_text_buffer_get_text (buf, &start, &end, FALSE);
+
+    if (!utf8_mode)
+      {
+	gchar *p = text;
+	text = g_locale_from_utf8 (text, -1, NULL, NULL, NULL);
+	g_free (p);
+      }
+
+    if (text)
+      {
+	text_length = strlen (text);
+	fwrite (text, 1, text_length, fp);
+	fclose (fp);
+	g_free (text);
+      }
 
     file_modified = 0;
     update_window_title ();
   }
+}
+
+static void
+save_file_as (GtkFileSelection *selector, gpointer user_data)
+{
+  filename = gtk_mini_file_selection_get_filename (GTK_MINI_FILE_SELECTION (file_selector));
+  
+  do_save_file (filename);
 
   gtk_widget_destroy (file_selector);
 }
@@ -213,7 +255,7 @@ save_file_as (GtkFileSelection *selector, gpointer user_data)
 static void
 select_open_file (void)
 {
-  file_selector = gtk_mini_file_selection_new ("Open File ...");
+  file_selector = gtk_mini_file_selection_new (_("Open File ..."));
 
   gtk_signal_connect (GTK_OBJECT (file_selector),
 		      "completed", GTK_SIGNAL_FUNC (open_file_from_filesel), NULL);
@@ -229,15 +271,19 @@ select_save_file_as (void)
 {
   gchar *suggested_filename;
   guint text_length;
+  GtkTextIter start, end;
+  gint offset;
+  GtkTextBuffer *buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_area));
 
-  text_length = gtk_text_get_length (GTK_TEXT (text_area));
+  offset = gtk_text_iter_get_offset (&start);
+  text_length = gtk_text_iter_get_offset (&end) - offset;
   if (text_length > 10)
     text_length = 10;
+  gtk_text_iter_set_offset (&end, offset + text_length);
 
-  suggested_filename = g_malloc (text_length);
-  suggested_filename = gtk_editable_get_chars (GTK_EDITABLE (text_area), 0, text_length);
+  suggested_filename = gtk_text_buffer_get_text (buf, &start, &end, FALSE);
 
-  file_selector = gtk_mini_file_selection_new ("Save As ..");
+  file_selector = gtk_mini_file_selection_new (_("Save as .."));
 
   gtk_signal_connect (GTK_OBJECT (file_selector),
 		      "completed", GTK_SIGNAL_FUNC (save_file_as), NULL);
@@ -259,32 +305,13 @@ select_save_file_as (void)
 static void
 save_file (void)
 {
-  guint text_length;
-  FILE *fp;
-
   if ( filename == NULL )
   {
     select_save_file_as ();
   }
   else
   {
-    if ( (fp = fopen(filename, "w")) == NULL)
-    {
-      gpe_perror_box (filename);
-    }
-    else
-    {
-      text_length = gtk_text_get_length (GTK_TEXT (text_area));
-      buffer = g_malloc (text_length);
-      buffer = gtk_editable_get_chars (GTK_EDITABLE (text_area), 0, text_length);
-
-      fwrite (buffer, 1, text_length, fp);
-      fclose (fp);
-      g_free (buffer);
-
-    file_modified = 0;
-    update_window_title ();
-    }
+    do_save_file (filename);
   }
 }
 
@@ -294,7 +321,7 @@ ask_save_before_exit (void)
 
   if (file_modified == 1)
   {
-    switch (gpe_question_ask ("Save current file before exiting?", _("Question"), "question",
+    switch (gpe_question_ask (_("Save current file before exiting?"), _("Question"), "question",
     _("Don't save"), "stop", _("Save"), "save"))
     {
     case 1: /* Save */
@@ -313,19 +340,28 @@ ask_save_before_exit (void)
 static void
 cut_selection (void)
 {
-  gtk_editable_cut_clipboard (GTK_EDITABLE (text_area));
+  GtkTextBuffer *buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_area));
+  GtkClipboard *clipboard = gtk_clipboard_get (GDK_SELECTION_CLIPBOARD);
+
+  gtk_text_buffer_cut_clipboard (GTK_TEXT_BUFFER (buf), clipboard, TRUE);
 }
 
 static void
 copy_selection (void)
 {
-  gtk_editable_copy_clipboard (GTK_EDITABLE (text_area));
+  GtkTextBuffer *buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_area));
+  GtkClipboard *clipboard = gtk_clipboard_get (GDK_SELECTION_CLIPBOARD);
+
+  gtk_text_buffer_copy_clipboard (GTK_TEXT_BUFFER (buf), clipboard);
 }
 
 static void
 paste_clipboard (void)
 {
-  gtk_editable_paste_clipboard (GTK_EDITABLE (text_area));
+  GtkTextBuffer *buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_area));
+  GtkClipboard *clipboard = gtk_clipboard_get (GDK_SELECTION_CLIPBOARD);
+
+  gtk_text_buffer_paste_clipboard (GTK_TEXT_BUFFER (buf), clipboard, NULL, TRUE);
 }
 
 static void
@@ -334,53 +370,60 @@ do_find_string (GtkWidget *widget)
   gchar *found, *find;
   gint found_start;
   GtkWidget *entry;
-
+  GtkTextBuffer *buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_area));
+  GtkTextIter start, end;
+  gchar *buffer;
+    
   entry = gtk_object_get_data (GTK_OBJECT (widget), "entry");
   find = gtk_editable_get_chars (GTK_EDITABLE (entry), 0, -1);
+
+  gtk_text_buffer_get_bounds (buf, &start, &end);
+  buffer = gtk_text_buffer_get_text (buf, &start, &end, FALSE);
 
   found = strstr (last_found + buffer + 1, find);
 
   if (!found)
     {
-      gpe_error_box ("Text not found");
+      gpe_error_box (_("Text not found"));
       last_found = 0;
     }
   else
     {
-  found_start = found - buffer;
-
-  gtk_editable_select_region (GTK_EDITABLE (text_area), found_start, found_start + strlen (find));
-
-  last_found = found_start;
+      found_start = found - buffer;
+      gtk_text_iter_set_offset (&start, found_start);
+      gtk_text_iter_set_offset (&end, found_start + strlen (find));
+      
+      gtk_text_buffer_move_mark_by_name (buf, "insert", &start);
+      gtk_text_buffer_move_mark_by_name (buf, "selection_bound", &end);
+      
+      last_found = found_start;
     }
 
   g_free (find);
+  g_free (buffer);
 }
 
 static void
 do_replace_string (GtkWidget *widget)
 {
   gchar *replace_with;
-  gint sel_start, sel_end, pos, text_length;
   GtkWidget *entry;
+  GtkTextBuffer *buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_area));
+  GtkTextIter sel_start, sel_end, at;
 
   entry = gtk_object_get_data (GTK_OBJECT (widget), "entry");
   replace_with = gtk_editable_get_chars (GTK_EDITABLE (entry), 0, -1);
 
-  if (gtk_editable_get_selection_bounds (GTK_EDITABLE (text_area), &sel_start, &sel_end))
+  if (gtk_text_buffer_get_selection_bounds (buf, &sel_start, &sel_end))
   {
-    pos = last_found;
-    gtk_editable_delete_text (GTK_EDITABLE (text_area), sel_start, sel_end);
-    gtk_editable_insert_text (GTK_EDITABLE (text_area), replace_with, strlen (replace_with), &pos);
-    last_found = sel_end;
-
-    text_length = gtk_text_get_length (GTK_TEXT (text_area));
-    buffer = g_malloc (text_length);
-    buffer = gtk_editable_get_chars (GTK_EDITABLE (text_area), 0, text_length);
+    gtk_text_iter_set_offset (&at, last_found);
+    gtk_text_buffer_delete_selection (buf, FALSE, TRUE);
+    gtk_text_buffer_insert (buf, &at, replace_with, strlen (replace_with));
+    last_found = gtk_text_iter_get_offset (&sel_end);
   }
   else
   {
-    gpe_error_box ("Unable to replace text");
+    gpe_error_box (_("Unable to replace text"));
   }
 }
 
@@ -394,7 +437,7 @@ search_string (GtkWidget *widget, GtkWidget *parent_vbox)
     search_replace_vbox = gtk_vbox_new (FALSE, 0);
     hbox1 = gtk_hbox_new (FALSE, 0);
     hbox2 = gtk_hbox_new (FALSE, 0);
-    label = gtk_label_new ("Search for: ");
+    label = gtk_label_new (_("Search for:"));
     entry = gtk_entry_new ();
 
     find = gpe_picture_button (hbox2->style, _("Find"), "search");
@@ -421,6 +464,8 @@ search_string (GtkWidget *widget, GtkWidget *parent_vbox)
     gtk_widget_show (entry);
     gtk_widget_show (find);
 
+    gtk_widget_grab_focus (entry);
+
     search_replace_open = 1;
   }
   else
@@ -441,8 +486,8 @@ replace_string (GtkWidget *widget, GtkWidget *parent_vbox)
     hbox1 = gtk_hbox_new (FALSE, 0);
     hbox2 = gtk_hbox_new (FALSE, 0);
     hbox3 = gtk_hbox_new (FALSE, 0);
-    label1 = gtk_label_new ("Search for: ");
-    label2 = gtk_label_new ("Replace with: ");
+    label1 = gtk_label_new (_("Search for:"));
+    label2 = gtk_label_new (_("Replace with:"));
     entry1 = gtk_entry_new ();
     entry2 = gtk_entry_new ();
 
@@ -501,6 +546,7 @@ main (int argc, char *argv[])
   GtkWidget *pw;
   GdkPixmap *pmap;
   GdkBitmap *bmap;
+  GtkTextBuffer *buf;
 
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
@@ -509,6 +555,13 @@ main (int argc, char *argv[])
     exit (1);
 
   setlocale (LC_ALL, "");
+
+  if (argc >= 2 && !strcmp (argv[1], "-u"))
+    {
+      argv++;
+      argc--;
+      utf8_mode = 1;
+    }
   
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
   textdomain (PACKAGE);
@@ -536,9 +589,11 @@ main (int argc, char *argv[])
   scroll = gtk_scrolled_window_new (NULL, NULL);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scroll), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
 
-  text_area = gtk_text_new (NULL, NULL);
-  gtk_text_set_editable (GTK_TEXT (text_area), TRUE);
-  gtk_signal_connect (GTK_OBJECT (text_area), "changed",
+  text_area = gtk_text_view_new ();
+  gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (text_area), GTK_WRAP_WORD);
+  gtk_text_view_set_editable (GTK_TEXT_VIEW (text_area), TRUE);
+  buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_area));
+  g_signal_connect (G_OBJECT (buf), "changed",
 		      GTK_SIGNAL_FUNC (text_changed), NULL);
 
   p = gpe_find_icon ("new");
