@@ -63,7 +63,7 @@ DEP_gpe-apps2 = \
 
 
 #---This is the base to run GPE
-VER_gpe-task-base = 0.5
+VER_gpe-task-base = 0.6
 DEP_gpe-task-base = \
     \
     gpe-collateral-gtk2, \
@@ -72,7 +72,6 @@ DEP_gpe-task-base = \
     gpe-bootsplash2, \
     gpe-dm, \
     gpe-login2, \
-    gpe-ownerinfo, \
     gpe-session-scripts, \
     gpe-setbg2, \
     \
@@ -122,13 +121,12 @@ DEP_gpe-collateral-gtk2 = \
 #------------------------------------------
 
 #------------------------------------------ PIM applications
-VER_gpe-task-pim = 0.3
+VER_gpe-task-pim = 0.4
 DEP_gpe-task-pim = \
     gpe-task-base, \
     gpe-calendar2, \
     gpe-soundbite2, \
     gpe-contacts2, \
-    gpe-ownerinfo, \
     gpe-sketchbook2, \
     gpe-today, \
     gpe-todo2, \
