@@ -1,9 +1,9 @@
-VERSION = 0.04
+VERSION = 0.05-pre
 
 PACKAGE = gpe-go
 
 ifndef PREFIX
-PREFIX = /usr
+PREFIX = /usr/local
 endif
 
 ifndef DEBUG
