@@ -50,7 +50,10 @@ void
 add_button (char *text, char *icon, GtkWidget *dialog, int value)
 {
   GtkWidget *btn;
-  btn = gpe_picture_button (dialog->style, text, icon);
+  if (text[0] == '!')
+    btn = gpe_button_new_from_stock (text + 1, GPE_BUTTON_TYPE_BOTH);
+  else
+    btn = gpe_picture_button (dialog->style, text, icon);
   gtk_object_set_data (GTK_OBJECT (btn), "value", (gpointer)value);
   gtk_signal_connect (GTK_OBJECT (btn), "clicked",
                       GTK_SIGNAL_FUNC (on_qn_button_clicked),
