@@ -193,7 +193,6 @@ main(int argc, char *argv[])
   gtk_widget_show (menubar);
 
   new_view (day);
-  update_current_view();
   
   gtk_main ();
 

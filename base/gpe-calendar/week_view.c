@@ -227,7 +227,5 @@ week_view(void)
 
   week_view_draw = draw;
 
-  week_view_update ();
-
   return vbox;
 }

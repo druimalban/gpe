@@ -125,8 +125,6 @@ future_view(void)
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window),
 		GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
   
-  future_view_update();
-  
   gtk_container_add (GTK_CONTAINER (scrolled_window), future_list);
   
   gtk_box_pack_start (GTK_BOX(vbox), label, FALSE, FALSE, 0);
@@ -135,5 +133,5 @@ future_view(void)
   gtk_object_set_data (GTK_OBJECT (vbox), "update_hook", 
 		       (gpointer) future_view_update);
   
- return vbox;
+  return vbox;
 }

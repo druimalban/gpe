@@ -30,6 +30,9 @@ static GSList *strings;
 static GtkWidget *day_list;
 static GtkWidget *datesel;
 
+static GtkStyle *light_style, *dark_style, *time_style;
+static GdkColor light_color, dark_color, time_color;
+
 static char *
 format_event (event_t ev)
 {
@@ -95,10 +98,7 @@ selection_made( GtkWidget      *clist,
 static gint
 day_view_update ()
 {
-  
-  GtkStyle *light_style, *dark_style, *time_style;
-  GdkColor light_color, dark_color, time_color;
-  guint hour, j, row=0;
+  guint hour, row = 0;
   time_t start, end;
   struct tm tm_start, tm_end;
   char buf[10];
@@ -110,21 +110,36 @@ day_view_update ()
 
   gtk_date_sel_set_time (GTK_DATE_SEL (datesel), viewtime);
       
-  light_color.red = 60000;
-  light_color.green = 60000;
-  light_color.blue = 60000;
+  if (! light_style)
+    {
+      guint j;
+      light_color.red = 60000;
+      light_color.green = 60000;
+      light_color.blue = 60000;
   
-  time_color.red = 20000;
-  time_color.green = 20000;
-  time_color.blue = 20000;
+      time_color.red = 20000;
+      time_color.green = 20000;
+      time_color.blue = 20000;
   
-  dark_color.red = 45000;
-  dark_color.green = 45000;
-  dark_color.blue = 45000;
-     
-  light_style = gtk_style_copy (gtk_widget_get_style (day_list));
-  dark_style = gtk_style_copy (gtk_widget_get_style (day_list));
-  time_style = gtk_style_copy (gtk_widget_get_style (day_list));
+      dark_color.red = 45000;
+      dark_color.green = 45000;
+      dark_color.blue = 45000;
+
+      light_style = gtk_style_copy (gtk_widget_get_style (day_list));
+      dark_style = gtk_style_copy (gtk_widget_get_style (day_list));
+      time_style = gtk_style_copy (gtk_widget_get_style (day_list));
+      
+      for (j = 0; j < 5; j++) 
+	{
+	  light_style->base[j] = light_color;
+	  dark_style->base[j] = dark_color;
+	  time_style->base[j] = time_color;
+	  time_style->fg[j] = light_color;
+	}
+    }
+  
+  gtk_clist_freeze (GTK_CLIST (day_list));
+  gtk_clist_clear (GTK_CLIST (day_list));
 
   if (strings)
     {
@@ -134,17 +149,6 @@ day_view_update ()
       strings = NULL;
     }
   
-  for (j = 0; j < 5; j++) 
-    {
-      light_style->base[j] = light_color;
-      dark_style->base[j] = dark_color;
-      time_style->base[j] = time_color;
-      time_style->fg[j] = light_color;
-    }
-  
-  gtk_clist_freeze (GTK_CLIST (day_list));
-  gtk_clist_clear (GTK_CLIST (day_list));
-
   for (hour = 0; hour <= 23; hour++)
     {
       localtime_r (&viewtime, &tm_start);
@@ -274,7 +278,6 @@ day_view(void)
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window),
 		GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
   
-  day_view_update ();
   gtk_container_add (GTK_CONTAINER (scrolled_window), day_list);
   
   gtk_box_pack_start (GTK_BOX (vbox), scrolled_window, TRUE, TRUE, 0);
