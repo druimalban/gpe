@@ -194,6 +194,8 @@ initial_structure (void)
 
   new_thing (ITEM_SINGLE_LINE, "Home", phone_group);
   new_thing (ITEM_SINGLE_LINE, "Work", phone_group);
+  new_thing (ITEM_SINGLE_LINE, "Mobile", phone_group);
+  new_thing (ITEM_SINGLE_LINE, "Fax", phone_group);
 
   new_thing (ITEM_SINGLE_LINE, "Mail", internet_group);
   new_thing (ITEM_SINGLE_LINE, "Web", internet_group);
@@ -206,9 +208,52 @@ initial_structure (void)
 }
 
 static void
+pop_singles (GtkWidget *vbox, GSList *list)
+{
+  if (list)
+    {
+      guint l = g_slist_length (list);
+      GtkWidget *table = gtk_table_new (l, 2, FALSE);
+      guint x = 0;
+      
+      while (list)
+	{
+	  GtkWidget *hbox = gtk_hbox_new (FALSE, 0);
+	  GSList *next = list->next;
+	  edit_thing_t e = list->data;
+
+	  gtk_box_pack_start (GTK_BOX (hbox),
+			      gtk_label_new (e->name),
+			      FALSE, FALSE, 0);
+
+	  gtk_table_attach (GTK_TABLE (table),
+			    hbox,
+			    0, 1, x, x + 1,
+			    0, 0, 0, 0);
+	  gtk_table_attach (GTK_TABLE (table),
+			    gtk_entry_new (),
+			    1, 2, x, x + 1,
+			    GTK_EXPAND | GTK_SHRINK | GTK_FILL,
+			    0, 0, 0);
+
+	  g_slist_free_1 (list);
+	  list = next;
+	  x++;
+	}
+
+      gtk_table_set_col_spacings (GTK_TABLE (table), 2);
+      gtk_container_set_border_width (GTK_CONTAINER (table), 2);
+
+      gtk_box_pack_start (GTK_BOX (vbox), table, TRUE, TRUE, 4);
+    }
+}
+
+static void
 build_children (GtkWidget *vbox, GSList *children)
 {
   GSList *child;
+  GSList *singles = NULL;
+
   for (child = children; child; child = child->next)
     {
       edit_thing_t e = child->data;
@@ -217,40 +262,42 @@ build_children (GtkWidget *vbox, GSList *children)
       switch (e->type)
 	{
 	case GROUP:
+	  pop_singles (vbox, singles);
+	  singles = NULL;
 	  w = gtk_frame_new (e->name);
 	  ww = gtk_vbox_new (FALSE, 0);
 	  gtk_container_add (GTK_CONTAINER (w), ww);
-	  gtk_container_set_border_width (GTK_CONTAINER (w), 4);
+	  gtk_container_set_border_width (GTK_CONTAINER (w), 2);
 	  build_children (ww, e->children);
+	  gtk_box_pack_start (GTK_BOX (vbox), w, FALSE, FALSE, 4);
 	  break;
 
 	case ITEM_MULTI_LINE:
+	  pop_singles (vbox, singles);
+	  singles = NULL;
 	  w = gtk_frame_new (e->name);
 	  ww = gtk_text_new (NULL, NULL);
 	  gtk_container_add (GTK_CONTAINER (w), ww);
-	  gtk_container_set_border_width (GTK_CONTAINER (w), 4);
+	  gtk_container_set_border_width (GTK_CONTAINER (w), 2);
+	  gtk_box_pack_start (GTK_BOX (vbox), w, FALSE, FALSE, 4);
 	  break;
 
 	case ITEM_SINGLE_LINE:
-	  w = gtk_hbox_new (FALSE, 4);
-	  gtk_box_pack_start (GTK_BOX (w), gtk_label_new (e->name), 
-			      FALSE, FALSE, 0);
-	  gtk_box_pack_start (GTK_BOX (w), gtk_entry_new (), 
-			      TRUE, TRUE, 0);
+	  singles = g_slist_append (singles, e);
 	  break;
 
 	default:
 	  abort ();
 	}
-      
-      gtk_box_pack_start (GTK_BOX (vbox), w, FALSE, FALSE, 4);
     }
+
+  pop_singles (vbox, singles);
+  singles = NULL;
 }
 
-GtkWidget *
-build_edit_page (void)
+void
+build_edit_page (GtkNotebook *book)
 {
-  GtkWidget *book = gtk_notebook_new ();
   GSList *page;
   
   for (page = edit_pages; page; page = page->next)
@@ -261,18 +308,19 @@ build_edit_page (void)
 
       build_children (vbox, e->children);
 
-      gtk_notebook_append_page (GTK_NOTEBOOK (book), vbox, label);
+      gtk_notebook_append_page (book, vbox, label);
     }
-
-  return book;
 }
 
 void
 try_it (void)
 {
   GtkWidget *w = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+  GtkWidget *book = gtk_notebook_new ();
   
-  gtk_container_add (GTK_CONTAINER (w), build_edit_page ());
+  build_edit_page (GTK_NOTEBOOK (book));
+
+  gtk_container_add (GTK_CONTAINER (w), book);
   
   gtk_widget_show_all (w);
 }
