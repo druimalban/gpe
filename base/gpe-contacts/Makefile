@@ -49,7 +49,7 @@ install-program: all $(PACKAGE).desktop
 	install -m 644 icons/gpe-contacts.png $(DESTDIR)$(PREFIX)/share/pixmaps/gpe-contacts.png
 	install -d $(DESTDIR)$(pkgdatadir)
 	install -m 644 contacts-layout.xml $(DESTDIR)$(pkgdatadir)/default-layout.xml
-	install -m 644 contacts-layout-large.xml $(DESTDIR)$(pkgdatadir)/contacts-layout-large.xml
+	install -m 644 contacts-layout-bigscreen.xml $(DESTDIR)$(pkgdatadir)/contacts-layout-bigscreen.xml
 	install -m 644 well-known-tags $(DESTDIR)$(pkgdatadir)/well-known-tags
 	install -d $(DESTDIR)$(MYPIXMAPSDIR)
 	install -m 644 icons/frame.png $(DESTDIR)$(MYPIXMAPSDIR)/frame.png

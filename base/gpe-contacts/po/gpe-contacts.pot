@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-07-08 15:51+0200\n"
+"POT-Creation-Date: 2004-07-16 16:02+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,127 +16,111 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: db.c:73 editing.c:203
+#: db.c:76 main.c:284
 msgid "Name"
 msgstr ""
 
-#: db.c:74
+#: db.c:77
 msgid "Phone"
 msgstr ""
 
-#: db.c:75
+#: db.c:78
 msgid "EMail"
 msgstr ""
 
-#: editing.c:181
+#: editing.c:164
+msgid "no year"
+msgstr ""
+
+#: editing.c:259
 msgid "Edit Contact"
 msgstr ""
 
-#: editing.c:207
-msgid "more detailed name options"
+#: editing.c:324
+msgid "Categories"
 msgstr ""
 
-#: editing.c:209
-msgid "Summary"
-msgstr ""
-
-#: editing.c:215
-msgid "Birthday"
-msgstr ""
-
-#: editing.c:221
-msgid "Image"
-msgstr ""
-
-#: editing.c:237
-msgid "Schedule"
-msgstr ""
-
-#: editing.c:240
-msgid "automatic appointment"
-msgstr ""
-
-#: editing.c:249
-msgid "click to choose file"
-msgstr ""
-
-#: editing.c:252
-msgid "Categories:"
-msgstr ""
-
-#: editing.c:272
-msgid "Personal"
-msgstr ""
-
-#: main.c:75 main.c:174
+#: main.c:80 main.c:179
 msgid "Really delete this contact?"
 msgstr ""
 
-#: main.c:75 main.c:174 structure.c:176
+#: main.c:80 main.c:179 structure.c:176
 msgid "Confirm"
 msgstr ""
 
-#: main.c:127
+#: main.c:132
 msgid "All categories"
 msgstr ""
 
-#: main.c:475 gpe-contacts.desktop.in.h:1
+#: main.c:263
+msgid "home"
+msgstr ""
+
+#: main.c:265
+msgid "work"
+msgstr ""
+
+#: main.c:313
+msgid "Birthday:"
+msgstr ""
+
+#: main.c:666 gpe-contacts.desktop.in.h:1
 msgid "Contacts"
 msgstr ""
 
-#: main.c:489
+#: main.c:679
 msgid "New contact"
 msgstr ""
 
-#: main.c:489
+#: main.c:679
 msgid "Tap here to add a new contact."
 msgstr ""
 
-#: main.c:495
+#: main.c:685
 msgid "Edit"
 msgstr ""
 
-#: main.c:496
+#: main.c:686
 msgid "Edit contact"
 msgstr ""
 
-#: main.c:496
+#: main.c:686
 msgid "Tap here to edit the selected contact."
 msgstr ""
 
-#: main.c:502
+#: main.c:692
 msgid "Delete contact"
 msgstr ""
 
-#: main.c:502
+#: main.c:692
 msgid "Tap here to delete the selected contact."
 msgstr ""
 
-#: main.c:508
+#: main.c:699
 msgid "Properties"
 msgstr ""
 
-#: main.c:508
+#: main.c:699
 msgid "Tap here to configure the program."
 msgstr ""
 
-#: main.c:514
+#: main.c:705
 msgid "Close"
 msgstr ""
 
-#: main.c:514
+#: main.c:705
 msgid "Tap here to exit gpe-contacts."
 msgstr ""
 
-#: main.c:531 main.c:563
+#: main.c:730 main.c:776
 msgid "Contact"
 msgstr ""
 
-#: main.c:538
+#: main.c:742
 msgid "Find:"
 msgstr ""
 
-#: main.c:544
+#: main.c:749
 msgid "in"
 msgstr ""
 
