@@ -5,7 +5,7 @@ PREFIX = /usr/local
 DEBUG = no
 CVSBUILD = yes
 GTK2=yes
-LINGUAS = de hu
+LINGUAS = de hu id
 
 MEMBERS = $(PACKAGE)
 CONTROL = control1
