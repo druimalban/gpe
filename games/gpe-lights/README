@@ -1,0 +1,16 @@
+This is XLightOff, a little game under X.
+Easy to get in hands, not so easy to solve.
+
+You can find it at :
+http://sed.free.fr/xlightoff
+
+You just run "make" in this directory, it should produce a xlightoff file.
+Then you simply do : ./xlightoff and enjoy.
+Under sparc/solaris, you may have to edit the Makefile to position XINC
+and XLIB variables to their correct position. I should use xmkmf...
+
+It is in the public domain.
+I dedicate it to my angel.
+
+Enjoy your life.
+Sed - sed@free.fr

@@ -1,0 +1,8 @@
+Package: gpe-lights2 
+Version: 0.0.1 
+Section: games
+Priority: optional
+Architecture: arm
+Depends: libgtk2.0-0
+Maintainer: Joe McCarthy <mccarthy@engrng.pitt.edu>
+Description: A simple light puzzle using GTK

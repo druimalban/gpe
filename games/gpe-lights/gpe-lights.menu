@@ -1,0 +1,3 @@
+?package(gpe-lights):needs=x11 section=Games\
+  title="Lights Off" command=gpe-lights
+  icon=/usr/share/pixmaps/gpe-lights.png
