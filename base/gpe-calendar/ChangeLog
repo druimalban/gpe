@@ -1,3 +1,11 @@
+2003-01-18  Philip Blundell  <philb@gnu.org>
+
+	* main.c (main): Use stock icons.
+	* day_popup.c (day_popup): Likewise.
+	* event-ui.c (build_edit_event_window): Likewise.
+
+	* main.c (my_icons): Remove now-redundant entries.
+
 2003-01-13  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>
 
 	* main.c: change update_current_view to happen at

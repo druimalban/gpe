@@ -741,9 +741,9 @@ build_edit_event_window (void)
   gtk_widget_set_usize (description, -1, 88);
 
   gtk_widget_realize (window);
-  buttonok = gpe_picture_button (window->style, _("Save"), "save");
-  buttoncancel = gpe_picture_button (window->style, _("Cancel"), "cancel");
-  buttondelete = gpe_picture_button (window->style, _("Delete"), "delete");
+  buttonok = gpe_button_new_from_stock (GTK_STOCK_SAVE, GPE_BUTTON_TYPE_BOTH);
+  buttoncancel = gpe_button_new_from_stock (GTK_STOCK_CANCEL, GPE_BUTTON_TYPE_BOTH);
+  buttondelete = gpe_button_new_from_stock (GTK_STOCK_DELETE, GPE_BUTTON_TYPE_BOTH);
 
   gtk_signal_connect (GTK_OBJECT (buttonok), "clicked",
 		      GTK_SIGNAL_FUNC (click_ok), window);

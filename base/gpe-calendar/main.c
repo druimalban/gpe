@@ -43,22 +43,15 @@ GtkWidget *main_window, *pop_window;
 GtkWidget *notebook;
 
 struct gpe_icon my_icons[] = {
-  { "new", "new" },
-  { "home", "home" },
   { "future_view", "future_view" },
   { "day_view", "day_view" },
   { "week_view", "week_view" },
   { "month_view", "month_view" },
-  { "exit", "exit" },
-  { "delete", "delete" },
-  { "save", "save" },
-  { "cancel", "cancel" },
   { "bell", "bell" },
   { "recur", "recur" },
   { "bell_recur", "bell_recur" },
-  { "close" },
   { "icon", PREFIX "/share/pixmaps/gpe-calendar.png" },
-  {NULL, NULL}
+  { NULL, NULL }
 };
 
 static GtkWidget *day, *week, *month, *future, *current_view;
@@ -259,8 +252,7 @@ main (int argc, char *argv[])
   gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
 #endif
 
-  p = gpe_find_icon ("new");
-  pw = gtk_image_new_from_pixbuf(p);
+  pw = gtk_image_new_from_stock (GTK_STOCK_NEW, GTK_ICON_SIZE_SMALL_TOOLBAR);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("New Appointment"), 
 			   _("New Appointment"), 
 			   _("Tap here to add a new appointment or reminder"), 
@@ -268,8 +260,7 @@ main (int argc, char *argv[])
 
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
 
-  p = gpe_find_icon ("home");
-  pw = gtk_image_new_from_pixbuf(p);
+  pw = gtk_image_new_from_stock (GTK_STOCK_HOME, GTK_ICON_SIZE_SMALL_TOOLBAR);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Today"), 
 			   _("Today"), _("Today"), pw, set_today, NULL);
 
@@ -309,8 +300,7 @@ main (int argc, char *argv[])
 
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
   
-  p = gpe_find_icon ("exit");
-  pw = gtk_image_new_from_pixbuf(p);
+  pw = gtk_image_new_from_stock (GTK_STOCK_QUIT, GTK_ICON_SIZE_SMALL_TOOLBAR);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Exit"), 
 			   _("Exit"), _("Tap here to exit the program"),
 			   pw, GTK_SIGNAL_FUNC (gpe_cal_exit), NULL);

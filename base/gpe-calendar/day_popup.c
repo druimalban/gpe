@@ -91,7 +91,7 @@ day_popup (GtkWidget *parent, struct day_popup *p)
 
   gtk_widget_realize (window);
   day_button = gpe_picture_button (window->style, NULL, "day_view");
-  close_button = gpe_picture_button (window->style, NULL, "close");
+  close_button = gpe_button_new_from_stock (GTK_STOCK_CLOSE, GPE_BUTTON_TYPE_ICON);
 
   memset (&tm, 0, sizeof (tm));
   tm.tm_year = p->year - 1900;
