@@ -13,7 +13,7 @@ run_parts () {
   done;
 }
 
-SYSSESSIONDIR=/etc/X11/Xsession.d
+SYSSESSIONDIR=/etc/X11/Xsession-gpe.d
 
 SESSIONFILES=$(run_parts $SYSSESSIONDIR)
 if [ -n "$SESSIONFILES" ]; then
