@@ -2,6 +2,8 @@
 
 	* gpeclockface.c (gpe_clock_face_prepare_xrender): Clear backing
 	pixmap to widget background colour.
+	(gpe_clock_face_button_press): Take hour modulo 12 when
+	calculating angle of hand.
 
 2003-08-22  Philip Blundell  <philb@gnu.org>
 

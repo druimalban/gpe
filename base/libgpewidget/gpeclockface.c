@@ -301,9 +301,9 @@ gpe_clock_face_button_press (GtkWidget *w, GdkEventButton *b)
   gint y_start = b->y - clock->y_offset - clock->radius;
   double r = sqrt (x_start * x_start + y_start * y_start);
   double start_angle = angle_from_xy (x_start, y_start);
-  double hour_angle = gtk_adjustment_get_value (clock->hour_adj) * 2 * M_PI / 12;
+  double hour_angle = ((int)gtk_adjustment_get_value (clock->hour_adj) % 12) * 2 * M_PI / 12;
   double minute_angle = gtk_adjustment_get_value (clock->minute_adj) * 2 * M_PI / 60;
-  
+
   hour_angle -= start_angle;
   minute_angle -= start_angle;
   if (hour_angle < 0)
