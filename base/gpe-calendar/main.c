@@ -28,8 +28,8 @@
 #include "year_view.h"
 #include "month_view.h"
 
-#define PIXMAPS_DIR "/usr/share/gpe/pixmaps"
-#define MY_PIXMAPS_DIR "/usr/share/gpe-calendar/pixmaps"
+#define PIXMAPS_DIR PREFIX "/share/gpe/pixmaps"
+#define MY_PIXMAPS_DIR PREFIX "/share/gpe-calendar/pixmaps"
 
 extern void about (void);
 
