@@ -309,6 +309,8 @@ open_window (GSList *clients)
 
   window = gtk_dialog_new ();
 
+  gtk_container_set_border_width (GTK_CONTAINER (window), gpe_get_border ());
+
   hbox1 = gtk_hbox_new (FALSE, gpe_get_boxspacing ());
   display_label = gtk_label_new (_("Display"));
   display_combo = gtk_combo_new ();
