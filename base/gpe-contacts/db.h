@@ -29,6 +29,7 @@ struct tag_value
 {
   guint tag;
   gchar *value;
+  guint oid;
 };
 
 extern struct tag_value *new_tag_value (guint, gchar *);
@@ -37,7 +38,13 @@ extern void update_tag_value (struct tag_value *t, gchar *value);
 
 struct person
 {
-  struct tag_value *data;
+  guint id;
+  gchar *name;
+  GSList *data;
 };
+
+extern struct person *new_person (void);
+extern void commit_person (struct person *);
+extern void discard_person (struct person *);
 
 #endif

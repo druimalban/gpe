@@ -91,6 +91,7 @@ new_tag_value (guint tag, gchar *value)
   struct tag_value *t = g_malloc (sizeof (struct tag_value));
   t->tag = tag;
   t->value = value;
+  t->oid = 0;
   return t;
 }
 
@@ -112,4 +113,73 @@ update_tag_value (struct tag_value *t, gchar *value)
 {
   g_free (t->value);
   t->value = value;
+}
+
+struct person *
+new_person (void)
+{
+  struct person *p = g_malloc (sizeof (struct person));
+  memset (p, 0, sizeof (*p));
+  return p;
+}
+
+void
+discard_person (struct person *p)
+{
+  g_free (p);
+}
+
+guint
+new_person_id ()
+{
+  return 1;
+}
+
+void
+commit_person (struct person *p)
+{
+  GSList *iter;
+  int r;
+  gchar *err;
+
+  if (p->id)
+    {
+      r = sqlite_exec_printf (db,
+			      "update person set name='%q' where id=%d",
+			      NULL,
+			      NULL,
+			      &err,
+			      p->name, p->id);
+    }
+  else
+    {
+      p->id = new_person_id ();
+      r = sqlite_exec_printf (db,
+			      "insert into person values (%d,'%q')",
+			      NULL,
+			      NULL,
+			      &err,
+			      p->id, p->name);
+    }
+
+  for (iter = p->data; iter; iter = iter->next)
+    {
+      struct tag_value *v = iter->data;
+      if (v->oid)
+	{
+	  r = sqlite_exec_printf (db,
+				  "update person_attr set value='%q' where oid=%d", 
+				  NULL, NULL, &err,
+				  v->value, v->oid);
+	}
+      else
+	{
+	  r = sqlite_exec_printf (db,
+				  "insert into person_attr values(%d,%d,'%q')",
+				  NULL, NULL, &err,
+				  p->id, v->tag, v->value);
+	}
+    }
+
+  discard_person (p);
 }

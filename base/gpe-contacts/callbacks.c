@@ -116,6 +116,9 @@ on_edit_save_clicked                   (GtkButton       *button,
   GtkWidget *edit = (GtkWidget *)user_data;
   GSList *data = NULL;
   GSList *tags;
+  struct person *p = gtk_object_get_data (GTK_OBJECT (edit), "person");
+  if (p == NULL)
+    p = new_person ();
 
   for (tags = gtk_object_get_data (GTK_OBJECT (edit), "tag-widgets");
        tags;
@@ -132,10 +135,11 @@ on_edit_save_clicked                   (GtkButton       *button,
       else
 	{
 	  t = new_tag_value (tag, text);
-	  data = g_slist_append (data, t);
+	  p->data = g_slist_append (p->data, t);
 	}
     }
 
+  commit_person (p);
   gtk_widget_destroy (edit);
 }
 
