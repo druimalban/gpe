@@ -16,6 +16,8 @@
 #include <glib.h>
 
 #include "event-db.h"
+#include "event-ui.h"
+
 #include "globals.h"
 
 void 

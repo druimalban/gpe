@@ -19,6 +19,8 @@
 
 #include "globals.h"
 #include "event-db.h"
+#include "event-ui.h"
+
 #include "gtkdatecombo.h"
 
 #define _(_x) gettext (_x)

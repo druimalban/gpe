@@ -16,6 +16,7 @@
 #include <gdk_imlib.h>
 
 #include "event-db.h"
+#include "event-ui.h"
 #include "globals.h"
 
 #include "day_view.h"
