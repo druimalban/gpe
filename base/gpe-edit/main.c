@@ -316,6 +316,9 @@ main (int argc, char *argv[])
   gtk_container_add (GTK_CONTAINER (scroll), GTK_WIDGET (text_area));
   gtk_box_pack_start (GTK_BOX (vbox), scroll, TRUE, TRUE, 0);
 
+  if (gpe_find_icon_pixmap ("icon", &pmap, &bmap))
+    gdk_window_set_icon (main_window->window, NULL, pmap, bmap);
+
   gtk_widget_show (main_window);
   gtk_widget_show (vbox);
   gtk_widget_show (toolbar);
@@ -323,9 +326,6 @@ main (int argc, char *argv[])
   gtk_widget_show (text_area);
 
   what_init ();
-
-  if (gpe_find_icon_pixmap ("icon", &pmap, &bmap))
-    gdk_window_set_icon (main_window->window, NULL, pmap, bmap);
 
   gtk_main();
   return 0;
