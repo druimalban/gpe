@@ -38,7 +38,6 @@
 
 
 #define WINDOW_NAME "IRC Client"
-#define _(_x) gettext (_x)
 
 struct gpe_icon my_icons[] = {
   {"new", "new", NULL},
@@ -170,7 +169,25 @@ update_text_view (GString * text)
 }
 
 
-void append_nick_to_buffer (IRCServer * server, gchar * target, gchar * nick)
+void append_to_buffer_printf (IRCServer * server,
+	const gchar * target, const gchar *tag_name, const gchar * format, ...)
+{
+    gchar *str = NULL;
+    va_list args;
+
+    va_start(args, format);
+    str = g_strdup_vprintf(format, args);
+    va_end(args);
+
+    append_to_buffer(server, target, str, tag_name);
+
+    g_free(str);
+}
+
+
+
+void append_nick_to_buffer (IRCServer * server,
+	const gchar * target, const gchar * nick)
 {
   gchar *tag = NULL;
   gchar *str = NULL;
@@ -194,8 +211,8 @@ void append_nick_to_buffer (IRCServer * server, gchar * target, gchar * nick)
 
 
 void
-append_to_buffer (IRCServer * server, gchar * target, gchar * text,
-                  gchar * tag_name)
+append_to_buffer (IRCServer * server, const gchar * target, const gchar * text,
+                  const gchar * tag_name)
 {
   GtkTextIter start, end;
   GtkTextBuffer *buffer = NULL;
@@ -353,7 +370,7 @@ add_default_buffer_tags (GtkTextBuffer * buffer)
 }
 
 void
-join_channel (IRCServer * server, gchar * channel_name)
+join_channel (IRCServer * server, const gchar * channel_name)
 {
   IRCChannel *channel;
   GtkWidget *button;
