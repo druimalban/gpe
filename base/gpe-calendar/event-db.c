@@ -109,10 +109,6 @@ load_data_callback (void *arg, int argc, char **argv, char **names)
 	{
 	  parse_date (argv[1], &ev->recur.end, NULL);
 	}
-      else if (!strcasecmp (argv[0], "modified"))
-	{
-	  parse_date (argv[1], &ev->modified, NULL);
-	}
       else if (!strcasecmp (argv[0], "rcount"))
 	{
 	  ev->recur.count = atoi (argv[1]);
@@ -137,10 +133,6 @@ load_data_callback (void *arg, int argc, char **argv, char **names)
 	{
 	  ev->alarm = atoi (argv[1]);
 	  ev->flags |= FLAG_ALARM;
-	}
-      else if (!strcasecmp (argv[0], "sequence"))
-	{
-	  ev->sequence = atoi (argv[1]);
 	}
     }
   return 0;
@@ -244,6 +236,10 @@ load_details_callback (void *arg, int argc, char *argv[], char **names)
 	evd->summary = g_strdup (argv[1]);
       else if (!strcasecmp (argv[0], "description") && !evd->description)
 	evd->description = g_strdup (argv[1]);
+      else if (!strcasecmp (argv[0], "modified"))
+	parse_date (argv[1], &evd->modified, NULL);
+      else if (!strcasecmp (argv[0], "sequence"))
+	evd->sequence = atoi (argv[1]);
     }
   return 0;
 }
@@ -254,19 +250,28 @@ event_db_get_details (event_t ev)
   char *err;
   event_details_t evd;
 
-  evd = g_malloc (sizeof (struct event_details_s));
-  memset (evd, 0, sizeof (*evd));
-
-  if (sqlite_exec_printf (sqliteh, "select tag,value from calendar where uid=%d",
-			  load_details_callback, evd, &err, ev->uid))
+  if (ev->details)
     {
-      gpe_error_box (err);
-      free (err);
-      g_free (evd);
-      return NULL;
+      evd = ev->details;
+    }
+  else
+    {
+      evd = g_malloc (sizeof (struct event_details_s));
+      memset (evd, 0, sizeof (*evd));
+
+      if (sqlite_exec_printf (sqliteh, "select tag,value from calendar where uid=%d",
+			      load_details_callback, evd, &err, ev->uid))
+	{
+	  gpe_error_box (err);
+	  free (err);
+	  g_free (evd);
+	  return NULL;
+	}
+      
+      ev->details = evd;
     }
 
-  ev->details = evd;
+  evd->ref++;
 
   return evd;
 }
@@ -276,15 +281,22 @@ event_db_forget_details (event_t ev)
 {
   if (ev->details)
     {
-      event_details_t evd = ev->details;
-      if (evd->description)
-	g_free (evd->description);
-      if (evd->summary)
-	g_free (evd->summary);
-      g_free (evd);
-    }
+      if (ev->details->ref == 0)
+	fprintf (stderr, "details refcount was already zero!\n");
+      else
+	ev->details->ref--;
 
-  ev->details = NULL;
+      if (ev->details->ref == 0)
+	{
+	  event_details_t evd = ev->details;
+	  if (evd->description)
+	    g_free (evd->description);
+	  if (evd->summary)
+	    g_free (evd->summary);
+	  g_free (evd);
+	}
+      ev->details = NULL;
+    }
 }
 
 gboolean
@@ -462,20 +474,22 @@ static gboolean
 event_db_write (event_t ev, char **err)
 {
   time_t modified;
-  char buf_start[256], buf_end[256], buf_modified[256];
+  char buf_start[64], buf_end[64], buf_modified[64];
   struct tm tm;
+  event_details_t ev_d = event_db_get_details (ev);
+  gboolean rc = FALSE;
 
   gmtime_r (&ev->start, &tm);
-  strftime (buf_start, 256, 
+  strftime (buf_start, sizeof (buf_start), 
 	    (ev->flags & FLAG_UNTIMED) ? "%Y-%m-%d" : "%Y-%m-%d %H:%M",
 	    &tm);  
 
   modified = time (NULL);
-  gmtime_r (&modified, &tm);
-  strftime (buf_modified, 256, "%Y-%m-%d %H:%M:%S", &tm); 
+  gmtime_r (&ev_d->modified, &tm);
+  strftime (buf_modified, sizeof (buf_modified), "%Y-%m-%d %H:%M:%S", &tm); 
 
-  if (insert_values (sqliteh, ev->uid, "summary", "%q", ev->details->summary)
-      || insert_values (sqliteh, ev->uid, "description", "%q", ev->details->description)
+  if (insert_values (sqliteh, ev->uid, "summary", "%q", ev_d->summary)
+      || insert_values (sqliteh, ev->uid, "description", "%q", ev_d->description)
       || insert_values (sqliteh, ev->uid, "duration", "%d", ev->duration)
       || insert_values (sqliteh, ev->uid, "recur", "%d", ev->recur.type)
       || insert_values (sqliteh, ev->uid, "rcount", "%d", ev->recur.count)
@@ -483,26 +497,30 @@ event_db_write (event_t ev, char **err)
       || insert_values (sqliteh, ev->uid, "rdaymask", "%d", ev->recur.daymask)
       || insert_values (sqliteh, ev->uid, "modified", "%q", buf_modified)
       || insert_values (sqliteh, ev->uid, "start", "%q", buf_start)
-      || insert_values (sqliteh, ev->uid, "sequence", "%d", ev->sequence))
-    return FALSE;
+      || insert_values (sqliteh, ev->uid, "sequence", "%d", ev_d->sequence))
+    goto exit;
 
   if (ev->recur.end != 0)
     {
       gmtime_r (&ev->recur.end, &tm);
-      strftime (buf_end, 256, 
+      strftime (buf_end, sizeof (buf_end), 
         	(ev->flags & FLAG_UNTIMED) ? "%Y-%m-%d" : "%Y-%m-%d %H:%M",
         	&tm); 
       if (insert_values (sqliteh, ev->uid, "rend", "%q", buf_end)) 
-        return FALSE;
+        goto exit;
     }
 
   if (ev->flags & FLAG_ALARM)
     {
       if (insert_values (sqliteh, ev->uid, "alarm", "%d", ev->alarm))
-	return FALSE;
+	goto exit;
     }
 
-  return TRUE;
+  rc = TRUE;
+
+ exit:
+  event_db_forget_details (ev);
+  return rc;
 }
 
 gboolean
@@ -611,5 +629,6 @@ event_db_alloc_details (event_t ev)
 {
   ev->details = (event_details_t) g_malloc (sizeof (struct event_details_s));
   memset (ev->details, 0, sizeof (*ev->details));
+  ev->details->ref++;
   return ev->details;
 }

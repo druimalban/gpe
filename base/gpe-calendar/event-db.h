@@ -24,6 +24,11 @@ typedef enum
 
 typedef struct event_details_s
 {
+  guint ref;
+
+  unsigned long sequence;
+  time_t modified;
+
   char *summary;
   char *description;
 } *event_details_t;
@@ -44,10 +49,8 @@ typedef time_t calendar_time_t;
 typedef struct event_s
 {
   unsigned long uid;
-  unsigned long sequence;
 
   calendar_time_t start;
-  time_t modified;
   unsigned long duration;	/* 0 == instantaneous */
   unsigned long alarm;		/* seconds before event */
   unsigned long flags;

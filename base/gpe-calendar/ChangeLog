@@ -1,3 +1,17 @@
+2002-08-31  Philip Blundell  <philb@gnu.org>
+
+	* event-db.c (event_db_alloc_details): Add refcount.
+	(event_db_forget_details): Likewise.
+	(event_db_get_details): Likewise.
+	(event_db_write): Use event_db_get_details and
+	event_db_forget_details.  Reduce size of string buffers.  Use
+	sizeof where appropriate.  Take "sequence" and "modified" from
+	details struct, not event_t.
+	* event-db.h (event_details_s): Add ref, sequence, modified.
+	(event_s): Remove sequence, modified.
+	* event-ui.c (click_ok): Call event_db_forget_details.  Use
+	ev_d->sequence not ev->sequence.
+
 2002-08-30  Philip Blundell  <philb@gnu.org>
 
 	* event-db.h (event_s): Add "sequence".
