@@ -33,6 +33,8 @@ install: $(PACKAGE)
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
 	install $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	strip $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
+	mkdir -p $(DESTDIR)/etc/X11/Xsession.d
+	install $(PACKAGE).xs $(DESTDIR)/etc/X11/Xsession.d/70gpe-confd
 
 clean:
 	rm -f $(PACKAGE)

@@ -1,0 +1,7 @@
+#!/bin/sh
+
+if test -d /etc/X11/Xsession-gpe.d/; then 
+    ln -sf /etc/X11/Xsession.d/70gpe-confd /etc/X11/Xsession-gpe.d/
+fi
+
+exit 0
