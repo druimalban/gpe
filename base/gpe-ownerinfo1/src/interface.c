@@ -279,6 +279,12 @@ create_GPE_Ownerinfo (void)
   gtk_signal_connect (GTK_OBJECT (bigphotobutton), "clicked",
                       GTK_SIGNAL_FUNC (on_bigphotobutton_clicked),
                       NULL);
+  gtk_signal_connect (GTK_OBJECT (bigphotobutton), "size_allocate",
+                      GTK_SIGNAL_FUNC (on_bigphotobutton_size_allocate),
+                      NULL);
+  gtk_signal_connect (GTK_OBJECT (smallphotobutton), "size_allocate",
+                      GTK_SIGNAL_FUNC (on_smallphotobutton_size_allocate),
+                      NULL);
 
   gtk_widget_grab_focus (smallphotobutton);
   return GPE_Ownerinfo;
