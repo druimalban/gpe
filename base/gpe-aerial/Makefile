@@ -8,7 +8,7 @@ INSTALL = install
 PREFIX = /usr/
 DESTDIR = /
 
-LINGUAS = de sv ro cs nl pt ru
+LINGUAS = de sv ro cs nl pt ru fr
 
 ifeq ($(CVSBUILD),yes)
 LDFLAGS += -L../libgpewidget -L.
