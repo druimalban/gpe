@@ -3,8 +3,19 @@ Thu, 13 Jun 2002 19:30:06 +0100.
 
 It was downloaded from http://gpe.handhelds.org
 
-Upstream Author(s): 
+Upstream Author: 
 	Phil Blundell <pb@handhelds.org>
 
 Copyright: LGPL-2
 
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Library General Public
+    License version 2 as published by the Free Software Foundation.
+ 
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Library General Public License for more details.
+ 
+    On Debian systems you should have a local copy of the GNU Library
+    General Public License in /usr/share/common-licenses/LGPL-2. 
