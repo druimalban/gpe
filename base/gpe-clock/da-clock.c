@@ -79,10 +79,7 @@ draw_clock (GtkWidget *widget,
   GtkDrawingArea *darea;
   GdkDrawable *drawable;
   GdkGC *black_gc;
-  GdkGC *gray_gc;
   GdkGC *white_gc;
-  GdkGC *blue_gc;
-  GdkGC *red_gc;
   GdkRectangle pixbuf_rect, intersect_rect;
   double hour_angle, minute_angle;
 
@@ -92,10 +89,7 @@ draw_clock (GtkWidget *widget,
   darea = GTK_DRAWING_AREA (widget);
   drawable = widget->window;
   white_gc = widget->style->white_gc;
-  gray_gc = widget->style->bg_gc[GTK_STATE_NORMAL];
   black_gc = widget->style->black_gc;
-  //blue_gc = widget->style->blue_gc;
-  //red_gc = widget->style->red_gc;
 
   x_offset = (widget->allocation.width / 2) - clock_radius;
   y_offset = (widget->allocation.height / 2) - clock_radius;
@@ -103,7 +97,6 @@ draw_clock (GtkWidget *widget,
   if (event)
     {
       gdk_gc_set_clip_rectangle (black_gc, &event->area);
-      gdk_gc_set_clip_rectangle (gray_gc, &event->area);
       gdk_gc_set_clip_rectangle (white_gc, &event->area);
     }
 
@@ -126,16 +119,19 @@ draw_clock (GtkWidget *widget,
 		0, 360 * 64);
   */
 
-  gdk_draw_rectangle (drawable, gray_gc, TRUE, x_offset, y_offset, clock_radius * 2, clock_radius * 2);
+  if (event)
+    {
+      pixbuf_rect.x = x_offset;
+      pixbuf_rect.y = y_offset;
+      pixbuf_rect.width = gdk_pixbuf_get_width (clock_background);
+      pixbuf_rect.height = gdk_pixbuf_get_height (clock_background);
 
-  pixbuf_rect.x = x_offset;
-  pixbuf_rect.y = y_offset;
-  pixbuf_rect.width = gdk_pixbuf_get_width (clock_background);
-  pixbuf_rect.height = gdk_pixbuf_get_height (clock_background);
-
-  if (gdk_rectangle_intersect (&pixbuf_rect, &event->area, &intersect_rect) == TRUE)
-    gdk_pixbuf_render_to_drawable (clock_background, drawable, gray_gc, intersect_rect.x - x_offset, intersect_rect.y - y_offset, intersect_rect.x, intersect_rect.y, intersect_rect.width, intersect_rect.height, GDK_RGB_DITHER_NONE, 0, 0);
-
+      if (gdk_rectangle_intersect (&pixbuf_rect, &event->area, &intersect_rect) == TRUE)
+	gdk_pixbuf_render_to_drawable (clock_background, drawable, black_gc, intersect_rect.x - x_offset, intersect_rect.y - y_offset, intersect_rect.x, intersect_rect.y, intersect_rect.width, intersect_rect.height, GDK_RGB_DITHER_NONE, 0, 0);
+    }
+  else
+    gdk_pixbuf_render_to_drawable (clock_background, drawable, black_gc, 0, 0, x_offset, y_offset, gdk_pixbuf_get_width (clock_background), gdk_pixbuf_get_height (clock_background), GDK_RGB_DITHER_NONE, 0, 0);
+ 
   minute_angle = gtk_adjustment_get_value (minute_adj) * 2 * M_PI / 60;
   hour_angle = gtk_adjustment_get_value (hour_adj) * 2 * M_PI / 12;
 
@@ -214,7 +210,11 @@ button_drag (GtkWidget *w, GdkEventMotion *m, GtkWidget *scrolled_window)
 static void
 adjustment_value_changed (GObject *a, GtkWidget *w)
 {
+  GdkRegion *region = gdk_region_rectangle (&w->allocation);
+  gdk_window_begin_paint_region (w->window, region);
   draw_clock (w, NULL, NULL);
+  gdk_window_end_paint (w->window);
+  gdk_region_destroy (region);
 }
 
 GtkWidget *

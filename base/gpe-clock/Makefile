@@ -1,6 +1,6 @@
 PACKAGE = gpe-clock
 PREFIX = /usr/local
-DEBUG = no
+DEBUG = yes
 GTK2 = yes
 CVSBUILD = yes
 VERSION = 0.0
@@ -15,7 +15,7 @@ GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
 CPPFLAGS = -D_GNU_SOURCE -I../libgpewidget -I../libeventdb
 ifeq ($(DEBUG),yes)
 CFLAGS += -O2 -g
-LDFLAGS = -g -lefence
+LDFLAGS = -g
 else
 CFLAGS += -Os -fomit-frame-pointer
 endif
