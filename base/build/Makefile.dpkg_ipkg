@@ -75,3 +75,6 @@ retag: check-source
 	cvs tag -F $(CVSTAG)
 
 source: tag dist-upload
+
+%.pc: %.pc.in
+	sed 's:PREFIX:$(PREFIX):;s:BUILDDIR:$(shell pwd):;s:VERSION:$(VERSION):' < $< > $@
