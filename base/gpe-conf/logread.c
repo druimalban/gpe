@@ -71,6 +71,14 @@ static int fsession;
 
 /* --- local intelligence --- */
 
+void
+printlog (GtkWidget * textview, gchar * str)
+{
+	GtkTextBuffer *log;
+	log = gtk_text_view_get_buffer (GTK_TEXT_VIEW (textview));
+	gtk_text_buffer_insert_at_cursor (GTK_TEXT_BUFFER (log), str, -1);
+}
+
 /*
  * sem_up - up()'s a semaphore.
  */

@@ -1,3 +1,13 @@
+2004-01-12	Florian Boor  	<florian.boor@kernelconcepts.de>
+	* Makefile, main-info.c: gpe-info target, main for gpe-info.
+	* sysinfo.c, applets.h: Some minor additions, fixes.
+	* unimplemented.c: Removed obsolete stuff.
+	* main-info.c: Added tab selection code.
+	* theme.c: Fixed bug that let the image radiobutton enabled on 
+	  theme default.
+	* Removed obsolete desktop files.
+	* Released V 0.1.4
+
 2004-01-09	Florian Boor  	<florian.boor@kernelconcepts.de>
 	* sysinfo.c: Major update to network info tab.
 	* tools/interface.c: Some hacks to make strings look nicer.
@@ -5,6 +15,7 @@
 	* sysinfo.c: Fixed dialog come up with wrong tab.
 	* sysinfo.c: Added syslog tab.
 	* sysinfo.c: Added displaying of default gateway.
+	* main.c: Install signal handler for cleanup on exit.
 	
 2004-01-08	Florian Boor  	<florian.boor@kernelconcepts.de>
 	* sysinfo.c: Started merging info applets.

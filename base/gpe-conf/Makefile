@@ -12,19 +12,16 @@ PACKAGETOOL = yes
 LINGUAS = pt ro de fr cs nl sv sk ru
 EXTRA_DESKTOPS = \
 	gpe-conf-admin.desktop.in \
-	gpe-conf-battery.desktop.in \
 	gpe-conf-cardinfo.desktop.in \
 	gpe-conf-ipaqscreen.desktop.in \
 	gpe-conf-kbd.desktop.in \
 	gpe-conf-keyboard.desktop.in \
 	gpe-conf-keyctl.desktop.in \
 	gpe-conf-login-setup.desktop.in \
-	gpe-conf-logread.desktop.in \
 	gpe-conf-network.desktop.in \
 	gpe-conf-ownerinfo.desktop.in \
 	gpe-conf-serial.desktop.in \
 	gpe-conf-sleep.desktop.in \
-	gpe-conf-storage.desktop.in \
 	gpe-conf-theme.desktop.in \
 	gpe-conf-time.desktop.in \
 	gpe-conf-users.desktop.in \
@@ -94,15 +91,19 @@ MEMBERS += sleep/main sleep/interface sleep/callbacks sleep/conf sleep/confGUI
 MEMBERS += users/interface users/callbacks  
 MEMBERS += cfgfile
 MEMBERS += gpe-admin
-MEMBERS += storage
 MEMBERS += widgets/sp-color-slider
 MEMBERS += serial
-MEMBERS += logread
 MEMBERS += cardinfo
 MEMBERS += tools/interface
 MEMBERS += tasks
-MEMBERS += battery
-MEMBERS += sysinfo
+
+MEMBERS_INFO  = main-info
+MEMBERS_INFO += storage
+MEMBERS_INFO += logread
+MEMBERS_INFO += tools/interface
+MEMBERS_INFO += battery
+MEMBERS_INFO += sysinfo
+
 
 ifeq ($(PACKAGETOOL),yes)
 EXTRA_DESKTOP += gpe-conf-packages.desktop.in 
@@ -114,6 +115,9 @@ OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
+OBJS_INFO = $(patsubst %,%.o,$(MEMBERS_INFO))
+DEPS_INFO = $(patsubst %,%.d,$(MEMBERS_INFO))
+SOURCES_INFO = $(patsubst %,%.c,$(MEMBERS_INFO))
 
 PIXMAPS = gpe-config-apm.png
 PIXMAPS += gpe-config-ipaqscreen.png
@@ -159,14 +163,18 @@ PIXMAPS += gpe-config-packages.png
 endif
 
 
-all: $(PACKAGE)
+all: $(PACKAGE) gpe-info
 
 $(PACKAGE): $(OBJS)
 	$(CC) -g -o $@ $(OBJS) $(LDFLAGS)
 	cp $(PACKAGE) gpe-conf.pc
 	$(STRIP) $(PACKAGE)
 
-install-program: $(PACKAGE) all-desktop
+gpe-info: $(OBJS_INFO)
+	$(CC) -g -o $@ $(OBJS_INFO) $(LDFLAGS)
+	$(STRIP) gpe-info
+	
+install-program: all all-desktop
 	mkdir -p $(DESTDIR)/CONTROL
 	sed -e s/VERSION/$(VERSION)/ < familiar/control1 > $(DESTDIR)/CONTROL/control
 	mkdir -p $(DESTDIR)/etc/gpe
@@ -175,6 +183,8 @@ install-program: $(PACKAGE) all-desktop
 	mkdir -p $(DESTDIR)/$(PREFIX)/bin
 	$(INSTALL) $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/gpe-conf
 	$(STRIP) $(DESTDIR)$(PREFIX)/bin/gpe-conf
+	$(INSTALL) gpe-info $(DESTDIR)$(PREFIX)/bin/gpe-info
+	$(STRIP) $(DESTDIR)$(PREFIX)/bin/gpe-info
 	mkdir -p $(DESTDIR)$(PREFIX)/share/pixmaps
 	for i in $(PIXMAPS); do install -m 644 -D pixmaps/$$i $(DESTDIR)$(PREFIX)/share/pixmaps/$$i; done
 	mkdir -p  $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default
@@ -183,7 +193,7 @@ install-program: $(PACKAGE) all-desktop
 	$(INSTALL) -m 644 *.desktop $(DESTDIR)$(PREFIX)/share/applications
 
 clean:
-	rm -f $(PACKAGE) $(OBJS) *~ */*~ *.ipk *.o
+	rm -f $(PACKAGE) gpe-info $(OBJS) $(OBJS_INFO) *~ */*~ *.ipk *.o
 
 include $(BUILD)/Makefile.dpkg_ipkg
 include $(BUILD)/Makefile.translation

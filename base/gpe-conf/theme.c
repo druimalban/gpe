@@ -325,11 +325,13 @@ void update_enabled_widgets()
 		gtk_widget_set_sensitive(self.rbImgTiled,FALSE);
 		gtk_widget_set_sensitive(self.rbSolid,FALSE);
 		gtk_widget_set_sensitive(self.rbGrad,FALSE);
+		gtk_widget_set_sensitive(self.rbImage,FALSE);
 	}
 	else
 	{
 		gtk_widget_set_sensitive(self.rbSolid,TRUE);
 		gtk_widget_set_sensitive(self.rbGrad,TRUE);
+		gtk_widget_set_sensitive(self.rbImage,TRUE);
 		if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self.rbSolid)))
 		{
 			gtk_widget_set_sensitive(self.bColor1,TRUE);

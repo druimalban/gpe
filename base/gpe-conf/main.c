@@ -42,16 +42,12 @@
 #include "users.h"
 #include "gpe-admin.h"
 #include "sleep/conf.h"
-#include "storage.h"
 #include "serial.h"
-#include "logread.h"
 #ifdef PACKAGETOOL		
 #include "packages.h"
 #endif
 #include "cardinfo.h"
 #include "tasks.h"
-#include "battery.h"
-#include "sysinfo.h"
 
 #include <gpe/init.h>
 #include <gpe/picturebutton.h>
@@ -115,22 +111,14 @@ struct Applet applets[]=
 		"Users" ,"users","User Administration",PREFIX "/share/pixmaps/gpe-config-users.png"},
     { &GpeAdmin_Build_Objects, &GpeAdmin_Free_Objects, &GpeAdmin_Save, &GpeAdmin_Restore , 
 		"GPE" ,"admin","GPE Conf Administration",PREFIX "/share/pixmaps/gpe-config-admin.png"},
-    { &Storage_Build_Objects, &Storage_Free_Objects, &Unimplemented_Save, &Storage_Restore ,
-		"Storage" ,"storage","Storage Information",PREFIX "/share/pixmaps/gpe-config-storage.png"},
     { &Serial_Build_Objects, &Serial_Free_Objects, &Serial_Save, &Serial_Restore ,
 		"Serial" ,"serial","Serial Port Configuration",PREFIX "/share/pixmaps/gpe-config-serial.png"},
-    { &Logread_Build_Objects, &Logread_Free_Objects, &Unimplemented_Save, &Logread_Restore ,
-		"Logread" ,"logread", "Logfile Viewer",PREFIX "/share/pixmaps/gpe-config-logread.png"},
     { &Cardinfo_Build_Objects, &Cardinfo_Free_Objects, &Unimplemented_Save, &Cardinfo_Restore ,
 		"Cardinfo" ,"cardinfo","PC/CF Card Info and Config",PREFIX "/share/pixmaps/gpe-config-cardinfo.png"},
 #ifdef PACKAGETOOL		
     { &Packages_Build_Objects, &Packages_Free_Objects, &Unimplemented_Save, &Packages_Restore ,
 		"Packages" ,"packages","Add and Remove packages",PREFIX "/share/pixmaps/gpe-config-packages.png"},
 #endif		
-    { &Battery_Build_Objects, &Battery_Free_Objects, &Unimplemented_Save, &Battery_Restore ,
-		"Battery" ,"battery","Battery info", PREFIX "/share/pixmaps/gpe-config-battery.png"},
-    { &Sysinfo_Build_Objects, &Sysinfo_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore ,
-		"System info" ,"sysinfo","System information", PREFIX "/share/pixmaps/gpe-config-sysinfo.png"},
     { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore ,
 		"Task nameserver" ,"task_nameserver","Task for changing nameserver", NULL}
   };
@@ -404,6 +392,10 @@ int main(int argc, char **argv)
 
       setresuid(getuid(),getuid(),getuid()); // abandon privilege..
       setresgid(getgid(),getgid(),getgid()); // abandon privilege..
+	
+	signal(SIGINT,Restore_Callback);
+	signal(SIGTERM,Restore_Callback);
+	
       if(argc == 1)
 	{
 		fprintf(stderr,_("This mode is disabled, please try:\n"));

@@ -1,17 +1,10 @@
 [Desktop Entry]
-Name=Global Look
-Name[cs]=Nastavení vzhledu aplikací
-Name[de]=Globales Aussehen
-Name[fr]=Apparence
-Name[pt]=Aparência Global
-Name[ro]=Privire Globală
-Name[ru]=Внешний вид
-Name[sk]=Globálny vzhľad
-Name[sv]=Globalt utseende
+Name=Appearance
 Comment=Global Appearance Setup
 Comment[cs]=Vzhled a písma
 Comment[de]=Globales Aussehen
 Comment[fr]=Configuration de l'apparence générale
+Comment[nl]=Globale verschijning setup
 Comment[pt]=Configuração de Aparência Global
 Comment[ro]=Setare Aspect Global
 Comment[ru]=Настройка внешнего вида

@@ -1,7 +1,7 @@
 [Desktop Entry]
 _Name=System Info
 _Comment=System Information
-Exec=gpe-conf sysinfo
+Exec=gpe-info
 Terminal=0
 Type=Application
 Icon=gpe-config-sysinfo.png

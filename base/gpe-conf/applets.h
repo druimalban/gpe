@@ -15,7 +15,6 @@ struct Applet
   char * icon_file;
 };
 
-/* When translation will be implemented...*/
 #define _(x) gettext(x)
 
 

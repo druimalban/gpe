@@ -250,7 +250,7 @@ network_get_gateway()
 	
 	while (i != EOF)
 	{
-		i = fscanf(froute,"%*s %llX %llX %*i %*i %*i %*i %*llX %*i %*i %*i\n", &dest, &gw);
+		i = fscanf(froute,"%*s %llX %llX %*i %*i %*i %*i %*s %*i %*i %*i\n", &dest, &gw);
 		if (i > 1)
 		{
 			if (dest == 0)
@@ -289,7 +289,6 @@ network_create_widgets (void)
 		GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
 	
 	table = gtk_table_new(6,2,FALSE);
-	gtk_container_set_border_width(GTK_CONTAINER(table),gpe_get_border());
 	gtk_table_set_row_spacings(GTK_TABLE(table),gpe_get_boxspacing());
 	gtk_table_set_col_spacings(GTK_TABLE(table),gpe_get_boxspacing());
 	gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW(sw),table);
@@ -302,7 +301,7 @@ network_create_widgets (void)
 	gtk_table_attach(GTK_TABLE(table),tw,0,3,0,1,GTK_FILL | GTK_EXPAND,
                      GTK_FILL,2,2);
 	
-	for (ife = int_list; ife->next; ife = ife->next)
+	for (ife = int_list; ife; ife = ife->next)
 	{
 		if ((ife->flags & IFF_UP) && !(ife->flags & IFF_LOOPBACK))
 		{
@@ -324,13 +323,13 @@ network_create_widgets (void)
 				tw = gtk_image_new_from_file(PIC_NET);
 			gtk_misc_set_alignment(GTK_MISC(tw),0.0,0.0);
 			gtk_table_attach(GTK_TABLE(table),tw,0,1,1+pos,2+pos,
-				GTK_FILL | GTK_EXPAND, GTK_FILL,0,0);
+				GTK_FILL , GTK_FILL,0,0);
 
 			tw = gtk_label_new(NULL);
 			gtk_label_set_markup(GTK_LABEL(tw),nwshort);
 			gtk_misc_set_alignment(GTK_MISC(tw),0,0.5);
 			gtk_table_attach(GTK_TABLE(table),tw,1,2,1+pos,3+pos,
-				GTK_FILL | GTK_EXPAND, GTK_FILL,0,0);
+				GTK_FILL , GTK_FILL,0,0);
 			
 			tw = gtk_label_new(NULL);
 			gtk_label_set_markup(GTK_LABEL(tw),nwlong);
@@ -360,11 +359,12 @@ network_create_widgets (void)
 void
 Sysinfo_Free_Objects ()
 {
+	gtk_main_quit();
 }
 
 
 GtkWidget *
-Sysinfo_Build_Objects (void)
+Sysinfo_Build_Objects (int whichtab)
 {
 	GtkWidget *notebook;
 	GtkWidget *tw, *table;
@@ -536,7 +536,7 @@ Sysinfo_Build_Objects (void)
 	gtk_notebook_append_page(GTK_NOTEBOOK(notebook),table,tw);
 	
 	gtk_widget_show_all(notebook);
-	gtk_notebook_set_current_page(GTK_NOTEBOOK(notebook),0);
+	gtk_notebook_set_current_page(GTK_NOTEBOOK(notebook),whichtab);
 	
 	return notebook;
 }
