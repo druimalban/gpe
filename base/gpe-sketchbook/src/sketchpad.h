@@ -57,13 +57,7 @@ extern gint prev_pos_y;
 extern gint tool;
 #define PEN    1
 #define ERASER 2
-extern gint color;
-#define WHITE  0
-#define BLACK  1
-#define RED    3
-#define GREEN  4
-#define BLUE   5
-#define YELLOW 6
+
 extern gint brush; //value = diameter of the brush (pixels)
 #define SMALL  0   // 0 means 'minimum' (gdk uses a specific algo)
 #define MEDIUM 2
@@ -71,6 +65,7 @@ extern gint brush; //value = diameter of the brush (pixels)
 #define XLARGE 20
 
 extern GdkColormap * colormap;
+extern GdkColor * current_color;
 extern GdkColor white;
 extern GdkColor black;
 extern GdkColor red;
@@ -78,10 +73,8 @@ extern GdkColor green;
 extern GdkColor blue;
 
 //void sketchpad_set_tool    (gint    tool);
-//void sketchpad_set_color   (gint    color);
 //void sketchpad_set_brush   (gint    brush);
 void sketchpad_set_tool_s  (gchar * tool);
-void sketchpad_set_color_s (gchar * color);
 void sketchpad_set_brush_s (gchar * brush);
 
 #endif

@@ -32,7 +32,7 @@ gboolean is_current_sketch_modified;
 
 GdkGC * graphical_context;
 GdkColormap * colormap;
-GdkColor * current_color;//FIXME: use that to ref the current color
+GdkColor * current_color;
 GdkColor white;
 GdkColor black;
 GdkColor red    = {0, 65535, 0, 0 };
@@ -43,9 +43,9 @@ gint drawing_area_width;
 gint drawing_area_height;
 gint prev_pos_x;
 gint prev_pos_y;
-gint tool;
-gint color;
-gint brush;
+
+gint tool;//current_tool
+gint brush;//current_brush
 
 //--Cursors:
 GdkCursor ** current_cursor;//ref the current one
@@ -72,19 +72,22 @@ void sketchpad_init(){
   prev_pos_y = NO_PREV_POS;
 
   tool  = PEN;
-  color = BLACK;
   brush = MEDIUM;
 }//sketchpad_init()
 
+//FIXME: a single init function is enough!
 void window_sketchpad_init(GtkWidget * window_sketchpad){
 
   //--colors
   colormap = gdk_colormap_get_system();
+
   gdk_color_black(colormap, &black);
   gdk_color_white(colormap, &white);
   gdk_colormap_alloc_color(colormap, &red,  FALSE,TRUE);
   gdk_colormap_alloc_color(colormap, &green,FALSE,TRUE);
   gdk_colormap_alloc_color(colormap, &blue, FALSE,TRUE);
+
+  current_color = &black;
 
   //--cursors
   {//none cursor
@@ -131,7 +134,6 @@ GdkCursor * _eraser_cursors_new(gchar * bits, gint width, gint height){//gint di
 }//
 
 //void sketchpad_set_tool (gint _tool)  { tool  = _tool;}
-//void sketchpad_set_color(gint _color) { color = _color;}
 //void sketchpad_set_brush(gint _brush) { brush = _brush;}
 void sketchpad_set_tool_s  (gchar * _tool) {
   if(g_strcasecmp(_tool, "eraser") == 0){
@@ -163,15 +165,6 @@ void sketchpad_set_brush_s (gchar * _brush){
     cursor_eraser = cursor_eraser_small;
   }
   gdk_window_set_cursor(drawing_area->window, *current_cursor);
-}
-
-void sketchpad_set_color_s (gchar * _color){
-  //**/g_printerr("color -->%s<--\n", _color);
-  if     (g_strcasecmp(_color, "black") == 0) color = BLACK;
-  else if(g_strcasecmp(_color, "red")   == 0) color = RED;
-  else if(g_strcasecmp(_color, "green") == 0) color = GREEN;
-  else if(g_strcasecmp(_color, "blue")  == 0) color = BLUE;
-  else color = BLACK;
 }
 
 void sketchpad_set_title(const gchar * name){
@@ -206,20 +199,17 @@ void draw_point(gdouble x, gdouble y){
   GdkRectangle ellipse;
   GdkRectangle * updated_rectangle;
 
+  //FIXME: to be done just when switching brush!
   ellipse.x      = x - brush/2;
   ellipse.y      = y - brush/2;
   ellipse.width  = brush;
   ellipse.height = brush;
 
-  if(tool == ERASER){
+  if(tool == ERASER){//FIXME: to be done just when switching tool/color!
     gdk_gc_set_foreground(graphical_context, &white);
   }
-  else switch(color){
-    case BLACK : gdk_gc_set_foreground(graphical_context, &black); break;
-    case RED   : gdk_gc_set_foreground(graphical_context, &red);   break;
-    case GREEN : gdk_gc_set_foreground(graphical_context, &green); break;
-    case BLUE  : gdk_gc_set_foreground(graphical_context, &blue);  break;
-    default    : gdk_gc_set_foreground(graphical_context, &black);
+  else{
+    gdk_gc_set_foreground(graphical_context, current_color);
   }
 
   gdk_draw_arc(drawing_area_pixmap_buffer,

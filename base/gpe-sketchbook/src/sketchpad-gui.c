@@ -129,193 +129,217 @@ GtkWidget * sketchpad_build_scrollable_drawing_area(gint width, gint height){
 }//sketchpad_build_scrollable_drawing_area()
 
 
+/*try*/void on_button_brushes_clicked (GtkButton *button, gpointer user_data);
+/*try*/void on_button_colors_clicked  (GtkButton *button, gpointer user_data);
+GtkWidget * brushbox_new();
+GtkWidget * colorbox_new();
+
+GtkWidget * current_brush_pixmap;
+GtkWidget * current_brush_button = NULL;
+
 GtkWidget * sketchpad_build_drawing_toolbar(GtkWidget * window){
   //draw toolbar
-  GtkWidget * hbox_drawtools;
+  GtkWidget * toolbar;
 
-  GdkPixbuf *pixbuf;
-  GtkWidget *pixmap;
+  GdkPixbuf * pixbuf;
+  GtkWidget * pixmap;
 
   //tools
-  GSList *tool_group;
-  GtkWidget *radiobutton_tools_eraser;
-  GtkWidget *radiobutton_tools_pen;   
+  GSList    * tool_group;
+  GtkWidget * radiobutton_tool_eraser;
+  GtkWidget * radiobutton_tool_pencil;
 
   //brushes
-  GSList *brush_group;
-  GtkWidget *radiobutton_brush_medium;
-  GtkWidget *radiobutton_brush_large; 
-  GtkWidget *radiobutton_brush_xlarge;
-  GtkWidget *radiobutton_brush_small; 
-  GtkWidget *table2;
+  GtkWidget * brushbox;
+  GtkWidget * button_brushes;
 
   //colors
-  GSList *color_group;
-  GtkWidget *radiobutton_color_blue; 
-  GtkWidget *radiobutton_color_green;
-  GtkWidget *radiobutton_color_red;  
-  GtkWidget *radiobutton_color_black;
-  GtkWidget *table1;
+  GtkWidget * colorbox;
+  GtkWidget * button_colors;
 
-  //--tools
+  toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, GTK_TOOLBAR_ICONS);
+  gtk_toolbar_set_button_relief (GTK_TOOLBAR (toolbar), GTK_RELIEF_NONE);
+  gtk_toolbar_set_space_style   (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_SPACE_LINE);
+  //gtk_toolbar_set_space_size    (GTK_TOOLBAR (toolbar), 0);
+
+
+#define TOSTRINGBASE(s) #s
+#define TOSTRING(s) TOSTRINGBASE(s)
+#define MAKE_ITEM_RADIOBUTTON(TYPE, ITEM, SIG_PARAM)  \
+  radiobutton_ ##TYPE ##_ ##ITEM    = gtk_radio_button_new (TYPE ##_group);\
+  TYPE ##_group = gtk_radio_button_group (GTK_RADIO_BUTTON (radiobutton_ ##TYPE ##_ ##ITEM));\
+  \
+  pixbuf = gpe_find_icon (  TOSTRING(##TYPE ##_ ##ITEM)  );\
+  pixmap = gpe_render_icon (window->style, pixbuf);\
+  gtk_button_set_relief (GTK_BUTTON (radiobutton_ ##TYPE ##_ ##ITEM), GTK_RELIEF_NONE);\
+  gtk_toggle_button_set_mode (GTK_TOGGLE_BUTTON (radiobutton_ ##TYPE ##_ ##ITEM), FALSE);\
+  \
+  gtk_container_add (GTK_CONTAINER (radiobutton_ ##TYPE ##_ ##ITEM), pixmap);\
+  \
+  gtk_signal_connect (GTK_OBJECT (radiobutton_ ##TYPE ##_ ##ITEM), "clicked",\
+                      GTK_SIGNAL_FUNC (on_radiobutton_ ##TYPE ##_clicked), SIG_PARAM);\
+  //**/g_printerr("--> %s\n", TOSTRING(TYPE ##_group));
+
+
+  //--toolbox
   tool_group = NULL;
-  radiobutton_tools_pen    = gtk_radio_button_new (tool_group);
-  tool_group = gtk_radio_button_group (GTK_RADIO_BUTTON (radiobutton_tools_pen));
-  radiobutton_tools_eraser = gtk_radio_button_new (tool_group);
-  tool_group = gtk_radio_button_group (GTK_RADIO_BUTTON (radiobutton_tools_eraser));
+  MAKE_ITEM_RADIOBUTTON (tool, pencil, "pencil");
+  MAKE_ITEM_RADIOBUTTON (tool, eraser, "eraser");
+  //default tool
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (radiobutton_tool_pencil), TRUE);
 
-  //pixmaps
-  pixbuf = gpe_find_icon ("eraser");
-  pixmap = gpe_render_icon (window->style, pixbuf);
-  gtk_container_add (GTK_CONTAINER (radiobutton_tools_eraser), pixmap);
-  pixbuf = gpe_find_icon ("pencil");
-  pixmap = gpe_render_icon (window->style, pixbuf);
-  gtk_container_add (GTK_CONTAINER (radiobutton_tools_pen), pixmap);
+  //--brushbox
+  button_brushes = gtk_button_new();
+  gtk_button_set_relief (GTK_BUTTON (button_brushes), GTK_RELIEF_NONE);
+  gtk_widget_set_usize (button_brushes,  20, 20);
+  pixbuf = gpe_find_icon ("brush_medium");//default value.
+  current_brush_pixmap = gpe_render_icon (window->style, pixbuf);
+  gtk_container_add (GTK_CONTAINER (button_brushes), current_brush_pixmap);
 
-  //--brushes
-  brush_group = NULL;
-  radiobutton_brush_small  = gtk_radio_button_new (brush_group);
-  brush_group = gtk_radio_button_group (GTK_RADIO_BUTTON (radiobutton_brush_small));
-  radiobutton_brush_medium = gtk_radio_button_new (brush_group);
-  brush_group = gtk_radio_button_group (GTK_RADIO_BUTTON (radiobutton_brush_medium));
-  radiobutton_brush_large  = gtk_radio_button_new (brush_group);
-  brush_group = gtk_radio_button_group (GTK_RADIO_BUTTON (radiobutton_brush_large));
-  radiobutton_brush_xlarge = gtk_radio_button_new (brush_group);
-  brush_group = gtk_radio_button_group (GTK_RADIO_BUTTON (radiobutton_brush_xlarge));
+  brushbox = brushbox_new();
+  /**/gtk_window_set_transient_for(GTK_WINDOW(brushbox), GTK_WINDOW(window));
+  gtk_signal_connect (GTK_OBJECT (button_brushes), "clicked",
+                      GTK_SIGNAL_FUNC (on_button_brushes_clicked), brushbox);
 
-  gtk_widget_set_usize (radiobutton_brush_small,  10, 10);
-  gtk_widget_set_usize (radiobutton_brush_medium, 10, 10);
-  gtk_widget_set_usize (radiobutton_brush_large,  10, 10);
-  gtk_widget_set_usize (radiobutton_brush_xlarge, 10, 10);
+  //--colorbox
+  button_colors = gtk_button_new();
+  gtk_button_set_relief (GTK_BUTTON (button_colors), GTK_RELIEF_NONE);
+  gtk_widget_set_usize (button_colors,  20, 20);
+  colorbox_button_set_color(button_colors, &black);//default color
 
-  //pixmaps
-  pixbuf = gpe_find_icon ("brush_small");
-  pixmap = gpe_render_icon (window->style, pixbuf);
-  gtk_container_add (GTK_CONTAINER (radiobutton_brush_small), pixmap);
-  pixbuf = gpe_find_icon ("brush_medium");
-  pixmap = gpe_render_icon (window->style, pixbuf);
-  gtk_container_add (GTK_CONTAINER (radiobutton_brush_medium), pixmap);
-  pixbuf = gpe_find_icon ("brush_large");
-  pixmap = gpe_render_icon (window->style, pixbuf);
-  gtk_container_add (GTK_CONTAINER (radiobutton_brush_large), pixmap);
-  pixbuf = gpe_find_icon ("brush_xlarge");
-  pixmap = gpe_render_icon (window->style, pixbuf);
-  gtk_container_add (GTK_CONTAINER (radiobutton_brush_xlarge), pixmap);
-
-  //pre-packing
-  table2 = gtk_table_new (2, 2, FALSE);
-  gtk_table_attach (GTK_TABLE (table2), radiobutton_brush_small, 0, 1, 1, 2,
-                    (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (GTK_FILL), 0, 0);
-  gtk_table_attach (GTK_TABLE (table2), radiobutton_brush_medium, 0, 1, 0, 1,
-                    (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (GTK_FILL), 0, 0);
-  gtk_table_attach (GTK_TABLE (table2), radiobutton_brush_large, 1, 2, 0, 1,
-                    (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (GTK_FILL), 0, 0);
-  gtk_table_attach (GTK_TABLE (table2), radiobutton_brush_xlarge, 1, 2, 1, 2,
-                    (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (GTK_FILL), 0, 0);
-
-  //--colors
-  color_group = NULL;
-  radiobutton_color_black = gtk_radio_button_new (color_group);
-  color_group = gtk_radio_button_group (GTK_RADIO_BUTTON (radiobutton_color_black));
-  radiobutton_color_red   = gtk_radio_button_new (color_group);
-  color_group = gtk_radio_button_group (GTK_RADIO_BUTTON (radiobutton_color_red));
-  radiobutton_color_green = gtk_radio_button_new (color_group);
-  color_group = gtk_radio_button_group (GTK_RADIO_BUTTON (radiobutton_color_green));
-  radiobutton_color_blue  = gtk_radio_button_new (color_group);
-  color_group = gtk_radio_button_group (GTK_RADIO_BUTTON (radiobutton_color_blue));
-
-  gtk_widget_set_usize (radiobutton_color_black, 10, 10);
-  gtk_widget_set_usize (radiobutton_color_red  , 10, 10);
-  gtk_widget_set_usize (radiobutton_color_green, 10, 10);
-  gtk_widget_set_usize (radiobutton_color_blue , 10, 10);
-
-  //pixmaps
-  pixbuf = gpe_find_icon ("color_black");
-  pixmap = gpe_render_icon (window->style, pixbuf);
-  gtk_container_add (GTK_CONTAINER (radiobutton_color_black), pixmap);
-  pixbuf = gpe_find_icon ("color_red");
-  pixmap = gpe_render_icon (window->style, pixbuf);
-  gtk_container_add (GTK_CONTAINER (radiobutton_color_red), pixmap);
-  pixbuf = gpe_find_icon ("color_green");
-  pixmap = gpe_render_icon (window->style, pixbuf);
-  gtk_container_add (GTK_CONTAINER (radiobutton_color_green), pixmap);
-  pixbuf = gpe_find_icon ("color_blue");
-  pixmap = gpe_render_icon (window->style, pixbuf);
-  gtk_container_add (GTK_CONTAINER (radiobutton_color_blue), pixmap);
-
-  //pre-packing
-  table1 = gtk_table_new (2, 2, FALSE);
-  gtk_table_attach (GTK_TABLE (table1), radiobutton_color_blue, 1, 2, 0, 1,
-                    (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
-  gtk_table_attach (GTK_TABLE (table1), radiobutton_color_green, 1, 2, 1, 2,
-                    (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
-  gtk_table_attach (GTK_TABLE (table1), radiobutton_color_red, 0, 1, 1, 2,
-                    (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
-  gtk_table_attach (GTK_TABLE (table1), radiobutton_color_black, 0, 1, 0, 1,
-                    (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
-
-  //--default tools //NOTE: maybe a preference
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (radiobutton_tools_pen),    TRUE);
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (radiobutton_color_black),  TRUE);
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (radiobutton_brush_medium), TRUE);
-
-  //--signals connection
-  gtk_signal_connect (GTK_OBJECT (radiobutton_tools_eraser), "clicked",
-                      GTK_SIGNAL_FUNC (on_radiobutton_tool_clicked), "eraser");
-  gtk_signal_connect (GTK_OBJECT (radiobutton_tools_pen), "clicked",
-                      GTK_SIGNAL_FUNC (on_radiobutton_tool_clicked), "pen");
-  gtk_signal_connect (GTK_OBJECT (radiobutton_brush_medium), "clicked",
-                      GTK_SIGNAL_FUNC (on_radiobutton_brush_clicked), "medium");
-  gtk_signal_connect (GTK_OBJECT (radiobutton_brush_large), "clicked",
-                      GTK_SIGNAL_FUNC (on_radiobutton_brush_clicked), "large");
-  gtk_signal_connect (GTK_OBJECT (radiobutton_brush_xlarge), "clicked",
-                      GTK_SIGNAL_FUNC (on_radiobutton_brush_clicked), "xlarge");
-  gtk_signal_connect (GTK_OBJECT (radiobutton_brush_small), "clicked",
-                      GTK_SIGNAL_FUNC (on_radiobutton_brush_clicked), "small");
-  gtk_signal_connect (GTK_OBJECT (radiobutton_color_black), "clicked",
-                      GTK_SIGNAL_FUNC (on_radiobutton_color_clicked), "black");
-  gtk_signal_connect (GTK_OBJECT (radiobutton_color_red), "clicked",
-                      GTK_SIGNAL_FUNC (on_radiobutton_color_clicked), "red");
-  gtk_signal_connect (GTK_OBJECT (radiobutton_color_green), "clicked",
-                      GTK_SIGNAL_FUNC (on_radiobutton_color_clicked), "green");
-  gtk_signal_connect (GTK_OBJECT (radiobutton_color_blue), "clicked",
-                      GTK_SIGNAL_FUNC (on_radiobutton_color_clicked), "blue");
-
-  //--don't show the toggle button
-  gtk_toggle_button_set_mode (GTK_TOGGLE_BUTTON (radiobutton_tools_pen),    FALSE);
-  gtk_toggle_button_set_mode (GTK_TOGGLE_BUTTON (radiobutton_tools_eraser), FALSE);
-  gtk_toggle_button_set_mode (GTK_TOGGLE_BUTTON (radiobutton_brush_small),  FALSE);
-  gtk_toggle_button_set_mode (GTK_TOGGLE_BUTTON (radiobutton_brush_medium), FALSE);
-  gtk_toggle_button_set_mode (GTK_TOGGLE_BUTTON (radiobutton_brush_large),  FALSE);
-  gtk_toggle_button_set_mode (GTK_TOGGLE_BUTTON (radiobutton_brush_xlarge), FALSE);
-  gtk_toggle_button_set_mode (GTK_TOGGLE_BUTTON (radiobutton_color_black),  FALSE);
-  gtk_toggle_button_set_mode (GTK_TOGGLE_BUTTON (radiobutton_color_red),    FALSE);
-  gtk_toggle_button_set_mode (GTK_TOGGLE_BUTTON (radiobutton_color_green),  FALSE);
-  gtk_toggle_button_set_mode (GTK_TOGGLE_BUTTON (radiobutton_color_blue),   FALSE);
-
-  //--no relief
-  gtk_button_set_relief (GTK_BUTTON (radiobutton_tools_pen),    GTK_RELIEF_NONE);
-  gtk_button_set_relief (GTK_BUTTON (radiobutton_tools_eraser), GTK_RELIEF_NONE);
-  gtk_button_set_relief (GTK_BUTTON (radiobutton_brush_small),  GTK_RELIEF_NONE);
-  gtk_button_set_relief (GTK_BUTTON (radiobutton_brush_medium), GTK_RELIEF_NONE);
-  gtk_button_set_relief (GTK_BUTTON (radiobutton_brush_large),  GTK_RELIEF_NONE);
-  gtk_button_set_relief (GTK_BUTTON (radiobutton_brush_xlarge), GTK_RELIEF_NONE);
-  gtk_button_set_relief (GTK_BUTTON (radiobutton_color_black),  GTK_RELIEF_NONE);
-  gtk_button_set_relief (GTK_BUTTON (radiobutton_color_red),    GTK_RELIEF_NONE);
-  gtk_button_set_relief (GTK_BUTTON (radiobutton_color_green),  GTK_RELIEF_NONE);
-  gtk_button_set_relief (GTK_BUTTON (radiobutton_color_blue),   GTK_RELIEF_NONE);
+  colorbox = colorbox_new();
+  /**/gtk_window_set_transient_for(GTK_WINDOW(colorbox), GTK_WINDOW(window));
+  gtk_signal_connect (GTK_OBJECT (button_colors), "clicked",
+                      GTK_SIGNAL_FUNC (on_button_colors_clicked), colorbox);
 
   //--packing
-  hbox_drawtools = gtk_hbox_new (FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (hbox_drawtools), radiobutton_tools_eraser, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (hbox_drawtools), radiobutton_tools_pen,    FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (hbox_drawtools), gtk_vseparator_new(),     FALSE, FALSE, 2);
-  gtk_box_pack_start (GTK_BOX (hbox_drawtools), table2,                   FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (hbox_drawtools), gtk_vseparator_new(),     FALSE, FALSE, 2);
-  gtk_box_pack_start (GTK_BOX (hbox_drawtools), table1,                   FALSE, FALSE, 0);
+  gtk_toolbar_append_widget(GTK_TOOLBAR (toolbar),
+                            radiobutton_tool_eraser, _("Eraser"), NULL);
+  gtk_toolbar_append_widget(GTK_TOOLBAR (toolbar),
+                            radiobutton_tool_pencil, _("Pencil"), NULL);
+  //gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
+  gtk_toolbar_append_widget(GTK_TOOLBAR (toolbar), button_brushes, _("Brush type"), NULL);
+  gtk_toolbar_append_widget(GTK_TOOLBAR (toolbar), button_colors,  _("Color"), NULL);
 
-  return hbox_drawtools;
+  return toolbar;
 }//sketchpad_build_drawing_toolbar()
+
+
+/** WARNING: will destroy button->child if any */
+void colorbox_button_set_color(GtkWidget * button, GdkColor * color){
+  GtkWidget * event_box;
+  GtkStyle * style;
+
+  if(GTK_BIN (button)->child != NULL) gtk_widget_destroy(GTK_BIN (button)->child);
+
+  event_box = gtk_event_box_new();
+  style = gtk_style_copy(event_box->style);
+  style->bg[0] = * color;
+  style->bg[1] = * color;
+  style->bg[2] = * color;
+  style->bg[3] = * color;
+  style->bg[4] = * color;
+  gtk_widget_set_style(event_box, style);
+  gtk_widget_show_now(event_box);
+  gtk_container_add (GTK_CONTAINER (button), event_box);
+}
+
+GtkWidget * _popupwindow (GtkWidget * widget){
+  GtkWidget * popup_window;
+  GtkWidget * frame;
+
+  popup_window = gtk_window_new(GTK_WINDOW_POPUP);
+  //gtk_window_set_modal   (GTK_WINDOW (popup_window), TRUE);
+  gtk_window_set_position(GTK_WINDOW (popup_window), GTK_WIN_POS_MOUSE);
+
+  frame = gtk_frame_new(NULL);
+  gtk_frame_set_shadow_type(GTK_FRAME (frame), GTK_SHADOW_ETCHED_OUT);
+  gtk_container_add (GTK_CONTAINER (popup_window), frame);
+
+  gtk_container_add (GTK_CONTAINER (frame), widget);
+
+  return popup_window;
+}//_popupwindow()
+
+GtkWidget * brushbox_new(){
+  GtkWidget * brushbox;
+  GtkWidget * window;//dummy alias to brushbox (for the generic macro (...))
+
+  GtkWidget * table_brushes;
+  GSList    * brush_group;
+  GtkWidget * radiobutton_brush_medium;
+  GtkWidget * radiobutton_brush_large; 
+  GtkWidget * radiobutton_brush_xlarge;
+  GtkWidget * radiobutton_brush_small; 
+
+  GdkPixbuf * pixbuf;
+  GtkWidget * pixmap;
+
+  table_brushes = gtk_table_new (2, 2, FALSE);
+  brushbox = _popupwindow (table_brushes);
+  window = brushbox;
+
+  brush_group = NULL;
+  MAKE_ITEM_RADIOBUTTON (brush, small , "small" );
+  MAKE_ITEM_RADIOBUTTON (brush, medium, "medium");
+  MAKE_ITEM_RADIOBUTTON (brush, large , "large" );
+  MAKE_ITEM_RADIOBUTTON (brush, xlarge, "xlarge");
+
+#define PACK_BRUSH_RADIOBUTTON(size, x, y, a, b) \
+  gtk_table_attach (GTK_TABLE (table_brushes), radiobutton_brush_ ##size, x, y, a, b, \
+                    (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (GTK_FILL), 0, 0);
+
+  PACK_BRUSH_RADIOBUTTON (small,  0, 1, 1, 2);
+  PACK_BRUSH_RADIOBUTTON (medium, 0, 1, 0, 1);
+  PACK_BRUSH_RADIOBUTTON (large,  1, 2, 0, 1);
+  PACK_BRUSH_RADIOBUTTON (xlarge, 1, 2, 1, 2);
+
+  //default brush //FIXME: other than "small" crashes!!!!
+  //gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (radiobutton_brush_medium), TRUE);
+
+  return brushbox;
+}//brushbox_new()
+
+GtkWidget * colorbox_new(){
+  GtkWidget * colorbox;
+
+  GtkWidget * table_colors;
+  GSList    * color_group;
+  GtkWidget * radiobutton_color_blue; 
+  GtkWidget * radiobutton_color_green;
+  GtkWidget * radiobutton_color_red;  
+  GtkWidget * radiobutton_color_black;
+
+  table_colors = gtk_table_new (2, 2, FALSE);
+  colorbox = _popupwindow (table_colors);
+
+  //NOTE: as window close as soon as one is clicked, normal buttons are enough
+#define MAKE_COLOR_RADIOBUTTON(color, x, y, a, b)  \
+  radiobutton_color_ ##color = gtk_radio_button_new (color_group);\
+  color_group = gtk_radio_button_group (GTK_RADIO_BUTTON (radiobutton_color_ ##color));\
+  \
+  gtk_widget_set_usize (radiobutton_color_ ##color, 20, 20);\
+  colorbox_button_set_color(radiobutton_color_ ##color, &##color);\
+  gtk_button_set_relief (GTK_BUTTON (radiobutton_color_ ##color), GTK_RELIEF_NONE);\
+  gtk_toggle_button_set_mode (GTK_TOGGLE_BUTTON (radiobutton_color_ ##color), FALSE);\
+  \
+  gtk_signal_connect (GTK_OBJECT (radiobutton_color_ ##color), "clicked",\
+                      GTK_SIGNAL_FUNC (on_radiobutton_color_clicked), &##color);\
+  \
+  gtk_table_attach (GTK_TABLE (table_colors), radiobutton_color_ ##color, x, y, a, b, \
+                    (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (GTK_FILL), 0, 0);
+
+  color_group = NULL;
+  MAKE_COLOR_RADIOBUTTON (black, 0, 1, 0, 1);
+  MAKE_COLOR_RADIOBUTTON (red  , 0, 1, 1, 2);
+  MAKE_COLOR_RADIOBUTTON (green, 1, 2, 1, 2);
+  MAKE_COLOR_RADIOBUTTON (blue , 1, 2, 0, 1);
+
+  //current selected (...)
+  //gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (radiobutton_color_ ...),  TRUE);
+
+  return colorbox;
+}//colorbox_new()
 
 GtkWidget * sketchpad_build_files_toolbar(GtkWidget * window){
   //file toolbar

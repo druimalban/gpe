@@ -139,17 +139,39 @@ void on_radiobutton_tool_clicked (GtkButton *button, gpointer user_data){
   sketchpad_set_tool_s((gchar *) user_data);
 }
 
+void on_button_brushes_clicked(GtkButton * button, gpointer brushbox){
+  if(current_brush_button != NULL)
+    gtk_widget_reparent(current_brush_pixmap, current_brush_button);
+  gtk_widget_show_all(GTK_WIDGET (brushbox));
+  gtk_main();
+  if(GTK_BIN (button)->child != NULL)
+    gtk_widget_destroy(GTK_BIN (button)->child);
+  gtk_widget_reparent(current_brush_pixmap, GTK_WIDGET (button));
+  gtk_widget_hide(GTK_WIDGET (brushbox));
+}
+
+void on_button_colors_clicked(GtkButton * button, gpointer colorbox){
+  gtk_widget_show_all(GTK_WIDGET (colorbox));
+  gtk_main();
+  colorbox_button_set_color(GTK_WIDGET (button), current_color);
+  gtk_widget_hide(GTK_WIDGET (colorbox));
+}
+
 
 void on_radiobutton_brush_clicked (GtkButton *button, gpointer user_data){
   //**/g_printerr("selected: %s\n", (gchar *) user_data);
   sketchpad_set_brush_s((gchar *) user_data);
+  current_brush_pixmap = GTK_BIN (button)->child;
+  current_brush_button = GTK_WIDGET(button);//needed to reparent the pixmap... (bidouille)
+  gtk_main_quit();//exit brushbox
 }
 
 
 void on_radiobutton_color_clicked (GtkButton *button, gpointer user_data){
   //**/g_printerr("selected: %s\n", (gchar *) user_data);
-  sketchpad_set_color_s((gchar *) user_data);
-  //NOTE: if(tool == ERASER) sketchpad_set_tool_s("pen"); (need toggle buttons)
+  current_color = user_data;
+  gtk_main_quit();//exit colorbox
+  //NOTE: if(tool == ERASER) sketchpad_set_tool_s("pencil"); (need toggle buttons)
 }
 
 //---------------------------------------------------------

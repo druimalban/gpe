@@ -33,9 +33,11 @@ void on_button_file_next_clicked   (GtkButton *button, gpointer user_data);
 void on_button_file_exit_clicked   (GtkButton *button, gpointer user_data);
 
 /* Drawing toolbar */
-void on_radiobutton_tool_clicked   (GtkButton *button, gpointer user_data);
-void on_radiobutton_brush_clicked  (GtkButton *button, gpointer user_data);
-void on_radiobutton_color_clicked  (GtkButton *button, gpointer user_data);
+void on_radiobutton_tool_clicked   (GtkButton * button, gpointer user_data);
+void on_button_brushes_clicked     (GtkButton * button, gpointer brushbox);
+void on_button_colors_clicked      (GtkButton * button, gpointer colorbox);
+void on_radiobutton_brush_clicked  (GtkButton * button, gpointer user_data);
+void on_radiobutton_color_clicked  (GtkButton * button, gpointer user_data);
 
 /* Drawing Area */
 gboolean on_drawing_area_configure_event     (GtkWidget *widget,
