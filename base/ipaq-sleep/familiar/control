@@ -7,7 +7,9 @@ Depends: libc6, xlibs
 Suggests: isgui
 Architecture: arm
 Filename: ./ipaq-sleep_0.7-3_arm.ipk
-Description: An app to dim the backlight and/or put the Ipaq to sleep after a
+Description: Application to dim the backlight and put the Ipaq to sleep.
+ An app to dim the backlight and/or put the Ipaq to sleep after a
  predefined period of inactivity. By default it looks at serial, USB,
  touchscreen, button, load average, external power, and audio out with a 5
  minute time-out.
+ .
