@@ -38,7 +38,6 @@
 #include <gpe/spacing.h>
 #include <gpe/pixmaps.h>
 #include <gpe/gpehelp.h>
-#include <gpe/about.h>
 
 #include "packages.h"
 #include "interface.h"
@@ -392,7 +391,7 @@ on_about_clicked (GtkWidget * w)
 void
 on_help_clicked (GtkWidget * w)
 {
-	if (gpe_show_help("gpe-package",""))
+	if (gpe_show_help("gpe-package",NULL))
 		show_message(GTK_MESSAGE_ERROR,NOHELPMESSAGE);
 }
 
