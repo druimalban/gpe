@@ -21,8 +21,3 @@ if [ $? -gt 0 ]; then
    # the color "#bbc0d7" is taken from the GPE logo:
    [ -x /usr/X11R6/bin/xsetroot ] && xsetroot -solid "#bbc0d7"
 fi
-
-# check if the user wants the owner info at all:
-if [ ! -e /etc/gpe/gpe-ownerinfo.dontshow ]; then
-    [ -x /usr/bin/gpe-ownerinfo ] && gpe-ownerinfo -t -g 240x100+0+220 &
-fi

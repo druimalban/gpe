@@ -43,7 +43,7 @@
 #include <gpe/gtksimplemenu.h>
 #include <gpe/translabel.h>
 
-#include "rootpixmap.h"
+#include "gpe-ownerinfo.h"
 
 #define _(x) gettext(x)
 #define N_(x) (x)
@@ -702,24 +702,6 @@ key_press_event (GtkWidget *window, GdkEventKey *event)
   return FALSE;
 }
 
-static void
-mapped (GtkWidget *window)
-{
-  Pixmap rmap = GetRootPixmap (GDK_DISPLAY ());
-  if (rmap != None)
-    {
-      Pixmap pmap;
-      pmap = CutWinPixmap (GDK_DISPLAY(), GDK_WINDOW_XWINDOW (window->window), rmap, 
-			   GDK_GC_XGC (window->style->black_gc));
-      if (pmap != None)
-	{
-	  GdkPixmap *gpmap = gdk_pixmap_foreign_new (pmap);      
-	  window->style->bg_pixmap[GTK_STATE_NORMAL] = gpmap;
-	  gtk_widget_set_style (window, window->style);
-	}
-    }
-}
-
 static int
 locale_set_xprop (const char *locale)
 {
@@ -1251,7 +1233,7 @@ main (int argc, char *argv[])
   GtkWidget *vbox, *vbox2;
   GtkWidget *ok_button;
   GtkWidget *frame;
-  GtkWidget *calibrate_hint;
+  GtkWidget *calibrate_hint, *ownerinfo;
   Display *dpy;
   Window root;
   gboolean geometry_set = FALSE;
@@ -1702,13 +1684,12 @@ main (int argc, char *argv[])
       gtk_box_pack_start (GTK_BOX (vbox2), calibrate_hint, FALSE, FALSE, 0);
     }
 
+  ownerinfo = gpe_owner_info ();
+  gtk_box_pack_start (GTK_BOX (vbox2), ownerinfo, TRUE, TRUE, 0);
+
   gtk_container_add (GTK_CONTAINER (window), vbox2);
 
   gtk_widget_add_events (GTK_WIDGET (window), GDK_BUTTON_PRESS_MASK);
-
-  if (flag_transparent)
-    g_signal_connect (G_OBJECT (window), "map-event",
-			G_CALLBACK (mapped), NULL);
 
   if (autolock_mode)
     {

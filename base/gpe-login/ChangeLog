@@ -1,3 +1,17 @@
+2003-07-21  Phil Blundell  <pb@nexus.co.uk>
+
+	* gpe-login.xinit: Remove geometry and transparency options.
+	* gpe-login.setup: Remove call to gpe-ownerinfo.
+
+	* gpe-login.c (main): Show owner info.  Remove old-style
+	--transparent.
+	(mapped): Deleted.
+
+	* Makefile (LDFLAGS_OWNERINFO): New.
+	(LDFLAGS_ROOT): Delete.
+	(CFLAGS, LDFLAGS): Don't use librootimage.
+	(CPPFLAGS): Add -I../gpe-ownerinfo.
+
 2003-07-19  Philip Blundell  <philb@gnu.org>
 
 	* standard.mbdock: Update.

@@ -19,16 +19,16 @@ CFLAGS += -Os -fomit-frame-pointer
 endif
 
 CFLAGS += $(GTKCFLAGS) -Wall
-CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\" -D_GNU_SOURCE
+CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\" -D_GNU_SOURCE -I../gpe-ownerinfo
 
 ifeq ($(CVSBUILD),yes)
-CFLAGS += -I../libgpewidget -I../librootimage
-LDFLAGS += -L../libgpewidget -L../librootimage
+CFLAGS += -I../libgpewidget
+LDFLAGS += -L../libgpewidget
 else
 CFLAGS += -I/usr/include/gpe
 endif
 LDFLAGS += -lgpewidget
-LDFLAGS_ROOT = -lrootimage
+LDFLAGS_OWNERINFO = -L../gpe-ownerinfo -lgpe-ownerinfo
 
 MEMBERS = gpe-login
 
@@ -41,7 +41,7 @@ EXTRA_DESKTOPS = gpe-logout.desktop.in
 all: gpe-login gpe-lock-display
 
 gpe-login: gpe-login.o nocursor.o
-	$(CC) -o $@ $^ $(LDFLAGS) $(GTKLDFLAGS) $(LDFLAGS_ROOT) -lcrypt
+	$(CC) -o $@ $^ $(LDFLAGS) $(GTKLDFLAGS) $(LDFLAGS_OWNERINFO) -lcrypt
 
 gpe-lock-display: gpe-lock-display.o
 	$(CC) -o $@ $^ -L/usr/X11R6/lib -lX11
