@@ -53,9 +53,9 @@ void on_window_sketchpad_destroy(GtkObject *object, gpointer user_data){
 void on_window_size_allocate (GtkWidget     * widget,
                               GtkAllocation * allocation,
                               gpointer        dock){
-  /**/g_printerr("Window size allocated: (%d,%d) (%d,%d)\n",
-  /**/           allocation->x, allocation->y,
-  /**/           allocation->width, allocation->height);
+  ///**/g_printerr("Window size allocated: (%d,%d) (%d,%d)\n",
+  ///**/           allocation->x, allocation->y,
+  ///**/           allocation->width, allocation->height);
 
   if(dock == NULL) return;
 
