@@ -29,33 +29,13 @@ static char *name = "";
 static GtkWidget *check;
 static sqlite *sqliteh;
 
-static const char *dname = "/.gpe";
-static const char *fname = "/bluetooth";
+static const char *fname = "/etc/bluetooth/pin.db";
 
 int
 sql_start (void)
 {
-  const char *home = getenv ("HOME");
-  char *buf;
   char *err;
-  size_t len;
-  if (home == NULL) 
-    home = "";
-  len = strlen (home) + strlen (dname) + strlen (fname) + 1;
-  buf = g_malloc (len);
-  strcpy (buf, home);
-  strcat (buf, dname);
-  if (access (buf, F_OK))
-    {
-      if (mkdir (buf, 0700))
-	{
-	  gpe_perror_box (buf);
-	  g_free (buf);
-	  return -1;
-	}
-    }
-  strcat (buf, fname);
-  sqliteh = sqlite_open (buf, 0, &err);
+  sqliteh = sqlite_open (fname, 0, &err);
   if (sqliteh == NULL)
     {
       gpe_error_box (err);
@@ -222,8 +202,41 @@ main(int argc, char *argv[])
   int outgoing = 0;
   char *pin;
   gboolean gui_started;
+  char *dpy = getenv (dpy);
 
-  setenv ("DISPLAY", ":0", 0);
+  if (dpy == NULL)
+    {
+      char *auth = NULL;
+      FILE *fp;
+      dpy = ":0";
+      fp = popen ("/bin/ps --format args --no-headers -C X -C XFree86", "r");
+      if (fp)
+	{
+	  char buf[1024];
+	  while (fgets (buf, sizeof (buf), fp))
+	    {
+	      char *p = strtok (buf, " ");
+	      int authf = 0;
+	      while (p)
+		{
+		  if (authf)
+		    {
+		      auth = strdup (p);
+		      authf = 0;
+		    }
+		  else if (p[0] == ':')
+		    dpy = strdup (p);
+		  else if (!strcmp (p, "-auth"))
+		    authf = 1;
+		  p = strtok (NULL, " ");
+		}
+	    }
+	  pclose (fp);
+	}
+      setenv ("DISPLAY", dpy, 0);
+      if (auth)
+	setenv ("XAUTHORITY", auth, 0);
+    }
 
   gtk_set_locale ();
   gui_started = gtk_init_check (&argc, &argv);
