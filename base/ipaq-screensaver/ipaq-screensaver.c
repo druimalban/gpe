@@ -10,7 +10,8 @@
 #include <linux/fb.h>
 #include <signal.h>
 
-#define TS_DEV "/dev/h3600_tsraw"
+#define TS_DEV "/dev/touchscreen/0raw"
+#define KB_DEV "/dev/touchscreen/key"
 #define FB_DEV "/dev/fb0"
 
 /* internal state
@@ -145,81 +146,68 @@ struct h3600_ts_backlight setstate;
 	}
 }
 
-int get_irq_val()
+void wait_for_change(int tfd, int kfd)
 {
-FILE *filp;
-static char buffer[255];
-static char inum[255];
-static char irqs[255];
-static char name[255];
-int val=0;
-int res;
+fd_set MSet;
+char buffer[1024];
 
-	filp=NULL;
-	filp=fopen("/proc/interrupts","r");
-	if (filp == NULL) {
-		fprintf(stderr,"could not open /proc/interrupts\n");
-		return 0;
-	}
-	do {
-		fgets(buffer,255,filp);
-		if (buffer != NULL) {
-			res=sscanf(buffer,"%s %s %s",inum,irqs,name);
-			if (res == 3) {
-/*				fprintf(stderr,"get_irq_val() name='%s'\n",name);*/
-				if (strcmp(name,"h3600_ts")==0)
-					sscanf(irqs,"%d",&val);
-			}
-		}
-	} while (!feof(filp));
-	fclose(filp);
-
-return val;
-}
-
-void wait_for_change()
-{
-int localstate;
-int val1, val2;
-
-	localstate=state;
-	val1=get_irq_val();
-	while (1) {
-		val2=get_irq_val();
-/*		fprintf(stderr,"v1=%d v2=%d ls=%d s=%d\n",val1,val2,localstate,state);*/
-		if (val1 != val2) {
-			if (localstate == state) {
-				return;
-			} else {
-				localstate = state;
-				usleep(450001);
-				val1 = get_irq_val();
-			}
-		}
-		usleep(450001);
-	}
+#ifdef DEBUG
+	fprintf(stderr,"wait_for_change() called\n");
+#endif
+        FD_ZERO(&MSet);
+        FD_SET(tfd,&MSet);
+        FD_SET(kfd,&MSet);
+        while (select((kfd+1),&MSet,NULL,NULL,NULL) <= 0) {
+#ifdef DEBUG
+                perror("select <= 0");
+#endif
+        }
+#ifdef DEBUGx
+        else
+                fprintf(stderr,"select() returned\n");
+#endif
+        if (FD_ISSET(tfd, &MSet))
+                read(tfd,buffer,1024);
+        if (FD_ISSET(kfd, &MSet))
+                read(kfd,buffer,1024);
 }
 
 int main(int argc, char **argv)
 {
+int tfd, kfd;
 	if (argc > 1) {
 		if (argc < 4) {
 			fprintf(stderr,"Usage:\n\t%s <t1> <t2> <t3>\n",argv[0]);
 		} else {
 			int i;
+			if (argc > 4)
+				argc=4;
 			for (i=1; i<argc; i++)
 				tmos[i-1]=atoi(argv[i]);
 		}
 	}
 
+        tfd=open("/dev/touchscreen/0raw",O_RDONLY);
+ 	if (tfd <= 0) {
+         	fprintf(stderr,"error opening touch\n");
+         	return 1;
+        }
+	kfd=open("/dev/touchscreen/key",O_RDONLY);
+        if (kfd <= 0) {
+         	fprintf(stderr,"error opening key\n");
+         	return 1;
+        }
+
 	signal(SIGALRM, timeout_alarm);
+#ifdef DEBUG
 	perror("signal");
+#endif
 	backlight_get_state(&orgstate);
 	state=0;
 	alarm(tmos[state]);
 	led_set(0);
 	while(1) {
-		wait_for_change();
+		wait_for_change(tfd,kfd);
 		if (state != 0) {
 			/* restore settings */
 			backlight_set_state(&orgstate);
