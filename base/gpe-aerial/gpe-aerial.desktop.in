@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=Aerial
-Comment=Panel based wireless LAN communications control
+_Comment=Panel based wireless LAN communications control
 Exec=gpe-aerial
 Type=PanelApp
 Icon=/usr/share/gpe/pixmaps/default/gpe-aerial.png

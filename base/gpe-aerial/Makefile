@@ -1,5 +1,5 @@
 PACKAGE = gpe-aerial
-VERSION = 0.2.3-1
+VERSION = 0.2.4
 NATIVE = yes
 CVSBUILD = yes
 DEBUG = no
@@ -9,6 +9,7 @@ PREFIX = /usr/
 DESTDIR = /
 CONTROL = control1
 
+LINGUAS =
 
 ifeq ($(CVSBUILD),yes)
 LDFLAGS += -L../libgpewidget -L.
@@ -32,9 +33,6 @@ CPPFLAGS += -I.
 
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0 gdk-pixbuf-2.0` 
 GTKLDFLAGS += `pkg-config --libs gtk+-2.0 gdk-2.0` `pkg-config --libs gthread-2.0`
-
-#MIMECFLAGS =`pkg-config --cflags mimedir-1.0` -I/usr/local/include/mimedir-1.0
-#MIMELDFLAGS = $(GTKLDFLAGS) -lsqlite -lmimedir 
 
 # setup how to compile
 ifeq ($(NATIVE),yes)
@@ -83,7 +81,6 @@ CFLAGS += $(MIMECFLAGS)
 
 
 install-program: $(PACKAGE)
-#	sed -e s/VERSION/$(VERSION)/ <$(CONTROL).pre > $(CONTROL)
 	mkdir -p $(DESTDIR)/$(PREFIX)/bin
 	$(INSTALL) $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/
 	$(STRIP) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)

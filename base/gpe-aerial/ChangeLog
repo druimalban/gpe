@@ -1,3 +1,9 @@
+06/12/2003		Florian Boor <florian.boor@kernelconcepts.de>
+	Makefile	Version update, language support.
+	.desktop ->
+	.desktop.in
+				Added po dir.
+
 06/10/2003		Florian Boor <florian.boor@kernelconcepts.de>
 	- main.c	Minor signal display changes.
 				Message display bugfixes.
