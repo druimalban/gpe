@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Task Manager
+Comment=gpe-taskmanager
+Exec=gpe-taskmanager
+Terminal=0
+Type=Application
+Icon=gpe-taskmanager.png
+Categories=Utility;GPE
+StartupNotify=True
+SingleInstance=True
