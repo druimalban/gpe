@@ -391,11 +391,9 @@ week_view (void)
   gtk_widget_show (scroller);
   gtk_widget_show (datesel);
 
-  gtk_signal_connect (GTK_OBJECT (draw),
-		      "expose_event",
-		      GTK_SIGNAL_FUNC (draw_expose_event),
-		      datesel);
-  
+  g_signal_connect (G_OBJECT (draw), "expose_event",
+                    G_CALLBACK (draw_expose_event), datesel);
+
   gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scroller), draw);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scroller),
 				  GTK_POLICY_NEVER, GTK_POLICY_ALWAYS);
@@ -403,11 +401,11 @@ week_view (void)
   gtk_box_pack_start (GTK_BOX (vbox), datesel, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), scroller, TRUE, TRUE, 0);
 
-  gtk_signal_connect (GTK_OBJECT (datesel), "changed",
-		     GTK_SIGNAL_FUNC (changed_callback), NULL);
+  g_signal_connect (G_OBJECT (datesel), "changed",
+                    G_CALLBACK (changed_callback), NULL);
 
-  gtk_object_set_data (GTK_OBJECT (vbox), "update_hook",
-                       (gpointer) update_hook_callback);
+  g_object_set_data (G_OBJECT (vbox), "update_hook",
+                     (gpointer) update_hook_callback);
 
   week_view_draw = draw;
 

@@ -385,9 +385,8 @@ day_view(void)
   day_list = gtk_clist_new (2);
   gtk_widget_show (day_list);
  
-  gtk_signal_connect (GTK_OBJECT (day_list), "select_row",
-                       GTK_SIGNAL_FUNC (selection_made),
-                       NULL);
+  g_signal_connect (G_OBJECT (day_list), "select_row",
+                    G_CALLBACK (selection_made), NULL);
 
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window),
 		GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
@@ -397,11 +396,11 @@ day_view(void)
   gtk_box_pack_start (GTK_BOX (vbox), datesel, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), scrolled_window, TRUE, TRUE, 0);
 
-  gtk_signal_connect (GTK_OBJECT (datesel), "changed",
-		     GTK_SIGNAL_FUNC (changed_callback), day_list);
-  
-  gtk_object_set_data (GTK_OBJECT (vbox), "update_hook", 
-		       (gpointer) update_hook_callback);
+  g_signal_connect (G_OBJECT (datesel), "changed",
+                    G_CALLBACK (changed_callback), day_list);
+
+  g_object_set_data (G_OBJECT (vbox), "update_hook",
+		     (gpointer) update_hook_callback);
 
   scroll_adjustment = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (scrolled_window));
 

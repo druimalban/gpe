@@ -22,20 +22,17 @@
 
 GtkWidget *future_list;
 
-static void 
+static void
 selection_made (GtkWidget *clist, int row, gint column,
-		GdkEventButton *event, GtkWidget *widget)
+                GdkEventButton *event, GtkWidget *widget)
 {
   event_t ev;
-    
+
   if (event->type == GDK_2BUTTON_PRESS)
     {
-      GtkWidget *appt;
-      
       ev = gtk_clist_get_row_data (GTK_CLIST (clist), row);
-      
       if (ev)
-	gtk_widget_show_all (edit_event (ev));
+        gtk_widget_show_all (edit_event (ev));
     }
 }
 
@@ -111,7 +108,7 @@ future_view(void)
   time_t t = time (NULL);
   struct tm tm;
   char buf[64];
-     
+
   GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
   GtkWidget *scrolled_window = gtk_scrolled_window_new (NULL, NULL);
   GtkWidget *label;
@@ -120,27 +117,26 @@ future_view(void)
 
   localtime_r(&t, &tm);
   strftime (buf, sizeof (buf), "%A, %d %b %Y", &tm);
-  
+
   label = gtk_label_new (buf);
   gtk_widget_show (label);
-  
+
   future_list = gtk_clist_new (2);
   gtk_widget_show (future_list);
-  
-  gtk_signal_connect(GTK_OBJECT (future_list), "select_row",
-                       GTK_SIGNAL_FUNC (selection_made),
-                       NULL);
+
+  g_signal_connect(G_OBJECT (future_list), "select_row",
+                   G_CALLBACK (selection_made), NULL);
 
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window),
-		GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-  
+                                  GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+
   gtk_container_add (GTK_CONTAINER (scrolled_window), future_list);
-  
+
   gtk_box_pack_start (GTK_BOX(vbox), label, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX(vbox), scrolled_window, TRUE, TRUE, 0);
-  
-  gtk_object_set_data (GTK_OBJECT (vbox), "update_hook", 
-		       (gpointer) future_view_update);
-  
+
+  g_object_set_data (G_OBJECT (vbox), "update_hook",
+                     (gpointer) future_view_update);
+
   return vbox;
 }

@@ -458,30 +458,28 @@ month_view(void)
 
   draw = gtk_drawing_area_new ();
   gtk_widget_show (draw);
-  gtk_signal_connect (GTK_OBJECT (draw),
-		      "expose_event",
-		      GTK_SIGNAL_FUNC (draw_expose_event),
-		      NULL);
+  g_signal_connect (G_OBJECT (draw), "expose_event",
+                    G_CALLBACK (draw_expose_event), NULL);
 
   datesel = gtk_date_sel_new (GTKDATESEL_MONTH);
   gtk_widget_show (datesel);
-  
+
   gtk_box_pack_start (GTK_BOX (vbox), datesel, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), draw, TRUE, TRUE, 0);
 
-  gtk_signal_connect(GTK_OBJECT (draw), "size-allocate",
-		     GTK_SIGNAL_FUNC (resize_table), NULL);
+  g_signal_connect(G_OBJECT (draw), "size-allocate",
+                   G_CALLBACK (resize_table), NULL);
 
-  gtk_signal_connect(GTK_OBJECT (draw), "button-press-event",
-		     GTK_SIGNAL_FUNC (button_press), NULL);
+  g_signal_connect(G_OBJECT (draw), "button-press-event",
+                   G_CALLBACK (button_press), NULL);
 
   gtk_widget_add_events (GTK_WIDGET (draw), GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
 
-  gtk_signal_connect(GTK_OBJECT (datesel), "changed",
-		     GTK_SIGNAL_FUNC (changed_callback), NULL);
-  
-  gtk_object_set_data (GTK_OBJECT (vbox), "update_hook", 
-		       (gpointer) update_hook_callback);
+  g_signal_connect(G_OBJECT (datesel), "changed",
+                     G_CALLBACK (changed_callback), NULL);
+
+  g_object_set_data (G_OBJECT (vbox), "update_hook",
+                     (gpointer) update_hook_callback);
 
   return vbox;
 }

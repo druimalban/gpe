@@ -30,7 +30,7 @@
 static void
 destroy_popup (GtkWidget *widget, GtkWidget *parent)
 {
-  gtk_object_set_data (GTK_OBJECT (parent), "popup-handle", NULL);
+  g_object_set_data (G_OBJECT (parent), "popup-handle", NULL);
   pop_window = NULL;
 }
 
@@ -43,7 +43,7 @@ close_window (GtkWidget *widget, GtkWidget *w)
 static void
 day_clicked (GtkWidget *widget, GtkWidget *w)
 {
-  struct day_popup *p = gtk_object_get_data (GTK_OBJECT (w), "popup-data");
+  struct day_popup *p = g_object_get_data (G_OBJECT (w), "popup-data");
   struct tm tm;
   localtime_r (&viewtime, &tm);
   tm.tm_year = p->year - 1900;
@@ -101,7 +101,7 @@ day_popup (GtkWidget *parent, struct day_popup *p)
   strftime(buf, sizeof (buf), "%a %d %B", &tm);
   label = gtk_label_new (buf);
 
-  if (gtk_object_get_data (GTK_OBJECT (parent), "popup-handle"))
+  if (g_object_get_data (G_OBJECT (parent), "popup-handle"))
     return NULL;
 
   if (p->events)
@@ -164,9 +164,8 @@ day_popup (GtkWidget *parent, struct day_popup *p)
 	}
 	
       gtk_clist_thaw (GTK_CLIST (contents));
-      gtk_signal_connect (GTK_OBJECT (contents), "select_row",
-			  GTK_SIGNAL_FUNC (selection_made),
-			  window);
+      g_signal_connect (G_OBJECT (contents), "select_row",
+                        G_CALLBACK (selection_made), window);
     }
   else
     {
@@ -176,14 +175,13 @@ day_popup (GtkWidget *parent, struct day_popup *p)
   gtk_button_set_relief (GTK_BUTTON (close_button), GTK_RELIEF_NONE);
   gtk_button_set_relief (GTK_BUTTON (day_button), GTK_RELIEF_NONE);
 
-  gtk_signal_connect (GTK_OBJECT (close_button), "clicked",
-		      GTK_SIGNAL_FUNC (close_window), window);
+  g_signal_connect (G_OBJECT (close_button), "clicked",
+                    G_CALLBACK (close_window), window);
 
-  gtk_signal_connect (GTK_OBJECT (day_button), "clicked",
-		      GTK_SIGNAL_FUNC (day_clicked), window);
+  g_signal_connect (G_OBJECT (day_button), "clicked",
+                    G_CALLBACK (day_clicked), window);
 
-  gtk_object_set_data (GTK_OBJECT (window), "popup-data",
-                       (gpointer) p);
+  g_object_set_data (G_OBJECT (window), "popup-data", (gpointer) p);
 
   gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 4);
   gtk_box_pack_start (GTK_BOX (hbox), day_button, FALSE, FALSE, 0);
@@ -213,9 +211,9 @@ day_popup (GtkWidget *parent, struct day_popup *p)
   
   gtk_widget_set_uposition (window, MAX (x, 0), MAX (y, 0));
 
-  gtk_object_set_data (GTK_OBJECT (parent), "popup-handle", window);
-  gtk_signal_connect (GTK_OBJECT (window), "destroy",
-		      GTK_SIGNAL_FUNC(destroy_popup), parent);
+  g_object_set_data (G_OBJECT (parent), "popup-handle", window);
+  g_signal_connect (G_OBJECT (window), "destroy",
+                    G_CALLBACK (destroy_popup), parent);
 
   gtk_widget_show (window);
 

@@ -7,6 +7,12 @@
 
 	* event-ui.c: Replace GtkObject with GObject.  Patch from
 	Christian Meyer <chrisime@gnome-de.org>.
+	* day_popup.c: Likewise.
+	* day_view.c: Likewise.
+	* week_view.c: Likewise.
+	* month_view.c: Likewise.
+	* year_view.c: Likewise.
+	* future_view.c: Likewise.
 
 2003-03-08  Philip Blundell  <philb@gnu.org>
 

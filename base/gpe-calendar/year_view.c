@@ -253,30 +253,26 @@ year_view(void)
   GtkWidget *scrolled_window = gtk_scrolled_window_new (NULL, NULL);
   char buf[32];
   guint d, maxw = 0;
-  
+
   g_draw = gtk_drawing_area_new ();
 
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window),
-		GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-  gtk_signal_connect (GTK_OBJECT (g_draw),
-		      "expose_event",
-		      GTK_SIGNAL_FUNC (draw_expose_event),
-		      NULL);
-  gtk_signal_connect (GTK_OBJECT (g_draw),
-		      "configure_event",
-		      GTK_SIGNAL_FUNC (calc_geometry),
-		      NULL);
+                                  GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 
-  gtk_signal_connect (GTK_OBJECT (datesel), "changed",
-		     GTK_SIGNAL_FUNC (changed_callback), g_draw);
+  g_signal_connect (G_OBJECT (g_draw), "expose_event",
+                    G_CALLBACK (draw_expose_event), NULL);
+  g_signal_connect (G_OBJECT (g_draw), "configure_event",
+                    G_CALLBACK (calc_geometry), NULL);
+  g_signal_connect (G_OBJECT (datesel), "changed",
+                    G_CALLBACK (changed_callback), g_draw);
 
   gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolled_window),
-					 g_draw);
-  
+                                         g_draw);
+
   gtk_box_pack_start (GTK_BOX (vbox), datesel, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), scrolled_window, TRUE, TRUE, 0);
-  gtk_object_set_data (GTK_OBJECT (vbox), "update_hook", 
-		       (gpointer) year_view_update);
+  g_object_set_data (G_OBJECT (vbox), "update_hook",
+                     (gpointer) year_view_update);
 
   for (d = 10; d < 32; d++)
     {
@@ -284,7 +280,7 @@ year_view(void)
       snprintf (buf, sizeof (buf), "%d", d);
       w = gdk_string_width (yearfont, buf);
       if (w > maxw)
-	maxw = w;
+        maxw = w;
     }
 
   day_pitch = maxw + 4;
