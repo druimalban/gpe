@@ -1,5 +1,13 @@
-2004-02-14  Phil Blundell  <pb@nexus.co.uk>
+2004-02-15  Philip Blundell  <philb@gnu.org>
 
+	* todo-ui.c (change_categories): Unref list store when window
+	deleted.  Add cell renderers.
+	(categories_button_press_event): New.
+	(ui_create_new_category): Rename to ...
+	(do_new_category): ... this.
+	(categories_ok): Rewrite to work with GtkListStore.
+
+	* list-ui.c (refresh_items): Delete useless variable.
 
 2004-02-14  Phil Blundell  <pb@nexus.co.uk>
 

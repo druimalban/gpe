@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002, 2003 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2002, 2003, 2004 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -142,7 +142,6 @@ void
 refresh_items (void)
 {
   GSList *iter;
-  guint nitems = 0;
 
   gtk_list_store_clear (list_store);
 
@@ -157,7 +156,7 @@ refresh_items (void)
 
 	  complete = (i->state == COMPLETED) ? TRUE : FALSE;
 
-	  gtk_list_store_insert (list_store, &iter, nitems);
+	  gtk_list_store_append (list_store, &iter);
 
 	  gtk_list_store_set (list_store, &iter, 
 			      0, complete ? gpe_find_icon ("tick-box") : gpe_find_icon ("notick-box"),
@@ -165,8 +164,6 @@ refresh_items (void)
 			      2, complete, 
 			      3, i,
 			      -1);
-
-	  nitems++;
 	}
     }
 }
