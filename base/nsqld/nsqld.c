@@ -115,7 +115,7 @@ dot_command (struct nsql_context *ctx, char *cmd, GError **error)
       return TRUE;
     }
   else if (!strncasecmp (cmd, "open ", 5))
-    return do_open (ctx, cmd + 6, error);
+    return do_open (ctx, cmd + 5, error);
 
   g_set_error (error, NSQLD_ERROR, NSQLD_ERROR_BAD_COMMAND,
 	       "Command '%s' not understood", cmd);
