@@ -61,6 +61,7 @@ static struct timeval close_time;
 static MBPixbufImage *img_icon, *img_icon_active;
 
 int xoff, yoff;
+int win_width, win_height;
 
 static void
 redraw_popup (void)
@@ -269,17 +270,18 @@ static void
 prepare_icon (MBPixbufImage *img_icon, Pixmap pix)
 {
   XColor xcol_bg;
+  int x, y;
   MBPixbufImage *img_backing;
   xcol_bg.red   = 0;
   xcol_bg.green = 0;
   xcol_bg.blue  = 0;
   mb_tray_get_bg_col (dpy, &xcol_bg);
-  img_backing = mb_pixbuf_img_new (mbpixbuf, 
-				   mb_pixbuf_img_get_width (img_icon), 
-				   mb_pixbuf_img_get_height (img_icon));
+  img_backing = mb_pixbuf_img_new (mbpixbuf, win_width, win_height);
   mb_pixbuf_img_fill (mbpixbuf, img_backing, 
 		      xcol_bg.red, xcol_bg.green, xcol_bg.blue, 0);
-  mb_pixbuf_img_composite (mbpixbuf, img_backing, img_icon, 0, 0);
+  x = (win_width - mb_pixbuf_img_get_width (img_icon)) / 2;
+  y = (win_height - mb_pixbuf_img_get_height (img_icon)) / 2;
+  mb_pixbuf_img_composite (mbpixbuf, img_backing, img_icon, x, y);
   mb_pixbuf_img_render_to_drawable (mbpixbuf, img_backing, pix, 0, 0);
   mb_pixbuf_img_free (mbpixbuf, img_backing);
 }
@@ -327,34 +329,33 @@ main (int argc, char *argv[])
       exit (1);
     }
 
+  win_width = mb_pixbuf_img_get_width (img_icon);
+  win_height = mb_pixbuf_img_get_height (img_icon),
+
   win_panel = XCreateSimpleWindow (dpy, DefaultRootWindow (dpy), 0, 0,
-				   mb_pixbuf_img_get_width (img_icon), 
-				   mb_pixbuf_img_get_height (img_icon), 
+				   win_width, win_height,
 				   0,
 				   BlackPixel (dpy, screen),
 				   WhitePixel (dpy, screen));
 
   XStoreName (dpy, win_panel, _("Interactive help"));
 
+  XSelectInput (dpy, win_panel, ButtonPressMask | PropertyChangeMask | StructureNotifyMask);
+
   mb_tray_init_session_info (dpy, win_panel, argv, argc);
   mb_tray_init (dpy, win_panel);
   mb_tray_window_icon_set (dpy, win_panel, img_icon);
 
   pixmap = XCreatePixmap (dpy, win_panel, 
-			  mb_pixbuf_img_get_width (img_icon), 
-			  mb_pixbuf_img_get_height (img_icon),
+			  win_width, win_height,
 			  mbpixbuf->depth);
 
   pixmap_active = XCreatePixmap (dpy, win_panel, 
-				 mb_pixbuf_img_get_width (img_icon), 
-				 mb_pixbuf_img_get_height (img_icon),
+				 win_width, win_height,
 				 mbpixbuf->depth);
 
   prepare_icon (img_icon, pixmap);
   prepare_icon (img_icon_active, pixmap_active);
-
-  mb_pixbuf_img_free (mbpixbuf, img_icon);
-  mb_pixbuf_img_free (mbpixbuf, img_icon_active);
 
   XSetWindowBackgroundPixmap (dpy, win_panel, pixmap);
   XClearWindow (dpy, win_panel);
@@ -395,8 +396,6 @@ main (int argc, char *argv[])
 
   XChangeProperty (dpy, win_panel, help_atom, XA_STRING, 8, PropModeReplace, NULL, 0);
 
-  XSelectInput (dpy, win_panel, ButtonPressMask | PropertyChangeMask);
-
   xfd = ConnectionNumber (dpy);
 
   for (;;)
@@ -434,6 +433,31 @@ main (int argc, char *argv[])
 
       switch (xev.type)
 	{
+	case ConfigureNotify:
+	  if (xev.xconfigure.window == win_panel)
+	    {
+	      XFreePixmap (dpy, pixmap);
+	      XFreePixmap (dpy, pixmap_active);
+
+	      win_width = xev.xconfigure.width;
+	      win_height = xev.xconfigure.height;
+
+	      pixmap = XCreatePixmap (dpy, win_panel, 
+				      win_width, win_height,
+				      mbpixbuf->depth);
+	      
+	      pixmap_active = XCreatePixmap (dpy, win_panel, 
+					     win_width, win_height,
+					     mbpixbuf->depth);
+
+	      prepare_icon (img_icon, pixmap);
+	      prepare_icon (img_icon_active, pixmap_active);
+
+	      XSetWindowBackgroundPixmap (dpy, win_panel, pixmap);
+	      XClearWindow (dpy, win_panel);
+	    }
+	  break;
+
 	case Expose:
 	  redraw_popup ();
 	  break;
