@@ -1,0 +1,281 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2003-06-30 18:32+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: main.c:375
+msgid "Wireless networks"
+msgstr ""
+
+#: main.c:391
+msgid ""
+"This window shows all detected networks. It will be updated while the "
+"scanner is running. The colors tell you something about the possibility to "
+"connect to the net. Green=OK, yellow=maybe need some\tconfiguration, red=not "
+"possible."
+msgstr ""
+
+#: main.c:399 netedit.c:229 netedit.c:420 netedit.c:422
+msgid "Mode"
+msgstr ""
+
+#: main.c:409
+msgid "ESSID"
+msgstr ""
+
+#: main.c:419
+msgid "CH"
+msgstr ""
+
+#: main.c:429
+msgid "WEP"
+msgstr ""
+
+#: main.c:449
+msgid "Unable to scan for devices."
+msgstr ""
+
+#: main.c:584
+msgid "Successfully connected."
+msgstr ""
+
+#: main.c:599
+msgid ""
+"Ad-Hoc connections\n"
+"setup complete."
+msgstr ""
+
+#: main.c:609
+msgid ""
+"Could not connect\n"
+"to wireless LAN."
+msgstr ""
+
+#: main.c:688
+msgid "Details..."
+msgstr ""
+
+#: main.c:694
+msgid "Enter additional info"
+msgstr ""
+
+#: main.c:701
+msgid "Try connect..."
+msgstr ""
+
+#: main.c:756
+msgid "Scanning for networks..."
+msgstr ""
+
+#: main.c:858
+msgid "scanner died unexpectedly"
+msgstr ""
+
+#: main.c:956
+msgid "Wireless LAN control"
+msgstr ""
+
+#: main.c:962
+msgid "Switch scanner on"
+msgstr ""
+
+#: main.c:964
+msgid "Switch scanner off"
+msgstr ""
+
+#: main.c:965
+msgid "Networks..."
+msgstr ""
+
+#: main.c:966
+msgid "Remove from dock"
+msgstr ""
+
+#: main.c:1006
+msgid "This is gpe-aerial - the wireless LAN selector."
+msgstr ""
+
+#: netedit.c:101
+msgid ""
+"The key you entered\n"
+"is not valid."
+msgstr ""
+
+#: netedit.c:112
+msgid ""
+"The IP address you entered\n"
+"is not valid."
+msgstr ""
+
+#: netedit.c:131
+msgid ""
+"The subnet mask address you\n"
+"entered is not valid."
+msgstr ""
+
+#: netedit.c:150
+msgid ""
+"The gateway address you\n"
+"entered is not valid."
+msgstr ""
+
+#: netedit.c:169
+msgid ""
+"The DNS server address you\n"
+"entered is not valid."
+msgstr ""
+
+#: netedit.c:225
+msgid "SSID"
+msgstr ""
+
+#: netedit.c:230
+msgid "Managed"
+msgstr ""
+
+#: netedit.c:231 netedit.c:439
+msgid "Channel"
+msgstr ""
+
+#: netedit.c:232 netedit.c:443 netedit.c:445
+msgid "WEP enabled"
+msgstr ""
+
+#: netedit.c:233
+msgid "Use DHCP"
+msgstr ""
+
+#: netedit.c:234
+msgid "DNS Server"
+msgstr ""
+
+#: netedit.c:238
+msgid "Ad-Hoc"
+msgstr ""
+
+#: netedit.c:242
+msgid "Gateway"
+msgstr ""
+
+#: netedit.c:244
+msgid "Subnet mask"
+msgstr ""
+
+#: netedit.c:246
+msgid "IP Address"
+msgstr ""
+
+#: netedit.c:249
+msgid "WEP-Key"
+msgstr ""
+
+#: netedit.c:253
+msgid "Enter your desired IP address here, e.g. 192.168.1.2"
+msgstr ""
+
+#: netedit.c:254
+msgid "Enter your desired subnet mask here, usually it is set to 255.255.255.0"
+msgstr ""
+
+#: netedit.c:255
+msgid "This field needs to contain the name of this wireless LAN."
+msgstr ""
+
+#: netedit.c:256 netedit.c:257
+msgid ""
+"Here you select the type of your net, if you have an accesspoint select "
+"\"managed\", if your ."
+msgstr ""
+
+#: netedit.c:258
+msgid ""
+"Select channel here, only needed in ad-hoc mode. Note: Not all channels are "
+"allowed in all countries."
+msgstr ""
+
+#: netedit.c:259
+msgid "Get IP setup using DHCP."
+msgstr ""
+
+#: netedit.c:260
+msgid "Enter the IP of the default gateway to use."
+msgstr ""
+
+#: netedit.c:261
+msgid "Check this if WEP encryption is activated in this LAN."
+msgstr ""
+
+#: netedit.c:262
+msgid ""
+"Enter WEP key here. Use hex digits or set as ascii string (s: <keystring>)."
+msgstr ""
+
+#: netedit.c:263
+msgid ""
+"Enter the IP address of the primary nameserver to be used in this net here."
+msgstr ""
+
+#: netedit.c:266
+msgid "Network editor"
+msgstr ""
+
+#: netedit.c:405
+msgid "This dialog provides some inforamtion about the selected wireless LAN."
+msgstr ""
+
+#: netedit.c:407
+msgid "Network information"
+msgstr ""
+
+#: netedit.c:427
+msgid "Max. signal"
+msgstr ""
+
+#: netedit.c:432 netedit.c:435
+msgid "Speed"
+msgstr ""
+
+#: netedit.c:436 netedit.c:471
+msgid "<i>unknown</i>"
+msgstr ""
+
+#: netedit.c:443 netedit.c:450 netedit.c:458
+msgid "yes"
+msgstr ""
+
+#: netedit.c:445 netedit.c:453 netedit.c:460
+msgid "no"
+msgstr ""
+
+#: netedit.c:449 netedit.c:452
+msgid "IPSec detected"
+msgstr ""
+
+#: netedit.c:457 netedit.c:460
+msgid "DHCP detected"
+msgstr ""
+
+#: netedit.c:464 netedit.c:470
+msgid "Subnet"
+msgstr ""
+
+#: gpe-aerial.desktop.in.h:1
+msgid "Aerial"
+msgstr ""
+
+#: gpe-aerial.desktop.in.h:2
+msgid "Panel based wireless LAN communications control"
+msgstr ""
