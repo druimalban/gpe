@@ -34,6 +34,7 @@
 #include "cfgfile.h"
 #include "ownerinfo.h"
 #include "screen/brightness.h"
+#include "keys/keyboard.h"
 #ifndef DISABLE_XRANDR
 #include "screen/rotation.h"
 #endif
@@ -391,6 +392,12 @@ suidloop (int write, int read)
 				{
 					fscanf (in, "%100s", arg1);
 					set_autologin_setting(atol(arg1) ? TRUE : FALSE);
+				}
+				else if (strcmp (cmd, "KBDD") == 0)  /* Keyboard config */
+				{
+					fscanf (in, "%100s", arg1);
+					fscanf (in, "%100s", arg2);
+					keyboard_save(arg1, arg2);
 				}
 				else if (strcmp (cmd, "CHPW") == 0)  // change users password
 				{

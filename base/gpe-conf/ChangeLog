@@ -1,3 +1,8 @@
+2005-03-04	Florian Boor  	<florian.boor@kernelconcepts.de>
+
+	* kbd/keyboard.c: Add some more bits for kbdd configuration support.
+	* suid.c: Save keyboard config.
+	
 2005-03-02	Florian Boor  	<florian.boor@kernelconcepts.de>
 
 	* kbd/keyboard.c: Add some more bits for kbdd configuration support.

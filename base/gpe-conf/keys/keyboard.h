@@ -6,4 +6,6 @@ void Keyboard_Free_Objects();
 void Keyboard_Save();
 void Keyboard_Restore();
 
+void keyboard_save(void);
+
 #endif

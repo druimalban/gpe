@@ -48,50 +48,52 @@
 #define KBD_TYPE_POCKETVIK	11
 #define KBD_TYPE_MICRO_FOLDAWAY	12
 #define KBD_TYPE_MICRO_DATAPAD	13
+#define KBD_TYPE_MAX	14
 
 #define DEFAULT_TTS "/dev/ttyS0"
 #define KBDD_CONFIG "/etc/kbdd.conf"
+
+typedef struct
+{
+	char *idstr;
+	int type;
+}t_keyboard;
 
 /* --- module global variables --- */
 
 int keyboard_type = KBD_TYPE_NONE;
 gchar keyboard_port[PATH_MAX] = {0};
+t_keyboard ktable[] = {
+	{"none", KBD_TYPE_NONE},
+	{"foldable", KBD_TYPE_FOLDABLE},
+	{"snapntype", KBD_TYPE_SNAPNTYPE},
+	{"stowaway", KBD_TYPE_STOWAWAY},
+	{"stowawayxt", KBD_TYPE_STOWAWAYXT},
+	{"hpslim", KBD_TYPE_HPSLIM},
+	{"smartbt", KBD_TYPE_SMARTBT},
+	{"flexis", KBD_TYPE_FLEXIS},
+	{"lirc", KBD_TYPE_LIRC},
+	{"belkinir", KBD_TYPE_BELKINIR},
+	{"g250", KBD_TYPE_BENQ_GAMEPAD},
+	{"pocketvik", KBD_TYPE_POCKETVIK},
+	{"microfold", KBD_TYPE_MICRO_FOLDAWAY},
+	{"micropad", KBD_TYPE_MICRO_DATAPAD},
+	{"--dummy--", KBD_TYPE_MAX}
+};	
 
 /* --- local intelligence --- */
 
 int 
 find_kbd_type(const char *ktype)
 {
-	if (strncmp("foldable", ktype, 8) == 0)
-		return KBD_TYPE_FOLDABLE;
-	else if (strncmp("snapntype", ktype, 9) == 0)
-		return KBD_TYPE_SNAPNTYPE;
-	else if (strncmp("stowaway", ktype, 8) == 0)
-		return KBD_TYPE_STOWAWAY;
-	else if (strncmp("stowawayxt", ktype, 8) == 0)
-		return KBD_TYPE_STOWAWAYXT;
-	else if (strncmp("hpslim", ktype, 6) == 0)
-		return KBD_TYPE_HPSLIM;
-	else if (strncmp("smartbt", optarg, 7) == 0)
-		return KBD_TYPE_SMARTBT;
-	else if (strncmp("flexis", ktype, 6) == 0)
-		return KBD_TYPE_FLEXIS;
-	else if (strncmp("lirc", optarg, 4) == 0)
-		return KBD_TYPE_LIRC;
-        else if (strncmp("belkinir", optarg, 8) == 0)
-		return KBD_TYPE_BELKINIR;
-	else if (strncmp("g250", optarg, 4) == 0)
-		return KBD_TYPE_BENQ_GAMEPAD;
-	else if (strncmp("pocketvik", optarg, 9) == 0)
-		return KBD_TYPE_POCKETVIK;
-	else if (strncmp("microfold", optarg, 9) == 0)
-		return KBD_TYPE_MICRO_FOLDAWAY;
-	else if (strncmp("micropad", optarg, 8) == 0)
-		return KBD_TYPE_MICRO_DATAPAD;
+	int i;
+	
+	for (i=1; i<KBD_TYPE_MAX; i++)
+		if (strncmp(ktable[i].idstr, ktype, strlen(ktable[i].idstr)) == 0)
+			return ktable[i].type;
 
 	fprintf(stderr, "unrecognised keyboard type %s\n", ktype);
-
-return KBD_TYPE_NONE;
+	return KBD_TYPE_NONE;
 }
 
 
@@ -151,6 +153,13 @@ keyboard_selected(GtkToggleButton *tb, gpointer data)
 		keyboard_type = keyboard;
 }
 
+void
+keyboard_save(char *type, char* port)
+{
+	change_cfg_value (KBDD_CONFIG, "type:", type, ' ');
+	change_cfg_value (KBDD_CONFIG, "port:", port, ' ');
+}
+
 /* --- gpe-conf interface --- */
 
 void
@@ -172,10 +181,10 @@ GtkWidget *
 Keyboard_Build_Objects (void)
 {
 	GtkWidget *label, *cbAny;
-	GtkWidget *table;
+	GtkWidget *table, *vp, *sw;
 	gchar *buf;
 	GtkTooltips *tooltips;
-	
+		
 	parse_config(KBDD_CONFIG, &keyboard_type, &keyboard_port);
 	tooltips = gtk_tooltips_new ();
 	buf = g_malloc (255);
@@ -185,6 +194,16 @@ Keyboard_Build_Objects (void)
 	gtk_table_set_row_spacings (GTK_TABLE (table), gpe_get_boxspacing ());
 	gtk_table_set_col_spacings (GTK_TABLE (table), gpe_get_boxspacing ());
 
+	sw = gtk_scrolled_window_new(NULL, NULL);
+	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(sw),
+	                               GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+	gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(sw), 
+	                                    GTK_SHADOW_NONE);
+	vp = gtk_viewport_new(NULL, NULL);
+	gtk_viewport_set_shadow_type(GTK_VIEWPORT(vp), GTK_SHADOW_NONE);
+	gtk_container_add(GTK_CONTAINER(vp), table);
+	gtk_container_add(GTK_CONTAINER(sw), vp);
+	
 	gtk_object_set_data (GTK_OBJECT (table), "tooltips", tooltips);
 	gtk_tooltips_set_tip (tooltips, 
 	                      table, 
@@ -301,5 +320,5 @@ Keyboard_Build_Objects (void)
 	                       G_CALLBACK(keyboard_selected), (gpointer)KBD_TYPE_MICRO_DATAPAD);
 
 	g_free(buf);
-	return table;
+	return sw;
 }
