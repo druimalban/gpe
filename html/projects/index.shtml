@@ -32,8 +32,13 @@ Interface (GUI) toolkit for X11 (not maintained by the GPE project)
 	<LI> <I><A HREF="GPE-media.shtml">Media Player</A></I>, a nice add-on feauture, good for boring
 	meetings and to impress your friends.
 	<LI> <I><A HREF="GPE-games.shtml">Games</A></I> ;)
+	<LI> <I><A HREF="GPE-time-tracker.shtml">Time tracker</A></I>
 	<LI> ... and for sure many more to come
 </UL>
-	
+
+Utilities:<br>	
+<UL>
+	<LI> <I><A HREF="GPE-login.shtml">Multi-user login</A></I>
+</UL>
 
 <!--#include virtual="/includes/foot.shtml"-->
