@@ -1,5 +1,7 @@
 2004-10-09  Florian Boor  <florian.boor@kernelconcepts.de>
 
+    * main.c: Minor changes to detail window layout.
+    * editing.c: Changed declaration to fix compile error with gcc 2.95. 
     * editing.c: Removed redundant delete button in edit window for small 
                  screens.
     * main.c: Implemented details window.

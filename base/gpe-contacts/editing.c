@@ -737,8 +737,9 @@ char *suffix = NULL;
     /* scan first element for title */
     if (sscanf(sp, "%s", e[0]))
       {
-        i = 0;
         struct tag_value *v;
+        i = 0;
+        
         while (titles[i])
           {
             if (!strcasecmp(e[0], titles[i]))

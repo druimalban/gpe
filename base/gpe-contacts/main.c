@@ -283,7 +283,9 @@ pop_singles (GtkWidget *vbox, GSList *list, struct person *p)
               w = gtk_label_new (NULL);
               gtk_misc_set_alignment(GTK_MISC(w),0.0,0.5);
               gtk_label_set_text(GTK_LABEL(w), tv->value);
-              gtk_label_set_line_wrap(GTK_LABEL(w), TRUE);
+              gtk_label_set_line_wrap(GTK_LABEL(w), 
+                                      ((e->type == ITEM_MULTI_LINE) 
+                                       || mode_landscape) ? TRUE : FALSE);
           
               if (e->name[0] && e->name[strlen(e->name)-1] != ':')
                 {
