@@ -1,8 +1,10 @@
 [Desktop Entry]
 Name=User Manager
 Name[cs]=Spravovat nastavení uživatelů
-Comment=Manage local Users 
-Comment[cs]=Správce uživatelů
+Name[de]=Benutzer-Manager
+Name[pt]=Gerenciar Utilizadores
+Name[ro]=Managerul de Utilizatori
+Comment=Manage local users 
 Exec=gpe-conf users
 Terminal=0
 Type=Application

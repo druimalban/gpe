@@ -1,8 +1,14 @@
 [Desktop Entry]
 Name=Battery Info
 Name[cs]=Baterie
+Name[de]=Batterieinfo
+Name[pt]=Informação da Bateria
+Name[ro]=Informaţii baterie
 Comment=Battery Information
 Comment[cs]=Informace o stavu baterií
+Comment[de]=Batterieinformation
+Comment[pt]=Informação acerca da bateria
+Comment[ro]=Informaţii Baterie
 Exec=gpe-conf battery
 Terminal=0
 Type=Application

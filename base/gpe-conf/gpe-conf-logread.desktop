@@ -1,7 +1,9 @@
 [Desktop Entry]
 Name=Show Logs
-Comment=Accesss System Log 
-Comment[cs]=Ukázat log
+Name[de]=Logs anzeigen
+Name[pt]=Mostrar Logs
+Name[ro]=Arată Jurnale
+Comment=Access System Log 
 Exec=gpe-conf logread
 Terminal=0
 Type=Application

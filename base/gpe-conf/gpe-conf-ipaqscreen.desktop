@@ -1,8 +1,14 @@
 [Desktop Entry]
 Name=Screen Setup
 Name[cs]=Nastavení displeje
+Name[de]=Bildschirmeinstellungen
+Name[pt]=Configuração do Ecrã
+Name[ro]=Setare screen
 Comment=Screen Setup
 Comment[cs]=Nastavení displeje
+Comment[de]=Bildschirmeinstellungen
+Comment[pt]=Configuração do Ecrã
+Comment[ro]=Setare screen
 Exec=gpe-conf ipaqscreen
 Terminal=0
 Type=Application

@@ -1,8 +1,14 @@
 [Desktop Entry]
 Name=Owner Information
 Name[cs]=Informace o majiteli
+Name[de]=Benutzerinformation
+Name[pt]=Informação do Proprietário
+Name[ro]=Informaţii Proprietar
 Comment=Set Owner Information
 Comment[cs]=Nastavit informace o majiteli
+Comment[de]=Setze Benutzerinformation
+Comment[pt]=Alterar Informações do Proprietário
+Comment[ro]=Setează Informaţii Proprietar
 Exec=gpe-conf ownerinfo
 Terminal=0
 Type=Application

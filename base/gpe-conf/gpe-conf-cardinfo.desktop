@@ -1,8 +1,14 @@
 [Desktop Entry]
 Name=PC/CF Cards
 Name[cs]=PC/CF karty
+Name[de]=PC/CF-Karten
+Name[pt]=Cartões PC/CF
+Name[ro]=Carduri PC/CF
 Comment=PC/CF Cards info and config
 Comment[cs]=Nastavení a informace o PC/CF kartách
+Comment[de]=PC/CF-Steckplatz-Information
+Comment[pt]=Configuração e informações acerca dos cartões PC/CF
+Comment[ro]=Informaţii şi configurare carduri PC/CF.
 Exec=gpe-conf cardinfo
 Terminal=0
 Type=Application

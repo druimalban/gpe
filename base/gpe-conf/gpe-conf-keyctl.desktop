@@ -1,8 +1,14 @@
 [Desktop Entry]
 Name=Button Config
 Name[cs]=Nastavení tlačítek
+Name[de]=Tastenkonfig
+Name[pt]=Configuração dos Botões
+Name[ro]=Buton Configurare
 Comment=Button Configuration
 Comment[cs]=Nastavení vnějších tlačítek
+Comment[de]=Tastenkonfiguration
+Comment[pt]=Configurações dos Botões.
+Comment[ro]=Buton Configurare
 Exec=gpe-conf keyctl
 Terminal=0
 Type=Application

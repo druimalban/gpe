@@ -1,8 +1,14 @@
 [Desktop Entry]
 Name=External Keyboard
 Name[cs]=Přídavné klávesnice
+Name[de]=Externe Tastatur
+Name[pt]=Teclado Externo
+Name[ro]=Tastatură externă
 Comment=External Keyboard Setup
 Comment[cs]=Nastavení přídavné klávesnice
+Comment[de]=Einstellungen der externen Tastatur
+Comment[pt]=Configuração do Teclado Externo
+Comment[ro]=Setare tastatură externă
 Exec=gpe-conf keyboard
 Terminal=0
 Type=Application

@@ -1,8 +1,14 @@
 [Desktop Entry]
 Name=Global Look
 Name[cs]=Nastavení celkového vzhledu aplikací
+Name[de]=Globales Aussehen
+Name[pt]=Aparência Global
+Name[ro]=Privire Globală
 Comment=Global Appearance Setup
 Comment[cs]=Vzhled a písma
+Comment[de]=Globales Aussehen
+Comment[pt]=Configuração de Aparência Global
+Comment[ro]=Setare Aspect Global
 Exec=gpe-conf theme
 Terminal=0
 Type=Application

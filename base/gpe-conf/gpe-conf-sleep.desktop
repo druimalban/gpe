@@ -1,8 +1,14 @@
 [Desktop Entry]
 Name=Sleep Config
 Name[cs]=Nastavení spánku
+Name[de]=Schlafen
+Name[pt]=Configuração de Suspensão
+Name[ro]=Configurare Adormire
 Comment=Sleep Configuration
 Comment[cs]=Nastavení spánku
+Comment[de]=Schlaf-Konfiguration.
+Comment[pt]=Configuração de Suspensão
+Comment[ro]=Configuraţie Adormire
 Exec=gpe-conf sleep
 Terminal=0
 Type=Application

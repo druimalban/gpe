@@ -1,8 +1,14 @@
 [Desktop Entry]
 Name=Network Setup
 Name[cs]=Nastavení sítě
+Name[de]=Netzwerkeinstellungen
+Name[pt]=Configuração de Rede
+Name[ro]=Setare Reţea
 Comment=Network Setup
 Comment[cs]=Nastavení sítě
+Comment[de]=Netzwerkeinstellungen
+Comment[pt]=Configuração de Rede
+Comment[ro]=Setare Reţea
 Exec=gpe-conf network
 Terminal=0
 Type=Application

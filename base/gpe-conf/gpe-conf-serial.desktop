@@ -1,8 +1,10 @@
 [Desktop Entry]
-Name= Serial Ports
-Name[cs]=Sériové porty
+Name=Serial Ports
 Comment=Serial Port Settings
 Comment[cs]=Nastavení sériového portu
+Comment[de]=Einstellungen für serielle Ports
+Comment[pt]=Configuração da Porta de Série
+Comment[ro]=Setări Porturi Seriale
 Exec=gpe-conf serial
 Terminal=0
 Type=Application
