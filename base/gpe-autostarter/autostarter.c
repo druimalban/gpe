@@ -27,7 +27,7 @@
 #include <X11/Xlib.h>
 
 #define PATH_NAME "/org/handhelds/gpe/hotplug"
-#define SIGNAL_NAME "HotplugEvent"
+#define SIGNAL_NAME "org.handhelds.gpe.hotplug.HotplugEvent"
 
 #define _(x) gettext(x)
 
