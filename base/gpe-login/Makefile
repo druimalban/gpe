@@ -2,7 +2,15 @@ PREFIX = /usr/local
 PACKAGE = gpe-login
 CVSBUILD = yes
 
-CFLAGS = `gtk-config --cflags` `gdk-pixbuf-config --cflags` -Os -Wall -fomit-frame-pointer
+ifeq ($(GTK2),yes)
+GTKLDFLAGS = `pkg-config --libs gtk+-2.0`
+GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
+else
+GTKLDFLAGS = `gtk-config --libs`
+GTKCFLAGS = `gtk-config --cflags` `gdk-pixbuf-config --cflags`
+endif
+
+CFLAGS = $(GTKCFLAGS) -Os -Wall -fomit-frame-pointer
 CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 
 ifeq ($(CVSBUILD),yes)
@@ -27,7 +35,10 @@ po/$(PACKAGE).pot: $(SOURCES)
 	xgettext -k_ -o po/$(PACKAGE).pot $^
 
 gpe-login: gpe-login.o
-	$(CC) -o $@ $< $(LDFLAGS) `gtk-config --libs` -lcrypt
+	$(CC) -o $@ $< $(LDFLAGS) $(GTKLDFLAGS) -lcrypt
+
+gpe-logout: gpe-logout.o
+	$(CC) -o $@ $< $(LDFLAGS) $(GTKLDFLAGS)
 
 gpe-dm: gpe-dm.o
 	$(CC) -o $@ $< -L/usr/X11R6/lib -lX11
