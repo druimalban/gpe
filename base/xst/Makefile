@@ -1,5 +1,6 @@
 PREFIX = /usr/local
 PACKAGE = xst
+CVSBUILD = yes
 DEBUG = no
 
 MEMBERS = xst
@@ -24,20 +25,24 @@ OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
+ifeq ($(CVSBUILD),yes)
+BUILD = ../build
+else
+BUILD = build
+endif
+
 all: $(PACKAGE)
 
 $(PACKAGE): $(OBJS)
 	$(CC) -o $@ $^ $(LDFLAGS)
 
-install: $(PACKAGE)
+install-program: $(PACKAGE)
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
-	install $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
-	strip $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
+	install -s $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 
 clean:
-	rm -f $(PACKAGE)
-	rm -f $(OBJS) $(DEPS)
+	rm -f $(PACKAGE) $(OBJS) $(DEPS)
 
-include ../build/Makefile.translation
-include ../build/Makefile.dpkg_ipkg
+include $(BUILD)/Makefile.translation
+include $(BUILD)/Makefile.dpkg_ipkg
 -include $(DEPS)

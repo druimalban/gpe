@@ -1,6 +1,7 @@
 PREFIX = /usr/local
 PACKAGE = teleport
 DEBUG = yes
+CVSBUILD = yes
 VERSION = 0.31
 
 LINGUAS = 
@@ -31,6 +32,12 @@ DEPS = $(patsubst %,%.d,$(MEMBERS))
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
+ifeq ($(CVSBUILD),yes)
+BUILD = ../build
+else
+BUILD = build
+endif
+
 all: teleport all-mo tp-keygen
 
 teleport: $(OBJS)
@@ -42,7 +49,7 @@ tp-keygen: tp-keygen.o keygen.o
 clean:
 	rm -f teleport tp-keygen tp-keygen.o $(OBJS) $(DEPS)
 
-install: all install-mo
+install-program: all
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
 	install -s teleport $(DESTDIR)$(PREFIX)/bin/
 	install -s tp-keygen $(DESTDIR)$(PREFIX)/bin/
@@ -51,7 +58,6 @@ install: all install-mo
 	install -d $(DESTDIR)$(PREFIX)/share/applications
 	install -m 644 teleport.desktop $(DESTDIR)$(PREFIX)/share/applications
 
-include ../build/Makefile.dpkg_ipkg
-include ../build/Makefile.translation
-
+include $(BUILD)/Makefile.translation
+include $(BUILD)/Makefile.dpkg_ipkg
 -include $(DEPS)

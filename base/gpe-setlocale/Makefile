@@ -18,16 +18,23 @@ LDFLAGS += -L/usr/X11R6/lib -lX11
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 
+ifeq ($(CVSBUILD),yes)
+BUILD = ../build
+else
+BUILD = build
+endif
+
 all: $(PACKAGE)
 
 $(PACKAGE): $(OBJS)
 	$(CC) -o $@ $^ $(LDFLAGS)
 
-install: all
+install-program: all
 	install -d $(DESTDIR)$(PREFIX)/bin/
 	install -s $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 
 clean:
 	rm -f $(PACKAGE) $(OBJS)
 
-include ../build/Makefile.dpkg_ipkg
+include $(BUILD)/Makefile.dpkg_ipkg
+include $(BUILD)/Makefile.translation
