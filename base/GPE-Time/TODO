@@ -1,0 +1,3 @@
+- add option for networked date/time setting
+	ntp
+	rdate
