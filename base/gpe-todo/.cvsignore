@@ -3,4 +3,5 @@ gpe-todo
 *.ipk
 *.ipk.asc
 *.ipk.upload.html
+*.desktop
 
