@@ -4,7 +4,7 @@ PACKAGE = gpe-bluetooth
 DEBUG = no
 CVSBUILD = yes
 GTK2 = yes
-VERSION = 0.36.1
+VERSION = 0.36.2
 
 GLADE = bluez-pin-gpe.glade
 
@@ -20,7 +20,7 @@ endif
 PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS) `pkg-config --cflags dbus-glib-1` `pkg-config --cflags libglade-2.0` `pkg-config --cflags mimedir-1.0` `$(LIBGPEVTYPE_PC_EXTRA) pkg-config --cflags $(LIBGPEVTYPE_PC)`
 PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS) -DDBUS_API_SUBJECT_TO_CHANGE -DGPE_BLUETOOTH
 PACKAGE_CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
-PACKAGE_LDFLAGS += $(GPELIBS) -lbluetooth -lsdp `pkg-config --libs gthread-2.0` `pkg-config --libs dbus-glib-1` `pkg-config --libs libglade-2.0` -lopenobex `pkg-config --libs mimedir-1.0` `$(LIBGPEVTYPE_PC_EXTRA) pkg-config --libs $(LIBGPEVTYPE_PC)` -lsqlite
+PACKAGE_LDFLAGS += $(GPELIBS) -lbluetooth `pkg-config --libs gthread-2.0` `pkg-config --libs dbus-glib-1` `pkg-config --libs libglade-2.0` -lopenobex `pkg-config --libs mimedir-1.0` `$(LIBGPEVTYPE_PC_EXTRA) pkg-config --libs $(LIBGPEVTYPE_PC)` -lsqlite
 
 ifeq ($(CVSBUILD),yes)
 BUILD = ../build
