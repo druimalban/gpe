@@ -360,7 +360,8 @@ draw_click_event (GtkWidget *widget,
 	      else
 		ti->state = COMPLETED;
 	      
-	      gtk_widget_draw (g_draw, NULL);
+	      push_item (ti);
+      	      gtk_widget_draw (g_draw, NULL);
 	    }
 	}
       else if (event->type == GDK_2BUTTON_PRESS)
