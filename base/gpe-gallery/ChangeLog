@@ -1,3 +1,9 @@
+2004-08-11  Florian Boor  <florian.boor@kernelconcepts.de>
+
+	* Released V 0.93
+	* main.c: Fixed three bugs causing segfaults.
+	* Makefile: V 0.93
+
 2004-08-09  Florian Boor  <florian.boor@kernelconcepts.de>
 	* Released V 0.92
 	* main.c: Improved file type checking.

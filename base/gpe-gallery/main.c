@@ -816,7 +816,7 @@ add_directory (gchar *directory)
 static gboolean
 next_image (gpointer data)
 {
-  if (image_widget)
+  if ((image_widget) && (image_filenames))
   {
     if (g_list_next (image_filenames) != NULL)
       image_filenames = g_list_next (image_filenames);
@@ -834,7 +834,7 @@ next_image (gpointer data)
 static gboolean
 previous_image ()
 {
-  if (image_widget)
+  if ((image_widget) && (image_filenames))
   {
     if (g_list_previous (image_filenames) != NULL)
       image_filenames = g_list_previous (image_filenames);
@@ -874,6 +874,11 @@ show_new_slideshow (void)
   GtkWidget *spin_button, *vbox, *hbox, *hbox2, *hsep, *label1, *label2;
   GtkAdjustment *spin_button_adjustment;
   GtkWidget *start_button, *close_button;
+
+  /* ignore if no images available */
+  #warning todo: disable button in this case
+  if (!image_filenames)
+	 return;
 
   hide_image ();
 
