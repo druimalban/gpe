@@ -3,6 +3,7 @@ PACKAGE = gpe-su
 DEBUG = yes
 CVSBUILD = yes
 GTK2 = yes
+VERSION = 0.06
 
 MEMBERS = gpe-su
 
