@@ -1,5 +1,5 @@
 [Desktop Entry]
-_Name=Show Log
+_Name=Show Logs
 _Comment=Accesss System Log 
 Exec=gpe-conf logread
 Terminal=0
