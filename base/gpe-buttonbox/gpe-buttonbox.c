@@ -324,37 +324,43 @@ delete_window_record (struct window_record *r)
   c = find_class_record (r->class);
 
   c->windows = g_list_remove (c->windows, r);
-  if (c->windows == NULL && c->exec == NULL)
+  if (c->slot != -1)
     {
-      int slot;
-
-      gtk_widget_hide (c->widget);
-      gtk_widget_destroy (c->widget);
-      slot = c->slot;
-      class_slot[c->slot] = NULL;
-      c->slot = -1;
-
-      if (other_windows)
+      if (c->windows == NULL && c->exec == NULL)
 	{
-	  struct window_record *rr;
-	  struct class_record *cc;
-	  GList *l;
-
-	  rr = other_windows->data;
-	  cc = find_class_record (rr->class);
-
-	  for (l = cc->windows; l; l = l->next)
-	    other_windows = g_list_remove (other_windows, l->data);
-
-	  cc->widget = build_icon_for_class (cc);
-	  gtk_widget_show (cc->widget);
-	  gtk_fixed_put (GTK_FIXED (box), cc->widget, (slot + 1) * SLOT_WIDTH, 0);
-	  cc->slot = slot;
-	  class_slot[slot] = cc;
+	  int slot;
+	  
+	  if (c->slot != -1)
+	    {
+	      gtk_widget_hide (c->widget);
+	      gtk_widget_destroy (c->widget);
+	      c->widget = NULL;
+	      slot = c->slot;
+	      class_slot[c->slot] = NULL;
+	      c->slot = -1;
+	    }
+	  
+	  if (other_windows)
+	    {
+	      struct window_record *rr;
+	      struct class_record *cc;
+	      GList *l;
+	      
+	      rr = other_windows->data;
+	      cc = find_class_record (rr->class);
+	      
+	      for (l = cc->windows; l; l = l->next)
+		other_windows = g_list_remove (other_windows, l->data);
+	      
+	      cc->widget = build_icon_for_class (cc);
+	      gtk_widget_show (cc->widget);
+	      gtk_fixed_put (GTK_FIXED (box), cc->widget, (slot + 1) * SLOT_WIDTH, 0);
+	      cc->slot = slot;
+	      class_slot[slot] = cc;
+	    }
 	}
     }
-  
-  if (c->slot == -1)
+  else
     other_windows = g_list_remove (other_windows, r);
 
   if (other_windows == NULL)
