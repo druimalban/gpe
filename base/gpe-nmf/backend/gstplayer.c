@@ -257,19 +257,19 @@ state_change (GstElement *elt, GstElementState old_state, GstElementState new_st
 static void
 metadata_notify (GObject *obj, GObject *the_obj, GParamSpec *spec, player_t p)
 {
-  GstCaps *caps;
+//  GstCaps *caps;
   GValue value;
 
   memset (&value, 0, sizeof (value));
   g_value_init (&value, GST_TYPE_CAPS);
   g_object_get_property (G_OBJECT (the_obj), "metadata", &value);
 
+#if 0 
   caps = g_value_get_boxed (&value);
   if (caps)
     {
       GstProps *props = gst_caps_get_props (caps);
      
-#if 0 
       if (props)
 	{
 	  gchar *artist = NULL, *title = NULL, *album = NULL;
@@ -292,8 +292,8 @@ metadata_notify (GObject *obj, GObject *the_obj, GParamSpec *spec, player_t p)
 	      p->data.track.album = album;
 	    }
 	}
-#endif
     }
+#endif
 
   /* If the metadata was all we wanted, stop the thread */
   if (p->cur == NULL)

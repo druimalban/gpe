@@ -3,6 +3,7 @@ PACKAGE = gpe-nmf
 DEBUG = no
 CVSBUILD = yes
 GST = yes
+GST_VERSION = 0.8
 VERSION = 0.17
 
 MEMBERS = gpe-nmf playlist_edit
@@ -19,7 +20,7 @@ PACKAGE_CFLAGS += -Os -fomit-frame-pointer
 endif
 PACKAGE_CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\" -I./backend
 
-PACKAGE_CPPFLAGS += -DGST_NMF `pkg-config --cflags gstreamer-0.6`
+PACKAGE_CPPFLAGS += -DGST_NMF `pkg-config --cflags gstreamer-$(GST_VERSION)`
 
 ifeq ($(CVSBUILD),yes)
 PACKAGE_CFLAGS += -I../libgpewidget
@@ -39,7 +40,7 @@ SOURCES = $(patsubst %,%.c,$(MEMBERS))
 all: all-mo backend $(PACKAGE)
 
 backend:
-	make -C backend PREFIX=$(PREFIX) GST=$(GST)
+	make -C backend PREFIX=$(PREFIX) GST=$(GST) GST_VERSION=$(GST_VERSION) CVSBUILD=$(CVSBUILD)
 
 $(PACKAGE): $(OBJS) $(LIB)
 	$(CC) -o $@ $^ $(PACKAGE_LDFLAGS) -Lbackend -lgpenmf
@@ -54,7 +55,7 @@ install-program: all $(PACKAGE).desktop
 	install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications
 
 clean:
-	make -C backend clean
+	make -C backend clean CVSBUILD=$(CVSBUILD)
 	rm -f $(PACKAGE) $(OBJS)
 
 include $(BUILD)/Makefile.translation
