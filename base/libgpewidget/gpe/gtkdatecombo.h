@@ -47,6 +47,6 @@ void            gtk_date_combo_set_date (GtkDateCombo *,
 
 void		gtk_date_combo_clear (GtkDateCombo *dp);
 
-void		gtk_date_combo_week_starts_monday (gboolean);
+void		gtk_date_combo_week_starts_monday (GtkDateCombo *, gboolean);
 
 #endif

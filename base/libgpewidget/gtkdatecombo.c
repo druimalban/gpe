@@ -224,9 +224,9 @@ gtk_date_combo_clear (GtkDateCombo *dp)
 }
 
 void
-gtk_date_combo_week_starts_monday (gboolean yes)
+gtk_date_combo_week_starts_monday (GtkDateCombo *combo, gboolean yes)
 {
-  gtk_calendar_display_options (GTK_CALENDAR (combo->calendar), 
+  gtk_calendar_display_options (GTK_CALENDAR (combo->cal), 
 				GTK_CALENDAR_SHOW_DAY_NAMES | 
-				(yes ? GTK_CALENDAR_WEEK_STARTS_MONDAY : NULL));
+				(yes ? GTK_CALENDAR_WEEK_START_MONDAY : 0));
 }
