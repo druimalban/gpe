@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-08-25 22:03+0200\n"
+"POT-Creation-Date: 2003-08-30 16:29+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -46,6 +46,10 @@ msgid ""
 "\n"
 "Usage: gpe-conf [AppletName]\n"
 "where AppletName is in:\n"
+msgstr ""
+
+#: applets.c:318
+msgid "Root access"
 msgstr ""
 
 #: applets.c:327
@@ -164,6 +168,22 @@ msgstr ""
 
 #: appmgr_setup.c:189 login-setup.c:152 gpe-admin.c:86
 msgid "General"
+msgstr ""
+
+#: appmgr_setup.c:206
+msgid "Show 'All' group"
+msgstr ""
+
+#: appmgr_setup.c:214
+msgid "Auto-hide group labels"
+msgstr ""
+
+#: appmgr_setup.c:221
+msgid "Show 'Recent' tab"
+msgstr ""
+
+#: appmgr_setup.c:228
+msgid "Do not launch at startup"
 msgstr ""
 
 #: appmgr_setup.c:237
@@ -945,12 +965,32 @@ msgstr ""
 msgid "Baud Rate"
 msgstr ""
 
-#: logread.c:140
+#: logread.c:107
+msgid "Can't find circular buffer, is syslog running?"
+msgstr ""
+
+#: logread.c:113
+msgid "Can't get access to circular buffer from syslogd."
+msgstr ""
+
+#: logread.c:119
+msgid "Can't get access to semaphone(s) for circular buffer from syslogd."
+msgstr ""
+
+#: logread.c:144
 msgid "<empty syslog>"
 msgstr ""
 
-#: logread.c:191
+#: logread.c:215 logread.c:229
 msgid "System Log"
+msgstr ""
+
+#: logread.c:237 logread.c:251
+msgid "Session Log"
+msgstr ""
+
+#: logread.c:257
+msgid "Could not open X session log."
 msgstr ""
 
 #: packages.c:66
@@ -1631,7 +1671,7 @@ msgid "Accesss System Log "
 msgstr ""
 
 #: gpe-conf-logread.desktop.in.h:2
-msgid "Show Log"
+msgid "Show Logs"
 msgstr ""
 
 #: gpe-conf-network.desktop.in.h:1

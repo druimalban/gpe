@@ -203,7 +203,7 @@ void page_add (GtkVBox *vb)
 	
 	/* Show the 'All' group */
 	all_group_check =
-		gtk_check_button_new_with_label ("Show 'All' group");
+		gtk_check_button_new_with_label (_("Show 'All' group"));
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(all_group_check),
 				      cfg_options.show_all_group);
 
@@ -211,21 +211,21 @@ void page_add (GtkVBox *vb)
 
 	/* Autohide group titles */
 	auto_hide_group_labels_check =
-		gtk_check_button_new_with_label ("Auto-hide group labels");
+		gtk_check_button_new_with_label (_("Auto-hide group labels"));
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(auto_hide_group_labels_check),
 				      cfg_options.auto_hide_group_labels);
 	gtk_box_pack_start (GTK_BOX(controlvbox1), auto_hide_group_labels_check, FALSE, FALSE, 0);
 
 	/* Show 'recent' tab */
 	show_recent_check =
-		gtk_check_button_new_with_label ("Show 'Recent' tab");
+		gtk_check_button_new_with_label (_("Show 'Recent' tab"));
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(show_recent_check),
 				      cfg_options.show_recent_apps);
 	gtk_box_pack_start (GTK_BOX(controlvbox1), show_recent_check, FALSE, FALSE, 0);
 
 	/* Don't launch at startup */
 	dont_launch_check =
-		gtk_check_button_new_with_label ("Do not launch at startup");
+		gtk_check_button_new_with_label (_("Do not launch at startup"));
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON( dont_launch_check),
 				      dont_launch_exists());
 	gtk_box_pack_start (GTK_BOX(controlvbox1), dont_launch_check, FALSE, FALSE, 0);

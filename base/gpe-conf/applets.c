@@ -315,7 +315,7 @@ int suid_exec(const char* cmd,const char* params)
 	}
 	else
 	{
-	  dialog = 	gtk_dialog_new_with_buttons ("Root access",
+	  dialog = 	gtk_dialog_new_with_buttons (_("Root access"),
                                                   GTK_WINDOW(mainw),
                                                   GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
                                                   GTK_STOCK_CANCEL,

@@ -1,3 +1,9 @@
+2003-08-30	Florian Boor	<florian.boor@kernelconcepts.de>
+	* Released V 0.1.0-pre8
+	* Applied 2 i8n patches contributed by Libor Klepac
+	* New version number for development branch: 0.1.0-pre9
+	* updated gpe-conf.pot
+
 2003-08-29	Florian Boor	<florian.boor@kernelconcepts.de>
 	* Improved logfile viewer.
 	
