@@ -49,7 +49,9 @@ GtkWidget * create_window_selector(){
 
   //--Main window
   window_selector = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+#ifdef DESKTOP
   gtk_window_set_default_size (GTK_WINDOW (window_selector), 240, 280);
+#endif
   gtk_signal_connect (GTK_OBJECT (window_selector), "destroy",
                       GTK_SIGNAL_FUNC (on_window_selector_destroy),
                       NULL);

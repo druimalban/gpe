@@ -48,7 +48,9 @@ GtkWidget * sketchpad_build_window(){
 
   //--building
   window_sketchpad = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-  gtk_window_set_default_size (GTK_WINDOW (window_sketchpad), 240, 280);//FIXME: dummy?
+#ifdef DESKTOP
+  gtk_window_set_default_size (GTK_WINDOW (window_sketchpad), 240, 280);
+#endif
   gtk_signal_connect (GTK_OBJECT (window_sketchpad), "destroy",
                       GTK_SIGNAL_FUNC (on_window_sketchpad_destroy),
                       NULL);
