@@ -55,7 +55,7 @@ do_new_category (GtkWidget *widget, GtkWidget *d)
   g_slist_free (list);
 
   gtk_list_store_append (list_store, &iter);
-  gtk_list_store_set (list_store, &iter, 0, FALSE, 1, title, 2, NULL, -1);
+  gtk_list_store_set (list_store, &iter, 0, FALSE, 1, title, 2, -1, -1);
 
   gtk_widget_destroy (d);
 }
