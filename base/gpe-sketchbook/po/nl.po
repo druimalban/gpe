@@ -1,0 +1,86 @@
+# Dutch translation of gpe-sketchbook.
+# Copyright (C) 2003 Free Software Foundation, Inc.
+# Elros Cyriatan <cyriatan@fastmail.fm>, 2003.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-sketchbook 0.2.5\n"
+"POT-Creation-Date: 2003-04-02 02:26+0300\n"
+"PO-Revision-Date: 2003-07-30 17:27+0100\n"
+"Last-Translator: Elros Cyriatan <cyriatan@fastmail.fm>\n"
+"Language-Team: Dutch <vertaling@nl.linux.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: gpe-sketchbook.desktop.in.h:2 src/gpe-sketchbook.c:108
+msgid "Sketchbook"
+msgstr "Schetsboek"
+
+#: src/selector.c:87
+#, c-format
+msgid "Cannot read the sketchbook directory: %s. Exit."
+msgstr "Kan schetsboek map niet lezen: %s. Afsluiten."
+
+#: src/selector.c:93
+#, c-format
+msgid "Cannot create %s: %s. Exit."
+msgstr "Kan %s niet maken: %s. Afsluiten."
+
+#: src/selector.c:164
+#, c-format
+msgid "%s  at  %s"
+msgstr "%s  bij  %s"
+
+#: src/selector-cb.c:70 src/sketchpad-cb.c:197
+msgid "Delete current sketch?"
+msgstr "Huidige schets verwijderen?"
+
+#: src/selector-cb.c:70 src/sketchpad-cb.c:46 src/sketchpad-cb.c:76
+#: src/sketchpad-cb.c:197
+msgid "Question"
+msgstr "Vraag"
+
+#: src/selector-cb.c:71 src/sketchpad-cb.c:198
+msgid "Cancel"
+msgstr "Annuleren"
+
+#: src/selector-cb.c:71 src/sketchpad-cb.c:198 src/sketchpad-gui.c:428
+msgid "Delete"
+msgstr "Verwijderen"
+
+#: src/sketchpad.c:184
+msgid "new"
+msgstr "nieuw"
+
+#: src/sketchpad-cb.c:46
+msgid ""
+"Sketch modified,\n"
+"save before exiting?"
+msgstr ""
+"Schets gewijzigd,\n"
+"opslaan alvorens af te sluiten?"
+
+#: src/sketchpad-cb.c:47 src/sketchpad-cb.c:77
+msgid "Discard"
+msgstr "Weggooien"
+
+#: src/sketchpad-cb.c:47 src/sketchpad-cb.c:77 src/sketchpad-gui.c:427
+msgid "Save"
+msgstr "Opslaan"
+
+#: src/sketchpad-cb.c:76
+msgid "Save current sketch?"
+msgstr "Huidige schets opslaan?"
+
+#: src/sketchpad-gui.c:426
+msgid "New"
+msgstr "Nieuw"
+
+#: src/sketchpad-gui.c:429
+msgid "Properties"
+msgstr "Eigenschappen"
+
+#: gpe-sketchbook.desktop.in.h:1
+msgid "GPE Sketchbook"
+msgstr "GPE Schetsboek"
