@@ -1,3 +1,12 @@
+2003-09-21  Philip Blundell  <philb@gnu.org>
+
+	* Version 0.38 released.
+
+2003-09-21  Philip Blundell  <philb@gnu.org>
+
+	* main.c (open_window): Use gtk_main_quit not g_main_loop_quit.
+	* list-ui.c (top_level): Likewise.	
+
 2003-09-06  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.37 released.

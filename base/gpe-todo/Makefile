@@ -2,7 +2,7 @@ PREFIX = /usr/local
 PACKAGE = gpe-todo
 GTK2 = yes
 CVSBUILD = yes
-VERSION = 0.37
+VERSION = 0.38
 DEBUG = no
 
 LINGUAS = de id pt zh_TW fr ro

@@ -333,7 +333,7 @@ top_level (GtkWidget *window)
 
   gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_QUIT,
 			    _("Quit"), _("Tap here to quit the program."),
-			    G_CALLBACK (g_main_loop_quit), NULL, -1);
+			    G_CALLBACK (gtk_main_quit), NULL, -1);
 
   gtk_box_pack_start (GTK_BOX (hbox), toolbar, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (hbox), sep, FALSE, FALSE, 0);
