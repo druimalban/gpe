@@ -1,3 +1,9 @@
+2004-03-08  Philip Blundell  <philb@gnu.org>
+
+	* Makefile: Add dependency tracking.
+	(PACKAGE_CFLAGS, PACKAGE_CPPFLAGS, PACKAGE_LDFLAGS): Define and
+	use instead of CFLAGS, CPPFLAGS and LDFLAGS.
+
 2003-03-23  Phil Blundell  <pb@nexus.co.uk>
 
 	* familiar/postinst: Deleted.
