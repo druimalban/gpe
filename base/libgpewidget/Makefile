@@ -4,7 +4,7 @@ DEBUG = no
 
 GTKRC = gtkrc
 
-MEMBERS = gtkdatecombo errorbox init pixmaps smallbox gtkminifilesel render dirbrowser picturebutton what stylus gtkdatesel screensize question gtksimplemenu
+MEMBERS = gtkdatecombo errorbox init pixmaps smallbox gtkminifilesel render dirbrowser picturebutton what stylus gtkdatesel screensize question gtksimplemenu spacing
 
 ifeq ($(GTK2),yes)
 MEMBERS += gpetooltips2 gtkgpepixmap2 
@@ -34,7 +34,7 @@ CFLAGS += -MD
 
 CPPFLAGS += -I./gpe
 
-HEADERS = init.h render.h errorbox.h smallbox.h pixmaps.h gtkminifilesel.h gtkdatecombo.h gtkdatesel.h dirbrowser.h stylus.h picturebutton.h
+HEADERS = init.h render.h errorbox.h smallbox.h pixmaps.h gtkminifilesel.h gtkdatecombo.h gtkdatesel.h dirbrowser.h stylus.h picturebutton.h spacing.h
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))

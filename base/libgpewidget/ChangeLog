@@ -1,3 +1,13 @@
+2002-09-17  Colin Marquardt  <colin@marquardt-home.de>
+
+	* Makefile (HEADERS): Add "spacing.h".
+	(MEMBERS): Add "spacing".
+
+	* spacing.c: New file containing the gpe_get_* accessor functions.
+
+	* gpe/spacing.h: New file containing the prototypes for the
+	gpe_get_* functions.
+
 2002-09-14  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.24 released.
