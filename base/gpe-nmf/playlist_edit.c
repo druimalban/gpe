@@ -76,11 +76,10 @@ load_file (struct nmf_frontend *fe, gchar *s)
   if (strstr (s, ".npl") || strstr (s, ".xml"))
     {
       p = playlist_xml_load (s);
-      if (p)
-	{
-	  player_set_playlist (fe->player, p);
-	  playlist_edit_push (fe->playlist_widget, p);
-	}
+    }
+  else if (strstr (s, ".m3u"))
+    {
+      p = playlist_m3u_load (s);
     }
   else
     {
@@ -186,6 +185,7 @@ playlist_edit (struct nmf_frontend *fe, struct playlist *p)
   GtkWidget *window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   GtkWidget *toolbar = gtk_toolbar_new ();
   GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
+  GtkWidget *sw = gtk_scrolled_window_new (NULL, NULL);
   GtkTreeStore *store = gtk_tree_store_new (N_COLUMNS, G_TYPE_STRING, G_TYPE_POINTER);
   GtkWidget *treeview = gtk_tree_view_new_with_model (GTK_TREE_MODEL (store));
   GtkCellRenderer *renderer = gtk_cell_renderer_text_new ();
@@ -211,8 +211,9 @@ playlist_edit (struct nmf_frontend *fe, struct playlist *p)
 
   gtk_tree_view_append_column (GTK_TREE_VIEW (treeview), column);
 
+  gtk_container_add (GTK_CONTAINER (sw), treeview);
   gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), treeview, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), sw, TRUE, TRUE, 0);
 
   fe->model = GTK_TREE_MODEL (store);
   fe->view = GTK_TREE_VIEW (treeview);
@@ -220,6 +221,7 @@ playlist_edit (struct nmf_frontend *fe, struct playlist *p)
   gtk_signal_connect (GTK_OBJECT (treeview), "row-activated",
 		      GTK_SIGNAL_FUNC (row_signal), fe);
 
+  gtk_widget_show (sw);
   gtk_widget_show (toolbar);
   gtk_widget_show (treeview);
   gtk_widget_show (vbox);
