@@ -6,18 +6,23 @@
 #include <sys/types.h>
 #include <pwd.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <gpe/errorbox.h>
 #include <gpe/question.h>
 #include <gpe-sql.h>
+#include <string.h>
 
-#include "../include/callbacks.h"
+#include "callbacks.h"
 #include "interface.h"
 #include "support.h"
-#include "../include/db.h"
-#include "../include/questionfx.h"
-
+#include "db.h"
+#include "questionfx.h"
+#include "usqld-cfgdb.h"
 
 extern GtkWidget *wdcmain;
+extern GtkWidget *bNew;
+extern GtkWidget *bDelete;
+
 static t_sql_handle *db = NULL;
 
 
@@ -36,6 +41,9 @@ list_toggle_read (GtkCellRendererToggle * cellrenderertoggle,
   uint perms = 0;
   gchar *tabname;
 
+  if (db == NULL)
+    return;
+
   /* get toggled iter */
   gtk_tree_model_get_iter (model, &iter, path);
   gtk_tree_model_get (model, &iter, COLUMN_READ, &ac_read, -1);
@@ -43,9 +51,6 @@ list_toggle_read (GtkCellRendererToggle * cellrenderertoggle,
   /* do something with the value */
   ac_read ^= 1;
 
-  /* set new value */
-  gtk_list_store_set (GTK_LIST_STORE (model), &iter, COLUMN_READ, ac_read,
-		      -1);
   gtk_tree_model_get (model, &iter, COLUMN_WRITE, &ac_write, -1);
   gtk_tree_model_get (model, &iter, COLUMN_USER, &username, -1);
   edit = lookup_widget (GTK_WIDGET (wdcmain), "eTable");
@@ -57,7 +62,13 @@ list_toggle_read (GtkCellRendererToggle * cellrenderertoggle,
       if (ac_write)
 	perms += AC_WRITE;
       tabname = gtk_editable_get_chars (GTK_EDITABLE (edit), 0, -1);
-      gpe_acontrol_set_table (db, tabname, pwdinfo->pw_uid, perms);
+      if (gpe_acontrol_set_table (db, tabname, pwdinfo->pw_uid, perms) >= 0)
+	{
+	  /* set new value */
+	  gtk_list_store_set (GTK_LIST_STORE (model), &iter, COLUMN_READ,
+			      ac_read, -1);
+
+	}
     }
   /* clean up */
   gtk_tree_path_free (path);
@@ -79,6 +90,9 @@ list_toggle_write (GtkCellRendererToggle * cellrenderertoggle,
   uint perms = 0;
   gchar *tabname;
 
+  if (db == NULL)
+    return;
+
   /* get toggled iter */
   gtk_tree_model_get_iter (model, &iter, path);
   gtk_tree_model_get (model, &iter, COLUMN_WRITE, &ac_write, -1);
@@ -86,9 +100,6 @@ list_toggle_write (GtkCellRendererToggle * cellrenderertoggle,
   /* do something with the value */
   ac_write ^= 1;
 
-  /* set new value */
-  gtk_list_store_set (GTK_LIST_STORE (model), &iter, COLUMN_WRITE, ac_write,
-		      -1);
   gtk_tree_model_get (model, &iter, COLUMN_READ, &ac_read, -1);
   gtk_tree_model_get (model, &iter, COLUMN_USER, &username, -1);
   edit = lookup_widget (GTK_WIDGET (wdcmain), "eTable");
@@ -100,7 +111,12 @@ list_toggle_write (GtkCellRendererToggle * cellrenderertoggle,
       if (ac_write)
 	perms += AC_WRITE;
       tabname = gtk_editable_get_chars (GTK_EDITABLE (edit), 0, -1);
-      gpe_acontrol_set_table (db, tabname, pwdinfo->pw_uid, perms);
+      if (gpe_acontrol_set_table (db, tabname, pwdinfo->pw_uid, perms) >= 0)
+	{
+	  /* set new value */
+	  gtk_list_store_set (GTK_LIST_STORE (model), &iter, COLUMN_WRITE,
+			      ac_write, -1);
+	}
     }
   /* clean up */
   gtk_tree_path_free (path);
@@ -117,7 +133,7 @@ rule_cb (void *arg, int argc, char **argv, char **data)
   GtkTreeIter iter;
   uint ac_read, ac_write;
 
-  if (argc > 0 && argv[0])
+  if (argc > 1 && argv[0])
     {
       treeview = GTK_TREE_VIEW (lookup_widget (wdcmain, "tvACL"));
       liststore = GTK_LIST_STORE (gtk_tree_view_get_model (treeview));
@@ -159,12 +175,45 @@ void
 on_wdcmain_show (GtkWidget * widget, gpointer user_data)
 {
   GList *items = NULL;
-  GtkWidget *combo;
+  GtkWidget *combo, *cbedit;
+  gchar *content = NULL;
+  uint avalue = AC_NONE;
 
   combo = lookup_widget (widget, "cbDatabase");
   items = g_list_append (items, "contacts");
   items = g_list_append (items, "todo");
   gtk_combo_set_popdown_strings (GTK_COMBO (combo), items);
+
+  if (!set_config_open (TRUE))
+	  fprintf(stderr,"err: could't open config\n");
+
+  combo = lookup_widget (widget, "cbBaseDir");
+  cbedit = lookup_widget (widget, "eBaseDir");
+  content = get_config_val(TAG_CFG_BASEDIR);
+  if (content)
+  {
+    gtk_entry_set_text(GTK_ENTRY(cbedit),content);
+  }	
+  combo = lookup_widget (widget, "cbPolicy");
+  if (!set_config_open (TRUE))
+	  fprintf(stderr,"err: could't open config\n");
+  content = get_config_val(TAG_CFG_GLOBALPOLICY);
+  if (content)
+    {
+      avalue = atoi(content);
+      free (content);
+      switch (avalue){
+		  case AC_NONE: gtk_list_select_item(GTK_LIST(GTK_COMBO(combo)->list),0);
+		  break;
+		  case AC_READ: gtk_list_select_item(GTK_LIST(GTK_COMBO(combo)->list),1);
+		  break;
+		  case AC_READWRITE: gtk_list_select_item(GTK_LIST(GTK_COMBO(combo)->list),2);
+		  break;
+		  default: gtk_list_select_item(GTK_LIST(GTK_COMBO(combo)->list),0);
+	  }
+    }
+	
+  set_config_open (FALSE);
 
 }
 
@@ -175,7 +224,7 @@ on_wdcmain_destroy (GtkObject * object, gpointer user_data)
     sql_close (db);
 }
 
-
+// changed database selection
 void
 on_combo_entry2_changed (GtkEditable * editable, gpointer user_data)
 {
@@ -184,35 +233,59 @@ on_combo_entry2_changed (GtkEditable * editable, gpointer user_data)
   int cnt, i;
   char **tables;
   gchar *etext;
+  GtkListStore *liststore;
+  GtkTreeView *treeview;
 
   etext = gtk_editable_get_chars (editable, 0, -1);
   if (!strlen (etext))
     return;
-
+  items = NULL;
+  combo = lookup_widget (GTK_WIDGET (editable), "cbTable");
+  treeview = GTK_TREE_VIEW (lookup_widget (wdcmain, "tvACL"));
+  liststore = GTK_LIST_STORE (gtk_tree_view_get_model (treeview));
+  gtk_list_store_clear (liststore);
   if (db)
     sql_close (db);
   db = sql_open (etext);
   if (db)
     {
-      items = NULL;
       cnt = sql_list_tables (db, &tables);
       for (i = 1; i < cnt; i++)	// first is field name
-	items = g_list_append (items, tables[i]);
-      combo = lookup_widget (GTK_WIDGET (editable), "cbTable");
-      gtk_combo_set_popdown_strings (GTK_COMBO (combo), items);
+	{
+	  items = g_list_append (items, tables[i]);
+	}
+      if (items != NULL)
+	{
+	  gtk_combo_set_popdown_strings (GTK_COMBO (combo), items);
+	  gtk_widget_set_sensitive (combo, TRUE);
+	  gtk_widget_set_sensitive (GTK_WIDGET (treeview), TRUE);
+	}
+      else
+	{
+	  items = g_list_append (items, _("<none>"));
+	  gtk_combo_set_popdown_strings (GTK_COMBO (combo), items);
+	  gtk_widget_set_sensitive (combo, FALSE);
+	  gtk_widget_set_sensitive (GTK_WIDGET (treeview), FALSE);
+	}
       sql_free_table (tables);
     }
-
+  else
+    {
+      gtk_widget_set_sensitive (combo, FALSE);
+      gtk_widget_set_sensitive (GTK_WIDGET (treeview), FALSE);
+    }
 }
 
 
+// changed table selection
 void
 on_combo_entry1_changed (GtkEditable * editable, gpointer user_data)
 {
   GtkListStore *liststore;
   GtkTreeView *treeview;
   gchar *etext;
-
+  if (db == NULL)
+    return;
   etext = gtk_editable_get_chars (editable, 0, -1);
   if (!strlen (etext))
     return;
@@ -294,8 +367,55 @@ on_bDelete_clicked (GtkButton * button, gpointer user_data)
 	  edit = lookup_widget (GTK_WIDGET (wdcmain), "eTable");
 
 	  tabname = gtk_editable_get_chars (GTK_EDITABLE (edit), 0, -1);
-	   gpe_acontrol_remove_rule(db, tabname, pwdinfo->pw_uid);
+	  gpe_acontrol_remove_rule (db, tabname, pwdinfo->pw_uid);
 	}
 
     }
 }
+
+void
+on_eBaseDir_editing_done (GtkEditable * editable, gpointer user_data)
+{
+  gchar *content = NULL;
+  // do some checks here
+  content = gtk_editable_get_chars (GTK_EDITABLE (editable), 0, -1);
+  if (content)
+    {
+      set_config_open (TRUE);
+      set_config_val (TAG_CFG_BASEDIR, content);
+      set_config_open (FALSE);
+    }
+}
+
+
+void
+on_ePolicy_editing_done (GtkEditable * editable, gpointer user_data)
+{
+  gchar *content = NULL;
+  uint avalue = AC_NONE;
+
+  // this needs some improvement
+  content = gtk_editable_get_chars (GTK_EDITABLE (editable), 0, -1);
+
+  if (content)
+    {
+      if (!strcmp (content, "allow read"))
+	avalue = AC_READ;
+      if (!strcmp (content, "allow read and write"))
+	avalue = AC_READWRITE;
+      sprintf (content, "%i", avalue);
+      set_config_open (TRUE);
+      set_config_val (TAG_CFG_GLOBALPOLICY, content);
+      free (content);
+      set_config_open (FALSE);
+    }
+
+}
+
+void
+on_eUserdir_changed                    (GtkEditable     *editable,
+                                        gpointer         user_data)
+{
+
+}
+

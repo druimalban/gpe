@@ -13,6 +13,7 @@ gpe_dataconf_include_DATA = \
 	interface.h\
 	support.h\
 	db.h\
-	questionfx.h
+	questionfx.h\
+	usqld-cfgdb.h
 
 EXTRA_DIST = $(gpe_dataconf_include_DATA)

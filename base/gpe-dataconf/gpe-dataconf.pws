@@ -1,13 +1,15 @@
 
 [filenumbers]
-0=63
-1=20
-2=38
-3=44
-4=198
-5=94
-6=167
-7=26
+0=75
+1=48
+2=87
+3=118
+4=12
+5=8
+6=371
+7=111
+8=30
+9=111
 
 [filemarkers]
 0=
@@ -18,6 +20,8 @@
 5=
 6=
 7=
+8=
+9=
 
 [executer]
 RunInTerminal=true
@@ -26,18 +30,21 @@ RunInTerminal=true
 ShowLocals=true
 
 [filelist]
-0=/home/fuchs/Projekte/gpe/todo.txt
-1=/home/fuchs/Projekte/gpe/gpe/base/gpe-dataconf/include/db.h
-2=/home/fuchs/Projekte/gpe/gpe/base/gpe-dataconf/src/Makefile
-3=/home/fuchs/Projekte/gpe/gpe/base/gpe-dataconf/include/callbacks.h
-4=/home/fuchs/Projekte/gpe/gpe/base/gpe-dataconf/src/callbacks.c
-5=/home/fuchs/Projekte/gpe/gpe/base/gpe-dataconf/src/main.c
-6=/home/fuchs/Projekte/gpe/gpe/base/gpe-dataconf/src/db.c
-7=/home/fuchs/Projekte/gpe/gpe/base/libgpedb/include/gpe-sql.h
+0=/home/fuchs/Projekte/prismstumbler/src/main.c
+1=/home/fuchs/Projekte/gpe/todo.txt
+2=/home/fuchs/Projekte/gpe/gpe/base/gpe-dataconf/src/db.c
+3=/home/fuchs/Projekte/gpe/gpe/base/gpe-dataconf/src/usqld-cfgdb.c
+4=/home/fuchs/Projekte/gpe/gpe/base/gpe-dataconf/include/usqld-cfgdb.h
+5=/home/fuchs/Projekte/gpe/gpe/base/gpe-dataconf/include/db.h
+6=/home/fuchs/Projekte/gpe/gpe/base/gpe-dataconf/src/callbacks.c
+7=/home/fuchs/Projekte/gpe/gpe/base/gpe-dataconf/src/main.c
+8=/home/fuchs/Projekte/gpe/gpe/base/libgpedb/usage.txt
 
 [replace_text]
 0=wdcmain
 
 [find_text]
-0=db_open
-1=mainw
+0=signal
+1=renderer
+2=db_open
+3=mainw

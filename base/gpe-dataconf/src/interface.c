@@ -54,6 +54,9 @@ create_wdcmain (void)
   GtkWidget *ePolicy;
   GtkWidget *label6;
   GtkWidget *label5;
+  GtkWidget *label7;
+  GtkWidget *cbUserdir;
+  GtkWidget *eUserdir;
   GtkWidget *label4;
 
   wdcmain = gtk_window_new (GTK_WINDOW_TOPLEVEL);
@@ -149,7 +152,7 @@ create_wdcmain (void)
   gtk_notebook_set_tab_label (GTK_NOTEBOOK (notebook1), gtk_notebook_get_nth_page (GTK_NOTEBOOK (notebook1), 0), label3);
   gtk_label_set_justify (GTK_LABEL (label3), GTK_JUSTIFY_LEFT);
 
-  table1 = gtk_table_new (3, 2, FALSE);
+  table1 = gtk_table_new (4, 2, FALSE);
   gtk_widget_set_name (table1, "table1");
   gtk_widget_show (table1);
   gtk_container_add (GTK_CONTAINER (notebook1), table1);
@@ -209,6 +212,29 @@ create_wdcmain (void)
   gtk_label_set_justify (GTK_LABEL (label5), GTK_JUSTIFY_LEFT);
   gtk_misc_set_alignment (GTK_MISC (label5), 0, 0.5);
 
+  label7 = gtk_label_new (_("My Data"));
+  gtk_widget_set_name (label7, "label7");
+  gtk_widget_show (label7);
+  gtk_table_attach (GTK_TABLE (table1), label7, 0, 1, 2, 3,
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_SHRINK), 0, 0);
+  gtk_label_set_justify (GTK_LABEL (label7), GTK_JUSTIFY_LEFT);
+  gtk_misc_set_alignment (GTK_MISC (label7), 0, 0.5);
+
+  cbUserdir = gtk_combo_new ();
+  g_object_set_data (G_OBJECT (GTK_COMBO (cbUserdir)->popwin),
+                     "GladeParentKey", cbUserdir);
+  gtk_widget_set_name (cbUserdir, "cbUserdir");
+  gtk_widget_show (cbUserdir);
+  gtk_table_attach (GTK_TABLE (table1), cbUserdir, 1, 2, 2, 3,
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_SHRINK | GTK_FILL),
+                    (GtkAttachOptions) (GTK_SHRINK | GTK_FILL), 0, 0);
+  gtk_container_set_border_width (GTK_CONTAINER (cbUserdir), 3);
+
+  eUserdir = GTK_COMBO (cbUserdir)->entry;
+  gtk_widget_set_name (eUserdir, "eUserdir");
+  gtk_widget_show (eUserdir);
+
   label4 = gtk_label_new (_("Global"));
   gtk_widget_set_name (label4, "label4");
   gtk_widget_show (label4);
@@ -230,6 +256,15 @@ create_wdcmain (void)
   g_signal_connect_after ((gpointer) eTable, "changed",
                           G_CALLBACK (on_combo_entry1_changed),
                           NULL);
+  g_signal_connect ((gpointer) eBaseDir, "changed",
+                    G_CALLBACK (on_eBaseDir_editing_done),
+                    NULL);
+  g_signal_connect ((gpointer) ePolicy, "changed",
+                    G_CALLBACK (on_ePolicy_editing_done),
+                    NULL);
+  g_signal_connect ((gpointer) eUserdir, "changed",
+                    G_CALLBACK (on_eUserdir_changed),
+                    NULL);
 
   atko = gtk_widget_get_accessible (wdcmain);
   atk_object_set_description (atko, _("GPE Dataconf main window"));
@@ -258,6 +293,9 @@ create_wdcmain (void)
   GLADE_HOOKUP_OBJECT (wdcmain, ePolicy, "ePolicy");
   GLADE_HOOKUP_OBJECT (wdcmain, label6, "label6");
   GLADE_HOOKUP_OBJECT (wdcmain, label5, "label5");
+  GLADE_HOOKUP_OBJECT (wdcmain, label7, "label7");
+  GLADE_HOOKUP_OBJECT (wdcmain, cbUserdir, "cbUserdir");
+  GLADE_HOOKUP_OBJECT (wdcmain, eUserdir, "eUserdir");
   GLADE_HOOKUP_OBJECT (wdcmain, label4, "label4");
 
   return wdcmain;

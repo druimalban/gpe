@@ -68,7 +68,8 @@ module.include.files=\
 	interface.h\
 	support.h\
 	db.h\
-	questionfx.h
+	questionfx.h\
+	usqld-cfgdb.h
 
 module.source.name=src
 module.source.type=
@@ -79,7 +80,8 @@ module.source.files=\
 	interface.c\
 	support.c\
 	db.c\
-	questionfx.c
+	questionfx.c\
+	usqld-cfgdb.c
 
 module.pixmap.name=pixmaps
 module.pixmap.type=

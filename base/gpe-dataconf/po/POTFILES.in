@@ -11,5 +11,6 @@ src/interface.c
 src/support.c
 src/db.c
 src/questionfx.c
+src/usqld-cfgdb.c
 
 

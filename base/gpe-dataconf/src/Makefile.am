@@ -20,7 +20,8 @@ gpe_dataconf_SOURCES = \
 	interface.c\
 	support.c\
 	db.c\
-	questionfx.c
+	questionfx.c\
+	usqld-cfgdb.c
 
 gpe_dataconf_LDFLAGS = 
 

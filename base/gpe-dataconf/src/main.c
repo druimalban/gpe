@@ -43,6 +43,8 @@ struct gpe_icon my_icons[] = {
 
 
 GtkWidget *wdcmain;		// making this global makes some things easier...
+GtkWidget *bNew;
+GtkWidget *bDelete;
 
 
 int
@@ -51,7 +53,6 @@ main (int argc, char *argv[])
   GtkWidget *vbox1;
   GtkWidget *toolbar;
   GtkWidget *pw;
-  GtkWidget *btn;
   GdkPixmap *pixmap;
   GdkBitmap *bitmap;
   GtkListStore *liststore;
@@ -87,20 +88,14 @@ main (int argc, char *argv[])
   gtk_widget_show (toolbar);
 
   pw = gtk_image_new_from_pixbuf (gpe_find_icon ("new"));
-  btn = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("New rule"),
+  bNew = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("New rule"),
 			   _("New rule"), _("New rule"), pw,
 			   (GtkSignalFunc) on_bNew_clicked, NULL);
-#ifdef USE_USQLD
-	gtk_widget_set_sensitive(btn,FALSE);
-#endif
 
   pw = gtk_image_new_from_pixbuf(gpe_find_icon ("delete"));
-  btn = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Delete rule"),
+  bDelete = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Delete rule"),
 			   _("Delete rule"), _("Delete rule"), pw,
 			   (GtkSignalFunc) on_bDelete_clicked, NULL);
-#ifdef USE_USQLD
-	gtk_widget_set_sensitive(btn,FALSE);
-#endif
   
   gtk_toolbar_append_space(GTK_TOOLBAR(toolbar));
   
@@ -156,9 +151,11 @@ main (int argc, char *argv[])
   // disable some feature if we are not root
   if (geteuid() > 0)  // if true we don't have root permissions
   {
-	pw = lookup_widget(wdcmain,"ePolicy");
+	pw = lookup_widget(wdcmain,"cbPolicy");
 	gtk_widget_set_sensitive(pw,FALSE);
 #ifdef USE_USQLD
+	gtk_widget_set_sensitive(bNew,FALSE);
+	gtk_widget_set_sensitive(bDelete,FALSE);
 	pw = lookup_widget(wdcmain,"tvACL");
 	gtk_widget_set_sensitive(pw,FALSE);
 #endif

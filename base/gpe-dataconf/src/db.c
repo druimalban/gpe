@@ -55,7 +55,7 @@ gpe_acontrol_set_table(t_sql_handle* sqlh, char *table, int uid, uint permission
 	ret = sql_get_table_printf(sqlh,"select amask from _acontrol where (atable='%q') and (auser=%i);",&qres,&nrow,&ncolumn,&err,table,uid);
 
 	if (ret) {
-		fprintf(stderr,"err gpe_acontrol_set_table: %s",err);
+		fprintf(stderr,"err gpe_acontrol_set_table: %s\n",err);
 		free(err);
 		return -1;
 	}
@@ -66,7 +66,7 @@ gpe_acontrol_set_table(t_sql_handle* sqlh, char *table, int uid, uint permission
 			if (qres) sql_free_table(qres);
 			ret = sql_get_table_printf(sqlh,"update _acontrol set amask=%i where (atable='%q') and (auser=%i);",&qres,&nrow,&ncolumn,&err,permissions,table,uid);
 			if (ret) {
-				fprintf(stderr,"err gpe_acontrol_set_table: %s",err);
+				fprintf(stderr,"err gpe_acontrol_set_table: %s\n",err);
 				free(err);
 				return -1;
 			}
@@ -77,7 +77,7 @@ gpe_acontrol_set_table(t_sql_handle* sqlh, char *table, int uid, uint permission
 			if (qres) sql_free_table(qres);
 			ret = sql_get_table_printf(sqlh,"insert into _acontrol (atable,auser,amask,aowner) values('%q',%i,%i,0);",&qres,&nrow,&ncolumn,&err,table,uid,permissions);
 			if (ret) {
-				fprintf(stderr,"err gpe_acontrol_set_table: %s",err);
+				fprintf(stderr,"err gpe_acontrol_set_table: %s\n",err);
 				free(err);
 				return -1;
 			}

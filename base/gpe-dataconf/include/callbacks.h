@@ -42,3 +42,15 @@ on_bNew_clicked                     (GtkButton       *button,
 
 void
 on_bDelete_clicked (GtkButton * button, gpointer user_data);
+
+void
+on_eBaseDir_editing_done               (GtkEditable     *editable,
+                                        gpointer         user_data);
+
+void
+on_ePolicy_editing_done                (GtkEditable     *editable,
+                                        gpointer         user_data);
+
+void
+on_eUserdir_changed                    (GtkEditable     *editable,
+                                        gpointer         user_data);
