@@ -13,9 +13,8 @@ endif
 gpe-dm: gpe-dm.o
 	$(CC) -o $@ $^ -L/usr/X11R6/lib -lX11
 
-install: gpe-dm
-	install -D gpe-dm $(DESTDIR)$(PREFIX)/bin/gpe-dm
-	strip $(DESTDIR)$(PREFIX)/bin/gpe-dm
+install-program: gpe-dm
+	install -Ds gpe-dm $(DESTDIR)$(PREFIX)/bin/gpe-dm
 	mkdir -p $(DESTDIR)/etc/init.d
 	mkdir -p $(DESTDIR)/etc/rc2.d
 	install gpe-dm.init $(DESTDIR)/etc/init.d/gpe-dm
