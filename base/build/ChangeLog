@@ -1,5 +1,10 @@
 2004-02-22  Luc Pionchon <luc@handhelds.org>
 
+	* extract-linguas: New file, extract linguas from a 'postats' file from TP
+	* Makefile.translation-auto-linguas: Temporary file for test, to be merged later with Makefile.translation.
+
+2004-02-22  Luc Pionchon <luc@handhelds.org>
+
 	* Makefile.translation (TRANSLATION_SITE): removed trailing '/'
 	* Makefile.translation (templates): use $(BUILD) variable to allow use from anywhere (especially from gpe/games/*)
 
