@@ -31,8 +31,8 @@
 #include <X11/Xresource.h>
 #include <X11/extensions/shape.h>
 
-#include "mbtray.h"
-#include "mbpixbuf.h"
+#include <mb/mbtray.h>
+#include <mb/mbpixbuf.h>
 
 #define PIXMAPSDIR  PREFIX "/share/pixmaps"
 
