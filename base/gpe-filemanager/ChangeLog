@@ -1,3 +1,9 @@
+2004-09-19  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * main.c: Changed dirbrowser default size.
+              Made dirbrowser size adjustable.
+    * guitools.c: Monitor mountpoints and activate items if available.
+
 2004-09-17  Florian Boor  <florian.boor@kernelconcepts.de>
     
     * guitools.c: Fixed several bugs.

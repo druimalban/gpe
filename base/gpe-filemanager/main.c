@@ -96,7 +96,7 @@ static GtkWidget *view_widget;
 static GtkWidget *dir_view_widget;
 static GtkWidget *view_window;
 static GtkWidget *dir_view_window;
-static GtkWidget *vbox, *main_hbox;
+static GtkWidget *vbox, *main_paned;
 
 static GtkWidget *bluetooth_menu_item;
 static GtkWidget *copy_menu_item;
@@ -1774,7 +1774,7 @@ create_view_widget_list(void)
     gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(view_window),
   		GTK_POLICY_NEVER,GTK_POLICY_AUTOMATIC);
     gtk_container_add(GTK_CONTAINER(view_window),treeview);
-    gtk_box_pack_end (GTK_BOX (main_hbox), view_window, TRUE, TRUE, 0);
+    gtk_paned_pack2(GTK_PANED (main_paned), view_window, TRUE, TRUE);
 
 	g_signal_connect (G_OBJECT(treeview), "button_press_event", 
 		G_CALLBACK(tree_button_press), NULL);
@@ -1810,7 +1810,7 @@ create_view_widget_icons(void)
   gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(view_window),
   	GTK_POLICY_NEVER,GTK_POLICY_AUTOMATIC);
   gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(view_window),view_icons);
-  gtk_box_pack_end (GTK_BOX (main_hbox), view_window, TRUE, TRUE, 0);
+  gtk_paned_pack2(GTK_PANED (main_paned), view_window, TRUE, TRUE);
   
   gtk_widget_show_all(view_window);  
   return view_icons;
@@ -1820,7 +1820,7 @@ create_view_widget_icons(void)
 static GtkWidget*
 create_dir_view_widget(void)
 {
-    GtkWidget *treeview, *hseparator;
+    GtkWidget *treeview;
 	GtkCellRenderer *renderer;
 	GtkTreeViewColumn *column;
 	
@@ -1844,8 +1844,8 @@ create_dir_view_widget(void)
 							   "text",
 							   COL_DIRNAME,
 							   NULL);
-    /* min width = 20% */
-    gtk_tree_view_column_set_min_width(column, gdk_screen_width() / 5);
+    /* min width = 100 pixels */
+    gtk_tree_view_column_set_min_width(column, 100);
     /* max width = 50% */
     gtk_tree_view_column_set_max_width(column, gdk_screen_width() / 2);
       
@@ -1856,10 +1856,7 @@ create_dir_view_widget(void)
     gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(dir_view_window),
   		GTK_POLICY_NEVER,GTK_POLICY_AUTOMATIC);
     gtk_container_add(GTK_CONTAINER(dir_view_window),treeview);
-    gtk_box_pack_start (GTK_BOX (main_hbox), dir_view_window, FALSE, TRUE, 0);
-    
-    hseparator = gtk_hseparator_new();
-    gtk_box_pack_start (GTK_BOX (main_hbox), hseparator, FALSE, TRUE, 0);
+    gtk_paned_pack1 (GTK_PANED(main_paned), dir_view_window, FALSE, TRUE);
     
 	g_signal_connect (G_OBJECT(treeview), "button_press_event", 
 		G_CALLBACK(tree_button_press), NULL);
@@ -1893,6 +1890,8 @@ main (int argc, char *argv[])
   
   bluetooth_init ();
 
+  gnome_vfs_init ();
+  
   /* init tree storage stuff */
   store = gtk_tree_store_new (N_COLUMNS,
                               G_TYPE_OBJECT,
@@ -1927,7 +1926,7 @@ main (int argc, char *argv[])
 
   gtk_widget_realize (window);
 
-  main_hbox = gtk_hbox_new (FALSE, gpe_get_boxspacing());
+  main_paned = gtk_hpaned_new ();
   
   vbox = gtk_vbox_new (FALSE, 0);
 
@@ -2011,7 +2010,7 @@ main (int argc, char *argv[])
   gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (hbox), combo, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (hbox), toolbar2, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), main_hbox, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), main_paned, TRUE, TRUE, 0);
 
   gpe_set_window_icon (window, "icon");
 
@@ -2041,7 +2040,6 @@ main (int argc, char *argv[])
 
   gtk_widget_show_all (window);
   
-  gnome_vfs_init ();
   gnome_vfs_module_callback_set_default (GNOME_VFS_MODULE_CALLBACK_AUTHENTICATION,
 						  (GnomeVFSModuleCallback) auth_callback,
 						  NULL,
