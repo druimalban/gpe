@@ -1,12 +1,7 @@
 [ ]BUGS
-	[X]color: after first use, the eventbox does not pass the events to the button.
-	---
-	[ ]when create/save FAST, (<1s) two files with same name --> overwrite, BUT two entries in the clist!
-	[X]grab keyevent (for joypad scrolling) + xstroke --> mess!
 	[ ]check memory leaks (free/unref)
 [ ]GENERAL todo
 	[ ]submit pot to TP
-	[ ]thumbnails table, improvements
 	[ ]GTK2, improvements
 	---
 	[ ]memory management use $HOME_VOLATILE rather than $HOME
@@ -17,8 +12,6 @@
 	[ ]sketchpad component
 	---
 	[ ]open/save file, check success/failure
-	[ ]check GTK warnings / assertion failed
-	[ ]add cmd line options support (std --version --help)
 	[ ]when allocation, check if != NULL (limited memory)
 	[ ]code cleaning!!!
 [ ]FEATURES ideas

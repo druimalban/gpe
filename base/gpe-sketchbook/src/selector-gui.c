@@ -175,9 +175,9 @@ GtkWidget * build_scrollable_icons(GtkWidget * window){
   gpe_iconlist_set_icon_xmargin (GPE_ICONLIST(iconlist), 4);
 
   g_signal_connect (G_OBJECT (iconlist), "clicked",
-                    G_CALLBACK (on_iconlist_clicked), "clicked!!!");
+                    G_CALLBACK (on_iconlist_clicked), NULL);
   //g_signal_connect (G_OBJECT (iconlist), "show_popup",
-  //                  G_CALLBACK (on_iconlist_show_popup), "popup!!!");
+  //                  G_CALLBACK (on_iconlist_show_popup), NULL);
 
   return iconlist;
 }

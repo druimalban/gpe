@@ -205,10 +205,10 @@ void delete_current_sketch(){
 
     if(is_sketch_list_empty){
       current_sketch = SKETCH_NEW;
-      sketchpad_new_sketch();//...
+      sketchpad_new_sketch();//... //FIXME: only with PAGE_SKETCHPAD
     }
     else{
-      open_indexed_sketch(current_sketch);//...
+      open_indexed_sketch(current_sketch);//... //FIXME: only with PAGE_SKETCHPAD
     }
 
   }

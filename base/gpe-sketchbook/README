@@ -5,9 +5,9 @@ Building:
 --------
 variables to set:
 
-DESKTOP=1   -- include extra code for test on desktop
-CSBUILD=yes -- build within cvs tree.
-DEBUG=yes   -- include debug flags/code
+DESKTOP=yes  -- include extra code for test on desktop
+CVSBUILD=yes -- build within cvs tree
+DEBUG=yes    -- include debug flags/code
 
 then make.
 
