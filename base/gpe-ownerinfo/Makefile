@@ -8,12 +8,15 @@ GTK2=yes
 LINGUAS = de pt_PT
 
 MEMBERS = gpe-ownerinfo2
+CONTROL = control1
 
 ifeq ($(CVSBUILD),yes)
 CFLAGS += -I../libgpewidget -I../librootimage
 LDFLAGS += -L../libgpewidget -L../librootimage
+BUILD = ../build
 else
 CFLAGS += -I/usr/include/gpe
+BUILD = build
 endif
 LDFLAGS += -lgpewidget -lrootimage
 
@@ -61,5 +64,7 @@ clean:
 distclean: clean
 	rm -rf familiar/dist/
 
-include ../../base/build/Makefile.dpkg_ipkg
+include $(BUILD)/Makefile.translation
+include $(BUILD)/Makefile.dpkg_ipkg
+
 -include $(DEPS)
