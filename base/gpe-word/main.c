@@ -600,7 +600,7 @@ toggle_tag (GtkWidget *parent_button, const gchar *tag_name)
   GtkTextBuffer *text_buffer;
   GtkTextIter iter_start, iter_end;
 
-  text_buffer = gtk_text_view_get_buffer (text_view);
+  text_buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_view));
   if (gtk_text_buffer_get_selection_bounds (text_buffer, &iter_start, &iter_end))
   {
     if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (parent_button)))
@@ -611,7 +611,7 @@ toggle_tag (GtkWidget *parent_button, const gchar *tag_name)
 }
 
 static void
-cursor_position_changed (GtkTextView *text_view, GtkMovementStep movement_step, gint arg2, gboolean arg3)
+cursor_position_changed (GtkTextView *text_view)
 {
   GtkWidget *tag_widget;
   GtkTextBuffer *text_buffer;
@@ -619,16 +619,18 @@ cursor_position_changed (GtkTextView *text_view, GtkMovementStep movement_step, 
   GSList *applied_tags;
   gboolean bold, italic, underline, strikethrough = FALSE;
 
-  if (movement_step == GTK_MOVEMENT_VISUAL_POSITIONS)
-  {
-    text_buffer = gtk_text_view_get_buffer (text_view);
+  printf ("Cursor moved.\n");
+
+  //  if (movement_step == GTK_MOVEMENT_VISUAL_POSITIONS)
+  //{
+  text_buffer = gtk_text_view_get_buffer (text_view);
     if (gtk_text_buffer_get_selection_bounds (text_buffer, &iter_start, &iter_end))
     {
       applied_tags = gtk_text_iter_get_tags (&iter_end);
 
       while (applied_tags != NULL)
       {
-        if (((GtkTextTag *) applied_tags->data)->weight == PANGO_WEIGHT_BOLD)
+	g_object_get (G_OBJECT (applied_tags->data), "weight", &bold, NULL);
           bold = TRUE;
 
         applied_tags = g_slist_next (applied_tags);
@@ -640,7 +642,7 @@ cursor_position_changed (GtkTextView *text_view, GtkMovementStep movement_step, 
       else
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (tag_widget), FALSE);
     }
-  }
+    //}
 }
 
 static int
@@ -1054,13 +1056,13 @@ main (int argc, char *argv[])
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scroll), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
 
   text_view = gtk_text_view_new ();
+  g_signal_connect (G_OBJECT (text_view), "set-anchor",
+		      GTK_SIGNAL_FUNC (cursor_position_changed), NULL);
   gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (text_view), GTK_WRAP_WORD);
   gtk_text_view_set_editable (GTK_TEXT_VIEW (text_view), TRUE);
   buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_view));
   g_signal_connect (G_OBJECT (buf), "changed",
 		      GTK_SIGNAL_FUNC (text_changed), NULL);
-  g_signal_connect (G_OBJECT (text_view), "move-cursor",
-		      GTK_SIGNAL_FUNC (cursor_position_changed), NULL);
 
   toolbar_icon = gtk_image_new_from_stock (GTK_STOCK_NEW, GTK_ICON_SIZE_SMALL_TOOLBAR);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("New"), 
@@ -1102,7 +1104,7 @@ main (int argc, char *argv[])
 
   toolbar_icon = gtk_image_new_from_stock (GTK_STOCK_STRIKETHROUGH, GTK_ICON_SIZE_SMALL_TOOLBAR);
   toolbar_button_strikethrough = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar2), GTK_TOOLBAR_CHILD_TOGGLEBUTTON, NULL, _("Strikethrough"), _("Strikethrough"), _("Make the selected text have a strike through it."), toolbar_icon, toggle_tag, "strikethrough");
-  g_hash_table_insert (tag_widgets, (gpointer) "strikethrough", (gpointer) toolbar_button_strikethough);
+  g_hash_table_insert (tag_widgets, (gpointer) "strikethrough", (gpointer) toolbar_button_strikethrough);
 
   justify_button = popup_menu_button_new (GTK_STOCK_JUSTIFY_LEFT);
   gtk_signal_connect (GTK_OBJECT (justify_button), "pressed",
