@@ -1,5 +1,11 @@
 2002-09-11  Colin Marquardt  <colin@marquardt-home.de>
 
+	* Version 0.04-4 is released.
+	
+	* familiar/control (Depends): gpe-icons (>= 0.13)
+	(Suggests): gpe-conf (>= 0.0.3)
+	(Version): 0.04-4
+
 	* src/main.c (main): Add option -k (keep on top with override
 	redirect). Use that option (for the
 	gdk_window_set_override_redirect() call).
