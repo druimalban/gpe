@@ -54,7 +54,9 @@ event_sort_func_recur (const event_t ev1, const event_t ev2)
 {
   recur_t r1 = ev1->recur;
   recur_t r2 = ev2->recur;
-  return (r1->end > r2->end) ? 0 : 1;
+  if(!r1->end) return (0);
+  else if (!r2->end) return (1);
+  else return (r1->end > r2->end) ? 0 : 1;
 }
 
 /* Add an event to the in-memory list */
@@ -629,7 +631,15 @@ event_db_list_for_period (time_t start, time_t end)
 GSList *
 event_db_list_alarms_for_period (time_t start, time_t end)
 {
-  return event_db_list_for_period_internal (start, end, FALSE, FALSE, TRUE, 0);
+  GSList *return_list = NULL;
+  
+  do
+  {
+    return_list=event_db_list_for_period_internal (start, start+SECONDS_IN_DAY, FALSE, FALSE, TRUE, 0);
+    start+=SECONDS_IN_DAY;
+    printf("%x\n", return_list);
+  } while (!return_list && start<end);
+  return(return_list);
 }
 
 GSList *

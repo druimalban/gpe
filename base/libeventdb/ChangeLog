@@ -1,4 +1,8 @@
-2003-09-05  Joseph J. McCarthy <mccarthy@engrng.pitt.edu>
+2004-02-20  Joseph J. McCarthy <mccarthy@engrng.pitt.edu>
+                                                                                
+        * Version 0.09 released. 
+                                                                                
+2004-02-20  Joseph J. McCarthy <mccarthy@engrng.pitt.edu>
 	
 	* event-db.c: change to modulo method of recur checking
 	* event-db.h: add SECONDS_IN_DAY definition 
