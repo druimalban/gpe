@@ -118,13 +118,13 @@ GdkPixbuf* image_tools_rotate( GdkPixbuf* pixbuf)
   image = gdk_pixbuf_get_pixels (GDK_PIXBUF (pixbuf));
   return_image = gdk_pixbuf_get_pixels (GDK_PIXBUF (return_pixbuf));
 
-  for (y = 0; y < new_height; y++)
+  for (y = 0; y < height; y++)
   {
-    for(x = 0; x < new_width; x++)
+    for(x = 0; x < width; x++)
     {
       for( b = 0; b < channels; b++)
       {
-	return_image[y * new_rowstride + x * channels + b] = image[x * rowstride + (width - y) * channels + b];
+	return_image[x * new_rowstride + y * channels + b] = image[y * rowstride + (width - x - 1) * channels + b];
       }
     }
   }
