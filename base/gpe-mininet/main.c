@@ -1,5 +1,5 @@
 /*
- * gpe-mininet (c) 2004 Florian Boor <florian.boor@kernelconcepts.de>
+ * gpe-mininet (c) 2004, 2005 Florian Boor <florian.boor@kernelconcepts.de>
  *
  * Basic applet skeleton taken from gpe-bluetooth (see below)
  *
@@ -160,19 +160,9 @@ net_get_status()
 	return result;
 }
 
-/*
-static gboolean
-remove_dock_message (guint id)
-{
-//	gpe_system_tray_cancel_message (GDK_WINDOW(), id);
-	return FALSE;
-}
-*/
-
 gboolean
 update_netstatus (void)
 {
-	GdkBitmap *bitmap;
 	gboolean oldstatus = net_is_on;
 	
 	net_is_on = net_get_status();
@@ -278,7 +268,6 @@ rtnl_connect_glib (int fd)
 void 
 paint_callback ( MBTrayApp *app, Drawable drw ) 
 { 
-	MBPixbufImage *img_scaled;
 	MBPixbufImage *img_backing = NULL;
 	int use_index = net_is_on ? ICON_NET_ON : ICON_NET_OFF;
   
@@ -297,11 +286,39 @@ event_filter (GdkXEvent *xev, GdkEvent *gev, gpointer data)
 {
 	XEvent    *ev  = (XEvent *)xev;
 	MBTrayApp *app = (MBTrayApp*)data;
-	Display *dpy = ev->xany.display;
 	mb_tray_handle_xevent (app, ev); 
 	return GDK_FILTER_CONTINUE;
 }
 
+void
+resized (MBTrayApp *mb, int width, int height)
+{
+	GdkPixbuf *pixmap;
+	MBPixbufImage *img;
+	int size;
+	
+	mb_pixbuf_img_free(Pixbuf, net_status_icons[ICON_NET_ON]);
+	mb_pixbuf_img_free(Pixbuf, net_status_icons[ICON_NET_OFF]);
+	
+	size = (width > height) ? height : width;
+	Pixbuf = mb_pixbuf_new(mb_tray_app_xdisplay(app), mb_tray_app_xscreen(app));
+	pixmap = gpe_find_icon("net-on");	
+	img = mb_pixbuf_img_new_from_data (Pixbuf, gdk_pixbuf_get_pixels(pixmap), 
+		                               gdk_pixbuf_get_width(pixmap), 
+	                                   gdk_pixbuf_get_height(pixmap), 
+	                                   gdk_pixbuf_get_has_alpha(pixmap));
+	net_status_icons[ICON_NET_ON] = mb_pixbuf_img_scale(Pixbuf, img, size, size);
+	mb_pixbuf_img_free(Pixbuf, img);
+	
+	pixmap = gpe_find_icon("net-on");	
+	img = mb_pixbuf_img_new_from_data (Pixbuf, gdk_pixbuf_get_pixels(pixmap), 
+		                               gdk_pixbuf_get_width(pixmap), 
+	                                   gdk_pixbuf_get_height(pixmap), 
+	                                   gdk_pixbuf_get_has_alpha(pixmap));
+	net_status_icons[ICON_NET_OFF] = mb_pixbuf_img_scale(Pixbuf, img, size, size);
+	mb_pixbuf_img_free(Pixbuf, img);
+	
+}
 
 int
 main (int argc, char *argv[])
@@ -312,7 +329,6 @@ main (int argc, char *argv[])
 	GtkWidget *menu_remove;
 	GtkWidget *menu_config;
 	GtkWidget *menu_info;
-	GtkTooltips *tooltips;
 	GdkPixbuf *pixmap;
 
 	if (gpe_application_init (&argc, &argv) == FALSE)
@@ -382,6 +398,7 @@ main (int argc, char *argv[])
 		gdk_pixbuf_get_width(pixmap), gdk_pixbuf_get_height(pixmap), gdk_pixbuf_get_has_alpha(pixmap));
 
 	mb_tray_app_set_button_callback (app, clicked);
+	mb_tray_app_set_resize_callback (app, resized);
 	mb_tray_app_main_init(app);
 
 	gdk_window_add_filter (NULL, event_filter, (gpointer)app );
