@@ -2,25 +2,18 @@ PREFIX = /usr/local
 PACKAGE = xst
 CVSBUILD = yes
 DEBUG = no
-VERSION = 0.13
+VERSION = 0.14
 
 MEMBERS = xst
 
-GTKCFLAGS = `pkg-config --cflags glib-2.0`
-GTKLDFLAGS += `pkg-config --libs glib-2.0`
-
-CPPFLAGS += -D_GNU_SOURCE
-
-ifeq ($(DEBUG),yes)
-CFLAGS += -O2 -g
-LDFLAGS = -g #-lefence
-else
-CFLAGS += -Os -fomit-frame-pointer
+ifeq ($(CVSBUILD),yes)
+PACKAGE_LDFLAGS += -L../libxsettings-client -Wl,-rpath-link,../libxsettings
+PACKAGE_CPPFLAGS += -I../libxsettings -I../libxsettings-client
 endif
-CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 
-LDFLAGS += $(GTKLDFLAGS) -L../libxsettings-client -lXsettings-client -Wl,-rpath-link,../libxsettings
-CPPFLAGS += $(GTKCFLAGS) -I../libxsettings -I../libxsettings-client
+PACKAGE_CFLAGS += $(STANDARD_CFLAGS) `pkg-config --cflags glib-2.0`
+PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) `pkg-config --libs glib-2.0` -lXsettings-client 
+PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS)
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
@@ -35,7 +28,7 @@ endif
 all: $(PACKAGE)
 
 $(PACKAGE): $(OBJS)
-	$(CC) -o $@ $^ $(LDFLAGS)
+	$(CC) -o $@ $^ $(LDFLAGS) $(PACKAGE_LDFLAGS)
 
 install-program: $(PACKAGE)
 	mkdir -p $(DESTDIR)$(PREFIX)/bin

@@ -9,6 +9,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
@@ -220,7 +221,7 @@ main (int argc, char *argv[])
 	  else if (!strcmp (format, "str"))
 	    {
 	      type = XSETTINGS_TYPE_STRING;
-	      length = 4 + (strlen (value) + 3) & ~3;
+	      length = 4 + ((strlen (value) + 3) & ~3);
 	    }
 	  else
 	    {
