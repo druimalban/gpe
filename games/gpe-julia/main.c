@@ -170,8 +170,8 @@ draw_mandelbrot (void)
 	  ca = xcoords[x];
 	  cb = ycoords[y];
 
-	  a = 0;
-	  b = 0;
+	  a = ca;
+	  b = cb;
 
 	  for (i = 0; (i < iterations) && ((a * a + b * b) < (4 << 26)); i++)
 	    {
