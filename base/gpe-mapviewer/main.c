@@ -37,13 +37,16 @@
 
 int MAXX[MAX_SCALE],MAXY[MAX_SCALE];
 
-GtkWidget *window, *toolbar, *scrolled_window;
-GtkWidget *image_widget, *image_event_box;
-GdkPixbuf *image_pixbuf;
+GtkWidget *window, *toolbar, *scrolled_window, *table;
+GtkWidget *image_widget[3][3], *image_event_box;
+GdkPixbuf *image_pixbuf[3][3];
 gint image_x_number, image_y_number, current_scale;
 GtkWidget *west, *east, *north, *south, *zoomin, *zoomout;
+GtkAdjustment *h_adjust, *v_adjust;
 gchar *map;
-gboolean rotate_flag;
+guint x_start, y_start, x_max, y_max;
+double xadj_start, yadj_start;
+gboolean confine_pointer_to_window;
 
 struct gpe_icon my_icons[] = {
   { "left", "left" },
@@ -58,6 +61,73 @@ struct gpe_icon my_icons[] = {
 };
 
 guint window_x = 240, window_y = 310;
+
+void
+recenter()
+{
+  x_max = 3*(gdk_pixbuf_get_width (GDK_PIXBUF (image_pixbuf[1][1]))) - (scrolled_window->allocation.width - 4);
+  y_max = 3*(gdk_pixbuf_get_height (GDK_PIXBUF (image_pixbuf[1][1]))) - (scrolled_window->allocation.height - 4);
+
+  gtk_adjustment_set_value (h_adjust, 0.5*x_max);
+  gtk_adjustment_set_value (v_adjust, 0.5*y_max);
+
+}
+
+void
+pan_button_down (GtkWidget *w, GdkEventButton *b)
+{
+  x_start = b->x_root;
+  y_start = b->y_root;
+
+  xadj_start = gtk_adjustment_get_value (h_adjust);
+  yadj_start = gtk_adjustment_get_value (v_adjust);
+
+  x_max = 3*(gdk_pixbuf_get_width (GDK_PIXBUF (image_pixbuf[1][1]))) - (scrolled_window->allocation.width - 4);
+  y_max = 3*(gdk_pixbuf_get_height (GDK_PIXBUF (image_pixbuf[1][1]))) - (scrolled_window->allocation.height - 4);
+
+  gdk_pointer_grab (w->window, 
+		    FALSE, GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK,
+		    confine_pointer_to_window ? w->window : NULL, NULL, b->time);
+}
+
+void
+button_down (GtkWidget *w, GdkEventButton *b)
+{
+  pan_button_down (w, b);
+}
+
+void
+button_up (GtkWidget *w, GdkEventButton *b)
+{
+  gdk_pointer_ungrab (b->time);
+}
+
+void
+pan (GtkWidget *w, GdkEventMotion *m)
+{
+  gint dx = m->x_root - x_start, dy = m->y_root - y_start;
+  double x, y;
+
+  x = xadj_start - dx;
+  y = yadj_start - dy;
+
+  if (x > x_max)
+    x = x_max;
+
+  if (y > y_max)
+    y = y_max;
+
+  gtk_adjustment_set_value (h_adjust, x);
+  gtk_adjustment_set_value (v_adjust, y);
+
+  gdk_window_get_pointer (w->window, NULL, NULL, NULL);
+}
+
+void
+motion_notify (GtkWidget *w, GdkEventMotion *m, GdkPixbuf *pixbuf)
+{
+  pan (w, m);
+}
 
 void
 get_scales (GtkWidget *widget, gchar *filename_root)
@@ -87,18 +157,31 @@ get_scales (GtkWidget *widget, gchar *filename_root)
 void
 show_image (GtkWidget *widget, gchar *filename_root)
 {
+  int i, j;
   gchar *filename;
   
-  filename = g_strdup_printf ("%s/.maps/%s-%d-%d-%d.gif", getenv("HOME"), filename_root, current_scale, image_x_number, image_y_number);
-  image_pixbuf = gdk_pixbuf_new_from_file (filename, NULL);
-  if (DEBUG) printf("%s\n", filename);
+  for (i=0;i<3;i++) {
+  	for (j=0;j<3;j++) {
+		filename = g_strdup_printf ("%s/.maps/%s-%d-%d-%d.gif", getenv("HOME"), filename_root, current_scale,
+			image_x_number+i-1, image_y_number+j-1);
+  		image_pixbuf[i][j] = gdk_pixbuf_new_from_file (filename, NULL);
+  		if (DEBUG) printf("%s\n", filename);
   
-  gtk_image_set_from_pixbuf (GTK_IMAGE (image_widget), image_pixbuf);
+  		gtk_image_set_from_pixbuf (GTK_IMAGE (image_widget[i][j]), image_pixbuf[i][j]);
+	}
+  }
 
   gtk_widget_show (toolbar);
   gtk_widget_show (image_event_box);
-  gtk_widget_show (image_widget);
+  
+  for (i=0;i<3;i++) {
+  	for (j=0;j<3;j++) gtk_widget_show (image_widget[i][j]);
+  }
+  
+  gtk_widget_show (table);
   gtk_widget_show (scrolled_window);
+  recenter();
+
 }
 
 void
@@ -107,26 +190,26 @@ recalc_sensitivy (GtkWidget *widget, gpointer user_data)
   int i;
   
   	for (i=0;i<MAX_SCALE;i++) {
-		if ((image_x_number==(MAXX[i]-1) && current_scale==i)) {
+		if ((image_x_number==(MAXX[i]-2) && current_scale==i)) {
 				gtk_widget_set_sensitive (east, FALSE);
 				break;
 		}
 		else	gtk_widget_set_sensitive (east, TRUE);
 	}
 	
-	if (image_x_number==0) 
+	if (image_x_number==1) 
 			gtk_widget_set_sensitive (west, FALSE);
 	else	gtk_widget_set_sensitive (west, TRUE);
 	
 	for (i=0;i<MAX_SCALE;i++) {
-		if ((image_y_number==(MAXY[i]-1) && current_scale==i)) {
+		if ((image_y_number==(MAXY[i]-2) && current_scale==i)) {
 				gtk_widget_set_sensitive (north, FALSE);
 				break;
 		}
 		else	gtk_widget_set_sensitive (north, TRUE);
 	}
 
-	if (image_y_number==0) 
+	if (image_y_number==1) 
 			gtk_widget_set_sensitive (south, FALSE);
 	else	gtk_widget_set_sensitive (south, TRUE);
 	
@@ -149,6 +232,7 @@ go_east (GtkWidget *widget, gpointer user_data)
 		recalc_sensitivy (NULL, NULL);
 		show_image (NULL, map);
 	}
+	else if(DEBUG) printf("cannot do it! (east) = %d > %d\n", image_x_number, MAXX[current_scale]-2);
 }
 
 void
@@ -160,6 +244,7 @@ go_west (GtkWidget *widget, gpointer user_data)
 		recalc_sensitivy (NULL, NULL);
 		show_image (NULL, map);
 	}
+	else if(DEBUG) printf("cannot do it! (west) = %d <= %d\n", image_x_number, 1);
 }
 
 void
@@ -171,6 +256,7 @@ go_north (GtkWidget *widget, gpointer user_data)
 		recalc_sensitivy (NULL, NULL);
 		show_image (NULL, map);
 	}
+	else if(DEBUG) printf("cannot do it! (north) = %d > %d\n", image_x_number, MAXY[current_scale]-2);
 }
 
 void
@@ -182,6 +268,7 @@ go_south (GtkWidget *widget, gpointer user_data)
 		recalc_sensitivy (NULL, NULL);
 		show_image (NULL, map);
 	}
+	else if(DEBUG) printf("cannot do it! (south) = %d <= %d\n", image_x_number, 1);
 }
 
 void
@@ -228,6 +315,7 @@ zoom_in (GtkWidget *widget, gpointer user_data)
 int
 main (int argc, char *argv[])
 {
+  int i, j;
   GtkWidget *vbox;
   GdkPixbuf *p;
   GtkWidget *pw;
@@ -316,16 +404,41 @@ main (int argc, char *argv[])
   gtk_box_pack_start (GTK_BOX (vbox), align, FALSE, FALSE, 0);
   
   scrolled_window = gtk_scrolled_window_new (NULL, NULL);
-  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window), GTK_POLICY_NEVER, GTK_POLICY_NEVER);
+
+  h_adjust = gtk_scrolled_window_get_hadjustment (GTK_SCROLLED_WINDOW (scrolled_window));
+  v_adjust = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (scrolled_window));
 
   gtk_box_pack_start (GTK_BOX (vbox), scrolled_window, TRUE, TRUE, 0);
   
-  image_widget = gtk_image_new_from_pixbuf (image_pixbuf);
+  table = gtk_table_new (3, 3, TRUE);
+  gtk_table_set_row_spacings(GTK_TABLE (table), 0);
+  gtk_table_set_row_spacings(GTK_TABLE (table), 0);
+  
+  for (i=0;i<3;i++) {
+  	for (j=0;j<3;j++) 
+		image_widget[i][j] = gtk_image_new_from_pixbuf (image_pixbuf[i][j]);
+  }	
+    
+  for (i=0;i<3;i++) {
+  	for (j=0;j<3;j++) 
+		gtk_table_attach_defaults (GTK_TABLE (table), image_widget[i][2-j], i, i+1, j, j+1);
+  }	
+    
   image_event_box = gtk_event_box_new ();
-  gtk_container_add (GTK_CONTAINER (image_event_box), image_widget);
+  
+  gtk_container_add (GTK_CONTAINER (image_event_box), table);
   gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolled_window), image_event_box);
   
+  gtk_signal_connect (GTK_OBJECT (image_event_box), "button-press-event", GTK_SIGNAL_FUNC (button_down), NULL);
+  gtk_signal_connect (GTK_OBJECT (image_event_box), "button-release-event", GTK_SIGNAL_FUNC (button_up), NULL);
+  gtk_signal_connect (GTK_OBJECT (image_event_box), "motion-notify-event", GTK_SIGNAL_FUNC (motion_notify), NULL);
+
+  gtk_widget_add_events (GTK_WIDGET (image_event_box), GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
+
   gtk_container_add (GTK_CONTAINER (window), GTK_WIDGET (vbox));
+
+  recalc_sensitivy (NULL, NULL);
   
   gtk_widget_show_all (window);
   
@@ -334,7 +447,7 @@ main (int argc, char *argv[])
   
   get_scales (NULL, map);
   show_image (NULL, map);
-
+  
   gtk_main();
   return 0;
 }
