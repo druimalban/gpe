@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-07-02 21:31+0200\n"
+"POT-Creation-Date: 2003-07-07 23:12+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,31 +16,31 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: main.c:286
+#: main.c:288
 msgid "'task_nameserver' needs a new (and only one) nameserver as argument.\n"
 msgstr ""
 
-#: main.c:341
+#: main.c:343
 msgid "Warning: PCMCIA init failed."
 msgstr ""
 
-#: main.c:369
+#: main.c:371
 msgid "This mode is disabled, please try:\n"
 msgstr ""
 
-#: main.c:370
+#: main.c:372
 msgid ""
 "\n"
 "gpe-conf [AppletName]\n"
 "where AppletName is in:\n"
 msgstr ""
 
-#: main.c:383
+#: main.c:385
 #, c-format
 msgid "Applet %s unknown!\n"
 msgstr ""
 
-#: main.c:384
+#: main.c:386
 msgid ""
 "\n"
 "\n"
@@ -48,14 +48,14 @@ msgid ""
 "where AppletName is in:\n"
 msgstr ""
 
-#: applets.c:332
+#: applets.c:327
 msgid ""
 "Some options are only\n"
 "accessible for user root.\n"
 "Please enter password."
 msgstr ""
 
-#: applets.c:368 ipaqscreen/calibrate.c:33
+#: applets.c:363 ipaqscreen/calibrate.c:33
 msgid "Sorry, wrong password."
 msgstr ""
 
@@ -331,7 +331,7 @@ msgstr ""
 msgid "Do you want to delete this interface?"
 msgstr ""
 
-#: network.c:227 keyctl.c:159
+#: network.c:227 keyctl.c:151
 msgid "Question"
 msgstr ""
 
@@ -434,47 +434,47 @@ msgid ""
 "make the device a point to point device."
 msgstr ""
 
-#: network.c:971 network.c:972
+#: network.c:966 network.c:967
 msgid "Add Interface"
 msgstr ""
 
-#: network.c:973
+#: network.c:968
 msgid "Add a new Interface"
 msgstr ""
 
-#: network.c:981 network.c:982
+#: network.c:976 network.c:977
 msgid "Remove Interface"
 msgstr ""
 
-#: network.c:983
+#: network.c:978
 msgid "Remove current Interface"
 msgstr ""
 
-#: network.c:996
+#: network.c:991
 msgid "Information"
 msgstr ""
 
-#: network.c:997 network.c:998
+#: network.c:992 network.c:993
 msgid "Show current configuration."
 msgstr ""
 
-#: network.c:1009
+#: network.c:1004
 msgid "Close"
 msgstr ""
 
-#: network.c:1010
+#: network.c:1005
 msgid "Close  network tool"
 msgstr ""
 
-#: network.c:1011
+#: network.c:1006
 msgid "Close network tool"
 msgstr ""
 
-#: network.c:1026
+#: network.c:1021
 msgid "Couldn't read network configuration."
 msgstr ""
 
-#: network.c:1035
+#: network.c:1030
 msgid "global"
 msgstr ""
 
@@ -580,15 +580,15 @@ msgstr ""
 msgid "Application Font"
 msgstr ""
 
-#: keyctl.c:159
+#: keyctl.c:151
 msgid "Reset button config to default?"
 msgstr ""
 
-#: keyctl.c:196
+#: keyctl.c:188
 msgid "Defaults"
 msgstr ""
 
-#: keyctl.c:301
+#: keyctl.c:293
 msgid "ERROR: Can't open keylaunchrc for writing!\n"
 msgstr ""
 
@@ -814,44 +814,48 @@ msgstr ""
 msgid "Allow users to configure everything"
 msgstr ""
 
-#: storage.c:261 storage.c:422
-msgid "Internal Flash"
-msgstr ""
-
-#: storage.c:267 storage.c:428
-msgid "MMC"
-msgstr ""
-
-#: storage.c:273 storage.c:434
-msgid "Compact Flash"
-msgstr ""
-
-#: storage.c:279 storage.c:440
-msgid "Network Filesystem"
-msgstr ""
-
-#: storage.c:296 storage.c:355 storage.c:477 storage.c:530
-msgid "Total:"
-msgstr ""
-
-#: storage.c:299 storage.c:480
-msgid "Mounted at"
-msgstr ""
-
-#: storage.c:305 storage.c:463
-msgid "Free space"
-msgstr ""
-
-#: storage.c:342
+#: storage.c:195
 msgid "System memory"
 msgstr ""
 
-#: storage.c:349 storage.c:518
+#: storage.c:202 storage.c:464
 msgid "Free memory"
 msgstr ""
 
-#: storage.c:501
+#: storage.c:209 storage.c:357 storage.c:477 storage.c:595
+msgid "Total:"
+msgstr ""
+
+#: storage.c:321 storage.c:524
+msgid "Internal Flash"
+msgstr ""
+
+#: storage.c:327 storage.c:530
+msgid "MMC"
+msgstr ""
+
+#: storage.c:333 storage.c:536
+msgid "Compact Flash"
+msgstr ""
+
+#: storage.c:339 storage.c:542
+msgid "Network Filesystem"
+msgstr ""
+
+#: storage.c:359 storage.c:597
+msgid "Mounted at"
+msgstr ""
+
+#: storage.c:367 storage.c:577
+msgid "Free space"
+msgstr ""
+
+#: storage.c:444
 msgid "System Memory"
+msgstr ""
+
+#: storage.c:616
+msgid "Couldn't get filesystem info!"
 msgstr ""
 
 #: serial.c:146
@@ -989,189 +993,189 @@ msgid ""
 "This window shows all output from the packet manager installing the package."
 msgstr ""
 
-#: cardinfo.c:247 cardinfo.c:315
+#: cardinfo.c:247 cardinfo.c:318
 msgid "Could not write to temporal config file."
 msgstr ""
 
-#: cardinfo.c:520
+#: cardinfo.c:524
 msgid "Could not open pidfile:"
 msgstr ""
 
-#: cardinfo.c:526
+#: cardinfo.c:530
 msgid "Could not read pidfile"
 msgstr ""
 
-#: cardinfo.c:530
+#: cardinfo.c:534
 msgid "Could not signal cardmgr:"
 msgstr ""
 
-#: cardinfo.c:605
+#: cardinfo.c:609
 msgid "gpe-conf must be setuid root to use cardinfo feature."
 msgstr ""
 
-#: cardinfo.c:624
+#: cardinfo.c:628
 msgid "No pcmcia driver in /proc/devices"
 msgstr ""
 
-#: cardinfo.c:627
+#: cardinfo.c:631
 msgid "Could not open /proc/devices"
 msgstr ""
 
-#: cardinfo.c:639
+#: cardinfo.c:643
 msgid "No sockets found\n"
 msgstr ""
 
-#: cardinfo.c:648
+#: cardinfo.c:652
 msgid "Card Services release does not match!"
 msgstr ""
 
-#: cardinfo.c:653
+#: cardinfo.c:657
 msgid "Could not get CS revision info!\n"
 msgstr ""
 
-#: cardinfo.c:810
+#: cardinfo.c:820
 msgid "flock(stabfile) failed)"
 msgstr ""
 
-#: cardinfo.c:826
+#: cardinfo.c:836
 msgid "no driver loaded"
 msgstr ""
 
-#: cardinfo.c:935
+#: cardinfo.c:945
 msgid "ready"
 msgstr ""
 
-#: cardinfo.c:953
+#: cardinfo.c:963
 msgid "not ready"
 msgstr ""
 
-#: cardinfo.c:968
+#: cardinfo.c:978
 msgid "suspended"
 msgstr ""
 
-#: cardinfo.c:1160 cardinfo.c:1331 cardinfo.c:1332
+#: cardinfo.c:1170 cardinfo.c:1341 cardinfo.c:1342
 msgid "Assign Driver"
 msgstr ""
 
-#: cardinfo.c:1169
+#: cardinfo.c:1179
 msgid ""
 "This dialog allows you to select/\n"
 "change the driver assignment for a\n"
 "PCMCIA or CF card."
 msgstr ""
 
-#: cardinfo.c:1179
+#: cardinfo.c:1189
 msgid "Your current card identifies itself as:"
 msgstr ""
 
-#: cardinfo.c:1193 cardinfo.c:1199
+#: cardinfo.c:1203 cardinfo.c:1209
 msgid "Manuf. Id"
 msgstr ""
 
-#: cardinfo.c:1193 cardinfo.c:1199
+#: cardinfo.c:1203 cardinfo.c:1209
 msgid "Class"
 msgstr ""
 
-#: cardinfo.c:1272
+#: cardinfo.c:1282
 msgid "Insert Card"
 msgstr ""
 
-#: cardinfo.c:1274
+#: cardinfo.c:1284
 msgid "Tap here to start card insertion manually."
 msgstr ""
 
-#: cardinfo.c:1282
+#: cardinfo.c:1292
 msgid "Eject Card"
 msgstr ""
 
-#: cardinfo.c:1284
+#: cardinfo.c:1294
 msgid "Tap here to eject card manually."
 msgstr ""
 
-#: cardinfo.c:1292
+#: cardinfo.c:1302
 msgid "Suspend Card"
 msgstr ""
 
-#: cardinfo.c:1294
+#: cardinfo.c:1304
 msgid "Tap here to suspend current card."
 msgstr ""
 
-#: cardinfo.c:1302
+#: cardinfo.c:1312
 msgid "Resume Card"
 msgstr ""
 
-#: cardinfo.c:1304
+#: cardinfo.c:1314
 msgid "Tap here to resume current card."
 msgstr ""
 
-#: cardinfo.c:1312
+#: cardinfo.c:1322
 msgid "Reset Card"
 msgstr ""
 
-#: cardinfo.c:1313
+#: cardinfo.c:1323
 msgid "Tap here to reset current card."
 msgstr ""
 
-#: cardinfo.c:1321 cardinfo.c:1322
+#: cardinfo.c:1331 cardinfo.c:1332
 msgid "Reset Card Manager"
 msgstr ""
 
-#: cardinfo.c:1324
+#: cardinfo.c:1334
 msgid ""
 "Tap here to reset card manager. This commits all updates to pcmcia config "
 "files."
 msgstr ""
 
-#: cardinfo.c:1334
+#: cardinfo.c:1344
 msgid ""
 "Tap here to assign a driver to this card / change current driver assignment."
 msgstr ""
 
-#: cardinfo.c:1341 cardinfo.c:1342
+#: cardinfo.c:1351 cardinfo.c:1352
 msgid "Exit applet"
 msgstr ""
 
-#: cardinfo.c:1351 cardinfo.c:1364
+#: cardinfo.c:1361 cardinfo.c:1374
 msgid "PC/CF card socket information."
 msgstr ""
 
-#: cardinfo.c:1359
+#: cardinfo.c:1369
 msgid "Socket"
 msgstr ""
 
-#: cardinfo.c:1390
+#: cardinfo.c:1400
 msgid "Information for socket"
 msgstr ""
 
-#: cardinfo.c:1399
+#: cardinfo.c:1409
 msgid "State:"
 msgstr ""
 
-#: cardinfo.c:1400
+#: cardinfo.c:1410
 msgid "Device:"
 msgstr ""
 
-#: cardinfo.c:1401
+#: cardinfo.c:1411
 msgid "Driver:"
 msgstr ""
 
-#: cardinfo.c:1402
+#: cardinfo.c:1412
 msgid "Type:"
 msgstr ""
 
-#: cardinfo.c:1403
+#: cardinfo.c:1413
 msgid "I/O:"
 msgstr ""
 
-#: cardinfo.c:1404
+#: cardinfo.c:1414
 msgid "IRQ:"
 msgstr ""
 
-#: cardinfo.c:1411
+#: cardinfo.c:1421
 msgid "Flags:"
 msgstr ""
 
-#: cardinfo.c:1428
+#: cardinfo.c:1438
 msgid "PCMCIA initialisation failed"
 msgstr ""
 
@@ -1444,4 +1448,81 @@ msgstr ""
 
 #: tools/interface.c:1906
 msgid "Unknown"
+msgstr ""
+
+#: battery.c:79
+#, c-format
+msgid "could not open touchscreen device '%s'\n"
+msgstr ""
+
+#: battery.c:127 battery.c:179
+msgid "Status: high"
+msgstr ""
+
+#: battery.c:130 battery.c:182
+msgid "Status: low"
+msgstr ""
+
+#: battery.c:133 battery.c:185
+msgid "Status: critical"
+msgstr ""
+
+#: battery.c:136 battery.c:188
+msgid "Status: charging"
+msgstr ""
+
+#: battery.c:139 battery.c:191
+msgid "Status: charge main"
+msgstr ""
+
+#: battery.c:142
+msgid "Status: dead"
+msgstr ""
+
+#: battery.c:145 battery.c:197
+msgid "Status: full"
+msgstr ""
+
+#: battery.c:148 battery.c:200
+msgid "Status: no battery"
+msgstr ""
+
+#: battery.c:151 battery.c:203 battery.c:222
+msgid "Status: unknown"
+msgstr ""
+
+#: battery.c:155 battery.c:207
+msgid "Voltage"
+msgstr ""
+
+#: battery.c:159 battery.c:211
+msgid "AC connected"
+msgstr ""
+
+#: battery.c:161 battery.c:213
+msgid "Lifetime"
+msgstr ""
+
+#: battery.c:194
+msgid "Status: not installed"
+msgstr ""
+
+#: battery.c:220
+msgid "not installed"
+msgstr ""
+
+#: battery.c:224
+msgid "Voltage: unknown"
+msgstr ""
+
+#: battery.c:226
+msgid "Lifetime: unknown"
+msgstr ""
+
+#: battery.c:265
+msgid "Internal battery"
+msgstr ""
+
+#: battery.c:269
+msgid "Jacket battery"
 msgstr ""

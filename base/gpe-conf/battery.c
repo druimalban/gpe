@@ -53,12 +53,6 @@ t_infowidgets;
 
 /* local definitions */
 
-gchar *ac_status[] = {
-	"offline",
-	"online",
-	"backup"
-};
-
 gchar *bat_chemistries[] = {
 	"",
 	"Alkaline",
@@ -68,17 +62,6 @@ gchar *bat_chemistries[] = {
 	"Lithium Polymer"
 };
 
-gchar *bat_status[] = {
-	"",
-	"high",
-	"low",
-	"critical",
-	"charging",
-	"charge main",
-	"dead",
-	"full",
-	"no battery"
-};
 
 static GtkWidget *vbox;
 t_infowidgets batt_int;
@@ -93,7 +76,7 @@ void init_device()
 {
   TSfd=open(TS_DEV, O_RDWR);
   if (TSfd < 0) {
-    g_print("could not open touchscreen device '%s'\n", TS_DEV);
+    g_print(_("could not open touchscreen device '%s'\n"), TS_DEV);
     perror("open");
   };
 }
@@ -132,7 +115,7 @@ gchar tmp[128];
 		bperc = 1.0;
 	
 	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (batt_int.bar),bperc);
-	toolbar_set_style (batt_int.bar,  100 - (int) (bperc*100));
+	toolbar_set_style (batt_int.bar,  90 - (int) (bperc*100));
 	sprintf(percstr,"%d %%",(unsigned char)battery_val.battery[0].percentage);
 	gtk_progress_bar_set_text(GTK_PROGRESS_BAR(batt_int.bar),percstr);
 
@@ -184,7 +167,7 @@ gchar tmp[128];
 		if (bperc > 1.0)
 			bperc = 1.0;
 		gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (batt_ext.bar),bperc);
-		toolbar_set_style (batt_ext.bar,  100 - (int) (bperc*100));
+		toolbar_set_style (batt_ext.bar,  90 - (int) (bperc*100));
 		sprintf(percstr,"%d %%",(unsigned char)battery_val.battery[1].percentage);
 		gtk_progress_bar_set_text(GTK_PROGRESS_BAR(batt_ext.bar),percstr);
 	
@@ -232,7 +215,7 @@ gchar tmp[128];
 		
 	} else {
 		gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(batt_ext.bar),0);
-		gtk_progress_bar_set_text(GTK_PROGRESS_BAR(batt_ext.bar),_(""));
+		gtk_progress_bar_set_text(GTK_PROGRESS_BAR(batt_ext.bar),"");
 	
 		gtk_label_set_text(GTK_LABEL(batt_ext.lchem),_("not installed"));
 	
