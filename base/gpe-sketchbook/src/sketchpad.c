@@ -16,6 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 #include "sketchpad.h"
+#include "sketchpad-cb.h"
 #include "_support.h" //lookup_widget
 #include "files.h"
 #include "selector.h"
@@ -60,8 +61,8 @@ void    clear_drawing_area       ();
 void sketchpad_init(){
   drawing_area_pixmap_buffer = NULL;
 
-  drawing_area_width  = 260;
-  drawing_area_height = 280;
+  drawing_area_width  = 230;
+  drawing_area_height = 250;
 
   prev_pos_x = NO_PREV_POS;
   prev_pos_y = NO_PREV_POS;
@@ -73,34 +74,52 @@ void sketchpad_init(){
 
 void window_sketchpad_init(GtkWidget * window_sketchpad){
   GtkWidget * widget;
-//  GtkAdjustment * adj;
+
+  GtkWidget * scrolledwindow_drawing_area;
 
   //--drawing area ref
   drawing_area = lookup_widget(window_sketchpad, "drawing_area");
-//  widget       = lookup_widget(window_sketchpad, "scrolledwindow_drawing_area");
-//  adj          = gtk_scrolled_window_get_hadjustment((GtkScrolledWindow*)widget);
-//  if(!adj){
-//    adj = (GtkAdjustment*) gtk_adjustment_new(drawing_area_width, 10, 500, 1, 10, drawing_area_width);
-//    gtk_scrolled_window_set_hadjustment((GtkScrolledWindow*)widget, adj);
-//  }
-//  gtk_adjustment_set_value(adj, drawing_area_width);
-//
-//  adj          = gtk_scrolled_window_get_vadjustment((GtkScrolledWindow*)widget);
-//  if(!adj){
-//    adj = (GtkAdjustment*) gtk_adjustment_new(drawing_area_height, 10, 500, 1, 10, drawing_area_height);
-//    gtk_scrolled_window_set_vadjustment((GtkScrolledWindow*)widget, adj);
-//  }
-//  gtk_adjustment_set_value(adj, drawing_area_height);
-//
-//GtkObject*  gtk_adjustment_new              (gfloat value,
-//                                             gfloat lower,
-//                                             gfloat upper,
-//                                             gfloat step_increment,
-//                                             gfloat page_increment,
-//                                             gfloat page_size);
-//void        gtk_adjustment_set_value        (GtkAdjustment *adjustment,
-//                                             gfloat value);
-//
+  gtk_widget_destroy(drawing_area);//Oooooooooooops :)
+  widget       = lookup_widget(window_sketchpad, "scrolledwindow_drawing_area");
+  gtk_widget_destroy(widget);//Oooooooooooops again :)
+  widget       = lookup_widget(window_sketchpad, "vbox");
+
+  scrolledwindow_drawing_area = gtk_scrolled_window_new (NULL, NULL);
+  gtk_widget_show (scrolledwindow_drawing_area);
+  gtk_box_pack_start (GTK_BOX (widget), scrolledwindow_drawing_area, TRUE, TRUE, 0);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow_drawing_area),
+                                  GTK_POLICY_AUTOMATIC,
+                                  GTK_POLICY_AUTOMATIC);
+
+  drawing_area = gtk_drawing_area_new ();
+  gtk_widget_show (drawing_area);
+  gtk_widget_set_usize (drawing_area, drawing_area_width, drawing_area_height);
+  gtk_widget_set_events (drawing_area,
+                         GDK_EXPOSURE_MASK
+                         | GDK_POINTER_MOTION_MASK
+                         | GDK_POINTER_MOTION_HINT_MASK
+                         | GDK_BUTTON_PRESS_MASK
+                         | GDK_BUTTON_RELEASE_MASK
+                         | GDK_LEAVE_NOTIFY_MASK);
+  gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scrolledwindow_drawing_area),
+                                        drawing_area);
+
+  gtk_signal_connect (GTK_OBJECT (drawing_area), "configure_event",
+                      GTK_SIGNAL_FUNC (on_drawing_area_configure_event),
+                      NULL);
+  gtk_signal_connect (GTK_OBJECT (drawing_area), "expose_event",
+                      GTK_SIGNAL_FUNC (on_drawing_area_expose_event),
+                      NULL);
+  gtk_signal_connect (GTK_OBJECT (drawing_area), "motion_notify_event",
+                      GTK_SIGNAL_FUNC (on_drawing_area_motion_notify_event),
+                      NULL);
+  gtk_signal_connect (GTK_OBJECT (drawing_area), "button_press_event",
+                      GTK_SIGNAL_FUNC (on_drawing_area_button_press_event),
+                      NULL);
+  gtk_signal_connect (GTK_OBJECT (drawing_area), "button_release_event",
+                      GTK_SIGNAL_FUNC (on_drawing_area_button_release_event),
+                      NULL);
+
   //--default tools
   widget = lookup_widget(window_sketchpad, "radiobutton_tools_pen");
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (widget), TRUE);
