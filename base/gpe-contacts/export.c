@@ -27,6 +27,13 @@
 #include <gpe/vcard.h>
 #include <gpe/errorbox.h>
 
+#include <dbus/dbus.h>
+#include <dbus/dbus-glib.h>
+
+static DBusConnection *connection;
+
+#define BLUETOOTH_SERVICE_NAME   "org.handhelds.gpe.bluez"
+
 static gchar *
 export_to_vcard (guint uid)
 {
@@ -47,6 +54,26 @@ export_to_vcard (guint uid)
 void
 menu_do_send_bluetooth (void)
 {
+  gchar *card;
+  DBusMessage *message;
+  DBusMessageIter iter;
+
+  card = export_to_vcard (menu_uid);
+
+  message = dbus_message_new_method_call (BLUETOOTH_SERVICE_NAME,
+					  "/org/handhelds/gpe/bluez/OBEX",
+					  BLUETOOTH_SERVICE_NAME ".OBEX",
+					  "ObjectPush");
+
+  dbus_message_append_iter_init (message, &iter);
+
+  dbus_message_iter_append_string (&iter, "GPE.vcf");
+  dbus_message_iter_append_string (&iter, "application/x-vcard");
+  dbus_message_iter_append_byte_array (&iter, card, strlen (card));
+
+  dbus_connection_send (connection, message, NULL);
+
+  g_free (card);
 }
 
 static void
@@ -103,3 +130,27 @@ menu_do_save (void)
   gtk_widget_show_all (filesel);
 }
 
+gboolean
+export_bluetooth_available (void)
+{
+  dbus_bool_t r;
+
+  if (connection == NULL)
+    return FALSE;
+
+  r = dbus_bus_service_exists (connection, BLUETOOTH_SERVICE_NAME, NULL);
+
+  return r ? TRUE : FALSE;
+}
+
+void
+export_init (void)
+{
+  DBusError error;
+
+  dbus_error_init (&error);
+
+  connection = dbus_bus_get (DBUS_BUS_SESSION, &error);
+  if (connection)
+    dbus_connection_setup_with_g_main (connection, NULL);
+}

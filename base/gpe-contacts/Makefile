@@ -25,14 +25,14 @@ else
 CFLAGS += -Os -fomit-frame-pointer
 endif
 
-CPPFLAGS += -D_GNU_SOURCE -DENABLE_NLS
+CPPFLAGS += -D_GNU_SOURCE -DENABLE_NLS -DDBUS_API_SUBJECT_TO_CHANGE
 
 CPPFLAGS += -I../libdisplaymigration
-LDFLAGS += -L../libdisplaymigration -ldisplaymigration -L../libgpepimc -lgpepimc -L../libgpevtype -lgpevtype `pkg-config --libs mimedir-1.0`
+LDFLAGS += -L../libdisplaymigration -ldisplaymigration -L../libgpepimc -lgpepimc -L../libgpevtype -lgpevtype `pkg-config --libs mimedir-1.0` `pkg-config --libs dbus-glib-1`
 
 LDFLAGS += -lsqlite
 
-CFLAGS = $(GTKCFLAGS) -I../libgpepimc -I../libgpewidget -Wall `pkg-config --cflags libxml-2.0` -I../libgpevtype `pkg-config --cflags mimedir-1.0`
+CFLAGS = $(GTKCFLAGS) -I../libgpepimc -I../libgpewidget -Wall `pkg-config --cflags libxml-2.0` -I../libgpevtype `pkg-config --cflags mimedir-1.0` `pkg-config --cflags dbus-glib-1`
 CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 CFLAGS += -MD
 

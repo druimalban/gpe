@@ -1,5 +1,15 @@
 2004-02-29  Phil Blundell  <pb@nexus.co.uk>
 
+	* main.c (list_button_press_event): Only show menu item for
+	bluetooth export if gpe-bluetooth service is available.
+	(popup_init): Save pointer to this item.
+	(main): Call export_init.
+	* export.c (export_init): New.
+	(menu_do_send_bluetooth): Fill in implementation.
+	* export.h (export_init): New.
+
+2004-02-29  Phil Blundell  <pb@nexus.co.uk>
+
 	* Makefile (LDFLAGS, CFLAGS): Add libgpevtype and libmimedir.
 	(MEMBERS): Add export.
 

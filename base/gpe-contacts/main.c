@@ -46,6 +46,7 @@ GtkListStore *list_store;
 GtkWidget *list_view;
 GtkWidget *search_entry;
 GtkWidget *popup_menu;
+GtkWidget *bluetooth_menu_item;
 guint menu_uid;
 
 struct gpe_icon my_icons[] = {
@@ -415,6 +416,11 @@ list_button_press_event (GtkWidget *widget, GdkEventButton *b, GtkListStore *lis
 
 	  menu_uid = id;
 
+	  if (export_bluetooth_available ())
+	    gtk_widget_show (bluetooth_menu_item);
+	  else
+	    gtk_widget_hide (bluetooth_menu_item);
+
 	  gtk_menu_popup (GTK_MENU (popup_menu), NULL, NULL, NULL, widget, b->button, b->time);
 	}
     }
@@ -424,10 +430,10 @@ list_button_press_event (GtkWidget *widget, GdkEventButton *b, GtkListStore *lis
 
 static GtkItemFactoryEntry popup_items[] =
 {
-  { "/_Edit",		    NULL, menu_do_edit,           0, "<Item>" },
-  { "/_Delete",		    NULL, menu_do_delete,         0, "<StockItem>", GTK_STOCK_DELETE },
-  { "/_Save as ...",	    NULL, menu_do_save,           0, "<Item>" },
-  { "/_Send via Bluetooth", NULL, menu_do_send_bluetooth, 0, "<Item>", },
+  { "/Edit",		    NULL, menu_do_edit,           0, "<Item>" },
+  { "/Delete",		    NULL, menu_do_delete,         0, "<StockItem>", GTK_STOCK_DELETE },
+  { "/Save as ...",	    NULL, menu_do_save,           0, "<Item>" },
+  { "/Send via Bluetooth", NULL, menu_do_send_bluetooth, 0, "<Item>", },
 };
 
 static GtkWidget *
@@ -441,6 +447,8 @@ create_popup (GtkWidget *window)
   g_object_set_data_full (G_OBJECT (window), "<main>", item_factory, (GDestroyNotify) g_object_unref);
   gtk_item_factory_create_items (item_factory, sizeof (popup_items) / sizeof (popup_items[0]), 
 				 popup_items, NULL);
+
+  bluetooth_menu_item = gtk_item_factory_get_widget (item_factory, "<main>/Send via Bluetooth");
 
   return gtk_item_factory_get_widget (item_factory, "<main>");
 }
@@ -587,6 +595,8 @@ main (int argc, char *argv[])
 
   if (db_open ())
     exit (1);
+
+  export_init ();
 
   displaymigration_init ();
 
