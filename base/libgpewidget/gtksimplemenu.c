@@ -12,13 +12,13 @@
 #include "gtksimplemenu.h"
 #include <libintl.h>
 
+#include "link-warning.h"
+
 static guint my_signals[1];
 
 struct _GtkSimpleMenu
 {
   GtkOptionMenu optionmenu;
-  guint item;
-
   GtkWidget *menu;
   guint nr;
 };
@@ -36,7 +36,6 @@ gtk_simple_menu_init (GtkSimpleMenu *sm)
 {
   sm->menu = gtk_menu_new ();
   sm->nr = 0;
-  sm->item = 0;
 
   gtk_option_menu_set_menu (GTK_OPTION_MENU (sm), sm->menu);
 }
@@ -116,24 +115,15 @@ gtk_simple_menu_new (void)
 guint
 gtk_simple_menu_get_result (GtkSimpleMenu *sm)
 {
-  return sm->item;
+  return gtk_option_menu_get_history (GTK_OPTION_MENU (sm));
 }
-
-static gboolean
-note_activation (GtkWidget *w, GtkSimpleMenu *sm)
-{
-  guint idx = (guint)gtk_object_get_data (GTK_OBJECT (w), "item");
-  sm->item = idx;
-  gtk_signal_emit (GTK_OBJECT (sm), my_signals[0]);
-  return FALSE;
-}
+link_warning(gtk_simple_menu_get_result, "warning: gtk_simple_menu_get_result is obsolescent; use gtk_option_menu_get_history instead.");
 
 void
 gtk_simple_menu_append_item (GtkSimpleMenu *sm, const gchar *s)
 {
   GtkWidget *mi = gtk_menu_item_new_with_label (s);
   gtk_widget_show (mi);
-  gtk_signal_connect (GTK_OBJECT (mi), "activate", GTK_SIGNAL_FUNC (note_activation), sm);
   gtk_object_set_data (GTK_OBJECT (mi), "item", (gpointer)sm->nr++);
   gtk_menu_append (GTK_MENU (sm->menu), mi);
   if (sm->nr == 1)

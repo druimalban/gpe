@@ -1,5 +1,15 @@
 2003-03-29  Philip Blundell  <philb@gnu.org>
 
+	* gtksimplemenu.c (gtk_simple_menu_append_item): Don't attach
+	signal handler to item.
+	(note_activation): Deleted.
+	(gtk_simple_menu_get_result): Just call
+	gtk_option_menu_get_history.  Add link warning about obsolescence.
+	(struct _GtkSimpleMenu): Delete ->item.
+	(gtk_simple_menu_init): Don't initialise ->item.
+
+2003-03-29  Philip Blundell  <philb@gnu.org>
+
 	* Version 0.56 released.
 
 2003-03-28  Philip Blundell  <philb@gnu.org>
