@@ -1,5 +1,13 @@
 2002-06-17  Philip Blundell  <philb@gnu.org>
 
+	* gpe-login.c (main): If no window manager is running, set window
+	size to full-screen.
+	(Makefile): Create separate packages for gpe-dm and
+	gpe-session-scripts.
+	(X11): New directory.
+
+2002-06-17  Philip Blundell  <philb@gnu.org>
+
 	* gpe-dm.c: New file.
 	* Makefile (gpe-dm): New target.
 	(all): Include it.

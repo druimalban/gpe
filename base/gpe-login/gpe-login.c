@@ -303,7 +303,7 @@ main (int argc, char *argv[])
   signal (SIGINT, cleanup_children_and_exit);
   signal (SIGQUIT, cleanup_children_and_exit);
   signal (SIGTERM, cleanup_children_and_exit);
-  
+
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 
   if (access (xkbd_path, X_OK) == 0)
@@ -349,6 +349,25 @@ main (int argc, char *argv[])
 
   gtk_widget_realize (window);
 
+  {
+    /* If no window manager is running, set size to full-screen */
+    /*
+      <mallum> pb: request the 'SubstructureRedirect' event mask on the root window
+      <mallum> pb: if that fails, theres already a window manager running
+    */
+    GdkEventMask ev = gdk_window_get_events (window->window);
+    int r;
+    gdk_error_trap_push ();
+    XSelectInput (GDK_WINDOW_XDISPLAY (window->window),
+			  RootWindow (GDK_WINDOW_XDISPLAY (window->window), 0),
+		  SubstructureRedirectMask);
+    gdk_flush ();
+    r = gdk_error_trap_pop ();
+    gdk_window_set_events (window->window, ev);
+    if (r == 0)
+      gtk_widget_set_usize (window, gdk_screen_width (), gdk_screen_height ());
+  }
+    
   icon = gpe_find_icon ("logo");
   if (icon)
     logo = gpe_render_icon (window->style, icon);

@@ -35,6 +35,8 @@ static time_t server_started;
 
 static int server_crashing_count;
 
+#define _(x) gettext (x)
+
 void
 start_server (gboolean crashed)
 {
@@ -46,7 +48,7 @@ start_server (gboolean crashed)
       server_crashing_count++;
       if (server_crashing_count == SERVER_CRASHING_THRESHOLD)
 	{
-	  fprintf (stderr, "gpe-dm: X server keeps crashing, giving up\n");
+	  fprintf (stderr, _("gpe-dm: X server keeps crashing, giving up\n"));
 	  exit (1);
 	}
     }
@@ -60,9 +62,14 @@ start_server (gboolean crashed)
   server_started = t;
 }
 
-void
+int
 main(int argc, char *argv[])
 {
+  setlocale (LC_ALL, "");
+
+  bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
+  textdomain (PACKAGE);
+
   if (argc == 2)
     dpy = argv[1];
   else
