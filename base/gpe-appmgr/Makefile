@@ -1,11 +1,14 @@
 CVSBUILD = yes
 DEBUG = yes
 PACKAGE = gpe-appmgr
-VERSION = 2.4
+VERSION = 2.5
 
 PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS)
 PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS) -I../libgpelaunch -I../libxsettings-client -I../libxsettings
 PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS) -L../libgpelaunch/.libs -lgpelaunch -Wl,-rpath-link,../libxsettings -L../libxsettings-client -lXsettings-client
+
+PACKAGE_CFLAGS += $(shell pkg-config --cflags cairo)
+PACKAGE_LDFLAGS += $(shell pkg-config --libs cairo)
 
 DESTDIR=
 PREFIX=/usr
