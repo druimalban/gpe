@@ -14,6 +14,7 @@
 #include <assert.h>
 
 #include "auth.h"
+#include "crypt.h"
 
 static GcryMPI
 mpi_from_sexp (GcrySexp r, char *tag)

@@ -13,11 +13,6 @@
 #include <gcrypt.h>
 #include <glib.h>
 
-struct rsa_key
-{
-  GcryMPI n, e, d, p, q, u;
-};
-
 extern void libdm_auth_update_challenge (void);
 extern void libdm_auth_generate_challenge (void);
 
