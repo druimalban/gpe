@@ -23,6 +23,7 @@
 static GtkWidget *week_view_draw;
 static struct tm today;
 static guint min_cell_height = 38;
+static GtkWidget *datesel;
 
 struct week_day
 {
@@ -132,6 +133,8 @@ week_view_update (void)
   struct tm tm;
   guint y = 0;
 
+  gtk_date_sel_set_time (GTK_DATE_SEL (datesel), viewtime);
+
   localtime_r (&t, &today);
 
   t = viewtime;
@@ -140,6 +143,7 @@ week_view_update (void)
   tm.tm_wday = (tm.tm_wday + 6) % 7;
 #endif
   t -= SECONDS_IN_DAY * tm.tm_wday;
+  t -= tm.tm_sec + (60 * tm.tm_min) + (60 * 60 * tm.tm_hour);
 
   for (day = 0; day < 7; day++)
     {
@@ -194,8 +198,9 @@ week_view(void)
   GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
   GtkWidget *draw = gtk_drawing_area_new ();
   GtkWidget *hbox = gtk_hbox_new (FALSE, 0);
-  GtkWidget *datesel = gtk_date_sel_new (GTKDATESEL_WEEK);
   GtkWidget *scroller = gtk_scrolled_window_new (NULL, NULL);
+
+  datesel = gtk_date_sel_new (GTKDATESEL_WEEK);
 
   gtk_signal_connect (GTK_OBJECT (draw),
 		      "expose_event",
@@ -211,8 +216,11 @@ week_view(void)
   gtk_box_pack_start (GTK_BOX (vbox), scroller, TRUE, TRUE, 0);
   gtk_box_pack_end (GTK_BOX (vbox), hbox, FALSE, FALSE, 4);
 
-  gtk_signal_connect(GTK_OBJECT (datesel), "changed",
+  gtk_signal_connect (GTK_OBJECT (datesel), "changed",
 		     GTK_SIGNAL_FUNC (changed_callback), NULL);
+
+  gtk_object_set_data (GTK_OBJECT (vbox), "update_hook",
+                       (gpointer) week_view_update);
 
   week_view_draw = draw;
 

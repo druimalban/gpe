@@ -26,8 +26,9 @@ extern GdkFont *timefont, *datefont;
   
 gint bias = 8;
 
-GSList *strings;
-GtkWidget *day_list;
+static GSList *strings;
+static GtkWidget *day_list;
+static GtkWidget *datesel;
 
 static char *
 format_event (event_t ev)
@@ -75,6 +76,8 @@ day_view_update ()
   GSList *day_events[24];
   guint width = 0, i;
   GSList *iter;
+
+  gtk_date_sel_set_time (GTK_DATE_SEL (datesel), viewtime);
       
   light_color.red = 60000;
   light_color.green = 60000;
@@ -216,8 +219,9 @@ GtkWidget *
 day_view(void)
 {
   GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
-  GtkWidget *datesel = gtk_date_sel_new (GTKDATESEL_FULL);
   GtkWidget *scrolled_window = gtk_scrolled_window_new (NULL, NULL);
+
+  datesel = gtk_date_sel_new (GTKDATESEL_FULL);
   
   day_list = gtk_clist_new (2);
   viewtime = gtk_date_sel_get_time (GTK_DATE_SEL (datesel));
