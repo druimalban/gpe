@@ -4,7 +4,7 @@ INCLUDES = @LAUNCHER_CFLAGS@ -DPACKAGE_LOCALE_DIR=\"@datadir@/locale/@PACKAGE_NA
 
 libgpelaunch_la_LIBADD = @LAUNCHER_LIBS@
 
-libgpelaunch_la_SOURCES = launch.c launch.h desktop_file.c desktop_file.h
+libgpelaunch_la_SOURCES = launch.c gpe/launch.h desktop_file.c gpe/desktop_file.h
 
 gpeincludedir = $(includedir)/gpe
 gpeinclude_HEADERS = gpe/launch.h gpe/desktop_file.h
