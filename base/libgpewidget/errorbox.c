@@ -11,6 +11,7 @@
 #include <libintl.h>
 #include <errno.h>
 #include <string.h>
+#include <stdarg.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
 
 #include "errorbox.h"
@@ -79,4 +80,17 @@ gpe_perror_box(char *text)
   strcat (buf, p);
   gpe_error_box (buf);
   g_free (buf);
+}
+
+void
+gpe_error_box_fmt(const char *format, ...)
+{
+  va_list ap;
+  char *str;
+
+  va_start (ap, format);
+  vasprintf (&str, format, ap);
+  va_end (ap);
+  gpe_error_box (str);
+  g_free (str);
 }
