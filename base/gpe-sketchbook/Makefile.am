@@ -13,6 +13,8 @@ SUBDIRS = src
 
 EXTRA_DIST = \
 	gpe-sketchbook.glade \
+	gpe-sketchbook.menu \
+	gpe-sketchbook.png \
 	TODO \
 	familiar/control \
         familiar/postinst \

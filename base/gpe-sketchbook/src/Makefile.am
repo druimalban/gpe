@@ -45,8 +45,16 @@ ipkg:
 	cd .. && mkdir -p familiar/dist/CONTROL
 	cd .. && cp familiar/control familiar/postinst familiar/dist/CONTROL
 	cd .. && make DESTDIR=`pwd`/familiar/dist PREFIX=/usr install
+	cd .. && mkdir -v -p familiar/dist/usr/lib/menu
+	cd .. && cp gpe-sketchbook.menu familiar/dist/usr/lib/menu/gpe-sketchbook
+	cd .. && mkdir -v -p familiar/dist/usr/share/pixmaps
+	cd .. && cp gpe-sketchbook.png  familiar/dist/usr/share/pixmaps/
 	cd .. && chown -R root.root familiar/dist
 	cd .. && ./ipkg-build familiar/dist
+	@echo --------------------------------
+	@echo proj version $(VERSION)
+	@echo ipkg 
+#`grep ersion ../familiar/control`
 
 trans-pc-to-handheld:
 	cd .. && make dist

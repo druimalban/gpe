@@ -1,0 +1,7 @@
+?package(gpe-sketchbook):\
+ needs=x11\
+ section=Applications\
+ title=sketchbook\
+ icon48=gpe-sketchbook.png\
+ command=gpe-sketchbook\
+ windowtitle=gpe-sketchbook

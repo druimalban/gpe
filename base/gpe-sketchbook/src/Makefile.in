@@ -104,6 +104,9 @@ DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
 
 TAR = tar
 GZIP_ENV = --best
+DEP_FILES =  .deps/_interface.P .deps/_support.P .deps/callbacks.P \
+.deps/files.P .deps/gpe-sketchbook.P .deps/selector.P \
+.deps/sketchpad-cb.P .deps/sketchpad.P
 SOURCES = $(gpe_sketchbook_SOURCES)
 OBJECTS = $(gpe_sketchbook_OBJECTS)
 
@@ -111,9 +114,9 @@ all: all-redirect
 .SUFFIXES:
 .SUFFIXES: .S .c .o .s
 $(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
-	cd $(top_srcdir) && $(AUTOMAKE) --gnu --include-deps src/Makefile
+	cd $(top_srcdir) && $(AUTOMAKE) --gnu src/Makefile
 
-Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status
+Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status $(BUILT_SOURCES)
 	cd $(top_builddir) \
 	  && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= $(SHELL) ./config.status
 
@@ -142,9 +145,6 @@ uninstall-binPROGRAMS:
 	list='$(bin_PROGRAMS)'; for p in $$list; do \
 	  rm -f $(DESTDIR)$(bindir)/`echo $$p|sed 's/$(EXEEXT)$$//'|sed '$(transform)'|sed 's/$$/$(EXEEXT)/'`; \
 	done
-
-.c.o:
-	$(COMPILE) -c $<
 
 .s.o:
 	$(COMPILE) -c $<
@@ -200,6 +200,11 @@ distdir = $(top_builddir)/$(PACKAGE)-$(VERSION)/$(subdir)
 subdir = src
 
 distdir: $(DISTFILES)
+	here=`cd $(top_builddir) && pwd`; \
+	top_distdir=`cd $(top_distdir) && pwd`; \
+	distdir=`cd $(distdir) && pwd`; \
+	cd $(top_srcdir) \
+	  && $(AUTOMAKE) --include-deps --build-dir=$$here --srcdir-name=$(top_srcdir) --output-dir=$$top_distdir --gnu src/Makefile
 	@for file in $(DISTFILES); do \
 	  d=$(srcdir); \
 	  if test -d $$d/$$file; then \
@@ -210,30 +215,38 @@ distdir: $(DISTFILES)
 	    || cp -p $$d/$$file $(distdir)/$$file || :; \
 	  fi; \
 	done
-_interface.o: _interface.c ../config.h callbacks.h sketchpad-cb.h \
-	_interface.h _support.h
-_support.o: _support.c ../config.h _support.h
-callbacks.o: callbacks.c ../config.h callbacks.h sketchpad-cb.h \
-	_interface.h _support.h gpe-sketchbook.h files.h selector.h \
-	sketchpad.h
-files.o: files.c files.h gpe-sketchbook.h sketchpad.h
-gpe-sketchbook.o: gpe-sketchbook.c ../config.h gpe-sketchbook.h \
-	sketchpad.h selector.h _interface.h _support.h
-ipaq-sketchpad.o: ipaq-sketchpad.c ../config.h ipaq-sketchpad.h sketch.h \
-	selector.h _interface.h _support.h
-selector.o: selector.c selector.h gpe-sketchbook.h _support.h \
-	../config.h
-sketch-cb.o: sketch-cb.c ../config.h callbacks.h sketch-cb.h \
-	_interface.h _support.h ipaq-sketchpad.h files.h selector.h \
-	sketch.h
-sketch.o: sketch.c sketch.h _support.h ../config.h files.h selector.h \
-	cursor_eraser_data.h
-sketchpad-cb.o: sketchpad-cb.c ../config.h callbacks.h sketchpad-cb.h \
-	_interface.h _support.h gpe-sketchbook.h files.h selector.h \
-	sketchpad.h
-sketchpad.o: sketchpad.c sketchpad.h _support.h ../config.h files.h \
-	selector.h cursor_eraser_data.h
 
+DEPS_MAGIC := $(shell mkdir .deps > /dev/null 2>&1 || :)
+
+-include $(DEP_FILES)
+
+mostlyclean-depend:
+
+clean-depend:
+
+distclean-depend:
+	-rm -rf .deps
+
+maintainer-clean-depend:
+
+%.o: %.c
+	@echo '$(COMPILE) -c $<'; \
+	$(COMPILE) -Wp,-MD,.deps/$(*F).pp -c $<
+	@-cp .deps/$(*F).pp .deps/$(*F).P; \
+	tr ' ' '\012' < .deps/$(*F).pp \
+	  | sed -e 's/^\\$$//' -e '/^$$/ d' -e '/:$$/ d' -e 's/$$/ :/' \
+	    >> .deps/$(*F).P; \
+	rm .deps/$(*F).pp
+
+%.lo: %.c
+	@echo '$(LTCOMPILE) -c $<'; \
+	$(LTCOMPILE) -Wp,-MD,.deps/$(*F).pp -c $<
+	@-sed -e 's/^\([^:]*\)\.o[ 	]*:/\1.lo \1.o :/' \
+	  < .deps/$(*F).pp > .deps/$(*F).P; \
+	tr ' ' '\012' < .deps/$(*F).pp \
+	  | sed -e 's/^\\$$//' -e '/^$$/ d' -e '/:$$/ d' -e 's/$$/ :/' \
+	    >> .deps/$(*F).P; \
+	rm -f .deps/$(*F).pp
 info-am:
 info: info-am
 dvi-am:
@@ -271,23 +284,24 @@ distclean-generic:
 
 maintainer-clean-generic:
 mostlyclean-am:  mostlyclean-binPROGRAMS mostlyclean-compile \
-		mostlyclean-tags mostlyclean-generic
+		mostlyclean-tags mostlyclean-depend mostlyclean-generic
 
 mostlyclean: mostlyclean-am
 
-clean-am:  clean-binPROGRAMS clean-compile clean-tags clean-generic \
-		mostlyclean-am
+clean-am:  clean-binPROGRAMS clean-compile clean-tags clean-depend \
+		clean-generic mostlyclean-am
 
 clean: clean-am
 
 distclean-am:  distclean-binPROGRAMS distclean-compile distclean-tags \
-		distclean-generic clean-am
+		distclean-depend distclean-generic clean-am
 
 distclean: distclean-am
 
 maintainer-clean-am:  maintainer-clean-binPROGRAMS \
 		maintainer-clean-compile maintainer-clean-tags \
-		maintainer-clean-generic distclean-am
+		maintainer-clean-depend maintainer-clean-generic \
+		distclean-am
 	@echo "This command is intended for maintainers to use;"
 	@echo "it deletes files that may require special tools to rebuild."
 
@@ -297,12 +311,13 @@ maintainer-clean: maintainer-clean-am
 maintainer-clean-binPROGRAMS uninstall-binPROGRAMS install-binPROGRAMS \
 mostlyclean-compile distclean-compile clean-compile \
 maintainer-clean-compile tags mostlyclean-tags distclean-tags \
-clean-tags maintainer-clean-tags distdir info-am info dvi-am dvi check \
-check-am installcheck-am installcheck install-exec-am install-exec \
-install-data-am install-data install-am install uninstall-am uninstall \
-all-redirect all-am all installdirs mostlyclean-generic \
-distclean-generic clean-generic maintainer-clean-generic clean \
-mostlyclean distclean maintainer-clean
+clean-tags maintainer-clean-tags distdir mostlyclean-depend \
+distclean-depend clean-depend maintainer-clean-depend info-am info \
+dvi-am dvi check check-am installcheck-am installcheck install-exec-am \
+install-exec install-data-am install-data install-am install \
+uninstall-am uninstall all-redirect all-am all installdirs \
+mostlyclean-generic distclean-generic clean-generic \
+maintainer-clean-generic clean mostlyclean distclean maintainer-clean
 
 
 #--------------------------------------------------
@@ -327,8 +342,16 @@ ipkg:
 	cd .. && mkdir -p familiar/dist/CONTROL
 	cd .. && cp familiar/control familiar/postinst familiar/dist/CONTROL
 	cd .. && make DESTDIR=`pwd`/familiar/dist PREFIX=/usr install
+	cd .. && mkdir -v -p familiar/dist/usr/lib/menu
+	cd .. && cp gpe-sketchbook.menu familiar/dist/usr/lib/menu/gpe-sketchbook
+	cd .. && mkdir -v -p familiar/dist/usr/share/pixmaps
+	cd .. && cp gpe-sketchbook.png  familiar/dist/usr/share/pixmaps/
 	cd .. && chown -R root.root familiar/dist
 	cd .. && ./ipkg-build familiar/dist
+	@echo --------------------------------
+	@echo proj version $(VERSION)
+	@echo ipkg 
+#`grep ersion ../familiar/control`
 
 trans-pc-to-handheld:
 	cd .. && make dist
