@@ -40,7 +40,7 @@ dist: check-source clean dist-prep
 	rm -rf ../$(PACKAGE)-$(VERSION)
 	mkdir ../$(PACKAGE)-$(VERSION)
 	( tar cf - --exclude "*/CVS" --exclude CVS --exclude "*~" --exclude "#*#" --exclude "debian" --exclude ".*" --exclude "*.ipk" --exclude "*.ipk.*" --exclude "*.mo" --exclude "*.batch" --exclude "translation-ipkgs.txt" * ) | (cd ../$(PACKAGE)-$(VERSION); tar xf -)
-	( cd ../$(PACKAGE)-$(VERSION); mkdir build; cp $(BUILD)/Makefile.dpkg_ipkg $(BUILD)/Makefile.translation $(BUILD)/Makefile.translation-auto-linguas build/ ; sed 's:^CVSBUILD.*:CVSBUILD = no:' < Makefile > Makefile.new; mv Makefile.new Makefile )
+	( if [ -f linguas ]; then LINGUAS=`cat linguas`; PATCH_LINGUAS="s:^LINGUAS =.*:LINGUAS = $${LINGUAS}:"; fi; cd ../$(PACKAGE)-$(VERSION) && mkdir build && cp $(BUILD)/Makefile.dpkg_ipkg $(BUILD)/Makefile.translation build/ && sed "s:^CVSBUILD =.*:CVSBUILD = no:;s:^DEBUG =.*:DEBUG = no:;s:Makefile.translation-auto-linguas:Makefile.translation:;$${PATCH_LINGUAS}" < Makefile > Makefile.new && mv Makefile.new Makefile )
 	( cd .. ; tar cf - $(PACKAGE)-$(VERSION) | gzip -9 >$(PACKAGE)-$(VERSION).tar.gz )
 	rm -rf ../$(PACKAGE)-$(VERSION)
 	$(MAKE) printinfo

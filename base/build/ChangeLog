@@ -1,7 +1,12 @@
 2005-02-28  Philip Blundell  <philb@gnu.org>
 
+	* Makefile.dpkg_ipkg (dist): Undo last change.  Patch LINGUAS into
+	shipped Makefile in place of auto-linguas code.  Force DEBUG=no.
+	
+2005-02-28  Philip Blundell  <philb@gnu.org>
+
 	* Makefile.dpkg_ipkg (dist): Also install
-	Makefile.translation-auto-linguas.
+	Makefile.translation-auto-linguas.	
 
 2004-11-18  Phil Blundell  <philb@gnu.org>
 
