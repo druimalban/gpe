@@ -1,3 +1,7 @@
+2003-02-23  Philip Blundell <philb@gnu.org>
+
+	* Version 0.48 released
+
 2003-02-23  Colin Marquardt  <colin@marquardt-home.de>
 
 	* question.c (gpe_question_ask): Allow pango markup in label.
