@@ -199,7 +199,7 @@ void on_button_file_prev_clicked (GtkButton *button, gpointer user_data){
 
 
 void on_button_file_next_clicked (GtkButton *button, gpointer user_data){
-  if(is_current_sketch_new) return;
+  if(is_current_sketch_new && !is_current_sketch_modified) return;
   if( _save_current_if_needed() == ACTION_CANCELED) return;
   if(is_current_sketch_last){
     current_sketch = SKETCH_NEW;
