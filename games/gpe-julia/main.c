@@ -86,10 +86,10 @@ void draw_init (void)
 {
   gint i, x, y, colours = 20;
 
-  if (zoom >= 256)
+  if (zoom >= 200)
     {
       /* insufficient precision */
-      zoom = 256;
+      zoom = 200;
     }
 
   iterations = 30 + pow (zoom, 1.2) * 10;
@@ -124,10 +124,10 @@ void draw_init (void)
     }
 
   for (x = 0; x < width; x++)
-	  xcoords[x] = ((x*(1<<16)/width) - (1<<15))/zoom + xcentre;
+	  xcoords[x] = ((x*(1<<15)/width) - (1<<14))/zoom + xcentre;
 
   for (y = 0; y < height; y++)
-	  ycoords[y] = ((y*(1<<16)/height) - (1<<15))/zoom + ycentre;
+	  ycoords[y] = ((y*(1<<15)/height) - (1<<14))/zoom + ycentre;
 }
 
 void choose_julia (gint pixelx, gint pixely)
@@ -173,10 +173,10 @@ draw_mandelbrot (void)
 	  a = 0;
 	  b = 0;
 
-	  for (i = 0; (i < iterations) && ((a * a + b * b) < (4 << 28)); i++)
+	  for (i = 0; (i < iterations) && ((a * a + b * b) < (4 << 26)); i++)
 	    {
-	      newa = ((a * a) >> 14) - ((b * b) >> 14) + ca;
-	      b = ((a * b) >> 13) + cb;
+	      newa = ((a * a) >> 13) - ((b * b) >> 13) + ca;
+	      b = ((a * b) >> 12) + cb;
 	      a = newa;
 	    }
 
@@ -206,10 +206,10 @@ draw_julia (void)
 	  a = xcoords[x];
 	  b = ycoords[y];
 
-	  for (i = 0; (i < iterations) && ((a * a + b * b) < (4 << 28)); i++)
+	  for (i = 0; (i < iterations) && ((a * a + b * b) < (4 << 26)); i++)
 	    {
-	      newa = ((a * a) >> 14) - ((b * b) >> 14) + juliax;
-	      b = ((a * b) >> 13) + juliay;
+	      newa = ((a * a) >> 13) - ((b * b) >> 13) + juliax;
+	      b = ((a * b) >> 12) + juliay;
 	      a = newa;
 	    }
 
