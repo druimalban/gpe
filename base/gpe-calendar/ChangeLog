@@ -1,3 +1,12 @@
+2003-03-03  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>
+
+	* main.c: add an update_current_view to set_day_view
+	* event-ui.c: finally alarm things (disallow changing away from
+	"minutes before" for now, add user id to alarmname, dont
+	subtract minutes before twice) 
+	* day_view.c : change widget_show to widget_show_all so new
+	event-edit windows get displayed properly
+
 2003-02-17  Philip Blundell  <philb@gnu.org>
 
 	* main.c (main): Mark window title for translation.  Reformat
