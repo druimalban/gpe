@@ -1,5 +1,8 @@
 2002-07-09  Philip Blundell  <philb@gnu.org>
 
+	* gpetooltips.c: New file.
+	* Makefile (MEMBERS): Add gpetooltips.
+
 	* stylus-mode.c: New file.
 
 	* Makefile (MEMBERS): Add stylus, nocursor.
