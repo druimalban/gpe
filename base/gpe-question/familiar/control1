@@ -6,3 +6,6 @@ Architecture: arm
 Maintainer: Moray Allan <moray@handhelds.org>
 Depends: libgpewidget1, gpe-icons
 Description: GPE interface for asking questions from shell scripts
+Provides: gpe-question
+Replaces: gpe-question
+
