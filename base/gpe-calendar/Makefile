@@ -49,7 +49,7 @@ ipkg:
 	rm -rf familiar/dist
 	mkdir -p familiar/dist/CONTROL
 	cp familiar/control familiar/postinst familiar/dist/CONTROL
-	make DESTDIR=`pwd`/familiar/dist PREFIX=/usr install
+	make DESTDIR=`pwd`/familiar/dist PREFIX=/usr DEBUG=no install
 	chown -R root.root familiar/dist
 	ipkg-build familiar/dist
 
