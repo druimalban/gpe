@@ -6,9 +6,6 @@ else
 CONTROL_FILE = familiar/control
 endif
 
-VERSION = $(shell grep 'Version: ' $(CONTROL_FILE) | cut -d ' ' -f 2)
-#PACKAGE = $(shell grep 'Package: ' $(CONTROL_FILE) | cut -d ' ' -f 2)
-PACKAGE = gpe-sketchbook
 
 SOURCES = $(patsubst %,src/%.c,$(MEMBERS))
 

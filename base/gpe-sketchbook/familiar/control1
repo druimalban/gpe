@@ -1,7 +1,7 @@
 Package: gpe-sketchbook2
 Section: base
 Priority: optional
-Version: pre0.2.1
+Version: VERSION
 Architecture: arm
 Maintainer: Luc Pionchon <luc.pionchon@welho.com>
 Depends: libgtk2.0-0, libgpewidget1, gpe-icons
