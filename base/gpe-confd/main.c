@@ -123,6 +123,8 @@ suck_in_settings (XSettingsManager *manager, DB *db)
 
   cursor->c_close (cursor);
 
+  xsettings_manager_notify (manager);
+
   return TRUE;
 }
 
@@ -194,6 +196,8 @@ suck_in_settings (XSettingsManager *manager, sqlite *db)
       free (err);
       return FALSE;
     }
+
+  xsettings_manager_notify (manager);
 
   return TRUE;
 }
@@ -372,8 +376,10 @@ main (int argc, char **argv)
 	  if (cev->message_type == gpe_settings_update_atom)
 	    {
 	      if (cev->format == 32)
-		write_setting (cev->display, cev->window, cev->data.l[0]);
-	      return TRUE;
+		{
+		  write_setting (cev->display, cev->window, cev->data.l[0]);
+		  xsettings_manager_notify (manager);
+		}
 	    }
 	}
     }
