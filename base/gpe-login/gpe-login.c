@@ -1211,9 +1211,8 @@ calibrate_hint_hook (GtkWidget *w, gpointer data)
 GtkWidget *
 build_root_password_box (void)
 {
-  GtkWidget *label_prompt;
+  GtkWidget *label_prompt, *label_title;
   GtkWidget *label_password, *label_confirm;
-  GtkWidget *hbox_password, *hbox_confirm;
   GtkWidget *table;
   GtkWidget *vbox;
   GtkWidget *hbox;
@@ -1222,35 +1221,32 @@ build_root_password_box (void)
 
   ok_button = gtk_button_new_from_stock (GTK_STOCK_OK);
  
+  label_title = gtk_label_new (NULL);
+  gtk_label_set_markup (GTK_LABEL (label_title), _("<b>System setup</b>"));
   label_prompt = gtk_label_new (NULL);
-  gtk_label_set_markup (GTK_LABEL (label_prompt), _("Please choose a password for the\n<i>root</i> account.\n\nThis will be needed when\nperforming system administration."));
+  gtk_label_set_markup (GTK_LABEL (label_prompt), _("Please choose a password for the\n<i>root</i> account.\n\nThis will be needed when performing\nsystem administration.\n"));
   label_password = gtk_label_new (_("Password"));
   label_confirm = gtk_label_new (_("Confirm"));
+
+  gtk_misc_set_alignment (GTK_MISC (label_password), 0.0, 0.5);
+  gtk_misc_set_alignment (GTK_MISC (label_confirm), 0.0, 0.5);
 
   entry_password = gtk_entry_new ();
   entry_confirm = gtk_entry_new ();
   
-  hbox_password = gtk_hbox_new (0, FALSE);
-  hbox_confirm = gtk_hbox_new (0, FALSE);
-
   gtk_entry_set_visibility (GTK_ENTRY (entry_password), FALSE);
   gtk_entry_set_visibility (GTK_ENTRY (entry_confirm), FALSE);
 
-  gtk_box_pack_start (GTK_BOX (hbox_password), label_password, 
-		      FALSE, FALSE, gpe_boxspacing);
-  gtk_box_pack_start (GTK_BOX (hbox_confirm), label_confirm,
-		      FALSE, FALSE, gpe_boxspacing);
-
   table = gtk_table_new (2, 2, FALSE);
-  gtk_table_attach_defaults (GTK_TABLE (table), hbox_password,
-			     0, 1, 0, 1);
-  gtk_table_attach_defaults (GTK_TABLE (table), hbox_confirm, 
-			     0, 1, 1, 2);
-  
-  gtk_table_attach_defaults (GTK_TABLE (table), entry_password,
-			     1, 2, 0, 1);
-  gtk_table_attach_defaults (GTK_TABLE (table), entry_confirm, 
-			     1, 2, 1, 2);
+  gtk_table_attach (GTK_TABLE (table), label_password,
+		    0, 1, 0, 1, GTK_EXPAND, 0, gpe_boxspacing, gpe_boxspacing);
+  gtk_table_attach (GTK_TABLE (table), label_confirm, 
+		    0, 1, 1, 2, GTK_EXPAND, 0, gpe_boxspacing, gpe_boxspacing);
+
+  gtk_table_attach (GTK_TABLE (table), entry_password,
+		    1, 2, 0, 1, GTK_EXPAND | GTK_FILL, 0, 0, gpe_boxspacing);
+  gtk_table_attach (GTK_TABLE (table), entry_confirm, 
+		    1, 2, 1, 2, GTK_EXPAND | GTK_FILL, 0, 0, gpe_boxspacing);
   
   g_signal_connect (G_OBJECT (entry_password), "activate",
 		    G_CALLBACK (move_callback), entry_confirm);
@@ -1263,7 +1259,8 @@ build_root_password_box (void)
   gtk_box_pack_end (GTK_BOX (hbox), ok_button, FALSE, FALSE, 0);
   
   vbox = gtk_vbox_new (FALSE, gpe_boxspacing);
-  gtk_box_pack_start (GTK_BOX (vbox), label_prompt, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), label_title, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), label_prompt, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), table, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
   
@@ -1605,7 +1602,10 @@ main (int argc, char *argv[])
   slurp_passwd (menu);
 
   if (flag_force_new_user)
-    have_users = FALSE;
+    {
+      have_users = FALSE;
+      root_password_set = FALSE;
+    }
 
   vbox2 = gtk_vbox_new (FALSE, gpe_boxspacing);
 
