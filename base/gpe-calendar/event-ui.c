@@ -1160,6 +1160,8 @@ build_edit_event_window (void)
 
   gpe_set_window_icon (window, "icon");
 
+  gtk_window_set_default_size (GTK_WINDOW (window), 240, 320);
+
   g_signal_connect (G_OBJECT (window), "delete_event",
                     G_CALLBACK (edit_finished), NULL);
 

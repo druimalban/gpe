@@ -1,5 +1,8 @@
 2004-02-09  Phil Blundell  <pb@nexus.co.uk>
 
+	* event-ui.c (build_edit_event_window): Set default size on new
+	window.
+
 	* future_view.c (future_view): Set NEVER policy for horizontal
 	scrollbar.
 
