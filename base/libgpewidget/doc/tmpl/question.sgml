@@ -1,0 +1,37 @@
+<!-- ##### SECTION Title ##### -->
+question
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION gpe_question_ask ##### -->
+<para>
+
+</para>
+
+@qn: 
+@title: 
+@iconname: 
+@Varargs: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gpe_question_ask_yn ##### -->
+<para>
+
+</para>
+
+@qn: 
+@Returns: 
+
+

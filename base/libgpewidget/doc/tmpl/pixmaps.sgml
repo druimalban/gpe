@@ -1,0 +1,74 @@
+<!-- ##### SECTION Title ##### -->
+pixmaps
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION gpe_load_icons ##### -->
+<para>
+
+</para>
+
+@Param1: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gpe_find_icon ##### -->
+<para>
+
+</para>
+
+@name: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gpe_find_icon_scaled ##### -->
+<para>
+
+</para>
+
+@name: 
+@size: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gpe_try_find_icon ##### -->
+<para>
+
+</para>
+
+@name: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gpe_find_icon_pixmap ##### -->
+<para>
+
+</para>
+
+@name: 
+@pixmap: 
+@bitmap: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gpe_set_window_icon ##### -->
+<para>
+
+</para>
+
+@window: 
+@icon: 
+
+

@@ -1,0 +1,123 @@
+<!-- ##### SECTION Title ##### -->
+gpewindowlist
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### MACRO GPE_WINDOW_LIST_CONST ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### STRUCT GPEWindowList ##### -->
+<para>
+
+</para>
+
+@class: 
+@screen: 
+@net_client_list_atom: 
+@net_active_window_atom: 
+@windows: 
+
+<!-- ##### STRUCT GPEWindowListClass ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gpe_window_list_new ##### -->
+<para>
+
+</para>
+
+@Param1: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gpe_window_list_get_clients ##### -->
+<para>
+
+</para>
+
+@Param1: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gpe_get_client_window_list ##### -->
+<para>
+
+</para>
+
+@dpy: 
+@list: 
+@nr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gpe_get_window_name ##### -->
+<para>
+
+</para>
+
+@dpy: 
+@w: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gpe_get_window_icon ##### -->
+<para>
+
+</para>
+
+@dpy: 
+@w: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gpe_get_wm_class ##### -->
+<para>
+
+</para>
+
+@dpy: 
+@w: 
+@instance: 
+@class: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gpe_get_window_property ##### -->
+<para>
+
+</para>
+
+@dpy: 
+@w: 
+@property: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gpe_get_wm_leader ##### -->
+<para>
+
+</para>
+
+@dpy: 
+@w: 
+@Returns: 
+
+

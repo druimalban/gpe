@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
+               "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<book id="index" xmlns:xi="http://www.w3.org/2003/XInclude">
+  <bookinfo>
+
+      <title>GPE Manual: libgpewidget Reference</title>
+
+      <authorgroup>
+        <author>
+          <firstname>Florian</firstname>
+          <surname>Boor</surname>
+          <affiliation>
+            <orgname>handhelds.org</orgname>
+          </affiliation>
+          <authorblurb>
+            <para>
+              <email>florian@handhelds.org</email>
+            </para>
+          </authorblurb>
+        </author>
+      </authorgroup>
+        <legalnotice>
+      <para>
+        This document may be distributed under the terms and
+        conditions of the Open Publication License, v1.0 or
+        later. (Current version is available at
+                <ulink url=" http://www.opencontent.org/openpub/"
+        type="http">http://www.opencontent.org/openpub/</ulink> )
+      </para>
+    </legalnotice>
+
+  </bookinfo>
+
+  <chapter>
+    <title>Interface Description</title>
+    <xi:include href="xml/gpe-iconlist.xml"/>
+    <xi:include href="xml/gtkdatecombo.xml"/>
+    <xi:include href="xml/gtkgpepixmap.xml"/>
+    <xi:include href="xml/gtksimplemenu.xml"/>
+    <xi:include href="xml/gpeiconlistitem.xml"/>
+    <xi:include href="xml/gpetimesel.xml"/>
+    <xi:include href="xml/gpewindowlist.xml"/>
+    <xi:include href="xml/gpeiconlistview.xml"/>
+    <xi:include href="xml/dirbrowser.xml"/>
+    <xi:include href="xml/errorbox.xml"/>
+    <xi:include href="xml/translabel.xml"/>
+    <xi:include href="xml/init.xml"/>
+    <xi:include href="xml/pixmaps.xml"/>
+    <xi:include href="xml/question.xml"/>
+    <xi:include href="xml/render.xml"/>
+    <xi:include href="xml/smallbox.xml"/>
+    <xi:include href="xml/spacing.xml"/>
+    <xi:include href="xml/stylus.xml"/>
+    <xi:include href="xml/tray.xml"/>
+    <xi:include href="xml/popup.xml"/>
+    <xi:include href="xml/popup_menu.xml"/>
+    <xi:include href="xml/gpeclockface.xml"/>
+    <xi:include href="xml/gpehelp.xml"/>
+    <xi:include href="xml/infoprint.xml"/>
+  </chapter>
+  <chapter>
+    <title>About</title>
+       <itemizedlist mark="bullet">
+         <listitem>
+           <para>
+                   Status: libgpewidget was developed and is currently maintained by Philip Blundell (pb@debian.org)
+           </para>
+         </listitem>
+         <listitem>
+           <para>
+              License: LGPL
+           </para>
+         </listitem>
+         <listitem>
+           <para>
+                   Version: 0.97
+           </para>
+         </listitem>
+      </itemizedlist>
+  </chapter>
+</book>

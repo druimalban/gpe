@@ -39,7 +39,7 @@ OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
-all: libgpewidget.so $(PACKAGE).pc $(PACKAGE)-uninstalled.pc
+all: libgpewidget.so $(PACKAGE).pc $(PACKAGE)-uninstalled.pc doc
 
 libgpewidget.so: $(SONAME)
 	ln -sf $^ $@
@@ -73,6 +73,11 @@ clean: clean-po
 
 ipkg: all
 
+doc:
+	make -C doc PACKAGE=$(PACKAGE)
+        
+
 include $(BUILD)/Makefile.translation
 include $(BUILD)/Makefile.dpkg_ipkg
 -include $(DEPS)
+.PHONY: doc

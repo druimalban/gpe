@@ -1,0 +1,124 @@
+<!-- ##### SECTION Title ##### -->
+gpeclockface
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### MACRO GPE_TYPE_CLOCK_FACE ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO GPE_CLOCK_FACE ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### MACRO GTK_CLOCK_GET_CLASS ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### STRUCT GpeClockFace ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### STRUCT GpeClockFaceClass ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gpe_clock_face_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gpe_clock_face_new ##### -->
+<para>
+
+</para>
+
+@Param1: 
+@Param2: 
+@Param3: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gpe_clock_face_set_do_grabs ##### -->
+<para>
+
+</para>
+
+@clock: 
+@yes: 
+
+
+<!-- ##### FUNCTION gpe_clock_face_set_radius ##### -->
+<para>
+
+</para>
+
+@clock: 
+@radius: 
+
+
+<!-- ##### FUNCTION gpe_clock_face_set_use_background_image ##### -->
+<para>
+
+</para>
+
+@clock: 
+@yes: 
+
+
+<!-- ##### FUNCTION gpe_clock_face_set_label_hours ##### -->
+<para>
+
+</para>
+
+@clock: 
+@yes: 
+
+
+<!-- ##### FUNCTION gpe_clock_face_set_hand_width ##### -->
+<para>
+
+</para>
+
+@clock: 
+@width: 
+
+
+<!-- ##### FUNCTION gpe_clock_face_get_shape ##### -->
+<para>
+
+</para>
+
+@clock: 
+@Returns: 
+
+

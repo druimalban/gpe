@@ -1,0 +1,44 @@
+<!-- ##### SECTION Title ##### -->
+tray
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION gpe_system_tray_dock ##### -->
+<para>
+
+</para>
+
+@window: 
+
+
+<!-- ##### FUNCTION gpe_system_tray_send_message ##### -->
+<para>
+
+</para>
+
+@window: 
+@text: 
+@timeout: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gpe_system_tray_cancel_message ##### -->
+<para>
+
+</para>
+
+@window: 
+@id: 
+
+

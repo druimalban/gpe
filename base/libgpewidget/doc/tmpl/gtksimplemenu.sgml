@@ -1,0 +1,62 @@
+<!-- ##### SECTION Title ##### -->
+gtksimplemenu
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### STRUCT GtkSimpleMenu ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### STRUCT GtkSimpleMenuClass ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gtk_simple_menu_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gtk_simple_menu_get_result ##### -->
+<para>
+
+</para>
+
+@sel: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gtk_simple_menu_append_item ##### -->
+<para>
+
+</para>
+
+@sel: 
+@items: 
+
+
+<!-- ##### FUNCTION gtk_simple_menu_flush ##### -->
+<para>
+
+</para>
+
+@sel: 
+
+

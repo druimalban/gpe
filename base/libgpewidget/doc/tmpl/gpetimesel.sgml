@@ -1,0 +1,60 @@
+<!-- ##### SECTION Title ##### -->
+gpetimesel
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### STRUCT GpeTimeSel ##### -->
+<para>
+
+</para>
+
+@hbox: 
+@label: 
+@button: 
+@popup: 
+
+<!-- ##### STRUCT GpeTimeSelClass ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gpe_time_sel_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gpe_time_sel_get_time ##### -->
+<para>
+
+</para>
+
+@sel: 
+@hour: 
+@minute: 
+
+
+<!-- ##### FUNCTION gpe_time_sel_set_time ##### -->
+<para>
+
+</para>
+
+@sel: 
+@hour: 
+@minute: 
+
+

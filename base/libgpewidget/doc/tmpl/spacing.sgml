@@ -1,0 +1,55 @@
+<!-- ##### SECTION Title ##### -->
+spacing
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### MACRO GPE_GNOME_SCALING ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gpe_get_catspacing ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gpe_get_catindent ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gpe_get_border ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gpe_get_boxspacing ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+

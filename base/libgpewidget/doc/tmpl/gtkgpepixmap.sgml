@@ -1,0 +1,82 @@
+<!-- ##### SECTION Title ##### -->
+GtkGpePixmap
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION gtk_gpe_pixmap_new ##### -->
+<para>
+
+</para>
+
+@pixmap: 
+@mask: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gtk_gpe_pixmap_set ##### -->
+<para>
+
+</para>
+
+@pixmap: 
+@val: 
+@mask: 
+
+
+<!-- ##### FUNCTION gtk_gpe_pixmap_get ##### -->
+<para>
+
+</para>
+
+@pixmap: 
+@val: 
+@mask: 
+
+
+<!-- ##### FUNCTION gtk_gpe_pixmap_set_build_insensitive ##### -->
+<para>
+
+</para>
+
+@pixmap: 
+@build: 
+
+
+<!-- ##### FUNCTION gtk_gpe_pixmap_set_prelight ##### -->
+<para>
+
+</para>
+
+@pixmap: 
+@val: 
+
+
+<!-- ##### FUNCTION gtk_gpe_pixmap_set_active ##### -->
+<para>
+
+</para>
+
+@pixmap: 
+@val: 
+
+
+<!-- ##### FUNCTION gtk_gpe_pixmap_set_selected ##### -->
+<para>
+
+</para>
+
+@pixmap: 
+@val: 
+
+

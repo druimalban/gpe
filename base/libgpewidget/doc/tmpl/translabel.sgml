@@ -1,0 +1,36 @@
+<!-- ##### SECTION Title ##### -->
+translabel
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION gtk_widget_add_translation_hook ##### -->
+<para>
+
+</para>
+
+@w: 
+@func: 
+@data: 
+
+
+<!-- ##### FUNCTION gtk_label_new_with_translation ##### -->
+<para>
+
+</para>
+
+@domain: 
+@string: 
+@Returns: 
+
+

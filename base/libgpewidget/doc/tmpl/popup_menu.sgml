@@ -1,0 +1,66 @@
+<!-- ##### SECTION Title ##### -->
+popup_menu
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION popup_menu_button_new ##### -->
+<para>
+
+</para>
+
+@child: 
+@Returns: 
+
+
+<!-- ##### FUNCTION popup_menu_button_new_from_stock ##### -->
+<para>
+
+</para>
+
+@stock_id: 
+@Returns: 
+
+
+<!-- ##### FUNCTION toggle_popup_menu ##### -->
+<para>
+
+</para>
+
+@parent_button: 
+
+
+<!-- ##### FUNCTION popup_menu_close ##### -->
+<para>
+
+</para>
+
+@parent_button: 
+
+
+<!-- ##### FUNCTION popup_menu_button_new_type_font ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION popup_menu_button_new_type_color ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+

@@ -1,0 +1,35 @@
+<!-- ##### SECTION Title ##### -->
+init
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION gpe_application_init ##### -->
+<para>
+
+</para>
+
+@argc: 
+@argv: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gpe_saved_args ##### -->
+<para>
+
+</para>
+
+@argc: 
+@argv: 
+
+

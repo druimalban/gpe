@@ -1,0 +1,232 @@
+<!-- ##### SECTION Title ##### -->
+GPEIconList
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### MACRO GPE_ICONLIST_CONST ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### STRUCT GPEIconListPrivate ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gpe_iconlist_clicked ##### -->
+<para>
+
+</para>
+
+@self: 
+@udata: 
+
+
+<!-- ##### FUNCTION gpe_iconlist_show_popup ##### -->
+<para>
+
+</para>
+
+@self: 
+@udata: 
+
+
+<!-- ##### FUNCTION gpe_iconlist_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gpe_iconlist_set_bg ##### -->
+<para>
+
+</para>
+
+@self: 
+@bg: 
+
+
+<!-- ##### FUNCTION gpe_iconlist_set_bg_pixmap ##### -->
+<para>
+
+</para>
+
+@self: 
+@bg: 
+
+
+<!-- ##### FUNCTION gpe_iconlist_set_bg_color ##### -->
+<para>
+
+</para>
+
+@self: 
+@color: 
+
+
+<!-- ##### FUNCTION gpe_iconlist_add_item ##### -->
+<para>
+
+</para>
+
+@self: 
+@title: 
+@icon: 
+@udata: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gpe_iconlist_add_item_pixbuf ##### -->
+<para>
+
+</para>
+
+@self: 
+@title: 
+@icon: 
+@udata: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gpe_iconlist_remove_item ##### -->
+<para>
+
+</para>
+
+@self: 
+@item: 
+
+
+<!-- ##### FUNCTION gpe_iconlist_set_embolden ##### -->
+<para>
+
+</para>
+
+@self: 
+@yes: 
+
+
+<!-- ##### FUNCTION gpe_iconlist_set_show_title ##### -->
+<para>
+
+</para>
+
+@self: 
+@yes: 
+
+
+<!-- ##### FUNCTION gpe_iconlist_set_icon_xmargin ##### -->
+<para>
+
+</para>
+
+@self: 
+@margin: 
+
+
+<!-- ##### FUNCTION gpe_iconlist_clear ##### -->
+<para>
+
+</para>
+
+@self: 
+
+
+<!-- ##### FUNCTION gpe_iconlist_set_icon_size ##### -->
+<para>
+
+</para>
+
+@self: 
+@size: 
+
+
+<!-- ##### FUNCTION gpe_iconlist_popup_removed ##### -->
+<para>
+
+</para>
+
+@self: 
+
+
+<!-- ##### MACRO gpe_iconlist_connect__clicked ##### -->
+<para>
+
+</para>
+
+@object: 
+@func: 
+@data: 
+
+
+<!-- ##### MACRO gpe_iconlist_connect_after__clicked ##### -->
+<para>
+
+</para>
+
+@object: 
+@func: 
+@data: 
+
+
+<!-- ##### MACRO gpe_iconlist_connect_data__clicked ##### -->
+<para>
+
+</para>
+
+@object: 
+@func: 
+@data: 
+@destroy_data: 
+@flags: 
+
+
+<!-- ##### MACRO gpe_iconlist_connect__show_popup ##### -->
+<para>
+
+</para>
+
+@object: 
+@func: 
+@data: 
+
+
+<!-- ##### MACRO gpe_iconlist_connect_after__show_popup ##### -->
+<para>
+
+</para>
+
+@object: 
+@func: 
+@data: 
+
+
+<!-- ##### MACRO gpe_iconlist_connect_data__show_popup ##### -->
+<para>
+
+</para>
+
+@object: 
+@func: 
+@data: 
+@destroy_data: 
+@flags: 
+
+
