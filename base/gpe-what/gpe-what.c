@@ -48,7 +48,7 @@ static MBPixbuf *mbpixbuf;
 static unsigned long bgcol;
 static XftColor fg_xftcol;
 
-static Pixmap pixmap;
+static Pixmap pixmap, pixmap_active;
 
 #define XPADDING 8
 #define YPADDING 4
@@ -56,6 +56,8 @@ static Pixmap pixmap;
 static struct timeval close_time;
 
 #define TIMEOUT 10
+
+static MBPixbufImage *img_icon, *img_icon_active;
 
 static void
 redraw_popup (void)
@@ -271,7 +273,6 @@ main (int argc, char *argv[])
   PangoFontDescription *fontdes;
   XRenderColor colortmp;
   XColor c;
-  MBPixbufImage *img_icon;
   int last_x = 0, last_y = 0;
   Atom string_atom;
   int xfd;
@@ -302,6 +303,12 @@ main (int argc, char *argv[])
       fprintf (stderr, _("Failed to load icon\n"));
       exit (1);
     }
+  img_icon_active = mb_pixbuf_img_new_from_file (mbpixbuf, PREFIX "/share/pixmaps/gpe-what-active.png");
+  if (img_icon_active == NULL)
+    {
+      fprintf (stderr, _("Failed to load icon\n"));
+      exit (1);
+    }
 
   win_panel = XCreateSimpleWindow (dpy, DefaultRootWindow (dpy), 0, 0,
 				   mb_pixbuf_img_get_width (img_icon), 
@@ -321,7 +328,17 @@ main (int argc, char *argv[])
 			  mb_pixbuf_img_get_height (img_icon),
 			  mbpixbuf->depth);
 
+  pixmap_active = XCreatePixmap (dpy, win_panel, 
+				 mb_pixbuf_img_get_width (img_icon), 
+				 mb_pixbuf_img_get_height (img_icon),
+				 mbpixbuf->depth);
+
   prepare_icon (img_icon, pixmap);
+  prepare_icon (img_icon_active, pixmap_active);
+
+  mb_pixbuf_img_free (mbpixbuf, img_icon);
+  mb_pixbuf_img_free (mbpixbuf, img_icon_active);
+
   XSetWindowBackgroundPixmap (dpy, win_panel, pixmap);
   XClearWindow (dpy, win_panel);
 
@@ -413,6 +430,9 @@ main (int argc, char *argv[])
 		  Window w;
 		  int x, y;
 		  
+		  XSetWindowBackgroundPixmap (dpy, win_panel, pixmap);
+		  XClearWindow (dpy, win_panel);
+
 		  w = find_deepest_window (dpy, DefaultRootWindow (dpy), DefaultRootWindow (dpy),
 					   xev.xbutton.x_root, xev.xbutton.y_root, &x, &y);
 		  
@@ -426,6 +446,9 @@ main (int argc, char *argv[])
 		}
 	      else
 		{
+		  XSetWindowBackgroundPixmap (dpy, win_panel, pixmap_active);
+		  XClearWindow (dpy, win_panel);
+
 		  XGrabPointer (dpy, win_panel, False, ButtonPressMask | ButtonReleaseMask,
 				GrabModeAsync, GrabModeAsync,
 				None, None, xev.xbutton.time);

@@ -45,6 +45,7 @@ install-program: all
 	install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications
 	mkdir -p $(DESTDIR)$(PREFIX)/share/pixmaps
 	install -m 644 $(PACKAGE).png $(DESTDIR)$(PREFIX)/share/pixmaps
+	install -m 644 $(PACKAGE)-active.png $(DESTDIR)$(PREFIX)/share/pixmaps
 
 clean:
 	rm -f $(PACKAGE) $(OBJS)
