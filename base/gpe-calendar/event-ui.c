@@ -25,6 +25,7 @@
 #include "globals.h"
 #include "event-db.h"
 #include "event-ui.h"
+#include <gpe/libgpe.h>
 
 #define _(_x) gettext (_x)
 
@@ -170,15 +171,44 @@ recalculate_sensitivities (GtkWidget *widget,
 }
 
 static void
-schedule_alarm (event_t ev)
+schedule_alarm(event_t ev)
 {
-  	      
+  time_t alarm_t;
+  struct tm tm;
+  event_details_t ev_d;
+   
+  alarm_t = ev->start-60*ev->alarm;
+  gmtime_r (&alarm_t, &tm);
+  ev_d = event_db_get_details (ev);
+  
+  CurrentAlarm=(struct Alarm_t *)malloc(sizeof(struct Alarm_t));
+  memset(CurrentAlarm,0,sizeof(struct Alarm_t));
+  CurrentAlarm->year=tm.tm_year + 1900;
+  CurrentAlarm->month=tm.tm_mon;
+  CurrentAlarm->day=tm.tm_mday;
+  CurrentAlarm->hour=tm.tm_hour;
+  CurrentAlarm->minute=tm.tm_min;
+  CurrentAlarm->AlarmType=6; /* melody 3 */
+  CurrentAlarm->AlarmReoccurence=0; /* once */
+  CurrentAlarm->Tone2Enable=TRUE;
+  tm.tm_isdst=1;
+  			
+  rtcd_set_alarm_tm("gpe-calendar", ev_d->summary, &tm, sizeof(struct Alarm_t),CurrentAlarm);
 }
 
 static void
-unschedule_alarm (gint uid)	/* FIXME.  This should be event_t too.  --pb */
+unschedule_alarm(event_t ev)
 {
+  time_t alarm_t;
+  struct tm tm;
+  event_details_t ev_d;
+   
+  alarm_t = ev->start-60*ev->alarm;
+  gmtime_r (&alarm_t, &tm);
+  ev_d = event_db_get_details (ev);
+  tm.tm_isdst=1;
   
+  rtcd_del_alarm_tm("gpe-calendar", ev_d->summary, &tm);
 }
 
 static void
@@ -186,10 +216,10 @@ click_delete (GtkWidget *widget, event_t ev)
 {
   GtkWidget *d = gtk_widget_get_toplevel (widget);
   
-  event_db_remove (ev);
   if (ev->flags & FLAG_ALARM) 
-    unschedule_alarm (ev->uid);
+    unschedule_alarm (ev);
   
+  event_db_remove (ev);
   update_current_view ();
   
   gtk_widget_hide (d);
@@ -211,7 +241,7 @@ click_ok (GtkWidget *widget, GtkWidget *d)
       ev = s->ev;
       ev_d = event_db_get_details (ev);
       if (ev->flags & FLAG_ALARM) 
-	unschedule_alarm (ev->uid);
+	unschedule_alarm (ev);
       ev_d->sequence++;
     }
   else
@@ -929,8 +959,8 @@ edit_event_window (void)
 
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), scrolledwindowevent, 
 			    labeleventpage);
-  /*gtk_notebook_append_page (GTK_NOTEBOOK (notebook), vboxalarm,
-			    labelalarmpage);*/
+  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), vboxalarm,
+			    labelalarmpage);
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), vboxrepeattop, 
 			    labelrecurpage);
   gtk_widget_grab_focus (summaryentry);

@@ -1,3 +1,10 @@
+2002-09-06  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>
+
+	* event-ui.c: add rtcd support for alarms and re-show alarm notepage
+	WE NEED TO FIX THIS PRIOR TO OUR NEXT RELEASE SINCE THE RTCD IS A HACK!
+	
+	* event-ui.h: alarm stuff	
+
 2002-09-05  Philip Blundell  <philb@gnu.org>
 
 	* main.c (main): Reinstate yearfont, datefont.
