@@ -1,5 +1,10 @@
 2003-09-21  Colin Marquardt  <colin@marquardt-home.de>
 
+	* misc.c: Include string.h to fix warning about strlen.
+
+	* logread.c (logread_main): Typo fix.
+	(logread_main): Change wording.
+
 	* serial.c (Serial_Build_Objects): Fix typos.
 
 2003-09-18	Florian Boor  	<florian.boor@kernelconcepts.de>

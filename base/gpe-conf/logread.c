@@ -110,13 +110,13 @@ int logread_main()
 	// Attach shared memory to our char*
 	if ( (buf = shmat(log_shmid, NULL, SHM_RDONLY)) == NULL)
 	{
-		printlog(txLog,_("Can't get access to circular buffer from syslogd."));
+		printlog(txLog,_("Can't get access to syslogd's circular buffer."));
 		return FALSE;
 	}
 
 	if ( (log_semid = semget(KEY_ID, 0, 0)) == -1)
 	{
-	    printlog(txLog,_("Can't get access to semaphone(s) for circular buffer from syslogd."));
+	    printlog(txLog,_("Can't get access to semaphore(s) for syslogd's circular buffer."));
 		return FALSE;
 	}
 
