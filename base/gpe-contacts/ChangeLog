@@ -1,5 +1,10 @@
 2002-12-15  Philip Blundell  <philb@gnu.org>
 
+	* gpe-contacts.desktop: New file.
+	* Makefile (install): Install it.
+
+2002-12-15  Philip Blundell  <philb@gnu.org>
+
 	* Version 0.07 released.
 
 2002-12-15  Philip Blundell  <philb@gnu.org>
