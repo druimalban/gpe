@@ -332,6 +332,7 @@ main (int argc, char *argv[])
 
   update_all_views ();
 
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (day_button), TRUE);
   new_view (day);
 
   gtk_main ();

@@ -8,6 +8,8 @@
 	gtk_clist_set_row_data.  Reorganise code slightly for improved
 	clarity.
 
+	* main.c (main): Ensure day-view button is selected.
+
 2003-04-20  Philip Blundell  <philb@gnu.org>
 
 	* Makefile (LINGUAS): Add zh_TW.
