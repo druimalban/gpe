@@ -101,6 +101,7 @@ main(int argc, char *argv[])
 	  wpid = wait (NULL);
 	  if (wpid == xserver_pid)
 	    {
+	      kill (session_pid, SIGTERM);
 	      start_server (TRUE);
 	      f = TRUE;
 	    }
