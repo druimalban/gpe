@@ -1,5 +1,6 @@
 PACKAGE = gpe-bootsplash
 VERSION = 1.9
+CVSBUILD = yes
 
 PACKAGE_CFLAGS = `pkg-config --cflags gdk-pixbuf-2.0 librsvg-2.0` `pkg-config --libs gdk-pixbuf-2.0 librsvg-2.0` -DGTK2
 CFLAGS = -fomit-frame-pointer -Os
@@ -30,5 +31,5 @@ else
 BUILD = build
 endif
 
-include $(BUILD)/Makefile.dpkg-ipkg
+include $(BUILD)/Makefile.dpkg_ipkg
 
