@@ -100,26 +100,57 @@ GtkWidget *setup_kb (GtkWidget *box, GtkWidget *opt, char *name, char *file)
 
 GtkWidget *Kbd_Build_Objects()
 {  
+  GtkWidget *categories;
+  GtkWidget *catvbox1;
+  GtkWidget *catlabel1;
+  GtkWidget *catconthbox1;
+  GtkWidget *catindentlabel1;
+  GtkWidget *controlvbox1;
+
   GtkWidget *vbox;
   GtkWidget *opt1;
   char *user_kbdrc;
 
+  guint gpe_catspacing = gpe_get_catspacing ();
+  gchar *gpe_catindent = gpe_get_catindent ();
   guint gpe_boxspacing = gpe_get_boxspacing ();
-  guint gpe_border = gpe_get_border ();
+  guint gpe_border     = gpe_get_border ();
+ 
+  // vbox = gtk_vbox_new (FALSE, gpe_boxspacing);
+  // gtk_container_set_border_width (GTK_CONTAINER (vbox), gpe_border);
 
-  vbox = gtk_vbox_new (FALSE, gpe_boxspacing);
-  gtk_container_set_border_width (GTK_CONTAINER (vbox), gpe_border);
+  categories = gtk_vbox_new (FALSE, gpe_catspacing);
+  gtk_container_set_border_width (GTK_CONTAINER (categories), gpe_border);
 
-  opt1 = setup_kb (vbox, NULL, _("Standard"), XKBD_DIR "kbdconfig");
-  setup_kb (vbox, opt1, _("Tiny"), XKBD_DIR "kbdconfig.tiny");
-  setup_kb (vbox, opt1, _("US"), XKBD_DIR "kbdconfig.us");
-  setup_kb (vbox, opt1, _("Fitaly"), XKBD_DIR "kbdconfig.fitaly");
+  /* -------------------------------------------------------------------------- */
+  catvbox1 = gtk_vbox_new (FALSE, gpe_boxspacing);
+  gtk_box_pack_start (GTK_BOX (categories), catvbox1, TRUE, TRUE, 0);
+
+  catlabel1 = gtk_label_new (_("Keyboard Geometry/Layout")); /* FIXME: GTK2: make this bold */
+  gtk_box_pack_start (GTK_BOX (catvbox1), catlabel1, FALSE, FALSE, 0);
+  gtk_label_set_justify (GTK_LABEL (catlabel1), GTK_JUSTIFY_LEFT);
+  gtk_misc_set_alignment (GTK_MISC (catlabel1), 0, 0.5);
+
+  catconthbox1 = gtk_hbox_new (FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (catvbox1), catconthbox1, TRUE, TRUE, 0);
+
+  catindentlabel1 = gtk_label_new (gpe_catindent);
+  gtk_box_pack_start (GTK_BOX (catconthbox1), catindentlabel1, FALSE, FALSE, 0);
+
+  controlvbox1 = gtk_vbox_new (FALSE, gpe_boxspacing);
+  gtk_box_pack_start (GTK_BOX (catconthbox1), controlvbox1, TRUE, TRUE, 0);
+  
+  /* FIXME: this is an ugly mix between Keyboard Geometry and Keyboard Layout */
+  opt1 = setup_kb (controlvbox1, NULL, _("Standard"), XKBD_DIR "kbdconfig");
+  setup_kb (controlvbox1,        opt1, _("Tiny"),     XKBD_DIR "kbdconfig.tiny");
+  setup_kb (controlvbox1,        opt1, _("US"),       XKBD_DIR "kbdconfig.us"); /* FIXME: US? */
+  setup_kb (controlvbox1,        opt1, _("Fitaly"),   XKBD_DIR "kbdconfig.fitaly");
 
   /* If the user has a config in ~/.kbdconfig, add it */
   user_kbdrc = g_strdup_printf ("%s/.kbdconfig", g_get_home_dir());
   if (file_exists(user_kbdrc))
-    setup_kb (vbox, opt1, _("User defined"), user_kbdrc);
+    setup_kb (controlvbox1, opt1, _("User defined"), user_kbdrc);
   g_free (user_kbdrc);
 
-  return vbox;
+  return categories;
 }
