@@ -20,6 +20,10 @@
 #include <X11/extensions/Xrender.h>
 #include <X11/Xft/Xft.h>
 
+#if RENDER_MAJOR > 0 || RENDER_MINOR >= 5
+#define HAVE_XRENDER
+#endif
+
 #include "gpeclockface.h"
 
 #define BACKGROUND_IMAGE TRUE
@@ -49,9 +53,12 @@ struct _GpeClockFace
 
   GtkAdjustment *hour_adj, *minute_adj, *second_adj;
 
+#ifdef HAVE_XRENDER
   gboolean can_render;
   XftDraw *draw;
   Picture image_pict, src_pict;
+#endif
+
   GdkPixmap *backing_pixmap;
   GdkGC *backing_gc;
   
@@ -69,6 +76,13 @@ struct _GpeClockFaceClass
   GtkWidgetClass parent_class;
 };
 
+#ifndef HAVE_XRENDER
+typedef struct
+{
+  double x, y;
+} FakeXPointDouble;
+#endif
+
 static void
 draw_hand (GpeClockFace *clock,
 	   double angle, 
@@ -76,7 +90,11 @@ draw_hand (GpeClockFace *clock,
 	   guint thick)
 {
   GdkPoint points[5];
+#ifdef HAVE_XRENDER
   XPointDouble poly[5];
+#else
+  FakeXPointDouble poly[5];
+#endif
   int i;
   double sa = sin (angle), ca = cos (angle);
 
@@ -105,6 +123,7 @@ draw_hand (GpeClockFace *clock,
       poly[i].y = -y + clock->y_offset + clock->radius;
     }
 
+#ifdef HAVE_XRENDER
   if (clock->can_render)
     {
       XRenderCompositeDoublePoly (GDK_WINDOW_XDISPLAY (clock->widget.window),
@@ -117,6 +136,7 @@ draw_hand (GpeClockFace *clock,
 				  EvenOddRule);
     }
   else
+#endif
     {
       for (i = 0; i < thick; i++)
 	{
@@ -430,6 +450,7 @@ gpe_clock_face_prepare_xrender (GtkWidget *widget)
 
   clock->backing_gc = gdk_gc_new (clock->backing_pixmap);
 
+#ifdef HAVE_XRENDER
   if (clock->can_render)
     {
       XRenderPictureAttributes att;
@@ -451,6 +472,7 @@ gpe_clock_face_prepare_xrender (GtkWidget *widget)
       att.poly_edge = PolyEdgeSmooth;
       XRenderChangePicture (dpy, clock->image_pict, CPPolyEdge, &att);
     }
+#endif
 }
 
 static void
@@ -458,6 +480,7 @@ gpe_clock_face_unprepare_xrender (GtkWidget *widget)
 {
   GpeClockFace *clock = GPE_CLOCK_FACE (widget);
 
+#ifdef HAVE_XRENDER
   if (clock->can_render)
     {
       XftDrawDestroy (clock->draw);
@@ -466,6 +489,7 @@ gpe_clock_face_unprepare_xrender (GtkWidget *widget)
       clock->src_pict = 0;
       clock->draw = NULL;
     }
+#endif
       
   if (clock->backing_gc)
     {
@@ -503,7 +527,9 @@ gpe_clock_face_realize (GtkWidget *widget)
   GpeClockFace *clock = GPE_CLOCK_FACE (widget);
   GdkWindowAttr attributes;
   gint attributes_mask;
+#ifdef HAVE_XRENDER
   int major, minor;
+#endif
 
   GTK_WIDGET_SET_FLAGS (widget, GTK_REALIZED);
     
@@ -528,12 +554,14 @@ gpe_clock_face_realize (GtkWidget *widget)
   widget->style = gtk_style_attach (widget->style, widget->window);
   gtk_style_set_background (widget->style, widget->window, GTK_STATE_ACTIVE);
 
+#ifdef HAVE_XRENDER
   if (XRenderQueryVersion (GDK_WINDOW_XDISPLAY (widget->window), &major, &minor) &&
       (major > 0 ||
        (major == 0 && minor >= 4)))
     clock->can_render = TRUE;
   else
     clock->can_render = FALSE;
+#endif
 
   gpe_clock_face_prepare_xrender (widget);
 
@@ -632,8 +660,10 @@ gpe_clock_face_init (GpeClockFace *clock)
 
   clock->radius = DEFAULT_RADIUS;
 
+#ifdef HAVE_XRENDER
   clock->draw = NULL;
   clock->image_pict = clock->src_pict = 0;
+#endif
   clock->backing_pixmap = NULL;
   clock->backing_gc = NULL;
   clock->grabbed = FALSE;
