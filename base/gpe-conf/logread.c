@@ -64,8 +64,9 @@ static int	log_semid = -1;	// ipc semaphore id
 
 /* --- module global variables --- */
 
-static GtkWidget *txLog;
+static GtkWidget *txLog, *txLog2;
 static int logtail = -1;
+static FILE *psession;
 
 /* --- local intelligence --- */
 
@@ -93,25 +94,27 @@ static inline void sem_down(int semid)
 	}		
 }
 
+
 int logread_main()
 {
 	int i;
+	char buffer[256];
 			
 	if ( (log_shmid = shmget(KEY_ID, 0, 0)) == -1)
 	{
-		fprintf(stderr,"Can't find circular buffer");
+		printlog(txLog,_("Can't find circular buffer, is syslog running?"));
 		return FALSE;
 	}
 	// Attach shared memory to our char*
 	if ( (buf = shmat(log_shmid, NULL, SHM_RDONLY)) == NULL)
 	{
-		fprintf(stderr,"Can't get access to circular buffer from syslogd");
+		printlog(txLog,_("Can't get access to circular buffer from syslogd."));
 		return FALSE;
 	}
 
 	if ( (log_semid = semget(KEY_ID, 0, 0)) == -1)
 	{
-	    fprintf(stderr,"Can't get access to semaphone(s) for circular buffer from syslogd");
+	    printlog(txLog,_("Can't get access to semaphone(s) for circular buffer from syslogd."));
 		return FALSE;
 	}
 
@@ -125,7 +128,6 @@ int logread_main()
 	{
 		if (logtail != buf->tail)	// append
 		{	
-			printf("new_item\n");
 			printlog(txLog,"new_item\n");
 			i=logtail;
 		}
@@ -152,7 +154,14 @@ int logread_main()
 
 	if (log_shmid != -1) 
 		shmdt(buf);
-		
+	
+	/* read session file */
+	
+	while( (i = fread(buffer,sizeof(char),255,psession)) > 0 )
+	{
+		buffer[i] = 0;
+		printlog(txLog2,buffer);
+	}		
 	return TRUE;		
 }
 
@@ -162,6 +171,7 @@ int logread_main()
 void
 Logread_Free_Objects ()
 {
+	pclose(psession);
 }
 
 void
@@ -179,13 +189,16 @@ Logread_Restore ()
 GtkWidget *
 Logread_Build_Objects (void)
 {
+  GtkWidget *notebook;
   GtkWidget *vbox;
   GtkWidget *tw, *tc;
   gchar *tstr;
-	
+
+  notebook = gtk_notebook_new();
+  gtk_container_set_border_width (GTK_CONTAINER (notebook), gpe_get_border ());
+
+  /* syslog box */	
   vbox = gtk_vbox_new(FALSE,gpe_get_boxspacing());
-  gtk_container_set_border_width (GTK_CONTAINER (vbox), gpe_get_border ());
-  
   tw = gtk_label_new(NULL);
   gtk_misc_set_alignment(GTK_MISC(tw),0.0,0.5);
   tstr = g_strdup_printf ("<b>%s</b>", _("System Log"));
@@ -201,9 +214,39 @@ Logread_Build_Objects (void)
   gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(tw),GTK_WRAP_WORD);
   gtk_container_add(GTK_CONTAINER(tc),tw);
   txLog = tw;
-  logread_main();
   
+  tw = gtk_label_new(_("System Log"));
+  gtk_notebook_append_page(GTK_NOTEBOOK(notebook),vbox,tw);
+  
+  /* xsession-errors box */	
+  
+  vbox = gtk_vbox_new(FALSE,gpe_get_boxspacing());
+  tw = gtk_label_new(NULL);
+  gtk_misc_set_alignment(GTK_MISC(tw),0.0,0.5);
+  tstr = g_strdup_printf ("<b>%s</b>", _("Session Log"));
+  gtk_label_set_markup (GTK_LABEL (tw), tstr);
+  g_free (tstr);
+  gtk_box_pack_start(GTK_BOX(vbox),tw,FALSE,TRUE,0);
+
+  tc = gtk_scrolled_window_new(NULL,NULL);
+  gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(tc),GTK_SHADOW_IN);
+  gtk_box_pack_start(GTK_BOX(vbox),tc,TRUE,TRUE,0);
+
+  tw = gtk_text_view_new();	
+  gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(tw),GTK_WRAP_WORD);
+  gtk_container_add(GTK_CONTAINER(tc),tw);
+  txLog2 = tw;
+  
+  tw = gtk_label_new(_("Session Log"));
+  gtk_notebook_append_page(GTK_NOTEBOOK(notebook),vbox,tw);
+  
+  tstr = g_strdup_printf("tail -n100 -f %s/.xsession-errors",g_get_home_dir());
+  psession = popen(tstr,"r");
+  fcntl(fileno(psession), F_SETFL, O_NONBLOCK);
+  g_free(tstr);
+ 
+  logread_main();
   gtk_timeout_add (2000, (GtkFunction) logread_main, NULL);
   
-  return vbox;
+  return notebook;
 }

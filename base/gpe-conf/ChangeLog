@@ -1,3 +1,6 @@
+2003-08-27	Florian Boor	<florian.boor@kernelconcepts.de>
+	* Logfile viewer shows users .xsession-errors now
+
 2003-08-26	Florian Boor	<florian.boor@kernelconcepts.de>
 	* Applied Libor's patch to create .desktop translations
 	* Updated Czech translation and pot
