@@ -51,7 +51,8 @@ main(int argc, char *argv[])
   textdomain (PACKAGE);
 
   window = gtk_dialog_new ();
-
+  gtk_widget_realize (window);
+  
   hbox = gtk_hbox_new (FALSE, 0);
   gtk_widget_show (hbox);
   entry = gtk_entry_new ();
