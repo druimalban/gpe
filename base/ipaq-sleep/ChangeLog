@@ -1,3 +1,7 @@
+2003-09-23  Philip Blundell  <philb@gnu.org>
+
+	* Version 0.7-7 released.
+
 2003-03-23  Colin Marquardt  <colin@marquardt-home.de>
 
 	* Makefile (install-program): New name for 'install' ('install' is
