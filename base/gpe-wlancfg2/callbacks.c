@@ -557,7 +557,7 @@ gboolean on_GPE_WLANCFG_de_event(GtkWidget *widget, gpointer user_data)
  	GtkTreeIter	iter;
 	GtkListStore	*liststore;
 	GtkTreeSelection *selection;
-	gboolean quit_app = (gboolean) user_data;
+	gint quit_app = (gint) user_data;
 	
 	gchar      	*ListEntry[4];
 	gint            answer;

@@ -1,3 +1,9 @@
+
+09/28/2004	Florian Boor <florian.boor@kernelconcepts.de>
+	
+	- gpe-wlancfg.desktop.in: make sure only one instance is running.
+        - callbacks.c, main.c: Fix in exit behaviour.
+
 09/08/2004	Florian Boor <florian.boor@kernelconcepts.de>
 
 	- main.c: Changed value passed to callback fixing exit button.

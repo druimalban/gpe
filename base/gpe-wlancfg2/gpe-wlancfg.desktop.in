@@ -6,4 +6,6 @@ Terminal=0
 Type=Application
 Icon=gpe-wlancfg.png
 Categories=Application;SystemSettings;GPE
-StartupNotify=False
+StartupNotify=True
+SingleInstance=True
+
