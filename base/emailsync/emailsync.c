@@ -695,7 +695,7 @@ char action;
 	bzero(&options,sizeof(options));
 	safe_strcpy(options.prefix,"~/.emailsync/");
 	options.cleandir=1;
-	options.timeout=10000; // 10 second timeout between reads
+	options.timeout=30000; // 30 second timeout between reads
 	argc--;
 	i=argc;
 	sp=*argv;
