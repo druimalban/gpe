@@ -22,8 +22,8 @@ LDFLAGS = -g #-lefence
 else
 CFLAGS += -Os -fomit-frame-pointer
 endif
-CFLAGS += -Wall $(GTKCFLAGS) -I../libxsettings -I../libxsettings-client
-LDFLAGS += $(GTKLDFLAGS) -L../libxsettings -L../libxsettings-client -lXsettings-client
+CFLAGS += -Wall $(GTKCFLAGS) -I../libxsettings -I../libxsettings-client -I../libdm
+LDFLAGS += $(GTKLDFLAGS) -L../libxsettings -L../libxsettings-client -lXsettings-client -L../libdm -ldm
 CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 CFLAGS += -MD
 

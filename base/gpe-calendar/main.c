@@ -29,6 +29,8 @@
 #include "year_view.h"
 #include "month_view.h"
 
+#include <libdm.h>
+
 #define _(_x) gettext (_x)
 
 extern gboolean gpe_calendar_start_xsettings (void);
@@ -171,6 +173,8 @@ main (int argc, char *argv[])
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
   textdomain (PACKAGE);
 
+  libdm_init ();
+
   if (event_db_start () == FALSE)
     exit (1);
 
@@ -218,6 +222,8 @@ main (int argc, char *argv[])
   gtk_window_set_title (GTK_WINDOW(main_window), "Calendar");
   gtk_signal_connect (GTK_OBJECT (main_window), "destroy",
 		      GTK_SIGNAL_FUNC (gtk_exit), NULL);
+
+  libdm_mark_window (main_window);
 
   gtk_widget_realize (main_window);
 
