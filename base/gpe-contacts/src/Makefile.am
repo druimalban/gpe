@@ -11,6 +11,6 @@ adb_SOURCES = \
 	support.c support.h \
 	interface.c interface.h \
 	callbacks.c callbacks.h \
-	structure.c db.c pixmaps.c
+	structure.c db.c
 
 adb_LDADD = @GTK_LIBS@ -L$(top_srcdir)/../libgpewidget -lgpewidget -lsqlite -lxml2

@@ -40,6 +40,56 @@ new_contact(GtkWidget *widget, gpointer d)
   gtk_widget_grab_focus (name);
 }
 
+static GtkWidget *
+config_categories_box(void)
+{
+  GtkWidget *box = gtk_vbox_new (FALSE, 0);
+  GtkWidget *clist = gtk_clist_new (1);
+  GtkWidget *toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, 
+					GTK_TOOLBAR_ICONS);
+  GtkWidget *scrolled = gtk_scrolled_window_new (NULL, NULL);
+  struct pix *p;
+  GtkWidget *pw;
+
+  p = find_pixmap ("new");
+  pw = gtk_pixmap_new (p->pixmap, p->mask);
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), "New", 
+			   "New", "New", pw, NULL, NULL);
+
+  gtk_container_add (GTK_CONTAINER (scrolled), clist);
+
+  gtk_box_pack_start (GTK_BOX (box), toolbar, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (box), scrolled, TRUE, TRUE, 0);
+
+  gtk_widget_show_all (box);
+  return box;
+}
+
+static GtkWidget *
+config_attributes_box(void)
+{
+  GtkWidget *box = gtk_vbox_new (FALSE, 0);
+  GtkWidget *clist = gtk_clist_new (1);
+  GtkWidget *toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, 
+					GTK_TOOLBAR_ICONS);
+  GtkWidget *scrolled = gtk_scrolled_window_new (NULL, NULL);
+  struct pix *p;
+  GtkWidget *pw;
+
+  p = find_pixmap ("new");
+  pw = gtk_pixmap_new (p->pixmap, p->mask);
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), "New", 
+			   "New", "New", pw, NULL, NULL);
+
+  gtk_container_add (GTK_CONTAINER (scrolled), clist);
+
+  gtk_box_pack_start (GTK_BOX (box), toolbar, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (box), scrolled, TRUE, TRUE, 0);
+
+  gtk_widget_show_all (box);
+  return box;
+}
+
 static void
 configure(GtkWidget *widget, gpointer d)
 {
@@ -48,9 +98,9 @@ configure(GtkWidget *widget, gpointer d)
   GtkWidget *editlabel = gtk_label_new ("Edit layout");
   GtkWidget *editbox = edit_structure ();
   GtkWidget *categorieslabel = gtk_label_new ("Categories");
-  GtkWidget *categoriesbox = gtk_vbox_new (FALSE, 0);
   GtkWidget *attributeslabel = gtk_label_new ("Attributes");
-  GtkWidget *attributesbox = gtk_vbox_new (FALSE, 0);
+  GtkWidget *categoriesbox = config_categories_box ();
+  GtkWidget *attributesbox = config_attributes_box ();
 
   gtk_widget_show (notebook);
   gtk_widget_show (editlabel);
