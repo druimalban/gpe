@@ -13,8 +13,6 @@
 #include <gdk/gdk.h>
 #include <gdk/gdkx.h>
 
-#include <stdio.h>
-
 static Atom system_tray_atom;
 static Atom system_tray_opcode_atom;
 static Atom manager_atom;
