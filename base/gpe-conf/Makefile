@@ -1,6 +1,6 @@
 PACKAGE = gpe-conf
 VERSION = 0.1.6
-NATIVE = yes
+NATIVE ?= yes
 CVSBUILD = yes
 DEBUG = no
 IPAQ_INCLUDES = -I/home/fuchs/ipaq/linux/include
