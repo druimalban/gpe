@@ -909,7 +909,7 @@ char *tmp;
 	);
 
 	fMain = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-	gtk_window_set_title (GTK_WINDOW (fMain), _("GPE Package"));
+	gtk_window_set_title (GTK_WINDOW (fMain), _("Package Manager"));
 	gtk_window_set_default_size (GTK_WINDOW (fMain), 240, 300);
 	gtk_window_set_policy (GTK_WINDOW (fMain), TRUE, TRUE, FALSE);
 	gpe_set_window_icon(fMain, "icon");
