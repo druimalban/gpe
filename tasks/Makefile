@@ -3,12 +3,19 @@
 #------------------------
 
 ALL_TASKS = \
+    gpe2 \
+    gpe-apps2 \
+    \
+    gpe-collateral-gtk2 \
+    \
     gpe-task-base \
     gpe-task-pim \
     gpe-task-utils \
     gpe-task-comm \
     gpe-task-mmedia \
-    gpe-task-extra-apps
+    gpe-task-games \
+    gpe-task-extra-apps \
+    gpe-task-extra-games \
 
 default: $(ALL_TASKS)
 
@@ -22,15 +29,17 @@ clean:
 	rm -rf dist *.ipk *.ipk.asc *~ .*~
 
 #---Meta tasks
-#DEP_gpe-apps = \
-#    gpe-task-base, \
-#    gpe-task-pim, \
-#    gpe-task-utils, \
-#    gpe-task-comm, \
-#    gpe-task-mmedia, \
-#    gpe-task-extra-apps
+DEP_gpe-apps = \
+    gpe-task-base, \
+    gpe-task-comm, \
+    gpe-task-mmedia, \
+    gpe-task-pim, \
+    gpe-task-utils \
+#    gpe-task-extra-apps \
+
 
 #---This is the base to run GPE
+VER_gpe-task-base = 0.2
 DEP_gpe-task-base = \
     \
     gpe-collateral-gtk2, \
@@ -77,6 +86,11 @@ DEP_gpe-task-base = \
     hotplug-dbus
 #FIXME: could be refined (contains hardware dependant packages)
 
+DEP_gpe-collateral-gtk2 = \
+    libgtk2.0-0, \
+    gtk2-theme-angelistic, \
+    ttf-bitstream-vera
+
 #---The following tasks aims to be user-level tasks
 DEP_gpe-task-pim = \
     gpe-task-base, \
@@ -116,3 +130,20 @@ DEP_gpe-task-extra-apps = \
     figment, \
     gpe-timesheet2, \
     greader
+
+DEP_gpe-task-games = \
+    gpe-tetris2, \
+    xdemineur, \
+    gpe-lights, \
+    gpe-code2, \
+    gpe-julia2, \
+    gpe-othello2, \
+    gsoko2, \
+    pdamaze
+#FIXME: couple of games to move to extra-games.
+
+DEP_gpe-task-extra-games = \
+    repton, \
+    sfcave-sdl, \
+    snes9x
+

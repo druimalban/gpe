@@ -1,0 +1,10 @@
+Package: gpe-apps2
+Provides: gpe-apps
+Replaces: gpe-apps
+Section: base
+Priority: optional
+Version: 0.42
+Architecture: all
+Maintainer: GPE Hackers <gpe@handhelds.org>
+Depends: _DEPS_
+Description: Task package for GPE applications

@@ -1,0 +1,10 @@
+Package: gpe-task-games
+Provides: gpe-games, gpe-games2
+Replaces: gpe-games, gpe-games2
+Section: games
+Priority: optional
+Version: 0.11
+Architecture: arm
+Maintainer: GPE Hackers <gpe@handhelds.org>
+Depends: _DEPS_
+Description: Task package for GPE games
