@@ -74,5 +74,24 @@
       <label>Notes</label>
       <tag>NOTES</tag>
     </multi-item>
+    <group>
+      <label>Name Details</label>
+      <single-item>
+        <tag>TITLE</tag>
+        <label>Title</label>
+      </single-item>
+      <single-item>
+        <tag>GIVEN_NAME</tag>
+        <label>Given name</label>
+      </single-item>
+      <single-item>
+        <tag>FAMILY_NAME</tag>
+        <label>Familiy name</label>
+      </single-item>
+      <single-item>
+        <tag>HONORIFIC_SUFFIX</tag>
+        <label>Name Suffix</label>
+      </single-item>
+    </group>
   </page>
 </layout>

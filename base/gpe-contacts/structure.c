@@ -152,14 +152,14 @@ structure_new_field (GtkWidget *widget,
       smallbox_x2 (_("New field"), bd);
 
       if (bd[0].value && bd[1].value && bd[0].value[0] && bd[1].value[0])
-	insert_new_thing (ct, bd[0].value, ITEM_SINGLE_LINE, bd[1].value);
+         insert_new_thing (ct, bd[0].value, ITEM_SINGLE_LINE, bd[1].value);
       else
-	{
-	  if (bd[0].value)
-	    g_free (bd[0].value);
-	  if (bd[1].value)
-	    g_free (bd[1].value);
-	}
+        {
+          if (bd[0].value)
+            g_free (bd[0].value);
+          if (bd[1].value)
+            g_free (bd[1].value);
+        }
     }
   else
     {
