@@ -59,7 +59,7 @@ PIXMAPS =
 all: $(PACKAGE)
 	
 $(PACKAGE): $(OBJS)
-	$(CC) -o $@ $^ $(LDFLAGS) $(GPELIBS) -lfl -lXrender -lXinerama	
+	$(CC) -o $@ $^ $(LDFLAGS) $(PACKAGE_LDFLAGS)
 
 .l.c:
 	$(LEX) $(LEXFLAGS) $< && mv $(LEX_OUTPUT_ROOT).c $@
