@@ -86,6 +86,7 @@ ask_user_a_file (char *path, char *prompt,
 {
 	char buf[1024];
 	char *ret = getcwd (buf, 1024);
+	gdk_threads_enter();
 	if (path)		// this is a hack, we're all waiting a gtk_file_selection_change_directory().. (TODO)
 		chdir (path);
 	{
@@ -135,4 +136,5 @@ ask_user_a_file (char *path, char *prompt,
 					  (gpointer) s->fs);
 		gtk_widget_show (s->fs);
 	}
+	gdk_threads_leave();
 }

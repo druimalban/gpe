@@ -379,6 +379,7 @@ tx_file_cancel (gpointer data)
 
 	if (scan_thread == NULL)
 		gpe_perror_box (_("Unable to start file transmit."));
+	
 }
 
 
@@ -408,11 +409,9 @@ do_send_file (void)
 	}
 	else
 	{
-		gdk_threads_enter ();
 		ask_user_a_file (getenv ("HOME"),
 				 _("Select file to transmit"), tx_file_select,
 				 tx_file_cancel, NULL);
-		gdk_threads_leave ();
 		printf ("exit do send...\n");
 	}
 }
@@ -479,8 +478,7 @@ check_file_import (char *filename)
 					      GTK_DIALOG_DESTROY_WITH_PARENT | GTK_DIALOG_MODAL,
 					      GTK_MESSAGE_QUESTION,
 					      GTK_BUTTONS_YES_NO,
-					      _
-					      ("File '%s' looks like a vCard, "
+					      _("File '%s' looks like a vCard, "
 					       "do you want to import it?"), filename);
 		
 		 g_signal_connect_after (GTK_OBJECT (dlg), "response",
