@@ -20,13 +20,7 @@
 #include "picturebutton.h"
 #include "pixmaps.h"
 
-static struct gpe_icon my_icons[] = {
-  { "ok", "ok" },
-  { "error", "error" },
-  { NULL, NULL }
-};
-
-static gboolean currently_handling_error = FALSE;
+static volatile gboolean currently_handling_error = FALSE;
 
 #define _(x) dgettext(PACKAGE, x)
 
@@ -44,9 +38,6 @@ gpe_error_box (char *text)
     }
 
   currently_handling_error = TRUE;
-
-  if (gpe_load_icons (my_icons) == FALSE)
-    exit (1);
 
   dialog = gtk_dialog_new ();
   label = gtk_label_new (text);
