@@ -1,5 +1,21 @@
 2003-01-04  Philip Blundell  <philb@gnu.org>
 
+	* event-db.h (event_db__alloc_event): New.
+	(event_db__alloc_recur): Likewise.
+	(event_db__free_event): Likewise.
+	(event_db__free_recur): Likewise.
+	(EVENT_DB_USE_MEMCHUNK): Likewise.  Default on.
+	* event-db.c (event_db_start): Create new GMemChunks.
+	(load_callback): Use above macros.
+	(event_db_clone): Likewise.
+	(event_db_new): Likewise.
+	(event_db_destroy): Likewise.
+	(event_db_destroy_clone): Likewise.
+	(event_db_get_recurrence): Likewise.
+	* old-db.c (load_callback0): Likewise.
+	
+2003-01-04  Philip Blundell  <philb@gnu.org>
+
 	* Version 0.29 released.
 	
 2003-01-04  Philip Blundell  <philb@gnu.org>

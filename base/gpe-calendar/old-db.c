@@ -28,7 +28,7 @@ load_callback0 (void *arg, int argc, char **argv, char **names)
     {
       char *p;
       struct tm tm;
-      event_t ev = g_malloc (sizeof (struct event_s));
+      event_t ev = event_db__alloc_event ();
       
       ev->flags = 0;
       ev->uid = atoi (argv[0]);

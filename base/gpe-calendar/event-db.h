@@ -41,9 +41,8 @@ typedef struct event_details_s
 
 struct calendar_time_s
 {
-  u_int16_t year;
-  u_int8_t month, day;
-  u_int8_t hour, minute;
+  GDate date;
+  GTime time;
 };
 
 typedef time_t calendar_time_t;
@@ -73,6 +72,38 @@ typedef struct event_s
   event_details_t details;
   gboolean mark;
 } *event_t;
+
+#ifdef EVENT_DB_USE_MEMCHUNK
+
+extern GMemChunk *event_chunk, *recur_chunk;
+
+#define event_db__alloc_event()		\
+	(event_t)g_mem_chunk_alloc0 (event_chunk)
+
+#define event_db__alloc_recur()		\
+	(recur_t)g_mem_chunk_alloc0 (recur_chunk)
+
+#define event_db__free_event(_x)	\
+	g_mem_chunk_free (event_chunk, _x)
+
+#define event_db__free_recur(_x)	\
+	g_mem_chunk_free (recur_chunk, _x)
+
+#else
+
+#define event_db__alloc_event()		\
+	(event_t)g_malloc0 (sizeof (struct event_s))
+
+#define event_db__alloc_recur()		\
+	(recur_t)g_malloc0 (sizeof (struct recur_s))
+
+#define event_db__free_event(_x)	\
+	g_free (_x)
+
+#define event_db__free_recur(_x)	\
+	g_free (_x)
+
+#endif
 
 extern gboolean event_db_start (void);
 extern gboolean event_db_stop (void);

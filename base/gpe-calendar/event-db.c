@@ -40,6 +40,10 @@ static const char *schema_info =
 
 extern gboolean convert_old_db (int oldversion, sqlite *);
 
+#ifdef EVENT_DB_USE_MEMCHUNK
+GMemChunk *event_chunk, *recur_chunk;
+#endif
+
 static gint
 event_sort_func (const event_t ev1, const event_t ev2)
 {
@@ -160,15 +164,14 @@ load_callback (void *arg, int argc, char **argv, char **names)
     {
       char *err;
       guint uid = atoi (argv[0]);
-      event_t ev = g_malloc (sizeof (struct event_s));
-      memset (ev, 0, sizeof (*ev));
+      event_t ev = event_db__alloc_event ();
       ev->uid = uid;
       if (sqlite_exec_printf (sqliteh, "select tag,value from calendar where uid=%d", 
 			      load_data_callback, ev, &err, uid))
 	{
 	  gpe_error_box (err);
 	  free (err);
-	  g_free (ev);
+	  event_db__free_event (ev);
 	  return 1;
 	}
 
@@ -176,7 +179,7 @@ load_callback (void *arg, int argc, char **argv, char **names)
 	{
 	  /* Old versions of gpe-calendar dumped out a load of recurrence tags
 	     even for a one-shot event.  */
-	  g_free (ev->recur);
+	  event_db__free_recur (ev->recur);
 	  ev->recur = NULL;
 	}
 
@@ -204,6 +207,12 @@ event_db_start (void)
   char *buf;
   char *err;
   size_t len;
+
+#ifdef EVENT_DB_USE_MEMCHUNK
+  event_chunk = g_mem_chunk_new ("event", sizeof (struct event_s), 4096, G_ALLOC_AND_FREE);
+  recur_chunk = g_mem_chunk_new ("recur", sizeof (struct recur_s), 4096, G_ALLOC_AND_FREE);
+#endif
+
   len = strlen (home) + strlen (fname) + 1;
   buf = g_malloc (len);
   strcpy (buf, home);
@@ -356,7 +365,7 @@ event_db_find_by_uid (guint uid)
 void
 event_db_destroy_clone (event_t ev)
 {
-  g_free (ev);
+  event_db__free_event (ev);
 }
 
 void
@@ -378,8 +387,7 @@ event_db_list_destroy (GSList *l)
 event_t
 event_db_clone (event_t ev)
 {
-  event_t n = g_malloc (sizeof (struct event_s));
-  memcpy (n, ev, sizeof (struct event_s));
+  event_t n = event_db__alloc_event ();
   n->flags |= FLAG_CLONE;
   return n;
 }
@@ -505,10 +513,8 @@ event_db_list_for_period_internal (time_t start, time_t end, gboolean untimed,
           do {
 	    localtime_r (&fixed_start, &tm_event);
 	    if (fixed_start >= start) {
-	      new_ev = event_db_new();
-	      memcpy (new_ev, ev, sizeof(event_t));
+	      new_ev = event_db_clone (ev);
 	      new_ev->start = fixed_start;
-	      new_ev->flags |= FLAG_CLONE;
 	      new_ev->flags |= FLAG_RECUR;
 	      list = g_slist_insert_sorted (list, new_ev, (GCompareFunc)event_sort_func);
 	    }
@@ -707,8 +713,7 @@ event_db_remove (event_t ev)
 event_t
 event_db_new (void)
 {
-  event_t ev = (event_t) g_malloc (sizeof (struct event_s));
-  memset (ev, 0, sizeof (struct event_s));
+  event_t ev = event_db__alloc_event ();
   return ev;
 }
 
@@ -718,9 +723,9 @@ event_db_destroy (event_t ev)
   event_db_forget_details (ev);
 
   if (ev->recur)
-    g_free (ev->recur);
+    event_db__free_recur (ev->recur);
 
-  g_free (ev);
+  event_db__free_event (ev);
 }
 
 event_details_t
@@ -737,8 +742,7 @@ event_db_get_recurrence (event_t ev)
 {
   if (ev->recur == NULL)
     {
-      ev->recur = g_malloc (sizeof (struct recur_s));
-      memset (ev->recur, 0, sizeof (struct recur_s));
+      ev->recur = event_db__alloc_recur ();
 
       ev->recur->type = RECUR_NONE;
     }
