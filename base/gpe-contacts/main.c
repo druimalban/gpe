@@ -278,6 +278,8 @@ main (int argc, char *argv[])
   if (db_open ())
     exit (1);
 
+  load_well_known_tags ();
+
   mainw = create_main ();
   combo = lookup_widget (GTK_WIDGET (mainw), "combo1");
   update_combo_categories ();

@@ -1,6 +1,14 @@
 2002-08-11  Philip Blundell  <philb@gnu.org>
 
+	* src/structure.c (load_well_known_tags): New function.
+	* src/structure.h (load_well_known_tags): Add prototype.
+	* src/main.c (main): Call load_well_known_tags.
+
+	* src/structure.c (print_structure_1): Use correct format when
+	printing tag.
+	
 	* well-known-tags: New file.
+	* Makefile.am (install-data-local): Install it.
 
 	* src/editing.c (edit_window): Put contents of tab in a scrolled window.
 

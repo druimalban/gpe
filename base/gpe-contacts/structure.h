@@ -42,5 +42,7 @@ extern void initial_structure (void);
 
 extern GSList *edit_pages;
 
+extern void load_well_known_tags (void);
+
 #endif
 

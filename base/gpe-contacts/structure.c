@@ -9,6 +9,8 @@
 
 #include <gtk/gtk.h>
 #include <stdio.h>
+#include <string.h>
+#include <ctype.h>
 
 #include <parser.h>
 
@@ -24,6 +26,7 @@
 #include "render.h"
 
 GSList *edit_pages;
+GSList *well_known_tags;
 
 edit_thing_t new_thing (edit_thing_type t, gchar *name, edit_thing_t parent);
 
@@ -335,7 +338,7 @@ print_structure_1 (FILE *fp, edit_thing_t e, int level)
       fprintf (fp, "<multi-item>\n");
       for (i = 0; i <= level; i++)
 	fputs ("  ", fp);
-      fprintf (fp, "<tag>%d</tag>\n", e->tag);
+      fprintf (fp, "<tag>%s</tag>\n", e->tag);
       for (i = 0; i <= level; i++)
 	fputs ("  ", fp);
       if (e->name)
@@ -480,4 +483,30 @@ read_structure (gchar *name)
   xmlFreeDoc (doc);
 
   return TRUE;
+}
+
+void
+load_well_known_tags (void)
+{
+  static const gchar *filename = PREFIX "/share/gpe-contacts/well-known-tags";
+  FILE *fp = fopen (filename, "r");
+  if (fp)
+    {
+      char buf[256];
+      while (fgets (buf, sizeof (buf), fp))
+	{
+	  char *s = buf, *h = strchr (buf, '#');
+	  if (h)
+	    *h = 0;	// dump comments
+	  while (isspace (*s))
+	    s++;	// dump leading whitespace
+	  h = s;
+	  while (*h && !isspace (*h))
+	    h++;
+	  *h = 0;	// dump trailing whitespace
+	  if (*s)
+	    well_known_tags = g_slist_append (well_known_tags, g_strdup (s));
+	}
+      fclose (fp);
+    }
 }
