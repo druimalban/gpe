@@ -17,13 +17,17 @@
 #include "pixmaps.h"
 #include "structure.h"
 
-#define PIXMAPS_DIR "/usr/share/gpe-calendar/pixmaps"
+#define PIXMAPS_DIR "/usr/share/gpe/pixmaps"
+#define MY_PIXMAPS_DIR "/usr/share/gpe-contacts/pixmaps"
 
 struct pix my_pix[] = {
   { "close", PIXMAPS_DIR "/close.xpm" },
   //  { "delete", PIXMAPS_DIR "/delete.xpm" },
   { "new", PIXMAPS_DIR "/new.xpm" },
   { "config", PIXMAPS_DIR "/config.xpm" },
+  { "frame", MY_PIXMAPS_DIR "/frame.xpm" },
+  { "notebook", MY_PIXMAPS_DIR "/notebook.xpm" },
+  { "entry", MY_PIXMAPS_DIR "/entry.xpm" },
   { NULL, NULL }
 };
 
@@ -41,16 +45,27 @@ configure(GtkWidget *widget, gpointer d)
 {
   GtkWidget *window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   GtkWidget *notebook = gtk_notebook_new ();
-  GtkWidget *editlabel = gtk_label_new ("Edit fields");
+  GtkWidget *editlabel = gtk_label_new ("Edit layout");
   GtkWidget *editbox = edit_structure ();
+  GtkWidget *categorieslabel = gtk_label_new ("Categories");
+  GtkWidget *categoriesbox = gtk_vbox_new (FALSE, 0);
+  GtkWidget *attributeslabel = gtk_label_new ("Attributes");
+  GtkWidget *attributesbox = gtk_vbox_new (FALSE, 0);
 
   gtk_widget_show (notebook);
   gtk_widget_show (editlabel);
   gtk_widget_show (editbox);
+  gtk_widget_show (categorieslabel);
+  gtk_widget_show (categoriesbox);
+  gtk_widget_show (attributeslabel);
+  gtk_widget_show (attributesbox);
 
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook),
-			    editbox,
-			    editlabel);
+			    attributesbox, attributeslabel);
+  gtk_notebook_append_page (GTK_NOTEBOOK (notebook),
+			    editbox, editlabel);
+  gtk_notebook_append_page (GTK_NOTEBOOK (notebook),
+			    categoriesbox, categorieslabel);
 
   gtk_container_add (GTK_CONTAINER (window), notebook);
 

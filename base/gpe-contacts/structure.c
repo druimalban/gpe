@@ -73,11 +73,30 @@ edit_structure (void)
   gtk_widget_show (tree);
   gtk_widget_show (toolbar);
 
-  p = find_pixmap ("new");
+  p = find_pixmap ("notebook");
+  pw = gtk_pixmap_new (p->pixmap, p->mask);
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), "New page", 
+			   "New page", "New page", 
+			   pw, structure_add_clicked, tree);
+
+  p = find_pixmap ("frame");
+  pw = gtk_pixmap_new (p->pixmap, p->mask);
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), "New group", 
+			   "New group", "New group", 
+			   pw, structure_add_clicked, tree);
+
+  p = find_pixmap ("entry");
   pw = gtk_pixmap_new (p->pixmap, p->mask);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), "New field", 
-			   "New Contact", "New field", 
+			   "New field", "New field", 
 			   pw, structure_add_clicked, tree);
+
+#if 0
+  p = find_pixmap ("save");
+  pw = gtk_pixmap_new (p->pixmap, p->mask);
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), "Save", 
+			   "Save", "Save", pw, NULL, NULL);
+#endif
 
   gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), scrolled, TRUE, TRUE, 0);
