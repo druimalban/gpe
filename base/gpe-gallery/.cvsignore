@@ -2,4 +2,6 @@
 *.ipk.asc
 *.ipk.upload.html
 *.batch
+*.d
+gpe-gallery
 
