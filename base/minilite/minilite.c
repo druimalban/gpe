@@ -482,6 +482,8 @@ external_event(GtkWindow *window, GdkEventConfigure *event, gpointer user_data)
     gtk_widget_shape_combine_mask (GTK_WIDGET(window), bitmap, 1, 0);
     gdk_bitmap_unref (bitmap);
     gtk_image_set_from_pixbuf(GTK_IMAGE(icon),dbuf);
+	/* make sure we want to resize all the time */
+	gtk_widget_set_size_request(GTK_WIDGET(window),size+1,size);
   }
   return FALSE;
 }
@@ -580,7 +582,7 @@ main (int argc, char **argv)
   g_signal_connect (G_OBJECT (slider_window), "button-press-event", G_CALLBACK (slider_clicked), NULL);
 
   gtk_widget_add_events (window, GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
-gtk_widget_add_events (window, GDK_ALL_EVENTS_MASK);
+
   gtk_widget_add_events (slider_window, GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
 
   gtk_widget_show (slider);
