@@ -20,6 +20,7 @@ struct nmf_frontend
   GtkWidget *progress_slider;
   GtkWidget *time_label, *artist_label, *title_label;
   GtkTreeModel *model;
+  GtkTreeView *view;
 };
 
 void update_track_info (struct nmf_frontend *fe, struct playlist *p);

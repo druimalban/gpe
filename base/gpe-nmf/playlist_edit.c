@@ -131,10 +131,9 @@ new_folder (GtkWidget *w, gpointer d)
 }
 
 void
-delete (GtkWidget *w, gpointer p)
+delete (GtkWidget *w, struct nmf_frontend *fe)
 {
-  GtkWidget *treeview = GTK_WIDGET (p);
-  GtkTreeSelection *sel = gtk_tree_view_get_selection (GTK_TREE_VIEW (treeview));
+  GtkTreeSelection *sel = gtk_tree_view_get_selection (GTK_TREE_VIEW (fe->view));
   GtkTreeModel *model;
   GtkTreeIter iter;
 
@@ -216,6 +215,7 @@ playlist_edit (struct nmf_frontend *fe, struct playlist *p)
   gtk_box_pack_start (GTK_BOX (vbox), treeview, TRUE, TRUE, 0);
 
   fe->model = GTK_TREE_MODEL (store);
+  fe->view = GTK_TREE_VIEW (treeview);
 
   gtk_signal_connect (GTK_OBJECT (treeview), "row-activated",
 		      GTK_SIGNAL_FUNC (row_signal), fe);
