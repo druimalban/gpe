@@ -13,20 +13,11 @@
  * 2 of the License, or (at your option) any later version.
  */
 
-//#include <sys/types.h>
 #include <stdlib.h>
 #include <libintl.h>
 #include <locale.h>
 #include <unistd.h>
 #include <string.h>
-
-/*
-#include <pty.h>
-#include <fcntl.h>
-#include <errno.h>
-#include <sys/wait.h>
-*/
-
 
 #include <signal.h>
 #include <stdio.h>
@@ -47,15 +38,18 @@
 
 #include <sys/socket.h>
 #include "main.h"
+#include "filesel.h"
 #include "ircp/ircp.h"
 #include "ircp/ircp_server.h"
 #include "ircp/ircp_client.h"
 
 #define _(x) gettext(x)
 
-#define COMMAND_IR_ON  "ifconfig irda0 up ; echo 1 > /proc/sys/net/irda/discovery"
-#define COMMAND_IR_OFF  "echo 0 > /proc/sys/net/irda/discovery ; ifconfig irda0 down"
+#define COMMAND_IR_ON  "/usr/bin/irsw on"
+#define COMMAND_IR_OFF  "/usr/bin/irsw off"
 #define IR_DISCOVERY "/proc/net/irda/discovery"
+#define IR_DISCOVERY_STATUS "/proc/sys/net/irda/discovery"
+
 static char *IR_INBOX = "/tmp" ;
 
 struct gpe_icon my_icons[] = {
@@ -78,8 +72,14 @@ static GThread *scan_thread;
 gboolean radio_is_on;
 GdkWindow *dock_window;
 static guint timeout_id = 0;
-static ircp_client_t *cli;
-GtkWidget *lStatus = NULL;
+static GtkWidget *lStatus = NULL;
+static GtkWidget *lTStatus = NULL;
+static char *str_last_filename = NULL;
+static GtkWidget *dlgStatus = NULL;
+
+static void radio_on (void);
+static void radio_off (void);
+static ircp_client_t *cli = NULL;
 
 
 GtkWidget *
@@ -121,7 +121,7 @@ ircp_info_cb (int event, char *param)
 	if (lStatus == NULL)
 		return;
 
-	gdk_threads_enter ();
+	gdk_threads_enter();
 	switch (event)
 	{
 	case IRCP_EV_ERRMSG:
@@ -130,10 +130,10 @@ ircp_info_cb (int event, char *param)
 		free (ts);
 		break;
 	case IRCP_EV_ERR:
-		gtk_label_set_text (GTK_LABEL (lStatus), _("failed"));
+		gtk_label_set_text (GTK_LABEL (lStatus), _("Failed"));
 		break;
 	case IRCP_EV_OK:
-		gtk_label_set_text (GTK_LABEL (lStatus), _("done"));
+		gtk_label_set_text (GTK_LABEL (lStatus), _("Done"));
 		break;
 	case IRCP_EV_CONNECTING:
 		gtk_label_set_text (GTK_LABEL (lStatus), _("Connecting..."));
@@ -146,7 +146,11 @@ ircp_info_cb (int event, char *param)
 		gtk_label_set_text (GTK_LABEL (lStatus), _("Sending..."));
 		break;
 	case IRCP_EV_RECEIVING:
-		gtk_label_set_text (GTK_LABEL (lStatus), _("Receiving..."));
+		ts = g_strdup_printf ("%s: %s", _("Receiving"), param);
+		gtk_label_set_text (GTK_LABEL (lStatus), ts);
+		if (str_last_filename) free(str_last_filename);
+		str_last_filename = g_strdup(param);
+		free (ts);
 		break;
 	case IRCP_EV_LISTENING:
 		gtk_label_set_text (GTK_LABEL (lStatus),
@@ -159,7 +163,7 @@ ircp_info_cb (int event, char *param)
 		gtk_label_set_text (GTK_LABEL (lStatus), _("Disconnecting"));
 		break;
 	}
-	gdk_threads_leave ();
+	gdk_threads_leave();
 }
 
 
@@ -289,26 +293,113 @@ parse_file (char *file, char *format, ...)
 }
 
 
+static int
+irda_is_on()
+{
+	int result = FALSE;
+	parse_file(IR_DISCOVERY_STATUS,"%d",&result);
+	return result;
+}
+
+
+static void
+exec_file_tx (char* filename)
+{
+	char *ts;
+	
+	if (cli == NULL) return;
+	gdk_threads_enter();
+	gtk_window_present(GTK_WINDOW(dlgStatus));
+	gdk_threads_leave();
+	if(ircp_cli_connect(cli) >= 0) 
+	{
+		ircp_put(cli, filename);
+		ircp_cli_disconnect(cli);
+		gdk_threads_enter();
+		ts = g_strdup_printf("%s %s",_("Transmitted file"),filename);
+		gtk_label_set_text (GTK_LABEL (lTStatus), ts);
+		free(ts);
+		gdk_threads_leave();
+	}
+	else
+	{
+		gdk_threads_enter();
+		ts = g_strdup_printf("%s %s",_("Could not transmit file"),filename);
+		gtk_label_set_text (GTK_LABEL (lTStatus), ts);
+		free(ts);
+		gdk_threads_leave();
+	}
+	ircp_cli_close(cli);
+	cli = NULL;
+
+	sleep(3);
+	gdk_threads_enter();
+	free(filename);
+	gtk_widget_destroy(dlgStatus);
+	lStatus = NULL;
+	gdk_threads_leave();
+}
+
+
+
+void 
+tx_file_select(char *filename, gpointer data)
+{
+	scan_thread =
+		g_thread_create ((GThreadFunc) exec_file_tx, strdup(filename), FALSE, NULL);
+
+	if (scan_thread == NULL)
+		gpe_perror_box (_("Unable to start file transmit."));
+}
+
+
+void
+tx_file_cancel(gpointer data)
+{
+	return;
+}
+
+
+static void
+do_send_file (void)
+{
+	if (!radio_is_on) radio_on();
+	
+	cli =  ircp_cli_open(ircp_info_cb);
+	
+	gdk_threads_enter ();
+	dlgStatus = bt_progress_dialog (_("IR Receive and Transmit........."), gpe_find_icon("irda"));
+	gtk_widget_show_all(dlgStatus);
+	gdk_threads_leave ();
+	
+	if (cli == NULL)
+	{
+		gdk_threads_enter ();
+		gtk_label_set_text (GTK_LABEL (lStatus), _("Error opening IR client."));
+		gtk_label_set_text (GTK_LABEL (lTStatus), _("Error opening IR client."));
+		gdk_threads_leave ();
+	}
+	else
+	{
+		gdk_threads_enter ();
+		ask_user_a_file (getenv("HOME"), _("Select file to transmit"),
+		tx_file_select,
+		tx_file_cancel, NULL);
+		gdk_threads_leave ();
+		printf("exit do send...\n");
+	}
+	do{sleep(1);}while(cli);
+}
+
+
 static void
 send_file (void)
 {
-/*	cli = ircp_cli_open(ircp_info_cb);
-	if(cli == NULL) {
-		printf("Error opening ircp-client\n");
-		return -1;
-	}
-		
-	// Connect
-	if(ircp_cli_connect(cli) >= 0) {
-		// Send all files
-		for(i = 1; i < argc; i++) {
-			ircp_put(cli, argv[i]);
-		}
-			// Disconnect
-		ircp_cli_disconnect(cli);
-	}
-	ircp_cli_close(cli);
-*/
+	scan_thread =
+		g_thread_create ((GThreadFunc) do_send_file, NULL, FALSE, NULL);
+
+	if (scan_thread == NULL)
+		gpe_perror_box (_("Unable to start receiver."));
 }
 
 
@@ -316,10 +407,12 @@ static void
 do_receive_file (void)
 {
 	ircp_server_t *srv = NULL;
-	GtkWidget *dlgStatus = NULL;
-
+	char *ts;
+	
+	if (!radio_is_on) radio_on();
+	
 	gdk_threads_enter ();
-	dlgStatus = bt_progress_dialog (_("IR Receive"), gpe_find_icon("irda"));
+	dlgStatus = bt_progress_dialog (_("IR Receive and Transmit......."), gpe_find_icon("irda"));
 	gtk_widget_show_all(dlgStatus);
 	gtk_window_present(GTK_WINDOW(dlgStatus));
 	gdk_threads_leave ();
@@ -327,14 +420,21 @@ do_receive_file (void)
 	srv = ircp_srv_open (ircp_info_cb);
 	if (srv == NULL)
 	{
-	gdk_threads_enter ();
+		gdk_threads_enter ();
 		gtk_label_set_text (GTK_LABEL (lStatus), _("Error opening IR server."));
-	gdk_threads_leave ();
+		gtk_label_set_text (GTK_LABEL (lTStatus), _("Error opening IR server."));
+		gdk_threads_leave ();
 	}
 	else
 	{
 		ircp_srv_recv (srv, IR_INBOX);
 		ircp_srv_close (srv);
+		if (str_last_filename)
+		{
+			ts = g_strdup_printf("%s %s",_("Received file"),str_last_filename);
+			gtk_label_set_text (GTK_LABEL (lTStatus), ts);
+			free(ts);
+		}
 	}
 	sleep(3);
 	gdk_threads_enter ();
@@ -351,7 +451,7 @@ receive_file (void)
 		g_thread_create ((GThreadFunc) do_receive_file, NULL, FALSE, NULL);
 
 	if (scan_thread == NULL)
-		gpe_perror_box (_("Unable to scan for devices."));
+		gpe_perror_box (_("Unable to start receiver."));
 
 }
 
@@ -401,7 +501,10 @@ static gboolean
 control_window_destroyed (void)
 {
 	control_window = NULL;
-
+	lTStatus = NULL;
+	
+	radio_off();
+	
 	/* stop updates from scanner */
 	if (timeout_id)
 	{
@@ -433,6 +536,7 @@ show_control (void)
 		GtkTooltips *tooltips = gtk_tooltips_new ();
 
 		GtkWidget *lcPeer = gtk_label_new (NULL);
+		GtkWidget *lcActions = gtk_label_new (NULL);
 
 		GtkWidget *l1 = gtk_label_new (_("Name:"));
 		GtkWidget *l2 = gtk_label_new (_("Hint:"));
@@ -448,6 +552,8 @@ show_control (void)
 
 		gtk_label_set_markup (GTK_LABEL (lcPeer),
 				      _("<b>Peer Information</b>"));
+		gtk_label_set_markup (GTK_LABEL (lcActions),
+				      _("<b>Peer Actions</b>"));
 
 		hb = gtk_hbox_new (FALSE, gpe_get_boxspacing ());
 		img = gtk_image_new_from_stock (GTK_STOCK_GO_UP,
@@ -471,6 +577,7 @@ show_control (void)
 		gtk_box_pack_start (GTK_BOX (hbox), bReceive, FALSE, TRUE, 0);
 
 		gtk_misc_set_alignment (GTK_MISC (lcPeer), 0, 0.5);
+		gtk_misc_set_alignment (GTK_MISC (lcActions), 0, 0.5);
 		gtk_misc_set_alignment (GTK_MISC (l1), 0, 0.5);
 		gtk_misc_set_alignment (GTK_MISC (l2), 0, 0.0);
 		gtk_misc_set_alignment (GTK_MISC (l3), 0, 0.5);
@@ -495,12 +602,16 @@ show_control (void)
 				  GTK_FILL | GTK_EXPAND,
 				  GTK_FILL | GTK_EXPAND, 0, 0);
 
-		gtk_table_attach (GTK_TABLE (table), hbox, 0, 3, 4, 5,
+		gtk_table_attach (GTK_TABLE (table), lcActions, 0, 3, 4, 5,
+				  GTK_FILL ,
+				  GTK_FILL , 0, 0);
+				  
+		gtk_table_attach (GTK_TABLE (table), hbox, 0, 3, 5, 6,
 				  GTK_FILL | GTK_EXPAND,
 				  GTK_FILL | GTK_EXPAND, 0, 0);
 
-	lStatus = gtk_label_new("Status");
-	gtk_table_attach (GTK_TABLE (table), lStatus, 0, 3, 5, 6,
+		lTStatus = gtk_label_new(_("Status"));
+		gtk_table_attach (GTK_TABLE (table), lTStatus, 0, 3, 6, 7,
 				  GTK_FILL | GTK_EXPAND,
 				  GTK_FILL | GTK_EXPAND, 0, 0);
 				  
@@ -528,8 +639,8 @@ show_control (void)
 						       (sw), vbox);
 		gtk_container_add (GTK_CONTAINER (control_window), sw);
 
-		gtk_box_pack_start (GTK_BOX (vbox), table, FALSE, TRUE, 0);
-		gtk_box_pack_start (GTK_BOX (vbox), hsep, FALSE, TRUE, 0);
+		gtk_box_pack_start (GTK_BOX (vbox), table, TRUE, TRUE, 0);
+		gtk_box_pack_start (GTK_BOX (vbox), hsep, FALSE, TRUE, gpe_get_boxspacing());
 
 		gtk_box_pack_start (GTK_BOX (hbox), bClose, FALSE, TRUE, 0);
 
@@ -577,6 +688,8 @@ radio_on (void)
 	sigprocmask (SIG_BLOCK, &sigs, NULL);
 //  hciattach_pid = fork_hciattach ();
 	sigprocmask (SIG_UNBLOCK, &sigs, NULL);
+	if (lTStatus)
+		gtk_label_set_text(GTK_LABEL(lTStatus),_("IR transceiver on"));
 }
 
 
@@ -599,31 +712,9 @@ radio_off (void)
 				   gpe_find_icon ("irda-off"));
 
 	do_stop_radio ();
+	if (lTStatus)
+		gtk_label_set_text(GTK_LABEL(lTStatus),_("IR transceiver off"));
 }
-
-
-static void
-sigchld_handler (int sig)
-{
-/*  int status;
-  pid_t p = waitpid (0, &status, WNOHANG);
-
-  if (p == hciattach_pid)
-    {
-      hciattach_pid = 0;
-      if (radio_is_on)
-	{
-	  gpe_error_box_nonblocking (_("hciattach died unexpectedly"));
-	  radio_off ();
-	}
-    }
-  else if (p > 0)
-    {
-      fprintf (stderr, "unknown pid %d exited\n", p);
-    }
-*/
-}
-
 
 
 static void
@@ -641,6 +732,7 @@ schedule_message_delete (guint id, guint time)
 	g_timeout_add (time, (GSourceFunc) cancel_dock_message,
 		       (gpointer) id);
 }
+
 
 static void
 clicked (GtkWidget * w, GdkEventButton * ev)
@@ -677,8 +769,6 @@ main (int argc, char *argv[])
 
 	gtk_window_set_title (GTK_WINDOW (window), _("IrDa control"));
 
-	signal (SIGCHLD, sigchld_handler);
-
 	menu = gtk_menu_new ();
 	menu_radio_on = gtk_menu_item_new_with_label (_("Switch IR on"));
 	menu_radio_off = gtk_menu_item_new_with_label (_("Switch IR off"));
@@ -697,10 +787,17 @@ main (int argc, char *argv[])
 	g_signal_connect (G_OBJECT (menu_remove), "activate",
 			  G_CALLBACK (gtk_main_quit), NULL);
 
+	radio_is_on = irda_is_on();
+
 	if (!radio_is_on)
 	{
 		gtk_widget_set_sensitive (menu_vcard, FALSE);
 		gtk_widget_show (menu_radio_on);
+	}
+	else
+	{
+		gtk_widget_set_sensitive (menu_vcard, TRUE);
+		gtk_widget_show (menu_radio_off);
 	}
 
 	gtk_widget_show (menu_control);

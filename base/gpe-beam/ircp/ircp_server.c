@@ -231,7 +231,7 @@ static int new_file(ircp_server_t *srv, obex_object_t *object)
 	}
 
 	srv->infocb(IRCP_EV_RECEIVING, name);	
-	srv->fd = ircp_open_safe("", name);
+	srv->fd = ircp_open_safe(srv->inbox, name);
 	
 	ret = srv->fd;
 
@@ -290,11 +290,12 @@ ircp_server_t *ircp_srv_open(ircp_info_cb_t infocb)
 
 	DEBUG(4, "\n");
 	srv = malloc(sizeof(ircp_server_t));
-	memset(srv,0,sizeof(ircp_server_t));
 	
 	if(srv == NULL)
 		return NULL;
 
+	memset(srv,0,sizeof(ircp_server_t));
+	
 	srv->fd = -1;
 	srv->infocb = infocb;
 

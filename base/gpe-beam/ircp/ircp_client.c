@@ -141,9 +141,12 @@ ircp_client_t *ircp_cli_open(ircp_info_cb_t infocb)
 
 	DEBUG(4, "\n");
 	cli = malloc(sizeof(ircp_client_t));
+	
 	if(cli == NULL)
 		return NULL;
 
+	memset(cli,0,sizeof(ircp_client_t));
+	
 	cli->infocb = infocb;
 	cli->fd = -1;
 

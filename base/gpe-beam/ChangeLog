@@ -1,3 +1,13 @@
+07/29/2003		Florian Boor <florian.boor@kernelconcepts.de>
+
+	- IR transmission and receive routines and fixes.
+	- Some layout changes.
+	- Status message line.
+	- added irsw tool.
+	- turn ir on if needed.
+	- changed postinst to set irsw suid root
+	- updated control, .desktop
+
 07/28/2003		Florian Boor <florian.boor@kernelconcepts.de>
 
 	- Added ircp stuff, fixed it's initialisation

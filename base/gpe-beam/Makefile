@@ -7,7 +7,7 @@ GTK2 = yes
 INSTALL = install
 PREFIX = /usr
 DESTDIR = /
-CONTROL = control
+CONTROL = control1
 
 ifeq ($(CVSBUILD),yes)
 LDFLAGS += -L../libgpewidget -L.
@@ -66,7 +66,7 @@ LDFLAGS += -lX11 -lXext -lXrender -lgdk-x11-2.0
 endif #native or cross-compile
 
 
-MEMBERS  = main 
+MEMBERS  = main filesel
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
@@ -75,10 +75,13 @@ SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
 PIXMAPS = irda-16.png irda.png irda-16-on.png
 
-all: $(PACKAGE) vcard-export vcard-import vcard-import-file
+all: $(PACKAGE) vcard-export vcard-import vcard-import-file irsw
 
 $(PACKAGE): libircp.a $(OBJS)
 	$(CC) -g -o $@ $(OBJS) $(LDFLAGS) $(IRFLAGS)
+
+irsw: irsw.o irsw.o
+	$(CC) -o $@ $^ $(LDFLAGS)
 
 CFLAGS += $(MIMECFLAGS)
 
@@ -97,10 +100,15 @@ libircp.a: $(libircp_a_OBJECTS) $(libircp_a_DEPENDENCIES)
 	$(RANLIB) libircp.a
 
 install-program: $(PACKAGE)
-	sed -e s/VERSION/$(VERSION)/ <$(CONTROL).pre > $(CONTROL)
+	mkdir -p $(DESTDIR)/CONTROL
+	sed -e s/VERSION/$(VERSION)/ <familiar/$(CONTROL) > $(DESTDIR)/CONTROL/control
 	mkdir -p $(DESTDIR)/$(PREFIX)/bin
 	$(INSTALL) $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/
-	$(STRIP) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
+	$(INSTALL) irsw $(DESTDIR)$(PREFIX)/bin/
+	$(INSTALL) vcard-export $(DESTDIR)$(PREFIX)/bin/
+	$(INSTALL) vcard-import $(DESTDIR)$(PREFIX)/bin/
+	$(INSTALL) vcard-import-file $(DESTDIR)$(PREFIX)/bin/
+	$(STRIP) $(DESTDIR)$(PREFIX)/bin/*
 	mkdir -p $(DESTDIR)$(PREFIX)/share/pixmaps
 	for i in $(PIXMAPS); do install -m 644 -D pixmaps/$$i $(DESTDIR)$(PREFIX)/share/pixmaps/$$i; done
 	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
