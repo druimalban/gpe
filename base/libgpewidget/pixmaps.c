@@ -39,9 +39,15 @@ gpe_load_one_icon (const char *filename, gchar **error)
     }
   else
     {
-      snprintf (buf, sizeof (buf) - 1, "%s/%s.png", theme_dir, filename);
-      buf[sizeof (buf) - 1] = 0;
-      if (access (buf, F_OK) != 0 && theme_dir != default_theme_dir)
+      gboolean found = FALSE;
+      if (theme_dir)
+	{
+	  snprintf (buf, sizeof (buf) - 1, "%s/%s.png", theme_dir, filename);
+	  buf[sizeof (buf) - 1] = 0;
+	  if (access (buf, R_OK) == 0)
+	    found = TRUE;
+	}
+      if (found == FALSE && theme_dir != default_theme_dir)
 	{
 	  snprintf (buf, sizeof (buf) - 1, "%s/%s.png", default_theme_dir, 
 		    filename);
