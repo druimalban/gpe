@@ -2,9 +2,13 @@ PACKAGE = ipaq-sleep
 
 PREFIX = /usr/local
 
-VERSION = 0.7-7
+VERSION = 0.7-9
 
 CVSBUILD = yes
+
+PACKAGE_LDFLAGS = $(STANDARD_LIBS) `pkg-config --libs x11 xextensions` -lX11 -lXext -Wall -lapm -lXss
+PACKAGE_CFLAGS = $(STANDARD_CFLAGS) `pkg-config --cflags x11 xextensions`
+PACKAGE_CPPFLAGS = $(STANDARD_CPPFLAGS)
 
 ifeq ($(CVSBUILD),yes)
 BUILD = ../build
@@ -12,10 +16,12 @@ else
 BUILD = build
 endif
 
+OBJS = $(PACKAGE).o
+
 all: $(PACKAGE)
 
-$(PACKAGE): $(PACKAGE).c
-	$(CC) -Os -fomit-frame-pointer -o $(PACKAGE) $(PACKAGE).c -I/usr/X11R6/include -L/usr/X11R6/lib -lX11 -lXext -lXss -Wall -lapm
+$(PACKAGE): $(OBJS)
+	$(CC) -o $(PACKAGE) $(PACKAGE).o $(LDFLAGS) $(PACKAGE_LDFLAGS)
 
 install-program: all
 	install -Ds $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
