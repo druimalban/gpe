@@ -27,9 +27,8 @@
 #include <sys/ioctl.h>
 #include <linux/h3600_ts.h>
 #define TS_DEV "/dev/touchscreen/0"
-#endif
-
 static FLITE_IN bl;
+#endif
 
 void turn_light(int status)
 {
@@ -76,6 +75,7 @@ int get_light_state ()
       tsbl.power = 1;
 	}
   }
+  if (tsbl.power) bl.brightness = tsbl.brightness;
 #endif
   return tsbl.power;
 }
@@ -98,12 +98,13 @@ void set_brightness (int brightness)
 
 int get_brightness ()
 {
-  struct h3600_ts_backlight tsbl;
-  int fd;
-  char state[5];
 #ifdef __i386__
   return 10; // bl doesnt exit on i386 dev machines!
 #else
+  struct h3600_ts_backlight tsbl;
+  int fd;
+  char state[5];
+  
   tsbl.brightness = 10;
   fd = open(TS_DEV, O_RDONLY);  // if we are allowed, we read bl setting direct from device
   if (fd != -1) {
@@ -124,6 +125,6 @@ int get_brightness ()
     }
   }
   bl.brightness = tsbl.brightness;
-#endif
   return tsbl.brightness;
+#endif
 }
