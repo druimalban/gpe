@@ -3,6 +3,7 @@ PACKAGE = gpe-login
 CVSBUILD = yes
 GTK2 = yes
 VERSION = 0.44
+DEBUG = no
 
 ifeq ($(GTK2),yes)
 GTKLDFLAGS = `pkg-config --libs gtk+-2.0`
@@ -14,7 +15,14 @@ GTKCFLAGS = `gtk-config --cflags` `gdk-pixbuf-config --cflags`
 CONTROL_GPE_LOGIN = control.gpe-login
 endif
 
-CFLAGS = $(GTKCFLAGS) -Os -Wall -fomit-frame-pointer -I../librootimage
+ifeq ($(DEBUG),yes)
+CFLAGS += -O2 -g
+LDFLAGS += -g
+else
+CFLAGS += -Os -fomit-frame-pointer
+endif
+
+CFLAGS += $(GTKCFLAGS) -Wall -I../librootimage
 CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 
 ifeq ($(CVSBUILD),yes)
@@ -72,6 +80,8 @@ install-login: gpe-login install-po
 	install -m 755 X11/10unsetgtkrc $(DESTDIR)/etc/X11/Xsession.d/10unsetgtkrc
 	install -d $(DESTDIR)/etc/X11/Xinit.d
 	install -m 755 gpe-login.xinit $(DESTDIR)/etc/X11/Xinit.d/99gpe-login
+	install -d $(DESTDIR)/etc/gpe
+	install -m 644 lcale.alias $(DESTDIR)/etc/gpe/
 
 install-scripts: gpe-logout.desktop
 	for i in X11/Xsession-gpe.d X11/Xinit.d; do install -d $(DESTDIR)/etc/$$i; FILES=`echo $$i/* | sed "s:$$i/CVS::"`; install -m 755 $$FILES $(DESTDIR)/etc/$$i/; done

@@ -1,5 +1,10 @@
 2003-03-16  Philip Blundell  <philb@gnu.org>
 
+	* Makefile (CFLAGS, LDFLAGS): Set according to $(DEBUG).
+
+	* locale.alias: New file.
+	* Makefile (install-login): Install it.
+
 	* gpe-login.c (build_language_menu): Create and return
 	GtkOptionMenu.
 	(locale_read_user): Use g_strdup_printf in place of
