@@ -3,7 +3,7 @@ PACKAGE = gpe-timesheet
 CVSBUILD = yes
 VERSION = 0.12
 GTK2 = yes
-LINGUAS = id pt zh_TW fr
+LINGUAS = id pt zh_TW fr ro
 
 ifeq ($(GTK2),yes)
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
