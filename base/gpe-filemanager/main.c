@@ -663,7 +663,7 @@ button_clicked (GtkWidget *widget, gpointer udata)
   }
 printf("Type: %s\n",file_info->vfs->mime_type);
 printf("Act: %i\n",gnome_vfs_mime_get_default_action_type(file_info->vfs->mime_type));
-if (!strcmp( file_info->vfs->mime_type,"application/x-gnome-app-info"))
+if ((file_info->vfs->mime_type) && (!strcmp(file_info->vfs->mime_type,"application/x-gnome-app-info")))
     browse_directory (file_info->filename);
 else    
   if (file_info->vfs->type == GNOME_VFS_FILE_TYPE_REGULAR || file_info->vfs->type == GNOME_VFS_FILE_TYPE_UNKNOWN)
