@@ -96,6 +96,7 @@ void app_init(int argc, char ** argv){
 }
 
 void app_quit(){
+  prefs_save_settings();
   gtk_exit (0);
 }
 

@@ -85,6 +85,9 @@ void prefs_fetch_settings(){
   xsettings_client_destroy (client);
 }
 
+
+#ifdef USE_X_COMM
+
 void _write_setting_int(Display * dpy, Window win,
                         Atom gpe_settings_update_atom,
                         Window manager,
@@ -142,7 +145,22 @@ void _write_setting_int(Display * dpy, Window win,
   }
 }
 
+#else
+
+#include <stdlib.h>
+void _system_write_setting_int(gchar * key, gint value){
+    gchar * command;
+    command = g_strdup_printf("xst write %s/%s int %d", KEY_BASE, key, value);
+    system (command);
+}
+
+#endif //USE_X_COMM
+
+
 void prefs_save_settings(){
+
+#ifdef USE_X_COMM
+
   Display * dpy = GDK_DISPLAY();
   Atom gpe_settings_update_atom = XInternAtom (dpy, "_GPE_SETTINGS_UPDATE", 0);
   Window manager = XGetSelectionOwner (dpy, gpe_settings_update_atom);
@@ -152,13 +170,23 @@ void prefs_save_settings(){
     gpe_error_box( _("gpe-confd is not running.\nCannot save the preferences."));
     return;
   }
-  win = XCreateSimpleWindow (dpy, DefaultRootWindow (dpy), 1, 1, 1, 1, 0, 0, 0);// ???
+  win = GDK_ROOT_WINDOW ();
+  //XCreateSimpleWindow (dpy, DefaultRootWindow (dpy), 1, 1, 1, 1, 0, 0, 0);// ???
 
+  //_write_setting_int(dpy, win, gpe_settings_update_atom, manager, "DUMMY",  42);
   _write_setting_int(dpy, win, gpe_settings_update_atom, manager,
                      "joypad-scroll",  (sketchbook.prefs.joypad_scroll)?1:0);
   _write_setting_int(dpy, win, gpe_settings_update_atom, manager,
                      "grow-on-scroll", (sketchbook.prefs.grow_on_scroll)?1:0);
 
+#else //Use system call
+
+  _system_write_setting_int("joypad-scroll",  (sketchbook.prefs.joypad_scroll)?1:0);
+  _system_write_setting_int("grow-on-scroll", (sketchbook.prefs.grow_on_scroll)?1:0);
+  //_system_write_setting_int("dummy-1", 42);
+  //_system_write_setting_int("dummy-2", 43);
+
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -184,7 +212,6 @@ void reset_prefs_from_gui(){
 
 void on_button_ok_clicked (GtkButton *button, gpointer _unused){
   reset_prefs_from_gui();
-  prefs_save_settings();//FIXME: should be done only when exit application
   gtk_notebook_set_page(sketchbook.notebook, PAGE_SELECTOR);
   //**/_print_prefs();
 }
