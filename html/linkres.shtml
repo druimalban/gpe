@@ -37,8 +37,8 @@
 <UL>
 <LI>Sam J. Engstr&ouml;m has a nice collection<BR>
 <A HREF="http://www.samengstrom.com/ipaq/">http://www.samengstrom.com/ipaq/</A>
-<LI>sqlite is the database engine library used by some applications and usqld<BR>
-<A HREF="http://www.hwaci.com/sqlite/">http://www.hwaci.com/sqlite/</A>
+<LI>SQLite is the database engine library used by some applications and usqld<BR>
+<A HREF="http://www.sqlite.org/">http://www.sqlite.org/</A>
 <LI> SyncML<BR>
 <A HREF="http://www.syncml.org">http://www.syncml.org</A><BR>
 SyncML library<BR>
