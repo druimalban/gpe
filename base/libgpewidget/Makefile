@@ -17,21 +17,11 @@ else
 BUILD = build
 endif
 
-$(eval CFLAGS = $(shell pkg-config --cflags xrender))
-$(eval LDFLAGS = $(shell pkg-config --libs xrender))
+CPPFLAGS = $(STANDARD_CPPFLAGS)
+CFLAGS = $(STANDARD_CFLAGS) $(GTKCFLAGS) $(shell pkg-config --cflags xrender)) 
+LDFLAGS = $(STANDARD_LDFLAGS) $(GTKLIBS) $(shell pkg-config --libs xrender))
 
-LDFLAGS += $(GTKLIBS)
-CFLAGS += $(GTKCFLAGS)
-
-CFLAGS += -DPREFIX=\"$(PREFIX)\" -DPACKAGE=\"$(PACKAGE)\" -D_GNU_SOURCE -Wall -fPIC
-ifeq ($(DEBUG),yes)
-CFLAGS += -O2 -g
-LDFLAGS += -g
-else
-CFLAGS += -Os -fomit-frame-pointer
-endif
-CFLAGS += -MD
-
+CFLAGS += -fPIC
 CPPFLAGS += -I./gpe
 
 HEADERS += init.h render.h errorbox.h smallbox.h pixmaps.h gtkdatecombo.h dirbrowser.h stylus.h picturebutton.h spacing.h translabel.h question.h windows.h gpe-iconlist.h gtksimplemenu.h

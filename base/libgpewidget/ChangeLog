@@ -1,3 +1,7 @@
+2003-10-19  Philip Blundell  <philb@gnu.org>
+
+	* Makefile: Use STANDARD_CFLAGS, STANDARD_LDFLAGS, STANDARD_CPPFLAGS.
+
 2003-10-18  Philip Blundell  <philb@gnu.org>
 
 	* gpe/popup.h: Include Xlib.h to avoid undefined types.
