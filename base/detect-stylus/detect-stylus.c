@@ -35,7 +35,7 @@ main (int argc, char *argv[])
 	}
       
       root = RootWindow (dpy, 0);
-      atom = XInternAtom (dpy, "GPE_STYLUS_MODE", 0);
+      atom = XInternAtom (dpy, "_GPE_STYLUS_MODE", 0);
       
       XChangeProperty (dpy, root, atom, XA_INTEGER, 8, PropModeReplace, &b, 1);
 
