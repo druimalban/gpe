@@ -14,7 +14,7 @@ CFLAGS += -Os -fomit-frame-pointer
 endif
 CFLAGS += -MD
 
-HEADERS = init.h render.h errorbox.h smallbox.h pixmaps.h gtkminifilesel.h gtkdatecombo.h gtkdatesel.h dirbrowser.h what.h stylus.h picturebutton.h
+HEADERS = init.h render.h errorbox.h smallbox.h pixmaps.h gtkminifilesel.h gtkdatecombo.h gtkdatesel.h dirbrowser.h stylus.h picturebutton.h
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
