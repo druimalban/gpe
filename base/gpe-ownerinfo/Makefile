@@ -1,11 +1,11 @@
 PACKAGE = gpe-ownerinfo2
-VERSION = 0.06
+VERSION = 0.07
 
 PREFIX = /usr/local
 DEBUG = no
 CVSBUILD = yes
 GTK2=yes
-LINGUAS = de pt_PT
+LINGUAS = de
 
 MEMBERS = gpe-ownerinfo2
 CONTROL = control1

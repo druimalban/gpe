@@ -24,11 +24,8 @@ text marked as Japanese.)
 Look for comment "LanguageCode" in po/<lang>.po, then put the code
 for your language in the 'mgstr'.  (Example: "ja" for Japanese)
 
-I will then use this information to mark up string with this
-language code. (Like "<span lang='" LanguageCode "'>foo</span>")
-
-The name "Pango" comes from the Greek "Pan" (&#x3a0;&#x3b1;&#x3bd;),
-meaning "All," and the Japanese "Go" (&#x8a9e;), meaning "Language."
+I will then use this information to mark up strings with this
+language code.
 
 -------------------------------------------------------------------------------
 

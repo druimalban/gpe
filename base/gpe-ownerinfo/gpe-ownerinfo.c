@@ -406,6 +406,8 @@ mapped (GtkWidget *window)
 int
 main (int argc, char *argv[])
 {
+  gchar *package_revision = "$Revision$";
+  
   GtkWidget *GPE_Ownerinfo;
   GtkWidget *notebook;
   GtkWidget *mainvbox;
@@ -441,6 +443,11 @@ main (int argc, char *argv[])
   gint val;
   gint opt;
   gint upgrade_result = UPGRADE_ERROR;
+  gchar *pango_lang_code;
+
+  /* (LanguageCode) translators: please replace this with your own
+     Pango language code: */
+  pango_lang_code = g_strdup (_("en"));
   
 #ifdef ENABLE_NLS
   setlocale (LC_ALL, "");
@@ -462,8 +469,8 @@ main (int argc, char *argv[])
 	flag_keep_on_top = TRUE;
 	break;
       case 'h':
-	printf (_("GPE Owner Info $Revision$\n"));
-	printf (_("\n"));
+	printf (g_strdup_printf ("%s %s", _("GPE Owner Info"), package_revision));
+	printf ("\n");
 	printf (_("Valid options:\n"));
 	printf (_("   -g GEOMETRY  window geometry (default: 240x120+0+200)\n"));
 	printf (_("   -t           make window transparent\n"));
@@ -602,7 +609,8 @@ main (int argc, char *argv[])
 
   catlabel = gtk_label_new (NULL);
   gtk_label_set_markup (GTK_LABEL (catlabel),
-			g_strdup_printf ("<span weight='bold'>%s</span>",
+			g_strdup_printf ("<span lang='%s' weight='bold'>%s</span>",
+					 pango_lang_code, 
 					 _("Owner Information")));
   gtk_widget_show (catlabel);
   gtk_box_pack_start (GTK_BOX (mainvbox), catlabel, FALSE, FALSE, 0);
@@ -627,8 +635,8 @@ main (int argc, char *argv[])
 
   namelabel = gtk_label_new (NULL);
   gtk_label_set_markup (GTK_LABEL (namelabel),
-			g_strdup_printf ("<span>%s</span>",
-					 _("Name:")));
+			g_strdup_printf ("<span lang='%s'>%s</span>",
+					 pango_lang_code, _("Name:")));
   gtk_widget_show (namelabel);
   gtk_box_pack_start (GTK_BOX (leftcolvbox), namelabel, FALSE, TRUE, 0);
   gtk_label_set_justify (GTK_LABEL (namelabel), GTK_JUSTIFY_LEFT);
@@ -636,8 +644,8 @@ main (int argc, char *argv[])
 
   emaillabel = gtk_label_new (NULL);
   gtk_label_set_markup (GTK_LABEL (emaillabel),
-			g_strdup_printf ("<span>%s</span>",
-					 _("E-Mail:")));
+			g_strdup_printf ("<span lang='%s'>%s</span>",
+					 pango_lang_code, _("E-Mail:")));
   gtk_widget_show (emaillabel);
   gtk_box_pack_start (GTK_BOX (leftcolvbox), emaillabel, FALSE, TRUE, 0);
   gtk_label_set_justify (GTK_LABEL (emaillabel), GTK_JUSTIFY_LEFT);
@@ -645,8 +653,8 @@ main (int argc, char *argv[])
 
   phonelabel = gtk_label_new (NULL);
   gtk_label_set_markup (GTK_LABEL (phonelabel),
-			g_strdup_printf ("<span>%s</span>",
-					 _("Phone:")));
+			g_strdup_printf ("<span lang='%s'>%s</span>",
+					 pango_lang_code, _("Phone:")));
   gtk_widget_show (phonelabel);
   gtk_box_pack_start (GTK_BOX (leftcolvbox), phonelabel, FALSE, TRUE, 0);
   gtk_label_set_justify (GTK_LABEL (phonelabel), GTK_JUSTIFY_LEFT);
@@ -658,8 +666,8 @@ main (int argc, char *argv[])
 
   addresslabel = gtk_label_new (NULL);
   gtk_label_set_markup (GTK_LABEL (addresslabel),
-			g_strdup_printf ("<span>%s</span>",
-					 _("Address:")));
+			g_strdup_printf ("<span lang='%s'>%s</span>",
+					 pango_lang_code, _("Address:")));
   gtk_widget_show (addresslabel);
   gtk_box_pack_start (GTK_BOX (address_button_vbox), addresslabel, FALSE, FALSE, 0);
   gtk_label_set_justify (GTK_LABEL (addresslabel), GTK_JUSTIFY_LEFT);
@@ -769,8 +777,10 @@ main (int argc, char *argv[])
 			g_strdup_printf ("<span>%s</span>",
 					 ownername));
   gtk_label_set_selectable (GTK_LABEL (name), TRUE);
+  /* maybe play with <span stretch='ultracondensed'> here, but we
+     likely don't have the fonts: */
   gtk_label_set_markup (GTK_LABEL (email),
-			g_strdup_printf ("<span foreground='darkblue'><small><tt>%s</tt></small></span>",
+			g_strdup_printf ("<span foreground='darkblue'>%s</span>",
 					 owneremail));
   gtk_label_set_selectable (GTK_LABEL (email), TRUE);
   gtk_label_set_markup (GTK_LABEL (phone),

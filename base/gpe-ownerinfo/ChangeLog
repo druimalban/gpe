@@ -1,3 +1,11 @@
+2003-02-12  Colin Marquardt  <colin@marquardt-home.de>
+
+	* Makefile (VERSION): Bump up version.
+
+	* po/de.po: Initial translation.
+
+	* gpe-ownerinfo2.c (main): Make it a bit more translator-friendly.
+
 2003-02-05  Colin Marquardt  <colin@marquardt-home.de>
 
 	* gpe-ownerinfo2.c (main): Put widgets for the actual info into a
