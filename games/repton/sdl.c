@@ -66,6 +66,8 @@ sdl_init(void)
 		fprintf (stderr, "Unable to set video mode\n");
 		exit (1);
 	}
+
+	SDL_WM_SetCaption ("Repton", "repton");
 }
 
 void
@@ -172,6 +174,10 @@ keyboard_update ()
 			if (ev.button.button == SDL_BUTTON_RIGHT)
 				wmouse_button &= ~MOUSE_RIGHTBUTTON;
 			break;
+		case SDL_QUIT:
+			SDL_Quit ();
+			exit (0);
+			break;
 		default:
 			break;
 		}
@@ -202,7 +208,7 @@ check_keyboard(struct map_s *mptr)
 	}
 	else if (keydown[SDLK_m])
 		showmap(mptr);
-	else if (keydown[SDLK_q] || keydown[SDLK_ESCAPE])
+	else if (keydown[SDLK_q] || keydown[SDLK_ESCAPE] || keydown[SDLK_POWER])
 		return 1;
 
 	return 0;
@@ -459,7 +465,7 @@ select_episode(char *file, int *level)
 	for (;;) {
 		keyboard_update();
 
-		if (keydown[SDLK_q] || keydown[SDLK_ESCAPE])
+		if (keydown[SDLK_q] || keydown[SDLK_ESCAPE] || keydown[SDLK_POWER])
 			break;
 		if (wmouse_button & MOUSE_RIGHTBUTTON && !wmouse_oldbutton)
 			break;
@@ -664,7 +670,7 @@ main_screen(void)
 	for (;;) {
 		keyboard_update ();
 
-		if (keydown[SDLK_q] || keydown[SDLK_ESCAPE])
+		if (keydown[SDLK_q] || keydown[SDLK_ESCAPE] || keydown[SDLK_POWER])
 			break;
 
 		if (keydown[SDLK_s])

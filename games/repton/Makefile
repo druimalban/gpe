@@ -10,7 +10,7 @@ CFLAGS=		-I. -Wall $(COPT) `sdl-config --cflags` -MD
 LDFLAGS=
 LIBS=		`sdl-config --libs`
 
-PREFIX = /usr/local
+PREFIX = /usr
 BUILD = ../../base/build
 VERSION = 1.3
 

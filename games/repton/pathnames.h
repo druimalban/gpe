@@ -33,9 +33,9 @@
  */
 
 #if 1
-#define PATH_BITMAPS	"/usr/games/lib/repton/bmps"
-#define PATH_MAPS	"/usr/games/lib/repton/maps"
-#define PATH_SOUNDS	"/usr/games/lib/repton/snds"
+#define PATH_BITMAPS	"/usr/lib/repton/bmps"
+#define PATH_MAPS	"/usr/lib/repton/maps"
+#define PATH_SOUNDS	"/usr/lib/repton/snds"
 #else
 #define PATH_BITMAPS	"./bmps"
 #define PATH_MAPS	"./maps"
