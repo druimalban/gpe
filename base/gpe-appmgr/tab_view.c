@@ -50,12 +50,12 @@
 #include <gpe/spacing.h>
 #include <gpe/gpe-iconlist.h>
 #include <gpe/tray.h>
+#include <gpe/launch.h>
 
 /* everything else */
 #include "main.h"
 
 #include "cfg.h"
-#include "launch.h"
 
 //#define DEBUG
 #ifdef DEBUG
