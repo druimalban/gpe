@@ -260,7 +260,7 @@ delete_item (struct todo_list *list, struct todo_item *i)
 		      NULL, NULL, NULL,
 		      i->id);
 
-  g_list_remove (list->items, i);
+  list->items = g_list_remove (list->items, i);
 
   g_free (i->what);
   g_free (i->summary);
