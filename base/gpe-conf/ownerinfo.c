@@ -41,7 +41,7 @@ static gchar *ownername, *owneremail, *ownerphone, *owneraddress;
 FILE *fp;
 
 GtkWidget *Ownerinfo_Build_Objects()
-{  
+{
   GtkWidget *table1;
   GtkWidget *owner_name_label;
   GtkWidget *owner_email_label;
@@ -62,7 +62,7 @@ GtkWidget *Ownerinfo_Build_Objects()
     {
       char buf[2048];
       guint numchar;
-      
+
       if (fgets (buf, sizeof (buf), fp))
         {
           ownername = g_strdup (buf);
@@ -84,7 +84,7 @@ GtkWidget *Ownerinfo_Build_Objects()
       	  owneraddress = g_strdup (buf);
       	  owneraddress[numchar]='\0';
       	}
-      
+
       fclose (fp);
     }
   else /* fp == NULL, no file existing */
@@ -174,6 +174,17 @@ GtkWidget *Ownerinfo_Build_Objects()
   gtk_text_insert (GTK_TEXT (address), NULL, NULL, NULL,
                    owneraddress, strlen(owneraddress));
 
+  /*
+   * Check if we are even allowed to write to the owner data file.
+   * FIXME:
+   *    Gotta do the same at top level of gpe-conf since the buttons
+   *    are not insensitive otherwise.
+   */
+  if (access (GPE_OWNERINFO_DATA, W_OK) == 0)
+    gtk_widget_set_sensitive (table1, TRUE);
+  else 
+    gtk_widget_set_sensitive (table1, FALSE);
+ 
   return table1;
 
 }
