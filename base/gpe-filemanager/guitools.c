@@ -51,13 +51,16 @@ is_mounted(gchar *path)
   if (mtab)
     {
       char buf[255];
+      char target[255];
+      
       while (fgets(buf, 255, mtab))
         {
-          if (strstr(buf, path))
-            {
-              result = TRUE;
-              break;
-            }
+          if (sscanf(buf, "%*s %s %*s %*s %*i %*i", target))
+            if (!strcmp(target, path))
+              {
+                result = TRUE;
+                break;
+              }
         }
       fclose(mtab);
     }
