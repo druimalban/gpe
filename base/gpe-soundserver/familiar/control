@@ -5,5 +5,5 @@ Version: VERSION
 Source: SOURCE
 Architecture: arm
 Maintainer: Phil Blundell <pb@debian.org>
-Depends: esd
+Depends: esd, xlibs
 Description: X-aware ESD wrapper
