@@ -113,12 +113,12 @@ gpe_button_new_from_stock (const gchar *stock_id, int type)
 	{
 	case GPE_BUTTON_TYPE_ICON:
 	  widget = gtk_image_new_from_stock (stock_id, GTK_ICON_SIZE_SMALL_TOOLBAR);
-	  gtk_container_add (GTK_CONTAINER (button), widget);
+	  gtk_container_add (GTK_CONTAINER (align), widget);
 	  break;
 
 	case GPE_BUTTON_TYPE_LABEL:
 	  widget = gtk_label_new_with_mnemonic (item.label);
-	  gtk_container_add (GTK_CONTAINER (button), widget);
+	  gtk_container_add (GTK_CONTAINER (align), widget);
 	  break;
 
 	default:
