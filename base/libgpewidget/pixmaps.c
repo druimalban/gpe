@@ -137,8 +137,7 @@ gpe_find_icon (const char *name)
       }
       else
       {
-        gpe_error_box (error);
-        abort ();
+	fprintf (stderr, error);
       }
     }
 
