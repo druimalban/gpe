@@ -1,0 +1,17 @@
+
+<!--#set var="addtitle" value="Mail Client"-->
+<!--#set var="pagename" value="mail client"-->
+<!--#set var="author" value="Erez Doron"-->
+<!--#set var="authoremail" value="erez@savan.com"-->
+<!--#include virtual="/includes/head.shtml"-->
+
+<CENTER><IMG SRC="/images/gpe-mail1.png" ALT="this is what it could look like">
+<IMG SRC="/images/gpe-mail1.png" ALT="this is what it could look like"></CENTER>
+<HR>
+<H2>Function</H2>
+<P>
+The Mail client currently supports offline reading and writing of mail.
+It supports SMTP, IMAPv4 and POP3, optionally via SSL.
+</P>
+
+<!--#include virtual="/includes/foot.shtml"-->
