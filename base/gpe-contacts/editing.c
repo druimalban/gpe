@@ -857,6 +857,7 @@ void
 on_edit_cancel_clicked (GtkButton * button, gpointer user_data)
 {
   gtk_widget_destroy (GTK_WIDGET (user_data));
+  update_display();
 }
 
 void        

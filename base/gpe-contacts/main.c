@@ -232,8 +232,10 @@ get_tag_name(const gchar* tag)
   for (page = edit_pages; page; page = page->next)
     {
       edit_thing_t e = page->data;
-
-      return g_strdup(get_tag_name_1 (tag, e));
+      const gchar *t = get_tag_name_1 (tag, e);
+    
+      if (t) 
+        return g_strdup(t);
     }
 
   return NULL;
@@ -271,7 +273,16 @@ show_details (struct person *p)
           {
             struct tag_value *id = (struct tag_value *) iter->data;
             fieldname = get_tag_name(id->tag);
-            if ((fieldname) && strcmp(id->tag,"NAME"))
+            /* exception list... */
+            if ((fieldname) 
+                 && strcasecmp(id->tag,"NAME")
+                 && strcasecmp(id->tag,"GIVEN_NAME")
+                 && strcasecmp(id->tag,"FAMILY_NAME")
+                 && strcasecmp(id->tag,"HONORIFIC_SUFFIX")
+                 && strcasecmp(id->tag,"TITLE")
+                 && strcasecmp(id->tag,"BIRTHDAY")
+                 && strcasecmp(id->tag,"PHOTO")
+               )
               {
                 if (fieldname[strlen(fieldname)-1] == ':')
                   fieldname[strlen(fieldname)-1] = 0;
@@ -432,8 +443,8 @@ match_for_search (struct person *p, const gchar *text, struct gpe_pim_category *
   else
     name = g_strdup("");
   
-  if (!g_str_has_prefix(gn,text) && !g_str_has_prefix(fn,text) 
-	  && !g_str_has_prefix(name,text))
+  if (!g_str_has_prefix(gn,text) 
+      && !g_str_has_prefix(fn,text) && !g_str_has_prefix(name,text))
     {
       if (gn) g_free(gn);
       if (fn) g_free(fn);
@@ -513,7 +524,7 @@ do_search (GObject *obj, GtkWidget *entry)
     {
       struct person *p = iter->data;
       GtkTreeIter iter;
-
+      
       if (match_for_search (p, text, c))
         {
 	      gtk_list_store_append (list_store, &iter);
@@ -575,6 +586,26 @@ static gboolean
 window_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkTreeView *tree)
 {
   GtkTreePath *path;
+  
+  /* common hotkeys */
+  if (k->state & GDK_CONTROL_MASK)
+    {
+        switch (k->keyval)
+          {
+            case GDK_f:
+              gtk_widget_grab_focus(search_entry);
+              return TRUE;
+            break;
+            case GDK_q:
+              gtk_main_quit();
+              return TRUE;
+            break;
+            case GDK_n:
+              new_contact(widget, NULL);
+              return TRUE;
+            break;
+          }
+    }
   
   if (k->keyval == GDK_Up)
     {

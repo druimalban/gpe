@@ -226,10 +226,10 @@ read_one_entry (void *arg, int argc, char **argv, char **names)
   sqlite_exec_printf (db, "select tag,value from contacts where (urn=%d) and ((tag='FAMILY_NAME') or (tag='family_name'))",
 		      read_family_name, p, NULL, p->id);
 
-  if (p->name)
-    *list = g_slist_prepend (*list, p);
-  else
-    discard_person (p);
+  /* we support contacts without name now */
+  if (!p->name) 
+    p->name = g_strdup("");
+  *list = g_slist_prepend (*list, p);
 
   return 0;
 }

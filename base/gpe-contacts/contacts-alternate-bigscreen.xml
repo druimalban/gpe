@@ -8,6 +8,10 @@
       <group>
         <label>Work</label>
         <single-item>
+          <tag>COMPANY</tag>
+          <label>Company:</label>
+        </single-item>
+        <single-item>
           <tag>WORK.TELEPHONE</tag>
           <label>Phone:</label>
         </single-item>

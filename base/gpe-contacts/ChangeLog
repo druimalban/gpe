@@ -1,3 +1,13 @@
+2004-08-25  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * Makefile: Updated version number.
+    * main.c: Support of some standard hotkeys (Ctrl+q, Ctrl+n...)
+    * db.c: We support contacts without name now.
+    * main.c: Added exception list of fields not to show in overview.
+    * editing.c: Update categories list on abort, categories might have changed.
+    * *.xml: Added company name.
+    * main.c: get_tag_name(): Worked only on first page, fixed it.
+
 2004-08-24  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * editing.c: Added missing population of categories display.
