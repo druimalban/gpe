@@ -36,7 +36,6 @@ clean-po:
 
 # ------------------------------------------------------------------------
 
-VERSION    = $(shell grep 'Version: '    familiar/control | cut -d ' ' -f 2)
 MAINTAINER = $(shell grep 'Maintainer: ' familiar/control | cut -d ' ' -f 2-)
 
 transdist := familiar/dist-translation

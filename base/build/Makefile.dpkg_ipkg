@@ -4,11 +4,6 @@
 ## in your Makefile.
 
 # Let's use whatever clean target the specific app provides:
-upstream: clean
-	( VERSION=`dpkg-parsechangelog | grep ^Version | cut -d\  -f2 | cut -d- -f1`; cd ..; cp -a $(PACKAGE) $(PACKAGE)-$$VERSION.orig; tar czf $(PACKAGE)_$$VERSION.orig.tar.gz --exclude=$(PACKAGE)-$$VERSION.orig/debian --exclude=$(PACKAGE)-$$VERSION.orig/CVS --exclude=$(PACKAGE)-$$VERSION.orig/familiar $(PACKAGE)-$$VERSION.orig ; rm -rf $(PACKAGE)-$$VERSION.orig )
-
-dpkg: upstream
-	( VERSION=`dpkg-parsechangelog | grep ^Version | cut -d\  -f2 | cut -d- -f1`; TMP=/var/tmp/debian/$(PACKAGE); PV=$(PACKAGE)-$$VERSION; rm -rf $$TMP; mkdir -p $$TMP; cp ../$(PACKAGE)_$$VERSION.orig.tar.gz $$TMP; (cd $$TMP; tar xzf $(PACKAGE)_$$VERSION.orig.tar.gz ; mv $$PV.orig $$PV ); mkdir -p $$TMP/$$PV/debian; cp debian/* $$TMP/$$PV/debian; cd $$TMP/$$PV; fakeroot dpkg-buildpackage ; cd ..; rm -rf $$PV )
 
 ifeq ($(GTK2),yes)
 CONTROL = control1
@@ -17,12 +12,17 @@ CONTROL = control
 endif
 
 dist: clean
-	( cd ..; tar cf - --exclude "*/CVS" --exclude "*~" --exclude "#*#" --exclude "$(PACKAGE)/debian" --exclude "$(PACKAGE)/familiar" --exclude ".*" --exclude "*.ipk" --exclude "*.ipk.*" $(PACKAGE) | bzip2 -9 >$(PACKAGE).tar.bz2 )
+	rm -rf ../$(PACKAGE)-$(VERSION)
+	mkdir ../$(PACKAGE)-$(VERSION)
+	( tar cf - --exclude "*/CVS" --exclude CVS --exclude "*~" --exclude "#*#" --exclude "debian" --exclude "familiar" --exclude ".*" --exclude "*.ipk" --exclude "*.ipk.*" --exclude "*.mo" --exclude "*.d" * ) | (cd ../$(PACKAGE)-$(VERSION); tar xf -)
+	( cd ../$(PACKAGE)-$(VERSION); mkdir build; cp ../build/Makefile.dpkg_ipkg ../build/Makefile.translation build/ ; sed 's:^CVSBUILD.*:CVSBUILD = no:' < Makefile > Makefile.new; mv Makefile.new Makefile )
+	( cd .. ; tar cf - $(PACKAGE)-$(VERSION) | gzip -9 >$(PACKAGE)-$(VERSION).tar.gz )
+	rm -rf ../$(PACKAGE)-$(VERSION)
 
 ipkg: clean
 	rm -rf familiar/dist
 	mkdir -p familiar/dist/CONTROL
-	cp familiar/$(CONTROL) familiar/dist/CONTROL/control
+	sed 's:VERSION:$(VERSION)' < familiar/$(CONTROL) > familiar/dist/CONTROL/control
 	if test -e familiar/conffiles; then install -m 644 familiar/conffiles familiar/dist/CONTROL; fi
 	if test -e familiar/preinst;   then install familiar/preinst   familiar/dist/CONTROL; fi
 	if test -e familiar/postinst;  then install familiar/postinst  familiar/dist/CONTROL; fi
@@ -31,3 +31,9 @@ ipkg: clean
 	make DESTDIR=`pwd`/familiar/dist PREFIX=/usr prefix=/usr DEBUG=no install
 	chown -R root.root familiar/dist
 	ipkg-build familiar/dist
+
+dpkg: dist
+	mkdir -p ../deb
+	( cd ../deb; rm -rf $(PACKAGE)-$(VERSION); ln -s ../$(PACKAGE)-$(VERSION).tar.gz $(PACKAGE)_$(VERSION).orig.tar.gz ; tar xzf $(PACKAGE)_$(VERSION).orig.tar.gz )
+	mkdir -p ../deb/$(PACKAGE)-$(VERSION)/debian
+	for i in debian/*; do if test -f $$i; then cp $$i ../deb/$(PACKAGE)-$(VERSION)/debian/; fi; done
