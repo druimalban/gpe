@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Teleport
 Comment=Move applications between displays
-Exec=monolaunch -k /usr/share/pixmaps/teleport.png teleport
+Exec=mb-applet-launcher -k /usr/share/pixmaps/teleport.png teleport
 Type=PanelApp
 Icon=teleport.png
 Categories=Panel;Utility;GPE
