@@ -31,6 +31,8 @@
 
 #include <openobex/obex.h>
 
+#include "obexserver.h"
+
 #define OBEX_PUSH_HANDLE	10
 
 #define _(x)  (x)
@@ -44,8 +46,6 @@ struct chan
 
 static GList *channels;
 
-extern void import_vcard (const gchar *data, size_t len);
-
 static void
 file_received (gchar *name, const uint8_t *data, size_t data_len)
 {
@@ -57,6 +57,10 @@ file_received (gchar *name, const uint8_t *data, size_t data_len)
       
       if (strstr (lname, ".vcf"))
 	import_vcard (data, data_len);
+      else if (strstr (lname, ".vcs"))
+	import_vcal (data, data_len);
+      else
+	import_unknown (name, data, data_len);
       
       g_free (name);
     }

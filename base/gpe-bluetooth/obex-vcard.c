@@ -13,21 +13,10 @@
 #include <stdio.h>
 #include <libintl.h>
 #include <errno.h>
-#include <netinet/in.h>
-#include <sys/poll.h>
-#include <sys/wait.h>
-#include <sys/socket.h>
 
 #include <gtk/gtk.h>
 #include <gpe/errorbox.h>
 #include <gpe/question.h>
-
-#include <bluetooth/bluetooth.h>
-#include <bluetooth/l2cap.h>
-#include <bluetooth/hci.h>
-#include <bluetooth/hci_lib.h>
-#include <bluetooth/sdp.h>
-#include <bluetooth/sdp_lib.h>
 
 #include <openobex/obex.h>
 
@@ -36,6 +25,8 @@
 #include <gpe/vcard.h>
 
 #include <sqlite.h>
+
+#include "obexserver.h"
 
 #define _(x)  (x)
 

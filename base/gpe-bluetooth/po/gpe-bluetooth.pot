@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-01-19 00:03+0000\n"
+"POT-Creation-Date: 2004-02-25 22:22+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -48,39 +48,39 @@ msgstr ""
 msgid "Retrieving service information"
 msgstr ""
 
-#: main.c:421
+#: main.c:424
 msgid "Bluetooth devices"
 msgstr ""
 
-#: main.c:439
+#: main.c:442
 msgid "Unable to scan for devices"
 msgstr ""
 
-#: main.c:453
+#: main.c:456
 msgid "hciattach died unexpectedly"
 msgstr ""
 
-#: main.c:517
+#: main.c:520
 msgid "Bluetooth control"
 msgstr ""
 
-#: main.c:522
+#: main.c:525
 msgid "Switch radio on"
 msgstr ""
 
-#: main.c:523
+#: main.c:526
 msgid "Switch radio off"
 msgstr ""
 
-#: main.c:524
+#: main.c:527
 msgid "Devices..."
 msgstr ""
 
-#: main.c:525
+#: main.c:528
 msgid "Remove from panel"
 msgstr ""
 
-#: main.c:558
+#: main.c:561
 msgid ""
 "This is the Bluetooth control.\n"
 "Tap here to turn the radio on and off, or to see a list of Bluetooth devices."
@@ -166,4 +166,9 @@ msgstr ""
 
 #: headset.c:206
 msgid "Connect HEADSET"
+msgstr ""
+
+#: obex-vcard.c:115
+#, c-format
+msgid "Received a business card for %s.  Import it?"
 msgstr ""

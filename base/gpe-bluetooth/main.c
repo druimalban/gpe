@@ -49,6 +49,8 @@
 #include "pan.h"
 #include "headset.h"
 
+#include "obexserver.h"
+
 #define _(x) gettext(x)
 
 #define HCIATTACH "/etc/bluetooth/hciattach"
