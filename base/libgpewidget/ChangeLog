@@ -1,3 +1,11 @@
+2003-02-23  Philip Blundell  <philb@gnu.org>
+
+	* Makefile (HEADERS): Add translabel.h
+	(MEMBERS): Add translabel.
+
+	* gpe/translabel.h: New file.
+	* translabel.c: Likewise.
+
 2003-02-23  Colin Marquardt  <colin@marquardt-home.de>
 
 	* spacing.h: Move constant and function prototypes here.

@@ -9,7 +9,7 @@ GTKRC = gtkrc
 
 LINGUAS = ro de
 
-MEMBERS = gtkdatecombo errorbox init pixmaps smallbox render dirbrowser picturebutton what stylus gtkdatesel screensize question gtksimplemenu spacing tray tap
+MEMBERS = gtkdatecombo errorbox init pixmaps smallbox render dirbrowser picturebutton what stylus gtkdatesel screensize question gtksimplemenu spacing tray tap translabel
 
 ifeq ($(GTK2),yes)
 MEMBERS += gpetooltips2 gpe-iconlist
@@ -47,7 +47,7 @@ CFLAGS += -MD
 
 CPPFLAGS += -I./gpe
 
-HEADERS = init.h render.h errorbox.h smallbox.h pixmaps.h gtkdatecombo.h gtkdatesel.h dirbrowser.h stylus.h picturebutton.h spacing.h
+HEADERS = init.h render.h errorbox.h smallbox.h pixmaps.h gtkdatecombo.h gtkdatesel.h dirbrowser.h stylus.h picturebutton.h spacing.h translabel.h
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
