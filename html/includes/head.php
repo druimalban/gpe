@@ -19,7 +19,7 @@
 <td width=70>
 <img src="/images/gpe-logo.png" alt="[The GPE Logo]">
 </td>
-<td width="*" valign="middle">
+<td>
 <h1> GPE: <?php echo $addtitle; ?></h1>
 </td>
 <td align="right">
