@@ -33,7 +33,7 @@
 #define _(_x) gettext (_x)
 GtkWidget *window, *vbox2;
 GtkWidget *dirbrowser_window;
-GtkWidget *view_widget, *image_widget;
+GtkWidget *view_widget, *image_widget, *image_pixbuf, *scaled_image_pixbuf;
 GtkWidget *loading_toolbar, *tools_toolbar;
 GtkWidget *loading_progress_bar;
 GList *image_filenames;
@@ -80,13 +80,99 @@ show_image (GtkWidget *widget, gpointer udata)
 {
   gtk_widget_hide (view_widget);
 
-  image_widget = gtk_image_new_from_file ((gchar *) udata);
+  image_pixbuf = gdk_pixbuf_new_from_file ((gchar *) udata, NULL);
+
+  image_widget = gtk_image_new_from_pixbuf (image_pixbuf);
   gtk_box_pack_start (GTK_BOX (vbox2), image_widget, TRUE, TRUE, 0);
 
   gtk_widget_show (tools_toolbar);
   gtk_widget_show (image_widget);
 
   printf ("You just clicked on an image called %s\n", (gchar *) udata);
+}
+
+void
+image_zoom_in ()
+{
+  gint width, height;
+
+  if (!scaled_image_pixbuf)
+    scaled_image_pixbuf = image_pixbuf;
+
+  width = gdk_pixbuf_get_width (GDK_PIXBUF (scaled_image_pixbuf)) * 1.5;
+  height = gdk_pixbuf_get_height (GDK_PIXBUF (scaled_image_pixbuf)) * 1.5;
+
+  scaled_image_pixbuf = gdk_pixbuf_scale_simple (GDK_PIXBUF (image_pixbuf), width, height, GDK_INTERP_BILINEAR);
+  gtk_image_set_from_pixbuf (GTK_IMAGE (image_widget), GDK_PIXBUF (scaled_image_pixbuf));
+}
+
+void
+image_zoom_out ()
+{
+  gint width, height;
+
+  if (!scaled_image_pixbuf)
+    scaled_image_pixbuf = image_pixbuf;
+
+  width = gdk_pixbuf_get_width (GDK_PIXBUF (scaled_image_pixbuf)) / 1.5;
+  height = gdk_pixbuf_get_height (GDK_PIXBUF (scaled_image_pixbuf)) / 1.5;
+
+  scaled_image_pixbuf = gdk_pixbuf_scale_simple (GDK_PIXBUF (image_pixbuf), width, height, GDK_INTERP_BILINEAR);
+  gtk_image_set_from_pixbuf (GTK_IMAGE (image_widget), GDK_PIXBUF (scaled_image_pixbuf));
+}
+
+void
+image_zoom_1 ()
+{
+  scaled_image_pixbuf = image_pixbuf;
+  gtk_image_set_from_pixbuf (GTK_IMAGE (image_widget), GDK_PIXBUF (scaled_image_pixbuf));
+}
+
+void
+image_zoom_fit ()
+{
+  gint width, height;
+  float ratio;
+
+  if (!scaled_image_pixbuf)
+    scaled_image_pixbuf = image_pixbuf;
+
+  width = gdk_pixbuf_get_width (GDK_PIXBUF (image_pixbuf));
+  height = gdk_pixbuf_get_height (GDK_PIXBUF (image_pixbuf));
+
+  if (height > width)
+  {
+    if (height < 200)
+    {
+      ratio = (float) 200 / (float) height;
+      height = 200;
+      width = ratio * width;
+    }
+    else
+    {
+      ratio = (float) height / (float) 200;
+      height = 200;
+      width = width / ratio;
+    }
+  }
+  else
+  {
+    if (width < 240)
+    {
+      ratio = (float) 240 / (float) width;
+      width = 240;
+      height = ratio * height;
+    }
+    else
+    {
+      ratio = (float) width / (float) 240;
+      width = 240;
+      height = height / ratio;
+    }
+  }
+
+  scaled_image_pixbuf = gdk_pixbuf_scale_simple (GDK_PIXBUF (image_pixbuf), width, height, GDK_INTERP_BILINEAR);
+  gtk_image_set_from_pixbuf (GTK_IMAGE (image_widget), GDK_PIXBUF (scaled_image_pixbuf));
 }
 
 void
@@ -403,24 +489,24 @@ main (int argc, char *argv[])
   p = gpe_find_icon ("zoom_in");
   pw = gpe_render_icon (window->style, p);
   gtk_toolbar_append_item (GTK_TOOLBAR (tools_toolbar), _("Zoom In"), 
-			   _("Zoom In"), _("Zoom In"), pw, NULL, NULL);
+			   _("Zoom In"), _("Zoom In"), pw, image_zoom_in, NULL);
 
   p = gpe_find_icon ("zoom_out");
   pw = gpe_render_icon (window->style, p);
   gtk_toolbar_append_item (GTK_TOOLBAR (tools_toolbar), _("Zoom Out"), 
-			   _("Zoom Out"), _("Zoom Out"), pw, NULL, NULL);
+			   _("Zoom Out"), _("Zoom Out"), pw, image_zoom_out, NULL);
 
   gtk_toolbar_append_space (GTK_TOOLBAR (tools_toolbar));
 
   p = gpe_find_icon ("zoom_1");
   pw = gpe_render_icon (window->style, p);
   gtk_toolbar_append_item (GTK_TOOLBAR (tools_toolbar), _("Zoom 1:1"), 
-			   _("Zoom 1:1"), _("Zoom 1:1"), pw, NULL, NULL);
+			   _("Zoom 1:1"), _("Zoom 1:1"), pw, image_zoom_1, NULL);
 
   p = gpe_find_icon ("zoom_fit");
   pw = gpe_render_icon (window->style, p);
   gtk_toolbar_append_item (GTK_TOOLBAR (tools_toolbar), _("Zoom to Fit"), 
-			   _("Zoom to Fit"), _("Zoom to Fit"), pw, NULL, NULL);
+			   _("Zoom to Fit"), _("Zoom to Fit"), pw, image_zoom_fit, NULL);
 
   gtk_toolbar_append_space (GTK_TOOLBAR (tools_toolbar));
 
