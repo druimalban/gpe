@@ -1,0 +1,50 @@
+/*
+ *  math_functions.c - some mathematical functions for the calculator
+ *	part of galculator
+ *  	(c) 2002 Simon Floery (simon.floery@gmx.at)
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Library General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ */
+ 
+
+#include <math.h>
+
+#include "math_functions.h"
+
+double pow10y (double y)
+{
+	return pow (10, y);
+}
+
+double reciprocal (double x)
+{
+	return 1/x;
+}
+
+double idx (double x)
+{
+	return x;
+}
+
+double powx2 (double x)
+{
+	return pow (x, 2);
+}
+
+double factorial (double n)
+{
+	if (n > 1) return n*factorial (n-1);
+	else return 1;
+}
