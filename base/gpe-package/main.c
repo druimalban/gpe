@@ -48,7 +48,7 @@ main (int argc, char *argv[])
 		exit(errno);
 	}
 	
-	if (suidPID)
+	if (!suidPID)
 	{
 		setuid(0);
 		seteuid(0);	

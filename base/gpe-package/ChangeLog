@@ -1,3 +1,8 @@
+2004-02-11 Florian Boor <florian.boor@kernelconcepts.de>
+	* interface.c: Added list filtering from menu.
+	* interface.c: Status messages for update ops.
+	* interface.c: Added about dialog.
+	
 2004-02-10 Florian Boor <florian.boor@kernelconcepts.de>
 	* interface.c: Made basic frontend work again. We create a package list to 
 	  filter now. 

@@ -52,15 +52,17 @@
 #define MI_PACKAGES_UPDATE  5
 #define MI_PACKAGES_UPGRADE 6
 #define MI_PACKAGES_APPLY   7
+#define MI_FILTER_INST		8
+#define MI_FILTER_NOTINST	9
 
+#define TREE_SHOW_ALL		0x00
+#define TREE_SHOW_INST		0x01
+#define TREE_SHOW_NOTINST	0x02
 
+#define HELPMESSAGE "GPE-Package\nVersion " VERSION \
+		"\nGPE frontend for ipkg\n\nflorian@handhelds.org"
+		
 /* --- module global variables --- */
-void create_fMain (void);
-void on_select_local(GtkButton *button, gpointer user_data);
-void on_packages_update_clicked(GtkButton *button, gpointer user_data);
-void on_system_update_clicked(GtkButton *button, gpointer user_data);
-void on_package_install_clicked(GtkButton *button, gpointer user_data);
-
 
 
 typedef struct
@@ -73,8 +75,9 @@ typedef struct
 }
 description_t;
 
-description_t *pkg_info = NULL;
-int pkg_count = 0;
+static description_t *pkg_info = NULL;
+static int pkg_count = 0;
+static int tree_filter = TREE_SHOW_ALL;
 
 int sock;
 static pkcommand_t running_command = CMD_NONE;
@@ -88,10 +91,22 @@ static GtkWidget *treeview;
 static GtkTreeStore *store = NULL;
 static GtkWidget *bApply;
 static GtkWidget *miUpdate, *miSysUpgrade, *miSelectLocal, *miApply;
+static GtkWidget *miFilterInst, *miFilterNotInst;
 static GtkWidget *sbar;
 static GtkWidget *fMain;
 static GtkWidget *dlgAction = NULL;
 static GtkWidget *mMain;
+
+
+/* some forwards */
+gboolean get_pending_messages ();
+void on_tree_filter_changed(GtkCheckMenuItem *menuitem, gpointer user_data);
+void create_fMain (void);
+void on_select_local(GtkButton *button, gpointer user_data);
+void on_packages_update_clicked(GtkButton *button, gpointer user_data);
+void on_system_update_clicked(GtkButton *button, gpointer user_data);
+void on_package_install_clicked(GtkButton *button, gpointer user_data);
+void on_about_clicked (GtkWidget * w);
 
 
 static GtkItemFactoryEntry mMain_items[] = {
@@ -100,16 +115,20 @@ static GtkItemFactoryEntry mMain_items[] = {
   { N_("/_File/s1"), NULL , NULL,    0, "<Separator>"},
   { N_("/File/_Close"),  NULL, do_safe_exit, MI_FILE_CLOSE, "<StockItem>", GTK_STOCK_QUIT },
   { N_("/_Packages"),         NULL,         NULL, MI_PACKAGES, "<Branch>" },
+  { N_("/Packages/Show _Installed"), "", on_tree_filter_changed, MI_FILTER_INST , "<CheckItem>"},
+  { N_("/Packages/Show _Not Installed"), "", on_tree_filter_changed, MI_FILTER_NOTINST, "<CheckItem>"},
+  { N_("/_Packages/s2"), NULL , NULL,    0, "<Separator>"},
   { N_("/Packages/_Update lists"), "<Control> U", on_packages_update_clicked, MI_PACKAGES_UPDATE , "<Item>"},
   { N_("/Packages/Upgrade _System"), "", on_system_update_clicked, MI_PACKAGES_UPGRADE, "<Item>"},
-  { N_("/_Packages/s2"), NULL , NULL,    0, "<Separator>"},
+  { N_("/_Packages/s3"), NULL , NULL,    0, "<Separator>"},
   { N_("/Packages/_Apply"), "", on_package_install_clicked, MI_PACKAGES_APPLY, "<StockItem>", GTK_STOCK_APPLY},
   { N_("/_Help"),         NULL,         NULL,           0, "<Branch>" },
-  { N_("/_Help/Index"),   NULL,         NULL,    0, "<Item>" },
-  { N_("/_Help/About"),   NULL,         NULL,    0, "<Item>" },
+  { N_("/_Help/Index"),   NULL,         NULL,    0, "<StockItem>",GTK_STOCK_HELP },
+  { N_("/_Help/About"),   NULL,         on_about_clicked,    0, "<Item>" },
 };
 
 int mMain_items_count = sizeof(mMain_items) / sizeof(GtkItemFactoryEntry);
+
 
 struct gpe_icon my_icons[] = {
   { "save" },
@@ -122,8 +141,6 @@ struct gpe_icon my_icons[] = {
   { "icon", PREFIX "/share/pixmaps/gpe-package.png" }
 };
 
-
-gboolean get_pending_messages ();
 
 
 /* dialogs */
@@ -170,6 +187,21 @@ progress_dialog (gchar * text, GdkPixbuf * pixbuf)
 	gtk_container_add (GTK_CONTAINER (window), hbox);
 
 	return window;
+}
+
+
+void
+show_message(GtkMessageType type, char* message)
+{
+	GtkWidget* dialog;
+	
+	dialog = gtk_message_dialog_new (GTK_WINDOW(fMain),
+					 GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+					 type,
+					 GTK_BUTTONS_OK,
+					 message);
+	gtk_dialog_run (GTK_DIALOG(dialog));
+	gtk_widget_destroy(dialog);
 }
 
 
@@ -231,8 +263,6 @@ void printlog(GtkWidget *textview, gchar *str)
 }
 
 
-/* --- local intelligence --- */
-
 void 
 wait_command_finish()
 {
@@ -246,6 +276,8 @@ wait_command_finish()
 }
 
 
+/* --- local intelligence --- */
+
 gboolean
 update_check(GtkTreeModel *model, GtkTreePath *path,
              GtkTreeIter *iter,
@@ -253,7 +285,6 @@ update_check(GtkTreeModel *model, GtkTreePath *path,
 {
 	pkg_state_want_t dstate;
 	char *name;
-// store -> model
 	gtk_tree_model_get (GTK_TREE_MODEL(model), iter, 
 						COL_DESIREDSTATE, &dstate,
 						COL_NAME,&name,	-1);
@@ -262,7 +293,6 @@ update_check(GtkTreeModel *model, GtkTreePath *path,
 		case SW_INSTALL:
 			send_message(PK_COMMAND,CMD_INSTALL,"",name);
 			wait_command_finish();
-//store -> model		
 			gtk_tree_store_set (GTK_TREE_STORE(model), iter, 
                       COL_INSTALLED,TRUE,
                       COL_DESIREDSTATE,SW_UNKNOWN,
@@ -271,7 +301,6 @@ update_check(GtkTreeModel *model, GtkTreePath *path,
 		case SW_DEINSTALL:
 			send_message(PK_COMMAND,CMD_REMOVE,"",name);
 			wait_command_finish();
-//store...		
 			gtk_tree_store_set (GTK_TREE_STORE(model), iter, 
                       COL_INSTALLED,FALSE,
                       COL_DESIREDSTATE,SW_UNKNOWN,
@@ -304,14 +333,23 @@ void do_question(int nr, char *question)
 void
 update_tree(void)
 {
+	guint id;
 	int i;
 	GtkTreeIter iter;
+
+	id = gtk_statusbar_get_context_id(GTK_STATUSBAR(sbar),"upd");
+	gtk_statusbar_push(GTK_STATUSBAR(sbar),
+		id,_("Updating views, please wait..."));
 	
 #warning improve this
 	gtk_tree_store_clear(GTK_TREE_STORE(store));
 	
 	for (i=0;i<pkg_count;i++)
 	{
+		if (((tree_filter & TREE_SHOW_INST) && (pkg_info[i].status == SS_INSTALLED))
+			|| ((tree_filter & TREE_SHOW_NOTINST) && (pkg_info[i].status != SS_INSTALLED)))		
+			continue;
+		
 		gtk_tree_store_append (store, &iter, NULL);
 	
 		gtk_tree_store_set (store, &iter,
@@ -323,10 +361,31 @@ update_tree(void)
 			COL_COLOR, pkg_info[i].color,
 	    	-1);
 	}
+	gtk_statusbar_pop(GTK_STATUSBAR(sbar),id);	
 }
 
 
-void do_list(int prio,char* pkgname,char *desc, char *version, pkg_state_status_t status)
+void
+on_tree_filter_changed(GtkCheckMenuItem *menuitem, gpointer user_data)
+{
+	tree_filter =
+		!gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(miFilterInst)) *
+		TREE_SHOW_INST +
+		!gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(miFilterNotInst)) *
+		TREE_SHOW_NOTINST;
+	update_tree();
+}
+
+
+void
+on_about_clicked (GtkWidget * w)
+{
+	show_message(GTK_MESSAGE_INFO,HELPMESSAGE);
+}
+
+
+void 
+do_list(int prio,char* pkgname,char *desc, char *version, pkg_state_status_t status)
 {
 	gboolean updatev;
 	char *nversion = NULL;
@@ -745,6 +804,11 @@ create_mMain(GtkWidget  *window)
 	miSysUpgrade = gtk_item_factory_get_item_by_action(itemfactory,MI_PACKAGES_UPGRADE);
 	miSelectLocal = gtk_item_factory_get_item_by_action(itemfactory,MI_FILE_INSTALL);
 	miApply = gtk_item_factory_get_item_by_action(itemfactory,MI_PACKAGES_APPLY);
+	miFilterInst = gtk_item_factory_get_item_by_action(itemfactory,MI_FILTER_INST);
+	miFilterNotInst = gtk_item_factory_get_item_by_action(itemfactory,MI_FILTER_NOTINST);
+	
+	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(miFilterInst),TRUE); 
+	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(miFilterNotInst),TRUE); 
 	
 	return (gtk_item_factory_get_widget (itemfactory, "<main>"));
 }
@@ -787,9 +851,11 @@ create_fMain (void)
   gtk_container_add(GTK_CONTAINER(fMain),vbox);
 	
   tooltips = gtk_tooltips_new ();
+  
+  sbar = gtk_statusbar_new();
+  gtk_box_pack_end(GTK_BOX(vbox),sbar,FALSE,TRUE,0);
 
   /* main menu */ 
-  
   mMain = create_mMain(fMain);
   gtk_box_pack_start(GTK_BOX(vbox),mMain,FALSE,TRUE,0);
   
@@ -820,9 +886,6 @@ create_fMain (void)
 	
   gtk_object_set_data(GTK_OBJECT(notebook),"tooltips",tooltips);
   
-  sbar = gtk_statusbar_new();
-  gtk_box_pack_start(GTK_BOX(vbox),sbar,FALSE,TRUE,0);
-
   /* installed tab */	
   vbox = gtk_vbox_new(FALSE,gpe_get_boxspacing());
 
@@ -874,58 +937,7 @@ create_fMain (void)
 	gtk_tree_view_column_set_resizable(GTK_TREE_VIEW_COLUMN(column),TRUE);
 	gtk_tree_view_append_column (GTK_TREE_VIEW (treeview), column);
 
-  /* uninstalled tab */	
-  vbox = gtk_vbox_new(FALSE,gpe_get_boxspacing());
-
-  cur = gtk_label_new(_("Not Installed"));
-  gtk_notebook_append_page(GTK_NOTEBOOK(notebook),vbox,cur);
-
-  cur = gtk_label_new(NULL);
-  gtk_misc_set_alignment(GTK_MISC(cur),0.0,0.5);
-  tmp = g_strdup_printf("<b>%s</b>",_("Package Selection"));
-  gtk_label_set_markup(GTK_LABEL(cur),tmp);
-  free(tmp);
-  gtk_box_pack_start(GTK_BOX(vbox),cur,FALSE,TRUE,0);	
-	
-  cur = gtk_scrolled_window_new(NULL,NULL);
-  gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(cur),GTK_POLICY_AUTOMATIC,GTK_POLICY_AUTOMATIC);
-  gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(cur),GTK_SHADOW_IN);
-  gtk_box_pack_start(GTK_BOX(vbox),cur,TRUE,TRUE,0);	
-
-  /* packages tree */
-  treeview = gtk_tree_view_new_with_model (GTK_TREE_MODEL (store));
-  gtk_tree_view_set_reorderable(GTK_TREE_VIEW(treeview),TRUE);
-  gtk_tree_view_set_rules_hint (GTK_TREE_VIEW(treeview),TRUE);
-  gtk_container_add(GTK_CONTAINER(cur),treeview);	
   
-	g_signal_connect_after (G_OBJECT (treeview), "cursor-changed",
-			  G_CALLBACK (tv_row_clicked), NULL);
-
-	renderer = gtk_cell_renderer_toggle_new ();
-	gtk_cell_renderer_toggle_set_radio(GTK_CELL_RENDERER_TOGGLE(renderer),FALSE);
-	g_signal_connect (G_OBJECT (renderer), "toggled",
-					  G_CALLBACK (list_toggle_inst), store);
-	column = gtk_tree_view_column_new_with_attributes (_("Inst."),
-							   renderer,
-							   "active",
-							   COL_INSTALLED,
-							   "cell-background",
-							   COL_COLOR,
-							   NULL);
-	gtk_tree_view_append_column (GTK_TREE_VIEW (treeview), column);
-
-	renderer = gtk_cell_renderer_text_new ();
-	column = gtk_tree_view_column_new_with_attributes (_("Name"),
-							   renderer,
-							   "text",
-							   COL_NAME,
-							   "background",
-							   COL_COLOR,
-							   NULL);
-	gtk_tree_view_column_set_resizable(GTK_TREE_VIEW_COLUMN(column),TRUE);
-	gtk_tree_view_append_column (GTK_TREE_VIEW (treeview), column);
-
-
   /* messages tab */
   vbox = gtk_vbox_new(FALSE,gpe_get_boxspacing());
 
