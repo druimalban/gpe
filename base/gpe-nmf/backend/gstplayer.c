@@ -24,6 +24,8 @@ struct player
   GstElement *filesrc, *decoder, *audiosink, *thread;
 };
 
+static gboolean play_track (player_t p, struct playlist *t);
+
 player_t
 player_new (void)
 {
@@ -64,33 +66,72 @@ player_get_playlist (player_t p)
   return p->list;
 }
 
+static void
+abandon_track (player_t p)
+{
+  gst_element_set_state (p->thread, GST_STATE_NULL);  
+}
+
 void
 player_stop (player_t p)
 {
+  if (p->thread)
+    abandon_track (p);
+
   p->cur = NULL;
 }
 
-gboolean
-play_track (player_t p, struct playlist *t)
+static void
+error_callback (GObject *object, GstObject *orig, gchar *error, player_t p)
 {
-  return TRUE;
+  g_print ("ERROR: %s: %s\n", GST_OBJECT_NAME (orig), error);
+
+  gst_element_set_state (GST_ELEMENT (orig), GST_STATE_NULL);  
 }
 
 static void
-player_run_track (player_t p)
+state_change (GstElement *elt, GstElementState old_state, GstElementState new_state, player_t p)
 {
-  struct playlist *l = p->cur;
+  fprintf (stderr, "State changed: %d -> %d\n", old_state, new_state);
 
-  assert (l);
+  if (old_state == GST_STATE_PLAYING && new_state == GST_STATE_PAUSED)
+    {
+      printf ("Play finished.\n");
+      gst_element_set_state (elt, GST_STATE_NULL);
+      p->thread = NULL;
+    }
+  else if (new_state == GST_STATE_NULL)
+    {
+      printf ("Next track.\n");
+      
+      p->idx++;
+      p->cur = playlist_fetch_item (p->list, p->idx);
+      
+      if (p->cur)
+	play_track (p, p->cur);
+      else
+	{
+	  p->idx = 0;
+	  fprintf (stderr, "No more tracks.\n");
+	}
+    }
+}
+
+static gboolean
+play_track (player_t p, struct playlist *t)
+{
+  assert (t);
   assert (!p->thread);
-  assert (!p->filesrc);  
-  assert (!p->decoder);
-  assert (!p->audiosink);
+
+  fprintf (stderr, "play %s\n", t->data.track.url);
 
   p->thread = gst_thread_new ("thread");
+  g_signal_connect (p->thread, "state_change", G_CALLBACK (state_change), p);
+
+  g_signal_connect (p->thread, "error", G_CALLBACK (error_callback), p);
 
   p->filesrc = gst_element_factory_make ("filesrc", "disk_source");
-  g_object_set (G_OBJECT (p->filesrc), "location", l->data.track.url, NULL);
+  g_object_set (G_OBJECT (p->filesrc), "location", t->data.track.url, NULL);
   
   p->decoder = gst_element_factory_make ("spider", "decoder");
 
@@ -102,11 +143,23 @@ player_run_track (player_t p)
   gst_element_connect (p->decoder, p->audiosink);
 
   gst_element_set_state (p->thread, GST_STATE_PLAYING);
+
+  return TRUE;
 }
 
 gboolean
 player_play (player_t p)
 {
+  if (p->list)
+    {
+      p->idx = 0;
+      
+      p->cur = playlist_fetch_item (p->list, p->idx);
+      
+      if (p->cur)
+	play_track (p, p->cur);
+    }
+
   return TRUE;
 }
 
