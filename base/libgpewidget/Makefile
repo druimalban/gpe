@@ -7,7 +7,7 @@ CVSBUILD = yes
 
 GTKRC = gtkrc
 
-LINGUAS = ro de id pt
+LINGUAS = ro de id pt fr
 
 MEMBERS = gtkdatecombo errorbox init pixmaps smallbox render dirbrowser picturebutton what stylus screensize question gtksimplemenu spacing tray tap translabel popup windows popup_menu gtktimesel gpeiconlistitem gpeclockface
 

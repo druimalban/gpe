@@ -1,5 +1,8 @@
 2003-04-07  Philip Blundell  <philb@gnu.org>
 
+	* Makefile (LINGUAS): Add fr.
+	* po/fr.po: New file, courtesy Luc Pionchon.
+
 	* po/pt.po: Updated, courtesy Luis Oliveira.
 	
 	* po/id.po: Updated, courtesy Tedi Heriyanto.
