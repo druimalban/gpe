@@ -8,7 +8,7 @@
 <P>
 This program allows short voice messages to be recorded and played
 back through the PDA's internal audio system.  The <B>libgsm</B> codec
-library can be used to compress the data for storage.
+library is used to compress the data for storage.
 </P>
 <P>
 It would be nice if this was integrated
