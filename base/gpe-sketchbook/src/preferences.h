@@ -20,6 +20,20 @@
 
 #include <gtk/gtk.h>
 
+#include <glib.h>
+#include <glib-object.h> //gtype.h -> GType, G_TYPE_*
+
+typedef enum{
+  GPE_PREFS_OK = 0,
+  GPE_PREFS_ERROR,
+} GpePrefsResult;
+
+GpePrefsResult gpe_prefs_init (gchar * prog_name);
+void gpe_prefs_exit ();
+GpePrefsResult gpe_prefs_get (gchar * key, GType type, gpointer pvalue);
+GpePrefsResult gpe_prefs_set (gchar * key, GType type, gconstpointer pvalue);
+
+
 typedef struct _preferences {
   gboolean joypad_scroll;
   gboolean grow_on_scroll;

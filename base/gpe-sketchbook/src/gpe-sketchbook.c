@@ -21,7 +21,6 @@
 //--GPE libs
 #include "gpe/init.h"
 #include "gpe/pixmaps.h"
-#include "gpe/gpepreferences.h"
 
 //--own headers
 #include "gpe-sketchbook.h"

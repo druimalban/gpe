@@ -35,12 +35,8 @@ endif
 ifeq ($(CVSBUILD),yes)
 CFLAGS  += -I../../libgpewidget
 LDFLAGS += -L../../libgpewidget
-
-CFLAGS  += `cd ../../libgpe && ln -sf include gpe` -I../../libgpe
-LDFLAGS += -L../../libgpe/src
 endif
 
-LDFLAGS += -lgpe
 LDFLAGS += -lgpewidget #need to be before gtk libs (overwrite things)
 
 #-- GTK2
@@ -49,9 +45,7 @@ CFLAGS  += `pkg-config --cflags gtk+-2.0 gdk-pixbuf-2.0`
 LDFLAGS += `pkg-config --libs   gtk+-2.0 gdk-pixbuf-2.0`
 
 #-- SQLite
-ifdef USE_SQLITE
 LDFLAGS += -lsqlite
-endif
 
 #.SUFFIXES: .d
 
