@@ -9,10 +9,32 @@
 #ifndef ABOUT_H
 #define ABOUT_H
 
-void _about_box(gchar * app_name,
-                gchar * app_version,
-              //gchar * app_icon,
-                gchar * app_description,
-                gchar * legal);
+/*
 
+ +-----------------------+
+ |+----+           +----+|
+ ||GPE | App Name  |APP ||
+ |+----+  version  +----+|
+ | --------------------- |
+ |  app short descript.  |
+ | +-------------------+ |
+ | |                  || |
+ | | mini help text   || |
+ | |                  || |
+ | | ...              || |
+ | |                  || |
+ | | legal stuff      || |
+ | |                  || |
+ | +-------------------+ |
+ +-----------------------+
+ |     [ x  OK   ]       |
+ +-----------------------+
+
+*/
+void about_box(gchar * app_name,
+               gchar * app_version, //optional, may be NULL
+               gchar * app_icon,
+               gchar * app_short_description,
+               gchar * minihelp_text,
+               gchar * legal_text);
 #endif

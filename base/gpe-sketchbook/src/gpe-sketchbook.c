@@ -41,7 +41,7 @@ gchar * sketchdir;
 #define SKETCHPAD_HOME_DIR ".sketchbook"
 
 static struct gpe_icon my_icons[] = {
-  { "icon", PREFIX "/share/pixmaps/gpe-sketchbook.png" }, //app icon
+  { "this_app_icon", PREFIX "/share/pixmaps/gpe-sketchbook.png" }, //app icon
   { NULL, NULL }
 };
 

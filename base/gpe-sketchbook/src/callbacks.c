@@ -98,11 +98,19 @@ void on_button_sketchpad_view_clicked (GtkButton *button, gpointer user_data){
 }
 
 void on_button_selector_about_clicked (GtkButton *button, gpointer user_data){
-  _about_box(PACKAGE,
-             VERSION,
-             //gchar * app_icon,
-             "a notebook to sketch your notes",
-             "Distributed under GPL");
+  about_box(PACKAGE,
+            VERSION,
+            "this_app_icon",
+            "a notebook to sketch your notes",
+
+            "The application provides two main windows: "
+            "the Selector, and the Sketchpad.\n"
+            "You select your sketchs with the Selector.\n"
+            "You sketch your notes with the Sketchpad.",
+            //FIXME: writte usefull help (if needed) or nothing! ;)
+
+            "(c) 2002 Luc Pionchon\n"
+            "Distributed under GPL");
 }
 
 
