@@ -282,7 +282,12 @@ load_details_callback (void *arg, int argc, char *argv[], char **names)
       else if (!strcasecmp (argv[0], "description") && !evd->description)
 	evd->description = g_strdup (argv[1]);
       else if (!strcasecmp (argv[0], "modified"))
-	parse_date (argv[1], &evd->modified, NULL);
+	{
+	  if (strchr (argv[1], '-'))
+	    parse_date (argv[1], &evd->modified, NULL);
+	  else
+	    evd->modified = strtoul (argv[1], NULL, 10);
+	}
       else if (!strcasecmp (argv[0], "sequence"))
 	evd->sequence = atoi (argv[1]);
     }
@@ -646,7 +651,7 @@ static gboolean
 event_db_write (event_t ev, char **err)
 {
   time_t modified;
-  char buf_start[64], buf_end[64], buf_modified[64];
+  char buf_start[64], buf_end[64];
   struct tm tm;
   event_details_t ev_d = event_db_get_details (ev);
   gboolean rc = FALSE;
@@ -657,13 +662,11 @@ event_db_write (event_t ev, char **err)
 	    &tm);  
 
   modified = time (NULL);
-  gmtime_r (&ev_d->modified, &tm);
-  strftime (buf_modified, sizeof (buf_modified), "%Y-%m-%d %H:%M:%S", &tm); 
 
   if (insert_values (sqliteh, ev->uid, "summary", "%q", ev_d->summary)
       || insert_values (sqliteh, ev->uid, "description", "%q", ev_d->description)
       || insert_values (sqliteh, ev->uid, "duration", "%d", ev->duration)
-      || insert_values (sqliteh, ev->uid, "modified", "%q", buf_modified)
+      || insert_values (sqliteh, ev->uid, "modified", "%lu", modified)
       || insert_values (sqliteh, ev->uid, "start", "%q", buf_start)
       || insert_values (sqliteh, ev->uid, "sequence", "%d", ev_d->sequence))
     goto exit;

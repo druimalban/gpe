@@ -1,3 +1,8 @@
+2003-04-20  Philip Blundell  <philb@gnu.org>
+
+	* event-db.c (event_db_write): Write out "modified" tag as Unix time.
+	(load_details_callback): Tolerate either this or the older format.
+
 2003-04-11  Philip Blundell  <philb@gnu.org>
 
 	* Makefile (VERSION): Set to 0.06.
