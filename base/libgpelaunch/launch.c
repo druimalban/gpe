@@ -57,6 +57,7 @@ struct startup_record
 {
   const gchar *startup_id;
   const gchar *binary;
+  time_t time;
 };
 
 static GSList *sn_display_list;
@@ -68,6 +69,7 @@ struct client_map
 };
 
 static void read_client_map (struct sn_display_map *map);
+static void kill_pending_startup (struct sn_display_map *map, const char *id);
 
 gboolean
 gpe_launch_startup_is_pending (Display *dpy, const gchar *binary)
@@ -90,7 +92,16 @@ gpe_launch_startup_is_pending (Display *dpy, const gchar *binary)
       struct startup_record *r = l->data;
 
       if (! strcmp (r->binary, binary))
-	return TRUE;
+	{
+	  time_t t;
+	  time (&t);
+	  if ((t - r->time) > 10)
+	    {
+	      kill_pending_startup (map, r->startup_id);
+	      return FALSE;
+	    }
+	  return TRUE;
+	}
     }
 
   return FALSE;
@@ -332,6 +343,7 @@ global_monitor_event (SnMonitorEvent *event, void *user_data)
       sr = g_malloc (sizeof (*sr));
       sr->binary = g_strdup (sn_startup_sequence_get_binary_name (sequence));
       sr->startup_id = g_strdup (id);
+      time (&sr->time);
       map->pending_startups = g_slist_prepend (map->pending_startups, sr);
       break;
       
