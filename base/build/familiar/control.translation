@@ -1,6 +1,7 @@
 Package: <package>-<language>
 Provides: apps-locale-<language>, <package>-locale
 Section: base
+Source: <source>
 Priority: optional
 Version: <version>
 Architecture: all
