@@ -4,7 +4,7 @@ Version: 0.0.2
 Architecture: arm
 Section: x11
 Maintainer: Moray Allan <moray@sermisy.org>
-Depends: libgtk1.2, xcalibrate, h3600-utils, xbase-clients
+Depends: libgtk1.2, xcalibrate, h3600-utils, xbase-clients, libgpewidget0 (>= 0.14)
 Description: Configure screen brightness, rotation, and calibration.
  Utility for configuring screen brightness, rotation and calibration.
  .
