@@ -31,6 +31,7 @@ gpe_application_init (int *argc, char **argv[])
   gtk_rc_add_default_file (default_gtkrc_file);
   user_gtkrc_file = g_strdup_printf ("%s/.gpe/gtkrc", g_get_home_dir());
   gtk_rc_add_default_file (user_gtkrc_file);
+  g_free (user_gtkrc_file);
 
   gtk_set_locale ();
 
@@ -59,10 +60,8 @@ gpe_application_init (int *argc, char **argv[])
 	      return FALSE;
 	    }
 	}
+      g_free (buf);
     }
-
-  g_free (buf);
-  g_free (user_gtkrc_file);
 
   gpe_what_init ();
 

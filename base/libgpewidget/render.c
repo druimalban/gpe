@@ -113,5 +113,13 @@ gpe_render_icon(GtkStyle *style, GdkPixbuf *pixbuf)
       gtk_gpe_pixmap_set_prelight (GTK_GPE_PIXMAP (widget), pixmap);
     }
   
+  if (style && 
+      style->bg[GTK_STATE_NORMAL].pixel != style->bg[GTK_STATE_ACTIVE].pixel)
+    {
+      gpe_render_pixmap (&style->bg[GTK_STATE_ACTIVE], pixbuf,
+			 &pixmap, &bitmap);
+      gtk_gpe_pixmap_set_active (GTK_GPE_PIXMAP (widget), pixmap);
+    }
+
   return widget;
 }
