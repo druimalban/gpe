@@ -22,7 +22,7 @@ dist: clean
 ipkg: clean
 	rm -rf familiar/dist
 	mkdir -p familiar/dist/CONTROL
-	sed 's:VERSION:$(VERSION)' < familiar/$(CONTROL) > familiar/dist/CONTROL/control
+	sed 's:VERSION:$(VERSION):' < familiar/$(CONTROL) > familiar/dist/CONTROL/control
 	if test -e familiar/conffiles; then install -m 644 familiar/conffiles familiar/dist/CONTROL; fi
 	if test -e familiar/preinst;   then install familiar/preinst   familiar/dist/CONTROL; fi
 	if test -e familiar/postinst;  then install familiar/postinst  familiar/dist/CONTROL; fi
