@@ -1013,7 +1013,6 @@ build_edit_event_window (void)
   gtk_box_pack_start (GTK_BOX (buttonbox), buttonok, TRUE, FALSE, 4);
 
   gtk_box_pack_start (GTK_BOX (vboxtop), notebookedit, TRUE, TRUE, 2);
-  gtk_box_pack_start (GTK_BOX (vboxtop), buttonbox, FALSE, FALSE, 2);
 
   scrolledwindowevent = gtk_scrolled_window_new (NULL, NULL);
   gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolledwindowevent),
