@@ -276,6 +276,7 @@ select_save_file_as (void)
   gint offset;
   GtkTextBuffer *buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_area));
 
+  gtk_text_buffer_get_bounds (buf, &start, &end);
   offset = gtk_text_iter_get_offset (&start);
   text_length = gtk_text_iter_get_offset (&end) - offset;
   if (text_length > 10)
