@@ -1,5 +1,7 @@
 2003-03-23  Colin Marquardt  <colin@marquardt-home.de>
 
+	* gpe-setbg.c: Include stdlib.h for exit().
+
 	* Makefile (install-program): New name for 'install' ('install' is
 	now provided by Makefile.dpkg_ipkg).  
 	(BUILD): New variable.

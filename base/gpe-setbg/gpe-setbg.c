@@ -8,6 +8,7 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h> /* for exit() */
 #include <unistd.h> /* for access() */
 
 #include <glib.h>
