@@ -4,8 +4,7 @@ DEBUG = yes
 CVSBUILD = yes
 VERSION = 0.58
 
-LINGUAS = id pt de fr zh_TW ro wa sv nl cs es sk sr ru hu
-
+LINGUAS = id pt de fr zh_TW ro wa sv nl cs es sk sr ru hu zh_CN
 
 ifeq ($(CVSBUILD),yes)
 LIBGPEVTYPE_PC = libgpevtype-uninstalled

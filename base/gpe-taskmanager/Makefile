@@ -5,7 +5,7 @@ GTK2 = yes
 CVSBUILD = yes
 VERSION = 0.17
 
-LINGUAS = nl cs fr de pt ro ru sr sk sv
+LINGUAS = nl cs fr de pt ro ru sr sk sv zh_CN
 
 MEMBERS = gpe-taskmanager
 

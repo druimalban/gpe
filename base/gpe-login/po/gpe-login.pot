@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-07-04 18:02+0100\n"
+"POT-Creation-Date: 2004-08-29 19:29+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -53,7 +53,7 @@ msgid ""
 "system administration.\n"
 msgstr ""
 
-#: gpe-login.c:1262 gpe-login.c:1325 gpe-login.c:1715
+#: gpe-login.c:1262 gpe-login.c:1325 gpe-login.c:1722
 msgid "Password"
 msgstr ""
 
@@ -61,7 +61,7 @@ msgstr ""
 msgid "Confirm"
 msgstr ""
 
-#: gpe-login.c:1323 gpe-login.c:1693
+#: gpe-login.c:1323 gpe-login.c:1700
 msgid "Username"
 msgstr ""
 
@@ -73,7 +73,7 @@ msgstr ""
 msgid "Confirm password"
 msgstr ""
 
-#: gpe-login.c:1327 gpe-login.c:1729
+#: gpe-login.c:1327 gpe-login.c:1736
 msgid "Language"
 msgstr ""
 
@@ -82,14 +82,14 @@ msgid "<b>New user details</b>"
 msgstr ""
 
 #. TRANSLATORS: please replace this with your own Pango language code:
-#: gpe-login.c:1434
+#: gpe-login.c:1435
 msgid "en"
 msgstr ""
 
-#: gpe-login.c:1689
+#: gpe-login.c:1696
 msgid "Screen locked"
 msgstr ""
 
-#: gpe-login.c:1750
+#: gpe-login.c:1757
 msgid "Enter password with hard keys"
 msgstr ""

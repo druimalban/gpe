@@ -1,0 +1,322 @@
+# Simplified Chinese messages for gpe-calendar
+# Copyright (C) 2004 Free Software Foundation, Inc.
+# This file is distributed under the same license as the gpe-calendar package.
+# Meng Jie <zuxyhere@eastday.com>, 2004.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-calendar 0.45\n"
+"POT-Creation-Date: 2003-09-05 23:16+0100\n"
+"PO-Revision-Date: 2004-11-03 22:20+0800\n"
+"Last-Translator: Meng Jie <zuxyhere@eastday.com>\n"
+"Language-Team: Chinese (simplified) <i18n-translation@lists.linux.net.cn>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: main.c:242 gpe-calendar.desktop.in.h:1
+msgid "Calendar"
+msgstr "日历"
+
+#: main.c:261
+msgid "New appointment"
+msgstr "新约会"
+
+#: main.c:261
+msgid "Tap here to add a new appointment or reminder"
+msgstr "轻击此处添加一个新约会或提醒"
+
+#: main.c:267 main.c:268
+msgid "Today"
+msgstr "今日"
+
+#: main.c:276
+msgid "Future"
+msgstr "未来"
+
+#: main.c:276
+msgid "Future View"
+msgstr "未来视图"
+
+#: main.c:277
+msgid "Tap here to see all future events."
+msgstr "轻击此处查看所有未来事件。"
+
+#: main.c:284
+msgid "Day View"
+msgstr "日视图"
+
+#: main.c:285
+msgid "Tap here to select day-at-a-time view."
+msgstr "轻击此处查看一日。"
+
+#: main.c:292
+msgid "Week"
+msgstr "周"
+
+#: main.c:292
+msgid "Week View"
+msgstr "周视图"
+
+#: main.c:293
+msgid "Tap here to select week-at-a-time view."
+msgstr "轻击此处查看一周。"
+
+#: main.c:300
+msgid "Month"
+msgstr "月"
+
+#: main.c:300
+msgid "Month View"
+msgstr "月视图"
+
+#: main.c:301
+msgid "Tap here to select month-at-a-time view."
+msgstr "轻击此处查看一个月。"
+
+#: main.c:307
+msgid "Exit"
+msgstr "退出"
+
+#: main.c:307
+msgid "Tap here to exit the program"
+msgstr "轻击此处退出程序"
+
+#: event-ui.c:251
+msgid ""
+"Delete all recurring entries?\n"
+"(If no, delete this instance only)"
+msgstr ""
+"删除所有重复条目？\n"
+"(否则仅删除此实例)"
+
+#: event-ui.c:383
+msgid "End time must not be earlier than start time"
+msgstr "结束时间不能早于开始时间"
+
+#: event-ui.c:622
+msgid "Event"
+msgstr "事件"
+
+#: event-ui.c:623
+msgid "Recurrence"
+msgstr "重复任务"
+
+#: event-ui.c:624 event-ui.c:797
+msgid "Alarm"
+msgstr "闹钟"
+
+#: event-ui.c:651 event-ui.c:853
+msgid "Type:"
+msgstr "类型："
+
+#: event-ui.c:656
+msgid "Appointment"
+msgstr "约会"
+
+#: event-ui.c:657
+msgid "Reminder"
+msgstr "提醒"
+
+#: event-ui.c:659
+msgid "Task"
+msgstr "任务"
+
+#: event-ui.c:665
+msgid "Days"
+msgstr "日"
+
+#: event-ui.c:666
+msgid "Weeks"
+msgstr "周"
+
+#: event-ui.c:674
+msgid "Summary:"
+msgstr "概要："
+
+#: event-ui.c:690
+msgid "Start:"
+msgstr "开始："
+
+#: event-ui.c:691
+msgid "End:"
+msgstr "结束："
+
+#: event-ui.c:692 event-ui.c:693
+msgid "at:"
+msgstr "于："
+
+#: event-ui.c:726
+msgid "Date:"
+msgstr "日期："
+
+#: event-ui.c:729
+msgid "Time:"
+msgstr "时间："
+
+#: event-ui.c:749
+msgid "Due:"
+msgstr "定于："
+
+#: event-ui.c:753
+msgid "Allow:"
+msgstr "允许："
+
+#: event-ui.c:768
+msgid "Description:"
+msgstr "描述："
+
+#: event-ui.c:801
+msgid "before event"
+msgstr "先于事件"
+
+#: event-ui.c:804
+msgid "minutes"
+msgstr "分钟"
+
+#: event-ui.c:806
+msgid "hours"
+msgstr "小时"
+
+#: event-ui.c:808 event-ui.c:908
+msgid "days"
+msgstr "天"
+
+#: event-ui.c:810
+msgid "weeks"
+msgstr "周"
+
+#: event-ui.c:865
+msgid "No recurrence"
+msgstr "不重复任务"
+
+#: event-ui.c:868
+msgid "Daily"
+msgstr "每天"
+
+#: event-ui.c:871
+msgid "Weekly"
+msgstr "每周"
+
+#: event-ui.c:874
+msgid "Monthly"
+msgstr "每月"
+
+#: event-ui.c:877
+msgid "Yearly"
+msgstr "每年"
+
+#: event-ui.c:898 event-ui.c:920 event-ui.c:963 event-ui.c:1018
+msgid "Every"
+msgstr "每"
+
+#: event-ui.c:921
+msgid "weeks, on:"
+msgstr "周，于："
+
+#: event-ui.c:974
+msgid "months"
+msgstr "月"
+
+#: event-ui.c:979
+#, c-format
+msgid "on day %d"
+msgstr "于 %d"
+
+#: event-ui.c:983
+msgid "on the"
+msgstr "在"
+
+#: event-ui.c:991
+msgid "first"
+msgstr "第一"
+
+#: event-ui.c:993
+msgid "second"
+msgstr "第二"
+
+#: event-ui.c:995
+msgid "third"
+msgstr "第三"
+
+#: event-ui.c:997
+msgid "fourth"
+msgstr "第四"
+
+#: event-ui.c:999
+msgid "fifth"
+msgstr "第五"
+
+#: event-ui.c:1001
+msgid "last"
+msgstr "最后"
+
+#: event-ui.c:1028
+msgid "years"
+msgstr "年"
+
+#: event-ui.c:1047
+msgid "End Date:"
+msgstr "结束日期："
+
+#: event-ui.c:1053
+msgid "forever"
+msgstr "永远"
+
+#: event-ui.c:1064
+msgid "end after"
+msgstr "在这之后结束"
+
+#: event-ui.c:1081
+msgid "end on"
+msgstr "结束于"
+
+#: event-ui.c:1089
+msgid "events"
+msgstr "事件"
+
+#: event-ui.c:1188
+msgid "Calendar: New event"
+msgstr "日历：新事件"
+
+#: event-ui.c:1235
+msgid "Calendar: Edit event"
+msgstr "日历：编辑事件"
+
+#: day_popup.c:171
+msgid "No appointments"
+msgstr "没有约会"
+
+#: xsettings.c:105
+msgid "Cannot create XSettings client"
+msgstr "不能创建 XSettings 客户"
+
+#: gtkdatesel.c:193
+msgid "%Y"
+msgstr "%Y"
+
+#: gtkdatesel.c:202
+msgid "%b"
+msgstr "%b"
+
+#: gtkdatesel.c:205
+msgid "%B"
+msgstr "%B"
+
+#: gtkdatesel.c:208
+#, c-format
+msgid "%m"
+msgstr "%m"
+
+#: gtkdatesel.c:219
+msgid "Week %V"
+msgstr "周 %V"
+
+#: gtkdatesel.c:225
+#, c-format
+msgid "%a, %d"
+msgstr "%a，%d"
+
+#: gpe-calendar.desktop.in.h:2
+msgid "GPE Calendar"
+msgstr "GPE 日历"

@@ -5,7 +5,7 @@ GTK2 = yes
 VERSION = 0.73
 DEBUG = no
 
-LINGUAS = de sv wa nl pt cs fr hu ro ru sr sk es
+LINGUAS = de sv wa nl pt cs fr hu ro ru sr sk es zh_CN
 
 CONTROL_GPE_LOGIN = control1
 
