@@ -1,3 +1,7 @@
+2003-02-19  Colin Marquardt  <colin@marquardt-home.de>
+
+	* spacing.c: Add link in comment. Change license to LGPL.
+
 2003-02-16  Philip Blundell  <philb@gnu.org>
 
 	* picturebutton.c (gpe_picture_button): If icon name starts with
