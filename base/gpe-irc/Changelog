@@ -1,5 +1,9 @@
 2004-01-19 Paul Jakma <paul@dishone.st>
 
+	* Makefile: bump version, gpe-irc now actually mostly works.
+	
+2004-01-19 Paul Jakma <paul@dishone.st>
+
 	* run all files through indent -nut to sanitise the sometimes
 	  inconsistent style (eg mix of tab and whitespace indentation)
 	* stripping of some dead code.
