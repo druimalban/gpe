@@ -2,6 +2,7 @@ PACKAGE = gpe-taskmanager
 PREFIX = /usr/local
 DEBUG = no
 GTK2 = yes
+VERSION = 0.11
 
 LINGUAS = 
 

@@ -1,7 +1,7 @@
 Package: gpe-taskmanager
 Section: x11
 Priority: optional
-Version: 0.10
+Version: VERSION
 Architecture: arm
 Maintainer: Phil Blundell <pb@debian.org>
 Depends: xlibs, libgtk2.0-0

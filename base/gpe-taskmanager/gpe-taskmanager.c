@@ -25,7 +25,7 @@
 #define _(_x) gettext (_x)
 
 struct gpe_icon my_icons[] = {
-  { "icon", PREFIX "/share/pixmaps/gpe-calendar.png" },
+  { "icon", PREFIX "/share/pixmaps/gpe-taskmanager.png" },
   { NULL, NULL }
 };
 
@@ -54,6 +54,26 @@ char *atom_names[] =
 #define _NET_WM_PING 5
 #define WM_DELETE_WINDOW 6
 #define _NET_WM_ICON 7
+
+int 
+dummy_error_handler ()
+{
+  return 0;
+}
+
+void *old_error_handler;
+
+void
+ignore_x_errors (void)
+{
+  old_error_handler = XSetErrorHandler (dummy_error_handler);
+}
+
+void
+restore_x_errors (void)
+{
+  XSetErrorHandler (old_error_handler);
+}
 
 gboolean
 get_client_windows (Window **list, guint *nr)
@@ -92,10 +112,17 @@ get_window_name (Window w)
   unsigned long nitems, bytes_after;
   unsigned char *prop = NULL;
   gchar *name = NULL;
- 
-  if (XGetWindowProperty (dpy, w, atoms[_NET_WM_NAME],
+  int rc;
+
+  ignore_x_errors ();
+
+  rc = XGetWindowProperty (dpy, w, atoms[_NET_WM_NAME],
 			  0, 65536, False, atoms[UTF8_STRING], &actual_type, &actual_format,
-			  &nitems, &bytes_after, &prop) != Success)
+			  &nitems, &bytes_after, &prop);
+
+  restore_x_errors ();
+
+  if (rc != Success)
     return FALSE;
 
   if (nitems)
