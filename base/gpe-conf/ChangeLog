@@ -1,7 +1,12 @@
 When			Who				Where						What
 
+07.04.2003		Phil			cardinfo.c				Add missing include <time.h>.
+								pcmcia/*		Avoid need for kernel source.
+								Makefile		Add -I. to CPPFLAGS
+
 07.04.2003		Phil			Makefile				Default is native building.
 											Remove spurious /usr/src/linux in cflags.
+						
 
 07.04.2003		Florian			kbd.c						Changed to current layout file name style.
 
