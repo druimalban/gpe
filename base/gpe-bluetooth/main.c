@@ -27,18 +27,34 @@
 #include <gpe/init.h>
 #include <gpe/pixmaps.h>
 #include <gpe/errorbox.h>
+#include <gpe/gpe-iconlist.h>
 #include "tray.h"
 
+#include <sys/socket.h>
+#include <bluetooth/bluetooth.h>
+#include <bluetooth/hci.h>
+#include <bluetooth/hci_lib.h>
+
 #define _(x) gettext(x)
+
+#define HCIATTACH "/etc/bluetooth/hciattach"
 
 struct gpe_icon my_icons[] = {
   { "bt-on" },
   { "bt-off" },
+  { "cellphone" },
+  { "network" },
   { NULL }
 };
 
+struct bt_device
+{
+  gchar *name;
+  guint class;
+  bdaddr_t bdaddr;
+};
+
 static GtkWidget *icon;
-static gchar *hciattach_string;
 
 static pid_t hcid_pid;
 static pid_t hciattach_pid;
@@ -46,8 +62,70 @@ static pid_t hciattach_pid;
 static GtkWidget *menu;
 static GtkWidget *menu_radio_on, *menu_radio_off;
 static GtkWidget *menu_devices;
+static GtkWidget *devices_window;
+static GtkWidget *iconlist;
 
 static gboolean radio_is_on;
+
+static GSList *devices;
+
+static gboolean
+run_scan (void)
+{
+  bdaddr_t bdaddr;
+  inquiry_info *info = NULL;
+  int dev_id = hci_get_route(&bdaddr);
+  int num_rsp, length, flags;
+  char name[248];
+  int i, opt, dd;
+
+  if (dev_id < 0) 
+    {
+      gpe_perror_box ("Device is not available");
+      return FALSE;
+    }
+  
+  length  = 4;  /* ~10 seconds */
+  num_rsp = 10;
+  flags = 0;
+
+  num_rsp = hci_inquiry(dev_id, length, num_rsp, NULL, &info, flags);
+  if (num_rsp < 0) 
+    {
+      gpe_perror_box ("Inquiry failed.");
+      close (dev_id);
+      return FALSE;
+    }
+
+  dd = hci_open_dev(dev_id);
+  if (dd < 0) 
+    {
+      gpe_perror_box ("HCI device open failed");
+      close (dev_id);
+      free(info);
+      return FALSE;
+    }
+
+  for (i = 0; i < num_rsp; i++) 
+    {
+      struct bt_device *bd;
+
+      memset(name, 0, sizeof(name));
+      if (hci_read_remote_name (dd, &(info+i)->bdaddr, sizeof(name), name, 100000) < 0)
+	strcpy (name, "n/a");
+      baswap (&bdaddr, &(info+i)->bdaddr);
+
+      bd = g_malloc (sizeof (struct bt_device));
+      bd->name = g_strdup (name);
+      memcpy (&bd->bdaddr, &bdaddr, sizeof (bdaddr));
+      bd->class = ((info+i)->dev_class[2] << 16) | ((info+i)->dev_class[1] << 8) | (info+i)->dev_class[0];
+      devices = g_slist_append (devices, bd);
+    }
+  
+  close (dd);
+  close (dev_id);
+  return TRUE;
+}
 
 static pid_t
 fork_hcid (void)
@@ -55,7 +133,7 @@ fork_hcid (void)
   pid_t p = vfork ();
   if (p == 0)
     {
-      execlp ("hcid", "hcid", "-n");
+      execlp ("hcid", "hcid", "-n", NULL);
       perror ("hcid");
       _exit (1);
     }
@@ -64,8 +142,22 @@ fork_hcid (void)
 }
 
 static pid_t
-fork_hciattach (char *str)
+fork_hciattach (void)
 {
+  if (access (HCIATTACH, X_OK) == 0)
+    {
+      pid_t p = vfork ();
+      if (p == 0)
+	{
+	  execl (HCIATTACH, HCIATTACH, NULL);
+	  perror (HCIATTACH);
+	  _exit (1);
+	}
+
+      return p;
+    }
+
+  return 0;
 }
 
 static void
@@ -83,8 +175,7 @@ radio_on (void)
   sigaddset (&sigs, SIGCHLD);
   sigprocmask (SIG_BLOCK, &sigs, NULL);
   hcid_pid = fork_hcid ();
-  if (hciattach_string)
-    hciattach_pid = fork_hciattach (hciattach_string);
+  hciattach_pid = fork_hciattach ();
   sigprocmask (SIG_UNBLOCK, &sigs, NULL);
 }
 
@@ -110,23 +201,148 @@ radio_off (void)
   system ("hciconfig hci0 down");
 }
 
+static gboolean
+devices_window_destroyed (void)
+{
+  devices_window = NULL;
+
+  return FALSE;
+}
+
+static gboolean
+browse_device (bdaddr_t *bdaddr)
+{
+  GSList *attrid, *search;
+  GSList *pSeq = NULL;
+  GSList *pGSList = NULL;
+  uint32_t range = 0x0000ffff;
+  uint16_t count = 0;
+  int status = -1, i;
+  sdp_access_proto_t *access_proto = NULL;
+  uuid_t group;
+  char str[20];
+
+  sdp_create_uuid16 (&group, PUBLIC_BROWSE_GROUP);
+
+  attrid = g_slist_append(NULL, &range);
+  search = g_slist_append(NULL, &group);
+  status = sdp_service_search_attr_req(bdaddr, search, SDP_ATTR_REQ_RANGE,
+				       attrid, 65535, &pSeq, &count);
+
+  if (status) 
+    {
+      gpe_error_box (_("Service search failed"));
+      return FALSE;
+    }
+
+  for (i = 0; i < (int) g_slist_length(pSeq); i++) {
+    uint32_t svcrec;
+    svcrec = *(uint32_t *) g_slist_nth_data(pSeq, i);
+    
+    sdp_svcrec_print(bdaddr, svcrec);
+    
+    printf("Service RecHandle: 0x%x\n", svcrec);
+    
+    if (sdp_get_svclass_id_list(bdaddr, svcrec, &pGSList) == 0) {
+      printf("Service Class ID List:\n");
+      g_slist_foreach(pGSList, print_service_class, NULL);
+    }
+    
+    if (sdp_get_access_proto(bdaddr, svcrec, &access_proto) == 0) {
+      printf("Protocol Descriptor List:\n");
+      g_slist_foreach(access_proto->seq, 
+		      print_access_proto, NULL);
+    }
+    
+    if (sdp_get_lang_attr(bdaddr, svcrec, &pGSList) == 0) {
+      printf("Language Base Atrr List:\n");
+      g_slist_foreach(pGSList, print_lang_attr, NULL);
+    }
+    
+    if (sdp_get_profile_desc(bdaddr, svcrec, &pGSList) == 0) {
+      printf("Profile Descriptor List:\n");
+      g_slist_foreach(pGSList, print_profile_desc, NULL);
+    }
+    
+    printf("\n");
+    
+    if (sdp_is_group(bdaddr, svcrec)) {
+      uuid_t grp;
+      sdp_get_group_id(bdaddr, svcrec, &grp);
+      if (grp.value.uuid16 != group.value.uuid16)
+	do_browse(bdaddr, &grp);
+    }
+  }
+
+  return status;
+}
+
+static void
+show_devices (void)
+{
+  GSList *iter;
+
+  if (devices_window == NULL)
+    {
+      devices_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+
+      gtk_window_set_title (GTK_WINDOW (devices_window), _("Bluetooth devices"));
+
+      iconlist = gpe_iconlist_new ();
+      gtk_widget_show (iconlist);
+      gtk_container_add (GTK_CONTAINER (devices_window), iconlist);
+
+      gtk_signal_connect (devices_window, "destroy", GTK_SIGNAL_FUNC (devices_window_destroyed), NULL);
+    }
+
+  gtk_widget_show (devices_window);
+
+  run_scan ();
+
+  for (iter = devices; iter; iter = iter->next)
+    {
+      struct bt_device *bd = iter->data;
+      gchar *icon = NULL;
+      switch (bd->class & 0x1f00)
+	{
+	case 0x200:
+	  icon = PREFIX "/share/gpe/pixmaps/default/cellphone.png";
+	  break;
+	case 0x300:
+	  icon = PREFIX "/share/gpe/pixmaps/default/network.png";
+	  break;
+	default:
+	  printf("Don't know what to do about class %x\n", bd->class & 0x1f00);
+	  break;
+	}
+      fprintf (stderr, "icon is %s\n", icon);
+      gpe_iconlist_add_item (iconlist, bd->name, icon, NULL);
+    }
+}
+
 static void
 sigchld_handler (int sig)
 {
   int status;
-  pid_t p = wait (&status);
+  pid_t p = waitpid (0, &status, WNOHANG);
 
   if (p == hcid_pid)
     {
       hcid_pid = 0;
-      gpe_error_box (_("hcid died unexpectedly"));
-      radio_off ();
+      if (radio_is_on)
+	{
+	  gpe_error_box (_("hcid died unexpectedly"));
+	  radio_off ();
+	}
     }
   else if (p == hciattach_pid)
     {
       hciattach_pid = 0;
-      gpe_error_box (_("hciattach died unexpectedly"));
-      radio_off ();
+      if (radio_is_on)
+	{
+	  gpe_error_box (_("hciattach died unexpectedly"));
+	  radio_off ();
+	}
     }
   else if (p != -1)
     {
@@ -183,7 +399,7 @@ main (int argc, char *argv[])
 
   gtk_signal_connect (GTK_OBJECT (menu_radio_on), "activate", GTK_SIGNAL_FUNC (radio_on), NULL);
   gtk_signal_connect (GTK_OBJECT (menu_radio_off), "activate", GTK_SIGNAL_FUNC (radio_off), NULL);
-  gtk_signal_connect (GTK_OBJECT (menu_radio_off), "activate", GTK_SIGNAL_FUNC (show_devices), NULL);
+  gtk_signal_connect (GTK_OBJECT (menu_devices), "activate", GTK_SIGNAL_FUNC (show_devices), NULL);
 
   gtk_widget_set_sensitive (menu_devices, FALSE);
 
@@ -200,7 +416,7 @@ main (int argc, char *argv[])
   icon = gtk_image_new ();
   gtk_widget_show (icon);
   gtk_image_set_from_pixbuf (GTK_IMAGE (icon), gpe_find_icon ("bt-off"));
-  gdk_pixbuf_render_pixmap_and_mask (gpe_find_icon ("bt-off"), NULL, &bitmap, 127);
+  gdk_pixbuf_render_pixmap_and_mask (gpe_find_icon ("bt-off"), NULL, &bitmap, 255);
   gtk_widget_shape_combine_mask (window, bitmap, 0, 0);
   gdk_bitmap_unref (bitmap);
 
