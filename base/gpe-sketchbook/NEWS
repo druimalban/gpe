@@ -1,6 +1,8 @@
 GPE sketchbook NEWS
 
 * cvs
+- add "Exit" action in menus
+- list: put sketch actions in a popup menu
 - list: makes columns sortable
 - list: display "last updated" timestamp
 - store updated timestamp in DB
