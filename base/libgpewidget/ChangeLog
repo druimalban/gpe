@@ -1,5 +1,17 @@
 2003-02-11  Philip Blundell  <philb@gnu.org>
 
+	* stylus.c (gpe_stylus_mode): Add missing _ to property name.
+	Optimise a little.  Fix small memory leak.
+
+	* tap.c: Fix warnings.
+	* tray.c: Likewise.
+	* gtkdatecombo.c: Likewise.
+	* what.c: Likewise.
+	* smallbox.c: Likewise.
+	* render.c: Likewise.  Improve warning message.
+
+2003-02-11  Philip Blundell  <philb@gnu.org>
+
 	* Version 0.45 released.
 
 2003-02-11  Philip Blundell  <philb@gnu.org>

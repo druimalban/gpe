@@ -116,8 +116,8 @@ smallbox_x (gchar *title, struct box_desc *d)
   gtk_window_set_title (GTK_WINDOW (window), title);
   gtk_window_set_modal (GTK_WINDOW (window), TRUE);
 
-  gtk_signal_connect (GTK_OBJECT (window), "destroy",
-		      smallbox_note_destruction, &destroyed);
+  g_signal_connect (G_OBJECT (window), "destroy",
+		    G_CALLBACK (smallbox_note_destruction), &destroyed);
 
   gtk_widget_set_usize (window, 200, 100);
 
@@ -229,8 +229,8 @@ smallbox_x2 (gchar *title, struct box_desc2 *d)
   gtk_window_set_title (GTK_WINDOW (window), title);
   gtk_window_set_modal (GTK_WINDOW (window), TRUE);
 
-  gtk_signal_connect (GTK_OBJECT (window), "destroy",
-		      smallbox_note_destruction, &destroyed);
+  g_signal_connect (G_OBJECT (window), "destroy",
+		    G_CALLBACK (smallbox_note_destruction), &destroyed);
 
   gtk_widget_set_usize (window, 200, 100);
 

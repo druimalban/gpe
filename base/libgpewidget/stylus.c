@@ -34,7 +34,7 @@ gpe_stylus_mode (void)
       Display *dpy;
       Window root;
       Atom atom;
-      unsigned char *prop;
+      unsigned char *prop = NULL;
       Atom type;
       int format;
       unsigned long nitems;
@@ -42,13 +42,22 @@ gpe_stylus_mode (void)
       
       dpy = GDK_DISPLAY ();
       root = RootWindow (dpy, 0);
-      atom = XInternAtom (dpy, "GPE_STYLUS_MODE", 0);
+      atom = XInternAtom (dpy, "_GPE_STYLUS_MODE", True);
 
-      XGetWindowProperty (dpy, root, atom, 0, 1, 0, XA_INTEGER,
-			  &type, &format, &nitems, &bytes,
-			  &prop);
+      stylus_mode_flag = NO;
+
+      if (atom)
+	{
+	  XGetWindowProperty (dpy, root, atom, 0, 1, 0, XA_INTEGER,
+			      &type, &format, &nitems, &bytes,
+			      &prop);
       
-      stylus_mode_flag = nitems ? YES : NO;
+	  if (nitems)
+	    stylus_mode_flag = YES;
+
+	  if (prop)
+	    XFree (prop);
+	}
     }
 
   return stylus_mode_flag == YES;

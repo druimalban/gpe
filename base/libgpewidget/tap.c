@@ -17,6 +17,8 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include <string.h>
+
 #include <gtk/gtk.h>
 #include <gdk/gdk.h>
 

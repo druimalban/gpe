@@ -17,6 +17,8 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include <signal.h>
+
 #include <gtk/gtk.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
 
@@ -31,4 +33,4 @@ gpe_render_icon (GtkStyle *style, GdkPixbuf *pixbuf)
   return gtk_image_new_from_pixbuf (pixbuf);
 }
 
-link_warning(gpe_render_icon, "warning: gpe_render_icon is obsolete and should not be used.");
+link_warning(gpe_render_icon, "warning: gpe_render_icon is obsolete: use gtk_image_new_from_pixbuf instead");
