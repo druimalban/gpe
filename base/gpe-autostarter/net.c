@@ -38,8 +38,8 @@ handle_net_wlan (char *action, char *interface)
 
       if (pid == 0)
 	{
-	  execlp ("miniwave", "+miniwave", NULL);
-	  perror ("miniwave");
+	  execlp ("mb-applet-wireless", "mb-applet-wireless", NULL);
+	  perror ("mb-applet-wireless");
 	  _exit (1);
 	}
 
