@@ -1,3 +1,7 @@
+2002-07-25  Philip Blundell  <philb@gnu.org>
+
+	* gpe-login.c (main): Correct geometry parsing.
+
 2002-07-23  Philip Blundell  <philb@gnu.org>
 
 	* gpe-login.setup: Call ipaq-sleep with -n flag so we can kill it later.

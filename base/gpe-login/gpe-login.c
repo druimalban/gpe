@@ -515,14 +515,16 @@ main (int argc, char *argv[])
 	  char buf[1024];
 	  if (fgets (buf, sizeof (buf), fp))
 	    {
-	      int x, y, h, w;
-	      int val = XParseGeometry (buf, &x, &y, &w, &h);
+	      int x = -1, y = -1, h, w;
+	      int val;
+	      buf[strlen(buf)-1] = 0;
+	      val = XParseGeometry (buf, &x, &y, &w, &h);
 	      if ((val & (HeightValue | WidthValue)) == (HeightValue | WidthValue))
 		{
 		  gtk_widget_set_usize (window, w, h);
 		  geometry_set = TRUE;
 		}
-	      if ((val & (XValue | YValue)) == (XValue | YValue))
+	      if (val & (XValue | YValue))
 		gtk_widget_set_uposition (window, x, y);
 	    }
 	  fclose (fp);
@@ -721,8 +723,6 @@ main (int argc, char *argv[])
 
       gtk_box_pack_end (GTK_BOX (hbox), ok_button, FALSE, FALSE, 5);
     }
-
-  gtk_window_set_position (GTK_WINDOW (window), GTK_WIN_POS_CENTER);
 
   gtk_box_pack_start (GTK_BOX (vbox2), frame, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox2), hbox, FALSE, FALSE, 5);
