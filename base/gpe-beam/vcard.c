@@ -124,6 +124,22 @@ gpe_export_vcard (sqlite *db, guint uid)
 				  id, a, b)) \
 	    goto error;
 
+gchar *
+append_str (gchar *old, gchar *new)
+{
+  gchar *ret;
+
+  if (old)
+    {
+      ret = g_strdup_printf ("%s\n%s", old, new);
+      g_free (old);
+      g_free (new);
+    }
+  else
+    ret = new;
+
+  return ret;
+}
 
 gboolean
 gpe_import_vcard (sqlite *db, MIMEDirVCard *vcard)
@@ -171,6 +187,34 @@ gpe_import_vcard (sqlite *db, MIMEDirVCard *vcard)
       gboolean home = FALSE, work = FALSE;
       address = l->data;
       g_object_get (G_OBJECT (address), "full", &s, NULL);
+      if (s == NULL)
+	{
+	  gchar *pobox = NULL, *street = NULL, *region = NULL, *locality = NULL, *code = NULL, *country = NULL, *ext = NULL;
+
+	  g_object_get (G_OBJECT (address), "pobox", &pobox, NULL);
+	  g_object_get (G_OBJECT (address), "extended", &ext, NULL);
+	  g_object_get (G_OBJECT (address), "street", &street, NULL);
+	  g_object_get (G_OBJECT (address), "region", &region, NULL);
+	  g_object_get (G_OBJECT (address), "locality", &locality, NULL);
+	  g_object_get (G_OBJECT (address), "pcode", &code, NULL);
+	  g_object_get (G_OBJECT (address), "country", &country, NULL);
+
+	  if (pobox)
+	    s = append_str (s, pobox);
+	  if (ext)
+	    s = append_str (s, ext);
+	  if (street)
+	    s = append_str (s, ext);
+	  if (region)
+	    s = append_str (s, region);
+	  if (locality)
+	    s = append_str (s, locality);
+	  if (code)
+	    s = append_str (s, code);
+	  if (country)
+	    s = append_str (s, country);
+	}
+
       if (s)
 	{
 	  g_object_get (G_OBJECT (address), "home", &home, NULL);
@@ -180,6 +224,8 @@ gpe_import_vcard (sqlite *db, MIMEDirVCard *vcard)
 	  if (work)
 	    insert ("work.address", s);
 	}
+      else
+	fprintf (stderr, "Unable to retrieve address.\n");
       l = g_list_next (l);
     }
 
