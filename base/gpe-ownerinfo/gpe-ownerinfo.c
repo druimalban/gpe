@@ -74,7 +74,8 @@ GdkPixbuf *photopixbuf;
 GtkWidget *smallphotobutton;
 GtkWidget *bigphotobutton;
 gchar *photofile = PREFIX "/share/gpe/pixmaps/default/tux-48.png";
-
+PangoLayout *address_layout;
+guint lost_height;
 
 /* redraw the pixbuf */
 gboolean
@@ -345,6 +346,52 @@ mapped (GtkWidget *window)
     }
 }
 
+static gboolean
+draw_address (GtkWidget *widget, GdkEventExpose *event, gpointer user_data)
+{
+  GtkAdjustment *adj = GTK_ADJUSTMENT (user_data);
+
+  gtk_paint_layout (widget->style,
+		    widget->window,
+		    GTK_WIDGET_STATE (widget),
+		    FALSE,
+		    &event->area,
+		    widget,
+		    "label",
+		    0, -(lost_height * adj->value),
+		    address_layout);
+
+  return TRUE;
+}
+
+static void
+do_scroll_address (GtkAdjustment *adj, gpointer user_data)
+{
+  GtkWidget *address = GTK_WIDGET (user_data);
+
+  gtk_widget_draw (address, NULL);
+}
+
+static void
+set_address_size (GtkWidget *widget, GtkAllocation *allocation, gpointer user_data)
+{
+  GtkAdjustment *adj = GTK_ADJUSTMENT (user_data);
+  guint width, height;
+
+  pango_layout_get_size (address_layout, &width, &height);
+  width /= PANGO_SCALE;
+  height /= PANGO_SCALE;
+
+  fprintf (stderr, "height required: %d, height obtained: %d\n", height, allocation->height);
+
+  if (height < allocation->height)
+    height = allocation->height;
+
+  lost_height = height - allocation->height;
+
+  adj->page_size = (double)allocation->height / (double)height;
+}
+
 int
 main (int argc, char *argv[])
 {
@@ -366,9 +413,10 @@ main (int argc, char *argv[])
   GtkWidget *smallphotodrawingarea;
   GtkWidget *bigphotodrawingarea;
   GtkWidget *rightcolvbox;
-  GtkWidget *scrolledwindow;
-  GtkWidget *viewport;
+  GtkWidget *scrollbar;
+  GtkWidget *addresshbox;
   GtkSizeGroup *sizegroup;
+  GtkObject *adjustment;
   
   gchar *gpe_catindent = gpe_get_catindent ();
   //guint gpe_catspacing = gpe_get_catspacing ();
@@ -651,32 +699,34 @@ main (int argc, char *argv[])
   gtk_label_set_justify (GTK_LABEL (phone), GTK_JUSTIFY_LEFT);
   gtk_misc_set_alignment (GTK_MISC (phone), 0, 0.5);
 
-  scrolledwindow = gtk_scrolled_window_new (NULL, NULL);
-  gtk_widget_show (scrolledwindow);
-  gtk_box_pack_start (GTK_BOX (rightcolvbox), scrolledwindow, TRUE, TRUE, 0);
-  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow),
-				  GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+  adjustment = gtk_adjustment_new (0, 0, 1.0, 0.1, 0.5, 1);
+  scrollbar = gtk_vscrollbar_new (GTK_ADJUSTMENT (adjustment));
+  address = gtk_drawing_area_new ();
 
-  viewport = gtk_viewport_new (NULL, NULL);
-  gtk_widget_show (viewport);
-  gtk_container_add (GTK_CONTAINER (scrolledwindow), viewport);
-  gtk_viewport_set_shadow_type (GTK_VIEWPORT (viewport), GTK_SHADOW_NONE);
+  address_layout = gtk_widget_create_pango_layout (address, owneraddress);
 
-  address = gtk_label_new (owneraddress);
+  g_signal_connect (G_OBJECT (address), "size-allocate", G_CALLBACK (set_address_size), adjustment);
+  g_signal_connect (G_OBJECT (address), "expose-event", G_CALLBACK (draw_address), adjustment);
+
+  g_signal_connect (G_OBJECT (adjustment), "value-changed", G_CALLBACK (do_scroll_address), address);
+
+  addresshbox = gtk_hbox_new (FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (addresshbox), address, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (addresshbox), scrollbar, FALSE, FALSE, 0);
+
+  gtk_widget_show (scrollbar);
   gtk_widget_show (address);
-  gtk_container_add (GTK_CONTAINER (viewport), address);
-  gtk_label_set_justify (GTK_LABEL (address), GTK_JUSTIFY_LEFT);
-  gtk_misc_set_alignment (GTK_MISC (address), 0, 0);
+  gtk_widget_show (addresshbox);
+
+  gtk_box_pack_start (GTK_BOX (rightcolvbox), addresshbox, TRUE, TRUE, 0);
 
   if (flag_transparent)
     {
       GtkStyle *style = gtk_style_copy (GPE_Ownerinfo->style);
       style->bg_pixmap[GTK_STATE_NORMAL] = GDK_PARENT_RELATIVE;
-      gtk_widget_set_style (scrolledwindow, style);
-      gtk_widget_set_style (viewport, style);
-      gtk_widget_set_style (address, style);
       gtk_widget_set_style (smallphotobutton, style);
       gtk_widget_set_style (smallphotodrawingarea, style);
+      gtk_widget_set_style (address, style);
     }
 
   /*
@@ -740,17 +790,11 @@ main (int argc, char *argv[])
 			g_strdup_printf ("<span>%s</span>",
 					 ownerphone));
   gtk_label_set_selectable (GTK_LABEL (phone), TRUE);
-  gtk_label_set_markup (GTK_LABEL (address),
-			g_strdup_printf ("<span>%s</span>",
-					 owneraddress));
-  gtk_label_set_selectable (GTK_LABEL (address), TRUE);
     
   /* make window transparent if option -t is given: */
   if (flag_transparent) {
     gtk_signal_connect (GTK_OBJECT (GPE_Ownerinfo), "map-event",
 			GTK_SIGNAL_FUNC (mapped), NULL);
-    gtk_signal_connect (GTK_OBJECT (viewport), "realize",
-			GTK_SIGNAL_FUNC (realize), NULL);
   }
 
   gtk_signal_connect (GTK_OBJECT (GPE_Ownerinfo), "destroy",
