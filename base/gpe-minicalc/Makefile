@@ -39,12 +39,14 @@ $(PACKAGE): $(OBJS)
 	$(CC) -o $@ $^ $(LDFLAGS)
 
 install: all
-	install -D $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
+	mkdir -p $(DESTDIR)$(PREFIX)/bin
+	install -s $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	mkdir -p $(DESTDIR)$(PREFIX)/share/matchbox/mbdock/
 	install -m 644 $(PACKAGE).dock $(DESTDIR)$(PREFIX)/share/matchbox/mbdock
 	mkdir -p $(DESTDIR)$(PREFIX)/share/pixmaps/
 	install -m 644 $(PACKAGE).xpm $(DESTDIR)$(PREFIX)/share/pixmaps
-	strip $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
+	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
+	install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications
 
 clean:
 	rm -f $(PACKAGE) $(OBJS)

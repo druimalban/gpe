@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Calculator
+Comment=gpe-minicalc
+Exec=gpe-minicalc
+Type=PanelApp
+Icon=/usr/share/pixmaps/gpe-minicalc.xpm
+Categories=Panel;Utility;GPE
