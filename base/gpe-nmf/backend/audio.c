@@ -33,7 +33,7 @@ audio_open (void)
 }
 
 void
-audio_set_volume (audio_t a, int volume)
+audio_set_volume (audio_t a, guint volume)
 {
   a->volume = volume;
 }

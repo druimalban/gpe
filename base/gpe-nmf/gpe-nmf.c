@@ -278,7 +278,7 @@ main (int argc, char *argv[])
 
   decoder_init ();
   player = player_new ();
-  g_timeout_add (100, (GSourceFunc)player_poll_func, player);
+  g_timeout_add (20, (GSourceFunc)player_poll_func, player);
 
   playlist_edit_double_click_hook (double_click_hook, player);
 
