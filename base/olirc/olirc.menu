@@ -1,0 +1,8 @@
+?package(olirc): \
+ needs=x11 \
+ title="IRC Client" \
+ logtitle="OlIRC IRC Client" \
+ command=olirc \
+ icon48=/usr/share/pixmaps/olirc.png \
+ section=PIM \
+ windowtitle=olirc
