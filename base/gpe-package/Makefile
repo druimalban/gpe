@@ -1,5 +1,5 @@
 PACKAGE = gpe-package
-VERSION = 0.0.8
+VERSION = 0.0.8-1
 NATIVE = yes
 CVSBUILD = yes
 DEBUG = no
@@ -9,7 +9,7 @@ DESTDIR = /
 
 LINGUAS = 
 
-EXTRA_DESKTOPS = gpe-packages.desktop.in 
+EXTRA_DESKTOPS = gpe-package.desktop.in 
 
 ifeq ($(CVSBUILD),yes)
 LDFLAGS += -L../libgpewidget -L../libdisplaymigration -ldisplaymigration -L.
@@ -75,7 +75,7 @@ all: $(PACKAGE)
 $(PACKAGE): $(OBJS)
 	$(CC) -g -o $@ $(OBJS) $(LDFLAGS)
 
-install-program: $(PACKAGE)
+install-program: $(PACKAGE) all-desktop
 	mkdir -p $(DESTDIR)/CONTROL
 	sed -e s/VERSION/$(VERSION)/ < familiar/control > $(DESTDIR)/CONTROL/control
 	mkdir -p $(DESTDIR)/etc/gpe

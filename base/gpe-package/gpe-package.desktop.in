@@ -1,7 +1,7 @@
 [Desktop Entry]
 _Name= Package Manager
 _Comment=Install and update packages
-Exec=gpe-packages
+Exec=gpe-package
 Terminal=0
 Type=Application
 Icon=gpe-packages.png
