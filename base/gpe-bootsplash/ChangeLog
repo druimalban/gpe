@@ -1,3 +1,10 @@
+2004-04-30  Michael Opdenacker <michaelo@handhelds.org>
+
+	* gpe-bootsplah.init: Now uses /proc/cpuinfo instead
+	of /proc/hal/model, to support both Linux 2.4 and 2.6.
+	Simplified by grouping several cases with the same command.
+	Added a H2200 case (tested this script on this platform).
+
 2003-07-11  Philip Blundell  <philb@gnu.org>
 
 	* Version 1.4.
