@@ -459,11 +459,13 @@ main(int argc, char *argv[])
   if (playing)
     {
       gtk_progress_set_activity_mode (GTK_PROGRESS(progress_bar), FALSE);
+      gtk_window_set_title (GTK_WINDOW(window), "Play Memo");
       label = gtk_label_new (_("Playing"));
     }
   else
     {
       gtk_progress_set_activity_mode (GTK_PROGRESS(progress_bar), TRUE);
+      gtk_window_set_title (GTK_WINDOW(window), "Record Memo");
       label = gtk_label_new (_("Recording"));
     }
   gtk_widget_show (label);

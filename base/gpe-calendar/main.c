@@ -218,6 +218,7 @@ main(int argc, char *argv[])
     }
 
   main_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+  gtk_window_set_title (GTK_WINDOW(main_window), "Calendar");
   gtk_signal_connect (GTK_OBJECT (main_window), "destroy",
 		      GTK_SIGNAL_FUNC (gtk_exit), NULL);
 
