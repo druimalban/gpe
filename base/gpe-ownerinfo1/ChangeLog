@@ -2,6 +2,8 @@
 
 	* src/Makefile.am (gpe_ownerinfo_LDADD): We don't need to link
 	against sqlite.
+	(gpe_ownerinfo_LDFLAGS): New variable. Needed for compiling on the
+	skiff.
 
 	* src/interface.c (Module): Generated anew.
 

@@ -13,6 +13,8 @@ gpe_ownerinfo_SOURCES = \
 	interface.c interface.h \
 	callbacks.c callbacks.h
 
+gpe_ownerinfo_LDFLAGS = `gdk-pixbuf-config --libs`
+
 gpe_ownerinfo_LDADD = -L$(top_srcdir)/../libgpewidget -lgpewidget \
 	@GTK_LIBS@ $(INTLLIBS)
 
