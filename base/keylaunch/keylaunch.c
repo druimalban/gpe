@@ -198,12 +198,15 @@ create_new_key (char *key_string)
       if (key_str[2] == '*')
 	k->modifier = k->modifier | Mod1Mask;
     }
-  k->keycode = XKeysymToKeycode (dpy, XStringToKeysym (key_str + 3));
-  k->long_press = 0;
 
-  if (k->keycode == NoSymbol && (strncmp (key_str+3, "Held", 4) == 0))
+  if (strncmp (key_str+3, "Held ", 5))
     {
-      k->keycode = XKeysymToKeycode (dpy, XStringToKeysym (key_str + 7));
+      k->keycode = XKeysymToKeycode (dpy, XStringToKeysym (key_str + 3));
+      k->long_press = 0;
+    }
+  else
+    {
+      k->keycode = XKeysymToKeycode (dpy, XStringToKeysym (key_str + 8));
       k->long_press = 1;
     }
 
@@ -213,7 +216,7 @@ create_new_key (char *key_string)
     k->window = strdup (window);
   else
     k->window = NULL;
-/*  printf ("new key: %s (%X) (%d)\n", k->window, k->keycode, k->modifier); */
+  /* fprintf (stderr, "new key: %s (%X) (%d) (%d)\n", k->window, k->keycode, k->modifier, k->long_press); */
   return;
 }
 
