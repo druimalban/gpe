@@ -1954,6 +1954,7 @@ main (ac, av, envp)
     // gboolean status;
     char *usage_format = "Usage:  %s [--unicode] [--dpi=N] [--verbose] [--scale=SCALE] DOCUMENT-FILE\n";
 
+
     TheScale = 1.0;
     UseUnicode = FALSE;
 
@@ -1993,11 +1994,33 @@ main (ac, av, envp)
       }
     if ((ac - i) != 1)
       {
-          fprintf (stderr, usage_format, av[0]);
-          return 1;
-      }
+      	GtkWidget *fs;
+      	gint result;
+      	
+      	fs = gtk_file_selection_new("Open file");
+      	result = gtk_dialog_run (GTK_DIALOG(fs));
+      	switch (result) {
+      		case GTK_RESPONSE_OK:
+		      	result = strlen (gtk_file_selection_get_filename (GTK_FILE_SELECTION(fs)));
+		      	document_path = (char *)malloc(result * sizeof(char));
+		      	strcpy (document_path, gtk_file_selection_get_filename (GTK_FILE_SELECTION(fs)));
+		      	gtk_widget_destroy (fs);
+      			g_print("accepted\n");
+      			break;
+      		case GTK_RESPONSE_CANCEL:
+      			gtk_widget_destroy (fs);
+      			exit(1);
+      			break;
+      		default:
+      			g_print("res=%d\n",result);
+      			break;
+      	}
 
-    document_path = av[i];
+//          fprintf (stderr, usage_format, av[0]);
+//          return 1;
+	
+      } else
+          document_path = av[i];
 
     if (stat (document_path, &buf) != 0)
       {

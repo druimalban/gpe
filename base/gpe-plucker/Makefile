@@ -8,8 +8,8 @@ VERSION = 0.1
 MEMBERS = gpe-plucker
 
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0` -DGTK_DISABLE_DEPRECATED
-GTKLDFLAGS += -L/skiff/local/arm-linux/lib/X11 `pkg-config --libs gtk+-2.0` -lX11 -lXrender -lXext -lXinerama
-#GTKLDFLAGS += -L/usr/X11R6/lib `pkg-config --libs gtk+-2.0` -lX11 -lXrender -lXext -lXinerama
+#GTKLDFLAGS += -L/skiff/local/arm-linux/lib/X11 `pkg-config --libs gtk+-2.0` -lX11 -lXrender -lXext -lXinerama
+GTKLDFLAGS += -L/usr/X11R6/lib `pkg-config --libs gtk+-2.0` -lX11 -lXrender -lXext -lXinerama
 
 CFLAGS = $(GTKCFLAGS) -Iunpluck/ -DUSE_GPE -D_GNU_SOURCE -Wall
 ifeq ($(DEBUG),yes)
