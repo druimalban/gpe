@@ -34,7 +34,6 @@ static Atom atom;
 static Display *dpy;
 static Window root;
 static Window mywindow;
-static GdkWindow *gdkw;
 
 struct gpe_icon my_icons[] = {
   { "what" },
@@ -57,24 +56,10 @@ filter (GdkXEvent *xevp, GdkEvent *ev, gpointer p)
     {
       XAnyEvent *any = (XAnyEvent *)xev;
       tray_handle_event (any->display, mywindow, xev);
+      if (xev->type == ReparentNotify)
+	gtk_widget_show (GTK_WIDGET (p));
     }
   return GDK_FILTER_CONTINUE;
-}
-
-void
-gdk_window_show (GdkWindow *window)
-{
-  static void (*f)(GdkWindow *window);
-  GdkWindowPrivate *p = window;
-  if (f == NULL)
-    f = dlsym (RTLD_NEXT, "gdk_window_show");
-  if (window != gdkw)
-    f(window);
-  else
-    {
-      printf ("not mapping window\n");
-      p->mapped = 1;
-    }
 }
 
 int
@@ -123,10 +108,8 @@ main (int argc, char *argv[])
 		   PropModeReplace, (unsigned char *)
 		   &window_type_dock_atom, 1);
 
-  gtk_widget_show_all (window);
-
   tray_init (dpy, GDK_WINDOW_XWINDOW (window->window));
-  gdk_window_add_filter (window->window, filter, 0);
+  gdk_window_add_filter (window->window, filter, window);
 
   gtk_main ();
 
