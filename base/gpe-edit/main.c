@@ -67,10 +67,8 @@ guint window_x = 240, window_y = 310;
 static void
 clear_text_area (void)
 {
-  GtkTextIter start, end;
   GtkTextBuffer *buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_area));
-  gtk_text_buffer_get_bounds (buf, &start, &end);
-  gtk_text_buffer_delete (buf, &start, &end);
+  gtk_text_buffer_set_text(buf,"",0);
 }
 
 static void
@@ -80,21 +78,14 @@ update_window_title (void)
   GError *error = NULL;
   gchar *displayname, *udisplayname;
   gchar *wname = _(WINDOW_NAME);
-
+	
   if (filename == NULL || strlen (filename) == 0)
   {
-    displayname = g_malloc (strlen (_("Untitled")) + 2);
-    strcpy (displayname, _("Untitled"));
+	displayname = g_strdup_printf("%s %s",_("Untitled"),file_modified ? "*" : "");
   }
   else
   {
-    displayname = g_malloc (strlen (basename (filename)) + 2);
-    strcpy (displayname, basename (filename));
-  }
-
-  if (file_modified == 1)
-  {
-    strcat (displayname, " *");
+	displayname = g_strdup_printf("%s %s",basename(filename),file_modified ? "*" : "");
   }
 
   udisplayname = g_locale_to_utf8 (displayname, -1, NULL, NULL, &error);
@@ -127,24 +118,23 @@ text_changed (void)
 }
 
 static void
-new_file (void)
+new_file (GtkWidget *w, gpointer p)
 {
-  if (file_modified == 1)
+  if (file_modified)
   {
-    if (gpe_question_ask (_("Current file is modified, save?"), 
-		                  _("Question"), "!gtk-question",
- 					      _("Don't save"), "stop", "!gtk-save", 
-	                      NULL, NULL))
+    if (gpe_question_ask (_("Current file is modified, save?"), _("Question"), 
+		                  "question", "!gtk-no", NULL, "!gtk-yes", NULL, NULL))
       save_file ();
 	else
 	  file_modified = 0;
   }
+  
   if (!file_modified)
   {
     clear_text_area ();
+    file_modified = 0;
     if (filename) g_free(filename);
     filename = NULL;
-    file_modified = 0;
     update_window_title ();
   }
 }
@@ -242,39 +232,22 @@ do_save_file (gchar *filename)
 
     if (!utf8_mode)
       {
-	gchar *p = text;
-	text = g_locale_from_utf8 (text, -1, NULL, NULL, NULL);
-	g_free (p);
+        gchar *p = text;
+        text = g_locale_from_utf8 (text, -1, NULL, NULL, NULL);
+        g_free (p);
       }
 
     if (text)
       {
-	text_length = strlen (text);
-	fwrite (text, 1, text_length, fp);
-	fclose (fp);
-	g_free (text);
+        text_length = strlen (text);
+        fwrite (text, 1, text_length, fp);
+        fclose (fp);
+	    g_free (text);
       }
 
     file_modified = 0;
     update_window_title ();
   }
-}
-
-static void
-save_file_as (GtkFileSelection *selector, gpointer user_data)
-{
-  if (filename) 
-	  g_free(filename);
-  filename = g_strdup(gtk_file_selection_get_filename (GTK_FILE_SELECTION (file_selector)));
-  
-  do_save_file (filename);
-
-  gtk_widget_destroy (file_selector);
-  if (access(filename,W_OK))
-    {
-	  g_free(filename);
-	  filename = NULL;
-	}
 }
 
 static void
@@ -309,23 +282,28 @@ select_save_file_as (void)
 
   suggested_filename = gtk_text_buffer_get_text (buf, &start, &end, FALSE);
 
-  file_selector = gtk_file_selection_new (_("Save as ..."));
-
-  gtk_signal_connect_object (GTK_OBJECT (GTK_FILE_SELECTION(file_selector)->ok_button),
-			     "clicked", GTK_SIGNAL_FUNC (save_file_as), NULL);
-  
-  gtk_signal_connect_object (GTK_OBJECT (GTK_FILE_SELECTION(file_selector)->cancel_button),
-		             "clicked", GTK_SIGNAL_FUNC (gtk_widget_destroy),
-		             (gpointer) file_selector);
+  file_selector = gtk_file_selection_new (_("Save as..."));
 
   gtk_file_selection_set_filename (GTK_FILE_SELECTION (file_selector), suggested_filename);
 
   gtk_widget_show (file_selector);
-
+  
+  if (gtk_dialog_run(GTK_DIALOG(file_selector)) == GTK_RESPONSE_OK)
+    {
+	  if (filename) 
+		  g_free(filename);
+	  filename = g_strdup(gtk_file_selection_get_filename (GTK_FILE_SELECTION (file_selector)));
+	  
+	  do_save_file (filename);
+	
+	  if (access(filename,W_OK))
+		{
+		  g_free(filename);
+		  filename = NULL;
+		}
+    }
+  gtk_widget_destroy (file_selector);
   g_free (suggested_filename);
-  while (GTK_IS_WIDGET(file_selector))
-    while (gtk_events_pending())
-      gtk_main_iteration_do(FALSE);
 }
 
 static void
@@ -621,7 +599,7 @@ main (int argc, char *argv[])
 
   toolbar_icon = gtk_image_new_from_stock (GTK_STOCK_NEW, GTK_ICON_SIZE_SMALL_TOOLBAR);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("New"), 
-			   _("New document"), _("New document"), toolbar_icon, new_file, NULL);
+			   _("New document"), _("New document"), toolbar_icon, GTK_SIGNAL_FUNC(new_file), NULL);
 
   toolbar_icon = gtk_image_new_from_stock (GTK_STOCK_OPEN, GTK_ICON_SIZE_SMALL_TOOLBAR);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Open"), 

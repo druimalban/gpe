@@ -1,3 +1,9 @@
+2004-08-24  Florian Boor <florian.boor@kernelconcepts.de>
+
+	* Version 0.27 released
+	* main.c: Fixed several sources of segfaults.
+	* main.c: Some simplifications and minor improvements.
+
 2004-08-16  Florian Boor <florian.boor@kernelconcepts.de>
 
 	* Version 0.26 released
