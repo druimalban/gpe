@@ -14,6 +14,7 @@ Atom primary_selection_atom;
 Atom clipboard_atom;
 Atom clipboard_selection_atom;
 Atom delete_atom;
+Atom active_window_atom;
 
 XGCValues *gv = NULL;
 int screen;
@@ -82,7 +83,31 @@ copy_click (XEvent *ev)
 void
 paste_click (XEvent *ev)
 {
-  printf ("Paste\n");
+  Window focus;
+  Atom actual_type;
+  unsigned long nitems;
+  unsigned long bytes_after;
+  int actual_format;
+  XButtonEvent evb;
+  int ret;
+  Window root;
+
+  memset (&evb, 0, sizeof (evb));
+  
+  XGetInputFocus (dpy, &focus, &ret);
+
+  evb.root = RootWindow (dpy, screen);
+  evb.display = dpy;
+  evb.window = focus;
+  evb.button = 2;
+  evb.time = CurrentTime;
+  evb.same_screen = True;
+
+  evb.type = ButtonPress;
+  XSendEvent (dpy, focus, True, 0, (XEvent *)&evb);
+  evb.state = Button2Mask;
+  evb.type = ButtonRelease;
+  XSendEvent (dpy, focus, True, 0, (XEvent *)&evb);
 }
 
 void
@@ -108,7 +133,7 @@ selection_request (XEvent *ev)
       sev.property = rev->property;
     }
 
-  XSendEvent (rev->display, rev->requestor, False, 0, &sev);
+  XSendEvent (rev->display, rev->requestor, False, 0, (XEvent *)&sev);
 }
 
 void
@@ -165,6 +190,7 @@ main (int argc, char *argv[])
   clipboard_atom = XInternAtom (dpy, "CLIPBOARD", False);
   delete_atom = XInternAtom (dpy, "DELETE", False);
   clipboard_selection_atom = XInternAtom (dpy, "MINICLIPBOARD_SELECTION", False);
+  active_window_atom = XInternAtom (dpy, "_NET_ACTIVE_WINDOW", False);
 
   screen = DefaultScreen (dpy);
   
