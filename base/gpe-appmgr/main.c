@@ -99,7 +99,6 @@ char *translate_group_name (char *name);
 
 void nb_switch (GtkNotebook *nb, GtkNotebookPage *page, guint pagenum)
 {
-#ifndef GTK2
 	GtkWidget *hb;
 	int i=0;
 
@@ -111,7 +110,7 @@ void nb_switch (GtkNotebook *nb, GtkNotebookPage *page, guint pagenum)
 		GtkWidget *page_contents;
 		GList *children;
 
-		page_contents = gtk_notebook_get_nth_page (GTK_NOTEBOOK(nb), i++);
+		page_contents = gtk_notebook_get_nth_page (GTK_NOTEBOOK(nb), i);
 		if (!page_contents)
 			break;
 
@@ -126,15 +125,17 @@ void nb_switch (GtkNotebook *nb, GtkNotebookPage *page, guint pagenum)
 		{
 			if (GTK_IS_LABEL(children->data))
 			{
-				if (page_contents == page->child)
+
+				if (i == pagenum)
 					gtk_widget_show (GTK_WIDGET(children->data));
 				else
 					gtk_widget_hide (GTK_WIDGET(children->data));
 			}
 			children = children->next;
 		}
+
+		i++;
 	}
-#endif
 }
 
 gint unignore_press (gpointer data)
