@@ -46,7 +46,7 @@ vtodo_interpret_tag (MIMEDirVTodo *todo, const char *tag, const char *value)
       t++;
     }
 
-  if (!strcasecmp (t->tag, "due"))
+  if (!strcasecmp (tag, "due"))
     {
       struct tm tm;
 
