@@ -244,10 +244,8 @@ do_save_file (gchar *filename)
 }
 
 static void
-save_file_as (GtkWidget *w, gpointer user_data)
+save_file_as (GtkFileSelection *selector, gpointer user_data)
 {
-  GtkFileSelection *file_selector = GTK_FILE_SELECTION (user_data);
-
   filename = gtk_file_selection_get_filename (GTK_FILE_SELECTION (file_selector));
   
   do_save_file (filename);
@@ -289,7 +287,7 @@ select_save_file_as (void)
   file_selector = gtk_file_selection_new (_("Save as .."));
 
   gtk_signal_connect_object (GTK_OBJECT (GTK_FILE_SELECTION(file_selector)->ok_button),
-			     "clicked", GTK_SIGNAL_FUNC (save_file_as), file_selector);
+			     "clicked", GTK_SIGNAL_FUNC (save_file_as), NULL);
   
   gtk_signal_connect_object (GTK_OBJECT (GTK_FILE_SELECTION(file_selector)->cancel_button),
 		             "clicked", GTK_SIGNAL_FUNC (gtk_widget_destroy),
@@ -616,19 +614,9 @@ main (int argc, char *argv[])
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Save"), 
 			   _("Save current file"), _("Save current file"), toolbar_icon, save_file, NULL);
 
-  gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
-
-  toolbar_icon = gtk_image_new_from_stock (GTK_STOCK_CUT, GTK_ICON_SIZE_SMALL_TOOLBAR);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Cut"), 
-			   _("Cut the selection"), _("Cut the selection"), toolbar_icon, cut_selection, NULL);
-
-  toolbar_icon = gtk_image_new_from_stock (GTK_STOCK_COPY, GTK_ICON_SIZE_SMALL_TOOLBAR);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Copy"), 
-			   _("Copy the selection"), _("Copy the selection"), toolbar_icon, copy_selection, NULL);
-
-  toolbar_icon = gtk_image_new_from_stock (GTK_STOCK_PASTE, GTK_ICON_SIZE_SMALL_TOOLBAR);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Paste"), 
-			   _("Paste the clipboard"), _("Paste the clipboard"), toolbar_icon, paste_clipboard, NULL);
+  toolbar_icon = gtk_image_new_from_stock (GTK_STOCK_SAVE_AS, GTK_ICON_SIZE_SMALL_TOOLBAR);
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Save as"), 
+			   _("Save current file as"), _("Save current file as"), toolbar_icon, select_save_file_as, NULL);
 
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
 
