@@ -1,3 +1,9 @@
+2003-01-02  Philip Blundell  <philb@gnu.org>
+
+	* X11/Xinit.d/90xXkbd: Delete, contents moved to ...
+	* X11/Xinit.d/99gpe-login: ... here.
+	* X11/Xsession-gpe.d/90xXkbd: Delete.
+
 2003-01-01  Philip Blundell  <philb@gnu.org>
 
 	* gpe-login 0.33 released.

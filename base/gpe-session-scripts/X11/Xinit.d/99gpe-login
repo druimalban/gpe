@@ -10,4 +10,6 @@ if [ -x /usr/X11R6/bin/xsetroot ]; then
 fi
 #HARD=--hard
 
+/usr/X11R6/bin/xmodmap -e "keycode 135 = Mode_switch Multi_key"
+
 GTK2_RC_FILES=/etc/X11/gpe-login.gtkrc /usr/bin/gpe-login $HARD $TRANSPARENT $GEOMETRY
