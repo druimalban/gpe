@@ -81,13 +81,11 @@ static GSList *rows, *labels;
 #define DEFAULT_BACKGROUND PREFIX "/share/gpe/pixmaps/default/gpe-appmgr/desktop-background.png"
 
 #define ICONLIST_WIDTH		576
-#define ICONLIST_XOFFSET	124
+#define ICONLIST_XOFFSET	16;
 
 #define N_(x)  (x)
 
-#define PANEL_HEIGHT		48
-
-#define SHUTDOWN_Y	(600 - 48 - 20 - 4)
+GdkGC *bg_gc;
 
 void
 row_view_set_bg_colour (guint c)
@@ -132,7 +130,6 @@ row_view_set_background (gchar *path)
   if (!pix)
     pix = gdk_pixbuf_new_from_file (DEFAULT_BACKGROUND, NULL);
   gdk_drawable_get_size (toplevel->window, &width, &height);
-  height -= PANEL_HEIGHT;
   background = gdk_pixbuf_scale_simple (pix, width, height, GDK_INTERP_BILINEAR);
 
   row_view_refresh_background ();
@@ -160,7 +157,7 @@ create_row (GList *all_items, char *current_group)
   gpe_icon_list_view_set_icon_xmargin (GPE_ICON_LIST_VIEW (view), 24);
 
   gpe_icon_list_view_set_bg_pixmap (GPE_ICON_LIST_VIEW (view), background);
-  gpe_icon_list_view_set_bg_color (GPE_ICON_LIST_VIEW (view), 0x80ffffff);
+  gpe_icon_list_view_set_bg_color (GPE_ICON_LIST_VIEW (view), 0x00ff8080);
   gpe_icon_list_view_set_border_color (GPE_ICON_LIST_VIEW (view), 0x00bfaea5);
   gpe_icon_list_view_set_border_width (GPE_ICON_LIST_VIEW (view), 8);
 
@@ -273,69 +270,64 @@ refresh_callback (void)
     }
 }
 
-void
-tab_button_press (GtkWidget *image, GdkEventButton *gev, GtkWidget *notebook)
-{
-  gint new_tab;
-  GtkWidget *slave_notebook;
-
-  if (gev->y < 87.0)
-    new_tab = 0;
-  else if (gev->y < 192.0)
-    new_tab = 1;
-  else if (gev->y < 288.0) 
-    new_tab = 2;
-  else if (gev->y > SHUTDOWN_Y && gev->y <= (SHUTDOWN_Y + 20))
-    {
-      shutdown_is_down = TRUE;
-      gtk_widget_queue_draw (image);
-      return;
-    }
-  else
-    return;
-
-  slave_notebook = g_object_get_data (G_OBJECT (notebook), "slave");
-
-  gtk_notebook_set_current_page (GTK_NOTEBOOK (notebook), new_tab);
-  gtk_notebook_set_current_page (GTK_NOTEBOOK (slave_notebook), new_tab);
-}
-
-void
-tab_button_release (GtkWidget *image, GdkEventButton *gev)
-{
-  if (shutdown_is_down)
-    {
-      shutdown_is_down = FALSE;
-      gtk_widget_queue_draw (image);
-      if (gev->y > SHUTDOWN_Y && gev->y <= (SHUTDOWN_Y + 20))
-	system ("apm -s");
-    }
-}
-
 gboolean
 draw_programs (GtkWidget *widget, GdkEventExpose *ev)
 {
-  GdkRectangle r, br;
-
-  br.x = 0;
-  br.y = 0;
-  br.width = gdk_pixbuf_get_width (background);
-  br.height = gdk_pixbuf_get_height (background);
-
-  gdk_window_clear_area (widget->window, ev->area.x, ev->area.y, ev->area.width, ev->area.height);
-
-  if (gdk_rectangle_intersect (&ev->area, &br, &r))
+  if (background)
     {
-      gdk_draw_pixbuf (widget->window, 
-		       widget->style->fg_gc[widget->state],
-		       background,
-		       r.x, r.y,
-		       r.x, r.y,
-		       r.width, r.height,
-		       GDK_RGB_DITHER_NORMAL, 0, 0);
+      GdkRectangle r, br;
+
+      br.x = 0;
+      br.y = 0;
+      br.width = gdk_pixbuf_get_width (background);
+      br.height = gdk_pixbuf_get_height (background);
+
+      if (gdk_rectangle_intersect (&ev->area, &br, &r))
+	{
+	  gdk_draw_pixbuf (widget->window, 
+			   widget->style->fg_gc[widget->state],
+			   background,
+			   r.x, r.y,
+			   r.x, r.y,
+			   r.width, r.height,
+			   GDK_RGB_DITHER_NORMAL, 0, 0);
+	}
     }
+  else
+    gdk_draw_rectangle (widget->window, bg_gc, TRUE,
+			ev->area.x, ev->area.y,
+			ev->area.width, ev->area.height);
 
   return FALSE;
+}
+
+void
+set_bg_color (GtkWidget *w, guint32 c)
+{
+  GdkColormap *gcm;
+  GdkColor color;
+
+  color.red = (c & 0xff);
+  color.green = (c & 0xff00) >> 8;
+  color.blue = (c & 0xff0000) >> 16;
+
+  color.red |= (color.red << 8);
+  color.green |= (color.green << 8);
+  color.blue |= (color.blue << 8);
+
+  gcm = gdk_drawable_get_colormap (w->window);
+  
+  gdk_colormap_alloc_color (gcm, &color, FALSE, TRUE);
+  
+  gdk_gc_set_foreground (bg_gc, &color);
+}
+
+void
+realize_programs (GtkWidget *w)
+{
+  bg_gc = gdk_gc_new (w->window);
+
+  set_bg_color (w, 0xff0000);
 }
 
 GtkWidget *
@@ -348,6 +340,7 @@ build_programs (void)
   gtk_fixed_set_has_window (GTK_FIXED (draw), TRUE);
 
   g_signal_connect (G_OBJECT (draw), "expose_event", G_CALLBACK (draw_programs), NULL);
+  g_signal_connect_after (G_OBJECT (draw), "realize", G_CALLBACK (realize_programs), NULL);
 
   programs_fixed = draw;
 
