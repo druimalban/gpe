@@ -1,2 +1,5 @@
+*.d
 *.ipk
+*.ipk.asc
+*.ipk.upload.html
 semantic.cache

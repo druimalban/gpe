@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-03-05 23:04+0100\n"
+"POT-Creation-Date: 2003-03-07 23:36+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,67 +15,68 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: gpe-ownerinfo.c:345
+#. TRANSLATORS: only a short word will look good here
+#: gpe-ownerinfo.c:348
 msgid "Owner"
 msgstr ""
 
 #. TRANSLATORS: please replace this with the Pango code for your own language
-#: gpe-ownerinfo.c:387
+#: gpe-ownerinfo.c:391
 msgid "en"
 msgstr ""
 
-#: gpe-ownerinfo.c:408 gpe-ownerinfo.c:524
+#: gpe-ownerinfo.c:424 gpe-ownerinfo.c:540
 msgid "GPE Owner Info"
 msgstr ""
 
-#: gpe-ownerinfo.c:410
+#: gpe-ownerinfo.c:426
 msgid "Valid options:\n"
 msgstr ""
 
-#: gpe-ownerinfo.c:411
+#: gpe-ownerinfo.c:427
 msgid "   -g GEOMETRY  window geometry (default: 240x100+0+220)\n"
 msgstr ""
 
-#: gpe-ownerinfo.c:412
+#: gpe-ownerinfo.c:428
 msgid "   -t           make window transparent\n"
 msgstr ""
 
-#: gpe-ownerinfo.c:413
+#: gpe-ownerinfo.c:429
 msgid "   -k           always keep window on top (override redirect)\n"
 msgstr ""
 
-#: gpe-ownerinfo.c:414
+#: gpe-ownerinfo.c:430
 msgid "   -h           this help text\n"
 msgstr ""
 
-#: gpe-ownerinfo.c:433
+#: gpe-ownerinfo.c:449
 msgid "GPE User"
 msgstr ""
 
-#: gpe-ownerinfo.c:434
+#: gpe-ownerinfo.c:450
 msgid "nobody@localhost.localdomain"
 msgstr ""
 
-#: gpe-ownerinfo.c:435
+#: gpe-ownerinfo.c:451
 msgid "+99 (9999) 999-9999"
 msgstr ""
 
-#: gpe-ownerinfo.c:439
+#: gpe-ownerinfo.c:455
 msgid "Configurable with"
 msgstr ""
 
-#: gpe-ownerinfo.c:440 gpe-ownerinfo.c:549
+#: gpe-ownerinfo.c:456 gpe-ownerinfo.c:565
 msgid "Owner Information"
 msgstr ""
 
-#: gpe-ownerinfo.c:441
+#: gpe-ownerinfo.c:457
 msgid "under"
 msgstr ""
 
-#: gpe-ownerinfo.c:441
+#: gpe-ownerinfo.c:457
 msgid " Settings."
 msgstr ""
 
-#: gpe-ownerinfo.c:578
+#: gpe-ownerinfo.c:594
 msgid "Address:"
 msgstr ""
