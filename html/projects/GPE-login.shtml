@@ -33,7 +33,7 @@ was specified on its command line.</LI>
 <LI><CODE>gpe-dm</CODE> runs <CODE>/etc/X11/Xinit</CODE> as root, and
 waits for it to finish.  The default script will execute everything
 from <CODE>/etc/X11/Xinit.d</CODE> in order.</LI>
-<LI><CODE>gpe-dm</CODE> launches <CODE>gpe-login</CODE>.</LI>
+<LI><CODE>gpe-login</CODE> is launched as the final entry in <CODE>Xinit.d</CODE>.</LI>
 <LI><CODE>gpe-login</CODE> runs <CODE>/etc/X11/gpe-login.setup</CODE>
 as root, and waits for it to finish.</LI>
 <LI><CODE>gpe-login</CODE> reads <CODE>/etc/X11/gpe-login.geometry</CODE>
@@ -52,6 +52,18 @@ attempts to launch a session.  It tries to exec
 loops back to step 2.</LI>
 </OL>
 </P>
+
+<H3>Password entry</H3>
+<p>
+Two modes are provided:
+<ul>
+<li>In "classic" mode, gpe-login displays an embedded xkbd and prompts
+	  the user to type their password in an entry box.</li>
+<li>In "hard keys" mode, the password is entered using the iPAQ's
+	  front panel buttons.  This requires that all passwords are a
+	  fixed length (typically 4 characters) and consist only of
+	  the digits 1-4 and the letters N, S, E, W.</li>
+</ul>
 
 <H2>Status</H2>
 <P>
