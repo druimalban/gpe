@@ -1,8 +1,0 @@
-Package: gpe-mapviewer
-Section: base
-Priority: optional
-Version: 0.1
-Architecture: arm
-Maintainer: Joe McCarthy ,jjmcc@pitt.edu>
-Depends: libgtk1.2, gpe-icons (>= 0.05), libgpewidget0 (>= 0.08), gdk-pixbuf-loader-gif
-Description: GPE map viewer.
