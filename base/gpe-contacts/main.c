@@ -26,10 +26,10 @@
 #include <gpe/pixmaps.h>
 #include <gpe/smallbox.h>
 #include <gpe/errorbox.h>
-#include <gpe/render.h>
 #include <gpe/gtkdatecombo.h>
 #include <gpe/question.h>
 #include <gpe/gtksimplemenu.h>
+#include <gpe/picturebutton.h>
 
 #include "interface.h"
 #include "support.h"
@@ -686,6 +686,84 @@ main_view_switch_page (GtkNotebook * notebook,
   update_display ();
 }
 
+static gboolean
+match_for_search (struct person *p, const gchar *text, struct category *cat)
+{
+  gchar *lname = g_utf8_strdown (p->name, -1);
+
+  if (strstr (lname, text) == NULL)
+    {
+      g_free (lname);
+      return FALSE;
+    }
+
+  g_free (lname);
+
+  if (cat)
+    {
+      GSList *l;
+      gboolean found = FALSE;
+
+      for (l = p->data; l; l = l->next)
+	{
+	  struct tag_value *v = l->data;
+	  if (!strcasecmp (v->tag, "CATEGORY") && v->value)
+	    {
+	      guint c = atoi (v->value);
+	      if (c == cat->id)
+		{
+		  found = TRUE;
+		  break;
+		}
+	    }
+	}
+
+      if (!found)
+	return FALSE;
+    }
+
+  return TRUE;
+}
+
+static void
+do_search (GObject *obj, GtkWidget *entry)
+{
+  gchar *text = g_utf8_strdown (gtk_entry_get_text (GTK_ENTRY (entry)), -1);
+  guint category = gtk_simple_menu_get_result (GTK_SIMPLE_MENU (categories_smenu));
+  GSList *all_entries = db_get_entries (), *iter;
+  struct category *c = NULL;
+
+  if (category)
+    {
+      GSList *l = db_get_categories ();
+      GSList *ll = g_slist_nth (l, category - 1);
+
+      if (ll)
+	c = ll->data;
+
+      g_slist_free (l);
+    }
+
+  gtk_list_store_clear (list_store);
+
+  for (iter = all_entries; iter; iter = iter->next)
+    {
+      struct person *p = iter->data;
+      GtkTreeIter iter;
+
+      if (match_for_search (p, text, c))
+	{
+	  gtk_list_store_append (list_store, &iter);
+	  gtk_list_store_set (list_store, &iter, 0, p->name, 1, p->id, -1);
+	}
+
+      discard_person (p);
+    }
+  
+  g_slist_free (all_entries);
+  g_free (text);
+}
+
 static GtkWidget*
 create_main (void)
 {
@@ -710,6 +788,7 @@ create_main (void)
   GtkTreeViewColumn *column;
   GtkTreeSelection *tree_sel;
   GtkWidget *scrolled_window;
+  GtkWidget *go_button;
 
   main_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title (GTK_WINDOW (main_window), _("Contacts"));
@@ -831,6 +910,11 @@ create_main (void)
   categories_smenu = gtk_simple_menu_new ();
   gtk_box_pack_start (GTK_BOX (hbox3), categories_smenu, TRUE, TRUE, 0);
 
+  go_button = gpe_button_new_from_stock (GTK_STOCK_OK, GPE_BUTTON_TYPE_ICON);
+  gtk_box_pack_start (GTK_BOX (hbox3), go_button, FALSE, FALSE, 0);  
+  g_signal_connect (G_OBJECT (go_button), "clicked", G_CALLBACK (do_search), entry1);
+  g_signal_connect (G_OBJECT (entry1), "activate", G_CALLBACK (do_search), entry1);
+
   pDetail = gtk_frame_new (_("Contact"));
   gtk_box_pack_start (GTK_BOX (vbox1), pDetail, FALSE, TRUE, 0);
 
@@ -838,6 +922,7 @@ create_main (void)
   gtk_container_add (GTK_CONTAINER (pDetail), tabDetail);
   gtk_table_set_col_spacings (GTK_TABLE (tabDetail), 6);
   g_object_set_data (G_OBJECT (main_window), "tabDetail", tabDetail);
+  g_object_set_data (G_OBJECT (main_window), "entry", entry1);
 
   g_signal_connect (G_OBJECT (nbList), "switch_page",
 		    G_CALLBACK (main_view_switch_page), NULL);
@@ -890,6 +975,7 @@ main (int argc, char *argv[])
 
   gpe_set_window_icon (mainw, "icon");
   gtk_widget_show_all (mainw);
+  gtk_widget_grab_focus (GTK_WIDGET (g_object_get_data (G_OBJECT (mainw), "entry")));
 
   gtk_main ();
   return 0;
