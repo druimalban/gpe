@@ -2,6 +2,8 @@ PREFIX = /usr/local
 PACKAGE = gpe-todo
 GTK2 = yes
 
+LINGUAS = de
+
 ifeq ($(GTK2),yes)
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0` -DGTK_ENABLE_BROKEN
 GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
@@ -33,9 +35,14 @@ clean:
 all: gpe-todo
 
 install: all install-mo
-	install -D gpe-todo $(DESTDIR)$(PREFIX)/bin/gpe-todo
-	install -D gpe-todo.menu $(DESTDIR)$(PREFIX)/lib/menu/gpe-todo
-	install -D gpe-todo.png $(DESTDIR)$(PREFIX)/share/pixmaps/gpe-todo.png
+	mkdir -p $(DESTDIR)$(PREFIX)/bin
+	install gpe-todo $(DESTDIR)$(PREFIX)/bin/gpe-todo
+	mkdir -p $(DESTDIR)$(PREFIX)/lib/menu
+	install -m 644 gpe-todo.menu $(DESTDIR)$(PREFIX)/lib/menu/gpe-todo
+	mkdir -p $(DESTDIR)$(PREFIX)/share/pixmaps
+	install -m 644 gpe-todo.png $(DESTDIR)$(PREFIX)/share/pixmaps/gpe-todo.png
+	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
+	install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications/$(PACKAGE)
 	strip $(DESTDIR)$(PREFIX)/bin/gpe-todo
 
 include ../build/Makefile.dpkg_ipkg

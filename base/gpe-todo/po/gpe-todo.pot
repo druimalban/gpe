@@ -1,12 +1,13 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR Free Software Foundation, Inc.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2002-08-25 16:26+0100\n"
+"POT-Creation-Date: 2002-11-30 20:42+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -14,95 +15,107 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: todo-ui.c:195
+#: main.c:64
+msgid "To-do list"
+msgstr ""
+
+#: todo-ui.c:197
 msgid "Summary:"
 msgstr ""
 
-#: todo-ui.c:196
+#: todo-ui.c:198
 msgid "Details"
 msgstr ""
 
-#: todo-ui.c:202
+#: todo-ui.c:204
 msgid "Not started"
 msgstr ""
 
-#: todo-ui.c:202
+#: todo-ui.c:204
 msgid "In progress"
 msgstr ""
 
-#: todo-ui.c:203
+#: todo-ui.c:205
 msgid "Completed"
 msgstr ""
 
-#: todo-ui.c:212
+#: todo-ui.c:214
 msgid "Save"
 msgstr ""
 
-#: configure.c:103 todo-ui.c:213
+#: todo-ui.c:215 list-ui.c:82 configure.c:103
 msgid "Cancel"
 msgstr ""
 
-#: configure.c:209 todo-ui.c:214
+#: todo-ui.c:216 list-ui.c:82 configure.c:209
 msgid "Delete"
 msgstr ""
 
-#: todo-ui.c:223
+#: todo-ui.c:225
 msgid "Due:"
 msgstr ""
 
-#: todo-ui.c:231
+#: todo-ui.c:233
 msgid "Categories:"
 msgstr ""
 
-#: todo-ui.c:320
+#: todo-ui.c:327
 msgid "Edit to-do item"
 msgstr ""
 
-#: todo-ui.c:327
+#: todo-ui.c:334
 msgid "New item"
 msgstr ""
 
-#: list-ui.c:55
-msgid "*all*"
+#: list-ui.c:52
+msgid "All items"
 msgstr ""
 
-#: configure.c:202 list-ui.c:347
+#: list-ui.c:81
+msgid "Permanently delete all completed items?"
+msgstr ""
+
+#: list-ui.c:81
+msgid "Confirm"
+msgstr ""
+
+#: list-ui.c:354 configure.c:202
 msgid "New"
 msgstr ""
 
-#: list-ui.c:348 list-ui.c:349
+#: list-ui.c:355 list-ui.c:356
 msgid "Add a new item"
 msgstr ""
 
-#: list-ui.c:354
+#: list-ui.c:361
 msgid "Configure"
 msgstr ""
 
-#: list-ui.c:355 list-ui.c:356
+#: list-ui.c:362 list-ui.c:363
 msgid "Configure categories"
 msgstr ""
 
-#: list-ui.c:361
+#: list-ui.c:368
 msgid "Purge"
 msgstr ""
 
-#: list-ui.c:362 list-ui.c:363
+#: list-ui.c:369 list-ui.c:370
 msgid "Purge completed items"
 msgstr ""
 
-#: list-ui.c:368
-msgid "Show/Hide"
-msgstr ""
-
-#: list-ui.c:369 list-ui.c:370
-msgid "Show/Hide completed items"
-msgstr ""
-
 #: list-ui.c:375
-msgid "Exit"
+msgid "Re-sort"
 msgstr ""
 
 #: list-ui.c:376 list-ui.c:377
+msgid "Move completed items to the end of the list"
+msgstr ""
+
+#: list-ui.c:382
+msgid "Exit"
+msgstr ""
+
+#: list-ui.c:383 list-ui.c:384
 msgid "Exit the program"
 msgstr ""
 

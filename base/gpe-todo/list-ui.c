@@ -49,7 +49,7 @@ categories_menu (void)
   GSList *l;
   GtkWidget *i;
 
-  i = gtk_menu_item_new_with_label (_("*all*"));
+  i = gtk_menu_item_new_with_label (_("All items"));
   gtk_menu_append (GTK_MENU (menu), i);
   gtk_signal_connect (GTK_OBJECT (i), "activate", (GtkSignalFunc)set_category, NULL);
   gtk_widget_show (i);

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Todo List
+Comment=GPE Todo List
+Exec=gpe-todo
+Terminal=0
+Type=Application
+Icon=gpe-todo.png
+Categories=Application;PIM;GPE
+StartupNotify=True
