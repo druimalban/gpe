@@ -16,8 +16,10 @@ install-data-local:
 	    fi \
 	  done \
 	fi
+	$(mkinstalldirs) $(DESTDIR)$(PREFIX)/share/pixmaps
 	$(INSTALL_DATA) $(srcdir)/ipaqscreen.png $(DESTDIR)$(PREFIX)/share/pixmaps
-	install -D $(srcdir)/ipaqscreen.menu $(DESTDIR)$(PREFIX)/lib/menu/ipaqscreen
+	$(mkinstalldirs) $(DESTDIR)$(PREFIX)/lib/menu
+	$(INSTALL_DATA) $(srcdir)/ipaqscreen.menu $(DESTDIR)$(PREFIX)/lib/menu/ipaqscreen
 
 dist-hook:
 	if test -d pixmaps; then \
