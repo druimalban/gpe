@@ -23,7 +23,7 @@ install-program: all pdamaze.desktop
 	install -d $(DESTDIR)$(PREFIX)/bin
 	install pdamaze.host $(DESTDIR)$(PREFIX)/bin/
 	install -d $(DESTDIR)$(PREFIX)/share/pdamaze
-	for i in images/*.png; do install -m 664 $$i $(DESTDIR)$(PREFIX)/share/pdamaze/; done
+	for i in images/*.png; do install -m 644 $$i $(DESTDIR)$(PREFIX)/share/pdamaze/; done
 	install -d $(DESTDIR)$(PREFIX)/share/applications
 	install -m 644 pdamaze.desktop $(DESTDIR)$(PREFIX)/share/applications/
 	install -d $(DESTDIR)$(PREFIX)/share/pixmaps
