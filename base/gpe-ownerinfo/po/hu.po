@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gpe-ownerinfo 0.20\n"
 "POT-Creation-Date: 2003-03-04 00:17+0100\n"
-"PO-Revision-Date: 2003-03-05 22:21+0100\n"
+"PO-Revision-Date: 2003-03-06 07:54+0100\n"
 "Last-Translator: Andras Timar <timar_a@freemail.hu>\n"
 "Language-Team: Hungarian <translation-team-hu@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 
 #: gpe-ownerinfo.c:345
 msgid "Owner"
-msgstr "Tulajdonos"
+msgstr "Tulaj."
 
 #. TRANSLATORS: please replace this with the Pango code for your own language
 #: gpe-ownerinfo.c:387
