@@ -3,7 +3,7 @@ PACKAGE = miniclipboard
 CVSBUILD = yes
 DEBUG = yes
 
-MEMBERS = miniclipboard
+MEMBERS = miniclipboard mbpixbuf mbtray
 
 CFLAGS += -Wall
 ifeq ($(DEBUG),yes)
@@ -14,7 +14,7 @@ CFLAGS += -Os -fomit-frame-pointer
 endif
 CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 
-LDFLAGS += -L/usr/X11R6/lib -lX11 -lXpm -lmbdock
+PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) -L/usr/X11R6/lib -lX11 -lXpm -lXext
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 
@@ -27,7 +27,7 @@ endif
 all: $(PACKAGE)
 
 $(PACKAGE): $(OBJS)
-	$(CC) -o $@ $^ $(LDFLAGS)
+	$(CC) -o $@ $^ $(LDFLAGS) $(PACKAGE_LDFLAGS)
 
 install-program: all
 	install -Ds $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)

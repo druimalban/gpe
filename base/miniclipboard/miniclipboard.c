@@ -15,93 +15,54 @@
 #include <X11/Xatom.h>
 #include <X11/extensions/shape.h>
 
-#include <mbtray.h>
+#include "mbtray.h"
 
 Display *dpy;
-Atom window_type_atom;
-Atom window_type_dock_atom;
-Atom string_atom;
-Atom primary_selection_atom;
 Atom clipboard_atom;
 Atom clipboard_selection_atom;
-Atom delete_atom;
-Atom active_window_atom;
+
+Window win;
 
 XGCValues *gv = NULL;
 int screen;
 char *buf = NULL;
 size_t bufsiz = 0;
 
-struct pix
+
+static int trapped_error_code;
+static int (*old_error_handler) (Display *d, XErrorEvent *e);
+
+static int
+error_handler(Display     *display,
+	      XErrorEvent *error)
 {
-  char *name;
-  void (*click)(XEvent *);
-  Pixmap pix, mask;
-  XpmAttributes attrib;
-  Window win;
-  GC gc;
-};
+   trapped_error_code = error->error_code;
+   return 0;
+}
 
-void copy_click (XEvent *);
-void paste_click (XEvent *);
-
-struct pix copy = { PREFIX "/share/pixmaps/copy.xpm", copy_click },
-  paste = { PREFIX "/share/pixmaps/paste.xpm", paste_click };
-
-void
-load_icon (struct pix *p)
+static void
+trap_errors(void)
 {
-  p->win = XCreateSimpleWindow (dpy,
-				RootWindow (dpy, screen),
-				0, 0,
-				32, 16,
-				0, BlackPixel (dpy, screen),
-				WhitePixel (dpy, screen));
-  
-  XChangeProperty (dpy, p->win, window_type_atom, XA_ATOM, 32, 
-		   PropModeReplace, (unsigned char *)
-		   &window_type_dock_atom, 1);
+   trapped_error_code = 0;
+   old_error_handler = XSetErrorHandler(error_handler);
+}
 
-  p->gc = XCreateGC (dpy, RootWindow(dpy, screen), 0, gv);
-
-  p->attrib.valuemask = XpmCloseness;
-  p->attrib.closeness = 40000;
-
-  if (XpmReadFileToPixmap (dpy, p->win, p->name,
-			   &p->pix, &p->mask, &p->attrib) != XpmSuccess )
-    {
-      fprintf (stderr, "failed loading image '%s'\n",
-	       p->name);
-      exit(1);
-    }
-
-  XResizeWindow (dpy, p->win, p->attrib.width, p->attrib.height);
-  XCopyArea (dpy, p->pix, p->win, p->gc, 0, 0,
-	     p->attrib.width, p->attrib.height, 0, 0);
-  XShapeCombineMask (dpy, p->win, ShapeBounding, 0, 0, p->mask, ShapeSet);
-  
-  XSelectInput (dpy, p->win, 
-		StructureNotifyMask|ExposureMask|ButtonPressMask|ButtonReleaseMask ); 
+static int
+untrap_errors(void)
+{
+   XSetErrorHandler(old_error_handler);
+   return trapped_error_code;
 }
 
 void
-copy_click (XEvent *ev)
+selection_clear (void)
 {
-  fprintf (stderr, "copying\n");
-  XConvertSelection (dpy, primary_selection_atom, string_atom, 
-		     clipboard_selection_atom, copy.win, ev->xbutton.time);
-}
+  fprintf (stderr, "got SelectionClear\n");
 
-void
-paste_click (XEvent *ev)
-{
-  Window w;
-  int revert;
+  XConvertSelection (dpy, clipboard_atom, XA_STRING,
+		     clipboard_selection_atom, win, CurrentTime);
 
-  XGetInputFocus (dpy, &w, &revert);
-
-  if (w != None)
-    fprintf (stderr, "pasting to %x\n", w);
+  XSync (dpy, False);
 }
 
 void
@@ -110,12 +71,14 @@ selection_request (XEvent *ev)
   XSelectionRequestEvent *rev = (XSelectionRequestEvent *)ev;
   XSelectionEvent sev;
   
+  fprintf (stderr, "got SelectionRequest from requestor %x\n", rev->requestor);
+
   sev.type = SelectionNotify;
   sev.selection = rev->selection;
   sev.requestor = rev->requestor;
   sev.time = rev->time;
 
-  if (rev->target != string_atom || rev->selection != clipboard_atom)
+  if (rev->target != XA_STRING || rev->selection != clipboard_atom)
     {
       /* Not something I understand */
       sev.property = None;
@@ -127,13 +90,19 @@ selection_request (XEvent *ev)
       sev.property = rev->property;
     }
 
+  trap_errors ();
+
   XSendEvent (rev->display, rev->requestor, False, 0, (XEvent *)&sev);
+  XSync (dpy, False);
+
+  untrap_errors ();
 }
 
 void
 selection_notify (XEvent *ev)
 {
   XSelectionEvent *sev = (XSelectionEvent *)ev;
+
   if (sev->property != None)
     {
       Atom actual_type;
@@ -158,11 +127,16 @@ selection_notify (XEvent *ev)
       memcpy (buf, prop, n);
       bufsiz = n;
 
-      XConvertSelection (dpy, primary_selection_atom, delete_atom, 
-			 clipboard_selection_atom, copy.win, CurrentTime);
+      fprintf (stderr, "Copied %d bytes.\n", n);
 
-      XSetSelectionOwner (dpy, clipboard_atom, sev->requestor, CurrentTime);
+      //mb_tray_send_message (dpy, win, "Copied", 0);
     }
+  else
+    fprintf (stderr, "No current selection.\n");
+
+  XSetSelectionOwner (dpy, clipboard_atom, win, CurrentTime);
+
+  XSync (dpy, False);
 }
 
 int 
@@ -177,25 +151,19 @@ main (int argc, char *argv[])
       exit (1);
     }
 
-  window_type_atom = XInternAtom (dpy, "_NET_WM_WINDOW_TYPE", False);
-  window_type_dock_atom = XInternAtom (dpy, "_NET_WM_WINDOW_TYPE_DOCK", False);
-  string_atom = XInternAtom (dpy, "STRING", False);
-  primary_selection_atom = XInternAtom (dpy, "PRIMARY", False);
   clipboard_atom = XInternAtom (dpy, "CLIPBOARD", False);
-  delete_atom = XInternAtom (dpy, "DELETE", False);
   clipboard_selection_atom = XInternAtom (dpy, "MINICLIPBOARD_SELECTION", False);
-  active_window_atom = XInternAtom (dpy, "_NET_ACTIVE_WINDOW", False);
 
   screen = DefaultScreen (dpy);
+
+  win = XCreateSimpleWindow (dpy, RootWindow (dpy, screen), 0, 0, 1, 1, 0, 0, 0);
+  XMapWindow (dpy, win);
   
-  load_icon (&copy);
-  load_icon (&paste);
+  mb_tray_init (dpy);  
 
-  mb_tray_init_session_info (dpy, copy.win, argv, argc);
-  mb_tray_init (dpy, copy.win);  
-  mb_tray_init (dpy, paste.win);
+  //XSelectInput (dpy, DefaultRootWindow (dpy), SubstructureNotifyMask);
 
-  XSelectInput (dpy, DefaultRootWindow (dpy), SubstructureNotifyMask);
+  selection_clear ();
 
   for (;;)
     {
@@ -206,28 +174,9 @@ main (int argc, char *argv[])
       XNextEvent (dpy, &an_event);
 
       any = (XAnyEvent *)&an_event;
-      if (any->window == copy.win)
-	p = &copy;
-      else if (any->window == paste.win)
-	p = &paste;
-      
+
       switch (an_event.type) 
 	{
-	case Expose:
-	  if (p)
-	    {
-	      XCopyArea (dpy, p->pix, p->win, p->gc, 0, 0,
-			 p->attrib.width, p->attrib.height, 0, 0);
-	      XShapeCombineMask (dpy, p->win, ShapeBounding,
-				 0, 0, p->mask, ShapeSet);
-	    }
-	  break;
-
-	case ButtonRelease:
-	  if (p)
-	    p->click (&an_event);
-	  break;
-
 	case SelectionNotify:
 	  selection_notify (&an_event);
 	  break;
@@ -235,8 +184,10 @@ main (int argc, char *argv[])
 	case SelectionRequest:
 	  selection_request (&an_event);
 	  break;
-	}
 
-      mb_tray_handle_event (any->display, any->window, &an_event);
+	case SelectionClear:
+	  selection_clear ();
+	  break;
+	}
     }
 }
