@@ -210,6 +210,7 @@ draw_expose_event (GtkWidget *widget,
 
       for (j = 0; j < (TOTAL_DAYS / 7); j++)
 	{
+	  gchar *buffer;
 	  guint d = i + (7 * j);
 	  struct render_ctl *c = &rc[d];
 	  guint y = (j + 1) * ys;
@@ -227,7 +228,7 @@ draw_expose_event (GtkWidget *widget,
 				  x, y, xs, ys);
 
 	      snprintf (buf, sizeof (buf), "%d", c->popup.day);
-	      gchar *buffer = g_locale_to_utf8 (buf, -1, NULL, NULL, NULL);
+	      buffer = g_locale_to_utf8 (buf, -1, NULL, NULL, NULL);
 	      pango_layout_set_text (pl, buffer, strlen (buffer));
 	      pango_layout_get_pixel_extents (pl, &pr, NULL);
 	      w = pr.width;
