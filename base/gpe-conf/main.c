@@ -64,7 +64,7 @@ struct Applet applets[]=
     { &ipaqscreen_Build_Objects, &ipaqscreen_Free_Objects, &ipaqscreen_Save, &ipaqscreen_Restore , "Screen" , "ipaqscreen", "Screen Setup"},
     { &Kbd_Build_Objects, &Unimplemented_Free_Objects, &Kbd_Save, &Unimplemented_Restore , "vKeyboard" ,"keyboard", "Virtual Keyboard Setup"},
     { &Keyctl_Build_Objects, &Unimplemented_Free_Objects, &Keyctl_Save, &Unimplemented_Restore , "Buttons" ,"keyctl", "Button Configuration"},
-    { &Network_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Network" ,"network","IP Adresses"},
+    { &Network_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Network" ,"network","IP Addresses"},
     { &Theme_Build_Objects, &Unimplemented_Free_Objects, &Theme_Save, &Unimplemented_Restore , "Theme" ,"theme", "Global Appearance Setup"},
     { &Sleep_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Sleep" ,"sleep","Sleep Configuration"},
     { &Ownerinfo_Build_Objects, &Ownerinfo_Free_Objects, &Ownerinfo_Save, &Ownerinfo_Restore , "Owner" ,"ownerinfo","Owner Information"},
