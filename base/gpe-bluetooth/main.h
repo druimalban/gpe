@@ -3,7 +3,8 @@ typedef enum
   {
     BT_UNKNOWN,
     BT_LAP,
-    BT_DUN
+    BT_DUN,
+    BT_NAP
   } bt_device_type;
 
 struct bt_device

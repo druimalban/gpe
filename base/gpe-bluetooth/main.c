@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2002, 2003 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -326,6 +326,9 @@ device_clicked (GtkWidget *w, gpointer data)
 	      break;
 	    case BT_LAP:
 	      strcat (str, _("LAN Access"));
+	      break;
+	    case BT_NAP:
+	      strcat (str, _("PAN NAP"));
 	      break;
 	    default:
 	      strcat (str, _("unknown"));
