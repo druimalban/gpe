@@ -5,9 +5,11 @@ CVSBUILD = yes
 ifeq ($(GTK2),yes)
 GTKLDFLAGS = `pkg-config --libs gtk+-2.0`
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
+CONTROL_GPE_LOGIN = control.gpe-login1
 else
 GTKLDFLAGS = `gtk-config --libs`
 GTKCFLAGS = `gtk-config --cflags` `gdk-pixbuf-config --cflags`
+CONTROL_GPE_LOGIN = control.gpe-login
 endif
 
 CFLAGS = $(GTKCFLAGS) -Os -Wall -fomit-frame-pointer
@@ -80,7 +82,7 @@ ipkg:
 	make PREFIX=/usr clean all
 	rm -rf familiar/dist.gpe-login
 	mkdir -p familiar/dist.gpe-login/CONTROL
-	cp familiar/control.gpe-login familiar/dist.gpe-login/CONTROL/control
+	cp familiar/$(CONTROL_GPE_LOGIN) familiar/dist.gpe-login/CONTROL/control
 	make DESTDIR=`pwd`/familiar/dist.gpe-login PREFIX=/usr install-login
 	chown -R root.root familiar/dist.gpe-login
 	ipkg-build familiar/dist.gpe-login

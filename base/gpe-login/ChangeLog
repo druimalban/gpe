@@ -1,3 +1,12 @@
+2002-10-08  Philip Blundell  <philb@gnu.org>
+
+	* familiar/control.session-scripts (Suggest): Add gpe-setbg.
+	(Depends): Remove gpe-appmgr, gpe-dm.  Add keylaunch, ipaq-sleep.
+	* familiar/control.gpe-login (Suggests): Remove gpe-setbg.
+	(Depends): Remove keylaunch, ipaq-sleep.
+	* familiar/control.gpe-login1: New file.
+	* Makefile (ipkg): Use it for gpe-login2 package.
+
 2002-10-07  Philip Blundell  <philb@gnu.org>
 
 	* X11/Xsession.gpe-d/65xstroke: Deleted.
