@@ -371,7 +371,49 @@ struct package *package_from_dotdesktop (char *filename, char *lang)
 	package_set_data (p, "title", dotdesktop_get (dd, "Name"));
 	package_set_data (p, "command", dotdesktop_get (dd, "Exec"));
 	package_set_data (p, "icon", dotdesktop_get (dd, "Icon"));
-	package_set_data (p, "section", ".desktop"); //, dotdesktop_get (dd, "Categories")
+	package_set_data (p, "section", "Other");
+	package_set_data (p, "Categories", dotdesktop_get (dd, "Categories"));
+
+	/* Hackish mapping onto familiar menu policy groups.
+	   TODO: Make this configurable */
+	{
+		/* Idea:
+		struct folder_cfg {
+			GList *contains;
+			GList *not_contains;
+		};
+		GList *folders;
+		*/
+		struct mapping {
+			char *from, *to;
+		} mappings[] = {
+			{"Game", "Games"},
+			{"Utility", "Utilities"},
+			{"PIM", "PIM"},
+			{"AudioVideo", "Audio"},
+			// {"Graphics", "???"},
+			{"System", "Configuration"},
+			{"SystemSetup", "Configuration"},
+			{"Settings", "Configuration"},
+			{"Amusement", "Games"},
+
+			{NULL, NULL}
+		};
+		char *categories = dotdesktop_get (dd, "Categories");
+		int i;
+		printf ("Categories = %s\n", categories);
+		for (i=0;mappings[i].from != NULL;i++)
+		{
+			char *from=g_strdup_printf ("%s;", mappings[i].from);
+			if (strstr(categories, from))
+			{
+				printf ("Found: %s\n", mappings[i].to);
+				package_set_data (p, "section", mappings[i].to);
+				break;
+			}
+			g_free (from);
+		}
+	}
 
 	dotdesktop_free (dd);
 
