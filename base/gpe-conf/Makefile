@@ -113,11 +113,13 @@ endif
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
-SOURCES = $(patsubst %,%.c,$(MEMBERS))
+SOURCES_CONF = $(patsubst %,%.c,$(MEMBERS))
 
 OBJS_INFO = $(patsubst %,%.o,$(MEMBERS_INFO))
 DEPS_INFO = $(patsubst %,%.d,$(MEMBERS_INFO))
 SOURCES_INFO = $(patsubst %,%.c,$(MEMBERS_INFO))
+
+SOURCES += $(SOURCES_CONF) $(SOURCES_INFO) 
 
 PIXMAPS = gpe-config-apm.png
 PIXMAPS += gpe-config-ipaqscreen.png

@@ -452,7 +452,7 @@ Sysinfo_Build_Objects (int whichtab)
 		g_free(ft);
 	}
 	
-	tw = gtk_label_new(_("Global"));
+	tw = gtk_label_new(_("System"));
 	gtk_notebook_append_page(GTK_NOTEBOOK(notebook),table,tw);
 
 	/* device tab */
@@ -527,7 +527,7 @@ Sysinfo_Build_Objects (int whichtab)
 	
 	/* network tab */
 	table = network_create_widgets();
-	tw = gtk_label_new(_("Network"));
+	tw = gtk_label_new(_("Networks"));
 	gtk_notebook_append_page(GTK_NOTEBOOK(notebook),table,tw);
 	
 	/* logfiles tab */
