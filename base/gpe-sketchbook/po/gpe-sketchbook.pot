@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-04-20 18:23+0300\n"
+"POT-Creation-Date: 2003-04-20 22:02+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -14,39 +14,55 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/gpe-sketchbook.c:112
+#: src/gpe-sketchbook.c:114
 msgid "Sketchbook: preferences"
 msgstr ""
 
-#: gpe-sketchbook.desktop.in.h:2 src/gpe-sketchbook.c:116
+#: gpe-sketchbook.desktop.in.h:2 src/gpe-sketchbook.c:118
 msgid "Sketchbook"
 msgstr ""
 
-#: src/preferences.c:76
+#: src/preferences.c:93
 msgid ""
 "Cannot create XSettings client.\n"
 "Use default preferences."
 msgstr ""
 
-#: src/preferences.c:152
+#: src/preferences.c:188
 msgid ""
 "gpe-confd is not running.\n"
 "Cannot save the preferences."
 msgstr ""
 
-#: src/preferences.c:209
+#: src/preferences.c:277
+msgid "Start with"
+msgstr ""
+
+#: src/preferences.c:280
+msgid "Sketchpad"
+msgstr ""
+
+#: src/preferences.c:282
+msgid "Selector - list"
+msgstr ""
+
+#: src/preferences.c:284
+msgid "Selector - icons table"
+msgstr ""
+
+#: src/preferences.c:300
 msgid "Use joypad scrolling"
 msgstr ""
 
-#: src/preferences.c:217
+#: src/preferences.c:307
 msgid "Grow on scroll"
 msgstr ""
 
-#: src/preferences.c:224
+#: src/preferences.c:316
 msgid "OK"
 msgstr ""
 
-#: src/preferences.c:225 src/selector-cb.c:67 src/sketchpad-cb.c:244
+#: src/preferences.c:317 src/selector-cb.c:67 src/sketchpad-cb.c:244
 msgid "Cancel"
 msgstr ""
 

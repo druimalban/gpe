@@ -30,12 +30,14 @@
 void prefs_reset_defaults(){
   sketchbook.prefs.joypad_scroll  = FALSE;
   sketchbook.prefs.grow_on_scroll = TRUE;
+  sketchbook.prefs.start_with     = PAGE_SELECTOR_LIST;
 }
 
 #ifdef DEBUG
 void _print_prefs(){
   g_printerr("Prefs: joypad_scroll  [%s]\n", sketchbook.prefs.joypad_scroll?"on":"off");
   g_printerr("Prefs: grow_on_scroll [%s]\n", sketchbook.prefs.grow_on_scroll?"on":"off");
+  g_printerr("Prefs: start_with     [%d]\n", sketchbook.prefs.start_with);
 }
 #endif /* DEBUG */
 
@@ -58,11 +60,26 @@ void _fetch_bool(XSettingsClient * client, const char * key, gboolean * bool){
   if (xsettings_client_get_setting (client, name, &setting) == XSETTINGS_SUCCESS){
     if(setting->type == XSETTINGS_TYPE_INT){
       * bool = (setting->data.v_int)?TRUE:FALSE;
-      /**/g_printerr("%s, set to: %d\n", name, setting->data.v_int);
+      //**/g_printerr("%s, set to: %d\n", name, setting->data.v_int);
     }
     xsettings_setting_free(setting);
   }
-  else /**/g_printerr("no %s\n", name);
+  else //**/g_printerr("no %s\n", name);
+  g_free(name);
+}
+
+void _fetch_int(XSettingsClient * client, const char * key, gint * value){
+  XSettingsSetting * setting;
+  gchar * name;
+  name = g_strdup_printf("%s/%s", KEY_BASE, key);
+  if (xsettings_client_get_setting (client, name, &setting) == XSETTINGS_SUCCESS){
+    if(setting->type == XSETTINGS_TYPE_INT){
+      * value = setting->data.v_int;
+      //**/g_printerr("%s, set to: %d\n", name, setting->data.v_int);
+    }
+    xsettings_setting_free(setting);
+  }
+  else //**/g_printerr("no %s\n", name);
   g_free(name);
 }
 
@@ -80,6 +97,7 @@ void prefs_fetch_settings(){
   //--Retrieve values
   _fetch_bool(client, "joypad-scroll",  &(sketchbook.prefs.joypad_scroll));
   _fetch_bool(client, "grow-on-scroll", &(sketchbook.prefs.grow_on_scroll));
+  _fetch_int (client, "start-with",     &(sketchbook.prefs.start_with));
 
   //--Close client
   xsettings_client_destroy (client);
@@ -181,8 +199,9 @@ void prefs_save_settings(){
 
 #else //Use system call
 
-  _system_write_setting_int("joypad-scroll",  (sketchbook.prefs.joypad_scroll)?1:0);
-  _system_write_setting_int("grow-on-scroll", (sketchbook.prefs.grow_on_scroll)?1:0);
+  _system_write_setting_int("joypad-scroll",  sketchbook.prefs.joypad_scroll ? 1:0);
+  _system_write_setting_int("grow-on-scroll", sketchbook.prefs.grow_on_scroll? 1:0);
+  _system_write_setting_int("start-with",     sketchbook.prefs.start_with);
   //_system_write_setting_int("dummy-1", 42);
   //_system_write_setting_int("dummy-2", 43);
 
@@ -195,31 +214,48 @@ void prefs_save_settings(){
 struct {
   GtkWidget * joypad_scroll;
   GtkWidget * grow_on_scroll;
+  GtkWidget * start_with;
+  gint        start_with_index;
 } _prefs_ui;
 
 void reset_gui_from_prefs(){
   // struct --> ui
+  switch(sketchbook.prefs.start_with){
+  //WARNING: MUST match gtk_menu_append() order!
+  case PAGE_SKETCHPAD:           _prefs_ui.start_with_index = 0; break;
+  case PAGE_SELECTOR_LIST:       _prefs_ui.start_with_index = 1; break;
+  case PAGE_SELECTOR_ICON_TABLE: _prefs_ui.start_with_index = 2; break;
+  }
+  gtk_option_menu_set_history(GTK_OPTION_MENU(_prefs_ui.start_with), _prefs_ui.start_with_index);
+
   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(_prefs_ui.joypad_scroll), sketchbook.prefs.joypad_scroll);
   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(_prefs_ui.grow_on_scroll), sketchbook.prefs.grow_on_scroll);
 }
+
 void reset_prefs_from_gui(){
   // ui -> struct
+  switch(gtk_option_menu_get_history(GTK_OPTION_MENU(_prefs_ui.start_with))){
+  //WARNING: MUST match gtk_menu_append() order!
+  case 0: sketchbook.prefs.start_with = PAGE_SKETCHPAD;           break;
+  case 1: sketchbook.prefs.start_with = PAGE_SELECTOR_LIST;       break;
+  case 2: sketchbook.prefs.start_with = PAGE_SELECTOR_ICON_TABLE; break;
+  }
+
   sketchbook.prefs.joypad_scroll = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(_prefs_ui.joypad_scroll));
-
   sketchbook.prefs.grow_on_scroll = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(_prefs_ui.grow_on_scroll));
-
 }
 
 void on_button_ok_clicked (GtkButton *button, gpointer _unused){
   reset_prefs_from_gui();
-  gtk_notebook_set_page(sketchbook.notebook, PAGE_SELECTOR);
   //**/_print_prefs();
+  gtk_notebook_set_page(sketchbook.notebook, PAGE_SELECTOR);
 }
 void on_button_no_clicked (GtkButton *button, gpointer _unused){
   reset_gui_from_prefs();
-  gtk_notebook_set_page(sketchbook.notebook, PAGE_SELECTOR);
   //**/_print_prefs();
+  gtk_notebook_set_page(sketchbook.notebook, PAGE_SELECTOR);
 }
+
 
 GtkWidget * preferences_gui(GtkWidget * window){
   GtkWidget * vbox;
@@ -231,10 +267,37 @@ GtkWidget * preferences_gui(GtkWidget * window){
   vbox = gtk_vbox_new(FALSE, 4);
 
   //--Preferences
+
+  {//start with
+    GtkWidget * label;
+    GtkWidget * option_menu;
+    GtkWidget * menu;
+    GtkWidget * menu_item;
+    GtkWidget * hbox;
+    label = gtk_label_new(_("Start with"));
+
+    menu = gtk_menu_new();
+    menu_item = gtk_menu_item_new_with_label(_("Sketchpad"));
+    gtk_menu_append(GTK_MENU(menu), menu_item);
+    menu_item = gtk_menu_item_new_with_label(_("Selector - list"));
+    gtk_menu_append(GTK_MENU(menu), menu_item);
+    menu_item = gtk_menu_item_new_with_label(_("Selector - icons table"));
+    gtk_menu_append(GTK_MENU(menu), menu_item);
+
+    option_menu = gtk_option_menu_new();
+    gtk_option_menu_set_menu(GTK_OPTION_MENU(option_menu), menu);
+    
+    hbox = gtk_hbox_new(FALSE, 4);
+    gtk_box_pack_start(GTK_BOX(hbox), label,        FALSE, FALSE, 4);
+    gtk_box_pack_start(GTK_BOX(hbox), option_menu,  TRUE, TRUE, 4);
+    gtk_box_pack_start(GTK_BOX(vbox), hbox,  FALSE, FALSE, 4);
+
+    _prefs_ui.start_with = option_menu;
+  }
+
   {//joypad scroll
     GtkWidget * check;
     check = gtk_check_button_new_with_label(_("Use joypad scrolling"));
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(check), sketchbook.prefs.joypad_scroll);
     gtk_box_pack_start(GTK_BOX(vbox), check,      FALSE, FALSE, 4);
     _prefs_ui.joypad_scroll = check;
   }
@@ -242,10 +305,12 @@ GtkWidget * preferences_gui(GtkWidget * window){
   {//grow on scroll
     GtkWidget * check;
     check = gtk_check_button_new_with_label(_("Grow on scroll"));
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(check), sketchbook.prefs.grow_on_scroll);
     gtk_box_pack_start(GTK_BOX(vbox), check,      FALSE, FALSE, 4);
     _prefs_ui.grow_on_scroll = check;
   }
+
+  //--init gui
+  reset_gui_from_prefs();
 
   //--Buttons
   button_ok = gpe_picture_button(window->style , _("OK")    , "!gtk-ok");

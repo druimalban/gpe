@@ -23,7 +23,7 @@
 typedef struct _preferences {
   gboolean joypad_scroll;
   gboolean grow_on_scroll;
-  //int start_with;
+  int start_with;
 } Preferences;
 
 void prefs_reset_defaults();

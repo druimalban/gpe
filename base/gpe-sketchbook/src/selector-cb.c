@@ -112,7 +112,7 @@ void on_button_selector_change_view_clicked (GtkButton *button, gpointer user_da
     gtk_widget_set_sensitive(selector.button_edit,   FALSE);//FIXME: remove if iconlist can select
     gtk_widget_set_sensitive(selector.button_delete, FALSE);//FIXME: remove if iconlist can select
   }
-  _switch_icon(button);
+  if(button) _switch_icon(button);
 }
 
 

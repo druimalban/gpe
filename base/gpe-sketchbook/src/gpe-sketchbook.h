@@ -36,9 +36,14 @@ typedef struct _sketchbook {
 extern Sketchbook sketchbook;
 
 enum {
-  PAGE_SELECTOR,
-  PAGE_SKETCHPAD,
-  PAGE_PREFERENCES,
+  //TOP Notebook pages
+  PAGE_SELECTOR    = 0,
+  PAGE_SKETCHPAD   = 1,
+  PAGE_PREFERENCES = 2,
+
+  //Sub pages
+  PAGE_SELECTOR_LIST,
+  PAGE_SELECTOR_ICON_TABLE,
 };
 
 

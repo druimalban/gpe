@@ -29,6 +29,7 @@
 #include "sketchpad-cb.h" //on_window_sketchpad_destroy()
 #include "selector.h"
 #include "selector-gui.h"
+#include "selector-cb.h" //on_button_selector_change_view_clicked()
 
 //--i18n
 #include <libintl.h>
@@ -157,6 +158,8 @@ void gui_init(){
   gtk_notebook_set_show_tabs  (notebook, FALSE);
   g_signal_connect (G_OBJECT (notebook), "switch_page", G_CALLBACK(on_notebook_switch_page), NULL);
 
+  //WARNING: notebook index pages in [0..n],
+  //so PAGE_* _MUST_ be numbered in the same order!
   gtk_notebook_insert_page(notebook, selector_ui,  NULL, PAGE_SELECTOR);
   gtk_notebook_insert_page(notebook, sketchpad_ui, NULL, PAGE_SKETCHPAD);
   gtk_notebook_insert_page(notebook, prefs_ui,     NULL, PAGE_PREFERENCES);
@@ -179,9 +182,20 @@ void gui_init(){
   gtk_container_add (GTK_CONTAINER (window), GTK_WIDGET(notebook));
 
   //--show up
-  //NOTE: could be defined by preference, or command line argument
-  if(1) gtk_notebook_set_page(notebook, PAGE_SELECTOR);
-  else  gtk_notebook_set_page(notebook, PAGE_SKETCHPAD);
+  switch(sketchbook.prefs.start_with){
+    case PAGE_SELECTOR_LIST:
+    case PAGE_SELECTOR_ICON_TABLE:
+      gtk_notebook_set_page(notebook, PAGE_SELECTOR);
+      icons_mode = sketchbook.prefs.start_with == PAGE_SELECTOR_LIST;
+      on_button_selector_change_view_clicked (NULL, NULL);
+      break;
+    case PAGE_SELECTOR:
+      gtk_notebook_set_page(notebook, PAGE_SELECTOR);
+      break;
+    case PAGE_SKETCHPAD:
+      gtk_notebook_set_page(notebook, PAGE_SKETCHPAD);
+      break;
+  }
 
   gtk_widget_show (GTK_WIDGET(notebook));
   gtk_widget_show (window);
