@@ -1,0 +1,4 @@
+2003-03-09  Damien Tanner  <dctanner@gekk>
+
+	* main.c (main): Fully working (but not yet optimized) list view and the ability to switch between icon and list view.
+
