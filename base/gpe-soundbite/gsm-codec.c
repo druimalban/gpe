@@ -11,6 +11,7 @@
 #include <unistd.h>
 #include <gsm/gsm.h>
 #include <glib.h>
+#include <string.h>
 
 gboolean stop;
 
