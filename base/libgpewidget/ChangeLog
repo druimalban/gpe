@@ -1,3 +1,19 @@
+2004-11-16  Phil Blundell  <pb@nexus.co.uk>
+
+	* gpeiconlistview.c (struct _GPEIconListView): Delete bgcolor.
+	Add bg_gc, bg_color, bg_alpha.
+	(gpe_icon_list_view_set_bg_pixmap): Avoid calling gdk_pixbuf_ref
+	if pixbuf is NULL.
+	(_gpe_icon_list_view_do_set_bg): New.
+	(gpe_icon_list_view_set_bg_color): Break down color into
+	components.  Call _gpe_icon_list_view_do_set_bg if realized.
+	(apply_translucency): Use component information from il->bg_color.
+	(_gpe_icon_list_view_expose): Border is not conditional on
+	bgpixmap.  Draw flat background with bg_color if pixmap not set.
+	Remove bogus call to gtk_paint_flat_box.
+	(_gpe_icon_list_view_realize): Call _gpe_icon_list_view_do_set_bg.
+	(gpe_icon_list_view_init): Use gpe_icon_list_view_set_bg_color.
+
 2004-10-18  Phil Blundell  <pb@nexus.co.uk>
 
 	* Version 0.95 released.

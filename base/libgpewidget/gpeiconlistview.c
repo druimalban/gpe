@@ -20,6 +20,7 @@
 #include <gtk/gtk.h>
 #include <string.h>
 #include <stdio.h>
+#include <stdint.h>
 
 #include "gpeiconlistview.h"
 #include "gpeiconlistitem.h"
@@ -33,7 +34,6 @@ struct _GPEIconListView
   /* private */
   GList *icons;
   GdkPixbuf * bgpixbuf;
-  guint32 bgcolor;
   int rows;
   int cols;
   int mcol;
@@ -52,6 +52,10 @@ struct _GPEIconListView
   GdkGC *border_gc;
   GdkColor border_color;
   gboolean border_set;
+
+  GdkGC *bg_gc;
+  GdkColor bg_color;
+  uint8_t bg_alpha;
 };
 
 struct _GPEIconListViewClass 
@@ -107,14 +111,40 @@ gpe_icon_list_view_set_bg_pixmap (GPEIconListView *self, GdkPixbuf *bg)
 {
   if (self->bgpixbuf)
     gdk_pixbuf_unref (self->bgpixbuf);
-  gdk_pixbuf_ref (bg);
+  if (bg)
+    gdk_pixbuf_ref (bg);
   self->bgpixbuf = bg;
+}
+
+static void
+_gpe_icon_list_view_do_set_bg (GPEIconListView *self)
+{
+  GdkColormap *gcm;
+
+  gcm = gdk_drawable_get_colormap (GTK_WIDGET (self)->window);
+  
+  if (!self->bg_gc)
+    self->bg_gc = gdk_gc_new (GTK_WIDGET (self)->window);
+
+  gdk_colormap_alloc_color (gcm, &self->bg_color, FALSE, TRUE);
+  
+  gdk_gc_set_foreground (self->bg_gc, &self->bg_color);
 }
 
 void 
 gpe_icon_list_view_set_bg_color (GPEIconListView *self, guint32 color)
 {
-  self->bgcolor = color;
+  self->bg_color.red = (color & 0xff);
+  self->bg_color.green = (color & 0xff00) >> 8;
+  self->bg_color.blue = (color & 0xff0000) >> 16;
+  self->bg_alpha = (color & 0xff000000) >> 24;
+
+  self->bg_color.red |= (self->bg_color.red << 8);
+  self->bg_color.green |= (self->bg_color.green << 8);
+  self->bg_color.blue |= (self->bg_color.blue << 8);
+
+  if (GTK_WIDGET_REALIZED (GTK_WIDGET (self)))
+    _gpe_icon_list_view_do_set_bg (self);
 }
 
 void
@@ -257,10 +287,10 @@ apply_translucency (GPEIconListView *il, GdkPixbuf *p)
   int alpha, br, bg, bb;
   int stride, bpp;
 
-  bb = il->bgcolor & 0xff;
-  bg = (il->bgcolor >> 8) & 0xff;
-  br = (il->bgcolor >> 16) & 0xff;
-  alpha = (il->bgcolor >> 24) & 0xff;
+  bb = il->bg_color.blue >> 8;
+  bg = il->bg_color.green >> 8;
+  br = il->bg_color.red >> 8;
+  alpha = il->bg_alpha;
 
   if (!p)
     return;
@@ -349,11 +379,16 @@ _gpe_icon_list_view_expose (GtkWidget *widget, GdkEventExpose *event)
       gdk_pixbuf_unref (s);
       gdk_pixbuf_unref (p);
 
-      if (il->border_gc)
-	gdk_draw_rectangle (widget->window, il->border_gc, FALSE, 0, 0, 
-			    GTK_WIDGET (il)->allocation.width - 1, GTK_WIDGET (il)->allocation.height - 1);
+    }
+  else
+    {
+      gdk_draw_rectangle (widget->window, il->bg_gc, TRUE, 0, 0, GTK_WIDGET (il)->allocation.width, GTK_WIDGET (il)->allocation.height);
     }
 
+  if (il->border_gc)
+    gdk_draw_rectangle (widget->window, il->border_gc, FALSE, 0, 0, 
+			GTK_WIDGET (il)->allocation.width - 1, GTK_WIDGET (il)->allocation.height - 1);
+  
   for (icons = il->icons; icons != NULL; icons = icons->next) 
     {
       GdkRectangle r1, r2, dst;
@@ -388,21 +423,6 @@ _gpe_icon_list_view_expose (GtkWidget *widget, GdkEventExpose *event)
 
 	  state = (selected && !il->flag_embolden) ? GTK_STATE_SELECTED : GTK_WIDGET_STATE (widget);
 
-	  if (!il->bgpixbuf)
-	    {
-	      gtk_paint_flat_box (widget->style,
-				  widget->window,
-				  state,
-				  GTK_SHADOW_NONE,
-				  &dst,
-				  widget,
-				  "",
-				  cell_x,
-				  cell_y,
-				  cell_w,
-				  cell_h);
-	    }
-	  
 	  /* Get the icon from the cache if its there, if not put it there :) */
 	  if (icon->pb_scaled)
 	    pixbuf = icon->pb_scaled;
@@ -813,6 +833,8 @@ _gpe_icon_list_view_realize (GtkWidget *widget)
 
   if (self->border_set)
     _gpe_icon_list_view_do_set_border (self);
+
+  _gpe_icon_list_view_do_set_bg (self);
 }
 
 static GPEIconListItem *
@@ -874,13 +896,14 @@ gpe_icon_list_view_init (GPEIconListView *self)
   self->mrow = self->mcol = -1;
   self->icon_size = 48;
   self->icon_xmargin = 12;
-  self->bgcolor = 0xd0ffffff;
   self->flag_embolden = FALSE;
   self->flag_show_title = TRUE;
   self->rows_set = 0;
   self->textpos = GPE_TEXT_BELOW;
 
   self->label_height = _gpe_icon_list_view_title_height (self);
+
+  gpe_icon_list_view_set_bg_color (self, 0xd0ffffff);
 }
 
 static void
