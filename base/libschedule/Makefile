@@ -1,7 +1,7 @@
 PREFIX = /usr/local
 PACKAGE = libschedule
 #DEBUG = yes 
-VERSION = 0.12
+VERSION = 0.13
 
 LINGUAS = 
 
@@ -9,20 +9,9 @@ MEMBERS = atd
 
 SONAME = libschedule.so.0
 
-CFLAGS = `pkg-config --cflags glib-2.0` -DG_DISABLE_DEPRECATED
-LDFLAGS = `pkg-config --libs glib-2.0` 
-
-CFLAGS += -DPREFIX=\"$(PREFIX)\" -DPACKAGE=\"$(PACKAGE)\" -D_GNU_SOURCE -Wall -fPIC
-
-ifeq ($(DEBUG),yes)
-CFLAGS += -g #-O2 -g
-LDFLAGS += -g
-else
-CFLAGS += -Os -fomit-frame-pointer
-endif
-CFLAGS += -MD
-
-CPPFLAGS += -I.
+PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS) -I.
+PACKAGE_CFLAGS += $(STANDARD_CFLAGS) `pkg-config --cflags glib-2.0` -DG_DISABLE_DEPRECATED
+PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) `pkg-config --libs glib-2.0` 
 
 HEADERS = schedule.h
 
@@ -36,10 +25,7 @@ libschedule.so: $(SONAME)
 	ln -sf $^ $@
 
 $(SONAME): $(OBJS)
-	$(CC) -nostartfiles -shared -o $@ $^ -Wl,-soname -Wl,$(SONAME) $(LDFLAGS)
-
-.c.s:;
-	$(CC) $(CFLAGS) -S $<
+	$(CC) -nostartfiles -shared -o $@ $^ -Wl,-soname -Wl,$(SONAME) $(LDFLAGS) $(PACKAGE_LDFLAGS)
 
 install-devel:
 	install -d $(DESTDIR)$(PREFIX)/include/gpe
