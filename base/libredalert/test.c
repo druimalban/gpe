@@ -22,5 +22,5 @@
 
 main() {
 	//redalert_set_alarm (time_t unixtime, char *program);
-	redalert_set_alarm_message (time(NULL)+5, "Hello world");
+	redalert_set_alarm_message ("Test", 0, time(NULL)+5, "Hello world");
 }
