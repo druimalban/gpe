@@ -26,7 +26,7 @@
 #define _(_x) gettext (_x)
 
 gchar *buffer;
-gchar *filename;
+gchar *filename = "";
 
 GtkWidget *main_window;
 GtkWidget *text_area;
@@ -36,6 +36,7 @@ struct pix my_pix[] = {
   { "new", "new" },
   { "open", "open" },
   { "save", "save" },
+  { "save_as", "save_as" },
   { "cut", "cut" },
   { "copy", "copy" },
   { "paste", "paste" },
@@ -57,18 +58,19 @@ void
 new_file (void)
 {
   clear_text_area ();
+  filename = "";
 }
 
 void
 open_file (GtkFileSelection *selector, gpointer user_data)
 {
   struct stat file_stat;
-  int fp;
+  FILE *fp;
   int pos = 0;
 
   filename = gtk_mini_file_selection_get_filename (GTK_MINI_FILE_SELECTION (file_selector));
 
-  if ( (fp = open(filename, O_RDONLY)) == -1)
+  if ( (fp = fopen(filename, "r")) == NULL)
   {
     gpe_perror_box (filename);
   }
@@ -76,7 +78,8 @@ open_file (GtkFileSelection *selector, gpointer user_data)
   {
     stat (filename, &file_stat);
     buffer = g_malloc (file_stat.st_size);
-    read (fp, buffer, file_stat.st_size);
+    fread (buffer, file_stat.st_size, 1, fp);
+    fclose (fp);
 
     clear_text_area ();
 
@@ -87,14 +90,14 @@ open_file (GtkFileSelection *selector, gpointer user_data)
 }
 
 void
-save_file (GtkFileSelection *selector, gpointer user_data)
+save_file_as (GtkFileSelection *selector, gpointer user_data)
 {
   guint text_length;
-  int fp;
+  FILE *fp;
 
   filename = gtk_mini_file_selection_get_filename (GTK_MINI_FILE_SELECTION (file_selector));
 
-  if ( (fp = open(filename, O_WRONLY)) == -1)
+  if ( (fp = fopen(filename, "w")) == NULL)
   {
     gpe_perror_box (filename);
   }
@@ -104,10 +107,11 @@ save_file (GtkFileSelection *selector, gpointer user_data)
     buffer = g_malloc (text_length);
     buffer = gtk_editable_get_chars (GTK_EDITABLE (text_area), 0, text_length);
 
-    write (fp, buffer, text_length);
-    close (fp);
+    fwrite (buffer, 1, text_length, fp);
+    fclose (fp);
     g_free (buffer);
   }
+
   gtk_widget_destroy (file_selector);
 }
 
@@ -115,8 +119,6 @@ void
 select_open_file (void)
 {
   file_selector = gtk_mini_file_selection_new ("Open File ...");
-  //gtk_file_selection_set_filename (GTK_FILE_SELECTION (file_selector), filename);
-  //gtk_file_selection_hide_fileop_buttons (GTK_FILE_SELECTION (file_selector));
 
   gtk_signal_connect (GTK_OBJECT (file_selector),
 		      "completed", GTK_SIGNAL_FUNC (open_file), NULL);
@@ -128,17 +130,46 @@ select_open_file (void)
 }
 
 void
-select_save_file (void)
+select_save_file_as (void)
 {
-  file_selector = gtk_mini_file_selection_new ("Save File ...");
+  file_selector = gtk_mini_file_selection_new ("Save As ..");
 
   gtk_signal_connect (GTK_OBJECT (file_selector),
-		      "completed", GTK_SIGNAL_FUNC (save_file), NULL);
+		      "completed", GTK_SIGNAL_FUNC (save_file_as), NULL);
 
   gtk_signal_connect_object (GTK_OBJECT (GTK_MINI_FILE_SELECTION(file_selector)->cancel_button),
 		             "clicked", GTK_SIGNAL_FUNC (gtk_widget_destroy),
 		             (gpointer) file_selector);
   gtk_widget_show (file_selector);
+}
+
+void
+save_file (void)
+{
+  guint text_length;
+  FILE *fp;
+
+  if ( filename == "" )
+  {
+    select_save_file_as ();
+  }
+  else
+  {
+    if ( (fp = fopen(filename, "w")) == NULL)
+    {
+      gpe_perror_box (filename);
+    }
+    else
+    {
+      text_length = gtk_text_get_length (GTK_TEXT (text_area));
+      buffer = g_malloc (text_length);
+      buffer = gtk_editable_get_chars (GTK_EDITABLE (text_area), 0, text_length);
+
+      fwrite (buffer, 1, text_length, fp);
+      fclose (fp);
+      g_free (buffer);
+    }
+  }
 }
 
 void
@@ -169,7 +200,7 @@ main (int argc, char *argv[])
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
 
-  if (load_pixmaps (my_pix) == FALSE)
+  if (gpe_load_pixmaps (my_pix) == FALSE)
     exit (1);
 
   main_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
@@ -192,41 +223,46 @@ main (int argc, char *argv[])
   text_area = gtk_text_new (NULL, NULL);
   gtk_text_set_editable (GTK_TEXT (text_area), TRUE);
 
-  p = find_pixmap ("new");
+  p = gpe_find_pixmap ("new");
   pw = gtk_pixmap_new (p->pixmap, p->mask);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("New document"), 
 			   _("New document"), _("New document"), pw, new_file, NULL);
 
-  p = find_pixmap ("open");
+  p = gpe_find_pixmap ("open");
   pw = gtk_pixmap_new (p->pixmap, p->mask);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Open file"), 
 			   _("Open file"), _("Open file"), pw, select_open_file, NULL);
 
-  p = find_pixmap ("save");
+  p = gpe_find_pixmap ("save");
   pw = gtk_pixmap_new (p->pixmap, p->mask);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Save current file"), 
-			   _("Save current file"), _("Save current file"), pw, select_save_file, NULL);
+			   _("Save current file"), _("Save current file"), pw, save_file, NULL);
+
+  p = gpe_find_pixmap ("save_as");
+  pw = gtk_pixmap_new (p->pixmap, p->mask);
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Save current file as"), 
+			   _("Save current file as"), _("Save current file as"), pw, select_save_file_as, NULL);
 
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
 
-  p = find_pixmap ("cut");
+  p = gpe_find_pixmap ("cut");
   pw = gtk_pixmap_new (p->pixmap, p->mask);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Cut the selection"), 
 			   _("Cut the selection"), _("Cut the selection"), pw, cut_selection, NULL);
 
-  p = find_pixmap ("copy");
+  p = gpe_find_pixmap ("copy");
   pw = gtk_pixmap_new (p->pixmap, p->mask);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Copy the selection"), 
 			   _("Copy the selection"), _("Copy the selection"), pw, copy_selection, NULL);
 
-  p = find_pixmap ("paste");
+  p = gpe_find_pixmap ("paste");
   pw = gtk_pixmap_new (p->pixmap, p->mask);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Paste the clipboard"), 
 			   _("Paste the clipboard"), _("Paste the clipboard"), pw, paste_clipboard, NULL);
 
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
 
-  p = find_pixmap ("exit");
+  p = gpe_find_pixmap ("exit");
   pw = gtk_pixmap_new (p->pixmap, p->mask);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Exit"), 
 			   _("Exit"), _("Exit"), pw, gtk_exit, NULL);
