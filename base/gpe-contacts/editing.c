@@ -162,6 +162,7 @@ create_edit (void)
 
   edit = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title (GTK_WINDOW (edit), _("Edit Contact"));
+  gpe_set_window_icon (edit, "icon");
   gtk_widget_realize (edit);
 
   vbox = gtk_vbox_new (FALSE, 0);

@@ -1,3 +1,15 @@
+2003-01-01  Philip Blundell  <philb@gnu.org>
+
+	* Version 0.08 released.
+	
+2003-01-01  Philip Blundell  <philb@gnu.org>
+
+	* gpe-contacts.desktop (SingleInstance): Set to true.
+
+	* src/main.c (main): Set icon on main window.
+	(configure): Set icon and title on config window.
+	* src/editing.c (create_edit): Set icon on editing window.
+
 2002-12-15  Philip Blundell  <philb@gnu.org>
 
 	* gpe-contacts.desktop: New file.

@@ -1,7 +1,7 @@
 Package: gpe-contacts2
 Section: base
 Priority: optional
-Version: 0.07
+Version: 0.08
 Architecture: arm
 Maintainer: Phil Blundell <pb@debian.org>
 Depends: libgpewidget1 (>= 0.30), gpe-icons (>= 0.04), libxml2

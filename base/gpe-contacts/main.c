@@ -55,6 +55,7 @@ struct gpe_icon my_icons[] = {
   {"frame", MY_PIXMAPS_DIR "/frame.png"},
   {"notebook", MY_PIXMAPS_DIR "/notebook.png"},
   {"entry", MY_PIXMAPS_DIR "/entry.png"},
+  {"icon", PREFIX "/share/pixmaps/gpe-contacts.png" },
   {NULL, NULL}
 };
 
@@ -554,6 +555,9 @@ configure (GtkWidget * widget, gpointer d)
   gtk_signal_connect (GTK_OBJECT (window), "destroy",
 		      GTK_SIGNAL_FUNC (on_setup_destroy), NULL);
 
+  gtk_window_set_title (GTK_WINDOW (window), _("Contacts: Configuration"));
+  gpe_set_window_icon (window, "icon");
+
   gtk_widget_show (window);
 }
 
@@ -689,7 +693,6 @@ main (int argc, char *argv[])
   clist = lookup_widget (GTK_WIDGET (mainw), "clist1");
   update_display ();
   show_details (NULL);
-  gtk_widget_show (mainw);
   gtk_signal_connect (GTK_OBJECT (clist), "select_row",
 		      GTK_SIGNAL_FUNC (selection_made), NULL);
 
@@ -732,6 +735,9 @@ main (int argc, char *argv[])
 
   // load detail panel config
   load_panel_config ();
+
+  gpe_set_window_icon (mainw, "icon");
+  gtk_widget_show (mainw);
 
   gtk_main ();
   return 0;
