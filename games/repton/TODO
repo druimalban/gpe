@@ -1,0 +1,17 @@
+TODO
+-----------------------------
+* other useful things
+	- hall of fame with records saved
+-----------------------------
+* average term
+	- time limit
+	- editor
+-----------------------------
+* long term
+	- new map file format with
+		- full 256 colors graphics with user modifiable palette
+		- 256 colors, real 32x32 sprites
+		- user definible map sprites, map size
+		- user definible number of maps and transporters
+		- and so on
+	- X Window version

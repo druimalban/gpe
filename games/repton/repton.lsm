@@ -1,0 +1,16 @@
+Begin3
+Title:		Repton for Linux
+Version:	1.1
+Entered-date:	08OCT96
+Description:	Repton-clone arcade game
+Keywords:	repton game svgalib arcade
+Author:		ssigala@globalnet.it (Sandro Sigala)
+Maintained-by:	ssigala@globalnet.it (Sandro Sigala)
+Primary-site:	sunsite.unc.edu /pub/Linux/games/video
+		328k repton-1.1.tar.gz
+		320k repton-1.1-bin.tar.gz
+Alternate-site:	
+Original-site:	
+Platforms:	Linux-ELF, GNU CC, svgalib
+Copying-policy:	Berkeley-style
+End

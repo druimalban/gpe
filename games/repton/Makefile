@@ -1,0 +1,74 @@
+#
+# Repton for Linux - Makefile
+#
+# $Id$
+#
+
+CC=		gcc
+COPT=		-O2 -fomit-frame-pointer -fno-strength-reduce
+CFLAGS=		-I. -Wall $(COPT) `sdl-config --cflags`
+LDFLAGS=	-s
+LIBS=		`sdl-config --libs`
+
+PREFIX=		/usr
+BINDIR=		$(PREFIX)/games
+LIBDIR=		$(PREFIX)/games/lib
+BINOWN=		games
+BINGRP=		bin
+
+MAPS=		maps/baby.rep maps/future.rep maps/orient.rep \
+		maps/school.rep maps/work.rep maps/africa.rep \
+		maps/babyj.rep maps/now.rep maps/pirate.rep \
+		maps/teens.rep maps/america.rep maps/egypt.rep \
+		maps/oap.rep maps/prehist.rep maps/toccata.rep \
+		maps/arctic.rep maps/finale.rep maps/oceans.rep \
+		maps/prelude.rep maps/victori.rep
+
+BMPS=		bmps/main.bmp bmps/credits.bmp bmps/endepis.bmp \
+		bmps/endlevel.bmp bmps/passwd.bmp bmps/start.bmp
+
+SNDS=		snds/bridge1.ub snds/chirp.ub snds/choo.ub \
+		snds/click.ub snds/cp70_eb2.ub snds/doo_eb3.ub \
+		snds/dx_ep_a2.ub snds/music_box.ub snds/orchhit.ub \
+		snds/pinknois.ub snds/screech.ub snds/space.ub
+
+OBJS=		main.o kernel.o fileio.o sdl.o showmap.o sound.o \
+		err.o soundIt.o
+
+PROG=		repton
+
+all: $(PROG)
+
+$(PROG): $(OBJS)
+	$(CC) $(LDFLAGS) -o $@ $(OBJS) $(LIBS)
+
+install: $(PROG) $(MAPS) $(BMPS)
+	install -m 755 -d -o $(BINOWN) -g $(BINGRP) $(BINDIR)
+	install -m 755 -d -o $(BINOWN) -g $(BINGRP) $(LIBDIR)/repton/maps
+	install -m 755 -d -o $(BINOWN) -g $(BINGRP) $(LIBDIR)/repton/bmps
+	install -m 755 -d -o $(BINOWN) -g $(BINGRP) $(LIBDIR)/repton/snds
+	install -s -m 555 -o $(BINOWN) -g $(BINGRP) $(PROG) $(BINDIR)
+	install -m 444 -o $(BINOWN) -g $(BINGRP) $(MAPS) $(LIBDIR)/repton/maps
+	install -m 444 -o $(BINOWN) -g $(BINGRP) $(BMPS) $(LIBDIR)/repton/bmps
+	install -m 444 -o $(BINOWN) -g $(BINGRP) $(SNDS) $(LIBDIR)/repton/snds
+
+uninstall:
+	rm -f $(BINDIR)/$(PROG)
+	rm -rf $(LIBDIR)/repton
+
+clean:
+	rm -f *~ *.o $(PROG)
+
+# Dependencies
+err.o: err.c
+fileio.o: fileio.c repton.h
+kernel.o: kernel.c repton.h
+main.o: main.c repton.h pathnames.h version.h
+mapsprites.o: mapsprites.c
+mouse.o: mouse.c mouse.h mouse_arrow.c
+mouse_arrow.o: mouse_arrow.c
+palette.o: palette.c
+showmap.o: showmap.c repton.h mapsprites.c
+sound.o: sound.c repton.h pathnames.h soundIt.h
+soundIt.o: soundIt.c soundIt.h
+svgalib.o: svgalib.c repton.h mouse.h pathnames.h palette.c

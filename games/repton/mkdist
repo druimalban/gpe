@@ -1,0 +1,34 @@
+#!/bin/sh
+#
+# $Id$
+#
+
+if [ "$LOGNAME" != "root" ]; then
+	exit 1
+fi
+
+export CVSROOT=sandro@lattice:/home/ncvs/cvsroot
+
+VERSION="`cut -d\\" -f2 version.h`"
+
+rm -rf tmp; mkdir tmp; cd tmp
+
+cvs export -r HEAD repton
+find -name .cvsignore | xargs rm
+
+mkdir -p usr/games
+
+mv repton repton-$VERSION
+tar cvf - repton-$VERSION | gzip -9 > ../../repton-$VERSION.tar.gz
+
+cd repton-$VERSION
+make
+make PREFIX="../usr" install
+cd ..
+
+tar cvf - usr | gzip -9 > ../../repton-$VERSION-bin.tar.gz
+
+cd ..
+rm -rf tmp
+
+chown sandro.sandro ../repton-$VERSION{,-bin}.tar.gz

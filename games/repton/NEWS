@@ -1,0 +1,29 @@
+NEWS
+
+1.3
+
+o Added soundcard support with some nice sound FXs, thanks
+  to the `soundIt' library by Brad Pitzel <pitzel@cs.sfu.ca>.
+
+1.2
+
+o Made RPM version.
+o Fixed bug that prevents suid executable from working (found by
+  Peter Hackenberg <phackenberg@aip.de>).
+
+1.1 - Changes from 1.0BETA
+
+o  Changing state from beta to stable.
+o  Added 18 more cool episodes (that's 18*8 = 144 levels!), thanks Jasper!.
+o  Removed america2.rep episode because bogus.
+o  The level is now finished when Repton collects all the diamonds and
+   gets the bomb.
+o  Some fixes to the episode selection code.
+
+1.0BETA - Changes from 1.0ALPHA
+
+o  Added america2 map.
+o  Added key and bomb as curved objects (rocks and eggs can now fall onto them).
+o  Fixed bug that allowed repton and monster collisions.
+o  Added more safe checks at startup.
+o  Cleanups in map decoding functions.

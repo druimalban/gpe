@@ -1,0 +1,34 @@
+Repton object list
+
+A = masso					rock
+B = diamante					diamond
+C = terriccio1					ground1
+D = terriccio2					ground2
+E = capsula tempo				time
+F = teschio					skull
+G = vuoto					empty
+H = muro					wall
+I = muro con bordo a ovest			wall
+J = muro con bordo a est			wall
+K = muro con bordo a nord			wall
+L = muro con bordo a sud			wall
+M = muro con bordo a nord-ovest			wall
+N = muro con bordo a nord-est			wall
+O = muro con bordo a sud-ovest			wall
+P = muro con bordo a sud-est			wall
+Q = muro pieno					filled wall
+R = muro pieno con angolo a nord-ovest		filled wall
+S = muro pieno con angolo a nord-est		filled wall
+T = muro pieno con angolo a sud-ovest		filled wall
+U = muro pieno con angolo a sud-est		filled wall
+V = muro specchio				mirror wall
+W = cassaforte					strongbox
+X = gabbia					cage
+Y = uovo					egg
+Z = chiave					key
+[ = pianta					plant
+\ = bomba					bomb
+] = teletrasporto				transporter
+^ = corona					crown
+_ = repton					repton
+` = mostro blip					blip

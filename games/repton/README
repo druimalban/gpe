@@ -1,0 +1,47 @@
+                        - Repton for Linux v1.3 -
+
+Repton is a clone of the old BBC Micro Repton game. I written it in two
+weeks (so the sources are far that clean) using the svgalib library.
+The original Repton game was produced on the BBC Micro and was the third
+hit Repton game for Superior Software.
+
+I release it under a Berkeley-style license.  If you like this program,
+send me a postcard from your hometown :-).  Maintainers of distributions
+(e.g. on CD-ROM) please drop me a note (or preferably a sample copy of
+your distribution), if you include my program: this eases maintenance,
+if distributions happen to contain old versions.
+
+You can find latest version on ftp://sunsite.unc.edu/pub/Linux/games/video
+
+-----------------------------------------------------------------------------
+
+                                 - CREDITS -
+
+Many many thanks to Jasper Renow-Clarke <cm5hdjjr@bs41.staffs.ac.uk> for
+the help with the BBC Micro Repton format and for the .rep maps :-) (take a
+look at the `note' file). He wrote another repton clone (for DOS), take a look
+at <http://sol.soc.staffs.ac.uk/cm4bcjs/David/S3/Jasper/repton>.
+
+-----------------------------------------------------------------------------
+
+                                - GAME INFO -
+
+At the main menu:
+	S: Start the game
+	P: Select password
+	E: Select episode
+	C: Credits
+	Q & ESC: Quit repton
+
+During the game:
+	M: Show map and status
+	Q & ESC: Abort game
+
+-----------------------------------------------------------------------------
+
+The author can be reached via email at the address <ssigala@globalnet.it>.
+
+Sandro Sigala
+Viale De Gasperi, 8
+25041 Darfo Boario Terme
+Brescia, Italy

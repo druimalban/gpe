@@ -1,0 +1,88 @@
+Some notes about the old BBC Micro repton format
+
+schermo: 10x6 sprite
+sprite: 16x32 pixel
+mappa: 28x24 sprite
+
+richiede schermo 160x192
+
+schermo BBC (modo 5): 160x256 pixel
+schermo PC (modo 13): 320x200 pixel
+
+---------------------------------------
+
+Jasper Renow-Clarke notes:
+http://sol.soc.staffs.ac.uk/cm4bcjs/David/S3/Jasper/repton
+cm5hdjjr@bs41.staffs.ac.uk
+
+here are the locations of all the stuff
+
+Offset  Contents
+0 - 63   Passwords
+64 - 79  Time limits
+80 - 95  Editor codes
+96 - 223 Transporter destinations
+224 - 255 Colour Palette
+256 - 3615 Maps
+3616 - 9760 Sprites
+
+The passwords are stored in 8 bit form
+and if you use this formular the passwords come out
+char = password_byte XOR (64-(file_offset+1))
+
+The time limits are stored in word format
+
+The editor codes are also in word format
+however if the editor codes are all 0's it
+indicates a home-made level
+
+The transporter destinations are stored as follows
+
+ A1  A2  A3  A4  B1  B2  B3 ... H4
+xyxyxyxyxyxyxyxyxyxyxyxyxyxy   xyxy
+
+Source (x,y) first then Destination (x,y)
+
+The Colour Palette is stored using bytes to
+represent each colour (0..4)
+
+The following table shows the colour mappings
+
+0 - Black         4 - Light blue
+1 - Light red     5 - Light magenta
+2 - Light green   6 - Light cyan
+3 - Yellow        7 - White
+
+The maps are stored in 5 bit form
+e.g.
+
+1  0  1  1  0  0  1  1  0  1  0  0  1  1  1  0  1  0  1  1  1  0  1  1  0  1
+4  2  1  16 8  4  2  1  1  16 8  4  2  1  16 8  4  2  1  16 8  4  2  2  1
+-------  -------------  -  -------------  -------------  ----------  ----
+   2           1        4        3              2            5          4  7
+
+Stored sequentially from top,left to bottom,right
+
+Values in the range 0->31
+
+A map is 28x24 in size
+
+There are 8 maps A -> H
+
+The sprites
+-----------
+
+Each sprite is 128 bytes long
+
+There are 48 sprites
+
+The sprite size is 16x32
+
+They are stored in 2 bit form
+
+ah  bh  ch  dh  al  bl  cl  dl
+   high bits       low bits
+
+Pixel colour = Palette_entry(ah*2)+al e.t.c
+
+Four pixels per byte

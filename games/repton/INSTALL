@@ -1,0 +1,13 @@
+                    - How to install Repton under Linux -
+
+                            - using the sources -
+
+The svgalib library is required.
+
+The GNU C compiler and the svgalib library are required.
+You may need to modify the `Makefile' and `pathnames.h' files.
+
+In the Repton source directory type:
+	make
+then
+	make install		(this requires root privileges)
