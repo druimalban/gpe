@@ -22,7 +22,7 @@ static const gchar *theme_dir_tail = "/.gpe/pixmaps";
 static const gchar *default_theme_dir = "/usr/local/share/gpe/pixmaps/default";
 
 gboolean 
-load_pixmaps (struct pix *p)
+gpe_load_pixmaps (struct pix *p)
 {
   gchar *home = getenv ("HOME");
   gchar *buf;
@@ -79,11 +79,17 @@ load_pixmaps (struct pix *p)
   return TRUE;
 }
 
+gboolean 
+load_pixmaps () __attribute__ ((weak, deprecated, alias ("gpe_load_pixmaps")));
+
 struct pix *
-find_pixmap (const char *name)
+gpe_find_pixmap (const char *name)
 {
   struct pix *p = g_datalist_get_data (&pdata, name);
 
   return p;
 }
+
+struct pix *
+find_pixmaps () __attribute__ ((weak, deprecated, alias ("gpe_find_pixmap")));
 

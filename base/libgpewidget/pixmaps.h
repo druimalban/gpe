@@ -18,8 +18,7 @@ struct pix
   GdkBitmap *mask;
 };
 
-extern gboolean load_pixmaps (struct pix *);
-
-extern struct pix *find_pixmap (const char *name);
+extern gboolean gpe_load_pixmaps (struct pix *);
+extern struct pix *gpe_find_pixmap (const char *name);
 
 #endif
