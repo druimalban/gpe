@@ -1,5 +1,9 @@
 2005-01-01  Phil Blundell  <philb@gnu.org>
 
+	* Version 0.34 released.
+
+2005-01-01  Phil Blundell  <philb@gnu.org>
+
 	Rewrite layout parser to use GMarkup rather than libxml2 DOM API:
 	* structure.c (new_element): New.
 	(xml_parser_start_element): Likewise.
