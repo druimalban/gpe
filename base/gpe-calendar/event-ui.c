@@ -34,7 +34,7 @@ struct edit_state
 
   GtkWidget *startdate, *enddate;
   GtkWidget *starttime, *endtime;
-  GtkWidget *alldaybutton;
+  GtkWidget *reminderdate, *remindertime, *remindertimebutton;
   
   GtkWidget *alarmbutton;
   GtkWidget *alarmspin;
@@ -94,17 +94,9 @@ recalculate_sensitivities (GtkWidget *widget,
       gtk_widget_set_sensitive (s->alarmspin, 0);
     }
 
-  if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->alldaybutton)))
-    {
-      gtk_widget_set_sensitive (s->starttime, 0);
-      gtk_widget_set_sensitive (s->endtime, 0);
-    }
-  else
-    {
-      gtk_widget_set_sensitive (s->starttime, 1);
-      gtk_widget_set_sensitive (s->endtime, 1);
-    }
-  
+  gtk_widget_set_sensitive (s->remindertime,
+			    gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->remindertimebutton)));
+
   if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->radiobuttonnone))) 
     {
       gtk_widget_hide (s->dailybox);
@@ -238,7 +230,7 @@ click_ok (GtkWidget *widget, GtkWidget *d)
   tm_end.tm_mday = GTK_DATE_COMBO (s->enddate)->day;
 
   ev->flags = 0;
-  if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->alldaybutton)))
+  if (0/*gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->alldaybutton))*/)
     {
       ev->flags |= FLAG_UNTIMED;
 
@@ -414,6 +406,15 @@ click_cancel (GtkWidget *widget,
   gtk_widget_destroy (d);
 }
 
+static gboolean
+set_notebook_page (GtkWidget *w, GtkWidget *notebook)
+{
+  guint i = (guint)gtk_object_get_data (GTK_OBJECT (w), "page");
+  gtk_notebook_set_page (GTK_NOTEBOOK (notebook), i);
+  gtk_widget_draw (notebook, NULL);
+  return FALSE;
+}
+
 static GtkWidget *
 edit_event_window (void)
 {
@@ -475,9 +476,6 @@ edit_event_window (void)
 
   GtkWidget *descriptionframe = gtk_frame_new (_("Description:"));
 
-  GtkWidget *alldaybutton = 
-    gtk_check_button_new_with_label (_("All-day event"));
-
   GtkWidget *alarmhbox = gtk_hbox_new (FALSE, 0);
   GtkWidget *alarmmenu = gtk_menu_new ();
   GtkWidget *alarmbutton = gtk_check_button_new_with_label (_("Alarm"));
@@ -504,6 +502,14 @@ edit_event_window (void)
   GtkWidget *optionmenu1, *optionmenu2;
   char buf[64];
   GtkWidget *scrolledwindowevent;
+  GtkWidget *optionmenutype = gtk_option_menu_new ();
+  GtkWidget *menutype = gtk_menu_new ();
+  GtkWidget *vboxappointment = gtk_vbox_new (FALSE, 0);
+  GtkWidget *vboxreminder = gtk_vbox_new (FALSE, 0);
+  GtkWidget *notebooktype = gtk_notebook_new ();
+  GtkWidget *hboxreminder1 = gtk_hbox_new (FALSE, 0);
+  GtkWidget *hboxreminder2 = gtk_hbox_new (FALSE, 0);
+  GtkWidget *mi;
   
   GtkWidget *menu1 = gtk_menu_new ();
   GtkWidget *menu2 = gtk_menu_new ();
@@ -511,12 +517,23 @@ edit_event_window (void)
   
   memset (s, 0, sizeof (*s));
 
+  mi = gtk_menu_item_new_with_label (_("Appointment"));
+  gtk_signal_connect (GTK_OBJECT (mi), "activate", GTK_SIGNAL_FUNC (set_notebook_page), notebooktype);
+  gtk_object_set_data (GTK_OBJECT (mi), "page", (gpointer)0);
+  gtk_menu_append (GTK_MENU (menutype), mi);
+  mi = gtk_menu_item_new_with_label (_("Reminder"));
+  gtk_signal_connect (GTK_OBJECT (mi), "activate", GTK_SIGNAL_FUNC (set_notebook_page), notebooktype);
+  gtk_object_set_data (GTK_OBJECT (mi), "page", (gpointer)1);
+  gtk_menu_append (GTK_MENU (menutype), mi);
+  gtk_option_menu_set_menu (GTK_OPTION_MENU (optionmenutype), menutype);
+
 /* Begin event vbox */
   gtk_combo_set_popdown_strings (GTK_COMBO (starttime), times);
   gtk_combo_set_popdown_strings (GTK_COMBO (endtime), times);
 
   s->startdate = gtk_date_combo_new ();
   s->enddate = gtk_date_combo_new ();
+  s->reminderdate = gtk_date_combo_new ();
   
   gtk_box_pack_end (GTK_BOX (startdatebox), starttime, TRUE, TRUE, 2);
   gtk_box_pack_end (GTK_BOX (startdatebox), starttimelabel, FALSE, FALSE, 2);
@@ -528,11 +545,29 @@ edit_event_window (void)
   gtk_box_pack_end (GTK_BOX (enddatebox), s->enddate, TRUE, TRUE, 2);
   gtk_box_pack_end (GTK_BOX (enddatebox), enddatelabel, FALSE, FALSE, 2);
 
-  /* disable "all day" until it's better supported */
-  gtk_widget_set_sensitive (alldaybutton, 0);
+  gtk_box_pack_start (GTK_BOX (vboxappointment), startdatebox, FALSE, FALSE, 2);
+  gtk_box_pack_start (GTK_BOX (vboxappointment), enddatebox, FALSE, FALSE, 0);
+  gtk_widget_show_all (vboxappointment);
 
-  gtk_signal_connect (GTK_OBJECT (alldaybutton), "toggled", 
+  gtk_box_pack_start (GTK_BOX (hboxreminder1), gtk_label_new (_("Date:")), FALSE, FALSE, 2);
+  gtk_box_pack_start (GTK_BOX (hboxreminder1), s->reminderdate, TRUE, TRUE, 2);
+
+  s->remindertimebutton = gtk_check_button_new_with_label (_("Time:"));
+  gtk_signal_connect (GTK_OBJECT (s->remindertimebutton), "clicked", 
 		      GTK_SIGNAL_FUNC (recalculate_sensitivities), window);
+  s->remindertime = gtk_combo_new ();
+  gtk_combo_set_popdown_strings (GTK_COMBO (s->remindertime), times);
+  gtk_box_pack_start (GTK_BOX (hboxreminder2), s->remindertimebutton, FALSE, FALSE, 2);
+  gtk_box_pack_start (GTK_BOX (hboxreminder2), s->remindertime, TRUE, TRUE, 2);
+
+  gtk_box_pack_start (GTK_BOX (vboxreminder), hboxreminder1, FALSE, FALSE, 2);
+  gtk_box_pack_start (GTK_BOX (vboxreminder), hboxreminder2, FALSE, FALSE, 0);
+  gtk_widget_show_all (vboxreminder);
+
+  gtk_notebook_set_show_tabs (GTK_NOTEBOOK (notebooktype), FALSE);
+  gtk_notebook_set_show_border (GTK_NOTEBOOK (notebooktype), FALSE);
+  gtk_notebook_append_page (GTK_NOTEBOOK (notebooktype), vboxappointment, NULL);
+  gtk_notebook_append_page (GTK_NOTEBOOK (notebooktype), vboxreminder, NULL);
 
   gtk_text_set_editable (GTK_TEXT (description), TRUE);
   gtk_text_set_word_wrap (GTK_TEXT (description), TRUE);
@@ -554,10 +589,9 @@ edit_event_window (void)
   gtk_box_pack_start (GTK_BOX (summaryhbox), summarylabel, FALSE, FALSE, 2);
   gtk_box_pack_start (GTK_BOX (summaryhbox), summaryentry, TRUE, TRUE, 2);
 
-  gtk_box_pack_start (GTK_BOX (vboxevent), startdatebox, FALSE, FALSE, 2);
-  gtk_box_pack_start (GTK_BOX (vboxevent), enddatebox, FALSE, FALSE, 2);
-  gtk_box_pack_start (GTK_BOX (vboxevent), alldaybutton, FALSE, FALSE, 2);  
+  gtk_box_pack_start (GTK_BOX (vboxevent), optionmenutype, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vboxevent), summaryhbox, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vboxevent), notebooktype, FALSE, FALSE, 2);
   gtk_box_pack_start (GTK_BOX (vboxevent), descriptionframe, TRUE, TRUE, 2);
   
   gtk_widget_show_all (vboxevent);
@@ -703,8 +737,8 @@ edit_event_window (void)
 
   /*gtk_box_pack_start_show (GTK_BOX (monthlyhbox2), weekbutton, FALSE, FALSE, 0);*/
 
-  optionmenu1 = gtk_option_menu_new();
-  optionmenu2 = gtk_option_menu_new();
+  optionmenu1 = gtk_option_menu_new ();
+  optionmenu2 = gtk_option_menu_new ();
 
   gtk_menu_append (GTK_MENU (menu1),
   		   gtk_menu_item_new_with_label (_("first")));
@@ -876,7 +910,6 @@ edit_event_window (void)
   s->deletebutton = buttondelete;
   s->starttime = starttime;
   s->endtime = endtime;
-  s->alldaybutton = alldaybutton;
   s->alarmbutton = alarmbutton;
   s->alarmspin = alarmspin;
   s->alarmoption = alarmoption;
