@@ -24,8 +24,8 @@
  * GTK+ at ftp://ftp.gtk.org/pub/gtk/. 
  */
 
-#ifndef __GTK_PIXMAP_H__
-#define __GTK_PIXMAP_H__
+#ifndef __GPE_PIXMAP_H__
+#define __GPE_PIXMAP_H__
 
 
 #include <gdk/gdk.h>
@@ -37,17 +37,17 @@ extern "C" {
 #endif /* __cplusplus */
 
 
-#define GTK_TYPE_PIXMAP			 (gtk_pixmap_get_type ())
-#define GTK_PIXMAP(obj)			 (GTK_CHECK_CAST ((obj), GTK_TYPE_PIXMAP, GtkPixmap))
-#define GTK_PIXMAP_CLASS(klass)		 (GTK_CHECK_CLASS_CAST ((klass), GTK_TYPE_PIXMAP, GtkPixmapClass))
-#define GTK_IS_PIXMAP(obj)		 (GTK_CHECK_TYPE ((obj), GTK_TYPE_PIXMAP))
-#define GTK_IS_PIXMAP_CLASS(klass)	 (GTK_CHECK_CLASS_TYPE ((klass), GTK_TYPE_PIXMAP))
+#define GTK_TYPE_GPE_PIXMAP		 (gtk_pixmap_get_type ())
+#define GTK_GPE_PIXMAP(obj)		 (GTK_CHECK_CAST ((obj), GTK_TYPE_GPE_PIXMAP, GtkGpePixmap))
+#define GTK_GPE_PIXMAP_CLASS(klass)	 (GTK_CHECK_CLASS_CAST ((klass), GTK_TYPE_GPE_PIXMAP, GtkGpePixmapClass))
+#define GTK_IS_GPE_PIXMAP(obj)		 (GTK_CHECK_TYPE ((obj), GTK_TYPE_GPE_PIXMAP))
+#define GTK_IS_GPE_PIXMAP_CLASS(klass)	 (GTK_CHECK_CLASS_TYPE ((klass), GTK_TYPE_GPE_PIXMAP))
 
 
-typedef struct _GtkPixmap	GtkPixmap;
-typedef struct _GtkPixmapClass	GtkPixmapClass;
+typedef struct _GtkGpePixmap		GtkGpePixmap;
+typedef struct _GtkGpePixmapClass	GtkGpePixmapClass;
 
-struct _GtkPixmap
+struct _GtkGpePixmap
 {
   GtkMisc misc;
   
@@ -59,26 +59,26 @@ struct _GtkPixmap
   guint build_insensitive : 1;
 };
 
-struct _GtkPixmapClass
+struct _GtkGpePixmapClass
 {
   GtkMiscClass parent_class;
 };
 
 
-GtkType	   gtk_pixmap_get_type	 (void);
-GtkWidget* gtk_pixmap_new	 (GdkPixmap  *pixmap,
+GtkType	   gtk_gpe_pixmap_get_type	 (void);
+GtkWidget* gtk_gpe_pixmap_new	 (GdkPixmap  *pixmap,
 				  GdkBitmap  *mask);
-void	   gtk_pixmap_set	 (GtkPixmap  *pixmap,
+void	   gtk_gpe_pixmap_set	 (GtkGpePixmap  *pixmap,
 				  GdkPixmap  *val,
 				  GdkBitmap  *mask);
-void	   gtk_pixmap_get	 (GtkPixmap  *pixmap,
+void	   gtk_gpe_pixmap_get	 (GtkGpePixmap  *pixmap,
 				  GdkPixmap **val,
 				  GdkBitmap **mask);
 
-void       gtk_pixmap_set_build_insensitive (GtkPixmap *pixmap,
+void       gtk_gpe_pixmap_set_build_insensitive (GtkGpePixmap *pixmap,
 		                             guint build);
 
-void	   gtk_pixmap_set_prelight (GtkPixmap *pixmap, GdkPixmap *val);
+void	   gtk_gpe_pixmap_set_prelight (GtkGpePixmap *pixmap, GdkPixmap *val);
 
 
 #ifdef __cplusplus

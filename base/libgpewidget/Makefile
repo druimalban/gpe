@@ -3,7 +3,7 @@ PACKAGE = libgpewidget
 
 SONAME = libgpewidget.so.0
 
-MEMBERS = gtkdatesel gtkdatecombo errorbox init pixmaps gtksmallentry smallbox gtkminifilesel render gtkpixmap dirbrowser
+MEMBERS = gtkdatesel gtkdatecombo errorbox init pixmaps gtksmallentry smallbox gtkminifilesel render gtkgpepixmap dirbrowser
 
 CFLAGS = `gdk-pixbuf-config --cflags` `gtk-config --cflags` -DPREFIX=\"$(PREFIX)\" -DPACKAGE=\"$(PACKAGE)\" -D_GNU_SOURCE -Wall -fPIC
 ifeq ($(DEBUG),yes)

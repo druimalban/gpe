@@ -27,21 +27,21 @@
  * GTK+ at ftp://ftp.gtk.org/pub/gtk/. 
  */
 
-#include "gtkpixmap.h"
 #include <gtk/gtk.h>
+#include "gtkgpepixmap.h"
 
 
-static void gtk_pixmap_class_init (GtkPixmapClass  *klass);
-static void gtk_pixmap_init       (GtkPixmap       *pixmap);
-static gint gtk_pixmap_expose     (GtkWidget       *widget,
+static void gtk_gpe_pixmap_class_init (GtkGpePixmapClass  *klass);
+static void gtk_gpe_pixmap_init       (GtkGpePixmap       *pixmap);
+static gint gtk_gpe_pixmap_expose     (GtkWidget       *widget,
 				   GdkEventExpose  *event);
-static void gtk_pixmap_finalize   (GtkObject       *object);
-static void build_insensitive_pixmap (GtkPixmap *gtkpixmap);
+static void gtk_gpe_pixmap_finalize   (GtkObject       *object);
+static void build_insensitive_pixmap (GtkGpePixmap *gtkpixmap);
 
 static GtkWidgetClass *parent_class;
 
 GtkType
-gtk_pixmap_get_type (void)
+gtk_gpe_pixmap_get_type (void)
 {
   static GtkType pixmap_type = 0;
 
@@ -49,11 +49,11 @@ gtk_pixmap_get_type (void)
     {
       static const GtkTypeInfo pixmap_info =
       {
-	"GtkPixmap",
-	sizeof (GtkPixmap),
-	sizeof (GtkPixmapClass),
-	(GtkClassInitFunc) gtk_pixmap_class_init,
-	(GtkObjectInitFunc) gtk_pixmap_init,
+	"GtkGpePixmap",
+	sizeof (GtkGpePixmap),
+	sizeof (GtkGpePixmapClass),
+	(GtkClassInitFunc) gtk_gpe_pixmap_class_init,
+	(GtkObjectInitFunc) gtk_gpe_pixmap_init,
 	/* reserved_1 */ NULL,
         /* reserved_2 */ NULL,
         (GtkClassInitFunc) NULL,
@@ -66,7 +66,7 @@ gtk_pixmap_get_type (void)
 }
 
 static void
-gtk_pixmap_class_init (GtkPixmapClass *class)
+gtk_gpe_pixmap_class_init (GtkGpePixmapClass *class)
 {
   GtkObjectClass *object_class;
   GtkWidgetClass *widget_class;
@@ -75,12 +75,12 @@ gtk_pixmap_class_init (GtkPixmapClass *class)
   widget_class = (GtkWidgetClass*) class;
   parent_class = gtk_type_class (gtk_widget_get_type ());
 
-  object_class->finalize = gtk_pixmap_finalize;
-  widget_class->expose_event = gtk_pixmap_expose;
+  object_class->finalize = gtk_gpe_pixmap_finalize;
+  widget_class->expose_event = gtk_gpe_pixmap_expose;
 }
 
 static void
-gtk_pixmap_init (GtkPixmap *pixmap)
+gtk_gpe_pixmap_init (GtkGpePixmap *pixmap)
 {
   GTK_WIDGET_SET_FLAGS (pixmap, GTK_NO_WINDOW);
 
@@ -90,30 +90,30 @@ gtk_pixmap_init (GtkPixmap *pixmap)
 }
 
 GtkWidget*
-gtk_pixmap_new (GdkPixmap *val,
+gtk_gpe_pixmap_new (GdkPixmap *val,
 		GdkBitmap *mask)
 {
-  GtkPixmap *pixmap;
+  GtkGpePixmap *pixmap;
    
   g_return_val_if_fail (val != NULL, NULL);
   
-  pixmap = gtk_type_new (gtk_pixmap_get_type ());
+  pixmap = gtk_type_new (gtk_gpe_pixmap_get_type ());
   
   pixmap->build_insensitive = TRUE;
-  gtk_pixmap_set (pixmap, val, mask);
+  gtk_gpe_pixmap_set (pixmap, val, mask);
   
   return GTK_WIDGET (pixmap);
 }
 
 static void
-gtk_pixmap_finalize (GtkObject *object)
+gtk_gpe_pixmap_finalize (GtkObject *object)
 {
-  gtk_pixmap_set (GTK_PIXMAP (object), NULL, NULL);
+  gtk_gpe_pixmap_set (GTK_GPE_PIXMAP (object), NULL, NULL);
   (* GTK_OBJECT_CLASS (parent_class)->finalize) (object);
 }
 
 void
-gtk_pixmap_set (GtkPixmap *pixmap,
+gtk_gpe_pixmap_set (GtkGpePixmap *pixmap,
 		GdkPixmap *val,
 		GdkBitmap *mask)
 {
@@ -170,7 +170,7 @@ gtk_pixmap_set (GtkPixmap *pixmap,
 }
 
 void
-gtk_pixmap_get (GtkPixmap  *pixmap,
+gtk_gpe_pixmap_get (GtkGpePixmap  *pixmap,
 		GdkPixmap **val,
 		GdkBitmap **mask)
 {
@@ -184,10 +184,10 @@ gtk_pixmap_get (GtkPixmap  *pixmap,
 }
 
 static gint
-gtk_pixmap_expose (GtkWidget      *widget,
+gtk_gpe_pixmap_expose (GtkWidget      *widget,
 		   GdkEventExpose *event)
 {
-  GtkPixmap *pixmap;
+  GtkGpePixmap *pixmap;
   GtkMisc *misc;
   gint x, y;
 
@@ -197,7 +197,7 @@ gtk_pixmap_expose (GtkWidget      *widget,
 
   if (GTK_WIDGET_DRAWABLE (widget))
     {
-      pixmap = GTK_PIXMAP (widget);
+      pixmap = GTK_GPE_PIXMAP (widget);
       misc = GTK_MISC (widget);
 
       x = (widget->allocation.x * (1.0 - misc->xalign) +
@@ -251,7 +251,7 @@ gtk_pixmap_expose (GtkWidget      *widget,
 }
 
 void
-gtk_pixmap_set_build_insensitive (GtkPixmap *pixmap, guint build)
+gtk_gpe_pixmap_set_build_insensitive (GtkGpePixmap *pixmap, guint build)
 {
   g_return_if_fail (pixmap != NULL);
   g_return_if_fail (GTK_IS_PIXMAP (pixmap));
@@ -265,7 +265,7 @@ gtk_pixmap_set_build_insensitive (GtkPixmap *pixmap, guint build)
 }
 
 void
-gtk_pixmap_set_prelight (GtkPixmap *pixmap, GdkPixmap *val)
+gtk_gpe_pixmap_set_prelight (GtkGpePixmap *pixmap, GdkPixmap *val)
 {
   g_return_if_fail (pixmap != NULL);
   g_return_if_fail (GTK_IS_PIXMAP (pixmap));
@@ -278,7 +278,7 @@ gtk_pixmap_set_prelight (GtkPixmap *pixmap, GdkPixmap *val)
 }
 
 static void
-build_insensitive_pixmap(GtkPixmap *gtkpixmap)
+build_insensitive_pixmap(GtkGpePixmap *gtkpixmap)
 {
   GdkGC *gc;
   GdkPixmap *pixmap = gtkpixmap->pixmap;

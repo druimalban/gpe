@@ -1,5 +1,11 @@
 2002-06-16  Philip Blundell  <pb@debian.org>
 
+	* Makefile (MEMBERS): Add gtkgpepixmap.
+	* gtkgpepixmap.c: New file.
+	* gtkgpepixmap.h: Likewise.
+
+2002-06-16  Philip Blundell  <pb@debian.org>
+
 	* Makefile (install-devel, upstream, dpkg): New rules.
 	(clean): Remove libgpewidget.so symlink.
 	(ipkg): Expect files in familiar subdir.
