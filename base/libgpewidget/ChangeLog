@@ -4,6 +4,8 @@
 
 2003-09-05  Philip Blundell  <philb@gnu.org>
 
+	* Makefile (install-program): Install background images again.
+
 	* gpeclockface.c (HAVE_XRENDER): New macro.  Only define if
 	XRENDER 0.5 or later is detected.
 	(struct _GpeClockFace): Elide RENDER support if !HAVE_XRENDER.
