@@ -20,7 +20,7 @@ endif
 
 CFLAGS = $(GTKCFLAGS) -D_GNU_SOURCE -Wall -fomit-frame-pointer -I../libgpewidget -DVERSION=\"$(VERSION)\" -DPREFIX=\"$(PREFIX)\"
 LDFLAGS = $(GTKLDFLAGS) -L../libgpewidget  -lgpewidget -lcrypt
-CC = gcc
+CC = arm-linux-gcc
 
 MEMBERS  = main applets parser suid
 MEMBERS += misc

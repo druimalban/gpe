@@ -183,7 +183,7 @@ GtkWidget* create_nwstatic_widgets(NWInterface_t iface)
 	// page items  
 	create_editable_entry(&iface, ctable, "address", _("Address"), iface.address, 1);
 	create_editable_entry(&iface, ctable, "netmask",_("Netmask"), iface.netmask, 2);
-	create_editable_entry(&iface, ctable, "broadcast",_("broadcast"), iface.broadcast, 3);
+	create_editable_entry(&iface, ctable, "broadcast",_("Broadcast"), iface.broadcast, 3);
 	create_editable_entry(&iface, ctable, "network",_("Network"), iface.network, 4);
 	create_editable_entry(&iface, ctable, "gateway",_("Gateway"), iface.gateway, 5);
 	return ctable;
@@ -443,7 +443,7 @@ GtkWidget *Network_Build_Objects()
     gtk_object_set_data (GTK_OBJECT (table), "table", table);
 	gtk_widget_set_name(GTK_WIDGET(table),"table");
 
-	gtk_container_set_border_width (GTK_CONTAINER (table), gpe_border);
+	gtk_container_set_border_width (GTK_CONTAINER (table), 2);//gpe_border
 
 	if (!set_file_open(TRUE))
 		gpe_error_box( "Couldn't read network configuration.\n");
