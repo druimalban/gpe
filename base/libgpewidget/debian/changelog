@@ -1,3 +1,10 @@
+libgpewidget (0.09-1) unstable; urgency=low
+
+  * New upstream version
+  * Add more packages to Build-Depends
+
+ -- Phil Blundell <pb@debian.org>  Tue,  9 Jul 2002 19:39:28 +0100
+
 libgpewidget (0.05-1) unstable; urgency=low
 
   * Initial release.

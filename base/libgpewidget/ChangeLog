@@ -1,5 +1,13 @@
 2002-07-09  Philip Blundell  <philb@gnu.org>
 
+	* Version 0.10 released.
+
+2002-07-09  Philip Blundell  <philb@gnu.org>
+
+	* nocursor.c (gdk_window_set_cursor): Remove stray debugging.
+
+2002-07-09  Philip Blundell  <philb@gnu.org>
+
 	* Version 0.09 released.
 
 2002-07-09  Philip Blundell  <philb@gnu.org>
