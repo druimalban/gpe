@@ -199,7 +199,7 @@ show_image (GtkWidget *widget, gpointer *udata)
 void
 open_from_file (gchar *filename)
 {
-  GList *buf;
+  GList *buf = NULL;
 
   buf = g_list_append (buf, (gpointer) filename);
   show_image (NULL, buf);
