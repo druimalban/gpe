@@ -75,6 +75,7 @@ drop_calendar(GtkWidget *widget,
 static void
 gtk_date_combo_init (GtkDateCombo *combo)
 {
+  GtkWidget *arrow;
   time_t t;
   struct tm tm;
   
@@ -85,15 +86,25 @@ gtk_date_combo_init (GtkDateCombo *combo)
   combo->month = tm.tm_mon;
   combo->day = tm.tm_mday;
 
+  arrow = gtk_arrow_new (GTK_ARROW_DOWN, GTK_SHADOW_OUT);
+  gtk_widget_show (arrow);
+
   combo->button = gtk_button_new ();
   combo->entry = gtk_entry_new ();
 
   update_text (combo);
 
+  gtk_container_add (GTK_CONTAINER (combo->button), arrow);
+
   gtk_box_pack_start (GTK_BOX (combo), combo->entry, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (combo), combo->button, FALSE, FALSE, 0);
 
+  GTK_WIDGET_UNSET_FLAGS (combo->button, GTK_CAN_FOCUS);
+
   gtk_entry_set_editable (GTK_ENTRY (combo->entry), FALSE);
+
+  gtk_widget_show (combo->button);
+  gtk_widget_show (combo->entry);
 
   combo->cal = gtk_calendar_new ();
   combo->calw = gtk_window_new (GTK_WINDOW_POPUP);
@@ -103,9 +114,6 @@ gtk_date_combo_init (GtkDateCombo *combo)
 
   gtk_window_set_policy (GTK_WINDOW (combo->calw), FALSE, FALSE, TRUE);
       
-  gtk_container_add (GTK_CONTAINER (combo->button), 
-		     gtk_arrow_new (GTK_ARROW_DOWN, GTK_SHADOW_OUT));
-
   gtk_signal_connect (GTK_OBJECT (combo->button), "clicked",
 		      GTK_SIGNAL_FUNC (drop_calendar), combo);
 
