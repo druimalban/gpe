@@ -7,5 +7,6 @@ Version: _VERSION_
 Architecture: all
 Maintainer: GPE Hackers <gpe@handhelds.org>
 Depends: _DEPS_
+Source: _SOURCE_
 Description: Task package for the whole of GPE. Note that it does *not* include extra packages found in gpe-task-extra-apps and gpe-task-extra-games, which must be installed separatly.
 

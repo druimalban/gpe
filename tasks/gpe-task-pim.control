@@ -5,4 +5,5 @@ Version: _VERSION_
 Architecture: all
 Maintainer: GPE Hackers <gpe@handhelds.org>
 Recommends: _DEPS_
+Source: _SOURCE_
 Description: Task package for GPE PIM (Personal Information Managers) applications.

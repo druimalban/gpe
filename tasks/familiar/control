@@ -1,0 +1,8 @@
+Package: gpe-tasks-src
+Section: GPE/tasks
+Priority: extra
+Version: VERSION
+Architecture: all
+Maintainer: GPE Hackers <gpe@handhelds.org>
+Source: SOURCE
+Description: GPE tasks. This package is just used for source distribution of task packages.

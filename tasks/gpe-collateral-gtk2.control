@@ -6,4 +6,5 @@ Provides: gpe-collateral
 Architecture: all
 Maintainer: GPE Hackers <gpe@handhelds.org>
 Depends: _DEPS_
+Source: _SOURCE_
 Description: GPE miscellanea: GTK 2 version.

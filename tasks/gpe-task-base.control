@@ -5,4 +5,5 @@ Version: _VERSION_
 Architecture: all
 Maintainer: GPE Hackers <gpe@handhelds.org>
 Depends: _DEPS_
+Source: _SOURCE_
 Description: Task package for GPE base packages. You really *need* them to run GPE!

@@ -5,18 +5,20 @@
 # * Change the content of a task:
 #
 #   1. edit       DEP_<task-name>
-#   2. incremente VER_<task-name>
+#   2. increment  VERSION
 #
 #
 # * Add a task:
 #
-#   1. create a file <task-name>.control, including _VERSION_ and _DEPS_ variables
+#   1. create a file <task-name>.control,
+#      including _SOURCE_, _VERSION_ and _DEPS_ variables
 #   2. create a variable DEP_<task-name>
-#   3. create a variable VER_<task-name>
-#   4. add the task to ALL_TASKS
+#   3. add the task to ALL_TASKS
 #
 #   that's it.
 #------------------------
+
+VERSION = 0.43
 
 ALL_TASKS = \
     gpe2 \
@@ -34,28 +36,44 @@ ALL_TASKS = \
     gpe-task-extra-games \
 
 default: $(ALL_TASKS)
+	make printinfo
 
-TMP_FILE = temporary_file_which_will_be_destroyed_without_warning
+#-----------------------------------------------------
+#DIST_FILES = Makefile $(patsubst %,%.control,$(ALL_TASKS))
+PACKAGE = gpe-tasks-src
+
+ifeq ($(CVSBUILD),yes)
+BUILD = ../base/build
+else
+BUILD = build
+endif
+
+include $(BUILD)/Makefile.dpkg_ipkg
+
+
+TMP_FILE1 = __tmp1
+TMP_FILE2 = __tmp2
 % : %.control
 	@rm -rf dist
 	@mkdir -p dist/CONTROL
-	@sed 's:_VERSION_:$(VER_$@):' < $< > $(TMP_FILE)
-	@sed 's:_DEPS_:$(DEP_$@):' < $(TMP_FILE) > dist/CONTROL/control
-	@rm -rf $(TMP_FILE)
+	@sed 's:_VERSION_:$(VERSION):'  < $<           > $(TMP_FILE1)
+	@sed 's:_DEPS_:$(DEP_$@):'      < $(TMP_FILE1) > $(TMP_FILE2)
+	@sed 's$$_SOURCE_$$$(SOURCE)$$' < $(TMP_FILE2) > dist/CONTROL/control
+	@rm -rf $(TMP_FILE1) $(TMP_FILE2)
 	@ipkg-build -o root -g root dist
-	gpg -sb --armor $@_$(VER_$@)_all.ipk
+	gpg -sb --armor $@_$(VERSION)_all.ipk
 
 clean:
 	rm -rf dist *.ipk *.ipk.asc *~ .*~
+	rm -rf familiar/dist familiar/*~
+
 
 #====================================================
 #================= TASKS DEFINITION =================
 
-VER_gpe2 = 0.02
 DEP_gpe2 = gpe-apps2 gpe-task-games
 
 #---Meta tasks
-VER_gpe-apps2 = 0.42
 DEP_gpe-apps2 = \
     gpe-task-base, \
     gpe-task-comm, \
@@ -66,7 +84,6 @@ DEP_gpe-apps2 = \
 
 
 #---This is the base to run GPE
-VER_gpe-task-base = 0.11
 DEP_gpe-task-base = \
     \
     gpe-collateral-gtk2, \
@@ -116,17 +133,15 @@ DEP_gpe-task-base = \
     nsqld
 #FIXME: could be refined (contains hardware dependant packages)
 
-VER_gpe-collateral-gtk2 = 0.05
 DEP_gpe-collateral-gtk2 = \
     gtk2-theme-angelistic, \
     ttf-bitstream-vera
 
 #------------------------------------------
-# The following aim to be USER LEVEL tasks
+# The following aims to be USER LEVEL tasks
 #------------------------------------------
 
 #------------------------------------------ PIM applications
-VER_gpe-task-pim = 0.5
 DEP_gpe-task-pim = \
     gpe-task-base, \
     gpe-calendar2, \
@@ -146,7 +161,6 @@ DEP_gpe-task-pim = \
 #FIXME: 2 calculators!
 
 #------------------------------------------ System utilities
-VER_gpe-task-utils = 0.3
 DEP_gpe-task-utils = \
     gpe-task-base, \
     gpe-edit2, \
@@ -154,7 +168,6 @@ DEP_gpe-task-utils = \
     gpe-taskmanager
 
 #------------------------------------------ Communication apps
-VER_gpe-task-comm = 0.3
 DEP_gpe-task-comm = \
     gpe-task-base, \
     dillo2, \
@@ -163,7 +176,6 @@ DEP_gpe-task-comm = \
 #FIXME: add email/contacts
 
 #------------------------------------------ Multimedia apps
-VER_gpe-task-mmedia = 0.2
 DEP_gpe-task-mmedia = \
     gpe-task-base, \
     gpe-gallery, \
@@ -171,13 +183,11 @@ DEP_gpe-task-mmedia = \
     gpe-mixer
 
 #------------------------------------------ Extra apps
-VER_gpe-task-extra-apps = 0.3
 DEP_gpe-task-extra-apps = \
     gpe-task-base, \
     gpe-filemanager2
 
 #------------------------------------------ Games
-VER_gpe-task-games = 0.2
 DEP_gpe-task-games = \
     gpe-tetris2, \
     xdemineur, \
@@ -190,7 +200,6 @@ DEP_gpe-task-games = \
 #FIXME: couple of games to move to extra-games.
 
 #------------------------------------------ Extra games
-VER_gpe-task-extra-games = 0.2
 DEP_gpe-task-extra-games = \
     repton, \
     sfcave-sdl, \
