@@ -75,6 +75,7 @@ main (int argc, char *argv[])
   gtk_signal_connect (GTK_OBJECT (button), "clicked", clicked, NULL);
 
   gtk_container_add (GTK_CONTAINER (window), button);
+  gtk_widget_set_usize (window, 16, 16);
 
   dpy = GDK_WINDOW_XDISPLAY (window->window);
   root = RootWindow (dpy, 0);
