@@ -2,6 +2,7 @@ Package: gpe-question2
 Section: x11
 Priority: optional
 Version: VERSION
+Source: SOURCE
 Architecture: arm
 Maintainer: Moray Allan <moray@handhelds.org>
 Depends: libgpewidget1, gpe-icons
