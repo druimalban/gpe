@@ -64,7 +64,9 @@ filter_func (GdkXEvent *xev, GdkEvent *ev, gpointer p)
       GtkWidget *widget = GTK_WIDGET (list->data);
       int x = xc->data.l[1], y = xc->data.l[2];
       int ax, ay;
-
+      
+      if (!GTK_WIDGET_DRAWABLE (widget)) continue;
+      
       if (GTK_WIDGET_NO_WINDOW (widget))
 	{
 	  ax = widget->allocation.x;
