@@ -2,6 +2,8 @@
 
 	* gpe-session-scripts 0.37 released.
 
+	* gpe-login 0.39 released.
+
 2003-02-15  Philip Blundell  <philb@gnu.org>
 
 	* X11/gpe-login.pre-session: Change ownership on
