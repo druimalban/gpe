@@ -8,7 +8,7 @@ IN_LIBGPEWIDGET = yes
 
 LINGUAS = ro de id pt fr ga wa sv nl cs
 
-MEMBERS = gtkdatecombo errorbox init pixmaps smallbox render dirbrowser picturebutton what stylus screensize question gtksimplemenu spacing tray tap translabel popup popup_menu gpetimesel gpeiconlistitem gpeclockface gpetooltips2 gpe-iconlist gpewindowlist
+MEMBERS = gtkdatecombo errorbox init pixmaps smallbox render dirbrowser picturebutton what stylus screensize question gtksimplemenu spacing tray tap translabel popup popup_menu gpetimesel gpeiconlistitem gpeclockface gpetooltips2 gpe-iconlist gpewindowlist gpehelp about
 
 SONAME = libgpewidget.so.1
 BINPACKAGE = libgpewidget1

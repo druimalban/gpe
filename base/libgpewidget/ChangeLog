@@ -1,3 +1,8 @@
+2004-02-21  Florian Boor <florian.boor@kernelconcepts.de>
+
+	* gpehelp.c, gpehelp.h: New files implementing gpe_show_help().
+	* removed gpe/about.h: Obsolete header file.
+	
 2004-02-19  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.75 released.
@@ -1877,4 +1882,3 @@
 	* pixmaps.c: Use gdk_pixbuf rather than gdk_imlib.
 	* errorbox.c: Likewise.
 	* Makefile: Add gdk-pixbuf flags to compile and link.
-	
