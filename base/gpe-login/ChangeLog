@@ -1,5 +1,9 @@
 2003-03-24  Philip Blundell  <philb@gnu.org>
 
+	* gpe-login 0.47 released.
+
+2003-03-24  Philip Blundell  <philb@gnu.org>
+
 	* gpe-login.c (parse_xkbd_args): Make first arg const to avoid
 	warning.
 
