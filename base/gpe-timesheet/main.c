@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2002, 2003 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -35,6 +35,22 @@ struct gpe_icon my_icons[] = {
 };
 
 static GdkWindow *top_level_window;
+
+static GtkWidget *btn_con, *btn_coff;
+
+static void
+set_active (int start, int stop) 
+{
+  if (start)
+    gtk_widget_set_sensitive (btn_con, TRUE);
+  else
+    gtk_widget_set_sensitive (btn_con, FALSE);
+
+  if (stop)
+    gtk_widget_set_sensitive (btn_coff, TRUE);
+  else
+    gtk_widget_set_sensitive (btn_coff, FALSE);
+}
 
 static void
 mark_started (GtkCTree *ct, GtkCTreeNode *node)
@@ -178,7 +194,9 @@ start_timing (GtkWidget *w, gpointer user_data)
       if (confirm_dialog (&text, _("Clocking in:"), t->description))
 	{
 	  log_entry (START, time (NULL), t, text);
+	  t->started = TRUE;
 	  mark_started (ct, node);
+	  set_active (0, 1);
 	  g_free (text);
 	}
     }
@@ -198,6 +216,8 @@ stop_timing (GtkWidget *w, gpointer user_data)
 	{
 	  gtk_ctree_node_set_text (ct, node, 1, "");
 	  log_entry (STOP, time (NULL), t, text);
+	  t->started = FALSE;
+	  set_active (1, 0);
 	  g_free (text);
 	}
     }
@@ -292,6 +312,25 @@ load_tasks (GSList *list, GtkCTree *ctree, GtkCTreeNode *parent)
     }
 }
 
+static void
+tree_select_row (GtkCTree *ct, GList *node, gint col, gpointer data)
+{
+  if (GTK_CLIST (ct)->selection)
+    {
+      GtkCTreeNode *node = GTK_CTREE_NODE (GTK_CLIST (ct)->selection->data);
+      struct task *t;
+      t = gtk_ctree_node_get_row_data (ct, node);
+      if (t->started)
+        {
+	  set_active (0, 1);
+	}
+      else
+	{
+	  set_active (1, 0);
+	}
+    }
+}
+
 int
 main(int argc, char *argv[])
 {
@@ -323,6 +362,9 @@ main(int argc, char *argv[])
   gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
 
   tree = gtk_ctree_new (2, 0);
+  g_signal_connect (G_OBJECT(tree), "tree-select-row",
+		    tree_select_row, NULL);
+
   chatter = gtk_label_new ("");
   gtk_misc_set_alignment (GTK_MISC (chatter), 0.0, 0.5);
 
@@ -347,15 +389,17 @@ main(int argc, char *argv[])
 
   p = gpe_find_icon ("clock");
   pw = gtk_image_new_from_pixbuf (p);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Clock on"),
+  btn_con = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Clock on"),
 			   _("Clock on"), _("Clock on"),
 			   pw, (GtkSignalFunc)start_timing, tree);
   
   p = gpe_find_icon ("stop_clock");
   pw = gtk_image_new_from_pixbuf (p);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Clock off"),
+  btn_coff = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Clock off"),
 			   _("Clock off"), _("Clock off"),
 			   pw, (GtkSignalFunc)stop_timing, tree);
+
+  set_active (0, 0);
 
   p = gpe_find_icon ("edit");
   pw = gtk_image_new_from_pixbuf (p);
@@ -374,8 +418,8 @@ main(int argc, char *argv[])
   gtk_container_add (GTK_CONTAINER (window), vbox_top);
   gtk_widget_set_usize (window, window_x, window_y);
 
-  gtk_signal_connect (GTK_OBJECT (window), "destroy",
-		      gtk_main_quit, NULL);
+  g_signal_connect (G_OBJECT (window), "delete-event", 
+		    G_CALLBACK (gtk_main_quit), NULL);
 
   gtk_widget_realize (window);
 

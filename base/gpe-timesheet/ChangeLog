@@ -1,3 +1,12 @@
+2003-06-28  Philip Blundell  <philb@gnu.org>
+
+	* main.c (main): Hook quit to delete-event signal on main window,
+	not destroy.
+
+2003-06-28  Robert Mibus  <mibus@handhelds.org>
+
+	* main.c: Stop people from clocking in/out if they are already in/out
+
 2003-05-09  Philip Blundell  <philb@gnu.org>
 
 	* Makefile (LINGUAS): Add ro.
