@@ -1,6 +1,7 @@
 PREFIX = /usr/local
 PACKAGE = gpe-todo
 GTK2 = yes
+CVSBUILD = yes
 VERSION = 0.34
 
 LINGUAS = de id pt
@@ -16,7 +17,7 @@ endif
 CPPFLAGS += -D_GNU_SOURCE
 
 CFLAGS = $(GTKCFLAGS) -g -I../libgpewidget -Wall -I../libdm -I../libtododb
-CFLAGS += -DPACKAGE=\"gpe-todo\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
+CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 CFLAGS += -MD
 
 MEMBERS = main todo-ui list-ui configure
@@ -25,27 +26,32 @@ DEPS = $(patsubst %,%.d,$(MEMBERS))
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
-all: gpe-todo all-mo
+ifeq ($(CVSBUILD),yes)
+BUILD = ../build
+else
+BUILD = build
+endif
 
-gpe-todo: $(OBJS)
+all: $(PACKAGE) all-mo
+
+$(PACKAGE): $(OBJS)
 	$(CC) -o $@ $^ -L../libgpewidget -lgpewidget $(GTKLDFLAGS) -g -lsqlite -L../libdm -ldm -L../libtododb -ltododb
 
 clean:
-	rm -f gpe-todo $(OBJS) $(DEPS)
+	rm -f $(PACKAGE) $(OBJS) $(DEPS)
 
-all: gpe-todo
+all: $(PACKAGE)
 
 install-program: all $(PACKAGE).desktop
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
-	install -s gpe-todo $(DESTDIR)$(PREFIX)/bin/gpe-todo
+	install -s $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	mkdir -p $(DESTDIR)$(PREFIX)/lib/menu
-	install -m 644 gpe-todo.menu $(DESTDIR)$(PREFIX)/lib/menu/gpe-todo
+	install -m 644 $(PACKAGE).menu $(DESTDIR)$(PREFIX)/lib/menu/$(PACKAGE)
 	mkdir -p $(DESTDIR)$(PREFIX)/share/pixmaps
-	install -m 644 gpe-todo.png $(DESTDIR)$(PREFIX)/share/pixmaps/gpe-todo.png
+	install -m 644 $(PACKAGE).png $(DESTDIR)$(PREFIX)/share/pixmaps/$(PACKAGE).png
 	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
 	install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications/$(PACKAGE)
 
-include ../build/Makefile.dpkg_ipkg
-include ../build/Makefile.translation
-
+include $(BUILD)/Makefile.translation
+include $(BUILD)/Makefile.dpkg_ipkg
 -include $(DEPS)
