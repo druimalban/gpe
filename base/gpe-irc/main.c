@@ -211,6 +211,7 @@ disconnect_from_server (IRCServer *server)
   }
 
   gtk_widget_destroy (server->button);
+  g_free (server);
 }
 
 void
