@@ -1,3 +1,7 @@
+2002-07-31  Colin Marquardt  <colin@marquardt-home.de>
+
+	* familiar/postinst (Module): Return success.
+
 Version 0.4 to 0.5 (Sep 10 2000)
 * Install binary as sgid games insted of suid games
 * Level speeds tuneing
