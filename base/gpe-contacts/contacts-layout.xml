@@ -57,12 +57,6 @@
     </group>
   </page>
   <page>
-    <label>Photo</label>
-    <single-item>
-      <tag>PHOTO</tag>
-    </single-item>
-  </page>
-  <page>
     <label>Notes</label>
     <multi-item>
       <tag>NOTES</tag>

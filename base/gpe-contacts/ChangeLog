@@ -1,3 +1,7 @@
+2002-12-15  Philip Blundell  <philb@gnu.org>
+
+	* contacts-layout.xml: Delete "Photo" page.
+
 2002-12-09  Florian Boor <florian.boor@kernelconcepts.de>
 
 	* adb.glade: Undocumented changes.
