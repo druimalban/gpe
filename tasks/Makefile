@@ -47,6 +47,10 @@ else
 BUILD = build
 endif
 
+$(BUILD)/Makefile.dpkg_ipkg:
+	@echo "Couldn't find Makefile.dpkg_ipkg.  Maybe you need to set 'CVSBUILD=yes'?"
+	exit 1
+
 include $(BUILD)/Makefile.dpkg_ipkg
 
 
