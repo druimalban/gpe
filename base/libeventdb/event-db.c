@@ -797,7 +797,14 @@ event_db_write (event_t ev, char **err)
 
   rc = TRUE;
 
- exit:
+  /* update internal list */
+  if (ev->recur)
+    recurring_events = g_slist_sort(recurring_events, 
+                                    (GCompareFunc)event_sort_func_recur);
+  else
+    one_shot_events = g_slist_sort(one_shot_events, 
+                                   (GCompareFunc)event_sort_func);
+exit:
   event_db_forget_details (ev);
   return rc;
 }
