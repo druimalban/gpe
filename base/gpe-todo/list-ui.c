@@ -29,6 +29,32 @@ static GtkWidget *g_option;
 static struct todo_category *selected_category;
 
 GtkListStore *list_store;
+GtkWidget *item_menu;
+
+static struct todo_item *current_menu_item;
+
+static void
+item_do_edit (void)
+{
+  gtk_widget_show_all (edit_item (current_menu_item, NULL));
+
+  current_menu_item = NULL;
+}
+
+static void
+item_do_move (void)
+{
+}
+
+static void
+item_do_delete (void)
+{
+  todo_db_delete_item (current_menu_item);
+
+  refresh_items ();
+
+  current_menu_item = NULL;
+}
 
 static void
 set_category (GtkWidget *w, gpointer user_data)
@@ -148,7 +174,34 @@ refresh_items (void)
 gboolean
 button_press_event (GtkWidget *widget, GdkEventButton *b)
 {
-  /* Just swallow the events to stop the TreeView seeing them.  */
+  if (b->button == 3)
+    {
+      gint x, y;
+      GtkTreeViewColumn *col;
+      GtkTreePath *path;
+  
+      x = b->x;
+      y = b->y;
+      
+      if (gtk_tree_view_get_path_at_pos (GTK_TREE_VIEW (widget),
+					 x, y,
+					 &path, &col,
+					 NULL, NULL))
+	{
+	  GtkTreeIter iter;
+	  struct todo_item *i;
+
+	  gtk_tree_model_get_iter (GTK_TREE_MODEL (list_store), &iter, path);
+
+	  gtk_tree_model_get (GTK_TREE_MODEL (list_store), &iter, 3, &i, -1);
+
+	  gtk_menu_popup (GTK_MENU (item_menu), NULL, NULL, NULL, NULL, b->button, b->time);
+
+	  current_menu_item = i;
+
+	  gtk_tree_path_free (path);
+	}
+    }
 
   return TRUE;
 }
@@ -156,35 +209,42 @@ button_press_event (GtkWidget *widget, GdkEventButton *b)
 gboolean
 button_release_event (GtkWidget *widget, GdkEventButton *b)
 {
-  gint x, y;
-  GtkTreeViewColumn *col;
-  GtkTreePath *path;
-  
-  x = b->x;
-  y = b->y;
-
-  if (gtk_tree_view_get_path_at_pos (GTK_TREE_VIEW (widget),
-				     x, y,
-				     &path, &col,
-				     NULL, NULL))
+  if (b->button == 1)
     {
-      if (b->button == 1)
+      gint x, y;
+      GtkTreeViewColumn *col;
+      GtkTreePath *path;
+  
+      x = b->x;
+      y = b->y;
+
+      if (gtk_tree_view_get_path_at_pos (GTK_TREE_VIEW (widget),
+					 x, y,
+					 &path, &col,
+					 NULL, NULL))
 	{
 	  GtkTreeViewColumn *pix_col;
-	  
+	      
 	  pix_col = g_object_get_data (G_OBJECT (widget), "pixmap-column");
 	  
 	  if (pix_col == col)
 	    toggle_completed (path);
 	  else
 	    open_editing_window (path);
-	}
 
-      gtk_tree_path_free (path);
+	  gtk_tree_path_free (path);
+	}
     }
 
   return TRUE;
 }
+
+static GtkItemFactoryEntry menu_items[] =
+{
+  { "/_Edit",   NULL, item_do_edit,     0, "<Item>" },
+  //  { "/_Move",   NULL, item_do_move,     0, "<Item>" },
+  { "/_Delete", NULL, item_do_delete,   0, "<StockItem>", GTK_STOCK_DELETE },
+};
 
 GtkWidget *
 top_level (GtkWidget *window)
@@ -196,9 +256,19 @@ top_level (GtkWidget *window)
   GtkWidget *pw;
   GtkWidget *scrolled = gtk_scrolled_window_new (NULL, NULL);
   GtkWidget *list_view;
+  GtkAccelGroup *accel_group;
+  GtkItemFactory *item_factory;
 
   g_option = option;
   categories_menu ();
+
+  accel_group = gtk_accel_group_new ();
+  item_factory = gtk_item_factory_new (GTK_TYPE_MENU, "<main>", accel_group);
+  g_object_set_data_full (G_OBJECT (window), "<main>", item_factory, (GDestroyNotify) g_object_unref);
+  gtk_item_factory_create_items (item_factory, sizeof (menu_items) / sizeof (menu_items[0]), 
+				 menu_items, NULL);
+
+  item_menu = gtk_item_factory_get_widget (item_factory, "<main>");
 
   /* Design the Tool Bar a little better, see Bug 733 */
   /* New | Conf | Purge Down | List | Exit */

@@ -1,5 +1,12 @@
 2004-02-14  Philip Blundell  <philb@gnu.org>
 
+	* list-ui.c (item_do_edit, item_do_move, item_do_delete): New.
+	(button_press_event): Pop up item menu on button 3 press.
+	(button_release_event): Relocate conditional.
+	(top_level): Generate item menu from factory.
+
+2004-02-14  Philip Blundell  <philb@gnu.org>
+
 	* tick-box.png, notick-box.png: New files.
 	* Makefile (install-program): Install them.
 	* main.c (my_icons): Remove tick.  Add tick-box, notick-box.
