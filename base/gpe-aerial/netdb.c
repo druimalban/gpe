@@ -116,9 +116,6 @@ int save_network(usernetinfo_t* my_net)
 		sqlite_get_table_printf(netdb,SQL_SELECTBY_BSSID,&myresult,&nrow,&ncolumn,&errmsg,my_net->bssid);
 		if (nrow > 0) // we found this net in the database
 		{
-			#ifdef DEBUG
-			printf("updating %c\n",my_net.pvec[0]);
-			#endif
 			sqlite_free_table(myresult);
 			// update network
 			ret = sqlite_get_table_printf(netdb,SQL_UPDATE_NET,&myresult,&nrow,&ncolumn,&errmsg,

@@ -9,6 +9,7 @@
  * 2 of the License, or (at your option) any later version.
  */
 
+#include <string.h>
 #include <gtk/gtk.h>
 #include <gpe/spacing.h>
 #include <gpe/errorbox.h>

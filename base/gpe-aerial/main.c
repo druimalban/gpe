@@ -135,7 +135,7 @@ draw_signal (int signal)
 	gdk_draw_rectangle (GDK_DRAWABLE (dock_window), gc, TRUE, 0,
 			    (16 + 2) - signal * 30 / 255, 16,
 			    signal * 30 / 255 + 2);
-	gtk_gc_release(gc);
+	g_object_unref(G_OBJECT(gc));
 }
 
 
@@ -152,9 +152,9 @@ get_linklevel (void)
 
 	if ((wireless = fopen ("/proc/net/wireless", "r")) != NULL)
 	{
-		fgets (line, sizeof (line), wireless);
-		fgets (line, sizeof (line), wireless);
-		if (fgets (line, sizeof (line), wireless) == NULL)
+		fgets (line, sizeof (line)-1, wireless);
+		fgets (line, sizeof (line)-1, wireless);
+		if (fgets (line, sizeof (line)-1, wireless) == NULL)
 		{
 		}
 		else

@@ -39,8 +39,8 @@ ifeq ($(NATIVE),yes)
 STRIP=strip
 CC=gcc
 
-CFLAGS +=  -Wall
-LDFLAGS += -lgpewidget $(GTKLDFLAGS)
+CFLAGS +=  -Wall $(GTKCFLAGS)
+LDFLAGS += -lgpewidget $(GTKLDFLAGS) -lsqlite
 
 else # we do cross-compile...
 
