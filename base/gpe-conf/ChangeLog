@@ -1,3 +1,20 @@
+2004-10-29	Ole Reinhardt   <ole.reinhardt@kernelconcepts.de>
+	* network.c:
+	Changed handling of WiFI WEP keys. Keys are saved as string by
+	default if not in correct hexadecimal notation. A correct hexadecimal key
+	has a length of 40, 104 or 232 bit (5, 13, 29 hex values).
+
+	e.g.:
+
+	string: "Hello_world_key"
+	hex:    0102030405
+	hex:    0102-0304-05
+	hex:    0102-0304-0506-0708-0910-1112-13
+	hex:    abcdef011234abcd0000000000
+	hex:    dead-beef-0000-0000-0000-0000-00
+	hex:    feed-a0-0a-000000000000000012
+
+
 2004-10-28	Florian Boor  	<florian.boor@kernelconcepts.de>
 
 	* suid.c, network.c: Don't set nameserver if entry is empty.
