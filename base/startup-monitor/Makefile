@@ -1,6 +1,7 @@
 PACKAGE = startup-monitor
 PREFIX = /usr/local
 DEBUG = no
+VERSION = 0.15
 
 LINGUAS = 
 

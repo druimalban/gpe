@@ -24,6 +24,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <libintl.h>
 
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
@@ -38,6 +39,8 @@
 #define TIMEOUT		20
 #define POLLTIME	10
 
+#define _(x) gettext(x)
+
 struct launch
 {
   gchar *id;
@@ -50,6 +53,8 @@ static Display *xdisplay;
 static GSList *launch_list;
 static gboolean hourglass_shown;
 
+static int target_x;
+
 static MBPixbuf *mbpb;
 
 #define wy 2
@@ -57,6 +62,7 @@ static MBPixbuf *mbpb;
 static void
 show_hourglass (void)
 {
+  XMoveWindow (xdisplay, window, target_x, wy);
   XMapRaised (xdisplay, window);
   hourglass_shown = TRUE;
 }
@@ -218,6 +224,10 @@ main (int argc, char **argv)
   int fd;
   Window root;
   
+  bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
+  textdomain (PACKAGE);
+  bind_textdomain_codeset (PACKAGE, "UTF-8");
+
   xdisplay = XOpenDisplay (NULL);
   if (xdisplay == NULL)
     {
@@ -243,8 +253,10 @@ main (int argc, char **argv)
 
   root = DefaultRootWindow (xdisplay);
 
+  target_x = x - (w + 4);
+
   window = XCreateSimpleWindow (xdisplay, root,
-				x - (w + 4), wy, w, h, 0, 
+				target_x, wy, w, h, 0, 
 				BlackPixel (xdisplay, DefaultScreen (xdisplay)),
 				WhitePixel (xdisplay, DefaultScreen (xdisplay)));
 
@@ -254,6 +266,8 @@ main (int argc, char **argv)
   XChangeProperty (xdisplay, window, window_type_atom,
 		   XA_ATOM, 32,  PropModeReplace,
 		   (unsigned char *)&window_type_splash_atom, 1);
+
+  XStoreName (xdisplay, window, _("Startup monitor"));
 
   pixmap = XCreatePixmap (xdisplay, window, w, h,
 			  mbpb->depth);
@@ -339,7 +353,7 @@ main (int argc, char **argv)
 	  break;
 	case ConfigureNotify:
 	  if (xevent.xconfigure.window == root)
-	    XMoveWindow (xdisplay, window, xevent.xconfigure.width - (w + 4), wy);
+	    target_x = xevent.xconfigure.width - (w + 4);
 	  break;
 	}
 
