@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Bluetooth Control
+Comment=Panel based Bluetooth control
+Exec=gpe-bluetooth
+Type=PanelApp
+Icon=gpe-bluetooth.png
+Categories=Panel;Utility;GPE

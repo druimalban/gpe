@@ -57,6 +57,7 @@ install-program: all
 	install -m 644 network.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/bluetooth/
 	mkdir -p $(DESTDIR)$(PREFIX)/share/matchbox/mbdock
 	install -m 644 $(PACKAGE).dock $(DESTDIR)$(PREFIX)/share/matchbox/mbdock/
+	install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications/
 
 clean:
 	rm -f $(PACKAGE) $(OBJS)
