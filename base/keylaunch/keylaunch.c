@@ -46,34 +46,41 @@ struct _Key
 
 Display *dpy;
 Window root;
-Key *key;
+Key *key = NULL;
+Key *lastkey = NULL;
 int NumLockMask, CapsLockMask, ScrollLockMask;
 time_t last_update;
 char *rc_file;
+
+int previousevent_keycode = 0;
+Time previousevent_time = 0;
 
 /*
  *
  * General functions
  *
  */
- 
-void print_error(char *error, int critical)
+
+void
+print_error (char *error, int critical)
 {
 #ifdef DEBUG
-  printf("print_error\n");
+  printf ("print_error\n");
 #endif
 
-  fprintf(stderr, "KEYLAUNCH: %s", error);
-  if(critical) exit(1);
+  fprintf (stderr, "KEYLAUNCH: %s", error);
+  if (critical)
+    exit (1);
 }
 
-time_t get_last_update(char *rc_file)
+time_t
+get_last_update (char *rc_file)
 {
   struct stat stat_buf;
 
   /* If no rc file then set time equal to last_update */
-  if(stat(rc_file, &stat_buf))
-    stat_buf.st_mtime=last_update;
+  if (stat (rc_file, &stat_buf))
+    stat_buf.st_mtime = last_update;
   return stat_buf.st_mtime;
 }
 
@@ -83,111 +90,135 @@ time_t get_last_update(char *rc_file)
  *
  */
 
-void init_keyboard()
+void
+init_keyboard ()
 {
-  XModifierKeymap *xmk=NULL;
+  XModifierKeymap *xmk = NULL;
   KeyCode *map;
   int m, k;
 
 #ifdef DEBUG
-  printf("init_keyboard\n");
+  printf ("init_keyboard\n");
 #endif
 
-  xmk=XGetModifierMapping(dpy);
-  if(xmk)
-  {
-    map=xmk->modifiermap;
-    for(m=0;m<8;m++)
-      for(k=0;k<xmk->max_keypermod; k++, map++)
-      {
-        if(*map==XKeysymToKeycode(dpy, XK_Num_Lock))
-          NumLockMask=(1<<m);
-        if(*map==XKeysymToKeycode(dpy, XK_Caps_Lock))
-          CapsLockMask=(1<<m);
-        if(*map==XKeysymToKeycode(dpy, XK_Scroll_Lock))
-          ScrollLockMask=(1<<m);
-      }
-    XFreeModifiermap(xmk);
-  }
+  xmk = XGetModifierMapping (dpy);
+  if (xmk)
+    {
+      map = xmk->modifiermap;
+      for (m = 0; m < 8; m++)
+	for (k = 0; k < xmk->max_keypermod; k++, map++)
+	  {
+	    if (*map == XKeysymToKeycode (dpy, XK_Num_Lock))
+	      NumLockMask = (1 << m);
+	    if (*map == XKeysymToKeycode (dpy, XK_Caps_Lock))
+	      CapsLockMask = (1 << m);
+	    if (*map == XKeysymToKeycode (dpy, XK_Scroll_Lock))
+	      ScrollLockMask = (1 << m);
+	  }
+      XFreeModifiermap (xmk);
+    }
 }
 
-void grab_key(int keycode, unsigned int modifiers, Window w)
+void
+grab_key (int keycode, unsigned int modifiers, Window w)
 {
-  if(keycode)
-  {
-    XGrabKey(dpy, keycode, modifiers, w, True, GrabModeAsync, GrabModeAsync);
-    XGrabKey(dpy, keycode, modifiers|NumLockMask, w, False, GrabModeAsync, GrabModeAsync); 
-    XGrabKey(dpy, keycode, modifiers|CapsLockMask, w, False, GrabModeAsync, GrabModeAsync);
-    XGrabKey(dpy, keycode, modifiers|ScrollLockMask, w, False, GrabModeAsync, GrabModeAsync);
-    XGrabKey(dpy, keycode, modifiers|NumLockMask|CapsLockMask, w, False, GrabModeAsync, GrabModeAsync);
-    XGrabKey(dpy, keycode, modifiers|NumLockMask|ScrollLockMask, w, False, GrabModeAsync, GrabModeAsync);
-    XGrabKey(dpy, keycode, modifiers|NumLockMask|CapsLockMask|ScrollLockMask, w, False, GrabModeAsync, GrabModeAsync);
-  }
+  if (keycode)
+    {
+      XGrabKey (dpy, keycode, modifiers, w, True, GrabModeAsync,
+		GrabModeAsync);
+      XGrabKey (dpy, keycode, modifiers | NumLockMask, w, False,
+		GrabModeAsync, GrabModeAsync);
+      XGrabKey (dpy, keycode, modifiers | CapsLockMask, w, False,
+		GrabModeAsync, GrabModeAsync);
+      XGrabKey (dpy, keycode, modifiers | ScrollLockMask, w, False,
+		GrabModeAsync, GrabModeAsync);
+      XGrabKey (dpy, keycode, modifiers | NumLockMask | CapsLockMask, w,
+		False, GrabModeAsync, GrabModeAsync);
+      XGrabKey (dpy, keycode, modifiers | NumLockMask | ScrollLockMask, w,
+		False, GrabModeAsync, GrabModeAsync);
+      XGrabKey (dpy, keycode,
+		modifiers | NumLockMask | CapsLockMask | ScrollLockMask, w,
+		False, GrabModeAsync, GrabModeAsync);
+    }
 }
 
-void create_new_key(char *key_string)
+void
+create_new_key (char *key_string)
 {
   Key *k;
-  char *key_str, *command=NULL, *temp=NULL, *window=NULL;
+  char *key_str, *command = NULL, *temp = NULL, *window = NULL;
 
 #ifdef DEBUG
-  printf("create_new_key\n");
+  printf ("create_new_key\n");
 #endif
 
-  key_str=strtok(key_string, ":");
-  if(key_str!=NULL)
-  {
-    temp=strtok(command, ":");
-    if(temp!=NULL)
+  key_str = strtok (key_string, ":");
+  if (key_str != NULL)
     {
-      window=temp;
-      command=strtok(NULL, "\n");
+      temp = strtok (NULL, ":");
+      if (temp != NULL)
+	{
+	  window = temp;
+	  command = strtok (NULL, "\n");
+	}
     }
-  }
-  
-  if(key_str==NULL || command==NULL) return;
 
-  if(strlen(key_str)<4) return;
-  
-  if((k=malloc(sizeof *k))==NULL)
+  if (key_str == NULL || command == NULL)
     return;
-  k->next=key;
-  key=k;
 
-  k->modifier=0;
-  k->keycode=0;
+  if (strlen (key_str) < 4)
+    return;
 
-  if(key_str[0]=='*') k->modifier=k->modifier|ShiftMask;
-  if(key_str[1]=='*') k->modifier=k->modifier|ControlMask;
-  if(key_str[2]=='*') k->modifier=k->modifier|Mod1Mask;
+  if ((k = malloc (sizeof *k)) == NULL)
+    return;
+  k->next = key;
+  key = k;
 
-  k->keycode=XKeysymToKeycode(dpy, XStringToKeysym(key_str+3));
+  if (lastkey == NULL)
+    lastkey = k;
 
-  grab_key(k->keycode, k->modifier, root);
-  k->command=strdup(command);
+  k->modifier = 0;
+  k->keycode = 0;
+
+  if (key_str[0] == '*')
+    k->modifier = k->modifier | ShiftMask;
+  if (key_str[1] == '*')
+    k->modifier = k->modifier | ControlMask;
+  if (key_str[2] == '*')
+    k->modifier = k->modifier | Mod1Mask;
+
+  k->keycode = XKeysymToKeycode (dpy, XStringToKeysym (key_str + 3));
+
+  grab_key (k->keycode, k->modifier, root);
+  k->command = strdup (command);
   if (window)
-    k->window=strdup(window);
+    k->window = strdup (window);
   else
-    k->window=NULL;
+    k->window = NULL;
   return;
 }
 
-void free_keys()
+void
+free_keys ()
 {
   Key *k;
 
 #ifdef DEBUG
-  printf("free_keys\n");
+  printf ("free_keys\n");
 #endif
 
-  XUngrabKey(dpy, AnyKey, AnyModifier, root);
-  while(key)
-  {
-    free(key->command);
-    k=key->next;
-    free(key);
-    key=k;
-  }
+  XUngrabKey (dpy, AnyKey, AnyModifier, root);
+  while (key)
+    {
+      if (key->command)
+	free (key->command);
+      if (key->window)
+	free (key->window);
+      k = key->next;
+      free (key);
+      key = k;
+    }
+  lastkey = NULL;
 }
 
 /*
@@ -196,55 +227,58 @@ void free_keys()
  *
  */
 
-char *find_rc()
+char *
+find_rc ()
 {
   FILE *rc;
   char *rc_file1;
 
-  if((rc_file1=malloc(strlen(getenv("HOME"))+strlen(RCFILE1)+2))==NULL)
+  if ((rc_file1 =
+       malloc (strlen (getenv ("HOME")) + strlen (RCFILE1) + 2)) == NULL)
     {
-      perror("malloc");
-      exit(1);
+      perror ("malloc");
+      exit (1);
     }
 
-  sprintf(rc_file1, "%s/%s", getenv("HOME"), RCFILE1); 
+  sprintf (rc_file1, "%s/%s", getenv ("HOME"), RCFILE1);
 
-  if((rc=fopen(rc_file1, "r")))
-  {
-    fclose(rc);
-    return rc_file1;
-  }
+  if ((rc = fopen (rc_file1, "r")))
+    {
+      fclose (rc);
+      return rc_file1;
+    }
 
   return RCFILE2;
 }
 
-void parse_rc(char *rc_file)
+void
+parse_rc (char *rc_file)
 {
   FILE *rc;
   char buf[1024], *lvalue, *rvalue;
 
 #ifdef DEBUG
-  printf("parse_rc\n");
+  printf ("parse_rc\n");
 #endif
 
-  if((rc=fopen(rc_file, "r")))
-  {
-    while(fgets(buf, sizeof buf, rc))
+  if ((rc = fopen (rc_file, "r")))
     {
-      lvalue=strtok(buf, "=");
-      if(lvalue)
-      {
-        if(!strcmp(lvalue, "key"))
-        {
-          rvalue=strtok(NULL, "\n");
-          if(rvalue)
-            create_new_key(rvalue);
-        }
-      }
+      while (fgets (buf, sizeof buf, rc))
+	{
+	  lvalue = strtok (buf, "=");
+	  if (lvalue)
+	    {
+	      if (!strcmp (lvalue, "key"))
+		{
+		  rvalue = strtok (NULL, "\n");
+		  if (rvalue)
+		    create_new_key (rvalue);
+		}
+	    }
+	}
+      fclose (rc);
     }
-    fclose (rc);
-  }
-  last_update=get_last_update(rc_file);
+  last_update = get_last_update (rc_file);
 }
 
 /*
@@ -253,26 +287,27 @@ void parse_rc(char *rc_file)
  *
  */
 
-void fork_exec(char *cmd)
+void
+fork_exec (char *cmd)
 {
-  pid_t pid=fork();
+  pid_t pid = fork ();
 
 #ifdef DEBUG
-  printf("fork_exec\n");
-  printf("  executing %s\n", cmd);
+  printf ("fork_exec\n");
+  printf ("  executing %s\n", cmd);
 #endif
 
-  switch(pid)
-  {
-  case 0:
-    execlp("/bin/sh", "sh", "-c", cmd, NULL);
-    fprintf(stderr, "Exec failed.\n");
-    exit(0);
-    break;
-  case -1:
-    fprintf(stderr, "Fork failed.\n");
-    break;
-  }
+  switch (pid)
+    {
+    case 0:
+      execlp ("/bin/sh", "sh", "-c", cmd, NULL);
+      fprintf (stderr, "Exec failed.\n");
+      exit (0);
+      break;
+    case -1:
+      fprintf (stderr, "Fork failed.\n");
+      break;
+    }
 }
 
 /*
@@ -281,57 +316,60 @@ void fork_exec(char *cmd)
  *
  */
 
-void quit()
+void
+quit ()
 {
 #ifdef DEBUG
-  printf("quit\n");
+  printf ("quit\n");
 #endif
 
-  free_keys();
-  XCloseDisplay(dpy);
-  exit(0);
+  free_keys ();
+  XCloseDisplay (dpy);
+  exit (0);
 }
 
-void signal_handler(int signal)
+void
+signal_handler (int signal)
 {
 #ifdef DEBUG
-  printf("signal_handler\n");
+  printf ("signal_handler\n");
 #endif
 
-  switch(signal)
-  {
-  case SIGINT:
-  case SIGTERM:
-  case SIGHUP:
-    quit();
-    break;
-  case SIGCHLD:
-    wait(NULL);
-    break;
-  }
+  switch (signal)
+    {
+    case SIGINT:
+    case SIGTERM:
+    case SIGHUP:
+      quit ();
+      break;
+    case SIGCHLD:
+      wait (NULL);
+      break;
+    }
 }
 
-void initialize()
+void
+initialize ()
 {
   struct sigaction act;
-  
-  act.sa_handler=signal_handler;
-  act.sa_flags=0;
-  sigaction(SIGTERM, &act, NULL);
-  sigaction(SIGINT, &act, NULL);
-  sigaction(SIGHUP, &act, NULL);
-  sigaction(SIGCHLD, &act, NULL);
-  
-  if(!(dpy=XOpenDisplay(NULL)))
-    print_error("Can't open display, X may not be running.\n", True);
 
-  root=XDefaultRootWindow(dpy);
-  
-  init_keyboard();  
+  act.sa_handler = signal_handler;
+  act.sa_flags = 0;
+  sigaction (SIGTERM, &act, NULL);
+  sigaction (SIGINT, &act, NULL);
+  sigaction (SIGHUP, &act, NULL);
+  sigaction (SIGCHLD, &act, NULL);
 
-  rc_file = find_rc();
+  if (!(dpy = XOpenDisplay (NULL)))
+    print_error ("Can't open display, X may not be running.\n", True);
 
-  parse_rc(rc_file);
+  root = XDefaultRootWindow (dpy);
+
+  init_keyboard ();
+
+  rc_file = find_rc ();
+
+  parse_rc (rc_file);
 }
 
 /*
@@ -340,41 +378,66 @@ void initialize()
  *
  */
 
-int main(int argc, char *argv[])
+int
+main (int argc, char *argv[])
 {
-  initialize();
+  initialize ();
 
-  while(1)
-  {
-    while(XPending(dpy))
+  while (1)
     {
-      XEvent ev;
-      Key *k;
+      while (XPending (dpy))
+	{
+	  XEvent ev;
+	  Key *k;
 
-      XNextEvent(dpy, &ev);
-      if(ev.type==KeyPress)
-      {
-        ev.xkey.state=ev.xkey.state&(Mod1Mask|ControlMask|ShiftMask);
-        for(k=key;k!=NULL;k=k->next)
-          if(k->keycode==ev.xkey.keycode && k->modifier==ev.xkey.state)
-          {
-            if (k->window == NULL || (try_to_raise_window(dpy, k->window) != 0))
-              fork_exec(k->command);
-          }
-      }
-      if(ev.type==KeyRelease)
-      {
-        free_keys();
-        XTestFakeKeyEvent(dpy, ev.xkey.keycode, False, 0);
-        parse_rc(rc_file);
-      }
+	  XNextEvent (dpy, &ev);
+	  if (ev.type == KeyPress)
+	    {
+	      ev.xkey.state =
+		ev.xkey.state & (Mod1Mask | ControlMask | ShiftMask);
+	      for (k = key; k != NULL; k = k->next)
+		if (k->keycode == ev.xkey.keycode
+		    && k->modifier == ev.xkey.state
+		    && (k->window == NULL
+			|| (ev.xkey.keycode != previousevent_keycode
+			    || abs (ev.xkey.
+				    time - previousevent_time) > 1000)))
+		  {
+		    if (k->window == NULL
+			|| (try_to_raise_window (dpy, k->window) != 0))
+		      {
+			printf ("running program\n");
+			fork_exec (k->command);
+		      }
+		  }
+	      previousevent_keycode = ev.xkey.keycode;
+	      previousevent_time = ev.xkey.time;
+	    }
+	  else if (ev.type == KeyRelease)
+	    {
+	      ev.xkey.state =
+		ev.xkey.state & (Mod1Mask | ControlMask | ShiftMask);
+	      for (k = key; k != NULL; k = k->next)
+		if (k->keycode == ev.xkey.keycode
+		    && k->modifier == ev.xkey.state)
+		  {
+		    printf ("key release event...\n");
+		    free_keys ();
+		    XTestFakeKeyEvent (dpy, ev.xkey.keycode, False, 5);
+		    printf ("faking key event\n");
+		    parse_rc (rc_file);
+		    k = lastkey;
+		  }
+	    }
+	  /*
+	     if (get_last_update (rc_file) != last_update)
+	     {
+	     free_keys ();
+	     parse_rc (rc_file);
+	     }
+	   */
+	}
+      usleep (1);
     }
-    if(get_last_update(rc_file)!=last_update)
-    {
-      free_keys();
-      parse_rc(rc_file);
-    }
-    usleep(1);
-  }
   return 0;
 }

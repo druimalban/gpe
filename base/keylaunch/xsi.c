@@ -199,18 +199,23 @@ int try_to_raise_window (Display *display, char *window)
 
 		xid = Window_With_Name(display, RootWindow(display, screen),
 			               window);
+
 		if (xid != 0)
 		{
 			XWindowAttributes xid_attrib;
-			XGetWindowAttributes(display, xid, &xid_attrib);
-			if (xid_attrib.map_state == IsUnmapped ||
-				wm_state(display, xid) != NormalState)
+
+			wm_state_atom = XInternAtom(display, "WM_STATE", True);
+        		XGetWindowAttributes(display, xid, &xid_attrib);
+			if (xid_attrib.map_state == IsUnmapped /* ||
+				wm_state(display, xid) != NormalState */)
 			{
 				raise_window (display, xid);
+				printf ("raised window\n");
 			}
 		}
 		else
 		{
+			printf ("can't find\n");
 			return 1;
 		}
 
