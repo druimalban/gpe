@@ -8,7 +8,7 @@ uSQLd is basically a network RPC wrapper for D. Richard Hipp's fantastic open so
 <p> 
 
 The first unstable release of GPE is in handhelds.org FTP: <a
-href="ftp://handhelds.org/pub/projects/gpe/unstable/SOURCES/usqld-0.2.0.tar.gz">ftp://handhelds.org/pub/projects/gpe/unstable/SOURCES/usqld-0.2.0.tar.gz</a>
+	href="ftp://handhelds.org/pub/projects/gpe/unstable/SOURCES/usqld-0.2.1.tar.gz">ftp://handhelds.org/pub/projects/gpe/unstable/SOURCES/usqld-0.2.1.tar.gz</a>
 <p>
 <b> N.B uslqd requires any sqlite 2.x compiled with -DTHREADSAFE=1</b>
 <p>
