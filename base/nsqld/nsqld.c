@@ -120,7 +120,15 @@ do_open (struct nsql_context *ctx, char *cmdline, GError **error)
 gboolean
 do_time (struct nsql_context *ctx)
 {
-  fprintf (ctx->ofp, "%s - %d\n", ctx->cmd_id, time (NULL));
+  fprintf (ctx->ofp, "%s - %d\n", ctx->cmd_id, (int)time (NULL));
+  
+  return TRUE;
+}
+
+gboolean
+do_lastid (struct nsql_context *ctx)
+{
+  fprintf (ctx->ofp, "%s - %d\n", ctx->cmd_id, sqlite_last_insert_rowid (ctx->sqliteh));
   
   return TRUE;
 }
@@ -137,6 +145,8 @@ dot_command (struct nsql_context *ctx, char *cmd, GError **error)
     return do_open (ctx, cmd + 5, error);
   else if (!strncasecmp (cmd, "time", 4))
     return do_time (ctx);
+  else if (!strncasecmp (cmd, "lastid", 6))
+    return do_lastid (ctx);
 
   g_set_error (error, NSQLD_ERROR, NSQLD_ERROR_BAD_COMMAND,
 	       "Command '%s' not understood", cmd);
@@ -349,11 +359,11 @@ int
 main_loop (int fd)
 {
   struct nsql_context *ctx;
+  int fd2;
+#ifdef USE_SASL
+  int r;
   struct sockaddr_storage local_ip, remote_ip;
   socklen_t salen;
-  int fd2;
-  int r;
-#ifdef USE_SASL
   sasl_security_properties_t secprops;
   char localaddr[NI_MAXHOST | NI_MAXSERV],
     remoteaddr[NI_MAXHOST | NI_MAXSERV];
@@ -487,7 +497,9 @@ main (int argc, char *argv[])
   int sock;
   struct sockaddr_in6 sin;
   int sopt;
+#ifdef USE_SASL
   int r;
+#endif
 
   if (argc == 2 && !strcmp (argv[1], "--stdout"))
     {
