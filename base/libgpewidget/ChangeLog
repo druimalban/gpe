@@ -1,5 +1,9 @@
 2002-07-09  Philip Blundell  <philb@gnu.org>
 
+	* Version 0.09 released.
+
+2002-07-09  Philip Blundell  <philb@gnu.org>
+
 	* gpetooltips.c: New file.
 	* Makefile (MEMBERS): Add gpetooltips.
 
