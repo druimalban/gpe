@@ -38,23 +38,22 @@ gchar * sketchdir;
 static struct gpe_icon my_icons[] = {
   //Apps icon
   { "this_app_icon", PREFIX "/share/pixmaps/gpe-sketchbook.png" },
-  { "gpe-logo", PREFIX "/share/gpe/pixmaps/gpe-logo.png" },
+  { "gpe-logo",      PREFIX "/share/gpe/pixmaps/gpe-logo.png" },
 
   //GPE stock icons
   { "new",    "new"   },
-  { "open",   "gpe-sketchbook/edit"  }, //distributed separatly until next gpe-icons release
+  { "open",   "edit"  },
   { "delete", "delete"},
   { "save",   "save"  },
   { "properties",   "properties"  },
   { "left",   "left"  },
   { "right",  "right" },
   { "about",  "help"  },
+
   { "list",      "gpe-sketchbook/view-mode-list"},
   { "icons",     "gpe-sketchbook/view-mode-icons"},
   //{ "sketchpad", "gpe-sketchbook/view-mode-sketchpad" },
   { "files",     "gpe-sketchbook/file-entry"},
-
-  { "question",  "question"  },//needed to be loaded for gpe_question ??? //FIXME: !!!
 
   //own icons
   { "tool_pencil",  "gpe-sketchbook/tool_pencil"},
