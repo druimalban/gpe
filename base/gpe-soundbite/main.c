@@ -203,6 +203,20 @@ on_window_destroy                  (GtkObject       *object,
 }
 
 void
+on_key_release_signal                  (GtkWidget *widget,
+                                            GdkEventKey *event,
+                                            gpointer user_data)
+{
+  if (!strcmp (gdk_keyval_name (event->keyval), "XF86AudioRecord"))
+    {
+      gdouble time;
+      time = g_timer_elapsed (timer, NULL);
+      if (time > 0.4) /* if less assume just mean to 'click' button */
+        stop_sound ();
+    }
+}
+
+void
 on_cancel_button_clicked                (GtkButton       *button,
                                         gpointer         user_data)
 {
@@ -224,7 +238,7 @@ file_selector_destroy_signal (GtkFileSelection *selector, gpointer user_data)
 {
   if (!filename)
   {
-    exit(0);
+    gtk_exit(0);
   }
 }
 
@@ -313,7 +327,10 @@ main(int argc, char *argv[])
     }
 
   if (gpe_application_init (&argc, &argv) == FALSE)
-    exit (1);
+    {
+      stop_sound ();
+      exit (1);
+    }
 
   if (filename == NULL)
     {
@@ -339,7 +356,10 @@ main(int argc, char *argv[])
   textdomain (PACKAGE);
 
   if (gpe_load_icons (my_icons) == FALSE)
-    exit (1);
+    {
+      stop_sound ();
+      gtk_exit (1);
+    }
 
   fakeparentwindow = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   gtk_widget_realize (fakeparentwindow);
@@ -398,8 +418,16 @@ main(int argc, char *argv[])
                       GTK_SIGNAL_FUNC (on_window_destroy),
                       NULL);
 
+  gtk_signal_connect (GTK_OBJECT (window), "key-release-event",
+                      GTK_SIGNAL_FUNC (on_key_release_signal),
+                      NULL);
+
   if (filename)
-    gtk_widget_show (window);
+    {
+      gtk_widget_show (window);
+      gtk_widget_add_events (window, GDK_KEY_RELEASE_MASK);
+      gtk_widget_grab_focus (window);
+    }
 
   gtk_main ();
 
