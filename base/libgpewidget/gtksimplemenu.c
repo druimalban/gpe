@@ -12,8 +12,6 @@
 #include "gtksimplemenu.h"
 #include <libintl.h>
 
-#define _(x) gettext(x)
-
 static guint my_signals[1];
 
 struct _GtkSimpleMenu

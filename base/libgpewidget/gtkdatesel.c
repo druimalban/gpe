@@ -22,7 +22,7 @@
 #include "gtkdatesel.h"
 #include <libintl.h>
 
-#define _(x) gettext(x)
+#define _(x) dgettext(PACKAGE, x)
 
 static guint my_signals[1];
 
