@@ -979,7 +979,7 @@ button_clicked (GtkWidget *widget, gpointer udata)
 {
   GnomeVFSMimeApplication *default_mime_application;
   FileInformation *file_info;
-  gchar *command;
+  pid_t pid;
     
   file_info = (FileInformation *) udata;
 
@@ -1023,11 +1023,21 @@ button_clicked (GtkWidget *widget, gpointer udata)
           default_mime_application = gnome_vfs_mime_get_default_application (file_info->vfs->mime_type);
           if (default_mime_application != NULL)
           {
-            if (default_mime_application->requires_terminal)
-              command = g_strdup_printf (DEFAULT_TERMINAL " %s %s &", default_mime_application->command, file_info->filename);
-            else
-              command = g_strdup_printf ("%s %s &", default_mime_application->command, file_info->filename);
-            system (command);
+			pid = fork();
+			switch (pid)
+			{
+				case -1: 
+					return; /* failed */
+				break;
+				case  0: 
+				  if (default_mime_application->requires_terminal)
+					execlp(DEFAULT_TERMINAL,DEFAULT_TERMINAL,default_mime_application->command,file_info->filename);
+				  else
+					execlp(default_mime_application->command,default_mime_application->command,file_info->filename,NULL);
+				break;
+				default: 
+				break;
+			} 
           }
           else
             ask_open_with (file_info);
@@ -1256,10 +1266,9 @@ make_view ()
 	case GNOME_VFS_ERROR_GENERIC:
 	break;
     default:
-      error = g_strdup_printf ("Error: %s", gnome_vfs_result_to_string(result));
-      break;
+      error = g_strdup_printf ("Error: %s", gnome_vfs_result_to_string(open_dir_result));
+    break;
     }
-//printf("err: %i\n",open_dir_result);
 	if (error)
 	{
 	  gpe_error_box (error);

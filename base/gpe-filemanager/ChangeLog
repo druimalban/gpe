@@ -1,3 +1,7 @@
+2004-07-05  Florian Boor  <florian.boor@kernelconcepts.de>
+	* main.c: Changed calling of external software fixing #1016
+	* main.c: Fixed bug causing wrong error messages.
+	
 2004-07-01  Florian Boor  <florian.boor@kernelconcepts.de>
 	* main.c: Removed debug output.
 	* main.c: Added support for application registry.
