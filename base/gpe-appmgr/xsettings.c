@@ -27,8 +27,8 @@ notify_func (const char       *name,
 	     XSettingsSetting *setting,
 	     void             *cb_data)
 {
-	printf ("notify!\n");
-	printf ("SET %s\n", name);
+//	printf ("notify!\n");
+//	printf ("SET %s\n", name);
 
   if (strncmp (name, KEY_BASE, strlen (KEY_BASE)) == 0)
     {
