@@ -1,0 +1,8 @@
+Package: gpe-edit-gtk2
+Section: base
+Priority: optional
+Version: 0.05
+Architecture: arm
+Maintainer: Damien Tanner <dctanner@magenet.com>
+Depends: libgtk2.0-0, gpe-icons (>= 0.05), libgpewidget1
+Description: GPE text editor

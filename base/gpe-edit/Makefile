@@ -7,8 +7,10 @@ MEMBERS = main
 
 ifeq ($(GTK2),yes)
 CFLAGS = `pkg-config --cflags gtk+-2.0` -DGTK_ENABLE_BROKEN
+CONTROL = control1
 else
 CFLAGS = `gdk-pixbuf-config --cflags` `gtk-config --cflags` 
+CONTROL = control
 endif
 
 CFLAGS += -D_GNU_SOURCE -Wall
@@ -69,7 +71,7 @@ dpkg: upstream
 ipkg:
 	rm -rf familiar/dist
 	mkdir -p familiar/dist/CONTROL
-	cp familiar/control familiar/dist/CONTROL
+	cp familiar/$(CONTROL) familiar/dist/CONTROL/control
 	make DESTDIR=`pwd`/familiar/dist PREFIX=/usr DEBUG=no install
 	chown -R root.root familiar/dist
 	ipkg-build familiar/dist
