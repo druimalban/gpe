@@ -1,3 +1,9 @@
+05/22/2003		Florian Boor <florian.boor@kernelconcepts.de>
+	
+	- main.c	Added database functions.
+				Updated list to treeview...
+	- netdb.*	New database management functions.
+
 05/19/2003		Florian Boor <florian.boor@kernelconcepts.de>
 	
 	- main.c	Several updates in scanner control.

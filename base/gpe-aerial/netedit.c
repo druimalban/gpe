@@ -39,7 +39,8 @@ ok_clicked (GtkWidget * w, GtkWidget * window)
 {
 	netinfo_t *ni;
 	char *tmp;
-	int t, i1, i2, i3, i4;
+	int t;
+	unsigned char i1, i2, i3, i4;
 	
 	ni = g_object_get_data(G_OBJECT(window),"netinfo");
 	if (!ni) return;
@@ -85,7 +86,7 @@ ok_clicked (GtkWidget * w, GtkWidget * window)
 	free(tmp);
 	
 	tmp = gtk_editable_get_chars(GTK_EDITABLE(eIP),0,-1);
-	if (strlen(tmp) && (sscanf(tmp,"%d.%d.%d.%d",&i1,&i2,&i3,&i4) < 4))
+	if (strlen(tmp) && (sscanf(tmp,"%hhu.%hhu.%hhu.%hhu",&i1,&i2,&i3,&i4) < 4))
 	{
 		gpe_error_box(_("The IP address you entered is not valid."));
 		return;
@@ -104,7 +105,7 @@ ok_clicked (GtkWidget * w, GtkWidget * window)
 	free(tmp);
 	
 	tmp = gtk_editable_get_chars(GTK_EDITABLE(eSubnet),0,-1);
-	if (strlen(tmp) && (sscanf(tmp,"%d.%d.%d.%d",&i1,&i2,&i3,&i4) < 4))
+	if (strlen(tmp) && (sscanf(tmp,"%hhu.%hhu.%hhu.%hhu",&i1,&i2,&i3,&i4) < 4))
 	{
 		gpe_error_box(_("The subnet mask address you entered is not valid."));
 		return;
@@ -123,7 +124,7 @@ ok_clicked (GtkWidget * w, GtkWidget * window)
 	free(tmp);
 	
 	tmp = gtk_editable_get_chars(GTK_EDITABLE(eGateway),0,-1);
-	if (strlen(tmp) && (sscanf(tmp,"%d.%d.%d.%d",&i1,&i2,&i3,&i4) < 4))
+	if (strlen(tmp) && (sscanf(tmp,"%hhu.%hhu.%hhu.%hhu",&i1,&i2,&i3,&i4) < 4))
 	{
 		gpe_error_box(_("The gateway address you entered is not valid."));
 		return;
@@ -265,8 +266,8 @@ network_edit (netinfo_t * ni)
 	gtk_box_pack_start (GTK_BOX (vbox), table, FALSE, TRUE, 0);
 	gtk_box_pack_start (GTK_BOX (vbox), hsep, FALSE, TRUE, 0);
 				
-	gtk_box_pack_end(GTK_BOX (hbox), bOK, FALSE, TRUE, 0);
-	gtk_box_pack_end(GTK_BOX (hbox), bCancel, FALSE, TRUE, 0);
+	gtk_box_pack_start(GTK_BOX (hbox), bCancel, FALSE, TRUE, 0);
+	gtk_box_pack_start(GTK_BOX (hbox), bOK, FALSE, TRUE, 0);
 
 	gtk_box_pack_end (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
 
@@ -284,13 +285,13 @@ network_edit (netinfo_t * ni)
 	gtk_spin_button_set_value(GTK_SPIN_BUTTON(eChannel),(gfloat)ni->netinfo.channel);
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(tbWEP),ni->netinfo.wep);
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(tbDhcp),ni->netinfo.dhcp);
-	tmp=g_strdup_printf("%i.%i.%i.%i",ni->netinfo.ip[0],ni->netinfo.ip[1],ni->netinfo.ip[2],ni->netinfo.ip[3]);
+	tmp=g_strdup_printf("%hhu.%hhu.%hhu.%hhu",ni->netinfo.ip[0],ni->netinfo.ip[1],ni->netinfo.ip[2],ni->netinfo.ip[3]);
 	gtk_entry_set_text(GTK_ENTRY(eIP),tmp);
 	free(tmp);
-	tmp=g_strdup_printf("%i.%i.%i.%i",ni->netinfo.netmask[0],ni->netinfo.netmask[1],ni->netinfo.netmask[2],ni->netinfo.netmask[3]);
+	tmp=g_strdup_printf("%hhu.%hhu.%hhu.%hhu",ni->netinfo.netmask[0],ni->netinfo.netmask[1],ni->netinfo.netmask[2],ni->netinfo.netmask[3]);
 	gtk_entry_set_text(GTK_ENTRY(eSubnet),tmp);
 	free(tmp);
-	tmp=g_strdup_printf("%i.%i.%i.%i",ni->netinfo.gateway[0],ni->netinfo.gateway[1],ni->netinfo.gateway[2],ni->netinfo.gateway[3]);
+	tmp=g_strdup_printf("%hhu.%hhu.%hhu.%hhu",ni->netinfo.gateway[0],ni->netinfo.gateway[1],ni->netinfo.gateway[2],ni->netinfo.gateway[3]);
 	gtk_entry_set_text(GTK_ENTRY(eGateway),tmp);
 	free(tmp);
 	gtk_entry_set_text(GTK_ENTRY(eWEPKey),ni->netinfo.wep_key);

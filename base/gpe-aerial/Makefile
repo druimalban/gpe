@@ -55,7 +55,7 @@ LDFLAGS += -L/skiff/local/arm-linux/lib -L/skiff/local/arm-linux/lib/X11
 LDFLAGS += -lgpewidget $(GTKLDFLAGS)
 LDFLAGS += -lm 
 LDFLAGS += -lgmodule-2.0 -ldl -lXinerama
-LDFLAGS += -lX11 -lXext -lXrender -lgdk-x11-2.0
+LDFLAGS += -lX11 -lXext -lXrender -lgdk-x11-2.0 -lsqlite
 
 endif #native or cross-compile
 

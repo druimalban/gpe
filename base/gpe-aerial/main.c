@@ -13,7 +13,6 @@
 
 #include <sys/types.h>
 #include <stdlib.h>
-//#include <time.h>
 #include <libintl.h>
 
 #include <locale.h>
@@ -61,6 +60,17 @@ struct gpe_icon my_icons[] = {
 	{NULL}
 };
 
+enum
+{
+   COL_ICON,
+   COL_SSID,
+   COL_CHANNEL,
+   COL_WEP,
+   COL_NET,
+   N_COLUMNS
+};
+
+
 static GtkWidget *icon;
 
 static pid_t scanner_pid;
@@ -74,7 +84,7 @@ static GtkWidget *menu;
 static GtkWidget *menu_radio_on, *menu_radio_off;
 static GtkWidget *menu_devices;
 GtkWidget *devices_window;
-static GtkWidget *iconlist;
+//static GtkWidget *iconlist;
 
 gboolean radio_is_on = FALSE;
 GdkWindow *dock_window;
@@ -86,7 +96,12 @@ static void radio_off (void);
 static void list_add_net (netinfo_t * ni);
 static void send_command (command_t cmd, int par);
 static void send_usernet (usernetinfo_t * usernet);
+static void device_clicked (GtkWidget * widget, GdkEventButton * e, gpointer data);
 
+static GtkTreeStore *store;
+static GtkWidget *tree;
+static GtkTreeViewColumn *column;
+static GtkCellRenderer *renderer;
 
 
 static void
@@ -94,6 +109,7 @@ net_enter_data (GtkWidget * w, netinfo_t * this_net)
 {
 	radio_off ();
 	network_edit (this_net);
+	save_network(&this_net->netinfo);
 }
 
 
@@ -266,17 +282,44 @@ show_networks (void)
 				      _("Wireless networks"));
 		gpe_set_window_icon (devices_window, "gpe-aerial");
 
-		iconlist = gpe_iconlist_new ();
-		gtk_container_add (GTK_CONTAINER (devices_window), iconlist);
-		gpe_iconlist_set_embolden (GPE_ICONLIST (iconlist), FALSE);
-		gpe_iconlist_set_icon_size (GPE_ICONLIST (iconlist), 42);
+	    /* Create a view */
+   		tree = gtk_tree_view_new_with_model (GTK_TREE_MODEL (store));
+		gtk_container_add (GTK_CONTAINER (devices_window), tree);
+ 		g_signal_connect (G_OBJECT (tree), "button-release-event",
+			  G_CALLBACK (device_clicked), NULL);		
+
+		renderer = gtk_cell_renderer_pixbuf_new();
+  	 	column = gtk_tree_view_column_new_with_attributes (_("State"), renderer,
+                                                      "pixbuf", COL_ICON,
+													  "sizing",GTK_TREE_VIEW_COLUMN_AUTOSIZE,
+                                                      NULL);
+		gtk_tree_view_append_column (GTK_TREE_VIEW (tree), column);
+		
+		renderer = gtk_cell_renderer_text_new ();
+  	 	column = gtk_tree_view_column_new_with_attributes (_("ESSID"), renderer,
+                                                      "text", COL_SSID,
+													  "sizing",GTK_TREE_VIEW_COLUMN_AUTOSIZE,
+                                                      NULL);
+		gtk_tree_view_append_column (GTK_TREE_VIEW (tree), column);
+			  
+		renderer = gtk_cell_renderer_text_new ();
+  	 	column = gtk_tree_view_column_new_with_attributes (_("CH"), renderer,
+                                                      "text", COL_CHANNEL,
+                                                      NULL);
+		gtk_tree_view_append_column (GTK_TREE_VIEW (tree), column);
+			  
+		renderer = gtk_cell_renderer_text_new ();
+  	 	column = gtk_tree_view_column_new_with_attributes (_("WEP"), renderer,
+                                                      "text", COL_WEP,
+                                                      NULL);
+		gtk_tree_view_append_column (GTK_TREE_VIEW (tree), column);
+  
 
 		g_signal_connect (G_OBJECT (devices_window), "destroy",
 				  G_CALLBACK (devices_window_destroyed),
 				  NULL);
 	}
 
-	gpe_iconlist_clear (GPE_ICONLIST (iconlist));
 
 	scan_thread =
 		g_thread_create ((GThreadFunc) run_scan, NULL, FALSE, NULL);
@@ -336,10 +379,11 @@ update_image (netinfo_t * ni)
 		ni->pix = gpe_find_icon ("network");
 	else
 		ni->pix = gpe_find_icon ("gpe-aerial");
-	gdk_pixbuf_ref (ni->pix);
-
-	gpe_iconlist_update_icon_item_with_udata (GPE_ICONLIST (iconlist),
-						  ni->pix, ni);
+	gdk_pixbuf_ref (ni->pix);	
+	
+#warning upate here
+//	gpe_iconlist_update_icon_item_with_udata (GPE_ICONLIST (iconlist),
+//						  ni->pix, ni);
 }
 
 
@@ -348,7 +392,8 @@ update_netlist (psnetinfo_t * anet)
 {
 	int i;
 	int found = FALSE;
-
+	usernetinfo_t* snet;
+	
 	for (i = 0; i < netcount; i++)
 		if (!strncmp (anet->bssid, netlist[i]->net.bssid, 17))
 		{
@@ -370,8 +415,16 @@ update_netlist (psnetinfo_t * anet)
 		netlist[netcount - 1] = malloc (sizeof (netinfo_t));
 		memset (&netlist[netcount - 1]->netinfo, 0,
 			sizeof (usernetinfo_t));
+		
+		/* try to load network info from database */
+		snet = get_network(anet->bssid);
+		
+		if (snet != NULL)
+			memcpy(&netlist[netcount - 1]->netinfo,snet,sizeof(usernetinfo_t));
+		
 		memcpy (&netlist[netcount - 1]->net, anet,
 			sizeof (psnetinfo_t));
+		
 		update_usernet (netlist[netcount - 1]);
 		netlist[netcount - 1]->visible = FALSE;
 		list_add_net (netlist[netcount - 1]);
@@ -523,7 +576,7 @@ network_info (netinfo_t * ni)
 	gtk_label_set_text (GTK_LABEL (lDhcp), tmp);
 	g_free (tmp);
 	if (ni->net.ip_range[0])
-		tmp = g_strdup_printf ("%s: %d.%d.%d.%d", _("Subnet"),
+		tmp = g_strdup_printf ("%s: %hhu.%hhu.%hhu.%hhu", _("Subnet"),
 				       ni->net.ip_range[0],
 				       ni->net.ip_range[1],
 				       ni->net.ip_range[2],
@@ -590,8 +643,16 @@ device_clicked (GtkWidget * widget, GdkEventButton * e, gpointer data)
 {
 	GtkWidget *device_menu;
 	GtkWidget *details;
-	netinfo_t *ni = (netinfo_t *) data;
+	netinfo_t *ni;
+	GtkTreeSelection *selection;
+	GtkTreeIter	iter;
+	
+	//(netinfo_t *) data;
 
+	selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(tree));
+	gtk_tree_selection_get_selected(selection,NULL,&iter);
+	gtk_tree_model_get(GTK_TREE_MODEL(store),&iter,COL_NET,&ni,-1);
+	
 	device_menu = gtk_menu_new ();
 
 	details = gtk_menu_item_new_with_label (_("Details..."));
@@ -618,11 +679,13 @@ device_clicked (GtkWidget * widget, GdkEventButton * e, gpointer data)
 			GDK_CURRENT_TIME);
 }
 
+
 static void
 list_add_net (netinfo_t * ni)
 {
 	GObject *item;
-
+	GtkTreeIter   iter;
+	
 	if (ni->net.isadhoc)
 		ni->pix = gpe_find_icon ("network");
 	else
@@ -630,6 +693,7 @@ list_add_net (netinfo_t * ni)
 	gdk_pixbuf_ref (ni->pix);
 
 	devices = g_slist_append (devices, ni);
+/*	
 	if (strlen (ni->net.ssid))
 		item = gpe_iconlist_add_item_pixbuf (GPE_ICONLIST
 						     (iconlist),
@@ -640,9 +704,22 @@ list_add_net (netinfo_t * ni)
 						     (iconlist),
 						     _("<hidden>"),
 						     ni->pix, ni);
+*/
+
+	gtk_tree_store_append (store, &iter, NULL);  /* Acquire an iterator */
+
+	gtk_tree_store_set (store, &iter,
+                    COL_ICON, ni->pix,
+                    COL_SSID, ni->netinfo.ssid,
+                    COL_WEP, ni->netinfo.wep,
+                    COL_CHANNEL, ni->netinfo.channel,
+                    COL_NET, ni,
+                    -1);
+
+
 	gtk_widget_show_all (GTK_WIDGET (devices_window));
-	g_signal_connect (G_OBJECT (item), "button-release",
-			  G_CALLBACK (device_clicked), ni);
+//	g_signal_connect (G_OBJECT (item), "button-release",
+//			  G_CALLBACK (device_clicked), ni);
 	ni->visible = TRUE;
 }
 
@@ -658,7 +735,7 @@ run_scan (void)
 	gtk_widget_show_all (w);
 	gdk_threads_leave ();
 
-	sleep (9);
+	sleep (7);
 	send_command (C_SENDLIST, 0);
 	sleep (1);
 	gdk_threads_enter ();
@@ -761,7 +838,6 @@ sigchld_handler (int sig)
 }
 
 
-
 static void
 cancel_dock_message (guint id)
 {
@@ -770,6 +846,7 @@ cancel_dock_message (guint id)
 	gdk_threads_leave ();
 }
 
+
 void
 schedule_message_delete (guint id, guint time)
 {
@@ -777,12 +854,14 @@ schedule_message_delete (guint id, guint time)
 		       (gpointer) id);
 }
 
+
 static void
 clicked (GtkWidget * w, GdkEventButton * ev)
 {
 	gtk_menu_popup (GTK_MENU (menu), NULL, NULL, gpe_popup_menu_position,
 			w, ev->button, ev->time);
 }
+
 
 static void
 aerial_shutdown ()
@@ -800,6 +879,7 @@ aerial_shutdown ()
 	gtk_main_quit ();
 }
 
+
 int
 main (int argc, char *argv[])
 {
@@ -808,6 +888,7 @@ main (int argc, char *argv[])
 	GdkBitmap *bitmap;
 	GtkWidget *menu_remove;
 	GtkTooltips *tooltips;
+	int i;
 
 	g_thread_init (NULL);
 	gdk_threads_init ();
@@ -821,6 +902,24 @@ main (int argc, char *argv[])
 	bind_textdomain_codeset (PACKAGE, "UTF-8");
 	textdomain (PACKAGE);
 
+	/* init and open database */
+	init_db();
+	if (check_table() != 0)
+	{
+		if (create_table() != 0){
+			fprintf (stderr,"Unable to create database - exiting!\n");
+			gtk_exit(-1);
+		}
+	}	
+	
+	/* init tree storage stuff */
+	store = gtk_tree_store_new (N_COLUMNS,
+                               G_TYPE_OBJECT,
+                               G_TYPE_STRING,
+                               G_TYPE_INT,
+								G_TYPE_BOOLEAN,
+								G_TYPE_POINTER);	
+	
 	window = gtk_plug_new (0);
 	gtk_widget_set_usize (window, 22, 16);
 	gtk_widget_realize (window);
@@ -895,6 +994,10 @@ main (int argc, char *argv[])
 	gdk_threads_enter ();
 	gtk_main ();
 	gdk_threads_leave ();
+
+	/* save network data */
+	for (i=0;i<netcount;i++)
+		save_network(&netlist[i]->netinfo);
 
 	exit (0);
 }
