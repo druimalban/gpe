@@ -1,3 +1,11 @@
+2003-05-29  Philip Blundell  <philb@gnu.org>
+
+	* Version 0.14 released.
+
+2003-05-29  Philip Blundell  <philb@gnu.org>
+
+	* Makefile (LINGUAS): Add de.
+
 2003-05-28  Florian Boor <florian.boor@kernelconcepts.de>
 	* main.c Removed obsolete var definition.
 			 Made tabbed notebook scrollable to support more tabs.
