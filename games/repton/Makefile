@@ -62,10 +62,10 @@ install-program: $(PROG) $(MAPS) $(BMPS) repton.desktop
 	install -m 755 -d -o $(BINOWN) -g $(BINGRP) $(LIBDIR)/repton/maps
 	install -m 755 -d -o $(BINOWN) -g $(BINGRP) $(LIBDIR)/repton/bmps
 	install -m 755 -d -o $(BINOWN) -g $(BINGRP) $(LIBDIR)/repton/snds
-	install -s -m 555 -o $(BINOWN) -g $(BINGRP) $(PROG) $(BINDIR)
-	install -m 444 -o $(BINOWN) -g $(BINGRP) $(MAPS) $(LIBDIR)/repton/maps
-	install -m 444 -o $(BINOWN) -g $(BINGRP) $(BMPS) $(LIBDIR)/repton/bmps
-	install -m 444 -o $(BINOWN) -g $(BINGRP) $(SNDS) $(LIBDIR)/repton/snds
+	install -s -m 755 -o $(BINOWN) -g $(BINGRP) $(PROG) $(BINDIR)
+	install -m 644 -o $(BINOWN) -g $(BINGRP) $(MAPS) $(LIBDIR)/repton/maps
+	install -m 644 -o $(BINOWN) -g $(BINGRP) $(BMPS) $(LIBDIR)/repton/bmps
+	install -m 644 -o $(BINOWN) -g $(BINGRP) $(SNDS) $(LIBDIR)/repton/snds
 	install -d $(DESTDIR)$(PREFIX)/share/applications
 	install -m 644 repton.desktop $(DESTDIR)$(PREFIX)/share/applications
 	install -d $(DESTDIR)$(PREFIX)/share/pixmaps
