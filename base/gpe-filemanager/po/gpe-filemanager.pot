@@ -1,0 +1,98 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2004-03-06 20:00+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: main.c:354
+msgid "Move to directory..."
+msgstr ""
+
+#: main.c:397
+#, c-format
+msgid "Delete \"%s\"?"
+msgstr ""
+
+#: main.c:399
+msgid "Confirm"
+msgstr ""
+
+#: main.c:527
+msgid "No available applications"
+msgstr ""
+
+#: main.c:985
+msgid "Back"
+msgstr ""
+
+#: main.c:985
+msgid "Go back in history."
+msgstr ""
+
+#: main.c:989
+msgid "Forward"
+msgstr ""
+
+#: main.c:989
+msgid "Go forward in history."
+msgstr ""
+
+#: main.c:993
+msgid "Up one level"
+msgstr ""
+
+#: main.c:993
+msgid "Go up one level."
+msgstr ""
+
+#: main.c:999
+msgid "Stop"
+msgstr ""
+
+#: main.c:999
+msgid "Stop the current process."
+msgstr ""
+
+#: main.c:1003
+msgid "Home"
+msgstr ""
+
+#: main.c:1003
+msgid "Goto your home directory."
+msgstr ""
+
+#: main.c:1009
+msgid "Zoom in"
+msgstr ""
+
+#: main.c:1009
+msgid "Zoom in."
+msgstr ""
+
+#: main.c:1013
+msgid "Zoom out"
+msgstr ""
+
+#: main.c:1013
+msgid "Zoom out."
+msgstr ""
+
+#: main.c:1018 main.c:1019
+msgid "Goto Location"
+msgstr ""
+
+#: bluetooth.c:49
+msgid "This file is too large to beam"
+msgstr ""
