@@ -35,6 +35,7 @@ schedule_alarm(char *buf, time_t when)
   f=fopen(filename, "w");
 	
   fprintf(f, "#!/bin/sh\n");
+  fprintf(f, "export DISPLAY=:0.0\n");
   fprintf(f, "/usr/bin/gpe-announce '%s'\n", buf);
   fprintf(f, "/bin/rm $0\n");
   
