@@ -5,7 +5,7 @@ VERSION = 0.2
 MEMBERS = soundgen
 SONAME = libsoundgen.so.1
 
-CFLAGS += -Wall
+CFLAGS += -Wall -fPIC
 LDFLAGS += -lm -lesd
 CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 CFLAGS += -MD
