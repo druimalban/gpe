@@ -1,3 +1,7 @@
+2004-03-08  Moray Allan  <moray@sermisy.org>
+
+	* Makefile: Let CFLAGS etc. be passed in at build time.
+
 2003-07-06  Moray Allan  <moray@sermisy.org>
 
 	* Makefile (install-program), gpe-soundbite.menu,
