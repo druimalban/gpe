@@ -1,3 +1,11 @@
+2002-10-12  Philip Blundell  <philb@gnu.org>
+
+	* Makefile (GTK2): Default is yes.
+
+	* main.c (main): Fix warnings.
+
+	* week_view.c: Switch back to drawing area implementation.
+
 2002-10-07  Philip Blundell  <philb@gnu.org>
 
 	* event-ui.c (edit_event_window): Fix memory leak.

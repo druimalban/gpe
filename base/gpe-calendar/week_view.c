@@ -17,67 +17,191 @@
 #include <gtk/gtk.h>
 
 #include <gpe/gtkdatesel.h>
+
 #include "globals.h"
 #include "event-db.h"
 #include "week_view.h"
-#include "event-ui.h"
 
 #define _(x) gettext(x)
 
+static GtkWidget *week_view_draw;
 static struct tm today;
+static guint min_cell_height = 38;
 static GtkWidget *datesel;
-
-static GtkWidget *list[7];
-static GtkWidget *week_view_vbox;
-
-static GtkStyle *dark_style, *red_style;
-static GdkColor dark_color, red_color;
 
 struct week_day
 {
-  struct tm tm;
-  guint y;
+  guint y0, y1;
   gchar *string;
   GSList *events;
   gboolean is_today;
 } week_days[7];
 
-static void 
-selection_made(GtkWidget *w, 
-	       gint            row,
-	       gint            column,
-	       GdkEventButton *event,
-	       GtkWidget      *widget)
+static gint
+draw_expose_event (GtkWidget *widget,
+		   GdkEventExpose *event,
+		   gpointer user_data)
 {
-  if (event->type == GDK_2BUTTON_PRESS)
+  GtkDrawingArea *darea;
+  GdkDrawable *drawable;
+  GdkGC *black_gc;
+  GdkGC *gray_gc;
+  GdkGC *white_gc;
+  GdkGC *red_gc;
+  guint max_width;
+  guint max_height;
+  guint day;
+  GdkColor red;
+  GdkColormap *colormap;
+#if GTK_MAJOR_VERSION >= 2
+  PangoLayout *pl = gtk_widget_create_pango_layout (GTK_WIDGET (widget), NULL);
+#endif
+
+  g_return_val_if_fail (widget != NULL, TRUE);
+  g_return_val_if_fail (GTK_IS_DRAWING_AREA (widget), TRUE);
+
+  red_gc = gdk_gc_new (widget->window);
+  gdk_gc_copy (red_gc, widget->style->black_gc);
+  colormap = gdk_window_get_colormap (widget->window);
+  red.red = 0xffff;
+  red.green = 0;
+  red.blue = 0;
+  gdk_colormap_alloc_color (colormap, &red, FALSE, TRUE);
+  gdk_gc_set_foreground (red_gc, &red);
+
+  darea = GTK_DRAWING_AREA (widget);
+  drawable = widget->window;
+  white_gc = widget->style->white_gc;
+  gray_gc = widget->style->bg_gc[GTK_STATE_NORMAL];
+  black_gc = widget->style->black_gc;
+  max_width = widget->allocation.width;
+  max_height = widget->allocation.height;
+
+  gdk_gc_set_clip_rectangle (black_gc, &event->area);
+  gdk_gc_set_clip_rectangle (red_gc, &event->area);
+  gdk_gc_set_clip_rectangle (gray_gc, &event->area);
+  gdk_gc_set_clip_rectangle (white_gc, &event->area);
+
+  for (day = 0; day < 7; day++)
     {
-      if (row==0) {
-	struct week_day *new_day = g_malloc (sizeof (struct week_day));
-	
-	new_day = gtk_clist_get_row_data (GTK_CLIST (w), row);
-      	viewtime = mktime (&(new_day->tm));
-        set_day_view ();      
-      }
-      
-      else {
-	event_t ev = gtk_clist_get_row_data (GTK_CLIST (w), row);
-      	if (ev)
-	{
-	  GtkWidget *appt = edit_event (ev);
-	  gtk_widget_show (appt);
-	}
-      }
+      GSList *iter;
+      for (iter = week_days[day].events; iter; iter = iter->next)
+	((event_t)iter->data)->mark = FALSE;
     }
+
+  for (day = 0; day < 7; day++)
+    {
+      guint x, y = week_days[day].y0;
+      GSList *iter;
+#if GTK_MAJOR_VERSION >= 2
+      PangoRectangle pr;
+#endif
+
+      if (day)
+	gdk_draw_line (drawable, black_gc, 0, y, max_width, y);
+
+      gdk_draw_rectangle (drawable, white_gc, 
+			  TRUE, 0, y + 1, max_width, max_height);
+
+#if GTK_MAJOR_VERSION < 2
+      x = max_width - gdk_string_width (datefont, week_days[day].string) - 8;
+      gdk_draw_text (drawable, datefont,
+		     week_days[day].is_today ? red_gc : black_gc,
+		     x, y + datefont->ascent + 1, week_days[day].string, 
+		     strlen (week_days[day].string));
+
+      y += datefont->ascent + datefont->descent;
+#else
+      pango_layout_set_text (pl, week_days[day].string, strlen (week_days[day].string));
+      pango_layout_get_pixel_extents (pl, &pr, NULL);
+      x = max_width - pr.width - 8;
+      gtk_paint_layout (widget->style,
+			widget->window,
+			GTK_WIDGET_STATE (widget),
+			FALSE,
+			&event->area,
+			widget,
+			"label",
+			x, y,
+			pl);
+      y += pr.height;
+#endif
+
+      if (week_days[day].events)
+	{
+	  for (iter = week_days[day].events; iter; iter = iter->next)
+	    {
+#if GTK_MAJOR_VERSION < 2
+	      GdkFont *font = widget->style->font;
+#endif
+	      char buf[256];
+	      struct tm tm;
+	      char *p = buf;
+	      event_t ev = iter->data;
+	      event_details_t evd = event_db_get_details (ev);
+	      size_t s = sizeof (buf), l;
+	      if (ev->mark)
+		{
+		  p = stpcpy (p, _("(contd...) "));
+		  s -= (p - buf);
+		}
+	      else
+		{
+		  localtime_r (&ev->start, &tm);
+		  l = strftime (p, s, TIMEFMT, &tm);
+		  s -= l;
+		  p += l;
+		  ev->mark = TRUE;
+		}
+	      snprintf (p, s - 1, " %s", evd->summary);
+	      p[s - 1] = 0;
+
+#if GTK_MAJOR_VERSION < 2
+	      gdk_draw_text (drawable, font, black_gc,
+			     4, y + font->ascent,
+			     buf, strlen (buf));
+	      y += font->ascent + font->descent;
+#else
+	      pango_layout_set_text (pl, buf, strlen (buf));
+	      pango_layout_get_pixel_extents (pl, &pr, NULL);
+	      gtk_paint_layout (widget->style,
+				widget->window,
+				GTK_WIDGET_STATE (widget),
+				FALSE,
+				&event->area,
+				widget,
+				"label",
+				4, y,
+				pl);
+	      y += pr.height;
+#endif
+	    }
+	}
+
+      if (week_days[day].is_today)
+	{
+	  gdk_draw_rectangle (drawable, red_gc, FALSE, 0, week_days[day].y0, max_width, week_days[day].y1 - week_days[day].y0);
+	  gdk_draw_rectangle (drawable, red_gc, FALSE, 1, week_days[day].y0 + 1, max_width - 2, week_days[day].y1 - week_days[day].y0 - 2);
+	}
+    }
+
+  gdk_gc_unref (red_gc);
+
+#if GTK_MAJOR_VERSION >= 2
+  g_object_unref (pl);
+#endif
+
+  return TRUE;
 }
 
 static void
 week_view_update (void)
 {
-  guint day, j;
+  guint day;
   time_t t = time (NULL);
   struct tm tm;
-  gchar *line_info[2];
-	      
+  guint y = 0;
+
   localtime_r (&t, &today);
 
   t = viewtime;
@@ -87,36 +211,19 @@ week_view_update (void)
   t -= SECONDS_IN_DAY * tm.tm_wday;
   t -= tm.tm_sec + (60 * tm.tm_min) + (60 * 60 * tm.tm_hour);
 
-  if (! dark_style)\
-  {
-    dark_color.red = 52000;
-    dark_color.green = 52000;
-    dark_color.blue = 52000;
-    red_color.red = 52000;
-    red_color.green = 40000;
-    red_color.blue = 40000;
-
-    red_style = gtk_style_copy (gtk_widget_get_style (list[0]));
-    dark_style = gtk_style_copy (gtk_widget_get_style (list[0]));
-    
-    for (j = 0; j < 5; j++) {
-	    dark_style->base[j] = dark_color;
-	    red_style->base[j] = red_color;
-    }
-  }	
-	  
   for (day = 0; day < 7; day++)
     {
       char buf[32];
       GSList *iter;      
+      guint height = datefont->ascent + datefont->descent;
 
       if (week_days[day].events)
 	event_db_list_destroy (week_days[day].events);
 
       week_days[day].events = event_db_list_for_period (t, t + SECONDS_IN_DAY - 1);
+      week_days[day].y0 = y;
 
       localtime_r (&t, &tm);
-      week_days[day].tm=tm;
       week_days[day].is_today = (tm.tm_mday == today.tm_mday 
 		       && tm.tm_mon == today.tm_mon 
 		       && tm.tm_year == today.tm_year);
@@ -125,51 +232,27 @@ week_view_update (void)
 	g_free (week_days[day].string);
       week_days[day].string = g_strdup (buf);
 
-      if (week_days[day].events)
-	{
-	  for (iter = week_days[day].events; iter; iter = iter->next)
-	    {
-	      event_t ev = iter->data;
-	      ev->mark = FALSE;
-	    }
-	}
-
       t += SECONDS_IN_DAY;
-    }
 
-  for (day = 0; day < 7; day++)
-    {
-      guint row = 0;
-
-      gtk_clist_clear (GTK_CLIST (list[day]));
-
-      line_info[0] = NULL;
-      line_info[1] = week_days[day].string;
-      gtk_clist_append (GTK_CLIST (list[day]), line_info);    
-      gtk_clist_set_row_data (GTK_CLIST (list[day]), row, &(week_days[day]));
-      if (!week_days[day].is_today) gtk_clist_set_row_style (GTK_CLIST (list[day]), row, dark_style); 
-      else gtk_clist_set_row_style (GTK_CLIST (list[day]), row, red_style); 
-      row++;
-       
+#if 0
       if (week_days[day].events)
 	{
-	  GSList *iter;
-	  
 	  for (iter = week_days[day].events; iter; iter = iter->next)
-	    {
-	      event_t ev = iter->data;
-	      event_details_t evd = event_db_get_details (ev);
-	      
-	      line_info[0] = evd->summary;
-	      line_info[1] = NULL;
-	      gtk_clist_append (GTK_CLIST (list[day]), line_info);
-	      gtk_clist_set_row_data (GTK_CLIST (list[day]), row, ev);
-	      row++;
-	    }
+	    height += week_view_draw->style->font->ascent + 
+	      week_view_draw->style->font->descent;
 	}
+#endif
+
+      if (height < min_cell_height)
+	height = min_cell_height;
+
+      y += height;
+      week_days[day].y1 = y;
     }
 
-  gtk_widget_draw (week_view_vbox, NULL);
+  gtk_widget_set_usize (week_view_draw, -1, y);
+
+  gtk_widget_draw (week_view_draw, NULL);
 }
 
 static void
@@ -182,7 +265,7 @@ changed_callback(GtkWidget *widget,
 }
 
 static void
-update_hook_callback()
+update_hook_callback (void)
 {
   gtk_date_sel_set_time (GTK_DATE_SEL (datesel), viewtime);
   gtk_widget_draw (datesel, NULL);
@@ -191,46 +274,26 @@ update_hook_callback()
 }
 
 GtkWidget *
-week_view(void)
+week_view (void)
 {
   GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
+  GtkWidget *draw = gtk_drawing_area_new ();
   GtkWidget *scroller = gtk_scrolled_window_new (NULL, NULL);
-  GtkWidget *vbox2 = gtk_vbox_new (FALSE, 0);
-  guint i;
-
-  gtk_widget_show (scroller);
-  gtk_widget_show (vbox2);
 
   datesel = gtk_date_sel_new (GTKDATESEL_WEEK);
+
+  gtk_widget_show (draw);
+  gtk_widget_show (scroller);
   gtk_widget_show (datesel);
 
-  gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scroller), 
-					 vbox2);
+  gtk_signal_connect (GTK_OBJECT (draw),
+		      "expose_event",
+		      GTK_SIGNAL_FUNC (draw_expose_event),
+		      datesel);
+  
+  gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scroller), draw);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scroller),
-				  GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-
-  for (i = 0; i < 7; i++)
-    {
-      
-      list[i] = gtk_clist_new (2);
-      gtk_widget_show (list[i]);
-      
-      gtk_clist_set_column_width (GTK_CLIST (list[i]), 0, 120);
-      gtk_clist_set_column_width (GTK_CLIST (list[i]), 1, 70);
-      gtk_clist_set_column_justification (GTK_CLIST (list[i]), 0,
-       			GTK_JUSTIFY_LEFT);
-      gtk_clist_set_column_justification (GTK_CLIST (list[i]), 1,
-       			GTK_JUSTIFY_RIGHT);
-      gtk_clist_set_shadow_type (GTK_CLIST (list[i]), GTK_SHADOW_NONE);
-      gtk_widget_show (list[i]);
-
-      gtk_signal_connect (GTK_OBJECT (list[i]), "select_row",
-			 GTK_SIGNAL_FUNC (selection_made),
-			 NULL);
-
-      gtk_box_pack_start (GTK_BOX (vbox2), list[i], TRUE, TRUE, 0);
-
-    }
+				  GTK_POLICY_NEVER, GTK_POLICY_ALWAYS);
 
   gtk_box_pack_start (GTK_BOX (vbox), datesel, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), scroller, TRUE, TRUE, 0);
@@ -241,7 +304,7 @@ week_view(void)
   gtk_object_set_data (GTK_OBJECT (vbox), "update_hook",
                        (gpointer) update_hook_callback);
 
-  week_view_vbox = vbox;
+  week_view_draw = draw;
 
   return vbox;
 }

@@ -1,6 +1,7 @@
 PACKAGE = gpe-calendar
 PREFIX = /usr/local
 DEBUG = no
+GTK2 = yes
 
 LINGUAS = de pt_PT
 

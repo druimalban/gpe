@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-calendar\n"
-"POT-Creation-Date: 2002-10-06 18:23+0100\n"
+"POT-Creation-Date: 2002-10-12 16:01+0100\n"
 "PO-Revision-Date: 2002-06-14 20:14+0200\n"
 "Last-Translator: Colin Marquardt <ipaq@marquardt-home.de>\n"
 "Language-Team: German <de@li.org>\n"
@@ -44,6 +44,10 @@ msgstr "Jahresansicht"
 #: main.c:276 main.c:277
 msgid "Exit"
 msgstr "Beenden"
+
+#: week_view.c:145
+msgid "(contd...) "
+msgstr ""
 
 #: event-ui.c:334
 msgid "End time must not be earlier than start time"
@@ -171,11 +175,11 @@ msgstr "Monatlich"
 msgid "Yearly"
 msgstr "Jährlich"
 
-#: event-ui.c:748 event-ui.c:936
+#: event-ui.c:748 event-ui.c:935
 msgid "day(s)"
 msgstr "Tag(e)"
 
-#: event-ui.c:804 event-ui.c:940
+#: event-ui.c:804 event-ui.c:939
 msgid "month(s)"
 msgstr "Monat(e)"
 
@@ -212,7 +216,7 @@ msgstr "fünfter"
 msgid "last"
 msgstr "letzter"
 
-#: event-ui.c:862 event-ui.c:942
+#: event-ui.c:862 event-ui.c:941
 msgid "year(s)"
 msgstr "Jahr(e)"
 
@@ -224,27 +228,27 @@ msgstr "Enddatum:"
 msgid "forever"
 msgstr "für immer"
 
-#: event-ui.c:894
+#: event-ui.c:893
 msgid "end after"
 msgstr "Ende nach"
 
-#: event-ui.c:911
+#: event-ui.c:910
 msgid "end on"
 msgstr "Ende am"
 
-#: event-ui.c:919
+#: event-ui.c:918
 msgid "event(s)"
 msgstr "Ereignis(sen)"
 
-#: event-ui.c:932
+#: event-ui.c:931
 msgid "minute(s)"
 msgstr "Minute(n)"
 
-#: event-ui.c:934
+#: event-ui.c:933
 msgid "hour(s)"
 msgstr "Stunde(n)"
 
-#: event-ui.c:938
+#: event-ui.c:937
 msgid "week(s)"
 msgstr "Woche(n)"
 
