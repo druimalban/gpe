@@ -1,3 +1,7 @@
+2002-06-21  Philip Blundell  <pb@debian.org>
+
+	* familiar/control (Depends): Require libgpewidget 0.08.
+
 2002-06-20  Philip Blundell  <pb@debian.org>
 
 	* main.c (main): Call what_init.
