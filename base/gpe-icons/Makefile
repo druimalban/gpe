@@ -6,15 +6,15 @@ MONOCHROME = no
 # these are icons that are in CVS for completeness but are not actually used anywhere yet:
 # warning48.png
 
+ifeq ($(MONOCHROME),yes)
+PIXMAPS_DIR = default-monochrome
+else
+PIXMAPS_DIR = default
+endif
+
 all:
 
 install:
-	ifeq ($(MONOCHROME),yes)
-	PIXMAPS_DIR = default-monochrome
-	else
-	PIXMAPS_DIR = default
-	endif
-
 	for i in $(PIXMAPS); do install -m 644 -D $(PIXMAPS_DIR)/$$i $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/$$i; done
 	install -D -m 644 gpe-logo.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/gpe-logo.png
 
