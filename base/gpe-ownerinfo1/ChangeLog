@@ -1,3 +1,12 @@
+2002-08-28  Colin Marquardt  <colin@marquardt-home.de>
+
+	* src/main.c: Add code to handle upgrades between different data
+	file versions.
+
+	* HACKING: Put <Photo> as line 2, so that I can dump the old info
+	in one go. This probably means I should migrate to an XML file
+	soon...
+
 2002-08-26  Colin Marquardt  <colin@marquardt-home.de>
 
 	* src/main.c, gpe-ownerinfo.glade, src/interface.c, src/callbacks.c: Use the new notebooks.

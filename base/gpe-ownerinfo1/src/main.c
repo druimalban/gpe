@@ -12,6 +12,7 @@
 #endif
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <getopt.h>
 #include <ctype.h>
@@ -31,7 +32,13 @@
 #include "interface.h"
 #include "support.h"
 
-#define GPE_OWNERINFO_DATA "/etc/gpe/gpe-ownerinfo.data"
+#include "main.h"
+
+#define CURRENT_DATAFILE_VER 2
+
+/* WARNING: don't mess with this! */
+#define GPE_OWNERINFO_DATA   "/etc/gpe/gpe-ownerinfo.data"
+#define INFO_MATCH           "[gpe-ownerinfo data version "
 
 GtkWidget *GPE_Ownerinfo;
 
@@ -80,7 +87,7 @@ main (int argc, char *argv[])
 	printf ("\n");
 	printf ("Valid options: -g GEOMETRY   window geometry (default: 240x120+0+200)\n");
 	printf ("               -h            this help text\n");
-	exit(1);
+	exit (1);
       case '?':
 	if (isprint (optopt))
 	  fprintf (stderr, "gpe-ownerinfo: Unknown option -%c'.\n", optopt);
@@ -93,7 +100,7 @@ main (int argc, char *argv[])
 	fprintf (stderr,
 		 "gpe-ownerinfo: Unknown error while parsing command line. Command was %c\n",
 		 opt);
-	exit(1);
+	exit (1);
       }
     }
     
@@ -121,9 +128,30 @@ main (int argc, char *argv[])
   fp = fopen (GPE_OWNERINFO_DATA, "r");
   if (fp)
     {
+      fclose (fp);
+      maybe_upgrade_datafile (fp);
+    }
+  else /* fp == NULL */
+    { 
+      perror (GPE_OWNERINFO_DATA);
+    }
+      
+  fp = fopen (GPE_OWNERINFO_DATA, "r");
+  if (fp)
+    {
       char buf[2048];
       guint numchar;
-      
+      gchar *firstline;
+
+#warning FIXME: dont skip over first line when upgrading failed!  
+      /* read over first line: */
+      if (fgets (buf, sizeof (buf), fp))
+        {
+          firstline = g_strdup (buf);
+          firstline[strlen (firstline)-1]='\0';
+        }
+
+      /* now get the real data: */
       if (fgets (buf, sizeof (buf), fp))
         {
           ownername = g_strdup (buf);
@@ -184,4 +212,143 @@ main (int argc, char *argv[])
 
   gtk_main ();
   return 0;
+}
+
+
+/*
+ *  Return value: The old version number found in the data file.
+ *  FIXME: do this only when success, neg value when error! 
+ *
+ *  The data file format is described in the file HACKING.
+ */
+
+gint
+maybe_upgrade_datafile (FILE *fp)
+{
+  gchar *firstline;
+  guint version = 0, idx = 0;
+
+  fp = fopen (GPE_OWNERINFO_DATA, "r");
+  if (fp)
+    {
+      char buf[2048];
+      if (fgets (buf, sizeof (buf), fp))
+	{
+	  firstline = g_strdup (buf);
+	  firstline[strlen (firstline)-1]='\0';
+	  
+	  /*
+	   * looking for a string like
+	   *   [gpe-ownerinfo data version 42]
+	   */
+	  
+	  if (strstr (firstline, INFO_MATCH)) { /* found magic string */
+	    version = strtol (firstline + strlen (INFO_MATCH), (char **)NULL, 10);
+	    
+	    if (version == 0) {
+	      fprintf (stderr, "gpe-ownerinfo: file '%s' is version %d, which should not happen.\n",
+		       GPE_OWNERINFO_DATA, version);
+	      fprintf (stderr, "   Please file a bug. I am continuing anyway.\n");
+	    }
+	    if (version > CURRENT_DATAFILE_VER) {
+	      fprintf (stderr, "gpe-ownerinfo: file '%s' is version %d.\n   I only know how to handle version %d. Exiting.\n",
+		       GPE_OWNERINFO_DATA, version, CURRENT_DATAFILE_VER);
+	      fclose (fp);
+	      exit (1);
+	    }
+	  }
+	  else { /* must be version 1 which didn't have a version indicator */
+	    version = 1;
+	  }
+	}
+      fclose (fp);
+      
+      if (version != CURRENT_DATAFILE_VER) {
+	for (idx = version+1; idx <= CURRENT_DATAFILE_VER; idx++) {
+	  printf ("Need to upgrade. idx is %d\n", idx);
+	  switch (idx) {
+	  case 0:
+	    break;
+	  case 1:
+	    break;
+	  case 2: /* from here, it's cumulative upgrades */
+	    upgrade_to_v2 (fp, idx);
+	  case 3:
+	    /* upgrade_to_v3 (fp, idx); */ /* ...and so on */
+	    break;
+	  }
+	}
+      }
+    }
+  else /* fp == NULL */
+    { 
+      perror (GPE_OWNERINFO_DATA);
+    }
+
+  printf ("Had found version %d\n", version);
+  return version;
+}
+
+/*
+ *  FIXME: we don't really use fp as it's unsafe to reuse it
+ */
+
+guint
+upgrade_to_v2 (FILE *fp, guint version)
+{
+  gchar *firstline, *oldcontent;
+  
+  /* firstline = g_strdup ("Initial firstline"); */
+#warning FIXME: Why doesnt this work?
+  /* sprintf (firstline, "%s %d]", INFO_MATCH, version); */
+  firstline =  g_strdup ("[gpe-ownerinfo data version 2]");
+  oldcontent = g_strdup ("Initial oldcontent.");
+  
+  fp = fopen (GPE_OWNERINFO_DATA, "r");
+  if (fp)
+    {
+      char buf[2048];
+      guint numchar;
+      
+      if ((numchar=fread (buf, 1, sizeof (buf), fp)))
+      	{
+      	  oldcontent = g_strdup (buf);
+      	  oldcontent[numchar]='\0';
+      	}
+
+      printf("oldcontent:\n%s", oldcontent);
+      
+      fclose (fp);
+    }
+  else /* fp == NULL */
+    { 
+      perror (GPE_OWNERINFO_DATA);
+    }
+  
+
+  fp = fopen (GPE_OWNERINFO_DATA, "w");
+  if (fp)
+    {
+      fputs (firstline, fp);
+      fputs ("\n", fp);
+
+#warning FIXME: give real default photo path here      
+      fputs ("<photopath_here>", fp);
+      fputs ("\n", fp);
+
+      fputs (oldcontent, fp);
+      
+      printf ("gpe-ownerinfo: Migrated data file '%s' to version %d.\n",
+	      GPE_OWNERINFO_DATA, version);
+
+      fclose (fp);
+    }
+  else /* fp == NULL */
+    { 
+      perror (GPE_OWNERINFO_DATA);
+    }
+
+#warning FIXME: Need to handle the case when we cannot write to the file
+  
+  return (0);
 }

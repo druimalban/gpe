@@ -14,15 +14,15 @@ line n: <Address>
 
 
 Version 2
-------------------------
+---------
 
 Line 1 verbatim!
 
 line 1: [gpe-ownerinfo data version 2]
-line 2: <Name>
-line 3: <E-mail>
-line 4: <Phone Number>
-line 5: <Photo>
+line 2: <Photo>
+line 3: <Name>
+line 4: <E-mail>
+line 5: <Phone Number>
 line 6: <Address>
 ...
 line n: <Address>
