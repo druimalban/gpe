@@ -96,7 +96,7 @@ struct package *read_menu (FILE *inp)
 {
 	struct package *r=NULL, *p=NULL;
 	char temp[1024];
-	char c, *t;
+	char c=0, *t;
 
 	/* Find the beginning of the entry */
 	while (!feof (inp) && isspace(c = getc (inp)))
