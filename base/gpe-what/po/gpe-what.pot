@@ -7,7 +7,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-08-17 14:10+0100\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2004-08-10 20:23+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,23 +16,25 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: gpe-what.c:292
+#: gpe-what.c:311
+#, c-format
 msgid "Cannot connect to X server\n"
 msgstr ""
 
-#: gpe-what.c:303 gpe-what.c:309
+#: gpe-what.c:322 gpe-what.c:328
+#, c-format
 msgid "Failed to load icon\n"
 msgstr ""
 
-#: gpe-what.c:320
+#: gpe-what.c:341
 msgid "Interactive help"
 msgstr ""
 
-#: gpe-what.c:443
-msgid "No help available."
+#: gpe-what.c:485
+msgid "No help available here."
 msgstr ""
 
-#: gpe-what.c:472
+#: gpe-what.c:514
 msgid ""
 "This is the interactive help button.  Tap here and then on another icon to "
 "get help."

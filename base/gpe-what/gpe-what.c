@@ -296,6 +296,8 @@ main (int argc, char *argv[])
   int last_x = 0, last_y = 0;
   int xfd;
   int state = 0;
+  int i;
+  int no_button = 0;
 
   g_type_init ();
 
@@ -304,6 +306,12 @@ main (int argc, char *argv[])
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
   textdomain (PACKAGE);
   bind_textdomain_codeset (PACKAGE, "UTF-8");
+
+  for (i = 1; i < argc; i++)
+    {
+      if (!strcmp (argv[i], "-n"))
+	no_button = 1;
+    }
 
   dpy = XOpenDisplay (NULL);
   if (dpy == NULL)
@@ -328,37 +336,40 @@ main (int argc, char *argv[])
       fprintf (stderr, _("Failed to load icon\n"));
       exit (1);
     }
-
+  
   win_width = mb_pixbuf_img_get_width (img_icon);
-  win_height = mb_pixbuf_img_get_height (img_icon),
-
+  win_height = mb_pixbuf_img_get_height (img_icon);
+  
   win_panel = XCreateSimpleWindow (dpy, DefaultRootWindow (dpy), 0, 0,
 				   win_width, win_height,
 				   0,
 				   BlackPixel (dpy, screen),
 				   WhitePixel (dpy, screen));
-
+  
   XStoreName (dpy, win_panel, _("Interactive help"));
-
+  
   XSelectInput (dpy, win_panel, ButtonPressMask | PropertyChangeMask | StructureNotifyMask);
+      
+  if (!no_button)
+    {
+      mb_tray_init_session_info (dpy, win_panel, argv, argc);
+      mb_tray_init (dpy, win_panel);
+      mb_tray_window_icon_set (dpy, win_panel, img_icon);
 
-  mb_tray_init_session_info (dpy, win_panel, argv, argc);
-  mb_tray_init (dpy, win_panel);
-  mb_tray_window_icon_set (dpy, win_panel, img_icon);
+      pixmap = XCreatePixmap (dpy, win_panel, 
+			      win_width, win_height,
+			      mbpixbuf->depth);
 
-  pixmap = XCreatePixmap (dpy, win_panel, 
-			  win_width, win_height,
-			  mbpixbuf->depth);
+      pixmap_active = XCreatePixmap (dpy, win_panel, 
+				     win_width, win_height,
+				     mbpixbuf->depth);
 
-  pixmap_active = XCreatePixmap (dpy, win_panel, 
-				 win_width, win_height,
-				 mbpixbuf->depth);
+      prepare_icon (img_icon, pixmap);
+      prepare_icon (img_icon_active, pixmap_active);
 
-  prepare_icon (img_icon, pixmap);
-  prepare_icon (img_icon_active, pixmap_active);
-
-  XSetWindowBackgroundPixmap (dpy, win_panel, pixmap);
-  XClearWindow (dpy, win_panel);
+      XSetWindowBackgroundPixmap (dpy, win_panel, pixmap);
+      XClearWindow (dpy, win_panel);
+    }
 
   help_atom = XInternAtom (dpy, "_GPE_INTERACTIVE_HELP", False);
   infoprint_atom = XInternAtom (dpy, "_GPE_INFOPRINT", False);
