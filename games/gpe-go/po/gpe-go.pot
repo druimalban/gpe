@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-11-09 21:55+0200\n"
+"POT-Creation-Date: 2003-12-20 19:12+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,65 +16,105 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: gpe-go.c:754
+#. TRANSLATORS: initial of "Comments"
+#. => Small labeled button to open the comment editor.
+#. The surrounding spaces are desired.
+#.
+#: gpe-go.c:808
+msgid " C "
+msgstr ""
+
+#. TRANSLATORS: B = Black stones, W = White stones
+#: gpe-go.c:860
 #, c-format
 msgid "B:%d  W:%d "
 msgstr ""
 
-#: gpe-go.c:1083
+#: gpe-go.c:981
+msgid "Variation choice"
+msgstr ""
+
+#: gpe-go.c:1241
 #, c-format
 msgid "Cannot save the game into %s."
 msgstr ""
 
-#: gpe-go.c:1357
+#: gpe-go.c:1355
+msgid "Save game as..."
+msgstr ""
+
+#: gpe-go.c:1361
+msgid "Load game..."
+msgstr ""
+
+#. TRANSLATORS: keep the <big><b> tags
+#: gpe-go.c:1408
+msgid "<big><b>New Game</b></big>"
+msgstr ""
+
+#. TRANSLATORS: keep the <b> tags
+#: gpe-go.c:1431
+msgid "<b>Game Size</b>"
+msgstr ""
+
+#. TRANSLATORS: keep the <big><b> tags
+#: gpe-go.c:1579
+msgid "<big><b>Comment editor</b></big>"
+msgstr ""
+
+#: gpe-go.c:1653
 msgid "New..."
 msgstr ""
 
-#: gpe-go.c:1358
+#: gpe-go.c:1654
 msgid "Save..."
 msgstr ""
 
-#: gpe-go.c:1359
+#: gpe-go.c:1655
 msgid "Load..."
 msgstr ""
 
-#: gpe-go.c:1419
+#: gpe-go.c:1716
 msgid "Game menu"
 msgstr ""
 
-#: gpe-go.c:1427
+#: gpe-go.c:1724
 msgid "First"
 msgstr ""
 
-#: gpe-go.c:1428 gpe-go.c:1429
+#: gpe-go.c:1725 gpe-go.c:1726
 msgid "Go to the beginning of the game"
 msgstr ""
 
-#: gpe-go.c:1435
-msgid "Undo"
+#: gpe-go.c:1732
+msgid "Prev"
 msgstr ""
 
-#: gpe-go.c:1441
-msgid "Redo"
+#: gpe-go.c:1733 gpe-go.c:1734
+msgid "Go to the previous step"
 msgstr ""
 
-#: gpe-go.c:1447
+#: gpe-go.c:1740
+msgid "Next"
+msgstr ""
+
+#: gpe-go.c:1741 gpe-go.c:1742
+msgid "Go to the next step"
+msgstr ""
+
+#: gpe-go.c:1748
 msgid "Last"
 msgstr ""
 
-#: gpe-go.c:1448 gpe-go.c:1449
+#: gpe-go.c:1749 gpe-go.c:1750
 msgid "Go to the end of the game"
 msgstr ""
 
-#: gpe-go.c:1457
-msgid "B:0  W:0 "
-msgstr ""
-
-#: gpe-go.c:1467
+#: gpe-go.c:1768
 msgid "Pass"
 msgstr ""
 
-#: gpe-go.c:1467
+#: gpe-go.c:1768
 msgid "Pass your turn"
 msgstr ""
 

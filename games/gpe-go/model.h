@@ -14,6 +14,7 @@ typedef struct _go {
   GtkWidget * notebook;
 
   GtkWidget * status;
+  GtkWidget * status_expander;
 
   GdkPixmap * drawing_area_pixmap_buffer;
   GtkWidget * drawing_area;

@@ -2,6 +2,8 @@ GPE go NEWS
 
 * cvs
 - 
+- show an "expander" if the message is longer than the statusbar.
+- remove all duplicated spaces in the message for maximal display in the status bar.
 - basic comment support:
   save/load comments in sfg
   display in status bar

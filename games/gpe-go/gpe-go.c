@@ -763,11 +763,51 @@ int kill_group_of(int col, int row){
   return count;
 }
 
+void _remove_duplicated(char * string, char c){
+  char *m, *s, *t;
+  m = s = t = string;
+  while(*t){
+    t++;    
+    if(*t != c || *s != c){
+      *m = *s;
+      m++;
+    }
+    s++;
+  }
+  *m = '\0';//FIXME: resize the string!
+}
+
 void status_update(char * message){
   g_strdelimit(message, "\n\t\r", ' ');//make message a "flat" string
+  _remove_duplicated(message, ' ');
+
   gtk_statusbar_pop (GTK_STATUSBAR(go.status), 0);
   gtk_statusbar_push(GTK_STATUSBAR(go.status), 0, message);
+
+  {//if the message is longer than the label, alert the user
+    GtkWidget * label;
+    PangoLayout * layout;
+    int text_width;
+    int label_width;
+
+    label = (GTK_STATUSBAR(go.status))->label;//NOTE: access to private field
+    label_width = label->allocation.width;
+    layout = gtk_label_get_layout(GTK_LABEL(label));
+    pango_layout_get_pixel_size (layout, &text_width, NULL);
+    TRACE("GOT width %d / %d", text_width, label_width);
+
+    if(text_width > label_width){
+      gtk_label_set_text(GTK_LABEL(go.status_expander), "(...)");
+    }
+    else{
+      /*TRANSLATORS: initial of "Comments"
+        => Small labeled button to open the comment editor.
+        The surrounding spaces are desired.*/
+      gtk_label_set_text(GTK_LABEL(go.status_expander), _(" C "));
+    }
+  }
 }
+
 #include <stdarg.h>
 void status_update_fmt(const char * format, ...){
   gchar * message;
@@ -1771,16 +1811,19 @@ void gui_init(){
   gtk_statusbar_set_has_resize_grip(GTK_STATUSBAR(widget), FALSE);
   go.status = widget;
 
-  {//Status expansion
+  {//[Comments] button / Status expander
     GtkWidget * event_box;
+
     event_box = gtk_event_box_new();
     gtk_widget_set_events (event_box, GDK_BUTTON_PRESS_MASK);
     g_signal_connect (G_OBJECT (event_box), "button_press_event",
                       G_CALLBACK (on_button_edit_comment_clicked), NULL);
 
-    widget = gtk_label_new("... ");
+    widget = gtk_label_new("");
     gtk_container_add (GTK_CONTAINER (event_box), widget);
     gtk_box_pack_start (GTK_BOX (go.status), event_box, FALSE, FALSE, 0);
+
+    go.status_expander = widget;
   }
 
   //--Comment editor
