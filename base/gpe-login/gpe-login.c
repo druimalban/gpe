@@ -781,7 +781,6 @@ main (int argc, char *argv[])
     {
       gtk_widget_show_all (window);
       gtk_widget_grab_focus (focus);
-      gdk_keyboard_grab (focus->window, TRUE, GDK_CURRENT_TIME);
       if (xkbd_xid && socket)
 	gtk_socket_steal (GTK_SOCKET (socket), xkbd_xid);
     }

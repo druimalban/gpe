@@ -1,3 +1,23 @@
+2002-08-07  Philip Blundell  <philb@gnu.org>
+
+	* gpe-session-scripts 0.17 released.
+
+2002-08-07  Philip Blundell  <philb@gnu.org>
+
+	* X11/Xsession-gpe.d/60xXDefaults: Just merge the resources from
+	~/.Xdefaults, don't overwrite the existing database.
+
+2002-08-06  Philip Blundell  <philb@gnu.org>
+
+	* gpe-login 0.20 released.
+	* gpe-session-scripts 0.16 released.
+
+2002-08-06  Philip Blundell  <philb@gnu.org>
+
+	* gpe-logout.c (main): Shorten window title.
+
+	* gpe-login.c (main): Don't grab focus when not in autolock mode.
+
 2002-08-06  Colin Marquardt  <colin@marquardt-home.de>
 
 	* gpe-xcalibrate.sh: Don't look at xcalibrate's return code, as it

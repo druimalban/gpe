@@ -80,7 +80,7 @@ main(int argc, char *argv[])
   gtk_widget_realize (fakeparentwindow);
 
   window = gtk_dialog_new ();
-  gtk_window_set_title (GTK_WINDOW(window), _("Exit confirmation"));
+  gtk_window_set_title (GTK_WINDOW(window), _("Confirmation"));
   gtk_window_set_transient_for (GTK_WINDOW(window), GTK_WINDOW(fakeparentwindow));
   gtk_widget_realize (window);
  
