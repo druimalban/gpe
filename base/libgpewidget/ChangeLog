@@ -1,3 +1,8 @@
+2002-06-20  Philip Blundell  <pb@kc.cam.armlinux.org>
+
+	* Makefile (MEMBERS): Add what.
+	* what.c: New file.
+
 2002-06-20  Philip Blundell  <pb@debian.org>
 
 	* errorbox.c (gpe_error_box): Remove call to gpe_load_icons.
