@@ -54,6 +54,7 @@ struct myscroll {
 };
 
 struct myscroll * myscroll_new(gboolean continuous);
+void myscroll_update_upper_adjust(struct myscroll *scroll);
 
 void markup_printf(PangoLayout *pl, const char *fmt, ...);
 

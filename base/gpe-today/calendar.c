@@ -38,6 +38,13 @@ struct calevent {
 	char *description;
 };
 
+static void refresh_calendar_widget(void)
+{
+	myscroll_update_upper_adjust(calendar.scroll);
+	gtk_widget_queue_draw(calendar.scroll->draw);
+	gtk_widget_queue_draw(calendar.toplevel);
+}
+
 int calendar_init(void)
 {
  	GdkPixmap *pix;
@@ -156,8 +163,7 @@ gboolean calendar_update(gpointer data)
 		}
 	}
 
-	gtk_widget_queue_draw(calendar.scroll->draw);
-	gtk_widget_queue_draw(calendar.toplevel);
+	refresh_calendar_widget();
 
 	return TRUE;
 }
@@ -189,17 +195,14 @@ void calendar_events_db_update(void)
 	                                          TRUE);
 	for (i = 0; (ev = (event_t) g_slist_nth_data(events, i)); i++)
 		calendar_add_event(ev);
-//	g_slist_free(events);
 	event_db_list_destroy(events);
 	
 	events = event_db_list_for_period(current_time, midnight);
 	for (i = 0; (ev = (event_t) g_slist_nth_data(events, i)); i++)
 		calendar_add_event(ev);
-//	g_slist_free(events);
 	event_db_list_destroy(events);
 
-	gtk_widget_queue_draw(calendar.scroll->draw);
-	gtk_widget_queue_draw(calendar.toplevel);
+	refresh_calendar_widget();
 
 	event_db_stop();
 }
