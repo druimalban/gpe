@@ -147,23 +147,31 @@ schedule_alarm(event_t ev)
   time_t alarm_t;
   struct tm tm;
   char alrm_date[32], alrm_time[32];
-      
+  char uscheduleidcmd [300], uschedulecmd[135];
+    
   /* set uschedule cmd */
-  printf("/usr/bin/uschedulecmd --id=%d \"export DISPLAY=:0.0\n/usr/bin/announce \'You have an appointment\'\"\n", ev->uid);
+  sprintf(uscheduleidcmd, "/usr/bin/uschedulecmd --id=%d \"export DISPLAY=:0.0\n/usr/bin/announce \'You have an appointment\'\"\n", ev->uid);
+  system(uscheduleidcmd);
   localtime_r (&(ev->start), &tm);
   strftime (alrm_date, sizeof(alrm_date), "%Y-%m-%d", &tm);
   alarm_t=ev->start-60*ev->alarm;
   localtime_r (&alarm_t, &tm);
   strftime (alrm_time, sizeof(alrm_time), "%H:%M:%S", &tm);
-  printf("/usr/bin/uschedule %d \'%s %s\'\n", ev->uid, alrm_date, alrm_time);
-    	      
+  sprintf(uschedulecmd, "/usr/bin/uschedule %d \'%s %s\'\n", ev->uid, alrm_date, alrm_time);
+  system(uschedulecmd);    	      
 }
 
 static void
 unschedule_alarm(event_t ev)
 {
-  printf("/usr/bin/uschedulerm %d\n", ev->uid);
-  printf("/usr/bin/uschedulerm -c %d\n", ev->uid);
+  char uschedulerm[30];
+  
+  if(ev->alarm!=-1) {
+    sprintf(uschedulerm,"/usr/bin/uschedulerm %d\n", ev->uid);
+    system(uschedulerm);
+    sprintf(uschedulerm,"/usr/bin/uschedulerm -c %d\n", ev->uid);
+    system(uschedulerm);
+  }
 }
 
 static void
