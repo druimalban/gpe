@@ -29,11 +29,20 @@ typedef enum
     GTKDATESEL_MONTH
   } GtkDateSelMode;
 
-GtkType		gtk_date_sel_get_type	   (void);
+typedef enum
+  {
+    GTKDATESEL_MONTH_LONG,		/* November */
+    GTKDATESEL_MONTH_SHORT,		/* Nov */
+    GTKDATESEL_MONTH_NUMERIC,		/* 11 */
+    GTKDATESEL_MONTH_ROMAN		/* xi */
+  } GtkDateSelMonthStyle;
+
+GtkType		gtk_date_sel_get_type (void);
 
 GtkWidget      *gtk_date_sel_new (GtkDateSelMode mode);
 
-time_t		gtk_date_sel_get_time	   (GtkDateSel *sel);
-void            gtk_date_sel_set_time      (GtkDateSel *sel, time_t time);
+time_t		gtk_date_sel_get_time (GtkDateSel *sel);
+void            gtk_date_sel_set_time (GtkDateSel *sel, time_t time);
+void		gtk_date_sel_set_month_style (GtkDateSel *sel, GtkDateSelMonthStyle style);
 
 #endif

@@ -35,6 +35,7 @@ struct _GtkDateSel
   time_t time;
 
   GtkDateSelMode mode;
+  GtkDateSelMonthStyle month_style;
 };
 
 struct _GtkDateSelClass 
@@ -179,7 +180,21 @@ year_update (GtkDateSel *sel, GtkWidget *w)
 static void
 month_update (GtkDateSel *sel, GtkWidget *w)
 {
-  format_text (&sel->time, w, _("%B"));
+  switch (sel->month_style)
+    {
+    case GTKDATESEL_MONTH_SHORT:
+      format_text (&sel->time, w, _("%b"));
+      break;
+    case GTKDATESEL_MONTH_LONG:
+      format_text (&sel->time, w, _("%B"));
+      break;
+    case GTKDATESEL_MONTH_NUMERIC:
+      format_text (&sel->time, w, _("%m"));
+      break;
+    case GTKDATESEL_MONTH_ROMAN:
+      /* NYS */
+      break;
+    }
 }
 
 static void
@@ -216,14 +231,14 @@ make_field (GtkDateSel *sel, struct elem *e, void (*click)(GtkWidget *, GtkDateS
   gtk_object_set_data (GTK_OBJECT (e->arrow_l), "direction", (gpointer)0);
   gtk_object_set_data (GTK_OBJECT (e->arrow_r), "direction", (gpointer)1);
 
-  gtk_signal_connect (GTK_OBJECT (e->arrow_l), "clicked", click, sel);
-  gtk_signal_connect (GTK_OBJECT (e->arrow_r), "clicked", click, sel);
+  gtk_signal_connect (GTK_OBJECT (e->arrow_l), "clicked", GTK_SIGNAL_FUNC (click), sel);
+  gtk_signal_connect (GTK_OBJECT (e->arrow_r), "clicked", GTK_SIGNAL_FUNC (click), sel);
 
   gtk_box_pack_start (GTK_BOX (sel), e->arrow_l, TRUE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (sel), e->text, TRUE, TRUE, 1);
   gtk_box_pack_start (GTK_BOX (sel), e->arrow_r, TRUE, FALSE, 0);
 
-  gtk_signal_connect (GTK_OBJECT (sel), "changed", update, e->text);
+  gtk_signal_connect (GTK_OBJECT (sel), "changed", GTK_SIGNAL_FUNC (update), e->text);
   update (sel, e->text);
 }
 
@@ -237,6 +252,8 @@ gtk_date_sel_init (GtkDateSel *sel)
   make_field (sel, &sel->week, week_click, week_update);
   make_field (sel, &sel->month, month_click, month_update);
   make_field (sel, &sel->year, year_click, year_update);
+
+  sel->month_style = GTKDATESEL_MONTH_SHORT;
 }
 
 static void
@@ -347,4 +364,10 @@ gtk_date_sel_set_time (GtkDateSel *sel, time_t time)
 {
   sel->time = time;
   gtk_signal_emit (GTK_OBJECT (sel), my_signals[0]);
+}
+
+void
+gtk_date_sel_set_month_style (GtkDateSel *sel, GtkDateSelMonthStyle style)
+{
+  sel->month_style = style;
 }

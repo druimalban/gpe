@@ -1,3 +1,12 @@
+2003-01-05  Philip Blundell  <philb@gnu.org>
+
+	* gpe/gtkdatesel.h (gtk_date_sel_set_month_style): New prototype.
+	(GtkDateSelMonthStyle): New enum.
+	* gtkdatesel.c 	(struct _GtkDateSel): New member month_style.
+	(month_update): Respect selected style.
+	(gtk_date_sel_set_month_style): New.
+	(make_field): Fix warnings.
+
 2003-01-04  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.40 released.
