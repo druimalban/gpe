@@ -1,5 +1,10 @@
 2003-01-05  Philip Blundell  <philb@gnu.org>
 
+	* Makefile (MEMBERS): Remove gtkminifilesel.
+	(HEADERS): Remove gtkminifilesel.h.
+	* gtkminifilesel.c: Deleted.
+	* gpe/gtkminifilesel.h: Likewise.
+
 	* link-warning.h: New file.
 	* render.c: Note that gpe_render_icon is obsolete and should not
 	be used.
