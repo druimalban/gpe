@@ -1,0 +1,2 @@
+xrdb -load -nocpp < /etc/X11/Xdefaults
+xrdb -load -nocpp < $HOME/.Xdefaults

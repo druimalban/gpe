@@ -1,0 +1,8 @@
+if [ -f /etc/xcalibrate.conf ]; then
+	echo "Restoring touch screen calibration"
+	/usr/X11R6/bin/xcalibrate -cal `cat /etc/xcalibrate.conf`
+fi
+#
+# MAYBE this should happen last so we can launch the calibrate 
+#       program if calibration is not found ?
+#
