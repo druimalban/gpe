@@ -38,7 +38,6 @@
 #include <gpe/errorbox.h>
 #include <gpe/question.h>
 #include <gpe/spacing.h>
-//#include <gpe/popup_menu.h>
 #include <xsettings-client.h>
 
 #define KEY_MATCHBOX "MATCHBOX/"
@@ -62,6 +61,7 @@ static struct
   GtkWidget *spFS, *bFont, *bColorFont;
   GtkWidget *spFSApp, *bFontApp;
   GtkWidget *slIconSize;
+  GtkWidget *cDefault;
 }
 self;
 
@@ -99,7 +99,6 @@ MBDesktopBG mb_back;
 static void select_font_popup (GtkWidget *parent_button);
 static void on_font_size_change(GtkSpinButton *spinbutton,GtkScrollType arg1);
 static GtkWidget *popup_menu_button_new (const gchar *stock_id);
-//static void on_font_select(char* desc);
 
 
 gboolean
@@ -312,41 +311,60 @@ sp_color_selector_update_sliders (SPColorSlider * csel1, guint channels)
 
 void update_enabled_widgets()
 {
-	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self.rbSolid)))
-	{
-		gtk_widget_set_sensitive(self.bColor1,TRUE);
-		gtk_widget_set_sensitive(self.bColor2,FALSE);
-		gtk_widget_set_sensitive(self.eImage,FALSE);
-		gtk_widget_set_sensitive(self.bOpen,FALSE);
-		gtk_widget_set_sensitive(self.rbH,FALSE);
-		gtk_widget_set_sensitive(self.rbV,FALSE);
-		gtk_widget_set_sensitive(self.rbImgCent,FALSE);
-		gtk_widget_set_sensitive(self.rbImgStr,FALSE);
-		gtk_widget_set_sensitive(self.rbImgTiled,FALSE);
-	}
-	else if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self.rbGrad)))
-	{
-		gtk_widget_set_sensitive(self.bColor1,TRUE);
-		gtk_widget_set_sensitive(self.bColor2,TRUE);
-		gtk_widget_set_sensitive(self.eImage,FALSE);
-		gtk_widget_set_sensitive(self.bOpen,FALSE);
-		gtk_widget_set_sensitive(self.rbH,TRUE);
-		gtk_widget_set_sensitive(self.rbV,TRUE);
-		gtk_widget_set_sensitive(self.rbImgCent,FALSE);
-		gtk_widget_set_sensitive(self.rbImgStr,FALSE);
-		gtk_widget_set_sensitive(self.rbImgTiled,FALSE);
-	}
-	else if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self.rbImage)))
+	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self.cDefault)))
 	{
 		gtk_widget_set_sensitive(self.bColor1,FALSE);
 		gtk_widget_set_sensitive(self.bColor2,FALSE);
-		gtk_widget_set_sensitive(self.eImage,TRUE);
-		gtk_widget_set_sensitive(self.bOpen,TRUE);
+		gtk_widget_set_sensitive(self.eImage,FALSE);
+		gtk_widget_set_sensitive(self.bOpen,FALSE);
 		gtk_widget_set_sensitive(self.rbH,FALSE);
 		gtk_widget_set_sensitive(self.rbV,FALSE);
-		gtk_widget_set_sensitive(self.rbImgCent,TRUE);
-		gtk_widget_set_sensitive(self.rbImgStr,TRUE);
-		gtk_widget_set_sensitive(self.rbImgTiled,TRUE);
+		gtk_widget_set_sensitive(self.rbImgCent,FALSE);
+		gtk_widget_set_sensitive(self.rbImgStr,FALSE);
+		gtk_widget_set_sensitive(self.rbImgTiled,FALSE);
+		gtk_widget_set_sensitive(self.rbSolid,FALSE);
+		gtk_widget_set_sensitive(self.rbGrad,FALSE);
+	}
+	else
+	{
+		gtk_widget_set_sensitive(self.rbSolid,TRUE);
+		gtk_widget_set_sensitive(self.rbGrad,TRUE);
+		if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self.rbSolid)))
+		{
+			gtk_widget_set_sensitive(self.bColor1,TRUE);
+			gtk_widget_set_sensitive(self.bColor2,FALSE);
+			gtk_widget_set_sensitive(self.eImage,FALSE);
+			gtk_widget_set_sensitive(self.bOpen,FALSE);
+			gtk_widget_set_sensitive(self.rbH,FALSE);
+			gtk_widget_set_sensitive(self.rbV,FALSE);
+			gtk_widget_set_sensitive(self.rbImgCent,FALSE);
+			gtk_widget_set_sensitive(self.rbImgStr,FALSE);
+			gtk_widget_set_sensitive(self.rbImgTiled,FALSE);
+		}
+		else if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self.rbGrad)))
+		{
+			gtk_widget_set_sensitive(self.bColor1,TRUE);
+			gtk_widget_set_sensitive(self.bColor2,TRUE);
+			gtk_widget_set_sensitive(self.eImage,FALSE);
+			gtk_widget_set_sensitive(self.bOpen,FALSE);
+			gtk_widget_set_sensitive(self.rbH,TRUE);
+			gtk_widget_set_sensitive(self.rbV,TRUE);
+			gtk_widget_set_sensitive(self.rbImgCent,FALSE);
+			gtk_widget_set_sensitive(self.rbImgStr,FALSE);
+			gtk_widget_set_sensitive(self.rbImgTiled,FALSE);
+		}
+		else if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self.rbImage)))
+		{
+			gtk_widget_set_sensitive(self.bColor1,FALSE);
+			gtk_widget_set_sensitive(self.bColor2,FALSE);
+			gtk_widget_set_sensitive(self.eImage,TRUE);
+			gtk_widget_set_sensitive(self.bOpen,TRUE);
+			gtk_widget_set_sensitive(self.rbH,FALSE);
+			gtk_widget_set_sensitive(self.rbV,FALSE);
+			gtk_widget_set_sensitive(self.rbImgCent,TRUE);
+			gtk_widget_set_sensitive(self.rbImgStr,TRUE);
+			gtk_widget_set_sensitive(self.rbImgTiled,TRUE);
+		}
 	}
 }
 
@@ -478,6 +496,9 @@ notify_func (const char *name,
 	{
 	  if (setting->type == XSETTINGS_TYPE_STRING)
 	    {
+			if (strlen(setting->data.v_string) > 1) /* There is something defined */
+				  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.cDefault),FALSE);
+				
 			mbbg_parse_spec(&mb_back,g_strdup(setting->data.v_string));
 			  switch(mb_back.type)
 				{
@@ -682,7 +703,7 @@ static void
 File_Selected (char *file, gpointer data)
 {
   if (access(file,R_OK))
-	gpe_error_box(_("You don't have read access\nto selected background image!"));
+	gpe_error_box(_("You don't have read access to selected background image!"));
   else
 	gtk_entry_set_text (GTK_ENTRY (self.eImage), file);
 }
@@ -720,48 +741,56 @@ Theme_Save ()
 	GtkWidget* label;
 	
     /* background settings */
-    if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self.rbSolid)))
+	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self.cDefault)))
 	{
-		par1 = get_color_from_widget(self.bColor1);
-		confstr = g_strdup_printf("col-solid:%s",par1);
-		free(par1);
+		confstr = g_strdup(" ");
 	}
-	else if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self.rbGrad)))
-	{
-		par1 = get_color_from_widget(self.bColor1);
-		par2 = get_color_from_widget(self.bColor2);
-		if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self.rbV)))
-			confstr = g_strdup_printf("col-gradient-vertical:%s,%s",par1,par2);
-		else
-			confstr = g_strdup_printf("col-gradient-horizontal:%s,%s",par1,par2);
-		free(par1);
-		free(par2);		
-	}
-	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self.rbImage)))
-	{
-		par1 = gtk_editable_get_chars(GTK_EDITABLE(self.eImage),0,-1);
-		if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self.rbImgCent)))
-			confstr = g_strdup_printf("img-centered:%s",par1);
-		else if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self.rbImgStr)))
-			confstr = g_strdup_printf("img-stretched:%s",par1);
-		else if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self.rbImgTiled)))
-			confstr = g_strdup_printf("img-tiled:%s",par1);
-		if (access(par1,R_OK))
+	else
+	{	
+		if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self.rbSolid)))
 		{
-			gpe_error_box(_("You don't have read access\nto selected background image!"));
-			free(confstr);
-			confstr = NULL;
+			par1 = get_color_from_widget(self.bColor1);
+			confstr = g_strdup_printf("col-solid:%s",par1);
+			free(par1);
 		}
-		free(par1);
+		else if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self.rbGrad)))
+		{
+			par1 = get_color_from_widget(self.bColor1);
+			par2 = get_color_from_widget(self.bColor2);
+			if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self.rbV)))
+				confstr = g_strdup_printf("col-gradient-vertical:%s,%s",par1,par2);
+			else
+				confstr = g_strdup_printf("col-gradient-horizontal:%s,%s",par1,par2);
+			free(par1);
+			free(par2);		
+		}
+		if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self.rbImage)))
+		{
+			par1 = gtk_editable_get_chars(GTK_EDITABLE(self.eImage),0,-1);
+			if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self.rbImgCent)))
+				confstr = g_strdup_printf("img-centered:%s",par1);
+			else if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self.rbImgStr)))
+				confstr = g_strdup_printf("img-stretched:%s",par1);
+			else if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self.rbImgTiled)))
+				confstr = g_strdup_printf("img-tiled:%s",par1);
+			if (access(par1,R_OK))
+			{
+				gpe_error_box(_("You don't have read access to selected background image!"));
+				free(confstr);
+				confstr = NULL;
+			}
+			free(par1);
+		}
+	
 	}
-
 	/* background style*/  	
 	if (confstr)
 	{
 		system_printf ("xst write %s%s str %s", KEY_MATCHBOX, "Background", confstr);
 		free(confstr);
 	}
-
+	
+	
 	/* desktop font type and size */
 	label = g_object_get_data (G_OBJECT (self.bFont), "label");
 	clabel = gtk_label_get_text(GTK_LABEL(label));
@@ -782,7 +811,7 @@ Theme_Save ()
 	confstr = g_strdup_printf("xst write %s%s str \"%s %i\"", KEY_GTK, "FontName", clabel,fs);
 	system(confstr);
 	free(confstr);	
-	
+
 	/* desktop icon size */
 	fs = (int)gtk_range_get_value(GTK_RANGE(self.slIconSize));
 	system_printf ("xst write %s%s int %d", KEY_MATCHBOX, "Desktop/IconSize", fs);
@@ -899,18 +928,25 @@ Theme_Build_Objects ()
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
 
+  self.cDefault = gtk_check_button_new_with_label(_("Theme Default"));
+  gtk_table_attach (GTK_TABLE (table), self.cDefault, 0, 2, 1, 2,
+		    (GtkAttachOptions) (table_attach_left_col_x),
+		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
+  g_signal_connect (GTK_OBJECT (self.cDefault), "toggled",
+		       (update_enabled_widgets), NULL);
+			
   label = gtk_radio_button_new_with_label (NULL, _("Solid color"));
   rg_background = label;
   self.rbSolid = label;
   g_signal_connect (GTK_OBJECT (label), "toggled",
 		       (update_enabled_widgets), NULL);
-  gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2,
+  gtk_table_attach (GTK_TABLE (table), label, 0, 1, 2, 3,
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
 			
   // box for radio buttons
   hbox = gtk_hbox_new(FALSE,gpe_boxspacing);
-  gtk_table_attach (GTK_TABLE (table), hbox, 0, 3, 5, 6,
+  gtk_table_attach (GTK_TABLE (table), hbox, 0, 3, 6, 7,
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
   label = gtk_radio_button_new_with_label (NULL, _("Horizontal"));
@@ -923,10 +959,9 @@ Theme_Build_Objects ()
   
   self.bColor1 = gtk_button_new();
   gtk_button_set_label(GTK_BUTTON(self.bColor1),_("Color"));
-  //gtk_button_new_from_stock (GTK_STOCK_SELECT_COLOR);
   g_signal_connect (GTK_OBJECT (self.bColor1), "clicked",
 		    G_CALLBACK (on_color_select), NULL);
-  gtk_table_attach (GTK_TABLE (table), self.bColor1, 1, 2, 1, 2,
+  gtk_table_attach (GTK_TABLE (table), self.bColor1, 1, 2, 2, 3,
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
 
@@ -937,7 +972,7 @@ Theme_Build_Objects ()
   g_signal_connect (GTK_OBJECT (label), "toggled",
 		       (update_enabled_widgets), NULL);
   self.rbGrad = label;
-  gtk_table_attach (GTK_TABLE (table), label, 0, 1, 2, 3,
+  gtk_table_attach (GTK_TABLE (table), label, 0, 1, 3, 4,
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
 
@@ -946,7 +981,7 @@ Theme_Build_Objects ()
   g_signal_connect (GTK_OBJECT (self.bColor2), "clicked",
 		    G_CALLBACK (on_color_select), NULL);
   //gtk_button_new_from_stock (GTK_STOCK_SELECT_COLOR);
-  gtk_table_attach (GTK_TABLE (table), self.bColor2, 1, 2, 2, 3,
+  gtk_table_attach (GTK_TABLE (table), self.bColor2, 1, 2, 3, 4,
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
 
@@ -957,12 +992,12 @@ Theme_Build_Objects ()
   g_signal_connect (GTK_OBJECT (label), "toggled",
 		       (update_enabled_widgets), NULL);
   self.rbImage = label;
-  gtk_table_attach (GTK_TABLE (table), label, 0, 1, 6, 7,
+  gtk_table_attach (GTK_TABLE (table), label, 0, 1, 7, 8,
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
 
   self.eImage = gtk_entry_new ();
-  gtk_table_attach (GTK_TABLE (table), self.eImage, 0, 1, 7, 8,
+  gtk_table_attach (GTK_TABLE (table), self.eImage, 0, 1, 8, 9,
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
   gtk_widget_set_size_request (self.eImage, 150, -1);
@@ -970,12 +1005,12 @@ Theme_Build_Objects ()
   self.bOpen = gtk_button_new_from_stock (GTK_STOCK_OPEN);
   gtk_signal_connect (GTK_OBJECT (self.bOpen), "pressed",
 		      GTK_SIGNAL_FUNC (choose_file), NULL);
-  gtk_table_attach (GTK_TABLE (table), self.bOpen, 1, 2, 7, 8,
+  gtk_table_attach (GTK_TABLE (table), self.bOpen, 1, 2, 8, 9,
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
 
   hbox = gtk_hbox_new(False,gpe_boxspacing);
-  gtk_table_attach (GTK_TABLE (table), hbox, 0, 3, 8, 9,
+  gtk_table_attach (GTK_TABLE (table), hbox, 0, 3, 9, 10,
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
 			
@@ -1105,6 +1140,7 @@ Theme_Build_Objects ()
   gtk_label_set_text(GTK_LABEL(label),"Sans");	
   label = g_object_get_data (G_OBJECT (self.bFontApp), "label");
   gtk_label_set_text(GTK_LABEL(label),"Sans");	
+  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.cDefault),TRUE);
   
   mb_start_xsettings ();
 
