@@ -1,6 +1,23 @@
+2004-05-16  Philip Blundell  <philb@gnu.org>
+
+	* gpeiconlistview.c: New file.
+	* gpe/gpeiconlistview.h: Likewise.
+
+	* gpeiconlist.gob: Implement in terms of GPEIconListView.
+	(gpe_iconlist_update_icon_item_with_udata): Deleted.
+	(gpe_iconlist_remove_item_with_udata): Likewise.
+	* gpe-iconlist.c, gpe/gpe-iconlist.h: Regenerated.
+
+	* gpeiconlistitem.c (gpe_icon_list_item_get_type): GType, not GtkType.
+	* gpe/gpeiconlistitem.h: Likewise.
+
 2004-03-11  Florian Boor <florian.boor@kernelconcepts.de>
 	
 	* gpehelp.c: Fixed parameters for application start.
+
+2004-03-07  Philip Blundell  <philb@gnu.org>
+
+	* Makefile (HEADERS): Add tray.h and popup.h.
 
 2004-03-07  Philip Blundell  <philb@gnu.org>
 

@@ -76,7 +76,7 @@ gpe_icon_list_item_fini (GPEIconListItem *item)
     gdk_pixbuf_unref (item->pb_scaled);
 }
 
-GtkType
+GType
 gpe_icon_list_item_get_type (void)
 {
   static GType item_type = 0;
@@ -98,6 +98,7 @@ gpe_icon_list_item_get_type (void)
 
       item_type = g_type_register_static (G_TYPE_OBJECT, "GPEIconListItem", &info, (GTypeFlags)0);
     }
+
   return item_type;
 }
 

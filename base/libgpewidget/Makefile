@@ -1,6 +1,6 @@
 PREFIX = /usr/local
 PACKAGE = libgpewidget
-DEBUG = no
+DEBUG = yes
 VERSION = 0.78
 CVSBUILD = yes
 
@@ -8,7 +8,7 @@ IN_LIBGPEWIDGET = yes
 
 LINGUAS = ro de id pt fr ga wa sv nl cs
 
-MEMBERS = gtkdatecombo errorbox init pixmaps smallbox render dirbrowser picturebutton what stylus screensize question gtksimplemenu spacing tray tap translabel popup popup_menu gpetimesel gpeiconlistitem gpeclockface gpetooltips2 gpe-iconlist gpewindowlist gpehelp
+MEMBERS = gtkdatecombo errorbox init pixmaps smallbox render dirbrowser picturebutton what stylus screensize question gtksimplemenu spacing tray tap translabel popup popup_menu gpetimesel gpeiconlistitem gpeclockface gpetooltips2 gpe-iconlist gpewindowlist gpehelp gpeiconlistview
 
 SONAME = libgpewidget.so.1
 BINPACKAGE = libgpewidget1
@@ -26,7 +26,7 @@ PACKAGE_LDFLAGS = $(STANDARD_LDFLAGS) $(GTKLIBS) $(shell pkg-config --libs xrend
 PACKAGE_CFLAGS += -fPIC
 PACKAGE_CPPFLAGS += -I./gpe
 
-HEADERS += init.h render.h errorbox.h smallbox.h pixmaps.h gtkdatecombo.h dirbrowser.h stylus.h picturebutton.h spacing.h translabel.h question.h windows.h gpe-iconlist.h gtksimplemenu.h gpewindowlist.h
+HEADERS += init.h render.h errorbox.h smallbox.h pixmaps.h gtkdatecombo.h dirbrowser.h stylus.h picturebutton.h spacing.h translabel.h question.h windows.h gpe-iconlist.h gtksimplemenu.h gpewindowlist.h tray.h popup.h
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))

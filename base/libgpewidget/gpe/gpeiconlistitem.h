@@ -35,7 +35,7 @@ struct _GPEIconListItem
 typedef struct _GPEIconListItem	        GPEIconListItem;
 typedef struct _GPEIconListItemClass    GPEIconListItemClass;
 
-GtkType		gpe_icon_list_item_get_type (void);
+GType		gpe_icon_list_item_get_type (void);
 
 GObject        *gpe_icon_list_item_new ();
 

@@ -63,24 +63,10 @@ void 	gpe_iconlist_set_bg_pixmap	(GPEIconList * self,
 					GdkPixbuf * bg);
 void 	gpe_iconlist_set_bg_color	(GPEIconList * self,
 					guint32 color);
-void 	gpe_iconlist_update_icon_item_with_udata	(GPEIconList * self,
-					GdkPixbuf * pixbuf,
-					gpointer udata);
-void 	gpe_iconlist_remove_item_with_udata	(GPEIconList * self,
-					gpointer udata);
 GObject * 	gpe_iconlist_add_item	(GPEIconList * self,
 					char * title,
 					char * icon,
 					gpointer udata);
-GObject * 	gpe_iconlist_add_item_pixbuf	(GPEIconList * self,
-					char * title,
-					GdkPixbuf * icon,
-					gpointer udata);
-void 	gpe_iconlist_remove_item	(GPEIconList * self,
-					GObject * item);
-void 	gpe_iconlist_set_item_icon	(GPEIconList * self,
-					GObject * item,
-					GdkPixbuf * new_pixbuf);
 void 	gpe_iconlist_set_embolden	(GPEIconList * self,
 					gboolean yes);
 void 	gpe_iconlist_set_show_title	(GPEIconList * self,

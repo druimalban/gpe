@@ -26,44 +26,11 @@ requires 2.0.0
 #include <gtk/gtk.h>
 
 #include "gpe-iconlist.h"
-#include "gpeiconlistitem.h"
-#include "link-warning.h"
-
-#define LABEL_YMARGIN	8
-#define TOP_MARGIN	5
-
-#define il_label_height(_x)	(GPE_ICONLIST (_x)->_priv->label_height)
-#define il_icon_size(_x)	(GPE_ICONLIST (_x)->_priv->icon_size)
-#define il_row_height(_x)	(il_icon_size (_x) \
-	                         + (((GPE_ICONLIST (_x)->_priv)->flag_show_title) ? \
-		                     (il_label_height (_x)) : 0 ) \
-				 + LABEL_YMARGIN)
-#define il_col_width(_x)	(il_icon_size (_x) + (2 * GPE_ICONLIST (_x)->_priv->icon_xmargin))
-
-//private structure used to find an icon from its data, see _find_from_udata()
-struct _Pack
-{
-  gpointer udata;         //udata to find
-  GPEIconListItem *icon;  //the icon if found, NULL if not found
-};
-
+#include "gpeiconlistview.h"
 %}
 
 class GPE:IconList from Gtk:Scrolled:Window {
-	private GList *icons = NULL;
-	private GdkPixbuf *bgpixbuf = NULL;
-	private guint32 bgcolor = 0xffffffff; //Whiten the background
-	//-> for use with a transparent bg? cool... 
-	private int rows = 1;
-	private int cols = 1;
-	private int mcol = -1;
-	private int mrow = -1;
-	private int popup_timeout = 0;
-	private gboolean flag_embolden = TRUE;
-	private gboolean flag_show_title = TRUE;
-	private guint icon_size = 48;
-	private guint icon_xmargin = 12;		//replaces LABEL_XMARGIN
-	private guint label_height = 0;
+	private GtkWidget *view;
 
 /* Signals */
 	signal last NONE(POINTER)
@@ -72,10 +39,22 @@ class GPE:IconList from Gtk:Scrolled:Window {
 	signal last NONE(POINTER)
 	void show_popup(self, gpointer udata);
 
+	private void
+	_relay_show_popup (GtkWidget *w, gpointer udata, gpointer self)
+	{
+	  gpe_iconlist_show_popup (self, udata);
+	}
+
+	private void
+	_relay_clicked (GtkWidget *w, gpointer udata, gpointer self)
+	{
+	  gpe_iconlist_clicked (self, udata);
+	}
+
 /* init and other gtkish methods */
 	init (self)
 	{
-	  GtkWidget *vp, *da;
+	  GtkWidget *vp;
 
 	  gtk_scrolled_window_set_hadjustment (GTK_SCROLLED_WINDOW(self), NULL);
 	  gtk_scrolled_window_set_vadjustment (GTK_SCROLLED_WINDOW(self), NULL);
@@ -86,22 +65,12 @@ class GPE:IconList from Gtk:Scrolled:Window {
 	  vp = gtk_viewport_new (NULL, NULL);
 	  gtk_container_add (GTK_CONTAINER (self), vp);
 
-	  da = gtk_drawing_area_new ();
-	  gtk_widget_add_events (GTK_WIDGET (da), GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
-	  g_signal_connect (G_OBJECT (da), "expose_event",
-			    G_CALLBACK (gpe_iconlist__expose), NULL);
-	  g_signal_connect (G_OBJECT (da), "button_release_event",
-			    G_CALLBACK (gpe_iconlist__button_release), NULL);
-	  g_signal_connect (G_OBJECT (da), "button_press_event",
-			    G_CALLBACK (gpe_iconlist__button_press), NULL);
-	  gtk_container_add (GTK_CONTAINER (vp), da);
-	  
-	  gtk_object_set_data (GTK_OBJECT (self), "da", da);
-	  gtk_object_set_data (GTK_OBJECT (da), "il", self);
-	  gtk_object_set_data (GTK_OBJECT (da), "va", gtk_viewport_get_vadjustment (GTK_VIEWPORT (vp)));
-	  
-	  self->_priv->label_height = gpe_iconlist__title_height (self);
-	  
+	  self->_priv->view = gpe_icon_list_view_new ();
+	  gtk_container_add (GTK_CONTAINER (vp), self->_priv->view);
+
+	  g_signal_connect (G_OBJECT (self->_priv->view), "clicked", G_CALLBACK (gpe_iconlist__relay_clicked), self);
+	  g_signal_connect (G_OBJECT (self->_priv->view), "show_popup", G_CALLBACK (gpe_iconlist__relay_show_popup), self); 
+
 	  gtk_widget_show_all (vp);
 	}
 
@@ -114,614 +83,52 @@ class GPE:IconList from Gtk:Scrolled:Window {
 /* Set the background */
 	public void set_bg (GPE:IconList *self, char *bg)
 	{
-		if (self->_priv->bgpixbuf)
-			gdk_pixbuf_unref (self->_priv->bgpixbuf);
-		if (bg)
-			self->_priv->bgpixbuf = gdk_pixbuf_new_from_file (bg, NULL);
-		else
-			self->_priv->bgpixbuf = NULL;
+	  gpe_icon_list_view_set_bg (GPE_ICON_LIST_VIEW (self->_priv->view), bg);
 	}
 
 	public void set_bg_pixmap (GPE::IconList *self, GdkPixbuf *bg)
 	{
-		if (self->_priv->bgpixbuf)
-			gdk_pixbuf_unref (self->_priv->bgpixbuf);
-		gdk_pixbuf_ref (bg);
-		self->_priv->bgpixbuf = bg;
+	  gpe_icon_list_view_set_bg_pixmap (GPE_ICON_LIST_VIEW (self->_priv->view), bg);
 	}
 
 	public void set_bg_color (GPE::IconList *self, guint32 color)
 	{
-		self->_priv->bgcolor = color;
-	}
-
-/* Helper - max. height of a label */
-	private gint _title_height (GPEIconList *widget) 
-	{
-		PangoContext *pc;
-		PangoLayout *pl;
-		PangoRectangle pr;
-		int label_height;
-
-		/* Pango font rendering setup */
-		if ((pc = gtk_widget_get_pango_context (GTK_WIDGET(widget))) == NULL)
-			pc = gtk_widget_create_pango_context (GTK_WIDGET(widget));
-		pl = pango_layout_new (pc);
-		
-		/* Find out how tall icon labels will be */
-		pango_layout_set_text (pl, "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm\nQWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm", -1);
-		pango_layout_get_pixel_extents  (pl, NULL, &pr);
-		label_height = pr.height;
-
-		g_object_unref (pl);
-
-		return label_height;
-	}
-
-	private void _check_icon_size (GPEIconList *il, GObject *obj)
-	{
-		GPEIconListItem *icon = GPE_ICON_LIST_ITEM (obj);
-		if (icon->pb) {
-			guint h = gdk_pixbuf_get_height (icon->pb);
-			if (h > il->_priv->icon_size + 1
-			   || h < il->_priv->icon_size - 1) {
-				double ratio = (double)il->_priv->icon_size / (double)h; 
-				guint new_width = gdk_pixbuf_get_width (icon->pb) * ratio;
-				icon->pb_scaled = gdk_pixbuf_scale_simple (icon->pb, new_width, il->_priv->icon_size, GDK_INTERP_BILINEAR);
-			} else {
-				gdk_pixbuf_ref (icon->pb);
-				icon->pb_scaled = icon->pb;
-			}
-		}
-	}
-
-/* Expose handler */
-	private gboolean _expose (GtkWidget *widget, GdkEventExpose *event, gpointer data)
-	{
-	  GPEIconList *il;
-	  GList *icons;
-	  GdkPixbuf *dest;
-	  int row=0, col=0;
-	  GtkAdjustment *va;
-	  PangoContext *pc;
-	  PangoLayout *pl;
-	  int label_height;
-	  int i;
-	  
-	  il = GPE_ICONLIST(gtk_object_get_data (GTK_OBJECT(widget), "il"));
-
-	  /* Pango font rendering setup */
-	  if ((pc = gtk_widget_get_pango_context (widget)) == NULL)
-	    pc = gtk_widget_create_pango_context (widget);
-
-	  pl = pango_layout_new (pc);
-	  pango_layout_set_width (pl, il_col_width (il) * PANGO_SCALE);
-	  pango_layout_set_alignment (pl, PANGO_ALIGN_CENTER);
-	  
-	  label_height = il_label_height (il);
-
-	  /* Get the GtkAdjustment used for the vertical scrollbar
-	     va->value is the current displacement of the view as compared to the widget */
-	  va = gtk_object_get_data (GTK_OBJECT (widget), "va");
-	  
-	  /* Make a new pixbuf for rendering icons to */
-	  dest = gdk_pixbuf_new (GDK_COLORSPACE_RGB, FALSE, 8,
-				 event->area.width, event->area.height);
-
-	  /* set the background color */
-	  gdk_pixbuf_fill (dest, il->_priv->bgcolor);
-
-	  /* Paint the background image, scaled */
-	  if (il->_priv->bgpixbuf)
-	    {
-	      /* ??? pb: what's this loop for?  why not just render the area of
-		 background image given by event->area?  */
-	      for (i = 0; 
-		   i < il->_priv->rows * il_row_height (il); 
-		   i += gdk_pixbuf_get_height (il->_priv->bgpixbuf)) 
-		{
-		  GdkRectangle r1, dst;
-		  r1.x = 0; r1.y = i;
-		  r1.width = gdk_pixbuf_get_width (il->_priv->bgpixbuf);
-		  r1.height = gdk_pixbuf_get_height (il->_priv->bgpixbuf);
-		  
-		  if (gdk_rectangle_intersect (&r1, &(event->area), &dst)) {
-		    gdk_pixbuf_composite (il->_priv->bgpixbuf, dest,
-					  dst.x-event->area.x,
-					  dst.y-event->area.y,
-					  dst.width, dst.height,
-					  r1.x-event->area.x, r1.y-event->area.y,
-					  1,
-					  1,
-					  GDK_INTERP_BILINEAR, 255);
-		  }
-		}
-	    }
-
-	  for (icons = il->_priv->icons; icons != NULL; icons = icons->next) 
-	    {
-	      GdkRectangle r1, r2, dst;
-	      GPEIconListItem *icon;
-	      GdkPixbuf *pixbuf=NULL;
-	    
-	      icon = icons->data;
-	    
-	      /* Compute & render the icon */
-	      r1.x=col * il_col_width (il);
-	      r1.y=row * il_row_height (il) + 5;
-	      r1.width = il_col_width (il);
-	      r1.height = il->_priv->icon_size;
-	      
-	      r2.x = event->area.x;
-	      r2.y = event->area.y;
-	      r2.width = event->area.width;
-	      r2.height = event->area.height;
-	      
-	      if (gdk_rectangle_intersect (&r1, &r2, &dst)) 
-		{
-		  /* Get the icon from the cache if its there, if not put it there :) */
-		  if (icon->pb_scaled)
-		    pixbuf = icon->pb_scaled;
-		  else 
-		    {
-		      if (icon->pb == NULL)
-			icon->pb = gdk_pixbuf_new_from_file (icon->icon, NULL);
-
-		      gpe_iconlist__check_icon_size (il, G_OBJECT (icon));
-
-		      if (icon->icon) 
-			{
-			  gdk_pixbuf_unref (icon->pb);
-			  icon->pb = NULL;
-			}
-
-		      pixbuf = icon->pb_scaled;
-		    }
-	      
-		  if (pixbuf) 
-		    {
-		      // adjust X position for actual size
-		      r1.width = gdk_pixbuf_get_width (pixbuf);
-		      r1.x=col * il_col_width (il) + (il_col_width (il) - r1.width) / 2;
-		
-		      // recompute intersection: maybe nothing to do any more
-		      if (gdk_rectangle_intersect (&r1, &r2, &dst)) 
-			{
-			  gdk_pixbuf_composite (pixbuf, dest, // from, to
-						dst.x - event->area.x, //dest_x
-						dst.y - event->area.y,// + va->value, // dest_y
-						dst.width, dst.height, // dest_width, dest_height
-						r1.x - event->area.x, // offset_x
-						r1.y - event->area.y, // + va->value, // offset_y
-						1.0, 1.0,
-						GDK_INTERP_BILINEAR, // filtering
-						col == il->_priv->mcol && row == il->_priv->mrow ? 128 : 255);
-			}
-		    }
-		}
-	      
-	      if (++col == il->_priv->cols) 
-		{
-		  col = 0; 
-		  row++;
-		}
-	    }
-
-	  /* Dump to drawingarea */
-	  gdk_pixbuf_render_to_drawable (dest, widget->window, widget->style->fg_gc[GTK_STATE_NORMAL],
-					 0, 0, event->area.x, event->area.y,
-					 event->area.width, event->area.height,
-					 GDK_RGB_DITHER_NORMAL, event->area.x, event->area.y);
- 	  
-	  gdk_pixbuf_unref (dest);
-	  
-	  col = row = 0;
-	  
-	  for (icons = il->_priv->icons; icons != NULL; icons = icons->next) 
-	    {
-	      GdkRectangle r1, r2, dst;
-	      GPEIconListItem *icon;
-	      icon = icons->data;
-	    
-	      if (il->_priv->flag_show_title && icon->title)
-		{
-		  /* if show_title mode is set and current title non NULL, then */
-		  /* Compute & render the title */
-		  r1.x=col * il_col_width (il);
-		  r1.y=row * il_row_height (il) + il->_priv->icon_size + LABEL_YMARGIN;
-		  r1.width = il_col_width (il);
-		  r1.height = label_height;
-	      
-		  r2.x = event->area.x;
-		  r2.y = event->area.y;
-		  r2.width = event->area.width;
-		  r2.height = event->area.height;
-	      
-		  if (gdk_rectangle_intersect (&r1, &r2, &dst)) 
-		    {
-		      char *stxt; int slen;
-		      int selected=0;
-		      PangoRectangle pr;
-		      
-		      stxt=icon->title;
-		      slen = strlen (stxt);
-          
-		      selected = (il->_priv->mrow == row && il->_priv->mcol == col);
-		      if (selected && il->_priv->flag_embolden) 
-			{
-			  char *newtxt;
-			  newtxt = g_strdup_printf ("<b>%s</b>", stxt);
-			  pango_layout_set_markup (pl, newtxt, -1);
-			  g_free (newtxt);
-			} 
-		      else
-			pango_layout_set_text (pl, stxt, -1);
-		
-		      pango_layout_get_pixel_extents  (pl, NULL, &pr);
-		      
-		      while ((pango_layout_get_line_count (pl) > 2 ||
-			      pr.width > il_col_width (il)) && slen>0) {
-			char *newtxt;
-			char *fmt;
-			if (stxt[slen-2] == ' ')
-			  slen--;
-            
-			if (selected && il->_priv->flag_embolden)
-			  fmt = g_strdup_printf ("<b>%%.%ds...</b>", --slen);
-			else
-			  fmt = g_strdup_printf ("%%.%ds...", --slen);
-		  
-			newtxt = g_strdup_printf (fmt, stxt);
-			g_free (fmt);
-		  
-			if (selected)
-			  pango_layout_set_markup (pl, newtxt, -1);
-			else
-			  pango_layout_set_text (pl, newtxt, -1);
-			g_free (newtxt);
-			
-			pango_layout_get_pixel_extents  (pl, NULL, &pr);
-		      }
-		
-		      gtk_paint_layout (widget->style, widget->window, GTK_WIDGET_STATE (widget),
-					FALSE, &dst,
-					widget, "detail?wtf?", r1.x, r1.y, pl);
-		    }
-		} //(if show title, compute and render)
-	      
-	      if (++col == il->_priv->cols) 
-		{
-		  col = 0; 
-		  row++;
-		}
-	  }
-	  
-	  g_object_unref (pl);
-	  
-	  return TRUE;
-	}
-
-	private void _recalc_size (self, GtkAllocation *allocation)
-	{
-	  int count;
-	  int da_new_height;
-	  GtkAdjustment *adj;
-	  GtkWidget *viewport;
-
-	  adj = gtk_scrolled_window_get_hadjustment (GTK_SCROLLED_WINDOW (self));
-	  
-	  /* calculate number of columns that will fit.  If none will, use one anyway */
-	  self->_priv->cols = allocation->width / il_col_width (self);
-	  if (self->_priv->cols == 0)
-	    self->_priv->cols = 1;
-	  
-	  count = g_list_length (self->_priv->icons);
-		
-	  self->_priv->rows = (count - 1) / self->_priv->cols + 1;
-		
-	  // update drawing area
-	  da_new_height = self->_priv->rows * il_row_height (self) + TOP_MARGIN;
-	  gtk_widget_set_usize (GTK_WIDGET (gtk_object_get_data (GTK_OBJECT (self), "da")),
-				-1, da_new_height);
-	  viewport = GTK_WIDGET (gtk_bin_get_child (GTK_BIN (self)));
-	  gtk_widget_size_allocate (viewport, &viewport->allocation);
-	}
-	
-	private GObject *new_icon (char *title, char *icon, gpointer udata, GdkPixbuf *pb)
-	{
-	  GPEIconListItem *ret;
-	  ret = (GPEIconListItem *) gpe_icon_list_item_new ();
-	  ret->title = title;
-	  ret->icon = icon;
-	  ret->udata = udata;
-	  ret->pb = pb;
-	  ret->pb_scaled = NULL;
-	  return G_OBJECT (ret);
-	}
-
-	/* Update an existing icon found from its udata. */
-	/* OBSOLETE */
-	public void update_icon_item_with_udata (self, GdkPixbuf * pixbuf, gpointer udata)
-	{
-	  GtkWidget *da = g_object_get_data (G_OBJECT (self), "da");
-	  struct _Pack pak;
-	  pak.udata = udata;
-	  pak.icon  = NULL;
-	  g_list_foreach (self->_priv->icons, gpe_iconlist__find_from_udata, &pak);
-	  
-	  if (pak.icon != NULL)
-	    {
-	      gdk_pixbuf_unref(pak.icon->pb);
-	      gdk_pixbuf_unref(pak.icon->pb_scaled);
-
-	      pak.icon->pb = pixbuf;
-	      gdk_pixbuf_ref(pak.icon->pb);
-	      gpe_iconlist__check_icon_size (self, G_OBJECT (pak.icon));
-	    }
-	  else
-	    {
-	      g_error ("icon to update NOT found :(\n");
-	    }
-
-	  gpe_iconlist__recalc_size (self, &da->allocation);
-	}
-
-	/* OBSOLETE */
-	private void _find_from_udata (gpointer icon, gpointer data_pak)
-	{
-	  if( ((GPEIconListItem *)icon)->udata == ((struct _Pack *)data_pak)->udata )
-	    {
-	      ((struct _Pack *)data_pak)->icon = icon;
-	    }
-	}
-
-	/** Removes an icon found from its udata. */
-	/* OBSOLETE */
-	public void remove_item_with_udata (self, gpointer udata)
-	{
-	  GtkWidget *da = g_object_get_data (G_OBJECT (self), "da");
-	  struct _Pack pak;
-	  pak.udata = udata;
-	  pak.icon  = NULL;
-	  g_list_foreach (self->_priv->icons, gpe_iconlist__find_from_udata, &pak);
-	  
-	  if (pak.icon != NULL)
-	    {
-	      self->_priv->icons = g_list_remove (self->_priv->icons, pak.icon);
-	    }
-	  else
-	    {
-	      g_error ("icon to remove NOT found :(\n");
-	    }
-	  gpe_iconlist__recalc_size (self, &da->allocation);
+	  gpe_icon_list_view_set_bg_color (GPE_ICON_LIST_VIEW (self->_priv->view), color);
 	}
 
 	public GObject *add_item (self, char *title, char *icon, gpointer udata)
 	{
-	  GtkWidget *da = g_object_get_data (G_OBJECT (self), "da");
-	  GObject *new = gpe_iconlist_new_icon (title, icon, udata, NULL);
-	  self->_priv->icons = g_list_append (self->_priv->icons, new);
-	  gpe_iconlist__recalc_size (self, &da->allocation);
-	  return new;
-	}
-
-	public GObject *add_item_pixbuf (self, char *title, GdkPixbuf *icon, gpointer udata)
-	{
-	  GObject *new;
-	  GtkWidget *da = g_object_get_data (G_OBJECT (self), "da");
-	  gdk_pixbuf_ref (icon);
-	  new = gpe_iconlist_new_icon (title, NULL, udata, icon);
-	  self->_priv->icons = g_list_append (self->_priv->icons, new);
-	  gpe_iconlist__check_icon_size (self, new);
-	  gpe_iconlist__recalc_size (self, &da->allocation);
-	  return new;
-	}
-
-	public void remove_item (self, GObject *item)
-	{
-	  GtkWidget *da;
-	  da = g_object_get_data (G_OBJECT (self), "da");
-	  self->_priv->icons = g_list_remove (self->_priv->icons, item);
-	  g_object_unref (item);
-	  gpe_iconlist__recalc_size (self, &da->allocation);
-	}
-
-	public void set_item_icon (self, GObject *item, GdkPixbuf *new_pixbuf)
-	{
-	  GPEIconListItem *i;
-
-	  i = GPE_ICON_LIST_ITEM (item);
-	  
-	  if (i->pb)
-	    gdk_pixbuf_unref (i->pb);
-	  if (i->pb_scaled)
-	    gdk_pixbuf_unref (i->pb_scaled);
-	  
-	  i->pb = new_pixbuf;
-	  gdk_pixbuf_ref (i->pb);
-
-	  gpe_iconlist__check_icon_size (self, item);
+	  return gpe_icon_list_view_add_item (GPE_ICON_LIST_VIEW (self->_priv->view),
+					      title, icon, udata);
 	}
 
 	public void set_embolden (self, gboolean yes)
 	{
-	  self->_priv->flag_embolden = yes;
+	  gpe_icon_list_view_set_embolden (GPE_ICON_LIST_VIEW (self->_priv->view), yes);
 	}
 
 	public void set_show_title (self, gboolean yes)
 	{
-	  self->_priv->flag_show_title = yes;
+	  gpe_icon_list_view_set_show_title (GPE_ICON_LIST_VIEW (self->_priv->view), yes);
 	}
 
 	public void set_icon_xmargin (self, guint margin)
 	{
-	  self->_priv->icon_xmargin = margin;
+	  gpe_icon_list_view_set_icon_xmargin (GPE_ICON_LIST_VIEW (self->_priv->view), margin);
 	}
 
 	public void clear (self)
 	{
-	  GList *iter;
-	  GtkWidget *da = g_object_get_data (G_OBJECT (self), "da");
-	  for (iter = self->_priv->icons; iter; iter = iter->next) 
-	    {
-	      GPEIconListItem *i = GPE_ICON_LIST_ITEM (iter->data);
-	      g_object_unref (i);
-	    }
-	  
-	  g_list_free (self->_priv->icons);
-	  self->_priv->icons = NULL;
-	  
-	  gpe_iconlist__recalc_size (self, &da->allocation);
+	  gpe_icon_list_view_clear (GPE_ICON_LIST_VIEW (self->_priv->view));
 	}
 
 	public void set_icon_size (self, guint size)
 	{
-	  GList *iter;
-	  GtkWidget *da = g_object_get_data (G_OBJECT (self), "da");
-
-	  for (iter = self->_priv->icons; iter; iter = iter->next) 
-	    {
-	      GPEIconListItem *i = GPE_ICON_LIST_ITEM (iter->data);
-	      if (i->pb_scaled)
-		gdk_pixbuf_unref (i->pb_scaled);
-	      i->pb_scaled = NULL;
-	    }
-	  
-	  self->_priv->icon_size = size;
-	  
-	  gpe_iconlist__recalc_size (self, &da->allocation);
-	  
-	  gtk_widget_draw (GTK_WIDGET (self), NULL);
+	  gpe_icon_list_view_set_icon_size (GPE_ICON_LIST_VIEW (self->_priv->view), size);
 	}
 
-	override (Gtk:Widget)
-	void
-	size_allocate (Gtk:Widget *self, GtkAllocation *allocation)
+	public void popup_removed (self) 
 	{
-	  GPEIconList *il;
-	  GtkWidget *da = g_object_get_data (G_OBJECT (self), "da");
-	  il = GPE_ICONLIST(self);
-
-	  if ((int)g_object_get_data (G_OBJECT(il), "size_x") == allocation->width &&
-	      (int)g_object_get_data (G_OBJECT(il), "size_y") == allocation->height)
-	    return;
-	  
-	  g_object_set_data (G_OBJECT(il), "size_x", (gpointer)allocation->width);
-	  g_object_set_data (G_OBJECT(il), "size_y", (gpointer)allocation->height);
-		
-	  PARENT_HANDLER (self, allocation);
-	  gpe_iconlist__recalc_size (il, &da->allocation);	//luc: recalc *after* the size is allocated :)
-	}
-
-	private void _get_rowcol (GPEIconList *widget, int x, int y, int *col, int *row) 
-	{
-	  *col = x / il_col_width (widget);
-	  *row = y / il_row_height (widget);
-	}
-
-	private void _refresh_containing (GPEIconList *widget, int col, int row) 
-	{
-		int x, y;
-		GtkWidget *w = GTK_WIDGET(gtk_object_get_data (GTK_OBJECT(widget), "da"));
-
-		x=col * il_col_width (widget);
-		y=row * il_row_height (widget);
-
-		gtk_widget_queue_draw_area (w, x, y, il_col_width (widget), il_row_height (widget) + 5);
-	}
-
-	private GPEIconListItem *_get_icon (GPEIconList *il, int col, int row) 
-	{
-		int i;
-		GList *icons;
-
-		icons = il->_priv->icons;
-		for (i=0;i<row*il->_priv->cols+col && icons;i++)
-			icons = icons->next;
-
-		return icons ? icons->data : NULL;
-
-	}
-
-	private void _cancel_popup (GPEIconList *il) 
-	{
-		if (il->_priv->popup_timeout != 0) {
-			gtk_timeout_remove (il->_priv->popup_timeout);
-			il->_priv->popup_timeout = 0;
-		}
-	}
-
-	private gint _button_release (GtkWidget *widget, GdkEventButton *event) 
-	{
-		GPEIconList *il;
-		int row, col;
-
-		il = GPE_ICONLIST(gtk_object_get_data (GTK_OBJECT(widget), "il"));
-
-		gpe_iconlist__cancel_popup (il);
-
-		gpe_iconlist__refresh_containing (il, il->_priv->mcol, il->_priv->mrow);
-
-		gpe_iconlist__get_rowcol (il, event->x, event->y, &(col), &(row));
-		if (col == il->_priv->mcol && row == il->_priv->mrow) {
-			GPEIconListItem *data;
-			data = gpe_iconlist__get_icon(il, il->_priv->mcol, il->_priv->mrow);
-			il->_priv->mcol = il->_priv->mrow = -1;
-			if (data) {
-				gpe_icon_list_item_button_release (data, event);
-				gpe_iconlist_clicked (il, data->udata);
-			}
-		} else
-			il->_priv->mcol = il->_priv->mrow = -1;
-
-		return TRUE;
-	}
-
-	private gint _popup (gpointer data) {
-		GPEIconList *il = data;
-		int row, col;
-
-		row = il->_priv->mrow;
-		col = il->_priv->mcol;
-		
-		gpe_iconlist_show_popup(il, gpe_iconlist__get_icon(il,col, row)->udata);
-
-		return FALSE;
-	}
-
-	public void popup_removed (self) {
-		int row, col;
-
-		row = self->_priv->mrow;
-		col = self->_priv->mcol;
-		
-		self->_priv->mcol = self->_priv->mrow = -1;
-
-		gpe_iconlist__refresh_containing (self, col, row);
-	}
-
-	private gint _button_press (GtkWidget *widget, GdkEventButton *event, gpointer user_data) {
-		GPEIconList *il;
-		GPEIconListItem *data;
-
-		il = GPE_ICONLIST(gtk_object_get_data (GTK_OBJECT(widget), "il"));
-
-		gpe_iconlist__get_rowcol (il, event->x, event->y, &(il->_priv->mcol), &(il->_priv->mrow));
-		gpe_iconlist__refresh_containing (il, il->_priv->mcol, il->_priv->mrow);
-
-		data = gpe_iconlist__get_icon(il, il->_priv->mcol, il->_priv->mrow);
-		if (data) {
-			gpe_icon_list_item_button_press (data, event);
-			
-			/* Register a popup if there is an icon under the cursor */
-			il->_priv->popup_timeout = gtk_timeout_add (500, gpe_iconlist__popup, (gpointer)il);
-		}
-
-		return TRUE;
+	  gpe_icon_list_view_popup_removed (GPE_ICON_LIST_VIEW (self->_priv->view));
 	}
 }
-
-%{
-link_warning (gpe_iconlist_update_icon_item_with_udata, "warning: gpe_iconlist_update_icon_item_with_udata is obsolete; use gpe_iconlist_set_item_icon instead.");
-link_warning (gpe_iconlist_remove_item_with_udata, "warning: gpe_iconlist_remove_item_with_udata is obsolete; use gpe_iconlist_remove_item instead.");
-%}
