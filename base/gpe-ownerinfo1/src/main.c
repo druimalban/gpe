@@ -135,7 +135,7 @@ main (int argc, char *argv[])
       }
       else {
 	/* upgrade went wrong, need to handle old format */
-#warning FIXME: handle all possible old formats here
+	/* Note: handle all possible old formats here */
       }
       /* now get the rest of the data: */
       if (fgets (buf, sizeof (buf), fp))
@@ -360,7 +360,6 @@ upgrade_to_v2 (guint new_version)
       fputs (firstline, fp);
       fputs ("\n", fp);
 
-#warning FIXME: give real default photo path here
 #define PREFIX "/usr/local/"      
       fputs (PREFIX "share/gpe/pixmaps/default/tux-48.png", fp);
       fputs ("\n", fp);

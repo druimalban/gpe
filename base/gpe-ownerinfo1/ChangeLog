@@ -1,5 +1,14 @@
 2002-09-01  Colin Marquardt  <colin@marquardt-home.de>
 
+	* src/main.c (Module): Small comment tweaks.
+
+	* src/support.c (create_pixmap_big), (create_pixmap): New function.
+	(create_pixmap_orig): The original, now renamed create_pixmap function.
+
+	* src/interface.c (create_GPE_Ownerinfo): Use functions in support.c now.
+
+	* src/support.h: New prototypes.
+
 	* src/interface.c (create_GPE_Ownerinfo): Scale small icon.
 
 	* src/main.h (Module): Functions have different parameters now.

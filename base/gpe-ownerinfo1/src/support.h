@@ -59,3 +59,11 @@ void        add_pixmap_directory       (const gchar     *directory);
 GtkWidget*  create_pixmap              (GtkWidget       *widget,
                                         const gchar     *filename);
 
+/* This is used to create the pixmaps in the interface. */
+GtkWidget*  create_pixmap_big          (GtkWidget       *widget,
+                                        const gchar     *filename);
+
+/* This is used to create the pixmaps in the interface. */
+GtkWidget*  create_pixmap_orig         (GtkWidget       *widget,
+                                        const gchar     *filename);
+

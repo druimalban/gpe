@@ -13,6 +13,9 @@
 
 #include <gtk/gtk.h>
 
+#include <gpe/pixmaps.h>
+#include <gpe/render.h>
+
 #include "support.h"
 
 /* This is an internally used function to check if a pixmap file exists. */
@@ -88,6 +91,98 @@ add_pixmap_directory                   (const gchar     *directory)
 /* This is an internally used function to create pixmaps. */
 GtkWidget*
 create_pixmap                          (GtkWidget       *widget,
+                                        const gchar     *filename)
+{
+  GtkWidget *pixmap;
+  GdkPixbuf *icon;
+  
+  gint width, height;
+  gfloat scale, scale_width = 2.72, scale_height = 3.14;
+
+  const guint maxwidth = 32, maxheight = 32;
+  
+  icon = gpe_find_icon (filename);
+  
+  width  = gdk_pixbuf_get_width (icon);
+  height = gdk_pixbuf_get_height (icon);
+
+  /* g_message ("image is %d x %d", width, height); */
+
+  if (width > maxwidth)
+    scale_width = (gfloat) maxwidth / width;
+  else
+    scale_width = 1.0;
+
+  if (height > maxheight)
+    scale_height = (gfloat) maxheight / height;
+  else
+    scale_height = 1.0;
+
+  /* g_message ("scale_width: %f, scale_height: %f", scale_width, scale_height); */
+
+  scale = scale_width < scale_height ? scale_width : scale_height;
+
+  /* g_message ("scale: %f", scale); */
+  
+  pixmap = gpe_render_icon (widget->style,
+				gdk_pixbuf_scale_simple
+				(icon, width * scale, height * scale, GDK_INTERP_BILINEAR));
+  
+  /* gdk_pixbuf_unref(icon); FIXME: needed? gives trouble... */
+
+  return pixmap;  
+}
+
+/* This is an internally used function to create pixmaps. */
+GtkWidget*
+create_pixmap_big                      (GtkWidget       *widget,
+                                        const gchar     *filename)
+{
+  GtkWidget *pixmap;
+  GdkPixbuf *icon;
+  
+  gint width, height;
+  gfloat scale, scale_width = 2.72, scale_height = 3.14;
+
+  const guint maxwidth = 100, maxheight = 100;
+  
+  icon = gpe_find_icon (filename);
+  
+  width  = gdk_pixbuf_get_width (icon);
+  height = gdk_pixbuf_get_height (icon);
+  /* g_message ("image is %d x %d", width, height); */
+
+  /* g_message ("allocation: %d x %d", widget->allocation.width, widget->allocation.height); */
+  /* FIXME: connect to "size-allocate" signal to get the real, dynamic allocation */
+    
+  if (width > maxwidth)
+    scale_width = (gfloat) maxwidth / width;
+  else
+    scale_width = 1.0;
+
+  if (height > maxheight)
+    scale_height = (gfloat) maxheight / height;
+  else
+    scale_height = 1.0;
+
+  /* g_message ("scale_width: %f, scale_height: %f", scale_width, scale_height); */
+
+  scale = scale_width < scale_height ? scale_width : scale_height;
+
+  /* g_message ("scale: %f", scale); */
+  
+  pixmap = gpe_render_icon (widget->style,
+				gdk_pixbuf_scale_simple
+				(icon, width * scale, height * scale, GDK_INTERP_BILINEAR));
+  
+  /* gdk_pixbuf_unref(icon); FIXME: needed? gives trouble... */
+
+  return pixmap;  
+}
+
+/* This is an internally used function to create pixmaps. */
+GtkWidget*
+create_pixmap_orig                     (GtkWidget       *widget,
                                         const gchar     *filename)
 {
   gchar *found_filename = NULL;

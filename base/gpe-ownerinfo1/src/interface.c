@@ -226,10 +226,7 @@ create_GPE_Ownerinfo (void)
   gtk_tooltips_set_tip (tooltips, smallphotobutton, _("Owner photo"), NULL);
   gtk_button_set_relief (GTK_BUTTON (smallphotobutton), GTK_RELIEF_NONE);
 
-  smallphoto = gpe_render_icon (GPE_Ownerinfo->style,
-				gdk_pixbuf_scale_simple
-				(gpe_find_icon ("ownerphoto"), 32, 32, GDK_INTERP_BILINEAR));
-  //smallphoto = create_pixmap (GPE_Ownerinfo, NULL);
+  smallphoto = create_pixmap (GPE_Ownerinfo, "ownerphoto");
   gtk_widget_set_name (smallphoto, "smallphoto");
   gtk_widget_ref (smallphoto);
   gtk_object_set_data_full (GTK_OBJECT (GPE_Ownerinfo), "smallphoto", smallphoto,
@@ -261,8 +258,7 @@ create_GPE_Ownerinfo (void)
   style->bg[GTK_STATE_NORMAL] = myGdkColor;
   gtk_widget_set_style (GTK_WIDGET (bigphotobutton), style);
   
-  bigphoto = gpe_render_icon (GPE_Ownerinfo->style, gpe_find_icon ("ownerphoto"));
-  //bigphoto = create_pixmap (GPE_Ownerinfo, NULL);
+  bigphoto = create_pixmap_big (GPE_Ownerinfo, "ownerphoto");
   gtk_widget_set_name (bigphoto, "bigphoto");
   gtk_widget_ref (bigphoto);
   gtk_object_set_data_full (GTK_OBJECT (GPE_Ownerinfo), "bigphoto", bigphoto,
