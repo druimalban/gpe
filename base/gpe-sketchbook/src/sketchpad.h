@@ -28,7 +28,7 @@ extern GtkWidget * drawing_area;
 void sketchpad_init();
 void window_sketchpad_init(GtkWidget * window_sketchpad);
 
-//--event handlers
+//--event handlers //FIXME: to move to sketchpad-cb
 gint configure_event_handler     (GtkWidget *_drawing_area, GdkEventConfigure *event);
 gint expose_event_handler        (GtkWidget *_drawing_area, GdkEventExpose *event);
 gint button_press_event_handler  (GtkWidget *_drawing_area, GdkEventButton *event);

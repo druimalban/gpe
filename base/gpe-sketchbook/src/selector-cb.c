@@ -21,13 +21,13 @@
 
 #include <gtk/gtk.h>
 
-#include "callbacks.h"
 #include "_interface.h"
 #include "_support.h"
 
+#include "selector.h"
+#include "selector-cb.h"
 #include "gpe-sketchbook.h"
 #include "files.h"
-#include "selector.h"
 #include "sketchpad.h"
 
 #include "dialog.h"
@@ -112,8 +112,4 @@ void on_button_selector_about_clicked (GtkButton *button, gpointer user_data){
             "(c) 2002 Luc Pionchon\n"
             "Distributed under GPL");
 }
-
-
-//------------------------------------------------------------
-//----------------------below is freshly kindly added by glade
 

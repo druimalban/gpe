@@ -21,15 +21,15 @@
 
 #include <gtk/gtk.h>
 
-#include "callbacks.h"
 #include "_interface.h"
 #include "_support.h"
 
 #include "sketchpad-cb.h"
+#include "sketchpad.h"
 #include "gpe-sketchbook.h"
 #include "files.h"
 #include "selector.h"
-#include "sketchpad.h"
+#include "selector-cb.h"
 
 #include "dialog.h"
 

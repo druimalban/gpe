@@ -8,15 +8,20 @@ bin_PROGRAMS = gpe-sketchbook
 gpe_sketchbook_SOURCES = \
 	gpe-sketchbook.c gpe-sketchbook.h \
 	_support.c       _support.h \
-	_interface.c     _interface.h \
+					\
 	selector.c       selector.h \
+	selector-cb.c    selector-cb.h \
+	selector-gui.c   selector-gui.h \
+					\
 	sketchpad.c      sketchpad.h \
 	sketchpad-cb.c   sketchpad-cb.h \
+	sketchpad-gui.c  sketchpad-gui.h \
+	cursor_eraser_data.h	\
+					\
 	files.c          files.h \
-	callbacks.c      callbacks.h \
+					\
 	dialog.c         dialog.h \
-	about.c          about.h \
-	cursor_eraser_data.h
+	about.c          about.h
 
 gpe_sketchbook_LDADD = @GTK_LIBS@
 
@@ -24,9 +29,10 @@ gpe_sketchbook_LDADD = @GTK_LIBS@
 #--------------- my targets
 
 fixme:
-	grep FIXME *.h *.c -n
+	@echo "NO! that does NOT fix anything! ;)"
+	grep 'FIXME:' *.h *.c -n
 	@echo "+----------------+"
-	@echo ' Left to fix: ' `grep FIXME *.h *.c|wc -l`
+	@echo ' Left to fix: ' `grep 'FIXME:' *.h *.c|wc -l`
 	@echo "+----------------+"
 note:
 	grep 'NOTE:' *.h *.c -n
