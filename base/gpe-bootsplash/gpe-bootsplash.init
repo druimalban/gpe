@@ -1,23 +1,21 @@
 #!/bin/sh
 
 module_id() {
-    ## used to read from assets, but sometimes assets is corrupted
-    # grep "Module ID" /proc/hal/assets | sed "s/.*://"
-    echo ' iPAQ' `cat /proc/hal/model`
+    # Get model name
+    echo `grep "^Hardware" /proc/cpuinfo | sed -e "s/.*: *//" | tr a-z A-Z`
 }
 
 depmod
 
 case $1 in
 'start')
-	modprobe ipaq_hal
 	case `module_id` in
-		" iPAQ 3100" )	    ARGS="--mono" ;;
-		" iPAQ 3600" )	    ARGS="--flip" ;;
-		" iPAQ 3700" )	    ARGS="--flip" ;;
-		" iPAQ 3800" )	    ;;
-		" iPAQ 3900" )	    ARGS="--flip" ;;
-		" iPAQ 5400" )	    ;;
+		"HP IPAQ H3100" )
+			ARGS="--mono" ;;
+		"HP IPAQ H3600" | "HP IPAQ H3700" | "HP IPAQ H3900" )
+		    	ARGS="--flip" ;;
+		"HP IPAQ H3800" | "HP IPAQ H5400" | "HP IPAQ H2200" )
+			;;
 	esac
 	/usr/bin/gpe-bootsplash $ARGS
 	;;
