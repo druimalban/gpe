@@ -1,23 +1,17 @@
 PREFIX = /usr/local
-PACKAGE = libxsettings0
+PACKAGE = libxsettings
 DEBUG = no
 CVSBUILD = yes
-VERSION = 0.10
+VERSION = 0.11
 
 .SUFFIXES: .os
 
 LIBXSETTINGS_SO = libXsettings.so.0
 XSETTINGS_MEMBERS = xsettings-common
 
-CPPFLAGS += -D_GNU_SOURCE
-
-ifeq ($(DEBUG),yes)
-CFLAGS += -O2 -g
-LDFLAGS = -g #-lefence
-else
-CFLAGS += -Os -fomit-frame-pointer
-endif
-CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
+PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS)
+PACKAGE_CFLAGS += $(STANDARD_CFLAGS) `pkg-config --cflags x11`
+PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) `pkg-config --libs x11`
 
 XSETTINGS_OBJS = $(patsubst %,%.os,$(XSETTINGS_MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS) $(XSETTINGS_MEMBERS))
@@ -28,8 +22,9 @@ BUILD = ../build
 else
 BUILD = build
 endif
+
 .c.os:;
-	$(CC) -o $@ -c $^ $(CFLAGS) -fPIC
+	$(CC) -o $@ -c $^ $(CFLAGS) $(PACKAGE_CFLAGS) -fPIC
 
 all: libXsettings.so
 
@@ -37,7 +32,7 @@ libXsettings.so: $(LIBXSETTINGS_SO)
 	ln -sf $^ $@
 
 $(LIBXSETTINGS_SO): $(XSETTINGS_OBJS)
-	$(CC) -o $@ $^ -shared -Wl,-soname -Wl,$(LIBXSETTINGS_SO) -nostartfiles -L/usr/X11R6/lib -lX11 
+	$(CC) -o $@ $^ -shared -Wl,-soname -Wl,$(LIBXSETTINGS_SO) -nostartfiles $(LDFLAGS) $(PACKAGE_LDFLAGS)
 
 install-program: $(LIBXSETTINGS_SO)
 	install -d $(DESTDIR)$(PREFIX)/lib
