@@ -46,11 +46,11 @@ there's anyone you can visit!
 </p>
 
 <p>
-<!-- xplanet -shade 100 -markerfile ../people.coord -output people.png -geometry 640x480 -font /usr/X11R6/lib/X11/fonts/TrueType/Verdana.ttf -fontsize 9 -->
-<img src="images/people.png">
+<!-- xplanet -shade 100 -markerfile ../people.coord -output people.png -geometry 700x350 -font /usr/X11R6/lib/X11/fonts/TrueType/Verdana.ttf -fontsize 9 -image /opt/applications/earth_images/earthmap_hires.jpg -->
+<img src="images/people.png" width="700" height="350">
 <br>
-<!-- xplanet -shade 100 -markerfile ../people.coord -output people_eu.png -geometry 320x240 -font /usr/X11R6/lib/X11/fonts/TrueType/Verdana.ttf -fontsize 9 -lat 050.00 -lon 000.00 -projection orthographic -radius 200 -->
-<img src="images/people_eu.png">
+<!-- xplanet -shade 100 -markerfile ../people.coord -output people_eu.png -geometry 600x300 -font /usr/X11R6/lib/X11/fonts/TrueType/Verdana.ttf -fontsize 9 -lat 050.00 -lon 000.00 -projection orthographic -radius 250 -image /opt/applications/earth_images/earthmap_hires.jpg -->
+<img src="images/people_eu.png" width="600" height="300">
 </p>
 
 
