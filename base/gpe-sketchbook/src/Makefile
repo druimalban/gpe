@@ -47,25 +47,23 @@ CFLAGS  +=  -DGTK2 #-DGTK_ENABLE_BROKEN
 CFLAGS  += `pkg-config --cflags gtk+-2.0 gdk-pixbuf-2.0`
 LDFLAGS += `pkg-config --libs   gtk+-2.0 gdk-pixbuf-2.0`
 else
-#CFLAGS  += `gtk-config --cflags`
-#LDFLAGS += `gtk-config --libs`
-#CFLAGS  += `gdk-pixbuf-config --cflags`
-#LDFLAGS += `gdk-pixbuf-config --libs`
-##libpng
-#CPPFLAGS += -I/usr/include
-#LDFLAGS  += -L/usr/lib -lpng
+CFLAGS  += `gtk-config --cflags`
+LDFLAGS += `gtk-config --libs`
+CFLAGS  += `gdk-pixbuf-config --cflags`
+LDFLAGS += `gdk-pixbuf-config --libs`
+#libpng
+CPPFLAGS += -I/usr/include
+LDFLAGS  += -L/usr/lib -lpng
+#-- @ handhelds.org
+CPPFLAGS += -I../../include
+LDFLAGS  += -L../../lib
+LDFLAGS  += -lgdk_pixbuf
 endif
 
 #-- SQLite
 ifdef USE_SQLITE
 LDFLAGS += -lsqlite
 endif
-
-
-#-- @ handhelds.org
-#CPPFLAGS += -I../../include
-#LDFLAGS  += -L../../lib
-#LDFLAGS  += -lgdk_pixbuf
 
 #.SUFFIXES: .d
 
