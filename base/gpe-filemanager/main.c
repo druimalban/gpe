@@ -765,6 +765,7 @@ main (int argc, char *argv[])
 		      GTK_SIGNAL_FUNC (button_clicked), NULL);
   gtk_signal_connect (GTK_OBJECT (view_widget), "show-popup",
 		      GTK_SIGNAL_FUNC (show_popup), NULL);
+  gpe_iconlist_set_icon_size (view_widget, current_zoom);
 
 #if GTK_MAJOR_VERSION < 2
   toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, GTK_TOOLBAR_ICONS);
