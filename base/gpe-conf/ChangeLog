@@ -1,6 +1,11 @@
+2003-08-06  Luis Oliveira  <luis@handhelds.org>
+
+	* familiar/control1: changed package name to gpe-conf, added
+	Provides/Replaces: gpe-conf2
+
 2003-08-01  luc  <luc@handhelds.org>
 
-	* storage.c (Storage_Build_Objects): 
+	* storage.c (Storage_Build_Objects):
 
 When			Who				Where						What
 
