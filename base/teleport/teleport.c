@@ -378,6 +378,7 @@ int
 main (int argc, char *argv[])
 {
   Display *dpy;
+  gchar *home_dir, *d;
 
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
@@ -390,6 +391,15 @@ main (int argc, char *argv[])
   list_store = gtk_list_store_new (2, G_TYPE_STRING, G_TYPE_POINTER);
 
   gdk_window_add_filter (NULL, window_filter, NULL);
+
+  home_dir = g_get_home_dir ();
+
+  d = g_strdup_printf ("%s/.gpe", home_dir);
+  mkdir (d, 0700);
+  g_free (d);
+  d = g_strdup_printf ("%s/.gpe/migrate", home_dir);
+  mkdir (d, 0700);
+  g_free (d);
 
   crypt_init ();
 
