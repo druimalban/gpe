@@ -243,9 +243,6 @@ day_view_update ()
       gtk_clist_set_column_width (GTK_CLIST (day_list), 0, width + 4);
     }
 
-  localtime_r (&viewtime, &tm_start);
-  gtk_clist_moveto (GTK_CLIST (day_list), tm_start.tm_hour, 0, 0.0, 0.0);
-
   gtk_clist_thaw (GTK_CLIST (day_list));
   
   return TRUE;
@@ -268,7 +265,6 @@ day_view(void)
   datesel = gtk_date_sel_new (GTKDATESEL_FULL);
   
   day_list = gtk_clist_new (2);
-  viewtime = gtk_date_sel_get_time (GTK_DATE_SEL (datesel));
   
   gtk_signal_connect (GTK_OBJECT (day_list), "select_row",
                        GTK_SIGNAL_FUNC (selection_made),
