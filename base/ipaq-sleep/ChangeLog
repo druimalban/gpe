@@ -1,5 +1,8 @@
 2002-07-22  Colin Marquardt  <colin@marquardt-home.de>
 
+	* familiar/control (Module): Change wording a bit. Add that it
+	looks at battery status now too.
+
 	* Makefile (ipkg): Copy familiar/preinst, familiar/postinst and
 	familiar/conffiles to /familiar/dist/ too.
 	(install): Remove the lines that deal with rc2.d.
