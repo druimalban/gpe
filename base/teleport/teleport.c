@@ -38,7 +38,6 @@ Atom migrate_atom;
 Atom string_atom;
 Atom challenge_atom;
 GdkWindow *grab_window;
-GtkListStore *list_store;
 
 gboolean grabbed;
 
