@@ -36,6 +36,9 @@
 #define COMPLETED 0
 #define LAST_SIGNAL 1
 
+#define FILEMANAGER_ICON_PATH "/share/gpe/pixmaps/default/filemanager/document-icons"
+#define DEFAULT_ICON_PATH "/pixmaps"
+
 GtkWidget *window, *vbox2;
 GtkWidget *combo;
 GtkWidget *view_scrolld;
@@ -322,22 +325,51 @@ button_clicked (GtkWidget *widget, gpointer udata)
     browse_directory (file_info->filename);
 }
 
+gchar *
+find_icon_path (gchar *mime_type)
+{
+  struct stat s;
+  gchar *mime_icon, *mime_path;
+
+  mime_icon = gnome_vfs_mime_get_icon (mime_type);
+  if (mime_icon)
+  {
+    if (mime_icon[0] == '/')
+    {
+      if (stat (mime_icon, &s) == 0)
+        return mime_icon;
+    }
+
+    mime_path = g_strdup_printf (PREFIX FILEMANAGER_ICONS_PATH "/%s", mime_icon);
+    if (stat (mime_path, &s) == 0)
+      return mime_path;
+
+    mime_path = g_strdup_printf (PREFIX DEFAULT_ICONS_PATH "/%s", mime_icon);
+    if (stat (mime_path, &s) == 0)
+      return mime_path;
+  }
+
+  return g_strdup (FILEMANAGER_ICON_PATH "/regular.png");
+}
+
 void
 add_icon (FileInfomation *file_info)
 {
   struct stat file_stats;
   GSList *iter;
-  gchar *image_filename = PREFIX "/share/gpe/pixmaps/default/filemanager/document-icons/";
-  gchar *extension;
+  gchar *mime_icon, *mime_type;
 
   if (file_info->vfs->type == GNOME_VFS_FILE_TYPE_DIRECTORY)
-    image_filename = g_strdup_printf ("%s%s", image_filename, "directory.png");
+    mime_icon = g_strdup (FILEMANAGER_ICON_PATH "/directory.png");
   else if (file_info->vfs->type == GNOME_VFS_FILE_TYPE_REGULAR)
-    image_filename = g_strdup_printf ("%s%s", image_filename, "regular.png");
-  else
-    image_filename = g_strdup_printf ("%s%s", image_filename, "regular.png");
-
-  printf ("Added %s\n", file_info->filename);
+  {
+    mime_type = gnome_vfs_get_mime_type (file_info->filename);
+    if (mime_type)
+      mime_icon = find_icon_path (mime_type);
+    else
+      mime_icon = g_strdup (FILEMANAGER_ICON_PATH "/regular.png");
+    printf ("Image Filename: %s\n", image_filename);
+  }
   gpe_iconlist_add_item (GPE_ICONLIST (view_widget), file_info->vfs->name, image_filename, (gpointer) file_info);
 }
 
