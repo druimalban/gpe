@@ -3,7 +3,7 @@ PACKAGE = gpe-bluetooth
 DEBUG = no
 CVSBUILD = yes
 GTK2 = yes
-VERSION = 0.25
+VERSION = 0.26
 
 MEMBERS = main dun sdp pan lap rfcomm pin-ui dbus pin-dbus
 
@@ -36,10 +36,12 @@ SOURCES = $(patsubst %,%.c,$(MEMBERS))
 all: $(PACKAGE) all-mo bnep-helper rfcomm-helper
 
 pin-ui.c: ../bluez-pin/pin-ui.c
+	rm -f $@
 	cp $< $@
 	chmod a-w $@
 
 pin-dbus.c: ../bluez-pin/pin-dbus.c
+	rm -f $@
 	cp $< $@
 	chmod a-w $@
 

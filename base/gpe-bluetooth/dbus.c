@@ -28,9 +28,9 @@
 
 DBusHandlerResult
 dbus_handler_func (DBusMessageHandler *handler,
- 	      DBusConnection     *connection,
-	      DBusMessage        *message,
-	      void               *user_data)
+		   DBusConnection     *connection,
+		   DBusMessage        *message,
+		   void               *user_data)
 {
   if (dbus_message_has_name (message, REQUEST_NAME))
     bluez_pin_handle_dbus_request (connection, message);
@@ -52,8 +52,8 @@ gpe_bluetooth_init_dbus (void)
   connection = dbus_bus_get (DBUS_BUS_SYSTEM, &error);
   if (connection == NULL)
     {
-      fprintf (stderr, "Failed to open connection to system message bus: %s\n",
-               error.message);
+      gpe_error_box_fmt ("Failed to open connection to system message bus: %s\n",
+			 error.message);
       dbus_error_free (&error);
       exit (1);
     }
