@@ -174,8 +174,9 @@ main (int argc, char *argv[])
       /* the rest is taken as address: */
       if ((numchar=fread (buf, 1, sizeof (buf), fp)))
       	{
-      	  owneraddress = g_strdup (buf);
-      	  owneraddress[numchar]='\0';
+	  owneraddress = g_malloc (numchar + 1);
+	  memcpy (owneraddress, buf, numchar);
+	  owneraddress[numchar] = '\0';
       	}
 
       fclose (fp);

@@ -1,3 +1,8 @@
+2002-09-16  Colin Marquardt  <colin@marquardt-home.de>
+
+	* src/main.c (main): Use pb's suggestion for getting and
+	terminating owneraddress.
+
 2002-09-11  Colin Marquardt  <colin@marquardt-home.de>
 
 	* familiar/control (Depends): gpe-login (>= 0.21)
