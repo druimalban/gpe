@@ -91,14 +91,15 @@ static int time_left_idx = 4;
 
 static Bool ac_power = False;
 
+#define popup_w 48
+
 static Window win_popup;
 static Bool popup_visible;
-static MBPixbufImage *img_icon_popup = NULL;
-static int popup_w = 48, popup_h = 56;
+static MBPixbufImage *img_icon_popup;
 static Pixmap popup_mask, popup_pixmap;
-static GC mask_gc_1, mask_gc_0;
-static GC popup_gc, popup_gc_1;
-static int text_offset = 20;
+static GC popup_gc;
+static int text_offset;
+static int popup_h;
 
 static XftFont *msg_font;
 static XftColor fg_xftcol;
@@ -297,14 +298,62 @@ text_size (char *s, int *x, int *y)
     *y = g.height;
 }
 
-Pixmap
-build_pixmap (void)
-{
-  Pixmap pix = XCreatePixmap (dpy, win_popup, popup_w, popup_h, pb->depth);
+#define MAX_OPACITY  192
+#define XRANGE 5
+#define YRANGE 4
 
-  mb_pixbuf_img_render_to_drawable (pb, img_icon_popup, pix, 
-				    popup_w / 2 - mb_pixbuf_img_get_width (img_icon_popup) / 2, 
-				    popup_h - mb_pixbuf_img_get_height (img_icon_popup));
+static int
+opacity (int val, int range, int ramp)
+{
+  int step = MAX_OPACITY / ramp;
+
+  if (val < ramp)
+    {
+      return val * step;
+    }
+  else if (val > (range - ramp))
+    {
+      return (range - val - 1) * step;
+    }
+
+  return MAX_OPACITY;
+}
+
+Pixmap
+build_pixmap (MBPixbufImage *background)
+{
+  Pixmap pix;
+  MBPixbufImage *img_whiten;
+  int i, j;
+  char *p;
+
+  img_whiten = mb_pixbuf_img_new (pb, popup_w, text_offset);
+  p = img_whiten->rgba;
+  
+  for (j = 0; j < text_offset; j++)
+    {
+      for (i = 0; i < popup_w; i++)
+	{
+	  int v = opacity (i, popup_w, XRANGE) * opacity (j, text_offset, YRANGE) / 256;
+	  
+	  *p++ = 255;
+	  *p++ = 255;
+	  *p++ = 255;
+	  *p++ = v;
+	}
+    }
+
+  mb_pixbuf_img_composite (pb, background, img_whiten, 0, 0);
+
+  mb_pixbuf_img_free (pb, img_whiten);
+
+  mb_pixbuf_img_composite (pb, background, img_icon_popup, 
+			   popup_w / 2 - mb_pixbuf_img_get_width (img_icon_popup) / 2,
+			   text_offset);
+
+  pix = XCreatePixmap (dpy, win_popup, popup_w, popup_h, pb->depth);
+
+  mb_pixbuf_img_render_to_drawable (pb, background, pix, 0, 0);
 
   return pix;
 }
@@ -404,6 +453,26 @@ main (int argc, char **argv)
       exit(1);
     }
 
+  if ((msg_font = XftFontOpenName(dpy, screen,"sans-7")) 
+      == NULL)
+    { printf("Cant open XFT font\n"); exit(0); }
+
+  {
+    XRenderColor colortmp;
+    colortmp.red   = 0;
+    colortmp.green = 0;
+    colortmp.blue  = 0;
+    colortmp.alpha = 0xffff;
+    XftColorAllocValue(dpy,
+		       DefaultVisual(dpy, screen),
+		       DefaultColormap(dpy, screen),
+		       &colortmp,
+		       &fg_xftcol);
+  }
+
+  text_offset = 2 * (msg_font->ascent + msg_font->descent);
+  popup_h = text_offset + mb_pixbuf_img_get_height (img_icon_popup);
+
   img_backing = mb_pixbuf_img_new(pb, 
 				  mb_pixbuf_img_get_width(img_icon), 
 				  mb_pixbuf_img_get_height(img_icon));
@@ -427,58 +496,17 @@ main (int argc, char **argv)
 			      mb_pixbuf_img_get_height(img_icon),
 			      pb->depth);
 
-  popup_mask = XCreatePixmap (dpy, win_popup, popup_w, popup_h, 1);
-
-#ifdef USE_OVERRIDE_REDIRECT
   {
     XSetWindowAttributes attr;
     attr.override_redirect = True;
     XChangeWindowAttributes (dpy, win_popup, CWOverrideRedirect, &attr);
   }
-#else
-  {
-    Atom window_type_atom, window_type_splash_atom;
-    window_type_atom = XInternAtom (dpy, "_NET_WM_WINDOW_TYPE", False);
-    window_type_splash_atom = XInternAtom (dpy, "_NET_WM_WINDOW_TYPE_SPLASH", False);
-    XChangeProperty (dpy, win_popup, window_type_atom, XA_ATOM, 32, PropModeReplace, 
-		     &window_type_splash_atom, 1);
-  }
-#endif
-
-  if ((msg_font = XftFontOpenName(dpy, screen,"sans-7")) 
-      == NULL)
-    { printf("Cant open XFT font\n"); exit(0); }
-
-  {
-    XRenderColor colortmp;
-    colortmp.red   = 0;
-    colortmp.green = 0;
-    colortmp.blue  = 0;
-    colortmp.alpha = 0xffff;
-    XftColorAllocValue(dpy,
-		       DefaultVisual(dpy, screen),
-		       DefaultColormap(dpy, screen),
-		       &colortmp,
-		       &fg_xftcol);
-  }
-
-  text_offset = 2 * (msg_font->ascent + msg_font->descent);
 
   gc = XCreateGC(dpy, win_root, 0, NULL);
-  mask_gc_0 = XCreateGC (dpy, popup_mask, 0, NULL);
-  mask_gc_1 = XCreateGC (dpy, popup_mask, 0, NULL);
   popup_gc = XCreateGC (dpy, win_popup, 0, NULL);
-  popup_gc_1 = XCreateGC (dpy, win_popup, 0, NULL);
-  XSetForeground (dpy, mask_gc_1, WhitePixel (dpy, screen));
-  XSetForeground (dpy, popup_gc_1, WhitePixel (dpy, screen));
 
   XStoreName(dpy, win_panel, _("Battery Monitor"));
   
-  XFillRectangle (dpy, popup_mask, mask_gc_0, 0, 0, popup_w, popup_h);
-  mbpixbuf_to_mask (pb, img_icon_popup, popup_mask, mask_gc_0, mask_gc_1, 
-		    (popup_w / 2) - (mb_pixbuf_img_get_width (img_icon_popup) / 2), 
-		    popup_h - mb_pixbuf_img_get_height (img_icon_popup));
-
   mb_tray_init_session_info(dpy, win_panel, argv, argc);
   mb_tray_init(dpy, win_panel);
   mb_tray_window_icon_set(dpy, win_panel, img_icon);
@@ -529,19 +557,15 @@ main (int argc, char **argv)
 		  XSetErrorHandler (old_handler);
 		}
 	      break;
+
 	    case Expose:
-	      if (xevent.xexpose.window == win_popup)
-		{
-		  XClearWindow (dpy, win_popup);
-		  if (popup_pixmap)
-		    XCopyArea (dpy, popup_pixmap, win_popup, popup_gc, 0, 0, popup_w, popup_h, 0, 0);
-		}
-	      else if (xevent.xexpose.window == win_panel)
-		XClearWindow (dpy, win_panel);
+	      XClearWindow (dpy, xevent.xexpose.window);
 	      break;
+
 	    case VisibilityNotify:
 	      visible = (xevent.xvisibility.state != VisibilityFullyObscured);
 	      break;
+
 	    case ButtonPress:
 	      popup_visible = !popup_visible;
 	      if (popup_visible) 
@@ -549,10 +573,20 @@ main (int argc, char **argv)
 		  char buf[64];
 		  XImage *image;
 		  int x, y, w, h;
+		  int x_pos, y_pos;
+		  MBPixbufImage *img_back;
+
 		  GetWinPosition (dpy, win_panel, &x, &y, &w, &h);
-		  XMoveWindow (dpy, win_popup, x + (w / 2) - (popup_w / 2), y + h - popup_h);
-		  popup_pixmap = build_pixmap ();
-		  XFillRectangle (dpy, popup_pixmap, popup_gc_1, 0, 0, popup_w, text_offset);
+		  x_pos = x + (w / 2) - (popup_w / 2);
+		  y_pos = y + h - popup_h;
+
+		  img_back = mb_pixbuf_img_new_from_drawable (pb, win_root,
+							      None, x_pos, y_pos, 
+							      popup_w, popup_h);
+
+		  popup_pixmap = build_pixmap (img_back);
+
+		  mb_pixbuf_img_free (pb, img_back);
 
 		  if (apm_vals[PERCENTAGE] >= 0)
 		    {
@@ -585,20 +619,8 @@ main (int argc, char **argv)
 		      
 		    }
 
-		  XFillRectangle (dpy, popup_mask, mask_gc_0, 0, 0, popup_w, text_offset);
-		  image = XGetImage (dpy, popup_pixmap, 0, 0, popup_w, text_offset, 
-				     0xffffffff, ZPixmap);
-		  for (x = 0; x < popup_w; x++)
-		    {
-		      for (y = 0; y < text_offset; y++)
-			{
-			  unsigned long pix = XGetPixel (image, x, y);
-			  if (pix != WhitePixel (dpy, screen))
-			    XDrawPoint (dpy, popup_mask, mask_gc_1, x, y);
-			}
-		    }
-		  XDestroyImage (image);
-		  XShapeCombineMask (dpy, win_popup, ShapeBounding, 0, 0, popup_mask, ShapeSet);
+		  XSetWindowBackgroundPixmap (dpy, win_popup, popup_pixmap);
+		  XMoveWindow (dpy, win_popup, x_pos, y_pos);
 		  XMapRaised (dpy, win_popup);
 		  XGrabPointer (dpy, win_popup, True, ButtonPressMask, GrabModeAsync, GrabModeAsync,
 				None, None, xevent.xbutton.time);
