@@ -1,0 +1,37 @@
+<!-- ##### SECTION Title ##### -->
+Tag lists
+
+<!-- ##### SECTION Short_Description ##### -->
+
+Tag list helper functions
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+These utility functions implement some basic functions that make life easier 
+dealing with GPE tag-value lists.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION gpe_tag_list_free ##### -->
+<para>
+You guessed it: This function frees a complete list of tags.
+</para>
+
+@tags: list to free
+
+
+<!-- ##### FUNCTION gpe_tag_list_prepend ##### -->
+<para>
+Adds a new tag-value pair to the head of a list.
+</para>
+
+@data: Current list or NULL.
+@tag: Tag identifying the new pair in the list.
+@value: String value to be stored.
+@Returns: New head of the complete list.
+
+

@@ -1,0 +1,40 @@
+<FUNCTION>
+<NAME>gpe_tag_list_free</NAME>
+<RETURNS>void  </RETURNS>
+GSList *tags
+</FUNCTION>
+<FUNCTION>
+<NAME>gpe_tag_list_prepend</NAME>
+<RETURNS>GSList  *</RETURNS>
+GSList *data, const char *tag, const char *value
+</FUNCTION>
+<FUNCTION>
+<NAME>vcard_from_tags</NAME>
+<RETURNS>MIMEDirVCard  *</RETURNS>
+GSList *tags
+</FUNCTION>
+<FUNCTION>
+<NAME>vcard_to_tags</NAME>
+<RETURNS>GSList  *</RETURNS>
+MIMEDirVCard *vcard
+</FUNCTION>
+<FUNCTION>
+<NAME>vevent_from_tags</NAME>
+<RETURNS>MIMEDirVEvent  *</RETURNS>
+GSList *tags
+</FUNCTION>
+<FUNCTION>
+<NAME>vevent_to_tags</NAME>
+<RETURNS>GSList  *</RETURNS>
+MIMEDirVEvent *vevent
+</FUNCTION>
+<FUNCTION>
+<NAME>vtodo_from_tags</NAME>
+<RETURNS>MIMEDirVTodo  *</RETURNS>
+GSList *tags
+</FUNCTION>
+<FUNCTION>
+<NAME>vtodo_to_tags</NAME>
+<RETURNS>GSList  *</RETURNS>
+MIMEDirVTodo *vtodo
+</FUNCTION>

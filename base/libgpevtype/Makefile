@@ -28,7 +28,10 @@ else
 BUILD = build
 endif
 
-all: $(PACKAGE).so $(PACKAGE).pc $(PACKAGE)-uninstalled.pc
+all: $(PACKAGE).so $(PACKAGE).pc $(PACKAGE)-uninstalled.pc doc
+
+doc: 
+	make -C doc PACKAGE=$(PACKAGE)
 
 $(PACKAGE).so: $(SONAME)
 	ln -sf $^ $@
@@ -42,7 +45,7 @@ install-devel: $(PACKAGE).pc
 	install -m 644 $(PACKAGE).pc $(DESTDIR)$(PREFIX)/lib/pkgconfig/
 
 clean:
-	rm -f $(OBJS) $(SONAME) $(PACKAGE).so $(DEPS) $(PACKAGE).pc $(PACKAGE)-uninstalled.pc
+	rm -f $(OBJS) $(SONAME) $(PACKAGE).so $(DEPS) $(PACKAGE).pc $(PACKAGE)-uninstalled.pc *.stamp
 
 install-program: $(SONAME)
 	mkdir -p $(DESTDIR)$(PREFIX)/lib/
@@ -51,3 +54,4 @@ install-program: $(SONAME)
 include $(BUILD)/Makefile.translation
 include $(BUILD)/Makefile.dpkg_ipkg
 -include $(DEPS)
+.PHONY: doc

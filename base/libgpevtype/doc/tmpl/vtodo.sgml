@@ -1,0 +1,36 @@
+<!-- ##### SECTION Title ##### -->
+vTodo data
+
+<!-- ##### SECTION Short_Description ##### -->
+
+vTodo import/export interface.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+Functions to import and export vTodo files from GPE PIM applications using 
+libmimedir.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION vtodo_from_tags ##### -->
+<para>
+Creates a mimedir vTodo object from a given list of tags.
+</para>
+
+@tags: List of tag-value pairs.
+@Returns: New mimedir vTodo object.
+
+
+<!-- ##### FUNCTION vtodo_to_tags ##### -->
+<para>
+Creates a list of tags and values from a mimedir vTodo object.
+</para>
+
+@vtodo: vTodo object to convert to a tag-value list.
+@Returns: New allocated list of tags and values.
+
+

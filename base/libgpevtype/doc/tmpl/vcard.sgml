@@ -1,0 +1,36 @@
+<!-- ##### SECTION Title ##### -->
+vCard data
+
+<!-- ##### SECTION Short_Description ##### -->
+
+vCard import/export interface.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+Functions to import and export vCard files from GPE PIM applications using 
+libmimedir.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION vcard_from_tags ##### -->
+<para>
+Create a mimedir vCard object from tag list.
+</para>
+
+@tags: pointer to tag list
+@Returns: mimedir vCard object
+
+
+<!-- ##### FUNCTION vcard_to_tags ##### -->
+<para>
+Create a tag list from a vCard object.
+</para>
+
+@vcard: mimedir vCard object
+@Returns: new allocated tag list
+
+
