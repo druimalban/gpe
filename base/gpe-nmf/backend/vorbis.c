@@ -81,7 +81,6 @@ vorbis_play_loop (void *vv)
       if (ret == 0) 
 	{
 	  /* EOF */
-	  fprintf (stderr, "At EOF\n");
 	  v->eos = TRUE;
 	  break;
 	} 
@@ -166,8 +165,11 @@ vorbis_open (struct stream *s, audio_t audio)
 static void 
 vorbis_close (struct vorbis_context *v)
 {
-  if (pthread_cancel (v->thread))
-    perror ("pthread_cancel");
+  if (!v->eos)
+    {
+      if (pthread_cancel (v->thread))
+	perror ("pthread_cancel");
+    }
   if (pthread_join (v->thread, NULL))
     perror ("pthread_join");
 }

@@ -102,15 +102,21 @@ void
 player_status (player_t p, struct player_status *s)
 {
   struct decoder_stats ds;
-  s->item = p->cur;
+  s->changed = FALSE;
   if (p->decoder)
     {
       decoder_stats (p->decoder, &ds);
-      s->time = ds.time;
-      s->finished = ds.finished;
+      if (ds.finished)
+	{
+	  s->changed = TRUE;
+	  s->time = 0;
+	  player_next_track (p);
+	}
+      else
+	s->time = ds.time;
     }
-  else
-    s->finished = TRUE;
+
+  s->item = p->cur;
 }
 
 void 

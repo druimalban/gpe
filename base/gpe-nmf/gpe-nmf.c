@@ -215,6 +215,22 @@ set_volume (GtkObject *o, player_t p)
   player_set_volume (p, volume);
 }
 
+static void
+update_time (unsigned long long t)
+{
+}
+
+static gboolean
+player_poll_func (player_t player)
+{
+  struct player_status ps;
+  player_status (player, &ps);
+  if (ps.changed)
+    update_track_info (ps.item);
+  update_time (ps.time);
+  return TRUE;
+}
+
 int
 main (int argc, char *argv[])
 {
@@ -262,6 +278,7 @@ main (int argc, char *argv[])
 
   decoder_init ();
   player = player_new ();
+  g_timeout_add (100, (GSourceFunc)player_poll_func, player);
 
   playlist_edit_double_click_hook (double_click_hook, player);
 
