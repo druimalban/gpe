@@ -1,6 +1,6 @@
 [Desktop Entry]
-Name=Summary
-Comment=GPE Today 
+_Name=Summary
+_Comment=GPE Today 
 Exec=gpe-today
 Terminal=0
 Type=Application

@@ -38,7 +38,7 @@ all: $(PACKAGE) all-mo
 $(PACKAGE): $(OBJS)
 	$(CC) -o $@ $^ -L../libgpewidget -lgpewidget -lsqlite $(LDFLAGS)
 
-install: all install-mo
+install: all install-mo gpe-today.desktop
 	for i in $(PIXMAPS); do install -D pixmaps/$$i $(DESTDIR)$(PREFIX)/share/$(PACKAGE)/pixmaps/$$i; done
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
 	install $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
