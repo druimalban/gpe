@@ -334,7 +334,8 @@ progress_dialog_create(gchar *title)
          gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->vbox),
                             progress,FALSE,TRUE,0);
          g_object_set_data(G_OBJECT(dialog),"bar",progress);
-         g_signal_connect(G_OBJECT(dialog),"response",G_CALLBACK(progress_response),NULL);
+         g_signal_connect(G_OBJECT(dialog),"response",
+                          G_CALLBACK(progress_response),NULL);
          gtk_widget_show_all(dialog);
   return dialog;
 }
@@ -557,7 +558,11 @@ create_directory_interactive(void)
     response = gnome_vfs_make_directory(diruri,S_IRWXU);
     if (response != GNOME_VFS_OK)
       gpe_error_box (gnome_vfs_result_to_string(response));
-    refresh_current_directory();
+    else
+      {
+        gpe_popup_infoprint(GDK_DISPLAY(), _("Directory created."));
+        refresh_current_directory();
+      }
   }
   gtk_widget_destroy(dialog);
 }
@@ -581,11 +586,15 @@ copy_file (const gchar *src_uri_txt, const gchar *dest_uri_txt)
                                (GnomeVFSXferProgressCallback) transfer_callback,
                                NULL);
   if ((result != GNOME_VFS_OK) && (result != GNOME_VFS_ERROR_INTERRUPTED))
-  {
-    error = g_strdup_printf ("Error: %s", gnome_vfs_result_to_string(result));
-    gpe_error_box (error);
-    g_free (error);
-  }
+    {
+      error = g_strdup_printf ("Error: %s", gnome_vfs_result_to_string(result));
+      gpe_error_box (error);
+      g_free (error);
+    }
+  else
+    {
+      gpe_popup_infoprint(GDK_DISPLAY(), _("File copied."));
+    }
   gnome_vfs_uri_unref(uri_src);
   gnome_vfs_uri_unref(uri_dest);
 }
@@ -600,6 +609,7 @@ copy_file_clip (void)
       gnome_vfs_get_uri_from_local_path(current_popup_file->filename);
   else
     file_clipboard = g_strdup(current_popup_file->filename);
+  gpe_popup_infoprint(GDK_DISPLAY(), _("File copied to clipboard."));
 }
 
 
@@ -717,39 +727,42 @@ rename_file (GtkWidget *dialog_window, gint response_id)
   GnomeVFSResult result;
 
   if (response_id == GTK_RESPONSE_ACCEPT)
-  {
-  gchar *tmp = g_strdup (current_popup_file->filename);
-  dest = g_strdup_printf ("%s/%s", dirname (tmp), gtk_entry_get_text (GTK_ENTRY (g_object_get_data (G_OBJECT (dialog_window), "entry"))));
-  g_free (tmp);
-  result = gnome_vfs_move_uri (gnome_vfs_uri_new (current_popup_file->filename), gnome_vfs_uri_new (dest), TRUE);
-
-  if (result != GNOME_VFS_OK)
-  {
-    switch (result)
     {
-    case GNOME_VFS_ERROR_READ_ONLY:
-      error = g_strdup ("File is read only.");
-      break;
-    case GNOME_VFS_ERROR_ACCESS_DENIED:
-      error = g_strdup ("Access denied.");
-      break;
-    case GNOME_VFS_ERROR_READ_ONLY_FILE_SYSTEM:
-      error = g_strdup ("Read only file system.");
-      break;
-    case GNOME_VFS_ERROR_FILE_EXISTS:
-      error = g_strdup ("Destination file already exists.");
-      break;
-    default:
-      error = g_strdup_printf ("Error: %s", gnome_vfs_result_to_string(result));
-      break;
+      gchar *tmp = g_strdup (current_popup_file->filename);
+      dest = g_strdup_printf ("%s/%s", dirname (tmp), gtk_entry_get_text (GTK_ENTRY (g_object_get_data (G_OBJECT (dialog_window), "entry"))));
+      g_free (tmp);
+      result = gnome_vfs_move_uri (gnome_vfs_uri_new (current_popup_file->filename), gnome_vfs_uri_new (dest), TRUE);
+    
+      if (result != GNOME_VFS_OK)
+      {
+        switch (result)
+          {
+          case GNOME_VFS_ERROR_READ_ONLY:
+            error = g_strdup ("File is read only.");
+            break;
+          case GNOME_VFS_ERROR_ACCESS_DENIED:
+            error = g_strdup ("Access denied.");
+            break;
+          case GNOME_VFS_ERROR_READ_ONLY_FILE_SYSTEM:
+            error = g_strdup ("Read only file system.");
+            break;
+          case GNOME_VFS_ERROR_FILE_EXISTS:
+            error = g_strdup ("Destination file already exists.");
+            break;
+          default:
+            error = g_strdup_printf ("Error: %s", 
+                                     gnome_vfs_result_to_string(result));
+            break;
+          }
+          gpe_error_box (error);
+          g_free (error);
+        }
+      else
+        {
+          gpe_popup_infoprint(GDK_DISPLAY(), _("File renamed."));
+        }
+      g_free (dest);
     }
-
-    gpe_error_box (error);
-    g_free (error);
-  }
-
-  g_free (dest);
-  }
 
   gtk_widget_destroy (dialog_window);
   refresh_current_directory();
@@ -766,32 +779,33 @@ move_file (gchar *directory)
   result = gnome_vfs_move_uri (gnome_vfs_uri_new (current_popup_file->filename), gnome_vfs_uri_new (dest), TRUE);
 
   if (result != GNOME_VFS_OK)
-  {
-    switch (result)
     {
-    case GNOME_VFS_ERROR_NO_SPACE:
-      error = g_strdup ("No space left on device.");
-      break;
-    case GNOME_VFS_ERROR_READ_ONLY:
-      error = g_strdup ("Destination is read only.");
-      break;
-    case GNOME_VFS_ERROR_ACCESS_DENIED:
-      error = g_strdup ("Access denied.");
-      break;
-    case GNOME_VFS_ERROR_READ_ONLY_FILE_SYSTEM:
-      error = g_strdup ("Read only file system.");
-      break;
-    default:
-      error = g_strdup_printf ("Error: %s", gnome_vfs_result_to_string(result));
-      break;
+      switch (result)
+      {
+      case GNOME_VFS_ERROR_NO_SPACE:
+        error = g_strdup ("No space left on device.");
+        break;
+      case GNOME_VFS_ERROR_READ_ONLY:
+        error = g_strdup ("Destination is read only.");
+        break;
+      case GNOME_VFS_ERROR_ACCESS_DENIED:
+        error = g_strdup ("Access denied.");
+        break;
+      case GNOME_VFS_ERROR_READ_ONLY_FILE_SYSTEM:
+        error = g_strdup ("Read only file system.");
+        break;
+      default:
+        error = g_strdup_printf ("Error: %s", gnome_vfs_result_to_string(result));
+        break;
+      }
+      gpe_error_box (error);
+      g_free (error);
     }
-
-    gpe_error_box (error);
-    g_free (error);
-  }
   else
-    refresh_current_directory();
-
+    {
+      gpe_popup_infoprint(GDK_DISPLAY(), _("File moved."));
+      refresh_current_directory();
+    }
   g_free (dest);
 }
 
@@ -816,10 +830,19 @@ popup_ask_rename_file ()
 
   label_text = g_strdup_printf ("Rename file %s to:", current_popup_file->vfs->name);
 
-  dialog_window = gtk_dialog_new_with_buttons ("Rename file", GTK_WINDOW (window), GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT, GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT, GTK_STOCK_OK, GTK_RESPONSE_ACCEPT, NULL);
-  g_signal_connect (G_OBJECT (dialog_window), "delete_event", GTK_SIGNAL_FUNC (kill_widget), dialog_window);
-  g_signal_connect (G_OBJECT (dialog_window), "response", GTK_SIGNAL_FUNC (rename_file), NULL);
-
+  dialog_window = gtk_dialog_new_with_buttons ("Rename file", 
+                                               GTK_WINDOW (window), 
+                                               GTK_DIALOG_MODAL 
+                                                 | GTK_DIALOG_DESTROY_WITH_PARENT, 
+                                               GTK_STOCK_CANCEL, 
+                                               GTK_RESPONSE_REJECT, 
+                                               GTK_STOCK_OK, 
+                                               GTK_RESPONSE_ACCEPT, NULL);
+  g_signal_connect (G_OBJECT (dialog_window), "delete_event", 
+                    G_CALLBACK (kill_widget), dialog_window);
+  g_signal_connect (G_OBJECT (dialog_window), "response", 
+                    G_CALLBACK (rename_file), NULL);
+  
   vbox = gtk_vbox_new (FALSE, 0);
 
   label = gtk_label_new (label_text);
@@ -1689,7 +1712,9 @@ tree_button_press (GtkWidget *tree,GdkEventButton *b, gpointer user_data)
 
 	    gtk_tree_model_get_iter (GTK_TREE_MODEL (store), &iter, path);
 
-	    gtk_tree_model_get (GTK_TREE_MODEL (store), &iter, tree == view_widget ? COL_DATA : COL_DIRDATA, &i, -1);
+	    gtk_tree_model_get (GTK_TREE_MODEL (store), &iter, 
+                            tree == view_widget ? COL_DATA : COL_DIRDATA, 
+                            &i, -1);
 		
 	    gtk_tree_path_free (path);
         if (b->button == 3) 
