@@ -2,6 +2,8 @@ PREFIX = /usr/local
 PACKAGE = gpe-contacts
 GTK2 = yes
 
+DIR_PO := ../po
+
 ifeq ($(GTK2),yes)
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0` -DGTK_ENABLE_BROKEN
 GTKLDFLAGS += `pkg-config --libs gtk+-2.0`

@@ -1,5 +1,8 @@
 2002-12-01  Philip Blundell  <philb@gnu.org>
 
+	* src/Makefile (DIR_PO): Define.
+	* src/Makefile.in, src/Makefile.am: Delete autotools cruft.
+
 	* src/main.c (show_details): New function.
 	(selection_made): Use it.
 	(main): Clear details at startup.
