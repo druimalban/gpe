@@ -2,7 +2,7 @@
  * Copyright (C) 2001, 2002, 2003, 2004 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
+ * modify it under the terms of the GNU Lesser General Public License
  * as published by the Free Software Foundation; either version
  * 2 of the License, or (at your option) any later version.
  */
@@ -102,6 +102,9 @@ new_category (GtkWidget *w, GtkListStore *list_store)
   g_signal_connect (G_OBJECT (ok), "clicked", 
 		    G_CALLBACK (do_new_category), window);
   
+  g_signal_connect (G_OBJECT (name), "activate", 
+		    G_CALLBACK (do_new_category), window);
+
   g_signal_connect_swapped (G_OBJECT (cancel), "clicked", 
 			    G_CALLBACK (gtk_widget_destroy), window);
 
@@ -280,7 +283,7 @@ categories_dialog_ok (GtkWidget *w, gpointer p)
 	    }
 
 	  if (selected)
-	    selected_categories = g_slist_append (selected_categories, (gpointer)id);
+	    selected_categories = g_slist_prepend (selected_categories, (gpointer)id);
 
 	} while (gtk_tree_model_iter_next (GTK_TREE_MODEL (list_store), &iter));
     }
