@@ -148,6 +148,12 @@ new_list_box (GtkWidget *w, gpointer data)
 }
 
 static void
+close_configure (GtkWidget *w, gpointer data)
+{
+  gtk_widget_destroy (data);
+}
+
+static void
 configure(GtkWidget *w, gpointer list)
 {
   GtkWidget *window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
@@ -172,17 +178,23 @@ configure(GtkWidget *w, gpointer list)
   
   gtk_toolbar_set_button_relief (GTK_TOOLBAR (toolbar), GTK_RELIEF_NONE);
 
-  p = find_pixmap ("new");
+  p = gpe_find_pixmap ("new");
   pw = gtk_pixmap_new (p->pixmap, p->mask);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("New list"), 
 			   _("New list"), _("New list"),
 			   pw, new_list_box, clist);
 
-  p = find_pixmap ("delete");
+  p = gpe_find_pixmap ("delete");
   pw = gtk_pixmap_new (p->pixmap, p->mask);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Delete list"),
 			   _("Delete list"), _("Delete list"),
 			   pw, ui_del_list, clist);
+
+  p = gpe_find_pixmap ("cancel");
+  pw = gtk_pixmap_new (p->pixmap, p->mask);
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Close"),
+			   _("Close"), _("Close"),
+			   pw, close_configure, window);
 
   gtk_widget_show (toolbar);
   gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, FALSE, 0);
@@ -382,13 +394,13 @@ top_level (void)
 
   gtk_toolbar_set_button_relief (GTK_TOOLBAR (toolbar), GTK_RELIEF_NONE);
 
-  p = find_pixmap ("new");
+  p = gpe_find_pixmap ("new");
   pw = gtk_pixmap_new (p->pixmap, p->mask);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("New Contact"), 
 			   _("New Contact"), _("New Contact"),
 			   pw, new_todo_item, NULL);
 
-  p = find_pixmap ("config");
+  p = gpe_find_pixmap ("properties");
   pw = gtk_pixmap_new (p->pixmap, p->mask);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("New Contact"), 
 			   _("New Contact"), _("New Contact"),

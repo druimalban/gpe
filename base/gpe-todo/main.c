@@ -21,13 +21,11 @@
 #include "pixmaps.h"
 #include "init.h"
 
-#define PIXMAPS_DIR PREFIX "/share/gpe/pixmaps"
-#define MY_PIXMAPS_DIR PREFIX "/share/gpe-todo/pixmaps"
-
 struct pix my_pix[] = {
-  { "new", MY_PIXMAPS_DIR "/new.png" },
-  { "config", MY_PIXMAPS_DIR "/preferences.png" },
-  { "delete", MY_PIXMAPS_DIR "/trash.png" },
+  { "new", "new" },
+  { "properties", "properties" },
+  { "delete", "delete" },
+  { "cancel", "cancel" },
   { NULL, NULL }
 };
 
@@ -66,7 +64,7 @@ main(int argc, char *argv[])
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
   textdomain (PACKAGE);
 
-  if (load_pixmaps (my_pix) == FALSE)
+  if (gpe_load_pixmaps (my_pix) == FALSE)
     exit (1);
 
   if (sql_start ())
