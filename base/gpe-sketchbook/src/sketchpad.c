@@ -181,7 +181,8 @@ void sketchpad_set_brush_s (gchar * _brush){
 
 void sketchpad_reset_title(){
   gchar * title;
-  title = g_strdup_printf("Sketch [%d/%d]%s%s%s",
+  title = g_strdup_printf("%s [%d/%d]%s%s%s",
+                          _("Sketch"),
                           (is_current_sketch_new)?sketch_list_size+1:current_sketch +1,
                           sketch_list_size,
                           (is_current_sketch_modified)?" *":"",

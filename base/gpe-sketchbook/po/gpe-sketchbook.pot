@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-04-13 16:11+0300\n"
+"POT-Creation-Date: 2003-04-18 20:53+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: gpe-sketchbook.desktop.in.h:2 src/gpe-sketchbook.c:110
+#: gpe-sketchbook.desktop.in.h:2 src/gpe-sketchbook.c:109
 msgid "Sketchbook"
 msgstr ""
 
@@ -50,16 +50,20 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: src/sketchpad.c:189
+#: src/sketchpad.c:185
+msgid "Sketch"
+msgstr ""
+
+#: src/sketchpad.c:190
 msgid "new"
 msgstr ""
 
-#: src/sketchpad.c:220
+#: src/sketchpad.c:221
 #, c-format
 msgid "Import of `%s' failed."
 msgstr ""
 
-#: src/sketchpad.c:237
+#: src/sketchpad.c:238
 msgid "Import Image ..."
 msgstr ""
 
