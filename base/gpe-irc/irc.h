@@ -16,7 +16,7 @@ typedef struct
 {
   gchar *name;
   GString *text;
-  GString *prefix;
+  gchar *prefix;
   int fd;
   GIOChannel *io_channel;
   gboolean connected;

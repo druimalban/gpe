@@ -1,6 +1,8 @@
 
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
+
 #include "irc.h"
 #include "irc_parse.h"
 
@@ -143,7 +145,7 @@ irc_parse_privmsg(IRCServer *server, gchar *prefix, gchar *params)
 
 		/* A bit nasty */
 		str_array[1] += 8;
-		while(t = strchr(str_array[1], ''))
+		while((t = strchr(str_array[1], '')))
 		{
 			*t = '\0';
 		}
@@ -301,19 +303,18 @@ irc_server_parse(IRCServer *server, gchar *line)
 		{
 			int m = 0;
 			gchar *t = NULL;
-			gboolean ret = FALSE;
 
 			/* Look for the function */
 			for(; msgtable[m].cmd &&
 				  (g_ascii_strcasecmp(msgtable[m].cmd, cmd) != 0); m++);
 
 			/* Remove new line */
-			while(t = strchr(params, '\n'))
+			while((t = strchr(params, '\n')))
 			{
 				*t = '\0';
 			}
 
-			while(t = strchr(params, '\r'))
+			while((t = strchr(params, '\r')))
 			{
 				*t = '\0';
 			}
