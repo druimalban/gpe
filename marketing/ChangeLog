@@ -1,3 +1,8 @@
+2003-03-04  Colin Marquardt  <colin@marquardt-home.de>
+
+	* gpe-flyer.tex: Add commented-out solution with pdfpages from
+	Andreas Matthias.
+
 2003-03-03  Colin Marquardt  <colin@marquardt-home.de>
 
 	* gpe-flyer.tex: Add link to IRC channel #gpe.

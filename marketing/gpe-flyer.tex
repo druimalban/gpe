@@ -103,3 +103,64 @@ for handhelds«.
   \end{tabular}
 \end{table}
 \end{document}
+
+
+
+% From: Andreas Matthias <amat@KABSI.AT>
+% Subject: Re: Subject: 4 gleiche Flyer auf ein A4-Blatt?
+% To: TEX-D-L@LISTSERV.DFN.DE
+% User-Agent: Gnus/5.09 (Gnus v5.9.0) Emacs/21.3.50
+% X-Gnus-Mail-Source: file:/var/spool/mail/colin
+% Message-ID:  <m3u1ekkpjz.fsf@h081217002064.dyn.cm.kabsi.at>
+% 
+% Colin Marquardt wrote:
+% 
+% > Herbert Voss <Herbert.Voss@ALUMNI.TU-BERLIN.DE> writes:
+% > 
+% >> Colin Marquardt schrieb:
+% >> 
+% >>> Ich muss einen Flyer setzen
+% >>> (<http://handhelds.org/z/wiki/GPEMarketing>, wen es interessiert).
+% >> 
+% >> z.B. in eine Tabelle setzen
+% > 
+% > So habe ich das letztendlich auch gemacht.
+% 
+% 
+% Ich hatte eigentlich gehofft, dass sich irgendwo noch ein
+% Tool für diese Aufgabe findet, weshalb ich meine primitive
+% Bastlerlösung nicht posten wollte. Sie ist aber vielleicht
+% doch etwas einfacher und allgemeiner als alles mit Tabellen
+% zu versuchen. Daher hier doch kurz ein Beispiel, wie man es
+% mit pdfpages.sty in 3 Schritten zusammenpfuschen kann.
+% 
+% Ciao
+% Andreas
+% 
+% 
+% %%% %%% dummy.tex %%% %%%
+% \documentclass{article}
+% \usepackage[a6paper]{geometry}
+% \begin{document}
+% First page \ldots \vfill First page \ldots\newpage
+% Second page \ldots \vfill Second page \ldots
+% \end{document}
+% %%% %%% dummy.tex %%% %%%
+% 
+% 
+% %%% %%% dummy_2.tex %%% %%%
+% \documentclass[a4paper]{article}
+% \usepackage{pdfpages}
+% \begin{document}
+% \includepdf[pages=-, doublepages, nup=1x2, landscape]{dummy.pdf}
+% \end{document}
+% %%% %%% dummy_2.tex %%% %%%
+% 
+% 
+% %%% %%% dummy_4.tex %%% %%%
+% \documentclass[a4paper]{article}
+% \usepackage{pdfpages}
+% \begin{document}
+% \includepdf[pages=-, doublepages, nup=1x2]{dummy_2.pdf}
+% \end{document}
+% %%% %%% dummy_4.tex %%% %%%
