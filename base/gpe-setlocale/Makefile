@@ -6,10 +6,10 @@ VERSION = 0.10
 
 MEMBERS = gpe-setlocale
 
-CFLAGS = -D_GNU_SOURCE -Wall
+CFLAGS += -D_GNU_SOURCE -Wall
 ifeq ($(DEBUG),yes)
 CFLAGS += -O2 -g
-LDFLAGS = -g #-lefence
+LDFLAGS += -g #-lefence
 else
 CFLAGS += -Os -fomit-frame-pointer
 endif
