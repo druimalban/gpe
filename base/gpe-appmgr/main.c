@@ -479,6 +479,10 @@ main (int argc, char *argv[])
   g->categories = g_list_append (g->categories, "PIM");
   g = make_group ("Games");
   g->categories = g_list_append (g->categories, "Games");
+  g = make_group ("Settings");
+  g->categories = g_list_append (g->categories, "SystemSettings");
+  g->categories = g_list_append (g->categories, "Settings");
+  g->hide = TRUE;
 
   other_group = make_group ("Other");
 

@@ -26,6 +26,7 @@ struct package_group
   gchar *name;
   GList *categories;
   GList *items;
+  gboolean hide;
 };
 
 /* main window */

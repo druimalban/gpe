@@ -122,7 +122,11 @@ refresh_callback (void)
       struct package_group *group = l->data;
       GtkWidget *row;
 
+      if (group->hide)
+	continue;
+
       row = create_row (group->items, group->name);
+      g_object_set_data (G_OBJECT (row), "group", group);
 
       rows = g_slist_append (rows, row);
       n_rows++;
@@ -131,18 +135,21 @@ refresh_callback (void)
   table = gtk_table_new (3, n_rows, FALSE);
   gtk_widget_show (table);
 
-  for (i = 0, p = rows, l = groups; i < n_rows; i++)
+  for (i = 0, p = rows; i < n_rows; i++)
     {
       GtkWidget *label;
-      struct package_group *g = l->data;
+      struct package_group *g;
+      GtkWidget *w;
+
+      w = p->data;
+      g = g_object_get_data (G_OBJECT (w), "group");
 
       label = gtk_label_new (g->name);
       gtk_widget_show (label);
 
       gtk_table_attach (GTK_TABLE (table), GTK_WIDGET (label), 0, 1, i, i + 1, 0, 0, 0, 0);
-      gtk_table_attach (GTK_TABLE (table), GTK_WIDGET (p->data), 2, 3, i, i + 1, GTK_EXPAND | GTK_FILL, 0, 0, 0);
+      gtk_table_attach (GTK_TABLE (table), GTK_WIDGET (w), 2, 3, i, i + 1, GTK_EXPAND | GTK_FILL, 0, 0, 0);
       p = p->next;
-      l = l->next;
     }
 
   g_slist_free (rows);
