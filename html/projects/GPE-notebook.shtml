@@ -30,9 +30,11 @@ The coordinator for the gpe-sketchbook sub-project is Luc Pionchon (<a HREF="mai
 
 <H2>Screenshots</H2>
 <P>
-<IMG SRC="../images/gpe-sketchbook-0.1.4-selector.png" ALT="Sketch selector">
-<IMG SRC="../images/gpe-sketchbook-0.1.4-sketch2.png " ALT="Sketch 1">
-<IMG SRC="../images/gpe-sketchbook-0.1.4-sketch1.png " ALT="Sketch 2">
+<IMG SRC="../images/gpe-sketchbook-select-list.png" ALT="Sketch selector - list">
+<IMG SRC="../images/gpe-sketchbook-select-icon.png" ALT="Sketch selector - icon">
+<IMG SRC="../images/gpe-sketchbook-sketch1.png"     ALT="Sketch 1">
+<IMG SRC="../images/gpe-sketchbook-sketch2.png"     ALT="Sketch 2">
+<IMG SRC="../images/gpe-sketchbook-sketch3.png"     ALT="Sketch 3">
 </P>
 
 <!--#include virtual="/includes/foot.shtml"-->
