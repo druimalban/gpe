@@ -656,13 +656,15 @@ select_justification_popup (GtkWidget *parent_button)
     printf ("Widget x requisition: %d\n", requisition.width);
     printf ("Widget y requisition: %d\n", requisition.height);
 
-    printf ("Window x: %d\n", popup_window->allocation.x);
-    printf ("Window y: %d\n", popup_window->allocation.y);
+    gdk_window_get_position (GDK_WINDOW (main_window->window), &x, &y);
+
+    printf ("Window x: %d\n", x);
+    printf ("Window y: %d\n", y);
 
     //x = parent_button->allocation.x + requisition.width;
     //y = parent_button->allocation.y + requisition.height;
-    x = parent_button->allocation.x + popup_window->allocation.x;
-    y = parent_button->allocation.y + popup_window->allocation.y;
+    x += parent_button->allocation.x;
+    y += parent_button->allocation.y;
 
     printf ("x: %d\n", x);
     printf ("y: %d\n", y);
