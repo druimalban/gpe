@@ -1,5 +1,9 @@
 2004-06-30  Philip Blundell  <philb@gnu.org>
 
+	* Version 0.84 released.
+
+2004-06-30  Philip Blundell  <philb@gnu.org>
+
 	* gpeiconlistitem.c (gpe_icon_list_item_get_pixbuf): New function.
 	(gpe_icon_list_item_set_pixbuf): Likewise.
 	(gpe_icon_list_item_set_parent): Likewise.
