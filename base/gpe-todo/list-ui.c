@@ -79,7 +79,7 @@ static void
 purge_completed (GtkWidget *w, gpointer list)
 {
   if (gpe_question_ask (_("Permanently delete all completed items?"), _("Confirm"), 
-			"question", _("Delete"), "ok", _("Cancel"), "cancel", NULL) == 0)
+			"!gtk-dialog-question", _("Delete"), "clean", "!gtk-cancel", NULL, NULL) == 0)
     {
       GSList *iter = todo_db_get_items_list();
 
@@ -335,21 +335,21 @@ top_level (GtkWidget *window)
 			   _("Add a new item"),
 			   pw, (GtkSignalFunc)new_todo_item, NULL);
 
-  pw = gpe_render_icon (window->style, gpe_find_icon ("properties"));
+  pw = gtk_image_new_from_pixbuf (gpe_find_icon ("properties"));
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), 
 			   _("Configure"), 
 			   _("Configure categories"), 
 			   _("Configure categories"),
 			   pw, (GtkSignalFunc)configure, NULL);
 
-  pw = gpe_render_icon (window->style, gpe_find_icon ("clean"));
+  pw = gtk_image_new_from_pixbuf (gpe_find_icon ("clean"));
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), 
 			   _("Purge"), 
 			   _("Purge completed items"), 
 			   _("Purge completed items"),
 			   pw, (GtkSignalFunc)purge_completed, NULL);
 
-  pw = gpe_render_icon (window->style, gpe_find_icon ("hide"));
+  pw = gtk_image_new_from_pixbuf (gpe_find_icon ("hide"));
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), 
 			   _("Re-sort"), 
 			   _("Move completed items to the end of the list"), 
@@ -361,7 +361,7 @@ top_level (GtkWidget *window)
 			   _("Exit"), 
 			   _("Exit the program"), 
 			   _("Exit the program"),
-			   pw, (GtkSignalFunc)gtk_exit, NULL);
+			   pw, G_CALLBACK (g_main_loop_quit), NULL);
 
   gtk_widget_show (toolbar);
   gtk_widget_show (toolbar2);

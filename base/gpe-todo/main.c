@@ -25,7 +25,6 @@ static struct gpe_icon my_icons[] = {
   { "hide" },
   { "clean" },
   { "properties" },
-  { "question" },
   { "icon", PREFIX "/share/pixmaps/gpe-todo.png" },
   { "tick" },
   { NULL, NULL }
@@ -53,8 +52,8 @@ open_window (void)
 
   gtk_container_add (GTK_CONTAINER (window), top);
 
-  gtk_signal_connect (GTK_OBJECT (window), "destroy",
-		      GTK_SIGNAL_FUNC (gtk_exit), NULL);
+  g_signal_connect (G_OBJECT (window), "destroy",
+		    G_CALLBACK (g_main_loop_quit), NULL);
 
   gtk_window_set_default_size (GTK_WINDOW (window), 240, 320);
   gtk_window_set_title (GTK_WINDOW (window), _("To-do list"));

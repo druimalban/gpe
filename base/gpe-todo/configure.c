@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <libintl.h>
+#include <string.h>
 
 #include <gtk/gtk.h>
 

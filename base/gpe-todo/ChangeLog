@@ -1,3 +1,21 @@
+2003-02-16  Philip Blundell  <philb@gnu.org>
+
+	* list-ui.c (purge_completed): Use stock items for question dialog.
+
+	* main.c (open_window): Use g_main_loop_quit in place of gtk_exit.
+	(my_icons): Remove question.
+
+	* list-ui.c (top_level): Likewise.	
+
+	* todo-ui.c (edit_item): Remove call to gtk_widget_realize and
+	GTK1 compatibility code.
+
+	* list-ui.c (top_level): Replace gpe_render_icon with
+	gtk_image_new_from_pixbuf.
+
+	* todo-ui.c: Fix warning.
+	* configure.c: Likewise.
+
 2003-02-15  Phil Blundell <pb@handhelds.org>
 
 	* Makefile (LINGUAS): Add de.

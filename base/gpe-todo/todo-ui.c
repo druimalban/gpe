@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <libintl.h>
+#include <string.h>
 
 #include <gtk/gtk.h>
 
@@ -97,7 +98,7 @@ click_ok (GtkWidget *widget,
 
   if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (t->duetoggle)))
     {
-      memset(&tm, 0, sizeof(tm));
+      memset (&tm, 0, sizeof(tm));
       tm.tm_year = GTK_DATE_COMBO (t->duedate)->year - 1900;
       tm.tm_mon = GTK_DATE_COMBO (t->duedate)->month;
       tm.tm_mday = GTK_DATE_COMBO (t->duedate)->day;
@@ -303,8 +304,6 @@ edit_item (struct todo_item *item, struct todo_category *initial_category)
   struct tm tm;
   time_t the_time;
 
-  gtk_widget_realize (window);
-
   libdm_mark_window (window);
 
   buttonok = gpe_button_new_from_stock (GTK_STOCK_SAVE, GPE_BUTTON_TYPE_BOTH);
@@ -360,11 +359,6 @@ edit_item (struct todo_item *item, struct todo_category *initial_category)
 
   t->item = item;
   
-#if GTK_MAJOR_VERSION < 2
-  gtk_widget_set_usize (state, -1, state->style->font->ascent + 
-			state->style->font->descent + 4);
-#endif
-
   gtk_box_pack_start (GTK_BOX (duebox), t->duetoggle, FALSE, FALSE, 4);
   gtk_box_pack_start (GTK_BOX (duebox), t->duedate, TRUE, TRUE, 1);
 
