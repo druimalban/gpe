@@ -72,7 +72,8 @@ install-program: $(PACKAGE) all-desktop
 	mkdir -p $(DESTDIR)/$(PREFIX)/bin
 	$(INSTALL) -m 4755 $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	$(STRIP) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
-	$(INSTALL) -m 755 ipshield $(DESTDIR)/etc/init.d/
+	mkdir -p $(DESTDIR)/etc/init.d/
+	$(INSTALL) -m 755 ipshield $(DESTDIR)/etc/init.d/ipshield
 	mkdir -p $(DESTDIR)$(PREFIX)/share/pixmaps
 	for i in $(PIXMAPS); do install -m 644 -D pixmaps/$$i $(DESTDIR)$(PREFIX)/share/pixmaps/$$i; done
 	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
