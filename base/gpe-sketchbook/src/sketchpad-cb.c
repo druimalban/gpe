@@ -119,7 +119,8 @@ gint on_key_press(GtkWidget *widget, GdkEventKey *ev, gpointer data){
   GtkScrollType scroll;
 
   // ignore key events if not showing a drawing area
-  if (gtk_notebook_get_current_page(sketchbook.notebook) != PAGE_SKETCHPAD)
+  if (gtk_notebook_get_current_page(sketchbook.notebook) != PAGE_SKETCHPAD
+      || sketchbook.prefs.joypad_scroll == FALSE)
     return FALSE;
 
   switch (ev->keyval){

@@ -259,6 +259,8 @@ void sketchpad_expand(GtkAdjustment *adj, gboolean isHoriz, int numPix){
   int n = abs(numPix);
   GdkPixmap *oldbuff;
 
+  if(sketchbook.prefs.grow_on_scroll == FALSE) return;
+
   if (isHoriz)
     drawing_area_width += n;
   else

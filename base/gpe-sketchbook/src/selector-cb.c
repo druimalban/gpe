@@ -34,17 +34,13 @@
 
 void switch_to_page(guint page){
   switch(page){
-    case PAGE_SKETCHPAD:
-      gtk_notebook_set_page(sketchbook.notebook, PAGE_SKETCHPAD);
-      break;
     case PAGE_SELECTOR:
-    default:
       if(icons_mode){//FIXME: to remove if iconlist can select
         gtk_widget_set_sensitive(selector.button_edit,   FALSE);//FIXME: to remove
         gtk_widget_set_sensitive(selector.button_delete, FALSE);//FIXME: to remove
       }//FIXME: to remove
-      gtk_notebook_set_page(sketchbook.notebook, PAGE_SELECTOR);
   }
+  gtk_notebook_set_page(sketchbook.notebook, page);
 }
 
 void on_window_selector_destroy (GtkObject *object, gpointer user_data){
@@ -156,3 +152,6 @@ void on_button_sketchpad_view_clicked (GtkButton *button, gpointer user_data){
   switch_to_page(PAGE_SKETCHPAD);
 }
 
+void on_button_selector_preferences_clicked (GtkButton *button, gpointer _unused){
+  switch_to_page(PAGE_PREFERENCES);
+}

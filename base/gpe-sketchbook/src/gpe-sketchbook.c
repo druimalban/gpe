@@ -23,6 +23,7 @@
 
 //--own headers
 #include "gpe-sketchbook.h"
+#include "preferences.h"
 #include "sketchpad.h"
 #include "sketchpad-gui.h"
 #include "sketchpad-cb.h" //on_window_sketchpad_destroy()
@@ -49,6 +50,7 @@ static struct gpe_icon my_icons[] = {
   { "import",     "open"  },
   { "delete",     "delete"},
   { "save",       "save"  },
+  { "prefs",      "preferences"  },
   { "properties", "properties"  },
   { "left",       "left"  },
   { "right",      "right" },
@@ -89,6 +91,7 @@ void app_init(int argc, char ** argv){
   sketchbook.save_dir = g_strdup_printf("%s/%s/", g_get_home_dir(), SKETCHPAD_HOME_DIR);
   selector_init();
   sketchpad_init();
+  prefs_reset_defaults();
 }
 
 void app_quit(){
@@ -101,12 +104,15 @@ void on_notebook_switch_page(GtkNotebook * notebook,
                              gpointer unused){
   //--update window title
   switch (page_number){
-  case PAGE_SKETCHPAD:
-    sketchpad_reset_title();
-    break;
-  case PAGE_SELECTOR:
-  default:
-    gtk_window_set_title (GTK_WINDOW (sketchbook.window), _("Sketchbook"));
+    case PAGE_SKETCHPAD:
+      sketchpad_reset_title();
+      break;
+    case PAGE_PREFERENCES:
+      gtk_window_set_title (GTK_WINDOW (sketchbook.window), _("Sketchbook: preferences"));
+      break;
+    case PAGE_SELECTOR:
+    default:
+      gtk_window_set_title (GTK_WINDOW (sketchbook.window), _("Sketchbook"));
   }
 }
 
@@ -116,6 +122,7 @@ void gui_init(){
 
   GtkWidget * selector_ui;
   GtkWidget * sketchpad_ui;
+  GtkWidget * prefs_ui;
 
   //--toplevel window
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
@@ -138,6 +145,9 @@ void gui_init(){
   sketchpad_ui = sketchpad_gui(window);
   window_sketchpad_init(window);
 
+  //--preferences
+  prefs_ui = preferences_gui(window);
+
   //--packing
   notebook = (GtkNotebook *) gtk_notebook_new();
   sketchbook.notebook = notebook;
@@ -147,6 +157,7 @@ void gui_init(){
 
   gtk_notebook_insert_page(notebook, selector_ui,  NULL, PAGE_SELECTOR);
   gtk_notebook_insert_page(notebook, sketchpad_ui, NULL, PAGE_SKETCHPAD);
+  gtk_notebook_insert_page(notebook, prefs_ui,     NULL, PAGE_PREFERENCES);
 
 #ifdef DEBUG
   {

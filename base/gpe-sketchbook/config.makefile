@@ -7,6 +7,7 @@ PACKAGE = gpe-sketchbook
 LINGUAS = fr pt de 
 MEMBERS = \
 	gpe-sketchbook       \
+        preferences          \
 	dock                 \
 	note                 \
 	selector	     \

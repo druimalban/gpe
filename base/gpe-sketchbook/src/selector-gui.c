@@ -117,7 +117,6 @@ GtkWidget * build_selector_toolbar(){
   gtk_widget_set_sensitive(button, FALSE);
   selector.button_delete = button;
 
-  gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
   pixbuf = gpe_find_icon ("import");
   pixmap = gtk_image_new_from_pixbuf (pixbuf);
   button = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
@@ -137,6 +136,15 @@ GtkWidget * build_selector_toolbar(){
   pixbuf = gpe_find_icon ("list");
   pixmap = gtk_image_new_from_pixbuf (pixbuf);
   g_object_set_data((GObject *) button, "list_mode_icon", pixmap);
+
+  gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
+
+  pixbuf = gpe_find_icon ("prefs");
+  pixmap = gtk_image_new_from_pixbuf (pixbuf);
+  button = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
+                                    NULL, NULL,
+				    pixmap,
+				    GTK_SIGNAL_FUNC(on_button_selector_preferences_clicked), NULL);
 
   return toolbar;
 }

@@ -15,33 +15,19 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-#ifndef GPE_SKETCHBOOK_H
-#define GPE_SKETCHBOOK_H
+#ifndef PREFERENCES_H
+#define PREFERENCES_H
 
 #include <gtk/gtk.h>
-#include "preferences.h"
 
-typedef struct _sketchbook {
-  Preferences prefs;
+typedef struct _preferences {
+  gboolean joypad_scroll;
+  gboolean grow_on_scroll;
+  //int start_with;
+} Preferences;
 
-  GtkWidget   * window;
-  GtkNotebook * notebook;
+void prefs_reset_defaults();
 
-  gchar * save_dir;//where to save the sketches
-
-  //Selector  * selector;
-  //Sketchpad * sketchpad;
-} Sketchbook;
-
-extern Sketchbook sketchbook;
-
-enum {
-  PAGE_SELECTOR,
-  PAGE_SKETCHPAD,
-  PAGE_PREFERENCES,
-};
-
-
-void app_quit();
+GtkWidget * preferences_gui(GtkWidget * window);
 
 #endif

@@ -27,6 +27,7 @@ void on_button_selector_open_clicked   (GtkButton *button, gpointer  user_data);
 void on_button_selector_delete_clicked (GtkButton *button, gpointer  user_data);
 void on_button_selector_import_clicked (GtkButton *button, gpointer  user_data);
 void on_button_selector_change_view_clicked (GtkButton *button, gpointer user_data);
+void on_button_selector_preferences_clicked (GtkButton *button, gpointer _unused);
 
 //--clist
 void on_clist_selector_select_row      (GtkCList  *clist,  gint row, gint column,
