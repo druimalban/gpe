@@ -331,7 +331,6 @@ ask_save_before_exit (void)
       save_file ();
     case 0: /* Don't Save */
       gtk_exit (0);
-      default:
     }
   }
   else

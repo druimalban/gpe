@@ -1,3 +1,12 @@
+2004-05-02  Philip Blundell  <philb@gnu.org>
+
+	* Version 0.22 released.
+
+2004-05-02  Philip Blundell  <philb@gnu.org>
+
+	* main.c (ask_save_before_exit): Remove stray 'default:' label
+	causing compile error.
+
 2004-03-07  Philip Blundell  <philb@gnu.org>
 
 	* Makefile (clean): Also remove $(DEPS).
