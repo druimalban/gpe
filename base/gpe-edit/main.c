@@ -18,6 +18,7 @@
 #include <fcntl.h>
 
 #include <gtk/gtk.h>
+#include <gdk/gdkkeysyms.h>
 
 #include <gpe/init.h>
 #include <gpe/errorbox.h>
@@ -411,13 +412,13 @@ do_find_string (GtkWidget *widget)
 }
 
 static void
-do_replace_string (GtkWidget *widget)
+do_replace_string (GtkWidget *widget, gpointer p)
 {
   gchar *replace_with;
   GtkWidget *entry;
   GtkTextBuffer *buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_area));
   GtkTextIter sel_start, sel_end, at;
-
+#warning it segfaults somewhere here
   entry = gtk_object_get_data (GTK_OBJECT (widget), "entry");
   replace_with = gtk_editable_get_chars (GTK_EDITABLE (entry), 0, -1);
 
@@ -468,6 +469,9 @@ search_string (GtkWidget *widget, GtkWidget *parent_vbox)
     gtk_widget_show (entry);
     gtk_widget_show (find);
 
+	GTK_WIDGET_SET_FLAGS(find, GTK_CAN_DEFAULT);
+    gtk_widget_grab_default(find);
+	gtk_entry_set_activates_default(GTK_ENTRY(entry), TRUE);
     gtk_widget_grab_focus (entry);
 
     search_replace_open = 1;
@@ -517,8 +521,8 @@ replace_string (GtkWidget *widget, GtkWidget *parent_vbox)
     gtk_signal_connect (GTK_OBJECT (find), "clicked",
 		        GTK_SIGNAL_FUNC (do_find_string), NULL);
 
-    gtk_signal_connect (GTK_OBJECT (replace), "clicked",
-    		        GTK_SIGNAL_FUNC (do_replace_string), NULL);
+    g_signal_connect (G_OBJECT (replace), "clicked",
+    		        G_CALLBACK (do_replace_string), NULL);
 
     gtk_widget_show (search_replace_vbox);
     gtk_widget_show (label1);
@@ -535,6 +539,36 @@ replace_string (GtkWidget *widget, GtkWidget *parent_vbox)
   search_replace_open = 0;
   gtk_widget_destroy (search_replace_vbox);
     }
+}
+
+gboolean
+main_window_key_pressed(GtkWidget *widget, 
+                         GdkEventKey *event, 
+                         GtkWidget *main_vbox)
+{
+  if (event->state & GDK_CONTROL_MASK)
+    switch (event->keyval)
+      {
+        case GDK_n:
+          new_file(widget, NULL);
+        break;	
+        case GDK_o:
+          select_open_file();
+        break;	
+        case GDK_s:
+          save_file();
+        break;	
+        case GDK_f:
+			search_string(widget, main_vbox);
+        break;	
+        case GDK_r:
+			replace_string(widget, main_vbox);
+        break;	
+        case GDK_q:
+          ask_save_before_exit();
+        break;	
+      }
+  return FALSE;
 }
 
 int
@@ -641,6 +675,9 @@ main (int argc, char *argv[])
   gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, FALSE, 0);
   gtk_container_add (GTK_CONTAINER (scroll), GTK_WIDGET (text_area));
   gtk_box_pack_start (GTK_BOX (vbox), scroll, TRUE, TRUE, 0);
+
+  g_signal_connect_after(G_OBJECT(main_window), "key-press-event", G_CALLBACK(main_window_key_pressed), vbox);
+  gtk_widget_add_events(main_window, GDK_KEY_PRESS_MASK);
 
   gpe_set_window_icon (main_window, "icon");
 

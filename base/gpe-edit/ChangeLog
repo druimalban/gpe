@@ -1,3 +1,9 @@
+2004-08-25  Florian Boor <florian.boor@kernelconcepts.de>
+
+	* main.c: Search edit activates search button.
+	* main.c: Added default hotkeys for common actions.
+	* Makefile: V 0.28
+
 2004-08-24  Florian Boor <florian.boor@kernelconcepts.de>
 
 	* Version 0.27 released
