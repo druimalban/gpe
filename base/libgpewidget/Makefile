@@ -5,19 +5,27 @@ SONAME = libgpewidget.so.0
 
 MEMBERS = gtkdatesel gtkdatecombo errorbox init pixmaps gtksmallentry smallbox gtkminifilesel render
 
-CFLAGS = `gdk-pixbuf-config --cflags` `gtk-config --cflags` -D_GNU_SOURCE -Wall -fPIC
+CFLAGS = `gdk-pixbuf-config --cflags` `gtk-config --cflags` -DPREFIX=\"$(PREFIX)\" -DPACKAGE=\"$(PACKAGE)\" -D_GNU_SOURCE -Wall -fPIC
 ifeq ($(DEBUG),yes)
 CFLAGS += -O2 -g
 LDFLAGS = -g
 else
 CFLAGS += -Os -fomit-frame-pointer
 endif
+CFLAGS += -MD
 
 HEADERS = init.h render.h errorbox.h smallbox.h pixmaps.h gtkminifilesel.h gtkdatecombo.h gtkdatesel.h
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
+DEPS = $(patsubst %,%.d,$(MEMBERS))
+SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
 all: libgpewidget.so
+
+update-po: po/$(PACKAGE).pot
+
+po/$(PACKAGE).pot: $(SOURCES)
+	xgettext -k_ -o $@ $^
 
 libgpewidget.so: $(SONAME)
 	ln -sf $^ $@
@@ -50,3 +58,4 @@ ipkg:
 clean:
 	rm -f $(OBJS) $(SONAME) libgpewidget.so
 
+-include $(DEPS)

@@ -20,7 +20,7 @@
 
 #define ERROR_ICON "/usr/share/pixmaps/error.png"
 
-#define _(x) gettext(x)
+#define _(x) dgettext(PACKAGE, x)
 
 static GdkPixbuf *pixbuf;
 static gboolean error_pix_loaded;

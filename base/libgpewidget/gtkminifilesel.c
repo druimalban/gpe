@@ -21,7 +21,7 @@
 
 #include "gtkminifilesel.h"
 
-#define _(x) gettext(x)
+#define _(x) dgettext(PACKAGE, x)
 
 #define COMPLETED 0
 #define LAST_SIGNAL 1

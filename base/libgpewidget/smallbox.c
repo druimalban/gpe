@@ -12,7 +12,7 @@
 
 #include "smallbox.h"
 
-#define _(x) gettext(x)
+#define _(x) dgettext(PACKAGE, x)
 
 void
 smallbox_click_ok (GtkWidget *widget, gpointer p)
