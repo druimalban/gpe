@@ -18,7 +18,7 @@
 #include <sqlite.h>
 
 #include <gpe/errorbox.h>
-#include <gpe/tododb.h>
+#include <gpe/todo-db.h>
 
 extern gboolean converted_item (struct todo_item *i);
 extern int converted_category (const char *title);

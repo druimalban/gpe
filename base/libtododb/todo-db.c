@@ -18,7 +18,7 @@
 #include <glib.h>
 
 #include <gpe/errorbox.h>
-#include <gpe/tododb.h>
+#include <gpe/todo-db.h>
 
 static sqlite *sqliteh;
 GSList *todo_db_categories, *todo_db_items;
