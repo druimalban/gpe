@@ -9,7 +9,7 @@
  * as published by the Free Software Foundation; either version
  * 2 of the License, or (at your option) any later version.
  *
- * GPE keybindings software setup untility (here: keylaunch)
+ * GPE keybindings software setup utility (here: keylaunch)
  *
  */
 
@@ -51,8 +51,8 @@ typedef struct
 {
 	char *pixname;
 	char *ident;
-	char *command;
 	char *modificator;
+	char *command;
 	char *title;
 	int type;
 }
@@ -72,11 +72,11 @@ static struct
 self;
 
 t_buttondef buttondef[NUM_BUTTONS] = {
-	{NULL, "???XF86AudioRecord","gpe-soundbite record --autogenerate-filename $HOME_VOLATILE",0},
-    {NULL, "???XF86Calendar","gpe-calendar",0},
-	{NULL, "???telephone","gpe-contacts",0},
-	{NULL, "???XF86Mail","gpe-taskmanager",0},
-	{NULL, "???XF86Start","mbcontrol -desktop",0}};
+	{NULL, "XF86AudioRecord","???Pressed","gpe-soundbite record --autogenerate-filename $HOME_VOLATILE",0},
+    {NULL, "XF86Calendar","???Pressed","gpe-calendar",0},
+	{NULL, "telephone","???Pressed","gpe-contacts",0},
+	{NULL, "XF86Mail","???Pressed","gpe-taskmanager",0},
+	{NULL, "XF86Start","???Pressed","mbcontrol -desktop",0}};
 
 static int active_button = 0;
 
@@ -91,33 +91,21 @@ struct gpe_icon local_icons[] = {
 };
 	
 	
-char *default_keyctl_conf[] = {
-	"key=???Pressed XF86AudioRecord:Record Memo:gpe-soundbite record --autogenerate-filename $HOME_VOLATILE",
-	"key=???XF86Calendar:Calendar:gpe-calendar",
-	"key=???telephone:Contacts:gpe-contacts",
-	"key=???XF86Mail:Running programs:gpe-taskmanager",
-	"key=???XF86Start:mbcontrol -desktop",
-	"key=???XF86PowerDown:apm --suspend",
-	"key=???Held XF86PowerDown:-:bl toggle",
-	"key=???Combine XF86Calendar XF86Start:gpe-keylock"
-};
-
 void FileSelected (char *file, gpointer data);
 
 void
 init_buttons ()
 {
 	FILE *fd;
-	GtkButton *target;
 	char *buffer = NULL;
 	char *slash;
-	char btext[16];
 	int i;
 	size_t len;
 
 	active_button = 0;
 	
 	/* make string variables from initial constants */
+	/* modificators stay constant for now */
 	for (i=0;i<NUM_BUTTONS;i++)
 		buttondef[i].command = g_strdup(buttondef[i].command);
 	
@@ -139,13 +127,11 @@ init_buttons ()
 		/* load from configfile */
 		while (getline(&buffer,&len,fd) > 0)
 		{
-printf("rl: %s",buffer);
-			/* this will not work with modificators other than ??? */
 			for (i=0;i<NUM_BUTTONS;i++)
-				if (strstr(buffer,buttondef[i].ident))
+				if (strlen(buffer) && (buffer[0] !='#') && 
+					strstr(buffer,buttondef[i].ident))
 				{
 					slash = strchr (buffer, ':');
-printf("c: %s",slash);
 					if (slash && ((slash - buffer) > 0))
 					{
 						slash++;
@@ -178,7 +164,7 @@ on_button_select (GtkButton * button, gpointer user_data)
 	buttondef[active_button].command = 
 		g_strdup(gtk_entry_get_text(GTK_ENTRY(self.edit)));
 	gtk_entry_set_text(GTK_ENTRY(self.edit),buttondef[nr].command);
-#warning pixmap, box, type
+#warning pixmap
 	active_button = nr;
 }
 
@@ -186,11 +172,18 @@ on_button_select (GtkButton * button, gpointer user_data)
 void
 on_defaults_clicked (GtkButton * button, gpointer user_data)
 {
-	
 	if (gpe_question_ask
 	    (_("Reset button config to default?"), _("Question"), "question",
 	     "!gtk-no", NULL, "!gtk-yes", NULL, NULL))
 	{
+		gtk_widget_grab_focus(self.button[0]);
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.button[0]),TRUE);
+		buttondef[0].command = g_strdup("gpe-soundbite record --autogenerate-filename $HOME_VOLATILE");
+    	buttondef[1].command = g_strdup("gpe-calendar");
+		buttondef[2].command = g_strdup("gpe-contacts");
+		buttondef[3].command = g_strdup("gpe-taskmanager");
+		buttondef[4].command = g_strdup("mbcontrol -desktop");
+		gtk_entry_set_text(GTK_ENTRY(self.edit),buttondef[0].command);
 	}
 }
 
@@ -204,8 +197,6 @@ Keyctl_Build_Objects ()
 	GtkWidget *scroll =	gtk_scrolled_window_new (NULL,NULL);
 	GtkWidget *bFile = gtk_button_new_from_stock(GTK_STOCK_OPEN);
 	GtkWidget *table = gtk_table_new(3,2,FALSE);
-	int i;
-	
 	
 	gpe_load_icons(local_icons);
 	
@@ -280,33 +271,85 @@ void
 Keyctl_Save ()
 {
 	/* save new config, force keyctl to reload, and exit */
-	int i;
+	int i,j;
 	FILE *fd;
+	char *cont = NULL;
+	GError *err = NULL;
+	char **cfglines = NULL;
+	gsize len = 0;
+
+	/* get current edit value */
+	g_free(buttondef[active_button].command);
+	buttondef[active_button].command = 
+		g_strdup(gtk_entry_get_text(GTK_ENTRY(self.edit)));
 	
 	/* User will write to keylaunch in homedir, root global */	
 	if (getuid())
 	{
 		keylaunchrc =
 			g_strdup_printf ("%s/.keylaunchrc", getenv ("HOME"));
+		if (access(keylaunchrc,F_OK))
+		{
+			cont = g_strdup_printf("/bin/cp /etc/keylaunchrc %s",keylaunchrc);
+			system(cont);
+			g_free(cont);
+			cont = NULL;
+		}
 	}
 	else
 		keylaunchrc = g_strdup ("/etc/keylaunchrc");
 
+	g_file_get_contents(keylaunchrc,&cont,&len,&err);
+	cfglines = g_strsplit(cont,"\n",255);
+	g_free(cont);
+	
+	i = 0;
+	j = 0;
+	while (cfglines[j])
+	{
+		for (i=0;i<NUM_BUTTONS;i++)
+		{
+			if (strlen(cfglines[j]) && (cfglines[j][0] !='#') && 
+				strstr(cfglines[j],buttondef[i].ident))
+			{
+				g_free(cfglines[j]);
+				cfglines[j] = 
+					g_strdup_printf("key=%s %s:-:%s",buttondef[i].modificator,
+						buttondef[i].ident,buttondef[i].command);
+				buttondef[i].type = 0xff;
+			}
+		}
+		j++;	
+	}
+	
+	for (i=0;i<NUM_BUTTONS;i++)
+	{
+		if (buttondef[i].type != 0xff)
+		{
+			j++;
+			cfglines = realloc(cfglines,(j+1) * sizeof(char*));
+			cfglines[j-1] =
+				g_strdup_printf("key=%s %s:-:%s",buttondef[i].modificator,
+					buttondef[i].ident,buttondef[i].command);
+			cfglines[j] = NULL;
+		}
+	}
 	fd = fopen (keylaunchrc, "w");
 	if (fd == NULL)
 	{
 		gpe_error_box (_("ERROR: Can't open keylaunchrc for writing!\n"));
 		return;
 	}
-	for (i = 0; i < 8; i++)
+	
+	for (i=0;i<j;i++)
 	{
-#ifdef DEBUG
-		printf ("button #%d => %s\n", i, buttons[i]);
-#endif
-		fprintf (fd, "%s\n", buttons[i]);
+		if (strlen(cfglines[i]) && (cfglines[i][strlen(cfglines[i])-1] == '\n'))
+			fprintf(fd,"%s",cfglines[i]);
+		else
+			fprintf(fd,"%s\n",cfglines[i]);
 	}
 	fclose (fd);
-
+	g_strfreev(cfglines);
 }
 
 void
@@ -318,45 +361,8 @@ Keyctl_Restore ()
 void
 FileSelected (char *file, gpointer data)
 {
-	GtkButton *target = data;
-	char btext[16];
-	int len;
-	char *slash;
-	int button_nr;
-
 	if (!strlen (file))
 		return;
-/*
-	for (button_nr = 0;
-	     button_nr < 5
-	     && self.button[button_nr] != GTK_WIDGET (target); button_nr++) ;
-	slash = strrchr (buttons[button_nr], ':') + 1;
-	strncpy (slash, file,
-		 1023 - (strlen (buttons[button_nr]) - strlen (slash)) - 1);
-	buttons[button_nr][1023] = '\x0';
-
-#ifdef DEBUG
-	printf ("button %d changed to %s\n", button_nr, file);
-#endif
-	len = strlen (file);
-	slash = strrchr (file, '/');
-	if (slash == NULL)
-	{
-		slash = strrchr (file, ':');
-	};
-	if (slash == NULL)
-	{
-		slash = file;
-	}
-	else
-	{
-		slash++;	// select next char after selected position
-	}
-	strncpy (btext, slash, 15);
-	btext[15] = '\x0';
-#ifdef DEBUG
-	printf ("setting label to %s\n", btext);
-#endif
-*/
+	
 	gtk_entry_set_text (GTK_ENTRY (self.edit), file);
 }

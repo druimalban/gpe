@@ -1,3 +1,6 @@
+2003-11-21	Florian Boor  	<florian.boor@kernelconcepts.de>
+	* keyctl.c: Fixed reading code, added config file writing.
+	
 2003-11-19	Florian Boor  	<florian.boor@kernelconcepts.de>
 	* theme.c: Fixed wrong brackets.
 	* keyctl.c: Started config reading code.
