@@ -80,6 +80,7 @@ static GtkWidget *window;
 static GtkWidget *focus;
 static GtkWidget *socket = NULL;
 static GtkWidget *socket_box;
+static GtkWidget *ownerinfo = NULL;
 
 static guint xkbd_xid;
 
@@ -471,7 +472,7 @@ enter_lock_callback (GtkWidget *widget, GtkWidget *entry)
 {
   gchar *pwstr = gtk_editable_get_chars (GTK_EDITABLE (entry), 0, -1);
   gtk_entry_set_text (GTK_ENTRY (entry), "");
-
+  
   if (login_correct (pwstr, NULL))
     {
       gdk_keyboard_ungrab (GDK_CURRENT_TIME);
@@ -521,6 +522,13 @@ filter (GdkXEvent *xevp, GdkEvent *ev, gpointer p)
 	  gtk_label_set_markup (GTK_LABEL (label_result), "");
 	  gtk_widget_set_usize (window, gdk_screen_width (), gdk_screen_height ());
 	  gtk_widget_show_all (window);
+      if (ownerinfo)
+        {  
+          if (access(GPE_OWNERINFO_DONTSHOW_FILE, F_OK))
+            gtk_widget_show(ownerinfo);
+          else
+            gtk_widget_hide(ownerinfo);
+         }
 	  gtk_widget_grab_focus (focus);
 	  gdk_keyboard_grab (focus->window, TRUE, GDK_CURRENT_TIME);
 	  if (xkbd_xid)
@@ -1407,7 +1415,7 @@ int
 main (int argc, char *argv[])
 {
   GtkWidget *option, *menu;
-  GtkWidget *calibrate_hint, *ownerinfo;
+  GtkWidget *calibrate_hint;
   Display *dpy;
   Window root;
   gboolean geometry_set = FALSE;
@@ -1836,11 +1844,12 @@ main (int argc, char *argv[])
 
   gtk_container_set_border_width (GTK_CONTAINER (vbox2), gpe_border);
 
-  if ((autolock_mode || have_users) 
-      && access(GPE_OWNERINFO_DONTSHOW_FILE, F_OK))
+  if (autolock_mode || have_users)
     {
       ownerinfo = gpe_owner_info ();
       gtk_box_pack_start (GTK_BOX (vbox2), ownerinfo, TRUE, TRUE, 0);
+      if (!access(GPE_OWNERINFO_DONTSHOW_FILE, F_OK))
+		gtk_widget_hide(ownerinfo);  
     }
 
   gtk_container_add (GTK_CONTAINER (window), vbox2);
@@ -1858,7 +1867,7 @@ main (int argc, char *argv[])
       gtk_widget_show_all (window);
       gtk_widget_grab_focus (focus);
       if (xkbd_xid && socket)
-	gtk_socket_steal (GTK_SOCKET (socket), xkbd_xid);
+         gtk_socket_steal (GTK_SOCKET (socket), xkbd_xid);
     }
 
   gtk_main ();
