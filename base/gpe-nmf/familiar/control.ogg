@@ -1,7 +1,7 @@
 Package: gpe-nmf-ogg
 Section: base
 Priority: optional
-Version: 0.03
+Version: 0.04-1
 Architecture: arm
 Maintainer: Phil Blundell <pb@debian.org>
 Depends: libvorbis-fixp0, libvorbisfile-fixp0
