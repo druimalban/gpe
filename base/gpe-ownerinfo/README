@@ -1,0 +1,93 @@
+README for gpe-ownerinfo2
+=========================
+
+/etc/gpe/gpe-ownerinfo.data can contain Pango markup if used with
+gpe-ownerinfo2.  
+
+Examples:
+
+<u>Hebrew &#x5d0;&#x5d1; &#x5d2;&#x5d3;&#x5d4; text</u>
+<span size='8000'>Germany</span>
+<span variant='smallcaps'>Norway</span>
+A nice reference is
+  <http://www-106.ibm.com/developerworks/unicode/library/l-u-pango1/index.html?dwzone=unicode>
+
+
+Translating
+-----------
+
+Translators: please provide the po files with the language code for
+your language. (The reason for this is that Pango supports language
+tagging, so, for example, it will attempt to use a Japanese font for
+text marked as Japanese.)
+
+Look for comment "LanguageCode" in po/<lang>.po, then put the code
+for your language in the 'mgstr'.  (Example: "ja" for Japanese)
+
+I will then use this information to mark up string with this
+language code. (Like "<span lang='" LanguageCode "'>foo</span>")
+
+The name "Pango" comes from the Greek "Pan" (&#x3a0;&#x3b1;&#x3bd;),
+meaning "All," and the Japanese "Go" (&#x8a9e;), meaning "Language."
+
+-------------------------------------------------------------------------------
+
+From <http://www-106.ibm.com/developerworks/unicode/library/l-u-pango1/index.html?dwzone=unicode>:
+
+
+The most versatile element, and the one that will have the most common
+use, is <span>. Like the HTML element with the same name, this marks a
+span of text, and its start tag may have the following attributes whose
+values will be translated into Pango text attribute values:
+
+    * font_desc: a shorthand font description, such as 
+      "Sans Italic 12" (any other span attributes override this 
+      description)
+    * font_family: A font family name
+    * face: Synonym for the font_family attribute
+    * size: Font size in thousandths of a point; a predefined absolute
+      size keyword such as xx-small or xx-large, or one of the relative
+      sizes smaller or larger
+    * style: One of normal, oblique, or italic, corresponding to the
+      allowed values of the style text attribute
+    * weight: One of six keywords such as ultralight, normal, or heavy
+      -- or a numeric weight
+    * variant: normal or smallcaps
+    * stretch: One of nine keywords such as ultracondensed, normal,
+      and ultraexpanded that correspond to the allowed values of the
+      stretch text attribute
+    * foreground: An RGB color specification such as #00FF00 or a
+      color name such as red
+    * background: An RGB color specification such as #00FF00 or a
+      color name such as red
+    * underline: One of single, double, low, none
+    * rise: Vertical displacement, in ten thousandths of an em. Can
+      be negative for subscript, positive for superscript
+    * strikethrough: true or false, whether to strike through the
+      text
+    * lang: A language code (for example, fr)
+
+
+The markup language also includes a handful of convenience elements
+that do not have attributes:
+
+    * <b>: bold
+    * <big>: equivalent to <span size="larger">
+    * <i>: italic
+    * <s>: strikethrough
+    * <sub>: subscript
+    * <sup>: superscript
+    * <small>: equivalent to <span size="smaller">
+    * <tt>: monospace font
+    * <u>: underline
+
+The absolute and relative sizes of successive steps of the size
+attribute and the size increase or decrease from the <bigger> or
+<smaller> elements is in the ratio 1:1.2 (or 1.2:1); this is the
+same as the CSS scale factor between its text sizes.
+
+The markup language is case-sensitive, unlike HTML (but like XML),
+and the only tags that can be omitted are the pair of the <markup>
+start tag and end tag.
+
+-------------------------------------------------------------------------------
