@@ -76,11 +76,12 @@ update_window_title (void)
 }
 
 void
-show_image (GtkWidget *widget, gpointer udata)
+show_image (GtkWidget *widget, gpointer *udata)
 {
   gchar *filename;
 
-  filename = (GList *) udata)->data;
+  image_filenames = udata;
+  filename = ((GList *) udata)->data;
 
   gtk_widget_hide (view_widget);
 
@@ -291,13 +292,32 @@ add_directory (gchar *directory)
 void
 next_image ()
 {
-  printf ("Displaying next image...\n");
+  if (image_widget)
+  {
+    gtk_widget_destroy (image_widget);
+    image_filenames = g_list_next (image_filenames);
+
+    if (image_filenames == NULL)
+      image_filenames = g_list_first (image_filenames);
+
+    show_image (NULL, (gpointer) image_filenames);
+  }
 }
 
 void
 previous_image ()
 {
-  printf ("Displaying previous image...\n");
+  if (image_widget)
+  {
+    gtk_widget_destroy (image_widget);
+    image_filenames = g_list_previous (image_filenames);
+
+    if (image_filenames == NULL)
+      image_filenames = g_list_last (image_filenames);
+
+
+    show_image (NULL, (gpointer) image_filenames);
+  }
 }
 
 void
@@ -480,12 +500,12 @@ main (int argc, char *argv[])
   p = gpe_find_icon ("left");
   pw = gpe_render_icon (window->style, p);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Previous"), 
-			   _("Previous image"), _("Previous image"), pw, NULL, NULL);
+			   _("Previous image"), _("Previous image"), pw, previous_image, NULL);
 
   p = gpe_find_icon ("right");
   pw = gpe_render_icon (window->style, p);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Next"), 
-			   _("Next image"), _("Next image"), pw, NULL, NULL);
+			   _("Next image"), _("Next image"), pw, next_image, NULL);
 
   p = gpe_find_icon ("cancel");
   pw = gpe_render_icon (window->style, p);
