@@ -1,3 +1,7 @@
+2004-06-02  Florian Boor  <florian.boor@kernelconcepts.de>
+    * Makefile: Version = 0.14
+    * Released V 0.14 
+
 2004-05-25  Florian Boor  <florian.boor@kernelconcepts.de>
     * main.c: Same for second toolbar.
     
