@@ -1,3 +1,11 @@
+2003-03-23  Colin Marquardt  <colin@marquardt-home.de>
+
+	* Makefile (install-program): New name for 'install' ('install' is
+	now provided by Makefile.dpkg_ipkg).  
+	(CVSBUILD): New variable.
+	(BUILD): New variable. Use it.
+	Use -s option for installing the binary, get rid of the strip call.
+
 2002-12-01  Philip Blundell  <philb@gnu.org>
 
 	* familiar/control (Version): 0.7-5

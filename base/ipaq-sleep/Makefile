@@ -2,20 +2,26 @@ PACKAGE = ipaq-sleep
 
 PREFIX = /usr/local
 
-all: ipaq-sleep
+ifeq ($(CVSBUILD),yes)
+BUILD = ../build
+else
+BUILD = build
+endif
 
-ipaq-sleep: ipaq-sleep.c
-	$(CC) -Os -fomit-frame-pointer -o ipaq-sleep ipaq-sleep.c -I/usr/X11R6/include -L/usr/X11R6/lib -lX11 -lXext -lXss -Wall -lapm
+all: $(PACKAGE)
 
-install: all
-	install -D $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
-	strip $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
+$(PACKAGE): $(PACKAGE).c
+	$(CC) -Os -fomit-frame-pointer -o $(PACKAGE) $(PACKAGE).c -I/usr/X11R6/include -L/usr/X11R6/lib -lX11 -lXext -lXss -Wall -lapm
+
+install-program: all
+	install -Ds $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	mkdir -p $(DESTDIR)/etc/init.d
-	install ipaq-sleep.init $(DESTDIR)/etc/init.d/ipaq-sleep
-	install ipaq-sleep.conf $(DESTDIR)/etc/ipaq-sleep.conf
-	install -D ipaq-sleep.session $(DESTDIR)/etc/X11/Xsession.d/69ipaq-sleep
+	install $(PACKAGE).init $(DESTDIR)/etc/init.d/$(PACKAGE)
+	install $(PACKAGE).conf $(DESTDIR)/etc/$(PACKAGE).conf
+	install -D $(PACKAGE).session $(DESTDIR)/etc/X11/Xsession.d/69ipaq-sleep
 
 clean:
 	rm -f $(PACKAGE) $(OBJS)
 
-include ../build/Makefile.dpkg_ipkg
+include $(BUILD)/Makefile.translation
+include $(BUILD)/Makefile.dpkg_ipkg
