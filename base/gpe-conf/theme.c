@@ -1307,7 +1307,7 @@ Theme_Build_Objects ()
   if (minsize < 200) 
 	 isize = 24;
   else if (minsize < 300)
-	 isize = 36;
+	 isize = 32;
   else 
 	 isize = 48;
   gtk_range_set_value(GTK_RANGE(self.slIconSize),(float)isize);
