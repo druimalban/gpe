@@ -1,5 +1,9 @@
 2003-03-15  Philip Blundell  <philb@gnu.org>
 
+	* Makefile (install): Depend on .desktop file.
+
+2003-03-15  Philip Blundell  <philb@gnu.org>
+
 	* Version 0.11 released.
 
 2003-03-15  Philip Blundell  <philb@gnu.org>

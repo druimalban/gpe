@@ -46,7 +46,7 @@ $(PACKAGE): $(OBJS)
 clean:
 	rm -f gpe-contacts $(OBJS) $(DEPS)
 
-install: all install-mo
+install: all install-mo $(PACKAGE).desktop
 	install -d $(DESTDIR)$(PREFIX)/bin
 	install -s gpe-contacts $(DESTDIR)$(PREFIX)/bin/gpe-contacts
 	install -d $(DESTDIR)$(PREFIX)/share/applications
