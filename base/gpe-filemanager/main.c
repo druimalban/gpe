@@ -306,19 +306,16 @@ static void
 create_directory_interactive(void)
 {
   GtkWidget *dialog;
-  GtkWidget *label, *entry;
+  GtkWidget *entry;
   int response;
   gchar *directory, *diruri;
 
   dialog = gtk_message_dialog_new (GTK_WINDOW (window), 
     GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT, 
     GTK_MESSAGE_QUESTION,
-    GTK_BUTTONS_OK_CANCEL, NULL);
-#warning pass message    
-  label = gtk_label_new ("New directory");
+    GTK_BUTTONS_OK_CANCEL, "Create directory");
   entry = gtk_entry_new ();
 
-  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox), label, FALSE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox), entry, FALSE, TRUE, 0);
 
   gtk_widget_show_all (dialog);
@@ -677,18 +674,22 @@ show_file_properties ()
 	                                    | GTK_DIALOG_MODAL,
 	                                  GTK_MESSAGE_INFO,
 	                                  GTK_BUTTONS_CLOSE,
-	                                  "File information");
+	                                  current_popup_file->vfs->name);
   table = gtk_table_new(4,2,FALSE);
   gtk_table_set_col_spacings(GTK_TABLE(table),gpe_get_boxspacing());
   
-  /* filename */
-  text = g_strdup_printf("<b>%s</b>","Name:");
+  /* location */
+  text = g_strdup_printf("<b>%s</b>","Location:");
   label = gtk_label_new(NULL);
   gtk_misc_set_alignment(GTK_MISC(label),1,0.5); /* align right, gnomish */
   gtk_label_set_markup(GTK_LABEL(label),text);
   g_free(text);
   gtk_table_attach(GTK_TABLE(table),label,0,1,0,1,GTK_FILL,GTK_FILL,0,0);
-  label = gtk_label_new(current_popup_file->vfs->name);
+  text = g_strdup(current_popup_file->filename);
+  if (strrchr(text,'/')) /* eliminate name */
+	  strrchr(text,'/')[0] = 0;
+  label = gtk_label_new(text);
+  g_free(text);
   gtk_misc_set_alignment(GTK_MISC(label),0,0.5); 
   gtk_table_attach(GTK_TABLE(table),label,1,2,0,1,GTK_FILL,GTK_FILL,0,0);
 	
@@ -866,6 +867,10 @@ show_popup (GtkWidget *widget, gpointer udata)
   FileInformation *file_info;
 
   file_info = (FileInformation *) udata;
+	
+  if (file_info == NULL)
+    return;
+
   current_popup_file = file_info;
 
   if (bluetooth_available ())
@@ -1260,6 +1265,7 @@ main (int argc, char *argv[])
   GdkPixbuf *p;
   GtkWidget *pw;
   GtkAccelGroup *accel_group;
+  int size_x, size_y;
 
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
@@ -1273,11 +1279,18 @@ main (int argc, char *argv[])
 
   bluetooth_init ();
 
+  /* main window */
+  size_x = gdk_screen_width() / 2;
+  size_y = gdk_screen_height() * 2 / 3;  
+  if (size_x < 240) size_x = 240;
+  if (size_y < 320) size_y = 320;
+  
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title (GTK_WINDOW (window), "Filemanager");
-  gtk_widget_set_usize (GTK_WIDGET (window), window_x, window_y);
+  gtk_window_set_default_size (GTK_WINDOW (window), size_x, size_y);
   gtk_signal_connect (GTK_OBJECT (window), "delete-event",
 		      GTK_SIGNAL_FUNC (gtk_exit), NULL);
+  gpe_set_window_icon(window,"icon");
 
   gtk_widget_realize (window);
 

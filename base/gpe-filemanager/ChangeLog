@@ -1,8 +1,13 @@
-2004-05-17  Florian Boor  <florian.boor@kernelconcepts.de>
+2004-05-20  Florian Boor  <florian.boor@kernelconcepts.de>
+	* main.c: main(): Set default size cleverer, set window icon.
+	* main.c: create_directory_interactive(): improved dialog
+	* ChangeLog: Fixed date, need more sleep.
+	* control1: Added gnome-vfs-extras to dependencies.
+	* main.c: show_popup(): Fixed segfault.
 	* main.c: Added file info dialog.
 	* main.c: Minor fix to compile with older compilers.
 
-2004-05-16  Florian Boor  <florian.boor@kernelconcepts.de>
+2004-05-19  Florian Boor  <florian.boor@kernelconcepts.de>
     * main.c: transfer_callback(): Impemented query dialogs for error 
       and overwrite queries.
     * main.c: Fixed multiple warnings, formating and removed old cruft.
