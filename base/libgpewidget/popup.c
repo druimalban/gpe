@@ -66,7 +66,7 @@ gpe_popup_menu_position (GtkMenu *menu, gint *xp, gint *yp, gboolean *push, gpoi
   
   gpe_get_win_position (GDK_WINDOW_XDISPLAY (w->window), GDK_WINDOW_XWINDOW (w->window), &x, &y);
 
-  *xp = x;
+  *xp = x + w->allocation.x;
   *yp = y - GTK_WIDGET (menu)->requisition.height;
 
   if (*yp < 0)

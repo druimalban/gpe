@@ -1,3 +1,12 @@
+2004-08-07  Phil Blundell  <pb@nexus.co.uk>
+
+	* Version 0.87 released.
+
+2004-08-07  Phil Blundell  <pb@nexus.co.uk>
+
+	* popup.c (gpe_popup_menu_position): Factor in widget allocation
+	to X coordinate.
+
 2004-07-16  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.86 released.
