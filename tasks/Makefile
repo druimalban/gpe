@@ -61,7 +61,9 @@ TMP_FILE2 = __tmp2
 	@sed 's$$_SOURCE_$$$(SOURCE)$$' < $(TMP_FILE2) > dist/CONTROL/control
 	@rm -rf $(TMP_FILE1) $(TMP_FILE2)
 	@ipkg-build -o root -g root dist
+ifeq ($(SIGN),yes)
 	gpg -sb --armor $@_$(VERSION)_all.ipk
+endif
 
 clean:
 	rm -rf dist *.ipk *.ipk.asc *~ .*~
