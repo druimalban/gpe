@@ -393,17 +393,10 @@ click_ok (GtkWidget *widget, GtkWidget *d)
   if (ev_d->description)
     g_free (ev_d->description);
 
-#if GTK_MAJOR_VERSION < 2
-  ev_d->description = gtk_editable_get_chars (GTK_EDITABLE (s->description), 
-					      0, -1);
-#else
-  {
     GtkTextIter start, end;
     GtkTextBuffer *buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (s->description));
     gtk_text_buffer_get_bounds (buf, &start, &end);
     ev_d->description = gtk_text_buffer_get_text (buf, &start, &end, FALSE);
-  }
-#endif
 
   if (ev_d->summary)
     g_free (ev_d->summary);
@@ -565,12 +558,8 @@ build_edit_event_window (void)
   GtkWidget *vboxrecur = gtk_vbox_new (FALSE, 0);
   GtkWidget *hboxrecurtypes = gtk_hbox_new (FALSE, 0);
   GtkWidget *hboxendafter = gtk_hbox_new (FALSE, 0);
-  
-#if GTK_MAJOR_VERSION < 2
-  GtkWidget *description = gtk_text_new (NULL, NULL);
-#else
+
   GtkWidget *description = gtk_text_view_new ();
-#endif
 
   GtkWidget *dailyhbox, *yearlyhbox;
 
@@ -719,13 +708,9 @@ build_edit_event_window (void)
   gtk_notebook_append_page (GTK_NOTEBOOK (s->notebooktype), vboxreminder, NULL);
   gtk_notebook_append_page (GTK_NOTEBOOK (s->notebooktype), vboxtask, NULL);
 
-#if GTK_MAJOR_VERSION < 2
-  gtk_text_set_editable (GTK_TEXT (description), TRUE);
-  gtk_text_set_word_wrap (GTK_TEXT (description), TRUE);
-#else
   gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (description), GTK_WRAP_WORD);
   gtk_text_view_set_editable (GTK_TEXT_VIEW (description), TRUE);
-#endif
+
   gtk_widget_set_usize (description, -1, 88);
 
   buttonok = gpe_button_new_from_stock (GTK_STOCK_SAVE, GPE_BUTTON_TYPE_BOTH);
@@ -1142,11 +1127,7 @@ new_event (time_t t, guint timesel)
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->radiobuttonnone), TRUE);
       gtk_notebook_set_page (GTK_NOTEBOOK (s->notebookedit), 0);
       gtk_entry_set_text (GTK_ENTRY (s->summary), "");
-#if GTK_MAJOR_VERSION >= 2
       gtk_text_buffer_set_text (gtk_text_view_get_buffer (GTK_TEXT_VIEW (s->description)), "", -1);
-#else
-#error needs fixing
-#endif
     }
 
   return w;
@@ -1172,13 +1153,8 @@ edit_event (event_t ev)
       g_signal_connect (G_OBJECT (s->deletebutton), "clicked",
 			G_CALLBACK (click_delete), ev);
       evd = event_db_get_details (ev);
-#if GTK_MAJOR_VERSION < 2
-      gtk_text_insert (GTK_TEXT (s->description), NULL, NULL, NULL, 
-		       evd->description, -1);
-#else
       gtk_text_buffer_set_text (gtk_text_view_get_buffer (GTK_TEXT_VIEW (s->description)),
 				evd->description, -1);
-#endif
       gtk_entry_set_text (GTK_ENTRY (s->summary), evd->summary);
       event_db_forget_details (ev);
       
