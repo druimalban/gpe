@@ -1,6 +1,3 @@
+zoom in continuously (and smoothly) when the stylus is held down
 
-need to queue up redrawing, rather than do immediately (?)
-
-i.e. avoid getting behind the mouse (esp. when dragging)
-- better to jump to most recent position
-
+use a greater precision
