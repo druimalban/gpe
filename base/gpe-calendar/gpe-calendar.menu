@@ -1,0 +1,1 @@
+?package(gpe-calendar): needs=x11 title=Calendar command=gpe-calendar icon48=gpe-calendar.png section=PIM windowtitle=gpe-calendar
