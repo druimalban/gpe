@@ -1,0 +1,49 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2004-02-22 15:13+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ui.c:39
+msgid "Category name must not be blank"
+msgstr ""
+
+#: ui.c:50
+msgid "A category by that name already exists"
+msgstr ""
+
+#: ui.c:85
+msgid "Name:"
+msgstr ""
+
+#: ui.c:115 ui.c:336
+msgid "New category"
+msgstr ""
+
+#: ui.c:337
+msgid "Tap here to add a new category."
+msgstr ""
+
+#: ui.c:341
+msgid "Delete category"
+msgstr ""
+
+#: ui.c:342
+msgid "Tap here to delete the selected category."
+msgstr ""
+
+#: ui.c:413
+msgid "Select categories"
+msgstr ""
