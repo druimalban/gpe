@@ -1,6 +1,6 @@
 [Desktop Entry]
-Name=Text Editor
-Comment=GPE Text Editor
+_Name=Text Editor
+_Comment=GPE Text Editor
 Exec=gpe-edit
 Terminal=0
 Type=Application

@@ -6,6 +6,9 @@
 
 	* Makefile (install): Depend on gpe-edit.desktop.  Don't ship
 	.menu file.  Use install -s.
+	* gpe-edit.desktop: Deleted.
+	* gpe-edit.desktop.in: New.
+	* gpe-edit.menu: Deleted.
 
 2003-02-17  Colin Marquardt  <colin@marquardt-home.de>
 
