@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-08-25 16:57+0200\n"
+"POT-Creation-Date: 2004-09-20 00:02+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: db.c:76 main.c:313
+#: db.c:76 main.c:328
 msgid "Name"
 msgstr ""
 
@@ -28,99 +28,107 @@ msgstr ""
 msgid "EMail"
 msgstr ""
 
-#: editing.c:221
+#: editing.c:107
+msgid "Details"
+msgstr ""
+
+#: editing.c:229
 msgid "no year"
 msgstr ""
 
-#: editing.c:344
-msgid "Edit Contact"
-msgstr ""
-
-#: editing.c:421
+#: editing.c:428
 msgid "Categories"
 msgstr ""
 
-#: main.c:81 main.c:181
+#: editing.c:526
+msgid "New Contact"
+msgstr ""
+
+#: editing.c:528
+msgid "Edit Contact"
+msgstr ""
+
+#: main.c:83 main.c:195
 msgid "Really delete this contact?"
 msgstr ""
 
-#: main.c:81 main.c:181 structure.c:176
+#: main.c:83 main.c:195 structure.c:176
 msgid "Confirm"
 msgstr ""
 
-#: main.c:133
+#: main.c:135
 msgid "All categories"
 msgstr ""
 
-#: main.c:290
+#: main.c:305
 msgid "home"
 msgstr ""
 
-#: main.c:292
+#: main.c:307
 msgid "work"
 msgstr ""
 
-#: main.c:342
+#: main.c:357
 msgid "Birthday:"
 msgstr ""
 
-#: main.c:780 gpe-contacts.desktop.in.h:1
+#: main.c:906 gpe-contacts.desktop.in.h:1
 msgid "Contacts"
 msgstr ""
 
-#: main.c:793
+#: main.c:919
 msgid "New contact"
 msgstr ""
 
-#: main.c:793
+#: main.c:919
 msgid "Tap here to add a new contact."
 msgstr ""
 
-#: main.c:799
+#: main.c:926
 msgid "Edit"
 msgstr ""
 
-#: main.c:800
+#: main.c:927
 msgid "Edit contact"
 msgstr ""
 
-#: main.c:800
+#: main.c:927
 msgid "Tap here to edit the selected contact."
 msgstr ""
 
-#: main.c:806
+#: main.c:933
 msgid "Delete contact"
 msgstr ""
 
-#: main.c:806
+#: main.c:933
 msgid "Tap here to delete the selected contact."
 msgstr ""
 
-#: main.c:813
+#: main.c:940
 msgid "Properties"
 msgstr ""
 
-#: main.c:813
+#: main.c:940
 msgid "Tap here to configure the program."
 msgstr ""
 
-#: main.c:819
+#: main.c:946
 msgid "Close"
 msgstr ""
 
-#: main.c:819
+#: main.c:946
 msgid "Tap here to exit gpe-contacts."
 msgstr ""
 
-#: main.c:844 main.c:892
+#: main.c:971 main.c:1037
 msgid "Contact"
 msgstr ""
 
-#: main.c:856
+#: main.c:997
 msgid "Find:"
 msgstr ""
 
-#: main.c:863
+#: main.c:1004
 msgid "in"
 msgstr ""
 
@@ -216,23 +224,69 @@ msgstr ""
 msgid "Save as..."
 msgstr ""
 
-#: namedetail.c:38
+#. TRANSLATORS: These abbreviations are a list of common titles used in a name
+#: namedetail.c:30
+msgid "Mr."
+msgstr ""
+
+#: namedetail.c:30
+msgid "Mrs."
+msgstr ""
+
+#: namedetail.c:30
+msgid "Sir"
+msgstr ""
+
+#: namedetail.c:30
+msgid "Dr."
+msgstr ""
+
+#. TRANSLATORS: This is a list of common name suffixes
+#: namedetail.c:32
+msgid "Sr."
+msgstr ""
+
+#: namedetail.c:32
+msgid "Jr."
+msgstr ""
+
+#: namedetail.c:32
+msgid "I"
+msgstr ""
+
+#: namedetail.c:32
+msgid "II"
+msgstr ""
+
+#: namedetail.c:32
+msgid "III"
+msgstr ""
+
+#: namedetail.c:32
+msgid "Esq."
+msgstr ""
+
+#: namedetail.c:62
 msgid "Edit Name Details"
 msgstr ""
 
-#: namedetail.c:55
-msgid "Given name:"
+#: namedetail.c:88
+msgid "First name:"
 msgstr ""
 
-#: namedetail.c:56
-msgid "Family name:"
+#: namedetail.c:89
+msgid "Middle name:"
 msgstr ""
 
-#: namedetail.c:57
+#: namedetail.c:90
+msgid "Last name:"
+msgstr ""
+
+#: namedetail.c:91
 msgid "Suffix:"
 msgstr ""
 
-#: namedetail.c:58
+#: namedetail.c:92
 msgid "Title:"
 msgstr ""
 

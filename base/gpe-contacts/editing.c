@@ -720,7 +720,10 @@ char *first = NULL;
 char *middle = NULL;
 char *last = NULL;
 char *suffix = NULL;
-    
+   
+  if (!nametext) return;
+  if (strlen(nametext) < 3) return;
+      
     sp = g_strdup(nametext);
 
     /* scan first element for title */
@@ -1045,9 +1048,13 @@ on_name_clicked (GtkButton *button, gpointer user_data)
   GtkWindow *edit = user_data;
   GtkEntry *e = g_object_get_data(G_OBJECT(button), "edit");
   struct person *p;
+  gchar *name;
 
   p = g_object_get_data (G_OBJECT (edit), "person");
-  store_name_fields(p, gtk_entry_get_text(e));
+  
+  name = gtk_editable_get_chars(GTK_EDITABLE(e), 0, -1);
+  store_name_fields(p, name);
+  g_free(name);
 
   do_edit_name_detail(edit, p);
 }

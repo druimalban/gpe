@@ -1,3 +1,8 @@
+2004-09-20  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * Released V 0.29
+    * editing.c: Fixed segfault on short name.
+
 2004-09-16  Florian Boor  <florian.boor@kernelconcepts.de>
     
     * editing.c: Fixed bug causing name update to fail.
