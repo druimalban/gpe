@@ -13,8 +13,8 @@ schemas for this information are currently under development and the
 current proposals for these standards are listed here: 
 
 <h2> PIM schema</h2> 
-<pre> 
-<!--#include file="pim.sql" -->
-</pre>
+A hacked-together version of the bulk of the GPE schema is available <a href=pim.sql>here</a> this ommits a specification for storing events and has not yet been finalised. 
+
+
 
 <!--#include virtual="includes/foot.shtml"-->
