@@ -12,8 +12,10 @@ DESTDIR = /
 ifeq ($(CVSBUILD),yes)
 LDFLAGS += -L../libgpewidget -L../libxsettings  -L../libxsettings-client -L../libdotdesktop -L../libdm -ldm -L.
 CFLAGS += -Wall -I../libgpewidget -I../libxsettings-client -I../libxsettings -I../libdotdesktop
+BUILD = ../build
 else
 CFLAGS += -I/usr/local/include/gpe
+BUILD = build
 endif
 
 ifeq ($(DEBUG),yes)
@@ -128,7 +130,7 @@ gpe-confsuid: gpe-confsuid.c
 	$(CC) -o $@ gpe-confsuid.c 
 	$(STRIP) gpe-confsuid
 
-install: gpe-conf
+install-program: gpe-conf
 	sed -e s/VERSION/$(VERSION)/ <$(CONTROL).pre > $(CONTROL)
 	mkdir -p $(DESTDIR)/etc/gpe
 	$(INSTALL) familiar/gpe-config.conf $(DESTDIR)/etc/gpe/
@@ -145,19 +147,8 @@ install: gpe-conf
 	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
 	$(INSTALL) -m 644 *.desktop $(DESTDIR)$(PREFIX)/share/applications
 
-ipkg: clean
-	rm -rf familiar/dist
-	make DESTDIR=`pwd`/familiar/dist PREFIX=/usr BINDIR=/usr/bin prefix=/usr install
-	mkdir -p familiar/dist/CONTROL
-	cp familiar/$(CONTROL) familiar/dist/CONTROL/control
-	if test -e familiar/conffiles; then install -m 644 familiar/conffiles familiar/dist/CONTROL; fi
-	if test -e familiar/preinst;   then install familiar/preinst   familiar/dist/CONTROL; fi
-	if test -e familiar/postinst;  then install familiar/postinst  familiar/dist/CONTROL; fi
-	if test -e familiar/prerm;     then install familiar/prerm     familiar/dist/CONTROL; fi
-	if test -e familiar/postrm;    then install familiar/postrm    familiar/dist/CONTROL; fi
-	chown -R root.root familiar/dist
-	ipkg-build familiar/dist
-
 clean:
 	rm -f gpe-conf $(OBJS) *~ */*~ *.ipk *.o
 
+include $(BUILD)/Makefile.dpkg_ipkg
+include $(BUILD)/Makefile.translation

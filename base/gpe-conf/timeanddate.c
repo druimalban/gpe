@@ -526,6 +526,7 @@ GtkWidget *Time_Build_Objects()
   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.usedst), strlen(tzi.dstname));
   g_signal_connect (G_OBJECT(self.usedst), "toggled",
 		      G_CALLBACK(update_enabled_widgets), NULL);
+  gtk_tooltips_set_tip (tooltips, self.usedst, _("Check this box if you want your device to handle daylight saving time for you."), NULL);
 
   self.offsetlabel = gtk_label_new(_("Offset"));
   gtk_misc_set_alignment(GTK_MISC(self.offsetlabel),0.0,0.5);
@@ -539,13 +540,15 @@ GtkWidget *Time_Build_Objects()
   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.defaultdst), !(tzi.utcdstofs_h || tzi.utcdstofs_m));
   g_signal_connect (G_OBJECT(self.defaultdst), "toggled",
 		      G_CALLBACK(update_enabled_widgets), NULL);
-  
+  gtk_tooltips_set_tip (tooltips, self.defaultdst, _("Use default DST offset of one hour?"), NULL);
+
   adj = gtk_adjustment_new(tzi.utcdstofs_h,-12,12,1,6,6);
   self.dsth = gtk_spin_button_new (GTK_ADJUSTMENT(adj),1,0);
   gtk_box_pack_start (GTK_BOX (hbox), self.dsth, FALSE, TRUE, 0);
   self.dstlh = gtk_label_new(_("Hours"));
   gtk_misc_set_alignment(GTK_MISC(self.dstlh),0.0,0.5);
   gtk_box_pack_start (GTK_BOX (hbox), self.dstlh, FALSE, TRUE, 0);
+  gtk_tooltips_set_tip (tooltips, self.dsth, _("Select daylight saving time offset hours here."), NULL);
 
   adj = gtk_adjustment_new(tzi.utcdstofs_m,0,55,5,15,15);
   self.dstm = gtk_spin_button_new (GTK_ADJUSTMENT(adj),1,0);
@@ -553,6 +556,7 @@ GtkWidget *Time_Build_Objects()
   self.dstlm = gtk_label_new(_("Minutes"));
   gtk_misc_set_alignment(GTK_MISC(self.dstlm),0.0,0.5);
   gtk_box_pack_start (GTK_BOX (hbox), self.dstlm, FALSE, TRUE, 0);
+  gtk_tooltips_set_tip (tooltips, self.dstm, _("Select daylight saving time offset minutes here."), NULL);
   
   /* ---- */
   
@@ -565,6 +569,7 @@ GtkWidget *Time_Build_Objects()
   
   self.advanced = gtk_check_button_new_with_label(_("Use advanced settings"));
   gtk_box_pack_start (GTK_BOX (self.catvbox4), self.advanced, FALSE, TRUE, 0);
+  gtk_tooltips_set_tip (tooltips, self.advanced, _("Check this if you want to use the advanced settings below."), NULL);
   
   
   /* -------------------------------------------------------------------------- */

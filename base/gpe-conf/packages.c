@@ -184,6 +184,7 @@ Packages_Build_Objects (void)
   gtk_tooltips_set_tip (tooltips, cur, _("This window shows all output from the packet manager that performs the update."), NULL);
   
   txLog = gtk_text_view_new();
+  gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(txLog),GTK_WRAP_WORD);
   gtk_container_add(GTK_CONTAINER(cur),txLog);
   gtk_box_pack_start_defaults(GTK_BOX(vbox),cur);	
    

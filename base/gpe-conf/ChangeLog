@@ -1,5 +1,10 @@
 When			Who				Where						What
 
+14.04.2003		Florian			Makefile					Changed to standard build system.
+								po/gpe-conf.pot				Added file for translation support.
+								packages.c					Changed wrap mode.
+								timeanddate.c				Added some help.
+
 13.04.2003		Colin			theme.c						Fix button order.
 
 12.04.2003		Florian			main.c						Updated error handling, added error message if PCMCIA init fails.
