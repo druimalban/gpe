@@ -18,135 +18,38 @@
 #include "support.h"
 #include "structure.h"
 #include "pixmaps.h"
+#include "gtkdatecombo.h"
+#include "callbacks.h"
+#include "smallbox.h"
 
-static GSList *edit_pages;
-
-void structure_add_clicked (GtkButton       *button,
-			    gpointer         user_data);
+GSList *edit_pages;
 
 static void
-run_list (GtkCTree *ct, GSList *list, GtkCTreeNode *parent)
+structure_new_page (GtkWidget *widget,
+		    gpointer d)
 {
-  GSList *iter;
-
-  for (iter = list; iter; iter = iter->next)
-    {
-      GtkCTreeNode *node;
-      edit_thing_t e = iter->data;
-      gchar *text[2];
-
-      text[0] = e->name;
-      text[1] = NULL;
- 
-      node = gtk_ctree_insert_node (ct,
-				    parent,
-				    NULL,
-				    text,
-				    4,
-				    NULL,
-				    NULL,
-				    NULL,
-				    NULL,
-				    (e->type == PAGE || e->type == GROUP) ? FALSE : TRUE,
-				    TRUE);
-
-      GTK_CTREE_ROW (node)->row.data = e;
-
-      if (e->children)
-	run_list (ct, e->children, node);
-    }
+  gchar *t = smallbox (_("New page"), _("Title"), "");
 }
 
-GtkWidget *
-edit_structure (void)
+static void
+structure_new_group (GtkWidget *widget,
+		    gpointer d)
 {
-  GtkWidget *tree = gtk_ctree_new (2, 0);
-  GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
-  GtkWidget *scrolled = gtk_scrolled_window_new (NULL, NULL);
-  GtkWidget *toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, 
-					GTK_TOOLBAR_ICONS);
-  struct pix *p;
-  GtkWidget *pw;
-
-  gtk_widget_show (vbox);
-  gtk_widget_show (scrolled);
-  gtk_widget_show (tree);
-  gtk_widget_show (toolbar);
-
-  p = find_pixmap ("notebook");
-  pw = gtk_pixmap_new (p->pixmap, p->mask);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), "New page", 
-			   "New page", "New page", 
-			   pw, structure_add_clicked, tree);
-
-  p = find_pixmap ("frame");
-  pw = gtk_pixmap_new (p->pixmap, p->mask);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), "New group", 
-			   "New group", "New group", 
-			   pw, structure_add_clicked, tree);
-
-  p = find_pixmap ("entry");
-  pw = gtk_pixmap_new (p->pixmap, p->mask);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), "New field", 
-			   "New field", "New field", 
-			   pw, structure_add_clicked, tree);
-
-#if 0
-  p = find_pixmap ("save");
-  pw = gtk_pixmap_new (p->pixmap, p->mask);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), "Save", 
-			   "Save", "Save", pw, NULL, NULL);
-#endif
-
-  gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), scrolled, TRUE, TRUE, 0);
-
-  gtk_container_add (GTK_CONTAINER (scrolled), tree);
-  gtk_clist_set_column_width (GTK_CLIST (tree), 0, 80);
-  gtk_clist_set_column_width (GTK_CLIST (tree), 1, 80);
-  gtk_clist_column_titles_hide (GTK_CLIST (tree));
-
-  run_list (GTK_CTREE (tree), edit_pages, NULL);
-
-  return vbox;
+  gchar *t = smallbox (_("New group"), _("Title"), "");
 }
 
-edit_thing_t
-new_thing (edit_thing_type t, gchar *name, edit_thing_t parent)
+static void
+structure_new_field (GtkWidget *widget,
+		    gpointer d)
 {
-  edit_thing_t e = g_malloc (sizeof (*e));
-  memset (e, 0, sizeof (*e));
-  e->type = t;
-  e->name = name;
-  e->children = NULL;
-  e->parent = parent;
-  if (parent)
-    parent->children = g_slist_append (parent->children, e);
-  return e;
 }
-
-void
-structure_add_clicked (GtkButton       *button,
-		       gpointer         user_data)
-{
-  GtkWidget *w = create_structure_item ();
-  GtkCTree *ct = GTK_CTREE (user_data);
-
-  if (GTK_CLIST (ct)->selection)
-    {
-      GtkCTreeNode *node = GTK_CTREE_NODE (GTK_CLIST (ct)->selection->data);
-      edit_thing_t e = GTK_CTREE_ROW (node)->row.data;
-    }
-
-  gtk_widget_show (w);
-}
-
 
 void
 structure_edit_clicked (GtkButton       *button,
 			gpointer         user_data)
 {
   GtkCTree *ct = GTK_CTREE (user_data);
+#if 0
   if (GTK_CLIST (ct)->selection)
     {
       GtkCTreeNode *node = GTK_CTREE_NODE (GTK_CLIST (ct)->selection->data);
@@ -194,6 +97,7 @@ structure_edit_clicked (GtkButton       *button,
 
       gtk_widget_show (w);
     }
+#endif
 }
 
 
@@ -216,163 +120,105 @@ structure_delete_clicked (GtkButton       *button,
     }
 }
 
-void
-initial_structure (void)
-{
-  edit_thing_t contact_page = new_thing (PAGE, "Contacts", NULL);
-  edit_thing_t address_page = new_thing (PAGE, "Addresses", NULL);
-
-  edit_thing_t phone_group = new_thing (GROUP, "Phone", contact_page);
-  edit_thing_t internet_group = new_thing (GROUP, "Internet", contact_page);
-
-  new_thing (ITEM_SINGLE_LINE, "Home", phone_group);
-  new_thing (ITEM_SINGLE_LINE, "Work", phone_group);
-  new_thing (ITEM_SINGLE_LINE, "Mobile", phone_group);
-  new_thing (ITEM_SINGLE_LINE, "Fax", phone_group);
-
-  new_thing (ITEM_SINGLE_LINE, "Mail", internet_group);
-  new_thing (ITEM_SINGLE_LINE, "Web", internet_group);
-
-  new_thing (ITEM_MULTI_LINE, "Home", address_page);
-  new_thing (ITEM_MULTI_LINE, "Work", address_page);
-
-  edit_pages = g_slist_append (edit_pages, contact_page);
-  edit_pages = g_slist_append (edit_pages, address_page);
-}
-
 static void
-add_tag (guint tag, GtkWidget *w, GtkWidget *pw)
+build_edit_tree (GtkCTree *ct, GSList *list, GtkCTreeNode *parent)
 {
-  GSList *tags;
-  gtk_object_set_data (GTK_OBJECT (w), "db-tag", (gpointer)tag);
+  GSList *iter;
 
-  tags = gtk_object_get_data (GTK_OBJECT (pw), "tag-widgets");
-  tags = g_slist_append (tags, w);
-  gtk_object_set_data (GTK_OBJECT (pw), "tag-widgets", tags);
-}
-
-static void
-pop_singles (GtkWidget *vbox, GSList *list, GtkWidget *pw)
-{
-  if (list)
+  for (iter = list; iter; iter = iter->next)
     {
-      guint l = g_slist_length (list);
-      GtkWidget *table = gtk_table_new (l, 2, FALSE);
-      guint x = 0;
-      
-      while (list)
-	{
-	  GSList *next = list->next;
-	  edit_thing_t e = list->data;
-	  GtkWidget *w = gtk_entry_new ();
+      GtkCTreeNode *node;
+      edit_thing_t e = iter->data;
+      gchar *text[2];
 
-	  add_tag (e->tag, w, pw);
+      text[0] = e->name;
+      text[1] = NULL;
+ 
+      node = gtk_ctree_insert_node (ct,
+				    parent,
+				    NULL,
+				    text,
+				    4,
+				    NULL,
+				    NULL,
+				    NULL,
+				    NULL,
+				    (e->type == PAGE || e->type == GROUP) ? FALSE : TRUE,
+				    TRUE);
 
-	  gtk_table_attach (GTK_TABLE (table),
-			    gtk_label_new (e->name),
-			    0, 1, x, x + 1,
-			    0, 0, 0, 0);
-	  gtk_table_attach (GTK_TABLE (table),
-			    w,
-			    1, 2, x, x + 1,
-			    GTK_EXPAND | GTK_SHRINK | GTK_FILL,
-			    0, 0, 0);
+      GTK_CTREE_ROW (node)->row.data = e;
 
-	  g_slist_free_1 (list);
-	  list = next;
-	  x++;
-	}
-
-      gtk_table_set_col_spacings (GTK_TABLE (table), 2);
-      gtk_container_set_border_width (GTK_CONTAINER (table), 2);
-
-      gtk_box_pack_start (GTK_BOX (vbox), table, TRUE, TRUE, 4);
+      if (e->children)
+	build_edit_tree (ct, e->children, node);
     }
-}
-
-static void
-build_children (GtkWidget *vbox, GSList *children, GtkWidget *pw)
-{
-  GSList *child;
-  GSList *singles = NULL;
-
-  for (child = children; child; child = child->next)
-    {
-      edit_thing_t e = child->data;
-      GtkWidget *w, *ww;
-      
-      switch (e->type)
-	{
-	case GROUP:
-	  pop_singles (vbox, singles, pw);
-	  singles = NULL;
-	  w = gtk_frame_new (e->name);
-	  ww = gtk_vbox_new (FALSE, 0);
-	  gtk_container_add (GTK_CONTAINER (w), ww);
-	  gtk_container_set_border_width (GTK_CONTAINER (w), 2);
-	  build_children (ww, e->children, pw);
-	  gtk_box_pack_start (GTK_BOX (vbox), w, FALSE, FALSE, 4);
-	  break;
-
-	case ITEM_MULTI_LINE:
-	  pop_singles (vbox, singles, pw);
-	  singles = NULL;
-	  ww = gtk_text_new (NULL, NULL);
-	  gtk_text_set_editable (GTK_TEXT (ww), TRUE);
-	  if (e->name)
-	    {
-	      w = gtk_frame_new (e->name);
-	      gtk_container_add (GTK_CONTAINER (w), ww);
-	      gtk_container_set_border_width (GTK_CONTAINER (w), 2);
-	    }
-	  else
-	    w = ww;
-	  gtk_box_pack_start (GTK_BOX (vbox), w, TRUE, TRUE, 4);
-	  add_tag (e->tag, pw, ww);
-	  break;
-
-	case ITEM_SINGLE_LINE:
-	  singles = g_slist_append (singles, e);
-	  break;
-
-	default:
-	  abort ();
-	}
-    }
-
-  pop_singles (vbox, singles, pw);
-  singles = NULL;
 }
 
 GtkWidget *
-edit_window (void)
+edit_structure (void)
 {
-  GtkWidget *w = create_edit ();
-  GtkWidget *book = lookup_widget (w, "notebook2");
-  GtkWidget *displaylabel = gtk_label_new ("Display");
-  GtkWidget *displayvbox = gtk_vbox_new (FALSE, 0);
-  GSList *page;
+  GtkWidget *tree = gtk_ctree_new (2, 0);
+  GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
+  GtkWidget *scrolled = gtk_scrolled_window_new (NULL, NULL);
+  GtkWidget *toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, 
+					GTK_TOOLBAR_ICONS);
+  struct pix *p;
+  GtkWidget *pw;
 
-  for (page = edit_pages; page; page = page->next)
-    {
-      edit_thing_t e = page->data;
-      GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
-      GtkWidget *label = gtk_label_new (e->name);
+  gtk_widget_show (vbox);
+  gtk_widget_show (scrolled);
+  gtk_widget_show (tree);
+  gtk_widget_show (toolbar);
 
-      build_children (vbox, e->children, w);
+  p = find_pixmap ("notebook");
+  pw = gtk_pixmap_new (p->pixmap, p->mask);
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), "New page", 
+			   "New page", "New page", 
+			   pw, structure_new_page, tree);
 
-      gtk_widget_show_all (vbox);
-      gtk_widget_show (label);
+  p = find_pixmap ("frame");
+  pw = gtk_pixmap_new (p->pixmap, p->mask);
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), "New group", 
+			   "New group", "New group", 
+			   pw, structure_new_group, tree);
 
-      gtk_notebook_append_page (GTK_NOTEBOOK (book), vbox, label);
-    }
+  p = find_pixmap ("entry");
+  pw = gtk_pixmap_new (p->pixmap, p->mask);
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), "New field", 
+			   "New field", "New field", 
+			   pw, structure_new_field, tree);
 
-  gtk_widget_show (displayvbox);
-  gtk_widget_show (displaylabel);
-  gtk_notebook_append_page (GTK_NOTEBOOK (book), displayvbox, 
-			    displaylabel);
-      
-  return w;
+#if 0
+  p = find_pixmap ("save");
+  pw = gtk_pixmap_new (p->pixmap, p->mask);
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), "Save", 
+			   "Save", "Save", pw, NULL, NULL);
+#endif
+
+  gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), scrolled, TRUE, TRUE, 0);
+
+  gtk_container_add (GTK_CONTAINER (scrolled), tree);
+  gtk_clist_set_column_width (GTK_CLIST (tree), 0, 80);
+  gtk_clist_set_column_width (GTK_CLIST (tree), 1, 80);
+  gtk_clist_column_titles_hide (GTK_CLIST (tree));
+
+  build_edit_tree (GTK_CTREE (tree), edit_pages, NULL);
+
+  return vbox;
+}
+
+edit_thing_t
+new_thing (edit_thing_type t, gchar *name, edit_thing_t parent)
+{
+  edit_thing_t e = g_malloc (sizeof (*e));
+  memset (e, 0, sizeof (*e));
+  e->type = t;
+  e->name = name;
+  e->children = NULL;
+  e->parent = parent;
+  if (parent)
+    parent->children = g_slist_append (parent->children, e);
+  return e;
 }
 
 static void

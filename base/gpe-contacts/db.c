@@ -13,6 +13,7 @@
 
 #define DB_NAME "/.gpe/contacts"
 #define LAYOUT_NAME "/.gpe/contacts-layout.xml"
+#define DEFAULT_STRUCTURE "/usr/share/gpe-contacts/default-layout.xml"
 
 static sqlite *db;
 
@@ -77,7 +78,7 @@ load_structure (void)
   strcat (buf, LAYOUT_NAME);
   
   if (access (buf, F_OK))
-    initial_structure ();
+    rc = read_structure (DEFAULT_STRUCTURE);
   else
     rc = read_structure (buf);
   

@@ -6,13 +6,6 @@
 #include "db.h"
 #include "gtkdatecombo.h"
 
-GtkWidget*
-create_date_combo (gchar *widget_name, gchar *string1, gchar *string2,
-                gint int1, gint int2)
-{
-  return gtk_date_combo_new ();
-}
-
 void 
 store_filename(GtkWidget *w, GtkFileSelection *selector) 
 {

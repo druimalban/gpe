@@ -40,5 +40,7 @@ extern void print_structure (FILE *);
 extern gboolean read_structure (gchar *);
 extern void initial_structure (void);
 
+extern GSList *edit_pages;
+
 #endif
 

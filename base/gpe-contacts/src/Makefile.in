@@ -106,7 +106,10 @@ adb_SOURCES = \
 	support.c support.h \
 	interface.c interface.h \
 	callbacks.c callbacks.h \
-	structure.c db.c
+	structure.c structure.h \
+	db.c db.h \
+	editing.c \
+	smallbox.c smallbox.h
 
 
 adb_LDADD = -L$(top_srcdir)/../libgpewidget -lgpewidget -lsqlite -lxml2 @GTK_LIBS@
@@ -118,7 +121,8 @@ bin_PROGRAMS = adb$(EXEEXT)
 PROGRAMS = $(bin_PROGRAMS)
 
 am_adb_OBJECTS = main.$(OBJEXT) support.$(OBJEXT) interface.$(OBJEXT) \
-	callbacks.$(OBJEXT) structure.$(OBJEXT) db.$(OBJEXT)
+	callbacks.$(OBJEXT) structure.$(OBJEXT) db.$(OBJEXT) \
+	editing.$(OBJEXT) smallbox.$(OBJEXT)
 adb_OBJECTS = $(am_adb_OBJECTS)
 adb_DEPENDENCIES =
 adb_LDFLAGS =
@@ -130,7 +134,8 @@ LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 @AMDEP_TRUE@DEP_FILES = $(DEPDIR)/callbacks.Po $(DEPDIR)/db.Po \
-@AMDEP_TRUE@	$(DEPDIR)/interface.Po $(DEPDIR)/main.Po \
+@AMDEP_TRUE@	$(DEPDIR)/editing.Po $(DEPDIR)/interface.Po \
+@AMDEP_TRUE@	$(DEPDIR)/main.Po $(DEPDIR)/smallbox.Po \
 @AMDEP_TRUE@	$(DEPDIR)/structure.Po $(DEPDIR)/support.Po
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -187,8 +192,10 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/callbacks.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/db.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/editing.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/interface.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/main.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/smallbox.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/structure.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/support.Po@am__quote@
 
