@@ -98,7 +98,12 @@ void sgf_parsed_prop_move(PropIdent prop_id, char row, char col){
   switch(prop_id){
   case SYMBOL_W:
   case SYMBOL_B:
-    play_at(col - 'a' +1, row - 'a' + 1);
+    if(col == 't' && row == 't'){
+      pass_turn();
+    }
+    else {
+      play_at(col - 'a' +1, row - 'a' + 1);
+    }
     //keep a ref to the main branch
     if(is_first_branch){
       loaded_main_branch = go.history;

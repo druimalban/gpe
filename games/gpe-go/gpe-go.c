@@ -107,6 +107,14 @@ gboolean delete_hitem(GNode * node, gpointer unused_data){
   return FALSE;
 }
 
+GoItem color_to_play(){ return (go.turn%2)?WHITE_STONE:BLACK_STONE;}
+void update_last_played_mark_to(int next_col, int next_row);
+void pass_turn(){
+  append_hitem(PASS, color_to_play(), 0, 0);
+  go.turn++;
+  update_last_played_mark_to(0, 0);
+}
+
 gboolean is_on_main_branch(GNode * node){
   GNode * n = go.main_branch;
   while(n != go.history_root){
@@ -860,7 +868,7 @@ void play_at(int col, int row){
 
   {
     GoItem color;
-    color = (go.turn%2)?WHITE_STONE:BLACK_STONE;
+    color = color_to_play();
 
     put_stone(color, col, row);
 
@@ -1290,8 +1298,12 @@ void on_button_last_pressed(GtkWidget *widget, gpointer unused){
       node = node->next;
     }
     hitem = node->data;
-    play_at(hitem->col, hitem->row);
-
+    if(hitem->item == PASS){
+      pass_turn();
+    }
+    else{
+      play_at(hitem->col, hitem->row);
+    }
     node = go.history;
   }while(!G_NODE_IS_LEAF(node));
 }
@@ -1307,13 +1319,8 @@ void on_button_next_pressed (void){
 
 void on_button_pass_clicked (void){
   TRACE("pass");
-
   if(go.lock_variation_choice) return;
-
-  append_hitem(PASS, EMPTY, 0, 0);
-  go.turn++;
-
-  update_last_played_mark_to(0, 0);
+  pass_turn();
 }
 
 void on_button_newgame_cancel_clicked (void){

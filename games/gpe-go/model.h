@@ -6,6 +6,7 @@
 void init_new_game(int game_size);
 void play_at(int col, int row);
 void undo_turn();
+void pass_turn();
 
 typedef struct _go {
   //--ui
@@ -105,6 +106,5 @@ typedef struct _hist_item{
   int row;
   //GList * captured; FIXME: to use
 } Hitem;
-
 
 #endif
