@@ -4,40 +4,41 @@ VERSION = 0.07
 DEBUG = yes
 CVSBUILD = yes
 
-MEMBERS = main irc irc_input dictionary general_config general_config_sql networks_config networks_config_sql irc_parse ctcp
-LINGUAS = 
-
-CFLAGS = `pkg-config --cflags gtk+-2.0`
-
-CFLAGS += -D_GNU_SOURCE -Wall
 ifeq ($(DEBUG),yes)
-CFLAGS += -O2 -g
+CFLAGS += -O2 -g -DDEBUG
 LDFLAGS = -g #-lefence
 else
 CFLAGS += -Os -fomit-frame-pointer
 endif
 
 ifeq ($(CVSBUILD),yes)
-CFLAGS += -I../libgpewidget
-LDFLAGS += -L../libgpewidget
+PACKAGE_CPPFLAGS += -I../libgpewidget
+PACKAGE_LDFLAGS += -L../libgpewidget
 BUILD = ../build
-else
-CFLAGS += -I/usr/include/gpe
-BUILD = build
 endif
-LDFLAGS += -lgpewidget -lsqlite
 
-LDFLAGS += `pkg-config --libs gtk+-2.0`
 
-CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
+PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS)
+PACKAGE_CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
+PACKAGE_CPPFLAGS += `pkg-config --cflags gtk+-2.0`
 
+PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS)
+
+PACKAGE_LDFLAGS += -lgpewidget -lsqlite
+
+
+
+MEMBERS = main irc irc_input dictionary general_config general_config_sql networks_config networks_config_sql irc_parse ctcp
+LINGUAS = 
+
+DEPS = $(patsubst %,%.d,$(MEMBERS))
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
 all: $(PACKAGE)
 
 $(PACKAGE): $(OBJS)
-	$(CC) -o $@ $^ $(LDFLAGS)
+	$(CC) -o $@ $^ $(LDFLAGS) $(PACKAGE_LDFLAGS)
 
 install-program: all
 	install -D $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
@@ -58,7 +59,7 @@ install-program: all
 	strip $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 
 clean:
-	rm -f $(PACKAGE) $(OBJS)
+	rm -f $(PACKAGE) $(OBJS) $(DEPS)
 
 include $(BUILD)/Makefile.translation
 include $(BUILD)/Makefile.dpkg_ipkg
