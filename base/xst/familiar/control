@@ -1,0 +1,8 @@
+Package: xst
+Section: x11
+Priority: optional
+Version: 0.10
+Architecture: arm
+Maintainer: Phil Blundell <pb@debian.org>
+Depends: libglib2.0-0, libxsettings-client0
+Description: XSETTINGS tool
