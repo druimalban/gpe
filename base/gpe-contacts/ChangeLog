@@ -1,5 +1,9 @@
 2002-07-31  Colin Marquardt  <colin@marquardt-home.de>
 
+	* familiar/postinst, familiar/postrm: New files.
+
+	* familiar/control (Version): Bump up to version 0.02.
+
 	* icons/gpe-contacts.png: New file.
 
 	* Makefile.am: Copy the menu, add the Makefile snippet for the
