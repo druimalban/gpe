@@ -43,8 +43,8 @@ dpkg: upstream
 ipkg:
 	rm -rf familiar/dist
 	mkdir -p familiar/dist/CONTROL
-	cp familiar/control postinst familiar/dist/CONTROL
-	make DESTDIR=`pwd`/familiar/dist install
+	cp familiar/control familiar/dist/CONTROL
+	make DESTDIR=`pwd`/familiar/dist PREFIX=/usr install
 	chown -R root.root familiar/dist
 	ipkg-build familiar/dist
 
