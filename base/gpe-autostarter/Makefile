@@ -6,7 +6,7 @@ VERSION = 0.5
 
 MEMBERS = autostarter net bluetooth
 
-CFLAGS = `pkg-config --cflags glib-2.0` `pkg-config --cflags dbus-glib-1` -DDBUS_API_SUBJECT_TO_CHANGE
+CFLAGS += `pkg-config --cflags glib-2.0` `pkg-config --cflags dbus-glib-1` -DDBUS_API_SUBJECT_TO_CHANGE
 
 CFLAGS += -D_GNU_SOURCE -Wall
 
