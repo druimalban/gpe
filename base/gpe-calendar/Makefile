@@ -48,7 +48,7 @@ $(PACKAGE): $(OBJS)
 
 install-program: all $(PACKAGE).desktop
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
-	install $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
+	install -s $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	mkdir -p $(DESTDIR)$(PREFIX)/share/pixmaps
 	install -m 644 $(PACKAGE).png $(DESTDIR)$(PREFIX)/share/pixmaps/$(PACKAGE).png
 	mkdir -p $(DESTDIR)$(PREFIX)/lib/menu
@@ -56,10 +56,9 @@ install-program: all $(PACKAGE).desktop
 	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
 	install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications/$(PACKAGE)
 	install -D $(PACKAGE).session $(DESTDIR)/etc/X11/Xsession.d/99$(PACKAGE)
-	strip $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 
 clean:
-	rm -f $(PACKAGE) $(OBJS) $(DEPS)
+	rm -f $(PACKAGE) $(OBJS) $(DEPS) $(PACKAGE).desktop
 
 include $(BUILD)/Makefile.translation
 include $(BUILD)/Makefile.dpkg_ipkg

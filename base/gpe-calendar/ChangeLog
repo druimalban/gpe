@@ -1,3 +1,12 @@
+2003-03-29  Philip Blundell  <philb@gnu.org>
+
+	* Makefile (clean): Also remove .desktop file.
+
+	* event-ui.c (build_edit_event_window): Use tables in recurrence
+	tab.
+
+	* Makefile (install-program): Use install -s.
+
 2003-03-28  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.40 released.
