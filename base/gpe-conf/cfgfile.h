@@ -58,14 +58,16 @@ typedef struct {
 	t_wifimode mode;
 	gint iswireless;
 	
-	gint isstatic;
-	gint isinet;
-	gint isloop;
-	gint isdhcp;
-	gint isppp;
+	gboolean isstatic;
+	gboolean isinet;
+	gboolean isloop;
+	gboolean isdhcp;
+	gboolean isppp;
 	gint firstline;
 	gint lastline;
 	gint status;
+	gboolean ispresent;
+	gint uipos;	
 } NWInterface_t;
 
 gint set_file_open(gint openon);

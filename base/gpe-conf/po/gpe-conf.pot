@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-10-31 22:33+0100\n"
+"POT-Creation-Date: 2004-11-23 22:35+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -167,7 +167,7 @@ msgstr ""
 
 #: timeanddate.c:780
 msgid ""
-"To make timezone settings take effect,you'll need to log out and log in "
+"To make timezone settings take effect, you'll need to log out and log in "
 "again."
 msgstr ""
 
@@ -380,106 +380,106 @@ msgstr ""
 msgid "Global Settings"
 msgstr ""
 
-#: network.c:1350
+#: network.c:1351
 msgid "Proxy"
 msgstr ""
 
-#: network.c:1351
+#: network.c:1352
 msgid ""
 "If you want/need to use a proxy, enter it here. (This only applies to dillo "
 "for now.)"
 msgstr ""
 
-#: network.c:1357
+#: network.c:1358
 msgid "No proxy for"
 msgstr ""
 
-#: network.c:1359
+#: network.c:1360
 msgid ""
 "Here you should enter your local domain for that you don't want to use a "
 "proxy."
 msgstr ""
 
-#: network.c:1366
+#: network.c:1367
 msgid "DNS server"
 msgstr ""
 
-#: network.c:1369
+#: network.c:1370
 msgid "Enter the IP of the DNS(name-) server to use here."
 msgstr ""
 
-#: network.c:1540
+#: network.c:1541
 msgid ""
 "Here you may change the basic configuration type of your device.\n"
 "Use \"static\" for manual interface configuration, \"dhcp\" to use DHCP and "
 "\"ppp\" to make the device a point-to-point device."
 msgstr ""
 
-#: network.c:1546
+#: network.c:1547
 msgid "Enable this option if your device is a WiFi device"
 msgstr ""
 
-#: network.c:1548
+#: network.c:1549
 msgid "Click to set the wireless options for this device"
 msgstr ""
 
-#: network.c:1550
+#: network.c:1551
 msgid "Set the mode your WiFi card should work. (managed or ad-hoc)."
 msgstr ""
 
-#: network.c:1553
+#: network.c:1554
 msgid ""
 "Set the enrcyption mode: off for no WEP encryption, open for open system and "
 "restricted for resticted WEP connections only."
 msgstr ""
 
-#: network.c:1558
+#: network.c:1559
 msgid "Enter the essid of your WiFi network here."
 msgstr ""
 
-#: network.c:1561
+#: network.c:1562
 msgid "Enter your WEP key here in (iwconfig format), e.g.: \"s:12345\""
 msgstr ""
 
-#: network.c:1564
+#: network.c:1565
 msgid "Select the WEP key to use."
 msgstr ""
 
-#: network.c:1567
+#: network.c:1568
 msgid ""
 "Enter the channel number or frequency if needed. If not needed leave this "
 "field blank."
 msgstr ""
 
-#: network.c:1590
+#: network.c:1591
 msgid "Add Interface"
 msgstr ""
 
-#: network.c:1591
+#: network.c:1592
 msgid "Add a new Interface"
 msgstr ""
 
-#: network.c:1601
+#: network.c:1602
 msgid "Remove Interface"
 msgstr ""
 
-#: network.c:1602
+#: network.c:1603
 msgid "Remove current Interface"
 msgstr ""
 
-#: network.c:1616
+#: network.c:1617
 msgid "Information"
 msgstr ""
 
-#: network.c:1617
+#: network.c:1618
 msgid "Show current configuration."
 msgstr ""
 
-#: network.c:1635
+#: network.c:1636
 msgid "Couldn't read network configuration."
 msgstr ""
 
-#: network.c:1642
+#: network.c:1643
 msgid "global"
 msgstr ""
 
@@ -731,26 +731,32 @@ msgstr ""
 msgid "Photofile:"
 msgstr ""
 
-#: login-setup.c:118
+#: login-setup.c:161
 msgid "Some of these settings can only be changed by the user 'root'."
 msgstr ""
 
-#: login-setup.c:141 gpe-admin.c:86
+#: login-setup.c:184 gpe-admin.c:86
 msgid "General"
 msgstr ""
 
-#: login-setup.c:158
+#: login-setup.c:201
 msgid "Show owner information at login."
 msgstr ""
 
-#: login-setup.c:162
+#: login-setup.c:205
 msgid "Lock display on suspend."
 msgstr ""
 
-#: login-setup.c:166
+#: login-setup.c:209
 msgid ""
 "Lock display on suspend. \n"
 "  (needs password)"
+msgstr ""
+
+#: login-setup.c:214
+msgid ""
+"Automatic login. \n"
+"  (without password)"
 msgstr ""
 
 #: sleep/interface.c:67
@@ -809,99 +815,95 @@ msgstr ""
 msgid "Check IRQ activity"
 msgstr ""
 
-#: sleep/callbacks.c:59
-msgid "%"
-msgstr ""
-
-#: users/interface.c:215
+#: users/interface.c:216
 msgid "User Name"
 msgstr ""
 
-#: users/interface.c:216
+#: users/interface.c:217
 msgid "User Info"
 msgstr ""
 
-#: users/interface.c:217
+#: users/interface.c:218
 msgid "Home"
 msgstr ""
 
-#: users/interface.c:235 users/interface.c:236
+#: users/interface.c:236 users/interface.c:237
 msgid "Add user"
 msgstr ""
 
-#: users/interface.c:236
+#: users/interface.c:237
 msgid "Add a new user"
 msgstr ""
 
-#: users/interface.c:240 users/interface.c:241
+#: users/interface.c:241 users/interface.c:242
 msgid "Edit user"
 msgstr ""
 
-#: users/interface.c:241
+#: users/interface.c:242
 msgid "Edit existing user"
 msgstr ""
 
-#: users/interface.c:245 users/interface.c:246
+#: users/interface.c:246 users/interface.c:247
 msgid "Delete user"
 msgstr ""
 
-#: users/interface.c:246
+#: users/interface.c:247
 msgid "Delete existing user"
 msgstr ""
 
-#: users/interface.c:250
+#: users/interface.c:251
 msgid "Password"
 msgstr ""
 
-#: users/interface.c:251
+#: users/interface.c:252
 msgid "Change password"
 msgstr ""
 
-#: users/interface.c:320
+#: users/interface.c:321
 msgid "User settings"
 msgstr ""
 
-#: users/interface.c:334
+#: users/interface.c:335
 msgid "User Name:"
 msgstr ""
 
-#: users/interface.c:350
+#: users/interface.c:351
 msgid "Password:"
 msgstr ""
 
-#: users/interface.c:358
+#: users/interface.c:359
 msgid "User Info:"
 msgstr ""
 
-#: users/interface.c:374
+#: users/interface.c:375
 msgid "Shell:"
 msgstr ""
 
-#: users/interface.c:393
+#: users/interface.c:394
 msgid "Home:"
 msgstr ""
 
-#: users/interface.c:412
+#: users/interface.c:413
 msgid "Change"
 msgstr ""
 
-#: users/interface.c:413
+#: users/interface.c:414
 msgid "Set"
 msgstr ""
 
-#: users/interface.c:478
+#: users/interface.c:479
 msgid "Change Password"
 msgstr ""
 
-#: users/interface.c:504
+#: users/interface.c:505
 msgid "Old Password:"
 msgstr ""
 
-#: users/interface.c:511
+#: users/interface.c:512
 msgid "New Password:"
 msgstr ""
 
-#: users/interface.c:519
+#: users/interface.c:520
 msgid "Confirm:"
 msgstr ""
 
@@ -926,13 +928,13 @@ msgstr ""
 msgid "Please choose a home directory."
 msgstr ""
 
-#: users/callbacks.c:256
+#: users/callbacks.c:257
 msgid ""
 "The two new pass are different!\n"
 " Please try again!"
 msgstr ""
 
-#: users/callbacks.c:259
+#: users/callbacks.c:260
 msgid ""
 "Wrong password\n"
 " Please try again!"
@@ -1036,187 +1038,187 @@ msgstr ""
 msgid "Serial Port"
 msgstr ""
 
-#: cardinfo.c:105
+#: cardinfo.c:104
 msgid "/_Card"
 msgstr ""
 
-#: cardinfo.c:106
+#: cardinfo.c:105
 msgid "/Card/_Insert"
 msgstr ""
 
-#: cardinfo.c:107
+#: cardinfo.c:106
 msgid "/Card/_Eject"
 msgstr ""
 
-#: cardinfo.c:108
+#: cardinfo.c:107
 msgid "/Card/_Suspend"
 msgstr ""
 
-#: cardinfo.c:109
+#: cardinfo.c:108
 msgid "/Card/_Resume"
 msgstr ""
 
-#: cardinfo.c:110
+#: cardinfo.c:109
 msgid "/Card/_Reset"
 msgstr ""
 
-#: cardinfo.c:111
+#: cardinfo.c:110
 msgid "/Card/s1"
 msgstr ""
 
-#: cardinfo.c:112
+#: cardinfo.c:111
 msgid "/Card/_Assign Driver"
 msgstr ""
 
-#: cardinfo.c:113
+#: cardinfo.c:112
 msgid "/Card/s2"
 msgstr ""
 
-#: cardinfo.c:114
+#: cardinfo.c:113
 msgid "/Card/_Close"
 msgstr ""
 
-#: cardinfo.c:115
+#: cardinfo.c:114
 msgid "/_Help"
 msgstr ""
 
-#: cardinfo.c:116
+#: cardinfo.c:115
 msgid "/_Help/Index"
 msgstr ""
 
-#: cardinfo.c:117
+#: cardinfo.c:116
 msgid "/_Help/About"
 msgstr ""
 
-#: cardinfo.c:177 cardinfo.c:865
+#: cardinfo.c:176 cardinfo.c:864
 msgid "card not recognized"
 msgstr ""
 
-#: cardinfo.c:279 cardinfo.c:350
+#: cardinfo.c:278 cardinfo.c:349
 msgid "Could not write to temporal config file."
 msgstr ""
 
-#: cardinfo.c:556
+#: cardinfo.c:555
 msgid "Could not open pidfile:"
 msgstr ""
 
-#: cardinfo.c:562
+#: cardinfo.c:561
 msgid "Could not read pidfile"
 msgstr ""
 
-#: cardinfo.c:566
+#: cardinfo.c:565
 msgid "Could not signal cardmgr:"
 msgstr ""
 
-#: cardinfo.c:641
+#: cardinfo.c:640
 msgid "gpe-conf must be setuid root to use cardinfo feature."
 msgstr ""
 
-#: cardinfo.c:660
+#: cardinfo.c:659
 msgid "No PCMCIA driver in '/proc/devices'"
 msgstr ""
 
-#: cardinfo.c:663
+#: cardinfo.c:662
 msgid "Could not open '/proc/devices'"
 msgstr ""
 
-#: cardinfo.c:675
+#: cardinfo.c:674
 msgid "No sockets found\n"
 msgstr ""
 
-#: cardinfo.c:684
+#: cardinfo.c:683
 msgid "Card Services release does not match!"
 msgstr ""
 
-#: cardinfo.c:689
+#: cardinfo.c:688
 msgid "Could not get CS revision info!\n"
 msgstr ""
 
-#: cardinfo.c:852
+#: cardinfo.c:851
 msgid "flock(stabfile) failed"
 msgstr ""
 
-#: cardinfo.c:871
+#: cardinfo.c:870
 #, c-format
 msgid "no driver loaded"
 msgstr ""
 
-#: cardinfo.c:980
+#: cardinfo.c:979
 msgid "ready"
 msgstr ""
 
-#: cardinfo.c:998
+#: cardinfo.c:997
 msgid "not ready"
 msgstr ""
 
-#: cardinfo.c:1013
+#: cardinfo.c:1012
 msgid "suspended"
 msgstr ""
 
-#: cardinfo.c:1205
+#: cardinfo.c:1204
 msgid "Assign Driver"
 msgstr ""
 
-#: cardinfo.c:1214
+#: cardinfo.c:1213
 msgid ""
 "This dialog allows you to select/\n"
 "change the driver assignment for a\n"
 "PCMCIA or CF card."
 msgstr ""
 
-#: cardinfo.c:1224
+#: cardinfo.c:1223
 msgid "Your current card identifies itself as:"
 msgstr ""
 
-#: cardinfo.c:1238 cardinfo.c:1244
+#: cardinfo.c:1237 cardinfo.c:1243
 msgid "Manuf. Id"
 msgstr ""
 
-#: cardinfo.c:1238 cardinfo.c:1244
+#: cardinfo.c:1237 cardinfo.c:1243
 msgid "Class"
 msgstr ""
 
-#: cardinfo.c:1342 cardinfo.c:1355
+#: cardinfo.c:1341 cardinfo.c:1354
 msgid "PC/CF card socket information."
 msgstr ""
 
-#: cardinfo.c:1350
+#: cardinfo.c:1349
 msgid "Socket"
 msgstr ""
 
-#: cardinfo.c:1381
+#: cardinfo.c:1380
 msgid "Information for socket"
 msgstr ""
 
-#: cardinfo.c:1390
+#: cardinfo.c:1389
 msgid "State:"
 msgstr ""
 
-#: cardinfo.c:1391
+#: cardinfo.c:1390
 msgid "Device:"
 msgstr ""
 
-#: cardinfo.c:1392
+#: cardinfo.c:1391
 msgid "Driver:"
 msgstr ""
 
-#: cardinfo.c:1393
+#: cardinfo.c:1392
 msgid "Type:"
 msgstr ""
 
-#: cardinfo.c:1394
+#: cardinfo.c:1393
 msgid "I/O:"
 msgstr ""
 
-#: cardinfo.c:1395
+#: cardinfo.c:1394
 msgid "IRQ:"
 msgstr ""
 
-#: cardinfo.c:1402
+#: cardinfo.c:1401
 msgid "Flags:"
 msgstr ""
 
-#: cardinfo.c:1419
+#: cardinfo.c:1418
 msgid "PCMCIA initialisation failed"
 msgstr ""
 
@@ -1483,31 +1485,31 @@ msgstr ""
 msgid "Unknown"
 msgstr ""
 
-#: sound/sound.c:252
+#: sound/sound.c:250
 msgid "Audio Settings"
 msgstr ""
 
-#: sound/sound.c:259
+#: sound/sound.c:257
 msgid "Mute Everything"
 msgstr ""
 
-#: sound/sound.c:300
+#: sound/sound.c:298
 msgid "Alarm Settings"
 msgstr ""
 
-#: sound/sound.c:307
+#: sound/sound.c:305
 msgid "Enable Alarm Sound"
 msgstr ""
 
-#: sound/sound.c:314
+#: sound/sound.c:312
 msgid "Automatic Volume (rising)"
 msgstr ""
 
-#: sound/sound.c:324 sound/soundctrl.c:283
+#: sound/sound.c:322 sound/soundctrl.c:298
 msgid "Volume"
 msgstr ""
 
-#: sound/sound.c:331
+#: sound/sound.c:329
 msgid "Test"
 msgstr ""
 

@@ -6,6 +6,8 @@
 #else
 #define MINUSERUID 100
 #endif
+#define MAXUSERID 65500
+
 typedef struct pwlist_s
 {
   struct passwd pw;

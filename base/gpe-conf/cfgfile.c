@@ -19,9 +19,12 @@
 #include <stdlib.h>
 #include <libintl.h>
 #include <gpe/errorbox.h>
+#include <net/if.h>
+#include <sys/socket.h>
 
 #include "cfgfile.h"
 #include "network.h"
+#include "tools/interface.h"
 
 #define _(x) gettext(x)
 
@@ -280,6 +283,22 @@ void parse_key(NWInterface_t *iface, gchar* key)
 	}
 }
 
+static gboolean
+is_present_interface(gchar *ifname)
+{
+	struct interface *int_list, *ife;
+
+	int_list = if_getlist ();
+	g_strstrip(ifname);
+
+	for (ife = int_list; ife; ife = ife->next)
+	{
+		if (g_str_has_prefix(ifname, ife->name))
+			return TRUE;
+	}
+	return FALSE;
+}
+
 gint get_scheme_list()
 {
 	gchar ifname[255]  = {0};
@@ -339,6 +358,7 @@ gint get_scheme_list()
 			memset(&iflist[l-1],'\0',sizeof(NWInterface_t));
 
 			strcpy(iflist[l-1].name,ifname);
+			iflist[l-1].ispresent = is_present_interface(ifname);
 			
 			iflist[l-1].isstatic = FALSE;
 			iflist[l-1].isinet = FALSE;

@@ -1,3 +1,22 @@
+2004-11-28	Florian Boor  	<florian.boor@kernelconcepts.de>
+
+	* cfgfile.*, network.c: Fixed device position handling which contained 
+	                        several bugs.
+
+2004-11-23	Florian Boor  	<florian.boor@kernelconcepts.de>
+
+	* cfgfile.*, network.c: Hide all network interfaces that are not available.
+
+2004-11-19	Florian Boor  	<florian.boor@kernelconcepts.de>
+
+	* users/interface.*, users/callbacks.c: Prevent user from deleting last 
+	                                        user account.
+	* timeanddate.c: Make some entries activate OK button.
+
+2004-11-23	Florian Boor  	<florian.boor@kernelconcepts.de>
+
+	* Released Version 0.1.22
+
 2004-11-17	Florian Boor  	<florian.boor@kernelconcepts.de>
 
 	* users/interface.c, users/callbacks.c: Fixed password changing.

@@ -65,7 +65,6 @@ GtkWidget *create_nwstatic_widgets (NWInterface_t iface);
 GtkWidget *create_nwdhcp_widgets (NWInterface_t iface);
 GtkWidget *create_nwppp_widgets (NWInterface_t iface);
 
-static guint not_added = 0;
 static gchar *cfgfile;
 static gboolean have_access = FALSE;
 static GtkTooltips *tooltips;
@@ -300,12 +299,15 @@ add_interface (GtkWidget * widget, gpointer d)
 		if (ctable)
 		{
 			label = gtk_label_new (iflist[i].name);
-			gtk_notebook_append_page (GTK_NOTEBOOK (table),
-						  GTK_WIDGET (ctable), label);
+			iflist[i].uipos = gtk_notebook_append_page (GTK_NOTEBOOK (table),
+			                                            GTK_WIDGET (ctable),
+			                                            label);
 			gtk_widget_show_all (table);
+			g_object_set_data(G_OBJECT(ctable), "ifnr", (gpointer)i);
 		}
 		else
-			not_added++;
+			iflist[i].uipos = -1;
+		
 		gtk_notebook_set_current_page (GTK_NOTEBOOK (table), -1);
 	}
 }
@@ -335,11 +337,13 @@ remove_interface (GtkWidget * widget, gpointer d)
 void
 changed_nwtype (GtkToggleButton * togglebutton, gpointer user_data)
 {
-	GtkWidget *ctable, *label;
+	GtkWidget *ctable, *label, *page;
 	gchar wname[100];
-	gint row =
-		gtk_notebook_get_current_page (GTK_NOTEBOOK (table)) +
-		not_added - PAGE_OFFSET;
+	gint row;
+	
+	page = gtk_notebook_get_nth_page(GTK_NOTEBOOK (table), 
+	                                 gtk_notebook_get_current_page (GTK_NOTEBOOK (table)));
+	row = (gint)g_object_get_data(G_OBJECT(page), "ifnr");
 
 	if (!gtk_toggle_button_get_active (togglebutton))
 		return;		// just run once
@@ -385,10 +389,11 @@ changed_nwtype (GtkToggleButton * togglebutton, gpointer user_data)
 					  (GTK_NOTEBOOK (table)));
 		gtk_notebook_insert_page (GTK_NOTEBOOK (table),
 					  GTK_WIDGET (ctable), label,
-					  row - not_added + PAGE_OFFSET);
+					  iflist[row].uipos);
 		gtk_widget_show_all (table);
 		gtk_notebook_set_page (GTK_NOTEBOOK (table),
-				       row - not_added + PAGE_OFFSET);
+				      iflist[row].uipos);
+		g_object_set_data(G_OBJECT(ctable), "ifnr", (gpointer)row);
 	}
 }
 
@@ -922,12 +927,14 @@ show_wificonfig(GtkWidget *window, NWInterface_t *iface)
 void
 changed_wifi (GtkToggleButton * togglebutton, gpointer user_data)
 {
-	GtkWidget *widget;
+	GtkWidget *widget, *page;
 	gchar wname[100];
-	gint ifnr = gtk_notebook_get_current_page (GTK_NOTEBOOK (table)) +
-		not_added - PAGE_OFFSET;
+	gint ifnr;
+	
+	page = gtk_notebook_get_nth_page(GTK_NOTEBOOK (table), 
+	                                 gtk_notebook_get_current_page (GTK_NOTEBOOK (table)));
+	ifnr = (gint)g_object_get_data(G_OBJECT(page), "ifnr");
 
-	// look who called us...
 	strcpy (wname, "wificonfig");
 	strcat (wname, iflist[ifnr].name);
 	
@@ -941,10 +948,12 @@ changed_wifi (GtkToggleButton * togglebutton, gpointer user_data)
 void
 clicked_wificonfig (GtkButton *button, gpointer user_data)
 {
+	GtkWidget *page;
 	gint ifnr;
 	
-	ifnr = gtk_notebook_get_current_page (GTK_NOTEBOOK (table)) +
-		not_added - PAGE_OFFSET;
+	page = gtk_notebook_get_nth_page(GTK_NOTEBOOK (table), 
+	                                 gtk_notebook_get_current_page (GTK_NOTEBOOK (table)));
+	ifnr = (gint)g_object_get_data(G_OBJECT(page), "ifnr");
 
 	show_wificonfig(gtk_widget_get_toplevel(GTK_WIDGET(button)), &iflist[ifnr]);
 }
@@ -1648,22 +1657,27 @@ Network_Build_Objects ()
 	for (row = 0; row < num_int; row++)
 	{
 		ctable = NULL;
-		if (iflist[row].isstatic)
-			ctable = create_nwstatic_widgets (iflist[row]);
-		if (iflist[row].isdhcp)
-			ctable = create_nwdhcp_widgets (iflist[row]);
-		if (iflist[row].isppp)
-			ctable = create_nwppp_widgets (iflist[row]);
+		if (iflist[row].ispresent)
+		{
+			if (iflist[row].isstatic)
+				ctable = create_nwstatic_widgets (iflist[row]);
+			if (iflist[row].isdhcp)
+				ctable = create_nwdhcp_widgets (iflist[row]);
+			if (iflist[row].isppp)
+				ctable = create_nwppp_widgets (iflist[row]);
+		}
 		if (ctable)
 		{
 			if (!have_access)
 				gtk_widget_set_sensitive (ctable, FALSE);
 			label = gtk_label_new (iflist[row].name);
-			gtk_notebook_append_page (GTK_NOTEBOOK (table),
-						  GTK_WIDGET (ctable), label);
+			iflist[row].uipos = gtk_notebook_append_page (GTK_NOTEBOOK (table),
+			                                              GTK_WIDGET (ctable), 
+			                                              label);
+			g_object_set_data(G_OBJECT(ctable), "ifnr", (gpointer)row);
 		}
 		else
-			not_added++;	// we'll run into trouble if we have a loopback device between other in interfaces
+			iflist[row].uipos = -1;
 	}
 	return tablebox;
 }

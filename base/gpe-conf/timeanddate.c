@@ -528,6 +528,7 @@ GtkWidget *Time_Build_Objects(gboolean nonroot)
 	  gtk_misc_set_alignment (GTK_MISC (self.catlabel1), 0.0, 0.9);
 	  
 	  self.cal = gtk_date_combo_new ();
+	  gtk_entry_set_activates_default(GTK_ENTRY(GTK_DATE_COMBO(self.cal)->entry), TRUE);
 	  gtk_calendar_select_month (GTK_CALENDAR (GTK_DATE_COMBO(self.cal)->cal), ts.tm_mon, ts.tm_year);
 	  gtk_calendar_select_day (GTK_CALENDAR (GTK_DATE_COMBO(self.cal)->cal), ts.tm_mday);
 	  gtk_table_attach (GTK_TABLE (table), self.cal, 0, 3, 1, 2,
@@ -549,6 +550,8 @@ GtkWidget *Time_Build_Objects(gboolean nonroot)
 	  gpe_time_sel_set_time(GPE_TIME_SEL(self.tsel),(guint)ts.tm_hour, (guint)ts.tm_min);
 	  gtk_table_attach (GTK_TABLE (table), self.tsel, 0, 3, 3, 4,
 				GTK_FILL,0,3,0);
+	  gtk_entry_set_activates_default(GTK_ENTRY(GPE_TIME_SEL(self.tsel)->hour_spin), TRUE);
+	  gtk_entry_set_activates_default(GTK_ENTRY(GPE_TIME_SEL(self.tsel)->minute_spin), TRUE);
 	  /* -------------------------------------------------------------------------- */
 	
 	  self.catlabel3 = gtk_label_new (NULL);
@@ -569,7 +572,7 @@ GtkWidget *Time_Build_Objects(gboolean nonroot)
 	  gtk_combo_set_popdown_strings (GTK_COMBO (self.ntpserver), ntpsrv);
 	  gtk_table_attach (GTK_TABLE (table), self.ntpserver, 0, 3, 5, 6,
 				GTK_FILL,0,3,0);
-	  
+ 
 	  gtk_tooltips_set_tip (tooltips, self.ntpserver, _("Select the timeserver to use to set the clock."), NULL);
 	
 	  self.internet = gtk_button_new_with_label(_("Get time from network"));

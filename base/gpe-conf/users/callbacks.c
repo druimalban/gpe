@@ -93,6 +93,22 @@ users_on_delete_clicked                      (GtkButton       *button,
     pwlist *cur = pwroot;
     pwlist **prec = &pwroot;
     uint i=GPOINTER_TO_UINT(tmp->data);
+	uint usercount = 0;
+	
+	while (cur)
+	 {
+		 if ((cur->pw.pw_uid >= MINUSERUID) && (cur->pw.pw_uid < MAXUSERID))
+		   usercount++;
+	     cur = cur->next;
+	 }
+
+	if (usercount < 2)
+	  {
+        gpe_error_box(_("You need at least one user account!"));
+		return;
+	  }
+	cur = pwroot;
+	  
     while(IsHidden(cur))
       {
         prec = &cur->next;
@@ -109,6 +125,13 @@ users_on_delete_clicked                      (GtkButton       *button,
         }
        i--;
       }
+	  
+	if (!strcmp(cur->pw.pw_name, "lx"))
+	  {
+        gpe_error_box(_("You can't remove this user!"));
+		return;
+	  }
+	  
     if(cur->pw.pw_uid < MINUSERUID)
       gpe_error_box(_("You can't remove\n system users!"));
     else
@@ -122,7 +145,6 @@ users_on_delete_clicked                      (GtkButton       *button,
       	}
   }
   ReloadList();
-
 }
 
 
