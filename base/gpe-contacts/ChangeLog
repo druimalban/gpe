@@ -1,5 +1,10 @@
 2003-03-15  Philip Blundell  <philb@gnu.org>
 
+	* familiar/control1 (Depends): Require libgpewidget1 0.53.
+
+	* Makefile: Remove GTK1 compatibility.
+	(LDFLAGS, CFLAGS): Set depending on $(DEBUG).  Add libdm.
+
 	* structure.c (edit_structure): Remove GTK1 compatibility.  Use
 	stock items.  Remove redundant calls to gtk_widget_show.  Set
 	policy on scrolled window to AUTOMATIC, AUTOMATIC.
