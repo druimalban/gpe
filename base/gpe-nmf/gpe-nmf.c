@@ -104,7 +104,7 @@ playlist_toggle (GtkWidget *w, gpointer d)
 }
 
 static void
-double_click_hook (player_t p, struct playlist_item *i)
+double_click_hook (player_t p, struct playlist *i)
 {
   struct player_status ps;
   player_set_playlist (p, i);
@@ -372,7 +372,7 @@ main (int argc, char *argv[])
   gtk_signal_connect (GTK_OBJECT (eject_button), "clicked", 
 		      GTK_SIGNAL_FUNC (eject_clicked), player);
 
-  p = gpe_find_icon ("media-exit");
+  p = gpe_find_icon ("exit");
   w = gpe_render_icon (window->style, p);
   exit_button = gtk_button_new ();
   gtk_widget_show (exit_button);

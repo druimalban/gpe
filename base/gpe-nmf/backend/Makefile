@@ -22,7 +22,7 @@ DEPS = $(patsubst %,%.d,$(MEMBERS) $(OGG_MEMBERS) $(MAD_MEMBERS))
 all: $(CODECS) $(BACKEND_SO)
 
 d-vorbis.so: $(OGG_OBJS)
-	$(CC) -shared -o $@ $^ $(LDFLAGS) -nostartfiles -lvorbisfile -lpthread -lvorbis
+	$(CC) -shared -o $@ $^ $(LDFLAGS) -nostartfiles -lpthread -L../../vorbis-fixp/lib -lvorbis -lvorbisfile
 
 d-mad.so: $(MAD_OBJS)
 	$(CC) -shared -o $@ $^ $(LDFLAGS) -nostartfiles -lmad -lpthread -lid3tag
