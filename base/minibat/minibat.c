@@ -366,6 +366,7 @@ main (int argc, char **argv)
   int xfd;
   fd_set fd;
   XSetWindowAttributes attr;
+  Atom window_type_atom, window_type_splash_atom;
 
   setlocale (LC_ALL, "");
 
@@ -432,8 +433,9 @@ main (int argc, char **argv)
 
   popup_mask = XCreatePixmap (dpy, win_popup, popup_w, popup_h, 1);
 
-  attr.override_redirect = True;
-  XChangeWindowAttributes (dpy, win_popup, CWOverrideRedirect, &attr);
+  window_type_atom = XInternAtom (dpy, "_NET_WM_WINDOW_TYPE", False);
+  window_type_splash_atom = XInternAtom (dpy, "_NET_WM_WINDOW_TYPE_SPLASH", False);
+  XChangeProperty (dpy, win_popup, window_type_atom, XA_ATOM, 32, PropModeReplace, &window_type_splash_atom, 1);
 
   if ((msg_font = XftFontOpenName(dpy, screen,"sans,verdana-6:bold")) 
       == NULL)
