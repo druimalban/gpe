@@ -1,6 +1,6 @@
 [Desktop Entry]
-Name=Pegged
-Comment=GPE Pegged
+_Name=Pegged
+_Comment=GPE Pegged
 Exec=gpe-pegged
 Terminal=0
 Type=Application

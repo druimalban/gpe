@@ -51,4 +51,5 @@ clean:
 	rm -f $(PACKAGE) $(OBJS) $(DEPS)
 
 include ../../base/build/Makefile.dpkg_ipkg
+include ../../base/build/Makefile.translation
 -include $(DEPS)

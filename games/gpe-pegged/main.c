@@ -135,11 +135,11 @@ void update_status ()
 	pieces = count_pieces ();
 	
 	if (pieces <= 1)
-		msg = g_strdup_printf ("You win!!!");
+		msg = g_strdup_printf (_("You win!!!"));
 	else if (has_moves())
-		msg = g_strdup_printf ("%d moves; %d pieces left", moves, pieces);
+		msg = g_strdup_printf (_("%d moves; %d pieces left"), moves, pieces);
 	else
-		msg = g_strdup_printf ("Game Over!");
+		msg = g_strdup_printf (_("Game Over!"));
 	smsg (msg);
 }
 
@@ -418,6 +418,7 @@ main (int argc, char *argv[])
   gpe_application_init (&argc, &argv);
 
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
+  bind_textdomain_codeset (PACKAGE, "UTF-8");
   textdomain (PACKAGE);
 
   gpe_load_icons (my_icons);
