@@ -17,6 +17,8 @@
 #include <gtk/gtk.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
 #include <gdk/gdkkeysyms.h>
+#include <gdk/gdkprivate.h>
+#include <gdk/gdkx.h>
 
 /* directory listing */
 #include<sys/types.h>
@@ -47,6 +49,8 @@
 #include "plugin.h"
 #include "popupmenu.h"
 #include "xsi.h"
+#include <dlfcn.h>
+#include "tray.h"
 
 //#define DEBUG
 #ifdef DEBUG
@@ -573,7 +577,8 @@ GtkWidget *create_tab (GList *all_items, char *current_group, tab_view_style sty
 			gtk_box_pack_end_defaults (GTK_BOX(vb),lbl);
 			if (pixbuf) {
 				GdkPixbuf *spixbuf = gdk_pixbuf_scale_simple (pixbuf, 48, 48, GDK_INTERP_BILINEAR);
-				gdk_pixbuf_unref (pixbuf);
+				if (pixbuf != default_pixbuf)
+					gdk_pixbuf_unref (pixbuf);
 				pixmap = gpe_render_icon (notebook->style, 
 							  spixbuf);
 				gdk_pixbuf_unref (spixbuf);
@@ -981,6 +986,21 @@ static void catch_signal (int signo)
 	last_update = time (NULL);
 }
 
+static GdkFilterReturn
+filter (GdkXEvent *xevp, GdkEvent *ev, gpointer p)
+{
+  XEvent *xev = (XEvent *)xevp;
+  
+  if (xev->type == ClientMessage || xev->type == ReparentNotify)
+    {
+      XAnyEvent *any = (XAnyEvent *)xev;
+      tray_handle_event (any->display, any->window, xev);
+      if (xev->type == ReparentNotify)
+	gtk_widget_show_all (GTK_WIDGET (p));
+    }
+  return GDK_FILTER_CONTINUE;
+}
+
 /* Create the 'recent' list as a dock app or normal widget */
 void create_recent_box(GtkBox *cont)
 {
@@ -999,12 +1019,15 @@ void create_recent_box(GtkBox *cont)
 		w = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 		gtk_container_set_border_width(GTK_CONTAINER (w), 0);
 		gtk_container_add(GTK_CONTAINER(w), recent_tab);
+		gtk_widget_set_usize (w, 48, 16);
 
 		window_type = gdk_atom_intern("_NET_WM_WINDOW_TYPE", FALSE);
 		window_type_dock = gdk_atom_intern("_NET_WM_WINDOW_TYPE_DOCK", FALSE);
 		gtk_widget_realize(w);
+		gtk_widget_show_all(recent_tab);
 		gdk_property_change(w->window, window_type, XA_ATOM, 32, GDK_PROP_MODE_REPLACE, (guchar *) &window_type_dock, 1);
-		gtk_widget_show_all (w);
+		tray_init (GDK_WINDOW_XDISPLAY (w->window), GDK_WINDOW_XWINDOW (w->window));
+		gdk_window_add_filter (w->window, filter, w);
 	}
 	TRACE ("create_recent_box: end");
 }
