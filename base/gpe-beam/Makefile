@@ -1,6 +1,6 @@
 PREFIX = /usr/local
 PACKAGE = gpe-beam
-DEBUG = no
+DEBUG = yes
 CVSBUILD = yes
 
 all: send-vcard import-vcard

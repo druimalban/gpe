@@ -35,7 +35,6 @@ static struct tag_map map[] =
     { "title", "prefix" },
     { "honorific_suffix", "suffix" },
     { "nickname", NULL },
-    { "birthday", NULL },
     { "comment", "note" },
     { NULL, NULL }
   };

@@ -69,20 +69,9 @@ main (int argc, char *argv[])
 
   vcard = gpe_export_vcard (db, uid);
 
-  fp = tmpfile ();
-  channel = g_io_channel_unix_new (fileno (fp));
-  if (mimedir_vcard_write_to_channel (vcard, channel, &err) == FALSE)
-    {
-      fprintf (stderr, "%s\n", err->message);
-      g_clear_error (&err);
-    }
+  str = mimedir_vcard_write_to_string (vcard);
 
-  rewind (fp);
-  while (fgets (line, sizeof (line), fp))
-    {
-      puts (line);
-    }
-  fclose (fp);
+  fprintf (stderr, "%s\n", str);
 
   exit (0);
 }
