@@ -57,7 +57,7 @@ irc_server_read (IRCServer *server)
 {
   fd_set rfds;
   struct timeval tv;
-  int data_waiting, buf_len;
+  int data_waiting, buf_len, char_num = 0;
   char buf[256];
   char *message;
 
@@ -80,9 +80,26 @@ irc_server_read (IRCServer *server)
     if (data_waiting)
     {
       //printf ("Data waiting.\n");
+      char_num = 0;
       buf_len = read (server->fd, buf, sizeof (buf));
       if (buf_len != -1)
-        printf ("%s\n", buf);
+      {
+	while (char_num <= buf_len)
+	{
+	  printf ("message len = %d\n", strlen (message));
+	  printf ("buf_len = %d\n", buf_len);
+	  printf ("char_num = %d\n", char_num);
+	  message = g_realloc (message, strlen (message));
+	  message[strlen (message) - 1] = buf[char_num];
+
+          if (buf[char_num] == '/n')
+	  {
+	    printf ("%s", message);
+	    message = g_malloc (0);
+	  }
+	  char_num++;
+	}
+      }
     }
   }
 
@@ -127,7 +144,7 @@ gboolean
 irc_server_login_init (IRCServer *server)
 {
   server->channel = g_hash_table_new (g_str_hash, g_str_equal);
-  irc_server_join_channel (server, "#handhelds.org");
+  //irc_server_join_channel (server, "#handhelds.org");
 
   irc_server_read (server);
   return TRUE;
