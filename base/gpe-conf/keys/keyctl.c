@@ -148,6 +148,7 @@ layout_load(void)
 	{
 		gpe_error_box(err->message);
 		g_error_free(err);
+		err = NULL;
 		return FALSE;
 	}
 	
@@ -155,13 +156,22 @@ layout_load(void)
 	{
 		bg_image = g_key_file_get_string(layoutfile, "Global", "image", &err);
 		if (err)
+		{
 			g_error_free(err);
+			err = NULL;
+		}
 		bg_x = g_key_file_get_integer(layoutfile, "Global", "offset_x", &err);
 		if (err)
+		{
 			g_error_free(err);
+			err = NULL;
+		}
 		bg_y = g_key_file_get_integer(layoutfile, "Global", "offset_y", &err);
 		if (err)
+		{
 			g_error_free(err);
+			err = NULL;
+		}
 	}
 	else
 	{
@@ -182,6 +192,7 @@ layout_load(void)
 			if (err)
 			{
 				g_error_free(err);
+				err = NULL;
 				continue;
 			}
 			buttondefs[NUM_BUTTONS].symbol = 
@@ -189,6 +200,7 @@ layout_load(void)
 			if (err)
 			{
 				g_error_free(err);
+				err = NULL;
 				continue;
 			}
 			buttondefs[NUM_BUTTONS].key = 
@@ -196,6 +208,7 @@ layout_load(void)
 			if (err)
 			{
 				g_error_free(err);
+				err = NULL;
 				continue;
 			}
 			buttondefs[NUM_BUTTONS].modificator = 
@@ -203,6 +216,7 @@ layout_load(void)
 			if (err)
 			{
 				g_error_free(err);
+				err = NULL;
 				continue;
 			}
 			buttondefs[NUM_BUTTONS].command = 
@@ -210,6 +224,7 @@ layout_load(void)
 			if (err)
 			{
 				g_error_free(err);
+				err = NULL;
 				continue;
 			}
 			buttondefs[NUM_BUTTONS].x = 
@@ -217,6 +232,7 @@ layout_load(void)
 			if (err)
 			{
 				g_error_free(err);
+				err = NULL;
 				continue;
 			}
 			buttondefs[NUM_BUTTONS].y = 
@@ -224,6 +240,7 @@ layout_load(void)
 			if (err)
 			{
 				g_error_free(err);
+				err = NULL;
 				continue;
 			}
 

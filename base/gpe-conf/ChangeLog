@@ -1,5 +1,6 @@
 2005-04-06              Florian Boor <florian.boor@kernelconcepts.de>
 
+	* keys/keyctl.c: Fixed usage of GError.
         * Makefile: Add Kinyarwanda translation.
 
 2005-04-02	Florian Boor  	<florian.boor@kernelconcepts.de>
