@@ -1,0 +1,8 @@
+[Desktop Entry]
+Exec=sfcave_sdl
+Icon=sfcave-sdl
+Type=Application
+_Name=SFCave-SDL
+_Comment=Fly the dot though the cave avoiding the walls
+Categories=Games
+

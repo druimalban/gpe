@@ -1,0 +1,8 @@
+Package: sfcave-sdl
+Priority: optional
+Section: games
+Version: VERSION
+Architecture: arm
+Maintainer: Phil Blundell <pb@nexus.co.uk>
+Depends: libsdl1.2, libsdl-mixer1.2, libsdl-gfx1.2
+Description: Fly though the cave avoiding the walls.
