@@ -1,0 +1,263 @@
+# Vietnamese Translation for gpe-aerial-0.2.10.
+# Copyright (C) 2005 Free Software Foundation, Inc.
+# Clytie Siddall <clytie@riverland.net.au>, 2005.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-aerial 0.2.10\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2004-06-12 01:19+0200\n"
+"PO-Revision-Date: 2005-02-01 19:05+0930\n"
+"Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
+"Language-Team: Vietnamese <gnomevi-list@lists.sourceforge.net> \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: main.c:386
+msgid "Wireless networks"
+msgstr "mạng vô tuyến"
+
+#: main.c:402
+msgid "This window shows all detected networks. It will be updated while the scanner is running. The colors tell you something about the possibility to connect to the net. Green=OK, yellow=maybe need some configuration, red=not possible."
+msgstr "Cửa sổ này hiển thị tất cả mạng được phát hiện. Trong khi trình quét chạy thì nó cập nhật. Những màu khác cho bạn biết có thể kết nối đến mạng ấy. Màu xanh=Có, màu vàng=có lẽ cần định cấu hình một chút, màu đỏ=không thể."
+
+#: main.c:410 netedit.c:231 netedit.c:422 netedit.c:424
+msgid "Mode"
+msgstr "Chế độ"
+
+#: main.c:420
+msgid "ESSID"
+msgstr "ESSID"
+
+#: main.c:431
+msgid "CH"
+msgstr "CH"
+
+#: main.c:442
+msgid "WEP"
+msgstr "WEP"
+
+#: main.c:463
+msgid "Unable to scan for devices."
+msgstr "Không thể quét tìm thiết bị."
+
+#: main.c:597
+msgid "Successfully connected."
+msgstr "Kết nối được."
+
+#: main.c:611
+msgid "Ad-Hoc connections setup complete."
+msgstr "Thiết lập xong sự kết nối «như gặp»."
+
+#: main.c:620
+msgid "Could not connect to wireless LAN."
+msgstr "Đã không kết nối được đến mạng địa phương vô tuyến."
+
+#: main.c:700
+msgid "Details..."
+msgstr "Chi tiết..."
+
+#: main.c:706
+msgid "Enter additional info"
+msgstr "Hãy nhập thông tin thêm"
+
+#: main.c:713
+msgid "Try connect..."
+msgstr "Thử kết nối..."
+
+#: main.c:768
+msgid "Scanning for networks..."
+msgstr "Đang quét tìm mạng..."
+
+#: main.c:867
+msgid "scanner died unexpectedly"
+msgstr "trình quét đã thoát bất ngờ"
+
+#: main.c:966
+msgid "Wireless LAN control"
+msgstr "Điều kiện mạng địa phương cô tuyến"
+
+#: main.c:972
+msgid "Switch scanner on"
+msgstr "Mở trình quét"
+
+#: main.c:974
+msgid "Switch scanner off"
+msgstr "Tất trình quét"
+
+#: main.c:975
+msgid "Networks..."
+msgstr "mạng..."
+
+#: main.c:976
+msgid "Remove from dock"
+msgstr "Bỏ ra neo"
+
+#: main.c:977
+msgid "Turn WLAN off"
+msgstr "Tất WLAN"
+
+#: main.c:1022
+msgid "This is gpe-aerial - the wireless LAN selector."
+msgstr "Chương trình này là gpe-aerial - trình chọn mạng địa phương vô tuyến."
+
+#: netedit.c:103
+msgid "The key you entered is not valid."
+msgstr "Bạn đã nhập khóa không hợp lệ."
+
+#: netedit.c:114
+msgid "The IP address you entered is not valid."
+msgstr "Bạn đã nhập địa chỉ IP không hợp lệ."
+
+#: netedit.c:133
+msgid "The subnet mask address you entered is not valid."
+msgstr "Bạn đã nhập địa chỉ mặt nạ mạng cấp dưới mà không hợp lệ."
+
+#: netedit.c:152
+msgid "The gateway address you entered is not valid."
+msgstr "Bạn đã nhập địa chỉ cổng ra mà không hợp lệ."
+
+#: netedit.c:171
+msgid "The DNS server address you entered is not valid."
+msgstr "Bạn đã nhập địa chỉ máy chủ DNS mà không hợp lệ."
+
+#: netedit.c:227
+msgid "SSID"
+msgstr "SSID"
+
+#: netedit.c:232
+msgid "Managed"
+msgstr "Quản lý"
+
+#: netedit.c:233 netedit.c:441
+msgid "Channel"
+msgstr "Kênh"
+
+#: netedit.c:234 netedit.c:445 netedit.c:447
+msgid "WEP enabled"
+msgstr "Đã hiệu lực WEP rồi"
+
+#: netedit.c:235
+msgid "Use DHCP"
+msgstr "Sử dụng DHCP"
+
+#: netedit.c:236
+msgid "DNS Server"
+msgstr "Máy chủ DNS"
+
+#: netedit.c:240
+msgid "Ad-Hoc"
+msgstr "Như gặp"
+
+#: netedit.c:244
+msgid "Gateway"
+msgstr "Cổng ra"
+
+#: netedit.c:246
+msgid "Subnet mask"
+msgstr "Mặt nạ mạng cấp dưới"
+
+#: netedit.c:248
+msgid "IP Address"
+msgstr "Địa chỉ IP"
+
+#: netedit.c:251
+msgid "WEP key"
+msgstr "Khóa WEP"
+
+#: netedit.c:255
+msgid "Enter your desired IP address here, e.g. 192.168.1.2"
+msgstr "Ở đây thì hãy nhập địa chỉ IP được muốn, v.d. 192.168.1.2"
+
+#: netedit.c:256
+msgid "Enter your desired subnet mask here, usually it is set to 255.255.255.0"
+msgstr "Ở đây thì hãy nhập mặt nạ mạng cấp dưới mà thường được lập thành 255.255.255.0"
+
+#: netedit.c:257
+msgid "This field needs to contain the name of this wireless LAN."
+msgstr "Ở đây thì hãy nhâp tên mạng địa phương vô tuyến."
+
+#: netedit.c:258 netedit.c:259
+msgid "Here you select the type of your net, if you have an accesspoint select \"managed\", for direct connections \"ad-hoc\""
+msgstr "Ở đây hãy chọn loại mạng: nếu bạn có điểm truy cập thì chọn «Quản lý», để kết nối trực tiếp thì chọn «như gặp"
+
+#: netedit.c:260
+msgid "Select channel here, only needed in ad-hoc mode. Note: Not all channels are allowed in all countries."
+msgstr "Ở đây thì hãy chọn kênh nếu sử dụng chế độ «như gặp». Ghi chú: một phần quốc gia không cho phép tất cả kênh."
+
+#: netedit.c:261
+msgid "Get IP setup using DHCP."
+msgstr "Gọi thông tin IP bằng DHCP"
+
+#: netedit.c:262
+msgid "Enter the IP of the default gateway to use."
+msgstr "Hãy nhập địa chỉ IP của cổng ra mặc định để sử dụng."
+
+#: netedit.c:263
+msgid "Check this if WEP encryption is activated in this LAN."
+msgstr "Hãy đánh dấu ở đây nếu đã hiệu lực mã hóa WEP trong mạng địa phương này."
+
+#: netedit.c:264
+msgid "Enter WEP key here. Use hex digits or set as ascii string (s: <keystring>)."
+msgstr "Ở đây thì hãy nhập khóa WEP: sử dụng số tự hệ thập lục phân, hay lập chuỗi ASCII (s: <keystring>)."
+
+#: netedit.c:265
+msgid "Enter the IP address of the primary nameserver to be used in this net here."
+msgstr "Hãy nhập địa chỉ IP của máy chủ tên chính để sử dụng trong mạng này."
+
+#: netedit.c:268
+msgid "Network editor"
+msgstr "Trình hiệu chỉnh mạng"
+
+#: netedit.c:407
+msgid "This dialog provides some information about the selected wireless LAN."
+msgstr "Hộp thoại này cung cập một phần thông tin về mạng địa phương vô tuyến được chọn."
+
+#: netedit.c:409
+msgid "Network information"
+msgstr "Thông tin mạng"
+
+#: netedit.c:429
+msgid "Max. signal"
+msgstr "Tín hiệu tối đa"
+
+#: netedit.c:434 netedit.c:437
+msgid "Speed"
+msgstr "Tốc độ"
+
+#: netedit.c:438
+msgid "unknown"
+msgstr "chưa biết"
+
+#: netedit.c:445 netedit.c:452 netedit.c:460
+msgid "yes"
+msgstr "có"
+
+#: netedit.c:447 netedit.c:455 netedit.c:462
+msgid "no"
+msgstr "không"
+
+#: netedit.c:451 netedit.c:454
+msgid "IPSec detected"
+msgstr "Đã phát hiện IPSec rồi"
+
+#: netedit.c:459 netedit.c:462
+msgid "DHCP detected"
+msgstr "Đã phát hiện DHCP rồi"
+
+#: netedit.c:466 netedit.c:472
+msgid "Subnet"
+msgstr "mạng cấp dưới"
+
+#: netedit.c:473
+msgid "<i>unknown</i>"
+msgstr "<i>chưa biết</i>"
+
+#: gpe-aerial.desktop.in.h:1
+msgid "Aerial"
+msgstr "Dây trời"
+
+#: gpe-aerial.desktop.in.h:2
+msgid "Panel based wireless LAN communications control"
+msgstr "Bảng điều kiện truyền thông trên mạng địa phương vô tuyến "
