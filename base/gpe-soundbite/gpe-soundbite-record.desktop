@@ -1,5 +1,5 @@
 [Desktop Entry]
-Name=Play Memo
+Name=Record Memo
 Comment=GPE Soundbite
 Exec=gpe-soundbite-record
 Terminal=0
