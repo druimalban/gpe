@@ -7,8 +7,5 @@ Page maintained by <!--#echo var="author"--> <a href='mailto:<!--#echo var="auth
 </SMALL>
 </P>
 </div>
-</td> 
-</tr>
-</table> 
 </body> 
 </html>
