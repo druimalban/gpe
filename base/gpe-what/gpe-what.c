@@ -63,6 +63,8 @@ static void
 redraw_popup (void)
 {
   GSList *lines;
+
+  XClearWindow (dpy, win_popup);
   
   for (lines = pango_layout_get_lines (pango_layout); lines; lines = lines->next)
     {
@@ -441,7 +443,7 @@ main (int argc, char *argv[])
 		  last_y = xev.xbutton.y_root;
 		  
 		  if (handle_click (w, w, x, y) == FALSE)
-		    popup_box (_("No help available."), -1, xev.xbutton.x_root, xev.xbutton.y_root);
+		    popup_box (_("No help available here."), -1, xev.xbutton.x_root, xev.xbutton.y_root);
 
 		  state = 2;
 		}
