@@ -5,7 +5,7 @@ CVSBUILD = yes
 GTK2 = yes
 VERSION = 0.15
 
-MEMBERS = main
+MEMBERS = main dun
 
 CFLAGS = `pkg-config --cflags gtk+-2.0`
 CONTROL = control1

@@ -40,6 +40,9 @@
 #include <bluetooth/sdp.h>
 #include <bluetooth/sdp_lib.h>
 
+#include "main.h"
+#include "dun.h"
+
 #define _(x) gettext(x)
 
 #define HCIATTACH "/etc/bluetooth/hciattach"
@@ -56,24 +59,7 @@ struct gpe_icon my_icons[] = {
   { NULL }
 };
 
-typedef enum
-  {
-    BT_UNKNOWN,
-    BT_LAP,
-    BT_DUN
-  } bt_device_type;
-
-struct bt_device
-{
-  gchar *name;
-  guint class;
-  bdaddr_t bdaddr;
-  GdkPixbuf *pixbuf;
-  bt_device_type type;
-  guint port;
-  pid_t pid;
-  GtkWidget *window, *button;
-};
+static uuid_t lap_uuid, dun_uuid, rfcomm_uuid;
 
 static GtkWidget *icon;
 
@@ -86,9 +72,9 @@ static GtkWidget *menu_devices;
 static GtkWidget *devices_window;
 static GtkWidget *iconlist;
 
-static gboolean radio_is_on;
-
 static GSList *devices;
+
+gboolean radio_is_on;
 
 static gboolean
 do_run_scan (void)
@@ -183,21 +169,6 @@ run_scan (void *data)
   scan_complete = TRUE;
 
   return NULL;
-}
-
-static void
-stop_dun (struct bt_device *bd)
-{
-  pid_t p = vfork ();
-  char bdaddr[40];
-
-  strcpy (bdaddr, batostr (&bd->bdaddr));
-
-  if (p == 0)
-    {
-      execlp ("dund", "dund", "-k", bdaddr, NULL);
-      _exit (1);
-    }
 }
 
 static pid_t
@@ -300,32 +271,29 @@ devices_window_destroyed (void)
 }
 
 static gboolean
-browse_device (struct bt_device *bd)
+browse_device (struct bt_device *bd, uint16_t group_id)
 {
   sdp_list_t *attrid, *search, *seq, *next;
   uint32_t range = 0x0000ffff;
   int status = -1;
   uuid_t group;
   bdaddr_t bdaddr;
-  uuid_t lap_uuid, dun_uuid, rfcomm_uuid;
   char str[20];
   sdp_session_t *sess;
 
   baswap (&bdaddr, &bd->bdaddr);
 
-  sdp_uuid16_create (&group, PUBLIC_BROWSE_GROUP);
-  sdp_uuid16_create (&lap_uuid, LAN_ACCESS_SVCLASS_ID);
-  sdp_uuid16_create (&dun_uuid, DIALUP_NET_SVCLASS_ID);
-  sdp_uuid16_create (&rfcomm_uuid, RFCOMM_UUID);
+  sdp_uuid16_create (&group, group_id);
 
   attrid = sdp_list_append (0, &range);
   search = sdp_list_append (0, &group);
-  sess = sdp_connect(BDADDR_ANY, &bdaddr, 0);
-  if (!sess) {
-    ba2str (&bdaddr, str);
-    fprintf (stderr, "Failed to connect to SDP server on %s\n", str);
-    return FALSE;
-  }
+  sess = sdp_connect (BDADDR_ANY, &bdaddr, 0);
+  if (!sess) 
+    {
+      ba2str (&bdaddr, str);
+      fprintf (stderr, "Failed to connect to SDP server on %s\n", str);
+      return FALSE;
+    }
   status = sdp_service_search_attr_req (sess, search, SDP_ATTR_REQ_RANGE, attrid, &seq);
 
   if (status) 
@@ -357,6 +325,8 @@ browse_device (struct bt_device *bd)
 
       if (bd->type != BT_UNKNOWN)
 	{
+	  uuid_t sub_group;
+
 	  if (sdp_get_access_protos (svcrec, &list) == 0) 
 	    {
 	      sdp_list_t *next;
@@ -389,6 +359,9 @@ browse_device (struct bt_device *bd)
 		  free (list);
 		}
 	    }
+
+	  if (sdp_get_group_id (svcrec, &sub_group) != -1)
+	    browse_device (bd, sub_group.value.uuid16);
 	}
 
       next = seq->next;
@@ -402,56 +375,20 @@ browse_device (struct bt_device *bd)
 }
 
 static void
+init_uuids (void)
+{
+  sdp_uuid16_create (&lap_uuid, LAN_ACCESS_SVCLASS_ID);
+  sdp_uuid16_create (&dun_uuid, DIALUP_NET_SVCLASS_ID);
+  sdp_uuid16_create (&rfcomm_uuid, RFCOMM_UUID);
+}
+
+static void
 window_destroyed (GtkWidget *window, gpointer data)
 {
   struct bt_device *bd = (struct bt_device *)data;
 
   bd->window = NULL;
   bd->button = NULL;
-}
-
-static void
-button_clicked (GtkWidget *window, gpointer data)
-{
-  struct bt_device *bd = (struct bt_device *)data;
-
-  if (bd->pid)
-    {
-      stop_dun (bd);
-      bd->pid = 0;
-    }
-  else
-    {
-      /* connect */
-      char port[16];
-      char address[64];
-      pid_t p;
-
-      if (! radio_is_on)
-	{
-	  gpe_error_box (_("Radio is switched off"));
-	  return;
-	}
-      
-      strcpy (address, batostr (&bd->bdaddr));
-      sprintf (port, "%d", bd->port);
-
-      p = vfork ();
-
-      if (p == 0)
-	{
-	  execlp ("dund", "dund", "-n", "-C", port, "-c", address, NULL);
-	  _exit (1);
-	}
-
-      bd->pid = p;
-    }
-
-  if (bd->button)
-    {
-      GtkWidget *label = gtk_bin_get_child (GTK_BIN (bd->button));
-      gtk_label_set_text (GTK_LABEL (label), bd->pid ? _("Disconnect") : _("Connect"));
-    }
 }
 
 static void
@@ -488,7 +425,7 @@ device_clicked (GtkWidget *w, gpointer data)
       gtk_box_pack_start (GTK_BOX (vbox2), hbox1, FALSE, FALSE, 0);
 
       if (bd->type == 0)
-	browse_device (bd);
+	browse_device (bd, PUBLIC_BROWSE_GROUP);
 
       if (bd->type != BT_UNKNOWN)
 	{
@@ -521,7 +458,7 @@ device_clicked (GtkWidget *w, gpointer data)
 	  gtk_widget_show (button);
 	  gtk_box_pack_start (GTK_BOX (vbox2), button, FALSE, FALSE, 4);
 	  bd->button = button;
-	  g_signal_connect (G_OBJECT (button), "clicked", G_CALLBACK (button_clicked), bd);
+	  g_signal_connect (G_OBJECT (button), "clicked", G_CALLBACK (dun_button_clicked), bd);
 	}
       
       gtk_container_add (GTK_CONTAINER (window), vbox2);
@@ -697,6 +634,8 @@ main (int argc, char *argv[])
   gtk_widget_show (window);
 
   atexit (do_stop_radio);
+
+  init_uuids ();
 
   gpe_system_tray_dock (window->window);
 
