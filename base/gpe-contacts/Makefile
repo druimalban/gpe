@@ -3,7 +3,7 @@ PACKAGE = gpe-contacts
 GTK2 = yes
 pkgdatadir = $(PREFIX)/share/$(PACKAGE)
 CVSBUILD = yes
-VERSION = 0.14
+VERSION = 0.15
 LINGUAS = de sv
 
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
@@ -42,7 +42,7 @@ SOURCES = $(patsubst %,%.c,$(MEMBERS))
 all: gpe-contacts all-mo
 
 $(PACKAGE): $(OBJS)
-	$(CC) -o $@ $^ -L../libgpewidget -lgpewidget $(GTKLDFLAGS) `pkg-config --libs libxml-2.0` $(LDFLAGS)
+	$(CC) -o $@ $^ -L../libgpewidget -lgpewidget $(GTKLDFLAGS) `pkg-config --libs libxml-2.0` $(LDFLAGS)  
 
 clean:
 	rm -f gpe-contacts $(OBJS) $(DEPS)
@@ -57,10 +57,11 @@ install-program: all $(PACKAGE).desktop
 	install -d $(DESTDIR)$(pkgdatadir)
 	install -m 644 contacts-layout.xml $(DESTDIR)$(pkgdatadir)/default-layout.xml
 	install -m 644 well-known-tags $(DESTDIR)$(pkgdatadir)/well-known-tags
-	install -d  $(DESTDIR)$(pkgdatadir)/pixmaps
-	install -m 644 icons/frame.png $(DESTDIR)$(pkgdatadir)/pixmaps/
-	install -m 644 icons/entry.png $(DESTDIR)$(pkgdatadir)/pixmaps/
-	install -m 644 icons/notebook.png $(DESTDIR)$(pkgdatadir)/pixmaps/
+	install -d  $(DESTDIR)$(PREFIX)/share/pixmaps
+	install -m 644 icons/frame.png $(DESTDIR)$(PREFIX)/share/pixmaps/
+	install -m 644 icons/entry.png $(DESTDIR)$(PREFIX)/share/pixmaps/
+	install -m 644 icons/notebook.png $(DESTDIR)$(PREFIX)/share/pixmaps/
+	install -m 644 icons/export.png $(DESTDIR)$(PREFIX)/share/pixmaps/
 
 include $(BUILD)/Makefile.dpkg_ipkg
 include $(BUILD)/Makefile.translation

@@ -13,7 +13,7 @@ extern gchar *active_chars;
 extern void edit_person (struct person *p);
 extern GtkWidget *mainw;
 extern gboolean panel_config_has_changed;
-	
+
 static gint panel_active_row = -1;
 
 void 

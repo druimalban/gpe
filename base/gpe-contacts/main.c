@@ -36,27 +36,30 @@
 #include "proto.h"
 #include "callbacks.h"
 
-#define MY_PIXMAPS_DIR PREFIX "/share/gpe-contacts/pixmaps"
+#define MY_PIXMAPS_DIR PREFIX "/share/pixmaps/"
 #define TAB_CONFIG_LOCAL ".contacts-tab"
 #define TAB_CONFIG_GLOBAL "/etc/gpe/contacts-tab.conf"
 
 static GtkWidget *categories_smenu;
 gchar *active_chars;
-GtkWidget *mainw;		// how ugly making this global
+GtkWidget *mainw;		
 gboolean panel_config_has_changed = FALSE;
 GtkListStore *list_store;
 GtkWidget *list_view;
+static GtkWidget *bExport;
 
 struct gpe_icon my_icons[] = {
   {"edit"},
   {"delete"},
   {"cancel"},
-  {"frame", MY_PIXMAPS_DIR "/frame.png"},
-  {"notebook", MY_PIXMAPS_DIR "/notebook.png"},
-  {"entry", MY_PIXMAPS_DIR "/entry.png"},
-  {"icon", PREFIX "/share/pixmaps/gpe-contacts.png" },
+  {"frame", MY_PIXMAPS_DIR "frame.png"},
+  {"notebook", MY_PIXMAPS_DIR "notebook.png"},
+  {"entry", MY_PIXMAPS_DIR "entry.png"},
+  {"export", MY_PIXMAPS_DIR "export.png"},
+  {"icon", MY_PIXMAPS_DIR "gpe-contacts.png" },
   {NULL, NULL}
 };
+
 
 /* type that holds tab configuration data */
 typedef struct 
@@ -142,7 +145,6 @@ load_panel_config ()
       table = lookup_widget (mainw, "tabDetail");
       container = lookup_widget (mainw, "pDetail");
       gtk_container_remove (GTK_CONTAINER (container), table);
-      //gtk_widget_unref(table);
       gtk_widget_destroy (table);
       table = gtk_table_new (1, 2, FALSE);
       gtk_widget_set_name (table, "tabDetail");
@@ -459,6 +461,37 @@ edit_person (struct person *p)
 }
 
 static void
+export_contact (GtkWidget * widget, gpointer d)
+{
+  GtkTreeSelection *sel = gtk_tree_view_get_selection (GTK_TREE_VIEW (list_view));
+  GtkTreeIter iter;
+  GtkTreeModel *model;
+  char *cmd;
+  GtkWidget *dlg;
+	
+  if (gtk_tree_selection_get_selected (sel, &model, &iter))
+    {
+      guint uid = -1;
+      gtk_tree_model_get (GTK_TREE_MODEL (model), &iter, 1, &uid, -1);
+	  if (uid >= 0)
+      {
+         cmd = g_strdup_printf("/usr/bin/vcard-export %i > /tmp/vcard.vcf",uid);
+         if (system(cmd))
+           dlg = gtk_message_dialog_new (GTK_WINDOW(mainw),
+              GTK_DIALOG_DESTROY_WITH_PARENT,GTK_MESSAGE_ERROR,
+              GTK_BUTTONS_CLOSE, _("Export of VCARD failed."));
+         else
+           dlg = gtk_message_dialog_new (GTK_WINDOW(mainw),
+              GTK_DIALOG_DESTROY_WITH_PARENT,GTK_MESSAGE_INFO, 
+              GTK_BUTTONS_CLOSE, _("VCARD exported to\n/tmp/vcard.vcf."));
+        gtk_dialog_run (GTK_DIALOG (dlg));
+        gtk_widget_destroy (dlg);
+        free(cmd);
+      }		  
+    }
+}
+
+static void
 new_contact (GtkWidget * widget, gpointer d)
 {
   edit_person (NULL);
@@ -700,6 +733,12 @@ selection_made (GtkTreeSelection *sel)
       show_details (p);
 
       discard_person (p);
+		
+      gtk_widget_set_sensitive(bExport,TRUE);	
+    }
+  else
+    {
+       gtk_widget_set_sensitive(bExport,FALSE);
     }
 }
 
@@ -863,6 +902,12 @@ create_main (void)
 			    _("Delete contact"), _("Tap here to delete the selected contact."),
 			    G_CALLBACK (delete_contact), NULL, -1);
 
+  pw = gtk_image_new_from_pixbuf (gpe_find_icon_scaled ("export", 
+							gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar))));
+  bExport = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Export"),
+			    _("Export"), _("Tap here to export this contact to VCARD."),
+			    pw, G_CALLBACK (export_contact), NULL);
+				
   gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_PROPERTIES,
 			    _("Properties"), _("Tap here to configure the program."),
 			    G_CALLBACK (configure), NULL, -1);
@@ -872,7 +917,9 @@ create_main (void)
   gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_QUIT,
 			    _("Close"), _("Tap here to exit gpe-contacts."),
 			    G_CALLBACK (gtk_main_quit), NULL, -1);
-				
+
+  gtk_widget_set_sensitive(bExport,FALSE);
+
   nbList = gtk_notebook_new ();
   gtk_box_pack_start (GTK_BOX (vbox1), nbList, FALSE, FALSE, 0);
   gtk_notebook_set_show_border (GTK_NOTEBOOK (nbList), FALSE);
@@ -940,7 +987,7 @@ create_main (void)
 
   g_signal_connect (G_OBJECT (tree_sel), "changed",
 		    G_CALLBACK (selection_made), NULL);
-
+ 
   displaymigration_mark_window (main_window);
 
   return main_window;

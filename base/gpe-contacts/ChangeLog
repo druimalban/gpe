@@ -1,3 +1,10 @@
+2003-08-19  Florian Boor <florian.boor@kernelconcepts.de>
+
+	* main.c: Added basic vcard export.
+	* Removed obsolete comments from main.c
+	* Makefile: Added new icon, changed installation path to allow icon themes.
+	* control1: Added "Source" description field.
+
 2003-07-29  Philip Blundell  <philb@gnu.org>
 
 	* Makefile (CPPFLAGS): Add -DENABLE_NLS.
