@@ -71,3 +71,9 @@ style "gpe_login_result"
   # red color:
   fg[NORMAL] = { 0.6, 0.0, 0.0 }
 }
+
+# the background image for GPE Owner Info
+style "gpe_ownerinfo_bg"
+ {
+  bg_pixmap[NORMAL] = "gpe-ownerinfo-bg.png"
+ }
