@@ -18,6 +18,7 @@
 #include <string.h>
 #include <errno.h>
 #include <stdlib.h>
+#include <signal.h>
 
 #include <gtk/gtk.h>
 #include <gdk/gdkx.h>
@@ -155,6 +156,7 @@ gpe_launch_program (Display *dpy, char *exec, char *name)
   SnDisplay *sn_dpy;
   int screen;
   pid_t pid;
+  int i;
 
   screen = DefaultScreen (dpy);
   sn_dpy = sn_display_for_display (dpy);
@@ -174,6 +176,10 @@ gpe_launch_program (Display *dpy, char *exec, char *name)
       return FALSE;
 
     case 0:
+      /* Clear out signal dispositions.  GnomeVFS will segfault if invoked
+	 with SIGCHLD set to SIG_IGN.  */
+      for (i = 0; i < _NSIG; i++)
+	signal (i, SIG_DFL);
       sn_launcher_context_setup_child_process (context);
       do_exec (exec);
       gpe_perror_box ("exec");
