@@ -2,6 +2,7 @@
 	---
 	[ ]when create/save FAST, (<1s) two files with same name --> overwrite, BUT two entries in the clist!
 	[ ]grab keyevent (for joypad scrolling) + xstroke --> mess!
+	[ ]check memory leaks (free/unref)
 [ ]GENERAL todo
 	[ ]link against libpng12 instead of libpng3
 	[ ]add .desktop

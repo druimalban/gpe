@@ -78,8 +78,7 @@ $(PACKAGE): $(OBJS)
 
 $(ARM_BIN):
 	../utils/dummy-arm-bin &> /dev/null && make $(PACKAGE)
-	../utils/dummy-arm-bin &> /dev/null && cp   $(PACKAGE) $(ARM_BIN)
-	../utils/dummy-arm-bin &> /dev/null && strip $(ARM_BIN)
+	../utils/dummy-arm-bin &> /dev/null && strip -o $(ARM_BIN) $(PACKAGE)
 
 strip: $(PACKAGE)
 	strip $(PACKAGE)
