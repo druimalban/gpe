@@ -1,10 +1,10 @@
 Package: gpe-calendar2
 Section: base
 Priority: optional
-Version: 0.32
+Version: 0.33
 Architecture: arm
 Maintainer: Phil Blundell <pb@debian.org>
-Depends: libsqlite0, gpe-icons (>= 0.14), libgpewidget1 (>= 0.08), atd, libxsettings-client0, libeventdb0
+Depends: libsqlite0, gpe-icons (>= 0.14), libgpewidget1 (>= 0.08), atd, libxsettings-client0, libeventdb0 (>= 0.02), libdm0
 Description: GPE calendar
 Provides: gpe-calendar
 Replaces: gpe-calendar

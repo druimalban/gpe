@@ -1,5 +1,11 @@
 2003-01-18  Philip Blundell  <philb@gnu.org>
 
+	* Version 0.33 released.
+
+2003-01-18  Philip Blundell  <philb@gnu.org>
+
+	* familiar/control1 (Depends): Require libdm0, libeventdb 0.02.
+
 	* main.c (main): Use stock icons.
 	* day_popup.c (day_popup): Likewise.
 	* event-ui.c (build_edit_event_window): Likewise.
