@@ -491,8 +491,7 @@ void unpaint_stone(int col, int row){
 
 void paint_mark(int col, int row, GoMark mark, GdkColor * color){
   GdkRectangle rect;
-
-  if(mark == NO_MARK) return;
+  int size;
 
   rect.x = (col -1) * go.cell_size + go.margin + go.stone_space;
   rect.y = (row -1) * go.cell_size + go.margin + go.stone_space;
@@ -504,11 +503,14 @@ void paint_mark(int col, int row, GoMark mark, GdkColor * color){
   gdk_gc_set_foreground(gc, color);
   switch(mark){
     case MARK_SQUARE:
+      size = go.stone_size / 2;
+      if( !((size - go.grid_stroke)%2) ) size++;
+
       gdk_draw_rectangle (go.drawing_area_pixmap_buffer,
                           gc,
                           FALSE,
                           rect.x + go.stone_size / 4, rect.y + go.stone_size / 4,
-                          go.stone_size / 2, go.stone_size / 2
+                          size, size
                           );
       break;
     case NO_MARK:
