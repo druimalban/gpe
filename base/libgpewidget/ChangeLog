@@ -1,5 +1,17 @@
 2003-04-13  Philip Blundell  <philb@gnu.org>
 
+	* Version 0.58 released.
+	
+2003-04-13  Philip Blundell  <philb@gnu.org>
+
+	* gtktimesel.c: Rename to ...
+	* gpetimesel.c: ... this.
+	* gpe/gtktimesel.h: Rename to ...
+	* gpe/gpetimesel.h: ... this.
+	* Makefile (MEMBERS): Adjust accordingly.
+
+2003-04-13  Philip Blundell  <philb@gnu.org>
+
 	* Version 0.57 released.
 
 2003-04-13  Philip Blundell  <philb@gnu.org>

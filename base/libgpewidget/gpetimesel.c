@@ -11,13 +11,13 @@
 #include <gtk/gtk.h>
 #include <gdk/gdkx.h>
 
-#include "gtktimesel.h"
+#include "gpetimesel.h"
 #include "gpeclockface.h"
 #include "pixmaps.h"
 
 #define _(x) gettext(x)
 
-struct _GtkTimeSelClass 
+struct _GpeTimeSelClass 
 {
   GtkHBoxClass parent_class;
 };
@@ -27,7 +27,7 @@ static GtkHBoxClass *parent_class;
 static GdkPixbuf *popup_button;
 
 static gboolean
-button_press (GtkWidget *w, GdkEventButton *b, GtkTimeSel *sel)
+button_press (GtkWidget *w, GdkEventButton *b, GpeTimeSel *sel)
 {
   GdkRectangle rect;
 
@@ -52,7 +52,7 @@ button_press (GtkWidget *w, GdkEventButton *b, GtkTimeSel *sel)
 }
 
 static gboolean
-button_release (GtkWidget *w, GdkEventButton *b, GtkTimeSel *sel)
+button_release (GtkWidget *w, GdkEventButton *b, GpeTimeSel *sel)
 {
   gdk_pointer_grab (w->window, FALSE, 
 		    GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK,
@@ -62,7 +62,7 @@ button_release (GtkWidget *w, GdkEventButton *b, GtkTimeSel *sel)
 }
 
 static void
-do_popup (GtkWidget *button, GtkTimeSel *sel)
+do_popup (GtkWidget *button, GpeTimeSel *sel)
 {
   if (sel->popup)
     {
@@ -112,7 +112,7 @@ do_popup (GtkWidget *button, GtkTimeSel *sel)
 }
 
 static void
-gtk_time_sel_init (GtkTimeSel *sel)
+gpe_time_sel_init (GpeTimeSel *sel)
 {
   sel->hour_adj = gtk_adjustment_new (0, 0, 23, 1, 15, 15);
   sel->minute_adj = gtk_adjustment_new (0, 0, 59, 1, 15, 15);
@@ -147,14 +147,14 @@ gtk_time_sel_init (GtkTimeSel *sel)
 }
 
 static void
-gtk_time_sel_show (GtkWidget *widget)
+gpe_time_sel_show (GtkWidget *widget)
 {
-  GtkTimeSel *sel;
+  GpeTimeSel *sel;
 
   g_return_if_fail (widget != NULL);
-  g_return_if_fail (GTK_IS_TIME_SEL (widget));
+  g_return_if_fail (GPE_IS_TIME_SEL (widget));
 
-  sel = GTK_TIME_SEL (widget);
+  sel = GPE_TIME_SEL (widget);
 
   gtk_widget_show (sel->hour_spin);
   gtk_widget_show (sel->minute_spin);
@@ -164,7 +164,7 @@ gtk_time_sel_show (GtkWidget *widget)
 }
 
 static void
-gtk_time_sel_class_init (GtkTimeSelClass * klass)
+gpe_time_sel_class_init (GpeTimeSelClass * klass)
 {
   GObjectClass *oclass;
   GtkWidgetClass *widget_class;
@@ -173,11 +173,11 @@ gtk_time_sel_class_init (GtkTimeSelClass * klass)
   oclass = (GObjectClass *) klass;
   widget_class = (GtkWidgetClass *) klass;
 
-  widget_class->show = gtk_time_sel_show;
+  widget_class->show = gpe_time_sel_show;
 }
 
 GtkType
-gtk_time_sel_get_type (void)
+gpe_time_sel_get_type (void)
 {
   static GType time_sel_type = 0;
 
@@ -185,24 +185,24 @@ gtk_time_sel_get_type (void)
     {
       static const GTypeInfo time_sel_info =
       {
-	sizeof (GtkTimeSelClass),
+	sizeof (GpeTimeSelClass),
 	(GBaseInitFunc) NULL,
 	(GBaseFinalizeFunc) NULL,
-	(GClassInitFunc) gtk_time_sel_class_init,
+	(GClassInitFunc) gpe_time_sel_class_init,
 	(GClassFinalizeFunc) NULL,
 	NULL /* class_data */,
-	sizeof (GtkTimeSel),
+	sizeof (GpeTimeSel),
 	0 /* n_preallocs */,
-	(GInstanceInitFunc) gtk_time_sel_init,
+	(GInstanceInitFunc) gpe_time_sel_init,
       };
 
-      time_sel_type = g_type_register_static (GTK_TYPE_HBOX, "GtkTimeSel", &time_sel_info, (GTypeFlags)0);
+      time_sel_type = g_type_register_static (GTK_TYPE_HBOX, "GpeTimeSel", &time_sel_info, (GTypeFlags)0);
     }
   return time_sel_type;
 }
 
 void
-gtk_time_sel_get_time (GtkTimeSel *sel, guint *hour, guint *minute)
+gpe_time_sel_get_time (GpeTimeSel *sel, guint *hour, guint *minute)
 {
   if (hour)
     *hour = (guint) gtk_adjustment_get_value (GTK_ADJUSTMENT (sel->hour_adj));
@@ -211,14 +211,14 @@ gtk_time_sel_get_time (GtkTimeSel *sel, guint *hour, guint *minute)
 }
 
 void
-gtk_time_set_set_time (GtkTimeSel *sel, guint hour, guint minute)
+gpe_time_sel_set_time (GpeTimeSel *sel, guint hour, guint minute)
 {
   gtk_adjustment_set_value (GTK_ADJUSTMENT (sel->hour_adj), hour);
   gtk_adjustment_set_value (GTK_ADJUSTMENT (sel->minute_adj), minute);
 }
 
 GtkWidget *
-gtk_time_sel_new (void)
+gpe_time_sel_new (void)
 {
-  return GTK_WIDGET (g_object_new (gtk_time_sel_get_type (), NULL));
+  return GTK_WIDGET (g_object_new (gpe_time_sel_get_type (), NULL));
 }
