@@ -218,16 +218,11 @@ pop_singles (GtkWidget *vbox, GSList *list)
       
       while (list)
 	{
-	  GtkWidget *hbox = gtk_hbox_new (FALSE, 0);
 	  GSList *next = list->next;
 	  edit_thing_t e = list->data;
 
-	  gtk_box_pack_start (GTK_BOX (hbox),
-			      gtk_label_new (e->name),
-			      FALSE, FALSE, 0);
-
 	  gtk_table_attach (GTK_TABLE (table),
-			    hbox,
+			    gtk_label_new (e->name),
 			    0, 1, x, x + 1,
 			    0, 0, 0, 0);
 	  gtk_table_attach (GTK_TABLE (table),
@@ -277,6 +272,7 @@ build_children (GtkWidget *vbox, GSList *children)
 	  singles = NULL;
 	  w = gtk_frame_new (e->name);
 	  ww = gtk_text_new (NULL, NULL);
+	  gtk_text_set_editable (GTK_TEXT (ww), TRUE);
 	  gtk_container_add (GTK_CONTAINER (w), ww);
 	  gtk_container_set_border_width (GTK_CONTAINER (w), 2);
 	  gtk_box_pack_start (GTK_BOX (vbox), w, FALSE, FALSE, 4);
@@ -295,11 +291,14 @@ build_children (GtkWidget *vbox, GSList *children)
   singles = NULL;
 }
 
-void
-build_edit_page (GtkNotebook *book)
+GtkWidget *
+edit_window (void)
 {
+  GtkWidget *w = create_edit ();
+  GtkWidget *book = lookup_widget (w, "notebook2");
   GSList *page;
-  
+  GtkWidget *text, *notes_label;
+
   for (page = edit_pages; page; page = page->next)
     {
       edit_thing_t e = page->data;
@@ -308,19 +307,19 @@ build_edit_page (GtkNotebook *book)
 
       build_children (vbox, e->children);
 
-      gtk_notebook_append_page (book, vbox, label);
+      gtk_widget_show_all (vbox);
+      gtk_widget_show (label);
+
+      gtk_notebook_append_page (GTK_NOTEBOOK (book), vbox, label);
     }
-}
 
-void
-try_it (void)
-{
-  GtkWidget *w = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-  GtkWidget *book = gtk_notebook_new ();
-  
-  build_edit_page (GTK_NOTEBOOK (book));
+  text = gtk_text_new (NULL, NULL);
+  gtk_text_set_editable (GTK_TEXT (text), TRUE);
+  gtk_widget_show (text);
+  notes_label = gtk_label_new ("Notes");
+  gtk_widget_show (notes_label);
 
-  gtk_container_add (GTK_CONTAINER (w), book);
-  
-  gtk_widget_show_all (w);
+  gtk_notebook_append_page (GTK_NOTEBOOK (book), text, notes_label);  
+
+  return w;
 }

@@ -22,7 +22,7 @@ void main_showlist(GtkWidget *object)
 
 void on_main_new_clicked (GtkWidget *widget, gpointer d)
 {
-  GtkWidget *w = create_edit ();
+  GtkWidget *w = edit_window ();
   GtkWidget *name = lookup_widget (w, "name_entry");
   gtk_widget_show (w);
   gtk_widget_grab_focus (name);
@@ -95,12 +95,4 @@ structure_delete_clicked               (GtkButton       *button,
 
 }
 #endif
-
-
-void
-on_structure_test                      (GtkButton       *button,
-                                        gpointer         user_data)
-{
-  try_it ();
-}
 
