@@ -59,6 +59,13 @@ href="http://www.winehq.com/">wine</a> on ARM:
 <a href="http://fabrice.bellard.free.fr/qemu/">QEMU x86 Emulator</a>.
 </p>
 
+<p>Icons:
+  <ul>
+    <li><a href="http://developer.ximian.com/themes/icons/">http://developer.ximian.com/themes/icons/</a>
+    <li><a href="http://jimmac.musichall.cz/ikony.php3">http://jimmac.musichall.cz/ikony.php3</a>
+    <li><a href="http://developer.ximian.com/themes/icons/ooo-icons.html">http://developer.ximian.com/themes/icons/ooo-icons.html</a>
+  </ul>
+</p>
 
 <h2>SQL schemas</h2> 
 <p>The core storage model for environment-wide data such as PIM data and
