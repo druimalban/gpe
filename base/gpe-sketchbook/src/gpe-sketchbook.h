@@ -25,6 +25,8 @@ typedef struct _sketchbook {
   GtkWidget   * window;
   GtkNotebook * notebook;
 
+  gchar * save_dir;//where to save the sketches
+
   //Selector  * selector;
   //Sketchpad * sketchpad;
 } Sketchbook;
@@ -36,7 +38,7 @@ enum {
   PAGE_SKETCHPAD,
 };
 
-extern gchar * sketchdir;
+
 void app_quit();
 
 #endif

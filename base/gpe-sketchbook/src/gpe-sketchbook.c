@@ -35,7 +35,7 @@
 
 
 Sketchbook sketchbook;
-gchar * sketchdir;
+
 #define SKETCHPAD_HOME_DIR ".sketchbook"
 
 static struct gpe_icon my_icons[] = {
@@ -88,7 +88,7 @@ int main (int argc, char ** argv){
 }//main()
 
 void app_init(int argc, char ** argv){
-  sketchdir = g_strdup_printf("%s/%s/", g_get_home_dir(), SKETCHPAD_HOME_DIR);
+  sketchbook.save_dir = g_strdup_printf("%s/%s/", g_get_home_dir(), SKETCHPAD_HOME_DIR);
   selector_init();
   sketchpad_init();
 }

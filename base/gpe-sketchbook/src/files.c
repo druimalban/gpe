@@ -34,7 +34,7 @@ gchar * file_new_fullpath_filename(){
   formated_time = localtime ((time_t *) &current_time);
   fullpath_filename = g_strdup_printf(
            "%s%04d-%02d-%02d_%02d-%02d-%02d.png",
-           sketchdir,
+           sketchbook.save_dir,
            formated_time->tm_year + 1900, //tm_year: number of years from 1900 (!)
            formated_time->tm_mon  + 1,    //tm_mon: range 0 to 11 (!)
            formated_time->tm_mday,

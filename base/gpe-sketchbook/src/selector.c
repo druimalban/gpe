@@ -81,11 +81,11 @@ void window_selector_init(GtkWidget * window_selector){
   gtk_clist_column_titles_hide(selector_clist);//no title (single column)
 
   //--fill CList
-  scandir_nb_entries = scandir (sketchdir, &direntries, _direntry_selector, alphasort);//FIXME: --> file.c
+  scandir_nb_entries = scandir (sketchbook.save_dir, &direntries, _direntry_selector, alphasort);//FIXME: --> file.c
   scandir_errno = errno;
   if (scandir_nb_entries == -1){//scandir error
     //might not exist, try to create it:
-    if( mkdir(sketchdir, S_IRWXU) == -1){
+    if( mkdir(sketchbook.save_dir, S_IRWXU) == -1){
       switch(errno){
         case EEXIST: //already exists
           gpe_error_box_fmt(_("Cannot read the sketchbook directory: %s. Exit."),
@@ -94,7 +94,7 @@ void window_selector_init(GtkWidget * window_selector){
         case EACCES: //write permission is denied
         case ENOSPC: //file system doesn't have enough room
         default:
-          gpe_error_box_fmt(_("Cannot create %s: %s. Exit."), sketchdir, sys_errlist[errno]);
+          gpe_error_box_fmt(_("Cannot create %s: %s. Exit."), sketchbook.save_dir, sys_errlist[errno]);
       }
       app_quit();
     }
@@ -109,7 +109,7 @@ void window_selector_init(GtkWidget * window_selector){
       Note * note;
 
       line_text[0] = make_label_from_filename(direntries[i]->d_name);
-      fullpath_filename = g_strdup_printf("%s%s", sketchdir, direntries[i]->d_name);
+      fullpath_filename = g_strdup_printf("%s%s", sketchbook.save_dir, direntries[i]->d_name);
 
       line = gtk_clist_append(selector_clist, line_text);
       note = note_new();
