@@ -15,14 +15,10 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-#ifndef FILES_H
-#define FILES_H
+#ifndef FILES_PNG_H
+#define FILES_PNG_H
 
-#include <gtk/gtk.h>
-
-gchar *  file_new_fullpath_filename();
-gboolean file_delete(const gchar * fullpath_filename);
-void     file_save(const gchar * fullpath_filename);
-void     file_load(const gchar * fullpath_filename);
+void file_save_png(const gchar * fullpath_filename);
+void file_load_png(const gchar * fullpath_filename);
 
 #endif

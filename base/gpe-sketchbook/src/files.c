@@ -18,10 +18,10 @@
 #include <gtk/gtk.h>
 #include <stdio.h>  //remove(file)
 #include <time.h>   //time --> filename
-#include <gdk/gdkx.h> //wraping GDK to X
-#include <X11/xpm.h>  //XPM read/write
 
 #include "files.h"
+#include "files-xpm.h"
+#include "files-png.h"
 #include "gpe-sketchbook.h"
 #include "sketchpad.h"
 
@@ -34,7 +34,7 @@ gchar * file_new_fullpath_filename(){
   g_get_current_time(&current_time); //gettimeofday
   formated_time = localtime ((time_t *) &current_time);
   fullpath_filename = g_strdup_printf(
-           "%s%04d-%02d-%02d_%02d-%02d-%02d.xpm",
+           "%s%04d-%02d-%02d_%02d-%02d-%02d.png",
            sketchdir,
            formated_time->tm_year + 1900, //tm_year: number of years from 1900 (!)
            formated_time->tm_mon  + 1,    //tm_mon: range 0 to 11 (!)
@@ -54,49 +54,10 @@ gboolean file_delete(const gchar * fullpath_filename){
   else return FALSE;
 }
 
-
-void file_save_xpm(GtkWidget *_drawing_area, const gchar * fullpath_filename){
-
-  GdkImage    * image;
-  GdkColormap * colormap;
-
-  XpmAttributes xpm_attributes;
-  int res;
-
-  image  = gdk_image_get(drawing_area_pixmap_buffer,
-                         0, 0,
-                         drawing_area_width,
-                         drawing_area_height);
-
-  colormap = gdk_window_get_colormap (_drawing_area->window);
-
-  xpm_attributes.valuemask = (XpmSize | XpmColormap | XpmDepth);
-  xpm_attributes.colormap  = GDK_COLORMAP_XCOLORMAP (colormap);
-  xpm_attributes.depth     = image->depth;
-
-  res = XpmWriteFileFromImage(
-           GDK_WINDOW_XDISPLAY (_drawing_area->window), //Display * xdisplay,
-           (char *) fullpath_filename, //char   *filename,
-           GDK_IMAGE_XIMAGE(image),    //XImage *image,
-           NULL,                       //XImage *shapeimage,
-           &xpm_attributes);           //XpmAttributes *attributes);
-
-  if (res != XpmSuccess){
-    //FIXME: do something!
-  }
-  gdk_image_destroy(image);
-}//file_save_xpm()
-
-void file_load_xpm(GtkWidget * _drawing_area, const gchar * fullpath_filename){
-  
-  //FIXME: use libXpm to handle .xpm.gz files!
-  drawing_area_pixmap_buffer = gdk_pixmap_create_from_xpm(_drawing_area->window,
-                                                          NULL, NULL,
-                                                          fullpath_filename);
-  //FIXME: update the drawing area size
-  //drawing_area_width  = ;
-  //drawing_area_height = ;
-
-  sketchpad_refresh_drawing_area(_drawing_area);
-}//file_load_xpm()
+void     file_save(const gchar * fullpath_filename){
+  file_save_png(fullpath_filename);
+}
+void     file_load(const gchar * fullpath_filename){
+  file_load_png(fullpath_filename);
+}
 

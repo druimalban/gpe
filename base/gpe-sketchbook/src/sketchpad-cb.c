@@ -49,7 +49,7 @@ void on_button_file_save_clicked(GtkButton *button, gpointer user_data){
   if(is_current_sketch_new) fullpath_filename = file_new_fullpath_filename();
   else fullpath_filename = (gchar *) gtk_clist_get_row_data(selector_clist, current_sketch);
 
-  file_save_xpm(drawing_area, fullpath_filename); //FIXME: should catch saving errors
+  file_save(fullpath_filename); //FIXME: should catch saving errors
   if(is_current_sketch_new){
     gchar * name[1];
 

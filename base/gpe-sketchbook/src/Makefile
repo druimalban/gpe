@@ -33,6 +33,10 @@ LIBS   += `gdk-pixbuf-config --libs`
 CPPFLAGS += -I/usr/X11R6/include
 LIBS     += -L/usr/X11R6/lib -lXpm
 
+#-- libpng support
+CPPFLAGS += -I/usr/include
+LIBS     += -L/usr/lib -lpng
+
 #-- @ handhelds.org
 CPPFLAGS += -I../../include
 LIBS     += -L../../lib

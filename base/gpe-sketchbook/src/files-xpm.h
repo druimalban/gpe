@@ -20,9 +20,7 @@
 
 #include <gtk/gtk.h>
 
-gchar *  file_new_fullpath_filename();
-gboolean file_delete(const gchar * fullpath_filename);
-void     file_save(const gchar * fullpath_filename);
-void     file_load(const gchar * fullpath_filename);
+void     file_save_xpm(GtkWidget * drawing_area, const gchar * fullpath_filename);
+void     file_load_xpm(GtkWidget * drawing_area, const gchar * fullpath_filename);
 
 #endif

@@ -83,8 +83,8 @@ void window_sketchpad_init(GtkWidget * window_sketchpad){
   //--cursors
   {//none cursor
     GdkPixmap * cursor_pixmap;
-    //static unsigned char cursor_none_data[] = { 0x01 }; //single spot
-    static unsigned char cursor_none_data[] = { 0x00 }; //empty
+    static unsigned char cursor_none_data[] = { 0x01 }; //single spot
+    //static unsigned char cursor_none_data[] = { 0x00 }; //empty
     cursor_pixmap = gdk_bitmap_create_from_data(NULL, cursor_none_data, 1, 1);
     cursor_none   = gdk_cursor_new_from_pixmap(cursor_pixmap, cursor_pixmap,
                                                &black, &white, 1, 1);
@@ -177,7 +177,7 @@ void sketchpad_set_title(const gchar * name){
 
 void sketchpad_open_file(gchar * fullpath_filename, const gchar * name){
   //**/g_printerr("sketchpad open: %s\n", fullpath_filename);
-  file_load_xpm(drawing_area, fullpath_filename);
+  file_load(fullpath_filename);
   sketchpad_set_title(name);
 }//sketchpad_open_file()
 

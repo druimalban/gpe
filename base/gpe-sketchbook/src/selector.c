@@ -136,9 +136,14 @@ int _direntry_selector (const struct dirent * direntry){
   /* no hidden file */
   if(s[0] == '.') return 0;
 
-  /* only .xpm[.gz] files */
+  ///* only .xpm[.gz] files */
+  //g_strreverse(s);
+  //if(g_strncasecmp(s,"mpx.", 4) && g_strncasecmp(s,"zg.mpx.", 7)) return 0;
+  //g_strreverse(s);
+
+  /* only .png files */
   g_strreverse(s);
-  if(g_strncasecmp(s,"mpx.", 4) && g_strncasecmp(s,"zg.mpx.", 7)) return 0;
+  if(g_strncasecmp(s,"gnp.", 4)) return 0;
   g_strreverse(s);
 
   /* yyyy-mm-dd_hh-mm-ss.xpm[.gz] */

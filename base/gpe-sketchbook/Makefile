@@ -52,13 +52,13 @@ DIST_NAME = $(PACKAGE)-$(VERSION)
 dist:
 	rm -rf $(DIST_NAME)       # needs improvment! :)
 	mkdir $(DIST_NAME)
-	cp makefile config.makefile $(DIST_NAME)
+	cp Makefile config.makefile $(DIST_NAME)
 	mkdir $(DIST_NAME)/utils
-	cp utils/* $(DIST_NAME)/utils
+	cp utils/????* $(DIST_NAME)/utils
 	mkdir $(DIST_NAME)/src
-	cp src/*.c src/*.h src/makefile $(DIST_NAME)/src
+	cp src/*.c src/*.h src/Makefile src/.cvsignore $(DIST_NAME)/src
 	mkdir $(DIST_NAME)/pixmaps
-	cp $(PIXMAPS) $(DIST_NAME)/pixmaps
+	cp pixmaps/*.png $(DIST_NAME)/pixmaps
 	mkdir $(DIST_NAME)/familiar
 	cp familiar/postinst $(DIST_NAME)/familiar
 	tar zcf $(DIST_NAME).tgz $(DIST_NAME)
