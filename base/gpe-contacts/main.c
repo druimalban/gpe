@@ -11,16 +11,16 @@
 #include <libintl.h>
 #include <stdlib.h>
 
-#include "init.h"
+#include <gpe/init.h>
+#include <gpe/pixmaps.h>
+#include <gpe/smallbox.h>
+#include <gpe/errorbox.h>
+#include <gpe/render.h>
 
 #include "interface.h"
 #include "support.h"
 #include "db.h"
-#include "pixmaps.h"
 #include "structure.h"
-#include "smallbox.h"
-#include "errorbox.h"
-#include "render.h"
 
 #define MY_PIXMAPS_DIR PREFIX "/share/gpe-contacts/pixmaps"
 

@@ -4,7 +4,8 @@
 #include "interface.h"
 #include "support.h"
 #include "db.h"
-#include "gtkdatecombo.h"
+
+#include <gpe/gtkdatecombo.h>
 
 void 
 store_filename(GtkWidget *w, GtkFileSelection *selector) 

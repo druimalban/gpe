@@ -9,16 +9,16 @@
 
 #include <gtk/gtk.h>
 
-#include "errorbox.h"
+#include <gpe/errorbox.h>
+#include <gpe/pixmaps.h>
+#include <gpe/gtkdatecombo.h>
+#include <gpe/picturebutton.h>
 
 #include "interface.h"
 #include "support.h"
 #include "structure.h"
-#include "pixmaps.h"
-#include "gtkdatecombo.h"
 #include "callbacks.h"
 #include "db.h"
-#include "picturebutton.h"
 
 static void
 add_tag (gchar *tag, GtkWidget *w, GtkWidget *pw)
@@ -108,7 +108,7 @@ build_children (GtkWidget *vbox, GSList *children, GtkWidget *pw)
 	  else
 	    w = ww;
 	  gtk_box_pack_start (GTK_BOX (vbox), w, TRUE, TRUE, 4);
-	  add_tag (e->tag, pw, ww);
+	  add_tag (e->tag, ww, pw);
 	  break;
 
 	case ITEM_SINGLE_LINE:

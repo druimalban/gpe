@@ -7,7 +7,8 @@
 
 #include <sqlite.h>
 
-#include "errorbox.h"
+#include <gpe/errorbox.h>
+
 #include "db.h"
 #include "structure.h"
 

@@ -21,6 +21,7 @@ install-data-local:
 	$(mkinstalldirs) $(DESTDIR)$(PREFIX)/share/pixmaps
 	$(INSTALL_DATA) $(srcdir)/icons/gpe-contacts.png $(DESTDIR)$(PREFIX)/share/pixmaps
 	$(INSTALL_DATA) contacts-layout.xml $(DESTDIR)$(pkgdatadir)/default-layout.xml
+	$(INSTALL_DATA) well-known-tags $(DESTDIR)$(pkgdatadir)/well-known-tags
 	install -D gpe-contacts.menu $(DESTDIR)$(PREFIX)/lib/menu/gpe-contacts
 
 dist-hook:

@@ -1,3 +1,13 @@
+2002-08-15  Philip Blundell  <philb@gnu.org>
+
+	* src/editing.c: Change path to libgpewidget headers.
+	* src/db.c: Likewise.
+	* src/main.c: Likewise.
+	* src/callbacks.c: Likewise.
+	* src/structure.c: Likewise.
+	
+	* src/editing.c (build_children): Fix typo.
+
 2002-08-12  Colin Marquardt  <colin@marquardt-home.de>
 
 	* po/de.po: New file.

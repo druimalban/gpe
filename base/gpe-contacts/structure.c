@@ -14,16 +14,17 @@
 
 #include <parser.h>
 
-#include "errorbox.h"
+#include "callbacks.h"
+
+#include <gpe/pixmaps.h>
+#include <gpe/gtkdatecombo.h>
+#include <gpe/smallbox.h>
+#include <gpe/render.h>
+#include <gpe/errorbox.h>
 
 #include "interface.h"
 #include "support.h"
 #include "structure.h"
-#include "pixmaps.h"
-#include "gtkdatecombo.h"
-#include "callbacks.h"
-#include "smallbox.h"
-#include "render.h"
 
 GSList *edit_pages;
 GList *well_known_tags;
