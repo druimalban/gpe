@@ -319,11 +319,12 @@ gtk_mini_file_selection_init (GtkMiniFileSelection *fs)
   gtk_widget_show (hbox);
   gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
 
-  fs->cancel_button = gtk_button_new_with_label (_("Cancel"));
+  gtk_widget_realize (fs);
+  fs->cancel_button = gpe_picture_button (GTK_WIDGET (fs)->style, _("Cancel"), "cancel");
   gtk_widget_show (fs->cancel_button);
   gtk_box_pack_start (GTK_BOX (hbox), fs->cancel_button, TRUE, TRUE, 0);
 
-  fs->ok_button = gtk_button_new_with_label (_("OK"));
+  fs->ok_button = gpe_picture_button (GTK_WIDGET (fs)->style, _("OK"), "ok");
   gtk_widget_show (fs->ok_button);
   gtk_box_pack_start (GTK_BOX (hbox), fs->ok_button, TRUE, TRUE, 0);
 
