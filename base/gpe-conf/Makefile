@@ -14,12 +14,12 @@ GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
 CONTROL = control1
 else
 GTKCFLAGS = `gtk-config --cflags` `gdk-pixbuf-config --cflags`
-GTKLDFLAGS = `gtk-config --libs`
+GTKLDFLAGS =  `gtk-config --libs` 
 CONTROL = control
 endif
 
 CFLAGS = $(GTKCFLAGS) -D_GNU_SOURCE -Wall -fomit-frame-pointer -I../libgpewidget -DVERSION=\"$(VERSION)\" -DPREFIX=\"$(PREFIX)\"
-LDFLAGS = $(GTKLDFLAGS) -L../libgpewidget  -lgpewidget -lcrypt
+LDFLAGS = $(GTKLDFLAGS) -L../libgpewidget  -lgpewidget -lcrypt 
 CC = gcc
 
 MEMBERS  = main applets parser suid

@@ -198,12 +198,11 @@ GtkWidget* create_nwstatic_widgets(NWInterface_t iface)
 
 	// page headers
 	
-	ctable=gtk_table_new(3,10,FALSE);
+	ctable=gtk_table_new(3,7,FALSE);
 
 	container = gtk_hbox_new(TRUE,0);  
 	
 	gtk_container_set_border_width (GTK_CONTAINER (ctable), gpe_border);
-	gtk_container_set_border_width (GTK_CONTAINER (container), gpe_border);
 
 	gtk_table_attach (GTK_TABLE (ctable), container, 1, 2, 0, 1,
 			(GtkAttachOptions) (GTK_FILL),
@@ -270,11 +269,10 @@ GtkWidget* create_nwdhcp_widgets(NWInterface_t iface)
 
 	// page headers
 	
-	ctable=gtk_table_new(3,10,FALSE);
+	ctable=gtk_table_new(3,7,FALSE);
 	container = gtk_hbox_new(TRUE,0);  
 	
 	gtk_container_set_border_width (GTK_CONTAINER (ctable), gpe_border);
-	gtk_container_set_border_width (GTK_CONTAINER (container), gpe_border);
 
 	gtk_table_attach (GTK_TABLE (ctable), container, 1, 2, 0, 1,
 			(GtkAttachOptions) (GTK_FILL),
@@ -337,11 +335,10 @@ GtkWidget* create_nwppp_widgets(NWInterface_t iface)
 
 	// page headers
 	
-	ctable=gtk_table_new(3,10,FALSE);
+	ctable=gtk_table_new(3,7,FALSE);
 	container = gtk_hbox_new(TRUE,0);  
 	
 	gtk_container_set_border_width (GTK_CONTAINER (ctable), gpe_border);
-	gtk_container_set_border_width (GTK_CONTAINER (container), gpe_border);
 
 	gtk_table_attach (GTK_TABLE (ctable), container, 1, 2, 0, 1,
 			(GtkAttachOptions) (GTK_FILL),

@@ -205,7 +205,7 @@ void make_container()
 
   hbuttons = gtk_hbutton_box_new();
   gtk_box_pack_end(GTK_BOX(self.vbox),hbuttons, FALSE, TRUE, 0);
-  gtk_container_set_border_width (GTK_CONTAINER (hbuttons), gpe_get_border());
+  gtk_container_set_border_width (GTK_CONTAINER (hbuttons), 2);
 
   self.cancel = gpe_picture_button (self.w->style, _("Cancel"), _("cancel"));
   gtk_box_pack_start(GTK_BOX(hbuttons),self.cancel,TRUE, TRUE, 0);

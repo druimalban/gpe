@@ -189,6 +189,8 @@ gint get_scheme_list()
 			}
 
 			iflist=(NWInterface_t*)realloc(iflist,l*sizeof(NWInterface_t));
+			memset(&iflist[l-1],'\0',sizeof(NWInterface_t));
+
 			strcpy(iflist[l-1].name,ifname);
 			
 			iflist[l-1].isstatic = FALSE;
@@ -313,7 +315,6 @@ void add_line(gint pos, gchar* line)
 	gchar *tmp;
 	configlen++;
 	configtext=realloc(configtext,configlen*sizeof(gchar*));
-//	configtext[configlen-1] = (gchar*)malloc(sizeof(gchar)*(strlen(configtext[configlen-2])+1));
 	configtext[configlen-1] = (gchar*)malloc(sizeof(gchar)*(strlen(line)+1));
 	tmp = configtext[configlen-1];
 	for (a=configlen-1;a>pos;a--)
