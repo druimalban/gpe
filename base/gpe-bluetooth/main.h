@@ -28,3 +28,5 @@ extern gboolean radio_is_on;
 extern GSList *service_desc_list;
 
 extern bdaddr_t src_addr;
+
+extern GtkWidget *bt_progress_dialog (gchar *text, GdkPixbuf *pixbuf);

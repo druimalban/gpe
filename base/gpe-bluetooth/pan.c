@@ -14,10 +14,13 @@
 #include <libintl.h>
 #include <errno.h>
 #include <netinet/in.h>
+#include <sys/poll.h>
+#include <sys/wait.h>
+#include <sys/socket.h>
 
 #include <gtk/gtk.h>
+#include <gpe/errorbox.h>
 
-#include <sys/socket.h>
 #include <bluetooth/bluetooth.h>
 #include <bluetooth/l2cap.h>
 #include <bluetooth/hci.h>
@@ -38,44 +41,44 @@ struct bt_service_pan
   struct bt_service service;
 
   struct bt_device *bd;
+
+  GThread *thread;
+  gboolean terminate;
+  GtkWidget *w;
+  int fd;
 };
 
-#if 0
 /* Wait for disconnect or error condition on the socket */
-static int w4_hup(int sk)
+static int 
+wait_for_hup (struct bt_service_pan *svc, int sk)
 {
   struct pollfd pf;
   int n;
 
-  while (!terminate) 
+  while (!svc->terminate) 
     {
       pf.fd = sk;
       pf.events = POLLERR | POLLHUP;
-      n = poll(&pf, 1, -1);
+      n = poll (&pf, 1, -1);
       if (n < 0) 
 	{
 	  if (errno == EINTR || errno == EAGAIN)
 	    continue;
-	  syslog(LOG_ERR, "Poll failed. %s(%d)",
-		 strerror(errno), errno);
 	  return 1;
 	}
       
       if (n) 
 	{
 	  int err = 0, olen = sizeof(err);
-	  getsockopt(sk, SOL_SOCKET, SO_ERROR, &err, &olen);
-	  syslog(LOG_INFO, "%s disconnected%s%s", netdev,
-		 err ? " : " : "", err ? strerror(err) : "");
+	  getsockopt (sk, SOL_SOCKET, SO_ERROR, &err, &olen);
 	  
-	  close(sk);
+	  close (sk);
 	  return 0;
 	}
     }
 
   return 0;
 }
-#endif
 
 /* Connect and initiate BNEP session
  * Returns:
@@ -111,9 +114,6 @@ create_connection (bdaddr_t *bdaddr)
       perror ("setsockopt");
       goto error;
     }
-
-  fprintf (stderr, "%s\n", batostr (bdaddr));
-  fprintf (stderr, "%s\n", batostr (&src_addr));
   
   l2a.l2_family = AF_BLUETOOTH;
   
@@ -143,24 +143,10 @@ error:
   return -1;
 }
 
-struct __service_16 { 
-	uint16_t dst;
-	uint16_t src;
-} __attribute__ ((packed));
-
-struct __service_32 { 
-	uint16_t unused1;
-	uint16_t dst;
-	uint16_t unused2;
-	uint16_t src;
-} __attribute__ ((packed));
-
-struct __service_128 { 
-	uint16_t unused1;
-	uint16_t dst;
-	uint16_t unused2[8];
-	uint16_t src;
-	uint16_t unused3[7];
+struct __service_16 
+{
+  uint16_t dst;
+  uint16_t src;
 } __attribute__ ((packed));
 
 /* Create BNEP connection 
@@ -169,62 +155,63 @@ struct __service_128 {
  * service - Remote service
  * dev     - Network device (contains actual dev name on return)
  */
-int bnep_create_connection(int sk, uint16_t role, uint16_t svc)
+static int 
+bnep_open_session (int sk, uint16_t role, uint16_t svc)
 {
-	struct bnep_setup_conn_req *req;
-	struct bnep_control_rsp *rsp;
-	struct __service_16 *s;
-	unsigned char pkt[BNEP_MTU];
-	int r;
+  struct bnep_setup_conn_req *req;
+  struct bnep_control_rsp *rsp;
+  struct __service_16 *s;
+  unsigned char pkt[BNEP_MTU];
+  int r;
 
-	/* Send request */
-	req = (void *) pkt;
-	req->type = BNEP_CONTROL;
-	req->ctrl = BNEP_SETUP_CONN_REQ;
-	req->uuid_size = 2;	//16bit UUID
-	s = (void *) req->service;
-	s->dst = htons(svc);
-	s->src = htons(role);
-
-	if (send(sk, pkt, sizeof(*req) + sizeof(*s), 0) < 0)
-		return -1;
+  /* Send request */
+  req = (void *) pkt;
+  req->type = BNEP_CONTROL;
+  req->ctrl = BNEP_SETUP_CONN_REQ;
+  req->uuid_size = 2;	//16bit UUID
+  s = (void *) req->service;
+  s->dst = htons(svc);
+  s->src = htons(role);
+  
+  if (send (sk, pkt, sizeof(*req) + sizeof(*s), 0) < 0)
+    return -1;
 
 receive:
-	/* Get response */
-	r = recv(sk, pkt, BNEP_MTU, 0);
-	if (r <= 0)
-		return -1;
-
-	errno = EPROTO;
-
-	if (r < sizeof(*rsp))
-		return -1;
-	
-	rsp = (void *) pkt;
-	if (rsp->type != BNEP_CONTROL)
-		return -1;
-
-	if (rsp->ctrl != BNEP_SETUP_CONN_RSP)
-		goto receive;
-
-	r = ntohs(rsp->resp);
-
-	switch (r) {
-	case BNEP_SUCCESS:
-		break;
-
-	case BNEP_CONN_INVALID_DST:
-	case BNEP_CONN_INVALID_SRC:
-	case BNEP_CONN_INVALID_SVC:
-		errno = EPROTO;
-		return -1;
-
-	case BNEP_CONN_NOT_ALLOWED:
-		errno = EACCES;
-		return -1;
-	}
-
-	return 0;
+  /* Get response */
+  r = recv (sk, pkt, BNEP_MTU, 0);
+  if (r <= 0)
+    return -1;
+  
+  errno = EPROTO;
+  
+  if (r < sizeof (*rsp))
+    return -1;
+  
+  rsp = (void *) pkt;
+  if (rsp->type != BNEP_CONTROL)
+    return -1;
+  
+  if (rsp->ctrl != BNEP_SETUP_CONN_RSP)
+    goto receive;
+  
+  r = ntohs(rsp->resp);
+  
+  switch (r) {
+  case BNEP_SUCCESS:
+    break;
+    
+  case BNEP_CONN_INVALID_DST:
+  case BNEP_CONN_INVALID_SRC:
+  case BNEP_CONN_INVALID_SVC:
+    errno = EPROTO;
+    return -1;
+    
+  case BNEP_CONN_NOT_ALLOWED:
+    errno = EACCES;
+    return -1;
+  }
+  
+  return 0;
 }
 
 static struct bt_service_desc pan_service_desc;
@@ -238,27 +225,94 @@ pan_scan (sdp_record_t *rec, struct bt_device *bd)
 
   s->service.desc = &pan_service_desc;
   s->bd = bd;
+  s->thread = NULL;
+  s->fd = -1;
+  s->terminate = FALSE;
 
   return (struct bt_service *)s;
 }
 
-static void
-pan_connect (GtkWidget *w, struct bt_service_pan *svc)
+static gboolean
+pan_connect (struct bt_service_pan *svc, GError *error)
 {
-  int fd;
   char buf[16];
+  pid_t pid;
+  int status;
 
-  fd = create_connection (&svc->bd->bdaddr);
-  
-  bnep_create_connection (fd, BNEP_SVC_PANU, BNEP_SVC_NAP);
+  svc->fd = create_connection (&svc->bd->bdaddr);
+  if (svc->fd < 0)
+    {
+      return FALSE;
+    }
 
-  sprintf (buf, "%d", fd);
+  if (bnep_open_session (svc->fd, BNEP_SVC_PANU, BNEP_SVC_NAP))
+    {
+      close (svc->fd);
+      svc->fd = -1;
+      return FALSE;
+    }
 
-  if (vfork () == 0)
+  sprintf (buf, "%d", svc->fd);
+
+  pid = vfork ();
+  if (pid == 0)
     {
       execl (PREFIX "/lib/gpe-bluetooth/bnep-helper", PREFIX "/lib/gpe-bluetooth/bnep-helper", buf, NULL);
       perror ("exec");
+      _exit (1);
     }
+
+  waitpid (pid, &status, 0);
+
+  if (WEXITSTATUS (status))
+    {
+      close (svc->fd);
+      svc->fd = -1;
+      return FALSE;
+    }
+  
+  return TRUE;
+}
+
+static void
+pan_thread (struct bt_service_pan *svc)
+{
+  char *text;
+  GError error;
+  gboolean rc;
+
+  text = g_strdup_printf (_("Connecting to %s"), batostr (&svc->bd->bdaddr));
+
+  gdk_threads_enter ();
+  svc->w = bt_progress_dialog (text, svc->bd->pixbuf);
+  gtk_widget_show_all (svc->w);
+  gdk_threads_leave ();
+  g_free (text);
+
+  rc = pan_connect (svc, &error);
+
+  gdk_threads_enter ();
+  gtk_widget_destroy (svc->w);
+  gdk_threads_leave ();
+
+  if (rc == FALSE)
+    {
+      gdk_threads_enter ();
+      gpe_error_box_nonblocking (_("Connection failed\n"));
+      gdk_threads_leave ();
+      return;
+    }
+}
+
+static void
+pan_menu_connect (GtkWidget *w, struct bt_service_pan *svc)
+{
+  svc->thread = g_thread_create ((GThreadFunc) pan_thread, svc, FALSE, 0);
+}
+
+static void
+pan_menu_disconnect (GtkWidget *w, struct bt_service_pan *svc)
+{
 }
 
 static void
@@ -269,8 +323,17 @@ pan_popup_menu (struct bt_service *svc, GtkWidget *menu)
   
   pan = (struct bt_service_pan *)svc;
 
-  w = gtk_menu_item_new_with_label (_("Connect PAN"));
-  g_signal_connect (G_OBJECT (w), "activate", G_CALLBACK (pan_connect), svc);
+  if (pan->thread)
+    {
+      w = gtk_menu_item_new_with_label (_("Disconnect PAN"));
+      g_signal_connect (G_OBJECT (w), "activate", G_CALLBACK (pan_menu_disconnect), svc);
+    }
+  else
+    {
+      w = gtk_menu_item_new_with_label (_("Connect PAN"));
+      g_signal_connect (G_OBJECT (w), "activate", G_CALLBACK (pan_menu_connect), svc);
+    }
+
   gtk_widget_show (w);
   gtk_menu_append (GTK_MENU (menu), w);
 }

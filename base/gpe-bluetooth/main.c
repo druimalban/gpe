@@ -51,7 +51,6 @@
 #define HCIATTACH "/etc/bluetooth/hciattach"
 
 static GThread *scan_thread;
-static gboolean scan_complete;
 
 bdaddr_t src_addr = *BDADDR_ANY;
 
@@ -81,107 +80,29 @@ gboolean radio_is_on;
 
 GSList *service_desc_list;
 
-static gboolean
-do_run_scan (void)
+GtkWidget *
+bt_progress_dialog (gchar *text, GdkPixbuf *pixbuf)
 {
-  bdaddr_t bdaddr;
-  inquiry_info *info = NULL;
-  int dev_id = -1;
-  int num_rsp, length, flags;
-  char name[248];
-  int i, dd;
+  GtkWidget *window;
+  GtkWidget *label;
+  GtkWidget *image;
+  GtkWidget *hbox;
 
-  length  = 4;  /* ~10 seconds */
-  num_rsp = 10;
-  flags = 0;
+  window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+  hbox = gtk_hbox_new (FALSE, 0);
+  image = gtk_image_new_from_pixbuf (pixbuf);
+  label = gtk_label_new (text);
 
-  num_rsp = hci_inquiry (dev_id, length, num_rsp, NULL, &info, flags);
-  if (num_rsp < 0) 
-    {
-      gdk_threads_enter ();
-      gpe_perror_box ("Inquiry failed.");
-      gdk_threads_leave ();
-      close (dev_id);
-      return FALSE;
-    }
-
-  dd = hci_open_dev(0/*dev_id*/);
-  if (dd < 0) 
-    {
-      gdk_threads_enter ();
-      gpe_perror_box ("HCI device open failed");
-      gdk_threads_leave ();
-      close (dev_id);
-      free(info);
-      return FALSE;
-    }
-
-  for (i = 0; i < num_rsp; i++) 
-    {
-      struct bt_device *bd;
-      GSList *iter;
-      gboolean found = FALSE;
-
-      baswap (&bdaddr, &(info+i)->bdaddr);
-
-      for (iter = devices; iter; iter = iter->next)
-	{
-	  struct bt_device *d = (struct bt_device *)iter->data;
-	  if (memcmp (&d->bdaddr, &bdaddr, sizeof (bdaddr)) == 0)
-	    {
-	      found = TRUE;
-	      break;
-	    }
-	}
-
-      if (found)
-	continue;
-
-      memset(name, 0, sizeof(name));
-      if (hci_read_remote_name (dd, &(info+i)->bdaddr, sizeof(name), name, 25000) < 0)
-	strcpy (name, _("unknown"));
-
-      bd = g_malloc (sizeof (struct bt_device));
-      memset (bd, 0, sizeof (*bd));
-      bd->name = g_strdup (name);
-      memcpy (&bd->bdaddr, &bdaddr, sizeof (bdaddr));
-      bd->class = ((info+i)->dev_class[2] << 16) | ((info+i)->dev_class[1] << 8) | (info+i)->dev_class[0];
-
-      switch (bd->class & 0x1f00)
-	{
-	case 0x100:
-	  bd->pixbuf = gpe_find_icon ("computer");
-	  break;
-	case 0x200:
-	  bd->pixbuf = gpe_find_icon ("cellphone");
-	  break;
-	case 0x300:
-	  bd->pixbuf = gpe_find_icon ("network");
-	  break;
-	default:
-	  bd->pixbuf = gpe_find_icon ("bt-logo");
-	  break;
-	}
-
-      gdk_pixbuf_ref (bd->pixbuf);
-
-      devices = g_slist_append (devices, bd);
-    }
+  gtk_window_set_type_hint (GTK_WINDOW (window), GDK_WINDOW_TYPE_HINT_DIALOG);
   
-  close (dd);
-  close (dev_id);
+  gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
 
-  return TRUE;
-}
+  gtk_box_pack_start (GTK_BOX (hbox), image, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 0);
 
-static void *
-run_scan (void *data)
-{
-  do_run_scan ();
+  gtk_container_add (GTK_CONTAINER (window), hbox);
 
-  scan_complete = TRUE;
-
-  return NULL;
+  return window;
 }
 
 static pid_t
@@ -327,30 +248,124 @@ device_clicked (GtkWidget *widget, GdkEventButton *e, gpointer data)
 }
 
 static gboolean
-check_scan_complete (void)
+run_scan (void)
 {
-  if (scan_complete)
-    {
-      GSList *iter;
+  bdaddr_t bdaddr;
+  inquiry_info *info = NULL;
+  int dev_id = -1;
+  int num_rsp, length, flags;
+  char name[248];
+  int i, dd;
+  GtkWidget *w;
+  GSList *iter;
 
-      g_thread_join (scan_thread);
-      
+  gdk_threads_enter ();
+  w = bt_progress_dialog (_("Scanning for devices"), gpe_find_icon ("bt-logo"));
+  gtk_widget_show_all (w);
+  gdk_threads_leave ();
+
+  length  = 4;  /* ~10 seconds */
+  num_rsp = 10;
+  flags = 0;
+
+  num_rsp = hci_inquiry (dev_id, length, num_rsp, NULL, &info, flags);
+  if (num_rsp < 0) 
+    {
+      gdk_threads_enter ();
+      gtk_widget_destroy (w);
+      gpe_perror_box (_("Inquiry failed"));
+      gdk_threads_leave ();
+      close (dev_id);
+      return FALSE;
+    }
+
+  dd = hci_open_dev(0/*dev_id*/);
+  if (dd < 0) 
+    {
+      gdk_threads_enter ();
+      gtk_widget_destroy (w);
+      gpe_perror_box (_("HCI device open failed"));
+      gdk_threads_leave ();
+      close (dev_id);
+      free(info);
+      return FALSE;
+    }
+
+  for (i = 0; i < num_rsp; i++) 
+    {
+      struct bt_device *bd;
+      GSList *iter;
+      gboolean found = FALSE;
+
+      baswap (&bdaddr, &(info+i)->bdaddr);
+
       for (iter = devices; iter; iter = iter->next)
 	{
-	  struct bt_device *bd = iter->data;
-	  GObject *item;
-	  item = gpe_iconlist_add_item_pixbuf (GPE_ICONLIST (iconlist), bd->name, bd->pixbuf, bd);
-	  g_signal_connect (G_OBJECT (item), "button-release", G_CALLBACK (device_clicked), bd);
-
-	  if (bd->sdp == FALSE)
+	  struct bt_device *d = (struct bt_device *)iter->data;
+	  if (memcmp (&d->bdaddr, &bdaddr, sizeof (bdaddr)) == 0)
 	    {
-	      bd->sdp = TRUE;
-	      sdp_browse_device (bd, PUBLIC_BROWSE_GROUP);
+	      found = TRUE;
+	      break;
 	    }
 	}
 
-      return FALSE;
+      if (found)
+	continue;
+
+      memset(name, 0, sizeof(name));
+      if (hci_read_remote_name (dd, &(info+i)->bdaddr, sizeof(name), name, 25000) < 0)
+	strcpy (name, _("unknown"));
+
+      bd = g_malloc (sizeof (struct bt_device));
+      memset (bd, 0, sizeof (*bd));
+      bd->name = g_strdup (name);
+      memcpy (&bd->bdaddr, &bdaddr, sizeof (bdaddr));
+      bd->class = ((info+i)->dev_class[2] << 16) | ((info+i)->dev_class[1] << 8) | (info+i)->dev_class[0];
+
+      switch (bd->class & 0x1f00)
+	{
+	case 0x100:
+	  bd->pixbuf = gpe_find_icon ("computer");
+	  break;
+	case 0x200:
+	  bd->pixbuf = gpe_find_icon ("cellphone");
+	  break;
+	case 0x300:
+	  bd->pixbuf = gpe_find_icon ("network");
+	  break;
+	default:
+	  bd->pixbuf = gpe_find_icon ("bt-logo");
+	  break;
+	}
+
+      gdk_pixbuf_ref (bd->pixbuf);
+
+      devices = g_slist_append (devices, bd);
     }
+  
+  close (dd);
+  close (dev_id);
+
+  gdk_threads_enter ();
+
+  for (iter = devices; iter; iter = iter->next)
+    {
+      struct bt_device *bd = iter->data;
+      GObject *item;
+      item = gpe_iconlist_add_item_pixbuf (GPE_ICONLIST (iconlist), bd->name, bd->pixbuf, bd);
+      g_signal_connect (G_OBJECT (item), "button-release", G_CALLBACK (device_clicked), bd);
+      
+      if (bd->sdp == FALSE)
+	{
+	  bd->sdp = TRUE;
+	  sdp_browse_device (bd, PUBLIC_BROWSE_GROUP);
+	}
+    }
+
+  gtk_widget_destroy (w);
+  gtk_widget_show_all (devices_window);
+
+  gdk_threads_leave ();
 
   return TRUE;
 }
@@ -366,7 +381,6 @@ show_devices (void)
       gpe_set_window_icon (devices_window, "bt-logo");
 
       iconlist = gpe_iconlist_new ();
-      gtk_widget_show (iconlist);
       gtk_container_add (GTK_CONTAINER (devices_window), iconlist);
       gpe_iconlist_set_embolden (GPE_ICONLIST (iconlist), FALSE);
 
@@ -375,16 +389,11 @@ show_devices (void)
     }
 
   gpe_iconlist_clear (GPE_ICONLIST (iconlist));
-  gtk_widget_show (devices_window);
 
-  scan_complete = FALSE;
+  scan_thread = g_thread_create ((GThreadFunc) run_scan, NULL, FALSE, NULL);
 
-  scan_thread = g_thread_create ((GThreadFunc) run_scan, NULL, TRUE, NULL);
-
-  if (scan_thread)
-    gtk_timeout_add (100, (GtkFunction) check_scan_complete, NULL);
-  else
-    gpe_perror_box (_("Unable to scan"));
+  if (scan_thread == NULL)
+    gpe_perror_box (_("Unable to scan for devices"));
 }
 
 static void
