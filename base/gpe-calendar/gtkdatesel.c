@@ -176,14 +176,19 @@ format_text (time_t *time, GtkWidget *w, char *fmt)
 {
   struct tm tm;
   char buf[64];
-  gchar *sbuf;
+  gchar *sbuf, *sfmt;
   localtime_r (time, &tm);
-  strftime (buf, sizeof (buf), fmt, &tm);
-  sbuf = g_locale_to_utf8 (buf, -1, NULL, NULL, NULL);
-  if (sbuf)
+  sfmt = g_locale_from_utf8 (buf, -1, NULL, NULL, NULL);
+  if (sfmt)
     {
-      gtk_label_set_text (GTK_LABEL (w), sbuf);
-      g_free (sbuf);
+      strftime (buf, sizeof (buf), sfmt, &tm);
+      sbuf = g_locale_to_utf8 (buf, -1, NULL, NULL, NULL);
+      if (sbuf)
+	{
+	  gtk_label_set_text (GTK_LABEL (w), sbuf);
+	  g_free (sbuf);
+	}
+      g_free (sfmt);
     }
 }
 

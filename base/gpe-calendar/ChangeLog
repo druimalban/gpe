@@ -1,5 +1,8 @@
 2003-09-06  Philip Blundell  <philb@gnu.org>
 
+	* gtkdatesel.c (format_text): Convert format string back to native
+	locale encoding before calling strftime.
+
   	Patch from Libor Klepac:
 	* day_popup.c (day_popup): Recode result of strftime to UTF-8.
 	* event-ui.c (build_edit_event_window): Likewise for nl_langinfo
