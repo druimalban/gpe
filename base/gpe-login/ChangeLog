@@ -1,3 +1,8 @@
+2002-07-30  Colin Marquardt  <colin@marquardt-home.de>
+
+	* Makefile (ipkg): mkdir
+	familiar/dist.gpe-session-scripts/usr/share/pixmaps.
+
 2002-07-30  Moray Allan  <moray@handhelds.org>
 
         * X11/Xsession: Now sets HOME_VOLATILE environment variable to
