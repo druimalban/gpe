@@ -52,6 +52,7 @@ gboolean gpe_initialised = FALSE;
 
 extern gboolean stop; /* set to TRUE when the sound process is trying to end */
 gboolean playing = FALSE; /* are we playing back a recording? */
+gboolean streaming = FALSE; /* are we sending sound to stdout? */
 gboolean recording = FALSE; /* (or) are we making a new recording */
 GTimer *timer = NULL; /* timer used to provide callbacks */
 pid_t sound_process; /* process ID of child that plays or records */
@@ -209,7 +210,7 @@ void start_sound (void)
            exit(1);
         }
     }
-  else
+  else /* playing */
     {
       int infd, outfd;
       struct stat buf;
@@ -219,7 +220,14 @@ void start_sound (void)
       playlength = buf.st_size / (1650*2);
 
       infd = open (filename, O_RDONLY);
-      outfd = sound_device_open (O_WRONLY);
+      if (streaming)
+	{
+	  outfd = 1;
+	}
+      else
+	{
+          outfd = sound_device_open (O_WRONLY);
+	}
 
       if (infd >= 0 && outfd >= 0)
         {
@@ -345,7 +353,7 @@ file_chosen_signal (GtkFileSelection *selector, gpointer user_data)
 
 void syntax_message (FILE *f)
 {
-      fprintf (f, "usage: gpe-soundbite play|record [filename]\n       gpe-soundbite play|record --autogenerate-filename pathname\n       gpe-soundbite --help\n");
+      fprintf (f, "usage: gpe-soundbite play|record [filename]\n       gpe-soundbite play|stream|record --autogenerate-filename pathname\n       gpe-soundbite --help\n");
 }
 
 int
@@ -371,6 +379,13 @@ main(int argc, char *argv[])
   else if (!strcmp(argv[1], "play"))
     {
       playing = TRUE;
+      streaming = FALSE;
+      recording = FALSE;
+    }
+  else if (!strcmp(argv[1], "stream"))
+    {
+      playing = TRUE;
+      streaming = TRUE;
       recording = FALSE;
     }
   else if (!(strcmp(argv[1], "help") && strcmp(argv[1], "--help") && strcmp(argv[1], "-h")))
@@ -442,6 +457,11 @@ main(int argc, char *argv[])
       filename = NULL;
     }
 
+  setlocale (LC_ALL, "");
+
+  bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
+  textdomain (PACKAGE);
+
   if (gpe_application_init (&argc, &argv) == FALSE)
     {
       exit (1);
@@ -469,11 +489,6 @@ main(int argc, char *argv[])
                              (gpointer) file_selector);
       gtk_widget_show (file_selector);
     }
-
-  setlocale (LC_ALL, "");
-
-  bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
-  textdomain (PACKAGE);
 
   if (gpe_load_icons (my_icons) == FALSE)
     {
