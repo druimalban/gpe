@@ -12,6 +12,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/ioctl.h>
+#include <unistd.h>
+
 #include <bluetooth/bluetooth.h>
 #include <bluetooth/rfcomm.h>
 
@@ -41,7 +43,10 @@ rfcomm_create_tty (int sk, char *tty, int size)
 
   id = ioctl (sk, RFCOMMCREATEDEV, &req);
   if (id < 0)
-    return id;
+    {
+      perror ("RFCOMMCREATEDEV");
+      return id;
+    }
   
   snprintf (tty, size, "/dev/rfcomm%d", id);
   if (stat (tty, &st) < 0) 
@@ -67,6 +72,13 @@ main (int argc, char *argv[])
 
   if (rfcomm_create_tty (atoi (argv[1]), buf, sizeof (buf)))
     exit (1);
+
+  if (argc == 3 && !strcmp (argv[2], "ppp"))
+    {
+      execl ("/usr/sbin/pppd", "pppd", buf, "call", "lap", NULL);
+      perror ("pppd");
+      exit (1);
+    }
 
   printf ("%s\n", buf);
 

@@ -229,6 +229,7 @@ pan_scan (sdp_record_t *rec, struct bt_device *bd)
   s->thread = NULL;
   s->fd = -1;
   s->terminate = FALSE;
+  s->w = NULL;
 
   return (struct bt_service *)s;
 }

@@ -61,6 +61,8 @@ install-program: all
 	install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications/
 	install -d $(DESTDIR)/etc/bluetooth/
 	install hciattach.sh $(DESTDIR)/etc/bluetooth/hciattach
+	install -d $(DESTDIR)/etc/ppp/peers/
+	install -m 644 peers/lap $(DESTDIR)/etc/ppp/peers/lap
 
 clean:
 	rm -f $(PACKAGE) $(OBJS)

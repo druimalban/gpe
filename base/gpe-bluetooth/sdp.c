@@ -27,49 +27,20 @@
 #define _(x) gettext(x)
 
 gboolean
-sdp_find_rfcomm (sdp_record_t *svcrec, int *port)
+sdp_find_rfcomm (sdp_record_t *svcrec, int *channel)
 {
-  sdp_list_t *list;
-  uuid_t rfcomm_uuid;
+  sdp_list_t *protos;
 
-  sdp_uuid16_create (&rfcomm_uuid, RFCOMM_UUID);
-
-  if (sdp_get_access_protos (svcrec, &list) == 0) 
+  if (! sdp_get_access_protos (svcrec, &protos)) 
     {
-      sdp_list_t *next;
+      int ch;
 
-      for (; list; list = next)
+      ch = sdp_get_proto_port (protos, RFCOMM_UUID);
+
+      if (ch > 0) 
 	{
-	  gboolean rfcomm = FALSE;
-	  sdp_list_t *protos = (sdp_list_t *)list->data, *nextp;
-	  for (; protos; protos = nextp)
-	    {
-	      sdp_data_t *p = protos->data;
-
-	      switch (p->dtd)
-		{
-		case SDP_UUID16:
-		case SDP_UUID32:
-		case SDP_UUID128:
-		  if (sdp_uuid_cmp (&p->val.uuid, &rfcomm_uuid) == 0)
-		    rfcomm = TRUE;
-		  break;
-		  
-		case SDP_UINT8:
-		  if (rfcomm)
-		    {
-		      *port = p->val.uint8;
-		      return TRUE;
-		    }
-		  break;
-		}
-
-	      nextp = protos->next;
-	      free (protos);
-	    }
-	  
-	  next = list->next;
-	  free (list);
+	  *channel = ch;
+	  return TRUE;
 	}
     }
 

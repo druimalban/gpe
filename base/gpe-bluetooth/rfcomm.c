@@ -13,23 +13,18 @@
 #include <libintl.h>
 #include <locale.h>
 #include <stdio.h>
-#include <gtk/gtk.h>
 #include <unistd.h>
+#include <glib.h>
 
 #include <sys/socket.h>
 #include <bluetooth/bluetooth.h>
-#include <bluetooth/hci.h>
-#include <bluetooth/hci_lib.h>
-#include <bluetooth/sdp.h>
-#include <bluetooth/sdp_lib.h>
 #include <bluetooth/rfcomm.h>
 
 #include "main.h"
-#include "sdp.h"
-#include "lap.h"
+#include "rfcomm.h"
 
-static gboolean
-create_connection (bdaddr_t *bdaddr, int channel, int *fd, GError *error)
+gboolean
+rfcomm_connect (bdaddr_t *bdaddr, int channel, int *fd, GError *error)
 {
   struct sockaddr_rc sa;
   int sk;
@@ -49,7 +44,7 @@ create_connection (bdaddr_t *bdaddr, int channel, int *fd, GError *error)
     }
   
   sa.rc_channel = channel;
-  sa.rc_bdaddr  = *bdaddr;
+  baswap (&sa.rc_bdaddr, bdaddr);
 
   if (connect (sk, (struct sockaddr *) &sa, sizeof (sa)))
     {

@@ -1,4 +1,5 @@
-#include <gdk-pixbuf/gdk-pixbuf.h>
+#include <gtk/gtk.h>
+#include <bluetooth/sdp.h>
 
 struct bt_device
 {
