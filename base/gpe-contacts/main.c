@@ -873,16 +873,16 @@ create_main (gboolean show_config_button)
 
 
 static int 
-import_one_file(gchar *filename)
+import_one_file(const gchar *filename)
 {
   GError *err = NULL;
-  gchar *content;
-  gsize count;
+  gchar *content = NULL;
+  gsize count = 0;
   int result = 0;
 	
-  if (g_file_get_contents(filename,&content,&count,&err))
+  if (g_file_get_contents(filename, &content, &count, &err))
     {
-      result = import_vcard(content,count);
+      result = import_vcard(content, count);
       g_free(content);
     }
   else
@@ -905,7 +905,7 @@ main (int argc, char *argv[])
   bind_textdomain_codeset (PACKAGE, "UTF-8");
   textdomain (PACKAGE);
 #endif
-	
+ 	
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
 
@@ -921,36 +921,41 @@ main (int argc, char *argv[])
         break;
       }
     if (arg == 'i')
-		ifile = g_strdup(optarg);
+		ifile = optarg;
   }    
 
   /* are we called to import a file? */
   if (ifile)
     {
-	  GtkWidget *dialog;
-/*      if (import_one_file(ifile))
-        dialog = gtk_message_dialog_new(NULL,0,GTK_MESSAGE_INFO,
+      int ret;
+      /*GtkWidget *dialog = NULL;*/
+      
+      ret =  import_one_file(ifile);
+      if (ret)
+        printf("Could not import file %s.\n", ifile);
+      else
+        printf("Successfully imported %s.\n", ifile);
+/*       dialog = gtk_message_dialog_new(NULL,0,GTK_MESSAGE_INFO,
 	                                    GTK_BUTTONS_OK,
 	                                    _("Could not import file %s."),
-	                                    ifile);
+	                                     ifile);
 	  else
         dialog = gtk_message_dialog_new(NULL,0,GTK_MESSAGE_INFO,
 	                                      GTK_BUTTONS_OK,
 	                                      _("File %s imported sucessfully."),
 	                                      ifile);
-*/printf("file imported %i\n",import_one_file(ifile));	  
-   //  gtk_widget_show_all(dialog);
-   //  gtk_dialog_run(GTK_DIALOG(dialog));
-printf(_("rf\n"));	  
+      gtk_dialog_run(GTK_DIALOG(dialog));
+      gtk_widget_destroy(dialog);
+*/      
       exit (EXIT_SUCCESS);
     }
   
-  if (db_open ())
-    exit (1);
-
   export_init ();
 
   displaymigration_init ();
+  
+  if (db_open ())
+    exit (1);
 
   load_well_known_tags ();
 
