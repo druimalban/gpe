@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001, 2002, 2003 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2001, 2002, 2003, 2004 Philip Blundell <philb@gnu.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -28,9 +28,8 @@ static guint my_signals[1];
 
 struct elem
 {
-  GtkWidget *arrow_l;
+  GtkWidget *container;
   GtkWidget *text;
-  GtkWidget *arrow_r;
 };
 
 struct _GtkDateSel
@@ -250,37 +249,45 @@ day_update (GtkDateSel *sel, GtkWidget *w)
 }
 
 static void
-make_field (GtkDateSel *sel, struct elem *e, void (*click)(GtkWidget *, GtkDateSel *),
-            void (*update)(GtkDateSel *, GtkWidget *))
+make_field (GtkDateSel *sel, struct elem *e, 
+	    void (*click)(GtkWidget *, GtkDateSel *),
+            void (*update)(GtkDateSel *, GtkWidget *),
+	    int max_width)
 {
-  GtkWidget *arrow_l = gtk_arrow_new (GTK_ARROW_LEFT, GTK_SHADOW_OUT);
-  GtkWidget *arrow_r = gtk_arrow_new (GTK_ARROW_RIGHT, GTK_SHADOW_OUT);
-  e->arrow_l = gtk_button_new ();
-  e->arrow_r = gtk_button_new ();
+  GtkWidget *arrow_l, *arrow_r, *arrow_button_l, *arrow_button_r;
+
+  arrow_l = gtk_arrow_new (GTK_ARROW_LEFT, GTK_SHADOW_OUT);
+  arrow_r = gtk_arrow_new (GTK_ARROW_RIGHT, GTK_SHADOW_OUT);
+
+  arrow_button_l = gtk_button_new ();
+  arrow_button_r = gtk_button_new ();
   e->text = gtk_label_new ("");
+  e->container = gtk_hbox_new (FALSE, 0);
 
-  gtk_widget_set_size_request(e->arrow_l, 20, 20);
-  gtk_widget_set_size_request(e->arrow_r, 20, 20);
-  GTK_WIDGET_UNSET_FLAGS(e->arrow_l, GTK_CAN_FOCUS);
-  GTK_WIDGET_UNSET_FLAGS(e->arrow_r, GTK_CAN_FOCUS);
-  gtk_widget_show (arrow_l);
-  gtk_widget_show (arrow_r);
+  gtk_widget_set_size_request (arrow_button_l, 20, 20);
+  gtk_widget_set_size_request (arrow_button_r, 20, 20);
+  GTK_WIDGET_UNSET_FLAGS (arrow_button_l, GTK_CAN_FOCUS);
+  GTK_WIDGET_UNSET_FLAGS (arrow_button_r, GTK_CAN_FOCUS);
 
-  gtk_container_add (GTK_CONTAINER (e->arrow_l), arrow_l);
-  gtk_container_add (GTK_CONTAINER (e->arrow_r), arrow_r);
+  gtk_container_add (GTK_CONTAINER (arrow_button_l), arrow_l);
+  gtk_container_add (GTK_CONTAINER (arrow_button_r), arrow_r);
 
-  gtk_button_set_relief (GTK_BUTTON (e->arrow_l), GTK_RELIEF_NONE);
-  gtk_button_set_relief (GTK_BUTTON (e->arrow_r), GTK_RELIEF_NONE);
+  gtk_button_set_relief (GTK_BUTTON (arrow_button_l), GTK_RELIEF_NONE);
+  gtk_button_set_relief (GTK_BUTTON (arrow_button_r), GTK_RELIEF_NONE);
 
-  g_object_set_data (G_OBJECT (e->arrow_l), "direction", (gpointer)0);
-  g_object_set_data (G_OBJECT (e->arrow_r), "direction", (gpointer)1);
+  g_object_set_data (G_OBJECT (arrow_button_l), "direction", (gpointer)0);
+  g_object_set_data (G_OBJECT (arrow_button_r), "direction", (gpointer)1);
 
-  g_signal_connect (G_OBJECT (e->arrow_l), "clicked", G_CALLBACK (click), sel);
-  g_signal_connect (G_OBJECT (e->arrow_r), "clicked", G_CALLBACK (click), sel);
+  g_signal_connect (G_OBJECT (arrow_button_l), "clicked", G_CALLBACK (click), sel);
+  g_signal_connect (G_OBJECT (arrow_button_r), "clicked", G_CALLBACK (click), sel);
 
-  gtk_box_pack_start (GTK_BOX (sel->subbox), e->arrow_l, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (sel->subbox), e->text, FALSE, FALSE, 1);
-  gtk_box_pack_start (GTK_BOX (sel->subbox), e->arrow_r, FALSE, FALSE, 0);
+  gtk_widget_set_usize (e->text, max_width, -1);
+
+  gtk_box_pack_start (GTK_BOX (e->container), arrow_button_l, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (e->container), e->text, TRUE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (e->container), arrow_button_r, FALSE, FALSE, 0);
+
+  gtk_box_pack_start (GTK_BOX (sel->subbox), e->container, FALSE, FALSE, 0);
 
   g_signal_connect (G_OBJECT (sel), "changed", G_CALLBACK (update), e->text);
   update (sel, e->text);
@@ -289,28 +296,44 @@ make_field (GtkDateSel *sel, struct elem *e, void (*click)(GtkWidget *, GtkDateS
 static void
 gtk_date_sel_init (GtkDateSel *sel)
 {
+  PangoLayout *layout;
+  PangoRectangle logical_rect;
+  int max_year_width, i;
+  gchar buffer[255];
+
+  layout = gtk_widget_create_pango_layout (GTK_WIDGET (sel), NULL);
+
   time (&sel->time);
   sel->day_clamped = -1;
 
   sel->subbox = gtk_hbox_new (FALSE, 0);
 
-  make_field (sel, &sel->day, day_click, day_update);
-  make_field (sel, &sel->week, week_click, week_update);
-  make_field (sel, &sel->month, month_click, month_update);
-  make_field (sel, &sel->year, year_click, year_update);
+  max_year_width = 0;
+  for (i=0; i<10; i++)
+    {
+      g_snprintf (buffer, sizeof (buffer), "%d%d%d%d", i,i,i,i);
+      pango_layout_set_text (layout, buffer, -1);	  
+      pango_layout_get_pixel_extents (layout, NULL, &logical_rect);
+      max_year_width = MAX (max_year_width, logical_rect.width + 8);
+    }
 
-  sel->month_style = GTKDATESEL_MONTH_SHORT;
+  make_field (sel, &sel->day, day_click, day_update, 72);
+  make_field (sel, &sel->week, week_click, week_update, 72);
+  make_field (sel, &sel->month, month_click, month_update, 0);
+  make_field (sel, &sel->year, year_click, year_update, max_year_width);
+
+  gtk_date_sel_set_month_style (sel, GTKDATESEL_MONTH_SHORT);
 
   gtk_widget_show (sel->subbox);
   gtk_box_pack_start (GTK_BOX (sel), sel->subbox, TRUE, FALSE, 0);
+
+  g_object_unref (layout);
 }
 
 static void
 show_field (struct elem *e)
 {
-  gtk_widget_show (e->arrow_l);
-  gtk_widget_show (e->text);
-  gtk_widget_show (e->arrow_r);
+  gtk_widget_show_all (e->container);
 }
 
 static void
@@ -433,5 +456,42 @@ gtk_date_sel_set_day(GtkDateSel *sel, int year, int month, int day)
 void
 gtk_date_sel_set_month_style (GtkDateSel *sel, GtkDateSelMonthStyle style)
 {
+  PangoLayout *layout;
+  PangoRectangle logical_rect;
+  int max_width, i;
+  gchar buffer[255];
+  struct tm tm;
+
+  localtime_r (&sel->time, &tm);
+
+  layout = gtk_widget_create_pango_layout (GTK_WIDGET (sel), NULL);
+
+  max_width = 0;
+  for (i = 0; i < 11; i++)
+    {
+      tm.tm_mon = i;
+
+      switch (style)
+	{
+	case GTKDATESEL_MONTH_SHORT:
+	  strftime (buffer, sizeof (buffer), _("%b"), &tm);
+	  break;
+	case GTKDATESEL_MONTH_LONG:
+	  strftime (buffer, sizeof (buffer), _("%B"), &tm);
+	  break;
+	case GTKDATESEL_MONTH_NUMERIC:
+	  strftime (buffer, sizeof (buffer), _("%m"), &tm);
+	  break;
+	case GTKDATESEL_MONTH_ROMAN:
+	  /* NYS */
+	  break;
+	}
+      pango_layout_set_text (layout, buffer, -1);
+      pango_layout_get_pixel_extents (layout, NULL, &logical_rect);
+      max_width = MAX (max_width, logical_rect.width + 8);
+    }
+
+  gtk_widget_set_usize (sel->month.text, max_width, -1);
   sel->month_style = style;
+  g_object_unref (layout);
 }

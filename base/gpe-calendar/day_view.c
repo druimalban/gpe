@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001, 2002 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2001, 2002, 2004 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -23,6 +23,7 @@
 #include <gpe/event-db.h>
 #include <gpe/question.h>
 #include <gpe/schedule.h>
+#include <gpe/stylus.h>
 
 #include "event-ui.h"
 #include "globals.h"
@@ -35,7 +36,7 @@
 static GSList *strings;
 static GSList *day_events[24], *untimed_events;
 GtkWidget *day_list;
-static GtkWidget *datesel;
+static GtkWidget *datesel, *calendar;
 static GtkAdjustment *scroll_adjustment;
 
 static GtkStyle *light_style, *dark_style, *time_style;
@@ -506,18 +507,45 @@ day_view_update ()
 }
 
 static void
-changed_callback(GtkWidget *widget,
-		 GtkWidget *clist)
+day_change_calendar (GtkWidget *widget)
 {
+  int day, month, year;
+  struct tm tm;
+
+  localtime_r (&viewtime, &tm);
+
+  gtk_calendar_get_date (GTK_CALENDAR (widget), &year, &month, &day);
+
+  tm.tm_year = year - 1900;
+  tm.tm_mon = month;
+  tm.tm_mday = day;
+
+  viewtime = mktime (&tm);
+
+  set_time_all_views ();
+  day_view_update ();
+}
+
+static void
+date_sel_changed (GtkWidget *widget, GtkWidget *clist)
+{
+  struct tm tm;
   viewtime = gtk_date_sel_get_time (GTK_DATE_SEL (widget));
+  localtime_r (&viewtime, &tm);
+  gtk_calendar_select_month (GTK_CALENDAR (calendar), tm.tm_mon, tm.tm_year + 1900);
+  gtk_calendar_select_day (GTK_CALENDAR (calendar), tm.tm_mday);
   day_view_update ();
 }
 
 static void
 update_hook_callback()
 {
+  struct tm tm;
+  localtime_r (&viewtime, &tm);
+
   gtk_date_sel_set_time (GTK_DATE_SEL (datesel), viewtime);
-  gtk_widget_draw (datesel, NULL);
+  gtk_calendar_select_month (GTK_CALENDAR (calendar), tm.tm_mon, tm.tm_year + 1900);
+  gtk_calendar_select_day (GTK_CALENDAR (calendar), tm.tm_mday);
   day_view_update ();
 }
 
@@ -536,29 +564,43 @@ day_free_lists()
       }
 }
 
-
 gboolean
-list_exposed(GtkWidget *widget, GdkEventExpose *event, gpointer user_data)
+list_exposed (GtkWidget *widget, GdkEventExpose *event, gpointer user_data)
 {
-  gtk_container_propagate_expose  (widget, day_list, event);
+  gtk_container_propagate_expose (GTK_CONTAINER (widget), day_list, event);
   return FALSE;
 }
 
 GtkWidget *
-day_view(void)
+day_view (void)
 {
   GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
   GtkWidget *scrolled_window = gtk_scrolled_window_new (NULL, NULL);
+  GtkWidget *hbox = gtk_hbox_new (FALSE, 0);
+  gboolean landscape;
+
+  landscape = gdk_screen_width () > gdk_screen_height () ? TRUE : FALSE;
+
+  calendar = gtk_calendar_new ();
 
   gtk_widget_show (scrolled_window);
+  gtk_widget_show (hbox);
+
+  gtk_calendar_set_display_options (GTK_CALENDAR (calendar), 
+				    GTK_CALENDAR_SHOW_DAY_NAMES 
+				    | (week_starts_monday ? GTK_CALENDAR_WEEK_START_MONDAY : 0));
 
   datesel = gtk_date_sel_new (GTKDATESEL_FULL);
   gtk_widget_show (datesel);
   
   day_list = gtk_clist_new (2);
-  gtk_clist_set_selection_mode(GTK_CLIST(day_list),GTK_SELECTION_SINGLE);
+  gtk_clist_set_selection_mode (GTK_CLIST (day_list), GTK_SELECTION_SINGLE);
   gtk_widget_show (day_list);
  
+  g_signal_connect (G_OBJECT (calendar), 
+		    gpe_stylus_mode () ? "day-selected" : "day-selected-double-click",
+		    G_CALLBACK (day_change_calendar), NULL);
+  
   g_signal_connect (G_OBJECT (day_list), "select_row",
                     G_CALLBACK (selection_made), NULL);
 
@@ -568,10 +610,23 @@ day_view(void)
   gtk_container_add (GTK_CONTAINER (scrolled_window), day_list);
 
   gtk_box_pack_start (GTK_BOX (vbox), datesel, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), scrolled_window, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), hbox, TRUE, TRUE, 0);
+
+  gtk_box_pack_start (GTK_BOX (hbox), scrolled_window, TRUE, TRUE, 0);
+  if (landscape)
+    {
+      GtkWidget *sep;
+      sep = gtk_vseparator_new ();
+
+      gtk_box_pack_start (GTK_BOX (hbox), sep, FALSE, FALSE, 0);
+      gtk_box_pack_start (GTK_BOX (hbox), calendar, FALSE, FALSE, 0);
+
+      gtk_widget_show (sep);
+      gtk_widget_show (calendar);
+    }
 
   g_signal_connect (G_OBJECT (datesel), "changed",
-                    G_CALLBACK (changed_callback), day_list);
+                    G_CALLBACK (date_sel_changed), day_list);
 
   g_object_set_data (G_OBJECT (vbox), "update_hook",
 		     (gpointer) update_hook_callback);
@@ -583,9 +638,9 @@ day_view(void)
 		    G_CALLBACK (list_key_press_event), NULL);
   g_signal_connect (G_OBJECT (scrolled_window), "expose-event",
             G_CALLBACK (list_exposed), NULL);
-  g_object_set_data(G_OBJECT(day_list),"selected-row",(void *)0);
+  g_object_set_data (G_OBJECT (day_list), "selected-row", (void *)0);
 
-  g_object_set_data(G_OBJECT(main_window),"datesel-day",datesel);
+  g_object_set_data (G_OBJECT (main_window), "datesel-day", datesel);
 
   return vbox;
 }

@@ -1,3 +1,19 @@
+2004-10-09  Phil Blundell  <pb@nexus.co.uk>
+
+	* day_view.c (day_view): Add calendar if screen is landscape.
+	(list_exposed): Fix warning.
+	(update_hook_callback): Keep calendar up to date.
+	(changed_callback): Rename to ...
+	(date_sel_changed): ... this.  Keep calendar up to date.
+	(day_change_calendar): New function.
+
+	* gtkdatesel.c (gtk_date_sel_set_month_style): Calculate maximum
+	width of month string.
+	(gtk_date_sel_init): Likewise for year.
+	(make_field): Rework widget packing to prevent arrows from moving
+	around.
+	(struct elem): Add container.  Remove arrow_l and arrow_r.
+
 2004-10-07  Phil Blundell  <pb@nexus.co.uk>
 
 	* Version 0.57 released.
