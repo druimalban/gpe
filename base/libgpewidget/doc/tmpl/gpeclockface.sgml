@@ -90,37 +90,36 @@ Sets the radius of the clockface (in pixels).
 
 <!-- ##### FUNCTION gpe_clock_face_set_use_background_image ##### -->
 <para>
-
+Set if the widget should use a background image.
 </para>
 
-@clock: 
-@yes: 
+@clock: Widget
+@yes: TRUE to enable, FALSE to disable
 
 
 <!-- ##### FUNCTION gpe_clock_face_set_label_hours ##### -->
 <para>
-
+Turn hour labels on the clockface on/off.
 </para>
 
-@clock: 
-@yes: 
+@clock: Widget
+@yes: TRUE to enable, FALSE to disable
 
 
 <!-- ##### FUNCTION gpe_clock_face_set_hand_width ##### -->
 <para>
-
+Change the width of clock hands.
 </para>
 
-@clock: 
-@width: 
+@clock: Widget
+@width: New with in pixels.
 
 
 <!-- ##### FUNCTION gpe_clock_face_get_shape ##### -->
 <para>
-
+Returns the shape mask of the given clockface widget. This is used to set up 
+a shaped window only containing a GtkClockFace widget.
 </para>
 
-@clock: 
-@Returns: 
-
-
+@clock: Widget
+@Returns: The widget's shape mask

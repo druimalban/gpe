@@ -2,6 +2,7 @@
 2005-01-28  Florian Boor <florian@kernelconcepts.de>
 
 	* doc/tmpl/gpeclockface.sgml: Documentation improvement.
+	* doc/tmpl/gpeiconlist.sgml: Documentation improvement.
 
 2005-01-27  Florian Boor <florian@kernelconcepts.de>
 

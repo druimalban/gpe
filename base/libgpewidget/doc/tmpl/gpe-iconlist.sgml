@@ -1,12 +1,14 @@
 <!-- ##### SECTION Title ##### -->
-GPEIconList
+GpeIconList
 
 <!-- ##### SECTION Short_Description ##### -->
-
+Widget to arrange icons in columns and rows.
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-
+This widget is used to arrange icons in columns and rows. It provides functions 
+for user interactive actions clicking on a particular icon and methods to
+manage icons in the list.
 </para>
 
 <!-- ##### SECTION See_Also ##### -->
@@ -227,6 +229,4 @@ GPEIconList
 @func: 
 @data: 
 @destroy_data: 
-@flags: 
-
-
+@flags:
