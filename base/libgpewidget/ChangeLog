@@ -1,5 +1,9 @@
 2004-02-29  Philip Blundell  <philb@gnu.org>
 
+	* Version 0.76 released.
+
+2004-02-29  Philip Blundell  <philb@gnu.org>
+
 	* tap.c (THRESHOLD): Set to 4 for better behaviour on jittery
 	touchscreens.
 
