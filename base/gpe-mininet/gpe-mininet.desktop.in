@@ -1,0 +1,7 @@
+[Desktop Entry]
+_Name=Network Applet
+_Comment=Network connection checking panel applet.
+Exec=gpe-mininet
+Type=PanelApp
+Icon=gpe-mininet.png
+Categories=Panel;Utility;GPE;Network
