@@ -1,3 +1,5 @@
+<h2>News</h2>
+
 <?php
 
 /* Reminder: always indent with 4 spaces (no tabs). */

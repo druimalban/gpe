@@ -14,7 +14,7 @@ function menu_entry($page, $title, $link,$thispage)
 <div class="menu">
 <small>
 
-<?php menu_entry("home", "Home", "/", $pagename); ?>
+<?php menu_entry("home", "Home/News", "/", $pagename); ?>
  &middot;
 <?php menu_entry("projects", "Projects", "/projects/", $pagename); ?>
  &middot;
