@@ -1,3 +1,7 @@
+2004-06-04  Florian Boor <florian.boor@kernelconcepts.de>
+
+	* Makefile: Some changes to work in an OE environment.
+
 2003-10-19  Philip Blundell  <philb@gnu.org>
 
 	* Makefile: Use STANDARD_CFLAGS, STANDARD_CPPFLAGS, STANDARD_LIBS.
