@@ -21,7 +21,7 @@ your copy of the sources, do:
       $ cd gpe_cvs
       $ cvs update
    </pre>
-</p>
+
 <P>
 For a more detailed description about how to use handhelds.org CVS, please see
 <a href="http://www.handhelds.org/handhelds-faq/development.html#USING-CVS">
@@ -54,6 +54,5 @@ applications:
       $ cd ../gpe-icons
       $ make install
    </pre>
-</p>
 
 <!--#include virtual="includes/foot.shtml"-->
