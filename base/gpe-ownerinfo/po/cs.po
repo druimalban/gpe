@@ -1,0 +1,78 @@
+# translation of gpe-ownerinfo.po to Czech
+# Copyright (C) 2003 Free Software Foundation, Inc.
+# Libor Klepac <elkropac@students.zcu.cz>, 2003.
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-ownerinfo 0.20\n"
+"POT-Creation-Date: 2003-03-04 00:17+0100\n"
+"PO-Revision-Date: 2003-10-08 23:01+0100\n"
+"Last-Translator: Libor Klepac <elkropac@students.zcu.cz>\n"
+"Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: gpe-ownerinfo.c:345
+msgid "Owner"
+msgstr "Můj majitel je"
+
+#. TRANSLATORS: please replace this with the Pango code for your own language
+#: gpe-ownerinfo.c:387
+msgid "en"
+msgstr "cs"
+
+#: gpe-ownerinfo.c:408 gpe-ownerinfo.c:524
+msgid "GPE Owner Info"
+msgstr "GPE Informace o majiteli"
+
+#: gpe-ownerinfo.c:410
+msgid "Valid options:\n"
+msgstr "Možné volby:\n"
+
+#: gpe-ownerinfo.c:411
+msgid "   -g GEOMETRY  window geometry (default: 240x100+0+220)\n"
+msgstr "   -g GEOMETRIE rozměry a pozice okna (standardně:240x100+0+220)\n"
+
+#: gpe-ownerinfo.c:412
+msgid "   -t           make window transparent\n"
+msgstr "   -t          transparentní okno\n"
+
+#: gpe-ownerinfo.c:413
+msgid "   -k           always keep window on top (override redirect)\n"
+msgstr "   -k           vždy na vrchu (override redirect)\n"
+
+#: gpe-ownerinfo.c:414
+msgid "   -h           this help text\n"
+msgstr "   -h           tento text\n"
+
+#: gpe-ownerinfo.c:433
+msgid "GPE User"
+msgstr "GPE uživatel"
+
+#: gpe-ownerinfo.c:434
+msgid "nobody@localhost.localdomain"
+msgstr "nikdo@nikde.cz"
+
+#: gpe-ownerinfo.c:435
+msgid "+99 (9999) 999-9999"
+msgstr "+420 999999999"
+
+#: gpe-ownerinfo.c:439
+msgid "Configurable with"
+msgstr "Lze nastavit pomocí"
+
+#: gpe-ownerinfo.c:440 gpe-ownerinfo.c:549
+msgid "Owner Information"
+msgstr "Informace o majiteli"
+
+#: gpe-ownerinfo.c:441
+msgid "under"
+msgstr "v "
+
+#: gpe-ownerinfo.c:441
+msgid " Settings."
+msgstr " Nastavení."
+
+#: gpe-ownerinfo.c:578
+msgid "Address:"
+msgstr "Adresa:"

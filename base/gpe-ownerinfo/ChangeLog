@@ -1,3 +1,9 @@
+2003-10-08  Colin Marquardt  <colin@marquardt-home.de>
+
+	* Makefile (LINGUAS): Add 'cs'.
+
+	* po/cs.po: New file courtesy Libor Klepac.
+
 2003-09-09  Colin Marquardt  <colin@marquardt-home.de>
 
 	* familiar/control1 (Source): Add 'Source: SOURCE'.
