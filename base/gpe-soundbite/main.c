@@ -331,7 +331,7 @@ file_chosen_signal (GtkFileSelection *selector, gpointer user_data)
 
 void syntax_message (FILE *f)
 {
-      fprintf (f, "syntax: gpe-soundbite play|record [filename]\n");
+      fprintf (f, "usage: gpe-soundbite play|record [filename]\n       gpe-soundbite play|record --autogenerate-filename pathname\n       gpe-soundbite --help\n");
 }
 
 int
@@ -359,10 +359,15 @@ main(int argc, char *argv[])
       playing = TRUE;
       recording = FALSE;
     }
+  else if (!(strcmp(argv[1], "help") && strcmp(argv[1], "--help") && strcmp(argv[1], "-h")))
+    {
+      syntax_message (stdout);
+      exit (0);
+    }
   else
     {
       syntax_message (stderr);
-      exit(1);
+      exit (1);
     }
 
   if (argc >= 3)
@@ -371,8 +376,29 @@ main(int argc, char *argv[])
         {
           time_t time1;
           struct tm *time2;
+	  char *savedir = NULL;
           char *s;
           size_t length;
+
+	  if (argc >= 4)
+	    {
+	      savedir = argv[3];
+              if (savedir == NULL)
+	        {
+                  syntax_message (stderr);
+	          exit (1);
+                }
+	    }
+	  else
+	    {
+	      savedir = getenv("HOME");
+              if (savedir == NULL)
+	        {
+                  fprintf (stderr, "$HOME does not contain the path to the user's home direcory!\n");
+		  exit (1);
+                }
+	    }
+
           time1 = time(NULL);
           time2 = localtime (&time1);
           length = strlen ("2002-06-23 03:54:00") + 1;
@@ -383,12 +409,12 @@ main(int argc, char *argv[])
 	      struct stat buf;
 	      int i = 1;
 
-              filename = g_strdup_printf ("%s/%s at %s", getenv("HOME"), _("Voice memo at"), s);
+              filename = g_strdup_printf ("%s/%s at %s", savedir, _("Voice memo at"), s);
 	      while (stat (filename, &buf) == 0)
 	        {
 		  i++;
 		  g_free (filename);
-                  filename = g_strdup_printf ("%s/%s at %s (%d)", getenv("HOME"), _("Voice memo at"), s, i);
+                  filename = g_strdup_printf ("%s/%s at %s (%d)", savedir, _("Voice memo at"), s, i);
                 }
             }
         }
