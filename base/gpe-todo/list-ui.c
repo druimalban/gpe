@@ -28,6 +28,7 @@
 
 static GtkWidget *g_option;
 static gint selected_category = -1;
+static gboolean show_completed_tasks = TRUE;
 
 GtkListStore *list_store;
 GtkWidget *item_menu;
@@ -62,6 +63,15 @@ set_category (GtkWidget *w, gpointer user_data)
   refresh_items ();
 }
 
+static void
+toggle_completed_items (GtkWidget *w, gpointer user_data)
+{
+   show_completed_tasks = gtk_check_menu_item_get_active
+      (GTK_CHECK_MENU_ITEM (w));
+   refresh_items ();
+}
+
+
 void
 categories_menu (void)
 {
@@ -94,6 +104,19 @@ categories_menu (void)
       selected_category = -1;
       refresh_items ();
     }
+
+  i = gtk_separator_menu_item_new ();
+  gtk_menu_append (GTK_MENU (menu), i);
+  gtk_widget_show (i);
+
+  i = gtk_check_menu_item_new_with_label (_("Show completed tasks"));
+  gtk_check_menu_item_set_active
+     (GTK_CHECK_MENU_ITEM (i), show_completed_tasks);
+  g_signal_connect (G_OBJECT (i), "toggled", 
+                    G_CALLBACK (toggle_completed_items), NULL);
+  gtk_menu_append (GTK_MENU (menu), i);
+  gtk_widget_show (i);
+
   gtk_widget_show (menu);
 
   gtk_option_menu_set_menu (GTK_OPTION_MENU (g_option), menu);
@@ -145,7 +168,6 @@ delete_completed_items (GtkWidget *w, gpointer user_data)
 
   gtk_widget_destroy (dialog);
 }
-
 
 void
 open_editing_window (GtkTreePath *path)
@@ -214,14 +236,19 @@ toggle_completed (GtkTreePath *path)
         strftime(time, 20, "%x", ti);
 	  }
 
-  gtk_list_store_set (list_store, &iter, 
-		      0, sicon,
-		      1, i->summary,  
-		      2, complete, 
-		      3, i,
-		      4, priority,
-		      5, time,
-		      -1);
+    if (complete && !show_completed_tasks) {
+       gtk_list_store_remove (list_store, &iter);
+    } else {
+       gtk_list_store_set (list_store, &iter, 
+                           0, sicon,
+                           1, i->summary,  
+                           2, complete, 
+                           3, i,
+                           4, priority,
+                           5, time,
+                           -1);
+    }
+
 
   todo_db_push_item (i);
 }
@@ -307,6 +334,9 @@ refresh_items (void)
 		}
 		
 	  complete = ((i->state == COMPLETED) || (i->state == ABANDONED)) ? TRUE : FALSE;
+
+      if (complete && !show_completed_tasks)
+         continue;
 
       switch (i->state)
         {
@@ -506,16 +536,18 @@ top_level (GtkWidget *window)
 						    "text", 1,
 						    "strikethrough", 2,
 						    NULL);
-
+    gtk_tree_view_column_set_expand(col, TRUE);
     gtk_tree_view_insert_column (GTK_TREE_VIEW (list_view), col, -1);
 
-    renderer = gtk_cell_renderer_text_new ();
-    col = gtk_tree_view_column_new_with_attributes (_("Priority"), renderer,
-						    "text", 4,
-						    "strikethrough", 2,
-						    NULL);
-
-    gtk_tree_view_insert_column (GTK_TREE_VIEW (list_view), col, -1);
+    if (gdk_screen_width() > 400)
+      {
+        renderer = gtk_cell_renderer_text_new ();
+        col = gtk_tree_view_column_new_with_attributes (_("Priority"), renderer,
+	                                                    "text", 4,
+	                                                    "strikethrough", 2,
+                                                          NULL);
+        gtk_tree_view_insert_column (GTK_TREE_VIEW (list_view), col, -1);
+      }
 	
     renderer = gtk_cell_renderer_text_new ();
     col = gtk_tree_view_column_new_with_attributes (_("Due Date"), renderer,

@@ -18,6 +18,7 @@
 #include <string.h>
 #include <errno.h>
 #include <libintl.h>
+#include <dirent.h>
 
 #include <gtk/gtk.h>
 #include <gdk/gdkx.h>
@@ -42,7 +43,7 @@ typedef enum
 	P_SIMPAD,
 	P_SIMPAD_NEW,
     P_GENERIC,
-	P_SYSFS
+	P_SYSCLASS
 }t_platform;
 
 
@@ -89,20 +90,13 @@ char IpaqModel = -1;
 /* Generic backlight */
 #define GENERIC_PROC_DRIVER "/proc/driver/backlight"
 
-/* Linux 2.6 sysfs interface */
+/* 2.6 style /sys/class/backlight */
+#define SYSCLASS 	"/sys/class/backlight/"
 #define SYS_STATE_ON  0
 #define SYS_STATE_OFF 4
 static char *SYS_BRIGHTNESS = NULL;
 static char *SYS_POWER = NULL;
 static char *SYS_LCDPOWER = NULL;
-
-const char *sysbdevs[] = 
-{
-	"/sys/class/backlight/sa1100fb",
-	"/sys/class/backlight/pxafb",
-	NULL
-};
-
 
 GtkWidget *slider_window;
 GtkWidget *window, *slider;
@@ -120,11 +114,44 @@ struct gpe_icon my_icons[] = {
 int window_open;
 t_platform platform = P_NONE;
 
+
+static char
+*get_sysclass_bl(void)
+{
+	DIR *dp;
+	char *dentry;
+	struct dirent *d;
+
+	if((dp = opendir(SYSCLASS)) == NULL) {
+		fprintf(stderr, "unable to open %s", SYSCLASS);
+		return NULL;
+	}
+
+	while((d = readdir(dp))) {
+		if (!(strcmp(d->d_name, ".") == 0) &&
+			!(strcmp(d->d_name, "..") == 0))
+			asprintf(&dentry, "%s%s", SYSCLASS, d->d_name);
+	}
+	closedir(dp);
+	return dentry;
+}
+
+static void
+setup_sysclass(void)
+{
+	char *bl_dev;
+	
+	bl_dev = get_sysclass_bl();
+	
+	SYS_BRIGHTNESS = g_strdup_printf("%s/brightness", bl_dev);
+	SYS_POWER = g_strdup_printf("%s/power", bl_dev);
+	SYS_LCDPOWER = g_strdup_printf("/sys/class/lcd/%s/power", 
+	                               strrchr(bl_dev, '/') + 1);
+}
+
 static t_platform
 detect_platform(void)
 {
-	int i = 0;
-	
 	if (!access(TS_DEV,R_OK))
 		return P_IPAQ;
 	if (!access(PROC_LIGHT,R_OK))
@@ -139,30 +166,24 @@ detect_platform(void)
 		return P_SIMPAD;
 	if (!access(GENERIC_PROC_DRIVER,R_OK))
 		return P_GENERIC;
-	while (sysbdevs[i])
+	if (!access(SYSCLASS,R_OK))
 	{
-		if (!access(sysbdevs[i], R_OK))
-		{
-			SYS_BRIGHTNESS = g_strdup_printf("%s/brightness", sysbdevs[i]);
-			SYS_POWER = g_strdup_printf("%s/power", sysbdevs[i]);
-			SYS_LCDPOWER = g_strdup_printf("/sys/class/lcd/%s/power", strrchr(sysbdevs[i],'/')+1);
-			return P_SYSFS;
-		}
-		i++;
+		setup_sysclass();
+		return P_SYSCLASS;
 	}
+	
 	return P_NONE;
 }
 
-
 int 
-sysfs_set_level(int level)
+sysclass_set_level(int level)
 {
   FILE *f_light;
   
   f_light = fopen(SYS_BRIGHTNESS, "w");
   if (f_light != NULL)
   {
-    fprintf(f_light,"%d\n", level);
+    fprintf(f_light,"%d\n", level * 4);
   	fclose(f_light);
   }
   else
@@ -185,17 +206,17 @@ sysfs_set_level(int level)
 }
 
 int 
-sysfs_get_level(void)
+sysclass_get_level(void)
 {
   FILE *f_light;
-  int level;
+  int level = 0;
   
   f_light = fopen(SYS_BRIGHTNESS, "r");
   if (f_light != NULL)
   {
   	fscanf(f_light,"%d", &level);
   	fclose(f_light);
-	return level;
+	return level / 4;
   }
   return -1;
 }  
@@ -215,6 +236,7 @@ generic_set_level(int level)
   else
 	  return -1;
 }
+
 
 int 
 generic_get_level(void)
@@ -505,9 +527,9 @@ set_level (int level)
 	case P_GENERIC:
 		return generic_set_level(level);
 	break;
-	case P_SYSFS:
-		return sysfs_set_level(level);
-	break;
+	case P_SYSCLASS:
+		return sysclass_set_level(level);
+	break;	
 	default:
 		return 0;
 	break;
@@ -550,9 +572,9 @@ read_old_level (void)
 	case P_GENERIC:
 		return generic_get_level();
 	break;
-	case P_SYSFS:
-		return sysfs_get_level();
-	break;
+	case P_SYSCLASS:
+		return sysclass_get_level();
+	break;	
 	default:
 		return 0;
 	break;
@@ -608,7 +630,7 @@ external_event(GtkWindow *window, GdkEventConfigure *event, gpointer user_data)
     gdk_bitmap_unref (bitmap);
     gtk_image_set_from_pixbuf(GTK_IMAGE(icon),dbuf);
 	/* make sure we want to resize all the time */
-	gtk_widget_set_size_request(GTK_WIDGET(window),size+1,size);
+	gtk_widget_set_size_request(GTK_WIDGET(window), size , size);
   }
   return FALSE;
 }

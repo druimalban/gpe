@@ -1,3 +1,11 @@
+2004-11-25  Florian Boor  <florian.boor@kernelconcepts.de>
+
+	* list-ui.c: Applied patch by Christian Gillot to toggle visibility
+                 of completed tasks using the selection menu.
+                 Changed column resizing to make sure summary colum gets
+                 all remaining space.
+                 Hide priority colum on small displays.
+
 2004-11-18  Phil Blundell  <philb@gnu.org>
 
 	* Version 0.50 released.

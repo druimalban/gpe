@@ -1,7 +1,7 @@
 PREFIX = /usr/local
 PACKAGE = libgpewidget
 DEBUG = yes
-VERSION = 0.95
+VERSION = 0.96
 CVSBUILD = yes
 CAIRO = yes
 

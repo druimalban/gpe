@@ -1,3 +1,10 @@
+2004-11-23	Florian Boor <florian.boor@kernelconcepts.de>
+
+    * Released Version 0.46
+	* Makefile: Define _GNU_SOURCE.
+	* minilite.c: Merged in some nice improved support for sysfs interface.
+	              Thanks to Koen Kooi for this patch.
+
 2004-10-07	Florian Boor <florian.boor@kernelconcepts.de>
 
     * Released Version 0.45
