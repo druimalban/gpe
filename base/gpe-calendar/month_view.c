@@ -620,6 +620,7 @@ month_view(void)
 
   datesel = gtk_date_sel_new (GTKDATESEL_MONTH);
   gtk_widget_show (datesel);
+  GTK_WIDGET_SET_FLAGS(datesel, GTK_CAN_FOCUS);
   gtk_widget_grab_focus(datesel);
 
   gtk_box_pack_start (GTK_BOX (vbox), datesel, FALSE, FALSE, 0);

@@ -121,7 +121,6 @@ set_time_all_views(void)
   gtk_date_sel_set_time(GTK_DATE_SEL(ds),viewtime);
   ds = g_object_get_data(G_OBJECT(main_window),"datesel-day");
   gtk_date_sel_set_time(GTK_DATE_SEL(ds),viewtime);
-  update_all_views();
 }
 
 void
@@ -167,7 +166,7 @@ new_view (GtkWidget *widget)
         {
           current_view = w;
           gtk_notebook_set_page (GTK_NOTEBOOK (notebook), i);
-          if (w == day) /* nasty hack to compensate missing update if clist */
+          if (w == day) /* nasty hack to compensate missing update of clist */
             update_current_view();
           return;
         }
@@ -229,8 +228,6 @@ set_today(void)
   else
     viewtime = selected_time;
   
-  gtk_button_set_relief(GTK_BUTTON(today_button),
-                        force_today ? GTK_RELIEF_HALF : GTK_RELIEF_NONE);
   set_time_all_views();
 }
 
@@ -370,6 +367,7 @@ main_window_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *data)
         ccpos++;
         return TRUE;
     }
+    
   return FALSE;
 }
 
@@ -502,9 +500,12 @@ main (int argc, char *argv[])
     gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
 
   pw = gtk_image_new_from_stock (GTK_STOCK_HOME, gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
-  today_button = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Today"),
-			   _("Switch to today and stay there/return to day selecting."), 
-               NULL, pw, set_today, NULL);
+  today_button = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar), 
+                                             GTK_TOOLBAR_CHILD_TOGGLEBUTTON, 
+                                             NULL,
+                                             _("Today"), 
+			                                 _("Switch to today and stay there/return to day selecting."), 
+                                             NULL, pw, set_today, NULL);
   GTK_WIDGET_UNSET_FLAGS(today_button, GTK_CAN_FOCUS);
 
   if (window_x > 260) 
@@ -592,6 +593,7 @@ main (int argc, char *argv[])
   update_all_views ();
 
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (day_button), TRUE);
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (today_button), FALSE);
   new_view (day);
 
   gtk_main ();

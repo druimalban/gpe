@@ -607,6 +607,7 @@ week_view (void)
   
   for (i=0;i<7;i++)
     week_days[i].initialized = FALSE;
+  GTK_WIDGET_SET_FLAGS(datesel, GTK_CAN_FOCUS);
   gtk_widget_grab_focus(datesel);
   g_signal_connect (G_OBJECT (datesel), "key_press_event", 
 		    G_CALLBACK (week_view_key_press_event), NULL);

@@ -548,13 +548,73 @@ click_ok (GtkWidget *widget, GtkWidget *d)
   edit_finished (d);
 }
 
+static void
+check_constrains(struct edit_state *s)
+{
+    if ((s->page == 0) && (s->ev))
+    {
+      char buf[32];
+      struct tm tm_start, tm_end;
+      time_t start_t, end_t;
+      event_t ev;
+      
+      ev = (event_t)(s->ev->cloned_ev);
+      
+      /* Appointment */
+      char *start = gtk_editable_get_chars (GTK_EDITABLE (GTK_COMBO
+                                                          (s->starttime)->entry),
+                                            0, -1);
+      char *end = gtk_editable_get_chars (GTK_EDITABLE (GTK_COMBO
+                                                        (s->endtime)->entry),
+                                          0, -1);
+
+      memset (&tm_start, 0, sizeof (struct tm));
+      tm_start.tm_year = GTK_DATE_COMBO (s->startdate)->year - 1900;
+      tm_start.tm_mon = GTK_DATE_COMBO (s->startdate)->month;
+      tm_start.tm_mday = GTK_DATE_COMBO (s->startdate)->day;
+
+      memset (&tm_end, 0, sizeof (struct tm));
+      tm_end.tm_year = GTK_DATE_COMBO (s->enddate)->year - 1900;
+      tm_end.tm_mon = GTK_DATE_COMBO (s->enddate)->month;
+      tm_end.tm_mday = GTK_DATE_COMBO (s->enddate)->day;
+
+      strptime (start, TIMEFMT, &tm_start);
+      strptime (end, TIMEFMT, &tm_end);
+
+      start_t = mktime (&tm_start);
+      end_t = mktime (&tm_end);
+
+      /* If DST was in effect, mktime will have "helpfully" incremented the
+         hour.  */
+      if (tm_start.tm_isdst)
+        {
+          start_t -= 60*60;
+          end_t -= 60*60;
+        }
+
+      if (start_t == end_t)
+        {
+          tm_end.tm_hour+=1;
+          strftime (buf, sizeof(buf), TIMEFMT, &tm_end);
+          gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (s->endtime)->entry), buf);
+        }
+      g_free (end);
+      g_free (start);
+      ev->start = start_t;
+      ev->duration = end_t - start_t;
+    }
+
+}
+
 static gboolean
 set_notebook_page (GtkWidget *w, struct edit_state *s)
 {
   guint i = gtk_option_menu_get_history (GTK_OPTION_MENU (w));
   gtk_notebook_set_page (GTK_NOTEBOOK (s->notebooktype), i);
   s->page = i;
+  check_constrains(s);
   gtk_widget_draw (s->notebooktype, NULL);
+  
   return FALSE;
 }
 
@@ -803,7 +863,10 @@ build_edit_event_window (void)
   hboxtask2           = gtk_hbox_new (FALSE, 0);
 
   s                   = g_malloc0 (sizeof (struct edit_state));
-
+    
+  gtk_window_set_transient_for(GTK_WINDOW(window), GTK_WINDOW(main_window));
+  gtk_window_set_modal(GTK_WINDOW(window), TRUE);
+  
   /* Scrolled window for event tab */
   scrolledwindowevent = gtk_scrolled_window_new (NULL, NULL);
   gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolledwindowevent),

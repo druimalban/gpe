@@ -1,3 +1,11 @@
+2004-09-20 Florian Boor <florian.boor@kernelconcepts.de>
+
+    * event-ui.c: Fixed event lossage if returning from reminder to appointment. 
+    * month_view.c, week_fiew.c: Allow focus to fix keyboard control.
+    * main.c: Fixed typo and not necessary updates.
+    * main.c: Changed today_button to become a real togglebutton.
+    * event-ui.c: Window modal to avoid open it more than once.
+
 2004-09-03 Florian Boor <florian.boor@kernelconcepts.de>
 
     * Released V 0.56
