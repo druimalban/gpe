@@ -25,6 +25,14 @@ GTKCFLAGS = $(shell pkg-config --cflags gtk+-2.0)
 GTKLIBS = $(shell pkg-config --libs gtk+-2.0)
 
 STANDARD_CPPFLAGS = -D_GNU_SOURCE -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
+STANDARD_CFLAGS = -MD -Wall
+
+ifeq ($(DEBUG),yes)
+STANDARD_CFLAGS += -O2 -g
+STANDARD_LDFLAGS = -g
+else
+STANDARD_CFLAGS += -Os -fomit-frame-pointer
+endif
 
 dist: check-source clean dist-prep
 	rm -rf ../$(PACKAGE)-$(VERSION)
