@@ -12,7 +12,8 @@
 #include <string.h>
 #include <unistd.h>
 #include <glib.h>
-#include <gdk_imlib.h>
+#include <gdk-pixbuf/gdk-pixbuf.h>
+#include <libintl.h>
 
 #include "pixmaps.h"
 #include "errorbox.h"
@@ -20,6 +21,8 @@
 static GData *pdata;
 static const gchar *theme_dir_tail = "/.gpe/pixmaps";
 static const gchar *default_theme_dir = "/usr/local/share/gpe/pixmaps/default";
+
+#define _(x) gettext(x)
 
 gboolean 
 gpe_load_pixmaps (struct pix *p)
@@ -47,6 +50,7 @@ gpe_load_pixmaps (struct pix *p)
     {
       const gchar *filename;
       char buf[1024];
+      GdkPixbuf *pixbuf;
 
       if (p->filename[0] == '/')
 	{
@@ -65,12 +69,18 @@ gpe_load_pixmaps (struct pix *p)
 	  filename = buf;
 	}
 
-      if (! gdk_imlib_load_file_to_pixmap (filename, 
-					   &p->pixmap, &p->mask))
+      pixbuf = gdk_pixbuf_new_from_file (filename);
+      if (pixbuf == NULL)
 	{
-	  gpe_perror_box (p->filename);
-	  return FALSE;
+	  char buf[1024];
+	  sprintf (buf, _("Unable to load %s"), filename);
+	  gpe_error_box (buf);
+	  exit (1);
 	}
+      gdk_pixbuf_render_pixmap_and_mask (pixbuf,
+					 &p->pixmap,
+					 &p->mask,
+					 1);
 
       g_datalist_set_data (&pdata, p->shortname, p);
       p++;

@@ -2,7 +2,7 @@ SONAME = libgpewidget.so.0
 
 MEMBERS = gtkdatesel gtkdatecombo errorbox init pixmaps gtksmallentry smallbox gtkminifilesel
 
-CFLAGS = `gtk-config --cflags` -D_GNU_SOURCE -Wall -fPIC
+CFLAGS = `gdk-pixbuf-config --cflags` `gtk-config --cflags` -D_GNU_SOURCE -Wall -fPIC
 ifeq ($(DEBUG),yes)
 CFLAGS += -O2 -g
 LDFLAGS = -g
@@ -18,7 +18,7 @@ libgpewidget.so: $(SONAME)
 	ln -sf $^ $@
 
 $(SONAME): $(OBJS)
-	$(CC) -nostartfiles -shared -o $@ $^ -Wl,-soname -Wl,$(SONAME) -lgtk -lgdk_imlib $(LDFLAGS)
+	$(CC) -nostartfiles -shared -o $@ $^ -Wl,-soname -Wl,$(SONAME) `gtk-config --libs` `gdk-pixbuf-config --libs` $(LDFLAGS)
 
 install: $(SONAME)
 	install -D $(SONAME) $(DESTDIR)/usr/lib/$(SONAME)

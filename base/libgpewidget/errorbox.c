@@ -8,10 +8,10 @@
  */
 
 #include <gtk/gtk.h>
-#include <gdk_imlib.h>
 #include <libintl.h>
 #include <errno.h>
 #include <string.h>
+#include <gdk-pixbuf/gdk-pixbuf.h>
 
 #include "errorbox.h"
 
@@ -19,6 +19,7 @@
 
 #define _(x) gettext(x)
 
+static GdkPixbuf *pixbuf;
 static GdkPixmap *error_pix;
 static GdkBitmap *error_pix_mask;
 static gboolean error_pix_loaded;
@@ -41,8 +42,9 @@ gpe_error_box (char *text)
   if (!error_pix_loaded)
     {
       error_pix_loaded = TRUE;
-      gdk_imlib_load_file_to_pixmap (ERROR_ICON, &error_pix, 
-				     &error_pix_mask);
+      pixbuf = gdk_pixbuf_new_from_file (ERROR_ICON);
+      if (pixbuf)
+        gdk_pixbuf_render_pixmap_and_mask (pixbuf, &error_pix, &error_pix_mask, 1);
     }
 
   if (error_pix)

@@ -1,0 +1,8 @@
+2002-06-15  Philip Blundell  <pb@kc.cam.armlinux.org>
+
+	* init.c (gpe_application_init): Don't call gdk_imlib_init.
+	* pixmaps.c: Use gdk_pixbuf rather than gdk_imlib.
+	* errorbox.c: Likewise.
+	* Makefile: Add gdk-pixbuf flags to compile and link.
+	
+

@@ -13,7 +13,6 @@
 #include <unistd.h>
 
 #include <gtk/gtk.h>
-#include <gdk_imlib.h>
 
 #include "errorbox.h"
 
@@ -28,7 +27,6 @@ gpe_application_init (int *argc, char **argv[])
 
   gtk_set_locale ();
   gtk_init(argc, argv);
-  gdk_imlib_init ();
 
   home = getenv ("HOME");
   if (home == NULL) 
