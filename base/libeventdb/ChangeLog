@@ -1,3 +1,8 @@
+2004-03-05  Philip Blundell  <philb@gnu.org>
+
+	* event-db.c (event_db_write): Only write out description and
+	summary if not NULL.
+
 2004-02-23  Joseph J. McCarthy <mccarthy@engrng.pitt.edu>
                                                                                 
         * Version 0.13 released.

@@ -746,8 +746,8 @@ event_db_write (event_t ev, char **err)
 
   modified = time (NULL);
 
-  if (insert_values (sqliteh, ev->uid, "summary", "%q", ev_d->summary)
-      || insert_values (sqliteh, ev->uid, "description", "%q", ev_d->description)
+  if ((ev_d->summary && insert_values (sqliteh, ev->uid, "summary", "%q", ev_d->summary))
+      || (ev_d->description && insert_values (sqliteh, ev->uid, "description", "%q", ev_d->description))
       || insert_values (sqliteh, ev->uid, "duration", "%d", ev->duration)
       || insert_values (sqliteh, ev->uid, "modified", "%lu", modified)
       || insert_values (sqliteh, ev->uid, "start", "%q", buf_start)
