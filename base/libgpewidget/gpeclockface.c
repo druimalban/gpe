@@ -171,6 +171,8 @@ gpe_clock_face_expose (GtkWidget *widget,
   GdkGC *gc;
   GpeClockFace *clock = GPE_CLOCK_FACE (widget);
   Display *dpy;
+  int cur_hour;
+  gboolean afternoon;
   GdkGC *white_gc;
 #ifdef BACKGROUND_IMAGE
   GdkRectangle pixbuf_rect, intersect_rect;
@@ -190,6 +192,9 @@ gpe_clock_face_expose (GtkWidget *widget,
   clock->x_offset = (widget->allocation.width / 2) - clock->radius;
   clock->y_offset = (widget->allocation.height / 2) - clock->radius;
 
+  cur_hour = gtk_adjustment_get_value (clock->hour_adj);
+  afternoon = (cur_hour >= 12) ? TRUE : FALSE;
+
   dpy = GDK_WINDOW_XDISPLAY (drawable);
 
   if (event)
@@ -206,7 +211,7 @@ gpe_clock_face_expose (GtkWidget *widget,
   gdk_gc_set_clip_rectangle (white_gc, NULL);
 
 #ifdef BACKGROUND_IMAGE
-  if (gtk_adjustment_get_value (clock->hour_adj) >= 12)
+  if (afternoon)
     current_background = clock_background_24;
   else
     current_background = clock_background;
@@ -249,7 +254,7 @@ gpe_clock_face_expose (GtkWidget *widget,
                 (clock->radius - border) * 2, (clock->radius - border) * 2,
                 0, 360 * 64);
 
-  for (i = 1; i < 13; i++)
+  for (i = 0; i < 12; i++)
     {
       double angle, dx, dy;
       int x, y, width, height;
@@ -263,7 +268,7 @@ gpe_clock_face_expose (GtkWidget *widget,
       x = clock->x_offset + clock->radius + dx;
       y = clock->y_offset + clock->radius + dy;
 
-      sprintf (buf, "%d", i);
+      sprintf (buf, "%d", afternoon ? (i + 12) : i);
 
       pango_layout_set_text (pl, buf, strlen (buf));
       pango_layout_get_size (pl, &width, &height);

@@ -1,5 +1,8 @@
 2004-02-08  Phil Blundell  <pb@nexus.co.uk>
 
+	* gpeclockface.c (gpe_clock_face_expose): Tweak handling of 12am
+	vs 12pm.
+
 	* Makefile (IN_LIBGPEWIDGET): Define.
 
 2004-01-18  Philip Blundell  <philb@gnu.org>
