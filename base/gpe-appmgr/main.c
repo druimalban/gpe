@@ -39,6 +39,9 @@
 
 #include <X11/Xatom.h>
 
+/* GPE */
+#include "init.h"
+#include "pixmaps.h"
 #include "render.h"
 
 /* everything else */
@@ -77,6 +80,11 @@ time_t last_update=0;
 int ignore_press = 0;
 
 GdkPixbuf *default_pixbuf;
+
+struct gpe_icon my_icons[] = {
+	{ "icon", "/usr/share/pixmaps/gpe-appmgr.png" },
+	{NULL, NULL}
+};
 
 GtkWidget *create_tab (GList *all_items, char *current_group, tab_view_style style, GtkWidget *curr_sw);
 void create_recent_list ();
@@ -1081,6 +1089,14 @@ gint keysnoop (GtkWidget *grab_widget, GdkEventKey *event, gpointer func_data)
 	return 1;
 }
 
+void set_window_pixmap ()
+{
+	GdkPixmap *pmap;
+	GdkBitmap *bmap;
+
+	if (gpe_find_icon_pixmap ("icon", &pmap, &bmap))
+		gdk_window_set_icon (window->window, NULL, pmap, bmap);
+}
 /* Create the UI for the main window and
  * stuff
  */
@@ -1091,6 +1107,8 @@ void create_main_window()
 	window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 	gtk_window_set_title (GTK_WINDOW(window), "Programs");
 	gtk_widget_set_usize (window, 220,280);
+	gtk_widget_realize (window);
+	set_window_pixmap();
 
 #ifndef DEBUG
 	gtk_signal_connect (GTK_OBJECT(window), "delete_event",
@@ -1166,7 +1184,11 @@ int main(int argc, char *argv[]) {
 	TRACE ("main");
 
 	/* Init gtk & friends */
-	gtk_init (&argc, &argv);
+	if (gpe_application_init (&argc, &argv) == FALSE)
+		exit (1);
+
+	if (gpe_load_icons (my_icons) == FALSE)
+		exit (1);
 
 	/* load our configuration */
 	cfg_load ();
