@@ -1,5 +1,5 @@
-key=...XF86AudioRecord:gpe-soundbite:gpe-soundbite record --autogenerate-filename
-key=...XF86Calendar:gpe-calendar:gpe-calendar
-key=...telephone:gpe-contacts:gpe-contacts
-key=...XF86Mail:gpe-mail:gpe-mail
-key=...XF86Start:Programs:gpe-appmgr
+key=???XF86AudioRecord:gpe-soundbite:gpe-soundbite record --autogenerate-filename
+key=???XF86Calendar:gpe-calendar:gpe-calendar
+key=???telephone:gpe-contacts:gpe-contacts
+key=???XF86Mail:gpe-mail:gpe-mail
+key=???XF86Start:Programs:gpe-appmgr
