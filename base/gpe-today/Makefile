@@ -52,7 +52,7 @@ install: all install-mo gpe-today.desktop
 	$(STRIP) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 
 clean: clean-po
-	rm -f $(PACKAGE) $(OBJS) $(DEPS) *~
+	rm -f $(PACKAGE) $(OBJS) $(DEPS) $(PACKAGE).desktop *~
 
 include ../build/Makefile.translation
 include ../build/Makefile.dpkg_ipkg
