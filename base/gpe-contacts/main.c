@@ -629,6 +629,15 @@ create_popup (GtkWidget *window)
   return gtk_item_factory_get_widget (item_factory, "<main>");
 }
 
+void 
+on_main_focus(GtkWindow *window,  GdkEventExpose *event,gpointer user_data)
+{
+  GtkWidget *searchentry = user_data;
+  
+  gtk_widget_grab_focus(searchentry);
+  gtk_editable_select_region(GTK_EDITABLE(searchentry),0,-1);
+}
+
 static GtkWidget *
 create_main (gboolean show_config_button)
 {
@@ -785,6 +794,9 @@ create_main (gboolean show_config_button)
   g_signal_connect (G_OBJECT (tree_sel), "changed",
 		    G_CALLBACK (selection_made), main_window);
  
+  g_signal_connect (G_OBJECT (main_window), "focus-in-event",
+		    G_CALLBACK (on_main_focus), entry1);
+
   displaymigration_mark_window (main_window);
 
   return main_window;
