@@ -138,7 +138,7 @@ window_filter (GdkXEvent *xev, GdkEvent *gev, gpointer d)
 }
 
 gboolean
-send_delete_message (Window w)
+send_delete_message (Display dpy, Window w)
 {
   XEvent e;
 
@@ -161,7 +161,21 @@ send_delete_message (Window w)
 }
 
 gboolean
-kill_window (Window w)
+really_kill_client (Display *dpy, Window w)
+{
+  gdk_error_trap_push ();
+
+  XKillClient (dpy, w);
+  XFlush (dpy);
+
+  if (gdk_error_trap_pop ())
+    return FALSE;
+
+  return TRUE;
+}
+
+gboolean
+kill_window (Display *dpy, Window w)
 {
   Atom *protocols;
   int count, rc;
@@ -187,18 +201,10 @@ kill_window (Window w)
       XFree (protocols);
 
       if (delete_supported)
-	return send_delete_message (w);
+	return send_delete_message (dpy, w);
     }
 
-  gdk_error_trap_push ();
-
-  XKillClient (dpy, w);
-  XFlush (dpy);
-
-  if (gdk_error_trap_pop ())
-    return FALSE;
-
-  return TRUE;
+  return really_kill_client (dpy, w);
 }
 
 gboolean
@@ -214,7 +220,7 @@ kill_task (GtkWidget *w, GtkWidget *list_view)
 
       gtk_tree_model_get (GTK_TREE_MODEL (model), &iter, 1, &w, -1);
 
-      kill_window (w);
+      kill_window (dpy, w);
     }
   else
     gpe_error_box (_("No program is selected"));
@@ -228,7 +234,7 @@ task_manager (void)
   GtkWidget *window = gtk_dialog_new ();
   GtkWidget *list_view;
   GtkWidget *scrolled = gtk_scrolled_window_new (NULL, NULL);
-  GtkWidget *kill_button;
+  GtkWidget *kill_button, *close_button;
   GtkCellRenderer *renderer;
   GtkTreeViewColumn *column;
 
@@ -250,9 +256,11 @@ task_manager (void)
   gtk_container_add (GTK_CONTAINER (scrolled), list_view);
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), scrolled, TRUE, TRUE, 0);
 
+  close_button = gtk_button_new_from_stock (GTK_STOCK_CLOSE);
   kill_button = gpe_picture_button (NULL, _("Kill program"), "kill");
 
-  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), kill_button, TRUE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), close_button, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), kill_button, FALSE, FALSE, 0);
   
   gdk_window_add_filter (NULL, window_filter, NULL);
 
@@ -261,6 +269,7 @@ task_manager (void)
   update_list (dpy);
 
   g_signal_connect (G_OBJECT (kill_button), "clicked", G_CALLBACK (kill_task), list_view);
+  g_signal_connect (G_OBJECT (close_button), "clicked", G_CALLBACK (gtk_main_quit), NULL);
   g_signal_connect (G_OBJECT (window), "delete_event", G_CALLBACK (gtk_main_quit), NULL);
 
   gtk_window_set_default_size (GTK_WINDOW (window), 200, 128);
