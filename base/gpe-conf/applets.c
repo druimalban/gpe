@@ -183,7 +183,11 @@ void ask_user_a_file(char *path, char *prompt,
     s->data=data;
   
 
-    GTK_WINDOW (fileselection1)->type = GTK_WINDOW_DIALOG;
+#if GTK_MAJOR_VERSION >= 2
+  GTK_WINDOW (fileselection1)->type = GTK_WINDOW_TOPLEVEL;
+#else
+  GTK_WINDOW (fileselection1)->type = GTK_WINDOW_DIALOG;
+#endif
 
     
     gtk_widget_show (ok_button1);

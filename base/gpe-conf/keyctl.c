@@ -60,7 +60,7 @@ void init_buttons()
 	    strncpy(btext,slash,15);
 	    btext[15]='\x0';
 	    target=GTK_BUTTON(self.button[i]);
-	    gtk_label_set_text(GTK_LABEL(target->child),btext);
+	    gtk_button_set_label(GTK_BUTTON(target),btext);
 	}
     } else {
 	/* load from configfile */
@@ -74,7 +74,7 @@ void init_buttons()
 	    strncpy(btext,slash,15);
 	    btext[15]='\x0';
 	    target=GTK_BUTTON(self.button[i]);
-	    gtk_label_set_text(GTK_LABEL(target->child),btext);
+	    gtk_button_set_label(GTK_BUTTON(target),btext);
 	}
         fclose(fd);
     }
@@ -250,6 +250,6 @@ void FileSelected(char *file, gpointer data)
 #ifdef DEBUG
   printf("setting label to %s\n",btext);
 #endif
-  gtk_label_set_text(GTK_LABEL(target->child),btext);
+  gtk_button_set_label(GTK_BUTTON(target),btext);
 }
  

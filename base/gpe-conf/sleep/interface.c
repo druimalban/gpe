@@ -358,7 +358,12 @@ create_irq_win (ipaq_conf_t *ISconf)
   GtkWidget *irq_des;
   GtkWidget *irq_done;
 
+#if GTK_MAJOR_VERSION >= 2
+  irq_win = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+#else
   irq_win = gtk_window_new (GTK_WINDOW_DIALOG);
+#endif
+  
   gtk_window_set_title (GTK_WINDOW (irq_win), "Select IRQs");
   gtk_window_set_modal (GTK_WINDOW (irq_win), TRUE);
   gtk_window_set_default_size (GTK_WINDOW (irq_win), 200, 150);

@@ -4,7 +4,18 @@ ifndef PREFIX # simple test to recognise if we are from ipaq
 PREFIX = "/usr/local"
 endif
 
-CFLAGS = `gtk-config --cflags` `gdk-pixbuf-config --cflags` -Os -Wall -fomit-frame-pointer -I../libgpewidget -DVERSION=\"$(VERSION)\" -DPREFIX=\"$(PREFIX)\"
+ifeq ($(GTK2),yes)
+GTKCFLAGS = `pkg-config --cflags gtk+-2.0`-DGTK_ENABLE_BROKEN
+GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
+CONTROL = control1
+else
+GTKCFLAGS = `gtk-config --cflags` `gdk-pixbuf-config --cflags`
+GTKLDFLAGS = `gtk-config --libs`
+CONTROL = control
+endif
+
+CFLAGS = $(GTKCFLAGS) -D_GNU_SOURCE -Wall -fomit-frame-pointer -I../libgpewidget -DVERSION=\"$(VERSION)\" -DPREFIX=\"$(PREFIX)\"
+LDFLAGS = $(GTKLDFLAGS) -L../libgpewidget  -lgpewidget -lcrypt
 CC = gcc
 
 MEMBERS  = main applets parser suid
@@ -28,7 +39,7 @@ ARM_BINARYPATHED = $(patsubst %,/armbins/%,$(ARM_BINARY))
 all: gpe-conf 
 
 gpe-conf: $(OBJS)
-	$(CC) -o $@ $(OBJS) -L../libgpewidget  -lgpewidget `gdk-pixbuf-config --libs` -lcrypt
+	$(CC) -o $@ $(OBJS) $(LDFLAGS)
 	strip gpe-conf
 	cp gpe-conf gpe-conf.pc
 	
