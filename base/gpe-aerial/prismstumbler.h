@@ -169,7 +169,7 @@ typedef struct
 {
 	char bssid[20];
 	char ssid[33];
-	int mode; 		// o = managed, >=1 = ad-hoc
+	int mode; 		// o = managed, 1 = ad-hoc
 	int wep;
 	int dhcp;
 	int channel;
@@ -217,5 +217,6 @@ extern int newnet_count;
 extern char device_capture[6];
 
 void update_all (ScanResult_t *aresult, int sock);
+extern int QUIET_MODE;
 
 #endif

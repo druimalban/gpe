@@ -299,7 +299,7 @@ fork_scanner ()
 		pid_t p = vfork ();
 		if (p == 0)
 		{
-			execl (SCANNER_EXEC, SCANNER_EXEC, NULL);
+			execl (SCANNER_EXEC, SCANNER_EXEC, "-q", NULL);
 			perror (SCANNER_EXEC);
 			_exit (1);
 		}

@@ -1,4 +1,11 @@
 06/12/2003		Florian Boor <florian.boor@kernelconcepts.de>
+
+	- prismstumbler.h	Updated from recent ps.
+	- main.c	Starts scanner in quiet mode now.
+	- Makefile	Version changed to 0.2.5
+	- control1	Changed dependency to new ps.
+
+06/12/2003		Florian Boor <florian.boor@kernelconcepts.de>
 	netedit.c	Added help and missing thread stuff.
 	main.c		Shutdown and kill prismstumbler on SIGTERM.
 
