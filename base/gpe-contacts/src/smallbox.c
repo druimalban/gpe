@@ -91,7 +91,7 @@ smallbox (gchar *title, gchar *labeltext, gchar *dval)
 
   destroyed = TRUE;
 
-  p = gtk_entry_get_text (GTK_ENTRY (entry));
+  p = gtk_editable_get_chars (GTK_EDITABLE (entry), 0, -1);
 
   gtk_widget_destroy (window);
 

@@ -24,17 +24,89 @@
 
 GSList *edit_pages;
 
+edit_thing_t new_thing (edit_thing_type t, gchar *name, edit_thing_t parent);
+
+static void
+insert_new_thing (GtkCTree *ct,
+		  gchar *name,
+		  edit_thing_type type)
+{
+  GtkCTreeNode *sibling = NULL, *parent = NULL, *node;
+  edit_thing_t e_sibling = NULL, e_parent = NULL;
+  edit_thing_t n;
+  GSList **list;
+  gchar *line_info[2];
+
+  if (GTK_CLIST (ct)->selection)
+    {
+      GtkCTreeNode *node = GTK_CTREE_NODE (GTK_CLIST (ct)->selection->data);
+      edit_thing_t e = GTK_CTREE_ROW (node)->row.data;
+      
+      sibling = node;
+      e_sibling = e;
+      
+      while (type < ITEM_MULTI_LINE && e_sibling->type > type)
+	{
+	  sibling = GTK_CTREE_ROW (sibling)->parent;
+	  e_sibling = e_sibling->parent;
+	}
+
+      if (e_sibling->type < type)
+	{
+	  e_parent = e_sibling;
+	  parent = sibling;
+	  e_sibling = NULL;
+	  sibling = NULL;
+	}
+      else
+	{
+	  e_parent = e_sibling->parent;
+	  parent = GTK_CTREE_ROW (sibling)->parent;
+	}
+    }
+
+  if (e_parent)
+    list = &e_parent->children;
+  else
+    list = &edit_pages;
+
+  n = new_thing (type, name, NULL);
+  n->parent = e_parent;
+
+  line_info[0] = name;
+  line_info[1] = NULL;
+  
+  node = gtk_ctree_insert_node (ct, parent, sibling, line_info,
+				4, NULL, NULL, NULL, NULL,
+				FALSE, TRUE);
+
+  gtk_ctree_node_set_row_data (ct, node, n);
+
+  if (e_sibling == NULL)
+    {
+      *list = g_slist_append (*list, n);
+    }
+  else
+    {
+      gint index = g_slist_index (*list, e_sibling);
+      *list = g_slist_insert (*list, n, index);
+    }
+}
+
 static void
 structure_new_page (GtkWidget *widget,
 		    gpointer user_data)
 {
   gchar *t = smallbox (_("New page"), _("Title"), "");
-
   GtkCTree *ct = GTK_CTREE (user_data);
-  if (GTK_CLIST (ct)->selection)
+  
+  if (t)
     {
+      if (t[0])
+	insert_new_thing (ct, t, PAGE);
+      else
+	g_free (t);
     }
-
 }
 
 static void
@@ -44,9 +116,15 @@ structure_new_group (GtkWidget *widget,
   GtkCTree *ct = GTK_CTREE (user_data);
   if (GTK_CLIST (ct)->selection)
     {
-      GtkCTreeNode *node = GTK_CTREE_NODE (GTK_CLIST (ct)->selection->data);
-      edit_thing_t e = GTK_CTREE_ROW (node)->row.data;
       gchar *t = smallbox (_("New group"), _("Title"), "");
+
+      if (t)
+	{
+	  if (t[0])
+	    insert_new_thing (ct, t, GROUP);
+	  else
+	    g_free (t);
+	}
     }
   else
     {
@@ -61,8 +139,15 @@ structure_new_field (GtkWidget *widget,
   GtkCTree *ct = GTK_CTREE (user_data);
   if (GTK_CLIST (ct)->selection)
     {
-      GtkCTreeNode *node = GTK_CTREE_NODE (GTK_CLIST (ct)->selection->data);
-      edit_thing_t e = GTK_CTREE_ROW (node)->row.data;
+      gchar *t = smallbox (_("New field"), _("Title"), "");
+
+      if (t)
+	{
+	  if (t[0])
+	    insert_new_thing (ct, t, ITEM_SINGLE_LINE);
+	  else
+	    g_free (t);
+	}
     }
   else
     {
