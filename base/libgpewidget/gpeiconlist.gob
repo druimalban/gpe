@@ -34,12 +34,23 @@ requires 2.0.0
 #define MAYBE_PRINTF(s, ...) do { } while (0)
 #endif
 
+#define LABEL_YMARGIN	8
+#define LABEL_XMARGIN	8
+
+#define COL_WIDTH 70
+
+#define il_label_height(_x)	(GPE_ICONLIST (_x)->_priv->label_height)
+#define il_icon_size(_x)	(GPE_ICONLIST (_x)->_priv->icon_size)
+#define il_row_height(_x)	(il_icon_size (_x) + il_label_height (_x) + LABEL_YMARGIN)
+#define il_col_width(_x)	(il_icon_size (_x) + (3 * LABEL_XMARGIN))
+
 struct ILIcon
 {
 	char *title;
 	char *icon;
 	gpointer udata;
 	GdkPixbuf *pb;
+	GdkPixbuf *pb_scaled;
 };
 
 %}
@@ -53,6 +64,8 @@ class GPE:IconList from Gtk:Scrolled:Window {
 	private int mrow = -1;
 	private int popup_timeout = 0;
 	private gboolean flag_embolden = TRUE;
+	private guint icon_size = 48;
+	private guint label_height = 0;
 
 /* Signals */
 	signal last NONE(POINTER)
@@ -90,6 +103,8 @@ class GPE:IconList from Gtk:Scrolled:Window {
 		gtk_object_set_data (GTK_OBJECT (da), "il", self);
 		gtk_object_set_data (GTK_OBJECT (da), "va", gtk_viewport_get_vadjustment(GTK_VIEWPORT(vp)));
 
+		self->_priv->label_height = gpe_iconlist__title_height (self);
+
 		gtk_widget_show_all (vp);
 	}
 
@@ -110,8 +125,16 @@ class GPE:IconList from Gtk:Scrolled:Window {
 			self->_priv->bgpixbuf = NULL;
 	}
 
+	public void set_bg_pixmap (GPE::IconList *self, GdkPixbuf *bg)
+	{
+		if (self->_priv->bgpixbuf)
+			gdk_pixbuf_unref (self->_priv->bgpixbuf);
+		gdk_pixbuf_ref (bg);
+		self->_priv->bgpixbuf = bg;
+	}
+
 /* Helper - max. height of a label */
-	private gint _title_height (GtkWidget *widget) {
+	private gint _title_height (GPEIconList *widget) {
 		PangoContext *pc;
 		PangoLayout *pl;
 		PangoRectangle pr;
@@ -131,6 +154,22 @@ class GPE:IconList from Gtk:Scrolled:Window {
 		g_object_unref (pl);
 
 		return label_height;
+	}
+
+	private void _check_icon_size (GPEIconList *il, struct ILIcon *icon)
+	{
+		if (icon->pb) {
+			guint h = gdk_pixbuf_get_height (icon->pb);
+			if (h > il->_priv->icon_size + 1
+			   || h < il->_priv->icon_size - 1) {
+				double ratio = (double)il->_priv->icon_size / (double)h; 
+				guint new_width = gdk_pixbuf_get_width (icon->pb) * ratio;
+				icon->pb_scaled = gdk_pixbuf_scale_simple (icon->pb, new_width, il->_priv->icon_size, GDK_INTERP_BILINEAR);
+			} else {
+				gdk_pixbuf_ref (icon->pb);
+				icon->pb_scaled = icon->pb;
+			}
+		}
 	}
 
 /* Expose handler */
@@ -153,11 +192,11 @@ class GPE:IconList from Gtk:Scrolled:Window {
 		if ((pc = gtk_widget_get_pango_context (widget)) == NULL)
 			pc = gtk_widget_create_pango_context (widget);
 		pl = pango_layout_new (pc);
-		pango_layout_set_width (pl, 70 * PANGO_SCALE);
+		pango_layout_set_width (pl, il_col_width (il) * PANGO_SCALE);
 		pango_layout_set_alignment (pl, PANGO_ALIGN_CENTER);
 		//pango_layout_set_wrap (pl, PANGO_WRAP_CHAR);
 
-		label_height = gpe_iconlist__title_height (widget);
+		label_height = il_label_height (il);
 
 		/* Get the GtkAdjustment used for the vertical scrollbar
 		   va->value is the current displacement of the view as compared to the widget */
@@ -185,14 +224,14 @@ class GPE:IconList from Gtk:Scrolled:Window {
 */
 		MAYBE_PRINTF ("bg:\n");
 		if (il->_priv->bgpixbuf)
-			for (i=0; i < il->_priv->rows * (60 + label_height); i += gdk_pixbuf_get_height(il->_priv->bgpixbuf)) {
+			for (i=0; i < il->_priv->rows * il_row_height (il); i += gdk_pixbuf_get_height(il->_priv->bgpixbuf)) {
 				GdkRectangle r1, dst;
 				r1.x = 0; r1.y = i;
 				r1.width = gdk_pixbuf_get_width (il->_priv->bgpixbuf);
 				r1.height = gdk_pixbuf_get_height (il->_priv->bgpixbuf);
 
 				MAYBE_PRINTF ("placing bg image at (0,%d)\n", i);
-				MAYBE_PRINTF ("of maximum height %d\n", il->_priv->rows * (60 + label_height));
+				MAYBE_PRINTF ("of maximum height %d\n", il->_priv->rows * il_row_height (il));
 				MAYBE_PRINTF ("image height = %d\n", gdk_pixbuf_get_height (il->_priv->bgpixbuf));
 				if (gdk_rectangle_intersect (&r1, &(event->area), &dst)) {
 					gdk_pixbuf_composite (il->_priv->bgpixbuf, dest,
@@ -212,13 +251,15 @@ class GPE:IconList from Gtk:Scrolled:Window {
 		while (icons) {
 			GdkRectangle r1, r2, dst;
 			struct ILIcon *icon;
+			GdkPixbuf *pixbuf=NULL;
+
 			icon = icons->data;
-			
+
 			/* Compute & render the icon */
-			r1.x=col * 70 + 11;
-			r1.y=row * (60 + label_height) + 5;
-			r1.width = 48; // gdk_pixbuf_get_width(pixbuf);
-			r1.height = 48; // gdk_pixbuf_get_height(pixbuf);
+			r1.x=col * il_col_width (il);
+			r1.y=row * il_row_height (il) + 5;
+			r1.width = il_col_width (il);
+			r1.height = il->_priv->icon_size;
 
 			r2.x = event->area.x;
 			r2.y = event->area.y;
@@ -226,28 +267,37 @@ class GPE:IconList from Gtk:Scrolled:Window {
 			r2.height = event->area.height;
 	  
 			if (gdk_rectangle_intersect (&r1, &r2, &dst)) {
-				GdkPixbuf *pixbuf=NULL;
 
 				/* Get the icon from the cache if its there, if not put it there :) */
-				if (icon->pb)
-					pixbuf = icon->pb;
-				else
-					icon->pb = pixbuf = gdk_pixbuf_new_from_file (icon->icon, NULL);
+				if (icon->pb_scaled)
+					pixbuf = icon->pb_scaled;
+				else {
+					if (icon->pb == NULL)
+						icon->pb = gdk_pixbuf_new_from_file (icon->icon, NULL);
+					gpe_iconlist__check_icon_size (il, icon);
+					pixbuf = icon->pb_scaled;
+				}
 
 				if (pixbuf) {
-					gdk_pixbuf_composite (pixbuf, dest, // from, to
+					// adjust X position for actual size
+					r1.width = gdk_pixbuf_get_width (pixbuf);
+					r1.x=col * il_col_width (il) + (il_col_width (il) - r1.width) / 2;
+
+					// recompute intersection: maybe nothing to do any more
+					if (gdk_rectangle_intersect (&r1, &r2, &dst)) {
+						gdk_pixbuf_composite (pixbuf, dest, // from, to
+
 							      dst.x - event->area.x, //dest_x
 							      dst.y - event->area.y,// + va->value, // dest_y
 							      dst.width, dst.height, // dest_width, dest_height
-							      r1.x-event->area.x, // offset_x
-							      r1.y-event->area.y,// + va->value, // offset_y
-							      (double)48/gdk_pixbuf_get_width (pixbuf), // scale_x
-							      (double)48/gdk_pixbuf_get_width (pixbuf), // scale y
+							      r1.x - event->area.x, // offset_x
+							      r1.y - event->area.y, // + va->value, // offset_y
+							      1.0,
+							      1.0,
 							      GDK_INTERP_BILINEAR, // filtering
 							      //(gpe_iconlist__contains (r1, il->_priv->mx, il->_priv->my)) ? 128 : 255); // forced whole-alpha
 							      col == il->_priv->mcol && row == il->_priv->mrow ? 128 : 255);
-					//gdk_pixbuf_unref (pixbuf);
-					     
+					}
 				}
 			}
 
@@ -279,9 +329,9 @@ class GPE:IconList from Gtk:Scrolled:Window {
 			icon = icons->data;
 
 			/* Compute & render the title */
-			r1.x=col * 70;
-			r1.y=row * (60 + label_height) + 55;
-			r1.width = 70;
+			r1.x=col * il_col_width (il);
+			r1.y=row * il_row_height (il) + il->_priv->icon_size + LABEL_YMARGIN;
+			r1.width = il_col_width (il);
 			r1.height = label_height;
 
 			r2.x = event->area.x;
@@ -309,7 +359,7 @@ class GPE:IconList from Gtk:Scrolled:Window {
 				pango_layout_get_pixel_extents  (pl, NULL, &pr);
 
 				while ((pango_layout_get_line_count (pl) > 2 ||
-					pr.width > 70) && slen>0) {
+					pr.width > il_col_width (il)) && slen>0) {
 					char *newtxt;
 					char *fmt;
 					if (stxt[slen-2] == ' ')
@@ -349,6 +399,24 @@ class GPE:IconList from Gtk:Scrolled:Window {
 		return TRUE;
 	}
 
+	private void _recalc_size (self, GtkAllocation *allocation)
+	{
+		int count;
+
+		if (allocation->width > 15 + il_col_width (self)) 
+			self->_priv->cols = (allocation->width - 15) / il_col_width (self);
+		else
+			self->_priv->cols = 1;
+		
+		count = g_list_length (self->_priv->icons);
+		
+		self->_priv->rows = ((count+self->_priv->cols-1)/self->_priv->cols);
+
+		gtk_drawing_area_size (
+			GTK_DRAWING_AREA(gtk_object_get_data (GTK_OBJECT(self), "da")),
+			allocation->width, self->_priv->rows * il_row_height (self) + 5);
+	}
+
 	private struct ILIcon *new_icon (char *title, char *icon, gpointer udata, GdkPixbuf *pb)
 	{
 		struct ILIcon *ret;
@@ -357,20 +425,24 @@ class GPE:IconList from Gtk:Scrolled:Window {
 		ret->icon = icon;
 		ret->udata = udata;
 		ret->pb = pb;
+		ret->pb_scaled = NULL;
 		return ret;
 	}
 
 	public void add_item (self, char *title, char *icon, gpointer udata)
 	{
 		self->_priv->icons = g_list_append (self->_priv->icons, gpe_iconlist_new_icon (title, icon, udata, NULL));
-		gtk_widget_draw (GTK_WIDGET (self), NULL);
+		gpe_iconlist__recalc_size (self, &GTK_WIDGET(self)->allocation);
 	}
 
 	public void add_item_pixbuf (self, char *title, GdkPixbuf *icon, gpointer udata)
 	{
+		struct ILIcon *i;
 		gdk_pixbuf_ref (icon);
-		self->_priv->icons = g_list_append (self->_priv->icons, gpe_iconlist_new_icon (title, NULL, udata, icon));
-		gtk_widget_draw (GTK_WIDGET (self), NULL);
+		i = gpe_iconlist_new_icon (title, NULL, udata, icon);
+		self->_priv->icons = g_list_append (self->_priv->icons, i);
+		gpe_iconlist__check_icon_size (self, i);
+		gpe_iconlist__recalc_size (self, &GTK_WIDGET(self)->allocation);
 	}
 
 	public void set_embolden (self, gboolean yes)
@@ -385,11 +457,32 @@ class GPE:IconList from Gtk:Scrolled:Window {
 			struct ILIcon *i = (struct ILIcon *)iter->data;
 			if (i->pb)
 				gdk_pixbuf_unref (i->pb);
+			if (i->pb_scaled)
+				gdk_pixbuf_unref (i->pb_scaled);
 			free (i);
 		}
 		
 		g_list_free (self->_priv->icons);
 		self->_priv->icons = NULL;
+
+		gpe_iconlist__recalc_size (self, &GTK_WIDGET(self)->allocation);
+	}
+
+	public void set_icon_size (self, guint size)
+	{
+		GList *iter;
+
+		for (iter = self->_priv->icons; iter; iter = iter->next) {
+			struct ILIcon *i = (struct ILIcon *)iter->data;
+			if (i->pb_scaled)
+				gdk_pixbuf_unref (i->pb_scaled);
+			i->pb_scaled = NULL;
+		}
+
+		self->_priv->icon_size = size;
+
+		gpe_iconlist__recalc_size (self, &GTK_WIDGET(self)->allocation);
+
 		gtk_widget_draw (GTK_WIDGET (self), NULL);
 	}
 
@@ -397,8 +490,6 @@ class GPE:IconList from Gtk:Scrolled:Window {
 	void
 	size_allocate (Gtk:Widget *self, GtkAllocation *allocation)
 	{
-		int count=0;
-		int label_height;
 		GPEIconList *il;
 		il = GPE_ICONLIST(self);
 
@@ -413,43 +504,24 @@ class GPE:IconList from Gtk:Scrolled:Window {
 		g_object_set_data (G_OBJECT(il), "size_x", (gpointer)allocation->width);
 		g_object_set_data (G_OBJECT(il), "size_y", (gpointer)allocation->height);
 		
-		if (allocation->width - 15 > 70) 
-			il->_priv->cols = (allocation->width - 15) / 70;
-		else
-			il->_priv->cols = 1;
-		
-		count = g_list_length (il->_priv->icons);
-		
-		il->_priv->rows = ((count+il->_priv->cols-1)/il->_priv->cols);
-		
-		label_height = gpe_iconlist__title_height (GTK_WIDGET(il));
-		
-		gtk_drawing_area_size (
-			GTK_DRAWING_AREA(gtk_object_get_data (GTK_OBJECT(il), "da")),
-			allocation->width, il->_priv->rows * (60 + label_height) + 5);
-		
+		gpe_iconlist__recalc_size (il, allocation);
+
 		PARENT_HANDLER (self, allocation);
 	}
 
-	private void _get_rowcol (GtkWidget *widget, int x, int y, int *col, int *row) {
-		int label_height;
-
-		label_height = gpe_iconlist__title_height (GTK_WIDGET(widget));
-
-		*col = (double)x / (double)70;
-		*row = (double)y / (double)(60 + label_height);
+	private void _get_rowcol (GPEIconList *widget, int x, int y, int *col, int *row) {
+		*col = x / il_col_width (widget);
+		*row = y / il_row_height (widget);
 	}
 
-	private void _refresh_containing (GtkWidget *widget, int col, int row) {
+	private void _refresh_containing (GPEIconList *widget, int col, int row) {
 		int x, y;
-		int label_height;
+		GtkWidget *w = GTK_WIDGET(gtk_object_get_data (GTK_OBJECT(widget), "da"));
 
-		label_height = gpe_iconlist__title_height (GTK_WIDGET(widget));
+		x=col * il_col_width (widget);
+		y=row * il_row_height (widget);
 
-		x=col * 70;
-		y=row * (60 + label_height);
-
-		gtk_widget_queue_draw_area (widget, x, y, 70, 60 + label_height + 5);
+		gtk_widget_queue_draw_area (w, x, y, il_col_width (widget), il_row_height (widget) + 5);
 	}
 
 	private struct ILIcon *_get_icon (GPEIconList *il, int col, int row) {
@@ -481,17 +553,17 @@ class GPE:IconList from Gtk:Scrolled:Window {
 
 		gpe_iconlist__cancel_popup (il);
 
-		gpe_iconlist__refresh_containing (GTK_WIDGET(widget), il->_priv->mcol, il->_priv->mrow);
+		gpe_iconlist__refresh_containing (il, il->_priv->mcol, il->_priv->mrow);
 
-		gpe_iconlist__get_rowcol (widget, event->x, event->y, &(col), &(row));
+		gpe_iconlist__get_rowcol (il, event->x, event->y, &(col), &(row));
 		if (col == il->_priv->mcol && row == il->_priv->mrow) {
 			struct ILIcon *data;
 			data = gpe_iconlist__get_icon(il, il->_priv->mcol, il->_priv->mrow);
+			il->_priv->mcol = il->_priv->mrow = -1;
 			if (data)
 				gpe_iconlist_clicked (il, data->udata);
-		}
-
-		il->_priv->mcol = il->_priv->mrow = -1;
+		} else
+			il->_priv->mcol = il->_priv->mrow = -1;
 
 		return TRUE;
 	}
@@ -503,19 +575,20 @@ class GPE:IconList from Gtk:Scrolled:Window {
 		row = il->_priv->mrow;
 		col = il->_priv->mcol;
 
-		il->_priv->mcol = il->_priv->mrow = -1;
-		/*
-		gdk_pointer_grab (GTK_WIDGET(il)->window,
-				  TRUE,
-				  GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK,
-				  NULL, NULL, GDK_CURRENT_TIME);
-		*/
 		gpe_iconlist_show_popup(il, gpe_iconlist__get_icon(il,col, row)->udata);
 
-		gpe_iconlist__refresh_containing (GTK_WIDGET(gtk_object_get_data (GTK_OBJECT(il), "da")),
-						  col, row);
-
 		return FALSE;
+	}
+
+	public void popup_removed (self) {
+		int row, col;
+
+		row = self->_priv->mrow;
+		col = self->_priv->mcol;
+		
+		self->_priv->mcol = self->_priv->mrow = -1;
+
+		gpe_iconlist__refresh_containing (self, col, row);
 	}
 
 	private gint _button_press (GtkWidget *widget, GdkEventButton *event, gpointer user_data) {
@@ -523,8 +596,8 @@ class GPE:IconList from Gtk:Scrolled:Window {
 
 		il = GPE_ICONLIST(gtk_object_get_data (GTK_OBJECT(widget), "il"));
 
-		gpe_iconlist__get_rowcol (widget, event->x, event->y, &(il->_priv->mcol), &(il->_priv->mrow));
-		gpe_iconlist__refresh_containing (widget, il->_priv->mcol, il->_priv->mrow);
+		gpe_iconlist__get_rowcol (il, event->x, event->y, &(il->_priv->mcol), &(il->_priv->mrow));
+		gpe_iconlist__refresh_containing (il, il->_priv->mcol, il->_priv->mrow);
 
 		/* Register a popup if there is an icon under the cursor */
 		if (gpe_iconlist__get_icon(il, il->_priv->mcol, il->_priv->mrow)) {

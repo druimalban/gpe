@@ -1,3 +1,41 @@
+2002-12-23  Philip Blundell  <philb@gnu.org>
+
+	Merge changes from hacked-iconlist-branch:
+	* gpeiconlist.gob (LABEL_YMARGIN, LABEL_XMARGIN, COL_WIDTH):
+	Define.
+	(il_label_height, il_icon_size, il_row_height, il_col_width): New
+	macros.
+	(struct ILIcon): New member pb_scaled.
+	(GPE:IconList): New members icon_size, label_height.
+	(init): Initialise label_height.
+	(bg_set_pixmap): New method.
+	(_check_icon_size): New function.
+	(_title_height): Make argument GPEIconList*.
+	(_expose): Use il_col_width and il_row_height in place of
+	hardcoded constants.  Use il_label_height rather than calling 
+	_title_height repeatedly.  Use prescaled icon from pb_scaled.
+	Allow icon width to float and centre pixmap accordingly.
+	(_recalc_size): New function, broken out from size_allocate.
+	(new_icon): Initialise pb_scaled to NULL.
+	(add_item): Call _recalc_size.  Don't force widget redraw.
+	(add_item_pixbuf): Likewise.  Call _check_icon_size to rescale
+	newly added pixbuf. 
+	(clear): Unref scaled pixbuf too.  Call _recalc_size.
+	(set_icon_size): New method.
+	(_get_rowcol): Remove spurious floating point usage.  Replace
+	hard-coded constants with il_col_width / il_row_height as
+	appropriate.  Make first argument GPEIconList*.
+	(_refresh_containing): Use il_col_width and il_row_height as
+	appropriate.  Make first argument GPEIconList*.
+	(_button_release): Pass iconlist to _refresh_containing and
+	_get_rowcol.  Set mcol and mrow to -1 prior to generating
+	"clicked" event.
+	(_popup): Don't clear selection here.
+	(popup_removed): New method.
+	(button_press): Pass iconlist to _refresh_containing and
+	_get_rowcol.
+	* gpe-iconlist.c, gpe/gpe-iconlist.h: Regenerated.
+
 2002-12-22  Philip Blundell  <philb@gnu.org>
 
 	* gpe/pixmaps.h: Include gtk/gtk.h.

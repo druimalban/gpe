@@ -58,6 +58,8 @@ void 	gpe_iconlist_show_popup	(GPEIconList * self,
 GtkWidget * 	gpe_iconlist_new	(void);
 void 	gpe_iconlist_set_bg	(GPEIconList * self,
 					char * bg);
+void 	gpe_iconlist_set_bg_pixmap	(GPEIconList * self,
+					GdkPixbuf * bg);
 void 	gpe_iconlist_add_item	(GPEIconList * self,
 					char * title,
 					char * icon,
@@ -69,6 +71,9 @@ void 	gpe_iconlist_add_item_pixbuf	(GPEIconList * self,
 void 	gpe_iconlist_set_embolden	(GPEIconList * self,
 					gboolean yes);
 void 	gpe_iconlist_clear	(GPEIconList * self);
+void 	gpe_iconlist_set_icon_size	(GPEIconList * self,
+					guint size);
+void 	gpe_iconlist_popup_removed	(GPEIconList * self);
 
 /*
  * Signal connection wrapper macros
