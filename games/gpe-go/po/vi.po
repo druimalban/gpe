@@ -1,0 +1,85 @@
+# Vietnamese Translation for gpe-go-0.05.
+# Copyright (C) 2005 Free Software Foundation, Inc.
+# Clytie Siddall <clytie@riverland.net.au>, 2005.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-go 0.05\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2003-11-09 22:28+0200\n"
+"PO-Revision-Date: 2005-02-01 22:06+0930\n"
+"Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
+"Language-Team: Vietnamese <gnomevi-list@lists.sourceforge.net> \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: gpe-go.c:754
+#, c-format
+msgid "B:%d  W:%d "
+msgstr "B:%d  W:%d "
+
+#: gpe-go.c:1083
+#, c-format
+msgid "Cannot save the game into %s."
+msgstr "Không lưu trò chơi này vào %s."
+
+#: gpe-go.c:1357
+msgid "New..."
+msgstr "Mới..."
+
+#: gpe-go.c:1358
+msgid "Save..."
+msgstr "Lưu..."
+
+#: gpe-go.c:1359
+msgid "Load..."
+msgstr "Tải..."
+
+#: gpe-go.c:1419
+msgid "Game menu"
+msgstr "Trình đơn chơi"
+
+#: gpe-go.c:1427
+msgid "First"
+msgstr "Đầu"
+
+#: gpe-go.c:1428 gpe-go.c:1429
+msgid "Go to the beginning of the game"
+msgstr "Đi đầu trò chơi"
+
+#: gpe-go.c:1435
+msgid "Undo"
+msgstr "Hoàn tác"
+
+#: gpe-go.c:1441
+msgid "Redo"
+msgstr "Làm lại"
+
+#: gpe-go.c:1447
+msgid "Last"
+msgstr "Cuối cùng"
+
+#: gpe-go.c:1448 gpe-go.c:1449
+msgid "Go to the end of the game"
+msgstr "Đi cuối cùng trò chơi"
+
+#: gpe-go.c:1457
+msgid "B:0  W:0 "
+msgstr "B:0  W:0 "
+
+#: gpe-go.c:1467
+msgid "Pass"
+msgstr "Bỏ"
+
+#: gpe-go.c:1467
+msgid "Pass your turn"
+msgstr "Không đi lần này"
+
+#: gpe-go.desktop.in.h:1
+msgid "GPE Go"
+msgstr "GPE Go"
+
+#: gpe-go.desktop.in.h:2
+msgid "Go"
+msgstr "Go"
