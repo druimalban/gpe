@@ -1,5 +1,9 @@
 2003-01-04  Philip Blundell  <philb@gnu.org>
 
+	* gpe-login.setup: Revert change of 2002-12-17.
+
+2003-01-04  Philip Blundell  <philb@gnu.org>
+
 	* gpe-session-scripts 0.32 released.
 	
 2003-01-04  Philip Blundell  <philb@gnu.org>
