@@ -1,5 +1,8 @@
 2003-02-23  Colin Marquardt  <colin@marquardt-home.de>
 
+	* gpe-logout.sh: Swap order of the buttons. Make primary text
+	bold and larger, add secondary text.
+
 	* gpe-logout.png: Remove padding.
 
 2003-02-22  Philip Blundell  <philb@gnu.org>

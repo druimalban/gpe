@@ -1,4 +1,5 @@
 #!/bin/sh
 
-gpe-question --icon /usr/share/pixmaps/gpe-logout.png --question "Are you sure you want
-to log out?" --buttons "ok:Log out" !gtk-cancel && mbcontrol -exit
+gpe-question --icon /usr/share/pixmaps/gpe-logout.png --question "<span weight="bold" size="larger">Are you sure you want to log out?</span> 
+
+Unsaved data from applications will be lost." --buttons !gtk-cancel "ok:Log out" && mbcontrol -exit
