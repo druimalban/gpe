@@ -15,7 +15,7 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 */
-
+ 
 #include <gtk/gtk.h>
 
 
@@ -28,6 +28,7 @@ void
 on_GPE_WLANCFG_show                    (GtkWidget       *widget,
                                         gpointer         user_data);
 
+/*
 void
 on_btnUp_clicked                       (GtkButton       *button,
                                         gpointer         user_data);
@@ -35,6 +36,7 @@ on_btnUp_clicked                       (GtkButton       *button,
 void
 on_btnDown_clicked                     (GtkButton       *button,
                                         gpointer         user_data);
+*/
 
 void
 on_btnDelete_clicked                   (GtkButton       *button,

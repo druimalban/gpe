@@ -14,7 +14,7 @@
 
 PACKAGE = gpe-wlancfg
 PREFIX = /usr/local
-DEBUG = no
+DEBUG = yes
 LINGUAS = de pt_PT
 VERSION = 0.2.1
 GTK2 = yes
@@ -39,12 +39,12 @@ CPPFLAGS = $(GTKCFLAGS) -D_GNU_SOURCE -I../libgpewidget
 ifeq ($(DEBUG),yes)
 CFLAGS += -O2 -g
 else
-CFLAGS += -Os -fomit-frame-pointer
+CFLAGS += -Os -fomit-frame-pointer 
 LDFLAGS = -L/skiff/local/arm-linux/lib/X11  -lXinerama -lgdk-x11-2.0 -lX11 -lXrender -lXext
 endif
 
 CFLAGS += -Wall
-CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\" -DPACKAGE_DATA_DIR=\"$(PREFIX)/share/\"
+CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\" -DPACKAGE_DATA_DIR=\"$(PREFIX)/share/\" -DENABLE_NLS
 CFLAGS += -MD
 
 LEXFLAGS = -L

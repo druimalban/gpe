@@ -136,7 +136,7 @@ char *get_config_line(Scheme_t *Schemes, int scount, int linenr)
 						break;
 				
 					case	L_Mode:
-						
+			 			
 						sprintf(configline, "\tMODE=\"%s\"\n",Schemes[count].Mode);
 						break;
 					

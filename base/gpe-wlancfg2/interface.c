@@ -88,20 +88,7 @@ create_GPE_WLANCFG (void)
   GtkWidget *GPE_WLANCFG;
   GtkWidget *nbPseudoMain;
   GtkWidget *vbSchemes;
-  GtkWidget *frame1;
-  GtkWidget *vbox2;
-  GtkWidget *swSchemeList;
   GtkWidget *tvSchemeList;
-  GtkWidget *hbox1;
-  GtkWidget *btnUp;
-  GtkWidget *arUp;
-  GtkWidget *btnDown;
-  GtkWidget *arDown;
-  GtkWidget *lblScheme;
-  GtkWidget *hbbEditButtons;
-  GtkWidget *btnDelete;
-  GtkWidget *btnNew;
-  GtkWidget *btnEdit;
   GtkWidget *lblTab1;
   GtkWidget *vbConfigSelection;
   GtkWidget *nbConfigSelection;
@@ -200,7 +187,98 @@ create_GPE_WLANCFG (void)
   GtkWidget *lblTabExpert;
   GtkWidget *hbbHelp;
   GtkWidget *btnHelp;
+  GtkWidget *btnBack;
   GtkWidget *lblTab2;
+  GtkWidget *vbox1;
+  GtkWidget *notebook1;
+  GtkWidget *table1;
+  GtkWidget *label2;
+  GtkWidget *label3;
+  GtkWidget *label4;
+  GtkWidget *label5;
+  GtkWidget *entry1;
+  GtkWidget *entry2;
+  GtkWidget *entry3;
+  GtkWidget *entry4;
+  GtkWidget *label6;
+  GtkWidget *table2;
+  GtkWidget *label8;
+  GtkWidget *entry6;
+  GtkWidget *radiobutton10;
+  GSList *radiobutton10_group = NULL;
+  GtkWidget *radiobutton11;
+  GtkWidget *label33;
+  GtkWidget *label11;
+  GtkWidget *table3;
+  GtkWidget *radiobutton1;
+  GSList *radiobutton1_group = NULL;
+  GtkWidget *radiobutton2;
+  GtkWidget *radiobutton3;
+  GtkObject *spinbutton1_adj;
+  GtkWidget *spinbutton1;
+  GtkObject *spinbutton2_adj;
+  GtkWidget *spinbutton2;
+  GtkWidget *label12;
+  GtkWidget *label13;
+  GtkWidget *optionmenu2;
+  GtkWidget *menu4;
+  GtkWidget *menuitem7;
+  GtkWidget *menuitem8;
+  GtkWidget *menuitem9;
+  GtkWidget *menuitem10;
+  GtkWidget *hseparator4;
+  GtkWidget *label14;
+  GtkWidget *table4;
+  GtkWidget *label15;
+  GtkWidget *hseparator5;
+  GtkWidget *vbox2;
+  GtkWidget *radiobutton4;
+  GSList *radiobutton4_group = NULL;
+  GtkWidget *radiobutton5;
+  GtkWidget *vbox3;
+  GtkWidget *radiobutton6;
+  GSList *radiobutton6_group = NULL;
+  GtkWidget *radiobutton7;
+  GtkWidget *label16;
+  GtkWidget *label17;
+  GtkWidget *table5;
+  GtkWidget *hseparator6;
+  GtkWidget *label18;
+  GtkWidget *vbox4;
+  GtkWidget *radiobutton8;
+  GSList *radiobutton8_group = NULL;
+  GtkWidget *radiobutton9;
+  GtkWidget *label19;
+  GtkWidget *label20;
+  GtkWidget *label21;
+  GtkWidget *label22;
+  GtkWidget *entry8;
+  GtkWidget *entry9;
+  GtkWidget *entry10;
+  GtkWidget *entry11;
+  GtkWidget *label23;
+  GtkObject *spinbutton3_adj;
+  GtkWidget *spinbutton3;
+  GtkWidget *label24;
+  GtkWidget *table6;
+  GtkWidget *label25;
+  GtkWidget *label26;
+  GtkWidget *label27;
+  GtkWidget *label28;
+  GtkWidget *label29;
+  GtkWidget *label30;
+  GtkWidget *label31;
+  GtkWidget *entry12;
+  GtkWidget *entry13;
+  GtkWidget *entry14;
+  GtkWidget *entry15;
+  GtkWidget *entry16;
+  GtkWidget *entry17;
+  GtkWidget *label32;
+  GtkWidget *hbuttonbox1;
+  GtkWidget *button1;
+  GtkWidget *button2;
+  GtkWidget *lblTab3;
 
   GPE_WLANCFG = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_widget_set_name (GPE_WLANCFG, "GPE_WLANCFG");
@@ -218,90 +296,12 @@ create_GPE_WLANCFG (void)
   gtk_widget_set_name (vbSchemes, "vbSchemes");
   gtk_widget_show (vbSchemes);
   gtk_container_add (GTK_CONTAINER (nbPseudoMain), vbSchemes);
-
-  frame1 = gtk_frame_new (NULL);
-  gtk_widget_set_name (frame1, "frame1");
-  gtk_widget_show (frame1);
-  gtk_box_pack_start (GTK_BOX (vbSchemes), frame1, TRUE, TRUE, 0);
-
-  vbox2 = gtk_vbox_new (FALSE, 0);
-  gtk_widget_set_name (vbox2, "vbox2");
-  gtk_widget_show (vbox2);
-  gtk_container_add (GTK_CONTAINER (frame1), vbox2);
-
-  swSchemeList = gtk_scrolled_window_new (NULL, NULL);
-  gtk_widget_set_name (swSchemeList, "swSchemeList");
-  gtk_widget_show (swSchemeList);
-  gtk_box_pack_start (GTK_BOX (vbox2), swSchemeList, TRUE, TRUE, 0);
-  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (swSchemeList), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+  gtk_container_set_border_width (GTK_CONTAINER (vbSchemes), 3);
 
   tvSchemeList = gtk_tree_view_new ();
   gtk_widget_set_name (tvSchemeList, "tvSchemeList");
   gtk_widget_show (tvSchemeList);
-  gtk_container_add (GTK_CONTAINER (swSchemeList), tvSchemeList);
-
-  hbox1 = gtk_hbox_new (TRUE, 0);
-  gtk_widget_set_name (hbox1, "hbox1");
-  gtk_widget_show (hbox1);
-  gtk_box_pack_start (GTK_BOX (vbox2), hbox1, FALSE, TRUE, 0);
-
-  btnUp = gtk_button_new ();
-  gtk_widget_set_name (btnUp, "btnUp");
-  gtk_widget_show (btnUp);
-  gtk_box_pack_start (GTK_BOX (hbox1), btnUp, FALSE, FALSE, 0);
-  gtk_widget_set_usize (btnUp, 40, -2);
-  gtk_container_set_border_width (GTK_CONTAINER (btnUp), 5);
-
-  arUp = gtk_arrow_new (GTK_ARROW_UP, GTK_SHADOW_OUT);
-  gtk_widget_set_name (arUp, "arUp");
-  gtk_widget_show (arUp);
-  gtk_container_add (GTK_CONTAINER (btnUp), arUp);
-
-  btnDown = gtk_button_new ();
-  gtk_widget_set_name (btnDown, "btnDown");
-  gtk_widget_show (btnDown);
-  gtk_box_pack_start (GTK_BOX (hbox1), btnDown, FALSE, FALSE, 0);
-  gtk_widget_set_usize (btnDown, 40, -2);
-  gtk_container_set_border_width (GTK_CONTAINER (btnDown), 5);
-
-  arDown = gtk_arrow_new (GTK_ARROW_DOWN, GTK_SHADOW_OUT);
-  gtk_widget_set_name (arDown, "arDown");
-  gtk_widget_show (arDown);
-  gtk_container_add (GTK_CONTAINER (btnDown), arDown);
-
-  lblScheme = gtk_label_new (_("Profile"));
-  gtk_widget_set_name (lblScheme, "lblScheme");
-  gtk_widget_show (lblScheme);
-  gtk_frame_set_label_widget (GTK_FRAME (frame1), lblScheme);
-  gtk_label_set_justify (GTK_LABEL (lblScheme), GTK_JUSTIFY_LEFT);
-
-  hbbEditButtons = gtk_hbutton_box_new ();
-  gtk_widget_set_name (hbbEditButtons, "hbbEditButtons");
-  gtk_widget_show (hbbEditButtons);
-  gtk_box_pack_start (GTK_BOX (vbSchemes), hbbEditButtons, FALSE, FALSE, 0);
-  gtk_button_box_set_layout (GTK_BUTTON_BOX (hbbEditButtons), GTK_BUTTONBOX_SPREAD);
-  gtk_button_box_set_spacing (GTK_BUTTON_BOX (hbbEditButtons), 0);
-
-  btnDelete = gtk_button_new_with_mnemonic (_("Delete"));
-  gtk_widget_set_name (btnDelete, "btnDelete");
-  gtk_widget_show (btnDelete);
-  gtk_container_add (GTK_CONTAINER (hbbEditButtons), btnDelete);
-  gtk_container_set_border_width (GTK_CONTAINER (btnDelete), 10);
-  GTK_WIDGET_SET_FLAGS (btnDelete, GTK_CAN_DEFAULT);
-
-  btnNew = gtk_button_new_with_mnemonic (_("New"));
-  gtk_widget_set_name (btnNew, "btnNew");
-  gtk_widget_show (btnNew);
-  gtk_container_add (GTK_CONTAINER (hbbEditButtons), btnNew);
-  gtk_container_set_border_width (GTK_CONTAINER (btnNew), 10);
-  GTK_WIDGET_SET_FLAGS (btnNew, GTK_CAN_DEFAULT);
-
-  btnEdit = gtk_button_new_with_mnemonic (_("Edit"));
-  gtk_widget_set_name (btnEdit, "btnEdit");
-  gtk_widget_show (btnEdit);
-  gtk_container_add (GTK_CONTAINER (hbbEditButtons), btnEdit);
-  gtk_container_set_border_width (GTK_CONTAINER (btnEdit), 10);
-  GTK_WIDGET_SET_FLAGS (btnEdit, GTK_CAN_DEFAULT);
+  gtk_box_pack_start (GTK_BOX (vbSchemes), tvSchemeList, TRUE, TRUE, 0);
 
   lblTab1 = gtk_label_new (_("Tab1"));
   gtk_widget_set_name (lblTab1, "lblTab1");
@@ -971,17 +971,646 @@ create_GPE_WLANCFG (void)
   gtk_container_set_border_width (GTK_CONTAINER (hbbHelp), 10);
   gtk_button_box_set_spacing (GTK_BUTTON_BOX (hbbHelp), 0);
 
-  btnHelp = gtk_button_new_with_mnemonic (_("Help"));
+  btnHelp = gtk_button_new_from_stock ("gtk-help");
   gtk_widget_set_name (btnHelp, "btnHelp");
   gtk_widget_show (btnHelp);
   gtk_container_add (GTK_CONTAINER (hbbHelp), btnHelp);
   GTK_WIDGET_SET_FLAGS (btnHelp, GTK_CAN_DEFAULT);
+
+  btnBack = gtk_button_new_from_stock ("gtk-go-back");
+  gtk_widget_set_name (btnBack, "btnBack");
+  gtk_widget_show (btnBack);
+  gtk_container_add (GTK_CONTAINER (hbbHelp), btnBack);
+  GTK_WIDGET_SET_FLAGS (btnBack, GTK_CAN_DEFAULT);
 
   lblTab2 = gtk_label_new (_("Tab2"));
   gtk_widget_set_name (lblTab2, "lblTab2");
   gtk_widget_show (lblTab2);
   gtk_notebook_set_tab_label (GTK_NOTEBOOK (nbPseudoMain), gtk_notebook_get_nth_page (GTK_NOTEBOOK (nbPseudoMain), 1), lblTab2);
   gtk_label_set_justify (GTK_LABEL (lblTab2), GTK_JUSTIFY_LEFT);
+
+  vbox1 = gtk_vbox_new (FALSE, 0);
+  gtk_widget_set_name (vbox1, "vbox1");
+  gtk_widget_show (vbox1);
+  gtk_container_add (GTK_CONTAINER (nbPseudoMain), vbox1);
+
+  notebook1 = gtk_notebook_new ();
+  gtk_widget_set_name (notebook1, "notebook1");
+  gtk_widget_show (notebook1);
+  gtk_box_pack_start (GTK_BOX (vbox1), notebook1, TRUE, TRUE, 0);
+  gtk_notebook_set_scrollable (GTK_NOTEBOOK (notebook1), TRUE);
+
+  table1 = gtk_table_new (4, 2, FALSE);
+  gtk_widget_set_name (table1, "table1");
+  gtk_widget_show (table1);
+  gtk_container_add (GTK_CONTAINER (notebook1), table1);
+  gtk_container_set_border_width (GTK_CONTAINER (table1), 5);
+  gtk_table_set_row_spacings (GTK_TABLE (table1), 5);
+  gtk_table_set_col_spacings (GTK_TABLE (table1), 10);
+
+  label2 = gtk_label_new (_("Profile:"));
+  gtk_widget_set_name (label2, "label2");
+  gtk_widget_show (label2);
+  gtk_table_attach (GTK_TABLE (table1), label2, 0, 1, 0, 1,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_label_set_justify (GTK_LABEL (label2), GTK_JUSTIFY_LEFT);
+  gtk_misc_set_alignment (GTK_MISC (label2), 0, 0.5);
+
+  label3 = gtk_label_new (_("Socket:"));
+  gtk_widget_set_name (label3, "label3");
+  gtk_widget_show (label3);
+  gtk_table_attach (GTK_TABLE (table1), label3, 0, 1, 1, 2,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_label_set_justify (GTK_LABEL (label3), GTK_JUSTIFY_LEFT);
+  gtk_misc_set_alignment (GTK_MISC (label3), 0, 0.5);
+
+  label4 = gtk_label_new (_("Instance:"));
+  gtk_widget_set_name (label4, "label4");
+  gtk_widget_show (label4);
+  gtk_table_attach (GTK_TABLE (table1), label4, 0, 1, 2, 3,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_label_set_justify (GTK_LABEL (label4), GTK_JUSTIFY_LEFT);
+  gtk_misc_set_alignment (GTK_MISC (label4), 0, 0.5);
+
+  label5 = gtk_label_new (_("MAC:"));
+  gtk_widget_set_name (label5, "label5");
+  gtk_widget_show (label5);
+  gtk_table_attach (GTK_TABLE (table1), label5, 0, 1, 3, 4,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_label_set_justify (GTK_LABEL (label5), GTK_JUSTIFY_LEFT);
+  gtk_misc_set_alignment (GTK_MISC (label5), 0, 0.5);
+
+  entry1 = gtk_entry_new ();
+  gtk_widget_set_name (entry1, "entry1");
+  gtk_widget_show (entry1);
+  gtk_table_attach (GTK_TABLE (table1), entry1, 1, 2, 0, 1,
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_entry_set_text (GTK_ENTRY (entry1), _("*"));
+
+  entry2 = gtk_entry_new ();
+  gtk_widget_set_name (entry2, "entry2");
+  gtk_widget_show (entry2);
+  gtk_table_attach (GTK_TABLE (table1), entry2, 1, 2, 1, 2,
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_entry_set_text (GTK_ENTRY (entry2), _("*"));
+
+  entry3 = gtk_entry_new ();
+  gtk_widget_set_name (entry3, "entry3");
+  gtk_widget_show (entry3);
+  gtk_table_attach (GTK_TABLE (table1), entry3, 1, 2, 2, 3,
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_entry_set_text (GTK_ENTRY (entry3), _("*"));
+
+  entry4 = gtk_entry_new ();
+  gtk_widget_set_name (entry4, "entry4");
+  gtk_widget_show (entry4);
+  gtk_table_attach (GTK_TABLE (table1), entry4, 1, 2, 3, 4,
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_entry_set_text (GTK_ENTRY (entry4), _("*"));
+
+  label6 = gtk_label_new (_("Profile"));
+  gtk_widget_set_name (label6, "label6");
+  gtk_widget_show (label6);
+  gtk_notebook_set_tab_label (GTK_NOTEBOOK (notebook1), gtk_notebook_get_nth_page (GTK_NOTEBOOK (notebook1), 0), label6);
+  gtk_label_set_justify (GTK_LABEL (label6), GTK_JUSTIFY_LEFT);
+
+  table2 = gtk_table_new (4, 2, FALSE);
+  gtk_widget_set_name (table2, "table2");
+  gtk_widget_show (table2);
+  gtk_container_add (GTK_CONTAINER (notebook1), table2);
+  gtk_container_set_border_width (GTK_CONTAINER (table2), 5);
+  gtk_table_set_row_spacings (GTK_TABLE (table2), 5);
+  gtk_table_set_col_spacings (GTK_TABLE (table2), 10);
+
+  label8 = gtk_label_new (_("ESSID:"));
+  gtk_widget_set_name (label8, "label8");
+  gtk_widget_show (label8);
+  gtk_table_attach (GTK_TABLE (table2), label8, 0, 1, 2, 3,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_label_set_justify (GTK_LABEL (label8), GTK_JUSTIFY_LEFT);
+  gtk_misc_set_alignment (GTK_MISC (label8), 0, 0.5);
+
+  entry6 = gtk_entry_new ();
+  gtk_widget_set_name (entry6, "entry6");
+  gtk_widget_show (entry6);
+  gtk_table_attach (GTK_TABLE (table2), entry6, 1, 2, 2, 3,
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_entry_set_text (GTK_ENTRY (entry6), _("any"));
+
+  radiobutton10 = gtk_radio_button_new_with_mnemonic (NULL, _("Infrastructure"));
+  gtk_widget_set_name (radiobutton10, "radiobutton10");
+  gtk_widget_show (radiobutton10);
+  gtk_table_attach (GTK_TABLE (table2), radiobutton10, 0, 1, 1, 2,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_radio_button_set_group (GTK_RADIO_BUTTON (radiobutton10), radiobutton10_group);
+  radiobutton10_group = gtk_radio_button_group (GTK_RADIO_BUTTON (radiobutton10));
+
+  radiobutton11 = gtk_radio_button_new_with_mnemonic (NULL, _("Ad-Hoc"));
+  gtk_widget_set_name (radiobutton11, "radiobutton11");
+  gtk_widget_show (radiobutton11);
+  gtk_table_attach (GTK_TABLE (table2), radiobutton11, 1, 2, 1, 2,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_radio_button_set_group (GTK_RADIO_BUTTON (radiobutton11), radiobutton10_group);
+  radiobutton10_group = gtk_radio_button_group (GTK_RADIO_BUTTON (radiobutton11));
+
+  label33 = gtk_label_new (_("Network type:"));
+  gtk_widget_set_name (label33, "label33");
+  gtk_widget_show (label33);
+  gtk_table_attach (GTK_TABLE (table2), label33, 0, 2, 0, 1,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_label_set_justify (GTK_LABEL (label33), GTK_JUSTIFY_LEFT);
+  gtk_misc_set_alignment (GTK_MISC (label33), 0, 0.5);
+
+  label11 = gtk_label_new (_("General"));
+  gtk_widget_set_name (label11, "label11");
+  gtk_widget_show (label11);
+  gtk_notebook_set_tab_label (GTK_NOTEBOOK (notebook1), gtk_notebook_get_nth_page (GTK_NOTEBOOK (notebook1), 1), label11);
+  gtk_label_set_justify (GTK_LABEL (label11), GTK_JUSTIFY_LEFT);
+
+  table3 = gtk_table_new (5, 3, FALSE);
+  gtk_widget_set_name (table3, "table3");
+  gtk_widget_show (table3);
+  gtk_container_add (GTK_CONTAINER (notebook1), table3);
+  gtk_container_set_border_width (GTK_CONTAINER (table3), 5);
+  gtk_table_set_row_spacings (GTK_TABLE (table3), 5);
+  gtk_table_set_col_spacings (GTK_TABLE (table3), 10);
+
+  radiobutton1 = gtk_radio_button_new_with_mnemonic (NULL, _("Use default channel"));
+  gtk_widget_set_name (radiobutton1, "radiobutton1");
+  gtk_widget_show (radiobutton1);
+  gtk_table_attach (GTK_TABLE (table3), radiobutton1, 0, 2, 0, 1,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_radio_button_set_group (GTK_RADIO_BUTTON (radiobutton1), radiobutton1_group);
+  radiobutton1_group = gtk_radio_button_group (GTK_RADIO_BUTTON (radiobutton1));
+
+  radiobutton2 = gtk_radio_button_new_with_mnemonic (NULL, _("Frequency:"));
+  gtk_widget_set_name (radiobutton2, "radiobutton2");
+  gtk_widget_show (radiobutton2);
+  gtk_table_attach (GTK_TABLE (table3), radiobutton2, 0, 1, 1, 2,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_radio_button_set_group (GTK_RADIO_BUTTON (radiobutton2), rbDefaultChannel_group);
+  rbDefaultChannel_group = gtk_radio_button_group (GTK_RADIO_BUTTON (radiobutton2));
+
+  radiobutton3 = gtk_radio_button_new_with_mnemonic (NULL, _("Channel:"));
+  gtk_widget_set_name (radiobutton3, "radiobutton3");
+  gtk_widget_show (radiobutton3);
+  gtk_table_attach (GTK_TABLE (table3), radiobutton3, 0, 1, 2, 3,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_radio_button_set_group (GTK_RADIO_BUTTON (radiobutton3), rbDefaultChannel_group);
+  rbDefaultChannel_group = gtk_radio_button_group (GTK_RADIO_BUTTON (radiobutton3));
+
+  spinbutton1_adj = gtk_adjustment_new (2.412, 2.4, 2.4836, 0.001, 0.01, 0.1);
+  spinbutton1 = gtk_spin_button_new (GTK_ADJUSTMENT (spinbutton1_adj), 0.001, 4);
+  gtk_widget_set_name (spinbutton1, "spinbutton1");
+  gtk_widget_show (spinbutton1);
+  gtk_table_attach (GTK_TABLE (table3), spinbutton1, 1, 2, 1, 2,
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_widget_set_sensitive (spinbutton1, FALSE);
+
+  spinbutton2_adj = gtk_adjustment_new (1, 1, 14, 1, 10, 10);
+  spinbutton2 = gtk_spin_button_new (GTK_ADJUSTMENT (spinbutton2_adj), 1, 0);
+  gtk_widget_set_name (spinbutton2, "spinbutton2");
+  gtk_widget_show (spinbutton2);
+  gtk_table_attach (GTK_TABLE (table3), spinbutton2, 1, 2, 2, 3,
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_widget_set_sensitive (spinbutton2, FALSE);
+
+  label12 = gtk_label_new (_("Ghz"));
+  gtk_widget_set_name (label12, "label12");
+  gtk_widget_show (label12);
+  gtk_table_attach (GTK_TABLE (table3), label12, 2, 3, 1, 2,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_label_set_justify (GTK_LABEL (label12), GTK_JUSTIFY_LEFT);
+  gtk_misc_set_alignment (GTK_MISC (label12), 0, 0.5);
+
+  label13 = gtk_label_new (_("Rate:"));
+  gtk_widget_set_name (label13, "label13");
+  gtk_widget_show (label13);
+  gtk_table_attach (GTK_TABLE (table3), label13, 0, 1, 4, 5,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_label_set_justify (GTK_LABEL (label13), GTK_JUSTIFY_LEFT);
+  gtk_misc_set_alignment (GTK_MISC (label13), 0, 0.5);
+
+  optionmenu2 = gtk_option_menu_new ();
+  gtk_widget_set_name (optionmenu2, "optionmenu2");
+  gtk_widget_show (optionmenu2);
+  gtk_table_attach (GTK_TABLE (table3), optionmenu2, 1, 2, 4, 5,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+
+  menu4 = gtk_menu_new ();
+  gtk_widget_set_name (menu4, "menu4");
+
+  menuitem7 = gtk_menu_item_new_with_mnemonic (_("Auto"));
+  gtk_widget_set_name (menuitem7, "menuitem7");
+  gtk_widget_show (menuitem7);
+  gtk_container_add (GTK_CONTAINER (menu4), menuitem7);
+
+  menuitem8 = gtk_menu_item_new_with_mnemonic (_("1M"));
+  gtk_widget_set_name (menuitem8, "menuitem8");
+  gtk_widget_show (menuitem8);
+  gtk_container_add (GTK_CONTAINER (menu4), menuitem8);
+
+  menuitem9 = gtk_menu_item_new_with_mnemonic (_("2M"));
+  gtk_widget_set_name (menuitem9, "menuitem9");
+  gtk_widget_show (menuitem9);
+  gtk_container_add (GTK_CONTAINER (menu4), menuitem9);
+
+  menuitem10 = gtk_menu_item_new_with_mnemonic (_("11M"));
+  gtk_widget_set_name (menuitem10, "menuitem10");
+  gtk_widget_show (menuitem10);
+  gtk_container_add (GTK_CONTAINER (menu4), menuitem10);
+
+  gtk_option_menu_set_menu (GTK_OPTION_MENU (optionmenu2), menu4);
+
+  hseparator4 = gtk_hseparator_new ();
+  gtk_widget_set_name (hseparator4, "hseparator4");
+  gtk_widget_show (hseparator4);
+  gtk_table_attach (GTK_TABLE (table3), hseparator4, 0, 3, 3, 4,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (GTK_FILL), 0, 0);
+
+  label14 = gtk_label_new (_("RF-Params"));
+  gtk_widget_set_name (label14, "label14");
+  gtk_widget_show (label14);
+  gtk_notebook_set_tab_label (GTK_NOTEBOOK (notebook1), gtk_notebook_get_nth_page (GTK_NOTEBOOK (notebook1), 2), label14);
+  gtk_label_set_justify (GTK_LABEL (label14), GTK_JUSTIFY_LEFT);
+
+  table4 = gtk_table_new (3, 2, FALSE);
+  gtk_widget_set_name (table4, "table4");
+  gtk_widget_show (table4);
+  gtk_container_add (GTK_CONTAINER (notebook1), table4);
+  gtk_container_set_border_width (GTK_CONTAINER (table4), 5);
+  gtk_table_set_row_spacings (GTK_TABLE (table4), 5);
+  gtk_table_set_col_spacings (GTK_TABLE (table4), 10);
+
+  label15 = gtk_label_new (_("Mode:"));
+  gtk_widget_set_name (label15, "label15");
+  gtk_widget_show (label15);
+  gtk_table_attach (GTK_TABLE (table4), label15, 0, 1, 2, 3,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_label_set_justify (GTK_LABEL (label15), GTK_JUSTIFY_LEFT);
+  gtk_misc_set_alignment (GTK_MISC (label15), 0, 0.5);
+
+  hseparator5 = gtk_hseparator_new ();
+  gtk_widget_set_name (hseparator5, "hseparator5");
+  gtk_widget_show (hseparator5);
+  gtk_table_attach (GTK_TABLE (table4), hseparator5, 0, 2, 1, 2,
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_FILL), 0, 0);
+
+  vbox2 = gtk_vbox_new (FALSE, 0);
+  gtk_widget_set_name (vbox2, "vbox2");
+  gtk_widget_show (vbox2);
+  gtk_table_attach (GTK_TABLE (table4), vbox2, 1, 2, 2, 3,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND), 0, 0);
+
+  radiobutton4 = gtk_radio_button_new_with_mnemonic (NULL, _("Open"));
+  gtk_widget_set_name (radiobutton4, "radiobutton4");
+  gtk_widget_show (radiobutton4);
+  gtk_box_pack_start (GTK_BOX (vbox2), radiobutton4, FALSE, FALSE, 0);
+  gtk_radio_button_set_group (GTK_RADIO_BUTTON (radiobutton4), radiobutton4_group);
+  radiobutton4_group = gtk_radio_button_group (GTK_RADIO_BUTTON (radiobutton4));
+
+  radiobutton5 = gtk_radio_button_new_with_mnemonic (NULL, _("Restricted"));
+  gtk_widget_set_name (radiobutton5, "radiobutton5");
+  gtk_widget_show (radiobutton5);
+  gtk_box_pack_start (GTK_BOX (vbox2), radiobutton5, FALSE, FALSE, 0);
+  gtk_radio_button_set_group (GTK_RADIO_BUTTON (radiobutton5), rbOpen_group);
+  rbOpen_group = gtk_radio_button_group (GTK_RADIO_BUTTON (radiobutton5));
+
+  vbox3 = gtk_vbox_new (FALSE, 0);
+  gtk_widget_set_name (vbox3, "vbox3");
+  gtk_widget_show (vbox3);
+  gtk_table_attach (GTK_TABLE (table4), vbox3, 1, 2, 0, 1,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND), 0, 0);
+
+  radiobutton6 = gtk_radio_button_new_with_mnemonic (NULL, _("On"));
+  gtk_widget_set_name (radiobutton6, "radiobutton6");
+  gtk_widget_show (radiobutton6);
+  gtk_box_pack_start (GTK_BOX (vbox3), radiobutton6, FALSE, FALSE, 0);
+  gtk_radio_button_set_group (GTK_RADIO_BUTTON (radiobutton6), radiobutton6_group);
+  radiobutton6_group = gtk_radio_button_group (GTK_RADIO_BUTTON (radiobutton6));
+
+  radiobutton7 = gtk_radio_button_new_with_mnemonic (NULL, _("Off"));
+  gtk_widget_set_name (radiobutton7, "radiobutton7");
+  gtk_widget_show (radiobutton7);
+  gtk_box_pack_start (GTK_BOX (vbox3), radiobutton7, FALSE, FALSE, 0);
+  gtk_radio_button_set_group (GTK_RADIO_BUTTON (radiobutton7), rbOn_group);
+  rbOn_group = gtk_radio_button_group (GTK_RADIO_BUTTON (radiobutton7));
+
+  label16 = gtk_label_new (_("Encryption:"));
+  gtk_widget_set_name (label16, "label16");
+  gtk_widget_show (label16);
+  gtk_table_attach (GTK_TABLE (table4), label16, 0, 1, 0, 1,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_label_set_justify (GTK_LABEL (label16), GTK_JUSTIFY_LEFT);
+  gtk_misc_set_alignment (GTK_MISC (label16), 0, 0.5);
+
+  label17 = gtk_label_new (_("WEP"));
+  gtk_widget_set_name (label17, "label17");
+  gtk_widget_show (label17);
+  gtk_notebook_set_tab_label (GTK_NOTEBOOK (notebook1), gtk_notebook_get_nth_page (GTK_NOTEBOOK (notebook1), 3), label17);
+  gtk_label_set_justify (GTK_LABEL (label17), GTK_JUSTIFY_LEFT);
+
+  table5 = gtk_table_new (7, 2, FALSE);
+  gtk_widget_set_name (table5, "table5");
+  gtk_widget_show (table5);
+  gtk_container_add (GTK_CONTAINER (notebook1), table5);
+  gtk_container_set_border_width (GTK_CONTAINER (table5), 5);
+  gtk_table_set_row_spacings (GTK_TABLE (table5), 5);
+  gtk_table_set_col_spacings (GTK_TABLE (table5), 10);
+
+  hseparator6 = gtk_hseparator_new ();
+  gtk_widget_set_name (hseparator6, "hseparator6");
+  gtk_widget_show (hseparator6);
+  gtk_table_attach (GTK_TABLE (table5), hseparator6, 0, 2, 1, 2,
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
+
+  label18 = gtk_label_new (_("Key format:"));
+  gtk_widget_set_name (label18, "label18");
+  gtk_widget_show (label18);
+  gtk_table_attach (GTK_TABLE (table5), label18, 0, 1, 0, 1,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_label_set_justify (GTK_LABEL (label18), GTK_JUSTIFY_LEFT);
+  gtk_misc_set_alignment (GTK_MISC (label18), 0, 0.5);
+
+  vbox4 = gtk_vbox_new (FALSE, 0);
+  gtk_widget_set_name (vbox4, "vbox4");
+  gtk_widget_show (vbox4);
+  gtk_table_attach (GTK_TABLE (table5), vbox4, 1, 2, 0, 1,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND), 0, 0);
+
+  radiobutton8 = gtk_radio_button_new_with_mnemonic (NULL, _("Hex values"));
+  gtk_widget_set_name (radiobutton8, "radiobutton8");
+  gtk_widget_show (radiobutton8);
+  gtk_box_pack_start (GTK_BOX (vbox4), radiobutton8, FALSE, FALSE, 0);
+  gtk_radio_button_set_group (GTK_RADIO_BUTTON (radiobutton8), radiobutton8_group);
+  radiobutton8_group = gtk_radio_button_group (GTK_RADIO_BUTTON (radiobutton8));
+
+  radiobutton9 = gtk_radio_button_new_with_mnemonic (NULL, _("String values"));
+  gtk_widget_set_name (radiobutton9, "radiobutton9");
+  gtk_widget_show (radiobutton9);
+  gtk_box_pack_start (GTK_BOX (vbox4), radiobutton9, FALSE, FALSE, 0);
+  gtk_radio_button_set_group (GTK_RADIO_BUTTON (radiobutton9), rbHex_group);
+  rbHex_group = gtk_radio_button_group (GTK_RADIO_BUTTON (radiobutton9));
+
+  label19 = gtk_label_new (_("Key #1:"));
+  gtk_widget_set_name (label19, "label19");
+  gtk_widget_show (label19);
+  gtk_table_attach (GTK_TABLE (table5), label19, 0, 1, 2, 3,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_label_set_justify (GTK_LABEL (label19), GTK_JUSTIFY_LEFT);
+  gtk_misc_set_alignment (GTK_MISC (label19), 0, 0.5);
+
+  label20 = gtk_label_new (_("Key #2:"));
+  gtk_widget_set_name (label20, "label20");
+  gtk_widget_show (label20);
+  gtk_table_attach (GTK_TABLE (table5), label20, 0, 1, 3, 4,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_label_set_justify (GTK_LABEL (label20), GTK_JUSTIFY_LEFT);
+  gtk_misc_set_alignment (GTK_MISC (label20), 0, 0.5);
+
+  label21 = gtk_label_new (_("Key #3:"));
+  gtk_widget_set_name (label21, "label21");
+  gtk_widget_show (label21);
+  gtk_table_attach (GTK_TABLE (table5), label21, 0, 1, 4, 5,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_label_set_justify (GTK_LABEL (label21), GTK_JUSTIFY_LEFT);
+  gtk_misc_set_alignment (GTK_MISC (label21), 0, 0.5);
+
+  label22 = gtk_label_new (_("Key #4:"));
+  gtk_widget_set_name (label22, "label22");
+  gtk_widget_show (label22);
+  gtk_table_attach (GTK_TABLE (table5), label22, 0, 1, 5, 6,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_label_set_justify (GTK_LABEL (label22), GTK_JUSTIFY_LEFT);
+  gtk_misc_set_alignment (GTK_MISC (label22), 0, 0.5);
+
+  entry8 = gtk_entry_new ();
+  gtk_widget_set_name (entry8, "entry8");
+  gtk_widget_show (entry8);
+  gtk_table_attach (GTK_TABLE (table5), entry8, 1, 2, 2, 3,
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+
+  entry9 = gtk_entry_new ();
+  gtk_widget_set_name (entry9, "entry9");
+  gtk_widget_show (entry9);
+  gtk_table_attach (GTK_TABLE (table5), entry9, 1, 2, 3, 4,
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+
+  entry10 = gtk_entry_new ();
+  gtk_widget_set_name (entry10, "entry10");
+  gtk_widget_show (entry10);
+  gtk_table_attach (GTK_TABLE (table5), entry10, 1, 2, 4, 5,
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+
+  entry11 = gtk_entry_new ();
+  gtk_widget_set_name (entry11, "entry11");
+  gtk_widget_show (entry11);
+  gtk_table_attach (GTK_TABLE (table5), entry11, 1, 2, 5, 6,
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+
+  label23 = gtk_label_new (_("Active key:"));
+  gtk_widget_set_name (label23, "label23");
+  gtk_widget_show (label23);
+  gtk_table_attach (GTK_TABLE (table5), label23, 0, 1, 6, 7,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_label_set_justify (GTK_LABEL (label23), GTK_JUSTIFY_LEFT);
+  gtk_misc_set_alignment (GTK_MISC (label23), 0, 0.5);
+
+  spinbutton3_adj = gtk_adjustment_new (1, 1, 4, 1, 10, 10);
+  spinbutton3 = gtk_spin_button_new (GTK_ADJUSTMENT (spinbutton3_adj), 1, 0);
+  gtk_widget_set_name (spinbutton3, "spinbutton3");
+  gtk_widget_show (spinbutton3);
+  gtk_table_attach (GTK_TABLE (table5), spinbutton3, 1, 2, 6, 7,
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+
+  label24 = gtk_label_new (_("Keys"));
+  gtk_widget_set_name (label24, "label24");
+  gtk_widget_show (label24);
+  gtk_notebook_set_tab_label (GTK_NOTEBOOK (notebook1), gtk_notebook_get_nth_page (GTK_NOTEBOOK (notebook1), 4), label24);
+  gtk_label_set_justify (GTK_LABEL (label24), GTK_JUSTIFY_LEFT);
+
+  table6 = gtk_table_new (7, 2, FALSE);
+  gtk_widget_set_name (table6, "table6");
+  gtk_widget_show (table6);
+  gtk_container_add (GTK_CONTAINER (notebook1), table6);
+  gtk_container_set_border_width (GTK_CONTAINER (table6), 5);
+  gtk_table_set_row_spacings (GTK_TABLE (table6), 5);
+  gtk_table_set_col_spacings (GTK_TABLE (table6), 10);
+
+  label25 = gtk_label_new (_("Additional expert settings\nUSE WITH CARE"));
+  gtk_widget_set_name (label25, "label25");
+  gtk_widget_show (label25);
+  gtk_table_attach (GTK_TABLE (table6), label25, 0, 2, 0, 1,
+                    (GtkAttachOptions) (GTK_EXPAND),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_misc_set_alignment (GTK_MISC (label25), 0, 0.5);
+
+  label26 = gtk_label_new (_("Sens:"));
+  gtk_widget_set_name (label26, "label26");
+  gtk_widget_show (label26);
+  gtk_table_attach (GTK_TABLE (table6), label26, 0, 1, 1, 2,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_label_set_justify (GTK_LABEL (label26), GTK_JUSTIFY_LEFT);
+  gtk_misc_set_alignment (GTK_MISC (label26), 0, 0.5);
+
+  label27 = gtk_label_new (_("RTS:"));
+  gtk_widget_set_name (label27, "label27");
+  gtk_widget_show (label27);
+  gtk_table_attach (GTK_TABLE (table6), label27, 0, 1, 2, 3,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_label_set_justify (GTK_LABEL (label27), GTK_JUSTIFY_LEFT);
+  gtk_misc_set_alignment (GTK_MISC (label27), 0, 0.5);
+
+  label28 = gtk_label_new (_("Frag:"));
+  gtk_widget_set_name (label28, "label28");
+  gtk_widget_show (label28);
+  gtk_table_attach (GTK_TABLE (table6), label28, 0, 1, 3, 4,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_label_set_justify (GTK_LABEL (label28), GTK_JUSTIFY_LEFT);
+  gtk_misc_set_alignment (GTK_MISC (label28), 0, 0.5);
+
+  label29 = gtk_label_new (_("iwconfig:"));
+  gtk_widget_set_name (label29, "label29");
+  gtk_widget_show (label29);
+  gtk_table_attach (GTK_TABLE (table6), label29, 0, 1, 4, 5,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_label_set_justify (GTK_LABEL (label29), GTK_JUSTIFY_LEFT);
+  gtk_misc_set_alignment (GTK_MISC (label29), 0, 0.5);
+
+  label30 = gtk_label_new (_("iwspy:"));
+  gtk_widget_set_name (label30, "label30");
+  gtk_widget_show (label30);
+  gtk_table_attach (GTK_TABLE (table6), label30, 0, 1, 5, 6,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_label_set_justify (GTK_LABEL (label30), GTK_JUSTIFY_LEFT);
+  gtk_misc_set_alignment (GTK_MISC (label30), 0, 0.5);
+
+  label31 = gtk_label_new (_("iwpriv:"));
+  gtk_widget_set_name (label31, "label31");
+  gtk_widget_show (label31);
+  gtk_table_attach (GTK_TABLE (table6), label31, 0, 1, 6, 7,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_label_set_justify (GTK_LABEL (label31), GTK_JUSTIFY_LEFT);
+  gtk_misc_set_alignment (GTK_MISC (label31), 0, 0.5);
+
+  entry12 = gtk_entry_new ();
+  gtk_widget_set_name (entry12, "entry12");
+  gtk_widget_show (entry12);
+  gtk_table_attach (GTK_TABLE (table6), entry12, 1, 2, 1, 2,
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+
+  entry13 = gtk_entry_new ();
+  gtk_widget_set_name (entry13, "entry13");
+  gtk_widget_show (entry13);
+  gtk_table_attach (GTK_TABLE (table6), entry13, 1, 2, 2, 3,
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+
+  entry14 = gtk_entry_new ();
+  gtk_widget_set_name (entry14, "entry14");
+  gtk_widget_show (entry14);
+  gtk_table_attach (GTK_TABLE (table6), entry14, 1, 2, 3, 4,
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+
+  entry15 = gtk_entry_new ();
+  gtk_widget_set_name (entry15, "entry15");
+  gtk_widget_show (entry15);
+  gtk_table_attach (GTK_TABLE (table6), entry15, 1, 2, 4, 5,
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+
+  entry16 = gtk_entry_new ();
+  gtk_widget_set_name (entry16, "entry16");
+  gtk_widget_show (entry16);
+  gtk_table_attach (GTK_TABLE (table6), entry16, 1, 2, 5, 6,
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+
+  entry17 = gtk_entry_new ();
+  gtk_widget_set_name (entry17, "entry17");
+  gtk_widget_show (entry17);
+  gtk_table_attach (GTK_TABLE (table6), entry17, 1, 2, 6, 7,
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+
+  label32 = gtk_label_new (_("Expert"));
+  gtk_widget_set_name (label32, "label32");
+  gtk_widget_show (label32);
+  gtk_notebook_set_tab_label (GTK_NOTEBOOK (notebook1), gtk_notebook_get_nth_page (GTK_NOTEBOOK (notebook1), 5), label32);
+  gtk_label_set_justify (GTK_LABEL (label32), GTK_JUSTIFY_LEFT);
+
+  hbuttonbox1 = gtk_hbutton_box_new ();
+  gtk_widget_set_name (hbuttonbox1, "hbuttonbox1");
+  gtk_widget_show (hbuttonbox1);
+  gtk_box_pack_start (GTK_BOX (vbox1), hbuttonbox1, FALSE, TRUE, 0);
+  gtk_container_set_border_width (GTK_CONTAINER (hbuttonbox1), 10);
+  gtk_button_box_set_spacing (GTK_BUTTON_BOX (hbuttonbox1), 0);
+
+  button1 = gtk_button_new_from_stock ("gtk-help");
+  gtk_widget_set_name (button1, "button1");
+  gtk_widget_show (button1);
+  gtk_container_add (GTK_CONTAINER (hbuttonbox1), button1);
+  GTK_WIDGET_SET_FLAGS (button1, GTK_CAN_DEFAULT);
+
+  button2 = gtk_button_new_from_stock ("gtk-go-back");
+  gtk_widget_set_name (button2, "button2");
+  gtk_widget_show (button2);
+  gtk_container_add (GTK_CONTAINER (hbuttonbox1), button2);
+  GTK_WIDGET_SET_FLAGS (button2, GTK_CAN_DEFAULT);
+
+  lblTab3 = gtk_label_new (_("Tab3"));
+  gtk_widget_set_name (lblTab3, "lblTab3");
+  gtk_widget_show (lblTab3);
+  gtk_notebook_set_tab_label (GTK_NOTEBOOK (nbPseudoMain), gtk_notebook_get_nth_page (GTK_NOTEBOOK (nbPseudoMain), 2), lblTab3);
+  gtk_label_set_justify (GTK_LABEL (lblTab3), GTK_JUSTIFY_LEFT);
 
   gtk_signal_connect (GTK_OBJECT (GPE_WLANCFG), "delete_event",
                       GTK_SIGNAL_FUNC (on_GPE_WLANCFG_de_event),
@@ -998,21 +1627,6 @@ create_GPE_WLANCFG (void)
   gtk_signal_connect (GTK_OBJECT (tvSchemeList), "row_activated",
                       GTK_SIGNAL_FUNC (on_tvSchemeList_row_activated),
                       NULL);
-  gtk_signal_connect (GTK_OBJECT (btnUp), "clicked",
-                      GTK_SIGNAL_FUNC (on_btnUp_clicked),
-                      NULL);
-  gtk_signal_connect (GTK_OBJECT (btnDown), "clicked",
-                      GTK_SIGNAL_FUNC (on_btnDown_clicked),
-                      NULL);
-  gtk_signal_connect (GTK_OBJECT (btnDelete), "clicked",
-                      GTK_SIGNAL_FUNC (on_btnDelete_clicked),
-                      NULL);
-  gtk_signal_connect (GTK_OBJECT (btnNew), "clicked",
-                      GTK_SIGNAL_FUNC (on_btnNew_clicked),
-                      NULL);
-  gtk_signal_connect (GTK_OBJECT (btnEdit), "clicked",
-                      GTK_SIGNAL_FUNC (on_btnEdit_clicked),
-                      NULL);
   gtk_signal_connect (GTK_OBJECT (rbFrequency), "toggled",
                       GTK_SIGNAL_FUNC (on_rbFrequency_toggled),
                       NULL);
@@ -1022,25 +1636,27 @@ create_GPE_WLANCFG (void)
   gtk_signal_connect (GTK_OBJECT (btnHelp), "clicked",
                       GTK_SIGNAL_FUNC (on_btnHelp_clicked),
                       NULL);
+  gtk_signal_connect (GTK_OBJECT (btnBack), "clicked",
+                      GTK_SIGNAL_FUNC (on_GPE_WLANCFG_de_event),
+                      NULL);
+  gtk_signal_connect (GTK_OBJECT (radiobutton2), "toggled",
+                      GTK_SIGNAL_FUNC (on_rbFrequency_toggled),
+                      NULL);
+  gtk_signal_connect (GTK_OBJECT (radiobutton3), "toggled",
+                      GTK_SIGNAL_FUNC (on_rbChannel_toggled),
+                      NULL);
+  gtk_signal_connect (GTK_OBJECT (button1), "clicked",
+                      GTK_SIGNAL_FUNC (on_btnHelp_clicked),
+                      NULL);
+  gtk_signal_connect (GTK_OBJECT (button2), "clicked",
+                      GTK_SIGNAL_FUNC (on_GPE_WLANCFG_de_event),
+                      NULL);
 
   /* Store pointers to all widgets, for use by lookup_widget(). */
   GLADE_HOOKUP_OBJECT_NO_REF (GPE_WLANCFG, GPE_WLANCFG, "GPE_WLANCFG");
   GLADE_HOOKUP_OBJECT (GPE_WLANCFG, nbPseudoMain, "nbPseudoMain");
   GLADE_HOOKUP_OBJECT (GPE_WLANCFG, vbSchemes, "vbSchemes");
-  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, frame1, "frame1");
-  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, vbox2, "vbox2");
-  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, swSchemeList, "swSchemeList");
   GLADE_HOOKUP_OBJECT (GPE_WLANCFG, tvSchemeList, "tvSchemeList");
-  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, hbox1, "hbox1");
-  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, btnUp, "btnUp");
-  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, arUp, "arUp");
-  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, btnDown, "btnDown");
-  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, arDown, "arDown");
-  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, lblScheme, "lblScheme");
-  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, hbbEditButtons, "hbbEditButtons");
-  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, btnDelete, "btnDelete");
-  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, btnNew, "btnNew");
-  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, btnEdit, "btnEdit");
   GLADE_HOOKUP_OBJECT (GPE_WLANCFG, lblTab1, "lblTab1");
   GLADE_HOOKUP_OBJECT (GPE_WLANCFG, vbConfigSelection, "vbConfigSelection");
   GLADE_HOOKUP_OBJECT (GPE_WLANCFG, nbConfigSelection, "nbConfigSelection");
@@ -1132,7 +1748,90 @@ create_GPE_WLANCFG (void)
   GLADE_HOOKUP_OBJECT (GPE_WLANCFG, lblTabExpert, "lblTabExpert");
   GLADE_HOOKUP_OBJECT (GPE_WLANCFG, hbbHelp, "hbbHelp");
   GLADE_HOOKUP_OBJECT (GPE_WLANCFG, btnHelp, "btnHelp");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, btnBack, "btnBack");
   GLADE_HOOKUP_OBJECT (GPE_WLANCFG, lblTab2, "lblTab2");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, vbox1, "vbox1");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, notebook1, "notebook1");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, table1, "table1");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, label2, "label2");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, label3, "label3");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, label4, "label4");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, label5, "label5");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, entry1, "entry1");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, entry2, "entry2");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, entry3, "entry3");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, entry4, "entry4");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, label6, "label6");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, table2, "table2");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, label8, "label8");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, entry6, "entry6");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, radiobutton10, "radiobutton10");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, radiobutton11, "radiobutton11");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, label33, "label33");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, label11, "label11");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, table3, "table3");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, radiobutton1, "radiobutton1");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, radiobutton2, "radiobutton2");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, radiobutton3, "radiobutton3");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, spinbutton1, "spinbutton1");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, spinbutton2, "spinbutton2");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, label12, "label12");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, label13, "label13");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, optionmenu2, "optionmenu2");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, menu4, "menu4");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, menuitem7, "menuitem7");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, menuitem8, "menuitem8");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, menuitem9, "menuitem9");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, menuitem10, "menuitem10");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, hseparator4, "hseparator4");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, label14, "label14");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, table4, "table4");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, label15, "label15");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, hseparator5, "hseparator5");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, vbox2, "vbox2");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, radiobutton4, "radiobutton4");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, radiobutton5, "radiobutton5");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, vbox3, "vbox3");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, radiobutton6, "radiobutton6");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, radiobutton7, "radiobutton7");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, label16, "label16");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, label17, "label17");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, table5, "table5");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, hseparator6, "hseparator6");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, label18, "label18");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, vbox4, "vbox4");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, radiobutton8, "radiobutton8");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, radiobutton9, "radiobutton9");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, label19, "label19");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, label20, "label20");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, label21, "label21");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, label22, "label22");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, entry8, "entry8");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, entry9, "entry9");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, entry10, "entry10");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, entry11, "entry11");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, label23, "label23");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, spinbutton3, "spinbutton3");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, label24, "label24");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, table6, "table6");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, label25, "label25");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, label26, "label26");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, label27, "label27");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, label28, "label28");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, label29, "label29");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, label30, "label30");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, label31, "label31");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, entry12, "entry12");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, entry13, "entry13");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, entry14, "entry14");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, entry15, "entry15");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, entry16, "entry16");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, entry17, "entry17");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, label32, "label32");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, hbuttonbox1, "hbuttonbox1");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, button1, "button1");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, button2, "button2");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, lblTab3, "lblTab3");
 
   return GPE_WLANCFG;
 }
