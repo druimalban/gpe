@@ -236,11 +236,14 @@ gtk_tooltips_set_tip (GtkTooltips *tooltips,
 		      const gchar *tip_private)
 {
   GtkTooltipsData *tooltipsdata;
+  extern void gpe_what_mark_widget (GtkWidget *);
 
   g_return_if_fail (GTK_IS_TOOLTIPS (tooltips));
   g_return_if_fail (widget != NULL);
 
   tooltipsdata = gtk_tooltips_data_get (widget);
+
+  gpe_what_mark_widget (widget);
 
   if (!tip_text)
     {

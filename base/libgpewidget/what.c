@@ -7,178 +7,100 @@
  * 2 of the License, or (at your option) any later version.
  */
 
-#include <sys/types.h>
-
-#include <gtk/gtk.h>
-#include <gdk/gdkx.h>
+#include <stdio.h>
 
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
 
-#include "render.h"
-#include "pixmaps.h"
-#include "what.h"
-#include "errorbox.h"
+#include <gdk/gdk.h>
+#include <gdk/gdkx.h>
+#include <gtk/gtk.h>
 
-static Display *dpy;
-static Window root;
-static Atom atom;
+#include <libintl.h>
 
-static GtkWidget *widget;
-static GtkWidget *label, *label2;
+#define _(x) dgettext(PACKAGE, x)
 
-static gboolean query_on, showing;
+static GdkAtom help_atom, string_atom;
+static Atom help_xatom, string_xatom;
 
-static GdkFilterReturn
-filter (GdkXEvent *xevp, GdkEvent *ev, gpointer p)
+void gpe_what_mark_widget (GtkWidget *widget);
+
+GSList *widgets;
+
+static void
+send_text (Display *dpy, Window w, char *text)
 {
-  XEvent *xev = (XEvent *)xevp;
-  
-  if (xev->type == PropertyNotify)
+  XChangeProperty (dpy, w, help_xatom, string_xatom, 8, PropModeReplace, text, strlen (text));
+}
+
+static GdkFilterReturn 
+filter_func (GdkXEvent *xev, GdkEvent *ev, gpointer p)
+{
+  XClientMessageEvent *xc = (XClientMessageEvent *)xev;
+  GSList *list;
+  Window sender = xc->data.l[0];
+
+  for (list = widgets; list; list = list->next)
     {
-      if (xev->xproperty.atom == atom)
+      GtkWidget *widget = GTK_WIDGET (list->data);
+      int x = xc->data.l[1], y = xc->data.l[2];
+
+      if (x >= widget->allocation.x && x < widget->allocation.x + widget->allocation.width
+	  && y >= widget->allocation.y && y < widget->allocation.y + widget->allocation.height)
 	{
-	  unsigned char *prop;
-	  Atom type;
-	  int format;
-	  unsigned long nitems;
-	  unsigned long bytes;
-	  XGetWindowProperty (dpy, root, atom, 0, 1, 0, XA_INTEGER,
-			      &type, &format, &nitems, &bytes,
-			      &prop);
-	  if (*prop)
-	    {
-	      query_on = TRUE;
-	      gtk_tips_query_start_query (GTK_TIPS_QUERY (widget));
-	    }
-	  else
-	    {
-	      if (query_on)
-		gtk_tips_query_stop_query (GTK_TIPS_QUERY (widget));
-	    }
+	  GtkTooltipsData *data = gtk_tooltips_data_get (widget);
+	  send_text (GDK_WINDOW_XDISPLAY (widget->window), sender, data->tip_text);
+	  return GDK_FILTER_CONTINUE;
 	}
     }
+
+  send_text (GDK_WINDOW_XDISPLAY (ev->any.window), sender, _("No help available."));
 
   return GDK_FILTER_CONTINUE;
 }
 
-static void
-do_widget (GtkWidget *tips, GtkWidget *widget, gchar *text, gchar *text_private, gpointer p)
+void
+gpe_what_mark_widget (GtkWidget *widget)
 {
-  GtkWidget *window = p;
-  guint x, y;
-
-  gtk_label_set_text (GTK_LABEL (label), text);
-  if (text_private && strcmp (text, text_private))
+  if (widget->window)
     {
-      gtk_label_set_text (GTK_LABEL (label2), text_private);
-      gtk_widget_show (label2);
+      widgets = g_slist_prepend (widgets, widget);
+
+      gdk_property_change (widget->window,
+			   help_atom,
+			   help_atom,
+			   8,
+			   GDK_PROP_MODE_REPLACE,
+			   NULL,
+			   0);
     }
   else
-    gtk_widget_hide (label2);
+    g_signal_connect_after (widget, "realize", G_CALLBACK (gpe_what_mark_widget), NULL);
+}
 
-  gdk_window_get_pointer (NULL, &x, &y, NULL);
-  y += 16;
-  gtk_widget_set_uposition (window, MAX (x, 0), MAX (y, 0));
+void
+gpe_what_handle_event (GdkEvent *event, GtkWidget *widget)
+{
+  fprintf (stderr, "handling event\n");
 
-  if (!showing)
+  if (event->client.message_type == help_atom)
     {
-      showing = TRUE;
-      gtk_widget_show (window);
+      GtkTooltipsData *tooltipsdata;
+
+      tooltipsdata = gtk_tooltips_data_get (widget);
+
+      printf ("%s\n", tooltipsdata->tip_text);
     }
-}
-
-static void
-stop_query (GtkWidget *w, GtkWidget *window)
-{
-  char b = 0;
-  XChangeProperty (dpy, root, atom, XA_INTEGER, 8, PropModeReplace, &b, 1);
-  query_on = FALSE;
-  showing = FALSE;
-}
-
-static void
-close_clicked (GtkWidget *w, GtkWidget *ww)
-{
-  gtk_widget_hide (ww);
 }
 
 void
 gpe_what_init (void)
 {
-  GtkWidget *window = gtk_window_new (GTK_WINDOW_POPUP);
-  GtkStyle *style;
-  GdkColor col;
-  GtkWidget *hbox, *vbox, *sep;
-  GtkWidget *close, *closei;
-  GdkPixbuf *closep;
-  gchar *error;
+  help_atom = gdk_atom_intern ("GPE_INTERACTIVE_HELP", FALSE);
+  string_atom = gdk_atom_intern ("STRING", False);
 
-  dpy = GDK_DISPLAY ();
-  root = GDK_ROOT_WINDOW ();
-  atom = XInternAtom (dpy, "GPE_WHAT", 0);
+  help_xatom = gdk_x11_atom_to_xatom (help_atom);
+  string_xatom = gdk_x11_atom_to_xatom (string_atom);
 
-  gdk_color_parse ("yellow", &col);
-
-  XSelectInput (dpy, root, PropertyChangeMask);
-
-  gdk_window_add_filter (GDK_ROOT_PARENT (), filter, 0);
-
-  style = gtk_style_copy (window->style);
-  style->bg[GTK_STATE_NORMAL] = col;
-  style->bg[GTK_STATE_PRELIGHT] = col;
-  gtk_widget_set_style (window, style);
-
-  widget = gtk_tips_query_new ();
-  label = gtk_label_new ("");
-  gtk_widget_show (label);
-
-  closep = gpe_try_find_icon ("cancel", &error);
-  if (closep == NULL)
-    {
-      gpe_error_box (error);
-      g_free (error);
-      return;
-    }
-  closei = gpe_render_icon (window->style, closep);
-  gtk_widget_show (closei);
-  close = gtk_button_new ();
-  gtk_container_add (GTK_CONTAINER (close), closei);
-  gtk_widget_show (close);
-  gtk_button_set_relief (GTK_BUTTON (close), GTK_RELIEF_NONE);
-
-  hbox = gtk_hbox_new (FALSE, 0);
-  gtk_widget_show (hbox);
-  gtk_box_pack_start (GTK_BOX (hbox), widget, TRUE, TRUE, 0);
-  gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 0);
-  gtk_box_pack_start (GTK_BOX (hbox), close, FALSE, FALSE, 0);
-
-  sep = gtk_vseparator_new ();
-  gtk_widget_show (sep);
-
-  label2 = gtk_label_new ("");
-  gtk_widget_show (label2);
-
-  vbox = gtk_vbox_new (FALSE, 0);
-  gtk_widget_show (vbox);
-  gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), sep, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), label2, FALSE, FALSE, 0);
-
-  gtk_container_add (GTK_CONTAINER (window), vbox);
-  gtk_widget_realize (window);
-  gtk_widget_realize (widget);
-
-  gtk_signal_connect (GTK_OBJECT (widget), "widget-entered", 
-		      do_widget, window);
-  gtk_signal_connect (GTK_OBJECT (widget), "stop-query", 
-		      stop_query, window);
-
-  gtk_signal_connect (GTK_OBJECT (close), "clicked",
-		      close_clicked, window);
-}
-
-void
-what_init (void)
-{
+  gdk_add_client_message_filter (help_atom, filter_func, NULL);
 }

@@ -1,3 +1,14 @@
+2002-12-28  Philip Blundell  <philb@gnu.org>
+
+	* Version 0.35 released.
+
+2002-12-28  Philip Blundell  <philb@gnu.org>
+
+	* what.c: New implementation.
+	* gpetooltips2.c (gpe_tooltips_set_tip): Mark widget for
+	interactive help.
+	* tray.c: Remove include of <stdio.h>.
+
 2002-12-27  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.34 released.
