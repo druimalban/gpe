@@ -80,7 +80,8 @@ schedule_alarm(char *buf, time_t when)
 {
   gchar *text;
 
-  text = g_strdup_printf ("/usr/bin/gpe-announce '%s'\n", buf);
+  if (buf) text = g_strdup_printf ("/usr/bin/gpe-announce '%s'\n", buf);
+  else text = g_strdup_printf ("/usr/bin/gpe-announce\n");
   schedule_set_alarm (1234, when, text);
   g_free (text);
 }

@@ -1,5 +1,11 @@
 2003-04-20  Joe McCarthy <jjmcc@pitt.edu>
 
+	* callbacks.c : oops, snooze doesnt work quite right....add a check
+	for buf being null
+	* Version 0.06 will be released soon :).
+	
+2003-04-20  Joe McCarthy <jjmcc@pitt.edu>
+
 	* callbacks.c : Move fd open calls, add fd close calls, have the alarm
 	volume crescendo and then stop after 20 beaps (10 loud ones)
 	* main.c : initialize times so that crescendo works properly
