@@ -58,6 +58,7 @@ guint timeout_handler;
 void
 sigint (int signal)
 {
+  printf ("received sigint\n");
   stop = TRUE;
 }
 
@@ -66,9 +67,11 @@ void stop_sound (void)
   if (sound_process > 0)
     {
       kill (sound_process, SIGINT);
-      waitpid (sound_process, 0, 0);
+      kill (sound_process, SIGKILL);
+      waitpid (sound_process, 0, 1);
+      sound_process = 0;
     }
-  if (timer != NULL)
+/*  if (timer != NULL)
     {
       g_timer_stop (timer);
       timer = NULL;
@@ -77,7 +80,7 @@ void stop_sound (void)
   if (timeout_handler != 0)
     {
       gtk_timeout_remove (timeout_handler);
-    }
+    } */
 }
 
 gint continue_sound (gpointer data)
@@ -92,6 +95,7 @@ gint continue_sound (gpointer data)
   }
 
   pid = waitpid (sound_process, NULL, WNOHANG);
+/*  printf ("waitpid in continue_sound gives %d\n", pid); */
   if (pid != 0)
   {
     stop_sound ();
@@ -132,7 +136,7 @@ void start_sound (void)
               {
                 signal (SIGINT, sigint);
                 sound_encode (infd, outfd);
-                _exit(0);
+                exit(0);
               }
             else
               {
@@ -168,7 +172,7 @@ void start_sound (void)
               {
                 signal (SIGINT, sigint);
                 sound_decode (infd, outfd);
-                _exit (0);
+                exit (0);
               }
             else
               {
@@ -207,17 +211,14 @@ on_key_release_signal                  (GtkWidget *widget,
                                             GdkEventKey *event,
                                             gpointer user_data)
 {
+  printf ("Key released: '%s'\n", gdk_keyval_name (event->keyval));
   if (!strcmp (gdk_keyval_name (event->keyval), "XF86AudioRecord"))
     {
       gdouble time;
       time = g_timer_elapsed (timer, NULL);
-      if (time > 2.0) /* if less assume just mean to 'click' button */
+      if (time > 0.5) /* if less assume just mean to 'click' button */
         stop_sound ();
-        gtk_exit (0);
-    }
-  else
-    {
-      printf ("Key released: '%s'\n", gdk_keyval_name (event->keyval));
+/*        gtk_exit (0); */
     }
 }
 

@@ -86,5 +86,8 @@ sound_decode (int infd, int outfd)
 
   gsm_destroy (g);
 
+  close (infd);
+  close (outfd);
+
   return 0;
 }
