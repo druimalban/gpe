@@ -89,6 +89,7 @@ day_popup (GtkWidget *parent, struct day_popup *p)
   GtkWidget *frame;
   char buf[256];
   struct tm tm;
+  gchar *gs;
 
   gtk_widget_realize (window);
   day_button = gpe_picture_button (window->style, NULL, "day_view");
@@ -99,9 +100,12 @@ day_popup (GtkWidget *parent, struct day_popup *p)
   tm.tm_mon = p->month;
   tm.tm_mday = p->day;
   mktime (&tm);
-  strftime(buf, sizeof (buf), "%a %d %B", &tm);
-  label = gtk_label_new (buf);
+  strftime (buf, sizeof (buf), "%a %d %B", &tm);
 
+  gs = g_locale_to_utf8 (buf, -1, NULL, NULL, NULL);
+  label = gtk_label_new (gs);
+  g_free (gs);
+  
   if (g_object_get_data (G_OBJECT (parent), "popup-handle"))
     return NULL;
 

@@ -931,23 +931,32 @@ build_edit_event_window (void)
 /* weekly hbox1 */
   weeklytable      = gtk_table_new (3, 3, FALSE);
   gtk_box_pack_start (GTK_BOX (s->weeklybox), weeklytable, FALSE, FALSE, 0);
+
+  gchar *gs;
+  
   for (i = 0; i < 3; i++)
     {
-      GtkWidget *b = gtk_check_button_new_with_label (nl_langinfo(days[i]));
+      gs = g_locale_to_utf8 (nl_langinfo(days[i]), -1, NULL, NULL, NULL);
+      GtkWidget *b = gtk_check_button_new_with_label (gs);
       gtk_table_attach_defaults (GTK_TABLE (weeklytable), b, i, i + 1, 0, 1);
       s->checkbuttonwday[i] = b;
+      g_free (gs);
     }
   for (i = 3; i < 6; i++)
     {
-      GtkWidget *b = gtk_check_button_new_with_label (nl_langinfo(days[i]));
+      gs = g_locale_to_utf8 (nl_langinfo(days[i]), -1, NULL, NULL, NULL);
+      GtkWidget *b = gtk_check_button_new_with_label (gs);
       gtk_table_attach_defaults (GTK_TABLE (weeklytable), b, i - 3, i - 2, 1, 2);
       s->checkbuttonwday[i] = b;
+      g_free(gs);
     }
   for (i = 6; i < 7; i++)
     {
-      GtkWidget *b = gtk_check_button_new_with_label (nl_langinfo(days[i]));
+      gs = g_locale_to_utf8 (nl_langinfo(days[i]), -1, NULL, NULL, NULL);
+      GtkWidget *b = gtk_check_button_new_with_label (gs);
       gtk_table_attach_defaults (GTK_TABLE (weeklytable), b, i - 6, i - 5, 2, 3);
       s->checkbuttonwday[i] = b;
+      g_free (gs);
     }
 
 /* monthly hbox */
