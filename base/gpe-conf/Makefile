@@ -11,7 +11,7 @@ DESTDIR = /
 LINGUAS = pt ro de fr
 
 ifeq ($(CVSBUILD),yes)
-LDFLAGS += -L../libgpewidget -L../libxsettings  -L../libxsettings-client -L../libdotdesktop -L../libdm -ldm -L.
+LDFLAGS += -L../libgpewidget -L../libxsettings  -L../libxsettings-client -L../libdotdesktop -L../libdisplaymigration -ldisplaymigration -L.
 CFLAGS += -Wall -I../libgpewidget -I../libxsettings-client -I../libxsettings -I../libdotdesktop
 BUILD = ../build
 else

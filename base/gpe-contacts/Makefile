@@ -24,8 +24,8 @@ endif
 
 CPPFLAGS += -D_GNU_SOURCE
 
-CPPFLAGS += -I../libdm
-LDFLAGS += -L../libdm -ldm
+CPPFLAGS += -I../libdisplaymigration
+LDFLAGS += -L../libdisplaymigration -ldisplaymigration
 
 LDFLAGS += -lsqlite
 

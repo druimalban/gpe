@@ -11,7 +11,7 @@ GTKLDFLAGS += `pkg-config --libs gtk+-2.0` -lgpewidget -lutil
 
 CPPFLAGS += -D_GNU_SOURCE
 
-CFLAGS = $(GTKCFLAGS) -g -I../libgpewidget -Wall -I../libdm
+CFLAGS = $(GTKCFLAGS) -g -I../libgpewidget -Wall -I../libdisplaymigration
 CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 CFLAGS += -MD
 

@@ -12,7 +12,7 @@ GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
 
 CPPFLAGS += -D_GNU_SOURCE
 
-CFLAGS = $(GTKCFLAGS) -g -I../libgpewidget -Wall -I../libdm -I../libtododb
+CFLAGS = $(GTKCFLAGS) -g -I../libgpewidget -Wall -I../libdisplaymigration -I../libtododb
 CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 CFLAGS += -MD
 
@@ -38,7 +38,7 @@ endif
 all: $(PACKAGE) all-mo
 
 $(PACKAGE): $(OBJS)
-	$(CC) -o $@ $^ -L../libgpewidget -lgpewidget $(GTKLDFLAGS) -g -lsqlite -L../libdm -ldm -L../libtododb -ltododb
+	$(CC) -o $@ $^ -L../libgpewidget -lgpewidget $(GTKLDFLAGS) -g -lsqlite -L../libdisplaymigration -ldisplaymigration -L../libtododb -ltododb
 
 clean: clean-po
 	rm -f $(PACKAGE) $(OBJS) $(DEPS) $(PACKAGE).desktop

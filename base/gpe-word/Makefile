@@ -28,8 +28,8 @@ LDFLAGS += -lgpewidget
 
 LDFLAGS += `pkg-config --libs gtk+-2.0`
 
-CFLAGS += -I../libdm
-LDFLAGS += -L../libdm -ldm
+CFLAGS += -I../libdisplaymigration
+LDFLAGS += -L../libdisplaymigration -ldisplaymigration
 
 CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 
