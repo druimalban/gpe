@@ -39,6 +39,8 @@ static gboolean		HasChanged = FALSE;
 Scheme_t 		*CurrentScheme;
 gint 			SchemeCount; 
 
+void   			EditSimple(void);
+
 void get_changes(void)
 {
 	GtkWidget 	*widget;
@@ -385,6 +387,166 @@ void get_changes(void)
 	gtk_notebook_set_page(GTK_NOTEBOOK(widget), 0);	
 }
 
+void get_changes_simple(void)
+{
+	
+	
+	GtkWidget 	*widget;
+	GtkWidget 	*menu;
+	gchar 		tempmode[20];
+	gchar		tempchannel[20];
+	
+	
+	menu=GTK_WIDGET(gtk_option_menu_get_menu(GTK_OPTION_MENU(lookup_widget(GTK_WIDGET(GPE_WLANCFG), "cbMode"))));
+	widget=gtk_menu_get_active(GTK_MENU(menu));
+
+	widget=lookup_widget(GTK_WIDGET(GPE_WLANCFG), "rbInfrastructure");
+	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget))) 
+	{
+		strncpy(tempmode, "MANAGED", 16);	
+	}
+	else
+	{
+		strncpy(tempmode, "AD-HOC", 16);	
+	}
+
+	if (strncmp(CurrentScheme->Mode, tempmode, 16)!=0)
+	{
+		HasChanged = TRUE;
+		if (CurrentScheme->lines[L_Mode]==LINE_NOT_PRESENT)
+			CurrentScheme->lines[L_Mode]=LINE_NEW;
+		strncpy(CurrentScheme->Mode, tempmode, 16);
+	}
+
+	strcpy(tempchannel, "");
+	widget=lookup_widget(GTK_WIDGET(GPE_WLANCFG), "sbChannel_simple");
+	strncpy(tempchannel,gtk_entry_get_text(GTK_ENTRY(widget)), 32);			
+	
+	if (strncmp(CurrentScheme->Channel, tempchannel, 32)!=0)
+	{
+		HasChanged = TRUE;
+		if (CurrentScheme->lines[L_Channel]==LINE_NOT_PRESENT)
+			CurrentScheme->lines[L_Channel]=LINE_NEW;
+		strncpy(CurrentScheme->Channel, tempchannel, 32);
+	}
+
+	widget=lookup_widget(GTK_WIDGET(GPE_WLANCFG), "edESSID_simple");
+	if (strncmp(CurrentScheme->ESSID, gtk_entry_get_text(GTK_ENTRY(widget)), 32)!=0)
+	{
+		HasChanged = TRUE;
+		if (CurrentScheme->lines[L_ESSID]==LINE_NOT_PRESENT)
+			CurrentScheme->lines[L_ESSID]=LINE_NEW;
+		strncpy(CurrentScheme->ESSID, gtk_entry_get_text(GTK_ENTRY(widget)), 32);	
+	}
+	
+	widget=lookup_widget(GTK_WIDGET(GPE_WLANCFG), "rbAuthOpen");
+	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget)))
+	{
+		if (strncmp(CurrentScheme->EncMode, "open", 16)!=0)
+		{
+			HasChanged = TRUE;
+			if (CurrentScheme->lines[L_EncMode]==LINE_NOT_PRESENT)
+				CurrentScheme->lines[L_EncMode]=LINE_NEW;
+			strncpy(CurrentScheme->EncMode, "open", 16);	
+		}
+	} else
+	{
+		if (strncmp(CurrentScheme->EncMode, "shared", 16)!=0)
+		{
+			HasChanged = TRUE;
+			if (CurrentScheme->lines[L_EncMode]==LINE_NOT_PRESENT)
+				CurrentScheme->lines[L_EncMode]=LINE_NEW;
+			strncpy(CurrentScheme->EncMode, "shared", 16);	
+		}
+	}
+	
+	widget=lookup_widget(GTK_WIDGET(GPE_WLANCFG), "rbWEPenable");	
+	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget)))
+	{
+		if (strncmp(CurrentScheme->Encryption, "on", 4)!=0)
+		{
+			HasChanged = TRUE;
+			if (CurrentScheme->lines[L_Encryption]==LINE_NOT_PRESENT)
+				CurrentScheme->lines[L_Encryption]=LINE_NEW;
+			strncpy(CurrentScheme->Encryption, "on", 4);	
+		}
+		
+		widget=lookup_widget(GTK_WIDGET(GPE_WLANCFG), "edKey1_simple");
+		if (strncmp(CurrentScheme->key1, gtk_entry_get_text(GTK_ENTRY(widget)), 64)!=0)
+		{
+			HasChanged = TRUE;
+			if (CurrentScheme->lines[L_key1]==LINE_NOT_PRESENT)
+				CurrentScheme->lines[L_key1]=LINE_NEW;
+			strncpy(CurrentScheme->key1, gtk_entry_get_text(GTK_ENTRY(widget)), 64);	
+		}
+		
+		widget=lookup_widget(GTK_WIDGET(GPE_WLANCFG), "edKey2_simple");
+		if (strncmp(CurrentScheme->key2, gtk_entry_get_text(GTK_ENTRY(widget)), 64)!=0)
+		{
+			HasChanged = TRUE;
+			if (CurrentScheme->lines[L_key2]==LINE_NOT_PRESENT)
+				CurrentScheme->lines[L_key2]=LINE_NEW;
+			strncpy(CurrentScheme->key2, gtk_entry_get_text(GTK_ENTRY(widget)), 64);	
+		}
+
+		widget=lookup_widget(GTK_WIDGET(GPE_WLANCFG), "edKey3_simple");
+		if (strncmp(CurrentScheme->key3, gtk_entry_get_text(GTK_ENTRY(widget)), 64)!=0)
+		{
+			HasChanged = TRUE;
+			if (CurrentScheme->lines[L_key3]==LINE_NOT_PRESENT)
+				CurrentScheme->lines[L_key3]=LINE_NEW;
+			strncpy(CurrentScheme->key3, gtk_entry_get_text(GTK_ENTRY(widget)), 64);	
+		}
+
+		widget=lookup_widget(GTK_WIDGET(GPE_WLANCFG), "edKey4_simple");
+		if (strncmp(CurrentScheme->key4, gtk_entry_get_text(GTK_ENTRY(widget)), 64)!=0)
+		{
+			HasChanged = TRUE;
+			if (CurrentScheme->lines[L_key4]==LINE_NOT_PRESENT)
+				CurrentScheme->lines[L_key4]=LINE_NEW;
+			strncpy(CurrentScheme->key4, gtk_entry_get_text(GTK_ENTRY(widget)), 64);	
+		}
+
+		widget=lookup_widget(GTK_WIDGET(GPE_WLANCFG), "sbActiveKey_simple");
+		if (strncmp(CurrentScheme->ActiveKey, gtk_entry_get_text(GTK_ENTRY(widget)), 64)!=0)
+		{
+			HasChanged = TRUE;
+			if (CurrentScheme->lines[L_ActiveKey]==LINE_NOT_PRESENT)
+				CurrentScheme->lines[L_ActiveKey]=LINE_NEW;
+			strncpy(CurrentScheme->ActiveKey, gtk_entry_get_text(GTK_ENTRY(widget)), 64);	
+		}
+
+	}
+	else 
+	{
+		if (strncmp(CurrentScheme->Encryption, "off", 4)!=0)
+		{
+			HasChanged = TRUE;
+			if (CurrentScheme->lines[L_Encryption]==LINE_NOT_PRESENT)
+				CurrentScheme->lines[L_Encryption]=LINE_NEW;
+			strncpy(CurrentScheme->Encryption, "off", 4);	
+		}
+
+		
+		if (strncmp(CurrentScheme->ActiveKey, "0", 4)!=0)
+		{
+			HasChanged = TRUE;
+			if (CurrentScheme->lines[L_ActiveKey]==LINE_NOT_PRESENT)
+				CurrentScheme->lines[L_ActiveKey]=LINE_NEW;
+			strncpy(CurrentScheme->ActiveKey, "0", 4);	
+		}
+	}
+
+	widget=lookup_widget(GTK_WIDGET(GPE_WLANCFG), "rbKeyString");
+
+	if (CurrentScheme->KeyFormat!=gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget)))
+	{
+		HasChanged = TRUE;
+		CurrentScheme->KeyFormat=gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget));		
+	}
+}
+
+
 gboolean on_GPE_WLANCFG_de_event(GtkWidget *widget, GdkEvent *event, gpointer user_data)
 {
 	
@@ -479,6 +641,58 @@ gboolean on_GPE_WLANCFG_de_event(GtkWidget *widget, GdkEvent *event, gpointer us
 		}
 		free(OrigScheme);
 	} else 
+	if (gtk_notebook_get_current_page(GTK_NOTEBOOK(MainWindow)) == 2) 
+	{
+		OrigScheme=malloc(sizeof(Scheme_t));
+		memcpy(OrigScheme, CurrentScheme, sizeof(Scheme_t));
+		get_changes_simple();
+		if (HasChanged) 
+		{
+			SaveWindow = create_dlgSaveChanges();
+			gtk_window_set_transient_for(GTK_WINDOW(SaveWindow), GTK_WINDOW(GPE_WLANCFG));
+			if (gtk_dialog_run(GTK_DIALOG(SaveWindow)) != GTK_RESPONSE_YES) 
+			{
+				memcpy(CurrentScheme, OrigScheme, sizeof(Scheme_t));
+			} else
+			{
+				treeview  = lookup_widget(GPE_WLANCFG, "tvSchemeList");
+				selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
+
+				for (count = 0; count < 4; count++) 
+				{
+					ListEntry[count]=(gchar *)malloc(32 * sizeof(char));
+					memset(ListEntry[count],0,32);
+				}
+
+				strncpy(ListEntry[0], CurrentScheme->Scheme, 32);
+				strncpy(ListEntry[1], CurrentScheme->Socket, 32);
+				strncpy(ListEntry[2], CurrentScheme->Instance, 32);
+				strncpy(ListEntry[3], CurrentScheme->HWAddress, 32);
+					
+				if(gtk_tree_selection_get_selected (selection, (GtkTreeModel**)&liststore, &iter))
+					gtk_list_store_set(liststore, &iter, 0, ListEntry[0], 1, ListEntry[1], 2 , ListEntry[2], 3, ListEntry[3], 4, CurrentScheme, -1);
+					
+				for (count = 0; count < 4; count++) 
+					free(ListEntry[count]);
+			}
+			gtk_widget_destroy(SaveWindow);
+
+			gtk_tree_model_get_iter_first(GTK_TREE_MODEL(liststore), &iter);
+		
+			for (count = 0; count<SchemeCount; count++)
+			{
+			
+				gtk_tree_model_get (GTK_TREE_MODEL(liststore), &iter, 4, &Scheme, -1);
+				gtk_tree_model_iter_next(GTK_TREE_MODEL(liststore), &iter);
+				memcpy(&schemelist[count], Scheme, sizeof(Scheme_t));
+				free(Scheme);
+			}
+			
+			write_back_configfile(WLAN_CONFIGFILE, schemelist, SchemeCount);
+		}
+		free(OrigScheme);
+		gtk_main_quit();
+	} else 
 	{
 		gtk_tree_model_get_iter_first(GTK_TREE_MODEL(liststore), &iter);
 		
@@ -504,16 +718,21 @@ void on_GPE_WLANCFG_show (GtkWidget *widget, gpointer user_data)
 	gint       	count;
 	gint		aRow;
 	gchar      	*ListEntry[4];
+	gint            found_wildcards = 0;
 
 	GtkWidget	*treeview;
  	GtkTreeIter	iter;
+	GtkTreeIter     tempiter;
 	GtkListStore	*liststore;
+	GtkTreeSelection *selection;
 	
 	treeview=lookup_widget(GPE_WLANCFG, "tvSchemeList");
 	liststore = GTK_LIST_STORE(gtk_tree_view_get_model(GTK_TREE_VIEW(treeview)));
 	
 	SchemeCount = parse_configfile(WLAN_CONFIGFILE);
-		
+	
+	if (SchemeCount == 0) exit(-1); // exit if no schemes are there
+	
 	for (aRow=0; aRow<SchemeCount; aRow++)
 	{
 		for (count = 0; count < 4; count++) 
@@ -536,7 +755,24 @@ void on_GPE_WLANCFG_show (GtkWidget *widget, gpointer user_data)
 		
 		gtk_list_store_append(liststore, &iter);
 		gtk_list_store_set(liststore, &iter, 0, ListEntry[0], 1, ListEntry[1], 2 , ListEntry[2], 3, ListEntry[3], 4, CurrentScheme, -1);
+		
+		if (!strcmp(CurrentScheme->Scheme, "*") &&
+		    !strcmp(CurrentScheme->Socket, "*")	&&
+		    !strcmp(CurrentScheme->Instance, "*") &&
+		    !strcmp(CurrentScheme->HWAddress, "*"))
+		{
+			tempiter = iter;
+			found_wildcards = 1;
+		}
 	}	
+	
+	if (found_wildcards)
+	{
+		selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
+		gtk_tree_selection_select_iter (selection, &tempiter);
+		
+		EditSimple();
+	}
 
 }
 
@@ -825,7 +1061,7 @@ void EditScheme(void)
 		widget=lookup_widget(GTK_WIDGET(GPE_WLANCFG),"edKey4");
 		gtk_entry_set_text(GTK_ENTRY(widget),CurrentScheme->key4);
 		widget=lookup_widget(GTK_WIDGET(GPE_WLANCFG),"sbActiveKey");
-		gtk_entry_set_text(GTK_ENTRY(widget),CurrentScheme->ActiveKey);
+		gtk_spin_button_set_value(GTK_SPIN_BUTTON(widget), atoi(CurrentScheme->ActiveKey));
 	
 		widget=lookup_widget(GTK_WIDGET(GPE_WLANCFG),"rbHex");
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(widget),!CurrentScheme->KeyFormat);		
@@ -847,7 +1083,85 @@ void EditScheme(void)
 	}
 }
 
+void EditSimple(void)
+{
+	GtkWidget	*treeview;
+	GtkWidget	*widget;
+ 	GtkTreeSelection *selection;
+	GtkTreeIter	iter;
+	GtkTreeModel	*liststore;
+	
+	treeview  = lookup_widget(GPE_WLANCFG, "tvSchemeList");
+	selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
+	
+	if(gtk_tree_selection_get_selected (selection, &liststore, &iter))
+	{
+		gtk_tree_model_get (liststore, &iter, 4, &CurrentScheme, -1);
+	
+		widget=lookup_widget(GTK_WIDGET(GPE_WLANCFG), "nbPseudoMain");
+		gtk_notebook_set_page(GTK_NOTEBOOK(widget), 2);
+		
+		widget = lookup_widget(GTK_WIDGET(GPE_WLANCFG), "nbSimple");
+		gtk_notebook_set_page(GTK_NOTEBOOK(widget), 0);
+	
+		widget=lookup_widget(GTK_WIDGET(GPE_WLANCFG), "rbInfrastructure");
+		if (!strcmp("AD-HOC",CurrentScheme->Mode))
+		{
+			widget=lookup_widget(GTK_WIDGET(GPE_WLANCFG), "rbAdHoc");
+			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(widget), TRUE);
+		} else
+		{
+			widget=lookup_widget(GTK_WIDGET(GPE_WLANCFG), "rbInfrastructure");
+			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(widget), TRUE);
+		}
+		
 
+		widget=lookup_widget(GTK_WIDGET(GPE_WLANCFG), "sbChannel_simple");
+		gtk_entry_set_text(GTK_ENTRY(widget),CurrentScheme->Channel);	
+
+		widget=lookup_widget(GTK_WIDGET(GPE_WLANCFG), "edESSID_simple");
+		gtk_entry_set_text(GTK_ENTRY(widget),CurrentScheme->ESSID);	
+
+		if (!strcmp(CurrentScheme->Encryption, "on"))
+		{
+			widget=lookup_widget(GTK_WIDGET(GPE_WLANCFG),"rbWEPenable");
+			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(widget),TRUE);		
+		}
+		else
+		{
+			widget=lookup_widget(GTK_WIDGET(GPE_WLANCFG),"rbWEPdisable");
+			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(widget),TRUE);		
+		}
+	
+		if (!strcmp(CurrentScheme->EncMode, "open"))
+		{
+			widget=lookup_widget(GTK_WIDGET(GPE_WLANCFG),"rbAuthOpen");
+			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(widget),TRUE);		
+		}
+		else
+		{
+			widget=lookup_widget(GTK_WIDGET(GPE_WLANCFG),"rbAuthShared");
+			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(widget),TRUE);		
+		}
+	
+		widget=lookup_widget(GTK_WIDGET(GPE_WLANCFG),"rbKeyHex");
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(widget),!CurrentScheme->KeyFormat);		
+		widget=lookup_widget(GTK_WIDGET(GPE_WLANCFG),"rbKeyString");
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(widget),CurrentScheme->KeyFormat);		
+
+		
+		widget=lookup_widget(GTK_WIDGET(GPE_WLANCFG),"edKey1_simple");
+		gtk_entry_set_text(GTK_ENTRY(widget),CurrentScheme->key1);	
+		widget=lookup_widget(GTK_WIDGET(GPE_WLANCFG),"edKey2_simple");
+		gtk_entry_set_text(GTK_ENTRY(widget),CurrentScheme->key2);	
+		widget=lookup_widget(GTK_WIDGET(GPE_WLANCFG),"edKey3_simple");
+		gtk_entry_set_text(GTK_ENTRY(widget),CurrentScheme->key3);	
+		widget=lookup_widget(GTK_WIDGET(GPE_WLANCFG),"edKey4_simple");
+		gtk_entry_set_text(GTK_ENTRY(widget),CurrentScheme->key4);
+		widget=lookup_widget(GTK_WIDGET(GPE_WLANCFG),"sbActiveKey_simple");
+		gtk_spin_button_set_value(GTK_SPIN_BUTTON(widget), atoi(CurrentScheme->ActiveKey));
+	}
+}
 
 void on_btnEdit_clicked (GtkButton *button, gpointer user_data)
 {
@@ -887,6 +1201,67 @@ void on_btnHelp_clicked(GtkButton *button, gpointer user_data)
 	gtk_widget_destroy(HelpWin);
 }
 
+void on_btnExpert_clicked (GtkButton *button, gpointer user_data)
+{
+	
+	GtkWidget 	*MainWindow;
+	GtkWidget 	*SaveWindow;
+
+	GtkWidget 	*treeview;
+ 	GtkTreeIter	iter;
+	GtkListStore	*liststore;
+	GtkTreeSelection *selection;
+	
+	gchar      	*ListEntry[4];
+
+	int 		count;
+	Scheme_t*	OrigScheme;
+
+	treeview = lookup_widget(GPE_WLANCFG, "tvSchemeList");
+	liststore = GTK_LIST_STORE(gtk_tree_view_get_model(GTK_TREE_VIEW(treeview)));
+
+	MainWindow = lookup_widget(GPE_WLANCFG, "nbPseudoMain");
+	
+	OrigScheme=malloc(sizeof(Scheme_t));
+	memcpy(OrigScheme, CurrentScheme, sizeof(Scheme_t));
+	get_changes_simple();
+	if (HasChanged) 
+	{
+		SaveWindow = create_dlgSaveChanges();
+		gtk_window_set_transient_for(GTK_WINDOW(SaveWindow), GTK_WINDOW(GPE_WLANCFG));
+		if (gtk_dialog_run(GTK_DIALOG(SaveWindow)) != GTK_RESPONSE_YES) 
+		{
+			memcpy(CurrentScheme, OrigScheme, sizeof(Scheme_t));
+		} else
+		{
+			treeview  = lookup_widget(GPE_WLANCFG, "tvSchemeList");
+			selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
+
+			for (count = 0; count < 4; count++) 
+			{
+				ListEntry[count]=(gchar *)malloc(32 * sizeof(char));
+				memset(ListEntry[count],0,32);
+			}
+
+			strncpy(ListEntry[0], CurrentScheme->Scheme, 32);
+			strncpy(ListEntry[1], CurrentScheme->Socket, 32);
+			strncpy(ListEntry[2], CurrentScheme->Instance, 32);
+			strncpy(ListEntry[3], CurrentScheme->HWAddress, 32);
+				
+			if(gtk_tree_selection_get_selected (selection, (GtkTreeModel**)&liststore, &iter))
+				gtk_list_store_set(liststore, &iter, 0, ListEntry[0], 1, ListEntry[1], 2 , ListEntry[2], 3, ListEntry[3], 4, CurrentScheme, -1);
+				
+			for (count = 0; count < 4; count++) 
+				free(ListEntry[count]);
+		}
+		gtk_widget_destroy(SaveWindow);
+
+		gtk_tree_model_get_iter_first(GTK_TREE_MODEL(liststore), &iter);
+	}
+	free(OrigScheme);
+
+	gtk_notebook_set_page(GTK_NOTEBOOK(MainWindow), 0);	
+}
 
 
 void on_tvSchemeList_row_activated (GtkTreeView *treeview, GtkTreePath *arg1, GtkTreeViewColumn *arg2, gpointer user_data)

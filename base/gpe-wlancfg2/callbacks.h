@@ -55,6 +55,10 @@ on_btnHelp_clicked                     (GtkButton       *button,
                                         gpointer         user_data);
 
 void
+on_btnExpert_clicked                    (GtkButton       *button,
+                                        gpointer         user_data);
+
+void
 on_tvSchemeList_row_activated          (GtkTreeView     *treeview,
                                         GtkTreePath     *arg1,
                                         GtkTreeViewColumn *arg2,

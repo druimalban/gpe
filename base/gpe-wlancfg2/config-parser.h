@@ -102,7 +102,11 @@ extern int	config_linenr[MAX_CONFIG_LINES];
 extern int	esac_line;
 extern int	delete_list[MAX_SCHEMES][2];
 extern int	delete_list_count;
+extern int      input_file_error;
+extern GtkWidget	*GPE_WLANCFG;
 
+int yylex(void);
+int yyparse(void);
 int wl_get_next_token(void);
 void wl_set_inputfile(FILE *inputfile);
 int parse_configfile(char* cfgname);

@@ -9,7 +9,7 @@
 #define TOK_SENS 1008
 #define TOK_RATE 1009
 #define TOK_KEY 1010
-#define TOK_RTS 1011 
+#define TOK_RTS 1011
 #define TOK_FRAG 1012
 #define TOK_IWCONFIG 1013
 #define TOK_IWSPY 1014

@@ -15,12 +15,18 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 */
-
+#include <gtk/gtk.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
+#include <sys/file.h>
 
+#include "interface.h"
+#include "support.h"
 #include "config-parser.h"
+
+int      input_file_error;
 
 #define DEBUG	0
 
@@ -38,15 +44,18 @@ int	delete_list_count = 0;
 int parse_configfile(char* cfgname)
 {
 	FILE 	*inputfile;
+	gint    answer;
+	GtkWidget *dialog;	
+	input_file_error = FALSE;
 	
 	memset(schemelist, 0, sizeof(schemelist));
 	memset(config_file, 0, sizeof(config_file));
 	memset(config_linenr, 0, sizeof(config_linenr));
 	
-	inputfile=fopen(cfgname, "r");
+	inputfile=fopen(cfgname, "rw");
 	if (!inputfile)
 	{
-		fprintf(stderr, "Could not open input file %s\n", cfgname);
+		fprintf(stderr, _("Could not open input file %s\n"), cfgname);
 		return(0);
 	}
 	
@@ -60,8 +69,79 @@ int parse_configfile(char* cfgname)
 	
 	wl_set_inputfile(inputfile);
 	parse_input();
+	
+	answer = GTK_RESPONSE_NO;
+	if (schemecount == 0)
+	{
+       		dialog = gtk_message_dialog_new (GTK_WINDOW (GPE_WLANCFG),
+                                                 GTK_DIALOG_DESTROY_WITH_PARENT,
+                                                 GTK_MESSAGE_ERROR,
+                                                 GTK_BUTTONS_YES_NO,
+                                                 _("The wireless.opts file is broken.\nShall I create a new one?"));
+		answer = gtk_dialog_run(GTK_DIALOG(dialog));
+		gtk_widget_destroy(dialog);
+	} else 
+	if (input_file_error)
+	{
+       		dialog = gtk_message_dialog_new (GTK_WINDOW (GPE_WLANCFG),
+                                                 GTK_DIALOG_DESTROY_WITH_PARENT,
+                                                 GTK_MESSAGE_WARNING,
+                                                 GTK_BUTTONS_OK,
+                                                 _("The wireless.opts file has syntax errors.\nPerhaps you can't see all entries"));
+		gtk_dialog_run(GTK_DIALOG(dialog));
+		gtk_widget_destroy(dialog);
+	}
+	
+	if (answer == GTK_RESPONSE_YES)
+	{
+		fprintf(stderr,_("Creating new wireless.opts file\n"));	
+		
+		memset(schemelist, 0, sizeof(schemelist));
+		memset(config_file, 0, sizeof(config_file));
+		memset(config_linenr, 0, sizeof(config_linenr));
 
+		fclose(inputfile);
+		
+		inputfile=fopen(cfgname, "wr");
+		if (!inputfile)
+		{
+			fprintf(stderr, _("Could not open input file %s\n"), cfgname);
+			return(0);
+		}
+		
+		
+		fputs("case \"$ADDRESS\" in\n", inputfile);
+		fputs("*,*,*,*)\n", inputfile);
+		fputs("\tINFO=\"AnyESSID\"\n", inputfile);
+		fputs("\tESSID=\"any\"\n", inputfile);
+		fputs("\tMODE=\"auto\"\n", inputfile);
+		fputs("\t;;\n", inputfile);
+		fputs("esac\n", inputfile);
+		
+		fclose(inputfile);
+
+		input_file_error = FALSE;
+		
+		inputfile=fopen(cfgname, "r");
+		if (!inputfile)
+		{
+			fprintf(stderr, _("Could not open input file %s\n"), cfgname);
+			return(0);
+		}
+		
+		line_count = 0;
+		while (fgets(config_file[line_count], 255, inputfile))
+		{
+			config_linenr[line_count]=line_count+1; 
+			line_count++;
+		}
+		rewind(inputfile);
+		wl_set_inputfile(inputfile);
+		parse_input();
+	} 
+	
 	if (DEBUG) printf("Found %i schemes...\n", schemecount);
+	
 	return(schemecount);
 }
 
@@ -235,6 +315,76 @@ int line_in_delete_list(int linenr)
 	return(FALSE);
 }
 
+void reset_pcmcia_socket(int sock)
+{
+	gchar command[30];
+	
+	sprintf(command, "exec cardctl eject %d\n", sock);
+	system(command);
+	sprintf(command,  "exec cardctl insert %d\n", sock);
+	system(command);	
+}
+
+void restart_socket(void)
+{
+	const char *stabfile;
+	char       linebuf[255];
+	FILE       *fd;
+	int        sock;
+	int        socks[10];
+	int        sockcount;
+	char       drbuf[127];
+	int        i;
+
+	const char *drivers[] = {"orinoco_cs","wvlan_cs","wavelan_cs","prism2_cs","spectrum24_cs","hostap_cs","airo_cs"};
+#define NUM_DRIVERS 7
+
+	if (access ("/var/lib/pcmcia", R_OK) == 0)
+	{
+        	stabfile = "/var/lib/pcmcia/stab";
+	}
+	else
+	{
+       		stabfile = "/var/run/stab";
+	}
+
+	fd = fopen(stabfile, "r");
+	
+	if (fd == NULL)
+	{
+		perror(_("Can't open stab file, is PCMCIA running? "));
+		exit(-2);
+	}
+	
+        if (flock (fileno (fd), LOCK_SH) != 0)
+        {
+		perror(_("Locking stabfile failed."));
+		return;
+        }
+
+	memset(linebuf, 0, sizeof(255));
+	
+	sockcount=0;
+	while (fgets(linebuf, sizeof(linebuf)-1, fd) != NULL)
+	{
+		if (2 == sscanf(linebuf, "%d %*s %s %*s %*s", &sock, drbuf))
+		{
+			for (i = 0; i < NUM_DRIVERS; i++) 
+				if (strcmp(drbuf, drivers[i]) == 0)
+					socks[sockcount++]=sock;
+			if (sockcount==10) break;
+		}
+	}
+	
+	flock (fileno(fd), LOCK_UN);
+	fclose(fd);	
+	
+	for (i=0; i<sockcount; i++)
+		reset_pcmcia_socket(socks[i]);		
+}
+
+
+
 int write_back_configfile(char* cfgname, Scheme_t *Schemes, int scount)
 {
 	FILE 	*outputfile;
@@ -359,7 +509,8 @@ int write_back_configfile(char* cfgname, Scheme_t *Schemes, int scount)
 		if (!line_in_delete_list(count+1)) fprintf(outputfile, get_config_line(Schemes, scount, count+1));
 	
 	fclose(outputfile);
+		
+	restart_socket();
 
 	return(1);
 }
- 

@@ -35,7 +35,8 @@ ifeq ($(DEBUG),yes)
 CFLAGS += -O2 -g
 else
 CFLAGS += -Os -fomit-frame-pointer 
-LDFLAGS = -L/skiff/local/arm-linux/lib/X11  -lXinerama -lgdk-x11-2.0 -lX11 -lXrender -lXext
+LDFLAGS = -L/skiff/local/arm-linux/lib/X11 -lgdk-x11-2.0 -lX11 -lXrender -lXext -lXinerama
+LDFLAGS = -L/skiff/local/arm-linux/lib/X11 -lgdk-x11-2.0 -lX11 -lXrender -lXext -lXinerama
 endif
 
 CFLAGS += -Wall

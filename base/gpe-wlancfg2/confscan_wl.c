@@ -1809,4 +1809,5 @@ int wl_get_next_token(void)
 void wl_set_inputfile(FILE *inputfile)
 {
 	yyin = inputfile;
+	yyrestart(inputfile);
 }

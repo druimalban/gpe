@@ -43,6 +43,7 @@ static struct gpe_icon icons[] = {
 	{"edit"},
 	{"delete"},
 	{"exit"},
+	{"preferences"},
 	{"icon", PREFIX "/share/pixmaps/gpe-wlancfg.png"},
 	{NULL, NULL}
 };
@@ -52,7 +53,9 @@ int main (int argc, char *argv[])
 {
 	
 	GtkWidget       *vbSchemes;
-	GtkWidget       *toolbar;
+	GtkWidget	*vbSimple;
+	GtkWidget       *toolbar_main;
+	GtkWidget       *toolbar_simple;
 	GtkWidget	*pw;
 	
 	GtkListStore	*liststore;
@@ -87,35 +90,59 @@ int main (int argc, char *argv[])
 
 	vbSchemes = lookup_widget (GPE_WLANCFG, "vbSchemes");
 
-	toolbar = gtk_toolbar_new ();
-	gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);
-	gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
+	toolbar_main = gtk_toolbar_new ();
+	gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar_main), GTK_ORIENTATION_HORIZONTAL);
+	gtk_toolbar_set_style (GTK_TOOLBAR (toolbar_main), GTK_TOOLBAR_ICONS);
 	
-	gtk_box_pack_start (GTK_BOX (vbSchemes), toolbar, FALSE, FALSE, 0);
-	gtk_box_reorder_child (GTK_BOX (vbSchemes), toolbar, 0);
-	gtk_widget_show (toolbar);
+	gtk_box_pack_start (GTK_BOX (vbSchemes), toolbar_main, FALSE, FALSE, 0);
+	gtk_box_reorder_child (GTK_BOX (vbSchemes), toolbar_main, 0);
+	gtk_widget_show (toolbar_main);
 	
 	pw = gtk_image_new_from_pixbuf(gpe_find_icon ("new"));
-	gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("New profile"),
+	gtk_toolbar_append_item (GTK_TOOLBAR (toolbar_main), _("New profile"),
 		_("New profile"), _("New profile"), pw,
 		 (GtkSignalFunc) on_btnNew_clicked, NULL);
 	
 	pw = gtk_image_new_from_pixbuf(gpe_find_icon ("edit"));
-	gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Edit profile"),
+	gtk_toolbar_append_item (GTK_TOOLBAR (toolbar_main), _("Edit profile"),
 		_("Edit profile"), _("Edit profile"), pw,
 		 (GtkSignalFunc) on_btnEdit_clicked, NULL);
 	
 	pw =  gtk_image_new_from_pixbuf(gpe_find_icon ("delete"));
-	gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Delete profile"),
+	gtk_toolbar_append_item (GTK_TOOLBAR (toolbar_main), _("Delete profile"),
 		_("Delete profile"), _("Delete profile"), pw,
 		 (GtkSignalFunc) on_btnDelete_clicked, NULL);
-	gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
+	gtk_toolbar_append_space (GTK_TOOLBAR (toolbar_main));
 	
-//	pw =  gtk_image_new_from_pixbuf(gpe_find_icon ("exit"));
-	gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_QUIT,_("Exit"),
+/*
+	pw =  gtk_image_new_from_pixbuf(gpe_find_icon ("exit"));
+	gtk_toolbar_append_item (GTK_TOOLBAR (toolbar_main), _("Exit"),
+		_("Exit"), _("Exit"), pw, (GtkSignalFunc) on_GPE_WLANCFG_de_event, NULL);
+*/
+	gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar_main), GTK_STOCK_QUIT,_("Exit"),
 		_("Exit"), (GtkSignalFunc) on_GPE_WLANCFG_de_event, NULL, -1);
 	
+	vbSimple = lookup_widget (GPE_WLANCFG, "vbSimple");
+
+	toolbar_simple = gtk_toolbar_new ();
+	gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar_simple), GTK_ORIENTATION_HORIZONTAL);
+	gtk_toolbar_set_style (GTK_TOOLBAR (toolbar_simple), GTK_TOOLBAR_ICONS);
 	
+	gtk_box_pack_start (GTK_BOX (vbSimple), toolbar_simple, FALSE, FALSE, 0);
+	gtk_box_reorder_child (GTK_BOX (vbSimple), toolbar_simple, 0);
+	gtk_widget_show (toolbar_simple);
+	
+	pw =  gtk_image_new_from_pixbuf(gpe_find_icon ("preferences"));
+	gtk_toolbar_append_item (GTK_TOOLBAR (toolbar_simple), _("Expert settings"),
+		_("Expert settings"), _("Expert settings"), pw,
+		 (GtkSignalFunc) on_btnExpert_clicked, NULL);
+	gtk_toolbar_append_space (GTK_TOOLBAR (toolbar_simple));
+	
+	pw =  gtk_image_new_from_pixbuf(gpe_find_icon ("exit"));
+	gtk_toolbar_append_item (GTK_TOOLBAR (toolbar_simple), _("Exit"),
+		_("Exit"), _("Exit"), pw, (GtkSignalFunc) on_GPE_WLANCFG_de_event, NULL);
+
+
 	
 	treeview=GTK_TREE_VIEW(lookup_widget(GPE_WLANCFG, "tvSchemeList"));
 	

@@ -533,6 +533,7 @@ void addkey(char *keystr)
 void yyerror(char *errmsg)
 {
 	fprintf(stderr, "Scanner: %s\n", errmsg);
+	input_file_error = TRUE;
 }
 
 int parse_input(void)
