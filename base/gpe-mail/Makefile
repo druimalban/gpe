@@ -1,4 +1,4 @@
-CFLAGS = `gtk-config --cflags` -Os -Wall -fomit-frame-pointer -I../libgpewidget
+CFLAGS = `gtk-config --cflags` `gdk-pixbuf-config --cflags` -Os -Wall -fomit-frame-pointer -I../libgpewidget
 
 MEMBERS = main
 
@@ -7,7 +7,7 @@ OBJS = $(patsubst %,%.o,$(MEMBERS))
 all: gpe-mail
 
 gpe-mail: $(OBJS)
-	$(CC) -o $@ $< `gtk-config --libs` -L../libgpewidget -lgpewidget -lsqlite -lgdk_imlib
+	$(CC) -o $@ $< -L../libgpewidget -lgpewidget `gtk-config --libs`
 
 install:
 	install -D gpe-mail $(DESTDIR)/usr/bin/gpe-mail

@@ -16,7 +16,6 @@
 #include <errno.h>
 
 #include <gtk/gtk.h>
-#include <gdk_imlib.h>
 
 #include "errorbox.h"
 
@@ -233,7 +232,6 @@ main (int argc, char *argv[])
 
   gtk_set_locale ();
   gtk_init (&argc, &argv);
-  gdk_imlib_init ();
 
   window  = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 
