@@ -41,7 +41,7 @@ static void
 set_category (GtkWidget *w, gpointer user_data)
 {
   selected_category = user_data;
-  gtk_widget_draw (g_draw, NULL);
+  refresh_items ();
 }
 
 void

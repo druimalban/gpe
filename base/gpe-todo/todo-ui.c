@@ -125,6 +125,24 @@ click_ok(GtkWidget *widget,
   else
     t->item = new_item ();
 
+  if (t->item->categories)
+    {
+      g_slist_free (t->item->categories);
+      t->item->categories = NULL;
+    }
+
+  if (t->category_map)
+    {
+      GSList *iter;
+      for (iter = t->category_map; iter; iter = iter->next)
+	{
+	  struct category_map *m = iter->data;
+	  if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (m->w)))
+	    t->item->categories = g_slist_append (t->item->categories, 
+						  (gpointer)(m->c->id));
+	}
+    }
+
   if (what[0])
     t->item->what = what;
   if (summary[0])
@@ -203,6 +221,7 @@ edit_item (struct todo_item *item)
 		   
   t->duetoggle = gtk_check_button_new_with_label (_("Due:"));
   t->duedate = gtk_date_combo_new ();
+  t->category_map = NULL;
 
   if (categories)
     {
@@ -278,9 +297,11 @@ edit_item (struct todo_item *item)
   if (item)
     {
       gint p = 0;
-      gtk_editable_insert_text (GTK_EDITABLE (text), item->what, 
-				strlen (item->what), &p);
-      gtk_entry_set_text (GTK_ENTRY (entry_summary), item->summary);
+      if (item->what)
+	gtk_editable_insert_text (GTK_EDITABLE (text), item->what, 
+				  strlen (item->what), &p);
+      if (item->summary)
+	gtk_entry_set_text (GTK_ENTRY (entry_summary), item->summary);
       gtk_option_menu_set_history (GTK_OPTION_MENU (state), item->state);
       t->state = item->state;
 
@@ -293,7 +314,7 @@ edit_item (struct todo_item *item)
       else
 	gtk_widget_set_sensitive (t->duedate, FALSE);
 
-      gtk_window_set_title (GTK_WINDOW (window), _("Edit item"));
+      gtk_window_set_title (GTK_WINDOW (window), _("Edit to-do item"));
     }
   else
     {

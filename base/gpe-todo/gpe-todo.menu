@@ -1,6 +1,6 @@
 ?package(gpe-todo): \
  needs=x11 \
- title=To-do \
+ title="To-do list" \
  command=gpe-todo \
  icon48=/usr/share/pixmaps/gpe-todo.png \
  section=PIM \

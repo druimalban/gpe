@@ -106,6 +106,7 @@ item_callback (void *arg, int argc, char **argv, char **names)
       int id = atoi (argv[0]);
       struct todo_item *i = g_malloc (sizeof (struct todo_item));
       memset (i, 0, sizeof (*i));
+      i->id = id;
       if (sqlite_exec_printf (sqliteh, "select tag,value from todo where uid=%d",
 			      item_data_callback, i, &err, id))
 	{

@@ -38,12 +38,6 @@ install: all install-po
 	install -D gpe-todo.png $(DESTDIR)$(PREFIX)/share/pixmaps/gpe-todo.png
 	strip $(DESTDIR)$(PREFIX)/bin/gpe-todo
 
-ipkg:
-	rm -rf familiar/dist
-	mkdir -p familiar/dist/CONTROL
-	cp familiar/control familiar/postinst familiar/dist/CONTROL
-	make DESTDIR=`pwd`/familiar/dist PREFIX=/usr install
-	chown -R root.root familiar/dist
-	ipkg-build familiar/dist
+include ../build/Makefile.dpkg_ipkg
 
 -include $(DEPS)
