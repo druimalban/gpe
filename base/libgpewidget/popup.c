@@ -39,16 +39,16 @@ gpe_get_win_position (Display *dpy, Window win, int *x, int *y)
       int w_x, w_y ;
       unsigned int border_w ;
       if (children) 
-	XFree (children);
+        XFree (children);
 
       if (!XGetGeometry( dpy, win, &root, &w_x, &w_y, &udumm, &udumm, &border_w, &udumm ))
-	break ;
+        break ;
 
       (*x)+=w_x+(int)border_w ;
       (*y)+=w_y+(int)border_w ;
       
       if (parent == root)
-	return 1;
+        return 1;
 
       win = parent ;
     }

@@ -12,7 +12,7 @@ Functions used for application initialisation.
 
 <!-- ##### SECTION See_Also ##### -->
 <para>
-
+Used by: Any GPE application.
 </para>
 
 <!-- ##### FUNCTION gpe_application_init ##### -->

@@ -1,0 +1,9 @@
+<!-- ##### FUNCTION gpe_render_icon ##### -->
+<para>
+[obsolete, use gtk_image_new_from_pixbuf()]
+</para>
+
+@style: 
+@pixbuf: 
+@Returns: 
+

@@ -53,18 +53,18 @@ gpe_load_one_icon (const char *filename, gchar **error)
     {
       gboolean found = FALSE;
       if (theme_dir)
-	{
-	  snprintf (buf, sizeof (buf) - 1, "%s/%s.png", theme_dir, filename);
-	  buf[sizeof (buf) - 1] = 0;
-	  if (access (buf, R_OK) == 0)
-	    found = TRUE;
-	}
+        {
+          snprintf (buf, sizeof (buf) - 1, "%s/%s.png", theme_dir, filename);
+          buf[sizeof (buf) - 1] = 0;
+          if (access (buf, R_OK) == 0)
+            found = TRUE;
+        }
       if (found == FALSE && theme_dir != default_theme_dir)
-	{
-	  snprintf (buf, sizeof (buf) - 1, "%s/%s.png", default_theme_dir, 
-		    filename);
-	  buf[sizeof (buf) - 1] = 0;
-	}
+        {
+          snprintf (buf, sizeof (buf) - 1, "%s/%s.png", default_theme_dir, 
+                    filename);
+          buf[sizeof (buf) - 1] = 0;
+        }
       pathname = buf;
     }
   
@@ -134,12 +134,12 @@ gpe_try_find_icon (const char *name, gchar **error)
     {
       GdkPixbuf *buf = gpe_load_one_icon (name, error);
       if (buf)
-	{
-	  p = g_malloc (sizeof (struct gpe_icon));
-	  p->shortname = g_strdup (name);
-	  p->pixbuf = buf;
-	  g_datalist_set_data (&pbdata, p->shortname, p);
-	}
+       {
+         p = g_malloc (sizeof (struct gpe_icon));
+         p->shortname = g_strdup (name);
+         p->pixbuf = buf;
+         g_datalist_set_data (&pbdata, p->shortname, p);
+       }
     }
   
   return p ? p->pixbuf : NULL;
@@ -152,7 +152,7 @@ gpe_find_icon (const char *name)
 
   if (p == NULL)
     {
-      gchar *error = g_strdup_printf (_("Icon \"%s\" not loaded"), name);
+      gchar *error = g_strdup_printf (_("Icon \"%s\" not loaded."), name);
       gpe_error_box (error);
       g_free (error);
       exit (1);

@@ -1,60 +1,69 @@
 <!-- ##### SECTION Title ##### -->
-pixmaps
+Pixmaps
 
 <!-- ##### SECTION Short_Description ##### -->
-
+Handling pixmaps for applications.
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-
+GPE provides a set of functions for maintaining a shared icons to avoid 
+loading icon sets multiple times. These icons are loaded into an internal
+storage list and identified by a name string.
 </para>
 
 <!-- ##### SECTION See_Also ##### -->
 <para>
-
+Used by: Most GPE applications.
 </para>
 
 <!-- ##### FUNCTION gpe_load_icons ##### -->
 <para>
-
+This function is used to load a set of icons into memory and makes them 
+accessible for the applications. Usually you will have a fixed set of pixmaps
+to load for each application on startup. The function will display an error 
+message if loading of an icon fails.
 </para>
 
-@Param1: 
-@Returns: 
+@Param1: List of icon defintions, terminated by NULL.
+@Returns: TRUE on success.
 
 
 <!-- ##### FUNCTION gpe_find_icon ##### -->
 <para>
-
+Get an icon by name from storage list.
 </para>
 
-@name: 
-@Returns: 
+@name: Icon name to find.
+@Returns: Pixbuf pointer on success, NULL on failure.
 
 
 <!-- ##### FUNCTION gpe_find_icon_scaled ##### -->
 <para>
-
+As GTK uses icons in several sizes for different purposes this function
+renders a given icon to one of the common GTK icon sizes.
 </para>
 
-@name: 
-@size: 
-@Returns: 
+@name: Icon to use.
+@size: GTK icon size to use.
+@Returns: A new allocated pixbuf containing the icon of the desired size.
 
 
 <!-- ##### FUNCTION gpe_try_find_icon ##### -->
 <para>
-
+This function is used to get an icon which is not necessarily loaded when 
+the function is called. The icon is taken from internal storage if it is 
+already available and tried to load from a file with the same name like 
+the name passed to the function otherwise.
 </para>
 
-@name: 
-@error: 
-@Returns: 
+@name: Icon name to get.
+@error: Retuned error information if function fails.
+@Returns: Pixbuf of icon or NULL on failure.
 
 
 <!-- ##### FUNCTION gpe_find_icon_pixmap ##### -->
 <para>
-
+[Deprecated - do not use.]
 </para>
 
 @name: 
@@ -65,10 +74,10 @@ pixmaps
 
 <!-- ##### FUNCTION gpe_set_window_icon ##### -->
 <para>
-
+Set the icon of a window from a named icon in storage list.
 </para>
 
-@window: 
-@icon: 
+@window: Window to set icon for.
+@icon: Icon name.
 
 
