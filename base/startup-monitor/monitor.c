@@ -56,12 +56,31 @@ static gboolean hourglass_shown;
 static int target_x;
 
 static MBPixbuf *mbpb;
+static MBPixbufImage *img;
+
+static Pixmap pixmap;
 
 #define wy 2
 
 static void
 show_hourglass (void)
 {
+  MBPixbufImage *img_dest;
+
+  img_dest = mb_pixbuf_img_new_from_drawable (mbpb, 
+					      DefaultRootWindow (xdisplay),
+					      None, 
+					      target_x, 
+					      wy, 
+					      img->width, 
+					      img->height);
+
+  mb_pixbuf_img_composite (mbpb, img_dest, img, 0, 0);
+
+  mb_pixbuf_img_render_to_drawable (mbpb, img_dest, pixmap, 0, 0);
+
+  mb_pixbuf_img_free (mbpb, img_dest);
+
   XMoveWindow (xdisplay, window, target_x, wy);
   XMapRaised (xdisplay, window);
   hourglass_shown = TRUE;
@@ -173,32 +192,6 @@ error_trap_pop (SnDisplay *display,
   --error_trap_depth;
 }
 
-static void
-mbpixbuf_to_mask (MBPixbuf    *pb,
-		  MBPixbufImage *img,
-		  Drawable     drw,
-		  GC gc0, GC gc1,
-		  int drw_x,
-		  int drw_y)
-{
-  unsigned char *p;
-  int x,y;
-  int r, g, b;
-  
-  p = img->rgba;
-  
-  for (y=0; y<img->height; y++)
-    {
-      for (x=0; x<img->width; x++)
-	{
-	  r = ( *p++ );
-	  g = ( *p++ );
-	  b = ( *p++ );
-	  XDrawPoint (xdisplay, drw, (*p++) ? gc1 : gc0, x + drw_x, y + drw_y);
-	}
-    }
-}
-
 void
 root_window_size (Display *dpy, unsigned int *rx, unsigned int *ry)
 {
@@ -216,13 +209,10 @@ main (int argc, char **argv)
   SnDisplay *display;
   SnMonitorContext *context;
   int x, y, w, h;
-  MBPixbufImage *img;
   static char *icon_name = PREFIX "/share/gpe/pixmaps/default/loading.png";
-  GC mask_gc_0, mask_gc_1;
-  Pixmap mask, pixmap;
-  Atom window_type_atom, window_type_splash_atom;
   int fd;
   Window root;
+  XSetWindowAttributes attr;
   
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
   textdomain (PACKAGE);
@@ -260,28 +250,14 @@ main (int argc, char **argv)
 				BlackPixel (xdisplay, DefaultScreen (xdisplay)),
 				WhitePixel (xdisplay, DefaultScreen (xdisplay)));
 
-  window_type_atom = XInternAtom (xdisplay, "_NET_WM_WINDOW_TYPE", False);
-  window_type_splash_atom = XInternAtom (xdisplay, "_NET_WM_WINDOW_TYPE_SPLASH", False);
-
-  XChangeProperty (xdisplay, window, window_type_atom,
-		   XA_ATOM, 32,  PropModeReplace,
-		   (unsigned char *)&window_type_splash_atom, 1);
+  attr.override_redirect = True;
+  XChangeWindowAttributes (xdisplay, window, CWOverrideRedirect, &attr);
 
   XStoreName (xdisplay, window, _("Startup monitor"));
 
   pixmap = XCreatePixmap (xdisplay, window, w, h,
 			  mbpb->depth);
   
-  mb_pixbuf_img_render_to_drawable (mbpb, img, pixmap, 0, 0);
-
-  mask = XCreatePixmap (xdisplay, window, w, h, 1);
-  mask_gc_0 = XCreateGC (xdisplay, mask, 0, NULL);
-  mask_gc_1 = XCreateGC (xdisplay, mask, 0, NULL);
-  XSetForeground (xdisplay, mask_gc_1, WhitePixel (xdisplay, DefaultScreen (xdisplay)));
-  mbpixbuf_to_mask (mbpb, img, mask, mask_gc_0, mask_gc_1, 0, 0);
-
-  XShapeCombineMask (xdisplay, window, ShapeBounding, 0, 0, mask, ShapeSet);
-
   XSetWindowBackgroundPixmap (xdisplay, window, pixmap);
 
   XSetErrorHandler (x_error_handler);
