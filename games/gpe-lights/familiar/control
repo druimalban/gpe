@@ -1,8 +1,0 @@
-Package: gpe-lights 
-Version: 0.0.1 
-Section: games
-Priority: optional
-Architecture: arm
-Depends: libgtk1.2
-Maintainer: Joe McCarthy <mccarthy@engrng.pitt.edu>
-Description: A simple light puzzle 
