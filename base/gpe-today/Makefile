@@ -1,6 +1,7 @@
 PACKAGE = gpe-today
 PREFIX = /usr/local
 VERSION = 0.01
+CVSBUILD = yes
 #DEBUG = yes 
 #LINGUAS = pt_PT
 
@@ -31,12 +32,18 @@ SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
 PIXMAPS = calendar.png date.png tasks.png
 
+ifeq ($(CVSBUILD),yes)
+BUILD = ../build
+else
+BUILD = build
+endif
+
 all: $(PACKAGE) all-mo
 
 $(PACKAGE): $(OBJS)
 	$(CC) -o $@ $^ -L../libgpewidget -lgpewidget -lsqlite $(LDFLAGS)
 
-install: all install-mo gpe-today.desktop
+install-program: all $(PACKAGE).desktop
 	for i in $(PIXMAPS); do install -D pixmaps/$$i $(DESTDIR)$(PREFIX)/share/$(PACKAGE)/pixmaps/$$i; done
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
 	install -s $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
@@ -49,6 +56,6 @@ install: all install-mo gpe-today.desktop
 clean: clean-po
 	rm -f $(PACKAGE) $(OBJS) $(DEPS) $(PACKAGE).desktop familiar/dist *~
 
-include ../build/Makefile.translation
-include ../build/Makefile.dpkg_ipkg
+include $(BUILD)/Makefile.translation
+include $(BUILD)/Makefile.dpkg_ipkg
 -include $(DEPS)
