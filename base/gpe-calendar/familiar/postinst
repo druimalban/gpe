@@ -4,5 +4,8 @@ if test -x /usr/bin/update-menus; then
     update-menus;
 fi
 
+#remove this later!!
+chmod -R a+wr /var/spool/at
+
 # return success
 exit 0;
