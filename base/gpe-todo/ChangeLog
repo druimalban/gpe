@@ -8,7 +8,7 @@
 	(button_press_event, button_release_event, toggle_completed,
 	open_editing_window): New.
 	(refresh_items, top_level): Use GtkTreeView to render list of
-	items.
+	items.  Remove "purge" and "push down" icons from toolbar.
 
 2004-01-17  Philip Blundell  <philb@gnu.org>
 
