@@ -18,10 +18,10 @@
 
 #include <gtk/gtk.h>
 
-#include "init.h"
-#include "picturebutton.h"
-#include "pixmaps.h"
-#include "render.h"
+#include <gpe/init.h>
+#include <gpe/pixmaps.h>
+#include <gpe/picturebutton.h>
+#include <gpe/render.h>
 
 static struct gpe_icon my_icons[] = {
   { "ok", "ok" },

@@ -1,3 +1,7 @@
+2002-09-03  Colin Marquardt  <colin@marquardt-home.de>
+
+	* gpe-login.c, gpe-logout.c: Use <gpe/foo.h> for the includes now.
+
 2002-08-07  Philip Blundell  <philb@gnu.org>
 
 	* gpe-session-scripts 0.17 released.

@@ -32,11 +32,11 @@
 #include <gdk/gdkx.h>
 #include <gdk/gdkkeysyms.h>
 
-#include "errorbox.h"
-#include "init.h"
-#include "pixmaps.h"
-#include "picturebutton.h"
-#include "render.h"
+#include <gpe/errorbox.h>
+#include <gpe/init.h>
+#include <gpe/pixmaps.h>
+#include <gpe/picturebutton.h>
+#include <gpe/render.h>
 
 #define _(x) gettext(x)
 
