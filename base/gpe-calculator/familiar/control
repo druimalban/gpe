@@ -1,8 +1,0 @@
-Package: gpe-calculator 
-Version: 0.1 
-Section: base 
-Priority: optional
-Architecture: arm
-Depends: libgtk1.2
-Maintainer: Joe McCarthy <mccarthy@engrng.pitt.edu>
-Description: A scientific calculator 

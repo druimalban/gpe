@@ -1,8 +1,0 @@
-Package: bluez-pin
-Section: base
-Priority: optional
-Version: 0.06
-Architecture: arm
-Maintainer: Phil Blundell <pb@debian.org>
-Depends: libgtk1.2, sqlite, libgpewidget0 (>= 0.02), gpe-icons
-Description: Bluetooth PIN helper
