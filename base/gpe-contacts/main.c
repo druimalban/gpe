@@ -47,7 +47,7 @@ update_combo_categories (void)
 
   for (iter = categories; iter; iter = iter->next)
     {
-      struct attribute *c = iter->data;
+      struct category *c = iter->data;
       list = g_list_append (list, (gpointer)c->name);
     }
 
@@ -56,7 +56,7 @@ update_combo_categories (void)
 
   for (iter = categories; iter; iter = iter->next)
     {
-      struct attribute *c = iter->data;
+      struct category *c = iter->data;
       g_free (c->name);
       g_free (c);
     }
@@ -97,6 +97,13 @@ new_contact(GtkWidget *widget, gpointer d)
 static void
 delete_contact(GtkWidget *widget, gpointer d)
 {
+  if (GTK_CLIST (clist)->selection)
+    {
+      guint row = (guint)(GTK_CLIST (clist)->selection->data);
+      guint uid = (guint)gtk_clist_get_row_data (GTK_CLIST (clist), row);
+      if (db_delete_by_uid (uid))
+	update_display ();
+    }
 }
 
 static void
@@ -155,7 +162,7 @@ config_categories_box(void)
       for (iter = categories; iter; iter = iter->next)
 	{
 	  gchar *line_info[1];
-	  struct attribute *c = iter->data;
+	  struct category *c = iter->data;
 	  line_info[0] = c->name;
 	  gtk_clist_append (GTK_CLIST (clist), line_info);
 	  gtk_clist_set_row_data (GTK_CLIST (clist), row, 
@@ -229,7 +236,7 @@ selection_made( GtkWidget      *clist,
     }
 }
 
-static void
+void
 update_display (void)
 {
   GSList *items = db_get_entries (), *iter;

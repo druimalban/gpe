@@ -19,9 +19,22 @@ static sqlite *db;
 
 static const char *schema_str = 
 "create table contacts (
-	urn		int NOT NULL,
-	tag		text NOT NULL,
-	value		text NOT NULL
+	urn		INTEGER NOT NULL,
+	tag		TEXT NOT NULL,
+	value		TEXT NOT NULL
+);
+";
+
+static const char *schema2_str = 
+"create table contacts_urn (
+        urn             INTEGER PRIMARY KEY
+);
+";
+
+static const char *schema3_str =
+"create table contacts_category (
+	id		INTEGER PRIMARY KEY,
+	description	TEXT
 );
 ";
 
@@ -52,6 +65,8 @@ db_open(void)
     }
 
   sqlite_exec (db, schema_str, NULL, NULL, NULL);
+  sqlite_exec (db, schema2_str, NULL, NULL, NULL);
+  sqlite_exec (db, schema3_str, NULL, NULL, NULL);
 
   return 0;
 }
@@ -126,10 +141,21 @@ discard_person (struct person *p)
   g_free (p);
 }
 
-guint
-new_person_id ()
+gboolean
+new_person_id (guint *id)
 {
-  return 1;
+  char *err;
+  int r = sqlite_exec (db, "insert into contacts_urn values (NULL)",
+		       NULL, NULL, &err);
+  if (r)
+    {
+      gpe_error_box (err);
+      free (err);
+      return FALSE;
+    }
+
+  *id = sqlite_last_insert_rowid (db);
+  return TRUE;
 }
 
 gint 
@@ -194,6 +220,45 @@ db_get_by_uid (guint uid)
   return p;
 }
 
+gboolean
+db_delete_by_uid (guint uid)
+{
+  int r;
+  gchar *err;
+  gboolean rollback = FALSE;
+
+  r = sqlite_exec (db, "begin transaction", NULL, NULL, &err);
+  if (r)
+    goto error;
+
+  rollback = TRUE;
+
+  r = sqlite_exec_printf (db, "delete from contacts where urn='%d'",
+			  NULL, NULL, &err,
+			  uid);
+  if (r)
+    goto error;
+  
+  r = sqlite_exec_printf (db, "delete from contacts_urn where urn='%d'",
+			  NULL, NULL, &err,
+			  uid);
+  if (r)
+    goto error;
+
+  r = sqlite_exec (db, "commit transaction", NULL, NULL, &err);
+  if (r)
+    goto error;
+
+  return TRUE;
+
+ error:
+  if (rollback)
+    sqlite_exec (db, "rollback transaction", NULL, NULL, NULL);
+  gpe_error_box (err);
+  free (err);
+  return FALSE;
+}
+
 struct tag_value *
 db_find_tag (struct person *p, gchar *tag)
 {
@@ -250,7 +315,13 @@ commit_person (struct person *p)
 	goto error;
     }
   else
-    p->id = new_person_id ();
+    {
+      if (new_person_id (&p->id) == FALSE)
+	{
+	  sqlite_exec (db, "rollback transaction", NULL, NULL, NULL);
+	  return FALSE;
+	}
+    }
 
   for (iter = p->data; iter; iter = iter->next)
     {
@@ -283,13 +354,17 @@ commit_person (struct person *p)
 gboolean
 db_insert_category (gchar *name, guint *id)
 {
-  *id = 1;
-  return TRUE;
-}
-
-gboolean
-db_insert_attribute (gchar *id, gchar *desc)
-{
+  char *err;
+  int r = sqlite_exec_printf (db, "insert into contacts_category values (NULL, '%q')", 
+			      NULL, NULL, &err, name);
+  if (r)
+    {
+      gpe_error_box (err);
+      free (err);
+      return FALSE;
+    }
+  
+  *id = sqlite_last_insert_rowid (db);
   return TRUE;
 }
 
@@ -299,7 +374,7 @@ load_one_attribute (void *arg, int argc, char **argv, char **names)
   if (argc == 2)
     {
       GSList **list = (GSList **)arg;
-      struct attribute *c = g_malloc (sizeof (struct attribute));
+      struct category *c = g_malloc (sizeof (struct category));
 
       c->id = atoi (argv[0]);
       c->name = g_strdup (argv[1]);
@@ -316,7 +391,7 @@ db_get_categories (void)
   GSList *list = NULL;
   char *err;
   if (sqlite_exec (db,
-		   "select id,description from category",
+		   "select id,description from contacts_category",
 		   load_one_attribute, &list, &err))
   {
     fprintf (stderr, "sqlite: %s\n", err);
@@ -325,21 +400,4 @@ db_get_categories (void)
   }
 		
   return list;
-}
-
-GSList *
-db_get_attributes (void)
-{
-  GSList *list = NULL;
-  char *err;
-  if (sqlite_exec (db,
-		   "select id,description from attr",
-		   load_one_attribute, &list, &err))
-  {
-    fprintf (stderr, "sqlite: %s\n", err);
-    free (err);
-    return NULL;
-  }
-		
-  return list;  
 }

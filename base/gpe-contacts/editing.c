@@ -293,7 +293,7 @@ create_edit (void)
       GSList *iter;
       for (iter = categories; iter; iter = iter->next)
 	{
-	  struct attribute *c = iter->data;
+	  struct category *c = iter->data;
 	  GtkWidget *w = gtk_check_button_new_with_label (c->name);
 	  gtk_widget_show (w);
 	  gtk_box_pack_start (GTK_BOX (cbox), w, FALSE, FALSE, 0);

@@ -113,5 +113,6 @@ on_edit_save_clicked                   (GtkButton       *button,
     {
       gtk_widget_destroy (edit);
       discard_person (p);
+      update_display ();
     }
 }

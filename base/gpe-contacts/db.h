@@ -30,17 +30,16 @@ extern void db_set_data (struct person *, gchar *tag, gchar *value);
 extern struct tag_value *db_find_tag (struct person *p, gchar *tag);
 extern GSList *db_get_entries (void);
 extern struct person *db_get_by_uid (guint uid);
+extern gboolean db_delete_by_uid (guint uid);
 
 extern gboolean db_insert_category (gchar *, guint *);
-extern gboolean db_insert_attribute (gchar *, gchar *);
 
-struct attribute
+struct category
 {
   guint id;
   gchar *name;
 };
 
-extern GSList *db_get_attributes (void);
 extern GSList *db_get_categories (void);
 
 #endif
