@@ -75,6 +75,7 @@ main (int argc, char *argv[])
   textdomain (PACKAGE);
 
   window = gtk_plug_new (0);
+  gtk_widget_set_usize (window, 16, 16);
   gtk_widget_realize (window);
 
   if (gpe_load_icons (my_icons) == FALSE)
@@ -89,7 +90,6 @@ main (int argc, char *argv[])
   gtk_signal_connect (GTK_OBJECT (button), "clicked", clicked, NULL);
 
   gtk_container_add (GTK_CONTAINER (window), button);
-  gtk_widget_set_usize (window, 16, 16);
 
   dpy = GDK_WINDOW_XDISPLAY (window->window);
   root = RootWindow (dpy, 0);
@@ -108,7 +108,7 @@ main (int argc, char *argv[])
   if (tray_init (dpy, GDK_WINDOW_XWINDOW (window->window)))
     {
       gtk_plug_construct (window, tray_get_window ());
-      gtk_widget_show (window);
+      gtk_widget_show_all (window);
     }  
 
   gtk_main ();
