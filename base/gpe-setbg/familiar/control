@@ -1,7 +1,7 @@
 Package: gpe-setbg
 Section: base
 Priority: optional
-Version: 0.01
+Version: 0.02
 Architecture: arm
 Maintainer: Colin Marquardt <ipaq@marquardt-home.de>
 Depends: libgdk-pixbuf2, libgpewidget0 (>= 0.23)

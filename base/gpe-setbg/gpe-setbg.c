@@ -18,11 +18,24 @@
 #include <gpe/pixmaps.h>
 #include <gpe/init.h>
 
+#include <X11/Xlib.h>
+#include <X11/Xatom.h>
 
 static struct gpe_icon my_icons[] = {
   { "login_bg", PREFIX "/share/pixmaps/gpe-default-bg.png" },
   { NULL, NULL }
 };
+
+static void
+set_xrootpmap_id (Pixmap p)
+{
+  Display *dpy = GDK_DISPLAY ();
+  Atom atom = XInternAtom (dpy, "_XROOTPMAP_ID", False);
+  Window root = RootWindow (dpy, 0);
+  XSetCloseDownMode (dpy, RetainPermanent);
+  XChangeProperty (dpy, root, atom, XA_PIXMAP, 32, PropModeReplace, (char *)&p, 1);
+  XSync (dpy, False);
+}
 
 int 
 main (int argc, char *argv[])
@@ -50,8 +63,9 @@ main (int argc, char *argv[])
     exit (1);
   
   if (gpe_find_icon_pixmap ("login_bg", &pixmap, &bitmap)) {
-    g_print ("gpe-setbg: Setting background.\n");
+    g_print ("gpe-setbg: Setting background to pixmap %08x.\n", GDK_PIXMAP_XID (pixmap));
     gdk_window_set_back_pixmap (GDK_ROOT_PARENT (), pixmap, 0);
+    set_xrootpmap_id (GDK_PIXMAP_XID (pixmap));
   }
 
   return (0);
