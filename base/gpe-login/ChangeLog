@@ -1,5 +1,8 @@
 2003-07-31  Philip Blundell  <philb@gnu.org>
 
+	* Makefile (BUILD): Define.
+	(CFLAGS): Don't add -I/usr/include/gpe.
+
 	* gpe-login.c (mapped): Delete prototype.
 
 	* Makefile (gpe-lock-display): Use pkg-config x11 rather than

@@ -24,8 +24,6 @@ CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR
 ifeq ($(CVSBUILD),yes)
 CFLAGS += -I../libgpewidget
 LDFLAGS += -L../libgpewidget
-else
-CFLAGS += -I/usr/include/gpe
 endif
 LDFLAGS += -lgpewidget
 LDFLAGS_OWNERINFO = -L../gpe-ownerinfo -lgpe-ownerinfo
@@ -37,6 +35,14 @@ DEPS = $(patsubst %,%.d,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
 EXTRA_DESKTOPS = gpe-logout.desktop.in
+
+ifeq ($(CVSBUILD),yes)
+BUILD = ../build
+else
+BUILD = build
+endif
+
+export PKG_CONFIG_PATH = $(BUILD)
 
 all: gpe-login gpe-lock-display
 
@@ -99,6 +105,6 @@ ipkg: scripts-ipkg
 clean: clean-po
 	rm -f gpe-login gpe-login.o gpe-lock-display gpe-lock-display.o nocursor.o
 
-include ../build/Makefile.dpkg_ipkg
-include ../build/Makefile.translation
+include $(BUILD)/Makefile.dpkg_ipkg
+include $(BUILD)/Makefile.translation
 -include $(DEPS)
