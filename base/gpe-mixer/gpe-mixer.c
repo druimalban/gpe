@@ -87,6 +87,7 @@ GtkWidget *slider;
 GtkWidget *label;
 GtkWidget *w;
 int *devnum;
+GtkTooltips *mixer_tips;
 
 	/* count mixers */
 	for (i=0; i<SOUND_MIXER_NRDEVICES; i++) {
@@ -98,7 +99,9 @@ int *devnum;
 	table=gtk_table_new(2, n, FALSE);
 	style = gtk_style_copy (table->style);
 	gtk_container_add (GTK_CONTAINER (window), table);
-	MixerAdjuster=(GtkObject **)malloc(n * sizeof (GtkObject));
+	MixerAdjuster = (GtkObject **)malloc(n * sizeof (GtkObject));
+
+	mixer_tips = gtk_tooltips_new ();
 
 	/* fill table with mixers */
 	n=0;
@@ -111,6 +114,7 @@ int *devnum;
 			gtk_scale_set_draw_value (GTK_SCALE (slider), FALSE);
 			gtk_widget_set_style (slider, style);
 			gtk_table_attach(GTK_TABLE(table), slider, n,n+1,1,2,(GtkAttachOptions) (GTK_FILL),(GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
+			gtk_tooltips_set_tip(GTK_TOOLTIPS(mixer_tips),GTK_WIDGET(slider),mixer_names[i],mixer_names[i]);
 			if (ioctl(mixfd, MIXER_READ(i),&mval)== -1) /* get initial setting */
 				perror("MIXER_READ");
 			else
@@ -121,11 +125,13 @@ int *devnum;
 				gtk_widget_set_style (w, style);
 				gtk_table_attach(GTK_TABLE(table), w, n,n+1,0,1, (GtkAttachOptions) (0),(GtkAttachOptions) (0), 1, 0);
 				gtk_widget_show(w);
+				gtk_tooltips_set_tip(GTK_TOOLTIPS(mixer_tips),GTK_WIDGET(w),mixer_names[i],mixer_names[i]);
 			} else {
 				label=gtk_label_new(_(mixer_labels[i]));
 				gtk_widget_set_style (label, style);
 				gtk_table_attach(GTK_TABLE(table), label, n,n+1,0,1, (GtkAttachOptions) (0),(GtkAttachOptions) (0), 1, 0);
 				gtk_widget_show(label);
+				gtk_tooltips_set_tip(GTK_TOOLTIPS(mixer_tips),GTK_WIDGET(label),mixer_names[i],mixer_names[i]);
 			}
 			n++;
 		}

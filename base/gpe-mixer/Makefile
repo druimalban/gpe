@@ -3,7 +3,7 @@ PACKAGE = gpe-mixer
 DEBUG = yes
 CVSBUILD = yes
 GST = yes
-VERSION = 0.30
+VERSION = 0.31
 
 MEMBERS = gpe-mixer
 
@@ -27,7 +27,7 @@ else
 CFLAGS += -I/usr/include/gpe
 BUILD = build
 endif
-LDFLAGS += $(GTKLDFLAGS) -lgpewidget
+LDFLAGS += -lgpewidget $(GTKLDFLAGS)
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
