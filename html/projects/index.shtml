@@ -41,7 +41,9 @@ Interface (GUI) toolkit for X11 (not maintained by the GPE project)
 Utilities:<br>	
 <UL>
 	<LI> <I><A HREF="GPE-login.shtml">Multi-user login</A></I>
-	<LI> <I><A HREF="bluez-pin.shtml">Bluetooth PIN manager</A></I>
+	<LI> <I><A HREF="bluez-pin.shtml">Bluetooth PIN
+		    manager</A></I>
+	<LI> <I><A HREF="GPE-what.shtml">Modal help system</A></I>
 </UL>
 
 Libraries:<br>
