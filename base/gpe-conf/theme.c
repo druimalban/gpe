@@ -235,29 +235,88 @@ void Theme_Save()
 GtkWidget *Theme_Build_Objects()
 {
   GtkWidget *table;
+  GtkWidget *scrolledwindow;
+  GtkWidget *viewport;
   GtkWidget *label;
   GtkWidget *button;
   GtkWidget *hbox;
-  GtkWidget *hbox2;
   GtkWidget *menu ;
+  GtkAttachOptions table_attach_left_col_x;
+  GtkAttachOptions table_attach_left_col_y;
+  GtkAttachOptions table_attach_right_col_x;
+  GtkAttachOptions table_attach_right_col_y;
+  GtkJustification table_justify_left_col;
+  GtkJustification table_justify_right_col;
+  guint widget_padding_x;
+  guint widget_padding_y_even;
+  guint widget_padding_y_odd;
  
+  /* 
+   * GTK_EXPAND  the widget should expand to take up any extra space
+                 in its container that has been allocated.
+   * GTK_SHRINK  the widget should shrink as and when possible.
+   * GTK_FILL    the widget should fill the space allocated to it.
+   */
+  
+  /*
+   * GTK_SHRINK to make it as small as possible, but use GTK_FILL to
+   * let it fill on the left side (so that the right alignment
+   * works:
+   */ 
+  table_attach_left_col_x = GTK_FILL; 
+  table_attach_left_col_y = 0;
+  table_attach_right_col_x = GTK_EXPAND | GTK_FILL;
+  table_attach_right_col_y = GTK_FILL;
+  
+  /*
+   * GTK_JUSTIFY_LEFT
+   * GTK_JUSTIFY_RIGHT
+   * GTK_JUSTIFY_CENTER (the default)
+   * GTK_JUSTIFY_FILL
+   */
+  table_justify_left_col = GTK_JUSTIFY_RIGHT;
+  table_justify_right_col = GTK_JUSTIFY_RIGHT;
+
+  widget_padding_x = 5;
+  widget_padding_y_even = 5; /* padding in y direction for widgets in an even row */
+  widget_padding_y_odd  = 0; /* padding in y direction for widgets in an odd row  */
+
+  /* ======================================================================== */
+  /* draw the GUI */
+  scrolledwindow = gtk_scrolled_window_new (NULL, NULL);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow),
+				  GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+
+  viewport = gtk_viewport_new (NULL, NULL);
+  gtk_container_add (GTK_CONTAINER (scrolledwindow), viewport);
+  gtk_viewport_set_shadow_type (GTK_VIEWPORT (viewport), GTK_SHADOW_NONE);
 
   table = gtk_table_new(3,2,FALSE);
-  label = gtk_label_new(_("Matchbox Theme:"));
-  gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1,
-		    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-		    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 4);
+  gtk_widget_set_name (table, "table");
+  gtk_container_add (GTK_CONTAINER (viewport), table);
+  gtk_container_set_border_width (GTK_CONTAINER (table), widget_padding_x);
 
-  hbox2 = gtk_hbutton_box_new();
+  /* ------------------------------------------------------------------------ */
+  label = gtk_label_new(_("Matchbox\nTheme"));
+  gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1,
+		    (GtkAttachOptions) (table_attach_left_col_x),
+		    (GtkAttachOptions) (table_attach_left_col_y), 0, 4);
+  gtk_label_set_justify (GTK_LABEL (label), table_justify_left_col);
+  gtk_misc_set_alignment (GTK_MISC (label), 1, 0.5);
+  gtk_misc_set_padding (GTK_MISC (label),
+			widget_padding_x, widget_padding_y_even);
+  /* make the label grey: */
+  gtk_rc_parse_string ("widget '*label' style 'gpe_ownerinfo_labels'");
+  gtk_widget_set_name (label, "label");
+
   self.MatchboxMenu = gtk_option_menu_new();
-  gtk_container_add(GTK_CONTAINER(hbox2),self.MatchboxMenu);
 
   menu =  make_menu_from_dir (matchboxpath, NULL, get_cur_matchboxtheme() );
   gtk_option_menu_set_menu (GTK_OPTION_MENU (self.MatchboxMenu),menu);
 
-  gtk_table_attach (GTK_TABLE (table), hbox2, 1, 2, 0, 1,
-		    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-		    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 4);
+  gtk_table_attach (GTK_TABLE (table), self.MatchboxMenu, 1, 2, 0, 1,
+		    (GtkAttachOptions) (table_attach_right_col_x),
+		    (GtkAttachOptions) (table_attach_right_col_y), 0, 4);
 
   gtk_signal_connect (GTK_OBJECT (menu), "selection-done",
                       GTK_SIGNAL_FUNC (on_matchbox_entry_changed),
@@ -265,48 +324,57 @@ GtkWidget *Theme_Build_Objects()
 
 
   
-  label = gtk_label_new(_("Gtk Theme:"));
+  label = gtk_label_new(_("GTK+\nTheme"));
   gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2,
-		    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-		    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 4);
+		    (GtkAttachOptions) (table_attach_left_col_x),
+		    (GtkAttachOptions) (table_attach_left_col_y), 0, 4);
+  gtk_label_set_justify (GTK_LABEL (label), table_justify_left_col);
+  gtk_misc_set_alignment (GTK_MISC (label), 1, 0.5);
+  gtk_misc_set_padding (GTK_MISC (label),
+			widget_padding_x, widget_padding_y_even);
+  /* make the label grey: */
+  gtk_rc_parse_string ("widget '*label' style 'gpe_ownerinfo_labels'");
+  gtk_widget_set_name (label, "label");
 
-  hbox2 = gtk_hbutton_box_new();
   self.GtkMenu = gtk_option_menu_new();
-  gtk_container_add(GTK_CONTAINER(hbox2),self.GtkMenu);
-
   menu =  make_menu_from_dir(gtkpath, &gtk_entry_test, get_cur_gtktheme());
 
   gtk_option_menu_set_menu (GTK_OPTION_MENU (self.GtkMenu),menu);
 
-  gtk_table_attach (GTK_TABLE (table), hbox2, 1, 2, 1, 2,
-		    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-		    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 4);
+  gtk_table_attach (GTK_TABLE (table), self.GtkMenu, 1, 2, 1, 2,
+		    (GtkAttachOptions) (table_attach_right_col_x),
+		    (GtkAttachOptions) (table_attach_right_col_y), 0, 4);
 
   gtk_signal_connect (GTK_OBJECT (menu), "selection-done",
                       GTK_SIGNAL_FUNC (on_gtk_entry_changed),
                       NULL);
 
-
-
-  label = gtk_label_new(_("Wallpaper:"));
+  label = gtk_label_new(_("Wallpaper"));
   gtk_table_attach (GTK_TABLE (table), label, 0, 1, 2, 3,
- 		    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-		    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 4);
+		    (GtkAttachOptions) (table_attach_left_col_x),
+		    (GtkAttachOptions) (table_attach_left_col_y), 0, 4);
+  gtk_label_set_justify (GTK_LABEL (label), table_justify_left_col);
+  gtk_misc_set_alignment (GTK_MISC (label), 1, 0.5);
+  gtk_misc_set_padding (GTK_MISC (label),
+			widget_padding_x, widget_padding_y_even);
+  /* make the label grey: */
+  gtk_rc_parse_string ("widget '*label' style 'gpe_ownerinfo_labels'");
+  gtk_widget_set_name (label, "label");
+
   hbox = gtk_hbox_new(FALSE,0);
   gtk_table_attach (GTK_TABLE (table), hbox, 1, 2, 2, 3,
-	 	    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-		     (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 4);
+		    (GtkAttachOptions) (table_attach_right_col_x),
+		    (GtkAttachOptions) (table_attach_right_col_y), 0, 4);
   self.WallPaper  = gtk_entry_new();
   gtk_entry_set_text(GTK_ENTRY(self.WallPaper),get_wallpaper());
-  gtk_container_add(GTK_CONTAINER(hbox),self.WallPaper);
-  button = gtk_button_new_with_label("...");
+  gtk_box_pack_start (GTK_BOX (hbox), self.WallPaper, TRUE, TRUE, 0);
 
-  gtk_container_add(GTK_CONTAINER(hbox),button);
-  gtk_widget_set_usize (button, 20, 20);
+  button = gtk_button_new_with_label("...");
+  gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, FALSE, 0);
 
   gtk_signal_connect (GTK_OBJECT (button), "clicked",
                       GTK_SIGNAL_FUNC (choose_wallpaper),
                       NULL);
 
-  return table;
+  return scrolledwindow;
 }

@@ -195,7 +195,7 @@ GtkWidget *Ownerinfo_Build_Objects()
   gtk_table_attach (GTK_TABLE (table), owner_name_label, 0, 1, 0, 1,
                     (GtkAttachOptions) (table_attach_left_col_x),
                     (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
-    gtk_label_set_justify (GTK_LABEL (owner_name_label), table_justify_left_col);
+  gtk_label_set_justify (GTK_LABEL (owner_name_label), table_justify_left_col);
   gtk_misc_set_alignment (GTK_MISC (owner_name_label), 1, 0.5);
   gtk_misc_set_padding (GTK_MISC (owner_name_label),
 			widget_padding_x, widget_padding_y_even);
