@@ -30,7 +30,7 @@ $(PACKAGE): $(OBJS)
 install-program: all
 	install -Ds $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	install -D -m 644 $(PACKAGE).png $(DESTDIR)$(PREFIX)/share/pixmaps/$(PACKAGE).png
-	install -D -m 644 $(PACKAGE).mime $(DESTDIR)/etc/mime-handlers/$(PACKAGE).mime
+	install -D -m 644 $(PACKAGE).applications $(DESTDIR)/$(PREFIX)/share/application-registry/$(PACKAGE).applications
 	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
 	install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications/
 	install -d $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/gallery
@@ -44,7 +44,6 @@ install-program: all
 	install -m 644 pixmaps/blur.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/gallery/blur.png
 	install -m 644 pixmaps/pan.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/gallery/pan.png
 	install -m 644 pixmaps/rotate.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/gallery/rotate.png
-
 clean:
 	rm -f $(PACKAGE) $(OBJS) $(DEPS)
 

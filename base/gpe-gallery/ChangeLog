@@ -1,3 +1,5 @@
+2004-07-01  Florian Boor  <florian.boor@kernelconcepts.de>
+	* Makefile: Updated MIME stuff to latest standards.
 
 2004-06-08  Florian Boor  <florian.boor@kernelconcepts.de>
 	* Removed obsolete icons: list_view.png, icon_view.png.

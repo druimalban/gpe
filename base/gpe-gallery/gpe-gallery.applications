@@ -1,0 +1,8 @@
+gpe-gallery
+	command=gpe-gallery
+	name=GPE Gallery
+	can_open_multiple_files=false
+	expects_uris=non-file
+	requires_terminal=false
+	supported_uri_schemes=file
+	mime_types=image/gif,image/jpeg,image/png,image/x-png
