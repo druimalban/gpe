@@ -1,8 +1,14 @@
+2002-07-20  Philip Blundell  <philb@gnu.org>
+
+	* Makefile (install-dm): Use -f when making symbolic link.
+ 
 2002-07-20  Colin Marquardt  <colin@marquardt-home.de>
 
 	* gpe-login.c (main): Add default and user resource files.
 	(enter_lock_callback): Use gpe_login_incorrect style.
 	(enter_callback):  Use gpe_login_incorrect style.
+	(main): Use gpe_application_init, remove own gtkrc setup stuff.
+	(main): Move setting of gpe_login_incorrect style to here.
 
 2002-07-20  Philip Blundell  <philb@gnu.org>
 
