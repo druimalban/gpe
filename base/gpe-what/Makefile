@@ -2,12 +2,12 @@ PREFIX = /usr/local
 PACKAGE = gpe-what
 #DEBUG = yes
 CVSBUILD = yes
-VERSION = 0.30
+VERSION = 0.31
 
 MEMBERS = gpe-what mbtray
 
 PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GTKCFLAGS)
-PACKAGE_LDFLAGS += $(GTKLDFLAGS) `pkg-config --libs gtk+-2.0`
+PACKAGE_LDFLAGS += $(GTKLDFLAGS)
 PACKAGE_CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
@@ -37,7 +37,7 @@ install-program: all
 	install -m 644 $(PACKAGE)-active.png $(DESTDIR)$(PREFIX)/share/pixmaps
 
 clean:
-	rm -f $(PACKAGE) $(OBJS)
+	rm -f $(PACKAGE) $(OBJS) $(DEPS)
 
 include $(BUILD)/Makefile.translation
 include $(BUILD)/Makefile.dpkg_ipkg
