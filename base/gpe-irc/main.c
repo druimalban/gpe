@@ -389,26 +389,51 @@ new_connection (GtkWidget *parent, GtkWidget *parent_window)
 }
 
 void
+get_networks (GtkWidget *combo, GHashTable *network_hash)
+{
+  GList *popdown_strings = NULL;
+  GSList *iter;
+
+  network_hash = g_hash_table_new (g_str_hash, g_str_equal);
+
+  iter = sql_networks; 
+  while (iter)
+  {
+    printf ("Done iter\n");
+    popdown_strings = g_list_append (popdown_strings, (gpointer) ((struct sql_network *) iter->data)->name);
+    if (((struct sql_network *) iter->data)->servers != NULL)
+      printf ("Added server name %s and server %s\n", ((struct sql_network *) iter->data)->name, ((struct sql_network_server *) ((struct sql_network *) iter->data)->servers->data)->name);
+    g_hash_table_insert (network_hash, (gpointer) ((struct sql_network *) iter->data)->name, (gpointer) ((struct sql_network *) iter->data)->servers);
+    iter = iter->next;
+  }
+  gtk_combo_set_popdown_strings (GTK_COMBO (combo), popdown_strings);
+}
+
+void
 select_servers_from_network (GtkWidget *widget, GHashTable *network_hash)
 {
   GtkWidget *server_combo, *entry;
   gchar *network_name;
-  GList *servers = NULL;
+  GSList *servers = NULL;
   GList *popdown_strings = NULL;
+  GSList *iter = NULL;
 
   entry = g_object_get_data (G_OBJECT (widget), "entry");
   server_combo = g_object_get_data (G_OBJECT (widget), "server_combo");
 
   network_name = (gchar *) gtk_entry_get_text (GTK_ENTRY (entry));
-
-  if (strlen (network_name) > 0)
-    servers = g_hash_table_lookup (network_hash, (gconstpointer) network_name);
-
-  if (servers != NULL)
+printf ("network_name len = %d\n", strlen (network_name));
+  //if (strlen (network_name) > 0)
+    iter = g_hash_table_lookup (network_hash, (gconstpointer) network_name);
+  printf ("Network name = %s\n", network_name);
+  if (iter != NULL)
   {
-	for(;servers && servers->data && ((struct sql_network_server *) servers->data)->name; servers = servers->next)
+  printf ("Are servers\n");
+	while (iter)
 	{
-		popdown_strings = g_list_append(popdown_strings, (gpointer) ((struct sql_network_server *) servers->data)->name);
+	printf ("added server\n");
+		popdown_strings = g_list_append(popdown_strings, (gpointer) ((struct sql_network_server *) iter->data)->name);
+		iter = iter->next;
 	}
 
     gtk_combo_set_popdown_strings (GTK_COMBO (server_combo), popdown_strings);
@@ -425,7 +450,8 @@ new_connection_dialog ()
   GdkPixmap *pmap;
   GdkBitmap *bmap;
 
-  GHashTable *network_hash = NULL;
+  GHashTable *network_hash;
+  network_hash = g_hash_table_new (g_str_hash, g_str_equal);
 
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title (GTK_WINDOW (window), "IRC Client - New Connection");

@@ -58,7 +58,7 @@ new_sql_network_server_internal (int id, const char *name, int port, struct sql_
   e->name = name;
   e->port = port;
 
-  parent_network->servers = g_list_append (parent_network->servers, e);
+  parent_network->servers = g_slist_append (parent_network->servers, e);
 
   return e;
 }
@@ -151,7 +151,7 @@ del_sql_network_server (struct sql_network *e, struct sql_network_server *s)
       free (err);
     }
 
-  e->servers = g_list_remove (e->servers, s);
+  e->servers = g_slist_remove (e->servers, s);
 }
 
 void

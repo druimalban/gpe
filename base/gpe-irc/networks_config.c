@@ -20,6 +20,7 @@
 #include <gpe/picturebutton.h>
 #include <gpe/question.h>
 
+#include "main.h"
 #include "networks_config_sql.h"
 
 enum
@@ -46,24 +47,6 @@ static void
 kill_widget (GtkWidget *parent, GtkWidget *widget)
 {
   gtk_widget_destroy (widget);
-}
-
-void
-get_networks (GtkWidget *combo, GHashTable *network_hash)
-{
-  GList *popdown_strings = NULL;
-  GSList *iter;
-
-  network_hash = g_hash_table_new (g_str_hash, g_str_equal);
-
-  iter = sql_networks; 
-  while (iter)
-  {
-    popdown_strings = g_list_append (popdown_strings, (gpointer) ((struct sql_network *) iter->data)->name);
-    g_hash_table_insert (network_hash, (gpointer) ((struct sql_network *) iter->data)->name, ((struct sql_network *) iter->data)->servers);
-    iter = iter->next;
-  }
-  gtk_combo_set_popdown_strings (GTK_COMBO (combo), popdown_strings);
 }
 
 void

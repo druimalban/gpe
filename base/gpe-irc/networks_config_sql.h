@@ -14,7 +14,7 @@ struct sql_network
   const char *nick;
   const char *real_name;
   const char *password;
-  GList *servers;
+  GSList *servers;
 };
 
 extern int networks_sql_start (void);
