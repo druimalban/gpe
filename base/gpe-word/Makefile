@@ -26,8 +26,10 @@ endif
 ifeq ($(CVSBUILD),yes)
 CFLAGS += -I../libgpewidget
 LDFLAGS += -L../libgpewidget
+BUILD = ../build
 else
 CFLAGS += -I/usr/include/gpe
+BUILD = build
 endif
 LDFLAGS += -lgpewidget
 
@@ -50,8 +52,6 @@ all: gpe-word
 gpe-word: $(OBJS)
 	$(CC) -o $@ $^ $(LDFLAGS)
 
-install: install-program
-
 install-program: all
 	install -D gpe-word $(DESTDIR)$(PREFIX)/bin/gpe-word
 	install -D -m 644 gpe-word.png $(DESTDIR)$(PREFIX)/share/pixmaps/gpe-word.png
@@ -62,6 +62,5 @@ install-program: all
 clean:
 	rm -f gpe-word $(OBJS)
 
-include ../build/Makefile.dpkg_ipkg
-include ../build/Makefile.translation
-
+include $(BUILD)/Makefile.translation
+include $(BUILD)/Makefile.dpkg_ipkg
