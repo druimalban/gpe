@@ -51,7 +51,8 @@
 #include <gpe/pixmaps.h>
 #include <gpe/render.h>
 #include <gpe/spacing.h>
-#include <gpe/gpe-iconlist.h>
+#include <gpe/gpeiconlistview.h>
+#include <gpe/gpeiconlistitem.h>
 #include <gpe/tray.h>
 #include <gpe/launch.h>
 
@@ -69,6 +70,8 @@
 #define DBG(x) ;
 #endif
 
+GdkPixbuf *hourglass;
+
 #define _(x) gettext(x)
 
 time_t last_update=0;
@@ -79,6 +82,7 @@ struct package_group *other_group;
 
 struct gpe_icon my_icons[] = {
   { "icon", "/usr/share/pixmaps/gpe-appmgr.png" },
+  { "loading" },
   {NULL, NULL}
 };
 
@@ -160,8 +164,48 @@ get_icon_fn (GnomeDesktopFile *p, int iconsize)
   return full_fn;
 }
 
+static void
+launch_status_callback (enum launch_status status, void *data)
+{
+  GPEIconListItem *item = (GPEIconListItem *)data;
+
+  switch (status)
+    {
+    case LAUNCH_STARTING:
+      {
+	GdkPixbuf *pix, *new_pix;
+	pix = gpe_icon_list_item_get_pixbuf (item);
+	if (pix)
+	  {
+	    g_object_ref (pix);
+	    g_object_set_data (G_OBJECT (item), "old_pixbuf", pix);
+	    new_pix = gdk_pixbuf_copy (pix);
+	    gdk_pixbuf_composite (hourglass, new_pix, 0, 0,
+				  gdk_pixbuf_get_width (hourglass), gdk_pixbuf_get_height (hourglass),
+				  1.0, 1.0, 1.0, 1.0, GDK_INTERP_BILINEAR, 255);
+	    gpe_icon_list_item_set_pixbuf (item, new_pix);
+	  }
+	break;
+      }
+
+    case LAUNCH_COMPLETE:
+    case LAUNCH_FAILED:
+      {
+	GdkPixbuf *pix;
+	pix = g_object_get_data (G_OBJECT (item), "old_pixbuf");
+	if (pix)
+	  {
+	    gpe_icon_list_item_set_pixbuf (item, pix);
+	    g_object_unref (pix);
+	    g_object_set_data (G_OBJECT (item), "old_pixbuf", NULL);
+	  }
+      }
+      break;
+    }
+}
+
 void 
-run_package (GnomeDesktopFile *p)
+run_package (GnomeDesktopFile *p, GObject *item)
 {
   gchar *cmd;
   gchar *title;
@@ -170,7 +214,7 @@ run_package (GnomeDesktopFile *p)
   gnome_desktop_file_get_string (p, NULL, "Comment", &title);
 
   /* Actually run the program */
-  gpe_launch_program (dpy, cmd, title);
+  gpe_launch_program_with_callback (dpy, cmd, title, TRUE, launch_status_callback, item);
 }
 
 /* clean_up():
@@ -450,6 +494,8 @@ main (int argc, char *argv[])
   if (gpe_load_icons (my_icons) == FALSE)
     exit (1);
 
+  hourglass = gpe_find_icon ("loading");
+
   while (1)
     {
       int option_index = 0;
@@ -521,6 +567,8 @@ main (int argc, char *argv[])
 #endif
   
   dpy = GDK_WINDOW_XDISPLAY (window->window);
+  XSelectInput (dpy, DefaultRootWindow (dpy), PropertyChangeMask);
+  gpe_launch_install_filter ();
   
   /* start the event loop */
   gtk_main ();

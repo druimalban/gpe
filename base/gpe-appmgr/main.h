@@ -45,7 +45,7 @@ extern GtkWidget *create_icon_pixmap (GtkStyle *style, char *fn, int size);
 
 char *get_icon_fn (GnomeDesktopFile *p, int iconsize);
 
-void run_package (GnomeDesktopFile *p);
+void run_package (GnomeDesktopFile *p, GObject *item);
 
 gchar *only_group;
 

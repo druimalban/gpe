@@ -65,7 +65,7 @@ GtkWidget *table;
 static void
 run_callback (GObject *obj, GdkEventButton *ev, GnomeDesktopFile *p)
 {
-  run_package (p);
+  run_package (p, obj);
 }
 
 /* Make the contents for a notebook tab.

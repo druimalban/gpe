@@ -48,7 +48,8 @@
 #include <gpe/pixmaps.h>
 #include <gpe/render.h>
 #include <gpe/spacing.h>
-#include <gpe/gpe-iconlist.h>
+#include <gpe/gpeiconlistitem.h>
+#include <gpe/gpeiconlistview.h>
 #include <gpe/tray.h>
 #include <gpe/launch.h>
 
@@ -69,13 +70,10 @@
 /* For not starting an app twice after a double click */
 static int ignore_press = 0;
 
-static void 
-cb_clicked (GtkWidget *il, gpointer udata, gpointer data) 
+static void
+run_callback (GObject *obj, GdkEventButton *ev, GnomeDesktopFile *p)
 {
-  GnomeDesktopFile *p;
-  p = udata;
-  
-  run_package (p);
+  run_package (p, obj);
 }
 
 static void 
@@ -155,31 +153,36 @@ create_tab (GList *all_items, char *current_group, tab_view_style style)
 	GtkWidget *il;
 	GList *this_item;
 	//char *icon_file;
+	GtkWidget *scrolled;
 
-	il = gpe_iconlist_new ();
+	scrolled = gtk_scrolled_window_new (NULL, NULL);
 
-	gtk_signal_connect (GTK_OBJECT (il), "clicked", (GtkSignalFunc)cb_clicked, NULL);
+	il = gpe_icon_list_view_new ();
 
 	this_item = all_items;
 	while (this_item)
 	{
 	  GnomeDesktopFile *p;
+	  GPEIconListItem *item;
 	  gchar *name;
 
 	  p = (GnomeDesktopFile *) this_item->data;
 	  
 	  gnome_desktop_file_get_string (p, NULL, "Name", &name);
 	  
-	  gpe_iconlist_add_item (GPE_ICONLIST (il),
-				 name,
-				 get_icon_fn (p, 48),
-				 (gpointer)p);
+	  item = gpe_icon_list_view_add_item (GPE_ICON_LIST_VIEW (il), name,
+					      get_icon_fn (p, 48),
+					      (gpointer)p);
 	  
+	  g_signal_connect (G_OBJECT (item), "button-release", G_CALLBACK (run_callback), p);
+
 	  this_item = this_item->next;
 	}
 
 	gtk_widget_show (il);
-	return il;
+	gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolled), il);
+	gtk_widget_show (scrolled);
+	return scrolled;
 }
 
 /* Creates the image/label combo for a tab.
