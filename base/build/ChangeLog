@@ -2,6 +2,8 @@
 
 	* Makefile.translation ($(PACKAGE).desktop): Fix disastrous typo
 	in rule.
+	(.po.po8): Also rewrite Content-Type header to say charset is now
+	UTF-8.
 
 2003-02-17  Philip Blundell  <philb@gnu.org>
 
