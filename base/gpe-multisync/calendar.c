@@ -48,7 +48,6 @@ calendar_get_changes (struct db *db, int newdb)
       vcal = mimedir_vcal_new ();
       mimedir_vcal_add_component (vcal, MIMEDIR_VCOMPONENT (vevent));
       string = mimedir_vcal_write_to_string (vcal);
-      g_object_unref (vevent);
       g_object_unref (vcal);
 
       obj = g_malloc0 (sizeof (*obj));
