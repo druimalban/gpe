@@ -1,5 +1,6 @@
 CC        = gcc
-CFLAGS    = -g -O2 -Wall
+#CFLAGS    = -g -O2 -Wall
+CFLAGS    = -Os -fomit-frame-pointer -Wall
 XROOT     = /usr/X11R6
 INCLUDES  = -I$(XROOT)/include
 LIBS      = -lX11 -lXtst
