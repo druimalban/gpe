@@ -1698,7 +1698,7 @@ main (int argc, char *argv[])
   GtkWidget *pw;
   GtkAccelGroup *accel_group;
   GtkWidget *storage_menu;
-  int size_x, size_y;
+  int size_x, size_y, arg;
 
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
@@ -1874,8 +1874,6 @@ main (int argc, char *argv[])
   gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(set_dirbrowser_menu_item), directory_browser);
   gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(set_myfiles_menu_item), limited_view);
   
-  gtk_widget_show_all (window);
-  
   gnome_vfs_module_callback_set_default (GNOME_VFS_MODULE_CALLBACK_AUTHENTICATION,
 						  (GnomeVFSModuleCallback) auth_callback,
 						  NULL,
@@ -1883,6 +1881,38 @@ main (int argc, char *argv[])
 						  
   gnome_vfs_mime_info_reload();
   gnome_vfs_application_registry_reload();
+  
+  /* check command line args */
+  while ((arg = getopt(argc, argv, "p:dt:")) >= 0)
+  {
+    if (arg == 'p')
+      {
+        GnomeVFSResult res;
+        GnomeVFSDirectoryHandle *handle;
+        res = gnome_vfs_directory_open(&handle, optarg, GNOME_VFS_FILE_INFO_DEFAULT);
+        if (res == GNOME_VFS_OK)
+          {
+            gnome_vfs_directory_close(handle);
+            browse_directory (optarg);
+          }
+        else
+          set_directory_home (NULL);
+      }
+    if (arg == 'd')
+      {
+        gtk_window_set_type_hint(GTK_WINDOW(window), 
+                                 GDK_WINDOW_TYPE_HINT_DIALOG);
+      }
+    if (arg == 't')
+      {
+        gtk_window_set_title(GTK_WINDOW(window), optarg);
+      }
+  }
+  
+  if (argc < 2)
+    set_directory_home (NULL);
+  
+  gtk_widget_show_all (window);
   
   if (directory_browser)
     {
@@ -1892,22 +1922,6 @@ main (int argc, char *argv[])
   else
 	gtk_widget_hide(dir_view_window);
   gtk_widget_grab_focus(view_widget);
-
-  if (argc < 2)
-    set_directory_home (NULL);
-  else
-    {
-      GnomeVFSResult res;
-      GnomeVFSDirectoryHandle *handle;
-      res = gnome_vfs_directory_open(&handle, argv[1], GNOME_VFS_FILE_INFO_DEFAULT);
-      if (res == GNOME_VFS_OK)
-        {
-          gnome_vfs_directory_close(handle);
-          browse_directory (argv[1]);
-        }
-      else
-        set_directory_home (NULL);
-    }
   
   setup_tabchain();
   do_scheduled_update();
