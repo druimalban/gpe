@@ -65,7 +65,7 @@ void window_selector_init(GtkWidget * window_selector){
   GdkColormap * colormap;
 
   //--window title
-  gtk_window_set_title (GTK_WINDOW (window_selector), _("Sketchbook: selector"));
+  gtk_window_set_title (GTK_WINDOW (window_selector), _("Sketchbook"));
 
   //--alternate bg color for list items
   colormap = gdk_colormap_get_system();
