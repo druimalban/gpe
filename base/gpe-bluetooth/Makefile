@@ -39,10 +39,16 @@ $(PACKAGE): $(OBJS)
 install: install-program install-mo
 
 install-program: all
+	mkdir -p $(DESTDIR)$(PREFIX)/bin
+	install -s $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/
+	mkdir -p $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default
+	install -m 644 bt-on.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/
+	install -m 644 bt-off.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/
+	mkdir -p $(DESTDIR)$(PREFIX)/share/matchbox/mbdock
+	install -m 644 $(PACKAGE).dock $(DESTDIR)$(PREFIX)/share/matchbox/mbdock/
 
 clean:
 	rm -f $(PACKAGE) $(OBJS)
 
 include ../build/Makefile.translation
 include ../build/Makefile.dpkg_ipkg
-

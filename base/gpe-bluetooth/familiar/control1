@@ -1,0 +1,8 @@
+Package: gpe-bluetooth
+Section: x11
+Priority: optional
+Version: 0.10
+Architecture: arm
+Maintainer: Phil Blundell <pb@debian.org>
+Depends: libgtk2.0-0, gpe-icons (>= 0.05), libgpewidget1 (>= 0.08), bluez-pin2, bluez-libs, bluez-utils
+Description: GPE Bluetooth manager
