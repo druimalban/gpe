@@ -8,16 +8,13 @@ DEBUG = no
 #FIXME: add: nl ru sr sk sv wa
 LINGUAS = de id pt zh_TW fr ro cs
 
-CPPFLAGS += $(STANDARD_CPPFLAGS)
-CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS)
-LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS)
-
 ifeq ($(CVSBUILD),yes)
-CPPFLAGS += -I../libdisplaymigration -I../libtododb -I../libgpepimc
-LDFLAGS += -L../libdisplaymigration -L../libtododb -L../libgpepimc
+PACKAGE_CPPFLAGS += -I../libdisplaymigration -I../libtododb -I../libgpepimc
+PACKAGE_LDFLAGS += -L../libdisplaymigration -L../libtododb -L../libgpepimc
 endif
-
-LDFLAGS += -ltododb -ldisplaymigration -lgpepimc
+PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS)
+PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS)
+PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS) -ltododb -ldisplaymigration -lgpepimc
 
 MEMBERS = main todo-ui list-ui
 
@@ -34,7 +31,7 @@ endif
 all: $(PACKAGE) all-mo
 
 $(PACKAGE): $(OBJS)
-	$(CC) -o $@ $^ $(LDFLAGS) 
+	$(CC) -o $@ $^ $(LDFLAGS) $(PACKAGE_LDFLAGS)
 
 clean: clean-po
 	rm -f $(PACKAGE) $(OBJS) $(DEPS) $(PACKAGE).desktop
