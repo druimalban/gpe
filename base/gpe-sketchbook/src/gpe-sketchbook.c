@@ -44,17 +44,16 @@ static struct gpe_icon my_icons[] = {
   { "gpe-logo",      PREFIX "/share/gpe/pixmaps/gpe-logo.png" },
 
   //GPE stock icons
-  { "new",    "new"   },
-  { "open",   "edit"  },
-  { "delete", "delete"},
-  { "save",   "save"  },
-  { "properties",   "properties"  },
-  { "left",   "left"  },
-  { "right",  "right" },
+  { "new",        "new"   },
+  { "open",       "edit"  },
+  { "delete",     "delete"},
+  { "save",       "save"  },
+  { "properties", "properties"  },
+  { "left",       "left"  },
+  { "right",      "right" },
+  { "list",       "list-view"},
+  { "icons",      "icon-view"},
 
-  { "list",      "gpe-sketchbook/view-mode-list"},
-  { "icons",     "gpe-sketchbook/view-mode-icons"},
-  //{ "sketchpad", "gpe-sketchbook/view-mode-sketchpad" },
   { "files",     "gpe-sketchbook/file-entry"},
 
   //own icons
