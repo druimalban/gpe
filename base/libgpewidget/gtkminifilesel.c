@@ -477,11 +477,7 @@ set_members (GtkMiniFileSelection *fs)
 		    }
 		  else
 		    {
-#if GTK_MAJOR_VERSION < 2
 		      gchar *fn = g_strdup (d->d_name);
-#else
-		      gchar *fn = g_locale_to_utf8 (d->d_name, -1, NULL, NULL, NULL);
-#endif
 		      if (fn)
 			files = g_slist_append (files, fn);
 		    }
@@ -490,6 +486,8 @@ set_members (GtkMiniFileSelection *fs)
 	}
       closedir (dir);
     }
+  else
+    gpe_perror_box (fs->directory);
 
   subdirs = g_slist_sort (subdirs, (GCompareFunc)strcoll);
   files = g_slist_sort (files, (GCompareFunc)strcoll);
@@ -498,7 +496,7 @@ set_members (GtkMiniFileSelection *fs)
     {
       guint row;
       text[0] = NULL;
-      text[1] = dirup_pix ? NULL : "../";
+      text[1] = dirup_pix ? NULL : g_strdup ("../");
       row = gtk_clist_append (GTK_CLIST (fs->clist), text);
       if (dirup_pix)
 	gtk_clist_set_pixmap (GTK_CLIST (fs->clist), row, 0, dirup_pix, dirup_mask);
@@ -513,7 +511,6 @@ set_members (GtkMiniFileSelection *fs)
       row = gtk_clist_append (GTK_CLIST (fs->clist), text);
       gtk_clist_set_pixmap (GTK_CLIST (fs->clist), row, 0, folder_pix, folder_mask);
       gtk_clist_set_row_data (GTK_CLIST (fs->clist), row, (gpointer)1);
-      g_free (iter->data);
     }
   for (iter = files; iter; iter = iter->next)
     {
@@ -522,7 +519,6 @@ set_members (GtkMiniFileSelection *fs)
       text[0] = NULL;
       row = gtk_clist_append (GTK_CLIST (fs->clist), text);
       gtk_clist_set_row_data (GTK_CLIST (fs->clist), row, (gpointer)0);
-      g_free (iter->data);
     }
 
   g_free (buf);
@@ -559,22 +555,10 @@ selection_made(GtkWidget      *clist,
 	case 1:
 	  {
 	    gchar *s, *ls;
-#if GTK_MAJOR_VERSION >= 2
-	    ls = g_locale_from_utf8 (text, -1, NULL, NULL, NULL);
-	    g_free (text);
-	    text = ls;
-	    if (! text)
-	      break;
-#else
-	    text = g_strdup (text);
-#endif
 	    if (strcmp (fs->directory, "/"))
-	      {
-		s = g_strdup_printf ("%s/%s", fs->directory, text);
-		g_free (text);
-	      }
+	      s = g_strdup_printf ("%s/%s", fs->directory, text);
 	    else
-	      s = text;
+	      s = g_strdup_printf ("/%s", text);
 	    if (s)
 	      set_directory (fs, s);
 	    gtk_widget_grab_focus (fs->entry);
@@ -768,16 +752,6 @@ gchar *
 gtk_mini_file_selection_get_filename (GtkMiniFileSelection *fs)
 {
   gchar *chars = gtk_editable_get_chars (GTK_EDITABLE (fs->entry), 0, -1);
-
-#if GTK_MAJOR_VERSION >= 2
-  {
-    gchar *p = chars;
-    chars = g_locale_from_utf8 (chars, -1, NULL, NULL, NULL);
-    g_free (p);
-    if (chars == NULL)
-      return NULL;
-  }
-#endif
 
   if (chars[0] != '/')
     {

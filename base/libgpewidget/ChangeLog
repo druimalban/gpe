@@ -1,5 +1,19 @@
 2002-12-28  Philip Blundell  <philb@gnu.org>
 
+	* Version 0.36 released.
+
+2002-12-29  Philip Blundell  <philb@gnu.org>
+
+	* gtkminifilesel.c (set_members): Remove character set conversion.
+	Print error if opendir fails.  Don't free data since CList will do
+	that.
+	(selection_made): Remove character set conversion.
+	(gtk_mini_file_selection_get_filename): Likewise.
+
+	* what.c (filter_func): Check window ID too.
+
+2002-12-28  Philip Blundell  <philb@gnu.org>
+
 	* Version 0.35 released.
 
 2002-12-28  Philip Blundell  <philb@gnu.org>

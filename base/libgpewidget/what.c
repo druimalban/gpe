@@ -45,7 +45,8 @@ filter_func (GdkXEvent *xev, GdkEvent *ev, gpointer p)
       GtkWidget *widget = GTK_WIDGET (list->data);
       int x = xc->data.l[1], y = xc->data.l[2];
 
-      if (x >= widget->allocation.x && x < widget->allocation.x + widget->allocation.width
+      if (widget->window == ev->any.window
+	  && x >= widget->allocation.x && x < widget->allocation.x + widget->allocation.width
 	  && y >= widget->allocation.y && y < widget->allocation.y + widget->allocation.height)
 	{
 	  GtkTooltipsData *data = gtk_tooltips_data_get (widget);
