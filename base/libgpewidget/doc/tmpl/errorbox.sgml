@@ -21,7 +21,7 @@ an error dialog and on stderr.
 
 <!-- ##### FUNCTION gpe_error_box ##### -->
 <para>
-Create and show normal, blocking error dialog.
+Creates and shows normal, blocking error dialog.
 </para>
 
 @text: Error message
@@ -29,7 +29,7 @@ Create and show normal, blocking error dialog.
 
 <!-- ##### FUNCTION gpe_error_box_nonblocking ##### -->
 <para>
-Create and show a non-blocking error message.
+Creates and shows a non-blocking error message.
 </para>
 
 @text: Error message
@@ -53,7 +53,7 @@ Shows an error message with perror style information, non-blocking version.
 
 <!-- ##### FUNCTION gpe_error_box_fmt ##### -->
 <para>
-Show an formated error message using a printf style argument list.
+Shows a formated error message using a printf style argument list.
 </para>
 
 @format: Message format string
