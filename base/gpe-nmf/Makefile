@@ -3,7 +3,7 @@ PACKAGE = gpe-nmf
 #DEBUG = yes
 CVSBUILD = yes
 
-MEMBERS = gpe-nmf
+MEMBERS = gpe-nmf playlist io_madplay io_vorbis plugin_input callbacks
 
 CFLAGS = `gtk-config --cflags` `gdk-pixbuf-config --cflags` -D_GNU_SOURCE -Wall
 ifeq ($(DEBUG),yes)
@@ -12,7 +12,7 @@ LDFLAGS = -g #-lefence
 else
 CFLAGS += -Os -fomit-frame-pointer
 endif
-CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
+CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\" -I../vorbis-fixp/lib
 
 ifeq ($(CVSBUILD),yes)
 CFLAGS += -I../libgpewidget
@@ -20,7 +20,7 @@ LDFLAGS += -L../libgpewidget
 else
 CFLAGS += -I/usr/include/gpe
 endif
-LDFLAGS += -lgpewidget `gtk-config --libs` -lutil
+LDFLAGS += -lgpewidget `gtk-config --libs` -lmad -L../vorbis-fixp/lib -lvorbis-fixp -lid3tag -lz
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 
