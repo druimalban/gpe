@@ -119,19 +119,18 @@ gpe_get_window_icon (Display *dpy, Window w)
       for (i = 0; i < w * h; i++)
 	{
 	  gulong l = prop[2 + i];
-	  *p = (l & 0x00ff0000) >> 16;
-	  *p = (l & 0x0000ff00) >> 8;
-	  *p = (l & 0x000000ff);
-	  *p = (l & 0xff000000) >> 24;
+	  *(p++) = (l & 0x00ff0000) >> 16;
+	  *(p++) = (l & 0x0000ff00) >> 8;
+	  *(p++) = (l & 0x000000ff);
+	  *(p++) = (l & 0xff000000) >> 24;
 	}
       
       pixbuf = gdk_pixbuf_new_from_data (pixels,
 					 GDK_COLORSPACE_RGB,
 					 TRUE,
 					 8,
-					 prop[0],
-					 prop[1],
-					 prop[0] * 4,
+					 w, h,
+					 w * 4,
 					 g_free,
 					 NULL);
     }
