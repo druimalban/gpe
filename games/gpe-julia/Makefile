@@ -1,8 +1,9 @@
-PREFIX = /usr/local
 PACKAGE = gpe-julia
+VERSION = 0.0.2
 DEBUG = no
 CVSBUILD = yes
 GTK2 = yes
+PREFIX = /usr/local
 
 MEMBERS = main
 

@@ -1,3 +1,5 @@
+VERSION = 1.0.4
+
 PREFIX = /usr/local
 PACKAGE = gpe-soundbite
 DEBUG = yes

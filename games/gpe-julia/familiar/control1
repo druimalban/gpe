@@ -1,7 +1,7 @@
 Package: gpe-julia2
 Section: base
 Priority: optional
-Version: 0.0.2
+Version: VERSION
 Architecture: arm
 Maintainer: Moray Allan <moray@handhelds.org>
 Depends: libgpewidget1, gpe-icons
