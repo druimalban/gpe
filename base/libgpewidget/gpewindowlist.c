@@ -178,8 +178,8 @@ gpe_window_list_get_clients (GPEWindowList *list, Window **ret, guint *nr)
     return FALSE;
 
   *nr = (guint)nitems;
-  ret = g_malloc (sizeof (Window) * nitems);
-  memcpy (ret, prop, sizeof (Window) * nitems);
+  *ret = g_malloc0 (sizeof (Window) * nitems);
+  memcpy (*ret, prop, sizeof (Window) * nitems);
 
   XFree (prop);
   return TRUE;

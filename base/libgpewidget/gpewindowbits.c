@@ -75,8 +75,8 @@ gpe_get_client_window_list (Display *dpy, Window **list, guint *nr)
 
   *nr = (guint)nitems;
 
-  list = g_malloc (sizeof (Window) * nitems);
-  memcpy (list, prop, sizeof (Window) * nitems);
+  *list = g_malloc (sizeof (Window) * nitems);
+  memcpy (*list, prop, sizeof (Window) * nitems);
   XFree (prop);
 
   return TRUE;
