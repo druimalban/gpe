@@ -16,7 +16,7 @@ else
 BUILD = build
 endif
 
-OBJS=main.o xsi.o popupmenu.o package.o properties.o gnome-exec.o tray.o xsettings.o
+OBJS=main.o xsi.o popupmenu.o package.o properties.o gnome-exec.o tray.o xsettings.o tab_view.o
 
 all: gpe-appmgr
 
