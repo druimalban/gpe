@@ -21,6 +21,8 @@ static sqlite *sqliteh;
 
 static char *dname = "/.gpe/todo";
 
+static int next_uid;
+
 struct todo_item *
 add_new_item_internal(struct todo_list *list, time_t t, const char *what, 
 		      item_state state, const char *summary, int id);
@@ -52,7 +54,10 @@ item_callback (void *arg, int argc, char **argv, char **names)
       /* ignore items belonging to deleted / bogus lists */
       if (iter == NULL)
 	return 0;
-      
+
+      if (next_uid < uid)
+	next_uid = uid;
+
       add_new_item_internal ((struct todo_list *)iter->data, 
 			     t, g_strdup (description), state, 
 			     g_strdup (summary), uid);
@@ -69,6 +74,12 @@ list_callback (void *arg, int argc, char **argv, char **names)
       new_list (atoi (argv[0]), g_strdup (argv[1]));
     }
   return 0;
+}
+
+int
+new_unique_id (void)
+{
+  return ++next_uid;
 }
 
 int
@@ -194,6 +205,47 @@ void
 add_new_item (struct todo_list *list, time_t t, const char *what, 
 	      item_state state, const char *summary, int id)
 {
-  struct todo_item *i = add_new_item_internal (list, t, what, state, summary, id);
+  struct todo_item *i;
+  i = add_new_item_internal (list, t, what, state, summary, id);
   add_new_item_sql (i, list->id);
+}
+
+void
+push_item (struct todo_item *i)
+{
+  char d_buf[32];
+  char *due, *err;
+
+  if (i->time)
+    {
+      struct tm tm;
+      localtime_r (&i->time, &tm);
+      strftime (d_buf, sizeof(d_buf), "%F", &tm);
+      due = d_buf;
+    }
+  else
+    due = "";
+
+  if (sqlite_exec_printf (sqliteh,
+			  "update todo_items set summary='%q',description='%q',state=%d,due_by='%q' where uid=%d",
+			  NULL, NULL, &err,
+			  i->summary, i->what, i->state, due, i->id))
+    {
+      fprintf (stderr, "sqlite: %s\n", err);
+      free (err);
+    }
+}
+
+void 
+delete_item (struct todo_list *list, struct todo_item *i)
+{
+  sqlite_exec_printf (sqliteh, "delete from todo_items where uid=%d",
+		      NULL, NULL, NULL,
+		      i->id);
+
+  g_list_remove (list->items, i);
+
+  g_free (i->what);
+  g_free (i->summary);
+  g_free (i);
 }

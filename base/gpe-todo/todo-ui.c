@@ -87,9 +87,10 @@ click_ok(GtkWidget *widget,
       t->item->summary = summary;
       t->item->time = when;
       t->item->state = t->state;
+      push_item (t->item);
     }
   else
-    add_new_item (t->list, when, what, t->state, summary, 0);
+    add_new_item (t->list, when, what, t->state, summary, new_unique_id ());
 
   gtk_widget_draw (t->list->widget, NULL);
 
