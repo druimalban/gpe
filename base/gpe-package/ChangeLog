@@ -1,3 +1,7 @@
+
+2004-07-27 Florian Boor <florian.boor@kernelconcepts.de>
+	* po/gpe-package.pot: Added translation files.
+
 2004-06-12 Florian Boor <florian.boor@kernelconcepts.de>
 	* Makefile: Version 0.1.0 is what we are working on. 
 	* Makefile: Updated to latest standards.
