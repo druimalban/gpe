@@ -1,5 +1,13 @@
 2003-02-13  Philip Blundell  <philb@gnu.org>
 
+	* Version 0.07 released.
+
+2003-02-13  Philip Blundell  <philb@gnu.org>
+
+	* gpe-su.c: Fix thinko in last change.
+
+2003-02-13  Philip Blundell  <philb@gnu.org>
+
 	* Version 0.06 released.
 
 2003-02-13  Philip Blundell  <philb@gnu.org>

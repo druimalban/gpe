@@ -36,7 +36,7 @@ static struct gpe_icon my_icons[] = {
 static GtkWidget *entry;
 static GtkWidget *window;
 
-static char *command = "x-terminal-emulator";
+static char *command = "x-terminal-emulator -ls";
 
 #define _(x) gettext(x)
 
@@ -70,7 +70,7 @@ do_su (void)
   
   if (pid == 0)
     {
-      execl (SU, SU, "-c", command, "-ls", NULL);
+      execl (SU, SU, "-c", command, NULL);
       exit (1);
     }
 
