@@ -1,0 +1,2 @@
+?package(gpe-soundbite): needs=x11 title="Record Memo" command="gpe-soundbite record" icon48=gpe-soundbite-record.png section=Audio windowtitle=gpe-soundbite
+?package(gpe-soundbite): needs=x11 title="Play Memo" command="gpe-soundbite play" icon48=gpe-soundbite-play.png section=Audio windowtitle=gpe-soundbite
