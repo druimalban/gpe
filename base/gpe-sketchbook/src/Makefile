@@ -1,0 +1,95 @@
+include ../config.makefile
+
+SOURCES = $(patsubst %,%.c,$(MEMBERS))
+DEPS    = $(patsubst %,%.d,$(MEMBERS))
+OBJS    = $(patsubst %,%.o,$(MEMBERS))
+
+CC      = gcc
+CFLAGS += -Wall #-g
+CFLAGS += -O2
+CFLAGS += -MD #(deps)
+
+#-- varaibles
+CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\"
+CPPFLAGS += -DVERSION=\"$(VERSION)\"
+CPPFLAGS += -DPREFIX=\"$(PREFIX)\"
+#CPPFLAGS += -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
+
+#-- base
+LIB_GPE_WIDGET = ../../libgpewidget
+CFLAGS += -I$(LIB_GPE_WIDGET)
+CFLAGS += `gtk-config --cflags`
+LIBS   += -L$(LIB_GPE_WIDGET) -lgpewidget #need to be before gtk libs (overwrite things)
+LIBS   += `gtk-config --libs`
+
+#-- GDK pixbuf
+CFLAGS += `gdk-pixbuf-config --cflags`
+LIBS   += `gdk-pixbuf-config --libs`
+
+#-- SQLite
+#LIBS += -lsqlite
+
+#-- libxpm support
+CPPFLAGS += -I/usr/X11R6/include
+LIBS     += -L/usr/X11R6/lib -lXpm
+
+#-- @ handhelds.org
+CPPFLAGS += -I../../include
+LIBS     += -L../../lib
+LIBS     += -lgdk_pixbuf -lXpm
+
+#.SUFFIXES: .d
+
+default: $(PACKAGE)
+
+ARM_BIN = $(PACKAGE)-$(VERSION)-arm-striped
+arm: $(ARM_BIN)
+
+#--package
+$(PACKAGE): $(OBJS)
+	$(CC) -o $@ $^ -g $(LIBS)
+
+$(ARM_BIN):
+	../utils/dummy-arm-bin &> /dev/null && make $(PACKAGE)
+	../utils/dummy-arm-bin &> /dev/null && cp   $(PACKAGE) $(ARM_BIN)
+	../utils/dummy-arm-bin &> /dev/null && strip $(ARM_BIN)
+
+strip: $(PACKAGE)
+	strip $(PACKAGE)
+
+x: $(PACKAGE)
+	./$(PACKAGE)
+
+clean:
+	rm -f *~
+	rm -f $(PACKAGE) $(OBJS) $(DEPS) $(ARM_BIN)
+
+-include $(DEPS)
+
+
+#--handhelds.org
+trans-pc-to-handheld: dist
+	~/bin/move-TO-handhelds.org `pwd` $(DIST_NAME).tar.gz
+
+trans-handheld-to-pc:
+	~/bin/move-FROM-handhelds.org $(DIST_NAME) src/$(PACKAGE)-$(VERSION)-arm-striped
+
+
+#--reminders
+fix: fixme
+fixme:
+	@echo "NO! that does NOT fix anything! ;)"
+	grep 'FIXME:' *.h *.c -n
+	@echo "+----------------+"
+	@echo ' Left to fix: ' `grep 'FIXME:' *.h *.c|wc -l`
+	@echo "+----------------+"
+note:
+	grep 'NOTE:' *.h *.c -n
+
+
+#-- hooks to main makefile targets
+dist:
+	cd .. && make dist
+ipkg:
+	cd .. && make ipkg
+
