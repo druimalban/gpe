@@ -402,6 +402,8 @@ main (int argc, char *argv[])
 	  break;
 
 	case ButtonPress:
+	  close_popup ();
+
 	  if (xev.xbutton.window == win_panel)
 	    {
 	      if (state == 1)
