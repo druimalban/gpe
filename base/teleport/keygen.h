@@ -10,7 +10,7 @@
 #ifndef KEYGEN_H
 #define KEYGEN_H
 
-#include <libdisplaymigration/crypt.h>
+#include "crypt.h"
 
 extern gchar *home_dir;
 

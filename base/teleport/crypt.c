@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2003, 2005 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -12,11 +12,7 @@
 #include <string.h>
 #include <glib.h>
 
-#include <gcrypt.h>
-
-#include <libdisplaymigration/auth.h>
-#include <libdisplaymigration/crypt.h>
-
+#include "crypt.h"
 #include "keygen.h"
 
 static struct rsa_key private_key;

@@ -2,24 +2,21 @@ PREFIX = /usr/local
 PACKAGE = teleport
 DEBUG = yes
 CVSBUILD = yes
-VERSION = 0.33
+VERSION = 0.34
 
 LINGUAS = 
 
-ifeq ($(CVSBUILD),yes)
-# temporary hack to work around lack of pkg-config for libdisplaymigration
-PACKAGE_CPPFLAGS += -I../libdisplaymigration
-PACKAGE_LDFLAGS += -L../libdisplaymigration
-endif
 PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS)
 PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS) `libgcrypt-config --cflags`
-PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS) -ldisplaymigration `libgcrypt-config --libs` -lsqlite
+PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS) `libgcrypt-config --libs` -lsqlite
 
-MEMBERS = teleport crypt displays keygen tp-keygen
+MEMBERS = teleport crypt displays dm-crypt keygen
+KG_MEMBERS = tp-keygen keygen
 
-DEPS = $(patsubst %,%.d,$(MEMBERS))
+DEPS = $(patsubst %,%.d,$(MEMBERS) $(KG_MEMBERS))
 OBJS = $(patsubst %,%.o,$(MEMBERS))
-SOURCES = $(patsubst %,%.c,$(MEMBERS))
+KG_OBJS = $(patsubst %,%.o,$(KG_MEMBERS))
+SOURCES = $(patsubst %,%.c,$(MEMBERS) $(KG_MEMBERS))
 
 ifeq ($(CVSBUILD),yes)
 BUILD = ../build
@@ -29,17 +26,17 @@ endif
 
 all: teleport all-mo tp-keygen
 
-teleport: teleport.o crypt.o displays.o keygen.o
+teleport: $(OBJS)
 	$(CC) -o $@ $^ $(LDFLAGS) $(PACKAGE_LDFLAGS)
 
-tp-keygen: tp-keygen.o keygen.o
+tp-keygen: $(KG_OBJS)
 	$(CC) -o $@ $^ $(LDFLAGS) $(PACKAGE_LDFLAGS)
 
 clean:
-	rm -f teleport tp-keygen tp-keygen.o $(OBJS) $(DEPS)
+	rm -f teleport tp-keygen $(OBJS) $(DEPS) $(KG_OBJS)
 
 install-program: all
-	mkdir -p $(DESTDIR)$(PREFIX)/bin
+	install -d $(DESTDIR)$(PREFIX)/bin
 	install -s teleport $(DESTDIR)$(PREFIX)/bin/
 	install -s tp-keygen $(DESTDIR)$(PREFIX)/bin/
 	install -d $(DESTDIR)$(PREFIX)/share/pixmaps
