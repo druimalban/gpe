@@ -1,5 +1,26 @@
 2002-12-15  Philip Blundell  <philb@gnu.org>
 
+	* src/structure.c (edit_structure): Fix warnings.
+	* src/db.c (db_open): Likewise.
+	* src/main.c (load_panel_config): Likewise.
+	* src/callbacks.c (on_edit_save_clicked): Likewise.
+	(retrieve_special_fields): Likewise.
+
+	* adb.glade: Delete unused "detailview" window.
+
+	* src/editing.c (create_edit): Remove unimplemented "Clear"
+	button.
+	* src/callbacks.c (on_edit_clear_clicked): Delete.
+	(structure_add_clicked): Likewise.
+	(structure_edit_clicked): Likewise.
+	(structure_delete_clicked): Likewise.
+	* src/callbacks.h (on_edit_clear_clicked): Likewise.
+	(structure_add_clicked): Likewise.
+	(structure_edit_clicked): Likewise.
+	(structure_delete_clicked): Likewise.
+	(on_structure_test): Likewise.
+	(on_structure_save_clicked): Likewise.
+	
 	* contacts-layout.xml: Delete "Photo" page.
 
 2002-12-09  Florian Boor <florian.boor@kernelconcepts.de>

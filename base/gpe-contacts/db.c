@@ -60,9 +60,10 @@ db_open (void)
 {
   /* open persistent connection */
   char *errmsg;
-  int ret;
   
 #ifdef USE_USQLD
+  int ret;
+
   db = usqld_connect ("localhost", "contacts", &errmsg);
   
   if (db == NULL) 

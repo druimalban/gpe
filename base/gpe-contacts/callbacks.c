@@ -44,45 +44,6 @@ on_edit_bt_image_clicked (GtkButton * button, gpointer user_data)
   gtk_widget_show_all (filesel);
 }
 
-#if 0
-void
-structure_add_clicked (GtkButton * button, gpointer user_data)
-{
-
-}
-
-
-void
-structure_edit_clicked (GtkButton * button, gpointer user_data)
-{
-
-}
-
-
-void
-structure_delete_clicked (GtkButton * button, gpointer user_data)
-{
-
-}
-
-#endif
-
-
-void
-on_structure_save_clicked (GtkButton * button, gpointer user_data)
-{
-
-}
-
-/* ... */
-
-void
-on_edit_clear_clicked (GtkButton * button, gpointer user_data)
-{
-
-}
-
-
 void
 on_edit_cancel_clicked (GtkButton * button, gpointer user_data)
 {
@@ -101,7 +62,6 @@ retrieve_special_fields (GtkWidget * edit, struct person *p)
 	{
 	  guint c = (guint) gtk_object_get_data (GTK_OBJECT (w), "category");
 	  char buf[32];
-	  struct tag_value *t;
 	  snprintf (buf, sizeof (buf) - 1, "%d", c);
 	  buf[sizeof (buf) - 1] = 0;
 	  db_set_multi_data (p, "CATEGORY", g_strdup (buf));
@@ -127,10 +87,7 @@ void
 on_edit_save_clicked (GtkButton * button, gpointer user_data)
 {
   GtkWidget *edit = (GtkWidget *) user_data;
-  GtkWidget *w;
-  GSList *data = NULL;
   GSList *tags;
-  gchar *s;
   struct person *p = gtk_object_get_data (GTK_OBJECT (edit), "person");
   if (p == NULL)
     p = new_person ();
@@ -153,8 +110,6 @@ on_edit_save_clicked (GtkButton * button, gpointer user_data)
       update_display ();
     }
 }
-
-
 
 void
 on_nbList_switch_page (GtkNotebook * notebook,

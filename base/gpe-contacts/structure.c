@@ -244,22 +244,22 @@ edit_structure (void)
   pw = gpe_render_icon (NULL, gpe_find_icon ("notebook"));
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), "New page", 
 			   "New page", "New page", pw, 
-			   structure_new_page, tree);
+			   GTK_SIGNAL_FUNC (structure_new_page), tree);
 
   pw = gpe_render_icon (NULL, gpe_find_icon ("frame"));
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), "New group", 
 			   "New group", "New group", pw, 
-			   structure_new_group, tree);
+			   GTK_SIGNAL_FUNC (structure_new_group), tree);
 
   pw = gpe_render_icon (NULL, gpe_find_icon ("entry"));
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), "New field", 
 			   "New field", "New field", pw, 
-			   structure_new_field, tree);
-
+			   GTK_SIGNAL_FUNC (structure_new_field), tree);
+  
   pw = gpe_render_icon (NULL, gpe_find_icon ("delete"));
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Delete"), 
 			   _("Delete"), _("Delete"), pw, 
-			   structure_delete_item, tree);
+			   GTK_SIGNAL_FUNC (structure_delete_item), tree);
 
   gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), scrolled, TRUE, TRUE, 0);

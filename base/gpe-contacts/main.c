@@ -72,7 +72,7 @@ load_panel_config ()
       panel_config_has_changed = FALSE;
       table = lookup_widget (mainw, "tabDetail");
       container = lookup_widget (mainw, "pDetail");
-      gtk_container_remove (container, table);
+      gtk_container_remove (GTK_CONTAINER (container), table);
       //gtk_widget_unref(table);
       gtk_widget_destroy (table);
       table = gtk_table_new (1, 2, FALSE);

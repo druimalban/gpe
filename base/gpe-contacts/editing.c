@@ -150,7 +150,6 @@ create_edit (void)
   GtkWidget *name_entry;
   GtkWidget *summary_entry;
   GtkWidget *label16;
-  GtkWidget *edit_clear;
   GtkWidget *edit_cancel;
   GtkWidget *edit_save;
   GtkWidget *catframe;
@@ -367,15 +366,6 @@ create_edit (void)
   gtk_container_add (GTK_CONTAINER (action_area), edit_cancel);
   GTK_WIDGET_SET_FLAGS (edit_cancel, GTK_CAN_DEFAULT);
 
-  edit_clear = gtk_button_new_with_label (_("Clear"));
-  gtk_widget_set_name (edit_clear, "edit_clear");
-  gtk_widget_ref (edit_clear);
-  gtk_object_set_data_full (GTK_OBJECT (edit), "edit_clear", edit_clear,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (edit_clear);
-  gtk_container_add (GTK_CONTAINER (action_area), edit_clear);
-  GTK_WIDGET_SET_FLAGS (edit_clear, GTK_CAN_DEFAULT);
-
   edit_save = gpe_picture_button (edit->style, _("Save"), "save");
   gtk_widget_set_name (edit_save, "edit_save");
   gtk_widget_ref (edit_save);
@@ -388,9 +378,6 @@ create_edit (void)
   gtk_signal_connect (GTK_OBJECT (edit_bt_image), "clicked",
                       GTK_SIGNAL_FUNC (on_edit_bt_image_clicked),
                       NULL);
-  gtk_signal_connect (GTK_OBJECT (edit_clear), "clicked",
-                      GTK_SIGNAL_FUNC (on_edit_clear_clicked),
-                      edit);
   gtk_signal_connect (GTK_OBJECT (edit_cancel), "clicked",
                       GTK_SIGNAL_FUNC (on_edit_cancel_clicked),
                       edit);
