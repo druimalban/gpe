@@ -187,7 +187,7 @@ parse_settings (unsigned char *data,
   CARD32 serial;
   CARD32 n_entries;
   CARD32 i;
-  XSettingsSetting *setting;
+  XSettingsSetting *setting = NULL;
   
   local_byte_order = xsettings_byte_order ();
 
@@ -198,7 +198,7 @@ parse_settings (unsigned char *data,
   if (buffer.byte_order != MSBFirst &&
       buffer.byte_order != LSBFirst)
     {
-      fprintf (stderr, "Invalid byte order in XSETTINGS property\n");
+      fprintf (stderr, "Invalid byte order %x in XSETTINGS property\n", buffer.byte_order);
       result = XSETTINGS_FAILED;
       goto out;
     }
