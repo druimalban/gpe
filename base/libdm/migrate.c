@@ -152,7 +152,9 @@ handle_request (GdkWindow *gwindow, char *prop)
 	}
     }
 
+#ifdef DEBUG
   fprintf (stderr, "target %s; auth %s; data %s\n", target, auth_method, auth_data);
+#endif
 
   if (!strcasecmp (auth_method, "null"))
     {
@@ -202,10 +204,19 @@ filter_func (GdkXEvent *xevp, GdkEvent *ev, gpointer p)
 		{
 		  if (actual_type == string_gdkatom && actual_length > 8)
 		    {
-		      int rc = handle_request (gwindow, prop);
+		      gchar *buf = g_malloc (actual_length + 1);
+		      int rc;
+		      
+		      memcpy (buf, prop, actual_length);
+		      buf[actual_length] = 0;
+
+		      rc = handle_request (gwindow, buf);
+
 #ifdef DEBUG
-		      fprintf (stderr, "returning code %d\n", rc);
+		      fprintf ("return code is %d\n", rc);
 #endif
+
+		      g_free (buf);
 		      generate_response (gdisplay, xev->display, xev->window, rc);
 		    }
 

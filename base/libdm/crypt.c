@@ -53,17 +53,10 @@ do_encode_md (const unsigned char *digest, size_t digestlen, int algo,
 
   asnlen = sizeof(asn);
   if (gcry_md_algo_info (algo, GCRYCTL_GET_ASNOID, asn, &asnlen))
-    {
-      fprintf (stderr, "no object identifier for algo %d\n", algo);
-      return -1;
-    }
+    return -1;
 
   if (digestlen + asnlen + 4  > nframe )
-    {
-      fprintf (stderr, "can't encode a %d bit MD into a %d bits frame\n",
-                 (int)(digestlen*8), (int)nbits);
-      return -1;
-    }
+    return -1;
   
   /* We encode the MD in this way:
    *
@@ -101,34 +94,24 @@ libdm_crypt_sign_hash (struct rsa_key *k, char *hash, gchar **result)
   do_encode_md (hash, 20, GCRY_MD_SHA1, 1024, &mpi);
 
   if (gcry_sexp_build (&data, NULL, "(data (value %m))", mpi))
-    {
-      fprintf (stderr, "failed building sexp\n");
-      return FALSE;
-    }
+    return FALSE;
  
+  gcry_mpi_release (mpi);
+
   if (gcry_sexp_build (&key, NULL, "(private-key (rsa (n %m) (e %m) (d %m) (p %m) (q %m) (u %m)))",
 		       k->n, k->e, k->d, k->p, k->q, k->u))
     {
-      fprintf (stderr, "failed building key sexp\n");
+      gcry_sexp_release (data);
       return FALSE;
     }
   
-  gcry_sexp_dump (data);
-  gcry_sexp_dump (key);
-
   rc = gcry_pk_sign (&sig, data, key);
 
   gcry_sexp_release (data);
   gcry_sexp_release (key);
-  gcry_mpi_release (mpi);
 
   if (rc)
-    {
-      fprintf (stderr, "error %d\n", rc);
-      return FALSE;
-    }
-
-  gcry_sexp_dump (sig);
+    return FALSE;
 
   mpi = mpi_from_sexp (sig, "s");
   hex = hex_from_mpi (mpi);
@@ -155,7 +138,11 @@ libdm_crypt_check_signature (struct rsa_key *k, char *hash, char *sigbuf)
 
   gcry_sexp_build (&key, NULL, "(public-key (rsa (n %m) (e %m)))", k->n, k->e);
 
-  gcry_mpi_scan (&mpi2, GCRYMPI_FMT_HEX, sigbuf, NULL);
+  if (gcry_mpi_scan (&mpi2, GCRYMPI_FMT_HEX, sigbuf, NULL))
+    {
+      gcry_sexp_release (data);
+      return FALSE;
+    }
 
   gcry_sexp_build (&sig, NULL, "(sig-val (rsa (s %m)))", mpi2);
 
@@ -164,7 +151,6 @@ libdm_crypt_check_signature (struct rsa_key *k, char *hash, char *sigbuf)
   gcry_sexp_release (data);
   gcry_sexp_release (key);
   gcry_sexp_release (sig);
-  gcry_mpi_release (mpi);
   gcry_mpi_release (mpi2);
 
 #ifdef DEBUG
