@@ -1,3 +1,8 @@
+2004-09-01  Florian Boor <florian.boor@kernelconcepts.de>
+
+	* main.c: Set window default size related to screen size.
+	          Enable paste button if screen is large.
+
 2004-08-25  Florian Boor <florian.boor@kernelconcepts.de>
 
 	* Released Version 0.28

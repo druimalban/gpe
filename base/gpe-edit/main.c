@@ -579,6 +579,7 @@ main (int argc, char *argv[])
   GtkTooltips *tooltips;
   GtkWidget *toolbar_icon;
   GtkTextBuffer *buf;
+  gint window_x, window_y;
 
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
@@ -598,8 +599,15 @@ main (int argc, char *argv[])
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
   textdomain (PACKAGE);
   bind_textdomain_codeset (PACKAGE, "UTF-8");
-  
+
+  window_x = gdk_screen_width() / 2;
+  window_y = gdk_screen_height() / 2;  
+  if (window_x < 240) window_x = 240;
+  if (window_y < 310) window_y = 310;
+    
+
   main_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+  gtk_window_set_default_size (GTK_WINDOW (main_window), window_x, window_y);
 	
   update_window_title ();
   gtk_widget_set_usize (GTK_WIDGET (main_window), window_x, window_y);
@@ -663,11 +671,14 @@ main (int argc, char *argv[])
   toolbar_icon = gtk_image_new_from_stock (GTK_STOCK_COPY, GTK_ICON_SIZE_SMALL_TOOLBAR);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Copy"), 
 			   _("Copy selected, paste is possible by tap&hold"), _("Copy selected, paste is possible by tap&hold"), toolbar_icon, copy_selection, vbox);
-/*
-  toolbar_icon = gtk_image_new_from_stock (GTK_STOCK_PASTE, GTK_ICON_SIZE_SMALL_TOOLBAR);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Paste"), 
+
+  /* add another icon if we screen is large */
+  if (window_x > 260)
+    {
+      toolbar_icon = gtk_image_new_from_stock (GTK_STOCK_PASTE, GTK_ICON_SIZE_SMALL_TOOLBAR);
+      gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Paste"), 
 			   _("Paste from clipboard"), _("Paste from clipboard"), toolbar_icon, paste_clipboard, vbox);
-*/			   
+	}			   
   toolbar_icon = gtk_image_new_from_stock (GTK_STOCK_QUIT, GTK_ICON_SIZE_SMALL_TOOLBAR);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Quit"), 
 			   _("Exit gpe-edit"), _("Exit gpe-edit"), toolbar_icon, ask_save_before_exit, vbox);
