@@ -373,14 +373,7 @@ update_categories (void)
       gtk_simple_menu_append_item (GTK_SIMPLE_MENU (menu), c->name);
     }
 
-  for (iter = categories; iter; iter = iter->next)
-    {
-      struct category *c = iter->data;
-      g_free (c->name);
-      g_free (c);
-    }
-
-  g_slist_free (categories);
+  db_free_categories (categories);
 }
 
 static gchar *
@@ -750,7 +743,7 @@ do_search (GObject *obj, GtkWidget *entry)
       if (ll)
 	c = ll->data;
 
-      g_slist_free (l);
+      db_free_categories (l);
     }
 
   all_entries = g_slist_sort (all_entries, (GCompareFunc)sort_entries);

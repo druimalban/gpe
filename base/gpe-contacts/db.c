@@ -481,6 +481,22 @@ db_get_categories (void)
   return list;
 }
 
+void
+db_free_categories (GSList *list)
+{
+  GSList *iter;
+
+  for (iter = list; iter; iter = iter->next)
+    {
+      struct category *c = iter->data;
+
+      g_free (c->name);
+      g_free (c);
+    }
+
+  g_slist_free (list);
+}
+
 gchar *
 db_get_category_name (guint id)
 {

@@ -1,5 +1,12 @@
 2004-02-16  Philip Blundell  <philb@gnu.org>
 
+	* db.c (db_free_categories): New function.
+	* db.h (db_free_categories): Prototype it.
+	* main.c (update_categories): Use it.
+	(do_search): Likewise.
+
+2004-02-16  Philip Blundell  <philb@gnu.org>
+
 	* main.c (config_categories_box): Deleted.
 	(new_category, delete_category): Likewise.
 	(configure): Remove "Categories" tab.
