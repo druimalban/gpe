@@ -6,4 +6,4 @@ struct day_popup
   GSList *events;
 };
 
-extern GtkObject *day_popup(GtkWidget *parent, struct day_popup *p);
+extern GtkWidget *day_popup(GtkWidget *parent, struct day_popup *p);

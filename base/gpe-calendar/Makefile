@@ -3,7 +3,7 @@ PREFIX = /usr/local
 DEBUG = no
 LINGUAS = de pt_PT
 
-MEMBERS = main day_view week_view future_view event-ui event-db year_view month_view day_popup
+MEMBERS = main day_view week_view future_view event-ui event-db year_view month_view day_popup old-db
 
 CPPFLAGS = `gtk-config --cflags` `gdk-pixbuf-config --cflags` -D_GNU_SOURCE -I../libgpewidget
 ifeq ($(DEBUG),yes)

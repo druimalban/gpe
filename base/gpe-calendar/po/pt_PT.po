@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2002-08-19 19:52+0100\n"
+"POT-Creation-Date: 2002-08-25 17:57+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -14,36 +14,36 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: main.c:232 main.c:233
+#: main.c:210 main.c:211
 msgid "New Appointment"
 msgstr ""
 
-#: main.c:239 main.c:240
+#: main.c:217 main.c:218
 msgid "Today"
 msgstr ""
 
-#: main.c:246 main.c:247
+#: main.c:224 main.c:225
 msgid "Future View"
 msgstr ""
 
-#: main.c:251 main.c:252
+#: main.c:229 main.c:230
 msgid "Day View"
 msgstr ""
 
-#: main.c:256 main.c:257
+#: main.c:234 main.c:235
 msgid "Week View"
 msgstr ""
 
-#: main.c:261 main.c:262
+#: main.c:239 main.c:240
 #, fuzzy
 msgid "Month View"
 msgstr "no"
 
-#: main.c:266 main.c:267
+#: main.c:244 main.c:245
 msgid "Year View"
 msgstr ""
 
-#: main.c:273 main.c:274
+#: main.c:251 main.c:252
 msgid "Exit"
 msgstr ""
 

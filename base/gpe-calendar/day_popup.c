@@ -72,8 +72,8 @@ selection_made( GtkWidget      *clist,
     }
 }
 
-GtkObject *
-day_popup(GtkWidget *parent, struct day_popup *p)
+GtkWidget *
+day_popup (GtkWidget *parent, struct day_popup *p)
 {
   GtkRequisition requisition;
   gint x, y;
@@ -188,5 +188,5 @@ day_popup(GtkWidget *parent, struct day_popup *p)
 
   gtk_widget_show (window);
 
-  return GTK_OBJECT (window);
+  return window;
 }

@@ -1,3 +1,14 @@
+2002-08-25  Philip Blundell  <philb@gnu.org>
+
+	* day_popup.c (day_popup): Return GtkWidget*.
+	* day_popup.h (day_popup): Adjust prototype to match.
+
+	* old-db.c: New file.
+	* Makefile (MEMBERS): Add old-db.
+
+	* event-db.c: Use new database schema.
+	* event-db.h (FLAG_ALARM): New.
+
 2002-08-23  Philip Blundell  <philb@gnu.org>
 
 	* Makefile (DEBUG): Default off.

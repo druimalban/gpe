@@ -29,6 +29,7 @@ typedef struct event_details_s
 } *event_details_t;
 
 #define FLAG_UNTIMED  (1 << 0)
+#define FLAG_ALARM    (1 << 1)
 
 typedef struct event_s
 {
@@ -36,7 +37,7 @@ typedef struct event_s
 
   time_t start;
   unsigned long duration;	/* 0 == instantaneous */
-  unsigned long alarm;		/* -1 == none */
+  unsigned long alarm;		/* seconds before event */
   unsigned long flags;
   
   struct

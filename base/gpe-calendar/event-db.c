@@ -29,6 +29,13 @@ static const char *fname = "/.gpe/calendar";
 
 static unsigned long uid;
 
+static const char *schema_str = 
+"create table calendar (uid integer NOT NULL, tag text, value text)";
+static const char *schema2_str = 
+"create table calendar_urn (uid INTEGER PRIMARY KEY)";
+
+extern gboolean convert_old_db (sqlite *);
+
 static gint
 event_sort_func (const event_t ev1, const event_t ev2)
 {
@@ -63,52 +70,74 @@ event_db_remove_internal (event_t ev)
 }
 
 static int
+load_data_callback (void *arg, int argc, char **argv, char **names)
+{
+  if (argc == 2)
+    {
+      event_t ev = arg;
+     
+      if (!strcasecmp (argv[0], "start"))
+	{
+	  struct tm tm;
+	  char *p;
+	  memset (&tm, 0, sizeof (tm));
+	  p = strptime (argv[1], "%Y-%m-%d", &tm);
+	  if (p == NULL)
+	    {
+	      fprintf (stderr, "Unable to parse date: %s\n", argv[1]);
+	      return 1;
+	    }
+	  p = strptime (p, " %H:%M", &tm);
+	  if (p == NULL)
+	    ev->flags |= FLAG_UNTIMED;
+	  
+	  ev->start = timegm (&tm);
+	}
+      else if (!strcasecmp (argv[0], "duration"))
+	{
+	  ev->duration = atoi (argv[1]);
+	}
+      else if (!strcasecmp (argv[0], "alarm"))
+	{
+	  ev->alarm = atoi (argv[1]);
+	  ev->flags |= FLAG_ALARM;
+	}
+    }
+  return 0;
+}
+
+static int
 load_callback (void *arg, int argc, char **argv, char **names)
 {
-  if (argc == 5)
+  if (argc == 1)
     {
-      char *p;
-      struct tm tm;
+      char *err;
+      guint uid = atoi (argv[0]);
       event_t ev = g_malloc (sizeof (struct event_s));
-      
-      ev->flags = 0;
-      ev->uid = atoi (argv[0]);
-
-      memset (&tm, 0, sizeof (tm));
-      p = strptime (argv[1], "%Y-%m-%d", &tm);
-      if (p == NULL)
+      memset (ev, 0, sizeof (*ev));
+      ev->uid = uid;
+      if (sqlite_exec_printf (sqliteh, "select tag,value from calendar where uid=%d", 
+			      load_data_callback, ev, &err, uid))
 	{
-	  fprintf (stderr, "Unable to parse date: %s\n", argv[1]);
+	  gpe_error_box (err);
+	  free (err);
+	  g_free (ev);
 	  return 1;
 	}
-      p = strptime (p, " %H:%M", &tm);
-      if (p == NULL)
-	ev->flags |= FLAG_UNTIMED;
-      
-      ev->start = timegm (&tm);
-      ev->duration = argv[2] ? atoi(argv[2]) : 0;
-      ev->alarm = atoi (argv[3]);
-      ev->recur.type = RECUR_NONE;
-      
+
       if (event_db_add_internal (ev) == FALSE)
 	return 1;
     }
-
   return 0;
 }
 
 gboolean
 event_db_start (void)
 {
-  static const char *schema_str = 
-    "create table events (uid integer NOT NULL, start text NOT NULL,"
-    " duration integer, alarmtime integer, alarmtype text, summary text, description text, recurring text)";
-  const char *home = getenv ("HOME");
+  const char *home = g_get_home_dir ();
   char *buf;
   char *err;
   size_t len;
-  if (home == NULL) 
-    home = "";
   len = strlen (home) + strlen (fname) + 1;
   buf = g_malloc (len);
   strcpy (buf, home);
@@ -123,38 +152,51 @@ event_db_start (void)
     }
 
   sqlite_exec (sqliteh, schema_str, NULL, NULL, &err);
+  sqlite_exec (sqliteh, schema2_str, NULL, NULL, &err);
   
-  if (sqlite_exec (sqliteh, "select uid, start, duration, alarmtime, recurring from events", load_callback, NULL, &err))
+  if (sqlite_exec (sqliteh, "select uid from calendar_urn", load_callback, NULL, &err))
     {
       gpe_error_box (err);
       free (err);
       return FALSE;
     }
 
+  convert_old_db (sqliteh);
+
   return TRUE;
+}
+
+static int
+load_details_callback (void *arg, int argc, char *argv[], char **names)
+{
+  if (argc == 2)
+    {
+      event_details_t evd = arg;
+      if (!strcasecmp (argv[0], "summary") && !evd->summary)
+	evd->summary = g_strdup (argv[1]);
+      else if (!strcasecmp (argv[0], "description") && !evd->description)
+	evd->description = g_strdup (argv[1]);
+    }
+  return 0;
 }
 
 event_details_t
 event_db_get_details (event_t ev)
 {
   char *err;
-  int nrow, ncol;
-  char **results;
   event_details_t evd;
 
-  if (sqlite_get_table_printf (sqliteh, "select summary,description from events where uid=%d", &results, &nrow, &ncol, &err, ev->uid))
+  evd = g_malloc (sizeof (struct event_details_s));
+  memset (evd, 0, sizeof (*evd));
+
+  if (sqlite_exec_printf (sqliteh, "select tag,value from calendar where uid=%d",
+			  load_details_callback, evd, &err, ev->uid))
     {
-      fprintf (stderr, "sqlite: %s\n", err);
+      gpe_error_box (err);
       free (err);
+      g_free (evd);
       return NULL;
     }
-
-  evd = g_malloc (sizeof (struct event_details_s));
-  
-  evd->summary = g_strdup (results[ncol]);
-  evd->description = g_strdup (results[ncol + 1]);
-
-  sqlite_free_table (results);
 
   ev->details = evd;
 
@@ -248,6 +290,10 @@ event_db_list_destroy (GSList *l)
   g_slist_free (l);
 }
 
+#define insert_values(db, id, key, format, value)	\
+	sqlite_exec_printf (db, "insert into calendar values (%d, '%q', '" ## format ## "')", \
+			    NULL, NULL, &err, id, key, value)
+
 /* Add an event to both the in-memory list and the SQL database */
 gboolean
 event_db_add (event_t ev)
@@ -255,30 +301,53 @@ event_db_add (event_t ev)
   char *err;
   char buf[256];
   struct tm tm;
+  gboolean rollback = FALSE;
 
-  ev->uid = uid;
+  if (sqlite_exec (sqliteh, "begin transaction", NULL, NULL, &err))
+    goto error;
+
+  rollback = TRUE;
+
+  if (sqlite_exec (sqliteh, "insert into calendar_urn values (NULL)",
+		   NULL, NULL, &err))
+    goto error;
+
+  ev->uid = sqlite_last_insert_rowid (sqliteh);
 
   if (event_db_add_internal (ev) == FALSE)
-    return FALSE;
- 
+    {
+      err = strdup ("Could not insert event");
+      goto error;
+    }
+
   gmtime_r (&ev->start, &tm);
   strftime (buf, 256, 
 	    (ev->flags & FLAG_UNTIMED) ? "%Y-%m-%d" : "%Y-%m-%d %H:%M",
-	    &tm);
- 
-  if (sqlite_exec_printf (sqliteh, 
-			  "insert into events (uid, start, duration, alarmtime, description, summary) values (%d, '%q', %d, %d, '%q', '%q')", 
-			  NULL, NULL, &err, 
-			  ev->uid, buf, ev->duration, ev->alarm, 
-			  ev->details->description, ev->details->summary))
+	    &tm);  
+
+  if (insert_values (sqliteh, ev->uid, "summary", "%q", ev->details->summary)
+      || insert_values (sqliteh, ev->uid, "description", "%q", ev->details->description)
+      || insert_values (sqliteh, ev->uid, "duration", "%d", ev->duration)
+      || insert_values (sqliteh, ev->uid, "start", "%q", buf))
+    goto error;
+
+  if (ev->flags & FLAG_ALARM)
     {
-      event_db_remove_internal (ev);
-      fprintf (stderr, "sqlite: %s\n", err);
-      free (err);
-      return FALSE;
+      if (insert_values (sqliteh, ev->uid, "alarm", "%d", ev->alarm))
+	goto error;
     }
 
+  if (sqlite_exec (sqliteh, "commit transaction", NULL, NULL, &err))
+    goto error;
+
   return TRUE;
+
+ error:
+  if (rollback)
+    sqlite_exec (sqliteh, "rollback transaction", NULL, NULL, NULL);
+  gpe_error_box (err);
+  free (err);
+  return FALSE;
 }
 
 /* Remove an event from both the in-memory list and the SQL database 
