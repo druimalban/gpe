@@ -18,10 +18,23 @@
 
 static struct 
 {
-  GtkWidget *applet;
-  GtkWidget *datel;
+  GtkWidget *categories;
+  GtkWidget *catvbox1;
+  GtkWidget *catlabel1;
+  GtkWidget *catconthbox1;
+  GtkWidget *catindentlabel1;
+  GtkWidget *controlvbox1;
+  GtkWidget *catvbox2;
+  GtkWidget *catlabel2;
+  GtkWidget *catconthbox2;
+  GtkWidget *catindentlabel2;
+  GtkWidget *controlvbox2;
+  GtkWidget *catvbox3;
+  GtkWidget *catlabel3;
+  GtkWidget *catconthbox3;
+  GtkWidget *catindentlabel3;
+  GtkWidget *controlvbox3;
   GtkWidget *cal;
-  GtkWidget *timel;
   GtkWidget *hbox;
   GtkWidget *h;
   GtkWidget *m;
@@ -30,57 +43,10 @@ static struct
   GtkWidget *internet;
 }self;
 
-GtkAttachOptions table_attach_left_col_x;
-GtkAttachOptions table_attach_left_col_y;
-GtkAttachOptions table_attach_right_col_x;
-GtkAttachOptions table_attach_right_col_y;
-GtkJustification table_justify_left_col;
-GtkJustification table_justify_right_col;
-guint border_width;
-guint col_spacing;
-guint row_spacing;
-guint widget_padding_x;
-guint widget_padding_y;
-guint widget_padding_y_even;
-guint widget_padding_y_odd;
-
-void
-InitSpacingsTime () {
-  /* 
-   * GTK_EXPAND  the widget should expand to take up any extra space
-                 in its container that has been allocated.
-   * GTK_SHRINK  the widget should shrink as and when possible.
-   * GTK_FILL    the widget should fill the space allocated to it.
-   */
-  
-  /*
-   * GTK_SHRINK to make it as small as possible, but use GTK_FILL to
-   * let it fill on the left side (so that the right alignment
-   * works:
-   */ 
-  table_attach_left_col_x = GTK_FILL; 
-  table_attach_left_col_y = 0;
-  table_attach_right_col_x = GTK_EXPAND | GTK_FILL;
-  //table_attach_right_col_x = GTK_SHRINK | GTK_EXPAND | GTK_FILL;
-  table_attach_right_col_y = GTK_FILL;
-  
-  /*
-   * GTK_JUSTIFY_LEFT
-   * GTK_JUSTIFY_RIGHT
-   * GTK_JUSTIFY_CENTER (the default)
-   * GTK_JUSTIFY_FILL
-   */
-  table_justify_left_col = GTK_JUSTIFY_LEFT;
-  table_justify_right_col = GTK_JUSTIFY_RIGHT;
-
-  border_width = 6;
-  col_spacing = 6;
-  row_spacing = 6;
-  widget_padding_x = 0; /* add space with col_spacing */
-  widget_padding_y = 0; /* add space with row_spacing */
-  widget_padding_y_even = 6; /* padding in y direction for widgets in an even row */
-  widget_padding_y_odd  = 6; /* padding in y direction for widgets in an odd row  */
-}
+guint gpe_catspacing = 18/2;
+guint gpe_border = 12/2;
+guint gpe_boxspacing = 6/2;
+gchar *gpe_catindent = "  "; /* Gnome 2 uses four spaces */
 
 void GetInternetTime()
 {
@@ -102,30 +68,56 @@ GtkWidget *Time_Build_Objects()
 
   ts.tm_year+=1900;
 
-  if(ts.tm_year <2002)
+  if(ts.tm_year < 2002)
     ts.tm_year=2002;
 
-  InitSpacingsTime ();
+  self.categories = gtk_vbox_new (FALSE, gpe_catspacing);
+  gtk_container_set_border_width (GTK_CONTAINER (self.categories), gpe_border);
 
-  self.applet = gtk_vbox_new(FALSE,0);
-  gtk_container_set_border_width (GTK_CONTAINER (self.applet), border_width);
+  /* -------------------------------------------------------------------------- */
+  self.catvbox1 = gtk_vbox_new (FALSE, gpe_boxspacing);
+  gtk_box_pack_start (GTK_BOX (self.categories), self.catvbox1, TRUE, TRUE, 0);
 
-  self.datel = gtk_label_new("Date:");
-  gtk_box_pack_start(GTK_BOX(self.applet),self.datel, FALSE, FALSE, 0);
-  gtk_misc_set_alignment (GTK_MISC (self.datel), 0, 0.5);
+  self.catlabel1 = gtk_label_new (_("Date")); /* FIXME: GTK2: make this bold */
+  gtk_box_pack_start (GTK_BOX (self.catvbox1), self.catlabel1, FALSE, FALSE, 0);
+  gtk_label_set_justify (GTK_LABEL (self.catlabel1), GTK_JUSTIFY_LEFT);
+  gtk_misc_set_alignment (GTK_MISC (self.catlabel1), 0, 0.5);
 
-  self.cal = gtk_calendar_new();
-    gtk_calendar_select_month(GTK_CALENDAR(self.cal),ts.tm_mon,ts.tm_year);
-  gtk_calendar_select_day(GTK_CALENDAR(self.cal),ts.tm_mday);
+  self.catconthbox1 = gtk_hbox_new (FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (self.catvbox1), self.catconthbox1, TRUE, TRUE, 0);
 
-  gtk_box_pack_start(GTK_BOX(self.applet),self.cal, FALSE, FALSE, 0);
+  self.catindentlabel1 = gtk_label_new (gpe_catindent);
+  gtk_box_pack_start (GTK_BOX (self.catconthbox1), self.catindentlabel1, FALSE, FALSE, 0);
 
-  self.timel = gtk_label_new("Time:");
-  gtk_box_pack_start(GTK_BOX(self.applet),self.timel, FALSE, FALSE, 0);
-  gtk_misc_set_alignment (GTK_MISC (self.timel), 0, 0.5);
+  self.controlvbox1 = gtk_vbox_new (FALSE, gpe_boxspacing);
+  gtk_box_pack_start (GTK_BOX (self.catconthbox1), self.controlvbox1, TRUE, TRUE, 0);
+  
+  self.cal = gtk_calendar_new ();
+  gtk_calendar_select_month (GTK_CALENDAR (self.cal), ts.tm_mon, ts.tm_year);
+  gtk_calendar_select_day (GTK_CALENDAR (self.cal), ts.tm_mday);
+  
+  gtk_box_pack_start (GTK_BOX (self.controlvbox1), self.cal, FALSE, FALSE, 0);
 
-  self.hbox = gtk_hbox_new(FALSE,0);
-  gtk_box_pack_start(GTK_BOX(self.applet),self.hbox, FALSE, FALSE, 0);
+  /* -------------------------------------------------------------------------- */
+  self.catvbox2 = gtk_vbox_new (FALSE, gpe_boxspacing);
+  gtk_box_pack_start (GTK_BOX (self.categories), self.catvbox2, TRUE, TRUE, 0);
+
+  self.catlabel2 = gtk_label_new (_("Time")); /* FIXME: GTK2: make this bold */
+  gtk_box_pack_start (GTK_BOX (self.catvbox2), self.catlabel2, FALSE, FALSE, 0);
+  gtk_label_set_justify (GTK_LABEL (self.catlabel2), GTK_JUSTIFY_LEFT);
+  gtk_misc_set_alignment (GTK_MISC (self.catlabel2), 0, 0.5);
+
+  self.catconthbox2 = gtk_hbox_new (FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (self.catvbox2), self.catconthbox2, TRUE, TRUE, 0);
+
+  self.catindentlabel2 = gtk_label_new (gpe_catindent);
+  gtk_box_pack_start (GTK_BOX (self.catconthbox2), self.catindentlabel2, FALSE, FALSE, 0);
+
+  self.controlvbox2 = gtk_vbox_new (FALSE, gpe_boxspacing);
+  gtk_box_pack_start (GTK_BOX (self.catconthbox2), self.controlvbox2, TRUE, TRUE, 0);
+  
+  self.hbox = gtk_hbox_new (FALSE, gpe_boxspacing);
+  gtk_box_pack_start (GTK_BOX (self.controlvbox2), self.hbox, FALSE, FALSE, 0);
 
   adj = gtk_adjustment_new(ts.tm_hour,0,24,1,6,6);
   self.h = gtk_spin_button_new (GTK_ADJUSTMENT(adj),1,0);
@@ -139,22 +131,39 @@ GtkWidget *Time_Build_Objects()
   self.s = gtk_spin_button_new (GTK_ADJUSTMENT(adj),1,0);
   gtk_container_add(GTK_CONTAINER(self.hbox),self.s);
 
+  /* -------------------------------------------------------------------------- */
+  self.catvbox3 = gtk_vbox_new (FALSE, gpe_boxspacing);
+  gtk_box_pack_start (GTK_BOX (self.categories), self.catvbox3, TRUE, TRUE, 0);
+
+  self.catlabel3 = gtk_label_new (_("Network")); /* FIXME: GTK2: make this bold */
+  gtk_box_pack_start (GTK_BOX (self.catvbox3), self.catlabel3, FALSE, FALSE, 0);
+  gtk_label_set_justify (GTK_LABEL (self.catlabel3), GTK_JUSTIFY_LEFT);
+  gtk_misc_set_alignment (GTK_MISC (self.catlabel3), 0, 0.5);
+
+  self.catconthbox3 = gtk_hbox_new (FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (self.catvbox3), self.catconthbox3, TRUE, TRUE, 0);
+
+  self.catindentlabel3 = gtk_label_new (gpe_catindent);
+  gtk_box_pack_start (GTK_BOX (self.catconthbox3), self.catindentlabel3, FALSE, FALSE, 0);
+
+  self.controlvbox3 = gtk_vbox_new (FALSE, gpe_boxspacing);
+  gtk_box_pack_start (GTK_BOX (self.catconthbox3), self.controlvbox3, TRUE, TRUE, 0);
+  
   self.internetserver = gtk_entry_new_with_max_length(30);
   gtk_entry_set_text(GTK_ENTRY(self.internetserver),"time.apple.com");
 
-  gtk_box_pack_start(GTK_BOX(self.applet),self.internetserver, FALSE, FALSE, 0);
+  gtk_box_pack_start(GTK_BOX(self.controlvbox3),self.internetserver, FALSE, FALSE, 0);
 
   self.internet = gtk_button_new_with_label("Get time from network");
   gtk_signal_connect (GTK_OBJECT(self.internet), "clicked",
 		      (GtkSignalFunc) GetInternetTime, NULL);
 
-  gtk_box_pack_start(GTK_BOX(self.applet),self.internet, FALSE, FALSE, 0);
+  gtk_box_pack_start(GTK_BOX(self.controlvbox3),self.internet, FALSE, FALSE, 0);
 
-
-  gtk_widget_show_all(self.applet);
-  return self.applet;
-
+  gtk_widget_show_all(self.categories);
+  return self.categories;
 }
+
 void Time_Free_Objects()
 {
 }
