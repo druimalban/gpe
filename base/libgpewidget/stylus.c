@@ -58,6 +58,9 @@ gpe_stylus_mode (void)
 	  if (prop)
 	    XFree (prop);
 	}
+
+      if (getenv ("GPE_PRETEND_STYLUS") != NULL)
+	stylus_mode_flag = YES;
     }
 
   return stylus_mode_flag == YES;

@@ -1,5 +1,8 @@
 2004-05-21  Philip Blundell  <philb@gnu.org>
 
+	* stylus.c (gpe_stylus_mode): Also select stylus mode if
+	GPE_PRETEND_STYLUS is set in the environment.
+
 	* gpeiconlistview.c (_gpe_icon_list_view_popup): Deleted.
 	(_gpe_icon_list_view_button_press): Emit show-popup signal on
 	button 3 click, even if no icon under pointer.
