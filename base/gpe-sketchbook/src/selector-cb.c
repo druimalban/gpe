@@ -156,7 +156,7 @@ gboolean on_treeview_event(GtkWidget *treeview, GdkEvent *event, gpointer the_mo
         gtk_tree_model_get(model, &iter,
                            ENTRY_URL, &fullpath_filename, -1);
         sketchpad_open_file(fullpath_filename);//NOTE: keep an index and open_indexed()
-		g_free(fullpath_filename);
+        g_free(fullpath_filename);
         switch_to_page(PAGE_SKETCHPAD);
         return TRUE;
       }
