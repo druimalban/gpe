@@ -1,9 +1,0 @@
-Package: gpe
-Section: base
-Priority: optional
-Version: 0.01
-Architecture: arm
-Maintainer: GPE Hackers <gpe@handhelds.org>
-Depends: gpe-apps, gpe-games
-Description: Task package for the whole of GPE
-

@@ -1,8 +1,0 @@
-Package: gpe-apps
-Section: base
-Priority: optional
-Version: 0.12
-Architecture: all
-Maintainer: GPE Hackers <gpe@handhelds.org>
-Depends: gpe-calendar, gpe-todo, gpe-appmgr, gpe-login, gpe-dm, gpe-session-scripts, xkbd, matchbox, gpe-what, gpe-edit, gpe-soundbite, keylaunch, esd, detect-stylus, xstroke, dillo, gpe-soundserver, gpe-bootsplash, gpe-minicalc, gpe-terminal, xcalibrate, xfonts-ttf, update-menus, gpe-setbg, gpe-conf, gpe-confd, xst, gpe-filemanager, gpe-sketchbook, gpe-collateral
-Description: Task package for GPE applications
