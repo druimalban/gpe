@@ -238,8 +238,8 @@ main (int argc, char *argv[])
   gtk_widget_set_usize (progress, -1, 8);
   gtk_box_pack_start (GTK_BOX (vbox), progress, FALSE, FALSE, 0);
 
-  gtk_box_pack_end (GTK_BOX (hbox2), vol_slider, FALSE, FALSE, 0);
   gtk_box_pack_end (GTK_BOX (hbox2), vbox, TRUE, TRUE, 0);
+  gtk_box_pack_end (GTK_BOX (hbox2), vol_slider, FALSE, FALSE, 0);
 
   gtk_container_add (GTK_CONTAINER (window), hbox2);
 
