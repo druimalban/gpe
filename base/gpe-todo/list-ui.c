@@ -276,18 +276,6 @@ draw_click_event (GtkWidget *widget,
     }
 }
 
-gboolean
-category_matches (GSList *valid, guint id)
-{
-  GSList *iter;
-  for (iter = valid; iter; iter = iter->next)
-    {
-      if ((guint)iter->data == id)
-	return TRUE;
-    }
-  return FALSE;
-}
-
 void
 refresh_items (void)
 {
@@ -304,7 +292,7 @@ refresh_items (void)
     {
       struct todo_item *i = iter->data;
       if (selected_category == NULL 
-	  || category_matches (i->categories, selected_category->id))
+	  || g_slist_find (i->categories, selected_category))
 	{
 	  display_items = g_slist_append (display_items, i);
 	  nitems++;

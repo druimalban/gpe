@@ -59,6 +59,6 @@ extern void categories_menu (void);
 
 extern void refresh_items (void);
 
-extern gboolean category_matches (GSList *valid, guint id);
+extern void set_window_icon (GtkWidget *window);
 
 #endif

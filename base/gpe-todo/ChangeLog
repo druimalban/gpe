@@ -1,3 +1,25 @@
+2002-12-22  Philip Blundell  <philb@gnu.org>
+
+	* main.c (my_icons): Add clean.
+	(set_window_icon): New function.
+	(open_window): Call it.  Set default window size to 240x320.
+	* list-ui.c (category_matches): Delete.
+	(refresh_items): Categories list contains pointers, not ID
+	values.  Use g_slist_find in place of category_matches.	
+	* todo.h (set_window_icon): Add prototype.
+	(category_matches): Delete.
+	* todo-ui.c (struct edit_todo): Delete category_map.  Add
+	selected_categories, category_label.
+	(destroy_user_data): Remove references to deleted fields.  Do a
+	shallow free of selected_categories.
+	(click_ok): Just copy selected category list from edit struct.
+	(build_categories_string): New function.
+	(categories_cancel: Likewise.
+	(categories_ok): Likewise.
+	(change_categories): Likewise.
+	(edit_item): Replace frame containing list of categories with a
+	label and a button.  Set icon on dialog window.
+
 2002-12-07  Philip Blundell  <philb@gnu.org>
 
 	* gpe-todo.desktop: New file.

@@ -21,15 +21,16 @@
 #include "todo-sql.h"
 
 static struct gpe_icon my_icons[] = {
-  { "ok", },
-  { "cancel", },
-  { "save", },
-  { "new", },
-  { "hide", },
-  { "properties", },
-  { "delete",  },
-  { "cancel", },
-  { "exit", },
+  { "ok" },
+  { "cancel" },
+  { "save" },
+  { "new" },
+  { "hide" },
+  { "clean" },
+  { "properties" },
+  { "delete"  },
+  { "cancel" },
+  { "exit" },
   { "question" },
   { "icon", PREFIX "/share/pixmaps/gpe-todo.png" },
   { "tick" },
@@ -45,11 +46,21 @@ GtkWidget *window;
 
 extern GtkWidget *top_level (GtkWidget *window);
 
-static void
-open_window (void)
+void
+set_window_icon (GtkWidget *window)
 {
   GdkPixmap *pmap;
   GdkBitmap *bmap;
+
+  gtk_widget_realize (window);
+
+  if (gpe_find_icon_pixmap ("icon", &pmap, &bmap))
+    gdk_window_set_icon (window->window, NULL, pmap, bmap);
+}
+
+static void
+open_window (void)
+{
   GtkWidget *top;
 
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
@@ -61,10 +72,9 @@ open_window (void)
   gtk_signal_connect (GTK_OBJECT (window), "destroy",
 		      GTK_SIGNAL_FUNC (gtk_exit), NULL);
 
+  gtk_window_set_default_size (GTK_WINDOW (window), 240, 320);
   gtk_window_set_title (GTK_WINDOW (window), _("To-do list"));
-  gtk_widget_realize (window);
-  if (gpe_find_icon_pixmap ("icon", &pmap, &bmap))
-    gdk_window_set_icon (window->window, NULL, pmap, bmap);
+  set_window_icon (window);
 
   gtk_widget_show (window);
 }
