@@ -10,7 +10,7 @@ depmod
 
 case $1 in
 'start')
-	modprobe h3600_hal
+	modprobe ipaq_hal
 	case `module_id` in
 		" iPAQ 3100" )	    ARGS="--mono" ;;
 		" iPAQ 3600" )	    ARGS="--flip" ;;

@@ -1,5 +1,5 @@
 PACKAGE = gpe-bootsplash
-VERSION = 1.4
+VERSION = 1.5
 
 CFLAGS = `pkg-config --cflags gdk-pixbuf-2.0` `pkg-config --libs gdk-pixbuf-2.0` -DGTK2
 SPLASH = splash2.png
