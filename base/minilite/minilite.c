@@ -123,7 +123,7 @@ simpad_set_level(int level)
   FILE *f_light;
   
   f_light = fopen(SIMPAD_BACKLIGHT_REG,"w");
-  if (f_light >= 0)
+  if (f_light != NULL)
   {
 	val = 255 - level;
 	val = val << 8;
@@ -143,7 +143,7 @@ simpad_get_level(void)
   int level;
   
   f_light = fopen(SIMPAD_BACKLIGHT_REG,"r");
-  if (f_light >= 0)
+  if (f_light != NULL)
   {
   	fscanf(f_light,"0x%x", &level);
   	fclose(f_light);

@@ -1,6 +1,7 @@
 2004-07-02	Florian Boor <florian.boor@kernelconcepts.de>
 
-	* minilite.c: Implemented proper resizing for panals of different size.
+	* minilite.c: simpad*() Fixed bug causing segfault.
+	* minilite.c: Implemented proper resizing for panels of different size.
 	* Makefile: Version to 0.43
 
 2004-06-23	Florian Boor <florian.boor@kernelconcepts.de>
