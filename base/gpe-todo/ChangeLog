@@ -1,3 +1,7 @@
+2002-06-22  Philip Blundell  <philb@gnu.org>
+
+	* Version 0.09 released.
+
 2002-06-21  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>
 
 	* list-ui.c: Push changes to items when clicked from main window.
