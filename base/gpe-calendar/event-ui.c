@@ -21,7 +21,8 @@
 void
 event_add(event_t ev)
 {
-  printf("Add event, time %x/%x text %s\n", (int)ev->start, (int)ev->end, ev->text);
+  printf("Add event, time %x/%x text %s\n", 
+	 (int)ev->start, (int)ev->end, ev->text);
 }
 
 struct date
@@ -54,11 +55,11 @@ struct sens
   GtkWidget *monthlyvbox, *monthlylabelevery, *monthlyspin, *monthlylabels;
   GtkWidget *yearlyvbox, *yearlylabelevery, *yearlyspin, *yearlylabels;
 
-  GtkWidget *weeklyhbox, *weeklyvbox, *weeklyvbox2, *checkbuttonsun, 
-    *checkbuttonmon, *checkbuttontue, *checkbuttonwed,
-    *checkbuttonthu, *checkbuttonfri, *checkbuttonsat;
+  GtkWidget *weeklyhbox, *weeklyvbox, *weeklyvbox2;
+  GtkWidget *checkbuttonwday[7];
 
-  GtkAdjustment *endspin_adj, *dailyspin_adj, *monthlyspin_adj, *yearlyspin_adj;
+  GtkAdjustment *endspin_adj, *dailyspin_adj, *monthlyspin_adj, 
+    *yearlyspin_adj;
   
   struct date start, end;
   		 
@@ -276,7 +277,10 @@ drop_calendar(GtkWidget *widget,
 GtkWidget *
 new_event(time_t t, guint timesel)
 {
-
+  static const char *days[] = 
+    { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" };
+  int i;
+  
   GSList *vboxrecur_group, *vboxend_group;
   GtkWidget *radiobuttonforever, *radiobuttonendafter;
   GtkWidget *endspin, *endlabel;
@@ -289,9 +293,7 @@ new_event(time_t t, guint timesel)
   GtkWidget *monthlyvbox, *monthlylabelevery, *monthlyspin, *monthlylabels;
   GtkWidget *yearlyvbox, *yearlylabelevery, *yearlyspin, *yearlylabels;
 
-  GtkWidget *weeklyhbox, *weeklyvbox, *weeklyvbox2, *checkbuttonsun, 
-    *checkbuttonmon, *checkbuttontue, *checkbuttonwed,
-    *checkbuttonthu, *checkbuttonfri, *checkbuttonsat;
+  GtkWidget *weeklyhbox, *weeklyvbox, *weeklyvbox2;
 
   GtkAdjustment *endspin_adj, *dailyspin_adj, *monthlyspin_adj, *yearlyspin_adj;
    
@@ -518,43 +520,29 @@ new_event(time_t t, guint timesel)
   gtk_widget_show (weeklyhbox);
   gtk_box_pack_start (GTK_BOX (hboxrepeat), weeklyhbox, FALSE, FALSE, 0);
 
-  /* weekly vbox */
+/* weekly vbox */
   weeklyvbox = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (weeklyvbox);
   gtk_box_pack_start (GTK_BOX (weeklyhbox), weeklyvbox, FALSE, FALSE, 0);
+  for (i = 0; i < 4; i++)
+    {
+      GtkWidget *b = gtk_check_button_new_with_label (days[i]);
+      gtk_widget_show (b);
+      gtk_box_pack_start (GTK_BOX (weeklyvbox), b, FALSE, FALSE, 0);
+      s->checkbuttonwday[i] = b;
+    }
 
-  checkbuttonmon = gtk_check_button_new_with_label ("Mon");
-  gtk_widget_show (checkbuttonmon);
-  gtk_box_pack_start (GTK_BOX (weeklyvbox), checkbuttonmon, FALSE, FALSE, 0);
-
-  checkbuttontue = gtk_check_button_new_with_label ("Tue");
-  gtk_widget_show (checkbuttontue);
-  gtk_box_pack_start (GTK_BOX (weeklyvbox), checkbuttontue, FALSE, FALSE, 0);
-
-  checkbuttonwed = gtk_check_button_new_with_label ("Wed");
-  gtk_widget_show (checkbuttonwed);
-  gtk_box_pack_start (GTK_BOX (weeklyvbox), checkbuttonwed, FALSE, FALSE, 0);
-
-  checkbuttonthu = gtk_check_button_new_with_label ("Thu");
-  gtk_widget_show (checkbuttonthu);
-  gtk_box_pack_start (GTK_BOX (weeklyvbox), checkbuttonthu, FALSE, FALSE, 0);
-
-  /* weekly vbox2 */
+/* weekly vbox2 */
   weeklyvbox2 = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (weeklyvbox2);
   gtk_box_pack_start (GTK_BOX (weeklyhbox), weeklyvbox2, FALSE, FALSE, 0);
-
-  checkbuttonfri = gtk_check_button_new_with_label ("Fri");
-  gtk_widget_show (checkbuttonfri);
-  gtk_box_pack_start (GTK_BOX (weeklyvbox2), checkbuttonfri, FALSE, FALSE, 0);
-
-  checkbuttonsat = gtk_check_button_new_with_label ("Sat");
-  gtk_widget_show (checkbuttonsat);
-  gtk_box_pack_start (GTK_BOX (weeklyvbox2), checkbuttonsat, FALSE, FALSE, 0);
-
-  checkbuttonsun = gtk_check_button_new_with_label ("Sun");
-  gtk_widget_show (checkbuttonsun);
-  gtk_box_pack_start (GTK_BOX (weeklyvbox2), checkbuttonsun, FALSE, FALSE, 0);
+  for (i = 4; i < 7; i++)
+    {
+      GtkWidget *b = gtk_check_button_new_with_label (days[i]);
+      gtk_widget_show (b);
+      gtk_box_pack_start (GTK_BOX (weeklyvbox2), b, FALSE, FALSE, 0);
+      s->checkbuttonwday[i] = b;
+    }
 
 /* monthly vbox */
   monthlyvbox = gtk_vbox_new (FALSE, 0);
@@ -698,13 +686,6 @@ new_event(time_t t, guint timesel)
   s->weeklyhbox = weeklyhbox;
   s->weeklyvbox = weeklyvbox;
   s->weeklyvbox2 = weeklyvbox2;
-  s->checkbuttonsun = checkbuttonsun;
-  s->checkbuttonmon = checkbuttonmon;
-  s->checkbuttontue = checkbuttontue;
-  s->checkbuttonwed = checkbuttonwed;
-  s->checkbuttonthu = checkbuttonthu;
-  s->checkbuttonfri = checkbuttonfri;
-  s->checkbuttonsat = checkbuttonsat;
   s->endspin_adj = endspin_adj;
   s->dailyspin_adj = dailyspin_adj;
   s->monthlyspin_adj = monthlyspin_adj;
