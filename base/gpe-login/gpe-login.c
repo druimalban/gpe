@@ -56,6 +56,9 @@
 #define GPE_LOCALE_DEFAULT "/etc/gpe/locale.default"
 #define GPE_LOCALE_USER_FILE ".gpe/locale"
 #define GPE_OWNERINFO_DONTSHOW_FILE "/etc/gpe/gpe-ownerinfo.dontshow"
+/* Number of milliseconds to hold the stylus down before recalibration is called */
+#define RECALIBRATION_TIMEOUT 5000
+#define XTSCAL_PATH "/usr/bin/gpe-xcalibrate.sh"
 #define DEBUG 0
 
 #define bin_to_ascii(c) ((c)>=38?((c)-38+'a'):(c)>=12?((c)-12+'A'):(c)+'.')
@@ -134,6 +137,8 @@ static key_map_t keymap[] =
     { "E", 'E' },
     { NULL }
   };
+  
+guint32 timer;
  
 /* function protos */
 static void cleanup_children (void);
@@ -167,6 +172,10 @@ static int locale_set (const char *locale);
 static void locale_try_user (const char *user);
 static void locale_update_menu (GtkOptionMenu *optionmenu, gpointer data);
 static locale_item_t *locale_get_file_single (const char *fname);
+
+static gboolean cal_countdown_button_press (GtkWidget *widget, GdkEventButton *event, gpointer data);
+static gboolean cal_countdown_button_release (GtkWidget *widget, GdkEventButton *event, gpointer data);
+static void add_recalibration_signals (GtkWidget *widget);
 
 GtkWidget *build_new_user_box (void);
 
@@ -289,6 +298,7 @@ add_menu_callback (GtkWidget * menu, const char *label, void *func, gpointer dat
 {
   GtkWidget *entry;
   entry = gtk_menu_item_new_with_label (label);
+  add_recalibration_signals (entry);
   g_signal_connect (G_OBJECT (entry), "activate", G_CALLBACK (func), data);
   gtk_menu_append (GTK_MENU (menu), entry);
 }
@@ -593,6 +603,7 @@ my_error_box (gchar *text)
 
   gtk_widget_show_all (w);
 
+  add_recalibration_signals (ok);
   g_signal_connect (G_OBJECT (ok), "clicked", gtk_main_quit, NULL);
 
   gtk_main ();
@@ -1241,10 +1252,13 @@ locale_read_user (const char *username)
 static void
 calibrate_hint_hook (GtkWidget *w, gpointer data)
 {
-  gchar *p = g_strdup_printf ("<span lang='%s'><i>%s</i> %s</span>",
+  gchar *p = g_strdup_printf ("<span lang='%s'>%s <i>%s</i> %s <i>%s</i> %s</span>",
 			      pango_lang_code,
-			      _("Record"),
-			      _("recalibrates touchscreen"));
+			      _("Holding down the stylus for greater than"),
+			      _("5 seconds"),
+			      _(", or holding"),
+			      _("record"),
+			      _(", recalibrates the touchscreen."));
 
   gtk_label_set_markup (GTK_LABEL (w), p);
 
@@ -1295,6 +1309,9 @@ build_root_password_box (void)
   gtk_table_attach (GTK_TABLE (table), entry_confirm, 
 		    1, 2, 1, 2, GTK_EXPAND | GTK_FILL, 0, 0, gpe_boxspacing);
   
+  add_recalibration_signals (entry_password);
+  add_recalibration_signals (entry_confirm);
+  add_recalibration_signals (ok_button);
   g_signal_connect (G_OBJECT (entry_password), "activate",
 		    G_CALLBACK (move_callback), entry_confirm);
   g_signal_connect (G_OBJECT (entry_confirm), "activate",
@@ -1388,6 +1405,8 @@ build_new_user_box (void)
   gtk_table_attach_defaults (GTK_TABLE (table), language_menu,
 			     1, 2, 4, 5);
   
+  add_recalibration_signals (entry_username);
+  add_recalibration_signals (entry_fullname);
   g_signal_connect (G_OBJECT (entry_username), "activate",
 		    G_CALLBACK (move_callback), entry_fullname);
   g_signal_connect (G_OBJECT (entry_fullname), "activate",
@@ -1418,6 +1437,58 @@ build_new_user_box (void)
   return vbox;
 }
 
+/* Following three functions detect pressing down of stylus for recalibration */
+static gboolean
+check_time(guint32 *time, guint32 current_time)
+{
+  guint32 time_elapsed = current_time - *time;
+  if (*time == 0)
+    return FALSE;
+  *time = 0;
+	
+  if (time_elapsed >= RECALIBRATION_TIMEOUT)
+    {
+      system (XTSCAL_PATH);
+      return TRUE;
+    }
+	
+  return FALSE;
+}
+
+static gboolean
+cal_countdown_button_press (GtkWidget *widget, GdkEventButton *event, gpointer data)
+{
+  if (event->button == 1)
+    {
+      if (*((guint32*)data) == 0)
+      *((guint32*)data) = event->time;
+    }
+  return FALSE;
+}
+
+static gboolean
+cal_countdown_button_release (GtkWidget *widget, GdkEventButton *event, gpointer data)
+{
+  guint32 time_elapsed;
+	
+  time_elapsed = event->time - *((guint32*)data);
+
+  return check_time ((guint32 *)data, event->time);
+}
+
+/* Add button press/release signals to a widget for recalibration */
+static void
+add_recalibration_signals (GtkWidget *widget)
+{
+  gtk_widget_add_events (GTK_WIDGET (widget), GDK_BUTTON_PRESS_MASK |
+  				 GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK |
+  				  GDK_BUTTON_MOTION_MASK);
+  g_signal_connect (G_OBJECT (widget), "button-press-event",
+		    G_CALLBACK (cal_countdown_button_press), &timer);
+  g_signal_connect (G_OBJECT (widget), "button-release-event",
+		    G_CALLBACK (cal_countdown_button_release), &timer);
+}
+
 int
 main (int argc, char *argv[])
 {
@@ -1440,12 +1511,15 @@ main (int argc, char *argv[])
   /* guint gpe_catspacing = gpe_get_catspacing (); */
   guint gpe_boxspacing = gpe_get_boxspacing ();
   guint gpe_border     = gpe_get_border ();
+  
+  /* Initialise timer to 0 for recalibration */
+  timer = 0;
 
   gtk_init (&argc, &argv);
   gtk_set_locale ();
 
   display = getenv ("DISPLAY");
-
+  
   /* (LanguageCode) */
   /* TRANSLATORS: please replace this with your own Pango language code: */
   pango_lang_code = g_strdup (_("en"));
@@ -1683,6 +1757,7 @@ main (int argc, char *argv[])
   calibrate_hint = gtk_label_new (NULL);
   gtk_widget_add_translation_hook (calibrate_hint, calibrate_hint_hook, NULL);
 
+  add_recalibration_signals (window);
   g_signal_connect (G_OBJECT (window), "delete_event",
 		    G_CALLBACK (gtk_main_quit), NULL);
 
@@ -1725,7 +1800,8 @@ main (int argc, char *argv[])
 	{
 	  option = gtk_option_menu_new ();
 	  gtk_option_menu_set_menu (GTK_OPTION_MENU (option), menu);
-	  g_signal_connect (G_OBJECT (option), "changed", 
+        add_recalibration_signals (option);
+  	  g_signal_connect (G_OBJECT (option), "changed", 
 	                    G_CALLBACK (locale_update_menu),NULL);
 	}
 
@@ -1792,6 +1868,8 @@ main (int argc, char *argv[])
       
       if (! hard_keys_mode)
 	{
+        add_recalibration_signals (entry);
+        add_recalibration_signals (ok_button);
 	  if (autolock_mode)
 	    {
 	      g_signal_connect (G_OBJECT (entry), "activate",

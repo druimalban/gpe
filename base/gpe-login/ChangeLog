@@ -1,3 +1,7 @@
+2005-02-23  Chris Lord  <cwiiis@handhelds.org>
+
+	* Add recalibration on a long stylus-press
+
 2005-01-03  Phil Blundell  <philb@gnu.org>
 
 	* Version 0.75 released.
