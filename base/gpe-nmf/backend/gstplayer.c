@@ -34,12 +34,14 @@ struct player
   gboolean new_track;
 
   player_state state;
-  GstElement *filesrc, *decoder, *audiosink, *thread;
+  GstElement *filesrc, *decoder, *audiosink, *thread, *volume;
   GstScheduler *sched;
   GstClock *clock;
 
   int opt_shuffle;
   int opt_loop;
+
+  char *source_elem;
 };
 
 static gboolean play_track (player_t p, struct playlist *t);
@@ -47,8 +49,13 @@ static gboolean play_track (player_t p, struct playlist *t);
 player_t
 player_new (void)
 {
-  player_t p = g_malloc (sizeof (struct player));
-  memset (p, 0, sizeof (struct player));
+  player_t p = g_malloc0 (sizeof (struct player));
+  char *src = getenv ("NMF_SRC");
+
+  if (!src)
+    src = "filesrc";
+
+  p->source_elem = g_strdup (src);
 
   return p;
 }
@@ -57,7 +64,8 @@ void
 player_destroy (player_t p)
 {
   player_stop (p);
- 
+
+  g_free (p->source_elem);
   g_free (p);
 }
 
@@ -260,17 +268,20 @@ metadata_notify (GObject *obj, GObject *the_obj, GParamSpec *spec, player_t p)
 static void
 build_pipeline (player_t p, struct playlist *t, gboolean really_play)
 {
-  p->filesrc = gst_element_factory_make ("filesrc", "disk_source");
+  p->filesrc = gst_element_factory_make (p->source_elem, "disk_source");
   g_object_set (G_OBJECT (p->filesrc), "location", t->data.track.url, NULL);
   
   p->decoder = gst_element_factory_make ("spider", "decoder");
 
+  p->volume = gst_element_factory_make ("volume", "volume");
+
   p->audiosink = gst_element_factory_make (really_play ? "esdsink" : "fakesink", "play_audio");
 
-  gst_bin_add_many (GST_BIN (p->thread), p->filesrc, p->decoder, p->audiosink, NULL);
+  gst_bin_add_many (GST_BIN (p->thread), p->filesrc, p->decoder, p->volume, p->audiosink, NULL);
 
   gst_element_connect (p->filesrc, p->decoder);
-  gst_element_connect (p->decoder, p->audiosink);
+  gst_element_connect (p->decoder, p->volume);
+  gst_element_connect (p->volume, p->audiosink);
 }
 
 static gboolean

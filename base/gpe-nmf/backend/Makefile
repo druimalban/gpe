@@ -13,8 +13,8 @@ BACKEND = libgpenmf.so.0
 BACKEND_SO = libgpenmf.so
 
 MEMBERS = playlist_db playlist_xml playlist_m3u gstplayer
-LDFLAGS += `pkg-config --libs gstreamer-0.5` -lpthread
-CPPFLAGS += `pkg-config --cflags gstreamer-0.5`
+LDFLAGS += `pkg-config --libs gstreamer-0.6` -lpthread
+CPPFLAGS += `pkg-config --cflags gstreamer-0.6`
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 OGG_OBJS = $(patsubst %,%.o,$(OGG_MEMBERS))

@@ -6,7 +6,7 @@ GST = yes
 
 MEMBERS = gpe-nmf playlist_edit
 
-GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
+GTKCFLAGS = `pkg-config --cflags gtk+-2.0` -DGTK_DISABLE_DEPRECATED
 GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
 
 CFLAGS = $(GTKCFLAGS) -D_GNU_SOURCE -Wall

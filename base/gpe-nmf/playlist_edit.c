@@ -174,11 +174,11 @@ new_entry (GtkWidget *w, struct nmf_frontend *fe)
 {
   GtkWidget *fs = gtk_file_selection_new (_("Select file"));
   
-  gtk_signal_connect (GTK_OBJECT (GTK_FILE_SELECTION (fs)->cancel_button), 
-		      "clicked", GTK_SIGNAL_FUNC (close_file_sel), fs);
-  gtk_signal_connect (GTK_OBJECT (GTK_FILE_SELECTION (fs)->ok_button), 
-		      "clicked", GTK_SIGNAL_FUNC (select_file_done), fs);
-
+  g_signal_connect (G_OBJECT (GTK_FILE_SELECTION (fs)->cancel_button), 
+		    "clicked", G_CALLBACK (close_file_sel), fs);
+  g_signal_connect (G_OBJECT (GTK_FILE_SELECTION (fs)->ok_button), 
+		    "clicked", G_CALLBACK (select_file_done), fs);
+  
   g_object_set_data (G_OBJECT (fs), "frontend", fe);
 
   gtk_widget_show (fs);
@@ -201,11 +201,10 @@ delete (GtkWidget *w, struct nmf_frontend *fe)
 void
 playlist_edit_push (GtkWidget *w, struct playlist *p)
 {
-  GtkTreeStore *store = gtk_object_get_data (GTK_OBJECT (w), "store");
+  GtkTreeStore *store = g_object_get_data (G_OBJECT (w), "store");
 
   gtk_tree_store_clear (store);
   store_playlist (store, p, NULL);
-  gtk_widget_draw (w, NULL);
 }
 
 static void
@@ -258,23 +257,20 @@ playlist_edit (struct nmf_frontend *fe, struct playlist *p)
 									"text", 
 									TITLE_COLUMN, 
 									NULL);
-  GtkWidget *pw;
 
   gtk_window_set_default_size (GTK_WINDOW (window), 240, 300);
   
   gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
 
-  pw = gpe_render_icon (NULL, gpe_find_icon ("open"));
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Open"), 
-			   _("Open"), _("Open"), pw, 
-			   GTK_SIGNAL_FUNC (new_entry), fe);
+  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_OPEN,
+			    _("Open"), _("Open"),
+			    G_CALLBACK (new_entry), fe, -1);
 
-  pw = gpe_render_icon (NULL, gpe_find_icon ("delete"));
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Delete"), 
-			   _("Delete"), _("Delete"), pw, 
-			   GTK_SIGNAL_FUNC (delete), fe);
+  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_DELETE,
+			    _("Delete"), _("Delete"),
+			    G_CALLBACK (delete), fe, -1);
   
-  gtk_object_set_data (GTK_OBJECT (window), "store", store);
+  g_object_set_data (G_OBJECT (window), "store", store);
   store_playlist (store, p, NULL);
 
   gtk_tree_view_append_column (GTK_TREE_VIEW (treeview), column);
@@ -286,8 +282,8 @@ playlist_edit (struct nmf_frontend *fe, struct playlist *p)
   fe->model = GTK_TREE_MODEL (store);
   fe->view = GTK_TREE_VIEW (treeview);
 
-  gtk_signal_connect (GTK_OBJECT (treeview), "row-activated",
-		      GTK_SIGNAL_FUNC (row_signal), fe);
+  g_signal_connect (G_OBJECT (treeview), "row-activated",
+		    G_CALLBACK (row_signal), fe);
 
   gtk_widget_show (sw);
   gtk_widget_show (toolbar);
@@ -295,8 +291,8 @@ playlist_edit (struct nmf_frontend *fe, struct playlist *p)
   gtk_widget_show (vbox);
   gtk_container_add (GTK_CONTAINER (window), vbox);
 
-  gtk_signal_connect (GTK_OBJECT (window), "delete-event",
-		      GTK_SIGNAL_FUNC (hide_window), NULL);
+  g_signal_connect (G_OBJECT (window), "delete-event",
+		    G_CALLBACK (hide_window), NULL);
 
   return window;
 }
