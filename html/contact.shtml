@@ -33,27 +33,25 @@ there's anyone you can visit!
 <p>
 <table border="0" width="100%">
 <tr><th width="15%"></th><th width="20%"></th><th width="65%"></th></tr>
-<tr><td><b>IRC nick</b></td> <td><b>Real name</b></td>   <td><b>Location</b></td></tr>
-<tr><td>moray</td>           <td>Moray Allan</td>        <td>Edinburgh, Scotland</td></tr>
-<tr><td>pb</td>              <td>Philip Blundell</td>    <td>Cambridge, England</td></tr>
-<tr><td>dc</td>              <td>Damien Tanner</td>      <td>London, England</td></tr>
-<tr><td>mallum</td>          <td>Matthew Allum</td>      <td>East London, England</td></tr>
-<tr><td>nils</td>            <td>Nils Färber</td>        <td>Netphen, Germany</td></tr>
-<tr><td>colin</td>           <td>Colin Marquardt</td>    <td>Stuttgart, Germany</td></tr>
-<tr><td>pierre</td>          <td>Pierre Tardy</td>       <td>Clermont-Ferrand, France</td></tr>
-<tr><td>mccarthy</td>        <td>Joseph McCarthy</td>    <td>Pittsburgh, USA</td></tr>
-<tr><td>mibus</td>           <td>Robert Mibus</td>       <td>Adelaide, Australia</td></tr>
+<tr><td><b>(IRC) nick</b></td> <td><b>Real name</b></td>   <td><b>Location</b></td></tr>
+<tr><td>moray</td>             <td>Moray Allan</td>        <td>Edinburgh, Scotland</td></tr>
+<tr><td>pb</td>                <td>Philip Blundell</td>    <td>Cambridge, England</td></tr>
+<tr><td>dc</td>                <td>Damien Tanner</td>      <td>London, England</td></tr>
+<tr><td>mallum</td>            <td>Matthew Allum</td>      <td>East London, England</td></tr>
+<tr><td>nils</td>              <td>Nils Färber</td>        <td>Netphen, Germany</td></tr>
+<tr><td>colin</td>             <td>Colin Marquardt</td>    <td>Stuttgart, Germany</td></tr>
+<tr><td>pierre</td>            <td>Pierre Tardy</td>       <td>Clermont-Ferrand, France</td></tr>
+<tr><td>jamey</td>             <td>Jamey Hicks</td>        <td>Cambridge, MA, USA</td></tr>
+<tr><td>mccarthy</td>          <td>Joseph McCarthy</td>    <td>Pittsburgh, PA, USA</td></tr>
+<tr><td>mibus</td>             <td>Robert Mibus</td>       <td>Adelaide, Australia</td></tr>
 </table>
 </p>
 
 <p>
-<!-- Image from http://flatplanet.neurofractal.org/getmap.cgi?earthmap_hires.jpg -->
-<!-- xplanet -shade 100 -markerfile ../people.coord -output people.png -geometry 700x350 -font /usr/X11R6/lib/X11/fonts/TrueType/Verdana.ttf -fontsize 9 -image /opt/applications/earth_images/earthmap_hires.jpg -->
+<!-- see people.coord for information on how to generate the images: -->
 <img src="images/people.png" width="700" height="350">
 <br>
-<!-- xplanet -shade 100 -markerfile ../people.coord -output people_eu.png -geometry 600x300 -font /usr/X11R6/lib/X11/fonts/TrueType/Verdana.ttf -fontsize 9 -lat 050.00 -lon 000.00 -projection orthographic -radius 250 -image /opt/applications/earth_images/earthmap_hires.jpg -->
 <img src="images/people_eu.png" width="600" height="300">
 </p>
-
 
 <!--#include virtual="includes/foot.shtml"-->
