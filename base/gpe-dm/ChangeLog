@@ -1,3 +1,12 @@
+2004-10-23  Phil Blundell  <pb@nexus.co.uk>
+
+	* Version 0.41 released.
+
+2004-10-23  Phil Blundell  <pb@nexus.co.uk>
+
+	* Xserver: Add support for Xorg.  Undo Florian's change of
+	2004-10-15.
+
 2004-10-15  Florian Boor  <florian@kernelconcepts.de>
 
 	* Xserver: Added some bits for iPaq H2200.

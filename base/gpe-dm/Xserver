@@ -8,6 +8,9 @@ fi
 if [ -f /usr/bin/Xepson ]; then
   XSERVER=Xepson
 fi
+if [ -f /usr/bin/Xorg ]; then
+  XSERVER=Xorg
+fi
 
 . /etc/profile
 
@@ -45,8 +48,6 @@ case `module_id` in
 		export TSLIB_TSDEVICE="/dev/sharp_ts" ;;
 	"Simpad")
 		ARGS="$ARGS -rgba rgb" ;;
-    "HP IPAQ H2200")
-        export TSLIB_TSDEVICE="/dev/input/event1";;
 esac
 
 exec $XSERVER $ARGS $*
