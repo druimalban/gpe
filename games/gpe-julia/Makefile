@@ -11,35 +11,20 @@ BUILD = ../../base/build
 else
 BUILD = build
 endif
-LDFLAGS += -lgpewidget
 
-GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
-GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
-
-CFLAGS = $(GTKCFLAGS) -D_GNU_SOURCE -Wall
-ifeq ($(DEBUG),yes)
-CFLAGS += -O2 -g
-LDFLAGS = -g #-lefence
-else
-CFLAGS += -Os -fomit-frame-pointer
-endif
-CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
-
-ifeq ($(CVSBUILD),yes)
-CFLAGS += -I../../base/libgpewidget
-LDFLAGS += -L../../base/libgpewidget
-else
-CFLAGS += -I/usr/include/gpe
-endif
-LDFLAGS += -lgpewidget $(GTKLDFLAGS)
+PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS) -DENABLE_NLS
+PACKAGE_CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
+PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS)
+PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS)
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
+DEPS = $(patsubst %,%.d,$(MEMBERS))
 
 all: $(PACKAGE)
 
 $(PACKAGE): $(OBJS)
-	$(CC) -o $@ $^ $(LDFLAGS)
+	$(CC) -o $@ $^ $(LDFLAGS) $(PACKAGE_LDFLAGS)
 
 install-program: all install-mo $(PACKAGE).desktop
 	install -D $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
@@ -52,7 +37,7 @@ install-program: all install-mo $(PACKAGE).desktop
 	strip $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 
 clean:
-	rm -f $(PACKAGE) $(OBJS)
+	rm -f $(PACKAGE) $(OBJS) $(DEPS)
 
 include $(BUILD)/Makefile.dpkg_ipkg
 include $(BUILD)/Makefile.translation
