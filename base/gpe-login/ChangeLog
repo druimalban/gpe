@@ -1,6 +1,7 @@
 2002-06-20  Philip Blundell  <pb@debian.org>
 
 	* familiar/control.gpe-login (Version): Set to 0.12.
+	(Depends): Require libgpewidget0 >= 0.07.
 
 	* gpe-login.c (main): Handle errors from fork.  Pass username to
 	do_login.  Call perror when execl of xkbd fails.
