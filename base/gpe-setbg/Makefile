@@ -50,7 +50,7 @@ $(PACKAGE): $(OBJS)
 install: all
 	install -D $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 ##	install -D $(PACKAGE).menu $(DESTDIR)$(PREFIX)/lib/menu/$(PACKAGE)
-	install -D gpe-login-bg.png $(DESTDIR)$(PREFIX)/share/pixmaps/gpe-login-bg.png
+	install -D gpe-default-bg.png $(DESTDIR)$(PREFIX)/share/pixmaps/gpe-default-bg.png
 	strip $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 
 clean:

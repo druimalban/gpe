@@ -1,0 +1,8 @@
+2002-09-22  Colin Marquardt  <colin@marquardt-home.de>
+
+	* Makefile: Install gpe-default-bg.png
+
+	* gpe-setbg.c: Add copyright info.
+	(my_icons): Try to load gpe-default-bg.png now.
+	(main): Accept file from the command line. Be verbose.
+
