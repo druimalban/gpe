@@ -6,3 +6,4 @@ Architecture: arm
 Maintainer: Nils Faerber <nils@kernelconcepts.de>
 Depends: libgtk2.0-0, libgpewidget1, gpe-icons (>= 0.09)
 Description: GPE audio mixer
+Source: gpe-mixer-VERSION.tar.gz
