@@ -5,7 +5,7 @@ CVSBUILD = yes
 VERSION = 0.20
 
 MEMBERS = main
-LINGUAS = id pt de zh_TW fr ro wa sv nl sk cs
+LINGUAS = id pt de zh_TW fr ro wa sv nl sk
 
 CPPFLAGS += $(STANDARD_CPPFLAGS)
 CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS)
