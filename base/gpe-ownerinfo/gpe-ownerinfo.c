@@ -342,6 +342,7 @@ translate_name_label (GtkWidget *namelabel, gpointer data)
 {
   gtk_label_set_markup (GTK_LABEL (namelabel),
 			g_strdup_printf ("<span lang='%s'><b>%s</b></span> ",
+					 /* TRANSLATORS: only a short word will look good here */
 					 pango_lang_code, _("Owner")));
 }
 

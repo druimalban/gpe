@@ -1,5 +1,10 @@
 2003-03-05  Colin Marquardt  <colin@marquardt-home.de>
 
+	* Makefile (LINGUAS): Add 'hu'.
+
+	* gpe-ownerinfo.c (translate_name_label): Tell translators that
+	only a short version will look good as a translation for "Owner".
+
 	* .cvsignore: Add 'semantic.cache'.
 
 	* familiar/.cvsignore: Add 'dist-translation'.
