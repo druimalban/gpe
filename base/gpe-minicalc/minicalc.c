@@ -445,12 +445,11 @@ main (int argc, char *argv[])
   gtk_container_add (GTK_CONTAINER (window), vbox);
   display = gtk_text_view_new ();
   gtk_container_set_border_width (GTK_CONTAINER (window), 2);
-  gtk_box_pack_start (GTK_BOX (vbox), display, FALSE, FALSE, 2);
   table = gtk_table_new (4, 8, TRUE);
   gtk_widget_show (table);
   hbox = gtk_hbox_new (FALSE, 0);
   gtk_widget_show (hbox);
-  gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+  gtk_box_pack_end (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
 
   gtk_widget_set_usize (window, 240, -1);
 
@@ -490,9 +489,6 @@ main (int argc, char *argv[])
   black_style->bg[GTK_STATE_NORMAL] = col;
   gtk_widget_set_style (window, black_style);
 
-  gtk_widget_show (window);
-
-  gtk_widget_show (display);
   gtk_text_view_set_editable (GTK_TEXT_VIEW (display), FALSE);
   gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (display), GTK_WRAP_WORD);
   gtk_text_view_set_cursor_visible (GTK_TEXT_VIEW (display), FALSE);
@@ -500,7 +496,14 @@ main (int argc, char *argv[])
   gtk_text_view_set_right_margin (GTK_TEXT_VIEW (display), 10);
   display_init (display);
 
+  gtk_widget_show (display);
+  gtk_box_pack_start (GTK_BOX (vbox), display, TRUE, TRUE, 2);
+  gtk_widget_show (window);
+
   clear (TRUE);
+
+  gtk_text_view_scroll_mark_onscreen (GTK_TEXT_VIEW (display),
+				      gtk_text_buffer_get_insert (gtk_text_view_get_buffer (GTK_TEXT_VIEW (display))));
 
   gtk_main ();
   
