@@ -2,7 +2,7 @@
 
 GEOMETRY=
 if [ -x /usr/bin/gpe-ownerinfo ]; then
-  GEOMETRY="-geometry 240x200+0+0 --no-logo"
+  GEOMETRY="-geometry 240x200+0+0"
 fi
 
-/usr/bin/gpe-login $GEOMETRY
+/usr/bin/gpe-login --transparent $GEOMETRY

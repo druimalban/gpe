@@ -4,4 +4,7 @@ PATH=$PATH:/usr/X11R6/bin:/usr/bin
 
 keylaunch -f /etc/X11/gpe-login.keylaunchrc &
 ipaq-sleep -u 60 -o 30 -n &
-[ -f /usr/bin/gpe-ownerinfo ] && gpe-ownerinfo -g 240x120+0+200 &
+
+# the color "#bbc0d7" is taken from the GPE logo:
+[ -f /usr/X11R6/bin/xsetroot ] && xsetroot -solid "#bbc0d7" &
+[ -f /usr/bin/gpe-ownerinfo ] && gpe-ownerinfo -t -g 240x120+0+200 &

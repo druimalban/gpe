@@ -1,5 +1,12 @@
 2002-09-05  Colin Marquardt  <colin@marquardt-home.de>
 
+	* X11/Xinit.d/99gpe-login: Run gpe-login with the --transparent
+	option.
+	(GEOMETRY): Remove --no-logo option.
+
+	* gpe-login.setup: Call xsetroot, run gpe-ownerinfo with the -t
+	option (transparent).
+
 	* gpe-login.c (main): Remove gtk_set_locale() call.
 
 2002-09-04  Philip Blundell  <philb@gnu.org>
