@@ -2,6 +2,11 @@
 
 	* gpeclockface.c: Add Cairo support.
 	(draw_hand): Fix data type in non-RENDER case.
+	(gpe_clock_face_set_hand_width): New function.
+	* gpe/gpeclockface.h (gpe_clock_face_set_hand_width): New
+	prototype.
+
+	* Makefile: Add Cairo support.
 
 2004-05-16  Philip Blundell  <philb@gnu.org>
 

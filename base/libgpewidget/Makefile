@@ -3,6 +3,7 @@ PACKAGE = libgpewidget
 DEBUG = yes
 VERSION = 0.78
 CVSBUILD = yes
+CAIRO = yes
 
 IN_LIBGPEWIDGET = yes
 
@@ -25,6 +26,12 @@ PACKAGE_LDFLAGS = $(STANDARD_LDFLAGS) $(GTKLIBS) $(shell pkg-config --libs xrend
 
 PACKAGE_CFLAGS += -fPIC
 PACKAGE_CPPFLAGS += -I./gpe
+
+ifeq ($(CAIRO),yes)
+PACKAGE_CPPFLAGS += -DHAVE_CAIRO
+PACKAGE_CFLAGS += $(shell pkg-config --cflags cairo)
+PACKAGE_LDFLAGS += $(shell pkg-config --libs cairo)
+endif
 
 HEADERS += init.h render.h errorbox.h smallbox.h pixmaps.h gtkdatecombo.h dirbrowser.h stylus.h picturebutton.h spacing.h translabel.h question.h windows.h gpe-iconlist.h gtksimplemenu.h gpewindowlist.h tray.h popup.h
 

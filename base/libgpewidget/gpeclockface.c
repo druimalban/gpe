@@ -731,7 +731,7 @@ gpe_clock_face_init (GpeClockFace *clock)
   clock->border = DEFAULT_BORDER;
   clock->use_background_image = TRUE;
   clock->label_hours = FALSE;
-  clock->hand_width = 1;
+  clock->hand_width = 3;
 
 #ifdef HAVE_XRENDER
   clock->draw = NULL;
@@ -792,6 +792,12 @@ void
 gpe_clock_face_set_label_hours (GpeClockFace *clock, gboolean yes)
 {
   clock->label_hours = yes;
+}
+
+void
+gpe_clock_face_set_hand_width (GpeClockFace *clock, double width)
+{
+  clock->hand_width = width;
 }
 
 GType
