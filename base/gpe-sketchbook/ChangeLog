@@ -1,3 +1,9 @@
+2002-08-91  Luc Pionchon <luc.pionchon@welho.com>
+
+	* sketchpad-gui.[ch] sketchpad-cb.c: fixed the pb of popup being under
+	the parent window: basicaly changed the gtk_main/gtk_main_quit pair by
+	a hide-show/hide pair.
+
 2002-08-30  Luc Pionchon <luc.pionchon@welho.org>
 
 	* Makefile config.makefile src/Makefile: improvement and bug fix.
