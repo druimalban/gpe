@@ -11,6 +11,7 @@ PRIORITY        = optional
 
 MEMBERS = \
 	gpe-sketchbook       \
+	dialog               \
 	selector	     \
 	selector-cb	     \
 	selector-gui	     \
