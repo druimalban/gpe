@@ -1,294 +1,295 @@
-# Translation into the walloon language.
-# Copyright (C) 2003 THE PACKAGE'S COPYRIGHT HOLDER
-# Pablo Saratxaga <pablo@walon.org>, 2003, 2004.
+# Translation of gpe-calendar-0.45.po to Russian.
+# Copyright (C) 2003 Free Software Foundation, Inc.
+# This file is distributed under the same license as the gpe-calendar package.
+# Pavel Maryanov <acid_jack@ukr.net>, 2003.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-calendar 0.45\n"
 "POT-Creation-Date: 2003-09-05 23:16+0100\n"
-"PO-Revision-Date: 2004-04-05 20:11+0200\n"
-"Last-Translator: Pablo Saratxaga <pablo@walon.org>\n"
-"Language-Team: Walloon <linux-wa@walon.org>\n"
+"PO-Revision-Date: 2003-10-23 21:39+0200\n"
+"Last-Translator: Pavel Maryanov <acid_jack@ukr.net>\n"
+"Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: KBabel 1.0.2\n"
 
 #: main.c:242 gpe-calendar.desktop.in.h:1
 msgid "Calendar"
-msgstr "Calindrî"
+msgstr "Календарь"
 
 #: main.c:261
 msgid "New appointment"
-msgstr "Novea radjoû"
+msgstr "Новая встреча"
 
 #: main.c:261
 msgid "Tap here to add a new appointment or reminder"
-msgstr "Clitchîz chal po radjouter åk a s' rapinser"
+msgstr "Нажмите здесь, чтобы добавить новую встречу или напоминание"
 
 #: main.c:267 main.c:268
 msgid "Today"
-msgstr "Ouy"
+msgstr "Сегодня"
 
 #: main.c:276
 msgid "Future"
-msgstr "E futeur"
+msgstr "Будущее"
 
 #: main.c:276
 msgid "Future View"
-msgstr "Vuwe do futeur"
+msgstr "Вид: Будущее"
 
 #: main.c:277
 msgid "Tap here to see all future events."
-msgstr "Clitchîz chal po vey tos les evenmints e futeur."
+msgstr "Нажмите здесь, чтобы увидеть все будущие события."
 
 #: main.c:284
 msgid "Day View"
-msgstr "Vuwe des djoûs"
+msgstr "Вид: День"
 
 #: main.c:285
 msgid "Tap here to select day-at-a-time view."
-msgstr "Clitchîz chal pol vuwe des djoûs (on djoû pa côp)."
+msgstr "Нажмите здесь, чтобы выбрать вид дня-за-раз."
 
 #: main.c:292
 msgid "Week"
-msgstr "Samwinne"
+msgstr "Неделя"
 
 #: main.c:292
 msgid "Week View"
-msgstr "Vuwe des samwinnes"
+msgstr "Вид: Неделя"
 
 #: main.c:293
 msgid "Tap here to select week-at-a-time view."
-msgstr "Clitchîz chal po vuwe des samwinnes (ene samwinne pa côp)."
+msgstr "Нажмите здесь, чтобы выбрать вид недели-за-раз."
 
 #: main.c:300
 msgid "Month"
-msgstr "Moes"
+msgstr "Месяц"
 
 #: main.c:300
 msgid "Month View"
-msgstr "Vuwe des moes"
+msgstr "Вид: Месяц"
 
 #: main.c:301
 msgid "Tap here to select month-at-a-time view."
-msgstr "Clitchîz chal po vuwe des moes (on moes pa côp)."
+msgstr "Нажмите здесь, чтобы выбрать вид месяца-за-раз."
 
 #: main.c:307
 msgid "Exit"
-msgstr "Moussî foû"
+msgstr "Выход"
 
 #: main.c:307
 msgid "Tap here to exit the program"
-msgstr "Clitchîz chal po moussî foû do programe"
+msgstr "Нажмите здесь для выхода из программы"
 
 #: event-ui.c:251
 msgid ""
 "Delete all recurring entries?\n"
 "(If no, delete this instance only)"
 msgstr ""
-"Disfacer totes les recurintès intrêyes?\n"
-"(oudonbén rén k' ciste intrêye ci)"
+"Удалить все повторяющиеся пункты?\n"
+"(Если нет, удалить только этот пункт)"
 
 #: event-ui.c:383
 msgid "End time must not be earlier than start time"
-msgstr "Li moumint del fén ni pout nén esse divant l' moumint di cmince"
+msgstr "Время окончания не должно быть раньше времени начала"
 
 #: event-ui.c:622
 msgid "Event"
-msgstr "Evenmint"
+msgstr "Событие"
 
 #: event-ui.c:623
 msgid "Recurrence"
-msgstr "Recurince"
+msgstr "Повторение"
 
 #: event-ui.c:624 event-ui.c:797
 msgid "Alarm"
-msgstr "Abranle"
+msgstr "Будильник"
 
 #: event-ui.c:651 event-ui.c:853
 msgid "Type:"
-msgstr "Sôre:"
+msgstr "Тип:"
 
 #: event-ui.c:656
 msgid "Appointment"
-msgstr "Radjoû"
+msgstr "Встреча"
 
 #: event-ui.c:657
 msgid "Reminder"
-msgstr "A s' rapinser"
+msgstr "Напоминание"
 
 #: event-ui.c:659
 msgid "Task"
-msgstr "Bouye"
+msgstr "Задание"
 
 #: event-ui.c:665
 msgid "Days"
-msgstr "Djoûs"
+msgstr "Дни"
 
 #: event-ui.c:666
 msgid "Weeks"
-msgstr "Samwinnes"
+msgstr "Недели"
 
 #: event-ui.c:674
 msgid "Summary:"
-msgstr "Rascourti:"
+msgstr "Сводка:"
 
 #: event-ui.c:690
 msgid "Start:"
-msgstr "Comince:"
+msgstr "Начало:"
 
 #: event-ui.c:691
 msgid "End:"
-msgstr "Fén:"
+msgstr "Окончание:"
 
 #: event-ui.c:692 event-ui.c:693
 msgid "at:"
-msgstr "li:"
+msgstr "в:"
 
 #: event-ui.c:726
 msgid "Date:"
-msgstr "Date:"
+msgstr "Дата:"
 
 #: event-ui.c:729
 msgid "Time:"
-msgstr "Eure:"
+msgstr "Время:"
 
 #: event-ui.c:749
 msgid "Due:"
-msgstr "A fé po:"
+msgstr "Ожидание:"
 
 #: event-ui.c:753
 msgid "Allow:"
-msgstr "Permete:"
+msgstr "Разрешение:"
 
 #: event-ui.c:768
 msgid "Description:"
-msgstr "Discrijhaedje:"
+msgstr "Описание:"
 
 #: event-ui.c:801
 msgid "before event"
-msgstr "divant l' evenmint"
+msgstr "до события"
 
 #: event-ui.c:804
 msgid "minutes"
-msgstr "munutes"
+msgstr "минуты"
 
 #: event-ui.c:806
 msgid "hours"
-msgstr "eures"
+msgstr "часы"
 
 #: event-ui.c:808 event-ui.c:908
 msgid "days"
-msgstr "djoûs"
+msgstr "дни"
 
 #: event-ui.c:810
 msgid "weeks"
-msgstr "samwinnes"
+msgstr "недели"
 
 #: event-ui.c:865
 msgid "No recurrence"
-msgstr "Nole recurince"
+msgstr "Без повторения"
 
 #: event-ui.c:868
 msgid "Daily"
-msgstr "Tchaeke djoû"
+msgstr "Ежедневно"
 
 #: event-ui.c:871
 msgid "Weekly"
-msgstr "Tchaeke samwinne"
+msgstr "Еженедельно"
 
 #: event-ui.c:874
 msgid "Monthly"
-msgstr "Tchaeke moes"
+msgstr "Ежемесячно"
 
 #: event-ui.c:877
 msgid "Yearly"
-msgstr "Tchaeke anêye"
+msgstr "Ежегодно"
 
 #: event-ui.c:898 event-ui.c:920 event-ui.c:963 event-ui.c:1018
 msgid "Every"
-msgstr "Tchaeke"
+msgstr "Каждый"
 
 #: event-ui.c:921
 msgid "weeks, on:"
-msgstr "samwinnes, les:"
+msgstr "недели, в:"
 
 #: event-ui.c:974
 msgid "months"
-msgstr "moes"
+msgstr "месяцы"
 
 #: event-ui.c:979
 #, c-format
 msgid "on day %d"
-msgstr "li %d"
+msgstr "в день %d"
 
 #: event-ui.c:983
 msgid "on the"
-msgstr "li"
+msgstr "в"
 
 #: event-ui.c:991
 msgid "first"
-msgstr "prumî"
+msgstr "первый"
 
 #: event-ui.c:993
 msgid "second"
-msgstr "deujhinme"
+msgstr "второй"
 
 #: event-ui.c:995
 msgid "third"
-msgstr "troejhinme"
+msgstr "третий"
 
 #: event-ui.c:997
 msgid "fourth"
-msgstr "cwatrinme"
+msgstr "четвертый"
 
 #: event-ui.c:999
 msgid "fifth"
-msgstr "cénkinme"
+msgstr "пятый"
 
 #: event-ui.c:1001
 msgid "last"
-msgstr "dierin"
+msgstr "последний"
 
 #: event-ui.c:1028
 msgid "years"
-msgstr "anêyes"
+msgstr "годы"
 
 #: event-ui.c:1047
 msgid "End Date:"
-msgstr "Date di fén:"
+msgstr "Дата окончания:"
 
 #: event-ui.c:1053
 msgid "forever"
-msgstr "tofer"
+msgstr "всегда"
 
 #: event-ui.c:1064
 msgid "end after"
-msgstr "finixh après"
+msgstr "после окончания"
 
 #: event-ui.c:1081
 msgid "end on"
-msgstr "finixh li"
+msgstr "перед окончанием"
 
 #: event-ui.c:1089
 msgid "events"
-msgstr "evenmints"
+msgstr "события"
 
 #: event-ui.c:1188
 msgid "Calendar: New event"
-msgstr "Calindrî: novea evenmint"
+msgstr "Календарь: Новое событие"
 
 #: event-ui.c:1235
 msgid "Calendar: Edit event"
-msgstr "Calindrî: candjî evenmint"
+msgstr "Календарь: Редактировать событие"
 
 #: day_popup.c:171
 msgid "No appointments"
-msgstr "Nou radjoû"
+msgstr "Встреч нет"
 
 #: xsettings.c:105
 msgid "Cannot create XSettings client"
-msgstr "Dji n' sai ahiver li cliyint XSettings"
+msgstr "Невозможно создать клиента XSettings"
 
 #: gtkdatesel.c:193
 msgid "%Y"
@@ -309,7 +310,7 @@ msgstr "%m"
 
 #: gtkdatesel.c:219
 msgid "Week %V"
-msgstr "Samwinne lº %V"
+msgstr "Неделя %V"
 
 #: gtkdatesel.c:225
 #, c-format
@@ -318,4 +319,4 @@ msgstr "%a, %d"
 
 #: gpe-calendar.desktop.in.h:2
 msgid "GPE Calendar"
-msgstr "GPE Calindrî"
+msgstr "Календарь GPE"

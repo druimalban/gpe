@@ -1,294 +1,295 @@
-# Translation into the walloon language.
-# Copyright (C) 2003 THE PACKAGE'S COPYRIGHT HOLDER
-# Pablo Saratxaga <pablo@walon.org>, 2003, 2004.
+# Slovak translations for gpe-calendar package
+# Copyright (C) 2003 Free Software Foundation, Inc.
+# This file is distributed under the same license as the gpe-calendar package.
+# Marcel Telka <marcel@telka.sk>, 2003.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-calendar 0.45\n"
 "POT-Creation-Date: 2003-09-05 23:16+0100\n"
-"PO-Revision-Date: 2004-04-05 20:11+0200\n"
-"Last-Translator: Pablo Saratxaga <pablo@walon.org>\n"
-"Language-Team: Walloon <linux-wa@walon.org>\n"
+"PO-Revision-Date: 2003-09-10 08:21+0200\n"
+"Last-Translator: Marcel Telka <marcel@telka.sk>\n"
+"Language-Team: Slovak <sk-i18n@lists.linux.sk>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: KBabel 1.0.2\n"
 
 #: main.c:242 gpe-calendar.desktop.in.h:1
 msgid "Calendar"
-msgstr "Calindrî"
+msgstr "Kalendár"
 
 #: main.c:261
 msgid "New appointment"
-msgstr "Novea radjoû"
+msgstr "Nová úloha"
 
 #: main.c:261
 msgid "Tap here to add a new appointment or reminder"
-msgstr "Clitchîz chal po radjouter åk a s' rapinser"
+msgstr "Kliknite sem pre pridanie novej úlohy alebo pripomenutia"
 
 #: main.c:267 main.c:268
 msgid "Today"
-msgstr "Ouy"
+msgstr "Dnes"
 
 #: main.c:276
 msgid "Future"
-msgstr "E futeur"
+msgstr "Budúcnosť"
 
 #: main.c:276
 msgid "Future View"
-msgstr "Vuwe do futeur"
+msgstr "Prezrieť budúce"
 
 #: main.c:277
 msgid "Tap here to see all future events."
-msgstr "Clitchîz chal po vey tos les evenmints e futeur."
+msgstr "Kliknite sem, aby ste videli všetky budúce udalosti."
 
 #: main.c:284
 msgid "Day View"
-msgstr "Vuwe des djoûs"
+msgstr "Prezrieť deň"
 
 #: main.c:285
 msgid "Tap here to select day-at-a-time view."
-msgstr "Clitchîz chal pol vuwe des djoûs (on djoû pa côp)."
+msgstr "Kliknite sem, aby ste zvolili prehľad dňa."
 
 #: main.c:292
 msgid "Week"
-msgstr "Samwinne"
+msgstr "Týždeň"
 
 #: main.c:292
 msgid "Week View"
-msgstr "Vuwe des samwinnes"
+msgstr "Prezrieť týždeň"
 
 #: main.c:293
 msgid "Tap here to select week-at-a-time view."
-msgstr "Clitchîz chal po vuwe des samwinnes (ene samwinne pa côp)."
+msgstr "Kliknite sem, aby ste zvolili prehľad týždňa."
 
 #: main.c:300
 msgid "Month"
-msgstr "Moes"
+msgstr "Mesiac"
 
 #: main.c:300
 msgid "Month View"
-msgstr "Vuwe des moes"
+msgstr "Prezrieť mesiac"
 
 #: main.c:301
 msgid "Tap here to select month-at-a-time view."
-msgstr "Clitchîz chal po vuwe des moes (on moes pa côp)."
+msgstr "Kliknite sem, aby ste zvolili prehľad mesiaca."
 
 #: main.c:307
 msgid "Exit"
-msgstr "Moussî foû"
+msgstr "Koniec"
 
 #: main.c:307
 msgid "Tap here to exit the program"
-msgstr "Clitchîz chal po moussî foû do programe"
+msgstr "Kliknite sem pre ukončenie programu"
 
 #: event-ui.c:251
 msgid ""
 "Delete all recurring entries?\n"
 "(If no, delete this instance only)"
 msgstr ""
-"Disfacer totes les recurintès intrêyes?\n"
-"(oudonbén rén k' ciste intrêye ci)"
+"Odstrániť všetky opakovania položky?\n"
+"(ak nie, odstráni sa len tento výskyt)"
 
 #: event-ui.c:383
 msgid "End time must not be earlier than start time"
-msgstr "Li moumint del fén ni pout nén esse divant l' moumint di cmince"
+msgstr "Čas skončenia nesmie byť skôr ako čas začatia"
 
 #: event-ui.c:622
 msgid "Event"
-msgstr "Evenmint"
+msgstr "Udalosť"
 
 #: event-ui.c:623
 msgid "Recurrence"
-msgstr "Recurince"
+msgstr "Opakovanie"
 
 #: event-ui.c:624 event-ui.c:797
 msgid "Alarm"
-msgstr "Abranle"
+msgstr "Upozornenie"
 
 #: event-ui.c:651 event-ui.c:853
 msgid "Type:"
-msgstr "Sôre:"
+msgstr "Typ:"
 
 #: event-ui.c:656
 msgid "Appointment"
-msgstr "Radjoû"
+msgstr "Úloha"
 
 #: event-ui.c:657
 msgid "Reminder"
-msgstr "A s' rapinser"
+msgstr "Pripomenutie"
 
 #: event-ui.c:659
 msgid "Task"
-msgstr "Bouye"
+msgstr "Úloha"
 
 #: event-ui.c:665
 msgid "Days"
-msgstr "Djoûs"
+msgstr "Dni"
 
 #: event-ui.c:666
 msgid "Weeks"
-msgstr "Samwinnes"
+msgstr "Týždne"
 
 #: event-ui.c:674
 msgid "Summary:"
-msgstr "Rascourti:"
+msgstr "Zhrnutie:"
 
 #: event-ui.c:690
 msgid "Start:"
-msgstr "Comince:"
+msgstr "Začiatok:"
 
 #: event-ui.c:691
 msgid "End:"
-msgstr "Fén:"
+msgstr "Koniec:"
 
 #: event-ui.c:692 event-ui.c:693
 msgid "at:"
-msgstr "li:"
+msgstr "v:"
 
 #: event-ui.c:726
 msgid "Date:"
-msgstr "Date:"
+msgstr "Dátum:"
 
 #: event-ui.c:729
 msgid "Time:"
-msgstr "Eure:"
+msgstr "Čas:"
 
 #: event-ui.c:749
 msgid "Due:"
-msgstr "A fé po:"
+msgstr "Povinnosť:"
 
 #: event-ui.c:753
 msgid "Allow:"
-msgstr "Permete:"
+msgstr "Povoliť:"
 
 #: event-ui.c:768
 msgid "Description:"
-msgstr "Discrijhaedje:"
+msgstr "Popis:"
 
 #: event-ui.c:801
 msgid "before event"
-msgstr "divant l' evenmint"
+msgstr "pred udalosťou"
 
 #: event-ui.c:804
 msgid "minutes"
-msgstr "munutes"
+msgstr "minút"
 
 #: event-ui.c:806
 msgid "hours"
-msgstr "eures"
+msgstr "hodín"
 
 #: event-ui.c:808 event-ui.c:908
 msgid "days"
-msgstr "djoûs"
+msgstr "dní"
 
 #: event-ui.c:810
 msgid "weeks"
-msgstr "samwinnes"
+msgstr "týždňov"
 
 #: event-ui.c:865
 msgid "No recurrence"
-msgstr "Nole recurince"
+msgstr "Bez opakovania"
 
 #: event-ui.c:868
 msgid "Daily"
-msgstr "Tchaeke djoû"
+msgstr "Denne"
 
 #: event-ui.c:871
 msgid "Weekly"
-msgstr "Tchaeke samwinne"
+msgstr "Týždenne"
 
 #: event-ui.c:874
 msgid "Monthly"
-msgstr "Tchaeke moes"
+msgstr "Mesačne"
 
 #: event-ui.c:877
 msgid "Yearly"
-msgstr "Tchaeke anêye"
+msgstr "Ročne"
 
 #: event-ui.c:898 event-ui.c:920 event-ui.c:963 event-ui.c:1018
 msgid "Every"
-msgstr "Tchaeke"
+msgstr "Každý"
 
 #: event-ui.c:921
 msgid "weeks, on:"
-msgstr "samwinnes, les:"
+msgstr "týždeň v:"
 
 #: event-ui.c:974
 msgid "months"
-msgstr "moes"
+msgstr "mesiace"
 
 #: event-ui.c:979
 #, c-format
 msgid "on day %d"
-msgstr "li %d"
+msgstr "v deň %d"
 
 #: event-ui.c:983
 msgid "on the"
-msgstr "li"
+msgstr "v"
 
 #: event-ui.c:991
 msgid "first"
-msgstr "prumî"
+msgstr "prvý"
 
 #: event-ui.c:993
 msgid "second"
-msgstr "deujhinme"
+msgstr "druhý"
 
 #: event-ui.c:995
 msgid "third"
-msgstr "troejhinme"
+msgstr "tretí"
 
 #: event-ui.c:997
 msgid "fourth"
-msgstr "cwatrinme"
+msgstr "štvrtý"
 
 #: event-ui.c:999
 msgid "fifth"
-msgstr "cénkinme"
+msgstr "piaty"
 
 #: event-ui.c:1001
 msgid "last"
-msgstr "dierin"
+msgstr "posledný"
 
 #: event-ui.c:1028
 msgid "years"
-msgstr "anêyes"
+msgstr "roky"
 
 #: event-ui.c:1047
 msgid "End Date:"
-msgstr "Date di fén:"
+msgstr "Dátum ukončenia:"
 
 #: event-ui.c:1053
 msgid "forever"
-msgstr "tofer"
+msgstr "navždy"
 
 #: event-ui.c:1064
 msgid "end after"
-msgstr "finixh après"
+msgstr "koniec po"
 
 #: event-ui.c:1081
 msgid "end on"
-msgstr "finixh li"
+msgstr "koniec v"
 
 #: event-ui.c:1089
 msgid "events"
-msgstr "evenmints"
+msgstr "udalosti"
 
 #: event-ui.c:1188
 msgid "Calendar: New event"
-msgstr "Calindrî: novea evenmint"
+msgstr "Kalendár: Nová udalosť"
 
 #: event-ui.c:1235
 msgid "Calendar: Edit event"
-msgstr "Calindrî: candjî evenmint"
+msgstr "Kalendár: Upraviť udalosť"
 
 #: day_popup.c:171
 msgid "No appointments"
-msgstr "Nou radjoû"
+msgstr "Bez úloh"
 
 #: xsettings.c:105
 msgid "Cannot create XSettings client"
-msgstr "Dji n' sai ahiver li cliyint XSettings"
+msgstr "Nepodarilo sa vytvoriť klienta XNastavení"
 
 #: gtkdatesel.c:193
 msgid "%Y"
@@ -309,7 +310,7 @@ msgstr "%m"
 
 #: gtkdatesel.c:219
 msgid "Week %V"
-msgstr "Samwinne lº %V"
+msgstr "Týždeň %V"
 
 #: gtkdatesel.c:225
 #, c-format
@@ -318,4 +319,4 @@ msgstr "%a, %d"
 
 #: gpe-calendar.desktop.in.h:2
 msgid "GPE Calendar"
-msgstr "GPE Calindrî"
+msgstr "GPE Kalendár"

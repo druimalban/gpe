@@ -1,6 +1,7 @@
 2004-07-23  Florian Boor <florian.boor@kernelconcepts.de>
     
     * Released V 0.54
+    * added several translations to cvs
     * event_ui.c: Changes in keyboard control to use direction keys to navigate.
     * main.c: Improved handling of updates and some feedback if the "today" 
               button is active.
