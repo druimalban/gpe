@@ -24,5 +24,5 @@ fi
 
 # check if the user wants the owner info at all:
 if [ ! -e /etc/gpe/gpe-ownerinfo.dontshow ]; then
-    [ -x /usr/bin/gpe-ownerinfo ] && gpe-ownerinfo -t -g 240x120+0+200 &
+    [ -x /usr/bin/gpe-ownerinfo ] && gpe-ownerinfo -t -g 240x100+0+220 &
 fi

@@ -2,7 +2,7 @@
 
 GEOMETRY=
 if [ -x /usr/bin/gpe-ownerinfo ]; then
-  GEOMETRY="-geometry 240x200+0+0"
+  GEOMETRY="-geometry 240x220+0+0"
 fi
 TRANSPARENT=
 if [ -x /usr/X11R6/bin/xsetroot ]; then
