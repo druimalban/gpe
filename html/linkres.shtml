@@ -54,6 +54,11 @@ can be found on the
 <p>OpenOffice has a project for Document Editing on Small Devices: 
 <a href="http://xml.openoffice.org/xmerge/"XMerge</a>.
 </p>
+<p>Here is something that would allow to run <a
+href="http://www.winehq.com/"wine</a> on ARM:
+<a href="http://fabrice.bellard.free.fr/qemu/"QEMU x86 Emulator</a>.
+</p>
+
 
 <h2>SQL schemas</h2> 
 <p>The core storage model for environment-wide data such as PIM data and
