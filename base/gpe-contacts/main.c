@@ -1,4 +1,13 @@
 /*
+ * Copyright (C) 2001, 2002 Philip Blundell <philb@gnu.org>
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version
+ * 2 of the License, or (at your option) any later version.
+ */
+
+/*
  * $Id$
  *
  */
@@ -151,7 +160,7 @@ delete_contact(GtkWidget *widget, gpointer d)
 static void
 new_category (GtkWidget *w, gpointer p)
 {
-  gchar *name = smallbox(_("New category"), _("Name"), "");
+  gchar *name = smallbox(_("New Category"), _("Name"), "");
   if (name && name[0])
     {
       gchar *line_info[1];
@@ -237,7 +246,7 @@ configure(GtkWidget *widget, gpointer d)
 {
   GtkWidget *window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   GtkWidget *notebook = gtk_notebook_new ();
-  GtkWidget *editlabel = gtk_label_new (_("Editing layout"));
+  GtkWidget *editlabel = gtk_label_new (_("Editing Layout"));
   GtkWidget *editbox = edit_structure ();
   GtkWidget *categorieslabel = gtk_label_new (_("Categories"));
   GtkWidget *categoriesbox = config_categories_box ();
