@@ -1,5 +1,5 @@
-Package: gpe-lights3
-Version: 0.10
+Package: gpe-lights
+Version: 0.10-1
 Section: games
 Priority: optional
 Architecture: arm

@@ -32,6 +32,7 @@
 #include <gpe/init.h>
 #include <gpe/pixmaps.h>
 #include <gpe/picturebutton.h>
+#include <gpe/question.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
 
 #define _(x)  gettext(x)
@@ -122,7 +123,6 @@ paint (GdkRectangle *area)
 static void
 game_over (void)
 {
-  GtkWidget* dialog;
   gchar *msg;
   int r;
  
@@ -889,7 +889,7 @@ prefs (void)
 struct gpe_icon my_icons[] = {
   { "new", },
   { "preferences" },
-  { "icon", PREFIX "/share/pixmaps/lights.png" },
+  { "icon", PREFIX "/share/pixmaps/gpe-lights.png" },
   { "exit", },
   { "ok" },
   { "cancel" },

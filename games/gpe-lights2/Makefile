@@ -20,7 +20,7 @@ CFLAGS += -Wall
 CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 CFLAGS += -MD
 
-LDFLAGS += -L../../base/libgpewidget -lgpewidget
+LDFLAGS += -lgpewidget
 
 .SUFFIXES: .d
 
@@ -41,7 +41,7 @@ install: all
 	install -m 644 $(PACKAGE).png $(DESTDIR)$(PREFIX)/share/pixmaps/
 	install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications
 	install -d $(DESTDIR)$(PREFIX)/share/$(PACKAGE)
-	install -m 644 bulbs.png $(DESTDIR)$(PREFIX)/share/$(PACKAGE)
+	install -m 644 bulb.png $(DESTDIR)$(PREFIX)/share/$(PACKAGE)
 	install -m 644 oses.png $(DESTDIR)$(PREFIX)/share/$(PACKAGE)
 	install -m 644 colors.png $(DESTDIR)$(PREFIX)/share/$(PACKAGE)
 	install -m 644 face.png $(DESTDIR)$(PREFIX)/share/$(PACKAGE)
