@@ -317,7 +317,7 @@ button_clicked (GtkWidget *widget, gpointer udata)
   FileInfomation *file_info;
   file_info = (FileInfomation *) udata;
 
-  printf ("You clicked on %s\n", file_info->vfs->name);
+  printf ("You clicked on %s\n", file_info->filename);
 
   if (file_info->vfs->type == GNOME_VFS_FILE_TYPE_REGULAR)
     ask_open_with (file_info->filename);
@@ -329,10 +329,10 @@ gchar *
 find_icon_path (gchar *mime_type)
 {
   struct stat s;
-  gchar *mime_icon, *mime_path;
+  gchar *mime_icon, *mime_path, *p;
 
   mime_icon = gnome_vfs_mime_get_icon (mime_type);
-  if (mime_icon)
+  if (mime_icon != NULL)
   {
     if (mime_icon[0] == '/')
     {
@@ -340,16 +340,30 @@ find_icon_path (gchar *mime_type)
         return mime_icon;
     }
 
-    mime_path = g_strdup_printf (PREFIX FILEMANAGER_ICONS_PATH "/%s", mime_icon);
+    mime_path = g_strdup_printf (PREFIX FILEMANAGER_ICON_PATH "/%s", mime_icon);
     if (stat (mime_path, &s) == 0)
       return mime_path;
 
-    mime_path = g_strdup_printf (PREFIX DEFAULT_ICONS_PATH "/%s", mime_icon);
+    mime_path = g_strdup_printf (PREFIX DEFAULT_ICON_PATH "/%s", mime_icon);
     if (stat (mime_path, &s) == 0)
       return mime_path;
   }
 
-  return g_strdup (FILEMANAGER_ICON_PATH "/regular.png");
+  mime_icon = g_strdup (mime_type);
+  while ((p = strchr(mime_icon, '/')) != NULL)
+    *p = '-';
+
+  printf ("\n\nMIME FOO = %s\n\n", mime_icon);
+
+  mime_path = g_strdup_printf (PREFIX FILEMANAGER_ICON_PATH "/%s.png", mime_icon);
+  if (stat (mime_path, &s) == 0)
+    return mime_path;
+
+  mime_path = g_strdup_printf (PREFIX DEFAULT_ICON_PATH "/%s.png", mime_icon);
+  if (stat (mime_path, &s) == 0)
+    return mime_path;
+
+  return g_strdup (PREFIX FILEMANAGER_ICON_PATH "/regular.png");
 }
 
 void
@@ -360,17 +374,20 @@ add_icon (FileInfomation *file_info)
   gchar *mime_icon, *mime_type;
 
   if (file_info->vfs->type == GNOME_VFS_FILE_TYPE_DIRECTORY)
-    mime_icon = g_strdup (FILEMANAGER_ICON_PATH "/directory.png");
-  else if (file_info->vfs->type == GNOME_VFS_FILE_TYPE_REGULAR)
+    mime_icon = g_strdup (PREFIX FILEMANAGER_ICON_PATH "/directory.png");
+  else if (file_info->vfs->type == GNOME_VFS_FILE_TYPE_REGULAR || file_info->vfs->type == GNOME_VFS_FILE_TYPE_UNKNOWN)
   {
     mime_type = gnome_vfs_get_mime_type (file_info->filename);
     if (mime_type)
       mime_icon = find_icon_path (mime_type);
     else
-      mime_icon = g_strdup (FILEMANAGER_ICON_PATH "/regular.png");
-    printf ("Image Filename: %s\n", image_filename);
+      mime_icon = g_strdup (PREFIX FILEMANAGER_ICON_PATH "/regular.png");
   }
-  gpe_iconlist_add_item (GPE_ICONLIST (view_widget), file_info->vfs->name, image_filename, (gpointer) file_info);
+  else
+    mime_icon = g_strdup (PREFIX FILEMANAGER_ICON_PATH "/regular.png");
+
+  //printf ("Image Filename: %s\n", mime_icon);
+  gpe_iconlist_add_item (GPE_ICONLIST (view_widget), file_info->vfs->name, mime_icon, (gpointer) file_info);
 }
 
 gint
@@ -423,7 +440,7 @@ make_view (gchar *view)
       if (strcmp (current_directory, "/"))
         file_info->filename = g_strdup_printf ("%s/%s", current_directory, vfs_file_info->name);
       else
-        file_info->filename = g_strdup_printf ("/%s", "foo");
+        file_info->filename = g_strdup_printf ("/%s", vfs_file_info->name);
 
       file_info->vfs = vfs_file_info;
 
