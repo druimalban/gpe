@@ -1,5 +1,6 @@
 2004-07-27  Florian Boor  <florian.boor@kernelconcepts.de>
     
+    Released Version 0.17.
     * main.c: Impemented limiting access to homedir.
     * main.c: Changed order of buttons in main toolbar.
     * main.c: Changed "Goto Location" button to "Go!" and use stock item.
