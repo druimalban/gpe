@@ -362,7 +362,7 @@ networks_config_edit ()
 }
 
 void
-networks_config_window_close (GtkWidget *widget)
+networks_config_window_close (GtkWidget *window, GtkWidget *widget)
 {
   get_networks (g_object_get_data (G_OBJECT (widget), "network_combo"), g_object_get_data (G_OBJECT (widget), "network_hash"));
 }
@@ -380,12 +380,10 @@ networks_config_window (GtkWidget *widget)
   guint window_x = 240, window_y = 310;
 
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-  g_object_set_data (G_OBJECT (window), "network_combo", (gpointer) g_object_get_data (G_OBJECT (widget), "network_combo"));
-  g_object_set_data (G_OBJECT (window), "network_hash", (gpointer) g_object_get_data (G_OBJECT (widget), "network_hash"));
   gtk_window_set_title (GTK_WINDOW (window), "IRC Client - Configuration");
   gtk_widget_set_usize (GTK_WIDGET (window), window_x, window_y);
   gtk_signal_connect (GTK_OBJECT (window), "destroy",
-		      G_CALLBACK (networks_config_window_close), NULL);
+		      G_CALLBACK (networks_config_window_close), widget);
 
   gtk_widget_realize (window);
 

@@ -465,7 +465,7 @@ new_connection_dialog ()
   gtk_window_set_title (GTK_WINDOW (window), "IRC Client - New Connection");
   gtk_widget_set_usize (GTK_WIDGET (window), window_x, window_y);
   g_signal_connect (G_OBJECT (window), "destroy",
-                             G_CALLBACK (gtk_widget_destroy), NULL);
+                             G_CALLBACK (kill_widget), window);
 
   gtk_widget_realize (window);
 
