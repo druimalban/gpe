@@ -49,6 +49,10 @@ struct _GpeClockFace
   GdkGC *backing_gc;
   
   gboolean dragging_minute_hand;
+  gboolean do_grabs;
+  gboolean grabbed;
+
+  gulong hour_handler, minute_handler;
 
   double hour_angle, minute_angle;
 };
@@ -163,7 +167,7 @@ hand_angles (GpeClockFace *clock)
 
 static gint
 gpe_clock_face_expose (GtkWidget *widget,
-		  GdkEventExpose *event)
+		       GdkEventExpose *event)
 {
   GdkDrawable *drawable;
   GdkPixbuf *current_background;
@@ -291,9 +295,13 @@ gpe_clock_face_button_press (GtkWidget *w, GdkEventButton *b)
   else
     clock->dragging_minute_hand = FALSE;
 
-  gdk_pointer_grab (w->window, 
-		    FALSE, GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK,
-		    w->window, NULL, b->time);
+  if (clock->do_grabs)
+    {
+      if (gdk_pointer_grab (w->window, FALSE, 
+			    GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK,
+			    w->window, NULL, b->time) == GDK_GRAB_SUCCESS)
+	clock->grabbed = TRUE;
+    }
 
   return TRUE;
 }
@@ -301,7 +309,13 @@ gpe_clock_face_button_press (GtkWidget *w, GdkEventButton *b)
 static gboolean
 gpe_clock_face_button_release (GtkWidget *w, GdkEventButton *b)
 {
-  gdk_pointer_ungrab (b->time);
+  GpeClockFace *clock = GPE_CLOCK_FACE (w);
+
+  if (clock->grabbed)
+    {
+      clock->grabbed = FALSE;
+      gdk_pointer_ungrab (b->time);
+    }
 
   return TRUE;
 }
@@ -438,12 +452,20 @@ gpe_clock_face_realize (GtkWidget *widget)
     clock->can_render = FALSE;
 
   gpe_clock_face_prepare_xrender (widget);
+
+  clock->hour_handler = g_signal_connect (G_OBJECT (clock->hour_adj), "value_changed", 
+					  G_CALLBACK (adjustment_value_changed), clock);
+  clock->minute_handler = g_signal_connect (G_OBJECT (clock->minute_adj), "value_changed", 
+					    G_CALLBACK (adjustment_value_changed), clock);
 }
 
 static void
 gpe_clock_face_unrealize (GtkWidget *widget)
 {
   GpeClockFace *clock = GPE_CLOCK_FACE (widget);
+
+  g_signal_handler_disconnect (clock->hour_adj, clock->hour_handler);
+  g_signal_handler_disconnect (clock->minute_adj, clock->minute_handler);
 
   if (clock->can_render)
     {
@@ -504,6 +526,8 @@ gpe_clock_face_init (GpeClockFace *clock)
   clock->image_pict = clock->src_pict = 0;
   clock->backing_pixmap = NULL;
   clock->backing_gc = NULL;
+  clock->grabbed = FALSE;
+  clock->do_grabs = TRUE;
 }
 
 static void
@@ -528,6 +552,12 @@ gpe_clock_face_class_init (GpeClockFaceClass * klass)
   color.color.blue = 0xc000;
   color.color.red = color.color.green = 0;
   color.color.alpha = 0x8000;
+}
+
+void
+gpe_clock_face_set_do_grabs (GpeClockFace *clock, gboolean yes)
+{
+  clock->do_grabs = yes;
 }
 
 GType
@@ -562,9 +592,6 @@ gpe_clock_face_new (GtkAdjustment *hour, GtkAdjustment *minute)
 
   clock->hour_adj = hour;
   clock->minute_adj = minute;
-
-  g_signal_connect (G_OBJECT (hour), "value_changed", G_CALLBACK (adjustment_value_changed), clock);
-  g_signal_connect (G_OBJECT (minute), "value_changed", G_CALLBACK (adjustment_value_changed), clock);
 
   hand_angles (clock);
 

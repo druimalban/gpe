@@ -1,3 +1,28 @@
+2003-04-13  Philip Blundell  <philb@gnu.org>
+
+	* gtktimesel.c (button_press): New function.
+	(button_release): Likewise.
+	(do_popup): Likewise.
+	(gtk_time_sel_init): Set wrap on for buttons.  Add popup support.
+	(parent_class): Remove explicit zero init.
+
+	* gpeclockface.c (gpe_clock_face_realize): Connect signal handlers
+	here.
+	(gpe_clock_face_unrealize): Disconnect them here.
+	(gpe_clock_face_new): Don't do anything at all with them here.
+	(struct _GpeClockFace): Add hour_handler, minute_handler.
+
+2003-04-13  Philip Blundell  <philb@gnu.org>
+
+	* gpeclockface.c (struct _GpeClockFace): Add grabbed, do_grabs.
+	(gpe_clock_face_init): Initialise above new members.
+	(gpe_clock_face_button_press): Only grab if instructed.  Mind
+	result of gdk_pointer_grab.
+	(gpe_clock_face_button_release): Only ungrab pointer if we grabbed
+	it earlier.
+	(gpe_clock_face_set_do_grabs): New function.
+	* gpe/gpeclockface.h (gpe_clock_face_set_do_grabs): Add prototype.
+
 2003-04-12  Philip Blundell  <philb@gnu.org>
 
 	* gpeclockface.c (gpe_clock_face_unrealize): Reinstate

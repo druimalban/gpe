@@ -25,4 +25,6 @@ GtkType		gpe_clock_face_get_type (void);
 
 GtkWidget      *gpe_clock_face_new (GtkAdjustment *, GtkAdjustment *);
 
+void            gpe_clock_face_set_do_grabs (GpeClockFace *clock, gboolean yes);
+
 #endif

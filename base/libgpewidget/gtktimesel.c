@@ -9,7 +9,11 @@
 
 #include <libintl.h>
 #include <gtk/gtk.h>
+#include <gdk/gdkx.h>
+
 #include "gtktimesel.h"
+#include "gpeclockface.h"
+#include "pixmaps.h"
 
 #define _(x) gettext(x)
 
@@ -18,7 +22,94 @@ struct _GtkTimeSelClass
   GtkHBoxClass parent_class;
 };
 
-static GtkHBoxClass *parent_class = NULL;
+static GtkHBoxClass *parent_class;
+
+static GdkPixbuf *popup_button;
+
+static gboolean
+button_press (GtkWidget *w, GdkEventButton *b, GtkTimeSel *sel)
+{
+  GdkRectangle rect;
+
+  gdk_window_get_frame_extents (w->window, &rect);
+
+  if (b->x < 0 || b->y < 0 || b->x > rect.width || b->y > rect.height)
+    {
+      gdk_pointer_ungrab (b->time);
+
+      gtk_widget_hide (sel->popup);
+      gtk_widget_destroy (sel->popup);
+      sel->popup = NULL;
+
+      return TRUE;
+    }
+
+  gdk_pointer_grab (w->window, FALSE, 
+		    GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK,
+		    w->window, NULL, b->time);
+
+  return FALSE;
+}
+
+static gboolean
+button_release (GtkWidget *w, GdkEventButton *b, GtkTimeSel *sel)
+{
+  gdk_pointer_grab (w->window, FALSE, 
+		    GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK,
+		    NULL, NULL, b->time);
+
+  return FALSE;
+}
+
+static void
+do_popup (GtkWidget *button, GtkTimeSel *sel)
+{
+  if (sel->popup)
+    {
+      gtk_widget_hide (sel->popup);
+      gtk_widget_destroy (sel->popup);
+      sel->popup = NULL;
+    }
+  else
+    {
+      GtkWidget *clock;
+      GtkRequisition requisition;
+      gint x, y;
+      gint screen_width;
+      gint screen_height;
+      
+      sel->popup = gtk_window_new (GTK_WINDOW_POPUP);
+
+      clock = gpe_clock_face_new (GTK_ADJUSTMENT (sel->hour_adj), 
+				  GTK_ADJUSTMENT (sel->minute_adj));
+
+      gpe_clock_face_set_do_grabs (GPE_CLOCK_FACE (clock), FALSE);
+
+      gtk_container_add (GTK_CONTAINER (sel->popup), clock);
+
+      gdk_window_get_pointer (NULL, &x, &y, NULL);
+      gtk_widget_size_request (clock, &requisition);
+
+      screen_width = gdk_screen_width ();
+      screen_height = gdk_screen_height ();
+      
+      x = CLAMP (x - 2, 0, MAX (0, screen_width - requisition.width));
+      y = CLAMP (y + 4, 0, MAX (0, screen_height - requisition.height));
+      
+      gtk_widget_set_uposition (sel->popup, MAX (x, 0), MAX (y, 0));
+
+      g_signal_connect (G_OBJECT (clock), "button_press_event", 
+			G_CALLBACK (button_press), sel);
+      g_signal_connect (G_OBJECT (clock), "button_release_event", 
+			G_CALLBACK (button_release), sel);
+
+      gtk_widget_show_all (sel->popup);
+
+      gdk_pointer_grab (clock->window, FALSE, 
+			GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK,
+			NULL, NULL, GDK_CURRENT_TIME);
+    }
+}
 
 static void
 gtk_time_sel_init (GtkTimeSel *sel)
@@ -29,11 +120,30 @@ gtk_time_sel_init (GtkTimeSel *sel)
   sel->hour_spin = gtk_spin_button_new (GTK_ADJUSTMENT (sel->hour_adj), 1, 0);
   sel->minute_spin = gtk_spin_button_new (GTK_ADJUSTMENT (sel->minute_adj), 1, 0);
 
+  gtk_spin_button_set_wrap (GTK_SPIN_BUTTON (sel->hour_spin), TRUE);
+  gtk_spin_button_set_wrap (GTK_SPIN_BUTTON (sel->minute_spin), TRUE);
+
   sel->label = gtk_label_new (":");
+
+  if (popup_button == NULL)
+    popup_button = gpe_try_find_icon ("clock-popup", NULL);
+
+  sel->button = gtk_button_new ();
+
+  if (popup_button)
+    {
+      GtkWidget *image = gtk_image_new_from_pixbuf (popup_button);
+      gtk_container_add (GTK_CONTAINER (sel->button), image);
+    }
+
+  sel->popup = NULL;
 
   gtk_box_pack_start (GTK_BOX (sel), sel->hour_spin, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (sel), sel->label, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (sel), sel->minute_spin, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (sel), sel->button, FALSE, FALSE, 0);
+
+  g_signal_connect (G_OBJECT (sel->button), "clicked", G_CALLBACK (do_popup), sel);
 }
 
 static void

@@ -28,6 +28,8 @@ struct _GtkTimeSel
   GtkObject *hour_adj, *minute_adj;
   GtkWidget *hour_spin, *minute_spin;
   GtkWidget *label;
+  GtkWidget *button;
+  GtkWidget *popup;
 };
 
 typedef struct _GtkTimeSel	   GtkTimeSel;
