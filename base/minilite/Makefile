@@ -2,7 +2,7 @@ PACKAGE = minilite
 PREFIX = /usr/local
 CVSBUILD = yes
 DEBUG = no
-VERSION = 0.11
+VERSION = 0.20
 
 LINGUAS = 
 
@@ -16,7 +16,8 @@ else
 CFLAGS += -Os -fomit-frame-pointer
 endif
 
-LDFLAGS = -L/usr/X11R6/lib -lX11 -lXext -lmb
+CFLAGS += `pkg-config --cflags gtk+-2.0` -I../libgpewidget
+LDFLAGS += -lgpewidget `pkg-config --libs gtk+-2.0`
 
 CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 CFLAGS += -MD
