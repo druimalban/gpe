@@ -110,7 +110,7 @@ channel_active(const gchar *name)
 	if (!name) 
 		return FALSE;
 
-	if (show_channels)
+	if (!show_channels)
 		return TRUE;
 	
 	while (show_channels[i])

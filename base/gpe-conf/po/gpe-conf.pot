@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-09-09 17:52+0200\n"
+"POT-Creation-Date: 2004-09-13 19:12+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,21 +16,26 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: main.c:308
+#: main.c:314
 #, c-format
 msgid "'task_nameserver' needs a new (and only one) nameserver as argument.\n"
 msgstr ""
 
-#: main.c:371
+#: main.c:327
+#, c-format
+msgid "'task_sound' needs (s)ave/(r)estore as argument.\n"
+msgstr ""
+
+#: main.c:386
 msgid "Warning: PCMCIA init failed."
 msgstr ""
 
-#: main.c:403
+#: main.c:418
 #, c-format
 msgid "This mode is disabled, please try:\n"
 msgstr ""
 
-#: main.c:404
+#: main.c:419
 #, c-format
 msgid ""
 "\n"
@@ -38,12 +43,12 @@ msgid ""
 "where AppletName is in:\n"
 msgstr ""
 
-#: main.c:417
+#: main.c:435
 #, c-format
 msgid "Applet %s unknown!\n"
 msgstr ""
 
-#: main.c:418
+#: main.c:436
 #, c-format
 msgid ""
 "\n"
@@ -1389,22 +1394,22 @@ msgstr ""
 
 #: tools/interface.c:1894
 #, c-format
-msgid "Address:\t%s\n"
+msgid "Address: %s\n"
 msgstr ""
 
 #: tools/interface.c:1899
 #, c-format
-msgid "P-t-P:\t%s\n"
+msgid "P-t-P: %s\n"
 msgstr ""
 
 #: tools/interface.c:1903
 #, c-format
-msgid "Netmask:\t%s\n"
+msgid "Netmask: %s\n"
 msgstr ""
 
 #: tools/interface.c:1907
 #, c-format
-msgid "Broadcast:\t%s\n"
+msgid "Broadcast: %s\n"
 msgstr ""
 
 #: tools/interface.c:1919
@@ -1450,6 +1455,18 @@ msgstr ""
 #: tools/interface.c:1972
 #, c-format
 msgid "Unknown"
+msgstr ""
+
+#: sound/sound.c:169 gpe-conf-sound.desktop.in.h:1
+msgid "Sound Settings"
+msgstr ""
+
+#: sound/sound.c:176
+msgid "Mute everything"
+msgstr ""
+
+#: sound/soundctrl.c:291
+msgid "Volume"
 msgstr ""
 
 #: main-info.c:67
@@ -1823,4 +1840,8 @@ msgstr ""
 
 #: gpe-conf-sysinfo.desktop.in.h:1
 msgid "System Info"
+msgstr ""
+
+#: gpe-conf-sound.desktop.in.h:2
+msgid "Sound defaults and setup"
 msgstr ""

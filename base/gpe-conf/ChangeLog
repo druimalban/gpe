@@ -1,5 +1,6 @@
 2004-09-13	Florian Boor  	<florian.boor@kernelconcepts.de>
-
+	
+	* soundctrl.c: Re-enabled channel filtering.
 	* sound.c: Added initialisation of audio device.
 	* sound/*: Implemented muting, restoring of mute status.
 	* tasks.c: Removed obsolete save line.
