@@ -40,7 +40,7 @@ handle_net_wlan (char *action, char *interface)
 
       if (pid == 0)
 	{
-	  execlp ("miniwave", "miniwave");
+	  execlp ("miniwave", "miniwave", NULL);
 	  _exit (1);
 	}
 
