@@ -73,7 +73,7 @@ clean:
 
 distclean: clean
 	rm -f *.ipk
-	rm -f dist/usr/bin/*
+	rm -rf familiar/dist
 
 include ../build/Makefile.translation
 include ../build/Makefile.dpkg_ipkg
