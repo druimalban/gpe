@@ -144,11 +144,9 @@ install-program: gpe-conf
 	mkdir -p $(DESTDIR)/$(PREFIX)/bin
 	$(INSTALL) gpe-conf $(DESTDIR)$(PREFIX)/bin/gpe-conf
 	$(STRIP) $(DESTDIR)$(PREFIX)/bin/gpe-conf
-	mkdir -p $(DESTDIR)$(PREFIX)/lib/menu
 	mkdir -p $(DESTDIR)$(PREFIX)/share/pixmaps
 	for i in $(PIXMAPS); do install -m 644 -D pixmaps/$$i $(DESTDIR)$(PREFIX)/share/pixmaps/$$i; done
 	export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:../libgpewidget/
-	$(INSTALL) -m 644 gpe-conf.menu_tmp $(DESTDIR)$(PREFIX)/lib/menu/gpe-conf
 	mkdir -p  $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default
 	$(INSTALL) -m 644 pixmaps/ipaq.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/ipaq.png
 	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
