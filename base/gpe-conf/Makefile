@@ -191,7 +191,11 @@ install-program: all all-desktop
 
 clean:
 	rm -f $(PACKAGE) gpe-info gpe-conf.pc $(OBJS) $(OBJS_INFO) *~ */*~ *.ipk *.o sleep/*.o *.upload.html *.asc *.desktop *.d
-
+	rm -f ipaqscreen/*.d pcmcia/*.d sleep/*.d widgets/*.d tools/*.d users/*.d	
+	
+	
+	
+	
 include $(BUILD)/Makefile.dpkg_ipkg
 include $(BUILD)/Makefile.translation
 
