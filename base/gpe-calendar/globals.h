@@ -23,6 +23,8 @@ extern time_t viewtime;
 
 extern void update_current_view (void);
 
+extern guint days_in_month (guint year, guint month);
+
 #define SECONDS_IN_DAY (24*60*60)
 
 /* stuff that could perhaps be configurable */

@@ -25,6 +25,7 @@
 #include "week_view.h"
 #include "future_view.h"
 #include "year_view.h"
+#include "month_view.h"
 
 extern void about (void);
 
@@ -34,9 +35,25 @@ GdkFont *yearfont;
 GList *times;
 time_t viewtime;
 
-static GtkWidget *window, *day, *week, *future, *year, *current_view;
+static GtkWidget *window, *day, *week, *month, *future, *year, *current_view;
 
 guint window_x = 240, window_y = 310;
+
+static guint nr_days[] = { 31, 28, 31, 30, 31, 30, 
+			   31, 31, 30, 31, 30, 31 };
+
+guint
+days_in_month (guint year, guint month)
+{
+  if (month == 1)
+    {
+      return ((year % 4) == 0
+	      && ((year % 100) != 0
+		  || (year % 400) == 0)) ? 29 : 28;
+    }
+
+  return nr_days[month];
+}
 
 void
 update_current_view (void)
@@ -78,6 +95,12 @@ set_week_view(void)
 }
 
 static void
+set_month_view(void)
+{
+  new_view (month);
+}
+
+static void
 set_future_view(void)
 {
   new_view (future);
@@ -103,6 +126,7 @@ static GtkItemFactoryEntry menu_items[] = {
   { "/View/_Future",	   NULL,	 set_future_view, 0, NULL },
   { "/View/_Day",          NULL,         set_day_view, 0, NULL },
   { "/View/_Week",         NULL,         set_week_view, 0, NULL },
+  { "/View/_Month",        NULL,         set_month_view, 0, NULL },
   { "/View/_Year",         NULL,         set_year_view, 0, NULL },
   { "/_New",               NULL,         NULL, 0, "<Branch>" },
   { "/New/_Appointment",   NULL,         new_appointment, 0, NULL },
@@ -176,12 +200,14 @@ main(int argc, char *argv[])
   time (&viewtime);
   week = week_view ();
   day = day_view ();
+  month = month_view ();
   future = future_view ();
   year = year_view ();
 
   gtk_box_pack_start (GTK_BOX (vbox), menubar, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), day, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), week, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), month, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), future, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), year, TRUE, TRUE, 0);
 

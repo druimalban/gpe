@@ -22,6 +22,7 @@
 #include "gtkdatesel.h"
 
 static GtkWidget *g_draw;
+static GtkWidget *cal[12];
 
 static const nl_item months[] = { MON_1, MON_2, MON_3, MON_4,
 				  MON_5, MON_6, MON_7, MON_8,
@@ -279,6 +280,9 @@ year_view(void)
       if (w > maxw)
 	maxw = w;
     }
+
+  for (d = 0; d < 12; d++)
+    cal[d] = gtk_calendar_new ();
 
   day_pitch = maxw + 2;
   day_vpitch = yearfont->ascent + yearfont->descent;

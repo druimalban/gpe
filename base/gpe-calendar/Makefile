@@ -1,6 +1,6 @@
 #DEBUG = yes
 
-MEMBERS = main day_view week_view future_view event-ui about event-db year_view
+MEMBERS = main day_view week_view future_view event-ui about event-db year_view month_view
 
 CFLAGS = `gtk-config --cflags` -D_GNU_SOURCE -Wall -I../libgpewidget
 ifeq ($(DEBUG),yes)

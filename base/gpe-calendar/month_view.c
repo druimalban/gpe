@@ -20,7 +20,7 @@
 #include "event-ui.h"
 #include "gtkdatesel.h"
 #include "globals.h"
-#include "day_view.h"
+#include "month_view.h"
 
 static GSList *strings;
 static GtkWidget *day_list;
@@ -92,17 +92,18 @@ selection_made( GtkWidget      *clist,
 }
 
 static gint
-day_view_update ()
+month_view_update ()
 {
-  guint hour, row = 0;
+  guint day, row = 0;
   time_t start, end;
   struct tm tm_start, tm_end;
   char buf[10];
   gchar *line_info[2];
-  GSList *day_events[24];
+  GSList *day_events[32];
   guint width = 0, i;
   GSList *iter;
   static gboolean width_set;
+  guint days;
 
   gtk_date_sel_set_time (GTK_DATE_SEL (datesel), viewtime);
       
@@ -145,37 +146,44 @@ day_view_update ()
       strings = NULL;
     }
   
-  for (hour = 0; hour <= 23; hour++)
+  localtime_r (&viewtime, &tm_start);
+  days = days_in_month (tm_start.tm_year + 1900, tm_start.tm_mon);
+
+  for (day = 1; day <= days; day++)
     {
       localtime_r (&viewtime, &tm_start);
 
-      tm_start.tm_hour = hour;
+      tm_start.tm_mday = day;
+      tm_start.tm_hour = 0;
       tm_start.tm_min = 0;
       tm_start.tm_sec = 0;
       start = mktime (&tm_start);
       localtime_r (&viewtime, &tm_end);
-      tm_end.tm_hour = hour+1;
-      tm_end.tm_min = 0;
-      tm_end.tm_sec = 0;
+      tm_start.tm_mday = day;
+      tm_end.tm_hour = 23;
+      tm_end.tm_min = 59;
+      tm_end.tm_sec = 59;
       end = mktime (&tm_end);
 
-      day_events[hour] = event_db_list_for_period (start, end-1);
+      day_events[day] = event_db_list_for_period (start, end);
       
-      for (iter = day_events[hour]; iter; iter = iter->next)
+      for (iter = day_events[day]; iter; iter = iter->next)
 	((event_t)iter->data)->mark = FALSE;
     }
 
-  for (hour = 0; hour <= 23; hour++)
+  for (day = 1; day <= days; day++)
     {
       guint w;
       gchar *text = NULL;
       event_t ev = NULL;
  
-      tm_start.tm_hour = hour;
+      tm_start.tm_mday = day;
+      tm_start.tm_hour = 0;
       tm_start.tm_min = 0;
       tm_start.tm_sec = 0;
+      mktime (&tm_start);
 
-      for (iter = day_events[hour]; iter; iter = iter->next)
+      for (iter = day_events[day]; iter; iter = iter->next)
 	{
 	  ev = (event_t) iter->data;
 
@@ -189,7 +197,7 @@ day_view_update ()
 	} 
 
       line_info[1] = text;
-      strftime (buf, sizeof (buf), "%R", &tm_start);
+      strftime (buf, sizeof (buf), "%a %d", &tm_start);
       line_info[0] = buf;
      
       if (! width_set)
@@ -205,7 +213,7 @@ day_view_update ()
 	gtk_clist_set_row_data (GTK_CLIST (day_list), row, ev);
       
       gtk_clist_set_cell_style (GTK_CLIST (day_list), row, 1, 
-				day_events[hour] ? dark_style : light_style); 
+				day_events[day] ? dark_style : light_style); 
       row++;
 
       for (; iter; iter = iter->next)
@@ -229,8 +237,8 @@ day_view_update ()
        } 
     }
 
-  for (hour = 0; hour <= 23; hour++)
-    event_db_list_destroy (day_events[hour]);
+  for (day = 1; day <= days; day++)
+    event_db_list_destroy (day_events[day]);
 
   for (i = 0; i < row; i++)
     gtk_clist_set_cell_style (GTK_CLIST (day_list), i, 0, time_style);
@@ -251,16 +259,16 @@ changed_callback(GtkWidget *widget,
 		 GtkWidget *clist)
 {
   viewtime = gtk_date_sel_get_time (GTK_DATE_SEL (widget));
-  day_view_update ();
+  month_view_update ();
 }
 
 GtkWidget *
-day_view(void)
+month_view(void)
 {
   GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
   GtkWidget *scrolled_window = gtk_scrolled_window_new (NULL, NULL);
 
-  datesel = gtk_date_sel_new (GTKDATESEL_FULL);
+  datesel = gtk_date_sel_new (GTKDATESEL_MONTH);
   
   day_list = gtk_clist_new (2);
   
@@ -280,7 +288,7 @@ day_view(void)
 		     GTK_SIGNAL_FUNC (changed_callback), day_list);
   
   gtk_object_set_data (GTK_OBJECT (vbox), "update_hook", 
-		       (gpointer) day_view_update);
+		       (gpointer) month_view_update);
 
   return vbox;
 }
