@@ -17,12 +17,15 @@ XLIB=-L$(LIBDIR) -lX11 `gdk-pixbuf-config --libs`
 
 all:	host
 
-install-program: all
+install-program: all pdamaze.desktop
 	install -d $(DESTDIR)$(PREFIX)/bin
 	install pdamaze.host $(DESTDIR)$(PREFIX)/bin/
 	install -d $(DESTDIR)$(PREFIX)/share/pdamaze
 	for i in images/*.png; do install -m 664 $$i $(DESTDIR)$(PREFIX)/share/pdamaze/; done
-	install -m 644 pdamaze.xpm $(DESTDIR)$(PREFIX)/share/pixmaps
+	install -d $(DESTDIR)$(PREFIX)/share/applications
+	install -m 644 pdamaze.desktop $(DESTDIR)$(PREFIX)/share/applications/
+	install -d $(DESTDIR)$(PREFIX)/share/pixmaps
+	install -m 644 pdamaze.png $(DESTDIR)$(PREFIX)/share/pixmaps
 
 host:
 	make \
@@ -56,3 +59,5 @@ $(TARGET):	pdamaze.c
 	$(STRIP) --remove-section .comment $(TARGET)
 
 include ../../base/build/Makefile.dpkg_ipkg
+include ../../base/build/Makefile.translation
+

@@ -1,8 +1,0 @@
-?package(pdamaze): \
- needs=x11 \
- title="PDA Maze" \
- logtitle="PDA Maze" \
- command=pdamaze \
- icon48=/usr/share/pixmaps/pdamaze.xpm \
- section=Games \
- windowtitle=pdamaze

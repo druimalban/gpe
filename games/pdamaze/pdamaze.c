@@ -15,7 +15,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <X11/Xlib.h>
-#include <X11/xpm.h>
 #include <X11/keysym.h>
 #include <X11/Xutil.h>
 #include <X11/Xatom.h>
@@ -129,7 +128,7 @@ XKeyboardState kbstate;
 
 int timer_mode, map_mode, maze_size, sound, timer;
 
-int xpos, ypos, dir;
+int epos, ypos, dir;
 
 
 int maze[MAX_SIZE][MAX_SIZE],

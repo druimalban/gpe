@@ -1,0 +1,7 @@
+[Desktop Entry]
+_Name=PDA Maze
+_Comment=PDA Maze
+Exec=pdamaze
+Icon=pdamaze.png
+Type=Application
+Categories=Games
