@@ -111,9 +111,9 @@ int main (int argc, char *argv[])
 		 (GtkSignalFunc) on_btnDelete_clicked, NULL);
 	gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
 	
-	pw =  gtk_image_new_from_pixbuf(gpe_find_icon ("exit"));
-	gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Exit"),
-		_("Exit"), _("Exit"), pw, (GtkSignalFunc) on_GPE_WLANCFG_de_event, NULL);
+//	pw =  gtk_image_new_from_pixbuf(gpe_find_icon ("exit"));
+	gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_QUIT,_("Exit"),
+		_("Exit"), (GtkSignalFunc) on_GPE_WLANCFG_de_event, NULL, -1);
 	
 	
 	

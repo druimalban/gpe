@@ -14,7 +14,7 @@
 
 PACKAGE = gpe-wlancfg
 PREFIX = /usr/local
-DEBUG = yes
+DEBUG = no
 LINGUAS = de pt_PT
 VERSION = 0.2.1
 GTK2 = yes
@@ -33,7 +33,7 @@ endif
 #GTKCFLAGS = `pkg-config --cflags gtk+-2.0` `pkg-config --cflags gthread-2.0` -DGTK_ENABLE_BROKEN
 #GTKLDFLAGS += `pkg-config --libs gtk+-2.0` `pkg-config --libs gthread-2.0`
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0` 
-GTKLDFLAGS += `pkg-config --libs gtk+-2.0` -lfreetype
+GTKLDFLAGS += `pkg-config --libs gtk+-2.0` -lfreetype -lXinerama
 
 CPPFLAGS = $(GTKCFLAGS) -D_GNU_SOURCE -I../libgpewidget 
 ifeq ($(DEBUG),yes)
