@@ -44,6 +44,7 @@
 
 #define TS_DEV "/dev/touchscreen/0raw"
 #define PROC_BATTERY "/proc/asic/battery"
+#define PROC_APM "/proc/apm"
 
 /* local types and structs */
 
@@ -71,177 +72,235 @@ static GtkWidget *vbox;
 t_infowidgets batt_int;
 t_infowidgets batt_ext;
 
-int TSfd;
+static int TSfd;
+FILE *file_apm = NULL;
 
 /* local functions */
 
 
 void init_device()
 {
-  TSfd=open(TS_DEV, O_RDWR);
-  if (TSfd < 0) {
-    g_print(_("could not open touchscreen device '%s'\n"), TS_DEV);
-    perror("open");
-  };
+	/* check if there is an iPaq touchscreen device, open it */
+	TSfd=open(TS_DEV, O_RDWR);
+	if (TSfd < 0) {
+ 		g_print(_("could not open touchscreen device '%s'\n"), TS_DEV);
+ 		perror("open");
+	};
+	
+	/* then check if we have apm support available*/
+	if (!access(PROC_APM,R_OK))
+		file_apm = fopen(PROC_APM,"r");
 }
 
 
 gint update_bat_values(gpointer data)
 {
+gchar percstr[9];
+gchar tmp[128];
 #ifdef MACH_IPAQ
 static struct h3600_battery battery_val;
 float bperc;
-gchar percstr[9];
-gchar tmp[128];
 gboolean islearning = FALSE;
 
 	parse_file(PROC_BATTERY," Is learning? %*s %s",tmp);
 	if (strstr(tmp,"yes"))
 		islearning = TRUE;
 	
-	if (ioctl(TSfd, GET_BATTERY_STATUS, &battery_val) != 0)
+	if (ioctl(TSfd, GET_BATTERY_STATUS, &battery_val) == 0)
+	{
+		if (battery_val.battery_count < 2) {
+			gtk_widget_set_sensitive(batt_ext.bar, FALSE);
+			gtk_widget_set_sensitive(batt_ext.label, FALSE);
+			gtk_widget_set_sensitive(batt_ext.lstate, FALSE);
+			gtk_widget_set_sensitive(batt_ext.lchem, FALSE);
+			gtk_widget_set_sensitive(batt_ext.lvoltage, FALSE);
+			gtk_widget_set_sensitive(batt_ext.llifetime, FALSE);
+		}
+		else
+		{
+			gtk_widget_set_sensitive(batt_ext.bar, TRUE);
+			gtk_widget_set_sensitive(batt_ext.label, TRUE);
+			gtk_widget_set_sensitive(batt_ext.lstate, TRUE);
+			gtk_widget_set_sensitive(batt_ext.lchem, TRUE);
+			gtk_widget_set_sensitive(batt_ext.lvoltage, TRUE);
+			gtk_widget_set_sensitive(batt_ext.llifetime, TRUE);
+		}
+		
+		bperc=(float)battery_val.battery[0].percentage / (float)100;
+		if (bperc > 1.0)
+			bperc = 1.0;
+		
+		gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (batt_int.bar),bperc);
+		toolbar_set_style (batt_int.bar,  90 - (int) (bperc*100));
+		sprintf(percstr,"%d %%",(unsigned char)battery_val.battery[0].percentage);
+		gtk_progress_bar_set_text(GTK_PROGRESS_BAR(batt_int.bar),percstr);
+	
+		if ((battery_val.battery[0].chemistry > 0) && (battery_val.battery[0].chemistry <= 0x05))
+			gtk_label_set_text(GTK_LABEL(batt_int.lchem),bat_chemistries[battery_val.battery[0].chemistry]);
+	
+		switch (battery_val.battery[0].status) {
+			case H3600_BATT_STATUS_HIGH:
+				sprintf(tmp,"%s",_("Status: high"));
+				break;
+			case H3600_BATT_STATUS_LOW:
+				sprintf(tmp,"%s",_("Status: low"));
+				break;
+			case H3600_BATT_STATUS_CRITICAL:
+				sprintf(tmp,"%s",_("Status: critical"));
+				break;
+			case H3600_BATT_STATUS_CHARGING:
+				sprintf(tmp,"%s",_("Status: charging"));
+				break;
+			case H3600_BATT_STATUS_CHARGE_MAIN:
+				sprintf(tmp,"%s",_("Status: charge main"));
+				break;
+			case H3600_BATT_STATUS_DEAD:
+				sprintf(tmp,"%s",_("Status: dead"));
+				break;
+			case H3600_BATT_STATUS_FULL:
+				sprintf(tmp,"%s",_("Status: full"));
+				break;
+			case H3600_BATT_STATUS_NOBATT:
+				sprintf(tmp,"%s",_("Status: no battery"));
+				break;
+			default:
+				sprintf(tmp,"%s",_("Status: unknown"));
+				break;
+		};
+	
+		if (islearning)
+			sprintf(tmp+strlen(tmp)," (%s)",_("learning"));
+		
+		gtk_label_set_text(GTK_LABEL(batt_int.lstate),tmp);
+	
+		sprintf(tmp,"%s: %d mV",_("Voltage"),battery_val.battery[0].voltage * 5000 / 1024);
+		gtk_label_set_text(GTK_LABEL(batt_int.lvoltage),tmp);
+	
+		if (battery_val.battery[0].life == 65535)
+			sprintf(tmp,"%s",_("AC connected"));
+		else
+			sprintf(tmp,"%s: %d min.",_("Lifetime"),battery_val.battery[0].life);
+		
+		gtk_label_set_text(GTK_LABEL(batt_int.llifetime),tmp);
+	
+		if (battery_val.battery_count > 1) {
+			bperc=(float)battery_val.battery[1].percentage / (float)100;
+			if (bperc > 1.0)
+				bperc = 1.0;
+			gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (batt_ext.bar),bperc);
+			toolbar_set_style (batt_ext.bar,  90 - (int) (bperc*100));
+			sprintf(percstr,"%d %%",(unsigned char)battery_val.battery[1].percentage);
+			gtk_progress_bar_set_text(GTK_PROGRESS_BAR(batt_ext.bar),percstr);
+		
+			if ((battery_val.battery[1].chemistry > 0) && (battery_val.battery[1].chemistry <= 0x05))
+				gtk_label_set_text(GTK_LABEL(batt_ext.lchem),bat_chemistries[battery_val.battery[1].chemistry]);
+		
+			switch (battery_val.battery[1].status) {
+			case H3600_BATT_STATUS_HIGH:
+					gtk_label_set_text(GTK_LABEL(batt_ext.lstate),_("Status: high"));
+					break;
+				case H3600_BATT_STATUS_LOW:
+					gtk_label_set_text(GTK_LABEL(batt_ext.lstate),_("Status: low"));
+					break;
+				case H3600_BATT_STATUS_CRITICAL:
+					gtk_label_set_text(GTK_LABEL(batt_ext.lstate),_("Status: critical"));
+					break;
+				case H3600_BATT_STATUS_CHARGING:
+					gtk_label_set_text(GTK_LABEL(batt_int.lstate),_("Status: charging"));
+					break;
+				case H3600_BATT_STATUS_CHARGE_MAIN:
+					gtk_label_set_text(GTK_LABEL(batt_ext.lstate),_("Status: charge main"));
+					break;
+				case H3600_BATT_NOT_INSTALLED:
+					gtk_label_set_text(GTK_LABEL(batt_ext.lstate),_("Status: not installed"));
+					break;
+				case H3600_BATT_STATUS_FULL:
+					gtk_label_set_text(GTK_LABEL(batt_ext.lstate),_("Status: full"));
+					break;
+				case H3600_BATT_STATUS_NOBATT:
+					gtk_label_set_text(GTK_LABEL(batt_ext.lstate),_("Status: no battery"));
+					break;
+				default:
+					gtk_label_set_text(GTK_LABEL(batt_ext.lstate),_("Status: unknown"));
+					break;
+			};
+	
+		sprintf(tmp,"%s: %d mV",_("Voltage"),battery_val.battery[1].voltage * 5000 / 1024);
+		gtk_label_set_text(GTK_LABEL(batt_ext.lvoltage),tmp);
+	
+		if (battery_val.battery[1].life == 65535)
+			sprintf(tmp,"%s",_("AC connected"));
+		else
+			sprintf(tmp,"%s: %d min.",_("Lifetime"),battery_val.battery[1].life);
+		gtk_label_set_text(GTK_LABEL(batt_ext.llifetime),tmp);
+			
+		} else {
+			gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(batt_ext.bar),0);
+			gtk_progress_bar_set_text(GTK_PROGRESS_BAR(batt_ext.bar),"");
+		
+			gtk_label_set_text(GTK_LABEL(batt_ext.lchem),_("not installed"));
+		
+			gtk_label_set_text(GTK_LABEL(batt_ext.lstate),_("Status: unknown"));
+	
+			gtk_label_set_text(GTK_LABEL(batt_ext.lvoltage),_("Voltage: unknown"));
+	
+			gtk_label_set_text(GTK_LABEL(batt_ext.llifetime),_("Lifetime: unknown"));
+		}
 		return TRUE;
-
-	if (battery_val.battery_count < 2) {
+	}
+#endif
+	if (file_apm)
+	{
+		int percent;
+		int remaining; 
+		
+		/* apm knows only about one battery */
 		gtk_widget_set_sensitive(batt_ext.bar, FALSE);
 		gtk_widget_set_sensitive(batt_ext.label, FALSE);
 		gtk_widget_set_sensitive(batt_ext.lstate, FALSE);
 		gtk_widget_set_sensitive(batt_ext.lchem, FALSE);
 		gtk_widget_set_sensitive(batt_ext.lvoltage, FALSE);
 		gtk_widget_set_sensitive(batt_ext.llifetime, FALSE);
-	}
-	else
-	{
-		gtk_widget_set_sensitive(batt_ext.bar, TRUE);
-		gtk_widget_set_sensitive(batt_ext.label, TRUE);
-		gtk_widget_set_sensitive(batt_ext.lstate, TRUE);
-		gtk_widget_set_sensitive(batt_ext.lchem, TRUE);
-		gtk_widget_set_sensitive(batt_ext.lvoltage, TRUE);
-		gtk_widget_set_sensitive(batt_ext.llifetime, TRUE);
-	}
-	
-	bperc=(float)battery_val.battery[0].percentage / (float)100;
-	if (bperc > 1.0)
-		bperc = 1.0;
-	
-	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (batt_int.bar),bperc);
-	toolbar_set_style (batt_int.bar,  90 - (int) (bperc*100));
-	sprintf(percstr,"%d %%",(unsigned char)battery_val.battery[0].percentage);
-	gtk_progress_bar_set_text(GTK_PROGRESS_BAR(batt_int.bar),percstr);
-
-	if ((battery_val.battery[0].chemistry > 0) && (battery_val.battery[0].chemistry <= 0x05))
-		gtk_label_set_text(GTK_LABEL(batt_int.lchem),bat_chemistries[battery_val.battery[0].chemistry]);
-
-	switch (battery_val.battery[0].status) {
-		case H3600_BATT_STATUS_HIGH:
-			sprintf(tmp,"%s",_("Status: high"));
-			break;
-		case H3600_BATT_STATUS_LOW:
-			sprintf(tmp,"%s",_("Status: low"));
-			break;
-		case H3600_BATT_STATUS_CRITICAL:
-			sprintf(tmp,"%s",_("Status: critical"));
-			break;
-		case H3600_BATT_STATUS_CHARGING:
-			sprintf(tmp,"%s",_("Status: charging"));
-			break;
-		case H3600_BATT_STATUS_CHARGE_MAIN:
-			sprintf(tmp,"%s",_("Status: charge main"));
-			break;
-		case H3600_BATT_STATUS_DEAD:
-			sprintf(tmp,"%s",_("Status: dead"));
-			break;
-		case H3600_BATT_STATUS_FULL:
-			sprintf(tmp,"%s",_("Status: full"));
-			break;
-		case H3600_BATT_STATUS_NOBATT:
-			sprintf(tmp,"%s",_("Status: no battery"));
-			break;
-		default:
-			sprintf(tmp,"%s",_("Status: unknown"));
-			break;
-	};
-
-	if (islearning)
-		sprintf(tmp+strlen(tmp)," (%s)",_("learning"));
-	
-	gtk_label_set_text(GTK_LABEL(batt_int.lstate),tmp);
-
-	sprintf(tmp,"%s: %d mV",_("Voltage"),battery_val.battery[0].voltage * 5000 / 1024);
-	gtk_label_set_text(GTK_LABEL(batt_int.lvoltage),tmp);
-
-	if (battery_val.battery[0].life == 65535)
-		sprintf(tmp,"%s",_("AC connected"));
-	else
-		sprintf(tmp,"%s: %d min.",_("Lifetime"),battery_val.battery[0].life);
-	
-	gtk_label_set_text(GTK_LABEL(batt_int.llifetime),tmp);
-
-	if (battery_val.battery_count > 1) {
-		bperc=(float)battery_val.battery[1].percentage / (float)100;
-		if (bperc > 1.0)
-			bperc = 1.0;
-		gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (batt_ext.bar),bperc);
-		toolbar_set_style (batt_ext.bar,  90 - (int) (bperc*100));
-		sprintf(percstr,"%d %%",(unsigned char)battery_val.battery[1].percentage);
-		gtk_progress_bar_set_text(GTK_PROGRESS_BAR(batt_ext.bar),percstr);
-	
-		if ((battery_val.battery[1].chemistry > 0) && (battery_val.battery[1].chemistry <= 0x05))
-			gtk_label_set_text(GTK_LABEL(batt_ext.lchem),bat_chemistries[battery_val.battery[1].chemistry]);
-	
-		switch (battery_val.battery[1].status) {
-		case H3600_BATT_STATUS_HIGH:
-				gtk_label_set_text(GTK_LABEL(batt_ext.lstate),_("Status: high"));
-				break;
-			case H3600_BATT_STATUS_LOW:
-				gtk_label_set_text(GTK_LABEL(batt_ext.lstate),_("Status: low"));
-				break;
-			case H3600_BATT_STATUS_CRITICAL:
-				gtk_label_set_text(GTK_LABEL(batt_ext.lstate),_("Status: critical"));
-				break;
-			case H3600_BATT_STATUS_CHARGING:
-				gtk_label_set_text(GTK_LABEL(batt_int.lstate),_("Status: charging"));
-				break;
-			case H3600_BATT_STATUS_CHARGE_MAIN:
-				gtk_label_set_text(GTK_LABEL(batt_ext.lstate),_("Status: charge main"));
-				break;
-			case H3600_BATT_NOT_INSTALLED:
-				gtk_label_set_text(GTK_LABEL(batt_ext.lstate),_("Status: not installed"));
-				break;
-			case H3600_BATT_STATUS_FULL:
-				gtk_label_set_text(GTK_LABEL(batt_ext.lstate),_("Status: full"));
-				break;
-			case H3600_BATT_STATUS_NOBATT:
-				gtk_label_set_text(GTK_LABEL(batt_ext.lstate),_("Status: no battery"));
-				break;
-			default:
-				gtk_label_set_text(GTK_LABEL(batt_ext.lstate),_("Status: unknown"));
-				break;
-		};
-
-	sprintf(tmp,"%s: %d mV",_("Voltage"),battery_val.battery[1].voltage * 5000 / 1024);
-	gtk_label_set_text(GTK_LABEL(batt_ext.lvoltage),tmp);
-
-	if (battery_val.battery[1].life == 65535)
-		sprintf(tmp,"%s",_("AC connected"));
-	else
-		sprintf(tmp,"%s: %d min.",_("Lifetime"),battery_val.battery[1].life);
-	gtk_label_set_text(GTK_LABEL(batt_ext.llifetime),tmp);
 		
-	} else {
-		gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(batt_ext.bar),0);
-		gtk_progress_bar_set_text(GTK_PROGRESS_BAR(batt_ext.bar),"");
-	
-		gtk_label_set_text(GTK_LABEL(batt_ext.lchem),_("not installed"));
-	
-		gtk_label_set_text(GTK_LABEL(batt_ext.lstate),_("Status: unknown"));
-
-		gtk_label_set_text(GTK_LABEL(batt_ext.lvoltage),_("Voltage: unknown"));
-
-		gtk_label_set_text(GTK_LABEL(batt_ext.llifetime),_("Lifetime: unknown"));
+		/* read data from proc entry */
+		fseek(file_apm,0,SEEK_SET);
+		if (fscanf(file_apm,
+			       "%*f %*f %*s %*s %*s %*s %i%% %i",
+		           &percent, 
+		           &remaining) >= 2)
+		{
+			gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (batt_int.bar),(float)percent/100.0);
+			toolbar_set_style (batt_int.bar,  90 - (percent));
+			sprintf(percstr,"%d %%",percent);
+			gtk_progress_bar_set_text(GTK_PROGRESS_BAR(batt_int.bar),percstr);
+			
+			/* some free interpretations */
+			sprintf(tmp,"%s",_("Status: unknown"));
+			if (percent >= 50)
+				sprintf(tmp,"%s",_("Status: high"));
+			else if ((percent < 50) && (percent > 15))
+				sprintf(tmp,"%s",_("Status: low"));
+			else 
+				sprintf(tmp,"%s",_("Status: critical"));
+			
+			if (remaining < 0)
+			{
+				if (percent < 100) 
+					sprintf(tmp,"%s",_("Status: charging"));
+				else
+					sprintf(tmp,"%s",_("Status: full"));
+			}
+			gtk_label_set_text(GTK_LABEL(batt_int.lstate),tmp);
+			
+			if ((remaining < 0) || (remaining > 5000))
+				sprintf(tmp,"%s",_("AC connected"));
+			else
+				sprintf(tmp,"%s: %d min.",_("Lifetime"),remaining);
+			gtk_label_set_text(GTK_LABEL(batt_int.llifetime),tmp);
+		}
+		else
+			fprintf(stderr,"parsing apm data failed\n");
 	}
-#endif
-
 	return TRUE;
 }
 
@@ -250,6 +309,7 @@ void
 Battery_Free_Objects ()
 {
 	close(TSfd);
+	fclose(file_apm);
 }
 
 void

@@ -1,3 +1,7 @@
+2004-06-12	Florian Boor  	<florian.boor@kernelconcepts.de>
+	* battery.c: Added some APM support. With some luck it should work on any 
+	             system with /proc/apm.
+	
 2004-06-10	Florian Boor  	<florian.boor@kernelconcepts.de>
 	* Released V 0.1.10
 	* Removed obsolete file.
