@@ -23,11 +23,11 @@ ARGS="-dpi 100 -br"
 
 # start off server in conventional location.
 case `module_id` in
-	"HP iPAQ 3100" | "HP iPAQ 3800")
+	"HP iPAQ H3100" | "HP iPAQ H3800")
 		ARGS="$ARGS -screen 240x320@90 -rgba vrgb" ;;
-	"HP iPAQ 3600" | "HP iPAQ 3700" | "HP iPAQ 3900")
+	"HP iPAQ H3600" | "HP iPAQ H3700" | "HP iPAQ H3900")
 		ARGS="$ARGS -screen 240x320@270 -rgba vbgr" ;;
-	"HP iPAQ 5400")
+	"HP iPAQ H5400")
 		ARGS="$ARGS -rgba rgb" ;;
 esac
 
