@@ -95,12 +95,12 @@ void init_device()
 
 gint update_bat_values(gpointer data)
 {
-gchar percstr[9];
-gchar tmp[128];
+	gchar percstr[9];
+	gchar tmp[128];
 #ifdef MACH_IPAQ
-static struct h3600_battery battery_val;
-float bperc;
-gboolean islearning = FALSE;
+	static struct h3600_battery battery_val;
+	float bperc;
+	gboolean islearning = FALSE;
 
 	parse_file(PROC_BATTERY," Is learning? %*s %s",tmp);
 	if (strstr(tmp,"yes"))
@@ -109,21 +109,21 @@ gboolean islearning = FALSE;
 	if (ioctl(TSfd, GET_BATTERY_STATUS, &battery_val) == 0)
 	{
 		if (battery_val.battery_count < 2) {
-			gtk_widget_set_sensitive(batt_ext.bar, FALSE);
-			gtk_widget_set_sensitive(batt_ext.label, FALSE);
-			gtk_widget_set_sensitive(batt_ext.lstate, FALSE);
-			gtk_widget_set_sensitive(batt_ext.lchem, FALSE);
-			gtk_widget_set_sensitive(batt_ext.lvoltage, FALSE);
-			gtk_widget_set_sensitive(batt_ext.llifetime, FALSE);
+			gtk_widget_hide(batt_ext.bar);
+			gtk_widget_hide(batt_ext.label);
+			gtk_widget_hide(batt_ext.lstate);
+			gtk_widget_hide(batt_ext.lchem);
+			gtk_widget_hide(batt_ext.lvoltage);
+			gtk_widget_hide(batt_ext.llifetime);
 		}
 		else
 		{
-			gtk_widget_set_sensitive(batt_ext.bar, TRUE);
-			gtk_widget_set_sensitive(batt_ext.label, TRUE);
-			gtk_widget_set_sensitive(batt_ext.lstate, TRUE);
-			gtk_widget_set_sensitive(batt_ext.lchem, TRUE);
-			gtk_widget_set_sensitive(batt_ext.lvoltage, TRUE);
-			gtk_widget_set_sensitive(batt_ext.llifetime, TRUE);
+			gtk_widget_show(batt_ext.bar);
+			gtk_widget_show(batt_ext.label);
+			gtk_widget_show(batt_ext.lstate);
+			gtk_widget_show(batt_ext.lchem);
+			gtk_widget_show(batt_ext.lvoltage);
+			gtk_widget_show(batt_ext.llifetime);
 		}
 		
 		bperc=(float)battery_val.battery[0].percentage / (float)100;
@@ -256,12 +256,12 @@ gboolean islearning = FALSE;
 		int ac_connected;
 		
 		/* apm knows only about one battery */
-		gtk_widget_set_sensitive(batt_ext.bar, FALSE);
-		gtk_widget_set_sensitive(batt_ext.label, FALSE);
-		gtk_widget_set_sensitive(batt_ext.lstate, FALSE);
-		gtk_widget_set_sensitive(batt_ext.lchem, FALSE);
-		gtk_widget_set_sensitive(batt_ext.lvoltage, FALSE);
-		gtk_widget_set_sensitive(batt_ext.llifetime, FALSE);
+		gtk_widget_hide(batt_ext.bar);
+		gtk_widget_hide(batt_ext.label);
+		gtk_widget_hide(batt_ext.lstate);
+		gtk_widget_hide(batt_ext.lchem);
+		gtk_widget_hide(batt_ext.lvoltage);
+		gtk_widget_hide(batt_ext.llifetime);
 		
 		/* read data from proc entry */
 		fclose(file_apm);
@@ -302,9 +302,17 @@ gboolean islearning = FALSE;
 				sprintf(tmp,"%s: %d min.",_("Lifetime"),remaining);
 			gtk_label_set_text(GTK_LABEL(batt_int.llifetime),tmp);
 		}
-		else
-			fprintf(stderr,"parsing apm data failed\n");
 	}
+	else /* nothing we know available: hide widgets */
+	{
+		gtk_widget_hide(batt_ext.bar);
+		gtk_widget_hide(batt_ext.label);
+		gtk_widget_hide(batt_ext.lstate);
+		gtk_widget_hide(batt_ext.lchem);
+		gtk_widget_hide(batt_ext.lvoltage);
+		gtk_widget_hide(batt_ext.llifetime);
+	}
+
 	return TRUE;
 }
 

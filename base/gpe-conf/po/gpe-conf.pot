@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-06-10 12:19+0200\n"
+"POT-Creation-Date: 2004-06-17 18:05+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -63,7 +63,7 @@ msgid ""
 "Please enter password."
 msgstr ""
 
-#: applets.c:419 ipaqscreen/calibrate.c:34
+#: applets.c:419 ipaqscreen/calibrate.c:32
 msgid "Sorry, wrong password."
 msgstr ""
 
@@ -310,238 +310,214 @@ msgid ""
 "this interface."
 msgstr ""
 
-#: network.c:670
+#: network.c:668
 msgid "Global Settings"
 msgstr ""
 
-#: network.c:711
+#: network.c:709
 msgid "Proxy"
 msgstr ""
 
-#: network.c:712
+#: network.c:710
 msgid ""
 "If you want/need to use a proxy, enter it here. (This only applies to dillo "
 "for now.)"
 msgstr ""
 
-#: network.c:718
+#: network.c:716
 msgid "No proxy for"
 msgstr ""
 
-#: network.c:720
+#: network.c:718
 msgid ""
 "Here you should enter your local domain for that you don't want to use a "
 "proxy."
 msgstr ""
 
-#: network.c:730
-msgid "Use DHCP in any case (usually not needed)."
-msgstr ""
-
-#: network.c:732
-msgid "Use DHCP"
-msgstr ""
-
-#: network.c:747
-msgid "yes"
-msgstr ""
-
-#: network.c:758
-msgid "no"
-msgstr ""
-
-#: network.c:771
+#: network.c:725
 msgid "DNS server"
 msgstr ""
 
-#: network.c:774
+#: network.c:728
 msgid "Enter the IP of the DNS(name-) server to use here."
 msgstr ""
 
-#: network.c:953
+#: network.c:897
 msgid ""
 "Here you may change the basic configuration type of your device.\n"
 "Use \"static\" for manual interface configuration, \"dhcp\" to use DHCP and "
 "\"ppp\" to make the device a point-to-point device."
 msgstr ""
 
-#: network.c:980 network.c:981
+#: network.c:923 network.c:924
 msgid "Add Interface"
 msgstr ""
 
-#: network.c:982
+#: network.c:925
 msgid "Add a new Interface"
 msgstr ""
 
-#: network.c:990 network.c:991
+#: network.c:933 network.c:934
 msgid "Remove Interface"
 msgstr ""
 
-#: network.c:992
+#: network.c:935
 msgid "Remove current Interface"
 msgstr ""
 
-#: network.c:1005
+#: network.c:948
 msgid "Information"
 msgstr ""
 
-#: network.c:1006 network.c:1007
+#: network.c:949 network.c:950
 msgid "Show current configuration."
 msgstr ""
 
-#: network.c:1015
-msgid "Close"
-msgstr ""
-
-#: network.c:1016 network.c:1017
-msgid "Close network tool"
-msgstr ""
-
-#: network.c:1032
+#: network.c:967
 msgid "Couldn't read network configuration."
 msgstr ""
 
-#: network.c:1039
+#: network.c:974
 msgid "global"
 msgstr ""
 
-#: theme.c:421
+#: theme.c:430
 msgid "Red"
 msgstr ""
 
-#: theme.c:426
+#: theme.c:435
 msgid "Green"
 msgstr ""
 
-#: theme.c:431
+#: theme.c:440
 msgid "Blue"
 msgstr ""
 
-#: theme.c:727
+#: theme.c:739
 msgid "Select color"
 msgstr ""
 
-#: theme.c:753 theme.c:825
+#: theme.c:765 theme.c:837
 msgid "You don't have read access to selected background image!"
 msgstr ""
 
-#: theme.c:933
+#: theme.c:948
 msgid "Theme"
 msgstr ""
 
-#: theme.c:942
+#: theme.c:957
 msgid "Desktop Theme"
 msgstr ""
 
-#: theme.c:954
+#: theme.c:969
 msgid "Name"
 msgstr ""
 
-#: theme.c:970
+#: theme.c:985
 msgid "Icon Size"
 msgstr ""
 
-#: theme.c:986
+#: theme.c:1001
 msgid "Visual Effects"
 msgstr ""
 
-#: theme.c:992
+#: theme.c:1007
 msgid "Enable Visual Effects"
 msgstr ""
 
-#: theme.c:999
+#: theme.c:1014
 msgid "Background"
 msgstr ""
 
-#: theme.c:1010
+#: theme.c:1025
 msgid "Background Settings"
 msgstr ""
 
-#: theme.c:1017
+#: theme.c:1032
 msgid "Theme Default"
 msgstr ""
 
-#: theme.c:1024
+#: theme.c:1039
 msgid "Solid color"
 msgstr ""
 
-#: theme.c:1038
+#: theme.c:1053
 msgid "Horizontal"
 msgstr ""
 
-#: theme.c:1042
+#: theme.c:1057
 msgid "Vertical"
 msgstr ""
 
-#: theme.c:1047 theme.c:1066 theme.c:1219 theme.c:1225
+#: theme.c:1062 theme.c:1081 theme.c:1234 theme.c:1240
 msgid "Color"
 msgstr ""
 
-#: theme.c:1057
+#: theme.c:1072
 msgid "Color gradient"
 msgstr ""
 
-#: theme.c:1077
+#: theme.c:1092
 msgid "Image"
 msgstr ""
 
-#: theme.c:1103
+#: theme.c:1118
 msgid "Centered"
 msgstr ""
 
-#: theme.c:1107
+#: theme.c:1122
 msgid "Tiled"
 msgstr ""
 
-#: theme.c:1110
+#: theme.c:1125
 msgid "Stretched"
 msgstr ""
 
-#: theme.c:1116
+#: theme.c:1131
 msgid "Toolbars"
 msgstr ""
 
-#: theme.c:1127
+#: theme.c:1142
 msgid "Toolbar Style"
 msgstr ""
 
-#: theme.c:1134
+#: theme.c:1149
 msgid "Icons"
 msgstr ""
 
-#: theme.c:1139
+#: theme.c:1154
 msgid "Text"
 msgstr ""
 
-#: theme.c:1144
+#: theme.c:1159
 msgid "Both"
 msgstr ""
 
-#: theme.c:1149
+#: theme.c:1164
 msgid "Both H"
 msgstr ""
 
-#: theme.c:1156
+#: theme.c:1171
 msgid "Toolbar Icon Size"
 msgstr ""
 
-#: theme.c:1171
+#: theme.c:1186
 msgid "Fonts"
 msgstr ""
 
-#: theme.c:1180 theme.c:1200
+#: theme.c:1195 theme.c:1215
 msgid "Desktop Font"
 msgstr ""
 
-#: theme.c:1187 theme.c:1243
+#: theme.c:1202 theme.c:1258
 msgid "Family"
 msgstr ""
 
-#: theme.c:1207 theme.c:1263
+#: theme.c:1222 theme.c:1278
 msgid "Size"
 msgstr ""
 
-#: theme.c:1236 theme.c:1256
+#: theme.c:1251 theme.c:1271
 msgid "Application Font"
 msgstr ""
 
@@ -681,7 +657,7 @@ msgstr ""
 msgid "Auto sleep advanced controls"
 msgstr ""
 
-#: sleep/interface.c:164 sysinfo.c:491
+#: sleep/interface.c:164 sysinfo.c:592
 msgid "CPU"
 msgstr ""
 
@@ -717,75 +693,75 @@ msgstr ""
 msgid "User Info"
 msgstr ""
 
-#: users/interface.c:211
+#: users/interface.c:210
 msgid "Home"
 msgstr ""
 
-#: users/interface.c:228 users/interface.c:229
+#: users/interface.c:226 users/interface.c:227
 msgid "Add user"
 msgstr ""
 
-#: users/interface.c:229
+#: users/interface.c:227
 msgid "Add a new user"
 msgstr ""
 
-#: users/interface.c:233 users/interface.c:234
+#: users/interface.c:231 users/interface.c:232
 msgid "Edit user"
 msgstr ""
 
-#: users/interface.c:234
+#: users/interface.c:232
 msgid "Edit existing user"
 msgstr ""
 
-#: users/interface.c:238 users/interface.c:239
+#: users/interface.c:236 users/interface.c:237
 msgid "Delete user"
 msgstr ""
 
-#: users/interface.c:239
+#: users/interface.c:237
 msgid "Delete existing user"
 msgstr ""
 
-#: users/interface.c:283
+#: users/interface.c:281
 msgid "User settings"
 msgstr ""
 
-#: users/interface.c:297
+#: users/interface.c:295
 msgid "User Name:"
 msgstr ""
 
-#: users/interface.c:313
+#: users/interface.c:311
 msgid "Password:"
 msgstr ""
 
-#: users/interface.c:321
+#: users/interface.c:319
 msgid "User Info:"
 msgstr ""
 
-#: users/interface.c:337
+#: users/interface.c:335
 msgid "Shell:"
 msgstr ""
 
-#: users/interface.c:356
+#: users/interface.c:354
 msgid "Home:"
 msgstr ""
 
-#: users/interface.c:374
+#: users/interface.c:372
 msgid "Change"
 msgstr ""
 
-#: users/interface.c:435
+#: users/interface.c:433
 msgid "Change Password"
 msgstr ""
 
-#: users/interface.c:462
+#: users/interface.c:460
 msgid "Old Password:"
 msgstr ""
 
-#: users/interface.c:469
+#: users/interface.c:467
 msgid "New Password:"
 msgstr ""
 
-#: users/interface.c:477
+#: users/interface.c:475
 msgid "Confirm:"
 msgstr ""
 
@@ -1297,17 +1273,17 @@ msgstr ""
 
 #: tools/interface.c:1907
 #, c-format
-msgid "Address:\t\t%s\n"
+msgid "Address:\t%s\n"
 msgstr ""
 
 #: tools/interface.c:1912
 #, c-format
-msgid "P-t-P:\t\t%s\n"
+msgid "P-t-P:\t%s\n"
 msgstr ""
 
 #: tools/interface.c:1916
 #, c-format
-msgid "Netmask:\t\t%s\n"
+msgid "Netmask:\t%s\n"
 msgstr ""
 
 #: tools/interface.c:1920
@@ -1384,7 +1360,7 @@ msgid "Free memory"
 msgstr ""
 
 #: storage.c:186 storage.c:193 storage.c:339 storage.c:350 storage.c:455
-#: storage.c:468 sysinfo.c:500 sysinfo.c:509
+#: storage.c:468 sysinfo.c:601 sysinfo.c:610
 msgid "MB"
 msgstr ""
 
@@ -1432,164 +1408,197 @@ msgstr ""
 msgid "<empty syslog>"
 msgstr ""
 
-#: logread.c:223 logread.c:237
+#: logread.c:224 logread.c:240
 msgid "System Log"
 msgstr ""
 
-#: logread.c:245 logread.c:259
+#: logread.c:249 logread.c:263
 msgid "Session Log"
 msgstr ""
 
-#: logread.c:265
+#: logread.c:269
 msgid "Could not open X session log."
 msgstr ""
 
-#: battery.c:83
+#: battery.c:86
 #, c-format
 msgid "could not open touchscreen device '%s'\n"
 msgstr ""
 
-#: battery.c:137 battery.c:194
+#: battery.c:143 battery.c:200 battery.c:282
 msgid "Status: high"
 msgstr ""
 
-#: battery.c:140 battery.c:197
+#: battery.c:146 battery.c:203 battery.c:284
 msgid "Status: low"
 msgstr ""
 
-#: battery.c:143 battery.c:200
+#: battery.c:149 battery.c:206 battery.c:286
 msgid "Status: critical"
 msgstr ""
 
-#: battery.c:146 battery.c:203
+#: battery.c:152 battery.c:209 battery.c:291
 msgid "Status: charging"
 msgstr ""
 
-#: battery.c:149 battery.c:206
+#: battery.c:155 battery.c:212
 msgid "Status: charge main"
 msgstr ""
 
-#: battery.c:152
+#: battery.c:158
 msgid "Status: dead"
 msgstr ""
 
-#: battery.c:155 battery.c:212
+#: battery.c:161 battery.c:218 battery.c:293
 msgid "Status: full"
 msgstr ""
 
-#: battery.c:158 battery.c:215
+#: battery.c:164 battery.c:221
 msgid "Status: no battery"
 msgstr ""
 
-#: battery.c:161 battery.c:218 battery.c:237
+#: battery.c:167 battery.c:224 battery.c:243 battery.c:280
 msgid "Status: unknown"
 msgstr ""
 
-#: battery.c:166
+#: battery.c:172
 msgid "learning"
 msgstr ""
 
-#: battery.c:170 battery.c:222
+#: battery.c:176 battery.c:228
 msgid "Voltage"
 msgstr ""
 
-#: battery.c:174 battery.c:226
+#: battery.c:180 battery.c:232 battery.c:298
 msgid "AC connected"
 msgstr ""
 
-#: battery.c:176 battery.c:228
+#: battery.c:182 battery.c:234 battery.c:300
 msgid "Lifetime"
 msgstr ""
 
-#: battery.c:209
+#: battery.c:215
 msgid "Status: not installed"
 msgstr ""
 
-#: battery.c:235
+#: battery.c:241
 msgid "not installed"
 msgstr ""
 
-#: battery.c:239
+#: battery.c:245
 msgid "Voltage: unknown"
 msgstr ""
 
-#: battery.c:241
+#: battery.c:247
 msgid "Lifetime: unknown"
 msgstr ""
 
-#: battery.c:289
+#: battery.c:351
 msgid "Internal battery"
 msgstr ""
 
-#: battery.c:293
+#: battery.c:355
 msgid "Jacket battery"
 msgstr ""
 
-#: sysinfo.c:297
+#: sysinfo.c:217
+msgid "ARM"
+msgstr ""
+
+#: sysinfo.c:220
+msgid "Intel x86 or compatible"
+msgstr ""
+
+#: sysinfo.c:223
+msgid "Mips"
+msgstr ""
+
+#: sysinfo.c:225
+msgid "Silicon Graphics Machine"
+msgstr ""
+
+#: sysinfo.c:229
+msgid "IBM Power or PowerPC"
+msgstr ""
+
+#. TRANSLATORS: "Familiar" is the name of a linux distribution.
+#: sysinfo.c:257
+msgid "Familiar"
+msgstr ""
+
+#. TRANSLATORS: "Familiar" is the name of a linux distribution.
+#: sysinfo.c:266
+msgid "OpenEmbedded"
+msgstr ""
+
+#: sysinfo.c:298 sysinfo.c:300
+msgid "Build"
+msgstr ""
+
+#: sysinfo.c:392
 msgid "Network Status"
 msgstr ""
 
-#: sysinfo.c:311 sysinfo.c:314
+#: sysinfo.c:406 sysinfo.c:409
 msgid "HWaddr (MAC)"
 msgstr ""
 
-#: sysinfo.c:345
+#: sysinfo.c:440
 msgid "Default Gateway"
 msgstr ""
 
-#: sysinfo.c:388
+#: sysinfo.c:483
 msgid "System information"
 msgstr ""
 
-#: sysinfo.c:399
+#: sysinfo.c:494
 msgid "Version"
 msgstr ""
 
-#. TRANSLATORS: "Familiar" is the name of the linux disrtribution.
-#: sysinfo.c:431
-msgid "Familiar Version"
+#: sysinfo.c:528
+msgid "Distribution"
 msgstr ""
 
-#: sysinfo.c:456
+#: sysinfo.c:553
 msgid "System"
 msgstr ""
 
-#: sysinfo.c:465
+#: sysinfo.c:562
 msgid "Device information"
 msgstr ""
 
-#: sysinfo.c:477
-msgid "Device"
+#: sysinfo.c:574
+msgid "Device Name"
 msgstr ""
 
 #. TRANSLATORS: MB == Mega Bytes
-#: sysinfo.c:500
+#: sysinfo.c:601
 msgid "RAM"
 msgstr ""
 
 #. TRANSLATORS: MB == Mega Bytes
-#: sysinfo.c:509
+#: sysinfo.c:610
 msgid "Flash"
 msgstr ""
 
-#: sysinfo.c:516
+#: sysinfo.c:617
 msgid "Hardware"
 msgstr ""
 
-#: sysinfo.c:521
+#: sysinfo.c:622
 msgid "Battery"
 msgstr ""
 
-#: sysinfo.c:526
+#: sysinfo.c:627
 msgid "Storage"
 msgstr ""
 
-#: sysinfo.c:531
+#: sysinfo.c:632
 msgid "Networks"
 msgstr ""
 
-#: sysinfo.c:536
-msgid "Syslog"
+#: sysinfo.c:637
+msgid "Log Display"
 msgstr ""
 
 #: gpe-conf.desktop.in.h:1

@@ -1,3 +1,8 @@
+2004-07-27	Florian Boor  	<florian.boor@kernelconcepts.de>
+	* sysinfo.c: Fixed misuse of GError.
+	* Makefile: Working on V 0.1.12
+	* battery.c: Hide widgets for second battery if not available.
+
 2004-07-21	Florian Boor  	<florian.boor@kernelconcepts.de>
 	* ipaqscreen/main.c: Raised lower limit for screensaver timeout.
 

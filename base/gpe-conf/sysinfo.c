@@ -113,6 +113,12 @@ get_flash_size()
 		}
 		g_strfreev(strv);
 	}
+	else
+	{
+		g_error_free(err);
+		err = NULL;
+	}
+	
 	result /= (1024 * 1024);
 
 	/* nothing in mtd, try partitions */
@@ -132,6 +138,11 @@ get_flash_size()
 				i++;
 			}
 			g_strfreev(strv);
+		}
+		else
+		{
+	 		g_error_free(err);
+			err = NULL;
 		}
 		result /= 2048;
 	}
@@ -258,6 +269,11 @@ get_distribution_version()
 		g_free(tmp);
 	 	return result;
 	}
+	else
+	{
+		g_error_free(err);
+		err = NULL;
+	}
 	
 	/* check for OpenEmbedded */
 	if (g_file_get_contents(OE_VERSION,&tmp,&len,&err))
@@ -266,6 +282,11 @@ get_distribution_version()
 		result = g_strdup_printf(_("OpenEmbedded"));
 		g_free(tmp);
 	 	return (result);
+	}
+	else
+	{
+		g_error_free(err);
+		err = NULL;
 	}
 	
 	return result;
@@ -287,6 +308,11 @@ get_distribution_time()
 			strchr(result,'\n')[0] = 0;
 		return g_strstrip(result);
 	}
+	else
+	{
+		g_error_free(err);
+		err = NULL;
+	}
 	
 	/* OpenEmbedded */
 	if (g_file_get_contents(OE_VERSION,&tmp,&len,&err))
@@ -300,6 +326,11 @@ get_distribution_time()
 			result = g_strdup_printf("%s %s",_("Build"),tmp);
 		g_free(tmp);
 	 	return (result);
+	}
+	else
+	{
+		g_error_free(err);
+		err = NULL;
 	}
 	
 	return result;
