@@ -18,9 +18,10 @@
 
 extern GtkWidget *day_view(void);
 extern GtkWidget *week_view(void);
+extern GtkWidget *future_view(void);
+extern void about(void);
 
 extern GtkWidget *new_event(time_t t, guint timesel);
-extern GtkWidget *future_view(void);
 
 GdkFont *timefont;
 GdkFont *datefont;
@@ -71,7 +72,7 @@ static GtkItemFactoryEntry menu_items[] = {
   { "/_New",               NULL,         NULL, 0, "<Branch>" },
   { "/New/_Appointment",   NULL,         new_appointment, 0, NULL },
   { "/_Help"       ,       NULL,         NULL, 0, "<LastBranch>" },
-  { "/Help/_About",        NULL,         NULL, 0, NULL },
+  { "/Help/_About",        NULL,         about, 0, NULL },
 };
 
 int

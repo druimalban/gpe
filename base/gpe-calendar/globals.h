@@ -11,3 +11,5 @@ extern GdkFont *timefont;
 extern GdkFont *datefont;
 extern GList *times;
 extern guint window_x, window_y;
+
+#define VERSION "0.0 (20020510)"
