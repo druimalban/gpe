@@ -1,6 +1,8 @@
 GPE go NEWS
 
-* 
+* cvs
+- mark last played stone
+- basic support to mark stones
 
 * 0.04 2003-10-12  "One of these days..."
 - added basic save feature (.sgf)

@@ -31,7 +31,7 @@ GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
 
 CPPFLAGS = $(GTKCFLAGS) -D_GNU_SOURCE 
 ifeq ($(DEBUG),yes)
-CFLAGS  += -O2 -g
+CFLAGS  += -O2 -g -DDEBUG=yes
 LDFLAGS += -g
 else
 CFLAGS += -Os -fomit-frame-pointer

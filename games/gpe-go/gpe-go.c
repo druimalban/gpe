@@ -64,8 +64,6 @@ typedef struct _go {
 
   int board_size;//px PARAM - size of the board widget
   int margin;    //***px - left/top margin
-
-  int game_size; //9, 13, 19, ...
   
   int cell_size;  //***px - == stone_size + stone_space 
   int stone_size; //px
@@ -73,11 +71,9 @@ typedef struct _go {
   
   int grid_stroke;//px PARAM width of the grid stroke (1px)  
 
-  //--current position
-  int col;
-  int row;
-
   //--game
+  int game_size; //9, 13, 19, ...
+
   char ** grid;   //current state of the board
   char ** stamps;
 
@@ -86,6 +82,14 @@ typedef struct _go {
 
   int turn;
   int last_turn;
+
+  //last played
+  int last_col;
+  int last_row;
+
+  //current position
+  int col;
+  int row;
 
   GList * history;
 
@@ -98,6 +102,13 @@ typedef enum {
   BLACK_STONE,
   WHITE_STONE,
 } GoItem;
+
+typedef enum {
+  NO_MARK,
+  MARK_SQUARE,
+  //MARK_SPOT,
+  //MARK_TRIANGLE
+} GoMark;
 
 typedef enum {
   PASS,
@@ -209,6 +220,9 @@ void app_init(int argc, char ** argv){
 
   go.turn = 0;
   go.last_turn = 0;
+
+  go.last_col = 0;
+  go.last_row = 0;
 
 }
 
@@ -466,6 +480,38 @@ void unpaint_stone(int col, int row){
   gtk_widget_draw (go.drawing_area, &rect);
 }
 
+void paint_mark(int col, int row, GoMark mark){
+  GdkRectangle rect;
+
+  if(mark == NO_MARK) return;
+
+  rect.x = (col -1) * go.cell_size + go.margin + go.stone_space;
+  rect.y = (row -1) * go.cell_size + go.margin + go.stone_space;
+  rect.width = rect.height = go.stone_size;
+
+  TRACE("mark (%d %d) %s", col, row,
+        (go.grid[col][row] == BLACK_STONE)?"black":"white");
+
+  _print_gird();
+
+  switch(mark){
+    case MARK_SQUARE:
+      gdk_draw_rectangle (go.drawing_area_pixmap_buffer,
+                          (go.grid[col][row] == BLACK_STONE)
+                          ?go.drawing_area->style->white_gc
+                          :go.drawing_area->style->black_gc,//FIXME: use better color
+                          FALSE,
+                          rect.x + go.stone_size / 4, rect.y + go.stone_size / 4,
+                          go.stone_size / 2, go.stone_size / 2
+                          );
+      break;
+    case NO_MARK:
+    default:
+      break;
+  }
+  gtk_widget_draw (go.drawing_area, &rect);
+}//paint_mark()
+
 void paint_stone(int col, int row, GoItem item){
   GdkRectangle rect;
 
@@ -498,16 +544,26 @@ void paint_stone(int col, int row, GoItem item){
   gtk_widget_draw (go.drawing_area, &rect);
 }
 
+void update_last_played_mark_to(int next_col, int next_row){
+  TRACE("update LAST PLAYED mark");
+  if(go.last_col && go.grid[go.last_col][go.last_row] != EMPTY){
+    paint_stone(go.last_col, go.last_row, go.grid[go.last_col][go.last_row]);
+  }
+  paint_mark(next_col, next_row, MARK_SQUARE);
+  go.last_col = next_col;
+  go.last_row = next_row;
+}
+
 void put_stone(GoItem color, int gox, int goy){
   if(go.grid[gox][goy] != EMPTY) return;
-  paint_stone(gox, goy, color);
   go.grid[gox][goy] = color;
+  paint_stone(gox, goy, color);
 }
 
 void remove_stone(int gox, int goy){
   if(go.grid[gox][goy] == EMPTY) return;
-  unpaint_stone(gox, goy);
   go.grid[gox][goy] = EMPTY;
+  unpaint_stone(gox, goy);
 }
 
 
@@ -778,6 +834,8 @@ void play_at(int gox, int goy){
 
     put_stone(color, gox, goy);
 
+    update_last_played_mark_to(gox, goy);
+
     append_hitem(PLAY, color, gox, goy);
   }
 
@@ -861,7 +919,21 @@ void undo_turn(){
   update_turn_label();
 #endif
 
-  if(go.history->prev) go.history = go.history->prev;
+  if(go.history->prev){
+    go.history = go.history->prev;
+
+    {
+      GList * hist;
+      Hitem * item;
+      hist = go.history;
+      item = hist->data;
+      while(item->action == CAPTURE){
+        hist = hist->prev;
+        item = hist->data;
+      } 
+      update_last_played_mark_to(item->posx, item->posy);
+    }
+  }
 }
 
 void redo_turn(){
@@ -885,11 +957,15 @@ void redo_turn(){
 
   if(hitem->action == PASS){
     TRACE("***> rePASS");
+    update_last_played_mark_to(0, 0);
     go.turn++;
   }
   else if(hitem->action == PLAY){
     TRACE("***> rePLAY %d %d", hitem->posx, hitem->posy);
     put_stone(hitem->item, hitem->posx, hitem->posy);
+
+    update_last_played_mark_to(hitem->posx, hitem->posy);
+
     go.turn++;
 
     {//revert capture if there are.
@@ -1033,6 +1109,8 @@ void on_button_pass_clicked (void){
   append_hitem(PASS, EMPTY, 0, 0);
   go.turn++;
   go.last_turn++;
+
+  update_last_played_mark_to(0, 0);
 }
 
 void gui_init(){
