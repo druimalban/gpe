@@ -1,0 +1,124 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2002-12-01 00:04+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: main.c:531
+msgid "Start"
+msgstr ""
+
+#: main.c:532
+msgid "Cancel"
+msgstr ""
+
+#: main.c:558
+msgid "Select directory"
+msgstr ""
+
+#: main.c:670
+msgid "Open"
+msgstr ""
+
+#: main.c:671
+msgid "Open file"
+msgstr ""
+
+#: main.c:677
+msgid "Previous"
+msgstr ""
+
+#: main.c:678
+msgid "Previous image"
+msgstr ""
+
+#: main.c:682
+msgid "Next"
+msgstr ""
+
+#: main.c:683
+msgid "Next image"
+msgstr ""
+
+#: main.c:687 main.c:688
+msgid "Close image"
+msgstr ""
+
+#: main.c:694 main.c:695
+msgid "Slideshow"
+msgstr ""
+
+#: main.c:700
+msgid "Select View"
+msgstr ""
+
+#: main.c:704
+msgid "Fullscreen"
+msgstr ""
+
+#: main.c:705
+msgid "Toggle fullscreen"
+msgstr ""
+
+#: main.c:709 main.c:710
+msgid "Zoom In"
+msgstr ""
+
+#: main.c:714 main.c:715
+msgid "Zoom Out"
+msgstr ""
+
+#: main.c:719 main.c:720
+msgid "Zoom 1:1"
+msgstr ""
+
+#: main.c:724 main.c:725
+msgid "Zoom to Fit"
+msgstr ""
+
+#: main.c:729 main.c:730
+msgid "Sharpen"
+msgstr ""
+
+#: main.c:734 main.c:735
+msgid "Blur"
+msgstr ""
+
+#: main.c:739
+msgid "Pan"
+msgstr ""
+
+#: main.c:740
+msgid "Toggle Pan"
+msgstr ""
+
+#: main.c:744
+msgid "Rotate"
+msgstr ""
+
+#: main.c:745
+msgid "Toggle Rotate"
+msgstr ""
+
+#: main.c:748
+msgid "Loading..."
+msgstr ""
+
+#: main.c:751
+msgid "Progress"
+msgstr ""
+
+#: main.c:755 main.c:756
+msgid "Stop Loading"
+msgstr ""
