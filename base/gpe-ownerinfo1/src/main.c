@@ -13,10 +13,14 @@
 
 #include <gtk/gtk.h>
 
+#include "init.h"
+
+/* Use this when libgewidget is fixed: */
+/* #include <gpe/init.h> */
+
 #include "interface.h"
 #include "support.h"
 
-#include "init.h"
 
 int
 main (int argc, char *argv[])

@@ -1,0 +1,15 @@
+Source: gpe-ownerinfo
+Section: x11
+Priority: optional
+Maintainer: Colin Marquardt <ipaq@marquardt-home.de>
+Build-Depends: debhelper (>> 3.0.0), libgpewidget-dev (>= 0.10-2), libgtk1.2-dev
+Standards-Version: 3.5.2
+
+Package: gpe-ownerinfo
+Architecture: any
+Depends: gpe-icons, ${shlibs:Depends}
+Description: GNU Palmtop Environment owner information
+ GPE-Ownerinfo displays information about the owner of a system. 
+ It is meant to be used in a login- or lock screen on palmtop devices
+ so that the owner can easily be identified in case the device gets lost.
+

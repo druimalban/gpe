@@ -1,5 +1,17 @@
 2002-07-21  Colin Marquardt  <colin@marquardt-home.de>
 
+	* familiar/control,
+	  debian/rules,
+	  debian/control,
+	  debian/changelog: New files.
+
+	* src/main.c: Add commented-out, "correct" header for init.h
+
+	* familiar/control: Added.
+
+	* Makefile.am: Add targets for ipkg and dpkg. The clean target
+	should be existent once this has been run through automake.
+
 	* src/Makefile.am: Pull in libgpewidget.
 
 	* src/main.c: Overwrite the values from the XML file (for demo
