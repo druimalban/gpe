@@ -325,13 +325,15 @@ update_time_face (void)
   gtk_adjustment_set_value (GTK_ADJUSTMENT (minute_adj), tm.tm_min);
 }
 
-static void
+static gboolean
 update_time (void)
 {
   if (format == FORMAT_ANALOGUE)
     update_time_face ();
   else
     update_time_label (time_label);
+
+  return TRUE;
 }
 
 static void
