@@ -102,6 +102,12 @@ guint window_x = 240, window_y = 310;
 static void browse_directory (gchar *directory);
 
 static void
+hide_menu (void)
+{
+  gpe_iconlist_popup_removed (GPE_ICONLIST (view_widget));
+}
+
+static void
 kill_widget (GtkObject *object, GtkWidget *widget)
 {
   gtk_widget_destroy (widget);
@@ -847,6 +853,7 @@ main (int argc, char *argv[])
     gtk_widget_show (i);
     gtk_menu_append (GTK_MENU (popup_menu), i);
   }
+  gtk_signal_connect (GTK_OBJECT (popup_menu), "hide", hide_menu, NULL);
 
   gnome_vfs_init ();
 
