@@ -99,9 +99,9 @@ selection_made (GtkWidget      *clist,
       else 
 	{
 	  char *t;
-	  gtk_clist_get_text (GTK_CLIST (clist), row, 0, &t);
 	  localtime_r (&viewtime, &tm);
-	  strptime (t, TIMEFMT, &tm);
+	  if (gtk_clist_get_text (GTK_CLIST (clist), row, 0, &t))
+	    strptime (t, TIMEFMT, &tm);
 	  gtk_widget_show_all (new_event (mktime (&tm), 1));
 	}
     }
@@ -110,10 +110,12 @@ selection_made (GtkWidget      *clist,
       // set the default event time to match the selected row
       struct tm tm;
       char *t;
-      while (gtk_clist_get_text (GTK_CLIST (clist), row, 0, &t)==0) row--;
-      localtime_r (&viewtime, &tm);
-      strptime (t, TIMEFMT, &tm);
-      viewtime = mktime (&tm);
+      if (gtk_clist_get_text (GTK_CLIST (clist), row, 0, &t))
+	{
+	  localtime_r (&viewtime, &tm);
+	  strptime (t, TIMEFMT, &tm);
+	  viewtime = mktime (&tm);
+	}
     }
 }
 

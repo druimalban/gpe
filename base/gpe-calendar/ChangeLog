@@ -1,3 +1,12 @@
+2003-09-05  Philip Blundell  <philb@gnu.org>
+
+	* Version 0.45 released.
+
+2003-09-05  Philip Blundell  <philb@gnu.org>
+
+	* day_view.c (selection_made): Avoid infinite loops and crashes
+	with untimed events.
+
 2003-07-29  Philip Blundell  <philb@gnu.org>
 
 	* gtkdatesel.c (format_text): Convert strftime() output to UTF-8.
