@@ -17,7 +17,7 @@
 #define MAIN_H
 
 #include <gtk/gtk.h>
-#include <desktop_file.h>
+#include <gpe/desktop_file.h>
 
 #include "cfg.h"
 
