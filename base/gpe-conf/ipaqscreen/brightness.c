@@ -77,8 +77,8 @@ int get_light_state ()
 	}
   }
   if (tsbl.power) bl.brightness = tsbl.brightness;
-#endif
   return tsbl.power;
+#endif
 }
 
 void set_brightness (int brightness)
