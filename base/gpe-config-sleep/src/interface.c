@@ -22,11 +22,25 @@
 
 #include <gdk/gdkkeysyms.h>
 #include <gtk/gtk.h>
+#include <gpe/picturebutton.h>
 
 #include "callbacks.h"
 #include "interface.h"
 #include "support.h"
+#include "../applets.h"
 
+GtkWidget *sleep_idle_spin;
+GtkWidget *dim_spin;
+GtkWidget *sleep_cpu_spin;
+GtkWidget *sleep_choose_irq;
+GtkWidget *sleep_enable;
+GtkWidget *dim_enable;
+GtkWidget *sleep_apm;
+GtkWidget *sleep_cpu;
+GtkWidget *sleep_probe_irq;
+GtkWidget *irqList;
+
+extern GtkStyle *wstyle;
 GtkWidget*
 create_GPE_Config_Sleep (ipaq_conf_t *ISconf)
 {
@@ -35,24 +49,15 @@ create_GPE_Config_Sleep (ipaq_conf_t *ISconf)
   GtkWidget *sleep;
   GtkWidget *table2;
   GtkObject *sleep_idle_spin_adj;
-  GtkWidget *sleep_idle_spin;
   GtkWidget *sleep_idle_label;
-  GtkWidget *sleep_enable;
   GtkWidget *dim;
   GtkWidget *table3;
   GtkObject *dim_spin_adj;
-  GtkWidget *dim_spin;
   GtkWidget *dim_idle_label;
-  GtkWidget *dim_enable;
   GtkWidget *frame5;
   GtkWidget *table4;
-  GtkWidget *sleep_cpu;
   GtkObject *sleep_cpu_spin_adj;
-  GtkWidget *sleep_cpu_spin;
   GtkWidget *sleep_cpu_label;
-  GtkWidget *sleep_choose_irq;
-  GtkWidget *sleep_apm;
-  GtkWidget *sleep_probe_irq;
   GtkWidget *frame6;
   GtkWidget *vbox2;
   GtkWidget *dim_scale;
@@ -60,7 +65,6 @@ create_GPE_Config_Sleep (ipaq_conf_t *ISconf)
   GtkWidget *hbuttonbox1;
   GtkWidget *start_but;
   GtkWidget *stop_but;
-  GtkWidget *quit_but;
   GtkTooltips *tooltips;
 
   int blVal;
@@ -70,25 +74,23 @@ create_GPE_Config_Sleep (ipaq_conf_t *ISconf)
 
   tooltips = gtk_tooltips_new ();
 
-  GPE_Config_Sleep = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+/*  GPE_Config_Sleep = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_widget_set_name (GPE_Config_Sleep, "GPE_Config_Sleep");
   gtk_object_set_data (GTK_OBJECT (GPE_Config_Sleep), "GPE_Config_Sleep", GPE_Config_Sleep);
   gtk_window_set_title (GTK_WINDOW (GPE_Config_Sleep), "GPE Config Sleep");
   gtk_window_set_policy (GTK_WINDOW (GPE_Config_Sleep), TRUE, TRUE, TRUE);
+*/
+  GPE_Config_Sleep = gtk_hbox_new (0,0);
 
   table1 = gtk_table_new (3, 2, FALSE);
   gtk_widget_set_name (table1, "table1");
-  gtk_widget_ref (table1);
-  gtk_object_set_data_full (GTK_OBJECT (GPE_Config_Sleep), "table1", table1,
-                            (GtkDestroyNotify) gtk_widget_unref);
+
   gtk_widget_show (table1);
   gtk_container_add (GTK_CONTAINER (GPE_Config_Sleep), table1);
 
   sleep = gtk_frame_new ("Auto-sleep");
   gtk_widget_set_name (sleep, "sleep");
-  gtk_widget_ref (sleep);
-  gtk_object_set_data_full (GTK_OBJECT (GPE_Config_Sleep), "sleep", sleep,
-                            (GtkDestroyNotify) gtk_widget_unref);
+
   gtk_widget_show (sleep);
   gtk_table_attach (GTK_TABLE (table1), sleep, 0, 1, 0, 1,
                     (GtkAttachOptions) (GTK_EXPAND | GTK_SHRINK | GTK_FILL),
@@ -96,31 +98,23 @@ create_GPE_Config_Sleep (ipaq_conf_t *ISconf)
   gtk_container_set_border_width (GTK_CONTAINER (sleep), 1);
 
   table2 = gtk_table_new (2, 2, FALSE);
-  gtk_widget_set_name (table2, "table2");
-  gtk_widget_ref (table2);
-  gtk_object_set_data_full (GTK_OBJECT (GPE_Config_Sleep), "table2", table2,
-                            (GtkDestroyNotify) gtk_widget_unref);
+
   gtk_widget_show (table2);
   gtk_container_add (GTK_CONTAINER (sleep), table2);
 
   sleep_idle_spin_adj = gtk_adjustment_new (180, 0, 1800, 5, 10, 10);
   sleep_idle_spin = gtk_spin_button_new (GTK_ADJUSTMENT (sleep_idle_spin_adj), 1, 0);
-  gtk_widget_set_name (sleep_idle_spin, "sleep_idle_spin");
-  gtk_widget_ref (sleep_idle_spin);
-  gtk_object_set_data_full (GTK_OBJECT (GPE_Config_Sleep), "sleep_idle_spin", sleep_idle_spin,
-                            (GtkDestroyNotify) gtk_widget_unref);
+
   gtk_widget_show (sleep_idle_spin);
   gtk_table_attach (GTK_TABLE (table2), sleep_idle_spin, 0, 1, 1, 2,
                     (GtkAttachOptions) (GTK_EXPAND | GTK_SHRINK | GTK_FILL),
                     (GtkAttachOptions) (GTK_SHRINK), 0, 0);
+
   gtk_tooltips_set_tip (tooltips, sleep_idle_spin, "sleep timeout", NULL);
   gtk_spin_button_set_numeric (GTK_SPIN_BUTTON (sleep_idle_spin), TRUE);
 
   sleep_idle_label = gtk_label_new ("idle(sec)");
-  gtk_widget_set_name (sleep_idle_label, "sleep_idle_label");
-  gtk_widget_ref (sleep_idle_label);
-  gtk_object_set_data_full (GTK_OBJECT (GPE_Config_Sleep), "sleep_idle_label", sleep_idle_label,
-                            (GtkDestroyNotify) gtk_widget_unref);
+
   gtk_widget_show (sleep_idle_label);
   gtk_table_attach (GTK_TABLE (table2), sleep_idle_label, 1, 2, 1, 2,
                     (GtkAttachOptions) (GTK_SHRINK | GTK_FILL),
@@ -128,10 +122,7 @@ create_GPE_Config_Sleep (ipaq_conf_t *ISconf)
   gtk_misc_set_alignment (GTK_MISC (sleep_idle_label), 0, 0.5);
 
   sleep_enable = gtk_check_button_new_with_label ("enabled");
-  gtk_widget_set_name (sleep_enable, "sleep_enable");
-  gtk_widget_ref (sleep_enable);
-  gtk_object_set_data_full (GTK_OBJECT (GPE_Config_Sleep), "sleep_enable", sleep_enable,
-                            (GtkDestroyNotify) gtk_widget_unref);
+
   gtk_widget_show (sleep_enable);
   gtk_table_attach (GTK_TABLE (table2), sleep_enable, 0, 2, 0, 1,
                     (GtkAttachOptions) (GTK_SHRINK | GTK_FILL),
@@ -139,10 +130,7 @@ create_GPE_Config_Sleep (ipaq_conf_t *ISconf)
   GTK_WIDGET_UNSET_FLAGS (sleep_enable, GTK_CAN_FOCUS);
 
   dim = gtk_frame_new ("Auto-dim");
-  gtk_widget_set_name (dim, "dim");
-  gtk_widget_ref (dim);
-  gtk_object_set_data_full (GTK_OBJECT (GPE_Config_Sleep), "dim", dim,
-                            (GtkDestroyNotify) gtk_widget_unref);
+
   gtk_widget_show (dim);
   gtk_table_attach (GTK_TABLE (table1), dim, 1, 2, 0, 1,
                     (GtkAttachOptions) (GTK_EXPAND | GTK_SHRINK | GTK_FILL),
@@ -150,19 +138,13 @@ create_GPE_Config_Sleep (ipaq_conf_t *ISconf)
   gtk_container_set_border_width (GTK_CONTAINER (dim), 1);
 
   table3 = gtk_table_new (2, 2, FALSE);
-  gtk_widget_set_name (table3, "table3");
-  gtk_widget_ref (table3);
-  gtk_object_set_data_full (GTK_OBJECT (GPE_Config_Sleep), "table3", table3,
-                            (GtkDestroyNotify) gtk_widget_unref);
+
   gtk_widget_show (table3);
   gtk_container_add (GTK_CONTAINER (dim), table3);
 
   dim_spin_adj = gtk_adjustment_new (60, 0, 1800, 5, 10, 10);
   dim_spin = gtk_spin_button_new (GTK_ADJUSTMENT (dim_spin_adj), 1, 0);
-  gtk_widget_set_name (dim_spin, "dim_spin");
-  gtk_widget_ref (dim_spin);
-  gtk_object_set_data_full (GTK_OBJECT (GPE_Config_Sleep), "dim_spin", dim_spin,
-                            (GtkDestroyNotify) gtk_widget_unref);
+
   gtk_widget_show (dim_spin);
   gtk_table_attach (GTK_TABLE (table3), dim_spin, 0, 1, 1, 2,
                     (GtkAttachOptions) (GTK_EXPAND | GTK_SHRINK | GTK_FILL),
@@ -170,10 +152,7 @@ create_GPE_Config_Sleep (ipaq_conf_t *ISconf)
   gtk_tooltips_set_tip (tooltips, dim_spin, "backlight dim timeout", NULL);
 
   dim_idle_label = gtk_label_new ("idle(sec)");
-  gtk_widget_set_name (dim_idle_label, "dim_idle_label");
-  gtk_widget_ref (dim_idle_label);
-  gtk_object_set_data_full (GTK_OBJECT (GPE_Config_Sleep), "dim_idle_label", dim_idle_label,
-                            (GtkDestroyNotify) gtk_widget_unref);
+
   gtk_widget_show (dim_idle_label);
   gtk_table_attach (GTK_TABLE (table3), dim_idle_label, 1, 2, 1, 2,
                     (GtkAttachOptions) (GTK_SHRINK | GTK_FILL),
@@ -181,10 +160,7 @@ create_GPE_Config_Sleep (ipaq_conf_t *ISconf)
   gtk_misc_set_alignment (GTK_MISC (dim_idle_label), 0, 0.5);
 
   dim_enable = gtk_check_button_new_with_label ("enabled");
-  gtk_widget_set_name (dim_enable, "dim_enable");
-  gtk_widget_ref (dim_enable);
-  gtk_object_set_data_full (GTK_OBJECT (GPE_Config_Sleep), "dim_enable", dim_enable,
-                            (GtkDestroyNotify) gtk_widget_unref);
+
   gtk_widget_show (dim_enable);
   gtk_table_attach (GTK_TABLE (table3), dim_enable, 0, 2, 0, 1,
                     (GtkAttachOptions) (GTK_SHRINK | GTK_FILL),
@@ -192,10 +168,7 @@ create_GPE_Config_Sleep (ipaq_conf_t *ISconf)
   GTK_WIDGET_UNSET_FLAGS (dim_enable, GTK_CAN_FOCUS);
 
   frame5 = gtk_frame_new ("Auto-sleep");
-  gtk_widget_set_name (frame5, "frame5");
-  gtk_widget_ref (frame5);
-  gtk_object_set_data_full (GTK_OBJECT (GPE_Config_Sleep), "frame5", frame5,
-                            (GtkDestroyNotify) gtk_widget_unref);
+
   gtk_widget_show (frame5);
   gtk_table_attach (GTK_TABLE (table1), frame5, 0, 1, 1, 2,
                     (GtkAttachOptions) (GTK_SHRINK | GTK_FILL),
@@ -203,18 +176,12 @@ create_GPE_Config_Sleep (ipaq_conf_t *ISconf)
   gtk_container_set_border_width (GTK_CONTAINER (frame5), 1);
 
   table4 = gtk_table_new (4, 3, FALSE);
-  gtk_widget_set_name (table4, "table4");
-  gtk_widget_ref (table4);
-  gtk_object_set_data_full (GTK_OBJECT (GPE_Config_Sleep), "table4", table4,
-                            (GtkDestroyNotify) gtk_widget_unref);
+
   gtk_widget_show (table4);
   gtk_container_add (GTK_CONTAINER (frame5), table4);
 
   sleep_cpu = gtk_check_button_new_with_label ("cpu");
-  gtk_widget_set_name (sleep_cpu, "sleep_cpu");
-  gtk_widget_ref (sleep_cpu);
-  gtk_object_set_data_full (GTK_OBJECT (GPE_Config_Sleep), "sleep_cpu", sleep_cpu,
-                            (GtkDestroyNotify) gtk_widget_unref);
+
   gtk_widget_show (sleep_cpu);
   gtk_table_attach (GTK_TABLE (table4), sleep_cpu, 0, 1, 1, 2,
                     (GtkAttachOptions) (GTK_SHRINK | GTK_FILL),
@@ -224,10 +191,7 @@ create_GPE_Config_Sleep (ipaq_conf_t *ISconf)
 
   sleep_cpu_spin_adj = gtk_adjustment_new (0.05, 0.01, 2, 0.01, 0.05, 10);
   sleep_cpu_spin = gtk_spin_button_new (GTK_ADJUSTMENT (sleep_cpu_spin_adj), 1, 2);
-  gtk_widget_set_name (sleep_cpu_spin, "sleep_cpu_spin");
-  gtk_widget_ref (sleep_cpu_spin);
-  gtk_object_set_data_full (GTK_OBJECT (GPE_Config_Sleep), "sleep_cpu_spin", sleep_cpu_spin,
-                            (GtkDestroyNotify) gtk_widget_unref);
+
   gtk_widget_show (sleep_cpu_spin);
   gtk_table_attach (GTK_TABLE (table4), sleep_cpu_spin, 1, 2, 1, 2,
                     (GtkAttachOptions) (GTK_EXPAND | GTK_SHRINK | GTK_FILL),
@@ -235,10 +199,7 @@ create_GPE_Config_Sleep (ipaq_conf_t *ISconf)
   gtk_spin_button_set_numeric (GTK_SPIN_BUTTON (sleep_cpu_spin), TRUE);
 
   sleep_cpu_label = gtk_label_new ("load");
-  gtk_widget_set_name (sleep_cpu_label, "sleep_cpu_label");
-  gtk_widget_ref (sleep_cpu_label);
-  gtk_object_set_data_full (GTK_OBJECT (GPE_Config_Sleep), "sleep_cpu_label", sleep_cpu_label,
-                            (GtkDestroyNotify) gtk_widget_unref);
+
   gtk_widget_show (sleep_cpu_label);
   gtk_table_attach (GTK_TABLE (table4), sleep_cpu_label, 2, 3, 1, 2,
                     (GtkAttachOptions) (GTK_SHRINK | GTK_FILL),
@@ -246,10 +207,7 @@ create_GPE_Config_Sleep (ipaq_conf_t *ISconf)
   gtk_misc_set_alignment (GTK_MISC (sleep_cpu_label), 0, 0.5);
 
   sleep_choose_irq = gtk_button_new_with_label ("Choose IRQs");
-  gtk_widget_set_name (sleep_choose_irq, "sleep_choose_irq");
-  gtk_widget_ref (sleep_choose_irq);
-  gtk_object_set_data_full (GTK_OBJECT (GPE_Config_Sleep), "sleep_choose_irq", sleep_choose_irq,
-                            (GtkDestroyNotify) gtk_widget_unref);
+
   gtk_widget_show (sleep_choose_irq);
   gtk_table_attach (GTK_TABLE (table4), sleep_choose_irq, 0, 3, 3, 4,
                     (GtkAttachOptions) (GTK_SHRINK | GTK_FILL),
@@ -258,10 +216,7 @@ create_GPE_Config_Sleep (ipaq_conf_t *ISconf)
   GTK_WIDGET_UNSET_FLAGS (sleep_choose_irq, GTK_CAN_FOCUS);
 
   sleep_apm = gtk_check_button_new_with_label ("apm");
-  gtk_widget_set_name (sleep_apm, "sleep_apm");
-  gtk_widget_ref (sleep_apm);
-  gtk_object_set_data_full (GTK_OBJECT (GPE_Config_Sleep), "sleep_apm", sleep_apm,
-                            (GtkDestroyNotify) gtk_widget_unref);
+
   gtk_widget_show (sleep_apm);
   gtk_table_attach (GTK_TABLE (table4), sleep_apm, 0, 3, 0, 1,
                     (GtkAttachOptions) (GTK_SHRINK | GTK_FILL),
@@ -270,10 +225,7 @@ create_GPE_Config_Sleep (ipaq_conf_t *ISconf)
   gtk_tooltips_set_tip (tooltips, sleep_apm, "Sleep on AC", NULL);
 
   sleep_probe_irq = gtk_check_button_new_with_label ("probe IRQs");
-  gtk_widget_set_name (sleep_probe_irq, "sleep_probe_irq");
-  gtk_widget_ref (sleep_probe_irq);
-  gtk_object_set_data_full (GTK_OBJECT (GPE_Config_Sleep), "sleep_probe_irq", sleep_probe_irq,
-                            (GtkDestroyNotify) gtk_widget_unref);
+
   gtk_widget_show (sleep_probe_irq);
   gtk_table_attach (GTK_TABLE (table4), sleep_probe_irq, 0, 3, 2, 3,
                     (GtkAttachOptions) (GTK_SHRINK | GTK_FILL),
@@ -282,10 +234,7 @@ create_GPE_Config_Sleep (ipaq_conf_t *ISconf)
   gtk_tooltips_set_tip (tooltips, sleep_probe_irq, "Check IRQ activity", NULL);
 
   frame6 = gtk_frame_new ("Auto-dim level");
-  gtk_widget_set_name (frame6, "frame6");
-  gtk_widget_ref (frame6);
-  gtk_object_set_data_full (GTK_OBJECT (GPE_Config_Sleep), "frame6", frame6,
-                            (GtkDestroyNotify) gtk_widget_unref);
+
   gtk_widget_show (frame6);
   gtk_table_attach (GTK_TABLE (table1), frame6, 1, 2, 1, 2,
                     (GtkAttachOptions) (GTK_SHRINK | GTK_FILL),
@@ -293,10 +242,7 @@ create_GPE_Config_Sleep (ipaq_conf_t *ISconf)
   gtk_container_set_border_width (GTK_CONTAINER (frame6), 1);
 
   vbox2 = gtk_vbox_new (FALSE, 0);
-  gtk_widget_set_name (vbox2, "vbox2");
-  gtk_widget_ref (vbox2);
-  gtk_object_set_data_full (GTK_OBJECT (GPE_Config_Sleep), "vbox2", vbox2,
-                            (GtkDestroyNotify) gtk_widget_unref);
+
   gtk_widget_show (vbox2);
   gtk_container_add (GTK_CONTAINER (frame6), vbox2);
 
@@ -316,54 +262,31 @@ create_GPE_Config_Sleep (ipaq_conf_t *ISconf)
 
   dim_adj = gtk_adjustment_new (blVal, 0, 255, 1, 5, 0);
   dim_scale = gtk_vscale_new (GTK_ADJUSTMENT (dim_adj));
-  gtk_widget_set_name (dim_scale, "dim_scale");
-  gtk_widget_ref (dim_scale);
-  gtk_object_set_data_full (GTK_OBJECT (GPE_Config_Sleep), "dim_scale", dim_scale,
-                            (GtkDestroyNotify) gtk_widget_unref);
+
   gtk_widget_show (dim_scale);
   gtk_box_pack_start (GTK_BOX (vbox2), dim_scale, TRUE, TRUE, 0);
   gtk_scale_set_digits (GTK_SCALE (dim_scale), 0);
 
   hbuttonbox1 = gtk_hbutton_box_new ();
-  gtk_widget_set_name (hbuttonbox1, "hbuttonbox1");
-  gtk_widget_ref (hbuttonbox1);
-  gtk_object_set_data_full (GTK_OBJECT (GPE_Config_Sleep), "hbuttonbox1", hbuttonbox1,
-                            (GtkDestroyNotify) gtk_widget_unref);
+
   gtk_widget_show (hbuttonbox1);
   gtk_table_attach (GTK_TABLE (table1), hbuttonbox1, 0, 2, 2, 3,
                     (GtkAttachOptions) (GTK_SHRINK | GTK_FILL),
                     (GtkAttachOptions) (GTK_EXPAND | GTK_SHRINK | GTK_FILL), 0, 0);
 
-  start_but = gtk_button_new_with_label ("Start");
-  gtk_widget_set_name (start_but, "start_but");
-  gtk_widget_ref (start_but);
-  gtk_object_set_data_full (GTK_OBJECT (GPE_Config_Sleep), "start_but", start_but,
-                            (GtkDestroyNotify) gtk_widget_unref);
+  start_but = gpe_picture_button(wstyle, _("Start"),"media-play" );//gtk_button_new_with_label ("Start");
+
   gtk_widget_show (start_but);
   gtk_container_add (GTK_CONTAINER (hbuttonbox1), start_but);
   gtk_container_set_border_width (GTK_CONTAINER (start_but), 1);
   GTK_WIDGET_SET_FLAGS (start_but, GTK_CAN_DEFAULT);
 
-  stop_but = gtk_button_new_with_label ("Stop");
-  gtk_widget_set_name (stop_but, "stop_but");
-  gtk_widget_ref (stop_but);
-  gtk_object_set_data_full (GTK_OBJECT (GPE_Config_Sleep), "stop_but", stop_but,
-                            (GtkDestroyNotify) gtk_widget_unref);
+  stop_but = gpe_picture_button(wstyle, _("Stop"),"media-stop" );//gtk_button_new_with_label ("Stop");
+
   gtk_widget_show (stop_but);
   gtk_container_add (GTK_CONTAINER (hbuttonbox1), stop_but);
   gtk_container_set_border_width (GTK_CONTAINER (stop_but), 1);
   GTK_WIDGET_SET_FLAGS (stop_but, GTK_CAN_DEFAULT);
-
-  quit_but = gtk_button_new_with_label ("Quit");
-  gtk_widget_set_name (quit_but, "quit_but");
-  gtk_widget_ref (quit_but);
-  gtk_object_set_data_full (GTK_OBJECT (GPE_Config_Sleep), "quit_but", quit_but,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (quit_but);
-  gtk_container_add (GTK_CONTAINER (hbuttonbox1), quit_but);
-  gtk_container_set_border_width (GTK_CONTAINER (quit_but), 1);
-  GTK_WIDGET_UNSET_FLAGS (quit_but, GTK_CAN_FOCUS);
-  GTK_WIDGET_SET_FLAGS (quit_but, GTK_CAN_DEFAULT);
 
   gtk_signal_connect (GTK_OBJECT (GPE_Config_Sleep), "delete_event",
                       GTK_SIGNAL_FUNC (gtk_main_quit),
@@ -422,9 +345,6 @@ create_GPE_Config_Sleep (ipaq_conf_t *ISconf)
   gtk_signal_connect (GTK_OBJECT (stop_but), "clicked",
                       GTK_SIGNAL_FUNC (stop_button),
                       ISconf);
-  gtk_signal_connect (GTK_OBJECT (quit_but), "clicked",
-                      GTK_SIGNAL_FUNC (mainquit),
-                      ISconf);
 
   gtk_object_set_data (GTK_OBJECT (GPE_Config_Sleep), "tooltips", tooltips);
 
@@ -437,41 +357,30 @@ create_irq_win (ipaq_conf_t *ISconf)
   GtkWidget *irq_win;
   GtkWidget *vbox3;
   GtkWidget *scrolledwindow1;
-  GtkWidget *irqList;
   GtkWidget *irq_tog;
   GtkWidget *irq_des;
   GtkWidget *irq_done;
 
   irq_win = gtk_window_new (GTK_WINDOW_DIALOG);
   gtk_widget_set_name (irq_win, "irq_win");
-  gtk_object_set_data (GTK_OBJECT (irq_win), "irq_win", irq_win);
   gtk_window_set_title (GTK_WINDOW (irq_win), "Select IRQs");
   gtk_window_set_modal (GTK_WINDOW (irq_win), TRUE);
   gtk_window_set_default_size (GTK_WINDOW (irq_win), 200, 150);
   gtk_window_set_policy (GTK_WINDOW (irq_win), TRUE, TRUE, TRUE);
 
   vbox3 = gtk_vbox_new (FALSE, 0);
-  gtk_widget_set_name (vbox3, "vbox3");
-  gtk_widget_ref (vbox3);
-  gtk_object_set_data_full (GTK_OBJECT (irq_win), "vbox3", vbox3,
-                            (GtkDestroyNotify) gtk_widget_unref);
+
   gtk_widget_show (vbox3);
   gtk_container_add (GTK_CONTAINER (irq_win), vbox3);
 
   scrolledwindow1 = gtk_scrolled_window_new (NULL, NULL);
-  gtk_widget_set_name (scrolledwindow1, "scrolledwindow1");
-  gtk_widget_ref (scrolledwindow1);
-  gtk_object_set_data_full (GTK_OBJECT (irq_win), "scrolledwindow1", scrolledwindow1,
-                            (GtkDestroyNotify) gtk_widget_unref);
+
   gtk_widget_show (scrolledwindow1);
   gtk_box_pack_start (GTK_BOX (vbox3), scrolledwindow1, TRUE, TRUE, 0);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow1), GTK_POLICY_AUTOMATIC, GTK_POLICY_ALWAYS);
 
   irqList = gtk_clist_new (2);
-  gtk_widget_set_name (irqList, "irqList");
-  gtk_widget_ref (irqList);
-  gtk_object_set_data_full (GTK_OBJECT (irq_win), "irqList", irqList,
-                            (GtkDestroyNotify) gtk_widget_unref);
+
   gtk_widget_show (irqList);
   gtk_container_add (GTK_CONTAINER (scrolledwindow1), irqList);
   GTK_WIDGET_UNSET_FLAGS (irqList, GTK_CAN_FOCUS);
@@ -480,28 +389,19 @@ create_irq_win (ipaq_conf_t *ISconf)
   gtk_clist_column_titles_show (GTK_CLIST (irqList));
 
   irq_tog = gtk_label_new ("Active");
-  gtk_widget_set_name (irq_tog, "irq_tog");
-  gtk_widget_ref (irq_tog);
-  gtk_object_set_data_full (GTK_OBJECT (irq_win), "irq_tog", irq_tog,
-                            (GtkDestroyNotify) gtk_widget_unref);
+
   gtk_widget_show (irq_tog);
   gtk_clist_set_column_widget (GTK_CLIST (irqList), 0, irq_tog);
   gtk_label_set_justify (GTK_LABEL (irq_tog), GTK_JUSTIFY_LEFT);
 
   irq_des = gtk_label_new ("Description");
-  gtk_widget_set_name (irq_des, "irq_des");
-  gtk_widget_ref (irq_des);
-  gtk_object_set_data_full (GTK_OBJECT (irq_win), "irq_des", irq_des,
-                            (GtkDestroyNotify) gtk_widget_unref);
+
   gtk_widget_show (irq_des);
   gtk_clist_set_column_widget (GTK_CLIST (irqList), 1, irq_des);
   gtk_label_set_justify (GTK_LABEL (irq_des), GTK_JUSTIFY_LEFT);
 
   irq_done = gtk_button_new_with_label ("Done");
-  gtk_widget_set_name (irq_done, "irq_done");
-  gtk_widget_ref (irq_done);
-  gtk_object_set_data_full (GTK_OBJECT (irq_win), "irq_done", irq_done,
-                            (GtkDestroyNotify) gtk_widget_unref);
+
   gtk_widget_show (irq_done);
   gtk_box_pack_start (GTK_BOX (vbox3), irq_done, FALSE, FALSE, 0);
   gtk_container_set_border_width (GTK_CONTAINER (irq_done), 2);
