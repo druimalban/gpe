@@ -2,6 +2,7 @@ Package: gpe-filemanager2
 Section: base
 Priority: optional
 Version: VERSION
+Source: SOURCE
 Architecture: arm
 Maintainer: Damien Tanner <dctanner@magenet.com>
 Provides: gpe-filemanager
