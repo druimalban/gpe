@@ -280,19 +280,19 @@ day_view_update ()
 	  if ((ev->flags & FLAG_ALARM) && (ev->flags & FLAG_RECUR))
 	    {
 	      if (gpe_find_icon_pixmap ("bell_recur", &pmap, &bmap))
-		gtk_clist_set_pixtext (GTK_CLIST (day_list), row, 1, text, 10,
+		gtk_clist_set_pixtext (GTK_CLIST (day_list), row, 1, text, 5,
 				       pmap, bmap);
 	    }
 	  else if (ev->flags & FLAG_ALARM)
 	    { 
 	      if (gpe_find_icon_pixmap ("bell", &pmap, &bmap))
-		gtk_clist_set_pixtext (GTK_CLIST (day_list), row, 1, text, 10,
+		gtk_clist_set_pixtext (GTK_CLIST (day_list), row, 1, text, 5,
 				       pmap, bmap);
 	    }
 	  else if (ev->flags & FLAG_RECUR)
 	    {
 	      if (gpe_find_icon_pixmap ("recur", &pmap, &bmap))
-		gtk_clist_set_pixtext (GTK_CLIST (day_list), row, 1, text, 10,
+		gtk_clist_set_pixtext (GTK_CLIST (day_list), row, 1, text, 5,
 				       pmap, bmap);
 	    }
 	}

@@ -32,7 +32,7 @@
 struct edit_state
 {
   GtkWidget *deletebutton;
-  GtkWidget *notebooktype, *notebook;
+  GtkWidget *notebooktype, *notebookedit;
 
   GtkWidget *startdate, *enddate;
   GtkWidget *starttime, *endtime;
@@ -187,14 +187,14 @@ schedule_alarm(event_t ev, time_t start)
   
   sprintf(filename, "/var/spool/at/%d.1234", (int)alarm_t);
   
-  if (!fopen(filename, "r"))
+  if (fopen(filename, "w"))
   {
     if ((f=fopen(filename, "w")))
     {
       fprintf(f, "#!/bin/sh\n");
       fprintf(f, "export DISPLAY=:0.0\n");
       fprintf(f, "/usr/bin/gpe-announce '%s'\n", ev_d->summary);
-      fprintf(f, "/usr/bin/gpe-calendar -s\n");
+      fprintf(f, "/usr/bin/gpe-calendar -s %ld\n", (int)60*ev->alarm);
       fprintf(f, "/bin/rm $0\n");
 
       fclose(f);
@@ -229,12 +229,13 @@ unschedule_alarm(event_t ev)
 }
 
 void
-schedule_next()
+schedule_next(guint skip)
 {
   GSList *events=NULL, *iter;
   struct tm tm;
   time_t end, start=time(NULL);
   
+  start+=skip;
   localtime_r (&start, &tm);
   tm.tm_year++;
   end=mktime (&tm);   
@@ -273,7 +274,7 @@ click_delete (GtkWidget *widget, event_t ev)
   if (ev->flags & FLAG_ALARM) 
   { 
     unschedule_alarm (ev);
-    schedule_next();
+    schedule_next(0);
   }
   
   event_db_remove (ev);
@@ -505,7 +506,7 @@ click_ok (GtkWidget *widget, GtkWidget *d)
     event_db_flush (ev);
 
   if (ev->flags & FLAG_ALARM)  
-    schedule_next();
+    schedule_next(0);
 
   event_db_forget_details (ev);
   
@@ -518,6 +519,8 @@ static void
 click_cancel (GtkWidget *widget,
 	      GtkWidget *d)
 {
+  update_current_view ();
+      
   edit_finished (d);
 }
 
@@ -554,7 +557,7 @@ build_edit_event_window (void)
   GtkAdjustment *endspin_adj, *dailyspin_adj, *monthlyspin_adj, *yearlyspin_adj;
   GtkAdjustment *taskadj;
    
-  GtkWidget *notebook = gtk_notebook_new ();
+  GtkWidget *notebookedit = gtk_notebook_new ();
   GtkWidget *labeleventpage = gtk_label_new (_("Event"));
   GtkWidget *labelrecurpage = gtk_label_new (_("Recurrence"));
   GtkWidget *labelalarmpage = gtk_label_new (_("Alarm"));
@@ -1034,7 +1037,7 @@ build_edit_event_window (void)
   gtk_box_pack_start_show (GTK_BOX (buttonbox), buttoncancel, TRUE, FALSE, 4);
   gtk_box_pack_start_show (GTK_BOX (buttonbox), buttonok, TRUE, FALSE, 4);
 
-  gtk_box_pack_start_show (GTK_BOX (vboxtop), notebook, TRUE, TRUE, 2);
+  gtk_box_pack_start_show (GTK_BOX (vboxtop), notebookedit, TRUE, TRUE, 2);
   gtk_box_pack_start_show (GTK_BOX (vboxtop), buttonbox, FALSE, FALSE, 2);
 
   gtk_widget_show (vboxtop);
@@ -1047,15 +1050,15 @@ build_edit_event_window (void)
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindowevent),
 				  GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
 
-  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), scrolledwindowevent, 
+  gtk_notebook_append_page (GTK_NOTEBOOK (notebookedit), scrolledwindowevent, 
 			    labeleventpage);
-  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), vboxalarm,
+  gtk_notebook_append_page (GTK_NOTEBOOK (notebookedit), vboxalarm,
 			    labelalarmpage);
-  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), vboxrepeattop, 
+  gtk_notebook_append_page (GTK_NOTEBOOK (notebookedit), vboxrepeattop, 
 			    labelrecurpage);
   gtk_widget_grab_focus (summaryentry);
 
-  s->notebook = notebook;
+  s->notebookedit = notebookedit;
   s->deletebutton = buttondelete;
   s->starttime = starttime;
   s->endtime = endtime;
@@ -1149,7 +1152,7 @@ new_event (time_t t, guint timesel)
       
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->alarmbutton), FALSE);
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->radiobuttonnone), TRUE);
-      gtk_notebook_set_page (GTK_NOTEBOOK (s->notebook), 0);
+      gtk_notebook_set_page (GTK_NOTEBOOK (s->notebookedit), 0);
       gtk_entry_set_text (GTK_ENTRY (s->summary), "");
 #if GTK_MAJOR_VERSION >= 2
       gtk_text_buffer_set_text (gtk_text_view_get_buffer (GTK_TEXT_VIEW (s->description)), "", -1);
@@ -1201,7 +1204,7 @@ edit_event (event_t ev)
       localtime_r (&end, &tm);
       strftime (buf, sizeof(buf), TIMEFMT, &tm);
       gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (s->endtime)->entry), buf);
-      gtk_notebook_set_page (GTK_NOTEBOOK (s->notebook), 0);
+      gtk_notebook_set_page (GTK_NOTEBOOK (s->notebookedit), 0);
       gtk_date_combo_set_date (GTK_DATE_COMBO (s->enddate),
 			       tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
       

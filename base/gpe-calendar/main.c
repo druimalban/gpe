@@ -154,7 +154,7 @@ button_toggled (GtkWidget *widget, gpointer data)
 static void
 gpe_cal_exit()
 {
-  schedule_next();
+  schedule_next(0);
   gtk_main_quit();	
 }
 		
@@ -165,7 +165,7 @@ main (int argc, char *argv[])
   GdkPixbuf *p;
   GtkWidget *pw;
 
-  guint hour;
+  guint hour, skip=0;
   int option_letter;
   extern char *optarg;
 
@@ -185,15 +185,17 @@ main (int argc, char *argv[])
   if (event_db_start () == FALSE)
     exit (1);
 
-  schedule_next();
+  while ((option_letter = getopt(argc, argv, "s:")) != -1 ){
   
-  while ((option_letter = getopt(argc, argv, "s")) != -1 ){
-  
-    if (option_letter == 's') {    
+    if (option_letter == 's') {  
+      skip = atol(optarg);  
+      schedule_next(skip);
       exit(0);     
     }   
 
   }   
+  
+  schedule_next(skip);
   
   for (hour = 0; hour < 24; hour++)
     {

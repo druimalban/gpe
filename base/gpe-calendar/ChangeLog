@@ -1,5 +1,16 @@
 2003-01-08  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>
 
+	* main.c: add "skip" time
+	* event-ui.c: same
+	* day_popup.c : add pretty pixmaps
+	* day_view.c : cut space down
+	
+2003-01-08  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>
+
+	* Makefile: removed reference to old-db.c
+	
+2003-01-08  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>
+
 	* main.c: Change "event-db.h" for <gpe/event-db.h>
 	* event-ui.c: fix notebook page handling on edit/new
 	
