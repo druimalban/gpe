@@ -47,6 +47,7 @@
 #include "packages.h"
 #include "cardinfo.h"
 #include "tasks.h"
+#include "battery.h"
 
 #include <gpe/init.h>
 #include <gpe/picturebutton.h>
@@ -101,7 +102,8 @@ struct Applet applets[]=
     { &Serial_Build_Objects, &Serial_Free_Objects, &Serial_Save, &Serial_Restore , "Serial" ,"serial","Serial Port Configuration"},
     { &Logread_Build_Objects, &Logread_Free_Objects, &Unimplemented_Save, &Logread_Restore , "Logread" ,"logread", "Show logfile"},
     { &Cardinfo_Build_Objects, &Cardinfo_Free_Objects, &Unimplemented_Save, &Cardinfo_Restore , "Cardinfo" ,"cardinfo","PC/CF Card Info and Config"},
-    { &Packages_Build_Objects, &Packages_Free_Objects, &Unimplemented_Save, &Packages_Restore , "Packages" ,"packages","Adding and Removing Programs"},
+    { &Packages_Build_Objects, &Packages_Free_Objects, &Unimplemented_Save, &Packages_Restore , "Packages" ,"packages","Add and Remove packages"},
+    { &Battery_Build_Objects, &Battery_Free_Objects, &Unimplemented_Save, &Battery_Restore , "Battery" ,"battery","Battery info"},
     { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Task nameserver" ,"task_nameserver","Task for changing nameserver"}
   };
   

@@ -80,6 +80,7 @@ MEMBERS += logread
 MEMBERS += packages cardinfo
 MEMBERS += tools/interface
 MEMBERS += tasks
+MEMBERS += battery
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
@@ -116,6 +117,7 @@ PIXMAPS += pccard-network.png
 PIXMAPS += pccard-usb.png
 PIXMAPS += gpe-config-logread.png
 PIXMAPS += gpe-config-keyboard.png
+PIXMAPS += gpe-config-battery.png
 
 all: $(PACKAGE) 
 

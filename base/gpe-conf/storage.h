@@ -6,4 +6,7 @@ void Storage_Free_Objects();
 void Storage_Save();
 void Storage_Restore();
 
+/* helper function, may be interesting for other applets */
+void toolbar_set_style (GtkWidget * bar, gint percent); 
+
 #endif

@@ -1,9 +1,16 @@
 When			Who				Where						What
 
+07.07.2003		Florian			storage.c					Added some space, some smaller optical changes.
+								battery.*					New applet: Battery info!
+								gpe-conf-battery.desktop
+								pixmaps/gpe-conf-battery.png
+								Makefile
+								main.c
+
 06.07.2003		Moray			Makefile	No longer install old-style menu file.
-						applets.c	Removed legacy GTK1 code.
-						keyctl.c	Removed legacy GTK1 code.
-						network.c	Removed legacy GTK1 code.
+								applets.c	Removed legacy GTK1 code.
+								keyctl.c	Removed legacy GTK1 code.
+								network.c	Removed legacy GTK1 code.
 
 06.07.2003		Florian			storage.c					Fixed storage info show rootfs with new mountpoint.
 															Made memory info displaying first for faster feedback.
