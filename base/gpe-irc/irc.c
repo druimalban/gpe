@@ -22,12 +22,15 @@
 #define SERVICE "ircd"
 
 gboolean
-irc_server_read (IRCServer *server)
+irc_server_read (IRCServer *server, gchar *passback_message)
 {
   fd_set rfds;
   int data_waiting, buf_len, char_num = 0, message_num = 0;
   char buf[256];
   char *message = NULL;
+  struct timeval tv;
+  tv.tv_sec = 0;
+  tv.tv_usec = 1;
 
   FD_ZERO (&rfds);
   FD_SET (server->fd, &rfds);
@@ -35,8 +38,11 @@ irc_server_read (IRCServer *server)
   if (server->fd == -1)
   {
     printf ("No socket open!\n");
-    return -1;
+    return FALSE;
   }
+
+  if (!select (server->fd + 1, &rfds, NULL, NULL, &tv))
+    return FALSE;
 
   while (1)
   {
@@ -65,7 +71,8 @@ irc_server_read (IRCServer *server)
 	    message[message_num] = '\0';
 	    printf ("%s", message);
 	    message_num = 0;
-	    return message;
+	    passback_message = g_strdup (message);
+	    return TRUE;
 	  }
 
 	  char_num++;
@@ -77,7 +84,7 @@ irc_server_read (IRCServer *server)
       gtk_main_iteration ();
   }
 
-  return -1;
+  return FALSE;
 }
 
 /* Send a the users message to specified channel on specified server */
@@ -105,7 +112,9 @@ irc_server_join_channel (IRCServer *server, gchar *channel)
   {
     printf ("Channel joined.\n");
     irc_channel = g_malloc (sizeof (*irc_channel));
-    g_hash_table_insert (server->channel, (gpointer) channel, (gpointer) irc_channel);
+    irc_channel->name = g_strdup (channel);
+    irc_channel->queue_in = g_queue_new ();
+    g_list_append (server->channels, (gpointer) irc_channel);
     return TRUE;
   }
 
@@ -117,8 +126,8 @@ irc_server_join_channel (IRCServer *server, gchar *channel)
 gboolean
 irc_server_login_init (IRCServer *server)
 {
-  server->channel = g_hash_table_new (g_str_hash, g_str_equal);
-  irc_server_join_channel (server, "#gpe");
+  //server->channel = NULL;
+  //irc_server_join_channel (server, "#gpe");
 
   return TRUE;
 }
