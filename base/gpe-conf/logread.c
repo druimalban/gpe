@@ -124,7 +124,11 @@ int logread_main()
 	else
 	{
 		if (logtail != buf->tail)	// append
+		{	
+			printf("new_item\n");
+			printlog(txLog,"new_item\n");
 			i=logtail;
+		}
 		else 						// nothing to do
 		{
 			shmdt(buf);
@@ -190,6 +194,7 @@ Logread_Build_Objects (void)
   gtk_box_pack_start(GTK_BOX(vbox),tw,FALSE,TRUE,0);
 
   tc = gtk_scrolled_window_new(NULL,NULL);
+  gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(tc),GTK_SHADOW_IN);
   gtk_box_pack_start(GTK_BOX(vbox),tc,TRUE,TRUE,0);
 
   tw = gtk_text_view_new();	

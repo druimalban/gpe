@@ -34,6 +34,7 @@
 #include "ipaqscreen/brightness.h"
 #include "ipaqscreen/rotation.h"
 #include "packages.h"
+#include "serial.h"
 
 static GtkWidget *passwd_entry;
 static int retv;
@@ -344,6 +345,8 @@ suidloop (int write, int read)
   nsreturnfd = write;
   nsreturn = fdopen (write,"w");
 
+  g_type_init();
+	
   while (!feof (in))		// the prg exits with sigpipe
     {
       cmd[0] = ' ';
@@ -468,6 +471,11 @@ suidloop (int write, int read)
 	      {
 		fscanf (in, "%100s", arg1);
 		update_packages ();
+	      }
+	    else if (strcmp (cmd, "SERU") == 0)
+	      {
+		fscanf (in, "%d", &numarg);
+		assign_serial_port(numarg);
 	      }
 #if 0
 	    if (bin)		// fork and exec

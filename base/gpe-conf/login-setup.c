@@ -103,35 +103,7 @@ GtkWidget *Login_Setup_Build_Objects()
       login_bg_filename[bytes] = '\0';
     }
   g_message ("login-setup: File at end of symlink: %s", login_bg_filename);
-#warning this 
-#if 0
-	/* either we can write to the file... */
-  if ((access (GPE_LOGIN_BG_DONTSHOW_FILE, W_OK) == 0) ||
-      /* ...or we are allowed to write in this directory, and the file does not yet exist */
-      (((access (gpe_dirname (g_strdup (GPE_LOGIN_BG_DONTSHOW_FILE)), W_OK)) == 0) &&
-       (access (GPE_LOGIN_BG_DONTSHOW_FILE, F_OK) != 0)))
-    login_bg_show_writable = TRUE;
-  else
-    login_bg_show_writable = FALSE;
-  
-  /* either we can write to the file... */
-  if ((access (GPE_OWNERINFO_DONTSHOW_FILE, W_OK) == 0) ||
-      /* ...or we are allowed to write in this directory, and the file does not yet exist */
-      (((access (gpe_dirname (g_strdup (GPE_OWNERINFO_DONTSHOW_FILE)), W_OK)) == 0) &&
-       (access (GPE_OWNERINFO_DONTSHOW_FILE, F_OK) != 0)))
-    ownerinfo_show_writable = TRUE;
-  else
-    ownerinfo_show_writable = FALSE;
-  
-  if (access (GPE_LOGIN_LOCK_SCRIPT, W_OK) == 0) 
-  {
-    login_lock_script_writable = TRUE;
-  }
-  else
-  {
-    login_lock_script_writable = FALSE;
-  }
- #endif 
+	
   if (suid_exec("CHEK",""))
   {
     login_bg_show_writable = FALSE;

@@ -94,7 +94,7 @@ struct Applet applets[]=
     { &GpeAdmin_Build_Objects, &GpeAdmin_Free_Objects, &GpeAdmin_Save, &GpeAdmin_Restore , "GPE" ,"admin","GPE Conf Administration"},
     { &Storage_Build_Objects, &Storage_Free_Objects, &Unimplemented_Save, &Storage_Restore , "Storage" ,"storage","Storage Information"},
     { &Serial_Build_Objects, &Serial_Free_Objects, &Serial_Save, &Serial_Restore , "Serial" ,"serial","Serial Port Configuration"},
-    { &Logread_Build_Objects, &Logread_Free_Objects, &Logread_Save, &Logread_Restore , "Logread" ,"logread", "Show logfile"},
+    { &Logread_Build_Objects, &Logread_Free_Objects, &Unimplemented_Save, &Logread_Restore , "Logread" ,"logread", "Show logfile"},
     { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Screensvr" ,"screensaver","Screen Saver Configuration"},
     { &Packages_Build_Objects, &Packages_Free_Objects, &Unimplemented_Save, &Packages_Restore , "Packages" ,"packages","Adding and Removing Programs"},
   };

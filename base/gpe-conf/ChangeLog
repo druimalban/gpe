@@ -1,5 +1,9 @@
 When			Who				Where						What
 
+31.03.2003		Florian			serial.*					Hacked very basic serial config code.
+								suid.c						What is missing?
+								logread.c					Some minor bugfixes.
+
 31.03.2003		Florian			theme.c						Application (GTK) font selection, font selection gui update.
 
 28.03.2003		Florian			timeanddate.c				Changed ui to use GtkDateCombo.
