@@ -1,6 +1,6 @@
 PACKAGE = gpe-conf
 VERSION = 0.1.6
-NATIVE ?= yes
+NATIVE = yes
 CVSBUILD = yes
 DEBUG = no
 INSTALL = install
@@ -26,7 +26,7 @@ EXTRA_DESKTOPS = \
 	gpe-conf-sysinfo.desktop.in	
 
 ifeq ($(CVSBUILD),yes)
-LDFLAGS += -L../libgpewidget -L../libxsettings  -L../libxsettings-client -L../libdotdesktop  -L.
+LIBS += -L../libgpewidget -L../libxsettings  -L../libxsettings-client -L../libdotdesktop  -L.
 CFLAGS += -Wall -I../libgpewidget -I../libxsettings-client -I../libxsettings -I../libdotdesktop
 BUILD = ../build
 else
@@ -40,7 +40,7 @@ else
 CFLAGS += -Os -fomit-frame-pointer
 endif
 
-LDFLAGS += -lXsettings -lXsettings-client -lcrypt
+LIBS += -lXsettings -lXsettings-client -lcrypt
 CFLAGS += -DVERSION=\"$(VERSION)\" -DPREFIX=\"$(PREFIX)\" -D_GNU_SOURCE
 CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 
@@ -54,7 +54,7 @@ STRIP=strip
 CC=gcc
 
 CFLAGS += `pkg-config --cflags gtk+-2.0 gdk-pixbuf-2.0` -Wall
-LDFLAGS += -lgpewidget `pkg-config --libs gtk+-2.0 gdk-pixbuf-2.0` -ldotdesktop 
+LIBS += -lgpewidget `pkg-config --libs gtk+-2.0 gdk-pixbuf-2.0` -ldotdesktop 
 
 else # we do cross-compile...
 
@@ -63,11 +63,11 @@ STRIP=arm-linux-strip
 
 CFLAGS += -march=armv4 -mtune=strongarm
 CFLAGS += `pkg-config --cflags gtk+-2.0 gdk-pixbuf-2.0` -Wall 
-LDFLAGS += -L/skiff/local/arm-linux/lib -L/skiff/local/arm-linux/lib/X11  
-LDFLAGS += -lgpewidget -lgtk-x11-2.0 -lgdk-x11-2.0 -latk-1.0 -lpangoxft-1.0 
-LDFLAGS += -lpangox-1.0 -lpango-1.0 -lgdk_pixbuf-2.0 -lm -lgobject-2.0 
-LDFLAGS += -lgmodule-2.0 -ldl -lglib-2.0 -ldotdesktop -lXinerama
-LDFLAGS += -lX11 -lXext -lXrender -lgdk-x11-2.0
+LIBS += -L/skiff/local/arm-linux/lib -L/skiff/local/arm-linux/lib/X11  
+LIBS += -lgpewidget -lgtk-x11-2.0 -lgdk-x11-2.0 -latk-1.0 -lpangoxft-1.0 
+LIBS += -lpangox-1.0 -lpango-1.0 -lgdk_pixbuf-2.0 -lm -lgobject-2.0 
+LIBS += -lgmodule-2.0 -ldl -lglib-2.0 -ldotdesktop -lXinerama
+LIBS += -lX11 -lXext -lXrender -lgdk-x11-2.0
 
 endif #native or cross-compile
 
@@ -167,12 +167,12 @@ endif
 all: $(PACKAGE) gpe-info
 
 $(PACKAGE): $(OBJS)
-	$(CC) -g -o $@ $(OBJS) $(LDFLAGS)
+	$(CC) -g -o $@ $(OBJS) $(LIBS)
 	cp $(PACKAGE) gpe-conf.pc
 	$(STRIP) $(PACKAGE)
 
 gpe-info: $(OBJS_INFO)
-	$(CC) -g -o $@ $(OBJS_INFO) $(LDFLAGS)
+	$(CC) -g -o $@ $(OBJS_INFO) $(LIBS)
 	$(STRIP) gpe-info
 	
 install-program: all all-desktop

@@ -63,11 +63,11 @@ gboolean login_lock_script_writable  = FALSE;
 guint buttonwidth, buttonheight = 42;
 guint hsync = 36;
 
-static gchar login_bg_filename[PATH_MAX + 1];
+static gchar login_bg_filename[PATH_MAX + 1] = "<none>";
 
 
 void update_login_lock (GtkWidget *togglebutton,gpointer  user_data);
-
+static void File_Selected (char *file, gpointer data);
 
 GtkWidget *Login_Setup_Build_Objects()
 {
@@ -199,10 +199,6 @@ GtkWidget *Login_Setup_Build_Objects()
  		      GTK_SIGNAL_FUNC (choose_login_bg_file),
  		      NULL);
   
-  gtk_signal_connect (GTK_OBJECT (login_bg_file_button), "size_allocate",
-		      GTK_SIGNAL_FUNC (on_login_bg_file_button_size_allocate),
-		      NULL);
-
   gtk_signal_connect (GTK_OBJECT (login_bg_show_check), "clicked",
                       GTK_SIGNAL_FUNC (update_login_bg_show),
                       NULL);
@@ -247,6 +243,10 @@ GtkWidget *Login_Setup_Build_Objects()
       gtk_widget_set_sensitive (login_lock_display_check, FALSE);
     }
 
+  gtk_signal_connect (GTK_OBJECT (login_bg_file_button), "size_allocate",
+		      GTK_SIGNAL_FUNC (on_login_bg_file_button_size_allocate),
+		      NULL);
+	
   return mainvbox;
 }
 
@@ -261,8 +261,11 @@ Login_Setup_Save ()
   char tmp[255];
   /* other settings apply immediately without saving, no explicit save necessary */
   /* here we should check if save is necessary */
-  snprintf(tmp,255,"%s",login_bg_filename);
-  suid_exec("ULBF",tmp);
+  if (!access(login_bg_filename,F_OK))
+  {
+  	snprintf(tmp,255,"%s",login_bg_filename);
+  	suid_exec("ULBF",tmp);
+  }
 }
 
 void
@@ -383,9 +386,10 @@ on_login_bg_file_button_size_allocate (GtkWidget       *widget,
 {
   /* Note: this updates only the first time the button/pixmap is
      drawn, but this is fine. */
-
-  /* g_message ("allocation1: %d x %d", allocation->width, allocation->height); */
-  
+	
+  /* sanity check */
+  if (access(login_bg_filename,R_OK)) return;
+	  
   buttonwidth  = allocation->width;
   buttonheight = allocation->height-hsync;
   hsync=0;
