@@ -830,9 +830,10 @@ radio_on (void)
 		}
 	}
 	cfg.autosend = (gboolean) devices_window;
+	send_command (C_DETECT_CARD, 0);
+	usleep(200000);
 	cfg.scan = TRUE;
 	send_config ();
-	send_command (C_DETECT_CARD, 0);
 }
 
 

@@ -4,7 +4,7 @@
                           prismstumbler.h  -  description
                              -------------------
     begin                : Wed Aug 14 2002
-    copyright            : (C) 2002 by Jan Fernquist, Florian Boor
+    copyright            : (C) 2002, 2004 by Jan Fernquist, Florian Boor
     email                : boor@unix-ag.org
  ***************************************************************************/
 
@@ -34,6 +34,7 @@
 #define PMAX 30
 #define RBUFFER_SIZE 10
 
+#define DT_NONE    0x00
 #define DT_PRISM   0x01
 #define DT_ORINOCO 0x02
 #define DT_HOSTAP  0x04
@@ -56,7 +57,8 @@ typedef enum
 	msg_gps,
 	msg_command,
 	msg_usernet,
-	msg_info
+	msg_info,
+	msg_node
 }
 psmsgtype_t;
 
@@ -66,7 +68,8 @@ typedef enum
 	C_SENDLIST,
 	C_CLEARLIST,
 	C_DETECT_CARD,
-	C_ASSOCIATE
+	C_ASSOCIATE,
+	C_GPSD
 }
 command_t;
 
@@ -218,6 +221,17 @@ typedef struct
 }
 usernetinfo_t;
 
+
+typedef struct
+{
+	char bssid[20];
+	char mac[20];
+	unsigned char ip[4];
+	unsigned short port;
+}
+nodeinfo_t;
+
+
 #define USET_BSSID 		0x0000
 #define USET_SSID  		0x0001
 #define USET_MODE 	 	0x0002
@@ -241,6 +255,7 @@ typedef struct
 		psgps_t gps;
 		usernetinfo_t usernet;
 		psinfo_t info; 
+		nodeinfo_t node;
 	}content;
 }
 psmessage_t;

@@ -1,7 +1,22 @@
 [Desktop Entry]
 Name=Aerial
+Name[cs]=Aerial - ovládání bezdrátových sítí
+Name[de]=Aerial
+Name[fr]=Aerial
+Name[nl]=Aerial
+Name[pt]=Aerial
+Name[ro]=Aerial
+Name[ru]=Aerial
+Name[sv]=Luftburen
 Comment=Panel based wireless LAN communications control
+Comment[cs]=Ovládání bezdrátových sítí z panelu
+Comment[fr]=Controle des communications sur un réseau local sans fil.
+Comment[nl]=Paneel-gebaseerde draadloze LAN communicatie beheerder
+Comment[pt]=Controlo de comunicações de redes sem-fios
+Comment[ro]=Panou pentru controlul comunicaţiilor prin LAN wireless
+Comment[ru]=Панель управления коммуникациями беспроводных ЛВС
+Comment[sv]=Panelbaserad styrning för trådlös LAN-kommunikation
 Exec=gpe-aerial
 Type=PanelApp
-Icon=/usr/share/gpe/pixmaps/default/gpe-aerial.png
+Icon=gpe-aerial.png
 Categories=Panel;Utility;GPE;WiFi
