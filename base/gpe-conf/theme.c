@@ -965,13 +965,13 @@ Theme_Build_Objects ()
   
   label = gtk_label_new(NULL);
   gtk_misc_set_alignment(GTK_MISC(label),0.0,0.1);
-  tstr = g_strdup_printf ("<b>%s</b>", _("Visual Performance"));
+  tstr = g_strdup_printf ("<b>%s</b>", _("Visual Effects"));
   gtk_label_set_markup (GTK_LABEL (label), tstr);
   g_free (tstr);
   gtk_table_attach (GTK_TABLE (table), label, 0, 2, 6, 7,
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
-  self.cPerformance = gtk_check_button_new_with_label(_("Visual Performance"));
+  self.cPerformance = gtk_check_button_new_with_label(_("Enable Visual Effects"));
   gtk_table_attach (GTK_TABLE (table), self.cPerformance, 0, 2, 7, 8,
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
