@@ -4,5 +4,6 @@ rfcomm-helper
 *.ipk
 pin-ui.c
 pin-dbus.c
+pin-ui.h
 *.d
 
