@@ -17,6 +17,7 @@
 #include "errorbox.h"
 #include "what.h"
 #include "tap.h"
+#include "stylus.h"
 
 gboolean
 gpe_application_init (int *argc, char **argv[])
@@ -64,7 +65,8 @@ gpe_application_init (int *argc, char **argv[])
 
   gpe_what_init ();
 
-  tap_hold_init ();
+  if (gpe_stylus_mode ())
+    tap_hold_init ();
 
   return TRUE;
 }

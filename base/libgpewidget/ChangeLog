@@ -1,5 +1,9 @@
 2003-01-04  Philip Blundell  <philb@gnu.org>
 
+	* init.c (gpe_application_init): Only do tap'n'hold in stylus mode.
+
+2003-01-04  Philip Blundell  <philb@gnu.org>
+
 	* gpe/what.h: Move to ...
 	* what.h: ... here.
 	
