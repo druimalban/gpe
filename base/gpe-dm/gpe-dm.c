@@ -60,10 +60,13 @@ start_server (gboolean crashed)
   else
     xserver = XSERVER;
 
-  xserver_pid = vfork ();
+  xserver_pid = fork ();
   if (xserver_pid == 0)
     {
+      int err;
       execl (xserver, xserver, dpyname, "-noreset", NULL);
+      err = errno;
+      syslog (LOG_DAEMON | LOG_WARNING, _("gpe-dm: couldn't exec %s: %d\n"), xserver, strerror (err));
       _exit (1);
     }
   server_started = t;
@@ -122,27 +125,45 @@ main(int argc, char *argv[])
       gboolean f;
 
       /* start session */
-      session_pid = vfork ();
+      session_pid = fork ();
       if (session_pid == 0)
 	{
+	  int err;
 	  execl (XINIT, XINIT, NULL);
+	  err = errno;
+	  syslog (LOG_DAEMON | LOG_WARNING, _("gpe-dm: couldn't exec %s: %d\n"), XINIT, strerror (err));
 	  _exit (1);
 	}
 
       for (f = FALSE; f == FALSE; )
 	{
-	  wpid = wait (NULL);
+	  int status;
+	  wpid = wait (&status);
 	  if (wpid == xserver_pid)
 	    {
+	      syslog (LOG_DAEMON | LOG_NOTICE, _("gpe-dm: Xserver pid %d exited with status %d\n"),
+		      wpid, WEXITSTATUS (status));
 	      kill (session_pid, SIGTERM);
 	      start_server (TRUE);
 	      f = TRUE;
 	    }
 	  else if (wpid == session_pid)
 	    {
-	      kill (xserver_pid, SIGHUP);
+	      syslog (LOG_DAEMON | LOG_INFO, _("gpe-dm: session pid %d exited with status %d\n"),
+		      wpid, WEXITSTATUS (status));
+	      if (kill (xserver_pid, SIGHUP))
+		{
+		  int err;
+		  err = errno;
+		  syslog (LOG_DAEMON | LOG_ERR, _("gpe-dm: server reset %d failed: %s\n"),
+			  xserver_pid, strerror (err));
+		}
+	      sleep (1);
 	      f = TRUE;
 	    }
+	  else
+	    syslog (LOG_DAEMON | LOG_WARNING, _("gpe-dm: unknown pid %d exited with status %d\n"),
+		    wpid, WEXITSTATUS (status));
 	}
     }
 }
