@@ -129,79 +129,6 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer data)
   return TRUE;
 }
 
-static
-gboolean on_configure_event (GtkWidget *window,
-			     GdkEventConfigure *event,
-			     gpointer data)
-{
-//	Pixmap rmap;
-//	static GdkPixmap *pix = NULL;
-//	gint new_height, new_width;
-//
-//	/* check if window got resized (eg: screen rotation) */
-//
-//	gdk_window_get_size(window.toplevel->window, &new_width, &new_height);
-//
-//	if ((new_height >= new_width) == window.mode) { /* screen got rotated */
-//		window.mode = !window.mode;
-//	}
-//
-//	window.height = new_height;
-//	window.width = new_width;
-//	
-//	if (pix) {
-//		g_object_unref(pix);
-//		g_object_unref(pix);
-//		g_object_unref(pix);
-//	}
-//
-//	rmap = GetRootPixmap(GDK_DISPLAY());
-//
-//	g_print("ROOT PIXMAP: %ld\n", rmap);
-//	
-//	if (rmap != None) {
-//		Pixmap pmap = CutWinPixmap(GDK_DISPLAY(),
-//		                    GDK_WINDOW_XWINDOW(widget->window), rmap,
-//		                    GDK_GC_XGC(widget->style->black_gc));
-//
-//		g_print("PIXMAP: %ld\n", pmap);
-//		
-//		if (pmap != None) {
-//			pix = gdk_pixmap_foreign_new(pmap);
-//			widget->style->bg_pixmap[GTK_STATE_NORMAL] = pix;
-//			g_object_ref(pix);
-//			widget->style->bg_pixmap[GTK_STATE_ACTIVE] = pix;
-//			g_object_ref(pix);
-//			widget->style->bg_pixmap[GTK_STATE_PRELIGHT] = pix;
-//			gtk_widget_set_style(widget, widget->style);
-//		}
-//	}
-//
-//	gtk_widget_queue_draw(calendar.scroll->draw);
-//	gtk_widget_queue_draw(calendar.toplevel);
-
-
-  Pixmap rmap = GetRootPixmap (GDK_DISPLAY ());
-  if (rmap != None)
-    {
-      Pixmap pmap;
-      pmap = CutWinPixmap (GDK_DISPLAY(), GDK_WINDOW_XWINDOW (window->window), rmap, 
-			   GDK_GC_XGC (window->style->black_gc));
-      if (pmap != None)
-	{
-	  GdkPixmap *gpmap = gdk_pixmap_foreign_new (pmap);      
-	  window->style->bg_pixmap[GTK_STATE_NORMAL] = gpmap;
-	  gtk_widget_set_style (window, window->style);
-	}
-    }
-
-  g_print ("Meeeep!\n");  
-  gtk_widget_queue_draw (window);
-	
-  return FALSE;
-}
-
-
 void
 on_smallphotobutton_clicked            (GtkButton       *button,
                                         GtkWidget       *notebook)
@@ -216,6 +143,20 @@ on_bigphotobutton_clicked              (GtkButton       *button,
   gtk_notebook_set_page (GTK_NOTEBOOK (notebook), 0);
 }
 
+void
+realize (GtkWidget *w)
+{
+  GtkViewport *vp = GTK_VIEWPORT (w);
+
+  gdk_window_set_back_pixmap (vp->view_window, NULL, TRUE);
+  gdk_window_set_back_pixmap (vp->bin_window, NULL, TRUE);
+}
+
+void
+realize2 (GtkWidget *w)
+{
+  gdk_window_set_back_pixmap (w->window, NULL, TRUE);
+}
 
 /*
  *  Return value: upgrade status
@@ -396,9 +337,10 @@ mapped (GtkWidget *window)
 			   GDK_GC_XGC (window->style->black_gc));
       if (pmap != None)
 	{
+	  GtkStyle *style = gtk_style_copy (window->style);
 	  GdkPixmap *gpmap = gdk_pixmap_foreign_new (pmap);      
-	  window->style->bg_pixmap[GTK_STATE_NORMAL] = gpmap;
-	  gtk_widget_set_style (window, window->style);
+	  style->bg_pixmap[GTK_STATE_NORMAL] = gpmap;
+	  gtk_widget_set_style (window, style);
 	}
     }
 }
@@ -726,6 +668,14 @@ main (int argc, char *argv[])
   gtk_label_set_justify (GTK_LABEL (address), GTK_JUSTIFY_LEFT);
   gtk_misc_set_alignment (GTK_MISC (address), 0, 0);
 
+  {
+    GtkStyle *style = gtk_style_copy (GPE_Ownerinfo->style);
+    style->bg_pixmap[GTK_STATE_NORMAL] = GDK_PARENT_RELATIVE;
+    gtk_widget_set_style (scrolledwindow, style);
+    gtk_widget_set_style (viewport, style);
+    gtk_widget_set_style (address, style);
+  }
+
   /*
    * The second notebook page
    */
@@ -796,8 +746,8 @@ main (int argc, char *argv[])
   if (flag_transparent) {
     gtk_signal_connect (GTK_OBJECT (GPE_Ownerinfo), "map-event",
 			GTK_SIGNAL_FUNC (mapped), NULL);
-    gtk_signal_connect (GTK_OBJECT (viewport), "configure-event",
-			GTK_SIGNAL_FUNC (on_configure_event), NULL);
+    gtk_signal_connect (GTK_OBJECT (viewport), "realize",
+			GTK_SIGNAL_FUNC (realize), NULL);
   }
 
   gtk_signal_connect (GTK_OBJECT (GPE_Ownerinfo), "destroy",
