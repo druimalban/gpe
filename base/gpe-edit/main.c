@@ -65,7 +65,8 @@ update_window_title (void)
 
   if (filename == "")
   {
-    file_path = g_malloc (strlen("Untitled"));
+    /* FIXME: this should be held in a variable [CM] */  
+    file_path = g_malloc (strlen(_("Untitled")));
     file_path = _("Untitled");
   }
   else
