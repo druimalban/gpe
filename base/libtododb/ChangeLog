@@ -1,3 +1,11 @@
+2004-02-23  Phil Blundell  <pb@nexus.co.uk>
+
+	* Version 0.05 released.
+
+2004-02-22  Phil Blundell  <pb@nexus.co.uk>
+
+	* todo-db.c (item_data_callback): Correct disastrous typo.
+
 2004-02-22  Phil Blundell  <pb@nexus.co.uk>
 
 	* Version 0.04 released.
