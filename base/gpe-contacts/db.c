@@ -180,6 +180,7 @@ db_get_by_uid (guint uid)
   char *err;
   int r;
 
+  p->id = uid;
   r = sqlite_exec_printf (db, "select tag,value from contacts where urn=%d",
 			  read_entry_data, p, &err, uid);
   if (r)

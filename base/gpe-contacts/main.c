@@ -69,16 +69,20 @@ edit_person (struct person *p)
 {
   GtkWidget *w = edit_window ();
   GtkWidget *entry = lookup_widget (w, "name_entry");
-  GSList *tags = gtk_object_get_data (GTK_OBJECT (w), "tag-widgets");
-  GSList *iter;
-  for (iter = tags; iter; iter = iter->next)
+  if (p)
     {
-      GtkWidget *w = iter->data;
-      gchar *tag = gtk_object_get_data (GTK_OBJECT (w), "db-tag");
-      struct tag_value *v = db_find_tag (p, tag);
-      guint pos = 0;
-      if (v && v->value)
-	gtk_editable_insert_text (GTK_EDITABLE (w), v->value, strlen (v->value), &pos);
+      GSList *tags = gtk_object_get_data (GTK_OBJECT (w), "tag-widgets");
+      GSList *iter;
+      for (iter = tags; iter; iter = iter->next)
+	{
+	  GtkWidget *w = iter->data;
+	  gchar *tag = gtk_object_get_data (GTK_OBJECT (w), "db-tag");
+	  struct tag_value *v = db_find_tag (p, tag);
+	  guint pos = 0;
+	  if (v && v->value)
+	    gtk_editable_insert_text (GTK_EDITABLE (w), v->value, strlen (v->value), &pos);
+	}
+      gtk_object_set_data (GTK_OBJECT (w), "person", p);
     }
   gtk_widget_show (w);
   gtk_widget_grab_focus (entry);
