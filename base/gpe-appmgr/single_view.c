@@ -127,6 +127,8 @@ refresh_callback (void)
       view = create_view (group->items);
       gtk_container_add (GTK_CONTAINER (bin), view);
     }
+  else
+    fprintf (stderr, "requested group \"%s\" does not exist\n", only_group);
 }
 
 GtkWidget *
