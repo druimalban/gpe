@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-02-04 20:17+0000\n"
+"POT-Creation-Date: 2004-08-29 19:55+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,12 +16,12 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: main.c:110
+#: main.c:131
 #, c-format
 msgid "Usage: %s <in|out> <address>\n"
 msgstr ""
 
-#: main.c:111
+#: main.c:132
 #, c-format
 msgid " or    %s --dbus\n"
 msgstr ""
