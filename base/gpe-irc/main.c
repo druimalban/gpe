@@ -63,7 +63,6 @@ GtkWidget *users_button_arrow;
 GtkWidget *users_button_arrow2;
 GtkListStore *users_list_store;
 GtkWidget *users_tree_view, *users_scroll;
-GtkTextBuffer *text_buffer;
 GtkWidget *scroll;
 
 IRCServer *selected_server;
@@ -139,12 +138,31 @@ update_text_view (GString *text)
   GtkTextIter start, end;
 
   //text = remove_invalid_utf8_chars (text);
-  if (text->str != NULL)
+  /*  if (text->str != NULL)
   {
     text_buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (main_text_view));
 
     gtk_text_buffer_get_bounds (text_buffer, &start, &end);
     gtk_text_buffer_insert (text_buffer, &end, text->str, strlen (text->str));
+
+    gtk_idle_add (scroll_text_view_to_bottom, NULL);
+  }
+  */
+}
+
+void
+append_to_buffer (GtkTextBuffer *buffer, gchar *text, gchar *colour)
+{
+  GtkTextIter start, end;
+
+  if (text != NULL)
+  {
+    gtk_text_buffer_get_bounds (buffer, &start, &end);
+
+    if (colour != NULL)
+      gtk_text_buffer_insert_with_tags_by_name (buffer, &end, text, -1, colour, NULL);
+    else
+      gtk_text_buffer_insert (buffer, &end, text, -1);
 
     gtk_idle_add (scroll_text_view_to_bottom, NULL);
   }
@@ -172,6 +190,7 @@ button_clicked (GtkWidget *button)
   {
     if (gtk_object_get_data (GTK_OBJECT (button), "type") == IRC_SERVER)
     {
+    printf ("----------%s----------\n", server->text->str);
       server = gtk_object_get_data (GTK_OBJECT (button), "IRCServer");
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (selected_button), FALSE);
       selected_button = button;
@@ -331,6 +350,22 @@ get_data_from_server (GIOChannel *source, GIOCondition condition, gpointer data)
 }
 */
 
+static void
+add_default_buffer_tags (GtkTextBuffer *buffer)
+{
+  gtk_text_buffer_create_tag (buffer, "blue",
+			      "foreground", "blue", NULL);
+  gtk_text_buffer_create_tag (buffer, "green",
+			      "foreground", "green", NULL);
+  gtk_text_buffer_create_tag (buffer, "red",
+			      "foreground", "red", NULL);
+
+  gtk_text_buffer_create_tag (buffer, "bold",
+			      "weight", PANGO_WEIGHT_BOLD, NULL);
+  gtk_text_buffer_create_tag (buffer, "italic",
+			      "style", PANGO_STYLE_ITALIC, NULL);
+}
+
 void
 new_connection (GtkWidget *parent, GtkWidget *parent_window)
 {
@@ -342,6 +377,7 @@ new_connection (GtkWidget *parent, GtkWidget *parent_window)
   server = g_malloc (sizeof (*server));
   server->user_info = g_malloc (sizeof (*server->user_info));
   server->text = g_string_new ("");
+  server->buffer = gtk_text_buffer_new (NULL);
   server->channel = g_hash_table_new (g_str_hash, g_str_equal);
   server->prefix = NULL;
 
@@ -360,6 +396,8 @@ new_connection (GtkWidget *parent, GtkWidget *parent_window)
     server->user_info->password = NULL;
 
   servers = g_list_append (servers, (gpointer) server);
+  gtk_text_view_set_buffer (main_text_view, server->buffer);
+  add_default_buffer_tags (server->buffer);
   selected_server = server;
 
   if (selected_button)
@@ -568,8 +606,11 @@ entry_key_press (GtkWidget *widget, GdkEventKey *event, gpointer data)
     {
       irc_privmsg (selected_server, selected_channel->name, entry_text);
       display_text = g_strdup_printf ("%s: %s\n", selected_server->user_info->nick, entry_text);
-      selected_server->text = g_string_append (selected_server->text, display_text);
-      update_text_view (g_string_new (display_text));
+      append_to_buffer(selected_server->buffer, "<", NULL);
+      append_to_buffer(selected_server->buffer, selected_server->user_info->nick, NULL);
+      append_to_buffer(selected_server->buffer, "> ", NULL);
+      append_to_buffer(selected_server->buffer, entry_text, NULL);
+      append_to_buffer(selected_server->buffer, "\n", NULL);
       gtk_entry_set_text (GTK_ENTRY (main_entry), "");
     }
   }

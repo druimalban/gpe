@@ -179,10 +179,13 @@ irc_parse_privmsg(IRCServer *server, gchar *prefix, gchar *params)
 		if(!ctcp_parse(server, prefix, str_array[0], str_array[1]))
 		{
 			/* TODO: Parse str_array[0] */
-			g_string_printf(gstr, "%s: %s\n", nick, str_array[1]);
+		  append_to_buffer(server->buffer, "<", "blue");
+		  append_to_buffer(server->buffer, nick, NULL);
+		  append_to_buffer(server->buffer, "> ", "blue");
+		  append_to_buffer(server->buffer, str_array[1], NULL);
+		  append_to_buffer(server->buffer, "\n", NULL);
 		}
 
-		update_text_view(gstr);
 		g_strfreev(str_array);
 	}
 
@@ -205,26 +208,27 @@ irc_parse_nick(IRCServer *server, gchar *prefix, gchar *params)
 static gboolean
 irc_parse_join(IRCServer *server, gchar *prefix, gchar *params)
 {
-	GString *gstr = g_string_new("");
-
 	STRIP_COLON(params);
 
 	if(irc_prefix_is_self(server, prefix))
 	{
 		/* I just joined a channel! */
 		join_channel(server, params);
-		g_string_printf(gstr, "You've joined %s.\n", params);
+		append_to_buffer(server->buffer, "You've ", "bold");
+		append_to_buffer(server->buffer, "joined ", NULL);
+		append_to_buffer(server->buffer, params, "italic");
+		append_to_buffer(server->buffer, "\n", NULL);
 	}
 	else
 	{
 		/* Someone else has joined the channel */
 		gchar *nick = irc_prefix_to_nick(prefix);
-		g_string_printf(gstr, "%s has joined %s.\n", nick, params);
+		append_to_buffer(server->buffer, nick, "bold");
+		append_to_buffer(server->buffer, " has joined ", NULL);
+		append_to_buffer(server->buffer, params, "italic");
+		append_to_buffer(server->buffer, "\n", NULL);
 		g_free(nick);
 	}
-
-	update_text_view(gstr);
-	g_string_free(gstr, TRUE);
 
 	return TRUE;
 }
@@ -233,7 +237,6 @@ irc_parse_join(IRCServer *server, gchar *prefix, gchar *params)
 static gboolean
 irc_parse_part(IRCServer *server, gchar *prefix, gchar *params)
 {
-	GString *gstr = g_string_new("");
 	gchar **str_array;
 
 	STRIP_COLON(params);
@@ -248,27 +251,30 @@ irc_parse_part(IRCServer *server, gchar *prefix, gchar *params)
 		{
 			/* I just parted a channel! */
 			//part_channel(server, str_array[0]);
-			g_string_printf(gstr, "You've parted %s.", str_array[0]);
+		  append_to_buffer(server->buffer, "You've ", "bold");
+		  append_to_buffer(server->buffer, "parted ", NULL);
+		  append_to_buffer(server->buffer, str_array[0], "italic");
 		}
 		else
 		{
 			/* Someone else has joined the channel */
-			gchar *nick = irc_prefix_to_nick(prefix);
-			g_string_printf(gstr, "%s has parted %s.", nick, str_array[0]);
+		  gchar *nick = irc_prefix_to_nick(prefix);
+		  append_to_buffer(server->buffer, nick, "bold");
+		  append_to_buffer(server->buffer, " has parted ", NULL);
+		  append_to_buffer(server->buffer, str_array[0], "italic");
 			g_free(nick);
 		}
 
 		if(strlen(str_array[1]))
 		{
-			g_string_append_printf(gstr, " (%s)", str_array[1]);
+		  append_to_buffer(server->buffer, g_strdup_printf(" (%s)", str_array[1]), NULL);
 		}
 
-		g_string_append(gstr, "\n");
-		update_text_view(gstr);
+		append_to_buffer(server->buffer, "\n", NULL);
+
 
 	}
 
-	g_string_free(gstr, TRUE);
 	g_strfreev(str_array);
 
 	return TRUE;
@@ -384,5 +390,9 @@ irc_server_parse(IRCServer *server, gchar *line)
 
 	return TRUE;
 }
+
+
+
+
 
 

@@ -166,14 +166,13 @@ ctcp_action(IRCServer *server, gchar *prefix, gchar *target, gchar *msg)
 {
 	/* FIXME: Wait for a better frontend interface */
 	gchar *nick = NULL;
-	GString *gstr = g_string_new("");
 
 	nick = irc_prefix_to_nick(prefix);
-	g_string_printf(gstr, "*%s %s\n", nick, msg);
-	update_text_view(gstr);
+	append_to_buffer(server->buffer, "* ", "red");
+	append_to_buffer(server->buffer, g_strdup_printf ("%s %s", nick, msg), NULL);
+	append_to_buffer(server->buffer, "\n", NULL);
 
 	g_free(nick);
-	g_string_free(gstr, TRUE);
 	return TRUE;
 }
 

@@ -16,6 +16,7 @@ typedef struct
 {
   gchar *name;
   GString *text;
+  GtkTextBuffer *buffer;
   gchar *prefix;
   int fd;
   GIOChannel *io_channel;
@@ -29,6 +30,7 @@ typedef struct
 {
   gchar *name;
   IRCServer *server;
+  GtkTextBuffer *buffer;
   GString *text;
   gchar *topic;
   GtkWidget *button;
@@ -60,4 +62,10 @@ extern IRCChannel *irc_server_channel_get(IRCServer *server, gchar *channel_name
 
 
 #endif
+
+
+
+
+
+
 
