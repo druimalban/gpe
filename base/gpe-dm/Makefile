@@ -1,7 +1,7 @@
 PREFIX = /usr/local
 PACKAGE = gpe-dm
 CVSBUILD = yes
-VERSION = 0.32
+VERSION = 0.33
    
 ifeq ($(CVSBUILD),yes)
 BUILD = ../build
@@ -11,10 +11,10 @@ endif
 
 MEMBERS = gpe-dm
 
-CFLAGS = `pkg-config --cflags glib-2.0`
-LDFLAGS = `pkg-config --libs glib-2.0`
+PACKAGE_CFLAGS = `pkg-config --cflags glib-2.0`
+PACKAGE_LDFLAGS = `pkg-config --libs glib-2.0`
 
-CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
+PACKAGE_CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
@@ -22,8 +22,8 @@ SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
 all: gpe-dm
 
-gpe-dm: $(SOURCES)
-	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $@ $^
+gpe-dm: $(OBJS)
+	$(CC) -o $@ $^ $(LDFLAGS) $(PACKAGE_LDFLAGS)
 
 install-program: gpe-dm
 	install -d $(DESTDIR)$(PREFIX)/bin/
