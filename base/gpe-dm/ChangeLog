@@ -1,3 +1,20 @@
+2004-07-15  Phil Blundell  <pb@nexus.co.uk>
+
+	* Version 0.39 released.
+
+2004-07-15  Phil Blundell  <pb@nexus.co.uk>
+
+	* Xserver: Undo last change.
+	(XSERVER): Use Xepson if it exists.
+
+2004-07-05  Phil Blundell  <pb@nexus.co.uk>
+
+	* Version 0.38 released.
+	
+2004-07-05  Phil Blundell  <pb@nexus.co.uk>
+
+	* Xserver: Rotate screen on Zaurus if in landscape mode.
+
 2004-07-05  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.37 released.
