@@ -27,7 +27,6 @@
 #include <libintl.h>
 #define _(_x) gettext(_x)
 
-//#define TURN_LABEL
 #ifdef DEBUG
 #define TRACE(message...) {g_printerr(message); g_printerr("\n");}
 //g_printerr("DEBUG *** %s, line %u: ", __FILE__, __LINE__);
@@ -101,7 +100,6 @@ void append_hitem(GoAction action, GoItem item, int gox, int goy){
   }
   if(!found) go.history = g_node_append_data(go.history, hitem);
 
-  go.last_turn = g_node_depth(go.history);
 }
 
 gboolean delete_hitem(GNode * node, gpointer unused_data){
@@ -200,7 +198,6 @@ void init_new_game(int game_size){
   go.black_captures = 0;
 
   go.turn = 0;
-  go.last_turn = 0;
 
   go.last_col = 0;
   go.last_row = 0;
@@ -833,15 +830,6 @@ void update_capture_label(){
   gtk_label_set_text (GTK_LABEL (go.capture_label), go.capture_string);
 }
 
-#ifdef TURN_LABEL
-void update_turn_label(){
-  free(go.turn_string);
-  go.turn_string = (char *) malloc (20 * sizeof(char));
-  sprintf(go.turn_string, "%d/%d", go.turn, go.last_turn);
-  gtk_label_set_text (GTK_LABEL (go.turn_label), go.turn_string);
-}
-#endif
-
 void redo_turn();
 void play_at(int gox, int goy){
   //TRACE("Play at %d %d", gox, goy);
@@ -916,10 +904,6 @@ void play_at(int gox, int goy){
 
   //--next turn
   go.turn++;
-  go.last_turn++;
-#ifdef TURN_LABEL
-  update_turn_label();
-#endif
 }
 
 
@@ -970,9 +954,6 @@ void undo_turn(){
   else if(hitem->action == PASS){
     go.turn--;
   }
-#ifdef TURN_LABEL
-  update_turn_label();
-#endif
 
   if(go.history->parent && !G_NODE_IS_ROOT(go.history->parent)){
     go.history = go.history->parent;
@@ -1115,9 +1096,6 @@ void redo_turn(){
     }
 
   }
-#ifdef TURN_LABEL
-  update_turn_label();
-#endif
 
 }
 
@@ -1252,7 +1230,6 @@ void on_button_pass_clicked (void){
 
   append_hitem(PASS, EMPTY, 0, 0);
   go.turn++;
-  go.last_turn++;
 
   update_last_played_mark_to(0, 0);
 }
@@ -1473,15 +1450,9 @@ void gui_init(){
   GtkWidget * new_game_dialog;
 
   GtkWidget * toolbar;
-#ifdef PREFS
-  GdkPixbuf * pixbuf;
-#endif
   GtkWidget * image;
 
   GtkWidget * capture_label;
-#ifdef TURN_LABEL
-  GtkWidget * turn_label;
-#endif
 
   GtkWidget   * drawing_area;
 
@@ -1526,14 +1497,6 @@ void gui_init(){
 			   _("Undo"), _("Undo"), _("Undo"),
 			   image, GTK_SIGNAL_FUNC (on_button_prev_pressed), NULL);
 
-#ifdef TURN_LABEL
-  //Turn label
-  turn_label = gtk_label_new("0/0");
-  
-  gtk_toolbar_append_widget (GTK_TOOLBAR (toolbar), turn_label, NULL, NULL);
-  go.turn_label = turn_label;
-#endif
-
   //[REDO] button
   image = gtk_image_new_from_stock (GTK_STOCK_REDO, GTK_ICON_SIZE_SMALL_TOOLBAR);
 
@@ -1552,18 +1515,6 @@ void gui_init(){
   go.capture_label = capture_label;
 
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
-
-#ifdef PREFS
-  //[PREFS] button
-  pixbuf = gpe_find_icon ("prefs");
-  image = gtk_image_new_from_pixbuf(pixbuf);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
-			   NULL, NULL, NULL,
-			   image, GTK_SIGNAL_FUNC (on_button_pref_pressed), NULL);
-  gdk_pixbuf_unref(pixbuf);
-
-  gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
-#endif
 
   // [PASS] button
   image = gtk_image_new_from_stock (GTK_STOCK_NO, GTK_ICON_SIZE_SMALL_TOOLBAR);

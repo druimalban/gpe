@@ -59,7 +59,6 @@ typedef struct _go {
   int black_captures; 
 
   int turn;
-  int last_turn;
 
   //last played
   int last_col;
