@@ -1,7 +1,7 @@
 Package: gpe-nmf
 Section: base
 Priority: optional
-Version: 0.04
+Version: 0.06
 Architecture: arm
 Maintainer: Phil Blundell <pb@debian.org>
 Depends: libgtk2.0-0, libgpewidget1, gpe-icons (>= 0.09), libesd0, libxml2
