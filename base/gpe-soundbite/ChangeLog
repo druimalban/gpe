@@ -1,3 +1,8 @@
+2003-03-22  Moray Allan  <moray@handhelds.org>
+
+	* Makefile: Now uses CVSBUILD to decide where to look for external
+	build helper makefiles.
+
 2003-01-09  Moray Allan  <moray@handhelds.org>
 
 	* Makefile: Fix .desktop files to have a .desktop extension when
