@@ -1,5 +1,5 @@
 Package: gpe-task-base
-Section: base
+Section: GPE/tasks
 Priority: optional
 Version: _VERSION_
 Architecture: all

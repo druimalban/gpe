@@ -1,5 +1,5 @@
 Package: gpe-collateral-gtk2
-Section: base
+Section: GPE/base
 Priority: optional
 Version: _VERSION_
 Provides: gpe-collateral

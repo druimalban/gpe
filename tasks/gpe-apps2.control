@@ -1,7 +1,7 @@
 Package: gpe-apps2
 Provides: gpe-apps
 Replaces: gpe-apps
-Section: base
+Section: GPE/tasks
 Priority: optional
 Version: _VERSION_
 Architecture: all

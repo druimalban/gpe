@@ -1,7 +1,7 @@
 Package: gpe2
 Provides: gpe
 Replaces: gpe
-Section: base
+Section: GPE/tasks
 Priority: optional
 Version: 0.02
 Architecture: arm
