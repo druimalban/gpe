@@ -2,6 +2,8 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
+#include "errorbox.h"
+
 #include "calibrate.h"
 
 void calibrate ()
@@ -15,6 +17,11 @@ void calibrate ()
 	}
 	else if (pid > 0)
 	{
-	        waitpid (pid, NULL, 0);
+		int status;
+	        waitpid (pid, &status, 0);
+		if (!WIFEXITED(status))
+		{
+			gpe_error_box ("xcalibrate exited abnormally");
+		}
 	}
 }
