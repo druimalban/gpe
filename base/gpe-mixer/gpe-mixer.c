@@ -35,19 +35,19 @@
 
 static struct gpe_icon my_icons[] = {
 	{ "icon", PREFIX "/share/pixmaps/gpe-mixer.png" },
-	{ "line" , PREFIX "/share/gpe-mixer/line.png"},
-	{ "line1" , PREFIX "/share/gpe-mixer/line.png"},
-	{ "cd" , PREFIX "/share/gpe-mixer/cd.png"},
-	{ "bass" , PREFIX "/share/gpe-mixer/bass.png"},
-	{ "vol" , PREFIX "/share/gpe-mixer/volume.png"},
-	{ "unkn" , PREFIX "/share/gpe-mixer/unkn.png"},
-	{ "treble" , PREFIX "/share/gpe-mixer/treble.png"},
-	{ "synth" , PREFIX "/share/gpe-mixer/synth.png"},
-	{ "speaker" , PREFIX "/share/gpe-mixer/speaker.png"},
-	{ "phout" , PREFIX "/share/gpe-mixer/speaker.png"},
-	{ "pcm" , PREFIX "/share/gpe-mixer/pcm.png"},
-	{ "pcm2" , PREFIX "/share/gpe-mixer/pcm.png"},
-	{ "mic" , PREFIX "/share/gpe-mixer/mic.png"},
+	{ "line" , "line"},
+	{ "line1" , "line"},
+	{ "cd" , "cd"},
+	{ "bass" , "bass"},
+	{ "vol" , "volume"},
+	{ "unkn" , "unkn"},
+	{ "treble" , "treble"},
+	{ "synth" , "synth"},
+	{ "speaker" , "speaker"},
+	{ "phout" , "speaker"},
+	{ "pcm" , "pcm"},
+	{ "pcm2" , "pcm"},
+	{ "mic" , "mic"},
 	{ NULL, NULL }
 };
 
