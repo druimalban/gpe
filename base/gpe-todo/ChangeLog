@@ -1,3 +1,8 @@
+2002-08-25  Philip Blundell  <philb@gnu.org>
+
+	* Makefile: Use Makefile.translation.
+	* po/Makefile: Deleted.
+
 2002-08-23  Philip Blundell  <philb@gnu.org>
 
 	* todo.h: Add support for GTK 2.

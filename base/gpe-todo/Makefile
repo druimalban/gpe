@@ -19,33 +19,23 @@ DEPS = $(patsubst %,%.d,$(MEMBERS))
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
-all: gpe-todo mo
-
-mo:
-	make -C po
-
-install-po:
-	make -C po install DESTDIR=$(DESTDIR) PREFIX=$(PREFIX)
+all: gpe-todo all-mo
 
 gpe-todo: $(OBJS)
 	$(CC) -o $@ $^ -L../libgpewidget -lgpewidget $(GTKLDFLAGS) -g -lsqlite
-
-update-po: po/$(PACKAGE).pot
-
-po/$(PACKAGE).pot: $(SOURCES)
-	xgettext -k_ -o po/$(PACKAGE).pot $^
 
 clean:
 	rm -f gpe-todo $(OBJS) $(DEPS)
 
 all: gpe-todo
 
-install: all install-po
+install: all install-mo
 	install -D gpe-todo $(DESTDIR)$(PREFIX)/bin/gpe-todo
 	install -D gpe-todo.menu $(DESTDIR)$(PREFIX)/lib/menu/gpe-todo
 	install -D gpe-todo.png $(DESTDIR)$(PREFIX)/share/pixmaps/gpe-todo.png
 	strip $(DESTDIR)$(PREFIX)/bin/gpe-todo
 
 include ../build/Makefile.dpkg_ipkg
+include ../build/Makefile.translation
 
 -include $(DEPS)
