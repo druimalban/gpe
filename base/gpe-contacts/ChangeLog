@@ -1,5 +1,8 @@
 2002-12-01  Philip Blundell  <philb@gnu.org>
 
+	* src/editing.c (create_edit): Mark "Schedule" button insensitive,
+	to discourage further bug reports about it not working.
+
 	* src/main.c (edit_contact): New function.
 	(my_icons): Add edit.
 	(main): Add "edit" icon to toolbar.

@@ -262,6 +262,7 @@ create_edit (void)
 
   edit_bt_bdate = gtk_check_button_new_with_label (_("Schedule"));
   gtk_widget_set_name (edit_bt_bdate, "edit_bt_bdate");
+  gtk_widget_set_sensitive (edit_bt_bdate, FALSE);		/* XXX */
   gtk_widget_ref (edit_bt_bdate);
   gtk_object_set_data_full (GTK_OBJECT (edit), "edit_bt_bdate", edit_bt_bdate,
                             (GtkDestroyNotify) gtk_widget_unref);
