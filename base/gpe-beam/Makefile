@@ -9,7 +9,7 @@ PREFIX = /usr
 DESTDIR = /
 CONTROL = control1
 
-LINGUAS = cs de sv ro nl pt
+LINGUAS = cs de sv ro nl pt ru
 
 ifeq ($(CVSBUILD),yes)
 LDFLAGS += -L../libgpewidget -L.
