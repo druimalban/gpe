@@ -45,15 +45,8 @@
 <!--#endif -->
 |
 <!--#if expr="x${pagename}=xcontact" -->
-<b>Contact / Mailing list</b>
+<b>Mailing list, Contact</b>
 <!--#else -->
-<A href="/contact.shtml">Contact / Mailing list</a>
+<A href="/contact.shtml">Mailing list, Contact</a>
 <!--#endif -->
-|
-<!--#if expr="x${pagename}=xglobe" -->
-<b>GPE around the globe</b>
-<!--#else -->
-<A href="/globe.shtml">GPE around the globe</a>
-<!--#endif -->
-
 </small>
