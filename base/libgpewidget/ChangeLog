@@ -2,6 +2,17 @@
 
 	* gpeclockface.c (gpe_clock_face_realize): Remove pointer motion
 	bits from event mask.
+	(gpe_clock_face_unrealize): Disable call to XftDrawDestroy.
+	
+2003-04-12  Philip Blundell  <philb@gnu.org>
+
+	* gpeclockface.c (struct _GpeClockFace): Add hour_angle,
+	minute_angle.
+	(hand_angles): New function.
+	(gpe_clock_face_expose): Use precomputed angles.
+	(gpe_clock_face_motion_notify): Call hand_angles.
+	(adjustment_value_changed): Likewise.
+	(gpe_clock_face_new): Likewise.
 
 	* Makefile (install-program): Install pixmaps for clock face in
 	$PREFIX/share/libgpewidget, not $PREFIX/share/gpe/pixmaps.
