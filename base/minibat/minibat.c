@@ -586,7 +586,7 @@ main(int argc, char **argv)
 		    }
 		  XDestroyImage (image);
 		  XShapeCombineMask (dpy, win_popup, ShapeBounding, 0, 0, popup_mask, ShapeSet);
-		  XMapWindow (dpy, win_popup);
+		  XMapRaised (dpy, win_popup);
 		}
 	      else
 		{
