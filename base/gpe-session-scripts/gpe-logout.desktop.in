@@ -1,6 +1,6 @@
 [Desktop Entry]
-Name=Log out
-Comment=Log out of GPE
+_Name=Log out
+_Comment=Log out of GPE
 Exec=gpe-logout
 Terminal=0
 Type=Application

@@ -25,6 +25,14 @@ endif
 LDFLAGS += -lgpewidget
 LDFLAGS_ROOT = -lrootimage
 
+MEMBERS = gpe-login
+
+OBJS = $(patsubst %,%.o,$(MEMBERS))
+DEPS = $(patsubst %,%.d,$(MEMBERS))
+SOURCES = $(patsubst %,%.c,$(MEMBERS))
+
+EXTRA_DESKTOPS = gpe-logout.desktop.in
+
 all: gpe-login gpe-dm gpe-lock-display mo
 
 mo:
@@ -78,7 +86,7 @@ install-dm: gpe-dm
 	install -D X11/Xinit $(DESTDIR)/etc/X11/Xinit
 	install -D X11/Xserver $(DESTDIR)/etc/X11/Xserver
 
-install-scripts:
+install-scripts: gpe-logout.desktop
 	for i in X11/Xsession-gpe.d X11/Xinit.d; do install -d $(DESTDIR)/etc/$$i; FILES=`echo $$i/* | sed "s:$$i/CVS::"`; install -m 755 $$FILES $(DESTDIR)/etc/$$i/; done
 	install -d $(DESTDIR)$(PREFIX)/bin
 	install -m 755 gpe-xcalibrate.sh $(DESTDIR)$(PREFIX)/bin/gpe-xcalibrate.sh
@@ -119,3 +127,6 @@ ipkg:
 
 clean:
 	rm -f gpe-login gpe-login.o gpe-dm gpe-dm.o gpe-lock-display gpe-lock-display.o nocursor.o
+
+include ../build/Makefile.translation
+-include $(DEPS)

@@ -1,11 +1,13 @@
-# Translation templates for gpe-login
-# Copyright (C) 2002 Phil Blundell <pb@debian.org>
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2002-06-14 13:36+0100\n"
+"POT-Creation-Date: 2003-02-21 19:37+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -13,46 +15,70 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: gpe-login.c:162
+#: gpe-login.c:395 gpe-login.c:448
 msgid "Login incorrect"
 msgstr ""
 
-#: gpe-login.c:188
+#: gpe-login.c:477
 msgid "User already exists"
 msgstr ""
 
-#: gpe-login.c:199
+#: gpe-login.c:488
 msgid "Passwords don't match"
 msgstr ""
 
-#: gpe-login.c:208
+#: gpe-login.c:497
 msgid "Empty password not allowed"
 msgstr ""
 
-#: gpe-login.c:350
-msgid "OK"
+#: gpe-login.c:647
+msgid "en"
 msgstr ""
 
-#: gpe-login.c:365
-msgid "Log in"
+#: gpe-login.c:869
+msgid "Record"
 msgstr ""
 
-#: gpe-login.c:367 gpe-login.c:419
+#: gpe-login.c:870
+msgid "recalibrates touchscreen"
+msgstr ""
+
+#: gpe-login.c:886
+msgid "Screen locked"
+msgstr ""
+
+#: gpe-login.c:890 gpe-login.c:1002
 msgid "Username"
 msgstr ""
 
-#: gpe-login.c:368 gpe-login.c:421
+#: gpe-login.c:913 gpe-login.c:1004
 msgid "Password"
 msgstr ""
 
-#: gpe-login.c:420
+#: gpe-login.c:926
+msgid "Language"
+msgstr ""
+
+#: gpe-login.c:946
+msgid "Enter password with hard keys"
+msgstr ""
+
+#: gpe-login.c:1003
 msgid "Full name"
 msgstr ""
 
-#: gpe-login.c:422
+#: gpe-login.c:1005
 msgid "Confirm password"
 msgstr ""
 
-#: gpe-login.c:476
+#: gpe-login.c:1059
 msgid "New user"
+msgstr ""
+
+#: gpe-logout.desktop.in.h:1
+msgid "Log out"
+msgstr ""
+
+#: gpe-logout.desktop.in.h:2
+msgid "Log out of GPE"
 msgstr ""

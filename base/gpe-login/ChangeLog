@@ -1,5 +1,12 @@
 2003-02-21  Philip Blundell  <philb@gnu.org>
 
+	* Makefile: Include Makefile.translation and $(DEPS).
+	(install-scripts): Depend on gpe-logout.desktop.
+	(EXTRA_DESKTOPS): Define.
+	(MEMBERS, OBJS, DEPS, SOURCES): Likewise.
+	* gpe-logout.desktop: Removed.
+	* gpe-logout.desktop.in: New.
+
 	* gpe-login.c (main): Tweak formatting of main table.  Add
 	language selector; currently not functional.
 	(build_language_menu): New.  Dummy implementation only.
