@@ -58,8 +58,8 @@ extern int   schemecount;
 #define MAX_CONFIG_LINES	1000
 #define MAX_CONFIG_VALUES       25
 
-//#define WLAN_CONFIGFILE "/etc/pcmcia/wireless.opts"
-#define WLAN_CONFIGFILE "/tmp/wireless.opts"
+#define WLAN_CONFIGFILE "/etc/pcmcia/wireless.opts"
+//#define WLAN_CONFIGFILE "/tmp/wireless.opts"
 
 typedef struct {
 	gint	NewScheme;
