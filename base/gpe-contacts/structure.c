@@ -26,7 +26,7 @@
 #include "render.h"
 
 GSList *edit_pages;
-GSList *well_known_tags;
+GList *well_known_tags;
 
 edit_thing_t new_thing (edit_thing_type t, gchar *name, edit_thing_t parent);
 
@@ -153,11 +153,12 @@ structure_new_field (GtkWidget *widget,
       GtkWidget *radio2 = gtk_radio_button_new_with_label_from_widget (GTK_RADIO_BUTTON (radio1), 
 								       _("Multiple line"));
       
-      struct box_desc bd[3];
+      struct box_desc2 bd[3];
       memset (&bd, 0, sizeof (bd));
       bd[0].label = _("Title");
       bd[1].label = _("Tag");
-      smallbox_x (_("New field"), bd);
+      bd[1].suggestions = well_known_tags;
+      smallbox_x2 (_("New field"), bd);
 
       if (bd[0].value && bd[1].value && bd[0].value[0] && bd[1].value[0])
 	insert_new_thing (ct, bd[0].value, ITEM_SINGLE_LINE, bd[1].value);
@@ -505,7 +506,7 @@ load_well_known_tags (void)
 	    h++;
 	  *h = 0;	// dump trailing whitespace
 	  if (*s)
-	    well_known_tags = g_slist_append (well_known_tags, g_strdup (s));
+	    well_known_tags = g_list_append (well_known_tags, g_strdup (s));
 	}
       fclose (fp);
     }

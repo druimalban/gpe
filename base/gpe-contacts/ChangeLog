@@ -1,5 +1,8 @@
 2002-08-11  Philip Blundell  <philb@gnu.org>
 
+	* src/structure.c (structure_new_field): Offer list of possible
+	tags in a combo box.
+	
 	* src/structure.c (load_well_known_tags): New function.
 	* src/structure.h (load_well_known_tags): Add prototype.
 	* src/main.c (main): Call load_well_known_tags.
