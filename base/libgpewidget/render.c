@@ -21,7 +21,7 @@ gpe_render_pixmap(GdkColor *bgcol, GdkPixbuf *pixbuf, GdkPixmap **pixmap,
     height = gdk_pixbuf_get_height (pixbuf);
   guint depth = gdk_pixbuf_get_bits_per_sample (pixbuf);
   
-  if (gdk_pixbuf_get_has_alpha (pixbuf))	
+  if (bgcol && gdk_pixbuf_get_has_alpha (pixbuf))	
     {
       GdkColorspace color = gdk_pixbuf_get_colorspace (pixbuf);
       guint y, stride, sstride;
@@ -97,12 +97,16 @@ gpe_render_icon(GtkStyle *style, GdkPixbuf *pixbuf)
   GdkPixmap *pixmap;
   GdkBitmap *bitmap;
 
-  gpe_render_pixmap (&style->bg[GTK_STATE_NORMAL], pixbuf,
-		     &pixmap, &bitmap);
+  if (pixbuf == NULL)
+    abort ();
+
+  gpe_render_pixmap (style ? &style->bg[GTK_STATE_NORMAL] : NULL, 
+		     pixbuf, &pixmap, &bitmap);
   
   widget = gtk_gpe_pixmap_new (pixmap, bitmap);
 
-  if (style->bg[GTK_STATE_NORMAL].pixel != style->bg[GTK_STATE_PRELIGHT].pixel)
+  if (style && 
+      style->bg[GTK_STATE_NORMAL].pixel != style->bg[GTK_STATE_PRELIGHT].pixel)
     {
       gpe_render_pixmap (&style->bg[GTK_STATE_PRELIGHT], pixbuf,
 			 &pixmap, &bitmap);

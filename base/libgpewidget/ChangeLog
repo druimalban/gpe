@@ -1,5 +1,11 @@
 2002-06-21  Philip Blundell  <pb@debian.org>
 
+	* render.c (gpe_render_pixmap): Render with no alpha if passed
+	NULL bgcol.
+	(gpe_render_icon): Tolerate NULL style.  Abort on NULL pixbuf.
+
+2002-06-21  Philip Blundell  <pb@debian.org>
+
 	* Makefile (clean): Remove $(DEPS) too.
 
 2002-06-21  Philip Blundell  <pb@debian.org>
