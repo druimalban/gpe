@@ -6,4 +6,5 @@ Terminal=0
 Type=Application
 Icon=gpe-mixer.png
 Categories=Application;AudioVideo;GPE
-SingleInstance=true
+StartupNotify=True
+SingleInstance=True
