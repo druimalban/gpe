@@ -6,7 +6,7 @@ export HOME_VOLATILE
 
 SYSSESSIONDIR=/etc/X11/Xsession-gpe.d
 
-if [ ! -f $SYSSESSIONDIR ]; then
+if [ ! -d $SYSSESSIONDIR ]; then
   SYSSESSIONDIR=/etc/X11/Xsession.d
 fi
 
