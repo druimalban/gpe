@@ -34,8 +34,8 @@ struct week_day
 
 static gint
 draw_expose_event (GtkWidget *widget,
-		   GdkEvent  *event,
-		   gpointer   user_data)
+		   GdkEventExpose *event,
+		   gpointer user_data)
 {
   GtkDrawingArea *darea;
   GdkDrawable *drawable;
@@ -68,6 +68,11 @@ draw_expose_event (GtkWidget *widget,
   black_gc = widget->style->black_gc;
   max_width = widget->allocation.width;
   max_height = widget->allocation.height;
+
+  gdk_gc_set_clip_rectangle (black_gc, &event->area);
+  gdk_gc_set_clip_rectangle (red_gc, &event->area);
+  gdk_gc_set_clip_rectangle (gray_gc, &event->area);
+  gdk_gc_set_clip_rectangle (white_gc, &event->area);
 
   for (day = 0; day < 7; day++)
     {
