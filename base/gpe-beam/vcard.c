@@ -211,9 +211,9 @@ gpe_import_vcard (sqlite *db, MIMEDirVCard *vcard)
 	  g_object_get (G_OBJECT (phone), "home", &home, NULL);
 	  g_object_get (G_OBJECT (phone), "work", &work, NULL);
 	  if (home || !work)
-	    insert ("home.phone", s);
+	    insert ("home.telephone", s);
 	  if (work)
-	    insert ("work.phone", s);
+	    insert ("work.telephone", s);
 	}
 
       l = g_list_next (l);
