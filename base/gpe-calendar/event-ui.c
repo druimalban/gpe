@@ -11,6 +11,7 @@
 #include <sys/stat.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include <string.h>
 #include <time.h>
 #include <libintl.h>
@@ -85,7 +86,7 @@ recalculate_sensitivities (GtkWidget *widget,
 
   if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->alarmbutton)))
     {
-      gtk_widget_set_sensitive (s->alarmoption, 1);
+      gtk_widget_set_sensitive (s->alarmoption, 0);
       gtk_widget_set_sensitive (s->alarmspin, 1);
     }
   else
@@ -177,7 +178,8 @@ schedule_alarm(event_t ev, time_t start)
   alarm_t = start-60*ev->alarm;
   ev_d = event_db_get_details (ev);
   
-  sprintf(filename, "/var/spool/at/%ld.%ld", (long)alarm_t, ev->uid);
+  sprintf(filename, "/var/spool/at/%ld.%ld.%ld", (long)alarm_t, ev->uid,
+		  (long(getuid()));
   
   if ((f=fopen(filename, "w")))
   {
@@ -210,7 +212,8 @@ unschedule_alarm(event_t ev)
   	
   alarm_t = ev->start-60*ev->alarm;
   
-  sprintf(filename, "/var/spool/at/%ld.%ld", (long)alarm_t, ev->uid);
+  sprintf(filename, "/var/spool/at/%ld.%ld.%ld", (long)alarm_t, ev->uid,
+		  (long(getuid()));
   sprintf(command, "rm %s", filename);
   system(command);
   
@@ -243,7 +246,7 @@ schedule_next(guint skip, guint uid)
       
       if (ev->flags & FLAG_ALARM) {
 	ev_real = event_db_find_by_uid (ev->uid);
-	if (((int)(ev->start-60*ev->alarm) != (int)skip) && (uid!=ev->uid))
+	if (((int)(ev->start) != (int)skip) && (uid!=ev->uid))
 	  {
 	    schedule_alarm (ev_real, ev->start);
 	    break;
