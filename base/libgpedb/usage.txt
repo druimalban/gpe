@@ -62,8 +62,8 @@ To build software that uses libgpedb you should consider these additions to the
 makefile. If needed define USE_USQLD at the top of the makefile above the 
 folowing lines. 
 
-ifdef USE_USQLD
-CFLAGS += -lusqld -lgpedb
+ifeq ($(USE_USQLD),yes)
+CFLAGS += -DUSE_USQLD  -lusqld -lgpedb
 else
 CFLAGS += -lsqlite -lgpedb
 endif

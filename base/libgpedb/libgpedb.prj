@@ -90,7 +90,8 @@ module.doc.name=.
 module.doc.type=
 module.doc.expanded=1
 module.doc.files=\
-	README
+	README\
+	usage.txt
 
 module.po.expanded=0
 module.po.files=
