@@ -49,6 +49,9 @@ button_press (GtkWidget *widget,
   guint y = event->y;
   struct render_ctl *c;
 
+  if (event->button != 1)
+    return FALSE;
+
   if (x < xp || y < ys)
     return FALSE;
 
@@ -59,7 +62,7 @@ button_press (GtkWidget *widget,
   y -= 1;
 
   c = &rc[x + (y * 7)];
-  if (c->valid) 
+  if (c->valid)
     {
       if (event->type == GDK_BUTTON_PRESS)
 	{
@@ -472,7 +475,7 @@ month_view(void)
   gtk_signal_connect(GTK_OBJECT (draw), "button-press-event",
 		     GTK_SIGNAL_FUNC (button_press), NULL);
 
-  gtk_widget_add_events (GTK_WIDGET (draw), GDK_BUTTON_PRESS_MASK);
+  gtk_widget_add_events (GTK_WIDGET (draw), GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
 
   gtk_signal_connect(GTK_OBJECT (datesel), "changed",
 		     GTK_SIGNAL_FUNC (changed_callback), NULL);

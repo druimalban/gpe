@@ -31,7 +31,9 @@ static void
 notify_func (const char *name, XSettingsAction action,
 	     XSettingsSetting *setting, void *cb_data)
 {
-  if (strncmp (name, KEY_BASE, strlen (KEY_BASE)) == 0)
+  if ((action == XSETTINGS_ACTION_NEW
+       || action == XSETTINGS_ACTION_CHANGED)
+      && strncmp (name, KEY_BASE, strlen (KEY_BASE)) == 0)
     {
       char *p = name + strlen (KEY_BASE);
       if (!strcasecmp (p, "week-starts-monday")
