@@ -18,14 +18,20 @@
  */
 
 #include <string.h>
+#include <stdlib.h>
 
 #include <gtk/gtk.h>
 #include <gdk/gdk.h>
+#include <gdk/gdkx.h>
+
+#define THRESHOLD 2
 
 struct tap
 {
+  GdkDisplay *gdisplay;
   GdkEvent ev;
   gboolean flag;
+  gint x, y;
 };
 
 static struct tap *t;
@@ -37,11 +43,17 @@ timeout (gpointer p)
 
   if (tt->flag == TRUE)
     {
-      tt->ev.button.button = 3;
-      tt->ev.button.type = GDK_BUTTON_PRESS;
-      gtk_main_do_event (&tt->ev);
-      tt->ev.button.type = GDK_BUTTON_RELEASE;
-      gtk_main_do_event (&tt->ev);
+      gint x, y;
+      gdk_display_get_pointer (tt->gdisplay, NULL, &x, &y, NULL);
+      if ((abs (x - tt->x) < THRESHOLD)
+	  && (abs (y - tt->y) < THRESHOLD))
+	{
+	  tt->ev.button.button = 3;
+	  tt->ev.button.type = GDK_BUTTON_PRESS;
+	  gtk_main_do_event (&tt->ev);
+	  tt->ev.button.type = GDK_BUTTON_RELEASE;
+	  gtk_main_do_event (&tt->ev);
+	}
     }
 
   t = NULL;
@@ -63,6 +75,8 @@ filter (GdkEvent *ev, gpointer data)
       tt->flag = TRUE;
       memcpy (&tt->ev, ev, sizeof (*ev));
       t = tt;
+      tt->gdisplay = gdk_x11_lookup_xdisplay (GDK_WINDOW_XDISPLAY (ev->any.window));
+      gdk_display_get_pointer (tt->gdisplay, NULL, &tt->x, &tt->y, NULL);
     }
   else if (ev->type == GDK_BUTTON_RELEASE 
 	   && ev->button.button == 1 
