@@ -369,7 +369,7 @@ event_db_list_for_period_internal (time_t start, time_t end, gboolean untimed,
       n++;
     }
 
-  for (iter = recurring_events; max && iter; iter = g_slist_next (iter))
+  for (iter = recurring_events; iter; iter = g_slist_next (iter))
     {
       event_t ev = iter->data;
       time_t fixed_start = ev->start;
@@ -390,12 +390,6 @@ event_db_list_for_period_internal (time_t start, time_t end, gboolean untimed,
       if (end && fixed_start > end)
 	continue;
       
-      /* Skip events that have finished already */
-      if ((fixed_start + ev->duration < start)
-	  || (ev->duration && ((fixed_start + ev->duration == start))))
-	continue;
-      list = g_slist_append (list, ev);
-
       switch (r->type)
 	{
 	case RECUR_NONE:

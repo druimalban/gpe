@@ -71,7 +71,7 @@ future_view_update ()
   tm.tm_year++;
   end = mktime (&tm);
       
-  events = event_db_list_for_period (start, end);
+  events = event_db_list_for_future (start, 15);
       
   for (iter = events; iter; iter = iter->next)
     {

@@ -1,3 +1,10 @@
+2002-10-04  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>
+
+	* event-db.c (event_db_list_for_period_internal: erase
+	the "max &&" and "/*skip already finished events */" 
+	parts got cut	
+	* future-view.c: change to use list_for_future()
+
 2002-09-29  Philip Blundell  <philb@gnu.org>
 
 	* day_view.c (format_event): Handle untimed events.  Elide end
