@@ -1,7 +1,7 @@
 PACKAGE = nsqld
 PREFIX = /usr/local
 DEBUG = no
-VERSION = 0.5-2
+VERSION = 0.5.3
 CVSBUILD = yes
 SASL = no
 STRIP = strip
