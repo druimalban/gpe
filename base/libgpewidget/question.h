@@ -11,7 +11,7 @@
 #ifndef QUESTION_H
 #define QUESTION_H
 
-//extern int gpe_question_ask (char *qn, char *title, char *icon, char *choice1, char *choice2);
-extern int gpe_question_ask_yn (char *qn);
+extern gint gpe_question_ask (char *qn, char *title, char *iconname, ...);
+extern gint gpe_question_ask_yn (char *qn);
 
 #endif

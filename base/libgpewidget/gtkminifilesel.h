@@ -26,6 +26,7 @@ struct _GtkMiniFileSelection
   GtkWidget *ok_button;
   GtkWidget *entry;
   GtkWidget *option;
+  gint selected_row;
 
   char *directory;
 };

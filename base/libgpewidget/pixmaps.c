@@ -123,17 +123,25 @@ GdkPixbuf *
 gpe_find_icon (const char *name)
 {
   struct gpe_icon *p = g_datalist_get_data (&pbdata, name);
+  gchar *error;
+
   if (p == NULL)
     {
-      GdkPixbuf *buf = gpe_load_one_icon (name, NULL);
+      GdkPixbuf *buf = gpe_load_one_icon (name, &error);
       if (buf)
-	{
-	  p = g_malloc (sizeof (struct gpe_icon));
-	  p->shortname = g_strdup (name);
-	  p->pixbuf = buf;
-	  g_datalist_set_data (&pbdata, p->shortname, p);
-	}
+      {
+        p = g_malloc (sizeof (struct gpe_icon));
+        p->shortname = g_strdup (name);
+        p->pixbuf = buf;
+        g_datalist_set_data (&pbdata, p->shortname, p);
+      }
+      else
+      {
+        gpe_error_box (error);
+        abort ();
+      }
     }
+
   return p ? p->pixbuf : NULL;
 }
 

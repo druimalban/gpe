@@ -14,6 +14,7 @@
 #include <string.h>
 #include <stdarg.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
 
 #include "question.h"
@@ -23,46 +24,46 @@
 
 #define _(x) dgettext(PACKAGE, x)
 
-int button_pressed=0;
-
 void
-on_window_destroy                  (GtkObject       *object,
+on_qn_button_clicked                (GtkButton       *button,
                                         gpointer         user_data)
 {
-  button_pressed=2;
-  gtk_main_quit ();
-}
-
-void
-on_no_button_clicked                (GtkButton       *button,
-                                        gpointer         user_data)
-{
+  gint *ret=NULL;
+  ret = gtk_object_get_data (GTK_OBJECT (user_data), "return");
+  *ret=(gint)gtk_object_get_data (GTK_OBJECT(button), "value");
   gtk_widget_destroy (user_data);
-  button_pressed=1;
   gtk_main_quit();
 }
 
 void
-on_yes_button_clicked                (GtkButton       *button,
-                                        gpointer         user_data)
+add_button (char *text, char *icon, GtkWidget *dialog, int value)
 {
-  gtk_widget_destroy (user_data);
-  button_pressed=0;
-  gtk_main_quit();
+  GtkWidget *btn;
+  btn = gpe_picture_button (dialog->style, text, icon);
+  gtk_object_set_data (GTK_OBJECT (btn), "value", (gpointer)value);
+  gtk_signal_connect (GTK_OBJECT (btn), "clicked",
+                      GTK_SIGNAL_FUNC (on_qn_button_clicked),
+                      dialog);
+  gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog)->action_area),
+                      btn);
 }
 
-int
-gpe_question_ask_yn (char *qn)
+gint
+gpe_question_ask (char *qn, char *title, char *iconname, ...)
 {
   GtkWidget *window, *fakeparentwindow, *hbox, *label, *icon;
-  GtkWidget *buttonok, *buttoncancel;
   GdkPixbuf *p;
+  gint button_pressed=-1;
+  int i=0;
 
+  va_list ap;
+
+  /* window gunk */
   fakeparentwindow = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   gtk_widget_realize (fakeparentwindow);
 
   window = gtk_dialog_new ();
-  gtk_window_set_title (GTK_WINDOW(window), _("Question"));
+  gtk_window_set_title (GTK_WINDOW(window), title);
   gtk_window_set_transient_for (GTK_WINDOW(window), GTK_WINDOW(fakeparentwindow));
   gtk_widget_realize (window);
  
@@ -70,64 +71,45 @@ gpe_question_ask_yn (char *qn)
   gtk_window_set_position (GTK_WINDOW (window), GTK_WIN_POS_CENTER);
 
   gtk_signal_connect (GTK_OBJECT (window), "destroy",
-                      GTK_SIGNAL_FUNC (gtk_main_quit), NULL);
+                      GTK_SIGNAL_FUNC (gtk_main_quit),
+                      NULL);
+  gtk_object_set_data (GTK_OBJECT (window), "return", &button_pressed);
 
+  /* icon / label */
   hbox = gtk_hbox_new (FALSE, 0);
-  gtk_widget_show (hbox);
+  gtk_container_add (GTK_CONTAINER (GTK_DIALOG (window)->vbox), hbox);
 
-  label = gtk_label_new (qn);
-
-  gtk_widget_show (label);
-  gtk_misc_set_alignment (GTK_MISC (label), 0.5, 0.5);
-
-  p = gpe_find_icon ("question");
+  p = gpe_find_icon (iconname);
   icon = gpe_render_icon (GTK_DIALOG(window)->vbox->style, p);
   gtk_box_pack_start (GTK_BOX (hbox), icon, TRUE, TRUE, 0);
+
+  label = gtk_label_new (qn);
+  gtk_misc_set_alignment (GTK_MISC (label), 0.5, 0.5);
   gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 4);
+
 
   gtk_widget_realize (window);
 
-  buttonok = gpe_picture_button (window->style, _("Yes"), "ok");
-  gtk_signal_connect (GTK_OBJECT (buttonok), "clicked",
-                      GTK_SIGNAL_FUNC (on_yes_button_clicked),
-                      window);
-
-  buttoncancel = gpe_picture_button (window->style, _("No"), "cancel");
-  gtk_signal_connect (GTK_OBJECT (buttoncancel), "clicked",
-                      GTK_SIGNAL_FUNC (on_no_button_clicked),
-                      window);
-
-  gtk_container_add (GTK_CONTAINER (GTK_DIALOG (window)->action_area),
-                     buttoncancel);
-  gtk_container_add (GTK_CONTAINER (GTK_DIALOG (window)->action_area),
-                      buttonok);
-
-  gtk_container_add (GTK_CONTAINER (GTK_DIALOG (window)->vbox), hbox);
-
-  gtk_signal_connect (GTK_OBJECT (window), "destroy",
-                      GTK_SIGNAL_FUNC (on_window_destroy),
-                      NULL);
+  /* buttons */
+  va_start (ap, iconname);
+  while (TRUE)
+  {
+    char *btn_lbl;	    free (btn_lbl);
+    free (btn_icon);
+  }
+  va_end (ap);
 
   gtk_widget_show_all (window);
-
-  button_pressed=0;
 
   gtk_main ();
 
   return button_pressed;
 }
 
-/*
-void
-gpe_error_box_fmt(const char *format, ...)
+gint
+gpe_question_ask_yn (char *qn)
 {
-  va_list ap;
-  char *str;
-
-  va_start (ap, format);
-  vasprintf (&str, format, ap);
-  va_end (ap);
-  gpe_error_box (str);
-  g_free (str);
+  return gpe_question_ask (qn, _("Question"), "question",
+  _("No"), "cancel", _("Yes"), "ok");
 }
-*/
+

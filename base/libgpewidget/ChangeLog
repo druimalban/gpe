@@ -1,3 +1,9 @@
+2002-08-05  Damien Tanner <dc@magenet.com>
+
+	* gtkminifilesel.c: Add tap-n-hold
+	* about.[ch]: New module
+	* question.[ch]: New module (Thanks to mibus)
+
 2002-08-06  Colin Marquardt  <colin@marquardt-home.de>
 
 	* gtkrc: Add gpe-ownerinfo background image.
