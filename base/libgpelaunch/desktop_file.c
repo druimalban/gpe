@@ -1243,6 +1243,25 @@ gnome_desktop_file_get_string (GnomeDesktopFile   *df,
 }
 
 gboolean
+gnome_desktop_file_get_boolean (GnomeDesktopFile   *df,
+				const char         *section,
+				const char         *keyname,
+				gboolean           *val)
+{
+  const char *raw;
+  
+  *val = FALSE;
+  
+  if (!gnome_desktop_file_get_raw (df, section, keyname, NULL, &raw))
+    return FALSE;
+
+  if (!g_strcasecmp (raw, "true"))
+    *val = TRUE;
+  
+  return TRUE;
+}
+
+gboolean
 gnome_desktop_file_get_strings (GnomeDesktopFile   *df,
                                 const char         *section,
                                 const char         *keyname,
@@ -1271,9 +1290,12 @@ gnome_desktop_file_get_strings (GnomeDesktopFile   *df,
   /* Drop the empty string g_strsplit leaves in the vector since
    * our list of strings ends in ";"
    */
-  --i;
-  g_free (retval[i]);
-  retval[i] = NULL;
+  if (retval[i-1][0] == 0)
+    {
+      --i;
+      g_free (retval[i]);
+      retval[i] = NULL;
+    }
   
   if (vals)
     *vals = retval;
