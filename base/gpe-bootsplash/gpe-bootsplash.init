@@ -11,10 +11,14 @@ case $1 in
 'start')
 	case `module_id` in
 		"HP IPAQ H3100" )
-			ARGS="--mono" ;;
+			ARGS="--mono --force-portrait" ;;
 		"HP IPAQ H3600" | "HP IPAQ H3700" | "HP IPAQ H3900" )
-		    	ARGS="--flip" ;;
-		"HP IPAQ H3800" | "HP IPAQ H5400" | "HP IPAQ H2200" )
+		    	ARGS="--flip --force-portrait" ;;
+		"HP IPAQ H3800" | *COLLIE)
+			ARGS="--force-portrait" ;;
+		"SHARP SHEPHERD" | "SHARP HUSKY" | "SHARP CORGI")
+			ARGS="--force-landscape" ;;
+		"HP IPAQ H5400" | "HP IPAQ H2200" )
 			;;
 	esac
 	/usr/bin/gpe-bootsplash $ARGS

@@ -58,7 +58,8 @@ main(int argc, char *argv[])
 #ifdef USE_SVG
   const char *svg_name;
 #endif
-  gboolean has_alpha;
+  gboolean has_alpha, use_landscape;
+  int img_xres, img_yres;
 
   g_type_init ();
 
@@ -114,20 +115,6 @@ main(int argc, char *argv[])
       exit (1);
     }
 
-#ifdef USE_SVG
-  if (var.xres > var.yres)
-    svg_name = SVG_NAME_LANDSCAPE;
-  else
-    svg_name = SVG_NAME_PORTRAIT;
-
-  buf = rsvg_pixbuf_from_file_at_size (svg_name, var.xres, var.yres, NULL);
-#else
-  buf =  gdk_pixbuf_new_from_file (IMAGE, NULL);
-#endif
-
-  if (buf == NULL)
-    exit (1);
-
   tty = open ("/dev/tty0", O_RDWR);
   if (tty < 0)
     perror ("open");
@@ -137,13 +124,10 @@ main(int argc, char *argv[])
       close (tty);
     }
 
-  pix = gdk_pixbuf_get_pixels (buf);
-  stride = gdk_pixbuf_get_rowstride (buf);
-  xsize = gdk_pixbuf_get_width (buf);
-  ysize = gdk_pixbuf_get_height(buf);
-  
-  landscape_image = xsize >= ysize;
-  rot = landscape_fb != landscape_image;
+  img_xres = var.xres;
+  img_yres = var.yres;
+
+  use_landscape = landscape_fb;
 
   for (i = 1; i < argc; i++)
     {
@@ -158,7 +142,47 @@ main(int argc, char *argv[])
 	depth16 = FALSE;
       else if (!strcmp (argv[i], "--depth16"))
 	depth16 = TRUE;
+      else if (!strcmp (argv[i], "--force-portrait"))
+	use_landscape = FALSE;
+      else if (!strcmp (argv[i], "--force-landscape"))
+	use_landscape = TRUE;
     }
+
+#ifdef USE_SVG
+  if (use_landscape)
+    {
+      if (img_xres < img_yres)
+	{
+	  img_xres = var.yres;
+	  img_yres = var.xres;
+	}
+      svg_name = SVG_NAME_LANDSCAPE;
+    }
+  else
+    {
+      if (img_xres > img_yres)
+	{
+	  img_xres = var.yres;
+	  img_yres = var.xres;
+	}
+      svg_name = SVG_NAME_PORTRAIT;
+    }
+
+  buf = rsvg_pixbuf_from_file_at_size (svg_name, img_xres, img_yres, NULL);
+#else
+  buf = gdk_pixbuf_new_from_file (IMAGE, NULL);
+#endif
+
+  pix = gdk_pixbuf_get_pixels (buf);
+  stride = gdk_pixbuf_get_rowstride (buf);
+  xsize = gdk_pixbuf_get_width (buf);
+  ysize = gdk_pixbuf_get_height(buf);
+  
+  landscape_image = xsize >= ysize;
+  rot = landscape_fb != landscape_image;
+
+  if (buf == NULL)
+    exit (1);
 
   if (rot)
   {
