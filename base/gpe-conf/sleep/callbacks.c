@@ -16,6 +16,7 @@
 #include "conf.h"
 #include "confGUI.h"
 #include "../applets.h"
+#include "../ipaqscreen/brightness.h"
 
 extern GtkWidget *sleep_idle_spin;
 extern GtkWidget *dim_spin;
@@ -264,7 +265,7 @@ on_dim_scale_focus_out_event            (GtkWidget       *widget,
                                         GdkEventFocus   *event,
                                         gpointer         user_data)
 {
-  set_brightness(user_data);
+  set_brightness((int)user_data);
   return FALSE;
 }
 

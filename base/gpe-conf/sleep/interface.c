@@ -266,7 +266,7 @@ create_GPE_Config_Sleep (ipaq_conf_t *ISconf)
                       ISconf);
   gtk_signal_connect (GTK_OBJECT (dim_scale), "focus_out_event",
                       GTK_SIGNAL_FUNC (on_dim_scale_focus_out_event),
-                      blVal);
+                      (gpointer)blVal);
   gtk_object_set_data (GTK_OBJECT (GPE_Config_Sleep), "tooltips", tooltips);
 
   return GPE_Config_Sleep;
@@ -350,4 +350,3 @@ create_irq_win (ipaq_conf_t *ISconf)
 
   return irq_win;
 }
-

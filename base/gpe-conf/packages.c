@@ -34,6 +34,7 @@
 #include "packages.h"
 #include "applets.h"
 #include "suid.h"
+#include "parser.h"
 
 
 /* --- local types and constants --- */

@@ -121,6 +121,7 @@ static struct
 } self;
 
 static int trc = 0;  // countdown for waiting for time change
+static int tid = 0;  // timeout id
 static int isdst;    // is a dst active?
 static int need_warning = FALSE;
 
@@ -279,12 +280,16 @@ tzinfo get_tz_info(char *tzstr)
 	return(result);
 }
 
-gint refresh_time()
+gboolean refresh_time()
 {
 	Time_Restore();
 	trc--;
-	if (!trc)  gtk_widget_set_sensitive(self.internet,TRUE);
-	return trc;
+	if (!trc)  
+	{
+		gtk_widget_set_sensitive(self.internet,TRUE);
+		gtk_timeout_remove(tid);
+	}
+	return (trc ? TRUE : FALSE);
 }
 
 void GetInternetTime()
@@ -292,7 +297,7 @@ void GetInternetTime()
   gtk_widget_set_sensitive(self.internet,FALSE);
   suid_exec("NTPD",gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (self.ntpserver)->entry)));
   trc = 10;
-  gtk_timeout_add(500,refresh_time,NULL);
+  tid = gtk_timeout_add(500,refresh_time,NULL);
 }
 
 

@@ -352,7 +352,7 @@ Serial_Build_Objects (void)
   gtk_table_attach(GTK_TABLE(table),label,0,2,3,4,GTK_FILL,GTK_FILL,0,0);
   
   self.cbBaudrate = gtk_combo_new();
-  gtk_combo_set_popdown_strings(GTK_COMBO(self.cbBaudrate),bauds);  
+  gtk_combo_set_popdown_strings(GTK_COMBO(self.cbBaudrate),(GList*)bauds);  
   gtk_table_attach(GTK_TABLE(table),self.cbBaudrate,0,2,4,5,GTK_FILL,GTK_FILL,gpe_get_boxspacing(),gpe_get_boxspacing());
   gtk_combo_set_value_in_list(GTK_COMBO(self.cbBaudrate),FALSE,FALSE);
   gtk_entry_set_text(GTK_ENTRY(GTK_COMBO(self.cbBaudrate)->entry),cur_baud);    

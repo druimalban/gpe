@@ -104,7 +104,7 @@ gchar *subst_val(gchar* line, gchar* value)
 	}
 	else	// remove line
 	{
-		sprintf(line,"\0"); 
+		line[0] = 0;
 	}	
 	return line;
 }

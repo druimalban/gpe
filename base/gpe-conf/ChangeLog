@@ -1,3 +1,11 @@
+2003-09-12	Florian Boor  	<florian.boor@kernelconcepts.de>
+	* removed obsolete menu building script
+	* timeanddate.c: cleaned up handling of timer
+	* fixed warning in cfgfile.c 
+	* fixed warning in serial.c
+	* fixed warning in sleep/interface.c
+	* added missing include to packages.c
+	
 2003-09-11	Florian Boor  	<florian.boor@kernelconcepts.de>
 	* fixed warning in applets.c, reformated file
 	* suid.c: added missing include
