@@ -2,7 +2,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
-#include "errorbox.h"
+#include "gpe/errorbox.h"
 
 #include "calibrate.h"
 

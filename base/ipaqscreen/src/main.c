@@ -9,7 +9,7 @@
 
 #include <gtk/gtk.h>
 
-#include "init.h"
+#include "gpe/init.h"
 
 #include "interface.h"
 #include "support.h"
