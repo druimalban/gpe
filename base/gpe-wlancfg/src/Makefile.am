@@ -17,10 +17,11 @@ gpe_wlancfg_SOURCES = \
 	callbacks.c callbacks.h \
 	confpars_wl.y \
 	confscan_wl.l \
-	cfgfile.c cfgfile.h \
+#	cfgfile.c cfgfile.h \
 	config-parser.c config-parser.h
+#	confpars_wl.c confpars_wl.h
+#	confscan_wl.c confscan_wl.h
 
-#	confpars_wl.c confpars_wl.h \
-#	confscan_wl.c confscan_wl.h \
 
-gpe_wlancfg_LDADD = @GTK_LIBS@ $(INTLLIBS) /skiff/local/arm-linux/lib/libfl.a
+# gpe_wlancfg_LDADD = @GTK_LIBS@ $(INTLLIBS) /skiff/local/arm-linux/lib/libfl.a
+gpe_wlancfg_LDADD = @GTK_LIBS@ $(INTLLIBS) /usr/lib/libfl.a

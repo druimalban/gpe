@@ -6,8 +6,8 @@
 #include <string.h>
 
 char	tempval[255];
-int	linenr;
-int	sectionstart;
+int	linenr=1;
+int	sectionstart=0;
 
 %}
 

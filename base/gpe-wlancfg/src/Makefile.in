@@ -88,7 +88,6 @@ RANLIB = @RANLIB@
 USE_INCLUDED_LIBINTL = @USE_INCLUDED_LIBINTL@
 USE_NLS = @USE_NLS@
 VERSION = @VERSION@
-YACC = @YACC@
 
 LFLAGS = -L
 YFLAGS = -ld
@@ -98,13 +97,14 @@ INCLUDES =  	-I$(top_srcdir)/intl 	@GTK_CFLAGS@
 
 bin_PROGRAMS = gpe-wlancfg
 
-gpe_wlancfg_SOURCES =  	main.c 	support.c support.h 	interface.c interface.h 	callbacks.c callbacks.h 	confpars_wl.y 	confscan_wl.l 	cfgfile.c cfgfile.h 	config-parser.c config-parser.h
+gpe_wlancfg_SOURCES =  	main.c 	support.c support.h 	interface.c interface.h 	callbacks.c callbacks.h 	confpars_wl.y 	confscan_wl.l 	config-parser.c config-parser.h
 
+#	cfgfile.c cfgfile.h \
+#	confpars_wl.c confpars_wl.h
+#	confscan_wl.c confscan_wl.h
 
-#	confpars_wl.c confpars_wl.h \
-#	confscan_wl.c confscan_wl.h \
-
-gpe_wlancfg_LDADD = @GTK_LIBS@ $(INTLLIBS) /skiff/local/arm-linux/lib/libfl.a
+# gpe_wlancfg_LDADD = @GTK_LIBS@ $(INTLLIBS) /skiff/local/arm-linux/lib/libfl.a
+gpe_wlancfg_LDADD = @GTK_LIBS@ $(INTLLIBS) /usr/lib/libfl.a
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../config.h
 CONFIG_CLEAN_FILES = 
@@ -116,8 +116,8 @@ CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 gpe_wlancfg_OBJECTS =  main.o support.o interface.o callbacks.o \
-confpars_wl.o confscan_wl.o cfgfile.o config-parser.o
-gpe_wlancfg_DEPENDENCIES =  /skiff/local/arm-linux/lib/libfl.a
+confpars_wl.o confscan_wl.o config-parser.o
+gpe_wlancfg_DEPENDENCIES =  /usr/lib/libfl.a
 gpe_wlancfg_LDFLAGS = 
 LEX_OUTPUT_ROOT = @LEX_OUTPUT_ROOT@
 LEXLIB = @LEXLIB@
@@ -132,9 +132,8 @@ DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
 
 TAR = gtar
 GZIP_ENV = --best
-DEP_FILES =  .deps/callbacks.P .deps/cfgfile.P .deps/config-parser.P \
-.deps/confpars_wl.P .deps/confscan_wl.P .deps/interface.P .deps/main.P \
-.deps/support.P
+DEP_FILES =  .deps/callbacks.P .deps/config-parser.P .deps/confpars_wl.P \
+.deps/confscan_wl.P .deps/interface.P .deps/main.P .deps/support.P
 SOURCES = $(gpe_wlancfg_SOURCES)
 OBJECTS = $(gpe_wlancfg_OBJECTS)
 

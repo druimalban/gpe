@@ -8,7 +8,6 @@
 #include "callbacks.h"
 #include "interface.h"
 #include "support.h"
-#include "cfgfile.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -16,6 +15,7 @@
 extern GtkWidget *GPE_WLAN;
 static gboolean HasChanged = FALSE;
 static gint SchemeListSelRow = -1;
+static gint SchemeListLastSelection;
 
 Scheme_t *CurrentScheme;
 gint sc; /*	Scheme counter */
@@ -56,7 +56,7 @@ on_HelpWin_de_event             (GtkWidget       *widget,
 	gtk_widget_hide(widget);
 	gtk_widget_destroy(widget);
 
-return TRUE;
+	return TRUE;
 }
 
 
@@ -84,7 +84,8 @@ GtkWidget *SchemeList;
 			for (i=0;i<sc;i++)
 				memcpy(&schemelist[i],gtk_clist_get_row_data(GTK_CLIST(SchemeList),i),sizeof(Scheme_t));
 
-			write_sections(schemelist,sc);
+			//kc-or: write_sections(schemelist,sc);
+			write_back_configfile(WLAN_CONFIGFILE, schemelist, sc);
 			gtk_main_quit();
 	}
 
@@ -96,13 +97,17 @@ void
 on_SaveChangesYes_clicked              (GtkButton       *button,
                                         gpointer         user_data)
 {
-GtkWidget *SaveDialog;
-GtkWidget *widget;
-GtkWidget *menu;
-GtkWidget *SchemeList;
-gchar *ListEntry[4];
-int i;
-
+GtkWidget 	*SaveDialog;
+GtkWidget 	*widget;
+GtkWidget 	*menu;
+GtkWidget 	*SchemeList;
+gchar 		*ListEntry[4];
+int 		i;
+gchar 		tempmode[20];
+gchar		tempchannel[20];
+gchar		tempfreq[20];
+gchar		temprate[20];
+	
 	HasChanged = FALSE;
 	SaveDialog=lookup_widget(GTK_WIDGET(button),"SaveChanges");
 
@@ -111,6 +116,272 @@ int i;
 		ListEntry[i]=(gchar *)malloc(32 * sizeof(char));
 		memset(ListEntry[i],0,32);
 	}
+
+	/* suck values */
+
+	//kc-or: Added line-checking... fixed bug in widget lookup
+	widget=lookup_widget(GTK_WIDGET(GPE_WLAN),"Scheme");
+	if (strcmp(CurrentScheme->Scheme, gtk_entry_get_text(GTK_ENTRY(widget)))!=0)
+	{
+		if (CurrentScheme->lines[L_Scheme]==LINE_NOT_PRESENT)
+			CurrentScheme->lines[L_Scheme]=LINE_NEW;
+		strcpy(CurrentScheme->Scheme, gtk_entry_get_text(GTK_ENTRY(widget)));	
+	}
+	
+	widget=lookup_widget(GTK_WIDGET(GPE_WLAN),"Instance");
+	if (strcmp(CurrentScheme->Instance, gtk_entry_get_text(GTK_ENTRY(widget)))!=0)
+	{
+		if (CurrentScheme->lines[L_Instance]==LINE_NOT_PRESENT)
+			CurrentScheme->lines[L_Instance]=LINE_NEW;
+		strcpy(CurrentScheme->Instance, gtk_entry_get_text(GTK_ENTRY(widget)));	
+	}
+	
+	widget=lookup_widget(GTK_WIDGET(GPE_WLAN),"Socket");
+	if (strcmp(CurrentScheme->Socket, gtk_entry_get_text(GTK_ENTRY(widget)))!=0)
+	{
+		if (CurrentScheme->lines[L_Socket]==LINE_NOT_PRESENT)
+			CurrentScheme->lines[L_Socket]=LINE_NEW;
+		strcpy(CurrentScheme->Socket, gtk_entry_get_text(GTK_ENTRY(widget)));	
+	}
+	
+	widget=lookup_widget(GTK_WIDGET(GPE_WLAN),"HWAddress");
+	if (strcmp(CurrentScheme->HWAddress, gtk_entry_get_text(GTK_ENTRY(widget)))!=0)
+	{
+		if (CurrentScheme->lines[L_HWAddress]==LINE_NOT_PRESENT)
+			CurrentScheme->lines[L_HWAddress]=LINE_NEW;
+		strcpy(CurrentScheme->HWAddress, gtk_entry_get_text(GTK_ENTRY(widget)));	
+	}
+	
+	widget=lookup_widget(GTK_WIDGET(GPE_WLAN),"Info");
+	if (strcmp(CurrentScheme->Info, gtk_entry_get_text(GTK_ENTRY(widget)))!=0)
+	{
+		if (CurrentScheme->lines[L_Info]==LINE_NOT_PRESENT)
+			CurrentScheme->lines[L_Info]=LINE_NEW;
+		strcpy(CurrentScheme->Info, gtk_entry_get_text(GTK_ENTRY(widget)));	
+	}
+	
+	widget=lookup_widget(GTK_WIDGET(GPE_WLAN),"ESSID");
+	if (strcmp(CurrentScheme->ESSID, gtk_entry_get_text(GTK_ENTRY(widget)))!=0)
+	{
+		if (CurrentScheme->lines[L_ESSID]==LINE_NOT_PRESENT)
+			CurrentScheme->lines[L_ESSID]=LINE_NEW;
+		strcpy(CurrentScheme->ESSID, gtk_entry_get_text(GTK_ENTRY(widget)));	
+	}
+	
+	widget=lookup_widget(GTK_WIDGET(GPE_WLAN),"NWID");
+	if (strcmp(CurrentScheme->NWID, gtk_entry_get_text(GTK_ENTRY(widget)))!=0)
+	{
+		if (CurrentScheme->lines[L_NWID]==LINE_NOT_PRESENT)
+			CurrentScheme->lines[L_NWID]=LINE_NEW;
+		strcpy(CurrentScheme->NWID, gtk_entry_get_text(GTK_ENTRY(widget)));
+	}
+
+	menu=GTK_WIDGET(gtk_option_menu_get_menu(GTK_OPTION_MENU(lookup_widget(GTK_WIDGET(GPE_WLAN),"Mode"))));
+	widget=gtk_menu_get_active(GTK_MENU(menu));
+	i = g_list_index (GTK_MENU_SHELL (menu)->children, widget);
+	switch(i)
+	{
+		case 0:
+			strcpy(tempmode, "AD-HOC");
+		break;
+		case 1:
+			strcpy(tempmode, "MANAGED");
+		break;
+		case 2:
+			strcpy(tempmode, "MASTER");
+ 		break;
+		case 3:
+			strcpy(tempmode, "REPEATER");
+		break;
+ 		case 4:
+			strcpy(tempmode, "SECONDARY");
+ 		break;
+		case 5:
+		default:	
+			strcpy(tempmode, "AUTO");
+ 		break;
+	}
+	
+	if (strcmp(CurrentScheme->Mode, tempmode)!=0)
+	{
+		if (CurrentScheme->lines[L_Mode]==LINE_NOT_PRESENT)
+			CurrentScheme->lines[L_Mode]=LINE_NEW;
+		strcpy(CurrentScheme->Mode, tempmode);
+	}
+
+	strcpy(tempchannel, "");
+	strcpy(tempfreq, "");
+
+	widget=lookup_widget(GTK_WIDGET(GPE_WLAN),"ChannelFreq");
+	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget))) 
+	{
+		widget=lookup_widget(GTK_WIDGET(GPE_WLAN),"Frequency");
+		strcpy(tempfreq,gtk_entry_get_text(GTK_ENTRY(widget)));	
+	}
+	else
+	{
+		widget=lookup_widget(GTK_WIDGET(GPE_WLAN),"ChannelChan");
+		if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget))) 
+		{
+			widget=lookup_widget(GTK_WIDGET(GPE_WLAN),"ChannelNr");
+			strcpy(tempchannel,gtk_entry_get_text(GTK_ENTRY(widget)));			
+		}
+	}
+
+	if (strcmp(CurrentScheme->Channel, tempchannel)!=0)
+	{
+		if (CurrentScheme->lines[L_Channel]==LINE_NOT_PRESENT)
+			CurrentScheme->lines[L_Channel]=LINE_NEW;
+		strcpy(CurrentScheme->Channel, tempchannel);
+	}
+
+	if (strcmp(CurrentScheme->Frequency, tempfreq)!=0)
+	{
+		if (CurrentScheme->lines[L_Frequency]==LINE_NOT_PRESENT)
+			CurrentScheme->lines[L_Frequency]=LINE_NEW;
+		strcpy(CurrentScheme->Frequency, tempfreq);
+	}
+	
+	menu=GTK_WIDGET(gtk_option_menu_get_menu(GTK_OPTION_MENU(lookup_widget(GTK_WIDGET(GPE_WLAN),"Rate"))));
+	widget=gtk_menu_get_active(GTK_MENU(menu));
+	i = g_list_index (GTK_MENU_SHELL (menu)->children, widget);
+	switch(i)
+	{
+		case 0:
+			strcpy(temprate, "auto");
+		break;
+		case 1:
+			strcpy(temprate, "1M");
+		break;
+		case 2:
+			strcpy(temprate, "2M");
+ 		break;
+		case 5:
+		default:	
+			strcpy(temprate, "11M");
+ 		break;
+	}
+
+	if (strcmp(CurrentScheme->Rate, temprate)!=0)
+	{
+		if (CurrentScheme->lines[L_Rate]==LINE_NOT_PRESENT)
+			CurrentScheme->lines[L_Rate]=LINE_NEW;
+		strcpy(CurrentScheme->Rate, temprate);
+	}
+
+	widget=lookup_widget(GTK_WIDGET(GPE_WLAN),"EncryptionOn");
+	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget)))
+	{
+		widget=lookup_widget(GTK_WIDGET(GPE_WLAN),"ed_key1");
+		if (strcmp(CurrentScheme->key1, gtk_entry_get_text(GTK_ENTRY(widget)))!=0)
+		{
+			if (CurrentScheme->lines[L_key1]==LINE_NOT_PRESENT)
+				CurrentScheme->lines[L_key1]=LINE_NEW;
+			strcpy(CurrentScheme->key1, gtk_entry_get_text(GTK_ENTRY(widget)));	
+		}
+		
+		widget=lookup_widget(GTK_WIDGET(GPE_WLAN),"ed_key2");
+		if (strcmp(CurrentScheme->key2, gtk_entry_get_text(GTK_ENTRY(widget)))!=0)
+		{
+			if (CurrentScheme->lines[L_key2]==LINE_NOT_PRESENT)
+				CurrentScheme->lines[L_key2]=LINE_NEW;
+			strcpy(CurrentScheme->key2, gtk_entry_get_text(GTK_ENTRY(widget)));	
+		}
+
+		widget=lookup_widget(GTK_WIDGET(GPE_WLAN),"ed_key3");
+		if (strcmp(CurrentScheme->key3, gtk_entry_get_text(GTK_ENTRY(widget)))!=0)
+		{
+			if (CurrentScheme->lines[L_key3]==LINE_NOT_PRESENT)
+				CurrentScheme->lines[L_key3]=LINE_NEW;
+			strcpy(CurrentScheme->key3, gtk_entry_get_text(GTK_ENTRY(widget)));	
+		}
+
+		widget=lookup_widget(GTK_WIDGET(GPE_WLAN),"ed_key4");
+		if (strcmp(CurrentScheme->key4, gtk_entry_get_text(GTK_ENTRY(widget)))!=0)
+		{
+			if (CurrentScheme->lines[L_key4]==LINE_NOT_PRESENT)
+				CurrentScheme->lines[L_key4]=LINE_NEW;
+			strcpy(CurrentScheme->key4, gtk_entry_get_text(GTK_ENTRY(widget)));	
+		}
+
+		widget=lookup_widget(GTK_WIDGET(GPE_WLAN),"ActiveKeyNr");
+		if (strcmp(CurrentScheme->ActiveKey, gtk_entry_get_text(GTK_ENTRY(widget)))!=0)
+		{
+			if (CurrentScheme->lines[L_ActiveKey]==LINE_NOT_PRESENT)
+				CurrentScheme->lines[L_ActiveKey]=LINE_NEW;
+			strcpy(CurrentScheme->ActiveKey, gtk_entry_get_text(GTK_ENTRY(widget)));	
+		}
+
+	}
+	else
+	{
+		if (strcmp(CurrentScheme->ActiveKey, "0")!=0)
+		{
+			if (CurrentScheme->lines[L_ActiveKey]==LINE_NOT_PRESENT)
+				CurrentScheme->lines[L_ActiveKey]=LINE_NEW;
+			strcpy(CurrentScheme->ActiveKey, "0");	
+		}
+	}
+
+	widget=lookup_widget(GTK_WIDGET(GPE_WLAN),"KeysStrings");
+
+	if (CurrentScheme->KeyFormat!=gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget)))
+	{
+		if (CurrentScheme->lines[L_KeyFormat]==LINE_NOT_PRESENT)
+			CurrentScheme->lines[L_KeyFormat]=LINE_NEW;
+		CurrentScheme->KeyFormat=gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget));		
+	}
+
+	widget=lookup_widget(GTK_WIDGET(GPE_WLAN),"ed_iwconfig");
+	if (strcmp(CurrentScheme->iwconfig, gtk_entry_get_text(GTK_ENTRY(widget)))!=0)
+	{
+		if (CurrentScheme->lines[L_iwconfig]==LINE_NOT_PRESENT)
+			CurrentScheme->lines[L_iwconfig]=LINE_NEW;
+		strcpy(CurrentScheme->iwconfig, gtk_entry_get_text(GTK_ENTRY(widget)));	
+	}
+	
+	widget=lookup_widget(GTK_WIDGET(GPE_WLAN),"ed_iwspy");
+	if (strcmp(CurrentScheme->iwspy, gtk_entry_get_text(GTK_ENTRY(widget)))!=0)
+	{
+		if (CurrentScheme->lines[L_iwspy]==LINE_NOT_PRESENT)
+			CurrentScheme->lines[L_iwspy]=LINE_NEW;
+		strcpy(CurrentScheme->iwspy, gtk_entry_get_text(GTK_ENTRY(widget)));	
+	}
+
+	widget=lookup_widget(GTK_WIDGET(GPE_WLAN),"ed_iwpriv");
+	if (strcmp(CurrentScheme->iwpriv, gtk_entry_get_text(GTK_ENTRY(widget)))!=0)
+	{
+		if (CurrentScheme->lines[L_iwpriv]==LINE_NOT_PRESENT)
+			CurrentScheme->lines[L_iwpriv]=LINE_NEW;
+		strcpy(CurrentScheme->iwpriv, gtk_entry_get_text(GTK_ENTRY(widget)));	
+	}
+
+	widget=lookup_widget(GTK_WIDGET(GPE_WLAN),"ed_rts");
+	if (strcmp(CurrentScheme->rts, gtk_entry_get_text(GTK_ENTRY(widget)))!=0)
+	{
+		if (CurrentScheme->lines[L_rts]==LINE_NOT_PRESENT)
+			CurrentScheme->lines[L_rts]=LINE_NEW;
+		strcpy(CurrentScheme->rts, gtk_entry_get_text(GTK_ENTRY(widget)));	
+	}
+	
+	widget=lookup_widget(GTK_WIDGET(GPE_WLAN),"ed_frag");
+	if (strcmp(CurrentScheme->frag, gtk_entry_get_text(GTK_ENTRY(widget)))!=0)
+	{
+		if (CurrentScheme->lines[L_frag]==LINE_NOT_PRESENT)
+			CurrentScheme->lines[L_frag]=LINE_NEW;
+		strcpy(CurrentScheme->frag, gtk_entry_get_text(GTK_ENTRY(widget)));	
+	}
+	
+	widget=lookup_widget(GTK_WIDGET(GPE_WLAN),"ed_sens");
+	if (strcmp(CurrentScheme->sens, gtk_entry_get_text(GTK_ENTRY(widget)))!=0)
+	{
+		if (CurrentScheme->lines[L_sens]==LINE_NOT_PRESENT)
+			CurrentScheme->lines[L_sens]=LINE_NEW;
+		strcpy(CurrentScheme->sens, gtk_entry_get_text(GTK_ENTRY(widget)));	
+	}
+	
+	
+	// kc-or: clist besser doch erst hier updaten :)
 	if (SchemeListSelRow == -1) {
 		/* New entry */
 		strcpy(ListEntry[0],CurrentScheme->Scheme);
@@ -126,118 +397,7 @@ int i;
 		gtk_clist_set_text(GTK_CLIST(SchemeList),SchemeListSelRow,2,CurrentScheme->Instance);
 		gtk_clist_set_text(GTK_CLIST(SchemeList),SchemeListSelRow,3,CurrentScheme->HWAddress);
 	}
-
-	button = GPE_WLAN;
-	/* suck values */
-	widget=lookup_widget(GTK_WIDGET(button),"SchemeName");
-	strcpy(CurrentScheme->Scheme,gtk_entry_get_text(GTK_ENTRY(widget)));	
-	widget=lookup_widget(GTK_WIDGET(button),"Instance");
-	strcpy(CurrentScheme->Instance,gtk_entry_get_text(GTK_ENTRY(widget)));	
-	widget=lookup_widget(GTK_WIDGET(button),"Socket");
-	strcpy(CurrentScheme->Socket,gtk_entry_get_text(GTK_ENTRY(widget)));	
-	widget=lookup_widget(GTK_WIDGET(button),"HWAddress");
-	strcpy(CurrentScheme->HWAddress,gtk_entry_get_text(GTK_ENTRY(widget)));	
-	widget=lookup_widget(GTK_WIDGET(button),"Info");
-	strcpy(CurrentScheme->Info,gtk_entry_get_text(GTK_ENTRY(widget)));	
-	widget=lookup_widget(GTK_WIDGET(button),"ESSID");
-	strcpy(CurrentScheme->ESSID,gtk_entry_get_text(GTK_ENTRY(widget)));	
-	widget=lookup_widget(GTK_WIDGET(button),"NWID");
-	strcpy(CurrentScheme->NWID,gtk_entry_get_text(GTK_ENTRY(widget)));
-
-	menu=GTK_WIDGET(gtk_option_menu_get_menu(GTK_OPTION_MENU(lookup_widget(GTK_WIDGET(button),"Mode"))));
-	widget=gtk_menu_get_active(GTK_MENU(menu));
-	i = g_list_index (GTK_MENU_SHELL (menu)->children, widget);
-	switch(i)
-	{
-		case 0:
-			strcpy(CurrentScheme->Mode,"AD-HOC");
-		break;
-		case 1:
-			strcpy(CurrentScheme->Mode,"MANAGED");
-		break;
-		case 2:
-			strcpy(CurrentScheme->Mode,"MASTER");
- 		break;
-		case 3:
-			strcpy(CurrentScheme->Mode,"REPEATER");
-		break;
- 		case 4:
-			strcpy(CurrentScheme->Mode,"SECONDARY");
- 		break;
-		case 5:
-		default:	
-			strcpy(CurrentScheme->Mode,"AUTO");
- 		break;
-	}
-
-	strcpy(CurrentScheme->Channel,"");
-	strcpy(CurrentScheme->Frequency,"");
-	widget=lookup_widget(GTK_WIDGET(button),"ChannelFreq");
-	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget))) 
-	{
-		widget=lookup_widget(GTK_WIDGET(button),"Frequency");
-		strcpy(CurrentScheme->Frequency,gtk_entry_get_text(GTK_ENTRY(widget)));	
-	}
-	else
-	{
-		widget=lookup_widget(GTK_WIDGET(button),"ChannelChan");
-		if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget))) 
-		{
-			widget=lookup_widget(GTK_WIDGET(button),"ChannelNr");
-			strcpy(CurrentScheme->Channel,gtk_entry_get_text(GTK_ENTRY(widget)));			
-		}
-	}
-
 	
-	menu=GTK_WIDGET(gtk_option_menu_get_menu(GTK_OPTION_MENU(lookup_widget(GTK_WIDGET(button),"Rate"))));
-	widget=gtk_menu_get_active(GTK_MENU(menu));
-	i = g_list_index (GTK_MENU_SHELL (menu)->children, widget);
-	switch(i)
-	{
-		case 0:
-			strcpy(CurrentScheme->Rate,"auto");
-		break;
-		case 1:
-			strcpy(CurrentScheme->Rate,"1M");
-		break;
-		case 2:
-			strcpy(CurrentScheme->Rate,"2M");
- 		break;
-		case 5:
-		default:	
-			strcpy(CurrentScheme->Rate,"11M");
- 		break;
-	}
-
-	widget=lookup_widget(GTK_WIDGET(button),"EncryptionOn");
-	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget)))
-	{
-		widget=lookup_widget(GTK_WIDGET(button),"entry4");
-		strcpy(CurrentScheme->key1,gtk_entry_get_text(GTK_ENTRY(widget)));	
-		widget=lookup_widget(GTK_WIDGET(button),"entry5");
-		strcpy(CurrentScheme->key2,gtk_entry_get_text(GTK_ENTRY(widget)));	
-		widget=lookup_widget(GTK_WIDGET(button),"entry6");
-		strcpy(CurrentScheme->key3,gtk_entry_get_text(GTK_ENTRY(widget)));	
-		widget=lookup_widget(GTK_WIDGET(button),"entry7");
-		strcpy(CurrentScheme->key4,gtk_entry_get_text(GTK_ENTRY(widget)));	
-		widget=lookup_widget(GTK_WIDGET(button),"ActiveKeyNr");
-		strcpy(CurrentScheme->ActiveKey,gtk_entry_get_text(GTK_ENTRY(widget)));	
-	}
-	else
-	{
-		strcpy(CurrentScheme->ActiveKey,"0");
-	}
-
-	widget=lookup_widget(GTK_WIDGET(button),"KeysHex");
-	CurrentScheme->KeyFormat=gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget));		
-	
-	widget=lookup_widget(GTK_WIDGET(button),"entry8");
-	strcpy(CurrentScheme->iwconfig,gtk_entry_get_text(GTK_ENTRY(widget)));	
-	widget=lookup_widget(GTK_WIDGET(button),"entry9");
-	strcpy(CurrentScheme->iwspy,gtk_entry_get_text(GTK_ENTRY(widget)));	
-	widget=lookup_widget(GTK_WIDGET(button),"entry10");
-	strcpy(CurrentScheme->iwpriv,gtk_entry_get_text(GTK_ENTRY(widget)));	
-
 	gtk_widget_hide(SaveDialog);
 	gtk_widget_destroy(SaveDialog);
 	widget=lookup_widget(GPE_WLAN,"PseudoMain");
@@ -382,6 +542,7 @@ on_ChannelDefault_toggled              (GtkToggleButton *togglebutton,
 GtkWidget *widget;
 
 	HasChanged = TRUE;
+
 	widget=lookup_widget(GTK_WIDGET(togglebutton),"Frequency");
 	gtk_widget_set_sensitive(widget,FALSE);
 	widget=lookup_widget(GTK_WIDGET(togglebutton),"ChannelNr");
@@ -396,6 +557,7 @@ on_ChannelFreq_toggled                 (GtkToggleButton *togglebutton,
 GtkWidget *widget;
 
 	HasChanged = TRUE;
+	
 	widget=lookup_widget(GTK_WIDGET(togglebutton),"Frequency");
 	gtk_widget_set_sensitive(widget,TRUE);
 	widget=lookup_widget(GTK_WIDGET(togglebutton),"ChannelNr");
@@ -410,6 +572,7 @@ on_ChannelChan_toggled                 (GtkToggleButton *togglebutton,
 GtkWidget *widget;
 
 	HasChanged = TRUE;
+
 	widget=lookup_widget(GTK_WIDGET(togglebutton),"Frequency");
 	gtk_widget_set_sensitive(widget,FALSE);
 	widget=lookup_widget(GTK_WIDGET(togglebutton),"ChannelNr");
@@ -465,7 +628,7 @@ void
 on_Frequency_changed                   (GtkEditable     *editable,
                                         gpointer         user_data)
 {
-	HasChanged = TRUE;
+	HasChanged = TRUE;	
 }
 
 
@@ -508,12 +671,21 @@ on_DeleteYes_clicked                   (GtkButton       *button,
 GtkWidget *DeleteVerify;
 GtkWidget *SchemeList;
 GtkWidget *widget;
+Scheme_t  *Scheme;
 
 	DeleteVerify=lookup_widget(GTK_WIDGET(button),"DeleteVerify");
 	gtk_widget_hide(DeleteVerify);
 	gtk_widget_destroy(DeleteVerify);
 	SchemeList=lookup_widget(GPE_WLAN, "SchemeList");
 	// free scheme here?
+	// kc-or:  Free Scheme and marc scheme-dimensions to be deleted...
+	Scheme = gtk_clist_get_row_data(GTK_CLIST(SchemeList), SchemeListSelRow);
+	delete_list[delete_list_count][0] = Scheme->scheme_start;
+	delete_list[delete_list_count][1] = Scheme->scheme_end;
+	delete_list_count++;
+	
+	free(Scheme);
+	// kc-or:  end...
 	gtk_clist_remove(GTK_CLIST(SchemeList), SchemeListSelRow);
 	widget=lookup_widget(GPE_WLAN,"SchemeDelete");
 	gtk_widget_set_sensitive(widget, FALSE);
@@ -651,6 +823,20 @@ GtkWidget *widget;
 	strcpy(CurrentScheme->Encryption,"off");
 	strcpy(CurrentScheme->EncMode,"");
 	strcpy(CurrentScheme->ActiveKey,"[1]");
+	//kc-or: Zeilen als zwingend neu initialisieren...
+	CurrentScheme->lines[L_Scheme]=LINE_NEW;
+	CurrentScheme->lines[L_Socket]=LINE_NEW;
+	CurrentScheme->lines[L_Instance]=LINE_NEW;
+	CurrentScheme->lines[L_HWAddress]=LINE_NEW;
+	CurrentScheme->lines[L_NWID]=LINE_NEW;
+	CurrentScheme->lines[L_Mode]=LINE_NEW;
+	CurrentScheme->lines[L_Rate]=LINE_NEW;
+	CurrentScheme->lines[L_Encryption]=LINE_NEW;
+	CurrentScheme->lines[L_EncMode]=LINE_NEW;
+	CurrentScheme->lines[L_key1]=LINE_NEW;
+	//kc-or: End
+	
+	
 	HasChanged = TRUE;
 
 	widget=lookup_widget(GTK_WIDGET(button),"SchemeList");
@@ -664,23 +850,21 @@ GtkWidget *widget;
 }
 
 
-void
-on_SchemeEdit_clicked                  (GtkButton       *button,
-                                        gpointer         user_data)
+void EditScheme(GtkWidget	*button)
 {
-GtkWidget *SchemeList;
-GtkWidget *widget;
-gint i;
+	GtkWidget *SchemeList;
+	GtkWidget *widget;
+	gint i;
 
-	SchemeList=lookup_widget(GTK_WIDGET(button),"SchemeList");
-
-	CurrentScheme = (Scheme_t *) gtk_clist_get_row_data (GTK_CLIST(SchemeList), SchemeListSelRow);
+	SchemeList=lookup_widget(button, "SchemeList");
+	
+	CurrentScheme = (Scheme_t *) gtk_clist_get_row_data (GTK_CLIST(SchemeList), SchemeListLastSelection);
 
 	widget=lookup_widget(GTK_WIDGET(button),"PseudoMain");
 	gtk_notebook_set_page(GTK_NOTEBOOK(widget), 1);
 
 	/* assign values */
-	widget=lookup_widget(GTK_WIDGET(button),"SchemeName");
+	widget=lookup_widget(GTK_WIDGET(button),"Scheme");
 	gtk_entry_set_text(GTK_ENTRY(widget),CurrentScheme->Scheme);	
 	widget=lookup_widget(GTK_WIDGET(button),"Instance");
 	gtk_entry_set_text(GTK_ENTRY(widget),CurrentScheme->Instance);	
@@ -760,28 +944,42 @@ gint i;
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(widget),TRUE);		
 	}
 
-	widget=lookup_widget(GTK_WIDGET(button),"entry4");
+	widget=lookup_widget(GTK_WIDGET(button),"ed_key1");
 	gtk_entry_set_text(GTK_ENTRY(widget),CurrentScheme->key1);	
-	widget=lookup_widget(GTK_WIDGET(button),"entry5");
+	widget=lookup_widget(GTK_WIDGET(button),"ed_key2");
 	gtk_entry_set_text(GTK_ENTRY(widget),CurrentScheme->key2);	
-	widget=lookup_widget(GTK_WIDGET(button),"entry6");
+	widget=lookup_widget(GTK_WIDGET(button),"ed_key3");
 	gtk_entry_set_text(GTK_ENTRY(widget),CurrentScheme->key3);	
-	widget=lookup_widget(GTK_WIDGET(button),"entry7");
+	widget=lookup_widget(GTK_WIDGET(button),"ed_key4");
 	gtk_entry_set_text(GTK_ENTRY(widget),CurrentScheme->key4);
 	widget=lookup_widget(GTK_WIDGET(button),"ActiveKeyNr");
 	gtk_entry_set_text(GTK_ENTRY(widget),CurrentScheme->ActiveKey);
 
 	widget=lookup_widget(GTK_WIDGET(button),"KeysHex");
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(widget),CurrentScheme->KeyFormat);		
-	widget=lookup_widget(GTK_WIDGET(button),"KeysStrings");
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(widget),!CurrentScheme->KeyFormat);		
+	widget=lookup_widget(GTK_WIDGET(button),"KeysStrings");
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(widget),CurrentScheme->KeyFormat);		
 
-	widget=lookup_widget(GTK_WIDGET(button),"entry8");
+	widget=lookup_widget(GTK_WIDGET(button),"ed_iwconfig");
 	gtk_entry_set_text(GTK_ENTRY(widget),CurrentScheme->iwconfig);	
-	widget=lookup_widget(GTK_WIDGET(button),"entry9");
+	widget=lookup_widget(GTK_WIDGET(button),"ed_iwspy");
 	gtk_entry_set_text(GTK_ENTRY(widget),CurrentScheme->iwspy);	
-	widget=lookup_widget(GTK_WIDGET(button),"entry10");
+	widget=lookup_widget(GTK_WIDGET(button),"ed_iwpriv");
 	gtk_entry_set_text(GTK_ENTRY(widget),CurrentScheme->iwpriv);	
+	widget=lookup_widget(GTK_WIDGET(button),"ed_rts");
+	gtk_entry_set_text(GTK_ENTRY(widget),CurrentScheme->rts);	
+	widget=lookup_widget(GTK_WIDGET(button),"ed_frag");
+	gtk_entry_set_text(GTK_ENTRY(widget),CurrentScheme->frag);	
+	widget=lookup_widget(GTK_WIDGET(button),"ed_sens");
+	gtk_entry_set_text(GTK_ENTRY(widget),CurrentScheme->sens);	
+
+}
+
+void
+on_SchemeEdit_clicked                  (GtkButton       *button,
+                                        gpointer         user_data)
+{
+	EditScheme(GTK_WIDGET(button));
 }
 
 
@@ -839,6 +1037,8 @@ GtkWidget *widget;
 		gtk_widget_set_sensitive(widget, TRUE);
 	}
 	SchemeListSelRow = row;
+	SchemeListLastSelection = row;
+	
 }
 
 
@@ -876,12 +1076,11 @@ void
 on_GPE_WLANCFG_show                    (GtkWidget       *widget,
                                         gpointer         user_data)
 {
-GtkWidget *SchemeList;
-gint i;
-gchar *ListEntry[4];
-    gint arow;
-
- 	sc = parse_input(WLAN_CONFIGFILE);
+	GtkWidget *SchemeList;
+	gint i;
+	gchar *ListEntry[4];
+	gint arow;
+ 	sc = parse_configfile(WLAN_CONFIGFILE);
 		
 	for (arow=0; arow<sc; arow++)
 	{
@@ -901,5 +1100,17 @@ gchar *ListEntry[4];
 		arow = gtk_clist_append(GTK_CLIST(SchemeList),ListEntry);
 		gtk_clist_set_row_data(GTK_CLIST(SchemeList), GTK_CLIST(SchemeList)->rows-1, (gpointer)CurrentScheme);
 	}	
+}
+
+gboolean
+on_SchemeList_button_press_event       (GtkWidget       *widget,
+                                        GdkEventButton  *event,
+                                        gpointer         user_data)
+{
+
+	if (event->type == GDK_2BUTTON_PRESS)
+		EditScheme(widget);
+	
+	return FALSE;
 }
 

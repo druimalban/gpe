@@ -8,13 +8,13 @@
 
 #include "config-parser.h"
 
-Scheme_t schemelist[20];
+Scheme_t schemelist[MAX_SCHEMES];
 int	schemecount = 0;
 
 char	schemes[10][32];
 int	nrschemes = 0;
 int 	count;
-
+int	lcount;
 
 #define DEBUG	0
 
@@ -63,14 +63,16 @@ statement:	assignment
 	|	case_statement
 	;
 
-case_statement:	TOK_CASE TOK_TEXTVAL TOK_IN caselist TOK_ESAC;
-
-
+case_statement:	TOK_CASE TOK_TEXTVAL TOK_IN caselist TOK_ESAC;	{	esac_line = $5;	}
+								
 caselist:	case_section
 	|	caselist case_section
 	;
 
 case_section:	case_val_list TOK_BRACE value_list TOK_SECTEND	{
+								schemelist[schemecount].scheme_start = sectionstart;
+								schemelist[schemecount].scheme_end   = $4;
+
 								//strncpy(schemelist[schemecount].Scheme, $1, 32);
 								schemelist[schemecount].lines[L_Scheme]=sectionstart;
 								schemelist[schemecount].lines[L_Socket]=sectionstart;
@@ -84,12 +86,22 @@ case_section:	case_val_list TOK_BRACE value_list TOK_SECTEND	{
 									strncpy(schemelist[schemecount+count].Socket, strtok(NULL ,","), 32);
 									strncpy(schemelist[schemecount+count].Instance, strtok(NULL ,","), 32);
 									strncpy(schemelist[schemecount+count].HWAddress, strtok(NULL ,","), 32);
+									
+									if (count>0)
+									{
+										schemelist[schemecount+count].parent_scheme_end = schemelist[schemecount].scheme_end;
+										for (lcount=0; lcount<MAX_CONFIG_VALUES; lcount++)
+											if (schemelist[schemecount+count].lines[lcount])
+												schemelist[schemecount+count].lines[lcount]=LINE_NEW;
+										
+											
+									}
 
 									if (DEBUG==1) printf("yacc: Case section detected: %s,%s,%s,%s\n",
 											schemelist[schemecount+count].Scheme,
 											schemelist[schemecount+count].Socket,
 											schemelist[schemecount+count].Instance,
-											schemelist[schemecount+count].HWAddress);
+				 							schemelist[schemecount+count].HWAddress);
 								}
 
 								schemecount+=nrschemes;
@@ -135,7 +147,11 @@ assignment:	TOK_INFO TOK_EQUALS TOK_TEXTVAL		{
 								schemelist[schemecount].lines[L_Channel]=$1;
 								if (DEBUG==1) printf("yacc: CHANNEL = %s\n", $3);
 							}
-	|	TOK_SENS TOK_EQUALS TOK_TEXTVAL			{if (DEBUG==1) printf("yacc: SENS = %s\n", $3);	}
+	|	TOK_SENS TOK_EQUALS TOK_TEXTVAL		{
+								strncpy(schemelist[schemecount].sens, $3, 32);
+								schemelist[schemecount].lines[L_sens]=$1;
+								if (DEBUG==1) printf("yacc: SENS = %s\n", $3);	
+							}
 	|	TOK_RATE TOK_EQUALS TOK_TEXTVAL		{
 								strncpy(schemelist[schemecount].Rate, $3, 8);
 								schemelist[schemecount].lines[L_Rate]=$1;
@@ -151,6 +167,14 @@ assignment:	TOK_INFO TOK_EQUALS TOK_TEXTVAL		{
 								schemelist[schemecount].ActiveKey,
 								schemelist[schemecount].EncMode,
 								schemelist[schemecount].Encryption);
+								
+								schemelist[schemecount].lines[L_key1] = $1;
+								schemelist[schemecount].lines[L_key2] = $1;
+								schemelist[schemecount].lines[L_key3] = $1;
+								schemelist[schemecount].lines[L_key4] = $1;
+								schemelist[schemecount].lines[L_ActiveKey]  = $1;
+								schemelist[schemecount].lines[L_EncMode]    = $1;
+								schemelist[schemecount].lines[L_Encryption] = $1;
 
 							}
 	|	TOK_KEY TOK_EQUALS keyval_list		{
@@ -162,9 +186,25 @@ assignment:	TOK_INFO TOK_EQUALS TOK_TEXTVAL		{
 								schemelist[schemecount].ActiveKey,
 								schemelist[schemecount].EncMode,
 								schemelist[schemecount].Encryption);
+								
+								schemelist[schemecount].lines[L_key1] = $1;
+								schemelist[schemecount].lines[L_key2] = $1;
+								schemelist[schemecount].lines[L_key3] = $1;
+								schemelist[schemecount].lines[L_key4] = $1;
+								schemelist[schemecount].lines[L_ActiveKey]  = $1;
+								schemelist[schemecount].lines[L_EncMode]    = $1;
+								schemelist[schemecount].lines[L_Encryption] = $1;
 							}
-	|	TOK_RTS TOK_EQUALS TOK_TEXTVAL			{if (DEBUG==1) printf("yacc: RTS = %s\n", $3);	}
-	|	TOK_FRAG TOK_EQUALS TOK_TEXTVAL			{if (DEBUG==1) printf("yacc: FRAG = %s\n", $3);	}
+	|	TOK_RTS TOK_EQUALS TOK_TEXTVAL		{
+								strncpy(schemelist[schemecount].rts, $3, 32);
+								schemelist[schemecount].lines[L_rts]=$1;
+								if (DEBUG==1) printf("yacc: RTS = %s\n", $3);	
+							}
+	|	TOK_FRAG TOK_EQUALS TOK_TEXTVAL		{
+								strncpy(schemelist[schemecount].frag, $3, 32);
+								schemelist[schemecount].lines[L_frag]=$1;
+								if (DEBUG==1) printf("yacc: FRAG = %s\n", $3);	
+							}
 	|	TOK_IWCONFIG TOK_EQUALS TOK_TEXTVAL	{
 								strncpy(schemelist[schemecount].iwconfig, $3, 255);
 								schemelist[schemecount].lines[L_iwconfig]=$1;
@@ -315,4 +355,9 @@ void addkey(char *keystr)
 void yyerror(char *errmsg)
 {
 	fprintf(stderr, "Scanner: %s\n", errmsg);
+}
+
+int parse_input(void)
+{
+	return(yyparse());
 }

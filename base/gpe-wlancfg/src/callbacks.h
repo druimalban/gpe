@@ -279,3 +279,8 @@ on_SchemeUse_clicked                   (GtkButton       *button,
 void
 on_GPE_WLANCFG_show                    (GtkWidget       *widget,
                                         gpointer         user_data);
+
+gboolean
+on_SchemeList_button_press_event       (GtkWidget       *widget,
+                                        GdkEventButton  *event,
+                                        gpointer         user_data);
