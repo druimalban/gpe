@@ -7,7 +7,7 @@ CAIRO = yes
 
 IN_LIBGPEWIDGET = yes
 
-LINGUAS = ro de id pt fr ga wa sv nl cs
+LINGUAS = ro de id pt fr ga wa sv nl cs es
 
 MEMBERS = gtkdatecombo errorbox init pixmaps smallbox render dirbrowser picturebutton what stylus screensize question gtksimplemenu spacing tray translabel popup popup_menu gpetimesel gpeiconlistitem gpeclockface gpetooltips2 gpe-iconlist gpewindowlist gpehelp gpeiconlistview gpewindowbits
 

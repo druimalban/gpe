@@ -1,0 +1,43 @@
+# Localización en castellano de libgpewidget.
+# Copyright © 2004 Free Software Foundation, Inc.
+# This file is distributed under the same license as the libgpewidget package.
+# J.Manrique <jsmanrique@asturlinux.org>, 2004.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: libgpewidget 0.56\n"
+"POT-Creation-Date: 2003-03-30 15:33+0100\n"
+"PO-Revision-Date: 2004-06-21 18:30+0100\n"
+"Last-Translator: J.Manrique <jsmanrique@asturlinux.org>\n"
+"Language-Team: Spanish <es@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: errorbox.c:42
+#, c-format
+msgid "GPE-ERROR: %s\n"
+msgstr "ERROR-GPE: %s\n"
+
+#: pixmaps.c:82
+#, c-format
+msgid "Unable to load icon \"%s\""
+msgstr "Imposible cargar icono \"%s\""
+
+#: pixmaps.c:168
+#, c-format
+msgid "Icon \"%s\" not loaded"
+msgstr "Icono \"%s\" no cargado"
+
+#: dirbrowser.c:166
+msgid "No directory is selected."
+msgstr "No hay directorio seleccionado"
+
+#: what.c:78
+msgid "No help available."
+msgstr "No hay ayuda disponible"
+
+#: question.c:175
+msgid "Question"
+msgstr "Pregunta"
