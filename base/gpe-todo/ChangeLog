@@ -1,5 +1,9 @@
 2002-11-28  Philip Blundell  <philb@gnu.org>
 
+	* Version 0.27 released.
+
+2002-11-28  Philip Blundell  <philb@gnu.org>
+
 	* todo-sql.c (item_data_callback): Handle DUE tag.
 
 	* Makefile (GTK2): Default on.
