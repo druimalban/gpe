@@ -401,7 +401,7 @@ get_networks (GtkWidget *combo, GHashTable *network_hash)
     {
       popdown_strings = g_list_append (popdown_strings, (gpointer) ((struct sql_network *) iter->data)->name);
       if (((struct sql_network *) iter->data)->servers != NULL)
-        g_hash_table_insert (network_hash, (gpointer) ((struct sql_network *) iter->data)->name, (gpointer) ((struct sql_network *) iter->data)->servers);
+        g_hash_table_insert (network_hash, (gpointer) ((struct sql_network *) iter->data)->name, (gpointer) (struct sql_network *) iter->data);
       iter = iter->next;
     }
     gtk_combo_set_popdown_strings (GTK_COMBO (combo), popdown_strings);
@@ -412,19 +412,24 @@ get_networks (GtkWidget *combo, GHashTable *network_hash)
 void
 select_servers_from_network (GtkWidget *widget, GHashTable *network_hash)
 {
+  GtkWidget *nick_entry, *real_name_entry, *password_entry;
   GtkWidget *server_combo, *entry;
   gchar *network_name;
-  GSList *servers = NULL;
   GList *popdown_strings = NULL;
   GSList *iter = NULL;
+  
+  struct sql_network *network;
 
   entry = g_object_get_data (G_OBJECT (widget), "entry");
   server_combo = g_object_get_data (G_OBJECT (widget), "server_combo");
+  nick_entry = gtk_object_get_data (GTK_OBJECT (widget), "nick_entry");
+  real_name_entry = gtk_object_get_data (GTK_OBJECT (widget), "real_name_entry");
+  password_entry = gtk_object_get_data (GTK_OBJECT (widget), "password_entry");
 
   network_name = (gchar *) gtk_entry_get_text (GTK_ENTRY (entry));
   if (strlen (network_name) > 0)
-    servers = g_hash_table_lookup (network_hash, (gconstpointer) network_name);
-  iter = servers;
+    network = g_hash_table_lookup (network_hash, (gconstpointer) network_name);
+  iter = network->servers;
   if (iter != NULL)
   {
     while (iter)
@@ -435,7 +440,8 @@ select_servers_from_network (GtkWidget *widget, GHashTable *network_hash)
 
     gtk_combo_set_popdown_strings (GTK_COMBO (server_combo), popdown_strings);
     g_list_free(popdown_strings);
-    gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (server_combo)->entry), ((struct sql_network_server *) servers->data)->name);
+    gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (server_combo)->entry), ((struct sql_network_server *) (network->servers->data))->name);
+    gtk_entry_set_text (GTK_ENTRY (nick_entry), network->nick);
   }
 }
 
@@ -512,6 +518,9 @@ new_connection_dialog ()
   g_object_set_data (G_OBJECT (network_properties_button), "network_hash", (gpointer) network_hash);
   g_object_set_data (G_OBJECT (GTK_COMBO (network_combo)->list), "server_combo", (gpointer) server_combo);
   g_object_set_data (G_OBJECT (GTK_COMBO (network_combo)->list), "entry", (gpointer) GTK_COMBO (network_combo)->entry);
+  g_object_set_data (G_OBJECT (GTK_COMBO (network_combo)->list), "nick_entry", (gpointer) nick_entry);
+  g_object_set_data (G_OBJECT (GTK_COMBO (network_combo)->list), "real_name_entry", (gpointer) real_name_entry);
+  g_object_set_data (G_OBJECT (GTK_COMBO (network_combo)->list), "password_entry", (gpointer) password_entry);
 
   g_signal_connect (G_OBJECT (connect_button), "clicked",
                              G_CALLBACK (new_connection), window);
