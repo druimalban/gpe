@@ -1,5 +1,11 @@
 2002-07-19  Philip Blundell  <philb@gnu.org>
 
+	* gpe-dm.c (main): Clear the environment.
+
+	* gpe-dm 0.15 released.
+
+2002-07-19  Philip Blundell  <philb@gnu.org>
+
 	* familiar/gpe-logout.menu: New file.
 	* X11/gpe-login.pre-session: Likewise.
 	* Makefile (install-scripts): Ship them.

@@ -93,6 +93,8 @@ main(int argc, char *argv[])
 
   start_server (FALSE);
 
+  clearenv ();
+
   setenv ("DISPLAY", dpyname, 1);
 
   signal (SIGINT, shutdown);

@@ -13,7 +13,7 @@ CFLAGS += -I/usr/include/gpe
 endif
 LDFLAGS += -lgpewidget
 
-all: $(PACKAGE) mo
+all: gpe-login gpe-dm gpe-lock-display mo
 
 mo:
 	make -C po
@@ -32,6 +32,9 @@ gpe-login: gpe-login.o
 	$(CC) -o $@ $< $(LDFLAGS) `gtk-config --libs` -lcrypt
 
 gpe-dm: gpe-dm.o
+	$(CC) -o $@ $< -L/usr/X11R6/lib -lX11
+
+gpe-lock-display: gpe-lock-display.o
 	$(CC) -o $@ $< -L/usr/X11R6/lib -lX11
 
 install: install-dm install-login
