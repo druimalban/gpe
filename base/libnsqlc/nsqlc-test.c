@@ -3,9 +3,17 @@
 
 #include "nsqlc.h"
 
-void
-callback (int argc, char *argv[], void *arg)
+int
+callback (void *arg, int argc, char *argv[])
 {
+  int i;
+
+  fprintf (stderr, "argc=%d\n", argc);
+
+  for (i = 0; i < argc; i++)
+    fprintf (stderr, "argv[%d] = '%s'\n", i, argv[i]);
+
+  return 0;
 }
 
 main()

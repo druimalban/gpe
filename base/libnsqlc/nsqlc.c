@@ -30,11 +30,23 @@ struct nsqlc
   int seq;
 
   int busy;
-  gchar *error;
   
   const gchar *hostname;
   const gchar *username;
   const gchar *filename;
+};
+
+struct nsqlc_query_context
+{
+  struct nsqlc *ctx;
+
+  nsqlc_callback callback;
+  void *cb_data;
+  char **column_names;
+
+  int result;
+  gchar *error;
+  gboolean aborting;
 };
 
 int verbose = 1;
@@ -61,11 +73,101 @@ write_command (nsqlc *ctx, const char *cmd, ...)
   g_free (buf2);
 }
 
+static char *
+decode_string (unsigned char *c)
+{
+  unsigned char *r, *p;
+
+  r = g_malloc (strlen (c));
+  p = r;
+
+  while (*c)
+    {
+      if (*c == '%')
+	{
+	  char buf[3];
+	  unsigned long r;
+ 
+	  c++;
+	  buf[0] = *c++;
+	  if (buf[0] == 0)
+	    break;
+	  buf[1] = *c;
+	  if (buf[1] == 0)
+	    break;
+	  buf[2] = 0;
+	  
+	  r = strtoul (buf, NULL, 16);
+	  *p = (unsigned char)r;
+	}
+      else
+	*p = *c;
+
+      c++;
+      p++;
+    }
+
+  *p = 0;
+
+  return r;
+}
+
 static void
-read_response (nsqlc *ctx)
+data_line (struct nsqlc_query_context *q, char *p)
+{
+  if (! q->aborting)
+    {
+      int argc;
+      char **argv;
+      int i;
+      
+      while (isspace (*p))
+	p++;
+
+      argc = strtoul (p, &p, 10);
+
+      argv = g_malloc0 (argc * sizeof (char *));
+
+      for (i = 0; i < argc; i++)
+	{
+	  char *s;
+	  
+	  p++;
+
+	  s = strchr (p, ' ');
+	  if (s)
+	    *s = 0;
+
+	  argv[i] = decode_string (p);
+
+	  if (s)
+	    p = s;
+	  else
+	    break;
+	}
+
+      if (q->callback (q->cb_data, argc, argv, q->column_names))
+	{
+	  fprintf (stderr, "aborting query\n");
+	  q->result = NSQLC_ABORT;
+	  q->aborting = TRUE;
+	}
+
+      for (i = 0; i < argc; i++)
+	g_free (argv[i]);
+
+      g_free (argv);
+    }
+}
+
+static void
+read_response (struct nsqlc_query_context *q)
 {
   char buf[1024];
   int p = 0;
+  nsqlc *ctx;
+
+  ctx = q->ctx;
 
   for (;;)
     {
@@ -104,10 +206,13 @@ read_response (nsqlc *ctx)
 
       if (*p == '+')
 	ctx->busy = 0;
+      else if (*p == '-')
+	data_line (q, p + 1);
       else if (*p == '!')
 	{
 	  ctx->busy = 0;
-	  ctx->error = strdup (p);
+	  q->error = strdup (p);
+	  q->result = 1;
 	}
       else
 	{
@@ -128,6 +233,7 @@ nsqlc_open (const char *database, int mode, char **errmsg)
   struct addrinfo hints, *ai, *aip;
   int fd = -1;
   int rc;
+  struct nsqlc_query_context query;
 
   str = g_strdup (database);
 
@@ -198,8 +304,21 @@ nsqlc_open (const char *database, int mode, char **errmsg)
 
   write_command (ctx, ".open %s", filename);
 
+  memset (&query, 0, sizeof (query));
+  query.ctx = ctx;
+
   while (ctx->busy)
-    read_response (ctx);
+    read_response (&query);
+
+  if (query.result)
+    {
+      nsqlc_close (ctx);
+
+      if (*errmsg)
+	*errmsg = query.error;
+
+      return NULL;
+    }
 
   return ctx;
 }
@@ -215,19 +334,24 @@ nsqlc_close (nsqlc *ctx)
 int 
 nsqlc_exec (nsqlc *ctx, const char *sql, nsqlc_callback cb, void *cb_data, char **err)
 {
-  ctx->error = NULL;
+  struct nsqlc_query_context query;
+
+  query.ctx = ctx;
+  query.callback = cb;
+  query.cb_data = cb_data;
+  query.aborting = FALSE;
+  query.result = 0;
+  query.error = NULL;
+
   ctx->busy = 1;
 
   write_command (ctx, sql);
 
   while (ctx->busy)
-    read_response (ctx);
+    read_response (&query);
 
-  if (ctx->error)
-    {
-      *err = ctx->error;
-      return 1;
-    }
+  if (err)
+    *err = query.error;
 
-  return 0;
+  return query.result;
 }
