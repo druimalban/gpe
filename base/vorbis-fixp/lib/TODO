@@ -1,0 +1,19 @@
+TODO
+----
+
+- Make static lookup tables instead of runtime generated ones where aplicable
+  to eliminate the small startup latency.
+
+- Use 32-bit multiplications instead of 64-bit ones for less CPU cycles where
+  the dynamic range is narrow enough not to affect quality.
+
+- Find out where this small quality difference is lost between the floating
+  and fixed point version (need to play a delta of both results to hear it,
+  otherwise not noticeable) when lsp is used for certain bit streams.
+
+- Profile CPU usage.
+
+- Check against the official format documentation (when it's available) for
+  further possible optimisations.
+
+Contributions welcome as always!

@@ -1,0 +1,30 @@
+Fixed Point (integer) based Ogg Vorbis audio decoder
+----------------------------------------------------
+
+The integerisation work is (C) 2002 by Nicolas Pitre <nico@cam.org>
+See lib/COPYING for license terms.
+
+Please make sure you correctly set the best optimisation flags for your CPU
+in the Makefile before compiling.
+
+This is a decoder only.  The resulting binary is "decoder" which should be
+presented an Ogg bitstream on its stdin and raw 16bit samples will be output
+on stdout.  For convenience I included the code for a little program called
+"vplay" that is able to play raw audio streams on Linux.
+
+To play a 44100Hz stereo Ogg Vorbis file, simply do:
+
+	decoder < bitstream.ogg | vplay -b 16 -s 44100 -S
+
+A more complete player such as ogg123 should link against this code with
+little effort.
+
+To generate the original floating point decoder, simply comment  out the
+definition of FIXED_POINT in lib/fixp.h.  This is handy to compare results
+if some streams appear not to play correctly.  I'll be interested in any
+Vorbis stream that doesn't produce the same audible result with both modes.
+
+
+Nicolas Pitre
+nico@cam.org
+May 03, 2002

@@ -1,0 +1,21 @@
+Fixed Point (integer) based Ogg Vorbis audio decoder
+----------------------------------------------------
+
+The integerisation work is (C) 2002 by Nicolas Pitre <nico@cam.org>.
+
+You can use and/or redistribute this code and/or modify it under the
+terms of the GNU General Public License version 2 as published by the
+Free Software Foundation. See the file COPYING for details.
+
+Please make sure you correctly set the best optimisation flags for your CPU
+in the Makefile before compiling.
+
+To generate the original floating point decoder, simply comment  out the
+definition of FIXED_POINT in fixp.h.  This is handy to compare results if
+some streams appear not to play correctly.  I'll be interested in any Vorbis
+stream that doesn't produce the same result with both modes.
+
+
+Nicolas Pitre
+nico@cam.org
+May 03, 2002
