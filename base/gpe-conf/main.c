@@ -251,7 +251,7 @@ void initwindow()
    if ((size_x > 640) && (size_y > 480))
    {
       gtk_window_set_type_hint(GTK_WINDOW(self.w), GDK_WINDOW_TYPE_HINT_DIALOG);
-	  gtk_window_set_default_size(GTK_WINDOW(self.w), 280, 340);
+	  gtk_window_set_default_size(GTK_WINDOW(self.w), 320, 420);
    }
    
    wstyle = self.w->style;

@@ -1,3 +1,7 @@
+2004-11-05	Florian Boor  	<florian.boor@kernelconcepts.de>
+
+	* main.c: Changed some default sizes.
+
 2004-11-04	Florian Boor  	<florian.boor@kernelconcepts.de>
 
 	* Makefile: Added Chinese translation. Thanks to Meng Jie for
