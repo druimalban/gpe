@@ -35,6 +35,7 @@ draw_hand (GdkDrawable *drawable,
 {
   GdkPoint points[5];
   int i;
+  double sa = sin (angle), ca = cos (angle);
 
   points[0].x = 2;
   points[0].y = 0;
@@ -53,8 +54,8 @@ draw_hand (GdkDrawable *drawable,
 
   for (i = 0; i < 5; i++)
     {
-      int x = points[i].x * cos(angle) - points[i].y * sin(angle);
-      int y = points[i].x * sin(angle) + points[i].y * cos(angle);
+      int x = points[i].x * ca - points[i].y * sa;
+      int y = points[i].x * sa + points[i].y * ca;
       points[i].x = -x;
       points[i].y = -y;
     }
