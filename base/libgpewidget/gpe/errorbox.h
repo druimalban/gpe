@@ -10,8 +10,8 @@
 #ifndef ERRORBOX_H
 #define ERRORBOX_H
 
-extern void gpe_error_box (char *text);
-extern void gpe_perror_box (char *text);
+extern void gpe_error_box (const char *text);
+extern void gpe_perror_box (const char *text);
 extern void gpe_error_box_fmt (const char *format, ...);
 
 #endif

@@ -48,16 +48,16 @@ struct file_info
 static void
 kill_window (GtkWidget *widget, gpointer data)
 {
-  gtk_widget_destroy(data);
+  gtk_widget_destroy (data);
 }
 
-static void set_directory (GtkMiniFileSelection *fs, char *directory);
+static void set_directory (GtkMiniFileSelection *fs, const gchar *directory);
 
 static void
 create_new_directory (GtkWidget *widget, gpointer data)
 {
   struct file_info *fi = (struct file_info *)data;
-  gchar *dir_name;
+  const gchar *dir_name;
   gchar *full_dir_name;
 
   dir_name = gtk_entry_get_text (GTK_ENTRY (gtk_object_get_data (GTK_OBJECT (widget),"entry")));
@@ -75,7 +75,7 @@ rename_file (GtkWidget *widget, gpointer data)
   struct file_info *fi = (struct file_info *)data;
   gchar *old_name;
   gchar *new_name;
-  gchar *new_filename;
+  const gchar *new_filename;
   gchar *error;
 
   new_filename = gtk_entry_get_text (GTK_ENTRY (gtk_object_get_data (GTK_OBJECT (widget),"entry")));
@@ -94,7 +94,7 @@ rename_file (GtkWidget *widget, gpointer data)
 
   g_free (old_name);
   g_free (new_name);
-  g_free (new_filename);
+  g_free ((gpointer)new_filename);
 }
 
 static void
@@ -104,24 +104,25 @@ delete_file (GtkWidget *widget, gpointer data)
   gchar *rm_command;
   fi = (struct file_info *)data;
 
-  if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (gtk_object_get_data(GTK_OBJECT(widget),"checkbutton"))) == 1)
-  {
-    if (gpe_question_ask_yn ("Delete directory recursively?") == 1)
+  if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (gtk_object_get_data (GTK_OBJECT(widget),
+									    "checkbutton"))) == 1)
     {
-      rm_command = g_strdup_printf ("rm -rf %s/%s", fi->directory, fi->filename);
+      if (gpe_question_ask_yn (_("Delete contents of folders?")) == 1)
+	{
+	  rm_command = g_strdup_printf ("rm -rf %s/%s", fi->directory, fi->filename);
+	  system (rm_command);
+	  g_free (rm_command);
+	}
+    }
+  else
+    {
+      rm_command = g_strdup_printf ("rm -f %s/%s", fi->directory, fi->filename);
       system (rm_command);
       g_free (rm_command);
     }
-  }
-  else
-  {
-    rm_command = g_strdup_printf ("rm -f %s/%s", fi->directory, fi->filename);
-    system (rm_command);
-    g_free (rm_command);
-  }
-
-  gtk_widget_destroy (GTK_WIDGET(gtk_object_get_data(GTK_OBJECT(widget), "window")));
-  set_directory (GTK_MINI_FILE_SELECTION(fi->fs), fi->directory);
+  
+  gtk_widget_destroy (GTK_WIDGET(gtk_object_get_data (GTK_OBJECT (widget), "window")));
+  set_directory (GTK_MINI_FILE_SELECTION (fi->fs), fi->directory);
 }
 
 static void
@@ -137,9 +138,6 @@ ask_rename_file (GtkWidget *widget, gpointer data)
   gtk_window_set_modal (GTK_WINDOW (window), TRUE);
   gtk_window_set_position (GTK_WINDOW (window), GTK_WIN_POS_CENTER);
 
-  gtk_signal_connect (GTK_OBJECT (window), "destroy",
-                      GTK_SIGNAL_FUNC (gtk_false), NULL);
-
   label = gtk_label_new (_("New name:"));
   entry = gtk_entry_new ();
 
@@ -154,8 +152,8 @@ ask_rename_file (GtkWidget *widget, gpointer data)
   buttonrename = gpe_picture_button (window->style, _("Rename"), "ok");
   gtk_signal_connect (GTK_OBJECT (buttonrename), "clicked",
                       GTK_SIGNAL_FUNC (rename_file), data);
-  gtk_object_set_data (GTK_OBJECT(buttonrename), "entry", entry);
-  gtk_object_set_data (GTK_OBJECT(buttonrename), "window", window);
+  gtk_object_set_data (GTK_OBJECT (buttonrename), "entry", entry);
+  gtk_object_set_data (GTK_OBJECT (buttonrename), "window", window);
 
   gtk_container_add (GTK_CONTAINER (GTK_DIALOG (window)->action_area),
                       buttoncancel);
@@ -185,14 +183,11 @@ ask_delete_file (GtkWidget *widget, gpointer data)
   gtk_window_set_modal (GTK_WINDOW (window), TRUE);
   gtk_window_set_position (GTK_WINDOW (window), GTK_WIN_POS_CENTER);
 
-  gtk_signal_connect (GTK_OBJECT (window), "destroy",
-                      GTK_SIGNAL_FUNC (gtk_false), NULL);
-
-  label_text = g_strdup_printf (_("Do you really want to delete %s"), fi->filename);
+  label_text = g_strdup_printf (_("Really delete %s?"), fi->filename);
   label = gtk_label_new (label_text);
   gtk_misc_set_alignment (GTK_MISC (label), 0.5, 0.5);
 
-  checkbutton = gtk_check_button_new_with_label ("Delete file recursively?");
+  checkbutton = gtk_check_button_new_with_label (_("Delete contents of folders"));
 
   gtk_widget_realize (window);
 
@@ -233,7 +228,7 @@ ask_new_directory (GtkWidget *widget, gpointer data)
   gtk_signal_connect (GTK_OBJECT (window), "destroy",
                       GTK_SIGNAL_FUNC (gtk_false), NULL);
 
-  label = gtk_label_new ("Directory name:");
+  label = gtk_label_new (_("Directory name:"));
   entry = gtk_entry_new ();
 
   gtk_misc_set_alignment (GTK_MISC (label), 0.5, 0.5);
@@ -378,7 +373,7 @@ gtk_mini_file_selection_show (GtkWidget *widget)
 static void
 menu_change_directory (GtkWidget *w, gpointer p)
 {
-  char *s = strdup (gtk_object_get_data (GTK_OBJECT (w), "text"));
+  gchar *s = g_strdup (gtk_object_get_data (GTK_OBJECT (w), "text"));
   
   set_directory (p, s);
 }
@@ -397,15 +392,15 @@ add_directory (GtkWidget *menu, char *name, GtkMiniFileSelection *fs)
   gtk_widget_show (item);
   gtk_menu_append (GTK_MENU (menu), item);
   gtk_signal_connect (GTK_OBJECT (item), "activate",
-		      menu_change_directory, fs);
+		      GTK_SIGNAL_FUNC (menu_change_directory), fs);
   p = g_strdup (name);
   gtk_object_set_data (GTK_OBJECT (item), "text", p);
   gtk_signal_connect (GTK_OBJECT (item), "destroy",
-		      free_string, p);
+		      GTK_SIGNAL_FUNC (free_string), p);
 }
 
 static void
-set_directory_menu (GtkWidget *option, char *dir, GtkMiniFileSelection *fs)
+set_directory_menu (GtkWidget *option, const gchar *dir, GtkMiniFileSelection *fs)
 {
   GtkWidget *menu = gtk_menu_new ();
   char *buf = alloca (strlen (dir) + 1);
@@ -501,9 +496,7 @@ set_members (GtkMiniFileSelection *fs)
       text[1] = dirup_pix ? NULL : "../";
       row = gtk_clist_append (GTK_CLIST (fs->clist), text);
       if (dirup_pix)
-      {
-        gtk_clist_set_pixmap (GTK_CLIST (fs->clist), row, 0, dirup_pix, dirup_mask);
-      }
+	gtk_clist_set_pixmap (GTK_CLIST (fs->clist), row, 0, dirup_pix, dirup_mask);
       gtk_clist_set_row_data (GTK_CLIST (fs->clist), row, (gpointer)2);
     }
 
@@ -531,10 +524,10 @@ set_members (GtkMiniFileSelection *fs)
 }
 
 static void
-set_directory (GtkMiniFileSelection *fs, char *directory)
+set_directory (GtkMiniFileSelection *fs, const gchar *directory)
 {
   if (fs->directory)
-    free (fs->directory);
+    g_free ((gpointer)fs->directory);
   fs->directory = directory;
 
   set_directory_menu (fs->option, fs->directory, fs);
@@ -560,17 +553,11 @@ selection_made(GtkWidget      *clist,
 	{
 	case 1:
 	  {
-	    size_t l = strlen (text);
-	    size_t dl = strlen (fs->directory);
-	    gchar *s = malloc (l + dl + 2);
-	    gchar *p = s;
+	    gchar *s;
 	    if (strcmp (fs->directory, "/"))
-	      {
-		dl = strlen (fs->directory);
-		p = stpcpy (s, fs->directory);
-	      }
-	    *p++ = '/';
-	    strcpy (p, text);
+	      s = g_strdup_printf ("%s/%s", fs->directory, text);
+	    else
+	      s = g_strdup (text);
 	    set_directory (fs, s);
 	    gtk_widget_grab_focus (fs->entry);
 	    break;
@@ -581,7 +568,7 @@ selection_made(GtkWidget      *clist,
 	    char *d;
 	    strcpy (p, fs->directory);
 	    d = dirname (p);
-	    set_directory (fs, strdup (d));
+	    set_directory (fs, g_strdup (d));
 	    gtk_widget_grab_focus (fs->entry);
 	    break;
 	  }
@@ -618,9 +605,7 @@ enter_struck (GtkWidget *w, gpointer p)
     {
       if (S_ISDIR (s.st_mode))
 	{
-	  char *dp = strdup (path);
-	  set_directory (p, dp);
-	  g_free (path);
+	  set_directory (p, path);
 	  return;
 	}
     }
@@ -646,6 +631,8 @@ gtk_mini_file_selection_init (GtkMiniFileSelection *fs)
   gtk_box_pack_start (GTK_BOX (vbox), scrolled, TRUE, TRUE, 0);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled),
 				  GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+
+  fs->directory = NULL;
 
   fs->clist = gtk_clist_new (2);
   gtk_clist_set_column_width (GTK_CLIST (fs->clist), 0, 12);
@@ -677,11 +664,11 @@ gtk_mini_file_selection_init (GtkMiniFileSelection *fs)
   gtk_box_pack_start (GTK_BOX (hbox), fs->ok_button, TRUE, TRUE, 0);
 
   gtk_signal_connect (GTK_OBJECT (fs->ok_button), "clicked", 
-		      emit_completed, fs);
-  gtk_signal_connect (GTK_OBJECT (fs->entry), "activate", enter_struck, fs);
+		      GTK_SIGNAL_FUNC (emit_completed), fs);
+  gtk_signal_connect (GTK_OBJECT (fs->entry), "activate", 
+		      GTK_SIGNAL_FUNC (enter_struck), fs);
 
-  fs->directory = NULL;
-  set_directory (fs, get_current_dir_name ());
+  set_directory (fs, g_get_current_dir ());
 }
 
 static void
@@ -689,6 +676,7 @@ gtk_mini_file_selection_destroy (GtkObject *fs)
 {
   if (GTK_OBJECT_CLASS (parent_class)->destroy)
     (*GTK_OBJECT_CLASS (parent_class)->destroy) (fs);
+
   popup_menu_cancel ();
 }
 
@@ -779,7 +767,13 @@ gtk_mini_file_selection_get_filename (GtkMiniFileSelection *fs)
 }
 
 void
-gtk_mini_file_selection_set_directory (GtkMiniFileSelection *fs, char *directory)
+gtk_mini_file_selection_set_directory (GtkMiniFileSelection *fs, gchar *directory)
 {
-  set_directory (fs,strdup(directory));
+  set_directory (fs, g_strdup (directory));
+}
+
+gchar *
+gtk_mini_file_selection_get_directory (GtkMiniFileSelection *fs)
+{
+  return g_strdup (fs->directory);
 }

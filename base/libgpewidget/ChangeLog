@@ -1,3 +1,33 @@
+2002-11-10  Philip Blundell  <philb@gnu.org>
+
+	* gpe/errorbox.h (gpe_error_box, gpe_perror_box): Argument is const.
+	* errorbox.c (gpe_perror_box): Likewise.
+	* errorbox.c (gpe_error_box): Likewise.
+
+	* gpe/gtkminifilesel.h (gtk_mini_file_selection_get_directory):
+	Add prototype.
+	(struct _GtkMiniFileSelection): Member "directory" is const gchar *.
+	* gtkminifilesel.c (gtk_mini_file_selection_get_directory): New
+	function.
+	(set_directory): Pathname is const gchar *.  Use g_strdup_printf
+	rather than malloc/strcpy.
+	(create_new_directory): Fix warnings.
+	(rename_file): Likewise.
+	(delete_file): Likewise.  Mark strings for translation.
+	(ask_rename_file): Delete spurious "destroy" handler.  Fix
+	formatting.  Improve prompts.  Mark strings for translation.
+	(ask_delete_file): Likewise.
+	(menu_change_directory): Use gchar for strings.
+	(set_directory_menu): Likewise.  Fix formatting.
+	(gtk_mini_file_selection_init): Likewise.  Zero fs->directory
+	earlier.  Use g_get_current_dir rather than get_current_dir_name.
+	(ask_rename_file): Fix formatting.
+	(set_members): Likewise.
+	(kill_window): Likewise.
+	(selection_made): Use g_strdup in place of strdup.
+	(gtk_mini_file_selection_set_directory): Likewise.
+	(enter_struck): Don't strdup directory name.
+
 2002-10-25  Robert Mibus  <mibus@handhelds.org>
 
 	* gpeiconlist.gob: Add a LGPL and copyright notice

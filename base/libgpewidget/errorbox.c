@@ -25,7 +25,7 @@ static volatile gboolean currently_handling_error = FALSE;
 #define _(x) dgettext(PACKAGE, x)
 
 void
-gpe_error_box (char *text)
+gpe_error_box (const char *text)
 {
   GtkWidget *label, *ok, *dialog, *icon;
   GtkWidget *hbox;
@@ -89,7 +89,7 @@ gpe_error_box (char *text)
 }
 
 void
-gpe_perror_box(char *text)
+gpe_perror_box(const char *text)
 {
   char *p = strerror (errno);
   char *buf = g_malloc (strlen (p) + strlen (text) + 3);
