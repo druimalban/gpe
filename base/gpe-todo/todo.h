@@ -59,6 +59,4 @@ extern void categories_menu (void);
 
 extern void refresh_items (void);
 
-extern void set_window_icon (GtkWidget *window);
-
 #endif

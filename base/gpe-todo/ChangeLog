@@ -1,5 +1,13 @@
 2002-12-22  Philip Blundell  <philb@gnu.org>
 
+	* main.c (set_window_icon): Delete.
+	(open_window): Use gpe_set_window_icon instead.
+	* todo-ui.c (change_categories): Likewise.
+	(edit_item): Likewise.
+	* todo.h (set_window_icon): Delete prototype.
+
+2002-12-22  Philip Blundell  <philb@gnu.org>
+
 	* main.c (my_icons): Add clean.
 	(set_window_icon): New function.
 	(open_window): Call it.  Set default window size to 240x320.

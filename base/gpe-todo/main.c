@@ -46,18 +46,6 @@ GtkWidget *window;
 
 extern GtkWidget *top_level (GtkWidget *window);
 
-void
-set_window_icon (GtkWidget *window)
-{
-  GdkPixmap *pmap;
-  GdkBitmap *bmap;
-
-  gtk_widget_realize (window);
-
-  if (gpe_find_icon_pixmap ("icon", &pmap, &bmap))
-    gdk_window_set_icon (window->window, NULL, pmap, bmap);
-}
-
 static void
 open_window (void)
 {
@@ -74,7 +62,7 @@ open_window (void)
 
   gtk_window_set_default_size (GTK_WINDOW (window), 240, 320);
   gtk_window_set_title (GTK_WINDOW (window), _("To-do list"));
-  set_window_icon (window);
+  gpe_set_window_icon (window, "icon");
 
   gtk_widget_show (window);
 }

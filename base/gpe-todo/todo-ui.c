@@ -249,13 +249,13 @@ change_categories (GtkWidget *w, gpointer p)
 
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), sw, TRUE, TRUE, 0);
 
-  set_window_icon (window);
+  gpe_set_window_icon (window, "icon");
 
   okbutton = gpe_picture_button (window->style, _("OK"), "ok");
   cancelbutton = gpe_picture_button (window->style, _("Cancel"), "cancel");
 
-  g_signal_connect (G_OBJECT (okbutton), "clicked", categories_ok, window);
-  g_signal_connect (G_OBJECT (cancelbutton), "clicked", categories_cancel, window);
+  g_signal_connect (G_OBJECT (okbutton), "clicked", G_CALLBACK (categories_ok), window);
+  g_signal_connect (G_OBJECT (cancelbutton), "clicked", G_CALLBACK (categories_cancel), window);
 
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), okbutton, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), cancelbutton, TRUE, TRUE, 0);
@@ -433,7 +433,7 @@ edit_item (struct todo_item *item, struct todo_category *initial_category)
   
   gtk_object_set_data_full (GTK_OBJECT (window), "todo", t, destroy_user_data);
 
-  set_window_icon (window);
+  gpe_set_window_icon (window, "icon");
 
   return window;
 }
