@@ -136,22 +136,20 @@ void cfg_load ()
 void cfg_load_if_newer (time_t when)
 {
 	struct stat buf;
-	char *home_dir=NULL;
-	char config_path[]=".gpe/gpe-appmgr";
-	char *s=NULL;
+	const char *home;
 
-	home_dir = (char*) getenv("HOME");
-	if (home_dir)
-	{
-		s = (char*) malloc (strlen (home_dir) + strlen (config_path) + 1);
-		sprintf (s, "%s/%s", home_dir, config_path);
-	}
+	if ((home = g_get_home_dir ())) {
+		char *s;
 
-	if (s) {
+		/* Check how new the config file is */
+		s = g_strdup_printf ("%s/.gpe/gpe-appmgr", home);
 		stat (s, &buf);
-		if (buf.st_mtime <= when) {
+		g_free (s);
+
+		/* Run away if it's older */
+		if (buf.st_mtime <= when)
 			return;
-		}
 	}
+
 	cfg_load();
 }

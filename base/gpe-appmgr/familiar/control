@@ -1,7 +1,7 @@
 Package: gpe-appmgr
 Section: base
 Priority: optional
-Version: 0.09
+Version: 0.9-2
 Architecture: arm
 Maintainer: Robert Mibus <mibus@bigpond.com>
 Depends: libgtk1.2, libgpewidget0, libgdk-pixbuf2
