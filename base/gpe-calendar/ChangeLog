@@ -1,3 +1,8 @@
+2002-10-13  Philip Blundell  <philb@gnu.org>
+
+	* week_view.c (draw_expose_event): Format time correctly.
+	(week_view_update): Likewise.
+
 2002-10-12  Philip Blundell  <philb@gnu.org>
 
 	* week_view.c (draw_expose_event): Only draw black separator when

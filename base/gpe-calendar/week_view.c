@@ -29,6 +29,8 @@ static struct tm today;
 static guint min_cell_height = 38;
 static GtkWidget *datesel;
 
+static guint time_width, available_width;
+
 struct week_day
 {
   guint y0, y1;
@@ -55,6 +57,7 @@ draw_expose_event (GtkWidget *widget,
   GdkColormap *colormap;
 #if GTK_MAJOR_VERSION >= 2
   PangoLayout *pl = gtk_widget_create_pango_layout (GTK_WIDGET (widget), NULL);
+  PangoLayout *pl_evt = gtk_widget_create_pango_layout (GTK_WIDGET (widget), NULL);
 #endif
   gboolean draw_sep = FALSE;
 
@@ -102,7 +105,10 @@ draw_expose_event (GtkWidget *widget,
 	gdk_draw_line (drawable, black_gc, 0, y, max_width, y);
 
       gdk_draw_rectangle (drawable, white_gc, 
-			  TRUE, 0, y + 1, max_width, max_height);
+			  TRUE, time_width, y + 1, max_width - time_width, max_height);
+
+      gdk_draw_rectangle (drawable, gray_gc, 
+			  TRUE, 0, y + 1, time_width, max_height);
 
 #if GTK_MAJOR_VERSION < 2
       x = max_width - gdk_string_width (datefont, week_days[day].string) - 8;
@@ -113,7 +119,8 @@ draw_expose_event (GtkWidget *widget,
 
       y += datefont->ascent + datefont->descent;
 #else
-      pango_layout_set_text (pl, week_days[day].string, strlen (week_days[day].string));
+      pango_layout_set_width (pl, max_width * PANGO_SCALE);
+      pango_layout_set_markup (pl, week_days[day].string, strlen (week_days[day].string));
       pango_layout_get_pixel_extents (pl, &pr, NULL);
       x = max_width - pr.width - 8;
       gtk_paint_layout (widget->style,
@@ -125,7 +132,7 @@ draw_expose_event (GtkWidget *widget,
 			"label",
 			x, y,
 			pl);
-      y += pr.height;
+      y += pr.height + 2;
 #endif
 
       if (week_days[day].events)
@@ -135,27 +142,11 @@ draw_expose_event (GtkWidget *widget,
 #if GTK_MAJOR_VERSION < 2
 	      GdkFont *font = widget->style->font;
 #endif
+	      guint height = 0;
 	      char buf[256];
 	      struct tm tm;
-	      char *p = buf;
 	      event_t ev = iter->data;
 	      event_details_t evd = event_db_get_details (ev);
-	      size_t s = sizeof (buf), l;
-	      if (ev->mark)
-		{
-		  p = stpcpy (p, _("(contd...) "));
-		  s -= (p - buf);
-		}
-	      else
-		{
-		  localtime_r (&ev->start, &tm);
-		  l = strftime (p, s, TIMEFMT, &tm);
-		  s -= l;
-		  p += l;
-		  ev->mark = TRUE;
-		}
-	      snprintf (p, s - 1, " %s", evd->summary);
-	      p[s - 1] = 0;
 
 #if GTK_MAJOR_VERSION < 2
 	      gdk_draw_text (drawable, font, black_gc,
@@ -163,8 +154,34 @@ draw_expose_event (GtkWidget *widget,
 			     buf, strlen (buf));
 	      y += font->ascent + font->descent;
 #else
-	      pango_layout_set_text (pl, buf, strlen (buf));
-	      pango_layout_get_pixel_extents (pl, &pr, NULL);
+	      if ((ev->flags & FLAG_UNTIMED) == 0)
+		{
+		  if (ev->mark == FALSE)
+		    {
+		      localtime_r (&ev->start, &tm);
+		      strftime (buf, sizeof (buf), "%H:%M", &tm);
+		  
+		      pango_layout_set_text (pl_evt, buf, strlen (buf));
+		      gtk_paint_layout (widget->style,
+					widget->window,
+					GTK_WIDGET_STATE (widget),
+					FALSE,
+					&event->area,
+					widget,
+					"label",
+					0, y,
+					pl_evt);
+
+		      pango_layout_get_pixel_extents (pl_evt, &pr, NULL);
+		      if (height < pr.height)
+			height = pr.height;
+		      ev->mark = TRUE;
+		    }
+		}
+
+	      pango_layout_set_width (pl_evt, available_width * PANGO_SCALE);
+	      pango_layout_set_text (pl_evt, evd->summary, strlen (evd->summary));
+	      pango_layout_get_pixel_extents (pl_evt, &pr, NULL);
 	      gtk_paint_layout (widget->style,
 				widget->window,
 				GTK_WIDGET_STATE (widget),
@@ -172,9 +189,13 @@ draw_expose_event (GtkWidget *widget,
 				&event->area,
 				widget,
 				"label",
-				4, y,
-				pl);
-	      y += pr.height;
+				2 + time_width, y,
+				pl_evt);
+
+	      if (height < pr.height)
+		height = pr.height;
+
+	      y += height + 2;
 #endif
 	    }
 	}
@@ -193,6 +214,7 @@ draw_expose_event (GtkWidget *widget,
 
 #if GTK_MAJOR_VERSION >= 2
   g_object_unref (pl);
+  g_object_unref (pl_evt);
 #endif
 
   return TRUE;
@@ -207,7 +229,9 @@ week_view_update (void)
   guint y = 0;
 #if GTK_MAJOR_VERSION >= 2
   PangoLayout *pl = gtk_widget_create_pango_layout (GTK_WIDGET (week_view_draw), NULL);
+  PangoLayout *pl_evt = gtk_widget_create_pango_layout (GTK_WIDGET (week_view_draw), NULL);
 #endif
+  GSList *iter;  
 
   localtime_r (&t, &today);
 
@@ -218,46 +242,90 @@ week_view_update (void)
   t -= SECONDS_IN_DAY * tm.tm_wday;
   t -= tm.tm_sec + (60 * tm.tm_min) + (60 * 60 * tm.tm_hour);
 
+  time_width = 0;
+
   for (day = 0; day < 7; day++)
     {
       char buf[32];
-      GSList *iter;      
-      guint height;
-#if GTK_MAJOR_VERSION >= 2
-      PangoRectangle pr;
-#endif
+      struct week_day *d = &week_days[day];
 
-      if (week_days[day].events)
-	event_db_list_destroy (week_days[day].events);
+      if (d->events)
+	event_db_list_destroy (d->events);
 
-      week_days[day].events = event_db_untimed_list_for_period (t, t + SECONDS_IN_DAY - 1, TRUE);
-      week_days[day].events = g_slist_concat (week_days[day].events, 
-					      event_db_untimed_list_for_period (t, t + SECONDS_IN_DAY - 1, 
-										FALSE));
+      d->events = event_db_untimed_list_for_period (t, t + SECONDS_IN_DAY - 1, TRUE);
+      d->events = g_slist_concat (d->events, 
+				  event_db_untimed_list_for_period (t, t + SECONDS_IN_DAY - 1, 
+								    FALSE));
 
       localtime_r (&t, &tm);
       week_days[day].is_today = (tm.tm_mday == today.tm_mday 
 		       && tm.tm_mon == today.tm_mon 
 		       && tm.tm_year == today.tm_year);
-      strftime(buf, sizeof (buf), "%a %d %B", &tm);
-      if (week_days[day].string)
-	g_free (week_days[day].string);
-      week_days[day].string = g_strdup (buf);
+      strftime (buf, sizeof (buf), "<b>%a %d %B</b>", &tm);
+      if (d->string)
+	g_free (d->string);
+      d->string = g_strdup (buf);
+
+      t += SECONDS_IN_DAY;
+
+      for (iter = week_days[day].events; iter; iter = iter->next)
+	((event_t)iter->data)->mark = FALSE;
+    }
+
+  for (day = 0; day < 7; day++)
+    {
+      struct week_day *d = &week_days[day];
+      for (iter = d->events; iter; iter = iter->next)
+	{
+	  /* calculate width required to display times */
+	  PangoRectangle pr;
+	  event_t ev = (event_t)iter->data;
+	  char buf[32];
+	  char *p = buf;
+	  size_t l = sizeof (buf) - 1;
+	  if ((ev->flags & FLAG_UNTIMED) == 0)
+	    {
+	      if (ev->mark == FALSE)
+		{
+		  size_t n;
+		  localtime_r (&ev->start, &tm);
+		  n = strftime (p, l, "%H:%M", &tm);
+		  p += n;
+		  l -= n;
+		}
+
+	      ev->mark = TRUE;
+	      pango_layout_set_text (pl_evt, buf, strlen (buf));
+	      pango_layout_get_pixel_extents (pl_evt, &pr, NULL);
+	      if (time_width < pr.width)
+		time_width = pr.width;
+	    }
+	}
+    }
+
+  time_width += 2;
+
+  available_width = week_view_draw->allocation.width - time_width - 2;
+
+  for (day = 0; day < 7; day++)
+    {
+      guint height;
 
 #if GTK_MAJOR_VERSION < 2
       height = datefont->ascent + datefont->descent;
 #else
-      pango_layout_set_text (pl, week_days[day].string, strlen (week_days[day].string));
+      PangoRectangle pr;
+      pango_layout_set_width (pl, week_view_draw->allocation.width * PANGO_SCALE);
+      pango_layout_set_markup (pl, week_days[day].string, strlen (week_days[day].string));
       pango_layout_get_pixel_extents (pl, &pr, NULL);
-      height = pr.height;
+      height = pr.height + 2;
 #endif
-
-      t += SECONDS_IN_DAY;
 
       if (week_days[day].events)
 	{
 	  event_t ev;
 	  event_details_t evd;
+  
 	  for (iter = week_days[day].events; iter; iter = iter->next)
 	    {
 #if GTK_MAJOR_VERSION < 2
@@ -266,9 +334,10 @@ week_view_update (void)
 #else
 	      ev = iter->data;
 	      evd = event_db_get_details (ev);
-	      pango_layout_set_text (pl, evd->summary, strlen (evd->summary));
-	      pango_layout_get_pixel_extents (pl, &pr, NULL);
-	      height += pr.height;
+	      pango_layout_set_width (pl_evt, available_width * PANGO_SCALE);
+	      pango_layout_set_text (pl_evt, evd->summary, strlen (evd->summary));
+	      pango_layout_get_pixel_extents (pl_evt, &pr, NULL);
+	      height += pr.height + 2;
 #endif
 	    }
 	}
@@ -287,6 +356,7 @@ week_view_update (void)
 
 #if GTK_MAJOR_VERSION >= 2
   g_object_unref (pl);
+  g_object_unref (pl_evt);
 #endif
 }
 
