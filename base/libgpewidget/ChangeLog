@@ -1,8 +1,13 @@
+2003-03-07  Philip Blundell  <philb@gnu.org>
+
+	* Version 0.51 released.
+
 2003-03-07  Damien Tanner  <dctanner@gekk>
 
 	* gpe/popup_menu.h (popup_menu_button_new_type_color): new color popup menu.
 
-	* popup_menu.c: Add code popup and if the child's height is larger than the screen size it will be packed into a GtkScrolledWindow.
+	* popup_menu.c: Add code popup and if the child's height is larger
+	than the screen size it will be packed into a GtkScrolledWindow.
 
 2003-03-07  Damien Tanner  <dctanner@handhelds.org>
 
