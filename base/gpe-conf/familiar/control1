@@ -6,3 +6,4 @@ Architecture: arm
 Maintainer: Pierre Tardy <tardyp@free.fr>
 Depends: libgpewidget1 (>= 0.25), gpe-icons (>= 0.13)
 Description: A set of configuration GUI
+Replaces: gpe-conf
