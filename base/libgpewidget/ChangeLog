@@ -1,5 +1,9 @@
 2003-08-22  Philip Blundell  <philb@gnu.org>
 
+	* Version 0.65 released.
+
+2003-08-22  Philip Blundell  <philb@gnu.org>
+
 	* gpeclockface.c (gpe_clock_face_unrealize): Move RENDER related
 	code to ...
 	(gpe_clock_face_unprepare_xrender): ... here.  New function.
