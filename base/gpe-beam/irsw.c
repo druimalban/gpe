@@ -17,7 +17,7 @@
 #include <stdio.h>
 
 #define COMMAND_IR_ON  "/sbin/ifconfig irda0 up ; echo 1 > /proc/sys/net/irda/discovery"
-#define COMMAND_IR_OFF  "echo 0 > /proc/sys/net/irda/discovery ; ifconfig irda0 down"
+#define COMMAND_IR_OFF  "echo 0 > /proc/sys/net/irda/discovery ; /sbin/ifconfig irda0 down"
 #define COMMAND_ATTACH PREFIX "/sbin/irattach pxa_ir"
 
 void usage()
