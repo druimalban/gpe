@@ -300,7 +300,7 @@ pan_disconnect (bdaddr_t *bd)
 }
 
 static void
-usr1_handler (void)
+usr1_handler (int signal)
 {
 }
 
