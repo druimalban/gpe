@@ -2,9 +2,9 @@ PACKAGE = gpe-calendar
 PREFIX = /usr/local
 DEBUG = no
 CVSBUILD = yes
-VERSION = 0.47
+VERSION = 0.48
 
-LINGUAS = id pt de fr zh_TW ro wa sv nl
+LINGUAS = id pt de fr zh_TW ro wa sv nl es
 
 MEMBERS = main day_view week_view future_view event-ui month_view day_popup xsettings gtkdatesel
 

@@ -1,1 +1,3 @@
+#!/bin/sh
+
 gpe-calendar -s 0 -e 0&
