@@ -102,6 +102,8 @@ void app_quit(){
 }//app_quit()
 
 void gui_init(){
+  GdkPixmap *pixmap;
+  GdkBitmap *bitmap;
 
   window_selector = create_window_selector();
   window_selector_init(window_selector);
@@ -110,6 +112,13 @@ void gui_init(){
   window_sketchpad = sketchpad_build_window();
   window_sketchpad_init(window_sketchpad);
   //gtk_window_set_title (GTK_WINDOW (window_sketchpad), "Sketch: new");
+
+  gtk_widget_realize   (window_selector);
+  gtk_widget_realize   (window_sketchpad);
+  if (gpe_find_icon_pixmap ("this_app_icon", &pixmap, &bitmap)){
+    gdk_window_set_icon (window_selector->window,  NULL, pixmap, bitmap);
+    gdk_window_set_icon (window_sketchpad->window, NULL, pixmap, bitmap);
+  }
 
 #ifdef DESKTOP //FIXME: to move into related -gui.c
   gtk_window_set_position (GTK_WINDOW (window_selector),  GTK_WIN_POS_CENTER);
@@ -120,7 +129,7 @@ void gui_init(){
   //NOTE: could be defined by preference, or command line argument
 
   //if(1){ workaround...
-  //  //gtk_widget_realise   (window_sketchpad);
+  //  //gtk_widget_realize   (window_sketchpad);
   //  gtk_widget_show   (window_sketchpad);
   //  gtk_widget_hide   (window_sketchpad);
   //  gtk_widget_show   (window_selector);
