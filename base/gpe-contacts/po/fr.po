@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: gpe-contacts 0.32\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2004-10-17 00:23+0200\n"
-"PO-Revision-Date: 2004-11-06 11:05+0200\n"
+"PO-Revision-Date: 2004-11-09 17:49+0200\n"
 "Last-Translator: Luc Pionchon <luc@handhelds.org>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -224,7 +224,7 @@ msgstr "Mise en page"
 
 #: configure.c:297
 msgid "List position"
-msgstr "Last position"
+msgstr "Position de la liste"
 
 #: configure.c:300
 msgid "left"

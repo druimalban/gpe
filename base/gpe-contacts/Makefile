@@ -24,8 +24,8 @@ PACKAGE_LDFLAGS += -L../libdisplaymigration -L../libgpepimc -L../libgpevtype
 endif
 PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS) -DENABLE_NLS -DDBUS_API_SUBJECT_TO_CHANGE
 PACKAGE_CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
-PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS) `pkg-config --cflags libxml-2.0` `pkg-config --cflags mimedir-1.0` `pkg-config --cflags dbus-glib-1`
-PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS) -lsqlite `pkg-config --libs libxml-2.0` `pkg-config --libs mimedir-1.0` `pkg-config --libs dbus-glib-1` -ldisplaymigration -lgpepimc -lgpevtype
+PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS) `pkg-config --cflags mimedir-1.0` `pkg-config --cflags dbus-glib-1`
+PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS) -lsqlite `pkg-config --libs mimedir-1.0` `pkg-config --libs dbus-glib-1` -ldisplaymigration -lgpepimc -lgpevtype
 
 ifeq ($(ALTERNATE_LAYOUT),yes)
   LAYOUT_BIGSCREEN = contacts-alternate-bigscreen.xml 

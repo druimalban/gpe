@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002, 2003 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2002, 2003, 2005 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -11,8 +11,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
-
-#include <libxml/parser.h>
 
 #include <gpe/pixmaps.h>
 #include <gpe/gtkdatecombo.h>
@@ -392,143 +390,236 @@ print_structure (FILE *fp)
   fputs ("</layout>\n", fp);
 }
 
-static void
-structure_parse_xml_item (xmlDocPtr doc, xmlNodePtr cur, 
-			  edit_thing_type t, edit_thing_t parent)
+struct xml_parser_context
 {
-  edit_thing_t e = new_thing (t, NULL, parent);
+  GQueue *queue;
+  GQueue *elt_queue;
+};
 
-  while (cur)
+edit_thing_t
+new_element (struct xml_parser_context *c, edit_thing_type t, gchar *name, edit_thing_t parent)
+{
+  edit_thing_t e;
+
+  e = new_thing (t, name, parent);
+
+  g_queue_push_head (c->queue, e);
+
+  return e;
+}
+
+static void 
+xml_parser_start_element (GMarkupParseContext *context,
+			  const gchar         *element_name,
+			  const gchar        **attribute_names,
+			  const gchar        **attribute_values,
+			  gpointer             user_data,
+			  GError             **error)
+{
+  struct xml_parser_context *c = (struct xml_parser_context *)user_data;
+  const gchar *cur_elem;
+
+  cur_elem = g_queue_peek_head (c->elt_queue);
+  
+  if (cur_elem == NULL)
     {
-      if (!xmlStrcmp (cur->name, "label"))
-        {
-          e->name = xmlNodeListGetString (doc, cur->xmlChildrenNode, 1);
-          if (!xmlStrcmp(e->name,"hidden"))
-            e->hidden = TRUE;
-        }
-
-      if (!xmlStrcmp (cur->name, "tag"))
-	e->tag = xmlNodeListGetString (doc, cur->xmlChildrenNode, 1);
-
-      cur = cur->next;
+      if (!strcmp (element_name, "layout"))
+	;
+      else
+	g_set_error (error, G_MARKUP_ERROR, G_MARKUP_ERROR_UNKNOWN_ELEMENT,
+		     "Unknown element \"%s\" at top level", element_name);
     }
+  else if (!strcmp (cur_elem, "layout"))
+    {
+      if (!strcmp (element_name, "page"))
+	{
+	  edit_thing_t e;
+	  e = new_element (c, PAGE, NULL, NULL);
+	  edit_pages = g_slist_append (edit_pages, e);
+	}
+      else
+	goto bad;
+    }
+  else if (!strcmp (cur_elem, "page"))
+    {
+      edit_thing_t e;
+
+      e = g_queue_peek_head (c->queue);
+
+      if (!strcmp (element_name, "label"))
+	;
+
+      else if (!strcmp (element_name, "group"))
+	new_element (c, GROUP, NULL, e);
+
+      else if (!strcmp (element_name, "multi-item"))
+	new_element (c, ITEM_MULTI_LINE, NULL, e);
+
+      else if (!strcmp (element_name, "single-item"))
+	new_element (c, ITEM_SINGLE_LINE, NULL, e);
+
+      else if (!strcmp (element_name, "date-item"))
+	new_element (c, ITEM_DATE, NULL, e);
+      
+      else if (!strcmp (element_name, "image-item"))
+	new_element (c, ITEM_IMAGE, NULL, e);
+    }
+  else if (!strcmp (cur_elem, "group"))
+    {
+      edit_thing_t e;
+
+      e = g_queue_peek_head (c->queue);
+
+      if (!strcmp (element_name, "label"))
+	;
+
+      else if (!strcmp (element_name, "multi-item"))
+	new_element (c, ITEM_MULTI_LINE, NULL, e);
+
+      else if (!strcmp (element_name, "single-item"))
+	new_element (c, ITEM_SINGLE_LINE, NULL, e);
+
+      else if (!strcmp (element_name, "date-item"))
+	new_element (c, ITEM_DATE, NULL, e);
+      
+      else if (!strcmp (element_name, "image-item"))
+	new_element (c, ITEM_IMAGE, NULL, e);
+    }
+  else if (!strcmp (cur_elem, "single-item")
+	   || !strcmp (cur_elem, "multi-item")
+	   || !strcmp (cur_elem, "date-item")
+	   || !strcmp (cur_elem, "image-item"))
+    {
+      if (!strcmp (element_name, "tag")
+	  || !strcmp (element_name, "label"))
+	;
+      else
+	goto bad;
+    }
+  else
+    {
+      goto bad;
+    }
+
+  g_queue_push_head (c->elt_queue, element_name);
+
+  return;
+
+ bad:
+  g_set_error (error, G_MARKUP_ERROR, G_MARKUP_ERROR_UNKNOWN_ELEMENT, 
+	       "Unknown element \"%s\" inside <%s>", element_name, cur_elem);      
+}
+
+static void 
+xml_parser_end_element (GMarkupParseContext *context,
+			const gchar         *element_name,
+			gpointer             user_data,
+			GError             **error)
+{
+  struct xml_parser_context *c = (struct xml_parser_context *)user_data;
+  const gchar *cur_elem;
+
+  cur_elem = g_queue_pop_head (c->elt_queue);
+
+  if (!strcmp (cur_elem, "layout") || !strcmp (cur_elem, "label") || !strcmp (cur_elem, "tag"))
+    return;
+
+  g_queue_pop_head (c->queue);
 }
 
 static void
-structure_parse_xml_group (xmlDocPtr doc, xmlNodePtr cur, 
-			   edit_thing_t parent)
+xml_parser_text (GMarkupParseContext *context,
+		 const gchar         *text,
+		 gsize                text_len,  
+		 gpointer             user_data,
+		 GError             **error)
 {
-  edit_thing_t e = new_thing (GROUP, NULL, parent);
+  struct xml_parser_context *c = (struct xml_parser_context *)user_data;
+  const gchar *cur_elem;
+  edit_thing_t e;
+  
+  cur_elem = g_markup_parse_context_get_element (context);
 
-  while (cur)
+  e = g_queue_peek_head (c->queue);
+
+  if (!strcmp (cur_elem, "label"))
     {
-      if (!xmlStrcmp (cur->name, "label"))
-        {
-          e->name = xmlNodeListGetString (doc, cur->xmlChildrenNode, 1);
-          if (!xmlStrcmp(e->name,"hidden"))
-            e->hidden = TRUE;
-        }
-
-      if (!xmlStrcmp (cur->name, "multi-item"))
-	structure_parse_xml_item (doc, cur->xmlChildrenNode, 
-				  ITEM_MULTI_LINE, e);
-	
-      if (!xmlStrcmp (cur->name, "single-item"))
-	structure_parse_xml_item (doc, cur->xmlChildrenNode, 
-				  ITEM_SINGLE_LINE, e);
-
-      if (!xmlStrcmp (cur->name, "date-item"))
-	structure_parse_xml_item (doc, cur->xmlChildrenNode, 
-				  ITEM_DATE, e);
-      
-      if (!xmlStrcmp (cur->name, "image-item"))
-	structure_parse_xml_item (doc, cur->xmlChildrenNode, 
-				  ITEM_IMAGE, e);
-      
-      cur = cur->next;
+      e->name = g_strndup (text, text_len);
+      if (!strcmp (e->name, "hidden"))
+	e->hidden = TRUE;
+    }
+  else if (!strcmp (cur_elem, "tag"))
+    {
+      e->tag = g_strndup (text, text_len);
     }
 }
 
-static void
-structure_parse_xml_page (xmlDocPtr doc, xmlNodePtr cur)
-{
-  edit_thing_t e = new_thing (PAGE, NULL, NULL);
-
-  while (cur)
-    {
-      if (!xmlStrcmp (cur->name, "label"))
-	e->name = xmlNodeListGetString (doc, cur->xmlChildrenNode, 1);
-
-      if (!xmlStrcmp (cur->name, "group"))
-	structure_parse_xml_group (doc, cur->xmlChildrenNode, e);
-	
-      if (!xmlStrcmp (cur->name, "multi-item"))
-	structure_parse_xml_item (doc, cur->xmlChildrenNode, 
-				  ITEM_MULTI_LINE, e);
-	
-      if (!xmlStrcmp (cur->name, "single-item"))
-	structure_parse_xml_item (doc, cur->xmlChildrenNode, 
-				  ITEM_SINGLE_LINE, e);
-
-      if (!xmlStrcmp (cur->name, "date-item"))
-	structure_parse_xml_item (doc, cur->xmlChildrenNode, 
-				  ITEM_DATE, e);
-      
-      if (!xmlStrcmp (cur->name, "image-item"))
-	structure_parse_xml_item (doc, cur->xmlChildrenNode, 
-				  ITEM_IMAGE, e);
-      cur = cur->next;
-    }
-
-  edit_pages = g_slist_append (edit_pages, e);
-}
+static GMarkupParser 
+xml_parser = 
+  {
+    start_element: xml_parser_start_element,
+    end_element: xml_parser_end_element,
+    text: xml_parser_text
+  };
 
 static void
-structure_parse_xml (xmlDocPtr doc, xmlNodePtr cur)
+free_ctx (gpointer p)
 {
-  while (cur)
-    {
-      if (!xmlStrcmp (cur->name, "page"))
-	structure_parse_xml_page (doc, cur->xmlChildrenNode);
-	
-      cur = cur->next;
-    }
+  struct xml_parser_context *c = p;
+
+  g_queue_free (c->queue);
+  g_queue_free (c->elt_queue);
+
+  g_free (p);
 }
 
 gboolean
 read_structure (gchar *name)
 {
-  xmlDocPtr doc = xmlParseFile (name);
-  xmlNodePtr cur;
+  GMarkupParseContext *ctx;
+  struct xml_parser_context *user_ctx;
+  FILE *fp;
 
-  if (doc == NULL)
+  fp = fopen (name, "r");
+  if (!fp)
     {
       gpe_perror_box (name);
       return FALSE;
     }
 
-  xmlCleanupParser ();
+  user_ctx = g_malloc (sizeof (*user_ctx));
 
-  cur = xmlDocGetRootElement (doc);
-  if (cur == NULL)
-    {
-      gpe_error_box ("Layout description is empty.");
-      xmlFreeDoc (doc);
-      return FALSE;
-    }
-  if (xmlStrcmp (cur->name, "layout")) 
-    {
-      gpe_error_box ("Layout description has wrong document type.");
-      xmlFreeDoc (doc);
-      return FALSE;
-    }
+  user_ctx->queue = g_queue_new ();
+  user_ctx->elt_queue = g_queue_new ();
+
+  ctx = g_markup_parse_context_new (&xml_parser, 0, user_ctx, free_ctx);
 
   edit_pages = NULL;
 
-  structure_parse_xml (doc, cur->xmlChildrenNode);
-      
-  xmlFreeDoc (doc);
+  while (! feof (fp))
+    {
+      char buf[1024];
+      int n;
+      GError *err = NULL;
 
+      n = fread (buf, 1, 1024, fp);
+      if (g_markup_parse_context_parse (ctx, buf, n, &err) == FALSE)
+	{
+	  gpe_error_box (err->message);
+	  g_error_free (err);
+
+	  g_markup_parse_context_free (ctx);
+	  
+	  fclose (fp);
+
+	  return FALSE;
+	}
+    }
+
+  g_markup_parse_context_free (ctx);
+
+  fclose (fp);
+  
   return TRUE;
 }
 

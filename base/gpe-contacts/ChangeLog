@@ -1,3 +1,20 @@
+2005-01-01  Phil Blundell  <philb@gnu.org>
+
+	Rewrite layout parser to use GMarkup rather than libxml2 DOM API:
+	* structure.c (new_element): New.
+	(xml_parser_start_element): Likewise.
+	(xml_parser_end_element): Likewise.
+	(xml_parser_text): Likewise.
+	(free_ctx): Likewise.
+	(read_structure): Reimplement using GMarkupParser and above
+	functions.
+	(structure_parse_xml_item): Deleted.
+	(structure_parse_xml_group): Likewise.
+	(structure_parse_xml_page): Likewise.
+	(structure_parse_xml): Likewise.
+	* Makefile (PACKAGE_CFLAGS): Remove libxml2 flags.
+	(PACKAGE_LDFLAGS): Likewise.
+
 2004-11-25  Florian Boor <florian.boor@kernelconcepts.de>
 
     * structure.c (load_well_known_tags): Make sure all tags are uppercase.
