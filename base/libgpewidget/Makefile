@@ -37,7 +37,7 @@ OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
-all: libgpewidget.so
+all: libgpewidget.so $(PACKAGE).pc $(PACKAGE)-uninstalled.pc
 
 libgpewidget.so: $(SONAME)
 	ln -sf $^ $@
