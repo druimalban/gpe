@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2002, 2003 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -34,14 +34,6 @@ static char *name = "";
 static GtkWidget *check;
 static sqlite *sqliteh;
 
-struct gpe_icon my_icons[] = 
-  {
-    { "bt-logo" },
-    { "ok" },
-    { "cancel" },
-    { NULL }
-  };
-
 int
 sql_start (void)
 {
@@ -51,7 +43,7 @@ sql_start (void)
   g_free (fname);
   if (sqliteh == NULL)
     {
-      gpe_error_box (err);
+      fprintf (stderr, "Error: %s\n", err);
       free (err);
       return -1;
     }
@@ -124,30 +116,20 @@ click_ok(GtkWidget *widget,
 void
 ask_user (int outgoing, const char *address)
 {
-  GtkWidget *window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+  GtkWidget *window = gtk_dialog_new ();
   GtkWidget *logo = NULL;
   GtkWidget *text1, *text2, *text3, *hbox, *vbox;
-  GtkWidget *vbox_top;
   GtkWidget *hbox_pin;
   GtkWidget *pin_label, *entry;
-  GtkWidget *buttonok, *buttoncancel, *hbox_but;
+  GtkWidget *buttonok, *buttoncancel;
   GdkPixbuf *pixbuf;
 
   const char *dir = outgoing ? _("Outgoing connection to") 
     : _("Incoming connection from");
  
-  gtk_widget_realize (window);
-
-#ifdef USE_LIBGPEWIDGET
-  if (gpe_load_icons (my_icons) == FALSE)
-    exit (1);
-
-  pixbuf = gpe_find_icon ("bt-logo");
-#else
   pixbuf = gdk_pixbuf_new_from_file (BT_ICON, NULL);
-#endif
   if (pixbuf)
-    logo = gpe_render_icon (window->style, pixbuf);
+    logo = gtk_image_new_from_pixbuf (pixbuf);
 
   pin_label = gtk_label_new (_("PIN:"));
   entry = gtk_entry_new ();
@@ -157,7 +139,6 @@ ask_user (int outgoing, const char *address)
   hbox = gtk_hbox_new (FALSE, 4);
   vbox = gtk_vbox_new (FALSE, 0);
 
-  vbox_top = gtk_vbox_new (FALSE, 2);
   hbox_pin = gtk_hbox_new (FALSE, 0);
 
   text1 = gtk_label_new (dir);
@@ -178,36 +159,24 @@ ask_user (int outgoing, const char *address)
   gtk_box_pack_start (GTK_BOX (hbox_pin), pin_label, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (hbox_pin), entry, TRUE, TRUE, 0);
 
-  hbox_but = gtk_hbox_new (FALSE, 0);
+  buttonok = gtk_button_new_from_stock (GTK_STOCK_OK);
+  buttoncancel = gtk_button_new_from_stock (GTK_STOCK_CANCEL);
 
-#ifdef USE_LIBGPEWIDGET
-  gtk_widget_realize (window);
-  buttonok = gpe_picture_button (window->style, _("OK"), "ok");
-  buttoncancel = gpe_picture_button (window->style, _("Cancel"), "cancel");
-#else
-  buttonok = gtk_button_new_with_label (_("OK"));
-  buttoncancel = gtk_button_new_with_label (_("Cancel"));
-#endif
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), buttonok, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), buttoncancel, TRUE, TRUE, 0);
 
-  gtk_box_pack_start (GTK_BOX (hbox_but), buttonok, TRUE, TRUE, 0);
-  gtk_box_pack_start (GTK_BOX (hbox_but), buttoncancel, TRUE, TRUE, 0);
+  g_signal_connect (G_OBJECT (buttonok), "clicked",
+		    G_CALLBACK (click_ok), entry);
+  g_signal_connect (G_OBJECT (buttoncancel), "clicked",
+		    G_CALLBACK (click_cancel), entry);
+  g_signal_connect (G_OBJECT (entry), "activate",
+		    G_CALLBACK (click_ok), entry);
 
-  gtk_signal_connect (GTK_OBJECT (buttonok), "clicked",
-		      GTK_SIGNAL_FUNC (click_ok), entry);
-  gtk_signal_connect (GTK_OBJECT (buttoncancel), "clicked",
-		      GTK_SIGNAL_FUNC (click_cancel), entry);
-  gtk_signal_connect (GTK_OBJECT (entry), "activate",
-		     GTK_SIGNAL_FUNC (click_ok), entry);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), hbox, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), hbox_pin, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), check, TRUE, TRUE, 0);
 
-  gtk_box_pack_start (GTK_BOX (vbox_top), hbox, TRUE, TRUE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox_top), hbox_pin, TRUE, TRUE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox_top), check, TRUE, TRUE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox_top), hbox_but, TRUE, TRUE, 0);
-
-  gtk_container_add (GTK_CONTAINER (window), vbox_top);
-  gtk_container_set_border_width (GTK_CONTAINER (window), 5);
-
-  gtk_window_set_position (GTK_WINDOW (window), GTK_WIN_POS_CENTER);
+  gtk_window_set_title (GTK_WINDOW (window), _("Bluetooth PIN"));
 
   gtk_widget_show_all (window);
 

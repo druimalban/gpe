@@ -1,7 +1,7 @@
 Package: bluez-pin2
 Section: base
 Priority: optional
-Version: 0.07
+Version: VERSION
 Architecture: arm
 Maintainer: Phil Blundell <pb@debian.org>
 Depends: sqlite, libgpewidget1, gpe-icons (>= 0.18)
