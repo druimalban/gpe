@@ -1,3 +1,14 @@
+2003-08-03  Philip Blundell  <philb@gnu.org>
+
+	* gpe-login 0.57 released.
+
+2003-08-03  Philip Blundell  <philb@gnu.org>
+
+	* Makefile (LINGUAS): Add wa.
+	* po/wa.po: New file, courtesy Pablo Saratxaga.
+
+	* gpe-logout.desktop.in (Categories): Add Action.
+
 2003-08-02  Philip Blundell  <philb@gnu.org>
 
 	* gpe-login 0.56 released.

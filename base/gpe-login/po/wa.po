@@ -1,0 +1,81 @@
+# Translation into the walloon language.
+# Copyright (C) 2003 THE PACKAGE'S COPYRIGHT HOLDER
+# Pablo Saratxaga <pablo@walon.org>, 2003
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-login 0.48\n"
+"POT-Creation-Date: 2003-03-30 15:44+0100\n"
+"PO-Revision-Date: 2003-06-25 20:08+0100\n"
+"Last-Translator: Pablo Saratxaga <pablo@walon.org>\n"
+"Language-Team: Walloon <linux-wa@walon.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: gpe-login.c:480 gpe-login.c:553
+msgid "Login incorrect"
+msgstr "L' elodjaedje a fwait berwete"
+
+#: gpe-login.c:582
+msgid "User already exists"
+msgstr "L' uzeu egzistêye dedja"
+
+#: gpe-login.c:593
+msgid "Passwords don't match"
+msgstr "Les screts n' corespondèt nén"
+
+#: gpe-login.c:602
+msgid "Empty password not allowed"
+msgstr "Vos n' poloz nén aveur on vude sicret"
+
+#: gpe-login.c:1058
+msgid "Record"
+msgstr "Eredjîstrer"
+
+#: gpe-login.c:1059
+msgid "recalibrates touchscreen"
+msgstr "ricalibrer l' waitroûle"
+
+#: gpe-login.c:1095
+msgid "en"
+msgstr "wa"
+
+#: gpe-login.c:1329
+msgid "Screen locked"
+msgstr "Waitroûle eclawêye"
+
+#: gpe-login.c:1333 gpe-login.c:1448
+msgid "Username"
+msgstr "No d' uzeu"
+
+#: gpe-login.c:1358 gpe-login.c:1450
+msgid "Password"
+msgstr "Sicret"
+
+#: gpe-login.c:1372
+msgid "Language"
+msgstr "Lingaedje"
+
+#: gpe-login.c:1392
+msgid "Enter password with hard keys"
+msgstr "Taper li scret avou les botons"
+
+#: gpe-login.c:1449
+msgid "Full name"
+msgstr "No en etir"
+
+#: gpe-login.c:1451
+msgid "Confirm password"
+msgstr "Acertinez l' sicret"
+
+#: gpe-login.c:1505
+msgid "New user"
+msgstr "Novea uzeu"
+
+#: gpe-logout.desktop.in.h:1
+msgid "Log out"
+msgstr "Si dislodjî"
+
+#: gpe-logout.desktop.in.h:2
+msgid "Log out of GPE"
+msgstr "Si dislodjî di GPE"

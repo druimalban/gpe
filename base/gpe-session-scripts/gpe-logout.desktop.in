@@ -5,5 +5,5 @@ Exec=gpe-logout
 Terminal=0
 Type=Application
 Icon=gpe-logout.png
-Categories=Utility;GPE
+Categories=Utility;GPE;Action
 StartupNotify=True

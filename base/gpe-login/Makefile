@@ -2,10 +2,10 @@ PREFIX = /usr/local
 PACKAGE = gpe-login
 CVSBUILD = yes
 GTK2 = yes
-VERSION = 0.56
+VERSION = 0.57
 DEBUG = no
 
-LINGUAS = de sv
+LINGUAS = de sv wa
 
 GTKLDFLAGS = `pkg-config --libs gtk+-2.0`
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
