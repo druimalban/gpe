@@ -25,7 +25,6 @@
 #include <gpe/pixmaps.h>
 #include <gpe/picturebutton.h>
 #include <gpe/question.h>
-#include <gpe/screensize.h>
 
 #define _(x) dgettext(PACKAGE, x)
 
@@ -252,9 +251,6 @@ set_view (GtkWidget *button, gpointer data)
   {
     printf ("%s", "Different view");
     //gtk_widget_destroy (view_widget);
-
-    screen_w = gdk_screen_width ();
-    screen_h = gdk_screen_height ();
 
     if (strcmp ((gchar *) data, "icons") == 0)
     {
