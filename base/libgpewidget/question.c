@@ -55,17 +55,17 @@ add_button (char *text, char *icon, GtkWidget *dialog, GtkWidget *box, int value
   else
     btn = gpe_picture_button (dialog->style, text, icon);
 
-  gtk_object_set_data (GTK_OBJECT (btn), "value", (gpointer)value);
-  gtk_signal_connect (GTK_OBJECT (btn), "clicked",
-                      GTK_SIGNAL_FUNC (on_qn_button_clicked),
-                      dialog);
+  g_object_set_data (G_OBJECT (btn), "value", (gpointer)value);
+  g_signal_connect (G_OBJECT (btn), "clicked",
+		    G_CALLBACK (on_qn_button_clicked),
+		    dialog);
   gtk_box_pack_start (GTK_BOX (box), btn, TRUE, FALSE, 0);
 }
 
 gint
 gpe_question_ask (char *qn, char *title, char *iconname, ...)
 {
-  GtkWidget *window, *hbox, *label, *icon, *vbox, *buttonhbox, *sep;
+  GtkWidget *window, *hbox, *label, *vbox, *buttonhbox, *sep;
   GdkPixbuf *p;
   gint button_pressed = -1;
   int i = 0;
@@ -84,9 +84,9 @@ gpe_question_ask (char *qn, char *title, char *iconname, ...)
 
   sep = gtk_hseparator_new ();
 
-  gtk_signal_connect (GTK_OBJECT (window), "destroy",
-                      GTK_SIGNAL_FUNC (gtk_main_quit),
-                      NULL);
+  g_signal_connect (G_OBJECT (window), "destroy",
+		    G_CALLBACK (gtk_main_quit),
+		    NULL);
 
   gtk_object_set_data (GTK_OBJECT (window), "return", &button_pressed);
 
@@ -94,11 +94,19 @@ gpe_question_ask (char *qn, char *title, char *iconname, ...)
   hbox = gtk_hbox_new (FALSE, 0);
   gtk_container_add (GTK_CONTAINER (vbox), hbox);
 
-  p = gpe_try_find_icon (iconname, NULL);
-  if (p != NULL)
+  if (iconname[0] == '!')
     {
-      icon = gpe_render_icon (window->style, p);
+      GtkWidget *icon = gtk_image_new_from_stock (iconname + 1, GTK_ICON_SIZE_DIALOG);
       gtk_box_pack_start (GTK_BOX (hbox), icon, TRUE, TRUE, 0);
+    }
+  else
+    {
+      p = gpe_try_find_icon (iconname, NULL);
+      if (p != NULL)
+	{
+	  GtkWidget *icon = gtk_image_new_from_pixbuf (p);
+	  gtk_box_pack_start (GTK_BOX (hbox), icon, TRUE, TRUE, 0);
+	}
     }
 
   label = gtk_label_new (qn);

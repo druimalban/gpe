@@ -1,5 +1,9 @@
 2003-02-15  Philip Blundell  <philb@gnu.org>
 
+	* question.c (add_button): Use GObject functions.
+	(gpe_question_ask): Likewise.  If icon name starts with "!", take
+	it as a stock item name.
+
 	* errorbox.c (do_gpe_error_box): Use GtkMessageDialog.
 
 	* dirbrowser.c: Rewrite.
