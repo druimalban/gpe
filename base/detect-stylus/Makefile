@@ -14,7 +14,7 @@ else
 CFLAGS += -Os -fomit-frame-pointer
 endif
 CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
-LDFLAGS += -L/usr/X11R6/lib -lX11
+LDFLAGS += `pkg-config --libs x11`
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 
@@ -23,6 +23,8 @@ BUILD = ../build
 else
 BUILD = build
 endif
+
+export PKG_CONFIG_PATH = $(BUILD)
 
 all: $(PACKAGE)
 
