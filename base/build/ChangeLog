@@ -1,7 +1,19 @@
 2003-09-06  Philip Blundell  <philb@gnu.org>
 
+	* Makefile.dpkg_ipkg (ipkg): Build .batch file listing all
+	generated packages and their md5sums.
+
+2003-09-06  Philip Blundell  <philb@gnu.org>
+
+	* Makefile.translation (ipkg-prep): Depend on freshen-po if CVSBUILD.
+	* Makefile.dpkg_ipkg (ipkg): Depend on ipkg-prep.
+
+2003-09-06  Philip Blundell  <philb@gnu.org>
+
 	* Makefile.translation (clean-po): Delete all generated .desktop
 	and .desktop.in.h files.
+
+2003-09-06  Philip Blundell  <philb@gnu.org>
 
 	* Makefile.dpkg_ipkg (retag): New.
 	* Makefile.translation (dist-prep): Also depend on freshen-po.
