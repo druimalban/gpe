@@ -406,6 +406,7 @@ class GPE:IconList from Gtk:Scrolled:Window {
 	  int count;
 	  int da_new_height;
 	  GtkAdjustment *adj;
+	  GtkWidget *viewport;
 
 	  adj = gtk_scrolled_window_get_hadjustment (GTK_SCROLLED_WINDOW (self));
 	  
@@ -420,19 +421,10 @@ class GPE:IconList from Gtk:Scrolled:Window {
 		
 	  // update drawing area
 	  da_new_height = self->_priv->rows * il_row_height (self) + TOP_MARGIN;
-	  gtk_drawing_area_size (GTK_DRAWING_AREA (gtk_object_get_data (GTK_OBJECT (self), "da")),
-				 -1, da_new_height);
-	  
-	  // update vertical page_size and value
-	  adj = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (self));
-	  adj->upper = da_new_height;
-	  gtk_adjustment_changed (adj);
-
-	  if (gtk_adjustment_get_value(adj) > adj->upper - adj->page_size)
-	    {
-	      gtk_adjustment_set_value(adj, adj->upper - adj->page_size);
-	      gtk_adjustment_value_changed(adj);
-	    }
+	  gtk_widget_set_usize (GTK_WIDGET (gtk_object_get_data (GTK_OBJECT (self), "da")),
+				-1, da_new_height);
+	  viewport = GTK_WIDGET (gtk_bin_get_child (GTK_BIN (self)));
+	  gtk_widget_size_allocate (viewport, &viewport->allocation);
 	}
 	
 	private GObject *new_icon (char *title, char *icon, gpointer udata, GdkPixbuf *pb)
