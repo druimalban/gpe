@@ -344,12 +344,12 @@ event_db_stop (void)
 
   for (iter = one_shot_events; iter; iter = g_slist_next (iter))
     event_db_destroy(iter->data);
-  event_db_list_destroy(one_shot_events);
+  g_slist_free(one_shot_events);
   one_shot_events = NULL;
 
   for (iter = recurring_events; iter; iter = g_slist_next (iter))
     event_db_destroy(iter->data);
-  event_db_list_destroy(recurring_events);
+  g_slist_free(recurring_events);
   recurring_events = NULL;
 	
   sqlite_close (sqliteh);
