@@ -284,7 +284,7 @@ gint update_bat_values(gpointer data)
 			gtk_progress_bar_set_text(GTK_PROGRESS_BAR(batt_int.bar),percstr);
 			
 			/* apm says: */
-			if (flags & 0x80)
+			if ((flags & 0x80) && (flags != 0xFF))
 			{
 				sprintf(tmp,"%s",_("No battery"));
 			}

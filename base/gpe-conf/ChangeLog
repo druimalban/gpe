@@ -1,3 +1,7 @@
+2004-08-15	Florian Boor  	<florian.boor@kernelconcepts.de>
+
+	* battery.c: Minor fix to compensate broken APM emulation.
+	
 2004-08-14	Florian Boor  	<florian.boor@kernelconcepts.de>
 	
 	* theme.c: Added casts to fix warnings.
