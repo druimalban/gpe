@@ -12,6 +12,7 @@ struct Applet
   char * label;
   char * name;
   char * frame_label;
+  char * icon_file;
 };
 
 /* When translation will be implemented...*/

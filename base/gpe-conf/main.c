@@ -85,26 +85,46 @@ GtkWidget *mainw; // for dialogs
 
 struct Applet applets[]=
   {
-    { &Time_Build_Objects, &Time_Free_Objects, &Time_Save, &Time_Restore , "Time" ,"time" ,"Time and Date Setup"},
-    { &Appmgr_Build_Objects, &Appmgr_Free_Objects, &Appmgr_Save, &Appmgr_Restore , "Appmgr" ,"appmgr", "Launcher Setup"},
-    { &ipaqscreen_Build_Objects, &ipaqscreen_Free_Objects, &ipaqscreen_Save, &ipaqscreen_Restore , "Screen" , "ipaqscreen", "Screen Setup"},
-    { &Kbd_Build_Objects, &Unimplemented_Free_Objects, &Kbd_Save, &Kbd_Restore , "vKeyboard" ,"kbd", "Virtual Keyboard Setup"},
-    { &Keyboard_Build_Objects, &Unimplemented_Free_Objects, &Keyboard_Save, &Keyboard_Restore , "Keyboard" ,"keyboard", "External Keyboard Setup"},
-    { &Keyctl_Build_Objects, &Unimplemented_Free_Objects, &Keyctl_Save, &Keyctl_Restore , "Buttons" ,"keyctl", "Button Configuration"},
-    { &Network_Build_Objects, &Network_Free_Objects, &Network_Save, &Network_Restore , "Network" ,"network","IP Addresses"},
-    { &Theme_Build_Objects, &Unimplemented_Free_Objects, &Theme_Save, &Theme_Restore , "Theme" ,"theme", "Global Appearance Setup"},
-    { &Sleep_Build_Objects, &Unimplemented_Free_Objects, &Sleep_Save, &Sleep_Restore , "Sleep" ,"sleep","Sleep Configuration"},
-    { &Ownerinfo_Build_Objects, &Ownerinfo_Free_Objects, &Ownerinfo_Save, &Ownerinfo_Restore, "Owner", "ownerinfo", "Owner Information"},
-    { &Login_Setup_Build_Objects, &Login_Setup_Free_Objects, &Login_Setup_Save, &Login_Setup_Restore, "Login", "login-setup", "Login Setup"},
-    { &Users_Build_Objects, &Users_Free_Objects, &Users_Save, &Users_Restore , "Users" ,"users","User Administration"},
-    { &GpeAdmin_Build_Objects, &GpeAdmin_Free_Objects, &GpeAdmin_Save, &GpeAdmin_Restore , "GPE" ,"admin","GPE Conf Administration"},
-    { &Storage_Build_Objects, &Storage_Free_Objects, &Unimplemented_Save, &Storage_Restore , "Storage" ,"storage","Storage Information"},
-    { &Serial_Build_Objects, &Serial_Free_Objects, &Serial_Save, &Serial_Restore , "Serial" ,"serial","Serial Port Configuration"},
-    { &Logread_Build_Objects, &Logread_Free_Objects, &Unimplemented_Save, &Logread_Restore , "Logread" ,"logread", "Logfile Viewer"},
-    { &Cardinfo_Build_Objects, &Cardinfo_Free_Objects, &Unimplemented_Save, &Cardinfo_Restore , "Cardinfo" ,"cardinfo","PC/CF Card Info and Config"},
-    { &Packages_Build_Objects, &Packages_Free_Objects, &Unimplemented_Save, &Packages_Restore , "Packages" ,"packages","Add and Remove packages"},
-    { &Battery_Build_Objects, &Battery_Free_Objects, &Unimplemented_Save, &Battery_Restore , "Battery" ,"battery","Battery info"},
-    { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Task nameserver" ,"task_nameserver","Task for changing nameserver"}
+    { &Time_Build_Objects, &Time_Free_Objects, &Time_Save, &Time_Restore , 
+		"Time" ,"time" ,"Time and Date Setup",PREFIX "/share/pixmaps/gpe-config-time.png"},
+    { &Appmgr_Build_Objects, &Appmgr_Free_Objects, &Appmgr_Save, &Appmgr_Restore , 
+		"Appmgr" ,"appmgr", "Launcher Setup", PREFIX "/share/pixmaps/gpe-config-appmgr.png"},
+    { &ipaqscreen_Build_Objects, &ipaqscreen_Free_Objects, &ipaqscreen_Save, &ipaqscreen_Restore,
+		"Screen" , "ipaqscreen", "Screen Setup", PREFIX "/share/pixmaps/gpe-config-ipaqscreen.png"},
+    { &Kbd_Build_Objects, &Unimplemented_Free_Objects, &Kbd_Save, &Kbd_Restore ,
+		"vKeyboard" ,"kbd", "Virtual Keyboard Setup",PREFIX "/share/pixmaps/gpe-config-kbd.png"},
+    { &Keyboard_Build_Objects, &Unimplemented_Free_Objects, &Keyboard_Save, &Keyboard_Restore ,
+		"Keyboard" ,"keyboard", "External Keyboard Setup",PREFIX "/share/pixmaps/gpe-config-keyboard.png"},
+    { &Keyctl_Build_Objects, &Unimplemented_Free_Objects, &Keyctl_Save, &Keyctl_Restore ,
+		"Buttons" ,"keyctl", "Button Configuration",PREFIX "/share/pixmaps/gpe-config-keyctl.png"},
+    { &Network_Build_Objects, &Network_Free_Objects, &Network_Save, &Network_Restore ,
+		"Network" ,"network","IP Addresses",PREFIX "/share/pixmaps/gpe-config-network.png"},
+    { &Theme_Build_Objects, &Unimplemented_Free_Objects, &Theme_Save, &Theme_Restore ,
+		"Theme" ,"theme", "Global Appearance Setup",PREFIX "/share/pixmaps/gpe-config-theme.png"},
+    { &Sleep_Build_Objects, &Unimplemented_Free_Objects, &Sleep_Save, &Sleep_Restore ,
+		"Sleep" ,"sleep","Sleep Configuration",PREFIX "/share/pixmaps/gpe-config-sleep.png"},
+    { &Ownerinfo_Build_Objects, &Ownerinfo_Free_Objects, &Ownerinfo_Save, &Ownerinfo_Restore,
+		"Owner", "ownerinfo", "Owner Information",PREFIX "/share/pixmaps/gpe-config-ownerinfo.png"},
+    { &Login_Setup_Build_Objects, &Login_Setup_Free_Objects, &Login_Setup_Save, &Login_Setup_Restore,
+		"Login", "login-setup", "Login Setup",PREFIX "/share/pixmaps/gpe-config-login.png"},
+    { &Users_Build_Objects, &Users_Free_Objects, &Users_Save, &Users_Restore ,
+		"Users" ,"users","User Administration",PREFIX "/share/pixmaps/gpe-config-users.png"},
+    { &GpeAdmin_Build_Objects, &GpeAdmin_Free_Objects, &GpeAdmin_Save, &GpeAdmin_Restore , 
+		"GPE" ,"admin","GPE Conf Administration",PREFIX "/share/pixmaps/gpe-config-admin.png"},
+    { &Storage_Build_Objects, &Storage_Free_Objects, &Unimplemented_Save, &Storage_Restore ,
+		"Storage" ,"storage","Storage Information",PREFIX "/share/pixmaps/gpe-config-storage.png"},
+    { &Serial_Build_Objects, &Serial_Free_Objects, &Serial_Save, &Serial_Restore ,
+		"Serial" ,"serial","Serial Port Configuration",PREFIX "/share/pixmaps/gpe-config-serial.png"},
+    { &Logread_Build_Objects, &Logread_Free_Objects, &Unimplemented_Save, &Logread_Restore ,
+		"Logread" ,"logread", "Logfile Viewer",PREFIX "/share/pixmaps/gpe-config-logread.png"},
+    { &Cardinfo_Build_Objects, &Cardinfo_Free_Objects, &Unimplemented_Save, &Cardinfo_Restore ,
+		"Cardinfo" ,"cardinfo","PC/CF Card Info and Config",PREFIX "/share/pixmaps/gpe-config-cardinfo.png"},
+    { &Packages_Build_Objects, &Packages_Free_Objects, &Unimplemented_Save, &Packages_Restore ,
+		"Packages" ,"packages","Add and Remove packages",PREFIX "/share/pixmaps/gpe-config-packages.png"},
+    { &Battery_Build_Objects, &Battery_Free_Objects, &Unimplemented_Save, &Battery_Restore ,
+		"Battery" ,"battery","Battery info", PREFIX "/share/pixmaps/gpe-config-battery.png"},
+    { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore ,
+		"Task nameserver" ,"task_nameserver","Task for changing nameserver", NULL}
   };
   
 struct gpe_icon my_icons[] = {
@@ -114,8 +134,8 @@ struct gpe_icon my_icons[] = {
   { "properties" },
   { "new" },
   { "lock" },
-  { "media-play" },
-  { "media-stop" },
+//  { "media-play" },
+//  { "media-stop" },
   { "ipaq" },
   { "exit" },
   { "ownerphoto", "tux-48" },
@@ -128,8 +148,11 @@ struct gpe_icon my_icons[] = {
   { "menu-reset", PREFIX "/share/pixmaps/menu-reset.png" }, 
   { "menu-reset2", PREFIX "/share/pixmaps/menu-reset2.png" }, 
   { "menu-assign", PREFIX "/share/pixmaps/menu-assign.png" }, 
+  { "icon", NULL },
   { NULL, NULL }
 };
+
+#define count_icons 19
 
 int applets_nb = sizeof(applets) / sizeof(struct Applet);
 
@@ -209,7 +232,6 @@ int killchild()
 
 void initwindow()
 {
-
    // main window
    self.w = mainw = gtk_window_new(GTK_WINDOW_TOPLEVEL);
    wstyle = self.w->style;
@@ -225,7 +247,6 @@ void initwindow()
 
    gtk_signal_connect (GTK_OBJECT(self.w), "destroy", 
       (GtkSignalFunc) gtk_main_quit, NULL);
-
 }
 
 
@@ -263,7 +284,6 @@ void make_container()
 		      (GtkSignalFunc) Restore_Callback, NULL);
   gtk_signal_connect (GTK_OBJECT(self.dismiss), "clicked",
 		      (GtkSignalFunc) Save_Callback, NULL);
-
 }
 
 
@@ -273,6 +293,8 @@ void main_one(int argc, char **argv,int applet)
   gboolean user_only_setup = FALSE; /* Don't change to suid mode. */  
 	
   self.alone_applet = 1;
+
+  my_icons[count_icons - 1].filename = applets[applet].icon_file;
 	
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
@@ -311,7 +333,7 @@ void main_one(int argc, char **argv,int applet)
 
   make_container();
 
-
+  gpe_set_window_icon(self.w,"icon");
   gtk_widget_show_all(self.w);
  
   gtk_widget_show(self.w);
@@ -326,14 +348,13 @@ void main_one(int argc, char **argv,int applet)
 }
 
 
-
 int main(int argc, char **argv)
 {
   int i;
   int pipe1[2];
   int pipe2[2];
 
-//  setlocale (LC_ALL, "");
+  setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
   bind_textdomain_codeset (PACKAGE, "UTF-8");
   textdomain (PACKAGE);
