@@ -66,7 +66,7 @@ install-login: gpe-login install-po
 	install -m 755 X11/gpe-login.pre-session $(DESTDIR)/etc/X11/gpe-login.pre-session
 	install -d $(DESTDIR)/etc/suspend-scripts
 	install -m 755 gpe-login.suspend $(DESTDIR)/etc/suspend-scripts/S98lock-display
-	install -d $(DESTDIR)/etc/Xsession.d
+	install -d $(DESTDIR)/etc/X11/Xsession.d
 	install -m 755 gpe-login.session $(DESTDIR)/etc/X11/Xsession.d/50autolock
 	install -m 755 X11/10unsetgtkrc $(DESTDIR)/etc/X11/Xsession.d/10unsetgtkrc
 

@@ -1,3 +1,4 @@
 #!/bin/sh
 
 rm -f /etc/X11/Xsession-gpe.d/50autolock
+rm -f /etc/X11/Xsession-gpe.d/10unsetgtkrc

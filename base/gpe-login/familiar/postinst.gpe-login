@@ -2,6 +2,7 @@
 
 if test -d /etc/X11/Xsession-gpe.d/; then 
     ln -fs /etc/X11/Xsession.d/50autolock /etc/X11/Xsession-gpe.d/50autolock
+    ln -fs /etc/X11/Xsession.d/10unsetgtkrc /etc/X11/Xsession-gpe.d/10unsetgtkrc
 fi
 
 exit 0
