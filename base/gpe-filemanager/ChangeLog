@@ -1,5 +1,6 @@
 2004-09-27  Florian Boor  <florian.boor@kernelconcepts.de>
 
+    * main.c (browse_directory): Added infoprints for opening directories.
     * main.c: Changed message on failing to display help to something
               more friendly.
               Improved file info flags: Links are handled correctly now.

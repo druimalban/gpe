@@ -1561,11 +1561,15 @@ directory_changed (GnomeVFSMonitorHandle *handle,
 void
 browse_directory (gchar *directory)
 {
-  gboolean enabled;
+  gboolean enabled, ishome;
+  gchar *msg;
+  
+  ishome = !strcmp(directory, g_get_home_dir());
+  
   /* disable "up" button if we are in homedir and view is limited */
-  enabled = (!limited_view || strcmp(directory, g_get_home_dir()));
+  enabled = (!limited_view || !ishome);
   if (btnGoUp)
-    gtk_widget_set_sensitive(btnGoUp,enabled);
+    gtk_widget_set_sensitive(btnGoUp, enabled);
   set_active_item(directory);  
 
   /* some hacks to handle nasty smb urls */
@@ -1608,6 +1612,17 @@ browse_directory (gchar *directory)
   if (current_directory) 
     g_free(current_directory);
   current_directory = g_strdup (directory);
+  
+  if (!ishome)
+    {
+       if (strlen(strrchr(directory, '/')) > 1)
+         msg = g_strdup_printf("%s %s",_("Opening"), strrchr(directory, '/') + 1);
+       else /* should only happen for "/" */
+         msg = g_strdup_printf("%s %s",_("Opening"), strrchr(directory, '/'));
+       gpe_popup_infoprint(GDK_DISPLAY(), msg);
+       g_free(msg);
+    }
+  
   add_history (g_strdup(directory));
   gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (combo)->entry), directory);
   
