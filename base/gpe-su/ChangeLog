@@ -1,7 +1,9 @@
 2004-06-18  Florian Boor <florian.boor@kernelconcepts.de>
 
+	* Released V 0.14
 	* Makefile: Fixed name of variable that provides gtk libraries.
 	* gpe-su.c: Ignore GDK warnings in stderr.
+	* gpe-su.c: Give dialog window a title.
 
 2004-06-07  Philip Blundell  <philb@gnu.org>
 

@@ -162,6 +162,7 @@ main (int argc, char *argv[])
     exit (system (command));
 
   window = gtk_dialog_new ();
+  gtk_window_set_title(GTK_WINDOW(window),_("Permission Control"));
   
   hbox = gtk_hbox_new (FALSE, 0);
   entry = gtk_entry_new ();
