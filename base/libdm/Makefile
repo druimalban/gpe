@@ -45,7 +45,7 @@ $(SONAME): $(OBJS)
 	$(CC) $(CFLAGS) -S $<
 
 install-program: $(SONAME)
-	install -d $(SONAME) $(DESTDIR)$(PREFIX)/lib
+	install -d $(DESTDIR)$(PREFIX)/lib
 	install -s $(SONAME) $(DESTDIR)$(PREFIX)/lib/$(SONAME)
 
 install-devel:
