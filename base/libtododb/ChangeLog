@@ -4,6 +4,8 @@
 
 2004-02-15  Philip Blundell  <philb@gnu.org>
 
+	* familiar/control: Add Source.
+
 	* gpe/todo-db.h (enum item_state): Add ABANDONED.
 	(struct todo_item): Add priority.
 	(PRIORITY_STANDARD, PRIORITY_HIGH, PRIORITY_LOW): New.
