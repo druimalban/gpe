@@ -1,3 +1,11 @@
+2003-02-18  Colin Marquardt  <colin@marquardt-home.de>
+
+	* po/de.po: Update.
+
+	* gpe-ownerinfo2.c (main): Get rid of the category label, and the
+	email and phone labels. Make window 10 pixels smaller by default.
+	Don't say "Name:" in the name label, say "Owner".
+
 2003-02-17  Philip Blundell  <philb@gnu.org>
 
 	* gpe-ownerinfo2.c (main): Remove duplicate locale code.  Move

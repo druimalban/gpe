@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-02-17 21:35+0000\n"
+"POT-Creation-Date: 2003-02-18 19:18+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,74 +15,66 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: gpe-ownerinfo2.c:415
+#: gpe-ownerinfo2.c:379
 msgid "en"
 msgstr ""
 
-#: gpe-ownerinfo2.c:437 gpe-ownerinfo2.c:559
+#: gpe-ownerinfo2.c:400 gpe-ownerinfo2.c:516
 msgid "GPE Owner Info"
 msgstr ""
 
-#: gpe-ownerinfo2.c:439
+#: gpe-ownerinfo2.c:402
 msgid "Valid options:\n"
 msgstr ""
 
-#: gpe-ownerinfo2.c:440
+#: gpe-ownerinfo2.c:403
 msgid "   -g GEOMETRY  window geometry (default: 240x120+0+200)\n"
 msgstr ""
 
-#: gpe-ownerinfo2.c:441
+#: gpe-ownerinfo2.c:404
 msgid "   -t           make window transparent\n"
 msgstr ""
 
-#: gpe-ownerinfo2.c:442
+#: gpe-ownerinfo2.c:405
 msgid "   -k           always keep window on top (override redirect)\n"
 msgstr ""
 
-#: gpe-ownerinfo2.c:443
+#: gpe-ownerinfo2.c:406
 msgid "   -h           this help text\n"
 msgstr ""
 
-#: gpe-ownerinfo2.c:462
+#: gpe-ownerinfo2.c:425
 msgid "GPE User"
 msgstr ""
 
-#: gpe-ownerinfo2.c:463
+#: gpe-ownerinfo2.c:426
 msgid "nobody@localhost.localdomain"
 msgstr ""
 
-#: gpe-ownerinfo2.c:464
+#: gpe-ownerinfo2.c:427
 msgid "+99 (9999) 999-9999"
 msgstr ""
 
-#: gpe-ownerinfo2.c:468
+#: gpe-ownerinfo2.c:431
 msgid "Configurable with"
 msgstr ""
 
-#: gpe-ownerinfo2.c:469 gpe-ownerinfo2.c:584
+#: gpe-ownerinfo2.c:432 gpe-ownerinfo2.c:541
 msgid "Owner Information"
 msgstr ""
 
-#: gpe-ownerinfo2.c:470
+#: gpe-ownerinfo2.c:433
 msgid "under"
 msgstr ""
 
-#: gpe-ownerinfo2.c:470
+#: gpe-ownerinfo2.c:433
 msgid " Settings."
 msgstr ""
 
-#: gpe-ownerinfo2.c:609
-msgid "Name:"
+#: gpe-ownerinfo2.c:558
+msgid "Owner"
 msgstr ""
 
-#: gpe-ownerinfo2.c:618
-msgid "E-Mail:"
-msgstr ""
-
-#: gpe-ownerinfo2.c:627
-msgid "Phone:"
-msgstr ""
-
-#: gpe-ownerinfo2.c:640
+#: gpe-ownerinfo2.c:571
 msgid "Address:"
 msgstr ""

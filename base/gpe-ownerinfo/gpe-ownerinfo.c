@@ -18,7 +18,6 @@
 
 #include <X11/Xlib.h>
 
-//#include <gobject.h>
 #include <gtk/gtk.h>
 #include <gdk/gdkx.h>
 #include <gdk/gdkkeysyms.h>
@@ -32,8 +31,6 @@
 #include <gpe/stylus.h>
 
 #include <rootpixmap.h>
-
-// #include "main.h"
 
 #define CURRENT_DATAFILE_VER 2
 
@@ -72,11 +69,9 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer data)
 
   maxwidth  = widget->allocation.width;
   maxheight = widget->allocation.height;
-  g_print ("gpe-ownerinfo2: allocation for drawing area: %d x %d\n", maxwidth, maxheight);
 
   width  = gdk_pixbuf_get_width (photopixbuf);
   height = gdk_pixbuf_get_height (photopixbuf);
-  g_print ("gpe-ownerinfo2: pixbuf: %d x %d\n", width, height);
 
   if (width > maxwidth)
     scale_width = (gfloat) maxwidth / width;
@@ -89,12 +84,9 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer data)
     scale_height = 1.0;
 
   scale = scale_width < scale_height ? scale_width : scale_height;
-  g_print ("gpe-ownerinfo2: scale_width: %f, scale_height: %f, selected scale: %f\n",
-	     scale_width, scale_height, scale);
 
   resultwidth  = (gint) (width  * scale);
   resultheight = (gint) (height * scale);
-  g_print ("gpe-ownerinfo2: resulting size: %d x %d\n", resultwidth, resultheight);
 
   scaledpixbuf = gdk_pixbuf_scale_simple (photopixbuf, resultwidth, resultheight, GDK_INTERP_BILINEAR);
 
@@ -108,7 +100,6 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer data)
 				       GDK_RGB_DITHER_NORMAL,     /* dither mode */
 				       0, 0);                     /* x_dither, y_dither */
   
-  g_print ("gpe-ownerinfo2: ======================================================\n");
   return TRUE;
 }
 
@@ -275,33 +266,6 @@ maybe_upgrade_datafile ()
   }
 }
 
-/* http://www.gtk.org/tutorial/sec-thedrawingareawidget.html */
-
-// /* Backing pixmap for drawing area */
-// static GdkPixmap *pixmap = NULL;
-// 
-// /* Create a new backing pixmap of the appropriate size */
-// static gint
-// configure_event (GtkWidget *widget, GdkEventConfigure *event)
-// {
-//   if (pixmap)
-//     gdk_pixmap_unref(pixmap);
-// 
-//   pixmap = gdk_pixmap_new(widget->window,
-// 			  widget->allocation.width,
-// 			  widget->allocation.height,
-// 			  -1);
-//   gdk_draw_rectangle (pixmap,
-// 		      widget->style->white_gc,
-// 		      TRUE,
-// 		      0, 0,
-// 		      widget->allocation.width,
-// 		      widget->allocation.height);
-// 
-//   return TRUE;
-// }
-// 
-
 
 static void
 mapped (GtkWidget *window)
@@ -381,12 +345,9 @@ main (int argc, char *argv[])
   GtkWidget *mainvbox;
   GtkWidget *catlabel;
   GtkWidget *cathbox;
-  GtkWidget *indentlabel;
   GtkWidget *indentedhbox;
   GtkWidget *leftcolvbox;
   GtkWidget *namelabel;
-  GtkWidget *phonelabel;
-  GtkWidget *emaillabel;
   GtkWidget *addresslabel;
   GtkWidget *address_button_vbox;
   GtkWidget *smallphotodrawingarea;
@@ -396,7 +357,7 @@ main (int argc, char *argv[])
   GtkSizeGroup *sizegroup;
   GtkObject *adjustment;
   
-  gchar *gpe_catindent = gpe_get_catindent ();
+  //gchar *gpe_catindent = gpe_get_catindent ();
   //guint gpe_catspacing = gpe_get_catspacing ();
   guint gpe_boxspacing = gpe_get_boxspacing ();
   //guint gpe_border     = gpe_get_border ();
@@ -551,7 +512,6 @@ main (int argc, char *argv[])
   GPE_Ownerinfo = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_widget_set_name (GPE_Ownerinfo, "GPE_Ownerinfo");
   gtk_object_set_data (GTK_OBJECT (GPE_Ownerinfo), "GPE_Ownerinfo", GPE_Ownerinfo);
-  //gtk_widget_set_usize (GPE_Ownerinfo, 240, 120);
   //gtk_container_set_border_width (GTK_CONTAINER (GPE_Ownerinfo), gpe_border);
   gtk_window_set_title (GTK_WINDOW (GPE_Ownerinfo), _("GPE Owner Info"));
 
@@ -579,18 +539,10 @@ main (int argc, char *argv[])
 			g_strdup_printf ("<span lang='%s' weight='bold'>%s</span>",
 					 pango_lang_code, 
 					 _("Owner Information")));
-  gtk_widget_show (catlabel);
-  gtk_box_pack_start (GTK_BOX (mainvbox), catlabel, FALSE, FALSE, 0);
-  gtk_label_set_justify (GTK_LABEL (catlabel), GTK_JUSTIFY_LEFT);
-  gtk_misc_set_alignment (GTK_MISC (catlabel), 0, 0.5);
 
   cathbox = gtk_hbox_new (FALSE, 0);
   gtk_widget_show (cathbox);
   gtk_box_pack_start (GTK_BOX (mainvbox), cathbox, TRUE, TRUE, 0);
-
-  indentlabel = gtk_label_new (gpe_catindent);
-  gtk_widget_show (indentlabel);
-  gtk_box_pack_start (GTK_BOX (cathbox), indentlabel, FALSE, FALSE, 0);
 
   indentedhbox = gtk_hbox_new (FALSE, 0);
   gtk_widget_show (indentedhbox);
@@ -602,30 +554,12 @@ main (int argc, char *argv[])
 
   namelabel = gtk_label_new (NULL);
   gtk_label_set_markup (GTK_LABEL (namelabel),
-			g_strdup_printf ("<span lang='%s'>%s</span>",
-					 pango_lang_code, _("Name:")));
+			g_strdup_printf ("<span lang='%s'><b>%s</b></span>",
+					 pango_lang_code, _("Owner")));
   gtk_widget_show (namelabel);
   gtk_box_pack_start (GTK_BOX (leftcolvbox), namelabel, FALSE, TRUE, 0);
   gtk_label_set_justify (GTK_LABEL (namelabel), GTK_JUSTIFY_LEFT);
   gtk_misc_set_alignment (GTK_MISC (namelabel), 0, 0.5);
-
-  emaillabel = gtk_label_new (NULL);
-  gtk_label_set_markup (GTK_LABEL (emaillabel),
-			g_strdup_printf ("<span lang='%s'>%s</span>",
-					 pango_lang_code, _("E-Mail:")));
-  gtk_widget_show (emaillabel);
-  gtk_box_pack_start (GTK_BOX (leftcolvbox), emaillabel, FALSE, TRUE, 0);
-  gtk_label_set_justify (GTK_LABEL (emaillabel), GTK_JUSTIFY_LEFT);
-  gtk_misc_set_alignment (GTK_MISC (emaillabel), 0, 0.5);
-
-  phonelabel = gtk_label_new (NULL);
-  gtk_label_set_markup (GTK_LABEL (phonelabel),
-			g_strdup_printf ("<span lang='%s'>%s</span>",
-					 pango_lang_code, _("Phone:")));
-  gtk_widget_show (phonelabel);
-  gtk_box_pack_start (GTK_BOX (leftcolvbox), phonelabel, FALSE, TRUE, 0);
-  gtk_label_set_justify (GTK_LABEL (phonelabel), GTK_JUSTIFY_LEFT);
-  gtk_misc_set_alignment (GTK_MISC (phonelabel), 0, 0.5);
 
   address_button_vbox = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (address_button_vbox);
@@ -635,10 +569,6 @@ main (int argc, char *argv[])
   gtk_label_set_markup (GTK_LABEL (addresslabel),
 			g_strdup_printf ("<span lang='%s'>%s</span>",
 					 pango_lang_code, _("Address:")));
-  gtk_widget_show (addresslabel);
-  gtk_box_pack_start (GTK_BOX (address_button_vbox), addresslabel, FALSE, FALSE, 0);
-  gtk_label_set_justify (GTK_LABEL (addresslabel), GTK_JUSTIFY_LEFT);
-  gtk_misc_set_alignment (GTK_MISC (addresslabel), 0, 0);
 
   smallphotobutton = gtk_button_new ();
   gtk_widget_show (smallphotobutton);
@@ -732,8 +662,6 @@ main (int argc, char *argv[])
    */
   sizegroup = gtk_size_group_new (GTK_SIZE_GROUP_VERTICAL);
   gtk_size_group_add_widget (sizegroup, namelabel);
-  gtk_size_group_add_widget (sizegroup, emaillabel);
-  gtk_size_group_add_widget (sizegroup, phonelabel);
   gtk_size_group_add_widget (sizegroup, name);
   gtk_size_group_add_widget (sizegroup, email);
   gtk_size_group_add_widget (sizegroup, phone);
@@ -751,8 +679,8 @@ main (int argc, char *argv[])
     }
   else
     {
-      gtk_widget_set_usize (GPE_Ownerinfo, 240, 120);
-      gtk_widget_set_uposition (GPE_Ownerinfo, 0, 200);
+      gtk_widget_set_usize (GPE_Ownerinfo, 240, 100);
+      gtk_widget_set_uposition (GPE_Ownerinfo, 0, 220); /* 320 - 100 */
     }
 
   gtk_label_set_markup (GTK_LABEL (name),
