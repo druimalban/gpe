@@ -91,7 +91,7 @@ future_view_update ()
 }
 
 GtkWidget *
-future_view(void)
+future_view (void)
 {
   time_t t = time (NULL);
   struct tm tm;
@@ -119,7 +119,7 @@ future_view(void)
                    G_CALLBACK (selection_made), NULL);
 
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window),
-                                  GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+                                  GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
 
   gtk_container_add (GTK_CONTAINER (scrolled_window), future_list);
 

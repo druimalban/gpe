@@ -1,4 +1,10 @@
+2004-02-09  Phil Blundell  <pb@nexus.co.uk>
+
+	* future_view.c (future_view): Set NEVER policy for horizontal
+	scrollbar.
+
 2004-02-08  Howell Tam	<pigeon@pigeond.net>
+	
 	* event-ui.c: Recurring page now shows corresponding fields properly.
 	* day_popup.c: Likewise.
 	* day_view.c: Likewise.
