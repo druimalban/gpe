@@ -1,6 +1,7 @@
 Package: libxsettings0
 Section: x11
 Priority: optional
+Source: SOURCE
 Version: VERSION
 Architecture: arm
 Maintainer: Phil Blundell <pb@debian.org>

@@ -1,6 +1,7 @@
 Package: libsoundgen1
 Section: base
 Priority: optional
+Source: SOURCE
 Version: VERSION
 Architecture: arm
 Maintainer: Joe McCarthy <mccarthy@engrng.pitt.edu>
