@@ -13,19 +13,9 @@
    GNU General Public License for more details.
 */
 
-#ifndef MAIN_H
-#define MAIN_H
-#include <gtk/gtk.h>
+#ifndef PLUGIN_H
+#define PLUGIN_H
 
-/* main window */
-GtkWidget *window;
-GtkWidget *notebook;
-GtkWidget *recent_box;
-
-/* Refresh the UI with the icons */
-void refresh_tabs (void);
-
-/* Creates the image/label combo for a tab */
-GtkWidget *create_tab_label (char *name, char *icon_file);
+void plugin_load (char *name);
 
 #endif

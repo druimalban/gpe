@@ -40,8 +40,10 @@
 
 /* everything else */
 #include "main.h"
+
 #include "cfg.h"
 #include "package.h"
+#include "plugin.h"
 #include "popupmenu.h"
 #include "xsi.h"
 
@@ -225,11 +227,20 @@ gint btn_leave (GtkWidget *btn, GdkEventCrossing *event)
 	return TRUE;
 }
 
-/* Remove the tabs from the notebook */
-void clear_tabs ()
+/* Remove the appmgr (not plugin) tabs from the notebook */
+void clear_appmgr_tabs ()
 {
-	while (gtk_notebook_get_current_page (GTK_NOTEBOOK(notebook)) != -1)
-		gtk_notebook_remove_page (GTK_NOTEBOOK(notebook), 0);
+	int i=0;
+	while (1) {
+		GtkWidget *page;
+		page = gtk_notebook_get_nth_page(GTK_NOTEBOOK(notebook),i);
+		if (page == NULL)
+			return;
+		if (!GTK_IS_SOCKET(page))
+			gtk_notebook_remove_page (GTK_NOTEBOOK(notebook), i);
+		else
+			i++;
+	}
 }
 
 char *find_icon (char *base)
@@ -636,22 +647,18 @@ GtkWidget *create_tab (GList *all_items, char *current_group, tab_view_style sty
 	return sw;
 }
 
-/* Creates the image/label combo for the tab
- * of a specified group.
+/* Creates the image/label combo for a tab.
  */
-GtkWidget *create_group_tab_label (char *group)
+GtkWidget *create_tab_label (char *name, char *icon_file)
 {
 	GtkWidget *img=NULL,*lbl,*hb;
-	char *icon_file;
 
-	icon_file = g_strdup_printf ("/usr/share/pixmaps/group_%s.png", group);
 	img = pixmap_from_file(icon_file);
-	g_free (icon_file);
 
 	if (!img)
 		img = pixmap_from_file("/usr/share/pixmaps/menu_unknown_group16.png");
 
-	lbl = gtk_label_new (group);
+	lbl = gtk_label_new (name);
 
 	hb = gtk_hbox_new (FALSE, 0);
 	if (img)
@@ -661,6 +668,21 @@ GtkWidget *create_group_tab_label (char *group)
 	gtk_widget_show_all (hb);
 	if (cfg_options.auto_hide_group_labels)
 		gtk_widget_hide (lbl);
+
+	return hb;
+}
+
+/* Creates the image/label combo for the tab
+ * of a specified group.
+ */
+GtkWidget *create_group_tab_label (char *group)
+{
+	GtkWidget *hb;
+	char *icon_file;
+
+	icon_file = g_strdup_printf ("/usr/share/pixmaps/group_%s.png", group);
+	hb = create_tab_label (group, icon_file);
+	g_free (icon_file);
 
 	return hb;
 }
@@ -686,11 +708,12 @@ void refresh_tabs ()
 {
 	GList *l;
 	int old_tab;
+
 	TRACE ("refresh_tabs");
 
 	old_tab = gtk_notebook_get_current_page (GTK_NOTEBOOK(notebook));
 
-	clear_tabs ();
+	clear_appmgr_tabs ();
 
 	/* Create the 'All' tab if wanted */
 	if (cfg_options.show_all_group)
@@ -999,7 +1022,7 @@ void create_main_window()
 	   Now we use a timeout to make sure it doesn't happen.
 	   We need to come up with a "real" solution.
 	*/
-	gtk_timeout_add (1000, (GtkFunction)cb_win_draw, NULL);
+	gtk_timeout_add (2000, (GtkFunction)cb_win_draw, NULL);
 
 	notebook = gtk_notebook_new ();
 	gtk_notebook_set_homogeneous_tabs(GTK_NOTEBOOK(notebook), FALSE);
@@ -1027,6 +1050,9 @@ void create_main_window()
 	gtk_container_add (GTK_CONTAINER (window), vbox);
 
 	gtk_widget_show_all (window);
+
+	/* Example plugin usage:
+	 plugin_load ("plug"); */
 }
 
 /* clean_up():
