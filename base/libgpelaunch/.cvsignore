@@ -8,4 +8,19 @@ config.cache
 config.status
 Makefile
 *.la
+configure
+config.h.in
+depcomp
+config.guess
+config.sub
+aclocal.m4
+Makefile.in
+install-sh
+missing
+ltmain.sh
+stamp-h1
+libtool
+*.pc
+*.tar.gz
+*.tar.bz2
 
