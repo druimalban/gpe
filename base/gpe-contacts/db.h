@@ -3,6 +3,8 @@
 
 #include <glib.h>
 
+#include <gpe/pim-categories.h>
+
 #define CONFIG_PANEL 0
 
 extern int db_open (void);
@@ -36,9 +38,7 @@ extern gboolean db_delete_by_uid (guint uid);
 extern void db_set_multi_data (struct person *p, gchar *tag, gchar *value);
 extern void db_delete_tag (struct person *p, gchar *tag);
 
-extern gboolean db_insert_category (gchar *, guint *);
 extern GSList *db_get_entries_alpha (const gchar* alphalist);
-extern gboolean db_delete_category (guint id);
 extern gint db_get_tag_list (gchar ***list);
 extern gint db_get_config_values (gint group, gchar ***list);
 extern void db_add_config_values (gint group, gchar *identifier, gchar *value);
@@ -47,16 +47,5 @@ extern gchar* db_get_config_tag (gint group, const gchar *tagname);
 extern void db_free_result(char** table);
 
 extern gint sort_entries (struct person * a, struct person * b);
-
-struct category
-{
-  guint id;
-  gchar *name;
-};
-
-extern GSList *db_get_categories (void);
-extern void db_free_categories (GSList *list);
-
-extern gchar *db_get_category_name (guint id);
 
 #endif

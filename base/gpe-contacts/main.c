@@ -41,7 +41,6 @@
 static GtkWidget *categories_smenu;
 gchar *active_chars;
 GtkWidget *mainw;
-gboolean panel_config_has_changed = FALSE;
 GtkListStore *list_store;
 GtkWidget *list_view;
 
@@ -130,30 +129,22 @@ load_tab_config ()
 }
 
 void
-load_panel_config ()
+load_panel_config (void)
 {
   gchar **list;
   gint count, i;
-  GtkWidget *lleft, *lright, *table, *container;
+  GtkWidget *lleft, *lright, *table;
+  GList *wlist, *iter;
 
-  if (panel_config_has_changed)
-    {
-      panel_config_has_changed = FALSE;
-      table = lookup_widget (mainw, "tabDetail");
-      container = lookup_widget (mainw, "pDetail");
-      gtk_container_remove (GTK_CONTAINER (container), table);
-      gtk_widget_destroy (table);
-      table = gtk_table_new (1, 2, FALSE);
-      gtk_widget_set_name (table, "tabDetail");
-      gtk_widget_ref (table);
-      gtk_object_set_data_full (GTK_OBJECT (mainw), "tabDetail", table,
-				(GtkDestroyNotify) gtk_widget_unref);
-      gtk_widget_show (table);
-      gtk_container_add (GTK_CONTAINER (container), table);
-      gtk_table_set_col_spacings (GTK_TABLE (table), 6);
-    }
-  else
-    table = lookup_widget (mainw, "tabDetail");
+  table = lookup_widget (mainw, "tabDetail");
+
+  wlist = gtk_container_get_children (GTK_CONTAINER (table));
+
+  for (iter = wlist; iter; iter = iter->next)
+    gtk_container_remove (GTK_CONTAINER (table), GTK_WIDGET (iter->data));
+
+  g_list_free (wlist);
+
   count = db_get_config_values (CONFIG_PANEL, &list);
   for (i = 0; i < count; i++)
     {
@@ -169,14 +160,14 @@ load_panel_config ()
       gtk_table_attach (GTK_TABLE (table), lright, 1, 2, i, i + 1, GTK_FILL,
 			GTK_FILL, 2, 2);
     }
-  db_free_result (list);
 
+  db_free_result (list);
 }
 
 static void
 update_categories (void)
 {
-  GSList *categories = db_get_categories (), *iter;
+  GSList *categories = gpe_pim_categories_list (), *iter;
   GtkWidget *menu = categories_smenu;
 
   gtk_simple_menu_flush (GTK_SIMPLE_MENU (menu));
@@ -185,11 +176,11 @@ update_categories (void)
 
   for (iter = categories; iter; iter = iter->next)
     {
-      struct category *c = iter->data;
+      struct gpe_pim_category *c = iter->data;
       gtk_simple_menu_append_item (GTK_SIMPLE_MENU (menu), c->name);
     }
 
-  db_free_categories (categories);
+  g_slist_free (categories);
 }
 
 static void
@@ -226,7 +217,9 @@ export_contact (GtkWidget * widget, gpointer d)
 static void
 new_contact (GtkWidget * widget, gpointer d)
 {
-  edit_person (NULL);
+  struct person *p;
+  p = new_person ();
+  edit_person (p);
 }
 
 static void
@@ -381,7 +374,7 @@ main_view_switch_page (GtkNotebook * notebook,
 }
 
 static gboolean
-match_for_search (struct person *p, const gchar *text, struct category *cat)
+match_for_search (struct person *p, const gchar *text, struct gpe_pim_category *cat)
 {
   gchar *lname = g_utf8_strdown (p->name, -1);
 
@@ -425,17 +418,17 @@ do_search (GObject *obj, GtkWidget *entry)
   gchar *text = g_utf8_strdown (gtk_entry_get_text (GTK_ENTRY (entry)), -1);
   guint category = gtk_option_menu_get_history (GTK_OPTION_MENU (categories_smenu));
   GSList *all_entries = db_get_entries (), *iter;
-  struct category *c = NULL;
+  struct gpe_pim_category *c = NULL;
 
   if (category)
     {
-      GSList *l = db_get_categories ();
+      GSList *l = gpe_pim_categories_list ();
       GSList *ll = g_slist_nth (l, category - 1);
 
       if (ll)
 	c = ll->data;
 
-      db_free_categories (l);
+      g_slist_free (l);
     }
 
   all_entries = g_slist_sort (all_entries, (GCompareFunc)sort_entries);

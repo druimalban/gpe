@@ -5,6 +5,7 @@ pkgdatadir = $(PREFIX)/share/$(PACKAGE)
 CVSBUILD = yes
 STRIP = strip
 VERSION = 0.16
+DEBUG = no
 
 LINGUAS = de sv cs nl hu ro ru sr sk
 
@@ -27,15 +28,15 @@ endif
 CPPFLAGS += -D_GNU_SOURCE -DENABLE_NLS
 
 CPPFLAGS += -I../libdisplaymigration
-LDFLAGS += -L../libdisplaymigration -ldisplaymigration
+LDFLAGS += -L../libdisplaymigration -ldisplaymigration -L../libgpepimc -lgpepimc
 
 LDFLAGS += -lsqlite
 
-CFLAGS = $(GTKCFLAGS) -I../libgpewidget -Wall `pkg-config --cflags libxml-2.0`
+CFLAGS = $(GTKCFLAGS) -I../libgpepimc -I../libgpewidget -Wall `pkg-config --cflags libxml-2.0`
 CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 CFLAGS += -MD
 
-MEMBERS = db editing main structure support categories configure
+MEMBERS = db editing main structure support configure old-db
 
 DEPS = $(patsubst %,%.d,$(MEMBERS))
 OBJS = $(patsubst %,%.o,$(MEMBERS))

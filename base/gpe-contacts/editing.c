@@ -15,11 +15,11 @@
 #include <gpe/pixmaps.h>
 #include <gpe/gtkdatecombo.h>
 #include <gpe/picturebutton.h>
+#include <gpe/pim-categories-ui.h>
 
 #include "support.h"
 #include "structure.h"
 #include "db.h"
-#include "categories.h"
 
 void on_edit_cancel_clicked (GtkButton * button, gpointer user_data);
 void on_edit_save_clicked (GtkButton * button, gpointer user_data);
@@ -370,39 +370,85 @@ retrieve_special_fields (GtkWidget * edit, struct person *p)
   }
 }
 
-static gchar *
-build_categories_string (struct person *p)
+static GSList *
+get_categories_list (struct person *p)
 {
-  gchar *s = NULL;
-  GSList *iter = p->data;
+  GSList *iter;
+  GSList *list = NULL;
+
+  iter = p->data;
 
   for (; iter; iter = iter->next)
     {
       struct tag_value *t = iter->data;
       if (!strcasecmp (t->tag, "category"))
 	{
-	  gchar *cat;
-	  cat = db_get_category_name (atoi (t->value));
+	  int id = atoi (t->value);
 
-	  if (cat)
-	    {
-	      if (s)
-		{
-		  char *ns = g_strdup_printf ("%s, %s", s, cat);
-		  g_free (s);
-		  s = ns;
-		}
-	      else
-		s = g_strdup (cat);
-	    }
+	  list = g_slist_prepend (list, (gpointer)id);
 	}
     }
+
+  return list;
+}
+
+static gchar *
+build_categories_string (struct person *p)
+{
+  gchar *s = NULL;
+  GSList *iter, *list;
+
+  list = get_categories_list (p);
+
+  for (iter = list; iter; iter = iter->next)
+    {
+      const gchar *cat;
+      cat = gpe_pim_category_name ((int)iter->data);
+
+      if (cat)
+	{
+	  if (s)
+	    {
+	      char *ns = g_strdup_printf ("%s, %s", s, cat);
+	      g_free (s);
+	      s = ns;
+	    }
+	  else
+	    s = g_strdup (cat);
+	}
+    }
+
+  g_slist_free (list);
 
   return s;
 }
 
 static void
-store_special_fields (GtkWidget * edit, struct person *p)
+update_categories_list (GtkWidget *ui, GSList *selected, GtkWidget *edit)
+{
+  struct person *p;
+  gchar *str;
+  GtkWidget *w;
+  GSList *iter;
+
+  p = g_object_get_data (G_OBJECT (edit), "person");
+
+  db_delete_tag (p, "category");
+
+  for (iter = selected; iter; iter = iter->next)
+    {
+      db_set_multi_data (p, "category", g_strdup_printf ("%d", (int)iter->data));
+    }
+
+  str = build_categories_string (p);
+  
+  w = lookup_widget (edit, "categories-label");
+  gtk_label_set_text (GTK_LABEL (w), str);
+  g_free (str);
+}
+
+static void
+store_special_fields (GtkWidget *edit, struct person *p)
 {
   GtkWidget *w;
   struct tag_value *v;
@@ -419,12 +465,15 @@ store_special_fields (GtkWidget * edit, struct person *p)
   else
     gtk_date_combo_clear (GTK_DATE_COMBO (w));
 
-  str = build_categories_string (p);
-  if (str)
+  if (p)
     {
-      w = lookup_widget (edit, "categories-label");
-      gtk_label_set_text (GTK_LABEL (w), str);
-      g_free (str);
+      str = build_categories_string (p);
+      if (str)
+	{
+	  w = lookup_widget (edit, "categories-label");
+	  gtk_label_set_text (GTK_LABEL (w), str);
+	  g_free (str);
+	}
     }
 }
 
@@ -466,8 +515,6 @@ on_edit_save_clicked (GtkButton * button, gpointer user_data)
   GtkWidget *edit = (GtkWidget *) user_data;
   GSList *tags;
   struct person *p = g_object_get_data (G_OBJECT (edit), "person");
-  if (p == NULL)
-    p = new_person ();
   
   for (tags = g_object_get_data (G_OBJECT (edit), "tag-widgets");
        tags; tags = tags->next)
@@ -501,10 +548,11 @@ void
 on_categories_clicked (GtkButton *button, gpointer user_data)
 {
   struct person *p;
+  GtkWidget *w;
 
   p = g_object_get_data (G_OBJECT (user_data), "person");
 
-  change_categories (p);
+  w = gpe_pim_categories_dialog (get_categories_list (p), G_CALLBACK (update_categories_list), user_data);
 }
 
 void 

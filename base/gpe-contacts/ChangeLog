@@ -1,3 +1,42 @@
+2004-02-22  Phil Blundell  <pb@nexus.co.uk>
+
+	* main.c (panel_config_has_changed): Delete.
+	(load_panel_config): Rewrite.
+	(new_contact): Create new person struct here.
+
+	* editing.c (build_categories_string): Use libgpepimc.
+	(get_categories_list): New.
+	(update_categories_list): Likewise.
+	(store_special_fields): Don't handle p==NULL.
+
+	* db.c (db_open): Don't create categories table.
+	(db_get_config_values): Use g_strdup_printf.
+
+	* configure.c (on_bDetAdd_clicked): Rewrite with GtkListStore and GtkTreeView.
+	(on_bDetRemove_clicked): Likewise.
+	(create_pageSetup): Likewise.
+	(on_clist8_select_row, on_clist8_unselect_row): Deleted.
+	(on_setup_destroy): Deleted.
+	(configure_ok_clicked): New.
+	(configure): Add Cancel button.
+
+2004-02-22  Phil Blundell  <pb@nexus.co.uk>
+
+	* old-db.c: New.
+	* Makefile (MEMBERS): Add old-db.
+
+	* db.c (db_open): Don't create categories table.  Initialize
+	libgpepimc.  Call migrate_old_categories().
+	(load_one_attribute): Deleted.
+	(db_get_categories): Deleted.
+	(db_free_categories): Deleted.
+	(db_get_category_name): Deleted.
+	* db.h (struct category): Deleted.
+	(db_get_categories): Deleted.
+	(db_free_categories): Deleted.
+	(db_get_category_name): Deleted.
+	(db_insert_category, db_delete_category): Deleted.
+
 2004-02-17  Philip Blundell  <philb@gnu.org>
 
 	* callbacks.c: Deleted.

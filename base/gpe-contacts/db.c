@@ -29,13 +29,11 @@
 #include <sqlite.h>
 static sqlite *db;
 
-extern GtkWidget *clist;
+extern void migrate_old_categories (sqlite *db);
 
 static const char *schema_str = "create table contacts (urn INTEGER NOT NULL, tag TEXT NOT NULL, value TEXT NOT NULL);";
 
 static const char *schema2_str = "create table contacts_urn (urn INTEGER PRIMARY KEY);";
-
-static const char *schema3_str = "create table contacts_category (id INTEGER PRIMARY KEY, description TEXT);";
 
 // this one is for config data
 static const char *schema4_str = "create table contacts_config (id INTEGER PRIMARY KEY,	cgroup INTEGER NOT NULL, cidentifier TEXT NOT NULL, cvalue TEXT);";
@@ -69,7 +67,6 @@ db_open (void)
 
   sqlite_exec (db, schema_str, NULL, NULL, NULL);
   sqlite_exec (db, schema2_str, NULL, NULL, NULL);
-  sqlite_exec (db, schema3_str, NULL, NULL, NULL);
   // if we can create this table, we should add some defaults
   if (sqlite_exec (db, schema4_str, NULL, NULL, NULL) == SQLITE_OK)
     {
@@ -77,6 +74,11 @@ db_open (void)
       db_add_config_values (CONFIG_PANEL, _("Phone"), "HOME.TELEPHONE");
       db_add_config_values (CONFIG_PANEL, _("EMail"), "HOME.EMAIL");
     }
+
+  gpe_pim_categories_init ();
+
+  migrate_old_categories (db);
+
   return 0;
 }
 
@@ -447,73 +449,6 @@ db_delete_category (guint id)
 }
 
 static int
-load_one_attribute (void *arg, int argc, char **argv, char **names)
-{
-  if (argc == 2)
-    {
-      GSList **list = (GSList **) arg;
-      struct category *c = g_malloc (sizeof (struct category));
-
-      c->id = atoi (argv[0]);
-      c->name = g_strdup (argv[1]);
-
-      *list = g_slist_prepend (*list, c);
-    }
-
-  return 0;
-}
-
-GSList *
-db_get_categories (void)
-{
-  GSList *list = NULL;
-  char *err;
-  if (
-      sqlite_exec
-      (db, "select id,description from contacts_category",
-       load_one_attribute, &list, &err))
-    {
-      fprintf (stderr, "sqlite: %s\n", err);
-      free (err);
-      return NULL;
-    }
-  
-  return list;
-}
-
-void
-db_free_categories (GSList *list)
-{
-  GSList *iter;
-
-  for (iter = list; iter; iter = iter->next)
-    {
-      struct category *c = iter->data;
-
-      g_free (c->name);
-      g_free (c);
-    }
-
-  g_slist_free (list);
-}
-
-gchar *
-db_get_category_name (guint id)
-{
-  GSList *iter;
-
-  for (iter = db_get_categories (); iter; iter = iter->next)
-    {
-      struct category *c = iter->data;
-
-      if (c->id == id)
-	return c->name;
-    }
-
-  return NULL;
-}
-
-static int
 read_one_entry_alpha (void *arg, int argc, char **argv, char **names)
 {
   struct person *p = new_person ();
@@ -624,16 +559,16 @@ db_get_config_values (gint group, gchar *** list)
   gchar *err, *statement;
   gint r, c;
 
-  statement = g_malloc (sizeof (gchar) * 100);
-  sprintf (statement,
-	   "select cidentifier,cvalue from contacts_config where cgroup=%i",
-	   group);
+  statement = g_strdup_printf ("select cidentifier,cvalue from contacts_config where cgroup=%i",
+			       group);
+
   sqlite_get_table (db, statement, list, &r, &c, &err);
   if (err)
     {
       fprintf (stderr,"e: %s\n", err);
       g_free (err);
     }
+
   g_free (statement);
   return r;
 }
@@ -710,3 +645,4 @@ db_free_result (char **table)
 {
   sqlite_free_table (table);
 }
+
