@@ -4,12 +4,12 @@ DEBUG = yes
 
 LINGUAS = 
 
-MEMBERS = migrate auth
+MEMBERS = migrate auth crypt
 
 SONAME = libdm.so.0
 CONTROL = control
 
-CFLAGS += -DPREFIX=\"$(PREFIX)\" -DPACKAGE=\"$(PACKAGE)\" -D_GNU_SOURCE -Wall -fPIC
+CFLAGS += -DPREFIX=\"$(PREFIX)\" -DPACKAGE=\"$(PACKAGE)\" -D_GNU_SOURCE -Wall -fPIC -DDEBUG
 ifeq ($(DEBUG),yes)
 CFLAGS += -O2 -g
 LDFLAGS += -g

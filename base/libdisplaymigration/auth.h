@@ -18,11 +18,11 @@ struct rsa_key
   GcryMPI n, e, d, p, q, u;
 };
 
-extern void update_challenge (void);
-extern void generate_challenge (void);
+extern void libdm_auth_update_challenge (void);
+extern void libdm_auth_generate_challenge (void);
 
-extern gboolean check_rsa_sig (char *display, char *data);
+extern gboolean libdm_auth_validate_request (char *display, char *data);
 
-extern void create_hash (char *display, char *challenge, size_t len, char *result);
+extern gchar *libdm_auth_challenge_string;
 
 #endif

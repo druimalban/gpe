@@ -11,6 +11,7 @@
 #include <ctype.h>
 #include <libintl.h>
 #include <string.h>
+#include <stdio.h>
 
 #include <X11/X.h>
 #include <X11/Xlib.h>
@@ -38,8 +39,6 @@ static gboolean enabled;
 static gboolean no_auth;
 
 static GSList *all_widgets;
-
-extern char *challenge_string;
 
 static int
 do_change_display (GtkWidget *w, char *display_name)
@@ -81,7 +80,8 @@ static void
 set_challenge_on_window (GdkWindow *window)
 {
   gdk_property_change (window, rsa_challenge_gdkatom, string_gdkatom,
-		       8, GDK_PROP_MODE_REPLACE, challenge_string, strlen (challenge_string));
+		       8, GDK_PROP_MODE_REPLACE, libdm_auth_challenge_string, 
+		       strlen (libdm_auth_challenge_string));
 }
 
 static void
@@ -89,7 +89,7 @@ update_challenge_on_windows (void)
 {
   GSList *i;
 
-  update_challenge ();
+  libdm_auth_update_challenge ();
 
   for (i = all_widgets; i; i = i->next)
     {
@@ -152,6 +152,8 @@ handle_request (GdkWindow *gwindow, char *prop)
 	}
     }
 
+  fprintf (stderr, "target %s; auth %s; data %s\n", target, auth_method, auth_data);
+
   if (!strcasecmp (auth_method, "null"))
     {
       if (no_auth == FALSE)
@@ -159,7 +161,7 @@ handle_request (GdkWindow *gwindow, char *prop)
     }
   else if (!strcasecmp (auth_method, "rsa-sig"))
     {
-      if (check_rsa_sig (target, auth_data) == FALSE)
+      if (libdm_auth_validate_request (target, auth_data) == FALSE)
 	return DISPLAY_CHANGE_AUTHENTICATION_BAD;
     }
   else
@@ -200,7 +202,10 @@ filter_func (GdkXEvent *xevp, GdkEvent *ev, gpointer p)
 		{
 		  if (actual_type == string_gdkatom && actual_length > 8)
 		    {
-		      int rc =  handle_request (gwindow, prop);
+		      int rc = handle_request (gwindow, prop);
+#ifdef DEBUG
+		      fprintf (stderr, "returning code %d\n", rc);
+#endif
 		      generate_response (gdisplay, xev->display, xev->window, rc);
 		    }
 
@@ -261,5 +266,5 @@ libdm_init (void)
   display_change_gdkatom = gdk_atom_intern ("_GPE_DISPLAY_CHANGE", FALSE);
   rsa_challenge_gdkatom = gdk_atom_intern ("_GPE_DISPLAY_CHANGE_RSA_CHALLENGE", FALSE);
 
-  generate_challenge ();
+  libdm_auth_generate_challenge ();
 }

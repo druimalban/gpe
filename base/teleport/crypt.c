@@ -15,70 +15,82 @@
 #include <gcrypt.h>
 
 #include "auth.h"
+#include "crypt.h"
 
 static struct rsa_key private_key;
-
-static GcryMPI
-mpi_from_sexp (GcrySexp r, char *tag)
-{
-  GcrySexp s = gcry_sexp_find_token (r, tag, 0);
-  return gcry_sexp_nth_mpi (s, 1, GCRYMPI_FMT_STD);
-}
-
-static char *
-hex_from_mpi (GcryMPI m)
-{
-  char *buf;
-
-  gcry_mpi_aprint (GCRYMPI_FMT_HEX, (void *)&buf, NULL, m);
-
-  return buf;
-}
-
-static gboolean
-sign_hash (struct rsa_key *k, char *hash, gchar **result)
-{
-  GcryMPI mpi;
-  GcrySexp data, sig, key;
-  size_t nb = 19;
-  int rc;
-  char *hex;
-
-  gcry_mpi_scan (&mpi, GCRYMPI_FMT_USG, hash, &nb);
-
-  gcry_sexp_build (&data, NULL, "(data (flags pkcs1) (hash sha1 %m))", mpi);
-  
-  gcry_sexp_build (&key, NULL, "(private-key (rsa (n %m) (e %m) (d %m) (p %m) (q %m) (u %m)))",
-		   k->n, k->e, k->d, k->p, k->q, k->u);
-
-  rc = gcry_pk_sign (&sig, data, key);
-
-  gcry_sexp_release (data);
-  gcry_sexp_release (key);
-  gcry_mpi_release (mpi);
-
-  if (rc)
-    return FALSE;
-
-  mpi = mpi_from_sexp (sig, "s");
-  hex = hex_from_mpi (mpi);
-  *result = g_strdup (hex);
-  gcry_free (hex);
-  gcry_mpi_release (mpi);
-
-  return TRUE;
-}
+static u_int32_t key_id;
 
 gchar *
 sign_challenge (gchar *text, int length, gchar *target)
 {
   char hash[20];
-  gchar *result;
+  gchar *sig, *result;
 
-  create_hash (target, text, length, hash);
+  memset (hash, 0, sizeof (hash));
 
-  if (sign_hash (&private_key, hash, &result) == FALSE)
-    return NULL;
-  
+  libdm_crypt_create_hash (target, text, length, hash);
+  if (libdm_crypt_sign_hash (&private_key, hash, &sig) == FALSE)
+    {
+      fprintf(stderr, "sign_challenge: return NULL\n");
+      return NULL;
+    }
+
+  result = g_strdup_printf ("%08x %s", key_id, sig);
+  g_free (sig);
+
   return result;
+}
+
+static gboolean
+parse_key (char *s, struct rsa_key *r)
+{
+  GcryMPI n, e, d, p, q, u;
+  char *sp;
+
+  sp = strtok (s, " \n");
+  key_id = strtoul (sp, NULL, 16);
+  sp = strtok (NULL, " \n");
+  gcry_mpi_scan (&e, GCRYMPI_FMT_HEX, sp, NULL);
+  sp = strtok (NULL, " \n");
+  gcry_mpi_scan (&d, GCRYMPI_FMT_HEX, sp, NULL);
+  sp = strtok (NULL, " \n");
+  gcry_mpi_scan (&n, GCRYMPI_FMT_HEX, sp, NULL);
+  sp = strtok (NULL, " \n");
+  gcry_mpi_scan (&p, GCRYMPI_FMT_HEX, sp, NULL);
+  sp = strtok (NULL, " \n");
+  gcry_mpi_scan (&q, GCRYMPI_FMT_HEX, sp, NULL);
+  sp = strtok (NULL, " \n");
+  gcry_mpi_scan (&u, GCRYMPI_FMT_HEX, sp, NULL);
+
+  memset (r, 0, sizeof (r));
+
+  r->e = e;
+  r->d = d;
+  r->n = n;
+  r->p = p;
+  r->q = q;
+  r->u = u;
+
+  return TRUE;
+}
+
+void
+crypt_init (void)
+{
+  const gchar *home_dir = g_get_home_dir ();
+  gchar *filename = g_strdup_printf ("%s/.gpe/migrate/secret", home_dir);
+  FILE *fp = fopen (filename, "r");
+
+  if (fp)
+    {
+      char buffer[4096];
+      if (fgets (buffer, 4096, fp))
+	parse_key (buffer, &private_key);
+      fclose (fp);
+    }
+
+  g_free (filename);
+
+  gcry_control (GCRYCTL_INIT_SECMEM, 1);
+  gcry_check_version (NULL);
 }

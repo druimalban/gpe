@@ -18,6 +18,13 @@
 
 static gchar *home_dir;
 
+static GcryMPI
+mpi_from_sexp (GcrySexp r, char *tag)
+{
+  GcrySexp s = gcry_sexp_find_token (r, tag, 0);
+  return gcry_sexp_nth_mpi (s, 1, GCRYMPI_FMT_STD);
+}
+
 char *
 hex_from_mpi (GcryMPI m)
 {
@@ -94,7 +101,7 @@ write_secret (struct rsa_key *k)
 {
   gchar *filename = g_strdup_printf ("%s/.gpe/migrate/secret", home_dir);
   int fd;
-  char *n, *d, *id, *p, *q, *u;
+  char *n, *d, *id, *p, *q, *u, *e;
   size_t len;
   gchar *buf;
   
@@ -104,6 +111,7 @@ write_secret (struct rsa_key *k)
     return FALSE;
 
   n = hex_from_mpi (k->n);
+  e = hex_from_mpi (k->e);
   d = hex_from_mpi (k->d);
   p = hex_from_mpi (k->p);
   q = hex_from_mpi (k->q);
@@ -111,7 +119,7 @@ write_secret (struct rsa_key *k)
   len = strlen (n);
   id = n + (len - 8);
 
-  buf = g_strdup_printf ("%s %s %s %s %s %s\n", id, d, n, p, q, u);
+  buf = g_strdup_printf ("%s %s %s %s %s %s %s\n", id, e, d, n, p, q, u);
 
   gcry_free (n);
   gcry_free (d);

@@ -81,6 +81,14 @@ migrate_to (Display *dpy, Window w, char *host, int display, int screen)
     {
       auth = "RSA-SIG";
       data = sign_challenge (prop, nitems, target);
+      if (data == NULL)
+	{
+	  g_free (target);
+	  if (prop)
+	    XFree (prop);
+	  fprintf (stderr, "Key signing failed!\n");
+	  return;
+	}
     }
 
   if (prop)
@@ -391,6 +399,8 @@ main (int argc, char *argv[])
   list_store = gtk_list_store_new (2, G_TYPE_STRING, G_TYPE_POINTER);
 
   gdk_window_add_filter (NULL, window_filter, NULL);
+
+  crypt_init ();
 
   open_window ();
 

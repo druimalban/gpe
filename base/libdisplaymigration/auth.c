@@ -11,28 +11,30 @@
 #include <stdio.h>
 #include <string.h>
 #include <glib.h>
+#include <assert.h>
 
 #include "auth.h"
+#include "crypt.h"
 
 #define CHALLENGE_LEN 64
 
-gchar *challenge_string;
+gchar *libdm_auth_challenge_string;
 
 static unsigned char challenge_bytes[CHALLENGE_LEN];
 static unsigned long challenge_seq;
 
-#define hexbyte(a)  (((a) >= 10) ? (a) + 'a' - 10 : (a) + '0')
+#define hexbyte(x)  ((x) >= 10 ? (x) + 'a' - 10 : (x) + '0')
 
 void 
-update_challenge (void)
+libdm_auth_update_challenge (void)
 {
   int i;
   unsigned char *p;
 
-  if (challenge_string == NULL)
-    challenge_string = g_malloc ((CHALLENGE_LEN * 2) + 9);
+  if (libdm_auth_challenge_string == NULL)
+    libdm_auth_challenge_string = g_malloc ((CHALLENGE_LEN * 2) + 9);
 
-  p = challenge_string;
+  p = libdm_auth_challenge_string;
 
   for (i = 0; i < CHALLENGE_LEN; i++)
     {
@@ -44,56 +46,10 @@ update_challenge (void)
 }
 
 void
-generate_challenge (void)
+libdm_auth_generate_challenge (void)
 {
   gcry_randomize (challenge_bytes, sizeof (challenge_bytes), GCRY_STRONG_RANDOM);
-  update_challenge ();
-}
-
-void
-create_hash (char *display, char *challenge, size_t len, char *result)
-{
-  size_t dlen = strlen (display);
-  gchar *buf = g_malloc (dlen + 1 + len);
-  strcpy (buf, display);
-  memcpy (buf + dlen + 1, challenge, len);
-  gcry_md_hash_buffer (GCRY_MD_SHA1, result, buf, len + dlen + 1);
-  g_free (buf);
-}
-
-gboolean
-check_signature (struct rsa_key *k, char *hash, char *sigbuf)
-{
-  GcryMPI mpi, mpi2;
-  GcrySexp data, sig, key;
-  size_t nb = 19;
-  int rc;
-
-  gcry_mpi_scan (&mpi, GCRYMPI_FMT_USG, hash, &nb);
-
-  gcry_sexp_build (&data, NULL, "(data (flags pkcs1) (hash sha1 %m))", mpi);
-  
-  gcry_mpi_release (mpi);
-
-  gcry_sexp_build (&key, NULL, "(public-key (rsa (n %m) (e %m)))",
-		   k->n, k->e, k->d, k->p, k->q, k->u);
-
-  gcry_mpi_scan (&mpi2, GCRYMPI_FMT_HEX, sigbuf, NULL);
-
-  gcry_sexp_build (&sig, NULL, "(sig-val (rsa (s %m)))", mpi2);
-
-  rc = gcry_pk_verify (sig, data, key);
-
-  gcry_sexp_release (data);
-  gcry_sexp_release (key);
-  gcry_sexp_release (sig);
-  gcry_mpi_release (mpi);
-  gcry_mpi_release (mpi2);
-
-  if (rc)
-    return FALSE;
-
-  return TRUE;
+  libdm_auth_update_challenge ();
 }
 
 static struct rsa_key *
@@ -101,13 +57,12 @@ parse_pubkey (char *s)
 {
   struct rsa_key *r;
   GcryMPI n, e;
-  char *p = strchr (s, ' ');
-  if (p == NULL)
-    return NULL;
-  *p++ = 0;
-  
-  gcry_mpi_scan (&e, GCRYMPI_FMT_HEX, s, NULL);
-  gcry_mpi_scan (&n, GCRYMPI_FMT_HEX, p, NULL);
+  gchar *sp;
+
+  sp = strtok (s, " \n");
+  gcry_mpi_scan (&e, GCRYMPI_FMT_HEX, sp, NULL);
+  sp = strtok (NULL, " \n");
+  gcry_mpi_scan (&n, GCRYMPI_FMT_HEX, sp, NULL);
 
   r = g_malloc0 (sizeof (struct rsa_key));
   r->e = e;
@@ -162,7 +117,7 @@ free_pubkey (struct rsa_key *k)
 }
 
 gboolean
-check_rsa_sig (char *display, char *data)
+libdm_auth_validate_request (char *display, char *data)
 {
   u_int32_t key_id;
   char *ep;
@@ -188,9 +143,9 @@ check_rsa_sig (char *display, char *data)
   if (k == NULL)
     return FALSE;
 
-  create_hash (display, challenge_string, strlen (challenge_string), hash);
-
-  rc = check_signature (k, hash, p);
+  libdm_crypt_create_hash (display, libdm_auth_challenge_string, 
+			   strlen (libdm_auth_challenge_string), hash);
+  rc = libdm_crypt_check_signature (k, hash, p);
 
   free_pubkey (k);
 

@@ -1,5 +1,6 @@
 PREFIX = /usr/local
 PACKAGE = teleport
+DEBUG = yes
 
 LINGUAS = 
 
@@ -17,17 +18,25 @@ MEMBERS = teleport crypt
 CFLAGS += -I../libdm `libgcrypt-config --cflags`
 LDFLAGS += -L../libdm -ldm `libgcrypt-config --libs`
 
+ifeq ($(DEBUG),yes)
+CFLAGS += -O -g
+LDFLAGS += -g
+else
 CFLAGS += -Os -fomit-frame-pointer
 LDFLAGS += 
+endif
 
 DEPS = $(patsubst %,%.d,$(MEMBERS))
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
-all: teleport all-mo
+all: teleport all-mo keygen
 
 teleport: $(OBJS)
 	$(CC) -o $@ $^ -L../libgpewidget -lgpewidget $(GTKLDFLAGS) $(LDFLAGS)
+
+keygen: keygen.o
+	$(CC) -o $@ $^ $(LDFLAGS)
 
 clean:
 	rm -f teleport $(OBJS) $(DEPS)
