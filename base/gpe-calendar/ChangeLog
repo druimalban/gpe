@@ -1,3 +1,12 @@
+2004-07-19  Florian Boor <florian.boor@kernelconcepts.de>
+
+    * month_view.c: Started simple keyboard control.
+    * day_view.c: Keyboard control improvements, still not perfect.
+    * week_view.c, day_popup.c: Improved UI, event creation for wek view,
+                                fixed some bugs in time handling. 
+    * day_popup.*: Keyboard control update, parameter wether to show items 
+                   or not.
+
 2004-07-16  Florian Boor <florian.boor@kernelconcepts.de>
     
     * day_popup.c: Started some keyboard controls.

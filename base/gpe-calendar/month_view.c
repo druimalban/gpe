@@ -15,6 +15,7 @@
 #include <langinfo.h>
 
 #include <gtk/gtk.h>
+#include <gdk/gdkkeysyms.h>
 #include <glib.h>
 
 #include <gpe/event-db.h>
@@ -29,12 +30,15 @@ static GSList *day_events[32];
 static GtkWidget *datesel, *draw;
 static guint xp, xs, ys;
 static struct render_ctl *c_old;
+static guint active_day = 0;
 
 struct render_ctl
 {
   struct day_popup popup;
   gboolean valid;
   gboolean today;
+  gboolean active;
+  gboolean initialized;
 };
 
 #define TOTAL_DAYS (6 * 7)
@@ -72,7 +76,7 @@ button_press (GtkWidget *widget,
 
 	  if (c != c_old) 
 	    {
-	      pop_window = day_popup (main_window, &c->popup);
+	      pop_window = day_popup (main_window, &c->popup, TRUE);
 	      c_old = c;
 	    }
 	  else 
@@ -286,7 +290,7 @@ draw_expose_event (GtkWidget *widget,
 	  struct render_ctl *c = &rc[d];
 	  guint y = (j + 1) * ys;
 
-	  if (c->today)
+	  if (c->active)
 	    {
 	      gdk_draw_rectangle (drawable, red_gc, FALSE,
 				  x, y, xs, ys);
@@ -401,9 +405,16 @@ month_view_update ()
 	  c->popup.events = day_events[rday];
 	}
 
-      c->today = ((year == today.tm_year + 1900
+         c->today = ((year == today.tm_year + 1900
 		   && month == today.tm_mon
 		   && rday == today.tm_mday)) ? TRUE : FALSE;
+         if (!c->initialized)
+            {
+              c->active = c->today;
+              c->initialized = TRUE;
+            } 
+       if (c->active) 
+         active_day = day;            
     }
 
   gtk_widget_draw (draw, NULL);
@@ -451,9 +462,107 @@ resize_table (GtkWidget *widget,
     }
 }
 
+static gboolean
+month_view_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *user_data)
+{
+  struct render_ctl *c;
+printf("kp\n");  
+  if (k->keyval == GDK_Escape)
+    {
+          c = &rc[active_day];
+          if (c->valid)
+            {
+              if (pop_window) 
+                gtk_widget_destroy (pop_window);
+              if (c != c_old) 
+                {
+                  pop_window = day_popup (main_window, &c->popup, TRUE);
+                  c_old = c;
+                }
+              else 
+                {
+                  pop_window = NULL;
+                  c_old = NULL;
+                }
+            }    
+    }
+    
+  if (k->keyval == GDK_Down) 
+  {
+          if (active_day < TOTAL_DAYS) 
+            {
+              active_day++;
+            }
+          else
+            gtk_widget_child_focus(gtk_widget_get_toplevel(GTK_WIDGET(widget)),
+		                         GTK_DIR_DOWN);  
+          month_view_update ();
+    return TRUE;
+  }
+  if (k->keyval == GDK_Up) 
+  {
+          if (active_day) 
+            {
+              active_day--;
+            }
+          else
+            gtk_widget_child_focus(gtk_widget_get_toplevel(GTK_WIDGET(widget)),
+		                         GTK_DIR_UP);  
+          month_view_update ();
+    return TRUE;
+  }
+
+  if (k->keyval == GDK_space)
+    {
+      c = &rc[active_day];
+      if (c->valid)
+        {
+          if (pop_window) 
+            gtk_widget_destroy (pop_window);
+              if (c != c_old) 
+            {
+              pop_window = day_popup (main_window, &c->popup, FALSE);
+              c_old = c;
+            }
+           else 
+            {
+              pop_window = NULL;
+              c_old = NULL;
+            }
+         }
+         return TRUE;
+     }  
+     
+  if (k->keyval == GDK_Return)
+    {
+      c = &rc[active_day];
+      if (c->valid)
+        {
+          struct tm tm;
+          time_t selected_time;
+          localtime_r (&viewtime, &tm);
+          tm.tm_year = c->popup.year;//- 1900;
+          tm.tm_mon = c->popup.month;
+          tm.tm_mday = c->popup.day;
+          tm.tm_hour = 0;
+          tm.tm_min = 0;
+          tm.tm_sec = 0;
+          selected_time = mktime (&tm);
+          if (pop_window) 
+            gtk_widget_destroy (pop_window);
+          set_time_and_day_view (selected_time);    
+        }
+      return TRUE; 
+    }
+  
+  return FALSE;
+}
+
+
 GtkWidget *
 month_view(void)
 {
+  int day;
   GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
 
   draw = gtk_drawing_area_new ();
@@ -463,6 +572,7 @@ month_view(void)
 
   datesel = gtk_date_sel_new (GTKDATESEL_MONTH);
   gtk_widget_show (datesel);
+  gtk_widget_grab_focus(datesel);
 
   gtk_box_pack_start (GTK_BOX (vbox), datesel, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), draw, TRUE, TRUE, 0);
@@ -473,13 +583,23 @@ month_view(void)
   g_signal_connect(G_OBJECT (draw), "button-press-event",
                    G_CALLBACK (button_press), NULL);
 
-  gtk_widget_add_events (GTK_WIDGET (draw), GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
+  gtk_widget_add_events (GTK_WIDGET (draw), 
+            GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
 
+  g_signal_connect (G_OBJECT (datesel), "key_press_event", 
+		    G_CALLBACK (month_view_key_press_event), NULL);
+            
+  gtk_widget_add_events (GTK_WIDGET (datesel), 
+            GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK);
+            
   g_signal_connect(G_OBJECT (datesel), "changed",
                      G_CALLBACK (changed_callback), NULL);
 
   g_object_set_data (G_OBJECT (vbox), "update_hook",
                      (gpointer) update_hook_callback);
+                     
+  for (day = 0; day < TOTAL_DAYS; day++)
+      rc[day].initialized = FALSE;
 
   return vbox;
 }

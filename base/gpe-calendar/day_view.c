@@ -88,13 +88,44 @@ delete_event (event_t ev)
 
 
 static gboolean
-window_key_press_event (GtkWidget *clist, GdkEventKey *k, gpointer user_data)
+list_key_press_event (GtkWidget *clist, GdkEventKey *k, gpointer user_data)
 {
   int row;
   event_t ev;
   GtkWidget *w;
+  int lastrow = (int)g_object_get_data(G_OBJECT(clist),"last-row");
   
   row = (int)g_object_get_data(G_OBJECT(clist),"selected-row");
+  
+  if (k->keyval == GDK_Up)
+  {
+    gtk_clist_select_row(GTK_CLIST(clist),row-1, 0);
+    if (!row)
+      {
+        gtk_widget_child_focus(gtk_widget_get_toplevel(GTK_WIDGET(clist)),
+		                         GTK_DIR_UP);
+        return TRUE;
+      }
+    else
+      return FALSE;
+  }
+  
+  if (k->keyval == GDK_Down)
+  {
+    gtk_clist_select_row(GTK_CLIST(clist),row + 1, 0);
+    if (row == lastrow)
+      {
+        gtk_widget_child_focus(gtk_widget_get_toplevel(GTK_WIDGET(clist)),
+		                      GTK_DIR_TAB_FORWARD);
+        lastrow = -1;
+        return TRUE;
+      }
+    else
+      {
+        lastrow = row;
+        return FALSE;
+      }
+  }
   
   if (k->keyval == GDK_Return)
   {
@@ -191,6 +222,8 @@ selection_made (GtkWidget      *clist,
   event_t ev;
   GtkWidget *w;
   
+  g_object_set_data(G_OBJECT(clist),"last-row",
+    g_object_get_data(G_OBJECT(clist),"selected-row"));
   g_object_set_data(G_OBJECT(clist),"selected-row",(void *)row);
 
   if (!event) return;
@@ -454,7 +487,6 @@ day_view_update ()
         gtk_clist_set_cell_style (GTK_CLIST (day_list), row, 1, dark_style);
         row++;
       } 
-      
   }
 
   for (i = 0; i < row; i++)
@@ -499,6 +531,7 @@ day_view(void)
   gtk_widget_show (datesel);
   
   day_list = gtk_clist_new (2);
+  gtk_clist_set_selection_mode(GTK_CLIST(day_list),GTK_SELECTION_SINGLE);
   gtk_widget_show (day_list);
  
   g_signal_connect (G_OBJECT (day_list), "select_row",
@@ -521,8 +554,8 @@ day_view(void)
   scroll_adjustment = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (scrolled_window));
 
   g_signal_connect (G_OBJECT (day_list), "key_press_event", 
-		    G_CALLBACK (window_key_press_event), NULL);
-  g_object_set_data(G_OBJECT(day_list),"selected-row",(void *)-1);
+		    G_CALLBACK (list_key_press_event), NULL);
+  g_object_set_data(G_OBJECT(day_list),"selected-row",(void *)0);
             
   return vbox;
 }
