@@ -41,6 +41,9 @@ $(PACKAGE): $(OBJS)
 
 install: all
 	install -D $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
+	install -D $(PACKAGE).menu $(DESTDIR)$(PREFIX)/lib/menu/$(PACKAGE)
+	install -D gpe-soundbite-play.png $(DESTDIR)$(PREFIX)/share/pixmaps/gpe-soundbite-play.png
+	install -D gpe-soundbite-record.png $(DESTDIR)$(PREFIX)/share/pixmaps/gpe-soundbite-record.png
 	strip $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 
 upstream: clean
