@@ -89,7 +89,7 @@ freshen-po: linguas
 
 #-- Extract LINGUAS from TP stat file
 linguas: $(BUILD)/postats
-	$(BUILD)/extract-linguas $(BUILD)/postats $(PACKAGE) > linguas
+	$(BUILD)/po-extract-linguas $(BUILD)/postats $(PACKAGE) > linguas
 	@echo "linguas:::: " $(LINGUAS)
 
 #-- Fetch TP stat file
