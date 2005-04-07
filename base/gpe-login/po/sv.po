@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-login 0.48\n"
-"POT-Creation-Date: 2003-03-30 15:44+0100\n"
+"POT-Creation-Date: 2003-08-17 13:50+0100\n"
 "PO-Revision-Date: 2003-07-10 15:40+0200\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
@@ -13,65 +13,66 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: gpe-login.c:480 gpe-login.c:553
+#: gpe-login.c:468 gpe-login.c:541
 msgid "Login incorrect"
 msgstr "Felaktig inloggning"
 
-#: gpe-login.c:582
+#: gpe-login.c:570
 msgid "User already exists"
 msgstr "Användaren finns redan"
 
-#: gpe-login.c:593
+#: gpe-login.c:581
 msgid "Passwords don't match"
 msgstr "Lösenorden stämmer inte överens"
 
-#: gpe-login.c:602
+#: gpe-login.c:590
 msgid "Empty password not allowed"
 msgstr "Tomt lösenord är inte tillåtet"
 
-#: gpe-login.c:1058
+#: gpe-login.c:1125
 msgid "Record"
 msgstr "Spela in"
 
-#: gpe-login.c:1059
+#: gpe-login.c:1126
 msgid "recalibrates touchscreen"
 msgstr "omkalibrerar pekskärmen"
 
 # Misstänker att detta kan vara koden för standardspråket eller något. Väntar
 # på svar från upphovsmännen.
-#: gpe-login.c:1095
+#. TRANSLATORS: please replace this with your own Pango language code:
+#: gpe-login.c:1162
 msgid "en"
 msgstr "sv"
 
-#: gpe-login.c:1329
+#: gpe-login.c:1396
 msgid "Screen locked"
 msgstr "Skärmen låst"
 
-#: gpe-login.c:1333 gpe-login.c:1448
+#: gpe-login.c:1400 gpe-login.c:1516
 msgid "Username"
 msgstr "Användarnamn"
 
-#: gpe-login.c:1358 gpe-login.c:1450
+#: gpe-login.c:1425 gpe-login.c:1518
 msgid "Password"
 msgstr "Lösenord"
 
-#: gpe-login.c:1372
+#: gpe-login.c:1439
 msgid "Language"
 msgstr "Språk"
 
-#: gpe-login.c:1392
+#: gpe-login.c:1460
 msgid "Enter password with hard keys"
 msgstr "Ange lösenord med hårda tangenter"
 
-#: gpe-login.c:1449
+#: gpe-login.c:1517
 msgid "Full name"
 msgstr "Fullständigt namn"
 
-#: gpe-login.c:1451
+#: gpe-login.c:1519
 msgid "Confirm password"
 msgstr "Bekräfta lösenord"
 
-#: gpe-login.c:1505
+#: gpe-login.c:1573
 msgid "New user"
 msgstr "Ny användare"
 

@@ -1,72 +1,87 @@
-# Turkish translation of gpe-go.
-# Copyright (C) gpe-go GNU GPL.
-# This file is distributed under the same license as the gpe-go package.
-# Abdullah Ulas <potkal@bioinformatics.org>, 2005.
+# gpe-go turkish translation.
+# Copyright (C) 2005 gpe-go.
+# distributed under the same license as the gpe-go package.
+# Abdullah ULAS <ulas@sdf.lonestar.org>, 2005.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-go 0.04\n"
+"Project-Id-Version: gpe-go 0.05\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-10-12 22:18+0300\n"
-"PO-Revision-Date: 2005-04-06 17:13+0300\n"
-"Last-Translator: Abdullah Ulas <potkal@bioinformatics.org>\n"
+"POT-Creation-Date: 2003-11-09 22:28+0200\n"
+"PO-Revision-Date: 2005-03-20 12:19+EET\n"
+"Last-Translator: Abdullah ULAS <ulas@sdf.lonestar.org>\n"
 "Language-Team: Turkish <gnu-tr-u12a@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=iso-8859-9\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: gpe-go.c:734
+#: gpe-go.c:754
 #, c-format
 msgid "B:%d  W:%d "
 msgstr "B:%d  W:%d "
 
-#: gpe-go.c:967
+#: gpe-go.c:1083
 #, c-format
 msgid "Cannot save the game into %s."
-msgstr "Oyun %s ye kaydedilemedi"
+msgstr "Oyun %s içine kaydedilemedi"
 
-#: gpe-go.c:1066
+#: gpe-go.c:1357
+msgid "New..."
+msgstr "Yeni..."
+
+#: gpe-go.c:1358
+msgid "Save..."
+msgstr "Kaydet..."
+
+#: gpe-go.c:1359
+msgid "Load..."
+msgstr "Yükle..."
+
+#: gpe-go.c:1419
+msgid "Game menu"
+msgstr "Oyun menüsü"
+
+#: gpe-go.c:1427
+msgid "First"
+msgstr ".lk"
+
+#: gpe-go.c:1428 gpe-go.c:1429
+msgid "Go to the beginning of the game"
+msgstr "Oyunun ba.lang.c.na git"
+
+#: gpe-go.c:1435
 msgid "Undo"
 msgstr "Gerial"
 
-#: gpe-go.c:1080
+#: gpe-go.c:1441
 msgid "Redo"
 msgstr "Tekrar yap"
 
-#: gpe-go.c:1088
+#: gpe-go.c:1447
+msgid "Last"
+msgstr "Son"
+
+#: gpe-go.c:1448 gpe-go.c:1449
+msgid "Go to the end of the game"
+msgstr "Oyunun sonuna git"
+
+#: gpe-go.c:1457
 msgid "B:0  W:0 "
 msgstr "B:0  W:0 "
 
-#: gpe-go.c:1109
-msgid "PASS"
-msgstr "GEÇ"
+#: gpe-go.c:1467
+msgid "Pass"
+msgstr "Geç"
 
-#: gpe-go.c:1122
-msgid "Save"
-msgstr "Kaydet"
+#: gpe-go.c:1467
+msgid "Pass your turn"
+msgstr "Dönü.ünü geç"
 
-#: gpe-go.c:1126
-msgid "Save as..."
-msgstr "Farklý kaydet..."
-
-#: gpe-go.desktop.in.h:1 gpe-go-9.desktop.in.h:1 gpe-go-13.desktop.in.h:1
-#: gpe-go-19.desktop.in.h:1
+#: gpe-go.desktop.in.h:1
 msgid "GPE Go"
 msgstr "GPE Git"
 
 #: gpe-go.desktop.in.h:2
 msgid "Go"
 msgstr "Git"
-
-#: gpe-go-9.desktop.in.h:2
-msgid "Go 9"
-msgstr "Git 9"
-
-#: gpe-go-13.desktop.in.h:2
-msgid "Go 13"
-msgstr "Git 13"
-
-#: gpe-go-19.desktop.in.h:2
-msgid "Go 19"
-msgstr "Git 19"

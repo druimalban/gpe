@@ -6,7 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-contacts 0.12\n"
-"POT-Creation-Date: 2003-03-30 15:59+0100\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2004-10-17 00:23+0200\n"
 "PO-Revision-Date: 2003-09-09 22:51+0200\n"
 "Last-Translator: Marcel Telka <marcel@telka.sk>\n"
 "Language-Team: Slovak <sk-i18n@lists.linux.sk>\n"
@@ -14,276 +15,449 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: db.c:103 db.c:136 editing.c:188 main.c:437
+#: db.c:70
 msgid "Name"
 msgstr "Meno"
 
-#: db.c:104 db.c:137
+#: db.c:71
 msgid "Phone"
 msgstr "Telefón"
 
-#: db.c:105 db.c:138
+#: db.c:72
 msgid "EMail"
 msgstr "E-mail"
 
-#: editing.c:170
-msgid "Edit Contact"
-msgstr "Upraviť kontakt"
+#: editing.c:108 main.c:1218
+#, fuzzy
+msgid "Details"
+msgstr "Panel podrobností"
 
-#: editing.c:192
-msgid "more detailed name options"
-msgstr "detailnejšie voľby mena"
+#: editing.c:227
+msgid "no year"
+msgstr ""
 
-#: editing.c:194
-msgid "Summary"
-msgstr "Zhrnutie"
-
-#: editing.c:200
-msgid "Birthday"
-msgstr "Narodeniny"
-
-#: editing.c:206
-msgid "Image"
-msgstr "Obrázok"
-
-#: editing.c:222
-msgid "Schedule"
-msgstr "Časový plán"
-
-#: editing.c:226
-msgid "automatic appointment"
-msgstr "automatická výzva"
-
-#: editing.c:235
-msgid "click to choose file"
-msgstr "kliknite pre výber súboru"
-
-#: editing.c:237 main.c:536
+#: editing.c:436 main.c:470 main.c:597
 msgid "Categories"
 msgstr "Kategórie"
 
-#: editing.c:279
-msgid "Personal"
-msgstr "Osobné"
+#: editing.c:972
+#, fuzzy
+msgid "Select image"
+msgstr "Odstrániť položku"
 
-#: interface.c:44 main.c:538
-msgid "Setup"
-msgstr "Nastavenie"
+#: main.c:80 main.c:182
+msgid "Edit Contact"
+msgstr "Upraviť kontakt"
 
-#: interface.c:56 main.c:143
-msgid "Detail panel"
-msgstr "Panel podrobností"
-
-#: interface.c:95 main.c:182
-msgid "NAME"
-msgstr "MENO"
-
-#: interface.c:105 main.c:192
-msgid "Add"
-msgstr "Pridať"
-
-#: interface.c:113 main.c:200
-msgid "Remove"
-msgstr "Odstrániť"
-
-#: interface.c:141 main.c:230
-msgid "Data Field"
-msgstr "Pole údajov"
-
-#: interface.c:149 main.c:238
-msgid "Label"
-msgstr "Označenie"
-
-#: interface.c:157 main.c:246
-msgid "Pages"
-msgstr "Stránky"
-
-#: main.c:298
-msgid "All categories"
-msgstr "Všetky kategórie"
-
-#: main.c:424
+#: main.c:86 main.c:198
 msgid "Really delete this contact?"
 msgstr "Naozaj chcete odstrániť tento kontakt?"
 
-#: main.c:424 main.c:457 structure.c:179
+#: main.c:86 main.c:198 structure.c:176
 msgid "Confirm"
 msgstr "Potvrdiť"
 
-#: main.c:425 main.c:458 structure.c:180
-msgid "Delete"
-msgstr "Odstrániť"
+#: main.c:138
+msgid "All categories"
+msgstr "Všetky kategórie"
 
-#: main.c:425 main.c:458 structure.c:180
-msgid "Cancel"
-msgstr "Zrušiť"
-
-#: main.c:437
-msgid "New Category"
-msgstr "Nová kategória"
-
-#: main.c:457
-msgid "Really delete this category?"
-msgstr "Naozaj odstrániť túto kategóriu?"
-
-#: main.c:487
-msgid "New category"
-msgstr "Nová kategória"
-
-#: main.c:487
-msgid "Tap here to create a category."
-msgstr "Kliknite sem pre vytvorenie kategórie."
-
-#: main.c:491
-msgid "Delete category"
-msgstr "Odstrániť kategóriu"
-
-#: main.c:491
-msgid "Tap here to delete the selected category."
-msgstr "Kliknite sem pre odstránenie zvolenej kategórie."
-
-#: main.c:534
-msgid "Editing Layout"
-msgstr "Úprava usporiadania"
-
-#: main.c:559
-msgid "Contacts: Configuration"
-msgstr "Kontakty: Konfigurácia"
-
-#: main.c:794 gpe-contacts.desktop.in.h:1
-msgid "Contacts"
-msgstr "Kontakty"
-
-#: main.c:808
-msgid "New contact"
+#: main.c:160
+#, fuzzy
+msgid "New Contact"
 msgstr "Nový kontakt"
 
-#: main.c:808
-msgid "Tap here to add a new contact."
-msgstr "Kliknite sem pre pridanie nového kontaktu."
+#: main.c:481
+#, fuzzy
+msgid "No contact selected."
+msgstr "Nebol zvolený zásobník"
 
-#: main.c:814
-msgid "Edit"
-msgstr "Upraviť"
-
-#: main.c:815
-msgid "Edit contact"
-msgstr "Upraviť kontakt"
-
-#: main.c:815
-msgid "Tap here to edit the selected contact."
-msgstr "Kliknite sem pre úpravu zvoleného kontaktu."
-
-#: main.c:819
-msgid "Delete contact"
-msgstr "Odstrániť kontakt"
-
-#: main.c:819
-msgid "Tap here to delete the selected contact."
-msgstr "Kliknite sem pre odstránenie zvoleného kontaktu."
-
-#: main.c:823
-msgid "Properties"
-msgstr "Vlastnosti"
-
-#: main.c:823
-msgid "Tap here to configure the program."
-msgstr "Kliknite sem pre konfiguráciu programu."
-
-#: main.c:835
-msgid "ABC"
-msgstr "ABC"
-
-#: main.c:843
-msgid "DEF"
-msgstr "DEF"
-
-#: main.c:850
-msgid "GHIJ"
-msgstr "GHIJ"
-
-#: main.c:857
-msgid "KLMN"
-msgstr "KLMN"
-
-#: main.c:864
-msgid "OPQR"
-msgstr "OPQR"
-
-#: main.c:871
-msgid "STUV"
-msgstr "STUV"
-
-#: main.c:878
-msgid "WXYZ"
-msgstr "WXYZ"
-
-#: main.c:894 main.c:918
+#: main.c:553 main.c:1272 main.c:1338
 msgid "Contact"
 msgstr "Kontakt"
 
-#: main.c:901
+#: main.c:1182 gpe-contacts.desktop.in.h:1
+msgid "Contacts"
+msgstr "Kontakty"
+
+#: main.c:1195
+#, fuzzy
+msgid "Tap this button to add a new contact."
+msgstr "Kliknite sem pre pridanie nového kontaktu."
+
+#: main.c:1202
+msgid "Edit"
+msgstr "Upraviť"
+
+#: main.c:1203
+msgid "Tap here to edit the selected contact."
+msgstr "Kliknite sem pre úpravu zvoleného kontaktu."
+
+#: main.c:1209
+msgid "Tap here to delete the selected contact."
+msgstr "Kliknite sem pre odstránenie zvoleného kontaktu."
+
+#: main.c:1219
+#, fuzzy
+msgid "Tap here to show contacts details."
+msgstr "Kliknite sem pre pridanie nového kontaktu."
+
+#: main.c:1228
+msgid "Find a contact by searching for any data."
+msgstr ""
+
+#: main.c:1233
+msgid "Properties"
+msgstr "Vlastnosti"
+
+#: main.c:1233
+#, fuzzy
+msgid "Tap here to configure this program."
+msgstr "Kliknite sem pre konfiguráciu programu."
+
+#: main.c:1239
+msgid "Close"
+msgstr ""
+
+#: main.c:1239
+#, fuzzy
+msgid "Tap here to exit gpe-contacts."
+msgstr "Kliknite sem pre úpravu zvoleného kontaktu."
+
+#: main.c:1298
 msgid "Find:"
 msgstr "Nájsť:"
 
-#: main.c:907
+#: main.c:1305
 msgid "in"
 msgstr "v"
 
-#: structure.c:108 structure.c:238
+#: main.c:1491
+msgid "My Card"
+msgstr ""
+
+#: main.c:1494
+msgid "Saving vcard failed"
+msgstr ""
+
+#: structure.c:105 structure.c:235
 msgid "New page"
 msgstr "Nová strana"
 
-#: structure.c:108 structure.c:127 structure.c:152
+#: structure.c:105 structure.c:124 structure.c:149
 msgid "Title"
 msgstr "Titulok"
 
-#: structure.c:127
+#: structure.c:124
 msgid "New group"
 msgstr "Nová skupina"
 
-#: structure.c:139 structure.c:169
+#: structure.c:136 structure.c:166
 msgid "No container selected"
 msgstr "Nebol zvolený zásobník"
 
-#: structure.c:153
+#: structure.c:150
 msgid "Tag"
 msgstr "Značka"
 
-#: structure.c:155
+#: structure.c:152
 msgid "New field"
 msgstr "Nové pole"
 
-#: structure.c:179
+#: structure.c:176
 msgid "Really delete this field?"
 msgstr "Naozaj odstrániť toto pole?"
 
-#: structure.c:237
+#: structure.c:177
+msgid "Delete"
+msgstr "Odstrániť"
+
+#: structure.c:177
+msgid "Cancel"
+msgstr "Zrušiť"
+
+#: structure.c:234
 msgid "Page"
 msgstr "Strana"
 
-#: structure.c:238
+#: structure.c:235
 msgid "Tap here to add a page."
 msgstr "Kliknite sem pre pridanie strany."
 
-#: structure.c:254
+#: structure.c:251
 msgid "Delete item"
 msgstr "Odstrániť položku"
 
-#: structure.c:254
+#: structure.c:251
 msgid "Tap here to delete the selected item."
 msgstr "Kliknite sem pre odstránenie zvolenej položky."
 
-#: support.c:121
-#, c-format
-msgid "Couldn't find pixmap file: %s"
-msgstr "Nepodarilo sa nájsť súbor s obrázkom: %s"
+#. TRANSLATORS: kB = kilo bytes
+#: configure.c:131 configure.c:337
+msgid "Current size:"
+msgstr ""
 
-#: support.c:130
-#, c-format
-msgid "Error loading pixmap file: %s"
-msgstr "Chyba pri načítavaní súboru s obrázkom: %s"
+#: configure.c:132
+msgid "kB (optimised)"
+msgstr ""
+
+#: configure.c:177
+#, fuzzy
+msgid "<b>Detail panel:</b>"
+msgstr "Panel podrobností"
+
+#: configure.c:203
+msgid "NAME"
+msgstr "MENO"
+
+#: configure.c:213
+msgid "Add"
+msgstr "Pridať"
+
+#: configure.c:220
+msgid "Remove"
+msgstr "Odstrániť"
+
+#: configure.c:242
+msgid "Label"
+msgstr "Označenie"
+
+#: configure.c:247
+#, fuzzy
+msgid "Data item"
+msgstr "Pole údajov"
+
+#: configure.c:291
+msgid "Screen Layout"
+msgstr ""
+
+#: configure.c:297
+msgid "List position"
+msgstr ""
+
+#: configure.c:300
+#, fuzzy
+msgid "left"
+msgstr "Odstrániť"
+
+#: configure.c:302
+msgid "right"
+msgstr ""
+
+#: configure.c:330
+#, fuzzy
+msgid "Database Size"
+msgstr "Pole údajov"
+
+#: configure.c:337
+msgid "kB"
+msgstr ""
+
+#: configure.c:342
+msgid "Actions"
+msgstr ""
+
+#: configure.c:349
+msgid "Optimise database"
+msgstr ""
+
+#: configure.c:352
+msgid "Run"
+msgstr ""
+
+#: configure.c:458
+msgid "Editing Layout"
+msgstr "Úprava usporiadania"
+
+#: configure.c:460
+msgid "Setup"
+msgstr "Nastavenie"
+
+#: configure.c:461
+msgid "Database"
+msgstr ""
+
+#: configure.c:493
+msgid "Contacts: Configuration"
+msgstr "Kontakty: Konfigurácia"
+
+#: export.c:158
+msgid "Save as..."
+msgstr ""
+
+#. TRANSLATORS: These abbreviations are a list of common titles used in a name
+#: namedetail.c:30
+msgid "Dr."
+msgstr ""
+
+#: namedetail.c:30
+msgid "Miss"
+msgstr ""
+
+#: namedetail.c:30
+msgid "Mr."
+msgstr ""
+
+#: namedetail.c:30
+msgid "Mrs."
+msgstr ""
+
+#: namedetail.c:30
+msgid "Ms."
+msgstr ""
+
+#: namedetail.c:30
+msgid "Prof."
+msgstr ""
+
+#: namedetail.c:30
+msgid "Sir"
+msgstr ""
+
+#. TRANSLATORS: This is a list of common name suffixes
+#: namedetail.c:32
+msgid "Jr."
+msgstr ""
+
+#: namedetail.c:32
+msgid "Esq."
+msgstr ""
+
+#: namedetail.c:32
+msgid "Sr."
+msgstr ""
+
+#: namedetail.c:32
+msgid "I"
+msgstr ""
+
+#: namedetail.c:32
+msgid "II"
+msgstr ""
+
+#: namedetail.c:32
+msgid "III"
+msgstr ""
+
+#: namedetail.c:61
+msgid "Edit Name Details"
+msgstr ""
+
+#: namedetail.c:88
+msgid "First name:"
+msgstr ""
+
+#: namedetail.c:89
+msgid "Middle name:"
+msgstr ""
+
+#: namedetail.c:90
+msgid "Last name:"
+msgstr ""
+
+#: namedetail.c:91
+msgid "Suffix:"
+msgstr ""
+
+#: namedetail.c:92
+#, fuzzy
+msgid "Title:"
+msgstr "Titulok"
+
+#: finddlg.c:37
+#, fuzzy
+msgid "Find Contacts"
+msgstr "Kontakty"
+
+#: finddlg.c:49
+msgid "Search for:"
+msgstr ""
 
 #: gpe-contacts.desktop.in.h:2
 msgid "GPE Contacts"
 msgstr "GPE Kontakty"
+
+#: edit-vcard.desktop.in.h:1
+msgid "Edit personal vcard"
+msgstr ""
+
+#: edit-vcard.desktop.in.h:2
+msgid "My VCard"
+msgstr ""
+
+#~ msgid "more detailed name options"
+#~ msgstr "detailnejšie voľby mena"
+
+#~ msgid "Summary"
+#~ msgstr "Zhrnutie"
+
+#~ msgid "Birthday"
+#~ msgstr "Narodeniny"
+
+#~ msgid "Image"
+#~ msgstr "Obrázok"
+
+#~ msgid "Schedule"
+#~ msgstr "Časový plán"
+
+#~ msgid "automatic appointment"
+#~ msgstr "automatická výzva"
+
+#~ msgid "click to choose file"
+#~ msgstr "kliknite pre výber súboru"
+
+#~ msgid "Personal"
+#~ msgstr "Osobné"
+
+#~ msgid "Pages"
+#~ msgstr "Stránky"
+
+#~ msgid "New Category"
+#~ msgstr "Nová kategória"
+
+#~ msgid "Really delete this category?"
+#~ msgstr "Naozaj odstrániť túto kategóriu?"
+
+#~ msgid "New category"
+#~ msgstr "Nová kategória"
+
+#~ msgid "Tap here to create a category."
+#~ msgstr "Kliknite sem pre vytvorenie kategórie."
+
+#~ msgid "Delete category"
+#~ msgstr "Odstrániť kategóriu"
+
+#~ msgid "Tap here to delete the selected category."
+#~ msgstr "Kliknite sem pre odstránenie zvolenej kategórie."
+
+#~ msgid "Edit contact"
+#~ msgstr "Upraviť kontakt"
+
+#~ msgid "Delete contact"
+#~ msgstr "Odstrániť kontakt"
+
+#~ msgid "ABC"
+#~ msgstr "ABC"
+
+#~ msgid "DEF"
+#~ msgstr "DEF"
+
+#~ msgid "GHIJ"
+#~ msgstr "GHIJ"
+
+#~ msgid "KLMN"
+#~ msgstr "KLMN"
+
+#~ msgid "OPQR"
+#~ msgstr "OPQR"
+
+#~ msgid "STUV"
+#~ msgstr "STUV"
+
+#~ msgid "WXYZ"
+#~ msgstr "WXYZ"
+
+#~ msgid "Couldn't find pixmap file: %s"
+#~ msgstr "Nepodarilo sa nájsť súbor s obrázkom: %s"
+
+#~ msgid "Error loading pixmap file: %s"
+#~ msgstr "Chyba pri načítavaní súboru s obrázkom: %s"

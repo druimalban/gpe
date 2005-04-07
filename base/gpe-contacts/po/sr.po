@@ -5,7 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-contacts 0.12\n"
-"POT-Creation-Date: 2003-03-30 15:59+0100\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2004-10-17 00:23+0200\n"
 "PO-Revision-Date: 2004-02-03 01:52-0500\n"
 "Last-Translator: Aleksandar Jelenak <jelenak@netlinkplus.net>\n"
 "Language-Team: Serbian <sr@li.org>\n"
@@ -13,276 +14,449 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: db.c:103 db.c:136 editing.c:188 main.c:437
+#: db.c:70
 msgid "Name"
 msgstr "Име"
 
-#: db.c:104 db.c:137
+#: db.c:71
 msgid "Phone"
 msgstr "Телефон"
 
-#: db.c:105 db.c:138
+#: db.c:72
 msgid "EMail"
 msgstr "Епошта"
 
-#: editing.c:170
-msgid "Edit Contact"
-msgstr "Уреди контакт"
+#: editing.c:108 main.c:1218
+#, fuzzy
+msgid "Details"
+msgstr "Табла појединости"
 
-#: editing.c:192
-msgid "more detailed name options"
-msgstr "подробније опције за име"
+#: editing.c:227
+msgid "no year"
+msgstr ""
 
-#: editing.c:194
-msgid "Summary"
-msgstr "Сажетак"
-
-#: editing.c:200
-msgid "Birthday"
-msgstr "Рођендан"
-
-#: editing.c:206
-msgid "Image"
-msgstr "Слика"
-
-#: editing.c:222
-msgid "Schedule"
-msgstr "Распоред"
-
-#: editing.c:226
-msgid "automatic appointment"
-msgstr "аутоматски састанак"
-
-#: editing.c:235
-msgid "click to choose file"
-msgstr "кликни за избор датотеке"
-
-#: editing.c:237 main.c:536
+#: editing.c:436 main.c:470 main.c:597
 msgid "Categories"
 msgstr "Категорије"
 
-#: editing.c:279
-msgid "Personal"
-msgstr "Лично"
+#: editing.c:972
+#, fuzzy
+msgid "Select image"
+msgstr "Избриши ставку"
 
-#: interface.c:44 main.c:538
-msgid "Setup"
-msgstr "Подешавање"
+#: main.c:80 main.c:182
+msgid "Edit Contact"
+msgstr "Уреди контакт"
 
-#: interface.c:56 main.c:143
-msgid "Detail panel"
-msgstr "Табла појединости"
-
-#: interface.c:95 main.c:182
-msgid "NAME"
-msgstr "ИМЕ"
-
-#: interface.c:105 main.c:192
-msgid "Add"
-msgstr "Додај"
-
-#: interface.c:113 main.c:200
-msgid "Remove"
-msgstr "Уклони"
-
-#: interface.c:141 main.c:230
-msgid "Data Field"
-msgstr "Поље податка"
-
-#: interface.c:149 main.c:238
-msgid "Label"
-msgstr "Ознака"
-
-#: interface.c:157 main.c:246
-msgid "Pages"
-msgstr "Страница"
-
-#: main.c:298
-msgid "All categories"
-msgstr "Све категорије"
-
-#: main.c:424
+#: main.c:86 main.c:198
 msgid "Really delete this contact?"
 msgstr "Заиста избрисати овај контакт?"
 
-#: main.c:424 main.c:457 structure.c:179
+#: main.c:86 main.c:198 structure.c:176
 msgid "Confirm"
 msgstr "Потврди"
 
-#: main.c:425 main.c:458 structure.c:180
-msgid "Delete"
-msgstr "Избриши"
+#: main.c:138
+msgid "All categories"
+msgstr "Све категорије"
 
-#: main.c:425 main.c:458 structure.c:180
-msgid "Cancel"
-msgstr "Поништи"
-
-#: main.c:437
-msgid "New Category"
-msgstr "Нова категорија"
-
-#: main.c:457
-msgid "Really delete this category?"
-msgstr "Заиста избрисати ову категорију?"
-
-#: main.c:487
-msgid "New category"
-msgstr "Нова категорија"
-
-#: main.c:487
-msgid "Tap here to create a category."
-msgstr "Лупни овде за нову категорију."
-
-#: main.c:491
-msgid "Delete category"
-msgstr "Избриши категорију"
-
-#: main.c:491
-msgid "Tap here to delete the selected category."
-msgstr "Лупни овде за брисање означене категорије."
-
-#: main.c:534
-msgid "Editing Layout"
-msgstr "Уређивање изгледа"
-
-#: main.c:559
-msgid "Contacts: Configuration"
-msgstr "Контакти: Подешавање"
-
-#: main.c:794 gpe-contacts.desktop.in.h:1
-msgid "Contacts"
-msgstr "Контакти"
-
-#: main.c:808
-msgid "New contact"
+#: main.c:160
+#, fuzzy
+msgid "New Contact"
 msgstr "Нови контакт"
 
-#: main.c:808
-msgid "Tap here to add a new contact."
-msgstr "Лупни овде за нови контакт"
+#: main.c:481
+#, fuzzy
+msgid "No contact selected."
+msgstr "Без одабраног садржаоца"
 
-#: main.c:814
-msgid "Edit"
-msgstr "Уреди"
-
-#: main.c:815
-msgid "Edit contact"
-msgstr "Уреди контакт"
-
-#: main.c:815
-msgid "Tap here to edit the selected contact."
-msgstr "Лупни овде за уређивање означеног контакта."
-
-#: main.c:819
-msgid "Delete contact"
-msgstr "Избриши контакт"
-
-#: main.c:819
-msgid "Tap here to delete the selected contact."
-msgstr "Лупни овде за брисање означеног контакта."
-
-#: main.c:823
-msgid "Properties"
-msgstr "Подешавања"
-
-#: main.c:823
-msgid "Tap here to configure the program."
-msgstr "Лупни овде за подешавање програма."
-
-#: main.c:835
-msgid "ABC"
-msgstr "АБВГ"
-
-#: main.c:843
-msgid "DEF"
-msgstr "ДЂЕЖЗ"
-
-#: main.c:850
-msgid "GHIJ"
-msgstr "ИЈКЛЉ"
-
-#: main.c:857
-msgid "KLMN"
-msgstr "МНЊО"
-
-#: main.c:864
-msgid "OPQR"
-msgstr "ПРСТ"
-
-#: main.c:871
-msgid "STUV"
-msgstr "ЋУФХ"
-
-#: main.c:878
-msgid "WXYZ"
-msgstr "ЦЧЏШ"
-
-#: main.c:894 main.c:918
+#: main.c:553 main.c:1272 main.c:1338
 msgid "Contact"
 msgstr "Контакт"
 
-#: main.c:901
+#: main.c:1182 gpe-contacts.desktop.in.h:1
+msgid "Contacts"
+msgstr "Контакти"
+
+#: main.c:1195
+#, fuzzy
+msgid "Tap this button to add a new contact."
+msgstr "Лупни овде за нови контакт"
+
+#: main.c:1202
+msgid "Edit"
+msgstr "Уреди"
+
+#: main.c:1203
+msgid "Tap here to edit the selected contact."
+msgstr "Лупни овде за уређивање означеног контакта."
+
+#: main.c:1209
+msgid "Tap here to delete the selected contact."
+msgstr "Лупни овде за брисање означеног контакта."
+
+#: main.c:1219
+#, fuzzy
+msgid "Tap here to show contacts details."
+msgstr "Лупни овде за нови контакт"
+
+#: main.c:1228
+msgid "Find a contact by searching for any data."
+msgstr ""
+
+#: main.c:1233
+msgid "Properties"
+msgstr "Подешавања"
+
+#: main.c:1233
+#, fuzzy
+msgid "Tap here to configure this program."
+msgstr "Лупни овде за подешавање програма."
+
+#: main.c:1239
+msgid "Close"
+msgstr ""
+
+#: main.c:1239
+#, fuzzy
+msgid "Tap here to exit gpe-contacts."
+msgstr "Лупни овде за уређивање означеног контакта."
+
+#: main.c:1298
 msgid "Find:"
 msgstr "Нађи:"
 
-#: main.c:907
+#: main.c:1305
 msgid "in"
 msgstr "у"
 
-#: structure.c:108 structure.c:238
+#: main.c:1491
+msgid "My Card"
+msgstr ""
+
+#: main.c:1494
+msgid "Saving vcard failed"
+msgstr ""
+
+#: structure.c:105 structure.c:235
 msgid "New page"
 msgstr "Нова страна"
 
-#: structure.c:108 structure.c:127 structure.c:152
+#: structure.c:105 structure.c:124 structure.c:149
 msgid "Title"
 msgstr "Наслов"
 
-#: structure.c:127
+#: structure.c:124
 msgid "New group"
 msgstr "Нова група"
 
-#: structure.c:139 structure.c:169
+#: structure.c:136 structure.c:166
 msgid "No container selected"
 msgstr "Без одабраног садржаоца"
 
-#: structure.c:153
+#: structure.c:150
 msgid "Tag"
 msgstr "Ознака"
 
-#: structure.c:155
+#: structure.c:152
 msgid "New field"
 msgstr "Ново поље"
 
-#: structure.c:179
+#: structure.c:176
 msgid "Really delete this field?"
 msgstr "Заиста избрисати ово поље?"
 
-#: structure.c:237
+#: structure.c:177
+msgid "Delete"
+msgstr "Избриши"
+
+#: structure.c:177
+msgid "Cancel"
+msgstr "Поништи"
+
+#: structure.c:234
 msgid "Page"
 msgstr "Страна"
 
-#: structure.c:238
+#: structure.c:235
 msgid "Tap here to add a page."
 msgstr "Лупни овде за нову страну"
 
-#: structure.c:254
+#: structure.c:251
 msgid "Delete item"
 msgstr "Избриши ставку"
 
-#: structure.c:254
+#: structure.c:251
 msgid "Tap here to delete the selected item."
 msgstr "Лупини овде за брисање означене ставке."
 
-#: support.c:121
-#, c-format
-msgid "Couldn't find pixmap file: %s"
-msgstr "Не могу наћи пиксмапу: %s"
+#. TRANSLATORS: kB = kilo bytes
+#: configure.c:131 configure.c:337
+msgid "Current size:"
+msgstr ""
 
-#: support.c:130
-#, c-format
-msgid "Error loading pixmap file: %s"
-msgstr "Грешка учитавајући пиксмапу: %s"
+#: configure.c:132
+msgid "kB (optimised)"
+msgstr ""
+
+#: configure.c:177
+#, fuzzy
+msgid "<b>Detail panel:</b>"
+msgstr "Табла појединости"
+
+#: configure.c:203
+msgid "NAME"
+msgstr "ИМЕ"
+
+#: configure.c:213
+msgid "Add"
+msgstr "Додај"
+
+#: configure.c:220
+msgid "Remove"
+msgstr "Уклони"
+
+#: configure.c:242
+msgid "Label"
+msgstr "Ознака"
+
+#: configure.c:247
+#, fuzzy
+msgid "Data item"
+msgstr "Поље податка"
+
+#: configure.c:291
+msgid "Screen Layout"
+msgstr ""
+
+#: configure.c:297
+msgid "List position"
+msgstr ""
+
+#: configure.c:300
+#, fuzzy
+msgid "left"
+msgstr "Избриши"
+
+#: configure.c:302
+msgid "right"
+msgstr ""
+
+#: configure.c:330
+#, fuzzy
+msgid "Database Size"
+msgstr "Поље податка"
+
+#: configure.c:337
+msgid "kB"
+msgstr ""
+
+#: configure.c:342
+msgid "Actions"
+msgstr ""
+
+#: configure.c:349
+msgid "Optimise database"
+msgstr ""
+
+#: configure.c:352
+msgid "Run"
+msgstr ""
+
+#: configure.c:458
+msgid "Editing Layout"
+msgstr "Уређивање изгледа"
+
+#: configure.c:460
+msgid "Setup"
+msgstr "Подешавање"
+
+#: configure.c:461
+msgid "Database"
+msgstr ""
+
+#: configure.c:493
+msgid "Contacts: Configuration"
+msgstr "Контакти: Подешавање"
+
+#: export.c:158
+msgid "Save as..."
+msgstr ""
+
+#. TRANSLATORS: These abbreviations are a list of common titles used in a name
+#: namedetail.c:30
+msgid "Dr."
+msgstr ""
+
+#: namedetail.c:30
+msgid "Miss"
+msgstr ""
+
+#: namedetail.c:30
+msgid "Mr."
+msgstr ""
+
+#: namedetail.c:30
+msgid "Mrs."
+msgstr ""
+
+#: namedetail.c:30
+msgid "Ms."
+msgstr ""
+
+#: namedetail.c:30
+msgid "Prof."
+msgstr ""
+
+#: namedetail.c:30
+msgid "Sir"
+msgstr ""
+
+#. TRANSLATORS: This is a list of common name suffixes
+#: namedetail.c:32
+msgid "Jr."
+msgstr ""
+
+#: namedetail.c:32
+msgid "Esq."
+msgstr ""
+
+#: namedetail.c:32
+msgid "Sr."
+msgstr ""
+
+#: namedetail.c:32
+msgid "I"
+msgstr ""
+
+#: namedetail.c:32
+msgid "II"
+msgstr ""
+
+#: namedetail.c:32
+msgid "III"
+msgstr ""
+
+#: namedetail.c:61
+msgid "Edit Name Details"
+msgstr ""
+
+#: namedetail.c:88
+msgid "First name:"
+msgstr ""
+
+#: namedetail.c:89
+msgid "Middle name:"
+msgstr ""
+
+#: namedetail.c:90
+msgid "Last name:"
+msgstr ""
+
+#: namedetail.c:91
+msgid "Suffix:"
+msgstr ""
+
+#: namedetail.c:92
+#, fuzzy
+msgid "Title:"
+msgstr "Наслов"
+
+#: finddlg.c:37
+#, fuzzy
+msgid "Find Contacts"
+msgstr "Контакти"
+
+#: finddlg.c:49
+msgid "Search for:"
+msgstr ""
 
 #: gpe-contacts.desktop.in.h:2
 msgid "GPE Contacts"
 msgstr "GPE Контакти"
+
+#: edit-vcard.desktop.in.h:1
+msgid "Edit personal vcard"
+msgstr ""
+
+#: edit-vcard.desktop.in.h:2
+msgid "My VCard"
+msgstr ""
+
+#~ msgid "more detailed name options"
+#~ msgstr "подробније опције за име"
+
+#~ msgid "Summary"
+#~ msgstr "Сажетак"
+
+#~ msgid "Birthday"
+#~ msgstr "Рођендан"
+
+#~ msgid "Image"
+#~ msgstr "Слика"
+
+#~ msgid "Schedule"
+#~ msgstr "Распоред"
+
+#~ msgid "automatic appointment"
+#~ msgstr "аутоматски састанак"
+
+#~ msgid "click to choose file"
+#~ msgstr "кликни за избор датотеке"
+
+#~ msgid "Personal"
+#~ msgstr "Лично"
+
+#~ msgid "Pages"
+#~ msgstr "Страница"
+
+#~ msgid "New Category"
+#~ msgstr "Нова категорија"
+
+#~ msgid "Really delete this category?"
+#~ msgstr "Заиста избрисати ову категорију?"
+
+#~ msgid "New category"
+#~ msgstr "Нова категорија"
+
+#~ msgid "Tap here to create a category."
+#~ msgstr "Лупни овде за нову категорију."
+
+#~ msgid "Delete category"
+#~ msgstr "Избриши категорију"
+
+#~ msgid "Tap here to delete the selected category."
+#~ msgstr "Лупни овде за брисање означене категорије."
+
+#~ msgid "Edit contact"
+#~ msgstr "Уреди контакт"
+
+#~ msgid "Delete contact"
+#~ msgstr "Избриши контакт"
+
+#~ msgid "ABC"
+#~ msgstr "АБВГ"
+
+#~ msgid "DEF"
+#~ msgstr "ДЂЕЖЗ"
+
+#~ msgid "GHIJ"
+#~ msgstr "ИЈКЛЉ"
+
+#~ msgid "KLMN"
+#~ msgstr "МНЊО"
+
+#~ msgid "OPQR"
+#~ msgstr "ПРСТ"
+
+#~ msgid "STUV"
+#~ msgstr "ЋУФХ"
+
+#~ msgid "WXYZ"
+#~ msgstr "ЦЧЏШ"
+
+#~ msgid "Couldn't find pixmap file: %s"
+#~ msgstr "Не могу наћи пиксмапу: %s"
+
+#~ msgid "Error loading pixmap file: %s"
+#~ msgstr "Грешка учитавајући пиксмапу: %s"

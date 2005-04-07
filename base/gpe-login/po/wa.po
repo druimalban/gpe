@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-login 0.48\n"
-"POT-Creation-Date: 2003-03-30 15:44+0100\n"
+"POT-Creation-Date: 2003-08-17 13:50+0100\n"
 "PO-Revision-Date: 2003-06-25 20:08+0100\n"
 "Last-Translator: Pablo Saratxaga <pablo@walon.org>\n"
 "Language-Team: Walloon <linux-wa@walon.org>\n"
@@ -12,63 +12,64 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: gpe-login.c:480 gpe-login.c:553
+#: gpe-login.c:468 gpe-login.c:541
 msgid "Login incorrect"
 msgstr "L' elodjaedje a fwait berwete"
 
-#: gpe-login.c:582
+#: gpe-login.c:570
 msgid "User already exists"
 msgstr "L' uzeu egzistêye dedja"
 
-#: gpe-login.c:593
+#: gpe-login.c:581
 msgid "Passwords don't match"
 msgstr "Les screts n' corespondèt nén"
 
-#: gpe-login.c:602
+#: gpe-login.c:590
 msgid "Empty password not allowed"
 msgstr "Vos n' poloz nén aveur on vude sicret"
 
-#: gpe-login.c:1058
+#: gpe-login.c:1125
 msgid "Record"
 msgstr "Eredjîstrer"
 
-#: gpe-login.c:1059
+#: gpe-login.c:1126
 msgid "recalibrates touchscreen"
 msgstr "ricalibrer l' waitroûle"
 
-#: gpe-login.c:1095
+#. TRANSLATORS: please replace this with your own Pango language code:
+#: gpe-login.c:1162
 msgid "en"
 msgstr "wa"
 
-#: gpe-login.c:1329
+#: gpe-login.c:1396
 msgid "Screen locked"
 msgstr "Waitroûle eclawêye"
 
-#: gpe-login.c:1333 gpe-login.c:1448
+#: gpe-login.c:1400 gpe-login.c:1516
 msgid "Username"
 msgstr "No d' uzeu"
 
-#: gpe-login.c:1358 gpe-login.c:1450
+#: gpe-login.c:1425 gpe-login.c:1518
 msgid "Password"
 msgstr "Sicret"
 
-#: gpe-login.c:1372
+#: gpe-login.c:1439
 msgid "Language"
 msgstr "Lingaedje"
 
-#: gpe-login.c:1392
+#: gpe-login.c:1460
 msgid "Enter password with hard keys"
 msgstr "Taper li scret avou les botons"
 
-#: gpe-login.c:1449
+#: gpe-login.c:1517
 msgid "Full name"
 msgstr "No en etir"
 
-#: gpe-login.c:1451
+#: gpe-login.c:1519
 msgid "Confirm password"
 msgstr "Acertinez l' sicret"
 
-#: gpe-login.c:1505
+#: gpe-login.c:1573
 msgid "New user"
 msgstr "Novea uzeu"
 

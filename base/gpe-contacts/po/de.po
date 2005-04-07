@@ -5,7 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-contacts\n"
-"POT-Creation-Date: 2002-08-12 22:18+0200\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2004-10-17 00:23+0200\n"
 "PO-Revision-Date: 2002-08-12 22:34+0200\n"
 "Last-Translator: Colin Marquardt <ipaq@marquardt-home.de>\n"
 "Language-Team: German <de@li.org>\n"
@@ -13,171 +14,452 @@ msgstr ""
 "Content-Type: text/plain; charset=iso-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/main.c:48
-msgid "*all*"
-msgstr "*Alle*"
-
-#: src/main.c:114
-msgid "New category"
-msgstr "Neue Kategorie"
-
-#: src/main.c:114
+#: db.c:70
 msgid "Name"
 msgstr "Name"
 
-#: src/main.c:150 src/main.c:151
-msgid "New"
-msgstr "Neu"
+#: db.c:71
+msgid "Phone"
+msgstr ""
 
-#: src/interface.c:255 src/main.c:154 src/main.c:155
-msgid "Delete"
-msgstr "Löschen"
+#: db.c:72
+#, fuzzy
+msgid "EMail"
+msgstr "E-Mail"
 
-#: src/main.c:200
-msgid "Editing layout"
-msgstr "Layout editieren"
+#: editing.c:108 main.c:1218
+#, fuzzy
+msgid "Details"
+msgstr "Kontaktdetails"
 
-#: src/main.c:202
+#: editing.c:227
+msgid "no year"
+msgstr ""
+
+#: editing.c:436 main.c:470 main.c:597
 msgid "Categories"
 msgstr "Kategorien"
 
-#: src/main.c:298 src/main.c:299
+#: editing.c:972
+msgid "Select image"
+msgstr ""
+
+#: main.c:80 main.c:182
+#, fuzzy
+msgid "Edit Contact"
+msgstr "Kontakte"
+
+#: main.c:86 main.c:198
+msgid "Really delete this contact?"
+msgstr ""
+
+#: main.c:86 main.c:198 structure.c:176
+#, fuzzy
+msgid "Confirm"
+msgstr "Konfigurieren"
+
+#: main.c:138
+#, fuzzy
+msgid "All categories"
+msgstr "Kategorien"
+
+#: main.c:160
 msgid "New Contact"
 msgstr "Neuer Kontakt"
 
-#: src/main.c:303 src/main.c:304
-msgid "Delete Contact"
-msgstr "Kontakt löschen"
+#: main.c:481
+msgid "No contact selected."
+msgstr ""
 
-#: src/main.c:308 src/main.c:309
-msgid "Configure"
-msgstr "Konfigurieren"
+#: main.c:553 main.c:1272 main.c:1338
+#, fuzzy
+msgid "Contact"
+msgstr "Kontakte"
 
-#: src/interface.c:48 src/interface.c:80
+#: main.c:1182 gpe-contacts.desktop.in.h:1
 msgid "Contacts"
 msgstr "Kontakte"
 
-#: src/interface.c:108
-msgid "label45"
+#: main.c:1195
+msgid "Tap this button to add a new contact."
 msgstr ""
 
-#: src/interface.c:116
-msgid "label46"
-msgstr ""
-
-#: src/interface.c:124
-msgid "Filter"
-msgstr "Filter"
-
-#: src/interface.c:147
-msgid "Enter Search Term"
-msgstr "Suchbegriff eingeben"
-
-#: src/interface.c:159
-msgid "All"
-msgstr "Alle"
-
-#: src/interface.c:160
-msgid "Personal"
-msgstr "Persönlich"
-
-#: src/interface.c:161 src/interface.c:171
-msgid "Business"
-msgstr "Geschäftlich"
-
-#: src/interface.c:222
-msgid "Contact Details"
-msgstr "Kontaktdetails"
-
-#: src/interface.c:246
+#: main.c:1202
 msgid "Edit"
 msgstr "Editieren"
 
-#: src/interface.c:296
-msgid "Markus Musterman"
-msgstr "Markus Mustermann"
+#: main.c:1203
+msgid "Tap here to edit the selected contact."
+msgstr ""
+
+#: main.c:1209
+msgid "Tap here to delete the selected contact."
+msgstr ""
+
+#: main.c:1219
+msgid "Tap here to show contacts details."
+msgstr ""
+
+#: main.c:1228
+msgid "Find a contact by searching for any data."
+msgstr ""
+
+#: main.c:1233
+msgid "Properties"
+msgstr ""
+
+#: main.c:1233
+msgid "Tap here to configure this program."
+msgstr ""
+
+#: main.c:1239
+msgid "Close"
+msgstr ""
+
+#: main.c:1239
+msgid "Tap here to exit gpe-contacts."
+msgstr ""
+
+#: main.c:1298
+msgid "Find:"
+msgstr ""
+
+#: main.c:1305
+msgid "in"
+msgstr ""
+
+#: main.c:1491
+msgid "My Card"
+msgstr ""
+
+#: main.c:1494
+msgid "Saving vcard failed"
+msgstr ""
+
+#: structure.c:105 structure.c:235
+#, fuzzy
+msgid "New page"
+msgstr "Neue Kategorie"
+
+#: structure.c:105 structure.c:124 structure.c:149
+msgid "Title"
+msgstr ""
+
+#: structure.c:124
+msgid "New group"
+msgstr ""
+
+#: structure.c:136 structure.c:166
+msgid "No container selected"
+msgstr ""
+
+#: structure.c:150
+msgid "Tag"
+msgstr ""
+
+#: structure.c:152
+msgid "New field"
+msgstr ""
+
+#: structure.c:176
+msgid "Really delete this field?"
+msgstr ""
+
+#: structure.c:177
+msgid "Delete"
+msgstr "Löschen"
+
+#: structure.c:177
+msgid "Cancel"
+msgstr ""
+
+#: structure.c:234
+msgid "Page"
+msgstr ""
+
+#: structure.c:235
+msgid "Tap here to add a page."
+msgstr ""
+
+#: structure.c:251
+#, fuzzy
+msgid "Delete item"
+msgstr "Löschen"
+
+#: structure.c:251
+msgid "Tap here to delete the selected item."
+msgstr ""
+
+#. TRANSLATORS: kB = kilo bytes
+#: configure.c:131 configure.c:337
+msgid "Current size:"
+msgstr ""
+
+#: configure.c:132
+msgid "kB (optimised)"
+msgstr ""
+
+#: configure.c:177
+msgid "<b>Detail panel:</b>"
+msgstr ""
+
+#: configure.c:203
+msgid "NAME"
+msgstr ""
+
+#: configure.c:213
+msgid "Add"
+msgstr ""
+
+#: configure.c:220
+msgid "Remove"
+msgstr ""
+
+#: configure.c:242
+msgid "Label"
+msgstr ""
+
+#: configure.c:247
+msgid "Data item"
+msgstr ""
+
+#: configure.c:291
+msgid "Screen Layout"
+msgstr ""
+
+#: configure.c:297
+msgid "List position"
+msgstr ""
+
+#: configure.c:300
+#, fuzzy
+msgid "left"
+msgstr "Löschen"
+
+#: configure.c:302
+msgid "right"
+msgstr ""
+
+#: configure.c:330
+msgid "Database Size"
+msgstr ""
+
+#: configure.c:337
+msgid "kB"
+msgstr ""
+
+#: configure.c:342
+msgid "Actions"
+msgstr ""
+
+#: configure.c:349
+msgid "Optimise database"
+msgstr ""
+
+#: configure.c:352
+msgid "Run"
+msgstr ""
+
+#: configure.c:458
+#, fuzzy
+msgid "Editing Layout"
+msgstr "Layout editieren"
+
+#: configure.c:460
+msgid "Setup"
+msgstr ""
+
+#: configure.c:461
+msgid "Database"
+msgstr ""
+
+#: configure.c:493
+msgid "Contacts: Configuration"
+msgstr ""
+
+#: export.c:158
+msgid "Save as..."
+msgstr ""
+
+#. TRANSLATORS: These abbreviations are a list of common titles used in a name
+#: namedetail.c:30
+msgid "Dr."
+msgstr ""
+
+#: namedetail.c:30
+msgid "Miss"
+msgstr ""
+
+#: namedetail.c:30
+msgid "Mr."
+msgstr ""
+
+#: namedetail.c:30
+msgid "Mrs."
+msgstr ""
+
+#: namedetail.c:30
+msgid "Ms."
+msgstr ""
+
+#: namedetail.c:30
+msgid "Prof."
+msgstr ""
+
+#: namedetail.c:30
+msgid "Sir"
+msgstr ""
+
+#. TRANSLATORS: This is a list of common name suffixes
+#: namedetail.c:32
+msgid "Jr."
+msgstr ""
+
+#: namedetail.c:32
+msgid "Esq."
+msgstr ""
+
+#: namedetail.c:32
+msgid "Sr."
+msgstr ""
+
+#: namedetail.c:32
+msgid "I"
+msgstr ""
+
+#: namedetail.c:32
+msgid "II"
+msgstr ""
+
+#: namedetail.c:32
+msgid "III"
+msgstr ""
+
+#: namedetail.c:61
+#, fuzzy
+msgid "Edit Name Details"
+msgstr "Kontaktdetails"
+
+#: namedetail.c:88
+msgid "First name:"
+msgstr ""
+
+#: namedetail.c:89
+msgid "Middle name:"
+msgstr ""
+
+#: namedetail.c:90
+msgid "Last name:"
+msgstr ""
+
+#: namedetail.c:91
+msgid "Suffix:"
+msgstr ""
+
+#: namedetail.c:92
+msgid "Title:"
+msgstr ""
+
+#: finddlg.c:37
+#, fuzzy
+msgid "Find Contacts"
+msgstr "Kontakte"
+
+#: finddlg.c:49
+msgid "Search for:"
+msgstr ""
+
+#: gpe-contacts.desktop.in.h:2
+#, fuzzy
+msgid "GPE Contacts"
+msgstr "Kontakte"
+
+#: edit-vcard.desktop.in.h:1
+msgid "Edit personal vcard"
+msgstr ""
+
+#: edit-vcard.desktop.in.h:2
+msgid "My VCard"
+msgstr ""
+
+#~ msgid "*all*"
+#~ msgstr "*Alle*"
+
+#~ msgid "New"
+#~ msgstr "Neu"
+
+#~ msgid "Delete Contact"
+#~ msgstr "Kontakt löschen"
+
+#~ msgid "Filter"
+#~ msgstr "Filter"
+
+#~ msgid "Enter Search Term"
+#~ msgstr "Suchbegriff eingeben"
+
+#~ msgid "All"
+#~ msgstr "Alle"
+
+#~ msgid "Personal"
+#~ msgstr "Persönlich"
+
+#~ msgid "Business"
+#~ msgstr "Geschäftlich"
+
+#~ msgid "Markus Musterman"
+#~ msgstr "Markus Mustermann"
 
 # ???
-#: src/interface.c:305
-msgid "Summary Description"
-msgstr "Zusammenfassung"
+#~ msgid "Summary Description"
+#~ msgstr "Zusammenfassung"
 
-#: src/interface.c:316
-msgid ""
-"Somestreet No. 10\n"
-"12345 Some City\n"
-"UnknownCountry"
-msgstr ""
-"Irgendeine Str. 10\n"
-"12345 Eine Stadt\n"
-"Ein Land"
+#~ msgid ""
+#~ "Somestreet No. 10\n"
+#~ "12345 Some City\n"
+#~ "UnknownCountry"
+#~ msgstr ""
+#~ "Irgendeine Str. 10\n"
+#~ "12345 Eine Stadt\n"
+#~ "Ein Land"
 
-#: src/interface.c:343
-msgid "Telephone"
-msgstr "Telefon"
+#~ msgid "Telephone"
+#~ msgstr "Telefon"
 
-#: src/interface.c:351 src/interface.c:370
-msgid "(555) 213 456 78"
-msgstr "(555) 213 456 78"
+#~ msgid "(555) 213 456 78"
+#~ msgstr "(555) 213 456 78"
 
-#: src/interface.c:362
-msgid "Mobile"
-msgstr "Mobiltelefon"
+#~ msgid "Mobile"
+#~ msgstr "Mobiltelefon"
 
-#: src/interface.c:381
-msgid "E-Mail"
-msgstr "E-Mail"
+#~ msgid "dummy@aol.com"
+#~ msgstr "dummy@aol.com"
 
-#: src/interface.c:389
-msgid "dummy@aol.com"
-msgstr "dummy@aol.com"
+#~ msgid "Birthday"
+#~ msgstr "Geburtstag"
 
-#: src/interface.c:400
-msgid "Birthday"
-msgstr "Geburtstag"
+#~ msgid "31. 2. 1968"
+#~ msgstr "31. 2. 1968"
 
-#: src/interface.c:408
-msgid "31. 2. 1968"
-msgstr "31. 2. 1968"
+#~ msgid "Main Data"
+#~ msgstr "Hauptdaten"
 
-#: src/interface.c:419
-msgid "Main Data"
-msgstr "Hauptdaten"
+#~ msgid "Other Data"
+#~ msgstr "Andere Daten"
 
-#: src/interface.c:427
-msgid "label38"
-msgstr ""
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "\n"
+#~ "There's some space here for arbitrary notes\n"
+#~ "about a contact.\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "\n"
+#~ "Etwas Platz für beliebige Notizen über einen\n"
+#~ "Kontakt.\n"
+#~ "\n"
 
-#: src/interface.c:435
-msgid "Other Data"
-msgstr "Andere Daten"
-
-#: src/interface.c:460
-msgid ""
-"\n"
-"\n"
-"\n"
-"There's some space here for arbitrary notes\n"
-"about a contact.\n"
-"\n"
-msgstr ""
-"\n"
-"\n"
-"\n"
-"Etwas Platz für beliebige Notizen über einen\n"
-"Kontakt.\n"
-"\n"
-
-#: src/interface.c:462
-msgid "Notes"
-msgstr "Notizen"
-
-#: src/support.c:121
-#, c-format
-msgid "Couldn't find pixmap file: %s"
-msgstr ""
-
-#: src/support.c:130
-#, c-format
-msgid "Error loading pixmap file: %s"
-msgstr ""
+#~ msgid "Notes"
+#~ msgstr "Notizen"
