@@ -1,10 +1,24 @@
-LIBS=libgpewidget libdisplaymigration libgpepimc libeventdb libtododb libxsettings libxsettings-client libsoundgen libschedule libgpevtype gpe-ownerinfo
+I18N_LIBS = libgpewidget libdisplaymigration libgpepimc libeventdb libtododb libxsettings libxsettings-client libsoundgen libschedule libgpevtype gpe-ownerinfo
 
-APPS=gpe-announce gpe-autostarter gpe-bluetooth gpe-bootsplash gpe-calculator gpe-calendar gpe-confd gpe-contacts gpe-dm gpe-edit gpe-filemanager gpe-gallery gpe-icons gpe-irc gpe-login gpe-minicalc gpe-nmf gpe-question gpe-setbg gpe-setlocale gpe-sketchbook gpe-soundbite gpe-soundserver gpe-su gpe-taskmanager gpe-terminal gpe-timesheet gpe-today gpe-todo keylaunch minilite nsqld startup-monitor teleport xst  # gpe-what
+MONO_LIBS = 
+
+I18N_APPS = gpe-announce gpe-autostarter gpe-bluetooth gpe-calculator gpe-calendar gpe-confd gpe-contacts gpe-dm gpe-edit gpe-filemanager gpe-gallery  gpe-irc gpe-login gpe-minicalc gpe-nmf gpe-question gpe-setbg gpe-setlocale gpe-sketchbook gpe-soundbite gpe-soundserver gpe-su gpe-taskmanager  gpe-timesheet gpe-today gpe-todo keylaunch minilite nsqld startup-monitor teleport xst  # gpe-what
+
+MONO_APPS = gpe-bootsplash gpe-icons gpe-terminal
 
 ifeq ($(IPAQ),1)
-APPS += gpe-conf minibat ipaq-sleep
+I18N_APPS += gpe-conf
+MONO_APPS += minibat ipaq-sleep
 endif
+
+I18N_TOYS = gpe-ataxx gpe-go
+MONO_TOYS = gsoko gpe-code gpe-code2 gpe-julia gpe-lights gpe-lights2 gpe-othello gpe-pegged gpe-tetris pdamaze repton sfcave-sdl snes232 xdemineur 
+
+
+LIBS = $(I18N_LIBS) $(MONO_LIBS)
+APPS = $(I18N_APPS) $(MONO_APPS)
+TOYS = $(I18N_TOYS) $(MONO_TOYS)
+
 
 export CVSBUILD=yes
 
@@ -23,3 +37,9 @@ ipkg:
 clean:
 	set -e ; for i in $(LIBS); do make -C $$i clean; done
 	set -e ; for i in $(APPS); do make -C $$i clean; done
+
+freshen-po:
+# UNCOMMENT THAT ONLY IF YOUR ARE A GPE MAINTAINER AND KNOW WHAT YOU DO.
+#	set -e ; for i in $(I18N_LIBS); do make -C $$i freshen-po; done
+#	set -e ; for i in $(I18N_APPS); do make -C $$i freshen-po; done
+#	set -e ; for i in $(I18N_TOYS); do make -C ../games/$$i freshen-po; done
