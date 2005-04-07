@@ -81,7 +81,8 @@ clean-po:
 freshen-po: linguas
 	rm -rf tmp-po
 	mkdir tmp-po
-	cd tmp-po; for LANG in $(LINGUAS); do wget $(TRANSLATION_SITE)/$(PACKAGE)/$$LANG.po; done
+#	cd tmp-po; for LANG in $(LINGUAS); do wget $(TRANSLATION_SITE)/$(PACKAGE)/$$LANG.po; done
+	cd tmp-po; ../$(BUILD)/po-wget-last ../$(BUILD)/postats $(PACKAGE)
 	for LANG in $(LINGUAS); do if [ ! -f $(DIR_PO)/$$LANG.po ] || ! cmp -s $(DIR_PO)/$$LANG.po tmp-po/$$LANG.po ; then mv tmp-po/$$LANG.po $(DIR_PO)/$$LANG.po; echo "Updated $$LANG translation"; fi; done
 	rm -rf tmp-po
 
