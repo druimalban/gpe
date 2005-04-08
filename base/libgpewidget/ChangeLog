@@ -1,6 +1,7 @@
 
 2005-04-08  Florian Boor <florian@kernelconcepts.de>
 
+	* init.c, spacing.c, spacing.h: Add automatic adjusting of scaling factor.
 	* gtksimplemenu.c: Fixed typo.
 
 2005-04-06  Florian Boor <florian@kernelconcepts.de>

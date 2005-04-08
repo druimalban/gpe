@@ -27,11 +27,15 @@
  *   (http://developer.gnome.org/projects/gup/hig/1.0/layout.html#layout-window)
  * for GPE:
  */
-#define GPE_GNOME_SCALING 2
+#define SCALING_SIZE	400
+extern guint GPE_GNOME_SCALING;
 
 /* See also
  *  http://mail.gnome.org/archives/gtk-devel-list/2003-February/msg00009.html
  */
+ 
+/* determine scaling by querying display size */
+void init_spacing (void);
 
 /* the spacing for categories in a dialog: */
 guint gpe_get_catspacing (void);

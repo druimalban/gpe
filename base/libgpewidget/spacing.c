@@ -18,6 +18,16 @@
  */
 
 #include "spacing.h"
+#include <gdk/gdk.h>
+
+guint GPE_GNOME_SCALING = 2;
+
+/* determine scaling by querying display size */
+void 
+init_spacing(void) {
+	if (gdk_screen_width() > SCALING_SIZE)
+		GPE_GNOME_SCALING = 1;
+}
 
 /* the spacing for categories in a dialog: */
 guint

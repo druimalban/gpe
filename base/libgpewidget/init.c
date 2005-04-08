@@ -25,6 +25,7 @@
 #include <gtk/gtk.h>
 
 #include "errorbox.h"
+#include "spacing.h"
 
 gint saved_argc;
 gchar **saved_argv;
@@ -44,7 +45,7 @@ gpe_application_init (int *argc, char **argv[])
       saved_argc = *argc;
       saved_argv = g_malloc (*argc * sizeof (gchar *));
       for (i = 0; i < saved_argc; i++)
-	saved_argv[i] = g_strdup ((*argv)[i]);
+        saved_argv[i] = g_strdup ((*argv)[i]);
     }
 
   gtk_rc_add_default_file (default_gtkrc_file);
@@ -55,6 +56,8 @@ gpe_application_init (int *argc, char **argv[])
   gtk_init (argc, argv);
   gtk_set_locale ();
 
+  init_spacing();
+	
   if (home_dir[0] && strcmp (home_dir, "/"))
     {
 
