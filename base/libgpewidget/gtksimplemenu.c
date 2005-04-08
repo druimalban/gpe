@@ -110,12 +110,12 @@ gtk_simple_menu_new (void)
 void
 gtk_simple_menu_append_item (GtkSimpleMenu *sel, const gchar *item)
 {
-  GtkWidget *mi = gtk_menu_item_new_with_label (s);
+  GtkWidget *mi = gtk_menu_item_new_with_label (item);
   gtk_widget_show (mi);
-  gtk_object_set_data (GTK_OBJECT (mi), "item", (gpointer)sm->nr++);
-  gtk_menu_append (GTK_MENU (sm->menu), mi);
-  if (sm->nr == 1)
-    gtk_option_menu_set_history (GTK_OPTION_MENU (sm), 0);
+  gtk_object_set_data (GTK_OBJECT (mi), "item", (gpointer)sel->nr++);
+  gtk_menu_append (GTK_MENU (sel->menu), mi);
+  if (sel->nr == 1)
+    gtk_option_menu_set_history (GTK_OPTION_MENU (sel), 0);
 }
 
 /**
@@ -127,5 +127,5 @@ gtk_simple_menu_append_item (GtkSimpleMenu *sel, const gchar *item)
 void
 gtk_simple_menu_flush (GtkSimpleMenu *sel)
 {
-  gtk_simple_menu_init (sm);
+  gtk_simple_menu_init (sel);
 }
