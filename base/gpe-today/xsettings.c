@@ -27,13 +27,11 @@ static void notify_func(const char *name, XSettingsAction action,
 
     if (conf.bg == MBDESKTOP_BG && !strncmp(name, MBG, strlen(MBG))) {
         if (setting->type == XSETTINGS_TYPE_STRING) {
-			if (strstr(setting->data.v_string, ":"))
-			  set_background(strstr(setting->data.v_string, ":") 
-			                 + (1 * sizeof(char)));
-			else
-		      set_background(setting->data.v_string);
-		  }
-
+            if (strchr(setting->data.v_string, ':'))
+                set_background(strrchr(setting->data.v_string, ':') + 1); 
+            else
+                set_background(setting->data.v_string);
+        }
     } else if (!strncmp(name, KEY_BASE, strlen(KEY_BASE))) {
         const char *p = name + strlen(KEY_BASE);
 
