@@ -5,7 +5,7 @@ module_id() {
     echo `grep "^Hardware" /proc/cpuinfo | sed -e "s/.*: *//" | tr a-z A-Z`
 }
 
-mount /proc
+mount /proc 2>/dev/null
 
 case $1 in
 'start')
@@ -14,7 +14,7 @@ case $1 in
 			ARGS="--mono --force-portrait" ;;
 		"HP IPAQ H3600" | "HP IPAQ H3700" | "HP IPAQ H3900" | *COLLIE | *POODLE)
 		    	ARGS="--flip --force-portrait" ;;
-		"HP IPAQ H3800")
+		"HP IPAQ H3800" | "RAMSES")
 			ARGS="--force-portrait" ;;
 		"SHARP SHEPHERD" | "SHARP HUSKY" | "SHARP CORGI")
 			ARGS="--force-landscape --flip" ;;

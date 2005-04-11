@@ -118,7 +118,8 @@ main(int argc, char *argv[])
 
   tty = open ("/dev/tty0", O_RDWR);
   if (tty < 0)
-    perror ("open");
+    tty = open ("/dev/vc/0", O_RDWR);
+  if (tty < 0)    perror ("open");
   else
     {
       write (tty, cursoff, strlen (cursoff));
