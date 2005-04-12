@@ -16,7 +16,7 @@ NOTE: currently all categories are global.
 
 <!-- ##### STRUCT gpe_pim_category ##### -->
 <para>
-
+A category
 </para>
 
 @name: Name of the category
