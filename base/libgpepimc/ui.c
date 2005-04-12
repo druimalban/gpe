@@ -312,7 +312,7 @@ categories_dialog_ok (GtkWidget *w, gpointer p)
   gtk_widget_destroy (window);
 }
 
-void
+static void
 change_category_name (GtkCellRendererText *cell,
                       gchar               *path_string,
                       gchar               *new_text,

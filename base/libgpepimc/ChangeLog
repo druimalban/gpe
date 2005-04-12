@@ -1,0 +1,4 @@
+2005-04-12  Luc Pionchon  <luc@handhelds.org>
+
+	* ui.c (change_category_name): make function static
+
