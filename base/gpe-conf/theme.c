@@ -1413,7 +1413,7 @@ Theme_Build_Objects ()
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), gpe_boxspacing, 0);
   self.spFS = gtk_spin_button_new_with_range(5,20,1);
-  gtk_spin_button_set_value(GTK_SPIN_BUTTON(self.spFS),8.0);
+  gtk_spin_button_set_value(GTK_SPIN_BUTTON(self.spFS),7.0);
   gtk_table_attach (GTK_TABLE (table), self.spFS, 1, 2, 2, 3,
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), gpe_boxspacing, 0);
@@ -1570,12 +1570,17 @@ Theme_Build_Objects ()
 #ifndef APPMGR_INTERFACE	
   gtk_range_set_value(GTK_RANGE(self.slIconSize),(float)isize);
 #endif 
-  /* toolbar layout */
+  /* toolbar layout and font size */
   if (minsize > 400)
+  {
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.rbToolBoth),TRUE);
+	gtk_spin_button_set_value(GTK_SPIN_BUTTON(self.spFSApp),9.0);
+    gtk_spin_button_set_value(GTK_SPIN_BUTTON(self.spFS),8.0);
+  }
   else
+  {
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.rbToolIcons),TRUE);
-
+  }
   gtk_spin_button_set_value(GTK_SPIN_BUTTON(self.spFSTerminal), 
                             get_terminal_fontsize());
   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.cPerformance), FALSE);

@@ -1,6 +1,7 @@
 
 2005-04-13              Florian Boor <florian.boor@kernelconcepts.de>
 
+	* theme.c: Some hopefully better default font sizes.
 	* gpe-conf.desktop: Changed category to avoid becoming filtered by 
 	                    gpe-appmgr.
 
