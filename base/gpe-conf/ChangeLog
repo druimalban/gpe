@@ -1,3 +1,9 @@
+
+2005-04-13              Florian Boor <florian.boor@kernelconcepts.de>
+
+	* gpe-conf.desktop: Changed category to avoid becoming filtered by 
+	                    gpe-appmgr.
+
 2005-04-06              Florian Boor <florian.boor@kernelconcepts.de>
 
 	* keys/keyctl.c: Fixed usage of GError.

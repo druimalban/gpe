@@ -5,6 +5,6 @@ Exec=gpe-appmgr -g Settings -D /usr/share/applications/gpe-conf.desktop
 Terminal=0
 Type=Application
 Icon=gpe-config.png
-Categories=Application;SystemSettings;GPE
+Categories=Application;GPE
 StartupNotify=True
 SingleInstance=True
