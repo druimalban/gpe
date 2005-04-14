@@ -6,6 +6,6 @@ Exec=gpe-contacts
 Terminal=false
 Type=Application
 Icon=gpe-contacts.png
-Categories=Application;PIM;GPE;
+Categories=Application;Office;PIM;GPE;
 StartupNotify=true
 SingleInstance=true
