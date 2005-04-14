@@ -11,7 +11,7 @@ offset_y = 10
 [Power]
 title = Power Button
 symbol = gpe-config-apm.png
-key = XF86Power
+key = XF86PowerDown
 modificator = ???Pressed
 command = apm --suspend
 xpos = 155
