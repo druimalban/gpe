@@ -234,7 +234,7 @@ run_package (GnomeDesktopFile *p, GObject *item)
   gnome_desktop_file_get_string (p, NULL, "Exec", &cmd);
 
   /* default single instance on for apps that don't request otherwise */
-  if (gnome_desktop_file_get_boolean (p, NULL, "SingleInstance", &single_instance) == FALSE)
+  if (gnome_desktop_file_get_boolean (p, NULL, "SingleInstance", &single_instance) == FALSE && gnome_desktop_file_get_boolean (p, NULL, "X-SingleInstance", &single_instance) == FALSE)
     single_instance = TRUE;
 
   if (gnome_desktop_file_get_boolean (p, NULL, "StartupNotify", &startup_notify) == FALSE)
