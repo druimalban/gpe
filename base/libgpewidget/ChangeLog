@@ -1,6 +1,7 @@
 
 2005-04-14  Florian Boor <florian@kernelconcepts.de>
 
+	* libgpewidget-uninstalled.pc.in: Fixed path to library.
 	* configure.ac, libgpewidget-uninstalled.pc.in: Add and update
           generating libgpewidget-uninstalled.pc.
 	* doc/.cvsignore: New file.
