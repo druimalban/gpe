@@ -1,3 +1,7 @@
+2005-04-14  Florian Boor <florian@kernelconcepts.de>
+
+	* Introducing autotools...
+	* configure.ac: Update version to 0.98
 
 2005-04-08  Florian Boor <florian@kernelconcepts.de>
 
