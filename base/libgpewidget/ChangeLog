@@ -1,3 +1,10 @@
+
+2005-04-14  Florian Boor <florian@kernelconcepts.de>
+
+	* configure.ac, libgpewidget-uninstalled.pc.in: Add and update
+          generating libgpewidget-uninstalled.pc.
+	* doc/.cvsignore: New file.
+
 2005-04-14  Florian Boor <florian@kernelconcepts.de>
 
 	* Introducing autotools...

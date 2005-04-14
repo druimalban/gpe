@@ -1,6 +1,6 @@
 Name: libgpewidget
 Description: GPE Widget Library (not installed)
-Version: VERSION
+Version: @VERSION@
 Requires: gtk+-2.0
-Libs: -LBUILDDIR -lgpewidget
-Cflags: -IBUILDDIR
+Libs: -L@abs_top_srcdir@ -lgpewidget
+Cflags: -I@abs_top_srcdir@
