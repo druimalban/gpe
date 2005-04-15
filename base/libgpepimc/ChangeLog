@@ -1,4 +1,8 @@
+2005-04-15  Florian Boor  <florian@kernelconcepts.de>
+
+	* Add autotools support, removed Makefiles.
+	* ui.c: Removed obsolete use of libdisplaymigration.
+
 2005-04-12  Luc Pionchon  <luc@handhelds.org>
 
 	* ui.c (change_category_name): make function static
-

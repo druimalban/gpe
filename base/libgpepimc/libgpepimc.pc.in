@@ -1,11 +1,11 @@
-prefix=PREFIX
+prefix=@prefix@
 exec_prefix=${prefix}
 libdir=${exec_prefix}/lib
 includedir=${prefix}/include
 
 Name: libgpevtype
 Description: GPE PIM Categories Library
-Version: VERSION
+Version: @VERSION@
 Requires: gtk+-2.0
 Libs: -L${libdir} -lgpepimc
 Cflags: -I${includedir}

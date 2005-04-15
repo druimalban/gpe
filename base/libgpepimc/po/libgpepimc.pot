@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-04-23 22:37+0100\n"
+"POT-Creation-Date: 2005-04-15 18:47+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,11 +16,11 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ui.c:39
+#: ui.c:38
 msgid "Category name must not be blank"
 msgstr ""
 
-#: ui.c:50
+#: ui.c:49
 msgid "A category by that name already exists"
 msgstr ""
 
@@ -28,22 +28,22 @@ msgstr ""
 msgid "Name:"
 msgstr ""
 
-#: ui.c:115 ui.c:336
+#: ui.c:115 ui.c:363
 msgid "New category"
 msgstr ""
 
-#: ui.c:337
+#: ui.c:364
 msgid "Tap here to add a new category."
 msgstr ""
 
-#: ui.c:341
+#: ui.c:368
 msgid "Delete category"
 msgstr ""
 
-#: ui.c:342
+#: ui.c:369
 msgid "Tap here to delete the selected category."
 msgstr ""
 
-#: ui.c:413
+#: ui.c:444
 msgid "Select categories"
 msgstr ""
