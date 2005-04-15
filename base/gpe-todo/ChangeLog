@@ -1,5 +1,6 @@
 2005-04-15  Florian Boor  <florian.boor@kernelconcepts.de>
 
+    * list-ui.c: Choose different colors for priorities.
     * gpe-todo.desktop.in: Changed SingleInstance to X-SingleInstance.
 
 2005-04-14  Florian Boor  <florian.boor@kernelconcepts.de>

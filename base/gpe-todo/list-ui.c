@@ -23,10 +23,10 @@
 
 #include "todo.h"
 
-#define COLOR_NONE      "#BBBBBB"
-#define COLOR_STANDARD  "#FF99FF"
-#define COLOR_HIGH      "#FF00FF"
-#define COLOR_LOW       "#FFDDFF"
+#define COLOR_NONE      "#FFFFFF"
+#define COLOR_STANDARD  "#00EE00"
+#define COLOR_HIGH      "#FF0000"
+#define COLOR_LOW       "#0000FF"
 
 #define _(_x) gettext(_x)
 
