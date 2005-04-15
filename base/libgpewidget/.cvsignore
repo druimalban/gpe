@@ -6,7 +6,7 @@ libgpewidget.so.1
 *.ipk.upload.html
 *.pc
 intltool*
-#Makefile
+Makefile
 Makefile.in
 libgpewidget.prj*
 lingpewidget.pws
@@ -27,3 +27,8 @@ stamp-h1
 depcomp
 *.bz2
 *.gz
+.tm_project.cache
+aclocal.m4
+autom4te.cache
+libgpewidget.pws
+libtool
