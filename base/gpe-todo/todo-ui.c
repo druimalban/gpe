@@ -23,8 +23,6 @@
 #include <gpe/pim-categories.h>
 #include <gpe/pim-categories-ui.h>
 
-#include <libdisplaymigration/displaymigration.h>
-
 #include "todo.h"
 
 #define _(_x) gettext(_x)
@@ -297,7 +295,7 @@ edit_item (struct todo_item *item, gint initial_category, GtkWindow *parent)
   gtk_window_set_modal(GTK_WINDOW(window), TRUE);
   gtk_container_set_border_width (GTK_CONTAINER (window),
                                   gpe_get_border ());
-  displaymigration_mark_window (window);
+  
   if (large_screen)
     {
       if (mode_landscape)

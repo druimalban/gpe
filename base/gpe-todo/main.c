@@ -18,8 +18,6 @@
 #include <gpe/init.h>
 #include <gpe/pim-categories.h>
 
-#include <libdisplaymigration/displaymigration.h>
-
 #include "todo.h"
 
 #define MY_PIXMAPS_DIR PREFIX "/share/gpe-todo"
@@ -53,8 +51,6 @@ open_window (void)
   mode_landscape = (gdk_screen_width() > gdk_screen_height());
     
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-
-  displaymigration_mark_window (window);
 
   top = top_level (window);
 
@@ -91,8 +87,6 @@ main (int argc, char *argv[])
   if (gpe_pim_categories_init () == FALSE)
     exit (1);  
 
-  displaymigration_init ();
-  
   open_window ();
   
   gtk_main ();
