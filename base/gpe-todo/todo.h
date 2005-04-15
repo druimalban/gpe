@@ -24,7 +24,21 @@ extern GtkWidget *edit_item (struct todo_item *item,
 extern void categories_menu (void);
 extern void refresh_items (void);
 
+/* screen geometry information */
 extern gboolean mode_landscape;
 extern gboolean large_screen;
 
+/* list store column definitions */
+enum
+{
+    COL_ICON,
+    COL_SUMMARY,
+    COL_STRIKETHROUGH,
+    COL_DATA,
+    COL_STATUS,
+    COL_DUE,
+    COL_CATEGORY,
+    COL_PRIORITY,
+    NUM_COLUMNS
+};
 #endif

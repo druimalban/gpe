@@ -168,7 +168,7 @@ struct menu_map
 priority_map[] = 
   {
     { N_("High"),		PRIORITY_HIGH },
-    { N_("Standard"),		PRIORITY_STANDARD },
+    { N_("Standard"),	PRIORITY_STANDARD },
     { N_("Low"),		PRIORITY_LOW },
   };
 
@@ -300,9 +300,10 @@ edit_item (struct todo_item *item, gint initial_category, GtkWindow *parent)
   displaymigration_mark_window (window);
   if (large_screen)
     {
-      gtk_window_set_default_size (GTK_WINDOW (window), 
-                                   (int)(gdk_screen_width() * 0.8), 
-                                   (int)(gdk_screen_height() * 0.8));
+      if (mode_landscape)
+        gtk_window_set_default_size (GTK_WINDOW (window), 640, 440);
+      else
+        gtk_window_set_default_size (GTK_WINDOW (window), 440, 640);
     }
   else
     gtk_window_set_default_size (GTK_WINDOW (window), 240, 320);
@@ -398,7 +399,6 @@ edit_item (struct todo_item *item, gint initial_category, GtkWindow *parent)
   
   gtk_text_view_set_editable (GTK_TEXT_VIEW (text), TRUE);
   gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (text), GTK_WRAP_WORD);
-  gtk_widget_set_usize (text, -1, 88);
   
   /* Summary */
   gtk_table_attach(GTK_TABLE(table), label_summary, 0, 1, pos, pos+1, 

@@ -1,3 +1,11 @@
+2005-04-14  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * todo-ui.c: Some GUI tweaks, limit size.
+    * todo.h: Add constants for list columns and some comments.
+    * list-ui.c: Introduced constants for columns, add colored column to
+                 indicate priority and add category in large screen mode.
+                 Some reformating (mostly identation fixes).
+
 2005-04-05  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * list-ui.c: Changed toolbar to use new toolbar API, some fixes and
