@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-11-18 22:49+0000\n"
+"POT-Creation-Date: 2005-04-15 21:01+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,122 +16,98 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: main.c:62 gpe-todo.desktop.in.h:2
+#: ../gpe-todo.desktop.in.h:1
+msgid "GPE To-do List"
+msgstr ""
+
+#: ../gpe-todo.desktop.in.h:2 ../main.c:63
 msgid "To-do list"
 msgstr ""
 
-#: todo-ui.c:161
-msgid "Not started"
-msgstr ""
-
-#: todo-ui.c:162
-msgid "In progress"
-msgstr ""
-
-#: todo-ui.c:163
-msgid "Completed"
-msgstr ""
-
-#: todo-ui.c:164
-msgid "Abandoned"
-msgstr ""
-
-#: todo-ui.c:170
-msgid "High"
-msgstr ""
-
-#: todo-ui.c:171
-msgid "Standard"
-msgstr ""
-
-#: todo-ui.c:172
-msgid "Low"
-msgstr ""
-
-#: todo-ui.c:271
-msgid "Summary:"
-msgstr ""
-
-#: todo-ui.c:272
-msgid "Details:"
-msgstr ""
-
-#: todo-ui.c:320
-msgid "Due:"
-msgstr ""
-
-#: todo-ui.c:334
-msgid "Categories:"
-msgstr ""
-
-#: todo-ui.c:384
-msgid "Priority:"
-msgstr ""
-
-#: todo-ui.c:446
-msgid "Edit to-do item"
-msgstr ""
-
-#: todo-ui.c:455
-msgid "New item"
-msgstr ""
-
-#: list-ui.c:75
+#: ../list-ui.c:117
 msgid "All items"
 msgstr ""
 
-#: list-ui.c:199 list-ui.c:290
-msgid "standard"
+#: ../list-ui.c:144
+msgid "Show completed"
 msgstr ""
 
-#: list-ui.c:202 list-ui.c:293
-msgid "high"
+#: ../list-ui.c:577
+msgid "P"
 msgstr ""
 
-#: list-ui.c:205 list-ui.c:296
-msgid "low"
-msgstr ""
-
-#: list-ui.c:208 list-ui.c:299
-msgid "none"
-msgstr ""
-
-#: list-ui.c:451
-msgid "Tap here to add a new item."
-msgstr ""
-
-#: list-ui.c:455
-msgid "Delete completed items"
-msgstr ""
-
-#: list-ui.c:456
-msgid "Tap here to delete completed items."
-msgstr ""
-
-#: list-ui.c:474
-msgid "Quit"
-msgstr ""
-
-#: list-ui.c:474
-msgid "Tap here to quit the program."
-msgstr ""
-
-#: list-ui.c:496
+#: ../list-ui.c:584
 msgid "Status"
 msgstr ""
 
-#: list-ui.c:505
+#: ../list-ui.c:591
 msgid "Summary"
 msgstr ""
 
-#: list-ui.c:513
-msgid "Priority"
+#: ../list-ui.c:598
+msgid "Category"
 msgstr ""
 
-#: list-ui.c:521
+#: ../list-ui.c:604
 msgid "Due Date"
 msgstr ""
 
-#: gpe-todo.desktop.in.h:1
-msgid "GPE To-do List"
+#: ../todo-ui.c:159
+msgid "Not started"
+msgstr ""
+
+#: ../todo-ui.c:160
+msgid "In progress"
+msgstr ""
+
+#: ../todo-ui.c:161
+msgid "Completed"
+msgstr ""
+
+#: ../todo-ui.c:162
+msgid "Abandoned"
+msgstr ""
+
+#: ../todo-ui.c:168
+msgid "High"
+msgstr ""
+
+#: ../todo-ui.c:169
+msgid "Standard"
+msgstr ""
+
+#: ../todo-ui.c:170
+msgid "Low"
+msgstr ""
+
+#: ../todo-ui.c:264
+msgid "Priority:"
+msgstr ""
+
+#: ../todo-ui.c:266
+msgid "Status:"
+msgstr ""
+
+#: ../todo-ui.c:269
+msgid "Summary:"
+msgstr ""
+
+#: ../todo-ui.c:270
+msgid "Details:"
+msgstr ""
+
+#: ../todo-ui.c:274
+msgid "Categories:"
+msgstr ""
+
+#: ../todo-ui.c:344
+msgid "Due:"
+msgstr ""
+
+#: ../todo-ui.c:482
+msgid "Edit to-do item"
+msgstr ""
+
+#: ../todo-ui.c:491
+msgid "New item"
 msgstr ""

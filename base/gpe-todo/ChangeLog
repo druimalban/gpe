@@ -1,5 +1,7 @@
 2005-04-15  Florian Boor  <florian.boor@kernelconcepts.de>
 
+    * Add support for autotools, updated .cvsignore files.
+    * main.c, todo-ui.c: Removed obsolete use of libdisplaymigration.
     * list-ui.c: Choose different colors for priorities.
     * gpe-todo.desktop.in: Changed SingleInstance to X-SingleInstance.
 

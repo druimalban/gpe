@@ -5,7 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-todo 0.32\n"
-"POT-Creation-Date: 2003-02-14 19:50+0000\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2005-04-15 21:01+0200\n"
 "PO-Revision-Date: 2004-02-03 08:35-0500\n"
 "Last-Translator: Aleksandar Jelenak <jelenak@netlinkplus.net>\n"
 "Language-Team: Serbian <sr@li.org>\n"
@@ -13,134 +14,166 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: main.c:60
+#: ../gpe-todo.desktop.in.h:1
+#, fuzzy
+msgid "GPE To-do List"
+msgstr "Списак послова"
+
+#: ../gpe-todo.desktop.in.h:2 ../main.c:63
 msgid "To-do list"
 msgstr "Списак послова"
 
-#: todo-ui.c:269
-msgid "Select categories"
-msgstr "Изабери категорију"
-
-#: todo-ui.c:291
-msgid "Summary:"
-msgstr "Сажетак:"
-
-#: todo-ui.c:292
-msgid "Details"
-msgstr "Појединости"
-
-#: todo-ui.c:298
-msgid "Not started"
-msgstr "Није почео"
-
-#: todo-ui.c:298
-msgid "In progress"
-msgstr "У току"
-
-#: todo-ui.c:299
-msgid "Completed"
-msgstr "Завршено"
-
-#: todo-ui.c:321
-msgid "Due:"
-msgstr "Доспева:"
-
-#: todo-ui.c:336
-msgid "Categories:"
-msgstr "Категорије:"
-
-#: todo-ui.c:429
-msgid "Edit to-do item"
-msgstr "Уреди ставку посла"
-
-#: todo-ui.c:436
-msgid "New item"
-msgstr "Нова ставка"
-
-#: list-ui.c:52
+#: ../list-ui.c:117
 msgid "All items"
 msgstr "Све ставке"
 
-#: list-ui.c:81
-msgid "Permanently delete all completed items?"
-msgstr "Заувек обрисати све окончане ставке?"
+#: ../list-ui.c:144
+#, fuzzy
+msgid "Show completed"
+msgstr "Завршено"
 
-#: list-ui.c:81
-msgid "Confirm"
-msgstr "Потврди"
+#: ../list-ui.c:577
+msgid "P"
+msgstr ""
 
-#: list-ui.c:82 configure.c:217
-msgid "Delete"
-msgstr "Избриши"
+#: ../list-ui.c:584
+msgid "Status"
+msgstr ""
 
-#: list-ui.c:82
-msgid "Cancel"
-msgstr "Поништи"
+#: ../list-ui.c:591
+#, fuzzy
+msgid "Summary"
+msgstr "Сажетак:"
 
-#: list-ui.c:333 configure.c:210
-msgid "New"
-msgstr "Нов"
-
-#: list-ui.c:334 list-ui.c:335
-msgid "Add a new item"
-msgstr "Додај нову ставку"
-
-#: list-ui.c:340
-msgid "Configure"
-msgstr "Подешавања"
-
-#: list-ui.c:341 list-ui.c:342
-msgid "Configure categories"
-msgstr "Подешавања категорија"
-
-#: list-ui.c:347
-msgid "Purge"
-msgstr "Прочисти"
-
-#: list-ui.c:348 list-ui.c:349
-msgid "Purge completed items"
-msgstr "Прочисти окончане ставке"
-
-#: list-ui.c:354
-msgid "Re-sort"
-msgstr "Поново поређај"
-
-#: list-ui.c:355 list-ui.c:356
-msgid "Move completed items to the end of the list"
-msgstr "Премести окончане ставке на крај списка"
-
-#: list-ui.c:361
-msgid "Exit"
-msgstr "Изађи"
-
-#: list-ui.c:362 list-ui.c:363
-msgid "Exit the program"
-msgstr "Напусти програм"
-
-#: configure.c:58
-msgid "Category name must not be blank"
-msgstr "Име категорије не сме бити празно"
-
-#: configure.c:68
-msgid "A category by that name already exists"
-msgstr "Истоимена категорија већ постоји"
-
-#: configure.c:106
-msgid "To-do list: Categories"
-msgstr "Списак послова: Категорије"
-
-#: configure.c:139
-msgid "New category"
-msgstr "Нова категорија"
-
-#: configure.c:172
-msgid "Categories"
+#: ../list-ui.c:598
+#, fuzzy
+msgid "Category"
 msgstr "Категорије"
 
-#: configure.c:211 configure.c:212
-msgid "Create a new category"
-msgstr "Направи нову категорију"
+#: ../list-ui.c:604
+msgid "Due Date"
+msgstr ""
 
-#: configure.c:218 configure.c:219
-msgid "Delete the selected category"
-msgstr "Избриши означене категорије"
+#: ../todo-ui.c:159
+msgid "Not started"
+msgstr "Није почео"
+
+#: ../todo-ui.c:160
+msgid "In progress"
+msgstr "У току"
+
+#: ../todo-ui.c:161
+msgid "Completed"
+msgstr "Завршено"
+
+#: ../todo-ui.c:162
+msgid "Abandoned"
+msgstr ""
+
+#: ../todo-ui.c:168
+msgid "High"
+msgstr ""
+
+#: ../todo-ui.c:169
+msgid "Standard"
+msgstr ""
+
+#: ../todo-ui.c:170
+msgid "Low"
+msgstr ""
+
+#: ../todo-ui.c:264
+msgid "Priority:"
+msgstr ""
+
+#: ../todo-ui.c:266
+msgid "Status:"
+msgstr ""
+
+#: ../todo-ui.c:269
+msgid "Summary:"
+msgstr "Сажетак:"
+
+#: ../todo-ui.c:270
+#, fuzzy
+msgid "Details:"
+msgstr "Појединости"
+
+#: ../todo-ui.c:274
+msgid "Categories:"
+msgstr "Категорије:"
+
+#: ../todo-ui.c:344
+msgid "Due:"
+msgstr "Доспева:"
+
+#: ../todo-ui.c:482
+msgid "Edit to-do item"
+msgstr "Уреди ставку посла"
+
+#: ../todo-ui.c:491
+msgid "New item"
+msgstr "Нова ставка"
+
+#~ msgid "Select categories"
+#~ msgstr "Изабери категорију"
+
+#~ msgid "Permanently delete all completed items?"
+#~ msgstr "Заувек обрисати све окончане ставке?"
+
+#~ msgid "Confirm"
+#~ msgstr "Потврди"
+
+#~ msgid "Delete"
+#~ msgstr "Избриши"
+
+#~ msgid "Cancel"
+#~ msgstr "Поништи"
+
+#~ msgid "New"
+#~ msgstr "Нов"
+
+#~ msgid "Add a new item"
+#~ msgstr "Додај нову ставку"
+
+#~ msgid "Configure"
+#~ msgstr "Подешавања"
+
+#~ msgid "Configure categories"
+#~ msgstr "Подешавања категорија"
+
+#~ msgid "Purge"
+#~ msgstr "Прочисти"
+
+#~ msgid "Purge completed items"
+#~ msgstr "Прочисти окончане ставке"
+
+#~ msgid "Re-sort"
+#~ msgstr "Поново поређај"
+
+#~ msgid "Move completed items to the end of the list"
+#~ msgstr "Премести окончане ставке на крај списка"
+
+#~ msgid "Exit"
+#~ msgstr "Изађи"
+
+#~ msgid "Exit the program"
+#~ msgstr "Напусти програм"
+
+#~ msgid "Category name must not be blank"
+#~ msgstr "Име категорије не сме бити празно"
+
+#~ msgid "A category by that name already exists"
+#~ msgstr "Истоимена категорија већ постоји"
+
+#~ msgid "To-do list: Categories"
+#~ msgstr "Списак послова: Категорије"
+
+#~ msgid "New category"
+#~ msgstr "Нова категорија"
+
+#~ msgid "Create a new category"
+#~ msgstr "Направи нову категорију"
+
+#~ msgid "Delete the selected category"
+#~ msgstr "Избриши означене категорије"
