@@ -1,10 +1,11 @@
 [Desktop Entry]
+Encoding=UTF-8
 _Name=Network Setup
 _Comment=Network Setup
 Exec=gpe-conf network
-Terminal=0
+Terminal=false
 Type=Application
 Icon=gpe-config-network.png
 Categories=Application;SystemSettings;GPE
 StartupNotify=True
-SingleInstance=True
+X-SingleInstance=True

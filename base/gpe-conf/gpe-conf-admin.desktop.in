@@ -1,10 +1,11 @@
 [Desktop Entry]
+Encoding=UTF-8
 _Name=User Access
 _Comment=User access administration
 Exec=gpe-conf admin
-Terminal=0
+Terminal=false
 Type=Application
 Icon=gpe-config-admin.png
 Categories=Application;SystemSettings;GPE
-StartupNotify=True
+X-StartupNotify=True
 SingleInstance=True

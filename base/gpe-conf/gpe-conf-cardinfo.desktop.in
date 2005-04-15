@@ -1,10 +1,11 @@
 [Desktop Entry]
+Encoding=UTF-8
 _Name=PC/CF Cards
 _Comment=PC/CF Cards info and config
 Exec=gpe-conf cardinfo
-Terminal=0
+Terminal=false
 Type=Application
 Icon=gpe-config-cardinfo.png
 Categories=Application;SystemSettings;GPE
 StartupNotify=True
-SingleInstance=True
+X-SingleInstance=True

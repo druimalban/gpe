@@ -1,10 +1,11 @@
 [Desktop Entry]
+Encoding=UTF-8
 _Name=Look and Feel
 _Comment=Global Appearance Setup
 Exec=gpe-conf theme
-Terminal=0
+Terminal=false
 Type=Application
 Icon=gpe-config-theme.png
 Categories=Application;SystemSettings;GPE
 StartupNotify=True
-SingleInstance=True
+X-SingleInstance=True
