@@ -6,7 +6,7 @@ libgpewidget.so.1
 *.ipk.upload.html
 *.pc
 intltool*
-Makefile
+#Makefile
 Makefile.in
 libgpewidget.prj*
 lingpewidget.pws
