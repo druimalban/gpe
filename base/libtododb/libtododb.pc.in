@@ -1,0 +1,11 @@
+prefix=@prefix@
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: libtododb
+Description: GPE TODO Database
+Version: @VERSION@
+Requires: sqlite
+Libs: -L${libdir} -ltododb
+Cflags: -I${includedir}

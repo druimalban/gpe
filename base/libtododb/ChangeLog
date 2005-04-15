@@ -1,3 +1,8 @@
+2005-04-15  Florian Boor <florian@kernelconcepts.de>
+
+	* Add autotools support.
+	* .cvsignore: Teach CVS to ignore many files.
+
 2004-10-17  Phil Blundell  <pb@nexus.co.uk>
 
 	* Version 0.08 released.

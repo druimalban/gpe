@@ -1,3 +1,23 @@
 *.d
 libtododb.so.0
+Makefile.in
+aclocal.m4
+autogen.sh
+autom4te.cache
+config.guess
+config.log
+config.status
+config.sub
+configure
+.libs
+.tm_project.cache
+libtododb-*.tar.bz2
+libtododb-*.tar.gz
+*.la
+*.lo
+libtododb.pc
+libtododb.prj
+libtododb.pws
+libtool
+ltmain.sh
 
