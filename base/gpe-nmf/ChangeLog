@@ -1,4 +1,8 @@
 
+2005-04-16  Florian Boor  <florian.boor@kernelconcepts.de>
+
+	* Makefile, backend/Makefile: Fixed path in install target.
+
 2005-03-31  Florian Boor  <florian.boor@kernelconcepts.de>
 
 	* Don't use render.h

@@ -46,7 +46,7 @@ $(PACKAGE): $(OBJS) $(LIB)
 	$(CC) -o $@ $^ $(LDFLAGS) $(PACKAGE_LDFLAGS) -Lbackend -lgpenmf
 
 install-program: all $(PACKAGE).desktop
-	make -C backend PREFIX=$(PREFIX) DESTDIR=$(DESTDIR) install
+	make -C backend PREFIX=$(PREFIX) DESTDIR=$(DESTDIR) BUILD=../$(BUILD) install
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
 	install -s $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	mkdir -p $(DESTDIR)$(PREFIX)/share/pixmaps
