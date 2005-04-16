@@ -1,0 +1,116 @@
+# Turkish translation of gpe-edit.
+# Copyright (C) 2005 gpe-edit GNU GPL.
+# This file is distributed under the same license as the gpe-edit package.
+# Abdullah Ulas <potkal@bioinformatics.org>, 2005.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-edit 0.13\n"
+"POT-Creation-Date: 2003-02-20 20:31+0000\n"
+"PO-Revision-Date: 2005-04-09 17:50+0300\n"
+"Last-Translator: Abdullah Ulas <potkal@bioinformatics.org>\n"
+"Language-Team: Turkish <gnu-tr-u12a@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-9\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: main.c:88 main.c:89
+msgid "Untitled"
+msgstr "Adsýz"
+
+#: main.c:260
+msgid "Open File ..."
+msgstr "Dosya Aç ..."
+
+#: main.c:289
+msgid "Save as .."
+msgstr "Farklý kaydet .."
+
+#: main.c:327
+msgid "Save current file before exiting?"
+msgstr "Þu andaki dosya önceki dosya üzerine mi kaydedilsin?"
+
+#: main.c:327
+msgid "Question"
+msgstr "Soru"
+
+#: main.c:328
+msgid "Don't save"
+msgstr "Kaydetme"
+
+#: main.c:328 main.c:616
+msgid "Save"
+msgstr "Kaydet"
+
+#: main.c:390
+msgid "Text not found"
+msgstr "Metin bulunamadý"
+
+#: main.c:429
+msgid "Unable to replace text"
+msgstr "Metin deðiþtirme yapýlamadý"
+
+#: main.c:443 main.c:492
+msgid "Search for:"
+msgstr "Arama yapýlan:"
+
+#: main.c:446 main.c:498
+msgid "Find"
+msgstr "Bul"
+
+#: main.c:493
+msgid "Replace with:"
+msgstr "Ýle yer deðiþtir:"
+
+#: main.c:497 main.c:630
+msgid "Replace"
+msgstr "Yer deðiþtir"
+
+#: main.c:608
+msgid "New"
+msgstr "Yeni"
+
+#: main.c:609
+msgid "New document"
+msgstr "Yeni doküman"
+
+#: main.c:612
+msgid "Open"
+msgstr "Aç"
+
+#: main.c:613
+msgid "Open file"
+msgstr "Dosya aç"
+
+#: main.c:617
+msgid "Save current file"
+msgstr "Hazýr dosyayý kaydet"
+
+#: main.c:620
+msgid "Save as"
+msgstr "Farklý kaydet"
+
+#: main.c:621
+msgid "Save current file as"
+msgstr "Hazýr dosyayý farklý kaydet"
+
+#: main.c:626
+msgid "Search"
+msgstr "Arama"
+
+#: main.c:627
+msgid "Search for a string"
+msgstr "Arama yapýlacak dizi"
+
+#: main.c:631
+msgid "Replace a string"
+msgstr "Dizi yer deðiþtir"
+
+#: gpe-edit.desktop.in.h:1
+msgid "GPE Text Editor"
+msgstr "GPE Metin Düzenleyicisi"
+
+#: gpe-edit.desktop.in.h:2
+msgid "Text Editor"
+msgstr "Metin Düzenleyici"

@@ -1,0 +1,88 @@
+# Turkish tarnslation of gpe-sketchbook.
+# Copyright (C) 2005 gpe-sketchbook GNU GPL.
+# This file is distributed under the same license as the gpe-sketchbook package.
+# Abdullah Ulas <potkal@bioinformatics.org>, 2005.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-sketchbook 0.2.5\n"
+"POT-Creation-Date: 2003-04-02 02:26+0300\n"
+"PO-Revision-Date: 2005-04-10 11:03+0300\n"
+"Last-Translator: Abdullah Ulas <potkal@bioinformatics.org>\n"
+"Language-Team: Turkish <gnu-tr-u12a@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-9\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: gpe-sketchbook.desktop.in.h:2 src/gpe-sketchbook.c:108
+msgid "Sketchbook"
+msgstr "Skeç kitabý"
+
+#: src/selector.c:87
+#, c-format
+msgid "Cannot read the sketchbook directory: %s. Exit."
+msgstr "Skeç kitabý dizini okuyamadý: %s. Çýkýþ."
+
+#: src/selector.c:93
+#, c-format
+msgid "Cannot create %s: %s. Exit."
+msgstr "Oluþturulamadý %s: %s. Çýkýþ."
+
+#: src/selector.c:164
+#, c-format
+msgid "%s  at  %s"
+msgstr "%s  de %s"
+
+#: src/selector-cb.c:70 src/sketchpad-cb.c:197
+msgid "Delete current sketch?"
+msgstr "Hazýr skeç silinsin mi?"
+
+#: src/selector-cb.c:70 src/sketchpad-cb.c:46 src/sketchpad-cb.c:76
+#: src/sketchpad-cb.c:197
+msgid "Question"
+msgstr "Soru"
+
+#: src/selector-cb.c:71 src/sketchpad-cb.c:198
+msgid "Cancel"
+msgstr "Ýptal"
+
+#: src/selector-cb.c:71 src/sketchpad-cb.c:198 src/sketchpad-gui.c:428
+msgid "Delete"
+msgstr "Sil"
+
+#: src/sketchpad.c:184
+msgid "new"
+msgstr "yeni"
+
+#: src/sketchpad-cb.c:46
+msgid ""
+"Sketch modified,\n"
+"save before exiting?"
+msgstr ""
+"Skeç düzenlendi,\n"
+"çýkmadan önce kaydedilain mi?"
+
+#: src/sketchpad-cb.c:47 src/sketchpad-cb.c:77
+msgid "Discard"
+msgstr "Vazgeç"
+
+#: src/sketchpad-cb.c:47 src/sketchpad-cb.c:77 src/sketchpad-gui.c:427
+msgid "Save"
+msgstr "Kaydet"
+
+#: src/sketchpad-cb.c:76
+msgid "Save current sketch?"
+msgstr "Hazýr seç kaydedilsin mi?"
+
+#: src/sketchpad-gui.c:426
+msgid "New"
+msgstr "Yeni"
+
+#: src/sketchpad-gui.c:429
+msgid "Properties"
+msgstr "Özellikler"
+
+#: gpe-sketchbook.desktop.in.h:1
+msgid "GPE Sketchbook"
+msgstr "GPE Skeç Kitabý"
