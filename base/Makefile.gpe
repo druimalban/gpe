@@ -38,8 +38,10 @@ clean:
 	set -e ; for i in $(LIBS); do make -C $$i clean; done
 	set -e ; for i in $(APPS); do make -C $$i clean; done
 
+I18N_MAKEFILE=build/Makefile.translation
+
 freshen-po:
 # UNCOMMENT THAT ONLY IF YOUR ARE A GPE MAINTAINER AND KNOW WHAT YOU DO.
-#	set -e ; for i in $(I18N_LIBS); do make -C $$i freshen-po; done
-#	set -e ; for i in $(I18N_APPS); do make -C $$i freshen-po; done
-#	set -e ; for i in $(I18N_TOYS); do make -C ../games/$$i freshen-po; done
+#	set -e ; for i in $(I18N_LIBS); do PACKAGE=$$i BUILD=../build          make -C $$i          -f ../$(I18N_MAKEFILE) freshen-po; done
+#	set -e ; for i in $(I18N_APPS); do PACKAGE=$$i BUILD=../build          make -C $$i          -f ../$(I18N_MAKEFILE) freshen-po; done
+#	set -e ; for i in $(I18N_TOYS); do PACKAGE=$$i BUILD=../../base/build  make -C ../games/$$i -f ../../base/$(I18N_MAKEFILE) freshen-po; done
