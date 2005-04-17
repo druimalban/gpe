@@ -40,12 +40,6 @@ static struct gpe_icon my_icons[] = {
   { "media-stop" },
   { "media-eject" },
   { "media-playlist", "open" },
-  { "new" },
-  { "open" },
-  { "delete" },
-  { "save" },
-  { "dir-up" },
-  { "dir-closed" },
   { "icon", PREFIX "/share/pixmaps/gpe-nmf.png" },
   { NULL, NULL }
 };
@@ -158,9 +152,9 @@ update_time (struct nmf_frontend *fe, struct player_status *ps)
   gtk_label_set_text (GTK_LABEL (fe->time_label), buf);
   
   if( ps->state == PLAYER_STATE_NEXT_TRACK )
-  {
-			update_track_info (fe, ps->item);
-  }
+    {
+      update_track_info (fe, ps->item);
+    }
   
   if (ps->total_time)
     {
@@ -226,6 +220,7 @@ main (int argc, char *argv[])
   gtk_widget_realize (window);
   gdk_window_set_type_hint (window->window, GDK_WINDOW_TYPE_HINT_TOOLBAR);
 
+  fe->current_path = NULL;
   fe->player = player_new ();
   if (fe->player == NULL)
     {
@@ -393,11 +388,10 @@ main (int argc, char *argv[])
   gtk_scale_set_draw_value (GTK_SCALE (fe->progress_slider), FALSE);
   gtk_widget_set_style (fe->progress_slider, style);
   gtk_widget_set_usize (fe->progress_slider, -1, 16);
-  // Disable the slider (until it works)
-  gtk_widget_set_sensitive (fe->progress_slider, FALSE);
-//  g_signal_connect (G_OBJECT (fe->progress_adjustment), "value-changed", 
-//		    G_CALLBACK (set_position), fe->player);
-
+  /* maybe use change-value here
+  g_signal_connect (G_OBJECT (fe->progress_adjustment), "value-changed", 
+		    G_CALLBACK (set_position), fe->player);
+  */
   gtk_container_add (GTK_CONTAINER (window), hbox2);
 
   gtk_box_pack_start (GTK_BOX (hbox2), vol_slider, FALSE, FALSE, 0);

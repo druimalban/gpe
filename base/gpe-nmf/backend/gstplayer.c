@@ -194,7 +194,7 @@ error_callback (GstElement *gstelement, GstElement *orig, GstStreamError *error_
 static void
 thread_shutdown (GstElement *elt, player_t p)
 {
-
+printf("thread shutdown\n");
   p->thread = NULL;
   
   if( p->state == PLAYER_STATE_NEXT_TRACK )
@@ -225,7 +225,11 @@ state_change (GstElement *elt, GstElementState old_state, GstElementState new_st
 static void
 eos (GstElement *elt, player_t p)
 {
-	p->state = PLAYER_STATE_NEXT_TRACK;
+  p->state = PLAYER_STATE_NEXT_TRACK;
+  if (p->thread)
+    {
+      gst_element_set_state (p->thread, GST_STATE_NULL);
+    }
 //	player_next_track(p);
 }
 
@@ -294,7 +298,19 @@ build_pipeline (player_t p, struct playlist *t, gboolean really_play)
 
   if (!p->filesrc || !p->decoder || !p->volume || !p->audiosink)
     {
-      fprintf (stderr, "Element creation failed\n");
+      gchar *msgstr = g_strdup(_("Problem creating player element:"));
+      
+      if (!p->filesrc)
+          msgstr = g_strdup_printf("%s\n%s", msgstr, _("Data Source"));
+      if (!p->decoder)
+          msgstr = g_strdup_printf("%s\n%s", msgstr, _("Decoder"));
+      if (!p->volume)
+          msgstr = g_strdup_printf("%s\n%s", msgstr, _("Volume Control"));
+      if (!p->audiosink)
+          msgstr = g_strdup_printf("%s\n%s", msgstr, _("Audio Output"));
+
+      fprintf (stderr, "%s\n", msgstr);
+      g_free(msgstr);
       return;
     }
 
@@ -309,22 +325,23 @@ static gboolean
 play_track (player_t p, struct playlist *t)
 {
   assert (t);
-  assert (!p->thread);
 
   fprintf (stderr, "player %p: play item %p [%s]\n", p, t, t->data.track.url);
 
   p->new_track = TRUE;
 
-  p->thread = gst_thread_new ("thread");
+  if (!p->thread)
+  {
+    p->thread = gst_thread_new ("thread");
 
-  build_pipeline (p, t, TRUE);
+    build_pipeline (p, t, TRUE);
 
-  g_signal_connect (p->thread, "shutdown", G_CALLBACK (thread_shutdown), p);
+    g_signal_connect (p->thread, "shutdown", G_CALLBACK (thread_shutdown), p);
 //  g_signal_connect (p->thread, "state_change", G_CALLBACK (state_change), p);
-  g_signal_connect (p->thread, "eos", G_CALLBACK (eos), p);
-  g_signal_connect (p->thread, "error", G_CALLBACK (error_callback), p);
-  g_signal_connect (p->thread, "deep_notify::metadata", G_CALLBACK (metadata_notify), p);
-
+    g_signal_connect (p->thread, "eos", G_CALLBACK (eos), p);
+    g_signal_connect (p->thread, "error", G_CALLBACK (error_callback), p);
+    g_signal_connect (p->thread, "deep_notify::metadata", G_CALLBACK (metadata_notify), p);
+  }
   p->state = PLAYER_STATE_PLAYING;
   return gst_element_set_state (p->thread, GST_STATE_PLAYING);
 }
@@ -421,9 +438,11 @@ void
 player_seek (player_t p, double progress)
 {
 	gint64 total_time;
-    GstFormat format = GST_FORMAT_BYTES;
+    GstFormat format = GST_FORMAT_TIME;
     gst_element_query( p->filesrc, GST_QUERY_POSITION, &format, &total_time);
-    gst_element_seek( p->filesrc, GST_SEEK_METHOD_SET, (guint64)((double)total_time * progress) );
+    gst_element_seek( p->filesrc, 
+                      GST_SEEK_METHOD_SET | GST_FORMAT_TIME | GST_SEEK_FLAG_FLUSH, 
+                      (guint64)((double)total_time * progress) );
 }
 
 #if 0

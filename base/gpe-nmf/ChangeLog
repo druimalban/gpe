@@ -1,3 +1,15 @@
+2005-04-17  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * gpe-nmf.c, playlist-edit.c: GUI improvements:
+      - Don't load useless icons.
+      - Use correct stock icons.
+      - Don't use fixed playlist toolbar layout.
+      - Implement selecting of multiple items.
+      - fixed warning about const type
+      - add ok button
+      - fixed tooltips text
+    * frontend.h, playlist-edit.c: Remember last path.
+    * gpe-nmf.c: Re-Enable slider - we really want to fix it.
 
 2005-04-16  Florian Boor  <florian.boor@kernelconcepts.de>
 
@@ -169,4 +181,3 @@
         * backend/gstplayer.c: Implement loop and shuffle.
 
         * backend/Makefile (CFLAGS): add -I../../libgpewidget
-

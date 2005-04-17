@@ -22,6 +22,7 @@ struct nmf_frontend
   GtkTreeModel *model;
   GtkTreeView *view;
   gboolean fs_open;
+  gchar *current_path;
 };
 
 void update_track_info (struct nmf_frontend *fe, struct playlist *p);
