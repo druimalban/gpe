@@ -1,5 +1,5 @@
 # gettext
-PKG_NAME="gpe-todo"
+PKG_NAME="gpe-contacts"
 GETTEXTIZE="glib-gettextize"
 
 $GETTEXTIZE --version < /dev/null > /dev/null 2>&1
