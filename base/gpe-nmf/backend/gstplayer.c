@@ -194,7 +194,6 @@ error_callback (GstElement *gstelement, GstElement *orig, GstStreamError *error_
 static void
 thread_shutdown (GstElement *elt, player_t p)
 {
-printf("thread shutdown\n");
   p->thread = NULL;
   
   if( p->state == PLAYER_STATE_NEXT_TRACK )
@@ -230,7 +229,6 @@ eos (GstElement *elt, player_t p)
     {
       gst_element_set_state (p->thread, GST_STATE_NULL);
     }
-//	player_next_track(p);
 }
 
 static void
