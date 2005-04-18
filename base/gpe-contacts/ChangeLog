@@ -1,6 +1,14 @@
+2005-04-18  Florian Boor <florian.boor@kernelconcepts.de>
+
+    * Add support for autotools.
+    * main.c, edit.c, categories.c, configure.c: Removed use of obsolete
+                                                 libdiplaymigration.
+    * main.c: Changed locations of some files.
+    * Renamed xml files.
+
 2005-04-15  Moray Allan  <moray@debian.org>
 
-        * Fix desktop entry files to almost validate.
+    * Fix desktop entry files to almost validate.
 
 2005-03-19  Phil Blundell  <pb@reciva.com>
 

@@ -27,7 +27,7 @@
 #define DB_NAME_VCARD "/.gpe/vcard"
 #define LAYOUT_NAME "/.gpe/contacts-layout.xml"
 #define DEFAULT_STRUCTURE PREFIX "/share/gpe-contacts/default-layout.xml"
-#define LARGE_STRUCTURE PREFIX "/share/gpe-contacts/contacts-layout-bigscreen.xml"
+#define LARGE_STRUCTURE PREFIX "/share/gpe-contacts/default-layout-bigscreen.xml"
 
 #include <sqlite.h>
 

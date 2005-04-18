@@ -1,0 +1,11 @@
+categories.c
+configure.c
+db.c
+edit-vcard.desktop.in
+editing.c
+export.c
+finddlg.c
+gpe-contacts.desktop.in
+main.c
+namedetail.c
+structure.c

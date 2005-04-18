@@ -20,7 +20,6 @@
 #include <gpe/picturebutton.h>
 #include <gpe/pim-categories-ui.h>
 #include <gpe/spacing.h>
-#include <libdisplaymigration/displaymigration.h>
 
 #include "support.h"
 #include "structure.h"
@@ -411,8 +410,6 @@ create_edit (void)
         gtk_window_set_default_size (GTK_WINDOW (edit), 240, 320);
     }
   
-  displaymigration_mark_window (edit);
-
   return edit;
 }
 

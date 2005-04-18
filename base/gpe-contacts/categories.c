@@ -15,7 +15,6 @@
 #include <gpe/errorbox.h>
 #include <gpe/spacing.h>
 #include <gpe/pixmaps.h>
-#include <libdisplaymigration/displaymigration.h>
 
 #include "support.h"
 #include "db.h"
@@ -140,8 +139,6 @@ new_category (GtkWidget *w, GtkListStore *list_store)
   spacing = gpe_get_boxspacing ();
 
   window = gtk_dialog_new ();
-
-  displaymigration_mark_window (window);
 
   vbox = GTK_DIALOG (window)->vbox;
 

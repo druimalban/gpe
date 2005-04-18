@@ -8,4 +8,4 @@ Type=Application
 Icon=gpe-contacts.png
 Categories=Application;Office;PIM;GPE;
 StartupNotify=true
-SingleInstance=true
+X-SingleInstance=true

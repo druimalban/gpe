@@ -1,2 +1,7 @@
 *.mo
-
+*.gmo
+.intltool-merge-cache
+Makefile
+Makefile.in
+POTFILES
+missing

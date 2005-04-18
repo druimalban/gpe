@@ -16,7 +16,6 @@
 #include <libintl.h>
 #include <stdlib.h>
 #include <string.h>
-#include <libdisplaymigration/displaymigration.h>
 #include <unistd.h>
 #include <locale.h>
 #include <time.h>
@@ -42,7 +41,6 @@
 #include "import-vcard.h"
 #include "finddlg.h"
 
-#define SYSTEM_PIXMAPS_DIR PREFIX "/share/pixmaps/"
 #define MY_PIXMAPS_DIR "gpe-contacts/"
 #define TAB_CONFIG_LOCAL ".contacts-tab"
 #define TAB_CONFIG_GLOBAL "/etc/gpe/contacts-tab.conf"
@@ -68,7 +66,7 @@ struct gpe_icon my_icons[] = {
   {"frame", MY_PIXMAPS_DIR "frame"},
   {"notebook", MY_PIXMAPS_DIR "notebook"},
   {"entry", MY_PIXMAPS_DIR "entry"},
-  {"icon", SYSTEM_PIXMAPS_DIR "gpe-contacts.png" },
+  {"icon", "gpe-contacts" },
   {NULL, NULL}
 };
 
@@ -1488,8 +1486,6 @@ create_main (gboolean edit_structure)
 		    G_CALLBACK (selection_made), main_window);
   g_signal_connect (G_OBJECT (main_window), "focus-in-event",
 		    G_CALLBACK (on_main_focus), entry1);
-
-  displaymigration_mark_window (main_window);
   
   return main_window;
 }
@@ -1563,8 +1559,6 @@ main (int argc, char *argv[])
   
   export_init ();
 
-  displaymigration_init ();
-  
  /* we are called to edit a users personal vcard */
   if (edit_vcard)
     {

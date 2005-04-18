@@ -16,7 +16,6 @@
 #include <libintl.h>
 #include <stdlib.h>
 #include <string.h>
-#include <libdisplaymigration/displaymigration.h>
 #include <unistd.h>
 #include <locale.h>
 
@@ -496,8 +495,6 @@ configure (GtkWidget * widget, gpointer d)
 
   gtk_window_set_title (GTK_WINDOW (window), _("Contacts: Configuration"));
   gpe_set_window_icon (window, "icon");
-
-  displaymigration_mark_window (window);
 
   gtk_widget_show_all (window);
 }
