@@ -1,3 +1,7 @@
+2005-04-19  Florian Boor <florian@kernelconcepts.de>
+
+	* download.phtml: Update OE/OZ status.
+	* cvs.phtml: Add CVSTrac link.
 
 2005-04-04  Florian Boor <florian@kernelconcepts.de>
 
