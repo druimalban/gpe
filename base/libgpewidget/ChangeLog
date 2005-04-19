@@ -1,3 +1,13 @@
+2005-04-19  Phil Blundell  <pb@mebius.nexus.co.uk>
+
+	* Makefile.am (INCLUDE): Add -Wall.
+
+	* gpeclockface.c: Include strlen.h and cairo-xlib.h to fix
+	warnings.
+	(draw_hand): Replace cairo_set_alpha/cairo_set_rgb_color with
+	cairo_set_source_rgba.
+	(gpe_clock_face_expose): Likewise.
+
 2005-04-19  Phil Blundell  <pb@reciva.com>
 
 	Add auto-linguas support:

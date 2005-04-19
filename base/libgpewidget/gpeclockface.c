@@ -13,12 +13,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <string.h>
 
 #include <gtk/gtk.h>
 #include <gdk/gdkx.h>
 
 #ifdef HAVE_CAIRO
 #include <cairo.h>
+#include <cairo-xlib.h>
 #endif
 
 #include "gpeclockface.h"
@@ -116,8 +118,7 @@ draw_hand (GpeClockFace *clock,
     }
 
 #ifdef HAVE_CAIRO
-  cairo_set_rgb_color (clock->cr, 0, 0, 0.8);
-  cairo_set_alpha (clock->cr, 0.5);
+  cairo_set_source_rgba (clock->cr, 0, 0, 0.8, 0.5);
 
   cairo_move_to (clock->cr, poly[0].x, poly[0].y);
   cairo_line_to (clock->cr, poly[1].x, poly[1].y);
@@ -252,9 +253,8 @@ gpe_clock_face_expose (GtkWidget *widget,
   else
     {
 #ifdef HAVE_CAIRO
-      cairo_set_alpha (clock->cr, 1.0);
+      cairo_set_source_rgba (clock->cr, 1, 1, 1, 1.0);
 
-      cairo_set_rgb_color (clock->cr, 1, 1, 1);
       cairo_arc (clock->cr,
 		 clock->x_offset + clock->radius,
 		 clock->y_offset + clock->radius,

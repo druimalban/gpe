@@ -5,7 +5,7 @@ lib_LTLIBRARIES = libgpewidget.la
 
 INCLUDES = @GPEWIDGET_CFLAGS@ -I$(top_srcdir)/gpe -I$(top_srcdir) \
            -DPREFIX=\"@prefix@\" -D_GNU_SOURCE \
-           -DPACKAGE_LOCALE_DIR=\"@datadir@/locale/@PACKAGE_NAME@\"
+           -DPACKAGE_LOCALE_DIR=\"@datadir@/locale/@PACKAGE_NAME@\" -Wall
 
 libgpewidget_la_SOURCES = gtkdatecombo.c errorbox.c init.c pixmaps.c smallbox.c \
                           dirbrowser.c picturebutton.c stylus.c screensize.c \
