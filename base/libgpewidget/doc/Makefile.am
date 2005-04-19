@@ -25,6 +25,13 @@ doc:
 	gtkdoc-mktmpl --module=$(DOC_MODULE)
 	gtkdoc-mkdb --module=$(DOC_MODULE) $(MKDB_OPTIONS) --source-dir=../gpe --source-dir=.. --main-sgml-file=$(DOC_MAIN_SGML_FILE)
 	gtkdoc-mkhtml $(DOC_MODULE) $(DOC_MAIN_SGML_FILE)
+
+else
+all: doc
+doc:
+	@echo "Use \"configure --enable-gtk-doc\" to enable documentation"
+	@exit 1
+
 endif
 
 clean-local:

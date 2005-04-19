@@ -1,5 +1,10 @@
 2005-04-19  Phil Blundell  <pb@mebius.nexus.co.uk>
 
+	* doc/Makefile.am (doc): Add friendly message when trying to build
+	documentation without gtk-doc.
+
+2005-04-19  Phil Blundell  <pb@mebius.nexus.co.uk>
+
 	* configure.ac: Set version to 0.99
 
 2005-04-19  Phil Blundell  <pb@mebius.nexus.co.uk>
