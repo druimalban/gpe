@@ -49,5 +49,6 @@ doc-local:
 	make -C doc
 	
 include gpe-dist.am
+include gpe-tp.am
 
 .PHONY: doc

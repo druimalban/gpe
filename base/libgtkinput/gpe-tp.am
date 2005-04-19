@@ -1,0 +1,24 @@
+DIR_PO = po
+DIR_TP = tp
+
+#-- Fetch .po files from TP
+freshen-po: linguas
+	rm -rf tmp-po
+	mkdir tmp-po
+#	cd tmp-po; for LANG in $(LINGUAS); do wget $(TRANSLATION_SITE)/$(PACKAGE)/$$LANG.po; done
+	cd tmp-po; ../$(DIR_TP)/po-wget-last ../$(DIR_TP)/postats $(PACKAGE)
+	for LANG in $$(cat linguas); do if [ ! -f $(DIR_PO)/$$LANG.po ] || ! cmp -s $(DIR_PO)/$$LANG.po tmp-po/$$LANG.po ; then mv tmp-po/$$LANG.po $(DIR_PO)/$$LANG.po; echo "Updated $$LANG translation"; fi; done
+	rm -rf tmp-po
+
+#-- Extract LINGUAS from TP stat file
+linguas: $(DIR_TP)/postats
+	$(DIR_TP)/po-extract-linguas $(DIR_TP)/postats $(PACKAGE) > linguas
+	@echo "linguas:::: " $(LINGUAS)
+
+#-- Fetch TP stat file
+$(DIR_TP)/postats: freshen-postats
+freshen-postats:
+	@echo "++++++++++++++++++++++++++++++++++++++"
+	@echo "Freshen "$(DIR_TP)"/postats:"
+	cd $(DIR_TP) && wget --timestamping http://www.iro.umontreal.ca/translation/data/postats
+	@echo "++++++++++++++++++++++++++++++++++++++"

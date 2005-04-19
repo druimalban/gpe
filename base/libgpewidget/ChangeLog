@@ -1,3 +1,9 @@
+2005-04-19  Phil Blundell  <pb@reciva.com>
+
+	Add auto-linguas support:
+	* gpe-tp.am: New files.
+	* Makefile.am: Include it.
+	* tp/po-extract-linguas, tp/po-wget-last: New files.
 
 2005-04-14  Florian Boor <florian@kernelconcepts.de>
 
