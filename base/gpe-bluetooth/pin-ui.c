@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002, 2003, 2004 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2002, 2003, 2004, 2005 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -43,10 +43,11 @@ struct pin_request_context;
 static guint my_signals[1];
 
 static const char *
-bluez_pin_guess_name (const char *address)
+bluez_pin_guess_name (const char *address, const char *name)
 {
+  if (name != NULL && strlen (name) > 0)
+    return name;
 #ifndef GPE_BLUETOOTH
-  const char *name;
   GConfClient *gc;
   char *path;
 
@@ -157,13 +158,14 @@ bluetooth_pin_request_init (BluetoothPinRequest *req)
 void
 bluetooth_pin_request_set_details (BluetoothPinRequest *req,
 				   gboolean outgoing,
-				   const gchar *address)
+				   const gchar *address,
+				   const gchar *name)
 {
   gchar *text;
 
   text = g_strdup_printf (outgoing ? _("Outgoing connection to %s")
 		  : _("Incoming connection from %s"),
-		  bluez_pin_guess_name (address));
+		  bluez_pin_guess_name (address, name));
   gtk_label_set_text (GTK_LABEL (req->label), text);
   g_free (text);
 }
@@ -222,7 +224,7 @@ bluetooth_pin_request_new (gboolean outgoing, const gchar *address, const gchar 
 
   req = g_object_new (bluetooth_pin_request_get_type (), NULL);
 
-  bluetooth_pin_request_set_details (req, outgoing, address);
+  bluetooth_pin_request_set_details (req, outgoing, address, name);
 
   gtk_widget_show_all (req->window);
 

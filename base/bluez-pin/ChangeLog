@@ -1,3 +1,13 @@
+2005-04-19  Phil Blundell  <pb@mebius.nexus.co.uk>
+
+	Apply patch from Marcel Holtmann for better device name support:
+	* pin-ui.c (bluez_pin_guess_name): Use supplied name, if any.
+	* main.c (usage): Mention name parameter.
+	* pin-ui.c (bluetooth_pin_request_new): Pass name to
+	bluetooth_pin_request_set_details.
+	* pin-ui.c (bluetooth_pin_request_set_details): Pass name to
+	bluez_pin_guess_name.
+
 2004-11-07  Phil Blundell  <pb@nexus.co.uk>
 
 	* Makefile (LINGUAS): Add uk.
