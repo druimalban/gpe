@@ -1,5 +1,6 @@
 2005-04-19  Florian Boor  <florian.boor@kernelconcepts.de>
 
+    * gstplayer.c, gpe-nmf.c: Some changes that might help to fix the slider.
     * gstplayer.c: Remove some useless lines.
 
 2005-04-17  Florian Boor  <florian.boor@kernelconcepts.de>

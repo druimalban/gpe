@@ -136,9 +136,9 @@ set_volume (GtkObject *o, player_t p)
 }
 
 static void
-set_position (GtkObject *o, player_t p)
+set_position (GtkObject *o, GtkScrollType scroll, gdouble value, player_t p)
 {
-  GtkAdjustment *a = GTK_ADJUSTMENT (o);
+  GtkAdjustment *a = GTK_ADJUSTMENT (GTK_RANGE(o)->adjustment);
   player_seek (p, a->value);
 }
 
@@ -388,10 +388,10 @@ main (int argc, char *argv[])
   gtk_scale_set_draw_value (GTK_SCALE (fe->progress_slider), FALSE);
   gtk_widget_set_style (fe->progress_slider, style);
   gtk_widget_set_usize (fe->progress_slider, -1, 16);
-  /* maybe use change-value here
-  g_signal_connect (G_OBJECT (fe->progress_adjustment), "value-changed", 
+  
+  g_signal_connect (G_OBJECT (fe->progress_slider), "change-value", 
 		    G_CALLBACK (set_position), fe->player);
-  */
+  
   gtk_container_add (GTK_CONTAINER (window), hbox2);
 
   gtk_box_pack_start (GTK_BOX (hbox2), vol_slider, FALSE, FALSE, 0);

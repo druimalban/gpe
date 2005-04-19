@@ -435,10 +435,12 @@ player_set_volume (player_t p, int v)
 void
 player_seek (player_t p, double progress)
 {
-	gint64 total_time;
+	gint64 total_time = 0;
     GstFormat format = GST_FORMAT_TIME;
-    gst_element_query( p->filesrc, GST_QUERY_POSITION, &format, &total_time);
-    gst_element_seek( p->filesrc, 
+	
+    gst_element_query( p->audiosink, GST_QUERY_TOTAL, &format, &total_time);
+printf("set %lli %lli\n", total_time, (guint64)((double)total_time * progress));
+    gst_element_seek( p->audiosink, 
                       GST_SEEK_METHOD_SET | GST_FORMAT_TIME | GST_SEEK_FLAG_FLUSH, 
                       (guint64)((double)total_time * progress) );
 }
