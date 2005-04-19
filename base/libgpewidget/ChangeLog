@@ -1,5 +1,7 @@
 2005-04-19  Phil Blundell  <pb@mebius.nexus.co.uk>
 
+	* configure.ac: Require cairo >= 0.4.0.
+
 	* Makefile.am (INCLUDE): Add -Wall.
 
 	* gpeclockface.c: Include strlen.h and cairo-xlib.h to fix

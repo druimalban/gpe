@@ -33,7 +33,7 @@ AC_ARG_ENABLE(cairo,
 [  --enable-cairo         Enable using Cairo rendering toolkit],
 [
         ENABLE_CAIRO=true
-        DEPS="$DEPS cairo"
+        DEPS="$DEPS cairo >= 0.4.0"
 ],
 [
         ENABLE_CAIRO=false
