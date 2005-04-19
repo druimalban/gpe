@@ -1,0 +1,40 @@
+# Simplified Chinese translation for bluez-pin.
+# Copyright (C) 2004 Free Software Foundation, Inc.
+# This file is distributed under the same license as the bluez-pin package.
+# Meng Jie, <zuxyhere@eastday.com>, 2004.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: bluez-pin 0.08\n"
+"POT-Creation-Date: 2003-02-21 00:12+0000\n"
+"PO-Revision-Date: 2004-03-04 19:27+0800\n"
+"Last-Translator: Meng Jie <zuxyhere@eastday.com>\n"
+"Language-Team: Chinese (simplified) <i18n-translation@lists.linux.net.cn>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=gb2312\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: bluez-pin.c:127
+msgid "Outgoing connection to"
+msgstr "传出的连接，至"
+
+#: bluez-pin.c:128
+msgid "Incoming connection from"
+msgstr "传入的连接，来自"
+
+#: bluez-pin.c:134
+msgid "PIN:"
+msgstr "PIN:"
+
+#: bluez-pin.c:137
+msgid "Save in database"
+msgstr "保存到数据库"
+
+#: bluez-pin.c:179
+msgid "Bluetooth PIN"
+msgstr "蓝牙 PIN"
+
+#: bluez-pin.c:191
+#, c-format
+msgid "Usage: %s <in|out> <address>\n"
+msgstr "用法：%s <in|out> <地址>\n"

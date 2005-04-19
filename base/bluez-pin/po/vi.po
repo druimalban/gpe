@@ -1,0 +1,40 @@
+# Vietnamese Translation for bluez-pin-0.08.
+# Copyright (C) 2005 Free Software Foundation, Inc.
+# This file is distributed under the same license as the bluez-pin-0.08 package.
+# Clytie Siddall <clytie@riverland.net.au>, 2005.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: bluez-pin 0.08\n"
+"POT-Creation-Date: 2003-02-21 00:12+0000\n"
+"PO-Revision-Date: 2005-01-27 19:45+0930\n"
+"Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
+"Language-Team: Vietnamese <gnomevi-list@lists.sourceforge.net> \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: bluez-pin.c:127
+msgid "Outgoing connection to"
+msgstr "Kết nối đi tới"
+
+#: bluez-pin.c:128
+msgid "Incoming connection from"
+msgstr "Kết nối đến từ"
+
+#: bluez-pin.c:134
+msgid "PIN:"
+msgstr "Số PIN:"
+
+#: bluez-pin.c:137
+msgid "Save in database"
+msgstr "Lưu vào cơ sở dữ liệu"
+
+#: bluez-pin.c:179
+msgid "Bluetooth PIN"
+msgstr "Số PIN Bluetooth"
+
+#: bluez-pin.c:191
+#, c-format
+msgid "Usage: %s <in|out> <address>\n"
+msgstr "Cách sử dụng: %s <đến|đi> <địa chỉ>\n"

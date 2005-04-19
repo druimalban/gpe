@@ -1,0 +1,40 @@
+# Greek translation of bluez-pin-0.08.el.po to Greek
+# Copyright (C) 2005 Free Software Foundation.
+# Simos Xenitellis <simos74@gmx.net>, 2005.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: bluez-pin 0.08\n"
+"POT-Creation-Date: 2003-02-21 00:12+0000\n"
+"PO-Revision-Date: 2005-01-06 18:44+0000\n"
+"Last-Translator: Simos Xenitellis <simos74@gmx.net>\n"
+"Language-Team: Greek <nls@tux.hellug.gr>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.3.1\n"
+
+#: bluez-pin.c:127
+msgid "Outgoing connection to"
+msgstr "Εξερχόμενη σύνδεση προς"
+
+#: bluez-pin.c:128
+msgid "Incoming connection from"
+msgstr "Εισερχόμενη σύνδεση από"
+
+#: bluez-pin.c:134
+msgid "PIN:"
+msgstr "PIN:"
+
+#: bluez-pin.c:137
+msgid "Save in database"
+msgstr "Αποθήκευση στη βάση δεδομένων"
+
+#: bluez-pin.c:179
+msgid "Bluetooth PIN"
+msgstr "PIN Bluetooth"
+
+#: bluez-pin.c:191
+#, c-format
+msgid "Usage: %s <in|out> <address>\n"
+msgstr "Χρήση: %s <in|out> <διεύθυνση>\n"

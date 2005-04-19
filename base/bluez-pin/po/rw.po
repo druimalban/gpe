@@ -1,0 +1,52 @@
+# Kinyarwanda translations for bluez-pin package.
+# Copyright (C) 2005 Free Software Foundation
+# This file is distributed under the same license as the bluez-pin package.
+# Steve Murphy <murf@e-tools.com>, 2005.
+# Steve performed initial rough translation from compendium built from translations provided by the following translators:
+# Philibert Ndandali  <ndandali@yahoo.fr>, 2005.
+# Viateur MUGENZI <muvia1@yahoo.fr>, 2005.
+# Noëlla Mupole <s24211045@tuks.co.za>, 2005.
+# Carole Karema <karemacarole@hotmail.com>, 2005.
+# JEAN BAPTISTE NGENDAHAYO <ngenda_denis@yahoo.co.uk>, 2005.
+# Augustin KIBERWA  <akiberwa@yahoo.co.uk>, 2005.
+# Donatien NSENGIYUMVA <ndonatienuk@yahoo.co.uk>, 2005.
+# Antoine Bigirimana <antoine@e-tools.com>, 2005.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: bluez-pin 0.08\n"
+"POT-Creation-Date: 2003-02-21 00:12+0000\n"
+"PO-Revision-Date: 2005-04-04 10:55-0700\n"
+"Last-Translator: Steven Michael Murphy <murf@e-tools.com>\n"
+"Language-Team: Kinyarwanda <translation-team-rw@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: bluez-pin.c:127
+#, fuzzy
+msgid "Outgoing connection to"
+msgstr "Ukwihuza Kuri"
+
+#: bluez-pin.c:128
+#, fuzzy
+msgid "Incoming connection from"
+msgstr "Ukwihuza Bivuye"
+
+#: bluez-pin.c:134
+msgid "PIN:"
+msgstr ""
+
+#: bluez-pin.c:137
+#, fuzzy
+msgid "Save in database"
+msgstr "Kubika in Ububikoshingiro"
+
+#: bluez-pin.c:179
+msgid "Bluetooth PIN"
+msgstr ""
+
+#: bluez-pin.c:191
+#, fuzzy, c-format
+msgid "Usage: %s <in|out> <address>\n"
+msgstr "in Inyuma Aderesi"

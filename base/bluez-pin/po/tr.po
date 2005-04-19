@@ -1,0 +1,40 @@
+# Bluez-pin Turkish translation.
+# Copyright (C) 2004 Free Software Foundation
+# This file is distributed under the same license as the bluez-pin package.
+# Elif Bilge Maden <bilgemaden_1@yahoo.com>, 2004.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: bluez-pin 0.08\n"
+"POT-Creation-Date: 2003-02-21 00:12+0000\n"
+"PO-Revision-Date: 2004-06-14 14:19+0200\n"
+"Last-Translator: Elif Bilge Maden <bilgemaden_1@yahoo.com>\n"
+"Language-Team: Turkish <gnu-tr-u12a@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: bluez-pin.c:127
+msgid "Outgoing connection to"
+msgstr "Giden Bağlantı"
+
+#: bluez-pin.c:128
+msgid "Incoming connection from"
+msgstr "Gelen Bağlantı"
+
+#: bluez-pin.c:134
+msgid "PIN:"
+msgstr "PIN:"
+
+#: bluez-pin.c:137
+msgid "Save in database"
+msgstr "Veritabanına kaydet"
+
+#: bluez-pin.c:179
+msgid "Bluetooth PIN"
+msgstr "Bluetooth PIN"
+
+#: bluez-pin.c:191
+#, c-format
+msgid "Usage: %s <in|out> <address>\n"
+msgstr "Kullanım: %s <iç/dış> <adres>\n"

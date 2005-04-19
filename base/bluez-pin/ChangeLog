@@ -1,5 +1,14 @@
 2005-04-19  Phil Blundell  <pb@mebius.nexus.co.uk>
 
+	* po/el.po: New file, courtesy Simos Xenitellis.
+	* po/rm.po: New file, courtesy Florian Verdet _goto.
+	* po/ru.po: New file, courtesy Peter Astakhov.
+	* po/rw.po: New file, courtesy Steve Murphy.
+	* po/tr.po: New file, courtesy Elif Bilge Maden.
+	* po/vi.po: New file, courtesy Clytie Siddall.
+	* po/zh_CN.po: New file, courtesy Meng Jie.
+	* Makefile (LINGUAS): Add these new languages.
+
 	Apply patch from Marcel Holtmann for better device name support:
 	* pin-ui.c (bluez_pin_guess_name): Use supplied name, if any.
 	* main.c (usage): Mention name parameter.

@@ -1,0 +1,42 @@
+#
+# translation of bluez-pin-0.08.po to Rumantsch (Rhaeto-Romance)
+# This file is distributed under the same license as the PACKAGE package.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER.
+# Florian Verdet _goto <fvgoto@linuxbourg.ch>, 2004, 2005.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: bluez-pin-0.08\n"
+"POT-Creation-Date: 2003-02-21 00:12+0000\n"
+"PO-Revision-Date: 2005-01-31 21:56+0100\n"
+"Last-Translator: Florian Verdet _goto <fvgoto@linuxbourg.ch>\n"
+"Language-Team: Rhaeto-Romance <gnu-rumantsch@guglielmtux.ch>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.2\n"
+
+#: bluez-pin.c:127
+msgid "Outgoing connection to"
+msgstr "Colliaziun chi sorta per"
+
+#: bluez-pin.c:128
+msgid "Incoming connection from"
+msgstr "Colliaziun chi aintra da"
+
+#: bluez-pin.c:134
+msgid "PIN:"
+msgstr "NIP:"
+
+#: bluez-pin.c:137
+msgid "Save in database"
+msgstr "Arcunar illa banca da datas"
+
+#: bluez-pin.c:179
+msgid "Bluetooth PIN"
+msgstr "NIP Bluetooth"
+
+#: bluez-pin.c:191
+#, c-format
+msgid "Usage: %s <in|out> <address>\n"
+msgstr "Adöver: %s <in|out> <adressa>\n"
