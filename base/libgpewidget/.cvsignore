@@ -34,3 +34,6 @@ libgpewidget.pws
 libtool
 *.la
 *.lo
+.libs
+.deps
+
