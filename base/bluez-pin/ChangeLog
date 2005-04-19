@@ -1,5 +1,9 @@
 2005-04-19  Phil Blundell  <pb@mebius.nexus.co.uk>
 
+	* Version 0.25 released.
+
+2005-04-19  Phil Blundell  <pb@mebius.nexus.co.uk>
+
 	* po/el.po: New file, courtesy Simos Xenitellis.
 	* po/rm.po: New file, courtesy Florian Verdet _goto.
 	* po/ru.po: New file, courtesy Peter Astakhov.
