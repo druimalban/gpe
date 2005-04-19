@@ -82,10 +82,23 @@ play_clicked (GtkWidget *w, struct nmf_frontend *fe)
   if (!fe->playing)
     {
       struct player_status ps;
-      player_play (fe->player);
-      player_status (fe->player, &ps);
-      update_track_info (fe, ps.item);
-      fe->playing = TRUE;
+      if (player_play (fe->player))
+        {
+          player_status (fe->player, &ps);
+          update_track_info (fe, ps.item);
+          fe->playing = TRUE;
+        }
+      else
+        {
+          GtkWidget *message;
+          message = gtk_message_dialog_new(NULL, 0, GTK_MESSAGE_WARNING, 
+                                           GTK_BUTTONS_CLOSE,
+                                           _("Unable to start playback."));
+          gtk_dialog_run(GTK_DIALOG(message));
+          gtk_widget_destroy(message);  
+          fe->player->state = PLAYER_STATE_NULL;
+          fe->playing = FALSE;
+        }
     }
     else
     	if( fe->player->state == PLAYER_STATE_PAUSED )
@@ -95,10 +108,13 @@ play_clicked (GtkWidget *w, struct nmf_frontend *fe)
 static void
 pause_clicked (GtkWidget *w, struct nmf_frontend *fe)
 {
-	if(fe->playing)
-	{
-		player_pause (fe->player);
-	}
+    if( fe->player->state != PLAYER_STATE_PAUSED )
+      {
+	    if(fe->playing)
+		  player_pause (fe->player);
+      }
+    else
+    	player_play (fe->player);
 }
 
 static void
@@ -135,11 +151,13 @@ set_volume (GtkObject *o, player_t p)
   player_set_volume (p, volume);
 }
 
-static void
-set_position (GtkObject *o, GtkScrollType scroll, gdouble value, player_t p)
+static gboolean
+set_position (GtkObject *o, GtkScrollType scroll, gdouble value, 
+              struct nmf_frontend *fe)
 {
   GtkAdjustment *a = GTK_ADJUSTMENT (GTK_RANGE(o)->adjustment);
-  player_seek (p, a->value);
+  fe->position = a->value;
+  return FALSE;
 }
 
 static void
@@ -147,20 +165,28 @@ update_time (struct nmf_frontend *fe, struct player_status *ps)
 {
   char buf[32];
   
-  snprintf (buf, sizeof (buf)-1, "%02d:%02d", (int)ps->time / 60, (int)ps->time % 60 );
+  snprintf (buf, sizeof (buf)-1, "%02d:%02d", 
+            (int)ps->time / 60, (int)ps->time % 60 );
   buf[sizeof (buf)-1] = 0;
   gtk_label_set_text (GTK_LABEL (fe->time_label), buf);
   
+  if (ps->total_time)
+    {
+      if (fe->position >= 0)
+        {
+          player_seek(fe->player, fe->position);
+          fe->position = -1;            
+        }
+        else
+        {
+          double d = ps->time / ps->total_time;
+          gtk_adjustment_set_value (fe->progress_adjustment, d);
+          gtk_widget_draw (fe->progress_slider, NULL);
+        }
+    }
   if( ps->state == PLAYER_STATE_NEXT_TRACK )
     {
       update_track_info (fe, ps->item);
-    }
-  
-  if (ps->total_time)
-    {
-      double d = ps->time / ps->total_time;
-      gtk_adjustment_set_value (fe->progress_adjustment, d);
-      gtk_widget_draw (fe->progress_slider, NULL);
     }
 }
 
@@ -220,6 +246,7 @@ main (int argc, char *argv[])
   gtk_widget_realize (window);
   gdk_window_set_type_hint (window->window, GDK_WINDOW_TYPE_HINT_TOOLBAR);
 
+  fe->position = -1;
   fe->current_path = NULL;
   fe->player = player_new ();
   if (fe->player == NULL)
@@ -382,7 +409,7 @@ main (int argc, char *argv[])
 		    G_CALLBACK (set_volume), fe->player);
 
   fe->progress_adjustment = (GtkAdjustment *) gtk_adjustment_new (0.0, 0.0, 1.0, 
-								  0.1, 0.2, 0.2);
+								  0.01, 0.02, 0.02);
 
   fe->progress_slider = gtk_hscale_new (GTK_ADJUSTMENT (fe->progress_adjustment));
   gtk_scale_set_draw_value (GTK_SCALE (fe->progress_slider), FALSE);
@@ -390,7 +417,7 @@ main (int argc, char *argv[])
   gtk_widget_set_usize (fe->progress_slider, -1, 16);
   
   g_signal_connect (G_OBJECT (fe->progress_slider), "change-value", 
-		    G_CALLBACK (set_position), fe->player);
+		    G_CALLBACK (set_position), fe);
   
   gtk_container_add (GTK_CONTAINER (window), hbox2);
 

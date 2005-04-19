@@ -185,10 +185,17 @@ apply_list (GtkWidget *w, struct nmf_frontend *fe)
  if (!fe->playing)
     {
       struct player_status ps;
-      player_play (fe->player);
-      player_status (fe->player, &ps);
-      update_track_info (fe, ps.item);
-      fe->playing = TRUE;
+      if (player_play (fe->player))
+        {
+          player_status (fe->player, &ps);
+          update_track_info (fe, ps.item);
+          fe->playing = TRUE;
+        }
+      else
+        {
+          fe->player->state = PLAYER_STATE_NULL;
+          fe->playing = FALSE;
+        }
     }
     else
     	if( fe->player->state == PLAYER_STATE_PAUSED )

@@ -104,8 +104,11 @@ player_set_playlist (player_t p, struct playlist *l)
 void
 player_set_index (player_t p, gint idx)
 {
-  assert (idx >= 0);
-
+  if (idx < 0)
+    {
+      fprintf(stderr, "Illegal index (%d)\n", idx);
+      return;
+	}
   if (p->opt_shuffle)
     {
       int i, len;
@@ -164,9 +167,9 @@ step_track (player_t p, int n)
   else if (n < 0)
     {
       if (p->idx)
-	p->idx--;
+        p->idx--;
       else if (p->opt_loop)
-	p->idx = playlist_get_length(p->list) - 1;
+        p->idx = playlist_get_length(p->list) - 1;
     }
 
   if (p->opt_loop && playlist_get_length(p->list) == p->idx)
@@ -182,27 +185,27 @@ step_track (player_t p, int n)
 }
 
 static void
-error_callback (GstElement *gstelement, GstElement *orig, GstStreamError *error_code, gchar *error, player_t p)
+error_callback (GstElement *thread, GstElement *source, GError *error,
+                gchar *debug, player_t p)
 {
-  g_print ("ERROR: %s: %s\n", GST_OBJECT_NAME (gstelement), error);
+  g_print ("ERROR: %s: %s\n", GST_OBJECT_NAME (source), error->message);
 
   p->state = PLAYER_STATE_NEXT_TRACK;
   player_stop (p);
-//  gst_element_set_state (GST_ELEMENT (orig), GST_STATE_NULL);  
 }
 
 static void
 thread_shutdown (GstElement *elt, player_t p)
 {
+  gst_object_unref (GST_OBJECT (p->thread));  
   p->thread = NULL;
-  
   if( p->state == PLAYER_STATE_NEXT_TRACK )
-  {
-    p->state = PLAYER_STATE_NULL;
-  	player_next_track(p);
-  }
+    {
+      p->state = PLAYER_STATE_NULL;
+  	  player_next_track(p);
+    }
   else
-	  p->state = PLAYER_STATE_NULL;
+      p->state = PLAYER_STATE_NULL;
 }
 /*
 static void
@@ -280,7 +283,7 @@ metadata_notify (GObject *obj, GObject *the_obj, GParamSpec *spec, player_t p)
     }
 }
 
-static void
+static gboolean
 build_pipeline (player_t p, struct playlist *t, gboolean really_play)
 {
   gchar *source_elem = p->source_elem;
@@ -309,37 +312,48 @@ build_pipeline (player_t p, struct playlist *t, gboolean really_play)
 
       fprintf (stderr, "%s\n", msgstr);
       g_free(msgstr);
-      return;
+      return FALSE;
     }
 
   g_object_set (G_OBJECT (p->filesrc), "location", t->data.track.url, NULL);
 
   gst_bin_add_many (GST_BIN (p->thread), p->filesrc, p->decoder, p->volume, p->audiosink, NULL);
-
   gst_element_link_many (p->filesrc, p->decoder, p->volume, p->audiosink, NULL );
+    
+  return TRUE;
 }
 
 static gboolean
 play_track (player_t p, struct playlist *t)
 {
-  assert (t);
-
+  if (!t)
+    {
+        fprintf(stderr, "Nothing to play.\n");
+        return FALSE;
+    }
   fprintf (stderr, "player %p: play item %p [%s]\n", p, t, t->data.track.url);
 
   p->new_track = TRUE;
 
   if (!p->thread)
-  {
-    p->thread = gst_thread_new ("thread");
+    {
+      p->thread = gst_thread_new ("thread");
 
-    build_pipeline (p, t, TRUE);
-
-    g_signal_connect (p->thread, "shutdown", G_CALLBACK (thread_shutdown), p);
-//  g_signal_connect (p->thread, "state_change", G_CALLBACK (state_change), p);
-    g_signal_connect (p->thread, "eos", G_CALLBACK (eos), p);
-    g_signal_connect (p->thread, "error", G_CALLBACK (error_callback), p);
-    g_signal_connect (p->thread, "deep_notify::metadata", G_CALLBACK (metadata_notify), p);
-  }
+      if (!build_pipeline (p, t, TRUE))
+        {
+          gst_element_set_state (p->thread, GST_STATE_NULL);
+          gst_object_unref (GST_OBJECT (p->thread));  
+          p->thread = NULL;
+          p->state = PLAYER_STATE_NULL;
+          return FALSE;
+        }
+      
+      g_signal_connect (p->thread, "shutdown", G_CALLBACK (thread_shutdown), p);  
+//    g_signal_connect (p->thread, "state_change", G_CALLBACK (state_change), p);
+      g_signal_connect (p->thread, "eos", G_CALLBACK (eos), p);
+      g_signal_connect (p->thread, "error", G_CALLBACK (error_callback), p);
+      g_signal_connect (p->thread, "deep_notify::metadata", G_CALLBACK (metadata_notify), p);
+    }
   p->state = PLAYER_STATE_PLAYING;
   return gst_element_set_state (p->thread, GST_STATE_PLAYING);
 }
@@ -348,26 +362,26 @@ gboolean
 player_play (player_t p)
 {
   if( p->state != PLAYER_STATE_PAUSED )
-  {
-	  if (p->list)
-	    {
-	      if (p->opt_shuffle)
-		p->cur = playlist_fetch_item (p->list, p->shuffle_list[p->idx]);
-	      else
-		p->cur = playlist_fetch_item (p->list, p->idx);
-	      
-	      if (p->cur)
-		return play_track (p, p->cur);
-	    }
-  }
+    {
+      if (p->list)
+        {
+          if (p->opt_shuffle)
+            p->cur = playlist_fetch_item (p->list, p->shuffle_list[p->idx]);
+          else
+            p->cur = playlist_fetch_item (p->list, p->idx);
+          
+          if (p->cur)
+            return play_track (p, p->cur);
+        }
+    }
   else
-  {
-  	if( gst_element_set_state( p->thread, GST_STATE_PLAYING ) )
-  	{
-  		p->state = PLAYER_STATE_PLAYING;
-  		return TRUE;
-  	}
-  }
+    {
+      if( gst_element_set_state( p->thread, GST_STATE_PLAYING ) )
+       {
+         p->state = PLAYER_STATE_PLAYING;
+         return TRUE;
+       }
+    }
 
   return FALSE;
 }
@@ -439,9 +453,8 @@ player_seek (player_t p, double progress)
     GstFormat format = GST_FORMAT_TIME;
 	
     gst_element_query( p->audiosink, GST_QUERY_TOTAL, &format, &total_time);
-printf("set %lli %lli\n", total_time, (guint64)((double)total_time * progress));
     gst_element_seek( p->audiosink, 
-                      GST_SEEK_METHOD_SET | GST_FORMAT_TIME | GST_SEEK_FLAG_FLUSH, 
+                      GST_SEEK_METHOD_SET | GST_FORMAT_TIME, 
                       (guint64)((double)total_time * progress) );
 }
 

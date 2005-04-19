@@ -1,5 +1,10 @@
 2005-04-19  Florian Boor  <florian.boor@kernelconcepts.de>
 
+    * gstplayer.c, gpe-nmf.c, frontend.h: Fixed position slider functionality.
+    * gpe-nmf.c: Implemented unpause using pause button.
+    * playlist-edit.c, gpe-nmf.c, gstplayer.c: Improved failure behaviour.
+	* gstplayer.c: Avoid assertions, fix error callback to avoid segfault, 
+                   fix formating.
     * gstplayer.c, gpe-nmf.c: Some changes that might help to fix the slider.
     * gstplayer.c: Remove some useless lines.
 
