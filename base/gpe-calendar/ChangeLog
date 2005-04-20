@@ -1,3 +1,7 @@
+2005-03-20  Florian Boor <florian.boor@kernelconcepts.de>
+	
+	* Version 0.62 released.
+
 2005-03-14  Florian Boor <florian.boor@kernelconcepts.de>
 
 	* Removed obsolete inclusion of render.h
