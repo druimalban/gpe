@@ -275,7 +275,7 @@ main (int argc, char *argv[])
   style->bg[0] = col;
 
   table = gtk_table_new(5, 5, FALSE);
-  gtk_table_set_col_spacings(GTK_TABLE(table), gpe_get_boxspacing());
+  gtk_table_set_col_spacings(GTK_TABLE(table), 0);
   gtk_table_set_row_spacings(GTK_TABLE(table), gpe_get_boxspacing());
 
   /* Main controls */
@@ -366,7 +366,7 @@ main (int argc, char *argv[])
   gtk_misc_set_alignment (GTK_MISC (fe->artist_label), 0.0, 0.5);
   gtk_misc_set_alignment (GTK_MISC (fe->title_label), 0.0, 0.5);
 
-  vol_adjust = gtk_adjustment_new (0.0, 0.0, 1.0, 0.1, 0.2, 0.2);
+  vol_adjust = gtk_adjustment_new (0.0, 0.0, 1.0, 0.01, 0.02, 0.02);
   vol_slider = gtk_vscale_new (GTK_ADJUSTMENT (vol_adjust));
   gtk_scale_set_draw_value (GTK_SCALE (vol_slider), FALSE);
   gtk_widget_set_style (vol_slider, style);

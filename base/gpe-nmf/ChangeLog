@@ -1,3 +1,8 @@
+2005-04-21  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * Released Version 0.21
+    * gpe-nmf.c: Some minor fixes.
+
 2005-04-20  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * gpe-nmf.c: Major UI fixes using a table layout.

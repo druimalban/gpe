@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-07-06 22:56+0200\n"
+"POT-Creation-Date: 2005-04-21 00:52+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,31 +16,39 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: gpe-nmf.c:215
+#: gpe-nmf.c:99
+msgid "Unable to start playback."
+msgstr ""
+
+#: gpe-nmf.c:256
 msgid "Unable to initialise player"
 msgstr ""
 
-#: playlist_edit.c:181
-msgid "Select file"
+#: gpe-nmf.c:343
+msgid "Shuffle"
 msgstr ""
 
-#: playlist_edit.c:261
+#: gpe-nmf.c:364
+msgid "Artist"
+msgstr ""
+
+#: gpe-nmf.c:365 playlist_edit.c:309
 msgid "Title"
 msgstr ""
 
-#: playlist_edit.c:272
-msgid "Open file"
+#: playlist_edit.c:215
+msgid "Select file"
 msgstr ""
 
-#: playlist_edit.c:272
-msgid "Tap here to add a file or directory."
+#: playlist_edit.c:316
+msgid "Playlist"
 msgstr ""
 
-#: playlist_edit.c:276
-msgid "Delete"
+#: playlist_edit.c:321
+msgid "Tap here to close playlist and start playing."
 msgstr ""
 
-#: playlist_edit.c:276
+#: playlist_edit.c:325 playlist_edit.c:330
 msgid "Tap here to remove the selected item."
 msgstr ""
 
