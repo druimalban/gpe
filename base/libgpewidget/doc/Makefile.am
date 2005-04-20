@@ -30,7 +30,6 @@ else
 all: doc
 doc:
 	@echo "Use \"configure --enable-gtk-doc\" to enable documentation"
-	@exit 1
 
 endif
 
