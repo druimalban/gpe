@@ -44,7 +44,6 @@
 #include <gpe/errorbox.h>
 #include <gpe/spacing.h>
 #include <gpe/pixmaps.h>
-#include <gpe/popup_menu.h>
 
 #include "cardinfo.h"
 #include "applets.h"

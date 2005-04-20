@@ -1,3 +1,8 @@
+
+2005-04-20	Florian Boor <florian.boor@kernelconcepts.de>
+
+	* cardinfo.c: Removed obsolete header.
+
 2005-04-15	Florian Boor <florian.boor@kernelconcepts.de>
 
 	* *desktop.in: Fixed desktop files to comply with standard.
