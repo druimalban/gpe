@@ -1,3 +1,8 @@
+2005-04-20  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * gpe-nmf.c: Major UI fixes using a table layout.
+    * gpe-nmf.c, gstplayer.c: Add note, formating fixes.
+
 2005-04-19  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * gstplayer.c, gpe-nmf.c, frontend.h: Fixed position slider functionality.

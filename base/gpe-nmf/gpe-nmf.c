@@ -4,7 +4,9 @@
  * - Enable progress slider
  * - Fix time display
  * - Add seeking
- *
+ * Several UI updates and fixes 
+ *      (c) 2005 Florian Boor <florian@kernelconcepts.de>
+ *  
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version
@@ -27,6 +29,7 @@
 #include <gpe/init.h>
 #include <gpe/picturebutton.h>
 #include <gpe/errorbox.h>
+#include <gpe/spacing.h>
 
 #include "frontend.h"
 
@@ -217,13 +220,12 @@ int
 main (int argc, char *argv[])
 {
   /* GTK Widgets */
-  GtkWidget *w;
-  GtkWidget *hbox1, *hbox2, *hbox3, *hbox4;
-  GtkWidget *vbox, *vbox2, *vbox3;
+  GtkWidget *w, *table;
   GdkColor col;
   GtkStyle *style;
   GtkWidget *prev_button, *play_button, *pause_button, *stop_button, *next_button, *eject_button, *exit_button;
   GtkWidget *rewind_button, *forward_button;
+  GtkWidget *shuffle_button, *loop_button;
   GtkWidget *vol_slider;
   GtkObject *vol_adjust;
   struct nmf_frontend *fe = g_malloc0 (sizeof (struct nmf_frontend));
@@ -265,139 +267,102 @@ main (int argc, char *argv[])
   /* Destroy handler */
 
   g_signal_connect (G_OBJECT (window), "destroy",
-		    G_CALLBACK (gtk_main_quit), NULL);
+                    G_CALLBACK (gtk_main_quit), NULL);
 
-  vbox = gtk_vbox_new (FALSE, 0);
-  vbox2 = gtk_vbox_new (FALSE, 0);
-  vbox3 = gtk_vbox_new (FALSE, 0);
   buttons_hbox = gtk_hbox_new (FALSE, 0);
-  hbox1 = gtk_hbox_new (FALSE, 0);
-  hbox2 = gtk_hbox_new (FALSE, 0);
-  hbox3 = gtk_hbox_new (FALSE, 0);
-  hbox4 = gtk_hbox_new (FALSE, 0);
-
+  gtk_container_set_border_width(GTK_CONTAINER(buttons_hbox), gpe_get_border());
   style = gtk_style_copy (buttons_hbox->style);
   style->bg[0] = col;
-  
+
+  table = gtk_table_new(5, 5, FALSE);
+  gtk_table_set_col_spacings(GTK_TABLE(table), gpe_get_boxspacing());
+  gtk_table_set_row_spacings(GTK_TABLE(table), gpe_get_boxspacing());
+
   /* Main controls */
   w = gtk_image_new_from_pixbuf (gpe_find_icon ("media-prev"));
-  gtk_widget_show (w);
   prev_button = gtk_button_new ();
-  gtk_widget_show (prev_button);
   gtk_widget_set_style (prev_button, style);
   gtk_widget_set_usize (prev_button, -1, button_height);
   gtk_container_add (GTK_CONTAINER (prev_button), w);
   g_signal_connect (G_OBJECT (prev_button), "clicked",
-		      G_CALLBACK (prev_clicked), fe);
+                    G_CALLBACK (prev_clicked), fe);
 
   w = gtk_image_new_from_pixbuf (gpe_find_icon ("media-rew"));
-  gtk_widget_show (w);
   rewind_button = gtk_button_new ();
-  gtk_widget_show (rewind_button);
   gtk_widget_set_style (rewind_button, style);
   gtk_widget_set_usize (rewind_button, -1, button_height);
   gtk_container_add (GTK_CONTAINER (rewind_button), w);
 
   w = gtk_image_new_from_pixbuf (gpe_find_icon ("media-play"));
   play_button = gtk_button_new ();
-  gtk_widget_show (play_button);
   gtk_widget_set_style (play_button, style);
   gtk_container_add (GTK_CONTAINER (play_button), w);
   gtk_widget_set_usize (play_button, -1, button_height);
-  gtk_widget_show (w);
   g_signal_connect (G_OBJECT (play_button), "clicked", 
-		    G_CALLBACK (play_clicked), fe);
+                    G_CALLBACK (play_clicked), fe);
 
   w = gtk_image_new_from_pixbuf (gpe_find_icon ("media-pause"));
   pause_button = gtk_button_new ();
-  gtk_widget_show (pause_button);
   gtk_widget_set_style (pause_button, style);
   gtk_container_add (GTK_CONTAINER (pause_button), w);
   gtk_widget_set_usize (pause_button, -1, button_height);
-  gtk_widget_show (w);
   g_signal_connect (G_OBJECT (pause_button), "clicked", 
-		    G_CALLBACK (pause_clicked), fe);
+                    G_CALLBACK (pause_clicked), fe);
 
   w = gtk_image_new_from_pixbuf (gpe_find_icon ("media-stop"));
   stop_button = gtk_button_new ();
-  gtk_widget_show (stop_button);
   gtk_widget_set_style (stop_button, style);
   gtk_container_add (GTK_CONTAINER (stop_button), w);
   gtk_widget_set_usize (stop_button, -1, button_height);
-  gtk_widget_show (w);
   g_signal_connect (G_OBJECT (stop_button), "clicked", 
-		    G_CALLBACK (stop_clicked), fe);
+                    G_CALLBACK (stop_clicked), fe);
 
   w = gtk_image_new_from_pixbuf (gpe_find_icon ("media-fwd"));
   forward_button = gtk_button_new ();
-  gtk_widget_show (forward_button);
   gtk_widget_set_style (forward_button, style);
   gtk_widget_set_usize (forward_button, -1, button_height);
   gtk_container_add (GTK_CONTAINER (forward_button), w);
-  gtk_widget_show (w);
 
   w = gtk_image_new_from_pixbuf (gpe_find_icon ("media-next"));
   next_button = gtk_button_new ();
-  gtk_widget_show (next_button);
   gtk_widget_set_style (next_button, style);
   gtk_container_add (GTK_CONTAINER (next_button), w);
   gtk_widget_set_usize (next_button, -1, button_height);
-  gtk_widget_show (w);
   g_signal_connect (G_OBJECT (next_button), "clicked",
-		    G_CALLBACK (next_clicked), fe);
+                    G_CALLBACK (next_clicked), fe);
 
   w = gtk_image_new_from_pixbuf (gpe_find_icon ("media-eject"));
   eject_button = gtk_button_new ();
-  gtk_widget_show (eject_button);
   gtk_widget_set_style (eject_button, style);
   gtk_container_add (GTK_CONTAINER (eject_button), w);
   gtk_widget_set_usize (eject_button, -1, button_height);
-  gtk_widget_show (w);
   g_signal_connect (G_OBJECT (eject_button), "clicked", 
-		    G_CALLBACK (eject_clicked), fe);
+                    G_CALLBACK (eject_clicked), fe);
 
   /* Shuffle / Loop */
-  w = gtk_toggle_button_new_with_label ("S");
-  gtk_widget_show (w);
-  gtk_box_pack_start (GTK_BOX (hbox1), w, FALSE, FALSE, 0);
-  gtk_widget_set_style (w, style);
-  gtk_button_set_relief (GTK_BUTTON (w), GTK_RELIEF_NONE);
-  gtk_widget_set_usize (w, 18, 18);
-  g_signal_connect (G_OBJECT (w), "toggled",
-		    G_CALLBACK (toggle_shuffle), fe);
+  shuffle_button = gtk_check_button_new_with_label (_("Shuffle"));
+  gtk_widget_set_style (shuffle_button, style);
+  g_signal_connect (G_OBJECT (shuffle_button), "toggled",
+                    G_CALLBACK (toggle_shuffle), fe);
 
-  w = gtk_toggle_button_new_with_label ("L");
-  gtk_widget_show (w);
-  gtk_box_pack_start (GTK_BOX (hbox1), w, FALSE, FALSE, 0);
-  gtk_widget_set_style (w, style);
-  gtk_button_set_relief (GTK_BUTTON (w), GTK_RELIEF_NONE);
-  gtk_widget_set_usize (w, 18, 18);
-  g_signal_connect (G_OBJECT (w), "toggled",
-		    G_CALLBACK (toggle_loop), fe);
-
-
-  /* padding */
-  w = gtk_label_new ("");
-  gtk_widget_show (w);
-  gtk_box_pack_start (GTK_BOX (hbox1), w, TRUE, FALSE, 0);
-
+  loop_button = gtk_check_button_new_with_label ("Loop");
+  gtk_widget_set_style (loop_button, style);
+  g_signal_connect (G_OBJECT (loop_button), "toggled",
+                    G_CALLBACK (toggle_loop), fe);
 
   /* Itty-bitty close button */
   w = gtk_image_new_from_stock (GTK_STOCK_CLOSE, GTK_ICON_SIZE_SMALL_TOOLBAR);
   exit_button = gtk_button_new ();
-  gtk_widget_show (exit_button);
   gtk_widget_set_style (exit_button, style);
   gtk_container_add (GTK_CONTAINER (exit_button), w);
-  gtk_widget_show (w);
   g_signal_connect (G_OBJECT (exit_button), "clicked",
 		    G_CALLBACK (gtk_main_quit), NULL);
   gtk_button_set_relief (GTK_BUTTON (exit_button), GTK_RELIEF_NONE);
   gtk_widget_set_usize (exit_button, 18, 18);
-  gtk_box_pack_start (GTK_BOX (hbox1), exit_button, FALSE, FALSE, 0);
 
   fe->time_label = gtk_label_new ("00:00");
-  fe->artist_label = gtk_label_new ("");
-  fe->title_label = gtk_label_new ("");
+  fe->artist_label = gtk_label_new (_("Artist"));
+  fe->title_label = gtk_label_new (_("Title"));
   gtk_misc_set_alignment (GTK_MISC (fe->artist_label), 0.0, 0.5);
   gtk_misc_set_alignment (GTK_MISC (fe->title_label), 0.0, 0.5);
 
@@ -406,10 +371,11 @@ main (int argc, char *argv[])
   gtk_scale_set_draw_value (GTK_SCALE (vol_slider), FALSE);
   gtk_widget_set_style (vol_slider, style);
   g_signal_connect (G_OBJECT (vol_adjust), "value-changed", 
-		    G_CALLBACK (set_volume), fe->player);
+                    G_CALLBACK (set_volume), fe->player);
 
-  fe->progress_adjustment = (GtkAdjustment *) gtk_adjustment_new (0.0, 0.0, 1.0, 
-								  0.01, 0.02, 0.02);
+  fe->progress_adjustment = (GtkAdjustment *) gtk_adjustment_new (0.0, 0.0, 
+                                                                  1.0, 0.01, 
+                                                                  0.02, 0.02);
 
   fe->progress_slider = gtk_hscale_new (GTK_ADJUSTMENT (fe->progress_adjustment));
   gtk_scale_set_draw_value (GTK_SCALE (fe->progress_slider), FALSE);
@@ -419,25 +385,22 @@ main (int argc, char *argv[])
   g_signal_connect (G_OBJECT (fe->progress_slider), "change-value", 
 		    G_CALLBACK (set_position), fe);
   
-  gtk_container_add (GTK_CONTAINER (window), hbox2);
+  gtk_container_add (GTK_CONTAINER (window), table);
+  gtk_table_attach_defaults(GTK_TABLE(table), vol_slider, 0, 1, 0, 5);
+  gtk_table_attach_defaults(GTK_TABLE(table), fe->title_label, 1, 4, 0, 1);
+  /* currently not used:
+  gtk_table_attach_defaults(GTK_TABLE(table), fe->artist_label, 1, 5, 1, 2);
+  */ 
+  gtk_table_attach(GTK_TABLE(table), exit_button, 4, 5, 0, 1, 0, 0, 0, 0);
+  
+  gtk_table_attach_defaults(GTK_TABLE(table), fe->progress_slider, 1, 5, 2, 3);
+  gtk_table_attach(GTK_TABLE(table), fe->time_label, 3, 5, 3, 4, 
+                   GTK_FILL, GTK_FILL, gpe_get_boxspacing(), 0);
 
-  gtk_box_pack_start (GTK_BOX (hbox2), vol_slider, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (hbox2), vbox, TRUE, TRUE, 0);
-
-  gtk_box_pack_start (GTK_BOX (hbox4), fe->progress_slider, TRUE, TRUE, 0);
-  gtk_box_pack_start (GTK_BOX (hbox4), fe->time_label, FALSE, FALSE, 0);
-
-  gtk_box_pack_start (GTK_BOX (vbox), hbox3, TRUE, TRUE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), hbox4, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), buttons_hbox, FALSE, FALSE, 0);
-
-  gtk_box_pack_start (GTK_BOX (hbox3), vbox2, TRUE, TRUE, 0);
-  gtk_box_pack_start (GTK_BOX (hbox3), vbox3, TRUE, TRUE, 0);
-
-  gtk_box_pack_start (GTK_BOX (vbox2), fe->title_label, TRUE, TRUE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox2), fe->artist_label, TRUE, TRUE, 0);
-
-  gtk_box_pack_start (GTK_BOX (vbox3), hbox1, FALSE, FALSE, 0);
+  gtk_table_attach_defaults(GTK_TABLE(table), shuffle_button, 1, 2, 3, 4);
+  gtk_table_attach_defaults(GTK_TABLE(table), loop_button, 2, 3, 3, 4);
+  
+  gtk_table_attach_defaults(GTK_TABLE(table), buttons_hbox, 1, 5, 4, 5);
 
   gtk_box_pack_start (GTK_BOX (buttons_hbox), prev_button, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (buttons_hbox), play_button, TRUE, TRUE, 0);
@@ -445,25 +408,9 @@ main (int argc, char *argv[])
   gtk_box_pack_start (GTK_BOX (buttons_hbox), stop_button, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (buttons_hbox), eject_button, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (buttons_hbox), next_button, TRUE, TRUE, 0);
-
-  gtk_widget_show (fe->time_label);
-  gtk_widget_show (fe->artist_label);
-  gtk_widget_show (fe->title_label);
-  gtk_widget_show (fe->progress_slider);
-  gtk_widget_show (vol_slider);
-
-  gtk_widget_show (vbox);
-  gtk_widget_show (vbox2);
-  gtk_widget_show (vbox3);
-  gtk_widget_show (buttons_hbox);
-  gtk_widget_show (hbox1);
-  gtk_widget_show (hbox2);
-  gtk_widget_show (hbox3);
-  gtk_widget_show (hbox4);
-
+  
   gpe_set_window_icon (window, "icon");
-
-  gtk_widget_show (window);
+  gtk_widget_show_all (window);
 
   gtk_widget_set_usize (fe->time_label, fe->time_label->allocation.width, -1);
   

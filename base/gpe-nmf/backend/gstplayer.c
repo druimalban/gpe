@@ -4,6 +4,8 @@
  * - Enable progress slider
  * - Fix time display
  * - Add seeking
+ * Several updates and fixes 
+ *      (c) 2005 Florian Boor <florian@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
