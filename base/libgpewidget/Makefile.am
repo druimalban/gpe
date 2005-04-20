@@ -23,7 +23,7 @@ gpeinclude_HEADERS = gpe/init.h gpe/errorbox.h gpe/smallbox.h gpe/pixmaps.h gpe/
 					 gpe/translabel.h gpe/question.h gpe/windows.h gpe/gpe-iconlist.h \
 					 gpe/gtksimplemenu.h gpe/gpewindowlist.h gpe/tray.h gpe/popup.h \
 					 gpe/gpeiconlistview.h gpe/gpeclockface.h gpe/gpeiconlistitem.h \
-					 gpe/infoprint.h gpe/gpetimesel.h
+					 gpe/infoprint.h gpe/gpetimesel.h gpe/gpehelp.h gpe/popup_menu.h
 
 
 pkgconfigdir = $(libdir)/pkgconfig

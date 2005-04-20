@@ -1,3 +1,7 @@
+2005-04-20  Florian Boor <florian@kernelconcepts.de>
+	
+	* Makefile.am: Add missing gpehelp.h
+
 2005-04-20  Phil Blundell  <pb@mebius.nexus.co.uk>
 
 	* doc/Makefile.am (doc): Don't raise an error if gtk-doc is missing.
