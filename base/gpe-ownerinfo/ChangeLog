@@ -1,3 +1,7 @@
+2005-04-20  Phil Blundell  <pb@mebius.nexus.co.uk>
+
+	* Version 0.25 released.
+
 2005-04-06  Colin Marquardt  <colin@marquardt-home.de>
 
 	* Makefile (LINGUAS): Add tr. Translation courtesy Abdullah Ulas.
