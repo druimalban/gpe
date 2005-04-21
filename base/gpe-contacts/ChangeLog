@@ -1,3 +1,9 @@
+2005-04-21  Florian Boor <florian.boor@kernelconcepts.de>
+
+    * configure.ac: Add linguas and missing dependencies.
+    * main.c, db.*: Removed unused variables and comparisons.
+    * .cvsignore: Add Makefile.
+
 2005-04-18  Florian Boor <florian.boor@kernelconcepts.de>
 
     * Add support for autotools.

@@ -685,8 +685,6 @@ selection_made (GtkTreeSelection *sel, GObject *o)
 static gboolean
 match_for_search (struct person *p, const gchar *text, struct gpe_pim_category *cat)
 {
-  gchar *gn;
-  gchar *mn;
   gchar *fn;
   gchar *name;
   gchar *company;
@@ -695,16 +693,6 @@ match_for_search (struct person *p, const gchar *text, struct gpe_pim_category *
   
   if (text)
     {
-      if (p->given_name)
-        gn = g_utf8_strdown(p->given_name, -1);
-      else
-        gn = g_strdup("");
-      
-      if (p->middle_name)
-        mn = g_utf8_strdown(p->middle_name, -1);
-      else
-        mn = g_strdup("");
-      
       if (p->family_name)
         fn = g_utf8_strdown(p->family_name, -1);
       else
@@ -720,21 +708,15 @@ match_for_search (struct person *p, const gchar *text, struct gpe_pim_category *
       else
         company = g_strdup("");
       
-      if (!g_str_has_prefix(gn, text) 
-          && !g_str_has_prefix(fn, text) 
+      if (!g_str_has_prefix(fn, text) 
           && !g_str_has_prefix(name, text)
-          && !g_str_has_prefix(mn, text)
           && !g_str_has_prefix(company, text))
         {
-          if (gn) g_free(gn);
-          if (mn) g_free(mn);
           if (fn) g_free(fn);
           if (name) g_free(name);
           if (company) g_free(company);
           return FALSE;
         }
-      if (gn) g_free(gn);
-      if (mn) g_free(mn);
       if (fn) g_free(fn);
       if (name) g_free(name);
       if (company) g_free(company);

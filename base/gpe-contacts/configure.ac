@@ -13,14 +13,14 @@ AC_STDC_HEADERS
 AC_PROG_INSTALL
 
 
-DEP_MODULES="gtk+-2.0 >= 2.2 glib-2.0 >= 2.2 libgpewidget libgpepimc libgpevtype sqlite dbus-glib-1"
+DEP_MODULES="gtk+-2.0 >= 2.2 glib-2.0 >= 2.2 libgpewidget libgpepimc libgpevtype sqlite dbus-glib-1 mimedir-1.0"
 
 # i8n stuff
 AH_TEMPLATE([GETTEXT_PACKAGE], [Package name for gettext])
 GETTEXT_PACKAGE=$PACKAGE
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE")
 AC_SUBST(GETTEXT_PACKAGE)
-ALL_LINGUAS=""
+ALL_LINGUAS="cs es hu pt_BR ro rw sr vi zh_TW de fr nl pt ru sk sv zh_CN"
 
 gpecontacts_localedir='${prefix}/${DATADIRNAME}/locale'
 AC_SUBST(gpecontacts_localedir)

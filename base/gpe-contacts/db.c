@@ -207,8 +207,6 @@ discard_person (struct person *p)
 {
   free_tag_values (p->data);
   g_free (p->name);
-  g_free (p->given_name);
-  g_free (p->middle_name);
   g_free (p->family_name);
   g_free (p->company);
   g_free (p);
