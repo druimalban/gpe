@@ -2,38 +2,53 @@
 DOC_MODULE=libgpewidget
 
 # The top-level SGML file.
-DOC_MAIN_SGML_FILE=libgpewidget-docs.sgml
-
-EXTRA_DIST = style.css $(DOC_MAIN_SGML_FILE) index.sgml \
-             tmpl/dirbrowser.sgml    tmpl/gpeiconlistitem.sgml \
- 			 tmpl/gpewindowlist.sgml  tmpl/init.sgml  tmpl/popup_menu.sgml \
-			 tmpl/spacing.sgml     tmpl/windows.sgml tmpl/errorbox.sgml \
-			 tmpl/gpe-iconlist.sgml     tmpl/gtkdatecombo.sgml \
- 			 tmpl/libgpewidget-unused.sgml  tmpl/popup.sgml tmpl/stylus.sgml \
-		     tmpl/gpeclockface.sgml  tmpl/gpeiconlistview.sgml  \
-			 tmpl/gtksimplemenu.sgml  tmpl/picturebutton.sgml \
-			 tmpl/question.sgml tmpl/translabel.sgml tmpl/gpehelp.sgml \
-			 tmpl/gpetimesel.sgml  tmpl/infoprint.sgml tmpl/pixmaps.sgml \
-			 tmpl/smallbox.sgml    tmpl/tray.sgml
+DOC_MAIN_SGML_FILE=$(DOC_MODULE)-docs.sgml
 			 
+DOC_SOURCE_DIR = ..
+
+# Extra options to supply to gtkdoc-scan.
+SCAN_OPTIONS=
+
+# Extra options to supply to gtkdoc-mkdb.
 MKDB_OPTIONS=--sgml-mode --output-format=xml --tmpl-dir=tmpl
 
-if ENABLE_GTK_DOC
-all: doc
-doc:
-	gtkdoc-scan --module=$(DOC_MODULE) --source-dir=../gpe --source-dir=.. --output-dir=.
-	gtkdoc-mktmpl --module=$(DOC_MODULE)
-	gtkdoc-mkdb --module=$(DOC_MODULE) $(MKDB_OPTIONS) --source-dir=../gpe --source-dir=.. --main-sgml-file=$(DOC_MAIN_SGML_FILE)
-	gtkdoc-mkhtml $(DOC_MODULE) $(DOC_MAIN_SGML_FILE)
+# Extra options to supply to gtkdoc-fixref.
+FIXXREF_OPTIONS=
 
-else
-all: doc
-doc:
+# Used for dependencies.
+HFILE_GLOB=
+CFILE_GLOB=
+
+# Header files to ignore when scanning.
+IGNORE_HFILES=					
+
+# Images to copy into HTML directory.
+HTML_IMAGES =
+
+# Extra SGML files that are included by $(DOC_MAIN_SGML_FILE).
+content_files =
+
+# Other files to distribute.
+extra_files = style.css
+
+# CFLAGS and LDFLAGS for compiling scan program. Only needed if your app/lib
+# contains GtkObjects/GObjects and you want to document signals and properties.
+GTKDOC_CFLAGS =
+GTKDOC_LIBS =
+
+GTKDOC_CC=$(LIBTOOL) --mode=compile $(CC)
+GTKDOC_LD=$(LIBTOOL) --mode=link $(CC)
+
+# If you need to override some of the declarations, place them in this file
+# and uncomment this line.
+#DOC_OVERRIDES = $(DOC_MODULE)-overrides.txt
+DOC_OVERRIDES=
+
+if !ENABLE_GTK_DOC
+all-local:
+	@echo
 	@echo "Use \"configure --enable-gtk-doc\" to enable documentation"
-
+	@echo
 endif
 
-clean-local:
-	rm -f *.html sgml/* xml/* *.stamp
-
-install-devel: all
+include gtk-doc.make

@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT(libgpewidget, 0.99, gpe@handhelds.org)
+AC_INIT(libgpewidget, 0.100, gpe@handhelds.org)
 AC_CONFIG_SRCDIR([init.c])
 AM_INIT_AUTOMAKE([foreign dist-bzip2])
 

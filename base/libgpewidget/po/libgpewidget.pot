@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-10-09 16:35+0200\n"
+"POT-Creation-Date: 2005-04-21 22:59+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,24 +16,20 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: errorbox.c:42
+#: ../dirbrowser.c:172
+msgid "No directory is selected."
+msgstr ""
+
+#: ../errorbox.c:41
 #, c-format
 msgid "GPE-ERROR: %s\n"
 msgstr ""
 
-#: pixmaps.c:155
+#: ../pixmaps.c:155
 #, c-format
-msgid "Icon \"%s\" not loaded"
+msgid "Icon \"%s\" not loaded."
 msgstr ""
 
-#: dirbrowser.c:172
-msgid "No directory is selected."
-msgstr ""
-
-#: what.c:92
-msgid "No help available."
-msgstr ""
-
-#: question.c:175
+#: ../question.c:174
 msgid "Question"
 msgstr ""

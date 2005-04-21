@@ -17,10 +17,24 @@ the most frquently used sizes for GUI development.
 
 </para>
 
+<!-- ##### MACRO SCALING_SIZE ##### -->
+<para>
+
+</para>
+
+
+
 <!-- ##### VARIABLE GPE_GNOME_SCALING ##### -->
 <para>
 
 </para>
+
+
+<!-- ##### FUNCTION init_spacing ##### -->
+<para>
+
+</para>
+
 
 
 <!-- ##### FUNCTION gpe_get_catspacing ##### -->

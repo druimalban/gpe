@@ -1,3 +1,16 @@
+2005-04-22  Florian Boor <florian@kernelconcepts.de>
+
+	* Released Version 0.100
+	* Makefile.am: Some cleanup.
+	* configure.ac: Version to 0.100
+	* doc/gtk-doc.make: New file providing improved gtk-doc support. 
+	                    It was necessary to modify this file a little bit to 
+						make distcheck work.
+	* doc/Makefile.am: Change to a documentation Makefile.am from template.
+	                   The friendly message is still there!
+	* doc/.cvsignore: Add some more files to ignore.
+	* doc/tmpl/*sgml: Some updates in generated sections.
+
 2005-04-20  Florian Boor <florian@kernelconcepts.de>
 	
 	* Makefile.am: Add missing gpehelp.h
