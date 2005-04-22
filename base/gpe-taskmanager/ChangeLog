@@ -1,6 +1,7 @@
 
 2005-04-22  Florian Boor <florian@kernelconcepts.de>
 
+	* Version 0.18 released.
 	* Don't use deprecated windows.h
 
 2005-03-31  Florian Boor <florian@kernelconcepts.de>
