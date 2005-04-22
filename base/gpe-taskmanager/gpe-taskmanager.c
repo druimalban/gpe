@@ -21,7 +21,7 @@
 #include <gpe/init.h>
 #include <gpe/pixmaps.h>
 #include <gpe/errorbox.h>
-#include <gpe/windows.h>
+#include <gpe/gpewindowlist.h>
 #include <gpe/picturebutton.h>
 
 #define _(_x) gettext (_x)
