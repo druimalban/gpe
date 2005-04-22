@@ -1,3 +1,7 @@
+2005-04-22  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * Released Version 0.96
+
 2005-03-11  Florian Boor  <florian.boor@kernelconcepts.de>
 
 	* main.c: Remove unused render.h, fixed window icon code.

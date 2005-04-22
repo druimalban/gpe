@@ -25,9 +25,6 @@ static void image_convolve( GdkPixbuf* pixbuf, int* mask, int mask_size, int mas
     width = gdk_pixbuf_get_width( GDK_PIXBUF( pixbuf ) );
     height = gdk_pixbuf_get_height( GDK_PIXBUF( pixbuf ) );
 
-//    fprintf( stderr, "Rowstride: %d, width: %d, height: %d, channels: %d\n", rowstride, width, height, channels );
-
-    
     padding = ( mask_size - 1 ) / 2; 
 
     image = gdk_pixbuf_get_pixels( GDK_PIXBUF( pixbuf ) );
