@@ -7,7 +7,7 @@ GROUP = games
 HIGHSCORE_FILE = $(HIGHSCORE_PATH)/highscore.dat
 DEBUG = yes
 CVSBUILD = yes
-VERSION = 0.6-2
+VERSION = 0.6-3
 
 
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
