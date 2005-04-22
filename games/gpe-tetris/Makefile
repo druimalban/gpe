@@ -28,10 +28,10 @@ PACKAGE_CFLAGS += -I../../base/libgpewidget
 PACKAGE_LDFLAGS += -L../../base/libgpewidget
 BUILD = ../../base/build
 else
-PACKAGE_CFLAGS += -I/usr/include/gpe
+PACKAGE_CFLAGS += $(GPECFLAGS)
 BUILD = build
 endif
-PACKAGE_LDFLAGS += -lgpewidget
+PACKAGE_LDFLAGS += $(GPELIBS)
 
 all: $(OBJS)
 	$(CC) $(DEFINES) $(CFLAGS) $(OBJS) -o $(PACKAGE) $(PACKAGE_LDFLAGS)
@@ -60,4 +60,3 @@ uninstall:
 include $(BUILD)/Makefile.dpkg_ipkg
 include $(BUILD)/Makefile.translation
 
--include $(DEPS)

@@ -2,6 +2,7 @@
 
 	* Relased Version 0.6-4.
         * Makefile: Fixed paths to Makefile includes.
+	* Makefile: Some more issues fixed.
 	* Relased Version 0.6-3.
 
 2005-04-02  Luc Pionchon  <luc@handhelds.org>
