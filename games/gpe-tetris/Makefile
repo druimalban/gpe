@@ -7,7 +7,7 @@ GROUP = games
 HIGHSCORE_FILE = $(HIGHSCORE_PATH)/highscore.dat
 DEBUG = yes
 CVSBUILD = yes
-VERSION = 0.6-3
+VERSION = 0.6-4
 
 
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
@@ -18,7 +18,7 @@ PACKAGE_LDFLAGS = $(GTKLDFLAGS)
 
 ifeq ($(DEBUG),yes)
 CFLAGS += -O2 -g
-LDFLAGS += -g #-lefence
+LDFLAGS += -g
 else
 CFLAGS += -Os -fomit-frame-pointer
 endif
@@ -26,8 +26,10 @@ endif
 ifeq ($(CVSBUILD),yes)
 PACKAGE_CFLAGS += -I../../base/libgpewidget
 PACKAGE_LDFLAGS += -L../../base/libgpewidget
+BUILD = ../../base/build
 else
 PACKAGE_CFLAGS += -I/usr/include/gpe
+BUILD = build
 endif
 PACKAGE_LDFLAGS += -lgpewidget
 
@@ -55,5 +57,7 @@ uninstall:
 	rm -i $(HIGHSCORE_FILE)
 	rmdir $(HIGHSCORE_PATH)
 
-include ../../base/build/Makefile.dpkg_ipkg
+include $(BUILD)/Makefile.dpkg_ipkg
+include $(BUILD)/Makefile.translation
+
 -include $(DEPS)
