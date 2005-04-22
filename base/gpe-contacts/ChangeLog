@@ -1,3 +1,7 @@
+2005-04-22  Florian Boor <florian.boor@kernelconcepts.de>
+
+    * db.c: Minor speedup.
+    
 2005-04-21  Florian Boor <florian.boor@kernelconcepts.de>
 
     * configure.ac: Add linguas and missing dependencies.

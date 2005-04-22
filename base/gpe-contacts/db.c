@@ -304,8 +304,8 @@ db_get_entries_list (const gchar *name, const gchar *cat)
   int r;
   gchar *strsearch;
 
-  gboolean no_cat = (!cat) || (!strlen(cat));
-  gboolean no_name = (!name) && (!strlen(name));
+  gboolean no_cat = (!cat) || (!cat[0]);
+  gboolean no_name = (!name) && (!name[0]);
 
   if (no_name && no_cat) 
     return db_get_entries();
@@ -350,8 +350,8 @@ db_get_entries_finddlg (const gchar *str, const gchar *cat)
   char *err;
   int r;
   gchar *strsearch;
-  gboolean has_cat = cat && strlen(cat);
-  gboolean has_str = str && strlen(str);
+  gboolean has_cat = cat && (cat[0]);
+  gboolean has_str = str && (str[0]);
 
   if (!has_cat && !has_str) 
     {
