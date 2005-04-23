@@ -34,7 +34,7 @@ endif
 PACKAGE_LDFLAGS += $(GPELIBS)
 
 all: $(OBJS)
-	$(CC) $(DEFINES) $(CFLAGS) $(OBJS) -o $(PACKAGE) $(PACKAGE_LDFLAGS)
+	$(CC) $(DEFINES) $(CFLAGS) $(OBJS) $(LDFLAGS) $(PACKAGE_LDFLAGS) -o $(PACKAGE)
 
 clean: 
 	rm -f *.o $(PACKAGE)
