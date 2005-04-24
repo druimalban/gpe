@@ -52,3 +52,13 @@ AC_SUBST(LDFLAGS)
 
 AC_CONFIG_FILES([Makefile libgpewidget.pc libgpewidget-uninstalled.pc doc/Makefile po/Makefile.in])
 AC_OUTPUT
+
+echo "
+######################################
+Configuration:
+
+- Compiler...........: ${CC}
+
+######################################
+"
+
