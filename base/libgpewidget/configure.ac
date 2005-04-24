@@ -60,5 +60,6 @@ Configuration:
 - Compiler...........: ${CC}
 
 ######################################
-"
 
+Now type 'make' to compile ${GETTEXT_PACKAGE}
+"

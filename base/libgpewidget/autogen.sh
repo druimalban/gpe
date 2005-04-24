@@ -39,7 +39,3 @@ autoconf
 echo "Fixing libtool..."
 patch -p0 < libtool-cross.patch
 
-#need to check errors from ./configure before displaying that!
-echo "
-Now type 'make' to compile $PKG_NAME
-"
