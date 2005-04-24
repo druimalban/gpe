@@ -22,19 +22,37 @@
 
 #include <glib.h>
 
-/*
+/**
+ * GPE_GNOME_SCALING:
+ *
  * How much to scale down the spacings defined in the Gnome 2 HIG
  *   (http://developer.gnome.org/projects/gup/hig/1.0/layout.html#layout-window)
- * for GPE:
+ * For GPE this value depends on the screen size. For screens with less than
+ * #SCALING_SIZE pixels wide this factor is 2, above this it is 1 (that means to
+ * use the same sizes like in Gnome.
+ */
+extern guint GPE_GNOME_SCALING;
+
+/**
+ * SCALING_SIZE:
+ *
+ * For screen sizes above this we use the same sizes like in Gnome.
  */
 #define SCALING_SIZE	400
-extern guint GPE_GNOME_SCALING;
+
+
 
 /* See also
  *  http://mail.gnome.org/archives/gtk-devel-list/2003-February/msg00009.html
  */
  
-/* determine scaling by querying display size */
+
+/**
+ * init_spacing:
+ *
+ * Determines scaling by querying display size. This function is usually used 
+ * by libgpewidget internally.
+ */
 void init_spacing (void);
 
 /* the spacing for categories in a dialog: */

@@ -1,3 +1,8 @@
+2005-04-24  Florian Boor <florian@kernelconcepts.de>
+
+	* doc/gtk-doc.make: Fixed some \-related confusion.
+	* gpe/spacing.h: Some more documentation.
+
 2005-04-22  Florian Boor <florian@kernelconcepts.de>
 
 	* Released Version 0.100
