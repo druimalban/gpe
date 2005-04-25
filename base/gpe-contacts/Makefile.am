@@ -50,11 +50,13 @@ EXTRA_DIST = $(desktop_DATA) \
 
 DISTCLEANFILES = intltool-extract \
                  intltool-merge \
-                 intltool-update
+                 intltool-update \
+                 gpe-contacts.desktop.in \
+                 edit-vcard.desktop.in
 
 clean-local:
-	rm -f gpe-contacts.desktop gpe-contacts.desktop.in
-	rm -f edit-vcard.desktop edit-vcard.desktop.in
+	rm -f gpe-contacts.desktop
+	rm -f edit-vcard.desktop
 	rm -f po/.intltool-merge-cache 
 	rm -rf autom4te.cache
 	rm -f *.d *~
