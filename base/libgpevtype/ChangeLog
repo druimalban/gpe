@@ -1,5 +1,6 @@
 2005-04-25  Florian Boor  <florian@kernelconcepts.de>
 
+	* configure.ac: gtk-doc 1.0 is too old.
 	* doc/Makefile.am: Replaced by new, improved file.
 	* doc/gtk-doc.make: New file providing better gtk-doc support.
 

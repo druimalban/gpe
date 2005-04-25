@@ -17,7 +17,7 @@ DEP_MODULES="glib-2.0 >= 2.2 mimedir-1.0"
 PKG_CHECK_MODULES(VTYPE, $DEP_MODULES)
 
 #gtk-doc for documentation
-GTK_DOC_CHECK(1.0)
+GTK_DOC_CHECK(1.2)
 
 AC_CONFIG_FILES([Makefile libgpevtype.pc libgpevtype-uninstalled.pc doc/Makefile])
 AC_OUTPUT
