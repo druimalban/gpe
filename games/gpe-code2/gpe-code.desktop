@@ -1,9 +1,10 @@
 [Desktop Entry]
+Encoding=UTF-8
 Name=CodeBreaker
 Comment=GPE Code
 Exec=gpe-code
-Terminal=0
+Terminal=false
 Type=Application
 Icon=gpe-code.png
 Categories=Games
-StartupNotify=False
+StartupNotify=false

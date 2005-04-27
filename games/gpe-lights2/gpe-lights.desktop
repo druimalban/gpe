@@ -1,9 +1,10 @@
 [Desktop Entry]
+Encoding=UTF-8
 Name=Lights Out
 Comment=GPE Lights
 Exec=gpe-lights
-Terminal=0
+Terminal=false
 Type=Application
 Icon=gpe-lights.png
 Categories=Games
-StartupNotify=True
+StartupNotify=true

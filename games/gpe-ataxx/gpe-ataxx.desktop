@@ -1,9 +1,10 @@
 [Desktop Entry]
+Encoding=UTF-8
 Name=Ataxx
 Comment=GPE Ataxx
 Exec=gpe-ataxx
-Terminal=0
+Terminal=false
 Type=Application
 Icon=gpe-ataxx.png
 Categories=Games
-StartupNotify=True
+StartupNotify=true

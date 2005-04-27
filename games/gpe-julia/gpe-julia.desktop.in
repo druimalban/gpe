@@ -1,9 +1,10 @@
 [Desktop Entry]
+Encoding=UTF-8
 _Name=Julia
 _Comment=Fractal generator
 Exec=gpe-julia
-Terminal=0
+Terminal=false
 Type=Application
 Icon=gpe-julia.png
 Categories=Application;Game;GPE
-StartupNotify=True
+StartupNotify=true

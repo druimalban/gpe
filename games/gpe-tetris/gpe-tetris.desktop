@@ -1,8 +1,9 @@
 [Desktop Entry]
+Encoding=UTF-8
 Name=Tetris
 Comment=GPE Tetris
 Exec=gpe-tetris
-Terminal=0
+Terminal=false
 Type=Application
 Icon=gpe-tetris.png
 Categories=Application;Game;GPE

@@ -1,9 +1,10 @@
 [Desktop Entry]
+Encoding=UTF-8
 Name=xdémineur
 Comment=Minesweeper-like game
 Exec=xdemineur
-Terminal=0
+Terminal=false
 Type=Application
 Icon=xdemineur.png
 Categories=Games
-StartupNotify=False
+StartupNotify=false

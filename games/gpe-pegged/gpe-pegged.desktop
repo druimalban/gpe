@@ -1,9 +1,10 @@
 [Desktop Entry]
+Encoding=UTF-8
 _Name=Pegged
 _Comment=GPE Pegged
 Exec=gpe-pegged
-Terminal=0
+Terminal=false
 Type=Application
 Icon=gpe-pegged.png
 Categories=Games
-StartupNotify=True
+StartupNotify=true

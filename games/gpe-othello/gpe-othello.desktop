@@ -1,9 +1,10 @@
 [Desktop Entry]
+Encoding=UTF-8
 Name=Othello
 Comment=GPE Othello
 Exec=gpe-othello
-Terminal=0
+Terminal=false
 Type=Application
 Icon=gpe-othello.png
 Categories=Games
-StartupNotify=True
+StartupNotify=true
