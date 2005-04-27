@@ -1,4 +1,5 @@
 [Desktop Entry]
+Encoding=UTF-8
 Name=Teleport
 Comment=Move applications between displays
 Exec=mb-applet-launcher -k /usr/share/pixmaps/teleport.png teleport

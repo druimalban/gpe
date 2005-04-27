@@ -1,4 +1,5 @@
 [Desktop Entry]
+Encoding=UTF-8
 Name=Map Viewer
 Comment=GPE Mapviewer
 Exec=gpe-mapviewer

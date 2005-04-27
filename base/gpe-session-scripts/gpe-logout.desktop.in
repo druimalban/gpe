@@ -1,4 +1,5 @@
 [Desktop Entry]
+Encoding=UTF-8
 _Name=Log out
 _Comment=Log out of GPE
 Exec=gpe-logout

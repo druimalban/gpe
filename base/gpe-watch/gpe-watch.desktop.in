@@ -1,4 +1,5 @@
 [Desktop Entry]
+Encoding=UTF-8
 _Name=Watch
 _Comment=Watch
 Exec=gpe-watch

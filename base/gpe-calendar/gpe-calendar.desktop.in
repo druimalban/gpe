@@ -1,4 +1,5 @@
 [Desktop Entry]
+Encoding=UTF-8
 _Name=Calendar
 _Comment=GPE Calendar
 Exec=gpe-calendar

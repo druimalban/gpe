@@ -1,4 +1,5 @@
 [Desktop Entry]
+Encoding=UTF-8
 Name=File Manager
 Comment=GPE File Manager
 Exec=gpe-filemanager

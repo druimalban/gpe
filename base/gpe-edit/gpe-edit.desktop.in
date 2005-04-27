@@ -1,4 +1,5 @@
 [Desktop Entry]
+Encoding=UTF-8
 _Name=Text Editor
 _Comment=GPE Text Editor
 Exec=gpe-edit

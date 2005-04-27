@@ -1,4 +1,5 @@
 [Desktop Entry]
+Encoding=UTF-8
 Name=Alarm clock
 Comment=Panel clock with alarm facility
 Exec=gpe-clock

@@ -1,4 +1,5 @@
 [Desktop Entry]
+Encoding=UTF-8
 Name=Image Gallery
 Comment=GPE Image Gallery
 Exec=gpe-gallery
