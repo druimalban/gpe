@@ -2,9 +2,9 @@
 _Name=Audio mixer
 _Comment=Mixer
 Exec=gpe-mixer
-Terminal=0
+Terminal=false
 Type=Application
 Icon=gpe-mixer.png
-Categories=Application;AudioVideo;GPE
-StartupNotify=True
-SingleInstance=True
+Categories=Application;AudioVideo;GPE;
+StartupNotify=true
+SingleInstance=true

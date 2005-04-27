@@ -4,4 +4,4 @@ Comment=Panel based Bluetooth control
 Exec=gpe-bluetooth
 Type=PanelApp
 Icon=/usr/share/gpe/pixmaps/default/bt-logo.png
-Categories=Panel;Utility;GPE;Bluetooth
+Categories=Panel;Utility;GPE;Bluetooth;

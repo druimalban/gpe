@@ -5,5 +5,5 @@ Exec=gpe-mapviewer
 Terminal=0
 Type=Application
 Icon=gpe-mapviewer.png
-Categories=Application;Utility;GPE
-StartupNotify=True
+Categories=Application;Utility;GPE;
+StartupNotify=true

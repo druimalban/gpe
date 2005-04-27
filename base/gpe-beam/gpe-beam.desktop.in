@@ -4,4 +4,4 @@ _Comment=Panel based infrared communications control
 Exec=gpe-beam
 Type=PanelApp
 Icon=irda-on-16.png
-Categories=Panel;Utility;GPE;Infrared
+Categories=Panel;Utility;GPE;Infrared;

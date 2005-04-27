@@ -2,8 +2,8 @@
 _Name=Watch
 _Comment=Watch
 Exec=gpe-watch
-Terminal=0
+Terminal=false
 Type=Application
 Icon=gpe-watch.png
-Categories=Application;Utility;GPE
+Categories=Application;Utility;GPE;
 SingleInstance=true

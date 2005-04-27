@@ -5,5 +5,5 @@ Exec=gpe-calculator
 Terminal=0
 Type=Application
 Icon=gpe-calculator.png
-Categories=Application;Utility;GPE
-StartupNotify=True
+Categories=Application;Utility;GPE;
+StartupNotify=true

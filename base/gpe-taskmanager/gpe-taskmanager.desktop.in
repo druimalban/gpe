@@ -2,9 +2,9 @@
 _Name=Program manager
 _Comment=Lists running programs
 Exec=gpe-taskmanager
-Terminal=0
+Terminal=false
 Type=Application
 Icon=gpe-taskmanager.png
-Categories=Utility;GPE
-StartupNotify=True
-SingleInstance=True
+Categories=Utility;GPE;
+StartupNotify=true
+SingleInstance=true

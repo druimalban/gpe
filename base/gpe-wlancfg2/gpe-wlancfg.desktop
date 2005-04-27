@@ -7,5 +7,5 @@ Exec=gpe-su -c 'gpe-wlancfg > /dev/null 2>&1'
 Terminal=0
 Type=Application
 Icon=gpe-wlancfg.png
-Categories=Application;SystemSettings;GPE
-StartupNotify=False
+Categories=Application;SystemSettings;GPE;
+StartupNotify=false

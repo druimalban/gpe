@@ -4,4 +4,4 @@ Comment=Displays tooltips in a window
 Exec=gpe-what
 Type=PanelApp
 Icon=gpe-what.png
-Categories=Panel;Utility;GPE
+Categories=Panel;Utility;GPE;

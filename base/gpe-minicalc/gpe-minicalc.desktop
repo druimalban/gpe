@@ -4,4 +4,4 @@ Comment=gpe-minicalc
 Exec=gpe-minicalc
 Type=PanelApp
 Icon=gpe-minicalc.xpm
-Categories=Panel;Utility;GPE
+Categories=Panel;Utility;GPE;

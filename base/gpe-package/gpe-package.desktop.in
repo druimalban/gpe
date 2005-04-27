@@ -2,9 +2,9 @@
 _Name=Package Manager
 _Comment=Install and update packages
 Exec=gpe-package
-Terminal=0
+Terminal=false
 Type=Application
 Icon=gpe-package.png
-Categories=Application;SystemSettings;GPE
-StartupNotify=True
-SingleInstance=True
+Categories=Application;SystemSettings;GPE;
+StartupNotify=true
+SingleInstance=true

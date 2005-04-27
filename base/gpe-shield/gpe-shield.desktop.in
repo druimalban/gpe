@@ -2,9 +2,9 @@
 _Name=Network Shield
 _Comment=Change security settings and access control
 Exec=gpe-shield
-Terminal=0
+Terminal=false
 Type=Application
 Icon=gpe-shield.png
-Categories=Application;SystemSettings;GPE
-StartupNotify=True
-SingleInstance=True
+Categories=Application;SystemSettings;GPE;
+StartupNotify=true
+SingleInstance=true

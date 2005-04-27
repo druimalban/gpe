@@ -4,4 +4,4 @@ Comment=Matchbox theme selection utility
 Exec=minitheme
 Type=PanelApp
 Icon=minitheme.png
-Categories=Panel;Utility;GPE
+Categories=Panel;Utility;GPE;

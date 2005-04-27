@@ -4,4 +4,4 @@ _Comment=Panel based wireless LAN communications control
 Exec=gpe-aerial
 Type=PanelApp
 Icon=gpe-aerial.png
-Categories=Panel;Utility;GPE;WiFi
+Categories=Panel;Utility;GPE;WiFi;

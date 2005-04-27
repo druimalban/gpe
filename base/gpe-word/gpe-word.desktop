@@ -5,5 +5,5 @@ Exec=gpe-word
 Terminal=0
 Type=Application
 Icon=gpe-word.png
-Categories=Application;PIM;GPE
-StartupNotify=True
+Categories=Application;PIM;GPE;
+StartupNotify=true

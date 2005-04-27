@@ -2,9 +2,9 @@
 _Name=Summary
 _Comment=GPE Today
 Exec=gpe-today
-Terminal=0
+Terminal=false
 Type=Application
 Icon=gpe-today.png
-Categories=Application;PIM;GPE
-StartupNotify=True
-SingleInstance=True
+Categories=Application;PIM;GPE;
+StartupNotify=true
+SingleInstance=true

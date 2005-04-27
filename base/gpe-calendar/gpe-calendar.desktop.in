@@ -2,9 +2,9 @@
 _Name=Calendar
 _Comment=GPE Calendar
 Exec=gpe-calendar
-Terminal=0
+Terminal=false
 Type=Application
 Icon=gpe-calendar.png
-Categories=Application;PIM;GPE
-StartupNotify=True
-SingleInstance=True
+Categories=Application;PIM;GPE;
+StartupNotify=true
+SingleInstance=true

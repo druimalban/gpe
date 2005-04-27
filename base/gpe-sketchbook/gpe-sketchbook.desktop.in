@@ -2,9 +2,9 @@
 _Name=Sketch Book
 _Comment=GPE Sketchbook
 Exec=gpe-sketchbook
-Terminal=0
+Terminal=false
 Type=Application
 Icon=gpe-sketchbook.png
-Categories=Application;PIM;GPE
-StartupNotify=True
-SingleInstance=True
+Categories=Application;PIM;GPE;
+StartupNotify=true
+SingleInstance=true

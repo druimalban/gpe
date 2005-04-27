@@ -4,4 +4,4 @@ Comment=Panel clock with alarm facility
 Exec=gpe-clock
 Type=PanelApp
 Icon=gpe-clock.png
-Categories=Panel;Utility;GPE
+Categories=Panel;Utility;GPE;

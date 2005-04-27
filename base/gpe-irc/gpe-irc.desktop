@@ -5,5 +5,5 @@ Exec=gpe-irc
 Terminal=0
 Type=Application
 Icon=gpe-irc.png
-Categories=Application;IRC;GPE
-StartupNotify=True
+Categories=Application;IRC;GPE;
+StartupNotify=true

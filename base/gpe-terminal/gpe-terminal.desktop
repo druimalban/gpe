@@ -5,4 +5,4 @@ Exec=rxvt
 Terminal=0
 Type=Application
 Icon=gpe-terminal.png
-Categories=Utility;GPE
+Categories=Utility;GPE;

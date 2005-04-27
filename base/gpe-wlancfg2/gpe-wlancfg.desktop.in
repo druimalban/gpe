@@ -2,10 +2,10 @@
 _Name=WLAN Config
 _Comment=GPE WLAN Config
 Exec=gpe-su -c 'gpe-wlancfg > /dev/null 2>&1'
-Terminal=0
+Terminal=false
 Type=Application
 Icon=gpe-wlancfg.png
-Categories=Application;SystemSettings;GPE
-StartupNotify=True
-SingleInstance=True
+Categories=Application;SystemSettings;GPE;
+StartupNotify=true
+SingleInstance=true
 
