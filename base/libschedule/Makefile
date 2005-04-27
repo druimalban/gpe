@@ -11,7 +11,7 @@ MEMBERS = atd
 SONAME = libschedule.so.0
 
 PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS) -I.
-PACKAGE_CFLAGS += $(STANDARD_CFLAGS) `pkg-config --cflags glib-2.0` -DG_DISABLE_DEPRECATED
+PACKAGE_CFLAGS += $(STANDARD_CFLAGS) `pkg-config --cflags glib-2.0` -DG_DISABLE_DEPRECATED -fPIC
 PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) `pkg-config --libs glib-2.0` 
 
 HEADERS = schedule.h
