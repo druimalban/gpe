@@ -14,6 +14,12 @@
 
 #include "link-warning.h"
 
+/**
+ * GtkSimpleMenu:
+ * 
+ * Menu class struct containing a GtkOptionMenu (optionmenu) 
+ * and a menu widget (menu). 
+ */
 struct _GtkSimpleMenu
 {
   GtkOptionMenu optionmenu;
@@ -21,6 +27,11 @@ struct _GtkSimpleMenu
   guint nr;
 };
 
+/**
+ * GtkSimpleMenuClass:
+ * 
+ * Abstract class type, don't use directly.
+ */
 struct _GtkSimpleMenuClass 
 {
   GtkOptionMenuClass parent_class;

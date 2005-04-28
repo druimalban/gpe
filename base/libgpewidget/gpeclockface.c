@@ -39,6 +39,11 @@ static GtkWidgetClass *parent_class;
 #define DEFAULT_RADIUS 64
 #define DEFAULT_BORDER 2
 
+/**
+ * GpeClockFace:
+ * 
+ * Object container for the GpeClockFace widget.
+ */
 struct _GpeClockFace
 {
   GtkWidget widget;

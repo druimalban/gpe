@@ -1,3 +1,8 @@
+2005-04-29  Florian Boor <florian@kernelconcepts.de>
+
+	* configure.ac: We need gtk-doc 1.2 or later.
+	* Some documentation (GpeClockFace, GtkSimpleMenu)
+
 2005-04-24  Florian Boor <florian@kernelconcepts.de>
 
 	* doc/gtk-doc.make: Fixed some \-related confusion.

@@ -12,7 +12,7 @@ A widget to display an analogue clock face.
 
 <!-- ##### SECTION See_Also ##### -->
 <para>
-
+Used by: #GpeTimeSel widget, gpe-watch, gpe-clock
 </para>
 
 <!-- ##### MACRO GPE_TYPE_CLOCK_FACE ##### -->
@@ -123,5 +123,3 @@ a shaped window only containing a GtkClockFace widget.
 
 @clock: Widget
 @Returns: The widget's shape mask
-
-

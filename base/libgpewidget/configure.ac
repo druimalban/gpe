@@ -24,7 +24,7 @@ AC_PROG_CC
 AC_PROG_LIBTOOL
 
 #gtk-doc for documentation
-GTK_DOC_CHECK(1.0)
+GTK_DOC_CHECK(1.2)
 
 # library dependencies
 DEPS="gtk+-2.0 >= 2.4 glib-2.0 >= 2.4"
