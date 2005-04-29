@@ -2,7 +2,7 @@
  * gpe-conf
  *
  * Copyright (C) 2002  Pierre TARDY <tardyp@free.fr>
- *               2003  Florian Boor <florian.boor@kernelconcepts.de>
+ *               2003 - 2005  Florian Boor <florian.boor@kernelconcepts.de>
  *               2004  Ole Reinhardt <ole.reinhardt@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
@@ -1661,15 +1661,12 @@ Network_Build_Objects ()
 	for (row = 0; row < num_int; row++)
 	{
 		ctable = NULL;
-		if (iflist[row].ispresent)
-		{
-			if (iflist[row].isstatic)
-				ctable = create_nwstatic_widgets (iflist[row]);
-			if (iflist[row].isdhcp)
-				ctable = create_nwdhcp_widgets (iflist[row]);
-			if (iflist[row].isppp)
-				ctable = create_nwppp_widgets (iflist[row]);
-		}
+		if (iflist[row].isstatic)
+			ctable = create_nwstatic_widgets (iflist[row]);
+		if (iflist[row].isdhcp)
+			ctable = create_nwdhcp_widgets (iflist[row]);
+		if (iflist[row].isppp)
+			ctable = create_nwppp_widgets (iflist[row]);
 		if (ctable)
 		{
 			if (!have_access)

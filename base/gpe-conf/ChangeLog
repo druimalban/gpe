@@ -1,3 +1,7 @@
+2005-04-29	Florian Boor <florian.boor@kernelconcepts.de>
+
+	* network.c: Remove feature to hide absent interfaces. Causes too much of
+	             confusion.
 
 2005-04-20	Florian Boor <florian.boor@kernelconcepts.de>
 
