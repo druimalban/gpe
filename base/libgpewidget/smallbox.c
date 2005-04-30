@@ -54,7 +54,7 @@ smallbox_note_destruction (GtkWidget *widget, gpointer p)
 /**
  * smallbox_x:
  * @title: Box title.
- * @d: Box content description (Query text and default value).
+ * @d: Array of box content descriptions (Query text and default value).
  *
  * Small and simple text input box to query for text input.
  * 
@@ -162,7 +162,7 @@ make_combo (GList *options)
 /**
  * smallbox_x2:
  * @title: Box title.
- * @d: Box content description containing query text, default value and
+ * @d: Aray of box content descriptions containing query text, default value and
  *     a list of predefined values.
  *
  * Small and simple text input box to query for text input offering a defined

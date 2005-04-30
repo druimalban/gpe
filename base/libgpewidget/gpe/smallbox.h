@@ -22,12 +22,31 @@
 
 #include <gtk/gtk.h>
 
+/**
+ * box_desc:
+ * 
+ * Value pair to describe a query in a small box.
+ *
+ * The componet label describes the query text, value the initial value
+ * of the text input field.
+ */
 struct box_desc
 {
   gchar *label;
   gchar *value;
 };
 
+/**
+ * box_desc2:
+ * 
+ * box_desc2 offers a more complex struct to decribe a query in a small box.
+ *
+ * The componet label describes the query text, value the initial value
+ * of the text input field.
+ *
+ * Additionally it contains a list of suggestions to offer the user a set 
+ * of predefined choices.
+ */
 struct box_desc2
 {
   gchar *label;

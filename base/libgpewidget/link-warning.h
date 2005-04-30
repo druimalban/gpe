@@ -18,6 +18,14 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+/**
+ * link_warning:
+ * @symbol: Symbol to mark.
+ * @msg: Warning message to emit on link.
+ *
+ * Function to mark deprecated or obsolete symbol to emit a warning
+ * at link time.
+ */
 #  define link_warning(symbol, msg) \
   static const char __evoke_link_warning_##symbol[]     \
     __attribute__ ((unused, section (".gnu.warning." #symbol ))) \
