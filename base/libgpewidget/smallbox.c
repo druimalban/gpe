@@ -51,6 +51,15 @@ smallbox_note_destruction (GtkWidget *widget, gpointer p)
     }
 }
 
+/**
+ * smallbox_x:
+ * @title: Box title.
+ * @d: Box content description (Query text and default value).
+ *
+ * Small and simple text input box to query for text input.
+ * 
+ * Returns: TRUE if a value was entered and confirmed, FALSE otherwise.
+ */
 gboolean
 smallbox_x (gchar *title, struct box_desc *d)
 {
@@ -85,7 +94,7 @@ smallbox_x (gchar *title, struct box_desc *d)
       entry[i] = gtk_entry_new ();
 
       if (di->value)
-	gtk_entry_set_text (GTK_ENTRY (entry[i]), di->value);
+        gtk_entry_set_text (GTK_ENTRY (entry[i]), di->value);
 
       gtk_table_attach (GTK_TABLE (table), label, 0, 1, i, i + 1, 0, 0, gpe_boxspacing, 1);
       gtk_table_attach_defaults (GTK_TABLE (table), entry[i], 1, 2, i, i + 1);
@@ -131,7 +140,7 @@ smallbox_x (gchar *title, struct box_desc *d)
   while (di->label)
     {
       if (di->value)
-	g_free (di->value);
+        g_free (di->value);
       di->value = gtk_editable_get_chars (GTK_EDITABLE (entry[i]), 0, -1);
       di++;
       i++;
@@ -150,6 +159,17 @@ make_combo (GList *options)
   return w;
 }
 
+/**
+ * smallbox_x2:
+ * @title: Box title.
+ * @d: Box content description containing query text, default value and
+ *     a list of predefined values.
+ *
+ * Small and simple text input box to query for text input offering a defined
+ * set of values to select from or to enter own text.
+ * 
+ * Returns: TRUE if a value was entered and confirmed, FALSE otherwise.
+ */
 gboolean
 smallbox_x2 (gchar *title, struct box_desc2 *d)
 {

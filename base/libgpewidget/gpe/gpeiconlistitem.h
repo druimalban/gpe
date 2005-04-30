@@ -36,7 +36,18 @@ struct _GPEIconListItem
   GPEIconListView *parent;
 };
 
+/**
+ * GPEIconListItem:
+ * 
+ * Object container for the GPEIconListItem widget.
+ */
 typedef struct _GPEIconListItem	        GPEIconListItem;
+	
+/**
+ * GPEIconListItemClass:
+ * 
+ * Object class for the #GPEIconListItem widget.
+ */
 typedef struct _GPEIconListItemClass    GPEIconListItemClass;
 
 GType		gpe_icon_list_item_get_type (void);

@@ -28,6 +28,11 @@ struct _GpeTimeSel
   GtkWidget *popup;
 };
 
+/**
+ * GpeTimeSel:
+ *
+ * Time selection widget container. 
+ */
 typedef struct _GpeTimeSel	   GpeTimeSel;
 typedef struct _GpeTimeSelClass    GpeTimeSelClass;
 

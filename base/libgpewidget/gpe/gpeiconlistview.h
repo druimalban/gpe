@@ -29,7 +29,18 @@ typedef enum
 
 struct _GPEIconListView;
 
+/**
+ * GPEIconListView:
+ * 
+ * Object container for the GPEIconListView widget.
+ */
 typedef struct _GPEIconListView	        GPEIconListView;
+
+/**
+ * GPEIconListViewClass:
+ * 
+ * Object class for the #GPEIconListView widget.
+ */
 typedef struct _GPEIconListViewClass    GPEIconListViewClass;
 
 GType		gpe_icon_list_view_get_type (void);

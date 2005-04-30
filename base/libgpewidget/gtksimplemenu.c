@@ -17,7 +17,7 @@
 /**
  * GtkSimpleMenu:
  * 
- * Menu class struct containing a GtkOptionMenu (optionmenu) 
+ * Menu struct containing a GtkOptionMenu (optionmenu) 
  * and a menu widget (menu). 
  */
 struct _GtkSimpleMenu

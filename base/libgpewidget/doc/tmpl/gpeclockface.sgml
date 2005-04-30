@@ -123,3 +123,5 @@ a shaped window only containing a GtkClockFace widget.
 
 @clock: Widget
 @Returns: The widget's shape mask
+
+

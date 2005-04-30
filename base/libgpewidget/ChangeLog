@@ -1,3 +1,7 @@
+2005-04-30  Florian Boor <florian@kernelconcepts.de>
+
+	* Some more documentation, 81% covered now
+
 2005-04-29  Florian Boor <florian@kernelconcepts.de>
 
 	* configure.ac: We need gtk-doc 1.2 or later.

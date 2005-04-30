@@ -19,6 +19,12 @@
 #define GTK_CLOCK_GET_CLASS(obj)	G_TYPE_INSTANCE_GET_CLASS ((obj), gpe_clock_face_get_type(), GpeClockFaceClass)
 
 typedef struct _GpeClockFace	   GpeClockFace;
+
+/**
+ * GpeClockFaceClass:
+ * 
+ * Object container for the GpeClockFaceClass widget.
+ */
 typedef struct _GpeClockFaceClass      GpeClockFaceClass;
 
 GtkType		gpe_clock_face_get_type (void);

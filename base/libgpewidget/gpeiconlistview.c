@@ -860,6 +860,11 @@ _gpe_icon_list_view_cancel_popup (GPEIconListView *il)
     }
 }
 
+/**
+ * gpe_icon_list_view_popup_removed:
+ * 
+ * Executes actions that take place when popup menu is closed.
+ */
 void 
 gpe_icon_list_view_popup_removed (GPEIconListView *self) 
 {

@@ -32,6 +32,18 @@
 extern "C" {
 #endif /* __cplusplus */
 
+/**
+ * gpe_icon:
+ * 
+ * Struct defining a icon resource in GPE.
+ * It consists of three parts:
+ *
+ * shortname: Short symbolic name to identify the icon.
+ *
+ * filename: Image file with full path or file in theme location (PREFIX /share/gpe/pixmaps/&lt;theme&gt;).
+ *	
+ * pixbuf: GdkPixbuf with icon data.
+ */
 struct gpe_icon
 {
   const char *shortname;
