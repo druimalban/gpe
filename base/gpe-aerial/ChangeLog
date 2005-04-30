@@ -1,4 +1,9 @@
+2005-04-30		Florian Boor <florian.boor@kernelconcepts.de>
+	
+	* main.c: Removed obsolete header.
+	
 2005-04-06		Florian Boor <florian.boor@kernelconcepts.de>
+
 	* Makefile: Add Kinyarwanda translation.
 
 2005-03-06		Florian Boor <florian.boor@kernelconcepts.de>

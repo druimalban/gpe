@@ -33,7 +33,6 @@
 #include <gpe/init.h>
 #include <gpe/pixmaps.h>
 #include <gpe/errorbox.h>
-#include <gpe/gpe-iconlist.h>
 #include <gpe/tray.h>
 #include <gpe/popup.h>
 #include <gpe/spacing.h>
