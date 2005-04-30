@@ -17,6 +17,7 @@
 #include <sys/socket.h>
 
 #include <gtk/gtk.h>
+#include <gpe/errorbox.h>
 
 #include <bluetooth/bluetooth.h>
 #include <bluetooth/sdp.h>
@@ -259,7 +260,6 @@ int
 obex_init (void)
 {
   obex_t *obex;
-  GIOChannel *chan;
   
   obex = OBEX_Init (OBEX_TRANS_BLUETOOTH, obex_event, OBEX_FL_KEEPSERVER);
   if (!obex)

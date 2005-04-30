@@ -30,7 +30,7 @@
 #include <gpe/pixmaps.h>
 #include <gpe/errorbox.h>
 #include <gpe/spacing.h>
-#include <gpe/gpe-iconlist.h>
+#include <gpe/gpeiconlistview.h>
 #include <gpe/tray.h>
 #include <gpe/popup.h>
 
@@ -395,7 +395,7 @@ run_scan (gpointer data)
     {
       struct bt_device *bd = iter->data;
       GObject *item;
-      item = gpe_iconlist_add_item_pixbuf (GPE_ICONLIST (iconlist), bd->name, bd->pixbuf, bd);
+      item = gpe_icon_list_view_add_item_pixbuf (GPE_ICON_LIST_VIEW (iconlist), bd->name, bd->pixbuf, bd);
       g_signal_connect (G_OBJECT (item), "button-release", G_CALLBACK (device_clicked), bd);
       
       if (bd->sdp == FALSE)
@@ -438,15 +438,15 @@ show_devices (void)
 
       gtk_window_set_default_size (GTK_WINDOW (devices_window), 240, 240);
 
-      iconlist = gpe_iconlist_new ();
+      iconlist = gpe_icon_list_view_new ();
       gtk_container_add (GTK_CONTAINER (devices_window), iconlist);
-      gpe_iconlist_set_embolden (GPE_ICONLIST (iconlist), FALSE);
+      gpe_icon_list_view_set_embolden (GPE_ICON_LIST_VIEW (iconlist), FALSE);
 
       g_signal_connect (G_OBJECT (devices_window), "destroy", 
 			G_CALLBACK (devices_window_destroyed), NULL);
     }
 
-  gpe_iconlist_clear (GPE_ICONLIST (iconlist));
+  gpe_icon_list_view_clear (GPE_ICON_LIST_VIEW (iconlist));
 
   scan_thread = g_thread_create ((GThreadFunc) run_scan, NULL, FALSE, NULL);
 
