@@ -1,3 +1,8 @@
+2005-04-30  Florian Boor <florian.boor@kernelconcepts.de>
+
+    * Released Version 0.37
+    * configure.ac: Version to 0.37
+
 2005-04-25  Florian Boor <florian.boor@kernelconcepts.de>
 
     * Makefile.am: Fixed creating and removing of edit-vcard.desktop.

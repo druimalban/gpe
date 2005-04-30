@@ -1,10 +1,7 @@
 dnl Process this file with autoconf to produce a configure script.
 
-PACKAGE=gpe-contacts
-VERSION=0.36
-
 AC_PREREQ(2.59)
-AC_INIT(gpe-contacts,0.36,gpe@handhelds.org)
+AC_INIT(gpe-contacts,0.37,gpe@handhelds.org)
 AC_CONFIG_SRCDIR([main.c])
 AM_INIT_AUTOMAKE([foreign dist-bzip2])
 
