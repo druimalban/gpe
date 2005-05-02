@@ -9,12 +9,10 @@ Translation-aware GtkLabel variant
 Support for widgets with "instant-apply" language switching.
 </para>
 
-
 <!-- ##### SECTION See_Also ##### -->
 <para>
 
 </para>
-
 
 <!-- ##### FUNCTION gtk_widget_add_translation_hook ##### -->
 <para>

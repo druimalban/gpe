@@ -1,3 +1,8 @@
+2005-05-03  Florian Boor <florian@kernelconcepts.de>
+
+	* gpe/gpe-iconlist.h, gpe-iconlist.sgml: Add some warnings about obsolete
+	                                         GpeIconList widget.
+
 2005-05-02  Phil Blundell  <pb@reciva.com>
 
 	* translabel.c: Add documentation.

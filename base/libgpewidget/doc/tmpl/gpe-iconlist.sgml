@@ -2,7 +2,7 @@
 GpeIconList
 
 <!-- ##### SECTION Short_Description ##### -->
-Widget to arrange icons in columns and rows. (deprecated)
+Widget to arrange icons in columns and rows. (deprecated, will be removed soon)
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
@@ -231,6 +231,4 @@ Changes the size of the icons displayed in the icon list.
 @func: 
 @data: 
 @destroy_data: 
-@flags: 
-
-
+@flags:

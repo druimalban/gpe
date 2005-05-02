@@ -9,6 +9,7 @@
 extern "C" {
 #endif /* __cplusplus */
 
+#warning Do not use GpeIconlist, use GpeIconListView instead.
 
 /*
  * Type checking and casting macros
