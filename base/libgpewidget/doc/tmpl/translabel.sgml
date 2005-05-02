@@ -1,18 +1,20 @@
 <!-- ##### SECTION Title ##### -->
-translabel
+Translation label
 
 <!-- ##### SECTION Short_Description ##### -->
-
+Translation-aware GtkLabel variant
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-
+Support for widgets with "instant-apply" language switching.
 </para>
+
 
 <!-- ##### SECTION See_Also ##### -->
 <para>
 
 </para>
+
 
 <!-- ##### FUNCTION gtk_widget_add_translation_hook ##### -->
 <para>

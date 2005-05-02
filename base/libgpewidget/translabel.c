@@ -99,6 +99,14 @@ label_translation (GtkWidget *w, void *pointer)
   gtk_label_set_text (GTK_LABEL (w), dgettext (domain, string));
 }
 
+/**
+ * gtk_widget_add_translation_hook:
+ * @w: A widget.
+ * @func: A callback function.
+ * @data: Passed as the second argument when the callback is invoked.
+ * 
+ * Register a callback to be invoked when the current locale changes.
+ */
 void
 gtk_widget_add_translation_hook (GtkWidget *w, void (*func)(GtkWidget *, void *), gpointer data)
 {
@@ -126,6 +134,16 @@ gtk_widget_add_translation_hook (GtkWidget *w, void (*func)(GtkWidget *, void *)
   func (w, data);
 }
 
+/**
+ * gtk_label_new_with_translation:
+ * @domain: Textual domain used for this program.
+ * @string: Message string to be displayed.
+ * @Returns: a GtkWidget
+ * 
+ * Creates a translation-aware label widget.  The supplied string is
+ * passed through gettext prior to display, and automatically updated
+ * if the selected locale is changed.
+ */
 GtkWidget *
 gtk_label_new_with_translation (gchar *domain, gchar *string)
 {
