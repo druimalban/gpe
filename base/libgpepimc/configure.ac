@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT(libgpepimc, 0.4, gpe@handhelds.org)
+AC_INIT(libgpepimc, 0.5, gpe@handhelds.org)
 AC_CONFIG_SRCDIR([ui.c])
 AM_INIT_AUTOMAKE([foreign dist-bzip2])
 
@@ -31,7 +31,7 @@ DEP_MODULES="gtk+-2.0 >= 2.2 glib-2.0 >= 2.2 sqlite libgpewidget"
 PKG_CHECK_MODULES(PIMC, $DEP_MODULES)
 
 #gtk-doc for documentation
-GTK_DOC_CHECK(1.0)
+GTK_DOC_CHECK(1.2)
 
 AC_CONFIG_FILES([Makefile libgpepimc.pc po/Makefile.in doc/Makefile])
 AC_OUTPUT

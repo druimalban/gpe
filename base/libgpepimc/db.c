@@ -133,6 +133,14 @@ gpe_pim_category_new (const gchar *name, gint *id)
   return TRUE;
 }
 
+/**
+ * gpe_pim_category_delete:
+ * @c: Pim category to become deleted.
+ *
+ * Delete a PIM category. The category to delete is isentified by the id 
+ * field in the given category.
+ */
+
 void 
 gpe_pim_category_delete (struct gpe_pim_category *c)
 {
