@@ -1,5 +1,5 @@
 PACKAGE = gpe-shield
-VERSION = 0.7
+VERSION = 0.8
 NATIVE = yes
 CVSBUILD = yes
 DEBUG = no

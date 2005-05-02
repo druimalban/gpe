@@ -1,7 +1,7 @@
 /*
  * gpe-shield
  *
- * Copyright (C) 2004 kernel concepts
+ * Copyright (C) 2004, 2005 kernel concepts
  * Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
@@ -279,11 +279,15 @@ do_rules_apply()
 				portspec = g_strdup("");
 
 			if (rule_info[i].interface[0] == '!')
-			  {
-			    sprintf (interface, "! %s", rule_info[i].interface + 1);
-			  }
+			{
+				sprintf (interface, "! %s", rule_info[i].interface + 1);
+			}
 			else
-			  strcpy (interface, rule_info[i].interface);
+			{
+		  		strcpy (interface, rule_info[i].interface);
+			}
+			if (!strlen(g_strstrip(interface)))
+				strcpy (interface, "! lo");
 			
 			if (rule_info[i].is_policy)
 				cmd = g_strdup_printf("%s %s %s %s",IPTABLES_CMD, "-P", dir, target);
@@ -379,8 +383,6 @@ send_message (pkcontent_t ctype, pkcommand_t cmd,rule_t *rule)
 static void
 do_shutdown()
 {
-//	system(IPTABLES_CMD " --flush"); /* cleans all existing iptables settings */
-//	system(IPTABLES_CMD " -P INPUT ACCEPT"); /* reset input policy */
 }
 
 static int
@@ -435,18 +437,27 @@ wait_message ()
 static void
 do_change_cfg_load(gboolean doit)
 {
+	char *cmd;
 	int fh;
+	
 	if (doit)
 	{
 		if ((fh = open(LOADRULES_MARK,O_CREAT | O_RDWR | O_TRUNC)) < 0)
 			perror("Cannot save setting.");
 		else
 			close(fh);
+		do_rules_apply();
 	}
 	else
 	{
 		if (remove(LOADRULES_MARK) < 0)
 			perror("Cannot save setting.");
+		cmd = g_strdup_printf("%s %s",IPTABLES_CMD,"--flush");
+		system(cmd);
+		g_free(cmd);
+		cmd = g_strdup_printf("%s %s",IPTABLES_CMD,"-P INPUT ACCEPT"); /* reset input policy */
+		system(cmd);
+		g_free(cmd);
 	}
 }
 
