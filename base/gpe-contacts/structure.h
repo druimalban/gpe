@@ -46,5 +46,6 @@ extern void initial_structure (void);
 extern GSList *edit_pages;
 
 extern void load_well_known_tags (void);
+extern gboolean load_structure (gchar* default_structure);
 
 #endif

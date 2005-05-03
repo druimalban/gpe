@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+#include <unistd.h>
 
 #include <gpe/pixmaps.h>
 #include <gpe/gtkdatecombo.h>
@@ -23,6 +24,8 @@
 
 GSList *edit_pages;
 GList *well_known_tags;
+
+#define LAYOUT_NAME "/.gpe/contacts-layout.xml"
 
 edit_thing_t new_thing (edit_thing_type t, gchar *name, edit_thing_t parent);
 
@@ -646,4 +649,28 @@ load_well_known_tags (void)
 	}
       fclose (fp);
     }
+}
+
+gboolean
+load_structure (gchar* default_structure)
+{
+  gchar *buf;
+  size_t len;
+  char *home = getenv ("HOME");
+  gboolean rc = TRUE;
+  if (home == NULL)
+    home = "";
+  
+  len = strlen (home) + strlen (LAYOUT_NAME) + 1;
+  buf = g_malloc (len);
+  strcpy (buf, home);
+  strcat (buf, LAYOUT_NAME);
+  
+  if (access (buf, F_OK))
+    read_structure (default_structure);
+  else
+    rc = read_structure (buf);
+  
+  g_free (buf);
+  return rc;
 }

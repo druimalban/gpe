@@ -11,7 +11,6 @@
 #include <string.h>
 #include <glib.h>
 #include <stdio.h>
-#include <unistd.h>
 #include <sys/stat.h>
 #include <ctype.h>
 #include <time.h>
@@ -25,7 +24,6 @@
 
 #define DB_NAME_CONTACTS "/.gpe/contacts"
 #define DB_NAME_VCARD "/.gpe/vcard"
-#define LAYOUT_NAME "/.gpe/contacts-layout.xml"
 
 #include <sqlite.h>
 
@@ -131,31 +129,6 @@ db_open (gboolean open_vcard)
   
   return 0;
 }
-
-gboolean
-load_structure (gchar* default_structure)
-{
-  gchar *buf;
-  size_t len;
-  char *home = getenv ("HOME");
-  gboolean rc = TRUE;
-  if (home == NULL)
-    home = "";
-  
-  len = strlen (home) + strlen (LAYOUT_NAME) + 1;
-  buf = g_malloc (len);
-  strcpy (buf, home);
-  strcat (buf, LAYOUT_NAME);
-  
-  if (access (buf, F_OK))
-    read_structure (default_structure);
-  else
-    rc = read_structure (buf);
-  
-  g_free (buf);
-  return rc;
-}
-
 
 struct tag_value *
 new_tag_value (gchar * tag, gchar * value)
