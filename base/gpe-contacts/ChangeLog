@@ -1,3 +1,9 @@
+2005-05-03  Florian Boor <florian.boor@kernelconcepts.de>
+
+    * db.c, db.h (load_structure): Move scheme selection to main.c, add 
+                                   parameter to pass scheme file.
+    * main.c (main): see above.
+
 2005-04-30  Florian Boor <florian.boor@kernelconcepts.de>
 
     * Released Version 0.37

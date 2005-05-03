@@ -9,7 +9,7 @@
 #define CONFIG_LIST  1
 
 extern int db_open (gboolean open_vcard);
-extern gboolean load_structure (void);
+extern gboolean load_structure (gchar* default_structure);
 
 struct tag_value
 {

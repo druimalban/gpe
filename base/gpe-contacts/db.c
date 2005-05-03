@@ -26,8 +26,6 @@
 #define DB_NAME_CONTACTS "/.gpe/contacts"
 #define DB_NAME_VCARD "/.gpe/vcard"
 #define LAYOUT_NAME "/.gpe/contacts-layout.xml"
-#define DEFAULT_STRUCTURE PREFIX "/share/gpe-contacts/default-layout.xml"
-#define LARGE_STRUCTURE PREFIX "/share/gpe-contacts/default-layout-bigscreen.xml"
 
 #include <sqlite.h>
 
@@ -135,7 +133,7 @@ db_open (gboolean open_vcard)
 }
 
 gboolean
-load_structure (void)
+load_structure (gchar* default_structure)
 {
   gchar *buf;
   size_t len;
@@ -150,12 +148,7 @@ load_structure (void)
   strcat (buf, LAYOUT_NAME);
   
   if (access (buf, F_OK))
-    {
-      if (mode_large_screen)
-        rc = read_structure (LARGE_STRUCTURE);
-      else
-        rc = read_structure (DEFAULT_STRUCTURE);
-    }
+    read_structure (default_structure);
   else
     rc = read_structure (buf);
   

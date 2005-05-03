@@ -59,6 +59,9 @@ gboolean mode_large_screen;
 gboolean scroll_delay = FALSE;
 gboolean do_wrap = FALSE;
 
+#define DEFAULT_STRUCTURE PREFIX "/share/gpe-contacts/default-layout.xml"
+#define LARGE_STRUCTURE PREFIX "/share/gpe-contacts/default-layout-bigscreen.xml"
+
 struct gpe_icon my_icons[] = {
   {"edit"},
   {"delete"},
@@ -1551,7 +1554,7 @@ main (int argc, char *argv[])
       if (db_open (TRUE))
         exit (1);
       load_well_known_tags ();
-      load_structure ();
+      load_structure (LARGE_STRUCTURE);
       
       p = db_get_by_uid (1);
       if (!p)
@@ -1577,7 +1580,10 @@ main (int argc, char *argv[])
 
   gtk_signal_connect (GTK_OBJECT (mainw), "destroy", gtk_main_quit, NULL);
 
-  load_structure ();
+  if (mode_large_screen)
+    load_structure (LARGE_STRUCTURE);
+  else
+    load_structure (DEFAULT_STRUCTURE);
 
   /* load detail panel fields, create widgets */
   if (!mode_landscape)
