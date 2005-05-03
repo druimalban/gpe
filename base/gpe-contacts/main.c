@@ -1544,7 +1544,7 @@ main (int argc, char *argv[])
   
   export_init ();
 
- /* we are called to edit a users personal vcard */
+  /* we are called to edit a users personal vcard */
   if (edit_vcard)
     {
       struct person *p;
@@ -1565,12 +1565,21 @@ main (int argc, char *argv[])
         gpe_perror_box(_("Saving vcard failed"));
       exit (EXIT_SUCCESS);
     }
-    
+   
+   /* initialise data backends */ 
+   gpe_pim_categories_init ();
+ 
    if (db_open (FALSE))
     exit (1);
 
   load_well_known_tags ();
 
+  if (mode_large_screen)
+    load_structure (LARGE_STRUCTURE);
+  else
+    load_structure (DEFAULT_STRUCTURE);
+
+  /* crate main window and initialise display */
   list_store = gtk_list_store_new (2, G_TYPE_STRING, G_TYPE_INT);
    
   mainw = create_main (edit_structure);
@@ -1579,11 +1588,6 @@ main (int argc, char *argv[])
   show_details (NULL);
 
   gtk_signal_connect (GTK_OBJECT (mainw), "destroy", gtk_main_quit, NULL);
-
-  if (mode_large_screen)
-    load_structure (LARGE_STRUCTURE);
-  else
-    load_structure (DEFAULT_STRUCTURE);
 
   /* load detail panel fields, create widgets */
   if (!mode_landscape)

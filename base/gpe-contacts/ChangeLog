@@ -1,5 +1,7 @@
 2005-05-03  Florian Boor <florian.boor@kernelconcepts.de>
 
+    * db.c (db_open), main.c (main): Move categories stuff to main.c.
+    * main.c (main): Add some comments, sort initialising stuff.
     * db.*, structure.*: Move load_structure() to structure.c.
     * db.c, db.h (load_structure): Move scheme selection to main.c, add 
                                    parameter to pass scheme file.

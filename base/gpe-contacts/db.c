@@ -121,8 +121,6 @@ db_open (gboolean open_vcard)
       db_add_config_values (CONFIG_PANEL, _("EMail"), "HOME.EMAIL");
     }
 
-  gpe_pim_categories_init ();
-
   migrate_old_categories (db);
 
   db_check_tags();
