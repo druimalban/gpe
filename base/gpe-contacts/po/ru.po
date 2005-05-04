@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gpe-contacts-0.32\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-10-17 00:23+0200\n"
+"POT-Creation-Date: 2005-04-30 17:29+0200\n"
 "PO-Revision-Date: 2004-11-05 12:02+0200\n"
 "Last-Translator: Pavel Maryanov <acid_jack@ukr.net>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -16,357 +16,434 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.3\n"
 
-#: db.c:70
-msgid "Name"
+#: ../categories.c:105
+msgid "Category name must not be blank"
+msgstr ""
+
+#: ../categories.c:115
+msgid "A category by that name already exists"
+msgstr ""
+
+#: ../categories.c:147
+#, fuzzy
+msgid "Name:"
 msgstr "Имя"
 
-#: db.c:71
-msgid "Phone"
-msgstr "Телефон"
-
-#: db.c:72
-msgid "EMail"
-msgstr "Эл. почта"
-
-#: editing.c:108 main.c:1218
-msgid "Details"
-msgstr "Подробности"
-
-#: editing.c:227
-msgid "no year"
-msgstr "год не указан"
-
-#: editing.c:436 main.c:470 main.c:597
-msgid "Categories"
-msgstr "Категории"
-
-#: editing.c:972
-msgid "Select image"
-msgstr "Выбрать изображение"
-
-#: main.c:80 main.c:182
-msgid "Edit Contact"
-msgstr "Редактировать контакт"
-
-#: main.c:86 main.c:198
-msgid "Really delete this contact?"
-msgstr "Действительно удалить этот контакт?"
-
-#: main.c:86 main.c:198 structure.c:176
-msgid "Confirm"
-msgstr "Подтверждение"
-
-#: main.c:138
-msgid "All categories"
+#: ../categories.c:174 ../categories.c:328
+#, fuzzy
+msgid "New category"
 msgstr "Все категории"
 
-#: main.c:160
-msgid "New Contact"
-msgstr "Новый контакт"
-
-#: main.c:481
-msgid "No contact selected."
-msgstr "Контакт не выбран."
-
-#: main.c:553 main.c:1272 main.c:1338
-msgid "Contact"
-msgstr "Контакт"
-
-#: main.c:1182 gpe-contacts.desktop.in.h:1
-msgid "Contacts"
-msgstr "Контакты"
-
-#: main.c:1195
-msgid "Tap this button to add a new contact."
-msgstr "Нажмите на эту кнопку, чтобы добавить новый контакт."
-
-#: main.c:1202
-msgid "Edit"
-msgstr "Редактировать"
-
-#: main.c:1203
-msgid "Tap here to edit the selected contact."
-msgstr "Нажмите сюда, чтобы редактировать выбранный контакт."
-
-#: main.c:1209
-msgid "Tap here to delete the selected contact."
-msgstr "Нажмите сюда, чтобы редактировать удалить выбранный контакт."
-
-#: main.c:1219
-msgid "Tap here to show contacts details."
-msgstr "Нажмите сюда, чтобы вывести подробности о контакте."
-
-#: main.c:1228
-msgid "Find a contact by searching for any data."
-msgstr "Поиск контакта по любому типу данных."
-
-#: main.c:1233
-msgid "Properties"
-msgstr "Свойства"
-
-#: main.c:1233
-msgid "Tap here to configure this program."
-msgstr "Нажмите сюда, чтобы настроить эту программу."
-
-#: main.c:1239
-msgid "Close"
-msgstr "Закрыть"
-
-#: main.c:1239
-msgid "Tap here to exit gpe-contacts."
-msgstr "Нажмите сюда, чтобы выйти из gpe-contacts."
-
-#: main.c:1298
-msgid "Find:"
-msgstr "Найти:"
-
-#: main.c:1305
-msgid "in"
-msgstr "в"
-
-#: main.c:1491
-msgid "My Card"
-msgstr "Моя карточка"
-
-#: main.c:1494
-msgid "Saving vcard failed"
-msgstr "Не удалось сохранить v-карточку"
-
-#: structure.c:105 structure.c:235
-msgid "New page"
-msgstr "Новая страница"
-
-#: structure.c:105 structure.c:124 structure.c:149
-msgid "Title"
-msgstr "Заголовок"
-
-#: structure.c:124
-msgid "New group"
-msgstr "Новая группа"
-
-#: structure.c:136 structure.c:166
-msgid "No container selected"
-msgstr "Контейнер не выбран"
-
-#: structure.c:150
-msgid "Tag"
-msgstr "Тэг"
-
-#: structure.c:152
-msgid "New field"
-msgstr "Новое поле"
-
-#: structure.c:176
-msgid "Really delete this field?"
-msgstr "Действительно хотите удалить это поле?"
-
-#: structure.c:177
-msgid "Delete"
-msgstr "Удалить"
-
-#: structure.c:177
-msgid "Cancel"
-msgstr "Отмена"
-
-#: structure.c:234
-msgid "Page"
-msgstr "Страница"
-
-#: structure.c:235
-msgid "Tap here to add a page."
+#: ../categories.c:329
+#, fuzzy
+msgid "Tap here to add a new category."
 msgstr "Нажмите сюда, чтобы добавить страницу."
 
-#: structure.c:251
-msgid "Delete item"
+#: ../categories.c:333
+#, fuzzy
+msgid "Delete category"
 msgstr "Удалить пункт"
 
-#: structure.c:251
-msgid "Tap here to delete the selected item."
+#: ../categories.c:334
+#, fuzzy
+msgid "Tap here to delete the selected category."
 msgstr "Нажмите сюда, чтобы удалить выбранный пункт."
 
+#: ../categories.c:401
+#, fuzzy
+msgid "Select categories"
+msgstr "Все категории"
+
 #. TRANSLATORS: kB = kilo bytes
-#: configure.c:131 configure.c:337
+#: ../configure.c:130 ../configure.c:340
 msgid "Current size:"
 msgstr "Текущий размер:"
 
-#: configure.c:132
+#: ../configure.c:131
 msgid "kB (optimised)"
 msgstr "кБ (оптимизирован)"
 
-#: configure.c:177
-msgid "<b>Detail panel:</b>"
+#: ../configure.c:177
+#, fuzzy
+msgid "Detail panel:"
 msgstr "<b>Подробная панель:</b>"
 
-#: configure.c:203
+#: ../configure.c:206
 msgid "NAME"
 msgstr "ИМЯ"
 
-#: configure.c:213
+#: ../configure.c:216
 msgid "Add"
 msgstr "Добавить"
 
-#: configure.c:220
+#: ../configure.c:223
 msgid "Remove"
 msgstr "Удалить"
 
-#: configure.c:242
+#: ../configure.c:245
 msgid "Label"
 msgstr "Метка"
 
-#: configure.c:247
+#: ../configure.c:250
 msgid "Data item"
 msgstr "Элемент данных"
 
-#: configure.c:291
+#: ../configure.c:294
 msgid "Screen Layout"
 msgstr "Размещение экрана"
 
-#: configure.c:297
+#: ../configure.c:300
 msgid "List position"
 msgstr "Положение списка"
 
-#: configure.c:300
+#: ../configure.c:303
 msgid "left"
 msgstr "слева"
 
-#: configure.c:302
+#: ../configure.c:305
 msgid "right"
 msgstr "справа"
 
-#: configure.c:330
+#: ../configure.c:333
 msgid "Database Size"
 msgstr "Размер базы данных"
 
-#: configure.c:337
+#: ../configure.c:340
 msgid "kB"
 msgstr "кБ"
 
-#: configure.c:342
+#: ../configure.c:345
 msgid "Actions"
 msgstr "Действия"
 
-#: configure.c:349
+#: ../configure.c:352
 msgid "Optimise database"
 msgstr "Оптимизировать БД"
 
-#: configure.c:352
+#: ../configure.c:355
 msgid "Run"
 msgstr "Запустить"
 
-#: configure.c:458
+#: ../configure.c:461
 msgid "Editing Layout"
 msgstr "Редактирование размещения"
 
-#: configure.c:460
+#: ../configure.c:463
 msgid "Setup"
 msgstr "Установка"
 
-#: configure.c:461
+#: ../configure.c:464
 msgid "Database"
 msgstr "База данных"
 
-#: configure.c:493
+#: ../configure.c:496
 msgid "Contacts: Configuration"
 msgstr "Контакты: Конфигурация"
 
-#: export.c:158
+#: ../db.c:123
+msgid "Name"
+msgstr "Имя"
+
+#: ../db.c:124
+msgid "Phone"
+msgstr "Телефон"
+
+#: ../db.c:125
+msgid "EMail"
+msgstr "Эл. почта"
+
+#: ../edit-vcard.desktop.in.h:1
+msgid "Edit personal vcard"
+msgstr "Редактировать личную v-карточку"
+
+#: ../edit-vcard.desktop.in.h:2
+msgid "My VCard"
+msgstr "Моя V-карточка"
+
+#: ../editing.c:116 ../main.c:1308
+msgid "Details"
+msgstr "Подробности"
+
+#: ../editing.c:236
+msgid "no year"
+msgstr "год не указан"
+
+#: ../editing.c:446 ../main.c:503 ../main.c:630
+msgid "Categories"
+msgstr "Категории"
+
+#: ../editing.c:982
+msgid "Select image"
+msgstr "Выбрать изображение"
+
+#: ../export.c:158
 msgid "Save as..."
 msgstr "Сохранить как..."
 
+#. create dialog window
+#: ../finddlg.c:37
+msgid "Find Contacts"
+msgstr "Найти контакт"
+
+#. supply action area
+#: ../finddlg.c:49
+msgid "Search for:"
+msgstr "Поиск:"
+
+#: ../gpe-contacts.desktop.in.h:1 ../main.c:1272
+msgid "Contacts"
+msgstr "Контакты"
+
+#: ../gpe-contacts.desktop.in.h:2
+msgid "GPE Contacts"
+msgstr "Контакты GPE"
+
+#: ../main.c:78 ../main.c:180
+msgid "Edit Contact"
+msgstr "Редактировать контакт"
+
+#: ../main.c:84 ../main.c:196
+msgid "Really delete this contact?"
+msgstr "Действительно удалить этот контакт?"
+
+#: ../main.c:84 ../main.c:196 ../structure.c:173
+msgid "Confirm"
+msgstr "Подтверждение"
+
+#: ../main.c:136
+msgid "All categories"
+msgstr "Все категории"
+
+#: ../main.c:158
+msgid "New Contact"
+msgstr "Новый контакт"
+
+#: ../main.c:514
+msgid "No contact selected."
+msgstr "Контакт не выбран."
+
+#. create and set up dialog
+#: ../main.c:586 ../main.c:1369 ../main.c:1435
+msgid "Contact"
+msgstr "Контакт"
+
+#: ../main.c:1202
+msgid "Choose file"
+msgstr ""
+
+#: ../main.c:1230
+msgid "Import of"
+msgstr ""
+
+#: ../main.c:1230
+msgid "files failed:"
+msgstr ""
+
+#: ../main.c:1234
+msgid "Import successful"
+msgstr ""
+
+#: ../main.c:1285
+msgid "Tap this button to add a new contact."
+msgstr "Нажмите на эту кнопку, чтобы добавить новый контакт."
+
+#: ../main.c:1292
+msgid "Edit"
+msgstr "Редактировать"
+
+#: ../main.c:1293
+msgid "Tap here to edit the selected contact."
+msgstr "Нажмите сюда, чтобы редактировать выбранный контакт."
+
+#: ../main.c:1299
+msgid "Tap here to delete the selected contact."
+msgstr "Нажмите сюда, чтобы редактировать удалить выбранный контакт."
+
+#: ../main.c:1309
+msgid "Tap here to show contacts details."
+msgstr "Нажмите сюда, чтобы вывести подробности о контакте."
+
+#: ../main.c:1318
+msgid "Find a contact by searching for any data."
+msgstr "Поиск контакта по любому типу данных."
+
+#: ../main.c:1323
+msgid "Properties"
+msgstr "Свойства"
+
+#: ../main.c:1323
+msgid "Tap here to configure this program."
+msgstr "Нажмите сюда, чтобы настроить эту программу."
+
+#: ../main.c:1329
+msgid "Import"
+msgstr ""
+
+#: ../main.c:1329
+msgid "Open file to import a contact from it."
+msgstr ""
+
+#: ../main.c:1335
+msgid "Close"
+msgstr "Закрыть"
+
+#: ../main.c:1335
+msgid "Tap here to exit gpe-contacts."
+msgstr "Нажмите сюда, чтобы выйти из gpe-contacts."
+
+#: ../main.c:1395
+msgid "Find:"
+msgstr "Найти:"
+
+#: ../main.c:1402
+msgid "in"
+msgstr "в"
+
+#: ../main.c:1529
+#, c-format
+msgid "Could not import file %s."
+msgstr ""
+
+#: ../main.c:1534
+#, c-format
+msgid "File %s imported sucessfully."
+msgstr ""
+
+#: ../main.c:1559
+msgid "My Card"
+msgstr "Моя карточка"
+
+#: ../main.c:1562
+msgid "Saving vcard failed"
+msgstr "Не удалось сохранить v-карточку"
+
 #. TRANSLATORS: These abbreviations are a list of common titles used in a name
-#: namedetail.c:30
+#: ../namedetail.c:30
 msgid "Dr."
 msgstr "Д-р"
 
-#: namedetail.c:30
+#: ../namedetail.c:30
 msgid "Miss"
 msgstr "Г-жа"
 
-#: namedetail.c:30
+#: ../namedetail.c:30
 msgid "Mr."
 msgstr "Г-н"
 
-#: namedetail.c:30
+#: ../namedetail.c:30
 msgid "Mrs."
 msgstr "Г-жа"
 
-#: namedetail.c:30
+#: ../namedetail.c:30
 msgid "Ms."
 msgstr "Г-жа"
 
-#: namedetail.c:30
+#: ../namedetail.c:30
 msgid "Prof."
 msgstr "Проф."
 
-#: namedetail.c:30
+#: ../namedetail.c:30
 msgid "Sir"
 msgstr "Сэр"
 
 #. TRANSLATORS: This is a list of common name suffixes
-#: namedetail.c:32
+#: ../namedetail.c:32
 msgid "Jr."
 msgstr "Мл."
 
-#: namedetail.c:32
+#: ../namedetail.c:32
 msgid "Esq."
 msgstr "Эсквайр"
 
-#: namedetail.c:32
+#: ../namedetail.c:32
 msgid "Sr."
 msgstr "Сестра"
 
-#: namedetail.c:32
+#: ../namedetail.c:32
 msgid "I"
 msgstr "I"
 
-#: namedetail.c:32
+#: ../namedetail.c:32
 msgid "II"
 msgstr "II"
 
-#: namedetail.c:32
+#: ../namedetail.c:32
 msgid "III"
 msgstr "III"
 
-#: namedetail.c:61
+#. create dialog window
+#: ../namedetail.c:61
 msgid "Edit Name Details"
 msgstr "Редактировать имя"
 
-#: namedetail.c:88
+#: ../namedetail.c:88
 msgid "First name:"
 msgstr "Имя:"
 
-#: namedetail.c:89
+#: ../namedetail.c:89
 msgid "Middle name:"
 msgstr "Второе имя (отчество):"
 
-#: namedetail.c:90
+#: ../namedetail.c:90
 msgid "Last name:"
 msgstr "Фамилия:"
 
-#: namedetail.c:91
+#: ../namedetail.c:91
 msgid "Suffix:"
 msgstr "Суффикс:"
 
-#: namedetail.c:92
+#: ../namedetail.c:92
 msgid "Title:"
 msgstr "Заголовок:"
 
-#: finddlg.c:37
-msgid "Find Contacts"
-msgstr "Найти контакт"
+#: ../structure.c:102 ../structure.c:232
+msgid "New page"
+msgstr "Новая страница"
 
-#: finddlg.c:49
-msgid "Search for:"
-msgstr "Поиск:"
+#: ../structure.c:102 ../structure.c:121 ../structure.c:146
+msgid "Title"
+msgstr "Заголовок"
 
-#: gpe-contacts.desktop.in.h:2
-msgid "GPE Contacts"
-msgstr "Контакты GPE"
+#: ../structure.c:121
+msgid "New group"
+msgstr "Новая группа"
 
-#: edit-vcard.desktop.in.h:1
-msgid "Edit personal vcard"
-msgstr "Редактировать личную v-карточку"
+#: ../structure.c:133 ../structure.c:163
+msgid "No container selected"
+msgstr "Контейнер не выбран"
 
-#: edit-vcard.desktop.in.h:2
-msgid "My VCard"
-msgstr "Моя V-карточка"
+#: ../structure.c:147
+msgid "Tag"
+msgstr "Тэг"
+
+#: ../structure.c:149
+msgid "New field"
+msgstr "Новое поле"
+
+#: ../structure.c:173
+msgid "Really delete this field?"
+msgstr "Действительно хотите удалить это поле?"
+
+#: ../structure.c:174
+msgid "Delete"
+msgstr "Удалить"
+
+#: ../structure.c:174
+msgid "Cancel"
+msgstr "Отмена"
+
+#: ../structure.c:231
+msgid "Page"
+msgstr "Страница"
+
+#: ../structure.c:232
+msgid "Tap here to add a page."
+msgstr "Нажмите сюда, чтобы добавить страницу."
+
+#: ../structure.c:248
+msgid "Delete item"
+msgstr "Удалить пункт"
+
+#: ../structure.c:248
+msgid "Tap here to delete the selected item."
+msgstr "Нажмите сюда, чтобы удалить выбранный пункт."

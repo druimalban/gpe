@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gpe-contacts 0.32\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-10-17 00:23+0200\n"
+"POT-Creation-Date: 2005-04-30 17:29+0200\n"
 "PO-Revision-Date: 2005-04-04 10:55-0700\n"
 "Last-Translator: Steven Michael Murphy <murf@e-tools.com>\n"
 "Language-Team: Kinyarwanda <translation-team-rw@lists.sourceforge.net>\n"
@@ -24,61 +24,229 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: db.c:70
+#: ../categories.c:105
+msgid "Category name must not be blank"
+msgstr ""
+
+#: ../categories.c:115
+msgid "A category by that name already exists"
+msgstr ""
+
+#: ../categories.c:147
+#, fuzzy
+msgid "Name:"
+msgstr "Izina"
+
+#: ../categories.c:174 ../categories.c:328
+#, fuzzy
+msgid "New category"
+msgstr "Ibyiciro"
+
+#: ../categories.c:329
+#, fuzzy
+msgid "Tap here to add a new category."
+msgstr "Kuri Kongeramo a Ipaji"
+
+#: ../categories.c:333
+#, fuzzy
+msgid "Delete category"
+msgstr "Ikintu"
+
+#: ../categories.c:334
+#, fuzzy
+msgid "Tap here to delete the selected category."
+msgstr "Kuri Gusiba i Byahiswemo Ikintu"
+
+#: ../categories.c:401
+#, fuzzy
+msgid "Select categories"
+msgstr "Ibyiciro"
+
+#. TRANSLATORS: kB = kilo bytes
+#: ../configure.c:130 ../configure.c:340
+#, fuzzy
+msgid "Current size:"
+msgstr "Ingano"
+
+#: ../configure.c:131
+msgid "kB (optimised)"
+msgstr ""
+
+#: ../configure.c:177
+#, fuzzy
+msgid "Detail panel:"
+msgstr "<B B"
+
+#: ../configure.c:206
+#, fuzzy
+msgid "NAME"
+msgstr "Izina"
+
+#: ../configure.c:216
+msgid "Add"
+msgstr "Kongera"
+
+#: ../configure.c:223
+msgid "Remove"
+msgstr "Gukuraho"
+
+#: ../configure.c:245
+msgid "Label"
+msgstr "Akarango"
+
+#: ../configure.c:250
+#, fuzzy
+msgid "Data item"
+msgstr "Ikintu"
+
+#: ../configure.c:294
+msgid "Screen Layout"
+msgstr ""
+
+#: ../configure.c:300
+#, fuzzy
+msgid "List position"
+msgstr "Ibirindiro"
+
+#: ../configure.c:303
+msgid "left"
+msgstr "ibumoso"
+
+#: ../configure.c:305
+msgid "right"
+msgstr "iburyo"
+
+#: ../configure.c:333
+msgid "Database Size"
+msgstr ""
+
+# #-#-#-#-#  setup2.pot (PACKAGE VERSION)  #-#-#-#-#
+# setup2/source\ui\dialog\dialog.src:RESID_DLG_OVERWRITE.2.text
+# #-#-#-#-#  setup2.pot (PACKAGE VERSION)  #-#-#-#-#
+# setup2/source\ui\dialog\strings.src:STR_KB.text
+#: ../configure.c:340
+#, fuzzy
+msgid "kB"
+msgstr "KB"
+
+#: ../configure.c:345
+msgid "Actions"
+msgstr ""
+
+#: ../configure.c:352
+#, fuzzy
+msgid "Optimise database"
+msgstr "Ububikoshingiro"
+
+#: ../configure.c:355
+msgid "Run"
+msgstr "Ihutishe"
+
+#: ../configure.c:461
+msgid "Editing Layout"
+msgstr ""
+
+#: ../configure.c:463
+msgid "Setup"
+msgstr "Imikorere"
+
+#: ../configure.c:464
+msgid "Database"
+msgstr "Ububikoshingiro"
+
+#: ../configure.c:496
+msgid "Contacts: Configuration"
+msgstr ""
+
+#: ../db.c:123
 msgid "Name"
 msgstr "Izina"
 
-#: db.c:71
+#: ../db.c:124
 msgid "Phone"
 msgstr "Telefone"
 
 # officecfg/registry\schema\org\openoffice\Office\Writer.xcs:....BusinessCard.BusinessAddress.Email.text
-#: db.c:72
+#: ../db.c:125
 #, fuzzy
 msgid "EMail"
 msgstr "imeli"
 
-#: editing.c:108 main.c:1218
+#: ../edit-vcard.desktop.in.h:1
+#, fuzzy
+msgid "Edit personal vcard"
+msgstr "Bwite"
+
+#: ../edit-vcard.desktop.in.h:2
+msgid "My VCard"
+msgstr ""
+
+#: ../editing.c:116 ../main.c:1308
 msgid "Details"
 msgstr "Birambuye"
 
-#: editing.c:227
+#: ../editing.c:236
 #, fuzzy
 msgid "no year"
 msgstr "Oya Umwaka"
 
-#: editing.c:436 main.c:470 main.c:597
+#: ../editing.c:446 ../main.c:503 ../main.c:630
 msgid "Categories"
 msgstr "Ibyiciro"
 
-#: editing.c:972
+#: ../editing.c:982
 #, fuzzy
 msgid "Select image"
 msgstr "Ishusho"
 
-#: main.c:80 main.c:182
+# sfx2/source\doc\doc.src:STR_SAVEASDOC.text
+#: ../export.c:158
+#, fuzzy
+msgid "Save as..."
+msgstr "Gushyingura muri..."
+
+#. create dialog window
+#: ../finddlg.c:37
+msgid "Find Contacts"
+msgstr ""
+
+#. supply action area
+#: ../finddlg.c:49
+#, fuzzy
+msgid "Search for:"
+msgstr "Gushakisha:"
+
+#: ../gpe-contacts.desktop.in.h:1 ../main.c:1272
+msgid "Contacts"
+msgstr "Aho kubariza"
+
+#: ../gpe-contacts.desktop.in.h:2
+msgid "GPE Contacts"
+msgstr ""
+
+#: ../main.c:78 ../main.c:180
 msgid "Edit Contact"
 msgstr ""
 
-#: main.c:86 main.c:198
+#: ../main.c:84 ../main.c:196
 #, fuzzy
 msgid "Really delete this contact?"
 msgstr "Gusiba iyi Umuntu"
 
-#: main.c:86 main.c:198 structure.c:176
+#: ../main.c:84 ../main.c:196 ../structure.c:173
 msgid "Confirm"
 msgstr "Emeza"
 
-#: main.c:138
+#: ../main.c:136
 #, fuzzy
 msgid "All categories"
 msgstr "Ibyiciro"
 
-#: main.c:160
+#: ../main.c:158
 msgid "New Contact"
 msgstr ""
 
-#: main.c:481
+#: ../main.c:514
 #, fuzzy
 msgid "No contact selected."
 msgstr "Umuntu Byahiswemo"
@@ -120,342 +288,250 @@ msgstr "Umuntu Byahiswemo"
 #
 # ***** END LICENSE BLOCK *****
 # Box Headings
-#: main.c:553 main.c:1272 main.c:1338
+#. create and set up dialog
+#: ../main.c:586 ../main.c:1369 ../main.c:1435
 msgid "Contact"
 msgstr "Umuntu"
 
-#: main.c:1182 gpe-contacts.desktop.in.h:1
-msgid "Contacts"
-msgstr "Aho kubariza"
+#: ../main.c:1202
+msgid "Choose file"
+msgstr ""
 
-#: main.c:1195
+#: ../main.c:1230
+msgid "Import of"
+msgstr ""
+
+#: ../main.c:1230
+msgid "files failed:"
+msgstr ""
+
+#: ../main.c:1234
+msgid "Import successful"
+msgstr ""
+
+#: ../main.c:1285
 #, fuzzy
 msgid "Tap this button to add a new contact."
 msgstr "iyi Akabuto Kuri Kongeramo a Gishya Umuntu"
 
-#: main.c:1202
+#: ../main.c:1292
 msgid "Edit"
 msgstr "Guhindura"
 
-#: main.c:1203
+#: ../main.c:1293
 #, fuzzy
 msgid "Tap here to edit the selected contact."
 msgstr "Kuri Guhindura i Byahiswemo Umuntu"
 
-#: main.c:1209
+#: ../main.c:1299
 #, fuzzy
 msgid "Tap here to delete the selected contact."
 msgstr "Kuri Gusiba i Byahiswemo Umuntu"
 
-#: main.c:1219
+#: ../main.c:1309
 #, fuzzy
 msgid "Tap here to show contacts details."
 msgstr "Kuri Garagaza Aho kubariza Birambuye"
 
-#: main.c:1228
+#: ../main.c:1318
 #, fuzzy
 msgid "Find a contact by searching for any data."
 msgstr "a Umuntu ku Ishakisha kugirango Ibyatanzwe"
 
-#: main.c:1233
+#: ../main.c:1323
 msgid "Properties"
 msgstr "indangakintu"
 
-#: main.c:1233
+#: ../main.c:1323
 #, fuzzy
 msgid "Tap here to configure this program."
 msgstr "Kuri Kugena Imiterere iyi Porogaramu"
 
-#: main.c:1239
+#: ../main.c:1329
+msgid "Import"
+msgstr ""
+
+#: ../main.c:1329
+msgid "Open file to import a contact from it."
+msgstr ""
+
+#: ../main.c:1335
 msgid "Close"
 msgstr "Gufunga"
 
-#: main.c:1239
+#: ../main.c:1335
 #, fuzzy
 msgid "Tap here to exit gpe-contacts."
 msgstr "Kuri Gusohoka Aho kubariza"
 
-#: main.c:1298
+#: ../main.c:1395
 msgid "Find:"
 msgstr "Shaka:"
 
-#: main.c:1305
+#: ../main.c:1402
 msgid "in"
 msgstr "in"
 
-#: main.c:1491
+#: ../main.c:1529
+#, c-format
+msgid "Could not import file %s."
+msgstr ""
+
+#: ../main.c:1534
+#, c-format
+msgid "File %s imported sucessfully."
+msgstr ""
+
+#: ../main.c:1559
 msgid "My Card"
 msgstr ""
 
-#: main.c:1494
+#: ../main.c:1562
 #, fuzzy
 msgid "Saving vcard failed"
 msgstr "Byanze"
 
-# sc/source\ui\src\popup.src:RID_POPUP_PREVIEW.SID_PREVIEW_NEXT.text
-#: structure.c:105 structure.c:235
-#, fuzzy
-msgid "New page"
-msgstr "Ipaji Nshya"
-
-#: structure.c:105 structure.c:124 structure.c:149
-msgid "Title"
-msgstr "Umutwe"
-
-#: structure.c:124
-msgid "New group"
-msgstr "itsinda rishya"
-
-#: structure.c:136 structure.c:166
-#, fuzzy
-msgid "No container selected"
-msgstr "Byahiswemo"
-
-#: structure.c:150
-msgid "Tag"
-msgstr "Itagi"
-
-#: structure.c:152
-#, fuzzy
-msgid "New field"
-msgstr "Umwanya"
-
-#: structure.c:176
-#, fuzzy
-msgid "Really delete this field?"
-msgstr "Gusiba iyi Umwanya"
-
-#: structure.c:177
-msgid "Delete"
-msgstr "Gusiba"
-
-#: structure.c:177
-msgid "Cancel"
-msgstr "Kureka"
-
-#: structure.c:234
-msgid "Page"
-msgstr "Ipaji"
-
-#: structure.c:235
-#, fuzzy
-msgid "Tap here to add a page."
-msgstr "Kuri Kongeramo a Ipaji"
-
-#: structure.c:251
-#, fuzzy
-msgid "Delete item"
-msgstr "Ikintu"
-
-#: structure.c:251
-#, fuzzy
-msgid "Tap here to delete the selected item."
-msgstr "Kuri Gusiba i Byahiswemo Ikintu"
-
-#. TRANSLATORS: kB = kilo bytes
-#: configure.c:131 configure.c:337
-#, fuzzy
-msgid "Current size:"
-msgstr "Ingano"
-
-#: configure.c:132
-msgid "kB (optimised)"
-msgstr ""
-
-#: configure.c:177
-#, fuzzy
-msgid "<b>Detail panel:</b>"
-msgstr "<B B"
-
-#: configure.c:203
-#, fuzzy
-msgid "NAME"
-msgstr "Izina"
-
-#: configure.c:213
-msgid "Add"
-msgstr "Kongera"
-
-#: configure.c:220
-msgid "Remove"
-msgstr "Gukuraho"
-
-#: configure.c:242
-msgid "Label"
-msgstr "Akarango"
-
-#: configure.c:247
-#, fuzzy
-msgid "Data item"
-msgstr "Ikintu"
-
-#: configure.c:291
-msgid "Screen Layout"
-msgstr ""
-
-#: configure.c:297
-#, fuzzy
-msgid "List position"
-msgstr "Ibirindiro"
-
-#: configure.c:300
-msgid "left"
-msgstr "ibumoso"
-
-#: configure.c:302
-msgid "right"
-msgstr "iburyo"
-
-#: configure.c:330
-msgid "Database Size"
-msgstr ""
-
-# #-#-#-#-#  setup2.pot (PACKAGE VERSION)  #-#-#-#-#
-# setup2/source\ui\dialog\dialog.src:RESID_DLG_OVERWRITE.2.text
-# #-#-#-#-#  setup2.pot (PACKAGE VERSION)  #-#-#-#-#
-# setup2/source\ui\dialog\strings.src:STR_KB.text
-#: configure.c:337
-#, fuzzy
-msgid "kB"
-msgstr "KB"
-
-#: configure.c:342
-msgid "Actions"
-msgstr ""
-
-#: configure.c:349
-#, fuzzy
-msgid "Optimise database"
-msgstr "Ububikoshingiro"
-
-#: configure.c:352
-msgid "Run"
-msgstr "Ihutishe"
-
-#: configure.c:458
-msgid "Editing Layout"
-msgstr ""
-
-#: configure.c:460
-msgid "Setup"
-msgstr "Imikorere"
-
-#: configure.c:461
-msgid "Database"
-msgstr "Ububikoshingiro"
-
-#: configure.c:493
-msgid "Contacts: Configuration"
-msgstr ""
-
-# sfx2/source\doc\doc.src:STR_SAVEASDOC.text
-#: export.c:158
-#, fuzzy
-msgid "Save as..."
-msgstr "Gushyingura muri..."
-
 #. TRANSLATORS: These abbreviations are a list of common titles used in a name
-#: namedetail.c:30
+#: ../namedetail.c:30
 msgid "Dr."
 msgstr ""
 
-#: namedetail.c:30
+#: ../namedetail.c:30
 msgid "Miss"
 msgstr ""
 
-#: namedetail.c:30
+#: ../namedetail.c:30
 msgid "Mr."
 msgstr ""
 
-#: namedetail.c:30
+#: ../namedetail.c:30
 msgid "Mrs."
 msgstr ""
 
-#: namedetail.c:30
+#: ../namedetail.c:30
 msgid "Ms."
 msgstr ""
 
-#: namedetail.c:30
+#: ../namedetail.c:30
 msgid "Prof."
 msgstr ""
 
-#: namedetail.c:30
+#: ../namedetail.c:30
 msgid "Sir"
 msgstr ""
 
 #. TRANSLATORS: This is a list of common name suffixes
-#: namedetail.c:32
+#: ../namedetail.c:32
 msgid "Jr."
 msgstr ""
 
-#: namedetail.c:32
+#: ../namedetail.c:32
 msgid "Esq."
 msgstr ""
 
-#: namedetail.c:32
+#: ../namedetail.c:32
 msgid "Sr."
 msgstr ""
 
-#: namedetail.c:32
+#: ../namedetail.c:32
 msgid "I"
 msgstr "I"
 
-#: namedetail.c:32
+#: ../namedetail.c:32
 msgid "II"
 msgstr ""
 
-#: namedetail.c:32
+#: ../namedetail.c:32
 msgid "III"
 msgstr ""
 
-#: namedetail.c:61
+#. create dialog window
+#: ../namedetail.c:61
 msgid "Edit Name Details"
 msgstr ""
 
 # officecfg/registry\data\org\openoffice\Office\DataAccess.xcu:..DataAccess.DriverSettings.com.sun.star.comp.sdbc.MozabDriver.ColumnAliases.FirstName.text
-#: namedetail.c:88
+#: ../namedetail.c:88
 #, fuzzy
 msgid "First name:"
 msgstr "Izina ry'idini"
 
-#: namedetail.c:89
+#: ../namedetail.c:89
 #, fuzzy
 msgid "Middle name:"
 msgstr "Izina ry'agati"
 
 # officecfg/registry\data\org\openoffice\Office\DataAccess.xcu:..DataAccess.DriverSettings.com.sun.star.comp.sdbc.MozabDriver.ColumnAliases.LastName.text
-#: namedetail.c:90
+#: ../namedetail.c:90
 #, fuzzy
 msgid "Last name:"
 msgstr "Izina ry'Ababyeyi"
 
-#: namedetail.c:91
+#: ../namedetail.c:91
 #, fuzzy
 msgid "Suffix:"
 msgstr "Ingereka:"
 
-#: namedetail.c:92
+#: ../namedetail.c:92
 msgid "Title:"
 msgstr "Umutwe:"
 
-#: finddlg.c:37
-msgid "Find Contacts"
-msgstr ""
-
-#: finddlg.c:49
+# sc/source\ui\src\popup.src:RID_POPUP_PREVIEW.SID_PREVIEW_NEXT.text
+#: ../structure.c:102 ../structure.c:232
 #, fuzzy
-msgid "Search for:"
-msgstr "Gushakisha:"
+msgid "New page"
+msgstr "Ipaji Nshya"
 
-#: gpe-contacts.desktop.in.h:2
-msgid "GPE Contacts"
-msgstr ""
+#: ../structure.c:102 ../structure.c:121 ../structure.c:146
+msgid "Title"
+msgstr "Umutwe"
 
-#: edit-vcard.desktop.in.h:1
+#: ../structure.c:121
+msgid "New group"
+msgstr "itsinda rishya"
+
+#: ../structure.c:133 ../structure.c:163
 #, fuzzy
-msgid "Edit personal vcard"
-msgstr "Bwite"
+msgid "No container selected"
+msgstr "Byahiswemo"
 
-#: edit-vcard.desktop.in.h:2
-msgid "My VCard"
-msgstr ""
+#: ../structure.c:147
+msgid "Tag"
+msgstr "Itagi"
+
+#: ../structure.c:149
+#, fuzzy
+msgid "New field"
+msgstr "Umwanya"
+
+#: ../structure.c:173
+#, fuzzy
+msgid "Really delete this field?"
+msgstr "Gusiba iyi Umwanya"
+
+#: ../structure.c:174
+msgid "Delete"
+msgstr "Gusiba"
+
+#: ../structure.c:174
+msgid "Cancel"
+msgstr "Kureka"
+
+#: ../structure.c:231
+msgid "Page"
+msgstr "Ipaji"
+
+#: ../structure.c:232
+#, fuzzy
+msgid "Tap here to add a page."
+msgstr "Kuri Kongeramo a Ipaji"
+
+#: ../structure.c:248
+#, fuzzy
+msgid "Delete item"
+msgstr "Ikintu"
+
+#: ../structure.c:248
+#, fuzzy
+msgid "Tap here to delete the selected item."
+msgstr "Kuri Gusiba i Byahiswemo Ikintu"

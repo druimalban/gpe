@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gpe-contacts 0.32\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-10-17 00:23+0200\n"
+"POT-Creation-Date: 2005-04-30 17:29+0200\n"
 "PO-Revision-Date: 2004-12-15 00:23+0100\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
@@ -14,363 +14,440 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: db.c:70
-msgid "Name"
+#: ../categories.c:105
+msgid "Category name must not be blank"
+msgstr ""
+
+#: ../categories.c:115
+msgid "A category by that name already exists"
+msgstr ""
+
+#: ../categories.c:147
+#, fuzzy
+msgid "Name:"
 msgstr "Namn"
 
-#: db.c:71
-msgid "Phone"
-msgstr "Telefon"
+#: ../categories.c:174 ../categories.c:328
+msgid "New category"
+msgstr "Ny kategori"
 
-#: db.c:72
-msgid "EMail"
-msgstr "E-post"
+#: ../categories.c:329
+#, fuzzy
+msgid "Tap here to add a new category."
+msgstr "Tryck här för att skapa en kategori."
 
-#: editing.c:108 main.c:1218
-msgid "Details"
-msgstr "Detaljer"
+#: ../categories.c:333
+msgid "Delete category"
+msgstr "Ta bort kategori"
 
-#: editing.c:227
-msgid "no year"
-msgstr "inget år"
+#: ../categories.c:334
+msgid "Tap here to delete the selected category."
+msgstr "Tryck här för att ta bort den markerade kategorin."
 
-#: editing.c:436 main.c:470 main.c:597
-msgid "Categories"
-msgstr "Kategorier"
-
-#: editing.c:972
-msgid "Select image"
-msgstr "Välj bild"
-
-#: main.c:80 main.c:182
-msgid "Edit Contact"
-msgstr "Redigera kontakt"
-
-#: main.c:86 main.c:198
-msgid "Really delete this contact?"
-msgstr "Verkligen ta bort denna kontakt?"
-
-#: main.c:86 main.c:198 structure.c:176
-msgid "Confirm"
-msgstr "Bekräfta"
-
-#: main.c:138
-msgid "All categories"
+#: ../categories.c:401
+#, fuzzy
+msgid "Select categories"
 msgstr "Alla kategorier"
 
-#: main.c:160
-msgid "New Contact"
-msgstr "Ny kontakt"
-
-#: main.c:481
-msgid "No contact selected."
-msgstr "Ingen kontakt markerad."
-
-#: main.c:553 main.c:1272 main.c:1338
-msgid "Contact"
-msgstr "Kontakt"
-
-#: main.c:1182 gpe-contacts.desktop.in.h:1
-msgid "Contacts"
-msgstr "Kontakter"
-
-#: main.c:1195
-msgid "Tap this button to add a new contact."
-msgstr "Tryck på denna knapp för att lägga till en ny kontakt."
-
-#: main.c:1202
-msgid "Edit"
-msgstr "Redigera"
-
-#: main.c:1203
-msgid "Tap here to edit the selected contact."
-msgstr "Tryck här för att redigera den markerade kontakten."
-
-#: main.c:1209
-msgid "Tap here to delete the selected contact."
-msgstr "Tryck här för att ta bort den markerade kontakten."
-
-#: main.c:1219
-msgid "Tap here to show contacts details."
-msgstr "Tryck här för att visa kontaktdetaljer."
-
-#: main.c:1228
-msgid "Find a contact by searching for any data."
-msgstr "Hitta en kontakt genom att söka efter några data."
-
-#: main.c:1233
-msgid "Properties"
-msgstr "Egenskaper"
-
-#: main.c:1233
-msgid "Tap here to configure this program."
-msgstr "Tryck här för att konfigurera detta program."
-
-#: main.c:1239
-msgid "Close"
-msgstr "Stäng"
-
-#: main.c:1239
-msgid "Tap here to exit gpe-contacts."
-msgstr "Tryck här för att avsluta gpe-contacts."
-
-#: main.c:1298
-msgid "Find:"
-msgstr "Sök:"
-
-#: main.c:1305
-msgid "in"
-msgstr "i"
-
-#: main.c:1491
-msgid "My Card"
-msgstr "Mitt kort"
-
-#: main.c:1494
-msgid "Saving vcard failed"
-msgstr "Misslyckades med att spara vcard"
-
-#: structure.c:105 structure.c:235
-msgid "New page"
-msgstr "Ny sida"
-
-#: structure.c:105 structure.c:124 structure.c:149
-msgid "Title"
-msgstr "Titel"
-
-#: structure.c:124
-msgid "New group"
-msgstr "Ny grupp"
-
-#: structure.c:136 structure.c:166
-msgid "No container selected"
-msgstr "Ingen behållare markerad"
-
-#: structure.c:150
-msgid "Tag"
-msgstr "Tagg"
-
-#: structure.c:152
-msgid "New field"
-msgstr "Nytt fält"
-
-#: structure.c:176
-msgid "Really delete this field?"
-msgstr "Verkligen ta bort detta fält?"
-
-#: structure.c:177
-msgid "Delete"
-msgstr "Ta bort"
-
-#: structure.c:177
-msgid "Cancel"
-msgstr "Avbryt"
-
-#: structure.c:234
-msgid "Page"
-msgstr "Sida"
-
-#: structure.c:235
-msgid "Tap here to add a page."
-msgstr "Tryck här för att lägga till en sida."
-
-#: structure.c:251
-msgid "Delete item"
-msgstr "Ta bort objekt"
-
-#: structure.c:251
-msgid "Tap here to delete the selected item."
-msgstr "Tryck här för att ta bort det markerade objektet."
-
 #. TRANSLATORS: kB = kilo bytes
-#: configure.c:131 configure.c:337
+#: ../configure.c:130 ../configure.c:340
 msgid "Current size:"
 msgstr "Aktuell storlek:"
 
-#: configure.c:132
+#: ../configure.c:131
 msgid "kB (optimised)"
 msgstr "kB (optimerad)"
 
-#: configure.c:177
-msgid "<b>Detail panel:</b>"
-msgstr "<b>Detaljpanel:</b>"
+#: ../configure.c:177
+msgid "Detail panel:"
+msgstr "Detaljpanel:"
 
-#: configure.c:203
+#: ../configure.c:206
 msgid "NAME"
 msgstr "NAMN"
 
-#: configure.c:213
+#: ../configure.c:216
 msgid "Add"
 msgstr "Lägg till"
 
-#: configure.c:220
+#: ../configure.c:223
 msgid "Remove"
 msgstr "Ta bort"
 
-#: configure.c:242
+#: ../configure.c:245
 msgid "Label"
 msgstr "Etikett"
 
-#: configure.c:247
+#: ../configure.c:250
 msgid "Data item"
 msgstr "Dataobjekt"
 
-#: configure.c:291
+#: ../configure.c:294
 msgid "Screen Layout"
 msgstr "Skärmlayout"
 
-#: configure.c:297
+#: ../configure.c:300
 msgid "List position"
 msgstr "Listposition"
 
-#: configure.c:300
+#: ../configure.c:303
 msgid "left"
 msgstr "vänster"
 
-#: configure.c:302
+#: ../configure.c:305
 msgid "right"
 msgstr "höger"
 
-#: configure.c:330
+#: ../configure.c:333
 msgid "Database Size"
 msgstr "Databasstorlek"
 
-#: configure.c:337
+#: ../configure.c:340
 msgid "kB"
 msgstr "kB"
 
-#: configure.c:342
+#: ../configure.c:345
 msgid "Actions"
 msgstr "Åtgärder"
 
-#: configure.c:349
+#: ../configure.c:352
 msgid "Optimise database"
 msgstr "Optimera databas"
 
-#: configure.c:352
+#: ../configure.c:355
 msgid "Run"
 msgstr "Kör"
 
-#: configure.c:458
+#: ../configure.c:461
 msgid "Editing Layout"
 msgstr "Redigeringslayout"
 
-#: configure.c:460
+#: ../configure.c:463
 msgid "Setup"
 msgstr "Konfiguration"
 
-#: configure.c:461
+#: ../configure.c:464
 msgid "Database"
 msgstr "Databas"
 
-#: configure.c:493
+#: ../configure.c:496
 msgid "Contacts: Configuration"
 msgstr "Kontakter: Konfiguration"
 
-#: export.c:158
+#: ../db.c:123
+msgid "Name"
+msgstr "Namn"
+
+#: ../db.c:124
+msgid "Phone"
+msgstr "Telefon"
+
+#: ../db.c:125
+msgid "EMail"
+msgstr "E-post"
+
+#: ../edit-vcard.desktop.in.h:1
+msgid "Edit personal vcard"
+msgstr "Redigera personligt vcard"
+
+#: ../edit-vcard.desktop.in.h:2
+msgid "My VCard"
+msgstr "Mitt vcard"
+
+#: ../editing.c:116 ../main.c:1308
+msgid "Details"
+msgstr "Detaljer"
+
+#: ../editing.c:236
+msgid "no year"
+msgstr "inget år"
+
+#: ../editing.c:446 ../main.c:503 ../main.c:630
+msgid "Categories"
+msgstr "Kategorier"
+
+#: ../editing.c:982
+msgid "Select image"
+msgstr "Välj bild"
+
+#: ../export.c:158
 msgid "Save as..."
 msgstr "Spara som..."
 
+#. create dialog window
+#: ../finddlg.c:37
+msgid "Find Contacts"
+msgstr "Sök kontakter"
+
+#. supply action area
+#: ../finddlg.c:49
+msgid "Search for:"
+msgstr "Sök efter:"
+
+#: ../gpe-contacts.desktop.in.h:1 ../main.c:1272
+msgid "Contacts"
+msgstr "Kontakter"
+
+#: ../gpe-contacts.desktop.in.h:2
+msgid "GPE Contacts"
+msgstr "GPE-kontakter"
+
+#: ../main.c:78 ../main.c:180
+msgid "Edit Contact"
+msgstr "Redigera kontakt"
+
+#: ../main.c:84 ../main.c:196
+msgid "Really delete this contact?"
+msgstr "Verkligen ta bort denna kontakt?"
+
+#: ../main.c:84 ../main.c:196 ../structure.c:173
+msgid "Confirm"
+msgstr "Bekräfta"
+
+#: ../main.c:136
+msgid "All categories"
+msgstr "Alla kategorier"
+
+#: ../main.c:158
+msgid "New Contact"
+msgstr "Ny kontakt"
+
+#: ../main.c:514
+msgid "No contact selected."
+msgstr "Ingen kontakt markerad."
+
+#. create and set up dialog
+#: ../main.c:586 ../main.c:1369 ../main.c:1435
+msgid "Contact"
+msgstr "Kontakt"
+
+#: ../main.c:1202
+#, fuzzy
+msgid "Choose file"
+msgstr "klicka för att välja fil"
+
+#: ../main.c:1230
+msgid "Import of"
+msgstr ""
+
+#: ../main.c:1230
+msgid "files failed:"
+msgstr ""
+
+#: ../main.c:1234
+msgid "Import successful"
+msgstr ""
+
+#: ../main.c:1285
+msgid "Tap this button to add a new contact."
+msgstr "Tryck på denna knapp för att lägga till en ny kontakt."
+
+#: ../main.c:1292
+msgid "Edit"
+msgstr "Redigera"
+
+#: ../main.c:1293
+msgid "Tap here to edit the selected contact."
+msgstr "Tryck här för att redigera den markerade kontakten."
+
+#: ../main.c:1299
+msgid "Tap here to delete the selected contact."
+msgstr "Tryck här för att ta bort den markerade kontakten."
+
+#: ../main.c:1309
+msgid "Tap here to show contacts details."
+msgstr "Tryck här för att visa kontaktdetaljer."
+
+#: ../main.c:1318
+msgid "Find a contact by searching for any data."
+msgstr "Hitta en kontakt genom att söka efter några data."
+
+#: ../main.c:1323
+msgid "Properties"
+msgstr "Egenskaper"
+
+#: ../main.c:1323
+msgid "Tap here to configure this program."
+msgstr "Tryck här för att konfigurera detta program."
+
+#: ../main.c:1329
+msgid "Import"
+msgstr ""
+
+#: ../main.c:1329
+msgid "Open file to import a contact from it."
+msgstr ""
+
+#: ../main.c:1335
+msgid "Close"
+msgstr "Stäng"
+
+#: ../main.c:1335
+msgid "Tap here to exit gpe-contacts."
+msgstr "Tryck här för att avsluta gpe-contacts."
+
+#: ../main.c:1395
+msgid "Find:"
+msgstr "Sök:"
+
+#: ../main.c:1402
+msgid "in"
+msgstr "i"
+
+#: ../main.c:1529
+#, fuzzy, c-format
+msgid "Could not import file %s."
+msgstr "Kunde inte hitta bildfil: %s"
+
+#: ../main.c:1534
+#, c-format
+msgid "File %s imported sucessfully."
+msgstr ""
+
+#: ../main.c:1559
+msgid "My Card"
+msgstr "Mitt kort"
+
+#: ../main.c:1562
+msgid "Saving vcard failed"
+msgstr "Misslyckades med att spara vcard"
+
 #. TRANSLATORS: These abbreviations are a list of common titles used in a name
-#: namedetail.c:30
+#: ../namedetail.c:30
 msgid "Dr."
 msgstr "Dr"
 
-#: namedetail.c:30
+#: ../namedetail.c:30
 msgid "Miss"
 msgstr "Fröken"
 
-#: namedetail.c:30
+#: ../namedetail.c:30
 msgid "Mr."
 msgstr "Herr"
 
-#: namedetail.c:30
+#: ../namedetail.c:30
 msgid "Mrs."
 msgstr "Fru"
 
 # Förslag från Göran... kan betyda både "Fru" och "Fröken".
-#: namedetail.c:30
+#: ../namedetail.c:30
 msgid "Ms."
 msgstr "Fr"
 
-#: namedetail.c:30
+#: ../namedetail.c:30
 msgid "Prof."
 msgstr "Prof."
 
 # Blir väl inte bättre än så.
-#: namedetail.c:30
+#: ../namedetail.c:30
 msgid "Sir"
 msgstr "Sir"
 
 #. TRANSLATORS: This is a list of common name suffixes
-#: namedetail.c:32
+#: ../namedetail.c:32
 msgid "Jr."
 msgstr "junior"
 
 # Osäker...
-#: namedetail.c:32
+#: ../namedetail.c:32
 msgid "Esq."
 msgstr "Esq."
 
-#: namedetail.c:32
+#: ../namedetail.c:32
 msgid "Sr."
 msgstr "senior"
 
-#: namedetail.c:32
+#: ../namedetail.c:32
 msgid "I"
 msgstr "I"
 
-#: namedetail.c:32
+#: ../namedetail.c:32
 msgid "II"
 msgstr "II"
 
-#: namedetail.c:32
+#: ../namedetail.c:32
 msgid "III"
 msgstr "III"
 
-#: namedetail.c:61
+#. create dialog window
+#: ../namedetail.c:61
 msgid "Edit Name Details"
 msgstr "Redigera namndetaljer"
 
-#: namedetail.c:88
+#: ../namedetail.c:88
 msgid "First name:"
 msgstr "Förnamn:"
 
-#: namedetail.c:89
+#: ../namedetail.c:89
 msgid "Middle name:"
 msgstr "Mellannamn:"
 
-#: namedetail.c:90
+#: ../namedetail.c:90
 msgid "Last name:"
 msgstr "Efternamn:"
 
-#: namedetail.c:91
+#: ../namedetail.c:91
 msgid "Suffix:"
 msgstr "Suffix:"
 
-#: namedetail.c:92
+#: ../namedetail.c:92
 msgid "Title:"
 msgstr "Titel:"
 
-#: finddlg.c:37
-msgid "Find Contacts"
-msgstr "Sök kontakter"
+#: ../structure.c:102 ../structure.c:232
+msgid "New page"
+msgstr "Ny sida"
 
-#: finddlg.c:49
-msgid "Search for:"
-msgstr "Sök efter:"
+#: ../structure.c:102 ../structure.c:121 ../structure.c:146
+msgid "Title"
+msgstr "Titel"
 
-#: gpe-contacts.desktop.in.h:2
-msgid "GPE Contacts"
-msgstr "GPE-kontakter"
+#: ../structure.c:121
+msgid "New group"
+msgstr "Ny grupp"
 
-#: edit-vcard.desktop.in.h:1
-msgid "Edit personal vcard"
-msgstr "Redigera personligt vcard"
+#: ../structure.c:133 ../structure.c:163
+msgid "No container selected"
+msgstr "Ingen behållare markerad"
 
-#: edit-vcard.desktop.in.h:2
-msgid "My VCard"
-msgstr "Mitt vcard"
+#: ../structure.c:147
+msgid "Tag"
+msgstr "Tagg"
+
+#: ../structure.c:149
+msgid "New field"
+msgstr "Nytt fält"
+
+#: ../structure.c:173
+msgid "Really delete this field?"
+msgstr "Verkligen ta bort detta fält?"
+
+#: ../structure.c:174
+msgid "Delete"
+msgstr "Ta bort"
+
+#: ../structure.c:174
+msgid "Cancel"
+msgstr "Avbryt"
+
+#: ../structure.c:231
+msgid "Page"
+msgstr "Sida"
+
+#: ../structure.c:232
+msgid "Tap here to add a page."
+msgstr "Tryck här för att lägga till en sida."
+
+#: ../structure.c:248
+msgid "Delete item"
+msgstr "Ta bort objekt"
+
+#: ../structure.c:248
+msgid "Tap here to delete the selected item."
+msgstr "Tryck här för att ta bort det markerade objektet."
+
+#~ msgid "<b>Detail panel:</b>"
+#~ msgstr "<b>Detaljpanel:</b>"
 
 #~ msgid "New contact"
 #~ msgstr "Ny kontakt"
@@ -380,9 +457,6 @@ msgstr "Mitt vcard"
 
 #~ msgid "My card"
 #~ msgstr "Mitt kort"
-
-#~ msgid "Detail panel:"
-#~ msgstr "Detaljpanel:"
 
 #~ msgid "Detail panel"
 #~ msgstr "Detaljpanel"
@@ -417,9 +491,6 @@ msgstr "Mitt vcard"
 #~ msgid "automatic appointment"
 #~ msgstr "automatiskt möte"
 
-#~ msgid "click to choose file"
-#~ msgstr "klicka för att välja fil"
-
 #~ msgid "Personal"
 #~ msgstr "Personligt"
 
@@ -431,18 +502,6 @@ msgstr "Mitt vcard"
 
 #~ msgid "Really delete this category?"
 #~ msgstr "Verkligen ta bort denna kategori?"
-
-#~ msgid "New category"
-#~ msgstr "Ny kategori"
-
-#~ msgid "Tap here to create a category."
-#~ msgstr "Tryck här för att skapa en kategori."
-
-#~ msgid "Delete category"
-#~ msgstr "Ta bort kategori"
-
-#~ msgid "Tap here to delete the selected category."
-#~ msgstr "Tryck här för att ta bort den markerade kategorin."
 
 #~ msgid "Edit contact"
 #~ msgstr "Redigera kontakt"
@@ -471,9 +530,6 @@ msgstr "Mitt vcard"
 # W isn't part of the Swedish alphabet, but ÅÄÖ are, and in that order
 #~ msgid "WXYZ"
 #~ msgstr "XYZÅÄÖ"
-
-#~ msgid "Couldn't find pixmap file: %s"
-#~ msgstr "Kunde inte hitta bildfil: %s"
 
 #~ msgid "Error loading pixmap file: %s"
 #~ msgstr "Fel vid inläsning av bildfil: %s"

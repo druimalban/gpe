@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gpe-contacts-0.32\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-10-17 00:23+0200\n"
+"POT-Creation-Date: 2005-04-30 17:29+0200\n"
 "PO-Revision-Date: 2004-12-29 12:00-0500\n"
 "Last-Translator: Laurentiu Buzdugan <lbuz@rolix.org>\n"
 "Language-Team: Romanian <translation-team-ro@lists.sourceforge.net>\n"
@@ -18,357 +18,434 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: db.c:70
-msgid "Name"
+#: ../categories.c:105
+msgid "Category name must not be blank"
+msgstr ""
+
+#: ../categories.c:115
+msgid "A category by that name already exists"
+msgstr ""
+
+#: ../categories.c:147
+#, fuzzy
+msgid "Name:"
 msgstr "Nume"
 
-#: db.c:71
-msgid "Phone"
-msgstr "Telefon"
-
-#: db.c:72
-msgid "EMail"
-msgstr "Email"
-
-#: editing.c:108 main.c:1218
-msgid "Details"
-msgstr "Detalii"
-
-#: editing.c:227
-msgid "no year"
-msgstr "nici un an"
-
-#: editing.c:436 main.c:470 main.c:597
-msgid "Categories"
-msgstr "Categorii"
-
-#: editing.c:972
-msgid "Select image"
-msgstr "Selecteazã imagine"
-
-#: main.c:80 main.c:182
-msgid "Edit Contact"
-msgstr "Editare Contact"
-
-#: main.c:86 main.c:198
-msgid "Really delete this contact?"
-msgstr "ªtergeþi într-adevãr acest contact?"
-
-#: main.c:86 main.c:198 structure.c:176
-msgid "Confirm"
-msgstr "Confirm"
-
-#: main.c:138
-msgid "All categories"
+#: ../categories.c:174 ../categories.c:328
+#, fuzzy
+msgid "New category"
 msgstr "Toate categoriile"
 
-#: main.c:160
-msgid "New Contact"
-msgstr "Contact nou"
-
-#: main.c:481
-msgid "No contact selected."
-msgstr "Nici un contact selectat"
-
-#: main.c:553 main.c:1272 main.c:1338
-msgid "Contact"
-msgstr "Contact"
-
-#: main.c:1182 gpe-contacts.desktop.in.h:1
-msgid "Contacts"
-msgstr "Contacte"
-
-#: main.c:1195
-msgid "Tap this button to add a new contact."
-msgstr "Apãsaþi acest buton pentru a adãuga un nou contact."
-
-#: main.c:1202
-msgid "Edit"
-msgstr "Editare"
-
-#: main.c:1203
-msgid "Tap here to edit the selected contact."
-msgstr "Apãsaþi aici pentru a edita contactul selectat."
-
-#: main.c:1209
-msgid "Tap here to delete the selected contact."
-msgstr "Apãsaþi aici pentru a ºterge contactul selectat."
-
-#: main.c:1219
-msgid "Tap here to show contacts details."
-msgstr "Apãsaþi aici pentru a afiºa detalii despre contact."
-
-#: main.c:1228
-msgid "Find a contact by searching for any data."
-msgstr "Cautã un contact cãutând pentru orice date."
-
-#: main.c:1233
-msgid "Properties"
-msgstr "Proprietãþi"
-
-#: main.c:1233
-msgid "Tap here to configure this program."
-msgstr "Apãsaþi aici pentru a configura acest program."
-
-#: main.c:1239
-msgid "Close"
-msgstr "Închide"
-
-#: main.c:1239
-msgid "Tap here to exit gpe-contacts."
-msgstr "Apãsaþi aici pentru a ieºi din gpe-contacts."
-
-#: main.c:1298
-msgid "Find:"
-msgstr "Cautã:"
-
-#: main.c:1305
-msgid "in"
-msgstr "în"
-
-#: main.c:1491
-msgid "My Card"
-msgstr "Cardul meu"
-
-#: main.c:1494
-msgid "Saving vcard failed"
-msgstr "Salvarea vcard-ului a eºuat"
-
-#: structure.c:105 structure.c:235
-msgid "New page"
-msgstr "Paginã nouã"
-
-#: structure.c:105 structure.c:124 structure.c:149
-msgid "Title"
-msgstr "Titlu"
-
-#: structure.c:124
-msgid "New group"
-msgstr "Grup nou"
-
-#: structure.c:136 structure.c:166
-msgid "No container selected"
-msgstr "Nici un dosar selectat"
-
-#: structure.c:150
-msgid "Tag"
-msgstr "Marcaj"
-
-#: structure.c:152
-msgid "New field"
-msgstr "Câmp nou"
-
-#: structure.c:176
-msgid "Really delete this field?"
-msgstr "ªtergeþi într-adevãr acest câmp?"
-
-#: structure.c:177
-msgid "Delete"
-msgstr "ªterge"
-
-#: structure.c:177
-msgid "Cancel"
-msgstr "Renunþã"
-
-#: structure.c:234
-msgid "Page"
-msgstr "Paginã"
-
-#: structure.c:235
-msgid "Tap here to add a page."
+#: ../categories.c:329
+#, fuzzy
+msgid "Tap here to add a new category."
 msgstr "Apãsaþi aici pentru a adãuga o paginã."
 
-#: structure.c:251
-msgid "Delete item"
+#: ../categories.c:333
+#, fuzzy
+msgid "Delete category"
 msgstr "ªterge articol"
 
-#: structure.c:251
-msgid "Tap here to delete the selected item."
+#: ../categories.c:334
+#, fuzzy
+msgid "Tap here to delete the selected category."
 msgstr "Apãsaþi aici pentru a ºterge articolul selectat."
 
+#: ../categories.c:401
+#, fuzzy
+msgid "Select categories"
+msgstr "Toate categoriile"
+
 #. TRANSLATORS: kB = kilo bytes
-#: configure.c:131 configure.c:337
+#: ../configure.c:130 ../configure.c:340
 msgid "Current size:"
 msgstr "Dimensiune curentã:"
 
-#: configure.c:132
+#: ../configure.c:131
 msgid "kB (optimised)"
 msgstr "kB (optimizatã)"
 
-#: configure.c:177
-msgid "<b>Detail panel:</b>"
+#: ../configure.c:177
+#, fuzzy
+msgid "Detail panel:"
 msgstr "<b>Panou detalii</b>"
 
-#: configure.c:203
+#: ../configure.c:206
 msgid "NAME"
 msgstr "NUME"
 
-#: configure.c:213
+#: ../configure.c:216
 msgid "Add"
 msgstr "Adaugã"
 
-#: configure.c:220
+#: ../configure.c:223
 msgid "Remove"
 msgstr "Eliminã"
 
-#: configure.c:242
+#: ../configure.c:245
 msgid "Label"
 msgstr "Etichetã"
 
-#: configure.c:247
+#: ../configure.c:250
 msgid "Data item"
 msgstr "Câmp Date"
 
-#: configure.c:291
+#: ../configure.c:294
 msgid "Screen Layout"
 msgstr "Amplasare în ecran"
 
-#: configure.c:297
+#: ../configure.c:300
 msgid "List position"
 msgstr "Posiþie listã"
 
-#: configure.c:300
+#: ../configure.c:303
 msgid "left"
 msgstr "stânga"
 
-#: configure.c:302
+#: ../configure.c:305
 msgid "right"
 msgstr "dreapta"
 
-#: configure.c:330
+#: ../configure.c:333
 msgid "Database Size"
 msgstr "Dimensiune baza de date"
 
-#: configure.c:337
+#: ../configure.c:340
 msgid "kB"
 msgstr "kB"
 
-#: configure.c:342
+#: ../configure.c:345
 msgid "Actions"
 msgstr "Acþiuni"
 
-#: configure.c:349
+#: ../configure.c:352
 msgid "Optimise database"
 msgstr "Optimizeazã baza de date"
 
-#: configure.c:352
+#: ../configure.c:355
 msgid "Run"
 msgstr "Ruleazã"
 
-#: configure.c:458
+#: ../configure.c:461
 msgid "Editing Layout"
 msgstr "Editare aranjament"
 
-#: configure.c:460
+#: ../configure.c:463
 msgid "Setup"
 msgstr "Setare"
 
-#: configure.c:461
+#: ../configure.c:464
 msgid "Database"
 msgstr "Bazã de date"
 
-#: configure.c:493
+#: ../configure.c:496
 msgid "Contacts: Configuration"
 msgstr "Contacte: Configurare"
 
-#: export.c:158
+#: ../db.c:123
+msgid "Name"
+msgstr "Nume"
+
+#: ../db.c:124
+msgid "Phone"
+msgstr "Telefon"
+
+#: ../db.c:125
+msgid "EMail"
+msgstr "Email"
+
+#: ../edit-vcard.desktop.in.h:1
+msgid "Edit personal vcard"
+msgstr "Editeazã vcard-ul personal"
+
+#: ../edit-vcard.desktop.in.h:2
+msgid "My VCard"
+msgstr "VCard-ul meu"
+
+#: ../editing.c:116 ../main.c:1308
+msgid "Details"
+msgstr "Detalii"
+
+#: ../editing.c:236
+msgid "no year"
+msgstr "nici un an"
+
+#: ../editing.c:446 ../main.c:503 ../main.c:630
+msgid "Categories"
+msgstr "Categorii"
+
+#: ../editing.c:982
+msgid "Select image"
+msgstr "Selecteazã imagine"
+
+#: ../export.c:158
 msgid "Save as..."
 msgstr "Salveazã ca..."
 
+#. create dialog window
+#: ../finddlg.c:37
+msgid "Find Contacts"
+msgstr "Gãseºte Contacte"
+
+#. supply action area
+#: ../finddlg.c:49
+msgid "Search for:"
+msgstr "Cautã:"
+
+#: ../gpe-contacts.desktop.in.h:1 ../main.c:1272
+msgid "Contacts"
+msgstr "Contacte"
+
+#: ../gpe-contacts.desktop.in.h:2
+msgid "GPE Contacts"
+msgstr "Contacte GPE"
+
+#: ../main.c:78 ../main.c:180
+msgid "Edit Contact"
+msgstr "Editare Contact"
+
+#: ../main.c:84 ../main.c:196
+msgid "Really delete this contact?"
+msgstr "ªtergeþi într-adevãr acest contact?"
+
+#: ../main.c:84 ../main.c:196 ../structure.c:173
+msgid "Confirm"
+msgstr "Confirm"
+
+#: ../main.c:136
+msgid "All categories"
+msgstr "Toate categoriile"
+
+#: ../main.c:158
+msgid "New Contact"
+msgstr "Contact nou"
+
+#: ../main.c:514
+msgid "No contact selected."
+msgstr "Nici un contact selectat"
+
+#. create and set up dialog
+#: ../main.c:586 ../main.c:1369 ../main.c:1435
+msgid "Contact"
+msgstr "Contact"
+
+#: ../main.c:1202
+msgid "Choose file"
+msgstr ""
+
+#: ../main.c:1230
+msgid "Import of"
+msgstr ""
+
+#: ../main.c:1230
+msgid "files failed:"
+msgstr ""
+
+#: ../main.c:1234
+msgid "Import successful"
+msgstr ""
+
+#: ../main.c:1285
+msgid "Tap this button to add a new contact."
+msgstr "Apãsaþi acest buton pentru a adãuga un nou contact."
+
+#: ../main.c:1292
+msgid "Edit"
+msgstr "Editare"
+
+#: ../main.c:1293
+msgid "Tap here to edit the selected contact."
+msgstr "Apãsaþi aici pentru a edita contactul selectat."
+
+#: ../main.c:1299
+msgid "Tap here to delete the selected contact."
+msgstr "Apãsaþi aici pentru a ºterge contactul selectat."
+
+#: ../main.c:1309
+msgid "Tap here to show contacts details."
+msgstr "Apãsaþi aici pentru a afiºa detalii despre contact."
+
+#: ../main.c:1318
+msgid "Find a contact by searching for any data."
+msgstr "Cautã un contact cãutând pentru orice date."
+
+#: ../main.c:1323
+msgid "Properties"
+msgstr "Proprietãþi"
+
+#: ../main.c:1323
+msgid "Tap here to configure this program."
+msgstr "Apãsaþi aici pentru a configura acest program."
+
+#: ../main.c:1329
+msgid "Import"
+msgstr ""
+
+#: ../main.c:1329
+msgid "Open file to import a contact from it."
+msgstr ""
+
+#: ../main.c:1335
+msgid "Close"
+msgstr "Închide"
+
+#: ../main.c:1335
+msgid "Tap here to exit gpe-contacts."
+msgstr "Apãsaþi aici pentru a ieºi din gpe-contacts."
+
+#: ../main.c:1395
+msgid "Find:"
+msgstr "Cautã:"
+
+#: ../main.c:1402
+msgid "in"
+msgstr "în"
+
+#: ../main.c:1529
+#, c-format
+msgid "Could not import file %s."
+msgstr ""
+
+#: ../main.c:1534
+#, c-format
+msgid "File %s imported sucessfully."
+msgstr ""
+
+#: ../main.c:1559
+msgid "My Card"
+msgstr "Cardul meu"
+
+#: ../main.c:1562
+msgid "Saving vcard failed"
+msgstr "Salvarea vcard-ului a eºuat"
+
 #. TRANSLATORS: These abbreviations are a list of common titles used in a name
-#: namedetail.c:30
+#: ../namedetail.c:30
 msgid "Dr."
 msgstr "Dr."
 
-#: namedetail.c:30
+#: ../namedetail.c:30
 msgid "Miss"
 msgstr "D-ºoara"
 
-#: namedetail.c:30
+#: ../namedetail.c:30
 msgid "Mr."
 msgstr "Dl."
 
-#: namedetail.c:30
+#: ../namedetail.c:30
 msgid "Mrs."
 msgstr "D-na"
 
-#: namedetail.c:30
+#: ../namedetail.c:30
 msgid "Ms."
 msgstr "Ms."
 
-#: namedetail.c:30
+#: ../namedetail.c:30
 msgid "Prof."
 msgstr "Prof."
 
-#: namedetail.c:30
+#: ../namedetail.c:30
 msgid "Sir"
 msgstr "Sir"
 
 #. TRANSLATORS: This is a list of common name suffixes
-#: namedetail.c:32
+#: ../namedetail.c:32
 msgid "Jr."
 msgstr "Jr."
 
-#: namedetail.c:32
+#: ../namedetail.c:32
 msgid "Esq."
 msgstr "Esq."
 
-#: namedetail.c:32
+#: ../namedetail.c:32
 msgid "Sr."
 msgstr "Sr."
 
-#: namedetail.c:32
+#: ../namedetail.c:32
 msgid "I"
 msgstr "I"
 
-#: namedetail.c:32
+#: ../namedetail.c:32
 msgid "II"
 msgstr "II"
 
-#: namedetail.c:32
+#: ../namedetail.c:32
 msgid "III"
 msgstr "III"
 
-#: namedetail.c:61
+#. create dialog window
+#: ../namedetail.c:61
 msgid "Edit Name Details"
 msgstr "Editeazã detalii nume"
 
-#: namedetail.c:88
+#: ../namedetail.c:88
 msgid "First name:"
 msgstr "Prenume:"
 
-#: namedetail.c:89
+#: ../namedetail.c:89
 msgid "Middle name:"
 msgstr "Numele mic"
 
-#: namedetail.c:90
+#: ../namedetail.c:90
 msgid "Last name:"
 msgstr "Nume familie"
 
-#: namedetail.c:91
+#: ../namedetail.c:91
 msgid "Suffix:"
 msgstr "Sufix:"
 
-#: namedetail.c:92
+#: ../namedetail.c:92
 msgid "Title:"
 msgstr "Titlu:"
 
-#: finddlg.c:37
-msgid "Find Contacts"
-msgstr "Gãseºte Contacte"
+#: ../structure.c:102 ../structure.c:232
+msgid "New page"
+msgstr "Paginã nouã"
 
-#: finddlg.c:49
-msgid "Search for:"
-msgstr "Cautã:"
+#: ../structure.c:102 ../structure.c:121 ../structure.c:146
+msgid "Title"
+msgstr "Titlu"
 
-#: gpe-contacts.desktop.in.h:2
-msgid "GPE Contacts"
-msgstr "Contacte GPE"
+#: ../structure.c:121
+msgid "New group"
+msgstr "Grup nou"
 
-#: edit-vcard.desktop.in.h:1
-msgid "Edit personal vcard"
-msgstr "Editeazã vcard-ul personal"
+#: ../structure.c:133 ../structure.c:163
+msgid "No container selected"
+msgstr "Nici un dosar selectat"
 
-#: edit-vcard.desktop.in.h:2
-msgid "My VCard"
-msgstr "VCard-ul meu"
+#: ../structure.c:147
+msgid "Tag"
+msgstr "Marcaj"
+
+#: ../structure.c:149
+msgid "New field"
+msgstr "Câmp nou"
+
+#: ../structure.c:173
+msgid "Really delete this field?"
+msgstr "ªtergeþi într-adevãr acest câmp?"
+
+#: ../structure.c:174
+msgid "Delete"
+msgstr "ªterge"
+
+#: ../structure.c:174
+msgid "Cancel"
+msgstr "Renunþã"
+
+#: ../structure.c:231
+msgid "Page"
+msgstr "Paginã"
+
+#: ../structure.c:232
+msgid "Tap here to add a page."
+msgstr "Apãsaþi aici pentru a adãuga o paginã."
+
+#: ../structure.c:248
+msgid "Delete item"
+msgstr "ªterge articol"
+
+#: ../structure.c:248
+msgid "Tap here to delete the selected item."
+msgstr "Apãsaþi aici pentru a ºterge articolul selectat."
