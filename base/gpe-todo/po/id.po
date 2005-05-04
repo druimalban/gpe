@@ -6,8 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-todo 0.32\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-04-15 21:01+0200\n"
+"POT-Creation-Date: 2003-02-14 19:50+0000\n"
 "PO-Revision-Date: 2003-03-07 13:31GMT+0700\n"
 "Last-Translator: Tedi Heriyanto <tedi_h@gmx.net>\n"
 "Language-Team: Indonesian <translation-team-id@lists.sourceforge.net>\n"
@@ -16,166 +15,134 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 0.9.6\n"
 
-#: ../gpe-todo.desktop.in.h:1
-#, fuzzy
-msgid "GPE To-do List"
-msgstr "Daftar to-do"
-
-#: ../gpe-todo.desktop.in.h:2 ../main.c:63
+#: main.c:60
 msgid "To-do list"
 msgstr "Daftar to-do"
 
-#: ../list-ui.c:117
-msgid "All items"
-msgstr "Semua item"
+#: todo-ui.c:269
+msgid "Select categories"
+msgstr "Pilih kategori"
 
-#: ../list-ui.c:144
-#, fuzzy
-msgid "Show completed"
-msgstr "Selesai"
-
-#: ../list-ui.c:577
-msgid "P"
-msgstr ""
-
-#: ../list-ui.c:584
-msgid "Status"
-msgstr ""
-
-#: ../list-ui.c:591
-#, fuzzy
-msgid "Summary"
-msgstr "Ringkasan:"
-
-#: ../list-ui.c:598
-#, fuzzy
-msgid "Category"
-msgstr "Kategori"
-
-#: ../list-ui.c:604
-msgid "Due Date"
-msgstr ""
-
-#: ../todo-ui.c:159
-msgid "Not started"
-msgstr "Belum dimulai"
-
-#: ../todo-ui.c:160
-msgid "In progress"
-msgstr "Sedang berlangsung"
-
-#: ../todo-ui.c:161
-msgid "Completed"
-msgstr "Selesai"
-
-#: ../todo-ui.c:162
-msgid "Abandoned"
-msgstr ""
-
-#: ../todo-ui.c:168
-msgid "High"
-msgstr ""
-
-#: ../todo-ui.c:169
-msgid "Standard"
-msgstr ""
-
-#: ../todo-ui.c:170
-msgid "Low"
-msgstr ""
-
-#: ../todo-ui.c:264
-msgid "Priority:"
-msgstr ""
-
-#: ../todo-ui.c:266
-msgid "Status:"
-msgstr ""
-
-#: ../todo-ui.c:269
+#: todo-ui.c:291
 msgid "Summary:"
 msgstr "Ringkasan:"
 
-#: ../todo-ui.c:270
-#, fuzzy
-msgid "Details:"
+#: todo-ui.c:292
+msgid "Details"
 msgstr "Detil"
 
-#: ../todo-ui.c:274
-msgid "Categories:"
-msgstr "Kategori:"
+#: todo-ui.c:298
+msgid "Not started"
+msgstr "Belum dimulai"
 
-#: ../todo-ui.c:344
+#: todo-ui.c:298
+msgid "In progress"
+msgstr "Sedang berlangsung"
+
+#: todo-ui.c:299
+msgid "Completed"
+msgstr "Selesai"
+
+#: todo-ui.c:321
 msgid "Due:"
 msgstr "Batas:"
 
-#: ../todo-ui.c:482
+#: todo-ui.c:336
+msgid "Categories:"
+msgstr "Kategori:"
+
+#: todo-ui.c:429
 msgid "Edit to-do item"
 msgstr "Edit item to-do"
 
-#: ../todo-ui.c:491
+#: todo-ui.c:436
 msgid "New item"
 msgstr "Item baru"
 
-#~ msgid "Select categories"
-#~ msgstr "Pilih kategori"
+#: list-ui.c:52
+msgid "All items"
+msgstr "Semua item"
 
-#~ msgid "Permanently delete all completed items?"
-#~ msgstr "Hapus semua item yang telah selesai secara permanen?"
+#: list-ui.c:81
+msgid "Permanently delete all completed items?"
+msgstr "Hapus semua item yang telah selesai secara permanen?"
 
-#~ msgid "Confirm"
-#~ msgstr "Konfirmasi"
+#: list-ui.c:81
+msgid "Confirm"
+msgstr "Konfirmasi"
 
-#~ msgid "Delete"
-#~ msgstr "Hapus"
+#: list-ui.c:82 configure.c:217
+msgid "Delete"
+msgstr "Hapus"
 
-#~ msgid "Cancel"
-#~ msgstr "Batal"
+#: list-ui.c:82
+msgid "Cancel"
+msgstr "Batal"
 
-#~ msgid "New"
-#~ msgstr "Baru"
+#: list-ui.c:333 configure.c:210
+msgid "New"
+msgstr "Baru"
 
-#~ msgid "Add a new item"
-#~ msgstr "Tambah item baru"
+#: list-ui.c:334 list-ui.c:335
+msgid "Add a new item"
+msgstr "Tambah item baru"
 
-#~ msgid "Configure"
-#~ msgstr "Konfigurasi"
+#: list-ui.c:340
+msgid "Configure"
+msgstr "Konfigurasi"
 
-#~ msgid "Configure categories"
-#~ msgstr "Konfigurasi kategori"
+#: list-ui.c:341 list-ui.c:342
+msgid "Configure categories"
+msgstr "Konfigurasi kategori"
 
-#~ msgid "Purge"
-#~ msgstr "Hapus"
+#: list-ui.c:347
+msgid "Purge"
+msgstr "Hapus"
 
-#~ msgid "Purge completed items"
-#~ msgstr "Hapus item yang telah selesai"
+#: list-ui.c:348 list-ui.c:349
+msgid "Purge completed items"
+msgstr "Hapus item yang telah selesai"
 
-#~ msgid "Re-sort"
-#~ msgstr "Sort ulang"
+#: list-ui.c:354
+msgid "Re-sort"
+msgstr "Sort ulang"
 
-#~ msgid "Move completed items to the end of the list"
-#~ msgstr "Pindahkan item yang telah selesai ke akhir daftar"
+#: list-ui.c:355 list-ui.c:356
+msgid "Move completed items to the end of the list"
+msgstr "Pindahkan item yang telah selesai ke akhir daftar"
 
-#~ msgid "Exit"
-#~ msgstr "Keluar"
+#: list-ui.c:361
+msgid "Exit"
+msgstr "Keluar"
 
-#~ msgid "Exit the program"
-#~ msgstr "Keluar dari program"
+#: list-ui.c:362 list-ui.c:363
+msgid "Exit the program"
+msgstr "Keluar dari program"
 
-#~ msgid "Category name must not be blank"
-#~ msgstr "Nama kategori tidak boleh kosong"
+#: configure.c:58
+msgid "Category name must not be blank"
+msgstr "Nama kategori tidak boleh kosong"
 
-#~ msgid "A category by that name already exists"
-#~ msgstr "Kategori dengan nama itu sudah ada"
+#: configure.c:68
+msgid "A category by that name already exists"
+msgstr "Kategori dengan nama itu sudah ada"
 
-#~ msgid "To-do list: Categories"
-#~ msgstr "Daftar to-do: Kategori"
+#: configure.c:106
+msgid "To-do list: Categories"
+msgstr "Daftar to-do: Kategori"
 
-#~ msgid "New category"
-#~ msgstr "Kategori baru"
+#: configure.c:139
+msgid "New category"
+msgstr "Kategori baru"
 
-#~ msgid "Create a new category"
-#~ msgstr "Buat kategori baru"
+#: configure.c:172
+msgid "Categories"
+msgstr "Kategori"
 
-#~ msgid "Delete the selected category"
-#~ msgstr "Hapus kategori terpilih"
+#: configure.c:211 configure.c:212
+msgid "Create a new category"
+msgstr "Buat kategori baru"
+
+#: configure.c:218 configure.c:219
+msgid "Delete the selected category"
+msgstr "Hapus kategori terpilih"

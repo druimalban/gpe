@@ -47,3 +47,5 @@ clean-local:
 	rm -f *.d *~
 
 include gpe-dist.am
+include gpe-tp.am
+

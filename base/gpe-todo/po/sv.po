@@ -5,8 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-todo 0.32\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-04-15 21:01+0200\n"
+"POT-Creation-Date: 2003-02-14 19:50+0000\n"
 "PO-Revision-Date: 2003-07-06 22:42+0200\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
@@ -14,166 +13,134 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../gpe-todo.desktop.in.h:1
-#, fuzzy
-msgid "GPE To-do List"
-msgstr "Att-göra-lista"
-
-#: ../gpe-todo.desktop.in.h:2 ../main.c:63
+#: main.c:60
 msgid "To-do list"
 msgstr "Att-göra-lista"
 
-#: ../list-ui.c:117
-msgid "All items"
-msgstr "Alla objekt"
+#: todo-ui.c:269
+msgid "Select categories"
+msgstr "Välj kategorier"
 
-#: ../list-ui.c:144
-#, fuzzy
-msgid "Show completed"
-msgstr "Färdigt"
-
-#: ../list-ui.c:577
-msgid "P"
-msgstr ""
-
-#: ../list-ui.c:584
-msgid "Status"
-msgstr ""
-
-#: ../list-ui.c:591
-#, fuzzy
-msgid "Summary"
-msgstr "Sammanfattning:"
-
-#: ../list-ui.c:598
-#, fuzzy
-msgid "Category"
-msgstr "Kategorier"
-
-#: ../list-ui.c:604
-msgid "Due Date"
-msgstr ""
-
-#: ../todo-ui.c:159
-msgid "Not started"
-msgstr "Inte startad"
-
-#: ../todo-ui.c:160
-msgid "In progress"
-msgstr "Pågår"
-
-#: ../todo-ui.c:161
-msgid "Completed"
-msgstr "Färdigt"
-
-#: ../todo-ui.c:162
-msgid "Abandoned"
-msgstr ""
-
-#: ../todo-ui.c:168
-msgid "High"
-msgstr ""
-
-#: ../todo-ui.c:169
-msgid "Standard"
-msgstr ""
-
-#: ../todo-ui.c:170
-msgid "Low"
-msgstr ""
-
-#: ../todo-ui.c:264
-msgid "Priority:"
-msgstr ""
-
-#: ../todo-ui.c:266
-msgid "Status:"
-msgstr ""
-
-#: ../todo-ui.c:269
+#: todo-ui.c:291
 msgid "Summary:"
 msgstr "Sammanfattning:"
 
-#: ../todo-ui.c:270
-#, fuzzy
-msgid "Details:"
+#: todo-ui.c:292
+msgid "Details"
 msgstr "Detaljer"
 
-#: ../todo-ui.c:274
-msgid "Categories:"
-msgstr "Kategorier:"
+#: todo-ui.c:298
+msgid "Not started"
+msgstr "Inte startad"
 
-#: ../todo-ui.c:344
+#: todo-ui.c:298
+msgid "In progress"
+msgstr "Pågår"
+
+#: todo-ui.c:299
+msgid "Completed"
+msgstr "Färdigt"
+
+#: todo-ui.c:321
 msgid "Due:"
 msgstr "Ska utföras:"
 
-#: ../todo-ui.c:482
+#: todo-ui.c:336
+msgid "Categories:"
+msgstr "Kategorier:"
+
+#: todo-ui.c:429
 msgid "Edit to-do item"
 msgstr "Redigera att-göra-objekt"
 
-#: ../todo-ui.c:491
+#: todo-ui.c:436
 msgid "New item"
 msgstr "Nytt objekt"
 
-#~ msgid "Select categories"
-#~ msgstr "Välj kategorier"
+#: list-ui.c:52
+msgid "All items"
+msgstr "Alla objekt"
 
-#~ msgid "Permanently delete all completed items?"
-#~ msgstr "Ta bort alla färdigställda objekt permanent?"
+#: list-ui.c:81
+msgid "Permanently delete all completed items?"
+msgstr "Ta bort alla färdigställda objekt permanent?"
 
-#~ msgid "Confirm"
-#~ msgstr "Bekräfta"
+#: list-ui.c:81
+msgid "Confirm"
+msgstr "Bekräfta"
 
-#~ msgid "Delete"
-#~ msgstr "Ta bort"
+#: list-ui.c:82 configure.c:217
+msgid "Delete"
+msgstr "Ta bort"
 
-#~ msgid "Cancel"
-#~ msgstr "Avbryt"
+#: list-ui.c:82
+msgid "Cancel"
+msgstr "Avbryt"
 
-#~ msgid "New"
-#~ msgstr "Nytt"
+#: list-ui.c:333 configure.c:210
+msgid "New"
+msgstr "Nytt"
 
-#~ msgid "Add a new item"
-#~ msgstr "Lägg till ett nytt objekt"
+#: list-ui.c:334 list-ui.c:335
+msgid "Add a new item"
+msgstr "Lägg till ett nytt objekt"
 
-#~ msgid "Configure"
-#~ msgstr "Konfigurera"
+#: list-ui.c:340
+msgid "Configure"
+msgstr "Konfigurera"
 
-#~ msgid "Configure categories"
-#~ msgstr "Konfigurera kategorier"
+#: list-ui.c:341 list-ui.c:342
+msgid "Configure categories"
+msgstr "Konfigurera kategorier"
 
-#~ msgid "Purge"
-#~ msgstr "Töm"
+#: list-ui.c:347
+msgid "Purge"
+msgstr "Töm"
 
-#~ msgid "Purge completed items"
-#~ msgstr "Töm färdigställda objekt"
+#: list-ui.c:348 list-ui.c:349
+msgid "Purge completed items"
+msgstr "Töm färdigställda objekt"
 
-#~ msgid "Re-sort"
-#~ msgstr "Sortera om"
+#: list-ui.c:354
+msgid "Re-sort"
+msgstr "Sortera om"
 
-#~ msgid "Move completed items to the end of the list"
-#~ msgstr "Flytta färdigställda objekt till slutet på listan"
+#: list-ui.c:355 list-ui.c:356
+msgid "Move completed items to the end of the list"
+msgstr "Flytta färdigställda objekt till slutet på listan"
 
-#~ msgid "Exit"
-#~ msgstr "Avsluta"
+#: list-ui.c:361
+msgid "Exit"
+msgstr "Avsluta"
 
-#~ msgid "Exit the program"
-#~ msgstr "Avsluta programmet"
+#: list-ui.c:362 list-ui.c:363
+msgid "Exit the program"
+msgstr "Avsluta programmet"
 
-#~ msgid "Category name must not be blank"
-#~ msgstr "Kategorinamnet får inte vara tomt"
+#: configure.c:58
+msgid "Category name must not be blank"
+msgstr "Kategorinamnet får inte vara tomt"
 
-#~ msgid "A category by that name already exists"
-#~ msgstr "En kategori med samma namn finns redan"
+#: configure.c:68
+msgid "A category by that name already exists"
+msgstr "En kategori med samma namn finns redan"
 
-#~ msgid "To-do list: Categories"
-#~ msgstr "Att-göra-lista: Kategorier"
+#: configure.c:106
+msgid "To-do list: Categories"
+msgstr "Att-göra-lista: Kategorier"
 
-#~ msgid "New category"
-#~ msgstr "Ny kategori"
+#: configure.c:139
+msgid "New category"
+msgstr "Ny kategori"
 
-#~ msgid "Create a new category"
-#~ msgstr "Skapa en ny kategori"
+#: configure.c:172
+msgid "Categories"
+msgstr "Kategorier"
 
-#~ msgid "Delete the selected category"
-#~ msgstr "Ta bort den markerade kategorin"
+#: configure.c:211 configure.c:212
+msgid "Create a new category"
+msgstr "Skapa en ny kategori"
+
+#: configure.c:218 configure.c:219
+msgid "Delete the selected category"
+msgstr "Ta bort den markerade kategorin"

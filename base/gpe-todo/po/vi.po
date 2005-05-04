@@ -5,8 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-todo 0.32\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-04-15 21:01+0200\n"
+"POT-Creation-Date: 2003-02-14 19:50+0000\n"
 "PO-Revision-Date: 2005-02-03 17:42+1030\n"
 "Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
 "Language-Team: Vietnamese <gnomevi-list@lists.sourceforge.net> \n"
@@ -14,166 +13,134 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../gpe-todo.desktop.in.h:1
-#, fuzzy
-msgid "GPE To-do List"
-msgstr "Mục lục kiểm tra"
-
-#: ../gpe-todo.desktop.in.h:2 ../main.c:63
+#: main.c:60
 msgid "To-do list"
 msgstr "Mục lục kiểm tra"
 
-#: ../list-ui.c:117
-msgid "All items"
-msgstr "Tất cả mục"
+#: todo-ui.c:269
+msgid "Select categories"
+msgstr "Chọn loại"
 
-#: ../list-ui.c:144
-#, fuzzy
-msgid "Show completed"
-msgstr "Hoàn thành"
-
-#: ../list-ui.c:577
-msgid "P"
-msgstr ""
-
-#: ../list-ui.c:584
-msgid "Status"
-msgstr ""
-
-#: ../list-ui.c:591
-#, fuzzy
-msgid "Summary"
-msgstr "Tóm tắt:"
-
-#: ../list-ui.c:598
-#, fuzzy
-msgid "Category"
-msgstr "Loại"
-
-#: ../list-ui.c:604
-msgid "Due Date"
-msgstr ""
-
-#: ../todo-ui.c:159
-msgid "Not started"
-msgstr "Chưa bắt đầu"
-
-#: ../todo-ui.c:160
-msgid "In progress"
-msgstr "Tiếp tục"
-
-#: ../todo-ui.c:161
-msgid "Completed"
-msgstr "Hoàn thành"
-
-#: ../todo-ui.c:162
-msgid "Abandoned"
-msgstr ""
-
-#: ../todo-ui.c:168
-msgid "High"
-msgstr ""
-
-#: ../todo-ui.c:169
-msgid "Standard"
-msgstr ""
-
-#: ../todo-ui.c:170
-msgid "Low"
-msgstr ""
-
-#: ../todo-ui.c:264
-msgid "Priority:"
-msgstr ""
-
-#: ../todo-ui.c:266
-msgid "Status:"
-msgstr ""
-
-#: ../todo-ui.c:269
+#: todo-ui.c:291
 msgid "Summary:"
 msgstr "Tóm tắt:"
 
-#: ../todo-ui.c:270
-#, fuzzy
-msgid "Details:"
+#: todo-ui.c:292
+msgid "Details"
 msgstr "Chi tiết"
 
-#: ../todo-ui.c:274
-msgid "Categories:"
-msgstr "Loại:"
+#: todo-ui.c:298
+msgid "Not started"
+msgstr "Chưa bắt đầu"
 
-#: ../todo-ui.c:344
+#: todo-ui.c:298
+msgid "In progress"
+msgstr "Tiếp tục"
+
+#: todo-ui.c:299
+msgid "Completed"
+msgstr "Hoàn thành"
+
+#: todo-ui.c:321
 msgid "Due:"
 msgstr "Đến kỳ:"
 
-#: ../todo-ui.c:482
+#: todo-ui.c:336
+msgid "Categories:"
+msgstr "Loại:"
+
+#: todo-ui.c:429
 msgid "Edit to-do item"
 msgstr "Hiệu chỉnh mục kiểm tra"
 
-#: ../todo-ui.c:491
+#: todo-ui.c:436
 msgid "New item"
 msgstr "Mục mới"
 
-#~ msgid "Select categories"
-#~ msgstr "Chọn loại"
+#: list-ui.c:52
+msgid "All items"
+msgstr "Tất cả mục"
 
-#~ msgid "Permanently delete all completed items?"
-#~ msgstr "Xóa bỏ một cách vĩnh cửu tất cả mục hoàn thành không?"
+#: list-ui.c:81
+msgid "Permanently delete all completed items?"
+msgstr "Xóa bỏ một cách vĩnh cửu tất cả mục hoàn thành không?"
 
-#~ msgid "Confirm"
-#~ msgstr "Xác nhận"
+#: list-ui.c:81
+msgid "Confirm"
+msgstr "Xác nhận"
 
-#~ msgid "Delete"
-#~ msgstr "Xóa bỏ"
+#: list-ui.c:82 configure.c:217
+msgid "Delete"
+msgstr "Xóa bỏ"
 
-#~ msgid "Cancel"
-#~ msgstr "Thôi"
+#: list-ui.c:82
+msgid "Cancel"
+msgstr "Thôi"
 
-#~ msgid "New"
-#~ msgstr "Mới"
+#: list-ui.c:333 configure.c:210
+msgid "New"
+msgstr "Mới"
 
-#~ msgid "Add a new item"
-#~ msgstr "Thêm mục mới"
+#: list-ui.c:334 list-ui.c:335
+msgid "Add a new item"
+msgstr "Thêm mục mới"
 
-#~ msgid "Configure"
-#~ msgstr "Tùy chỉnh"
+#: list-ui.c:340
+msgid "Configure"
+msgstr "Tùy chỉnh"
 
-#~ msgid "Configure categories"
-#~ msgstr "Tùy chỉnh loại"
+#: list-ui.c:341 list-ui.c:342
+msgid "Configure categories"
+msgstr "Tùy chỉnh loại"
 
-#~ msgid "Purge"
-#~ msgstr "Dọn dẹp"
+#: list-ui.c:347
+msgid "Purge"
+msgstr "Dọn dẹp"
 
-#~ msgid "Purge completed items"
-#~ msgstr "Don dẹp mục hoàn thành"
+#: list-ui.c:348 list-ui.c:349
+msgid "Purge completed items"
+msgstr "Don dẹp mục hoàn thành"
 
-#~ msgid "Re-sort"
-#~ msgstr "Sắp xếp lại"
+#: list-ui.c:354
+msgid "Re-sort"
+msgstr "Sắp xếp lại"
 
-#~ msgid "Move completed items to the end of the list"
-#~ msgstr "Di động mục hoàn thành xuống cuối cùng mục lục"
+#: list-ui.c:355 list-ui.c:356
+msgid "Move completed items to the end of the list"
+msgstr "Di động mục hoàn thành xuống cuối cùng mục lục"
 
-#~ msgid "Exit"
-#~ msgstr "Thoát"
+#: list-ui.c:361
+msgid "Exit"
+msgstr "Thoát"
 
-#~ msgid "Exit the program"
-#~ msgstr "Thoát trình này"
+#: list-ui.c:362 list-ui.c:363
+msgid "Exit the program"
+msgstr "Thoát trình này"
 
-#~ msgid "Category name must not be blank"
-#~ msgstr "Tên loại không phải trống"
+#: configure.c:58
+msgid "Category name must not be blank"
+msgstr "Tên loại không phải trống"
 
-#~ msgid "A category by that name already exists"
-#~ msgstr "Có tên loại ấy"
+#: configure.c:68
+msgid "A category by that name already exists"
+msgstr "Có tên loại ấy"
 
-#~ msgid "To-do list: Categories"
-#~ msgstr "Mục lục kiểm tra: Loại"
+#: configure.c:106
+msgid "To-do list: Categories"
+msgstr "Mục lục kiểm tra: Loại"
 
-#~ msgid "New category"
-#~ msgstr "Loại mới"
+#: configure.c:139
+msgid "New category"
+msgstr "Loại mới"
 
-#~ msgid "Create a new category"
-#~ msgstr "Tạo loại mới"
+#: configure.c:172
+msgid "Categories"
+msgstr "Loại"
 
-#~ msgid "Delete the selected category"
-#~ msgstr "Xóa bỏ loại được chọn"
+#: configure.c:211 configure.c:212
+msgid "Create a new category"
+msgstr "Tạo loại mới"
+
+#: configure.c:218 configure.c:219
+msgid "Delete the selected category"
+msgstr "Xóa bỏ loại được chọn"

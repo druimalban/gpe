@@ -4,8 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-todo 0.32\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-04-15 21:01+0200\n"
+"POT-Creation-Date: 2003-02-14 19:50+0000\n"
 "PO-Revision-Date: 2004-04-05 20:20+0200\n"
 "Last-Translator: Pablo Saratxaga <pablo@walon.org>\n"
 "Language-Team: Walloon <linux-wa@walon.org>\n"
@@ -14,166 +13,134 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.0.2\n"
 
-#: ../gpe-todo.desktop.in.h:1
-#, fuzzy
-msgid "GPE To-do List"
-msgstr "Djivêye des bouyes a fé"
-
-#: ../gpe-todo.desktop.in.h:2 ../main.c:63
+#: main.c:60
 msgid "To-do list"
 msgstr "Djivêye des bouyes a fé"
 
-#: ../list-ui.c:117
-msgid "All items"
-msgstr "Tos les cayets"
+#: todo-ui.c:269
+msgid "Select categories"
+msgstr "Tchoezixhoz les categoreyes"
 
-#: ../list-ui.c:144
-#, fuzzy
-msgid "Show completed"
-msgstr "Fini"
-
-#: ../list-ui.c:577
-msgid "P"
-msgstr ""
-
-#: ../list-ui.c:584
-msgid "Status"
-msgstr ""
-
-#: ../list-ui.c:591
-#, fuzzy
-msgid "Summary"
-msgstr "Rascourti:"
-
-#: ../list-ui.c:598
-#, fuzzy
-msgid "Category"
-msgstr "Categoreyes"
-
-#: ../list-ui.c:604
-msgid "Due Date"
-msgstr ""
-
-#: ../todo-ui.c:159
-msgid "Not started"
-msgstr "Nén cmincî"
-
-#: ../todo-ui.c:160
-msgid "In progress"
-msgstr "En alaedje"
-
-#: ../todo-ui.c:161
-msgid "Completed"
-msgstr "Fini"
-
-#: ../todo-ui.c:162
-msgid "Abandoned"
-msgstr ""
-
-#: ../todo-ui.c:168
-msgid "High"
-msgstr ""
-
-#: ../todo-ui.c:169
-msgid "Standard"
-msgstr ""
-
-#: ../todo-ui.c:170
-msgid "Low"
-msgstr ""
-
-#: ../todo-ui.c:264
-msgid "Priority:"
-msgstr ""
-
-#: ../todo-ui.c:266
-msgid "Status:"
-msgstr ""
-
-#: ../todo-ui.c:269
+#: todo-ui.c:291
 msgid "Summary:"
 msgstr "Rascourti:"
 
-#: ../todo-ui.c:270
-#, fuzzy
-msgid "Details:"
+#: todo-ui.c:292
+msgid "Details"
 msgstr "Detays"
 
-#: ../todo-ui.c:274
-msgid "Categories:"
-msgstr "Categoreyes:"
+#: todo-ui.c:298
+msgid "Not started"
+msgstr "Nén cmincî"
 
-#: ../todo-ui.c:344
+#: todo-ui.c:298
+msgid "In progress"
+msgstr "En alaedje"
+
+#: todo-ui.c:299
+msgid "Completed"
+msgstr "Fini"
+
+#: todo-ui.c:321
 msgid "Due:"
 msgstr "A fé po:"
 
-#: ../todo-ui.c:482
+#: todo-ui.c:336
+msgid "Categories:"
+msgstr "Categoreyes:"
+
+#: todo-ui.c:429
 msgid "Edit to-do item"
 msgstr "Candjî l' cayet a fé"
 
-#: ../todo-ui.c:491
+#: todo-ui.c:436
 msgid "New item"
 msgstr "Novea cayet"
 
-#~ msgid "Select categories"
-#~ msgstr "Tchoezixhoz les categoreyes"
+#: list-ui.c:52
+msgid "All items"
+msgstr "Tos les cayets"
 
-#~ msgid "Permanently delete all completed items?"
-#~ msgstr "Disfacer po do bon tos les cayets k' on stî finis?"
+#: list-ui.c:81
+msgid "Permanently delete all completed items?"
+msgstr "Disfacer po do bon tos les cayets k' on stî finis?"
 
-#~ msgid "Confirm"
-#~ msgstr "Acertiner"
+#: list-ui.c:81
+msgid "Confirm"
+msgstr "Acertiner"
 
-#~ msgid "Delete"
-#~ msgstr "Disfacer"
+#: list-ui.c:82 configure.c:217
+msgid "Delete"
+msgstr "Disfacer"
 
-#~ msgid "Cancel"
-#~ msgstr "Rinoncî"
+#: list-ui.c:82
+msgid "Cancel"
+msgstr "Rinoncî"
 
-#~ msgid "New"
-#~ msgstr "Novea"
+#: list-ui.c:333 configure.c:210
+msgid "New"
+msgstr "Novea"
 
-#~ msgid "Add a new item"
-#~ msgstr "Radjouter on novea cayet"
+#: list-ui.c:334 list-ui.c:335
+msgid "Add a new item"
+msgstr "Radjouter on novea cayet"
 
-#~ msgid "Configure"
-#~ msgstr "Apontyî"
+#: list-ui.c:340
+msgid "Configure"
+msgstr "Apontyî"
 
-#~ msgid "Configure categories"
-#~ msgstr "Apontyî les categoreyes"
+#: list-ui.c:341 list-ui.c:342
+msgid "Configure categories"
+msgstr "Apontyî les categoreyes"
 
-#~ msgid "Purge"
-#~ msgstr "Purdjî"
+#: list-ui.c:347
+msgid "Purge"
+msgstr "Purdjî"
 
-#~ msgid "Purge completed items"
-#~ msgstr "Purdjî les cayets k' ont stî finis"
+#: list-ui.c:348 list-ui.c:349
+msgid "Purge completed items"
+msgstr "Purdjî les cayets k' ont stî finis"
 
-#~ msgid "Re-sort"
-#~ msgstr "Relére"
+#: list-ui.c:354
+msgid "Re-sort"
+msgstr "Relére"
 
-#~ msgid "Move completed items to the end of the list"
-#~ msgstr "Bodjî les cayets k' on stî fwaits viè l' fén del djivêye"
+#: list-ui.c:355 list-ui.c:356
+msgid "Move completed items to the end of the list"
+msgstr "Bodjî les cayets k' on stî fwaits viè l' fén del djivêye"
 
-#~ msgid "Exit"
-#~ msgstr "Moussî foû"
+#: list-ui.c:361
+msgid "Exit"
+msgstr "Moussî foû"
 
-#~ msgid "Exit the program"
-#~ msgstr "Moussî foû do programe"
+#: list-ui.c:362 list-ui.c:363
+msgid "Exit the program"
+msgstr "Moussî foû do programe"
 
-#~ msgid "Category name must not be blank"
-#~ msgstr "Li no del categoreye èn pout nén esse vude"
+#: configure.c:58
+msgid "Category name must not be blank"
+msgstr "Li no del categoreye èn pout nén esse vude"
 
-#~ msgid "A category by that name already exists"
-#~ msgstr "Ene categoreye avou ç' no la egzistêye dedja"
+#: configure.c:68
+msgid "A category by that name already exists"
+msgstr "Ene categoreye avou ç' no la egzistêye dedja"
 
-#~ msgid "To-do list: Categories"
-#~ msgstr "Djivêye des bouyes a fé: Categoreyes"
+#: configure.c:106
+msgid "To-do list: Categories"
+msgstr "Djivêye des bouyes a fé: Categoreyes"
 
-#~ msgid "New category"
-#~ msgstr "Novele categoreye"
+#: configure.c:139
+msgid "New category"
+msgstr "Novele categoreye"
 
-#~ msgid "Create a new category"
-#~ msgstr "Fé ene novele categoreye"
+#: configure.c:172
+msgid "Categories"
+msgstr "Categoreyes"
 
-#~ msgid "Delete the selected category"
-#~ msgstr "Disfacer li tchoezeye categoreye"
+#: configure.c:211 configure.c:212
+msgid "Create a new category"
+msgstr "Fé ene novele categoreye"
+
+#: configure.c:218 configure.c:219
+msgid "Delete the selected category"
+msgstr "Disfacer li tchoezeye categoreye"
