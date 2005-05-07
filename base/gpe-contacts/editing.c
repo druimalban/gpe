@@ -428,12 +428,14 @@ edit_window (gboolean isdialog)
       GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
       GtkWidget *label = gtk_label_new (e->name);
       GtkWidget *scrolled_window = gtk_scrolled_window_new (NULL, NULL);
+      GtkWidget *viewport = gtk_viewport_new(NULL, NULL);
 
-      gtk_container_set_border_width (GTK_CONTAINER (vbox), 2);
-
+      gtk_container_set_border_width (GTK_CONTAINER (vbox), gpe_get_border());
       gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window),
-				      GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
-      gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolled_window), vbox);
+                                      GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+      gtk_viewport_set_shadow_type(GTK_VIEWPORT(viewport), GTK_SHADOW_NONE);
+      gtk_container_add(GTK_CONTAINER(viewport), vbox);
+      gtk_container_add(GTK_CONTAINER(scrolled_window), viewport);
       gtk_widget_show_all(scrolled_window);
       gtk_widget_show(label);
       gtk_notebook_append_page (GTK_NOTEBOOK (book), scrolled_window, label);

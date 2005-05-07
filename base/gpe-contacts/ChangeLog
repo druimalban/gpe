@@ -1,5 +1,6 @@
 2005-05-08  Florian Boor <florian.boor@kernelconcepts.de>
 
+    * editing.c (edit_window): Change size a little bit, remove ugly shadow.
     * main.c (create_main): Rewrite toolbar section to use new toolbar API.
                             Add some comments. Improve default window size.
     * configure.ac: Version to 0.38.
