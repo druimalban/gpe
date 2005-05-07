@@ -1,3 +1,18 @@
+2005-05-07  Florian Boor <florian.boor@kernelconcepts.de>
+
+    * db.c: Major structure changes: We move some data to the contacts_urn
+            table to avoid the need of multiple nested queries to get a list
+            of names only.
+    * db.c: Add some comments.
+    * db.c (check_table_update): New function to check if table is in new 
+                                 format and convert if necessary.
+    * db.c: Reordered some functions.
+    * db.c (check_table_update): Create some additional indexes on database 
+                                 update.
+    * db.c: Some formating updates.
+    * configure.ac: Some commented out bits to enable gprof support.
+
+
 2005-05-04  Phil Blundell  <pb@reciva.com>
 
 	* Makefile.am (clean-local): Include gpe-tp.am.

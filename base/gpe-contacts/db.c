@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2001, 2002, 2003, 2004 Philip Blundell <philb@gnu.org>
+ *               2004, 2005 Florian Boor <florian@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -31,12 +32,146 @@ static sqlite *db = NULL;
 
 extern void migrate_old_categories (sqlite *db);
 
+/* contacts full data in tag/value pairs */
 static const char *schema_str = "create table contacts (urn INTEGER NOT NULL, tag TEXT NOT NULL, value TEXT NOT NULL);";
 
-static const char *schema2_str = "create table contacts_urn (urn INTEGER PRIMARY KEY);";
+/* entry data for identification and absic information */
+static const char *schema2_str = "create table contacts_urn (urn INTEGER PRIMARY KEY, name TEXT, family_name TEXT, company TEXT);";
 
 /* this one is for config data */
 static const char *schema4_str = "create table contacts_config (id INTEGER PRIMARY KEY,	cgroup INTEGER NOT NULL, cidentifier TEXT NOT NULL, cvalue TEXT);";
+
+
+
+inline struct person *
+new_person (void)
+{
+  struct person *p = g_malloc0 (sizeof (struct person));
+  return p;
+}
+
+/* used by check_table_update to convert database */
+static int
+read_name (void *arg, int argc, char **argv, char **names)
+{
+  struct person *p = (struct person *)arg;
+  p->name = g_strdup (argv[0]);
+
+  return 0;
+}
+
+/* used by check_table_update to convert database */
+static int
+read_family_name (void *arg, int argc, char **argv, char **names)
+{
+  struct person *p = (struct person *)arg;
+  p->family_name = g_strdup (argv[0]);
+
+  return 0;
+}
+
+/* used by check_table_update to convert database */
+static int
+read_one_entry_old (void *arg, int argc, char **argv, char **names)
+{
+  struct person *p = new_person ();
+  GSList **list = (GSList **) arg;
+
+  p->id = atoi (argv[0]);
+  sqlite_exec_printf (db, "select value from contacts where (urn=%d) and (tag='NAME')",
+                      read_name, p, NULL, p->id);
+  sqlite_exec_printf (db, "select value from contacts where (urn=%d) and (tag='FAMILY_NAME')",
+                      read_family_name, p, NULL, p->id);
+  
+  /* we support contacts without name now */
+  if (!p->name) 
+    p->name = g_strdup("");
+  *list = g_slist_prepend (*list, p);
+
+  return 0;
+}
+
+/* used by check_table_update to convert database */
+GSList *
+db_get_entries_old (void)
+{
+  GSList *list = NULL;
+  char *err;
+  int r;
+
+  r = sqlite_exec (db, "select urn from contacts_urn",
+                   read_one_entry_old, &list, &err);
+
+  if (r)
+    {
+      gpe_error_box (err);
+      free (err);
+      return NULL;
+    }
+
+  return list;
+}
+
+/* check contacts_urn table and update to new scheme if necessary */
+static void
+check_table_update(void)
+{
+  int r;
+  gchar *err = NULL;
+  GSList *entries = NULL, *iter=NULL;
+  
+
+  /* check if we have the company field */
+  r = sqlite_exec (db, "select company from contacts_urn",
+                   NULL, NULL, &err);
+
+  if (r) /* r > 0 indicates a failure, need to recreate that table with new schema */
+    {
+      int num, col, i;
+      struct person *p;
+          
+      free (err);
+      r = sqlite_exec (db, "begin transaction", NULL, NULL, &err);
+      if (r)
+          goto error;
+      entries = db_get_entries_old();      
+      r = sqlite_exec (db, "drop table contacts_urn",
+                       NULL, NULL, &err);
+      if (r)
+          goto error;
+      r = sqlite_exec (db, schema2_str, NULL, NULL, NULL);
+      if (r)
+          goto error;
+      for (iter = entries; iter; iter=iter->next)
+        {
+           p = (struct person*)iter->data;
+           if (p)
+             {
+               sqlite_exec_printf(db, "insert into contacts_urn values (%d, '%q', '%q', '%q')", 
+                                  NULL, NULL, &err, p->id, p->name, p->family_name, p->company); 
+               discard_person(p);
+             }
+        }
+      r = sqlite_exec (db, "commit transaction", NULL, NULL, &err);
+      if (r)
+          goto error;
+      g_slist_free(entries);
+      
+      /* add some additional indexes */
+      r = sqlite_exec (db, "create index idxtag on contacts (tag)", NULL, NULL, &err);
+      if (r)
+          goto error;
+      
+      return;
+      
+      error:
+        {
+          gpe_error_box_fmt ("Couldn't convert database data to new format: %s", err);
+          g_free(err);
+          sqlite_exec (db, "rollback transaction", NULL, NULL, &err);
+        }
+    }
+}
 
 static int
 check_one_tag (void *arg, int argc, char **argv, char **names)
@@ -98,7 +233,7 @@ db_open (gboolean open_vcard)
   char *buf;
 
   buf = g_strdup_printf("%s/%s", g_get_home_dir(), 
-                                 open_vcard ? DB_NAME_VCARD : DB_NAME_CONTACTS);
+                        open_vcard ? DB_NAME_VCARD : DB_NAME_CONTACTS);
   if (db) 
     sqlite_close(db);
   db = sqlite_open (buf, 0, &errmsg);
@@ -120,7 +255,8 @@ db_open (gboolean open_vcard)
       db_add_config_values (CONFIG_PANEL, _("Phone"), "HOME.TELEPHONE");
       db_add_config_values (CONFIG_PANEL, _("EMail"), "HOME.EMAIL");
     }
-
+  else
+      check_table_update();
   migrate_old_categories (db);
 
   db_check_tags();
@@ -137,7 +273,7 @@ new_tag_value (gchar * tag, gchar * value)
   return t;
 }
 
-void
+inline void
 free_tag_values (GSList * list)
 {
   GSList *i;
@@ -156,14 +292,6 @@ update_tag_value (struct tag_value *t, gchar * value)
 {
   g_free (t->value);
   t->value = value;
-}
-
-struct person *
-new_person (void)
-{
-  struct person *p = g_malloc (sizeof (struct person));
-  memset (p, 0, sizeof (*p));
-  return p;
 }
 
 void
@@ -203,35 +331,17 @@ sort_entries(struct person * a, struct person * b)
 }
 
 static int
-read_name (void *arg, int argc, char **argv, char **names)
-{
-  struct person *p = (struct person *)arg;
-  p->name = g_strdup (argv[1]);
-
-  return 0;
-}
-
-static int
-read_family_name (void *arg, int argc, char **argv, char **names)
-{
-  struct person *p = (struct person *)arg;
-  p->family_name = g_strdup (argv[1]);
-
-  return 0;
-}
-
-static int
 read_one_entry (void *arg, int argc, char **argv, char **names)
 {
   struct person *p = new_person ();
   GSList **list = (GSList **) arg;
 
   p->id = atoi (argv[0]);
-  sqlite_exec_printf (db, "select tag,value from contacts where (urn=%d) and ((tag='NAME') or (tag='name'))",
-		      read_name, p, NULL, p->id);
-  sqlite_exec_printf (db, "select tag,value from contacts where (urn=%d) and ((tag='FAMILY_NAME') or (tag='family_name'))",
-		      read_family_name, p, NULL, p->id);
-  
+   
+  if (argv[1]) p->name = g_strdup(argv[1]);  
+  if (argv[2]) p->family_name = g_strdup(argv[2]);  
+  if (argv[3]) p->company = g_strdup(argv[3]);
+      
   /* we support contacts without name now */
   if (!p->name) 
     p->name = g_strdup("");
@@ -247,8 +357,8 @@ db_get_entries (void)
   char *err;
   int r;
 
-  r = sqlite_exec (db, "select urn from contacts_urn",
-		   read_one_entry, &list, &err);
+  r = sqlite_exec (db, "select urn, name, family_name from contacts_urn",
+                   read_one_entry, &list, &err);
 
   if (r)
     {
@@ -266,36 +376,40 @@ db_get_entries_list (const gchar *name, const gchar *cat)
   GSList *list = NULL;
   char *err;
   int r;
-  gchar *strsearch;
 
   gboolean no_cat = (!cat) || (!cat[0]);
-  gboolean no_name = (!name) && (!name[0]);
+  gboolean no_name = (!name) || (!name[0]);
 
   if (no_name && no_cat) 
     return db_get_entries();
-  
-  strsearch = g_strdup_printf("%%%s%%", name);
 
   if (no_name && !no_cat) 
     {
       r = sqlite_exec_printf 
-        (db, "select distinct urn from contacts where tag = 'CATEGORY' and value like '%q'",
+        (db, "select contacts_urn.urn, contacts_urn.name, contacts_urn.family_name, contacts_urn.company "\
+             "from contacts_urn, contacts where contacts_urn.urn = contacts.urn "\
+             "and contacts.tag = 'CATEGORY' and contacts.value like '%%%q%%'",
          read_one_entry, &list, &err, cat);
     }
   else if (no_cat)
     {
       r = sqlite_exec_printf 
-        (db, "select distinct urn from contacts where (tag = 'NAME' or tag = 'GIVEN_NAME' or tag = 'FAMILY_NAME' or tag = 'COMPANY' or tag = 'MIDDLE_NAME') and value like '%q'",
-         read_one_entry, &list, &err, strsearch);
+        (db, "select * from contacts_urn where name like '%%%q%%' "\
+             "or family_name like '%%%q%%' or company like '%%%q%%'",
+         read_one_entry, &list, &err, name, name, name);
     } 
   else 
     {
       r = sqlite_exec_printf 
-        (db, "select urn from contacts where tag = 'CATEGORY' and value = '%q' and urn IN (select distinct urn from contacts where (tag = 'NAME' or tag = 'GIVEN_NAME' or tag = 'FAMILY_NAME' or tag = 'COMPANY' or tag = 'MIDDLE_NAME') and value like '%q')",
-         read_one_entry, &list, &err, cat, strsearch);
+        (db, "select urn from contacts where tag = 'CATEGORY' "\
+             "and value = '%%%q%%' and urn IN "\
+             "(select distinct urn from contacts where "\
+                "(tag = 'NAME' or tag = 'GIVEN_NAME' "\
+                "or tag = 'FAMILY_NAME' or tag = 'COMPANY')"\
+                "and value like '%%%q%%')",
+         read_one_entry, &list, &err, cat, name);
     }
  
-  g_free(strsearch);
   if (r)
     {
       gpe_error_box (err);
@@ -313,7 +427,6 @@ db_get_entries_finddlg (const gchar *str, const gchar *cat)
   GSList *list = NULL;
   char *err;
   int r;
-  gchar *strsearch;
   gboolean has_cat = cat && (cat[0]);
   gboolean has_str = str && (str[0]);
 
@@ -322,25 +435,28 @@ db_get_entries_finddlg (const gchar *str, const gchar *cat)
       return db_get_entries();
     } 
 
-  strsearch = g_strdup_printf("%%%s%%", str); 
-
   if (has_cat && has_str) 
     {
-      r = sqlite_exec_printf (db, "select urn from contacts where (tag = 'CATEGORY' or tag = 'category') and value = '%q' and urn in (select distinct urn from contacts where value like '%q');",
-                              read_one_entry, &list, &err, cat, strsearch);
+      r = sqlite_exec_printf (db, "select contacts_urn.urn, contacts_urn.name, contacts_urn.family_name, contacts_urn.company "\
+                                   "from contacts_urn, contacts where (contacts_urn.urn = contacts.urn) and (contacts.tag = 'CATEGORY') "\
+                                   "and contacts.value = '%q' and contacts.urn in (select distinct urn from contacts where value like '%%%q%%');",
+                              read_one_entry, &list, &err, cat, str);
     } 
   else if (has_cat)
     {
-      r = sqlite_exec_printf (db, "select distinct urn from contacts where category = '%q'",
+      r = sqlite_exec_printf (db, "select contacts_urn.urn, contacts_urn.name, contacts_urn.family_name, contacts_urn.company "\
+                                   "from contacts_urn, contacts where (contacts_urn.urn = contacts.urn) and (contacts.tag = 'CATEGORY') "\
+                                   "and contacts.value = '%q'",
                               read_one_entry, &list, &err, cat);
     }
   else
     {
-      r = sqlite_exec_printf (db, "select distinct urn from contacts where value like '%q'",
-                              read_one_entry, &list, &err, strsearch);
+      r = sqlite_exec_printf (db, "select contacts_urn.urn, contacts_urn.name, contacts_urn.family_name, contacts_urn.company "\
+                                   "from contacts_urn, contacts where (contacts_urn.urn = contacts.urn) "\
+                                   "and contacts.urn in (select distinct urn from contacts where value like '%%%q%%');",
+                              read_one_entry, &list, &err, str);
     }
   
-  g_free(strsearch);
   if (r)
     {
       gpe_error_box (err);
@@ -368,7 +484,7 @@ db_get_by_uid (guint uid)
 
   p->id = uid;
   r = sqlite_exec_printf (db, "select tag,value from contacts where urn=%d",
-  read_entry_data, p, &err, uid);
+                          read_entry_data, p, &err, uid);
   if (r)
     {
       gpe_error_box (err);
@@ -421,7 +537,10 @@ struct tag_value *
 db_find_tag (struct person *p, gchar * tag)
 {
   struct tag_value *t = NULL;
+  int r;
+  char *err = NULL;
   GSList *iter;
+  
   for (iter = p->data; iter; iter = iter->next)
     {
       struct tag_value *id = (struct tag_value *) iter->data;
@@ -431,6 +550,7 @@ db_find_tag (struct person *p, gchar * tag)
          break;
        }
     }
+  
   return t;
 }
 
@@ -499,30 +619,43 @@ commit_person (struct person *p)
       r = sqlite_exec_printf (db, "delete from contacts where urn='%d'",
 			      NULL, NULL, &err, p->id);
       if (r)
-	goto error;
+        goto error;
     }
   else
     {
       if (new_person_id (&p->id) == FALSE)
-	{
-	  sqlite_exec (db, "rollback transaction", NULL, NULL, NULL);
-	  return FALSE;
-	}
+        {
+          sqlite_exec (db, "rollback transaction", NULL, NULL, NULL);
+          return FALSE;
+        }
     }
 
   for (iter = p->data; iter; iter = iter->next)
     {
       struct tag_value *v = iter->data;
-      if (v->value && v->value[0] && (strcmp(v->tag,"MODIFIED")))
+      if (v->value && v->value[0] && (strcmp(v->tag, "MODIFIED")))
         {
 	      r = sqlite_exec_printf (db,
-				  "insert into contacts values(%d,'%q','%q')",
-				  NULL, NULL, &err, p->id, v->tag, v->value);
+                                  "insert into contacts values(%d,'%q','%q')",
+                                  NULL, NULL, &err, p->id, v->tag, v->value);
           if (r)
 	        goto error;
+          
+          if (!strcmp(v->tag, "NAME"))
+              p->name = g_strdup(v->value);
+          else if (!strcmp(v->tag, "FAMILY_NAME"))
+              p->family_name = g_strdup(v->value);
+          else if (!strcmp(v->tag, "COMPANY"))
+              p->company = g_strdup(v->value);
         }
     }
 
+   r = sqlite_exec_printf (db,
+                            "update contacts_urn set name='%q', family_name='%q', company='%q' where (urn=%d)",
+				           NULL, NULL, &err, p->name, p->family_name, p->company, p->id);
+   if (r)
+	 goto error;
+          
   if (sqlite_exec_printf (db,
 			  "insert into contacts values(%d, 'MODIFIED', %d)",
 			  NULL, NULL, &err, p->id, modified))
@@ -540,41 +673,6 @@ error:
   gpe_error_box (err);
   free (err);
   return FALSE;
-}
-
-gboolean
-db_insert_category (gchar * name, guint * id)
-{
-  char *err;
-  int r =
-    sqlite_exec_printf (db,
-			"insert into contacts_category values (NULL, '%q')",
-			      NULL, NULL, &err, name);
-  if (r)
-    {
-      gpe_error_box (err);
-      free (err);
-      return FALSE;
-    }
-  
-  *id = sqlite_last_insert_rowid (db);
-  return TRUE;
-}
- 
-gboolean
-db_delete_category (guint id)
-{
-  char *err;
-  int r = sqlite_exec_printf (db, "delete from contacts_category where id=%d", 
-			      NULL, NULL, &err, id);
-  if (r)
-    {
-      gpe_error_box (err);
-      free (err);
-      return FALSE;
-    }
-
-  return TRUE;
 }
 
 
@@ -599,7 +697,7 @@ db_get_config_values (gint group, gchar *** list)
   gint r, c;
 
   statement = g_strdup_printf ("select cidentifier,cvalue from contacts_config where cgroup=%i",
-			       group);
+                               group);
 
   sqlite_get_table (db, statement, list, &r, &c, &err);
   if (err)
@@ -619,8 +717,9 @@ db_add_config_values (gint group, gchar * identifier, gchar * value)
   gint r, c;
   gchar **list;
   sqlite_get_table_printf (db,
-			   "insert into contacts_config (cgroup,cidentifier,cvalue) values(%i,'%q','%q')",
-			   &list, &r, &c, &err, group, identifier, value);
+                           "insert into contacts_config "\
+                           "(cgroup,cidentifier,cvalue) values(%i,'%q','%q')",
+                           &list, &r, &c, &err, group, identifier, value);
   if (err)
     {
       fprintf (stderr,"e: %s\n", err);
@@ -641,8 +740,9 @@ db_delete_config_values (gint group, gchar * identifier)
   gint c = 0;
   gchar **list;
   sqlite_get_table_printf (db,
-			   "delete from contacts_config where (cgroup=%i) and (cidentifier='%q')",
-			   &list, &r, &c, &err, group, identifier);
+                           "delete from contacts_config "\
+                           "where (cgroup=%i) and (cidentifier='%q')",
+                           &list, &r, &c, &err, group, identifier);
   if (err)
     {
       fprintf (stderr,"e: %s\n", err);
@@ -669,8 +769,9 @@ db_get_config_tag (gint group, const gchar * tagname)
   gint r, c;
 
   sqlite_get_table_printf (db,
-			   "select cvalue from contacts_config where (cgroup=%i) and (cidentifier='%q')",
-			   &list, &r, &c, &err, group, tagname);
+                           "select cvalue from contacts_config "\
+                            "where (cgroup=%i) and (cidentifier='%q')",
+                            &list, &r, &c, &err, group, tagname);
   if (err)
     {
       fprintf (stderr,"e: %s\n", err);
@@ -680,7 +781,7 @@ db_get_config_tag (gint group, const gchar * tagname)
   if (list != NULL)
     {
       if (c == 1 && r >= 1)
-	err = g_strdup (list[1]);
+        err = g_strdup (list[1]);
       sqlite_free_table (list);
     }
   return err;

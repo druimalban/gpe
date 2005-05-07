@@ -1,14 +1,18 @@
 
 SUBDIRS = po
 
+
 INCLUDES = $(DEPS_CFLAGS) -I$(top_srcdir)/gpe -I$(top_srcdir) \
            -DPREFIX=\"@prefix@\" -D_GNU_SOURCE \
            -DPACKAGE_LOCALE_DIR=\"@gpecontacts_localedir@\" \
            -DDBUS_API_SUBJECT_TO_CHANGE
 
+#LDFLAGS = -pg
+#INCLUDES = $(INCLUDES) -pg
+
 bin_PROGRAMS = gpe-contacts
 
-gpe_contacts_LDADD = @DEPS_LIBS@
+gpe_contacts_LDADD = $(DEPS_LIBS)
 
 gpe_contacts_SOURCES = main.c main.h configure.c db.c db.h \
                        editing.c export.c export.h \

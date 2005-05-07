@@ -1484,7 +1484,7 @@ main (int argc, char *argv[])
   gchar *ifile = NULL;
   GtkTreePath *path;
   gint size_x, size_y;
-  
+    
 #ifdef ENABLE_NLS
   setlocale (LC_ALL, "");
 
@@ -1517,8 +1517,8 @@ main (int argc, char *argv[])
 		ifile = optarg;
     if (arg == 'v')
       edit_vcard = TRUE;
-  }    
-
+  }
+  
   /* are we called to import a file? */
   if (ifile)
     {
@@ -1600,7 +1600,7 @@ main (int argc, char *argv[])
   path = gtk_tree_path_new_first();
   gtk_tree_view_set_cursor(GTK_TREE_VIEW(list_view), path, NULL, FALSE);
   gtk_tree_path_free(path);
-
+  
   gtk_main ();
   return 0;
 }
