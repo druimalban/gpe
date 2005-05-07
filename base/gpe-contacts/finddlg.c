@@ -62,8 +62,8 @@ do_find_contacts(GtkWindow *parent, gchar *cat_id)
   
   if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_OK)
     {
-      result = db_get_entries_finddlg
-         (gtk_entry_get_text(GTK_ENTRY(entry)), NULL);
+      result = db_get_entries_finddlg (gtk_entry_get_text(GTK_ENTRY(entry)), 
+                                       NULL);
     }
   gtk_widget_destroy(dialog);
   return result;

@@ -1,3 +1,14 @@
+2005-05-08  Florian Boor <florian.boor@kernelconcepts.de>
+
+    * main.c (create_main): Rewrite toolbar section to use new toolbar API.
+                            Add some comments. Improve default window size.
+    * configure.ac: Version to 0.38.
+    * finddlg.c: Formating change.
+    * main.c (do_search): Fix memory leak.
+    * main.c (do_find): Handle cancel action properly.
+    * db.c (db_get_entries_finddlg): Fix query which resulted in multiple 
+                                     results for a single contact.
+
 2005-05-07  Florian Boor <florian.boor@kernelconcepts.de>
 
     * db.c: Major structure changes: We move some data to the contacts_urn

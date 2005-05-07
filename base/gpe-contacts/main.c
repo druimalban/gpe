@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2001, 2002, 2003, 2004 Philip Blundell <philb@gnu.org>
+ *               2004, 2005 Florian Boor <florian@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -63,7 +64,6 @@ gboolean do_wrap = FALSE;
 #define LARGE_STRUCTURE PREFIX "/share/gpe-contacts/default-layout-bigscreen.xml"
 
 struct gpe_icon my_icons[] = {
-  {"edit"},
   {"delete"},
   {"cancel"},
   {"frame", MY_PIXMAPS_DIR "frame"},
@@ -775,8 +775,11 @@ do_search (GObject *obj, GtkWidget *entry)
       g_slist_free (l);
     }
 
-  /* Todo cat  */
   sel_entries = db_get_entries_list (text, cat_id);
+  
+  if (cat_id) 
+    g_free(cat_id);
+      
   sel_entries = g_slist_sort (sel_entries, (GCompareFunc)sort_entries);
 
   gtk_list_store_clear (list_store);
@@ -827,6 +830,12 @@ do_find (void)
     }
 
   all_entries = do_find_contacts(GTK_WINDOW(mainw), cat_id);
+
+  if (cat_id) 
+    g_free(cat_id);
+  if (!all_entries)
+    return;
+  
   all_entries = g_slist_sort (all_entries, (GCompareFunc)sort_entries);
 
   gtk_list_store_clear (list_store);
@@ -1254,23 +1263,33 @@ create_main (gboolean edit_structure)
   GtkWidget *pDetail;
   GtkWidget *tabDetail;
   GtkWidget *toolbar, *pw;
-  GtkWidget *b, *btnNew, *btnDetails;
+  GtkToolItem *b, *btnNew;
   GtkCellRenderer *renderer;
   GtkTreeViewColumn *column;
   GtkTreeSelection *tree_sel;
   GtkWidget *scrolled_window;
   GtkWidget *lStatus = NULL;
+  GtkTooltips *tooltips;
   gint size_x, size_y;
 
-  /* screen layout detection */
+  /* default screen size and dimension base */
   size_x = gdk_screen_width();
   size_y = gdk_screen_height();  
-  size_x /= 4;
+  size_x /= 3;
   size_y /= 3;
-  if (size_x < 240) size_x = 240;
-  if (size_y < 320) size_y = 320;
-
-  /* main window */
+  
+  if (mode_large_screen)
+    {
+       size_x = 560;
+       size_y = 400;
+    }
+  else
+    {
+      if (size_x < 240) size_x = 240;
+      if (size_y < 320) size_y = 320;
+    }
+    
+  /*** main window ***/
   main_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title (GTK_WINDOW (main_window), _("Contacts"));
   gtk_window_set_default_size (GTK_WINDOW (main_window), size_x, size_y);
@@ -1278,66 +1297,105 @@ create_main (gboolean edit_structure)
   vbox1 = gtk_vbox_new (FALSE, 0);
   gtk_container_add (GTK_CONTAINER (main_window), vbox1);
 
+  /** toolbar widgets **/
   toolbar = gtk_toolbar_new ();
   gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar),
-			       GTK_ORIENTATION_HORIZONTAL);
-
+                               GTK_ORIENTATION_HORIZONTAL);
+  tooltips = gtk_tooltips_new();
+  
   gtk_box_pack_start (GTK_BOX (vbox1), toolbar, FALSE, FALSE, 0);
 
-  btnNew = gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_NEW,
-			    _("Tap this button to add a new contact."), NULL,
-			    G_CALLBACK (new_contact), NULL, -1);
+  /* new button */
+  btnNew = gtk_tool_button_new_from_stock(GTK_STOCK_NEW);
+  gtk_tool_item_set_tooltip(btnNew, tooltips, 
+                            _("Tap this button to add a new contact."), NULL);
+  g_signal_connect(G_OBJECT(btnNew), "clicked", G_CALLBACK(new_contact), NULL);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), btnNew, -1);
+  
   g_object_set_data (G_OBJECT (main_window), "new-button", btnNew);
 
-  pw = gtk_image_new_from_pixbuf (gpe_find_icon_scaled ("edit", 
-							gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar))));
-
-  b = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Edit"), 
-			       _("Tap here to edit the selected contact."), NULL,
-			       pw, (GtkSignalFunc) edit_contact, NULL);
+  /* edit button */
+  b = gtk_tool_button_new_from_stock(GTK_STOCK_EDIT);
+  gtk_tool_item_set_tooltip(b, tooltips, 
+                            _("Tap here to edit the selected contact."), NULL);
+  g_signal_connect(G_OBJECT(b), "clicked", G_CALLBACK(edit_contact), NULL);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), b, -1);
+  
   g_object_set_data (G_OBJECT (main_window), "edit-button", b);
-  gtk_widget_set_sensitive (b, FALSE);
+  gtk_widget_set_sensitive (GTK_WIDGET(b), FALSE);
 
-  b = gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_DELETE,
-				_("Tap here to delete the selected contact."), NULL,
-				G_CALLBACK (delete_contact), NULL, -1);
+  /* delete button */
+  b = gtk_tool_button_new_from_stock(GTK_STOCK_DELETE);
+  gtk_tool_item_set_tooltip(b, tooltips, 
+                            _("Tap here to delete the selected contact."), NULL);
+  g_signal_connect(G_OBJECT(b), "clicked", G_CALLBACK(delete_contact), NULL);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), b, -1);
+  
   g_object_set_data (G_OBJECT (main_window), "delete-button", b);
-  gtk_widget_set_sensitive (b, FALSE);
+  gtk_widget_set_sensitive (GTK_WIDGET(b), FALSE);
 
-  if (!mode_landscape)
+  /* separator */
+  b = gtk_separator_tool_item_new();
+  gtk_separator_tool_item_set_draw(GTK_SEPARATOR_TOOL_ITEM(b), TRUE);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), b, -1);
+
+  /* 
+    In portrait screen layout we add a button for the details dialog.
+    If the display is landscape add additional find button. 
+   */
+  if (mode_landscape)
     {
-      pw = gtk_image_new_from_stock (GTK_STOCK_INDEX,
-                                     gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
-      btnDetails = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Details"), 
-                                      _("Tap here to show contacts details."), 
-                                      NULL, pw, G_CALLBACK (show_details_window), NULL);
-      g_object_set_data (G_OBJECT (main_window), "details-button", btnDetails);
+      b = gtk_tool_button_new_from_stock(GTK_STOCK_FIND);
+      gtk_tool_item_set_tooltip(b, tooltips, 
+                                _("Find a contact by searching for any data."), NULL);
+      g_signal_connect(G_OBJECT(b), "clicked", G_CALLBACK(do_find), NULL);
+      gtk_toolbar_insert(GTK_TOOLBAR(toolbar), b, -1);
     }
   else
     {
-      gtk_toolbar_append_space(GTK_TOOLBAR(toolbar));
+      pw = gtk_image_new_from_stock (GTK_STOCK_INDEX,
+                                     gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
+      b = gtk_tool_button_new(pw, _("Details"));
+      gtk_tool_item_set_tooltip(b, tooltips, 
+                                _("Tap here to show contacts details."), NULL);
+      g_signal_connect(G_OBJECT(b), "clicked", G_CALLBACK(show_details_window), NULL);
+      gtk_toolbar_insert(GTK_TOOLBAR(toolbar), b, -1);
     
-      b = gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_FIND,
-				_("Find a contact by searching for any data."), NULL,
-				G_CALLBACK (do_find), NULL, -1);
+      g_object_set_data (G_OBJECT (main_window), "details-button", b);
     }
   
-  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_PROPERTIES,
-			    _("Properties"), _("Tap here to configure this program."),
-  			    G_CALLBACK (configure), (gpointer)edit_structure, -1);
-				
-  pw = gtk_image_new_from_stock(GTK_STOCK_OPEN, 
-                                gtk_toolbar_get_icon_size(GTK_TOOLBAR (toolbar)));
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
-			    _("Import"), _("Open file to import a contact from it."), 
-                NULL, pw, G_CALLBACK (on_import_vcard), NULL);
-    
-  gtk_toolbar_append_space(GTK_TOOLBAR(toolbar));
+  /* application properties button */
+  b = gtk_tool_button_new_from_stock(GTK_STOCK_PROPERTIES);
+  gtk_tool_item_set_tooltip(b, tooltips, 
+                            _("Tap here to configure this program."), NULL);
+  g_signal_connect(G_OBJECT(b), "clicked", G_CALLBACK(configure),
+                   (gpointer)edit_structure);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), b, -1);
 
-  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_QUIT,
-			    _("Close"), _("Tap here to exit gpe-contacts."),
-			    G_CALLBACK (gtk_main_quit), NULL, -1);
+  /* import button */
+  pw = gtk_image_new_from_stock (GTK_STOCK_OPEN,
+                                 gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
+  b = gtk_tool_button_new(pw, _("Import"));
+  gtk_tool_item_set_tooltip(b, tooltips, 
+                            _("Open file to import a contact from it."), NULL);
+  g_signal_connect(G_OBJECT(b), "clicked", G_CALLBACK(on_import_vcard), NULL);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), b, -1);
 
+  /* another separator */
+  b = gtk_separator_tool_item_new();
+  gtk_separator_tool_item_set_draw(GTK_SEPARATOR_TOOL_ITEM(b), FALSE);
+  gtk_tool_item_set_expand(b, TRUE);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), b, -1);
+
+  /* quit button */
+  b = gtk_tool_button_new_from_stock(GTK_STOCK_QUIT);
+  gtk_tool_item_set_tooltip(b, tooltips, 
+                            _("Tap here to exit gpe-contacts."), NULL);
+  g_signal_connect(G_OBJECT(b), "clicked", G_CALLBACK(gtk_main_quit), NULL);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), b, -1);
+
+
+  /** contacts list **/
   scrolled_window = gtk_scrolled_window_new (NULL, NULL);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window), 
 				  GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
@@ -1389,12 +1447,15 @@ create_main (gboolean edit_structure)
     }
   gtk_box_pack_start (GTK_BOX (vbox1), hbox3, FALSE, FALSE, 0);
 
+  /** status label on larger screens **/
   if (mode_large_screen)
     {
       lStatus = gtk_label_new (NULL);
       gtk_misc_set_alignment(GTK_MISC(lStatus), 1.0, 0.5);
       gtk_box_pack_end (GTK_BOX (hbox3), lStatus, FALSE, FALSE, 3);
     }
+    
+  /** find and categories section **/
   label83 = gtk_label_new (_("Find:"));
   gtk_box_pack_start (GTK_BOX (hbox3), label83, FALSE, FALSE, 0);
 
@@ -1423,18 +1484,21 @@ create_main (gboolean edit_structure)
     g_signal_connect (G_OBJECT (list_view), "cursor-changed", 
 		    G_CALLBACK (list_view_cursor_changed), lStatus);
 
-  gtk_widget_set_events (main_window,GDK_KEY_PRESS_MASK);
-  gtk_widget_set_events (entry1,GDK_KEY_PRESS_MASK);
+  /* set masks and tie up key events for keyboard control */
+  gtk_widget_set_events (main_window, GDK_KEY_PRESS_MASK);
+  gtk_widget_set_events (entry1, GDK_KEY_PRESS_MASK);
   g_signal_connect (G_OBJECT (main_window), "key_press_event", 
-		    G_CALLBACK (window_key_press_event), list_view);
+                    G_CALLBACK (window_key_press_event), list_view);
 
   g_signal_connect (G_OBJECT (toolbar), "key_press_event", 
-		    G_CALLBACK (toolbar_key_press_event), NULL);
+                    G_CALLBACK (toolbar_key_press_event), NULL);
   g_signal_connect (G_OBJECT (entry1), "key_press_event", 
-		    G_CALLBACK (search_entry_key_press_event), btnNew);
+                    G_CALLBACK (search_entry_key_press_event), btnNew);
             
   search_entry = entry1;
 
+  
+  /** detail section **/
   pDetail = gtk_frame_new (_("Contact"));
   
   if (mode_landscape)

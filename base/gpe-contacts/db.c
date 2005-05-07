@@ -437,21 +437,21 @@ db_get_entries_finddlg (const gchar *str, const gchar *cat)
 
   if (has_cat && has_str) 
     {
-      r = sqlite_exec_printf (db, "select contacts_urn.urn, contacts_urn.name, contacts_urn.family_name, contacts_urn.company "\
+      r = sqlite_exec_printf (db, "select distinct contacts_urn.urn, contacts_urn.name, contacts_urn.family_name, contacts_urn.company "\
                                    "from contacts_urn, contacts where (contacts_urn.urn = contacts.urn) and (contacts.tag = 'CATEGORY') "\
                                    "and contacts.value = '%q' and contacts.urn in (select distinct urn from contacts where value like '%%%q%%');",
                               read_one_entry, &list, &err, cat, str);
     } 
   else if (has_cat)
     {
-      r = sqlite_exec_printf (db, "select contacts_urn.urn, contacts_urn.name, contacts_urn.family_name, contacts_urn.company "\
+      r = sqlite_exec_printf (db, "select distinct contacts_urn.urn, contacts_urn.name, contacts_urn.family_name, contacts_urn.company "\
                                    "from contacts_urn, contacts where (contacts_urn.urn = contacts.urn) and (contacts.tag = 'CATEGORY') "\
                                    "and contacts.value = '%q'",
                               read_one_entry, &list, &err, cat);
     }
   else
     {
-      r = sqlite_exec_printf (db, "select contacts_urn.urn, contacts_urn.name, contacts_urn.family_name, contacts_urn.company "\
+      r = sqlite_exec_printf (db, "select distinct contacts_urn.urn, contacts_urn.name, contacts_urn.family_name, contacts_urn.company "\
                                    "from contacts_urn, contacts where (contacts_urn.urn = contacts.urn) "\
                                    "and contacts.urn in (select distinct urn from contacts where value like '%%%q%%');",
                               read_one_entry, &list, &err, str);
@@ -533,7 +533,7 @@ error:
   return FALSE;
 }
 
-struct tag_value *
+inline struct tag_value *
 db_find_tag (struct person *p, gchar * tag)
 {
   struct tag_value *t = NULL;
@@ -544,7 +544,7 @@ db_find_tag (struct person *p, gchar * tag)
   for (iter = p->data; iter; iter = iter->next)
     {
       struct tag_value *id = (struct tag_value *) iter->data;
-      if (!strcasecmp (id->tag, tag))
+      if (!strcmp (id->tag, tag))
        {
          t = id;
          break;
