@@ -1,5 +1,7 @@
 2005-05-08  Florian Boor <florian.boor@kernelconcepts.de>
 
+    * configure.ac: Changed dependecy to GTK 2.6 instaaead of 2.2 because
+                    of GTK_STOCK_EDIT.
     * editing.c (edit_window): Change size a little bit, remove ugly shadow.
     * main.c (create_main): Rewrite toolbar section to use new toolbar API.
                             Add some comments. Improve default window size.
