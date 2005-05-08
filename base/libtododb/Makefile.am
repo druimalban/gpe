@@ -1,3 +1,5 @@
+SUBDIRS = doc
+
 lib_LTLIBRARIES = libtododb.la
 
 INCLUDES = @TODODB_CFLAGS@ -DPACKAGE_LOCALE_DIR=\"@datadir@/locale/@PACKAGE_NAME@\"

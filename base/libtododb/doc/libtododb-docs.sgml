@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
+               "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<book id="index" xmlns:xi="http://www.w3.org/2001/XInclude">
+  <bookinfo>
+
+	  <title>GPE Manual: libtododb Reference</title>
+	
+      <authorgroup>
+      <author>
+        <firstname>Florian</firstname>
+        <surname>Boor</surname>
+        <affiliation>
+          <orgname>handhelds.org</orgname>
+        </affiliation>
+        <authorblurb>
+          <para>
+            <email>florian@handhelds.org</email>
+          </para>
+        </authorblurb>
+      </author>
+    </authorgroup>    
+	<legalnotice>
+      <para>
+        This document may be distributed under the terms and
+        conditions of the Open Publication License, v1.0 or
+        later. (Current version is available at
+		<ulink url=" http://www.opencontent.org/openpub/"
+        type="http">http://www.opencontent.org/openpub/</ulink> )
+      </para>
+    </legalnotice>
+	
+  </bookinfo>
+      <abstract>
+	      <para>
+		  	Libtododb is a API library to task information used by gpe-todo.
+	      </para>
+	  </abstract>
+    <para>
+	   Libtododb offers an API to access ToDo task data like used in gpe-todo.
+	   It is used by gpe-todo itself and should be used from all applications
+	   to read or modify ToDo data.
+    </para>
+  <chapter>
+    <title>Programmers Interface</title>
+    <xi:include href="xml/todo-db.xml"/>
+  </chapter>
+  <chapter>
+    <title>About</title>
+	<itemizedlist mark="bullet">
+       <listitem>
+         <para>
+		   Status: libtodo was developed by Luís Oliveira and Philip Blundell 
+		   and is currently maintained by Philip Blundell (pb@debian.org)
+	     </para>
+	   </listitem>
+       <listitem>
+         <para>
+		   License: LGPL
+	     </para>
+	   </listitem>
+       <listitem>
+         <para>
+		   Version: 0.09
+	     </para>
+	   </listitem>
+	</itemizedlist>
+  </chapter>
+</book>
