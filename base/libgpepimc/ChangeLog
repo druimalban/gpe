@@ -1,3 +1,7 @@
+2005-05-08  Florian Boor  <florian@kernelconcepts.de>
+
+	* doc/tmpl/*.sgml: Improved some documentation.
+
 2005-05-03  Florian Boor  <florian@kernelconcepts.de>
 
 	* db.c: Documented last symbol. 

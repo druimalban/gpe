@@ -1,17 +1,19 @@
 <!-- ##### SECTION Title ##### -->
-pim-categories-ui
+PIM Categories UI
 
 <!-- ##### SECTION Short_Description ##### -->
-
+Category selection and manipulation interface.
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-
+Libgpepimc offers an interface to display a dialog which is used to select
+and/or edit categories. In this way we have an unified category look and feel
+for all applications and a minimum amount of redundant code.
 </para>
 
 <!-- ##### SECTION See_Also ##### -->
 <para>
-
+Used by: gpe-contacts, gpe-todo, gpe-calendar
 </para>
 
 <!-- ##### FUNCTION gpe_pim_categories_dialog ##### -->
@@ -19,9 +21,7 @@ pim-categories-ui
 Creates a dialog to manage categories.
 </para>
 
-@selected_categories: 
-@callback: 
-@data: 
-@Returns: 
-
-
+@selected_categories: List of currently selected categories.
+@callback: Function to call after category selection change.
+@data: Pointer to pass to callback.
+@Returns: Dialog widget.

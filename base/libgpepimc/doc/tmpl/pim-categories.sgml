@@ -1,11 +1,13 @@
 <!-- ##### SECTION Title ##### -->
-pim-categories
+PIM Categories
 
 <!-- ##### SECTION Short_Description ##### -->
-
+API functions for PIM categories.
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
+Set of API functions to handle GPE PIM category data.
+
 NOTE: currently all categories are global.
 </para>
 
@@ -56,5 +58,3 @@ Returns the name of the category with specified @id.
 
 @id: the id of the category
 @Returns: the name of the category
-
-
