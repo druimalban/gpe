@@ -3,6 +3,15 @@
 
 #include <glib.h>
 
+/** 
+ * item_state:
+ * @NOT_STARTED: Indicates a task which isn't started.
+ * @IN_PROGRESS: Task currently in progress.
+ * @COMPLETED: Task is marked as completed.
+ * @ABANDONED: Indicates an abandoned task.
+ *
+ * Type to describe the progress status of a todo item.
+ */
 typedef enum
 {
   NOT_STARTED,
@@ -11,6 +20,21 @@ typedef enum
   ABANDONED
 } item_state;
 
+
+/** 
+ * todo_item:
+ * @id: Unique id.
+ * @pos: Position marker.
+ * @time: Timestamp holding due date.
+ * @what: Item title.
+ * @summary: Item description.
+ * @state: Item status (see #item_state).
+ * @was_complete:
+ * @categories: List of categories the item belongs to.
+ * @priority: Priority information.
+ *
+ * Data type describing a todo item including description and current status.
+ */
 struct todo_item
 {
   int id, pos;
@@ -23,6 +47,21 @@ struct todo_item
   guint priority;
 };
 
+/**
+ * PRIORITY_HIGH: 
+ *
+ * Indicates an item with high priority.
+ */
+/**
+ * PRIORITY_STANDARD: 
+ *
+ * Indicates an item with default priority.
+ */
+/**
+ * PRIORITY_LOW: 
+ *
+ * Indicates a low priority item.
+ */
 #define PRIORITY_HIGH		9
 #define PRIORITY_STANDARD	5
 #define PRIORITY_LOW		0

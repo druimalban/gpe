@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2002, 2003, 2004 Philip Blundell <philb@gnu.org>
+ * Documentation: 2005 Florian Boor <florian@kernelconcepts.de> 
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -30,6 +31,15 @@ static const char *fname = "/.gpe/todo";
 extern gboolean convert_old_db (int oldversion, sqlite *);
 extern void migrate_old_categories (sqlite *db);
 
+/**
+ * todo_db_get_items_list:
+ *
+ * Get a list of all todo items. The returned list points to the internal 
+ * list used by libtododb and doesn't need to be freed. It is a good idea 
+ * to consider it to be read only.
+ *
+ * Returns: List of todo items.
+ */
 GSList *
 todo_db_get_items_list(void)
 {
@@ -103,7 +113,13 @@ dbinfo_callback (void *arg, int argc, char **argv, char **names)
 }
 
 /* --- */
-
+/**
+ * todo_db_start:
+ * 
+ * Initialises libtododb for use.
+ *
+ * Returns: 0 on success, -1 on failure.
+ */
 int
 todo_db_start (void)
 {
@@ -173,6 +189,13 @@ todo_db_start (void)
   return 0;
 }
 
+/**
+ * todo_db_refresh:
+ * 
+ * Update list of todo items from database.
+ *
+ * Returns: 0 on success, -1 on failure.
+ */
 int
 todo_db_refresh (void)
 {
@@ -194,6 +217,11 @@ todo_db_refresh (void)
   return 0;
 }
 
+/**
+ * todo_db_stop:
+ * 
+ * Deinitialises libtododb and frees all its allocated data.
+ */
 void
 todo_db_stop (void)
 {
@@ -298,6 +326,13 @@ converted_item (struct todo_item *i)
   return todo_db_push_item (i);
 }
 
+/**
+ * todo_db_new_item:
+ * 
+ * Create a new todo item and add it to list and database.
+ *
+ * Returns: New todo item.
+ */
 struct todo_item *
 todo_db_new_item (void)
 {
@@ -316,6 +351,12 @@ todo_db_new_item (void)
   return i;
 }
 
+/**
+ * todo_db_destroy_item:
+ * @i: Todo item to destroy.
+ *
+ * Frees a todo list item struct.
+ */
 void
 todo_db_destroy_item (struct todo_item *i)
 {
@@ -325,6 +366,12 @@ todo_db_destroy_item (struct todo_item *i)
   g_free (i);
 }
 
+/**
+ * todo_db_delete_item:
+ * @i: Todo item to delete.
+ * 
+ * Deletes an item from the list and database.
+ */
 void 
 todo_db_delete_item (struct todo_item *i)
 {

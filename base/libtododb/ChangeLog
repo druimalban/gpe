@@ -1,5 +1,6 @@
 2005-04-08  Florian Boor <florian@kernelconcepts.de>
 
+	* todo-db.c, todo-db.h: Add documentaion.
 	* doc/Makefile.am, doc/gtk-doc.make, doc/libtododb-docs.sgml:
 	  New files for API documentation support.
 	* configure.ac: Push version to 0.09. Add support for gtk-doc.
