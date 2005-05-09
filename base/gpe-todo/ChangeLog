@@ -1,3 +1,7 @@
+2005-05-10  Florian Boor  <florian.boor@kernelconcepts.de>
+
+	* main.c: Remove unused icons.
+
 2005-05-04  Phil Blundell  <pb@reciva.com>
 
 	* Makefile.am: Include gpe-tp.am.

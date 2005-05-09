@@ -23,8 +23,6 @@
 #define MY_PIXMAPS_DIR PREFIX "/share/gpe-todo"
 
 static struct gpe_icon my_icons[] = {
-  { "hide" },
-  { "clean" },
   { "icon", PREFIX "/share/pixmaps/gpe-todo.png" },
   { "tick-box", MY_PIXMAPS_DIR "/tick-box.png" },
   { "notick-box", MY_PIXMAPS_DIR "/notick-box.png" },
