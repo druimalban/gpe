@@ -64,8 +64,6 @@ gboolean do_wrap = FALSE;
 #define LARGE_STRUCTURE PREFIX "/share/gpe-contacts/default-layout-bigscreen.xml"
 
 struct gpe_icon my_icons[] = {
-  {"delete"},
-  {"cancel"},
   {"frame", MY_PIXMAPS_DIR "frame"},
   {"notebook", MY_PIXMAPS_DIR "notebook"},
   {"entry", MY_PIXMAPS_DIR "entry"},
