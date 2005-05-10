@@ -1,3 +1,8 @@
+
+2005-05-11  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * pixmaps/dot-box.png: Change colour to yellow. 
+
 2005-05-10  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * configure.ac: Version to 0.53.
