@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2002, 2003, 2004 Philip Blundell <philb@gnu.org>
+ *               2005             Florian Boor <florian@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -148,12 +149,6 @@ click_ok (GtkWidget *widget,
 }
 
 struct menu_map
-{
-  gchar *string;
-  gint value;
-};
-
-struct menu_map
 state_map[] =
   {
     { N_("Not started"),	NOT_STARTED },
@@ -289,10 +284,10 @@ edit_item (struct todo_item *item, gint initial_category, GtkWindow *parent)
     {
       gtk_window_set_type_hint(GTK_WINDOW(window),
                                GDK_WINDOW_TYPE_HINT_DIALOG);
+      gtk_window_set_transient_for(GTK_WINDOW(window), parent);
+      gtk_window_set_modal(GTK_WINDOW(window), TRUE);
     }
     
-  gtk_window_set_transient_for(GTK_WINDOW(window), parent);
-  gtk_window_set_modal(GTK_WINDOW(window), TRUE);
   gtk_container_set_border_width (GTK_CONTAINER (window),
                                   gpe_get_border ());
   

@@ -1,6 +1,16 @@
 2005-05-10  Florian Boor  <florian.boor@kernelconcepts.de>
 
-	* main.c: Remove unused icons.
+    * configure.ac: Version to 0.53.
+    * todo-ui.c, todo.h: Moved some declarations to header, we use it in 
+                         list-ui.c too.
+                         Fixed window type for small screens.
+    * todo.h: Declare new columns.
+    * list-ui.c: Add written priority column in large screen mode.
+                 Surpress creating of useless cell renderes in small screen mode.
+                 Replaced colours by a priority marker.
+    * main.c, pixmaps/flag-16.png: Add new pixmap (from OpenOffice, LGPL).
+    * *.png, Makefile.am: Move pixmaps to pixmaps directory.
+    
 
 2005-05-04  Phil Blundell  <pb@reciva.com>
 

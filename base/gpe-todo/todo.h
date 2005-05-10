@@ -39,6 +39,16 @@ enum
     COL_DUE,
     COL_CATEGORY,
     COL_PRIORITY,
+    COL_PRIORITY_TEXT,
     NUM_COLUMNS
 };
+
+struct menu_map
+{
+  gchar *string;
+  gint value;
+};
+
+extern struct menu_map state_map[];
+
 #endif

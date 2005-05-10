@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2002, 2003, 2004 Philip Blundell <philb@gnu.org>
+ *               2005             Florian Boor <florian@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -23,11 +24,6 @@
 
 #include "todo.h"
 
-#define COLOR_NONE      "#FFFFFF"
-#define COLOR_STANDARD  "#00EE00"
-#define COLOR_HIGH      "#FF0000"
-#define COLOR_LOW       "#0000FF"
-
 #define _(_x) gettext(_x)
 
 static GtkWidget *g_option;
@@ -37,7 +33,7 @@ static gboolean show_completed_tasks = TRUE;
 GtkListStore *list_store;
 GtkWidget *item_menu;
 
-GdkPixbuf *tick_icon, *no_tick_icon, *bar_icon, *dot_icon;
+GdkPixbuf *tick_icon, *no_tick_icon, *bar_icon, *dot_icon, *high_icon;
 
 static struct todo_item *current_menu_item;
 extern GtkWidget *window;
@@ -220,10 +216,11 @@ toggle_completed (GtkTreePath *path)
   GtkTreeIter iter;
   struct todo_item *i;
   gboolean complete;
-  gchar *priority, time[20] = {0};
+  gchar time[20] = {0};
   struct tm *ti;
   GdkPixbuf *sicon;
-	  
+  GdkPixbuf *priority;
+
   gtk_tree_model_get_iter (GTK_TREE_MODEL (list_store), &iter, path);
 
   gtk_tree_model_get (GTK_TREE_MODEL (list_store), &iter, COL_DATA, &i, -1);
@@ -249,17 +246,11 @@ toggle_completed (GtkTreePath *path)
 
   switch (i->priority)
     {
-    case PRIORITY_STANDARD:
-        priority = COLOR_STANDARD;
-    break;
     case PRIORITY_HIGH:
-        priority = COLOR_HIGH;
-    break;
-    case PRIORITY_LOW:
-        priority = COLOR_LOW;
+        priority = high_icon;
     break;
     default:
-        priority = COLOR_NONE;
+        priority = NULL;
     break;
     }
 	if (i->time)
@@ -277,6 +268,7 @@ toggle_completed (GtkTreePath *path)
                            COL_STRIKETHROUGH, complete, 
                            COL_DATA, i,
                            COL_PRIORITY, priority,
+                           COL_PRIORITY_TEXT, state_map[i->state].string,
                            COL_DUE, time,
                            -1);
     }
@@ -347,22 +339,17 @@ refresh_items (void)
         {
           GtkTreeIter iter;
           gboolean complete;
-          gchar *priority, time[20] = {0};
+          gchar time[20] = {0};
+          GdkPixbuf *priority;
           struct tm *ti;
               
           switch (i->priority)
             {
-            case PRIORITY_STANDARD:
-                priority = COLOR_STANDARD;
-            break;
             case PRIORITY_HIGH:
-                priority = COLOR_HIGH;
-            break;
-            case PRIORITY_LOW:
-                priority = COLOR_LOW;
+                priority = high_icon;
             break;
             default:
-                priority = COLOR_NONE;
+                priority = NULL;
             break;
             }
             
@@ -403,6 +390,7 @@ refresh_items (void)
                               COL_STRIKETHROUGH, complete, 
                               COL_DATA, i,
                               COL_PRIORITY, priority,
+                              COL_PRIORITY_TEXT, state_map[i->state].string,
                               COL_DUE, time,
                               COL_CATEGORY, categories,
                               -1);
@@ -500,6 +488,7 @@ top_level (GtkWidget *window)
   tick_icon = gpe_find_icon ("tick-box");
   bar_icon = gpe_find_icon ("bar-box");
   dot_icon = gpe_find_icon ("dot-box");
+  high_icon = gpe_find_icon ("high");
 
   g_option = option;
   categories_menu ();
@@ -566,6 +555,7 @@ top_level (GtkWidget *window)
                                    G_TYPE_STRING, 
                                    G_TYPE_STRING, 
                                    G_TYPE_STRING, 
+                                   GDK_TYPE_PIXBUF,
                                    G_TYPE_STRING);
   list_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (list_store));
 
@@ -573,20 +563,27 @@ top_level (GtkWidget *window)
     GtkCellRenderer *renderer;
     GtkTreeViewColumn *col;
 
-    renderer = gtk_cell_renderer_text_new ();
-    col = gtk_tree_view_column_new_with_attributes (_("P"), renderer,
-                                                    "cell-background", COL_PRIORITY,
-	                                                "strikethrough", COL_STRIKETHROUGH,
-                                                     NULL);
+    renderer = gtk_cell_renderer_pixbuf_new ();
+    col = gtk_tree_view_column_new_with_attributes ("", renderer,
+                                                    "pixbuf", COL_PRIORITY,
+                                                    NULL);
     gtk_tree_view_insert_column (GTK_TREE_VIEW (list_view), col, -1);
 
     renderer = gtk_cell_renderer_pixbuf_new ();
-    col = gtk_tree_view_column_new_with_attributes (_("Status"), renderer,
+    col = gtk_tree_view_column_new_with_attributes (_("State"), renderer,
                                                     "pixbuf", COL_ICON, NULL);
     gtk_tree_view_insert_column (GTK_TREE_VIEW (list_view), col, -1);
 
     g_object_set_data (G_OBJECT (list_view), "pixmap-column", col);
 
+   if (large_screen)
+      {
+        renderer = gtk_cell_renderer_text_new ();
+        col = gtk_tree_view_column_new_with_attributes (_("Priority"), renderer,
+                                                        "text", COL_PRIORITY_TEXT,
+                                                        "strikethrough", COL_STRIKETHROUGH, NULL);
+        gtk_tree_view_insert_column (GTK_TREE_VIEW (list_view), col, -1);
+      }
     renderer = gtk_cell_renderer_text_new ();
     col = gtk_tree_view_column_new_with_attributes (_("Summary"), renderer,
                                                     "text", COL_SUMMARY,
@@ -594,18 +591,20 @@ top_level (GtkWidget *window)
     gtk_tree_view_column_set_expand(col, TRUE);
     gtk_tree_view_insert_column (GTK_TREE_VIEW (list_view), col, -1);
 	
-    renderer = gtk_cell_renderer_text_new ();
-    col = gtk_tree_view_column_new_with_attributes (_("Category"), renderer,
-                                                    "text", COL_CATEGORY,
-                                                    "strikethrough", COL_STRIKETHROUGH, NULL);
-    gtk_tree_view_insert_column (GTK_TREE_VIEW (list_view), col, -1);
-	
-    renderer = gtk_cell_renderer_text_new ();
-    col = gtk_tree_view_column_new_with_attributes (_("Due Date"), renderer,
-                                                    "text", COL_DUE,
-                                                    "strikethrough", COL_STRIKETHROUGH, NULL);
-    gtk_tree_view_insert_column (GTK_TREE_VIEW (list_view), col, -1);
-    
+    if (large_screen)
+      {
+        renderer = gtk_cell_renderer_text_new ();
+        col = gtk_tree_view_column_new_with_attributes (_("Category"), renderer,
+                                                        "text", COL_CATEGORY,
+                                                        "strikethrough", COL_STRIKETHROUGH, NULL);
+        gtk_tree_view_insert_column (GTK_TREE_VIEW (list_view), col, -1);
+        
+        renderer = gtk_cell_renderer_text_new ();
+        col = gtk_tree_view_column_new_with_attributes (_("Due Date"), renderer,
+                                                        "text", COL_DUE,
+                                                        "strikethrough", COL_STRIKETHROUGH, NULL);
+        gtk_tree_view_insert_column (GTK_TREE_VIEW (list_view), col, -1);
+      }
     gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (list_view), TRUE);
     gtk_tree_view_set_reorderable (GTK_TREE_VIEW (list_view), FALSE);
   }

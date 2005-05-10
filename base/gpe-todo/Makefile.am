@@ -19,13 +19,14 @@ desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
 
 pixmapsdir = $(datadir)/gpe-todo
 
-pixmaps_DATA = bar-box.png \
-               dot-box.png \
-               notick-box.png \
-               tick-box.png
+pixmaps_DATA = pixmaps/bar-box.png \
+               pixmaps/dot-box.png \
+               pixmaps/notick-box.png \
+               pixmaps/tick-box.png \
+               pixmaps/flag-16.png
 
 pixmaps_extradir = $(datadir)/pixmaps
-pixmaps_extra_DATA = gpe-todo.png
+pixmaps_extra_DATA = pixmaps/gpe-todo.png
 
 
 EXTRA_DIST = $(desktop_DATA) \
@@ -48,4 +49,3 @@ clean-local:
 
 include gpe-dist.am
 include gpe-tp.am
-
