@@ -567,11 +567,14 @@ top_level (GtkWidget *window)
     col = gtk_tree_view_column_new_with_attributes ("", renderer,
                                                     "pixbuf", COL_PRIORITY,
                                                     NULL);
+    gtk_tree_view_column_set_min_width(col, 20);
     gtk_tree_view_insert_column (GTK_TREE_VIEW (list_view), col, -1);
 
     renderer = gtk_cell_renderer_pixbuf_new ();
-    col = gtk_tree_view_column_new_with_attributes (_("State"), renderer,
-                                                    "pixbuf", COL_ICON, NULL);
+    col = gtk_tree_view_column_new_with_attributes ("", renderer,
+                                                    "pixbuf", COL_ICON, 
+                                                    NULL);
+    gtk_tree_view_column_set_min_width(col, 20);
     gtk_tree_view_insert_column (GTK_TREE_VIEW (list_view), col, -1);
 
     g_object_set_data (G_OBJECT (list_view), "pixmap-column", col);

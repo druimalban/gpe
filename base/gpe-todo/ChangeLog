@@ -1,6 +1,8 @@
 
 2005-05-11  Florian Boor  <florian.boor@kernelconcepts.de>
 
+    * list-ui.c: Avoid wasting space in the first two columns of the list.
+    * pixmaps/dot-box.png: Make it a little bit darker.
     * pixmaps/dot-box.png: Change colour to yellow. 
 
 2005-05-10  Florian Boor  <florian.boor@kernelconcepts.de>
