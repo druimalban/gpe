@@ -1,3 +1,7 @@
+2005-05-11  Florian Boor <florian@kernelconcepts.de>
+
+	* Version 0.09 released.
+
 2005-04-08  Florian Boor <florian@kernelconcepts.de>
 
 	* todo-db.c, todo-db.h: Add documentaion.
