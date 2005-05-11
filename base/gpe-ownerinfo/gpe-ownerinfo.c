@@ -52,7 +52,7 @@ static GtkWidget *address;
 static GdkPixbuf *photopixbuf;
 static GtkWidget *smallphotobutton;
 static GtkWidget *bigphotobutton;
-static gchar *photofile = PREFIX "/share/gpe/pixmaps/default/tux-48.png";
+static gchar *photofile = PREFIX "/share/gpe/pixmaps/gpe-logo.png";
 static PangoLayout *address_layout;
 static guint lost_height;
 static GtkWidget *scrollbar;
@@ -191,6 +191,8 @@ maybe_upgrade_datafile ()
   gint upgrade_result = UPGRADE_ERROR;
   FILE *fp;
 
+  return UPGRADE_NOT_NEEDED;
+	
   fp = fopen (GPE_OWNERINFO_DATA, "r");
   if (fp)
     {
