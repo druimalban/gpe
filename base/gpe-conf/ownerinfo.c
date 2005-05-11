@@ -2,6 +2,7 @@
  * ownerinfo module for gpe-conf
  *
  * Copyright (C) 2002 Colin Marquardt <ipaq@marquardt-home.de>
+ *         2004, 2005 Florian Boor <florian@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -552,7 +553,7 @@ upgrade_to_v2 (guint new_version)
       fputs (firstline, fp);
       fputs ("\n", fp);
 
-      fputs (PREFIX "/share/gpe/pixmaps/default/tux-48.png", fp);
+      fputs (PREFIX "/share/gpe/pixmaps/gpe-logo.png", fp);
       fputs ("\n", fp);
 
       fputs (oldcontent, fp);

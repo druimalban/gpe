@@ -1,3 +1,7 @@
+2005-05-12	Florian Boor <florian.boor@kernelconcepts.de>
+
+	* ownerinfo.c: Change default image in login display to GPE logo.
+
 2005-04-29	Florian Boor <florian.boor@kernelconcepts.de>
 
 	* network.c: Remove feature to hide absent interfaces. Causes too much of
