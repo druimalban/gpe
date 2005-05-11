@@ -4,7 +4,7 @@ PIXMAPS = close.png copy.png cut.png exit.png new.png open.png paste.png save.pn
 AUDIO_PIXMAPS = bass.png cd.png line.png mic.png pcm.png speaker.png synth.png treble.png unkn.png volume.png
 MONOCHROME = no
 CVSBUILD = yes
-VERSION = 0.24
+VERSION = 0.25
 
 PIXMAPS += $(AUDIO_PIXMAPS)
 
