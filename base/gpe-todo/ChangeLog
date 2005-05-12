@@ -1,3 +1,6 @@
+2005-05-12  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * list-ui.c: Move category cell to end.
 
 2005-05-11  Florian Boor  <florian.boor@kernelconcepts.de>
 

@@ -6,7 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-todo 0.32\n"
-"POT-Creation-Date: 2003-02-14 19:50+0000\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2005-05-11 16:39+0200\n"
 "PO-Revision-Date: 2003-03-18 21:07+0000\n"
 "Last-Translator: Luis Oliveira <luismbo@netcabo.pt>\n"
 "Language-Team: Portuguese <translation-team-pt@lists.sourceforge.net>\n"
@@ -14,134 +15,162 @@ msgstr ""
 "Content-Type: text/plain; charset=ISO-8859-15\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: main.c:60
+#: ../gpe-todo.desktop.in.h:1
+#, fuzzy
+msgid "GPE To-do List"
+msgstr "Lista de tarefas"
+
+#: ../gpe-todo.desktop.in.h:2 ../main.c:62
 msgid "To-do list"
 msgstr "Lista de tarefas"
 
-#: todo-ui.c:269
-msgid "Select categories"
-msgstr "Seleccionar categorias"
-
-#: todo-ui.c:291
-msgid "Summary:"
-msgstr "Assunto:"
-
-#: todo-ui.c:292
-msgid "Details"
-msgstr "Detalhes"
-
-#: todo-ui.c:298
-msgid "Not started"
-msgstr "Não iniciada"
-
-#: todo-ui.c:298
-msgid "In progress"
-msgstr "Em curso"
-
-#: todo-ui.c:299
-msgid "Completed"
-msgstr "Concluída"
-
-#: todo-ui.c:321
-msgid "Due:"
-msgstr "Conclusão:"
-
-#: todo-ui.c:336
-msgid "Categories:"
-msgstr "Categorias:"
-
-#: todo-ui.c:429
-msgid "Edit to-do item"
-msgstr "Editar tarefa"
-
-#: todo-ui.c:436
-msgid "New item"
-msgstr "Nova tarefa"
-
-#: list-ui.c:52
+#: ../list-ui.c:113
 msgid "All items"
 msgstr "Todas as tarefas"
 
-#: list-ui.c:81
-msgid "Permanently delete all completed items?"
-msgstr "Deseja eliminar permanentemente todas as tarefas concluídas?"
+#: ../list-ui.c:140
+#, fuzzy
+msgid "Show completed"
+msgstr "Concluída"
 
-#: list-ui.c:81
-msgid "Confirm"
-msgstr "Confirmar"
+#: ../list-ui.c:585
+msgid "Priority"
+msgstr ""
 
-#: list-ui.c:82 configure.c:217
-msgid "Delete"
-msgstr "Eliminar"
+#: ../list-ui.c:591
+#, fuzzy
+msgid "Summary"
+msgstr "Assunto:"
 
-#: list-ui.c:82
-msgid "Cancel"
-msgstr "Cancelar"
-
-#: list-ui.c:333 configure.c:210
-msgid "New"
-msgstr "Nova"
-
-#: list-ui.c:334 list-ui.c:335
-msgid "Add a new item"
-msgstr "Adicionar uma nova tarefa"
-
-#: list-ui.c:340
-msgid "Configure"
-msgstr "Configurar"
-
-#: list-ui.c:341 list-ui.c:342
-msgid "Configure categories"
-msgstr "Configurar categorias"
-
-#: list-ui.c:347
-msgid "Purge"
-msgstr "Eliminar"
-
-#: list-ui.c:348 list-ui.c:349
-msgid "Purge completed items"
-msgstr "Eliminar tarefas concluídas"
-
-#: list-ui.c:354
-msgid "Re-sort"
-msgstr "Re-ordenar"
-
-#: list-ui.c:355 list-ui.c:356
-msgid "Move completed items to the end of the list"
-msgstr "Mover tarefas concluídas para o final da lista"
-
-#: list-ui.c:361
-msgid "Exit"
-msgstr "Sair"
-
-#: list-ui.c:362 list-ui.c:363
-msgid "Exit the program"
-msgstr "Sair do programa"
-
-#: configure.c:58
-msgid "Category name must not be blank"
-msgstr "O nome da categoria não pode estar em branco"
-
-#: configure.c:68
-msgid "A category by that name already exists"
-msgstr "Já existe uma categoria com esse nome"
-
-#: configure.c:106
-msgid "To-do list: Categories"
-msgstr "Lista de tarefas: Categorias"
-
-#: configure.c:139
-msgid "New category"
-msgstr "Nova categoria"
-
-#: configure.c:172
-msgid "Categories"
+#: ../list-ui.c:600
+#, fuzzy
+msgid "Category"
 msgstr "Categorias"
 
-#: configure.c:211 configure.c:212
-msgid "Create a new category"
-msgstr "Criar nova categoria"
+#: ../list-ui.c:606
+msgid "Due Date"
+msgstr ""
 
-#: configure.c:218 configure.c:219
-msgid "Delete the selected category"
-msgstr "Eliminar a categoria seleccionada"
+#: ../todo-ui.c:154
+msgid "Not started"
+msgstr "Não iniciada"
+
+#: ../todo-ui.c:155
+msgid "In progress"
+msgstr "Em curso"
+
+#: ../todo-ui.c:156
+msgid "Completed"
+msgstr "Concluída"
+
+#: ../todo-ui.c:157
+msgid "Abandoned"
+msgstr ""
+
+#: ../todo-ui.c:163
+msgid "High"
+msgstr ""
+
+#: ../todo-ui.c:164
+msgid "Standard"
+msgstr ""
+
+#: ../todo-ui.c:165
+msgid "Low"
+msgstr ""
+
+#: ../todo-ui.c:259
+msgid "Priority:"
+msgstr ""
+
+#: ../todo-ui.c:261
+msgid "Status:"
+msgstr ""
+
+#: ../todo-ui.c:264
+msgid "Summary:"
+msgstr "Assunto:"
+
+#: ../todo-ui.c:265
+#, fuzzy
+msgid "Details:"
+msgstr "Detalhes"
+
+#: ../todo-ui.c:269
+msgid "Categories:"
+msgstr "Categorias:"
+
+#: ../todo-ui.c:339
+msgid "Due:"
+msgstr "Conclusão:"
+
+#: ../todo-ui.c:477
+msgid "Edit to-do item"
+msgstr "Editar tarefa"
+
+#: ../todo-ui.c:486
+msgid "New item"
+msgstr "Nova tarefa"
+
+#~ msgid "Select categories"
+#~ msgstr "Seleccionar categorias"
+
+#~ msgid "Permanently delete all completed items?"
+#~ msgstr "Deseja eliminar permanentemente todas as tarefas concluídas?"
+
+#~ msgid "Confirm"
+#~ msgstr "Confirmar"
+
+#~ msgid "Delete"
+#~ msgstr "Eliminar"
+
+#~ msgid "Cancel"
+#~ msgstr "Cancelar"
+
+#~ msgid "New"
+#~ msgstr "Nova"
+
+#~ msgid "Add a new item"
+#~ msgstr "Adicionar uma nova tarefa"
+
+#~ msgid "Configure"
+#~ msgstr "Configurar"
+
+#~ msgid "Configure categories"
+#~ msgstr "Configurar categorias"
+
+#~ msgid "Purge"
+#~ msgstr "Eliminar"
+
+#~ msgid "Purge completed items"
+#~ msgstr "Eliminar tarefas concluídas"
+
+#~ msgid "Re-sort"
+#~ msgstr "Re-ordenar"
+
+#~ msgid "Move completed items to the end of the list"
+#~ msgstr "Mover tarefas concluídas para o final da lista"
+
+#~ msgid "Exit"
+#~ msgstr "Sair"
+
+#~ msgid "Exit the program"
+#~ msgstr "Sair do programa"
+
+#~ msgid "Category name must not be blank"
+#~ msgstr "O nome da categoria não pode estar em branco"
+
+#~ msgid "A category by that name already exists"
+#~ msgstr "Já existe uma categoria com esse nome"
+
+#~ msgid "To-do list: Categories"
+#~ msgstr "Lista de tarefas: Categorias"
+
+#~ msgid "New category"
+#~ msgstr "Nova categoria"
+
+#~ msgid "Create a new category"
+#~ msgstr "Criar nova categoria"
+
+#~ msgid "Delete the selected category"
+#~ msgstr "Eliminar a categoria seleccionada"

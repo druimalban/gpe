@@ -597,16 +597,15 @@ top_level (GtkWidget *window)
     if (large_screen)
       {
         renderer = gtk_cell_renderer_text_new ();
-        col = gtk_tree_view_column_new_with_attributes (_("Category"), renderer,
-                                                        "text", COL_CATEGORY,
-                                                        "strikethrough", COL_STRIKETHROUGH, NULL);
-        gtk_tree_view_insert_column (GTK_TREE_VIEW (list_view), col, -1);
-        
-        renderer = gtk_cell_renderer_text_new ();
         col = gtk_tree_view_column_new_with_attributes (_("Due Date"), renderer,
                                                         "text", COL_DUE,
                                                         "strikethrough", COL_STRIKETHROUGH, NULL);
         gtk_tree_view_insert_column (GTK_TREE_VIEW (list_view), col, -1);
+        renderer = gtk_cell_renderer_text_new ();
+        col = gtk_tree_view_column_new_with_attributes (_("Category"), renderer,
+                                                        "text", COL_CATEGORY,
+                                                        "strikethrough", COL_STRIKETHROUGH, NULL);
+        gtk_tree_view_insert_column (GTK_TREE_VIEW (list_view), col, -1);        
       }
     gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (list_view), TRUE);
     gtk_tree_view_set_reorderable (GTK_TREE_VIEW (list_view), FALSE);

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-04-15 21:01+0200\n"
+"POT-Creation-Date: 2005-05-11 16:39+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,94 +20,90 @@ msgstr ""
 msgid "GPE To-do List"
 msgstr ""
 
-#: ../gpe-todo.desktop.in.h:2 ../main.c:63
+#: ../gpe-todo.desktop.in.h:2 ../main.c:62
 msgid "To-do list"
 msgstr ""
 
-#: ../list-ui.c:117
+#: ../list-ui.c:113
 msgid "All items"
 msgstr ""
 
-#: ../list-ui.c:144
+#: ../list-ui.c:140
 msgid "Show completed"
 msgstr ""
 
-#: ../list-ui.c:577
-msgid "P"
-msgstr ""
-
-#: ../list-ui.c:584
-msgid "Status"
+#: ../list-ui.c:585
+msgid "Priority"
 msgstr ""
 
 #: ../list-ui.c:591
 msgid "Summary"
 msgstr ""
 
-#: ../list-ui.c:598
+#: ../list-ui.c:600
 msgid "Category"
 msgstr ""
 
-#: ../list-ui.c:604
+#: ../list-ui.c:606
 msgid "Due Date"
 msgstr ""
 
-#: ../todo-ui.c:159
+#: ../todo-ui.c:154
 msgid "Not started"
 msgstr ""
 
-#: ../todo-ui.c:160
+#: ../todo-ui.c:155
 msgid "In progress"
 msgstr ""
 
-#: ../todo-ui.c:161
+#: ../todo-ui.c:156
 msgid "Completed"
 msgstr ""
 
-#: ../todo-ui.c:162
+#: ../todo-ui.c:157
 msgid "Abandoned"
 msgstr ""
 
-#: ../todo-ui.c:168
+#: ../todo-ui.c:163
 msgid "High"
 msgstr ""
 
-#: ../todo-ui.c:169
+#: ../todo-ui.c:164
 msgid "Standard"
 msgstr ""
 
-#: ../todo-ui.c:170
+#: ../todo-ui.c:165
 msgid "Low"
 msgstr ""
 
-#: ../todo-ui.c:264
+#: ../todo-ui.c:259
 msgid "Priority:"
 msgstr ""
 
-#: ../todo-ui.c:266
+#: ../todo-ui.c:261
 msgid "Status:"
 msgstr ""
 
-#: ../todo-ui.c:269
+#: ../todo-ui.c:264
 msgid "Summary:"
 msgstr ""
 
-#: ../todo-ui.c:270
+#: ../todo-ui.c:265
 msgid "Details:"
 msgstr ""
 
-#: ../todo-ui.c:274
+#: ../todo-ui.c:269
 msgid "Categories:"
 msgstr ""
 
-#: ../todo-ui.c:344
+#: ../todo-ui.c:339
 msgid "Due:"
 msgstr ""
 
-#: ../todo-ui.c:482
+#: ../todo-ui.c:477
 msgid "Edit to-do item"
 msgstr ""
 
-#: ../todo-ui.c:491
+#: ../todo-ui.c:486
 msgid "New item"
 msgstr ""

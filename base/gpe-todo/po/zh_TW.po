@@ -6,7 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-todo 0.32\n"
-"POT-Creation-Date: 2003-02-14 19:50+0000\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2005-05-11 16:39+0200\n"
 "PO-Revision-Date: 2003-04-14 23:00+0800\n"
 "Last-Translator: Chao-Hsiung Liao <pesder.liao@msa.hinet.net>\n"
 "Language-Team: Chinese (traditional) <zh-l10n@linux.org.tw>\n"
@@ -14,134 +15,162 @@ msgstr ""
 "Content-Type: text/plain; charset=Big5\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: main.c:60
+#: ../gpe-todo.desktop.in.h:1
+#, fuzzy
+msgid "GPE To-do List"
+msgstr "待辦事項清單"
+
+#: ../gpe-todo.desktop.in.h:2 ../main.c:62
 msgid "To-do list"
 msgstr "待辦事項清單"
 
-#: todo-ui.c:269
-msgid "Select categories"
-msgstr "選擇類別"
-
-#: todo-ui.c:291
-msgid "Summary:"
-msgstr "摘要:"
-
-#: todo-ui.c:292
-msgid "Details"
-msgstr "細節"
-
-#: todo-ui.c:298
-msgid "Not started"
-msgstr "尚未開始"
-
-#: todo-ui.c:298
-msgid "In progress"
-msgstr "進行中"
-
-#: todo-ui.c:299
-msgid "Completed"
-msgstr "已完成"
-
-#: todo-ui.c:321
-msgid "Due:"
-msgstr "期限:"
-
-#: todo-ui.c:336
-msgid "Categories:"
-msgstr "類別:"
-
-#: todo-ui.c:429
-msgid "Edit to-do item"
-msgstr "編輯待辦事項項目"
-
-#: todo-ui.c:436
-msgid "New item"
-msgstr "新增項目"
-
-#: list-ui.c:52
+#: ../list-ui.c:113
 msgid "All items"
 msgstr "所有項目"
 
-#: list-ui.c:81
-msgid "Permanently delete all completed items?"
-msgstr "永遠刪除所有已完成的項目？"
+#: ../list-ui.c:140
+#, fuzzy
+msgid "Show completed"
+msgstr "已完成"
 
-#: list-ui.c:81
-msgid "Confirm"
-msgstr "確認"
+#: ../list-ui.c:585
+msgid "Priority"
+msgstr ""
 
-#: list-ui.c:82 configure.c:217
-msgid "Delete"
-msgstr "刪除"
+#: ../list-ui.c:591
+#, fuzzy
+msgid "Summary"
+msgstr "摘要:"
 
-#: list-ui.c:82
-msgid "Cancel"
-msgstr "取消"
-
-#: list-ui.c:333 configure.c:210
-msgid "New"
-msgstr "新增"
-
-#: list-ui.c:334 list-ui.c:335
-msgid "Add a new item"
-msgstr "加入一個新項目"
-
-#: list-ui.c:340
-msgid "Configure"
-msgstr "設定"
-
-#: list-ui.c:341 list-ui.c:342
-msgid "Configure categories"
-msgstr "設定類別"
-
-#: list-ui.c:347
-msgid "Purge"
-msgstr "清除"
-
-#: list-ui.c:348 list-ui.c:349
-msgid "Purge completed items"
-msgstr "清除已完成的項目"
-
-#: list-ui.c:354
-msgid "Re-sort"
-msgstr "重新排序"
-
-#: list-ui.c:355 list-ui.c:356
-msgid "Move completed items to the end of the list"
-msgstr "將已完成的項目移至清單結尾"
-
-#: list-ui.c:361
-msgid "Exit"
-msgstr "離開"
-
-#: list-ui.c:362 list-ui.c:363
-msgid "Exit the program"
-msgstr "離開本程式"
-
-#: configure.c:58
-msgid "Category name must not be blank"
-msgstr "類別名稱一定不能留空"
-
-#: configure.c:68
-msgid "A category by that name already exists"
-msgstr "已存在以此為名的類別"
-
-#: configure.c:106
-msgid "To-do list: Categories"
-msgstr "待辦事項清單：類別"
-
-#: configure.c:139
-msgid "New category"
-msgstr "新增類別"
-
-#: configure.c:172
-msgid "Categories"
+#: ../list-ui.c:600
+#, fuzzy
+msgid "Category"
 msgstr "類別"
 
-#: configure.c:211 configure.c:212
-msgid "Create a new category"
-msgstr "建立一個新類別"
+#: ../list-ui.c:606
+msgid "Due Date"
+msgstr ""
 
-#: configure.c:218 configure.c:219
-msgid "Delete the selected category"
-msgstr "刪除選定的類別"
+#: ../todo-ui.c:154
+msgid "Not started"
+msgstr "尚未開始"
+
+#: ../todo-ui.c:155
+msgid "In progress"
+msgstr "進行中"
+
+#: ../todo-ui.c:156
+msgid "Completed"
+msgstr "已完成"
+
+#: ../todo-ui.c:157
+msgid "Abandoned"
+msgstr ""
+
+#: ../todo-ui.c:163
+msgid "High"
+msgstr ""
+
+#: ../todo-ui.c:164
+msgid "Standard"
+msgstr ""
+
+#: ../todo-ui.c:165
+msgid "Low"
+msgstr ""
+
+#: ../todo-ui.c:259
+msgid "Priority:"
+msgstr ""
+
+#: ../todo-ui.c:261
+msgid "Status:"
+msgstr ""
+
+#: ../todo-ui.c:264
+msgid "Summary:"
+msgstr "摘要:"
+
+#: ../todo-ui.c:265
+#, fuzzy
+msgid "Details:"
+msgstr "細節"
+
+#: ../todo-ui.c:269
+msgid "Categories:"
+msgstr "類別:"
+
+#: ../todo-ui.c:339
+msgid "Due:"
+msgstr "期限:"
+
+#: ../todo-ui.c:477
+msgid "Edit to-do item"
+msgstr "編輯待辦事項項目"
+
+#: ../todo-ui.c:486
+msgid "New item"
+msgstr "新增項目"
+
+#~ msgid "Select categories"
+#~ msgstr "選擇類別"
+
+#~ msgid "Permanently delete all completed items?"
+#~ msgstr "永遠刪除所有已完成的項目？"
+
+#~ msgid "Confirm"
+#~ msgstr "確認"
+
+#~ msgid "Delete"
+#~ msgstr "刪除"
+
+#~ msgid "Cancel"
+#~ msgstr "取消"
+
+#~ msgid "New"
+#~ msgstr "新增"
+
+#~ msgid "Add a new item"
+#~ msgstr "加入一個新項目"
+
+#~ msgid "Configure"
+#~ msgstr "設定"
+
+#~ msgid "Configure categories"
+#~ msgstr "設定類別"
+
+#~ msgid "Purge"
+#~ msgstr "清除"
+
+#~ msgid "Purge completed items"
+#~ msgstr "清除已完成的項目"
+
+#~ msgid "Re-sort"
+#~ msgstr "重新排序"
+
+#~ msgid "Move completed items to the end of the list"
+#~ msgstr "將已完成的項目移至清單結尾"
+
+#~ msgid "Exit"
+#~ msgstr "離開"
+
+#~ msgid "Exit the program"
+#~ msgstr "離開本程式"
+
+#~ msgid "Category name must not be blank"
+#~ msgstr "類別名稱一定不能留空"
+
+#~ msgid "A category by that name already exists"
+#~ msgstr "已存在以此為名的類別"
+
+#~ msgid "To-do list: Categories"
+#~ msgstr "待辦事項清單：類別"
+
+#~ msgid "New category"
+#~ msgstr "新增類別"
+
+#~ msgid "Create a new category"
+#~ msgstr "建立一個新類別"
+
+#~ msgid "Delete the selected category"
+#~ msgstr "刪除選定的類別"
