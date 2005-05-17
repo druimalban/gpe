@@ -28,17 +28,9 @@ gchar*
 change_scale_label (GtkScale *scale, gdouble val)
 {
   int min; 
-  int sec;
+  int sec = (int)val;
   gchar* buf;
 
-/*  if(val > 0.1)
-    sec=1+(int)exp(val/2.8208);// an exponentiel range from 0 to 20 min
-  else
-    sec = 0;
-  if(sec>60)
-    sec = sec - sec % 60;
-	*/
-	sec = val;
   min = sec / 60;
   
   if(min > 0)

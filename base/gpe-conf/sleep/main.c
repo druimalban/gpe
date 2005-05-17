@@ -23,7 +23,7 @@ Sleep_Save ()
   runProg(cmd);
   if(save_ISconf(ISconf, ISconf->confName)) {
     char homeConf[MAXPATHLEN];
-    sprintf(homeConf, "%s/.sleep.conf", getenv("HOME"));
+    sprintf(homeConf, "%s/ipaq-sleep.conf", getenv("HOME"));
     if(!save_ISconf(ISconf, homeConf))
       strcpy(ISconf->confName, homeConf);
   }

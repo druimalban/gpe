@@ -37,10 +37,8 @@ create_GPE_Config_Sleep (ipaq_conf_t *ISconf)
   GtkWidget *table1, *hbox;
   GtkWidget *sleep;
   GtkObject *sleep_idle_spin_adj;
-//  GtkWidget *sleep_idle_label;
   GtkWidget *dim;
   GtkObject *dim_spin_adj;
-//  GtkWidget *dim_idle_label;
   GtkWidget *frame5;
   GtkObject *sleep_cpu_spin_adj;
   GtkWidget *sleep_cpu_label;
@@ -94,14 +92,6 @@ create_GPE_Config_Sleep (ipaq_conf_t *ISconf)
 
   gtk_tooltips_set_tip (tooltips, sleep_idle_spin, _("sleep timeout"), NULL);
 
- /* sleep_idle_label = gtk_label_new (_("Delay:"));
-  gtk_misc_set_alignment (GTK_MISC(sleep_idle_label), 0.0, 0.5);
-  gtk_widget_show (sleep_idle_label);
-  gtk_table_attach (GTK_TABLE (table1), sleep_idle_label, 1, 2, 1, 2,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (GTK_FILL), gpe_box_spacing, gpe_box_spacing);
-*/
-
   dim = gtk_label_new (NULL);
   tstr = g_strdup_printf ("<b>%s</b>", _("Auto dim"));
   gtk_label_set_markup (GTK_LABEL (dim), tstr);
@@ -132,13 +122,6 @@ create_GPE_Config_Sleep (ipaq_conf_t *ISconf)
 					
   gtk_tooltips_set_tip (tooltips, dim_spin, _("backlight dim timeout"), NULL);
 
-/*  dim_idle_label = gtk_label_new (_("Delay:"));
-  gtk_misc_set_alignment (GTK_MISC(dim_idle_label), 0.0, 0.5);
-  gtk_widget_show (dim_idle_label);
-  gtk_table_attach (GTK_TABLE (table1), dim_idle_label, 1, 2, 3, 4,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (GTK_FILL), gpe_box_spacing, gpe_box_spacing);
-*/
   frame6 = gtk_label_new (_("Auto dim level"));
   gtk_misc_set_alignment (GTK_MISC(frame6), 0.0, 0.5);
   gtk_widget_show (frame6);

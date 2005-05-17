@@ -1,3 +1,8 @@
+2005-05-17	Florian Boor <florian.boor@kernelconcepts.de>
+
+	* sleep/interface.c, sleep/callbacks.c: Remove some old cruft, fix name 
+	                                        of configuration file.
+
 2005-05-12	Florian Boor <florian.boor@kernelconcepts.de>
 
 	* ownerinfo.c: Change default image in login display to GPE logo.
@@ -28,7 +33,7 @@
 2005-04-06      Florian Boor <florian.boor@kernelconcepts.de>
 
 	* keys/keyctl.c: Fixed usage of GError.
-        * Makefile: Add Kinyarwanda translation.
+	* Makefile: Add Kinyarwanda translation.
 
 2005-04-02	Florian Boor  	<florian.boor@kernelconcepts.de>
 
