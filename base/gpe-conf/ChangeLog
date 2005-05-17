@@ -1,5 +1,7 @@
 2005-05-17	Florian Boor <florian.boor@kernelconcepts.de>
 
+	* Release Version 0.1.24
+	* Makefile: Version to 0.1.24
 	* sleep/interface.c, sleep/callbacks.c: Remove some old cruft, fix name 
 	                                        of configuration file.
 

@@ -42,7 +42,7 @@ GtkWidget *Sleep_Build_Objects()
   char cname[MAXPATHLEN];
   GtkWidget *GPE_Config_Sleep;
 
-  sprintf(cname,"%s/.sleep.conf",g_get_home_dir());
+  sprintf(cname,"%s/ipaq-sleep.conf",g_get_home_dir());
   ISconf = load_ISconf(cname);
   if(ISconf == NULL) {
     strcpy(cname, "/etc/ipaq-sleep.conf");
