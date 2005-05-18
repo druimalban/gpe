@@ -43,6 +43,7 @@
 
 #define TS_DEV "/dev/touchscreen/0raw"
 #define PROC_BATTERY "/proc/asic/battery"
+#define HAL_BATTERY "/proc/hal/battery"
 #define PROC_APM "/proc/apm"
 
 /* local types and structs */
@@ -54,6 +55,13 @@ typedef struct
 }
 t_infowidgets;
 
+typedef struct {
+        unsigned char  chemistry;
+        unsigned char  status;
+        unsigned short voltage;    /* Voltage for battery #0; unknown for battery #1 */
+        unsigned short percentage; /* Percentage of full charge */
+        unsigned short life;       /* Life remaining in minutes */
+}t_battery_data;
 
 /* local definitions */
 
@@ -63,7 +71,8 @@ gchar *bat_chemistries[] = {
 	"NiCd",
 	"NiMh",
 	"Lithium Ion",
-	"Lithium Polymer"
+	"Lithium Polymer",
+	"not installed"
 };
 
 
@@ -76,6 +85,27 @@ FILE *file_apm = NULL;
 
 /* local functions */
 
+/* Check if we can read battery information from iPaq HAL. */ 
+static gboolean
+have_ipaq_hal(void)
+{
+	if (access(HAL_BATTERY, R_OK))
+		return FALSE;
+	else
+		return TRUE;
+}
+
+/* Read battery information from iPaq HAL, batteries needs to 
+ * have a minimum length of two - we have two batteries in iPaq
+ * sometimes.
+ */
+static int
+read_ipaq_batteríes(t_battery_data *batteries)
+{
+	int num_batteries = 0;
+	
+	return num_batteries;
+}
 
 void init_device()
 {
