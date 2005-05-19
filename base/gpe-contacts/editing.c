@@ -343,7 +343,7 @@ create_edit (void)
   if (mode_large_screen)
     {
       edit = gtk_dialog_new ();
-      gtk_window_set_transient_for(GTK_WINDOW(edit),GTK_WINDOW(mainw));
+      gtk_window_set_transient_for(GTK_WINDOW(edit), GTK_WINDOW(mainw));
       action_area = GTK_DIALOG (edit)->action_area;
       vbox = GTK_DIALOG (edit)->vbox;
     }
