@@ -1,7 +1,7 @@
 PREFIX = /usr/local
 PACKAGE = gpe-session-scripts
 CVSBUILD = yes
-VERSION = 0.62
+VERSION = 0.63
 DEBUG = no
 
 LINGUAS = 
