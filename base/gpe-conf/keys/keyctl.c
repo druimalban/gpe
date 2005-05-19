@@ -412,9 +412,9 @@ Keyctl_Build_Objects ()
 	gtk_box_pack_start(GTK_BOX(vbox), scroll, TRUE, TRUE, 0);
 	gtk_box_pack_start(GTK_BOX(vbox), table, FALSE, TRUE, 0);
 	
-	gtk_table_attach(GTK_TABLE(table),self.icon, 0, 1, 0, 2, GTK_FILL | GTK_EXPAND, GTK_FILL | GTK_EXPAND, 0, 0);
-	gtk_table_attach(GTK_TABLE(table),self.edit, 1, 2, 1, 2, GTK_FILL | GTK_EXPAND, GTK_FILL | GTK_EXPAND, 0, 0);
-	gtk_table_attach(GTK_TABLE(table),self.select, 1, 4, 0, 1, GTK_FILL | GTK_EXPAND, GTK_FILL | GTK_EXPAND, 0, 0);
+	gtk_table_attach(GTK_TABLE(table),self.icon, 0, 1, 0, 2, GTK_FILL, GTK_FILL, 0, 0);
+	gtk_table_attach(GTK_TABLE(table),self.edit, 1, 2, 1, 2, GTK_FILL, GTK_FILL, 0, 0);
+	gtk_table_attach(GTK_TABLE(table),self.select, 1, 4, 0, 1, GTK_FILL, GTK_FILL, 0, 0);
 	gtk_table_attach(GTK_TABLE(table),bFile, 3, 4, 1, 2, GTK_FILL, GTK_FILL, 0, 0);
 	
 	if (NUM_BUTTONS)

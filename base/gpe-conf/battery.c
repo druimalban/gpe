@@ -1,7 +1,7 @@
 /*
  * gpe-conf
  *
- * Copyright (C) 2003, 2004  Florian Boor <florian.boor@kernelconcepts.de>
+ * Copyright (C) 2003 - 2005  Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -100,7 +100,7 @@ have_ipaq_hal(void)
  * sometimes.
  */
 static int
-read_ipaq_batteríes(t_battery_data *batteries)
+read_ipaq_batteries(t_battery_data *batteries)
 {
 	int num_batteries = 0;
 	
