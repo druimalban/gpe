@@ -34,7 +34,7 @@ pixmaps_DATA = icons/entry.png \
                icons/frame.png \
                icons/notebook.png
 
-pixmaps_extradir = $(datadir)/gpe/pixmaps/default
+pixmaps_extradir = $(datadir)/pixmaps
 pixmaps_extra_DATA = icons/gpe-contacts.png \
                      icons/edit-vcard.png
 
@@ -67,4 +67,3 @@ clean-local:
 
 include gpe-dist.am
 include gpe-tp.am
-

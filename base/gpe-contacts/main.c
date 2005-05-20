@@ -67,7 +67,7 @@ struct gpe_icon my_icons[] = {
   {"frame", MY_PIXMAPS_DIR "frame"},
   {"notebook", MY_PIXMAPS_DIR "notebook"},
   {"entry", MY_PIXMAPS_DIR "entry"},
-  {"icon", "gpe-contacts" },
+  {"icon", PREFIX "/share/pixmaps/gpe-contacts.png" },
   {NULL, NULL}
 };
 

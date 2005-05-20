@@ -1,6 +1,7 @@
 
 2005-05-20  Florian Boor <florian.boor@kernelconcepts.de>
 
+    * Makefile.am, main.c: Fix icon path.
     * Released Version 0.38
 
 2005-05-10  Florian Boor <florian.boor@kernelconcepts.de>
