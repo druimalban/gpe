@@ -1,8 +1,8 @@
 
-<!--#set var="addtitle" value="Addressbook"-->
-<!--#set var="pagename" value="addressbook"-->
-<!--#set var="author" value="Nils Faerber"-->
-<!--#set var="authoremail" value="nils@handhelds.org"-->
+<!--#set var="addtitle" value="Contacts"-->
+<!--#set var="pagename" value="Contacts"-->
+<!--#set var="author" value="Florian Boor"-->
+<!--#set var="authoremail" value="florian@handhelds.org"-->
 <!--#include virtual="/includes/head.shtml"-->
 
 <H2>Coordinator</H2>
