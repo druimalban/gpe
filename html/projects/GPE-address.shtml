@@ -21,14 +21,16 @@ IrDA (IrOBEX) and Bluetooth (BtOBEX) support for beaming them in vCard format.
 </P>
 <H2>Status</H2>
 <P>
-<CODE>gpe-contacts</CODE> is in CVS, actively maintained, in Familiar 
+<B>GPE-Contacts</B> is in CVS, actively maintained, in Familiar 
 0.8.2 release and the unstable feed.
 </P>
 
 <H2>Screenshots</H2>
+GPE-Contacts running on a HP iPAQ H3870.
 <CENTER><IMG src="/images/gpe-contacts.png" ALT="[gpe-contacts screenshot]">
 </CENTER>
 <HR>
+This GPE-Contacts runs on a Sharp Zaurus C-700.
 <CENTER>
 <IMG src="/images/gpe-contacts2.png" ALT="[gpe-contacts screenshot]">
 </CENTER>
