@@ -1,8 +1,8 @@
 
 <!--#set var="addtitle" value="Todo List"-->
 <!--#set var="pagename" value="todo"-->
-<!--#set var="author" value="Nils Faerber"-->
-<!--#set var="authoremail" value="nils@handhelds.org"-->
+<!--#set var="author" value="Florian Boor"-->
+<!--#set var="authoremail" value="florian@handhelds.org"-->
 <!--#include virtual="/includes/head.shtml"-->
 
 <H2>Coordinator</H2>
@@ -25,10 +25,15 @@ which it must be completed.
 The source code can be found in <A href="../cvs.shtml">CVS</A>,
 module <b>gpe-todo</b>.  Precompiled binaries for iPAQ are available
 in the Familiar <A href="http://familiar.handhelds.org/familiar/feeds/unstable/">unstable feed</A>.
+<br>
+GPE-Todo is included in current Familiar releases as well as in Debian Sid.
 </P>
 
 <H2>Screenshot</H2>
 <P>
+GPE-Todo active in a HP iPAQ.
+<CENTER>
 <IMG SRC="/images/gpe-todo.png" ALT="gpe-todo">
+</CENTER>
 </P>
 <!--#include virtual="/includes/foot.shtml"-->
