@@ -1,14 +1,14 @@
-<!--#set var="addtitle" value="Setup"-->
-<!--#set var="pagename" value="setup"-->
-<!--#set var="author" value="Colin Marquardt"-->
-<!--#set var="authoremail" value="gpe-web@marquardt-home.de"-->
+<!--#set var="addtitle" value="Configuration"-->
+<!--#set var="pagename" value="Configuration"-->
+<!--#set var="author" value="Florian Boor"-->
+<!--#set var="authoremail" value="florian@handhelds.org"-->
 <!--#include virtual="/includes/head.shtml"-->
 
 <img src="/images/gpe-conf-applets.png" alt="[Screenshot of gpe-conf]">
 
 <H2>Function</H2>
 <P>
-GPE Setup (the gpe-conf/gpe-conf2 package) will control the whole
+GPE-Conf is intended to provide a control GUI for the whole
 machine. It includes (or will include) sub-applications for setting up
 <UL>
 <LI> System date and time
@@ -22,7 +22,6 @@ machine. It includes (or will include) sub-applications for setting up
 <LI> IrDA networking
 <LI> Wireless LAN 802.11
 <LI> Bluetooth
-<LI> Dial-Up LAN for example using IrDA and mobile phone
 </UL>
 <LI> External keyboard (like StowAway)
 <LI> Mapping of built-in keys (OK, Cancel, Menu, Home, Voicerecorder, etc.)
