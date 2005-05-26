@@ -1,3 +1,7 @@
+2005-05-26  Luc Pionchon  <luc@handhelds.org>
+
+	* autogen.sh : do not call ./configure 
+
 2005-05-03  Florian Boor <florian@kernelconcepts.de>
 
 	* gpe/gpe-iconlist.h, gpe-iconlist.sgml: Add some warnings about obsolete
