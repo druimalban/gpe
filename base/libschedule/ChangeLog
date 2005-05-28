@@ -1,3 +1,11 @@
+2005-05-27  Florian Boor  <florian.boor@kernelconcepts.de>
+
+	* Add autotools support.
+	* configure.ac, autogen.sh, Makefile.am, gpe-dist.am, libschedule.pc.in:
+	  new files.
+	* configure.ac: Version set to 0.15.
+	* Makefile: deleted.
+
 2004-04-27  Moray Allan  <moray@handhelds.org>
 
 	* Makefile: Compile with -fPIC.
@@ -25,4 +33,4 @@
 
 2003-04-16  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>
 	
-	* atd.c : re-arrange the order of script operations and add an "export" before DISPLAY':0 
+	* atd.c : re-arrange the order of script operations and add an "export" before DISPLAY':0
