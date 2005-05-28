@@ -5,7 +5,7 @@ includedir=${prefix}/include
 
 Name: libeventdb
 Description: GPE Event Database Library
-Version: VERSION
-Requires: glib-2.0, libgpewidget
+Version: @VERSION@
+Requires: glib-2.0
 Libs: -L${libdir} -leventdb
 Cflags: -I${includedir}
