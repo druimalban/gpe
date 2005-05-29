@@ -128,8 +128,11 @@ gint get_param_val(gchar* line, gchar* param, gchar* value)
 	for (b=a+1;b<strlen(line);b++)
 		if ((line[b]=='\n') || (line[b]=='\0')) break;
 	param=strncpy(param,&line[st],sep-st);
-	param[sep-st]='\0';	
-	if ((b-a) > 1) value=strncpy(value,&line[a],b-a);	
+	param[sep-st]='\0';
+	
+//KC-OR: changed because singe character values not recognized correctly
+//		if ((b-a) > 0) value=strncpy(value,&line[a],b-a);	
+	if ((b-a) > 0) value=strncpy(value,&line[a],b-a);	
 	value[b-a]='\0';
 	return 0;
 }
@@ -869,20 +872,21 @@ gint write_sections()
 				sprintf(outstr,"\tgateway %s",iflist[i].gateway);
 				add_line(configlen,outstr);
 			}
-			if (iflist[l-1].iswireless)
+		
+			if (iflist[i].iswireless)
 			{
-				sprintf(outstr,"\twireless_essid %s",iflist[l-1].essid);
+				sprintf(outstr,"\twireless_essid %s",iflist[i].essid);
 				add_line(configlen,outstr);
 				
-				sprintf(outstr,"\twireless_mode %s",iflist[l-1].mode == MODE_MANAGED ? "managed" : "ad-hoc");
+				sprintf(outstr,"\twireless_mode %s",iflist[i].mode == MODE_MANAGED ? "managed" : "ad-hoc");
 				add_line(configlen,outstr);
 	
-				if (strlen (iflist[l-1].channel) > 0)
+				if (strlen (iflist[i].channel) > 0)
 				{
-					sprintf(outstr,"\twireless_channel %s",iflist[l-1].channel);
+					sprintf(outstr,"\twireless_channel %s",iflist[i].channel);
 					add_line(configlen,outstr);
 				} 
-				get_wifikey_string(iflist[l-1], key);
+				get_wifikey_string(iflist[i], key);
 				sprintf(outstr,"\twireless_key %s",key);
 				add_line(configlen,outstr);
 			}					

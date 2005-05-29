@@ -285,7 +285,6 @@ add_interface (GtkWidget * widget, gpointer d)
 				sep = strrchr(buffer, ':');
 				if (sep) *sep = 0;
 				while(*name == ' ') name++;
-		
 				if (!strcmp(name, ifname))
 					iflist[iflen - 1].iswireless = TRUE;
 			}
@@ -691,7 +690,6 @@ show_wificonfig(GtkWidget *window, NWInterface_t *iface)
 	gtk_object_remove_data (GTK_OBJECT (table), "channel");
 	gtk_object_set_data_full (GTK_OBJECT (table), "channel" , label,
 				  (GtkDestroyNotify) gtk_widget_unref);
-	
 	gtk_entry_set_text (GTK_ENTRY (label), iface->channel);
 	gtk_entry_set_editable (GTK_ENTRY (label), TRUE);
 	gtk_table_attach (GTK_TABLE (ctable), label, 1, 2, 3, 4,
@@ -874,7 +872,6 @@ show_wificonfig(GtkWidget *window, NWInterface_t *iface)
 		
 		label = gtk_object_get_data (GTK_OBJECT (table), "channel");
 		strncpy(iface->channel, gtk_editable_get_chars(GTK_EDITABLE (label), 0, -1), 31);		
-		
 		label = gtk_object_get_data (GTK_OBJECT (table), "key1");
 		strncpy(iface->key[0], text2key(gtk_editable_get_chars(GTK_EDITABLE (label), 0, -1), tmp_key), 127);
 		
