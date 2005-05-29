@@ -10,7 +10,7 @@ AM_INIT_AUTOMAKE([foreign dist-bzip2])
 AC_PROG_CC
 AC_PROG_LIBTOOL
 
-PKG_CHECK_MODULES(EVENTDB, glib-2.0 sqlite)
+PKG_CHECK_MODULES(EVENTDB, glib-2.0 sqlite libgpewidget)
 
 #gtk-doc for documentation, currently unused
 #GTK_DOC_CHECK(1.2)
