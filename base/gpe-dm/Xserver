@@ -11,6 +11,9 @@ fi
 if [ -f /usr/bin/Xorg ]; then
   XSERVER=Xorg
 fi
+if [ -f /usr/bin/Xomap ]; then
+  XSERVER=Xomap
+fi
 
 . /etc/profile
 
@@ -51,6 +54,8 @@ case `module_id` in
 		ARGS="$ARGS -rgba rgb" ;;
 	"Simpad")
 		ARGS="$ARGS -rgba rgb" ;;
+	"Generic OMAP1510/1610/1710")
+		ARGS="$ARGS -mouse /dev/input/event0" ;;
 esac
 
 exec $XSERVER $ARGS $*
