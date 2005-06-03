@@ -37,6 +37,7 @@ extern struct tag_value *db_find_tag (struct person *p, gchar *tag);
 extern GSList *db_get_entries (void);
 extern GSList *db_get_entries_finddlg (const gchar *str, const gchar *cat);
 extern GSList *db_get_entries_list (const gchar *name, const gchar *cat);
+extern GSList *db_get_entries_list_filtered (const gchar* str, const gchar *filter, const gchar *cat);
 
 extern struct person *db_get_by_uid (guint uid);
 extern gboolean db_delete_by_uid (guint uid);

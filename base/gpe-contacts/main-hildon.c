@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2001, 2002, 2003, 2004 Philip Blundell <philb@gnu.org>
- *               2004, 2005 Florian Boor <florian@kernelconcepts.de>
- *
+ * Hildon adaption by Florian Boor <florian.boor@kernelconcepts.de>
+ * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version
@@ -13,16 +13,17 @@
  *
  */
 
-#include <gtk/gtk.h>
 #include <libintl.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 #include <locale.h>
 #include <time.h>
-#include <gdk/gdkkeysyms.h>
 #include <ctype.h>
 
+/* GTK and GPE includes */
+#include <gdk/gdkkeysyms.h>
+#include <gtk/gtk.h>
 #include <gpe/init.h>
 #include <gpe/pixmaps.h>
 #include <gpe/smallbox.h>
@@ -32,6 +33,15 @@
 #include <gpe/gtksimplemenu.h>
 #include <gpe/picturebutton.h>
 #include <gpe/spacing.h>
+
+/* Hildon includes */
+#include <hildon-widgets/hildon-app.h>
+#include <hildon-widgets/hildon-appview.h>
+#include <gpe/pim-categories-ui.h>
+#include <hildon-fm/hildon-widgets/hildon-file-chooser-dialog.h>
+
+#include <libosso.h>
+
 
 #include "support.h"
 #include "db.h"
@@ -43,11 +53,16 @@
 #include "finddlg.h"
 
 #define MY_PIXMAPS_DIR "gpe-contacts/"
+#define ICON_PATH PREFIX "/share/icons/hicolor/26x26"
+
+#define SERVICE_NAME    "gpe_contacts"
+#define SERVICE_VERSION VERSION
+
 
 GtkWidget *categories_smenu;
 GtkWidget *mainw;
-GtkListStore *list_store;
-GtkWidget *list_view;
+GtkListStore *list_store, *filter_store;
+GtkWidget *list_view, *filter_view;
 GtkWidget *search_entry;
 GtkWidget *popup_menu;
 GtkWidget *bluetooth_menu_item;
@@ -57,17 +72,48 @@ gboolean mode_landscape;
 gboolean mode_large_screen;
 gboolean scroll_delay = FALSE;
 gboolean do_wrap = FALSE;
+static osso_context_t *context = NULL;
 
 #define DEFAULT_STRUCTURE PREFIX "/share/gpe-contacts/default-layout.xml"
 #define LARGE_STRUCTURE PREFIX "/share/gpe-contacts/default-layout-bigscreen.xml"
 
 struct gpe_icon my_icons[] = {
-  {"frame", MY_PIXMAPS_DIR "frame"},
-  {"notebook", MY_PIXMAPS_DIR "notebook"},
-  {"entry", MY_PIXMAPS_DIR "entry"},
   {"icon", PREFIX "/share/pixmaps/gpe-contacts.png" },
   {NULL, NULL}
 };
+
+/* the length of the filter stings is fixed to three, you need to change
+   the queries in db.c to change the filter langth */
+
+t_filter filter[]= {
+  {"*"  , "***"},
+  {"ABC", "abc"},
+  {"DEF", "def"},      
+  {"GHI", "ghi"},
+  {"JKL", "jkl"},
+  {"MNO", "mno"},
+  {"PQR", "pqr"},
+  {"STU", "stu"},
+  {"VWX", "vwx"},
+  {"YZ" , "yzz"},
+  {"...", NULL},
+};
+
+int num_filter = sizeof(filter) / sizeof(t_filter);
+int current_filter = 0;
+
+static void 
+populate_filter(void)
+{
+  int i;
+  GtkTreeIter iter;
+	
+  for (i=0; i<num_filter; i++)
+    {
+        gtk_list_store_append(GTK_LIST_STORE(filter_store), &iter);
+        gtk_list_store_set (filter_store, &iter, 0, filter[i].title, 1, i, -1);
+    }
+}
 
 static void
 menu_do_edit (void)
@@ -96,7 +142,7 @@ load_panel_config (void)
   GtkWidget *lleft, *lright, *table;
   GList *wlist, *iter;
 
-  table = lookup_widget (mainw, "tabDetail");
+  table = g_object_get_data (G_OBJECT(mainw), "tabDetail");
 
   wlist = gtk_container_get_children (GTK_CONTAINER (table));
 
@@ -170,8 +216,8 @@ edit_contact (GtkWidget * widget, gpointer d)
       struct person *p;
       GtkWidget *new_button, *edit_button;
 	  
-	  new_button = g_object_get_data(G_OBJECT(mainw), "new-button");
-	  edit_button = g_object_get_data(G_OBJECT(mainw), "edit-button");
+      new_button = g_object_get_data(G_OBJECT(mainw), "new-button");
+      edit_button = g_object_get_data(G_OBJECT(mainw), "edit-button");
       gtk_widget_set_sensitive (new_button, FALSE);
       gtk_widget_set_sensitive (edit_button, FALSE);
       gtk_tree_model_get (GTK_TREE_MODEL (model), &iter, 1, &uid, -1);
@@ -191,9 +237,20 @@ delete_contact (GtkWidget * widget, gpointer d)
   if (gtk_tree_selection_get_selected (sel, &model, &iter))
     {
       guint uid;
+      GtkWidget *dialog;
+        
+      dialog = gtk_message_dialog_new (GTK_WINDOW(gtk_widget_get_toplevel(mainw)),
+                                       GTK_DIALOG_MODAL 
+                                       | GTK_DIALOG_DESTROY_WITH_PARENT,
+                                       GTK_MESSAGE_QUESTION, GTK_BUTTONS_NONE,
+                                       _("Are you sure you want to want to "\
+                                       "delete the selected contact permanently?"));
+      gtk_dialog_add_buttons(GTK_DIALOG(dialog),
+                             _("OK"), GTK_RESPONSE_YES,
+                             _("Cancel"), GTK_RESPONSE_NO, NULL);
+        
       gtk_tree_model_get (GTK_TREE_MODEL (model), &iter, 1, &uid, -1);
-      if (gpe_question_ask (_("Really delete this contact?"), _("Confirm"), 
-			    "question", "!gtk-cancel", NULL, "!gtk-delete", NULL, NULL) == 1)
+      if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_YES)
         {
           gtk_tree_view_get_cursor(GTK_TREE_VIEW(list_view), &path, NULL);
           if (path) 
@@ -211,6 +268,7 @@ delete_contact (GtkWidget * widget, gpointer d)
             }
           gtk_tree_path_free(path);
         }
+      gtk_widget_destroy(dialog);
     }
 }
 
@@ -283,9 +341,7 @@ pop_singles (GtkWidget *vbox, GSList *list, struct person *p)
               w = gtk_label_new (NULL);
               gtk_misc_set_alignment(GTK_MISC(w),0.0,0.5);
               gtk_label_set_text(GTK_LABEL(w), tv->value);
-              gtk_label_set_line_wrap(GTK_LABEL(w), 
-                                      ((e->type == ITEM_MULTI_LINE) 
-                                       || mode_landscape) ? TRUE : FALSE);
+              gtk_label_set_line_wrap(GTK_LABEL(w), TRUE);
           
               if (e && e->name && e->name[strlen(e->name)-1] != ':')
                 {
@@ -295,7 +351,6 @@ pop_singles (GtkWidget *vbox, GSList *list, struct person *p)
                 }
               else
                 l = gtk_label_new (e->name);
-              
               gtk_misc_set_alignment(GTK_MISC(l),0.0,0.0);
               
               gtk_table_attach (GTK_TABLE (table),
@@ -317,7 +372,6 @@ pop_singles (GtkWidget *vbox, GSList *list, struct person *p)
         gtk_table_set_col_spacings (GTK_TABLE (table), gpe_get_boxspacing());
         gtk_table_set_row_spacings (GTK_TABLE (table), gpe_get_boxspacing());
         gtk_container_set_border_width (GTK_CONTAINER (table), 0);
-  
         gtk_widget_show_all(table);
         gtk_box_pack_start (GTK_BOX (vbox), table, TRUE, TRUE, 4);
         return TRUE;
@@ -352,21 +406,30 @@ build_children (GtkWidget *vbox, GSList *children, struct person *p)
               gboolean res;
               if (e->children) /* ignore empty groups */
                 {
-                  markup = g_strdup_printf ("<b>%s</b>", e->name);
-                  w = gtk_label_new (NULL);
-                  gtk_label_set_markup (GTK_LABEL (w), markup);
-                  gtk_misc_set_alignment (GTK_MISC (w), 0, 0.5);
-                  g_free (markup);
+                  markup = NULL;
                   if (vbox && singles)
-                    result = pop_singles (vbox, singles, p);
+                    result |= pop_singles (vbox, singles, p);
                   singles = NULL;
-                  gtk_box_pack_start (GTK_BOX (vbox), w, TRUE, TRUE, 0);
-                  res = build_children (vbox, e->children, p);
-                  if (!res)
-                    {
-                      gtk_container_remove(GTK_CONTAINER(vbox), w);
+                  if (e->name)
+                    {                      
+                      markup = g_strdup_printf ("<b>%s</b>", e->name);
+                      w = gtk_label_new (NULL);
+                      gtk_label_set_markup (GTK_LABEL (w), markup);
+                      gtk_misc_set_alignment (GTK_MISC (w), 0, 0.5);
+                      g_free (markup);
+                      gtk_box_pack_start (GTK_BOX (vbox), w, TRUE, TRUE, 0);
+                      gtk_widget_show(w);
+                        
+                      res = build_children (vbox, e->children, p);
+                      if (!res)
+                        {
+                          gtk_container_remove(GTK_CONTAINER(vbox), w);
+                        }
+                      result |= res;
+                        
                     }
-                  result |= res;
+                  else 
+                    result |=  build_children (vbox, e->children, p);
                 }
             }
           break;
@@ -409,38 +472,35 @@ build_children (GtkWidget *vbox, GSList *children, struct person *p)
                 gtk_box_pack_start (GTK_BOX (hbox), l, FALSE, TRUE, 0);
                 gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, TRUE, 0);
                 gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, TRUE, 0);
+                result = TRUE;
               }
           }
           break;
           case ITEM_IMAGE:
           {
             GtkWidget *l = gtk_label_new (e->name);
-            GtkWidget *hbox, *image, *sw, *vp;
+            GtkWidget *hbox, *image;
+            GdkPixbuf *buf;
             
             if (!(tv && tv->value))
               continue;
             if (vbox && singles)
-              result |= pop_singles (vbox, singles, p);
+              pop_singles (vbox, singles, p);
             singles = NULL;
+            result = TRUE;
             hbox = gtk_hbox_new (FALSE, gpe_get_boxspacing());
             gtk_misc_set_alignment (GTK_MISC (l), 0.0, 0.0);
             gtk_box_pack_start (GTK_BOX (hbox), l, FALSE, TRUE, 0);
   
             image = gtk_image_new();
-            gtk_image_set_from_file(GTK_IMAGE(image), tv->value);
-            /* todo: image size check */
-/*            vp = gtk_viewport_new(NULL, NULL);
-            gtk_viewport_set_shadow_type(GTK_VIEWPORT(vp), GTK_SHADOW_NONE);
-            sw = gtk_scrolled_window_new(NULL, NULL);
-            gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(sw), 
-                                           GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-            gtk_container_add(GTK_CONTAINER(vp), image);
-            gtk_container_add(GTK_CONTAINER(sw), vp);
-            gtk_box_pack_start (GTK_BOX (hbox), sw, TRUE, TRUE, 0);
-*/ 
-            gtk_box_pack_start (GTK_BOX (hbox), image, TRUE, TRUE, 0);
+            gtk_widget_set_size_request(image, IMG_WIDTH, IMG_HEIGHT);
+            buf = gdk_pixbuf_new_from_file_at_size(tv->value, IMG_WIDTH, 
+                                          IMG_HEIGHT, NULL);
+            gtk_image_set_from_pixbuf(GTK_IMAGE(image), buf);
+            gdk_pixbuf_unref(buf);
+            gtk_box_pack_start (GTK_BOX (hbox), image, FALSE, TRUE, 0);
             gtk_widget_show_all(hbox);
-            gtk_box_pack_start (GTK_BOX (vbox), hbox, TRUE, TRUE, 0);
+            gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, TRUE, 0);
           }
           default:
             /* just ignore */
@@ -469,7 +529,7 @@ show_details (struct person *p)
   GtkWidget *label;
   gchar *text;
 
-  table = GTK_TABLE (lookup_widget (mainw, "tabDetail"));
+  table = GTK_TABLE (g_object_get_data(G_OBJECT(mainw), "tabDetail"));
   
   if (mode_landscape) /* we show all available data */
     {
@@ -641,19 +701,18 @@ show_details_window(GtkWidget *btn)
   discard_person (p);
 }
 
-void
+static void
 selection_made (GtkTreeSelection *sel, GObject *o)
 {
   GtkTreeIter iter;
   guint id;
   struct person *p;
   GtkTreeModel *model;
-  GtkWidget *edit_button, *delete_button, *new_button, *details_button;
+  GtkWidget *edit_button, *delete_button, *new_button;
 
-  edit_button = g_object_get_data (o, "edit-button");
   delete_button = g_object_get_data (o, "delete-button");
+  edit_button = g_object_get_data (o, "edit-button");
   new_button = g_object_get_data (o, "new-button");
-  details_button = g_object_get_data (o, "details-button");
   
   if (gtk_tree_selection_get_selected (sel, &model, &iter))
     {
@@ -663,17 +722,13 @@ selection_made (GtkTreeSelection *sel, GObject *o)
       show_details (p);
       discard_person (p);
 		
-      gtk_widget_set_sensitive (edit_button, TRUE);
       gtk_widget_set_sensitive (delete_button, TRUE);
-      if (!mode_landscape)
-        gtk_widget_set_sensitive (details_button, TRUE);
+      gtk_widget_set_sensitive (edit_button, TRUE);
     }
   else
     {
-      gtk_widget_set_sensitive (edit_button, FALSE);
       gtk_widget_set_sensitive (delete_button, FALSE);
-      if (!mode_landscape)
-        gtk_widget_set_sensitive (details_button, FALSE);
+      gtk_widget_set_sensitive (edit_button, FALSE);
     }
 	/* restore after edit/new */
     gtk_widget_set_sensitive (new_button, TRUE);
@@ -769,11 +824,11 @@ do_search (GObject *obj, GtkWidget *entry)
       g_slist_free (l);
     }
 
-  sel_entries = db_get_entries_list (text, cat_id);
-  
+  sel_entries = db_get_entries_list_filtered (text, filter[current_filter].list, cat_id);
+    
   if (cat_id) 
     g_free(cat_id);
-      
+    
   sel_entries = g_slist_sort (sel_entries, (GCompareFunc)sort_entries);
 
   gtk_list_store_clear (list_store);
@@ -786,7 +841,6 @@ do_search (GObject *obj, GtkWidget *entry)
       
       gtk_list_store_append (list_store, &titer);
       gtk_list_store_set (list_store, &titer, 0, p->name, 1, p->id, -1);
-
       discard_person (p);
     }
   
@@ -823,13 +877,11 @@ do_find (void)
       g_slist_free (l);
     }
 
-  all_entries = do_find_contacts(GTK_WINDOW(mainw), cat_id);
-
+  all_entries = do_find_contacts(GTK_WINDOW(gtk_widget_get_toplevel(mainw)), cat_id);
   if (cat_id) 
     g_free(cat_id);
   if (!all_entries)
     return;
-  
   all_entries = g_slist_sort (all_entries, (GCompareFunc)sort_entries);
 
   gtk_list_store_clear (list_store);
@@ -898,7 +950,7 @@ update_display (void)
   GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(list_view));
   update_categories ();
   if (sel)
-    selection_made(sel, G_OBJECT(gtk_widget_get_toplevel(search_entry)));
+    selection_made(sel, G_OBJECT(mainw));
   do_search (G_OBJECT (search_entry), search_entry);
 }
 
@@ -1146,6 +1198,21 @@ list_button_release_event (GtkWidget *widget, GdkEventButton *b, GtkListStore *l
   return FALSE;
 }
 
+static void
+filter_selected (GtkTreeSelection *sel, GObject *o)
+{
+  GtkTreeIter iter;
+  gint id;
+  GtkTreeModel *model;
+
+  if (gtk_tree_selection_get_selected (sel, &model, &iter))
+    {
+      gtk_tree_model_get (model, &iter, 1, &id, -1);
+      current_filter = id;
+      update_display();
+    }
+}
+
 static GtkItemFactoryEntry popup_items[] =
 {
   { "/Edit",		    NULL, menu_do_edit,           0, "<Item>" },
@@ -1205,17 +1272,18 @@ on_import_vcard (GtkWidget *widget, gpointer data)
 {
   GtkWidget *filesel, *feedbackdlg;
   
-  filesel = gtk_file_selection_new(_("Choose file"));
-  gtk_file_selection_set_select_multiple(GTK_FILE_SELECTION(filesel), TRUE);
+  filesel = hildon_file_chooser_dialog_new(GTK_WINDOW(gtk_widget_get_toplevel(widget)), 
+                                                      GTK_FILE_CHOOSER_ACTION_OPEN);
+  gtk_file_chooser_set_select_multiple(GTK_FILE_CHOOSER(filesel), TRUE);
   
   if (gtk_dialog_run(GTK_DIALOG(filesel)) == GTK_RESPONSE_OK)
     {
       gchar *errstr = NULL;
       int ec = 0, i = 0;
       gchar **files = 
-        gtk_file_selection_get_selections(GTK_FILE_SELECTION(filesel));
-      gtk_widget_hide(filesel); 
-      while (files[i])
+        gtk_file_chooser_get_filenames(GTK_FILE_CHOOSER(filesel));
+      gtk_widget_hide(filesel);
+      while (files && files[i])
         {
           if (import_one_file(files[i]) < 0) 
             {
@@ -1223,7 +1291,7 @@ on_import_vcard (GtkWidget *widget, gpointer data)
               if (!errstr) 
                 errstr=g_strdup("");
               ec++;
-			  tmp = g_strdup_printf("%s\n%s",errstr,strrchr(files[i],'/')+1);
+			  tmp = g_strdup_printf("%s\n%s", errstr, strrchr(files[i], '/')+1);
               if (errstr) 
                  g_free(errstr);
               errstr = tmp;
@@ -1231,11 +1299,11 @@ on_import_vcard (GtkWidget *widget, gpointer data)
           i++;  
         }
       if (ec)
-        feedbackdlg = gtk_message_dialog_new(GTK_WINDOW(mainw),
+        feedbackdlg = gtk_message_dialog_new(GTK_WINDOW(gtk_widget_get_toplevel(mainw)),
           GTK_DIALOG_MODAL, GTK_MESSAGE_INFO, GTK_BUTTONS_OK, 
           "%s %i %s\n%s",_("Import of"),ec,_("files failed:"),errstr);
       else
-        feedbackdlg = gtk_message_dialog_new(GTK_WINDOW(mainw),
+        feedbackdlg = gtk_message_dialog_new(GTK_WINDOW(gtk_widget_get_toplevel(mainw)),
           GTK_DIALOG_MODAL, GTK_MESSAGE_INFO, GTK_BUTTONS_OK, 
           _("Import successful"));
       gtk_dialog_run(GTK_DIALOG(feedbackdlg));
@@ -1246,151 +1314,240 @@ on_import_vcard (GtkWidget *widget, gpointer data)
   update_display();
 }
 
+#ifdef IS_HILDON
+static void
+toggle_toolbar(GtkCheckMenuItem *menuitem, gpointer user_data)
+{
+  GtkWidget *toolbar = g_object_get_data(G_OBJECT(mainw), "toolbar");
+  
+  if (!toolbar) 
+	return;
+	  
+  if (gtk_check_menu_item_get_active(menuitem))
+    gtk_widget_show(toolbar);
+  else
+    gtk_widget_hide(toolbar);
+}
+
+static void
+edit_categories (GtkWidget *w)
+{
+  GtkWidget *dialog;
+
+  dialog = gpe_pim_categories_dialog (NULL, FALSE, 
+                                      G_CALLBACK(update_categories), NULL);
+  gtk_window_set_transient_for(GTK_WINDOW(dialog), 
+                               GTK_WINDOW(gtk_widget_get_toplevel(w)));
+  gtk_window_set_modal(GTK_WINDOW(dialog), TRUE);
+}
+
+/* create hildon application main menu */
+static void
+create_app_menu(HildonAppView *appview)
+{
+  GtkMenu *menu_main = hildon_appview_get_menu(appview);    
+  GtkWidget *menu_contacts = gtk_menu_new();
+  GtkWidget *menu_categories = gtk_menu_new();
+  GtkWidget *menu_view = gtk_menu_new();
+  GtkWidget *menu_tools = gtk_menu_new();
+    
+  GtkWidget *item_contacts = gtk_menu_item_new_with_label(_("Contact"));
+  GtkWidget *item_categories = gtk_menu_item_new_with_label(_("Categories"));
+  GtkWidget *item_view = gtk_menu_item_new_with_label(_("View"));
+  GtkWidget *item_close = gtk_menu_item_new_with_label(_("Close"));
+  GtkWidget *item_open = gtk_menu_item_new_with_label(_("Open..."));
+  GtkWidget *item_add = gtk_menu_item_new_with_label(_("Add new"));
+  GtkWidget *item_delete = gtk_menu_item_new_with_label(_("Delete"));
+  GtkWidget *item_catedit = gtk_menu_item_new_with_label(_("Edit categories"));
+  GtkWidget *item_toolbar = gtk_check_menu_item_new_with_label(_("Show toolbar"));
+  GtkWidget *item_tools = gtk_menu_item_new_with_label(_("Tools"));
+  GtkWidget *item_import = gtk_menu_item_new_with_label(_("Import VCard"));
+
+  gtk_menu_append (GTK_MENU(menu_contacts), item_open);
+  gtk_menu_append (GTK_MENU(menu_contacts), item_add);
+  gtk_menu_append (GTK_MENU(menu_contacts), item_delete);
+  gtk_menu_append (GTK_MENU(menu_categories), item_catedit);
+  gtk_menu_append (GTK_MENU(menu_view), item_toolbar);
+  gtk_menu_append (menu_main, item_contacts);
+  gtk_menu_append (menu_main, item_categories);
+  gtk_menu_append (menu_main, item_view);
+  gtk_menu_append (menu_main, item_tools);
+  gtk_menu_append (menu_main, item_close);
+  gtk_menu_append (menu_tools, item_import);
+  gtk_menu_item_set_submenu(GTK_MENU_ITEM(item_contacts), menu_contacts);
+  gtk_menu_item_set_submenu(GTK_MENU_ITEM(item_categories), menu_categories);
+  gtk_menu_item_set_submenu(GTK_MENU_ITEM(item_view), menu_view);
+  gtk_menu_item_set_submenu(GTK_MENU_ITEM(item_tools), menu_tools);
+  
+  gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item_toolbar), TRUE);
+
+  g_signal_connect(G_OBJECT(item_add), "activate", G_CALLBACK(new_contact), NULL);
+  g_signal_connect(G_OBJECT(item_open), "activate", G_CALLBACK(edit_contact), NULL);
+  g_signal_connect(G_OBJECT(item_catedit), "activate", G_CALLBACK(edit_categories), NULL);
+  g_signal_connect(G_OBJECT(item_toolbar), "activate", G_CALLBACK(toggle_toolbar), NULL);
+  g_signal_connect(G_OBJECT(item_delete), "activate", G_CALLBACK(delete_contact), NULL);
+  g_signal_connect(G_OBJECT(item_import), "activate", G_CALLBACK(on_import_vcard), NULL);
+  g_signal_connect(G_OBJECT(item_close), "activate", G_CALLBACK(gtk_main_quit), NULL);
+
+  gtk_widget_show_all (GTK_WIDGET(menu_main));  
+}
+#endif
+
 static GtkWidget *
 create_main (gboolean edit_structure)
 {
   GtkWidget *main_window;
   GtkWidget *vbox1;
-  GtkWidget *hbox1 = NULL, *hbox3;
+  GtkWidget *hbox1 = NULL;
   GtkWidget *label83, *label84;
   GtkWidget *entry1;
   GtkWidget *pDetail;
   GtkWidget *tabDetail;
-  GtkWidget *toolbar, *pw;
-  GtkToolItem *b, *btnNew;
+  GtkWidget *toolbar;
+  GtkWidget *btnNew;
   GtkCellRenderer *renderer;
   GtkTreeViewColumn *column;
-  GtkTreeSelection *tree_sel;
-  GtkWidget *scrolled_window;
+  GtkTreeSelection *tree_sel, *filter_sel;
+  GtkWidget *scrolled_window, *filter_window;
   GtkWidget *lStatus = NULL;
-  GtkTooltips *tooltips;
   gint size_x, size_y;
+	
+  GtkWidget *app, *w;
+  GtkWidget *main_appview;
+  GtkToolItem *item;
 
-  /* default screen size and dimension base */
+  /* screen layout detection */
   size_x = gdk_screen_width();
   size_y = gdk_screen_height();  
-  size_x /= 3;
+  size_x /= 4;
   size_y /= 3;
-  
-  if (mode_large_screen)
-    {
-       size_x = 560;
-       size_y = 400;
-    }
-  else
-    {
-      if (size_x < 240) size_x = 240;
-      if (size_y < 320) size_y = 320;
-    }
-    
-  /*** main window ***/
-  main_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-  gtk_window_set_title (GTK_WINDOW (main_window), _("Contacts"));
-  gtk_window_set_default_size (GTK_WINDOW (main_window), size_x, size_y);
+  if (size_x < 240) size_x = 240;
+  if (size_y < 320) size_y = 320;
 
-  vbox1 = gtk_vbox_new (FALSE, 0);
+  /* main application and appview */
+  app = hildon_app_new();
+  hildon_app_set_two_part_title(HILDON_APP(app), FALSE);
+  hildon_app_set_title (HILDON_APP(app), _("Contacts"));
+  main_appview = hildon_appview_new (_("Main"));
+  hildon_app_set_appview (HILDON_APP(app), HILDON_APPVIEW(main_appview));
+  main_window = main_appview;
+  create_app_menu (HILDON_APPVIEW(main_appview));
+  gtk_widget_show_all (app);
+  gtk_widget_show_all (main_appview);
+  
+  vbox1 = gtk_vbox_new (FALSE, gpe_get_boxspacing());
   gtk_container_add (GTK_CONTAINER (main_window), vbox1);
 
-  /** toolbar widgets **/
   toolbar = gtk_toolbar_new ();
   gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar),
-                               GTK_ORIENTATION_HORIZONTAL);
-  tooltips = gtk_tooltips_new();
+			       GTK_ORIENTATION_HORIZONTAL);
+
+  /* toolbar */
+  gtk_box_pack_end (GTK_BOX (vbox1), toolbar, FALSE, FALSE, 0);
   
-  gtk_box_pack_start (GTK_BOX (vbox1), toolbar, FALSE, FALSE, 0);
-
-  /* new button */
-  btnNew = gtk_tool_button_new_from_stock(GTK_STOCK_NEW);
-  gtk_tool_item_set_tooltip(btnNew, tooltips, 
-                            _("Tap this button to add a new contact."), NULL);
-  g_signal_connect(G_OBJECT(btnNew), "clicked", G_CALLBACK(new_contact), NULL);
-  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), btnNew, -1);
+  /* buttons left */
+  w = gtk_image_new_from_file(ICON_PATH "/qgn_list_gene_unknown_file.png");
+  item = gtk_tool_button_new(w, _("New"));
+  g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK(new_contact), NULL);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, 0);
+  g_object_set_data (G_OBJECT (main_window), "new-button", item);
+  btnNew = GTK_WIDGET(item);
   
-  g_object_set_data (G_OBJECT (main_window), "new-button", btnNew);
-
-  /* edit button */
-  b = gtk_tool_button_new_from_stock(GTK_STOCK_EDIT);
-  gtk_tool_item_set_tooltip(b, tooltips, 
-                            _("Tap here to edit the selected contact."), NULL);
-  g_signal_connect(G_OBJECT(b), "clicked", G_CALLBACK(edit_contact), NULL);
-  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), b, -1);
+  w = gtk_image_new_from_file(ICON_PATH "/qgn_list_messagin_editor.png");
+  item = gtk_tool_button_new(w, _("Edit"));
+  g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK(edit_contact), NULL);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
+  g_object_set_data (G_OBJECT (main_window), "edit-button", item);
+  gtk_widget_set_sensitive(GTK_WIDGET(item), FALSE);
   
-  g_object_set_data (G_OBJECT (main_window), "edit-button", b);
-  gtk_widget_set_sensitive (GTK_WIDGET(b), FALSE);
-
-  /* delete button */
-  b = gtk_tool_button_new_from_stock(GTK_STOCK_DELETE);
-  gtk_tool_item_set_tooltip(b, tooltips, 
-                            _("Tap here to delete the selected contact."), NULL);
-  g_signal_connect(G_OBJECT(b), "clicked", G_CALLBACK(delete_contact), NULL);
-  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), b, -1);
+  w = gtk_image_new_from_file(ICON_PATH "/qgn_toolb_gene_deletebutton.png");
+  item = gtk_tool_button_new(w, _("Delete"));
+  g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK(delete_contact), NULL);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
+  g_object_set_data (G_OBJECT (main_window), "delete-button", item);
+  gtk_widget_set_sensitive(GTK_WIDGET(item), FALSE);
   
-  g_object_set_data (G_OBJECT (main_window), "delete-button", b);
-  gtk_widget_set_sensitive (GTK_WIDGET(b), FALSE);
+  w = gtk_image_new_from_file(ICON_PATH "/qgn_toolb_messagin_bullets.png");
+  item = gtk_tool_button_new(w, _("Categories"));
+  g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK (edit_categories), NULL);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
 
-  /* separator */
-  b = gtk_separator_tool_item_new();
-  gtk_separator_tool_item_set_draw(GTK_SEPARATOR_TOOL_ITEM(b), TRUE);
-  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), b, -1);
+  item = gtk_separator_tool_item_new();
+  gtk_separator_tool_item_set_draw(GTK_SEPARATOR_TOOL_ITEM(item), TRUE);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
 
-  /* 
-    In portrait screen layout we add a button for the details dialog.
-    If the display is landscape add additional find button. 
-   */
+  /* find section of toolbar */
+  item = gtk_separator_tool_item_new();
+  gtk_separator_tool_item_set_draw(GTK_SEPARATOR_TOOL_ITEM(item), FALSE);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
+  
+  label83 = gtk_label_new (_("Find:"));
+  item = gtk_tool_item_new();
+  gtk_container_add(GTK_CONTAINER(item), label83);
+  gtk_tool_item_set_expand(GTK_TOOL_ITEM(item), FALSE);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
+
+  item = gtk_separator_tool_item_new();
+  gtk_separator_tool_item_set_draw(GTK_SEPARATOR_TOOL_ITEM(item), FALSE);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
+  
+  entry1 = gtk_entry_new ();
+  gtk_widget_set_size_request(entry1, 120, -1);
+  item = gtk_tool_item_new();
+  gtk_container_add(GTK_CONTAINER(item), entry1);
+  gtk_tool_item_set_expand(GTK_TOOL_ITEM(item), FALSE);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
+
+  item = gtk_separator_tool_item_new();
+  gtk_separator_tool_item_set_draw(GTK_SEPARATOR_TOOL_ITEM(item), FALSE);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
+  
+  label84 = gtk_label_new (_("in"));
+  item = gtk_tool_item_new();
+  gtk_container_add(GTK_CONTAINER(item), label84);
+  gtk_tool_item_set_expand(GTK_TOOL_ITEM(item), FALSE);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
+
+  item = gtk_separator_tool_item_new();
+  gtk_separator_tool_item_set_draw(GTK_SEPARATOR_TOOL_ITEM(item), FALSE);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
+  
+  categories_smenu = gtk_simple_menu_new ();
+  item = gtk_tool_item_new();
+  gtk_container_add(GTK_CONTAINER(item), categories_smenu);
+  gtk_tool_item_set_expand(GTK_TOOL_ITEM(item), TRUE);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
+
+  /* filter list */
+  filter_window = gtk_scrolled_window_new (NULL, NULL);
+  gtk_widget_set_size_request(filter_window, 60, -1);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (filter_window), 
+                                  GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+  filter_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (filter_store));
+  gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (filter_view), FALSE);
+  filter_sel = gtk_tree_view_get_selection (GTK_TREE_VIEW (filter_view));
+  gtk_tree_selection_set_mode(filter_sel, GTK_SELECTION_BROWSE);
+
+  GTK_WIDGET_UNSET_FLAGS (filter_view, GTK_CAN_FOCUS);
+  gtk_container_add (GTK_CONTAINER (filter_window), filter_view);
+
+  renderer = gtk_cell_renderer_text_new ();
+  column = gtk_tree_view_column_new_with_attributes (NULL, renderer,
+						                             "text", 0, NULL);
   if (mode_landscape)
     {
-      b = gtk_tool_button_new_from_stock(GTK_STOCK_FIND);
-      gtk_tool_item_set_tooltip(b, tooltips, 
-                                _("Find a contact by searching for any data."), NULL);
-      g_signal_connect(G_OBJECT(b), "clicked", G_CALLBACK(do_find), NULL);
-      gtk_toolbar_insert(GTK_TOOLBAR(toolbar), b, -1);
+      /* min width = 5% */
+      gtk_tree_view_column_set_min_width(column, size_x / 20);
+      /* max width = 10% */
+      gtk_tree_view_column_set_max_width(column, size_x / 10); 
     }
-  else
-    {
-      pw = gtk_image_new_from_stock (GTK_STOCK_INDEX,
-                                     gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
-      b = gtk_tool_button_new(pw, _("Details"));
-      gtk_tool_item_set_tooltip(b, tooltips, 
-                                _("Tap here to show contacts details."), NULL);
-      g_signal_connect(G_OBJECT(b), "clicked", G_CALLBACK(show_details_window), NULL);
-      gtk_toolbar_insert(GTK_TOOLBAR(toolbar), b, -1);
-    
-      g_object_set_data (G_OBJECT (main_window), "details-button", b);
-    }
-  
-  /* application properties button */
-  b = gtk_tool_button_new_from_stock(GTK_STOCK_PROPERTIES);
-  gtk_tool_item_set_tooltip(b, tooltips, 
-                            _("Tap here to configure this program."), NULL);
-  g_signal_connect(G_OBJECT(b), "clicked", G_CALLBACK(configure),
-                   (gpointer)edit_structure);
-  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), b, -1);
-
-  /* import button */
-  pw = gtk_image_new_from_stock (GTK_STOCK_OPEN,
-                                 gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
-  b = gtk_tool_button_new(pw, _("Import"));
-  gtk_tool_item_set_tooltip(b, tooltips, 
-                            _("Open file to import a contact from it."), NULL);
-  g_signal_connect(G_OBJECT(b), "clicked", G_CALLBACK(on_import_vcard), NULL);
-  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), b, -1);
-
-  /* another separator */
-  b = gtk_separator_tool_item_new();
-  gtk_separator_tool_item_set_draw(GTK_SEPARATOR_TOOL_ITEM(b), FALSE);
-  gtk_tool_item_set_expand(b, TRUE);
-  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), b, -1);
-
-  /* quit button */
-  b = gtk_tool_button_new_from_stock(GTK_STOCK_QUIT);
-  gtk_tool_item_set_tooltip(b, tooltips, 
-                            _("Tap here to exit gpe-contacts."), NULL);
-  g_signal_connect(G_OBJECT(b), "clicked", G_CALLBACK(gtk_main_quit), NULL);
-  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), b, -1);
+  gtk_tree_view_column_set_sizing(column, GTK_TREE_VIEW_COLUMN_AUTOSIZE);
+  gtk_tree_view_append_column (GTK_TREE_VIEW (filter_view), column);
 
 
-  /** contacts list **/
+  /* contacts list */
   scrolled_window = gtk_scrolled_window_new (NULL, NULL);
+  gtk_widget_set_size_request(scrolled_window, 220, -1);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window), 
 				  GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
 
@@ -1404,13 +1561,22 @@ create_main (gboolean edit_structure)
   gtk_container_add (GTK_CONTAINER (scrolled_window), list_view);
   if (mode_landscape)
     {
+      GtkWidget *sep = gtk_vseparator_new();
       gchar *cfgval = db_get_config_tag(CONFIG_LIST, "pos");
       hbox1 = gtk_hbox_new(FALSE, gpe_get_boxspacing());
       gtk_box_pack_start (GTK_BOX (vbox1), hbox1, TRUE, TRUE, 0);
       if ((cfgval) && !strcmp(cfgval, "right"))
-        gtk_box_pack_end (GTK_BOX (hbox1), scrolled_window, FALSE, TRUE, 0);
+        {
+          gtk_box_pack_end (GTK_BOX (hbox1), scrolled_window, FALSE, TRUE, 0);
+          gtk_box_pack_end (GTK_BOX (hbox1), sep, FALSE, TRUE, 0);
+          gtk_box_pack_end (GTK_BOX (hbox1), filter_window, FALSE, TRUE, 0);
+        }
       else
-        gtk_box_pack_start (GTK_BOX (hbox1), scrolled_window, FALSE, TRUE, 0);
+        {
+          gtk_box_pack_start (GTK_BOX (hbox1), filter_window, FALSE, TRUE, 0);
+          gtk_box_pack_start (GTK_BOX (hbox1), sep, FALSE, TRUE, 0);
+          gtk_box_pack_start (GTK_BOX (hbox1), scrolled_window, FALSE, TRUE, 0);
+        }
       if (cfgval)
         g_free(cfgval);
       g_object_set_data(G_OBJECT(main_window), "hbox", hbox1);
@@ -1425,62 +1591,31 @@ create_main (gboolean edit_structure)
 						     "text", 0, NULL);
   if (mode_landscape)
     {
-      /* min width = 20% */
-      gtk_tree_view_column_set_min_width(column, size_x / 5);
+      /* min width = 25% */
+      gtk_tree_view_column_set_min_width(column, size_x / 4);
       /* max width = 50% */
       gtk_tree_view_column_set_max_width(column, size_x / 2); 
     }
   gtk_tree_view_column_set_sizing(column, GTK_TREE_VIEW_COLUMN_AUTOSIZE);
   gtk_tree_view_append_column (GTK_TREE_VIEW (list_view), column);
+	
 
-  hbox3 = gtk_hbox_new (FALSE, 0);
-  if (mode_landscape)
-    {
-       gtk_container_set_border_width(GTK_CONTAINER(hbox3), gpe_get_border());
-       gtk_box_set_spacing(GTK_BOX(hbox3), gpe_get_boxspacing());
-    }
-  gtk_box_pack_start (GTK_BOX (vbox1), hbox3, FALSE, FALSE, 0);
-
-  /** status label on larger screens **/
-  if (mode_large_screen)
-    {
-      lStatus = gtk_label_new (NULL);
-      gtk_misc_set_alignment(GTK_MISC(lStatus), 1.0, 0.5);
-      gtk_box_pack_end (GTK_BOX (hbox3), lStatus, FALSE, FALSE, 3);
-    }
-    
-  /** find and categories section **/
-  label83 = gtk_label_new (_("Find:"));
-  gtk_box_pack_start (GTK_BOX (hbox3), label83, FALSE, FALSE, 0);
-
-  entry1 = gtk_entry_new ();
-  gtk_widget_set_size_request(entry1, 60, -1);
-  gtk_box_pack_start (GTK_BOX (hbox3), entry1, FALSE, FALSE, 0);
-
-  label84 = gtk_label_new (_("in"));
-  gtk_box_pack_start (GTK_BOX (hbox3), label84, FALSE, FALSE, 2);
-
-  categories_smenu = gtk_simple_menu_new ();
-  gtk_box_pack_start (GTK_BOX (hbox3), categories_smenu, FALSE, FALSE, 0);
+  /* connect actions to widgets */
   g_signal_connect (G_OBJECT (categories_smenu), "changed", 
-		    G_CALLBACK (do_search), entry1);
-
+                    G_CALLBACK (do_search), entry1);
   g_signal_connect (G_OBJECT (entry1), "activate", G_CALLBACK (do_search), entry1);
   g_signal_connect (G_OBJECT (entry1), "changed", G_CALLBACK (schedule_search), NULL);
 
   g_signal_connect (G_OBJECT (list_view), "button_press_event", 
-		    G_CALLBACK (list_button_press_event), list_store);
+                    G_CALLBACK (list_button_press_event), list_store);
 
   g_signal_connect (G_OBJECT (list_view), "button_release_event", 
-		    G_CALLBACK (list_button_release_event), list_store);
+                    G_CALLBACK (list_button_release_event), list_store);
   
   if (mode_large_screen)
     g_signal_connect (G_OBJECT (list_view), "cursor-changed", 
-		    G_CALLBACK (list_view_cursor_changed), lStatus);
+                      G_CALLBACK (list_view_cursor_changed), lStatus);
 
-  /* set masks and tie up key events for keyboard control */
-  gtk_widget_set_events (main_window, GDK_KEY_PRESS_MASK);
-  gtk_widget_set_events (entry1, GDK_KEY_PRESS_MASK);
   g_signal_connect (G_OBJECT (main_window), "key_press_event", 
                     G_CALLBACK (window_key_press_event), list_view);
 
@@ -1488,16 +1623,17 @@ create_main (gboolean edit_structure)
                     G_CALLBACK (toolbar_key_press_event), NULL);
   g_signal_connect (G_OBJECT (entry1), "key_press_event", 
                     G_CALLBACK (search_entry_key_press_event), btnNew);
-            
+ 
   search_entry = entry1;
 
-  
-  /** detail section **/
-  pDetail = gtk_frame_new (_("Contact"));
+  /* contact detail panel */
+  pDetail = gtk_alignment_new(0, 0, 1, 1);
   
   if (mode_landscape)
     {
-      gtk_container_set_border_width(GTK_CONTAINER(pDetail), gpe_get_border());
+      GtkWidget *sep = gtk_vseparator_new();
+      gtk_container_set_border_width(GTK_CONTAINER(pDetail), 0);
+      gtk_box_pack_start (GTK_BOX (hbox1), sep, FALSE, TRUE, 0);
       gtk_box_pack_start (GTK_BOX (hbox1), pDetail, TRUE, TRUE, 0);
     }
   else
@@ -1505,14 +1641,14 @@ create_main (gboolean edit_structure)
       gtk_box_pack_start (GTK_BOX (vbox1), pDetail, FALSE, TRUE, 0);
     }
   tabDetail = gtk_table_new (1, 2, FALSE);
-  gtk_table_set_col_spacings(GTK_TABLE(tabDetail), gpe_get_boxspacing() * 2);
-  gtk_container_set_border_width(GTK_CONTAINER(tabDetail), gpe_get_border());
+  gtk_table_set_col_spacings(GTK_TABLE(tabDetail), gpe_get_boxspacing());
+  gtk_container_set_border_width(GTK_CONTAINER(tabDetail), 0);
   if (mode_large_screen)
     {
       GtkWidget *vport;
       scrolled_window = gtk_scrolled_window_new(NULL, NULL);
       gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrolled_window),
-                                     GTK_POLICY_NEVER,
+                                     GTK_POLICY_AUTOMATIC,
                                      GTK_POLICY_AUTOMATIC);
       vport = gtk_viewport_new(NULL, NULL);
       gtk_viewport_set_shadow_type(GTK_VIEWPORT(vport), GTK_SHADOW_NONE);
@@ -1522,15 +1658,28 @@ create_main (gboolean edit_structure)
     }
   else
     gtk_container_add (GTK_CONTAINER (pDetail), tabDetail);
+  
+  /* store pointers to some widgets */
   g_object_set_data (G_OBJECT (main_window), "tabDetail", tabDetail);
   g_object_set_data (G_OBJECT (main_window), "entry", entry1);
+  g_object_set_data (G_OBJECT (main_window), "toolbar", toolbar);
 
   g_signal_connect (G_OBJECT (tree_sel), "changed",
 		    G_CALLBACK (selection_made), main_window);
+  g_signal_connect (G_OBJECT (filter_sel), "changed",
+		    G_CALLBACK (filter_selected), main_window);
   g_signal_connect (G_OBJECT (main_window), "focus-in-event",
 		    G_CALLBACK (on_main_focus), entry1);
   
   return main_window;
+}
+
+static void 
+osso_top_callback (const gchar* arguments, gpointer ptr)
+{
+    GtkWindow *window = ptr;
+
+    gtk_window_present (GTK_WINDOW (window));
 }
 
 int
@@ -1542,7 +1691,7 @@ main (int argc, char *argv[])
   gchar *ifile = NULL;
   GtkTreePath *path;
   gint size_x, size_y;
-    
+  
 #ifdef ENABLE_NLS
   setlocale (LC_ALL, "");
 
@@ -1575,8 +1724,8 @@ main (int argc, char *argv[])
 		ifile = optarg;
     if (arg == 'v')
       edit_vcard = TRUE;
-  }
-  
+  }    
+
   /* are we called to import a file? */
   if (ifile)
     {
@@ -1602,7 +1751,10 @@ main (int argc, char *argv[])
   
   export_init ();
 
-  /* we are called to edit a users personal vcard */
+  /* initialise data backends */ 
+  gpe_pim_categories_init ();
+    
+ /* we are called to edit a users personal vcard */
   if (edit_vcard)
     {
       struct person *p;
@@ -1623,22 +1775,14 @@ main (int argc, char *argv[])
         gpe_perror_box(_("Saving vcard failed"));
       exit (EXIT_SUCCESS);
     }
-   
-   /* initialise data backends */ 
-   gpe_pim_categories_init ();
- 
+    
    if (db_open (FALSE))
     exit (1);
 
   load_well_known_tags ();
 
-  if (mode_large_screen)
-    load_structure (LARGE_STRUCTURE);
-  else
-    load_structure (DEFAULT_STRUCTURE);
-
-  /* crate main window and initialise display */
   list_store = gtk_list_store_new (2, G_TYPE_STRING, G_TYPE_INT);
+  filter_store = gtk_list_store_new (2, G_TYPE_STRING, G_TYPE_INT);
    
   mainw = create_main (edit_structure);
   popup_menu = create_popup (mainw);
@@ -1647,18 +1791,30 @@ main (int argc, char *argv[])
 
   gtk_signal_connect (GTK_OBJECT (mainw), "destroy", gtk_main_quit, NULL);
 
+  if (mode_large_screen)
+    load_structure (LARGE_STRUCTURE);
+  else
+    load_structure (DEFAULT_STRUCTURE);
+
   /* load detail panel fields, create widgets */
   if (!mode_landscape)
     load_panel_config ();
 
-  gpe_set_window_icon (mainw, "icon");
+  populate_filter();
+
+  /* fire up osso services */
+  context = osso_initialize(SERVICE_NAME, SERVICE_VERSION, TRUE, NULL);
+  g_assert(context);
+  osso_application_set_top_cb(context, osso_top_callback, (gpointer)mainw);
+  
+  
   gtk_widget_show_all (mainw);
   gtk_widget_grab_focus (GTK_WIDGET (g_object_get_data (G_OBJECT (mainw), "entry")));
 
   path = gtk_tree_path_new_first();
   gtk_tree_view_set_cursor(GTK_TREE_VIEW(list_view), path, NULL, FALSE);
   gtk_tree_path_free(path);
-  
+
   gtk_main ();
   return 0;
 }

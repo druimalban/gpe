@@ -1,7 +1,7 @@
 dnl Process this file with autoconf to produce a configure script.
 
-AC_PREREQ(2.59)
-AC_INIT(gpe-contacts,0.38,gpe@handhelds.org)
+AC_INIT(gpe-contacts,0.39,gpe@handhelds.org)
+
 AC_CONFIG_SRCDIR([main.c])
 AM_INIT_AUTOMAKE([foreign dist-bzip2])
 
@@ -25,14 +25,35 @@ AC_SUBST(gpecontacts_localedir)
 AM_GLIB_GNU_GETTEXT
 AC_PROG_INTLTOOL([0.23])
 
-PKG_CHECK_MODULES(DEPS, $DEP_MODULES)
+ENABLE_HILDON=false
 
+AC_ARG_ENABLE(hildon,
+[  --enable-hildon         Enable Hildon GUI],
+[
+	ENABLE_HILDON=true
+	DEP_MODULES="$DEP_MODULES hildon-lgpl hildon-fm libosso"
+],
+[
+	ENABLE_HILDON=false
+])
+
+AC_SUBST(ENABLE_HILDON)
+
+AM_CONDITIONAL(HILDON, test x$ENABLE_HILDON = xtrue)
+PKG_CHECK_MODULES(DEPS, $DEP_MODULES)
 AC_SUBST(DEPS_CFLAGS)
 AC_SUBST(DEPS_LIBS)
+
+PKG_CHECK_MODULES(SERVERDEPS, "glib-2.0 dbus-glib-1 sqlite libgpewidget libosso")
+AC_SUBST(SERVERDEPS_CFLAGS)
+AC_SUBST(SERVERDEPS_LIBS)
+
 
 AC_OUTPUT([
 Makefile
 po/Makefile.in
-gpe-contacts.desktop.in
 edit-vcard.desktop.in
+gpe-contacts.desktop.in
+hildon/org.gpe.gpe-contacts.service
+hildon/gpe-contacts.desktop.in
 ])

@@ -30,7 +30,9 @@
 
 static sqlite *db = NULL; 
 
+#ifndef IS_HILDON
 extern void migrate_old_categories (sqlite *db);
+#endif
 
 /* contacts full data in tag/value pairs */
 static const char *schema_str = "create table contacts (urn INTEGER NOT NULL, tag TEXT NOT NULL, value TEXT NOT NULL);";
@@ -127,7 +129,6 @@ check_table_update(void)
 
   if (r) /* r > 0 indicates a failure, need to recreate that table with new schema */
     {
-      int num, col, i;
       struct person *p;
           
       free (err);
@@ -255,10 +256,12 @@ db_open (gboolean open_vcard)
       db_add_config_values (CONFIG_PANEL, _("Phone"), "HOME.TELEPHONE");
       db_add_config_values (CONFIG_PANEL, _("EMail"), "HOME.EMAIL");
     }
+#ifndef IS_HILDON
   else
       check_table_update();
+  
   migrate_old_categories (db);
-
+#endif
   db_check_tags();
   
   return 0;
@@ -467,6 +470,88 @@ db_get_entries_finddlg (const gchar *str, const gchar *cat)
   return list;
 }
 
+GSList *
+db_get_entries_filtered (const gchar* filter)
+{
+  GSList *list = NULL;
+  char *err = NULL;
+  int r;
+
+  if (filter && !strncmp(filter, "***", 3))
+     return db_get_entries(); 
+  
+  if (filter)
+    r = sqlite_exec_printf (db, "select urn, name, family_name from contacts_urn "\
+                            "where (family_name like '%c%%' or family_name like '%c%%' or family_name like '%c%%')",
+                            read_one_entry, &list, &err, filter[0], filter[1], filter[2]);
+  else
+    r = sqlite_exec(db, "select urn, name, family_name from contacts_urn "\
+                        "where lower(substr(family_name,1,1)) not between 'a' and 'z'",
+                    read_one_entry, &list, &err);
+      
+  if (r)
+    {
+      gpe_error_box (err);
+      free (err);
+      return NULL;
+    }
+
+  return list;
+}
+
+GSList *
+db_get_entries_list_filtered (const gchar* str, const gchar *filter, const gchar *cat)
+{
+  GSList *list = NULL;
+  char *err = NULL;
+  int r = 0;
+  gboolean has_cat = cat && cat[0];
+  gboolean has_str = str && str[0];
+
+  if (filter && !strncmp(filter, "***", 3))
+     return db_get_entries_list(str, cat); 
+  
+  if (!has_cat && !has_str) 
+    {
+      return db_get_entries_filtered(filter);
+    }   
+  else if (!has_str && has_cat) 
+    {
+      r = sqlite_exec_printf 
+        (db, "select contacts_urn.urn, contacts_urn.name, contacts_urn.family_name, contacts_urn.company "\
+             "from contacts_urn, contacts where contacts_urn.urn = contacts.urn "\
+             "and contacts.tag = 'CATEGORY' and contacts.value like '%%%q%%' and "\
+             "(contacts_urn.family_name like '%%%q%%') and (contacts_urn.family_name like '%c%%' or contacts_urn.family_name like '%c%%')",
+        read_one_entry, &list, &err, cat, filter[0], filter[1], filter[2]);
+    }
+  else if (has_cat)
+    {
+      r = sqlite_exec_printf 
+        (db, "select contacts_urn.urn, contacts_urn.name, contacts_urn.family_name, contacts_urn.company "\
+             "from contacts_urn, contacts where contacts_urn.urn = contacts.urn "\
+             "and contacts.tag = 'CATEGORY' and contacts.value like '%%%q%%' and "\
+             "(contacts_urn.family_name like '%%%q%%') and (contacts_urn.family_name like '%c%%' or contacts_urn.family_name like '%c%%')",
+        read_one_entry, &list, &err, cat, str, filter[0], filter[1], filter[2]);
+    } 
+  else
+    {
+      r = sqlite_exec_printf 
+        (db, "select distinct contacts_urn.urn, contacts_urn.name, contacts_urn.family_name, contacts_urn.company "\
+             "from contacts_urn, contacts where contacts_urn.urn = contacts.urn "\
+             "and (contacts_urn.family_name like '%%%q%%') and (contacts_urn.family_name like '%c%%' or contacts_urn.family_name like '%c%%')",
+        read_one_entry, &list, &err, str, filter[0], filter[1], filter[2]);
+    } 
+ 
+  if (r)
+    {
+      gpe_error_box (err);
+      free (err);
+      return NULL;
+    }
+
+  return list;
+}
+
 static int
 read_entry_data (void *arg, int argc, char **argv, char **names)
 {
@@ -537,8 +622,6 @@ inline struct tag_value *
 db_find_tag (struct person *p, gchar * tag)
 {
   struct tag_value *t = NULL;
-  int r;
-  char *err = NULL;
   GSList *iter;
   
   for (iter = p->data; iter; iter = iter->next)

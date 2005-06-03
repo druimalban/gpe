@@ -58,16 +58,25 @@ do_edit_name_detail(GtkWindow *parent, struct person *p)
     }
     
   /* create dialog window */
+#ifdef IS_HILDON
+  dialog = gtk_dialog_new_with_buttons(_("Edit Name Details"), parent, 
+                                       GTK_DIALOG_MODAL, NULL);
+  btnOK = gtk_dialog_add_button(GTK_DIALOG(dialog), _("OK"), 
+                                GTK_RESPONSE_OK);
+  gtk_dialog_add_button(GTK_DIALOG(dialog), _("Cancel"), 
+                        GTK_RESPONSE_CANCEL);
+#else    
   dialog = gtk_dialog_new_with_buttons(_("Edit Name Details"), parent,
                                        GTK_DIALOG_MODAL,
                                        GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
                                        NULL);
-  gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(parent));
   btnOK = gtk_dialog_add_button(GTK_DIALOG(dialog), GTK_STOCK_OK, 
                                 GTK_RESPONSE_OK);
+#endif
   GTK_WIDGET_SET_FLAGS(btnOK, GTK_CAN_DEFAULT);
   gtk_widget_grab_default(btnOK);
   gtk_widget_grab_focus(btnOK);
+  gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(parent));
   
   /* supply action area */
   
