@@ -22,6 +22,10 @@
 
 #include <gtk/gtk.h>
 
+#ifdef IS_HILDON
+extern GtkWidget *gpe_pim_categories_dialog (GSList *selected_categories, gboolean select, GCallback callback, gpointer data);
+#else
 extern GtkWidget *gpe_pim_categories_dialog (GSList *selected_categories, GCallback callback, gpointer data);
+#endif 
 
 #endif

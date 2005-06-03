@@ -1,3 +1,10 @@
+
+2005-06-04  Florian Boor  <florian@kernelconcepts.de>
+
+	* configure.ac: New version, new configuration switch: --enable-hildon
+	* debian/*: New files for building debian packages in maemo env.
+	* Merge in support for maemo platform.
+
 2005-05-08  Florian Boor  <florian@kernelconcepts.de>
 
 	* doc/tmpl/*.sgml: Improved some documentation.

@@ -1,3 +1,7 @@
+missing
+depcomp
+install-sh
+Makefile
 *.pc
 *.d
 *.so.0

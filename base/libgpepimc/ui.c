@@ -88,6 +88,15 @@ new_category (GtkWidget *w, GtkListStore *list_store)
   gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (hbox), name, TRUE, TRUE, 2);
 
+#ifdef IS_HILDON
+  ok = gtk_button_new_with_label (_("OK"));
+  cancel = gtk_button_new_with_label (_("Cancel"));
+
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), ok, 
+		      FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), cancel, 
+		      FALSE, FALSE, 0);
+#else
   ok = gtk_button_new_from_stock (GTK_STOCK_OK);
   cancel = gtk_button_new_from_stock (GTK_STOCK_CANCEL);
 
@@ -95,7 +104,7 @@ new_category (GtkWidget *w, GtkListStore *list_store)
 		      FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), ok, 
 		      FALSE, FALSE, 0);
-
+#endif
   GTK_WIDGET_SET_FLAGS (ok, GTK_CAN_DEFAULT);
   gtk_widget_grab_default (ok);
 
@@ -335,43 +344,53 @@ change_category_name (GtkCellRendererText *cell,
   gtk_list_store_set (list_store, &iter, 1, new_text, -1);
 }
 
+#ifdef IS_HILDON
+GtkWidget *
+gpe_pim_categories_dialog (GSList *selected_categories, gboolean select, 
+                           GCallback callback, gpointer data)
+#else
 GtkWidget *
 gpe_pim_categories_dialog (GSList *selected_categories, GCallback callback, gpointer data)
+#endif
 {
   GtkWidget *toolbar;
   GtkWidget *window;
   GtkWidget *sw;
   GSList *iter;
-  GtkWidget *okbutton, *cancelbutton;
+  GtkWidget *okbutton = NULL, *cancelbutton = NULL;
   GtkListStore *list_store;
   GtkWidget *tree_view;
   GtkCellRenderer *renderer;
   GtkTreeViewColumn *col;
   GSList *list;
-
+#ifdef IS_HILDON
+  GtkWidget *newbutton, *deletebutton;
+#endif
+    
   window = gtk_dialog_new ();
 
   list_store = gtk_list_store_new (3, G_TYPE_BOOLEAN, G_TYPE_STRING, G_TYPE_INT);
 
   tree_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (list_store));
 
-  toolbar = gtk_toolbar_new ();
-  gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);
-  gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
-
-  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_NEW,
-			    _("New category"), 
-			    _("Tap here to add a new category."),
-			    G_CALLBACK (new_category), list_store, -1);
-
-  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_DELETE,
-			    _("Delete category"), 
-			    _("Tap here to delete the selected category."),
-			    G_CALLBACK (delete_category), tree_view, -1);
-
-  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox),
-		      toolbar, FALSE, FALSE, 0);
-
+#ifndef IS_HILDON
+    toolbar = gtk_toolbar_new ();
+    gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);
+    gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
+    
+    gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_NEW,
+                  _("New category"), 
+                  _("Tap here to add a new category."),
+                  G_CALLBACK (new_category), list_store, -1);
+    
+    gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_DELETE,
+                  _("Delete category"), 
+                  _("Tap here to delete the selected category."),
+                  G_CALLBACK (delete_category), tree_view, -1);
+    
+    gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox),
+                toolbar, FALSE, FALSE, 0);
+#endif      
   sw = gtk_scrolled_window_new (NULL, NULL);
 
   list = gpe_pim_categories_list ();
@@ -383,23 +402,27 @@ gpe_pim_categories_dialog (GSList *selected_categories, GCallback callback, gpoi
       gtk_list_store_append (list_store, &titer);
 
       gtk_list_store_set (list_store, &titer, 
-			  0, g_slist_find (selected_categories, (gpointer)c->id) ? TRUE : FALSE, 
+			  0, g_slist_find (selected_categories, (gpointer)c->id) ? TRUE : FALSE,
 			  1, c->name, 
 			  2, c->id, 
 			  -1);
     }
   g_slist_free (list);
 
-  renderer = gtk_cell_renderer_toggle_new ();
-  g_object_set (G_OBJECT (renderer), "activatable", TRUE, NULL);
-  col = gtk_tree_view_column_new_with_attributes (NULL, renderer,
-						  "active", 0,
-						  NULL);
-
-  gtk_tree_view_insert_column (GTK_TREE_VIEW (tree_view), col, -1);
-
-  g_object_set_data (G_OBJECT (tree_view), "toggle-col", col);
-
+#ifdef IS_HILDON
+  if (select)
+#endif
+    {  
+      renderer = gtk_cell_renderer_toggle_new ();
+      g_object_set (G_OBJECT (renderer), "activatable", TRUE, NULL);
+      col = gtk_tree_view_column_new_with_attributes (NULL, renderer,
+                              "active", 0,
+                              NULL);
+    
+      gtk_tree_view_insert_column (GTK_TREE_VIEW (tree_view), col, -1);
+    
+      g_object_set_data (G_OBJECT (tree_view), "toggle-col", col);
+    }
   renderer = gtk_cell_renderer_text_new ();
   g_object_set (G_OBJECT (renderer), "editable", TRUE, NULL);
   col = gtk_tree_view_column_new_with_attributes (NULL, renderer,
@@ -410,7 +433,7 @@ gpe_pim_categories_dialog (GSList *selected_categories, GCallback callback, gpoi
                     G_CALLBACK(change_category_name),
                     list_store);
 
- gtk_tree_view_insert_column (GTK_TREE_VIEW (tree_view), col, -1);
+  gtk_tree_view_insert_column (GTK_TREE_VIEW (tree_view), col, -1);
 
   gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (tree_view), FALSE);
 
@@ -427,21 +450,56 @@ gpe_pim_categories_dialog (GSList *selected_categories, GCallback callback, gpoi
 
   gpe_set_window_icon (window, "icon");
 
+#ifdef IS_HILDON
+  if (select)
+  {
+    okbutton = gtk_button_new_with_label (_("OK"));
+    cancelbutton = gtk_button_new_with_label (_("Cancel"));
+  }
+  else
+  {
+    okbutton = gtk_button_new_with_label (_("Close"));
+    newbutton = gtk_button_new_with_label (_("New"));
+    deletebutton = gtk_button_new_with_label (_("Delete"));
+  }
+#else
   okbutton = gtk_button_new_from_stock (GTK_STOCK_OK);
   cancelbutton = gtk_button_new_from_stock (GTK_STOCK_CANCEL);
+#endif
 
   g_object_set_data (G_OBJECT (window), "list_store", list_store);
 
-  g_signal_connect (G_OBJECT (okbutton), "clicked", G_CALLBACK (categories_dialog_ok), window);
-  g_signal_connect (G_OBJECT (cancelbutton), "clicked", G_CALLBACK (categories_dialog_cancel), window);
+  if (okbutton) 
+    g_signal_connect (G_OBJECT (okbutton), "clicked", G_CALLBACK (categories_dialog_ok), window);
+  if (cancelbutton)
+    g_signal_connect (G_OBJECT (cancelbutton), "clicked", G_CALLBACK (categories_dialog_cancel), window);
 
+#ifdef IS_HILDON
+if (select)
+  {
+    gtk_window_set_title (GTK_WINDOW (window), _("Select categories"));
+    gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), okbutton, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), cancelbutton, TRUE, TRUE, 0);
+  }
+else
+  {
+    gtk_window_set_title (GTK_WINDOW (window), _("Edit categories"));
+    gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), newbutton, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), deletebutton, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), okbutton, TRUE, TRUE, 0);
+    g_signal_connect (G_OBJECT (newbutton), "clicked", G_CALLBACK (new_category), list_store);
+    g_signal_connect (G_OBJECT (deletebutton), "clicked", G_CALLBACK (delete_category), tree_view);
+  }
+#else
+  gtk_window_set_title (GTK_WINDOW (window), _("Select categories"));
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), cancelbutton, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), okbutton, TRUE, TRUE, 0);
+#endif
+  
   GTK_WIDGET_SET_FLAGS (okbutton, GTK_CAN_DEFAULT);
   gtk_widget_grab_default (okbutton);
   
   gtk_window_set_default_size (GTK_WINDOW (window), 240, 320);
-  gtk_window_set_title (GTK_WINDOW (window), _("Select categories"));
 
   g_signal_connect_swapped (G_OBJECT (window), "destroy", G_CALLBACK (g_object_unref), list_store);
 

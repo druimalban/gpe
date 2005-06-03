@@ -1,0 +1,23 @@
+libgpepimc (0.4m1-4) unstable; urgency=low
+
+  * Changed dependencies.
+
+ -- Florian Boor <florian.boor@kernelconcepts.de>  Mon, 30 May 2005 20:17:44 +0200
+
+libgpepimc (0.4m1-3) unstable; urgency=low
+
+  * Minor fixes.
+
+ -- Florian Boor <florian.boor@kernelconcepts.de>  Mon, 09 May 2005 20:17:44 +0200
+ 
+libgpepimc (0.4m1-2) unstable; urgency=low
+
+  * Minor fixes.
+
+ -- Florian Boor <florian.boor@kernelconcepts.de>  Wed, 29 Apr 2005 20:17:44 +0200
+
+libgpepimc (0.4m1-1) unstable; urgency=low
+
+  * Initial Maemo release.
+
+ -- Florian Boor <florian.boor@kernelconcepts.de>  Wed, 27 Apr 2005 15:17:44 +0200
