@@ -1,3 +1,8 @@
+debian-build
+depcomp
+install-sh
+libgpevtype.prj
+missing
 *.pc
 *.d
 *.so.0

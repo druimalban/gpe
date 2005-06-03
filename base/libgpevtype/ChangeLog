@@ -1,3 +1,11 @@
+2005-06-04  Florian Boor  <florian@kernelconcepts.de>
+
+	* doc/gtk-doc.make: Fixed doc build support not to fail in some
+                            situations.
+	* debian/*: Add support for maemo debian packages.
+	* configure.ac: Version to 0.12.
+
+
 2005-04-25  Florian Boor  <florian@kernelconcepts.de>
 
 	* Makefile.am: Add missing header file.

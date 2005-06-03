@@ -1,0 +1,17 @@
+libgpevtype (0.11m1-3) unstable; urgency=low
+
+  * Changed dependencies.
+
+ -- Florian Boor <florian.boor@kernelconcepts.de>  Mon, 30 May 2005 15:17:44 +0200
+
+libgpevtype (0.11m1-2) unstable; urgency=low
+
+  * Dependency fix.
+
+ -- Florian Boor <florian.boor@kernelconcepts.de>  Mon, 09 May 2005 15:17:44 +0200
+ 
+libgpevtype (0.11m1-1) unstable; urgency=low
+
+  * Initial Maemo release.
+
+ -- Florian Boor <florian.boor@kernelconcepts.de>  Fri, 29 Apr 2005 15:17:44 +0200
