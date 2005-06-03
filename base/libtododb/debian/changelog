@@ -1,0 +1,17 @@
+libtododb (0.08m1-3) unstable; urgency=low
+
+  * Dependency fix.
+
+ -- Florian Boor <florian.boor@kernelconcepts.de>  Mon, 30 May 2005 16:55:56 +0200
+
+libtododb (0.08m1-2) unstable; urgency=low
+
+  * Dependency fix.
+
+ -- Florian Boor <florian.boor@kernelconcepts.de>  May, 09 may 2005 16:55:56 +0200
+ 
+libtododb (0.08m1-1) unstable; urgency=low
+
+  * Initial Release.
+
+ -- Florian Boor <florian.boor@kernelconcepts.de>  Wed, 27 Apr 2005 16:55:56 +0200

@@ -1,3 +1,12 @@
+
+2005-06-04  Florian Boor <florian@kernelconcepts.de>
+
+	* configure.ac, Makefile.am: Merge in support for maemo debian
+                                     packages.
+        * debian/*: Support files for package creation.
+	* autogen.sh: Don't call configure here.
+
+
 2005-05-11  Florian Boor <florian@kernelconcepts.de>
 
 	* Version 0.09 released.

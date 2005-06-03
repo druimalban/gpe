@@ -1,0 +1,26 @@
+Source: libtododb
+Priority: optional
+Maintainer: Florian Boor <florian.boor@kernelconcepts.de>
+Build-Depends: debhelper (>= 4.0.0), autotools-dev
+Standards-Version: 3.6.1
+Section: libs
+
+Package: libtododb-dev
+Section: libdev
+Architecture: any
+Depends: libtododb0 (= ${Source-Version}) libgpewidget-dev libgpepimc-dev
+Description: GPE ToDo database API library (development files)
+ This library provides an API interface for accessing ToDo data used in 
+ GPE PIM applications.
+ .
+ For mor information about the GPE project visit http://gpe.handhelds.org.
+
+Package: libtododb0
+Section: libs
+Architecture: any
+Depends: maemo
+Description: GPE ToDo database API library
+ This library provides an API interface for accessing ToDo data used in 
+ GPE PIM applications.
+ .
+ For mor information about the GPE project visit http://gpe.handhelds.org.

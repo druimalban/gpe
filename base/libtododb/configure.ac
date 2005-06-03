@@ -3,6 +3,7 @@
 
 AC_PREREQ(2.59)
 AC_INIT(libtododb, 0.09, gpe@handhelds.org)
+
 AC_CONFIG_SRCDIR([todo-db.c])
 AM_INIT_AUTOMAKE([foreign dist-bzip2])
 
