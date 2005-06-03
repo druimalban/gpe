@@ -1,0 +1,13 @@
+[Desktop Entry]
+Encoding=UTF-8
+_Name=To-do list
+_Comment=GPE To-do List
+Exec=@prefix@/bin/gpe-todo
+Terminal=false
+Type=Application
+Icon=gpe-todo
+X-Window-Icon=gpe-todo
+X-Window-Icon-Dimmed=gpe-todo
+X-Osso-Service=gpe_todo
+X-HildonDesk-ShowInToolbar=true
+X-Osso-Type=application/x-executable
