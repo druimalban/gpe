@@ -1,3 +1,9 @@
+2005-06-04  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * configure.ac: Version to 0.54. New switch: --enable-hildon
+	* Makefile.am, configure.ac, list-ui.c, main.c, todo-ui.c:
+	  Merge in support for maemo/hildon environment.
+
 2005-05-12  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * list-ui.c: Move category cell to end.

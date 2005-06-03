@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2002, 2003, 2004 Philip Blundell <philb@gnu.org>
- *               2005             Florian Boor <florian@kernelconcepts.de>
+ * maemo suppoar and UI updtes 2005 Florian Boor <florian@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -22,6 +22,16 @@
 #include <gpe/question.h>
 #include <gpe/pim-categories.h>
 
+/* Hildon includes */
+#ifdef IS_HILDON
+
+#include <hildon-widgets/hildon-app.h>
+#include <gpe/pim-categories-ui.h>
+
+#define ICON_PATH PREFIX "/share/icons/hicolor/26x26"
+
+#endif
+
 #include "todo.h"
 
 #define _(_x) gettext(_x)
@@ -37,6 +47,7 @@ GdkPixbuf *tick_icon, *no_tick_icon, *bar_icon, *dot_icon, *high_icon;
 
 static struct todo_item *current_menu_item;
 extern GtkWidget *window;
+static GtkWidget *toolbar;
 
 
 static gchar *
@@ -99,7 +110,6 @@ toggle_completed_items (GtkWidget *w, gpointer user_data)
    refresh_items ();
 }
 
-
 void
 categories_menu (void)
 {
@@ -146,7 +156,10 @@ categories_menu (void)
   gtk_widget_show (i);
 
   gtk_widget_show (menu);
-
+  if (gtk_option_menu_get_menu(GTK_OPTION_MENU (g_option)))
+    {
+      gtk_widget_destroy(gtk_option_menu_get_menu(GTK_OPTION_MENU (g_option)));
+    }
   gtk_option_menu_set_menu (GTK_OPTION_MENU (g_option), menu);
 }
 
@@ -164,12 +177,23 @@ delete_completed_items (GtkWidget *w, gpointer user_data)
 {
   GtkWidget *dialog;
 
-  dialog = gtk_message_dialog_new (GTK_WINDOW (window),
+#ifdef IS_HILDON
+  dialog = gtk_message_dialog_new (GTK_WINDOW(gtk_widget_get_toplevel(w)),
+                                   GTK_DIALOG_MODAL 
+                                   | GTK_DIALOG_DESTROY_WITH_PARENT,
+                                   GTK_MESSAGE_QUESTION, GTK_BUTTONS_NONE,
+                                   "Are you sure you want to delete all " \
+                                   "completed items permanently?");
+  gtk_dialog_add_buttons(GTK_DIALOG(dialog),
+                         _("OK"), GTK_RESPONSE_YES,
+                         _("Cancel"), GTK_RESPONSE_NO, NULL);
+#else
+  dialog = gtk_message_dialog_new (GTK_WINDOW(gtk_widget_get_toplevel(w)),
                                    GTK_DIALOG_MODAL 
                                    | GTK_DIALOG_DESTROY_WITH_PARENT,
                                    GTK_MESSAGE_QUESTION, GTK_BUTTONS_YES_NO,
                                    "Delete completed items?");
-
+#endif  
   if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_YES)
     {
       GSList *list, *iter;
@@ -466,6 +490,92 @@ button_release_event (GtkWidget *widget, GdkEventButton *b)
   return TRUE;
 }
 
+#ifdef IS_HILDON
+static void
+toggle_toolbar(GtkCheckMenuItem *menuitem, gpointer user_data)
+{
+  if (gtk_check_menu_item_get_active(menuitem))
+    gtk_widget_show(toolbar);
+  else
+    gtk_widget_hide(toolbar);
+}
+
+static void
+update_categories (GtkWidget *w, GSList *new, gpointer t)
+{
+  categories_menu ();
+  if (new)
+      g_slist_free(new);
+}
+
+static void
+edit_categories (GtkWidget *w)
+{
+  GtkWidget *dialog;
+
+  dialog = gpe_pim_categories_dialog (NULL, FALSE, 
+                                      G_CALLBACK(update_categories), NULL);
+  gtk_window_set_transient_for(GTK_WINDOW(dialog), 
+                               GTK_WINDOW(gtk_widget_get_toplevel(w)));
+  gtk_window_set_modal(GTK_WINDOW(dialog), TRUE);
+}
+#endif
+
+
+#ifdef IS_HILDON
+/* create hildon application main menu */
+static void
+create_app_menu(HildonAppView *appview)
+{
+  GtkMenu *menu_main = hildon_appview_get_menu(appview);    
+  GtkWidget *menu_items = gtk_menu_new();
+  GtkWidget *menu_categories = gtk_menu_new();
+  GtkWidget *menu_view = gtk_menu_new();
+  GtkWidget *menu_tools = gtk_menu_new();
+    
+  GtkWidget *item_items = gtk_menu_item_new_with_label(_("Item"));
+  GtkWidget *item_categories = gtk_menu_item_new_with_label(_("Categories"));
+  GtkWidget *item_view = gtk_menu_item_new_with_label(_("View"));
+  GtkWidget *item_tools = gtk_menu_item_new_with_label(_("Tools"));
+  GtkWidget *item_close = gtk_menu_item_new_with_label(_("Close"));
+  GtkWidget *item_open = gtk_menu_item_new_with_label(_("Open..."));
+  GtkWidget *item_add = gtk_menu_item_new_with_label(_("Add new"));
+  GtkWidget *item_catedit = gtk_menu_item_new_with_label(_("Edit categories"));
+  GtkWidget *item_toolbar = gtk_check_menu_item_new_with_label(_("Show toolbar"));
+  GtkWidget *item_delete = gtk_menu_item_new_with_label(_("Delete completed items"));
+  GtkWidget *item_move = gtk_menu_item_new_with_label(_("Move completed items to the end"));
+
+  gtk_menu_append (GTK_MENU(menu_items), item_open);
+  gtk_menu_append (GTK_MENU(menu_items), item_add);
+  gtk_menu_append (GTK_MENU(menu_categories), item_catedit);
+  gtk_menu_append (GTK_MENU(menu_view), item_toolbar);
+  gtk_menu_append (GTK_MENU(menu_tools), item_delete);
+  gtk_menu_append (GTK_MENU(menu_tools), item_move);
+  gtk_menu_append (menu_main, item_items);
+  gtk_menu_append (menu_main, item_categories);
+  gtk_menu_append (menu_main, item_view);
+  gtk_menu_append (menu_main, item_tools);
+  gtk_menu_append (menu_main, item_close);
+  gtk_menu_item_set_submenu(GTK_MENU_ITEM(item_items), menu_items);
+  gtk_menu_item_set_submenu(GTK_MENU_ITEM(item_categories), menu_categories);
+  gtk_menu_item_set_submenu(GTK_MENU_ITEM(item_view), menu_view);
+  gtk_menu_item_set_submenu(GTK_MENU_ITEM(item_tools), menu_tools);
+
+  gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item_toolbar), TRUE);
+
+  g_signal_connect(G_OBJECT(item_add), "activate", G_CALLBACK(new_todo_item), NULL);
+  g_signal_connect(G_OBJECT(item_open), "activate", G_CALLBACK(item_do_edit), NULL);
+  g_signal_connect(G_OBJECT(item_catedit), "activate", G_CALLBACK(edit_categories), NULL);
+  g_signal_connect(G_OBJECT(item_toolbar), "activate", G_CALLBACK(toggle_toolbar), NULL);
+  g_signal_connect(G_OBJECT(item_delete), "activate", G_CALLBACK(delete_completed_items), NULL);
+  g_signal_connect(G_OBJECT(item_move), "activate", G_CALLBACK(refresh_items), NULL);
+  g_signal_connect(G_OBJECT(item_close), "activate", G_CALLBACK(gtk_main_quit), NULL);
+
+  gtk_widget_show_all (GTK_WIDGET(menu_main));  
+}
+#endif
+
+
 static GtkItemFactoryEntry menu_items[] =
 {
   { "/_Edit",   NULL, item_do_edit,     0, "<Item>" },
@@ -476,13 +586,13 @@ GtkWidget *
 top_level (GtkWidget *window)
 {
   GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
-  GtkWidget *toolbar;
   GtkWidget *option = gtk_option_menu_new ();
   GtkWidget *scrolled = gtk_scrolled_window_new (NULL, NULL);
   GtkWidget *list_view;
   GtkAccelGroup *accel_group;
   GtkItemFactory *item_factory;
   GtkToolItem *item;
+  GtkWidget *w;
 
   no_tick_icon = gpe_find_icon ("notick-box");
   tick_icon = gpe_find_icon ("tick-box");
@@ -507,37 +617,79 @@ top_level (GtkWidget *window)
   gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);
 
   /* New button */
+#ifdef IS_HILDON  
+  w = gtk_image_new_from_file(ICON_PATH "/qgn_indi_gene_plus.png");
+  item = gtk_tool_button_new(w, _("New"));
+#else
   item = gtk_tool_button_new_from_stock(GTK_STOCK_NEW);
+#endif
   g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK (new_todo_item), NULL);
   gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
   
   /* Delete button */
+#ifdef IS_HILDON  
+  w = gtk_image_new_from_file(ICON_PATH "/qgn_toolb_gene_deletebutton.png");
+  item = gtk_tool_button_new(w, _("Delete"));
+#else
   item = gtk_tool_button_new_from_stock(GTK_STOCK_DELETE);
+#endif
   g_signal_connect(G_OBJECT(item), "clicked", 
                    G_CALLBACK (delete_completed_items), NULL);
   gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
   
+
+#ifdef IS_HILDON
+  create_app_menu (HILDON_APPVIEW(window));
+  
+  w = gtk_image_new_from_file(ICON_PATH "/qgn_toolb_gene_refresh.png");
+  item = gtk_tool_button_new(w, _("Refresh"));
+  g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK (refresh_items), 
+                   NULL);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
+	  
+  if (mode_landscape || large_screen)
+    {
+      w = gtk_image_new_from_file(ICON_PATH "/qgn_list_gene_bullets.png");
+      item = gtk_tool_button_new(w, _("Categories"));
+      g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK (edit_categories), 
+                       NULL);
+      gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
+    }
+    
+  gtk_box_pack_end (GTK_BOX (vbox), toolbar, FALSE, FALSE, 0);
+#else
   /* Insert refresh button if we have enough space */
   if (mode_landscape || large_screen)
     {
       item = gtk_tool_button_new_from_stock(GTK_STOCK_REFRESH);
-      g_signal_connect(G_OBJECT(item), "clicked",
-                       G_CALLBACK (refresh_items), NULL);
-      gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
+      g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK (refresh_items), 
+                       NULL);
+      gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);        
     }
-    
+	
   gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, FALSE, 0);
+#endif
     
   item = gtk_separator_tool_item_new();
   gtk_tool_item_set_expand(GTK_TOOL_ITEM(item), FALSE);
   gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
 
+  if (mode_landscape || large_screen)
+    {
+      GtkWidget *label = gtk_label_new(_("Show:"));
+      item = gtk_tool_item_new();
+      gtk_container_add(GTK_CONTAINER(item), label);
+      gtk_tool_item_set_expand(GTK_TOOL_ITEM(item), FALSE);
+      gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
+    }
+    
   /* Category menu */    
   item = gtk_tool_item_new();
   gtk_container_add(GTK_CONTAINER(item), option);
   gtk_tool_item_set_expand(GTK_TOOL_ITEM(item), FALSE);
   gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
-  
+
+#ifndef IS_HILDON    
   /* Some space and quit button */
   item = gtk_separator_tool_item_new();
   gtk_separator_tool_item_set_draw(GTK_SEPARATOR_TOOL_ITEM(item), FALSE);
@@ -546,7 +698,8 @@ top_level (GtkWidget *window)
   item = gtk_tool_button_new_from_stock(GTK_STOCK_QUIT);
   g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK (gtk_main_quit), NULL);
   gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
-
+#endif
+    
   list_store = gtk_list_store_new (NUM_COLUMNS, 
                                    GDK_TYPE_PIXBUF, 
                                    G_TYPE_STRING, 
@@ -582,7 +735,7 @@ top_level (GtkWidget *window)
    if (large_screen)
       {
         renderer = gtk_cell_renderer_text_new ();
-        col = gtk_tree_view_column_new_with_attributes (_("Priority"), renderer,
+        col = gtk_tree_view_column_new_with_attributes (_("Status"), renderer,
                                                         "text", COL_PRIORITY_TEXT,
                                                         "strikethrough", COL_STRIKETHROUGH, NULL);
         gtk_tree_view_insert_column (GTK_TREE_VIEW (list_view), col, -1);
@@ -592,6 +745,9 @@ top_level (GtkWidget *window)
                                                     "text", COL_SUMMARY,
                                                     "strikethrough", COL_STRIKETHROUGH, NULL);
     gtk_tree_view_column_set_expand(col, TRUE);
+#ifdef IS_HILDON	  
+	gtk_tree_view_column_set_max_width(col, 360);
+#endif	  
     gtk_tree_view_insert_column (GTK_TREE_VIEW (list_view), col, -1);
 	
     if (large_screen)

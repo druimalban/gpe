@@ -1,7 +1,7 @@
 dnl Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT(gpe-todo,0.53,gpe@handhelds.org)
+AC_INIT(gpe-todo,0.54,gpe@handhelds.org)
 AC_CONFIG_SRCDIR([main.c])
 AM_INIT_AUTOMAKE([foreign dist-bzip2])
 
@@ -25,6 +25,23 @@ AC_SUBST(gpetodo_localedir)
 AM_GLIB_GNU_GETTEXT
 AC_PROG_INTLTOOL([0.23])
 
+
+ENABLE_HILDON=false
+
+AC_ARG_ENABLE(hildon,
+[  --enable-hildon         Enable Hildon GUI],
+[
+	ENABLE_HILDON=true
+	DEP_MODULES="$DEP_MODULES hildon-lgpl libosso"
+],
+[
+	ENABLE_HILDON=false
+])
+
+AC_SUBST(ENABLE_HILDON)
+
+AM_CONDITIONAL(HILDON, test x$ENABLE_HILDON = xtrue)
+
 PKG_CHECK_MODULES(DEPS, $DEP_MODULES)
 
 
@@ -35,4 +52,6 @@ AC_OUTPUT([
 Makefile
 po/Makefile.in
 gpe-todo.desktop.in
+hildon/com.nokia.gpe-todo.service
+hildon/gpe-todo.desktop.in
 ])

@@ -233,9 +233,14 @@ static void
 change_categories (GtkWidget *w, struct edit_todo *t)
 {
   GtkWidget *dialog;
-    
+
+#ifdef IS_HILDON    
+  dialog = gpe_pim_categories_dialog (t->selected_categories, TRUE,
+                                      G_CALLBACK (update_categories), t);
+#else
   dialog = gpe_pim_categories_dialog (t->selected_categories, 
                                       G_CALLBACK (update_categories), t);
+#endif    
   gtk_window_set_transient_for(GTK_WINDOW(dialog), 
                                GTK_WINDOW(gtk_widget_get_toplevel(w)));
   gtk_window_set_modal(GTK_WINDOW(dialog), TRUE);
@@ -255,6 +260,9 @@ edit_item (struct todo_item *item, gint initial_category, GtkWindow *parent)
   GtkWidget *buttonbox = gtk_hbox_new (FALSE, 0);
   GtkWidget *buttonok;
   GtkWidget *buttoncancel;
+#ifdef IS_HILDON    
+  GtkWidget *buttoncategories;
+#endif    
   GtkWidget *buttondelete;
   GtkWidget *label_priority = gtk_label_new (_("Priority:"));
   GtkWidget *priority_menu, *priority_optionmenu;
@@ -266,7 +274,7 @@ edit_item (struct todo_item *item, gint initial_category, GtkWindow *parent)
   GtkWidget *entry_summary = gtk_entry_new ();
   GtkWidget *scrolled_window = gtk_scrolled_window_new (NULL, NULL);
   GtkWidget *viewport = gtk_viewport_new(NULL, NULL);
-  GtkWidget *button_categories = gtk_button_new_with_label (_("Categories:"));
+  GtkWidget *button_categories;
   GtkWidget *label_categories = gtk_label_new ("");
   gchar *s = NULL;
   struct edit_todo *t;
@@ -290,7 +298,13 @@ edit_item (struct todo_item *item, gint initial_category, GtkWindow *parent)
     
   gtk_container_set_border_width (GTK_CONTAINER (window),
                                   gpe_get_border ());
-  
+#ifdef IS_HILDON    
+  button_categories = gtk_label_new (_("Categories:"));
+  gtk_misc_set_alignment(GTK_MISC(button_categories), 0.0, 0.0);
+#else
+  button_categories = gtk_button_new_with_label (_("Categories:"));  
+#endif
+	
   if (large_screen)
     {
       if (mode_landscape)
@@ -308,12 +322,17 @@ edit_item (struct todo_item *item, gint initial_category, GtkWindow *parent)
   gtk_container_add (GTK_CONTAINER (scrolled_window), viewport);
   
   gtk_container_set_border_width(GTK_CONTAINER(buttonbox), 0);
-  
+
+#ifdef IS_HILDON  
+  buttonok = gtk_button_new_with_label (_("OK"));
+  buttoncancel = gtk_button_new_with_label (_("Cancel"));
+  buttoncategories = gtk_button_new_with_label (_("Categories..."));
+  buttondelete = gtk_button_new_from_stock (_("Delete"));
+#else  
   buttonok = gtk_button_new_from_stock (GTK_STOCK_SAVE);
   buttoncancel = gtk_button_new_from_stock (GTK_STOCK_CANCEL);
   buttondelete = gtk_button_new_from_stock (GTK_STOCK_DELETE);
-
-  
+#endif  
   gtk_table_set_col_spacings (GTK_TABLE(table), gpe_spacing);
   gtk_table_set_row_spacings (GTK_TABLE(table), gpe_spacing);
   gtk_box_set_spacing (GTK_BOX(top_vbox), gpe_spacing);
@@ -350,19 +369,19 @@ edit_item (struct todo_item *item, gint initial_category, GtkWindow *parent)
     }
 
   s = build_categories_string (t);
-  if (s)
-    {
-      gtk_label_set_text (GTK_LABEL (label_categories), s);
-      g_free (s);
-    }
+  if (!s)
+     s = g_strdup(_("Define categories by tapping Categories button."));
+  gtk_label_set_text (GTK_LABEL (label_categories), s);
+  g_free (s);
      
   gtk_misc_set_alignment (GTK_MISC (label_categories), 0.0, 0.5);
   gtk_label_set_line_wrap(GTK_LABEL (label_categories), TRUE);
 
+#ifndef IS_HILDON  
   gtk_button_set_alignment(GTK_BUTTON(button_categories), 0.0, 0.5);    
-    
   g_signal_connect (G_OBJECT (button_categories), "clicked", 
                     G_CALLBACK (change_categories), t);
+#endif
   
   t->categories_label = label_categories;
   t->item = item;
@@ -373,19 +392,29 @@ edit_item (struct todo_item *item, gint initial_category, GtkWindow *parent)
 		      GTK_SIGNAL_FUNC (click_ok), window);
   gtk_signal_connect (GTK_OBJECT (buttoncancel), "clicked",
 		      GTK_SIGNAL_FUNC (click_cancel), window);
+#ifdef IS_HILDON              
+  gtk_signal_connect (GTK_OBJECT (buttoncategories), "clicked",
+		      GTK_SIGNAL_FUNC (change_categories), t);
+#endif
   gtk_signal_connect (GTK_OBJECT (buttondelete), "clicked",
 		      GTK_SIGNAL_FUNC (click_delete), window);
 
+#ifdef IS_HILDON
+  gtk_box_pack_start (GTK_BOX (buttonbox), buttonok, TRUE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (buttonbox), buttoncategories, TRUE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (buttonbox), buttondelete, TRUE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (buttonbox), buttoncancel, TRUE, FALSE, 0);
+#else
   gtk_box_pack_start (GTK_BOX (buttonbox), buttondelete, TRUE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (buttonbox), buttoncancel, TRUE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (buttonbox), buttonok, TRUE, FALSE, 0);
-
+#endif
   gtk_option_menu_set_menu (GTK_OPTION_MENU (state), state_menu);
 
   priority_optionmenu = gtk_option_menu_new ();
   gtk_option_menu_set_menu (GTK_OPTION_MENU (priority_optionmenu), priority_menu);
 
-  gtk_misc_set_alignment (GTK_MISC (label_details), 0.0, 0.5);
+  gtk_misc_set_alignment (GTK_MISC (label_details), 0.0, 0.0);
   gtk_misc_set_alignment (GTK_MISC (label_summary), 0.0, 0.5);
   gtk_misc_set_alignment (GTK_MISC (label_priority), 0.0, 0.5);
   gtk_misc_set_alignment (GTK_MISC (label_state), 0.0, 0.5);
@@ -409,7 +438,8 @@ edit_item (struct todo_item *item, gint initial_category, GtkWindow *parent)
   gtk_table_attach(GTK_TABLE(table), label_priority, 0, 1, pos, pos+1,
                    GTK_FILL, GTK_FILL, 0, 0);
   gtk_table_attach(GTK_TABLE(table), priority_optionmenu, 1, 
-                   mode_landscape ? 3 : 5, pos, pos+1, GTK_FILL, GTK_FILL, 0, 0);
+                   mode_landscape ? 3 : 5, pos, pos+1, 
+                   GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
   /* State */                 
   if (mode_landscape)
     {    
@@ -427,6 +457,19 @@ edit_item (struct todo_item *item, gint initial_category, GtkWindow *parent)
                        GTK_FILL, GTK_FILL, 0, 0);
     }
     pos++;
+#ifdef IS_HILDON    
+  /* Details */
+  gtk_table_attach(GTK_TABLE(table), label_details, 0, 1, pos, pos+1,
+                   GTK_FILL, GTK_FILL, 0, 0);
+  gtk_table_attach(GTK_TABLE(table), text, 1, 5, pos, pos+1,
+                   GTK_FILL | GTK_EXPAND, GTK_FILL | GTK_EXPAND, 0, 0);
+  pos++;
+  /* Categories */
+  gtk_table_attach(GTK_TABLE(table), button_categories, 0, 2, pos, pos+1,
+                   GTK_SHRINK | GTK_FILL, GTK_FILL, 0, 0);
+  gtk_table_attach(GTK_TABLE(table), label_categories, 2, 5, pos, pos+1,
+                   GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
+#else
   /* Categories */
   gtk_table_attach(GTK_TABLE(table), button_categories, 0, 2, pos, pos+1,
                    GTK_SHRINK | GTK_FILL, GTK_FILL, 0, 0);
@@ -439,7 +482,7 @@ edit_item (struct todo_item *item, gint initial_category, GtkWindow *parent)
   pos++;
   gtk_table_attach(GTK_TABLE(table), text, 0, 5, pos, pos+1,
                    GTK_FILL | GTK_EXPAND, GTK_FILL | GTK_EXPAND, 0, 0);
-  
+#endif    
   gtk_box_pack_start (GTK_BOX (top_vbox), scrolled_window, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (top_vbox), buttonbox, FALSE, FALSE, 0);
 
@@ -474,14 +517,16 @@ edit_item (struct todo_item *item, gint initial_category, GtkWindow *parent)
       else
         gtk_widget_set_sensitive (t->duedate, FALSE);
       
-      gtk_window_set_title (GTK_WINDOW (window), _("Edit to-do item"));
+      gtk_window_set_title (GTK_WINDOW (window), _("Edit Item"));
     }
   else
     {
       t->state = NOT_STARTED;
       t->priority = PRIORITY_STANDARD;
       gtk_option_menu_set_history (GTK_OPTION_MENU (priority_optionmenu), 1);
-      gtk_widget_set_sensitive (buttondelete, FALSE);
+#ifdef IS_HILDON        
+      gtk_widget_destroy (buttondelete);
+#endif        
       gtk_widget_set_sensitive (t->duedate, FALSE);
       gtk_window_set_title (GTK_WINDOW (window), _("New item"));
     }
