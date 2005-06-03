@@ -1,0 +1,59 @@
+gpe-todo (0.53m2-3) unstable; urgency=low
+
+  * Change dependency.
+  
+ -- Florian Boor <florian.boor@kernelconcepts.de>  Mon, 30 May 2005 19:40:21 +0200
+
+gpe-todo (0.53m2-2) unstable; urgency=low
+
+  * Fixed label.
+  
+ -- Florian Boor <florian.boor@kernelconcepts.de>  Sun, 29 May 2005 19:40:21 +0200
+ 
+gpe-todo (0.53m2-1) unstable; urgency=low
+
+  * Introduce osso services.
+  
+ -- Florian Boor <florian.boor@kernelconcepts.de>  Fri, 27 May 2005 19:40:21 +0200
+ 
+gpe-todo (0.53m1-4) unstable; urgency=low
+
+  * New path to icons.
+  
+ -- Florian Boor <florian.boor@kernelconcepts.de>  Wed, 25 May 2005 19:40:21 +0200
+
+gpe-todo (0.53m1-3) unstable; urgency=low
+
+  * Column contraints changed.
+  
+ -- Florian Boor <florian.boor@kernelconcepts.de>  Tue, 12 May 2005 19:40:21 +0200
+ 
+gpe-todo (0.53m1-2) unstable; urgency=low
+
+  * Minor UI fixes, resized icon.
+  
+ -- Florian Boor <florian.boor@kernelconcepts.de>  Tue, 11 May 2005 19:40:21 +0200
+ 
+gpe-todo (0.53m1-1) unstable; urgency=low
+
+  * Some UI layout changes.
+
+ -- Florian Boor <florian.boor@kernelconcepts.de>  Tue, 10 May 2005 19:40:21 +0200
+
+gpe-todo (0.52m1-3) unstable; urgency=low
+
+  * New icons, minor fixes.
+
+ -- Florian Boor <florian.boor@kernelconcepts.de>  Mon, 09 May 2005 19:40:21 +0200
+ 
+gpe-todo (0.52-2) unstable; urgency=low
+
+  * Some integration fixes.
+
+ -- Florian Boor <florian.boor@kernelconcepts.de>  Thu, 28 Apr 2005 19:40:21 +0200
+ 
+gpe-todo (0.52-1) unstable; urgency=low
+
+  * Initial Release.
+
+ -- Florian Boor <florian.boor@kernelconcepts.de>  Thu, 14 Apr 2005 14:40:21 +0200
