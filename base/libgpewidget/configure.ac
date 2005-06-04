@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT(libgpewidget, 0.100, gpe@handhelds.org)
+AC_INIT(libgpewidget, 0.101, gpe@handhelds.org)
 AC_CONFIG_SRCDIR([init.c])
 AM_INIT_AUTOMAKE([foreign dist-bzip2])
 
@@ -39,6 +39,21 @@ AC_ARG_ENABLE(cairo,
         ENABLE_CAIRO=false
 ])
 
+ENABLE_HILDON=false
+
+AC_ARG_ENABLE(hildon,
+[  --enable-hildon         Enable Hildon GUI],
+[
+	ENABLE_HILDON=true
+],
+[
+	ENABLE_HILDON=false
+])
+
+AC_SUBST(ENABLE_HILDON)
+
+AM_CONDITIONAL(HILDON, test x$ENABLE_HILDON = xtrue)
+
 PKG_CHECK_MODULES(GPEWIDGET, $DEPS)
 
 if test x$ENABLE_CAIRO = xtrue; then
@@ -50,7 +65,9 @@ AC_SUBST(CFLAGS)
 AC_SUBST(CPPFLAGS)
 AC_SUBST(LDFLAGS)
 
-AC_CONFIG_FILES([Makefile libgpewidget.pc libgpewidget-uninstalled.pc doc/Makefile po/Makefile.in])
+AC_CONFIG_FILES([Makefile libgpewidget.pc 
+                 libgpewidget-uninstalled.pc 
+				 doc/Makefile po/Makefile.in])
 AC_OUTPUT
 
 echo "

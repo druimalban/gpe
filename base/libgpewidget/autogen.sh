@@ -35,6 +35,5 @@ aclocal $ACLOCAL_FLAGS
 automake -a $am_opt
 autoconf
 
-echo "Fixing libtool..."
-patch -p0 < libtool-cross.patch
-
+#echo "Fixing libtool..."
+#patch -p0 < libtool-cross.patch

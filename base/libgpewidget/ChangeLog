@@ -1,3 +1,10 @@
+2005-06-04  Florian Boor <florian@kernelconcepts.de>
+
+	* configure.ac: Version to 0.101, new switch: --enable-hildon
+	* configure.ac, Makefile.am: Add support to configure for maemo environment.
+	* gtkdatecombo.c, pixmaps.c: Obey some minor differences between plain
+	                             GTK and maemo environment.
+
 2005-05-26  Luc Pionchon  <luc@handhelds.org>
 
 	* autogen.sh : do not call ./configure 

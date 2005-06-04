@@ -1,9 +1,13 @@
 
 SUBDIRS = doc po
 
+if HILDON
+GPEWIDGET_CFLAGS += -DIS_HILDON
+endif
+
 lib_LTLIBRARIES = libgpewidget.la
 
-INCLUDES = @GPEWIDGET_CFLAGS@ -I$(top_srcdir)/gpe -I$(top_srcdir) \
+INCLUDES = $(GPEWIDGET_CFLAGS) -I$(top_srcdir)/gpe -I$(top_srcdir) \
            -DPREFIX=\"@prefix@\" -D_GNU_SOURCE \
            -DPACKAGE_LOCALE_DIR=\"@datadir@/locale/@PACKAGE_NAME@\" -Wall
 
@@ -36,13 +40,29 @@ pixmap_DATA = pixmaps/clock.png pixmaps/clock24.png pixmaps/day-night-wheel.png
 EXTRA_DIST = $(pixmap_DATA) \
              intltool-extract.in \
              intltool-merge.in \
-             intltool-update.in\
-			 libtool-cross.patch
+             intltool-update.in \
+			 libtool-cross.patch \
+			 mkinstalldirs \
+			 debian/changelog \
+			 debian/compat \
+			 debian/copyright \
+			 debian/control \
+			 debian/rules \
+			 debian/docs \
+			 debian/postinst \
+			 debian/postrm \
+			 debian/libgpewidget1.files \
+			 debian/libgpewidget-dev.files
+			 
+ 
+DISTCLEANFILES = intltool-extract intltool-merge intltool-update po/.intltool-merge-cache *.d autom4te.cache
 
-clean-local:
-	rm -rf po/.intltool-merge-cache *.d autom4te.cache
-
-DISTCLEANFILES = intltool-extract intltool-merge intltool-update
-
+deb: dist
+	-mkdir $(top_builddir)/debian-build
+	cd $(top_builddir)/debian-build && tar zxf ../$(top_builddir)/$(PACKAGE)-$(VERSION).tar.gz
+	cd $(top_builddir)/debian-build/$(PACKAGE)-$(VERSION) && dpkg-buildpackage -S -D -rfakeroot
+	cd $(top_builddir)/debian-build/$(PACKAGE)-$(VERSION) && dpkg-buildpackage -D -rfakeroot
+	-rm -rf $(top_builddir)/debian-build/$(PACKAGE)-$(VERSION)
+	
 include gpe-dist.am
 include gpe-tp.am

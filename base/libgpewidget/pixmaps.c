@@ -32,7 +32,12 @@
 static GData *pbdata;
 
 static const gchar *theme_dir_tail = "/.gpe/pixmaps";
+#ifdef IS_HILDON
+static const gchar *default_theme_dir = PREFIX "/share/icons/hicolor/26x26";
+#else
 static const gchar *default_theme_dir = PREFIX "/share/gpe/pixmaps/default";
+#endif
+
 static const gchar *theme_dir;
 
 #define _(x) dgettext(PACKAGE, x)
