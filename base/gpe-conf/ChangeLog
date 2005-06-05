@@ -1,6 +1,12 @@
+2005-06-05	Florian Boor <florian.boor@kernelconcepts.de>
+
+	* battery.c: Got rid of this "retro" battery info code. 
+	* battery.h: Add some definitions from h3600_ts.h.
+
 2005-25-29      Ole Reinhardt <ole.reinhardt@kernelconcepts.de
-        * cfgfile.c, network.c: Fixed problem with config file reading /
-          writing (especialy with new devices)
+    * cfgfile.c, network.c: Fixed problem with config file reading /
+                            writing (especially with new devices)
+		  
 2005-05-19	Florian Boor <florian.boor@kernelconcepts.de>
 
 	* battery.c: Fix typo.
