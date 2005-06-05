@@ -20,5 +20,6 @@
  */
 
 gboolean
-gpe_show_help(const char* book, const char* topic);
+gpe_show_help(const char* appname, const char* topic);
+char *gpe_check_for_help (const char *appname);
 #endif
