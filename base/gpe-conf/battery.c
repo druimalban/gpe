@@ -38,7 +38,7 @@
 
 #define TS_DEV "/dev/touchscreen/0raw"
 #define PROC_BATTERY "/proc/asic/battery"
-#define HAL_BATTERY "/tmp/battery"
+#define HAL_BATTERY "/proc/hal/battery"
 #define PROC_APM "/proc/apm"
 
 /* local types and structs */
@@ -146,7 +146,7 @@ init_device()
 gint 
 update_bat_values(gpointer data)
 {
-	gchar percstr[9];
+	gchar percstr[32];
 	gchar tmp[128];
 #ifdef MACH_IPAQ
 	t_battery_data battery_val[2];
@@ -184,7 +184,11 @@ update_bat_values(gpointer data)
 		
 		gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (batt_int.bar),bperc);
 		toolbar_set_style (batt_int.bar,  90 - (int) (bperc*100));
-		sprintf(percstr,"%d %%",(unsigned char)battery_val[0].percentage);
+		if (battery_val[0].percentage <= 100)
+			sprintf(percstr,"%d %%",(unsigned char)battery_val[0].percentage);
+		else
+			snprintf(percstr, 32, "%s",_("unknown"));
+			
 		gtk_progress_bar_set_text(GTK_PROGRESS_BAR(batt_int.bar),percstr);
 	
 		if ((battery_val[0].chemistry > 0) && (battery_val[0].chemistry <= 0x05))
@@ -239,9 +243,12 @@ update_bat_values(gpointer data)
 			bperc=(float)battery_val[1].percentage / (float)100;
 			if (bperc > 1.0)
 				bperc = 1.0;
-			gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (batt_ext.bar),bperc);
+			gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (batt_ext.bar), bperc);
 			toolbar_set_style (batt_ext.bar,  90 - (int) (bperc*100));
-			sprintf(percstr,"%d %%",(unsigned char)battery_val[1].percentage);
+			if (battery_val[1].percentage <= 100)
+				sprintf(percstr,"%d %%",(unsigned char)battery_val[1].percentage);
+			else
+				snprintf(percstr, 32, "%s",_("unknown"));
 			gtk_progress_bar_set_text(GTK_PROGRESS_BAR(batt_ext.bar),percstr);
 		
 			if ((battery_val[1].chemistry > 0) && (battery_val[1].chemistry <= 0x05))

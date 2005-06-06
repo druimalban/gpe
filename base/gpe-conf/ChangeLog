@@ -1,3 +1,7 @@
+2005-06-06	Florian Boor <florian.boor@kernelconcepts.de>
+
+	* battery.c: Fixed path, some minor improvements in battery display. 
+	
 2005-06-05	Florian Boor <florian.boor@kernelconcepts.de>
 
 	* battery.c: Got rid of this "retro" battery info code. 
