@@ -1,5 +1,6 @@
 2005-06-06  Florian Boor <florian@kernelconcepts.de>
 
+	* gpehelp.c: Fix double-freeing some data in some situation.
 	* gpehelp.c: Add documentation, rename and relocate configfile.
 	* doc/tmpl/gpehelp.sgml: Remove documentation.
 

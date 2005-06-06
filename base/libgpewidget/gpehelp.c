@@ -95,7 +95,7 @@ gpe_show_help (const char *appname, const char *topic)
 #endif
       spawn = g_spawn_command_line_async (command, NULL);
       if (spawn)
-	return FALSE;
+         return FALSE;
       app++;
     }
   if (!spawn)
@@ -103,7 +103,8 @@ gpe_show_help (const char *appname, const char *topic)
       g_free (command);
       g_free (helpfile);
       g_strfreev (applist); 
-      g_free (helpadress); 
+      if (helpadress != helpfile)
+        g_free (helpadress); 
       return TRUE;
     }
 }
