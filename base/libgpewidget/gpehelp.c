@@ -35,18 +35,23 @@
 #include <glib.h>
 #include <glib/gkeyfile.h>
 
-/*#define DEBUG */
 
 /* helper function definitions*/
 char *gpe_check_for_help (const char *appname);	/* can be used as a quick help check when starting an app */
 static GKeyFile *load_help_key_file (void);
 
-/*
+/** 
+ * gpe_show_help
+ * @appname: Name of the application to show help about.
+ * @topic: String describing help topic.
+ *
  *  This function provides a generic interface for displaying
  *  full text online help. It is intended to be independent from
  *  file format and location.
  *  Return value is FALSE if help is found and displayed, TRUE
  *  if an error occurs.
+ *	 
+ *  Returns: TRUE if an error occured, FALSE otherwise.
  */
 gboolean
 gpe_show_help (const char *appname, const char *topic)
@@ -103,12 +108,16 @@ gpe_show_help (const char *appname, const char *topic)
     }
 }
 
-/*
+/** 
+ * gpe_check_for_help
+ * @appname: Name of the application.
+ *
  * Checks for the existance of any installed help. Returns NULL if no help, or
  * if the help for that particular application is not installed.
  * If the help is found it returns the filename to that help.
-*/
-
+ *
+ * Returns: Filename if help is installed.
+ */
 char *
 gpe_check_for_help (const char *appname)
 {
@@ -139,7 +148,7 @@ load_help_key_file (void)
 {
   GKeyFile *config;
   gboolean loaded;
-  const char *filename = "/etc/gpe-helpviewer.conf";	//rename to gpe-help ???
+  const char *filename = "/etc/gpe/gpe-help.conf";
 
   config = g_key_file_new ();
   loaded =
