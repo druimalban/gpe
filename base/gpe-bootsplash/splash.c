@@ -177,6 +177,7 @@ main(int argc, char *argv[])
   double scale, xscale, yscale;
   svg_cairo_status_t status;
   int width, height;
+  cairo_surface_t *surface;
     
   status = svg_cairo_create (&svgc);
   if (status) 
@@ -202,17 +203,17 @@ main(int argc, char *argv[])
   xsize = (double)width * scale + 0.5;
   ysize = (double)height * scale + 0.5;
 
-  cr = cairo_create ();
-  cairo_scale (cr, scale, scale);
 
   pix = malloc (xsize * ysize * 4);
   stride = xsize * 4;
   has_alpha = TRUE;
   
-  cairo_set_target_image (cr, pix, CAIRO_FORMAT_ARGB32, xsize, ysize, xsize * 4);
-
+  surface = cairo_image_surface_create_for_data(pix, CAIRO_FORMAT_ARGB32, xsize, ysize, stride);
+  cr = cairo_create (surface);
+  cairo_scale (cr, scale, scale);
+  
   /* XXX: This probably doesn't need to be here (eventually) */
-  cairo_set_rgb_color (cr, 1, 1, 1);
+  cairo_set_source_rgb (cr, 1, 1, 1);
 
   svg_cairo_render (svgc, cr);
 
