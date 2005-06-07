@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-04-02 17:50+0200\n"
+"POT-Creation-Date: 2005-05-17 19:12+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -343,11 +343,11 @@ msgstr ""
 msgid "Start"
 msgstr ""
 
-#: screen/main.c:304 sleep/callbacks.c:47
+#: screen/main.c:304 sleep/callbacks.c:39
 msgid "min"
 msgstr ""
 
-#: screen/main.c:307 sleep/callbacks.c:50
+#: screen/main.c:307 sleep/callbacks.c:42
 msgid "sec"
 msgstr ""
 
@@ -363,7 +363,7 @@ msgstr ""
 msgid "Current Config"
 msgstr ""
 
-#: network.c:233 ownerinfo.c:236
+#: network.c:233 ownerinfo.c:237
 msgid "Name:"
 msgstr ""
 
@@ -779,43 +779,43 @@ msgstr ""
 msgid "Font"
 msgstr ""
 
-#: keys/keyctl.c:168
+#: keys/keyctl.c:178
 msgid "Button layout file is missing a global section."
 msgstr ""
 
-#: keys/keyctl.c:532
+#: keys/keyctl.c:549
 msgid "Critical: Can't open keylaunchrc for writing!"
 msgstr ""
 
-#: keys/keyctl.c:555
+#: keys/keyctl.c:572
 msgid "Could not restart key handler!"
 msgstr ""
 
-#: keys/keyctl.c:578
+#: keys/keyctl.c:595
 msgid "The file you selected is not executable."
 msgstr ""
 
-#: ownerinfo.c:209
+#: ownerinfo.c:210
 msgid "Information about the Owner"
 msgstr ""
 
-#: ownerinfo.c:217
+#: ownerinfo.c:218
 msgid "Only the user 'root' is allowed to change this information"
 msgstr ""
 
-#: ownerinfo.c:251
+#: ownerinfo.c:252
 msgid "E-Mail:"
 msgstr ""
 
-#: ownerinfo.c:266
+#: ownerinfo.c:267
 msgid "Phone:"
 msgstr ""
 
-#: ownerinfo.c:281
+#: ownerinfo.c:282
 msgid "Address:"
 msgstr ""
 
-#: ownerinfo.c:307
+#: ownerinfo.c:308
 msgid "Photofile:"
 msgstr ""
 
@@ -847,59 +847,59 @@ msgid ""
 "  (without password)"
 msgstr ""
 
-#: sleep/interface.c:67
+#: sleep/interface.c:65
 msgid "Auto sleep"
 msgstr ""
 
-#: sleep/interface.c:77 sleep/interface.c:116
+#: sleep/interface.c:75 sleep/interface.c:106
 msgid "enabled"
 msgstr ""
 
-#: sleep/interface.c:95
+#: sleep/interface.c:93
 msgid "sleep timeout"
 msgstr ""
 
-#: sleep/interface.c:106
+#: sleep/interface.c:96
 msgid "Auto dim"
 msgstr ""
 
-#: sleep/interface.c:133
+#: sleep/interface.c:123
 msgid "backlight dim timeout"
 msgstr ""
 
-#: sleep/interface.c:142
+#: sleep/interface.c:125
 msgid "Auto dim level"
 msgstr ""
 
-#: sleep/interface.c:162
+#: sleep/interface.c:145
 msgid "Advanced Controls"
 msgstr ""
 
-#: sleep/interface.c:172
+#: sleep/interface.c:155
 msgid "CPU"
 msgstr ""
 
-#: sleep/interface.c:178
+#: sleep/interface.c:161
 msgid "Sleep on cpu less than load"
 msgstr ""
 
-#: sleep/interface.c:182
+#: sleep/interface.c:165
 msgid "load below"
 msgstr ""
 
-#: sleep/interface.c:198
+#: sleep/interface.c:181
 msgid "APM"
 msgstr ""
 
-#: sleep/interface.c:204
+#: sleep/interface.c:187
 msgid "Sleep on AC"
 msgstr ""
 
-#: sleep/interface.c:206
+#: sleep/interface.c:189
 msgid "probe IRQs"
 msgstr ""
 
-#: sleep/interface.c:212
+#: sleep/interface.c:195
 msgid "Check IRQ activity"
 msgstr ""
 
@@ -1134,187 +1134,187 @@ msgstr ""
 msgid "Serial Port"
 msgstr ""
 
-#: cardinfo.c:104
+#: cardinfo.c:103
 msgid "/_Card"
 msgstr ""
 
-#: cardinfo.c:105
+#: cardinfo.c:104
 msgid "/Card/_Insert"
 msgstr ""
 
-#: cardinfo.c:106
+#: cardinfo.c:105
 msgid "/Card/_Eject"
 msgstr ""
 
-#: cardinfo.c:107
+#: cardinfo.c:106
 msgid "/Card/_Suspend"
 msgstr ""
 
-#: cardinfo.c:108
+#: cardinfo.c:107
 msgid "/Card/_Resume"
 msgstr ""
 
-#: cardinfo.c:109
+#: cardinfo.c:108
 msgid "/Card/_Reset"
 msgstr ""
 
-#: cardinfo.c:110
+#: cardinfo.c:109
 msgid "/Card/s1"
 msgstr ""
 
-#: cardinfo.c:111
+#: cardinfo.c:110
 msgid "/Card/_Assign Driver"
 msgstr ""
 
-#: cardinfo.c:112
+#: cardinfo.c:111
 msgid "/Card/s2"
 msgstr ""
 
-#: cardinfo.c:113
+#: cardinfo.c:112
 msgid "/Card/_Close"
 msgstr ""
 
-#: cardinfo.c:114
+#: cardinfo.c:113
 msgid "/_Help"
 msgstr ""
 
-#: cardinfo.c:115
+#: cardinfo.c:114
 msgid "/_Help/Index"
 msgstr ""
 
-#: cardinfo.c:116
+#: cardinfo.c:115
 msgid "/_Help/About"
 msgstr ""
 
-#: cardinfo.c:176 cardinfo.c:864
+#: cardinfo.c:175 cardinfo.c:863
 msgid "card not recognized"
 msgstr ""
 
-#: cardinfo.c:278 cardinfo.c:349
+#: cardinfo.c:277 cardinfo.c:348
 msgid "Could not write to temporal config file."
 msgstr ""
 
-#: cardinfo.c:555
+#: cardinfo.c:554
 msgid "Could not open pidfile:"
 msgstr ""
 
-#: cardinfo.c:561
+#: cardinfo.c:560
 msgid "Could not read pidfile"
 msgstr ""
 
-#: cardinfo.c:565
+#: cardinfo.c:564
 msgid "Could not signal cardmgr:"
 msgstr ""
 
-#: cardinfo.c:640
+#: cardinfo.c:639
 msgid "gpe-conf must be setuid root to use cardinfo feature."
 msgstr ""
 
-#: cardinfo.c:659
+#: cardinfo.c:658
 msgid "No PCMCIA driver in '/proc/devices'"
 msgstr ""
 
-#: cardinfo.c:662
+#: cardinfo.c:661
 msgid "Could not open '/proc/devices'"
 msgstr ""
 
-#: cardinfo.c:674
+#: cardinfo.c:673
 msgid "No sockets found\n"
 msgstr ""
 
-#: cardinfo.c:683
+#: cardinfo.c:682
 msgid "Card Services release does not match!"
 msgstr ""
 
-#: cardinfo.c:688
+#: cardinfo.c:687
 msgid "Could not get CS revision info!\n"
 msgstr ""
 
-#: cardinfo.c:851
+#: cardinfo.c:850
 msgid "flock(stabfile) failed"
 msgstr ""
 
-#: cardinfo.c:870
+#: cardinfo.c:869
 #, c-format
 msgid "no driver loaded"
 msgstr ""
 
-#: cardinfo.c:979
+#: cardinfo.c:978
 msgid "ready"
 msgstr ""
 
-#: cardinfo.c:997
+#: cardinfo.c:996
 msgid "not ready"
 msgstr ""
 
-#: cardinfo.c:1012
+#: cardinfo.c:1011
 msgid "suspended"
 msgstr ""
 
-#: cardinfo.c:1204
+#: cardinfo.c:1203
 msgid "Assign Driver"
 msgstr ""
 
-#: cardinfo.c:1213
+#: cardinfo.c:1212
 msgid ""
 "This dialog allows you to select/\n"
 "change the driver assignment for a\n"
 "PCMCIA or CF card."
 msgstr ""
 
-#: cardinfo.c:1223
+#: cardinfo.c:1222
 msgid "Your current card identifies itself as:"
 msgstr ""
 
-#: cardinfo.c:1237 cardinfo.c:1243
+#: cardinfo.c:1236 cardinfo.c:1242
 msgid "Manuf. Id"
 msgstr ""
 
-#: cardinfo.c:1237 cardinfo.c:1243
+#: cardinfo.c:1236 cardinfo.c:1242
 msgid "Class"
 msgstr ""
 
-#: cardinfo.c:1341 cardinfo.c:1354
+#: cardinfo.c:1340 cardinfo.c:1353
 msgid "PC/CF card socket information."
 msgstr ""
 
-#: cardinfo.c:1349
+#: cardinfo.c:1348
 msgid "Socket"
 msgstr ""
 
-#: cardinfo.c:1380
+#: cardinfo.c:1379
 msgid "Information for socket"
 msgstr ""
 
-#: cardinfo.c:1389
+#: cardinfo.c:1388
 msgid "State:"
 msgstr ""
 
-#: cardinfo.c:1390
+#: cardinfo.c:1389
 msgid "Device:"
 msgstr ""
 
-#: cardinfo.c:1391
+#: cardinfo.c:1390
 msgid "Driver:"
 msgstr ""
 
-#: cardinfo.c:1392
+#: cardinfo.c:1391
 msgid "Type:"
 msgstr ""
 
-#: cardinfo.c:1393
+#: cardinfo.c:1392
 msgid "I/O:"
 msgstr ""
 
-#: cardinfo.c:1394
+#: cardinfo.c:1393
 msgid "IRQ:"
 msgstr ""
 
-#: cardinfo.c:1401
+#: cardinfo.c:1400
 msgid "Flags:"
 msgstr ""
 
-#: cardinfo.c:1418
+#: cardinfo.c:1417
 msgid "PCMCIA initialisation failed"
 msgstr ""
 

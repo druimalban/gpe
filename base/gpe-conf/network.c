@@ -1634,6 +1634,7 @@ Network_Build_Objects ()
 	// chreate tabbed notebook
 	// this contains lookup list!
 	table = gtk_notebook_new ();
+	gtk_notebook_set_scrollable (GTK_NOTEBOOK(table), TRUE);
 
 	gtk_object_set_data (GTK_OBJECT (table), "table", table);
 	gtk_widget_set_name (GTK_WIDGET (table), "table");

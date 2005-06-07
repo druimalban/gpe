@@ -1,28 +1,164 @@
-#  Vietnamese translation for gpe-conf-0.1.21.
-#  Copyright (C) 2005 Free Software Foundation, Inc.
-#  Clytie Siddall <clytie@riverland.net.au>, 2005.
+# Vietnamese translation for gpe-conf-0.1.23.
+# Copyright © 2005 Free Software Foundation, Inc.
+# Clytie Siddall <clytie@riverland.net.au>, 2005.
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-conf 0.1.21\n"
+"Project-Id-Version: gpe-conf 0.1.23\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-10-31 22:33+0100\n"
-"PO-Revision-Date: 2005-02-18 17:27+0950\n"
+"POT-Creation-Date: 2005-04-02 17:50+0200\n"
+"PO-Revision-Date: 2005-04-15 17:27+0950\n"
 "Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
 "Language-Team: Vietnamese <gnomevi-list@lists.sourceforge.net> \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+#: main.c:90 timeanddate.c:542
+msgid "Time"
+msgstr "Giờ"
+
+#: main.c:90
+msgid "Time and Date Setup"
+msgstr "Thiết lập giờ và ngày"
+
+#: main.c:92
+msgid "Screen"
+msgstr "Màn ảnh"
+
+#: main.c:92 gpe-conf-screen.desktop.in.h:1
+msgid "Screen Setup"
+msgstr "Thiết lập màn ảnh"
+
+#: main.c:94
+msgid "Keys & Buttons"
+msgstr "Phím và nút"
+
+#: main.c:94
+msgid "Keys and Buttons Setup"
+msgstr "Thiết lập phím và cái nút"
+
+#: main.c:96 timeanddate.c:558
+msgid "Network"
+msgstr "mạng"
+
+#: main.c:96 gpe-conf-network.desktop.in.h:1
+msgid "Network Setup"
+msgstr "Thiết lập mạng"
+
+#: main.c:98 theme.c:1083
+msgid "Theme"
+msgstr "Đề tài"
+
+#: main.c:98 theme.c:1085 gpe-conf-theme.desktop.in.h:2
+msgid "Look and Feel"
+msgstr "Hình thức và cảm giác"
+
+#: main.c:100
+msgid "Power"
+msgstr "Điện"
+
+#: main.c:100
+msgid "Power safe Configuration"
+msgstr "Cấu hình điện an toàn"
+
+#: main.c:102
+msgid "Owner"
+msgstr "Người chủ"
+
+#: main.c:102 gpe-conf-ownerinfo.desktop.in.h:1
+msgid "Owner Information"
+msgstr "Thông tin người chủ"
+
+#: main.c:104
+msgid "Login"
+msgstr "Đăng nhập"
+
+#: main.c:104 gpe-conf-login-setup.desktop.in.h:1
+msgid "Login Setup"
+msgstr "Thiết lập đăng nhập"
+
+#: main.c:106
+msgid "Users"
+msgstr "Người dùng"
+
+#: main.c:106
+msgid "User Administration"
+msgstr "Quản lý người dùng"
+
+#: main.c:108
+msgid "GPE"
+msgstr "GPE"
+
+#: main.c:108
+msgid "GPE Conf Administration"
+msgstr "Quản lý GPE Conf"
+
+#: main.c:110 gpe-conf-serial.desktop.in.h:2
+msgid "Serial Ports"
+msgstr "Cổng nối tiếp"
+
+#: main.c:110
+msgid "Serial Port Configuration"
+msgstr "Cấu hình cổng nối tiếp"
+
+#: main.c:112
+msgid "PCMCIA/CF Cards"
+msgstr "Thẻ PCMCIA/CF"
+
+#: main.c:112
+msgid "PCMCIA/CF Card Info and Config"
+msgstr "Thông tin và cấu hình thẻ PCMCIA/CF"
+
+#: main.c:114
+msgid "Sound"
+msgstr "Âm thanh"
+
+#: main.c:114
+msgid "Sound Setup"
+msgstr "Thiết lập phát âm thanh"
+
+#: main.c:116
+msgid "Task nameserver"
+msgstr "Cộng việc chọn máy chủ tênc"
+
+#: main.c:116
+msgid "Task for changing nameserver"
+msgstr "Cộng việc thay đổi máy chủ tên"
+
+#: main.c:118
+msgid "Task sound"
+msgstr "Cộng việc phát âm thanh"
+
+#: main.c:118
+msgid "Command line task saving/restoring sound settings."
+msgstr "Công việc dòng lệnh để lưu/phục hồi thiết lập âm thanh"
+
+#: main.c:120
+msgid "Task background image"
+msgstr "Công việc chọn ảnh nền"
+
+#: main.c:120
+msgid "Only select background image."
+msgstr "Chỉ chọn ảnh nền"
+
+#: main.c:146
+msgid "Settings saved"
+msgstr "Lưu thiết lập rồi"
+
+#: main.c:162
+msgid "Aborted"
+msgstr "Bị hủy bỏ"
+
 #: main.c:335
 #, c-format
 msgid "'task_nameserver' needs a new (and only one) nameserver as argument.\n"
-msgstr "Lệnh 'task_nameserver' (việc_máy-chủ-tên) cần chỉ một máy chủ tên mới là đối số.\n"
+msgstr "Lệnh 'task_nameserver' (công_việc_máy-chủ-tên) cần chỉ một máy chủ tên mới là đối số.\n"
 
 #: main.c:353
 #, c-format
 msgid "'task_sound' needs (s)ave/(r)estore as argument.\n"
-msgstr "Lệnh 'task_sound' (việc_âm-thanh) cần (s)ave/(r)estore (lưu/phục hồi) là đối số.\n"
+msgstr "Lệnh 'task_sound' (công_việc_âm-thanh) cần (s)ave/(r)estore (lưu/phục hồi) là đối số.\n"
 
 #: main.c:421
 msgid "Warning: PCMCIA init failed."
@@ -62,11 +198,11 @@ msgstr ""
 "Cách sử dụng: gpe-conf [tên_tiểu_ứng_dụng]\n"
 "mà tên_tiểu_ứng_dụng trong:\n"
 
-#: applets.c:356
+#: applets.c:445
 msgid "Root access"
 msgstr "Truy cập chủ (root access)"
 
-#: applets.c:370
+#: applets.c:459
 msgid ""
 "Some options are only\n"
 "accessible for user root.\n"
@@ -76,7 +212,7 @@ msgstr ""
 "ngươi dùng chủ sử dung.\n"
 "Hãy nhập mật khẩu."
 
-#: applets.c:417 screen/calibrate.c:32
+#: applets.c:506 screen/calibrate.c:32
 msgid "Sorry, wrong password."
 msgstr "Tiếc là mật khẩu không đúng."
 
@@ -96,80 +232,72 @@ msgstr "Giờ ngày"
 msgid "Date"
 msgstr "Ngày"
 
-#: timeanddate.c:536
+#: timeanddate.c:537
 msgid "Enter current date here or use button to select."
 msgstr "Ở đây thì hãy nhập ngày hiện hay sử dụng cái nút để chọn."
 
-#: timeanddate.c:541
-msgid "Time"
-msgstr "Giờ"
-
-#: timeanddate.c:555
-msgid "Network"
-msgstr "mạngf"
-
-#: timeanddate.c:573
+#: timeanddate.c:576
 msgid "Select the timeserver to use to set the clock."
 msgstr "Hãy chọn máy chủ thời gian sẽ lập đồng hồ."
 
-#: timeanddate.c:575
+#: timeanddate.c:578
 msgid "Get time from network"
 msgstr "Gọi giờ từ mạng"
 
-#: timeanddate.c:582
+#: timeanddate.c:585
 msgid "If connected to the Internet, you may press this button to set the time on this device using the timeserver above."
 msgstr "Nếu kết nối đến Mạng thì bạn có thể bấm cái nút này để lập giờ của thiết bị này bằng cách sử dụng mấy chủ thờì gian ở trên."
 
-#: timeanddate.c:587 timeanddate.c:596
+#: timeanddate.c:590 timeanddate.c:599
 msgid "Timezone"
 msgstr "Múi giờ"
 
-#: timeanddate.c:619
+#: timeanddate.c:622
 msgid "Select your current timezone here. The setting applies after the next login."
 msgstr "Ở đây thì hãy chọn múi giờ hiện của bạn. Tùy chọn này hoặt động sau khi đăng nhập lại."
 
-#: timeanddate.c:627
+#: timeanddate.c:630
 msgid "Daylight Saving"
 msgstr "Giờ giữ ban ngày"
 
-#: timeanddate.c:634
+#: timeanddate.c:637
 msgid "Use daylight saving time"
 msgstr "Sử dụng giờ giữ ban ngày (giờ mùa hạ)"
 
-#: timeanddate.c:641
+#: timeanddate.c:644
 msgid "Check this box if you want your device to handle daylight saving time for you."
 msgstr "Hãy đánh dấu trong hộp này nếu bạn muốn thiết bị mình tự động thay đổi đến/từ giờ giữ ban ngày."
 
-#: timeanddate.c:643
+#: timeanddate.c:646
 msgid "Offset:"
 msgstr "Hiệu số:"
 
-#: timeanddate.c:652
+#: timeanddate.c:655
 msgid "Default"
 msgstr "Mặc định"
 
-#: timeanddate.c:659
+#: timeanddate.c:662
 msgid "Use default DST offset of one hour?"
 msgstr "Sử dụng hiệu số giờ giữ ban ngày mặc định là một tiếng phải không?"
 
-#: timeanddate.c:664
+#: timeanddate.c:667
 msgid "Hours"
 msgstr "Tiếng"
 
-#: timeanddate.c:667
+#: timeanddate.c:670
 msgid "Select daylight saving time offset hours here."
 msgstr "Ở đây thì hãy chọn hiệu số tiếng đốí với giờ giữ ban ngày."
 
-#: timeanddate.c:672
+#: timeanddate.c:675
 msgid "Minutes"
 msgstr "Phút"
 
-#: timeanddate.c:675
+#: timeanddate.c:678
 msgid "Select daylight saving time offset minutes here."
 msgstr "Ở đây thì hãy chọn hiệu số phút đối với giờ giữ ban ngày."
 
-#: timeanddate.c:780
-msgid "To make timezone settings take effect,you'll need to log out and log in again."
+#: timeanddate.c:783
+msgid "To make timezone settings take effect, you'll need to log out and log in again."
 msgstr "Để áp dụng những tùy chọn múi giờ này thì bạn hãy đăng xuất rồi đăng nhập lại."
 
 #: screen/main.c:74
@@ -224,184 +352,184 @@ msgstr "phút"
 msgid "sec"
 msgstr "giây"
 
-#: kbd.c:146
+#: keys/kbd.c:142
 msgid "Keyboard Geometry / Layout"
 msgstr "Bố trí bàn phím"
 
-#: kbd.c:186
+#: keys/kbd.c:182
 msgid "User defined"
 msgstr "Người dùng đinh nghĩa"
 
-#: network.c:106
+#: network.c:104
 msgid "Current Config"
 msgstr "Cấu hình hiện"
 
-#: network.c:235 ownerinfo.c:237
+#: network.c:233 ownerinfo.c:236
 msgid "Name:"
 msgstr "Tên:"
 
-#: network.c:241
+#: network.c:239
 msgid "New Interface"
 msgstr "Giao diện mới"
 
-#: network.c:250
+#: network.c:248
 msgid "This interface definition already exists!"
 msgstr "Lời định nghĩa giao diện này tồn tại rôi."
 
-#: network.c:324
+#: network.c:327
 msgid "Do you want to delete this interface?"
 msgstr "Bạn có muốn xóa bỏ giao diện này không?"
 
-#: network.c:324 keyctl.c:230 users/callbacks.c:115
+#: network.c:327 users/callbacks.c:138
 msgid "Question"
 msgstr "Câu hỏi"
 
-#: network.c:570
+#: network.c:576
 msgid "WiFi config"
 msgstr "Cấu hình WiFi"
 
-#: network.c:600
+#: network.c:607
 #, c-format
-msgid "<b>WiFi config for %s</b>"
-msgstr "<b>Cấu hình WiFi đối với %s</b>"
+msgid "WiFi config for %s"
+msgstr "Cấu hình WiFi cho %s"
 
-#: network.c:610
+#: network.c:619
 msgid "ESSID"
 msgstr "ESSID"
 
-#: network.c:632
+#: network.c:641
 msgid "Mode"
 msgstr "Chế độ"
 
-#: network.c:642
+#: network.c:651
 msgid "managed"
 msgstr "quản lý"
 
-#: network.c:654
+#: network.c:663
 msgid "ad-hoc"
 msgstr "khớp lúc ấy"
 
-#: network.c:671
+#: network.c:680
 msgid "Channel"
 msgstr "Kênh"
 
-#: network.c:693
+#: network.c:702
 msgid "WEP"
 msgstr "WEP"
 
-#: network.c:703
+#: network.c:712
 msgid "off"
 msgstr "tất"
 
-#: network.c:715
+#: network.c:724
 msgid "open"
 msgstr "mở"
 
-#: network.c:727
+#: network.c:736
 msgid "restricted"
 msgstr "bị hạn chế"
 
-#: network.c:743
+#: network.c:752
 msgid "Key 1"
 msgstr "Khóa 1"
 
-#: network.c:771
+#: network.c:780
 msgid "Key 2"
 msgstr "Khóa 2"
 
-#: network.c:799
+#: network.c:808
 msgid "Key 3"
 msgstr "Khóa 3"
 
-#: network.c:828
+#: network.c:837
 msgid "Key 4"
 msgstr "Khóa 4"
 
-#: network.c:1030
+#: network.c:1043
 msgid "Address"
 msgstr "Địa chỉ"
 
-#: network.c:1033
+#: network.c:1046
 msgid "Enter your IP address here, e.g. 192.168.1.2"
 msgstr "Ở đây thì hãy nhập địa chỉ IP của bạn, v.d. 192.168.1.2"
 
-#: network.c:1035
+#: network.c:1048
 msgid "Netmask"
 msgstr "Mặt nạ mạng"
 
-#: network.c:1038
+#: network.c:1051
 msgid "Enter your netmask here, e.g. 255.255.255.0 in most cases"
 msgstr "Ở đây thì hãy nhập mặt nạ mạng của bạn, thường là 255.255.255.0 "
 
-#: network.c:1040
+#: network.c:1053
 msgid "Broadcast"
 msgstr "Phát thanh"
 
-#: network.c:1043
+#: network.c:1056
 msgid "Enter your broadcast address here, usually the same like your IP with 255 as last number."
 msgstr "Ở đây thì hãy nhập địa chỉ phát thanh của bạn, thường giống như địa chỉ IP còn cuối cùng số 255."
 
-#: network.c:1045
+#: network.c:1058
 msgid "Gateway"
 msgstr "Cổng ra"
 
-#: network.c:1048
+#: network.c:1061
 msgid "Enter the IP Address of your default gateway here."
 msgstr "Ở đây thì hãy nhập địa chỉ IP của cổng ra mặc định của bạn."
 
-#: network.c:1059 network.c:1176
+#: network.c:1072 network.c:1189
 msgid "WiFi device"
 msgstr "Thiết bị WiFi"
 
-#: network.c:1067 network.c:1184
+#: network.c:1080 network.c:1197
 msgid "Configure"
 msgstr "Định cấu hình"
 
-#: network.c:1164
+#: network.c:1177
 msgid "Hostname"
 msgstr "Tên máy"
 
-#: network.c:1167
+#: network.c:1180
 msgid "Enter your desired hostname here. This parameter is optional."
 msgstr "Ở đây thì hãy nhập tên máy (chủ) được muốn. Tham số này tùy chọn."
 
-#: network.c:1284
+#: network.c:1297
 msgid "Provider"
 msgstr "Cung cấp"
 
-#: network.c:1286
+#: network.c:1299
 msgid "Here you need to enter the name of the provider configuration to use for this interface."
 msgstr "Ở đây thì hãy nhập tên cấu hình của công ty cung cấp dịch vụ Mạng để sử dụng với giao diện này."
 
-#: network.c:1309
+#: network.c:1322
 msgid "Global Settings"
 msgstr "Tham chiếu toàn cục"
 
-#: network.c:1350
+#: network.c:1364
 msgid "Proxy"
 msgstr "Máy chủ ủy nhiệm"
 
-#: network.c:1351
+#: network.c:1365
 msgid "If you want/need to use a proxy, enter it here. (This only applies to dillo for now.)"
 msgstr "Nếu bạn muốn/cần sử dụng máy chủ ủy nhiệm thì hãy nhập nó ở đây. (Hiện chỉ áp dụng vào dillo.)"
 
-#: network.c:1357
+#: network.c:1371
 msgid "No proxy for"
 msgstr "Không ủy nhiệm"
 
-#: network.c:1359
+#: network.c:1373
 msgid "Here you should enter your local domain for that you don't want to use a proxy."
 msgstr "Ở đây thì bạn hãy nhập miền nào mà bạn không muốn sử dụng máy chủ ủy nhiệm với nó."
 
-#: network.c:1366
+#: network.c:1380
 msgid "DNS server"
 msgstr "Máy chủ DNS"
 
-#: network.c:1369
+#: network.c:1383
 msgid "Enter the IP of the DNS(name-) server to use here."
 msgstr "Ở đây thì hãy nhập địa chỉ IP của máy chủ (tên) DNS để sử dụng."
 
-#: network.c:1540
+#: network.c:1554
 msgid ""
 "Here you may change the basic configuration type of your device.\n"
 "Use \"static\" for manual interface configuration, \"dhcp\" to use DHCP and \"ppp\" to make the device a point-to-point device."
@@ -409,341 +537,309 @@ msgstr ""
 "Ở đây thì bạn có thể thay đổi loại cấu hình cơ bản của thiết bị bạn.\n"
 "Hãy sử dụng \"static\" (tĩnh) để tự định cấu hình giao diện, \"dhcp\" để sử dụng DHCP và \"ppp\" để lập thiết bị là thiết bị điểm-sang-điểm."
 
-#: network.c:1546
+#: network.c:1560
 msgid "Enable this option if your device is a WiFi device"
 msgstr "Hiệu lực tùy chọn này nếu thiết bị bạn loại WiFi"
 
-#: network.c:1548
+#: network.c:1562
 msgid "Click to set the wireless options for this device"
 msgstr "Hãy nhắp để lập những tùy chọn vô tuyến cho thiết bị này."
 
-#: network.c:1550
+#: network.c:1564
 msgid "Set the mode your WiFi card should work. (managed or ad-hoc)."
 msgstr "Hãy chọn chế độ hoặt đông của thẻ WiFi (quản lý hay khớp lúc ấy)."
 
-#: network.c:1553
+#: network.c:1567
 msgid "Set the enrcyption mode: off for no WEP encryption, open for open system and restricted for resticted WEP connections only."
 msgstr "Hãy lập chế độ mã hóa: Tất (không mã hóa WEP), Mở (hệ thống mở) hay Bị hạn chế (chỉ cho phép sự kết nốí WEP bị hạn chế)."
 
-#: network.c:1558
+#: network.c:1572
 msgid "Enter the essid of your WiFi network here."
 msgstr "Ở đây thì hãy nhập essid của mạng WiFi của bạn."
 
-#: network.c:1561
+#: network.c:1575
 msgid "Enter your WEP key here in (iwconfig format), e.g.: \"s:12345\""
 msgstr "Ở đây thì hãy nhập khóa WEP của bạn bằng dạng iwconfig, v.d. \"s:12345\""
 
-#: network.c:1564
+#: network.c:1578
 msgid "Select the WEP key to use."
 msgstr "Hãy chọn khóa WEP nào để sử dụng."
 
-#: network.c:1567
+#: network.c:1581
 msgid "Enter the channel number or frequency if needed. If not needed leave this field blank."
 msgstr "Hãy nhập số kênh hay tần số nếu cần thiết. Nếu không thì không hãy nhập gì."
 
-#: network.c:1590
+#: network.c:1604
 msgid "Add Interface"
 msgstr "Thêm giao diện"
 
-#: network.c:1591
+#: network.c:1605
 msgid "Add a new Interface"
 msgstr "Thêm một giao diện mới"
 
-#: network.c:1601
+#: network.c:1615
 msgid "Remove Interface"
 msgstr "Bỏ giao diện"
 
-#: network.c:1602
+#: network.c:1616
 msgid "Remove current Interface"
 msgstr "Bỏ giao diện hiện có"
 
-#: network.c:1616
+#: network.c:1630
 msgid "Information"
 msgstr "Thông tin"
 
-#: network.c:1617
+#: network.c:1631
 msgid "Show current configuration."
 msgstr "Hiển thị cấu hình hiện có"
 
-#: network.c:1635
+#: network.c:1649
 msgid "Couldn't read network configuration."
 msgstr "Không đọc được cấu hình mạng."
 
-#: network.c:1642
+#: network.c:1656
 msgid "global"
 msgstr "toàn cục"
 
-#: theme.c:140
+#: theme.c:178
 msgid "Choose backgound image"
 msgstr "Chọn ảnh nền"
 
-#: theme.c:154
+#: theme.c:192
 msgid "You are not allowed to read this file, choose another."
 msgstr "Không cho phép bạn đọc tập tin này thì hãy chọn tập tin khác."
 
-#: theme.c:175
+#: theme.c:213
 msgid "Succesfully changed background image."
 msgstr "Mới thay đổi ảnh nền."
 
-#: theme.c:176
+#: theme.c:214
 msgid "Use \"Look and Feel\" setup tool to change details."
 msgstr "Sử dụng công cụ thiết lập \"Hình thức và cảm giác\" để thay đổi chi tiết."
 
-#: theme.c:500
+#: theme.c:538
 msgid "Red"
 msgstr "Màu đỏ"
 
-#: theme.c:505
+#: theme.c:543
 msgid "Green"
 msgstr "Màu xanh lá cây"
 
-#: theme.c:510
+#: theme.c:548
 msgid "Blue"
 msgstr "Màu xanh nước biển"
 
-#: theme.c:820
+#: theme.c:858
 msgid "Select colour"
 msgstr "Chọn màuy"
 
-#: theme.c:846 theme.c:920
+#: theme.c:884 theme.c:958
 msgid "You don't have read access to selected background image!"
 msgstr "Không cho phép bạn đọc ảnh nền được chọn."
 
-#: theme.c:1040
-msgid "Theme"
-msgstr "Đề tài"
-
-#: theme.c:1042 gpe-conf-theme.desktop.in.h:2
-msgid "Look and Feel"
-msgstr "Hình thức và cảm giác"
-
-#: theme.c:1052
+#: theme.c:1095
 msgid "Desktop Theme"
 msgstr "Đề tài màn hình nền"
 
-#: theme.c:1064
+#: theme.c:1107
 msgid "Name"
 msgstr "Tên"
 
-#: theme.c:1081
+#: theme.c:1124
 msgid "Icon Size"
 msgstr "Cỡ biểu tượng"
 
-#: theme.c:1096
+#: theme.c:1139
 msgid "Visual Effects"
 msgstr "Hiệu ứng trực quan"
 
-#: theme.c:1102
+#: theme.c:1145
 msgid "Enable Visual Effects"
 msgstr "Hiệu lực hiệu ứng trực quan"
 
-#: theme.c:1109
+#: theme.c:1152
 msgid "Background"
 msgstr "Nền"
 
-#: theme.c:1123 theme.c:1125
+#: theme.c:1166 theme.c:1168
 msgid "Background Settings"
 msgstr "Tham chiếu nền"
 
-#: theme.c:1135 theme.c:1146
+#: theme.c:1178 theme.c:1189
 msgid "Theme Default"
 msgstr "Đề tài mặc định"
 
-#: theme.c:1154
+#: theme.c:1197
 msgid "Solid colour"
 msgstr "Màu đầy"
 
-#: theme.c:1168
+#: theme.c:1211
 msgid "Horizontal"
 msgstr "Nằm ngang"
 
-#: theme.c:1172
+#: theme.c:1215
 msgid "Vertical"
 msgstr "Đứng"
 
-#: theme.c:1177 theme.c:1196 theme.c:1379 theme.c:1385
+#: theme.c:1220 theme.c:1239 theme.c:1422 theme.c:1428
 msgid "Colour"
 msgstr "Màu"
 
-#: theme.c:1187
+#: theme.c:1230
 msgid "Colour gradient"
 msgstr "Chuyển màu sắc"
 
-#: theme.c:1206
+#: theme.c:1249
 msgid "Image"
 msgstr "Ảnh"
 
-#: theme.c:1232
+#: theme.c:1275
 msgid "Centered"
 msgstr "Được để vào giữa"
 
-#: theme.c:1236
+#: theme.c:1279
 msgid "Tiled"
 msgstr "Được lát đều"
 
-#: theme.c:1239
+#: theme.c:1282
 msgid "Stretched"
 msgstr "Được căng ra"
 
-#: theme.c:1246
+#: theme.c:1289
 msgid "Toolbars"
 msgstr "Thanh công cụ"
 
-#: theme.c:1258 theme.c:1260
+#: theme.c:1301 theme.c:1303
 msgid "Toolbar Style"
 msgstr "Kiểu thanh công cụ"
 
-#: theme.c:1269 theme.c:1298
+#: theme.c:1312 theme.c:1341
 msgid "Icons"
 msgstr "Biểu tượng"
 
-#: theme.c:1274 theme.c:1302
+#: theme.c:1317 theme.c:1345
 msgid "Text"
 msgstr "Chữ"
 
-#: theme.c:1279
+#: theme.c:1322
 msgid "Both"
 msgstr "Cả hai"
 
-#: theme.c:1284
+#: theme.c:1327
 msgid "Both H"
 msgstr "Cả hai H"
 
-#: theme.c:1305
+#: theme.c:1348
 msgid "Both (icon above text)"
 msgstr "Cả hai (biểu tượng trên chữ)"
 
-#: theme.c:1308
+#: theme.c:1351
 msgid "Both (icon left of text)"
 msgstr "Cả hai (biểu tượng bên trái chữ)"
 
-#: theme.c:1315
+#: theme.c:1358
 msgid "Toolbar Icon Size"
 msgstr "Cỡ biểu tượng thanh công cụ"
 
-#: theme.c:1331
+#: theme.c:1374
 msgid "Fonts"
 msgstr "Phông chữ"
 
-#: theme.c:1340 theme.c:1360
+#: theme.c:1383 theme.c:1403
 msgid "Desktop Font"
 msgstr "Phông chữ màn hình nền"
 
-#: theme.c:1347 theme.c:1407 theme.c:1442
+#: theme.c:1390 theme.c:1450 theme.c:1485
 msgid "Family"
 msgstr "Nhóm"
 
-#: theme.c:1367 theme.c:1427 theme.c:1462
+#: theme.c:1410 theme.c:1470 theme.c:1505 theme.c:1535
 msgid "Size"
 msgstr "Cỡ"
 
-#: theme.c:1396 theme.c:1398 theme.c:1420 theme.c:1455
+#: theme.c:1439 theme.c:1441 theme.c:1463 theme.c:1498
 msgid "Application Font"
 msgstr "Phông chữ ứng dụng"
 
-#: keyctl.c:230
-msgid "Reset button config to default?"
-msgstr "Lập cấu hình của các cai nút là mặc định lại không?"
+#: theme.c:1519
+msgid "Terminal"
+msgstr "Thiết bị cuối"
 
-#: keyctl.c:248
-msgid "User Defined"
-msgstr "Người dùng định nghĩã"
+#: theme.c:1528
+msgid "Font"
+msgstr "Phông chữ"
 
-#: keyctl.c:249
-msgid "Record Memo"
-msgstr "Ghi lời nhớ"
+#: keys/keyctl.c:168
+msgid "Button layout file is missing a global section."
+msgstr "Tập tin bố trị nút thiếu một phần toàn cục"
 
-#: keyctl.c:250
-msgid "Calendar"
-msgstr "Dương lịch"
+#: keys/keyctl.c:532
+msgid "Critical: Can't open keylaunchrc for writing!"
+msgstr "Nghiêm trọng: không mở được keylaunchrc để ghi."
 
-#: keyctl.c:251
-msgid "Contacts"
-msgstr "Liên hệ"
+#: keys/keyctl.c:555
+msgid "Could not restart key handler!"
+msgstr "Không thể khởi đông lại trình quản lý khóa."
 
-#: keyctl.c:252
-msgid "Taskmanager"
-msgstr "Quản lý việc"
-
-#: keyctl.c:253
-msgid "Audio Player"
-msgstr "Phát âm thanh"
-
-#: keyctl.c:254
-msgid "Web Browser"
-msgstr "Duyệt Mạng"
-
-#: keyctl.c:255
-msgid "To-do List"
-msgstr "Các việc cần làm"
-
-#: keyctl.c:256
-msgid "Toggle Desktop"
-msgstr "Màn hình nền bập bênh"
-
-#: keyctl.c:277
-msgid "Defaults"
-msgstr "Mặc đinh"
-
-#: keyctl.c:442
-msgid "Critical: Can't open keylaunchrc for writing!\n"
-msgstr "Nghiêm trọng: không mở được keylaunchrc để ghi.\n"
-
-#: keyctl.c:464
-msgid "Could not restart key handler!\n"
-msgstr "Không thể khởi đông lại trình quản lý khóa.\n"
-
-#: keyctl.c:486
+#: keys/keyctl.c:578
 msgid "The file you selected is not executable."
 msgstr "Bạn đã chọn tập tin không chạy được."
 
-#: ownerinfo.c:210
+#: ownerinfo.c:209
 msgid "Information about the Owner"
 msgstr "Thông tin về người chủ"
 
-#: ownerinfo.c:218
+#: ownerinfo.c:217
 msgid "Only the user 'root' is allowed to change this information"
 msgstr "Chỉ cho phép ngươi dùng 'root' (chủ) thay đổi thông tin này."
 
-#: ownerinfo.c:252
+#: ownerinfo.c:251
 msgid "E-Mail:"
 msgstr "Địa chỉ thư điện tử:"
 
-#: ownerinfo.c:267
+#: ownerinfo.c:266
 msgid "Phone:"
 msgstr "Số đ.t.:"
 
-#: ownerinfo.c:282
+#: ownerinfo.c:281
 msgid "Address:"
 msgstr "Địa chỉ nhà:"
 
-#: ownerinfo.c:308
+#: ownerinfo.c:307
 msgid "Photofile:"
 msgstr "Tệp ảnh chụp:"
 
-#: login-setup.c:118
+#: login-setup.c:160
 msgid "Some of these settings can only be changed by the user 'root'."
 msgstr "Chỉ cho phép người dùng 'root' (chủ) thay đổi một số của tham chiếu này."
 
-#: login-setup.c:141 gpe-admin.c:86
+#: login-setup.c:183 gpe-admin.c:85
 msgid "General"
 msgstr "Chung"
 
-#: login-setup.c:158
+#: login-setup.c:200
 msgid "Show owner information at login."
 msgstr "Hiển thị thông tin người chủ khi đăng nhập."
 
-#: login-setup.c:162
+#: login-setup.c:204
 msgid "Lock display on suspend."
 msgstr "Khi ngưng thì khóa màn hình."
 
-#: login-setup.c:166
+#: login-setup.c:208
 msgid ""
 "Lock display on suspend. \n"
 "  (needs password)"
 msgstr ""
 "Khi ngưng thì khóa màn hình.\n"
 "(cần đến mật khẩu)"
+
+#: login-setup.c:213
+msgid ""
+"Automatic login. \n"
+"  (without password)"
+msgstr ""
+"Tự động đăng nhập. \n"
+"  (không cần mật khẩu)"
 
 #: sleep/interface.c:67
 msgid "Auto sleep"
@@ -785,7 +881,7 @@ msgstr "Ngủ khi có ít tiêm năng của đơn vị xử lý trung tâm (cpu)
 msgid "load below"
 msgstr "trọng tải thập hơn"
 
-#  Re-visit this item
+# Re-visit this item
 #: sleep/interface.c:198
 msgid "APM"
 msgstr "APM"
@@ -801,10 +897,6 @@ msgstr "dò các IRQ"
 #: sleep/interface.c:212
 msgid "Check IRQ activity"
 msgstr "Kiểm tra có IRQ hoặt độngh"
-
-#: sleep/callbacks.c:59
-msgid "%"
-msgstr "%"
 
 #: users/interface.c:215
 msgid "User Name"
@@ -898,7 +990,15 @@ msgstr "Mật khẩu mới:"
 msgid "Confirm:"
 msgstr "Xác nhận:"
 
-#: users/callbacks.c:113
+#: users/callbacks.c:107
+msgid "You need at least one user account!"
+msgstr "Cần ít nhất một tài khoản người dùng."
+
+#: users/callbacks.c:131
+msgid "You can't remove this user!"
+msgstr "Bạn không loại bỏ được ngươi dùng này."
+
+#: users/callbacks.c:136
 msgid ""
 "You can't remove\n"
 " system users!"
@@ -906,7 +1006,7 @@ msgstr ""
 "Bạn không loại bỏ được \n"
 "ngươi dùng hệ thông."
 
-#: users/callbacks.c:115
+#: users/callbacks.c:138
 msgid ""
 "Delete user and all its data?\n"
 "This action is not revertable\n"
@@ -917,15 +1017,15 @@ msgstr ""
 "Không thể hoàn tác viêc này\n"
 "và nó ngay được thi hành."
 
-#: users/callbacks.c:151
+#: users/callbacks.c:173
 msgid "Please choose a user name."
 msgstr "Hãy chọn tên người dùng."
 
-#: users/callbacks.c:169
+#: users/callbacks.c:191
 msgid "Please choose a home directory."
 msgstr "Hãy chọn thư mục chính."
 
-#: users/callbacks.c:256
+#: users/callbacks.c:279
 msgid ""
 "The two new pass are different!\n"
 " Please try again!"
@@ -933,7 +1033,7 @@ msgstr ""
 "Hai mật khảu mới không khớp\n"
 "thì hãy thử lại."
 
-#: users/callbacks.c:259
+#: users/callbacks.c:282
 msgid ""
 "Wrong password\n"
 " Please try again!"
@@ -941,11 +1041,11 @@ msgstr ""
 "Mật khẩu không đúng\n"
 "thì hãy thử lại."
 
-#: cfgfile.c:891
+#: cfgfile.c:915
 msgid "No write access to network configuration."
 msgstr "Không có quyền ghi cấu hình mạng."
 
-#: gpe-admin.c:93
+#: gpe-admin.c:92
 msgid "Allow users to configure everything"
 msgstr "Cho phép mọi người dùng định cấu hình tất cả"
 
@@ -1033,128 +1133,128 @@ msgstr "Tốc độ truyền (kbps)"
 msgid "Serial Port"
 msgstr "Cổng nối tiếp"
 
-#: cardinfo.c:105
+#: cardinfo.c:104
 msgid "/_Card"
 msgstr "/_Thẻ"
 
-#: cardinfo.c:106
+#: cardinfo.c:105
 msgid "/Card/_Insert"
 msgstr "/Thẻ/_Chèn"
 
-#: cardinfo.c:107
+#: cardinfo.c:106
 msgid "/Card/_Eject"
 msgstr "/Thẻ/Nhả _ra"
 
-#: cardinfo.c:108
+#: cardinfo.c:107
 msgid "/Card/_Suspend"
 msgstr "/Thẻ/_Ngưng"
 
-#: cardinfo.c:109
+#: cardinfo.c:108
 msgid "/Card/_Resume"
 msgstr "/Thẻ/Làm _tiếp"
 
-#: cardinfo.c:110
+#: cardinfo.c:109
 msgid "/Card/_Reset"
 msgstr "/Thẻ/_Lập lại"
 
-#: cardinfo.c:111
+#: cardinfo.c:110
 msgid "/Card/s1"
 msgstr "/Thẻ/s1"
 
-#: cardinfo.c:112
+#: cardinfo.c:111
 msgid "/Card/_Assign Driver"
 msgstr "/Thẻ/_Gán trình điều khiển"
 
-#: cardinfo.c:113
+#: cardinfo.c:112
 msgid "/Card/s2"
 msgstr "/Thẻ/s2"
 
-#: cardinfo.c:114
+#: cardinfo.c:113
 msgid "/Card/_Close"
 msgstr "/Thẻ/_Đóng"
 
-#: cardinfo.c:115
+#: cardinfo.c:114
 msgid "/_Help"
 msgstr "/Trợ _giúp"
 
-#: cardinfo.c:116
+#: cardinfo.c:115
 msgid "/_Help/Index"
 msgstr "/Trợ _giúp/Mục lục"
 
-#: cardinfo.c:117
+#: cardinfo.c:116
 msgid "/_Help/About"
-msgstr "/Trợ _giúp/Về trình này"
+msgstr "/Trợ _giúp/Giới thiệu"
 
-#: cardinfo.c:177 cardinfo.c:865
+#: cardinfo.c:176 cardinfo.c:864
 msgid "card not recognized"
 msgstr "chưa chấp nhân thẻ"
 
-#: cardinfo.c:279 cardinfo.c:350
+#: cardinfo.c:278 cardinfo.c:349
 msgid "Could not write to temporal config file."
 msgstr "Không thể ghi vào tập tin cấu hình tạm thờì."
 
-#: cardinfo.c:556
+#: cardinfo.c:555
 msgid "Could not open pidfile:"
 msgstr "Không mở được tập tin thông tin cá nhân (pidfile):"
 
-#: cardinfo.c:562
+#: cardinfo.c:561
 msgid "Could not read pidfile"
 msgstr "Không đọc được tập tin thông tin cá nhân (pidfile)"
 
-#: cardinfo.c:566
+#: cardinfo.c:565
 msgid "Could not signal cardmgr:"
 msgstr "Không thể ra hiệu trình quản lý thẻ (cardmgr):"
 
-#: cardinfo.c:641
+#: cardinfo.c:640
 msgid "gpe-conf must be setuid root to use cardinfo feature."
 msgstr "Để sử dụng tính gọi năng thông tin thẻ (cardinfo) thì cần phải lâp trình gpe-conf có quyền setuid root."
 
-#: cardinfo.c:660
+#: cardinfo.c:659
 msgid "No PCMCIA driver in '/proc/devices'"
 msgstr "Không có trình điều khiển PCMCIA trong thư mục '/proc/devices'"
 
-#: cardinfo.c:663
+#: cardinfo.c:662
 msgid "Could not open '/proc/devices'"
 msgstr "Không thể mở thư mục '/proc/devices'"
 
-#: cardinfo.c:675
+#: cardinfo.c:674
 msgid "No sockets found\n"
 msgstr "Chưa tìm ổ cắm nào\n"
 
-#: cardinfo.c:684
+#: cardinfo.c:683
 msgid "Card Services release does not match!"
 msgstr "Phiên bản dịch vụ thẻ (Card Services) không khớp được."
 
-#: cardinfo.c:689
+#: cardinfo.c:688
 msgid "Could not get CS revision info!\n"
 msgstr "Không gọi được thông tin sửa lại phiên bản của dịch vụ thẻ (CS).\n"
 
-#: cardinfo.c:852
+#: cardinfo.c:851
 msgid "flock(stabfile) failed"
 msgstr "không thi hành lệnh flock(stabfile) được"
 
-#: cardinfo.c:871
+#: cardinfo.c:870
 #, c-format
 msgid "no driver loaded"
 msgstr "chưa tải trình điều khiển thiết bị (driver)"
 
-#: cardinfo.c:980
+#: cardinfo.c:979
 msgid "ready"
 msgstr "sẵn sàng"
 
-#: cardinfo.c:998
+#: cardinfo.c:997
 msgid "not ready"
 msgstr "chưa sẵn sàng"
 
-#: cardinfo.c:1013
+#: cardinfo.c:1012
 msgid "suspended"
 msgstr "đã ngưng"
 
-#: cardinfo.c:1205
+#: cardinfo.c:1204
 msgid "Assign Driver"
 msgstr "Gán trình điều khiển"
 
-#: cardinfo.c:1214
+#: cardinfo.c:1213
 msgid ""
 "This dialog allows you to select/\n"
 "change the driver assignment for a\n"
@@ -1164,59 +1264,59 @@ msgstr ""
 "hay thay đổi trình điều khiển đối với\n"
 "thẻ PCMCIA hay CF."
 
-#: cardinfo.c:1224
+#: cardinfo.c:1223
 msgid "Your current card identifies itself as:"
 msgstr "Thẻ hiện của bạn có thông tin này:"
 
-#: cardinfo.c:1238 cardinfo.c:1244
+#: cardinfo.c:1237 cardinfo.c:1243
 msgid "Manuf. Id"
 msgstr "Mã chế tạo"
 
-#: cardinfo.c:1238 cardinfo.c:1244
+#: cardinfo.c:1237 cardinfo.c:1243
 msgid "Class"
 msgstr "Loại"
 
-#: cardinfo.c:1342 cardinfo.c:1355
+#: cardinfo.c:1341 cardinfo.c:1354
 msgid "PC/CF card socket information."
 msgstr "Thông tin ổ cắm của thẻ PC/CF."
 
-#: cardinfo.c:1350
+#: cardinfo.c:1349
 msgid "Socket"
 msgstr "Ổ cắm"
 
-#: cardinfo.c:1381
+#: cardinfo.c:1380
 msgid "Information for socket"
 msgstr "Thông tin về ổ cắm"
 
-#: cardinfo.c:1390
+#: cardinfo.c:1389
 msgid "State:"
 msgstr "Tính trạng:"
 
-#: cardinfo.c:1391
+#: cardinfo.c:1390
 msgid "Device:"
 msgstr "Thiết bị:"
 
-#: cardinfo.c:1392
+#: cardinfo.c:1391
 msgid "Driver:"
 msgstr "Trình điều khiển:"
 
-#: cardinfo.c:1393
+#: cardinfo.c:1392
 msgid "Type:"
 msgstr "Loại:"
 
-#: cardinfo.c:1394
+#: cardinfo.c:1393
 msgid "I/O:"
 msgstr "Vào/xuất:"
 
-#: cardinfo.c:1395
+#: cardinfo.c:1394
 msgid "IRQ:"
 msgstr "IRQ:"
 
-#: cardinfo.c:1402
+#: cardinfo.c:1401
 msgid "Flags:"
 msgstr "Cờ:"
 
-#: cardinfo.c:1419
+#: cardinfo.c:1418
 msgid "PCMCIA initialisation failed"
 msgstr "Không khởi động đươc PCMCIA"
 
@@ -1401,117 +1501,202 @@ msgstr "Ổ hiêu bài (Token Ring) 16/4 Mbps"
 msgid "16/4 Mbps Token Ring (New)"
 msgstr "Ổ hiêu bài 16/4 Mbps Mới"
 
-#: tools/interface.c:1871
+#: tools/interface.c:1875
 #, c-format
-msgid ""
-"<b>Interface %s</b>\n"
-"Type: %s\n"
-msgstr ""
-"<b>Giao diện %s</b>\n"
-"Loại: %s\n"
+msgid "Interface %s"
+msgstr "Giao diện %s"
 
-#: tools/interface.c:1877
+#: tools/interface.c:1876
+#, c-format
+msgid "Type: %s"
+msgstr "Kiểu: %s"
+
+#: tools/interface.c:1885
 #, c-format
 msgid "Media: %s"
 msgstr "Môi giới: %s"
 
-#: tools/interface.c:1882
+#: tools/interface.c:1890
 #, c-format
 msgid "(auto)"
 msgstr "(tự động)"
 
-#: tools/interface.c:1894
+#: tools/interface.c:1902
 #, c-format
 msgid "Address: %s\n"
 msgstr "Địa chỉ: %s\n"
 
-#: tools/interface.c:1899
+#: tools/interface.c:1907
 #, c-format
 msgid "P-t-P: %s\n"
 msgstr "P-t-P: %s\n"
 
-#: tools/interface.c:1903
+#: tools/interface.c:1911
 #, c-format
 msgid "Netmask: %s\n"
 msgstr "Mặt nạ mang: %s\n"
 
-#: tools/interface.c:1907
+#: tools/interface.c:1915
 #, c-format
 msgid "Broadcast: %s\n"
 msgstr "Phát thanh: %s\n"
 
-#: tools/interface.c:1919
+#: tools/interface.c:1927
 #, c-format
 msgid "HWaddr (MAC): %s\n"
 msgstr "HWaddr (MAC): %s\n"
 
-#: tools/interface.c:1949
+#: tools/interface.c:1957
 #, c-format
 msgid "IPv6 Address: %s/%d\n"
 msgstr "Địa chỉ IPv6: %s/%d\n"
 
-#: tools/interface.c:1952
+#: tools/interface.c:1960
 #, c-format
 msgid "Scope: "
 msgstr "Phạm vị:"
 
-#: tools/interface.c:1957
+#: tools/interface.c:1965
 #, c-format
 msgid "Global"
 msgstr "Toàn cục"
 
-#: tools/interface.c:1960
+#: tools/interface.c:1968
 #, c-format
 msgid "Link"
 msgstr "Liên kết"
 
-#: tools/interface.c:1963
+#: tools/interface.c:1971
 #, c-format
 msgid "Site"
 msgstr "Nơi Mạng"
 
-#: tools/interface.c:1966
+#: tools/interface.c:1974
 #, c-format
 msgid "Compat"
 msgstr "Tương thích"
 
-#: tools/interface.c:1969
+#: tools/interface.c:1977
 #, c-format
 msgid "Host"
 msgstr "Máy chủ"
 
-#: tools/interface.c:1972
+#: tools/interface.c:1980
 #, c-format
 msgid "Unknown"
 msgstr "Chưa biết"
 
-#: sound/sound.c:252
+#: sound/sound.c:250
 msgid "Audio Settings"
 msgstr "Tham chiếu âm thanh"
 
-#: sound/sound.c:259
+#: sound/sound.c:257
 msgid "Mute Everything"
 msgstr "Chặn tất cả tiếng"
 
-#: sound/sound.c:300
+#: sound/sound.c:298
 msgid "Alarm Settings"
 msgstr "Tham chiếu báo động"
 
-#: sound/sound.c:307
+#: sound/sound.c:305
 msgid "Enable Alarm Sound"
 msgstr "Hiệu lực âm thanh báo động"
 
-#: sound/sound.c:314
+#: sound/sound.c:312
 msgid "Automatic Volume (rising)"
 msgstr "Âm lượng tự động (tăng lên)"
 
-#: sound/sound.c:324 sound/soundctrl.c:283
+#: sound/sound.c:322 sound/soundctrl.c:298
 msgid "Volume"
 msgstr "Âm lượng"
 
-#: sound/sound.c:331
+#: sound/sound.c:329
 msgid "Test"
 msgstr "Thử ra"
+
+#: keys/keyboard.c:75
+msgid "none"
+msgstr "không có"
+
+#: keys/keyboard.c:76
+msgid "Foldable"
+msgstr "Có thể gấp"
+
+#: keys/keyboard.c:77
+msgid "SnapNType"
+msgstr "SnapNType"
+
+#: keys/keyboard.c:78
+msgid "Stowaway"
+msgstr "Stowaway"
+
+#: keys/keyboard.c:79
+msgid "StowawayXT"
+msgstr "StowawayXT"
+
+#: keys/keyboard.c:80
+msgid "HP Slim"
+msgstr "HP Slim"
+
+#: keys/keyboard.c:81
+msgid "Smart BT"
+msgstr "Smart BT"
+
+#: keys/keyboard.c:82
+msgid "LIRC"
+msgstr "LIRC"
+
+#: keys/keyboard.c:83
+msgid "Belkin IR"
+msgstr "Belkin IR"
+
+#: keys/keyboard.c:84
+msgid "Flexis"
+msgstr "Flexis"
+
+#: keys/keyboard.c:85
+msgid "Benq Gamepad"
+msgstr "Benq Gamepad"
+
+#: keys/keyboard.c:86
+msgid "Pocketvik"
+msgstr "0"
+
+#: keys/keyboard.c:87
+msgid "Micro Foldaway"
+msgstr "Micro Foldaway"
+
+#: keys/keyboard.c:88
+msgid "Micro Datapad"
+msgstr "Micro Datapad"
+
+#: keys/keyboard.c:252
+msgid "External keyboard configuration."
+msgstr "Cấu hình bàn phím bên ngoại."
+
+#: keys/keyboard.c:255
+msgid "External Keyboard Port"
+msgstr "Thiết lập bàn phím ảop"
+
+#: keys/keyboard.c:262
+msgid "Here you may select your external keyboard model."
+msgstr "Ở đây thì bạn có thể chọn mẫu bàn phím bên ngoại."
+
+#: keys/keyboard.c:283
+msgid "External Keyboard Type"
+msgstr "Kiểu bàn phím bên ngoại"
+
+#: keys/keys.c:79
+msgid "Buttons"
+msgstr "Nút"
+
+#: keys/keys.c:83
+msgid "Virtual Keyboard"
+msgstr "Bàn phím ảo"
+
+#: keys/keys.c:87
+msgid "External Keyboard"
+msgstr "Bàn phím bên ngoại"
 
 #: main-info.c:67
 #, c-format
@@ -1521,52 +1706,52 @@ msgstr "cách sử dụng: gpe-info [trang]\n"
 #: main-info.c:68
 #, c-format
 msgid "    Where page may be \"global\" (default)\n"
-msgstr "    Mà trang ấy có thể là \"global\" (toàn cuc: là mặc định)\n"
+msgstr "    Mà trang ấy có thể là \"global\" (toàn cục: là mặc định)\n"
 
 #: main-info.c:78 gpe-conf-sysinfo.desktop.in.h:2
 msgid "System Information"
 msgstr "Thông tin hệ thống"
 
-#: storage.c:167 storage.c:424
+#: storage.c:166 storage.c:423
 msgid "System Memory"
 msgstr "Bộ nhớ hê thống"
 
 #. TRANSLATORS: MB == Mega Bytes
-#: storage.c:175 storage.c:444
+#: storage.c:174 storage.c:443
 msgid "Free memory"
 msgstr "Bộ nhớ còn rảnh"
 
 #. TRANSLATORS: MB == Mega Bytes
-#: storage.c:177 storage.c:184 storage.c:330 storage.c:341 storage.c:446
-#: storage.c:459 sysinfo.c:664 sysinfo.c:680
+#: storage.c:176 storage.c:183 storage.c:329 storage.c:340 storage.c:445
+#: storage.c:458 sysinfo.c:663 sysinfo.c:679
 msgid "MB"
 msgstr "MB"
 
-#: storage.c:182 storage.c:329 storage.c:457
+#: storage.c:181 storage.c:328 storage.c:456
 msgid "Total:"
 msgstr "Tổng số:"
 
-#: storage.c:293
+#: storage.c:292
 msgid "Internal Flash"
 msgstr "Bộ nhớ cực nhanh nôi bộ"
 
-#: storage.c:299
+#: storage.c:298
 msgid "MMC"
 msgstr "MMC"
 
-#: storage.c:305
+#: storage.c:304
 msgid "Compact Flash"
 msgstr "Bộ nhớ cực nhanh gọn (CF)"
 
-#: storage.c:311
+#: storage.c:310
 msgid "Network Filesystem"
 msgstr "Hệ thống tập tin mạng"
 
-#: storage.c:331
+#: storage.c:330
 msgid "Mounted at "
 msgstr "Đươc lắp ở"
 
-#: storage.c:339
+#: storage.c:338
 msgid "Free space"
 msgstr "Sức chứa còn rảnh"
 
@@ -1598,199 +1783,199 @@ msgstr "Bản ghi phiên"
 msgid "Could not open X session log.\n"
 msgstr "Không mở được bản ghi phiên X.\n"
 
-#: battery.c:86
+#: battery.c:85
 #, c-format
 msgid "could not open touchscreen device '%s'\n"
 msgstr "không mở được thiết bị màn ảnh sờ '%s'\n"
 
-#: battery.c:143 battery.c:200 battery.c:319
+#: battery.c:142 battery.c:199 battery.c:301
 msgid "Status: high"
 msgstr "Tình trạng: cao"
 
-#: battery.c:146 battery.c:203 battery.c:323
+#: battery.c:145 battery.c:202 battery.c:305
 msgid "Status: low"
 msgstr "Tình trang: thập"
 
-#: battery.c:149 battery.c:206 battery.c:327
+#: battery.c:148 battery.c:205 battery.c:309
 msgid "Status: critical"
 msgstr "Tình trạng: gần chết"
 
-#: battery.c:152 battery.c:209 battery.c:331
+#: battery.c:151 battery.c:208 battery.c:313
 msgid "Status: charging"
 msgstr "Tình trạng: "
 
-#: battery.c:155 battery.c:212
+#: battery.c:154 battery.c:211
 msgid "Status: charge main"
 msgstr "Tình trạng: nạp điện chính"
 
-#: battery.c:158
+#: battery.c:157
 msgid "Status: dead"
 msgstr "Tình trạng: chết rồi"
 
-#: battery.c:161 battery.c:218 battery.c:317
+#: battery.c:160 battery.c:217 battery.c:299
 msgid "Status: full"
 msgstr "Tình trạng: đầy rồi"
 
-#: battery.c:164 battery.c:221
+#: battery.c:163 battery.c:220
 msgid "Status: no battery"
 msgstr "Tình trạng: không có pin"
 
-#: battery.c:167 battery.c:224 battery.c:243 battery.c:334
+#: battery.c:166 battery.c:223 battery.c:242 battery.c:316
 msgid "Status: unknown"
 msgstr "Tình trạng: chưa biết"
 
-#: battery.c:172
+#: battery.c:171
 msgid "learning"
 msgstr "đang học biết"
 
-#: battery.c:176 battery.c:228
+#: battery.c:175 battery.c:227
 msgid "Voltage"
 msgstr "Điện áp"
 
-#: battery.c:180 battery.c:232 battery.c:348
+#: battery.c:179 battery.c:231 battery.c:333
 msgid "AC connected"
 msgstr "Kết nối đến AC rồi"
 
-#: battery.c:182 battery.c:234 battery.c:350
+#: battery.c:181 battery.c:233 battery.c:335
 msgid "Lifetime"
 msgstr "Thời gian sống"
 
-#: battery.c:215
+#: battery.c:214
 msgid "Status: not installed"
 msgstr "Tình trạng: chưa càì đặt"
 
-#: battery.c:241
+#: battery.c:240
 msgid "not installed"
 msgstr "chưa cài đặt"
 
-#: battery.c:245
+#: battery.c:244
 msgid "Voltage: unknown"
 msgstr "Điện áp: chưa biết"
 
-#: battery.c:247
+#: battery.c:246
 msgid "Lifetime: unknown"
 msgstr "Thời gian sống: chưa biết"
 
-#: battery.c:309
+#: battery.c:291
 msgid "No battery"
 msgstr "Không có pin"
 
-#: battery.c:409
+#: battery.c:396
 msgid "Internal battery"
 msgstr "Pin nội bộ"
 
-#: battery.c:413
+#: battery.c:400
 msgid "Jacket battery"
 msgstr "Pin thêm ngoài"
 
-#: sysinfo.c:237
+#: sysinfo.c:236
 msgid "ARM"
 msgstr "ARM"
 
-#: sysinfo.c:240
+#: sysinfo.c:239
 msgid "Intel x86 or compatible"
 msgstr "Intel x86 hay tương thích"
 
-#: sysinfo.c:241
+#: sysinfo.c:240
 msgid "IBM type PC"
 msgstr "PC loại IBM<"
 
-#: sysinfo.c:244
+#: sysinfo.c:243
 msgid "Mips"
 msgstr "Mips"
 
-#: sysinfo.c:246
+#: sysinfo.c:245
 msgid "Silicon Graphics Machine"
 msgstr "Máy đồ họa silic (Silicon Graphics)"
 
-#: sysinfo.c:250
+#: sysinfo.c:249
 msgid "IBM Power or PowerPC"
 msgstr "IBM Power hay PowerPC"
 
 #. TRANSLATORS: "Familiar" is the name of a linux distribution.
-#: sysinfo.c:279
+#: sysinfo.c:278
 msgid "Familiar"
 msgstr "Familiar (linux)"
 
-#. TRANSLATORS: "Familiar" is the name of a linux distribution.
-#: sysinfo.c:293
+#. TRANSLATORS: "OpenEmbedded" is the name of a linux distribution.
+#: sysinfo.c:292
 msgid "OpenEmbedded"
-msgstr "OpenEmbedded"
+msgstr "OpenEmbedded (linux)"
 
-#: sysinfo.c:335 sysinfo.c:337
+#: sysinfo.c:334 sysinfo.c:336
 msgid "Build"
 msgstr "Số dựng"
 
-#: sysinfo.c:439
+#: sysinfo.c:438
 msgid "Network Status"
 msgstr "Trạng thái mạng"
 
-#: sysinfo.c:453 sysinfo.c:456
+#: sysinfo.c:452 sysinfo.c:455
 msgid "HWaddr (MAC)"
 msgstr "HWaddr (MAC)"
 
-#: sysinfo.c:467 sysinfo.c:468
+#: sysinfo.c:466 sysinfo.c:467
 #, c-format
 msgid "Wireless"
 msgstr "Vô tuyến"
 
-#: sysinfo.c:495
+#: sysinfo.c:494
 msgid "Default Gateway"
 msgstr "Cổng ra mặc định"
 
-#: sysinfo.c:538
+#: sysinfo.c:537
 msgid "System information"
 msgstr "Thông tin hệ thống"
 
-#: sysinfo.c:548
+#: sysinfo.c:547
 msgid "Version"
 msgstr "Phiên bản"
 
-#: sysinfo.c:580
+#: sysinfo.c:579
 msgid "Distribution"
 msgstr "Sự phân phối"
 
-#: sysinfo.c:605
+#: sysinfo.c:604
 msgid "System"
 msgstr "Hệ điều hành"
 
-#: sysinfo.c:614
+#: sysinfo.c:613
 msgid "Device information"
 msgstr "Thông tin thiết bị"
 
-#: sysinfo.c:626
+#: sysinfo.c:625
 msgid "Device Name"
 msgstr "Tên thiết bị"
 
-#: sysinfo.c:645
+#: sysinfo.c:644
 msgid "CPU:"
 msgstr "CPU:"
 
-#: sysinfo.c:658
+#: sysinfo.c:657
 msgid "RAM:"
 msgstr "RAM:"
 
-#: sysinfo.c:674
+#: sysinfo.c:673
 msgid "Storage:"
 msgstr "Sức chứa:"
 
-#: sysinfo.c:686
+#: sysinfo.c:685
 msgid "Hardware"
 msgstr "Phần cứng"
 
-#: sysinfo.c:696
+#: sysinfo.c:695
 msgid "Battery"
 msgstr "Pin"
 
-#: sysinfo.c:703
+#: sysinfo.c:702
 msgid "Storage"
 msgstr "Sức chứa"
 
-#: sysinfo.c:710
+#: sysinfo.c:709
 msgid "Networks"
 msgstr "mạng"
 
-#: sysinfo.c:717
+#: sysinfo.c:716
 msgid "Log Display"
 msgstr "Trình bày bản ghi"
 
@@ -1814,37 +1999,13 @@ msgstr "Thẻ PC/CF"
 msgid "PC/CF Cards info and config"
 msgstr "Thông tin và cấu hình thẻ PC/CF"
 
-#: gpe-conf-screen.desktop.in.h:1
-msgid "Screen Setup"
-msgstr "Thiết lập màn ảnh"
+#: gpe-conf-keys.desktop.in.h:1
+msgid "Keyboard and Button Setup"
+msgstr "Thiết lập bàn phím và cái nút"
 
-#: gpe-conf-kbd.desktop.in.h:1
-msgid "Virtual Keyboard"
-msgstr "Bàn phím ảo"
-
-#: gpe-conf-kbd.desktop.in.h:2
-msgid "Virtual Keyboard Setup"
-msgstr "Thiết lập bàn phím ảop"
-
-#: gpe-conf-keyctl.desktop.in.h:1
-msgid "Button Config"
-msgstr "Cấu hình nút"
-
-#: gpe-conf-keyctl.desktop.in.h:2
-msgid "Button Configuration"
-msgstr "Cấu hình các cái nút"
-
-#: gpe-conf-login-setup.desktop.in.h:1
-msgid "Login Setup"
-msgstr "Thiết lập đăng nhập"
-
-#: gpe-conf-network.desktop.in.h:1
-msgid "Network Setup"
-msgstr "Thiết lập mạng"
-
-#: gpe-conf-ownerinfo.desktop.in.h:1
-msgid "Owner Information"
-msgstr "Thông tin người chủ"
+#: gpe-conf-keys.desktop.in.h:2
+msgid "Keys and Buttons"
+msgstr "Phím và Nút"
 
 #: gpe-conf-ownerinfo.desktop.in.h:2
 msgid "Set Owner Information"
@@ -1853,10 +2014,6 @@ msgstr "Lập thông tin về người chủ"
 #: gpe-conf-serial.desktop.in.h:1
 msgid "Serial Port Settings"
 msgstr "Tham chiếu cổng nối tiếp"
-
-#: gpe-conf-serial.desktop.in.h:2
-msgid "Serial Ports"
-msgstr "Cổng nối tiếp"
 
 #: gpe-conf-sleep.desktop.in.h:1
 msgid "Sleep Config"
