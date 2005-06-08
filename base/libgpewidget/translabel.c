@@ -65,9 +65,10 @@ filter (GdkXEvent *xevp, GdkEvent *ev, gpointer p)
 	    {
 	      GSList *iter;
 
+#ifdef ENABLE_NLS
 	      setlocale (LC_MESSAGES, prop);
-
-	      for (iter = widgets; iter; iter = iter->next)
+#endif
+      for (iter = widgets; iter; iter = iter->next)
 		{
 		  GtkWidget *w = GTK_WIDGET (iter->data);
 		  void (*func)(GtkWidget *, void *) = g_object_get_data (G_OBJECT (w), 
@@ -89,6 +90,7 @@ filter (GdkXEvent *xevp, GdkEvent *ev, gpointer p)
   return FALSE;
 }
 
+#ifdef ENABLE_NLS
 static void
 label_translation (GtkWidget *w, void *pointer)
 {
@@ -97,6 +99,7 @@ label_translation (GtkWidget *w, void *pointer)
 		  
   gtk_label_set_text (GTK_LABEL (w), dgettext (domain, string));
 }
+#endif
 
 /**
  * gtk_widget_add_translation_hook:

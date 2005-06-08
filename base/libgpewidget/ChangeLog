@@ -1,5 +1,6 @@
 2005-06-08  Florian Boor <florian@kernelconcepts.de>
 
+	* translabel.c: Some more changes to support systems without NLS.
 	* dirbrowser.c, errorbox.c, gpetimesel.c, gtksimplemenu.c, pixmaps.c,
 	  question.c, smallbox.c, translabel.c: Make i8n stuff depend on ENABLE_NLS.
 
