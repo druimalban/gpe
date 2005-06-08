@@ -1,3 +1,8 @@
+2005-06-08  Florian Boor <florian@kernelconcepts.de>
+
+	* dirbrowser.c, errorbox.c, gpetimesel.c, gtksimplemenu.c, pixmaps.c,
+	  question.c, smallbox.c, translabel.c: Make i8n stuff depend on ENABLE_NLS.
+
 2005-06-06  Florian Boor <florian@kernelconcepts.de>
 
 	* gpehelp.c: Fix double-freeing some data in some situation.

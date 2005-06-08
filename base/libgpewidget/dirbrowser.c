@@ -20,7 +20,6 @@
 #include <sys/types.h>
 #include <dirent.h>
 #include <stdio.h>
-#include <libintl.h>
 #include <string.h>
 
 #include <gtk/gtk.h>
@@ -30,7 +29,12 @@
 #include "pixmaps.h"
 #include "errorbox.h"
 
+#ifdef ENABLE_NLS
+#include <libintl.h>
 #define _(x) dgettext(PACKAGE, x)
+#else
+#define _(x) (x)
+#endif
 
 enum
   {

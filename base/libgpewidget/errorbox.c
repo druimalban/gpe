@@ -18,7 +18,6 @@
  */
 
 #include <gtk/gtk.h>
-#include <libintl.h>
 #include <errno.h>
 #include <string.h>
 #include <stdarg.h>
@@ -29,9 +28,14 @@
 #include "picturebutton.h"
 #include "pixmaps.h"
 
-static volatile gboolean currently_handling_error = FALSE;
-
+#ifdef ENABLE_NLS
+#include <libintl.h>
 #define _(x) dgettext(PACKAGE, x)
+#else
+#define _(x) (x)
+#endif
+
+static volatile gboolean currently_handling_error = FALSE;
 
 static void
 do_gpe_error_box (const char *text, gboolean block)

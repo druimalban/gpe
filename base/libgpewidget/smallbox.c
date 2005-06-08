@@ -18,13 +18,17 @@
  */
 
 #include <gtk/gtk.h>
-#include <libintl.h>
 
 #include "smallbox.h"
 #include "picturebutton.h"
 #include "spacing.h"
 
+#ifdef ENABLE_NLS
+#include <libintl.h>
 #define _(x) dgettext(PACKAGE, x)
+#else
+#define _(x) (x)
+#endif
 
 void
 smallbox_click_ok (GtkWidget *widget, gpointer p)

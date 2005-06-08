@@ -7,7 +7,6 @@
  * 2 of the License, or (at your option) any later version.
  */
 
-#include <libintl.h>
 #include <gtk/gtk.h>
 #include <gdk/gdkx.h>
 
@@ -17,7 +16,12 @@
 #include "gpeclockface.h"
 #include "pixmaps.h"
 
+#ifdef ENABLE_NLS
+#include <libintl.h>
 #define _(x) gettext(x)
+#else
+#define _(x) (x)
+#endif
 
 struct _GpeTimeSelClass 
 {

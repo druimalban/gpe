@@ -17,7 +17,6 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include <libintl.h>
 #include <stdio.h>
 
 #include <X11/Xatom.h>
@@ -147,13 +146,16 @@ gtk_widget_add_translation_hook (GtkWidget *w, void (*func)(GtkWidget *, void *)
 GtkWidget *
 gtk_label_new_with_translation (gchar *domain, gchar *string)
 {
+#ifdef ENABLE_NLS
   gchar *initial_value = dgettext (domain, string);
   GtkWidget *w = gtk_label_new (initial_value);
-
+	
   g_object_set_data (G_OBJECT (w), "translate-domain", domain);
   g_object_set_data (G_OBJECT (w), "translate-string", string);
-
   gtk_widget_add_translation_hook (w, label_translation, NULL);
-
+#else
+  GtkWidget *w = gtk_label_new (string);
+#endif
+	
   return w;
 }

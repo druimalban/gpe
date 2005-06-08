@@ -10,9 +10,14 @@
 #include <time.h>
 #include <gtk/gtk.h>
 #include "gtksimplemenu.h"
-#include <libintl.h>
-
 #include "link-warning.h"
+
+#ifdef ENABLE_NLS
+#include <libintl.h>
+#define _(x) dgettext(PACKAGE, x)
+#else
+#define _(x) (x)
+#endif
 
 /**
  * GtkSimpleMenu:

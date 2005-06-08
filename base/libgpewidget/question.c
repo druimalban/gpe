@@ -20,7 +20,6 @@
  */
 
 #include <gtk/gtk.h>
-#include <libintl.h>
 #include <string.h>
 #include <stdarg.h>
 #include <stdlib.h>
@@ -32,7 +31,12 @@
 #include "pixmaps.h"
 #include "link-warning.h"
 
+#ifdef ENABLE_NLS
+#include <libintl.h>
 #define _(x) dgettext(PACKAGE, x)
+#else
+#define _(x) (x)
+#endif
 
 static void
 on_qn_button_clicked (GtkButton *button, gpointer user_data)

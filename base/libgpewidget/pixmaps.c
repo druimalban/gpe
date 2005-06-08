@@ -23,11 +23,17 @@
 #include <unistd.h>
 #include <glib.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
-#include <libintl.h>
 
 #include "pixmaps.h"
 #include "errorbox.h"
 #include "link-warning.h"
+
+#ifdef ENABLE_NLS
+#include <libintl.h>
+#define _(x) dgettext(PACKAGE, x)
+#else
+#define _(x) (x)
+#endif
 
 static GData *pbdata;
 
@@ -39,8 +45,6 @@ static const gchar *default_theme_dir = PREFIX "/share/gpe/pixmaps/default";
 #endif
 
 static const gchar *theme_dir;
-
-#define _(x) dgettext(PACKAGE, x)
 
 static GdkPixbuf *
 gpe_load_one_icon (const char *filename, gchar **error)
