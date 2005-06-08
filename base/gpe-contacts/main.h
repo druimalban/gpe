@@ -17,9 +17,9 @@ typedef struct {
 extern t_filter *filters;
 extern int current_filter;
 
+#endif
+
 #define IMG_HEIGHT 160
 #define IMG_WIDTH  120
-
-#endif
 
 #endif

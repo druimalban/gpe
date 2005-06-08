@@ -1,7 +1,13 @@
+
+2005-06-08  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * configure.ac, main.h: Some fixes for bugs introduced with the hildon
+                            UI support.
+
 2005-06-04  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * configure.ac: Version to 0.39. New switch: --enable-hildon
-	* Merge in support for maemo/hildon environment.
+    * Merge in support for maemo/hildon environment.
     * main.c: Removed obsolete #defines.
     * debian/*: New files to build Debian packages for maemo environment.
     * hildon/*: Support files for maemo environment.
