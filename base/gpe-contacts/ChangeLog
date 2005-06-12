@@ -1,3 +1,7 @@
+2005-06-11  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * autogen.sh: Don't run configure.
+    * editing.c: Hotfix to improve behaviour on small screens.
 
 2005-06-08  Florian Boor  <florian.boor@kernelconcepts.de>
 

@@ -119,7 +119,7 @@ pop_singles (GtkWidget *vtable, GSList *list, GtkWidget *pw, gboolean visible, g
             }
 #endif            
           /* even fields right, odd fields left */
-          if (alt_pos)
+          if (alt_pos && mode_large_screen)
             {
               if (l) 
                 gtk_table_attach_defaults(GTK_TABLE(vtable), l, 2, 3, *pos, *pos+1);
