@@ -36,7 +36,11 @@
 
 #include "gpe-ownerinfo.h"
 
+#ifdef ENABLE_NLS
 #define _(_x) gettext(_x)
+#else
+#define _(_x) (_x)
+#endif
 
 int
 main (int argc, char *argv[])
