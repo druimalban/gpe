@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-ownerinfo 0.20\n"
-"POT-Creation-Date: 2003-10-10 00:14+0200\n"
+"POT-Creation-Date: 2003-03-04 00:17+0100\n"
 "PO-Revision-Date: 2003-04-14 22:07+0800\n"
 "Last-Translator: Chao-Hsiung Liao <pesder.liao@msa.hinet.net>\n"
 "Language-Team: Chinese (traditional) <zh-l10n@linux.org.tw>\n"
@@ -14,71 +14,67 @@ msgstr ""
 "Content-Type: text/plain; charset=Big5\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: main.c:83 main.c:112
-msgid "GPE Owner Info"
-msgstr "GPE 擁有者資訊"
-
-#: main.c:85
-msgid "Valid options:\n"
-msgstr "有效的選項:\n"
-
-#: main.c:86
-msgid "   -g GEOMETRY  window geometry (default: 240x100+0+220)\n"
-msgstr "   -g GEOMETRY  視窗位置大小 (預設: 240x100+0+220)\n"
-
-#: main.c:87
-msgid "   -k           always keep window on top (override redirect)\n"
-msgstr "   -k           視窗永遠保持在最上層(此設定先於重新導向)\n"
-
-#: main.c:88
-msgid "   -h           this help text\n"
-msgstr "   -h           此說明文字\n"
-
-#. TRANSLATORS: only a short word will look good
-#. here.  If the word is shorter than 5 letters,
-#. please fill it up with spaces.
-#: gpe-ownerinfo.c:326
+#: gpe-ownerinfo.c:345
 msgid "Owner"
 msgstr "擁有人"
 
-#: gpe-ownerinfo.c:356
+#. TRANSLATORS: please replace this with the Pango code for your own language
+#: gpe-ownerinfo.c:387
+msgid "en"
+msgstr "zh_TW.Big5"
+
+#: gpe-ownerinfo.c:408 gpe-ownerinfo.c:524
+msgid "GPE Owner Info"
+msgstr "GPE 擁有者資訊"
+
+#: gpe-ownerinfo.c:410
+msgid "Valid options:\n"
+msgstr "有效的選項:\n"
+
+#: gpe-ownerinfo.c:411
+msgid "   -g GEOMETRY  window geometry (default: 240x100+0+220)\n"
+msgstr "   -g GEOMETRY  視窗位置大小 (預設: 240x100+0+220)\n"
+
+#: gpe-ownerinfo.c:412
+msgid "   -t           make window transparent\n"
+msgstr "   -t           視窗透明化\n"
+
+#: gpe-ownerinfo.c:413
+msgid "   -k           always keep window on top (override redirect)\n"
+msgstr "   -k           視窗永遠保持在最上層(此設定先於重新導向)\n"
+
+#: gpe-ownerinfo.c:414
+msgid "   -h           this help text\n"
+msgstr "   -h           此說明文字\n"
+
+#: gpe-ownerinfo.c:433
 msgid "GPE User"
 msgstr "GPE 使用者"
 
-#. TRANSLATORS: you should make sure to not use a 'fantasy' domain
-#. which might actually exist (maybe in the future). You can
-#. replace the 'nobody' though, or use '@example.org' (see RFC 2606)
-#: gpe-ownerinfo.c:360
+#: gpe-ownerinfo.c:434
 msgid "nobody@localhost.localdomain"
 msgstr "nobody@localhost.localdomain"
 
-#: gpe-ownerinfo.c:361
+#: gpe-ownerinfo.c:435
 msgid "+99 (9999) 999-9999"
 msgstr "+99 (9999) 999-9999"
 
-#. TRANSLATORS: the translations below should match 'Owner
-#. Information' (in gpe-conf) and 'Settings' (in mbdesktop)
-#: gpe-ownerinfo.c:364
-msgid "Configurable with <i>Owner Information</i> under <i>Settings</i>."
-msgstr ""
+#: gpe-ownerinfo.c:439
+msgid "Configurable with"
+msgstr "可以此設定"
 
-#~ msgid "en"
-#~ msgstr "zh_TW.Big5"
+#: gpe-ownerinfo.c:440 gpe-ownerinfo.c:549
+msgid "Owner Information"
+msgstr "擁有者資訊"
 
-#~ msgid "   -t           make window transparent\n"
-#~ msgstr "   -t           視窗透明化\n"
+#: gpe-ownerinfo.c:441
+msgid "under"
+msgstr "於"
 
-#~ msgid "Configurable with"
-#~ msgstr "可以此設定"
+#: gpe-ownerinfo.c:441
+msgid " Settings."
+msgstr " 設定。"
 
-#~ msgid "Owner Information"
-#~ msgstr "擁有者資訊"
-
-#~ msgid "under"
-#~ msgstr "於"
-
-#~ msgid " Settings."
-#~ msgstr " 設定。"
-
-#~ msgid "Address:"
-#~ msgstr "住址:"
+#: gpe-ownerinfo.c:578
+msgid "Address:"
+msgstr "住址:"

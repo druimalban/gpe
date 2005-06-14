@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-ownerinfo 0.20\n"
-"POT-Creation-Date: 2003-10-10 00:14+0200\n"
+"POT-Creation-Date: 2003-03-04 00:17+0100\n"
 "PO-Revision-Date: 2003-03-07 13:19+0000\n"
 "Last-Translator: Tedi Heriyanto <tedi_h@gmx.net>\n"
 "Language-Team: Indonesian <translation-team-id@lists.sourceforge.net>\n"
@@ -15,71 +15,67 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 0.9.6\n"
 
-#: main.c:83 main.c:112
-msgid "GPE Owner Info"
-msgstr "GPE Owner Info"
-
-#: main.c:85
-msgid "Valid options:\n"
-msgstr "Opsi valid:\n"
-
-#: main.c:86
-msgid "   -g GEOMETRY  window geometry (default: 240x100+0+220)\n"
-msgstr "  -g GEOMETRY  jendela geometri (default: 240x100+0+220)\n"
-
-#: main.c:87
-msgid "   -k           always keep window on top (override redirect)\n"
-msgstr "  -k           jaga jendela selalu di atas (tiadakan redireksi)\n"
-
-#: main.c:88
-msgid "   -h           this help text\n"
-msgstr "  -h           teks bantuan ini\n"
-
-#. TRANSLATORS: only a short word will look good
-#. here.  If the word is shorter than 5 letters,
-#. please fill it up with spaces.
-#: gpe-ownerinfo.c:326
+#: gpe-ownerinfo.c:345
 msgid "Owner"
 msgstr "Pemilik"
 
-#: gpe-ownerinfo.c:356
+#. TRANSLATORS: please replace this with the Pango code for your own language
+#: gpe-ownerinfo.c:387
+msgid "en"
+msgstr "id"
+
+#: gpe-ownerinfo.c:408 gpe-ownerinfo.c:524
+msgid "GPE Owner Info"
+msgstr "GPE Owner Info"
+
+#: gpe-ownerinfo.c:410
+msgid "Valid options:\n"
+msgstr "Opsi valid:\n"
+
+#: gpe-ownerinfo.c:411
+msgid "   -g GEOMETRY  window geometry (default: 240x100+0+220)\n"
+msgstr "  -g GEOMETRY  jendela geometri (default: 240x100+0+220)\n"
+
+#: gpe-ownerinfo.c:412
+msgid "   -t           make window transparent\n"
+msgstr "  -t           buat jendela transparan\n"
+
+#: gpe-ownerinfo.c:413
+msgid "   -k           always keep window on top (override redirect)\n"
+msgstr "  -k           jaga jendela selalu di atas (tiadakan redireksi)\n"
+
+#: gpe-ownerinfo.c:414
+msgid "   -h           this help text\n"
+msgstr "  -h           teks bantuan ini\n"
+
+#: gpe-ownerinfo.c:433
 msgid "GPE User"
 msgstr "GPE User"
 
-#. TRANSLATORS: you should make sure to not use a 'fantasy' domain
-#. which might actually exist (maybe in the future). You can
-#. replace the 'nobody' though, or use '@example.org' (see RFC 2606)
-#: gpe-ownerinfo.c:360
+#: gpe-ownerinfo.c:434
 msgid "nobody@localhost.localdomain"
 msgstr "nobody@localhost.localdomain"
 
-#: gpe-ownerinfo.c:361
+#: gpe-ownerinfo.c:435
 msgid "+99 (9999) 999-9999"
 msgstr "+99 (9999) 999-9999"
 
-#. TRANSLATORS: the translations below should match 'Owner
-#. Information' (in gpe-conf) and 'Settings' (in mbdesktop)
-#: gpe-ownerinfo.c:364
-msgid "Configurable with <i>Owner Information</i> under <i>Settings</i>."
-msgstr ""
+#: gpe-ownerinfo.c:439
+msgid "Configurable with"
+msgstr "Dapat dikonfigurasi dengan"
 
-#~ msgid "en"
-#~ msgstr "id"
+#: gpe-ownerinfo.c:440 gpe-ownerinfo.c:549
+msgid "Owner Information"
+msgstr "Informasi Pemilik"
 
-#~ msgid "   -t           make window transparent\n"
-#~ msgstr "  -t           buat jendela transparan\n"
+#: gpe-ownerinfo.c:441
+msgid "under"
+msgstr "dalam"
 
-#~ msgid "Configurable with"
-#~ msgstr "Dapat dikonfigurasi dengan"
+#: gpe-ownerinfo.c:441
+msgid " Settings."
+msgstr "Setting."
 
-#~ msgid "Owner Information"
-#~ msgstr "Informasi Pemilik"
-
-#~ msgid "under"
-#~ msgstr "dalam"
-
-#~ msgid " Settings."
-#~ msgstr "Setting."
-
-#~ msgid "Address:"
-#~ msgstr "Alamat:"
+#: gpe-ownerinfo.c:578
+msgid "Address:"
+msgstr "Alamat:"

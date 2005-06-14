@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-06-21 23:09+0200\n"
+"POT-Creation-Date: 2005-04-20 14:48+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,27 +16,27 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: main.c:83 main.c:112
+#: main.c:82 main.c:111
 #, c-format
 msgid "GPE Owner Info"
 msgstr ""
 
-#: main.c:85
+#: main.c:84
 #, c-format
 msgid "Valid options:\n"
 msgstr ""
 
-#: main.c:86
+#: main.c:85
 #, c-format
 msgid "   -g GEOMETRY  window geometry (default: 240x100+0+220)\n"
 msgstr ""
 
-#: main.c:87
+#: main.c:86
 #, c-format
 msgid "   -k           always keep window on top (override redirect)\n"
 msgstr ""
 
-#: main.c:88
+#: main.c:87
 #, c-format
 msgid "   -h           this help text\n"
 msgstr ""
@@ -44,7 +44,7 @@ msgstr ""
 #. TRANSLATORS: only a short word will look good
 #. here.  If the word is shorter than 5 letters,
 #. please fill it up with spaces.
-#: gpe-ownerinfo.c:326
+#: gpe-ownerinfo.c:325
 msgid "Owner"
 msgstr ""
 

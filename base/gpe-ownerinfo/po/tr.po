@@ -1,64 +1,81 @@
 # Turkish translation of gpe-ownerinfo.
 # Copyright (C) 2005 gpe-ownerinfo.
 # This file is distributed under the same license as the gpe-ownerinfo package.
-# Abdullah Ulas <ulas@sdf.lonestar.org>, 2005.
-# 
+# Abdullah Ulas <potkal@bioinformatics.org>, 2005.
+#
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-ownerinfo 0.22\n"
-"POT-Creation-Date: 2003-10-10 00:14+0200\n"
-"PO-Revision-Date: 2005-04-01 15:59+0300\n"
-"Last-Translator: Abdullah Ulas <ulas@sdf.lonestar.org>\n"
+"Project-Id-Version: gpe-ownerinfo 0.20\n"
+"POT-Creation-Date: 2003-03-04 00:17+0100\n"
+"PO-Revision-Date: 2005-04-08 17:49+0300\n"
+"Last-Translator: Abdullah Ulas <potkal@bioinformatics.org>\n"
 "Language-Team: Turkish <gnu-tr-u12a@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=iso-8859-9\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: main.c:83 main.c:112
-msgid "GPE Owner Info"
-msgstr "GPE sahip bilgisi"
-
-#: main.c:85
-msgid "Valid options:\n"
-msgstr "Geçerli seçenekler:\n"
-
-#: main.c:86
-msgid "   -g GEOMETRY  window geometry (default: 240x100+0+220)\n"
-msgstr "   -g GEOMETRY pencere geometrisi (öntanýmlý: 240x100+0+220)\n"
-
-#: main.c:87
-msgid "   -k           always keep window on top (override redirect)\n"
-msgstr "   -k           herzaman pencereyi üstte tut (yönlendirmeyi baskýn tut)\n"
-
-#: main.c:88
-msgid "   -h           this help text\n"
-msgstr "   -h           bu yardým metnidir\n"
-
-#. TRANSLATORS: only a short word will look good
-#. here.  If the word is shorter than 5 letters,
-#. please fill it up with spaces.
-#: gpe-ownerinfo.c:326
+#: gpe-ownerinfo.c:345
 msgid "Owner"
 msgstr "Sahip"
 
-#: gpe-ownerinfo.c:356
+#. TRANSLATORS: please replace this with the Pango code for your own language
+#: gpe-ownerinfo.c:387
+msgid "en"
+msgstr "tr"
+
+#: gpe-ownerinfo.c:408 gpe-ownerinfo.c:524
+msgid "GPE Owner Info"
+msgstr "GPE Sahip Bilgisi"
+
+#: gpe-ownerinfo.c:410
+msgid "Valid options:\n"
+msgstr "Geçerli seçenekler:\n"
+
+#: gpe-ownerinfo.c:411
+msgid "   -g GEOMETRY  window geometry (default: 240x100+0+220)\n"
+msgstr "   -g GEOMETRY  window geometry (default: 240x100+0+220)\n"
+
+#: gpe-ownerinfo.c:412
+msgid "   -t           make window transparent\n"
+msgstr "   -t           pencereyi transparan yap\n"
+
+#: gpe-ownerinfo.c:413
+msgid "   -k           always keep window on top (override redirect)\n"
+msgstr "   -k           herzaman pencereyi üstte tut (yönlendirmeyi baskýn tut)\n"
+
+#: gpe-ownerinfo.c:414
+msgid "   -h           this help text\n"
+msgstr "   -h           bu yardým metnidir\n"
+
+#: gpe-ownerinfo.c:433
 msgid "GPE User"
 msgstr "GPE Kullanýcýsý"
 
-#. TRANSLATORS: you should make sure to not use a 'fantasy' domain
-#. which might actually exist (maybe in the future). You can
-#. replace the 'nobody' though, or use '@example.org' (see RFC 2606)
-#: gpe-ownerinfo.c:360
+#: gpe-ownerinfo.c:434
 msgid "nobody@localhost.localdomain"
-msgstr "nobody@localhost.localdomain"
+msgstr "hiçkimse@@localhost.localdomain"
 
-#: gpe-ownerinfo.c:361
+#: gpe-ownerinfo.c:435
 msgid "+99 (9999) 999-9999"
 msgstr "+90 (436) 999 99 99"
 
-#. TRANSLATORS: the translations below should match 'Owner
-#. Information' (in gpe-conf) and 'Settings' (in mbdesktop)
-#: gpe-ownerinfo.c:364
-msgid "Configurable with <i>Owner Information</i> under <i>Settings</i>."
-msgstr "<i>Ayarlar</i> kýsmýnda <i>Sahip Bilgisi</i> ayarlanabilir."
+#: gpe-ownerinfo.c:439
+msgid "Configurable with"
+msgstr "Ýle ayarlanabilir"
+
+#: gpe-ownerinfo.c:440 gpe-ownerinfo.c:549
+msgid "Owner Information"
+msgstr "Sahip Bilgileri"
+
+#: gpe-ownerinfo.c:441
+msgid "under"
+msgstr "altýnda"
+
+#: gpe-ownerinfo.c:441
+msgid " Settings."
+msgstr "Ayarlar"
+
+#: gpe-ownerinfo.c:578
+msgid "Address:"
+msgstr "Adres"

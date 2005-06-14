@@ -12,8 +12,10 @@
 #include <string.h>
 #include <getopt.h>
 #include <ctype.h>
+#ifdef ENABLE_NLS
 #include <libintl.h>
 #include <locale.h>
+#endif
 #include <sys/types.h> /* for getpwnam() */
 #include <pwd.h>       /* for getpwnam() */
 #include <unistd.h>    /* for access() */
@@ -60,11 +62,13 @@ main (int argc, char *argv[])
       exit (1);
     }
   }
-  
+
+#ifdef ENABLE_NLS  
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
   textdomain (PACKAGE);
   bind_textdomain_codeset (PACKAGE, "UTF-8");
+#endif
 
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
