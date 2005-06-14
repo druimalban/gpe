@@ -12,8 +12,10 @@
 #include <string.h>
 #include <getopt.h>
 #include <ctype.h>
+#ifdef ENABLE_NLS
 #include <libintl.h>
 #include <locale.h>
+#endif
 #include <sys/types.h> /* for getpwnam() */
 #include <pwd.h>       /* for getpwnam() */
 #include <unistd.h>    /* for access() */
@@ -43,7 +45,11 @@
 #define UPGRADE_ERROR      -1
 #define UPGRADE_NOT_NEEDED  0
 
+#ifdef ENABLE_NLS
 #define _(_x) gettext(_x)
+#else
+#define _(_x) (_x)
+#endif
 
 static GtkWidget *name;
 static GtkWidget *phone;
