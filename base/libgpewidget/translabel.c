@@ -25,6 +25,11 @@
 #include <gdk/gdk.h>
 #include <gdk/gdkx.h>
 
+#ifdef ENABLE_NLS
+#include <libintl.h>
+#include <locale.h>
+#endif
+
 static GSList *widgets;
 static gboolean filter_installed;
 static GdkAtom locale_atom;
