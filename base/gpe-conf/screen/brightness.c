@@ -90,6 +90,7 @@ const char *sysbdevs[] =
 {
 	"/sys/class/backlight/sa1100fb",
 	"/sys/class/backlight/pxafb",
+	"/sys/class/backlight/s3c2410-bl",
 	NULL
 };
 
