@@ -79,6 +79,10 @@ read_file (const gchar * url, GtkWidget * html)
 #endif
       if (!access ("/usr/share/doc/gpe/doc-not-installed.html", F_OK))
 	read_file ("file:///usr/share/doc/gpe/doc-not-installed.html", html);
+      else if (!access ("/usr/share/doc/gpe/help-index.html", F_OK))
+	{
+	  read_file ("file:///usr/share/doc/gpe/help-index.html", html);
+	}
       else
 	{
 	  gpe_error_box ("Help not installed or file not found");
