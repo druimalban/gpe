@@ -1,3 +1,33 @@
-2005-02-07  Florian Boor <florian@kernelconcepts.de>
-	
-	* initial checkin
+v0.5 - 6/2005 - Philippe De Swert
+
+* Port to gtk-webcore
+* Better integration with GPE (see libgpewidget/gpehelp.c)
+
+v0.4 - 4/2005 - Philippe De Swert
+
+* Single instance through sockets
+* Automatic adaptation of toolbar (icons || text & icons) depending on screen
+  size.
+* Creation of application .desktop file
+* Default documentation not found warning for the user.
+* gpe-helpindex helper application to generate the help index
+
+v0.3 - 2/2005 - Philippe De Swert
+
+* General fullscreen use, device independant
+* Improved command line handling
+* Working on better GPE integration
+* Added exit button 
+* removal of as much as possible hard-coded links
+
+v 0.2 - 09/2004 - Philippe De Swert, for Aleph One Ltd.
+
+* Further development for a more functional help viewer by
+  Philippe De Swert, until cancellation of the Netbook pro 
+  GNU/Linux port by Psion.
+* Home, back and forward buttons
+
+v0.1 - 06/2004 - Phil Blundell
+
+* Original basic gtkhtml rendering implemented by Phil Blundell
+  for Psion Netbook pro.

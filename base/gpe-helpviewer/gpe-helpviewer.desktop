@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=help viewer
+Comment=Displays help
+Exec=gpe-helpviewer /usr/share/doc/gpe-helpviewer/gpe-helpviewer.html
+Terminal=0
+Type=Application
+Icon=gpe-help.png
+Categories=Application;Utility;GPE
+StartupNotify=True
+

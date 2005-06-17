@@ -1,8 +1,13 @@
 /*
- * gpe-helpviewer
+ * gpe-helpviewer v0.5
+ *
+ * Displays HTML help files 
  *
  * Copyright (c) 2004 Phil Blundell
  * Copyright (c) 2004 Philippe De Swert, for Aleph One Ltd.
+ * Copyright (c) 2005 Philippe De Swert
+ *
+ * Contact : philippedeswert@scarlet.be
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,280 +23,314 @@
 #include <string.h>
 #include <unistd.h>
 #include <stdio.h>
+#include <stddef.h>
 
 #include <gtk/gtk.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
-#include <gtkhtml/gtkhtml.h>
+#include <webi.h>
 
-struct button_data {	GtkWidget *web;
-						GList *list;
-					}buttond;
-GList *history;  //keep a list of urls
-GList *lasthistory=NULL;  //keep last position in the list
-gchar *lastdata; //keep last url
+#include <gdk/gdk.h>
 
-void
-read_file (const gchar *filename, GtkWidget *html)
+#include <glib.h>
+#include <gpe/init.h>
+#include <gpe/errorbox.h>
+
+#include <sys/un.h>
+#include <sys/socket.h>
+#include <time.h>
+#include <errno.h>
+#include <pthread.h>
+
+#define SOCKETNAME "/tmp/comm"
+#define EC_FAIL 1
+//#define DEBUG /* uncomment this if you want debug output*/
+
+struct button_data
 {
-  FILE *fp;
-  GtkHTMLStream *stream;
+  GtkWidget *web;
+  GList *list;
+} buttond;
+GList *history;			//keep a list of urls
+GList *lasthistory = NULL;	//keep last position in the list
+gchar *lastdata;		//keep last url
 
-  stream = gtk_html_begin (GTK_HTML (html));
+/* read a file into gtk-webcore */
+void
+read_file (const gchar * url, GtkWidget * html)
+{
+  const gchar *filename;
 
-  fp = fopen (filename, "r");
-  if (fp)
+  filename = strchr (url, ':');
+  if (filename)
+    filename = filename + 3;
+
+  if (!access (filename, F_OK))
     {
-      char buf[1024];
-      while (!feof (fp))
-	{
-	  int n = fread (buf, 1, sizeof (buf), fp);
-	  gtk_html_write (GTK_HTML (html), stream, buf, n);
-	}
-      fclose (fp);
+#ifdef DEBUG
+      fprintf (stderr, "loading html %s\n", filename);
+#endif
+      webi_stop_load (WEBI (html));
+      webi_load_url (WEBI (html), url);
     }
   else
     {
+#ifdef DEBUG
       fprintf (stderr, "Could not open %s\n", filename);
-	  read_file ("/usr/share/help/doc-not-installed.html", html);
+#endif
+      if (!access ("/usr/share/doc/gpe/doc-not-installed.html", F_OK))
+	read_file ("/usr/share/doc/gpe/doc-not-installed.html", html);
+      else
+	{
+	  gpe_error_box ("Help not installed or file not found");
+	}
     }
-
-  gtk_html_end (GTK_HTML (html), stream, GTK_HTML_STREAM_OK);
 }
 
-static void
-url_requested (GtkHTML *html, const char *url, GtkHTMLStream *handle, gpointer data)
+/* parse url to something easy to interprete */
+const gchar *
+parse_url (const gchar * url)
 {
-  FILE *fp;
   const gchar *p;
+
 
   p = strchr (url, ':');
   if (p)
-    p = p + 1;
-  else
-    p = url;
-
-  fp = fopen (p, "r");
-  if (fp)
     {
-      char buf[1024];
-      while (!feof (fp))
-	{
-	  int n = fread (buf, 1, sizeof (buf), fp);
-	  gtk_html_write (html, handle, buf, n);
-	}
-      fclose (fp);
+      return p;
     }
-
-  gtk_html_end (html, handle, GTK_HTML_STREAM_OK);
+  else
+    {
+      p = g_strconcat ("file://", url, NULL);
+    }
+  return (p);
 }
 
-static void
-link_clicked (GtkHTML *html, const gchar *url, gpointer data)
-{
-  const gchar *p;
-  GList *temp;
-  int i=0;
-  
-	  	p = strchr (url, ':');
-				if (p)
-    			 p = p + 1;
-  				else
-    			 p = url;
-  lastdata = g_strdup (p);		
-  //add url to list and check if we have been going back earlier
-  //if the back button has been pressed clean up list to save memory 
-  //and to go back to the right page
-  if (lasthistory != g_list_last(history) && lasthistory != NULL)
-		  {
-				 temp = lasthistory;
-				 while (g_list_next(temp) != NULL)
-				 {
-					 i++;
-				 	 temp = g_list_next(temp);
-				 }
-				 while (i > 0)
-				 {
-				 	history = g_list_remove(history, temp->data);
-					temp = g_list_last(history);
-					i--;
-				}
-		  }
-  history = g_list_append(history, (gpointer *) lastdata );
-  lasthistory = g_list_last(history);
-  read_file (p, GTK_WIDGET (html));
-}
-	
 /*static void
 find_func ()
 {
 }*/
 
+/* makes the engine go forward one page */
 static void
-forward_func (GtkWidget *forward, GtkWidget *html)
+forward_func (GtkWidget * forward, GtkWidget * html)
 {
-	const gchar *goforward;
-	
-	//if there is a next page in the list show it, otherwise do nothing
-	if (g_list_next(lasthistory) != NULL)
-			{
-			goforward = g_list_next(lasthistory)->data;
-			lasthistory = g_list_next(lasthistory);
-			read_file ( goforward, GTK_WIDGET (buttond.web));
-			}
+
+  if (webi_can_go_forward (WEBI (html)))
+    webi_go_forward (WEBI (html));
+  else
+    gpe_error_box ("no more pages forward!");
 
 }
 
+/* makes the engine go back one page */
 static void
-back_func (GtkWidget *back, GtkWidget *web)
+back_func (GtkWidget * back, GtkWidget * html)
 {
-	const gchar *goback;
-	
-	//if there no previous list stop going back
-	if (g_list_previous(lasthistory)!= NULL)
-	{	
-	    goback = g_list_previous(lasthistory)->data;
-		lasthistory = g_list_previous(lasthistory);
-		read_file (goback, GTK_WIDGET (buttond.web));
-	}
-	else
+  if (webi_can_go_back (WEBI (html)))
+    webi_go_back (WEBI (html));
+  else
+    gpe_error_box ("No more pages back!");
+
+
+}
+
+/* makes the engine load the help index page, if none exists it tries to generate it */
+static void
+home_func (GtkWidget * home, GtkWidget * html)
+{
+  if (!access ("/usr/share/doc/gpe/help-index.html", F_OK))
+    system ("gpe-helpindex");
+  read_file ("/usr/share/doc/gpe/help-index.html", GTK_WIDGET (html));
+}
+
+/* open socket, check for instance and send it a quit message */
+int
+checkinstance (const gchar * url)
+{
+  struct sockaddr_un sv;
+  int fd_skt, n, retry = 0;
+  char buf[100];
+
+  strcpy (sv.sun_path, SOCKETNAME);
+  sv.sun_family = AF_UNIX;
+  fd_skt = socket (AF_UNIX, SOCK_STREAM, 0);
+#ifdef DEBUG
+  while (connect (fd_skt, (struct sockaddr *) &sv, sizeof (sv)) == -1)
+    {
+      if ((errno != ENOENT) && (retry < 1))
 	{
-		g_message ("no more pages back!");
+	  sleep (1);
+	  printf ("retry!\n");
+	  retry++;
+	  continue;
 	}
+      else
+	{
+	  return (0);
+	}
+    }
+#endif
+#ifndef DEBUG
+  connect (fd_skt, (struct sockaddr *) &sv, sizeof (sv));
+#endif
+  n = strlen (url);
+  //write (fd_skt, url, n+1);
+  write (fd_skt, "quit", 5);
+  read (fd_skt, buf, sizeof (buf));
+  close (fd_skt);
+  return (0);
 }
 
-static void
-home_func (GtkWidget *home, GtkWidget *html)
+/* open listening socket for single instance. The application quits when it gets a message*/
+static void *
+reportinstance (void *html2)
 {
-	//append home page to list, so we can get back to home using the back button
-	history = g_list_append(history, "/usr/share/help/help-index.html");
-	//set lasthistory to last element in list, otherwise we go back one
-	//page to much after pressing home.
-  	lasthistory = g_list_last(history);
-	read_file ("/usr/share/help/help-index.html", GTK_WIDGET (html));
+  int fd_skt, fd_client, len;
+  char buf[100];
+  struct sockaddr_un skt;
+
+  while (1)
+    {
+      (void) unlink (SOCKETNAME);
+      strcpy (skt.sun_path, SOCKETNAME);
+      skt.sun_family = AF_UNIX;
+      fd_skt = socket (AF_UNIX, SOCK_STREAM, 0);
+      if (bind (fd_skt, (struct sockaddr *) &skt, sizeof (skt)) != 0)
+	printf ("bind failed \n");
+      if (listen (fd_skt, SOMAXCONN) != 0)
+	printf ("listening failed\n ");
+      fd_client = accept (fd_skt, NULL, 0);
+      read (fd_client, buf, sizeof (buf));
+      write (fd_client, "Goodbye!", 9);
+      close (fd_client);
+      close (fd_skt);
+      exit (0);
+    }
 }
 
 int
 main (int argc, char *argv[])
 {
-  GtkWidget *window;
   GtkWidget *html;
   GtkWidget *app;
   GtkWidget *contentbox;
   GtkWidget *toolbar;
   GtkWidget *iconw;
-  GtkWidget *back_button, *forward_button, *home_button, *search_button;
-  gchar *base;
-  const gchar *p;
-  
-  gtk_init (&argc, &argv);
+  GtkWidget *back_button, *forward_button, *home_button, *search_button,
+    *exit_button;
+  const gchar *base;
+  gchar *p;
+  gint width = 240, height = 320;
+  pthread_t tid;
 
-  if (argc != 2)
+  WebiSettings s = { 0, };
+  WebiSettings *ks = &s;
+
+  gpe_application_init (&argc, &argv);
+  checkinstance (argv[1]);
+#ifdef DEBUG
+  printf ("no instance running!\n");
+#endif
+
+  if (argc == 1)
     {
-	  argv[1] = "/usr/share/help/help-index.html";
-	  /* if no url is given load the standard url, the rest of the args are not used
-	   * and thus ignored */
+
+      printf
+	("GPE-helpviewer, basic help viewer application. (c)2005, Philippe De Swert\n");
+      printf ("Usage: gpe-helpviewer /path/to/file\n");
+      exit (0);
     }
-  //check if the help url starts with file:// and remove it if needed
-    p = strchr (argv[1], ':');
-	  if (p)
-		      p = p + 3;
-	    else
-			    p = argv[1];
-  base = p;		
-  
-  fprintf( stderr, "url = %s\n", base);
+
+  base = parse_url (argv[1]);
+#ifdef DEBUG
+  fprintf (stderr, "url = %s\n", base);
+#endif
   //create list and add first element from the command line
   history = NULL;
-  history = g_list_append(history, base);
+  history = g_list_append (history, (gchar *) base);
 
 
   //create application window
-  app = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+  app = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   g_signal_connect (G_OBJECT (app), "delete-event", gtk_main_quit, NULL);
-  gtk_window_set_default_size (GTK_WINDOW (app), 800, 600);
-  gtk_window_set_title (GTK_WINDOW (app), "Help viewer");	
+  width = gdk_screen_width ();
+  height = gdk_screen_height ();
+  gtk_window_set_default_size (GTK_WINDOW (app), width, height);
+  gtk_window_set_title (GTK_WINDOW (app), "Help viewer");
+  gtk_window_set_resizable (GTK_WINDOW (app), TRUE);
   gtk_widget_realize (app);
-  
+
   //create boxes
-  contentbox = gtk_vbox_new(FALSE,0);
-  
+  contentbox = gtk_vbox_new (FALSE, 0);
+
   //create toolbar and add to topbox
   toolbar = gtk_toolbar_new ();
-  gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);
+  gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar),
+			       GTK_ORIENTATION_HORIZONTAL);
   gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_BOTH);
   gtk_container_set_border_width (GTK_CONTAINER (toolbar), 5);
 
   //create html object (must be created before function calls to html to avoid segfault)
-  html = gtk_html_new ();
+  html = webi_new ();
+  webi_set_emit_internal_status (WEBI (html), TRUE);
+
+  ks->default_font_size = 11;
+  ks->default_fixed_font_size = 11;
+  webi_set_settings (WEBI (html), ks);
+
+  pthread_create (&tid, NULL, reportinstance, html);
+#ifdef DEBUG
+  printf ("report running! html=%d\n", html);
+  printf ("continuing!\n");
+#endif
 
   //buttond = (struct button_data *) malloc (sizeof(struct button_data));
   buttond.web = html;
   buttond.list = history;
-  
-  //add home, search, back and forward button
-  iconw = gtk_image_new_from_file ("/usr/share/help/back.png"); /* icon widget */
-  back_button =  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), /* our toolbar */
-				                          "Back",               /* button label */
-				                          "Go back a page",     /* this button's tooltip */
-				                          "Back",             /* tooltip private info */
-				                          iconw,                 /* icon widget */
-				                          GTK_SIGNAL_FUNC (back_func), /* a signal */
-				                          html);
-  iconw = gtk_image_new_from_file ("/usr/share/help/forward.png"); 
-  forward_button = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
-		  									"Forward", 
-											"Next page", 
-											"Forward", 
-											iconw, 
-											GTK_SIGNAL_FUNC (forward_func), 
-											html);
- /* iconw = gtk_image_new_from_file ("help/search.png"); 
-  search_button = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
-		  									"Find",
-											"Find a word in the text",
-											"Find",
-											iconw,
-											GTK_SIGNAL_FUNC (find_func),
-											NULL);*/
-  iconw = gtk_image_new_from_file ("/usr/share/help/home.png");
-  home_button = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
-		  									"Home",
-											"Go to the help index",
-											"Home",
-											iconw,
-											GTK_SIGNAL_FUNC (home_func),
-											html);
-  
-  gtk_toolbar_append_space (GTK_TOOLBAR (toolbar)); /* space after item */
-  gtk_widget_show (toolbar); 
-  
-  //create scrolling window to display html in
-  window = gtk_scrolled_window_new (NULL, NULL);
-  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (window), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-  
+
+  /*add home, search, back, forward and exit button */
+  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_GO_BACK,
+			    ("Go back a page"), ("Back"),
+			    GTK_SIGNAL_FUNC (back_func), html, -1);
+
+  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_GO_FORWARD,
+			    ("Go to the next page"), ("Next"),
+			    GTK_SIGNAL_FUNC (forward_func), html, -1);
+
+  /* TODO: Actually implement search function 
+     iconw = gtk_image_new_from_file ("help/search.png"); 
+     search_button = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), "Find", "Find a word in the text","Find",
+     iconw, GTK_SIGNAL_FUNC (find_func), NULL); */
+
+  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_HOME,
+			    ("Go to help home"), ("Home"),
+			    GTK_SIGNAL_FUNC (home_func), html, -1);
+
+  gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));	/* space after item */
+
+  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_QUIT,
+			    ("Exit help"), ("Exit"),
+			    GTK_SIGNAL_FUNC (gtk_main_quit), NULL, -1);
+
+  gtk_toolbar_set_icon_size (GTK_TOOLBAR (toolbar),
+			     GTK_ICON_SIZE_SMALL_TOOLBAR);
+  /* only show icons if the screen is 240x320 | 320x240 or smaller */
+  if ((width <= 240) || (height <= 240))
+    gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
+  gtk_widget_show (toolbar);
+
   //create html reader
-  gtk_widget_show (html);
+  gtk_widget_show_all (html);
 
-
-  g_signal_connect (G_OBJECT (html), "url_requested", 
-		    G_CALLBACK (url_requested), html);
-
-  g_signal_connect (G_OBJECT (html), "link_clicked", 
-		    G_CALLBACK (link_clicked), history);
-  
   //make everything viewable
-  gtk_container_add (GTK_CONTAINER (window), html);
-  
-  gtk_box_pack_start (GTK_BOX(contentbox), toolbar, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX(contentbox), window, TRUE, TRUE, 0);
-	  
-  gtk_container_add(GTK_CONTAINER (app), contentbox);
+  gtk_box_pack_start (GTK_BOX (contentbox), toolbar, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (contentbox), html, TRUE, TRUE, 0);
+  gtk_container_add (GTK_CONTAINER (app), contentbox);
 
   read_file (base, html);
 
-  gtk_widget_show (window);
-  gtk_widget_show (contentbox);
-  gtk_widget_show (app);
+  gtk_widget_show (GTK_WIDGET (contentbox));
+  gtk_widget_show (GTK_WIDGET (app));
   gtk_main ();
 
   exit (0);

@@ -1,4 +1,4 @@
-bin_PROGRAMS = gpe-helpviewer
+bin_PROGRAMS = gpe-helpviewer gpe-helpindex
 
 INCLUDES = @HELPVIEWER_CFLAGS@
 LDADD = @HELPVIEWER_LIBS@

@@ -1,0 +1,19 @@
+TODO:
+
+* Search function
+
+Partially done:
+
+* add support for chapters
+* put all callbacks / helper functions in separate files (less of those now. Is it useful?)
+
+DONE:
+
+* Replace gtkhtml by somthing lighter, or diminish dependencies (replaced by gtk-webcore)
+* Provide #-defines for debug information
+* Removing hard coded paths for help documentation, usage of a config file. 
+  (only the help index file is hardcoded)
+* Provide help registering (add keys to /etc/gpe-helpviewer.conf), done by gpe-helpindex app. 
+* Changing all icons to GTK stock icons, or provide new icons with error checking
+  and fallback on GTK stock icons.
+* Single instance
