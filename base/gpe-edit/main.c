@@ -37,6 +37,7 @@ int file_modified = 0;
 int search_replace_open = 0;
 int last_found = 0;
 gboolean utf8_mode;
+const char *appname = "gpe-edit";
 
 GtkWidget *main_window;
 GtkWidget *text_area;
@@ -59,10 +60,23 @@ struct gpe_icon my_icons[] = {
   { "dir-up", "dir-up" },
   { "stop", "stop" },
   { "icon", PREFIX "/share/pixmaps/gpe-edit.png" },
+  { "help", "help" },
   {NULL, NULL}
 };
 
 guint window_x = 240, window_y = 310;
+
+static void
+show_help (void)
+{
+        gboolean test;
+        char *topic = NULL;
+
+        test = gpe_show_help(appname, topic);
+        if (test == TRUE)
+		gpe_error_box (_("Help not (or incorrectly) installed. Or no helpviewer application registered."));
+}
+
 
 static void
 clear_text_area (void)
@@ -670,12 +684,13 @@ main (int argc, char *argv[])
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Replace"), 
 			   _("Replace a string"), _("Replace a string"), toolbar_icon, GTK_SIGNAL_FUNC(replace_string), vbox);
 
-  gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
-  
+  if(gpe_check_for_help(appname) == NULL )
+	  gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
+
   toolbar_icon = gtk_image_new_from_stock (GTK_STOCK_COPY, GTK_ICON_SIZE_SMALL_TOOLBAR);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Copy"), 
 			   _("Copy selected, paste is possible by tap&hold"), _("Copy selected, paste is possible by tap&hold"), toolbar_icon, copy_selection, vbox);
-
+ 
   /* add another icon if we screen is large */
   if (window_x > 260)
     {
@@ -683,6 +698,15 @@ main (int argc, char *argv[])
       gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Paste"), 
 			   _("Paste from clipboard"), _("Paste from clipboard"), toolbar_icon, paste_clipboard, vbox);
 	}			   
+
+  if(gpe_check_for_help(appname) != NULL)
+	{
+	  toolbar_icon = gtk_image_new_from_stock (GTK_STOCK_HELP, GTK_ICON_SIZE_SMALL_TOOLBAR);
+	  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Help"),
+                                       _("Get help"), _("Get help"), toolbar_icon, show_help, vbox); 
+	}
+  
+
   toolbar_icon = gtk_image_new_from_stock (GTK_STOCK_QUIT, GTK_ICON_SIZE_SMALL_TOOLBAR);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Quit"), 
 			   _("Exit gpe-edit"), _("Exit gpe-edit"), toolbar_icon, ask_save_before_exit, vbox);

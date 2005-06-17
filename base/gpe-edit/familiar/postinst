@@ -1,0 +1,13 @@
+#!/bin/sh
+if [ -e /etc/gpe/gpe-help.conf ]; then
+	echo gpe-edit = /usr/share/doc/gpe-edit.html >> /etc/gpe/gpe-help.conf
+else
+	 echo [Help] >> /etc/gpe/gpe-help.conf 
+	 echo gpe-edit = /usr/share/doc/gpe-edit.html >> /etc/gpe/gpe-help.conf
+fi
+if [ -x /usr/bin/gpe-helpindex ]; then
+	echo generating help-index
+	gpe-helpindex
+else
+	echo not generating index for gpe-helpviewer
+fi

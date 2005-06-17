@@ -1,3 +1,9 @@
+2005-06-09  Philippe De Swert <philippedeswert@scarlet.be>
+
+	* Version 0.30
+	* supports help button with gpe_show_help()
+	* help button only shows up when help is installed
+
 2005-04-22  Florian Boor <florian.boor@kernelconcepts.de>
 
 	* Released Version 0.29

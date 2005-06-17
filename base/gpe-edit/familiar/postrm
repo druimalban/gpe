@@ -1,0 +1,12 @@
+#!/bin/sh
+if [ -e /etc/gpe/gpe-help ]; then
+	sed '/^\<gpe-edit\>/d' /etc/gpe/gpe-help > /tmp/gpe-help.conf
+	mv /tmp/gpe-help.conf /etc/gpe/gpe-help
+fi
+if [ -x /usr/bin/gpe-helpindex ]; then
+        echo generating help-index
+        gpe-helpindex
+else
+        echo not generating index for gpe-helpviewer
+fi
+

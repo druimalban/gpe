@@ -2,11 +2,13 @@ PREFIX = /usr/local
 PACKAGE = gpe-edit
 DEBUG = no
 CVSBUILD = yes
-VERSION = 0.29
+VERSION = 0.30
 
 MEMBERS = main
 #FIXME: ('de' is not on TP?)
 LINGUAS = id pt de zh_TW fr ro wa sv nl sk cs ru sr
+
+HELPFILE = doc/gpe-edit.html
 
 PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS)
 PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS)
@@ -42,6 +44,8 @@ install-program: all gpe-edit.desktop
 	install -D -m 644 gpe-edit.applications $(DESTDIR)$(PREFIX)/share/application-registry/gpe-edit.applications
 	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
 	install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications/
+	mkdir -p $(DESTDIR)$(PREFIX)/share/doc/gpe
+	install -m 644 $(HELPFILE) $(DESTDIR)$(PREFIX)/share/doc/gpe/gpe-edit.html
 
 clean: clean-po
 	rm -f gpe-edit $(OBJS) $(DEPS) $(PACKAGE).desktop *.ipk *~ *.bak
