@@ -78,7 +78,7 @@ read_file (const gchar * url, GtkWidget * html)
       fprintf (stderr, "Could not open %s\n", filename);
 #endif
       if (!access ("/usr/share/doc/gpe/doc-not-installed.html", F_OK))
-	read_file ("/usr/share/doc/gpe/doc-not-installed.html", html);
+	read_file ("file:///usr/share/doc/gpe/doc-not-installed.html", html);
       else
 	{
 	  gpe_error_box ("Help not installed or file not found");
@@ -140,7 +140,7 @@ home_func (GtkWidget * home, GtkWidget * html)
 {
   if (!access ("/usr/share/doc/gpe/help-index.html", F_OK))
     system ("gpe-helpindex");
-  read_file ("/usr/share/doc/gpe/help-index.html", GTK_WIDGET (html));
+  read_file ("file:///usr/share/doc/gpe/help-index.html", GTK_WIDGET (html));
 }
 
 /* open socket, check for instance and send it a quit message */
