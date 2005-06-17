@@ -1,3 +1,17 @@
+2005-06-17  Phil Blundell  <pb@reciva.com>
+
+	Bug #1350:
+	* Xserver: Add support for "Ramses".
+	* gpe-dm.init: Try both /dev/fb/0 and /dev/fb0.
+	* Xsession: Source rather than exec scripts in Xsession.d so that
+	variable passing works.
+
+2005-06-17  Phil Blundell  <pb@reciva.com>
+
+	* Xserver: Avoid upsetting Xorg with unnecessary "-mouse" option.
+
+	* Xinit: Set HOME=/home/root if it exists.
+
 2005-06-02  Florian Boor  <florian@kernelconcepts.de>
 
 	* Version 0.45 released.

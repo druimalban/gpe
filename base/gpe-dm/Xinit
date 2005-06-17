@@ -2,7 +2,10 @@
 # 
 
 export USER=root
-export HOME=/root
+export HOME=/home/root
+if [ ! -d $HOME ] && [ -d /root ];
+  HOME=/root
+fi
 export XAPPLRESDIR=/usr/X11R6/lib/app-defaults
 export XFILESEARCHPATH=./%N%S%C.ad:/usr/X11R6/lib/X11/%L/%T/%N%S%C:/usr/X11R6/lib/X11/%l/%T/%N%S%C:/usr/X11R6/lib/X11/%T/%N%S%C:./%N%S.ad:/usr/X11R6/lib/X11/%L/%T/%N%S:/usr/X11R6/lib/X11/%l/%T/%N%S:/usr/X11R6/lib/X11/%T/%N%S:/usr/local/lib/X11/app-defaults/%N%S%C.ad
 

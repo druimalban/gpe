@@ -19,7 +19,7 @@ case "$1" in
   stop)
         echo "Stopping GPE display manager: gpe-dm"
         killproc /usr/bin/gpe-dm
-	dd if=/dev/zero of=/dev/fb0 2>/dev/null
+	dd if=/dev/zero of=/dev/fb0 2>/dev/null || dd if=/dev/zero of=/dev/fb/0 2>/dev/null
   ;;
 
   *)

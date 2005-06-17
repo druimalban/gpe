@@ -35,7 +35,8 @@ if [ -z "$TSLIB_TSDEVICE" ] && [ -e /dev/touchscreen/ucb1x00 ]; then
 fi
 
 # use usb mouse if present
-if [ -z "$TSLIB_TSDEVICE" ] && [ -e /dev/input/mice ]; then
+# Xorg doesn't support "-mouse" option, and uses /dev/input/mice automatically
+if [ -z "$TSLIB_TSDEVICE" ] && [ -e /dev/input/mice ] && [ "$XSERVER" != "Xorg" ]; then
   ARGS="$ARGS -mouse /dev/input/mice"
 fi
 
@@ -47,6 +48,9 @@ case `module_id` in
 		ARGS="$ARGS -screen 320x240@270 -rgba vbgr" ;;
 	"HP iPAQ H5400" | "HP iPAQ H2200")
 		ARGS="$ARGS -rgba rgb" ;;
+	"Ramses")
+		# What is this "vt2" in aid of?
+		ARGS="$ARGS -screen 320x240@90 -rgba vrgb vt2" ;;
 	# both 'Sharp-Collie' and just 'Collie' have been reported
 	*Collie | *Poodle)
 		ARGS="$ARGS -screen 320x240@270 -rgba vrgb" ;;
