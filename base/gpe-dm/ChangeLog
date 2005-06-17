@@ -1,5 +1,9 @@
 2005-06-17  Phil Blundell  <pb@reciva.com>
 
+	* Version 0.46 released.
+
+2005-06-17  Phil Blundell  <pb@reciva.com>
+
 	Bug #1350:
 	* Xserver: Add support for "Ramses".
 	* gpe-dm.init: Try both /dev/fb/0 and /dev/fb0.
