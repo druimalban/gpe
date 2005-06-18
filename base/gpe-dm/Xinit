@@ -3,7 +3,7 @@
 
 export USER=root
 export HOME=/home/root
-if [ ! -d $HOME ] && [ -d /root ];
+if [ ! -d $HOME ] && [ -d /root ]; then
   HOME=/root
 fi
 export XAPPLRESDIR=/usr/X11R6/lib/app-defaults
