@@ -2,6 +2,10 @@
 
 	* Version 0.102 released.
 
+2005-06-19  Florian Boor <florian@kernelconcepts.de>
+
+	*  Makefile.am: Remove debian/compat from EXTRA_DIST.
+
 2005-06-19  Phil Blundell  <pb@reciva.com>
 
 	* gpewindowlist.c: Add some documentation.

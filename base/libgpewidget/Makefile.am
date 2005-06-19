@@ -44,7 +44,6 @@ EXTRA_DIST = $(pixmap_DATA) \
 			 libtool-cross.patch \
 			 mkinstalldirs \
 			 debian/changelog \
-			 debian/compat \
 			 debian/copyright \
 			 debian/control \
 			 debian/rules \
