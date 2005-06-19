@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001, 2002, 2003, 2004 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2001, 2002, 2003, 2004, 2005 Philip Blundell <philb@gnu.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,6 +18,7 @@
  */
 
 #include <sys/types.h>
+#include <sys/stat.h>
 #include <dirent.h>
 #include <stdio.h>
 #include <string.h>
@@ -78,7 +79,19 @@ scan_dir (GtkTreeStore *store, GtkTreeIter *iter, gchar *path)
       gchar *name;
       if (de->d_name[0] == '.')
 	continue;
-      if (de->d_type != DT_DIR)
+      if (de->d_type == DT_LNK || de->d_type == DT_UNKNOWN)
+	{
+	  struct stat st;
+	  gchar *p;
+	  int r;
+
+	  p = g_strdup_printf ("%s%s", path, de->d_name);
+	  r = stat (p, &st);
+	  g_free (p);
+	  if (r != 0 || ! S_ISDIR (st.st_mode))
+	    continue;
+	}
+      else if (de->d_type != DT_DIR)
 	continue;
       name = g_strdup_printf ("%s%s/", path, de->d_name);
       entries = g_list_insert_sorted (entries, name, (GCompareFunc)strcoll);

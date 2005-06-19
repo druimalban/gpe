@@ -1,3 +1,12 @@
+2005-06-19  Phil Blundell  <pb@reciva.com>
+
+	* gpewindowlist.c: Add some documentation.
+	(gpe_window_list_get_type): Return value is GType, not GtkType.
+	* gpe/gpewindowlist.h: Keep in step.
+
+	* dirbrowser.c (scan_dir): Accept symlinks to directories.  Use
+	stat to find the type of an object if readdir doesn't know.
+
 2005-06-15  Florian Boor <florian@kernelconcepts.de>
 
 	* translabel.c: Fix compile error with NLS enabled.

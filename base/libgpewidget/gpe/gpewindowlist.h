@@ -37,7 +37,7 @@ struct _GPEWindowList
 typedef struct _GPEWindowList	      GPEWindowList;
 typedef struct _GPEWindowListClass    GPEWindowListClass;
 
-GtkType		 gpe_window_list_get_type (void);
+GType		 gpe_window_list_get_type (void);
 
 GObject         *gpe_window_list_new (GdkScreen *);
 
