@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gpe-contacts 0.12\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-05-20 00:57+0200\n"
+"POT-Creation-Date: 2005-06-21 00:53+0200\n"
 "PO-Revision-Date: 2003-08-05 14:36+0100\n"
 "Last-Translator: Elros Cyriatan <cyriatan@fastmail.fm>\n"
 "Language-Team: Dutch <vertaling@nl.linux.org>\n"
@@ -139,15 +139,15 @@ msgstr ""
 msgid "Contacts: Configuration"
 msgstr "Contacten: configuratie"
 
-#: ../db.c:254
+#: ../db.c:255
 msgid "Name"
 msgstr "Naam"
 
-#: ../db.c:255
+#: ../db.c:256
 msgid "Phone"
 msgstr "Telefoon"
 
-#: ../db.c:256
+#: ../db.c:257
 msgid "EMail"
 msgstr "E-mail"
 
@@ -159,20 +159,33 @@ msgstr ""
 msgid "My VCard"
 msgstr ""
 
-#: ../editing.c:116 ../main.c:1356
+#: ../editing.c:114 ../main.c:1352
 #, fuzzy
 msgid "Details"
 msgstr "Detail paneel"
 
-#: ../editing.c:236
+#: ../editing.c:257
 msgid "no year"
 msgstr ""
 
-#: ../editing.c:448 ../main.c:504 ../main.c:631
+#: ../editing.c:436 ../namedetail.c:66 ../structure.c:177
+msgid "Cancel"
+msgstr "Annuleren"
+
+#: ../editing.c:437 ../namedetail.c:64
+msgid "OK"
+msgstr ""
+
+#: ../editing.c:438
+#, fuzzy
+msgid "Image..."
+msgstr "Afbeelding"
+
+#: ../editing.c:546 ../main.c:502 ../main.c:629
 msgid "Categories"
 msgstr "Categorieen"
 
-#: ../editing.c:984
+#: ../editing.c:1154
 #, fuzzy
 msgid "Select image"
 msgstr "Punt verwijderen"
@@ -192,7 +205,7 @@ msgstr "Contacten"
 msgid "Search for:"
 msgstr ""
 
-#: ../gpe-contacts.desktop.in.h:1 ../main.c:1292
+#: ../gpe-contacts.desktop.in.h:1 ../main.c:1288
 msgid "Contacts"
 msgstr "Contacten"
 
@@ -200,119 +213,119 @@ msgstr "Contacten"
 msgid "GPE Contacts"
 msgstr "GPE Contacten"
 
-#: ../main.c:79 ../main.c:181
+#: ../main.c:77 ../main.c:179
 msgid "Edit Contact"
 msgstr "Contact bewerken"
 
-#: ../main.c:85 ../main.c:197
+#: ../main.c:83 ../main.c:195
 msgid "Really delete this contact?"
 msgstr "Echt dit contact verwijderen?"
 
-#: ../main.c:85 ../main.c:197 ../structure.c:176
+#: ../main.c:83 ../main.c:195 ../structure.c:176
 msgid "Confirm"
 msgstr "Bevestigen"
 
-#: ../main.c:137
+#: ../main.c:135
 msgid "All categories"
 msgstr "Alle categorieen"
 
-#: ../main.c:159
+#: ../main.c:157
 #, fuzzy
 msgid "New Contact"
 msgstr "Nieuw contact"
 
-#: ../main.c:515
+#: ../main.c:513
 #, fuzzy
 msgid "No contact selected."
 msgstr "Geen omvatter geselecteerd"
 
 #. create and set up dialog
 #. * detail section *
-#: ../main.c:587 ../main.c:1428 ../main.c:1500
+#: ../main.c:585 ../main.c:1424 ../main.c:1496
 msgid "Contact"
 msgstr "Contact"
 
-#: ../main.c:1212
+#: ../main.c:1208
 #, fuzzy
 msgid "Choose file"
 msgstr "klik om bestand te kiezen"
 
-#: ../main.c:1240
+#: ../main.c:1236
 msgid "Import of"
 msgstr ""
 
-#: ../main.c:1240
+#: ../main.c:1236
 msgid "files failed:"
 msgstr ""
 
-#: ../main.c:1244
+#: ../main.c:1240
 msgid "Import successful"
 msgstr ""
 
-#: ../main.c:1309
+#: ../main.c:1305
 #, fuzzy
 msgid "Tap this button to add a new contact."
 msgstr "Druk hier om een nieuw contact toe te voegen."
 
-#: ../main.c:1318
+#: ../main.c:1314
 msgid "Tap here to edit the selected contact."
 msgstr "Druk hier om het geselecteerde contact te bewerken."
 
-#: ../main.c:1328
+#: ../main.c:1324
 msgid "Tap here to delete the selected contact."
 msgstr "Druk hier om het geselecteerde contact de verwijderen."
 
-#: ../main.c:1348
+#: ../main.c:1344
 msgid "Find a contact by searching for any data."
 msgstr ""
 
-#: ../main.c:1358
+#: ../main.c:1354
 #, fuzzy
 msgid "Tap here to show contacts details."
 msgstr "Druk hier om een nieuw contact toe te voegen."
 
-#: ../main.c:1368
+#: ../main.c:1364
 #, fuzzy
 msgid "Tap here to configure this program."
 msgstr "Druk hier om het programma in te stellen."
 
-#: ../main.c:1376
+#: ../main.c:1372
 msgid "Import"
 msgstr ""
 
-#: ../main.c:1378
+#: ../main.c:1374
 msgid "Open file to import a contact from it."
 msgstr ""
 
-#: ../main.c:1391
+#: ../main.c:1387
 #, fuzzy
 msgid "Tap here to exit gpe-contacts."
 msgstr "Druk hier om het geselecteerde contact te bewerken."
 
 #. * find and categories section *
-#: ../main.c:1457
+#: ../main.c:1453
 msgid "Find:"
 msgstr "Zoeken:"
 
-#: ../main.c:1464
+#: ../main.c:1460
 msgid "in"
 msgstr "in"
 
-#: ../main.c:1594
+#: ../main.c:1590
 #, fuzzy, c-format
 msgid "Could not import file %s."
 msgstr "Kon afbeeldingsbestand niet vinden: %s"
 
-#: ../main.c:1599
+#: ../main.c:1595
 #, c-format
 msgid "File %s imported sucessfully."
 msgstr ""
 
-#: ../main.c:1624
+#: ../main.c:1620
 msgid "My Card"
 msgstr ""
 
-#: ../main.c:1627
+#: ../main.c:1623
 msgid "Saving vcard failed"
 msgstr ""
 
@@ -370,28 +383,27 @@ msgstr ""
 msgid "III"
 msgstr ""
 
-#. create dialog window
-#: ../namedetail.c:61
+#: ../namedetail.c:62 ../namedetail.c:69
 msgid "Edit Name Details"
 msgstr ""
 
-#: ../namedetail.c:88
+#: ../namedetail.c:97
 msgid "First name:"
 msgstr ""
 
-#: ../namedetail.c:89
+#: ../namedetail.c:98
 msgid "Middle name:"
 msgstr ""
 
-#: ../namedetail.c:90
+#: ../namedetail.c:99
 msgid "Last name:"
 msgstr ""
 
-#: ../namedetail.c:91
+#: ../namedetail.c:100
 msgid "Suffix:"
 msgstr ""
 
-#: ../namedetail.c:92
+#: ../namedetail.c:101
 #, fuzzy
 msgid "Title:"
 msgstr "Titel"
@@ -428,10 +440,6 @@ msgstr "Echt dit veld verwijderen?"
 msgid "Delete"
 msgstr "Verwijderen"
 
-#: ../structure.c:177
-msgid "Cancel"
-msgstr "Annuleren"
-
 #: ../structure.c:234
 msgid "Page"
 msgstr "Pagina"
@@ -462,9 +470,6 @@ msgstr "Druk hier om het geselecteerde punt te verwijderen."
 
 #~ msgid "Birthday"
 #~ msgstr "Geboortedag"
-
-#~ msgid "Image"
-#~ msgstr "Afbeelding"
 
 #~ msgid "Schedule"
 #~ msgstr "Rooster"

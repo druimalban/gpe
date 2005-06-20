@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gpe-contacts-0.32\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-05-20 00:57+0200\n"
+"POT-Creation-Date: 2005-06-21 00:53+0200\n"
 "PO-Revision-Date: 2004-11-05 12:02+0200\n"
 "Last-Translator: Pavel Maryanov <acid_jack@ukr.net>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -140,15 +140,15 @@ msgstr "База данных"
 msgid "Contacts: Configuration"
 msgstr "Контакты: Конфигурация"
 
-#: ../db.c:254
+#: ../db.c:255
 msgid "Name"
 msgstr "Имя"
 
-#: ../db.c:255
+#: ../db.c:256
 msgid "Phone"
 msgstr "Телефон"
 
-#: ../db.c:256
+#: ../db.c:257
 msgid "EMail"
 msgstr "Эл. почта"
 
@@ -160,19 +160,31 @@ msgstr "Редактировать личную v-карточку"
 msgid "My VCard"
 msgstr "Моя V-карточка"
 
-#: ../editing.c:116 ../main.c:1356
+#: ../editing.c:114 ../main.c:1352
 msgid "Details"
 msgstr "Подробности"
 
-#: ../editing.c:236
+#: ../editing.c:257
 msgid "no year"
 msgstr "год не указан"
 
-#: ../editing.c:448 ../main.c:504 ../main.c:631
+#: ../editing.c:436 ../namedetail.c:66 ../structure.c:177
+msgid "Cancel"
+msgstr "Отмена"
+
+#: ../editing.c:437 ../namedetail.c:64
+msgid "OK"
+msgstr ""
+
+#: ../editing.c:438
+msgid "Image..."
+msgstr ""
+
+#: ../editing.c:546 ../main.c:502 ../main.c:629
 msgid "Categories"
 msgstr "Категории"
 
-#: ../editing.c:984
+#: ../editing.c:1154
 msgid "Select image"
 msgstr "Выбрать изображение"
 
@@ -190,7 +202,7 @@ msgstr "Найти контакт"
 msgid "Search for:"
 msgstr "Поиск:"
 
-#: ../gpe-contacts.desktop.in.h:1 ../main.c:1292
+#: ../gpe-contacts.desktop.in.h:1 ../main.c:1288
 msgid "Contacts"
 msgstr "Контакты"
 
@@ -198,112 +210,112 @@ msgstr "Контакты"
 msgid "GPE Contacts"
 msgstr "Контакты GPE"
 
-#: ../main.c:79 ../main.c:181
+#: ../main.c:77 ../main.c:179
 msgid "Edit Contact"
 msgstr "Редактировать контакт"
 
-#: ../main.c:85 ../main.c:197
+#: ../main.c:83 ../main.c:195
 msgid "Really delete this contact?"
 msgstr "Действительно удалить этот контакт?"
 
-#: ../main.c:85 ../main.c:197 ../structure.c:176
+#: ../main.c:83 ../main.c:195 ../structure.c:176
 msgid "Confirm"
 msgstr "Подтверждение"
 
-#: ../main.c:137
+#: ../main.c:135
 msgid "All categories"
 msgstr "Все категории"
 
-#: ../main.c:159
+#: ../main.c:157
 msgid "New Contact"
 msgstr "Новый контакт"
 
-#: ../main.c:515
+#: ../main.c:513
 msgid "No contact selected."
 msgstr "Контакт не выбран."
 
 #. create and set up dialog
 #. * detail section *
-#: ../main.c:587 ../main.c:1428 ../main.c:1500
+#: ../main.c:585 ../main.c:1424 ../main.c:1496
 msgid "Contact"
 msgstr "Контакт"
 
-#: ../main.c:1212
+#: ../main.c:1208
 msgid "Choose file"
 msgstr ""
 
-#: ../main.c:1240
+#: ../main.c:1236
 msgid "Import of"
 msgstr ""
 
-#: ../main.c:1240
+#: ../main.c:1236
 msgid "files failed:"
 msgstr ""
 
-#: ../main.c:1244
+#: ../main.c:1240
 msgid "Import successful"
 msgstr ""
 
-#: ../main.c:1309
+#: ../main.c:1305
 msgid "Tap this button to add a new contact."
 msgstr "Нажмите на эту кнопку, чтобы добавить новый контакт."
 
-#: ../main.c:1318
+#: ../main.c:1314
 msgid "Tap here to edit the selected contact."
 msgstr "Нажмите сюда, чтобы редактировать выбранный контакт."
 
-#: ../main.c:1328
+#: ../main.c:1324
 msgid "Tap here to delete the selected contact."
 msgstr "Нажмите сюда, чтобы редактировать удалить выбранный контакт."
 
-#: ../main.c:1348
+#: ../main.c:1344
 msgid "Find a contact by searching for any data."
 msgstr "Поиск контакта по любому типу данных."
 
-#: ../main.c:1358
+#: ../main.c:1354
 msgid "Tap here to show contacts details."
 msgstr "Нажмите сюда, чтобы вывести подробности о контакте."
 
-#: ../main.c:1368
+#: ../main.c:1364
 msgid "Tap here to configure this program."
 msgstr "Нажмите сюда, чтобы настроить эту программу."
 
-#: ../main.c:1376
+#: ../main.c:1372
 msgid "Import"
 msgstr ""
 
-#: ../main.c:1378
+#: ../main.c:1374
 msgid "Open file to import a contact from it."
 msgstr ""
 
-#: ../main.c:1391
+#: ../main.c:1387
 msgid "Tap here to exit gpe-contacts."
 msgstr "Нажмите сюда, чтобы выйти из gpe-contacts."
 
 #. * find and categories section *
-#: ../main.c:1457
+#: ../main.c:1453
 msgid "Find:"
 msgstr "Найти:"
 
-#: ../main.c:1464
+#: ../main.c:1460
 msgid "in"
 msgstr "в"
 
-#: ../main.c:1594
+#: ../main.c:1590
 #, c-format
 msgid "Could not import file %s."
 msgstr ""
 
-#: ../main.c:1599
+#: ../main.c:1595
 #, c-format
 msgid "File %s imported sucessfully."
 msgstr ""
 
-#: ../main.c:1624
+#: ../main.c:1620
 msgid "My Card"
 msgstr "Моя карточка"
 
-#: ../main.c:1627
+#: ../main.c:1623
 msgid "Saving vcard failed"
 msgstr "Не удалось сохранить v-карточку"
 
@@ -361,28 +373,27 @@ msgstr "II"
 msgid "III"
 msgstr "III"
 
-#. create dialog window
-#: ../namedetail.c:61
+#: ../namedetail.c:62 ../namedetail.c:69
 msgid "Edit Name Details"
 msgstr "Редактировать имя"
 
-#: ../namedetail.c:88
+#: ../namedetail.c:97
 msgid "First name:"
 msgstr "Имя:"
 
-#: ../namedetail.c:89
+#: ../namedetail.c:98
 msgid "Middle name:"
 msgstr "Второе имя (отчество):"
 
-#: ../namedetail.c:90
+#: ../namedetail.c:99
 msgid "Last name:"
 msgstr "Фамилия:"
 
-#: ../namedetail.c:91
+#: ../namedetail.c:100
 msgid "Suffix:"
 msgstr "Суффикс:"
 
-#: ../namedetail.c:92
+#: ../namedetail.c:101
 msgid "Title:"
 msgstr "Заголовок:"
 
@@ -417,10 +428,6 @@ msgstr "Действительно хотите удалить это поле?"
 #: ../structure.c:177
 msgid "Delete"
 msgstr "Удалить"
-
-#: ../structure.c:177
-msgid "Cancel"
-msgstr "Отмена"
 
 #: ../structure.c:234
 msgid "Page"

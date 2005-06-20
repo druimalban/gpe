@@ -1,6 +1,9 @@
 2005-06-21  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * Released Version 0.39
+    * Update translations.
+    * configure.ac, debian/changelog: Add some missing files and improve 
+                                      file list in configure.ac.
     * editing.c, default-layout.xml: Fix editor layout on PDA screens.
 
 2005-06-11  Florian Boor  <florian.boor@kernelconcepts.de>

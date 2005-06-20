@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gpe-contacts 0.37\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-05-20 00:57+0200\n"
+"POT-Creation-Date: 2005-06-21 00:53+0200\n"
 "PO-Revision-Date: 2005-05-04 02:33+0800\n"
 "Last-Translator: Meng Jie <zuxyhere@eastday.com>\n"
 "Language-Team: Chinese (simplified) <i18n-translation@lists.linux.net.cn>\n"
@@ -133,15 +133,15 @@ msgstr "数据库"
 msgid "Contacts: Configuration"
 msgstr "联系人：配置"
 
-#: ../db.c:254
+#: ../db.c:255
 msgid "Name"
 msgstr "姓名"
 
-#: ../db.c:255
+#: ../db.c:256
 msgid "Phone"
 msgstr "电话"
 
-#: ../db.c:256
+#: ../db.c:257
 msgid "EMail"
 msgstr "电子邮件"
 
@@ -153,19 +153,31 @@ msgstr "编辑个人名片"
 msgid "My VCard"
 msgstr "我的名片"
 
-#: ../editing.c:116 ../main.c:1356
+#: ../editing.c:114 ../main.c:1352
 msgid "Details"
 msgstr "详细信息"
 
-#: ../editing.c:236
+#: ../editing.c:257
 msgid "no year"
 msgstr "无年份"
 
-#: ../editing.c:448 ../main.c:504 ../main.c:631
+#: ../editing.c:436 ../namedetail.c:66 ../structure.c:177
+msgid "Cancel"
+msgstr "取消"
+
+#: ../editing.c:437 ../namedetail.c:64
+msgid "OK"
+msgstr ""
+
+#: ../editing.c:438
+msgid "Image..."
+msgstr ""
+
+#: ../editing.c:546 ../main.c:502 ../main.c:629
 msgid "Categories"
 msgstr "类别"
 
-#: ../editing.c:984
+#: ../editing.c:1154
 msgid "Select image"
 msgstr "选择图片"
 
@@ -183,7 +195,7 @@ msgstr "查找联系人"
 msgid "Search for:"
 msgstr "寻找："
 
-#: ../gpe-contacts.desktop.in.h:1 ../main.c:1292
+#: ../gpe-contacts.desktop.in.h:1 ../main.c:1288
 msgid "Contacts"
 msgstr "联系人"
 
@@ -191,112 +203,112 @@ msgstr "联系人"
 msgid "GPE Contacts"
 msgstr "GPE 联系人"
 
-#: ../main.c:79 ../main.c:181
+#: ../main.c:77 ../main.c:179
 msgid "Edit Contact"
 msgstr "编辑联系人"
 
-#: ../main.c:85 ../main.c:197
+#: ../main.c:83 ../main.c:195
 msgid "Really delete this contact?"
 msgstr "真的要删除这个联系人吗？"
 
-#: ../main.c:85 ../main.c:197 ../structure.c:176
+#: ../main.c:83 ../main.c:195 ../structure.c:176
 msgid "Confirm"
 msgstr "确认"
 
-#: ../main.c:137
+#: ../main.c:135
 msgid "All categories"
 msgstr "所有类别"
 
-#: ../main.c:159
+#: ../main.c:157
 msgid "New Contact"
 msgstr "新建联系人"
 
-#: ../main.c:515
+#: ../main.c:513
 msgid "No contact selected."
 msgstr "未选择联系人。"
 
 #. create and set up dialog
 #. * detail section *
-#: ../main.c:587 ../main.c:1428 ../main.c:1500
+#: ../main.c:585 ../main.c:1424 ../main.c:1496
 msgid "Contact"
 msgstr "联系人"
 
-#: ../main.c:1212
+#: ../main.c:1208
 msgid "Choose file"
 msgstr "选择文件"
 
-#: ../main.c:1240
+#: ../main.c:1236
 msgid "Import of"
 msgstr "导入"
 
-#: ../main.c:1240
+#: ../main.c:1236
 msgid "files failed:"
 msgstr "文件失败："
 
-#: ../main.c:1244
+#: ../main.c:1240
 msgid "Import successful"
 msgstr "导入成功"
 
-#: ../main.c:1309
+#: ../main.c:1305
 msgid "Tap this button to add a new contact."
 msgstr "轻击此按钮添加一个新的联系人。"
 
-#: ../main.c:1318
+#: ../main.c:1314
 msgid "Tap here to edit the selected contact."
 msgstr "轻击此处编辑选择的联系人。"
 
-#: ../main.c:1328
+#: ../main.c:1324
 msgid "Tap here to delete the selected contact."
 msgstr "轻击此处删除选择的联系人。"
 
-#: ../main.c:1348
+#: ../main.c:1344
 msgid "Find a contact by searching for any data."
 msgstr "通过搜索所有数据来查找联系人。"
 
-#: ../main.c:1358
+#: ../main.c:1354
 msgid "Tap here to show contacts details."
 msgstr "轻击此处显示联系人的详细信息。"
 
-#: ../main.c:1368
+#: ../main.c:1364
 msgid "Tap here to configure this program."
 msgstr "轻击此处配置此程序。"
 
-#: ../main.c:1376
+#: ../main.c:1372
 msgid "Import"
 msgstr "导入"
 
-#: ../main.c:1378
+#: ../main.c:1374
 msgid "Open file to import a contact from it."
 msgstr "打开文件以从中导入联系人"
 
-#: ../main.c:1391
+#: ../main.c:1387
 msgid "Tap here to exit gpe-contacts."
 msgstr "轻击此处退出 GPE 联系人。"
 
 #. * find and categories section *
-#: ../main.c:1457
+#: ../main.c:1453
 msgid "Find:"
 msgstr "查找："
 
-#: ../main.c:1464
+#: ../main.c:1460
 msgid "in"
 msgstr "在"
 
-#: ../main.c:1594
+#: ../main.c:1590
 #, c-format
 msgid "Could not import file %s."
 msgstr "无法导入文件 %s。"
 
-#: ../main.c:1599
+#: ../main.c:1595
 #, c-format
 msgid "File %s imported sucessfully."
 msgstr "文件 %s 已被成功导入"
 
-#: ../main.c:1624
+#: ../main.c:1620
 msgid "My Card"
 msgstr "我的名片"
 
-#: ../main.c:1627
+#: ../main.c:1623
 msgid "Saving vcard failed"
 msgstr "保存 vCard 名片失败。"
 
@@ -354,28 +366,27 @@ msgstr "II"
 msgid "III"
 msgstr "III"
 
-#. create dialog window
-#: ../namedetail.c:61
+#: ../namedetail.c:62 ../namedetail.c:69
 msgid "Edit Name Details"
 msgstr "编辑姓名详细信息"
 
-#: ../namedetail.c:88
+#: ../namedetail.c:97
 msgid "First name:"
 msgstr "名："
 
-#: ../namedetail.c:89
+#: ../namedetail.c:98
 msgid "Middle name:"
 msgstr "中名："
 
-#: ../namedetail.c:90
+#: ../namedetail.c:99
 msgid "Last name:"
 msgstr "姓："
 
-#: ../namedetail.c:91
+#: ../namedetail.c:100
 msgid "Suffix:"
 msgstr "后缀："
 
-#: ../namedetail.c:92
+#: ../namedetail.c:101
 msgid "Title:"
 msgstr "称谓："
 
@@ -410,10 +421,6 @@ msgstr "真的要删除这一字段吗？"
 #: ../structure.c:177
 msgid "Delete"
 msgstr "删除"
-
-#: ../structure.c:177
-msgid "Cancel"
-msgstr "取消"
 
 #: ../structure.c:234
 msgid "Page"

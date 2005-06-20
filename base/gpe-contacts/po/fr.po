@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gpe-contacts 0.32\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-05-20 00:57+0200\n"
+"POT-Creation-Date: 2005-06-21 00:53+0200\n"
 "PO-Revision-Date: 2004-11-09 17:49+0200\n"
 "Last-Translator: Luc Pionchon <luc@handhelds.org>\n"
 "Language-Team: French <traduc@traduc.org>\n"
@@ -137,15 +137,15 @@ msgstr "Base de données"
 msgid "Contacts: Configuration"
 msgstr "Contacts : Configuration"
 
-#: ../db.c:254
+#: ../db.c:255
 msgid "Name"
 msgstr "Nom"
 
-#: ../db.c:255
+#: ../db.c:256
 msgid "Phone"
 msgstr "Tél."
 
-#: ../db.c:256
+#: ../db.c:257
 msgid "EMail"
 msgstr "Mél."
 
@@ -157,19 +157,32 @@ msgstr "Éditer ma carte de visite (vcard)"
 msgid "My VCard"
 msgstr "Ma Carte"
 
-#: ../editing.c:116 ../main.c:1356
+#: ../editing.c:114 ../main.c:1352
 msgid "Details"
 msgstr "Détails"
 
-#: ../editing.c:236
+#: ../editing.c:257
 msgid "no year"
 msgstr "pas d'année"
 
-#: ../editing.c:448 ../main.c:504 ../main.c:631
+#: ../editing.c:436 ../namedetail.c:66 ../structure.c:177
+msgid "Cancel"
+msgstr "Annuler"
+
+#: ../editing.c:437 ../namedetail.c:64
+msgid "OK"
+msgstr ""
+
+#: ../editing.c:438
+#, fuzzy
+msgid "Image..."
+msgstr "Photo"
+
+#: ../editing.c:546 ../main.c:502 ../main.c:629
 msgid "Categories"
 msgstr "Catégories"
 
-#: ../editing.c:984
+#: ../editing.c:1154
 msgid "Select image"
 msgstr "Sélectionner une image"
 
@@ -187,7 +200,7 @@ msgstr "Rechercher"
 msgid "Search for:"
 msgstr "Rechercher :"
 
-#: ../gpe-contacts.desktop.in.h:1 ../main.c:1292
+#: ../gpe-contacts.desktop.in.h:1 ../main.c:1288
 msgid "Contacts"
 msgstr "Contacts"
 
@@ -195,113 +208,113 @@ msgstr "Contacts"
 msgid "GPE Contacts"
 msgstr "GPE Contacts"
 
-#: ../main.c:79 ../main.c:181
+#: ../main.c:77 ../main.c:179
 msgid "Edit Contact"
 msgstr "Contact"
 
-#: ../main.c:85 ../main.c:197
+#: ../main.c:83 ../main.c:195
 msgid "Really delete this contact?"
 msgstr "Supprimer ce contact ?"
 
-#: ../main.c:85 ../main.c:197 ../structure.c:176
+#: ../main.c:83 ../main.c:195 ../structure.c:176
 msgid "Confirm"
 msgstr "Confirmer"
 
-#: ../main.c:137
+#: ../main.c:135
 msgid "All categories"
 msgstr "Toutes les catégories"
 
-#: ../main.c:159
+#: ../main.c:157
 msgid "New Contact"
 msgstr "Nouveau contact"
 
-#: ../main.c:515
+#: ../main.c:513
 msgid "No contact selected."
 msgstr "Aucun contact sélectionné"
 
 #. create and set up dialog
 #. * detail section *
-#: ../main.c:587 ../main.c:1428 ../main.c:1500
+#: ../main.c:585 ../main.c:1424 ../main.c:1496
 msgid "Contact"
 msgstr "Contact"
 
-#: ../main.c:1212
+#: ../main.c:1208
 #, fuzzy
 msgid "Choose file"
 msgstr "Cliquer pour sélectionner un fichier"
 
-#: ../main.c:1240
+#: ../main.c:1236
 msgid "Import of"
 msgstr ""
 
-#: ../main.c:1240
+#: ../main.c:1236
 msgid "files failed:"
 msgstr ""
 
-#: ../main.c:1244
+#: ../main.c:1240
 msgid "Import successful"
 msgstr ""
 
-#: ../main.c:1309
+#: ../main.c:1305
 msgid "Tap this button to add a new contact."
 msgstr "Cliquer ici pour ajouter un contact."
 
-#: ../main.c:1318
+#: ../main.c:1314
 msgid "Tap here to edit the selected contact."
 msgstr "Cliquer ici pour éditer le contact sélectionné."
 
-#: ../main.c:1328
+#: ../main.c:1324
 msgid "Tap here to delete the selected contact."
 msgstr "Cliquer ici pour supprimer le contact sélectionné."
 
-#: ../main.c:1348
+#: ../main.c:1344
 msgid "Find a contact by searching for any data."
 msgstr "Trouver un contact À partir de n'importe quelle donnée."
 
-#: ../main.c:1358
+#: ../main.c:1354
 msgid "Tap here to show contacts details."
 msgstr "Cliquer ici pour afficher les détails."
 
-#: ../main.c:1368
+#: ../main.c:1364
 msgid "Tap here to configure this program."
 msgstr "Cliquer ici pour configurer le programme."
 
-#: ../main.c:1376
+#: ../main.c:1372
 msgid "Import"
 msgstr ""
 
-#: ../main.c:1378
+#: ../main.c:1374
 msgid "Open file to import a contact from it."
 msgstr ""
 
-#: ../main.c:1391
+#: ../main.c:1387
 msgid "Tap here to exit gpe-contacts."
 msgstr "Cliquer ici pour quitter le programme."
 
 #. * find and categories section *
-#: ../main.c:1457
+#: ../main.c:1453
 msgid "Find:"
 msgstr "Trouver :"
 
-#: ../main.c:1464
+#: ../main.c:1460
 msgid "in"
 msgstr "pour"
 
-#: ../main.c:1594
+#: ../main.c:1590
 #, fuzzy, c-format
 msgid "Could not import file %s."
 msgstr "Impossible de trouver l'image : %s"
 
-#: ../main.c:1599
+#: ../main.c:1595
 #, c-format
 msgid "File %s imported sucessfully."
 msgstr ""
 
-#: ../main.c:1624
+#: ../main.c:1620
 msgid "My Card"
 msgstr "Ma Carte"
 
-#: ../main.c:1627
+#: ../main.c:1623
 msgid "Saving vcard failed"
 msgstr "Échec de la sauvegarde au format vcard"
 
@@ -359,28 +372,27 @@ msgstr "II"
 msgid "III"
 msgstr "III"
 
-#. create dialog window
-#: ../namedetail.c:61
+#: ../namedetail.c:62 ../namedetail.c:69
 msgid "Edit Name Details"
 msgstr ""
 
-#: ../namedetail.c:88
+#: ../namedetail.c:97
 msgid "First name:"
 msgstr "Prénom"
 
-#: ../namedetail.c:89
+#: ../namedetail.c:98
 msgid "Middle name:"
 msgstr ""
 
-#: ../namedetail.c:90
+#: ../namedetail.c:99
 msgid "Last name:"
 msgstr "Nom de famille"
 
-#: ../namedetail.c:91
+#: ../namedetail.c:100
 msgid "Suffix:"
 msgstr "Suffixe"
 
-#: ../namedetail.c:92
+#: ../namedetail.c:101
 msgid "Title:"
 msgstr "Titre"
 
@@ -417,10 +429,6 @@ msgstr "Supprimer ce champ ?"
 msgid "Delete"
 msgstr "Supprimer"
 
-#: ../structure.c:177
-msgid "Cancel"
-msgstr "Annuler"
-
 #: ../structure.c:234
 msgid "Page"
 msgstr "Page"
@@ -454,9 +462,6 @@ msgstr "Cliquer ici pour supprimer l'objet sélectionné."
 
 #~ msgid "Birthday"
 #~ msgstr "Né(e) le"
-
-#~ msgid "Image"
-#~ msgstr "Photo"
 
 # rappel, programmer
 #~ msgid "Schedule"

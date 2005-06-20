@@ -93,16 +93,19 @@ EXTRA_DIST = $(service_DATA) \
              $(pixmaps_extra_DATA) \
              $(meta_DATA) \
              hildon/default-layout-bigscreen.xml \
+             hildon/org.gpe.gpe-contacts.service.in \
+             hildon/gpe-contacts.desktop.in.in \
+             hildon/gpe-contacts.png \
              intltool-extract.in \
              intltool-merge.in \
              intltool-update.in \
-			 debian/changelog \
-			 debian/compat \
-			 debian/copyright \
-			 debian/control \
-			 debian/rules \
-			 debian/dirs \
-			 debian/links
+             debian/changelog \
+             debian/compat \
+             debian/copyright \
+             debian/control \
+             debian/rules \
+             debian/dirs \
+             debian/links
  
 
 DISTCLEANFILES = intltool-extract \
