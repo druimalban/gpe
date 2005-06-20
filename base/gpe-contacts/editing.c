@@ -139,7 +139,8 @@ pop_singles (GtkWidget *vtable, GSList *list, GtkWidget *pw, gboolean visible, g
               else
                 gtk_table_attach_defaults(GTK_TABLE(vtable), w, 1, 2, *pos, *pos+1);
               if (b) 
-                gtk_table_attach_defaults(GTK_TABLE(vtable), b, 2, 3, *pos, *pos+1);
+                gtk_table_attach(GTK_TABLE(vtable), b, 2, 3, *pos, *pos+1, 
+                                 GTK_FILL, GTK_FILL, 0, 0);
             }
           g_slist_free_1 (list);
           list = next;

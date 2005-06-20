@@ -1,5 +1,6 @@
 2005-06-21  Florian Boor  <florian.boor@kernelconcepts.de>
 
+    * Released Version 0.39
     * editing.c, default-layout.xml: Fix editor layout on PDA screens.
 
 2005-06-11  Florian Boor  <florian.boor@kernelconcepts.de>
