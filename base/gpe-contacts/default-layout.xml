@@ -75,6 +75,7 @@
  <page>
     <label>Notes</label>
     <multi-item>
+      <label>Notes</label>
       <tag>NOTES</tag>
     </multi-item>
     <group>

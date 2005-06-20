@@ -88,7 +88,7 @@ pop_singles (GtkWidget *vtable, GSList *list, GtkWidget *pw, gboolean visible, g
   if (list)
     {
       guint x = 0;
-      gboolean alt_pos = FALSE;
+      gboolean alt_pos = FALSE; /* indicates left/right column on larger screens */
     
       while (list)
         {
@@ -113,16 +113,17 @@ pop_singles (GtkWidget *vtable, GSList *list, GtkWidget *pw, gboolean visible, g
               GTK_WIDGET_SET_FLAGS(w, GTK_CAN_DEFAULT);
               b = gtk_button_new_with_label(_("Details"));
               g_object_set_data(G_OBJECT(b), "edit", w);
-              g_signal_connect(G_OBJECT(b),"clicked",
+              g_signal_connect(G_OBJECT(b), "clicked",
                                G_CALLBACK(on_name_clicked),
                                gtk_widget_get_toplevel(pw));
             }
 #endif            
-          /* even fields right, odd fields left */
+          /* if enough space: even fields right, odd fields left */
           if (alt_pos && mode_large_screen)
             {
               if (l) 
-                gtk_table_attach_defaults(GTK_TABLE(vtable), l, 2, 3, *pos, *pos+1);
+                gtk_table_attach(GTK_TABLE(vtable), l, 2, 3, *pos, *pos+1, 
+                                 GTK_FILL, GTK_FILL, 0, 0);
               gtk_table_attach_defaults(GTK_TABLE(vtable), w, 3, 4, *pos, *pos+1);
               if (b) 
                 gtk_table_attach_defaults(GTK_TABLE(vtable), b, 4, 5, *pos, *pos+1);
@@ -131,9 +132,10 @@ pop_singles (GtkWidget *vtable, GSList *list, GtkWidget *pw, gboolean visible, g
             {
               (*pos)++;
               if (l) 
-                gtk_table_attach_defaults(GTK_TABLE(vtable), l, 0, 1, *pos, *pos+1);
-              if (!next && !b)
-                gtk_table_attach_defaults(GTK_TABLE(vtable), w, 1, 4, *pos, *pos+1);
+                gtk_table_attach(GTK_TABLE(vtable), l, 0, 1, *pos, *pos+1, 
+                                 GTK_FILL, GTK_FILL, 0, 0);
+              if (!next || !b)
+                gtk_table_attach_defaults(GTK_TABLE(vtable), w, 1, 3, *pos, *pos+1);
               else
                 gtk_table_attach_defaults(GTK_TABLE(vtable), w, 1, 2, *pos, *pos+1);
               if (b) 
@@ -190,7 +192,8 @@ build_children (GtkWidget *table, GSList *children, GtkWidget *pw, gboolean visi
                 g_free (markup);
                 singles = NULL;
                 (*pos)++;
-                gtk_table_attach_defaults(GTK_TABLE(table), w, 0, 2, *pos, *pos+1);
+                gtk_table_attach(GTK_TABLE(table), w, 0, 3, *pos, *pos+1, 
+                                 GTK_FILL, GTK_FILL, 0, 0);
                 if (e->hidden)
                     gtk_widget_hide(w);
               }
@@ -217,7 +220,7 @@ build_children (GtkWidget *table, GSList *children, GtkWidget *pw, gboolean visi
             G_CALLBACK(tv_focus_out),NULL);
           
 #ifndef IS_HILDON
-          gtk_widget_set_usize (GTK_WIDGET (ww), -1, 64);
+          gtk_widget_set_usize (GTK_WIDGET (ww), -1, 36);
 #endif
           if (e->name)
             {
@@ -229,8 +232,9 @@ build_children (GtkWidget *table, GSList *children, GtkWidget *pw, gboolean visi
                 gtk_widget_hide(w);
             }
           (*pos)++;
-          if (e->name) gtk_table_attach(GTK_TABLE(table), w, 0, 1, *pos, *pos+1, GTK_FILL, GTK_FILL, 0, 0);
-          gtk_table_attach_defaults(GTK_TABLE(table), ww, 1, 2, *pos, *pos+1);
+          if (e->name) gtk_table_attach(GTK_TABLE(table), w, 0, 1, *pos, *pos+1, 
+                                        GTK_FILL, GTK_FILL, 0, 0);
+          gtk_table_attach_defaults(GTK_TABLE(table), ww, 1, 3, *pos, *pos+1);
           add_tag (e->tag, ww, pw);
         break;
       
@@ -266,7 +270,8 @@ build_children (GtkWidget *table, GSList *children, GtkWidget *pw, gboolean visi
               gtk_widget_hide(cbnoyear);
             }
           (*pos)++;
-          gtk_table_attach_defaults(GTK_TABLE(table), l, 0, 1, *pos, *pos+1);
+          gtk_table_attach(GTK_TABLE(table), l, 0, 1, *pos, *pos+1, 
+                           GTK_FILL, GTK_FILL, 0, 0);
           gtk_table_attach_defaults(GTK_TABLE(table), datecombo, 1, 2, *pos, *pos+1);
           gtk_table_attach_defaults(GTK_TABLE(table), cbnoyear, 2, 3, *pos, *pos+1);
           add_tag (e->tag, datecombo, pw);
@@ -312,8 +317,9 @@ build_children (GtkWidget *table, GSList *children, GtkWidget *pw, gboolean visi
 #else
           (*pos)++;
           if (e->name)
-              gtk_table_attach_defaults(GTK_TABLE(table), l, 1, 2, *pos, *pos+1);
-          gtk_table_attach_defaults(GTK_TABLE(table), sw, 1, 2, *pos, *pos+1);
+              gtk_table_attach(GTK_TABLE(table), l, 0, 1, *pos, *pos+1, 
+                               GTK_FILL, GTK_FILL, 0, 0);
+          gtk_table_attach_defaults(GTK_TABLE(table), sw, 1, 3, *pos, *pos+1);
 #endif          
           add_tag (e->tag, image, pw);
         }
@@ -542,7 +548,8 @@ edit_window (gboolean isdialog)
           gtk_box_pack_start (GTK_BOX (cathbox), catbutton, FALSE, FALSE, gpe_get_boxspacing());
           gtk_box_pack_start (GTK_BOX (cathbox), catlabel, TRUE, TRUE, 0);
           pos++;
-          gtk_table_attach_defaults (GTK_TABLE (table), cathbox, 0, 1, pos, pos+1);
+          gtk_table_attach (GTK_TABLE (table), cathbox, 0, 3, pos, pos+1, 
+                            GTK_FILL, GTK_FILL, 0, 0);
           g_signal_connect (G_OBJECT (catbutton), "clicked",
                             G_CALLBACK (on_categories_clicked), w);
           g_object_set_data (G_OBJECT (w), "categories-label", catlabel);

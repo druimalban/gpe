@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gpe-contacts 0.12\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-04-30 17:29+0200\n"
+"POT-Creation-Date: 2005-05-20 00:57+0200\n"
 "PO-Revision-Date: 2004-09-02 19:04-0300\n"
 "Last-Translator: Marcus Moreira de Souza <marcus@frb.br>\n"
 "Language-Team: Brazilian Portuguese <ldp-br@bazar.conectiva.com.br>\n"
@@ -140,15 +140,15 @@ msgstr ""
 msgid "Contacts: Configuration"
 msgstr "Contatos: Configuração"
 
-#: ../db.c:123
+#: ../db.c:254
 msgid "Name"
 msgstr "Nome"
 
-#: ../db.c:124
+#: ../db.c:255
 msgid "Phone"
 msgstr "Telefone"
 
-#: ../db.c:125
+#: ../db.c:256
 msgid "EMail"
 msgstr "E-mail"
 
@@ -160,7 +160,7 @@ msgstr ""
 msgid "My VCard"
 msgstr ""
 
-#: ../editing.c:116 ../main.c:1308
+#: ../editing.c:116 ../main.c:1356
 #, fuzzy
 msgid "Details"
 msgstr "Painel de Detalhes"
@@ -169,11 +169,11 @@ msgstr "Painel de Detalhes"
 msgid "no year"
 msgstr ""
 
-#: ../editing.c:446 ../main.c:503 ../main.c:630
+#: ../editing.c:448 ../main.c:504 ../main.c:631
 msgid "Categories"
 msgstr "Categorias"
 
-#: ../editing.c:982
+#: ../editing.c:984
 #, fuzzy
 msgid "Select image"
 msgstr "Apagar item"
@@ -193,7 +193,7 @@ msgstr "Contatos"
 msgid "Search for:"
 msgstr ""
 
-#: ../gpe-contacts.desktop.in.h:1 ../main.c:1272
+#: ../gpe-contacts.desktop.in.h:1 ../main.c:1292
 msgid "Contacts"
 msgstr "Contatos"
 
@@ -201,129 +201,119 @@ msgstr "Contatos"
 msgid "GPE Contacts"
 msgstr "Contatos GPE"
 
-#: ../main.c:78 ../main.c:180
+#: ../main.c:79 ../main.c:181
 msgid "Edit Contact"
 msgstr "Editar Contato"
 
-#: ../main.c:84 ../main.c:196
+#: ../main.c:85 ../main.c:197
 msgid "Really delete this contact?"
 msgstr "Deseja realmente apagar este contato?"
 
-#: ../main.c:84 ../main.c:196 ../structure.c:173
+#: ../main.c:85 ../main.c:197 ../structure.c:176
 msgid "Confirm"
 msgstr "Confirmar"
 
-#: ../main.c:136
+#: ../main.c:137
 msgid "All categories"
 msgstr "Todas"
 
-#: ../main.c:158
+#: ../main.c:159
 #, fuzzy
 msgid "New Contact"
 msgstr "Novo contato"
 
-#: ../main.c:514
+#: ../main.c:515
 #, fuzzy
 msgid "No contact selected."
 msgstr "Nenhum recipiente selecionado"
 
 #. create and set up dialog
-#: ../main.c:586 ../main.c:1369 ../main.c:1435
+#. * detail section *
+#: ../main.c:587 ../main.c:1428 ../main.c:1500
 msgid "Contact"
 msgstr "Contato"
 
-#: ../main.c:1202
+#: ../main.c:1212
 #, fuzzy
 msgid "Choose file"
 msgstr "clique para escolher o arquivo"
 
-#: ../main.c:1230
+#: ../main.c:1240
 msgid "Import of"
 msgstr ""
 
-#: ../main.c:1230
+#: ../main.c:1240
 msgid "files failed:"
 msgstr ""
 
-#: ../main.c:1234
+#: ../main.c:1244
 msgid "Import successful"
 msgstr ""
 
-#: ../main.c:1285
+#: ../main.c:1309
 #, fuzzy
 msgid "Tap this button to add a new contact."
 msgstr "Clique aqui para adicionar um novo contato."
 
-#: ../main.c:1292
-msgid "Edit"
-msgstr "Editar"
-
-#: ../main.c:1293
+#: ../main.c:1318
 msgid "Tap here to edit the selected contact."
 msgstr "clique aqui para editar o contato selecionado."
 
-#: ../main.c:1299
+#: ../main.c:1328
 msgid "Tap here to delete the selected contact."
 msgstr "Clique aqui para apagar o contato selecionado."
 
-#: ../main.c:1309
+#: ../main.c:1348
+msgid "Find a contact by searching for any data."
+msgstr ""
+
+#: ../main.c:1358
 #, fuzzy
 msgid "Tap here to show contacts details."
 msgstr "Clique aqui para adicionar um novo contato."
 
-#: ../main.c:1318
-msgid "Find a contact by searching for any data."
-msgstr ""
-
-#: ../main.c:1323
-msgid "Properties"
-msgstr "Propriedades"
-
-#: ../main.c:1323
+#: ../main.c:1368
 #, fuzzy
 msgid "Tap here to configure this program."
 msgstr "Clique aqui para configurar o programa."
 
-#: ../main.c:1329
+#: ../main.c:1376
 msgid "Import"
 msgstr ""
 
-#: ../main.c:1329
+#: ../main.c:1378
 msgid "Open file to import a contact from it."
 msgstr ""
 
-#: ../main.c:1335
-msgid "Close"
-msgstr ""
-
-#: ../main.c:1335
+#: ../main.c:1391
 #, fuzzy
 msgid "Tap here to exit gpe-contacts."
 msgstr "clique aqui para editar o contato selecionado."
 
-#: ../main.c:1395
+#. * find and categories section *
+#: ../main.c:1457
 msgid "Find:"
 msgstr "Procurar:"
 
-#: ../main.c:1402
+#: ../main.c:1464
 msgid "in"
 msgstr "em"
 
-#: ../main.c:1529
+#: ../main.c:1594
 #, fuzzy, c-format
 msgid "Could not import file %s."
 msgstr "Impossível encontrar o arquivo pixmap: %s"
 
-#: ../main.c:1534
+#: ../main.c:1599
 #, c-format
 msgid "File %s imported sucessfully."
 msgstr ""
 
-#: ../main.c:1559
+#: ../main.c:1624
 msgid "My Card"
 msgstr ""
 
-#: ../main.c:1562
+#: ../main.c:1627
 msgid "Saving vcard failed"
 msgstr ""
 
@@ -407,57 +397,63 @@ msgstr ""
 msgid "Title:"
 msgstr "Título"
 
-#: ../structure.c:102 ../structure.c:232
+#: ../structure.c:105 ../structure.c:235
 msgid "New page"
 msgstr "Nova página"
 
-#: ../structure.c:102 ../structure.c:121 ../structure.c:146
+#: ../structure.c:105 ../structure.c:124 ../structure.c:149
 msgid "Title"
 msgstr "Título"
 
-#: ../structure.c:121
+#: ../structure.c:124
 msgid "New group"
 msgstr "Novo grupo"
 
-#: ../structure.c:133 ../structure.c:163
+#: ../structure.c:136 ../structure.c:166
 msgid "No container selected"
 msgstr "Nenhum recipiente selecionado"
 
-#: ../structure.c:147
+#: ../structure.c:150
 msgid "Tag"
 msgstr "Etiqueta"
 
-#: ../structure.c:149
+#: ../structure.c:152
 msgid "New field"
 msgstr "Novo campo"
 
-#: ../structure.c:173
+#: ../structure.c:176
 msgid "Really delete this field?"
 msgstr "Deseja realmente apagar este campo?"
 
-#: ../structure.c:174
+#: ../structure.c:177
 msgid "Delete"
 msgstr "Apagar"
 
-#: ../structure.c:174
+#: ../structure.c:177
 msgid "Cancel"
 msgstr "Cancelar"
 
-#: ../structure.c:231
+#: ../structure.c:234
 msgid "Page"
 msgstr "Página"
 
-#: ../structure.c:232
+#: ../structure.c:235
 msgid "Tap here to add a page."
 msgstr "Clique aqui para adicionar uma página."
 
-#: ../structure.c:248
+#: ../structure.c:251
 msgid "Delete item"
 msgstr "Apagar item"
 
-#: ../structure.c:248
+#: ../structure.c:251
 msgid "Tap here to delete the selected item."
 msgstr "Clique aqui para apagar o item selecionado."
+
+#~ msgid "Edit"
+#~ msgstr "Editar"
+
+#~ msgid "Properties"
+#~ msgstr "Propriedades"
 
 #~ msgid "more detailed name options"
 #~ msgstr "mais opções detalhadas de nome"

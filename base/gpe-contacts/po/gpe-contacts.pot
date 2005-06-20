@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-04-18 15:49+0200\n"
+"POT-Creation-Date: 2005-05-20 00:57+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -133,27 +133,27 @@ msgstr ""
 msgid "Contacts: Configuration"
 msgstr ""
 
-#: ../db.c:123
+#: ../db.c:254
 msgid "Name"
 msgstr ""
 
-#: ../db.c:124
+#: ../db.c:255
 msgid "Phone"
 msgstr ""
 
-#: ../db.c:125
+#: ../db.c:256
 msgid "EMail"
 msgstr ""
 
-#: ../edit-vcard.desktop.in.h:1 ../edit-vcard.desktop.in.in.h:1
+#: ../edit-vcard.desktop.in.h:1
 msgid "Edit personal vcard"
 msgstr ""
 
-#: ../edit-vcard.desktop.in.h:2 ../edit-vcard.desktop.in.in.h:2
+#: ../edit-vcard.desktop.in.h:2
 msgid "My VCard"
 msgstr ""
 
-#: ../editing.c:116 ../main.c:1326
+#: ../editing.c:116 ../main.c:1356
 msgid "Details"
 msgstr ""
 
@@ -161,11 +161,11 @@ msgstr ""
 msgid "no year"
 msgstr ""
 
-#: ../editing.c:446 ../main.c:503 ../main.c:630
+#: ../editing.c:448 ../main.c:504 ../main.c:631
 msgid "Categories"
 msgstr ""
 
-#: ../editing.c:982
+#: ../editing.c:984
 msgid "Select image"
 msgstr ""
 
@@ -183,131 +183,120 @@ msgstr ""
 msgid "Search for:"
 msgstr ""
 
-#: ../gpe-contacts.desktop.in.h:1 ../gpe-contacts.desktop.in.in.h:1
-#: ../main.c:1290
+#: ../gpe-contacts.desktop.in.h:1 ../main.c:1292
 msgid "Contacts"
 msgstr ""
 
-#: ../gpe-contacts.desktop.in.h:2 ../gpe-contacts.desktop.in.in.h:2
+#: ../gpe-contacts.desktop.in.h:2
 msgid "GPE Contacts"
 msgstr ""
 
-#: ../main.c:78 ../main.c:180
+#: ../main.c:79 ../main.c:181
 msgid "Edit Contact"
 msgstr ""
 
-#: ../main.c:84 ../main.c:196
+#: ../main.c:85 ../main.c:197
 msgid "Really delete this contact?"
 msgstr ""
 
-#: ../main.c:84 ../main.c:196 ../structure.c:173
+#: ../main.c:85 ../main.c:197 ../structure.c:176
 msgid "Confirm"
 msgstr ""
 
-#: ../main.c:136
+#: ../main.c:137
 msgid "All categories"
 msgstr ""
 
-#: ../main.c:158
+#: ../main.c:159
 msgid "New Contact"
 msgstr ""
 
-#: ../main.c:514
+#: ../main.c:515
 msgid "No contact selected."
 msgstr ""
 
 #. create and set up dialog
-#: ../main.c:586 ../main.c:1387 ../main.c:1453
+#. * detail section *
+#: ../main.c:587 ../main.c:1428 ../main.c:1500
 msgid "Contact"
 msgstr ""
 
-#: ../main.c:1220
+#: ../main.c:1212
 msgid "Choose file"
 msgstr ""
 
-#: ../main.c:1248
+#: ../main.c:1240
 msgid "Import of"
 msgstr ""
 
-#: ../main.c:1248
+#: ../main.c:1240
 msgid "files failed:"
 msgstr ""
 
-#: ../main.c:1252
+#: ../main.c:1244
 msgid "Import successful"
 msgstr ""
 
-#: ../main.c:1303
+#: ../main.c:1309
 msgid "Tap this button to add a new contact."
 msgstr ""
 
-#: ../main.c:1310
-msgid "Edit"
-msgstr ""
-
-#: ../main.c:1311
+#: ../main.c:1318
 msgid "Tap here to edit the selected contact."
 msgstr ""
 
-#: ../main.c:1317
+#: ../main.c:1328
 msgid "Tap here to delete the selected contact."
 msgstr ""
 
-#: ../main.c:1327
-msgid "Tap here to show contacts details."
-msgstr ""
-
-#: ../main.c:1336
+#: ../main.c:1348
 msgid "Find a contact by searching for any data."
 msgstr ""
 
-#: ../main.c:1341
-msgid "Properties"
+#: ../main.c:1358
+msgid "Tap here to show contacts details."
 msgstr ""
 
-#: ../main.c:1341
+#: ../main.c:1368
 msgid "Tap here to configure this program."
 msgstr ""
 
-#: ../main.c:1347
+#: ../main.c:1376
 msgid "Import"
 msgstr ""
 
-#: ../main.c:1347
+#: ../main.c:1378
 msgid "Open file to import a contact from it."
 msgstr ""
 
-#: ../main.c:1353
-msgid "Close"
-msgstr ""
-
-#: ../main.c:1353
+#: ../main.c:1391
 msgid "Tap here to exit gpe-contacts."
 msgstr ""
 
-#: ../main.c:1413
+#. * find and categories section *
+#: ../main.c:1457
 msgid "Find:"
 msgstr ""
 
-#: ../main.c:1420
+#: ../main.c:1464
 msgid "in"
 msgstr ""
 
-#: ../main.c:1547
+#: ../main.c:1594
 #, c-format
 msgid "Could not import file %s."
 msgstr ""
 
-#: ../main.c:1552
+#: ../main.c:1599
 #, c-format
 msgid "File %s imported sucessfully."
 msgstr ""
 
-#: ../main.c:1577
+#: ../main.c:1624
 msgid "My Card"
 msgstr ""
 
-#: ../main.c:1580
+#: ../main.c:1627
 msgid "Saving vcard failed"
 msgstr ""
 
@@ -390,54 +379,54 @@ msgstr ""
 msgid "Title:"
 msgstr ""
 
-#: ../structure.c:102 ../structure.c:232
+#: ../structure.c:105 ../structure.c:235
 msgid "New page"
 msgstr ""
 
-#: ../structure.c:102 ../structure.c:121 ../structure.c:146
+#: ../structure.c:105 ../structure.c:124 ../structure.c:149
 msgid "Title"
 msgstr ""
 
-#: ../structure.c:121
+#: ../structure.c:124
 msgid "New group"
 msgstr ""
 
-#: ../structure.c:133 ../structure.c:163
+#: ../structure.c:136 ../structure.c:166
 msgid "No container selected"
 msgstr ""
 
-#: ../structure.c:147
+#: ../structure.c:150
 msgid "Tag"
 msgstr ""
 
-#: ../structure.c:149
+#: ../structure.c:152
 msgid "New field"
 msgstr ""
 
-#: ../structure.c:173
+#: ../structure.c:176
 msgid "Really delete this field?"
 msgstr ""
 
-#: ../structure.c:174
+#: ../structure.c:177
 msgid "Delete"
 msgstr ""
 
-#: ../structure.c:174
+#: ../structure.c:177
 msgid "Cancel"
 msgstr ""
 
-#: ../structure.c:231
+#: ../structure.c:234
 msgid "Page"
 msgstr ""
 
-#: ../structure.c:232
+#: ../structure.c:235
 msgid "Tap here to add a page."
 msgstr ""
 
-#: ../structure.c:248
+#: ../structure.c:251
 msgid "Delete item"
 msgstr ""
 
-#: ../structure.c:248
+#: ../structure.c:251
 msgid "Tap here to delete the selected item."
 msgstr ""

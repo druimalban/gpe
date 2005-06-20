@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gpe-contacts 0.32\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-04-30 17:29+0200\n"
+"POT-Creation-Date: 2005-05-20 00:57+0200\n"
 "PO-Revision-Date: 2005-04-04 10:55-0700\n"
 "Last-Translator: Steven Michael Murphy <murf@e-tools.com>\n"
 "Language-Team: Kinyarwanda <translation-team-rw@lists.sourceforge.net>\n"
@@ -158,16 +158,16 @@ msgstr "Ububikoshingiro"
 msgid "Contacts: Configuration"
 msgstr ""
 
-#: ../db.c:123
+#: ../db.c:254
 msgid "Name"
 msgstr "Izina"
 
-#: ../db.c:124
+#: ../db.c:255
 msgid "Phone"
 msgstr "Telefone"
 
 # officecfg/registry\schema\org\openoffice\Office\Writer.xcs:....BusinessCard.BusinessAddress.Email.text
-#: ../db.c:125
+#: ../db.c:256
 #, fuzzy
 msgid "EMail"
 msgstr "imeli"
@@ -181,7 +181,7 @@ msgstr "Bwite"
 msgid "My VCard"
 msgstr ""
 
-#: ../editing.c:116 ../main.c:1308
+#: ../editing.c:116 ../main.c:1356
 msgid "Details"
 msgstr "Birambuye"
 
@@ -190,11 +190,11 @@ msgstr "Birambuye"
 msgid "no year"
 msgstr "Oya Umwaka"
 
-#: ../editing.c:446 ../main.c:503 ../main.c:630
+#: ../editing.c:448 ../main.c:504 ../main.c:631
 msgid "Categories"
 msgstr "Ibyiciro"
 
-#: ../editing.c:982
+#: ../editing.c:984
 #, fuzzy
 msgid "Select image"
 msgstr "Ishusho"
@@ -216,7 +216,7 @@ msgstr ""
 msgid "Search for:"
 msgstr "Gushakisha:"
 
-#: ../gpe-contacts.desktop.in.h:1 ../main.c:1272
+#: ../gpe-contacts.desktop.in.h:1 ../main.c:1292
 msgid "Contacts"
 msgstr "Aho kubariza"
 
@@ -224,29 +224,29 @@ msgstr "Aho kubariza"
 msgid "GPE Contacts"
 msgstr ""
 
-#: ../main.c:78 ../main.c:180
+#: ../main.c:79 ../main.c:181
 msgid "Edit Contact"
 msgstr ""
 
-#: ../main.c:84 ../main.c:196
+#: ../main.c:85 ../main.c:197
 #, fuzzy
 msgid "Really delete this contact?"
 msgstr "Gusiba iyi Umuntu"
 
-#: ../main.c:84 ../main.c:196 ../structure.c:173
+#: ../main.c:85 ../main.c:197 ../structure.c:176
 msgid "Confirm"
 msgstr "Emeza"
 
-#: ../main.c:136
+#: ../main.c:137
 #, fuzzy
 msgid "All categories"
 msgstr "Ibyiciro"
 
-#: ../main.c:158
+#: ../main.c:159
 msgid "New Contact"
 msgstr ""
 
-#: ../main.c:514
+#: ../main.c:515
 #, fuzzy
 msgid "No contact selected."
 msgstr "Umuntu Byahiswemo"
@@ -289,104 +289,94 @@ msgstr "Umuntu Byahiswemo"
 # ***** END LICENSE BLOCK *****
 # Box Headings
 #. create and set up dialog
-#: ../main.c:586 ../main.c:1369 ../main.c:1435
+#. * detail section *
+#: ../main.c:587 ../main.c:1428 ../main.c:1500
 msgid "Contact"
 msgstr "Umuntu"
 
-#: ../main.c:1202
+#: ../main.c:1212
 msgid "Choose file"
 msgstr ""
 
-#: ../main.c:1230
+#: ../main.c:1240
 msgid "Import of"
 msgstr ""
 
-#: ../main.c:1230
+#: ../main.c:1240
 msgid "files failed:"
 msgstr ""
 
-#: ../main.c:1234
+#: ../main.c:1244
 msgid "Import successful"
 msgstr ""
 
-#: ../main.c:1285
+#: ../main.c:1309
 #, fuzzy
 msgid "Tap this button to add a new contact."
 msgstr "iyi Akabuto Kuri Kongeramo a Gishya Umuntu"
 
-#: ../main.c:1292
-msgid "Edit"
-msgstr "Guhindura"
-
-#: ../main.c:1293
+#: ../main.c:1318
 #, fuzzy
 msgid "Tap here to edit the selected contact."
 msgstr "Kuri Guhindura i Byahiswemo Umuntu"
 
-#: ../main.c:1299
+#: ../main.c:1328
 #, fuzzy
 msgid "Tap here to delete the selected contact."
 msgstr "Kuri Gusiba i Byahiswemo Umuntu"
 
-#: ../main.c:1309
-#, fuzzy
-msgid "Tap here to show contacts details."
-msgstr "Kuri Garagaza Aho kubariza Birambuye"
-
-#: ../main.c:1318
+#: ../main.c:1348
 #, fuzzy
 msgid "Find a contact by searching for any data."
 msgstr "a Umuntu ku Ishakisha kugirango Ibyatanzwe"
 
-#: ../main.c:1323
-msgid "Properties"
-msgstr "indangakintu"
+#: ../main.c:1358
+#, fuzzy
+msgid "Tap here to show contacts details."
+msgstr "Kuri Garagaza Aho kubariza Birambuye"
 
-#: ../main.c:1323
+#: ../main.c:1368
 #, fuzzy
 msgid "Tap here to configure this program."
 msgstr "Kuri Kugena Imiterere iyi Porogaramu"
 
-#: ../main.c:1329
+#: ../main.c:1376
 msgid "Import"
 msgstr ""
 
-#: ../main.c:1329
+#: ../main.c:1378
 msgid "Open file to import a contact from it."
 msgstr ""
 
-#: ../main.c:1335
-msgid "Close"
-msgstr "Gufunga"
-
-#: ../main.c:1335
+#: ../main.c:1391
 #, fuzzy
 msgid "Tap here to exit gpe-contacts."
 msgstr "Kuri Gusohoka Aho kubariza"
 
-#: ../main.c:1395
+#. * find and categories section *
+#: ../main.c:1457
 msgid "Find:"
 msgstr "Shaka:"
 
-#: ../main.c:1402
+#: ../main.c:1464
 msgid "in"
 msgstr "in"
 
-#: ../main.c:1529
+#: ../main.c:1594
 #, c-format
 msgid "Could not import file %s."
 msgstr ""
 
-#: ../main.c:1534
+#: ../main.c:1599
 #, c-format
 msgid "File %s imported sucessfully."
 msgstr ""
 
-#: ../main.c:1559
+#: ../main.c:1624
 msgid "My Card"
 msgstr ""
 
-#: ../main.c:1562
+#: ../main.c:1627
 #, fuzzy
 msgid "Saving vcard failed"
 msgstr "Byanze"
@@ -477,61 +467,70 @@ msgid "Title:"
 msgstr "Umutwe:"
 
 # sc/source\ui\src\popup.src:RID_POPUP_PREVIEW.SID_PREVIEW_NEXT.text
-#: ../structure.c:102 ../structure.c:232
+#: ../structure.c:105 ../structure.c:235
 #, fuzzy
 msgid "New page"
 msgstr "Ipaji Nshya"
 
-#: ../structure.c:102 ../structure.c:121 ../structure.c:146
+#: ../structure.c:105 ../structure.c:124 ../structure.c:149
 msgid "Title"
 msgstr "Umutwe"
 
-#: ../structure.c:121
+#: ../structure.c:124
 msgid "New group"
 msgstr "itsinda rishya"
 
-#: ../structure.c:133 ../structure.c:163
+#: ../structure.c:136 ../structure.c:166
 #, fuzzy
 msgid "No container selected"
 msgstr "Byahiswemo"
 
-#: ../structure.c:147
+#: ../structure.c:150
 msgid "Tag"
 msgstr "Itagi"
 
-#: ../structure.c:149
+#: ../structure.c:152
 #, fuzzy
 msgid "New field"
 msgstr "Umwanya"
 
-#: ../structure.c:173
+#: ../structure.c:176
 #, fuzzy
 msgid "Really delete this field?"
 msgstr "Gusiba iyi Umwanya"
 
-#: ../structure.c:174
+#: ../structure.c:177
 msgid "Delete"
 msgstr "Gusiba"
 
-#: ../structure.c:174
+#: ../structure.c:177
 msgid "Cancel"
 msgstr "Kureka"
 
-#: ../structure.c:231
+#: ../structure.c:234
 msgid "Page"
 msgstr "Ipaji"
 
-#: ../structure.c:232
+#: ../structure.c:235
 #, fuzzy
 msgid "Tap here to add a page."
 msgstr "Kuri Kongeramo a Ipaji"
 
-#: ../structure.c:248
+#: ../structure.c:251
 #, fuzzy
 msgid "Delete item"
 msgstr "Ikintu"
 
-#: ../structure.c:248
+#: ../structure.c:251
 #, fuzzy
 msgid "Tap here to delete the selected item."
 msgstr "Kuri Gusiba i Byahiswemo Ikintu"
+
+#~ msgid "Edit"
+#~ msgstr "Guhindura"
+
+#~ msgid "Properties"
+#~ msgstr "indangakintu"
+
+#~ msgid "Close"
+#~ msgstr "Gufunga"
