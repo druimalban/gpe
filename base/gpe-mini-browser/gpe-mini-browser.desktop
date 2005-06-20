@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Mini Web Browser
+Comment=Browse the web
+Exec=gpe-mini-browser
+Terminal=0
+Type=Application
+Icon=gpe-mini-browser.png
+Categories=Application;Utility;GPE
+StartupNotify=True
+
