@@ -45,15 +45,6 @@
 #define EC_FAIL 1
 //#define DEBUG /* uncomment this if you want debug output*/
 
-struct button_data
-{
-  GtkWidget *web;
-  GList *list;
-} buttond;
-GList *history;			//keep a list of urls
-GList *lasthistory = NULL;	//keep last position in the list
-gchar *lastdata;		//keep last url
-
 /* read a file into gtk-webcore */
 void
 read_file (const gchar * url, GtkWidget * html)
@@ -249,10 +240,6 @@ main (int argc, char *argv[])
 #ifdef DEBUG
   fprintf (stderr, "url = %s\n", base);
 #endif
-  //create list and add first element from the command line
-  history = NULL;
-  history = g_list_append (history, (gchar *) base);
-
 
   //create application window
   app = gtk_window_new (GTK_WINDOW_TOPLEVEL);
@@ -287,10 +274,6 @@ main (int argc, char *argv[])
   printf ("report running! html=%d\n", html);
   printf ("continuing!\n");
 #endif
-
-  //buttond = (struct button_data *) malloc (sizeof(struct button_data));
-  buttond.web = html;
-  buttond.list = history;
 
   /*add home, search, back, forward and exit button */
   gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_GO_BACK,
