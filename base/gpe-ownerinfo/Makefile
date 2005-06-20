@@ -49,9 +49,15 @@ install-program: all
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
 	install -s $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/
 	install -d $(DESTDIR)/etc/gpe/
+	
+install-devel: 
+	install -d $(DESTDIR)/$(PREFIX)/include
+	install -m644 gpe-ownerinfo.h $(DESTDIR)/$(PREFIX)/include/gpe-ownerinfo.h
+	install -d $(DESTDIR)/$(PREFIX)/lib
+	install -m755 $(LIB_TARGET) $(DESTDIR)/$(PREFIX)/lib/$(LIB_TARGET)
 
 clean: clean-po
-	rm -f $(PACKAGE) $(OBJS) $(DEPS) $(LIB_OBJS) libgpe-ownerinfo.a
+	rm -f $(PACKAGE) $(OBJS) $(DEPS) $(LIB_OBJS) $(LIB_TARGET)
 
 distclean: clean
 	rm -rf familiar/dist/
