@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gpe-todo 0.32\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-05-11 16:39+0200\n"
+"POT-Creation-Date: 2005-06-20 16:51+0200\n"
 "PO-Revision-Date: 2003-10-29 21:24+0200\n"
 "Last-Translator: Pavel Maryanov <acid_jack@ukr.net>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -20,35 +20,117 @@ msgstr ""
 msgid "GPE To-do List"
 msgstr "Список to-do"
 
-#: ../gpe-todo.desktop.in.h:2 ../main.c:62
+#: ../gpe-todo.desktop.in.h:2 ../main.c:93
 msgid "To-do list"
 msgstr "Список to-do"
 
-#: ../list-ui.c:113
+#: ../list-ui.c:123
 msgid "All items"
 msgstr "Все пункты"
 
-#: ../list-ui.c:140
+#: ../list-ui.c:150
 #, fuzzy
 msgid "Show completed"
 msgstr "Завершен"
 
-#: ../list-ui.c:585
-msgid "Priority"
+#: ../list-ui.c:188 ../todo-ui.c:327
+msgid "OK"
 msgstr ""
 
-#: ../list-ui.c:591
+#: ../list-ui.c:189 ../todo-ui.c:328
+msgid "Cancel"
+msgstr "Отмена"
+
+#: ../list-ui.c:536
+msgid "Item"
+msgstr ""
+
+#: ../list-ui.c:537 ../list-ui.c:653
+#, fuzzy
+msgid "Categories"
+msgstr "Категории:"
+
+#: ../list-ui.c:538
+msgid "View"
+msgstr ""
+
+#: ../list-ui.c:539
+#, fuzzy
+msgid "Tools"
+msgstr "Список to-do"
+
+#: ../list-ui.c:540
+msgid "Close"
+msgstr ""
+
+#: ../list-ui.c:541
+msgid "Open..."
+msgstr ""
+
+#: ../list-ui.c:542
+#, fuzzy
+msgid "Add new"
+msgstr "Добавить новый пункт"
+
+#: ../list-ui.c:543
+#, fuzzy
+msgid "Edit categories"
+msgstr "Выбрать категории"
+
+#: ../list-ui.c:544
+msgid "Show toolbar"
+msgstr ""
+
+#: ../list-ui.c:545
+#, fuzzy
+msgid "Delete completed items"
+msgstr "Удалить завершенные пункты"
+
+#: ../list-ui.c:546
+#, fuzzy
+msgid "Move completed items to the end"
+msgstr "Переместить выполненные пункты в конец списка"
+
+#: ../list-ui.c:622
+msgid "New"
+msgstr "Новый"
+
+#: ../list-ui.c:632 ../todo-ui.c:330
+msgid "Delete"
+msgstr "Удалить"
+
+#: ../list-ui.c:645
+msgid "Refresh"
+msgstr ""
+
+#: ../list-ui.c:679
+msgid "Show:"
+msgstr ""
+
+#: ../list-ui.c:738
+msgid "Status"
+msgstr ""
+
+#: ../list-ui.c:744
 #, fuzzy
 msgid "Summary"
 msgstr "Сводка:"
 
-#: ../list-ui.c:600
+#: ../list-ui.c:756
+msgid "Due Date"
+msgstr ""
+
+#: ../list-ui.c:761
 #, fuzzy
 msgid "Category"
 msgstr "Категории"
 
-#: ../list-ui.c:606
-msgid "Due Date"
+#: ../main.c:80
+msgid "ToDo"
+msgstr ""
+
+#: ../main.c:81
+msgid "List"
 msgstr ""
 
 #: ../todo-ui.c:154
@@ -79,59 +161,54 @@ msgstr ""
 msgid "Low"
 msgstr ""
 
-#: ../todo-ui.c:259
+#: ../todo-ui.c:267
 msgid "Priority:"
 msgstr ""
 
-#: ../todo-ui.c:261
+#: ../todo-ui.c:269
 msgid "Status:"
 msgstr ""
 
-#: ../todo-ui.c:264
+#: ../todo-ui.c:272
 msgid "Summary:"
 msgstr "Сводка:"
 
-#: ../todo-ui.c:265
+#: ../todo-ui.c:273
 #, fuzzy
 msgid "Details:"
 msgstr "Подробности"
 
-#: ../todo-ui.c:269
+#: ../todo-ui.c:302 ../todo-ui.c:305
 msgid "Categories:"
 msgstr "Категории:"
 
-#: ../todo-ui.c:339
+#: ../todo-ui.c:329
+#, fuzzy
+msgid "Categories..."
+msgstr "Категории:"
+
+#: ../todo-ui.c:358
 msgid "Due:"
 msgstr "Должен:"
 
-#: ../todo-ui.c:477
-msgid "Edit to-do item"
+#: ../todo-ui.c:373
+msgid "Define categories by tapping Categories button."
+msgstr ""
+
+#: ../todo-ui.c:520
+#, fuzzy
+msgid "Edit Item"
 msgstr "Редактировать пункт to-do"
 
-#: ../todo-ui.c:486
+#: ../todo-ui.c:531
 msgid "New item"
 msgstr "Новый пункт"
-
-#~ msgid "Select categories"
-#~ msgstr "Выбрать категории"
 
 #~ msgid "Permanently delete all completed items?"
 #~ msgstr "Постоянно удалять все завершенные пункты?"
 
 #~ msgid "Confirm"
 #~ msgstr "Подтвердить"
-
-#~ msgid "Delete"
-#~ msgstr "Удалить"
-
-#~ msgid "Cancel"
-#~ msgstr "Отмена"
-
-#~ msgid "New"
-#~ msgstr "Новый"
-
-#~ msgid "Add a new item"
-#~ msgstr "Добавить новый пункт"
 
 #~ msgid "Configure"
 #~ msgstr "Настроить"
@@ -142,14 +219,8 @@ msgstr "Новый пункт"
 #~ msgid "Purge"
 #~ msgstr "Удалить"
 
-#~ msgid "Purge completed items"
-#~ msgstr "Удалить завершенные пункты"
-
 #~ msgid "Re-sort"
 #~ msgstr "Пересортировать"
-
-#~ msgid "Move completed items to the end of the list"
-#~ msgstr "Переместить выполненные пункты в конец списка"
 
 #~ msgid "Exit"
 #~ msgstr "Выход"

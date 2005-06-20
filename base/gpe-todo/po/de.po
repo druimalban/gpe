@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gpe-todo 0.32\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-05-11 16:39+0200\n"
+"POT-Creation-Date: 2005-06-20 16:51+0200\n"
 "PO-Revision-Date: 2003-04-24 00:18+0200\n"
 "Last-Translator: Colin Marquardt <colin@marquardt-home.de>\n"
 "Language-Team: German <de@li.org>\n"
@@ -19,35 +19,117 @@ msgstr ""
 msgid "GPE To-do List"
 msgstr "Aufgabenliste"
 
-#: ../gpe-todo.desktop.in.h:2 ../main.c:62
+#: ../gpe-todo.desktop.in.h:2 ../main.c:93
 msgid "To-do list"
 msgstr "Aufgabenliste"
 
-#: ../list-ui.c:113
+#: ../list-ui.c:123
 msgid "All items"
 msgstr "Alle Einträge"
 
-#: ../list-ui.c:140
+#: ../list-ui.c:150
 #, fuzzy
 msgid "Show completed"
 msgstr "Abgeschlossen"
 
-#: ../list-ui.c:585
-msgid "Priority"
+#: ../list-ui.c:188 ../todo-ui.c:327
+msgid "OK"
 msgstr ""
 
-#: ../list-ui.c:591
+#: ../list-ui.c:189 ../todo-ui.c:328
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: ../list-ui.c:536
+msgid "Item"
+msgstr ""
+
+#: ../list-ui.c:537 ../list-ui.c:653
+#, fuzzy
+msgid "Categories"
+msgstr "Kategorien:"
+
+#: ../list-ui.c:538
+msgid "View"
+msgstr ""
+
+#: ../list-ui.c:539
+#, fuzzy
+msgid "Tools"
+msgstr "Aufgabenliste"
+
+#: ../list-ui.c:540
+msgid "Close"
+msgstr ""
+
+#: ../list-ui.c:541
+msgid "Open..."
+msgstr ""
+
+#: ../list-ui.c:542
+#, fuzzy
+msgid "Add new"
+msgstr "Neuen Eintrag hinzufügen"
+
+#: ../list-ui.c:543
+#, fuzzy
+msgid "Edit categories"
+msgstr "Wähle Kategorien"
+
+#: ../list-ui.c:544
+msgid "Show toolbar"
+msgstr ""
+
+#: ../list-ui.c:545
+#, fuzzy
+msgid "Delete completed items"
+msgstr "Räume alle bearbeiteten Einträge auf"
+
+#: ../list-ui.c:546
+#, fuzzy
+msgid "Move completed items to the end"
+msgstr "Verschiebe bearbeitete Einträge an das Listenende"
+
+#: ../list-ui.c:622
+msgid "New"
+msgstr "Neu"
+
+#: ../list-ui.c:632 ../todo-ui.c:330
+msgid "Delete"
+msgstr "Löschen"
+
+#: ../list-ui.c:645
+msgid "Refresh"
+msgstr ""
+
+#: ../list-ui.c:679
+msgid "Show:"
+msgstr ""
+
+#: ../list-ui.c:738
+msgid "Status"
+msgstr ""
+
+#: ../list-ui.c:744
 #, fuzzy
 msgid "Summary"
 msgstr "Zusammenfassung:"
 
-#: ../list-ui.c:600
+#: ../list-ui.c:756
+msgid "Due Date"
+msgstr ""
+
+#: ../list-ui.c:761
 #, fuzzy
 msgid "Category"
 msgstr "Kategorien"
 
-#: ../list-ui.c:606
-msgid "Due Date"
+#: ../main.c:80
+msgid "ToDo"
+msgstr ""
+
+#: ../main.c:81
+msgid "List"
 msgstr ""
 
 #: ../todo-ui.c:154
@@ -78,59 +160,54 @@ msgstr ""
 msgid "Low"
 msgstr ""
 
-#: ../todo-ui.c:259
+#: ../todo-ui.c:267
 msgid "Priority:"
 msgstr ""
 
-#: ../todo-ui.c:261
+#: ../todo-ui.c:269
 msgid "Status:"
 msgstr ""
 
-#: ../todo-ui.c:264
+#: ../todo-ui.c:272
 msgid "Summary:"
 msgstr "Zusammenfassung:"
 
-#: ../todo-ui.c:265
+#: ../todo-ui.c:273
 #, fuzzy
 msgid "Details:"
 msgstr "Details"
 
-#: ../todo-ui.c:269
+#: ../todo-ui.c:302 ../todo-ui.c:305
 msgid "Categories:"
 msgstr "Kategorien:"
 
-#: ../todo-ui.c:339
+#: ../todo-ui.c:329
+#, fuzzy
+msgid "Categories..."
+msgstr "Kategorien:"
+
+#: ../todo-ui.c:358
 msgid "Due:"
 msgstr "Fällig:"
 
-#: ../todo-ui.c:477
-msgid "Edit to-do item"
+#: ../todo-ui.c:373
+msgid "Define categories by tapping Categories button."
+msgstr ""
+
+#: ../todo-ui.c:520
+#, fuzzy
+msgid "Edit Item"
 msgstr "Editiere Eintrag"
 
-#: ../todo-ui.c:486
+#: ../todo-ui.c:531
 msgid "New item"
 msgstr "Neuer Eintrag"
-
-#~ msgid "Select categories"
-#~ msgstr "Wähle Kategorien"
 
 #~ msgid "Permanently delete all completed items?"
 #~ msgstr "Alle bearbeiteten Einträge permanent löschen?"
 
 #~ msgid "Confirm"
 #~ msgstr "Bestätigen"
-
-#~ msgid "Delete"
-#~ msgstr "Löschen"
-
-#~ msgid "Cancel"
-#~ msgstr "Abbrechen"
-
-#~ msgid "New"
-#~ msgstr "Neu"
-
-#~ msgid "Add a new item"
-#~ msgstr "Neuen Eintrag hinzufügen"
 
 #~ msgid "Configure"
 #~ msgstr "Konfigurieren"
@@ -141,14 +218,8 @@ msgstr "Neuer Eintrag"
 #~ msgid "Purge"
 #~ msgstr "Aufräumen"
 
-#~ msgid "Purge completed items"
-#~ msgstr "Räume alle bearbeiteten Einträge auf"
-
 #~ msgid "Re-sort"
 #~ msgstr "Erneut sortieren"
-
-#~ msgid "Move completed items to the end of the list"
-#~ msgstr "Verschiebe bearbeitete Einträge an das Listenende"
 
 #~ msgid "Exit"
 #~ msgstr "Beenden"

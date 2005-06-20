@@ -1,6 +1,7 @@
 2005-06-20  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * Version to 0.54 released.
+    * Makefile.am: Add some missing files to EXTRA_DIST.
 
 2005-06-04  Florian Boor  <florian.boor@kernelconcepts.de>
 
