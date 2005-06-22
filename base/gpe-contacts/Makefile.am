@@ -60,8 +60,7 @@ service_DATA = $(service_in_files:.service.in=.service)
 
 pixmapsdir = $(datadir)/pixmaps
 
-pixmaps_extradir = $(datadir)/pixmaps
-pixmaps_extra_DATA = icons/gpe-contacts.png \
+pixmaps_extra_DATA += icons/gpe-contacts.png \
                      icons/edit-vcard.png
 
 metadir = $(datadir)/gpe-contacts
