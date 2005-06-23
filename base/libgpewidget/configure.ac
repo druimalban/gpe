@@ -27,7 +27,7 @@ AC_PROG_LIBTOOL
 GTK_DOC_CHECK(1.2)
 
 # library dependencies
-DEPS="gtk+-2.0 >= 2.4 glib-2.0 >= 2.4"
+DEPS="gtk+-2.0 >= 2.4 glib-2.0 >= 2.6"
 
 AC_ARG_ENABLE(cairo,
 [  --enable-cairo         Enable using Cairo rendering toolkit],
