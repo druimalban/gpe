@@ -36,7 +36,8 @@ extern void destroy_window (GtkButton * button, gpointer * window);
 
 
 
-/* url loading */
+/* url loading and handling */
 extern void fetch_url (const gchar * url, GtkWidget * html);
 extern const gchar *parse_url (const gchar * url);
 extern void load_text_entry (GtkWidget * Button, gpointer * text);
+extern void handle_cookie (Webi * html, WebiCookie * cookie, gpointer * data);

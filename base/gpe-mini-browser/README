@@ -1,2 +1,6 @@
 This is a basic web-browser based on gtk-webcore for 
 use in the Gnome Palmdesktop Environment (GPE)
+
+I would like to thank the GPE team for the support.
+Special thanks go to Kimmo Kinnunen for his support on developing 
+with gtk-webcore.

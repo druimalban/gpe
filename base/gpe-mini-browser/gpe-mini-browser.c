@@ -35,7 +35,7 @@
 
 #include "gpe-mini-browser.h"
 
-#define DEBUG /* uncomment this if you want debug output*/
+//#define DEBUG /* uncomment this if you want debug output*/
 
 
 int
@@ -62,7 +62,7 @@ main (int argc, char *argv[])
 
       printf
 	("GPE-mini-browser, basic web browser application. (c)2005, Philippe De Swert\n");
-      printf ("Usage: gpe-minibrowser\n");
+      printf ("Usage: gpe-minibrowser <URL>\n");
       exit (0);
     }
 
@@ -98,12 +98,25 @@ main (int argc, char *argv[])
   html = webi_new ();
   webi_set_emit_internal_status (WEBI (html), TRUE);
 
+  /* set rendering mode depending on screen size (when working in gtk-webcore) 
+  if(width <=320)
+	{
+	 webi_set_device_type (WEBI(html), WEBI_DEVICE_TYPE_HANDHELD);
+	}
+  else
+	{
+	 webi_set_device_type (WEBI(html), WEBI_DEVICE_TYPE_SCREEN);
+	}*/
   ks->default_font_size = 11;
   ks->default_fixed_font_size = 11;
   ks->autoload_images = 1;
+  ks->javascript_enabled =1;
   webi_set_settings (WEBI (html), ks);
+ 
+  /* will only decently work when fixed in gtk-webcore */
+  g_signal_connect (WEBI(html), "set-cookie", G_CALLBACK(handle_cookie), NULL);
 
-  /*add home, search, back, forward and exit button */
+  /*add home, search, back, forward, refresh, stop, url and exit button */
   gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_GO_BACK,
 			    ("Go back a page"), ("Back"),
 			    GTK_SIGNAL_FUNC (back_func), html, -1);
@@ -118,11 +131,6 @@ main (int argc, char *argv[])
   gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_STOP,
 			    ("Stop loading this page"), ("Stop"),
 			    GTK_SIGNAL_FUNC (stop_func), html, -1);
-
-  /* TODO: Actually implement search function 
-     iconw = gtk_image_new_from_file ("help/search.png"); 
-     search_button = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), "Find", "Find a word in the text","Find",
-     iconw, GTK_SIGNAL_FUNC (find_func), NULL); */
 
   gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_HOME,
 			    ("Go to home page"), ("Home"),

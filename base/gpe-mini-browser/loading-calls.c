@@ -39,7 +39,7 @@
 
 #define HOME_PAGE "file:///usr/share/doc/gpe/mini-browser-index.html"
 
-#define DEBUG /* uncomment this if you want debug output*/
+//#define DEBUG /* uncomment this if you want debug output*/
 
 /* read a file or url into gtk-webcore */
 void
@@ -54,7 +54,7 @@ fetch_url (const gchar * url, GtkWidget * html)
      cut = strchr (url, ':');
      if (cut)
 	{
-	 cut = cut+3;
+	 cut = cut+2;
 	}
      if(access(cut, F_OK))
         {
@@ -86,7 +86,7 @@ parse_url (const gchar * url)
   p = strchr (url, ':');
   if (p)
     {
-      return p;
+      return url;
     }
   else
     {
@@ -98,7 +98,7 @@ parse_url (const gchar * url)
 void load_text_entry (GtkWidget * Button, gpointer * text)
 {
 	struct url_data *data;
-	gchar *url;
+	const gchar *url;
 	
         data =  (struct url_data *)text;
 
@@ -114,5 +114,16 @@ void load_text_entry (GtkWidget * Button, gpointer * text)
 #endif
 		fetch_url(url, data->html);
 	}
+	g_free(data);
+}
+
+
+void handle_cookie (Webi * html, WebiCookie * cookie, gpointer * data)
+{
+#ifdef DEBUG
+	printf ("Site %s wants to set a cookie.\n", cookie->domain);
+#endif
+	/* accept all cookies by default for the moment */
+	cookie->out_accept_cookie = TRUE;
 }
 

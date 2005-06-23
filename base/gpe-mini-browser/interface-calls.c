@@ -79,18 +79,21 @@ home_func (GtkWidget * home, GtkWidget * html)
   	fetch_url (HOME_PAGE, GTK_WIDGET (html));
 }
 
+/* tell the engine to reload the current page */
 void
 reload_func (GtkWidget * reload, GtkWidget * html)
 {
 	webi_refresh(WEBI (html));
 }
 
+/* tell the engine to stop loading */
 void
 stop_func (GtkWidget * stop, GtkWidget * html)
 {
 	webi_stop_load(WEBI(html));
 }
 
+/* pop up a window to enter an URL */
 void 
 show_url_window (GtkWidget * show, GtkWidget * html)
 {
@@ -100,6 +103,7 @@ show_url_window (GtkWidget * show, GtkWidget * html)
         GtkWidget *buttonok, *buttoncancel;
 	struct url_data *data;
 
+        /* create dialog window */
 	url_window = gtk_dialog_new();
 	gtk_window_set_title(GTK_WINDOW(url_window),("Where to go to?"));
   
@@ -118,6 +122,7 @@ show_url_window (GtkWidget * show, GtkWidget * html)
 	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (url_window)->vbox),
         		      hbox, FALSE, FALSE, 0);
 
+	/* add the buttons */
 	buttonok = gpe_button_new_from_stock (GTK_STOCK_OK, GPE_BUTTON_TYPE_BOTH);
 	buttoncancel = gpe_button_new_from_stock (GTK_STOCK_CANCEL, GPE_BUTTON_TYPE_BOTH);
 
@@ -134,10 +139,11 @@ show_url_window (GtkWidget * show, GtkWidget * html)
 	data->entry = entry;
 	data->window = url_window;
 
-	g_signal_connect (GTK_OBJECT (buttonok), "clicked", load_text_entry , data);
- 
-        g_signal_connect (GTK_OBJECT (buttoncancel), "clicked", destroy_window, (gpointer *)url_window);
-        g_signal_connect (GTK_OBJECT (buttonok), "clicked", destroy_window, (gpointer *)url_window);
+	/* add button callbacks */
+	g_signal_connect (GTK_OBJECT (buttonok), "clicked", G_CALLBACK(load_text_entry) , (gpointer *) data);
+        g_signal_connect (GTK_OBJECT (buttoncancel), "clicked", G_CALLBACK(destroy_window), (gpointer *)url_window);
+        g_signal_connect (GTK_OBJECT (buttonok), "clicked", G_CALLBACK(destroy_window), (gpointer *)url_window);
+
 	gtk_widget_show_all (url_window);
         gtk_widget_grab_focus (entry);
 }
