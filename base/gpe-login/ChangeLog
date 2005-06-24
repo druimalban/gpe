@@ -1,3 +1,7 @@
+2005-06-24  Florian Boor <florian@kernelconcepts.de>
+
+	* Version 0.77 released.
+
 2005-06-20  Florian Boor <florian@kernelconcepts.de>
 
 	* X11/gpe-login.pre-session: Change owner of sysclass backlight
