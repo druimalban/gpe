@@ -1,0 +1,5 @@
+2005-06-26  Florian Boor <florian@kernelconcepts.de>
+
+	* Add autotools support and merge with libXsettings package.
+	* Add autotools support files - thanks to Matthew Allum for creating
+          them.
