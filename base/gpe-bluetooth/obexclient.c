@@ -221,6 +221,7 @@ obex_do_connect (gpointer data)
   gchar *text;
   GtkWidget *w;
   obex_object_t *object;
+  int r;
   
   gdk_threads_enter ();
   w = bt_progress_dialog (_("Connecting"), gpe_find_icon ("bt-logo"));
@@ -241,10 +242,11 @@ obex_do_connect (gpointer data)
       goto error;
     }
 
-  if (BtOBEX_TransportConnect (req->obex, BDADDR_ANY, &req->bdaddr, port) < 0)
+  if (r = BtOBEX_TransportConnect (req->obex, BDADDR_ANY, &req->bdaddr, port), r < 0)
     {
       OBEX_Cleanup (req->obex);
       text = _("Unable to connect");
+      errno = r;
       goto error;
     }
 
