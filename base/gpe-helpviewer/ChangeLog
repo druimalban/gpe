@@ -1,3 +1,7 @@
+2005-06-27  Florian Boor <florian@kernelconcepts.de>
+
+* gpe-helpviewer.desktop: make name uppercase.
+
 v0.5 - 6/2005 - Philippe De Swert
 
 * Port to gtk-webcore

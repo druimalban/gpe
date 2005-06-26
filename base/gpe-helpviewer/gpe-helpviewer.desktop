@@ -1,5 +1,5 @@
 [Desktop Entry]
-Name=help viewer
+Name=Help Viewer
 Comment=Displays help
 Exec=gpe-helpviewer /usr/share/doc/gpe/gpe-helpviewer.html
 Terminal=0
