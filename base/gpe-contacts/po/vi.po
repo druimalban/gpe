@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gpe-contacts 0.37\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-06-21 00:53+0200\n"
+"POT-Creation-Date: 2005-06-27 14:02+0200\n"
 "PO-Revision-Date: 2005-05-04 12:56+0930\n"
 "Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
 "Language-Team: Vietnamese <gnomevi-list@lists.sourceforge.net> \n"
@@ -155,27 +155,27 @@ msgstr "vCard tôi"
 msgid "Details"
 msgstr "Chi tiết"
 
-#: ../editing.c:257
+#: ../editing.c:271
 msgid "no year"
 msgstr "không có năm"
 
-#: ../editing.c:436 ../namedetail.c:66 ../structure.c:177
+#: ../editing.c:450 ../namedetail.c:66 ../structure.c:177
 msgid "Cancel"
 msgstr "Thôi"
 
-#: ../editing.c:437 ../namedetail.c:64
+#: ../editing.c:451 ../namedetail.c:64
 msgid "OK"
 msgstr ""
 
-#: ../editing.c:438
+#: ../editing.c:452
 msgid "Image..."
 msgstr ""
 
-#: ../editing.c:546 ../main.c:502 ../main.c:629
+#: ../editing.c:560 ../main.c:502 ../main.c:629
 msgid "Categories"
 msgstr "Loại"
 
-#: ../editing.c:1154
+#: ../editing.c:1168
 msgid "Select image"
 msgstr "Chọn ảnh"
 

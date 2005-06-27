@@ -1,5 +1,6 @@
 2005-06-27  Florian Boor  <florian.boor@kernelconcepts.de>
 
+    * Release Version 0.40
     * editing.c: Improve code for widget placement, fixing bugs on large screens.
     * main.c: Increase default window size to make all buttons fit.
     * db.c: Fix creating of new contacts.

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gpe-contacts-0.32\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-06-21 00:53+0200\n"
+"POT-Creation-Date: 2005-06-27 14:02+0200\n"
 "PO-Revision-Date: 2004-11-05 12:02+0200\n"
 "Last-Translator: Pavel Maryanov <acid_jack@ukr.net>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -164,27 +164,27 @@ msgstr "Моя V-карточка"
 msgid "Details"
 msgstr "Подробности"
 
-#: ../editing.c:257
+#: ../editing.c:271
 msgid "no year"
 msgstr "год не указан"
 
-#: ../editing.c:436 ../namedetail.c:66 ../structure.c:177
+#: ../editing.c:450 ../namedetail.c:66 ../structure.c:177
 msgid "Cancel"
 msgstr "Отмена"
 
-#: ../editing.c:437 ../namedetail.c:64
+#: ../editing.c:451 ../namedetail.c:64
 msgid "OK"
 msgstr ""
 
-#: ../editing.c:438
+#: ../editing.c:452
 msgid "Image..."
 msgstr ""
 
-#: ../editing.c:546 ../main.c:502 ../main.c:629
+#: ../editing.c:560 ../main.c:502 ../main.c:629
 msgid "Categories"
 msgstr "Категории"
 
-#: ../editing.c:1154
+#: ../editing.c:1168
 msgid "Select image"
 msgstr "Выбрать изображение"
 

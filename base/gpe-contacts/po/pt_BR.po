@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gpe-contacts 0.12\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-06-21 00:53+0200\n"
+"POT-Creation-Date: 2005-06-27 14:02+0200\n"
 "PO-Revision-Date: 2004-09-02 19:04-0300\n"
 "Last-Translator: Marcus Moreira de Souza <marcus@frb.br>\n"
 "Language-Team: Brazilian Portuguese <ldp-br@bazar.conectiva.com.br>\n"
@@ -165,28 +165,28 @@ msgstr ""
 msgid "Details"
 msgstr "Painel de Detalhes"
 
-#: ../editing.c:257
+#: ../editing.c:271
 msgid "no year"
 msgstr ""
 
-#: ../editing.c:436 ../namedetail.c:66 ../structure.c:177
+#: ../editing.c:450 ../namedetail.c:66 ../structure.c:177
 msgid "Cancel"
 msgstr "Cancelar"
 
-#: ../editing.c:437 ../namedetail.c:64
+#: ../editing.c:451 ../namedetail.c:64
 msgid "OK"
 msgstr ""
 
-#: ../editing.c:438
+#: ../editing.c:452
 #, fuzzy
 msgid "Image..."
 msgstr "Imagem"
 
-#: ../editing.c:546 ../main.c:502 ../main.c:629
+#: ../editing.c:560 ../main.c:502 ../main.c:629
 msgid "Categories"
 msgstr "Categorias"
 
-#: ../editing.c:1154
+#: ../editing.c:1168
 #, fuzzy
 msgid "Select image"
 msgstr "Apagar item"

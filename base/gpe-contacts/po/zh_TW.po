@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gpe-contacts 0.12\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-06-21 00:53+0200\n"
+"POT-Creation-Date: 2005-06-27 14:02+0200\n"
 "PO-Revision-Date: 2003-04-14 22:00+0800\n"
 "Last-Translator: Chao-Hsiung Liao <pesder.liao@msa.hinet.net>\n"
 "Language-Team: Chinese (traditional) <zh-l10n@linux.org.tw>\n"
@@ -164,28 +164,28 @@ msgstr ""
 msgid "Details"
 msgstr "詳細資料面板"
 
-#: ../editing.c:257
+#: ../editing.c:271
 msgid "no year"
 msgstr ""
 
-#: ../editing.c:436 ../namedetail.c:66 ../structure.c:177
+#: ../editing.c:450 ../namedetail.c:66 ../structure.c:177
 msgid "Cancel"
 msgstr "取消"
 
-#: ../editing.c:437 ../namedetail.c:64
+#: ../editing.c:451 ../namedetail.c:64
 msgid "OK"
 msgstr ""
 
-#: ../editing.c:438
+#: ../editing.c:452
 #, fuzzy
 msgid "Image..."
 msgstr "影像"
 
-#: ../editing.c:546 ../main.c:502 ../main.c:629
+#: ../editing.c:560 ../main.c:502 ../main.c:629
 msgid "Categories"
 msgstr "類別"
 
-#: ../editing.c:1154
+#: ../editing.c:1168
 #, fuzzy
 msgid "Select image"
 msgstr "刪除項目"
