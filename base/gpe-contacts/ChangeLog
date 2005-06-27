@@ -1,5 +1,7 @@
 2005-06-27  Florian Boor  <florian.boor@kernelconcepts.de>
 
+    * editing.c: Improve code for widget placement, fixing bugs on large screens.
+    * main.c: Increase default window size to make all buttons fit.
     * db.c: Fix creating of new contacts.
     * Makefile.am: I should test my fixes from time to time.. 
 

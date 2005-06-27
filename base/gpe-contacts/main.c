@@ -1274,7 +1274,7 @@ create_main (gboolean edit_structure)
   
   if (mode_large_screen)
     {
-       size_x = 560;
+       size_x = 620;
        size_y = 400;
     }
   else

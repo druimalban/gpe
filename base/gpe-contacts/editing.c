@@ -134,13 +134,27 @@ pop_singles (GtkWidget *vtable, GSList *list, GtkWidget *pw, gboolean visible, g
               if (l) 
                 gtk_table_attach(GTK_TABLE(vtable), l, 0, 1, *pos, *pos+1, 
                                  GTK_FILL, GTK_FILL, 0, 0);
-              if (!next || !b)
-                gtk_table_attach_defaults(GTK_TABLE(vtable), w, 1, 3, *pos, *pos+1);
+              if (mode_large_screen)
+                {
+                  if (!next && !b)
+                    gtk_table_attach_defaults(GTK_TABLE(vtable), w, 1, 4, *pos, *pos+1);
+                  else
+                    gtk_table_attach_defaults(GTK_TABLE(vtable), w, 1, 2, *pos, *pos+1);
+                  if (b)
+                    gtk_table_attach(GTK_TABLE(vtable), b, 3, 4, *pos, *pos+1, 
+                                     GTK_FILL, GTK_FILL, 0, 0);
+                }
               else
-                gtk_table_attach_defaults(GTK_TABLE(vtable), w, 1, 2, *pos, *pos+1);
-              if (b) 
-                gtk_table_attach(GTK_TABLE(vtable), b, 2, 3, *pos, *pos+1, 
-                                 GTK_FILL, GTK_FILL, 0, 0);
+                {
+                  if (!next && !b)
+                    gtk_table_attach_defaults(GTK_TABLE(vtable), w, 1, 3, *pos, *pos+1);
+                  else
+                    gtk_table_attach_defaults(GTK_TABLE(vtable), w, 1, 2, *pos, *pos+1);
+                  if (b)
+                    gtk_table_attach(GTK_TABLE(vtable), b, 2, 3, *pos, *pos+1, 
+                                    GTK_FILL, GTK_FILL, 0, 0);
+
+                }
             }
           g_slist_free_1 (list);
           list = next;
