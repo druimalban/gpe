@@ -1,5 +1,6 @@
 2005-06-27  Florian Boor  <florian.boor@kernelconcepts.de>
 
+    * db.c: Fix creating of new contacts.
     * Makefile.am: I should test my fixes from time to time.. 
 
 2005-06-22  Florian Boor  <florian.boor@kernelconcepts.de>

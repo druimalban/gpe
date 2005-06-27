@@ -311,7 +311,7 @@ gboolean
 new_person_id (guint * id)
 {
   char *err;
-  int r = sqlite_exec (db, "insert into contacts_urn values (NULL)",
+  int r = sqlite_exec (db, "insert into contacts_urn values (NULL, NULL, NULL, NULL)",
 		       NULL, NULL, &err);
   if (r)
     {
