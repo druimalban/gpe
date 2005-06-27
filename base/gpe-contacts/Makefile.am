@@ -47,7 +47,7 @@ service_in_files =
 
 gpe_contacts_SOURCES += main.c
 
-pixmaps_extradir = $(datadir)/gpe/pixmaps/default
+pixmaps_extradir = $(datadir)/gpe/pixmaps/default/gpe-contacts
 pixmaps_extra_DATA = icons/entry.png \
                icons/export.png \
                icons/frame.png \
@@ -59,10 +59,6 @@ service_DATA = $(service_in_files:.service.in=.service)
 @INTLTOOL_DESKTOP_RULE@
 
 pixmapsdir = $(datadir)/pixmaps
-
-pixmaps_extra_DATA += icons/gpe-contacts.png \
-                     icons/edit-vcard.png
-
 metadir = $(datadir)/gpe-contacts
 
 if HILDON
@@ -128,3 +124,4 @@ deb: dist
 	
 include gpe-dist.am
 include gpe-tp.am
+
