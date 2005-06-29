@@ -22,4 +22,4 @@ AC_TYPE_PID_T
 AC_FUNC_MALLOC
 AC_FUNC_VPRINTF
 
-AC_OUTPUT(Makefile)
+AC_OUTPUT(Makefile libxsettings-client.pc)

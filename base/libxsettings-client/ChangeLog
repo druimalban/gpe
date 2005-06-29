@@ -1,3 +1,8 @@
+2005-06-30  Florian Boor <florian@kernelconcepts.de>
+
+	* Add libxsettings-client.pc.in, add creating .pc from it to 
+          configure.ac.
+
 2005-06-26  Florian Boor <florian@kernelconcepts.de>
 
 	* Add autotools support and merge with libXsettings package.

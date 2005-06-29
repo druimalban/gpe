@@ -1,0 +1,11 @@
+prefix=@prefix@
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: libxsettings-client
+Description: Xsettings library
+Version: @VERSION@
+Requires: x11
+Libs: -L${libdir} -lXsettings-client
+Cflags: -I${includedir}
