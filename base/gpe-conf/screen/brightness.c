@@ -83,6 +83,7 @@ struct h3600_ts_backlight {
 #define SYS_STATE_ON  0
 #define SYS_STATE_OFF 4
 static char *SYS_BRIGHTNESS = NULL;
+static char *SYS_MAXBRIGHTNESS = NULL;
 static char *SYS_POWER = NULL;
 static char *SYS_LCDPOWER = NULL;
 
@@ -121,6 +122,7 @@ detect_platform(void)
 		if (!access(sysbdevs[i], R_OK))
 		{
 			SYS_BRIGHTNESS = g_strdup_printf("%s/brightness", sysbdevs[i]);
+			SYS_MAXBRIGHTNESS = g_strdup_printf("%s/max_brightness", sysbdevs[i]);
 			SYS_POWER = g_strdup_printf("%s/power", sysbdevs[i]);
 			SYS_LCDPOWER = g_strdup_printf("/sys/class/lcd/%s/power", strrchr(sysbdevs[i],'/')+1);
 			return P_SYSFS;
@@ -141,11 +143,27 @@ int
 sysfs_set_level(int level)
 {
   FILE *f_light;
+  FILE *f_max;
+  int val, maxlevel;
   
+  if ( level > 255 ) level = 255;
+  if ( level < 1 ) level = 1;
+
+  f_max = fopen(SYS_MAXBRIGHTNESS, "r");
+  if (f_max != NULL)
+  {
+  	fscanf(f_max,"%d", &maxlevel);
+  	fclose(f_max);
+  }
+  val = ( level == 1 ) ? 1 : ( level * maxlevel ) / 255;
+  if (val > maxlevel)
+  {
+	  val = maxlevel;
+  }
   f_light = fopen(SYS_BRIGHTNESS, "w");
   if (f_light != NULL)
   {
-    fprintf(f_light,"%d\n", level);
+    fprintf(f_light,"%d\n", val);
   	fclose(f_light);
   }
   else
@@ -171,14 +189,27 @@ int
 sysfs_get_level(void)
 {
   FILE *f_light;
-  int level;
+  FILE *f_max;
+  double factor, maxlevel, level;
   
+  f_max = fopen(SYS_MAXBRIGHTNESS, "r");
+  if (f_max != NULL)
+  {
+  	fscanf(f_max,"%d", &maxlevel);
+  	fclose(f_max);
+  }
+  factor = 255/maxlevel;
   f_light = fopen(SYS_BRIGHTNESS, "r");
   if (f_light != NULL)
   {
   	fscanf(f_light,"%d", &level);
   	fclose(f_light);
-	return level;
+	level = level * factor;
+	if (level > 255)
+	{
+		level = 255;
+	}
+	return (int)level;
   }
   return -1;
 }  
