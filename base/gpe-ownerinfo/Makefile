@@ -3,7 +3,7 @@ VERSION = 0.26
 PREFIX = /usr/local
 DEBUG = no
 CVSBUILD = yes
-NLS = yes
+ENABLE_NLS = yes
 
 LINGUAS = de hu id pt pt_BR fr zh_TW ro sv nl sk cs ru sr es zh_CN vi fi tr
 
@@ -21,7 +21,7 @@ else
 BUILD = build
 endif
 
-ifeq ($(NLS),yes)
+ifeq ($(ENABLE_NLS),yes)
 PACKAGE_CFLAGS += -DENABLE_NLS
 endif
 
