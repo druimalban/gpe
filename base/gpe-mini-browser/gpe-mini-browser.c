@@ -7,6 +7,8 @@
  *
  * Contact : philippedeswert@scarlet.be
  * 
+ * Dedicated to Apocalyptica (Cult album) for keeping me sane.
+ * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2, or (at your option)
@@ -62,7 +64,7 @@ main (int argc, char *argv[])
 
       printf
 	("GPE-mini-browser, basic web browser application. (c)2005, Philippe De Swert\n");
-      printf ("Usage: gpe-minibrowser <URL>\n");
+      printf ("Usage: gpe-mini-browser <URL>\n");
       exit (0);
     }
 
@@ -148,11 +150,9 @@ main (int argc, char *argv[])
 			    ("Exit gpe-mini-browser"), ("Exit"),
 			    GTK_SIGNAL_FUNC (gtk_main_quit), NULL, -1);
 
-  gtk_toolbar_set_icon_size (GTK_TOOLBAR (toolbar),
-			     GTK_ICON_SIZE_SMALL_TOOLBAR);
-  /* only show icons if the screen is 240x320 | 320x240 or smaller */
-  if ((width <= 240) || (height <= 240))
-    gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
+  /* only show full Url bar if the screen is 240x320 | 320x240 or smaller 
+  if ((width <= 240) || (height <= 240))*/
+	
   gtk_widget_show (toolbar);
 
   //create html reader
@@ -165,6 +165,8 @@ main (int argc, char *argv[])
 
   if (base != NULL)
 	  fetch_url (base, html);
+
+  g_free((gpointer *)base);
 
   gtk_widget_show (GTK_WIDGET (contentbox));
   gtk_widget_show (GTK_WIDGET (app));
