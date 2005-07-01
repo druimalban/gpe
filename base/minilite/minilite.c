@@ -95,6 +95,7 @@ char IpaqModel = -1;
 #define SYS_STATE_ON  0
 #define SYS_STATE_OFF 4
 static char *SYS_BRIGHTNESS = NULL;
+static char *SYS_MAXBRIGHTNESS = NULL;
 static char *SYS_POWER = NULL;
 
 GtkWidget *slider_window;
@@ -143,6 +144,7 @@ setup_sysclass(void)
 	bl_dev = get_sysclass_bl();
 	
 	SYS_BRIGHTNESS = g_strdup_printf("%s/brightness", bl_dev);
+	SYS_MAXBRIGHTNESS = g_strdup_printf("%s/max_brightness", bl_dev);
 	SYS_POWER = g_strdup_printf("%s/power", bl_dev);
 }
 
@@ -176,11 +178,27 @@ int
 sysclass_set_level(int level)
 {
   FILE *f_light;
+  FILE *f_max;
+  int val, maxlevel;
   
+  if ( level > 255 ) level = 255;
+  if ( level < 1 ) level = 1;
+
+  f_max = fopen(SYS_MAXBRIGHTNESS, "r");
+  if (f_max != NULL)
+  {
+    fscanf(f_max,"%d", &maxlevel);
+    fclose(f_max);
+  }
+  val = ( level == 1 ) ? 1 : ( level * maxlevel ) / 255;
+  if (val > maxlevel)
+  {
+    val = maxlevel;
+  }
   f_light = fopen(SYS_BRIGHTNESS, "w");
   if (f_light != NULL)
   {
-    fprintf(f_light,"%d\n", level * 4); /* XXX Ought to scale to max_brightness. */ 
+    fprintf(f_light,"%d\n", val);
   	fclose(f_light);
   }
   else
@@ -200,14 +218,27 @@ int
 sysclass_get_level(void)
 {
   FILE *f_light;
-  int level = 0;
+  FILE *f_max;
+  double level, maxlevel, factor;
   
+  f_max = fopen(SYS_MAXBRIGHTNESS, "r");
+  if (f_max != NULL)
+  {
+    fscanf(f_max,"%d", &maxlevel);
+    fclose(f_max);
+  }
+  factor = 255/maxlevel;
   f_light = fopen(SYS_BRIGHTNESS, "r");
   if (f_light != NULL)
   {
   	fscanf(f_light,"%d", &level);
   	fclose(f_light);
-	return level / 4; /* XXX Ought to scale to max_brightness. */
+    level = level * factor;
+    if (level > 255)
+    {
+      level = 255;
+    }
+	return (int)level;
   }
   return -1;
 }  

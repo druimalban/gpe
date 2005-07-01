@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-08-02 12:49+0200\n"
+"POT-Creation-Date: 2004-12-22 17:20+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,19 +16,19 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: minilite.c:552
+#: minilite.c:657
 msgid "Determining iPaq model"
 msgstr ""
 
-#: minilite.c:564
+#: minilite.c:667
 msgid "Failed to load icons"
 msgstr ""
 
-#: minilite.c:568
+#: minilite.c:671
 msgid "Frontlight control"
 msgstr ""
 
-#: minilite.c:572
+#: minilite.c:675
 msgid ""
 "This is the frontlight control.  Tap here and drag the slider to change the "
 "brightness."
