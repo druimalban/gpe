@@ -1,6 +1,7 @@
 
 2005-07-01	Florian Boor <florian.boor@kernelconcepts.de>
 
+    * Released version 0.48.
     * minilite.c: Applied patch by Arjan Schrijver to use maximum brightness
                   information from sysfs.
 
