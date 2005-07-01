@@ -1855,13 +1855,14 @@ main (int argc, char *argv[])
 	{
 	  gtk_container_add (GTK_CONTAINER (socket_frame), socket);
 	  gtk_box_pack_start (GTK_BOX (vbox), socket_frame, TRUE, TRUE, 0);
+      gtk_widget_show_all(socket_frame);
 	}
       else
 	{
 	  socket_box = gtk_event_box_new ();
 	  gtk_widget_show (socket_box);
 	  gtk_container_add (GTK_CONTAINER (socket_box), socket);
-	  gtk_box_pack_start (GTK_BOX (vbox), socket_frame, TRUE, TRUE, 0);
+	  gtk_box_pack_start (GTK_BOX (vbox), socket_box, TRUE, FALSE, 0);
 	}
 
       gtk_container_set_border_width (GTK_CONTAINER (vbox), 0);
