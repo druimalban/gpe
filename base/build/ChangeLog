@@ -1,3 +1,8 @@
+2005-07-01  Florian Boor  <florian@kernelconcepts.de>
+
+	* Makefile.translation: Make some tasks depend on ENABLE_NLS to
+                                avoid trouble if NLS tools are not installed.
+
 2005-04-07  Luc Pionchon  <luc@handhelds.org>
 
 	* po-wget-last: python script to wget freshest .po from TP for a given package.

@@ -8,3 +8,4 @@ Architecture: all
 Maintainer: <maintainer>
 Depends: ipkg (>= 0.99.30), <package>, virtual-locale-<language>
 Description: Translation into <language> for <package>.
+Source: none

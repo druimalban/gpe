@@ -31,12 +31,16 @@ all-mo: $(mo-files)
 all-desktop: $(desktop-files)
 
 install-mo: all-mo
-	if [ "x$(LINGUAS)" != "x" ]; then \
-		for i in $(LINGUAS); do mkdir -p $(DESTDIR)$(PREFIX)/share/locale/$$i/LC_MESSAGES; install -m 644 $(DIR_PO)/$$i.mo $(DESTDIR)$(PREFIX)/share/locale/$$i/LC_MESSAGES/$(PACKAGE).mo; done \
+	if [ "$(ENABLE_NLS)" != "no" ]; then \
+		if [ "x$(LINGUAS)" != "x" ]; then \
+			for i in $(LINGUAS); do mkdir -p $(DESTDIR)$(PREFIX)/share/locale/$$i/LC_MESSAGES; install -m 644 $(DIR_PO)/$$i.mo $(DESTDIR)$(PREFIX)/share/locale/$$i/LC_MESSAGES/$(PACKAGE).mo; done \
+		fi;
 	fi;
 
 .po8.mo:;
-	msgfmt -o $@ $<
+	if [ "$(ENABLE_NLS)" != "no" ]; then \
+		msgfmt -o $@ $<; \
+	fi;
 
 .po.po8:;
 	CTYPE=`grep "^\"Content-Type:" $< | sed 's/^.*charset=//;s/\\\\.*//'`; sed "s/\(Content-Type: .*=\)$$CTYPE/\1UTF-8/" < $< | iconv -f $${CTYPE} -t UTF-8 >$@
