@@ -41,9 +41,7 @@
 
 #include "gpe-mini-browser.h"
 
-#define HOME_PAGE "file:///usr/share/doc/gpe/mini-browser-index.html"
-
-#define DEBUG /* uncomment this if you want debug output*/
+//#define DEBUG /* uncomment this if you want debug output*/
 
 /* makes the engine go forward one page */
 void
@@ -151,4 +149,79 @@ show_url_window (GtkWidget * show, GtkWidget * html)
 void destroy_window (GtkButton * button, gpointer * window)
 {
 	gtk_widget_destroy (GTK_WIDGET(window));
+}
+
+void create_status_window(Webi * html, gpointer * status_data)
+{
+	GtkWidget *statusbox, *pbar, *label;
+	struct status_data *data;
+
+#ifdef DEBUG
+	printf("status = loading\n");
+#endif
+	statusbox = gtk_hbox_new(FALSE, 0);
+        pbar = gtk_progress_bar_new();
+	label = gtk_label_new ("loading");
+	
+	data = (struct status_data *)status_data;
+	data->statusbox = statusbox;
+	data->pbar = pbar;
+	data->exists = TRUE;
+
+        gtk_box_pack_end (GTK_BOX(data->main_window), statusbox, FALSE, FALSE, 0);
+	gtk_box_pack_start(GTK_BOX(statusbox), label, TRUE, TRUE, 0);
+        gtk_box_pack_start(GTK_BOX(statusbox),GTK_WIDGET(pbar), FALSE, FALSE, 0);
+
+	gtk_widget_show(statusbox);
+	gtk_widget_show(GTK_WIDGET(pbar));
+	gtk_widget_show(label);
+}
+
+void destroy_status_window (Webi *html, gpointer * status_data)
+{
+	struct status_data *data;
+
+	data = (struct status_data *)status_data;
+
+#ifdef DEBUG
+	printf("loading stopped\n");
+#endif
+	if(data->exists == TRUE)
+	{
+	data->exists = FALSE;
+	/* set pbar to NULL for testing in activate_statusbar (we do not want to access a destroyed widget) */
+	data->pbar = NULL;
+	gtk_widget_destroy(GTK_WIDGET(data->statusbox));
+	}
+}
+
+void activate_statusbar (Webi * html, WebiLoadStatus * status, gpointer status_data)
+{
+	gdouble fraction = 0.0;
+	struct status_data *data;
+
+#ifdef DEBUG
+	printf("progressbar status changed\n");
+#endif
+
+	data = (struct status_data *)status_data;
+	
+	/* copied from the reference implementation of osb-browser, needs to be improved for this app */
+        if ( status->filesWithSize < status->files ) 
+	{
+        	gdouble ratio = (gdouble) status->filesWithSize / (gdouble) status->files;
+	        fraction += status->received >= status->size ? ratio : ratio * (gdouble) status->received / (gdouble) status->size;
+        	fraction += status->ready >= status->files ? (1.0 - ratio) : (1.0 - ratio) * (gdouble) (status->ready - status->filesWithSize) / (gdouble) (status->files  - status->filesWithSize);
+        } 
+	else
+	{
+        	fraction = (gdouble) status->received / (gdouble) status->size;
+        }
+        if ( fraction > 1.0 )
+	{
+        	fraction = 1.0;
+        }
+	/* see if the widget still exists */
+	if(data->pbar != NULL)
+	        gtk_progress_bar_set_fraction ((GtkProgressBar *)data->pbar, fraction); 
 }

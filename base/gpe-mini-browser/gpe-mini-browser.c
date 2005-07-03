@@ -53,6 +53,7 @@ main (int argc, char *argv[])
   const gchar *base;
   gchar *p;
   gint width = 240, height = 320;
+  struct status_data *status;
 
   WebiSettings s = { 0, };
   WebiSettings *ks = &s;
@@ -89,6 +90,11 @@ main (int argc, char *argv[])
   //create boxes
   contentbox = gtk_vbox_new (FALSE, 0);
 
+  //fill in status to be sure everything is filled in when used
+  status = malloc(sizeof(struct status_data));
+  status->main_window = contentbox;
+  status->exists = FALSE;
+
   //create toolbar and add to topbox
   toolbar = gtk_toolbar_new ();
   gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar),
@@ -114,9 +120,16 @@ main (int argc, char *argv[])
   ks->autoload_images = 1;
   ks->javascript_enabled =1;
   webi_set_settings (WEBI (html), ks);
- 
-  /* will only decently work when fixed in gtk-webcore */
-  g_signal_connect (WEBI(html), "set-cookie", G_CALLBACK(handle_cookie), NULL);
+
+  /* Connect all the signals to the rendering object */	 
+  /* cookies will only decently work when fixed in gtk-webcore */
+  g_signal_connect (WEBI(html), "set_cookie", G_CALLBACK(handle_cookie), NULL);
+
+  g_signal_connect (WEBI(html), "load_start", G_CALLBACK(create_status_window), status);
+
+  g_signal_connect (WEBI(html), "load_stop", G_CALLBACK(destroy_status_window), status);
+
+  g_signal_connect (WEBI(html), "status", G_CALLBACK(activate_statusbar), status);
 
   /*add home, search, back, forward, refresh, stop, url and exit button */
   gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_GO_BACK,
@@ -140,9 +153,15 @@ main (int argc, char *argv[])
 
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));	/* space after item */
 
-  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_NETWORK,
-			    ("Type in url"), ("URL"),
-			    GTK_SIGNAL_FUNC (show_url_window), html, -1);
+  /* only show full Url bar if the screen isi bigger than 240x320 | 320x240 
+  still needs to be implemented
+  if ((width > 320) || (height > 320))
+	{
+	}
+  else*/
+  iconw = gtk_image_new_from_stock (GTK_STOCK_NETWORK, GTK_ICON_SIZE_SMALL_TOOLBAR);
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), ("URL"), ("Type in url"), ("URL"),
+				 iconw, GTK_SIGNAL_FUNC (show_url_window), html);
 
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
 
@@ -150,8 +169,12 @@ main (int argc, char *argv[])
 			    ("Exit gpe-mini-browser"), ("Exit"),
 			    GTK_SIGNAL_FUNC (gtk_main_quit), NULL, -1);
 
-  /* only show full Url bar if the screen is 240x320 | 320x240 or smaller 
-  if ((width <= 240) || (height <= 240))*/
+  gtk_toolbar_set_icon_size (GTK_TOOLBAR (toolbar),
+                            GTK_ICON_SIZE_SMALL_TOOLBAR);
+  /* only show icons if the screen is 240x320 | 320x240 or smaller */
+  if ((width <= 240) || (height <= 240))
+    gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
+
 	
   gtk_widget_show (toolbar);
 

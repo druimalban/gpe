@@ -37,8 +37,6 @@
 
 #include "gpe-mini-browser.h"
 
-#define HOME_PAGE "file:///usr/share/doc/gpe/mini-browser-index.html"
-
 //#define DEBUG /* uncomment this if you want debug output*/
 
 /* read a file or url into gtk-webcore */

@@ -4,14 +4,15 @@ TODO:
 * history management
 * config file to keep zoom/font settings and bookmarks
 * support multiple windows
-* pop-up progress window at the bottom of the screen
 * "normal" url window for big screens
+* improve progressbar display
 
 DONE:
 
 * add javascript support
+* pop-up progress window at the bottom of the screen
 
-POSTPONED:
+POSTPONED / PARTIALLY DONE:
 
 * switch rendering method according to screen size (requested by Florian)
 -> provisions are in the code, however not yet implemented in gtk-webcore
