@@ -7,9 +7,10 @@ INCLUDES = $(GPE_BLUETOOTH_CFLAGS) -I$(top_srcdir)/gpe -I$(top_srcdir) \
 
 bin_PROGRAMS = gpe-bluetooth bnep-helper rfcomm-helper
 
-gpe_bluetooth_LDADD = @GPE_BLUETOOTH_LIBS@ -lopenobex -lbluetooth
-gpe_bluetooth_SOURCES = main.c dun.c sdp.c pan.c lap.c rfcomm.c pin-ui.c dbus.c pin-dbus.c headset.c obexserver.c obex-vcard.c obex-vcal.c obex-unknown.c obexclient.c obex-glib.c obexclient-dbus.c)
+gpe_bluetooth_LDADD = @GPE_BLUETOOTH_LIBS@ -lopenobex -lbluetooth -lsqlite
+gpe_bluetooth_SOURCES = main.c dun.c sdp.c pan.c lap.c rfcomm.c pin-ui.c dbus.c pin-dbus.c headset.c obexserver.c obex-vcard.c obex-vcal.c obex-unknown.c obexclient.c obex-glib.c obexclient-dbus.c
 bnep_helper_SOURCES = bnep-helper.c
+bnep_helper_LDADD = -lbluetooth
 rfcomm_helper_SOURCES = rfcomm-helper.c
 
 desktopdir = $(datadir)/applications
