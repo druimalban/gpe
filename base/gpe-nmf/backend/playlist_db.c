@@ -9,6 +9,7 @@
 
 #include <glib.h>
 #include <assert.h>
+#include <string.h>
 
 #include "playlist_db.h"
 
