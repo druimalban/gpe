@@ -173,6 +173,7 @@ select_file_done (GtkWidget *w, GtkWidget *fs)
   if (fe->current_path)
       g_free(fe->current_path);
   fe->current_path = isdir(s) ? g_strdup(s) : g_path_get_dirname (s);
+      strcat(fe->current_path,"/");
   
   fe->fs_open = FALSE;
 
