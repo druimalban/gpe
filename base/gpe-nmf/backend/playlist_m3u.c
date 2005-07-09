@@ -10,6 +10,7 @@
 #include <glib.h>
 #include <stdio.h>
 #include <ctype.h>
+#include <string.h>
 
 #include "playlist_db.h"
 #include "player.h"
