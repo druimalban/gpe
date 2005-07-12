@@ -265,6 +265,5 @@ update_text_entry (Webi * html, GtkWidget * entrybox)
 
   location = webi_get_location (html);
   gtk_entry_set_text (GTK_ENTRY (entrybox), location);
-  g_free ((gpointer *) location);
 
 }
