@@ -1,5 +1,5 @@
 /*
- * gpe-mini-browser v0.1
+ * gpe-mini-browser v0.13
  *
  * Basic web browser based on gtk-webcore 
  *
@@ -24,6 +24,7 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <stddef.h>
+#include <getopt.h>
 
 #include <gtk/gtk.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
@@ -34,6 +35,8 @@
 #include <glib.h>
 #include <gpe/init.h>
 #include <gpe/errorbox.h>
+#include <gpe/pixmaps.h>
+#include <gpe/picturebutton.h>
 
 #include "gpe-mini-browser.h"
 
@@ -43,36 +46,43 @@
 int
 main (int argc, char *argv[])
 {
-  GtkWidget *html;
-  GtkWidget *app;
-  GtkWidget *contentbox;
-  GtkWidget *toolbar;
-  GtkWidget *iconw;
+  GtkWidget *html, *app, *contentbox;	/* html engine, application window, content box of application window */
+  GtkWidget *toolbar, *urlbox, *iconw;	/* toolbar, url entry box (big screen), icon for url pop-up window (small screens) */
   GtkWidget *back_button, *forward_button, *home_button, *search_button,
     *exit_button;
   const gchar *base;
   gchar *p;
   gint width = 240, height = 320;
   struct status_data *status;
+  int opt;
 
   WebiSettings s = { 0, };
   WebiSettings *ks = &s;
 
   gpe_application_init (&argc, &argv);
 
-  if (argc > 2)
+  while ((opt = getopt (argc, argv, "vh")) != -1)
     {
+      switch (opt)
+	{
+	case 'v':
+	  printf
+	    ("GPE-mini-browser version 0.12. (C)2005, Philippe De Swert\n");
+	  exit (0);
 
-      printf
-	("GPE-mini-browser, basic web browser application. (c)2005, Philippe De Swert\n");
-      printf ("Usage: gpe-mini-browser <URL>\n");
-      exit (0);
+	default:
+	  printf
+	    ("GPE-mini-browser, basic web browser application. (c)2005, Philippe De Swert\n");
+	  printf ("Usage: gpe-mini-browser <URL>\n");
+	  printf ("Use -v for version info.\n");
+	  exit (0);
+	}
     }
 
-  if( argv[1] != NULL)
-	  base = parse_url (argv[1]);
+  if (argv[1] != NULL)
+    base = parse_url (argv[1]);
   else
-	  base = NULL;	
+    base = NULL;
 #ifdef DEBUG
   fprintf (stderr, "url = %s\n", base);
 #endif
@@ -91,7 +101,7 @@ main (int argc, char *argv[])
   contentbox = gtk_vbox_new (FALSE, 0);
 
   //fill in status to be sure everything is filled in when used
-  status = malloc(sizeof(struct status_data));
+  status = malloc (sizeof (struct status_data));
   status->main_window = contentbox;
   status->exists = FALSE;
 
@@ -107,29 +117,34 @@ main (int argc, char *argv[])
   webi_set_emit_internal_status (WEBI (html), TRUE);
 
   /* set rendering mode depending on screen size (when working in gtk-webcore) 
-  if(width <=320)
-	{
-	 webi_set_device_type (WEBI(html), WEBI_DEVICE_TYPE_HANDHELD);
-	}
-  else
-	{
-	 webi_set_device_type (WEBI(html), WEBI_DEVICE_TYPE_SCREEN);
-	}*/
+     if(width <=320)
+     {
+     webi_set_device_type (WEBI(html), WEBI_DEVICE_TYPE_HANDHELD);
+     }
+     else
+     {
+     webi_set_device_type (WEBI(html), WEBI_DEVICE_TYPE_SCREEN);
+     } */
   ks->default_font_size = 11;
   ks->default_fixed_font_size = 11;
   ks->autoload_images = 1;
-  ks->javascript_enabled =1;
+  ks->javascript_enabled = 1;
   webi_set_settings (WEBI (html), ks);
 
-  /* Connect all the signals to the rendering object */	 
+  /* Connect all the signals to the rendering object */
   /* cookies will only decently work when fixed in gtk-webcore */
-  g_signal_connect (WEBI(html), "set_cookie", G_CALLBACK(handle_cookie), NULL);
+  g_signal_connect (WEBI (html), "set_cookie", G_CALLBACK (handle_cookie),
+		    NULL);
 
-  g_signal_connect (WEBI(html), "load_start", G_CALLBACK(create_status_window), status);
+  g_signal_connect (WEBI (html), "load_start",
+		    G_CALLBACK (create_status_window), status);
 
-  g_signal_connect (WEBI(html), "load_stop", G_CALLBACK(destroy_status_window), status);
+  g_signal_connect (WEBI (html), "load_stop",
+		    G_CALLBACK (destroy_status_window), status);
 
-  g_signal_connect (WEBI(html), "status", G_CALLBACK(activate_statusbar), status);
+  g_signal_connect (WEBI (html), "status", G_CALLBACK (activate_statusbar),
+		    status);
+  g_signal_connect (WEBI (html), "title", G_CALLBACK (set_title), app);
 
   /*add home, search, back, forward, refresh, stop, url and exit button */
   gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_GO_BACK,
@@ -153,43 +168,81 @@ main (int argc, char *argv[])
 
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));	/* space after item */
 
-  /* only show full Url bar if the screen isi bigger than 240x320 | 320x240 
-  still needs to be implemented
+  /* only show full Url bar if the screen is bigger than 240x320 | 320x240 */
   if ((width > 320) || (height > 320))
-	{
-	}
-  else*/
-  iconw = gtk_image_new_from_stock (GTK_STOCK_NETWORK, GTK_ICON_SIZE_SMALL_TOOLBAR);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), ("URL"), ("Type in url"), ("URL"),
-				 iconw, GTK_SIGNAL_FUNC (show_url_window), html);
+    {
+      /* define locally to reduce memory consumption if they are not needed */
+      GtkWidget *urlentry, *urllabel, *okbutton;
+      struct url_data *data;
 
-  gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
+      /* create all necessary widgets */
+      urlbox = gtk_hbox_new (FALSE, 0);
+      urllabel = gtk_label_new (("Url:"));
+      gtk_misc_set_alignment (GTK_MISC (urllabel), 0.0, 0.5);
+      urlentry = gtk_entry_new ();
+      okbutton =
+	gpe_button_new_from_stock (GTK_STOCK_OK, GPE_BUTTON_TYPE_BOTH);
+
+      /* pack everything in the hbox */
+      gtk_box_pack_start (GTK_BOX (urlbox), urllabel, FALSE, FALSE, 0);
+      gtk_box_pack_start (GTK_BOX (urlbox), urlentry, TRUE, TRUE, 5);
+      gtk_box_pack_start (GTK_BOX (urlbox), okbutton, FALSE, FALSE, 10);
+
+      data = malloc (sizeof (struct url_data));
+      data->html = html;
+      data->entry = urlentry;
+      data->window = NULL;	/* set to NULL to be easy to recognize to avoid freeing in load_text_entry */
+
+      /* add button callbacks */
+      g_signal_connect (GTK_OBJECT (okbutton), "clicked",
+			G_CALLBACK (load_text_entry), (gpointer *) data);
+      g_signal_connect (GTK_OBJECT (html), "location",
+			G_CALLBACK (update_text_entry),
+			(gpointer *) urlentry);
+
+      /*final settings */
+      GTK_WIDGET_SET_FLAGS (okbutton, GTK_CAN_DEFAULT);
+      gtk_button_set_relief (GTK_BUTTON (okbutton), GTK_RELIEF_NONE);
+      gtk_widget_grab_default (okbutton);
+      gtk_widget_grab_focus (urlentry);
+
+    }
+  else
+    {
+      iconw = gtk_image_new_from_stock (GTK_STOCK_NETWORK,
+					GTK_ICON_SIZE_SMALL_TOOLBAR);
+      gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), ("URL"),
+			       ("Type in url"), ("URL"), iconw,
+			       GTK_SIGNAL_FUNC (show_url_window), html);
+      gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
+    }
 
   gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_QUIT,
 			    ("Exit gpe-mini-browser"), ("Exit"),
 			    GTK_SIGNAL_FUNC (gtk_main_quit), NULL, -1);
 
   gtk_toolbar_set_icon_size (GTK_TOOLBAR (toolbar),
-                            GTK_ICON_SIZE_SMALL_TOOLBAR);
+			     GTK_ICON_SIZE_SMALL_TOOLBAR);
   /* only show icons if the screen is 240x320 | 320x240 or smaller */
   if ((width <= 240) || (height <= 240))
     gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
 
-	
-  gtk_widget_show (toolbar);
-
-  //create html reader
-  gtk_widget_show_all (html);
-
   //make everything viewable
+  gtk_widget_show (toolbar);
+  gtk_widget_show_all (html);
   gtk_box_pack_start (GTK_BOX (contentbox), toolbar, FALSE, FALSE, 0);
+  if ((width > 320) || (height > 320))
+    {
+      gtk_box_pack_start (GTK_BOX (contentbox), urlbox, FALSE, FALSE, 0);
+      gtk_widget_show_all (urlbox);
+    }
   gtk_box_pack_start (GTK_BOX (contentbox), html, TRUE, TRUE, 0);
   gtk_container_add (GTK_CONTAINER (app), contentbox);
 
   if (base != NULL)
-	  fetch_url (base, html);
+    fetch_url (base, html);
 
-  g_free((gpointer *)base);
+  g_free ((gpointer *) base);
 
   gtk_widget_show (GTK_WIDGET (contentbox));
   gtk_widget_show (GTK_WIDGET (app));

@@ -1,5 +1,5 @@
 /*
- * gpe-mini-browser v0.1
+ * gpe-mini-browser v0.13
  *
  * Basic web browser based on gtk-webcore 
  * 
@@ -43,31 +43,31 @@
 void
 fetch_url (const gchar * url, GtkWidget * html)
 {
-    gboolean file=FALSE;	
-    gchar *cut;
+  gboolean file = FALSE;
+  gchar *cut;
 
-    file = g_str_has_prefix(url, "file");
-    if(file)
+  file = g_str_has_prefix (url, "file");
+  if (file)
     {
-     cut = strchr (url, ':');
-     if (cut)
+      cut = strchr (url, ':');
+      if (cut)
 	{
-	 cut = cut+2;
+	  cut = cut + 3;
 	}
-     if(access(cut, F_OK))
-        {
-#ifdef DEBUG
-         fprintf (stderr, "Could not open %s\n", url);
-#endif
-         gpe_error_box("Could not open file");
-        }	
-     else
+      if (access (cut, F_OK))
 	{
-	file = FALSE;
-	}	
+#ifdef DEBUG
+	  fprintf (stderr, "Could not open %s\n", url);
+#endif
+	  gpe_error_box ("Could not open file");
+	}
+      else
+	{
+	  file = FALSE;
+	}
     }
 
-    if(!file)	
+  if (!file)
     {
       webi_stop_load (WEBI (html));
       webi_load_url (WEBI (html), url);
@@ -93,35 +93,39 @@ parse_url (const gchar * url)
   return (p);
 }
 
-void load_text_entry (GtkWidget * Button, gpointer * text)
+void
+load_text_entry (GtkWidget * Button, gpointer * text)
 {
-	struct url_data *data;
-	const gchar *url;
-	
-        data =  (struct url_data *)text;
+  struct url_data *data;
+  const gchar *url;
 
-	url = gtk_editable_get_chars (GTK_EDITABLE (data->entry), 0, -1);
+  data = (struct url_data *) text;
+
+  url = gtk_editable_get_chars (GTK_EDITABLE (data->entry), 0, -1);
 #ifdef DEBUG
-	printf("url = %s\n", url);
+  printf ("url = %s\n", url);
 #endif
-	if(url != NULL)	
-	{
-		url = parse_url(url);
+  if (url != NULL)
+    {
+      url = parse_url (url);
 #ifdef DEBUG
-		printf("fetching %s !\n", url);
+      printf ("fetching %s !\n", url);
 #endif
-		fetch_url(url, data->html);
-	}
-	g_free(data);
+      fetch_url (url, data->html);
+    }
+  /* test if data->window !=NULL to find out if we can free data (if we have a static 
+     url bar on top for big screens we do not want to free data as it is not automatically recreated */
+  if (data->window != NULL)
+    g_free (data);
 }
 
 
-void handle_cookie (Webi * html, WebiCookie * cookie, gpointer * data)
+void
+handle_cookie (Webi * html, WebiCookie * cookie, gpointer * data)
 {
 #ifdef DEBUG
-	printf ("Site %s wants to set a cookie.\n", cookie->domain);
+  printf ("Site %s wants to set a cookie.\n", cookie->domain);
 #endif
-	/* accept all cookies by default for the moment */
-	cookie->out_accept_cookie = TRUE;
+  /* accept all cookies by default for the moment */
+  cookie->out_accept_cookie = TRUE;
 }
-

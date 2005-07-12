@@ -4,13 +4,15 @@ TODO:
 * history management
 * config file to keep zoom/font settings and bookmarks
 * support multiple windows
-* "normal" url window for big screens
 * improve progressbar display
+* add hildon interface support (Nokia 770)
 
 DONE:
 
 * add javascript support
 * pop-up progress window at the bottom of the screen
+* "normal" url window for big screens
+* window title set to identify website
 
 POSTPONED / PARTIALLY DONE:
 

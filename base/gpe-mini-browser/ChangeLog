@@ -1,7 +1,13 @@
+v0.13 - 07/2005 - Philippe De Swert
+
+* Added a normal url bar for bigger screens
+* Location change is reflected in url bar (big screens only)
+* Added title change
+
 v0.12 - 07/2005 - Philippe De Swert
 
 * Added pop-up progress bar
-* cleanud up the source a little (HOME_PAGE define relocated courtesy of Jim Huang)
+* cleaned up the source a little (HOME_PAGE define relocated courtesy of Jim Huang)
 * fixed the displaying of a wrong label (URL instead of Network)
 
 v0.11 - 06/2005 - Philippe De Swert
