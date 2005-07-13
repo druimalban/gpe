@@ -1,5 +1,5 @@
 /*
- * gpe-mini-browser v0.13
+ * gpe-mini-browser v0.1
  *
  * Basic web browser based on gtk-webcore 
  *
@@ -46,8 +46,8 @@ extern void destroy_window (GtkButton * button, gpointer * window);
 extern void create_status_window (Webi * html, gpointer * status_data);
 extern void destroy_status_window (Webi * html, gpointer * status_data);
 extern void activate_statusbar (Webi * html, WebiLoadStatus * status, gpointer status_data);
-
-
+extern void set_title (Webi *html, GtkWidget *app_window);
+extern void update_text_entry (Webi *html, GtkWidget *entrybox);
 
 /* url loading and handling */
 extern void fetch_url (const gchar * url, GtkWidget * html);
