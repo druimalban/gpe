@@ -1,3 +1,11 @@
+v0.14 - 10/07/2005 - Philippe De Swert
+
+* Cleanud op big screen extra's
+* Added zoom in/out button for big screens
+* Fixed some bugs related to stop, reload, back and forward not stopping loading first
+* Moved some functions to a better location + added more documentation
+* Seperated settings out to better manipulate them
+
 v0.13 - 07/2005 - Philippe De Swert
 
 * Added a normal url bar for bigger screens

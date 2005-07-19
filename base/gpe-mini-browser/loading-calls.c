@@ -1,5 +1,5 @@
 /*
- * gpe-mini-browser v0.13
+ * gpe-mini-browser v0.14
  *
  * Basic web browser based on gtk-webcore 
  * 
@@ -129,3 +129,55 @@ handle_cookie (Webi * html, WebiCookie * cookie, gpointer * data)
   /* accept all cookies by default for the moment */
   cookie->out_accept_cookie = TRUE;
 }
+
+/* makes the engine go forward one page */
+void
+forward_func (GtkWidget * forward, GtkWidget * html)
+{
+  webi_stop_load (WEBI (html)); /*stop loading the web-page to avoid that the interface goes crazy */
+  if (webi_can_go_forward (WEBI (html)))
+    webi_go_forward (WEBI (html));
+  else
+    gpe_error_box ("no more pages forward!");
+  
+}
+  
+/* makes the engine go back one page */
+void
+back_func (GtkWidget * back, GtkWidget * html)
+{ 
+  webi_stop_load (WEBI (html));
+  if (webi_can_go_back (WEBI (html)))
+    webi_go_back (WEBI (html));
+  else
+    gpe_error_box ("No more pages back!");
+
+
+} 
+  
+/* makes the engine load the home page, if none exists default to gpe.handhelds.org :-) */
+void
+home_func (GtkWidget * home, GtkWidget * html)
+{
+  webi_stop_load (WEBI (html));
+  if (access (HOME_PAGE, F_OK))
+    fetch_url ("http://gpe.handhelds.org", GTK_WIDGET (html));
+  else
+    fetch_url (HOME_PAGE, GTK_WIDGET (html));
+}
+  
+/* tell the engine to reload the current page */
+void
+reload_func (GtkWidget * reload, GtkWidget * html)
+{
+  webi_stop_load (WEBI (html));
+  webi_refresh (WEBI (html));
+}
+
+/* tell the engine to stop loading */
+void
+stop_func (GtkWidget * stop, GtkWidget * html)
+{
+  webi_stop_load (WEBI (html));
+}
+

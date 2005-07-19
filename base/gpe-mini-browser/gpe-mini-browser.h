@@ -1,5 +1,5 @@
 /*
- * gpe-mini-browser v0.1
+ * gpe-mini-browser v0.14
  *
  * Basic web browser based on gtk-webcore 
  *
@@ -18,16 +18,22 @@
  * GNU General Public License for more details.
  */
 
+/*****************************************************************
+			GENERAL INCLUDES
+*****************************************************************/
+
 /* General Defines */
 #define HOME_PAGE "file:///usr/share/doc/gpe/mini-browser-index.html"
 
-/* General include file */
+
+/* contains the necessary data for passing urls between the different functions */
 struct url_data {
 GtkWidget *window;
 GtkWidget *html;
 GtkWidget *entry;
 };
 
+/* contains all the necessary data to make the progressbar work */
 struct status_data {
 GtkWidget *main_window;
 GtkWidget *statusbox;
@@ -35,22 +41,66 @@ GtkWidget *pbar;
 gboolean exists;
 };
 
-/* interface call primitives */
-extern void forward_func (GtkWidget * forward, GtkWidget * html);
-extern void back_func (GtkWidget * back, GtkWidget * html);
-extern void home_func (GtkWidget * home, GtkWidget * html);
-extern void reload_func (GtkWidget * reload, GtkWidget * html);
-extern void stop_func (GtkWidget * stop, GtkWidget * html);
-extern void show_url_window (GtkWidget * show, GtkWidget * html);
-extern void destroy_window (GtkButton * button, gpointer * window);
-extern void create_status_window (Webi * html, gpointer * status_data);
-extern void destroy_status_window (Webi * html, gpointer * status_data);
-extern void activate_statusbar (Webi * html, WebiLoadStatus * status, gpointer status_data);
-extern void set_title (Webi *html, GtkWidget *app_window);
-extern void update_text_entry (Webi *html, GtkWidget *entrybox);
+/* contains all the necessary data for the zoom functions */
+struct zoom_data {
+Webi *html;
+WebiSettings *settings;
+};
 
-/* url loading and handling */
-extern void fetch_url (const gchar * url, GtkWidget * html);
-extern const gchar *parse_url (const gchar * url);
-extern void load_text_entry (GtkWidget * Button, gpointer * text);
-extern void handle_cookie (Webi * html, WebiCookie * cookie, gpointer * data);
+/********************************************************
+	      interface call primitives 
+	      see: interface-calls.c
+*********************************************************/
+
+/* show pop_up window for url input */
+void show_url_window (GtkWidget * show, GtkWidget * html);
+/* destroy the pop_up window */
+void destroy_window (GtkButton * button, gpointer * window);
+/* pop up the status window with status bar at the bottom of the screen */
+void create_status_window (Webi * html, gpointer * status_data);
+/* destroy the status window, making more screen estate available for viewing */
+void destroy_status_window (Webi * html, gpointer * status_data);
+/* make progressbar actually show progress */
+void activate_statusbar (Webi * html, WebiLoadStatus * status, gpointer status_data);
+/* set the webpage title in as the window title */
+void set_title (Webi *html, GtkWidget *app_window);
+/* show the current and correct url in the urlbox (big screen only) */
+void update_text_entry (Webi *html, GtkWidget *entrybox);
+/* show urlbar and extra buttons for big screens */
+GtkWidget * show_big_screen_interface ( Webi *html, GtkWidget *toolbar, WebiSettings *set);
+
+/********************************************************
+	       url loading and handling
+	       see: loading-calls.c 
+*********************************************************/
+
+/* fetch the parsed url and send it to the renderer */
+void fetch_url (const gchar * url, GtkWidget * html);
+/* parse the url. automatically add the http://, if it is a file check if it exists */
+const gchar *parse_url (const gchar * url);
+/* get the url from the entry box (url bar or pop-up window */
+void load_text_entry (GtkWidget * Button, gpointer * text);
+/* accept cookies further improvements depend on gtk-webcore cookie handling */
+void handle_cookie (Webi * html, WebiCookie * cookie, gpointer * data);
+/* go forward when forward button is pressed */
+void forward_func (GtkWidget * forward, GtkWidget * html);
+/* go backward if the back button is pressed */
+void back_func (GtkWidget * back, GtkWidget * html);
+/* go to the home page */
+void home_func (GtkWidget * home, GtkWidget * html);
+/* reload the current page */
+void reload_func (GtkWidget * reload, GtkWidget * html);
+/* stop loading the current page */
+void stop_func (GtkWidget * stop, GtkWidget * html);
+
+/******************************************************
+	            misc handling 
+		    see: misc-calls.c
+*******************************************************/
+
+/* (re)set the settings to sane defaults for small screens */
+void set_default_settings(Webi *html, WebiSettings *ks);
+/* zoom in (basically making text size bigger)*/
+void zoom_in(GtkWidget * zoom_in, gpointer *data);
+/* zoom out (basically decreasing text size)*/
+void zoom_out(GtkWidget * zoom_out, gpointer *data);

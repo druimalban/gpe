@@ -1,5 +1,5 @@
 /*
- * gpe-mini-browser v0.13
+ * gpe-mini-browser v0.14
  *
  * Basic web browser based on gtk-webcore 
  * 
@@ -42,54 +42,6 @@
 #include "gpe-mini-browser.h"
 
 //#define DEBUG /* uncomment this if you want debug output*/
-
-/* makes the engine go forward one page */
-void
-forward_func (GtkWidget * forward, GtkWidget * html)
-{
-
-  if (webi_can_go_forward (WEBI (html)))
-    webi_go_forward (WEBI (html));
-  else
-    gpe_error_box ("no more pages forward!");
-
-}
-
-/* makes the engine go back one page */
-void
-back_func (GtkWidget * back, GtkWidget * html)
-{
-  if (webi_can_go_back (WEBI (html)))
-    webi_go_back (WEBI (html));
-  else
-    gpe_error_box ("No more pages back!");
-
-
-}
-
-/* makes the engine load the home page, if none exists default to gpe.handhelds.org :-) */
-void
-home_func (GtkWidget * home, GtkWidget * html)
-{
-  if (access (HOME_PAGE, F_OK))
-    fetch_url ("http://gpe.handhelds.org", GTK_WIDGET (html));
-  else
-    fetch_url (HOME_PAGE, GTK_WIDGET (html));
-}
-
-/* tell the engine to reload the current page */
-void
-reload_func (GtkWidget * reload, GtkWidget * html)
-{
-  webi_refresh (WEBI (html));
-}
-
-/* tell the engine to stop loading */
-void
-stop_func (GtkWidget * stop, GtkWidget * html)
-{
-  webi_stop_load (WEBI (html));
-}
 
 /* pop up a window to enter an URL */
 void
@@ -266,4 +218,60 @@ update_text_entry (Webi * html, GtkWidget * entrybox)
   location = webi_get_location (html);
   gtk_entry_set_text (GTK_ENTRY (entrybox), location);
 
+}
+
+GtkWidget * show_big_screen_interface ( Webi *html, GtkWidget *toolbar, WebiSettings *set)
+{
+      GtkWidget *urlentry, *urllabel, *okbutton, *urlbox;
+      struct url_data *data;
+
+      /* create all necessary widgets */
+      urlbox = gtk_hbox_new (FALSE, 0);
+      urllabel = gtk_label_new ((" Url:"));
+      gtk_misc_set_alignment (GTK_MISC (urllabel), 0.0, 0.5);
+      urlentry = gtk_entry_new ();
+      okbutton =
+        gpe_button_new_from_stock (GTK_STOCK_OK, GPE_BUTTON_TYPE_BOTH);
+  
+      /* pack everything in the hbox */
+      gtk_box_pack_start (GTK_BOX (urlbox), urllabel, FALSE, FALSE, 0);
+      gtk_box_pack_start (GTK_BOX (urlbox), urlentry, TRUE, TRUE, 5);
+      gtk_box_pack_start (GTK_BOX (urlbox), okbutton, FALSE, FALSE, 10);
+  
+      data = malloc (sizeof (struct url_data));
+      data->html = (GtkWidget *)html;
+      data->entry = urlentry;
+      data->window = NULL;      /* set to NULL to be easy to recognize to avoid freeing in load_text_entry  as this window is not destroyed unlike the pop-up */
+
+      /* add button callbacks */ 
+      g_signal_connect (GTK_OBJECT (okbutton), "clicked",
+                        G_CALLBACK (load_text_entry), (gpointer *) data);
+      g_signal_connect (GTK_OBJECT (html), "location",
+                        G_CALLBACK (update_text_entry),
+                        (gpointer *) urlentry);
+
+      /* fill in the data needed for the zoom functionality */
+      struct zoom_data *zoom;
+
+      zoom = malloc(sizeof(struct zoom_data));
+	
+      zoom->html = html;
+      zoom->settings = set;
+
+      /* add extra zoom in/out buttons + spacing to the toolbar +  callbacks */ 
+      gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_ZOOM_IN,
+			        ("Zoom in"), ("Zoom in"),
+				GTK_SIGNAL_FUNC (zoom_in), zoom, -1); 
+      gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_ZOOM_OUT,
+				("Zoom out"), ("Zoom out"),
+				GTK_SIGNAL_FUNC (zoom_out), zoom, -1);
+      gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
+
+      /*final settings */
+      GTK_WIDGET_SET_FLAGS (okbutton, GTK_CAN_DEFAULT);
+      gtk_button_set_relief (GTK_BUTTON (okbutton), GTK_RELIEF_NONE);
+      gtk_widget_grab_default (okbutton);
+      gtk_widget_grab_focus (urlentry);
+
+      return(urlbox);
 }

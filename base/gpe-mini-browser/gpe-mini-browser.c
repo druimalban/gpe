@@ -1,5 +1,5 @@
 /*
- * gpe-mini-browser v0.13
+ * gpe-mini-browser v0.14
  *
  * Basic web browser based on gtk-webcore 
  *
@@ -57,7 +57,6 @@ main (int argc, char *argv[])
   int opt;
 
   WebiSettings s = { 0, };
-  WebiSettings *ks = &s;
 
   gpe_application_init (&argc, &argv);
 
@@ -116,6 +115,8 @@ main (int argc, char *argv[])
   html = webi_new ();
   webi_set_emit_internal_status (WEBI (html), TRUE);
 
+  set_default_settings(WEBI (html), &s );
+
   /* set rendering mode depending on screen size (when working in gtk-webcore) 
      if(width <=320)
      {
@@ -125,11 +126,6 @@ main (int argc, char *argv[])
      {
      webi_set_device_type (WEBI(html), WEBI_DEVICE_TYPE_SCREEN);
      } */
-  ks->default_font_size = 11;
-  ks->default_fixed_font_size = 11;
-  ks->autoload_images = 1;
-  ks->javascript_enabled = 1;
-  webi_set_settings (WEBI (html), ks);
 
   /* Connect all the signals to the rendering object */
   /* cookies will only decently work when fixed in gtk-webcore */
@@ -171,41 +167,7 @@ main (int argc, char *argv[])
   /* only show full Url bar if the screen is bigger than 240x320 | 320x240 */
   if ((width > 320) || (height > 320))
     {
-      /* define locally to reduce memory consumption if they are not needed */
-      GtkWidget *urlentry, *urllabel, *okbutton;
-      struct url_data *data;
-
-      /* create all necessary widgets */
-      urlbox = gtk_hbox_new (FALSE, 0);
-      urllabel = gtk_label_new (("Url:"));
-      gtk_misc_set_alignment (GTK_MISC (urllabel), 0.0, 0.5);
-      urlentry = gtk_entry_new ();
-      okbutton =
-	gpe_button_new_from_stock (GTK_STOCK_OK, GPE_BUTTON_TYPE_BOTH);
-
-      /* pack everything in the hbox */
-      gtk_box_pack_start (GTK_BOX (urlbox), urllabel, FALSE, FALSE, 0);
-      gtk_box_pack_start (GTK_BOX (urlbox), urlentry, TRUE, TRUE, 5);
-      gtk_box_pack_start (GTK_BOX (urlbox), okbutton, FALSE, FALSE, 10);
-
-      data = malloc (sizeof (struct url_data));
-      data->html = html;
-      data->entry = urlentry;
-      data->window = NULL;	/* set to NULL to be easy to recognize to avoid freeing in load_text_entry */
-
-      /* add button callbacks */
-      g_signal_connect (GTK_OBJECT (okbutton), "clicked",
-			G_CALLBACK (load_text_entry), (gpointer *) data);
-      g_signal_connect (GTK_OBJECT (html), "location",
-			G_CALLBACK (update_text_entry),
-			(gpointer *) urlentry);
-
-      /*final settings */
-      GTK_WIDGET_SET_FLAGS (okbutton, GTK_CAN_DEFAULT);
-      gtk_button_set_relief (GTK_BUTTON (okbutton), GTK_RELIEF_NONE);
-      gtk_widget_grab_default (okbutton);
-      gtk_widget_grab_focus (urlentry);
-
+	urlbox = show_big_screen_interface(WEBI (html), toolbar, &s);
     }
   else
     {
