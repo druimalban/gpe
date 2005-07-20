@@ -1,6 +1,6 @@
  /*
  * Copyright (C) 2001, 2002 Damien Tanner <dctanner@magenet.com>
- *               2004 Florian Boor <florian.boor@kernelconcepts.de>
+ *               2004, 2005 Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -115,8 +115,6 @@ static GtkWidget *set_dirbrowser_menu_item;
 static GtkWidget *set_myfiles_menu_item;
 static GtkWidget *goto_menu_item;
 
-static GtkWidget *btnListView;
-static GtkWidget *btnIconView;
 static GtkWidget *btnGoUp = NULL;
 
 GdkPixbuf *default_pixbuf;
@@ -188,6 +186,8 @@ void on_help_clicked (GtkWidget * w);
 void on_dirbrowser_setting_changed(GtkCheckMenuItem *menuitem, gpointer user_data);
 void on_myfiles_setting_changed(GtkCheckMenuItem *menuitem, gpointer user_data);
 void do_select_all(GtkWidget *w, gpointer d);
+static void view_icons (GtkWidget *widget);
+static void view_list (GtkWidget *widget);
 
 
 /* items of the context menu */
@@ -225,6 +225,9 @@ static GtkItemFactoryEntry mMain_items[] = {
   { N_("/_Settings"),         NULL,         NULL, 0, "<Branch>" },
   { N_("/_Settings/Directory Browser"), NULL, on_dirbrowser_setting_changed, 0, "<CheckItem>"},
   { N_("/_Settings/My Files only"), NULL, on_myfiles_setting_changed, 0, "<CheckItem>"},
+  { N_("/_Settings/s3"), NULL , NULL,    0, "<Separator>"},
+  { N_("/_Settings/View Icons"), NULL, view_icons, 0, "<RadioItem>"},
+  { N_("/_Settings/View List"), NULL, view_list, 0, "<RadioItem>"},
   { N_("/_Go To"),         NULL,         NULL,           0, "<Branch>" },
   { N_("/_Help"),         NULL,         NULL,           0, "<Branch>" },
   { N_("/_Help/Index"),   NULL,         on_help_clicked,    0, "<StockItem>",GTK_STOCK_HELP },
@@ -278,6 +281,7 @@ create_mMain(GtkWidget  *window)
 {
   GtkItemFactory *itemfactory;
   GtkAccelGroup *accelgroup;
+  GtkWidget *item_icons, *item_list;
   
   accelgroup = gtk_accel_group_new ();
   
@@ -291,12 +295,20 @@ create_mMain(GtkWidget  *window)
     gtk_item_factory_get_item (itemfactory, N_("/Settings/Directory Browser"));
   set_myfiles_menu_item = 
     gtk_item_factory_get_item (itemfactory, N_("/Settings/My Files only"));
+  item_icons = 
+    gtk_item_factory_get_item (itemfactory, N_("/Settings/View Icons"));
+  item_list = 
+    gtk_item_factory_get_item (itemfactory, N_("/Settings/View List"));
   goto_menu_item = 
     gtk_item_factory_get_item (itemfactory, N_("/Go To"));
   
- gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(set_dirbrowser_menu_item),
+  gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(set_dirbrowser_menu_item),
                                  directory_browser); 
-  
+  gtk_radio_menu_item_set_group(GTK_RADIO_MENU_ITEM(item_list), 
+                                gtk_radio_menu_item_get_group(GTK_RADIO_MENU_ITEM(item_icons)));
+  gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM (item_list), TRUE); 
+  gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM (item_icons), FALSE); 
+ 
   return (gtk_item_factory_get_widget (itemfactory, "<main>"));
 }
 
@@ -1123,7 +1135,11 @@ make_view (void)
 
   loaded_icons = g_hash_table_new (g_str_hash, g_str_equal);
   if (view_is_icons)
+  {
     gpe_icon_list_view_clear (GPE_ICON_LIST_VIEW (view_widget));
+	if (directory_browser)
+        gtk_tree_store_clear(GTK_TREE_STORE(dirstore));
+  }
   else
   {
 	GtkTreeIter iter;
@@ -1427,10 +1443,9 @@ history_forward (GtkWidget *widget)
 static void
 view_icons (GtkWidget *widget)
 {
+  if (!initialized) return;
   gtk_tree_store_clear(GTK_TREE_STORE(store));
   view_widget = create_view_widget_icons();
-  gtk_widget_set_sensitive(btnListView,TRUE);
-  gtk_widget_set_sensitive(btnIconView,FALSE);
   view_is_icons = TRUE;
   refresh_current_directory ();
 }
@@ -1439,9 +1454,8 @@ view_icons (GtkWidget *widget)
 static void
 view_list (GtkWidget *widget)
 {
+  if (!initialized) return;
   view_widget = create_view_widget_list();
-  gtk_widget_set_sensitive(btnListView,FALSE);
-  gtk_widget_set_sensitive(btnIconView,TRUE);
   view_is_icons = FALSE;
   refresh_current_directory ();
 }
@@ -1702,8 +1716,9 @@ int
 main (int argc, char *argv[])
 {
   GtkWidget *hbox, *toolbar, *toolbar2, *mMain;
-  GdkPixbuf *p;
+  GtkTooltips *tooltips;
   GtkWidget *pw;
+  GtkToolItem *item;
   GtkAccelGroup *accel_group;
   GtkWidget *storage_menu;
   int size_x, size_y, arg;
@@ -1748,7 +1763,7 @@ main (int argc, char *argv[])
   if (size_y < 320) size_y = 320;
   
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-  gtk_window_set_title (GTK_WINDOW (window), "Filemanager");
+  gtk_window_set_title (GTK_WINDOW (window),_("Filemanager"));
   gtk_window_set_default_size (GTK_WINDOW (window), size_x, size_y);
   gtk_signal_connect (GTK_OBJECT (window), "delete-event",
 		      GTK_SIGNAL_FUNC (gtk_exit), NULL);
@@ -1780,6 +1795,9 @@ main (int argc, char *argv[])
   storage_menu = build_storage_menu(directory_browser);
   GTK_WIDGET_UNSET_FLAGS(storage_menu, GTK_CAN_FOCUS);
 
+  /* toolbars */
+  tooltips = gtk_tooltips_new();
+  
   toolbar = gtk_toolbar_new ();
   GTK_WIDGET_UNSET_FLAGS(toolbar, GTK_CAN_FOCUS);
   gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);
@@ -1787,58 +1805,64 @@ main (int argc, char *argv[])
   toolbar2 = gtk_toolbar_new ();
   gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar2), GTK_ORIENTATION_HORIZONTAL);
 
-  pw = gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_GO_BACK,
-		                         _("Go back in history."), NULL,
-			                     G_CALLBACK (history_back), NULL, -1);
-  GTK_WIDGET_UNSET_FLAGS(pw, GTK_CAN_FOCUS);
-
-  pw = gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_GO_FORWARD,
-			                     _("Go forward in history."), NULL,
-			                     G_CALLBACK (history_forward), NULL, -1);
-  GTK_WIDGET_UNSET_FLAGS(pw, GTK_CAN_FOCUS);
-
-  btnGoUp = gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_GO_UP,
-			                          _("Go up one level."), NULL,
-			                          G_CALLBACK (up_one_level), NULL, -1);
-  GTK_WIDGET_UNSET_FLAGS(btnGoUp, GTK_CAN_FOCUS);
-
-  gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
-
+  item = gtk_tool_button_new_from_stock(GTK_STOCK_GO_BACK);
+  gtk_tool_item_set_tooltip(item, tooltips, _("Go back in history."), NULL);
+  g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK(history_back), NULL);
+  GTK_WIDGET_UNSET_FLAGS(GTK_WIDGET(item), GTK_CAN_FOCUS);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
+  
+  item = gtk_tool_button_new_from_stock(GTK_STOCK_GO_FORWARD);
+  gtk_tool_item_set_tooltip(item, tooltips, _("Go forward in history."), NULL);
+  g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK(history_forward), NULL);
+  GTK_WIDGET_UNSET_FLAGS(GTK_WIDGET(item), GTK_CAN_FOCUS);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
+  
+  item = gtk_tool_button_new_from_stock(GTK_STOCK_GO_UP);
+  gtk_tool_item_set_tooltip(item, tooltips, _("Go up one level."), NULL);
+  g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK(up_one_level), NULL);
+  GTK_WIDGET_UNSET_FLAGS(GTK_WIDGET(item), GTK_CAN_FOCUS);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
+  btnGoUp = GTK_WIDGET(item);
+  
+  item = gtk_separator_tool_item_new();
+  gtk_separator_tool_item_set_draw(GTK_SEPARATOR_TOOL_ITEM(item), FALSE);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
+  
   if (!directory_browser)
     {
-      pw = gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_HOME,
-	                                 _("Goto your home directory."), NULL,
-                                     G_CALLBACK (set_directory_home), NULL, -1);
-      GTK_WIDGET_UNSET_FLAGS(pw, GTK_CAN_FOCUS);
+      item = gtk_tool_button_new_from_stock(GTK_STOCK_HOME);
+      gtk_tool_item_set_tooltip(item, tooltips, _("Goto your home directory."), NULL);
+      g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK(set_directory_home), NULL);
+      GTK_WIDGET_UNSET_FLAGS(GTK_WIDGET(item), GTK_CAN_FOCUS);
+      gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
     }
-                
-  pw = gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_REFRESH,
-                                 _("Refresh current directory."), NULL,
-                                 G_CALLBACK (refresh_current_directory), NULL, -1);
-  GTK_WIDGET_UNSET_FLAGS(pw, GTK_CAN_FOCUS);    
-                
-  pw = gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_STOP,
-                                 _("Stop the current process."), NULL,
-                                 G_CALLBACK (safety_check), NULL, -1);
-  GTK_WIDGET_UNSET_FLAGS(pw, GTK_CAN_FOCUS);
-
-  gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
-
-  p = gpe_find_icon ("icon-view");
-  pw = gtk_image_new_from_pixbuf(p);
-  btnIconView = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Icon view"), 
-			   _("View files as icons"), NULL, pw, 
-			   G_CALLBACK (view_icons), NULL);
-  GTK_WIDGET_UNSET_FLAGS(btnIconView, GTK_CAN_FOCUS);
   
-  p = gpe_find_icon ("list-view");
-  pw = gtk_image_new_from_pixbuf(p);
-  btnListView = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("List view"), 
-			   _("View files in a list"), NULL, pw, 
-			   G_CALLBACK (view_list), NULL);
-  gtk_widget_set_sensitive(btnListView,FALSE);
-  GTK_WIDGET_UNSET_FLAGS(btnListView, GTK_CAN_FOCUS);
-               
+  item = gtk_tool_button_new_from_stock(GTK_STOCK_REFRESH);
+  gtk_tool_item_set_tooltip(item, tooltips, _("Refresh current directory."), NULL);
+  g_signal_connect(G_OBJECT(item), "clicked", 
+                   G_CALLBACK(refresh_current_directory), NULL);
+  GTK_WIDGET_UNSET_FLAGS(GTK_WIDGET(item), GTK_CAN_FOCUS);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
+
+  item = gtk_tool_button_new_from_stock(GTK_STOCK_STOP);
+  gtk_tool_item_set_tooltip(item, tooltips, _("Stop the current process."), NULL);
+  g_signal_connect(G_OBJECT(item), "clicked", 
+                   G_CALLBACK(safety_check), NULL);
+  GTK_WIDGET_UNSET_FLAGS(GTK_WIDGET(item), GTK_CAN_FOCUS);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
+
+  item = gtk_separator_tool_item_new();
+  gtk_separator_tool_item_set_draw(GTK_SEPARATOR_TOOL_ITEM(item), FALSE);
+  gtk_tool_item_set_expand(item, TRUE);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
+    
+  item = gtk_tool_button_new_from_stock(GTK_STOCK_QUIT);
+  gtk_tool_item_set_tooltip(item, tooltips, _("Exit from this program."), NULL);
+  g_signal_connect(G_OBJECT(item), "clicked", 
+                   G_CALLBACK(gtk_main_quit), NULL);
+  GTK_WIDGET_UNSET_FLAGS(GTK_WIDGET(item), GTK_CAN_FOCUS);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
+  
   pw = gtk_image_new_from_stock(GTK_STOCK_JUMP_TO, 
                                 gtk_toolbar_get_icon_size(GTK_TOOLBAR(toolbar2)));
   pw = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar2), _("Go!"), 

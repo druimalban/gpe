@@ -1,6 +1,18 @@
+2005-07-20  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * main.c (make_view): Fix missing cleanup of dirbrowser in icon view mode.
+    * main.c (main): Change to new toolbar API.
+    * main.c: Moved icon/list view setting to menu. Add quit button.
+    * main.c: Mark more translatable strings.
+    * Makefile: Version to 0.23.
+
 2005-01-01  Luc Pionchon  <luc@handhelds.org>
 
-	* main.c (ask_open_with): remove markup from i18n'ed strings
+	* main.c (ask_open_with): removeFix missing cleanup of dirbrowser in icon view mode.
+    * main.c (main): Change to new toolbar API.
+    * main.c: Moved icon/list view setting to menu. Add quit button.
+    * main.c: Mark more translatable strings.
+    * Makefile: Version to 0.23. markup from i18n'ed strings
 	(ask_open_with): Likewise.
 
 2004-11-18  Florian Boor  <florian.boor@kernelconcepts.de>
