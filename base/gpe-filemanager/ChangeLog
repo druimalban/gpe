@@ -1,3 +1,7 @@
+2005-07-21  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * Release Version 0.23
+
 2005-07-20  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * main.c (make_view): Fix missing cleanup of dirbrowser in icon view mode.
