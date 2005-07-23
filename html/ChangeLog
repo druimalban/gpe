@@ -1,6 +1,8 @@
 2005-07-23  Florian Boor <florian@kernelconcepts.de>
 
 	* documentation.phtml: Add link to wiki about GPE help system.
+                               Mention developer documentation in the
+                               description.
 
 2005-06-01  Florian Boor <florian@kernelconcepts.de>
 
