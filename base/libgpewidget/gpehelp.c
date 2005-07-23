@@ -58,7 +58,7 @@ gpe_show_help (const char *appname, const char *topic)
 {
   gchar *helpfile;
   gchar *helpadress;
-  gchar *apps = "gpe-helpviewer dillo osb-browser minimo";
+  gchar *apps = "gpe-helpviewer gpe-mini-browser dillo minimo";
   gchar **app, **applist;
   const gchar *command;
   gboolean spawn = FALSE;
