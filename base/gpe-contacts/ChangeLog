@@ -1,3 +1,10 @@
+2005-07-24  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * debian/control: Tune dependencies for Maemo integration a little bit.
+    * debian/links: Fix link to support package installer.
+    * debian/changelog: Add new release.
+    * hildon/gpe-contacts.desktop.in.in: Change path to executable.
+
 2005-06-27  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * Release Version 0.40

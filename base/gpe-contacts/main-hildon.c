@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2001, 2002, 2003, 2004 Philip Blundell <philb@gnu.org>
- * Hildon adaption by Florian Boor <florian.boor@kernelconcepts.de>
+ * Hildon adaption 2005 by Florian Boor <florian.boor@kernelconcepts.de>
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License

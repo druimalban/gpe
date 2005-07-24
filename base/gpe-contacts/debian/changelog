@@ -1,3 +1,9 @@
+gpe-contacts (0.40m2-1) unstable; urgency=low
+
+  * Change some links and some more bits to fix integration.
+
+ -- Florian Boor <florian.boor@kernelconcepts.de>  Sun, 24 Jul 2005 17:11:00 +0200
+ 
 gpe-contacts (0.37m2-1) unstable; urgency=low
 
   * Fix osso registration, add top callback.
