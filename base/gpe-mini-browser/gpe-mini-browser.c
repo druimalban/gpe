@@ -66,7 +66,7 @@ main (int argc, char *argv[])
 	{
 	case 'v':
 	  printf
-	    ("GPE-mini-browser version 0.12. (C)2005, Philippe De Swert\n");
+	    ("GPE-mini-browser version 0.14. (C)2005, Philippe De Swert\n");
 	  exit (0);
 
 	default:

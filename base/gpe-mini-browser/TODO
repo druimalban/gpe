@@ -5,6 +5,9 @@ TODO:
 * support multiple windows
 * improve progressbar display
 * add hildon interface support (Nokia 770)
+* bookmarks (possible integration with gpe-contacts)
+* history (special case of bookmarks)
+* fullscreen mode
 
 DONE:
 
