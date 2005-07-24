@@ -1,5 +1,7 @@
 2005-07-24  Florian Boor  <florian.boor@kernelconcepts.de>
 
+    * hildon/org.gpe.gpe-contacts.service.in: Correct path to installed 
+                                              executable.
     * debian/control: Tune dependencies for Maemo integration a little bit.
     * debian/links: Fix link to support package installer.
     * debian/changelog: Add new release.

@@ -7,5 +7,5 @@ Standards-Version: 3.6.0
 
 Package: gpe-contacts
 Architecture: any
-Depends: maemo libgpewidget1 libgpevtype0
+Depends: maemo libgpewidget1 libgpevtype0 libgpepimc0
 Description: This is a contacts application for GPE
