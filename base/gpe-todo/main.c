@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2002, 2003, 2004 Philip Blundell <philb@gnu.org>
- * Haemo support and UI update 2005 Florian Boor <florian@kernelconcepts.de>
+ * Maemo support and UI update 2005 Florian Boor <florian@kernelconcepts.de>
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License

@@ -1,3 +1,9 @@
+gpe-todo (0.54m2-1) unstable; urgency=low
+
+  * Update installer integreation.
+  
+ -- Florian Boor <florian.boor@kernelconcepts.de>  Sun, 25 Jul 2005 19:40:21 +0200
+ 
 gpe-todo (0.53m2-3) unstable; urgency=low
 
   * Change dependency.

@@ -52,6 +52,6 @@ AC_OUTPUT([
 Makefile
 po/Makefile.in
 gpe-todo.desktop.in
-hildon/com.nokia.gpe-todo.service
+hildon/org.gpe.gpe-todo.service
 hildon/gpe-todo.desktop.in
 ])

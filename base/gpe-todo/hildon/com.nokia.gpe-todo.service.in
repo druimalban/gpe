@@ -1,3 +1,0 @@
-[D-BUS Service]
-Name=com.nokia.gpe_todo
-Exec=@prefix@/bin/gpe-todo

@@ -1,3 +1,11 @@
+2005-07-25  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * debian/chagelog: Add new package.
+    * debian/control: Refine dependencies of the maemo package.
+    * debian/links: Fix link to support package installer.
+    * hildon/gpe-todo.desktop.in: Change path to executable.
+    * Rename service from com.nokia to more correct org.gpe...
+
 2005-06-20  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * Version to 0.54 released.
