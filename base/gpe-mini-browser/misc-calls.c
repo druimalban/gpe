@@ -41,10 +41,26 @@
 
 void set_default_settings(Webi *html, WebiSettings *ks)
 {
+  const gchar* http_proxy;
+
   ks->default_font_size = 11;
   ks->default_fixed_font_size = 11;
+  ks->minimum_font_size = 7;
+  ks->serif_font_family = "serif";
+  ks->sans_serif_font_family = "sans";
+  ks->fixed_font_family = "sans";
+  ks->standard_font_family = "sans";
   ks->autoload_images = 1;
   ks->javascript_enabled = 1;
+
+  http_proxy = g_getenv ("http_proxy");
+  if (!http_proxy)
+    http_proxy = g_getenv ("HTTP_PROXY");
+  if (!http_proxy) {
+    http_proxy = "" ;
+  }
+  ks->http_proxy = g_strdup(http_proxy);
+
   webi_set_settings (WEBI (html), ks);
 }
 
