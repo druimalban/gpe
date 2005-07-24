@@ -25,3 +25,5 @@ Creates a dialog to manage categories.
 @callback: Function to call after category selection change.
 @data: Pointer to pass to callback.
 @Returns: Dialog widget.
+
+

@@ -1,3 +1,9 @@
+libgpepimc (0.4m1-5) unstable; urgency=low
+
+  * Changed dependencies one more time.
+
+ -- Florian Boor <florian.boor@kernelconcepts.de>  Sun, 25 Jul 2005 20:17:44 +0200
+ 
 libgpepimc (0.4m1-4) unstable; urgency=low
 
   * Changed dependencies.

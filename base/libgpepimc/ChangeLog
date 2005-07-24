@@ -1,3 +1,7 @@
+2005-07-25  Florian Boor  <florian@kernelconcepts.de>
+
+	* debian/*: Some minor dependency fix for maemo stuff.
+
 2005-06-20  Florian Boor  <florian@kernelconcepts.de>
 
 	* Release Version 0.5
