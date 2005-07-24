@@ -135,7 +135,6 @@ handle_cookie (Webi * html, WebiCookie * cookie, gpointer * data)
 void
 forward_func (GtkWidget * forward, GtkWidget * html)
 {
-  webi_stop_load (WEBI (html)); /*stop loading the web-page to avoid that the interface goes crazy */
   if (webi_can_go_forward (WEBI (html)))
     webi_go_forward (WEBI (html));
   else
@@ -147,7 +146,6 @@ forward_func (GtkWidget * forward, GtkWidget * html)
 void
 back_func (GtkWidget * back, GtkWidget * html)
 { 
-  webi_stop_load (WEBI (html));
   if (webi_can_go_back (WEBI (html)))
     webi_go_back (WEBI (html));
   else
@@ -160,7 +158,6 @@ back_func (GtkWidget * back, GtkWidget * html)
 void
 home_func (GtkWidget * home, GtkWidget * html)
 {
-  webi_stop_load (WEBI (html));
   if (access (HOME_PAGE, F_OK))
     fetch_url ("http://gpe.handhelds.org", GTK_WIDGET (html));
   else
@@ -171,7 +168,6 @@ home_func (GtkWidget * home, GtkWidget * html)
 void
 reload_func (GtkWidget * reload, GtkWidget * html)
 {
-  webi_stop_load (WEBI (html));
   webi_refresh (WEBI (html));
 }
 

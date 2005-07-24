@@ -115,6 +115,15 @@ create_status_window (Webi * html, gpointer * status_data)
   GtkWidget *statusbox, *pbar, *label;
   struct status_data *data;
 
+  data = (struct status_data *) status_data;
+  /* the stop signal is not always generated. Like when you click on a link in a page
+  before it is fully loaded. So to avoid several status bars to appear (and not all 
+  disappearing), check if there is already one and remoce it. */
+  if (data->exists == TRUE)
+  {
+   gtk_widget_destroy (GTK_WIDGET (data->statusbox));
+  }	
+
 #ifdef DEBUG
   printf ("status = loading\n");
 #endif
@@ -122,7 +131,6 @@ create_status_window (Webi * html, gpointer * status_data)
   pbar = gtk_progress_bar_new ();
   label = gtk_label_new ("loading");
 
-  data = (struct status_data *) status_data;
   data->statusbox = statusbox;
   data->pbar = pbar;
   data->exists = TRUE;
