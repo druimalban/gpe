@@ -100,6 +100,7 @@ load_text_entry (GtkWidget * Button, gpointer * text)
   const gchar *url;
 
   data = (struct url_data *) text;
+  webi_stop_load (WEBI (data->html));
 
   url = gtk_editable_get_chars (GTK_EDITABLE (data->entry), 0, -1);
 #ifdef DEBUG
