@@ -1,3 +1,8 @@
+2005-07-25  Florian Boor <florian@kernelconcepts.de>
+
+	* gtkdatecombo.c: Remove signal handler workaround which isn't 
+	                  necessary anymore.
+
 2005-06-23  Phil Blundell  <pb@reciva.com>
 
 	* configure.ac (DEPS): Demand glib-2.0 >= 2.6.

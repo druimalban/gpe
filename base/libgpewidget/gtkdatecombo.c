@@ -237,14 +237,9 @@ gtk_date_combo_init (GtkDateCombo *combo)
   gtk_signal_connect (GTK_OBJECT (combo->button), "clicked",
 		      GTK_SIGNAL_FUNC (drop_calendar), combo);
 
-#ifdef IS_HILDON
-  gtk_signal_connect (GTK_OBJECT (combo->cal), 
-		      gpe_stylus_mode () ? "day-selected" : "day-selected-double-click",
-		      GTK_SIGNAL_FUNC (click_calendar), combo);
-#else
   gtk_signal_connect (GTK_OBJECT (combo->cal), "selected-date",
 		      GTK_SIGNAL_FUNC (click_calendar), combo);
-#endif
+			  
   g_signal_connect (G_OBJECT (combo->entry), "focus-out-event",
 		      G_CALLBACK (verify_date), combo);
 }
