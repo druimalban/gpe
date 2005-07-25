@@ -656,7 +656,7 @@ top_level (GtkWidget *window)
       gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
     }
     
-  gtk_box_pack_end (GTK_BOX (vbox), toolbar, FALSE, FALSE, 0);
+  hildon_appview_set_toolbar(HILDON_APPVIEW(window), GTK_TOOLBAR(toolbar));
 #else
   /* Insert refresh button if we have enough space */
   if (mode_landscape || large_screen)
