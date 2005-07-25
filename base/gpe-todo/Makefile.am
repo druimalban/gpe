@@ -24,7 +24,7 @@ desktopdir = $(datadir)/applications/hildon
 desktop_in_files = hildon/gpe-todo.desktop.in
 
 servicedir = $(libdir)/dbus-1.0/services
-service_in_files = hildon/com.nokia.gpe-todo.service.in
+service_in_files = hildon/org.gpe.gpe-todo.service.in
 
 # we need a 26x26 icon here
 pixmaps_extra_DATA = hildon/gpe-todo.png
@@ -72,9 +72,8 @@ EXTRA_DIST = $(desktop_DATA) \
              debian/dirs \
              debian/links \
              hildon/gpe-todo.desktop.in.in \
-             hildon/com.nokia.gpe-todo.service.in \
+             hildon/org.gpe.gpe-todo.service.in \
              hildon/gpe-todo.png
-              
 			 
 
 DISTCLEANFILES = intltool-extract \

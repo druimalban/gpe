@@ -1,5 +1,6 @@
 2005-07-25  Florian Boor  <florian.boor@kernelconcepts.de>
 
+	* Makefile.am: Change name of service file.
     * main.c: Use hildon way to control packing of the toolbar.
     * debian/chagelog: Add new package.
     * debian/control: Refine dependencies of the maemo package.

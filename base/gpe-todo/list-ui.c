@@ -637,7 +637,6 @@ top_level (GtkWidget *window)
                    G_CALLBACK (delete_completed_items), NULL);
   gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
   
-
 #ifdef IS_HILDON
   create_app_menu (HILDON_APPVIEW(window));
   
