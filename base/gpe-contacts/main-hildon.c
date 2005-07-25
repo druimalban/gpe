@@ -1443,7 +1443,7 @@ create_main (gboolean edit_structure)
 			       GTK_ORIENTATION_HORIZONTAL);
 
   /* toolbar */
-  gtk_box_pack_end (GTK_BOX (vbox1), toolbar, FALSE, FALSE, 0);
+  hildon_appview_set_toolbar(HILDON_APPVIEW(main_appview), GTK_TOOLBAR(toolbar));
   
   /* buttons left */
   w = gtk_image_new_from_file(ICON_PATH "/qgn_list_gene_unknown_file.png");
