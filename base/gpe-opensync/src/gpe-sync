@@ -1,0 +1,4 @@
+<config>
+  <handheld_ip>10.0.0.1</handheld_ip>
+  <handheld_user>martin</handheld_user>
+</config>

@@ -1,0 +1,6 @@
+These are just rudimentary installation information.
+- More are to come.
+./autogen.sh
+./configure
+make
+make install
