@@ -1,0 +1,13 @@
+[Desktop Entry]
+Encoding=UTF-8
+_Name=Calendar
+_Comment=GPE Calendar Application
+Exec=/var/lib/install/@prefix@/bin/gpe-calendar
+Terminal=false
+Type=Application
+Icon=gpe-calendar
+X-Window-Icon=gpe-calendar
+X-Window-Icon-Dimmed=gpe-calendar
+X-Osso-Service=gpe_calendar
+X-HildonDesk-ShowInToolbar=true
+X-Osso-Type=application/x-executable

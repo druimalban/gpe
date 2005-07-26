@@ -2,10 +2,12 @@
 # Copyright (C) 2003 Free Software Foundation, Inc.
 # Christian Rose <menthos@menthos.com>, 2003.
 #
+#: intltool-merge.in:592 intltool-merge.in:593
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-calendar 0.45\n"
-"POT-Creation-Date: 2003-09-05 23:16+0100\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2005-07-27 00:49+0200\n"
 "PO-Revision-Date: 2003-09-15 15:46+0200\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
@@ -14,75 +16,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: main.c:242 gpe-calendar.desktop.in.h:1
-msgid "Calendar"
-msgstr "Kalender"
+#: day_popup.c:209
+msgid "No appointments"
+msgstr "Inga möten"
 
-#: main.c:261
-msgid "New appointment"
-msgstr "Nytt möte"
-
-#: main.c:261
-msgid "Tap here to add a new appointment or reminder"
-msgstr "Tryck här för att lägga till ett nytt möte eller en ny påminnelse"
-
-#: main.c:267 main.c:268
-msgid "Today"
-msgstr "Idag"
-
-#: main.c:276
-msgid "Future"
-msgstr "Framtid"
-
-#: main.c:276
-msgid "Future View"
-msgstr "Framtidsvy"
-
-#: main.c:277
-msgid "Tap here to see all future events."
-msgstr "Tryck här för att se alla framtida händelser."
-
-#: main.c:284
-msgid "Day View"
-msgstr "Dagsvy"
-
-#: main.c:285
-msgid "Tap here to select day-at-a-time view."
-msgstr "Tryck här för att välja dag-för-dag-vy."
-
-#: main.c:292
-msgid "Week"
-msgstr "Vecka"
-
-#: main.c:292
-msgid "Week View"
-msgstr "Veckovy"
-
-#: main.c:293
-msgid "Tap here to select week-at-a-time view."
-msgstr "Tryck här för att välja vecka-för-vecka-vy."
-
-#: main.c:300
-msgid "Month"
-msgstr "Månad"
-
-#: main.c:300
-msgid "Month View"
-msgstr "Månadsvy"
-
-#: main.c:301
-msgid "Tap here to select month-at-a-time view."
-msgstr "Tryck här för att välja månad-för-månad-vy."
-
-#: main.c:307
-msgid "Exit"
-msgstr "Avsluta"
-
-#: main.c:307
-msgid "Tap here to exit the program"
-msgstr "Tryck här för att avsluta programmet"
-
-#: event-ui.c:251
+#: day_view.c:59 event-ui.c:281
 msgid ""
 "Delete all recurring entries?\n"
 "(If no, delete this instance only)"
@@ -90,237 +28,398 @@ msgstr ""
 "Ta bort alla återkommande poster?\n"
 "(Om inte, ta endast bort denna förekomst)"
 
-#: event-ui.c:383
+#: day_view.c:60 day_view.c:164 event-ui.c:282
+#, fuzzy
+msgid "Question"
+msgstr "Beskrivning:"
+
+#: day_view.c:164
+#, fuzzy
+msgid "Delete event?"
+msgstr "före händelse"
+
+#: event-ui.c:415
 msgid "End time must not be earlier than start time"
 msgstr "Sluttiden får inte vara tidigare än starttiden"
 
-#: event-ui.c:622
+#: event-ui.c:435
+msgid ""
+"Event starts in the past!\n"
+"Save anyway?"
+msgstr ""
+
+#: event-ui.c:875
 msgid "Event"
 msgstr "Händelse"
 
-#: event-ui.c:623
+#: event-ui.c:876
 msgid "Recurrence"
 msgstr "Upprepning"
 
-#: event-ui.c:624 event-ui.c:797
+#: event-ui.c:877 event-ui.c:1080
 msgid "Alarm"
 msgstr "Alarm"
 
-#: event-ui.c:651 event-ui.c:853
+#: event-ui.c:907
 msgid "Type:"
 msgstr "Typ:"
 
-#: event-ui.c:656
+#: event-ui.c:912
 msgid "Appointment"
 msgstr "Möte"
 
-#: event-ui.c:657
+#: event-ui.c:913
 msgid "Reminder"
 msgstr "Påminnelse"
 
-#: event-ui.c:659
+#: event-ui.c:915
 msgid "Task"
 msgstr "Uppgift"
 
-#: event-ui.c:665
+#: event-ui.c:921
 msgid "Days"
 msgstr "Dagar"
 
-#: event-ui.c:666
+#: event-ui.c:922
 msgid "Weeks"
 msgstr "Veckor"
 
-#: event-ui.c:674
-msgid "Summary:"
-msgstr "Sammanfattning:"
+#: event-ui.c:929
+#, fuzzy
+msgid "Text:"
+msgstr "Tid:"
 
-#: event-ui.c:690
-msgid "Start:"
+#: event-ui.c:949
+#, fuzzy
+msgid "Start at:"
 msgstr "Start:"
 
-#: event-ui.c:691
-msgid "End:"
-msgstr "Slut:"
+#: event-ui.c:950
+#, fuzzy
+msgid "End at:"
+msgstr "Slutdatum:"
 
-#: event-ui.c:692 event-ui.c:693
-msgid "at:"
-msgstr "vid:"
+#: event-ui.c:951 event-ui.c:952
+msgid "on:"
+msgstr ""
 
-#: event-ui.c:726
+#: event-ui.c:988
 msgid "Date:"
 msgstr "Datum:"
 
-#: event-ui.c:729
+#: event-ui.c:991
 msgid "Time:"
 msgstr "Tid:"
 
-#: event-ui.c:749
+#: event-ui.c:1012
 msgid "Due:"
 msgstr "Ska utföras:"
 
-#: event-ui.c:753
+#: event-ui.c:1016
 msgid "Allow:"
 msgstr "Tillåt:"
 
-#: event-ui.c:768
+#: event-ui.c:1026
+msgid "Categories"
+msgstr ""
+
+#: event-ui.c:1050
 msgid "Description:"
 msgstr "Beskrivning:"
 
-#: event-ui.c:801
+#: event-ui.c:1084
 msgid "before event"
 msgstr "före händelse"
 
-#: event-ui.c:804
+#: event-ui.c:1087
 msgid "minutes"
 msgstr "minuter"
 
-#: event-ui.c:806
+#: event-ui.c:1089
 msgid "hours"
 msgstr "timmar"
 
-#: event-ui.c:808 event-ui.c:908
+#. days label
+#: event-ui.c:1091 event-ui.c:1198
 msgid "days"
 msgstr "dagar"
 
-#: event-ui.c:810
+#: event-ui.c:1093
 msgid "weeks"
 msgstr "veckor"
 
-#: event-ui.c:865
+#: event-ui.c:1143
+#, fuzzy
+msgid "Type"
+msgstr "Typ:"
+
+#: event-ui.c:1155
 msgid "No recurrence"
 msgstr "Ingen upprepning"
 
-#: event-ui.c:868
+#: event-ui.c:1158
 msgid "Daily"
 msgstr "Dagligen"
 
-#: event-ui.c:871
+#: event-ui.c:1161
 msgid "Weekly"
 msgstr "Veckovis"
 
-#: event-ui.c:874
+#: event-ui.c:1164
 msgid "Monthly"
 msgstr "Månatligen"
 
-#: event-ui.c:877
+#: event-ui.c:1167
 msgid "Yearly"
 msgstr "Årligen"
 
-#: event-ui.c:898 event-ui.c:920 event-ui.c:963 event-ui.c:1018
+#. "every" label
+#: event-ui.c:1188 event-ui.c:1210 event-ui.c:1262 event-ui.c:1317
 msgid "Every"
 msgstr "Var"
 
-#: event-ui.c:921
+#: event-ui.c:1211
 msgid "weeks, on:"
 msgstr "vecka, på:"
 
-#: event-ui.c:974
+#. months label
+#: event-ui.c:1273
 msgid "months"
 msgstr "månader"
 
-#: event-ui.c:979
+#: event-ui.c:1278
 #, c-format
 msgid "on day %d"
 msgstr "på dag %d"
 
-#: event-ui.c:983
+#: event-ui.c:1282
 msgid "on the"
 msgstr "den"
 
-#: event-ui.c:991
+#: event-ui.c:1290
 msgid "first"
 msgstr "första"
 
 # Bugrapporterat, http://bugzilla.ximian.com/show_bug.cgi?id=36245
-#: event-ui.c:993
+#: event-ui.c:1292
 msgid "second"
 msgstr "sekund"
 
-#: event-ui.c:995
+#: event-ui.c:1294
 msgid "third"
 msgstr "tredje"
 
-#: event-ui.c:997
+#: event-ui.c:1296
 msgid "fourth"
 msgstr "fjärde"
 
-#: event-ui.c:999
+#: event-ui.c:1298
 msgid "fifth"
 msgstr "femte"
 
-#: event-ui.c:1001
+#: event-ui.c:1300
 msgid "last"
 msgstr "sista"
 
-#: event-ui.c:1028
+#. years label
+#: event-ui.c:1327
 msgid "years"
 msgstr "år"
 
-#: event-ui.c:1047
-msgid "End Date:"
+#. Begin end-date vbox
+#: event-ui.c:1346
+#, fuzzy
+msgid "End Date"
 msgstr "Slutdatum:"
 
-#: event-ui.c:1053
+#. forever radio button
+#: event-ui.c:1352
 msgid "forever"
 msgstr "för alltid"
 
-#: event-ui.c:1064
+#: event-ui.c:1363
 msgid "end after"
 msgstr "sluta efter"
 
-#: event-ui.c:1081
+#: event-ui.c:1380
 msgid "end on"
 msgstr "sluta den"
 
-#: event-ui.c:1089
+#. events label
+#: event-ui.c:1388
 msgid "events"
 msgstr "händelser"
 
-#: event-ui.c:1188
+#: event-ui.c:1504
 msgid "Calendar: New event"
 msgstr "Kalender: Ny händelse"
 
-#: event-ui.c:1235
+#: event-ui.c:1558
 msgid "Calendar: Edit event"
 msgstr "Kalender: Redigera händelse"
 
-#: day_popup.c:171
-msgid "No appointments"
-msgstr "Inga möten"
+#: gtkdatesel.c:216
+msgid "%Y"
+msgstr "%Y"
+
+#: gtkdatesel.c:225 gtkdatesel.c:272
+msgid "%b"
+msgstr "%b"
+
+#: gtkdatesel.c:228 gtkdatesel.c:275
+msgid "%B"
+msgstr "%B"
+
+#: gtkdatesel.c:231 gtkdatesel.c:278
+#, c-format
+msgid "%m"
+msgstr "%m"
+
+#: gtkdatesel.c:242
+msgid "Week %V"
+msgstr "Vecka %V"
+
+#: gtkdatesel.c:248
+#, c-format
+msgid "%a, %d"
+msgstr "%a %d"
+
+#: gtkdatesel.c:312
+#, c-format
+msgid "%d"
+msgstr ""
+
+#: gtkdatesel.c:324
+#, c-format
+msgid "%a"
+msgstr ""
+
+#: intltool-merge.in:554
+msgid "($q)"
+msgstr ""
+
+#: intltool-merge.in:572
+msgid ")($q)"
+msgstr ""
+
+#: intltool-merge.in:605
+msgid "'"
+msgstr ""
+
+#: main.c:276
+msgid "Choose file"
+msgstr ""
+
+#: main.c:304
+msgid "Import of"
+msgstr ""
+
+#: main.c:304
+msgid "files failed:"
+msgstr ""
+
+#: main.c:308
+msgid "Import successful"
+msgstr ""
+
+#: main.c:424
+#, c-format
+msgid "Could not import file %s."
+msgstr ""
+
+#: main.c:429
+#, c-format
+msgid "File %s imported sucessfully."
+msgstr ""
+
+#: main.c:462
+msgid "Calendar"
+msgstr "Kalender"
+
+#: main.c:484
+msgid "New appointment"
+msgstr "Nytt möte"
+
+#: main.c:484
+msgid "Tap here to add a new appointment or reminder"
+msgstr "Tryck här för att lägga till ett nytt möte eller en ny påminnelse"
+
+#: main.c:495
+msgid "Today"
+msgstr "Idag"
+
+#: main.c:496
+msgid "Switch to today and stay there/return to day selecting."
+msgstr ""
+
+#: main.c:508
+msgid "Tap here to select day-at-a-time view."
+msgstr "Tryck här för att välja dag-för-dag-vy."
+
+#: main.c:516
+msgid "Week"
+msgstr "Vecka"
+
+#: main.c:517
+msgid "Tap here to select week-at-a-time view."
+msgstr "Tryck här för att välja vecka-för-vecka-vy."
+
+#: main.c:525
+msgid "Month"
+msgstr "Månad"
+
+#: main.c:526
+msgid "Tap here to select month-at-a-time view."
+msgstr "Tryck här för att välja månad-för-månad-vy."
+
+#: main.c:533
+msgid "Import"
+msgstr ""
+
+#: main.c:533
+msgid "Open file to import an event from it."
+msgstr ""
+
+#: main.c:540
+msgid "Tap here to exit the program"
+msgstr "Tryck här för att avsluta programmet"
 
 #: xsettings.c:105
 msgid "Cannot create XSettings client"
 msgstr "Kan inte skapa XSettings-klient"
 
-#: gtkdatesel.c:193
-msgid "%Y"
-msgstr "%Y"
+#~ msgid "Future"
+#~ msgstr "Framtid"
 
-#: gtkdatesel.c:202
-msgid "%b"
-msgstr "%b"
+#~ msgid "Future View"
+#~ msgstr "Framtidsvy"
 
-#: gtkdatesel.c:205
-msgid "%B"
-msgstr "%B"
+#~ msgid "Tap here to see all future events."
+#~ msgstr "Tryck här för att se alla framtida händelser."
 
-#: gtkdatesel.c:208
-#, c-format
-msgid "%m"
-msgstr "%m"
+#~ msgid "Day View"
+#~ msgstr "Dagsvy"
 
-#: gtkdatesel.c:219
-msgid "Week %V"
-msgstr "Vecka %V"
+#~ msgid "Week View"
+#~ msgstr "Veckovy"
 
-#: gtkdatesel.c:225
-#, c-format
-msgid "%a, %d"
-msgstr "%a %d"
+#~ msgid "Month View"
+#~ msgstr "Månadsvy"
 
-#: gpe-calendar.desktop.in.h:2
-msgid "GPE Calendar"
-msgstr "GPE-kalender"
+#~ msgid "Exit"
+#~ msgstr "Avsluta"
+
+#~ msgid "Summary:"
+#~ msgstr "Sammanfattning:"
+
+#~ msgid "End:"
+#~ msgstr "Slut:"
+
+#~ msgid "at:"
+#~ msgstr "vid:"
+
+#~ msgid "GPE Calendar"
+#~ msgstr "GPE-kalender"
 
 #~ msgid "Calendar: Edit events"
 #~ msgstr "Kalender: Redigera händelser"

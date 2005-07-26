@@ -35,7 +35,6 @@
 #include "import-vcal.h"
 #include "gtkdatesel.h"
 
-#include <libdisplaymigration/displaymigration.h>
 #include <gpe/pim-categories.h>
 
 #include <locale.h>
@@ -391,8 +390,6 @@ main (int argc, char *argv[])
   bind_textdomain_codeset (PACKAGE, "UTF-8");
   textdomain (PACKAGE);
 
-  displaymigration_init ();
-
   if (event_db_start () == FALSE)
     exit (1);
 
@@ -466,8 +463,6 @@ main (int argc, char *argv[])
   g_signal_connect (G_OBJECT (main_window), "delete-event",
                     G_CALLBACK (gpe_cal_exit), NULL);
   gtk_window_set_default_size (GTK_WINDOW (main_window), window_x, window_y);
-
-  displaymigration_mark_window (main_window);
 
   gtk_widget_realize (main_window);
 

@@ -2,3 +2,14 @@ gpe-calendar
 *.d
 *.ipk
 gpe-calendar.desktop
+gpe_calendar.prj
+gpe_calendar.pws
+intltool-extract
+intltool-extract.in
+intltool-merge
+intltool-merge.in
+intltool-update
+intltool-update.in
+.deps
+.tm_project.cache
+ltmain.sh

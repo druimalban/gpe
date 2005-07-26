@@ -3,12 +3,13 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+#: intltool-merge.in:592 intltool-merge.in:593
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-01-09 16:48+0000\n"
+"POT-Creation-Date: 2005-07-27 00:49+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,82 +17,8 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: main.c:278
-msgid "Choose file"
-msgstr ""
-
-#: main.c:306
-msgid "Import of"
-msgstr ""
-
-#: main.c:306
-msgid "files failed:"
-msgstr ""
-
-#: main.c:310
-msgid "Import successful"
-msgstr ""
-
-#: main.c:428
-#, c-format
-msgid "Could not import file %s."
-msgstr ""
-
-#: main.c:433
-#, c-format
-msgid "File %s imported sucessfully."
-msgstr ""
-
-#: main.c:466 gpe-calendar.desktop.in.h:1
-msgid "Calendar"
-msgstr ""
-
-#: main.c:490
-msgid "New appointment"
-msgstr ""
-
-#: main.c:490
-msgid "Tap here to add a new appointment or reminder"
-msgstr ""
-
-#: main.c:501
-msgid "Today"
-msgstr ""
-
-#: main.c:502
-msgid "Switch to today and stay there/return to day selecting."
-msgstr ""
-
-#: main.c:514
-msgid "Tap here to select day-at-a-time view."
-msgstr ""
-
-#: main.c:522
-msgid "Week"
-msgstr ""
-
-#: main.c:523
-msgid "Tap here to select week-at-a-time view."
-msgstr ""
-
-#: main.c:531
-msgid "Month"
-msgstr ""
-
-#: main.c:532
-msgid "Tap here to select month-at-a-time view."
-msgstr ""
-
-#: main.c:539
-msgid "Import"
-msgstr ""
-
-#: main.c:539
-msgid "Open file to import an event from it."
-msgstr ""
-
-#: main.c:546
-msgid "Tap here to exit the program"
+#: day_popup.c:209
+msgid "No appointments"
 msgstr ""
 
 #: day_view.c:59 event-ui.c:281
@@ -206,6 +133,7 @@ msgstr ""
 msgid "hours"
 msgstr ""
 
+#. days label
 #: event-ui.c:1091 event-ui.c:1198
 msgid "days"
 msgstr ""
@@ -238,6 +166,7 @@ msgstr ""
 msgid "Yearly"
 msgstr ""
 
+#. "every" label
 #: event-ui.c:1188 event-ui.c:1210 event-ui.c:1262 event-ui.c:1317
 msgid "Every"
 msgstr ""
@@ -246,6 +175,7 @@ msgstr ""
 msgid "weeks, on:"
 msgstr ""
 
+#. months label
 #: event-ui.c:1273
 msgid "months"
 msgstr ""
@@ -283,14 +213,17 @@ msgstr ""
 msgid "last"
 msgstr ""
 
+#. years label
 #: event-ui.c:1327
 msgid "years"
 msgstr ""
 
+#. Begin end-date vbox
 #: event-ui.c:1346
 msgid "End Date"
 msgstr ""
 
+#. forever radio button
 #: event-ui.c:1352
 msgid "forever"
 msgstr ""
@@ -303,6 +236,7 @@ msgstr ""
 msgid "end on"
 msgstr ""
 
+#. events label
 #: event-ui.c:1388
 msgid "events"
 msgstr ""
@@ -315,27 +249,19 @@ msgstr ""
 msgid "Calendar: Edit event"
 msgstr ""
 
-#: day_popup.c:209
-msgid "No appointments"
-msgstr ""
-
-#: xsettings.c:105
-msgid "Cannot create XSettings client"
-msgstr ""
-
 #: gtkdatesel.c:216
 msgid "%Y"
 msgstr ""
 
-#: gtkdatesel.c:225 gtkdatesel.c:477
+#: gtkdatesel.c:225 gtkdatesel.c:272
 msgid "%b"
 msgstr ""
 
-#: gtkdatesel.c:228 gtkdatesel.c:480
+#: gtkdatesel.c:228 gtkdatesel.c:275
 msgid "%B"
 msgstr ""
 
-#: gtkdatesel.c:231 gtkdatesel.c:483
+#: gtkdatesel.c:231 gtkdatesel.c:278
 #, c-format
 msgid "%m"
 msgstr ""
@@ -349,6 +275,106 @@ msgstr ""
 msgid "%a, %d"
 msgstr ""
 
-#: gpe-calendar.desktop.in.h:2
-msgid "GPE Calendar"
+#: gtkdatesel.c:312
+#, c-format
+msgid "%d"
+msgstr ""
+
+#: gtkdatesel.c:324
+#, c-format
+msgid "%a"
+msgstr ""
+
+#: intltool-merge.in:554
+msgid "($q)"
+msgstr ""
+
+#: intltool-merge.in:572
+msgid ")($q)"
+msgstr ""
+
+#: intltool-merge.in:605
+msgid "'"
+msgstr ""
+
+#: main.c:276
+msgid "Choose file"
+msgstr ""
+
+#: main.c:304
+msgid "Import of"
+msgstr ""
+
+#: main.c:304
+msgid "files failed:"
+msgstr ""
+
+#: main.c:308
+msgid "Import successful"
+msgstr ""
+
+#: main.c:424
+#, c-format
+msgid "Could not import file %s."
+msgstr ""
+
+#: main.c:429
+#, c-format
+msgid "File %s imported sucessfully."
+msgstr ""
+
+#: main.c:462
+msgid "Calendar"
+msgstr ""
+
+#: main.c:484
+msgid "New appointment"
+msgstr ""
+
+#: main.c:484
+msgid "Tap here to add a new appointment or reminder"
+msgstr ""
+
+#: main.c:495
+msgid "Today"
+msgstr ""
+
+#: main.c:496
+msgid "Switch to today and stay there/return to day selecting."
+msgstr ""
+
+#: main.c:508
+msgid "Tap here to select day-at-a-time view."
+msgstr ""
+
+#: main.c:516
+msgid "Week"
+msgstr ""
+
+#: main.c:517
+msgid "Tap here to select week-at-a-time view."
+msgstr ""
+
+#: main.c:525
+msgid "Month"
+msgstr ""
+
+#: main.c:526
+msgid "Tap here to select month-at-a-time view."
+msgstr ""
+
+#: main.c:533
+msgid "Import"
+msgstr ""
+
+#: main.c:533
+msgid "Open file to import an event from it."
+msgstr ""
+
+#: main.c:540
+msgid "Tap here to exit the program"
+msgstr ""
+
+#: xsettings.c:105
+msgid "Cannot create XSettings client"
 msgstr ""

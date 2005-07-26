@@ -1,0 +1,16 @@
+day_popup.c
+day_render.c
+day_view.c
+event-ui.c
+gpe-calendar.desktop.in
+gtkdatesel.c
+import-vcal.c
+intltool-extract.in
+intltool-merge.in
+intltool-update.in
+main.c
+Makefile.in
+month_view.c
+week_view.c
+xsettings.c
+year_view.c

@@ -1,0 +1,3 @@
+[D-BUS Service]
+Name=org.gpe.gpe_calendar
+Exec=/var/lib/install/@prefix@/bin/gpe-calendar

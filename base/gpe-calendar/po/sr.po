@@ -2,10 +2,12 @@
 # Copyright (C) 2004 Free Software Foundation, Inc.
 # This file is distributed under the same license as the `gpe-calendar' package.
 # Aleksandar Jelenak <jelenak@netlinkplus.net>, 2004.
+#: intltool-merge.in:592 intltool-merge.in:593
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-calendar 0.45\n"
-"POT-Creation-Date: 2003-09-05 23:16+0100\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2005-07-27 00:49+0200\n"
 "PO-Revision-Date: 2004-02-03 01:03-0500\n"
 "Last-Translator: Aleksandar Jelenak <jelenak@netlinkplus.net>\n"
 "Language-Team: Serbian <sr@li.org>\n"
@@ -13,75 +15,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: main.c:242 gpe-calendar.desktop.in.h:1
-msgid "Calendar"
-msgstr "Календар"
+#: day_popup.c:209
+msgid "No appointments"
+msgstr "Нема састанака"
 
-#: main.c:261
-msgid "New appointment"
-msgstr "Нови састанак"
-
-#: main.c:261
-msgid "Tap here to add a new appointment or reminder"
-msgstr "Лупни овде за нови састанак или подсетник"
-
-#: main.c:267 main.c:268
-msgid "Today"
-msgstr "Данас"
-
-#: main.c:276
-msgid "Future"
-msgstr "Будућност"
-
-#: main.c:276
-msgid "Future View"
-msgstr "Преглед будућности"
-
-#: main.c:277
-msgid "Tap here to see all future events."
-msgstr "Лупни овде за преглед будућих догађаја."
-
-#: main.c:284
-msgid "Day View"
-msgstr "Преглед дана"
-
-#: main.c:285
-msgid "Tap here to select day-at-a-time view."
-msgstr "Лупни овде за преглед по данима"
-
-#: main.c:292
-msgid "Week"
-msgstr "Недеља"
-
-#: main.c:292
-msgid "Week View"
-msgstr "Преглед недеље"
-
-#: main.c:293
-msgid "Tap here to select week-at-a-time view."
-msgstr "Лупни овде за преглед по недељама"
-
-#: main.c:300
-msgid "Month"
-msgstr "Месец"
-
-#: main.c:300
-msgid "Month View"
-msgstr "Преглед месеца"
-
-#: main.c:301
-msgid "Tap here to select month-at-a-time view."
-msgstr "Лупни овде за преглед по месецима."
-
-#: main.c:307
-msgid "Exit"
-msgstr "Излаз"
-
-#: main.c:307
-msgid "Tap here to exit the program"
-msgstr "Лупни овде за крај"
-
-#: event-ui.c:251
+#: day_view.c:59 event-ui.c:281
 msgid ""
 "Delete all recurring entries?\n"
 "(If no, delete this instance only)"
@@ -89,233 +27,394 @@ msgstr ""
 "Избрисати све понављајуће уносе?\n"
 "(Ако не, избриши само овај)"
 
-#: event-ui.c:383
+#: day_view.c:60 day_view.c:164 event-ui.c:282
+#, fuzzy
+msgid "Question"
+msgstr "Опис:"
+
+#: day_view.c:164
+#, fuzzy
+msgid "Delete event?"
+msgstr "пре догађаја"
+
+#: event-ui.c:415
 msgid "End time must not be earlier than start time"
 msgstr "Време завршетка не сме да буде пре времена почетка"
 
-#: event-ui.c:622
+#: event-ui.c:435
+msgid ""
+"Event starts in the past!\n"
+"Save anyway?"
+msgstr ""
+
+#: event-ui.c:875
 msgid "Event"
 msgstr "Догађај"
 
-#: event-ui.c:623
+#: event-ui.c:876
 msgid "Recurrence"
 msgstr "Понављање"
 
-#: event-ui.c:624 event-ui.c:797
+#: event-ui.c:877 event-ui.c:1080
 msgid "Alarm"
 msgstr "Аларм"
 
-#: event-ui.c:651 event-ui.c:853
+#: event-ui.c:907
 msgid "Type:"
 msgstr "Врста:"
 
-#: event-ui.c:656
+#: event-ui.c:912
 msgid "Appointment"
 msgstr "Састанак"
 
-#: event-ui.c:657
+#: event-ui.c:913
 msgid "Reminder"
 msgstr "Подсетник"
 
-#: event-ui.c:659
+#: event-ui.c:915
 msgid "Task"
 msgstr "Задатак"
 
-#: event-ui.c:665
+#: event-ui.c:921
 msgid "Days"
 msgstr "Дани"
 
-#: event-ui.c:666
+#: event-ui.c:922
 msgid "Weeks"
 msgstr "Недеље"
 
-#: event-ui.c:674
-msgid "Summary:"
-msgstr "Сажетак:"
+#: event-ui.c:929
+#, fuzzy
+msgid "Text:"
+msgstr "Време:"
 
-#: event-ui.c:690
-msgid "Start:"
+#: event-ui.c:949
+#, fuzzy
+msgid "Start at:"
 msgstr "Почетак:"
 
-#: event-ui.c:691
-msgid "End:"
-msgstr "Крај:"
+#: event-ui.c:950
+#, fuzzy
+msgid "End at:"
+msgstr "Крајњу датум:"
 
-#: event-ui.c:692 event-ui.c:693
-msgid "at:"
-msgstr "у:"
+#: event-ui.c:951 event-ui.c:952
+msgid "on:"
+msgstr ""
 
-#: event-ui.c:726
+#: event-ui.c:988
 msgid "Date:"
 msgstr "Датум:"
 
-#: event-ui.c:729
+#: event-ui.c:991
 msgid "Time:"
 msgstr "Време:"
 
-#: event-ui.c:749
+#: event-ui.c:1012
 msgid "Due:"
 msgstr "Приспева:"
 
-#: event-ui.c:753
+#: event-ui.c:1016
 msgid "Allow:"
 msgstr "Дозволи:"
 
-#: event-ui.c:768
+#: event-ui.c:1026
+msgid "Categories"
+msgstr ""
+
+#: event-ui.c:1050
 msgid "Description:"
 msgstr "Опис:"
 
-#: event-ui.c:801
+#: event-ui.c:1084
 msgid "before event"
 msgstr "пре догађаја"
 
-#: event-ui.c:804
+#: event-ui.c:1087
 msgid "minutes"
 msgstr "минута"
 
-#: event-ui.c:806
+#: event-ui.c:1089
 msgid "hours"
 msgstr "сати"
 
-#: event-ui.c:808 event-ui.c:908
+#. days label
+#: event-ui.c:1091 event-ui.c:1198
 msgid "days"
 msgstr "дана"
 
-#: event-ui.c:810
+#: event-ui.c:1093
 msgid "weeks"
 msgstr "недеља"
 
-#: event-ui.c:865
+#: event-ui.c:1143
+#, fuzzy
+msgid "Type"
+msgstr "Врста:"
+
+#: event-ui.c:1155
 msgid "No recurrence"
 msgstr "Без понављања"
 
-#: event-ui.c:868
+#: event-ui.c:1158
 msgid "Daily"
 msgstr "Дневно"
 
-#: event-ui.c:871
+#: event-ui.c:1161
 msgid "Weekly"
 msgstr "Недељно"
 
-#: event-ui.c:874
+#: event-ui.c:1164
 msgid "Monthly"
 msgstr "Месечно"
 
-#: event-ui.c:877
+#: event-ui.c:1167
 msgid "Yearly"
 msgstr "Годишње"
 
-#: event-ui.c:898 event-ui.c:920 event-ui.c:963 event-ui.c:1018
+#. "every" label
+#: event-ui.c:1188 event-ui.c:1210 event-ui.c:1262 event-ui.c:1317
 msgid "Every"
 msgstr "Сваки(е)"
 
-#: event-ui.c:921
+#: event-ui.c:1211
 msgid "weeks, on:"
 msgstr "недељама, на:"
 
-#: event-ui.c:974
+#. months label
+#: event-ui.c:1273
 msgid "months"
 msgstr "месеци"
 
-#: event-ui.c:979
+#: event-ui.c:1278
 #, c-format
 msgid "on day %d"
 msgstr "на дан %d"
 
-#: event-ui.c:983
+#: event-ui.c:1282
 msgid "on the"
 msgstr "на"
 
-#: event-ui.c:991
+#: event-ui.c:1290
 msgid "first"
 msgstr "први"
 
-#: event-ui.c:993
+#: event-ui.c:1292
 msgid "second"
 msgstr "други"
 
-#: event-ui.c:995
+#: event-ui.c:1294
 msgid "third"
 msgstr "трећи"
 
-#: event-ui.c:997
+#: event-ui.c:1296
 msgid "fourth"
 msgstr "четврти"
 
-#: event-ui.c:999
+#: event-ui.c:1298
 msgid "fifth"
 msgstr "пети"
 
-#: event-ui.c:1001
+#: event-ui.c:1300
 msgid "last"
 msgstr "задњи"
 
-#: event-ui.c:1028
+#. years label
+#: event-ui.c:1327
 msgid "years"
 msgstr "године"
 
-#: event-ui.c:1047
-msgid "End Date:"
+#. Begin end-date vbox
+#: event-ui.c:1346
+#, fuzzy
+msgid "End Date"
 msgstr "Крајњу датум:"
 
-#: event-ui.c:1053
+#. forever radio button
+#: event-ui.c:1352
 msgid "forever"
 msgstr "заувек"
 
-#: event-ui.c:1064
+#: event-ui.c:1363
 msgid "end after"
 msgstr "завршава после"
 
-#: event-ui.c:1081
+#: event-ui.c:1380
 msgid "end on"
 msgstr "завршава на"
 
-#: event-ui.c:1089
+#. events label
+#: event-ui.c:1388
 msgid "events"
 msgstr "догађаји"
 
-#: event-ui.c:1188
+#: event-ui.c:1504
 msgid "Calendar: New event"
 msgstr "Календар: Нови догађај"
 
-#: event-ui.c:1235
+#: event-ui.c:1558
 msgid "Calendar: Edit event"
 msgstr "Календар: Уреди догађај"
 
-#: day_popup.c:171
-msgid "No appointments"
-msgstr "Нема састанака"
+#: gtkdatesel.c:216
+msgid "%Y"
+msgstr "%Y"
+
+#: gtkdatesel.c:225 gtkdatesel.c:272
+msgid "%b"
+msgstr "%b"
+
+#: gtkdatesel.c:228 gtkdatesel.c:275
+msgid "%B"
+msgstr "%B"
+
+#: gtkdatesel.c:231 gtkdatesel.c:278
+#, c-format
+msgid "%m"
+msgstr "%m"
+
+#: gtkdatesel.c:242
+msgid "Week %V"
+msgstr "Недеља %V"
+
+#: gtkdatesel.c:248
+#, c-format
+msgid "%a, %d"
+msgstr "%a, %d"
+
+#: gtkdatesel.c:312
+#, c-format
+msgid "%d"
+msgstr ""
+
+#: gtkdatesel.c:324
+#, c-format
+msgid "%a"
+msgstr ""
+
+#: intltool-merge.in:554
+msgid "($q)"
+msgstr ""
+
+#: intltool-merge.in:572
+msgid ")($q)"
+msgstr ""
+
+#: intltool-merge.in:605
+msgid "'"
+msgstr ""
+
+#: main.c:276
+msgid "Choose file"
+msgstr ""
+
+#: main.c:304
+msgid "Import of"
+msgstr ""
+
+#: main.c:304
+msgid "files failed:"
+msgstr ""
+
+#: main.c:308
+msgid "Import successful"
+msgstr ""
+
+#: main.c:424
+#, c-format
+msgid "Could not import file %s."
+msgstr ""
+
+#: main.c:429
+#, c-format
+msgid "File %s imported sucessfully."
+msgstr ""
+
+#: main.c:462
+msgid "Calendar"
+msgstr "Календар"
+
+#: main.c:484
+msgid "New appointment"
+msgstr "Нови састанак"
+
+#: main.c:484
+msgid "Tap here to add a new appointment or reminder"
+msgstr "Лупни овде за нови састанак или подсетник"
+
+#: main.c:495
+msgid "Today"
+msgstr "Данас"
+
+#: main.c:496
+msgid "Switch to today and stay there/return to day selecting."
+msgstr ""
+
+#: main.c:508
+msgid "Tap here to select day-at-a-time view."
+msgstr "Лупни овде за преглед по данима"
+
+#: main.c:516
+msgid "Week"
+msgstr "Недеља"
+
+#: main.c:517
+msgid "Tap here to select week-at-a-time view."
+msgstr "Лупни овде за преглед по недељама"
+
+#: main.c:525
+msgid "Month"
+msgstr "Месец"
+
+#: main.c:526
+msgid "Tap here to select month-at-a-time view."
+msgstr "Лупни овде за преглед по месецима."
+
+#: main.c:533
+msgid "Import"
+msgstr ""
+
+#: main.c:533
+msgid "Open file to import an event from it."
+msgstr ""
+
+#: main.c:540
+msgid "Tap here to exit the program"
+msgstr "Лупни овде за крај"
 
 #: xsettings.c:105
 msgid "Cannot create XSettings client"
 msgstr "Не може створити XSettings клијента"
 
-#: gtkdatesel.c:193
-msgid "%Y"
-msgstr "%Y"
+#~ msgid "Future"
+#~ msgstr "Будућност"
 
-#: gtkdatesel.c:202
-msgid "%b"
-msgstr "%b"
+#~ msgid "Future View"
+#~ msgstr "Преглед будућности"
 
-#: gtkdatesel.c:205
-msgid "%B"
-msgstr "%B"
+#~ msgid "Tap here to see all future events."
+#~ msgstr "Лупни овде за преглед будућих догађаја."
 
-#: gtkdatesel.c:208
-#, c-format
-msgid "%m"
-msgstr "%m"
+#~ msgid "Day View"
+#~ msgstr "Преглед дана"
 
-#: gtkdatesel.c:219
-msgid "Week %V"
-msgstr "Недеља %V"
+#~ msgid "Week View"
+#~ msgstr "Преглед недеље"
 
-#: gtkdatesel.c:225
-#, c-format
-msgid "%a, %d"
-msgstr "%a, %d"
+#~ msgid "Month View"
+#~ msgstr "Преглед месеца"
 
-#: gpe-calendar.desktop.in.h:2
-msgid "GPE Calendar"
-msgstr "GPE Календар"
+#~ msgid "Exit"
+#~ msgstr "Излаз"
+
+#~ msgid "Summary:"
+#~ msgstr "Сажетак:"
+
+#~ msgid "End:"
+#~ msgstr "Крај:"
+
+#~ msgid "at:"
+#~ msgstr "у:"
+
+#~ msgid "GPE Calendar"
+#~ msgstr "GPE Календар"
