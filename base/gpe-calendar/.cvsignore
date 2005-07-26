@@ -22,3 +22,4 @@ config.sub
 configure
 *.tar.gz
 *.tar.bz2
+Makefile.in
