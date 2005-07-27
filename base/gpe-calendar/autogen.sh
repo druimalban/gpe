@@ -1,5 +1,5 @@
 # gettext
-PKG_NAME="gpe-contacts"
+PKG_NAME="gpe-calendar"
 GETTEXTIZE="glib-gettextize"
 
 $GETTEXTIZE --version < /dev/null > /dev/null 2>&1
