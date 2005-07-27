@@ -9,29 +9,38 @@ static void *initialize(OSyncMember *member, OSyncError **error)
 	osync_debug("GPE_SYNC", 4, "start: %s", __func__);
 	char *configdata = NULL;
 	int configsize = 0;
+
+	g_type_init();
 	
 	//You need to specify the <some name>_environment somewhere with
 	//all the members you need
-	gpe_environment *env = malloc(sizeof(gpe_environment));
+	gpe_environment *env = g_malloc0(sizeof(gpe_environment));
 	assert(env != NULL);
-	memset(env, 0, sizeof(gpe_environment));
-	
+
 	//now you can get the config file for this plugin
 	if (!osync_member_get_config(member, &configdata, &configsize, error)) {
 		osync_error_update(error, "Unable to get config data: %s", osync_error_print(error));
-		free(env);
+		g_free(env);
+		osync_trace(TRACE_EXIT_ERROR, "GPE-SYNC %s: %s", __func__, osync_error_print(error));
+		return NULL;
+	}
+	
+	osync_debug("GPE_SYNC", 4, "configdata: %s", configdata);
+	
+	if (!gpe_parse_settings(env, configdata, configsize)) {
+		osync_error_set(error, OSYNC_ERROR_MISCONFIGURATION, "Unable to parse plugin configuration for gpe plugin");
+		g_free(env);
+		osync_trace(TRACE_EXIT_ERROR, "GPE-SYNC %s: %s", __func__, osync_error_print(error));
 		return NULL;
 	}
 
-	osync_debug("GPE_SYNC", 4, "configdata: %s", configdata);
-	
 	//Process the configdata here and set the options on your environment
-	free(configdata);
 	env->member = member;
-	
-	//If you need a hashtable you make it here
-	//env->hashtable = osync_hashtable_new();
-	
+	OSyncGroup *group = osync_member_get_group(member);
+	env->change_id = g_strdup(osync_group_get_name(group));
+
+	osync_trace(TRACE_EXIT, "GPE-SYNC %s: %p", __func__, env);
+
 	//Now your return your struct.
 	return (void *)env;
 }
@@ -200,7 +209,7 @@ void get_info(OSyncEnv *env)
 	OSyncPluginInfo *info = osync_plugin_new_info(env);
 	
 	//Tell opensync something about your plugin
-	info->name = "GPE-plugin";
+	info->name = "gpe-sync";
 	info->longname = "Provides synchronisation with handhelds using GPE.";
 	info->description = "See http://gpe.handhelds.org for more information";
 	//the version of the api we are using, (1 at the moment)

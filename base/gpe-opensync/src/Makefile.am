@@ -15,11 +15,13 @@ plugin_LTLIBRARIES = gpe_sync.la
 EXTRA_DIST = \
 	gpe_sync.h \
 	gpe_adresses.h \
+	gpe_xml.h \
 	gpe-sync
 
 gpe_sync_la_SOURCES = \
 	gpe_sync.c \
-	gpe_adresses.c
+	gpe_adresses.c \
+	gpe_xml.c
 	
 gpe_sync_la_LDFLAGS = -avoid-version -export-dynamic -module
 gpe_sync_la_LIBADD = @PACKAGE_LIBS@ @LIBS@

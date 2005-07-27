@@ -102,6 +102,7 @@ ac_ct_CXX = @ac_ct_CXX@
 ac_ct_F77 = @ac_ct_F77@
 ac_ct_RANLIB = @ac_ct_RANLIB@
 ac_ct_STRIP = @ac_ct_STRIP@
+ac_pt_PKG_CONFIG = @ac_pt_PKG_CONFIG@
 am__fastdepCC_FALSE = @am__fastdepCC_FALSE@
 am__fastdepCC_TRUE = @am__fastdepCC_TRUE@
 am__fastdepCXX_FALSE = @am__fastdepCXX_FALSE@
@@ -138,48 +139,49 @@ sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 plugindir = @OPENSYNC_PLUGINDIR@
 configdir = @OPENSYNC_CONFIGDIR@
-formatsdir = @OPENSYNC_FORMATSDIR@
 opensyncheaderdir = @OPENSYNC_HEADERDIR@
 
 INCLUDES = @PACKAGE_CFLAGS@
 
 AM_CFLAGS = -Wall -Werror @PACKAGE_CFLAGS@
 
-EXTRA_DIST = plugin-name plugin.h
+config_DATA = gpe-sync
 
-config_DATA = plugin-name
+opensyncheader_HEADERS = gpe_sync.h
 
-opensyncheader_HEADER = plugin.h
+plugin_LTLIBRARIES = gpe_sync.la
 
-plugin_LTLIBRARIES = plugin.la
+EXTRA_DIST = \
+	gpe_sync.h \
+	gpe_adresses.h \
+	gpe_xml.h \
+	gpe-sync
 
-plugin_la_SOURCES = plugin.c
-plugin_la_LDFLAGS = -avoid-version -export-dynamic -module
-plugin_la_LIBADD = @PACKAGE_LIBS@ @LIBS@
 
-formats_LTLIBRARIES = format.la
+gpe_sync_la_SOURCES = \
+	gpe_sync.c \
+	gpe_adresses.c \
+	gpe_xml.c
 
-format_la_SOURCES = format.c
-format_la_LDFLAGS = -avoid-version -export-dynamic -module
-format_la_LIBADD = @PACKAGE_LIBS@ @LIBS@
+
+gpe_sync_la_LDFLAGS = -avoid-version -export-dynamic -module
+gpe_sync_la_LIBADD = @PACKAGE_LIBS@ @LIBS@
 subdir = src
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-mkinstalldirs = $(SHELL) $(top_srcdir)/../../mkinstalldirs
+mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
-LTLIBRARIES = $(formats_LTLIBRARIES) $(plugin_LTLIBRARIES)
+LTLIBRARIES = $(plugin_LTLIBRARIES)
 
-format_la_DEPENDENCIES =
-am_format_la_OBJECTS = format.lo
-format_la_OBJECTS = $(am_format_la_OBJECTS)
-plugin_la_DEPENDENCIES =
-am_plugin_la_OBJECTS = plugin.lo
-plugin_la_OBJECTS = $(am_plugin_la_OBJECTS)
+gpe_sync_la_DEPENDENCIES =
+am_gpe_sync_la_OBJECTS = gpe_sync.lo gpe_adresses.lo gpe_xml.lo
+gpe_sync_la_OBJECTS = $(am_gpe_sync_la_OBJECTS)
 
 DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)
-depcomp = $(SHELL) $(top_srcdir)/../../depcomp
+depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
-@AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/format.Plo ./$(DEPDIR)/plugin.Plo
+@AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/gpe_adresses.Plo \
+@AMDEP_TRUE@	./$(DEPDIR)/gpe_sync.Plo ./$(DEPDIR)/gpe_xml.Plo
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) \
@@ -187,11 +189,14 @@ LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) \
 CCLD = $(CC)
 LINK = $(LIBTOOL) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
-DIST_SOURCES = $(format_la_SOURCES) $(plugin_la_SOURCES)
+DIST_SOURCES = $(gpe_sync_la_SOURCES)
 DATA = $(config_DATA)
 
-DIST_COMMON = $(srcdir)/Makefile.in Makefile.am
-SOURCES = $(format_la_SOURCES) $(plugin_la_SOURCES)
+HEADERS = $(opensyncheader_HEADERS)
+
+DIST_COMMON = $(opensyncheader_HEADERS) $(srcdir)/Makefile.in \
+	Makefile.am
+SOURCES = $(gpe_sync_la_SOURCES)
 
 all: all-am
 
@@ -202,34 +207,6 @@ $(srcdir)/Makefile.in:  Makefile.am  $(top_srcdir)/configure.in $(ACLOCAL_M4)
 	  $(AUTOMAKE) --foreign  src/Makefile
 Makefile:  $(srcdir)/Makefile.in  $(top_builddir)/config.status
 	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@ $(am__depfiles_maybe)
-formatsLTLIBRARIES_INSTALL = $(INSTALL)
-install-formatsLTLIBRARIES: $(formats_LTLIBRARIES)
-	@$(NORMAL_INSTALL)
-	$(mkinstalldirs) $(DESTDIR)$(formatsdir)
-	@list='$(formats_LTLIBRARIES)'; for p in $$list; do \
-	  if test -f $$p; then \
-	    f="`echo $$p | sed -e 's|^.*/||'`"; \
-	    echo " $(LIBTOOL) --mode=install $(formatsLTLIBRARIES_INSTALL) $(INSTALL_STRIP_FLAG) $$p $(DESTDIR)$(formatsdir)/$$f"; \
-	    $(LIBTOOL) --mode=install $(formatsLTLIBRARIES_INSTALL) $(INSTALL_STRIP_FLAG) $$p $(DESTDIR)$(formatsdir)/$$f; \
-	  else :; fi; \
-	done
-
-uninstall-formatsLTLIBRARIES:
-	@$(NORMAL_UNINSTALL)
-	@list='$(formats_LTLIBRARIES)'; for p in $$list; do \
-	    p="`echo $$p | sed -e 's|^.*/||'`"; \
-	  echo " $(LIBTOOL) --mode=uninstall rm -f $(DESTDIR)$(formatsdir)/$$p"; \
-	  $(LIBTOOL) --mode=uninstall rm -f $(DESTDIR)$(formatsdir)/$$p; \
-	done
-
-clean-formatsLTLIBRARIES:
-	-test -z "$(formats_LTLIBRARIES)" || rm -f $(formats_LTLIBRARIES)
-	@list='$(formats_LTLIBRARIES)'; for p in $$list; do \
-	  dir="`echo $$p | sed -e 's|/[^/]*$$||'`"; \
-	  test "$$dir" = "$$p" && dir=.; \
-	  echo "rm -f \"$${dir}/so_locations\""; \
-	  rm -f "$${dir}/so_locations"; \
-	done
 pluginLTLIBRARIES_INSTALL = $(INSTALL)
 install-pluginLTLIBRARIES: $(plugin_LTLIBRARIES)
 	@$(NORMAL_INSTALL)
@@ -258,10 +235,8 @@ clean-pluginLTLIBRARIES:
 	  echo "rm -f \"$${dir}/so_locations\""; \
 	  rm -f "$${dir}/so_locations"; \
 	done
-format.la: $(format_la_OBJECTS) $(format_la_DEPENDENCIES) 
-	$(LINK) -rpath $(formatsdir) $(format_la_LDFLAGS) $(format_la_OBJECTS) $(format_la_LIBADD) $(LIBS)
-plugin.la: $(plugin_la_OBJECTS) $(plugin_la_DEPENDENCIES) 
-	$(LINK) -rpath $(plugindir) $(plugin_la_LDFLAGS) $(plugin_la_OBJECTS) $(plugin_la_LIBADD) $(LIBS)
+gpe_sync.la: $(gpe_sync_la_OBJECTS) $(gpe_sync_la_DEPENDENCIES) 
+	$(LINK) -rpath $(plugindir) $(gpe_sync_la_LDFLAGS) $(gpe_sync_la_OBJECTS) $(gpe_sync_la_LIBADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT) core *.core
@@ -269,8 +244,9 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/format.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/plugin.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gpe_adresses.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gpe_sync.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gpe_xml.Plo@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	if $(COMPILE) -MT $@ -MD -MP -MF "$(DEPDIR)/$*.Tpo" \
@@ -331,6 +307,24 @@ uninstall-configDATA:
 	  f="`echo $$p | sed -e 's|^.*/||'`"; \
 	  echo " rm -f $(DESTDIR)$(configdir)/$$f"; \
 	  rm -f $(DESTDIR)$(configdir)/$$f; \
+	done
+opensyncheaderHEADERS_INSTALL = $(INSTALL_HEADER)
+install-opensyncheaderHEADERS: $(opensyncheader_HEADERS)
+	@$(NORMAL_INSTALL)
+	$(mkinstalldirs) $(DESTDIR)$(opensyncheaderdir)
+	@list='$(opensyncheader_HEADERS)'; for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  f="`echo $$p | sed -e 's|^.*/||'`"; \
+	  echo " $(opensyncheaderHEADERS_INSTALL) $$d$$p $(DESTDIR)$(opensyncheaderdir)/$$f"; \
+	  $(opensyncheaderHEADERS_INSTALL) $$d$$p $(DESTDIR)$(opensyncheaderdir)/$$f; \
+	done
+
+uninstall-opensyncheaderHEADERS:
+	@$(NORMAL_UNINSTALL)
+	@list='$(opensyncheader_HEADERS)'; for p in $$list; do \
+	  f="`echo $$p | sed -e 's|^.*/||'`"; \
+	  echo " rm -f $(DESTDIR)$(opensyncheaderdir)/$$f"; \
+	  rm -f $(DESTDIR)$(opensyncheaderdir)/$$f; \
 	done
 
 ETAGS = etags
@@ -420,10 +414,10 @@ distdir: $(DISTFILES)
 	done
 check-am: all-am
 check: check-am
-all-am: Makefile $(LTLIBRARIES) $(DATA)
+all-am: Makefile $(LTLIBRARIES) $(DATA) $(HEADERS)
 
 installdirs:
-	$(mkinstalldirs) $(DESTDIR)$(formatsdir) $(DESTDIR)$(plugindir) $(DESTDIR)$(configdir)
+	$(mkinstalldirs) $(DESTDIR)$(plugindir) $(DESTDIR)$(configdir) $(DESTDIR)$(opensyncheaderdir)
 install: install-am
 install-exec: install-exec-am
 install-data: install-data-am
@@ -450,8 +444,8 @@ maintainer-clean-generic:
 	@echo "it deletes files that may require special tools to rebuild."
 clean: clean-am
 
-clean-am: clean-formatsLTLIBRARIES clean-generic clean-libtool \
-	clean-pluginLTLIBRARIES mostlyclean-am
+clean-am: clean-generic clean-libtool clean-pluginLTLIBRARIES \
+	mostlyclean-am
 
 distclean: distclean-am
 	-rm -rf ./$(DEPDIR)
@@ -467,7 +461,7 @@ info: info-am
 
 info-am:
 
-install-data-am: install-configDATA install-formatsLTLIBRARIES \
+install-data-am: install-configDATA install-opensyncheaderHEADERS \
 	install-pluginLTLIBRARIES
 
 install-exec-am:
@@ -496,24 +490,30 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-configDATA uninstall-formatsLTLIBRARIES \
-	uninstall-info-am uninstall-pluginLTLIBRARIES
+uninstall-am: uninstall-configDATA uninstall-info-am \
+	uninstall-opensyncheaderHEADERS uninstall-pluginLTLIBRARIES
 
-.PHONY: CTAGS GTAGS all all-am check check-am clean \
-	clean-formatsLTLIBRARIES clean-generic clean-libtool \
-	clean-pluginLTLIBRARIES ctags distclean distclean-compile \
-	distclean-generic distclean-libtool distclean-tags distdir dvi \
-	dvi-am info info-am install install-am install-configDATA \
-	install-data install-data-am install-exec install-exec-am \
-	install-formatsLTLIBRARIES install-info install-info-am \
-	install-man install-pluginLTLIBRARIES install-strip \
-	installcheck installcheck-am installdirs maintainer-clean \
+.PHONY: CTAGS GTAGS all all-am check check-am clean clean-generic \
+	clean-libtool clean-pluginLTLIBRARIES ctags distclean \
+	distclean-compile distclean-generic distclean-libtool \
+	distclean-tags distdir dvi dvi-am info info-am install \
+	install-am install-configDATA install-data install-data-am \
+	install-exec install-exec-am install-info install-info-am \
+	install-man install-opensyncheaderHEADERS \
+	install-pluginLTLIBRARIES install-strip installcheck \
+	installcheck-am installdirs maintainer-clean \
 	maintainer-clean-generic mostlyclean mostlyclean-compile \
 	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
 	tags uninstall uninstall-am uninstall-configDATA \
-	uninstall-formatsLTLIBRARIES uninstall-info-am \
+	uninstall-info-am uninstall-opensyncheaderHEADERS \
 	uninstall-pluginLTLIBRARIES
 
+
+#formats_LTLIBRARIES = format.la
+
+#format_la_SOURCES = format.c
+#format_la_LDFLAGS = -avoid-version -export-dynamic -module
+#format_la_LIBADD = @PACKAGE_LIBS@ @LIBS@
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
