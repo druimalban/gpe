@@ -4,10 +4,10 @@ TODO:
 * config file to keep zoom/font settings and bookmarks
 * support multiple windows
 * improve progressbar display
-* add hildon interface support (Nokia 770)
 * bookmarks (possible integration with gpe-contacts)
 * history (special case of bookmarks)
 * fullscreen mode
+* remove exit button
 
 DONE:
 
@@ -16,6 +16,7 @@ DONE:
 * "normal" url window for big screens
 * window title set to identify website
 * add zoom in/out buttons if bigger screen or in landscape mode
+* add hildon interface support (Nokia 770)
 
 POSTPONED / PARTIALLY DONE:
 

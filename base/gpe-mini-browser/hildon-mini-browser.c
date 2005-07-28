@@ -1,5 +1,5 @@
 /*
- * gpe-mini-browser v0.15
+ * gpe-mini-browser v0.14
  *
  * Basic web browser based on gtk-webcore 
  *
@@ -25,6 +25,7 @@
 #include <stdio.h>
 #include <stddef.h>
 #include <getopt.h>
+#include <libintl.h>
 
 #include <gtk/gtk.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
@@ -40,13 +41,22 @@
 
 #include "gpe-mini-browser.h"
 
+/* Hildon includes */
+#include <hildon-widgets/hildon-app.h>
+#include <hildon-widgets/hildon-appview.h>
+#include <libosso.h>
+
 //#define DEBUG /* uncomment this if you want debug output*/
 
 
 int
 main (int argc, char *argv[])
 {
-  GtkWidget *html, *app, *contentbox;	/* html engine, application window, content box of application window */
+  HildonApp *app = NULL;
+  HildonAppView *mainview = NULL;
+
+  
+  GtkWidget *html, *contentbox;	/* html engine, application window, content box of application window */
   GtkWidget *toolbar, *urlbox, *iconw;	/* toolbar, url entry box (big screen), icon for url pop-up window (small screens) */
   GtkWidget *back_button, *forward_button, *home_button, *search_button,
     *exit_button;
@@ -66,7 +76,7 @@ main (int argc, char *argv[])
 	{
 	case 'v':
 	  printf
-	    ("GPE-mini-browser version 0.15. (C)2005, Philippe De Swert\n");
+	    ("GPE-mini-browser version 0.14. (C)2005, Philippe De Swert\n");
 	  exit (0);
 
 	default:
@@ -87,29 +97,29 @@ main (int argc, char *argv[])
 #endif
 
   //create application window
-  app = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-  g_signal_connect (G_OBJECT (app), "delete-event", gtk_main_quit, NULL);
-  width = gdk_screen_width ();
-  height = gdk_screen_height ();
-  gtk_window_set_default_size (GTK_WINDOW (app), width, height);
-  gtk_window_set_title (GTK_WINDOW (app), "mini-browser");
-  gtk_window_set_resizable (GTK_WINDOW (app), TRUE);
-  gtk_widget_realize (app);
+  app = HILDON_APP(hildon_app_new()); 
+  hildon_app_set_two_part_title(HILDON_APP(app), FALSE);
+  hildon_app_set_title(app, ("mini-browser"));
+  mainview = HILDON_APPVIEW(hildon_appview_new("main_view"));
+
+  hildon_app_set_appview(app, mainview);
+  gtk_widget_show_all (GTK_WIDGET(app));
+  gtk_widget_show_all (GTK_WIDGET(mainview));
 
   //create boxes
   contentbox = gtk_vbox_new (FALSE, 0);
 
   //fill in status to be sure everything is filled in when used
-  status = (struct status_data*) malloc (sizeof (struct status_data));
+  status = malloc (sizeof (struct status_data));
   status->main_window = contentbox;
   status->exists = FALSE;
 
   //create toolbar and add to topbox
   toolbar = gtk_toolbar_new ();
+  gtk_container_set_border_width (GTK_CONTAINER (toolbar), 3);
   gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar),
 			       GTK_ORIENTATION_HORIZONTAL);
-  gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_BOTH);
-  gtk_container_set_border_width (GTK_CONTAINER (toolbar), 3);
+  gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
 
   //create html object (must be created before function calls to html to avoid segfault)
   html = webi_new ();
@@ -163,21 +173,10 @@ main (int argc, char *argv[])
 			    GTK_SIGNAL_FUNC (home_func), html, -1);
 
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));	/* space after item */
+  
+  hildon_appview_set_toolbar (mainview, GTK_TOOLBAR(toolbar));
 
-  /* only show full Url bar if the screen is bigger than 240x320 | 320x240 */
-  if ((width > 320) || (height > 320))
-    {
-	urlbox = show_big_screen_interface(WEBI (html), toolbar, &s);
-    }
-  else
-    {
-      iconw = gtk_image_new_from_stock (GTK_STOCK_NETWORK,
-					GTK_ICON_SIZE_SMALL_TOOLBAR);
-      gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), ("URL"),
-			       ("Type in url"), ("URL"), iconw,
-			       GTK_SIGNAL_FUNC (show_url_window), html);
-      gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
-    }
+  urlbox = show_big_screen_interface(WEBI (html), toolbar, &s);
 
   gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_QUIT,
 			    ("Exit gpe-mini-browser"), ("Exit"),
@@ -185,29 +184,22 @@ main (int argc, char *argv[])
 
   gtk_toolbar_set_icon_size (GTK_TOOLBAR (toolbar),
 			     GTK_ICON_SIZE_SMALL_TOOLBAR);
-  /* only show icons if the screen is 240x320 | 320x240 or smaller */
-  if ((width <= 240) || (height <= 240))
-    gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
 
-  //make everything viewable
-  gtk_widget_show (toolbar);
-  gtk_widget_show_all (html);
-  gtk_box_pack_start (GTK_BOX (contentbox), toolbar, FALSE, FALSE, 0);
-  if ((width > 320) || (height > 320))
-    {
-      gtk_box_pack_start (GTK_BOX (contentbox), urlbox, FALSE, FALSE, 0);
-      gtk_widget_show_all (urlbox);
-    }
+  gtk_box_pack_start (GTK_BOX (contentbox), urlbox, FALSE, FALSE, 0);
+  gtk_widget_show_all (urlbox);
+  
   gtk_box_pack_start (GTK_BOX (contentbox), html, TRUE, TRUE, 0);
-  gtk_container_add (GTK_CONTAINER (app), contentbox);
+  gtk_container_add (GTK_CONTAINER (mainview), contentbox);
 
   if (base != NULL)
     fetch_url (base, html);
 
   g_free ((gpointer *) base);
 
-  gtk_widget_show (GTK_WIDGET (contentbox));
-  gtk_widget_show (GTK_WIDGET (app));
+  //make everything viewable
+  gtk_widget_show_all (GTK_WIDGET (contentbox));
+  gtk_widget_show_all (toolbar);
+  gtk_widget_show_all (html);
   gtk_main ();
 
   exit (0);
