@@ -1,3 +1,9 @@
+2005-07-29  Florian Boor  <florian.boor@kernelconcepts.de>
+
+	* src/Makefile: Use pkg-config for libgpewidget LDFLAGS.
+	* src/sketchpad.c: Get rid of the nasty unused space in the bottom of 
+	                   the window.
+	
 2005-03-31  Florian Boor  <florian.boor@kernelconcepts.de>
 	* Don't use render.h.
 

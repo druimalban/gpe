@@ -37,7 +37,7 @@ PACKAGE_CFLAGS  += -I../../libgpewidget
 PACKAGE_LDFLAGS += -L../../libgpewidget
 endif
 
-LDFLAGS += -lgpewidget #need to be before gtk libs (overwrite things)
+LDFLAGS += `pkg-config --libs libgpewidget`  #need to be before gtk libs (overwrite things)
 
 #-- GTK2
 PACKAGE_CFLAGS  +=  #-DGTK_ENABLE_BROKEN
