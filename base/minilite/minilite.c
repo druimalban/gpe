@@ -2,6 +2,8 @@
  * minilite -- frontlight control
  *
  * Copyright 2002, 2003 Phil Blundell
+ *           2004, 2005 Florian Boor <florian@kernelconcepts.de>
+ * Contributions by: Arjan Schrijver, Koen Kooi and Nils Faerber
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -43,6 +45,7 @@ typedef enum
 	P_SIMPAD,
 	P_SIMPAD_NEW,
     P_GENERIC,
+	P_SYSCLASS_770,
 	P_SYSCLASS
 }t_platform;
 
@@ -97,6 +100,8 @@ char IpaqModel = -1;
 static char *SYS_BRIGHTNESS = NULL;
 static char *SYS_MAXBRIGHTNESS = NULL;
 static char *SYS_POWER = NULL;
+/* wrong sysclass path on Nokia 770 */
+#define SYSCLASS_770 	"/sys/devices/platform/omapfb/panel/"
 
 GtkWidget *slider_window;
 GtkWidget *window, *slider;
@@ -148,6 +153,14 @@ setup_sysclass(void)
 	SYS_POWER = g_strdup_printf("%s/power", bl_dev);
 }
 
+static void
+setup_sysclass_770(void)
+{
+	SYS_BRIGHTNESS = g_strdup_printf("%s/backlight_level", SYSCLASS_770);
+	SYS_MAXBRIGHTNESS = g_strdup_printf("%s/backlight_max", SYSCLASS_770);
+	SYS_POWER = NULL;
+}
+
 static t_platform
 detect_platform(void)
 {
@@ -165,7 +178,12 @@ detect_platform(void)
 		return P_SIMPAD;
 	if (!access(GENERIC_PROC_DRIVER,R_OK))
 		return P_GENERIC;
-	if (!access(SYSCLASS,R_OK))
+	if (!access(SYSCLASS_770, R_OK))
+	{
+		setup_sysclass_770();
+		return P_SYSCLASS_770;
+	}
+	if (!access(SYSCLASS, R_OK))
 	{
 		setup_sysclass();
 		return P_SYSCLASS;
@@ -219,19 +237,19 @@ sysclass_get_level(void)
 {
   FILE *f_light;
   FILE *f_max;
-  double level, maxlevel, factor;
+  float level, maxlevel, factor;
   
   f_max = fopen(SYS_MAXBRIGHTNESS, "r");
   if (f_max != NULL)
   {
-    fscanf(f_max,"%d", &maxlevel);
+    fscanf(f_max,"%f", &maxlevel);
     fclose(f_max);
   }
   factor = 255/maxlevel;
   f_light = fopen(SYS_BRIGHTNESS, "r");
   if (f_light != NULL)
   {
-  	fscanf(f_light,"%d", &level);
+  	fscanf(f_light,"%f", &level);
   	fclose(f_light);
     level = level * factor;
     if (level > 255)
@@ -550,6 +568,7 @@ set_level (int level)
 		return generic_set_level(level);
 	break;
 	case P_SYSCLASS:
+	case P_SYSCLASS_770:
 		return sysclass_set_level(level);
 	break;	
 	default:
@@ -595,6 +614,7 @@ read_old_level (void)
 		return generic_get_level();
 	break;
 	case P_SYSCLASS:
+	case P_SYSCLASS_770:
 		return sysclass_get_level();
 	break;	
 	default:
