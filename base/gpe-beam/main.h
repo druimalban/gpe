@@ -21,8 +21,6 @@
 #define HINT_HTTP        0x10
 #define HINT_OBEX        0x20
 
-extern gboolean radio_is_on;
-
 extern GdkWindow *dock_window;
 extern void schedule_message_delete (guint id, guint time);
 extern void send_data (char *filename, char *data, size_t len);

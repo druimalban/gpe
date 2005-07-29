@@ -24,7 +24,7 @@ endif
 PACKAGE_CFLAGS += -DVERSION=\"$(VERSION)\" -DPREFIX=\"$(PREFIX)\" -D_GNU_SOURCE -DPACKAGE=\"$(PACKAGE)\" 
 PACKAGE_CFLAGS += -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\" -DDBUS_API_SUBJECT_TO_CHANGE
 
-PACKAGE_CPPFLAGS += -I.
+PACKAGE_CPPFLAGS += -I. -Wall
 
 MIMECFLAGS =`pkg-config --cflags mimedir-1.0`
 MIMELDFLAGS = $(GTKLDFLAGS) -lsqlite `pkg-config --libs mimedir-1.0`

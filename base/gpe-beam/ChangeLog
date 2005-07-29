@@ -1,3 +1,7 @@
+2005-07-29              Florian Boor <florian.boor@kernelconcepts.de>
+
+	* main.h: remove declaration.
+
 2005-04-06              Florian Boor <florian.boor@kernelconcepts.de>
 
         * Makefile: Add Kinyarwanda translation.
