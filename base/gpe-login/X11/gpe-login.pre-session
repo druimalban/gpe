@@ -26,6 +26,10 @@ if [ -d /sys/class/backlight ]; then
 chown -R $USER /sys/class/backlight/*
 fi
 
+if [ -d /sys/devices/platform/omapfb/panel ]; then
+chown -R $USER /sys/devices/platform/omapfb/panel/*
+fi
+
 mkdir -p /mnt/ramfs/home/$USER
 chown $USER /mnt/ramfs/home/$USER
 
