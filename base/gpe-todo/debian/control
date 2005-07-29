@@ -7,5 +7,5 @@ Standards-Version: 3.6.0
 
 Package: gpe-todo
 Architecture: any
-Depends: maemo libgpewidget1 libtododb0 libgpepimc0
+Depends: maemo, libgpewidget1, libtododb0, libgpepimc0
 Description: This is a todo list application for GPE
