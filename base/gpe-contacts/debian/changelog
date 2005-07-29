@@ -1,3 +1,9 @@
+gpe-contacts (0.40m2-2) unstable; urgency=low
+
+  * Update dependencies.
+
+ -- Florian Boor <florian.boor@kernelconcepts.de>  Fri, 29 Jul 2005 17:11:00 +0200
+ 
 gpe-contacts (0.40m2-1) unstable; urgency=low
 
   * Change some links and some more bits to fix integration.
