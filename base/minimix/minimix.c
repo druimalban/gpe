@@ -108,16 +108,32 @@ clicked (GtkWidget *w, GdkEventButton *ev)
 }
 
 gboolean 
-configure_event (GtkWidget *window, GdkEventConfigure *event)
+configure_event (GtkWidget *window, GdkEventConfigure *event, gpointer user_data)
 {
   GdkPixbuf *buf;
   int xoff, yoff;
+  GdkBitmap *tmp;
+  GdkPixbuf *sbuf, *dbuf;
+  int size;
 
   xoff = (event->width - 30) / 2;
   yoff = (event->height - 32) / 2;
 
   gtk_widget_shape_combine_mask (window, bitmap, xoff, yoff);
  
+  /* resize icon pixmap */
+  if (event->type == GDK_CONFIGURE)
+  {
+    size = (event->width > event->height) ? event->height : event->width;
+    sbuf = gpe_find_icon ("minimix");
+    dbuf = gdk_pixbuf_scale_simple(sbuf,size, size,GDK_INTERP_HYPER);
+    gdk_pixbuf_render_pixmap_and_mask (dbuf, NULL, &tmp, 128);
+    gtk_widget_shape_combine_mask (GTK_WIDGET(window), NULL, 1, 0);
+    gtk_widget_shape_combine_mask (GTK_WIDGET(window), tmp, 1, 0);
+    gdk_bitmap_unref (tmp);
+    gtk_image_set_from_pixbuf(GTK_IMAGE(icon),dbuf);
+  }
+
   return FALSE;
 }
 
