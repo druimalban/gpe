@@ -32,7 +32,6 @@
 #include <sys/ioctl.h>
 #include <sys/soundcard.h>
 
-#include "config.h"
 
 GtkWidget *slider_window;
 GtkWidget *window, *slider;
