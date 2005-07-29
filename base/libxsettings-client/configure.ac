@@ -1,6 +1,8 @@
 # Process this file with autoconf to produce a configure script.
-AC_INIT(xsettings-client.c)
-AM_INIT_AUTOMAKE(Xsettings-client, 0.14)
+
+AC_INIT(Xsettings-client, 0.14, gpe@handhelds.org)
+AC_CONFIG_SRCDIR([xsettings-client.c])
+AM_INIT_AUTOMAKE([foreign dist-bzip2])
 AM_CONFIG_HEADER(config.h)
 
 CFLAGS="-Os -Wall"

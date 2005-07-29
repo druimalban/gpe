@@ -3,6 +3,7 @@
 
 	* Version 0.14 released.
 	* configure.ac: Push version to 0.14
+	* configure.ac: Fix buildsystem to generate bzip files.
 
 2005-07-26  Florian Boor <florian@kernelconcepts.de>
 
