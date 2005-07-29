@@ -1507,7 +1507,7 @@ create_main (gboolean edit_structure)
   tabDetail = gtk_table_new (1, 2, FALSE);
   gtk_table_set_col_spacings(GTK_TABLE(tabDetail), gpe_get_boxspacing() * 2);
   gtk_container_set_border_width(GTK_CONTAINER(tabDetail), gpe_get_border());
-  if (mode_large_screen)
+  if (mode_landscape)
     {
       GtkWidget *vport;
       scrolled_window = gtk_scrolled_window_new(NULL, NULL);

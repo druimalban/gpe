@@ -1,3 +1,7 @@
+2005-07-29  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * main.c: Change packing of deatil table in bigscreen + portrait mode.
+
 2005-07-25  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * main-hildon.c: Use hidon method to connect toolbar.
