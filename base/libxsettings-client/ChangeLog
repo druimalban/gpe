@@ -1,3 +1,9 @@
+
+2005-07-29  Florian Boor <florian@kernelconcepts.de>
+
+	* Version 0.14 released.
+	* configure.ac: Push version to 0.14
+
 2005-07-26  Florian Boor <florian@kernelconcepts.de>
 
 	* Makefile.am: Add installation of libxsettings-client.pc.
