@@ -1,3 +1,8 @@
+2005-07-29  Florian Boor  <florian.boor@kernelconcepts.de>
+
+	* Version 0.14 released.
+	* configure.ac: Fix version number.
+
 2005-05-27  Florian Boor  <florian.boor@kernelconcepts.de>
 
 	* Add autotools support.
