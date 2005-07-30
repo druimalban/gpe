@@ -1,5 +1,6 @@
 2005-07-29  Florian Boor <florian@kernelconcepts.de>
 
+	* Version 0.79 released.
 	* X11/gpe-login.pre-session: Change owner of sysclass backlight
                                      devices on Nokia 770.
 
