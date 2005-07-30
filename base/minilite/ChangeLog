@@ -1,5 +1,6 @@
 2005-07-29	Florian Boor <florian.boor@kernelconcepts.de>
 
+    * Release Version 0.49
     * minilite.c: Fix warnings, add support for Nokia 770 / OMAP non-standard
                   sysclass devices.
 
