@@ -1,3 +1,8 @@
+29/07/2005
+
+* text-input now accepts enter (no need to push on the ok button anymore)
+* Hildon support
+
 19/07/2005
 
 * Bumped up to 0.14. Fixed some bugs and added extra features.

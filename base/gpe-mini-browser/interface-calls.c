@@ -59,6 +59,7 @@ show_url_window (GtkWidget * show, GtkWidget * html)
 
   hbox = gtk_hbox_new (FALSE, 0);
   entry = gtk_entry_new ();
+  gtk_entry_set_activates_default (GTK_ENTRY(entry), TRUE);
   label = gtk_label_new (("Enter url:"));
   gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
 
@@ -98,6 +99,10 @@ show_url_window (GtkWidget * show, GtkWidget * html)
 		    G_CALLBACK (destroy_window), (gpointer *) url_window);
   g_signal_connect (GTK_OBJECT (buttonok), "clicked",
 		    G_CALLBACK (destroy_window), (gpointer *) url_window);
+  g_signal_connect (GTK_OBJECT (entry), "activate",
+                        G_CALLBACK (load_text_entry), (gpointer *) data);
+  g_signal_connect (GTK_OBJECT (entry), "activate",
+                        G_CALLBACK (destroy_window), (gpointer *) url_window);
 
   gtk_widget_show_all (url_window);
   gtk_widget_grab_focus (entry);
@@ -238,6 +243,7 @@ GtkWidget * show_big_screen_interface ( Webi *html, GtkWidget *toolbar, WebiSett
       urllabel = gtk_label_new ((" Url:"));
       gtk_misc_set_alignment (GTK_MISC (urllabel), 0.0, 0.5);
       urlentry = gtk_entry_new ();
+      gtk_entry_set_activates_default (GTK_ENTRY(urlentry), TRUE);
       okbutton =
         gpe_button_new_from_stock (GTK_STOCK_OK, GPE_BUTTON_TYPE_BOTH);
   
@@ -257,6 +263,8 @@ GtkWidget * show_big_screen_interface ( Webi *html, GtkWidget *toolbar, WebiSett
       g_signal_connect (GTK_OBJECT (html), "location",
                         G_CALLBACK (update_text_entry),
                         (gpointer *) urlentry);
+      g_signal_connect (GTK_OBJECT (urlentry), "activate",
+                        G_CALLBACK (load_text_entry), (gpointer *) data);
 
       /* fill in the data needed for the zoom functionality */
       struct zoom_data *zoom;
