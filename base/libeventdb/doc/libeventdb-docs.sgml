@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
+               "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<book id="index" xmlns:xi="http://www.w3.org/2003/XInclude">
+  <bookinfo>
+	  <title>GPE Manual: libeventdb Reference Manual</title>
+	
+      <authorgroup>
+      <author>
+        <firstname>Florian</firstname>
+        <surname>Boor</surname>
+        <affiliation>
+          <orgname>handhelds.org</orgname>
+        </affiliation>
+        <authorblurb>
+          <para>
+            <email>florian@handhelds.org</email>
+          </para>
+        </authorblurb>
+      </author>
+    </authorgroup>    
+	<legalnotice>
+      <para>
+        This document may be distributed under the terms and
+        conditions of the Open Publication License, v1.0 or
+        later. (Current version is available at
+		<ulink url=" http://www.opencontent.org/openpub/"
+        type="http">http://www.opencontent.org/openpub/</ulink> )
+      </para>
+    </legalnotice>
+  </bookinfo>
+
+      <abstract>
+	      <para>
+		  Libeventdb is a library to store and manipulate calendar (dated) 
+		  events.
+	      </para>
+	  </abstract>
+    <para>
+	   The libeventdb library is used by GPE applications which need to handle
+	   scheduled events. Currently mostly gpe-calendar and gpe-clock, but it 
+	   provides a common interface which may be used by other applications as
+	   well.
+    </para>
+  <chapter>
+    <title>Programmers Interface</title>
+    <xi:include href="xml/event-db.xml"/>
+  </chapter>
+</book>

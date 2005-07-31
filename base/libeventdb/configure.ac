@@ -13,7 +13,7 @@ AC_PROG_LIBTOOL
 PKG_CHECK_MODULES(EVENTDB, glib-2.0 sqlite libgpewidget)
 
 #gtk-doc for documentation, currently unused
-#GTK_DOC_CHECK(1.2)
+GTK_DOC_CHECK(1.2)
 
-AC_CONFIG_FILES([Makefile libeventdb.pc])
+AC_CONFIG_FILES([Makefile doc/Makefile libeventdb.pc])
 AC_OUTPUT

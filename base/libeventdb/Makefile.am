@@ -1,4 +1,4 @@
-SUBDIRS = 
+SUBDIRS = doc
 
 lib_LTLIBRARIES = libeventdb.la
 
