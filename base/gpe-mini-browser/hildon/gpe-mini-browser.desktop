@@ -1,0 +1,12 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=mini-browser
+Comment=GPE mini-browser Application
+Exec=/var/lib/install/usr/bin/gpe-mini-browser
+Terminal=false
+Type=Application
+Icon=gpe-mini-browser
+X-Window-Icon=gpe-mini-browser
+X-Window-Icon-Dimmed=gpe-mini-browser
+X-HildonDesk-ShowInToolbar=true
+X-Osso-Type=application/x-executable

@@ -48,6 +48,13 @@
 
 //#define DEBUG /* uncomment this if you want debug output*/
 
+static void
+osso_top_callback (const gchar* arguments, gpointer ptr)
+{
+	    GtkWindow *window = ptr;
+
+	        gtk_window_present (GTK_WINDOW (window));
+}
 
 int
 main (int argc, char *argv[])
@@ -65,8 +72,17 @@ main (int argc, char *argv[])
   gint width = 240, height = 320;
   struct status_data *status;
   int opt;
+  osso_context_t *context;
 
   WebiSettings s = { 0, };
+
+  /* osso stuff  */
+  context = osso_initialize ("gpe-mini-browser", "0.15", TRUE, NULL);
+  if (context == NULL)
+  {
+	  fprintf (stderr, "osso_initialize failed.\n");
+          exit (1);
+  }
 
   gpe_application_init (&argc, &argv);
 
@@ -101,6 +117,7 @@ main (int argc, char *argv[])
   hildon_app_set_two_part_title(HILDON_APP(app), FALSE);
   hildon_app_set_title(app, ("mini-browser"));
   mainview = HILDON_APPVIEW(hildon_appview_new("main_view"));
+  osso_application_set_top_cb(context, osso_top_callback, (gpointer)mainview);
 
   hildon_app_set_appview(app, mainview);
   gtk_widget_show_all (GTK_WIDGET(app));

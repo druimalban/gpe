@@ -1,0 +1,11 @@
+Source: gpe-mini-browser
+Section: X11
+Priority: optional
+Maintainer: Philippe De Swert <philippedeswert@scarlet.be>
+Build-Depends: debhelper (>= 4.0.0)
+Standards-Version: 3.6.0
+
+Package: gpe-mini-browser
+Architecture: any
+Depends: maemo libgpewidget1 libgtk-webcore
+Description: This the basic webbrowser application for GPE
