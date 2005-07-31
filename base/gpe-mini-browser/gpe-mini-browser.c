@@ -50,7 +50,6 @@ static int fullscreen = 0;
 
 static void set_fullscreen (GtkWidget *button, GtkWidget *app)
 {
-	printf("fullscreen = %d\n", fullscreen);
 	if(!fullscreen)
 	{
 		gtk_window_fullscreen(GTK_WINDOW (app));
@@ -129,7 +128,6 @@ main (int argc, char *argv[])
   toolbar = gtk_toolbar_new ();
   gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar),
 			       GTK_ORIENTATION_HORIZONTAL);
-  gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_BOTH);
   gtk_container_set_border_width (GTK_CONTAINER (toolbar), 3);
 
   //create html object (must be created before function calls to html to avoid segfault)
