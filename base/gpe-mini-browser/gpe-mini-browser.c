@@ -205,10 +205,13 @@ main (int argc, char *argv[])
 			    ("Set Fullscreen"), ("Fullscreen"),
 			    GTK_SIGNAL_FUNC (set_fullscreen), app , -1);
 
+  /* remove this line that might override user settings for now
   gtk_toolbar_set_icon_size (GTK_TOOLBAR (toolbar),
 			     GTK_ICON_SIZE_SMALL_TOOLBAR);
+  */  
+ 
   /* only show icons if the screen is 240x320 | 320x240 or smaller */
-  if ((width <= 480) || (height <= 480))
+  if ((width <= 240) || (height <= 240))
     gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
 
   //make everything viewable
