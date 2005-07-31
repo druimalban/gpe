@@ -6,8 +6,8 @@ TODO:
 * improve progressbar display
 * bookmarks (possible integration with gpe-contacts)
 * history (special case of bookmarks)
-* fullscreen mode
-* remove exit button
+* some sort of status indication if clicking on links with infoprint or equivalent
+* hiding of url-bar in Hildon/ big-screen mode
 
 DONE:
 
@@ -17,6 +17,8 @@ DONE:
 * window title set to identify website
 * add zoom in/out buttons if bigger screen or in landscape mode
 * add hildon interface support (Nokia 770)
+* fullscreen mode
+* remove exit button
 
 POSTPONED / PARTIALLY DONE:
 

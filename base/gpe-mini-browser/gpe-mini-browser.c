@@ -8,6 +8,10 @@
  * Contact : philippedeswert@scarlet.be
  * 
  * Dedicated to Apocalyptica (Cult album) for keeping me sane.
+ *
+ * SUPPORT : If you like this program and want it to be developed further,
+ * your wishlist items implemented or just thank me, send me beer from my 
+ * native country (Belgium). (Very useful now I (almost) live in Finland)
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,6 +45,23 @@
 #include "gpe-mini-browser.h"
 
 //#define DEBUG /* uncomment this if you want debug output*/
+
+static int fullscreen = 0;
+
+static void set_fullscreen (GtkWidget *button, GtkWidget *app)
+{
+	printf("fullscreen = %d\n", fullscreen);
+	if(!fullscreen)
+	{
+		gtk_window_fullscreen(GTK_WINDOW (app));
+		fullscreen = 1;
+	}
+	else
+	{
+		gtk_window_unfullscreen(GTK_WINDOW (app));
+		fullscreen = 0;
+	}
+}
 
 
 int
@@ -178,10 +199,11 @@ main (int argc, char *argv[])
 			       GTK_SIGNAL_FUNC (show_url_window), html);
       gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
     }
-
-  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_QUIT,
-			    ("Exit gpe-mini-browser"), ("Exit"),
-			    GTK_SIGNAL_FUNC (gtk_main_quit), NULL, -1);
+  /* replace GTK_STOCK_ZOOM_FIT with GTK_STOCK_FULLSCREEN once GPE uses
+     gtk 2.7.1 or higher. Or add it myself :-) */
+  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_ZOOM_FIT,
+			    ("Set Fullscreen"), ("Fullscreen"),
+			    GTK_SIGNAL_FUNC (set_fullscreen), app , -1);
 
   gtk_toolbar_set_icon_size (GTK_TOOLBAR (toolbar),
 			     GTK_ICON_SIZE_SMALL_TOOLBAR);
