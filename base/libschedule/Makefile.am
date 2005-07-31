@@ -1,4 +1,4 @@
-SUBDIRS = 
+SUBDIRS = doc
 
 lib_LTLIBRARIES = libschedule.la
 

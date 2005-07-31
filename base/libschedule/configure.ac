@@ -13,7 +13,7 @@ AC_PROG_LIBTOOL
 PKG_CHECK_MODULES(SCHEDULE, glib-2.0)
 
 #gtk-doc for documentation, currently unused
-#GTK_DOC_CHECK(1.2)
+GTK_DOC_CHECK(1.2)
 
-AC_CONFIG_FILES([Makefile libschedule.pc])
+AC_CONFIG_FILES([Makefile doc/Makefile libschedule.pc])
 AC_OUTPUT
