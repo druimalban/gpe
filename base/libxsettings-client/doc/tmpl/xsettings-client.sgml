@@ -1,0 +1,98 @@
+<!-- ##### SECTION Title ##### -->
+xsettings-client
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT XSettingsClient ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ENUM XSettingsAction ##### -->
+<para>
+
+</para>
+
+@XSETTINGS_ACTION_NEW: 
+@XSETTINGS_ACTION_CHANGED: 
+@XSETTINGS_ACTION_DELETED: 
+
+<!-- ##### USER_FUNCTION XSettingsNotifyFunc ##### -->
+<para>
+
+</para>
+
+@name: 
+@action: 
+@setting: 
+@cb_data: 
+
+
+<!-- ##### USER_FUNCTION XSettingsWatchFunc ##### -->
+<para>
+
+</para>
+
+@window: 
+@is_start: 
+@Param3: 
+@cb_data: 
+
+
+<!-- ##### FUNCTION xsettings_client_new ##### -->
+<para>
+
+</para>
+
+@display: 
+@screen: 
+@notify: 
+@watch: 
+@cb_data: 
+@Returns: 
+
+
+<!-- ##### FUNCTION xsettings_client_destroy ##### -->
+<para>
+
+</para>
+
+@client: 
+
+
+<!-- ##### FUNCTION xsettings_client_process_event ##### -->
+<para>
+
+</para>
+
+@client: 
+@xev: 
+@Returns: 
+
+
+<!-- ##### FUNCTION xsettings_client_get_setting ##### -->
+<para>
+
+</para>
+
+@client: 
+@name: 
+@setting: 
+@Returns: 
+
+

@@ -1,3 +1,5 @@
+SUBDIRS = doc
+
 source_h = xsettings-client.h  xsettings-common.h
 source_c = xsettings-client.c  xsettings-common.c
 

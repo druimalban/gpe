@@ -1,0 +1,169 @@
+<!-- ##### SECTION Title ##### -->
+xsettings-common
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT XSettingsBuffer ##### -->
+<para>
+
+</para>
+
+@byte_order: 
+@len: 
+@data: 
+@pos: 
+
+<!-- ##### STRUCT XSettingsColor ##### -->
+<para>
+
+</para>
+
+@green: 
+@blue: 
+@alpha: 
+
+<!-- ##### STRUCT XSettingsList ##### -->
+<para>
+
+</para>
+
+@setting: 
+@next: 
+
+<!-- ##### STRUCT XSettingsSetting ##### -->
+<para>
+
+</para>
+
+@name: 
+@type: 
+
+<!-- ##### ENUM XSettingsType ##### -->
+<para>
+
+</para>
+
+@XSETTINGS_TYPE_INT: 
+@XSETTINGS_TYPE_STRING: 
+@XSETTINGS_TYPE_COLOR: 
+@XSETTINGS_TYPE_NONE: 
+
+<!-- ##### ENUM XSettingsResult ##### -->
+<para>
+
+</para>
+
+@XSETTINGS_SUCCESS: 
+@XSETTINGS_NO_MEM: 
+@XSETTINGS_ACCESS: 
+@XSETTINGS_FAILED: 
+@XSETTINGS_NO_ENTRY: 
+@XSETTINGS_DUPLICATE_ENTRY: 
+
+<!-- ##### FUNCTION xsettings_setting_copy ##### -->
+<para>
+
+</para>
+
+@setting: 
+@Returns: 
+
+
+<!-- ##### FUNCTION xsettings_setting_free ##### -->
+<para>
+
+</para>
+
+@setting: 
+
+
+<!-- ##### FUNCTION xsettings_setting_equal ##### -->
+<para>
+
+</para>
+
+@setting_a: 
+@setting_b: 
+@Returns: 
+
+
+<!-- ##### FUNCTION xsettings_list_free ##### -->
+<para>
+
+</para>
+
+@list: 
+
+
+<!-- ##### FUNCTION xsettings_list_copy ##### -->
+<para>
+
+</para>
+
+@list: 
+@Returns: 
+
+
+<!-- ##### FUNCTION xsettings_list_insert ##### -->
+<para>
+
+</para>
+
+@list: 
+@setting: 
+@Returns: 
+
+
+<!-- ##### FUNCTION xsettings_list_lookup ##### -->
+<para>
+
+</para>
+
+@list: 
+@name: 
+@Returns: 
+
+
+<!-- ##### FUNCTION xsettings_list_delete ##### -->
+<para>
+
+</para>
+
+@list: 
+@name: 
+@Returns: 
+
+
+<!-- ##### FUNCTION xsettings_byte_order ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### MACRO XSETTINGS_PAD ##### -->
+<para>
+
+</para>
+
+@n: 
+@m: 
+
+

@@ -1,3 +1,7 @@
+2005-08-01  Florian Boor <florian@kernelconcepts.de>
+
+	* doc/*, Makefile.am, configure.ac: Add documentation framework support
+	                                    and basic information about this library.
 
 2005-07-29  Florian Boor <florian@kernelconcepts.de>
 
