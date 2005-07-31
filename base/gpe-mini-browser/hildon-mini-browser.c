@@ -1,13 +1,15 @@
 /*
- * gpe-mini-browser v0.14
+ * gpe-mini-browser v0.15
  *
- * Basic web browser based on gtk-webcore 
+ * Basic web browser based on gtk-webcore.
+ * Hildon interface version for Maemo / Nokia 770
  *
  * Copyright (c) 2005 Philippe De Swert
  *
  * Contact : philippedeswert@scarlet.be
  * 
- * Dedicated to Apocalyptica (Cult album) for keeping me sane.
+ * Dedicated to Dark Tranquility for inspiration while struggling
+ * with Maemo "specials".
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -48,13 +50,29 @@
 
 //#define DEBUG /* uncomment this if you want debug output*/
 
-static void
-osso_top_callback (const gchar* arguments, gpointer ptr)
-{
-	    GtkWindow *window = ptr;
 
-	        gtk_window_present (GTK_WINDOW (window));
+static void
+fullscreen (GtkWidget * button, HildonAppView * app)
+{
+  gboolean fullscreen;
+
+  fullscreen = hildon_appview_get_fullscreen (app);
+  if (!fullscreen)
+    hildon_appview_set_fullscreen (app, TRUE);
+  else
+    hildon_appview_set_fullscreen (app, FALSE);
+
 }
+
+
+static void
+osso_top_callback (const gchar * arguments, gpointer ptr)
+{
+  GtkWindow *window = ptr;
+
+  gtk_window_present (GTK_WINDOW (window));
+}
+
 
 int
 main (int argc, char *argv[])
@@ -62,7 +80,7 @@ main (int argc, char *argv[])
   HildonApp *app = NULL;
   HildonAppView *mainview = NULL;
 
-  
+
   GtkWidget *html, *contentbox;	/* html engine, application window, content box of application window */
   GtkWidget *toolbar, *urlbox, *iconw;	/* toolbar, url entry box (big screen), icon for url pop-up window (small screens) */
   GtkWidget *back_button, *forward_button, *home_button, *search_button,
@@ -79,10 +97,10 @@ main (int argc, char *argv[])
   /* osso stuff  */
   context = osso_initialize ("gpe-mini-browser", "0.15", TRUE, NULL);
   if (context == NULL)
-  {
-	  fprintf (stderr, "osso_initialize failed.\n");
-          exit (1);
-  }
+    {
+      fprintf (stderr, "osso_initialize failed.\n");
+      exit (1);
+    }
 
   gpe_application_init (&argc, &argv);
 
@@ -113,15 +131,18 @@ main (int argc, char *argv[])
 #endif
 
   //create application window
-  app = HILDON_APP(hildon_app_new()); 
-  hildon_app_set_two_part_title(HILDON_APP(app), FALSE);
-  hildon_app_set_title(app, ("mini-browser"));
-  mainview = HILDON_APPVIEW(hildon_appview_new("main_view"));
-  osso_application_set_top_cb(context, osso_top_callback, (gpointer)mainview);
+  app = HILDON_APP (hildon_app_new ());
+  hildon_app_set_two_part_title (HILDON_APP (app), FALSE);
+  hildon_app_set_title (app, ("mini-browser"));
+  mainview = HILDON_APPVIEW (hildon_appview_new ("main_view"));
+  osso_application_set_top_cb (context, osso_top_callback,
+			       (gpointer) mainview);
 
-  hildon_app_set_appview(app, mainview);
-  gtk_widget_show_all (GTK_WIDGET(app));
-  gtk_widget_show_all (GTK_WIDGET(mainview));
+  hildon_app_set_appview (app, mainview);
+  gtk_widget_show_all (GTK_WIDGET (app));
+  gtk_widget_show_all (GTK_WIDGET (mainview));
+
+  hildon_appview_set_fullscreen_key_allowed (mainview, TRUE);
 
   //create boxes
   contentbox = gtk_vbox_new (FALSE, 0);
@@ -142,7 +163,7 @@ main (int argc, char *argv[])
   html = webi_new ();
   webi_set_emit_internal_status (WEBI (html), TRUE);
 
-  set_default_settings(WEBI (html), &s );
+  set_default_settings (WEBI (html), &s);
 
   /* set rendering mode depending on screen size (when working in gtk-webcore) 
      if(width <=320)
@@ -190,21 +211,21 @@ main (int argc, char *argv[])
 			    GTK_SIGNAL_FUNC (home_func), html, -1);
 
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));	/* space after item */
-  
-  hildon_appview_set_toolbar (mainview, GTK_TOOLBAR(toolbar));
 
-  urlbox = show_big_screen_interface(WEBI (html), toolbar, &s);
+  hildon_appview_set_toolbar (mainview, GTK_TOOLBAR (toolbar));
 
-  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_QUIT,
-			    ("Exit gpe-mini-browser"), ("Exit"),
-			    GTK_SIGNAL_FUNC (gtk_main_quit), NULL, -1);
+  urlbox = show_big_screen_interface (WEBI (html), toolbar, &s);
+
+  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_ZOOM_FIT,
+			    ("Fullscreen gpe-mini-browser"), ("Fullscreen"),
+			    GTK_SIGNAL_FUNC (fullscreen), mainview, -1);
 
   gtk_toolbar_set_icon_size (GTK_TOOLBAR (toolbar),
 			     GTK_ICON_SIZE_SMALL_TOOLBAR);
 
   gtk_box_pack_start (GTK_BOX (contentbox), urlbox, FALSE, FALSE, 0);
   gtk_widget_show_all (urlbox);
-  
+
   gtk_box_pack_start (GTK_BOX (contentbox), html, TRUE, TRUE, 0);
   gtk_container_add (GTK_CONTAINER (mainview), contentbox);
 
