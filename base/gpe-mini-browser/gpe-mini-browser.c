@@ -208,7 +208,7 @@ main (int argc, char *argv[])
   gtk_toolbar_set_icon_size (GTK_TOOLBAR (toolbar),
 			     GTK_ICON_SIZE_SMALL_TOOLBAR);
   /* only show icons if the screen is 240x320 | 320x240 or smaller */
-  if ((width <= 240) || (height <= 240))
+  if ((width <= 480) || (height <= 480))
     gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
 
   //make everything viewable
