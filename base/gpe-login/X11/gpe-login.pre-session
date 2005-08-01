@@ -35,7 +35,7 @@ if [ -d /mnt/ramfs ]; then
 # old location as used in familiar <= 0.7.2
 RAMDISK="/mnt/ramfs"
 # check for location as used in familiar >= 0.8.2
-elif [ -d /media/ram ]
+elif [ -d /media/ram ]; then
 RAMDISK="/media/ram"
 else
 # default to location as used in familiar 0.8.[01]
