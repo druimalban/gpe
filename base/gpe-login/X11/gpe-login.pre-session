@@ -30,9 +30,21 @@ if [ -d /sys/devices/platform/omapfb/panel ]; then
 chown -R $USER /sys/devices/platform/omapfb/panel/*
 fi
 
-mkdir -p /mnt/ramfs/home/$USER
-chown $USER /mnt/ramfs/home/$USER
+# check for ramdisk location
+if [ -d /mnt/ramfs ]; then
+# old location as used in familiar <= 0.7.2
+RAMDISK="/mnt/ramfs"
+# check for location as used in familiar >= 0.8.2
+elif [ -d /media/ram ]
+RAMDISK="/media/ram"
+else
+# default to location as used in familiar 0.8.[01]
+RAMDISK="/mnt/ram"
+fi
+
+mkdir -p $RAMDISK/home/$USER
+chown $USER $RAMDISK/home/$USER
 
 # this location MUST be consistent with HOME_VOLATILE in /etc/X11/Xsession
-ln -s /mnt/ramfs/home/$USER /home/$USER/ramdisk
-ln -s /home/$USER/ramdisk/.xsession-errors /home/$USER/.xsession-errors
+ln -sf $RAMDISK/home/$USER /home/$USER/ramdisk
+ln -sf /home/$USER/ramdisk/.xsession-errors /home/$USER/.xsession-errors
