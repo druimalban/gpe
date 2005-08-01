@@ -106,6 +106,8 @@ play_clicked (GtkWidget *w, struct nmf_frontend *fe)
     else
     	if( fe->player->state == PLAYER_STATE_PAUSED )
     		player_play (fe->player);
+  gtk_range_set_value(GTK_RANGE(fe->volume_slider),
+                      player_get_volume(fe->player));
 }
 
 static void
@@ -221,8 +223,6 @@ main (int argc, char *argv[])
 {
   /* GTK Widgets */
   GtkWidget *w, *table;
-  GdkColor col;
-  GtkStyle *style;
   GtkWidget *prev_button, *play_button, *pause_button, *stop_button, *next_button, *eject_button, *exit_button;
   GtkWidget *rewind_button, *forward_button;
   GtkWidget *shuffle_button, *loop_button;
@@ -230,7 +230,6 @@ main (int argc, char *argv[])
   GtkObject *vol_adjust;
   struct nmf_frontend *fe = g_malloc0 (sizeof (struct nmf_frontend));
   gint button_height = 20;
-  gchar *color = "gray80";
 
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
@@ -240,8 +239,6 @@ main (int argc, char *argv[])
   if (gpe_load_icons (my_icons) == FALSE)
     exit (1);
 
-  gdk_color_parse (color, &col);
-  
   /* GTK Window stuff */
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title (GTK_WINDOW (window), "NMF");
@@ -271,8 +268,6 @@ main (int argc, char *argv[])
 
   buttons_hbox = gtk_hbox_new (FALSE, 0);
   gtk_container_set_border_width(GTK_CONTAINER(buttons_hbox), gpe_get_border());
-  style = gtk_style_copy (buttons_hbox->style);
-  style->bg[0] = col;
 
   table = gtk_table_new(5, 5, FALSE);
   gtk_table_set_col_spacings(GTK_TABLE(table), 0);
@@ -281,7 +276,6 @@ main (int argc, char *argv[])
   /* Main controls */
   w = gtk_image_new_from_pixbuf (gpe_find_icon ("media-prev"));
   prev_button = gtk_button_new ();
-  gtk_widget_set_style (prev_button, style);
   gtk_widget_set_usize (prev_button, -1, button_height);
   gtk_container_add (GTK_CONTAINER (prev_button), w);
   g_signal_connect (G_OBJECT (prev_button), "clicked",
@@ -289,13 +283,11 @@ main (int argc, char *argv[])
 
   w = gtk_image_new_from_pixbuf (gpe_find_icon ("media-rew"));
   rewind_button = gtk_button_new ();
-  gtk_widget_set_style (rewind_button, style);
   gtk_widget_set_usize (rewind_button, -1, button_height);
   gtk_container_add (GTK_CONTAINER (rewind_button), w);
 
   w = gtk_image_new_from_pixbuf (gpe_find_icon ("media-play"));
   play_button = gtk_button_new ();
-  gtk_widget_set_style (play_button, style);
   gtk_container_add (GTK_CONTAINER (play_button), w);
   gtk_widget_set_usize (play_button, -1, button_height);
   g_signal_connect (G_OBJECT (play_button), "clicked", 
@@ -303,7 +295,6 @@ main (int argc, char *argv[])
 
   w = gtk_image_new_from_pixbuf (gpe_find_icon ("media-pause"));
   pause_button = gtk_button_new ();
-  gtk_widget_set_style (pause_button, style);
   gtk_container_add (GTK_CONTAINER (pause_button), w);
   gtk_widget_set_usize (pause_button, -1, button_height);
   g_signal_connect (G_OBJECT (pause_button), "clicked", 
@@ -311,7 +302,6 @@ main (int argc, char *argv[])
 
   w = gtk_image_new_from_pixbuf (gpe_find_icon ("media-stop"));
   stop_button = gtk_button_new ();
-  gtk_widget_set_style (stop_button, style);
   gtk_container_add (GTK_CONTAINER (stop_button), w);
   gtk_widget_set_usize (stop_button, -1, button_height);
   g_signal_connect (G_OBJECT (stop_button), "clicked", 
@@ -319,13 +309,11 @@ main (int argc, char *argv[])
 
   w = gtk_image_new_from_pixbuf (gpe_find_icon ("media-fwd"));
   forward_button = gtk_button_new ();
-  gtk_widget_set_style (forward_button, style);
   gtk_widget_set_usize (forward_button, -1, button_height);
   gtk_container_add (GTK_CONTAINER (forward_button), w);
 
   w = gtk_image_new_from_pixbuf (gpe_find_icon ("media-next"));
   next_button = gtk_button_new ();
-  gtk_widget_set_style (next_button, style);
   gtk_container_add (GTK_CONTAINER (next_button), w);
   gtk_widget_set_usize (next_button, -1, button_height);
   g_signal_connect (G_OBJECT (next_button), "clicked",
@@ -333,7 +321,6 @@ main (int argc, char *argv[])
 
   w = gtk_image_new_from_pixbuf (gpe_find_icon ("media-eject"));
   eject_button = gtk_button_new ();
-  gtk_widget_set_style (eject_button, style);
   gtk_container_add (GTK_CONTAINER (eject_button), w);
   gtk_widget_set_usize (eject_button, -1, button_height);
   g_signal_connect (G_OBJECT (eject_button), "clicked", 
@@ -341,19 +328,16 @@ main (int argc, char *argv[])
 
   /* Shuffle / Loop */
   shuffle_button = gtk_check_button_new_with_label (_("Shuffle"));
-  gtk_widget_set_style (shuffle_button, style);
   g_signal_connect (G_OBJECT (shuffle_button), "toggled",
                     G_CALLBACK (toggle_shuffle), fe);
 
   loop_button = gtk_check_button_new_with_label ("Loop");
-  gtk_widget_set_style (loop_button, style);
   g_signal_connect (G_OBJECT (loop_button), "toggled",
                     G_CALLBACK (toggle_loop), fe);
 
   /* Itty-bitty close button */
   w = gtk_image_new_from_stock (GTK_STOCK_CLOSE, GTK_ICON_SIZE_SMALL_TOOLBAR);
   exit_button = gtk_button_new ();
-  gtk_widget_set_style (exit_button, style);
   gtk_container_add (GTK_CONTAINER (exit_button), w);
   g_signal_connect (G_OBJECT (exit_button), "clicked",
 		    G_CALLBACK (gtk_main_quit), NULL);
@@ -368,8 +352,8 @@ main (int argc, char *argv[])
 
   vol_adjust = gtk_adjustment_new (0.0, 0.0, 1.0, 0.01, 0.02, 0.02);
   vol_slider = gtk_vscale_new (GTK_ADJUSTMENT (vol_adjust));
+  fe->volume_slider = vol_slider;
   gtk_scale_set_draw_value (GTK_SCALE (vol_slider), FALSE);
-  gtk_widget_set_style (vol_slider, style);
   g_signal_connect (G_OBJECT (vol_adjust), "value-changed", 
                     G_CALLBACK (set_volume), fe->player);
 
@@ -379,7 +363,6 @@ main (int argc, char *argv[])
 
   fe->progress_slider = gtk_hscale_new (GTK_ADJUSTMENT (fe->progress_adjustment));
   gtk_scale_set_draw_value (GTK_SCALE (fe->progress_slider), FALSE);
-  gtk_widget_set_style (fe->progress_slider, style);
   gtk_widget_set_usize (fe->progress_slider, -1, 16);
   
   g_signal_connect (G_OBJECT (fe->progress_slider), "change-value", 

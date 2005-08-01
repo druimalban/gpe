@@ -159,6 +159,9 @@ step_track (player_t p, int n)
   assert (p);
   assert (n != 0);
 
+  if(!playlist_get_length(p->list))
+      return;
+
   if (p->state == PLAYER_STATE_PLAYING || p->state == PLAYER_STATE_PAUSED)
     abandon_track (p);
 
@@ -441,11 +444,24 @@ player_set_volume (player_t p, int v)
 {
   GValue value;
 
+  if (!G_IS_OBJECT(p->volume))
+      return;
   memset (&value, 0, sizeof (value));
   g_value_init (&value, G_TYPE_FLOAT);
   g_value_set_float (&value, (float)v / 256);
   
   g_object_set_property (G_OBJECT (p->volume), "volume", &value);
+}
+
+float
+player_get_volume (player_t p)
+{
+  float vol;
+
+  if (!G_IS_OBJECT(p->audiosink))
+      return 0;
+  g_object_get (G_OBJECT (p->audiosink), "volume", &vol, NULL);
+  return (float)(vol * 256);
 }
 
 void

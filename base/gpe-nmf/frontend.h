@@ -18,6 +18,7 @@ struct nmf_frontend
   gboolean playing;
   GtkAdjustment *progress_adjustment;
   GtkWidget *progress_slider;
+  GtkWidget *volume_slider;
   GtkWidget *time_label, *artist_label, *title_label;
   GtkTreeModel *model;
   GtkTreeView *view;

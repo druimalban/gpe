@@ -1,3 +1,10 @@
+2005-08-01  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * gstplayer.c, frontend.h: Apply Skyhusker's patch to fix a segfault.
+                               Add (maybe broken) volume reading from 
+                               gestreamer, fix minor bugs.
+    * gpe-nmf.c: Remove obsolete style code to make gpe-nmf themable.
+
 2005-04-21  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * Released Version 0.21
