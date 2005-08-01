@@ -1,3 +1,8 @@
+2005-08-31  Rene Wagner <rw@handhelds.org>
+
+	* X11/gpe-login.pre-session: Apply pre-session-ramdisk.patch from OE.
+	                             also check if /media/ram is available.
+
 2005-07-29  Florian Boor <florian@kernelconcepts.de>
 
 	* Version 0.79 released.
