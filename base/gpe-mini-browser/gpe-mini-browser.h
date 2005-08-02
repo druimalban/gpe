@@ -1,5 +1,5 @@
 /*
- * gpe-mini-browser v0.15
+ * gpe-mini-browser v0.16
  *
  * Basic web browser based on gtk-webcore 
  *
@@ -25,6 +25,7 @@
 /* General Defines */
 #define HOME_PAGE "file:///usr/share/doc/gpe/mini-browser-index.html"
 
+GtkToolItem *stop_reload_button;
 
 /* contains the necessary data for passing urls between the different functions */
 struct url_data {
@@ -88,10 +89,8 @@ void forward_func (GtkWidget * forward, GtkWidget * html);
 void back_func (GtkWidget * back, GtkWidget * html);
 /* go to the home page */
 void home_func (GtkWidget * home, GtkWidget * html);
-/* reload the current page */
-void reload_func (GtkWidget * reload, GtkWidget * html);
-/* stop loading the current page */
-void stop_func (GtkWidget * stop, GtkWidget * html);
+/* stop or reload the current page depending on status */
+void stop_reload_func (GtkWidget * reload, GtkWidget * html);
 
 /******************************************************
 	            misc handling 

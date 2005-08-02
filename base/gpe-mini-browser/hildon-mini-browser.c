@@ -82,9 +82,11 @@ main (int argc, char *argv[])
 
 
   GtkWidget *html, *contentbox;	/* html engine, application window, content box of application window */
-  GtkWidget *toolbar, *urlbox, *iconw;	/* toolbar, url entry box (big screen), icon for url pop-up window (small screens) */
-  GtkWidget *back_button, *forward_button, *home_button, *search_button,
-    *exit_button;
+  GtkWidget *toolbar, *urlbox;	/* toolbar, url entry box (big screen), icon for url pop-up window (small screens) */
+  GtkToolItem *back_button, *forward_button, *home_button,
+                *fullscreen_button, *url_button;
+  GtkToolItem *separator, *separator2;
+  extern GtkToolItem *stop_reload_button;
   const gchar *base;
   gchar *p;
   gint width = 240, height = 320;
@@ -190,38 +192,49 @@ main (int argc, char *argv[])
 		    status);
   g_signal_connect (WEBI (html), "title", G_CALLBACK (set_title), app);
 
-  /*add home, search, back, forward, refresh, stop, url and exit button */
-  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_GO_BACK,
-			    ("Go back a page"), ("Back"),
-			    GTK_SIGNAL_FUNC (back_func), html, -1);
+/*add home,  back, forward, refresh / stop, url (small screen) */
+  back_button = gtk_tool_button_new_from_stock (GTK_STOCK_GO_BACK);
+  gtk_toolbar_insert(GTK_TOOLBAR (toolbar), back_button, -1);
 
-  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_GO_FORWARD,
-			    ("Go to the next page"), ("Next"),
-			    GTK_SIGNAL_FUNC (forward_func), html, -1);
+  forward_button = gtk_tool_button_new_from_stock (GTK_STOCK_GO_FORWARD);
+  gtk_toolbar_insert(GTK_TOOLBAR (toolbar), forward_button, -1);
 
-  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_REFRESH,
-			    ("Reload the current page"), ("Reload"),
-			    GTK_SIGNAL_FUNC (reload_func), html, -1);
-  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_STOP,
-			    ("Stop loading this page"), ("Stop"),
-			    GTK_SIGNAL_FUNC (stop_func), html, -1);
+  stop_reload_button = gtk_tool_button_new_from_stock (GTK_STOCK_REFRESH);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), stop_reload_button, -1);
 
-  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_HOME,
-			    ("Go to home page"), ("Home"),
-			    GTK_SIGNAL_FUNC (home_func), html, -1);
+  home_button = gtk_tool_button_new_from_stock (GTK_STOCK_HOME);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), home_button, -1);
 
-  gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));	/* space after item */
+  separator = gtk_separator_tool_item_new();
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), separator, -1);
 
   hildon_appview_set_toolbar (mainview, GTK_TOOLBAR (toolbar));
 
   urlbox = show_big_screen_interface (WEBI (html), toolbar, &s);
 
-  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_ZOOM_FIT,
-			    ("Fullscreen gpe-mini-browser"), ("Fullscreen"),
-			    GTK_SIGNAL_FUNC (fullscreen), mainview, -1);
+/* replace GTK_STOCK_ZOOM_FIT with GTK_STOCK_FULLSCREEN once GPE uses
+     gtk 2.7.1 or higher. Or add it myself :-) */
+  fullscreen_button = gtk_tool_button_new_from_stock (GTK_STOCK_ZOOM_FIT);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), fullscreen_button, -1);
 
-  gtk_toolbar_set_icon_size (GTK_TOOLBAR (toolbar),
-			     GTK_ICON_SIZE_SMALL_TOOLBAR);
+  /* connect all button signals */
+  g_signal_connect (GTK_OBJECT (back_button), "clicked",
+                    G_CALLBACK (back_func), html);
+
+  g_signal_connect (GTK_OBJECT (forward_button), "clicked",
+                    G_CALLBACK (forward_func), html);
+
+  g_signal_connect (GTK_OBJECT (stop_reload_button), "clicked",
+                    G_CALLBACK (stop_reload_func), html);
+
+  g_signal_connect (GTK_OBJECT (home_button), "clicked",
+                    G_CALLBACK (home_func), html);
+  
+  g_signal_connect (GTK_OBJECT (fullscreen_button), "clicked",
+                    G_CALLBACK (fullscreen), mainview);
+
+//  gtk_toolbar_set_icon_size(GTK_TOOLBAR(toolbar), GTK_ICON_SIZE_SMALL_TOOLBAR);
+//  toolbar size seems to be the same, icons are clearer
 
   gtk_box_pack_start (GTK_BOX (contentbox), urlbox, FALSE, FALSE, 0);
   gtk_widget_show_all (urlbox);

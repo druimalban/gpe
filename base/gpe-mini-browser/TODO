@@ -19,6 +19,8 @@ DONE:
 * add hildon interface support (Nokia 770)
 * fullscreen mode
 * remove exit button
+* moved to new GTK toolbar/toolitem API (allows to get to buttons that might be off-screen)
+* hybrid stop/reload button (there is space now for a bookmarks button)
 
 POSTPONED / PARTIALLY DONE:
 

@@ -1,5 +1,5 @@
 /*
- * gpe-mini-browser v0.15
+ * gpe-mini-browser v0.16
  *
  * Basic web browser based on gtk-webcore 
  * 
@@ -164,17 +164,16 @@ home_func (GtkWidget * home, GtkWidget * html)
     fetch_url (HOME_PAGE, GTK_WIDGET (html));
 }
   
-/* tell the engine to reload the current page */
+/* tell the engine to stop or reload the current page */
 void
-reload_func (GtkWidget * reload, GtkWidget * html)
+stop_reload_func (GtkWidget * reload, GtkWidget * html)
 {
-  webi_refresh (WEBI (html));
-}
+  const gchar *id;
 
-/* tell the engine to stop loading */
-void
-stop_func (GtkWidget * stop, GtkWidget * html)
-{
-  webi_stop_load (WEBI (html));
+  id = gtk_tool_button_get_stock_id (GTK_TOOL_BUTTON(stop_reload_button));
+  if (!strcmp(id, "gtk-refresh"))
+	  webi_refresh (WEBI (html));
+  else
+	  webi_stop_load (WEBI (html));
 }
 

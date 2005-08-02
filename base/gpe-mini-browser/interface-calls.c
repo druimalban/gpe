@@ -1,5 +1,5 @@
 /*
- * gpe-mini-browser v0.15
+ * gpe-mini-browser v0.16
  *
  * Basic web browser based on gtk-webcore 
  * 
@@ -132,6 +132,9 @@ create_status_window (Webi * html, gpointer * status_data)
 #ifdef DEBUG
   printf ("status = loading\n");
 #endif
+  gtk_tool_button_set_stock_id(GTK_TOOL_BUTTON(stop_reload_button), "gtk-stop"); 
+  gtk_tool_button_set_icon_widget(GTK_TOOL_BUTTON(stop_reload_button), NULL);
+
   statusbox = gtk_hbox_new (FALSE, 0);
   pbar = gtk_progress_bar_new ();
   label = gtk_label_new ("loading");
@@ -160,6 +163,9 @@ destroy_status_window (Webi * html, gpointer * status_data)
 #ifdef DEBUG
   printf ("loading stopped\n");
 #endif
+  gtk_tool_button_set_stock_id(GTK_TOOL_BUTTON(stop_reload_button), "gtk-refresh"); 
+  gtk_tool_button_set_icon_widget(GTK_TOOL_BUTTON(stop_reload_button), NULL);
+
   if (data->exists == TRUE)
     {
       data->exists = FALSE;
@@ -236,6 +242,7 @@ update_text_entry (Webi * html, GtkWidget * entrybox)
 GtkWidget * show_big_screen_interface ( Webi *html, GtkWidget *toolbar, WebiSettings *set)
 {
       GtkWidget *urlentry, *urllabel, *okbutton, *urlbox;
+      GtkToolItem *zoom_in_button, *zoom_out_button, *sep;
       struct url_data *data;
 
       /* create all necessary widgets */
@@ -257,15 +264,6 @@ GtkWidget * show_big_screen_interface ( Webi *html, GtkWidget *toolbar, WebiSett
       data->entry = urlentry;
       data->window = NULL;      /* set to NULL to be easy to recognize to avoid freeing in load_text_entry  as this window is not destroyed unlike the pop-up */
 
-      /* add button callbacks */ 
-      g_signal_connect (GTK_OBJECT (okbutton), "clicked",
-                        G_CALLBACK (load_text_entry), (gpointer *) data);
-      g_signal_connect (GTK_OBJECT (html), "location",
-                        G_CALLBACK (update_text_entry),
-                        (gpointer *) urlentry);
-      g_signal_connect (GTK_OBJECT (urlentry), "activate",
-                        G_CALLBACK (load_text_entry), (gpointer *) data);
-
       /* fill in the data needed for the zoom functionality */
       struct zoom_data *zoom;
 
@@ -274,14 +272,30 @@ GtkWidget * show_big_screen_interface ( Webi *html, GtkWidget *toolbar, WebiSett
       zoom->html = html;
       zoom->settings = set;
 
-      /* add extra zoom in/out buttons + spacing to the toolbar +  callbacks */ 
-      gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_ZOOM_IN,
-			        ("Zoom in"), ("Zoom in"),
-				GTK_SIGNAL_FUNC (zoom_in), zoom, -1); 
-      gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_ZOOM_OUT,
-				("Zoom out"), ("Zoom out"),
-				GTK_SIGNAL_FUNC (zoom_out), zoom, -1);
-      gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
+      /* add extra zoom in/out buttons + spacing to the toolbar */ 
+
+      zoom_in_button = gtk_tool_button_new_from_stock (GTK_STOCK_ZOOM_IN);
+      gtk_toolbar_insert (GTK_TOOLBAR(toolbar), zoom_in_button, -1);
+
+      zoom_out_button = gtk_tool_button_new_from_stock (GTK_STOCK_ZOOM_OUT);
+      gtk_toolbar_insert (GTK_TOOLBAR(toolbar), zoom_out_button, -1);
+
+      sep = gtk_separator_tool_item_new();
+      gtk_toolbar_insert (GTK_TOOLBAR(toolbar), sep, -1);
+
+      /* add button callbacks */ 
+      g_signal_connect (GTK_OBJECT (okbutton), "clicked",
+                        G_CALLBACK (load_text_entry), (gpointer *) data);
+      g_signal_connect (GTK_OBJECT (html), "location",
+                        G_CALLBACK (update_text_entry),
+                        (gpointer *) urlentry);
+      g_signal_connect (GTK_OBJECT (urlentry), "activate",
+                        G_CALLBACK (load_text_entry), (gpointer *) data);
+      g_signal_connect (GTK_OBJECT (zoom_in_button), "clicked",
+			G_CALLBACK (zoom_in), zoom);
+      g_signal_connect (GTK_OBJECT (zoom_out_button), "clicked",
+			G_CALLBACK (zoom_out), zoom);
+
 
       /*final settings */
       GTK_WIDGET_SET_FLAGS (okbutton, GTK_CAN_DEFAULT);
