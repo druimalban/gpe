@@ -1,5 +1,5 @@
 <config>
-  <handheld_ip>10.0.0.1</handheld_ip>
-  <handheld_user>martin</handheld_user>
+  <handheld_ip>127.0.0.1</handheld_ip>
+  <handheld_user>gpeuser</handheld_user>
   <handheld_port>6666</handheld_port>
 </config>
