@@ -1,6 +1,38 @@
-These are just rudimentary installation information.
-- More are to come.
+To use the plugin you need to have opensync and multisync0.90.
+You can get the latest versions with subversion with:
+
+svn co http://svn.opensync.org/trunk opensync
+svn co http://svn.opensync.org/multisync/trunk multisync-0.90 
+
+once both are installed you can compile with the usual commands:
 ./autogen.sh
 ./configure
 make
 make install
+
+multisync-0.90 comes with some tools which make it easier to configure
+opensync.
+Here is an example how to sync the contacts from the handheld to evolution
+
+First you need to install the evo2-sync plugin (see www.opensync.org
+for more information).
+
+Now add a synchronization group:
+msynctool --addgroup gpe-evo
+
+Now you can list your groups with:
+msynctool --listgroups
+
+Now we need to add members to this sync-group, by typing:
+msynctool --addmember gpe-evo gpe-sync
+msynctool --addmember gpe-evo evo2-sync
+
+After this you need to configure the plugins. You can us this with
+multisync0.90, a gui, or with the commands:
+msynctool --configure gpe-evo 1
+msynctool --configure gpe-evo 2
+
+After this you can sync it with
+msynctool --sync gpe-evo
+
+That's it!
