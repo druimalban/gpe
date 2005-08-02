@@ -56,7 +56,7 @@ case `module_id` in
 		ARGS="$ARGS -screen 320x240@270 -rgba vrgb" ;;
 	"SHARP Shepherd" | "SHARP Husky" | "SHARP Corgi")
 		ARGS="$ARGS -rgba rgb" ;;
-	"SHARP Spitz")
+	"SHARP Spitz" | "SHARP Akita")
 		ARGS="$ARGS -rgba rgb -screen 640x480@270" ;;
 	"Simpad")
 		ARGS="$ARGS -rgba rgb" ;;

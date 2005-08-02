@@ -1,5 +1,6 @@
 2005-08-02  Florian Boor  <florian@kernelconcepts.de>
 
+	* Xserver: Add support for Sharp Akita.
 	* Xserver: Add support for Sharp Spitz.
 
 2005-06-18  Phil Blundell  <pb@reciva.com>
