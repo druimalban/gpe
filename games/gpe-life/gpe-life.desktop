@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Conway's Game of Life
+Comment=Play the Game of Life
+Exec=gpe-life
+Terminal=0                                       
+Type=Application
+Icon=gpe-life.png
+Categories=Application;Games;GPE
+StartupNotify=True
