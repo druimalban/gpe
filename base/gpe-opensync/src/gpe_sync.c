@@ -1,9 +1,14 @@
 #include <opensync/opensync.h>
-#include "gpe_sync.h"
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
+#include "gpe_sync.h"
 
+/*! \brief Initializes the plugin (needed for opensync)
+ *
+ * \param member	???
+ * \param error		???
+ */
 static void *initialize(OSyncMember *member, OSyncError **error)
 {
 	osync_debug("GPE_SYNC", 4, "start: %s", __func__);
@@ -39,134 +44,80 @@ static void *initialize(OSyncMember *member, OSyncError **error)
 	OSyncGroup *group = osync_member_get_group(member);
 	env->change_id = g_strdup(osync_group_get_name(group));
 
+	env->contacts = NULL;
+	
+	//Set up a hash to detect changes
+	env->hashtable = osync_hashtable_new();
+	if (env->hashtable == NULL) {
+		printf ("ERROR creating hashtable!\n");		
+	}
+	
 	osync_trace(TRACE_EXIT, "GPE-SYNC %s: %p", __func__, env);
 
 	//Now your return your struct.
 	return (void *)env;
 }
 
+/*! \brief Connects to the databases of GPE
+ *
+ * \param ctx		The context of the plugin
+ */
 static void connect(OSyncContext *ctx)
 {
-	//Each time you get passed a context (which is used to track
-	//calls to your plugin) you can get the data your returned in
-	//initialize via this call:
+	osync_debug("GPE_SYNC", 4, "start: %s", __func__);
+
+	// We need to get the context to load all our stuff.
 	gpe_environment *env = (gpe_environment *)osync_context_get_plugin_data(ctx);
 
-	/*
-	 * Now connect to your devices and report
-	 * 
-	 * an error via:
-	 * osync_context_report_error(ctx, ERROR_CODE, "Some message");
-	 * 
-	 * or success via:
-	 * osync_context_report_success(ctx);
-	 * 
-	 * You have to use one of these 2 somewhere to answer the context.
-	 * 
-	 */
+	printf ("Connecting to: %s:%d user: %s\n",env->device_addr, env->port, env->username);
+	OSyncError *error = NULL;
+
+	if (gpe_contacts_connect(ctx) == FALSE) {
+		osync_context_report_error(ctx, OSYNC_ERROR_NO_CONNECTION, "Could not connect to contacts.");
+		return;
+	}
+
+	if (!osync_hashtable_load(env->hashtable, env->member, &error)) {
+		osync_context_report_error(ctx, OSYNC_ERROR_GENERIC, osync_error_print(&error));
+
+		return;
+	}
 	
-	//If you are using a hashtable you have to load it here
-	//OSyncError *error = NULL;
-	//if (!osync_hashtable_load(env->hashtable, env->member, &error)) {
-	//	osync_context_report_osyncerror(ctx, &error);
-	//	return;
-	//}
-	
+	osync_context_report_success(ctx);
+
+	/* TODO: What is this??
 	//you can also use the anchor system to detect a device reset
 	//or some parameter change here. Check the docs to see how it works
-	char *lanchor = NULL;
+	//char *lanchor = NULL;
 	//Now you get the last stored anchor from the device
 	if (!osync_anchor_compare(env->member, "lanchor", lanchor))
 		osync_member_set_slow_sync(env->member, "<object type to request a slow-sync>", TRUE);
+        */
+	osync_debug("GPE_SYNC", 4, "stop: %s", __func__);
 }
 
+/* \brief Reports all the objects that were changes
+ *
+ * \param ctx		The context of the plugin
+ */
 static void get_changeinfo(OSyncContext *ctx)
 {
-	gpe_environment *env = (gpe_environment *)osync_context_get_plugin_data(ctx);
-	
-	//If you use opensync hashtables you can detect if you need
-	//to do a slow-sync and set this on the hastable directly
-	//otherwise you have to make 2 function like "get_changes" and
-	//"get_all" and decide which to use using
-	//osync_member_get_slow_sync
-	//if (osync_member_get_slow_sync(env->member, "<object type>"))
-	//	osync_hashtable_set_slow_sync(env->hashtable, "<object type>");
+	osync_debug("GPE_SYNC", 4, "start: %s", __func__);
 
-	/*
-	 * Now you can get the changes.
-	 * Loop over all changes you get and do the following:
-	 */
-		char *data = NULL;
-		//Now get the data of this change
-		
-		//Make the new change to report
-		OSyncChange *change = osync_change_new();
-		//Set the member
-		osync_change_set_member(change, env->member);
-		//Now set the uid of the object
-		osync_change_set_uid(change, "<some uid>");
-		//Set the object format
-		osync_change_set_objformat_string(change, "<the format of the object>");
-		//Set the hash of the object (optional, only required if you use hashtabled)
-		//osync_change_set_hash(change, "the calculated hash of the object");
-		//Now you can set the data for the object
-		//Set the last argument to FALSE if the real data
-		//should be queried later in a "get_data" function
-		
-		osync_change_set_data(change, data, sizeof(data), TRUE);			
-
-		//If you use hashtables use these functions:
-		//if (osync_hashtable_detect_change(env->hashtable, change)) {
-		//	osync_context_report_change(ctx, change);
-		//	osync_hashtable_update_hash(env->hashtable, change);
-		//}	
-		//otherwise just report the change via
-		//osync_context_report_change(ctx, change);
-
-	//When you are done looping and if you are using hashtables	
-	//osync_hashtable_report_deleted(env->hashtable, ctx, "data");
+	gpe_contacts_get_changes(ctx);
 	
 	//Now we need to answer the call
 	osync_context_report_success(ctx);
+	osync_debug("GPE_SYNC", 4, "stop: %s", __func__);
 }
 
-static osync_bool commit_change(OSyncContext *ctx, OSyncChange *change)
-{
-	//gpe_environment *env = (gpe_environment *)osync_context_get_plugin_data(ctx);
-	
-	/*
-	 * Here you have to add, modify or delete a object
-	 * 
-	 */
-	switch (osync_change_get_changetype(change)) {
-		case CHANGE_DELETED:
-			//Delete the change
-			//Dont forget to answer the call on error
-			break;
-		case CHANGE_ADDED:
-			//Add the change
-			//Dont forget to answer the call on error
-			//If you are using hashtables you have to calculate the hash here:
-			//osync_change_set_hash(change, "new hash");
-			break;
-		case CHANGE_MODIFIED:
-			//Modify the change
-			//Dont forget to answer the call on error
-			//If you are using hashtables you have to calculate the new hash here:
-			//osync_change_set_hash(change, "new hash");
-			break;
-		default:
-			osync_debug("FILE-SYNC", 0, "Unknown change type");
-	}
-	//Answer the call
-	osync_context_report_success(ctx);
-	//if you use hashtable, update the hash now.
-	//osync_hashtable_update_hash(env->hashtable, change);
-	return TRUE;
-}
-
+/*! \brief This is called once all objects have been sent to the plugin
+ *
+ * \param ctx		The context of the plugin
+ */
 static void sync_done(OSyncContext *ctx)
 {
+	osync_debug("GPE_SYNC", 4, "start: %s", __func__);
 	gpe_environment *env = (gpe_environment *)osync_context_get_plugin_data(ctx);
 	
 	/*
@@ -174,7 +125,7 @@ static void sync_done(OSyncContext *ctx)
 	 */
 	
 	//If we have a hashtable we can now forget the already reported changes
-	//osync_hashtable_forget(env->hashtable);
+	osync_hashtable_forget(env->hashtable);
 	
 	//If we use anchors we have to update it now.
 	char *lanchor = NULL;
@@ -183,29 +134,56 @@ static void sync_done(OSyncContext *ctx)
 	
 	//Answer the call
 	osync_context_report_success(ctx);
+	osync_debug("GPE_SYNC", 4, "stop: %s", __func__);
 }
 
+/*! \brief Closes the connection to the databases
+ *
+ * \brief ctx		The context of the plugin
+ */
 static void disconnect(OSyncContext *ctx)
 {
-	//gpe_environment *env = (gpe_environment *)osync_context_get_plugin_data(ctx);
+	osync_debug("GPE_SYNC", 4, "start: %s", __func__);
+	gpe_environment *env = (gpe_environment *)osync_context_get_plugin_data(ctx);
 	
 	//Close all stuff you need to close
 	
 	//Close the hashtable
-	//osync_hashtable_close(env->hashtable);
+	osync_hashtable_close(env->hashtable);
+	
+	if (env->contacts) {
+		gpe_contacts_disconnect(ctx);
+	}
+	
 	//Answer the call
 	osync_context_report_success(ctx);
+	osync_debug("GPE_SYNC", 4, "stop: %s", __func__);
 }
 
+/*! \brief The counterpart to initialize
+ * 
+ * \param data		The data of the plugin (configuration, etc.)
+ */
 static void finalize(void *data)
 {
-	//gpe_environment *env = (gpe_environment *)data;
+	osync_debug("GPE_SYNC", 4, "start: %s", __func__);
+	gpe_environment *env = (gpe_environment *)data;
 	//Free all stuff that you have allocated here.
-	//osync_hashtable_free(env->hashtable);
+	osync_hashtable_free(env->hashtable);
+	g_free(env->username);
+	g_free(env->device_addr);
+	g_free(env);
+	osync_debug("GPE_SYNC", 4, "stop: %s", __func__);
 }
 
+/*! \brief This function has to be in every opensync plugin
+ *
+ * \brief env		The environment of the plugin containing basic
+ * 			information about the plugin.
+ */
 void get_info(OSyncEnv *env)
 {
+	osync_debug("GPE_SYNC", 4, "start: %s", __func__);
 	OSyncPluginInfo *info = osync_plugin_new_info(env);
 	
 	//Tell opensync something about your plugin
@@ -230,17 +208,9 @@ void get_info(OSyncEnv *env)
 	//wait for expected timeouts (Lets say while waiting for a webserver).
 	//you should wait for the normal timeout and return a error.
 	info->timeouts.connect_timeout = 5;
-	//There are more timeouts for the other functions
 	
-	//Now you have to tell opensync all the object types that your are
-	//accepting. This can be more than one
-	//osync_plugin_accept_objtype(info, "<object type name>");
-	//which format do you accept for this objtype
-	//osync_plugin_accept_objformat(info, "<object type name>", "<format name>", "<name of the required extension if any>");
-	//set the commit function for this format
-	//osync_plugin_set_commit_objformat(info, "<object type name>", "<format name>", commit_change);
+	// Now we got to tell opensync, which formats and what types we accept
+	gpe_contacts_setup(info);
 	
-	//All the stuff above will be made through these functions:
-	gpe_adresses_setup(info);
-	osync_plugin_set_commit_objformat(info,"contact", "file",commit_change);
+	osync_debug("GPE_SYNC", 4, "stop: %s", __func__);
 }
