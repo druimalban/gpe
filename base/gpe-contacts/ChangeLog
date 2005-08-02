@@ -1,3 +1,7 @@
+2005-08-02  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * import-vcard.c: Update import stuff to new database layout.
+
 2005-07-29  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * main.c: Change packing of deatil table in bigscreen + portrait mode.
