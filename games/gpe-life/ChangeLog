@@ -1,3 +1,8 @@
+2005-08-02  Rene Wagner <rw@handhelds.org>
+
+	* Use shorter name in .desktop file.
+	* Release 0.2.
+
 2005-07-15  Rene Wagner <rw@handhelds.org>
 
 	* Initial release. This is gpe-life 0.1.

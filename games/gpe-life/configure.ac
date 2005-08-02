@@ -1,4 +1,4 @@
-AC_INIT([GPE Mileage], [0.1], [rw@handhelds.org], [gpe-life])
+AC_INIT([GPE Mileage], [0.2], [rw@handhelds.org], [gpe-life])
 
 AC_CONFIG_SRCDIR([src/main.c])
 AM_CONFIG_HEADER(config.h)
