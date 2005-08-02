@@ -1,0 +1,15 @@
+2005-08-02  Martin Felis <martin@silef.de>
+	* gpe_db.h gpe_db.c: Files added for easier querying/handling of the
+	results from nsqlc_exec().
+	* contacts.h contacts.c: Moved from gpe_adresses.c/h. I thought this
+	name fits better.
+	Added support for reading the entries.
+	Contacts get converted to a vcard and sent to opensync (works!)
+	* gpe_sync.h gpe_sync.c: Some clean-up.
+	Added support for contact.c.
+	* configure.in : Added support for libgpevtype.
+	* README : Put in a few words.
+
+2005-07-27  Martin Felis <martin@silef.de>
+
+	* Changelog: started to use it!
