@@ -35,7 +35,7 @@ playlist_m3u_load (gchar *s)
       player_fill_in_playlist (i);
 
       if (i->title == NULL)
-	i->title = i->data.track.url;
+	i->title = g_filename_display_basename (i->data.track.url);
       i->parent = p;
       p->data.list = g_slist_append (p->data.list, i);
     }
@@ -43,3 +43,30 @@ playlist_m3u_load (gchar *s)
   return p;
 }
 
+void
+playlist_m3u_save (struct playlist *p,
+        gchar *s)
+{
+  struct playlist *track;
+  FILE *fp;
+  gchar *buf;
+  GSList *list;
+  
+  if (p->type != ITEM_TYPE_LIST)
+      return;
+  
+  fp = fopen (s, "w");
+
+  if(!fp)
+    return;
+
+  for( list = p->data.list; list; list = g_slist_next (list)) {
+    track = list->data;
+    buf = g_strdup_printf("%s\n", track->data.track.url);
+    fputs (buf, fp);
+    g_free(buf);
+  }
+
+  fclose (fp);
+}
+     

@@ -49,5 +49,6 @@ extern             void playlist_free (struct playlist *);
 
 extern struct playlist *playlist_xml_load (gchar *);
 extern struct playlist *playlist_m3u_load (gchar *);
+extern             void playlist_m3u_save (struct playlist *, gchar *);
 
 #endif

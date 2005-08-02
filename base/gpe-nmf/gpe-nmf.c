@@ -218,6 +218,17 @@ toggle_loop (GtkToggleButton *tb, struct nmf_frontend *fe)
   player_set_loop (fe->player, gtk_toggle_button_get_active (tb));
 }
 
+static void
+save_playlist_and_exit (GtkWidget *wid, struct playlist *p)
+{
+    gchar *fn;
+    fn = g_strdup_printf ("%s/.gpe/gpe-nmf-playlist.m3u", g_get_home_dir());
+    playlist_m3u_save (p, fn);
+    g_free (fn);
+    
+    gtk_main_quit();
+}
+
 int
 main (int argc, char *argv[])
 {
@@ -230,6 +241,7 @@ main (int argc, char *argv[])
   GtkObject *vol_adjust;
   struct nmf_frontend *fe = g_malloc0 (sizeof (struct nmf_frontend));
   gint button_height = 20;
+  gchar *buf;
 
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
@@ -256,15 +268,20 @@ main (int argc, char *argv[])
 
   player_play (fe->player);
 
-  fe->playlist = playlist_new_list ();
+  buf = g_strdup_printf ("%s/.gpe/gpe-nmf-playlist.m3u", g_get_home_dir());
+  if (g_file_test (buf, G_FILE_TEST_EXISTS)) 
+      fe->playlist = playlist_m3u_load (buf);
+  else
+    fe->playlist = playlist_new_list ();
+  g_free (buf);
   g_timeout_add (500, (GSourceFunc)player_poll_func, fe);
 
-  fe->playlist_widget = playlist_edit (fe, NULL);
+  fe->playlist_widget = playlist_edit (fe, fe->playlist);
 
   /* Destroy handler */
 
   g_signal_connect (G_OBJECT (window), "destroy",
-                    G_CALLBACK (gtk_main_quit), NULL);
+                    G_CALLBACK (save_playlist_and_exit), fe->playlist);
 
   buttons_hbox = gtk_hbox_new (FALSE, 0);
   gtk_container_set_border_width(GTK_CONTAINER(buttons_hbox), gpe_get_border());
@@ -340,7 +357,7 @@ main (int argc, char *argv[])
   exit_button = gtk_button_new ();
   gtk_container_add (GTK_CONTAINER (exit_button), w);
   g_signal_connect (G_OBJECT (exit_button), "clicked",
-		    G_CALLBACK (gtk_main_quit), NULL);
+		    G_CALLBACK (save_playlist_and_exit), fe->playlist);
   gtk_button_set_relief (GTK_BUTTON (exit_button), GTK_RELIEF_NONE);
   gtk_widget_set_usize (exit_button, 18, 18);
 
