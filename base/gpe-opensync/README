@@ -1,1 +1,9 @@
-Nothing in here yet.
+gpe-opensync: A plugin for opensync (www.opensync.org) to sync with handhelds
+              using GPE (http://gpe.handhelds.org).
+
+WARNING: This plugin is not yet finished. A lot of functions are still not yet
+written. Although there should be no damage to your files, it is not
+guaranteed that it works, so make backups!
+
+To compile this you need to have libnsqlc installed. Otherwise it won't work.
+Other dependencies should be reported from ./configure.
