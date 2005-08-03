@@ -2,6 +2,8 @@
 
 USER=$1
 
+# Sound devices on various devices #
+
 if [ -e /dev/sound/dsp ]; then
 chown $USER /dev/sound/dsp
 fi
@@ -9,6 +11,20 @@ fi
 if [ -e /dev/sound/mixer ]; then
 chown $USER /dev/sound/mixer
 fi
+
+if [ -e /dev/misc/buzzer ]; then
+chown $USER /dev/misc/buzzer
+fi
+
+if [ -e /dev/dsp ]; then
+chown $USER /dev/dsp
+fi
+
+if [ -e /dev/mixer ]; then
+chown $USER /dev/mixer
+fi
+
+# touchscreen devices #
 
 if [ -e /dev/touchscreen/0raw ]; then
 chown $USER /dev/touchscreen/0raw
@@ -18,9 +34,8 @@ if [ -e /dev/touchscreen/0 ]; then
 chown $USER /dev/touchscreen/0
 fi
 
-if [ -e /dev/misc/buzzer ]; then
-chown $USER /dev/misc/buzzer
-fi
+
+# screen light control #
 
 if [ -d /sys/class/backlight ]; then
 chown -R $USER /sys/class/backlight/*
@@ -29,6 +44,11 @@ fi
 if [ -d /sys/devices/platform/omapfb/panel ]; then
 chown -R $USER /sys/devices/platform/omapfb/panel/*
 fi
+
+if [ -e /dev/sharp_fl ]; then
+chown $USER /dev/sharp_fl
+fi
+
 
 # check for ramdisk location
 if [ -d /mnt/ramfs ]; then
