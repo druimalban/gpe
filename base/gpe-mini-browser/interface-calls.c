@@ -38,6 +38,7 @@
 #include "gpe/init.h"
 #include "gpe/picturebutton.h"
 #include <gpe/errorbox.h>
+#include <gpe/spacing.h>
 
 #include "gpe-mini-browser.h"
 

@@ -27,6 +27,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <stddef.h>
 #include <getopt.h>
 
@@ -67,13 +68,12 @@ int
 main (int argc, char *argv[])
 {
   GtkWidget *html, *app, *contentbox;	/* html engine, application window, content box of application window */
-  GtkWidget *toolbar, *urlbox;	/* toolbar, url entry box (big screen) */
+  GtkWidget *toolbar, *urlbox=NULL;	/* toolbar, url entry box (big screen) */
   GtkToolItem *back_button, *forward_button, *home_button, 
-	        *fullscreen_button, *url_button;
+	        *fullscreen_button, *url_button=NULL;
   GtkToolItem *separator, *separator2;
   extern GtkToolItem *stop_reload_button;
   const gchar *base;
-  gchar *p;
   gint width = 240, height = 320;
   struct status_data *status;
   int opt;
@@ -113,10 +113,8 @@ main (int argc, char *argv[])
   g_signal_connect (G_OBJECT (app), "delete-event", gtk_main_quit, NULL);
   width = gdk_screen_width ();
   height = gdk_screen_height ();
-  gtk_window_set_default_size (GTK_WINDOW (app), width, height);
   gtk_window_set_title (GTK_WINDOW (app), "mini-browser");
-  gtk_window_set_resizable (GTK_WINDOW (app), TRUE);
-  gtk_widget_realize (app);
+  gtk_window_set_default_size (GTK_WINDOW (app), width, height);
 
   //create boxes
   contentbox = gtk_vbox_new (FALSE, 0);
@@ -124,13 +122,11 @@ main (int argc, char *argv[])
   //fill in status to be sure everything is filled in when used
   status = (struct status_data*) malloc (sizeof (struct status_data));
   status->main_window = contentbox;
+  status->pbar = NULL;
   status->exists = FALSE;
 
   //create toolbar and add to topbox
   toolbar = gtk_toolbar_new ();
-  gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar),
-			       GTK_ORIENTATION_HORIZONTAL);
-  gtk_container_set_border_width (GTK_CONTAINER (toolbar), 3);
 
   //create html object (must be created before function calls to html to avoid segfault)
   html = webi_new ();
@@ -190,6 +186,9 @@ main (int argc, char *argv[])
       gtk_toolbar_insert(GTK_TOOLBAR(toolbar), url_button, -1);
       separator2 = gtk_separator_tool_item_new();
       gtk_toolbar_insert(GTK_TOOLBAR(toolbar), separator2, -1);
+
+      g_signal_connect (GTK_OBJECT (url_button), "clicked",
+		    G_CALLBACK (show_url_window), html);
     }
   /* replace GTK_STOCK_ZOOM_FIT with GTK_STOCK_FULLSCREEN once GPE uses
      gtk 2.7.1 or higher. Or add it myself :-) */
@@ -212,15 +211,13 @@ main (int argc, char *argv[])
   g_signal_connect (GTK_OBJECT (fullscreen_button), "clicked",
 		    G_CALLBACK (set_fullscreen), app);
 
-  /* only show icons if the screen is 240x320 | 320x240 or smaller */
-  if ((width <= 240) || (height <= 240))
-    gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
-  
-  gtk_toolbar_set_icon_size(GTK_TOOLBAR(toolbar), GTK_ICON_SIZE_SMALL_TOOLBAR);
 
-  //make everything viewable
-  gtk_widget_show_all (toolbar);
-  gtk_widget_show_all (html);
+  /* only show icons if the screen is 240x320 | 320x240 or smaller */
+//  if ((width <= 240) || (height <= 240))
+  //  gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
+  
+ // gtk_toolbar_set_icon_size(GTK_TOOLBAR(toolbar), GTK_ICON_SIZE_SMALL_TOOLBAR);
+
   gtk_box_pack_start (GTK_BOX (contentbox), toolbar, FALSE, FALSE, 0);
   if ((width > 320) || (height > 320))
     {
@@ -235,6 +232,9 @@ main (int argc, char *argv[])
 
   g_free ((gpointer *) base);
 
+  //make everything viewable
+  gtk_widget_show_all (toolbar);
+  gtk_widget_show_all (html);
   gtk_widget_show (GTK_WIDGET (contentbox));
   gtk_widget_show (GTK_WIDGET (app));
   gtk_main ();
