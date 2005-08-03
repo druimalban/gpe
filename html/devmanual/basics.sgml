@@ -1,0 +1,79 @@
+<chapter id="basics">
+<title>Basic Ideas and Concepts</title>
+  <para>
+  One of the most frequently asked questions is about how to start GPE 
+  programming. The answer is pretty easy and leads us to one of the major 
+  advantages of GPE: Apart from some hardware limitations you need to keep in 
+  mind GPE programming is the same like application development on a PC using 
+  the GTK+ widget set. So what makes an application become a GPE application?
+  </para>
+  
+  <para>
+  <itemizedlist>
+       <listitem>
+          <para>Use of a standard set of libraries and tools
+          <itemizedlist>
+             <listitem><para>X-Window System</para></listitem>
+             <listitem><para>GTK+ GUI toolkit</para></listitem>
+             <listitem><para>SQLite</para></listitem>
+             <listitem><para>DBus</para></listitem>
+          </itemizedlist>
+          </para>
+       </listitem>
+       <listitem>
+          <para>Respect hardware constraints
+          <itemizedlist>
+             <listitem><para>Limited amount of RAM and mass storage on mobile devices.</para></listitem>
+             <listitem><para>Screen size and geometry.</para></listitem>
+             <listitem><para>Input capabilities</para></listitem>
+          </itemizedlist>
+          </para>
+       </listitem>
+       <listitem>
+          <para>
+          Common look and feel
+          </para>
+          <para>
+              The design of user interfaces is an endless 
+              source of never ending discussions. Latest essence of wisdom may 
+              be reduced to some simple rules:
+          <itemizedlist>
+             <listitem><para>Keep everything simple and obvious.</para></listitem>
+             <listitem><para>Don't use fixed window layouts - screen size and orientation changes.</para>
+             <para>design the GUI for QVGA, VGA and beyond</para>
+             </listitem>
+             <listitem><para>Use a toolbar for the very basic functions of your application.</para></listitem>
+             <listitem><para>More complex applications should have a menu.</para></listitem>
+             <listitem><para>Use stock icons - think about every non-stock icon you intend to use.</para></listitem>
+          </itemizedlist>
+          </para>
+       </listitem>
+    </itemizedlist> 
+  </para>
+
+  <para>
+    We will take a more close look at the details of GUI design later.
+  </para>
+  <para>
+    Some other things might be good but are not a must: 
+    For example it is a good idea to use the C programming language for GPE 
+    applications. On devices with limited CPU power and memory C 
+    (or if really necessary C++) has some advantages over many other well known 
+    programming languages like Java or Python. Reusing code other people wrote 
+    isn't only one of the major strengths of Open Source, it is essential and in 
+    the context of embedded application design it is very important to save space 
+    and manpower. So if several applications share some code consider to make a 
+    library from it. This leads to a similar point: If you need additional 
+    libraries you should check if some library used for other parts of GPE 
+    provide what you want. This helps very much keeping the whole framework as 
+    small as possible.
+  </para>
+  <para>
+[Details - what should be possible, where are the limitations?]
+  </para>
+  <para>
+    For more generic information about how to become involved into Open Source 
+    projects refer to [1] and [2]. For some information how to teach yourself 
+    and how become a hacker you maybe want to read [3]. 
+  </para>
+</chapter>

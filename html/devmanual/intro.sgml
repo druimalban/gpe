@@ -1,0 +1,28 @@
+<chapter id="about">
+<title>About GPE</title>
+  <para>
+    The GPE Palmtop Environment provides a user interface environment for 
+    palmtop/handheld computers running the GNU/Linux operating system.
+  </para>
+  <para>
+    GPE is an entire environment of components which make it possible to use your 
+    GNU/Linux handheld for standard tasks such as Personal Information Management 
+    (PIM), browsing the web, playing music and videos, games, etc.
+  </para>
+  <para>
+    In addition GPE provides an infrastructure for easy application development 
+    and good compatibility to existing desktop solutions. GPE uses the 
+    <ulink url="http://www.x.org">X Window System</ulink>, and the 
+    <ulink url="http://www.gtk.org">GTK+ widget toolkit</ulink>. 
+    Besides providing core software such as shared libraries, and perhaps more 
+    importantly, the GPE environment defines standards for program design and 
+    interaction. It is based on the C programming language and other common 
+    standards such as SQL, XML, DBUS.
+  </para>
+  <para>
+    GPE is committed to the <emphasis>Open Source idea</emphasis>. All GPE core 
+    components are released under GNU licenses, applications using the GPL and 
+    shared libraries using the LGPL. Those allow for the most free usability of 
+    the GPE system.
+    </para>
+</chapter>

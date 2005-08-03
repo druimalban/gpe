@@ -1,3 +1,10 @@
+
+2005-08-04  Florian Boor <florian.boor@kernelconcepts.de>
+
+	* Remove useless scripts, docbook2html is much more useful.
+	* intro.sgml, basics.sgml: Split up the document and add single
+                                   charpters.
+
 2005-08-03  Florian Boor <florian.boor@kernelconcepts.de>
 
 	* Initial checkin of base document and tools from the docbook howto.
