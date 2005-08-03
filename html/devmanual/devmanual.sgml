@@ -1,0 +1,78 @@
+
+<book id="gpe-development-manual"><?dbhtml filename="html/gpedevmanual.html">
+      <bookinfo>
+      -- please add yourself if you do changes to this document --
+        <author>
+          <firstname>Florian</firstname>
+          <surname>Boor</surname>
+          <affiliation>
+            <address role="email">florian.boor@kernelconcepts.de</address>
+          </affiliation>
+        </author>
+        <author>
+          <firstname>Nils</firstname>
+          <surname>Faerber</surname>
+          <affiliation>
+            <address role="email">nils.faerber@kernelconcepts.de</address>
+          </affiliation>
+        </author>
+        <copyright>
+          <year>2005</year>
+          <holder>GPE Team</holder>
+        </copyright>
+        <title>GPE Development Manual</title>
+        <legalnotice>
+          <para> This document may be distributed under the terms and 
+          conditions of the Open Publication License, v1.0 or later. 
+          (Current version is available at 
+          <ulink url="http://www.opencontent.org/openpub/">http://www.opencontent.org/openpub/</ulink> ).
+          </para>
+        </legalnotice>
+        <revhistory>
+          <revision>
+            <revnumber>0.2</revnumber>
+            <date>20050802</date>
+            <revremark>First Draft</revremark>
+          </revision>
+        </revhistory>
+        <abstract>
+        This document is intended to become a complete reference manual for 
+        GPE application development. At the point of starting this we have 
+        various sources of information about the wisdom how to create or 
+        continue a GPE application. In the past years we have been collecting 
+        lots of experience in coding for handhelds devices - it is very 
+        important not only to share the software but the experience that lead 
+        to this software as well.
+        </abstract>
+      </bookinfo>
+      
+    <chapter id="about">
+    <title>About GPE</title>
+      <para>
+        The GPE Palmtop Environment provides a user interface environment for 
+        palmtop/handheld computers running the GNU/Linux operating system.
+      </para>
+      <para>
+        GPE is an entire environment of components which make it possible to use your 
+        GNU/Linux handheld for standard tasks such as Personal Information Management 
+        (PIM), browsing the web, playing music and videos, games, etc.
+      </para>
+      <para>
+        In addition GPE provides an infrastructure for easy application development 
+        and good compatibility to existing desktop solutions. GPE uses the 
+        <ulink url="http://www.x.org">X Window System</ulink>, and the 
+        <ulink url="http://www.gtk.org">GTK+ widget toolkit</ulink>. 
+        Besides providing core software such as shared libraries, and perhaps more 
+        importantly, the GPE environment defines standards for program design and 
+        interaction. It is based on the C programming language and other common 
+        standards such as SQL, XML, DBUS.
+      </para>
+      <para>
+        GPE is committed to the <emphasis>Open Source idea</emphasis>. All GPE core 
+        components are released under GNU licenses, applications using the GPL and 
+        shared libraries using the LGPL. Those allow for the most free usability of 
+        the GPE system.
+        </para>
+    </chapter>      
+      
+</book>
