@@ -1,3 +1,12 @@
+2005-08-04  Florian Boor <florian@kernelconcepts.de>
+
+    * gpe-login.c (locale_get_files): Introduce a fallback solution for 
+                                      creating a locale list using locale.alias.
+                  (locale_install_check): New function to guess if a locale is
+                                          installed or not.
+    * locale.alias: Don't comment out some locales, we have a different 
+                    mechanism now.
+
 2005-08-03  Florian Boor <florian@kernelconcepts.de>
 
 	* Version 0.80 released.

@@ -53,6 +53,7 @@
 #define SHELL "/bin/sh"
 #define GPE_LOGIN_CONF "/etc/gpe/gpe-login.conf"
 #define GPE_LOCALE_ALIAS "/etc/gpe/locales/"
+#define GPE_LOCALE_ALIAS_FALLBACK "/etc/gpe/locale.alias"
 #define GPE_LOCALE_DEFAULT "/etc/gpe/locale.default"
 #define GPE_LOCALE_USER_FILE ".gpe/locale"
 #define GPE_OWNERINFO_DONTSHOW_FILE "/etc/gpe/gpe-ownerinfo.dontshow"
@@ -958,6 +959,27 @@ locale_parse_line (char *p)
   return item;
 }
 
+/*
+ * In order to filter not installed locales we check if the locale
+ * directory is present in the filesystem. On most large distributions 
+ * we have all the locale stuff in place but not generated, in this case
+ * this guss will fail, but in Familiar and similar distribution this 
+ * assumption is correct.
+ */
+
+gboolean
+locale_install_check(const char* locale)
+{
+    gboolean result = FALSE;
+    char *dir = g_strdup_printf(PREFIX "/share/locale/%s", locale);
+    
+    if (!access(dir, F_OK))
+        result = TRUE;
+    
+    g_free (dir);
+    return result;
+}
+
 
 /* Read the given file name and parse it with locale_parse_line,
  * returning a GSList of the (locale_item_t *)'s found
@@ -983,10 +1005,19 @@ locale_get_list (const char *flocale)
     {
       if ((p = fgets (lbuf, sizeof (lbuf), fp)))
         {
-	  item = locale_parse_line (p);
-	  if (item)
-	    list = g_slist_append (list, item);
-	}
+          item = locale_parse_line (p);
+          if (item)
+            {
+              if (locale_install_check(item->locale))
+                list = g_slist_append (list, item);
+              else
+                {
+                  g_free(item->locale);
+                  g_free(item->name);
+                  g_free(item);
+                }
+            }
+        }
     }    
   fclose (fp);
   return list;
@@ -1003,13 +1034,19 @@ locale_get_files (void)
   GSList *flist = NULL;
   DIR *dir;
   struct dirent *dent;
+  gboolean fallback = FALSE;
 
   if (stat(GPE_LOCALE_ALIAS,&st))
     {
-      perror("locale_get_files: could not stat!");
-      return NULL;
+      perror("locale_get_files: could not stat, tryinf fallback");
+      fallback = TRUE;
+      if (stat(GPE_LOCALE_ALIAS_FALLBACK, &st))
+        {
+          perror("locale_get_files: no fallback, giving up");
+          return NULL;
+        }
     }
-
+  
   /* read all file entries if it is a directory */  
   if (S_ISDIR (st.st_mode))
     {
@@ -1059,7 +1096,10 @@ locale_get_files (void)
     /* just one file. copy the filename cause we dont own it */
     {
       gchar *fname;
-      fname = g_strdup (GPE_LOCALE_ALIAS);
+      if (fallback) 
+          fname = g_strdup (GPE_LOCALE_ALIAS_FALLBACK);
+      else
+          fname = g_strdup (GPE_LOCALE_ALIAS);
       if (fname)
         flist = g_slist_append (flist, fname);
     }

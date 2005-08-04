@@ -18,10 +18,10 @@
 # This file originates from the gdm distribution, and presumably before
 # that from glibc.
 
-#"Catalan"	ca_ES
-#"Chinese (simplified)"	zh_CN
-#"Chinese (traditional)"	zh_TW
-#"Czech"		cs_CZ
+"Catalan"	ca_ES
+"Chinese (simplified)"	zh_CN
+"Chinese (traditional)"	zh_TW
+"Czech"		cs_CZ
 "Dansk"		da_DK
 "Deutsch"	de_DE
 "Dutch"		nl_NL
@@ -35,20 +35,20 @@
 "Greek"		el_GR
 "Hebrew"	iw_IL
 "Hrvatski"	hr_HR
-#"Hungarian"	hu_HU
-#"Icelandic"	is_IS
-#"Italian"	it_IT
+"Hungarian"	hu_HU
+"Icelandic"	is_IS
+"Italian"	it_IT
 "Japanese"	ja_JP
-#"Korean"	ko_KR
-#"Lithuanian"	lt_LT
+"Korean"	ko_KR
+"Lithuanian"	lt_LT
 "Norwegian"	no_NO
 "Polish"	pl_PL
 "Portuguese"	pt_PT
 "Romanian"	ro_RO
-#"Russian"	ru_RU
-#"Slovak"	sk_SK
-#"Slovenian"	sl_SI
+"Russian"	ru_RU
+"Slovak"	sk_SK
+"Slovenian"	sl_SI
 "Spanish"	es_ES
 "Swedish"	sv_SE
 "Turkish"	tr_TR
-#"Ukrainian"	uk_UA
+"Ukrainian"	uk_UA
