@@ -1,5 +1,6 @@
 2005-08-04  Rene Wagner  <rw@handhelds.org>
 
+    * Release 0.41
     * export.c: Include config.h. Add #ifdef USE_DBUS guards around D-Bus code.
     * configure.ac: Add --disable-dbus configure option. Generate config.h.
     * autogen.sh: Run autoheader.
