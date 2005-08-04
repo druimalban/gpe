@@ -189,6 +189,7 @@ main (int argc, char *argv[])
     {
       url_button = gtk_tool_button_new_from_stock (GTK_STOCK_NETWORK);
       gtk_tool_item_set_homogeneous(url_button, FALSE);
+      gtk_tool_button_set_label(GTK_TOOL_BUTTON(url_button), "Url");
       gtk_toolbar_insert(GTK_TOOLBAR(toolbar), url_button, -1);
       separator2 = gtk_separator_tool_item_new();
       gtk_tool_item_set_homogeneous(separator2, FALSE);
@@ -201,6 +202,7 @@ main (int argc, char *argv[])
      gtk 2.7.1 or higher. Or add it myself :-) */
   fullscreen_button = gtk_tool_button_new_from_stock (GTK_STOCK_ZOOM_FIT);
   gtk_tool_item_set_homogeneous(fullscreen_button, FALSE);
+  gtk_tool_button_set_label(GTK_TOOL_BUTTON(fullscreen_button), "Fullscreen");
   gtk_toolbar_insert(GTK_TOOLBAR(toolbar), fullscreen_button, -1);
 
   /* connect all button signals */
@@ -224,7 +226,7 @@ main (int argc, char *argv[])
 //  if ((width <= 240) || (height <= 240))
   //  gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
   
- // gtk_toolbar_set_icon_size(GTK_TOOLBAR(toolbar), GTK_ICON_SIZE_SMALL_TOOLBAR);
+  gtk_toolbar_set_icon_size(GTK_TOOLBAR(toolbar), GTK_ICON_SIZE_SMALL_TOOLBAR);
 
   gtk_box_pack_start (GTK_BOX (contentbox), toolbar, FALSE, FALSE, 0);
   if ((width > 320) || (height > 320))
