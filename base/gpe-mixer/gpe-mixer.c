@@ -53,7 +53,6 @@ static struct gpe_icon my_icons[] = {
 
 /* GTK UI */
 GtkWidget *window;				/* Main window */
-GtkStyle *style;
 GtkObject **MixerAdjuster;
 gchar **channels = NULL;
 
@@ -116,7 +115,6 @@ GdkPixbuf *pbuf = NULL;
 
 	/* create table for all mixers */
 	table=gtk_table_new(2, n, FALSE);
-	style = gtk_style_copy (table->style);
 	gtk_container_add (GTK_CONTAINER (window), table);
 	MixerAdjuster = (GtkObject **)g_malloc0(n * sizeof (GtkObject *));
 
@@ -131,7 +129,6 @@ GdkPixbuf *pbuf = NULL;
 			MixerAdjuster[n] = gtk_adjustment_new (101.0, 0.0, 101.0, 1.0, 10.0, 1.0);
 			slider = gtk_vscale_new (GTK_ADJUSTMENT (MixerAdjuster[n]));
 			gtk_scale_set_draw_value (GTK_SCALE (slider), FALSE);
-			gtk_widget_set_style (slider, style);
 			gtk_table_attach(GTK_TABLE(table), slider, n, n+1, 1, 2, GTK_FILL, GTK_EXPAND | GTK_FILL, 0, 0);
 			gtk_tooltips_set_tip(GTK_TOOLTIPS(mixer_tips),GTK_WIDGET(slider),mixer_names[i],mixer_names[i]);
 			if (ioctl(mixfd, MIXER_READ(i),&mval)== -1) /* get initial setting */
@@ -145,13 +142,11 @@ GdkPixbuf *pbuf = NULL;
 				pbuf = gpe_try_find_icon ("unkn", &err);
 			w = gtk_image_new_from_pixbuf (pbuf);
 			if (w) {
-				gtk_widget_set_style (w, style);
 				gtk_table_attach(GTK_TABLE(table), w, n, n+1, 0, 1, 0, 0, 1, 0);
 				gtk_widget_show(w);
 				gtk_tooltips_set_tip(GTK_TOOLTIPS(mixer_tips),GTK_WIDGET(w),mixer_names[i],mixer_names[i]);
 			} else {
 				label=gtk_label_new(_(mixer_labels[i]));
-				gtk_widget_set_style (label, style);
 				gtk_table_attach(GTK_TABLE(table), label, n, n+1, 0, 1, 0, 0, 1, 0);
 				gtk_widget_show(label);
 				gtk_tooltips_set_tip(GTK_TOOLTIPS(mixer_tips),GTK_WIDGET(label),mixer_names[i],mixer_names[i]);
@@ -188,8 +183,6 @@ main (int argc, char *argv[])
 {
 /* GTK Widgets */
 GtkWidget *table;
-GdkColor col;
-gchar *color = "gray80";
 int arg;
 gchar *cstr = NULL;
 	
@@ -242,8 +235,6 @@ gchar *cstr = NULL;
 			printf("DC: %s\n",channels[i++]);
 	}
 	
-	gdk_color_parse (color, &col);
-  
 	/* mixer init */
 	if ((mixfd = open("/dev/mixer", O_RDWR)) < 0) {
 		gpe_perror_box("opening mixer");
