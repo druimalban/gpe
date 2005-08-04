@@ -60,7 +60,9 @@
 /* Number of milliseconds to hold the stylus down before recalibration is called */
 #define RECALIBRATION_TIMEOUT 5000
 #define XTSCAL_PATH "/usr/bin/gpe-xcalibrate.sh"
+#ifndef DEBUG
 #define DEBUG 0
+#endif
 
 #define bin_to_ascii(c) ((c)>=38?((c)-38+'a'):(c)>=12?((c)-12+'A'):(c)+'.')
 
@@ -972,11 +974,29 @@ locale_install_check(const char* locale)
 {
     gboolean result = FALSE;
     char *dir = g_strdup_printf(PREFIX "/share/locale/%s", locale);
-    
+
+    /* check for equal locale */    
     if (!access(dir, F_OK))
         result = TRUE;
-    
-    g_free (dir);
+
+    /* If we have a locale of the type xx_XX check if xx exists. */
+    if (strstr(locale, "_"))
+      {
+        int l1, l2, lm;
+        char *lp = g_strdup(strstr(locale, "_"));
+        char *cu = strstr(dir, "_");
+        l1 = strlen(locale) - strlen(lp);
+        l2 = strlen(lp) - 1;
+        lm = MIN(l1, l2);
+        
+        cu[0] = 0; /* cu is the location of the "_" in dir, we cut off dir */
+        if ((!strncasecmp(locale, (char*)(lp+1), lm))
+            && (!access(dir, F_OK)))
+          result = TRUE;
+        g_free(lp);
+      }
+    g_free(dir);
+      
     return result;
 }
 
