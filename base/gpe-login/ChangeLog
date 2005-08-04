@@ -1,7 +1,10 @@
 2005-08-04  Florian Boor <florian@kernelconcepts.de>
 
+    * Version 0.81 released.
+    * locale.alias: Import new file from gdm with the help of Phil's awk
+                    knowlege.
     * gpe-login.c: Improve fallback solution to support more situations.
-                   Defind DEBUG only if not already defined.    
+                   Define DEBUG only if not already defined.    
     * Makefile: Add -Wall and a section to handle DEBUG.
     * gpe-login.c (locale_get_files): Introduce a fallback solution for 
                                       creating a locale list using locale.alias.

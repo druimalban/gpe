@@ -987,7 +987,7 @@ locale_install_check(const char* locale)
         char *cu = strstr(dir, "_");
         l1 = strlen(locale) - strlen(lp);
         l2 = strlen(lp) - 1;
-        lm = MIN(l1, l2);
+        lm = MAX(l1, l2);
         
         cu[0] = 0; /* cu is the location of the "_" in dir, we cut off dir */
         if ((!strncasecmp(locale, (char*)(lp+1), lm))
