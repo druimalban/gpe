@@ -1,3 +1,7 @@
+2005-08-04	Rene Wagner <rw@handhelds.org>
+
+	- Remove bogus '-' (resulting in '--lgpewidget' etc.) from Makefile
+
 2005-04-20	Florian Boor <florian@kernelconcepts.de>
 
 	- Released V 0.41

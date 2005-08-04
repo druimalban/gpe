@@ -25,7 +25,7 @@ else
 PACKAGE_CFLAGS += -I/usr/include/gpe
 BUILD = build
 endif
-PACKAGE_LDFLAGS += -$(GPELIBS) $(GTKLIBS)
+PACKAGE_LDFLAGS += $(GPELIBS) $(GTKLIBS)
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
