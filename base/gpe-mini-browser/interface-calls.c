@@ -276,12 +276,15 @@ GtkWidget * show_big_screen_interface ( Webi *html, GtkWidget *toolbar, WebiSett
       /* add extra zoom in/out buttons + spacing to the toolbar */ 
 
       zoom_in_button = gtk_tool_button_new_from_stock (GTK_STOCK_ZOOM_IN);
+      gtk_tool_item_set_homogeneous(zoom_in_button, FALSE);
       gtk_toolbar_insert (GTK_TOOLBAR(toolbar), zoom_in_button, -1);
 
       zoom_out_button = gtk_tool_button_new_from_stock (GTK_STOCK_ZOOM_OUT);
+      gtk_tool_item_set_homogeneous(zoom_out_button, FALSE);
       gtk_toolbar_insert (GTK_TOOLBAR(toolbar), zoom_out_button, -1);
 
       sep = gtk_separator_tool_item_new();
+      gtk_tool_item_set_homogeneous(sep, FALSE);
       gtk_toolbar_insert (GTK_TOOLBAR(toolbar), sep, -1);
 
       /* add button callbacks */ 

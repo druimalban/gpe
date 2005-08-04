@@ -161,18 +161,23 @@ main (int argc, char *argv[])
 
   /*add home,  back, forward, refresh / stop, url (small screen) */
   back_button = gtk_tool_button_new_from_stock (GTK_STOCK_GO_BACK);
+  gtk_tool_item_set_homogeneous(back_button, FALSE);
   gtk_toolbar_insert(GTK_TOOLBAR (toolbar), back_button, -1);
 
   forward_button = gtk_tool_button_new_from_stock (GTK_STOCK_GO_FORWARD);
+  gtk_tool_item_set_homogeneous(forward_button, FALSE);
   gtk_toolbar_insert(GTK_TOOLBAR (toolbar), forward_button, -1);
 
   stop_reload_button = gtk_tool_button_new_from_stock (GTK_STOCK_REFRESH);
+  gtk_tool_item_set_homogeneous(stop_reload_button, FALSE);
   gtk_toolbar_insert(GTK_TOOLBAR(toolbar), stop_reload_button, -1);   
 
   home_button = gtk_tool_button_new_from_stock (GTK_STOCK_HOME);
+  gtk_tool_item_set_homogeneous(home_button, FALSE);
   gtk_toolbar_insert(GTK_TOOLBAR(toolbar), home_button, -1);   
   
   separator = gtk_separator_tool_item_new();
+  gtk_tool_item_set_homogeneous(separator, FALSE);
   gtk_toolbar_insert(GTK_TOOLBAR(toolbar), separator, -1);
 
   /* only show full Url bar if the screen is bigger than 240x320 | 320x240 */
@@ -183,8 +188,10 @@ main (int argc, char *argv[])
   else
     {
       url_button = gtk_tool_button_new_from_stock (GTK_STOCK_NETWORK);
+      gtk_tool_item_set_homogeneous(url_button, FALSE);
       gtk_toolbar_insert(GTK_TOOLBAR(toolbar), url_button, -1);
       separator2 = gtk_separator_tool_item_new();
+      gtk_tool_item_set_homogeneous(separator2, FALSE);
       gtk_toolbar_insert(GTK_TOOLBAR(toolbar), separator2, -1);
 
       g_signal_connect (GTK_OBJECT (url_button), "clicked",
@@ -193,6 +200,7 @@ main (int argc, char *argv[])
   /* replace GTK_STOCK_ZOOM_FIT with GTK_STOCK_FULLSCREEN once GPE uses
      gtk 2.7.1 or higher. Or add it myself :-) */
   fullscreen_button = gtk_tool_button_new_from_stock (GTK_STOCK_ZOOM_FIT);
+  gtk_tool_item_set_homogeneous(fullscreen_button, FALSE);
   gtk_toolbar_insert(GTK_TOOLBAR(toolbar), fullscreen_button, -1);
 
   /* connect all button signals */
