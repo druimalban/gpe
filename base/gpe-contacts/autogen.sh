@@ -32,6 +32,7 @@ libtoolize --copy --force
 
 aclocal $ACLOCAL_FLAGS
 
+autoheader
 automake -a $am_opt
 autoconf
 

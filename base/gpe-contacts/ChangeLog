@@ -1,3 +1,9 @@
+2005-08-04  Rene Wagner  <rw@handhelds.org>
+
+    * export.c: Include config.h. Add #ifdef USE_DBUS guards around D-Bus code.
+    * configure.ac: Add --disable-dbus configure option. Generate config.h.
+    * autogen.sh: Run autoheader.
+
 2005-08-02  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * import-vcard.c: Update import stuff to new database layout.

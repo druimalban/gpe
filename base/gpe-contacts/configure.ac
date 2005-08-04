@@ -3,6 +3,7 @@ dnl Process this file with autoconf to produce a configure script.
 AC_INIT(gpe-contacts,0.40,gpe@handhelds.org)
 
 AC_CONFIG_SRCDIR([main.c])
+AM_CONFIG_HEADER(config.h)
 AM_INIT_AUTOMAKE([foreign dist-bzip2])
 
 AC_PROG_CC
@@ -10,7 +11,7 @@ AC_STDC_HEADERS
 AC_PROG_INSTALL
 
 
-DEP_MODULES="gtk+-2.0 >= 2.6 glib-2.0 >= 2.2 libgpewidget libgpepimc libgpevtype sqlite dbus-glib-1 mimedir-1.0"
+DEP_MODULES="gtk+-2.0 >= 2.6 glib-2.0 >= 2.2 libgpewidget libgpepimc libgpevtype sqlite mimedir-1.0"
 
 # i8n stuff
 AH_TEMPLATE([GETTEXT_PACKAGE], [Package name for gettext])
@@ -24,6 +25,27 @@ AC_SUBST(gpecontacts_localedir)
 
 AM_GLIB_GNU_GETTEXT
 AC_PROG_INTLTOOL([0.23])
+ dbus-glib-1
+AC_MSG_CHECKING([if D-Bus support has been enabled]);
+AC_ARG_ENABLE(
+  dbus,
+  [  --disable-dbus          compile without D-Bus support],
+  [ 
+    if test "$enable_dbus" = "yes"; then
+      AC_MSG_RESULT(yes)
+    else
+      AC_MSG_RESULT(no)
+    fi
+  ],
+  [ 
+    enable_dbus="yes";
+    AC_MSG_RESULT(yes) 
+  ]
+)
+if test "$enable_dbus" = "yes"; then
+    DEP_MODULES="$DEP_MODULES dbus-glib-1"
+    AC_DEFINE([USE_DBUS], [1], [Define to 1 to enable D-Bus support])
+fi
 
 ENABLE_HILDON=false
 

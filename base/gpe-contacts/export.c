@@ -11,6 +11,10 @@
  * $Id$
  */
 
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
+
 #include <gtk/gtk.h>
 #include <libintl.h>
 #include <stdlib.h>
@@ -27,6 +31,7 @@
 #include <gpe/vcard.h>
 #include <gpe/errorbox.h>
 
+#ifdef USE_DBUS
 #include <dbus/dbus.h>
 #include <dbus/dbus-glib.h>
 
@@ -34,6 +39,7 @@ static DBusConnection *connection;
 
 #define BLUETOOTH_SERVICE_NAME   "org.handhelds.gpe.bluez"
 #define IRDA_SERVICE_NAME   "org.handhelds.gpe.irda"
+#endif /* USE_DBUS */
 
 static gchar *
 export_to_vcard (guint uid)
@@ -55,6 +61,7 @@ export_to_vcard (guint uid)
 void
 menu_do_send_bluetooth (void)
 {
+#ifdef USE_DBUS
   gchar *card;
   DBusMessage *message;
   DBusMessageIter iter;
@@ -75,11 +82,13 @@ menu_do_send_bluetooth (void)
   dbus_connection_send (connection, message, NULL);
 
   g_free (card);
+#endif /* USE_DBUS */
 }
 
 void
 menu_do_send_irda (void)
 {
+#ifdef USE_DBUS
   gchar *card;
   DBusMessage *message;
   DBusMessageIter iter;
@@ -100,6 +109,7 @@ menu_do_send_irda (void)
   dbus_connection_send (connection, message, NULL);
 
   g_free (card);
+#endif /* USE_DBUS */
 }
 
 gboolean
@@ -173,6 +183,7 @@ menu_do_save (void)
 gboolean
 export_bluetooth_available (void)
 {
+#ifdef USE_DBUS
   dbus_bool_t r;
 
   if (connection == NULL)
@@ -181,11 +192,15 @@ export_bluetooth_available (void)
   r = dbus_bus_service_exists (connection, BLUETOOTH_SERVICE_NAME, NULL);
 
   return r ? TRUE : FALSE;
+#else
+  return FALSE;
+#endif /* USE_DBUS */
 }
 
 gboolean
 export_irda_available (void)
 {
+#ifdef USE_DBUS
   dbus_bool_t r;
 
   if (connection == NULL)
@@ -194,11 +209,15 @@ export_irda_available (void)
   r = dbus_bus_service_exists (connection, IRDA_SERVICE_NAME, NULL);
 
   return r ? TRUE : FALSE;
+#else
+  return FALSE;
+#endif /* USE_DBUS */
 }
 
 void
 export_init (void)
 {
+#ifdef USE_DBUS
   DBusError error;
 
   dbus_error_init (&error);
@@ -206,4 +225,5 @@ export_init (void)
   connection = dbus_bus_get (DBUS_BUS_SESSION, &error);
   if (connection)
     dbus_connection_setup_with_g_main (connection, NULL);
+#endif /* USE_DBUS */
 }
