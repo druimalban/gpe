@@ -3,6 +3,7 @@
                       "http://www.oasis-open.org/docbook/xml/4.1/docbookx.dtd" [
   <!ENTITY introduction SYSTEM "intro.sgml">
   <!ENTITY basics SYSTEM "basics.sgml">
+  <!ENTITY environment SYSTEM "environment.sgml">
 ]>
 
 
@@ -55,7 +56,7 @@
       </bookinfo>
 
 &introduction;
-
 &basics;
-      
+&environment;
+
 </book>

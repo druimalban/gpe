@@ -1,0 +1,90 @@
+<chapter id="environment">
+<title>Your Development Environment</title>
+  <para>
+    In the most cases you do not want to compile a complete GPE framework 
+	manually, there are build systems like Openembedded[6] or T2[7] which do 
+	this work for you. On many hardware platforms you can use binaries from 
+	one of the embedded Linux distributions like e.g. Familiar[8]. The Familiar 
+	binaries are expected to work fine on most ARM based platforms. There are 
+	only a very few bits in GPE which have platform-dependent switches, so 
+	there is usually no need to compile packages specific to a particular 
+	platform.
+  </para>
+  <para>
+    Currently we work on switching the build system from our own Makefiles 
+	to Autotools the way to compile the components GPE consists of.
+  </para>
+<section>
+  <title>Native Development</title>
+  <para>
+  The basic needs for GPE development are a PC running Linux (or a similar 
+  UNIX-like operating system) and a X window system with compiler and some 
+  libraries installed. GPE applications are basically just GTK applications 
+  like many others. In this context GPE application development is quite 
+  uncomplicated.
+  </para>
+  <para>
+  What do i need to install?
+  </para>
+  
+  <itemizedlist>
+       <listitem><para>C Compiler</para></listitem>
+       <listitem><para>make</para></listitem>
+       <listitem><para>intltool</para></listitem>
+       <listitem><para>Autotools (autoconf/automake)</para></listitem>
+       <listitem><para>GTK2 and its development packages.</para></listitem>
+       <listitem><para>SQLite and its development packages.</para></listitem>
+       <listitem><para>GOB2 - the GTK object builder. (for older library revisions)</para></listitem>
+       <listitem><para>DBUS</para></listitem>
+  </itemizedlist>
+
+  <para>
+  For the compiler you usually want to use GCC which is included in most modern 
+  operating system distributions. All versions >= 3.0 should work without 
+  trouble. The GTK libraries will pull in some other libraries they depend on 
+  (things like GDK, Pango, ATK, X11). To be sure all parts of GPE work properly 
+  it is recommended to use GTK 2.6.0 or higher. SQLite is a small in-process 
+  SQL database which is used by various GPE applications for data storage. 
+  Currently GPE uses the typless 2.x versions of SQLite.
+  </para>
+  <para>
+    More and more GPE bits require GNU autotools to build. Some old versions 
+	of autotools are known to cause trouble. If you use autoconf >= 2.50 and 
+	and automake >= 1.9 you should be safe.
+  </para>
+  <para>
+    Apart from the basic libraries necessary for almost all GPE applications 
+	some parts of GPE depend on other external tools and libraries. 
+	Most important are BlueZ (for gpe-bluetooth), Openobex (gpe-beam, 
+	gpe-bluetooth), libmimedir (PIM applications), Cairo (gpe-appmgr, 
+	gpe-bootsplash, libgpewidget if activated), libmatchbox (gpe-what, 
+	gpe-mininet).
+  </para>
+</section>
+
+<section>
+<title>Crosscompiling</title>
+
+  <para>
+    For a simple and fast start crosscompiling a GPE application get a copy of 
+	the OpenEmbedded crosstoolchain for GPE from handhelds.org.
+  </para>
+
+</section>
+
+<section>
+<title>GPE Websites and Resources</title>
+  <para>
+    After all these information about how to compile GPE it might be 
+	interesting to know where to find GPE and information about it. 
+	
+	[sources archive, uploads, documentation, cvs, irc, mailinglist, cvstrac, gallery]
+  </para>
+</section>
+
+<section>
+<title>Exploring the CVS</title>
+  <para>  </para>  
+</section>
+
+</chapter>
