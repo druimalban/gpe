@@ -42,6 +42,13 @@
             <revremark>First Draft</revremark>
           </revision>
         </revhistory>
+
+        <mediaobject>
+          <imageobject>
+             <imagedata fileref="gpe-logo-360.png" align="center" width="1cm"/>
+          </imageobject>
+        </mediaobject>
+
         <abstract>
           <para>
             This document is intended to become a complete reference manual for 
@@ -54,6 +61,17 @@
           </para>
         </abstract>
       </bookinfo>
+
+
+<index>
+<para>
+GPE Development Manual
+<indexterm>
+  <primary>GPE Development Manual</primary>
+  <secondary>Making mysterious handheld programming become fun.</secondary>
+</indexterm>
+</para>
+</index>
 
 &introduction;
 &basics;

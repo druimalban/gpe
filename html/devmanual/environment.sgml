@@ -2,17 +2,17 @@
 <title>Your Development Environment</title>
   <para>
     In the most cases you do not want to compile a complete GPE framework 
-	manually, there are build systems like Openembedded[6] or T2[7] which do 
-	this work for you. On many hardware platforms you can use binaries from 
-	one of the embedded Linux distributions like e.g. Familiar[8]. The Familiar 
-	binaries are expected to work fine on most ARM based platforms. There are 
-	only a very few bits in GPE which have platform-dependent switches, so 
-	there is usually no need to compile packages specific to a particular 
-	platform.
+    manually, there are build systems like Openembedded[6] or T2[7] which do 
+    this work for you. On many hardware platforms you can use binaries from 
+    one of the embedded Linux distributions like e.g. Familiar[8]. The Familiar 
+    binaries are expected to work fine on most ARM based platforms. There are 
+    only a very few bits in GPE which have platform-dependent switches, so 
+    there is usually no need to compile packages specific to a particular 
+    platform.
   </para>
   <para>
     Currently we work on switching the build system from our own Makefiles 
-	to Autotools the way to compile the components GPE consists of.
+    to Autotools the way to compile the components GPE consists of.
   </para>
 <section>
   <title>Native Development</title>
@@ -49,16 +49,16 @@
   </para>
   <para>
     More and more GPE bits require GNU autotools to build. Some old versions 
-	of autotools are known to cause trouble. If you use autoconf >= 2.50 and 
-	and automake >= 1.9 you should be safe.
+    of autotools are known to cause trouble. If you use autoconf >= 2.50 and 
+    and automake >= 1.9 you should be safe.
   </para>
   <para>
     Apart from the basic libraries necessary for almost all GPE applications 
-	some parts of GPE depend on other external tools and libraries. 
-	Most important are BlueZ (for gpe-bluetooth), Openobex (gpe-beam, 
-	gpe-bluetooth), libmimedir (PIM applications), Cairo (gpe-appmgr, 
-	gpe-bootsplash, libgpewidget if activated), libmatchbox (gpe-what, 
-	gpe-mininet).
+    some parts of GPE depend on other external tools and libraries. 
+    Most important are BlueZ (for gpe-bluetooth), Openobex (gpe-beam, 
+    gpe-bluetooth), libmimedir (PIM applications), Cairo (gpe-appmgr, 
+    gpe-bootsplash, libgpewidget if activated), libmatchbox (gpe-what, 
+    gpe-mininet).
   </para>
 </section>
 
@@ -67,7 +67,7 @@
 
   <para>
     For a simple and fast start crosscompiling a GPE application get a copy of 
-	the OpenEmbedded crosstoolchain for GPE from handhelds.org.
+    the OpenEmbedded crosstoolchain for GPE from handhelds.org.
   </para>
 
 </section>
@@ -76,7 +76,7 @@
 <title>GPE Websites and Resources</title>
   <para>
     After all these information about how to compile GPE it might be 
-	interesting to know where to find GPE and information about it. 
+    interesting to know where to find GPE and information about it. 
 	
 	[sources archive, uploads, documentation, cvs, irc, mailinglist, cvstrac, gallery]
   </para>
