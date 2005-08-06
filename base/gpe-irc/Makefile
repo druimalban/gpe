@@ -58,7 +58,7 @@ install-program: all
 	install -m 644 pixmaps/colors/blue.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/irc/colors/blue.png
 	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
 	install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications/
-	strip $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
+	$(STRIP) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 
 clean:
 	rm -f $(PACKAGE) $(OBJS) $(DEPS)
