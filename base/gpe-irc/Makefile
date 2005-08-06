@@ -15,6 +15,8 @@ ifeq ($(CVSBUILD),yes)
 PACKAGE_CPPFLAGS += -I../libgpewidget
 PACKAGE_LDFLAGS += -L../libgpewidget
 BUILD = ../build
+else
+BUILD = build
 endif
 
 
