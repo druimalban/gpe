@@ -1,6 +1,7 @@
 
 #include "irc.h"
 
+#include <libintl.h>
 #define _(_x) gettext (_x)
 
 extern void get_networks (GtkWidget *combo, GHashTable *network_hash);

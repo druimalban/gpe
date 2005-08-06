@@ -1,3 +1,7 @@
+2005-08-06  Phil Blundell  <pb@reciva.com>
+
+	* main.h: Include libintl.h to avoid warning.
+
 2005-04-02  Luc Pionchon  <luc@handhelds.org>
 
 	* main.c (main): replaced gpe_find_icon by gtk_image_new_from_pixbuf
