@@ -17,14 +17,14 @@
 <section>
   <title>Native Development</title>
   <para>
-  The basic needs for GPE development are a PC running Linux (or a similar 
-  UNIX-like operating system) and a X window system with compiler and some 
-  libraries installed. GPE applications are basically just GTK applications 
-  like many others. In this context GPE application development is quite 
-  uncomplicated.
+    The basic needs for GPE development are a PC running Linux (or a similar 
+    UNIX-like operating system) and a X window system with compiler and some 
+    libraries installed. GPE applications are basically just GTK applications 
+    like many others. In this context GPE application development is quite 
+    uncomplicated.
   </para>
   <para>
-  What do i need to install?
+    What do i need to install?
   </para>
   
   <itemizedlist>
@@ -39,13 +39,13 @@
   </itemizedlist>
 
   <para>
-  For the compiler you usually want to use GCC which is included in most modern 
-  operating system distributions. All versions >= 3.0 should work without 
-  trouble. The GTK libraries will pull in some other libraries they depend on 
-  (things like GDK, Pango, ATK, X11). To be sure all parts of GPE work properly 
-  it is recommended to use GTK 2.6.0 or higher. SQLite is a small in-process 
-  SQL database which is used by various GPE applications for data storage. 
-  Currently GPE uses the typless 2.x versions of SQLite.
+    For the compiler you usually want to use GCC which is included in most modern 
+    operating system distributions. All versions >= 3.0 should work without 
+    trouble. The GTK libraries will pull in some other libraries they depend on 
+    (things like GDK, Pango, ATK, X11). To be sure all parts of GPE work properly 
+    it is recommended to use GTK 2.6.0 or higher. SQLite is a small in-process 
+    SQL database which is used by various GPE applications for data storage. 
+    Currently GPE uses the typless 2.x versions of SQLite.
   </para>
   <para>
     More and more GPE bits require GNU autotools to build. Some old versions 
@@ -55,7 +55,7 @@
   <para>
     Apart from the basic libraries necessary for almost all GPE applications 
     some parts of GPE depend on other external tools and libraries. 
-    Most important are BlueZ (for gpe-bluetooth), Openobex (gpe-beam, 
+    Most important are BlueZ (for gpe-bluetooth), OpenOBEX (gpe-beam, 
     gpe-bluetooth), libmimedir (PIM applications), Cairo (gpe-appmgr, 
     gpe-bootsplash, libgpewidget if activated), libmatchbox (gpe-what, 
     gpe-mininet).
@@ -63,12 +63,54 @@
 </section>
 
 <section>
-<title>Crosscompiling</title>
+<title>Target Binaries and Cross Compiling</title>
+  <para>
+    The major part of the potential target devices for GPE will not have an 
+    Intel x86 compatible CPU which most developers usually use on their 
+    development workstations. This and the fact that our typical target device
+    has very limited harware capabilities are the reasons why we need special
+    mechanisms to compile GPE libraries and applications to run on our target 
+    devices. Depending on the situation and your personal preference there 
+    are several methods to choose. We describe the most frequently used ones 
+    here.
+  </para>
 
+<section>
+<title>Prebuilt Toolchain</title>
   <para>
     For a simple and fast start crosscompiling a GPE application get a copy of 
-    the OpenEmbedded crosstoolchain for GPE from handhelds.org.
+    the prebuilt crosstoolchain for GPE from 
+    <ulink url="http://handhelds.org/~florian/sdk">handhelds.org</ulink>.
+    Currently this reference toolchain is built using the OpenEmbedded 
+    build system. It is updated from time to time to supply newer compilers
+    and updated libraries.
   </para>
+  <para>
+    These toolchains are limited to some extend. Both the architecture of the
+    computer the toolchain runs on and the architecture of the target 
+    system are fixed. Currently we have toochains wich run on Intel x86 based 
+    PCs running Linux and systems using an IBM PowerPC CPU running Linux. 
+    Both variants of toolchain create binaries for ARM CPU (StrongARM, Xscale, 
+    OMAP) based devices which are used on most mobile devices like PDAs.
+  </para>
+</section>
+
+<section>
+<title>Scratchbox</title>
+  <para>
+  Fill in some text here...
+  </para>
+</section>
+
+<section>
+<title>Other Methods</title>
+  <para>
+    Apart from the described methods you can always build your own toolchain,  
+    Debian crosstoolchain packages or use a User Mode Linux setup for 
+    crosscompiling. For a detailed description how to do this please refer 
+    to specialized documents.[ref]
+  </para>
+</section>
 
 </section>
 

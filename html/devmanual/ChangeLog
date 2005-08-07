@@ -1,3 +1,8 @@
+2005-08-08  Florian Boor <florian.boor@kernelconcepts.de>
+
+	* *.sgml: Add remaining (mostly empty) chapters to complete the basic
+                  document structure.  
+
 2005-08-05  Florian Boor <florian.boor@kernelconcepts.de>
 
 	* environment.sgml: Add new chapter.

@@ -1,0 +1,18 @@
+<chapter id="documentation">
+<title>How to write Documentaion</title>
+
+  <section>
+    <title>User Documentation</title>
+    <para>
+      text
+    </para>
+  </section>
+
+  <section>
+    <title>Developer Documentation</title>
+    <para>
+      text
+    </para>
+  </section>
+
+</chapter>

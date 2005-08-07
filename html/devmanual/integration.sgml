@@ -1,0 +1,25 @@
+<chapter id="integration">
+<title>Framework Integration</title>
+
+  <section>
+    <title>DBUS Services</title>
+    <para>
+      text
+    </para>
+  </section>
+
+  <section>
+    <title>Mimedir Data</title>
+    <para>
+      text
+    </para>
+  </section>
+
+  <section>
+    <title>MIME Types</title>
+    <para>
+      text
+    </para>
+  </section>
+
+</chapter>

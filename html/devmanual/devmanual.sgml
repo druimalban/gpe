@@ -4,6 +4,17 @@
   <!ENTITY introduction SYSTEM "intro.sgml">
   <!ENTITY basics SYSTEM "basics.sgml">
   <!ENTITY environment SYSTEM "environment.sgml">
+  <!ENTITY application SYSTEM "application.sgml">
+  <!ENTITY debug SYSTEM "debug.sgml">
+  <!ENTITY documentation SYSTEM "documentation.sgml">
+  <!ENTITY integration SYSTEM "integration.sgml">
+  <!ENTITY devicecontrol SYSTEM "devicecontrol.sgml">
+  <!ENTITY porting SYSTEM "porting.sgml">
+  <!ENTITY related SYSTEM "related.sgml">
+  <!ENTITY community SYSTEM "community.sgml">
+  <!ENTITY licensing SYSTEM "licensing.sgml">
+  <!ENTITY themes SYSTEM "themes.sgml">
+  <!ENTITY configuration SYSTEM "configuration.sgml">
 ]>
 
 
@@ -76,5 +87,16 @@ GPE Development Manual
 &introduction;
 &basics;
 &environment;
+&application;
+&debug;
+&documentation;
+&integration;
+&devicecontrol;
+&porting;
+&related;
+&community;
+&themes;
+&licensing;
+&configuration;
 
 </book>

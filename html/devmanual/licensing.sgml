@@ -1,0 +1,16 @@
+<chapter id="licensing">
+<title>Licensing</title>
+  <para>
+    The goal of GPE licensing is to provide the GPE system itself in an as free as possible
+    manner. This means that all GPE specific libraries that are needed to create GPE 
+    applications are provided under the LGPL. This enables open- and closed-source
+    application development at the same time; though open- source development are of course
+    preferred. All application that are part of GPE are licensed under the GPL. This is a
+    requirement for becoming part of the GPE system. 
+  </para>
+  <para>
+    If you start a new application it is a good idea to follow the GPE licensing 
+    scheme, but actually - if you don't want to make it become a part of GPE itself - 
+    noone will force you to use a particular license. 
+  </para>
+</chapter>
