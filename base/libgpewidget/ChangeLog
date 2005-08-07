@@ -1,3 +1,7 @@
+2005-08-07  Phil Blundell  <pb@reciva.com>
+
+	* gpeclockface.c: Keep up with Cairo API changes.
+
 2005-07-25  Florian Boor <florian@kernelconcepts.de>
 
 	* gtkdatecombo.c: Remove signal handler workaround which isn't 
