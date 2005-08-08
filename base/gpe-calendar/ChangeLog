@@ -1,3 +1,9 @@
+2005-08-08  Matthias Steinbauer <matthias@steinbauer.org>
+	* main.c: Added basic hildon support adjusted main-window to appview
+	  put toolbar to the bottom.
+	* event-ui.c: click_categories adjusted to fit to the hildon extensions
+	  in libgpewidget.
+
 2005-07-27  Florian Boor <florian.boor@kernelconcepts.de>
 
 	* main.c: Remove explicit use of obsolete libdisplaymigration.
