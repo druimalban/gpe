@@ -1,3 +1,7 @@
+2005-08-09  Florian Boor <florian.boor@kernelconcepts.de>
+
+	* environment.sgml: Add some lines about using the SDK.
+
 2005-08-08  Florian Boor <florian.boor@kernelconcepts.de>
 
 	* *.sgml: Add remaining (mostly empty) chapters to complete the basic

@@ -93,6 +93,24 @@
     Both variants of toolchain create binaries for ARM CPU (StrongARM, Xscale, 
     OMAP) based devices which are used on most mobile devices like PDAs.
   </para>
+  <para>
+    To install the prebuilt toolchain you need to have root privileges on the
+	PC you install it to. The installation itself is very easy: Change to the
+	root ("/") directory and unpack the toolchain there:
+	<command>
+	  tar xpjf sdk-package-archive.tar.bz2
+	</command>
+  </para>
+  <para>
+    Using the toolchain is easy as long as the software supports being 
+	crosscompiled properly. You need to have the compilers of the toolchain
+	in your PATH environment. This is necessary to make sure all tools used 
+	for compiling the software find all the executable binaries shipped with
+	the toolchain. To achieve this run 
+	<command>export PATH=/usr/local/arm/oe/bin:$PATH</command>
+	You can add this to your local .login or .basrc file to have this setting
+	in every shell you open.	
+  </para>
 </section>
 
 <section>
