@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2001, 2002, 2003 Philip Blundell <philb@gnu.org>
+ * Hildon adaption 2005 by Matthias Steinbauer <matthias@steinbauer.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -25,6 +26,14 @@
 #include <gpe/errorbox.h>
 
 #include <gpe/event-db.h>
+
+#ifdef IS_HILDON
+/* Hildon includes */
+#include <hildon-widgets/hildon-app.h>
+#include <hildon-widgets/hildon-appview.h>
+#include <gpe/pim-categories-ui.h>
+#include <hildon-fm/hildon-widgets/hildon-file-chooser-dialog.h>
+#endif
 
 #include "event-ui.h"
 #include "globals.h"
@@ -371,6 +380,9 @@ main (int argc, char *argv[])
   GtkWidget *vbox, *toolbar;
   GdkPixbuf *p;
   GtkWidget *pw;
+#ifdef IS_HILDON
+  GtkWidget *app, *main_appview;
+#endif
 
   guint hour, skip=0, uid=0;
   int option_letter;
@@ -457,7 +469,14 @@ main (int argc, char *argv[])
   window_y = gdk_screen_height() / 2;  
   if (window_x < 240) window_x = 240;
   if (window_y < 310) window_y = 310;
-    
+#ifdef IS_HILDON
+  app = hildon_app_new();
+  hildon_app_set_two_part_title(HILDON_APP(app), FALSE);
+  hildon_app_set_title(HILDON_APP(app), _("Calendar"));
+  main_appview = hildon_appview_new(_("Main"));
+  hildon_app_set_appview(HILDON_APP(app), HILDON_APPVIEW(main_appview));
+  main_window = main_appview;
+#else    
   main_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title (GTK_WINDOW (main_window), _("Calendar"));
   g_signal_connect (G_OBJECT (main_window), "delete-event",
@@ -465,6 +484,7 @@ main (int argc, char *argv[])
   gtk_window_set_default_size (GTK_WINDOW (main_window), window_x, window_y);
 
   gtk_widget_realize (main_window);
+#endif
 
   gtk_container_add (GTK_CONTAINER (main_window), vbox);
 
@@ -472,12 +492,17 @@ main (int argc, char *argv[])
   week = week_view ();
   day = day_view ();
   month = month_view ();
+  
   toolbar = gtk_toolbar_new ();
-
   gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);
   GTK_WIDGET_UNSET_FLAGS(toolbar, GTK_CAN_FOCUS);
 
+  // SMA 07.Aug.2005: Do not pack toolbar (toolbar is added with hildon api).
+#ifndef IS_HILDON
   gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, FALSE, 0);
+#else
+  hildon_appview_set_toolbar(HILDON_APPVIEW(main_appview), GTK_TOOLBAR(toolbar));
+#endif
   gtk_box_pack_start (GTK_BOX (vbox), notebook, TRUE, TRUE, 0);
 
   pw = gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_NEW,
@@ -533,13 +558,17 @@ main (int argc, char *argv[])
 			    _("Import"), _("Open file to import an event from it."), 
                 NULL, pw, G_CALLBACK (on_import_vcal), NULL);
   GTK_WIDGET_UNSET_FLAGS(pw, GTK_CAN_FOCUS);
-              
+
+  
+  // SMA 07.Aug.2005: Disable the exit button if running in hildon mode
+#ifndef IS_HILDON
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
 
   pw = gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_QUIT,
-		                 	     _("Tap here to exit the program"), NULL, 
-			                     G_CALLBACK (gpe_cal_exit), NULL, -1);
+					_("Tap here to exit the program"), NULL, 
+					G_CALLBACK (gpe_cal_exit), NULL, -1);
   GTK_WIDGET_UNSET_FLAGS(pw, GTK_CAN_FOCUS);
+#endif
 
   gtk_notebook_set_show_tabs (GTK_NOTEBOOK (notebook), FALSE);
 
@@ -562,6 +591,9 @@ main (int argc, char *argv[])
 
   gpe_set_window_icon (main_window, "icon");
 
+#ifdef IS_HILDON  
+  gtk_widget_show_all(app);
+#endif
   gtk_widget_show (main_window);
   gtk_widget_show (vbox);
   gtk_widget_show (toolbar);
