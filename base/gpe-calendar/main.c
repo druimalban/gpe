@@ -497,7 +497,6 @@ main (int argc, char *argv[])
   gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);
   GTK_WIDGET_UNSET_FLAGS(toolbar, GTK_CAN_FOCUS);
 
-  // SMA 07.Aug.2005: Do not pack toolbar (toolbar is added with hildon api).
 #ifndef IS_HILDON
   gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, FALSE, 0);
 #else
@@ -559,8 +558,6 @@ main (int argc, char *argv[])
                 NULL, pw, G_CALLBACK (on_import_vcal), NULL);
   GTK_WIDGET_UNSET_FLAGS(pw, GTK_CAN_FOCUS);
 
-  
-  // SMA 07.Aug.2005: Disable the exit button if running in hildon mode
 #ifndef IS_HILDON
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
 
