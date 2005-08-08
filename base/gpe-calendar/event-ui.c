@@ -691,8 +691,11 @@ click_categories (GtkWidget *b, GtkWidget *w)
   GtkWidget *ui;
 
   s = g_object_get_data (G_OBJECT (w), "edit_state");
-  
+#ifdef IS_HILDON  
+  ui = gpe_pim_categories_dialog (s->categories, TRUE, G_CALLBACK (update_categories), s);
+#else
   ui = gpe_pim_categories_dialog (s->categories, G_CALLBACK (update_categories), s);
+#endif
 
   gtk_window_set_transient_for(GTK_WINDOW(ui),
                                GTK_WINDOW(gtk_widget_get_toplevel(b)));
