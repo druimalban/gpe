@@ -97,26 +97,80 @@
     To install the prebuilt toolchain you need to have root privileges on the
 	PC you install it to. The installation itself is very easy: Change to the
 	root ("/") directory and unpack the toolchain there:
-	<command>
-	  tar xpjf sdk-package-archive.tar.bz2
-	</command>
+	<screen>
+      <prompt>$</prompt> <userinput>tar xpjf sdk-package-archive.tar.bz2</userinput>
+    </screen>
   </para>
   <para>
     Using the toolchain is easy as long as the software supports being 
 	crosscompiled properly. You need to have the compilers of the toolchain
 	in your PATH environment. This is necessary to make sure all tools used 
 	for compiling the software find all the executable binaries shipped with
-	the toolchain. To achieve this run 
-	<command>export PATH=/usr/local/arm/oe/bin:$PATH</command>
+	the toolchain. To achieve this run:
+	<screen>
+      <prompt>$</prompt> <userinput>export PATH=/usr/local/arm/oe/bin:$PATH</userinput>
+    </screen>
 	You can add this to your local .login or .basrc file to have this setting
 	in every shell you open.	
   </para>
+  <para>
+    Before using the toolchain for compiling you need to set the PKG_CONFIG_PATH
+	environment variable to tell the <command>pkgconfig</command> tool where 
+	to find the correct information about the libraries shipped with the 
+	toolchain. The environment variable needs to point to the pkgconfig of
+	the toolchains library directory. Do this:
+	<screen>
+      <prompt>$</prompt> <userinput>export PKG_CONFIG_PATH=/usr/local/arm/oe/arm-linux/lib/pkgconfig/</userinput>
+    </screen>
+	You should <emphasis>not</emphasis> put this into .basrc, because you 
+	won't be able to compile natively without changing PKG_CONFIG_PATH anymore.
+	You are now ready to start building your first application for the ARM 
+	architecture.
+  </para>
+  <para>
+    <emphasis>Compiling an application</emphasis>
+	with the toolchain is very easy as long as all dependent libraries are part
+	of the toolchain and crosscompiling works properly with the piece of 
+	software you intend to compile. The method to do this depends on the build
+	tools which are used for this software. If the application is using 
+	autotools you need to pass some parameters to <command>configure</command>
+	to tell it to create makefiles for crosscompiling. These parameters are
+	the target prefix of the toolchain (in our case "arm-linux") and the 
+	destination prefix used on the target platform (usually "/usr"). Once 
+	<command>configure</command> created the necessary output files you can
+	call <command>make</command> to start compiling. In most cases you just 
+	need to go to the source directory and run:
+	<screen>
+      <prompt>$</prompt> <userinput>./configure --host=arm-linux --prefix=/usr</userinput>
+      <prompt>$</prompt> <userinput>make</userinput>
+    </screen>
+	Of course you can add additional parameters to <command>configure</command>
+	to influence the build process according to your needs.
+  </para>
+  
+  <note>
+    <para>
+    You can easily add software in the crosstoolchain or update existing ones.
+	Compile and install it with <filename>/usr/local/arm/oe/arm-linux</filename>
+	as PREFIX. If you update libraries using libtool it is a good idea to remove
+	all <filename>*.la</filename> from 
+	<filename>/usr/local/arm/oe/arm-linux/lib</filename>.
+	</para>
+  </note>
 </section>
 
 <section>
 <title>Scratchbox</title>
   <para>
-  Fill in some text here...
+    <ulink url="http://www.scratchbox.org">Scratchbox</ulink> is a very powerful
+	virtual development environment which is able to build binaries for a 
+	different platform transparently and is even able to run these binaries
+	in an emulated environment or by transfering them to a real device 
+	transparently. Scratchbox is available as packages for several distributions. 
+	For detailed information about installing Scratchbox refer to the Scratchbox
+	project
+	<ulink url="http://www.scratchbox.org/documentation/user/scratchbox-1.0/">
+	documentation</ulink>.
   </para>
 </section>
 

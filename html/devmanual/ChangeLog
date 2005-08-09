@@ -1,3 +1,7 @@
+2005-08-10  Florian Boor <florian.boor@kernelconcepts.de>
+
+	* environment.sgml: Finish chapter about the SDK, start with Scratchbox.
+	
 2005-08-09  Florian Boor <florian.boor@kernelconcepts.de>
 
 	* environment.sgml: Add some lines about using the SDK.
@@ -15,7 +19,7 @@
 
 	* Remove useless scripts, docbook2html is much more useful.
 	* intro.sgml, basics.sgml: Split up the document and add single
-                                   charpters.
+                                   chapters.
 
 2005-08-03  Florian Boor <florian.boor@kernelconcepts.de>
 
