@@ -1,5 +1,7 @@
 2005-08-10  Florian Boor <florian.boor@kernelconcepts.de>
 
+	* environment.sgml: Some additions to the SDK and Scratchbox
+                            sections.
 	* environment.sgml: Finish chapter about the SDK, start with Scratchbox.
 	
 2005-08-09  Florian Boor <florian.boor@kernelconcepts.de>

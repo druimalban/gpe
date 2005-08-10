@@ -72,7 +72,8 @@
     mechanisms to compile GPE libraries and applications to run on our target 
     devices. Depending on the situation and your personal preference there 
     are several methods to choose. We describe the most frequently used ones 
-    here.
+    here. The examples assume that you compile for a device with an ARM CPU
+    running Linux.
   </para>
 
 <section>
@@ -148,6 +149,16 @@
 	to influence the build process according to your needs.
   </para>
   
+  <para>
+    If you need to compile one of the "classic" GPE applications not using autotools
+    you need to pass the compiler and prefix to use to <command>make</command> 
+    directly. You need to set the variables CC to the compiler to use and PREFIX
+    to the prefix for the software at least. If you want to build an ARM binary
+    for Familiar Linux you would use:
+    <screen>
+      <prompt>$</prompt> <userinput>make CC=arm-linux-gcc PREFIX=/usr</userinput>
+    </screen>
+  </para>
   <note>
     <para>
     You can easily add software in the crosstoolchain or update existing ones.
@@ -171,6 +182,19 @@
 	project
 	<ulink url="http://www.scratchbox.org/documentation/user/scratchbox-1.0/">
 	documentation</ulink>.
+  </para>
+  <para>
+     Apart from the Scratchbox setup crosscompiling applications in Scratchbox is
+     the same process like compiling natively. The only thing you need to do before
+     is to select a target machine definition created during the install process.
+     The fact that Scratchbox is able to execute the target binaries transparently
+     avoids errors caused by broken autoconf tests which try to build and execute
+     a binary because this will fail using a normal crosstoolchain.
+     In addition to this you can configure Scratchbox to run these binaries on a
+     real target device. This makes it possible to test and debug them on the target
+     hardware in a very comfortable way. This is very important if the software
+     makes use of special hardware features not present on development PC or if
+     you port applications to a new hardware platform.
   </para>
 </section>
 
