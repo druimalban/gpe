@@ -174,39 +174,48 @@
 <title>Scratchbox</title>
   <para>
     <ulink url="http://www.scratchbox.org">Scratchbox</ulink> is a very powerful
-	virtual development environment which is able to build binaries for a 
-	different platform transparently and is even able to run these binaries
-	in an emulated environment or by transfering them to a real device 
-	transparently. Scratchbox is available as packages for several distributions. 
-	For detailed information about installing Scratchbox refer to the Scratchbox
-	project
-	<ulink url="http://www.scratchbox.org/documentation/user/scratchbox-1.0/">
-	documentation</ulink>.
+    virtual development environment which is able to build binaries for a 
+    different platform transparently and is even able to run these binaries
+    in an emulated environment or by transfering them to a real device 
+    transparently. Scratchbox is available as packages for several distributions. 
+    For detailed information about installing Scratchbox refer to the Scratchbox
+    project
+    <ulink url="http://www.scratchbox.org/documentation/user/scratchbox-1.0/">
+    documentation</ulink>.
   </para>
   <para>
-     Apart from the Scratchbox setup crosscompiling applications in Scratchbox is
-     the same process like compiling natively. The only thing you need to do before
-     is to select a target machine definition created during the install process.
-     The fact that Scratchbox is able to execute the target binaries transparently
-     avoids errors caused by broken autoconf tests which try to build and execute
-     a binary because this will fail using a normal crosstoolchain.
-     In addition to this you can configure Scratchbox to run these binaries on a
-     real target device. This makes it possible to test and debug them on the target
-     hardware in a very comfortable way. This is very important if the software
-     makes use of special hardware features not present on development PC or if
-     you port applications to a new hardware platform.
+    Apart from the Scratchbox setup crosscompiling applications in Scratchbox is
+    the same process like compiling natively. The only thing you need to do before
+    is to select a target machine definition created during the install process.
+    The fact that Scratchbox is able to execute the target binaries transparently
+    avoids errors caused by broken autoconf tests which try to build and execute
+    a binary because this will fail using a normal crosstoolchain.
+    In addition to this you can configure Scratchbox to run these binaries on a
+    real target device. This makes it possible to test and debug them on the target
+    hardware in a very comfortable way. This is very important if the software
+    makes use of special hardware features not present on development PC or if
+    you port applications to a new hardware platform.
+  </para>
+  <para>
+    Scratchbox is very useful if you need libraries for native development 
+    which are incompatible with your host system (or each other). For some GPE
+    applications which support the Hildon user interface from the 
+    <ulink url="http://www.maemo.org">Maemo project</ulink>.
+    This is very useful to switch from Hildon to plain GTK and back. You can do
+    this by using Hildon inside of a native development target for 
+    Scratchbox and another target (or just your host system) for plain GTK.
   </para>
 </section>
 
-<section>
-<title>Other Methods</title>
-  <para>
-    Apart from the described methods you can always build your own toolchain,  
-    Debian crosstoolchain packages or use a User Mode Linux setup for 
-    crosscompiling. For a detailed description how to do this please refer 
-    to specialized documents.[ref]
-  </para>
-</section>
+  <section>
+  <title>Other Methods</title>
+    <para>
+      Apart from the described methods you can always build your own toolchain,  
+      Debian crosstoolchain packages or use a User Mode Linux setup for 
+      crosscompiling. For a detailed description how to do this please refer 
+      to specialized documents.[ref]
+    </para>
+  </section>
 
 </section>
 
@@ -215,8 +224,32 @@
   <para>
     After all these information about how to compile GPE it might be 
     interesting to know where to find GPE and information about it. 
-	
-	[sources archive, uploads, documentation, cvs, irc, mailinglist, cvstrac, gallery]
+
+	[uploads, documentation, cvs access and updates, cvsrc, cvstrac, gallery]
+  </para>
+  <para>
+    The first thing to know about GPE sources is the location of the GPE main 
+    source repository. This one is located here:
+    <ulink url="ftp://ftp.handhelds.org/projects/gpe/source/">ftp://ftp.handhelds.org/projects/gpe/source/</ulink>
+    It contains the release packages of all pieces of GPE. As long as there is
+    no good reason not to do so please choose the latest version of a package
+    if you intend to use it.
+  </para>
+  <para>
+    The GPE project makes use of the handhelds.org CVS to keep its sources.
+    You can access latest sources either by using the <command>cvs</command>
+    command line tool or ViewCVS if you only want to take a look.
+    If you don't have an account at handhelds.org you can check out GPE with
+    anonyomous CVS access. Follow these example instructions:
+    <screen>
+      <prompt>$</prompt> <userinput>mkdir gpe_cvs</userinput>
+      <prompt>$</prompt> <userinput>cd gpe_cvs</userinput>
+      <prompt>$</prompt> <userinput>export CVSROOT=:pserver:anoncvs@cvs.handhelds.org:/cvs</userinput>
+      <prompt>$</prompt> <userinput>cvs login</userinput>
+      Logging in to :pserver:anoncvs@cvs.handhelds.org:2401/cvs
+      CVS Password: anoncvs
+      <prompt>$</prompt> <userinput>cvs checkout gpe</userinput>
+    </screen>
   </para>
 </section>
 
