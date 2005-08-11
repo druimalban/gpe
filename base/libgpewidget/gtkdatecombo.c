@@ -234,14 +234,15 @@ gtk_date_combo_init (GtkDateCombo *combo)
 
   gtk_window_set_policy (GTK_WINDOW (combo->calw), FALSE, FALSE, TRUE);
       
-  gtk_signal_connect (GTK_OBJECT (combo->button), "clicked",
-		      GTK_SIGNAL_FUNC (drop_calendar), combo);
+  g_signal_connect (G_OBJECT (combo->button), "clicked",
+                    G_CALLBACK (drop_calendar), combo);
 
-  gtk_signal_connect (GTK_OBJECT (combo->cal), "selected-date",
-		      GTK_SIGNAL_FUNC (click_calendar), combo);
-			  
+  g_signal_connect (G_OBJECT (combo->cal),
+                    gpe_stylus_mode () ? "day-selected" : "day-selected-double-click",
+                    G_CALLBACK (click_calendar), combo);
+
   g_signal_connect (G_OBJECT (combo->entry), "focus-out-event",
-		      G_CALLBACK (verify_date), combo);
+                    G_CALLBACK (verify_date), combo);
 }
 
 static GtkHBoxClass *parent_class = NULL;

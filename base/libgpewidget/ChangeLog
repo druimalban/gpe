@@ -1,3 +1,8 @@
+2005-08-11  Florian Boor <florian@kernelconcepts.de>
+
+	* gtkadatecombo.c: Fix signal handler and update from gtk_signal
+                           functions to g_signal.
+
 2005-08-07  Phil Blundell  <pb@reciva.com>
 
 	* gpeclockface.c: Keep up with Cairo API changes.
