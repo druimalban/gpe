@@ -26,6 +26,7 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <stddef.h>
+#include <stdlib.h>
 #include <getopt.h>
 #include <libintl.h>
 
@@ -84,12 +85,10 @@ main (int argc, char *argv[])
   GtkWidget *html, *contentbox;	/* html engine, application window, content box of application window */
   GtkWidget *toolbar, *urlbox;	/* toolbar, url entry box (big screen), icon for url pop-up window (small screens) */
   GtkToolItem *back_button, *forward_button, *home_button,
-                *fullscreen_button, *url_button;
-  GtkToolItem *separator, *separator2;
+                *fullscreen_button;
+  GtkToolItem *separator;
   extern GtkToolItem *stop_reload_button;
   const gchar *base;
-  gchar *p;
-  gint width = 240, height = 320;
   struct status_data *status;
   int opt;
   osso_context_t *context;

@@ -4,10 +4,8 @@ TODO:
 * config file to keep zoom/font settings and bookmarks
 * support multiple windows
 * improve progressbar display
-* bookmarks (possible integration with gpe-contacts)
 * history (special case of bookmarks)
 * some sort of status indication if clicking on links with infoprint or equivalent
-* hiding of url-bar in Hildon/ big-screen mode
 
 DONE:
 
@@ -21,6 +19,7 @@ DONE:
 * remove exit button
 * moved to new GTK toolbar/toolitem API (allows to get to buttons that might be off-screen)
 * hybrid stop/reload button (there is space now for a bookmarks button)
+* hiding of url-bar in Hildon/ big-screen mode
 
 POSTPONED / PARTIALLY DONE:
 
@@ -28,3 +27,4 @@ POSTPONED / PARTIALLY DONE:
 -> provisions are in the code, however not yet implemented in gtk-webcore
 * cookie support. Working cookie support is in. However gtk-webcore does not handle
   them gracefully yet.
+* bookmarks (possible integration with gpe-contacts)

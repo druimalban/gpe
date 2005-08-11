@@ -48,6 +48,12 @@ Webi *html;
 WebiSettings *settings;
 };
 
+struct urlbar_data {
+GtkWidget *urlbox;
+int hidden;
+GtkToolItem *hiding_button;
+};
+
 /********************************************************
 	      interface call primitives 
 	      see: interface-calls.c
@@ -69,6 +75,12 @@ void set_title (Webi *html, GtkWidget *app_window);
 void update_text_entry (Webi *html, GtkWidget *entrybox);
 /* show urlbar and extra buttons for big screens */
 GtkWidget * show_big_screen_interface ( Webi *html, GtkWidget *toolbar, WebiSettings *set);
+/* show urlbar */
+GtkWidget * create_url_bar (Webi * html);
+/* hide urlbar */
+void hide_url_bar (GtkWidget * button, struct urlbar_data* url_bar);
+/* show bookmark window */
+void show_bookmarks (GtkWidget * button, Webi * html);
 
 /********************************************************
 	       url loading and handling

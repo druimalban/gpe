@@ -2,6 +2,8 @@ v0.16 - .....	- ../08/2005 - Philippe De Swert
 
 * Ported to the newer GTK toolbar API
 * Hybrid stop/reload button
+* Hiding/unhiding Url bar
+* Bookmarks
 
 v0.15 - Happy Koen release - 31/07/2005 - Philippe De Swert
 
