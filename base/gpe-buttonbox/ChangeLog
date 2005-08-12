@@ -1,0 +1,6 @@
+2005-08-12  Florian Boor <florian@kernelconcepts.de>
+
+	* Import of hopefully latest project version (51).
+	* show-desktop.png: Modified version with GPE logo.
+	* *.c: Include string.h to avoid warnings.
+	* configure.ac, Makefile.am: Fix definition of PREFIX.

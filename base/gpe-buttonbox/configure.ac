@@ -12,7 +12,6 @@ AC_PROG_CC
 
 PKG_CHECK_MODULES(BUTTONBOX, gtk+-2.0 libgpewidget libgpelaunch)
 
-AC_DEFINE_UNQUOTED(PREFIX, "$prefix", [Installation prefix])
 AC_DEFINE_UNQUOTED(PACKAGE_LOCALE_DIR, "$prefix/share/locale/$PACKAGE_NAME", [Directory for locale files])
 
 AC_CONFIG_FILES([Makefile])

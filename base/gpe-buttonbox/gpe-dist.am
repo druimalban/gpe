@@ -1,7 +1,7 @@
 CVSTAG := $(shell echo $(PACKAGE)-$(VERSION) | tr [a-z.] [A-Z_])
 
 dist-upload: dist
-	scp $(PACKAGE)-$(VERSION).tar.bz2 $(USER)@handhelds.org:/home/ftp/projects/gpe/source/
+	scp $(PACKAGE)-$(VERSION).tar.bz2 $(USER)@handhelds.org:/home/ftp/pub/projects/gpe/source/
 
 tag:
 	cvs tag $(CVSTAG)
