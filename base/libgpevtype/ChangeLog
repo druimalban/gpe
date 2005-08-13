@@ -1,4 +1,10 @@
-
+2005-08-13  Martin Felis <martin@silef.de>
+	* vcard.c: Fixed the following fields:
+	           "web adress","notes","honorific_prefix"
+		   Made the exportation of the adress compatible to
+		   evolution.
+		   Imports now only two email adresses.
+	         
 2005-06-21  Florian Boor  <florian@kernelconcepts.de>
 
 	* Release Version 0.12

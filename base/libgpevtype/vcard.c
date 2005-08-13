@@ -35,6 +35,11 @@ static struct tag_map map[] =
     { "comment", "note" },
     { "work_organization", "organization"},
     { "company", "organization"},
+    { "notes", "note"},
+    { "work.title", "jobtitle"},
+    { "category", "categories"},
+    { "work.www", "url" },
+    { "title" , "honorific_prefix" },
     { NULL, NULL }
   };
 
@@ -54,7 +59,12 @@ tag_with_type (MIMEDirVCard *card, const char *tag, const char *value, const cha
     {
       MIMEDirVCardAddress *a = mimedir_vcard_address_new ();
       set_type (G_OBJECT (a), type);
+
       g_object_set (G_OBJECT (a), "full", value, NULL);
+      g_object_set (G_OBJECT (a), "international", FALSE, NULL);
+      g_object_set (G_OBJECT (a), "postal", FALSE, NULL);
+      g_object_set (G_OBJECT (a), "parcel", FALSE, NULL);
+
       mimedir_vcard_append_address (card, a);
       return TRUE;
     }
@@ -170,7 +180,9 @@ vcard_to_tags (MIMEDirVCard *vcard)
   GSList *data = NULL;
   GList *l;
   gchar *fn, *ln, *name;
-
+  gboolean have_adr_home = FALSE, have_adr_work = FALSE;
+  int num_emails=0;
+  
   while (t->tag)
     {
       gchar *value;
@@ -223,10 +235,18 @@ vcard_to_tags (MIMEDirVCard *vcard)
 	{
 	  g_object_get (G_OBJECT (address), "home", &home, NULL);
 	  g_object_get (G_OBJECT (address), "work", &work, NULL);
-	  if (home || !work)
-	    data = gpe_tag_list_prepend (data, "home.address", s);
-	  if (work)
-	    data = gpe_tag_list_prepend (data, "work.address", s);
+	  if ( (home || !work) && (!have_adr_home)) 
+            {
+              /* we want prevent gpe from importing more than two
+	         adresses */
+	      data = gpe_tag_list_prepend (data, "home.address", s);
+	      have_adr_home = TRUE;
+	    }
+	  if (work && !have_adr_work) 
+            {
+	      data = gpe_tag_list_prepend (data, "work.address", s);
+	      have_adr_work = TRUE;
+	    }
 	}
       else
 	fprintf (stderr, "Unable to retrieve address.\n");
@@ -243,8 +263,20 @@ vcard_to_tags (MIMEDirVCard *vcard)
 
       if (s) /* vcard doesn't tell us if it is home or work */
         {
-          data = gpe_tag_list_prepend (data, "home.email", g_strdup(s));/*!*/
-          data = gpe_tag_list_prepend (data, "work.email", s);
+	  if (num_emails == 1)
+            {
+              /* we want prevent gpe from importing more
+                 than two email adresses. The first wil
+                 be the one from work, the secont the
+                 home email. */
+              data = gpe_tag_list_prepend (data, "home.email", g_strdup(s));/*!*/
+	      num_emails++;
+	    }
+	  if (num_emails == 0) 
+            {
+              data = gpe_tag_list_prepend (data, "work.email", s);
+	      num_emails++;;
+	    }
         }
 
       l = g_list_next (l);
