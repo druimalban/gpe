@@ -46,6 +46,8 @@ static void *initialize(OSyncMember *member, OSyncError **error)
 
 	env->contacts = NULL;
 	
+	env->categories = NULL;
+	
 	//Set up a hash to detect changes
 	env->hashtable = osync_hashtable_new();
 	if (env->hashtable == NULL) {
@@ -68,10 +70,28 @@ static void connect(OSyncContext *ctx)
 
 	// We need to get the context to load all our stuff.
 	gpe_environment *env = (gpe_environment *)osync_context_get_plugin_data(ctx);
-
+	
 	printf ("Connecting to: %s:%d user: %s\n",env->device_addr, env->port, env->username);
 	OSyncError *error = NULL;
 
+	// Here we read out the categories, since
+	// they are stored for every entry as a number, but
+	// for the vcards we need the full names.
+	nsqlc *categories_db;
+	gchar *path;
+	path = g_strdup_printf ("%s@%s:.gpe/categories", env->username, env->device_addr);
+
+	char *nsqlc_err;
+	categories_db = nsqlc_open_ssh (path, 0, &nsqlc_err);
+	if (categories_db == NULL) {
+		osync_context_report_error(ctx, OSYNC_ERROR_NO_CONNECTION, nsqlc_err);
+		categories_db = NULL;
+		return;
+	}
+	env->categories = fetch_categories (categories_db);
+
+	nsqlc_close(categories_db);
+	
 	if (gpe_contacts_connect(ctx) == FALSE) {
 		osync_context_report_error(ctx, OSYNC_ERROR_NO_CONNECTION, "Could not connect to contacts.");
 		return;
@@ -105,7 +125,7 @@ static void get_changeinfo(OSyncContext *ctx)
 	osync_debug("GPE_SYNC", 4, "start: %s", __func__);
 
 	gpe_contacts_get_changes(ctx);
-	
+
 	//Now we need to answer the call
 	osync_context_report_success(ctx);
 	osync_debug("GPE_SYNC", 4, "stop: %s", __func__);

@@ -9,4 +9,14 @@ GSList * fetch_tag_data (nsqlc *db, const gchar *query_str, guint id);
 
 gchar * get_tag_value(GSList *tags, gchar *tag);
 
+gboolean store_tag_data (nsqlc *db, const gchar *table, guint id, GSList *tags, gboolean delete);
+
+void s_print_tags(GSList *tags, GString *str);
+
+int get_new_urn (nsqlc *db);
+
+GSList * fetch_categories (nsqlc *db);
+
+void tags_replace_category (GSList *tags, GSList *categories);
+
 #endif /* GPE_DB_H */

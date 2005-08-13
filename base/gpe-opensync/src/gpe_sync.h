@@ -14,7 +14,6 @@
 #include <nsqlc.h>
 #include <gpe/tag-db.h>
 #include <gpe/vcard.h>
-#include <gpe/tag-db.h>
 
 typedef struct {
 	OSyncMember *member;
@@ -24,6 +23,11 @@ typedef struct {
 	nsqlc *contacts;
 	nsqlc *calendar;
 	nsqlc *todo;
+
+	// This is a list with gpe_tag_pair 's which
+	// contain all the categories. As tag we have
+	// the index and as value the name of the category.
+	GSList *categories;
 	
 	// configuration
 	char *device_addr; // the ip of the handheld;
@@ -34,6 +38,7 @@ typedef struct {
 } gpe_environment;
 
 #include "contacts.h"
+#include "todo.h"
 #include "gpe_xml.h"
 #include "gpe_db.h"
 
