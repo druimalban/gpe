@@ -1,0 +1,14 @@
+general:
+	- The first synchronization fails always. Just sync again and
+	everything is fine. Why??
+
+contacts:
+	- no support for photo
+	- no support for birthday
+	- only export of category is working.
+
+tasks:
+	- nothing yet implemented
+
+calendar:
+	- nothing yet implemented

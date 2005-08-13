@@ -1,3 +1,10 @@
+2005-08-13  Martin Felis <martin@silef.de>
+	* gpe_db.h gpe_db.c: Implemented the tags_replace_category function,
+	which replaces the numbers of the cateogories to their names.
+	* gpe_sync.h gpe_sync.c: Added categories list, for
+	tags_replace_category.
+	* contacts.c: Reading and writing now implemented.
+
 2005-08-02  Martin Felis <martin@silef.de>
 	* gpe_db.h gpe_db.c: Files added for easier querying/handling of the
 	results from nsqlc_exec().

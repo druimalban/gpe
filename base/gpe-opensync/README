@@ -7,3 +7,10 @@ guaranteed that it works, so make backups!
 
 To compile this you need to have libnsqlc installed. Otherwise it won't work.
 Other dependencies should be reported from ./configure.
+
+You must use the cvs-version of libgpevtype. Otherwise some fields won't be
+synced!
+
+See BUGS for known problems.
+
+Have fun.
