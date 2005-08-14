@@ -10,9 +10,111 @@
 
   <section>
     <title>Developer Documentation</title>
-    <para>
-      text
-    </para>
-  </section>
+      <section>
+      <title>Work Setup</title>
+        <para>
+          You don't need much on you host system to generate or modify GPE documentation. If
+          you intend to help documenting a library which has documentation stuff in CVS you 
+          only need your favourite text editor and CVS.
+        </para>
+        <para> 
+          To add documentation support or build the documentation from source you will need
+          <command>make</command>, <command>gtk-doc</command> and the packages these depend
+          on (perl, jade and some docbook stuff). Running Debian just run 'apt-get install 
+          gtk-doc-tools'. It is a useful to have latest gtk-doc-tools package installed to 
+          test the documentation build and verify the results.
+        </para>
+        <para>
+          If you intend to work on this manual you need some additional tools to convert 
+          the SGML sources into HTML or some other target format. Using <command>
+          docbook2html</command> from the Debian docbook-utils package is a good 
+          choice.
+        </para>
+      </section>
+      <section>
+      <title>Documentation in GPE Sources</title>
+        <para>
+          Deverloper documentation consists of several tasks - the most important one is
+          a proper documentation of all library interfaces to make libraries easy to use
+          for other developers. Another very important task is to add comments in your
+          source code to make it easier to understand. In particular sections which are not
+          obvious or subject of frequent changes should be documented with comments. How to 
+          do this should be pretty obvious and so this section only deals with the 
+          documentation of library interfaces.
+        </para>
+        <para>
+           There are two ways to place documentation in the source:
+           <itemizedlist>
+             <listitem><para>1. Add special comments to the source code itself.</para></listitem>
+             <listitem><para>2. Add the documentation to the template files.</para></listitem>
+           </itemizedlist>
+           These files are located in the doc/tmpl/ subdirectory of each library after adding
+           documentation support. You should prefer to keep the major part of the documentation 
+           in the source code to make it easier to keep it up to date. Use the external files 
+           for generic which is not related to a particular entitiy in the code (e.g. a function).
 
+           The Gnome project has a very nice description on how to use gtk-doc here:
+           <ulink url="http://developer.gnome.org/arch/doc/authors.html">
+                  http://developer.gnome.org/arch/doc/authors.html</ulink>
+       </para>
+       <para>
+         Adding documentation support to library source is really easy:
+         <itemizedlist>
+            <listitem><para>Create a subdirectory for the documentation. Most GPE libraries use
+                            "<filename>doc</filename>"</para></listitem>
+            <listitem><para>Add support for gtk-doc to configure.ac: "GTK_DOC_CHECK(1.2)"
+                            </para></listitem>
+            <listitem><para>Add the makefile in the documentation directory to the list of output
+                            files.</para></listitem>
+            <listitem><para>Copy <filename>gtk-doc.make</filename> to the documentation directory.
+                            </para></listitem>
+            <listitem><para>You can use <command>gtkdocize</command> (included in the gtk-doc
+                            package) and the Makefile.am template. </para></listitem>
+            <listitem><para>Change the Makefile.am file in doc to the correct source directory
+                            and to contain the correct product name.</para></listitem>
+            <listitem><para>Add all new files to EXTRA_DIST in the Makefile.am in their 
+                            directory.</para></listitem>
+         </itemizedlist>
+       </para>
+       <para>
+       To add gtk-doc support to a piece of software without autotools do as follows:
+       First add a section to the main Makefile adding the "doc" target:
+       <programlisting>
+        <![CDATA[doc:
+	make -C doc PACKAGE=$(PACKAGE)
+
+        .PHONY: doc
+        ]]>
+       </programlisting>
+
+       Create the 'doc' subdirectory and add a Makefile to it. This file may look similar to this:
+
+       <programlisting>
+        <![CDATA[all: doc
+        doc:
+		gtkdoc-scan --module=$(PACKAGE) --source-dir=../gpe --output-dir=.
+		gtkdoc-mktmpl --module=$(PACKAGE)
+		gtkdoc-mkdb --module=$(PACKAGE) --source-dir=../gpe --tmpl-dir=tmpl --output-format=xml --main-sgml-file=$(PACKAGE)-docs.sgml --sgml-mode
+		gtkdoc-mkhtml $(PACKAGE) $(PACKAGE)-docs.sgml
+        clean:
+		rm -f *.html sgml/* xml/* *.stamp
+
+        ]]>
+       </programlisting>
+
+       This should be sufficient in most cases. Only the location of the header sources that contain
+       the declarations to document need to be set correctly.
+       </para>
+       <para>
+          Now you are ready to run 'make doc' the first time. Note: With this simple
+          Makefile running make in the doc subdirectory itself will fail. Run 'make doc' in the
+          toplevel directory only. It is a good idea to start documenting with the toplevel sgml
+          file gtk-doc creates in 'doc'. If you are unsure what to add there look at the file
+          <filename>libgpewidget-docs.sgml</filename> in libgpewidget source.
+       </para>
+     
+    </section>
+     
+  </section>
+ 
 </chapter>

@@ -1,4 +1,9 @@
-2005-08-11  Florian Boor <florian.boor@kernelconcepts.de>
+
+2005-08-15  Florian Boor <florian.boor@kernelconcepts.de>
+
+	* documentation.sgml: Add section about developer documentation.
+
+2005-08-14  Florian Boor <florian.boor@kernelconcepts.de>
 
 	* environment.sgml: Information about where to get GPE sources.
 
