@@ -41,4 +41,7 @@
     <title>Programmers Interface</title>
     <xi:include href="xml/schedule.xml"/>
   </chapter>
+  <para>
+  The libschedule library was developed and is maintained by Philip Blundell. 
+  </para>
 </book>

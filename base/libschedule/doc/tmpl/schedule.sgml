@@ -1,12 +1,13 @@
 <!-- ##### SECTION Title ##### -->
-schedule
+Schedule Events
 
 <!-- ##### SECTION Short_Description ##### -->
-
+Interface for scheduling events.
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-
+The library libschedule provides functions to set scheduled alerts to notify applications
+of a defined event.
 </para>
 
 <!-- ##### SECTION See_Also ##### -->

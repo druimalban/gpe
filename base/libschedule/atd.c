@@ -51,6 +51,17 @@ alarm_filename (guint id, time_t start)
 static const char *boilerplate_1 = "#!/bin/sh\nexport DISPLAY=:0\n";
 static const char *condensorplate_1 = "\nrm -f $0\n";
 
+/**
+ * schedule_set_alarm:
+ * @id: Unique alarm identifier. 
+ * @start: Time to start the alarm action.
+ * @action: Command to become executed if alarm time is reached.
+ *
+ * Set a new alert including an action which should become executed
+ * at the alarm time. 
+ *
+ * Returns: TRUE on success, FALSE otherwise.
+ */
 gboolean
 schedule_set_alarm (guint id, time_t start, const gchar *action)
 {
@@ -76,6 +87,15 @@ schedule_set_alarm (guint id, time_t start, const gchar *action)
   return trigger_atd ();
 }
 
+/**
+ * schedule_cancel_alarm:
+ * @id: Unique alarm identifier. 
+ * @start: Alarm time.
+ *
+ * Cancel a schedule alarm event.
+ *
+ * Returns: TRUE on success, FALSE otherwise.
+ */
 gboolean
 schedule_cancel_alarm (guint id, time_t start)
 {
