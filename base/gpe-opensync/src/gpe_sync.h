@@ -38,7 +38,6 @@ typedef struct {
 } gpe_environment;
 
 #include "contacts.h"
-#include "todo.h"
 #include "gpe_xml.h"
 #include "gpe_db.h"
 
