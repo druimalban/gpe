@@ -1,3 +1,9 @@
+
+2005-08-14  Florian Boor <florian@kernelconcepts.de>
+
+	* Release Version 0.103
+	* configure.ac: New Version: 0.103
+
 2005-08-11  Florian Boor <florian@kernelconcepts.de>
 
 	* gtkadatecombo.c: Fix signal handler and update from gtk_signal
