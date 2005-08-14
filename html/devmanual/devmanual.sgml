@@ -56,7 +56,7 @@
 
         <mediaobject>
           <imageobject>
-             <imagedata fileref="gpe-logo-360.png" align="center" width="1cm"/>
+             <imagedata fileref="gpe-logo-360.png" align="right" width="1cm"/>
           </imageobject>
         </mediaobject>
 

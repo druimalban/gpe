@@ -224,9 +224,7 @@
   <para>
     After all these information about how to compile GPE it might be 
     interesting to know where to find GPE and information about it. 
-
-	[uploads, documentation, cvs access and updates, cvsrc, cvstrac, gallery]
-  </para>
+ </para>
   <section>
   <title>Obtaining GPE Sources</title>
   <para>
@@ -253,7 +251,20 @@
         <prompt>$</prompt> <userinput>cvs checkout gpe</userinput>
       </screen>
       For a detailed description of the contents of GPE CVS see the section about the CVS below. To find out more about how
-      to use CVS check out this (ref cvs man).
+      to use CVS check out the CVS manual at <ulink url="http://ximbiot.com/cvs/manual/cvs-1.11.20/cvs.html">
+      http://ximbiot.com/cvs/manual/cvs-1.11.20/cvs.html</ulink>.
+    </para>
+    <para>
+       To use the GPE CVS repository it is a good idea to have a <filename>.cvsrc</filename> in your home directory
+       to set up some default parameters. It should contain at least this:
+       <programlisting>
+        <![CDATA[cvs -z3 -q
+        update -dP
+        ]]>
+       </programlisting>
+       The first line will make CVS use data compression for transfered data and to omit some status output.
+       The second line tells CVS to pull new directories on every update but omit empty directories. This is very
+       useful because every new component is a new directory in GPE CVS.
     </para>
   </section>
   <section>
@@ -276,7 +287,7 @@
                                            currently going on and who is working on what just go there.</para></listitem>
              <listitem><para>Not everything is documented or obvious - if you need help or are curious about something
                                            don't hestitate to use our mailinglist (gpe@handhelds.org). Due to some problems with the
-                                           mailinglist administration it is currentlz a very good idea to subscribe to the mailinglist before
+                                           mailinglist administration it is currently a very good idea to subscribe to the mailinglist before
                                            sending a mail to it.</para></listitem>
           </itemizedlist>
     </para>
@@ -285,7 +296,19 @@
 
 <section>
 <title>Exploring the CVS</title>
-  <para>  </para>  
+  <para>
+    The GPE CVS is separated into seven toplevel directories.
+    <itemizedlist>
+    <listitem><para><filename>base</filename> GPE core applications and libraries.</para></listitem>
+    <listitem><para><filename>eyecandy</filename> Themes and wallpapers.</para></listitem>
+    <listitem><para><filename>games</filename> Game applications and data.</para></listitem>
+    <listitem><para><filename>gpe-logo</filename> The GPE logo in several sizes, forats and versions.</para></listitem>
+    <listitem><para><filename>html</filename> The project website and some documentation.</para></listitem>
+    <listitem><para><filename>marketing</filename> GPE marketing information like flyers.</para></listitem>
+    <listitem><para><filename>tasks</filename> GPE tasks for Familiar, currently unused.</para></listitem>
+    </itemizedlist>
+  The <filename>base</filename> section contains a toplevel Makefile to build a whole GPE - don't try to use it, it is broken because of our move to autotools.
+  </para>  
 </section>
 
 </chapter>
