@@ -1,5 +1,9 @@
 2005-08-11  Florian Boor <florian.boor@kernelconcepts.de>
 
+	* environment.sgml: Information about where to get GPE sources.
+
+2005-08-11  Florian Boor <florian.boor@kernelconcepts.de>
+
 	* environment.sgml: More about Scratchbox, identation fixes and some 
                         information about how to find sources.
                             

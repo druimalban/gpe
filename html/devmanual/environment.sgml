@@ -227,30 +227,60 @@
 
 	[uploads, documentation, cvs access and updates, cvsrc, cvstrac, gallery]
   </para>
+  <section>
+  <title>Obtaining GPE Sources</title>
   <para>
-    The first thing to know about GPE sources is the location of the GPE main 
-    source repository. This one is located here:
-    <ulink url="ftp://ftp.handhelds.org/projects/gpe/source/">ftp://ftp.handhelds.org/projects/gpe/source/</ulink>
-    It contains the release packages of all pieces of GPE. As long as there is
-    no good reason not to do so please choose the latest version of a package
-    if you intend to use it.
-  </para>
-  <para>
-    The GPE project makes use of the handhelds.org CVS to keep its sources.
-    You can access latest sources either by using the <command>cvs</command>
-    command line tool or ViewCVS if you only want to take a look.
-    If you don't have an account at handhelds.org you can check out GPE with
-    anonyomous CVS access. Follow these example instructions:
-    <screen>
-      <prompt>$</prompt> <userinput>mkdir gpe_cvs</userinput>
-      <prompt>$</prompt> <userinput>cd gpe_cvs</userinput>
-      <prompt>$</prompt> <userinput>export CVSROOT=:pserver:anoncvs@cvs.handhelds.org:/cvs</userinput>
-      <prompt>$</prompt> <userinput>cvs login</userinput>
-      Logging in to :pserver:anoncvs@cvs.handhelds.org:2401/cvs
-      CVS Password: anoncvs
-      <prompt>$</prompt> <userinput>cvs checkout gpe</userinput>
-    </screen>
-  </para>
+      The first thing to know about GPE sources is the location of the GPE main  
+      source repository. This one is located here:
+      <ulink url="ftp://ftp.handhelds.org/projects/gpe/source/">ftp://ftp.handhelds.org/projects/gpe/source/</ulink>
+      It contains the release packages of all pieces of GPE. As long as there is
+      no good reason not to do so please choose the latest version of a package
+      if you intend to use it.
+    </para>
+    <para>
+      The GPE project makes use of the handhelds.org CVS to keep its sources.
+      You can access latest sources either by using the <command>cvs</command>
+      command line tool or ViewCVS if you only want to take a look.
+      If you don't have an account at handhelds.org you can check out GPE with
+      anonyomous CVS access. Follow these example instructions:
+      <screen>
+        <prompt>$</prompt> <userinput>mkdir gpe_cvs</userinput>
+        <prompt>$</prompt> <userinput>cd gpe_cvs</userinput>
+        <prompt>$</prompt> <userinput>export CVSROOT=:pserver:anoncvs@cvs.handhelds.org:/cvs</userinput>
+        <prompt>$</prompt> <userinput>cvs login</userinput>
+        Logging in to :pserver:anoncvs@cvs.handhelds.org:2401/cvs
+        CVS Password: anoncvs
+        <prompt>$</prompt> <userinput>cvs checkout gpe</userinput>
+      </screen>
+      For a detailed description of the contents of GPE CVS see the section about the CVS below. To find out more about how
+      to use CVS check out this (ref cvs man).
+    </para>
+  </section>
+  <section>
+  <title>More detailed Information</title>
+    <para>
+       Just continue reading this manual might be the best idea, but there are other sources for information available:
+         <itemizedlist>
+             <listitem><para>The GPE website (<ulink url="http://gpe.handhelds.org">http://gpe.handhelds.org</ulink>) 
+                                           itself is currently not perfectly up to date, but it contains some additional information
+                                           about some parts of GPE and some news about what is going on. It also contains information
+                                           about how to get in touch with the developers and a nice screenshot gallery to find out how
+                                           GPE looks(and looked) like.</para></listitem>
+             <listitem><para>handhelds.org Wiki <ulink url=""></ulink> has much of information about GPE and related 
+                                            topics like the Familiar distribution and Linux on all kind of mobile devices. It also contains
+                                            a collection of user documentation for several GPE applications.</para></listitem>
+             <listitem><para>GPE also offers a CVSTrac service for several development tasks. It can be found at
+                                            <ulink url="http://handhelds.org:8080/gpe/">http://handhelds.org:8080/gpe/</ulink>
+                                           It offers a simple Wiki system which is used for development only and a detailed timeline
+                                           of changes in CVS. It can create patches from checkins as well. If you are interested in what is 
+                                           currently going on and who is working on what just go there.</para></listitem>
+             <listitem><para>Not everything is documented or obvious - if you need help or are curious about something
+                                           don't hestitate to use our mailinglist (gpe@handhelds.org). Due to some problems with the
+                                           mailinglist administration it is currentlz a very good idea to subscribe to the mailinglist before
+                                           sending a mail to it.</para></listitem>
+          </itemizedlist>
+    </para>
+  </section>
 </section>
 
 <section>
