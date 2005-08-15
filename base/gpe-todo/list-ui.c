@@ -28,7 +28,7 @@
 #include <hildon-widgets/hildon-app.h>
 #include <gpe/pim-categories-ui.h>
 
-#define ICON_PATH PREFIX "/share/icons/hicolor/26x26"
+#define ICON_PATH "/usr/share/icons/hicolor/26x26/hildon"
 
 #endif
 

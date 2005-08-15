@@ -1,8 +1,13 @@
+2005-08-15  Florian Boor  <florian.boor@kernelconcepts.de>
+
+	* debian/rules: Change package prefix to meet latest hildon requirements.
+	* list-ui.c: Change path to hildon icons.
+
 2005-07-25  Florian Boor  <florian.boor@kernelconcepts.de>
 
 	* Makefile.am: Change name of service file.
     * main.c: Use hildon way to control packing of the toolbar.
-    * debian/chagelog: Add new package.
+    * debian/changelog: Add new package.
     * debian/control: Refine dependencies of the maemo package.
     * debian/links: Fix link to support package installer.
     * hildon/gpe-todo.desktop.in: Change path to executable.
