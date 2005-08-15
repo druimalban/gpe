@@ -1,6 +1,17 @@
 <chapter id="themes">
 <title>Themes</title>
-  <para>
-  text
-  </para>
+  <section>
+  <title><para>Introduction</para></title>
+    <para>
+      GPE themes consist of two parts which need to play together. 
+	  These are a GTK+ theme and a Matchbox theme.
+	  <itemizedlist>
+      <listitem><para>The matchbox theme covers window decoration, default background, menu design, desktop icons.</para></listitem>
+      <listitem><para>The GTK theme covers application look like stock icons, button design, sliders and other widgets.</para></listitem>
+	  </itemizedlist>
+	  The themes usually consist of description files which are found
+	  in the <filename>/usr/share/themes</filename> directory. Some of the GTK
+	  themes make use if a GTK theming engine which is installed as a shared library.
+    </para>
+  </section>
 </chapter>
