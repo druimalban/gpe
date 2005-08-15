@@ -53,7 +53,7 @@
 #include "finddlg.h"
 
 #define MY_PIXMAPS_DIR "gpe-contacts/"
-#define ICON_PATH PREFIX "/share/icons/hicolor/26x26"
+#define ICON_PATH "/usr/share/icons/hicolor/26x26/hildon"
 
 #define SERVICE_NAME    "gpe_contacts"
 #define SERVICE_VERSION VERSION

@@ -1,3 +1,8 @@
+2005-08-15  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * main-hildon.c, debian/rules: Change path to icons and package prefix to 
+                                   make application work in 770 production images.
+
 2005-08-04  Rene Wagner  <rw@handhelds.org>
 
     * Release 0.41

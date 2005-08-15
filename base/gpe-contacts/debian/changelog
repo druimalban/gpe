@@ -1,3 +1,15 @@
+gpe-contacts (0.41m2-1) unstable; urgency=low
+
+  * New release, new package prefix and updated icon path.
+
+ -- Florian Boor <florian.boor@kernelconcepts.de>  Tue, 02 Aug 2005 17:11:00 +0200
+
+gpe-contacts (0.40m2-3) unstable; urgency=low
+
+  * Fix vcard import.
+
+ -- Florian Boor <florian.boor@kernelconcepts.de>  Tue, 02 Aug 2005 17:11:00 +0200
+ 
 gpe-contacts (0.40m2-2) unstable; urgency=low
 
   * Update dependencies.
