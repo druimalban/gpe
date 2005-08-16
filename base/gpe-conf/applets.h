@@ -1,8 +1,9 @@
-#include <gtk/gtk.h>
-
-
 #ifndef APPLETS_H
 #define APPLETS_H
+
+#include <gtk/gtk.h>
+#include <gpe/pixmaps.h>
+
 struct Applet
 {
   GtkWidget *(*Build_Objects)(); // store his objets in a static self struct
