@@ -33,6 +33,8 @@
 #include <hildon-widgets/hildon-appview.h>
 #include <gpe/pim-categories-ui.h>
 #include <hildon-fm/hildon-widgets/hildon-file-chooser-dialog.h>
+#include <libosso.h>
+#define APPLICATION_DBUS_SERVICE "gpe-calendar"
 #endif
 
 #include "event-ui.h"
@@ -374,6 +376,32 @@ main_window_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *data)
   return FALSE;
 }
 
+#ifdef IS_HILDON
+static void
+create_app_menu(HildonAppView *appview)
+{
+  GtkMenu *main_menu;
+  GtkWidget *item_appointment, *item_today, *item_day, *item_week, 
+    *item_month, *item_import, *item_toolbar;
+  
+  main_menu = hildon_appview_get_menu(appview);
+  
+  item_appointment = gtk_menu_item_new_with_label(_("New appointment"));
+  g_signal_connect(G_OBJECT(item_appointment), "activate", G_CALLBACK(new_appointment), NULL);
+  gtk_menu_append(main_menu, item_appointment);
+  
+  item_today = gtk_menu_item_new_with_label(_("Today"));
+  g_signal_connect(G_OBJECT(item_today), "activate", set_today, NULL);
+  gtk_menu_append(main_menu, item_today);
+  
+  item_import = gtk_menu_item_new_with_label(_("Import"));
+  g_signal_connect(G_OBJECT(item_import), "activate", G_CALLBACK(on_import_vcal), NULL);
+  gtk_menu_append(main_menu, item_import);
+
+  gtk_widget_show_all(main_menu);
+}
+#endif
+
 int
 main (int argc, char *argv[])
 {
@@ -382,6 +410,7 @@ main (int argc, char *argv[])
   GtkWidget *pw;
 #ifdef IS_HILDON
   GtkWidget *app, *main_appview;
+  osso_context_t *osso_context;
 #endif
 
   guint hour, skip=0, uid=0;
@@ -486,6 +515,18 @@ main (int argc, char *argv[])
   gtk_widget_realize (main_window);
 #endif
 
+#ifdef IS_HILDON
+  /* Initialize maemo application */
+  osso_context = osso_initialize(
+  APPLICATION_DBUS_SERVICE, "0.1", TRUE, NULL);
+
+  /* Check that initialization was ok */
+  if (osso_context == NULL)
+  {
+    return OSSO_ERROR;
+  }
+#endif
+
   gtk_container_add (GTK_CONTAINER (main_window), vbox);
 
   time (&viewtime);
@@ -565,6 +606,10 @@ main (int argc, char *argv[])
 					_("Tap here to exit the program"), NULL, 
 					G_CALLBACK (gpe_cal_exit), NULL, -1);
   GTK_WIDGET_UNSET_FLAGS(pw, GTK_CAN_FOCUS);
+#endif
+
+#ifdef IS_HILDON
+  create_app_menu(main_appview);
 #endif
 
   gtk_notebook_set_show_tabs (GTK_NOTEBOOK (notebook), FALSE);
