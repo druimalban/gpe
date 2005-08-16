@@ -1,4 +1,9 @@
+2005-08-16  Matthias Steinbauer <matthias@steinbauer.org>
+
+        * main.c: Included basic LibOSSO Support.
+
 2005-08-08  Matthias Steinbauer <matthias@steinbauer.org>
+
 	* main.c: Added basic hildon support adjusted main-window to appview
 	  put toolbar to the bottom.
 	* event-ui.c: click_categories adjusted to fit to the hildon extensions
