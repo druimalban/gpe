@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Buttonbar Setup
+Comment=Preset buttons
+Exec=gpe-buttonbox-config
+Terminal=0
+Type=Application
+Icon=gpe-config.png
+Categories=Application;SystemSettings;GPE
+StartupNotify=True
+SingleInstance=True
