@@ -26,7 +26,6 @@
 
 #include <gpe/init.h>
 #include <gpe/pixmaps.h>
-#include <gpe/render.h>
 #include <gpe/gpewindowlist.h>
 #include <gpe/popup.h>
 

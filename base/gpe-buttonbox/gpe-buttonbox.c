@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2004 Philip Blundell <philb@gnu.org>
+ *               2005 Florian Boor <florian@handhelds.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -26,9 +27,9 @@
 
 #include <gpe/init.h>
 #include <gpe/pixmaps.h>
-#include <gpe/render.h>
 #include <gpe/gpewindowlist.h>
 #include <gpe/popup.h>
+#include <gpe/infoprint.h>
 
 #include <gpe/launch.h>
 #include <gpe/desktop_file.h>
@@ -55,8 +56,24 @@ GdkPixbuf *other_icon;
 
 char **g_argv;
 
-#define NR_SLOTS 7
-#define SLOT_WIDTH 64
+#define NR_SLOTS_DEFAULT     4
+#define SLOT_WIDTH_DEFAULT  64
+#define SLOT_HEIGHT_DEFAULT 48
+#define ICON_SIZE_DEFAULT   24
+#define MYFILES_DEFAULT     FALSE
+#define CONFIGFILE "buttonbox.cfg"
+#define MY_PIXMAPS_DIR "gpe-buttonbox/"
+
+typedef struct {
+  int nr_slots;
+  int slot_width;
+  int slot_height;
+  int icon_size;
+  gboolean myfiles_on;
+  int fixed_slots;
+}t_cfg;
+
+t_cfg cfg; 
 
 Atom atoms[12];
 
@@ -76,9 +93,7 @@ char *atom_names[] =
     "_NET_SYSTEM_TRAY_S0"
 };
 
-#define ICON_SIZE	24
-
-struct class_record *class_slot[NR_SLOTS];
+struct class_record **class_slot;
 
 struct window_record
 {
@@ -102,7 +117,6 @@ struct class_record
   gboolean fixed;
 };
 
-#define MY_PIXMAPS_DIR "gpe-buttonbox/"
 
 struct gpe_icon my_icons[] = 
   {
@@ -119,6 +133,78 @@ struct gpe_icon my_icons[] =
 
 static gboolean is_viewable (Display *dpy, Window w);
 
+
+static gboolean
+config_load(void)
+{
+  GKeyFile *configfile;
+  GError *err = NULL;
+  gchar *fname = g_strdup_printf("%s/%s", g_get_home_dir(), CONFIGFILE);
+
+  configfile = g_key_file_new();
+
+  cfg.slot_width = SLOT_WIDTH_DEFAULT;
+  cfg.slot_height = SLOT_HEIGHT_DEFAULT;
+  cfg.nr_slots = NR_SLOTS_DEFAULT;
+  cfg.icon_size = ICON_SIZE_DEFAULT;
+  cfg.myfiles_on = MYFILES_DEFAULT;
+  cfg.fixed_slots = 1;
+	
+  if (!g_key_file_load_from_file (configfile, fname,
+                                  G_KEY_FILE_KEEP_COMMENTS, &err)
+      && !g_key_file_load_from_file (configfile, "/etc/gpe/" CONFIGFILE,
+                                  G_KEY_FILE_KEEP_COMMENTS, &err))
+    {
+      g_error_free(err);
+      g_free(fname);
+      return FALSE;
+    }
+    
+  if (g_key_file_has_group(configfile, "Global"))
+    {
+      cfg.slot_width = g_key_file_get_integer(configfile, 
+                                                "Global", "slot_width", &err);
+      if (err)
+        {
+            g_error_free(err);
+            err = NULL;
+        }
+      cfg.slot_height = g_key_file_get_integer(configfile, 
+                                               "Global", "slot_height", &err);
+      if (err)
+        {
+            g_error_free(err);
+            err = NULL;
+        }
+      cfg.nr_slots = g_key_file_get_integer(configfile, 
+                                            "Global", "slots", &err);
+      if (err)
+        {
+          g_error_free(err);
+          err = NULL;
+        }
+      cfg.icon_size = g_key_file_get_integer(configfile, 
+                                             "Global", "icon_size", &err);
+      if (err)
+        {
+          g_error_free(err);
+          err = NULL;
+        }
+      cfg.myfiles_on = g_key_file_get_boolean(configfile, 
+                                              "Global", "show_myfiles", &err);
+      if (err)
+        {
+          g_error_free(err);
+          err = NULL;
+        }
+    }
+  if (cfg.myfiles_on)
+      cfg.fixed_slots = 2;
+  g_key_file_free(configfile);
+  g_free(fname);
+  return TRUE;
+}
+  
 /* copied from libmatchbox */
 static void
 activate_window (Display *dpy, Window win)
@@ -145,7 +231,6 @@ popup_window_list (GtkWidget *widget, GdkEventButton *button, GList *windows)
 {
   GtkWidget *menu;
   GList *l;
-  gint x, y;
 
   menu = gtk_menu_new ();
   
@@ -160,23 +245,23 @@ popup_window_list (GtkWidget *widget, GdkEventButton *button, GList *windows)
 
       name = gpe_get_window_name (dpy, r->w);
       if (name == NULL && r->leader != r->w)
-	name = gpe_get_window_name (dpy, r->leader);
+        name = gpe_get_window_name (dpy, r->leader);  
       if (name == NULL)
-	name = g_strdup ("?");
+        name = g_strdup ("?");
 
       item = gtk_image_menu_item_new_with_label (name);
       
       gtk_widget_show (item);
       
       if (r->icon)
-	{
-	  GtkWidget *icon;
-	  GdkPixbuf *pix;
-	  
-	  pix = gdk_pixbuf_scale_simple (r->icon, 16, 16, GDK_INTERP_BILINEAR);
-	  icon = gtk_image_new_from_pixbuf (pix);
-	  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), icon);
-	}
+      {
+        GtkWidget *icon;
+        GdkPixbuf *pix;
+      
+        pix = gdk_pixbuf_scale_simple (r->icon, 16, 16, GDK_INTERP_BILINEAR);
+        icon = gtk_image_new_from_pixbuf (pix);
+        gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), icon);
+      }
       
       g_signal_connect_swapped (G_OBJECT (item), "activate", G_CALLBACK (raise_window), r);
       
@@ -184,8 +269,8 @@ popup_window_list (GtkWidget *widget, GdkEventButton *button, GList *windows)
     }
 
   gtk_menu_popup (GTK_MENU (menu), NULL, NULL,
-		  gpe_popup_menu_position,
-		  widget, button->button, button->time);
+                  gpe_popup_menu_position,
+                  widget, button->button, button->time);
 }
 
 void
@@ -199,13 +284,13 @@ raise_one_window (GList *windows)
       struct window_record *r = l->data;
 
       if (use_next)
-	{
-	  raise_window (r);
-	  return;
-	}
+        {
+          raise_window (r);
+          return;
+        }
 
       if (is_viewable (dpy, r->w))
-	use_next = TRUE;
+        use_next = TRUE;
     }
 
   raise_window (windows->data);
@@ -258,7 +343,7 @@ button_press_event (GtkWidget *widget, GdkEventButton *button, struct class_reco
       struct tap *tt;
       
       if (button->button != 1)
-	return;
+        return;
       
       tt = g_malloc (sizeof (struct tap));
       g_timeout_add (TIMEOUT, timeout, tt);
@@ -286,31 +371,30 @@ button_release_event (GtkWidget *widget, GdkEventButton *button, struct class_re
   if (c->windows)
     {
       if (t)
-	raise_one_window (c->windows);
+        raise_one_window (c->windows);
     }
   else if (c->exec)
     {
       Window w;
       w = gpe_launch_get_window_for_binary (dpy, c->exec);
       if (w != None)
-	{
-	  activate_window (dpy, w);
-	  return;
-	}
+        {
+          activate_window (dpy, w);
+          return;
+        }
 
       if (! gpe_launch_startup_is_pending (dpy, c->exec))
-	{
-	  if (c->name)
-	    {
-	      gchar *text;
-
-	      text = g_strdup_printf ("Starting %s", c->name);
-	      gpe_popup_infoprint (dpy, text);
-	      g_free (text);
-	    }
-	  
-	  gpe_launch_program_with_callback (dpy, c->exec, c->exec, TRUE, NULL, NULL);
-	}
+      {
+        if (c->name)
+          {
+            gchar *text;
+    
+            text = g_strdup_printf ("Starting %s", c->name);
+            gpe_popup_infoprint (dpy, text);
+            g_free (text);
+          }
+        gpe_launch_program_with_callback (dpy, c->exec, c->exec, TRUE, NULL, NULL);
+      }
     }
   else
     {
@@ -332,7 +416,7 @@ other_button_release (GtkWidget *widget, GdkEventButton *button)
       struct class_record *c = class_iter->data;
 
       for (window_iter = c->windows; window_iter; window_iter = window_iter->next)
-	list = g_list_append (list, window_iter->data);
+        list = g_list_append (list, window_iter->data);
     }
 
   popup_window_list (widget, button, list);
@@ -356,7 +440,7 @@ docs_button_release (GtkWidget *widget, GdkEventButton *button)
   else
     {
       if (! gpe_launch_startup_is_pending (dpy, docs_str))
-	gpe_launch_program_with_callback (dpy, docs_str, docs_str, TRUE, NULL, NULL);
+	    gpe_launch_program_with_callback (dpy, docs_str, docs_str, TRUE, NULL, NULL);
     }
 
   g_free (docs_str);
@@ -441,15 +525,15 @@ draw_icon (GtkWidget *widget, GdkEventExpose *ev)
 		   ev->area.width, ev->area.height,
 		   GDK_RGB_DITHER_NORMAL, 0, 0);
 
-  // scale to desired height but retain aspect ratio
+  /* scale to desired height but retain aspect ratio */
   w = gdk_pixbuf_get_width (pix);
   h = gdk_pixbuf_get_height (pix);
-  w = (w * ICON_SIZE) / h;
+  w = (w * cfg.icon_size) / h;
 
   br.x = (64 - w) / 2;
   br.y = 4;
   br.width = w;
-  br.height = ICON_SIZE;
+  br.height = cfg.icon_size;
 
   if (gdk_rectangle_intersect (&ev->area, &br, &r))
     {
@@ -465,11 +549,11 @@ draw_icon (GtkWidget *widget, GdkEventExpose *ev)
   layout = gtk_widget_create_pango_layout (GTK_WIDGET (widget),
 					   text);
 
-  pango_layout_set_width (layout, SLOT_WIDTH * PANGO_SCALE);
+  pango_layout_set_width (layout, cfg.slot_width * PANGO_SCALE);
   pango_layout_set_alignment (layout, PANGO_ALIGN_CENTER);
 
   gtk_paint_layout (widget->style, widget->window, widget->state,
-		    FALSE, &ev->area, widget, "", 0, ICON_SIZE + 6, layout);  
+		    FALSE, &ev->area, widget, "", 0, cfg.icon_size + 6, layout);  
 
   g_object_unref (layout);
 }
@@ -477,19 +561,17 @@ draw_icon (GtkWidget *widget, GdkEventExpose *ev)
 GtkWidget *
 do_build_icon (gchar *name, GdkPixbuf *icon_pix, gboolean yellow)
 {
-  GtkWidget *wbox;
   GtkWidget *icon;
-  GtkWidget *text;
   GtkWidget *ebox;
-  GdkPixbuf *composite, *scaled;
+  GdkPixbuf *scaled;
   int w, h;
 
-  // scale to desired height but retain aspect ratio
+  /* scale to desired height but retain aspect ratio */
   w = gdk_pixbuf_get_width (icon_pix);
   h = gdk_pixbuf_get_height (icon_pix);
-  w = (w * ICON_SIZE) / h;
+  w = (w * cfg.icon_size) / h;
 
-  scaled = gdk_pixbuf_scale_simple (icon_pix, w, ICON_SIZE, 
+  scaled = gdk_pixbuf_scale_simple (icon_pix, w, cfg.icon_size, 
 				    GDK_INTERP_BILINEAR);
 
   icon = gtk_drawing_area_new ();
@@ -497,7 +579,7 @@ do_build_icon (gchar *name, GdkPixbuf *icon_pix, gboolean yellow)
 
   gtk_widget_show (icon);
 
-  gtk_widget_set_usize (GTK_WIDGET (ebox), SLOT_WIDTH, 48);
+  gtk_widget_set_usize (GTK_WIDGET (ebox), cfg.slot_width, cfg.slot_height);
   
   gtk_container_add (GTK_CONTAINER (ebox), icon);
 
@@ -597,14 +679,14 @@ find_slot_for_class (struct class_record *c)
     {
       int i;
 
-      for (i = 0; i < NR_SLOTS; i++)
+      for (i = 0; i < cfg.nr_slots; i++)
 	{
 	  if (class_slot[i] == NULL)
 	    {
 	      class_slot[i] = c;
 	      c->slot = i;
 	      c->widget = build_icon_for_class (c);
-	      gtk_fixed_put (GTK_FIXED (box), c->widget, (i + 2) * SLOT_WIDTH, 0);
+	      gtk_fixed_put (GTK_FIXED (box), c->widget, (i + cfg.fixed_slots) * cfg.slot_width, 0);
 	      gtk_widget_show (c->widget);
 	      return;
 	    }
@@ -616,14 +698,14 @@ static void
 show_other_button (void)
 {
   struct class_record *c;
-  c = class_slot[NR_SLOTS - 1];
+  c = class_slot[cfg.nr_slots - 1];
 
   other_classes = g_list_append (other_classes, c);
   gtk_container_remove (GTK_CONTAINER (box), c->widget);
   c->slot = -1;
-  class_slot[NR_SLOTS - 1] = (void *)1;
+  class_slot[cfg.nr_slots - (cfg.fixed_slots - 1)] = (void *)1;
 
-  gtk_fixed_put (GTK_FIXED (box), other_button, (NR_SLOTS + 1) * SLOT_WIDTH, 0);
+  gtk_fixed_put (GTK_FIXED (box), other_button, (cfg.nr_slots + (cfg.fixed_slots -1)) * cfg.slot_width, 0);
   gtk_widget_show (other_button);
 }
 
@@ -631,7 +713,6 @@ static void
 add_window_record (struct window_record *r)
 {
   struct class_record *c;
-  GList *l;
   gboolean new_class = FALSE;
 
   g_assert (r != NULL);
@@ -663,7 +744,7 @@ add_window_record (struct window_record *r)
 static void
 hide_other_button (void)
 {
-  assert (class_slot[NR_SLOTS - 1] == (void *)1);
+  assert (class_slot[cfg.nr_slots - 1] == (void *)1);
   assert (other_classes == NULL);
 
   gtk_container_remove (GTK_CONTAINER (box), other_button);
@@ -690,7 +771,7 @@ delete_window_record (struct window_record *r)
 	  c->slot = -1;
 
 	  /* Shuffle up all the icons to the right of this one.  */
-	  for (; slot < (NR_SLOTS - 1); slot++)
+	  for (; slot < (cfg.nr_slots - (cfg.fixed_slots - 1)); slot++)
 	    {
 	      if (class_slot[slot + 1] != NULL && class_slot[slot + 1] != (void *)1)
 		{
@@ -698,7 +779,7 @@ delete_window_record (struct window_record *r)
 		  class_slot[slot] = cc;
 		  class_slot[slot + 1] = NULL;
 		  cc->slot = slot;
-		  gtk_fixed_move (GTK_FIXED (box), cc->widget, (slot + 2) * SLOT_WIDTH, 0);
+		  gtk_fixed_move (GTK_FIXED (box), cc->widget, (slot + cfg.fixed_slots) * cfg.slot_width, 0);
 		}
 	    }
 
@@ -715,14 +796,14 @@ delete_window_record (struct window_record *r)
 		 slot must be the last one before that button.  Put a new button in it.  */
 	      struct class_record *cc = other_classes->data;
 
-	      assert (class_slot[NR_SLOTS - 2] == NULL);
+	      assert (class_slot[cfg.nr_slots - cfg.fixed_slots] == NULL);
 
 	      other_classes = g_list_remove (other_classes, cc);
 
 	      cc->widget = build_icon_for_class (cc);
 	      gtk_widget_show (cc->widget);
-	      cc->slot = NR_SLOTS - 2;
-	      gtk_fixed_put (GTK_FIXED (box), cc->widget, (cc->slot + 2) * SLOT_WIDTH, 0);
+	      cc->slot = cfg.nr_slots - cfg.fixed_slots;
+	      gtk_fixed_put (GTK_FIXED (box), cc->widget, (cc->slot + cfg.fixed_slots) * cfg.slot_width, 0);
 	      class_slot[cc->slot] = cc;
 	    }
 
@@ -736,8 +817,8 @@ delete_window_record (struct window_record *r)
 
 	      cc->widget = build_icon_for_class (cc);
 	      gtk_widget_show (cc->widget);
-	      cc->slot = NR_SLOTS - 1;
-	      gtk_fixed_put (GTK_FIXED (box), cc->widget, (cc->slot + 2) * SLOT_WIDTH, 0);
+	      cc->slot = cfg.nr_slots - (cfg.fixed_slots - 1);
+	      gtk_fixed_put (GTK_FIXED (box), cc->widget, (cc->slot + cfg.fixed_slots) * cfg.slot_width, 0);
 	      class_slot[cc->slot] = cc;
 	    }
 	}
@@ -854,7 +935,6 @@ static void
 window_added (GPEWindowList *list, Window w)
 {
   struct window_record *r;
-  GtkWidget *widget;
   Atom type;
   Window leader;
   gchar *class;
@@ -984,7 +1064,7 @@ add_fixed_button (gchar *name, gchar *icon, gchar *exec, gchar *class)
   if (!name || !icon || !exec)
     return FALSE;
 
-  for (i = 0; i < NR_SLOTS; i++)
+  for (i = 0; i < cfg.nr_slots; i++)
     {
       if (class_slot[i] == NULL)
 	{
@@ -1026,7 +1106,7 @@ add_fixed_button (gchar *name, gchar *icon, gchar *exec, gchar *class)
 
   g_signal_connect (G_OBJECT (c->widget), "button_press_event", G_CALLBACK (button_press_event), c);
   g_signal_connect (G_OBJECT (c->widget), "button_release_event", G_CALLBACK (button_release_event), c);
-  gtk_fixed_put (GTK_FIXED (box), c->widget, (slot + 2) * SLOT_WIDTH, 0);
+  gtk_fixed_put (GTK_FIXED (box), c->widget, (slot + cfg.fixed_slots) * cfg.slot_width, 0);
   gtk_widget_show (c->widget);
 
   return TRUE;
@@ -1173,16 +1253,18 @@ main (int argc, char *argv[])
   if (gpe_load_icons (my_icons) == FALSE)
     exit (1);
 
+  config_load();
+  class_slot = g_malloc0(sizeof(void*) * cfg.nr_slots);
+  
   while (1)
     {
-      int this_option_optind = optind ? optind : 1;
       int option_index = 0;
       int c;
 
       static struct option long_options[] = {
-	{"panel", 0, 0, 'p'},
-	{"geometry", 1, 0, 'g'},
-	{0, 0, 0, 0}
+        {"panel", 0, 0, 'p'},
+        {"geometry", 1, 0, 'g'},
+        {0, 0, 0, 0}
       };
       
       c = getopt_long (argc, argv, "ptg:", long_options, &option_index);
@@ -1240,14 +1322,16 @@ main (int argc, char *argv[])
   g_signal_connect (G_OBJECT (desktop_button), "button_release_event", G_CALLBACK (desktop_button_release), NULL);
   gtk_widget_show (desktop_button);
 
-  docs_icon = gpe_find_icon ("docs");
-  docs_button = do_build_icon ("Docs", docs_icon, TRUE);
-  gtk_widget_set_name (docs_button, "Docs");
-  gtk_fixed_put (GTK_FIXED (box), docs_button, SLOT_WIDTH, 0);
-  g_signal_connect (G_OBJECT (docs_button), "button_press_event", G_CALLBACK (button_press_event), NULL);
-  g_signal_connect (G_OBJECT (docs_button), "button_release_event", G_CALLBACK (docs_button_release), NULL);
-  gtk_widget_show (docs_button);
-
+  if (cfg.myfiles_on)
+    {
+      docs_icon = gpe_find_icon ("docs");
+      docs_button = do_build_icon ("Docs", docs_icon, TRUE);
+      gtk_widget_set_name (docs_button, "Docs");
+      gtk_fixed_put (GTK_FIXED (box), docs_button, cfg.slot_width, 0);
+      g_signal_connect (G_OBJECT (docs_button), "button_press_event", G_CALLBACK (button_press_event), NULL);
+      g_signal_connect (G_OBJECT (docs_button), "button_release_event", G_CALLBACK (docs_button_release), NULL);
+      gtk_widget_show (docs_button);
+    }
   other_icon = gpe_find_icon ("other");
   other_button = do_build_icon ("Other", other_icon, FALSE);
   g_signal_connect (G_OBJECT (other_button), "button_press_event", G_CALLBACK (button_press_event), NULL);
@@ -1260,7 +1344,7 @@ main (int argc, char *argv[])
 
   add_initial_windows (GPE_WINDOW_LIST (list));
 
-  gtk_widget_set_usize (box, (NR_SLOTS + 2) * SLOT_WIDTH, -1);
+  gtk_widget_set_usize (box, (cfg.nr_slots + cfg.fixed_slots) * cfg.slot_width, -1);
 
   gtk_container_set_border_width (GTK_CONTAINER (window), 0);
   gtk_container_add (GTK_CONTAINER (window), box);
