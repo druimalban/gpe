@@ -8,8 +8,10 @@ Call external help browser.
 <para>
 Simple interface to provide a call for an external application 
 to display help information. Currently this is fixed to a list
-of help browsers (gpe-helpviewer, dillo, minimo, osb-browser). 
+of help browsers (gpe-helpviewer, gpe-mini-browser, dillo, minimo). 
 The help system is configured in /etc/gpe/gpe-help.conf.
+For an example how to provide help for applications check out 
+gpe-edit.
 </para>
 
 <!-- ##### SECTION See_Also ##### -->
@@ -23,6 +25,4 @@ The help system is configured in /etc/gpe/gpe-help.conf.
 
 @appname: 
 @topic: 
-@Returns: 
-
-
+@Returns:
