@@ -1,3 +1,8 @@
+
+2005-08-18  Florian Boor <florian@kernelconcepts.de>
+
+	*  documentation.phtml: Add link to maintainer list.
+
 2005-08-03  Florian Boor <florian@kernelconcepts.de>
 
 	* devmanual: New directory for development manual.
