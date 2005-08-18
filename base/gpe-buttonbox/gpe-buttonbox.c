@@ -30,6 +30,7 @@
 #include <gpe/gpewindowlist.h>
 #include <gpe/popup.h>
 #include <gpe/infoprint.h>
+#include <gpe/tray.h>
 
 #include <gpe/launch.h>
 #include <gpe/desktop_file.h>
@@ -61,7 +62,8 @@ char **g_argv;
 #define SLOT_HEIGHT_DEFAULT 48
 #define ICON_SIZE_DEFAULT   24
 #define MYFILES_DEFAULT     FALSE
-#define CONFIGFILE "buttonbox.cfg"
+#define LABLES_DEFAULT      TRUE
+#define CONFIGFILE "buttonbox.conf"
 #define MY_PIXMAPS_DIR "gpe-buttonbox/"
 
 typedef struct {
@@ -70,6 +72,7 @@ typedef struct {
   int slot_height;
   int icon_size;
   gboolean myfiles_on;
+  gboolean labels_on;
   int fixed_slots;
 }t_cfg;
 
@@ -140,6 +143,7 @@ config_load(void)
   GKeyFile *configfile;
   GError *err = NULL;
   gchar *fname = g_strdup_printf("%s/%s", g_get_home_dir(), CONFIGFILE);
+  gint value;
 
   configfile = g_key_file_new();
 
@@ -148,6 +152,8 @@ config_load(void)
   cfg.nr_slots = NR_SLOTS_DEFAULT;
   cfg.icon_size = ICON_SIZE_DEFAULT;
   cfg.myfiles_on = MYFILES_DEFAULT;
+  cfg.labels_on = LABLES_DEFAULT;
+
   cfg.fixed_slots = 1;
 	
   if (!g_key_file_load_from_file (configfile, fname,
@@ -162,41 +168,60 @@ config_load(void)
     
   if (g_key_file_has_group(configfile, "Global"))
     {
-      cfg.slot_width = g_key_file_get_integer(configfile, 
-                                                "Global", "slot_width", &err);
+      value = g_key_file_get_integer(configfile, 
+                                     "Global", "slot_width", &err);
       if (err)
         {
             g_error_free(err);
             err = NULL;
         }
-      cfg.slot_height = g_key_file_get_integer(configfile, 
-                                               "Global", "slot_height", &err);
+      else
+		cfg.slot_width = value;
+      value = g_key_file_get_integer(configfile, 
+                                     "Global", "slot_height", &err);
       if (err)
         {
             g_error_free(err);
             err = NULL;
         }
-      cfg.nr_slots = g_key_file_get_integer(configfile, 
-                                            "Global", "slots", &err);
+      else
+		cfg.slot_height = value;
+      value = g_key_file_get_integer(configfile, 
+                                     "Global", "slots", &err);
       if (err)
         {
           g_error_free(err);
           err = NULL;
         }
-      cfg.icon_size = g_key_file_get_integer(configfile, 
-                                             "Global", "icon_size", &err);
+      else
+		cfg.nr_slots = value;
+      value = g_key_file_get_integer(configfile, 
+                                     "Global", "icon_size", &err);
       if (err)
         {
           g_error_free(err);
           err = NULL;
         }
-      cfg.myfiles_on = g_key_file_get_boolean(configfile, 
-                                              "Global", "show_myfiles", &err);
+      else
+		cfg.icon_size = value;
+      value = g_key_file_get_boolean(configfile, 
+                                     "Global", "show_myfiles", &err);
       if (err)
         {
           g_error_free(err);
           err = NULL;
         }
+	  else
+		cfg.myfiles_on = value;
+      value = g_key_file_get_boolean(configfile, 
+                                     "Global", "show_labels", &err);
+      if (err)
+        {
+          g_error_free(err);
+          err = NULL;
+        }
+	  else
+		cfg.labels_on = value;
     }
   if (cfg.myfiles_on)
       cfg.fixed_slots = 2;
@@ -428,9 +453,9 @@ void
 docs_button_release (GtkWidget *widget, GdkEventButton *button)
 {
   Window w;
-  const char *docs_str;
+  gchar *docs_str;
   
-  docs_str = g_strdup_printf ("gpe-filemanager -p \"%s/My Documents\" -t Docs --class Gpe-filemanager-docs", g_get_home_dir ());
+  docs_str = g_strdup_printf ("gpe-filemanager -p \"%s/\" -t Docs --class Gpe-filemanager-docs", g_get_home_dir ());
 
   update_icon (G_OBJECT (widget), 0);
 
@@ -530,7 +555,7 @@ draw_icon (GtkWidget *widget, GdkEventExpose *ev)
   h = gdk_pixbuf_get_height (pix);
   w = (w * cfg.icon_size) / h;
 
-  br.x = (64 - w) / 2;
+  br.x = (cfg.slot_width - w) / 2;
   br.y = 4;
   br.width = w;
   br.height = cfg.icon_size;
@@ -545,17 +570,19 @@ draw_icon (GtkWidget *widget, GdkEventExpose *ev)
 		       r.width, r.height,
 		       GDK_RGB_DITHER_NORMAL, 0, 0);
     }
-
-  layout = gtk_widget_create_pango_layout (GTK_WIDGET (widget),
-					   text);
-
-  pango_layout_set_width (layout, cfg.slot_width * PANGO_SCALE);
-  pango_layout_set_alignment (layout, PANGO_ALIGN_CENTER);
-
-  gtk_paint_layout (widget->style, widget->window, widget->state,
-		    FALSE, &ev->area, widget, "", 0, cfg.icon_size + 6, layout);  
-
-  g_object_unref (layout);
+  
+  if (cfg.labels_on)
+    {
+	  layout = gtk_widget_create_pango_layout (GTK_WIDGET (widget),
+						   text);
+	
+	  pango_layout_set_width (layout, cfg.slot_width * PANGO_SCALE);
+	  pango_layout_set_alignment (layout, PANGO_ALIGN_CENTER);
+	
+	  gtk_paint_layout (widget->style, widget->window, widget->state,
+				FALSE, &ev->area, widget, "", 0, cfg.icon_size + 6, layout);  
+      g_object_unref (layout);
+    }
 }
 
 GtkWidget *
@@ -699,13 +726,14 @@ show_other_button (void)
 {
   struct class_record *c;
   c = class_slot[cfg.nr_slots - 1];
-
+  
   other_classes = g_list_append (other_classes, c);
   gtk_container_remove (GTK_CONTAINER (box), c->widget);
   c->slot = -1;
-  class_slot[cfg.nr_slots - (cfg.fixed_slots - 1)] = (void *)1;
+  class_slot[cfg.nr_slots - 1] = (void *)1;
 
   gtk_fixed_put (GTK_FIXED (box), other_button, (cfg.nr_slots + (cfg.fixed_slots -1)) * cfg.slot_width, 0);
+  
   gtk_widget_show (other_button);
 }
 
@@ -737,7 +765,7 @@ add_window_record (struct window_record *r)
       gboolean other_button_visible = (other_classes != NULL) ? TRUE : FALSE;
       other_classes = g_list_append (other_classes, c);
       if (!other_button_visible)
-	show_other_button ();
+        show_other_button ();
     }
 }
 
@@ -1254,7 +1282,7 @@ main (int argc, char *argv[])
     exit (1);
 
   config_load();
-  class_slot = g_malloc0(sizeof(void*) * cfg.nr_slots);
+  class_slot = g_malloc0(sizeof(void*) * (cfg.nr_slots + 2));
   
   while (1)
     {

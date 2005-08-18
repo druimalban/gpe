@@ -14,3 +14,5 @@
 extern Atom atoms[];
 extern Display *dpy;
 extern GtkWidget *window;
+
+extern gboolean system_tray_init (Display *dpy, Window window);

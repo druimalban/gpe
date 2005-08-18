@@ -39,7 +39,6 @@ static GdkFilterReturn
 tray_opcode (GdkXEvent *xev, GdkEvent *ev)
 {
   XClientMessageEvent *c = (XClientMessageEvent *)xev;
-  unsigned long time = c->data.l[0];
   Window w = c->window;
 
   switch (c->data.l[1])
