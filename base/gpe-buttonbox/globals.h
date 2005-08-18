@@ -11,6 +11,13 @@
 #define MANAGER 10
 #define _NET_SYSTEM_TRAY_Sn 11
 
+#define NR_SLOTS_DEFAULT     4
+#define SLOT_WIDTH_DEFAULT  64
+#define SLOT_HEIGHT_DEFAULT 48
+#define ICON_SIZE_DEFAULT   24
+#define MYFILES_DEFAULT     FALSE
+#define LABLES_DEFAULT      TRUE
+
 extern Atom atoms[];
 extern Display *dpy;
 extern GtkWidget *window;

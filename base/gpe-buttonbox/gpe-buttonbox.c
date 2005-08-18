@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Philip Blundell <philb@gnu.org>
- *               2005 Florian Boor <florian@handhelds.org>
+ *               2005 Florian Boor <florian@handhelds.org> (Configuration)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -57,12 +57,6 @@ GdkPixbuf *other_icon;
 
 char **g_argv;
 
-#define NR_SLOTS_DEFAULT     4
-#define SLOT_WIDTH_DEFAULT  64
-#define SLOT_HEIGHT_DEFAULT 48
-#define ICON_SIZE_DEFAULT   24
-#define MYFILES_DEFAULT     FALSE
-#define LABLES_DEFAULT      TRUE
 #define CONFIGFILE "buttonbox.conf"
 #define MY_PIXMAPS_DIR "gpe-buttonbox/"
 
@@ -1113,6 +1107,11 @@ add_fixed_button (gchar *name, gchar *icon, gchar *exec, gchar *class)
       g_free (pix_fn);
       pix_fn = g_strdup_printf (PREFIX "/share/pixmaps/%s", icon);
     }
+  if (access (pix_fn, R_OK) != 0)
+    {
+      g_free (pix_fn);
+      pix_fn = g_strdup_printf ("/usr/share/pixmaps/%s", icon);
+    }
   pix = gdk_pixbuf_new_from_file (pix_fn, NULL);
   if (pix == NULL)
     {
@@ -1152,6 +1151,11 @@ load_one_preset (gchar *name)
     {
       g_free (path);
       path = g_strdup_printf (PREFIX "/share/applications/%s.desktop", name);
+    }
+  if (access (path, R_OK) != 0)
+    {
+      g_free (path);
+      path = g_strdup_printf ("/usr/share/applications/%s.desktop", name);
     }
   d = gnome_desktop_file_load (path, &error);
   if (d)

@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2004 Philip Blundell <philb@gnu.org>
+ *               2005 Florian Boor <florian@handhelds.org> (Settings)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -35,13 +36,43 @@
 #include <locale.h>
 
 #include "config.h"
+#include "globals.h"
 
 #define _(_x) gettext (_x)
+
+typedef struct {
+  int nr_slots;
+  int slot_width;
+  int slot_height;
+  int icon_size;
+  gboolean myfiles_on;
+  gboolean labels_on;
+}t_cfg;
+
+t_cfg cfg; 
 
 GtkWidget *dialog;
 
 GtkListStore *all_apps, *selected_apps;
 GtkWidget *add_button, *remove_button;
+GtkWidget *sb_nr, *sb_height, *sb_width, *sb_icon;
+GtkWidget *cb_labels, *cb_myfiles;
+
+void 
+load_config(void)
+{
+  cfg.slot_width = SLOT_WIDTH_DEFAULT;
+  cfg.slot_height = SLOT_HEIGHT_DEFAULT;
+  cfg.nr_slots = NR_SLOTS_DEFAULT;
+  cfg.icon_size = ICON_SIZE_DEFAULT;
+  cfg.myfiles_on = MYFILES_DEFAULT;
+  cfg.labels_on = LABLES_DEFAULT;
+}
+
+void 
+save_config(void)
+{
+}
 
 char *
 find_icon (char *base)
@@ -301,6 +332,7 @@ read_selected (void)
 int
 main (int argc, char *argv[])
 {
+  GtkWidget *notebook, *table, *label;
   GtkWidget *hbox;
   GtkWidget *scrolled;
   GtkWidget *selected_apps_box;
@@ -311,15 +343,26 @@ main (int argc, char *argv[])
   GtkTreeViewColumn *column;
   GtkCellRenderer *renderer;
   GtkTreeSelection *selection;
+  gchar *str;
 
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
 
+  load_config();
+  
   dialog = gtk_dialog_new ();
+  gtk_window_set_title(GTK_WINDOW(dialog), _("Buttonbox Configuration"));
 
+  notebook = gtk_notebook_new();
+  
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox), notebook, TRUE, TRUE, 0);
+  
+  /* applications tab */
   hbox = gtk_hbox_new (TRUE, 0);
-  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox), hbox, TRUE, TRUE, 0);
-
+  label = gtk_label_new(_("Applications"));
+   
+  gtk_notebook_append_page(GTK_NOTEBOOK(notebook), hbox, label);
+  
   all_apps = gtk_list_store_new (3, G_TYPE_STRING, G_TYPE_STRING, GDK_TYPE_PIXBUF);
   selected_apps = gtk_list_store_new (3, G_TYPE_STRING, G_TYPE_STRING, GDK_TYPE_PIXBUF);
 
@@ -394,6 +437,57 @@ main (int argc, char *argv[])
   gtk_box_pack_end (GTK_BOX (GTK_DIALOG (dialog)->action_area), cancel_button, FALSE, FALSE, 2);
   gtk_box_pack_end (GTK_BOX (GTK_DIALOG (dialog)->action_area), ok_button, FALSE, FALSE, 2);
 
+  /* settings tab */
+  table = gtk_table_new(2, 2, FALSE);
+  gtk_container_set_border_width(GTK_CONTAINER(table), gpe_get_border());
+  gtk_table_set_col_spacings(GTK_TABLE(table), gpe_get_boxspacing());
+  gtk_table_set_row_spacings(GTK_TABLE(table), gpe_get_boxspacing());
+  label = gtk_label_new(_("Settings"));
+   
+  gtk_notebook_append_page(GTK_NOTEBOOK(notebook), table, label);
+  
+  str = g_strdup_printf("<b>%s</b>", _("Settings"));
+  label = gtk_label_new(NULL);
+  gtk_misc_set_alignment(GTK_MISC(label), 0, 0.5);  
+  gtk_label_set_markup(GTK_LABEL(label), str);
+  g_free(str);
+  gtk_table_attach(GTK_TABLE(table), label, 0, 2, 0, 1, GTK_FILL, GTK_FILL, 0, 0);
+  
+  sb_nr = gtk_spin_button_new_with_range(1, 32, 1);
+  label = gtk_label_new(_("Amount of Buttons "));
+  gtk_misc_set_alignment(GTK_MISC(label), 0, 0.5);  
+  gtk_table_attach(GTK_TABLE(table), label, 0, 1, 1, 2, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_table_attach(GTK_TABLE(table), sb_nr, 1, 2, 1, 2, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_spin_button_set_value(GTK_SPIN_BUTTON(sb_nr), cfg.nr_slots);
+
+  sb_height = gtk_spin_button_new_with_range(8, 64, 1);
+  label = gtk_label_new(_("Button Height "));
+  gtk_misc_set_alignment(GTK_MISC(label), 0, 0.5);  
+  gtk_table_attach(GTK_TABLE(table), label, 0, 1, 2, 3, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_table_attach(GTK_TABLE(table), sb_height, 1, 2, 2, 3, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_spin_button_set_value(GTK_SPIN_BUTTON(sb_height), cfg.slot_height);
+
+  sb_width = gtk_spin_button_new_with_range(8, 64, 1);
+  label = gtk_label_new(_("Button Width "));
+  gtk_misc_set_alignment(GTK_MISC(label), 0, 0.5);  
+  gtk_table_attach(GTK_TABLE(table), label, 0, 1, 3, 4, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_table_attach(GTK_TABLE(table), sb_width, 1, 2, 3, 4, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_spin_button_set_value(GTK_SPIN_BUTTON(sb_width), cfg.slot_width);
+
+  sb_icon = gtk_spin_button_new_with_range(8, 48, 1);
+  label = gtk_label_new(_("Icon Size "));
+  gtk_misc_set_alignment(GTK_MISC(label), 0, 0.5);  
+  gtk_table_attach(GTK_TABLE(table), label, 0, 1, 4, 5, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_table_attach(GTK_TABLE(table), sb_icon, 1, 2, 4, 5, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_spin_button_set_value(GTK_SPIN_BUTTON(sb_icon), cfg.icon_size);
+
+  cb_myfiles = gtk_check_button_new_with_label(_("Show \"My Files\" Button"));
+  gtk_table_attach(GTK_TABLE(table), cb_myfiles, 0, 2, 5, 6, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(cb_myfiles), cfg.myfiles_on);
+  cb_labels = gtk_check_button_new_with_label(_("Show Button Lables"));
+  gtk_table_attach(GTK_TABLE(table), cb_labels, 0, 2, 6, 7, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(cb_labels), cfg.labels_on);
+  
   load_from ("/usr/share/applications");
 
   read_selected ();

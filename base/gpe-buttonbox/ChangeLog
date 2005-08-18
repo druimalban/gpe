@@ -1,5 +1,8 @@
 2005-08-18  Florian Boor <florian@kernelconcepts.de>
 
+	* gpe-buttonbox-config.c: Make multitabbed dialog, add widgets for 
+	                          configuration settings. Some tweaks and fixes.
+	* gpe-buttonbox.c: Add some additional locations to search files in.
 	* gpe-buttonbox.c: Fix some config bugs, fix some warnings. Make button 
 	                   lables configurable.
 	* system-tray.c, globals.h: Fix more warnings.
