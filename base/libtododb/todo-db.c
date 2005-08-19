@@ -159,26 +159,28 @@ todo_db_start (void)
       return FALSE;
     }
 
-  sqlite_exec (sqliteh, schema2_str, NULL, NULL, &err);
-  sqlite_exec (sqliteh, schema3_str, NULL, NULL, &err);
+  if (sqlite_exec (sqliteh, schema2_str, NULL, NULL, &err))
+      free (err);
+  if (sqlite_exec (sqliteh, schema3_str, NULL, NULL, &err))
+      free (err);
      
   if (dbversion == 1) 
     {
       if (sqlite_exec (sqliteh, "select uid from todo_urn", item_callback, NULL, &err))
-	{
-	  gpe_error_box (err);
-	  free (err);
-	  return -1;
-	}
+        {
+          gpe_error_box (err);
+          free (err);
+          return -1;
+        }
     }
   else if (dbversion == 0)
     {
       if (sqlite_exec (sqliteh, "select uid from todo_urn", item_callback, NULL, &err))
-	{
-	  gpe_error_box (err);
-	  free (err);
-	  return -1;
-	}
+        {
+          gpe_error_box (err);
+          free (err);
+          return -1;
+        }
       
       convert_old_db (dbversion, sqliteh);
       dbversion = 1;
