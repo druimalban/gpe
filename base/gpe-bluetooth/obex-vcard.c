@@ -42,6 +42,10 @@ do_import_vcard (MIMEDirVCard *card)
   const gchar *home;
   char *err = NULL;
   int id;
+  char *name = NULL;
+  char *family_name = NULL;
+  char *given_name = NULL;
+  char *company = NULL;
 
   home = g_get_home_dir ();
   
@@ -57,8 +61,9 @@ do_import_vcard (MIMEDirVCard *card)
       return;
     }
  
-  if (sqlite_exec (db, "insert into contacts_urn values (NULL)", NULL, NULL, &err) != SQLITE_OK)
-    {
+   if (sqlite_exec (db, "insert into contacts_urn values (NULL, NULL, NULL, NULL)",
+                    NULL, NULL, &err) != SQLITE_OK)
+   {
       gpe_error_box (err);
       free (err);
       sqlite_close (db);
@@ -73,10 +78,32 @@ do_import_vcard (MIMEDirVCard *card)
     {
       gpe_tag_pair *t = i->data;
 
-      sqlite_exec_printf (db, "insert into contacts values ('%d', '%q', '%q')", NULL, NULL, NULL,
-			  id, t->tag, t->value);
+      sqlite_exec_printf (db, "insert into contacts values ('%d', '%q', '%q')",
+                          NULL, NULL, NULL, id, t->tag, t->value);
+      if (!strcasecmp(t->tag, "NAME"))
+          name = g_strdup(t->value);
+      else if (!strcasecmp(t->tag, "FAMILY_NAME"))
+          family_name = g_strdup(t->value);
+      else if (!strcasecmp(t->tag, "GIVEN_NAME"))
+          given_name = g_strdup(t->value);
+      else if (!strcasecmp(t->tag, "COMPANY"))
+          company = g_strdup(t->value);
     }
   
+    if (!name) 
+      name = g_strdup_printf("%s %s", given_name ? given_name : "", 
+                             family_name ? family_name : "");
+    
+    if (sqlite_exec_printf (db,
+                             "update contacts_urn set name='%q', family_name='%q', company='%q' where (urn=%d)",
+				             NULL, NULL, &err, name, family_name, company, id))
+    {
+      gpe_error_box (err);
+      free (err);
+      sqlite_close (db);
+      return;
+    }
+	
   gpe_tag_list_free (tags);
 
   sqlite_close (db);
@@ -112,4 +139,3 @@ import_vcard (const gchar *data, size_t len)
       g_object_unref (card);
     }
 }
-
