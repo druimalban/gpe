@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gpe-contacts 0.37\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-08-04 18:55+0200\n"
+"POT-Creation-Date: 2005-08-04 19:15+0200\n"
 "PO-Revision-Date: 2005-05-03 14:48-0400\n"
 "Last-Translator: Aleksandar Jelenak <jelenak@netlinkplus.net>\n"
 "Language-Team: Serbian <gnu@prevod.org>\n"
@@ -14,425 +14,426 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: categories.c:105
+#: ../categories.c:105
 msgid "Category name must not be blank"
 msgstr "Име категорије мора бити попуњено"
 
-#: categories.c:115
+#: ../categories.c:115
 msgid "A category by that name already exists"
 msgstr "Истоимена категорија већ постоји"
 
-#: categories.c:147
+#: ../categories.c:147
 msgid "Name:"
 msgstr "Име:"
 
-#: categories.c:174 categories.c:328
+#: ../categories.c:174 ../categories.c:328
 msgid "New category"
 msgstr "Нова категорија"
 
-#: categories.c:329
+#: ../categories.c:329
 msgid "Tap here to add a new category."
 msgstr "Лупни овде за нову категорију."
 
-#: categories.c:333
+#: ../categories.c:333
 msgid "Delete category"
 msgstr "Избриши категорију"
 
-#: categories.c:334
+#: ../categories.c:334
 msgid "Tap here to delete the selected category."
 msgstr "Лупни овде за брисање означене категорије."
 
-#: categories.c:401
+#: ../categories.c:401
 msgid "Select categories"
 msgstr "Изабери категорије"
 
 #. TRANSLATORS: kB = kilo bytes
-#: configure.c:130 configure.c:340
+#: ../configure.c:130 ../configure.c:340
 msgid "Current size:"
 msgstr "Тренутна величина:"
 
-#: configure.c:131
+#: ../configure.c:131
 msgid "kB (optimised)"
 msgstr "kB (оптимизовано)"
 
-#: configure.c:177
+#: ../configure.c:177
 msgid "Detail panel:"
 msgstr "Табла појединости:"
 
-#: configure.c:206
+#: ../configure.c:206
 msgid "NAME"
 msgstr "ИМЕ"
 
-#: configure.c:216
+#: ../configure.c:216
 msgid "Add"
 msgstr "Додај"
 
-#: configure.c:223
+#: ../configure.c:223
 msgid "Remove"
 msgstr "Уклони"
 
-#: configure.c:245
+#: ../configure.c:245
 msgid "Label"
 msgstr "Ознака"
 
-#: configure.c:250
+#: ../configure.c:250
 msgid "Data item"
 msgstr "Податак"
 
-#: configure.c:294
+#: ../configure.c:294
 msgid "Screen Layout"
 msgstr "Изглед екрана"
 
-#: configure.c:300
+#: ../configure.c:300
 msgid "List position"
 msgstr "Положај списак"
 
-#: configure.c:303
+#: ../configure.c:303
 msgid "left"
 msgstr "лево"
 
-#: configure.c:305
+#: ../configure.c:305
 msgid "right"
 msgstr "десно"
 
-#: configure.c:333
+#: ../configure.c:333
 msgid "Database Size"
 msgstr "Величина базе података"
 
-#: configure.c:340
+#: ../configure.c:340
 msgid "kB"
 msgstr "kB"
 
-#: configure.c:345
+#: ../configure.c:345
 msgid "Actions"
 msgstr "Дејства"
 
-#: configure.c:352
+#: ../configure.c:352
 msgid "Optimise database"
 msgstr "Оптимизирај базу података"
 
-#: configure.c:355
+#: ../configure.c:355
 msgid "Run"
 msgstr "Покрени"
 
-#: configure.c:461
+#: ../configure.c:461
 msgid "Editing Layout"
 msgstr "Уређивање изгледа"
 
-#: configure.c:463
+#: ../configure.c:463
 msgid "Setup"
 msgstr "Подешавање"
 
-#: configure.c:464
+#: ../configure.c:464
 msgid "Database"
 msgstr "База података"
 
-#: configure.c:496
+#: ../configure.c:496
 msgid "Contacts: Configuration"
 msgstr "Контакти: Подешавање"
 
-#: db.c:255
+#: ../db.c:255
 msgid "Name"
 msgstr "Име"
 
-#: db.c:256
+#: ../db.c:256
 msgid "Phone"
 msgstr "Телефон"
 
-#: db.c:257
+#: ../db.c:257
 msgid "EMail"
 msgstr "Епошта"
 
-#: edit-vcard.desktop.in.h:1
+#: ../edit-vcard.desktop.in.h:1
 msgid "Edit personal vcard"
 msgstr "Уреди лични vcard"
 
-#: edit-vcard.desktop.in.h:2
+#: ../edit-vcard.desktop.in.h:2
 msgid "My VCard"
 msgstr "Мој VCard"
 
-#: editing.c:114 main.c:1352
+#: ../editing.c:114 ../main.c:1352
 msgid "Details"
 msgstr "Детаљи"
 
-#: editing.c:271
+#: ../editing.c:271
 msgid "no year"
 msgstr "без године"
 
-#: editing.c:450 namedetail.c:66 structure.c:177
+#: ../editing.c:450 ../namedetail.c:66 ../structure.c:177
 msgid "Cancel"
 msgstr "Поништи"
 
-#: editing.c:451 namedetail.c:64
+#: ../editing.c:451 ../namedetail.c:64
 msgid "OK"
 msgstr ""
 
-#: editing.c:452
+#: ../editing.c:452
 #, fuzzy
 msgid "Image..."
 msgstr "Слика"
 
-#: editing.c:560 main.c:502 main.c:629
+#: ../editing.c:560 ../main.c:502 ../main.c:629
 msgid "Categories"
 msgstr "Категорије"
 
-#: editing.c:1168
+#: ../editing.c:1168
 msgid "Select image"
 msgstr "Изабери слику"
 
-#: export.c:168
+#: ../export.c:168
 msgid "Save as..."
 msgstr "Сачувај као..."
 
 #. create dialog window
-#: finddlg.c:37
+#: ../finddlg.c:37
 msgid "Find Contacts"
 msgstr "Нађи контакте"
 
 #. supply action area
-#: finddlg.c:49
+#: ../finddlg.c:49
 msgid "Search for:"
 msgstr "Претрага за:"
 
-#: gpe-contacts.desktop.in.h:1 main.c:1288
+#: ../gpe-contacts.desktop.in.h:1 ../main.c:1288
 msgid "Contacts"
 msgstr "Контакти"
 
-#: gpe-contacts.desktop.in.h:2
+#: ../gpe-contacts.desktop.in.h:2
 msgid "GPE Contacts"
 msgstr "GPE Контакти"
 
-#: main.c:77 main.c:179
+#: ../main.c:77 ../main.c:179
 msgid "Edit Contact"
 msgstr "Уреди контакт"
 
-#: main.c:83 main.c:195
+#: ../main.c:83 ../main.c:195
 msgid "Really delete this contact?"
 msgstr "Заиста избрисати овај контакт?"
 
-#: main.c:83 main.c:195 structure.c:176
+#: ../main.c:83 ../main.c:195 ../structure.c:176
 msgid "Confirm"
 msgstr "Потврди"
 
-#: main.c:135
+#: ../main.c:135
 msgid "All categories"
 msgstr "Све категорије"
 
-#: main.c:157
+#: ../main.c:157
 msgid "New Contact"
 msgstr "Нови контакт"
 
-#: main.c:513
+#: ../main.c:513
 msgid "No contact selected."
 msgstr "Без изабраног контакта."
 
 #. create and set up dialog
-#: main.c:585 main.c:1424 main.c:1496
+#. * detail section *
+#: ../main.c:585 ../main.c:1424 ../main.c:1496
 msgid "Contact"
 msgstr "Контакт"
 
-#: main.c:1208
+#: ../main.c:1208
 msgid "Choose file"
 msgstr "Изабери датотеку"
 
-#: main.c:1236
+#: ../main.c:1236
 msgid "Import of"
 msgstr "Увоз"
 
-#: main.c:1236
+#: ../main.c:1236
 msgid "files failed:"
 msgstr "датотека није успело:"
 
-#: main.c:1240
+#: ../main.c:1240
 msgid "Import successful"
 msgstr "Увоз успешан"
 
-#: main.c:1305
+#: ../main.c:1305
 msgid "Tap this button to add a new contact."
 msgstr "Лупни овде за нови контакт."
 
-#: main.c:1314
+#: ../main.c:1314
 msgid "Tap here to edit the selected contact."
 msgstr "Лупни овде за уређивање означеног контакта."
 
-#: main.c:1324
+#: ../main.c:1324
 msgid "Tap here to delete the selected contact."
 msgstr "Лупни овде за брисање означеног контакта."
 
-#: main.c:1344
+#: ../main.c:1344
 msgid "Find a contact by searching for any data."
 msgstr "Нађи контакт тражећи по било ком податку."
 
-#: main.c:1354
+#: ../main.c:1354
 msgid "Tap here to show contacts details."
 msgstr "Лупни овде за детаље контакта."
 
-#: main.c:1364
+#: ../main.c:1364
 msgid "Tap here to configure this program."
 msgstr "Лупни овде за подешавање програма."
 
-#: main.c:1372
+#: ../main.c:1372
 msgid "Import"
 msgstr "Увоз"
 
-#: main.c:1374
+#: ../main.c:1374
 msgid "Open file to import a contact from it."
 msgstr "Отвори датотеку због увоза контакта."
 
-#: main.c:1387
+#: ../main.c:1387
 msgid "Tap here to exit gpe-contacts."
 msgstr "Лупни овде за напуштање gpe-contacts."
 
 #. * find and categories section *
-#: main.c:1453
+#: ../main.c:1453
 msgid "Find:"
 msgstr "Нађи:"
 
-#: main.c:1460
+#: ../main.c:1460
 msgid "in"
 msgstr "у"
 
-#: main.c:1590
+#: ../main.c:1590
 #, c-format
 msgid "Could not import file %s."
 msgstr "Не могу увести датотеку „%s“."
 
-#: main.c:1595
+#: ../main.c:1595
 #, c-format
 msgid "File %s imported sucessfully."
 msgstr "Датотека „%s“ увезена успешно.."
 
-#: main.c:1620
+#: ../main.c:1620
 msgid "My Card"
 msgstr "Моја карта"
 
-#: main.c:1623
+#: ../main.c:1623
 msgid "Saving vcard failed"
 msgstr "Снимање vcard није успело"
 
 #. TRANSLATORS: These abbreviations are a list of common titles used in a name
-#: namedetail.c:30
+#: ../namedetail.c:30
 msgid "Dr."
 msgstr "др"
 
-#: namedetail.c:30
+#: ../namedetail.c:30
 msgid "Miss"
 msgstr "г-ца"
 
-#: namedetail.c:30
+#: ../namedetail.c:30
 msgid "Mr."
 msgstr "г-дин"
 
-#: namedetail.c:30
+#: ../namedetail.c:30
 msgid "Mrs."
 msgstr "г-ђа"
 
-#: namedetail.c:30
+#: ../namedetail.c:30
 msgid "Ms."
 msgstr "г-(ђ/ц)а"
 
-#: namedetail.c:30
+#: ../namedetail.c:30
 msgid "Prof."
 msgstr "проф."
 
-#: namedetail.c:30
+#: ../namedetail.c:30
 msgid "Sir"
 msgstr "сер"
 
 #. TRANSLATORS: This is a list of common name suffixes
-#: namedetail.c:32
+#: ../namedetail.c:32
 msgid "Jr."
 msgstr "млађи"
 
-#: namedetail.c:32
+#: ../namedetail.c:32
 msgid "Esq."
 msgstr "благородни"
 
-#: namedetail.c:32
+#: ../namedetail.c:32
 msgid "Sr."
 msgstr "старији"
 
-#: namedetail.c:32
+#: ../namedetail.c:32
 msgid "I"
 msgstr "I"
 
-#: namedetail.c:32
+#: ../namedetail.c:32
 msgid "II"
 msgstr "II"
 
-#: namedetail.c:32
+#: ../namedetail.c:32
 msgid "III"
 msgstr "III"
 
-#: namedetail.c:62 namedetail.c:69
+#: ../namedetail.c:62 ../namedetail.c:69
 msgid "Edit Name Details"
 msgstr "Уреди детаље имена"
 
-#: namedetail.c:97
+#: ../namedetail.c:97
 msgid "First name:"
 msgstr "Прво име:"
 
-#: namedetail.c:98
+#: ../namedetail.c:98
 msgid "Middle name:"
 msgstr "Средње име:"
 
-#: namedetail.c:99
+#: ../namedetail.c:99
 msgid "Last name:"
 msgstr "Презиме:"
 
-#: namedetail.c:100
+#: ../namedetail.c:100
 msgid "Suffix:"
 msgstr "Наставак:"
 
-#: namedetail.c:101
+#: ../namedetail.c:101
 msgid "Title:"
 msgstr "Наслов:"
 
-#: structure.c:105 structure.c:235
+#: ../structure.c:105 ../structure.c:235
 msgid "New page"
 msgstr "Нова страна"
 
-#: structure.c:105 structure.c:124 structure.c:149
+#: ../structure.c:105 ../structure.c:124 ../structure.c:149
 msgid "Title"
 msgstr "Наслов"
 
-#: structure.c:124
+#: ../structure.c:124
 msgid "New group"
 msgstr "Нова група"
 
-#: structure.c:136 structure.c:166
+#: ../structure.c:136 ../structure.c:166
 msgid "No container selected"
 msgstr "Без одабраног садржаоца"
 
-#: structure.c:150
+#: ../structure.c:150
 msgid "Tag"
 msgstr "Ознака"
 
-#: structure.c:152
+#: ../structure.c:152
 msgid "New field"
 msgstr "Ново поље"
 
-#: structure.c:176
+#: ../structure.c:176
 msgid "Really delete this field?"
 msgstr "Заиста избрисати ово поље?"
 
-#: structure.c:177
+#: ../structure.c:177
 msgid "Delete"
 msgstr "Избриши"
 
-#: structure.c:234
+#: ../structure.c:234
 msgid "Page"
 msgstr "Страна"
 
-#: structure.c:235
+#: ../structure.c:235
 msgid "Tap here to add a page."
 msgstr "Лупни овде за нову страну"
 
-#: structure.c:251
+#: ../structure.c:251
 msgid "Delete item"
 msgstr "Избриши ставку"
 
-#: structure.c:251
+#: ../structure.c:251
 msgid "Tap here to delete the selected item."
 msgstr "Лупини овде за брисање означене ставке."
 

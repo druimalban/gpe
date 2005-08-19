@@ -716,7 +716,7 @@ commit_person (struct person *p)
   for (iter = p->data; iter; iter = iter->next)
     {
       struct tag_value *v = iter->data;
-      if (v->value && v->value[0] && (strcmp(v->tag, "MODIFIED")))
+      if (v->value && v->value[0] && (strcasecmp(v->tag, "MODIFIED")))
         {
 	      r = sqlite_exec_printf (db,
                                   "insert into contacts values(%d,'%q','%q')",
@@ -724,11 +724,11 @@ commit_person (struct person *p)
           if (r)
 	        goto error;
           
-          if (!strcmp(v->tag, "NAME"))
+          if (!strcasecmp(v->tag, "NAME"))
               p->name = g_strdup(v->value);
-          else if (!strcmp(v->tag, "FAMILY_NAME"))
+          else if (!strcasecmp(v->tag, "FAMILY_NAME"))
               p->family_name = g_strdup(v->value);
-          else if (!strcmp(v->tag, "COMPANY"))
+          else if (!strcasecmp(v->tag, "COMPANY"))
               p->company = g_strdup(v->value);
         }
     }

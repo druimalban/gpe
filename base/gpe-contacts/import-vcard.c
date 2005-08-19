@@ -43,6 +43,7 @@ do_import_vcard (MIMEDirVCard *card)
   int id;
   char *name = NULL;
   char *family_name = NULL;
+  char *given_name = NULL;
   char *company = NULL;
 
   home = g_get_home_dir ();
@@ -79,14 +80,20 @@ do_import_vcard (MIMEDirVCard *card)
       sqlite_exec_printf (db, "insert into contacts values ('%d', '%q', '%q')", NULL, NULL, NULL,
                           id, t->tag, t->value);
     
-      if (!strcmp(t->tag, "NAME"))
+      if (!strcasecmp(t->tag, "NAME"))
           name = g_strdup(t->value);
-      else if (!strcmp(t->tag, "FAMILY_NAME"))
+      else if (!strcasecmp(t->tag, "FAMILY_NAME"))
           family_name = g_strdup(t->value);
-      else if (!strcmp(t->tag, "COMPANY"))
+      else if (!strcasecmp(t->tag, "GIVEN_NAME"))
+          given_name = g_strdup(t->value);
+      else if (!strcasecmp(t->tag, "COMPANY"))
           company = g_strdup(t->value);
     }
-  
+    
+    if (!name) 
+      name = g_strdup_printf("%s %s", given_name ? given_name : "", 
+                             family_name ? family_name : "");
+    
     if (sqlite_exec_printf (db,
                              "update contacts_urn set name='%q', family_name='%q', company='%q' where (urn=%d)",
 				             NULL, NULL, &err, name, family_name, company, id))
