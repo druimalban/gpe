@@ -1,3 +1,9 @@
+#ifndef _GLOBALS_H
+#define _GLOBALS_H
+
+#include <X11/Xlib.h>
+#include <X11/Xatom.h>
+
 #define _NET_WM_WINDOW_TYPE_DOCK 0
 #define _NET_WM_WINDOW_TYPE 1
 #define _NET_WM_STATE_HIDDEN 2
@@ -23,3 +29,4 @@ extern Display *dpy;
 extern GtkWidget *window;
 
 extern gboolean system_tray_init (Display *dpy, Window window);
+#endif

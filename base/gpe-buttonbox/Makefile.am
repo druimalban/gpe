@@ -1,6 +1,8 @@
 bin_PROGRAMS = gpe-buttonbox gpe-buttonbox-config
 
-gpe_buttonbox_SOURCES = gpe-buttonbox.c system-tray.c
+gpe_buttonbox_SOURCES = gpe-buttonbox.c system-tray.c cfgfile.c
+
+gpe_buttonbox_config_SOURCES = gpe-buttonbox-config.c cfgfile.c
 
 INCLUDES = @BUTTONBOX_CFLAGS@ -DPREFIX=\"@prefix@\" -D_GNU_SOURCE -Wall
            

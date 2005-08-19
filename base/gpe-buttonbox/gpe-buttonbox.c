@@ -22,9 +22,6 @@
 #include <gdk/gdkx.h>
 #include <libintl.h>
 
-#include <X11/Xlib.h>
-#include <X11/Xatom.h>
-
 #include <gpe/init.h>
 #include <gpe/pixmaps.h>
 #include <gpe/gpewindowlist.h>
@@ -39,6 +36,7 @@
 
 #include "config.h"
 #include "globals.h"
+#include "cfgfile.h"
 
 #define _(_x) gettext (_x)
 
@@ -57,18 +55,7 @@ GdkPixbuf *other_icon;
 
 char **g_argv;
 
-#define CONFIGFILE "buttonbox.conf"
 #define MY_PIXMAPS_DIR "gpe-buttonbox/"
-
-typedef struct {
-  int nr_slots;
-  int slot_width;
-  int slot_height;
-  int icon_size;
-  gboolean myfiles_on;
-  gboolean labels_on;
-  int fixed_slots;
-}t_cfg;
 
 t_cfg cfg; 
 
@@ -130,99 +117,6 @@ struct gpe_icon my_icons[] =
 
 static gboolean is_viewable (Display *dpy, Window w);
 
-
-static gboolean
-config_load(void)
-{
-  GKeyFile *configfile;
-  GError *err = NULL;
-  gchar *fname = g_strdup_printf("%s/%s", g_get_home_dir(), CONFIGFILE);
-  gint value;
-
-  configfile = g_key_file_new();
-
-  cfg.slot_width = SLOT_WIDTH_DEFAULT;
-  cfg.slot_height = SLOT_HEIGHT_DEFAULT;
-  cfg.nr_slots = NR_SLOTS_DEFAULT;
-  cfg.icon_size = ICON_SIZE_DEFAULT;
-  cfg.myfiles_on = MYFILES_DEFAULT;
-  cfg.labels_on = LABLES_DEFAULT;
-
-  cfg.fixed_slots = 1;
-	
-  if (!g_key_file_load_from_file (configfile, fname,
-                                  G_KEY_FILE_KEEP_COMMENTS, &err)
-      && !g_key_file_load_from_file (configfile, "/etc/gpe/" CONFIGFILE,
-                                  G_KEY_FILE_KEEP_COMMENTS, &err))
-    {
-      g_error_free(err);
-      g_free(fname);
-      return FALSE;
-    }
-    
-  if (g_key_file_has_group(configfile, "Global"))
-    {
-      value = g_key_file_get_integer(configfile, 
-                                     "Global", "slot_width", &err);
-      if (err)
-        {
-            g_error_free(err);
-            err = NULL;
-        }
-      else
-		cfg.slot_width = value;
-      value = g_key_file_get_integer(configfile, 
-                                     "Global", "slot_height", &err);
-      if (err)
-        {
-            g_error_free(err);
-            err = NULL;
-        }
-      else
-		cfg.slot_height = value;
-      value = g_key_file_get_integer(configfile, 
-                                     "Global", "slots", &err);
-      if (err)
-        {
-          g_error_free(err);
-          err = NULL;
-        }
-      else
-		cfg.nr_slots = value;
-      value = g_key_file_get_integer(configfile, 
-                                     "Global", "icon_size", &err);
-      if (err)
-        {
-          g_error_free(err);
-          err = NULL;
-        }
-      else
-		cfg.icon_size = value;
-      value = g_key_file_get_boolean(configfile, 
-                                     "Global", "show_myfiles", &err);
-      if (err)
-        {
-          g_error_free(err);
-          err = NULL;
-        }
-	  else
-		cfg.myfiles_on = value;
-      value = g_key_file_get_boolean(configfile, 
-                                     "Global", "show_labels", &err);
-      if (err)
-        {
-          g_error_free(err);
-          err = NULL;
-        }
-	  else
-		cfg.labels_on = value;
-    }
-  if (cfg.myfiles_on)
-      cfg.fixed_slots = 2;
-  g_key_file_free(configfile);
-  g_free(fname);
-  return TRUE;
-}
   
 /* copied from libmatchbox */
 static void

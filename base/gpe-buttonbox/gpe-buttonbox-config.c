@@ -27,27 +27,18 @@
 
 #include <gpe/init.h>
 #include <gpe/pixmaps.h>
-#include <gpe/gpewindowlist.h>
-#include <gpe/popup.h>
+#include <gpe/errorbox.h>
 
-#include <gpe/launch.h>
+#include <gpe/spacing.h>
 #include <gpe/desktop_file.h>
 
 #include <locale.h>
 
 #include "config.h"
 #include "globals.h"
+#include "cfgfile.h"
 
 #define _(_x) gettext (_x)
-
-typedef struct {
-  int nr_slots;
-  int slot_width;
-  int slot_height;
-  int icon_size;
-  gboolean myfiles_on;
-  gboolean labels_on;
-}t_cfg;
 
 t_cfg cfg; 
 
@@ -58,21 +49,6 @@ GtkWidget *add_button, *remove_button;
 GtkWidget *sb_nr, *sb_height, *sb_width, *sb_icon;
 GtkWidget *cb_labels, *cb_myfiles;
 
-void 
-load_config(void)
-{
-  cfg.slot_width = SLOT_WIDTH_DEFAULT;
-  cfg.slot_height = SLOT_HEIGHT_DEFAULT;
-  cfg.nr_slots = NR_SLOTS_DEFAULT;
-  cfg.icon_size = ICON_SIZE_DEFAULT;
-  cfg.myfiles_on = MYFILES_DEFAULT;
-  cfg.labels_on = LABLES_DEFAULT;
-}
-
-void 
-save_config(void)
-{
-}
 
 char *
 find_icon (char *base)
@@ -205,19 +181,29 @@ save_and_quit (void)
   if (fp)
     {
       if (gtk_tree_model_get_iter_first (GTK_TREE_MODEL (selected_apps), &iter))
-	{
-	  do
-	    {
-	      gchar *name;
-	      gtk_tree_model_get (GTK_TREE_MODEL (selected_apps), &iter, 0, &name, -1);
-	      fputs (name, fp);
-	      fputc ('\n', fp);
-	    } while (gtk_tree_model_iter_next (GTK_TREE_MODEL (selected_apps), &iter));
-	}
+        {
+          do
+            {
+              gchar *name;
+              gtk_tree_model_get (GTK_TREE_MODEL (selected_apps), &iter, 0, &name, -1);
+              fputs (name, fp);
+              fputc ('\n', fp);
+            } while (gtk_tree_model_iter_next (GTK_TREE_MODEL (selected_apps), &iter));
+        }
       fclose (fp);
     }
   g_free (path);
 
+  cfg.nr_slots = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(sb_nr));
+  cfg.slot_width = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(sb_width));
+  cfg.slot_height = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(sb_height));
+  cfg.icon_size = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(sb_icon));
+  cfg.myfiles_on = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(cb_myfiles));
+  cfg.labels_on = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(cb_labels));
+	
+  if (!config_save())
+    gpe_error_box(_("Unable to write configuration to file."));
+	
   system ("killall -HUP gpe-buttonbox");
 
   gtk_main_quit ();
@@ -348,7 +334,7 @@ main (int argc, char *argv[])
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
 
-  load_config();
+  config_load();
   
   dialog = gtk_dialog_new ();
   gtk_window_set_title(GTK_WINDOW(dialog), _("Buttonbox Configuration"));
@@ -454,7 +440,7 @@ main (int argc, char *argv[])
   gtk_table_attach(GTK_TABLE(table), label, 0, 2, 0, 1, GTK_FILL, GTK_FILL, 0, 0);
   
   sb_nr = gtk_spin_button_new_with_range(1, 32, 1);
-  label = gtk_label_new(_("Amount of Buttons "));
+  label = gtk_label_new(_("Number of Buttons "));
   gtk_misc_set_alignment(GTK_MISC(label), 0, 0.5);  
   gtk_table_attach(GTK_TABLE(table), label, 0, 1, 1, 2, GTK_FILL, GTK_FILL, 0, 0);
   gtk_table_attach(GTK_TABLE(table), sb_nr, 1, 2, 1, 2, GTK_FILL, GTK_FILL, 0, 0);

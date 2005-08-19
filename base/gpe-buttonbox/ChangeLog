@@ -1,3 +1,9 @@
+2005-08-19  Florian Boor <florian@kernelconcepts.de>
+
+	* Makefile.am, *.c *.h: Move configfile code to external file.
+	* gpe-buttonbox-config.c: Fix some minor bugs.
+    * cfgfile.*: Implement saving settings to file.
+
 2005-08-18  Florian Boor <florian@kernelconcepts.de>
 
 	* gpe-buttonbox-config.c: Make multitabbed dialog, add widgets for 
