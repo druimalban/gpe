@@ -330,13 +330,23 @@ main (int argc, char *argv[])
   GtkCellRenderer *renderer;
   GtkTreeSelection *selection;
   gchar *str;
+  gint size_x, size_y;
 
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
 
   config_load();
   
-  dialog = gtk_dialog_new ();
+   /* screen layout detection */
+   size_x = gdk_screen_width();
+   size_y = gdk_screen_height();  
+	
+   /* create config window */	
+   dialog = gtk_dialog_new();
+	
+   if ((size_x < 640) || (size_y < 480))
+      gtk_window_set_type_hint(GTK_WINDOW(dialog), GDK_WINDOW_TYPE_HINT_NORMAL);
+  
   gtk_window_set_title(GTK_WINDOW(dialog), _("Buttonbox Configuration"));
 
   notebook = gtk_notebook_new();
