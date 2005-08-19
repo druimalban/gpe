@@ -4,15 +4,17 @@ v0.16 - .....	- ../08/2005 - Philippe De Swert
 * Hybrid stop/reload button
 * Hiding/unhiding Url bar
 * Bookmarks
+* fixed bug when loading a file that could not be found
 
 v0.15 - Happy Koen release - 31/07/2005 - Philippe De Swert
 
 * Maemo / Hildon support
 * Fullscreen mode of the application
+* proxy support (has to be set in the env)
 
 v0.14 - 10/07/2005 - Philippe De Swert
 
-* Cleanud op big screen extra's
+* Cleanup of big screen extra's
 * Added zoom in/out button for big screens
 * Fixed some bugs related to stop, reload, back and forward not stopping loading first
 * Moved some functions to a better location + added more documentation

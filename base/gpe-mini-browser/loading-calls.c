@@ -59,6 +59,7 @@ fetch_url (const gchar * url, GtkWidget * html)
 #ifdef DEBUG
 	  fprintf (stderr, "Could not open %s\n", url);
 #endif
+	  file = TRUE;
 	  gpe_error_box ("Could not open file");
 	}
       else

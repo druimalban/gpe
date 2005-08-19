@@ -183,11 +183,11 @@ main (int argc, char *argv[])
   bookmarks_button = gtk_tool_button_new_from_stock (GTK_STOCK_INDENT);
   gtk_tool_item_set_homogeneous(bookmarks_button, FALSE);
   gtk_tool_button_set_label(GTK_TOOL_BUTTON(bookmarks_button), "Bookmarks");
-//  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), bookmarks_button, -1);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), bookmarks_button, -1);
   
   separator = gtk_separator_tool_item_new();
   gtk_tool_item_set_homogeneous(separator, FALSE);
-//  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), separator, -1); 
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), separator, -1); 
 
   /* only show full Url bar if the screen is bigger than 240x320 | 320x240 */
   if ((width > 320) || (height > 320))
@@ -238,11 +238,11 @@ main (int argc, char *argv[])
 
   /* 
 	DEBUG CODE!
-   only show icons if the screen is 240x320 | 320x240 or smaller 
+   only show icons if the screen is 240x320 | 320x240 or smaller*/ 
   if ((width <= 240) || (height <= 240))
     gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
-  
-   //gtk_toolbar_set_icon_size(GTK_TOOLBAR(toolbar), GTK_ICON_SIZE_SMALL_TOOLBAR);
+  gtk_toolbar_set_icon_size(GTK_TOOLBAR(toolbar), GTK_ICON_SIZE_SMALL_TOOLBAR);
+  /*
     gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_BOTH);
 */
   gtk_box_pack_start (GTK_BOX (contentbox), toolbar, FALSE, FALSE, 0);

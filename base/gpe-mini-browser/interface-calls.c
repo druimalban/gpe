@@ -388,45 +388,139 @@ void hide_url_bar (GtkWidget * button, struct urlbar_data * url_bar)
 
 void show_bookmarks (GtkWidget * button, Webi * html)
 {
-	GtkWidget *bookmarks_window, *bookbox;
+	GtkWidget *bookmarks_window, *bookbox, *scroll_window, *bookmark_list;
+	GtkTreeIter iter;
 	GtkToolbar *booktool;
-	GtkToolItem *add_current, *add_new, *del, *new_category, *del_category;
+	GtkToolItem *add, *del, *open_bookmark;
+	GtkListStore *model;
+	GtkCellRenderer *cell;
+	GtkTreeViewColumn *column;
 
 	bookmarks_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
         gtk_window_set_title(GTK_WINDOW(bookmarks_window), "Bookmarks");
-	//temporary debug code
- 	gtk_window_set_default_size (GTK_WINDOW (bookmarks_window), 800, 480);
+	gtk_window_set_default_size(GTK_WINDOW(bookmarks_window), 240, 320);
 
 	bookbox = gtk_vbox_new(FALSE, 0);
 	booktool = GTK_TOOLBAR(gtk_toolbar_new());
 
-	add_current = gtk_tool_button_new_from_stock (GTK_STOCK_ADD);
-	gtk_tool_item_set_homogeneous (add_current, FALSE);
-        gtk_tool_button_set_label (GTK_TOOL_BUTTON(add_current), "Add Current");
-	gtk_toolbar_insert (booktool, add_current, -1);
-	
-	add_new = gtk_tool_button_new_from_stock (GTK_STOCK_NEW);
-	gtk_tool_item_set_homogeneous (add_new, FALSE);
-        gtk_tool_button_set_label (GTK_TOOL_BUTTON(add_new), "Add New");
-	gtk_toolbar_insert (booktool, add_new, -1);
+	add = gtk_tool_button_new_from_stock (GTK_STOCK_ADD);
+	gtk_tool_item_set_homogeneous (add, FALSE);
+	gtk_toolbar_insert (booktool, add, -1);
 	
 	del = gtk_tool_button_new_from_stock (GTK_STOCK_REMOVE);
 	gtk_tool_item_set_homogeneous (del, FALSE);
 	gtk_toolbar_insert (booktool, del, -1);
 
-	new_category = gtk_tool_button_new_from_stock (GTK_STOCK_EDIT);
-	gtk_tool_item_set_homogeneous (new_category, FALSE);
-        gtk_tool_button_set_label (GTK_TOOL_BUTTON(new_category), "New Category");
-	gtk_toolbar_insert (booktool, new_category, -1);
+        open_bookmark = gtk_tool_button_new_from_stock (GTK_STOCK_OPEN);
+	gtk_tool_item_set_homogeneous (open_bookmark, FALSE);
+	gtk_toolbar_insert (booktool, open_bookmark, -1);
 
-	del_category = gtk_tool_button_new_from_stock (GTK_STOCK_DELETE);
-	gtk_tool_item_set_homogeneous (del_category, FALSE);
-	gtk_tool_button_set_label (GTK_TOOL_BUTTON(del_category), "Delete Category");
-	gtk_toolbar_insert (booktool, del_category, -1);
-     
-	gtk_box_pack_start(GTK_BOX(bookbox), GTK_WIDGET(booktool), FALSE, FALSE, 0);
-	gtk_container_add(GTK_CONTAINER(bookmarks_window), bookbox);
+	// scrolled window with bookmark list
+	scroll_window = gtk_scrolled_window_new(NULL, NULL);
+	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW(scroll_window),
+					GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+	bookmark_list = gtk_tree_view_new();
+	model = gtk_list_store_new (1, G_TYPE_STRING);
+	gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (bookmark_list), FALSE);
+	gtk_tree_view_set_model(GTK_TREE_VIEW(bookmark_list), GTK_TREE_MODEL(model));
+        gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scroll_window), bookmark_list);
 	
+	int i;
+	for(i=0; i < 15; i++)
+	{
+		gchar *msg = g_strdup_printf("gpe.handhelds.org/%d", i);
+		gtk_list_store_append(GTK_LIST_STORE(model), &iter);
+		gtk_list_store_set(GTK_LIST_STORE(model), &iter, 0, msg, -1);
+		g_free(msg);
+	}
+
+	cell = gtk_cell_renderer_text_new();
+	column = gtk_tree_view_column_new_with_attributes ("Bookmarks", cell, "text", 0, NULL);
+
+	gtk_tree_view_append_column(GTK_TREE_VIEW(bookmark_list), GTK_TREE_VIEW_COLUMN(column));	
+
+	// connect signals
+	g_signal_connect (GTK_OBJECT (add), "clicked",
+                          G_CALLBACK (show_add_dialog), html); 
+	g_signal_connect (GTK_OBJECT (del), "clicked",
+			  G_CALLBACK (delete_bookmarks), NULL);
+	g_signal_connect (GTK_OBJECT (open_bookmark), "clicked",
+			  G_CALLBACK (open_bookmarks), html);
+
+	gtk_box_pack_start(GTK_BOX(bookbox), GTK_WIDGET(booktool), FALSE, FALSE, 0);
+	gtk_box_pack_start(GTK_BOX(bookbox), GTK_WIDGET(scroll_window), TRUE, TRUE, 0);
+	gtk_container_add(GTK_CONTAINER(bookmarks_window), bookbox);
+
 	gtk_widget_show_all(bookmarks_window);
 
 }
+
+/* ======================================================== */
+
+void show_add_dialog (GtkWidget *button, Webi *html)
+{
+	GtkWidget *add_dialog, *add_new, *add_current, *add;
+	GtkWidget *hbox, *vbox;
+	GtkWidget *entry, *cancel;
+	GSList *group;
+	struct bookmark_add *bookmark;
+
+	bookmark = malloc(sizeof(struct bookmark_add));
+
+	bookmark->html = html;
+	bookmark->bookmark_type = 0;
+
+	/* new dialog window */
+	add_dialog = gtk_dialog_new();
+	gtk_window_set_title (GTK_WINDOW (add_dialog), ("Add a bookmark"));
+        gtk_container_set_border_width (GTK_CONTAINER (add_dialog),
+			                                gpe_get_border ());
+
+	/* vbox for selector */
+	vbox = gtk_vbox_new(FALSE, 0);
+	add_current = gtk_radio_button_new_with_label(NULL, "Add current web page");
+
+	group = gtk_radio_button_get_group(GTK_RADIO_BUTTON (add_current));
+
+	/* hbox for add new button + text-entry */
+	hbox = gtk_hbox_new (FALSE, 0);
+	add_new = gtk_radio_button_new_with_label(group, "Add new :");
+
+  	entry = gtk_entry_new ();
+
+	bookmark->entry = entry;
+        gtk_entry_set_activates_default (GTK_ENTRY(entry), TRUE);
+	gtk_box_pack_start (GTK_BOX(hbox), add_new, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX(hbox), entry, FALSE, FALSE, 0);
+
+
+	/* pack the buttons and the hbow with the entrybox on the dialog */
+	gtk_box_pack_start (GTK_BOX(vbox), add_current, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX(vbox), hbox, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (add_dialog)->vbox),
+		                             vbox, FALSE, FALSE, 0);
+
+	/* dialog buttons */
+	add = gpe_button_new_from_stock (GTK_STOCK_ADD, GPE_BUTTON_TYPE_BOTH);
+  	cancel = gpe_button_new_from_stock (GTK_STOCK_CANCEL, GPE_BUTTON_TYPE_BOTH);
+
+	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (add_dialog)->action_area),
+                      cancel, TRUE, TRUE, 0);
+	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (add_dialog)->action_area),
+                      add, TRUE, TRUE, 0);
+	
+	/* connect the signals */
+	g_signal_connect (GTK_OBJECT (cancel), "clicked",
+                    G_CALLBACK (destroy_window), (gpointer *) add_dialog);
+	g_signal_connect (GTK_OBJECT(add_dialog), "destroy",
+		    G_CALLBACK (clean_up), bookmark);
+	g_signal_connect (GTK_OBJECT(add_current), "toggled",
+		    G_CALLBACK (toggle_type), bookmark);
+	g_signal_connect (GTK_OBJECT(add_new), "toggled",
+		    G_CALLBACK (toggle_type), bookmark);
+
+	gtk_widget_show_all (add_dialog);
+	gtk_widget_grab_focus (entry);
+
+}
+

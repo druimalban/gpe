@@ -48,10 +48,18 @@ Webi *html;
 WebiSettings *settings;
 };
 
+/* data needed to hide the urlbar */
 struct urlbar_data {
 GtkWidget *urlbox;
 int hidden;
 GtkToolItem *hiding_button;
+};
+
+/* data container for adding a bookmark */
+struct bookmark_add {
+Webi *html;
+GtkWidget *entry;
+int bookmark_type;
 };
 
 /********************************************************
@@ -81,6 +89,8 @@ GtkWidget * create_url_bar (Webi * html);
 void hide_url_bar (GtkWidget * button, struct urlbar_data* url_bar);
 /* show bookmark window */
 void show_bookmarks (GtkWidget * button, Webi * html);
+/* bookmark add dialog */
+void show_add_dialog (GtkWidget *button, Webi *html);
 
 /********************************************************
 	       url loading and handling
@@ -115,3 +125,11 @@ void set_default_settings(Webi *html, WebiSettings *ks);
 void zoom_in(GtkWidget * zoom_in, gpointer *data);
 /* zoom out (basically decreasing text size)*/
 void zoom_out(GtkWidget * zoom_out, gpointer *data);
+/* delete one or several bookmarks */
+void delete_bookmarks (GtkWidget *button, gpointer *data);
+/* open bookmark and close the bookmark window */
+void open_bookmarks (GtkWidget *button, gpointer *data);
+/* free allocted space to avoid memory leaks */
+void clean_up (GtkWidget *window, gpointer *data);
+/* toggle bookmark type */
+void toggle_type (GtkWidget *button, gpointer *data);

@@ -34,6 +34,7 @@
 #include <glib.h>
 #include <gpe/init.h>
 #include <gpe/errorbox.h>
+#include <gpe/question.h>
 
 #include "gpe-mini-browser.h"
 
@@ -88,4 +89,32 @@ void zoom_out (GtkWidget *zoom_out , gpointer *data)
   webi_set_settings (WEBI(zoom->html), set);
 }
 
+void delete_bookmarks (GtkWidget *button, gpointer *data)
+{
+        if (gpe_question_ask("Really delete this bookmark or category?", "Delete?",
+                             "question", "!gtk-cancel", NULL,
+                             "!gtk-delete", NULL, NULL) == 1)
+        {
+        }
+}
 
+void open_bookmarks (GtkWidget *button, gpointer *data)
+{
+}
+
+void clean_up (GtkWidget *window, gpointer *data)
+{
+	g_free(data);
+}
+
+void toggle_type (GtkWidget *button, gpointer *data)
+{
+	struct bookmark_add *test;
+	
+	test = (struct bookmark_add *)data;
+	
+	if(test->bookmark_type)
+		test->bookmark_type = 0;
+	else
+		test->bookmark_type = 1;
+}
