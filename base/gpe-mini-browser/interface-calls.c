@@ -383,6 +383,7 @@ void hide_url_bar (GtkWidget * button, struct urlbar_data * url_bar)
 
 /* ======================================================== */
 
+#ifndef NOBOOKMARKS
 void show_bookmarks (GtkWidget * button, Webi * html)
 {
 	GtkWidget *bookmarks_window, *bookbox, *scroll_window, *bookmark_list;
@@ -390,6 +391,8 @@ void show_bookmarks (GtkWidget * button, Webi * html)
 	GtkToolbar *booktool;
 	GtkToolItem *add, *del, *open_bookmark;
 	GtkListStore *model;
+	GtkCellRenderer *cell;
+	GtkTreeViewColumn *column;
 
 	bookmarks_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
         gtk_window_set_title(GTK_WINDOW(bookmarks_window), "Bookmarks");
@@ -402,11 +405,6 @@ void show_bookmarks (GtkWidget * button, Webi * html)
 	gtk_tool_item_set_homogeneous (add, FALSE);
 	gtk_toolbar_insert (booktool, add, -1);
 	
-	/*new_category = gtk_tool_button_new_from_stock (GTK_STOCK_EDIT);
-	gtk_tool_item_set_homogeneous (new_category, FALSE);
-        gtk_tool_button_set_label (GTK_TOOL_BUTTON(new_category), "New Category");
-	gtk_toolbar_insert (booktool, new_category, -1);*/
-
 	del = gtk_tool_button_new_from_stock (GTK_STOCK_REMOVE);
 	gtk_tool_item_set_homogeneous (del, FALSE);
 	gtk_toolbar_insert (booktool, del, -1);
@@ -434,12 +432,6 @@ void show_bookmarks (GtkWidget * button, Webi * html)
 		g_free(msg);
 	}
 
-	//GtkTreeSelection *tree_sel;
-	GtkCellRenderer *cell;
-	GtkTreeViewColumn *column;
-
-	//tree_sel = gtk_tree_view_get_selection (GTK_TREE_VIEW (bookmark_list));
-	//gtk_tree_selection_set_mode(tree_sel, GTK_SELECTION_BROWSE);
 
 	cell = gtk_cell_renderer_text_new();
 	column = gtk_tree_view_column_new_with_attributes ("Bookmarks", cell, "text", 0, NULL);
@@ -472,12 +464,10 @@ void show_add_dialog (GtkWidget *button, Webi *html)
 	GtkWidget *hbox, *vbox;
 	GtkWidget *entry, *cancel;
 	GSList *group;
-	struct bookmark_add *bookmark;
+	static struct bookmark_add bookmark;
 
-	bookmark = malloc(sizeof(struct bookmark_add));
-
-	bookmark->html = html;
-	bookmark->bookmark_type = 0;
+	bookmark.html = html;
+	bookmark.bookmark_type = 0;
 
 	/* new dialog window */
 	add_dialog = gtk_dialog_new();
@@ -497,7 +487,7 @@ void show_add_dialog (GtkWidget *button, Webi *html)
 
   	entry = gtk_entry_new ();
 
-	bookmark->entry = entry;
+	bookmark.entry = entry;
         gtk_entry_set_activates_default (GTK_ENTRY(entry), TRUE);
 	gtk_box_pack_start (GTK_BOX(hbox), add_new, FALSE, FALSE, 0);
 	gtk_box_pack_start (GTK_BOX(hbox), entry, FALSE, FALSE, 0);
@@ -521,15 +511,13 @@ void show_add_dialog (GtkWidget *button, Webi *html)
 	/* connect the signals */
 	g_signal_connect (GTK_OBJECT (cancel), "clicked",
                     G_CALLBACK (destroy_window), (gpointer *) add_dialog);
-	g_signal_connect (GTK_OBJECT(add_dialog), "destroy",
-		    G_CALLBACK (clean_up), bookmark);
 	g_signal_connect (GTK_OBJECT(add_current), "toggled",
-		    G_CALLBACK (toggle_type), bookmark);
+		    G_CALLBACK (toggle_type), &bookmark);
 	g_signal_connect (GTK_OBJECT(add_new), "toggled",
-		    G_CALLBACK (toggle_type), bookmark);
+		    G_CALLBACK (toggle_type), &bookmark);
 
 	gtk_widget_show_all (add_dialog);
 	gtk_widget_grab_focus (entry);
 
 }
-
+#endif

@@ -4,7 +4,9 @@ v0.16 - .....	- ../08/2005 - Philippe De Swert
 * Hybrid stop/reload button
 * Hiding/unhiding Url bar
 * Bookmarks
-* fixed bug when loading a file that could not be found
+* Fixed a bug that causes a segfault when loading a file that could not be found
+* Fixed some tiny memory leaks that popped up after passing it through Valgrind
+* Added a --disable-bookmarks flag (this way builds can be made without boomarks which requires sqlite)
 
 v0.15 - Happy Koen release - 31/07/2005 - Philippe De Swert
 

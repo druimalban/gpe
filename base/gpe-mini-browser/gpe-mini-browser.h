@@ -26,6 +26,7 @@
 #define HOME_PAGE "file:///usr/share/doc/gpe/mini-browser-index.html"
 
 GtkToolItem *stop_reload_button;
+GSList *booklist;
 
 /* contains the necessary data for passing urls between the different functions */
 struct url_data {
@@ -129,7 +130,5 @@ void zoom_out(GtkWidget * zoom_out, gpointer *data);
 void delete_bookmarks (GtkWidget *button, gpointer *data);
 /* open bookmark and close the bookmark window */
 void open_bookmarks (GtkWidget *button, gpointer *data);
-/* free allocted space to avoid memory leaks */
-void clean_up (GtkWidget *window, gpointer *data);
 /* toggle bookmark type */
 void toggle_type (GtkWidget *button, gpointer *data);

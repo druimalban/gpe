@@ -102,11 +102,6 @@ void open_bookmarks (GtkWidget *button, gpointer *data)
 {
 }
 
-void clean_up (GtkWidget *window, gpointer *data)
-{
-	g_free(data);
-}
-
 void toggle_type (GtkWidget *button, gpointer *data)
 {
 	struct bookmark_add *test;
