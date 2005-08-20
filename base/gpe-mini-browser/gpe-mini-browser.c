@@ -75,7 +75,7 @@ main (int argc, char *argv[])
   extern GtkToolItem *stop_reload_button;
   const gchar *base;
   gint width = 240, height = 320;
-  struct status_data *status;
+  static struct status_data status;
   int opt;
 
   WebiSettings s = { 0, };
@@ -120,10 +120,10 @@ main (int argc, char *argv[])
   contentbox = gtk_vbox_new (FALSE, 0);
 
   //fill in status to be sure everything is filled in when used
-  status = (struct status_data*) malloc (sizeof (struct status_data));
-  status->main_window = contentbox;
-  status->pbar = NULL;
-  status->exists = FALSE;
+  //status = (struct status_data*) malloc (sizeof (struct status_data));
+  status.main_window = contentbox;
+  status.pbar = NULL;
+  status.exists = FALSE;
 
   //create toolbar and add to topbox
   toolbar = gtk_toolbar_new ();
@@ -150,13 +150,13 @@ main (int argc, char *argv[])
 		    NULL);
 
   g_signal_connect (WEBI (html), "load_start",
-		    G_CALLBACK (create_status_window), status);
+		    G_CALLBACK (create_status_window), &status);
 
   g_signal_connect (WEBI (html), "load_stop",
-		    G_CALLBACK (destroy_status_window), status);
+		    G_CALLBACK (destroy_status_window), &status);
 
   g_signal_connect (WEBI (html), "status", G_CALLBACK (activate_statusbar),
-		    status);
+		    &status);
   g_signal_connect (WEBI (html), "title", G_CALLBACK (set_title), app);
 
   /*add home,  back, forward, refresh / stop, url (small screen) */
