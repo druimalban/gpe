@@ -233,10 +233,10 @@ main (int argc, char *argv[])
 
   g_signal_connect (GTK_OBJECT (fullscreen_button), "clicked",
 		    G_CALLBACK (set_fullscreen), app);
- 
+#ifndef NOBOOKMARKS 
   g_signal_connect (GTK_OBJECT (bookmarks_button), "clicked",
 		    G_CALLBACK (show_bookmarks), html);
-
+#endif
 
   /* 
 	DEBUG CODE!
