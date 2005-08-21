@@ -39,7 +39,6 @@ pixmaps_extradir = $(datadir)/pixmaps
 EXTRA_DIST = $(desktop_DATA) \
              $(pixmaps_DATA) \
 	     $(service_DATA) \
-             $(pixmaps_extra_DATA) \
              intltool-extract.in \
              intltool-merge.in \
              intltool-update.in
