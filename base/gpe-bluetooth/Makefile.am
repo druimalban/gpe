@@ -39,6 +39,7 @@ pixmaps_extradir = $(datadir)/pixmaps
 EXTRA_DIST = $(desktop_DATA) \
              $(pixmaps_DATA) \
 	     $(service_DATA) \
+	     gpe-bluetooth.desktop.in \
              intltool-extract.in \
              intltool-merge.in \
              intltool-update.in
