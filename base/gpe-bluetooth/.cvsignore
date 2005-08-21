@@ -7,3 +7,4 @@ pin-dbus.c
 pin-ui.h
 *.d
 
+gpe-bluetooth.desktop

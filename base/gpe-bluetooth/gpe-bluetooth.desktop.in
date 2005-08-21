@@ -1,7 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
-Name=Bluetooth control
-Comment=Panel based Bluetooth control
+_Name=Bluetooth control
+_Comment=Panel based Bluetooth control
 Exec=gpe-bluetooth
 Type=PanelApp
 Icon=/usr/share/gpe/pixmaps/default/bt-logo.png
