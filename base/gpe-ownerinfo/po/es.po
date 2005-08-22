@@ -3,12 +3,11 @@
 # This file is distributed under the same license as the gpe-ownerinfo package.
 # J.Manrique <jsmanrique@asturlinux.org>, 2004.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-ownerinfo 0.22\n"
 "POT-Creation-Date: 2003-10-10 00:14+0200\n"
-"PO-Revision-Date: 2004-06-18 17:00+0100\n"
+"PO-Revision-Date: 2005-08-23 00:09+0200\n"
 "Last-Translator: J.Manrique <jsmanrique@asturlinux.org>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -29,11 +28,11 @@ msgstr "   -g GEOMETRÍA geometría de la ventana (por defecto: 240x100+0+220)\n
 
 #: main.c:87
 msgid "   -k           always keep window on top (override redirect)\n"
-msgstr "    -k\t\tmantener la ventana siempre arriba (sobreescribe redirección)\n"
+msgstr "    -k         mantener la ventana siempre arriba (sobreescribe redirección)\n"
 
 #: main.c:88
 msgid "   -h           this help text\n"
-msgstr "    -h\t\teste texto de ayuda\n"
+msgstr "    -h         este texto de ayuda\n"
 
 #. TRANSLATORS: only a short word will look good
 #. here.  If the word is shorter than 5 letters,
@@ -51,11 +50,11 @@ msgstr "GPE Usuario"
 #. replace the 'nobody' though, or use '@example.org' (see RFC 2606)
 #: gpe-ownerinfo.c:360
 msgid "nobody@localhost.localdomain"
-msgstr ""
+msgstr "nombre@servidor.dominio"
 
 #: gpe-ownerinfo.c:361
 msgid "+99 (9999) 999-9999"
-msgstr ""
+msgstr "++99 (999) 999-999"
 
 #. TRANSLATORS: the translations below should match 'Owner
 #. Information' (in gpe-conf) and 'Settings' (in mbdesktop)
