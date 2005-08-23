@@ -2,7 +2,7 @@
  * gpe-conf
  *
  * Copyright (C) 2002  Pierre TARDY <tardyp@free.fr>
- *               2003,2004  Florian Boor <florian.boor@kernelconcepts.de>
+ *               2003-2005 Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -42,7 +42,7 @@
 #define KEY_GTK "Gtk/"
 #define CMD_XST PREFIX "/bin/xst"
 #define CMD_GCONF PREFIX "/bin/gconftool-2"
-#define PARAM_RXVT_FONTSIZE "Rxvt*font:"
+#define PARAM_RXVT_FONT "Rxvt*font:"
 
 static XSettingsClient *client;
 static gboolean use_xst, use_gconf;
@@ -54,14 +54,14 @@ static struct
   GtkWidget *rbImgStr,*rbImgTiled,*rbImgCent;
   gchar *themename;
   GtkWidget *bOpen;
-  GtkWidget *demolabel2;
+  GtkWidget *demolabel2, *demolabel3;
   GtkWidget *spFSApp, *bFontApp;
   GtkWidget *cDefault;
   GtkWidget *rbToolIcons;
   GtkWidget *rbToolText;
   GtkWidget *rbToolBoth;
   GtkWidget *rbToolBothH;
-  GtkWidget *spFSTerminal;
+  GtkWidget *spFSTerminal, *bFontTerminal;
 #ifndef APPMGR_INTERFACE	
   GtkWidget *rbSolid, *rbGrad, *rbImage;	
   GtkWidget *rbH,*rbV;
@@ -148,23 +148,83 @@ get_terminal_fontsize(void)
 		while (!feof(fxdefaults))
 		{
 			char buf[128];
+			char *p1;
+			
 			fgets(buf, 128, fxdefaults);
-			if (sscanf(buf, PARAM_RXVT_FONTSIZE " xft:Mono:pixelsize=%i", &size))
-				break;
+			p1 = strstr(buf, PARAM_RXVT_FONT " xft:");
+			if (p1)
+			{
+				p1 += strlen(PARAM_RXVT_FONT " xft:");
+				p1 = strstr(p1, ":");
+				p1 = strstr(p1, "=");
+				if (p1)
+				{
+					if (sscanf(p1, "=%i", &size))
+						break;
+				}
+			}
 		}
 		fclose(fxdefaults);
 	}
 	return size;
 }
 
+char *
+get_terminal_fontname (void)
+{
+	gchar *xdefaults;
+	FILE *fxdefaults;
+	gchar *name = g_malloc0(128);
+	
+	xdefaults = g_strdup_printf("%s/%s", g_get_home_dir(), ".Xdefaults");
+	if (access(xdefaults, R_OK))
+	{
+		g_free(xdefaults);
+		xdefaults = g_strdup("/etc/X11/Xdefaults");
+		if (access(xdefaults, R_OK))
+		{
+			g_free(xdefaults);
+			sprintf(name, "Mono");
+			return name;
+		}
+	}
+	
+	fxdefaults = fopen(xdefaults, "r");
+	if (fxdefaults)
+	{
+		while (!feof(fxdefaults))
+		{
+			char buf[128];
+			char *p1;
+			int i = 0;
+			fgets(buf, 128, fxdefaults);
+			p1 = strstr(buf, PARAM_RXVT_FONT " xft:");
+			if (p1)
+			{
+				p1 += strlen(PARAM_RXVT_FONT " xft:");
+				if (strstr(p1, ":"))
+					while (p1[i] != ':')
+					{
+						name[i] = p1[i];
+						i++;
+					}
+			}
+		}
+		fclose(fxdefaults);
+	}
+	if (!name[0]) 
+		sprintf(name, "Mono");
+	return name;
+}
+
 void
-set_terminal_fontsize(int size)
+set_terminal_font(int size, const gchar *name)
 {
 	gchar *line, *xdefaults;
 	
 	xdefaults = g_strdup_printf("%s/%s", g_get_home_dir(), ".Xdefaults");
-	line = g_strdup_printf("%s %s%i",PARAM_RXVT_FONTSIZE, "xft:Mono:pixelsize=", size);
-	file_set_line(xdefaults, PARAM_RXVT_FONTSIZE, line);
+	line = g_strdup_printf("%s xft:%s:pixelsize=%i",PARAM_RXVT_FONT, name, size);
+	file_set_line(xdefaults, PARAM_RXVT_FONT, line);
 	g_free(line);
 	g_free(xdefaults);
 }
@@ -1025,8 +1085,9 @@ Theme_Save (void)
 	system_printf (CMD_XST " write %s%s int %d", KEY_GTK, "ToolbarStyle", fs);
 	
 	/* terminal */
-	set_terminal_fontsize(gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(self.spFSTerminal)));
-
+	label = g_object_get_data (G_OBJECT (self.bFontTerminal), "label");
+	clabel = gtk_label_get_text(GTK_LABEL(label));
+	set_terminal_font(gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(self.spFSTerminal)), clabel);
 }
 
 void
@@ -1057,7 +1118,7 @@ Theme_Build_Objects ()
   GtkJustification table_justify_right_col;
   guint gpe_border = gpe_get_border ();
   guint gpe_boxspacing = gpe_get_boxspacing ();
-  gchar *tstr; 
+  gchar *tstr, *desc; 
   GtkRcStyle* astyle;
   int isize, minsize;
 
@@ -1532,16 +1593,37 @@ Theme_Build_Objects ()
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
 
-  label = gtk_label_new(_("Size"));
+  label = gtk_label_new(_("Family"));
   gtk_misc_set_alignment(GTK_MISC(label),0.0,0.5);
   gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2,
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), gpe_boxspacing, 0);
-  self.spFSTerminal = gtk_spin_button_new_with_range(5, 16, 1);
-  gtk_table_attach (GTK_TABLE (table), self.spFSTerminal, 1, 2, 1, 2,
+
+  self.bFontTerminal = GTK_WIDGET(popup_menu_button_new (GTK_STOCK_SELECT_FONT));
+  g_object_set_data (G_OBJECT (self.bFontTerminal), "active", FALSE);
+  gtk_signal_connect (GTK_OBJECT (self.bFontTerminal), "pressed",
+		      GTK_SIGNAL_FUNC (select_font_popup), NULL);
+  gtk_table_attach (GTK_TABLE (table), self.bFontTerminal, 0, 3, 2, 3,
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), gpe_boxspacing, 0);
+  self.demolabel3 = gtk_label_new(_("Terminal Font"));  
+  gtk_table_attach (GTK_TABLE (table), self.demolabel3, 0, 4, 4, 5,
+		    (GtkAttachOptions) (table_attach_left_col_x),
+		    (GtkAttachOptions) (table_attach_left_col_y), gpe_boxspacing, 0);
+  gtk_widget_set_size_request(self.demolabel3, -1, 30);
+  gtk_misc_set_alignment(GTK_MISC(self.demolabel3), 0.5, 0.2);
 
+  label = gtk_label_new(_("Size"));
+  gtk_misc_set_alignment(GTK_MISC(label), 0.0, 0.5);
+  gtk_table_attach (GTK_TABLE (table), label, 0, 1, 3, 4,
+		    (GtkAttachOptions) (table_attach_left_col_x),
+		    (GtkAttachOptions) (table_attach_left_col_y), gpe_boxspacing, 0);
+  self.spFSTerminal = gtk_spin_button_new_with_range(5, 16, 1);
+  gtk_table_attach (GTK_TABLE (table), self.spFSTerminal, 1, 2, 3, 4,
+		    (GtkAttachOptions) (table_attach_left_col_x),
+		    (GtkAttachOptions) (table_attach_left_col_y), gpe_boxspacing, 0);
+  g_signal_connect(G_OBJECT(self.spFSTerminal), "value-changed",
+                   G_CALLBACK(on_font_size_change), NULL);	
 			
 /* insert some defaults */
   astyle = gtk_rc_style_new ();
@@ -1558,6 +1640,7 @@ Theme_Build_Objects ()
   label = g_object_get_data (G_OBJECT (self.bFontApp), "label");
   gtk_label_set_text(GTK_LABEL(label),"Sans");	
   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.cDefault),TRUE);
+   
   /* icon sizes */
   minsize = (gdk_screen_height() < gdk_screen_width()) 
             ? gdk_screen_height() : gdk_screen_width();
@@ -1581,8 +1664,20 @@ Theme_Build_Objects ()
   {
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.rbToolIcons),TRUE);
   }
-  gtk_spin_button_set_value(GTK_SPIN_BUTTON(self.spFSTerminal), 
-                            get_terminal_fontsize());
+  
+  /* terminal font type and size */
+  isize = get_terminal_fontsize();
+  gtk_spin_button_set_value(GTK_SPIN_BUTTON(self.spFSTerminal), isize);
+  label = g_object_get_data (G_OBJECT (self.bFontTerminal), "label");
+  tstr = get_terminal_fontname();
+  gtk_label_set_text(GTK_LABEL(label), tstr);
+  
+  desc = g_strdup_printf("%s %d", tstr, isize);
+  astyle->font_desc = pango_font_description_from_string (desc);
+  gtk_widget_modify_style (self.demolabel3, astyle);
+  g_free(tstr);
+  g_free(desc);
+  
   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.cPerformance), FALSE);
   mb_start_xsettings ();
 
@@ -1657,6 +1752,17 @@ on_font_select_app(GtkWidget * widget, gpointer style)
 	on_font_size_change(GTK_SPIN_BUTTON(self.spFSApp),GTK_SCROLL_NONE);
 }
 
+static void
+on_font_select_terminal(GtkWidget * widget, gpointer style)
+{
+	GtkWidget * label;
+	gtk_widget_modify_style(self.demolabel3,GTK_RC_STYLE(style));
+	pango_font_description_set_size(GTK_RC_STYLE(style)->font_desc,gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(self.spFSTerminal))*PANGO_SCALE);
+	label = g_object_get_data(G_OBJECT(self.bFontTerminal),"label");
+	gtk_label_set_text(GTK_LABEL(label),pango_font_description_get_family(GTK_RC_STYLE(style)->font_desc));	
+	select_font_popup(self.bFontTerminal);
+	on_font_size_change(GTK_SPIN_BUTTON(self.spFSTerminal),GTK_SCROLL_NONE);
+}
 
 static void
 on_font_size_change(GtkSpinButton *spinbutton,GtkScrollType arg1)
@@ -1672,11 +1778,17 @@ on_font_size_change(GtkSpinButton *spinbutton,GtkScrollType arg1)
 	}
 	else 
 #endif		
-		if (GTK_WIDGET(spinbutton) == self.spFSApp) 	
+	if (GTK_WIDGET(spinbutton) == self.spFSApp) 	
 	{
 		astyle->font_desc = gtk_widget_get_style(self.demolabel2)->font_desc;
 		pango_font_description_set_size(astyle->font_desc,gtk_spin_button_get_value_as_int(spinbutton)*PANGO_SCALE);
 	    gtk_widget_modify_style(self.demolabel2,GTK_RC_STYLE(astyle));
+	}
+	if (GTK_WIDGET(spinbutton) == self.spFSTerminal) 	
+	{
+		astyle->font_desc = gtk_widget_get_style(self.demolabel3)->font_desc;
+		pango_font_description_set_size(astyle->font_desc,gtk_spin_button_get_value_as_int(spinbutton)*PANGO_SCALE);
+	    gtk_widget_modify_style(self.demolabel3,GTK_RC_STYLE(astyle));
 	}
 
 	g_free(astyle);
@@ -1744,8 +1856,11 @@ select_font_popup (GtkWidget *parent_button)
       gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
 #ifndef APPMGR_INTERFACE	
 	  if (parent_button == self.bFont) g_signal_connect(G_OBJECT(button),"clicked",G_CALLBACK(on_font_select_desk),button_label_rc_style);
+	  	else	  
 #endif		  
 	  if (parent_button == self.bFontApp) g_signal_connect(G_OBJECT(button),"clicked",G_CALLBACK(on_font_select_app),button_label_rc_style);
+		else
+          if (parent_button == self.bFontTerminal) g_signal_connect(G_OBJECT(button),"clicked",G_CALLBACK(on_font_select_terminal),button_label_rc_style);
     }
 
     g_free (families);
