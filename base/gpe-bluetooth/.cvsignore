@@ -8,3 +8,18 @@ pin-ui.h
 *.d
 
 gpe-bluetooth.desktop
+Makefile
+Makefile.in
+.deps
+configure
+intltool-*
+config.log
+config.cache
+depcomp
+missing
+aclocal.m4
+install-sh
+autom4te.cache
+config.status
+mkinstalldirs
+
