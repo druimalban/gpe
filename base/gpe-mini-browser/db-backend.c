@@ -73,19 +73,64 @@ int start_db (void)
     	}
 
 	sqlite_exec (db, create_str, NULL, NULL, &err);
+	g_free (buf);
 
 	return 0;
 }
 
 void stop_db (void)
 {
-  GSList *iter;
+	GSList *iter;
 
-  for (iter = booklist; iter; iter = g_slist_next (iter))
-  //  todo_db_destroy_item (iter->data);
-  g_slist_free (booklist);
-  booklist = NULL;
-
-  sqlite_close (db);
+  	for (iter = booklist; iter; iter = g_slist_next (iter))
+  	//  todo_db_destroy_item (iter->data);
+ 	g_slist_free (booklist);
+ 	booklist = NULL;
+	
+	sqlite_close (db);
 }
 
+int insert_new_bookmark (char *bookmark)
+{
+	char *err;
+	const char *insert = "insert into bookmarks values ";
+	char *cmd = NULL;
+  
+  	strcpy (cmd, insert);
+  	strcat (cmd, bookmark);
+  	if (sqlite_exec (db, cmd, NULL, NULL, &err))
+  	{
+    	 g_free(err);
+    	 g_free(cmd);
+   	 return 1;
+ 	 }
+
+  	booklist = g_slist_append (booklist, bookmark);
+  	g_free(err);
+ 	g_free(cmd);
+
+ 	 return 0;
+
+}	
+
+int remove_bookmark (char *bookmark)
+{
+	char *err;
+	const char *remove = "delete from bookmarks where bookmark=";
+	char *cmd = NULL;
+
+	strcpy (cmd, remove);
+	strcat (cmd, bookmark);
+	if (sqlite_exec (db, cmd, NULL, NULL, &err))
+	{
+	 g_free(err);
+	 g_free(cmd);
+    	 return 1;
+ 	}
+	
+	booklist = g_slist_remove (booklist, bookmark);
+	g_free(err);
+        g_free(cmd);
+
+	return 0;
+}

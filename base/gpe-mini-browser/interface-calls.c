@@ -59,12 +59,12 @@ show_url_window (GtkWidget * show, GtkWidget * html)
 
   /* create dialog window */
   url_window = gtk_dialog_new ();
-  gtk_window_set_title (GTK_WINDOW (url_window), ("Where to go to?"));
+  gtk_window_set_title (GTK_WINDOW (url_window), _("Where to go to?"));
 
   hbox = gtk_hbox_new (FALSE, 0);
   entry = gtk_entry_new ();
   gtk_entry_set_activates_default (GTK_ENTRY(entry), TRUE);
-  label = gtk_label_new (("Enter url:"));
+  label = gtk_label_new (_("Enter url:"));
   gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
 
   gtk_container_set_border_width (GTK_CONTAINER (url_window),
@@ -145,7 +145,7 @@ create_status_window (Webi * html, gpointer * status_data)
 
   statusbox = gtk_hbox_new (FALSE, 0);
   pbar = gtk_progress_bar_new ();
-  label = gtk_label_new ("loading");
+  label = gtk_label_new (_("loading"));
 
   data->statusbox = statusbox;
   data->pbar = pbar;
@@ -203,7 +203,7 @@ activate_statusbar (Webi * html, WebiLoadStatus * status,
   /* test if an error occured */
   if (status->status == WEBI_LOADING_ERROR)
     {
-      gpe_error_box ("An error occured loading the webpage!");
+      gpe_error_box (_("An error occured loading the webpage!"));
     }
 
   /* copied from the reference implementation of osb-browser, needs to be improved for this app */
@@ -288,7 +288,7 @@ GtkWidget * show_big_screen_interface ( Webi *html, GtkWidget *toolbar, WebiSett
 
       hide_button = gtk_tool_button_new_from_stock (GTK_STOCK_UNDO);
       gtk_tool_item_set_homogeneous(hide_button, FALSE);
-      gtk_tool_button_set_label (GTK_TOOL_BUTTON(hide_button), "Hide Url");
+      gtk_tool_button_set_label (GTK_TOOL_BUTTON(hide_button), _("Hide Url"));
       gtk_toolbar_insert (GTK_TOOLBAR(toolbar), hide_button, -1); 
 
       sep2 = gtk_separator_tool_item_new();
@@ -321,7 +321,7 @@ GtkWidget * create_url_bar (Webi *html)
 
       /* create all necessary widgets */
       urlbox = gtk_hbox_new (FALSE, 0);
-      urllabel = gtk_label_new ((" Url:"));
+      urllabel = gtk_label_new (_(" Url:"));
       gtk_misc_set_alignment (GTK_MISC (urllabel), 0.0, 0.5);
       urlentry = gtk_entry_new ();
       gtk_entry_set_activates_default (GTK_ENTRY(urlentry), TRUE);
@@ -338,12 +338,12 @@ GtkWidget * create_url_bar (Webi *html)
       data.window = NULL;      /* set to NULL to be easy to recognize to avoid freeing in load_text_entry  as this window is not destroyed unlike the pop-up */
 
       g_signal_connect (GTK_OBJECT (okbutton), "clicked",
-                        G_CALLBACK (load_text_entry), (gpointer *) &data);
+                        G_CALLBACK (load_text_entry), &data);
       g_signal_connect (GTK_OBJECT (html), "location",
                         G_CALLBACK (update_text_entry),
                         (gpointer *) urlentry);
       g_signal_connect (GTK_OBJECT (urlentry), "activate",
-                        G_CALLBACK (load_text_entry), (gpointer *) &data);
+                        G_CALLBACK (load_text_entry), &data);
 
       gtk_widget_grab_focus (urlentry);
       /*final settings */
@@ -368,7 +368,7 @@ void hide_url_bar (GtkWidget * button, struct urlbar_data * url_bar)
 		data->hidden = 1;
   		gtk_tool_button_set_stock_id(GTK_TOOL_BUTTON(data->hiding_button), "gtk-redo"); 
 	        gtk_tool_button_set_icon_widget(GTK_TOOL_BUTTON(data->hiding_button), NULL);
-     	        gtk_tool_button_set_label (GTK_TOOL_BUTTON(data->hiding_button), "Show Url");
+     	        gtk_tool_button_set_label (GTK_TOOL_BUTTON(data->hiding_button), _("Show Url"));
 	}
      else
 	{
@@ -376,7 +376,7 @@ void hide_url_bar (GtkWidget * button, struct urlbar_data * url_bar)
 		data->hidden = 0;
   		gtk_tool_button_set_stock_id(GTK_TOOL_BUTTON(data->hiding_button), "gtk-undo"); 
 	        gtk_tool_button_set_icon_widget(GTK_TOOL_BUTTON(data->hiding_button), NULL);
-      		gtk_tool_button_set_label (GTK_TOOL_BUTTON(data->hiding_button), "Hide Url");
+      		gtk_tool_button_set_label (GTK_TOOL_BUTTON(data->hiding_button), _("Hide Url"));
 	}	
 
 }
@@ -387,15 +387,14 @@ void hide_url_bar (GtkWidget * button, struct urlbar_data * url_bar)
 void show_bookmarks (GtkWidget * button, Webi * html)
 {
 	GtkWidget *bookmarks_window, *bookbox, *scroll_window, *bookmark_list;
-	GtkTreeIter iter;
 	GtkToolbar *booktool;
 	GtkToolItem *add, *del, *open_bookmark;
-	GtkListStore *model;
+	GtkTreeStore *model;
 	GtkCellRenderer *cell;
 	GtkTreeViewColumn *column;
 
 	bookmarks_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-        gtk_window_set_title(GTK_WINDOW(bookmarks_window), "Bookmarks");
+        gtk_window_set_title(GTK_WINDOW(bookmarks_window), _("Bookmarks"));
 	gtk_window_set_default_size(GTK_WINDOW(bookmarks_window), 240, 320);
 
 	bookbox = gtk_vbox_new(FALSE, 0);
@@ -418,7 +417,7 @@ void show_bookmarks (GtkWidget * button, Webi * html)
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW(scroll_window),
 					GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 	bookmark_list = gtk_tree_view_new();
-	model = gtk_list_store_new (1, G_TYPE_STRING);
+	model = gtk_tree_store_new (1, G_TYPE_STRING);
 	gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (bookmark_list), FALSE);
 	gtk_tree_view_set_model(GTK_TREE_VIEW(bookmark_list), GTK_TREE_MODEL(model));
         gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scroll_window), bookmark_list);
@@ -427,8 +426,8 @@ void show_bookmarks (GtkWidget * button, Webi * html)
 	for(i=0; i < 15; i++)
 	{
 		gchar *msg = g_strdup_printf("gpe.handhelds.org/%d", i);
-		gtk_list_store_append(GTK_LIST_STORE(model), &iter);
-		gtk_list_store_set(GTK_LIST_STORE(model), &iter, 0, msg, -1);
+		gtk_tree_store_append(GTK_TREE_STORE(model), &iter, NULL);
+		gtk_tree_store_set(GTK_TREE_STORE(model), &iter, 0, msg, -1);
 		g_free(msg);
 	}
 
@@ -471,19 +470,19 @@ void show_add_dialog (GtkWidget *button, Webi *html)
 
 	/* new dialog window */
 	add_dialog = gtk_dialog_new();
-	gtk_window_set_title (GTK_WINDOW (add_dialog), ("Add a bookmark"));
+	gtk_window_set_title (GTK_WINDOW (add_dialog), _("Add a bookmark"));
         gtk_container_set_border_width (GTK_CONTAINER (add_dialog),
 			                                gpe_get_border ());
 
 	/* vbox for selector */
 	vbox = gtk_vbox_new(FALSE, 0);
-	add_current = gtk_radio_button_new_with_label(NULL, "Add current web page");
+	add_current = gtk_radio_button_new_with_label(NULL, _("Add current web page"));
 
 	group = gtk_radio_button_get_group(GTK_RADIO_BUTTON (add_current));
 
 	/* hbox for add new button + text-entry */
 	hbox = gtk_hbox_new (FALSE, 0);
-	add_new = gtk_radio_button_new_with_label(group, "Add new :");
+	add_new = gtk_radio_button_new_with_label(group, _("Add new :"));
 
   	entry = gtk_entry_new ();
 

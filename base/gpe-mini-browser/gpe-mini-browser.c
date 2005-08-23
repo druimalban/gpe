@@ -88,14 +88,14 @@ main (int argc, char *argv[])
 	{
 	case 'v':
 	  printf
-	    ("GPE-mini-browser version 0.16. (C)2005, Philippe De Swert\n");
+	    (_("GPE-mini-browser version 0.16. (C)2005, Philippe De Swert\n"));
 	  exit (0);
 
 	default:
 	  printf
-	    ("GPE-mini-browser, basic web browser application. (c)2005, Philippe De Swert\n");
-	  printf ("Usage: gpe-mini-browser <URL>\n");
-	  printf ("Use -v for version info.\n");
+	    (_("GPE-mini-browser, basic web browser application. (c)2005, Philippe De Swert\n"));
+	  printf (_("Usage: gpe-mini-browser <URL>\n"));
+	  printf (_("Use -v for version info.\n"));
 	  exit (0);
 	}
     }
@@ -183,7 +183,7 @@ main (int argc, char *argv[])
 #ifndef NOBOOKMARKS
   bookmarks_button = gtk_tool_button_new_from_stock (GTK_STOCK_INDENT);
   gtk_tool_item_set_homogeneous(bookmarks_button, FALSE);
-  gtk_tool_button_set_label(GTK_TOOL_BUTTON(bookmarks_button), "Bookmarks");
+  gtk_tool_button_set_label(GTK_TOOL_BUTTON(bookmarks_button), _("Bookmarks"));
   gtk_toolbar_insert(GTK_TOOLBAR(toolbar), bookmarks_button, -1);
   
   separator = gtk_separator_tool_item_new();
@@ -215,7 +215,7 @@ main (int argc, char *argv[])
      gtk 2.7.1 or higher. Or add it myself :-) */
   fullscreen_button = gtk_tool_button_new_from_stock (GTK_STOCK_ZOOM_FIT);
   gtk_tool_item_set_homogeneous(fullscreen_button, FALSE);
-  gtk_tool_button_set_label(GTK_TOOL_BUTTON(fullscreen_button), "Fullscreen");
+  gtk_tool_button_set_label(GTK_TOOL_BUTTON(fullscreen_button), _("Fullscreen"));
   gtk_toolbar_insert(GTK_TOOLBAR(toolbar), fullscreen_button, -1);
 
   /* connect all button signals */
@@ -244,7 +244,7 @@ main (int argc, char *argv[])
   if ((width <= 240) || (height <= 240))
     gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
   gtk_toolbar_set_icon_size(GTK_TOOLBAR(toolbar), GTK_ICON_SIZE_SMALL_TOOLBAR);
-  /*
+  
     gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_BOTH);
 */
   gtk_box_pack_start (GTK_BOX (contentbox), toolbar, FALSE, FALSE, 0);

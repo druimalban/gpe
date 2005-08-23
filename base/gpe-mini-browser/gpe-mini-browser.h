@@ -25,8 +25,13 @@
 /* General Defines */
 #define HOME_PAGE "file:///usr/share/doc/gpe/mini-browser-index.html"
 
+/*internationalisation */
+#include <libintl.h>
+#define _(String) gettext(String)
+
 GtkToolItem *stop_reload_button;
 GSList *booklist;
+GtkTreeIter iter;
 
 /* contains the necessary data for passing urls between the different functions */
 struct url_data {
@@ -132,3 +137,18 @@ void delete_bookmarks (GtkWidget *button, gpointer *data);
 void open_bookmarks (GtkWidget *button, gpointer *data);
 /* toggle bookmark type */
 void toggle_type (GtkWidget *button, gpointer *data);
+
+
+/******************************************************
+	            database backend handling 
+		    see: db-backend.c
+*******************************************************/
+
+/* initialize bookmark db */
+int start_db (void);
+/* stop bookmark db */
+void stop_db (void);
+/* insert a new bookmark in the db */
+int insert_new_bookmark (char *bookmark);
+/* remove a bookmark from the db */
+int remove_bookmark (char *bookmark);
