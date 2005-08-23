@@ -1,3 +1,8 @@
+2005-08-23  Florian Boor <florian.boor@kernelconcepts.de>
+
+    * themes.sgml: Fix bug.
+    * porting.sgml: basic sections and some words about software GPE is based on.
+
 2005-08-16  Florian Boor <florian.boor@kernelconcepts.de>
 
 	* themes.sgml: Add a few lines about themes. 

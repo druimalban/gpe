@@ -1,6 +1,41 @@
 <chapter id="porting">
 <title>Porting GPE to a new Device</title>
-  <para>
-  text
-  </para>
+  <section>
+  <title>Suppositions to run GPE</title>
+    <para>
+      <itemizedlist>
+        <listitem>
+          <para>Operating System</para>
+          <para>GPE is designed to run ontop of the Linux operating system, but
+                it should be possible to run it on other UNIX-Like systems too.
+                Most of the GPE developers don't have much experience with 
+                running other operating systems than Linux on their mobile 
+                devices, so any feedback about GPE running on other operating
+                systems or information about what to change in GPE to make it 
+                work is very important for us.</para>
+        </listitem>
+        <listitem>
+          <para>Libc Flavours</para>
+          <para>At the moment we usually use Glibc in systems running GPE, but
+                it is reported to work with Uclibc as well. The main reason 
+                not to use Uclibc in production systems/daily use is the lack
+                of internationalisation support in it.</para>
+        </listitem>
+        <listitem>
+          <para>Libc flavours</para>
+          <para></para>
+        </listitem>
+      </itemizedlist>
+    </para>
+  </section>
+  <section>
+  <title>Platform dependencies in GPE</title>
+    <para>
+    </para>
+  </section>
+  <section>
+  <title>Building filesystem Images</title>
+    <para>
+    </para>
+  </section>
 </chapter>
