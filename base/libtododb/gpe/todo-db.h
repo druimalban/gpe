@@ -28,6 +28,7 @@ typedef enum
  * @time: Timestamp holding due date.
  * @what: Item title.
  * @summary: Item description.
+ * @todoid: ID for vtodo ex-/importation.
  * @state: Item status (see #item_state).
  * @was_complete:
  * @categories: List of categories the item belongs to.
@@ -41,6 +42,7 @@ struct todo_item
   time_t time;
   const char *what;
   const char *summary;
+  const char *todoid;
   item_state state;
   gboolean was_complete;
   GSList *categories;

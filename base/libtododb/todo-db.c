@@ -63,6 +63,8 @@ item_data_callback (void *arg, int argc, char **argv, char **names)
 	i->state = atoi (argv[1]);
       else if (!strcasecmp (argv[0], "PRIORITY"))
 	i->priority = atoi (argv[1]);
+      else if (!strcasecmp (argv[0], "TODOID"))
+	i->todoid = g_strdup (argv[1]);
       else if (!strcasecmp (argv[0], "CATEGORY"))
 	i->categories = g_slist_append (i->categories, (gpointer)atoi (argv[1]));
       else if (!strcasecmp (argv[0], "DUE"))
@@ -276,6 +278,7 @@ todo_db_push_item (struct todo_item *i)
 			  NULL, NULL, &err, i->id)
       || (i->summary && insert_values (sqliteh, i->id, "SUMMARY", "%q", i->summary))
       || (i->what && insert_values (sqliteh, i->id, "DESCRIPTION", "%q", i->what))
+      || (i->todoid && insert_values (sqliteh, i->id, "TODOID", "%q", i->todoid))
       || insert_values (sqliteh, i->id, "STATE", "%d", i->state))
     goto error;
 
@@ -340,6 +343,9 @@ todo_db_new_item (void)
 {
   char *err;
   struct todo_item *i;
+  static char *hostname;
+  static char buffer [512];
+
   if (sqlite_exec (sqliteh, "insert into todo_urn values (NULL)",
 		   NULL, NULL, &err))
     return NULL;
@@ -347,7 +353,19 @@ todo_db_new_item (void)
   i = g_malloc0 (sizeof (struct todo_item));
 
   i->id = sqlite_last_insert_rowid (sqliteh);
-
+  /* Here we create an id for the todo, so that we can
+   * later reference it in vcals, etc. */
+  if ((gethostname (buffer, sizeof (buffer) -1) == 0) &&
+     (buffer[0] != 0))
+    hostname = buffer;
+  else
+    hostname = "localhost";
+  
+  i->todoid = g_strdup_printf ("%lu.%lu@%s", 
+                              (unsigned long) time (NULL),
+                              (unsigned long) getpid (),
+                              hostname);
+  
   todo_db_items = g_slist_append (todo_db_items, i);
 
   return i;
@@ -364,6 +382,7 @@ todo_db_destroy_item (struct todo_item *i)
 {
   g_free ((gpointer)i->what);
   g_free ((gpointer)i->summary);
+  g_free ((gpointer)i->todoid);
   g_slist_free (i->categories);
   g_free (i);
 }
