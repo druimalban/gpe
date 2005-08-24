@@ -50,4 +50,4 @@ all-local:
 	@echo
 endif
 
-include gtk-doc.make
+#include gtk-doc.make

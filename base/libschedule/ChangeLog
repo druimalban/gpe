@@ -1,6 +1,6 @@
 2005-08-24  Joseph J. McCarthy  <mccarthy@granular.che.pitt.edu>
 
-        * atd.c : configure libschedule to use desktop versions of at when
+	* atd.c : configure libschedule to use desktop versions of at when
 	available (need to use configure --enable-haveat=yes; add sqlite
 	stuff in order to remember atjob numbers; add errorbox stuff to warn
 	if at is not working properly (on either handhelds or desktops)
@@ -19,6 +19,7 @@
 	* libschedule.pc.in: add sqlite dependecy
 	* Makefile.am: add HAVE_AT stuff
 	* gpe/schedule.h: new API
+	* release version 0.15
 
 2005-08-14  Florian Boor  <florian.boor@kernelconcepts.de>
 
