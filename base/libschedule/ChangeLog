@@ -1,3 +1,24 @@
+2005-08-24  Joseph J. McCarthy  <mccarthy@granular.che.pitt.edu>
+
+        * atd.c : configure libschedule to use desktop versions of at when
+	available (need to use configure --enable-haveat=yes; add sqlite
+	stuff in order to remember atjob numbers; add errorbox stuff to warn
+	if at is not working properly (on either handhelds or desktops)
+	* atd.c (dbinfo_callback; alarm_db_start): sqlite related routines
+	* atd.c (trigger_atd): check for atd.pid
+	* atd.c (same-alarm): checks to see if existing "next alarm" is
+	correct (so that we may skip scheduling it) -- useful on desktop only
+	* atd.c (write_tail, tmp_alarm_filename, cancel_alarm_uid): all
+	modifications for using and canceling at jobs on desktop
+	* atd.c (schedule_set_alarm): CHANGED API(!) so that we know to be
+	careful to only erase at jobs when using the gpe-calendar app
+	* atd.c (schedule_set_alrm): a huge number of changes mostly stolen
+	from standard at (and handled with the compile-time flag HAVE_AT)
+	* atd.c (schedule_cancel_alarm): use desktop at when necessary
+	* configure.ac: add sqlite dependency and enable-haveat flag
+	* libschedule.pc.in: add sqlite dependecy
+	* Makefile.am: add HAVE_AT stuff
+	* gpe/schedule.h: new API
 
 2005-08-14  Florian Boor  <florian.boor@kernelconcepts.de>
 

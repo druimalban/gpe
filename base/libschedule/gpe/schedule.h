@@ -17,7 +17,7 @@
 extern "C" {
 #endif /* __cplusplus */
 
-extern gboolean schedule_set_alarm (guint id, time_t start, const gchar *action);
+extern gboolean schedule_set_alarm (guint id, time_t start, const gchar *action, gboolean calendar_alarm);
 extern gboolean schedule_cancel_alarm (guint id, time_t start);
 
 #ifdef __cplusplus

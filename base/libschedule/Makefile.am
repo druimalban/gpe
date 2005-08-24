@@ -2,7 +2,11 @@ SUBDIRS = doc
 
 lib_LTLIBRARIES = libschedule.la
 
-INCLUDES = @SCHEDULE_CFLAGS@ -DPACKAGE_LOCALE_DIR=\"@datadir@/locale/@PACKAGE_NAME@\"
+if HAVEAT
+DEPS_CFLAGS += -DHAVE_AT
+endif
+
+INCLUDES = @SCHEDULE_CFLAGS@ $(DEPS_CFLAGS)  -DPACKAGE_LOCALE_DIR=\"@datadir@/locale/@PACKAGE_NAME@\"
 
 libschedule_la_LIBADD = @SCHEDULE_LIBS@
 
