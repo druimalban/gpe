@@ -76,6 +76,26 @@ event_db_add_internal (event_t ev)
   return TRUE;
 }
 
+/* Here we create an globally unique eventid, which we
+ * can use to reference this event in an vcal, etc. */
+gchar *
+event_db_make_eventid ()
+{
+  static char *hostname;
+  static char buffer [512];
+
+  if ((gethostname (buffer, sizeof (buffer) -1) == 0) &&
+     (buffer [0] != 0))
+    hostname = buffer;
+  else
+    hostname = "localhost";
+
+  return g_strdup_printf ("%lu.%lu@%s",
+                         (unsigned long) time (NULL),
+                         (unsigned long) getpid(),
+                         hostname); 
+}
+
 /* Remove an event from the in-memory list */
 static gboolean
 event_db_remove_internal (event_t ev)
@@ -129,6 +149,10 @@ load_data_callback (void *arg, int argc, char **argv, char **names)
 	      ev->flags |= FLAG_UNTIMED;
 	      ev->start += 12 * 60 * 60;
 	    }
+	}
+      else if (!strcasecmp (argv[0], "eventid"))
+	{
+	  ev->eventid = g_strdup (argv[1]);
 	}
       else if (!strcasecmp (argv[0], "rend"))
 	{
@@ -746,12 +770,19 @@ event_db_write (event_t ev, char **err)
 
   modified = time (NULL);
 
+  if (!ev->eventid)
+    {
+      ev->eventid = event_db_make_eventid();
+      printf ("Made new eventid: %s\n", ev->eventid);
+    }
+  
   if ((ev_d->summary && insert_values (sqliteh, ev->uid, "summary", "%q", ev_d->summary))
       || (ev_d->description && insert_values (sqliteh, ev->uid, "description", "%q", ev_d->description))
       || insert_values (sqliteh, ev->uid, "duration", "%d", ev->duration)
       || insert_values (sqliteh, ev->uid, "modified", "%lu", modified)
       || insert_values (sqliteh, ev->uid, "start", "%q", buf_start)
-      || insert_values (sqliteh, ev->uid, "sequence", "%d", ev_d->sequence))
+      || insert_values (sqliteh, ev->uid, "sequence", "%d", ev_d->sequence)
+      || insert_values (sqliteh, ev->uid, "eventid", "%q", ev->eventid))
     goto exit;
 
   for (iter = ev_d->categories; iter; iter = iter->next)
@@ -852,6 +883,7 @@ event_db_add (event_t ev)
     goto error;
 
   ev->uid = sqlite_last_insert_rowid (sqliteh);
+  ev->eventid = event_db_make_eventid();
 
   if (event_db_add_internal (ev) == FALSE)
     {
@@ -904,6 +936,8 @@ event_db_destroy (event_t ev)
 
   if (ev->recur)
     event_db__free_recur (ev->recur);
+  if (ev->eventid)
+    g_free (ev->eventid);
 
   event_db__free_event (ev);
 }

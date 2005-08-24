@@ -41,7 +41,7 @@ typedef struct event_details_s
 
   char *summary;
   char *description;
-
+  
   GSList *categories;
 } *event_details_t;
 
@@ -85,7 +85,7 @@ typedef struct event_s
   event_details_t details;
   gboolean mark;
   gpointer *cloned_ev;
-  
+  char *eventid; 
 } *event_t;
 
 #define EVENT_DB_USE_MEMCHUNK
