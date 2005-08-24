@@ -1,3 +1,13 @@
+2005-08-24  Joseph J. McCarthy <mccarthy@engrng.pitt.edu>
+
+        * day_view.c: use new libschedule API (and change to internal schedule
+	calls)
+	* event-ui.c: use new libschedule API; change internal schedule calls 
+	so that an errorbox can be used to warn if there are at problems
+	* event-ui.h: changes to internal schedule stuff
+	* main.c: use new libschedule API (and change to internal schedule 
+	calls)		 
+
 2005-08-16  Matthias Steinbauer <matthias@steinbauer.org>
 
         * main.c: Included basic LibOSSO Support.

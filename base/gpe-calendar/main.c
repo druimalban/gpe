@@ -256,7 +256,7 @@ button_toggled (GtkWidget *widget, gpointer data)
 static void
 gpe_cal_exit (void)
 {
-  schedule_next (0, 0);
+  schedule_next (0, 0, NULL);
   event_db_stop ();
   gtk_main_quit ();
 }
@@ -381,19 +381,19 @@ static void
 create_app_menu(HildonAppView *appview)
 {
   GtkMenu *main_menu;
-  GtkWidget *item_appointment, *item_today, *item_day, *item_week, 
+  GtkWidget *item_appointment, *item_today, *item_day, *item_week,
     *item_month, *item_import, *item_toolbar;
-  
+
   main_menu = hildon_appview_get_menu(appview);
-  
+
   item_appointment = gtk_menu_item_new_with_label(_("New appointment"));
   g_signal_connect(G_OBJECT(item_appointment), "activate", G_CALLBACK(new_appointment), NULL);
   gtk_menu_append(main_menu, item_appointment);
-  
+
   item_today = gtk_menu_item_new_with_label(_("Today"));
   g_signal_connect(G_OBJECT(item_today), "activate", set_today, NULL);
   gtk_menu_append(main_menu, item_today);
-  
+
   item_import = gtk_menu_item_new_with_label(_("Import"));
   g_signal_connect(G_OBJECT(item_import), "activate", G_CALLBACK(on_import_vcal), NULL);
   gtk_menu_append(main_menu, item_import);
@@ -401,7 +401,7 @@ create_app_menu(HildonAppView *appview)
   gtk_widget_show_all(main_menu);
 }
 #endif
-
+	 
 int
 main (int argc, char *argv[])
 {
@@ -451,7 +451,7 @@ main (int argc, char *argv[])
 		ifile = optarg;
     }
 
-  schedule_next (skip, uid);
+  schedule_next (skip, uid, NULL);
 
   if (schedule_only)
     exit (EXIT_SUCCESS);
@@ -526,7 +526,7 @@ main (int argc, char *argv[])
     return OSSO_ERROR;
   }
 #endif
-
+	 
   gtk_container_add (GTK_CONTAINER (main_window), vbox);
 
   time (&viewtime);
@@ -611,7 +611,7 @@ main (int argc, char *argv[])
 #ifdef IS_HILDON
   create_app_menu(main_appview);
 #endif
-
+	 
   gtk_notebook_set_show_tabs (GTK_NOTEBOOK (notebook), FALSE);
 
   gtk_widget_show (day);

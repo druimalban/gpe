@@ -44,7 +44,7 @@ static GdkColor light_color, dark_color, time_color;
 
 
 void
-delete_event (event_t ev)
+delete_event (event_t ev, GtkWidget *d)
 {
   event_t ev_real;
   event_details_t ev_d;
@@ -61,8 +61,8 @@ delete_event (event_t ev)
         {			  
           if (ev_real->flags & FLAG_ALARM)
             {
-              schedule_cancel_alarm (ev_real->uid, ev->start);
-              schedule_next (0,0);
+              unschedule_alarm (ev_real, d);
+              schedule_next (0,0, d);
             }
           event_db_remove (ev_real);
         }
@@ -77,8 +77,8 @@ delete_event (event_t ev)
     {			  
       if (ev_real->flags & FLAG_ALARM)
         {
-          schedule_cancel_alarm (ev_real->uid, ev->start);
-          schedule_next (0,0);
+          unschedule_alarm (ev_real,d);
+          schedule_next (0,0,d);
         }
       event_db_remove (ev_real);
   }
@@ -164,7 +164,7 @@ list_key_press_event (GtkWidget *clist, GdkEventKey *k, gpointer user_data)
         if ((ev) && (gpe_question_ask (_("Delete event?"), _("Question"), "question",
 			   "!gtk-no", NULL, "!gtk-yes", NULL, NULL)))
           {
-            delete_event(ev);
+            delete_event(ev, gtk_widget_get_toplevel(clist));
             g_object_set_data(G_OBJECT(clist),"selected-row",(void *)-1);
           }
       }

@@ -354,7 +354,7 @@ set_alarm (struct alarm_state *alarm)
 	  alarm->day = tm.tm_mday;
 	}
 
-      if (schedule_set_alarm (1, t, "gpe-announce\ngpe-clock --check-alarm\n") == FALSE)
+      if (schedule_set_alarm (1, t, "gpe-announce\ngpe-clock --check-alarm\n", FALSE) == FALSE)
 	{
 	  gpe_error_box (_("Unable to set alarm"));
 	  alarm->active = FALSE;

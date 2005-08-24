@@ -203,23 +203,34 @@ weekly_toggled (GtkWidget *widget,
 }
 
 
-static void
-unschedule_alarm (event_t ev)
+void
+unschedule_alarm (event_t ev, GtkWidget *d)
 {
   event_t ev_real = (event_t)ev->cloned_ev;
 
   if (!schedule_cancel_alarm (ev_real->uid, ev->start)) 
-    printf("ack!\n");
+  {
+    GtkWidget* dialog;
+                
+    dialog = gtk_message_dialog_new (GTK_WINDOW(d),
+    	   GTK_DIALOG_DESTROY_WITH_PARENT,
+    	   GTK_MESSAGE_WARNING,
+    	   GTK_BUTTONS_CLOSE,
+    	   _("There is a problem with the scheduling daemon (perhaps atd is not running)!\nThis can cause issues."));
+    gtk_dialog_run (GTK_DIALOG(dialog));
+    gtk_widget_destroy(dialog);
+      
+  }
 }
 
 void
-schedule_next (guint skip, guint uid)
+schedule_next (guint skip, guint uid, GtkWidget *d)
 {
   GSList *events = NULL, *iter;
   struct tm tm;
   time_t end, start = time(NULL);
   event_details_t ev_d;
-  
+
   localtime_r (&start, &tm);
   tm.tm_year++;
   end=mktime (&tm);
@@ -238,11 +249,20 @@ schedule_next (guint skip, guint uid)
 	    {
 	      gchar *action;
 
-	      action = g_strdup_printf ("/usr/bin/gpe-announce '%s'\n/usr/bin/gpe-calendar -s %ld -e %ld &\n ",
+	      action = g_strdup_printf ("gpe-announce '%s'\ngpe-calendar -s %ld -e %ld &\n",
 					ev_d->summary, (long)ev->start, ev_real->uid);
-	      if (!schedule_set_alarm (ev->uid, ev->start, action)) 
-		printf("ack!\n");
-
+	      if (!schedule_set_alarm (ev->uid, ev->start, action, TRUE)) 
+	      {
+	        GtkWidget* dialog;
+                
+		dialog = gtk_message_dialog_new (GTK_WINDOW(d),
+                       GTK_DIALOG_DESTROY_WITH_PARENT,
+                       GTK_MESSAGE_WARNING,
+                       GTK_BUTTONS_CLOSE,
+                       _("There is a problem with the scheduling daemon (perhaps atd is not running)!\nThis can cause issues."));
+		gtk_dialog_run (GTK_DIALOG(dialog));
+                gtk_widget_destroy(dialog);
+              }
 	      g_free (action);
 	      break;
 	    }
@@ -283,8 +303,8 @@ click_delete (GtkWidget *widget, GtkWidget *d)
         {			  
           if (ev_real->flags & FLAG_ALARM)
             {
-              unschedule_alarm (ev);
-              schedule_next (0,0);
+              unschedule_alarm (ev, gtk_widget_get_toplevel(widget));
+              schedule_next (0,0, gtk_widget_get_toplevel(widget));
             }
           
           event_db_remove (ev_real);
@@ -300,8 +320,8 @@ click_delete (GtkWidget *widget, GtkWidget *d)
     {			  
       if (ev_real->flags & FLAG_ALARM)
         {
-          unschedule_alarm (ev);
-          schedule_next (0,0);
+          unschedule_alarm (ev, gtk_widget_get_toplevel(widget));
+          schedule_next (0,0, gtk_widget_get_toplevel(widget));
         }
       
       event_db_remove (ev_real);
@@ -329,7 +349,7 @@ click_ok (GtkWidget *widget, GtkWidget *d)
       ev = (event_t)(s->ev->cloned_ev);
       ev_d = event_db_get_details (ev);
       if (ev->flags & FLAG_ALARM)
-        unschedule_alarm (s->ev);
+        unschedule_alarm (s->ev, gtk_widget_get_toplevel(widget));
       ev_d->sequence++;
       ev_d->modified=time(NULL);
     }
@@ -564,7 +584,7 @@ click_ok (GtkWidget *widget, GtkWidget *d)
     event_db_flush (ev);
 
   if (ev->flags & FLAG_ALARM)
-    schedule_next (0, 0);
+    schedule_next (0,0, gtk_widget_get_toplevel(widget));
 
   event_db_forget_details (ev);
 
