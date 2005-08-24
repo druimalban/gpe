@@ -1,0 +1,4 @@
+2005-08-24  Joseph J. McCarthy <mccarthy@engrng.pitt.edu>
+
+	* clock.c: use new libschedule API
+	
