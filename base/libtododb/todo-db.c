@@ -29,7 +29,33 @@ static unsigned long dbversion;
 static const char *fname = "/.gpe/todo";
 
 extern gboolean convert_old_db (int oldversion, sqlite *);
-extern void migrate_old_categories (sqlite *db);
+extern void migrate_old_categories (sqlite * db);
+
+/**
+ * todo_db_make_todoid:
+ *
+ * Makes a globally unique identifier, with which an todo item
+ * can be referenced in a vcal.
+ *
+ * Returns: An id of the format <time>.<pid>@<hostname>
+ */
+char * 
+todo_db_make_todoid (void)
+{
+  static char *hostname;
+  static char buffer[512];
+
+  /* Here we create an id for the todo, so that we can
+   * later reference it in vcals, etc. */
+  if ((gethostname (buffer, sizeof (buffer) - 1) == 0) && (buffer[0] != 0))
+    hostname = buffer;
+  else
+    hostname = "localhost";
+
+  return g_strdup_printf ("%lu.%lu@%s",
+			    (unsigned long) time (NULL),
+			    (unsigned long) getpid (), hostname);
+}
 
 /**
  * todo_db_get_items_list:
@@ -41,7 +67,7 @@ extern void migrate_old_categories (sqlite *db);
  * Returns: List of todo items.
  */
 GSList *
-todo_db_get_items_list(void)
+todo_db_get_items_list (void)
 {
   return todo_db_items;
 }
@@ -51,7 +77,7 @@ todo_db_get_items_list(void)
 static int
 item_data_callback (void *arg, int argc, char **argv, char **names)
 {
-  struct todo_item *i = (struct todo_item *)arg;
+  struct todo_item *i = (struct todo_item *) arg;
 
   if (argc == 2 && argv[0] && argv[1])
     {
@@ -66,7 +92,8 @@ item_data_callback (void *arg, int argc, char **argv, char **names)
       else if (!strcasecmp (argv[0], "TODOID"))
 	i->todoid = g_strdup (argv[1]);
       else if (!strcasecmp (argv[0], "CATEGORY"))
-	i->categories = g_slist_append (i->categories, (gpointer)atoi (argv[1]));
+	i->categories =
+	  g_slist_append (i->categories, (gpointer) atoi (argv[1]));
       else if (!strcasecmp (argv[0], "DUE"))
 	{
 	  struct tm tm;
@@ -89,8 +116,9 @@ item_callback (void *arg, int argc, char **argv, char **names)
       struct todo_item *i = g_malloc0 (sizeof (struct todo_item));
       i->id = id;
       i->priority = PRIORITY_STANDARD;
-      if (sqlite_exec_printf (sqliteh, "select tag,value from todo where uid=%d",
-			      item_data_callback, i, &err, id))
+      if (sqlite_exec_printf
+	  (sqliteh, "select tag,value from todo where uid=%d",
+	   item_data_callback, i, &err, id))
 	{
 	  gpe_error_box (err);
 	  free (err);
@@ -125,18 +153,18 @@ dbinfo_callback (void *arg, int argc, char **argv, char **names)
 int
 todo_db_start (void)
 {
-  static const char *schema2_str = 
+  static const char *schema2_str =
     "create table todo (uid INTEGER NOT NULL, tag TEXT NOT NULL, value TEXT)";
-  static const char *schema3_str = 
+  static const char *schema3_str =
     "create table todo_urn (uid INTEGER PRIMARY KEY)";
-  static const char *schema_info = 
+  static const char *schema_info =
     "create table todo_dbinfo (version integer NOT NULL)";
 
   const char *home = getenv ("HOME");
   char *buf;
   char *err;
   size_t len;
-  if (home == NULL) 
+  if (home == NULL)
     home = "";
   len = strlen (home) + strlen (fname) + 1;
   buf = g_malloc (len);
@@ -152,38 +180,42 @@ todo_db_start (void)
     }
 
   sqlite_exec (sqliteh, schema_info, NULL, NULL, &err);
-  
-  if (sqlite_exec (sqliteh, "select version from todo_dbinfo", dbinfo_callback, NULL, &err))
+
+  if (sqlite_exec
+      (sqliteh, "select version from todo_dbinfo", dbinfo_callback, NULL,
+       &err))
     {
-      dbversion=0;
+      dbversion = 0;
       gpe_error_box (err);
       free (err);
       return FALSE;
     }
 
   if (sqlite_exec (sqliteh, schema2_str, NULL, NULL, &err))
-      free (err);
+    free (err);
   if (sqlite_exec (sqliteh, schema3_str, NULL, NULL, &err))
-      free (err);
-     
-  if (dbversion == 1) 
+    free (err);
+
+  if (dbversion == 1)
     {
-      if (sqlite_exec (sqliteh, "select uid from todo_urn", item_callback, NULL, &err))
-        {
-          gpe_error_box (err);
-          free (err);
-          return -1;
-        }
+      if (sqlite_exec
+	  (sqliteh, "select uid from todo_urn", item_callback, NULL, &err))
+	{
+	  gpe_error_box (err);
+	  free (err);
+	  return -1;
+	}
     }
   else if (dbversion == 0)
     {
-      if (sqlite_exec (sqliteh, "select uid from todo_urn", item_callback, NULL, &err))
-        {
-          gpe_error_box (err);
-          free (err);
-          return -1;
-        }
-      
+      if (sqlite_exec
+	  (sqliteh, "select uid from todo_urn", item_callback, NULL, &err))
+	{
+	  gpe_error_box (err);
+	  free (err);
+	  return -1;
+	}
+
       convert_old_db (dbversion, sqliteh);
       dbversion = 1;
     }
@@ -211,7 +243,8 @@ todo_db_refresh (void)
   g_slist_free (todo_db_items);
   todo_db_items = NULL;
 
-  if (sqlite_exec (sqliteh, "select uid from todo_urn", item_callback, NULL, &err))
+  if (sqlite_exec
+      (sqliteh, "select uid from todo_urn", item_callback, NULL, &err))
     {
       gpe_error_box (err);
       free (err);
@@ -260,7 +293,7 @@ list_sort_func (gconstpointer a, gconstpointer b)
 			    NULL, NULL, &err, id, key, value)
 
 gboolean
-todo_db_push_item (struct todo_item *i)
+todo_db_push_item (struct todo_item * i)
 {
   char *err;
   gboolean rollback = FALSE;
@@ -273,12 +306,20 @@ todo_db_push_item (struct todo_item *i)
     goto error;
 
   rollback = TRUE;
-  
+
+  if (!i->id)
+    {
+      i->todoid = todo_db_make_todoid ();
+    }
+
   if (sqlite_exec_printf (sqliteh, "delete from todo where uid=%d",
 			  NULL, NULL, &err, i->id)
-      || (i->summary && insert_values (sqliteh, i->id, "SUMMARY", "%q", i->summary))
-      || (i->what && insert_values (sqliteh, i->id, "DESCRIPTION", "%q", i->what))
-      || (i->todoid && insert_values (sqliteh, i->id, "TODOID", "%q", i->todoid))
+      || (i->summary
+	  && insert_values (sqliteh, i->id, "SUMMARY", "%q", i->summary))
+      || (i->what
+	  && insert_values (sqliteh, i->id, "DESCRIPTION", "%q", i->what))
+      || (i->todoid
+	  && insert_values (sqliteh, i->id, "TODOID", "%q", i->todoid))
       || insert_values (sqliteh, i->id, "STATE", "%d", i->state))
     goto error;
 
@@ -301,7 +342,7 @@ todo_db_push_item (struct todo_item *i)
   if (insert_values (sqliteh, i->id, "PRIORITY", "%d", i->priority))
     goto error;
 
-  if (insert_values (sqliteh, i->id, "MODIFIED", "%d", (int)modified))
+  if (insert_values (sqliteh, i->id, "MODIFIED", "%d", (int) modified))
     goto error;
 
   if (sqlite_exec (sqliteh, "commit transaction", NULL, NULL, &err))
@@ -309,7 +350,7 @@ todo_db_push_item (struct todo_item *i)
 
   return TRUE;
 
- error:
+error:
   if (rollback)
     sqlite_exec (sqliteh, "rollback transaction", NULL, NULL, NULL);
   gpe_error_box (err);
@@ -317,14 +358,14 @@ todo_db_push_item (struct todo_item *i)
   return FALSE;
 }
 
-gboolean 
-converted_item (struct todo_item *i)
+gboolean
+converted_item (struct todo_item * i)
 {
   char *err;
   if (sqlite_exec (sqliteh, "insert into todo_urn values (NULL)",
 		   NULL, NULL, &err))
     return FALSE;
-  
+
   i->id = sqlite_last_insert_rowid (sqliteh);
 
   todo_db_items = g_slist_append (todo_db_items, i);
@@ -343,29 +384,17 @@ todo_db_new_item (void)
 {
   char *err;
   struct todo_item *i;
-  static char *hostname;
-  static char buffer [512];
 
   if (sqlite_exec (sqliteh, "insert into todo_urn values (NULL)",
 		   NULL, NULL, &err))
     return NULL;
-  
+
   i = g_malloc0 (sizeof (struct todo_item));
 
   i->id = sqlite_last_insert_rowid (sqliteh);
-  /* Here we create an id for the todo, so that we can
-   * later reference it in vcals, etc. */
-  if ((gethostname (buffer, sizeof (buffer) -1) == 0) &&
-     (buffer[0] != 0))
-    hostname = buffer;
-  else
-    hostname = "localhost";
-  
-  i->todoid = g_strdup_printf ("%lu.%lu@%s", 
-                              (unsigned long) time (NULL),
-                              (unsigned long) getpid (),
-                              hostname);
-  
+
+  i->todoid = todo_db_make_todoid ();
+
   todo_db_items = g_slist_append (todo_db_items, i);
 
   return i;
@@ -380,9 +409,9 @@ todo_db_new_item (void)
 void
 todo_db_destroy_item (struct todo_item *i)
 {
-  g_free ((gpointer)i->what);
-  g_free ((gpointer)i->summary);
-  g_free ((gpointer)i->todoid);
+  g_free ((gpointer) i->what);
+  g_free ((gpointer) i->summary);
+  g_free ((gpointer) i->todoid);
   g_slist_free (i->categories);
   g_free (i);
 }
@@ -393,15 +422,13 @@ todo_db_destroy_item (struct todo_item *i)
  * 
  * Deletes an item from the list and database.
  */
-void 
+void
 todo_db_delete_item (struct todo_item *i)
 {
   sqlite_exec_printf (sqliteh, "delete from todo where uid=%d",
-		      NULL, NULL, NULL,
-		      i->id);
+		      NULL, NULL, NULL, i->id);
   sqlite_exec_printf (sqliteh, "delete from todo_urn where uid=%d",
-		      NULL, NULL, NULL,
-		      i->id);
+		      NULL, NULL, NULL, i->id);
 
   todo_db_items = g_slist_remove (todo_db_items, i);
 
