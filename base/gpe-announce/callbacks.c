@@ -41,6 +41,9 @@
 #define SIZE 256
 #define SNOOZE 5
 
+/* Flag to reset sound volume after playing		*/
+static gboolean VolumeReset = TRUE;
+
 /* Flag to stop alarm sound thread from playing		*/
 static gboolean PlayAlarmStop = TRUE;
 
@@ -177,10 +180,10 @@ static void schedule_alarm(const gchar *buf, time_t when)
 	gchar *text;
 
 	if (buf)
-		text = g_strdup_printf ("/usr/bin/gpe-announce '%s'\n", buf);
+		text = g_strdup_printf ("gpe-announce '%s'\n", buf);
 	else
-		text = g_strdup_printf ("/usr/bin/gpe-announce\n");
-	schedule_set_alarm (1234, when, text);
+		text = g_strdup_printf ("gpe-announce\n");
+	schedule_set_alarm (1234, when, text, FALSE);
 	g_free (text);
 }
 
@@ -301,11 +304,16 @@ gint bells_and_whistles ()
 {
 	sound_config = get_config();
 	
+	VolumeReset = TRUE;
+	
 	open_buzzer ();
   
 	if((get_vol(&curl, &curr, SOUND_MIXER_VOLUME) == -1)
 		|| (get_vol(&curpcml, &curpcmr, SOUND_MIXER_PCM) == -1))
+	{
+		VolumeReset = FALSE;
 		printf("Unable to get volume\n");
+	}
 	set_vol(100, 100, SOUND_MIXER_PCM);
 	
 	signal (SIGINT, buzzer_off);
@@ -366,8 +374,11 @@ gint on_ok_clicked (GtkButton *button, gpointer user_data)
 	PlayAlarmStop = TRUE;
 	set_buzzer (0, 0);
 	pthread_join(SoundThread, NULL);
-	set_vol(curl, curr, SOUND_MIXER_VOLUME);
-	set_vol(curpcml, curpcmr, SOUND_MIXER_PCM);
+	if (VolumeReset)
+	{
+		set_vol(curl, curr, SOUND_MIXER_VOLUME);
+		set_vol(curpcml, curpcmr, SOUND_MIXER_PCM);
+	}
 	
 	gtk_main_quit();
 	return(FALSE);

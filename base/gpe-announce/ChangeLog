@@ -1,3 +1,9 @@
+2005-08-24  Joe McCarthy <jjmcc@pitt.edu>
+
+        * callbacks.c: add VoluemReset flag to tell whether we successfully
+	grabbed the original volume (so that we *can* reset it)
+	* callbacks: use new libschedule api
+	
 2004-10-11  Florian Boor <florian@kernelconcepts.de>
 	* Released Version 0.12
 	* callbacks.c: We set PCM level to 100% at start to avoid missing alarms
