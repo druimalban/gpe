@@ -1,5 +1,13 @@
 2005-08-24  Martin Felis <martin@silef.de>
 
+	* todo-db.c: Fixed todoid typo.
+	
+2005-08-24  Martin Felis <martin@silef.de>
+
+	* todo-db.c: Adds now an todoid when modifying and if it was not yet provided.
+
+2005-08-24  Martin Felis <martin@silef.de>
+
 	* todo-db.c, gpe/todo-db.h : Added todoid field.
 
 2005-08-19  Florian Boor <florian@kernelconcepts.de>

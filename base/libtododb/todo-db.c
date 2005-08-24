@@ -39,7 +39,7 @@ extern void migrate_old_categories (sqlite * db);
  *
  * Returns: An id of the format <time>.<pid>@<hostname>
  */
-char * 
+char *
 todo_db_make_todoid (void)
 {
   static char *hostname;
@@ -53,8 +53,8 @@ todo_db_make_todoid (void)
     hostname = "localhost";
 
   return g_strdup_printf ("%lu.%lu@%s",
-			    (unsigned long) time (NULL),
-			    (unsigned long) getpid (), hostname);
+			  (unsigned long) time (NULL),
+			  (unsigned long) getpid (), hostname);
 }
 
 /**
@@ -307,7 +307,7 @@ todo_db_push_item (struct todo_item * i)
 
   rollback = TRUE;
 
-  if (!i->id)
+  if (!i->todoid)
     {
       i->todoid = todo_db_make_todoid ();
     }
@@ -392,8 +392,6 @@ todo_db_new_item (void)
   i = g_malloc0 (sizeof (struct todo_item));
 
   i->id = sqlite_last_insert_rowid (sqliteh);
-
-  i->todoid = todo_db_make_todoid ();
 
   todo_db_items = g_slist_append (todo_db_items, i);
 
