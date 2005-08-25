@@ -188,4 +188,3 @@ import_vcal (const gchar *data, size_t len)
       g_object_unref (cal);
     }
 }
-
