@@ -4,3 +4,4 @@ Gtk/ToolbarStyle:I:2
 Gtk/FontName:S:Sans 7
 MATCHBOX/Desktop/Font:S:Sans 7
 Net/ThemeName:S:Default
+MATCHBOX/Background:S:col-solid:#1f00ba
