@@ -1,3 +1,7 @@
+2005-08-24  Philippe De Swert  <philippedeswert@scarlet.be>
+
+	* release version 0.15
+
 2005-08-24  Joseph J. McCarthy  <mccarthy@granular.che.pitt.edu>
 
 	* atd.c : configure libschedule to use desktop versions of at when
@@ -19,7 +23,6 @@
 	* libschedule.pc.in: add sqlite dependecy
 	* Makefile.am: add HAVE_AT stuff
 	* gpe/schedule.h: new API
-	* release version 0.15
 
 2005-08-14  Florian Boor  <florian.boor@kernelconcepts.de>
 

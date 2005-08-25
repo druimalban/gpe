@@ -1,3 +1,7 @@
+2005-08-24  Philippe De Swert <philippedeswert@scarlet.be>
+
+	* release version 0.63
+
 2005-08-24  Joseph J. McCarthy <mccarthy@engrng.pitt.edu>
 
 	* day_view.c: use new libschedule API (and change to internal schedule
@@ -7,7 +11,6 @@
 	* event-ui.h: changes to internal schedule stuff
 	* main.c: use new libschedule API (and change to internal schedule 
 	calls)		 
-	* release version 0.63
 
 2005-08-16  Matthias Steinbauer <matthias@steinbauer.org>
 
