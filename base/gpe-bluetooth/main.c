@@ -75,6 +75,7 @@ static GtkWidget *icon;
 
 static pid_t hciattach_pid;
 
+static GtkWidget *window;
 static GtkWidget *menu;
 static GtkWidget *menu_radio_on, *menu_radio_off;
 static GtkWidget *menu_devices;
@@ -128,6 +129,30 @@ bt_progress_dialog_update (GtkWidget *w, gchar *new_text)
   gtk_label_set_text (GTK_LABEL (label), new_text);
 }
 
+void
+set_image(int sx, int sy)
+{
+  GdkBitmap *bitmap;
+  GdkPixbuf *sbuf, *dbuf;
+  int size;
+	
+  if (!sx)
+    {
+      sy = gdk_pixbuf_get_height(gtk_image_get_pixbuf(GTK_IMAGE(icon)));
+      sx = gdk_pixbuf_get_width(gtk_image_get_pixbuf(GTK_IMAGE(icon)));
+    }
+	
+  size = (sx > sy) ? sy : sx;
+  sbuf = gpe_find_icon (radio_is_on ? "bt-on" : "bt-off");
+	
+  dbuf = gdk_pixbuf_scale_simple(sbuf, size, size, GDK_INTERP_HYPER);
+  gdk_pixbuf_render_pixmap_and_mask (dbuf, NULL, &bitmap, 60);
+  gtk_widget_shape_combine_mask (GTK_WIDGET(window), NULL, 0, 0);
+  gtk_widget_shape_combine_mask (GTK_WIDGET(window), bitmap, 0, 0);
+  gdk_bitmap_unref (bitmap);
+  gtk_image_set_from_pixbuf(GTK_IMAGE(icon), dbuf);
+}
+
 static pid_t
 fork_hciattach (void)
 {
@@ -165,13 +190,13 @@ radio_on (void)
   gtk_widget_show (menu_radio_off);
   gtk_widget_set_sensitive (menu_devices, TRUE);
 
-  gtk_image_set_from_pixbuf (GTK_IMAGE (icon), gpe_find_icon ("bt-on"));
   radio_is_on = TRUE;
   sigemptyset (&sigs);
   sigaddset (&sigs, SIGCHLD);
   sigprocmask (SIG_BLOCK, &sigs, NULL);
   hciattach_pid = fork_hciattach ();
   sigprocmask (SIG_UNBLOCK, &sigs, NULL);
+  set_image(0, 0);
 }
 
 static void
@@ -195,9 +220,8 @@ radio_off (void)
   gtk_widget_show (menu_radio_on);
   gtk_widget_set_sensitive (menu_devices, FALSE);
 
-  gtk_image_set_from_pixbuf (GTK_IMAGE (icon), gpe_find_icon ("bt-off"));
-
   do_stop_radio ();
+  set_image(0, 0);
 }
 
 static gboolean
@@ -504,25 +528,17 @@ schedule_message_delete (guint id, guint time)
 }
 
 gboolean 
-configure_event (GtkWidget *window, GdkEventConfigure *event, GdkBitmap *bitmap)
+configure_event (GtkWidget *window, GdkEventConfigure *event, GdkBitmap *bitmap_)
 {
-  GdkPixbuf *buf;
-  int xoff, yoff;
-
-  buf = gpe_find_icon ("bt-off");
-
-  xoff = (event->width - gdk_pixbuf_get_width (buf)) / 2;
-  yoff = (event->height - gdk_pixbuf_get_height (buf)) / 2;
-
-  gtk_widget_shape_combine_mask (window, bitmap, xoff, yoff);
- 
+  if (event->type == GDK_CONFIGURE)
+    set_image(event->width, event->height);
+	
   return FALSE;
 }
 
 int
 main (int argc, char *argv[])
 {
-  GtkWidget *window;
   GdkBitmap *bitmap;
   GtkWidget *menu_remove;
   GtkTooltips *tooltips;
@@ -550,7 +566,6 @@ main (int argc, char *argv[])
   gpe_bluetooth_init_dbus ();
 
   window = gtk_plug_new (0);
-  gtk_widget_set_usize (window, 16, 16);
   gtk_widget_realize (window);
 
   gtk_window_set_title (GTK_WINDOW (window), _("Bluetooth control"));
@@ -587,8 +602,6 @@ main (int argc, char *argv[])
 
   icon = gtk_image_new_from_pixbuf (gpe_find_icon (radio_is_on ? "bt-on" : "bt-off"));
   gtk_widget_show (icon);
-  gdk_pixbuf_render_pixmap_and_mask (gpe_find_icon ("bt-off"), NULL, &bitmap, 255);
-  gtk_widget_shape_combine_mask (window, bitmap, 0, 0);
 
   gpe_set_window_icon (window, "bt-on");
 
