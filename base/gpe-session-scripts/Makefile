@@ -1,7 +1,7 @@
 PREFIX = /usr/local
 PACKAGE = gpe-session-scripts
 CVSBUILD = yes
-VERSION = 0.63
+VERSION = 0.64
 DEBUG = no
 
 LINGUAS = 
@@ -32,6 +32,7 @@ install-program: gpe-logout.desktop
 	install -m 644 X11/Xdefaults $(DESTDIR)/etc/X11/
 	mkdir -p $(DESTDIR)$(PREFIX)/share/pixmaps
 	install -m 644 gpe-logout.png $(DESTDIR)$(PREFIX)/share/pixmaps
+	install -m 644 gpe-logout-menu.png $(DESTDIR)$(PREFIX)/share/pixmaps
 	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
 	install -m 644 gpe-logout.desktop $(DESTDIR)$(PREFIX)/share/applications
 	mkdir -p $(DESTDIR)$(PREFIX)/bin

@@ -5,6 +5,6 @@ _Comment=Log out of GPE
 Exec=gpe-logout
 Terminal=false
 Type=Application
-Icon=gpe-logout.png
+Icon=gpe-logout-menu.png
 Categories=Utility;GPE;Action;
 StartupNotify=true
