@@ -2,5 +2,5 @@ gpe-conf
 gpe-info
 *.pc
 *.d
+*/*.desktop
 *.desktop
-

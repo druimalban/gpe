@@ -6,6 +6,6 @@ Exec=gpe-info
 Terminal=false
 Type=Application
 Icon=gpe-config-sysinfo.png
-Categories=Application;SystemSettings;GPE;
+Categories=Application;Utilities;GPE;
 StartupNotify=true
 X-SingleInstance=true
