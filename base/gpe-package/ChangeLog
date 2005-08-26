@@ -1,3 +1,13 @@
+2005-08-26 Florian Boor <florian.boor@kernelconcepts.de>
+
+	* Release Version 0.3
+	* interface.c: Convert toolbar to new API.
+	* Makefile: Minor updates, version to 0.3.
+	* feededit.*: Show not editable feeds from configuration files, 
+	              fix several bugs. Update toolbar to new API. Handle editable
+				  and not editable feeds.
+	* gpe-package.html: Add some more information.
+
 2005-02-07 Florian Boor <florian.boor@kernelconcepts.de>
 
 	* interface.c: Fixed i8n support for menus.

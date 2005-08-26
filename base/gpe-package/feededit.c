@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2004  Florian Boor <florian.boor@kernelconcepts.de>
+ *  Copyright (C) 2004, 2005  Florian Boor <florian.boor@kernelconcepts.de>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -27,14 +27,18 @@
 #include <gtk/gtk.h>
 #include <gpe/spacing.h>
 #include <gpe/errorbox.h>
+#include <sys/types.h>
+#include <dirent.h>
 
 #include "feededit.h"
 
 #define IPKG_FEEDCONFIG "/etc/ipkg/feeds.conf"
+#define IPKG_CONFIG     "/etc/ipkg.conf"
+#define IPKG_CONFIGDIR  "/etc/ipkg"
 
-#warning todo: check editable(view, del, edit), check valid
 extern GtkWidget *fMain;
 static GtkListStore *feedstore;
+static GtkToolItem *bAdd, *bRemove, *bEdit;
 
 gboolean 
 write_feed(GtkTreeModel *model, GtkTreePath *path,
@@ -44,12 +48,14 @@ write_feed(GtkTreeModel *model, GtkTreePath *path,
 FILE *fp = data;
 gchar *name = NULL, *url = NULL;
 gint type;
+gboolean *editable;
 
 	gtk_tree_model_get (GTK_TREE_MODEL(model), iter, 
 	                    FEED_NAME, &name, 
 	                    FEED_URL, &url,
-                        FEED_TYPE, &type, -1);
-	if (type != FT_PROTECTED)
+                        FEED_TYPE, &type, 
+	                    FEED_EDITABLE, &editable, -1);
+	if ((type != FT_PROTECTED) && editable)
 	{
 		if (type == FT_UNCOMPRESED)
 			fprintf(fp, "src \t%s \t%s\n", name, url);
@@ -154,7 +160,7 @@ gint type = FT_COMPRESSED;
 }
 
 static void
-read_feeds_from_file(const gchar *filename)
+read_feeds_from_file(const gchar *filename, gboolean editable)
 {
 FILE *fp = fopen(filename, "r");
 char buf[255];
@@ -168,7 +174,7 @@ GtkTreeIter iter;
 		{
 			g_strstrip(buf);
 			
-			if ((buf[0] != '#') 
+			if ((buf[0] != '#') && (!strncasecmp(buf, "src", 3))
 				&& (3 == sscanf(buf, "%10s %64s %255s", stype, name, url)))
 			{
 				if (!strcmp(stype, "src"))
@@ -179,9 +185,12 @@ GtkTreeIter iter;
 				gtk_list_store_set(feedstore, &iter,
 				                   FEED_NAME, name,
 				                   FEED_URL, url,
-				                   FEED_TYPE, type, -1);
+				                   FEED_TYPE, type, 
+				                   FEED_EDITABLE, editable,
+				                   -1);
 			}
-		}	
+		}
+		fclose(fp);
 	}
 }
 
@@ -191,7 +200,8 @@ on_add_feed(GtkWidget *button, gpointer data)
 GtkTreeIter iter;
 	
 	gtk_list_store_append(feedstore, &iter);
-	gtk_list_store_set(feedstore, &iter, FEED_TYPE, FT_COMPRESSED, -1);
+	gtk_list_store_set(feedstore, &iter, FEED_TYPE, FT_COMPRESSED, 
+	                   FEED_EDITABLE, TRUE, -1);
 	edit_feed(&iter);
 }
 
@@ -238,6 +248,51 @@ GtkWidget *treeview = data;
 	}
 }
 
+static void
+fill_feed_list(void)
+{
+	DIR *cfgdir;
+	struct dirent *di;
+		
+	read_feeds_from_file(IPKG_CONFIG, FALSE);
+	
+	cfgdir = opendir(IPKG_CONFIGDIR);
+	if (!cfgdir)
+		return;
+	while ( (di = readdir(cfgdir)) )
+	{
+		gchar *fullname;
+		
+		/* read all real files and filter backup files */
+		if ((di->d_type == DT_REG) && (di->d_name[strlen(di->d_name)-1] != '~'))
+		{
+			fullname = g_strdup_printf("%s/%s", IPKG_CONFIGDIR, di->d_name);
+			read_feeds_from_file(fullname, 
+			                     strcmp(fullname, IPKG_FEEDCONFIG) ? FALSE : TRUE );
+			g_free(fullname);
+		}
+	}
+	closedir(cfgdir);
+}
+
+static void 
+list_select_row (GtkTreeView *treeview, gpointer data)
+{
+	GtkTreeModel *model = data;
+	GtkTreeSelection *sel;
+	GtkTreeIter iter;
+	
+	sel = gtk_tree_view_get_selection(treeview);
+	if (gtk_tree_selection_get_selected(sel, &model, &iter))
+	{
+		gboolean editable;
+		gtk_tree_model_get (GTK_TREE_MODEL(model), &iter, 
+        	                FEED_EDITABLE, &editable, -1);
+		gtk_widget_set_sensitive(GTK_WIDGET(bEdit), editable);
+		gtk_widget_set_sensitive(GTK_WIDGET(bRemove), editable);
+	}
+}
+
 GtkWidget *
 create_feed_edit(void)
 {
@@ -252,7 +307,8 @@ gchar *ts;
 	feedstore = gtk_list_store_new(FEED_FIELDNUM, 
 	                               G_TYPE_INT,
 				                   G_TYPE_STRING,
-								   G_TYPE_STRING);
+								   G_TYPE_STRING,
+	                               G_TYPE_BOOLEAN);
 	
 	treeview = gtk_tree_view_new_with_model (GTK_TREE_MODEL (feedstore));
 	
@@ -265,18 +321,21 @@ gchar *ts;
 	gtk_toolbar_set_style(GTK_TOOLBAR(toolbar), GTK_TOOLBAR_ICONS);
 	gtk_toolbar_set_orientation(GTK_TOOLBAR(toolbar), GTK_ORIENTATION_HORIZONTAL);
 	
-	gtk_toolbar_insert_stock(GTK_TOOLBAR(toolbar), 
-	                         GTK_STOCK_ADD, 
-	                         _("Add a new package feed."),
-	                         NULL, G_CALLBACK(on_add_feed), treeview, -1);
-	gtk_toolbar_insert_stock(GTK_TOOLBAR(toolbar), 
-	                         GTK_STOCK_REMOVE, 
-	                         _("Remove selected package feed."),
-	                         NULL, G_CALLBACK(on_remove_feed), treeview, -1);
-	gtk_toolbar_insert_stock(GTK_TOOLBAR(toolbar), 
-	                         GTK_STOCK_PREFERENCES, 
-	                         _("Edit selected package feed."),
-	                         NULL, G_CALLBACK(on_edit_feed), treeview, -1);
+	bAdd = gtk_tool_button_new_from_stock(GTK_STOCK_ADD);
+	g_signal_connect(G_OBJECT(bAdd), "clicked", G_CALLBACK(on_add_feed), 
+	                 treeview);
+	gtk_toolbar_insert(GTK_TOOLBAR(toolbar), bAdd, -1);
+	
+	bRemove = gtk_tool_button_new_from_stock(GTK_STOCK_REMOVE);
+	g_signal_connect(G_OBJECT(bRemove), "clicked", G_CALLBACK(on_remove_feed), 
+	                 treeview);
+	gtk_toolbar_insert(GTK_TOOLBAR(toolbar), bRemove, -1);
+
+	bEdit = gtk_tool_button_new_from_stock(GTK_STOCK_PREFERENCES);
+	g_signal_connect(G_OBJECT(bEdit), "clicked", G_CALLBACK(on_edit_feed), 
+	                 treeview);
+	gtk_toolbar_insert(GTK_TOOLBAR(toolbar), bEdit, -1);
+
 	gtk_box_pack_start(GTK_BOX(vbox), toolbar, FALSE, TRUE, 0);
 	
 	gtk_tree_view_set_rules_hint (GTK_TREE_VIEW(treeview),TRUE);
@@ -307,7 +366,13 @@ gchar *ts;
 	gtk_tree_view_column_set_resizable(GTK_TREE_VIEW_COLUMN(column), TRUE);
 	gtk_tree_view_append_column (GTK_TREE_VIEW (treeview), column);
 	
-	read_feeds_from_file(IPKG_FEEDCONFIG);
+	g_signal_connect_after(G_OBJECT(treeview), "cursor-changed", 
+	                       G_CALLBACK(list_select_row), (gpointer)(feedstore)); 
 	
+	fill_feed_list();
+
+	gtk_widget_set_sensitive(GTK_WIDGET(bRemove), FALSE);
+	gtk_widget_set_sensitive(GTK_WIDGET(bEdit), FALSE);
+
 	return vbox;
 }

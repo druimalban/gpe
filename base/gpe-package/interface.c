@@ -1,7 +1,7 @@
 /*
  * gpe-package
  *
- * Copyright (C) 2003,2004  Florian Boor <florian.boor@kernelconcepts.de>
+ * Copyright (C) 2003 - 2005  Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -92,7 +92,7 @@ static GtkWidget *notebook;
 static GtkWidget *txLog;
 static GtkWidget *treeview;
 static GtkTreeStore *store = NULL;
-static GtkWidget *bApply;
+static GtkToolItem *bApply;
 static GtkWidget *miUpdate, *miSysUpgrade, *miSelectLocal, *miApply;
 static GtkWidget *miFilterInst, *miFilterNotInst;
 static GtkWidget *sbar;
@@ -140,7 +140,6 @@ int mMain_items_count = sizeof(mMain_items) / sizeof(GtkItemFactoryEntry);
 
 
 struct gpe_icon my_icons[] = {
-  { "exit" },
   { "local-package", PREFIX "/share/pixmaps/local-package-16.png" },
   { "icon", PREFIX "/share/pixmaps/gpe-package.png" },
   { NULL, NULL}
@@ -430,7 +429,7 @@ void on_about_clicked (GtkWidget * w)
 
 void on_help_clicked (GtkWidget * w)
 {
-	if (gpe_show_help("gpe-package",NULL))
+	if (gpe_show_help("gpe-package", NULL))
 		show_message(GTK_MESSAGE_INFO, NOHELPMESSAGE);
 }
 
@@ -496,10 +495,10 @@ void do_info(int priority, char *str1, char *str2)
 
 void do_end_command()
 {
-	gtk_widget_set_sensitive(miUpdate,TRUE);
-	gtk_widget_set_sensitive(miApply,TRUE);
-	gtk_widget_set_sensitive(miSysUpgrade,TRUE);
-	gtk_widget_set_sensitive(bApply,TRUE);
+	gtk_widget_set_sensitive(miUpdate, TRUE);
+	gtk_widget_set_sensitive(miApply, TRUE);
+	gtk_widget_set_sensitive(miSysUpgrade, TRUE);
+	gtk_widget_set_sensitive(GTK_WIDGET(bApply), TRUE);
 	printlog(txLog,_("Command finished. Please check log messages for errors."));
 	if (dlgAction) {
 		gtk_widget_destroy(dlgAction);
@@ -759,15 +758,15 @@ void on_system_update_clicked(GtkButton *button, gpointer user_data)
 	GtkTextBuffer *logbuf;
 	GtkTextIter start,end;
 	
-	gtk_widget_set_sensitive(miUpdate,FALSE);
-	gtk_widget_set_sensitive(miApply,FALSE);
-	gtk_widget_set_sensitive(miSysUpgrade,FALSE);
-	gtk_widget_set_sensitive(bApply,FALSE);
+	gtk_widget_set_sensitive(miUpdate, FALSE);
+	gtk_widget_set_sensitive(miApply, FALSE);
+	gtk_widget_set_sensitive(miSysUpgrade, FALSE);
+	gtk_widget_set_sensitive(GTK_WIDGET(bApply), FALSE);
 
 	error = 0;
 	
 	show_message(GTK_MESSAGE_INFO, 
-	             _("Make sure your internet connection is up " \ 
+	             _("Make sure your internet connection is up " \
 	               "or your update source is available and " \
 	               "press OK to continue."));
 	
@@ -795,10 +794,10 @@ void on_packages_update_clicked(GtkButton *button, gpointer user_data)
 GtkTextBuffer *logbuf;
 GtkTextIter start,end;
 
-	gtk_widget_set_sensitive(miUpdate,FALSE);
-	gtk_widget_set_sensitive(miApply,FALSE);
-	gtk_widget_set_sensitive(miSysUpgrade,FALSE);
-	gtk_widget_set_sensitive(bApply,FALSE);
+	gtk_widget_set_sensitive(miUpdate, FALSE);
+	gtk_widget_set_sensitive(miApply, FALSE);
+	gtk_widget_set_sensitive(miSysUpgrade, FALSE);
+	gtk_widget_set_sensitive(GTK_WIDGET(bApply), FALSE);
 
 	error = 0;
 	
@@ -899,10 +898,10 @@ void create_fMain (void)
 GtkWidget *vbox;
 GtkWidget *cur;
 GtkWidget *toolbar;
-GtkWidget *pw;
 GtkTooltips *tooltips;
 GtkCellRenderer *renderer;
 GtkTreeViewColumn *column;
+GtkToolItem *sep, *bExit;
 char *tmp;
 
 	/* init tree storage stuff */
@@ -939,20 +938,24 @@ char *tmp;
 	
 	toolbar = gtk_toolbar_new ();
 	gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar),
-			       GTK_ORIENTATION_HORIZONTAL);
+	                             GTK_ORIENTATION_HORIZONTAL);
 
-	bApply = gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_APPLY,
-			   _("Apply package selection"), NULL,
-			   (GtkSignalFunc) on_package_install_clicked , NULL, -1);
+	bApply = gtk_tool_button_new_from_stock(GTK_STOCK_APPLY);
+	gtk_toolbar_insert(GTK_TOOLBAR(toolbar), GTK_TOOL_ITEM(bApply), -1);
+	g_signal_connect(G_OBJECT(bApply), "clicked", 
+	                 G_CALLBACK(on_package_install_clicked), NULL);
 			   
-	gtk_toolbar_append_space(GTK_TOOLBAR(toolbar));
+	sep = gtk_separator_tool_item_new();
+	gtk_separator_tool_item_set_draw(GTK_SEPARATOR_TOOL_ITEM(sep), FALSE);
+	gtk_tool_item_set_expand(GTK_TOOL_ITEM(sep), TRUE);
+	gtk_toolbar_insert(GTK_TOOLBAR(toolbar), GTK_TOOL_ITEM(sep), -1);
   
-	pw = gtk_image_new_from_pixbuf(gpe_find_icon ("exit"));
-	gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Close"),
-			   _("Close application"), NULL, pw,
-			   (GtkSignalFunc) do_safe_exit, NULL);
+	bExit = gtk_tool_button_new_from_stock(GTK_STOCK_QUIT);
+	gtk_toolbar_insert(GTK_TOOLBAR(toolbar), GTK_TOOL_ITEM(bExit), -1);
+	g_signal_connect(G_OBJECT(bExit), "clicked", 
+	                 G_CALLBACK(do_safe_exit), NULL);
 			   
-	gtk_box_pack_start(GTK_BOX(vbox),toolbar,FALSE,TRUE,0);
+	gtk_box_pack_start(GTK_BOX(vbox),toolbar, FALSE, TRUE, 0);
 
 	/* notebook */
   

@@ -8,6 +8,7 @@ typedef enum
 	FEED_TYPE,
 	FEED_NAME,
 	FEED_URL,
+	FEED_EDITABLE,
 	FEED_FIELDNUM
 }t_feedfield;
 
