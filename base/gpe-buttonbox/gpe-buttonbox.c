@@ -427,6 +427,8 @@ draw_icon (GtkWidget *widget, GdkEventExpose *ev)
     name = down ? "blue-down" : "blue-up";
 
   base = gpe_find_icon (name);
+  base = gdk_pixbuf_scale_simple(base, cfg.slot_width, cfg.slot_height, 
+         GDK_INTERP_BILINEAR);
   pix = g_object_get_data (G_OBJECT (widget), "icon-pixbuf");
   text = g_object_get_data (G_OBJECT (widget), "icon-text");
 
@@ -437,7 +439,9 @@ draw_icon (GtkWidget *widget, GdkEventExpose *ev)
 		   ev->area.x, ev->area.y,
 		   ev->area.width, ev->area.height,
 		   GDK_RGB_DITHER_NORMAL, 0, 0);
-
+  
+  g_object_unref (base);
+  
   /* scale to desired height but retain aspect ratio */
   w = gdk_pixbuf_get_width (pix);
   h = gdk_pixbuf_get_height (pix);
