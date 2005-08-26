@@ -37,7 +37,9 @@ struct player
 
   player_state state;
   GstElement *filesrc, *decoder, *audiosink, *thread, *volume;
-
+  GstElement *conv, *audio;
+  GstPad *audiopad;
+  
   int opt_shuffle;
   int opt_loop;
 

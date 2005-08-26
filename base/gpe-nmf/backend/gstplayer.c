@@ -288,6 +288,29 @@ metadata_notify (GObject *obj, GObject *the_obj, GParamSpec *spec, player_t p)
     }
 }
 
+
+static void
+cb_newpad (GstElement *decodebin, GstPad *pad, gboolean last,
+	       gpointer data)
+{
+  GstCaps *caps;
+  GstStructure *str;
+  player_t p = data;
+
+  /* only link audio; only link once */
+  if (GST_PAD_IS_LINKED (p->audiopad))
+    return;
+  caps = gst_pad_get_caps (pad);
+  str = gst_caps_get_structure (caps, 0);
+  if (!g_strrstr (gst_structure_get_name (str), "audio"))
+    return;
+
+  /* link'n'play */
+  gst_pad_link (pad, p->audiopad);
+  gst_bin_add (GST_BIN (p->thread), p->audio);
+  gst_bin_sync_children_state (GST_BIN (p->thread));
+}
+
 static gboolean
 build_pipeline (player_t p, struct playlist *t, gboolean really_play)
 {
@@ -297,10 +320,13 @@ build_pipeline (player_t p, struct playlist *t, gboolean really_play)
       && (strcmp(source_elem, "filesrc") == 0))
     source_elem = "httpclientsrc";
 
+  p->audio = gst_bin_new ("audiobin");
   p->filesrc = gst_element_factory_make (source_elem, "disk_source");
-  p->decoder = gst_element_factory_make ("spider", "decoder");
+  p->decoder = gst_element_factory_make ("decodebin", "decoder"); /* fails on arm */
   p->volume = gst_element_factory_make ("volume", "volume");
   p->audiosink = gst_element_factory_make (sink_elem, "play_audio");
+  p->conv = gst_element_factory_make ("audioconvert", "aconv");
+  p->audiopad = gst_element_get_pad (p->conv, "sink");
 
   if (!p->filesrc || !p->decoder || !p->volume || !p->audiosink)
     {
@@ -321,9 +347,12 @@ build_pipeline (player_t p, struct playlist *t, gboolean really_play)
     }
 
   g_object_set (G_OBJECT (p->filesrc), "location", t->data.track.url, NULL);
-
-  gst_bin_add_many (GST_BIN (p->thread), p->filesrc, p->decoder, p->volume, p->audiosink, NULL);
-  gst_element_link_many (p->filesrc, p->decoder, p->volume, p->audiosink, NULL );
+  g_signal_connect (p->decoder, "new-decoded-pad", G_CALLBACK (cb_newpad), (gpointer)p);
+    
+  gst_bin_add_many (GST_BIN (p->audio), p->conv, p->volume, p->audiosink, NULL);
+  gst_element_link_many (p->conv, p->volume, p->audiosink, NULL);
+  gst_bin_add_many (GST_BIN (p->thread), p->filesrc, p->decoder, NULL);
+  gst_element_link (p->filesrc, p->decoder);
     
   return TRUE;
 }
