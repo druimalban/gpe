@@ -11,8 +11,8 @@ PACKAGE_LDFLAGS += -L../libxsettings-client -Wl,-rpath-link,../libxsettings
 PACKAGE_CPPFLAGS += -I../libxsettings -I../libxsettings-client
 endif
 
-PACKAGE_CFLAGS += $(STANDARD_CFLAGS) `pkg-config --cflags glib-2.0`
-PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) `pkg-config --libs glib-2.0` -lXsettings-client 
+PACKAGE_CFLAGS += $(STANDARD_CFLAGS) `pkg-config --cflags glib-2.0 --cflags libxsettings-client`
+PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) `pkg-config --libs glib-2.0 --libs libxsettings-client`
 PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS)
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
