@@ -5,7 +5,7 @@ Version: VERSION
 Source: SOURCE
 Architecture: arm
 Maintainer: Phil Blundell <pb@debian.org>
-Depends: libgtk2.0-0, libgpewidget1, gpe-icons (>= 0.09), gst-plugins, gstreamer
+Depends: libgtk2.0-0, libgpewidget1, gpe-icons (>= 0.09), gst-plugins, gstreamer, gst-plugin-decodebin
 Conflicts: gpe-nmf-ogg, gpe-nmf-mp3
 Replaces: gpe-nmf-ogg, gpe-nmf-mp3
 Description: GPE audio player

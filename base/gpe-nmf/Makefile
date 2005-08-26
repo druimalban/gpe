@@ -4,7 +4,7 @@ DEBUG = no
 CVSBUILD = yes
 GST = yes
 GST_VERSION = 0.8
-VERSION = 0.21
+VERSION = 0.22
 
 MEMBERS = gpe-nmf playlist_edit
 
@@ -14,7 +14,7 @@ GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
 PACKAGE_CFLAGS = $(GTKCFLAGS) -D_GNU_SOURCE -Wall
 ifeq ($(DEBUG),yes)
 PACKAGE_CFLAGS += -O2 -g
-PACKAGE_LDFLAGS = -g #-lefence
+PACKAGE_LDFLAGS = -g
 else
 PACKAGE_CFLAGS += -Os -fomit-frame-pointer
 endif

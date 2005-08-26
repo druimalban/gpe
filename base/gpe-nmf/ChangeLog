@@ -1,5 +1,7 @@
 2005-08-26  Florian Boor  <florian.boor@kernelconcepts.de>
 
+    * Makefile: Release version 0.22.
+    * gstplayer.c: Remove comment.
     * gstplayer.c, player.h: Change setup to use decodebin instead of spider.
 
 2005-08-02  Florian Boor  <florian.boor@kernelconcepts.de>

@@ -322,7 +322,7 @@ build_pipeline (player_t p, struct playlist *t, gboolean really_play)
 
   p->audio = gst_bin_new ("audiobin");
   p->filesrc = gst_element_factory_make (source_elem, "disk_source");
-  p->decoder = gst_element_factory_make ("decodebin", "decoder"); /* fails on arm */
+  p->decoder = gst_element_factory_make ("decodebin", "decoder");
   p->volume = gst_element_factory_make ("volume", "volume");
   p->audiosink = gst_element_factory_make (sink_elem, "play_audio");
   p->conv = gst_element_factory_make ("audioconvert", "aconv");
