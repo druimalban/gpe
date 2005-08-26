@@ -1,5 +1,6 @@
 2005-08-26 Florian Boor <florian.boor@kernelconcepts.de>
 
+	* filechooser.c: Use different choosers depending on screen size.
 	* Release Version 0.3
 	* interface.c: Convert toolbar to new API.
 	* Makefile: Minor updates, version to 0.3.
