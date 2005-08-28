@@ -55,9 +55,9 @@ pixmaps_DATA = pixmaps/gpe-calendar.png
 
 EXTRA_DIST = $(service_DATA) \
              $(pixmaps_DATA) \
-             gpe-calendar.desktop.in \
+             gpe-calendar.desktop.in.in \
              hildon/org.gpe.gpe-calendar.service.in \
-             hildon/gpe-calendar.desktop.in \
+             hildon/gpe-calendar.desktop.in.in \
              intltool-extract.in \
              intltool-merge.in \
              intltool-update.in
