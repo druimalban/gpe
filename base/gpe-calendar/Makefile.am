@@ -46,8 +46,8 @@ service_in_files =
 endif
 
 desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
-service_DATA = $(service_in_files:.service.in=.service)
 @INTLTOOL_DESKTOP_RULE@
+service_DATA = $(service_in_files:.service.in=.service)
 
 pixmapsdir = $(datadir)/pixmaps
 

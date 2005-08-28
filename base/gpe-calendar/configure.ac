@@ -49,7 +49,7 @@ AC_SUBST(DEPS_LIBS)
 AC_OUTPUT([
 Makefile
 po/Makefile.in
-gpe-calendar.desktop
+gpe-calendar.desktop.in
 hildon/org.gpe.gpe-calendar.service
-hildon/gpe-calendar.desktop
+hildon/gpe-calendar.desktop.in
 ])

@@ -1,3 +1,10 @@
+2005-08-29  Florian Boor <florian.boor@kernelconcepts.de>
+
+	* Move *.desktop.in to *.desktop.in.in to fix creating of translated
+	  desktop files.
+	* configure.ac:  Create *.desktop.in instead of *.desktop.
+	* po/Makefile.in.in: Update.
+
 2005-08-24  Philippe De Swert <philippedeswert@scarlet.be>
 
 	* release version 0.63
