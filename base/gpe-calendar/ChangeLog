@@ -1,3 +1,7 @@
+2005-08-29  Philippe De Swert <philippedeswert@scarlet.be>
+
+	* release version 0.64 as the previous fix by Florian is quite important
+
 2005-08-29  Florian Boor <florian.boor@kernelconcepts.de>
 
 	* Move *.desktop.in to *.desktop.in.in to fix creating of translated
