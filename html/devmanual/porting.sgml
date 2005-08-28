@@ -1,5 +1,12 @@
 <chapter id="porting">
 <title>Porting GPE to a new Device</title>
+  <para>
+    Many developers getting in touch with GPE have some particular device in 
+    mind to run GPE on. This chapter is about how to port GPE to a new hardware
+    platform and what kind of software and libraries are necessary to have on
+    this hardware. One additional section offers information about tools to
+    create complete filesystems including GPE.
+  </para>
   <section>
   <title>Suppositions to run GPE</title>
     <para>
@@ -7,7 +14,7 @@
         <listitem>
           <para>Operating System</para>
           <para>GPE is designed to run ontop of the Linux operating system, but
-                it should be possible to run it on other UNIX-Like systems too.
+                it should be possible to run it on other UNIX-like systems too.
                 Most of the GPE developers don't have much experience with 
                 running other operating systems than Linux on their mobile 
                 devices, so any feedback about GPE running on other operating
@@ -19,11 +26,34 @@
           <para>At the moment we usually use Glibc in systems running GPE, but
                 it is reported to work with Uclibc as well. The main reason 
                 not to use Uclibc in production systems/daily use is the lack
-                of internationalisation support in it.</para>
+                of internationalisation support in it. This lack may cause
+                trouble with some GPE applications which do not support being 
+                built without i18n support, but the most frequently used GPE 
+                applications are known to support this.</para>
         </listitem>
         <listitem>
-          <para>Libc flavours</para>
-          <para></para>
+          <para>X window sytem</para>
+          <para>The X window system provides the graphical backend for GTK 
+                and GPE. In theory you can use GTK with different backends 
+                (e.g. GtkFB) as well, but it would be necessary to remove 
+                several features making use of special features of the X window
+                system (e.g. tray messages and infoprints). On the most 
+                platforms it is easy to make a X server work using a framebuffer
+                driver. There are only a few platforms around which need special
+                care to make X work at all. Hardware acceleration support is 
+                useful especially for devices with higher display resolutions. 
+                GPE will make use from this automatically running on X servers 
+                with hardware acceleration. Typically you would use the Kdrive
+                X server on mobile devices. Kdrive is part of the Xorg project
+                and provides a small and fast X server with good support for 
+                common mobile hardware.</para>
+        </listitem>
+        <listitem>
+          <para>GTK+ and related libraries</para>
+          <para>Because GTK runs on most UNIX-like platforms the availability 
+                of GTK is usually not a major problem. On some platforms with 
+                uncommon graphics hardware you might run into trouble with 
+                some Pango issues, but that should be easy to fix.</para>
         </listitem>
       </itemizedlist>
     </para>

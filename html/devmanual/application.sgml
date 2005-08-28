@@ -1,6 +1,72 @@
 <chapter id="application">
+<title>Writing Applications</title>
+  <para>
+    In this chapter we show how GPE applications are implemented and what
+    is different in comparison with Gnome and plain GTK applications. The 
+    major part of information about application development in this chapter
+    is very generic and not directly limited to GPE applications, so it might
+    be useful even if you do not intend to write a GPE application.
+  </para>
+<section>
 <title>A GPE Application Step by Step</title>
+  <para>
+  To get an idea about how GPE applications look like and how they use the 
+  GTK toolkit we look at a simple GPE application first. We will go through
+  the complete code of it to explain the very basic steps of GPE application
+  development. Our example project will consist of these files:
+  <table frame='all'>
+  <title>Example Project Files</title>
+  <tgroup cols='2' align='left' colsep='1' rowsep='1'>
+    <colspec colname='Des'/>
+    <colspec colname='Val'/>
+    <thead>
+      <row>
+        <entry>Filename</entry>
+        <entry>Description</entry>
+      </row>
+    </thead>
+    <tbody>
+       <row><entry>gpe-demo.c</entry><entry>Application implementation.</entry></row>
+       <row><entry>gpe-demo.png</entry><entry>Application icon.</entry></row>
+       <row><entry>gpe-demo.dektop.in</entry><entry>Desktop entry file base.</entry></row>
+       <row><entry>configure.ac</entry><entry>Autotools support file (autoconf).</entry></row>
+       <row><entry>Makefile.am</entry><entry>Autotools support file (automake).</entry></row>
+       <row><entry>gpe-dist.am</entry><entry>Some generic GPE make targets.</entry></row>
+    </tbody>
+    </tgroup>
+  </table>
+
+
+  </para>
+</section>
+<section>
+<title>Building and Testing</title>
   <para>
   text
   </para>
+</section>
+<section>
+<title>User Interfaces</title>
+  <para>
+  text
+  </para>
+</section>
+<section>
+<title>Data Handling</title>
+  <para>
+  text
+  </para>
+</section>
+<section>
+<title>Using GPE Services and Libraries</title>
+  <para>
+  text
+  </para>
+</section>
+<section>
+<title>Distribution and Packaging</title>
+  <para>
+  text
+  </para>
+</section>
 </chapter>
