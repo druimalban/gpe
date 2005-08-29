@@ -336,7 +336,9 @@ do_command (gpesyncd_context * ctx, gchar * command)
   if (buf)
     g_free (buf);
 
-//  fprintf (stderr, "error: %d, data: %d, cmd_result: %d\n", (int) error, (int) data, (int) cmd_result);
+  if (verbose)
+    fprintf (stderr, "error: %d, data: %d, cmd_result: %d\n", (int) error, (int) data, (int) cmd_result);
+
   /* Either we have an error, return data, or just a 
    * small "OK" */
   if (error)
@@ -444,12 +446,9 @@ remote_loop (gpesyncd_context * ctx)
 
   char data[BUFFER_LENGTH];
 
-  while ((!ctx->quit) && (!feof (ctx->ifp)))
+  while ((!ctx->quit) && (!feof(ctx->ifp)))
     {
-      c = fgetc (ctx->ifp);
-
-      if (!feof (ctx->ifp))
-	break;
+      c = fgetc(ctx->ifp);
 
       if (have_len == FALSE)
 	{
@@ -473,6 +472,8 @@ remote_loop (gpesyncd_context * ctx)
 	    {
 	      data[p] = c;
 	      data[p + 1] = '\0';
+	      if (verbose)
+                fprintf (stderr, "Executing command: %s", data+1);
 	      do_command (ctx, data + 1);
 	      have_len = FALSE;
 	      len = 0;
@@ -512,6 +513,7 @@ main (int argc, char **argv)
       {
 	remote = 1;
 	remote_loop (ctx);
+	exit (0);
       }
 
   command_loop (ctx);
