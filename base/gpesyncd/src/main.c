@@ -187,24 +187,32 @@ do_command (gpesyncd_context * ctx, gchar * command)
 
   GError *error = NULL;
 
-  //fprintf (stderr, "cmd: %s, typestr: %s, type: %d, uid: %d data[0]: %c\n", cmd, buf, type, uid, data[0]);
+  // fprintf (stderr, "cmd: %s typestr: %s uid: %d data[0]: %s\n", cmd, buf, uid, data[0]);
   if ((!strcasecmp (cmd, "GET")) && (type != GPE_DB_TYPE_UNKNOWN)
       && (uid > 0))
     {
+      gchar *get_result;
       switch (type)
 	{
 	case GPE_DB_TYPE_VCARD:
-	  g_string_append (ctx->result, get_contact (ctx, uid, &error));
+	  get_result = get_contact (ctx, uid, &error);
 	  break;
 	case GPE_DB_TYPE_VEVENT:
-	  g_string_append (ctx->result, get_event (ctx, uid, &error));
+	  get_result = get_event (ctx, uid, &error);
 	  break;
 	case GPE_DB_TYPE_VTODO:
-	  g_string_append (ctx->result, get_todo (ctx, uid, &error));
+	  get_result = get_todo (ctx, uid, &error);
 	  break;
 	default:
 	  g_string_append (ctx->result, "Error: wrong type\n");
 	}
+      if (get_result)
+	{
+	  g_string_append (ctx->result, get_result);
+	  g_free (get_result);
+	}
+      else
+	g_string_append (ctx->result, "Error: No item found\n");
     }
   else if ((!strcasecmp (cmd, "ADD")) && (type != GPE_DB_TYPE_UNKNOWN))
     {
@@ -340,9 +348,9 @@ do_command (gpesyncd_context * ctx, gchar * command)
   else if (!ctx->result->len)
     {
       if (cmd_result)
-	g_string_append_printf (ctx->result, "OK");
+	g_string_append_printf (ctx->result, "OK\n");
       else
-	g_string_append_printf (ctx->result, "UNKNOWN ERROR");
+	g_string_append_printf (ctx->result, "UNKNOWN ERROR\n");
     }
   gpesyncd_printf (ctx, ctx->result->str);
   g_string_assign (ctx->result, "");

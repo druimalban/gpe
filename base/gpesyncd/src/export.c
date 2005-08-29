@@ -45,6 +45,7 @@ gchar *
 get_contact (gpesyncd_context * ctx, guint uid, GError ** error)
 {
   GSList *tags = NULL;
+  gchar *data = NULL;
   char *err;
   if (sqlite_exec_printf
       (ctx->contact_db, "select tag,value from contacts where urn='%d'",
@@ -54,12 +55,14 @@ get_contact (gpesyncd_context * ctx, guint uid, GError ** error)
       return NULL;
     }
 
+  if (!tags)
+    return NULL;
+
   MIMEDirVCard *vcard = vcard_from_tags (tags);
 
-  gchar *data = mimedir_vcard_write_to_string (vcard);
+  data = mimedir_vcard_write_to_string (vcard);
 
   g_object_unref (vcard);
-
   return data;
 }
 
@@ -75,6 +78,10 @@ get_event (gpesyncd_context * ctx, guint uid, GError ** error)
       g_set_error (error, 0, 102, err);
       return NULL;
     }
+
+  if (!tags)
+    return NULL;
+
 
   MIMEDirVCal *vcal = mimedir_vcal_new ();
   MIMEDirVEvent *vevent = vevent_from_tags (tags);
@@ -100,6 +107,9 @@ get_todo (gpesyncd_context * ctx, guint uid, GError ** error)
       g_set_error (error, 0, 103, err);
       return NULL;
     }
+
+  if (!tags)
+    return NULL;
 
   MIMEDirVCal *vcal = mimedir_vcal_new ();
   MIMEDirVTodo *vtodo = vtodo_from_tags (tags);
