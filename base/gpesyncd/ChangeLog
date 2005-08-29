@@ -1,3 +1,7 @@
+2005-08-30  Martin Felis  <martn@silef.de>
+
+	* main.c: gpesyncd didn't want to stop after client disconnected.
+
 2005-08-30  Martin Felis  <martin@silef.de>
 
 	* export.c, main.c: Error in export.c caused segfault. (Forgot to
