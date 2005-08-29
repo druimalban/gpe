@@ -1,10 +1,10 @@
-2005-08-29  Philippe De Swert <philippedeswert@scarlet.be>
+2005-08-30  Philippe De Swert <philippedeswert@scarlet.be>
 
 	* release version 0.64 as the previous fix by Florian is quite important
 
 2005-08-29  Florian Boor <florian.boor@kernelconcepts.de>
 
-    * main.c: Rewrite toolbar to use new API. Fix warning.
+	* main.c: Rewrite toolbar to use new API. Fix warning.
 	* Move *.desktop.in to *.desktop.in.in to fix creating of translated
 	  desktop files.
 	* configure.ac:  Create *.desktop.in instead of *.desktop.
