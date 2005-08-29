@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2001, 2002, 2003 Philip Blundell <philb@gnu.org>
  * Hildon adaption 2005 by Matthias Steinbauer <matthias@steinbauer.org>
+ * Toolbar new API conversion 2005 by Florian Boor <florian@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -216,7 +217,7 @@ new_appointment (void)
   g_timeout_add(1000, do_reset_new, NULL);
   
   appt = new_event (viewtime, 0);
-  g_timeout_add(500, do_insert_text, (gpointer)appt);
+  g_timeout_add(500, (GSourceFunc)(do_insert_text), (gpointer)appt);
   gtk_widget_show (appt);
 }
 
@@ -241,7 +242,7 @@ void
 set_time_and_day_view(time_t selected_time)
 {
   viewtime=selected_time;
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (day_button), TRUE);
+  gtk_toggle_tool_button_set_active (GTK_TOGGLE_TOOL_BUTTON (day_button), TRUE);
   new_view (day);
   update_current_view();
 }
@@ -249,7 +250,7 @@ set_time_and_day_view(time_t selected_time)
 static void
 button_toggled (GtkWidget *widget, gpointer data)
 {
-  if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (widget)))
+  if (gtk_toggle_tool_button_get_active (GTK_TOGGLE_TOOL_BUTTON (widget)))
     new_view (data);
 }
 
@@ -408,6 +409,8 @@ main (int argc, char *argv[])
   GtkWidget *vbox, *toolbar;
   GdkPixbuf *p;
   GtkWidget *pw;
+  GtkToolItem *item;
+  GtkTooltips *tooltips;
 #ifdef IS_HILDON
   GtkWidget *app, *main_appview;
   osso_context_t *osso_context;
@@ -534,6 +537,9 @@ main (int argc, char *argv[])
   day = day_view ();
   month = month_view ();
   
+  tooltips = gtk_tooltips_new();
+  gtk_tooltips_enable(tooltips);
+  
   toolbar = gtk_toolbar_new ();
   gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);
   GTK_WIDGET_UNSET_FLAGS(toolbar, GTK_CAN_FOCUS);
@@ -545,67 +551,99 @@ main (int argc, char *argv[])
 #endif
   gtk_box_pack_start (GTK_BOX (vbox), notebook, TRUE, TRUE, 0);
 
-  pw = gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_NEW,
-			    _("New appointment"), _("Tap here to add a new appointment or reminder"),
-			    G_CALLBACK (new_appointment), NULL, -1);
-  GTK_WIDGET_UNSET_FLAGS(pw, GTK_CAN_FOCUS);
+  item = gtk_tool_button_new_from_stock(GTK_STOCK_NEW);
+  g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK(new_appointment), NULL);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
+  gtk_tooltips_set_tip(tooltips, GTK_WIDGET(item), 
+                       _("Tap here to add a new appointment or reminder"), NULL);
+  GTK_WIDGET_UNSET_FLAGS(item, GTK_CAN_FOCUS);
 
+  if (window_x > 260)
+    {	  
+      item = gtk_separator_tool_item_new();
+      gtk_separator_tool_item_set_draw(GTK_SEPARATOR_TOOL_ITEM(item), FALSE);
+      gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
+    }
+
+  pw = gtk_image_new_from_stock (GTK_STOCK_HOME, 
+                                 gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
+  item = gtk_toggle_tool_button_new();
+  gtk_tool_button_set_label(GTK_TOOL_BUTTON(item), _("Today"));
+  gtk_tool_button_set_icon_widget(GTK_TOOL_BUTTON(item), pw);
+  g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK(set_today), NULL);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
+  gtk_tooltips_set_tip(tooltips, GTK_WIDGET(item), 
+                       _("Switch to today and stay there/return to day selecting."), NULL);
+  GTK_WIDGET_UNSET_FLAGS(item, GTK_CAN_FOCUS);
+  today_button = GTK_WIDGET(item);    
+    
   if (window_x > 260) 
-    gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
+    {	  
+      item = gtk_separator_tool_item_new();
+      gtk_separator_tool_item_set_draw(GTK_SEPARATOR_TOOL_ITEM(item), FALSE);
+      gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
+    }
 
-  pw = gtk_image_new_from_stock (GTK_STOCK_HOME, gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
-  today_button = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar), 
-                                             GTK_TOOLBAR_CHILD_TOGGLEBUTTON, 
-                                             NULL,
-                                             _("Today"), 
-			                                 _("Switch to today and stay there/return to day selecting."), 
-                                             NULL, pw, set_today, NULL);
-  GTK_WIDGET_UNSET_FLAGS(today_button, GTK_CAN_FOCUS);
-
-  if (window_x > 260) 
-    gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
-
-  p = gpe_find_icon_scaled ("day_view", gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
+  p = gpe_find_icon_scaled ("day_view", 
+                            gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
   pw = gtk_image_new_from_pixbuf (p);
-  day_button = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar),
-					   GTK_TOOLBAR_CHILD_RADIOBUTTON, NULL,
-					   ("Day"), 
-					   _("Tap here to select day-at-a-time view."), NULL,
-					   pw, GTK_SIGNAL_FUNC (button_toggled), day);
-  GTK_WIDGET_UNSET_FLAGS(day_button, GTK_CAN_FOCUS);
-
+  item = gtk_radio_tool_button_new(NULL);
+  gtk_tool_button_set_label(GTK_TOOL_BUTTON(item), _("Day"));
+  gtk_tool_button_set_icon_widget(GTK_TOOL_BUTTON(item), pw);
+  g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK(button_toggled), day);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
+  gtk_tooltips_set_tip(tooltips, GTK_WIDGET(item), 
+                       _("Tap here to select day-at-a-time view."), NULL);
+  GTK_WIDGET_UNSET_FLAGS(item, GTK_CAN_FOCUS);
+  day_button = GTK_WIDGET(item);    
+    
+    
   p = gpe_find_icon_scaled ("week_view", gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
   pw = gtk_image_new_from_pixbuf (p);
-  week_button = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar),
-					    GTK_TOOLBAR_CHILD_RADIOBUTTON, day_button,
-					    _("Week"),
-					    _("Tap here to select week-at-a-time view."), NULL,
-					    pw, GTK_SIGNAL_FUNC (button_toggled), week);
-  GTK_WIDGET_UNSET_FLAGS(week_button, GTK_CAN_FOCUS);
-
+  item = gtk_radio_tool_button_new_from_widget(GTK_RADIO_TOOL_BUTTON(item));
+  gtk_tool_button_set_label(GTK_TOOL_BUTTON(item), _("Week"));
+  gtk_tool_button_set_icon_widget(GTK_TOOL_BUTTON(item), pw);
+  g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK(button_toggled), week);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
+  gtk_tooltips_set_tip(tooltips, GTK_WIDGET(item), 
+                       _("Tap here to select week-at-a-time view."), NULL);
+  GTK_WIDGET_UNSET_FLAGS(item, GTK_CAN_FOCUS);
+  week_button = GTK_WIDGET(item);    
+  
   p = gpe_find_icon_scaled ("month_view", gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
   pw = gtk_image_new_from_pixbuf (p);
-  month_button = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar),
-					     GTK_TOOLBAR_CHILD_RADIOBUTTON, week_button,
-					     _("Month"), 
-					     _("Tap here to select month-at-a-time view."), NULL,
-					     pw, GTK_SIGNAL_FUNC (button_toggled), month);
-  GTK_WIDGET_UNSET_FLAGS(month_button, GTK_CAN_FOCUS);
-
+  item = gtk_radio_tool_button_new_from_widget(GTK_RADIO_TOOL_BUTTON(item));
+  gtk_tool_button_set_label(GTK_TOOL_BUTTON(item), _("Month"));
+  gtk_tool_button_set_icon_widget(GTK_TOOL_BUTTON(item), pw);
+  g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK(button_toggled), month);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
+  gtk_tooltips_set_tip(tooltips, GTK_WIDGET(item), 
+                       _("Tap here to select month-at-a-time view."), NULL);
+  GTK_WIDGET_UNSET_FLAGS(item, GTK_CAN_FOCUS);
+  month_button = GTK_WIDGET(item);    
+  
   pw = gtk_image_new_from_stock(GTK_STOCK_OPEN, 
                                 gtk_toolbar_get_icon_size(GTK_TOOLBAR (toolbar)));
-  pw = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
-			    _("Import"), _("Open file to import an event from it."), 
-                NULL, pw, G_CALLBACK (on_import_vcal), NULL);
-  GTK_WIDGET_UNSET_FLAGS(pw, GTK_CAN_FOCUS);
+  item = gtk_tool_button_new(pw, _("Import"));
+  g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK(on_import_vcal), NULL);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
+  gtk_tooltips_set_tip(tooltips, GTK_WIDGET(item), 
+                       _("Open file to import an event from it."), NULL);
+  GTK_WIDGET_UNSET_FLAGS(item, GTK_CAN_FOCUS);
 
 #ifndef IS_HILDON
-  gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
+  item = gtk_separator_tool_item_new();
+  gtk_separator_tool_item_set_draw(GTK_SEPARATOR_TOOL_ITEM(item), FALSE);
+  gtk_tool_item_set_expand(item, TRUE);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
 
-  pw = gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_QUIT,
-					_("Tap here to exit the program"), NULL, 
-					G_CALLBACK (gpe_cal_exit), NULL, -1);
-  GTK_WIDGET_UNSET_FLAGS(pw, GTK_CAN_FOCUS);
+  item = gtk_tool_button_new_from_stock(GTK_STOCK_QUIT);
+  g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK(gpe_cal_exit), NULL);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
+  gtk_tooltips_set_tip(tooltips, GTK_WIDGET(item), 
+                       _("Tap here to exit the program"), NULL);
+  GTK_WIDGET_UNSET_FLAGS(item, GTK_CAN_FOCUS);
+  
 #endif
 
 #ifdef IS_HILDON
@@ -638,14 +676,14 @@ main (int argc, char *argv[])
 #endif
   gtk_widget_show (main_window);
   gtk_widget_show (vbox);
-  gtk_widget_show (toolbar);
+  gtk_widget_show_all (toolbar);
 
   gpe_calendar_start_xsettings ();
 
   update_all_views ();
 
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (day_button), TRUE);
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (today_button), FALSE);
+  gtk_toggle_tool_button_set_active (GTK_TOGGLE_TOOL_BUTTON (day_button), TRUE);
+  gtk_toggle_tool_button_set_active (GTK_TOGGLE_TOOL_BUTTON (today_button), FALSE);
   new_view (day);
 
   gtk_main ();

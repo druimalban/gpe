@@ -4,6 +4,7 @@
 
 2005-08-29  Florian Boor <florian.boor@kernelconcepts.de>
 
+    * main.c: Rewrite toolbar to use new API. Fix warning.
 	* Move *.desktop.in to *.desktop.in.in to fix creating of translated
 	  desktop files.
 	* configure.ac:  Create *.desktop.in instead of *.desktop.
