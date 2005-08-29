@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Buttonbar
+Comment=Multi-functional buttonbar.
+Exec=gpe-buttonbox -p
+Terminal=0
+Type=Application
+Icon=gpe-config.png
+Categories=Panel;Utility;
+StartupNotify=True
+SingleInstance=True

@@ -1,3 +1,11 @@
+2005-08-29  Florian Boor <florian@kernelconcepts.de>
+
+    * apps/*: Use autotools generated desktop files, provide .in files, 
+              add desktop for gpe-buttonbox itself.
+    * configure.ac, Makefile.am: major update of autotools stuff.
+    * Move png files to pixmap directory.
+    * gpe-tp.am, autogen.sh: New files.
+
 2005-08-26  Florian Boor <florian@kernelconcepts.de>
 
 	* gpe-buttonbox.c: Scale backgrounds.

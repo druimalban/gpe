@@ -1,6 +1,6 @@
 [Desktop Entry]
-Name=Buttonbar Setup
-Comment=Preset buttons
+_Name=Buttonbar Setup
+_Comment=Preset buttons
 Exec=gpe-buttonbox-config
 Terminal=0
 Type=Application

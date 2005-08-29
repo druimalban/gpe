@@ -1,29 +1,47 @@
 bin_PROGRAMS = gpe-buttonbox gpe-buttonbox-config
 
-gpe_buttonbox_SOURCES = gpe-buttonbox.c system-tray.c cfgfile.c
+gpe_buttonbox_SOURCES = gpe-buttonbox.c system-tray.c cfgfile.c cfgfile.h globals.h
 
-gpe_buttonbox_config_SOURCES = gpe-buttonbox-config.c cfgfile.c
+gpe_buttonbox_config_SOURCES = gpe-buttonbox-config.c cfgfile.c cfgfile.h globals.h
 
 INCLUDES = @BUTTONBOX_CFLAGS@ -DPREFIX=\"@prefix@\" -D_GNU_SOURCE -Wall
            
 LDADD = @BUTTONBOX_LIBS@
 
-EXTRA_DIST = show-desktop.png other-app.png
+desktopdir = $(datadir)/applications
+desktop_in_files = apps/gpe-buttonbox.desktop.in \
+                   apps/gpe-buttonbox-config.desktop.in
+desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
+@INTLTOOL_DESKTOP_RULE@
 
-install-data-local:
-	mkdir -p $(DESTDIR)$(datadir)/gpe/pixmaps/default/gpe-buttonbox
-	install -m 0644 show-desktop.png $(DESTDIR)$(datadir)/gpe/pixmaps/default/gpe-buttonbox/
-	install -m 0644 other-app.png $(DESTDIR)$(datadir)/gpe/pixmaps/default/gpe-buttonbox/
-	install -m 0644 docs.png $(DESTDIR)$(datadir)/gpe/pixmaps/default/gpe-buttonbox/
-	for i in blue_button_down yellow_button_down blue_button_up yellow_button_up separator; do install -m 0644 pixmaps/$$i.png $(DESTDIR)$(datadir)/gpe/pixmaps/default/gpe-buttonbox/$$i.png; done
-	install -d $(DESTDIR)/etc/gpe
-	install -m 0644 button-box.apps $(DESTDIR)/etc/gpe/
+pixmapsdir = $(datadir)/gpe/pixmaps/default/gpe-buttonbox/
 
-#	install -d $(DESTDIR)$(datadir)/gpe/overrides
-#	for i in abiword balsa gnumeric mozilla-firefox gpe-contacts gpe-calendar galculator gaim gpe-edit gpe-filemanager gpe-todo gkdial gpdf gpe-terminal gpe-gallery gpe-sketchbook totem gpe-mixer gpe-conf sol edit-vcard; do install -m 0644 apps/$$i.desktop $(DESTDIR)$(datadir)/gpe/overrides/$$i.desktop; done
-#	for i in audio_mixer calculator calendar contacts control_panels email file_manager image_gallery instant_messenger media_player modern_dialer pdf_viewer sketch_book sheet terminal text_editor to_do_list web word aisleriot_solitaire Printer edit-vcard gpe-config-ownerinfo gpe-config-serial gpe-config-sound gpe-config-users gpe-package gpe-shield; do install -m 0644 apps/$$i.png $(DESTDIR)$(datadir)/gpe/overrides/$$i.png; done
+pixmaps_DATA = pixmaps/show-desktop.png \
+               pixmaps/other-app.png \
+			   pixmaps/docs.png \
+			   pixmaps/blue_button_down.png \
+               pixmaps/yellow_button_down.png \
+               pixmaps/blue_button_up.png pixmaps/yellow_button_up.png \
+               pixmaps/separator.png 
 
-	install -d $(DESTDIR)$(datadir)/applications
-	install -m 0644 apps/gpe-buttonbox-config.desktop $(DESTDIR)$(datadir)/applications/
+configdir = $(sysconfdir)/gpe
+config_DATA = button-box.apps
+
+EXTRA_DIST = apps/gpe-buttonbox.desktop.in.in \
+             apps/gpe-buttonbox-config.desktop.in.in \
+             $(pixmaps_DATA) \
+             $(config_DATA) \
+             intltool-extract.in \
+             intltool-merge.in \
+             intltool-update.in \
+             po/POTFILES.in
+
+DISTCLEANFILES = intltool-extract \
+                 intltool-merge \
+                 intltool-update \
+                 po/POTFILES \
+                 po/.intltool-merge-cache \
+                 apps/gpe-buttonbox.desktop \
+                 apps/gpe-buttonbox-config.desktop
 
 include gpe-dist.am
