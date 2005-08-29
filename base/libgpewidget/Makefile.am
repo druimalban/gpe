@@ -33,7 +33,7 @@ gpeinclude_HEADERS = gpe/init.h gpe/errorbox.h gpe/smallbox.h gpe/pixmaps.h gpe/
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libgpewidget.pc
 
-pixmapdir = $(datadir)/pixmaps
+pixmapdir = $(datadir)/libgpewidget
 
 pixmap_DATA = pixmaps/clock.png pixmaps/clock24.png pixmaps/day-night-wheel.png
 

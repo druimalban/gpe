@@ -16,6 +16,9 @@ storage list and identified by a name string.
 Used by: Most GPE applications.
 </para>
 
+<!-- ##### SECTION Stability_Level ##### -->
+
+
 <!-- ##### STRUCT gpe_icon ##### -->
 <para>
 

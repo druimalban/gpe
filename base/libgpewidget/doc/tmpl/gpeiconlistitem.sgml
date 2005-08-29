@@ -15,6 +15,9 @@ The GpeIconListItem represents a single item inside of a GpeIconListView.
 
 </para>
 
+<!-- ##### SECTION Stability_Level ##### -->
+
+
 <!-- ##### MACRO GPE_ICON_LIST_ITEM_CONST ##### -->
 <para>
 

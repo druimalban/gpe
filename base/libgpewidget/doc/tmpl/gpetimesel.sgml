@@ -15,6 +15,9 @@ for a time value and an extra button which opens a time selection popup.
 
 </para>
 
+<!-- ##### SECTION Stability_Level ##### -->
+
+
 <!-- ##### STRUCT GpeTimeSel ##### -->
 <para>
 

@@ -17,6 +17,9 @@ user interaction.
 
 </para>
 
+<!-- ##### SECTION Stability_Level ##### -->
+
+
 <!-- ##### FUNCTION gpe_popup_infoprint ##### -->
 <para>
 Displays an infoprint on a given X display. Usually you want to use current

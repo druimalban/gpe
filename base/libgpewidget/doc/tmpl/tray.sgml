@@ -16,6 +16,9 @@ or a Matchbox-Panel.)
 Used by: gpe-aerial, gpe-bluetooth, gpe-beam and gpe-buttonbox
 </para>
 
+<!-- ##### SECTION Stability_Level ##### -->
+
+
 <!-- ##### FUNCTION gpe_system_tray_dock ##### -->
 <para>
 

@@ -15,6 +15,9 @@ dialogs and handle the users answers.
 
 </para>
 
+<!-- ##### SECTION Stability_Level ##### -->
+
+
 <!-- ##### FUNCTION gpe_question_ask ##### -->
 <para>
 Opens a blocking question dialog presenting a variable set of buttons to select

@@ -19,6 +19,9 @@ an error dialog and on stderr.
 
 </para>
 
+<!-- ##### SECTION Stability_Level ##### -->
+
+
 <!-- ##### FUNCTION gpe_error_box ##### -->
 <para>
 Creates and shows normal, blocking error dialog.

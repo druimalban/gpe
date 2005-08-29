@@ -15,6 +15,9 @@ some functions to make construction of this kind of menus easier.
 Used by: gpe-sketchbook, gpe-word
 </para>
 
+<!-- ##### SECTION Stability_Level ##### -->
+
+
 <!-- ##### FUNCTION popup_menu_button_new ##### -->
 <para>
 Create a new menu button containing a given widget.

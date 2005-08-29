@@ -17,6 +17,9 @@ of the date value in the display entry of the widget is supported too.
 
 </para>
 
+<!-- ##### SECTION Stability_Level ##### -->
+
+
 <!-- ##### FUNCTION gtk_date_combo_new ##### -->
 <para>
 Creates a new GtkDateCombo widget.

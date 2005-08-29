@@ -1,3 +1,7 @@
+2005-08-30  Florian Boor <florian@kernelconcepts.de>
+
+	* Makefile.am: Fix install location for pixmaps.
+
 2005-08-18  Florian Boor <florian@kernelconcepts.de>
 
 	* doc/tmpl/gpehelp.sgml: Update browser list, add reference to example. 

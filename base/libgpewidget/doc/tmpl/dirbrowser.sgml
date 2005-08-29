@@ -18,6 +18,9 @@ dialog.
 
 </para>
 
+<!-- ##### SECTION Stability_Level ##### -->
+
+
 <!-- ##### FUNCTION gpe_create_dir_browser ##### -->
 <para>
 Creates and opens a directory browser dialog.

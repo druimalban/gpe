@@ -15,6 +15,9 @@ A widget to display an analogue clock face.
 Used by: #GpeTimeSel widget, gpe-watch, gpe-clock
 </para>
 
+<!-- ##### SECTION Stability_Level ##### -->
+
+
 <!-- ##### MACRO GPE_TYPE_CLOCK_FACE ##### -->
 <para>
 Type checking macro.

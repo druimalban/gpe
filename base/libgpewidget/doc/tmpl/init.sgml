@@ -15,6 +15,9 @@ Functions used for application initialisation.
 Used by: Any GPE application.
 </para>
 
+<!-- ##### SECTION Stability_Level ##### -->
+
+
 <!-- ##### FUNCTION gpe_application_init ##### -->
 <para>
 Initialise a GPE application. This function is called on startup of a GPE
