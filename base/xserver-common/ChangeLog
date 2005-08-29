@@ -1,4 +1,6 @@
 2005-08-29  Florian Boor <florian@kernelconcepts.de>
 
+	* Release version 1.1
+	* Add xmodmap files for rotation.
 	* Initial release 1.0 with files merged in from gpe-session-scripts,
 	  gpe-dm and OE.
