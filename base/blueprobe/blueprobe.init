@@ -4,26 +4,48 @@ module_id() {
     awk 'BEGIN { FS=": " } /Hardware/ { print $2 } ' </proc/cpuinfo
 }
 
-if [ ! -f /etc/sysconfig/bluetooth ]; then
+if [ -f /etc/sysconfig/bluetooth ]; then
+
+  . /etc/sysconfig/bluetooth
+
+  # Turn echo off; if the bluetooth chip emits characters on power up,
+  # they would be echoed back to the chip, confusing it. This should only
+  # be necessary to do once, as hciattach turns echo off too (but too
+  # late the first time, since the bluetooth chip is powered up when the
+  # port is opened, before hciattach gets a chance to turn echo off).
+  echo "Turning echo off on ${BLUETOOTH_PORT}"
+  stty -echo < $BLUETOOTH_PORT
+
+else
   echo -n "Checking for built-in Bluetooth: "
   case `module_id` in
+    "HP iPAQ H2200")
+	BLUETOOTH=yes
+	PORT=/dev/tts/3
+	SPEED=921600
+        PROTO=any
+	PROBE=no
+	;;
     "HP iPAQ H5400")
 	BLUETOOTH=yes
 	PORT=/dev/tts/1
 	SPEED=921600
         PROTO=any
+	PROBE=yes
 	;;
     "HP iPAQ H3900")
 	BLUETOOTH=yes
 	PORT=/dev/tts/1
 	SPEED=921600
         PROTO=bcsp
+	PROBE=yes
 	;;
     "HP iPAQ H3800")
 	BLUETOOTH=yes
 	PORT=/dev/ttySB0
 	SPEED=230400
         PROTO=bcsp
+	PROBE=yes
 	;;
     *)
 	BLUETOOTH=no
@@ -31,8 +53,11 @@ if [ ! -f /etc/sysconfig/bluetooth ]; then
   esac
 
   if [ $BLUETOOTH = "yes" ]; then
-    if ! blueprobe $PORT $SPEED; then
-      BLUETOOTH=no
+    stty -echo < $PORT
+    if [ $PROBE = "yes" ]; then
+      if ! blueprobe $PORT $SPEED; then
+        BLUETOOTH=no
+      fi
     fi
   fi
 
