@@ -1,0 +1,6 @@
+This is a small tool to handle the exchange between the gpe databases
+and the vcard, vevent, vtodo formats.
+
+Type "help" to get some information what you can do.
+
+Bug reports are VERY welcome!
