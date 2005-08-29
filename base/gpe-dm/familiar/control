@@ -5,6 +5,6 @@ Version: VERSION
 Source: SOURCE
 Architecture: arm
 Maintainer: Phil Blundell <pb@debian.org>
-Depends: gpe-session-scripts (>= 0.14), xserver, update-rc.d
+Depends: gpe-session-scripts (>= 0.14), xserver, update-rc.d, xserver-common
 Provides: x-display-manager
 Description: Minimal X display manager

@@ -1,7 +1,7 @@
 PREFIX = /usr/local
 PACKAGE = gpe-dm
 CVSBUILD = yes
-VERSION = 0.47
+VERSION = 0.48
 
 ifeq ($(CVSBUILD),yes)
 BUILD = ../build
@@ -32,9 +32,6 @@ install-program: gpe-dm
 	install -d $(DESTDIR)/etc/rc2.d
 	install gpe-dm.init $(DESTDIR)/etc/init.d/gpe-dm
 	install -d $(DESTDIR)/etc/X11
-	install Xsession $(DESTDIR)/etc/X11/Xsession
-	install Xinit $(DESTDIR)/etc/X11/Xinit
-	install Xserver $(DESTDIR)/etc/X11/Xserver
 
 clean: clean-po
 	rm -f gpe-dm gpe-dm.o

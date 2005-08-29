@@ -1,3 +1,10 @@
+2005-08-29  Florian Boor  <florian@kernelconcepts.de>
+
+	* Release Version 0.48
+	* Makefile: Remove Xserver, Xinit and Xsession to become part of
+                    xserver-common.
+	* familiar/control: Update dependencies.
+
 2005-08-02  Florian Boor  <florian@kernelconcepts.de>
 
 	* Xserver: Add support for Sharp Akita.
