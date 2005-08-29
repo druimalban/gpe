@@ -1,0 +1,4 @@
+2005-08-29  Florian Boor <floriankernelconcepts.de>
+
+	* Release version 0.65.
+	* Remove several files to become part of xserver-common.
