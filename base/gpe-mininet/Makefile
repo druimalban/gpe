@@ -29,11 +29,8 @@ PACKAGE_CFLAGS += -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 
 PACKAGE_CPPFLAGS += -I.
 
-GTKCFLAGS = `pkg-config --cflags gtk+-2.0 gdk-pixbuf-2.0 libmb` 
-GTKLDFLAGS += `pkg-config --libs gtk+-2.0 gdk-2.0` `pkg-config --libs gthread-2.0 libmb`
-
-PACKAGE_CFLAGS +=  -Wall $(GTKCFLAGS)
-PACKAGE_LDFLAGS += -lgpewidget $(GTKLDFLAGS) 
+PACKAGE_CFLAGS +=  -Wall $(GPECFLAGS) `pkg-config --cflags gdk-pixbuf-2.0 libmb`
+PACKAGE_LDFLAGS += -lgpewidget $(GPELDFLAGS) `pkg-config --libs gdk-pixbuf-2.0 libmb`
 
 MEMBERS  = main netlink iwlib
 
