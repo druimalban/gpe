@@ -3,9 +3,14 @@ PACKAGE = xserver-common
 CVSBUILD = yes
 VERSION = 1.1
 DEBUG = no
-BUILD = ../build
 
 LINGUAS = 
+
+ifeq ($(CVSBUILD),yes)
+BUILD = ../build
+else
+BUILD = build
+endif
 
 all:
 
