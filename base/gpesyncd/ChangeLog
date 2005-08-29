@@ -1,0 +1,8 @@
+2005-08-30  Martin Felis  <martin@silef.de>
+
+	* export.c, main.c: Error in export.c caused segfault. (Forgot to
+	check, whether I get some tags back or not).
+
+2005-08-29  Martin Felis  <martin@silef.de>
+
+	* Initial Release.
