@@ -1,5 +1,6 @@
 2005-08-29  Florian Boor <florian@kernelconcepts.de>
 
+    * Update gpe-dist.am
     * Release Version 0.5.
     * apps/*: Use autotools generated desktop files, provide .in files, 
               add desktop for gpe-buttonbox itself.
