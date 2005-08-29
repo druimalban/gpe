@@ -39,6 +39,7 @@ fi
 
 if [ -d /sys/class/backlight ]; then
 chown -R $USER /sys/class/backlight/*
+chmod u+rw /sys/class/backlight/*/*
 fi
 
 if [ -d /sys/devices/platform/omapfb/panel ]; then
@@ -49,6 +50,15 @@ if [ -e /dev/sharp_fl ]; then
 chown $USER /dev/sharp_fl
 fi
 
+# terminal and framebuffer access #
+if [ -e /dev/tty ]; then
+chmod a+rw /dev/tty
+fi
+
+if [ -e /dev/fb0 ]; then
+chown $USER /dev/fb0
+fi
+ 
 
 # check for ramdisk location
 if [ -d /mnt/ramfs ]; then
