@@ -10,7 +10,7 @@ if [ $? -eq 1 ]; then
   if [ -x /usr/bin/matchbox-remote ]; then
     /usr/bin/matchbox-remote -exit;
   else
-    mbcontrol -exit;
+    matchbox-remote -exit;
 fi
 # hack to run on simpad too
     killall metacity; 

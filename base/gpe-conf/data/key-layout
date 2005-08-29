@@ -58,6 +58,6 @@ title = Calendar
 symbol = ibutton5.png
 key = XF86Start
 modificator = ???Pressed
-command = mbcontrol --desktop
+command = matchbox-remote -desktop
 xpos = 168
 ypos = 130

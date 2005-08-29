@@ -12,6 +12,6 @@ cmd4 = To-do List;gpe-todo
 cmd5 = Taskmanager;gpe-taskmanager
 cmd6 = Audio Player;gpe-nmf
 cmd7 = Web Browser;dillo
-cmd8 = Toggle Desktop;mbcontrol -desktop
+cmd8 = Toggle Desktop;matchbox-remote -desktop
 cmd9 = Audio Mixer;gpe-mixer
 cmd10 = Suspend Device;apm --suspend
