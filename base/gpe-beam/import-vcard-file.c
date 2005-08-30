@@ -46,6 +46,7 @@ int
 main (int argc, char *argv[])
 {
   MIMEDirVCard *vcard;
+  MIMEDirProfile *profile;
   gchar *str;
   GError *err = NULL;
 	gchar *content;
@@ -70,14 +71,19 @@ main (int argc, char *argv[])
   {
     if (!strstr(lines[i],"END:VCARD"))
     {
-      lines[i]=realloc(lines[i],strlen(lines[i])+9);
+      lines[i]=realloc(lines[i], strlen(lines[i])+9);
       sprintf(lines[i]+strlen(lines[i]),"%s","END:VCARD");
     }
-    vcard = mimedir_vcard_new_from_string (lines[i], &err);
+    profile = mimedir_profile_new(NULL);
+    mimedir_profile_parse(profile, lines[i], &err);
+	if (!err)
+      vcard = mimedir_vcard_new_from_profile (profile, &err);
+	
     if (vcard == NULL)
       {
         fprintf (stderr, "Err: %s\n", err->message);
-        g_clear_error (&err);
+        g_error_free (&err);
+		err = NULL;
         i++;
         continue;
       }
@@ -85,11 +91,11 @@ main (int argc, char *argv[])
     str = mimedir_vcard_get_as_string (vcard);
     if (str) 
     {
-//      puts (str);
       free(str);
     }
     gpe_import_vcard (db, vcard);
     
+	g_object_unref(profile);
 	g_object_unref(vcard);
     i++;
   }

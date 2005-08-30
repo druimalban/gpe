@@ -51,7 +51,8 @@
 
 #define COMMAND_IR_ON  PREFIX "/bin/irsw on"
 #define COMMAND_IR_OFF PREFIX "/bin/irsw off"
-#define COMMAND_VCARD_IMPORT PREFIX "/bin/vcard-import < " IR_INBOX "/%s"
+#define COMMAND_VCARD_IMPORT PREFIX "/bin/gpe-contacts -i " IR_INBOX "/%s"
+#define COMMAND_VCAL_IMPORT PREFIX "/bin/gpe-calendar -i " IR_INBOX "/%s"
 #define IR_DISCOVERY "/proc/net/irda/discovery"
 #define IR_DISCOVERY_STATUS "/proc/sys/net/irda/discovery"
 static const gchar *MY_VCARD;
@@ -485,48 +486,30 @@ do_send_file (void)
 
 
 static void
-do_import_file(GtkWidget *dlg,gint response,char *filename)
+do_import_file(GtkWidget *dlg, gint response, char *filename)
 {
 	char *imp;
 	
+	gtk_widget_destroy (dlg);
+	
 	if (response == GTK_RESPONSE_YES)
 	{
-		gtk_widget_destroy (dlg);
-		imp = g_strdup_printf
-			(COMMAND_VCARD_IMPORT, filename);
-		switch (system (imp))
+		if (strstr (filename, ".vcf"))
+			imp = g_strdup_printf(COMMAND_VCARD_IMPORT, filename);
+		else
+			imp = g_strdup_printf(COMMAND_VCAL_IMPORT, filename);
+		
+		if (system (imp) == -1)
 		{
-		case -1:
 			dlg = gtk_message_dialog_new (GTK_WINDOW(control_window),
 							  GTK_DIALOG_DESTROY_WITH_PARENT,
 							  GTK_MESSAGE_ERROR,
 							  GTK_BUTTONS_CLOSE,
 							  _("Could not start import tool."));
-			break;
-		case 0:
-			dlg = gtk_message_dialog_new (GTK_WINDOW(control_window),
-							  GTK_DIALOG_DESTROY_WITH_PARENT,
-							  GTK_MESSAGE_INFO,
-							  GTK_BUTTONS_CLOSE,
-							  _("vCard was imported successfully."));
-			break;
-		default:
-			dlg = gtk_message_dialog_new
-				(GTK_WINDOW(control_window),
-				 GTK_DIALOG_DESTROY_WITH_PARENT,
-				 GTK_MESSAGE_ERROR,
-				 GTK_BUTTONS_CLOSE,
-				 _("Import of vCard failed."));
-			break;
+			gtk_dialog_run (GTK_DIALOG (dlg));
+			gtk_widget_destroy (dlg);
 		}
-		gtk_dialog_run (GTK_DIALOG (dlg));
-		gtk_widget_destroy (dlg);
-
 		g_free (imp);
-	}
-	else
-	{
-		gtk_widget_destroy (dlg);
 	}
 }
 
@@ -536,8 +519,9 @@ check_file_import (char *filename)
 {
 	GtkWidget *dlg;
 
-	/* ultra simple check for a vcf file */
-	if (strstr (filename, "vcf"))
+	/* ultra simple check for a mimedir file */
+	if (strstr (filename, ".vcf") || strstr (filename, ".vcal") 
+		|| strstr (filename, "vtodo"))
 	{
 		gdk_threads_enter ();
 		
@@ -545,7 +529,7 @@ check_file_import (char *filename)
 					      GTK_DIALOG_DESTROY_WITH_PARENT | GTK_DIALOG_MODAL,
 					      GTK_MESSAGE_QUESTION,
 					      GTK_BUTTONS_YES_NO,
-					      _("File '%s' looks like a vCard, "
+					      _("File '%s' looks like a mimedir (vCard, vCal) file"
 					       "do you want to import it?"), filename);
 		
 		g_signal_connect_after (GTK_OBJECT (dlg), "response",

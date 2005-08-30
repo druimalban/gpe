@@ -1,4 +1,10 @@
-2005-07-29              Florian Boor <florian.boor@kernelconcepts.de>
+2005-08-31  Florian Boor <florian.boor@kernelconcepts.de>
+
+	* Makefile: Version to 0.2.8
+	* main.c: Use gpe-contacts for importing vcard files.
+	          Implement importing of vcal and vtodo files.
+
+2005-07-29  Florian Boor <florian.boor@kernelconcepts.de>
 
 	* main.h: remove declaration.
 
