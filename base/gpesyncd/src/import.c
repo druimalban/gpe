@@ -76,6 +76,51 @@ set_tag_value (GSList * tags, gchar * tag, gchar * value)
 }
 
 gboolean
+item_exists (gpesyncd_context *ctx, guint uid, gchar *type, GError **error)
+{
+  GString *query = g_string_new ("");
+  gchar *errmsg = NULL;
+  sqlite *db = NULL;
+  gint errorcode = 0;
+
+  if (!strcasecmp (type, "contacts"))
+    {
+      g_string_printf (query, "select value from %s where urn='%d' and upper(tag)='MODIFIED'", type, uid);
+      db = ctx->contact_db;
+      errorcode = 241;
+    }
+  else if(!strcasecmp (type, "calendar")) 
+    {
+      g_string_printf (query, "select value from %s where uid='%d' and upper(tag)='MODIFIED'", type, uid);
+      db = ctx->event_db;
+      errorcode = 242;
+    }
+   else if(!strcasecmp (type, "todo")) 
+    {
+      g_string_printf (query, "select value from %s where uid='%d' and upper(tag)='MODIFIED'", type, uid);
+      db = ctx->todo_db;
+      errorcode = 243;
+    }
+   
+   int query_uid=0;
+   sqlite_exec_printf (db, query->str, fetch_int_callback, &query_uid, &errmsg);
+
+   g_string_free (query, TRUE);
+
+   if (errmsg)
+    {
+      g_set_error (error, 0, errorcode, "Checking item in %s with uid %d: %s\n", type,
+		   uid, errmsg);
+      return FALSE;
+    }
+  
+   if (query_uid == 0)
+     return FALSE;
+   
+   return TRUE;
+}
+
+gboolean
 add_item (gpesyncd_context * ctx, guint uid, gchar * type, gchar * data,
 	  GError ** error)
 {
@@ -88,7 +133,7 @@ add_item (gpesyncd_context * ctx, guint uid, gchar * type, gchar * data,
   gint errorcode = 0;
 
   profile = mimedir_profile_new (NULL);
-  mimedir_profile_parse (profile, data, NULL);
+  mimedir_profile_parse (profile, data, &convert_error);
 
   if (convert_error)
     {
@@ -218,6 +263,18 @@ add_item (gpesyncd_context * ctx, guint uid, gchar * type, gchar * data,
 
 }
 
+gboolean
+modify_item (gpesyncd_context * ctx, guint uid, gchar * type, gchar * data,
+	  GError ** error)
+{
+  gboolean mod_result = FALSE;
+  mod_result = del_item (ctx, uid, type, error);
+  if (mod_result == FALSE)
+    return FALSE;
+
+  mod_result = add_item (ctx, uid, type, data, error);
+  return mod_result;
+}
 
 gboolean
 del_item (gpesyncd_context * ctx, guint uid, gchar * type, GError ** error)
@@ -228,36 +285,46 @@ del_item (gpesyncd_context * ctx, guint uid, gchar * type, GError ** error)
   gint errorcode = 0;
   if (!strcasecmp (type, "contacts"))
     {
-      g_string_printf (query, "delete from contacts where urn='%d'", uid);
+      g_string_printf (query, "delete from %s where urn='%d'", type, uid);
       db = ctx->contact_db;
       errorcode = 231;
     }
   else if (!strcasecmp (type, "calendar"))
     {
-      g_string_printf (query, "delete from calendar where uid='%d'", uid);
+      g_string_printf (query, "delete from %s where uid='%d'", type, uid);
       db = ctx->event_db;
       errorcode = 232;
     }
-  else if (!strcasecmp (type, "todo"))
+   else if (!strcasecmp (type, "todo"))
     {
-      g_string_printf (query, "delete from todo where uid='%d'", uid);
+      g_string_printf (query, "delete from %s where uid='%d'", type, uid);
       db = ctx->todo_db;
       errorcode = 233;
     }
+ 
+  if (!item_exists (ctx, uid, type, error))
+    {
+      if (!*error)
+	g_set_error (error, 0, errorcode, "No item found\n");
+
+      g_string_free (query, TRUE);
+      return FALSE;
+    }
+  
   sqlite_exec_printf (db, query->str, NULL, NULL, &errmsg, uid);
+
   if (errmsg)
     {
       g_set_error (error, 0, errorcode, "deleting %s with uid %d: %s\n", type,
 		   uid, errmsg);
+      g_string_free (query, TRUE);
       return FALSE;
     }
 
   if (!strcasecmp (type, "contacts"))
-    g_string_printf (query, "delete from contacts_urn where urn='%d'", uid);
+    g_string_printf (query, "delete from %s_urn where urn='%d'", type, uid);
   if (!strcasecmp (type, "calendar"))
-    g_string_printf (query, "delete from calendar_urn where uid='%d'", uid);
-  if (!strcasecmp (type, "todo"))
-    g_string_printf (query, "delete from todo_urn where uid='%d'", uid);
+    g_string_printf (query, "delete from %s_urn where uid='%d'", type, uid);
 
   sqlite_exec_printf (db, query->str, NULL, NULL, &errmsg, uid);
 
@@ -266,11 +333,11 @@ del_item (gpesyncd_context * ctx, guint uid, gchar * type, GError ** error)
     {
       g_set_error (error, 0, errorcode, "deleting %s_urn with uid %d: %s\n",
 		   type, uid, errmsg);
+      g_string_free (query, TRUE);
       return FALSE;
     }
 
   g_string_free (query, TRUE);
-
   return TRUE;
 
 }
