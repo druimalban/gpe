@@ -1,3 +1,14 @@
+2005-08-31  Martin Felis <martin@silef.de>
+	* gpesync_client.c, gpesync_client.h: Added. It's the communication
+	backend for this plugin. It is the client for the gpesyncd.
+	* utils.c, utils.h: Added. They contain general function that can
+	be used by calendar, contact, todo items.
+	* calendar.c, calendar.h, todo.c, todo.h: Added but no functionality,
+	yet.
+	* contacts.c: Ported to use the gpesyncd.
+	* gpe_db.h gpe_db.c: No more needed. All conversion is made by the
+	gpesyncd on the pda.
+
 2005-08-13  Martin Felis <martin@silef.de>
 	* gpe_db.h gpe_db.c: Implemented the tags_replace_category function,
 	which replaces the numbers of the cateogories to their names.
