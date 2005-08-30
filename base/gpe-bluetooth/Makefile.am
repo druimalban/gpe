@@ -45,7 +45,7 @@ pixmaps_extradir = $(datadir)/pixmaps
 btscriptdir = $(sysconfdir)/bluetooth
 btscript_DATA = hciattach.sh
 
-btresumedir = $(sysconfdir)/bluetooth
+btresumedir = $(sysconfdir)/apm/resume.d
 btresume_DATA = gpe-bluetooth-resume.sh
 
 EXTRA_DIST = $(desktop_DATA) \
