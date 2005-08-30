@@ -160,7 +160,6 @@ get_todo_uid_list (gpesyncd_context * ctx, GError ** error)
 {
   GSList *list = NULL;
   char *err;
-  fprintf (stderr, "Getting todo_list\n");
   if (sqlite_exec
       (ctx->todo_db,
        "select uid,value from todo where upper(tag)='MODIFIED' order by uid",
@@ -169,6 +168,5 @@ get_todo_uid_list (gpesyncd_context * ctx, GError ** error)
       g_set_error (error, 0, 113, err);
       return NULL;
     }
-  fprintf (stderr, "Getting todo_list\n");
   return list;
 }
