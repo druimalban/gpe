@@ -1,5 +1,9 @@
 2005-08-19  Florian Boor  <florian.boor@kernelconcepts.de>
 
+    * import-vcard.c: Use newer libmimedir API.
+    
+2005-08-19  Florian Boor  <florian.boor@kernelconcepts.de>
+
     * import-vcard.c: Improve import to set name field.
     * import-vcard.c, db.c: Replace some strcmp by strcasecmp to avoid problems
                             with uppcase/lowercase in tags.

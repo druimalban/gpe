@@ -1,3 +1,7 @@
+2005-08-30  Florian Boor <florian.boor@kernelconcepts.de>
+
+    * import-vcal.c: Convert to new libmimedir API.
+
 2005-08-30  Philippe De Swert <philippedeswert@scarlet.be>
 
 	* release version 0.64 as the previous fix by Florian is quite important

@@ -164,7 +164,8 @@ do_import_vcal (MIMEDirVCal *vcal)
 void
 import_vcal (const gchar *data, size_t len)
 {
-  MIMEDirVCal *cal;
+  MIMEDirProfile *profile;
+  MIMEDirVCal *cal = NULL;
   gchar *str;
   GError *error = NULL;
 
@@ -172,7 +173,10 @@ import_vcal (const gchar *data, size_t len)
   memcpy (str, data, len);
   str[len] = 0;
 
-  cal = mimedir_vcal_new_from_string (str, &error);
+  profile = mimedir_profile_new(NULL);
+  mimedir_profile_parse(profile, str, &error);
+  if (!error)
+    cal = mimedir_vcal_new_from_profile (profile, &error);
  
   g_free (str);
 
@@ -183,8 +187,14 @@ import_vcal (const gchar *data, size_t len)
       query = g_strdup_printf (_("Received a calendar entry.  Import it?"));
 
       if (gpe_question_ask (query, NULL, "bt-logo", "!gtk-cancel", NULL, "!gtk-ok", NULL, NULL))
-	do_import_vcal (cal);
+	    do_import_vcal (cal);
 
       g_object_unref (cal);
+      g_object_unref (profile);
     }
+  else
+    {
+      if (error)
+        g_error_free(error);
+    }  
 }

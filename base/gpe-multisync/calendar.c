@@ -70,10 +70,15 @@ calendar_push_object (struct db *db, const char *obj, const char *uid,
 {
   GSList *list, *tags;
   MIMEDirVEvent *vevent;
-  MIMEDirVCal *vcal;
+  MIMEDirVCal *vcal = NULL;
+  MIMEDirProfile *profile;
   int id;
 
-  vcal = mimedir_vcal_new_from_string (obj, err);
+  profile = mimedir_profile_new(NULL);
+  mimedir_profile_parse(profile, obj, err);
+  if (*err)
+    vcal = mimedir_vcal_new_from_profile (profile, err);
+  
   if (vcal == NULL)
     return FALSE;
 
@@ -104,6 +109,7 @@ calendar_push_object (struct db *db, const char *obj, const char *uid,
   mimedir_vcal_free_component_list (list);
    
   g_object_unref (vcal);
+  g_object_unref (profile);
 
   store_tag_data (db->db, "calendar", id, tags, TRUE);
 

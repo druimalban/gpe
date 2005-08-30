@@ -64,10 +64,15 @@ contacts_push_object (struct db *db, const char *obj, const char *uid,
 		      char *returnuid, int *returnuidlen, GError **err)
 {
   GSList *tags;
-  MIMEDirVCard *vcard;
+  MIMEDirVCard *vcard = NULL;
+  MIMEDirProfile *profile;
   int id;
 
-  vcard = mimedir_vcard_new_from_string (obj, err);
+  profile = mimedir_profile_new(NULL);
+  mimedir_profile_parse(profile, obj, err);
+  if (*err)
+    vcard = mimedir_vcard_new_from_profile (profile, err);
+  
   if (vcard == NULL)
     return FALSE;
 
@@ -91,6 +96,8 @@ contacts_push_object (struct db *db, const char *obj, const char *uid,
   sprintf (returnuid, "%d", id);
   *returnuidlen = strlen (returnuid);
 
+  g_object_unref(profile);
+	
   return TRUE;
 }
 

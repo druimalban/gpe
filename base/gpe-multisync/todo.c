@@ -71,9 +71,14 @@ todo_push_object (struct db *db, const char *obj, const char *uid,
   GSList *list, *tags;
   MIMEDirVTodo *vtodo;
   MIMEDirVCal *vcal;
+  MIMEDirProfile *profile;
   int id;
 
-  vcal = mimedir_vcal_new_from_string (obj, err);
+  profile = mimedir_profile_new(NULL);
+  mimedir_profile_parse(profile, obj, err);
+  if (*err)
+    vcal = mimedir_vcal_new_from_profile (profile, err);
+  
   if (vcal == NULL)
     return FALSE;
 
@@ -104,6 +109,7 @@ todo_push_object (struct db *db, const char *obj, const char *uid,
   mimedir_vcal_free_component_list (list);
    
   g_object_unref (vcal);
+  g_object_unref (profile);
 
   nsqlc_exec_printf (db->db, "delete from todo where uid='%q'", NULL, NULL, NULL, uid);
   store_tag_data (db->db, "todo", id, tags, FALSE);

@@ -112,7 +112,8 @@ do_import_vcard (MIMEDirVCard *card)
 int
 import_vcard (const gchar *data, size_t len)
 {
-  MIMEDirVCard *card;
+  MIMEDirVCard *card = NULL;
+  MIMEDirProfile *profile;
   gchar *str;
   GError *error = NULL;
 
@@ -120,7 +121,10 @@ import_vcard (const gchar *data, size_t len)
   memcpy (str, data, len);
   str[len] = 0;
 
-  card = mimedir_vcard_new_from_string (str, &error);
+  profile = mimedir_profile_new(NULL);
+  mimedir_profile_parse(profile, str, &error);
+  if (!error)
+    card = mimedir_vcard_new_from_profile (profile, &error);
  
   g_free (str);
 
@@ -130,6 +134,7 @@ import_vcard (const gchar *data, size_t len)
 
       result = do_import_vcard (card);
       g_object_unref (card);
+      g_object_unref (profile);
       return result;
     }
   return -3;

@@ -160,6 +160,7 @@ do_import_vcal (MIMEDirVCal *vcal)
 int
 import_vcal (const gchar *data, size_t len)
 {
+  MIMEDirProfile *profile = NULL;
   MIMEDirVCal *cal;
   gchar *str;
   GError *error = NULL;
@@ -168,7 +169,10 @@ import_vcal (const gchar *data, size_t len)
   memcpy (str, data, len);
   str[len] = 0;
 
-  cal = mimedir_vcal_new_from_string (str, &error);
+  profile = mimedir_profile_new(NULL);
+  mimedir_profile_parse(profile, str, &error);
+  if (!error)
+    cal = mimedir_vcal_new_from_profile (profile, &error);
  
   g_free (str);
 
@@ -176,6 +180,7 @@ import_vcal (const gchar *data, size_t len)
     {
       do_import_vcal (cal);
       g_object_unref (cal);
+      g_object_unref (profile);
       return 0;
     }
   else
