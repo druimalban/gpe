@@ -3,7 +3,7 @@
 
 #include <string.h>
 #include <stdlib.h>
-
+#include <time.h>
 #include <glib.h>
 #include <glib-object.h>
 #include <opensync/opensync.h>
