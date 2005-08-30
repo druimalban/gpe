@@ -23,7 +23,7 @@ static void *initialize(OSyncMember *member, OSyncError **error)
 	assert(env != NULL);
 
 	//now you can get the config file for this plugin
-	if (!osync_member_get_config(member, &configdata, &configsize, error)) {
+	if (!osync_member_get_config_or_default(member, &configdata, &configsize, error)) {
 		osync_error_update(error, "Unable to get config data: %s", osync_error_print(error));
 		g_free(env);
 		osync_trace(TRACE_EXIT_ERROR, "GPE-SYNC %s: %s", __func__, osync_error_print(error));
@@ -41,22 +41,14 @@ static void *initialize(OSyncMember *member, OSyncError **error)
 
 	//Process the configdata here and set the options on your environment
 	env->member = member;
-	OSyncGroup *group = osync_member_get_group(member);
-	env->change_id = g_strdup(osync_group_get_name(group));
 
-	env->contacts = NULL;
-	
-	env->categories = NULL;
+	env->client = NULL;
 	
 	//Set up a hash to detect changes
 	env->hashtable = osync_hashtable_new();
-	if (env->hashtable == NULL) {
-		printf ("ERROR creating hashtable!\n");		
-	}
 	
 	osync_trace(TRACE_EXIT, "GPE-SYNC %s: %p", __func__, env);
 
-	//Now your return your struct.
 	return (void *)env;
 }
 
@@ -71,32 +63,28 @@ static void connect(OSyncContext *ctx)
 	// We need to get the context to load all our stuff.
 	gpe_environment *env = (gpe_environment *)osync_context_get_plugin_data(ctx);
 	
-	printf ("Connecting to: %s:%d user: %s\n",env->device_addr, env->port, env->username);
 	OSyncError *error = NULL;
 
-	// Here we read out the categories, since
-	// they are stored for every entry as a number, but
-	// for the vcards we need the full names.
-	nsqlc *categories_db;
-	gchar *path;
-	path = g_strdup_printf ("%s@%s:.gpe/categories", env->username, env->device_addr);
+	gchar *path = g_strdup_printf ("%s@%s:gpesyncd", env->username, env->device_addr);
 
-	char *nsqlc_err;
-	categories_db = nsqlc_open_ssh (path, 0, &nsqlc_err);
-	if (categories_db == NULL) {
-		osync_context_report_error(ctx, OSYNC_ERROR_NO_CONNECTION, nsqlc_err);
-		categories_db = NULL;
+	char *client_err;
+	env->client = gpesync_client_open_ssh (path, 0, &client_err);
+	if (env->client == NULL) {
+		osync_context_report_error(ctx, OSYNC_ERROR_NO_CONNECTION, client_err);
+		env->client = NULL;
 		return;
 	}
-	env->categories = fetch_categories (categories_db);
-
-	nsqlc_close(categories_db);
 	
-	if (gpe_contacts_connect(ctx) == FALSE) {
-		osync_context_report_error(ctx, OSYNC_ERROR_NO_CONNECTION, "Could not connect to contacts.");
+/*	if (gpe_calendar_connect(ctx) == FALSE) {
+		osync_context_report_error(ctx, OSYNC_ERROR_NO_CONNECTION, "Could not connect to calendar.");
 		return;
 	}
 
+	if (gpe_todo_connect(ctx) == FALSE) {
+		osync_context_report_error(ctx, OSYNC_ERROR_NO_CONNECTION, "Could not connect to todo.");
+		return;
+	}
+*/
 	if (!osync_hashtable_load(env->hashtable, env->member, &error)) {
 		osync_context_report_error(ctx, OSYNC_ERROR_GENERIC, osync_error_print(&error));
 
@@ -105,14 +93,14 @@ static void connect(OSyncContext *ctx)
 	
 	osync_context_report_success(ctx);
 
-	/* TODO: What is this??
+	// TODO: What is this??
 	//you can also use the anchor system to detect a device reset
 	//or some parameter change here. Check the docs to see how it works
 	//char *lanchor = NULL;
 	//Now you get the last stored anchor from the device
-	if (!osync_anchor_compare(env->member, "lanchor", lanchor))
-		osync_member_set_slow_sync(env->member, "<object type to request a slow-sync>", TRUE);
-        */
+	//if (!osync_anchor_compare(env->member, "lanchor", lanchor))
+	//	osync_member_set_slow_sync(env->member, "<object type to request a slow-sync>", TRUE);
+        
 	osync_debug("GPE_SYNC", 4, "stop: %s", __func__);
 }
 
@@ -125,6 +113,8 @@ static void get_changeinfo(OSyncContext *ctx)
 	osync_debug("GPE_SYNC", 4, "start: %s", __func__);
 
 	gpe_contacts_get_changes(ctx);
+//	gpe_calendar_get_changes(ctx);
+//	gpe_todo_get_changes(ctx);
 
 	//Now we need to answer the call
 	osync_context_report_success(ctx);
@@ -140,17 +130,13 @@ static void sync_done(OSyncContext *ctx)
 	osync_debug("GPE_SYNC", 4, "start: %s", __func__);
 	gpe_environment *env = (gpe_environment *)osync_context_get_plugin_data(ctx);
 	
-	/*
-	 * This function will only be called if the sync was successfull
-	 */
-	
 	//If we have a hashtable we can now forget the already reported changes
 	osync_hashtable_forget(env->hashtable);
 	
 	//If we use anchors we have to update it now.
-	char *lanchor = NULL;
+	//char *lanchor = NULL;
 	//Now you get/calculate the current anchor of the device
-	osync_anchor_update(env->member, "lanchor", lanchor);
+	//osync_anchor_update(env->member, "lanchor", lanchor);
 	
 	//Answer the call
 	osync_context_report_success(ctx);
@@ -171,10 +157,10 @@ static void disconnect(OSyncContext *ctx)
 	//Close the hashtable
 	osync_hashtable_close(env->hashtable);
 	
-	if (env->contacts) {
-		gpe_contacts_disconnect(ctx);
+	if (env->client) {
+		gpesync_client_close (env->client);
 	}
-	
+
 	//Answer the call
 	osync_context_report_success(ctx);
 	osync_debug("GPE_SYNC", 4, "stop: %s", __func__);
@@ -192,6 +178,8 @@ static void finalize(void *data)
 	osync_hashtable_free(env->hashtable);
 	g_free(env->username);
 	g_free(env->device_addr);
+	if (env->client)
+	  gpesync_client_close (env->client);
 	g_free(env);
 	osync_debug("GPE_SYNC", 4, "stop: %s", __func__);
 }
@@ -210,9 +198,7 @@ void get_info(OSyncEnv *env)
 	info->name = "gpe-sync";
 	info->longname = "Provides synchronisation with handhelds using GPE.";
 	info->description = "See http://gpe.handhelds.org for more information";
-	//the version of the api we are using, (1 at the moment)
 	info->version = 1;
-	//If you plugin is threadsafe.
 	info->is_threadsafe = TRUE;
 	
 	//Now set the function we made earlier
@@ -230,7 +216,9 @@ void get_info(OSyncEnv *env)
 	info->timeouts.connect_timeout = 5;
 	
 	// Now we got to tell opensync, which formats and what types we accept
-	gpe_contacts_setup(info);
+	gpe_contacts_setup (info);
+//	gpe_calendar_setup (info);
+//	gpe_todo_setup (info);
 	
 	osync_debug("GPE_SYNC", 4, "stop: %s", __func__);
 }

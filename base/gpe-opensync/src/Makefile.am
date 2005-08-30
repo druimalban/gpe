@@ -4,8 +4,8 @@ opensyncheaderdir=@OPENSYNC_HEADERDIR@
 
 INCLUDES = @PACKAGE_CFLAGS@
 
-AM_CFLAGS = -Wall -Werror -lnsqlc $(shell pkg-config --cflags libgpevtype)  @PACKAGE_CFLAGS@
-AM_LIBS = $(shell pkg-config --libs libgpevtype)
+AM_CFLAGS = -Wall -Werror @PACKAGE_CFLAGS@
+AM_LIBS = 
 
 config_DATA = gpe-sync
 
@@ -17,13 +17,15 @@ EXTRA_DIST = \
 	gpe_sync.h \
 	contacts.h \
 	gpe_xml.h \
-	gpe_db.h \
+	gpesync_client.h \
+	utils.h \
 	gpe-sync
 
 gpe_sync_la_SOURCES = \
 	gpe_sync.c \
 	contacts.c \
-	gpe_db.c \
+	gpesync_client.c \
+	utils.c \
 	gpe_xml.c
 	
 gpe_sync_la_LDFLAGS = -avoid-version -export-dynamic -module

@@ -2,32 +2,22 @@
 #define GPE_SYNC_H
 
 #include <string.h>
+#include <stdlib.h>
+
 #include <glib.h>
 #include <glib-object.h>
 #include <opensync/opensync.h>
 
-#include <strings.h>
-#include <stdlib.h>
-
 // this is needed for gpe_xml.c:
 #include <libxml/parser.h>
-#include <nsqlc.h>
-#include <gpe/tag-db.h>
-#include <gpe/vcard.h>
+
+#include "gpesync_client.h"
 
 typedef struct {
 	OSyncMember *member;
 	OSyncHashTable *hashtable;
-	char *change_id;
 
-	nsqlc *contacts;
-	nsqlc *calendar;
-	nsqlc *todo;
-
-	// This is a list with gpe_tag_pair 's which
-	// contain all the categories. As tag we have
-	// the index and as value the name of the category.
-	GSList *categories;
+	gpesync_client *client;
 	
 	// configuration
 	char *device_addr; // the ip of the handheld;
@@ -38,8 +28,10 @@ typedef struct {
 } gpe_environment;
 
 #include "contacts.h"
+//#include "calendar.h"
+//#include "todo.h"
 #include "gpe_xml.h"
-#include "gpe_db.h"
+#include "utils.h"
 
 #define GPE_CONNECT_ERROR 1
 #define GPE_SQL_EXEC_ERROR 2
