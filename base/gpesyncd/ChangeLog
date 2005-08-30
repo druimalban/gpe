@@ -1,4 +1,12 @@
-2005-08-30  Martin Felis  <martn@silef.de>
+2005-08-30  Martin Felis  <martin@silef.de>
+	
+	* main.c: Corrected processing of the data. Now also vcards
+	that start with a BEGIN:vcard instead of a BEGIN:VCARD will
+	be processed.
+	* import.c: Made a seperate function for modifying data. Fixed
+	the return value of del_item.
+	
+2005-08-30  Martin Felis  <martin@silef.de>
 
 	* main.c: gpesyncd didn't want to stop after client disconnected.
 
