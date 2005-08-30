@@ -1,3 +1,10 @@
+2005-08-31 Philippe De Swert <philippedeswert@scarlet.be>
+
+	* html.c: rewrite browser tests
+	* main.c: Make stop_timing behave correctly
+	* basic Debian-isation.
+	* Taking maintainership
+
 2004-08-06  Florian Boor <florian.boor@kernelconcepts.de>
 	
 	* html.c: Added more browsers, but we need a better solution.

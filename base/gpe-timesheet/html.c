@@ -1,6 +1,7 @@
 /*
  * This file is part of gpe-timeheet
  * (c) 2004 Florian Boor <florian.boor@kernelconcepts.de>
+ * Copright (c) 2005 Philippe De Swert <philippedeswert@scarlet.be>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -22,10 +23,7 @@
 
 #define _(x) gettext(x)
 #define FILE_URL_PREFIX "file://"
-#define HTML_APP1 "/usr/bin/dillo"
-#define HTML_APP2 "/usr/bin/minimo"
-#define HTML_APP3 "/usr/bin/mozilla"
-#define HTML_APP4 "/usr/bin/firefox"
+static gchar *apps = "/usr/bin/gpe-helpviewer /usr/bin/gpe-mini-browser /usr/bin/dillo /usr/bin/minimo /usr/bin/firefox";
 
 static char **myjournal = NULL;
 static int jlen = 0;
@@ -45,8 +43,8 @@ journal_add_header(char* title)
     _("Journal for"), title);
   myjournal[2] = g_strdup("<table WIDTH=100% BORDER=0 CELLPADDING=0 CELLSPACING=0>\n");
   myjournal[3] = g_strdup_printf("<tr><th align=\"left\">%s</th><th " \
-    "align=\"left\">%s</th><th align=\"left\">%s</th><th align=\"left\">%s</th></tr>",
-  	_("Start"), _("Comment"), _("End"), _("Duration"));
+    "align=\"left\">%s</th><th align=\"left\">%s</th><th align=\"left\">%s</th><th align=\"left\">%s</th></tr>",
+  	_("Start"), _("Comment"), _("End"), _("Comment"),  _("Duration"));
   myjournal[4] = NULL;
   jlen = 5;
   return jlen; /* curent length */
@@ -59,10 +57,14 @@ int
 journal_add_line(time_t tstart, time_t tstop, 
                  const char *istart, const char *istop)
 {
+  int duration=1;
+
+  duration = ctime(&tstop) - ctime(&tstart);
+
   myjournal = realloc(myjournal,sizeof(char*)*(++jlen));
   myjournal[jlen - 2] = 
-    g_strdup_printf("<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>\n",
-	  ctime(&tstart), istart, ctime(&tstop), istop);
+    g_strdup_printf("<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%d</td></tr>\n",
+	  ctime(&tstart), istart, ctime(&tstop), istop, duration);
   myjournal[jlen - 1] = NULL;
   return jlen;
 }
@@ -108,23 +110,29 @@ journal_to_file(const char *filename)
 int 
 journal_show(const char *filename)
 {
-  char *app = NULL;
   char *jurl;
+  gchar **app, **applist;
   pid_t p_html;
 	
   /* check if the file is readable */
+  printf("filename = %s\n", filename);
   if (access(filename,R_OK))
     return -1;
 	
-  /* check if we are able to execute one of the display
-  applications */
-  if (!access(HTML_APP1,X_OK)) app = HTML_APP1;
-    else if (!access(HTML_APP2,X_OK)) app = HTML_APP2;
-      else if (!access(HTML_APP3,X_OK)) app = HTML_APP3;
-        else if (!access(HTML_APP4,X_OK)) app = HTML_APP4;
+  /* make array of strings to be able to check for the different aplications */
+  app = g_strsplit (apps, " ", 0);
+  applist = app;
+
+  while (*app != NULL)
+  {
+	if (!access(*app, X_OK))
+		break;
+	else
+		app++;
+  } 
 	
   /* return if no app is available */
-  if (app == NULL) 
+  if (*app == NULL) 
     return -2;
 	
   /* construct the complete file url */
@@ -138,7 +146,7 @@ journal_show(const char *filename)
         return -3;
       break;
       case  0: 
-        execlp(app,app,jurl,NULL);
+        execlp(*app,*app,jurl,NULL);
       break;
       default: 
         g_free(jurl);

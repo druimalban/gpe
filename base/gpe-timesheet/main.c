@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2002, 2003 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2005 Philippe De Swert <philippedeswert@scarlet.be>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -25,7 +26,6 @@
 #define _(_x) gettext(_x)
 #define JOURNAL_FILE "/tmp/journal.html"
 
-static const guint window_x = 240, window_y = 320;
 
 struct gpe_icon my_icons[] = {
   { "clock", },
@@ -192,7 +192,6 @@ confirm_dialog (gchar **text, gchar *action, gchar *action2)
   frame = gtk_frame_new (_("Notes"));
   gtk_widget_show (frame);
   entry = gtk_text_view_new ();
-  gtk_text_view_set_accepts_tab(GTK_TEXT_VIEW(entry),FALSE);
   gtk_widget_show (entry);
   gtk_container_add (GTK_CONTAINER (frame), entry);
 
@@ -203,12 +202,10 @@ confirm_dialog (gchar **text, gchar *action, gchar *action2)
   buttoncancel = gtk_button_new_from_stock (GTK_STOCK_CANCEL);
 
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (w)->action_area), 
-		      buttoncancel, TRUE, TRUE, 0);
-  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (w)->action_area), 
 		      buttonok, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (w)->action_area), 
+		      buttoncancel, TRUE, TRUE, 0);
 
-  GTK_WIDGET_SET_FLAGS(buttonok,GTK_CAN_DEFAULT);
-  gtk_widget_grab_default(buttonok);
   gtk_signal_connect (GTK_OBJECT (buttonok), "clicked", 
 		      GTK_SIGNAL_FUNC (confirm_click_ok), NULL);
   gtk_signal_connect (GTK_OBJECT (buttoncancel), "clicked", 
@@ -273,7 +270,7 @@ stop_timing (GtkWidget *w, gpointer user_data)
       struct task *t;
       gchar *text = " ";
       t = gtk_ctree_node_get_row_data (ct, node);
-/*      if (confirm_dialog (&text, _("Clocking out:"), t->description))*/
+      if (confirm_dialog (&text, _("Clocking out:"), t->description))
 	{
 	  gtk_ctree_node_set_text (ct, node, 1, "");
 	  log_entry (STOP, time (NULL), t, text);
@@ -482,7 +479,6 @@ main(int argc, char *argv[])
   load_tasks (root, GTK_CTREE (tree), NULL);
   
   gtk_container_add (GTK_CONTAINER (window), vbox_top);
-  gtk_widget_set_usize (window, window_x, window_y);
 
   g_signal_connect (G_OBJECT (window), "delete-event", 
 		    G_CALLBACK (exit_app), (void *)tree);

@@ -7,3 +7,4 @@ Things to do in gpe-timesheet
   - Show date in a single line.
   - Create summary at the end.
   - improve table size, coloring etc.
+-fix end and start timestamps
