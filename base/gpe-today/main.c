@@ -198,6 +198,7 @@ static void init_main_window(void)
 
 	g_signal_connect(G_OBJECT(window.toplevel), "configure-event",
 			 G_CALLBACK(resize_callback), NULL);
+	
 }
 
 static void load_modules(void)
@@ -336,9 +337,6 @@ struct myscroll * myscroll_new(gboolean continuous)
 	
 	g_signal_connect(G_OBJECT(scroll->draw), "expose-event",  
 			 G_CALLBACK(myscroll_draw_cb), scroll);
-	
-	g_signal_connect(G_OBJECT(scroll->draw), "configure-event",
-			 G_CALLBACK(myscroll_size_cb), scroll);
 	
 	if (continuous)
 		g_signal_connect(G_OBJECT(scroll->adjust), "value-changed",

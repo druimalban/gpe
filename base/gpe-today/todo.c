@@ -43,7 +43,7 @@ static void make_no_items_label(void)
 		return;
 	
 	todo.message = gtk_widget_create_pango_layout(todo.scroll->draw, NULL);
-	pango_layout_set_wrap(calendar.noevent, PANGO_WRAP_WORD);
+	pango_layout_set_wrap(todo.message, PANGO_WRAP_WORD);
 	todo.scroll->list = g_slist_append(todo.scroll->list, todo.message);
 	pango_layout_set_markup(todo.message, str, strlen(str));
 }
