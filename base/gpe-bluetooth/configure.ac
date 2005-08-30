@@ -9,7 +9,7 @@ AC_PROG_CC
 AC_STDC_HEADERS
 AC_PROG_INSTALL
 
-DEP_MODULES="gtk+-2.0 >= 2.2 glib-2.0 >= 2.2 libgpewidget libgpevtype dbus-glib-1 libglade-2.0 mimedir-1.0 gthread-2.0"
+DEP_MODULES="gtk+-2.0 >= 2.2 glib-2.0 >= 2.2 libgpewidget libgpevtype dbus-glib-1 libglade-2.0 mimedir-1.0 gthread-2.0 bluez"
 
 # i8n stuff
 AH_TEMPLATE([GETTEXT_PACKAGE], [Package name for gettext])
