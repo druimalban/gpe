@@ -31,12 +31,16 @@ gpesyncd_context_new (char *err)
 
   sprintf (buf, "%s%s", home, "/.gpe/calendar");
   ctx->event_db = sqlite_open (buf, 0, &err);
+  if (verbose)
+    fprintf (stderr, "Opening: %s\n", buf);
   if (!ctx->event_db)
     {
       g_free (buf);
       return NULL;
     }
   sprintf (buf, "%s%s", home, "/.gpe/contacts");
+  if (verbose)
+    fprintf (stderr, "Opening: %s\n", buf);
   ctx->contact_db = sqlite_open (buf, 0, &err);
   if (!ctx->contact_db)
     {
@@ -44,6 +48,8 @@ gpesyncd_context_new (char *err)
       return NULL;
     }
   sprintf (buf, "%s%s", home, "/.gpe/todo");
+  if (verbose)
+    fprintf (stderr, "Opening: %s\n", buf);
   ctx->todo_db = sqlite_open (buf, 0, &err);
   if (!ctx->todo_db)
     {
@@ -197,9 +203,9 @@ do_command (gpesyncd_context * ctx, gchar * command)
   if (verbose)
   {
     if (data)
-      fprintf (stderr, "cmd: %s typestr: %s uid: %d data[0]: %c\n", cmd, buf, uid, data[0]);
+      fprintf (stderr, "cmd: %s typestr: %s type: %d uid: %d data[0]: %c\n", cmd, buf, type, uid, data[0]);
     else
-      fprintf (stderr, "cmd: %s typestr: %s uid: %d\n", cmd, buf, uid);
+      fprintf (stderr, "cmd: %s typestr: %s type: %d uid: %d\n", cmd, buf, type, uid);
   }
 
   if ((!strcasecmp (cmd, "GET")) && (type != GPE_DB_TYPE_UNKNOWN)
