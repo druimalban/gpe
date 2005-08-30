@@ -43,18 +43,18 @@ pixmaps_DATA = pixmaps/bt-off.png \
 pixmaps_extradir = $(datadir)/pixmaps
 
 btscriptdir = $(sysconfdir)/bluetooth
-btscript_DATA = hciattach.sh
+btscript_SCRIPTS = hciattach.sh
 
 btresumedir = $(sysconfdir)/apm/resume.d
-btresume_DATA = gpe-bluetooth-resume.sh
+btresume_SCRIPTS = gpe-bluetooth-resume.sh
 
 EXTRA_DIST = $(desktop_DATA) \
              $(pixmaps_DATA) \
              $(service_DATA) \
 	         $(dbusconf_DATA) \
 	         $(peers_DATA) \
-	         $(btscript_DATA) \
-	         $(btresume_DATA) \
+	         $(btscript_SCRIPTS) \
+	         $(btresume_SCRIPTS) \
 	         gpe-bluetooth.desktop.in \
              intltool-extract.in \
              intltool-merge.in \
