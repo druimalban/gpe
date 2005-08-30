@@ -183,11 +183,25 @@ do_command (gpesyncd_context * ctx, gchar * command)
 	}
     }
 
-  data = (gchar *) (cmd_string->str + pos);
+  if (pos < cmd_string->len)
+  {
+    data = (gchar *) (cmd_string->str + pos - 1);
+    /* We remove any leading spaces */
+    while (data[0] == ' ')
+      *data++;
+  }
+  else data = NULL;
 
   GError *error = NULL;
 
-  // fprintf (stderr, "cmd: %s typestr: %s uid: %d data[0]: %s\n", cmd, buf, uid, data[0]);
+  if (verbose)
+  {
+    if (data)
+      fprintf (stderr, "cmd: %s typestr: %s uid: %d data[0]: %c\n", cmd, buf, uid, data[0]);
+    else
+      fprintf (stderr, "cmd: %s typestr: %s uid: %d\n", cmd, buf, uid);
+  }
+
   if ((!strcasecmp (cmd, "GET")) && (type != GPE_DB_TYPE_UNKNOWN)
       && (uid > 0))
     {
@@ -237,29 +251,19 @@ do_command (gpesyncd_context * ctx, gchar * command)
       switch (type)
 	{
 	case GPE_DB_TYPE_VCARD:
-	  cmd_result = del_item (ctx, uid, "contacts", &error);
-	  if (cmd_result)
-	    break;
-	  else
-	    cmd_result = add_item (ctx, uid, "contacts", data, &error);
+	  cmd_result = modify_item (ctx, uid, "contacts", data, &error);
 	  break;
 	case GPE_DB_TYPE_VEVENT:
-	  cmd_result = del_item (ctx, uid, "calendar", &error);
-	  if (cmd_result)
-	    break;
-	  else
-	    cmd_result = add_item (ctx, uid, "calendar", data, &error);
+	  cmd_result = modify_item (ctx, uid, "calendar", data, &error);
 	  break;
 	case GPE_DB_TYPE_VTODO:
-	  cmd_result = del_item (ctx, uid, "todo", &error);
-	  if (cmd_result)
-	    break;
-	  else
-	    cmd_result = add_item (ctx, uid, "todo", data, &error);
+	  cmd_result = modify_item (ctx, uid, "todo", data, &error);
 	  break;
 	default:
 	  g_string_append (ctx->result, "Error: wrong type\n");
 	}
+      if (error)
+	fprintf (stderr, "Error found in modify\n");
     }
   else if ((!strcasecmp (cmd, "DEL")) && (type != GPE_DB_TYPE_UNKNOWN)
 	   && (uid > 0))
@@ -390,9 +394,11 @@ command_loop (gpesyncd_context * ctx)
       if (tmpstr)
 	{
 	  *tmpstr++;
-	  if (!strncasecmp (tmpstr, "BEGINs", 5))
+	  if (!strncasecmp (tmpstr, "BEGIN", 5))
 	    {
 	      addtype = strchr (tmpstr, 'V');
+	      if (!addtype)
+		addtype = strchr (tmpstr, 'v');
 	      if ((!strcasecmp (addtype, "VCALENDAR\n"))
 		  || (!strcasecmp (addtype, "VCARD\n")))
 		{
