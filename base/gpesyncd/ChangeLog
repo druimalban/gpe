@@ -1,3 +1,10 @@
+2005-08-31  Martin Felis  <martin@silef.de>
+
+	* import.c: Added a check whether there are any items in the
+	database.
+	* main.c: gpesyncd now creates tables if they do not yet exist. This
+	prevents gpesyncd from crashing when adding a new item.
+	
 2005-08-30  Martin Felis  <martin@silef.de>
 	
 	* main.c: Corrected processing of the data. Now also vcards
