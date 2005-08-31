@@ -1,114 +1,62 @@
 #include "gpe_sync.h"
 
-/*! \brief Connects to the calendar database
+/*! \brief Commits changes to the gpe client
  *
- * \param env		Environment of the plugin
- * \param error		Will be fillen when an error occurs
- */
-osync_bool gpe_calendar_connect(OSyncContext *ctx)
-{
-	osync_debug("GPE_SYNC", 4, "start %s", __func__);
-
-	osync_debug("GPE_SYNC", 4, "stop %s", __func__);
-
-	return TRUE;
-}
-
-/*! \brief Closes the connection to the database
+ * \param ctx		The current context of the sync
+ * \param change	The change that has to be committed
  *
- * \param ctx	Context of the plugin
  */
-void gpe_calendar_disconnect(OSyncContext *ctx)
+osync_bool gpe_calendar_commit_change (OSyncContext *ctx, OSyncChange *change)
 {
-	return;
-}
-
-/*! \brief Deletes an item with a given urn
- *
- * \param ctx		The context of the plugin
- * \param urn		The urn of the calendar item 
- */
-void gpe_calendar_delete_item(OSyncContext *ctx, unsigned int urn)
-{
-	return;
-}
-
-/*! \brief Adds a new event 
- *
- * \param ctx		The context of the plugin
- * \param urn		The urn of the event 
- * \param data		Must be a vcard
- */
-osync_bool gpe_calendar_add_item(OSyncContext *ctx, unsigned int urn, const char *data)
-{
-	return TRUE;
-}
-
-/*! \brief Provides access to the calendar
- *
- * \param ctx		Context of the plugin
- * \param change	The change
- */
-static osync_bool gpe_calendar_access(OSyncContext *ctx, OSyncChange *change)
-{
-	osync_debug("GPE_SYNC", 4, "start %s", __func__);
-
-	int urn = 0;	
-
-	switch(osync_change_get_changetype(change)) {
+        gpe_environment *env = (gpe_environment *)osync_context_get_plugin_data(ctx);
+	gchar *result = NULL;
+	gchar *modified = NULL;
+	gchar *error = NULL;
+	osync_bool state = FALSE;
+		
+	switch (osync_change_get_changetype (change)) {
 		case CHANGE_DELETED:
-			urn = atoi(g_strdup (osync_change_get_uid(change)));
-			gpe_calendar_delete_item(ctx, urn);
-
+			gpesync_client_exec_printf (env->client, "del vevent %d", client_callback_string, &result, &error, atoi (osync_change_get_uid (change)));
 			break;
 		case CHANGE_ADDED:
-			if (gpe_calendar_add_item(ctx, urn, osync_change_get_data (change)) == FALSE)
-				return FALSE;
-			
+			gpesync_client_exec_printf (env->client, "add vevent %s", client_callback_string, &result, &error, osync_change_get_data (change));
 			break;
 		case CHANGE_MODIFIED:
-			urn = atoi(g_strdup (osync_change_get_uid(change)));
-			gpe_calendar_delete_item(ctx, urn);
-			if (gpe_calendar_add_item(ctx, urn, osync_change_get_data (change)) == FALSE)
-				return FALSE;
-			
+			gpesync_client_exec_printf (env->client, "modify vevent %d %s", client_callback_string, &result, &error, atoi (osync_change_get_uid (change)), osync_change_get_data (change));
 			break;
 		default:
-			osync_debug("GPE_SYNC", 0, "Unknown change type");
+			osync_debug ("GPE_SYNC", 0, "Unknown change type");
 	}
 
-	osync_context_report_success(ctx);
-	return TRUE;		
-	osync_debug("GPE_SYNC", 4, "stop %s", __func__);
+	if (parse_value_modified (result, &result, &modified))
+	{
+		if (!strcasecmp (result, "OK"))
+		{
+			state = TRUE;
+			osync_change_set_hash (change, modified);
+			osync_hashtable_update_hash (env->hashtable, change);
+			osync_context_report_success(ctx);
+		}
+		else {
+			osync_debug ("GPE_SYNC", 0, "Couldn't commit event: %s", error);
+			osync_context_report_error (ctx, OSYNC_ERROR_GENERIC, "Couldn't commit event: %s", error);
+			g_free (error);
+		}
+	} else {
+		osync_context_report_error (ctx, OSYNC_ERROR_GENERIC, "Couldn't process answer form gpesyncd: %s", result);
+
+	}
+	
+	if (result)
+		g_free (result);
+	
+	return state;
 }
 
-/*! \brief Commits a change into the GPE-Database
- *
- * \param ctx		The context of the plugin
- * \param change	The item that has changed
- */
-static osync_bool gpe_calendar_commit_change (OSyncContext *ctx, OSyncChange *change)
-{
-	osync_debug ("GPE-SYNC", 4, "start: %s", __func__);
-	osync_debug ("GPE-SYNC", 3, "Writing change %s with changetype %i", osync_change_get_uid(change), osync_change_get_changetype(change));
-
-	gpe_environment *env = (gpe_environment *)osync_context_get_plugin_data(ctx);
-
-	if (!gpe_calendar_access(ctx, change))
-		return FALSE;
-
-	osync_hashtable_update_hash(env->hashtable, change);
-	osync_debug("GPE-SYNC", 4, "end: %s", __func__);
-
-	return TRUE;
-}
-
-
-/*! \brief Lists all the objects that were changed
+/*! \brief Reports all available items to opensync
  *
  * \param ctx		Context of the plugin
  *
- * In the end it only fills the hashtable with the values
  */
 void gpe_calendar_get_changes(OSyncContext *ctx)
 {
@@ -120,59 +68,82 @@ void gpe_calendar_get_changes(OSyncContext *ctx)
 		osync_debug("GPE_SYNC", 3, "Slow sync requested");
 		osync_hashtable_set_slow_sync(env->hashtable, "event");
 	}
+	gchar *errmsg = NULL;
+	GSList *uid_list = NULL, *iter;
+	gpesync_client_exec (env->client, "uidlist vevent", client_callback_list, &uid_list, &errmsg);
 
-	GSList *uid_list = NULL, *i;
 
-	// In calendar it's called uid and not urn as in contacts - ???
-
-	for (i = uid_list; i; i = i->next)
+	if ((uid_list) && (!strncasecmp ((gchar *)uid_list->data, "ERROR", 5)))
 	{
-		OSyncChange *change = osync_change_new();
-		gchar *hash;
-		GString *uid;
-		GString *string = NULL;
-
-		uid = g_string_new (NULL);
-				
-		osync_debug("GPE_SYNC", 2, "vevent output:\n%s", string->str);
-
-		osync_change_set_uid(change, uid->str);
-		osync_change_set_objtype_string(change, "event");
-		osync_change_set_objformat_string(change, "vevent20");
-		
-		osync_change_set_hash(change, hash);
-		osync_change_set_data(change, string->str, string->len, TRUE);
-
-		if (osync_hashtable_detect_change(env->hashtable, change)) {
-				osync_context_report_change(ctx, change);
-				osync_hashtable_update_hash(env->hashtable, change);
+	  errmsg = (gchar *) uid_list->data;
+	}
+	
+	if (errmsg)
+	{
+		if (strcasecmp (errmsg, "Error: No item found\n"))
+		{
+			g_free (uid_list->data);
+			g_slist_free (uid_list);
+			uid_list = NULL;
+			osync_context_report_error (ctx, OSYNC_ERROR_GENERIC, "Error getting todo uidlist: %s\n", errmsg);
+		} else {
+			g_free (uid_list->data);
+			g_slist_free (uid_list);
+			uid_list = NULL;
 		}
-
-		// TODO: Why do I have to pass a FALSE here? I don't need
-		// to do that at contacts.c
-//		g_string_free(string, FALSE);
-		g_string_free(uid, TRUE);
-		g_free(hash);
 	}
 
+	GString *vevent_data = g_string_new("");
+
+	for (iter = uid_list; iter; iter = iter->next)
+	{
+		/* The list we got has the format:
+		 * uid:modified */
+	  	gchar *modified = NULL;
+		gchar *uid = NULL;
+
+		if (parse_value_modified ((gchar *)iter->data, &uid, &modified) == FALSE)
+		{
+			osync_context_report_error (ctx, OSYNC_ERROR_CONVERT, "Wrong uidlist item: %s\n");
+			g_slist_free (uid_list);
+
+			return;
+		}
+
+		g_string_assign (vevent_data, "");
+		gpesync_client_exec_printf (env->client, "get vevent %s", client_callback_gstring, &vevent_data, &errmsg, uid);
+		osync_debug("GPE_SYNC", 2, "vevent output:\n%s", vevent_data->str);
+
+		report_change (ctx, "event", uid, modified, vevent_data->str);
+		
+		g_string_assign (vevent_data, "");
+		g_free (iter->data);
+
+		/* We don't need to free modified and uid, because they
+		 * are only pointers to iter->data */
+		modified = NULL;
+		uid = NULL;
+	}
+	g_string_free (vevent_data, TRUE);
+
 	osync_hashtable_report_deleted(env->hashtable, ctx, "event");
-	
 	g_slist_free (uid_list);
-	
+
 	osync_debug("GPE_SYNC", 4, "stop %s", __func__);
 }
 
-/*! \brief Tells the plugin to accept calendar
+
+/*! \brief Tells the plugin to accept todos
  *
- * \param info	The plugin info on which to operat
+ * \param info	The plugin info on which to operate
  */
 void gpe_calendar_setup(OSyncPluginInfo *info)
 {
 	osync_debug("GPE_SYNC", 4, "start %s", __func__);
-/*	osync_plugin_accept_objtype(info, "event");
+	osync_plugin_accept_objtype(info, "event");
 	osync_plugin_accept_objformat(info, "event", "vevent20", NULL);
 	osync_plugin_set_commit_objformat(info, "event", "vevent20", gpe_calendar_commit_change);
-	osync_plugin_set_access_objformat(info, "event", "vevent20", gpe_calendar_access);
-*/
+	osync_plugin_set_access_objformat(info, "event", "vevent20", gpe_calendar_commit_change);
 	osync_debug("GPE_SYNC", 4, "stop %s", __func__);
+
 }
