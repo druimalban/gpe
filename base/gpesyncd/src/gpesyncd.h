@@ -25,7 +25,7 @@
 #include <gpe/vevent.h>
 #include <gpe/vtodo.h>
 
-#define BUFFER_LENGTH 2048
+#define BUFFER_LENGTH 8192 
 
 #define _GNU_SOURCE
 
