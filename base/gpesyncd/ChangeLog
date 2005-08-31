@@ -1,5 +1,12 @@
 2005-08-31  Martin Felis  <martin@silef.de>
 
+	* import.c, import.h: Changed add_/modify_item to return the value of
+	the modify tag.
+	* main.c: The commands add and modify return now the value of the
+	modify tag.
+
+2005-08-31  Martin Felis  <martin@silef.de>
+
 	* main.c: Creation of contact database corrected.
 
 2005-08-31  Martin Felis  <martin@silef.de>
