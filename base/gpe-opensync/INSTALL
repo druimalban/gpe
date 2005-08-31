@@ -1,3 +1,11 @@
+Here are some guides how to sync the gpe-pims with evolution.
+
+gpe:
+You need to install gpesyncd and must be able to connect through ssh
+to the gpe device. That's basically it. But to make the sync a
+little more comfortable, you should use ssh hostkey authentication.
+
+evolution:
 To use the plugin you need to have opensync and multisync0.90.
 You can get the latest versions with subversion with:
 
@@ -27,7 +35,7 @@ Now we need to add members to this sync-group, by typing:
 msynctool --addmember gpe-evo gpe-sync
 msynctool --addmember gpe-evo evo2-sync
 
-After this you need to configure the plugins. You can us this with
+After this you need to configure the plugins. You can do this with
 multisync0.90, a gui, or with the commands:
 msynctool --configure gpe-evo 1
 msynctool --configure gpe-evo 2
