@@ -281,6 +281,8 @@ prepare_icon (MBPixbufImage *img_icon, Pixmap pix)
 		      xcol_bg.red, xcol_bg.green, xcol_bg.blue, 0);
   x = (win_width - mb_pixbuf_img_get_width (img_icon)) / 2;
   y = (win_height - mb_pixbuf_img_get_height (img_icon)) / 2;
+  if ( x < 0) x = 0;
+  if ( y < 0) y = 0;
   mb_pixbuf_img_composite (mbpixbuf, img_backing, img_icon, x, y);
   mb_pixbuf_img_render_to_drawable (mbpixbuf, img_backing, pix, 0, 0);
   mb_pixbuf_img_free (mbpixbuf, img_backing);
