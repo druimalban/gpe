@@ -257,6 +257,7 @@ do_command (gpesyncd_context * ctx, gchar * command)
   guint pos = 0;
   gpe_db_type type = GPE_DB_TYPE_UNKNOWN;
   guint uid = 0;
+  guint modified = 0;
   gboolean cmd_result = FALSE;
 
   //printf ("Processing command %s\n", command);
@@ -339,17 +340,19 @@ do_command (gpesyncd_context * ctx, gchar * command)
       switch (type)
 	{
 	case GPE_DB_TYPE_VCARD:
-	  cmd_result = add_item (ctx, uid, "contacts", data, &error);
+	  cmd_result = add_item (ctx, uid, "contacts", data, &modified, &error);
 	  break;
 	case GPE_DB_TYPE_VEVENT:
-	  cmd_result = add_item (ctx, uid, "calendar", data, &error);
+	  cmd_result = add_item (ctx, uid, "calendar", data, &modified, &error);
 	  break;
 	case GPE_DB_TYPE_VTODO:
-	  cmd_result = add_item (ctx, uid, "todo", data, &error);
+	  cmd_result = add_item (ctx, uid, "todo", data, &modified, &error);
 	  break;
 	default:
 	  g_string_append (ctx->result, "Error: wrong type\n");
 	}
+      if (cmd_result)
+	g_string_printf (ctx->result, "OK:%d\n", modified);
     }
   else if ((!strcasecmp (cmd, "MODIFY")) && (type != GPE_DB_TYPE_UNKNOWN)
 	   && (uid > 0))
@@ -357,19 +360,22 @@ do_command (gpesyncd_context * ctx, gchar * command)
       switch (type)
 	{
 	case GPE_DB_TYPE_VCARD:
-	  cmd_result = modify_item (ctx, uid, "contacts", data, &error);
+	  cmd_result = modify_item (ctx, uid, "contacts", data, &modified, &error);
 	  break;
 	case GPE_DB_TYPE_VEVENT:
-	  cmd_result = modify_item (ctx, uid, "calendar", data, &error);
+	  cmd_result = modify_item (ctx, uid, "calendar", data, &modified, &error);
 	  break;
 	case GPE_DB_TYPE_VTODO:
-	  cmd_result = modify_item (ctx, uid, "todo", data, &error);
+	  cmd_result = modify_item (ctx, uid, "todo", data, &modified, &error);
 	  break;
 	default:
 	  g_string_append (ctx->result, "Error: wrong type\n");
 	}
       if (error)
 	fprintf (stderr, "Error found in modify\n");
+      
+      if (cmd_result)
+	g_string_printf (ctx->result, "OK:%d\n", modified);
     }
   else if ((!strcasecmp (cmd, "DEL")) && (type != GPE_DB_TYPE_UNKNOWN)
 	   && (uid > 0))
@@ -388,6 +394,8 @@ do_command (gpesyncd_context * ctx, gchar * command)
 	default:
 	  g_string_append (ctx->result, "Error: wrong type\n");
 	}
+      if (cmd_result)
+	g_string_printf (ctx->result, "OK:0\n");
     }
   else if ((!strcasecmp (cmd, "UIDLIST")) && (type != GPE_DB_TYPE_UNKNOWN))
     {
