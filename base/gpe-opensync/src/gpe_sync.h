@@ -3,7 +3,8 @@
 
 #include <string.h>
 #include <stdlib.h>
-#include <time.h>
+#include <assert.h>
+
 #include <glib.h>
 #include <glib-object.h>
 #include <opensync/opensync.h>
@@ -27,11 +28,11 @@ typedef struct {
 	int debuglevel;
 } gpe_environment;
 
-#include "contacts.h"
-//#include "calendar.h"
-//#include "todo.h"
-#include "gpe_xml.h"
 #include "utils.h"
+#include "contacts.h"
+#include "calendar.h"
+#include "todo.h"
+#include "gpe_xml.h"
 
 #define GPE_CONNECT_ERROR 1
 #define GPE_SQL_EXEC_ERROR 2

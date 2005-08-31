@@ -1,7 +1,3 @@
-#include <opensync/opensync.h>
-#include <stdlib.h>
-#include <string.h>
-#include <assert.h>
 #include "gpe_sync.h"
 
 /*! \brief Initializes the plugin (needed for opensync)
@@ -14,8 +10,6 @@ static void *initialize(OSyncMember *member, OSyncError **error)
 	osync_debug("GPE_SYNC", 4, "start: %s", __func__);
 	char *configdata = NULL;
 	int configsize = 0;
-
-	g_type_init();
 	
 	//You need to specify the <some name>_environment somewhere with
 	//all the members you need
@@ -75,16 +69,6 @@ static void connect(OSyncContext *ctx)
 		return;
 	}
 	
-/*	if (gpe_calendar_connect(ctx) == FALSE) {
-		osync_context_report_error(ctx, OSYNC_ERROR_NO_CONNECTION, "Could not connect to calendar.");
-		return;
-	}
-
-	if (gpe_todo_connect(ctx) == FALSE) {
-		osync_context_report_error(ctx, OSYNC_ERROR_NO_CONNECTION, "Could not connect to todo.");
-		return;
-	}
-*/
 	if (!osync_hashtable_load(env->hashtable, env->member, &error)) {
 		osync_context_report_error(ctx, OSYNC_ERROR_GENERIC, osync_error_print(&error));
 
@@ -120,6 +104,7 @@ static void get_changeinfo(OSyncContext *ctx)
 	osync_context_report_success(ctx);
 	osync_debug("GPE_SYNC", 4, "stop: %s", __func__);
 }
+
 
 /*! \brief This is called once all objects have been sent to the plugin
  *
