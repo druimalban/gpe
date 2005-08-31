@@ -16,6 +16,8 @@ plugin_LTLIBRARIES = gpe_sync.la
 EXTRA_DIST = \
 	gpe_sync.h \
 	contacts.h \
+	calendar.h \
+	todo.h \
 	gpe_xml.h \
 	gpesync_client.h \
 	utils.h \
@@ -24,6 +26,8 @@ EXTRA_DIST = \
 gpe_sync_la_SOURCES = \
 	gpe_sync.c \
 	contacts.c \
+	calendar.c \
+	todo.c \
 	gpesync_client.c \
 	utils.c \
 	gpe_xml.c
