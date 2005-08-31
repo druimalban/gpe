@@ -340,10 +340,12 @@ do_command (gpesyncd_context * ctx, gchar * command)
       switch (type)
 	{
 	case GPE_DB_TYPE_VCARD:
-	  cmd_result = add_item (ctx, uid, "contacts", data, &modified, &error);
+	  cmd_result =
+	    add_item (ctx, uid, "contacts", data, &modified, &error);
 	  break;
 	case GPE_DB_TYPE_VEVENT:
-	  cmd_result = add_item (ctx, uid, "calendar", data, &modified, &error);
+	  cmd_result =
+	    add_item (ctx, uid, "calendar", data, &modified, &error);
 	  break;
 	case GPE_DB_TYPE_VTODO:
 	  cmd_result = add_item (ctx, uid, "todo", data, &modified, &error);
@@ -360,20 +362,23 @@ do_command (gpesyncd_context * ctx, gchar * command)
       switch (type)
 	{
 	case GPE_DB_TYPE_VCARD:
-	  cmd_result = modify_item (ctx, uid, "contacts", data, &modified, &error);
+	  cmd_result =
+	    modify_item (ctx, uid, "contacts", data, &modified, &error);
 	  break;
 	case GPE_DB_TYPE_VEVENT:
-	  cmd_result = modify_item (ctx, uid, "calendar", data, &modified, &error);
+	  cmd_result =
+	    modify_item (ctx, uid, "calendar", data, &modified, &error);
 	  break;
 	case GPE_DB_TYPE_VTODO:
-	  cmd_result = modify_item (ctx, uid, "todo", data, &modified, &error);
+	  cmd_result =
+	    modify_item (ctx, uid, "todo", data, &modified, &error);
 	  break;
 	default:
 	  g_string_append (ctx->result, "Error: wrong type\n");
 	}
       if (error)
 	fprintf (stderr, "Error found in modify\n");
-      
+
       if (cmd_result)
 	g_string_printf (ctx->result, "OK:%d\n", modified);
     }
