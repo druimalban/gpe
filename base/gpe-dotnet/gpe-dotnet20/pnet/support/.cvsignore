@@ -1,0 +1,7 @@
+Makefile
+Makefile.in
+.deps
+mkcategory
+mknumber
+mkcase
+errno_map.c

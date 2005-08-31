@@ -1,0 +1,10 @@
+Makefile
+Makefile.in
+.deps
+csdoc2texi
+csdoc2html
+csdoc2stub
+csdoc2hier
+csdoc2test
+csdocvalil
+src2xml
