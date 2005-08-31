@@ -35,6 +35,19 @@ get_new_uid (sqlite * db, gchar * type)
   return uid + 1;
 }
 
+guint
+get_item_count (sqlite *db, gchar *type)
+{
+  int count = 0;
+  char uid_name[4] = "uid\0";
+  if (!strcasecmp (type, "contacts"))
+    sprintf (uid_name, "urn");
+
+  sqlite_exec_printf (db, "select count(tag) from %q where upper(tag)='MODIFIED'", fetch_int_callback, &count, 0, uid_name, type);
+
+  return count;
+}
+
 gchar *
 get_tag_value (GSList * tags, gchar * tag)
 {
@@ -203,6 +216,9 @@ add_item (gpesyncd_context * ctx, guint uid, gchar * type, gchar * data,
     }
 
   g_object_unref (profile);
+
+  if (get_item_count (db, type) == 0)
+    uid = 1;
 
   if (uid == 0)
     uid = get_new_uid (db, type);
