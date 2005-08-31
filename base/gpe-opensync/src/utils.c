@@ -20,6 +20,16 @@
 
 #include "gpe_sync.h"
 
+/*! \brief Seperates a string of the format "<a>:<b>" into "<a>" and "<b>"
+ *
+ * \param string	The string that should be separated
+ * \param value		The string where <a> should be stored
+ * \param modified	The string where <b> should be stored
+ *
+ * Note: The pointers of value and modified are pointing into string, so
+ * if string gets freed, value and modified are no more valid!
+ *
+ */
 osync_bool parse_value_modified (gchar *string, gchar **value, gchar **modified)
 {
 	gchar *c = NULL;
@@ -39,9 +49,19 @@ osync_bool parse_value_modified (gchar *string, gchar **value, gchar **modified)
 	return TRUE;
 }
 
-
+/*! \brief Reports a single change (vcard, vtodo, vevent)
+ *
+ * \param ctx	The context of the plugin
+ * \param type	Must be "contact", "event", or "todo"
+ * \param uid	The uid of the item
+ * \param hash	The hash of the item
+ * \param data	The whole vcard, vevent or vtodo
+ *
+ */
 osync_bool report_change (OSyncContext *ctx, gchar *type, gchar *uid, gchar *hash, gchar *data)
 {
+	osync_debug("GPE_SYNC", 3, "reporting item type: %s uid: %s hash: %s data size: %d", type, uid, hash, strlen (data));
+
 	gpe_environment *env = (gpe_environment *)osync_context_get_plugin_data (ctx);
 	OSyncChange *change = osync_change_new ();
 	osync_change_set_uid (change, g_strdup(uid));
