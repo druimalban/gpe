@@ -28,7 +28,7 @@ gboolean gpesyncd_setup_databases (gpesyncd_context *ctx)
   if (ctx->contact_db)
   {
         gchar *err = NULL;
-	sqlite_exec (ctx->todo_db, "select max(uid) from contacts", callback_list, &tables, &err);
+	sqlite_exec (ctx->contact_db, "select max(urn) from contacts", callback_list, &tables, &err);
 	if ( (err) && (!strcasecmp(err, "no such table: contacts")))
 	{
 	  fprintf (stderr, "No contacts tables found. Creating...");
@@ -385,6 +385,9 @@ do_command (gpesyncd_context * ctx, gchar * command)
 	  g_slist_free (listdata);
 	  listdata = NULL;
 	}
+      else if (!error)
+	g_string_append (ctx->result, "Error: No item found\n");
+
     }
 
   else if (!strncasecmp (cmd, "HELP", 4))
