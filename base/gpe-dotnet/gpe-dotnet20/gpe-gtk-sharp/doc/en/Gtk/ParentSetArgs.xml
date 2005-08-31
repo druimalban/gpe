@@ -1,0 +1,48 @@
+<Type Name="ParentSetArgs" FullName="Gtk.ParentSetArgs">
+  <TypeSignature Language="C#" Value="public class ParentSetArgs : GLib.SignalArgs" Maintainer="auto" />
+  <AssemblyInfo>
+    <AssemblyName>gtk-sharp</AssemblyName>
+    <AssemblyPublicKey>
+    </AssemblyPublicKey>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+    <AssemblyCulture>neutral</AssemblyCulture>
+    <Attributes />
+  </AssemblyInfo>
+  <ThreadSafetyStatement>Gtk# is thread aware, but not thread safe; See the <link location="node:gtk-sharp/programming/threads">Gtk# Thread Programming</link> for details.</ThreadSafetyStatement>
+  <Docs>
+    <summary>Event data.</summary>
+    <remarks>
+      <para>The <see cref="M:Gtk.Widget.ParentSet" /> event invokes <see cref="T:Gtk.ParentSetHandler" /> delegates which pass event data via this class.</para>
+    </remarks>
+  </Docs>
+  <Base>
+    <BaseTypeName>GLib.SignalArgs</BaseTypeName>
+  </Base>
+  <Interfaces />
+  <Attributes />
+  <Members>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public ParentSetArgs ();" />
+      <MemberType>Constructor</MemberType>
+      <ReturnValue />
+      <Parameters />
+      <Docs>
+        <summary>Public Constructor.</summary>
+        <returns>A new <see cref="T:Gtk.ParentSetArgs" />.</returns>
+        <remarks>Create a new <see cref="T:Gtk.ParentSetArgs" /> instance with this constructor if you need to invoke a <see cref="T:Gtk.ParentSetHandler" /> delegate.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="PreviousParent">
+      <MemberSignature Language="C#" Value="public Gtk.Widget PreviousParent { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.Widget</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>Returns the widget that was the parent of this widget previously.</summary>
+        <returns>A <see cref="T:Gtk.Widget" /></returns>
+        <remarks />
+      </Docs>
+    </Member>
+  </Members>
+</Type>

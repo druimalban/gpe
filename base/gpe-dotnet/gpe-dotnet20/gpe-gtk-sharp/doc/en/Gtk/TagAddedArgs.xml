@@ -1,0 +1,48 @@
+<Type Name="TagAddedArgs" FullName="Gtk.TagAddedArgs">
+  <TypeSignature Language="C#" Value="public class TagAddedArgs : GLib.SignalArgs" Maintainer="auto" />
+  <AssemblyInfo>
+    <AssemblyName>gtk-sharp</AssemblyName>
+    <AssemblyPublicKey>
+    </AssemblyPublicKey>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+    <AssemblyCulture>neutral</AssemblyCulture>
+    <Attributes />
+  </AssemblyInfo>
+  <ThreadSafetyStatement>Gtk# is thread aware, but not thread safe; See the <link location="node:gtk-sharp/programming/threads">Gtk# Thread Programming</link> for details.</ThreadSafetyStatement>
+  <Docs>
+    <summary>Event data for when a tag is added to text.</summary>
+    <remarks>
+      <para>The <see cref="M:Gtk.TextTagTable.TagAdded" /> event invokes <see cref="T:Gtk.TagAddedHandler" /> delegates which pass event data via this class.</para>
+    </remarks>
+  </Docs>
+  <Base>
+    <BaseTypeName>GLib.SignalArgs</BaseTypeName>
+  </Base>
+  <Interfaces />
+  <Attributes />
+  <Members>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public TagAddedArgs ();" />
+      <MemberType>Constructor</MemberType>
+      <ReturnValue />
+      <Parameters />
+      <Docs>
+        <summary>Public Constructor.</summary>
+        <returns>A new <see cref="T:Gtk.TagAddedArgs" />.</returns>
+        <remarks>Create a new <see cref="T:Gtk.TagAddedArgs" /> instance with this constructor if you need to invoke a <see cref="T:Gtk.TagAddedHandler" /> delegate.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Tag">
+      <MemberSignature Language="C#" Value="public Gtk.TextTag Tag { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.TextTag</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>The tag that changed.</summary>
+        <returns>A <see cref="T:Gtk.TextTag" /></returns>
+        <remarks />
+      </Docs>
+    </Member>
+  </Members>
+</Type>

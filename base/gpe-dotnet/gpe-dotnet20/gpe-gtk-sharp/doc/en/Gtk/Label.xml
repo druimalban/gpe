@@ -1,0 +1,705 @@
+<Type Name="Label" FullName="Gtk.Label">
+  <TypeSignature Language="C#" Value="public class Label : Gtk.Misc, Implementor, IWrapper, IWrapper, IDisposable" Maintainer="Duncan Mak" />
+  <AssemblyInfo>
+    <AssemblyName>gtk-sharp</AssemblyName>
+    <AssemblyPublicKey>
+    </AssemblyPublicKey>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+    <AssemblyCulture>neutral</AssemblyCulture>
+    <Attributes />
+  </AssemblyInfo>
+  <ThreadSafetyStatement>Gtk# is thread aware, but not thread safe; See the <link location="node:gtk-sharp/programming/threads">Gtk# Thread Programming</link> for details.</ThreadSafetyStatement>
+  <Docs>
+    <summary>A widget that displays a small to medium amount of text</summary>
+    <remarks>
+      <para>
+        This widget displays a small to medium amount of text, it is
+        the widget used by other widgets, such as <see cref="T:Gtk.Button" /> and <see cref="T:Gtk.MenuItem" /> for
+        displaying text.
+      </para>
+      <para>
+        Labels may contain mnemonics; mnemonics are underlined
+        characters in the label, used for keyboard navigation. To
+        provide the mnemonic, put an underscore before the mnemonic
+        character, such as "_File".
+      </para>
+    </remarks>
+  </Docs>
+  <Base>
+    <BaseTypeName>Gtk.Misc</BaseTypeName>
+  </Base>
+  <Interfaces>
+    <Interface>
+      <InterfaceName>Atk.Implementor</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>GLib.IWrapper</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>GLib.IWrapper</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>System.IDisposable</InterfaceName>
+    </Interface>
+  </Interfaces>
+  <Attributes />
+  <Members>
+    <Member MemberName="GetSelectionBounds">
+      <MemberSignature Language="C#" Value="public bool GetSelectionBounds (out int start, out int end);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="start" Type="System.Int32" RefType="out" />
+        <Parameter Name="end" Type="System.Int32" RefType="out" />
+      </Parameters>
+      <Docs>
+        <summary>Gets the selected range of characters in the label.</summary>
+        <param name="start"> return location for start of selection, as a character offset</param>
+        <param name="end"> return location for end of selection, as a character offset</param>
+        <returns>returns <see langword="true" /> if there is a selection.</returns>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="SelectRegion">
+      <MemberSignature Language="C#" Value="public void SelectRegion (int start_offset, int end_offset);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="start_offset" Type="System.Int32" />
+        <Parameter Name="end_offset" Type="System.Int32" />
+      </Parameters>
+      <Docs>
+        <summary>Selects a range of characters in the label, if the label is selectable.</summary>
+        <param name="start_offset">start offset (in characters not bytes)</param>
+        <param name="end_offset">end offset (in characters not bytes)</param>
+        <remarks>
+          <para>
+            Selects a range of characters in the label, if the label
+            is selectable. See <see cref="P:Gtk.Label.Selectable" />. If the
+            label is not selectable, this function has no effect. If
+            <paramref name="start_offset" /> or
+            <paramref name="end_offset" /> are -1, then the end of the
+            label will be substituted.
+          </para>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="GetLayoutOffsets">
+      <MemberSignature Language="C#" Value="public void GetLayoutOffsets (out int x, out int y);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="x" Type="System.Int32" RefType="out" />
+        <Parameter Name="y" Type="System.Int32" RefType="out" />
+      </Parameters>
+      <Docs>
+        <summary>
+          Obtains the coordinates where the label will draw the <see cref="T:Pango.Layout" />
+          representing the text in the label
+        </summary>
+        <param name="x">
+          location to store X offset of layout, or <see langword="null" /></param>
+        <param name="y">
+          location to store Y offset of layout, or <see langword="null" /></param>
+        <remarks>
+          <para>
+            Obtains the coordinates where the label will draw the
+            <see cref="T:Pango.Layout" /> representing the text in the label; useful to
+            convert mouse events into coordinates inside the
+            <see cref="T:Pango.Layout" />, e.g. to take some action if some part of the
+            label is clicked. Of course you will need to create a
+            <see cref="T:Gtk.EventBox" /> to receive the events, and pack the label
+            inside it, since labels are a <see cref="F:Gtk.WindowType.NoWindow" />
+            widget. Remember when using the
+            <see cref="T:Pango.Layout" />functions you
+            need to convert to and from pixels using PANGO_PIXELS() or
+            PANGO_SCALE.
+          </para>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Finalize">
+      <MemberSignature Language="C#" Value="protected override void Finalize ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Disposes the resources associated with the object.</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public Label (IntPtr raw);" />
+      <MemberType>Constructor</MemberType>
+      <ReturnValue />
+      <Parameters>
+        <Parameter Name="raw" Type="System.IntPtr" />
+      </Parameters>
+      <Docs>
+        <summary>Internal constructor</summary>
+        <param name="raw">Pointer to the C object.</param>
+        <returns>An instance of Label, wrapping the C object.</returns>
+        <remarks>
+          <para>This is an internal constructor, and should not be used by user code.</para>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public Label (string str);" />
+      <MemberType>Constructor</MemberType>
+      <ReturnValue />
+      <Parameters>
+        <Parameter Name="str" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <summary>
+          Creates a new label with the given text inside it. You can
+          pass <see langword="null" /> to get an empty label
+          widget.
+        </summary>
+        <param name="str">The text of the label</param>
+        <returns> the new label widget</returns>
+        <remarks>
+          <para>
+            Creates a new label with the given text inside it. You can
+            pass <see langword="null" /> to get an empty label
+            widget.
+          </para>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="TextWithMnemonic">
+      <MemberSignature Language="C#" Value="public string TextWithMnemonic { set; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Sets the text of the label</summary>
+        <param name="value">the text for this label</param>
+        <remarks>
+          <para>
+            Sets the text of the label. If characters in <paramref name="value" />
+            are preceded by an underscore, they are
+            underlined indicating that they represent a keyboard
+            accelerator called a mnemonic. The mnemonic key can be
+            used to activate another widget, chosen automatically, or
+            explicitly using <see cref="M:Gtk.Label.MnemonicWidget" />.
+          </para>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Markup">
+      <MemberSignature Language="C#" Value="public string Markup { set; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Parses str which is marked up with the Pango text markup language</summary>
+        <param name="value">a markup string (see Pango markup format)</param>
+        <returns>a GtkLabel</returns>
+        <remarks>
+          <para>
+            Parses <paramref name="value" /> which is marked up with the
+            Pango text markup language, setting the text of the label and
+            attribute list based on the parse results.
+          </para>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="LineWrap">
+      <MemberSignature Language="C#" Value="public bool LineWrap { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Toggles line wrapping within the GtkLabel widget.</summary>
+        <param name="value">
+          <see langword="true" /> makes it
+          break lines if text exceeds the size of the widget. <see langword="false" /> lets the text get cut off by the edge of the widget if it exceeds the widget size.
+        </param>
+        <returns>
+          <see langword="true" /> if the lines of the label are automatically wrapped.</returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Text">
+      <MemberSignature Language="C#" Value="public string Text { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>The text within the <see cref="T:Gtk.Label" /> widget.</summary>
+        <param name="value">The text you want to set.</param>
+        <returns>a <see cref="T:System.String" /></returns>
+        <remarks>
+          <para>
+            When setting the text within the <see cref="T:Gtk.Label" /> widget, it overwrites any text that was there before.
+          </para>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Layout">
+      <MemberSignature Language="C#" Value="public Pango.Layout Layout { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Layout</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>Gets the <see cref="T:Pango.Layout" /> used to display the label.</summary>
+        <returns> the <see cref="T:Pango.Layout" /> for this label</returns>
+        <remarks>
+          <para>
+            Gets the <see cref="T:Pango.Layout" /> used to display the label. The layout
+            is useful to e.g. convert text positions to pixel
+            positions, in combination with <see cref="M:Gtk.Label.GetLayoutOffset" />. The returned layout
+            is owned by the label so need not be freed by the caller.
+          </para>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="MarkupWithMnemonic">
+      <MemberSignature Language="C#" Value="public string MarkupWithMnemonic { set; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>
+          Parses <paramref name="value" /> which is marked up with the
+          Pango text markup language, setting the text of the label and
+          attribute list based on the parse results.
+        </summary>
+        <param name="value"> a markup string (see Pango markup format)</param>
+        <returns>a new label widget</returns>
+        <remarks>
+          <para>
+            Parses <paramref name="value" /> which is marked up with the
+            Pango text markup language, setting the text of the label and
+            attribute list based on the parse results. If characters
+            in the string are preceded by an underscore, they are underlined
+            indicating that they represent a keyboard accelerator
+            called a mnemonic.
+          </para>
+          <para>
+            The mnemonic key can be used to activate another widget,
+            chosen automatically, or explicitly using <see cref="M:Gtk.Label.MnemonicWidget" />.
+          </para>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Selectable">
+      <MemberSignature Language="C#" Value="public bool Selectable { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Toggle whether or not the label allow the user to select text from the label, for copy-and-paste.</summary>
+        <param name="value">
+          <see langword="true" /> to allow selecting text in the
+        label, and <see langword="false" /> to disallow.
+        </param>
+        <returns>
+          <see langword="true" /> if the label is selectable, and
+        <see langword="false" /> if not.
+        </returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Justify">
+      <MemberSignature Language="C#" Value="public Gtk.Justification Justify { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.Justification</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>The alignment of the lines in the text of the label relative to each other</summary>
+        <param name="value">a <see cref="T:Gtk.Justification" /></param>
+        <returns>The justification of the label</returns>
+        <remarks>
+          <para>
+            Sets the alignment of the lines in the text of the label
+            relative to each other. <see cref="T:Gtk.Justification.Left" /> is the default value
+            when the widget is first created with <see cref="C:Gtk.Label" />. If you instead want to set the
+            alignment of the label as a whole, set <see cref="P:Gtk.Misc.Alignment" /> instead. This has no effect
+            on labels containing only a single line.
+          </para>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="CursorPosition">
+      <MemberSignature Language="C#" Value="public int CursorPosition { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Int32</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>The current position of the insertion cursor in characters.</summary>
+        <returns>The current position of the insertion cursor in characters</returns>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="SelectionBound">
+      <MemberSignature Language="C#" Value="public int SelectionBound { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Int32</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>The position of the opposite end of the selection from the cursor in characters.</summary>
+        <returns>The position of the opposite end of the selection from the cursor in characters.</returns>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="MnemonicWidget">
+      <MemberSignature Language="C#" Value="public Gtk.Widget MnemonicWidget { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.Widget</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>The widget to be activated when the label's mnemonic key is pressed.</summary>
+        <param name="value">The widget to be activated when the label's mnemonic key is pressed.</param>
+        <returns>The widget to be activated when the label's mnemonic key is pressed.</returns>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="LabelProp">
+      <MemberSignature Language="C#" Value="public string LabelProp { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>The text from a label widget including any embedded underlines indicating mnemonics and Pango markup.</summary>
+        <param name="value">The text of the label widget</param>
+        <returns>The text of the label widget.</returns>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Pattern">
+      <MemberSignature Language="C#" Value="public string Pattern { set; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>A string with _ characters in positions correspond to characters in the text to underline.</summary>
+        <param name="value">A string with _ characters in positions correspond to characters in the text to underline.</param>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="MnemonicKeyval">
+      <MemberSignature Language="C#" Value="public uint MnemonicKeyval { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.UInt32</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>The mnemonic accelerator key for this label.</summary>
+        <returns>The mnemonic accelerator key for this label.</returns>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Wrap">
+      <MemberSignature Language="C#" Value="public bool Wrap { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Whether lines should be wrapped if the text becomes too wide.</summary>
+        <param name="value">
+          <see langword="true" /> to wrap lines</param>
+        <returns>whether lines should be wrapped</returns>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="UseUnderline">
+      <MemberSignature Language="C#" Value="public bool UseUnderline { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>
+          Whether an underline in the text indicates the next
+          character should be used for the mnemonic accelerator key.
+        </summary>
+        <param name="value">
+          <see langword="true" /> to use underline</param>
+        <returns>
+          Whether an underline in the text indicates the next
+          character should be used for the mnemonic accelerator key.
+        </returns>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="UseMarkup">
+      <MemberSignature Language="C#" Value="public bool UseMarkup { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Whether the label's text is interpreted as marked up with the Pango text markup language.</summary>
+        <param name="value">
+          <see langword="true" /> to parse the
+        text as Pango markup, <see langword="false" /> as plain-text</param>
+        <returns />
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Attributes">
+      <MemberSignature Language="C#" Value="public Pango.AttrList Attributes { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.AttrList</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>The attribute list set on the label.</summary>
+        <param name="value">a <see cref="T:Pango.AttrList" /></param>
+        <returns>the attribute list set on the label</returns>
+        <remarks>
+          <para>
+            This function does not reflect attributes that come from
+            the labels markup (see <see cref="P:Gtk.Label.Markup" />). If you
+            want to get the effective attributes for the label, use
+            <see cref="T:Pango.Layout.Attribute" /> on the label's
+            <see cref="P:Gtk.Label.Layout" /> property.
+          </para>
+          <para>
+          </para>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="MoveCursor">
+      <MemberSignature Language="C#" Value="public event Gtk.MoveCursorHandler MoveCursor;" />
+      <MemberType>Event</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.MoveCursorHandler</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Emitted when the cursor is moved.</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="PopulatePopup">
+      <MemberSignature Language="C#" Value="public event Gtk.PopulatePopupHandler PopulatePopup;" />
+      <MemberType>Event</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.PopulatePopupHandler</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Emitted when a right-click pop-up menu is displayed</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="CopyClipboard">
+      <MemberSignature Language="C#" Value="public event EventHandler CopyClipboard;" />
+      <MemberType>Event</MemberType>
+      <ReturnValue>
+        <ReturnType>System.EventHandler</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Emitted when text is copied to the clipboard.</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="GType">
+      <MemberSignature Language="C#" Value="public static GLib.GType GType { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>GLib.GType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>GType Property.</summary>
+        <returns>a <see cref="T:GLib.GType" /></returns>
+        <remarks>Returns the native <see cref="T:GLib.GType" /> value for <see cref="T:Gtk.Label" />.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="OnCopyClipboard">
+      <MemberSignature Language="C#" Value="protected virtual void OnCopyClipboard ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Default handler for the <see cref="M:Gtk.Label.CopyClipboard" /> event.</summary>
+        <remarks>Override this method in a subclass to provide a default handler for the <see cref="M:Gtk.Label.CopyClipboard" /> event.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="OnPopulatePopup">
+      <MemberSignature Language="C#" Value="protected virtual void OnPopulatePopup (Gtk.Menu menu);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="menu" Type="Gtk.Menu" />
+      </Parameters>
+      <Docs>
+        <summary>Default handler for the <see cref="M:Gtk.Label.PopulatePopup" /> event.</summary>
+        <param name="menu">a <see cref="T:Gtk.Menu" /></param>
+        <remarks>Override this method in a subclass to provide a default handler for the <see cref="M:Gtk.Label.PopulatePopup" /> event.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="OnMoveCursor">
+      <MemberSignature Language="C#" Value="protected virtual void OnMoveCursor (Gtk.MovementStep step, int count, bool extend_selection);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="step" Type="Gtk.MovementStep" />
+        <Parameter Name="count" Type="System.Int32" />
+        <Parameter Name="extend_selection" Type="System.Boolean" />
+      </Parameters>
+      <Docs>
+        <summary>Default handler for the <see cref="M:Gtk.Label.MoveCursor" /> event.</summary>
+        <param name="step">a <see cref="T:Gtk.MovementStep" /></param>
+        <param name="count">a <see cref="T:System.Int32" /></param>
+        <param name="extend_selection">a <see cref="T:System.Boolean" /></param>
+        <remarks>Override this method in a subclass to provide a default handler for the <see cref="M:Gtk.Label.MoveCursor" /> event.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="protected Label (GLib.GType gtype);" />
+      <MemberType>Constructor</MemberType>
+      <ReturnValue />
+      <Parameters>
+        <Parameter Name="gtype" Type="GLib.GType" />
+      </Parameters>
+      <Docs>
+        <summary>Internal constructor</summary>
+        <param name="gtype">a <see cref="T:GLib.GType" /></param>
+        <returns>a <see cref="T:Gtk.Label" /></returns>
+        <remarks>This is not typically used by C# code.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="New">
+      <MemberSignature Language="C#" Value="public static Gtk.Label New (string str);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.Label</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="str" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <summary>Basic constructor.</summary>
+        <param name="str">a <see cref="T:System.String" /></param>
+        <returns>a <see cref="T:Gtk.Label" /></returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public Label ();" />
+      <MemberType>Constructor</MemberType>
+      <ReturnValue />
+      <Parameters />
+      <Docs>
+        <summary>Creates a new <see cref="T:Gtk.Label" /> without text.</summary>
+        <returns>a <see cref="T:Gtk.Label" /></returns>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="ParseUline">
+      <MemberSignature Language="C#" Value="public uint ParseUline (string str1ng);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.UInt32</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="str1ng" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <summary>Deprecated.</summary>
+        <param name="str1ng">a <see cref="T:System.String" /></param>
+        <returns>a <see cref="T:System.UInt32" /></returns>
+        <remarks>
+	  Checks the string passed as the parameter for underscores,
+	  and then underlines the characters following the
+	  underscores. It will take the first underlined character in
+	  a label and return it as a lower-case accelerator key,
+	  e.g. _Save will return the accelerator key value for "s".
+	</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Get">
+      <MemberSignature Language="C#" Value="public void Get (string str);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="str" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <summary>Deprecated; do not use in new code.</summary>
+        <param name="str">a <see cref="T:System.String" /></param>
+        <remarks>Gets the current string of text within the Label
+        object and writes it to <paramref name="str"/>. It does not make a copy of this
+        string so you must not write to it.</remarks>
+      </Docs>
+    </Member>
+  </Members>
+</Type>

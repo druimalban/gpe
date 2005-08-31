@@ -1,0 +1,38 @@
+<Type Name="XMLCustomWidgetHandler" FullName="Glade.XMLCustomWidgetHandler">
+  <TypeSignature Language="C#" Value="public sealed delegate Gtk.Widget XMLCustomWidgetHandler (Glade.XML xml, string func_name, string name, string string1, string string2, int int1, int int2);" Maintainer="auto" />
+  <AssemblyInfo>
+    <AssemblyName>glade-sharp</AssemblyName>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+    <Attributes />
+  </AssemblyInfo>
+  <ThreadSafetyStatement>Gtk# is thread aware, but not thread safe; See the <link location="node:gtk-sharp/programming/threads">Gtk# Thread Programming</link> for details.</ThreadSafetyStatement>
+  <Docs>
+    <summary>Event handler.</summary>
+    <remarks>this delegate is used for custom methods to call when a custom widget is found.</remarks>
+  </Docs>
+  <Base>
+    <BaseTypeName>System.Delegate</BaseTypeName>
+  </Base>
+  <Interfaces>
+    <Interface>
+      <InterfaceName>System.ICloneable</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>System.Runtime.Serialization.ISerializable</InterfaceName>
+    </Interface>
+  </Interfaces>
+  <Attributes />
+  <Members />
+  <Parameters>
+    <Parameter Name="xml" Type="Glade.XML" />
+    <Parameter Name="func_name" Type="System.String" />
+    <Parameter Name="name" Type="System.String" />
+    <Parameter Name="string1" Type="System.String" />
+    <Parameter Name="string2" Type="System.String" />
+    <Parameter Name="int1" Type="System.Int32" />
+    <Parameter Name="int2" Type="System.Int32" />
+  </Parameters>
+  <ReturnValue>
+    <ReturnType>Gtk.Widget</ReturnType>
+  </ReturnValue>
+</Type>

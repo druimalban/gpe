@@ -1,0 +1,160 @@
+<Type Name="List" FullName="GLib.List">
+  <TypeSignature Language="C#" Value="public class List : GLib.ListBase, IDisposable, ICollection, IEnumerable, IWrapper, ICloneable" Maintainer="miguel" />
+  <AssemblyInfo>
+    <AssemblyName>glib-sharp</AssemblyName>
+    <AssemblyPublicKey>
+    </AssemblyPublicKey>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+    <AssemblyCulture>neutral</AssemblyCulture>
+    <Attributes />
+  </AssemblyInfo>
+  <ThreadSafetyStatement>Gtk# is thread aware, but not thread safe; See the <link location="node:gtk-sharp/programming/threads">Gtk# Thread Programming</link> for details.</ThreadSafetyStatement>
+  <Docs>
+    <summary>A list class used by Gtk</summary>
+    <remarks>
+      <para>
+        <see cref="T:GLib.List" /> is managed wrapper for the underlying C list
+	implementation used by Gtk+.  Various functions on the Gtk+
+	API take lists or return lists in this form.
+      </para>
+      <para>
+	The list deals with <see cref="T:System.IntPtr" /> objects, these are pointers into
+	unmanaged resources.
+      </para>
+      <example>
+        <para>
+	  For example to create a list of widgets, you would use the
+	  following sample:
+	</para>
+        <code lang="c#">
+	  GLib.List MakeList (Gtk.Widget a, Gtk.Widget b)
+	  {
+	  	GLib.List l = new GLib.List ((IntPtr) 0, typeof (Gtk.Widget));
+		l.Append (a.Handle);
+		l.Append (b.Handle);
+	  }
+	</code>
+        <para>
+	  The <see cref="T:System.Type" /> argument to the <see cref="T:GLib.List" />
+	  constructor, allows the list enumerator code to return
+	  properly wrapped or demarshalled objects from the unmanaged
+	  world into the managed world.
+	</para>
+      </example>
+    </remarks>
+  </Docs>
+  <Base>
+    <BaseTypeName>GLib.ListBase</BaseTypeName>
+  </Base>
+  <Interfaces>
+    <Interface>
+      <InterfaceName>System.IDisposable</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>System.Collections.ICollection</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>System.Collections.IEnumerable</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>GLib.IWrapper</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>System.ICloneable</InterfaceName>
+    </Interface>
+  </Interfaces>
+  <Attributes />
+  <Members>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public List (IntPtr raw);" />
+      <MemberType>Constructor</MemberType>
+      <ReturnValue />
+      <Parameters>
+        <Parameter Name="raw" Type="System.IntPtr" />
+      </Parameters>
+      <Docs>
+        <summary>Constructs a List</summary>
+        <param name="raw">A handle to a <see cref="T:GLib.List" />.</param>
+        <returns>A new insteace instance of List, wrapping the C list.</returns>
+        <remarks>
+          <para>
+            <see cref="T:GLib.List" /> objects are constructed by passing an unmanaged
+	    reference to an existing <see cref="T:GLib.List" />, or they can use
+	    "(IntPtr) 0" as an initial value. 
+	  </para>
+          <para>
+	    Using this constructor will not track the type information
+	    of the classes or structures kept in the list.  If you
+	    plan on tracking the type information, use the <see cref="M:GLib.List.List(IntPtr,Type)" /> method.
+	  </para>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public List (IntPtr raw, Type element_type);" />
+      <MemberType>Constructor</MemberType>
+      <ReturnValue />
+      <Parameters>
+        <Parameter Name="raw" Type="System.IntPtr" />
+        <Parameter Name="element_type" Type="System.Type" />
+      </Parameters>
+      <Docs>
+        <summary>Internal constructor</summary>
+        <param name="raw">A handle to a GLib.list</param>
+        <returns>A new instance of List, wrapping the C list.</returns>
+        <remarks>
+          <para>
+            <see cref="T:GLib.List" /> objects are constructed by passing an unmanaged
+	    reference to an existing <see cref="T:GLib.List" />, or they can use
+	    "(IntPtr) 0" as an initial value. 
+	  </para>
+          <para>
+	    Using this constructor will track the type information
+	    of the classes or structures kept in the list.  This
+	    information is used by the List enumerator when returning
+	    data. 
+	  </para>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Clone">
+      <MemberSignature Language="C#" Value="public override object Clone ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Object</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Duplicates the list, shallow copy.</summary>
+        <returns>The duplicated list.</returns>
+        <remarks>Makes a new copy of the list.  The individual elements on
+-	    the list are not duplicated.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public List (Type element_type);" />
+      <MemberType>Constructor</MemberType>
+      <ReturnValue />
+      <Parameters>
+        <Parameter Name="element_type" Type="System.Type" />
+      </Parameters>
+      <Docs>
+        <summary>Constructs a list of objects of a given type.</summary>
+        <param name="element_type">a <see cref="T:System.Type" /></param>
+        <returns>a <see cref="T:GLib.List" /></returns>
+        <remarks>
+          <example>
+            <code lang="C#">
+	Gtk.Widget a = new Gtk.Widget((IntPtr) 0);
+		Gtk.Widget b = new Gtk.Widget((IntPtr) 0);
+		
+		GLib.List l = new GLib.List (typeof (Gtk.Widget));
+        l.Append (a.Handle);
+        l.Append (b.Handle);
+  </code>
+          </example>
+        </remarks>
+      </Docs>
+    </Member>
+  </Members>
+</Type>

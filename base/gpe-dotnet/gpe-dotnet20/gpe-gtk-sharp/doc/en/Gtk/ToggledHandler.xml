@@ -1,0 +1,37 @@
+<Type Name="ToggledHandler" FullName="Gtk.ToggledHandler">
+  <TypeSignature Language="C#" Maintainer="auto" Value="public sealed delegate void ToggledHandler (object o, Gtk.ToggledArgs args);" />
+  <AssemblyInfo>
+    <AssemblyName>gtk-sharp</AssemblyName>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+    <Attributes />
+  </AssemblyInfo>
+  <ThreadSafetyStatement>Gtk# is thread aware, but not thread safe; See the <link location="node:gtk-sharp/programming/threads">Gtk# Thread Programming</link> for details.</ThreadSafetyStatement>
+  <Docs>
+    <summary>Event handler.</summary>
+    <remarks>
+      <para>The <see cref="M:Gtk.CellRendererToggle.Toggled" /> event utilizes this delegate:</para>
+      <para>Event data is passed via the <see cref="T:Gtk.ToggledArgs" /> parameter.</para>
+      <para>To attach a <see cref="T:Gtk.ToggledHandler" /> to an event, add the ToggledHandler instance to the event.  The methods referenced by the ToggledHandler instance are invoked whenever the event is raised, until the ToggledHandler is removed from the event.</para>
+    </remarks>
+  </Docs>
+  <Base>
+    <BaseTypeName>System.Delegate</BaseTypeName>
+  </Base>
+  <Interfaces>
+    <Interface>
+      <InterfaceName>System.ICloneable</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>System.Runtime.Serialization.ISerializable</InterfaceName>
+    </Interface>
+  </Interfaces>
+  <Attributes />
+  <Members />
+  <Parameters>
+    <Parameter Name="o" Type="System.Object" />
+    <Parameter Name="args" Type="Gtk.ToggledArgs" />
+  </Parameters>
+  <ReturnValue>
+    <ReturnType>System.Void</ReturnType>
+  </ReturnValue>
+</Type>

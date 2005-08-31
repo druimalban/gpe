@@ -1,0 +1,133 @@
+<Type Name="TextAppearance" FullName="Gtk.TextAppearance">
+  <TypeSignature Language="C#" Value="public sealed struct TextAppearance;" Maintainer="auto" />
+  <AssemblyInfo>
+    <AssemblyName>gtk-sharp</AssemblyName>
+    <AssemblyPublicKey>
+    </AssemblyPublicKey>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+    <AssemblyCulture>neutral</AssemblyCulture>
+    <Attributes />
+  </AssemblyInfo>
+  <ThreadSafetyStatement>Gtk# is thread aware, but not thread safe; See the <link location="node:gtk-sharp/programming/threads">Gtk# Thread Programming</link> for details.</ThreadSafetyStatement>
+  <Docs>
+    <summary>This is used by <see cref="T:Gtk.TextAttributes" /> for color and position details about text.</summary>
+    <remarks />
+  </Docs>
+  <Base>
+    <BaseTypeName>System.ValueType</BaseTypeName>
+  </Base>
+  <Interfaces />
+  <Attributes />
+  <Members>
+    <Member MemberName="Zero">
+      <MemberSignature Language="C#" Value="public static Gtk.TextAppearance Zero;" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.TextAppearance</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>A default/empty TextAppearance.</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="New">
+      <MemberSignature Language="C#" Value="public static Gtk.TextAppearance New (IntPtr raw);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.TextAppearance</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="raw" Type="System.IntPtr" />
+      </Parameters>
+      <Docs>
+        <summary>Internal constructor; not for developer use.</summary>
+        <param name="raw">an <see cref="T:IntPtr" />, pointer to the underlying C object</param>
+        <returns>a new <see cref="T:Gtk.TextAppearance" /></returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="fg_stipple">
+      <MemberSignature Language="C#" Value="public Gdk.Pixmap fg_stipple { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.Pixmap</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>A stipple (dotted) pattern for the foreground color.</summary>
+        <param name="value">a 1-bit-deep <see cref="T:Gdk.Pixmap" /></param>
+        <returns>a <see cref="T:Gdk.Pixmap" /></returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="bg_stipple">
+      <MemberSignature Language="C#" Value="public Gdk.Pixmap bg_stipple { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.Pixmap</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>A stipple (dotted) pattern for the background color.</summary>
+        <param name="value">a 1-bit-deep <see cref="T:Gdk.Pixmap" /></param>
+        <returns>a <see cref="T:Gdk.Pixmap" /></returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="BgColor">
+      <MemberSignature Language="C#" Value="public Gdk.Color BgColor;" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.Color</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>The background color of this text.</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="FgColor">
+      <MemberSignature Language="C#" Value="public Gdk.Color FgColor;" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.Color</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>The foreground color of this text.</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Rise">
+      <MemberSignature Language="C#" Value="public int Rise;" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Int32</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Offset of text in pixels above the baseline (if positive) or below the baseline (if negative).</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Underline">
+      <MemberSignature Language="C#" Value="public uint Underline;" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>System.UInt32</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Style of underlining for this text.</summary>
+        <remarks>See <see cref="T:Pango.Underline" /> for possible values.</remarks>
+      </Docs>
+    </Member>
+  </Members>
+</Type>

@@ -1,0 +1,35 @@
+<Type Name="ApplyCustomPropFunc" FullName="Glade.ApplyCustomPropFunc">
+  <TypeSignature Language="C#" Value="public sealed delegate void ApplyCustomPropFunc (Glade.XML xml, Gtk.Widget widget, string propname, string value);" Maintainer="auto" />
+  <AssemblyInfo>
+    <AssemblyName>glade-sharp</AssemblyName>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+    <Attributes />
+  </AssemblyInfo>
+  <ThreadSafetyStatement>Gtk# is thread aware, but not thread safe; See the <link location="node:gtk-sharp/programming/threads">Gtk# Thread Programming</link> for details.</ThreadSafetyStatement>
+  <Docs>
+    <summary>Event handler.</summary>
+    <remarks></remarks>
+  </Docs>
+  <Base>
+    <BaseTypeName>System.Delegate</BaseTypeName>
+  </Base>
+  <Interfaces>
+    <Interface>
+      <InterfaceName>System.ICloneable</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>System.Runtime.Serialization.ISerializable</InterfaceName>
+    </Interface>
+  </Interfaces>
+  <Attributes />
+  <Members />
+  <Parameters>
+    <Parameter Name="xml" Type="Glade.XML" />
+    <Parameter Name="widget" Type="Gtk.Widget" />
+    <Parameter Name="propname" Type="System.String" />
+    <Parameter Name="value" Type="System.String" />
+  </Parameters>
+  <ReturnValue>
+    <ReturnType>System.Void</ReturnType>
+  </ReturnValue>
+</Type>

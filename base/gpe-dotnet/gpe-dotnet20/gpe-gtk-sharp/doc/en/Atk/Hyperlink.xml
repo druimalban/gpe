@@ -1,0 +1,372 @@
+<Type Name="Hyperlink" FullName="Atk.Hyperlink">
+  <TypeSignature Language="C#" Value="public class Hyperlink : GLib.Object, Action, IWrapper, IWrapper, IDisposable" Maintainer="auto" />
+  <AssemblyInfo>
+    <AssemblyName>atk-sharp</AssemblyName>
+    <AssemblyPublicKey>
+    </AssemblyPublicKey>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+    <AssemblyCulture>neutral</AssemblyCulture>
+    <Attributes />
+  </AssemblyInfo>
+  <ThreadSafetyStatement>Gtk# is thread aware, but not thread safe; See the <link location="node:gtk-sharp/programming/threads">Gtk# Thread Programming</link> for details.</ThreadSafetyStatement>
+  <Docs>
+    <summary>An ATK object which encapsulates a link or set of links in a hypertext document.</summary>
+    <remarks />
+  </Docs>
+  <Base>
+    <BaseTypeName>GLib.Object</BaseTypeName>
+  </Base>
+  <Interfaces>
+    <Interface>
+      <InterfaceName>Atk.Action</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>GLib.IWrapper</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>GLib.IWrapper</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>System.IDisposable</InterfaceName>
+    </Interface>
+  </Interfaces>
+  <Attributes />
+  <Members>
+    <Member MemberName="GetDescription">
+      <MemberSignature Language="C#" Value="public virtual string GetDescription (int i);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="i" Type="System.Int32" />
+      </Parameters>
+      <Docs>
+        <summary>To be added</summary>
+        <param name="i">an object of type <see cref="T:System.Int32" /></param>
+        <returns>an object of type <see cref="T:System.String" /></returns>
+        <remarks>To be added</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="SetDescription">
+      <MemberSignature Language="C#" Value="public virtual bool SetDescription (int i, string desc);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="i" Type="System.Int32" />
+        <Parameter Name="desc" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <summary>To be added</summary>
+        <param name="i">an object of type <see cref="T:System.Int32" /></param>
+        <param name="desc">an object of type <see cref="T:System.String" /></param>
+        <returns>an object of type <see cref="T:System.Boolean" /></returns>
+        <remarks>To be added</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="GetKeybinding">
+      <MemberSignature Language="C#" Value="public virtual string GetKeybinding (int i);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="i" Type="System.Int32" />
+      </Parameters>
+      <Docs>
+        <summary>To be added</summary>
+        <param name="i">an object of type <see cref="T:System.Int32" /></param>
+        <returns>an object of type <see cref="T:System.String" /></returns>
+        <remarks>To be added</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="GetName">
+      <MemberSignature Language="C#" Value="public virtual string GetName (int i);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="i" Type="System.Int32" />
+      </Parameters>
+      <Docs>
+        <summary>To be added</summary>
+        <param name="i">an object of type <see cref="T:System.Int32" /></param>
+        <returns>an object of type <see cref="T:System.String" /></returns>
+        <remarks>To be added</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="DoAction">
+      <MemberSignature Language="C#" Value="public virtual bool DoAction (int i);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="i" Type="System.Int32" />
+      </Parameters>
+      <Docs>
+        <summary>To be added</summary>
+        <param name="i">an object of type <see cref="T:System.Int32" /></param>
+        <returns>an object of type <see cref="T:System.Boolean" /></returns>
+        <remarks>To be added</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="GetObject">
+      <MemberSignature Language="C#" Value="public Atk.Object GetObject (int i);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>Atk.Object</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="i" Type="System.Int32" />
+      </Parameters>
+      <Docs>
+        <summary>Returns the item associated with this hyperlinks nth anchor.</summary>
+        <param name="i">an object of type <see cref="T:System.Int32" /></param>
+        <returns>an object of type <see cref="T:Atk.Object" /></returns>
+        <remarks>For instance, the returned <see cref="T:Atk.Object" /> will implement <see cref="T:Atk.Text" /> if the link is a text hyperlink, <see cref="T:Atk.Image" /> if the link is an image hyperlink etc.
+<para>
+Multiple anchors are primarily used by client-side image maps.
+</para></remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="GetUri">
+      <MemberSignature Language="C#" Value="public string GetUri (int i);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="i" Type="System.Int32" />
+      </Parameters>
+      <Docs>
+        <summary>Get a the URI associated with the anchor specified by <paramref name="i" /></summary>
+        <param name="i"> a (zero-index) integer specifying the desired anchor</param>
+        <returns> a string specifying the URI</returns>
+        <remarks>Multiple anchors are primarily used by client-side image maps.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Finalize">
+      <MemberSignature Language="C#" Value="protected override void Finalize ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Disposes the resources associated with the object.</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public Hyperlink (IntPtr raw);" />
+      <MemberType>Constructor</MemberType>
+      <ReturnValue />
+      <Parameters>
+        <Parameter Name="raw" Type="System.IntPtr" />
+      </Parameters>
+      <Docs>
+        <summary>Internal constructor</summary>
+        <param name="raw">Pointer to the C object.</param>
+        <returns>An instance of Hyperlink, wrapping the C object.</returns>
+        <remarks>
+          <para>This is an internal constructor, and should not be used by user code.</para>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="NActions">
+      <MemberSignature Language="C#" Value="public virtual int NActions { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Int32</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>The number of actions.</summary>
+        <returns>an object of type <see cref="T:System.Int32" /></returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="NAnchors">
+      <MemberSignature Language="C#" Value="public int NAnchors { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Int32</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>Gets the number of anchors associated with this hyperlink.</summary>
+        <returns>the number of anchors associated with this hyperlink</returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="EndIndex">
+      <MemberSignature Language="C#" Value="public int EndIndex { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Int32</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>Gets the index with the hypertext document at which this link ends.</summary>
+        <returns> the index with the hypertext document at which this link ends</returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="StartIndex">
+      <MemberSignature Language="C#" Value="public int StartIndex { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Int32</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>Gets the index with the hypertext document at which this link begins.</summary>
+        <returns> the index with the hypertext document at which this link begins</returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="GetLocalizedName">
+      <MemberSignature Language="C#" Value="public virtual string GetLocalizedName (int i);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="i" Type="System.Int32" />
+      </Parameters>
+      <Docs>
+        <summary>To be added</summary>
+        <param name="i">a <see cref="T:System.Int32" /></param>
+        <returns>a <see cref="T:System.String" /></returns>
+        <remarks>To be added</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="IsValid">
+      <MemberSignature Language="C#" Value="public bool IsValid { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Since the document that a link is associated with may have changed this method returns <see langword="true" /> if the link is still valid (with respect to the document it references) and <see langword="false" /> otherwise.</summary>
+        <returns> whether or not this link is still valid</returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="IsInline">
+      <MemberSignature Language="C#" Value="public bool IsInline { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Indicates whether the link currently displays some or all of its content inline.</summary>
+        <returns> whether or not this link displays its content inline.</returns>
+        <remarks>Ordinary HTML links will usually return <see langword="false" />, but an inline &lt;src&gt; HTML element will return <see langword="true" />.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="GType">
+      <MemberSignature Language="C#" Value="public static GLib.GType GType { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>GLib.GType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>GType Property.</summary>
+        <returns>a <see cref="T:GLib.GType" /></returns>
+        <remarks>Returns the native <see cref="T:GLib.GType" /> value for <see cref="T:Atk.Hyperlink" />.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="protected Hyperlink (GLib.GType gtype);" />
+      <MemberType>Constructor</MemberType>
+      <ReturnValue />
+      <Parameters>
+        <Parameter Name="gtype" Type="GLib.GType" />
+      </Parameters>
+      <Docs>
+        <summary>Internal constructor</summary>
+        <param name="gtype">a <see cref="T:GLib.GType" /></param>
+        <returns>a <see cref="T:Atk.Hyperlink" /></returns>
+        <remarks>This is a constructor used by derivative types of <see cref="T:Atk.Hyperlink" /> that would have their own GLib.GType assigned to it.  This is not typically used by C# code.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="protected Hyperlink ();" />
+      <MemberType>Constructor</MemberType>
+      <ReturnValue />
+      <Parameters />
+      <Docs>
+        <summary>Default constructor</summary>
+        <returns>a <see cref="T:Atk.Hyperlink" /></returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="NumberOfAnchors">
+      <MemberSignature Language="C#" Value="public int NumberOfAnchors { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Int32</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>To be added</summary>
+        <returns>a <see cref="T:System.Int32" /></returns>
+        <remarks>To be added</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="SelectedLink">
+      <MemberSignature Language="C#" Value="public bool SelectedLink { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>To be added</summary>
+        <returns>a <see cref="T:System.Boolean" /></returns>
+        <remarks>To be added</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="IsSelectedLink">
+      <MemberSignature Language="C#" Value="public bool IsSelectedLink { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>To be added</summary>
+        <returns>a <see cref="T:System.Boolean" /></returns>
+        <remarks>To be added</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="LinkActivated">
+      <MemberSignature Language="C#" Value="public event EventHandler LinkActivated;" />
+      <MemberType>Event</MemberType>
+      <ReturnValue>
+        <ReturnType>System.EventHandler</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>To be added</summary>
+        <remarks>To be added</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="OnLinkActivated">
+      <MemberSignature Language="C#" Value="protected virtual void OnLinkActivated ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Default handler for the <see cref="M:Atk.Hyperlink.LinkActivated" /> event.</summary>
+        <remarks>Override this method in a subclass to provide a default handler for the <see cref="M:Atk.Hyperlink.LinkActivated" /> event.</remarks>
+      </Docs>
+    </Member>
+  </Members>
+</Type>

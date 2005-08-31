@@ -1,0 +1,122 @@
+<Type Name="Image" FullName="Atk.Image">
+  <TypeSignature Language="C#" Value="public abstract interface Image;" Maintainer="auto" />
+  <AssemblyInfo>
+    <AssemblyName>atk-sharp</AssemblyName>
+    <AssemblyPublicKey>
+    </AssemblyPublicKey>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+    <AssemblyCulture>neutral</AssemblyCulture>
+    <Attributes />
+  </AssemblyInfo>
+  <ThreadSafetyStatement>Gtk# is thread aware, but not thread safe; See the <link location="node:gtk-sharp/programming/threads">Gtk# Thread Programming</link> for details.</ThreadSafetyStatement>
+  <Docs>
+    <summary>
+      Implemented by AtkObject subtypes on behalf of components which
+       display image/pixmap information onscreen, and which provide
+       information (other than just widget borders, etc.) via that
+       image content.
+    </summary>
+    <remarks>
+      <para>
+        <see cref="T:Atk.Image" /> should be implemented by <see cref="T:Atk.Object" /> subtypes on behalf
+        of components which display image/pixmap information onscreen,
+        and which provide information (other than just widget borders,
+        etc.) via that image content. For instance, icons, buttons
+        with icons, toolbar elements, and image viewing panes
+        typically should implement AtkImage.
+      </para>
+      <para>
+        <see cref="T:Atk.Image" /> primarily provides two types of information:
+        coordinate information (useful for screen review mode of
+        screenreaders, and for use by onscreen magnifiers), and
+        descriptive information. The descriptive information is
+        provided for alternative, text-only presentation of the most
+        significant information present in the image.
+      </para>
+    </remarks>
+  </Docs>
+  <Base />
+  <Interfaces>
+    <Interface>
+      <InterfaceName>GLib.IWrapper</InterfaceName>
+    </Interface>
+  </Interfaces>
+  <Attributes />
+  <Members>
+    <Member MemberName="SetImageDescription">
+      <MemberSignature Language="C#" Value="public virtual bool SetImageDescription (string description);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="description" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <summary>Sets the textual description for this image.</summary>
+        <param name="description">a description to set for image</param>
+        <returns>
+          <see langword="true" />, or <see langword="false" /> if operation could not be completed.</returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="ImageDescription">
+      <MemberSignature Language="C#" Value="public virtual string ImageDescription { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>Get a textual description of this image.</summary>
+        <returns>a string representing the image description</returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="GetImagePosition">
+      <MemberSignature Language="C#" Value="public virtual void GetImagePosition (out int x, out int y, Atk.CoordType coord_type);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="x" Type="System.Int32&amp;" RefType="out" />
+        <Parameter Name="y" Type="System.Int32&amp;" RefType="out" />
+        <Parameter Name="coord_type" Type="Atk.CoordType" />
+      </Parameters>
+      <Docs>
+        <summary>Gets the position of the image in the form of a point specifying the images top-left corner.</summary>
+        <param name="x">x coordinate position</param>
+        <param name="y">y coordinate position</param>
+        <param name="coord_type">
+            specifies whether the coordinates are relative to the
+            screen or to the components top level window
+          </param>
+        <remarks>
+          <para>
+            The values of <paramref name="x" /> and <paramref name="y" />are returned as -1 if the values cannot be obtained.
+          </para>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="GetImageSize">
+      <MemberSignature Language="C#" Value="public virtual void GetImageSize (out int width, out int height);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="width" Type="System.Int32&amp;" RefType="out" />
+        <Parameter Name="height" Type="System.Int32&amp;" RefType="out" />
+      </Parameters>
+      <Docs>
+        <summary>Get the width and height in pixels for the specified image.</summary>
+        <param name="width">the image width</param>
+        <param name="height">the image height</param>
+        <remarks>
+          The values of <paramref name="width" /> and <paramref name="height" /> are returned as -1 if the values cannot be
+          obtained.
+        </remarks>
+      </Docs>
+    </Member>
+  </Members>
+</Type>

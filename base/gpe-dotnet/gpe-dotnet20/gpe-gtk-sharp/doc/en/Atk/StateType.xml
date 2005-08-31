@@ -1,0 +1,463 @@
+<Type Name="StateType" FullName="Atk.StateType">
+  <TypeSignature Language="C#" Maintainer="auto" Value="public enum StateType;" />
+  <AssemblyInfo>
+    <AssemblyName>atk-sharp</AssemblyName>
+    <AssemblyPublicKey>
+    </AssemblyPublicKey>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+    <AssemblyCulture>neutral</AssemblyCulture>
+    <Attributes />
+  </AssemblyInfo>
+  <ThreadSafetyStatement>Gtk# is thread aware, but not thread safe; See the <link location="node:gtk-sharp/programming/threads">Gtk# Thread Programming</link> for details.</ThreadSafetyStatement>
+  <Docs>
+    <summary>The possible types of states of an object</summary>
+    <remarks />
+  </Docs>
+  <Base>
+    <BaseTypeName>System.Enum</BaseTypeName>
+  </Base>
+  <Interfaces>
+    <Interface>
+      <InterfaceName>System.IComparable</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>System.IConvertible</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>System.IFormattable</InterfaceName>
+    </Interface>
+  </Interfaces>
+  <Attributes />
+  <Members>
+    <Member MemberName="Invalid">
+      <MemberSignature Language="C#" Value="Invalid" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Atk.StateType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary> Indicates an invalid state</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Active">
+      <MemberSignature Language="C#" Value="Active" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Atk.StateType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary> Indicates a window is currently the active window</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Armed">
+      <MemberSignature Language="C#" Value="Armed" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Atk.StateType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary> Indicates that the object is armed</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Busy">
+      <MemberSignature Language="C#" Value="Busy" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Atk.StateType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary> Indicates the current object is busy</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Checked">
+      <MemberSignature Language="C#" Value="Checked" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Atk.StateType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary> Indicates this object is currently checked</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Defunct">
+      <MemberSignature Language="C#" Value="Defunct" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Atk.StateType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary> Indicates the user interface object corresponding to this object no longer exists</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Editable">
+      <MemberSignature Language="C#" Value="Editable" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Atk.StateType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary> Indicates the user can change the contents of this object</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Enabled">
+      <MemberSignature Language="C#" Value="Enabled" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Atk.StateType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Indicates that this object is enabled. An inconsistent <see cref="T:Gtk.ToggleButton" /> is an example of an object which is sensitive but not enabled.</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Expandable">
+      <MemberSignature Language="C#" Value="Expandable" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Atk.StateType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary> Indicates this object allows progressive disclosure of its children</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Expanded">
+      <MemberSignature Language="C#" Value="Expanded" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Atk.StateType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary> Indicates this object its expanded</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Focusable">
+      <MemberSignature Language="C#" Value="Focusable" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Atk.StateType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Indicates this object can accept keyboard focus, which means all events resulting from typing on the keyboard will normally be passed to it when it has focus</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Focused">
+      <MemberSignature Language="C#" Value="Focused" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Atk.StateType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Indicates this object currently has the keyboard focus</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Horizontal">
+      <MemberSignature Language="C#" Value="Horizontal" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Atk.StateType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary> Indicates the orientation of this object is horizontal</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Iconified">
+      <MemberSignature Language="C#" Value="Iconified" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Atk.StateType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary> Indicates this object is minimized and is represented only by an icon</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Modal">
+      <MemberSignature Language="C#" Value="Modal" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Atk.StateType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary> Indicates something must be done with this object before the user can interact with an object in a different window</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="MultiLine">
+      <MemberSignature Language="C#" Value="MultiLine" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Atk.StateType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary> Indicates this (text) object can contain multiple lines of text</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Multiselectable">
+      <MemberSignature Language="C#" Value="Multiselectable" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Atk.StateType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary> Indicates this object allows more than one of its children to be selected at the same time</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Opaque">
+      <MemberSignature Language="C#" Value="Opaque" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Atk.StateType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary> Indicates this object paints every pixel within its rectangular region</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Pressed">
+      <MemberSignature Language="C#" Value="Pressed" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Atk.StateType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary> Indicates this object is currently pressed</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Resizable">
+      <MemberSignature Language="C#" Value="Resizable" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Atk.StateType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary> Indicates the size of this object is not fixed</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Selectable">
+      <MemberSignature Language="C#" Value="Selectable" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Atk.StateType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Indicates this object is the child of an object that allows its children to be selected and that this child is one of those children that can be selected</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Selected">
+      <MemberSignature Language="C#" Value="Selected" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Atk.StateType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Indicates this object is the child of an object that allows its children to be selected and that this child is one of those children that has been selected</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Sensitive">
+      <MemberSignature Language="C#" Value="Sensitive" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Atk.StateType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary> Indicates this object is sensitive</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Showing">
+      <MemberSignature Language="C#" Value="Showing" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Atk.StateType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary> Indicates this object, the object's parent, the object's parent's parent, and so on, are all visible</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="SingleLine">
+      <MemberSignature Language="C#" Value="SingleLine" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Atk.StateType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary> Indicates this (text) object can contain only a single line of text</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Stale">
+      <MemberSignature Language="C#" Value="Stale" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Atk.StateType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary> Indicates that the index associated with this object has changed since the user accessed the object.</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Transient">
+      <MemberSignature Language="C#" Value="Transient" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Atk.StateType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary> Indicates this object is transient</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Vertical">
+      <MemberSignature Language="C#" Value="Vertical" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Atk.StateType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary> Indicates the orientation of this object is vertical</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Visible">
+      <MemberSignature Language="C#" Value="Visible" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Atk.StateType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary> Indicates this object is visible</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="LastDefined">
+      <MemberSignature Language="C#" Value="LastDefined" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Atk.StateType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary> Not a valid state, used for finding end of enumeration</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="ManagesDescendants">
+      <MemberSignature Language="C#" Value="ManagesDescendants" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Atk.StateType</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary> Indicates that "active-descendant-changed" event is sent when children become 'active' (i.e. are selected or navigated to onscreen). Used to prevent need to enumerate all children in very large containers, like tables.</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="value__">
+      <MemberSignature Language="C#" Value="value__" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Int32</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Internal field.</summary>
+        <remarks>Do not use.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Indeterminate">
+      <MemberSignature Language="C#" Value="Indeterminate" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Atk.StateType</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>To be added</summary>
+        <remarks>To be added</remarks>
+      </Docs>
+    </Member>
+  </Members>
+</Type>

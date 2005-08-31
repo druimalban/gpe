@@ -1,0 +1,501 @@
+<Type Name="EventType" FullName="Gdk.EventType">
+  <TypeSignature Language="C#" Maintainer="auto" Value="public enum EventType;" />
+  <AssemblyInfo>
+    <AssemblyName>gdk-sharp</AssemblyName>
+    <AssemblyPublicKey>
+    </AssemblyPublicKey>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+    <AssemblyCulture>neutral</AssemblyCulture>
+    <Attributes />
+  </AssemblyInfo>
+  <ThreadSafetyStatement>Gtk# is thread aware, but not thread safe; See the <link location="node:gtk-sharp/programming/threads">Gtk# Thread Programming</link> for details.</ThreadSafetyStatement>
+  <Docs>
+    <summary>To be added</summary>
+    <remarks />
+  </Docs>
+  <Base>
+    <BaseTypeName>System.Enum</BaseTypeName>
+  </Base>
+  <Interfaces>
+    <Interface>
+      <InterfaceName>System.IComparable</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>System.IConvertible</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>System.IFormattable</InterfaceName>
+    </Interface>
+  </Interfaces>
+  <Attributes />
+  <Members>
+    <Member MemberName="Nothing">
+      <MemberSignature Language="C#" Value="Nothing" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.EventType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>A special code to indicate a null event.</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Delete">
+      <MemberSignature Language="C#" Value="Delete" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.EventType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>The window manager has requested that the toplevel window be hidden or destroyed, usually when the user clicks on a special icon in the title bar.</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Destroy">
+      <MemberSignature Language="C#" Value="Destroy" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.EventType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>The window has been destroyed.</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Expose">
+      <MemberSignature Language="C#" Value="Expose" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.EventType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>All or part of the window has become visible and needs to be redrawn.</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="MotionNotify">
+      <MemberSignature Language="C#" Value="MotionNotify" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.EventType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>The pointer (usually a mouse) has moved.</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="ButtonPress">
+      <MemberSignature Language="C#" Value="ButtonPress" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.EventType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>A mouse button has been pressed. </summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="TwoButtonPress">
+      <MemberSignature Language="C#" Value="TwoButtonPress" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.EventType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>A mouse button has been double-clicked (clicked twice within a short period of time). Note that each click also generates a ButtonPress event.</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="ThreeButtonPress">
+      <MemberSignature Language="C#" Value="ThreeButtonPress" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.EventType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>A mouse button has been clicked 3 times in a short period of time. Note that each click also generates a  ButtonPress event.</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="ButtonRelease">
+      <MemberSignature Language="C#" Value="ButtonRelease" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.EventType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>A mouse button has been released.</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="KeyPress">
+      <MemberSignature Language="C#" Value="KeyPress" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.EventType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>A key has been pressed.</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="KeyRelease">
+      <MemberSignature Language="C#" Value="KeyRelease" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.EventType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>A key has been released.</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="EnterNotify">
+      <MemberSignature Language="C#" Value="EnterNotify" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.EventType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>The pointer has entered the window.</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="LeaveNotify">
+      <MemberSignature Language="C#" Value="LeaveNotify" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.EventType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>The pointer has left the window.</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="FocusChange">
+      <MemberSignature Language="C#" Value="FocusChange" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.EventType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>The keyboard focus has entered or left the window.</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Configure">
+      <MemberSignature Language="C#" Value="Configure" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.EventType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>The size, position or stacking order of the window has changed. Note that GTK+ discards these events for Gdk.WindowType.Child windows. </summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Map">
+      <MemberSignature Language="C#" Value="Map" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.EventType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>The window has been mapped.</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Unmap">
+      <MemberSignature Language="C#" Value="Unmap" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.EventType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>The window has been unmapped.</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="PropertyNotify">
+      <MemberSignature Language="C#" Value="PropertyNotify" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.EventType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>A property on the window has been changed or deleted.</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="SelectionClear">
+      <MemberSignature Language="C#" Value="SelectionClear" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.EventType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>The application has lost ownership of a selection.</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="SelectionRequest">
+      <MemberSignature Language="C#" Value="SelectionRequest" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.EventType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Another application has requested a selection.</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="SelectionNotify">
+      <MemberSignature Language="C#" Value="SelectionNotify" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.EventType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>A selection has been received.</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="ProximityIn">
+      <MemberSignature Language="C#" Value="ProximityIn" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.EventType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>An input device has moved into contact with a sensing surface (e.g. a touchscreen or graphics tablet).</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="ProximityOut">
+      <MemberSignature Language="C#" Value="ProximityOut" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.EventType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>An input device has moved out of contact with a sensing surface.</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="DragEnter">
+      <MemberSignature Language="C#" Value="DragEnter" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.EventType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>The mouse has entered the window while a drag is in progress.</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="DragLeave">
+      <MemberSignature Language="C#" Value="DragLeave" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.EventType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>The mouse has left the window while a drag is in progress.</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="DragMotion">
+      <MemberSignature Language="C#" Value="DragMotion" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.EventType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>The mouse has moved in the window while a drag is in progress.</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="DragStatus">
+      <MemberSignature Language="C#" Value="DragStatus" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.EventType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>The status of the drag operation initiated by the window has changed.</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="DropStart">
+      <MemberSignature Language="C#" Value="DropStart" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.EventType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>A drop operation onto the window has started.</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="DropFinished">
+      <MemberSignature Language="C#" Value="DropFinished" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.EventType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>The drop operation initiated by the window has completed.</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="ClientEvent">
+      <MemberSignature Language="C#" Value="ClientEvent" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.EventType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>A message has been received from another application.</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="VisibilityNotify">
+      <MemberSignature Language="C#" Value="VisibilityNotify" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.EventType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>The window visibility status has changed.</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="NoExpose">
+      <MemberSignature Language="C#" Value="NoExpose" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.EventType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Indicates that the source region was completely available when parts of a drawable were copied. This is not very useful.</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Scroll">
+      <MemberSignature Language="C#" Value="Scroll" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.EventType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>None.</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="WindowState">
+      <MemberSignature Language="C#" Value="WindowState" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.EventType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>None.</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Setting">
+      <MemberSignature Language="C#" Value="Setting" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.EventType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>None.</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="value__">
+      <MemberSignature Language="C#" Value="value__" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Int32</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Internal field.</summary>
+        <remarks>Do not use.</remarks>
+      </Docs>
+    </Member>
+  </Members>
+</Type>

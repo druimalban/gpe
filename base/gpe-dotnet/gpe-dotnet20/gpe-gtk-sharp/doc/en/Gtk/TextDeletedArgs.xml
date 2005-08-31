@@ -1,0 +1,79 @@
+<Type Name="TextDeletedArgs" FullName="Gtk.TextDeletedArgs">
+  <TypeSignature Language="C#" Value="public class TextDeletedArgs : GLib.SignalArgs" Maintainer="auto" />
+  <AssemblyInfo>
+    <AssemblyName>gtk-sharp</AssemblyName>
+    <AssemblyPublicKey>
+    </AssemblyPublicKey>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+    <AssemblyCulture>neutral</AssemblyCulture>
+    <Attributes />
+  </AssemblyInfo>
+  <ThreadSafetyStatement>Gtk# is thread aware, but not thread safe; See the <link location="node:gtk-sharp/programming/threads">Gtk# Thread Programming</link> for details.</ThreadSafetyStatement>
+  <Docs>
+    <summary>Event data.</summary>
+    <remarks>
+      <para>The following events invoke <see cref="T:Gtk.TextDeletedHandler" /> delegates which pass event data via this class:</para>
+      <para>
+        <list type="bullet">
+          <item>
+            <term>
+              <see cref="M:Gnome.Entry.TextDeleted" />
+            </term>
+          </item>
+          <item>
+            <term>
+              <see cref="M:Gnome.FileEntry.TextDeleted" />
+            </term>
+          </item>
+          <item>
+            <term>
+              <see cref="M:Gtk.Entry.TextDeleted" />
+            </term>
+          </item>
+        </list>
+      </para>
+    </remarks>
+  </Docs>
+  <Base>
+    <BaseTypeName>GLib.SignalArgs</BaseTypeName>
+  </Base>
+  <Interfaces />
+  <Attributes />
+  <Members>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public TextDeletedArgs ();" />
+      <MemberType>Constructor</MemberType>
+      <ReturnValue />
+      <Parameters />
+      <Docs>
+        <summary>Public Constructor.</summary>
+        <returns>A new <see cref="T:Gtk.TextDeletedArgs" />.</returns>
+        <remarks>Create a new <see cref="T:Gtk.TextDeletedArgs" /> instance with this constructor if you need to invoke a <see cref="T:Gtk.TextDeletedHandler" /> delegate.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="EndPos">
+      <MemberSignature Language="C#" Value="public int EndPos { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Int32</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>The end position within the widget for the text that was deleted.</summary>
+        <returns>An integer for the end position; this character is not included in the deleted text.</returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="StartPos">
+      <MemberSignature Language="C#" Value="public int StartPos { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Int32</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>The start position within the widget for the text that was deleted.</summary>
+        <returns>An integer for the start position.</returns>
+        <remarks />
+      </Docs>
+    </Member>
+  </Members>
+</Type>

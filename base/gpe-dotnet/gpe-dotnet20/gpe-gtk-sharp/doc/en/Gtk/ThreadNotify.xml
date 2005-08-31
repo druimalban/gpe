@@ -1,0 +1,124 @@
+<Type Name="ThreadNotify" FullName="Gtk.ThreadNotify">
+  <TypeSignature Language="C#" Value="public class ThreadNotify" Maintainer="auto" />
+  <AssemblyInfo>
+    <AssemblyName>gtk-sharp</AssemblyName>
+    <AssemblyPublicKey>
+    </AssemblyPublicKey>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+    <AssemblyCulture>neutral</AssemblyCulture>
+    <Attributes />
+  </AssemblyInfo>
+  <ThreadSafetyStatement>Gtk# is thread aware, but not thread safe; See the <link location="node:gtk-sharp/programming/threads">Gtk# Thread Programming</link> for details.</ThreadSafetyStatement>
+  <Docs>
+    <summary>Multi-threaded integration with Gtk support.</summary>
+    <remarks>
+      <para>The ThreadNotify class is used to invoke methods in the Gtk+ thread.  Since Gtk is not a thread-safe toolkit, only a single thread at a time might be making calls into Gtk.</para>
+      <para>Typically applications will be executing the main Gtk+ main loop and when threads are done processing work, they invoke <see cref="M:Gtk.ThreadNotify.WakeupMain()" /> to invoke a method on the main Gtk+ thread.</para>
+      <example>
+        <code lang="C#">
+using Gtk;
+
+class Demo {
+
+  static ThreadNotify notify;
+
+  static void Main ()
+  {
+    Application.Init ();
+    notify = new ThreadNotify (new ReadyEvent (ready));
+    Application.Run ();
+  }
+
+  static void ready ()
+  {
+    // Update the GUI with computation values.
+  }
+
+  static void ThreadRoutine ()
+  {
+	LargeComputation ();
+        notify.WakeupMain ();
+  }
+
+  static void LargeComputation ()
+  {
+    // lots of processing here
+  }
+}
+  </code>
+      </example>
+    </remarks>
+  </Docs>
+  <Base>
+    <BaseTypeName>System.Object</BaseTypeName>
+  </Base>
+  <Interfaces />
+  <Attributes />
+  <Members>
+    <Member MemberName="WakeupMain">
+      <MemberSignature Language="C#" Value="public void WakeupMain ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Wakeup the main thread, and invoke delegate.</summary>
+        <remarks>This methods wakes up the Gtk+ main thread and executes the delegate that was specified at construction time in the Gtk+ thread.   </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public ThreadNotify (Gtk.ReadyEvent re);" />
+      <MemberType>Constructor</MemberType>
+      <ReturnValue />
+      <Parameters>
+        <Parameter Name="re" Type="Gtk.ReadyEvent" />
+      </Parameters>
+      <Docs>
+        <summary>ThreadNotify constructor</summary>
+        <param name="re">A ReadyEvent delegate.</param>
+        <returns>Constructed object.</returns>
+        <remarks>The method referenced by the delegate will be invoked on the Gtk+ mainloop whenever any thread invokes the <see cref="M:Gtk.ThreadNotify.WakeupMain ()" /> method.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Close">
+      <MemberSignature Language="C#" Value="public void Close ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>To be added</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Finalize">
+      <MemberSignature Language="C#" Value="protected override void Finalize ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>To be added</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Dispose">
+      <MemberSignature Language="C#" Value="protected virtual void Dispose (bool disposing);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="disposing" Type="System.Boolean" />
+      </Parameters>
+      <Docs>
+        <summary>To be added</summary>
+        <param name="disposing">a <see cref="T:System.Boolean" /></param>
+        <remarks />
+      </Docs>
+    </Member>
+  </Members>
+</Type>

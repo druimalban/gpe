@@ -1,0 +1,38 @@
+<Type Name="DelegateWrapper" FullName="GLib.DelegateWrapper">
+  <TypeSignature Language="C#" Value="public class DelegateWrapper" Maintainer="auto" />
+  <AssemblyInfo>
+    <AssemblyName>glib-sharp</AssemblyName>
+    <AssemblyPublicKey>
+    </AssemblyPublicKey>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+    <AssemblyCulture>neutral</AssemblyCulture>
+    <Attributes />
+  </AssemblyInfo>
+  <ThreadSafetyStatement>Gtk# is thread aware, but not thread safe; See the <link location="node:gtk-sharp/programming/threads">Gtk# Thread Programming</link> for details.</ThreadSafetyStatement>
+  <Docs>
+    <summary>Wrapper class for delegates.</summary>
+    <remarks>
+    </remarks>
+  </Docs>
+  <Base>
+    <BaseTypeName>System.Object</BaseTypeName>
+  </Base>
+  <Interfaces />
+  <Attributes />
+  <Members>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="protected DelegateWrapper (object o);" />
+      <MemberType>Constructor</MemberType>
+      <ReturnValue />
+      <Parameters>
+        <Parameter Name="o" Type="System.Object" />
+      </Parameters>
+      <Docs>
+        <summary>The <paramref name="o" /> is the object that creates the instance of the DelegateWrapper derived class or null if created from a static method.</summary>
+        <param name="o">a <see cref="T:System.Object" /></param>
+        <returns>a <see cref="T:GLib.DelegateWrapper" /></returns>
+        <remarks>Note that the instances will never be disposed if they are created in a static method.</remarks>
+      </Docs>
+    </Member>
+  </Members>
+</Type>

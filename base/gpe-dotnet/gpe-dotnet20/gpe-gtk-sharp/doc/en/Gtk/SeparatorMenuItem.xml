@@ -1,0 +1,112 @@
+<Type Name="SeparatorMenuItem" FullName="Gtk.SeparatorMenuItem">
+  <TypeSignature Language="C#" Value="public class SeparatorMenuItem : Gtk.MenuItem, Implementor, IWrapper, IWrapper, IDisposable" Maintainer="John Luke" />
+  <AssemblyInfo>
+    <AssemblyName>gtk-sharp</AssemblyName>
+    <AssemblyPublicKey>
+    </AssemblyPublicKey>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+    <AssemblyCulture>neutral</AssemblyCulture>
+    <Attributes />
+  </AssemblyInfo>
+  <ThreadSafetyStatement>Gtk# is thread aware, but not thread safe; See the <link location="node:gtk-sharp/programming/threads">Gtk# Thread Programming</link> for details.</ThreadSafetyStatement>
+  <Docs>
+    <summary>A separator used in menus.</summary>
+    <remarks>
+			A separator used in menus.
+			The <see cref="T:Gtk.SeparatorMenuItem" /> is a <see cref="T:Gtk.Separator" /> used to group items within a <see cref="T:Gtk.Menu" />.
+			It displays a horizontal line with a shadow to make it appear sunken into the interface.
+		</remarks>
+  </Docs>
+  <Base>
+    <BaseTypeName>Gtk.MenuItem</BaseTypeName>
+  </Base>
+  <Interfaces>
+    <Interface>
+      <InterfaceName>Atk.Implementor</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>GLib.IWrapper</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>GLib.IWrapper</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>System.IDisposable</InterfaceName>
+    </Interface>
+  </Interfaces>
+  <Attributes />
+  <Members>
+    <Member MemberName="Finalize">
+      <MemberSignature Language="C#" Value="protected override void Finalize ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Disposes the resources associated with the object.</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public SeparatorMenuItem (IntPtr raw);" />
+      <MemberType>Constructor</MemberType>
+      <ReturnValue />
+      <Parameters>
+        <Parameter Name="raw" Type="System.IntPtr" />
+      </Parameters>
+      <Docs>
+        <summary>Internal constructor</summary>
+        <param name="raw">Pointer to the C object.</param>
+        <returns>An instance of <see cref="T:Gtk.SeparatorMenuItem" />, wrapping the C object.</returns>
+        <remarks>
+          <para>This is an internal constructor, and should not be used by user code.</para>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public SeparatorMenuItem ();" />
+      <MemberType>Constructor</MemberType>
+      <ReturnValue />
+      <Parameters />
+      <Docs>
+        <summary>Creates a new <see cref="T:Gtk.SeparatorMenuItem" />.</summary>
+        <returns>an object of type <see cref="T:Gtk.SeparatorMenuItem" /></returns>
+        <remarks>
+					Creates a new <see cref="T:Gtk.SeparatorMenuItem" />.
+					<example>
+            <code lang="C#">
+Gtk.SeparatorMenuItem smi = new Gtk.SeparatorMenuItem ();
+						</code>
+          </example></remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="GType">
+      <MemberSignature Language="C#" Value="public static GLib.GType GType { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>GLib.GType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>GType Property.</summary>
+        <returns>a <see cref="T:GLib.GType" /></returns>
+        <remarks>Returns the native <see cref="T:GLib.GType" /> value for <see cref="T:Gtk.SeparatorMenuItem" />.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="protected SeparatorMenuItem (GLib.GType gtype);" />
+      <MemberType>Constructor</MemberType>
+      <ReturnValue />
+      <Parameters>
+        <Parameter Name="gtype" Type="GLib.GType" />
+      </Parameters>
+      <Docs>
+        <summary>Protected Constructor.</summary>
+        <param name="gtype">a <see cref="T:GLib.GType" /></param>
+        <returns>a <see cref="T:Gtk.SeparatorMenuItem" /></returns>
+        <remarks>Chain to this constructor if you have manually registered a native <see cref="T:GLib.GType" /> value for your subclass.</remarks>
+      </Docs>
+    </Member>
+  </Members>
+</Type>

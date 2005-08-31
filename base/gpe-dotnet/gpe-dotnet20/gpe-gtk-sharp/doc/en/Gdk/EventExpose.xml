@@ -1,0 +1,77 @@
+<Type Name="EventExpose" FullName="Gdk.EventExpose">
+  <TypeSignature Language="C#" Value="public sealed struct EventExpose;" Maintainer="auto" />
+  <AssemblyInfo>
+    <AssemblyName>gdk-sharp</AssemblyName>
+    <AssemblyPublicKey>
+    </AssemblyPublicKey>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+    <AssemblyCulture>neutral</AssemblyCulture>
+    <Attributes />
+  </AssemblyInfo>
+  <ThreadSafetyStatement>Gtk# is thread aware, but not thread safe; See the <link location="node:gtk-sharp/programming/threads">Gtk# Thread Programming</link> for details.</ThreadSafetyStatement>
+  <Docs>
+    <summary>Generated when all or part of a window becomes visible and needs to be redrawn.</summary>
+    <remarks>
+    </remarks>
+  </Docs>
+  <Base>
+    <BaseTypeName>Gdk.Event</BaseTypeName>
+  </Base>
+  <Interfaces />
+  <Attributes />
+  <Members>
+    <Member MemberName="Area">
+      <MemberSignature Language="C#" Value="public Gdk.Rectangle Area { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.Rectangle</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>The bounding box of the <see cref="P:Gdk.EventExpose.Region" /></summary>
+        <returns>The bounding box of the <see cref="P:Gdk.EventExpose.Region" /></returns>
+        <remarks>None.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Count">
+      <MemberSignature Language="C#" Value="public int Count { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Int32</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>The number of contiguous Expose Events following this one.</summary>
+        <returns>The number of contiguous Expose Events following this one.</returns>
+        <remarks>The only use for this is "exposure compression", i.e. handling all contiguous Expose events in one go, though GDK performs some exposure compression so this is not normally needed</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Region">
+      <MemberSignature Language="C#" Value="public Gdk.Region Region { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.Region</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>The region that needs to be redrawn.</summary>
+        <returns>The <see cref="T:Gdk.Region" /> that needs to be redrawn.</returns>
+        <remarks>None.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public EventExpose (IntPtr raw);" />
+      <MemberType>Constructor</MemberType>
+      <ReturnValue />
+      <Parameters>
+        <Parameter Name="raw" Type="System.IntPtr" />
+      </Parameters>
+      <Docs>
+        <summary>Internal constructor.</summary>
+        <param name="raw">raw unmanaged pointer.</param>
+        <returns>A new <see cref="T:Gdk.EventExpose" /></returns>
+        <remarks>None.</remarks>
+      </Docs>
+    </Member>
+  </Members>
+</Type>

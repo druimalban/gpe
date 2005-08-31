@@ -1,0 +1,227 @@
+<Type Name="Editable" FullName="Gtk.Editable">
+  <TypeSignature Language="C#" Value="public abstract interface Editable;" Maintainer="auto" />
+  <AssemblyInfo>
+    <AssemblyName>gtk-sharp</AssemblyName>
+    <AssemblyPublicKey>
+    </AssemblyPublicKey>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+    <AssemblyCulture>neutral</AssemblyCulture>
+    <Attributes />
+  </AssemblyInfo>
+  <ThreadSafetyStatement>Gtk# is thread aware, but not thread safe; See the <link location="node:gtk-sharp/programming/threads">Gtk# Thread Programming</link> for details.</ThreadSafetyStatement>
+  <Docs>
+    <summary>Interface for text-editing widgets.</summary>
+    <remarks />
+  </Docs>
+  <Base />
+  <Interfaces>
+    <Interface>
+      <InterfaceName>GLib.IWrapper</InterfaceName>
+    </Interface>
+  </Interfaces>
+  <Attributes />
+  <Members>
+    <Member MemberName="SelectRegion">
+      <MemberSignature Language="C#" Value="public virtual void SelectRegion (int start, int end);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="start" Type="System.Int32" />
+        <Parameter Name="end" Type="System.Int32" />
+      </Parameters>
+      <Docs>
+        <summary>Selects a region of text. </summary>
+        <param name="start">An integer, the start of the selected region.</param>
+        <param name="end">An integer, the end of the selected region.</param>
+        <remarks>The characters that are selected are those characters at positions from <paramref name="start" /> up to, but not including <paramref name="end" />. If <paramref name="end" /> is negative, then the the characters selected will be those characters from <paramref name="start" /> to the end of the text.
+	</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="GetChars">
+      <MemberSignature Language="C#" Value="public virtual string GetChars (int start_pos, int end_pos);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="start_pos" Type="System.Int32" />
+        <Parameter Name="end_pos" Type="System.Int32" />
+      </Parameters>
+      <Docs>
+        <summary>Retrieves a sequence of characters. The characters that are retrieved are those characters at positions from <paramref name="start_pos" /> up to, but not including <paramref name="end_pos" />. If <paramref name="end_pos" /> is negative, then the the characters retrieved will be those characters from  <paramref name="start_pos" /> to the end of the text.</summary>
+        <param name="start_pos">An integer; the start position</param>
+        <param name="end_pos">An integer; the end position</param>
+        <returns>The characters between <paramref name="start_pos" /> and (but not including) <paramref name="end_pos" />.</returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="DeleteText">
+      <MemberSignature Language="C#" Value="public virtual void DeleteText (int start_pos, int end_pos);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="start_pos" Type="System.Int32" />
+        <Parameter Name="end_pos" Type="System.Int32" />
+      </Parameters>
+      <Docs>
+        <summary>Deletes a sequence of characters. The characters that are deleted are those characters at positions from <paramref name="start_pos" /> up to, but not including <paramref name="end_pos" />. If <paramref name="end_pos" /> is negative, then the the characters deleted will be those characters from  <paramref name="start_pos" /> to the end of the text.</summary>
+        <param name="start_pos">An integer; the start position</param>
+        <param name="end_pos">An integer; the end position</param>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="CopyClipboard">
+      <MemberSignature Language="C#" Value="public virtual void CopyClipboard ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Causes the characters in the current selection to be copied to the clipboard.</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="DeleteSelection">
+      <MemberSignature Language="C#" Value="public virtual void DeleteSelection ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Causes the characters in the current selection to be deleted.</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="GetSelectionBounds">
+      <MemberSignature Language="C#" Value="public virtual bool GetSelectionBounds (out int start, out int end);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="start" Type="System.Int32&amp;" RefType="out" />
+        <Parameter Name="end" Type="System.Int32&amp;" RefType="out" />
+      </Parameters>
+      <Docs>
+        <summary>Gets the current selection bounds, if there is a selection</summary>
+        <param name="start">An IntPtr to store the start position in.</param>
+        <param name="end">An IntPtr to store the end position in.</param>
+        <returns>Boolean, TRUE if there is a selection.</returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="CutClipboard">
+      <MemberSignature Language="C#" Value="public virtual void CutClipboard ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Causes the characters in the current selection to be copied to the clipboard and then deleted from the widget.</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="PasteClipboard">
+      <MemberSignature Language="C#" Value="public virtual void PasteClipboard ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Causes the contents of the clipboard to be pasted into the given widget at the current cursor position.</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="IsEditable">
+      <MemberSignature Language="C#" Value="public virtual bool IsEditable { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Whether or not the user can edit the text in the editable widget or not.</summary>
+        <param name="value">A boolean; TRUE if the user can edit the text.</param>
+        <returns>A boolean; TRUE if the user can edit the text.</returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Position">
+      <MemberSignature Language="C#" Value="public virtual int Position { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Int32</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>The current cursor position.</summary>
+        <param name="value">An integer position for the cursor.</param>
+        <returns>An integer position for the cursor.</returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="TextInserted">
+      <MemberSignature Language="C#" Value="public virtual event Gtk.TextInsertedHandler TextInserted;" />
+      <MemberType>Event</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.TextInsertedHandler</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Fired whenever the user inserts text.</summary>
+        <remarks>The default handler for this signal will normally be responsible for inserting the text, so by connecting to this signal and then stopping the signal with gtk_signal_emit_stop(), it is possible to modify the inserted text, or prevent it from being inserted entirely. (FIXME: Need Gtk# equivalent for gtk_signal_emit_stop().)</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="TextDeleted">
+      <MemberSignature Language="C#" Value="public virtual event Gtk.TextDeletedHandler TextDeleted;" />
+      <MemberType>Event</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.TextDeletedHandler</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Fired whenever the user deletes text.</summary>
+        <remarks>The default handler for this signal will normally be responsible for inserting the text, so by connecting to this signal and then stopping the signal with gtk_signal_emit_stop(), it is possible to modify the inserted text, or prevent it from being inserted entirely. The <paramref name="start_pos" /> and <paramref name="end_pos" /> parameters are interpreted as for <see cref="F:Gtk.Editable.DeleteText()" />(FIXME: need equivalent for gtk_signal_emit_stop().)</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Changed">
+      <MemberSignature Language="C#" Value="public virtual event EventHandler Changed;" />
+      <MemberType>Event</MemberType>
+      <ReturnValue>
+        <ReturnType>System.EventHandler</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Fired when the user has changed the contents of the widget.</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="InsertText">
+      <MemberSignature Language="C#" Value="public virtual void InsertText (string new_text, ref int position);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="new_text" Type="System.String" />
+        <Parameter Name="position" Type="System.Int32&amp;" RefType="ref" />
+      </Parameters>
+      <Docs>
+        <summary>Inserts <paramref name="new_text" /> at <paramref name="position" />.</summary>
+        <param name="new_text">A string to insert.</param>
+        <param name="position">A pointer to the position within the Editable object for inserting the string.</param>
+        <remarks />
+      </Docs>
+    </Member>
+  </Members>
+</Type>

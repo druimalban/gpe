@@ -1,0 +1,812 @@
+<Type Name="Script" FullName="Pango.Script">
+  <TypeSignature Language="C#" Value="public enum Script" Maintainer="auto" />
+  <AssemblyInfo>
+    <AssemblyName>pango-sharp</AssemblyName>
+    <AssemblyPublicKey>[00 24 00 00 04 80 00 00 94 00 00 00 06 02 00 00 00 24 00 00 52 53 41 31 00 04 00 00 01 00 01 00 71 EB 6C 55 75 52 9C BF 72 44 F7 A6 EA 05 62 84 F9 EA E0 3B CF F2 CC 13 2C 9C 49 0A B3 09 EA B0 B5 6B CE 44 9D F5 03 D9 C0 A8 1E 52 05 85 CD BE 70 E2 FB 90 43 4B AC 04 FA 62 22 A8 00 98 B7 A1 A7 B3 AF 99 1A 41 23 24 BB 43 25 F6 B8 65 BB 64 EB F6 D1 C2 06 D5 73 2D DF BC 70 A7 38 9E E5 3E 0C 24 6E 32 79 74 1A D0 05 03 E4 98 42 E1 9B F3 7B 19 8B 40 21 26 CB 36 89 C2 EA 64 96 A4 7C B4]</AssemblyPublicKey>
+    <AssemblyVersion>2.0.0.0</AssemblyVersion>
+    <AssemblyCulture>neutral</AssemblyCulture>
+    <Attributes />
+  </AssemblyInfo>
+  <ThreadSafetyStatement>Gtk# is thread aware, but not thread safe; See the <link location="node:gtk-sharp/programming/threads">Gtk# Thread Programming</link> for details.</ThreadSafetyStatement>
+  <Docs>
+    <summary>Identifies different writing systems.</summary>
+    <remarks>The values correspond to the names defined in the Unicode standard. (See Unicode Standard Annex 24: Script names http://www.unicode.org/reports/tr24/).</remarks>
+  </Docs>
+  <Base>
+    <BaseTypeName>System.Enum</BaseTypeName>
+  </Base>
+  <Interfaces>
+    <Interface>
+      <InterfaceName>System.IComparable</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>System.IConvertible</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>System.IFormattable</InterfaceName>
+    </Interface>
+  </Interfaces>
+  <Attributes />
+  <Members>
+    <Member MemberName="InvalidCode">
+      <MemberSignature Language="C#" Value="InvalidCode" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Script</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>a value never used for any unicode character</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Common">
+      <MemberSignature Language="C#" Value="Common" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Script</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>a character used by multiple different scripts </summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Inherited">
+      <MemberSignature Language="C#" Value="Inherited" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Script</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>a mark glyph that takes its script from the base glyph to which it is attached.</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Arabic">
+      <MemberSignature Language="C#" Value="Arabic" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Script</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Arabic</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Armenian">
+      <MemberSignature Language="C#" Value="Armenian" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Script</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Armenian</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Bengali">
+      <MemberSignature Language="C#" Value="Bengali" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Script</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Bengali</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Bopomofo">
+      <MemberSignature Language="C#" Value="Bopomofo" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Script</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Bopomofo</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Cherokee">
+      <MemberSignature Language="C#" Value="Cherokee" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Script</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Cherokee</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Coptic">
+      <MemberSignature Language="C#" Value="Coptic" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Script</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Coptic</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Cyrillic">
+      <MemberSignature Language="C#" Value="Cyrillic" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Script</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Cyrillic</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Deseret">
+      <MemberSignature Language="C#" Value="Deseret" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Script</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Deseret</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Devanagari">
+      <MemberSignature Language="C#" Value="Devanagari" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Script</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Devanagari</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Ethiopic">
+      <MemberSignature Language="C#" Value="Ethiopic" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Script</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Ethiopic</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Georgian">
+      <MemberSignature Language="C#" Value="Georgian" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Script</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Georgian</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Gothic">
+      <MemberSignature Language="C#" Value="Gothic" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Script</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Gothic</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Greek">
+      <MemberSignature Language="C#" Value="Greek" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Script</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Greek</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Gujarati">
+      <MemberSignature Language="C#" Value="Gujarati" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Script</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Gujarati</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Gurmukhi">
+      <MemberSignature Language="C#" Value="Gurmukhi" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Script</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Gurmukhi</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Han">
+      <MemberSignature Language="C#" Value="Han" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Script</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Han</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Hangul">
+      <MemberSignature Language="C#" Value="Hangul" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Script</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Hangul</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Hebrew">
+      <MemberSignature Language="C#" Value="Hebrew" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Script</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Hebrew</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Hiragana">
+      <MemberSignature Language="C#" Value="Hiragana" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Script</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Hiragana</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Kannada">
+      <MemberSignature Language="C#" Value="Kannada" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Script</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Kannada</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Katakana">
+      <MemberSignature Language="C#" Value="Katakana" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Script</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Katakana</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Khmer">
+      <MemberSignature Language="C#" Value="Khmer" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Script</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Khmer</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Lao">
+      <MemberSignature Language="C#" Value="Lao" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Script</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Lao</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Latin">
+      <MemberSignature Language="C#" Value="Latin" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Script</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Latin</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Malayalam">
+      <MemberSignature Language="C#" Value="Malayalam" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Script</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Malayalam</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Mongolian">
+      <MemberSignature Language="C#" Value="Mongolian" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Script</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Mongolian</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Myanmar">
+      <MemberSignature Language="C#" Value="Myanmar" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Script</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Myanmar</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Ogham">
+      <MemberSignature Language="C#" Value="Ogham" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Script</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Ogham</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="OldItalic">
+      <MemberSignature Language="C#" Value="OldItalic" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Script</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>OldItalic</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Oriya">
+      <MemberSignature Language="C#" Value="Oriya" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Script</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Oriya</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Runic">
+      <MemberSignature Language="C#" Value="Runic" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Script</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Runic</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Sinhala">
+      <MemberSignature Language="C#" Value="Sinhala" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Script</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Sinhala</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Syriac">
+      <MemberSignature Language="C#" Value="Syriac" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Script</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Syriac</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Tamil">
+      <MemberSignature Language="C#" Value="Tamil" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Script</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Tamil</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Telugu">
+      <MemberSignature Language="C#" Value="Telugu" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Script</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Telugu</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Thaana">
+      <MemberSignature Language="C#" Value="Thaana" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Script</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Thaana</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Thai">
+      <MemberSignature Language="C#" Value="Thai" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Script</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Thai</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Tibetan">
+      <MemberSignature Language="C#" Value="Tibetan" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Script</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Tibetan</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="CanadianAboriginal">
+      <MemberSignature Language="C#" Value="CanadianAboriginal" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Script</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Canadian Aboriginal</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Yi">
+      <MemberSignature Language="C#" Value="Yi" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Script</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Yi</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Tagalog">
+      <MemberSignature Language="C#" Value="Tagalog" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Script</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Tagalog</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Hanunoo">
+      <MemberSignature Language="C#" Value="Hanunoo" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Script</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Hanunoo</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Buhid">
+      <MemberSignature Language="C#" Value="Buhid" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Script</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Buhid</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Tagbanwa">
+      <MemberSignature Language="C#" Value="Tagbanwa" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Script</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Tagbanwa</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Braille">
+      <MemberSignature Language="C#" Value="Braille" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Script</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Braille</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Cypriot">
+      <MemberSignature Language="C#" Value="Cypriot" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Script</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Cypriot</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Limbu">
+      <MemberSignature Language="C#" Value="Limbu" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Script</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Limbu</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Osmanya">
+      <MemberSignature Language="C#" Value="Osmanya" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Script</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Osmanya</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Shavian">
+      <MemberSignature Language="C#" Value="Shavian" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Script</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Shavian</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="LinearB">
+      <MemberSignature Language="C#" Value="LinearB" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Script</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>LinearB</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="TaiLe">
+      <MemberSignature Language="C#" Value="TaiLe" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Script</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>TaiLe</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Ugaritic">
+      <MemberSignature Language="C#" Value="Ugaritic" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Script</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Ugaritic</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="value__">
+      <MemberSignature Language="C#" Value="value__" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Int32</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Internal field.</summary>
+        <remarks>Do not use.</remarks>
+      </Docs>
+    </Member>
+  </Members>
+</Type>

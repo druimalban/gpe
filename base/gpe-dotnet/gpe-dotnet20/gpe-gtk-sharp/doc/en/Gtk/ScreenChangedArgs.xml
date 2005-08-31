@@ -1,0 +1,48 @@
+<Type Name="ScreenChangedArgs" FullName="Gtk.ScreenChangedArgs">
+  <TypeSignature Language="C#" Value="public class ScreenChangedArgs : GLib.SignalArgs" Maintainer="auto" />
+  <AssemblyInfo>
+    <AssemblyName>gtk-sharp</AssemblyName>
+    <AssemblyPublicKey>
+    </AssemblyPublicKey>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+    <AssemblyCulture>neutral</AssemblyCulture>
+    <Attributes />
+  </AssemblyInfo>
+  <ThreadSafetyStatement>Gtk# is thread aware, but not thread safe; See the <link location="node:gtk-sharp/programming/threads">Gtk# Thread Programming</link> for details.</ThreadSafetyStatement>
+  <Docs>
+    <summary>Event data.</summary>
+    <remarks>
+      <para>The <see cref="M:Gtk.Widget.ScreenChanged" /> event invokes <see cref="T:Gtk.ScreenChangedHandler" /> delegates which pass event data via this class.</para>
+    </remarks>
+  </Docs>
+  <Base>
+    <BaseTypeName>GLib.SignalArgs</BaseTypeName>
+  </Base>
+  <Interfaces />
+  <Attributes />
+  <Members>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public ScreenChangedArgs ();" />
+      <MemberType>Constructor</MemberType>
+      <ReturnValue />
+      <Parameters />
+      <Docs>
+        <summary>Public Constructor.</summary>
+        <returns>A new <see cref="T:Gtk.ScreenChangedArgs" />.</returns>
+        <remarks>Create a new <see cref="T:Gtk.ScreenChangedArgs" /> instance with this constructor if you need to invoke a <see cref="T:Gtk.ScreenChangedHandler" /> delegate.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="PreviousScreen">
+      <MemberSignature Language="C#" Value="public Gdk.Screen PreviousScreen { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.Screen</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>The screen where the widget was formerly located.</summary>
+        <returns>a <see cref="T:Gdk.Screen" /></returns>
+        <remarks></remarks>
+      </Docs>
+    </Member>
+  </Members>
+</Type>

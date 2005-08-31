@@ -1,0 +1,138 @@
+<Type Name="DragProtocol" FullName="Gdk.DragProtocol">
+  <TypeSignature Language="C#" Maintainer="auto" Value="public enum DragProtocol;" />
+  <AssemblyInfo>
+    <AssemblyName>gdk-sharp</AssemblyName>
+    <AssemblyPublicKey>
+    </AssemblyPublicKey>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+    <AssemblyCulture>neutral</AssemblyCulture>
+    <Attributes />
+  </AssemblyInfo>
+  <ThreadSafetyStatement>Gtk# is thread aware, but not thread safe; See the <link location="node:gtk-sharp/programming/threads">Gtk# Thread Programming</link> for details.</ThreadSafetyStatement>
+  <Docs>
+    <summary>Used in <see cref="T:Gdk.DragContext" /> to indicate the protocol according to which DND is done.</summary>
+    <remarks>None.</remarks>
+  </Docs>
+  <Base>
+    <BaseTypeName>System.Enum</BaseTypeName>
+  </Base>
+  <Interfaces>
+    <Interface>
+      <InterfaceName>System.IComparable</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>System.IConvertible</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>System.IFormattable</InterfaceName>
+    </Interface>
+  </Interfaces>
+  <Attributes />
+  <Members>
+    <Member MemberName="Motif">
+      <MemberSignature Language="C#" Value="Motif" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.DragProtocol</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>The Motif DND protocol.</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Xdnd">
+      <MemberSignature Language="C#" Value="Xdnd" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.DragProtocol</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>The Xdnd protocol.</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Rootwin">
+      <MemberSignature Language="C#" Value="Rootwin" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.DragProtocol</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>An extension to the Xdnd protocol for unclaimed root window drops.</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Win32Dropfiles">
+      <MemberSignature Language="C#" Value="Win32Dropfiles" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.DragProtocol</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>The simple WM_DROPFILES protocol.</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Ole2">
+      <MemberSignature Language="C#" Value="Ole2" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.DragProtocol</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>The complex OLE2 DND protocol (not implemented).</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Local">
+      <MemberSignature Language="C#" Value="Local" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.DragProtocol</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Intra-application DND.</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="None">
+      <MemberSignature Language="C#" Value="None" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.DragProtocol</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>None.</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="value__">
+      <MemberSignature Language="C#" Value="value__" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Int32</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Internal field.</summary>
+        <remarks>Do not use.</remarks>
+      </Docs>
+    </Member>
+  </Members>
+</Type>

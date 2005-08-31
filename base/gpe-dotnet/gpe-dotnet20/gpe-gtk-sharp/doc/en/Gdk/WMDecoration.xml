@@ -1,0 +1,130 @@
+<Type Name="WMDecoration" FullName="Gdk.WMDecoration">
+  <TypeSignature Language="C#" Maintainer="auto" Value="public enum WMDecoration;" />
+  <AssemblyInfo>
+    <AssemblyName>gdk-sharp</AssemblyName>
+    <AssemblyPublicKey>
+    </AssemblyPublicKey>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+    <AssemblyCulture>neutral</AssemblyCulture>
+    <Attributes />
+  </AssemblyInfo>
+  <ThreadSafetyStatement>Gtk# is thread aware, but not thread safe; See the <link location="node:gtk-sharp/programming/threads">Gtk# Thread Programming</link> for details.</ThreadSafetyStatement>
+  <Docs>
+    <summary>These are hints originally defined by the Motif toolkit. The window manager can use them when determining how to decorate the window. </summary>
+    <remarks>The hint must be set before mapping the window.</remarks>
+  </Docs>
+  <Base>
+    <BaseTypeName>System.Enum</BaseTypeName>
+  </Base>
+  <Interfaces>
+    <Interface>
+      <InterfaceName>System.IComparable</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>System.IConvertible</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>System.IFormattable</InterfaceName>
+    </Interface>
+  </Interfaces>
+  <Attributes />
+  <Members>
+    <Member MemberName="All">
+      <MemberSignature Language="C#" Value="All" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.WMDecoration</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>All decorations should be applied.</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Border">
+      <MemberSignature Language="C#" Value="Border" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.WMDecoration</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>A frame should be drawn around the window.</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Resizeh">
+      <MemberSignature Language="C#" Value="Resizeh" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.WMDecoration</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>The frame should have resize handles.</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Title">
+      <MemberSignature Language="C#" Value="Title" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.WMDecoration</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>A titlebar should be placed above the window.</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Menu">
+      <MemberSignature Language="C#" Value="Menu" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.WMDecoration</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>A button for opening a menu should be included.</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Minimize">
+      <MemberSignature Language="C#" Value="Minimize" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.WMDecoration</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>A minimize button should be included.</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Maximize">
+      <MemberSignature Language="C#" Value="Maximize" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.WMDecoration</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>A maximize button should be included.</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="value__">
+      <MemberSignature Language="C#" Value="value__" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Int32</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Internal field.</summary>
+        <remarks>Do not use.</remarks>
+      </Docs>
+    </Member>
+  </Members>
+</Type>

@@ -1,0 +1,125 @@
+<Type Name="VBox" FullName="Gtk.VBox">
+  <TypeSignature Language="C#" Value="public class VBox : Gtk.Box, Implementor, IWrapper, IWrapper, IDisposable" Maintainer="Lee Mallabone" />
+  <AssemblyInfo>
+    <AssemblyName>gtk-sharp</AssemblyName>
+    <AssemblyPublicKey>
+    </AssemblyPublicKey>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+    <AssemblyCulture>neutral</AssemblyCulture>
+    <Attributes />
+  </AssemblyInfo>
+  <ThreadSafetyStatement>Gtk# is thread aware, but not thread safe; See the <link location="node:gtk-sharp/programming/threads">Gtk# Thread Programming</link> for details.</ThreadSafetyStatement>
+  <Docs>
+    <summary>A VBox is a specific type of <see cref="T:Gtk.Container" /> for packing widgets vertically.</summary>
+    <remarks>
+      <para>Other ways of laying out widgets include using a horizontal box, (see <see cref="T:Gtk.HBox" />), a table, (see <see cref="T:Gtk.Table" />), button boxes, etc.</para>
+      <para>
+    	Useful methods for manipulating boxes can be found in the superclass for HBox, <see cref="T:Gtk.Box" />.
+    </para>
+    </remarks>
+  </Docs>
+  <Base>
+    <BaseTypeName>Gtk.Box</BaseTypeName>
+  </Base>
+  <Interfaces>
+    <Interface>
+      <InterfaceName>Atk.Implementor</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>GLib.IWrapper</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>GLib.IWrapper</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>System.IDisposable</InterfaceName>
+    </Interface>
+  </Interfaces>
+  <Attributes />
+  <Members>
+    <Member MemberName="Finalize">
+      <MemberSignature Language="C#" Value="protected override void Finalize ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Disposes the resources associated with the object.</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public VBox (IntPtr raw);" />
+      <MemberType>Constructor</MemberType>
+      <ReturnValue />
+      <Parameters>
+        <Parameter Name="raw" Type="System.IntPtr" />
+      </Parameters>
+      <Docs>
+        <summary>Internal constructor</summary>
+        <param name="raw">Pointer to the C object.</param>
+        <returns>An instance of VBox, wrapping the C object.</returns>
+        <remarks>
+          <para>This is an internal constructor, and should not be used by user code.</para>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public VBox (bool homogeneous, int spacing);" />
+      <MemberType>Constructor</MemberType>
+      <ReturnValue />
+      <Parameters>
+        <Parameter Name="homogeneous" Type="System.Boolean" />
+        <Parameter Name="spacing" Type="System.Int32" />
+      </Parameters>
+      <Docs>
+        <summary>The main way to create a new VBox</summary>
+        <param name="homogeneous">If <see langword="true" />, all widgets in the box are forced to be equally sized.</param>
+        <param name="spacing">The number of pixels to place between each widget in the box.</param>
+        <returns>
+          <para>A new VBox</para>
+        </returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="GType">
+      <MemberSignature Language="C#" Value="public static GLib.GType GType { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>GLib.GType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>GType property.</summary>
+        <returns>a <see cref="T:GLib.GType" /></returns>
+        <remarks>Returns the native GObject type for <see cref="T:Gtk.VBox" />.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="protected VBox (GLib.GType gtype);" />
+      <MemberType>Constructor</MemberType>
+      <ReturnValue />
+      <Parameters>
+        <Parameter Name="gtype" Type="GLib.GType" />
+      </Parameters>
+      <Docs>
+        <summary>Protected constructor.</summary>
+        <param name="gtype">a <see cref="T:GLib.GType" /></param>
+        <returns>a <see cref="T:Gtk.VBox" /></returns>
+        <remarks>Chain to this constructor from subclasses when you manually register a <see cref="T:GLib.GType" /> for your subclass.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public VBox ();" />
+      <MemberType>Constructor</MemberType>
+      <ReturnValue />
+      <Parameters />
+      <Docs>
+        <summary>VBox Constructor.</summary>
+        <returns>a <see cref="T:Gtk.VBox" /></returns>
+        <remarks>Instantiates a <see cref="T:Gtk.VBox" /> object using default values for the spacing and homogeneous attributes.</remarks>
+      </Docs>
+    </Member>
+  </Members>
+</Type>

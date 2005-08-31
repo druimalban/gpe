@@ -1,0 +1,31 @@
+<Type Name="HTMLPrintCallback" FullName="Gtk.HTMLPrintCallback">
+  <TypeSignature Language="C#" Maintainer="auto" Value="public sealed delegate void HTMLPrintCallback (Gtk.HTML html, Gnome.PrintContext print_context, double x, double y, double width, double height);" />
+  <AssemblyInfo>
+    <AssemblyName>gtkhtml-sharp</AssemblyName>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+    <Attributes />
+  </AssemblyInfo>
+  <ThreadSafetyStatement>Gtk# is thread aware, but not thread safe; See the <link location="node:gtk-sharp/programming/threads">Gtk# Thread Programming</link> for details.</ThreadSafetyStatement>
+  <Docs>
+    <summary>Delegate for printing page framing elements.</summary>
+    <remarks>Used to print headers and footers in <see cref="M:Gtk.HTML.PrintWithHeaderFooter" />.</remarks>
+  </Docs>
+  <Base>
+    <BaseTypeName>System.Delegate</BaseTypeName>
+  </Base>
+  <Interfaces>
+    <Interface>
+      <InterfaceName>System.ICloneable</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>System.Runtime.Serialization.ISerializable</InterfaceName>
+    </Interface>
+  </Interfaces>
+  <Attributes />
+  <Members />
+  <Parameters>
+  </Parameters>
+  <ReturnValue>
+    <ReturnType>System.Void</ReturnType>
+  </ReturnValue>
+</Type>

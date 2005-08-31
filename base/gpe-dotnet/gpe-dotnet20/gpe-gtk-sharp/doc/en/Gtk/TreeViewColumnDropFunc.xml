@@ -1,0 +1,37 @@
+<Type Name="TreeViewColumnDropFunc" FullName="Gtk.TreeViewColumnDropFunc">
+  <TypeSignature Language="C#" Value="public sealed delegate bool TreeViewColumnDropFunc (Gtk.TreeView tree_view, Gtk.TreeViewColumn column, Gtk.TreeViewColumn prev_column, Gtk.TreeViewColumn next_column);" Maintainer="auto" />
+  <AssemblyInfo>
+    <AssemblyName>gtk-sharp</AssemblyName>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+    <Attributes />
+  </AssemblyInfo>
+  <ThreadSafetyStatement>Gtk# is thread aware, but not thread safe; See the <link location="node:gtk-sharp/programming/threads">Gtk# Thread Programming</link> for details.</ThreadSafetyStatement>
+  <Docs>
+    <summary>A delegate type to specify a function signature for saying
+      where a dragged column may be dropped.</summary>
+    <remarks>See <see cref="M:Gtk.TreeView.SetColumnDragFunction" /> for
+    more details on how this delegate should be used.</remarks>
+  </Docs>
+  <Base>
+    <BaseTypeName>System.Delegate</BaseTypeName>
+  </Base>
+  <Interfaces>
+    <Interface>
+      <InterfaceName>System.ICloneable</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>System.Runtime.Serialization.ISerializable</InterfaceName>
+    </Interface>
+  </Interfaces>
+  <Attributes />
+  <Members />
+  <Parameters>
+    <Parameter Name="tree_view" Type="Gtk.TreeView" />
+    <Parameter Name="column" Type="Gtk.TreeViewColumn" />
+    <Parameter Name="prev_column" Type="Gtk.TreeViewColumn" />
+    <Parameter Name="next_column" Type="Gtk.TreeViewColumn" />
+  </Parameters>
+  <ReturnValue>
+    <ReturnType>System.Boolean</ReturnType>
+  </ReturnValue>
+</Type>

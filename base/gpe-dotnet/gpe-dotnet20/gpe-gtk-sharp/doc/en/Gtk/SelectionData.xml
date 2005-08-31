@@ -1,0 +1,244 @@
+<Type Name="SelectionData" FullName="Gtk.SelectionData">
+  <TypeSignature Language="C#" Value="public sealed struct SelectionData;" Maintainer="auto" />
+  <AssemblyInfo>
+    <AssemblyName>gtk-sharp</AssemblyName>
+    <AssemblyPublicKey>
+    </AssemblyPublicKey>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+    <AssemblyCulture>neutral</AssemblyCulture>
+    <Attributes />
+  </AssemblyInfo>
+  <ThreadSafetyStatement>Gtk# is thread aware, but not thread safe; See the <link location="node:gtk-sharp/programming/threads">Gtk# Thread Programming</link> for details.</ThreadSafetyStatement>
+  <Docs>
+    <summary>A type to represent data that's selected as part of a drag-and-drop or clipboard operation.</summary>
+    <remarks />
+  </Docs>
+  <Base>
+    <BaseTypeName>GLib.Opaque</BaseTypeName>
+  </Base>
+  <Interfaces />
+  <Attributes />
+  <Members>
+    <Member MemberName="Free">
+      <MemberSignature Language="C#" Value="public void Free ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Releases memory that was used by this object.</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Copy">
+      <MemberSignature Language="C#" Value="public Gtk.SelectionData Copy ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.SelectionData</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Copy the object by value.</summary>
+        <returns>a <see cref="T:Gtk.SelectionData" /></returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="TargetsIncludeText">
+      <MemberSignature Language="C#" Value="public bool TargetsIncludeText ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>
+	  Assuming that this selection data object holds a list
+	  of targets, determines if any of the targets in can be used to
+	  provide text.</summary>
+        <returns>a <see cref="T:System.Boolean" /></returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Text">
+      <MemberSignature Language="C#" Value="public string Text { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>The text stored in the selection.</summary>
+        <param name="value">A <see cref="T:System.String" /></param>
+        <returns>A <see cref="T:System.String" />.</returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="GType">
+      <MemberSignature Language="C#" Value="public static GLib.GType GType { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>GLib.GType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>GType Property.</summary>
+        <returns>a <see cref="T:GLib.GType" /></returns>
+        <remarks>Returns the native <see cref="T:GLib.GType" /> value for <see cref="T:Gtk.SelectionData" />.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Format">
+      <MemberSignature Language="C#" Value="public int Format { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Int32</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>The unit length of the data in bits.</summary>
+        <returns>a <see cref="T:System.Int32" /></returns>
+        <remarks>On most systems, this is 8 for a string and 32 for 
+	  an integer.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Length">
+      <MemberSignature Language="C#" Value="public int Length { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Int32</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>The length of the selected data.</summary>
+        <returns>a <see cref="T:System.Int32" /></returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public SelectionData (IntPtr raw);" />
+      <MemberType>Constructor</MemberType>
+      <ReturnValue />
+      <Parameters>
+        <Parameter Name="raw" Type="System.IntPtr" />
+      </Parameters>
+      <Docs>
+        <summary>Constructor.</summary>
+        <param name="raw">a <see cref="T:System.IntPtr" />, pointer to the underlying C data.</param>
+        <returns>a <see cref="T:Gtk.SelectionData" /></returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Data">
+      <MemberSignature Language="C#" Value="public byte [] Data { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Byte[]</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>The data as a sequence of bytes.</summary>
+        <returns>a <see cref="T:System.Byte[]" /></returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Set">
+      <MemberSignature Language="C#" Value="public void Set (Gdk.Atom type, int format, byte [] data, int length);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="type" Type="Gdk.Atom" />
+        <Parameter Name="format" Type="System.Int32" />
+        <Parameter Name="data" Type="System.Byte[]" />
+        <Parameter Name="length" Type="System.Int32" />
+      </Parameters>
+      <Docs>
+        <summary>Stores new data into this <see cref="T:Gtk.SelectionData" /> object. Should only be called from a selection handler callback.</summary>
+        <param name="type">type of selection data (expressed via a <see cref="T:Gdk.Atom" />)</param>
+        <param name="format">format (number of bits in a unit) - set this to 8 and encode your data as UTF-8</param>
+        <param name="data">a <see cref="T:System.Byte" /> array containing the data to send to this selection object - use 
+<see cref="P:System.Text.Encoding.UTF8" />.GetBytes(string) to encode string data as UTF-8 before passing it here
+</param>
+        <param name="length">length of the data in bytes</param>
+        <remarks>The version <see cref="M:Gtk.SelectionData.Set(Gdk.Atom,System.Int32,System.Byte[])" /> auto-calculates the length for you.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Set">
+      <MemberSignature Language="C#" Value="public void Set (Gdk.Atom type, int format, byte [] data);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="type" Type="Gdk.Atom" />
+        <Parameter Name="format" Type="System.Int32" />
+        <Parameter Name="data" Type="System.Byte[]" />
+      </Parameters>
+      <Docs>
+        <summary>Stores new data into this <see cref="T:Gtk.SelectionData" /> object. Should only be called from a selection handler callback.</summary>
+        <param name="type">type of selection data (expressed via a <see cref="T:Gdk.Atom" />)</param>
+        <param name="format">format (number of bits in a unit) - set this to 8 and encode your data as UTF-8
+</param>
+        <param name="data">a <see cref="T:System.Byte" /> array containing the data to send to this selection object - use 
+<see cref="P:System.Text.Encoding.UTF8" />.GetBytes(string) to encode string data as UTF-8 before passing it here</param>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Selection">
+      <MemberSignature Language="C#" Value="public Gdk.Atom Selection { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.Atom</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>The selected data.</summary>
+        <returns>a <see cref="T:Gdk.Atom" /></returns>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Target">
+      <MemberSignature Language="C#" Value="public Gdk.Atom Target { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.Atom</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>The type of target being used.</summary>
+        <returns>a <see cref="T:Gdk.Atom" /></returns>
+        <remarks>XXX: Add a list of useful strings for target types.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Targets">
+      <MemberSignature Language="C#" Value="public Gdk.Atom [] Targets { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.Atom[]</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Gets the selection data as an array of targets.</summary>
+        <returns>a <see cref="T:Gdk.Atom[]" /></returns>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Type">
+      <MemberSignature Language="C#" Value="public Gdk.Atom Type { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.Atom</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>The type of selection data</summary>
+        <returns>a <see cref="T:Gdk.Atom" /></returns>
+        <remarks>XXX: elaborate on the possible values here.</remarks>
+      </Docs>
+    </Member>
+  </Members>
+</Type>

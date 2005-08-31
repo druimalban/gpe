@@ -1,0 +1,284 @@
+<Type Name="ColorSelection" FullName="Gtk.ColorSelection">
+  <TypeSignature Language="C#" Value="public class ColorSelection : Gtk.VBox, Implementor, IWrapper, IWrapper, IDisposable" Maintainer="Lee Mallabone" />
+  <AssemblyInfo>
+    <AssemblyName>gtk-sharp</AssemblyName>
+    <AssemblyPublicKey>
+    </AssemblyPublicKey>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+    <AssemblyCulture>neutral</AssemblyCulture>
+    <Attributes />
+  </AssemblyInfo>
+  <ThreadSafetyStatement>Gtk# is thread aware, but not thread safe; See the <link location="node:gtk-sharp/programming/threads">Gtk# Thread Programming</link> for details.</ThreadSafetyStatement>
+  <Docs>
+    <summary>A widget for selecting a color.</summary>
+    <remarks>
+      <para>The ColorSelection consists of a color wheel and number of sliders and entry boxes for color parameters such as hue, saturation, value, red, green, blue, and opacity. It is found on the standard color selection dialog box, <see cref="Gtk.ColorSelectionDialog" />.</para>
+      <para>This widget displays the 'selected' color as well as the previously selected color.</para>
+    </remarks>
+  </Docs>
+  <Base>
+    <BaseTypeName>Gtk.VBox</BaseTypeName>
+  </Base>
+  <Interfaces>
+    <Interface>
+      <InterfaceName>Atk.Implementor</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>GLib.IWrapper</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>GLib.IWrapper</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>System.IDisposable</InterfaceName>
+    </Interface>
+  </Interfaces>
+  <Attributes />
+  <Members>
+    <Member MemberName="Finalize">
+      <MemberSignature Language="C#" Value="protected override void Finalize ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Disposes the resources associated with the object.</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public ColorSelection (IntPtr raw);" />
+      <MemberType>Constructor</MemberType>
+      <ReturnValue />
+      <Parameters>
+        <Parameter Name="raw" Type="System.IntPtr" />
+      </Parameters>
+      <Docs>
+        <summary>Internal constructor</summary>
+        <param name="raw">Pointer to the C object.</param>
+        <returns>An instance of ColorSelection, wrapping the C object.</returns>
+        <remarks>
+          <para>This is an internal constructor, and should not be used by user code.</para>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public ColorSelection ();" />
+      <MemberType>Constructor</MemberType>
+      <ReturnValue />
+      <Parameters />
+      <Docs>
+        <summary>The main way to create a new ColorSelection</summary>
+        <returns>A new ColorSelection</returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="PreviousAlpha">
+      <MemberSignature Language="C#" Value="public ushort PreviousAlpha { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.UInt16</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Get the alpha value of the previous color</summary>
+        <param name="value">A new setting for the 'previous' alpha value.</param>
+        <returns>The previous alpha value - an integer between 0 and 65535.</returns>
+        <remarks>
+          <para>It may be confusing for a user if this property is set with no interaction from them.</para>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="CurrentColor">
+      <MemberSignature Language="C#" Value="public Gdk.Color CurrentColor { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.Color</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Manage the current color of the ColorSelection.</summary>
+        <param name="value">A color to set as the 'current' color.</param>
+        <returns>The currently selected color in this ColorSelection.</returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="HasPalette">
+      <MemberSignature Language="C#" Value="public bool HasPalette { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Manage whether or not the ColorSelection displays a palette.</summary>
+        <param name="value">
+          <see langword="true" /> to display a palette in the ColorSelection, <see langword="false" /> otherwise.</param>
+        <returns>
+          <see langword="true" /> if a palette is currently part of the ColorSelection, <see langword="false" /> otherwise.</returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="HasOpacityControl">
+      <MemberSignature Language="C#" Value="public bool HasOpacityControl { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Manage whether or not opacity is part of the ColorSelection.</summary>
+        <param name="value">
+          <see langword="true" /> to display opacity controls, <see langword="false" /> otherwise.</param>
+        <returns>
+          <see langword="true" /> if the user can edit opacity, <see langword="false" /> otherwise.</returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="CurrentAlpha">
+      <MemberSignature Language="C#" Value="public ushort CurrentAlpha { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.UInt16</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Manage the current alpha value of the ColorSelection.</summary>
+        <param name="value">Sets the current opacity.</param>
+        <returns>The existing opacity of this ColorSelection.</returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="ColorChanged">
+      <MemberSignature Language="C#" Value="public event EventHandler ColorChanged;" />
+      <MemberType>Event</MemberType>
+      <ReturnValue>
+        <ReturnType>System.EventHandler</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>This event is fired when the current color changes in the ColorSelection.</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="PreviousColor">
+      <MemberSignature Language="C#" Value="public Gdk.Color PreviousColor { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.Color</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>The color that was selected before the current one.</summary>
+        <param name="value">An object of type <see cref="M:Gdk.Color" /></param>
+        <returns>a <see cref="M:Gdk.Color" /></returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="PaletteFromString">
+      <MemberSignature Language="C#" Value="public static Gdk.Color[] PaletteFromString (string str);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.Color[]</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="str" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <summary>Parses a color palette string; the string is a colon-separated list of color names readable by <see cref="M:Gdk.ColorParse" /></summary>
+        <param name="str">A palette string to parse</param>
+        <returns>An array of <see cref="M:Gdk.Color" /> objects.</returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="PaletteToString">
+      <MemberSignature Language="C#" Value="public static string PaletteToString (Gdk.Color[] colors);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="colors" Type="Gdk.Color[]" />
+      </Parameters>
+      <Docs>
+        <summary>Encodes a palette as a string; useful for persistent storage.</summary>
+        <param name="colors">An array of <see cref="M:Gdk.Color" /> objects. </param>
+        <returns>A string encoding of the palette.</returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="IsAdjusting">
+      <MemberSignature Language="C#" Value="public bool IsAdjusting { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>The current state of the ColorSelection</summary>
+        <returns>
+          <see langword="true" /> if the user is currently dragging a color around, <see langword="false" /> if the selection has stopped.</returns>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="GType">
+      <MemberSignature Language="C#" Value="public static GLib.GType GType { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>GLib.GType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>GType Property.</summary>
+        <returns>a <see cref="T:GLib.GType" /></returns>
+        <remarks>Returns the native <see cref="T:GLib.GType" /> value for <see cref="T:Gtk.ColorSelection" />.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="OnColorChanged">
+      <MemberSignature Language="C#" Value="protected virtual void OnColorChanged ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Default handler for the <see cref="M:Gtk.ColorSelection.ColorChanged" /> event.</summary>
+        <remarks>Override this method in a subclass to provide a default handler for the <see cref="M:Gtk.ColorSelection.ColorChanged" /> event.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="protected ColorSelection (GLib.GType gtype);" />
+      <MemberType>Constructor</MemberType>
+      <ReturnValue />
+      <Parameters>
+        <Parameter Name="gtype" Type="GLib.GType" />
+      </Parameters>
+      <Docs>
+        <summary>Protected Constructor.</summary>
+        <param name="gtype">a <see cref="T:GLib.GType" /></param>
+        <returns>a <see cref="T:Gtk.ColorSelection" /></returns>
+        <remarks>Chain to this constructor if you have manually registered a native <see cref="T:GLib.GType" /> value for your subclass.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="UpdatePolicy">
+      <MemberSignature Language="C#" Value="public Gtk.UpdateType UpdatePolicy { set; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.UpdateType</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>Deprecated. Do not use.</summary>
+        <returns>a <see cref="T:Gtk.UpdateType" /></returns>
+        <remarks>Before it was deprecated, this property set the policy controlling when ColorChanged signals are emitted.</remarks>
+      </Docs>
+    </Member>
+  </Members>
+</Type>

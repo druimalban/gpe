@@ -1,0 +1,178 @@
+<Type Name="Action" FullName="Atk.Action">
+  <TypeSignature Language="C#" Value="public abstract interface Action;" Maintainer="auto" />
+  <AssemblyInfo>
+    <AssemblyName>atk-sharp</AssemblyName>
+    <AssemblyPublicKey>
+    </AssemblyPublicKey>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+    <AssemblyCulture>neutral</AssemblyCulture>
+    <Attributes />
+  </AssemblyInfo>
+  <ThreadSafetyStatement>Gtk# is thread aware, but not thread safe; See the <link location="node:gtk-sharp/programming/threads">Gtk# Thread Programming</link> for details.</ThreadSafetyStatement>
+  <Docs>
+    <summary>
+      The ATK interface provided by UI components which the user can
+      activate/interact with, this should be implemented by instances
+      of <see cref="T:Atk.Object" /> classes with which the user can interact
+      directly, i.e. buttons, checkboxes, scrollbars, e.g. components
+      which are not "passive" providers of UI information.
+    </summary>
+    <remarks>
+      <para>
+        The ATK interface provided by UI components which the user can
+        activate/interact with, This should be implemented by
+        instances of <see cref="T:Atk.Object" /> classes with which the
+        user can interact directly, i.e. buttons, checkboxes,
+        scrollbars, e.g. components which are not "passive" providers
+        of UI information.
+      </para>
+      <para>
+        Exceptions: when the user interaction is already covered by
+        another appropriate interface such as <see cref="T:Atk.EditableText" /> (insert/delete test, etc.) or <see cref="T:Atk.Value" /> (set value) then these actions should not
+        be exposed by <see cref="T:Atk.Action" /> as well.
+      </para>
+      <para>
+        Also note that the <see cref="T:Atk.Action" /> API is limited in that
+        parameters may not be passed to the object being activated;
+        thus the action must be self-contained and specifiable via
+        only a single "verb". Concrete examples include "press",
+        "release", "click" for buttons, "drag" (meaning initiate drag)
+        and "drop" for drag sources and drop targets, etc.
+      </para>
+      <para>
+        Though most UI interactions on components should be invocable
+        via keyboard as well as mouse, there will generally be a close
+        mapping between "mouse actions" that are possible on a
+        component and the <see cref="T:Atk.Actions" />. Where mouse and keyboard
+        actions are redundant in effect, <see cref="T:Atk.Action" /> should expose
+        only one action rather than exposing redundant actions if
+        possible. By convention we have been using "mouse centric"
+        terminology for <see cref="T:Atk.Action" /> names.
+      </para>
+    </remarks>
+  </Docs>
+  <Base />
+  <Interfaces>
+    <Interface>
+      <InterfaceName>GLib.IWrapper</InterfaceName>
+    </Interface>
+  </Interfaces>
+  <Attributes />
+  <Members>
+    <Member MemberName="GetDescription">
+      <MemberSignature Language="C#" Value="public virtual string GetDescription (int i);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="i" Type="System.Int32" />
+      </Parameters>
+      <Docs>
+        <summary>Returns a description of the specified action of the object.</summary>
+        <param name="i">The action index corresponding to the action to be performed.</param>
+        <returns>A description string, or 0 if action does not implement this interface.</returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="SetDescription">
+      <MemberSignature Language="C#" Value="public virtual bool SetDescription (int i, string desc);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="i" Type="System.Int32" />
+        <Parameter Name="desc" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <summary>Sets a description of the specified action of the object.</summary>
+        <param name="i">The action index corresponding to the action to be performed.</param>
+        <param name="desc">The description to be assigned to this action.</param>
+        <returns>A <see cref="T:System.Boolean" /> representing if the description was successfully set.</returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="GetKeybinding">
+      <MemberSignature Language="C#" Value="public virtual string GetKeybinding (int i);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="i" Type="System.Int32" />
+      </Parameters>
+      <Docs>
+        <summary>Returns a keybinding associated with this action, if one exists.</summary>
+        <param name="i">The action index corresponding to the action to be performed.</param>
+        <returns>A string representing the keybinding, or an empty string if there is no keybinding for this action.</returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="GetName">
+      <MemberSignature Language="C#" Value="public virtual string GetName (int i);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="i" Type="System.Int32" />
+      </Parameters>
+      <Docs>
+        <summary>Returns the name of the specified action of the object.</summary>
+        <param name="i">The action index corresponding to the action to be performed.</param>
+        <returns>A name string, or an empty string if action does not implement this interface.</returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="DoAction">
+      <MemberSignature Language="C#" Value="public virtual bool DoAction (int i);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="i" Type="System.Int32" />
+      </Parameters>
+      <Docs>
+        <summary>Perform the specified action on the object.</summary>
+        <param name="i">The action index corresponding to the action to be performed.</param>
+        <returns>
+          <see langword="true" /> if success, <see langword="false" /> otherwise.</returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="NActions">
+      <MemberSignature Language="C#" Value="public virtual int NActions { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Int32</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>Gets the number of accessible actions available on the object.</summary>
+        <returns>A the number of actions, or 0 if action does not implement this interface.</returns>
+        <remarks>
+          Gets the number of accessible actions available on the
+          object. If there are more than one, the first one is
+          considered the "default" action of the object.
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="GetLocalizedName">
+      <MemberSignature Language="C#" Value="public virtual string GetLocalizedName (int i);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="i" Type="System.Int32" />
+      </Parameters>
+      <Docs>
+        <summary>Returns the localized name of the specified action of the object.</summary>
+        <param name="i">The action index corresponding to the action to be performed.</param>
+        <returns>A name string, or an empty string if action does not implement this interface.</returns>
+        <remarks />
+      </Docs>
+    </Member>
+  </Members>
+</Type>

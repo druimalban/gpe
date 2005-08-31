@@ -1,0 +1,52 @@
+<Type Name="NoSuchKeyException" FullName="GConf.NoSuchKeyException">
+  <TypeSignature Language="C#" Value="public class NoSuchKeyException : System.Exception, ISerializable" Maintainer="auto" />
+  <AssemblyInfo>
+    <AssemblyName>gconf-sharp</AssemblyName>
+    <AssemblyPublicKey>
+    </AssemblyPublicKey>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+    <AssemblyCulture>neutral</AssemblyCulture>
+    <Attributes />
+  </AssemblyInfo>
+  <ThreadSafetyStatement>Gtk# is thread aware, but not thread safe; See the &lt;link location="node:gtk-sharp/programming/threads"&gt;Gtk# Thread Programming&lt;/link&gt; for details.</ThreadSafetyStatement>
+  <Docs>
+    <summary>This Exception is thrown when a key is not found in the user GConf file</summary>
+    <remarks>This exception is thrown by the Get methods of the ChangeSet and Client classes when a value is requested for a key that does not exist.</remarks>
+  </Docs>
+  <Base>
+    <BaseTypeName>System.Exception</BaseTypeName>
+  </Base>
+  <Interfaces>
+    <Interface>
+      <InterfaceName>System.Runtime.Serialization.ISerializable</InterfaceName>
+    </Interface>
+  </Interfaces>
+  <Attributes />
+  <Members>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public NoSuchKeyException ();" />
+      <MemberType>Constructor</MemberType>
+      <ReturnValue />
+      <Parameters />
+      <Docs>
+        <summary>Public constructor.</summary>
+        <returns>a <see cref="T:GConf.NoSuchKeyException" /></returns>
+        <remarks></remarks>
+      </Docs>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public NoSuchKeyException (string key);" />
+      <MemberType>Constructor</MemberType>
+      <ReturnValue />
+      <Parameters>
+        <Parameter Name="key" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <summary>Public constructor.</summary>
+        <param name="key">a <see cref="T:System.String" />, name of the key that was not found.</param>
+        <returns>a <see cref="T:GConf.NoSuchKeyException" /></returns>
+        <remarks></remarks>
+      </Docs>
+    </Member>
+  </Members>
+</Type>

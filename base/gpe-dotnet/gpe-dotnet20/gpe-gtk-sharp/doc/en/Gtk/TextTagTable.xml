@@ -1,0 +1,268 @@
+<Type Name="TextTagTable" FullName="Gtk.TextTagTable">
+  <TypeSignature Language="C#" Value="public class TextTagTable : GLib.Object, IWrapper, IDisposable" Maintainer="auto" />
+  <AssemblyInfo>
+    <AssemblyName>gtk-sharp</AssemblyName>
+    <AssemblyPublicKey>
+    </AssemblyPublicKey>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+    <AssemblyCulture>neutral</AssemblyCulture>
+    <Attributes />
+  </AssemblyInfo>
+  <ThreadSafetyStatement>Gtk# is thread aware, but not thread safe; See the <link location="node:gtk-sharp/programming/threads">Gtk# Thread Programming</link> for details.</ThreadSafetyStatement>
+  <Docs>
+    <summary>
+      A tag table defines a set of tags
+    </summary>
+    <remarks>
+      A tag table defines a set of <see cref="T:Gtk.TextTag" /> tags that can be used
+      together. Each buffer has one tag table associated with it; only
+      tags from that tag table can be used with the buffer. A single
+      tag table can be shared between multiple buffers, however.
+    </remarks>
+  </Docs>
+  <Base>
+    <BaseTypeName>GLib.Object</BaseTypeName>
+  </Base>
+  <Interfaces>
+    <Interface>
+      <InterfaceName>GLib.IWrapper</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>System.IDisposable</InterfaceName>
+    </Interface>
+  </Interfaces>
+  <Attributes />
+  <Members>
+    <Member MemberName="Remove">
+      <MemberSignature Language="C#" Value="public void Remove (Gtk.TextTag tag);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="tag" Type="Gtk.TextTag" />
+      </Parameters>
+      <Docs>
+        <summary>Remove a tag from the table.</summary>
+        <param name="tag">the tag to be removed</param>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Add">
+      <MemberSignature Language="C#" Value="public void Add (Gtk.TextTag tag);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="tag" Type="Gtk.TextTag" />
+      </Parameters>
+      <Docs>
+        <summary>Add a tag to the table. The tag is assigned the highest priority in the table.</summary>
+        <param name="tag">the tag to be added</param>
+        <remarks>
+          <para>
+            Add a tag to the table. The tag is assigned the highest
+            priority in the table.
+          </para>
+          <para>
+            <paramref name="tag" /> must not be in a tag table already,
+            and may not have the same name as an already-added tag.
+          </para>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Lookup">
+      <MemberSignature Language="C#" Value="public Gtk.TextTag Lookup (string name);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.TextTag</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="name" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <summary>Finds a <see cref="T:Gtk.TextTag" /> by its name</summary>
+        <param name="name">the name of a tag</param>
+        <returns>The tag, or <see langword="null" /> if none by that name is in the table.</returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Foreach">
+      <MemberSignature Language="C#" Value="public void Foreach (Gtk.TextTagTableForeach func);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="func" Type="Gtk.TextTagTableForeach" />
+      </Parameters>
+      <Docs>
+        <summary>Calls func on each tag in table</summary>
+        <param name="func">a <see cref="T:Gtk.TextTagTableForeach" /></param>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Finalize">
+      <MemberSignature Language="C#" Value="protected override void Finalize ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Disposes the resources associated with the object.</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public TextTagTable (IntPtr raw);" />
+      <MemberType>Constructor</MemberType>
+      <ReturnValue />
+      <Parameters>
+        <Parameter Name="raw" Type="System.IntPtr" />
+      </Parameters>
+      <Docs>
+        <summary>Internal constructor</summary>
+        <param name="raw">Pointer to the C object.</param>
+        <returns>An instance of TextTagTable, wrapping the C object.</returns>
+        <remarks>
+          <para>This is an internal constructor, and should not be used by user code.</para>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public TextTagTable ();" />
+      <MemberType>Constructor</MemberType>
+      <ReturnValue />
+      <Parameters />
+      <Docs>
+        <summary>Default constructor</summary>
+        <returns>a <see cref="T:Gtk.TextTagTable" /></returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Size">
+      <MemberSignature Language="C#" Value="public int Size { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Int32</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>The size of the table</summary>
+        <returns>The number of the tags in this table</returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="TagRemoved">
+      <MemberSignature Language="C#" Value="public event Gtk.TagRemovedHandler TagRemoved;" />
+      <MemberType>Event</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.TagRemovedHandler</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Emitted when a tag is removed from the table</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="TagChanged">
+      <MemberSignature Language="C#" Value="public event Gtk.TagChangedHandler TagChanged;" />
+      <MemberType>Event</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.TagChangedHandler</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Emitted when a tag in the table is changed</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="TagAdded">
+      <MemberSignature Language="C#" Value="public event Gtk.TagAddedHandler TagAdded;" />
+      <MemberType>Event</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.TagAddedHandler</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Emitted when a tag is added to the table</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="GType">
+      <MemberSignature Language="C#" Value="public static GLib.GType GType { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>GLib.GType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>GType Property.</summary>
+        <returns>a <see cref="T:GLib.GType" /></returns>
+        <remarks>Returns the native <see cref="T:GLib.GType" /> value for <see cref="T:Gtk.TextTagTable" />.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="OnTagAdded">
+      <MemberSignature Language="C#" Value="protected virtual void OnTagAdded (Gtk.TextTag tag);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="tag" Type="Gtk.TextTag" />
+      </Parameters>
+      <Docs>
+        <summary>Default handler for the <see cref="M:Gtk.TextTagTable.TagAdded" /> event.</summary>
+        <param name="tag">a <see cref="T:Gtk.TextTag" /></param>
+        <remarks>Override this method in a subclass to provide a default handler for the <see cref="M:Gtk.TextTagTable.TagAdded" /> event.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="OnTagChanged">
+      <MemberSignature Language="C#" Value="protected virtual void OnTagChanged (Gtk.TextTag tag, bool size_changed);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="tag" Type="Gtk.TextTag" />
+        <Parameter Name="size_changed" Type="System.Boolean" />
+      </Parameters>
+      <Docs>
+        <summary>Default handler for the <see cref="M:Gtk.TextTagTable.TagChanged" /> event.</summary>
+        <param name="tag">a <see cref="T:Gtk.TextTag" /></param>
+        <param name="size_changed">a <see cref="T:System.Boolean" /></param>
+        <remarks>Override this method in a subclass to provide a default handler for the <see cref="M:Gtk.TextTagTable.TagChanged" /> event.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="OnTagRemoved">
+      <MemberSignature Language="C#" Value="protected virtual void OnTagRemoved (Gtk.TextTag tag);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="tag" Type="Gtk.TextTag" />
+      </Parameters>
+      <Docs>
+        <summary>Default handler for the <see cref="M:Gtk.TextTagTable.TagRemoved" /> event.</summary>
+        <param name="tag">a <see cref="T:Gtk.TextTag" /></param>
+        <remarks>Override this method in a subclass to provide a default handler for the <see cref="M:Gtk.TextTagTable.TagRemoved" /> event.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="protected TextTagTable (GLib.GType gtype);" />
+      <MemberType>Constructor</MemberType>
+      <ReturnValue />
+      <Parameters>
+        <Parameter Name="gtype" Type="GLib.GType" />
+      </Parameters>
+      <Docs>
+        <summary>Protected Constructor.</summary>
+        <param name="gtype">a <see cref="T:GLib.GType" /></param>
+        <returns>a <see cref="T:Gtk.TextTagTable" /></returns>
+        <remarks>Chain to this constructor if you have manually registered a native <see cref="T:GLib.GType" /> value for your subclass.</remarks>
+      </Docs>
+    </Member>
+  </Members>
+</Type>

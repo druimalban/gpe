@@ -1,0 +1,48 @@
+<Type Name="CurrentParagraphAlignmentChangedArgs" FullName="Gtk.CurrentParagraphAlignmentChangedArgs">
+  <TypeSignature Language="C#" Value="public class CurrentParagraphAlignmentChangedArgs : GLib.SignalArgs" Maintainer="auto" />
+  <AssemblyInfo>
+    <AssemblyName>gtkhtml-sharp</AssemblyName>
+    <AssemblyPublicKey>
+    </AssemblyPublicKey>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+    <AssemblyCulture>neutral</AssemblyCulture>
+    <Attributes />
+  </AssemblyInfo>
+  <ThreadSafetyStatement>Gtk# is thread aware, but not thread safe; See the <link location="node:gtk-sharp/programming/threads">Gtk# Thread Programming</link> for details.</ThreadSafetyStatement>
+  <Docs>
+    <summary>Event data.</summary>
+    <remarks>
+      <para>The <see cref="M:Gtk.HTML.CurrentParagraphAlignmentChanged" /> event invokes <see cref="T:Gtk.CurrentParagraphAlignmentChangedHandler" /> delegates which pass event data via this class.</para>
+    </remarks>
+  </Docs>
+  <Base>
+    <BaseTypeName>GLib.SignalArgs</BaseTypeName>
+  </Base>
+  <Interfaces />
+  <Attributes />
+  <Members>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public CurrentParagraphAlignmentChangedArgs ();" />
+      <MemberType>Constructor</MemberType>
+      <ReturnValue />
+      <Parameters />
+      <Docs>
+        <summary>Public Constructor.</summary>
+        <returns>A new <see cref="T:Gtk.CurrentParagraphAlignmentChangedArgs" />.</returns>
+        <remarks>Create a new <see cref="T:Gtk.CurrentParagraphAlignmentChangedArgs" /> instance with this constructor if you need to invoke a <see cref="T:Gtk.CurrentParagraphAlignmentChangedHandler" /> delegate.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="NewAlignment">
+      <MemberSignature Language="C#" Value="public Gtk.HTMLParagraphAlignment NewAlignment { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.HTMLParagraphAlignment</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>The new alignment of the paragraph.</summary>
+        <returns>a <see cref="Gtk.HTMLParagraphAlignment" /></returns>
+        <remarks />
+      </Docs>
+    </Member>
+  </Members>
+</Type>

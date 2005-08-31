@@ -1,0 +1,120 @@
+<Type Name="Requisition" FullName="Gtk.Requisition">
+  <TypeSignature Language="C#" Value="public sealed struct Requisition;" Maintainer="auto" />
+  <AssemblyInfo>
+    <AssemblyName>gtk-sharp</AssemblyName>
+    <AssemblyPublicKey>
+    </AssemblyPublicKey>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+    <AssemblyCulture>neutral</AssemblyCulture>
+    <Attributes />
+  </AssemblyInfo>
+  <ThreadSafetyStatement>Gtk# is thread aware, but not thread safe; See the <link location="node:gtk-sharp/programming/threads">Gtk# Thread Programming</link> for details.</ThreadSafetyStatement>
+  <Docs>
+    <summary>A GtkRequisition represents the desired size of a widget. </summary>
+    <remarks>The size requisition of a widget is it's desired width and height. This is represented by this structure.
+<para>
+How a widget determines its desired size depends on the widget. A <see cref="T:Gtk.Label" />, for example, requests enough space to display all its text. Container widgets generally base their size request on the requisitions of their children.
+</para><para>
+The size requisition phase of the widget layout process operates top-down. It starts at a top-level widget, typically a <see cref="T:Gtk.Window" />. The top-level widget asks its child for its size requisition by calling <see cref="M:Gtk.Widget.SizeRequest" />. To determine its requisition, the child asks its own children for their requisitions and so on. Finally, the top-level widget will get a requisition back from its child. 
+</para></remarks>
+  </Docs>
+  <Base>
+    <BaseTypeName>System.ValueType</BaseTypeName>
+  </Base>
+  <Interfaces />
+  <Attributes />
+  <Members>
+    <Member MemberName="Zero">
+      <MemberSignature Language="C#" Value="public static Gtk.Requisition Zero;" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.Requisition</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>An empty object.</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="New">
+      <MemberSignature Language="C#" Value="public static Gtk.Requisition New (IntPtr raw);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.Requisition</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="raw" Type="System.IntPtr" />
+      </Parameters>
+      <Docs>
+        <summary>Constructor.</summary>
+        <param name="raw">A <see cref="T:IntPtr" />, the underlying C object.</param>
+        <returns>A <see cref="T:Gtk.Requisition" /></returns>
+        <remarks>Not for general developer use.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Free">
+      <MemberSignature Language="C#" Value="public void Free ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Frees the memory used by this requisition.</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Copy">
+      <MemberSignature Language="C#" Value="public Gtk.Requisition Copy ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.Requisition</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Duplicates this requisition object by value.</summary>
+        <returns>A <see cref="T:Gtk.Requisition" /></returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="GType">
+      <MemberSignature Language="C#" Value="public static GLib.GType GType { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>GLib.GType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>GType Property.</summary>
+        <returns>a <see cref="T:GLib.GType" /></returns>
+        <remarks>Returns the native <see cref="T:GLib.GType" /> value for <see cref="T:Gtk.Requisition" />.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Width">
+      <MemberSignature Language="C#" Value="public int Width;" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Int32</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>The requested width.</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Height">
+      <MemberSignature Language="C#" Value="public int Height;" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Int32</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>The requested height.</summary>
+        <remarks />
+      </Docs>
+    </Member>
+  </Members>
+</Type>

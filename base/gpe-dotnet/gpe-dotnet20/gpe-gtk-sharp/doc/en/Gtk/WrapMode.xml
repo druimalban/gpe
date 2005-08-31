@@ -1,0 +1,111 @@
+<Type Name="WrapMode" FullName="Gtk.WrapMode">
+  <TypeSignature Language="C#" Maintainer="Hector Gomez M" Value="public enum WrapMode;" />
+  <AssemblyInfo>
+    <AssemblyName>gtk-sharp</AssemblyName>
+    <AssemblyPublicKey>
+    </AssemblyPublicKey>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+    <AssemblyCulture>neutral</AssemblyCulture>
+    <Attributes />
+  </AssemblyInfo>
+  <ThreadSafetyStatement>Gtk# is thread aware, but not thread safe; See the <link location="node:gtk-sharp/programming/threads">Gtk# Thread Programming</link> for details.</ThreadSafetyStatement>
+  <Docs>
+    <summary>An enumeration used by TextTag.</summary>
+    <remarks>
+      <para>
+      This enumeration is used by <see cref="T:Gtk.TextTag" /> to describe the type of line wrapping.
+     </para>
+    </remarks>
+  </Docs>
+  <Base>
+    <BaseTypeName>System.Enum</BaseTypeName>
+  </Base>
+  <Interfaces>
+    <Interface>
+      <InterfaceName>System.IComparable</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>System.IConvertible</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>System.IFormattable</InterfaceName>
+    </Interface>
+  </Interfaces>
+  <Attributes />
+  <Members>
+    <Member MemberName="None">
+      <MemberSignature Language="C#" Value="None" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.WrapMode</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Do not wrap lines, just make the text area wider.</summary>
+        <remarks>
+          <para>
+          Do not wrap lines, just make the text area wider.
+         </para>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Char">
+      <MemberSignature Language="C#" Value="Char" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.WrapMode</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Wrap text, breaking lines anywhere the cursor can appear.</summary>
+        <remarks>
+          <para>
+          Note this is between characters, usually, if you want to be technical, between graphemes, see <see cref="T:Pango.LogAttr" />.
+         </para>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Word">
+      <MemberSignature Language="C#" Value="Word" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.WrapMode</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Wrap text, breaking lines in between words.</summary>
+        <remarks>
+          <para>
+          Wrap text, breaking lines in between words.
+         </para>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="value__">
+      <MemberSignature Language="C#" Value="value__" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Int32</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Internal field.</summary>
+        <remarks>Do not use.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="WordChar">
+      <MemberSignature Language="C#" Value="WordChar" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.WrapMode</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>wrap text, breaking lines in between words, or if that is not enough, also between graphemes.</summary>
+        <remarks></remarks>
+      </Docs>
+    </Member>
+  </Members>
+</Type>

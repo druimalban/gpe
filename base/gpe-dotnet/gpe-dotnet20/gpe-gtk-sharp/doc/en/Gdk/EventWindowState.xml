@@ -1,0 +1,64 @@
+<Type Name="EventWindowState" FullName="Gdk.EventWindowState">
+  <TypeSignature Language="C#" Value="public sealed struct EventWindowState;" Maintainer="auto" />
+  <AssemblyInfo>
+    <AssemblyName>gdk-sharp</AssemblyName>
+    <AssemblyPublicKey>
+    </AssemblyPublicKey>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+    <AssemblyCulture>neutral</AssemblyCulture>
+    <Attributes />
+  </AssemblyInfo>
+  <ThreadSafetyStatement>Gtk# is thread aware, but not thread safe; See the <link location="node:gtk-sharp/programming/threads">Gtk# Thread Programming</link> for details.</ThreadSafetyStatement>
+  <Docs>
+    <summary>Generated when the state of a toplevel window changes.</summary>
+    <remarks>
+    </remarks>
+  </Docs>
+  <Base>
+    <BaseTypeName>Gdk.Event</BaseTypeName>
+  </Base>
+  <Interfaces />
+  <Attributes />
+  <Members>
+    <Member MemberName="ChangedMask">
+      <MemberSignature Language="C#" Value="public Gdk.WindowState ChangedMask { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.WindowState</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Mask specifying what flags have changed.</summary>
+        <returns>Mask specifying what flags have changed.</returns>
+        <remarks>None.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="NewWindowState">
+      <MemberSignature Language="C#" Value="public Gdk.WindowState NewWindowState { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.WindowState</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>The new window state.</summary>
+        <returns>The new window state.</returns>
+        <remarks>None.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public EventWindowState (IntPtr raw);" />
+      <MemberType>Constructor</MemberType>
+      <ReturnValue />
+      <Parameters>
+        <Parameter Name="raw" Type="System.IntPtr" />
+      </Parameters>
+      <Docs>
+        <summary>Internal constructor.</summary>
+        <param name="raw">raw unmanaged pointer.</param>
+        <returns>A new <see cref="T:Gdk.EventWindowState" /></returns>
+        <remarks>None.</remarks>
+      </Docs>
+    </Member>
+  </Members>
+</Type>

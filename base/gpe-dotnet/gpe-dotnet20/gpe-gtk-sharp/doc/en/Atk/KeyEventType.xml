@@ -1,0 +1,85 @@
+<Type Name="KeyEventType" FullName="Atk.KeyEventType">
+  <TypeSignature Language="C#" Maintainer="auto" Value="public enum KeyEventType;" />
+  <AssemblyInfo>
+    <AssemblyName>atk-sharp</AssemblyName>
+    <AssemblyPublicKey>
+    </AssemblyPublicKey>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+    <AssemblyCulture>neutral</AssemblyCulture>
+    <Attributes />
+  </AssemblyInfo>
+  <ThreadSafetyStatement>Gtk# is thread aware, but not thread safe; See the <link location="node:gtk-sharp/programming/threads">Gtk# Thread Programming</link> for details.</ThreadSafetyStatement>
+  <Docs>
+    <summary>Specifies the type of a keyboard event.</summary>
+    <remarks />
+  </Docs>
+  <Base>
+    <BaseTypeName>System.Enum</BaseTypeName>
+  </Base>
+  <Interfaces>
+    <Interface>
+      <InterfaceName>System.IComparable</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>System.IConvertible</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>System.IFormattable</InterfaceName>
+    </Interface>
+  </Interfaces>
+  <Attributes />
+  <Members>
+    <Member MemberName="Press">
+      <MemberSignature Language="C#" Value="Press" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Atk.KeyEventType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary> specifies a key press event</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Release">
+      <MemberSignature Language="C#" Value="Release" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Atk.KeyEventType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary> specifies a key release event</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="LastDefined">
+      <MemberSignature Language="C#" Value="LastDefined" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Atk.KeyEventType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary> Not a valid value; specifies end of enumeration</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="value__">
+      <MemberSignature Language="C#" Value="value__" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Int32</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Internal field.</summary>
+        <remarks>Do not use.</remarks>
+      </Docs>
+    </Member>
+  </Members>
+</Type>

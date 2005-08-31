@@ -1,0 +1,496 @@
+<Type Name="Paned" FullName="Gtk.Paned">
+  <TypeSignature Language="C#" Value="public class Paned : Gtk.Container, Implementor, IWrapper, IWrapper, IDisposable" Maintainer="Lee Mallabone" />
+  <AssemblyInfo>
+    <AssemblyName>gtk-sharp</AssemblyName>
+    <AssemblyPublicKey>
+    </AssemblyPublicKey>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+    <AssemblyCulture>neutral</AssemblyCulture>
+    <Attributes />
+  </AssemblyInfo>
+  <ThreadSafetyStatement>Gtk# is thread aware, but not thread safe; See the <link location="node:gtk-sharp/programming/threads">Gtk# Thread Programming</link> for details.</ThreadSafetyStatement>
+  <Docs>
+    <summary>Base class for containers that have two children separated by an adjustable pane.</summary>
+    <remarks>
+      <para>This class provides methods for manipulating a panel with 2 child widgets, separated by a splitter. The concrete widgets that extend from this class are <see cref="T:Gtk.VPaned" /> for a vertical splitter, and <see cref="T:Gtk.HPaned" /> for a horizontal splitter.</para>
+      <para>A paned widget draws a separator between the two child widgets that the user can drag to adjust the division.</para>
+      <para>Each child widget has two options that can be set, <paramref name="resize" /> and <paramref name="shrink" />, (set with the <see cref="M:Gtk.Paned.Pack1" /> and <see cref="M:Gtk.Paned.Pack2" /> methods). If resize is <see langword="true" />, then when the Paned is resized, the respective child will expand or shrink along with the paned widget. If shrink is <see langword="true" />, then the respective child can be made smaller than it's requisition by the user. Setting shrink to <see langword="false" /> allows the application to set a minimum size. If resize is <see langword="false" /> for both children, then this exhibits exactly the same behaviour as if resize is <see langword="true" /> for both children.</para>
+      <para>The application can set the position of the slider as if it were set by the user with the <see cref="P:Gtk.Paned.Position" /> property.</para>
+      <para>
+        <example>
+          <code lang="C#">
+public Widget GetExampleFrame()
+{
+    HPaned splitter = new HPaned();
+    Frame frame1 = new Frame("Example frame1");
+    Frame frame2 = new Frame("Example frame2");
+
+    splitter.Pack1(frame1, true, false);
+    splitter.Pack2(frame2, false, false);
+    splitter.ShowAll();
+   
+    return splitter;
+}
+    </code>
+        </example>
+      </para>
+    </remarks>
+  </Docs>
+  <Base>
+    <BaseTypeName>Gtk.Container</BaseTypeName>
+  </Base>
+  <Interfaces>
+    <Interface>
+      <InterfaceName>Atk.Implementor</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>GLib.IWrapper</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>GLib.IWrapper</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>System.IDisposable</InterfaceName>
+    </Interface>
+  </Interfaces>
+  <Attributes />
+  <Members>
+    <Member MemberName="Pack2">
+      <MemberSignature Language="C#" Value="public void Pack2 (Gtk.Widget child, bool resize, bool shrink);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="child" Type="Gtk.Widget" />
+        <Parameter Name="resize" Type="System.Boolean" />
+        <Parameter Name="shrink" Type="System.Boolean" />
+      </Parameters>
+      <Docs>
+        <summary>Packs a child widget into the second part of the Paned container, (the bottom or right panes).</summary>
+        <param name="child">A widget for this container to manage.</param>
+        <param name="resize">Whether this child should expand when the Paned widget is resized.</param>
+        <param name="shrink">Whether this child can be made smaller than its default size by the user.</param>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Pack1">
+      <MemberSignature Language="C#" Value="public void Pack1 (Gtk.Widget child, bool resize, bool shrink);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="child" Type="Gtk.Widget" />
+        <Parameter Name="resize" Type="System.Boolean" />
+        <Parameter Name="shrink" Type="System.Boolean" />
+      </Parameters>
+      <Docs>
+        <summary>Packs a child widget into the first part of the Paned container, (the top or left panes).</summary>
+        <param name="child">A widget for this container to manage.</param>
+        <param name="resize">Whether this child should expand when the Paned widget is resized.</param>
+        <param name="shrink">Whether this child can be made smaller than its default size by the user.</param>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Add2">
+      <MemberSignature Language="C#" Value="public void Add2 (Gtk.Widget child);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="child" Type="Gtk.Widget" />
+      </Parameters>
+      <Docs>
+        <summary>Adds a child widget into the second part of the Paned container, (the bottom or right panes), with default packing settings.</summary>
+        <param name="child">A widget for this container to manage.</param>
+        <remarks>
+          <para>This is the same as calling <see cref="M:Gtk.Paned.Pack2" /> with resize set to <see langword="false" /> and shrink set to <see langword="true" />.</para>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Add1">
+      <MemberSignature Language="C#" Value="public void Add1 (Gtk.Widget child);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="child" Type="Gtk.Widget" />
+      </Parameters>
+      <Docs>
+        <summary>Adds a child widget into the first part of the Paned container, (the top or left panes), with default packing settings.</summary>
+        <param name="child">A widget for this container to manage.</param>
+        <remarks>
+          <para>This is the same as calling <see cref="M:Gtk.Paned.Pack1" /> with resize set to <see langword="false" /> and shrink set to <see langword="true" />.</para>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="ComputePosition">
+      <MemberSignature Language="C#" Value="public void ComputePosition (int allocation, int child1_req, int child2_req);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="allocation" Type="System.Int32" />
+        <Parameter Name="child1_req" Type="System.Int32" />
+        <Parameter Name="child2_req" Type="System.Int32" />
+      </Parameters>
+      <Docs>
+        <summary>Determines the position of the pane separator based on the 
+	  size and shrinkability of the widget's children.</summary>
+        <param name="allocation">A <see cref="T:System.Int32" /></param>
+        <param name="child1_req">A <see cref="T:System.Int32" /></param>
+        <param name="child2_req">A <see cref="T:System.Int32" /></param>
+        <remarks></remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Finalize">
+      <MemberSignature Language="C#" Value="protected override void Finalize ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Disposes the resources associated with the object.</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public Paned (IntPtr raw);" />
+      <MemberType>Constructor</MemberType>
+      <ReturnValue />
+      <Parameters>
+        <Parameter Name="raw" Type="System.IntPtr" />
+      </Parameters>
+      <Docs>
+        <summary>Internal constructor</summary>
+        <param name="raw">Pointer to the C object.</param>
+        <returns>An instance of Paned, wrapping the C object.</returns>
+        <remarks>
+          <para>This is an internal constructor, and should not be used by user code.</para>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Child2">
+      <MemberSignature Language="C#" Value="public Gtk.Widget Child2 { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.Widget</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>An accessor to the second child widget of this container</summary>
+        <returns>The child widget added with <see cref="M:Gtk.Paned.Pack2" /> or <see cref="M:Gtk.Paned.Add2" />.</returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Child1">
+      <MemberSignature Language="C#" Value="public Gtk.Widget Child1 { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.Widget</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>An accessor to the first child widget of this container</summary>
+        <returns>The child widget added with <see cref="M:Gtk.Paned.Pack1" /> or <see cref="M:Gtk.Paned.Add1" />.</returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Position">
+      <MemberSignature Language="C#" Value="public int Position { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Int32</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Manage the position of the splitter bar that separates the 2 child widgets.</summary>
+        <param name="value`">The number of pixels the splitter should appear from the left/top edge.</param>
+        <returns>The current position ofh</returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="PositionSet">
+      <MemberSignature Language="C#" Value="public bool PositionSet { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Whether the position property (related to <see cref="P:Gtk.Paned.MinPosition"/> and
+	  <see cref="P:Gtk.Paned.MaxPosition"/>) should be used.</summary>
+        <param name="value">an object of type <see cref="T:System.Boolean" /></param>
+        <returns>an object of type <see cref="T:System.Boolean" /></returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="CycleHandleFocus">
+      <MemberSignature Language="C#" Value="public event Gtk.CycleHandleFocusHandler CycleHandleFocus;" />
+      <MemberType>Event</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.CycleHandleFocusHandler</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>
+          Emitted when paned has the focus and one of the tab key
+          combinations are pressed.
+        </summary>
+        <remarks>
+          This signal is emitted when paned has the focus and any of
+          the Tab, Ctrl-Tab, Shift-Tab or Ctrl-Shift-Tab keys
+          combinations are pressed. Tab and Ctrl-Tab set reversed to
+          <see langword="false" /> while Shift-Tab and Ctrl-Shift-Tab
+          set reversed to <see langword="true" />.
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="MoveHandle">
+      <MemberSignature Language="C#" Value="public event Gtk.MoveHandleHandler MoveHandle;" />
+      <MemberType>Event</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.MoveHandleHandler</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>
+          Emitted when paned has the focus and the separator is moved.
+        </summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="CancelPosition">
+      <MemberSignature Language="C#" Value="public event Gtk.CancelPositionHandler CancelPosition;" />
+      <MemberType>Event</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.CancelPositionHandler</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>
+          Emitted when the Esc key is pressed while paned has the focus.
+        </summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="AcceptPosition">
+      <MemberSignature Language="C#" Value="public event Gtk.AcceptPositionHandler AcceptPosition;" />
+      <MemberType>Event</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.AcceptPositionHandler</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Emitted when the paned has focus</summary>
+        <remarks>
+          This signal is emitted when paned has the focus and any of
+          the Return, Enter, Space keys are pressed. This will also
+          cause the child widget with the focus to be activated.
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="ToggleHandleFocus">
+      <MemberSignature Language="C#" Value="public event Gtk.ToggleHandleFocusHandler ToggleHandleFocus;" />
+      <MemberType>Event</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.ToggleHandleFocusHandler</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>
+          Emitted when paned has the focus and F8 is pressed to give the focus to or take the focus from the separator handle.
+        </summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="CycleChildFocus">
+      <MemberSignature Language="C#" Value="public event Gtk.CycleChildFocusHandler CycleChildFocus;" />
+      <MemberType>Event</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.CycleChildFocusHandler</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Emitted when F6 or Shift-F6 is pressed while paned has the focus.</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="GType">
+      <MemberSignature Language="C#" Value="public static GLib.GType GType { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>GLib.GType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>GType Property.</summary>
+        <returns>a <see cref="T:GLib.GType" /></returns>
+        <remarks>Returns the native <see cref="T:GLib.GType" /> value for <see cref="T:Gtk.Paned" />.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="OnCycleChildFocus">
+      <MemberSignature Language="C#" Value="protected virtual bool OnCycleChildFocus (bool reverse);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="reverse" Type="System.Boolean" />
+      </Parameters>
+      <Docs>
+        <summary>Default handler for the <see cref="M:Gtk.Paned.CycleChildFocus" /> event.</summary>
+        <param name="reverse">a <see cref="T:System.Boolean" /></param>
+        <returns>a <see cref="T:System.Boolean" /></returns>
+        <remarks>Override this method in a subclass to provide a default handler for the <see cref="M:Gtk.Paned.CycleChildFocus" /> event.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="OnToggleHandleFocus">
+      <MemberSignature Language="C#" Value="protected virtual bool OnToggleHandleFocus ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Default handler for the <see cref="M:Gtk.Paned.ToggleHandleFocus" /> event.</summary>
+        <returns>a <see cref="T:System.Boolean" /></returns>
+        <remarks>Override this method in a subclass to provide a default handler for the <see cref="M:Gtk.Paned.ToggleHandleFocus" /> event.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="OnAcceptPosition">
+      <MemberSignature Language="C#" Value="protected virtual bool OnAcceptPosition ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Default handler for the <see cref="M:Gtk.Paned.AcceptPosition" /> event.</summary>
+        <returns>a <see cref="T:System.Boolean" /></returns>
+        <remarks>Override this method in a subclass to provide a default handler for the <see cref="M:Gtk.Paned.AcceptPosition" /> event.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="OnCancelPosition">
+      <MemberSignature Language="C#" Value="protected virtual bool OnCancelPosition ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Default handler for the <see cref="M:Gtk.Paned.CancelPosition" /> event.</summary>
+        <returns>a <see cref="T:System.Boolean" /></returns>
+        <remarks>Override this method in a subclass to provide a default handler for the <see cref="M:Gtk.Paned.CancelPosition" /> event.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="OnMoveHandle">
+      <MemberSignature Language="C#" Value="protected virtual bool OnMoveHandle (Gtk.ScrollType scroll);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="scroll" Type="Gtk.ScrollType" />
+      </Parameters>
+      <Docs>
+        <summary>Default handler for the <see cref="M:Gtk.Paned.MoveHandle" /> event.</summary>
+        <param name="scroll">a <see cref="T:Gtk.ScrollType" /></param>
+        <returns>a <see cref="T:System.Boolean" /></returns>
+        <remarks>Override this method in a subclass to provide a default handler for the <see cref="M:Gtk.Paned.MoveHandle" /> event.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="OnCycleHandleFocus">
+      <MemberSignature Language="C#" Value="protected virtual bool OnCycleHandleFocus (bool reverse);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="reverse" Type="System.Boolean" />
+      </Parameters>
+      <Docs>
+        <summary>Default handler for the <see cref="M:Gtk.Paned.CycleHandleFocus" /> event.</summary>
+        <param name="reverse">a <see cref="T:System.Boolean" /></param>
+        <returns>a <see cref="T:System.Boolean" /></returns>
+        <remarks>Override this method in a subclass to provide a default handler for the <see cref="M:Gtk.Paned.CycleHandleFocus" /> event.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="protected Paned (GLib.GType gtype);" />
+      <MemberType>Constructor</MemberType>
+      <ReturnValue />
+      <Parameters>
+        <Parameter Name="gtype" Type="GLib.GType" />
+      </Parameters>
+      <Docs>
+        <summary>Protected Constructor.</summary>
+        <param name="gtype">a <see cref="T:GLib.GType" /></param>
+        <returns>a <see cref="T:Gtk.Paned" /></returns>
+        <remarks>Chain to this constructor if you have manually registered a native <see cref="T:GLib.GType" /> value for your subclass.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="protected Paned ();" />
+      <MemberType>Constructor</MemberType>
+      <ReturnValue />
+      <Parameters />
+      <Docs>
+        <summary>Default constructor.</summary>
+        <returns>a <see cref="T:Gtk.Paned" /></returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="MaxPosition">
+      <MemberSignature Language="C#" Value="public int MaxPosition { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Int32</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>The largest possible value for the position property. 
+	  This property is derived from the size and shrinkability of the widget's children.
+	</summary>
+        <returns>a <see cref="T:System.Int32" /></returns>
+        <remarks></remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="MinPosition">
+      <MemberSignature Language="C#" Value="public int MinPosition { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Int32</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>The smallest possible value for the position property. 
+	  This property is derived from the size and shrinkability of the widget's children.
+	</summary>
+        <returns>a <see cref="T:System.Int32" /></returns>
+        <remarks></remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Item">
+      <MemberSignature Language="C#" Value="public override Gtk.Container+ContainerChild Item { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.Container+ContainerChild</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="child" Type="Gtk.Widget" />
+      </Parameters>
+      <Docs>
+        <summary>Accessor for child property items</summary>
+        <param name="child">a child of this <see cref="T:Gtk.Paned" /></param>
+        <returns>a <see cref="T:Gtk.Container+ContainerChild" /></returns>
+        <remarks>You can cast the returned object to <see cref="T:Gtk.Paned+PanedChild" /> to access its child properties.</remarks>
+      </Docs>
+    </Member>
+  </Members>
+</Type>

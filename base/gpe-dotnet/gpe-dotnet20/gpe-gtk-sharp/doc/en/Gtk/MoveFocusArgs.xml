@@ -1,0 +1,62 @@
+<Type Name="MoveFocusArgs" FullName="Gtk.MoveFocusArgs">
+  <TypeSignature Language="C#" Value="public class MoveFocusArgs : GLib.SignalArgs" Maintainer="auto" />
+  <AssemblyInfo>
+    <AssemblyName>gtk-sharp</AssemblyName>
+    <AssemblyPublicKey>
+    </AssemblyPublicKey>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+    <AssemblyCulture>neutral</AssemblyCulture>
+    <Attributes />
+  </AssemblyInfo>
+  <ThreadSafetyStatement>Gtk# is thread aware, but not thread safe; See the <link location="node:gtk-sharp/programming/threads">Gtk# Thread Programming</link> for details.</ThreadSafetyStatement>
+  <Docs>
+    <summary>Event data.</summary>
+    <remarks>
+      <para>The following events invoke <see cref="T:Gtk.MoveFocusHandler" /> delegates which pass event data via this class:</para>
+      <para>
+        <list type="bullet">
+          <item>
+            <term>
+              <see cref="M:Gtk.Window.MoveFocus" />
+            </term>
+          </item>
+          <item>
+            <term>
+              <see cref="M:Gtk.TextView.MoveFocus" />
+            </term>
+          </item>
+        </list>
+      </para>
+    </remarks>
+  </Docs>
+  <Base>
+    <BaseTypeName>GLib.SignalArgs</BaseTypeName>
+  </Base>
+  <Interfaces />
+  <Attributes />
+  <Members>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public MoveFocusArgs ();" />
+      <MemberType>Constructor</MemberType>
+      <ReturnValue />
+      <Parameters />
+      <Docs>
+        <summary>Public Constructor.</summary>
+        <returns>A new <see cref="T:Gtk.MoveFocusArgs" />.</returns>
+        <remarks>Create a new <see cref="T:Gtk.MoveFocusArgs" /> instance with this constructor if you need to invoke a <see cref="T:Gtk.MoveFocusHandler" /> delegate.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Direction">
+      <MemberSignature Language="C#" Value="public Gtk.DirectionType Direction { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.DirectionType</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>The direction to move the focus.</summary>
+        <returns>a <see cref="Gtk.DirectionType" /></returns>
+        <remarks />
+      </Docs>
+    </Member>
+  </Members>
+</Type>

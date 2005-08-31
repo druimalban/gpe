@@ -1,0 +1,82 @@
+<Type Name="Tree" FullName="Gtk.Tree">
+  <TypeSignature Language="C#" Value="public class Tree" Maintainer="Hector Gomez M" />
+  <AssemblyInfo>
+    <AssemblyName>gtk-sharp</AssemblyName>
+    <AssemblyPublicKey>
+    </AssemblyPublicKey>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+    <AssemblyCulture>neutral</AssemblyCulture>
+    <Attributes />
+  </AssemblyInfo>
+  <ThreadSafetyStatement>Gtk# is thread aware, but not thread safe; See the <link location="node:gtk-sharp/programming/threads">Gtk# Thread Programming</link> for details.</ThreadSafetyStatement>
+  <Docs>
+    <summary>A tree <paramref name="widget" />.</summary>
+    <remarks>
+      <para>
+        <see cref="T:Gtk.Tree" /> is deprecated and unsupported. It is known to be buggy. To use it, you must define the symbol <paramref name="GTK_ENABLE_BROKEN" /> prior to includng the Gtk# header files. Use <see cref="T:Gtk.TreeView" /> instead.
+     </para>
+      <para>
+      The <see cref="T:Gtk.Tree" /> widget is a container that shows users a list of items, in a tree format complete withbranches and leafnodes. Branches can be expanded to show their child items, or collapsed to hide them.
+     </para>
+    </remarks>
+  </Docs>
+  <Base>
+    <BaseTypeName>System.Object</BaseTypeName>
+  </Base>
+  <Interfaces />
+  <Attributes />
+  <Members>
+    <Member MemberName="SetRowDragData">
+      <MemberSignature Language="C#" Value="public static bool SetRowDragData (Gtk.SelectionData selection_data, Gtk.TreeModel tree_model, Gtk.TreePath path);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="selection_data" Type="Gtk.SelectionData" />
+        <Parameter Name="tree_model" Type="Gtk.TreeModel" />
+        <Parameter Name="path" Type="Gtk.TreePath" />
+      </Parameters>
+      <Docs>
+        <summary>Deprecated.</summary>
+        <param name="selection_data">a <see cref="T:Gtk.SelectionData" /></param>
+        <param name="tree_model">a <see cref="T:Gtk.TreeModel" /></param>
+        <param name="path">a <see cref="T:Gtk.TreePath" /></param>
+        <returns>a <see cref="T:System.Boolean" /></returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public Tree ();" />
+      <MemberType>Constructor</MemberType>
+      <ReturnValue />
+      <Parameters />
+      <Docs>
+        <summary>Deprecated.</summary>
+        <returns>a <see cref="T:Gtk.Tree" /></returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="GetRowDragData">
+      <MemberSignature Language="C#" Value="public static bool GetRowDragData (Gtk.SelectionData selection_data, out Gtk.TreeModel tree_model, out Gtk.TreePath path);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="selection_data" Type="Gtk.SelectionData" />
+        <Parameter Name="tree_model" Type="Gtk.TreeModel&amp;" RefType="out" />
+        <Parameter Name="path" Type="Gtk.TreePath&amp;" RefType="out" />
+      </Parameters>
+      <Docs>
+        <summary>Gets row information from a Drag Selection.</summary>
+        <param name="selection_data">a <see cref="T:Gtk.SelectionData" /></param>
+        <param name="tree_model">a <see cref="T:Gtk.TreeModel" /></param>
+        <param name="path">a <see cref="T:Gtk.TreePath" /></param>
+        <returns>a <see cref="T:System.Boolean" /></returns>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+  </Members>
+</Type>

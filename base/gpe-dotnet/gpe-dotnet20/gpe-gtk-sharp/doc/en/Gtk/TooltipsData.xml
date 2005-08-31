@@ -1,0 +1,130 @@
+<Type Name="TooltipsData" FullName="Gtk.TooltipsData">
+  <TypeSignature Language="C#" Value="public sealed struct TooltipsData;" Maintainer="John Luke" />
+  <AssemblyInfo>
+    <AssemblyName>gtk-sharp</AssemblyName>
+    <AssemblyPublicKey>
+    </AssemblyPublicKey>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+    <AssemblyCulture>neutral</AssemblyCulture>
+    <Attributes />
+  </AssemblyInfo>
+  <ThreadSafetyStatement>Gtk# is thread aware, but not thread safe; See the <link location="node:gtk-sharp/programming/threads">Gtk# Thread Programming</link> for details.</ThreadSafetyStatement>
+  <Docs>
+    <summary>The data needed for a <see cref="T:Gtk.Tooltips" /> object.</summary>
+    <remarks>
+    </remarks>
+  </Docs>
+  <Base>
+    <BaseTypeName>System.ValueType</BaseTypeName>
+  </Base>
+  <Interfaces />
+  <Attributes />
+  <Members>
+    <Member MemberName="Zero">
+      <MemberSignature Language="C#" Value="public static Gtk.TooltipsData Zero;" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.TooltipsData</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>A <see cref="T:Gtk.TooltipsData" /> with default values.</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Get">
+      <MemberSignature Language="C#" Value="public static Gtk.TooltipsData Get (Gtk.Widget widget);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.TooltipsData</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="widget" Type="Gtk.Widget" />
+      </Parameters>
+      <Docs>
+        <summary>Gets the <see cref="T:Gtk.TooltipsData" /> associated with <paramref name="widget" />.</summary>
+        <param name="widget">an object of type <see cref="T:Gtk.Widget" /></param>
+        <returns>an object of type <see cref="T:Gtk.TooltipsData" /></returns>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="New">
+      <MemberSignature Language="C#" Value="public static Gtk.TooltipsData New (IntPtr raw);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.TooltipsData</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="raw" Type="System.IntPtr" />
+      </Parameters>
+      <Docs>
+        <summary>Creates a new TooltipsData object.</summary>
+        <param name="raw">an object of type <see cref="T:System.IntPtr" /></param>
+        <returns>an object of type <see cref="T:Gtk.TooltipsData" /></returns>
+        <remarks>This is not typically used directly by applications.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="widget">
+      <MemberSignature Language="C#" Value="public Gtk.Widget widget { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.Widget</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>The <see cref="T:Gtk.Widget" /> that this <see cref="T:Gtk.TooltipsData" /> is associated with.</summary>
+        <param name="value">an object of type <see cref="T:Gtk.Widget" /></param>
+        <returns>an object of type <see cref="T:Gtk.Widget" /></returns>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="tooltips">
+      <MemberSignature Language="C#" Value="public Gtk.Tooltips tooltips { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.Tooltips</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Generates a Tooltips object out of this data.</summary>
+        <param name="value">an object of type <see cref="T:Gtk.Tooltips" /></param>
+        <returns>an object of type <see cref="T:Gtk.Tooltips" /></returns>
+      </Docs>
+    </Member>
+    <Member MemberName="TipText">
+      <MemberSignature Language="C#" Value="public string TipText;" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>A string containing the tooltip message.</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="TipPrivate">
+      <MemberSignature Language="C#" Value="public string TipPrivate;" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>A string that is not shown as the default tooltip.</summary>
+        <remarks>
+          <para>
+	  Instead, this message may be more informative and go towards forming a context-sensitive help system for your application. (FIXME: how to actually "switch on" private tips?)
+	  </para>
+        </remarks>
+      </Docs>
+    </Member>
+  </Members>
+</Type>

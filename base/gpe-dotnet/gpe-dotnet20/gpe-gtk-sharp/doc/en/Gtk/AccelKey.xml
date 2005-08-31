@@ -1,0 +1,108 @@
+<Type Name="AccelKey" FullName="Gtk.AccelKey">
+  <TypeSignature Language="C#" Value="public sealed struct AccelKey;" Maintainer="auto" />
+  <AssemblyInfo>
+    <AssemblyName>gtk-sharp</AssemblyName>
+    <AssemblyPublicKey>
+    </AssemblyPublicKey>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+    <AssemblyCulture>neutral</AssemblyCulture>
+    <Attributes />
+  </AssemblyInfo>
+  <ThreadSafetyStatement>Gtk# is thread aware, but not thread safe; See the <link location="node:gtk-sharp/programming/threads">Gtk# Thread Programming</link> for details.</ThreadSafetyStatement>
+  <Docs>
+    <summary>A class for holding information about a key that gets used as an accelerator.</summary>
+    <remarks />
+  </Docs>
+  <Base>
+    <BaseTypeName>System.ValueType</BaseTypeName>
+  </Base>
+  <Interfaces />
+  <Attributes />
+  <Members>
+    <Member MemberName="Zero">
+      <MemberSignature Language="C#" Value="public static Gtk.AccelKey Zero;" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.AccelKey</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Make a new AccelKey object that has no global object key.</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="New">
+      <MemberSignature Language="C#" Value="public static Gtk.AccelKey New (IntPtr raw);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.AccelKey</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="raw" Type="System.IntPtr" />
+      </Parameters>
+      <Docs>
+        <summary>Make a new AccelKey object with the object key specified by <paramref name="raw" />.</summary>
+        <param name="raw">an <see cref="T:IntPtr" /></param>
+        <returns>An object of type <see cref="T:Gtk.AccelKey" /></returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="AccelMods">
+      <MemberSignature Language="C#" Value="public Gdk.ModifierType AccelMods;" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.ModifierType</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>A mask of the modifier keys that are relevant for this AccelKey.</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="AccelFlags">
+      <MemberSignature Language="C#" Value="public Gtk.AccelFlags AccelFlags;" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.AccelFlags</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>The flags for this AccelKey that determine whether <see cref="T:Gtk.AccelLabel" /> will display it.</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Key">
+      <MemberSignature Language="C#" Value="public Gdk.Key Key;" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.Key</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>The main keyboard key to use for this AccelKey.</summary>
+        <remarks>Useful values are <see cref="T:System.Int32" /> enumerated in <see cref="T:Gdk.Key" />.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public AccelKey (Gdk.Key key, Gdk.ModifierType mods, Gtk.AccelFlags flags);" />
+      <MemberType>Constructor</MemberType>
+      <ReturnValue />
+      <Parameters>
+        <Parameter Name="key" Type="Gdk.Key" />
+        <Parameter Name="mods" Type="Gdk.ModifierType" />
+        <Parameter Name="flags" Type="Gtk.AccelFlags" />
+      </Parameters>
+      <Docs>
+        <summary>Public constructor.</summary>
+        <param name="key">a <see cref="T:System.Int32" /> enumerated in <see cref="T:Gdk.Key" /></param>
+        <param name="mods">a <see cref="T:System.Int32" /> enumerated in <see cref="T:Gdk.ModifierType" />, the modifiers (shift, ctrl, etc) that apply for this AccelKey</param>
+        <param name="flags">a <see cref="T:System.Int32" /> enumerated in <see cref="T:Gdk.AccelFlags" /> for whether this AccelKey should be displayed in the menu</param>
+        <returns>a <see cref="T:Gtk.AccelKey" /></returns>
+        <remarks />
+      </Docs>
+    </Member>
+  </Members>
+</Type>

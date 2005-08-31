@@ -1,0 +1,107 @@
+<Type Name="ShadowType" FullName="Gtk.ShadowType">
+  <TypeSignature Language="C#" Maintainer="Duncan Mak" Value="public enum ShadowType;" />
+  <AssemblyInfo>
+    <AssemblyName>gtk-sharp</AssemblyName>
+    <AssemblyPublicKey>
+    </AssemblyPublicKey>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+    <AssemblyCulture>neutral</AssemblyCulture>
+    <Attributes />
+  </AssemblyInfo>
+  <ThreadSafetyStatement>Gtk# is thread aware, but not thread safe; See the <link location="node:gtk-sharp/programming/threads">Gtk# Thread Programming</link> for details.</ThreadSafetyStatement>
+  <Docs>
+    <summary>Used to change the appearance of an outline typically provided by a <see cref="T:Gtk.Frame" />.</summary>
+    <remarks />
+  </Docs>
+  <Base>
+    <BaseTypeName>System.Enum</BaseTypeName>
+  </Base>
+  <Interfaces>
+    <Interface>
+      <InterfaceName>System.IComparable</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>System.IConvertible</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>System.IFormattable</InterfaceName>
+    </Interface>
+  </Interfaces>
+  <Attributes />
+  <Members>
+    <Member MemberName="None">
+      <MemberSignature Language="C#" Value="None" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.ShadowType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>No outline.</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="In">
+      <MemberSignature Language="C#" Value="In" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.ShadowType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>The outline is bevelled inwards.</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Out">
+      <MemberSignature Language="C#" Value="Out" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.ShadowType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>The outline is bevelled outwards like a button.</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="EtchedIn">
+      <MemberSignature Language="C#" Value="EtchedIn" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.ShadowType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>The outline itself is an inward bevel, but the frame is an outward bevel.</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="EtchedOut">
+      <MemberSignature Language="C#" Value="EtchedOut" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.ShadowType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>The outline itself is an outward bevel, but the frame is an inward bevel.</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="value__">
+      <MemberSignature Language="C#" Value="value__" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Int32</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Internal field.</summary>
+        <remarks>Do not use.</remarks>
+      </Docs>
+    </Member>
+  </Members>
+</Type>

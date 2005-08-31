@@ -1,0 +1,134 @@
+<Type Name="NodeStore" FullName="Gtk.NodeStore">
+  <TypeSignature Language="C#" Value="public class NodeStore : GLib.Object, IWrapper, IDisposable" Maintainer="Mike Kestner" />
+  <AssemblyInfo>
+    <AssemblyName>gtk-sharp</AssemblyName>
+    <AssemblyPublicKey>
+    </AssemblyPublicKey>
+    <AssemblyVersion>2.0.0.0</AssemblyVersion>
+    <AssemblyCulture>neutral</AssemblyCulture>
+    <Attributes />
+  </AssemblyInfo>
+  <ThreadSafetyStatement>Gtk# is thread aware, but not thread safe; See the <link location="node:gtk-sharp/programming/threads">Gtk# Thread Programming</link> for details.</ThreadSafetyStatement>
+  <Docs>
+    <summary>Tree and List store for <see cref="T:Gtk.ITreeNode" /> objects.</summary>
+    <remarks>
+    </remarks>
+  </Docs>
+  <Base>
+    <BaseTypeName>GLib.Object</BaseTypeName>
+  </Base>
+  <Interfaces>
+    <Interface>
+      <InterfaceName>GLib.IWrapper</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>System.IDisposable</InterfaceName>
+    </Interface>
+  </Interfaces>
+  <Attributes />
+  <Members>
+    <Member MemberName="AddNode">
+      <MemberSignature Language="C#" Value="public void AddNode (Gtk.ITreeNode node);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="node" Type="Gtk.ITreeNode" />
+      </Parameters>
+      <Docs>
+        <summary>Appends the node to the root level of the tree</summary>
+        <param name="node">a <see cref="T:Gtk.ITreeNode" /></param>
+        <remarks>
+          Adds <paramref name="node" /> to the end of the list of root level nodes.
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="AddNode">
+      <MemberSignature Language="C#" Value="public void AddNode (Gtk.ITreeNode node, int position);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="node" Type="Gtk.ITreeNode" />
+        <Parameter Name="position" Type="System.Int32" />
+      </Parameters>
+      <Docs>
+        <summary>Inserts the node into the root level of the tree</summary>
+        <param name="node">a <see cref="T:Gtk.ITreeNode" /></param>
+        <param name="position">the position to insert it at</param>
+        <remarks>
+          Adds <paramref name="node" /> to the list of root level nodes before the node
+	  currently at <paramref name="position" />.
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="GetNode">
+      <MemberSignature Language="C#" Value="public Gtk.ITreeNode GetNode (Gtk.TreePath path);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.ITreeNode</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="path" Type="Gtk.TreePath" />
+      </Parameters>
+      <Docs>
+        <summary>Returns a node given a <see cref="T:Gtk.TreePath" />.</summary>
+        <param name="path">The path to look up.</param>
+        <remarks>
+          Looks up the node corresponding to <paramref name="path" /> and returns it,
+	  or null if the node cannot be found.
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="RemoveNode">
+      <MemberSignature Language="C#" Value="public void RemoveNode (Gtk.ITreeNode node);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="node" Type="Gtk.ITreeNode" />
+      </Parameters>
+      <Docs>
+        <summary>Removes a node from the store.</summary>
+        <param name="node">a <see cref="T:Gtk.ITreeNode" /></param>
+        <remarks>
+          Removes <paramref name="node" /> from the list of root level nodes.
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public NodeStore (Type node_type);" />
+      <MemberType>Constructor</MemberType>
+      <ReturnValue />
+      <Parameters>
+        <Parameter Name="node_type" Type="System.Type" />
+      </Parameters>
+      <Docs>
+        <summary>NodeStore constructor</summary>
+        <param name="node_type">a <see cref="T:System.Type" /></param>
+        <returns>a <see cref="T:Gtk.NodeStore" /></returns>
+        <remarks>
+          Creates a <see cref="T:Gtk.NodeStore" /> for nodes of the specified <paramref name="node_type" />.
+          The type provided in <paramref name="node_type" /> must implement <see cref="T:Gtk.ITreeNode" />.
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="GType">
+      <MemberSignature Language="C#" Value="public static GLib.GType GType { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>GLib.GType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Native type value.</summary>
+        <returns>a <see cref="T:GLib.GType" /></returns>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+  </Members>
+</Type>

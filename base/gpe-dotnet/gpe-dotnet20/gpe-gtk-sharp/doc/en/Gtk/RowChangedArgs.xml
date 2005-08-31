@@ -1,0 +1,79 @@
+<Type Name="RowChangedArgs" FullName="Gtk.RowChangedArgs">
+  <TypeSignature Language="C#" Value="public class RowChangedArgs : GLib.SignalArgs" Maintainer="auto" />
+  <AssemblyInfo>
+    <AssemblyName>gtk-sharp</AssemblyName>
+    <AssemblyPublicKey>
+    </AssemblyPublicKey>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+    <AssemblyCulture>neutral</AssemblyCulture>
+    <Attributes />
+  </AssemblyInfo>
+  <ThreadSafetyStatement>Gtk# is thread aware, but not thread safe; See the <link location="node:gtk-sharp/programming/threads">Gtk# Thread Programming</link> for details.</ThreadSafetyStatement>
+  <Docs>
+    <summary>Event data.</summary>
+    <remarks>
+      <para>The following events invoke <see cref="T:Gtk.RowChangedHandler" /> delegates which pass event data via this class:</para>
+      <para>
+        <list type="bullet">
+          <item>
+            <term>
+              <see cref="M:Gtk.ListStore.RowChanged" />
+            </term>
+          </item>
+          <item>
+            <term>
+              <see cref="M:Gtk.TreeModelSort.RowChanged" />
+            </term>
+          </item>
+          <item>
+            <term>
+              <see cref="M:Gtk.TreeStore.RowChanged" />
+            </term>
+          </item>
+        </list>
+      </para>
+    </remarks>
+  </Docs>
+  <Base>
+    <BaseTypeName>GLib.SignalArgs</BaseTypeName>
+  </Base>
+  <Interfaces />
+  <Attributes />
+  <Members>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public RowChangedArgs ();" />
+      <MemberType>Constructor</MemberType>
+      <ReturnValue />
+      <Parameters />
+      <Docs>
+        <summary>Public Constructor.</summary>
+        <returns>A new <see cref="T:Gtk.RowChangedArgs" />.</returns>
+        <remarks>Create a new <see cref="T:Gtk.RowChangedArgs" /> instance with this constructor if you need to invoke a <see cref="T:Gtk.RowChangedHandler" /> delegate.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Iter">
+      <MemberSignature Language="C#" Value="public Gtk.TreeIter Iter { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.TreeIter</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>The row that was inserted.</summary>
+        <returns>A <see cref="T:Gtk.TreeIter" /> that points to the inserted row.</returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Path">
+      <MemberSignature Language="C#" Value="public Gtk.TreePath Path { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.TreePath</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>The path of the row that was inserted.</summary>
+        <returns>a <see cref="T:Gtk.TreePath" /></returns>
+        <remarks />
+      </Docs>
+    </Member>
+  </Members>
+</Type>

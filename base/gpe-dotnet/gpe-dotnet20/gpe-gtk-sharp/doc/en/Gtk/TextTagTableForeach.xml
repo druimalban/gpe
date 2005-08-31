@@ -1,0 +1,32 @@
+<Type Name="TextTagTableForeach" FullName="Gtk.TextTagTableForeach">
+  <TypeSignature Language="C#" Value="public sealed delegate void TextTagTableForeach (Gtk.TextTag tag);" Maintainer="auto" />
+  <AssemblyInfo>
+    <AssemblyName>gtk-sharp</AssemblyName>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+    <Attributes />
+  </AssemblyInfo>
+  <ThreadSafetyStatement>Gtk# is thread aware, but not thread safe; See the <link location="node:gtk-sharp/programming/threads">Gtk# Thread Programming</link> for details.</ThreadSafetyStatement>
+  <Docs>
+    <summary>A delegate function to be run on every <see cref="T:Gtk.TextTag" /> in a <see cref="T:Gtk.TextTagTable" />.</summary>
+    <remarks>Callable by <see cref="M:Gtk.TextTagTable.Foreach" /></remarks>
+  </Docs>
+  <Base>
+    <BaseTypeName>System.Delegate</BaseTypeName>
+  </Base>
+  <Interfaces>
+    <Interface>
+      <InterfaceName>System.ICloneable</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>System.Runtime.Serialization.ISerializable</InterfaceName>
+    </Interface>
+  </Interfaces>
+  <Attributes />
+  <Members />
+  <Parameters>
+    <Parameter Name="tag" Type="Gtk.TextTag" />
+  </Parameters>
+  <ReturnValue>
+    <ReturnType>System.Void</ReturnType>
+  </ReturnValue>
+</Type>

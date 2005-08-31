@@ -1,0 +1,49 @@
+<Type Name="SelectionNotifyEventArgs" FullName="Gtk.SelectionNotifyEventArgs">
+  <TypeSignature Language="C#" Value="public class SelectionNotifyEventArgs : GLib.SignalArgs" Maintainer="auto" />
+  <AssemblyInfo>
+    <AssemblyName>gtk-sharp</AssemblyName>
+    <AssemblyPublicKey>
+    </AssemblyPublicKey>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+    <AssemblyCulture>neutral</AssemblyCulture>
+    <Attributes />
+  </AssemblyInfo>
+  <ThreadSafetyStatement>Gtk# is thread aware, but not thread safe; See the <link location="node:gtk-sharp/programming/threads">Gtk# Thread Programming</link> for details.</ThreadSafetyStatement>
+  <Docs>
+    <summary>Event data.</summary>
+    <remarks>
+      <para>The <see cref="M:Gtk.Widget.SelectionNotifyEvent" /> event invokes <see cref="T:Gtk.SelectionNotifyEventHandler" /> delegates which pass event data via this class.</para>
+    </remarks>
+  </Docs>
+  <Base>
+    <BaseTypeName>GLib.SignalArgs</BaseTypeName>
+  </Base>
+  <Interfaces />
+  <Attributes />
+  <Members>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public SelectionNotifyEventArgs ();" />
+      <MemberType>Constructor</MemberType>
+      <ReturnValue />
+      <Parameters />
+      <Docs>
+        <summary>Public Constructor.</summary>
+        <returns>A new <see cref="T:Gtk.SelectionNotifyEventArgs" />.</returns>
+        <remarks>Create a new <see cref="T:Gtk.SelectionNotifyEventArgs" /> instance with this constructor if you need to invoke a <see cref="T:Gtk.SelectionNotifyEventHandler" /> delegate.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Event">
+      <MemberSignature Language="C#" Value="public Gdk.EventSelection Event { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.EventSelection</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>The event which triggered this callback.</summary>
+        <returns>A <see cref="T:Gdk.EventSelection" /></returns>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+  </Members>
+</Type>

@@ -1,0 +1,608 @@
+<Type Name="Button" FullName="Gtk.Button">
+  <TypeSignature Language="C#" Value="public class Button : Gtk.Bin, Implementor, IWrapper, IWrapper, IDisposable" Maintainer="Duncan Mak" />
+  <AssemblyInfo>
+    <AssemblyName>gtk-sharp</AssemblyName>
+    <AssemblyPublicKey>
+    </AssemblyPublicKey>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+    <AssemblyCulture>neutral</AssemblyCulture>
+    <Attributes />
+  </AssemblyInfo>
+  <ThreadSafetyStatement>Gtk# is thread aware, but not thread safe; See the <link location="node:gtk-sharp/programming/threads">Gtk# Thread Programming</link> for details.</ThreadSafetyStatement>
+  <Docs>
+    <summary>A widget that creates a signal when clicked on.</summary>
+    <remarks>
+      <para>
+        The <see cref="T:Gtk.Button" /> widget is generally used to attach to a function that is called when the button is pressed.
+        The <see cref="T:Gtk.Button" /> widget can hold any valid child widget.
+				That is, it can hold most any other standard <see cref="T:Gtk.Widget" />. The most commonly used child is the <see cref="T:Gtk.Label" />.
+      </para>
+      <example>
+        <code lang="C#">
+using Gtk;
+using System;
+	
+public class ButtonApp  {
+
+	public static int Main (string[] args)
+	{
+		Application.Init ();
+		Window win = new Window ("Button Tester");
+		win.SetDefaultSize (200, 150);
+		win.DeleteEvent += new DeleteEventHandler (Window_Delete);
+		Button btn = new Button ("Click Me");
+		btn.Clicked += new EventHandler (btn_click);
+		win.Add (btn);
+		win.ShowAll ();
+		Application.Run ();
+		return 0;
+	}
+
+	static void btn_click (object obj, EventArgs args)
+	{
+		Console.WriteLine ("Button Clicked");
+	}
+
+	static void Window_Delete (object obj, DeleteEventArgs args)
+	{
+		Application.Quit ();
+		args.RetVal = true;
+	}
+
+}
+				</code>
+      </example>
+    </remarks>
+  </Docs>
+  <Base>
+    <BaseTypeName>Gtk.Bin</BaseTypeName>
+  </Base>
+  <Interfaces>
+    <Interface>
+      <InterfaceName>Atk.Implementor</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>GLib.IWrapper</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>GLib.IWrapper</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>System.IDisposable</InterfaceName>
+    </Interface>
+  </Interfaces>
+  <Attributes />
+  <Members>
+    <Member MemberName="UseStock">
+      <MemberSignature Language="C#" Value="public bool UseStock { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Whether the <see cref="T:Gtk.Button" /> should use a <see cref="T:Gtk.Stock" />.</summary>
+        <param name="value">Boolean value to select if the
+  <see cref="T:Gtk.Button" /> uses a <see cref="T:Gtk.Stock" /> or not.</param>
+        <returns>Gets a value indicating if the <see cref="T:Gtk.Button" /> uses a <see cref="T:Gtk.Stock" />.</returns>
+        <remarks>It is possible to create a <see cref="T:Gtk.Button" /> from <see cref="T:Gtk.Stock" />, which is recommended for consistency in <see cref="N:Gnome" />
+  apps. They also provide a <see cref="T:Gtk.Label" /> and a key shortcut. 
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="UseUnderline">
+      <MemberSignature Language="C#" Value="public bool UseUnderline { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Indicates if a mnemonic is associated with the <see cref="T:Gtk.Button" />.</summary>
+        <param name="value">Boolean value to select if the <see cref="T:Gtk.Button" /> uses
+	underline or not.</param>
+        <returns>Gets a value indicating if the <see cref="T:Gtk.Button" /> uses underline
+  or not.</returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Relief">
+      <MemberSignature Language="C#" Value="public Gtk.ReliefStyle Relief { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.ReliefStyle</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>The <see cref="T:Gtk.ReliefStyle" /> for the <see cref="T:Gtk.Button" />.</summary>
+        <param name="value">The <see cref="T:Gtk.ReliefStyle" /> for
+  the <see cref="T:Gtk.Button" />.</param>
+        <returns>An instance of <see cref="T:Gtk.ReliefStyle" /> that
+  represents the relief style of the <see cref="T:Gtk.Button" />.</returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Label">
+      <MemberSignature Language="C#" Value="public string Label { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>The text of the <see cref="T:Gtk.Label" /> in the <see cref="T:Gtk.Button" />.</summary>
+        <param name="value">A <see cref="T:System.String" /> to be used for
+  the <see cref="T:Gtk.Button" />'s <see cref="T:Gtk.Label" /></param>
+        <returns>The <see cref="T:System.String" /> contained by the <see cref="T:Gtk.Button" />.</returns>
+        <remarks>If you want the Label to have a mnemonic you need to set <see cref="P:Gtk.Button.UseUnderline" /> to <see langword="true" />.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Activated">
+      <MemberSignature Language="C#" Value="public event EventHandler Activated;" />
+      <MemberType>Event</MemberType>
+      <ReturnValue>
+        <ReturnType>System.EventHandler</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>
+          Event launched when the <see cref="T:Gtk.Button" /> is activated.</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Clicked">
+      <MemberSignature Language="C#" Value="public event EventHandler Clicked;" />
+      <MemberType>Event</MemberType>
+      <ReturnValue>
+        <ReturnType>System.EventHandler</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>
+          Event launched when the <see cref="T:Gtk.Button" /> is clicked.</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Left">
+      <MemberSignature Language="C#" Value="public event EventHandler Left;" />
+      <MemberType>Event</MemberType>
+      <ReturnValue>
+        <ReturnType>System.EventHandler</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>
+          Event launched when the cursor leaves the <see cref="T:Gtk.Button" /> area.</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Pressed">
+      <MemberSignature Language="C#" Value="public event EventHandler Pressed;" />
+      <MemberType>Event</MemberType>
+      <ReturnValue>
+        <ReturnType>System.EventHandler</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>
+          Event launched when the <see cref="T:Gtk.Button" /> is pressed.</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Released">
+      <MemberSignature Language="C#" Value="public event EventHandler Released;" />
+      <MemberType>Event</MemberType>
+      <ReturnValue>
+        <ReturnType>System.EventHandler</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>
+          Event launched when the <see cref="T:Gtk.Button" /> is released.</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Entered">
+      <MemberSignature Language="C#" Value="public event EventHandler Entered;" />
+      <MemberType>Event</MemberType>
+      <ReturnValue>
+        <ReturnType>System.EventHandler</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>
+          Event launched when the cursor enters the <see cref="T:Gtk.Button" /> area.</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="NewWithLabel">
+      <MemberSignature Language="C#" Value="public static Gtk.Button NewWithLabel (string label);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.Button</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="label" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <summary>Creates a <see cref="T:Gtk.Button" /> widget with a <see cref="T:Gtk.Label" /> child containing the given text.</summary>
+        <param name="label">
+          The text you want the <see cref="T:Gtk.Label" /> to hold.
+        </param>
+        <returns>The newly created <see cref="T:Gtk.Button" /> widget.</returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Leave">
+      <MemberSignature Language="C#" Value="public void Leave ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Emits a <see cref="E:Gtk.Button.Left" /> signal to the given <see cref="T:Gtk.Button" />.</summary>
+        <remarks>Emits a <see cref="E:Gtk.Button.Left" /> signal to the given <see cref="T:Gtk.Button" />.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Press">
+      <MemberSignature Language="C#" Value="public void Press ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Emits a <see cref="E:Gtk.Button.Pressed" /> signal to the given <see cref="T:Gtk.Button" />.</summary>
+        <remarks>Emits a <see cref="E:Gtk.Button.Pressed" /> signal to the given <see cref="T:Gtk.Button" />.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Release">
+      <MemberSignature Language="C#" Value="public void Release ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Emits a <see cref="E:Gtk.Button.Released" /> signal to the given <see cref="T:Gtk.Button" />.</summary>
+        <remarks>Emits a <see cref="E:Gtk.Button.Released" /> signal to the given <see cref="T:Gtk.Button" />.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Click">
+      <MemberSignature Language="C#" Value="public void Click ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Emits a <see cref="E:Gtk.Button.Clicked" /> signal to the given <see cref="T:Gtk.Button" />.</summary>
+        <remarks>Emits a <see cref="E:Gtk.Button.Clicked" /> signal to the given <see cref="T:Gtk.Button" />.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Enter">
+      <MemberSignature Language="C#" Value="public void Enter ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Emits a <see cref="E:Gtk.Button.Entered" /> signal to the given <see cref="T:Gtk.Button" />.</summary>
+        <remarks>Emits a <see cref="E:Gtk.Button.Entered" /> signal to the given <see cref="T:Gtk.Button" />.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Finalize">
+      <MemberSignature Language="C#" Value="protected override void Finalize ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Disposes the resources associated with this object.</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public Button ();" />
+      <MemberType>Constructor</MemberType>
+      <ReturnValue />
+      <Parameters />
+      <Docs>
+        <summary>Default parameterless constructor.</summary>
+        <returns>An instance of <see cref="T:Gtk.Button" />.</returns>
+        <remarks>This is the default constructor for the <see cref="T:Gtk.Button" /> class.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public Button (IntPtr raw);" />
+      <MemberType>Constructor</MemberType>
+      <ReturnValue />
+      <Parameters>
+        <Parameter Name="raw" Type="System.IntPtr" />
+      </Parameters>
+      <Docs>
+        <summary>Internal constructor</summary>
+        <param name="raw">an object of type <see cref="T:System.IntPtr" /></param>
+        <returns>an object of type <see cref="T:Gtk.Button" /></returns>
+        <remarks>This is not typically used by C# code.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="InButton">
+      <MemberSignature Language="C#" Value="public bool InButton { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Whether or not the cursor is inside the button.</summary>
+        <returns>a <see cref="T:System.Boolean" />, true if the cursor is inside the button.</returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="NewWithMnemonic">
+      <MemberSignature Language="C#" Value="public static Gtk.Button NewWithMnemonic (string label);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.Button</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="label" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <summary>Creates a labeled <see cref="T:Gtk.Button" />.</summary>
+        <param name="label">a <see cref="T:System.String" /></param>
+        <returns>a <see cref="T:Gtk.Button" /></returns>
+        <remarks>Constructor that creates a labeled <see cref="T:Gtk.Button" />. The label
+  shows the string passed as parameter.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public Button (string stock_id);" />
+      <MemberType>Constructor</MemberType>
+      <ReturnValue />
+      <Parameters>
+        <Parameter Name="stock_id" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <summary>Creates a new <see cref="T:Gtk.Button" /> containing the image and text from a stock item.</summary>
+        <param name="stock_id">a <see cref="T:System.String" /></param>
+        <returns>a <see cref="T:Gtk.Button" /></returns>
+        <remarks>The valid names of Stock items can be found in the <see cref="T:Gtk.Stock" /> class.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="GType">
+      <MemberSignature Language="C#" Value="public static GLib.GType GType { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>GLib.GType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>GType Property.</summary>
+        <returns>a <see cref="T:GLib.GType" /></returns>
+        <remarks>Returns the native <see cref="T:GLib.GType" /> value for <see cref="T:Gtk.Button" />.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="ActionGetType">
+      <MemberSignature Language="C#" Value="public static GLib.GType ActionGetType ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>GLib.GType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Returns the kind of action this button does.</summary>
+        <returns>a <see cref="T:GLib.GType" /></returns>
+        <remarks>There are four possible options: "ignored", "selects", "drags",
+	  and "expands".</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="OnEntered">
+      <MemberSignature Language="C#" Value="protected virtual void OnEntered ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Default handler for the <see cref="M:Gtk.Button.Entered" /> event.</summary>
+        <remarks>Override this method in a subclass to provide a default handler for the <see cref="M:Gtk.Button.Entered" /> event.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="OnReleased">
+      <MemberSignature Language="C#" Value="protected virtual void OnReleased ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Default handler for the <see cref="M:Gtk.Button.Released" /> event.</summary>
+        <remarks>Override this method in a subclass to provide a default handler for the <see cref="M:Gtk.Button.Released" /> event.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="OnPressed">
+      <MemberSignature Language="C#" Value="protected virtual void OnPressed ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Default handler for the <see cref="M:Gtk.Button.Pressed" /> event.</summary>
+        <remarks>Override this method in a subclass to provide a default handler for the <see cref="M:Gtk.Button.Pressed" /> event.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="OnLeft">
+      <MemberSignature Language="C#" Value="protected virtual void OnLeft ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Default handler for the <see cref="M:Gtk.Button.Left" /> event.</summary>
+        <remarks>Override this method in a subclass to provide a default handler for the <see cref="M:Gtk.Button.Left" /> event.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="OnClicked">
+      <MemberSignature Language="C#" Value="protected virtual void OnClicked ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Default handler for the <see cref="M:Gtk.Button.Clicked" /> event.</summary>
+        <remarks>Override this method in a subclass to provide a default handler for the <see cref="M:Gtk.Button.Clicked" /> event.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="OnActivated">
+      <MemberSignature Language="C#" Value="protected virtual void OnActivated ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Default handler for the <see cref="M:Gtk.Button.Activated" /> event.</summary>
+        <remarks>Override this method in a subclass to provide a default handler for the <see cref="M:Gtk.Button.Activated" /> event.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="protected Button (GLib.GType gtype);" />
+      <MemberType>Constructor</MemberType>
+      <ReturnValue />
+      <Parameters>
+        <Parameter Name="gtype" Type="GLib.GType" />
+      </Parameters>
+      <Docs>
+        <summary>Protected Constructor.</summary>
+        <param name="gtype">a <see cref="T:GLib.GType" /></param>
+        <returns>a <see cref="T:Gtk.Button" /></returns>
+        <remarks>Chain to this constructor if you have manually registered a native <see cref="T:GLib.GType" /> value for your subclass.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public Button (Gtk.Widget widget);" />
+      <MemberType>Constructor</MemberType>
+      <ReturnValue />
+      <Parameters>
+        <Parameter Name="widget" Type="Gtk.Widget" />
+      </Parameters>
+      <Docs>
+        <summary>Constructs a button containing a specified Child widget.</summary>
+        <param name="widget">a child <see cref="T:Gtk.Widget" /></param>
+        <returns>a <see cref="T:Gtk.Button" /></returns>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="FocusOnClick">
+      <MemberSignature Language="C#" Value="public bool FocusOnClick { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>
+	  Whether the button grabs focus when it is clicked with the mouse.
+	</summary>
+        <returns>a <see cref="T:System.Boolean" /></returns>
+        <remarks></remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Xalign">
+      <MemberSignature Language="C#" Value="public float Xalign { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Single</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>
+	   If the child of the button is a <see cref="T:Gtk.Misc"/> 
+	   or <see cref="T:Gtk.Alignment"/>, this property 
+	   can be used to control its horizontal alignment. 
+	</summary>
+        <returns>a <see cref="T:System.Single" />; 
+	  0.0 is left aligned, 1.0 is right aligned.
+	</returns>
+        <remarks></remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Yalign">
+      <MemberSignature Language="C#" Value="public float Yalign { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Single</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>
+	   If the child of the button is a <see cref="T:Gtk.Misc"/> 
+	   or <see cref="T:Gtk.Alignment"/>, this property 
+	   can be used to control its vertical alignment. 
+	</summary>
+        <returns>
+	  a <see cref="T:System.Single" />;
+	  0.0 is top aligned, 1.0 is bottom aligned.
+	</returns>
+        <remarks></remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="GetAlignment">
+      <MemberSignature Language="C#" Value="public void GetAlignment (out float xalign, out float yalign);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="xalign" Type="System.Single&amp;" RefType="out" />
+        <Parameter Name="yalign" Type="System.Single&amp;" RefType="out" />
+      </Parameters>
+      <Docs>
+        <summary>Gets the alignment of the child in the button.</summary>
+        <param name="xalign">a <see cref="T:System.Single" /> to put the horizontal alignment in</param>
+        <param name="yalign">a <see cref="T:System.Single" /> to put the vertical alignment in</param>
+        <remarks>A convenience method; shouldn't be </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="SetAlignment">
+      <MemberSignature Language="C#" Value="public void SetAlignment (float xalign, float yalign);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="xalign" Type="System.Single" />
+        <Parameter Name="yalign" Type="System.Single" />
+      </Parameters>
+      <Docs>
+        <summary>	   
+	  Sets the alignment of the child. 
+	</summary>
+        <param name="xalign">a <see cref="T:System.Single" />,  
+	  the horizontal position of the child; 0.0 is left aligned, 
+	  1.0 is right aligned.</param>
+        <param name="yalign">a <see cref="T:System.Single" />,
+	  the vertical position of the child; 0.0 is top aligned, 
+	  1.0 is bottom aligned.</param>
+        <remarks>
+	  This has no effect
+	  unless the button's child is a <see cref="T:Gtk.Misc"/> 
+	  or <see cref="T:Gtk.Alignment"/>.
+	</remarks>
+      </Docs>
+    </Member>
+  </Members>
+</Type>

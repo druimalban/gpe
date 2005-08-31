@@ -1,0 +1,123 @@
+<Type Name="FontMetrics" FullName="Pango.FontMetrics">
+  <TypeSignature Language="C#" Value="public sealed struct FontMetrics;" Maintainer="auto" />
+  <AssemblyInfo>
+    <AssemblyName>pango-sharp</AssemblyName>
+    <AssemblyPublicKey>
+    </AssemblyPublicKey>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+    <AssemblyCulture>neutral</AssemblyCulture>
+    <Attributes />
+  </AssemblyInfo>
+  <ThreadSafetyStatement>Gtk# is thread aware, but not thread safe; See the <link location="node:gtk-sharp/programming/threads">Gtk# Thread Programming</link> for details.</ThreadSafetyStatement>
+  <Docs>
+    <summary>Holds the overall metric information for a font (possibly restricted to a script).</summary>
+    <remarks />
+  </Docs>
+  <Base>
+    <BaseTypeName>GLib.Opaque</BaseTypeName>
+  </Base>
+  <Interfaces />
+  <Attributes />
+  <Members>
+    <Member MemberName="Unref">
+      <MemberSignature Language="C#" Value="public void Unref ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Decreases the reference count of a font metrics structure.</summary>
+        <remarks>If the result is zero, frees the structure and any associated memory.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Ref">
+      <MemberSignature Language="C#" Value="public Pango.FontMetrics Ref ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.FontMetrics</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Increases the reference count of a font metrics structure.</summary>
+        <returns>an object of type <see cref="T:Pango.FontMetrics" /></returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="ApproximateCharWidth">
+      <MemberSignature Language="C#" Value="public int ApproximateCharWidth { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Int32</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>The approximate character width for a font metrics structure.</summary>
+        <returns>the character width, in pango units.</returns>
+        <remarks>This is merely a representative value useful, for example, for determining the initial size for a window. Actual characters in text will be wider and narrower than this.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Ascent">
+      <MemberSignature Language="C#" Value="public int Ascent { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Int32</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>The ascent from a font metrics structure.</summary>
+        <returns> the ascent, in pango units.</returns>
+        <remarks>The ascent is the distance from the baseline to the logical top of a line of text. (The logical top may be above or below the top of the actual drawn ink. It is necessary to lay out the text to figure where the ink will be.)</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="ApproximateDigitWidth">
+      <MemberSignature Language="C#" Value="public int ApproximateDigitWidth { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Int32</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>The approximate digit width for a font metrics structure.</summary>
+        <returns>	 the digit width, in pango units.</returns>
+        <remarks>This is merely a representative value useful, for example, for determining the initial size for a window. Actual digits in text can be wider and narrower than this.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Descent">
+      <MemberSignature Language="C#" Value="public int Descent { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Int32</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>The descent from a font metrics structure.</summary>
+        <returns> the descent, in pango units.</returns>
+        <remarks>The descent is the distance from the baseline to the logical bottom of a line of text. (The logical bottom may be above or below the bottom of the actual drawn ink. It is necessary to lay out the text to figure where the ink will be.)</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="GType">
+      <MemberSignature Language="C#" Value="public static GLib.GType GType { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>GLib.GType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>GType Property.</summary>
+        <returns>a <see cref="T:GLib.GType" /></returns>
+        <remarks>Returns the native <see cref="T:GLib.GType" /> value for <see cref="T:Pango.FontMetrics" />.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public FontMetrics (IntPtr raw);" />
+      <MemberType>Constructor</MemberType>
+      <ReturnValue />
+      <Parameters>
+        <Parameter Name="raw" Type="System.IntPtr" />
+      </Parameters>
+      <Docs>
+        <summary>Internal constructor</summary>
+        <param name="raw">a <see cref="T:System.IntPtr" /></param>
+        <returns>a <see cref="T:Pango.FontMetrics" /></returns>
+        <remarks>This is an internal constructor, and should not be used by user code.</remarks>
+      </Docs>
+    </Member>
+  </Members>
+</Type>

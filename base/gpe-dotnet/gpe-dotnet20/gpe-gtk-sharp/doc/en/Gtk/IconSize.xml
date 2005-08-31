@@ -1,0 +1,135 @@
+<Type Name="IconSize" FullName="Gtk.IconSize">
+  <TypeSignature Language="C#" Value="public enum IconSize;" Maintainer="duncan" />
+  <AssemblyInfo>
+    <AssemblyName>gtk-sharp</AssemblyName>
+    <AssemblyPublicKey>
+    </AssemblyPublicKey>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+    <AssemblyCulture>neutral</AssemblyCulture>
+    <Attributes />
+  </AssemblyInfo>
+  <ThreadSafetyStatement>Gtk# is thread aware, but not thread safe; See the <link location="node:gtk-sharp/programming/threads">Gtk# Thread Programming</link> for details.</ThreadSafetyStatement>
+  <Docs>
+    <summary>The possible icon sizes</summary>
+    <remarks>
+      <para>
+        This class contains all the valid icon sizes that are supported
+        by Gtk.
+      </para>
+    </remarks>
+  </Docs>
+  <Base>
+    <BaseTypeName>System.Enum</BaseTypeName>
+  </Base>
+  <Interfaces>
+    <Interface>
+      <InterfaceName>System.IComparable</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>System.IConvertible</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>System.IFormattable</InterfaceName>
+    </Interface>
+  </Interfaces>
+  <Attributes />
+  <Members>
+    <Member MemberName="Invalid">
+      <MemberSignature Language="C#" Value="Invalid" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.IconSize</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>This signifies an unsupported icon size.</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Menu">
+      <MemberSignature Language="C#" Value="Menu" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.IconSize</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>The icon size for a <see cref="T:Gtk.MenuItem" />.</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="SmallToolbar">
+      <MemberSignature Language="C#" Value="SmallToolbar" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.IconSize</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>The icon size for a small <see cref="T:Gtk.Toolbar" /></summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="LargeToolbar">
+      <MemberSignature Language="C#" Value="LargeToolbar" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.IconSize</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>The icon size for a large <see cref="T:Gtk.Toolbar" />.</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Button">
+      <MemberSignature Language="C#" Value="Button" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.IconSize</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>The icon size for a <see cref="T:Gtk.Button" />.</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Dnd">
+      <MemberSignature Language="C#" Value="Dnd" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.IconSize</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>The icon size used during a drag-n-drop operation.</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Dialog">
+      <MemberSignature Language="C#" Value="Dialog" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.IconSize</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>The icon size used in a <see cref="T:Gtk.Dialog" /></summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="value__">
+      <MemberSignature Language="C#" Value="value__" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Int32</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Internal field.</summary>
+        <remarks>Do not use.</remarks>
+      </Docs>
+    </Member>
+  </Members>
+</Type>

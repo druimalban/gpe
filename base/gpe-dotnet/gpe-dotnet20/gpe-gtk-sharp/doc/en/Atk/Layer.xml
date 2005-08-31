@@ -1,0 +1,151 @@
+<Type Name="Layer" FullName="Atk.Layer">
+  <TypeSignature Language="C#" Maintainer="auto" Value="public enum Layer;" />
+  <AssemblyInfo>
+    <AssemblyName>atk-sharp</AssemblyName>
+    <AssemblyPublicKey>
+    </AssemblyPublicKey>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+    <AssemblyCulture>neutral</AssemblyCulture>
+    <Attributes />
+  </AssemblyInfo>
+  <ThreadSafetyStatement>Gtk# is thread aware, but not thread safe; See the <link location="node:gtk-sharp/programming/threads">Gtk# Thread Programming</link> for details.</ThreadSafetyStatement>
+  <Docs>
+    <summary>Describes the layer of a component</summary>
+    <remarks>These enumerated "layer values" are used when determining which UI rendering layer a component is drawn into, which can help in making determinations of when components occlude one another.</remarks>
+  </Docs>
+  <Base>
+    <BaseTypeName>System.Enum</BaseTypeName>
+  </Base>
+  <Interfaces>
+    <Interface>
+      <InterfaceName>System.IComparable</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>System.IConvertible</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>System.IFormattable</InterfaceName>
+    </Interface>
+  </Interfaces>
+  <Attributes />
+  <Members>
+    <Member MemberName="Invalid">
+      <MemberSignature Language="C#" Value="Invalid" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Atk.Layer</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary> The object does not have a layer</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Background">
+      <MemberSignature Language="C#" Value="Background" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Atk.Layer</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary> This layer is reserved for the desktop background</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Canvas">
+      <MemberSignature Language="C#" Value="Canvas" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Atk.Layer</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary> This layer is used for Canvas components</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Widget">
+      <MemberSignature Language="C#" Value="Widget" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Atk.Layer</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary> This layer is normally used for components</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Mdi">
+      <MemberSignature Language="C#" Value="Mdi" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Atk.Layer</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary> This layer is used for layered components</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Popup">
+      <MemberSignature Language="C#" Value="Popup" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Atk.Layer</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary> This layer is used for popup components, such as menus</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Overlay">
+      <MemberSignature Language="C#" Value="Overlay" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Atk.Layer</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary> This layer is reserved for future use.</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Window">
+      <MemberSignature Language="C#" Value="Window" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Atk.Layer</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary> This layer is used for toplevel windows.</summary>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="value__">
+      <MemberSignature Language="C#" Value="value__" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Int32</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Internal field.</summary>
+        <remarks>Do not use.</remarks>
+      </Docs>
+    </Member>
+  </Members>
+</Type>

@@ -1,0 +1,301 @@
+
+AC_INIT(README)
+AC_CANONICAL_SYSTEM
+AM_CONFIG_HEADER(config.h)
+AM_INIT_AUTOMAKE(gtk-sharp, 1.9.3)
+AM_MAINTAINER_MODE
+
+API_VERSION=2.0.0.0
+AC_SUBST(API_VERSION)
+
+PACKAGE_VERSION=gtk-sharp-2.0
+AC_SUBST(PACKAGE_VERSION)
+
+AC_CHECK_TOOL(CC, gcc, gcc)
+AC_PROG_CC
+AM_PROG_CC_STDC
+AC_PROG_INSTALL
+
+dnl may require a specific autoconf version
+dnl AC_PROG_CC_FOR_BUILD
+dnl CC_FOR_BUILD not automatically detected
+CC_FOR_BUILD=$CC
+BUILD_EXEEXT=
+if test "x$cross_compiling" = "xyes"; then
+	CC_FOR_BUILD=cc
+	BUILD_EXEEXT=""
+fi
+AC_SUBST(CC_FOR_BUILD)
+AC_SUBST(HOST_CC)
+AC_SUBST(BUILD_EXEEXT)
+
+# Set STDC_HEADERS
+AC_HEADER_STDC
+AC_LIBTOOL_WIN32_DLL
+AM_PROG_LIBTOOL
+
+# not 64 bit clean in cross-compile
+AC_CHECK_SIZEOF(void *, 4)
+
+CFLAGS='-g -Wall -Wunused -Wmissing-prototypes -Wmissing-declarations -Wstrict-prototypes  -Wmissing-prototypes -Wnested-externs  -Wshadow -Wpointer-arith -Wno-cast-qual -Wcast-align -Wwrite-strings'
+
+AC_ARG_ENABLE(debug, [  --enable-debug          Build debugger (.mdb) files for dlls],
+	CSFLAGS='-g'
+)
+AC_SUBST(CSFLAGS)
+
+AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
+if test "x$PKG_CONFIG" = "xno"; then
+	AC_MSG_ERROR([You need to install pkg-config])
+fi
+
+dnl for use on the build system
+BUILD_GTK_CFLAGS=`$PKG_CONFIG --cflags gtk+-2.0`
+BUILD_GTK_LIBS=`$PKG_CONFIG --libs gtk+-2.0`
+AC_SUBST(BUILD_GTK_CFLAGS)
+AC_SUBST(BUILD_GTK_LIBS)
+
+PKG_PATH=
+AC_ARG_WITH(crosspkgdir, [  --with-crosspkgdir=/path/to/pkg-config/dir],
+	if test x$with_crosspkgdir = "x"; then
+		if test -s $PKG_CONFIG_PATH; then
+			PKG_PATH=$PKG_CONFIG_PATH
+		fi
+	else
+		PKG_PATH=$with_crosspkgdir
+		PKG_CONFIG_PATH=$PKG_PATH
+		export PKG_CONFIG_PATH
+	fi
+)
+
+MONO_REQUIRED_VERSION=0.00
+
+GENERATED_SOURCES=generated/*.cs
+AC_PATH_PROG(RUNTIME, ilrun, no)
+AC_PATH_PROG(CSC, cscc, no)
+if test `uname -s` = "Darwin"; then
+	LIB_PREFIX=
+	LIB_SUFFIX=.dylib
+else
+	LIB_PREFIX=.so
+	LIB_SUFFIX=
+fi
+
+RUNTIME=
+LIB_PREFIX=
+LIB_SUFFIX=.dylib
+
+CS="C#"
+
+
+enable_dotnet=yes
+
+AC_SUBST(RUNTIME)
+AC_SUBST(CSC)
+AC_SUBST(LIB_PREFIX)
+AC_SUBST(LIB_SUFFIX)
+AC_SUBST(GENERATED_SOURCES)
+
+PKG_CHECK_MODULES(GLIB, gobject-2.0 >= 2.4)
+AC_SUBST(GLIB_CFLAGS)
+AC_SUBST(GLIB_LIBS)
+
+PKG_CHECK_MODULES(PANGO, pango >= 1.4)
+AC_SUBST(PANGO_CFLAGS)
+AC_SUBST(PANGO_LIBS)
+
+PKG_CHECK_MODULES(GTK, gtk+-2.0 >= 2.4)
+AC_SUBST(GTK_CFLAGS)
+AC_SUBST(GTK_LIBS)
+
+PKG_CHECK_MODULES(XML, libxml-2.0)
+AC_SUBST(XML_CFLAGS)
+AC_SUBST(XML_LIBS)
+
+## Versions of dependencies
+GNOME_REQUIRED_VERSION=2.6.0
+GTK_REQUIRED_VERSION=2.4.0
+ART_REQUIRED_VERSION=2.3.16
+
+PKG_CHECK_MODULES(LIBART, libart-2.0 >= $ART_REQUIRED_VERSION, enable_libart=yes, enable_libart=no)
+AC_SUBST(LIBART_CFLAGS)
+AC_SUBST(LIBART_LIBS)
+
+PKG_CHECK_MODULES(GNOMEVFS, gnome-vfs-2.0 >= $GNOME_REQUIRED_VERSION, enable_gnomevfs=yes, enable_gnomevfs=no)
+AC_SUBST(GNOMEVFS_CFLAGS)
+AC_SUBST(GNOMEVFS_LIBS)
+
+PKG_CHECK_MODULES(GNOME, libgnomecanvas-2.0 >= $GNOME_REQUIRED_VERSION libgnomeui-2.0 >= $GNOME_REQUIRED_VERSION gtk+-2.0 >= $GTK_REQUIRED_VERSION libgnomeprintui-2.2 >= $GNOME_REQUIRED_VERSION gmodule-2.0 >= $GTK_REQUIRED_VERSION libpanelapplet-2.0 >= $GNOME_REQUIRED_VERSION, enable_gnome=yes, enable_gnome=no)
+AC_SUBST(GNOME_CFLAGS)
+AC_SUBST(GNOME_LIBS)
+
+GLADE_REQUIRED_VERSION=2.3.6
+PKG_CHECK_MODULES(GLADE, libglade-2.0 >= $GLADE_REQUIRED_VERSION, enable_glade=yes, enable_glade=no)
+AC_SUBST(GLADE_CFLAGS)
+AC_SUBST(GLADE_LIBS)
+
+LIBGDA_REQUIRED_VERSION=1.0.0
+PKG_CHECK_MODULES(LIBGDA_DEPENDENCIES, libgda >= $LIBGDA_REQUIRED_VERSION, enable_gda=yes, enable_gda=no)
+
+enable_gnomedb=no
+if test "x$enable_gnome" = "xyes"; then
+if test "x$enable_gda" = "xyes"; then
+	PKG_CHECK_MODULES(LIBGNOMEDB_DEPENDENCIES, libgnomedb >= $LIBGDA_REQUIRED_VERSION, enable_gnomedb=yes, enable_gnomedb=no)
+fi
+fi
+
+RSVG_REQUIRED_VERSION=2.0.1
+PKG_CHECK_MODULES(RSVG_DEPENDENCIES, librsvg-2.0 >= $RSVG_REQUIRED_VERSION, enable_rsvg=yes, enable_rsvg=no)
+
+if test "x$enable_gnome" = "xyes"; then
+GTKHTML_REQUIRED_VERSION=3.6.0
+PKG_CHECK_MODULES(GTKHTML_DEPENDENCIES, libgtkhtml-3.6 >= $GTKHTML_REQUIRED_VERSION, enable_gtkhtml=yes, enable_gtkhtml=no)
+if test "x$enable_gtkhtml" = "xyes"; then
+GTKHTML_VERSION=3.6
+GTKHTML_SOVERSION=18
+else
+GTKHTML_REQUIRED_VERSION=3.2.0
+PKG_CHECK_MODULES(GTKHTML_DEPENDENCIES, libgtkhtml-3.1 >= $GTKHTML_REQUIRED_VERSION, enable_gtkhtml=yes, enable_gtkhtml=no)
+if test "x$enable_gtkhtml" = "xyes"; then
+GTKHTML_VERSION=3.1
+GTKHTML_SOVERSION=11
+else
+GTKHTML_REQUIRED_VERSION=3.0.10
+PKG_CHECK_MODULES(GTKHTML_DEPENDENCIES, libgtkhtml-3.0 >= $GTKHTML_REQUIRED_VERSION, enable_gtkhtml=yes, enable_gtkhtml=no)
+if test "x$enable_gtkhtml" = "xyes"; then
+GTKHTML_VERSION=3.0
+GTKHTML_SOVERSION=4
+else
+GTKHTML_VERSION=
+GTKHTML_SOVERSION=
+fi
+fi
+fi
+AC_SUBST(GTKHTML_VERSION)
+AC_SUBST(GTKHTML_SOVERSION)
+else
+enable_gtkhtml=no
+fi
+
+if test "x$enable_gnome" = "xyes"; then
+VTE_REQUIRED_VERSION=0.11.10
+PKG_CHECK_MODULES(VTE_DEPENDENCIES, vte >= $VTE_REQUIRED_VERSION, enable_vte=yes, enable_vte=no)
+else
+enable_vte=no
+fi
+
+AM_CONDITIONAL(ENABLE_LIBART, test "x$enable_libart" = "xyes")
+AM_CONDITIONAL(ENABLE_GNOMEVFS, test "x$enable_gnomevfs" = "xyes")
+AM_CONDITIONAL(ENABLE_GNOME, test "x$enable_gnome" = "xyes")
+AM_CONDITIONAL(ENABLE_GLADE, test "x$enable_glade" = "xyes")
+AM_CONDITIONAL(ENABLE_GDA, test "x$enable_gda" = "xyes")
+AM_CONDITIONAL(ENABLE_GNOMEDB, test "x$enable_gnomedb" = "xyes")
+AM_CONDITIONAL(ENABLE_RSVG, test "x$enable_rsvg" = "xyes")
+AM_CONDITIONAL(ENABLE_GTKHTML, test "x$enable_gtkhtml" = "xyes")
+AM_CONDITIONAL(ENABLE_VTE, test "x$enable_vte" = "xyes")
+AM_CONDITIONAL(ENABLE_DOTNET, test "x$enable_dotnet" = "xyes")
+
+AC_SUBST(CFLAGS)
+
+AC_OUTPUT([
+AssemblyInfo.cs
+Makefile
+sources/Makefile
+parser/Makefile
+parser/gapi-2.0.pc
+parser/gapi2-fixup
+parser/gapi2-parser
+generator/Makefile
+generator/gapi2-codegen
+glib/Makefile
+glib/glib-sharp.dll.config
+glib/glue/Makefile
+pango/Makefile
+pango/pango-sharp.dll.config
+pango/glue/Makefile
+atk/Makefile
+atk/atk-sharp.dll.config
+art/Makefile
+art/art-sharp.dll.config
+art/art-sharp-2.0.pc
+gdk/Makefile
+gdk/gdk-sharp.dll.config
+gdk/glue/Makefile
+gtk/Makefile
+gtk/gtk-sharp-2.0.pc
+gtk/gtk-sharp.dll.config
+gtk/glue/Makefile
+glade/Makefile
+glade/glade-sharp.dll.config
+glade/glade-sharp-2.0.pc
+glade/glue/Makefile
+gnome/Makefile
+gnome/gnome-sharp.dll.config
+gnome/gnome-sharp-2.0.pc
+gnome/glue/Makefile
+gnomevfs/Makefile
+gnomevfs/gnome-vfs-sharp.dll.config
+gnomevfs/gnome-vfs-sharp-2.0.pc
+gda/Makefile
+gda/gda-sharp.dll.config
+gda/gda-sharp-2.0.pc
+gnomedb/Makefile
+gnomedb/gnomedb-sharp.dll.config
+gnomedb/gnomedb-sharp-2.0.pc
+gconf/Makefile
+gconf/doc/Makefile
+gconf/GConf/Makefile
+gconf/GConf/gconf-sharp.dll.config
+gconf/GConf/gconf-sharp-2.0.pc
+gconf/GConf.PropertyEditors/Makefile
+gconf/tools/Makefile
+gconf/tools/gconfsharp2-schemagen
+gtkhtml/Makefile
+gtkhtml/gtkhtml-sharp.dll.config
+gtkhtml/gtkhtml-sharp-2.0.pc
+rsvg/Makefile
+rsvg/rsvg-sharp.dll.config
+rsvg/rsvg-sharp-2.0.pc
+vte/Makefile
+vte/vte-sharp.dll.config
+vte/vte-sharp-2.0.pc
+gtkdotnet/Makefile
+gtkdotnet/gtk-dotnet.dll.config
+gtkdotnet/gtk-dotnet-2.0.pc
+doc/Makefile
+doc/updater/Makefile
+sample/GtkDemo/Makefile
+sample/Makefile
+sample/gconf/Makefile
+sample/gnomevfs/Makefile
+sample/pixmaps/Makefile
+sample/rsvg/Makefile
+sample/test/Makefile
+sample/cairo-sample.exe.config
+])
+
+echo "---"
+echo "Configuration summary"
+echo ""
+echo "   * Installation prefix = $prefix"
+echo "   * $CS compiler: $CSC $CSFLAGS"
+echo ""
+echo "   Optional assemblies included in the build:"
+echo ""
+echo "      * art-sharp.dll: $enable_libart"
+echo "      * gnomevfs-sharp.dll: $enable_gnomevfs"
+echo "      * gnome-sharp.dll: $enable_gnome"
+echo "      * glade-sharp.dll: $enable_glade"
+echo "      * gda-sharp.dll: $enable_gda"
+echo "      * gnomedb-sharp.dll: $enable_gnomedb"
+echo "      * rsvg-sharp.dll: $enable_rsvg "
+echo "      * gtkhtml-sharp.dll: $enable_gtkhtml "
+echo "      * vte-sharp.dll: $enable_vte "
+echo "      * gtk-dotnet.dll: $enable_dotnet "
+echo ""
+echo "      NOTE: if any of the above say 'no' you may install the"
+echo "            corresponding development packages for them, rerun"
+echo "            autogen.sh to include them in the build."
+echo ""
+echo "---"
+

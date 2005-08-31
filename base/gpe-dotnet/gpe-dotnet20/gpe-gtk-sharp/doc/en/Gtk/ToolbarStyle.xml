@@ -1,0 +1,112 @@
+<Type Name="ToolbarStyle" FullName="Gtk.ToolbarStyle">
+  <TypeSignature Language="C#" Maintainer="Hector Gomez M" Value="public enum ToolbarStyle;" />
+  <AssemblyInfo>
+    <AssemblyName>gtk-sharp</AssemblyName>
+    <AssemblyPublicKey>
+    </AssemblyPublicKey>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+    <AssemblyCulture>neutral</AssemblyCulture>
+    <Attributes />
+  </AssemblyInfo>
+  <ThreadSafetyStatement>Gtk# is thread aware, but not thread safe; See the <link location="node:gtk-sharp/programming/threads">Gtk# Thread Programming</link> for details.</ThreadSafetyStatement>
+  <Docs>
+    <summary>An enumeration used by Toolbar</summary>
+    <remarks>
+      <para>
+      This enumeration is used by <see cref="T:Gtk.Toolbar" /> to customize it's appearance. Note that setting the toolbar overrides the user's preferences for the default toolbar style.
+     </para>
+    </remarks>
+  </Docs>
+  <Base>
+    <BaseTypeName>System.Enum</BaseTypeName>
+  </Base>
+  <Interfaces>
+    <Interface>
+      <InterfaceName>System.IComparable</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>System.IConvertible</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>System.IFormattable</InterfaceName>
+    </Interface>
+  </Interfaces>
+  <Attributes />
+  <Members>
+    <Member MemberName="Icons">
+      <MemberSignature Language="C#" Value="Icons" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.ToolbarStyle</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Buttons display only icons in the toolbar.</summary>
+        <remarks>
+          <para>
+          Buttons display only icons in the toolbar.
+         </para>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Text">
+      <MemberSignature Language="C#" Value="Text" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.ToolbarStyle</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Buttons display only text labels in the toolbar.</summary>
+        <remarks>
+         Buttons display only text labels in the toolbar.
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Both">
+      <MemberSignature Language="C#" Value="Both" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.ToolbarStyle</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Buttons display text and icons in the toolbar.</summary>
+        <remarks>
+          <para>
+          Buttons display text and icons in the toolbar.
+         </para>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="BothHoriz">
+      <MemberSignature Language="C#" Value="BothHoriz" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.ToolbarStyle</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Buttons display icons and text alongside each other, rather than vertically stacked.</summary>
+        <remarks>
+          <para>
+          Buttons display icons and text alongside each other, rather than vertically stacked.
+         </para>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="value__">
+      <MemberSignature Language="C#" Value="value__" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Int32</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Internal field.</summary>
+        <remarks>Do not use.</remarks>
+      </Docs>
+    </Member>
+  </Members>
+</Type>

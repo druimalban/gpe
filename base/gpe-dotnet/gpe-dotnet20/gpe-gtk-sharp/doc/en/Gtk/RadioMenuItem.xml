@@ -1,0 +1,199 @@
+<Type Name="RadioMenuItem" FullName="Gtk.RadioMenuItem">
+  <TypeSignature Language="C#" Value="public class RadioMenuItem : Gtk.CheckMenuItem, Implementor, IWrapper, IWrapper, IDisposable" Maintainer="auto" />
+  <AssemblyInfo>
+    <AssemblyName>gtk-sharp</AssemblyName>
+    <AssemblyPublicKey>
+    </AssemblyPublicKey>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+    <AssemblyCulture>neutral</AssemblyCulture>
+    <Attributes />
+  </AssemblyInfo>
+  <ThreadSafetyStatement>Gtk# is thread aware, but not thread safe; See the <link location="node:gtk-sharp/programming/threads">Gtk# Thread Programming</link> for details.</ThreadSafetyStatement>
+  <Docs>
+    <summary>A radio-style control (pick one of a list of options) for a menu.</summary>
+    <remarks />
+  </Docs>
+  <Base>
+    <BaseTypeName>Gtk.CheckMenuItem</BaseTypeName>
+  </Base>
+  <Interfaces>
+    <Interface>
+      <InterfaceName>Atk.Implementor</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>GLib.IWrapper</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>GLib.IWrapper</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>System.IDisposable</InterfaceName>
+    </Interface>
+  </Interfaces>
+  <Attributes />
+  <Members>
+    <Member MemberName="Finalize">
+      <MemberSignature Language="C#" Value="protected override void Finalize ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Disposes the resources associated with the object.</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public RadioMenuItem (IntPtr raw);" />
+      <MemberType>Constructor</MemberType>
+      <ReturnValue />
+      <Parameters>
+        <Parameter Name="raw" Type="System.IntPtr" />
+      </Parameters>
+      <Docs>
+        <summary>Internal constructor</summary>
+        <param name="raw">Pointer to the C object.</param>
+        <returns>An instance of RadioMenuItem, wrapping the C object.</returns>
+        <remarks>
+          <para>This is an internal constructor, and should not be used by user code.</para>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public RadioMenuItem (GLib.SList group, string label);" />
+      <MemberType>Constructor</MemberType>
+      <ReturnValue />
+      <Parameters>
+        <Parameter Name="group" Type="GLib.SList" />
+        <Parameter Name="label" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <summary>Constructor</summary>
+        <param name="group">A <see cref="T:GLib.SList" />, the group this item belongs to</param>
+        <param name="label">A <see cref="T:System.String" />, this item's label.</param>
+        <returns>A <see cref="T:Gtk.RadioMenuItem" /></returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Group">
+      <MemberSignature Language="C#" Value="public GLib.SList Group { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>GLib.SList</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>The group the menu item is inside.</summary>
+        <param name="value">A <see cref="T:GLib.SList" /></param>
+        <returns>A <see cref="T:GLib.SList" /></returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="GType">
+      <MemberSignature Language="C#" Value="public static GLib.GType GType { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>GLib.GType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>GType Property.</summary>
+        <returns>a <see cref="T:GLib.GType" /></returns>
+        <remarks>Returns the native <see cref="T:GLib.GType" /> value for <see cref="T:Gtk.RadioMenuItem" />.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="protected RadioMenuItem (GLib.GType gtype);" />
+      <MemberType>Constructor</MemberType>
+      <ReturnValue />
+      <Parameters>
+        <Parameter Name="gtype" Type="GLib.GType" />
+      </Parameters>
+      <Docs>
+        <summary>Protected Constructor.</summary>
+        <param name="gtype">a <see cref="T:GLib.GType" /></param>
+        <returns>a <see cref="T:Gtk.RadioMenuItem" /></returns>
+        <remarks>Chain to this constructor if you have manually registered a native <see cref="T:GLib.GType" /> value for your subclass.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public RadioMenuItem (string label);" />
+      <MemberType>Constructor</MemberType>
+      <ReturnValue />
+      <Parameters>
+        <Parameter Name="label" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <summary>Basic constructor.</summary>
+        <param name="label">a <see cref="T:System.String" /></param>
+        <returns>a <see cref="T:Gtk.RadioMenuItem" /></returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="GroupChanged">
+      <MemberSignature Language="C#" Value="public event EventHandler GroupChanged;" />
+      <MemberType>Event</MemberType>
+      <ReturnValue>
+        <ReturnType>System.EventHandler</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Emitted when the group of radio menu items that a
+	  radio button belongs to changes.</summary>
+        <remarks>This is emitted when a radio button switches from
+	  being alone to being part of a group of 2 or more menu items, or
+	  vice-versa, and when a buttton is moved from one group of 2 or
+	  more menu items to a different one, but not when the composition
+	  of the group that a button belongs to changes.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="OnGroupChanged">
+      <MemberSignature Language="C#" Value="protected virtual void OnGroupChanged ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Default handler for the <see cref="M:Gtk.RadioMenuItem.GroupChanged" /> event.</summary>
+        <remarks>Override this method in a subclass to provide a default handler for the <see cref="M:Gtk.RadioMenuItem.GroupChanged" /> event.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public RadioMenuItem (Gtk.RadioMenuItem group);" />
+      <MemberType>Constructor</MemberType>
+      <ReturnValue />
+      <Parameters>
+        <Parameter Name="group" Type="Gtk.RadioMenuItem" />
+      </Parameters>
+      <Docs>
+        <summary>Basic constructor.</summary>
+        <param name="group">a <see cref="T:Gtk.RadioMenuItem" />, group the menu item is inside (XXX: this type looks wrong)</param>
+        <returns>a <see cref="T:Gtk.RadioMenuItem" /></returns>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public RadioMenuItem (Gtk.RadioMenuItem group, string label);" />
+      <MemberType>Constructor</MemberType>
+      <ReturnValue />
+      <Parameters>
+        <Parameter Name="group" Type="Gtk.RadioMenuItem" />
+        <Parameter Name="label" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <summary>Constructor with support for mnemonic labels.</summary>
+        <param name="group">a <see cref="T:Gtk.RadioMenuItem" />, group the 
+	  menu item is inside (XXX: this type looks wrong)</param>
+        <param name="label">a <see cref="T:System.String" />the text of the 
+	  button, with an underscore in front of the mnemonic character</param>
+        <returns>a <see cref="T:Gtk.RadioMenuItem" /></returns>
+        <remarks>
+        </remarks>
+      </Docs>
+    </Member>
+  </Members>
+</Type>

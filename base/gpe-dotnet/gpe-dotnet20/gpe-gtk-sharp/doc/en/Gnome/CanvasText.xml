@@ -1,0 +1,640 @@
+<Type Name="CanvasText" FullName="Gnome.CanvasText">
+  <TypeSignature Language="C#" Value="public class CanvasText : Gnome.CanvasItem, IWrapper, IDisposable" Maintainer="auto" />
+  <AssemblyInfo>
+    <AssemblyName>gnome-sharp</AssemblyName>
+    <AssemblyPublicKey>
+    </AssemblyPublicKey>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+    <AssemblyCulture>neutral</AssemblyCulture>
+    <Attributes />
+  </AssemblyInfo>
+  <ThreadSafetyStatement>Gtk# is thread aware, but not thread safe; See the <link location="node:gtk-sharp/programming/threads">Gtk# Thread Programming</link> for details.</ThreadSafetyStatement>
+  <Docs>
+    <summary>Text canvas item</summary>
+    <remarks>A canvas item for displaying text. See <see cref="T:Gnome.CanvasRichText" /> for a more advanced text display and editing canvas item.</remarks>
+    <example>
+      <code language="C#">
+using System;
+using Gtk;
+using GtkSharp;
+using Gnome;
+
+class CanvasTest
+{
+
+	public CanvasTest()
+	{
+		Application.Init();
+
+ 		Window window1 = new Window("Hello Canvas!");
+		window1.DeleteEvent += new DeleteEventHandler (delete_event);
+
+		Canvas canvas1 = Canvas.NewAa();
+
+		int Width = 100;
+		int Height = 100;
+
+		canvas1.SetScrollRegion(0, 0, Width, Height);
+		canvas1.WidthRequest = Width;
+		canvas1.HeightRequest = Height;
+		CanvasGroup root = canvas1.Root();
+
+		// Draw Background
+
+		CanvasRect background = new CanvasRect(root);
+		background.X1 = 0;
+		background.X2 = Width;
+		background.Y1 = 0;
+		background.Y2 = Height;
+		background.FillColor = "#ffffff";
+		background.Show();
+
+        // Here we go
+
+		CanvasText hello = new CanvasText(root);
+		hello.X = 40;
+		hello.Y = 10;
+		hello.FillColor = "#000000";
+		hello.Text = "Hello, Canvas!";
+		hello.Show();
+
+		canvas1.Show();
+
+		window1.Add(canvas1);
+		window1.ShowAll();
+		Application.Run();
+	}
+
+	public static void Main()
+	{
+		new CanvasTest();
+	}
+
+	void delete_event (object obj, DeleteEventArgs args)
+	{
+		Application.Quit ();
+	}
+}
+      </code>
+    </example>
+  </Docs>
+  <Base>
+    <BaseTypeName>Gnome.CanvasItem</BaseTypeName>
+  </Base>
+  <Interfaces>
+    <Interface>
+      <InterfaceName>GLib.IWrapper</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>System.IDisposable</InterfaceName>
+    </Interface>
+  </Interfaces>
+  <Attributes />
+  <Members>
+    <Member MemberName="Finalize">
+      <MemberSignature Language="C#" Value="protected override void Finalize ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Disposes the resources associated with the object.</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public CanvasText (IntPtr raw);" />
+      <MemberType>Constructor</MemberType>
+      <ReturnValue />
+      <Parameters>
+        <Parameter Name="raw" Type="System.IntPtr" />
+      </Parameters>
+      <Docs>
+        <summary>Internal constructor</summary>
+        <param name="raw">Pointer to the C object.</param>
+        <returns>An instance of CanvasText, wrapping the C object.</returns>
+        <remarks>
+          <para>This is an internal constructor, and should not be used by user code.</para>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public CanvasText (Gnome.CanvasGroup group);" />
+      <MemberType>Constructor</MemberType>
+      <ReturnValue />
+      <Parameters>
+        <Parameter Name="group" Type="Gnome.CanvasGroup" />
+      </Parameters>
+      <Docs>
+        <summary>To be added</summary>
+        <param name="group">an object of type <see cref="T:Gnome.CanvasGroup" /></param>
+        <returns>an object of type <see cref="T:Gnome.CanvasText" /></returns>
+        <remarks>To be added</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Markup">
+      <MemberSignature Language="C#" Value="public string Markup { set; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Pango marked up text to render.</summary>
+        <param name="value">an object of type <see cref="T:System.String" /></param>
+        <returns>an object of type <see cref="T:System.String" /></returns>
+        <remarks>To be added</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Strikethrough">
+      <MemberSignature Language="C#" Value="public bool Strikethrough { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Whether to strike through the text.</summary>
+        <param name="value">an object of type <see cref="T:System.Boolean" /></param>
+        <returns>an object of type <see cref="T:System.Boolean" /></returns>
+        <remarks>To be added</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Rise">
+      <MemberSignature Language="C#" Value="public int Rise { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Int32</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Offset of text above the baseline.</summary>
+        <param name="value">an object of type <see cref="T:System.Int32" /></param>
+        <returns>an object of type <see cref="T:System.Int32" /></returns>
+        <remarks>This property specifies the offset of the text below the baseline if Rise is negative.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Text">
+      <MemberSignature Language="C#" Value="public string Text { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>The text to display.</summary>
+        <param name="value">an object of type <see cref="T:System.String" /></param>
+        <returns>an object of type <see cref="T:System.String" /></returns>
+        <remarks>To be added</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Family">
+      <MemberSignature Language="C#" Value="public string Family { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Name of the font family.</summary>
+        <param name="value">an object of type <see cref="T:System.String" /></param>
+        <returns>an object of type <see cref="T:System.String" /></returns>
+        <remarks>e.g. Sans, Helvetica, Times, Monospace</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Y">
+      <MemberSignature Language="C#" Value="public double Y { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Double</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Y coordinate of anchor point.</summary>
+        <param name="value">an object of type <see cref="T:System.Double" /></param>
+        <returns>an object of type <see cref="T:System.Double" /></returns>
+        <remarks>To be added</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="X">
+      <MemberSignature Language="C#" Value="public double X { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Double</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>X coordinate of anchor point.</summary>
+        <param name="value">an object of type <see cref="T:System.Double" /></param>
+        <returns>an object of type <see cref="T:System.Double" /></returns>
+        <remarks>To be added</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="ClipHeight">
+      <MemberSignature Language="C#" Value="public double ClipHeight { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Double</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Height of clip rectangle.</summary>
+        <param name="value">an object of type <see cref="T:System.Double" /></param>
+        <returns>an object of type <see cref="T:System.Double" /></returns>
+        <remarks>To be added</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Stretch">
+      <MemberSignature Language="C#" Value="public Pango.Stretch Stretch { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Stretch</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Pango stretch of font to use.</summary>
+        <param name="value">an object of type <see cref="T:Pango.Stretch" /></param>
+        <returns>an object of type <see cref="T:Pango.Stretch" /></returns>
+        <remarks>To be added</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Justification">
+      <MemberSignature Language="C#" Value="public Gtk.Justification Justification { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.Justification</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Justification for multiline text.</summary>
+        <param name="value">an object of type <see cref="T:Gtk.Justification" /></param>
+        <returns>an object of type <see cref="T:Gtk.Justification" /></returns>
+        <remarks>To be added</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="TextHeight">
+      <MemberSignature Language="C#" Value="public double TextHeight { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Double</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Used to query the height of the rendered text.</summary>
+        <param name="value">an object of type <see cref="T:System.Double" /></param>
+        <returns>an object of type <see cref="T:System.Double" /></returns>
+        <remarks>To be added</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="YOffset">
+      <MemberSignature Language="C#" Value="public double YOffset { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Double</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Vertical offset distance from anchor position.</summary>
+        <param name="value">an object of type 'double'</param>
+        <returns>an object of type 'double'</returns>
+        <remarks>To be added</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="FillStipple">
+      <MemberSignature Language="C#" Value="public Gdk.Drawable FillStipple { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.Drawable</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Stipple pattern for filling the text.</summary>
+        <param name="value">an object of type <see cref="T:Gdk.Drawable" /></param>
+        <returns>an object of type <see cref="T:Gdk.Drawable" /></returns>
+        <remarks>To be added</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Anchor">
+      <MemberSignature Language="C#" Value="public Gtk.AnchorType Anchor { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>Gtk.AnchorType</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Anchor position for the text.</summary>
+        <param name="value">an object of type <see cref="T:Gtk.AnchorType" /></param>
+        <returns>an object of type <see cref="T:Gtk.AnchorType" /></returns>
+        <remarks>To be added</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="SizePoints">
+      <MemberSignature Language="C#" Value="public double SizePoints { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Double</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Size (in points) of font.</summary>
+        <param name="value">an object of type <see cref="T:System.Double" /></param>
+        <returns>an object of type <see cref="T:System.Double" /></returns>
+        <remarks>To be added</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Weight">
+      <MemberSignature Language="C#" Value="public int Weight { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Int32</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Pango weight of font to use.</summary>
+        <param name="value">an object of type <see cref="T:System.Int32" /></param>
+        <returns>an object of type <see cref="T:System.Int32" /></returns>
+        <remarks>To be added</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Clip">
+      <MemberSignature Language="C#" Value="public bool Clip { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Use clipping rectangle?</summary>
+        <param name="value">an object of type <see cref="T:System.Boolean" /></param>
+        <returns>an object of type <see cref="T:System.Boolean" /></returns>
+        <remarks>To be added</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Attributes">
+      <MemberSignature Language="C#" Value="public Pango.AttrList Attributes { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.AttrList</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Reference to a Pango attribute list.</summary>
+        <param name="value">an object of type <see cref="T:Pango.AttrList" /></param>
+        <returns>an object of type <see cref="T:Pango.AttrList" /></returns>
+        <remarks>To be added</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Underline">
+      <MemberSignature Language="C#" Value="public Pango.Underline Underline { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Underline</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Pango underline style for text.</summary>
+        <param name="value">an object of type <see cref="T:Pango.Underline" /></param>
+        <returns>an object of type <see cref="T:Pango.Underline" /></returns>
+        <remarks>To be added</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Scale">
+      <MemberSignature Language="C#" Value="public double Scale { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Double</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Size of font, relative to default size.</summary>
+        <param name="value">an object of type <see cref="T:System.Double" /></param>
+        <returns>an object of type <see cref="T:System.Double" /></returns>
+        <remarks>To be added</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="FillColorRgba">
+      <MemberSignature Language="C#" Value="public uint FillColorRgba { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.UInt32</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>RGBA value used for AA color </summary>
+        <param name="value">an object of type <see cref="T:System.UInt32" /></param>
+        <returns>an object of type <see cref="T:System.UInt32" /></returns>
+        <remarks>The color should be specified in the format 0xRRGGBBAA (R: red, G: green, B: blue, A: alpha)</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Size">
+      <MemberSignature Language="C#" Value="public int Size { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Int32</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Size (in pixels) of font.</summary>
+        <param name="value">an object of type <see cref="T:System.Int32" /></param>
+        <returns>an object of type <see cref="T:System.Int32" /></returns>
+        <remarks>To be added</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="ClipWidth">
+      <MemberSignature Language="C#" Value="public double ClipWidth { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Double</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Width of clip rectangle.</summary>
+        <param name="value">an object of type <see cref="T:System.Double" /></param>
+        <returns>an object of type <see cref="T:System.Double" /></returns>
+        <remarks>To be added</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Style">
+      <MemberSignature Language="C#" Value="public Pango.Style Style { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Style</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Pango style of font to use. </summary>
+        <param name="value">an object of type <see cref="T:Pango.Style" /></param>
+        <returns>an object of type <see cref="T:Pango.Style" /></returns>
+        <remarks>To be added</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Variant">
+      <MemberSignature Language="C#" Value="public Pango.Variant Variant { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Variant</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Pango variant of font to use.</summary>
+        <param name="value">an object of type <see cref="T:Pango.Variant" /></param>
+        <returns>an object of type <see cref="T:Pango.Variant" /></returns>
+        <remarks>To be added</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="FillColorGdk">
+      <MemberSignature Language="C#" Value="public Gdk.Color FillColorGdk { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>Gdk.Color</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>An allocated Gdk.Color specification for text.</summary>
+        <param name="value">an object of type <see cref="T:Gdk.Color" /></param>
+        <returns>an object of type <see cref="T:Gdk.Color" /></returns>
+        <remarks>To be added</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="FontDesc">
+      <MemberSignature Language="C#" Value="public Pango.FontDescription FontDesc { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.FontDescription</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Font description as a Pango.FontDescription class.</summary>
+        <param name="value">an object of type <see cref="T:Pango.FontDescription" /></param>
+        <returns>an object of type <see cref="T:Pango.FontDescription" /></returns>
+        <remarks>To be added</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Font">
+      <MemberSignature Language="C#" Value="public string Font { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Font description as a string.</summary>
+        <param name="value">an object of type <see cref="T:System.String" /></param>
+        <returns>an object of type <see cref="T:System.String" /></returns>
+        <remarks>See <see cref="M:Pango.FontDescription.FromString()" /> for a description of the format of the string representation.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="TextWidth">
+      <MemberSignature Language="C#" Value="public double TextWidth { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Double</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Used to query the width of the rendered text.</summary>
+        <param name="value">an object of type 'double'</param>
+        <returns>an object of type 'double'</returns>
+        <remarks>To be added</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="XOffset">
+      <MemberSignature Language="C#" Value="public double XOffset { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Double</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Horizontal offset distance from anchor position.</summary>
+        <param name="value">an object of type <see cref="T:System.Double" /></param>
+        <returns>an object of type <see cref="T:System.Double" /></returns>
+        <remarks>To be added</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="FillColor">
+      <MemberSignature Language="C#" Value="public string FillColor { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>X color specification for text.</summary>
+        <param name="value">an object of type <see cref="T:System.String" /></param>
+        <returns>an object of type <see cref="T:System.String" /></returns>
+        <remarks>To be added</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="GType">
+      <MemberSignature Language="C#" Value="public static GLib.GType GType { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>GLib.GType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>GType Property.</summary>
+        <returns>a <see cref="T:GLib.GType" /></returns>
+        <remarks>Returns the native <see cref="T:GLib.GType" /> value for <see cref="T:Gnome.CanvasText" />.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="protected CanvasText (GLib.GType gtype);" />
+      <MemberType>Constructor</MemberType>
+      <ReturnValue />
+      <Parameters>
+        <Parameter Name="gtype" Type="GLib.GType" />
+      </Parameters>
+      <Docs>
+        <summary>Protected Constructor.</summary>
+        <param name="gtype">a <see cref="T:GLib.GType" /></param>
+        <returns>a <see cref="T:Gnome.CanvasText" /></returns>
+        <remarks>Chain to this constructor if you have manually registered a native <see cref="T:GLib.GType" /> value for your subclass.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="protected CanvasText ();" />
+      <MemberType>Constructor</MemberType>
+      <ReturnValue />
+      <Parameters />
+      <Docs>
+        <summary>To be added</summary>
+        <returns>a <see cref="T:Gnome.CanvasText" /></returns>
+        <remarks>To be added</remarks>
+      </Docs>
+    </Member>
+  </Members>
+</Type>

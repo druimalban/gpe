@@ -1,0 +1,123 @@
+<Type Name="Weight" FullName="Pango.Weight">
+  <TypeSignature Language="C#" Maintainer="duncan" Value="public enum Weight;" />
+  <AssemblyInfo>
+    <AssemblyName>pango-sharp</AssemblyName>
+    <AssemblyPublicKey>
+    </AssemblyPublicKey>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+    <AssemblyCulture>neutral</AssemblyCulture>
+    <Attributes />
+  </AssemblyInfo>
+  <ThreadSafetyStatement>Gtk# is thread aware, but not thread safe; See the <link location="node:gtk-sharp/programming/threads">Gtk# Thread Programming</link> for details.</ThreadSafetyStatement>
+  <Docs>
+    <summary>An enumeration specifying the weight (boldness) of a font</summary>
+    <remarks>
+      <para>
+        This is a numerical value ranging from 100 to 900, but there
+        are two predefined values.
+      </para>
+    </remarks>
+  </Docs>
+  <Base>
+    <BaseTypeName>System.Enum</BaseTypeName>
+  </Base>
+  <Interfaces>
+    <Interface>
+      <InterfaceName>System.IComparable</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>System.IConvertible</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>System.IFormattable</InterfaceName>
+    </Interface>
+  </Interfaces>
+  <Attributes />
+  <Members>
+    <Member MemberName="Ultralight">
+      <MemberSignature Language="C#" Value="Ultralight" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Weight</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>The ultralight weight (200)</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Light">
+      <MemberSignature Language="C#" Value="Light" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Weight</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>The light weight (300)</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Normal">
+      <MemberSignature Language="C#" Value="Normal" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Weight</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>The default weight (400)</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Bold">
+      <MemberSignature Language="C#" Value="Bold" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Weight</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>The bold weight (700)</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Ultrabold">
+      <MemberSignature Language="C#" Value="Ultrabold" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Weight</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>The ultrabold weight (800)</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Heavy">
+      <MemberSignature Language="C#" Value="Heavy" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>Pango.Weight</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>The heavy weight (900)</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="value__">
+      <MemberSignature Language="C#" Value="value__" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Int32</ReturnType>
+      </ReturnValue>
+      <Parameters>
+      </Parameters>
+      <Docs>
+        <summary>Internal field.</summary>
+        <remarks>Do not use.</remarks>
+      </Docs>
+    </Member>
+  </Members>
+</Type>

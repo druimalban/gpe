@@ -1,0 +1,144 @@
+<Type Name="MenuBar" FullName="Gtk.MenuBar">
+  <TypeSignature Language="C#" Value="public class MenuBar : Gtk.MenuShell, Implementor, IWrapper, IWrapper, IDisposable" Maintainer="Hector Gomez M" />
+  <AssemblyInfo>
+    <AssemblyName>gtk-sharp</AssemblyName>
+    <AssemblyPublicKey>
+    </AssemblyPublicKey>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+    <AssemblyCulture>neutral</AssemblyCulture>
+    <Attributes />
+  </AssemblyInfo>
+  <ThreadSafetyStatement>Gtk# is thread aware, but not thread safe; See the <link location="node:gtk-sharp/programming/threads">Gtk# Thread Programming</link> for details.</ThreadSafetyStatement>
+  <Docs>
+    <summary>The MenuBar is a subclass of MenuShell which contains one to many MenuItem.</summary>
+    <remarks>
+      <para>
+      The result is a standard menu bar which can hold many menu items. <see cref="T:Gtk.MenuBar" /> allows for a shadow type to be set for aesthetic purposes.
+     </para>
+      <example>
+        <code lang="C#">
+			
+	using System;
+	using Gtk;
+
+	public class MenuApp {
+
+		public static void Main (string[] args)
+		{
+			new MenuApp();
+		}
+
+		public MenuApp(){
+			Application.Init();
+			Window win = new Window ("Menu Sample App");
+			MenuBar mb = new MenuBar ();
+			Menu file_menu = new Menu ();
+			MenuItem exit_item = new MenuItem("Exit");
+			exit_item.Activated += new EventHandler (on_exit_item_activate);
+			file_menu.Append (exit_item);
+			MenuItem file_item = new MenuItem("File");
+			file_item.Submenu = file_menu;
+			mb.Append (file_item);		
+			win.Add (mb);
+			win.ShowAll ();
+			Application.Run ();
+		}
+
+
+
+		public void on_exit_item_activate(object o, EventArgs args)
+		{
+			Application.Quit ();
+		}
+
+  </code>
+      </example>
+    </remarks>
+  </Docs>
+  <Base>
+    <BaseTypeName>Gtk.MenuShell</BaseTypeName>
+  </Base>
+  <Interfaces>
+    <Interface>
+      <InterfaceName>Atk.Implementor</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>GLib.IWrapper</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>GLib.IWrapper</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>System.IDisposable</InterfaceName>
+    </Interface>
+  </Interfaces>
+  <Attributes />
+  <Members>
+    <Member MemberName="Finalize">
+      <MemberSignature Language="C#" Value="protected override void Finalize ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Disposes the resources associated with the object.</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public MenuBar (IntPtr raw);" />
+      <MemberType>Constructor</MemberType>
+      <ReturnValue />
+      <Parameters>
+        <Parameter Name="raw" Type="System.IntPtr" />
+      </Parameters>
+      <Docs>
+        <summary>Internal constructor</summary>
+        <param name="raw">Pointer to the C object.</param>
+        <returns>An instance of MenuBar, wrapping the C object.</returns>
+        <remarks>
+          <para>This is an internal constructor, and should not be used by user code.</para>
+        </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public MenuBar ();" />
+      <MemberType>Constructor</MemberType>
+      <ReturnValue />
+      <Parameters />
+      <Docs>
+        <summary>A constructor.</summary>
+        <returns>An instance of <see cref="T:Gtk.MenuBar" />.</returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="GType">
+      <MemberSignature Language="C#" Value="public static GLib.GType GType { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>GLib.GType</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>GType Property.</summary>
+        <returns>a <see cref="T:GLib.GType" /></returns>
+        <remarks>Returns the native <see cref="T:GLib.GType" /> value for <see cref="T:Gtk.MenuBar" />.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="protected MenuBar (GLib.GType gtype);" />
+      <MemberType>Constructor</MemberType>
+      <ReturnValue />
+      <Parameters>
+        <Parameter Name="gtype" Type="GLib.GType" />
+      </Parameters>
+      <Docs>
+        <summary>Protected Constructor.</summary>
+        <param name="gtype">a <see cref="T:GLib.GType" /></param>
+        <returns>a <see cref="T:Gtk.MenuBar" /></returns>
+        <remarks>Chain to this constructor if you have manually registered a native <see cref="T:GLib.GType" /> value for your subclass.</remarks>
+      </Docs>
+    </Member>
+  </Members>
+</Type>
