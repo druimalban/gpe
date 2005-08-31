@@ -1,164 +1,63 @@
 #include "gpe_sync.h"
 
-/*! \brief Add a contact
+/*! \brief Commits changes to the gpe client
  *
- * \param ctx		The context of the plugin
- * \param urn		The urn of the contact
- * \param data		Must be a vcard
+ * \param ctx		The current context of the sync
+ * \param change	The change that has to be committed
+ *
  */
-osync_bool gpe_contacts_add_item(OSyncContext *ctx, const char *data, gchar **error)
+osync_bool gpe_contacts_commit_change (OSyncContext *ctx, OSyncChange *change)
 {
-	gpe_environment *env = (gpe_environment *)osync_context_get_plugin_data(ctx);
-	osync_debug("GPE_SYNC", 2, "Adding item:\n%s", data);
+        gpe_environment *env = (gpe_environment *)osync_context_get_plugin_data(ctx);
+	osync_debug("GPE_SYNC", 2, "Adding item:\n%s", osync_change_get_data (change));
 	gchar *result = NULL;
-	osync_bool state = FALSE;
-
-	gpesync_client_exec_printf (env->client, "add vcard %s", client_callback_string, &result, error, data);
-
-	if (!strcasecmp (result, "OK\n"))
-        	state = TRUE;
-	
-	if (result)
-		g_free (result);
-	
-	return state;
-}
-
-
-/*! \brief Modifies a contact
- *
- * \param ctx		The context of the plugin
- * \param urn		The urn of the contact
- * \param data		Must be a vcard
- */
-osync_bool gpe_contacts_modify_item(OSyncContext *ctx, unsigned int urn, const char *data, gchar **error)
-{
-	gpe_environment *env = (gpe_environment *)osync_context_get_plugin_data(ctx);
-	osync_debug("GPE_SYNC", 2, "Modifying item %d:\n%s", urn, data);
-	gchar *result = NULL;
-	osync_bool state = FALSE;
-	
-	gpesync_client_exec_printf (env->client, "modify vcard %d %s", client_callback_string, &result, error, urn, data);
-	if (!strcasecmp (result, "OK\n"))
-        	state = TRUE;
-	
-	if (result)
-		g_free (result);
-	
-	return state;
-}
-
-/*! \brief Deletes an item with a given urn
- *
- * \param ctx		The context of the plugin
- * \param urn		The urn of the contact
- */
-osync_bool gpe_contacts_delete_item(OSyncContext *ctx, unsigned int urn, gchar **error)
-{
-	gpe_environment *env = (gpe_environment *)osync_context_get_plugin_data(ctx);
-
-	osync_debug("GPE_SYNC", 2, "Deleting item: %d", urn);
-	gchar *result = NULL;
-	osync_bool state = FALSE;
-	gpesync_client_exec_printf (env->client, "del vcard %d", client_callback_string, &result, error, urn);
-	fprintf (stderr, "Delete resut: %s\n", result);
-
-	if (!strcasecmp (result, "OK\n"))
-        	state = TRUE;
-	
-	if (result)
-		g_free (result);
-	
-	return state;
-}
-
-
-
-/*! \brief Provides access to the contacts
- *
- * \param ctx		Context of the plugin
- * \param change	The change
- */
-static osync_bool gpe_contacts_access(OSyncContext *ctx, OSyncChange *change)
-{
-	osync_debug("GPE_SYNC", 4, "start %s", __func__);
-	int urn;
+	gchar *modified = NULL;
 	gchar *error = NULL;
-	GString *hash = g_string_new ("");
-
-	switch(osync_change_get_changetype(change)) {
+	osync_bool state = FALSE;
+		
+	switch (osync_change_get_changetype (change)) {
 		case CHANGE_DELETED:
-			urn = atoi(g_strdup (osync_change_get_uid(change)));
-			if (delete_item (ctx, "contact", urn, &error) == FALSE)
-			{
-				osync_debug ("GPE_SYNC", 0, "Unable to remove contact %d", urn);
-				osync_context_report_error (ctx, OSYNC_ERROR_FILE_NOT_FOUND, error);
-				g_free (error);
-				return FALSE;
-			}
-
+			gpesync_client_exec_printf (env->client, "del vcard %d", client_callback_string, &result, &error, atoi (osync_change_get_uid (change)));
 			break;
 		case CHANGE_ADDED:
-			if (add_item(ctx, "contact", osync_change_get_data (change), &error) == FALSE)
-			{
-				osync_debug ("GPE_SYNC", 0, "Couldn't add contact");
-				osync_context_report_error (ctx, OSYNC_ERROR_EXISTS, error);
-				g_free (error);
-				return FALSE;
-			}
-
-			g_string_printf (hash, "%d", (int) time(NULL));
-			osync_change_set_hash (change, hash->str);
+			gpesync_client_exec_printf (env->client, "add vcard %s", client_callback_string, &result, &error, osync_change_get_data (change));
 			break;
 		case CHANGE_MODIFIED:
-			urn = atoi(g_strdup (osync_change_get_uid(change)));
-			if (modify_item (ctx, "contact", urn, osync_change_get_data (change), &error) == FALSE)
-			{
-				osync_debug ("GPE_SYNC", 0, "Unable to modify contact");
-				osync_context_report_error (ctx, OSYNC_ERROR_GENERIC, error);
-				g_free (error);
-				return FALSE;
-			}
-			g_string_printf (hash, "%d", (int) time(NULL));
-			osync_change_set_hash (change, hash->str);
+			gpesync_client_exec_printf (env->client, "modify vcard %d %s", client_callback_string, &result, &error, atoi (osync_change_get_uid (change)), osync_change_get_data (change));
 			break;
 		default:
-			osync_debug("GPE_SYNC", 0, "Unknown change type");
+			osync_debug ("GPE_SYNC", 0, "Unknown change type");
 	}
-	g_string_free (hash, TRUE);
 
-	osync_context_report_success(ctx);
-	osync_debug("GPE_SYNC", 4, "stop %s", __func__);
-	return TRUE;		
+	if (parse_value_modified (result, &result, &modified))
+	{
+		if (!strcasecmp (result, "OK"))
+		{
+			state = TRUE;
+			osync_change_set_hash (change, modified);
+			osync_hashtable_update_hash (env->hashtable, change);
+			osync_context_report_success(ctx);
+		}
+		else {
+			osync_debug ("GPE_SYNC", 0, "Couldn't commit contact: %s", error);
+			osync_context_report_error (ctx, OSYNC_ERROR_GENERIC, "Couldn't commit contact: %s", error);
+			g_free (error);
+		}
+	} else {
+		osync_context_report_error (ctx, OSYNC_ERROR_GENERIC, "Couldn't process answer form gpesyncd: %s", result);
+
+	}
+	
+	if (result)
+		g_free (result);
+	
+	return state;
 }
 
-/*! \brief Commits a change into the GPE-Database
- *
- * \param ctx		The context of the plugin
- * \param change	The item that has changed
- */
-static osync_bool gpe_contacts_commit_change (OSyncContext *ctx, OSyncChange *change)
-{
-	osync_debug ("GPE-SYNC", 4, "start: %s", __func__);
-	osync_debug ("GPE-SYNC", 3, "Writing change %s with changetype %i", osync_change_get_uid(change), osync_change_get_changetype(change));
-
-	gpe_environment *env = (gpe_environment *)osync_context_get_plugin_data(ctx);
-
-	if (!gpe_contacts_access(ctx, change))
-		return FALSE;
-
-	osync_hashtable_update_hash(env->hashtable, change);
-	osync_debug("GPE-SYNC", 4, "end: %s", __func__);
-
-	return TRUE;
-}
-
-
-/*! \brief Lists all the objects that were changed
+/*! \brief Reports all available items to opensync
  *
  * \param ctx		Context of the plugin
  *
- * In the end it only fills the hashtable with the values
  */
 void gpe_contacts_get_changes(OSyncContext *ctx)
 {
@@ -174,10 +73,25 @@ void gpe_contacts_get_changes(OSyncContext *ctx)
 	GSList *uid_list = NULL, *iter;
 	gpesync_client_exec (env->client, "uidlist vcard", client_callback_list, &uid_list, &errmsg);
 
+
+	if ((uid_list) && (!strncasecmp ((gchar *)uid_list->data, "ERROR", 5)))
+	{
+	  errmsg = (gchar *) uid_list->data;
+	}
+	
 	if (errmsg)
 	{
-	  /* TODO: Report osync_error */
-	  fprintf (stderr, "Error while getting uidlist:%s\n", errmsg);
+		if (strcasecmp (errmsg, "Error: No item found\n"))
+		{
+			g_free (uid_list->data);
+			g_slist_free (uid_list);
+			uid_list = NULL;
+			osync_context_report_error (ctx, OSYNC_ERROR_GENERIC, "Error getting contact uidlist: %s\n", errmsg);
+		} else {
+			g_free (uid_list->data);
+			g_slist_free (uid_list);
+			uid_list = NULL;
+		}
 	}
 
 	GString *vcard_data = g_string_new("");
@@ -189,9 +103,11 @@ void gpe_contacts_get_changes(OSyncContext *ctx)
 	  	gchar *modified = NULL;
 		gchar *uid = NULL;
 
-		if (parse_uid_modified ((gchar *)iter->data, &uid, &modified) == FALSE)
+		if (parse_value_modified ((gchar *)iter->data, &uid, &modified) == FALSE)
 		{
-			fprintf (stderr, "Wrong list item :%s\n", (gchar *)iter->data);
+			osync_context_report_error (ctx, OSYNC_ERROR_CONVERT, "Wrong uidlist item: %s\n");
+			g_slist_free (uid_list);
+
 			return;
 		}
 
@@ -203,18 +119,24 @@ void gpe_contacts_get_changes(OSyncContext *ctx)
 		
 		g_string_assign (vcard_data, "");
 		g_free (iter->data);
+
+		/* We don't need to free modified and uid, because they
+		 * are only pointers to iter->data */
+		modified = NULL;
+		uid = NULL;
 	}
 	g_string_free (vcard_data, TRUE);
 
 	osync_hashtable_report_deleted(env->hashtable, ctx, "contact");
 	g_slist_free (uid_list);
-	
+
 	osync_debug("GPE_SYNC", 4, "stop %s", __func__);
 }
 
+
 /*! \brief Tells the plugin to accept contacts
  *
- * \param info	The plugin info on which to operat
+ * \param info	The plugin info on which to operate
  */
 void gpe_contacts_setup(OSyncPluginInfo *info)
 {
@@ -222,7 +144,7 @@ void gpe_contacts_setup(OSyncPluginInfo *info)
 	osync_plugin_accept_objtype(info, "contact");
 	osync_plugin_accept_objformat(info, "contact", "vcard30", NULL);
 	osync_plugin_set_commit_objformat(info, "contact", "vcard30", gpe_contacts_commit_change);
-	osync_plugin_set_access_objformat(info, "contact", "vcard30", gpe_contacts_access);
+	osync_plugin_set_access_objformat(info, "contact", "vcard30", gpe_contacts_commit_change);
 	osync_debug("GPE_SYNC", 4, "stop %s", __func__);
 
 }
