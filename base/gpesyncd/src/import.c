@@ -26,24 +26,26 @@ get_new_uid (sqlite * db, gchar * type)
 {
   int uid = 0;
   char uid_name[4] = "uid\0";
+  char *errmsg = NULL;
   if (!strcasecmp (type, "contacts"))
     sprintf (uid_name, "urn");
 
   sqlite_exec_printf (db, "select max(%q) from %q", fetch_int_callback, &uid,
-		      0, uid_name, type);
+		      &errmsg, uid_name, type);
 
   return uid + 1;
 }
 
 guint
-get_item_count (sqlite *db, gchar *type)
+get_item_count (sqlite * db, gchar * type)
 {
   int count = 0;
   char uid_name[4] = "uid\0";
-  if (!strcasecmp (type, "contacts"))
-    sprintf (uid_name, "urn");
+  char *errmsg = NULL;
 
-  sqlite_exec_printf (db, "select count(tag) from %q where upper(tag)='MODIFIED'", fetch_int_callback, &count, 0, uid_name, type);
+  sqlite_exec_printf (db,
+		      "select count(tag) from %q where upper(tag)='MODIFIED'",
+		      fetch_int_callback, &count, &errmsg, type);
 
   return count;
 }
@@ -89,7 +91,7 @@ set_tag_value (GSList * tags, gchar * tag, gchar * value)
 }
 
 gboolean
-item_exists (gpesyncd_context *ctx, guint uid, gchar *type, GError **error)
+item_exists (gpesyncd_context * ctx, guint uid, gchar * type, GError ** error)
 {
   GString *query = g_string_new ("");
   gchar *errmsg = NULL;
@@ -98,44 +100,52 @@ item_exists (gpesyncd_context *ctx, guint uid, gchar *type, GError **error)
 
   if (!strcasecmp (type, "contacts"))
     {
-      g_string_printf (query, "select value from %s where urn='%d' and upper(tag)='MODIFIED'", type, uid);
+      g_string_printf (query,
+		       "select value from %s where urn='%d' and upper(tag)='MODIFIED'",
+		       type, uid);
       db = ctx->contact_db;
       errorcode = 241;
     }
-  else if(!strcasecmp (type, "calendar")) 
+  else if (!strcasecmp (type, "calendar"))
     {
-      g_string_printf (query, "select value from %s where uid='%d' and upper(tag)='MODIFIED'", type, uid);
+      g_string_printf (query,
+		       "select value from %s where uid='%d' and upper(tag)='MODIFIED'",
+		       type, uid);
       db = ctx->event_db;
       errorcode = 242;
     }
-   else if(!strcasecmp (type, "todo")) 
+  else if (!strcasecmp (type, "todo"))
     {
-      g_string_printf (query, "select value from %s where uid='%d' and upper(tag)='MODIFIED'", type, uid);
+      g_string_printf (query,
+		       "select value from %s where uid='%d' and upper(tag)='MODIFIED'",
+		       type, uid);
       db = ctx->todo_db;
       errorcode = 243;
     }
-   
-   int query_uid=0;
-   sqlite_exec_printf (db, query->str, fetch_int_callback, &query_uid, &errmsg);
 
-   g_string_free (query, TRUE);
+  int query_uid = 0;
+  sqlite_exec_printf (db, query->str, fetch_int_callback, &query_uid,
+		      &errmsg);
 
-   if (errmsg)
+  g_string_free (query, TRUE);
+
+  if (errmsg)
     {
-      g_set_error (error, 0, errorcode, "Checking item in %s with uid %d: %s\n", type,
-		   uid, errmsg);
+      g_set_error (error, 0, errorcode,
+		   "Checking item in %s with uid %d: %s\n", type, uid,
+		   errmsg);
       return FALSE;
     }
-  
-   if (query_uid == 0)
-     return FALSE;
-   
-   return TRUE;
+
+  if (query_uid == 0)
+    return FALSE;
+
+  return TRUE;
 }
 
 gboolean
 add_item (gpesyncd_context * ctx, guint uid, gchar * type, gchar * data,
-	  GError ** error)
+	  guint * modified, GError ** error)
 {
   GString *query = g_string_new ("");
   GSList *tags = NULL, *tag_iter;
@@ -223,9 +233,10 @@ add_item (gpesyncd_context * ctx, guint uid, gchar * type, gchar * data,
   if (uid == 0)
     uid = get_new_uid (db, type);
 
-  GString *modified = g_string_new ("");
-  g_string_printf (modified, "%d", (int) time (NULL));
-  set_tag_value (tags, "MODIFIED", modified->str);
+  GString *modified_str = g_string_new ("");
+  *modified = (int) time (NULL);
+  g_string_printf (modified_str, "%d", *modified);
+  set_tag_value (tags, "MODIFIED", modified_str->str);
 
   for (tag_iter = tags; tag_iter; tag_iter = g_slist_next (tag_iter))
     {
@@ -281,14 +292,14 @@ add_item (gpesyncd_context * ctx, guint uid, gchar * type, gchar * data,
 
 gboolean
 modify_item (gpesyncd_context * ctx, guint uid, gchar * type, gchar * data,
-	  GError ** error)
+	     guint * modified, GError ** error)
 {
   gboolean mod_result = FALSE;
   mod_result = del_item (ctx, uid, type, error);
   if (mod_result == FALSE)
     return FALSE;
 
-  mod_result = add_item (ctx, uid, type, data, error);
+  mod_result = add_item (ctx, uid, type, data, modified, error);
   return mod_result;
 }
 
@@ -311,13 +322,13 @@ del_item (gpesyncd_context * ctx, guint uid, gchar * type, GError ** error)
       db = ctx->event_db;
       errorcode = 232;
     }
-   else if (!strcasecmp (type, "todo"))
+  else if (!strcasecmp (type, "todo"))
     {
       g_string_printf (query, "delete from %s where uid='%d'", type, uid);
       db = ctx->todo_db;
       errorcode = 233;
     }
- 
+
   if (!item_exists (ctx, uid, type, error))
     {
       if (!*error)
@@ -326,7 +337,7 @@ del_item (gpesyncd_context * ctx, guint uid, gchar * type, GError ** error)
       g_string_free (query, TRUE);
       return FALSE;
     }
-  
+
   sqlite_exec_printf (db, query->str, NULL, NULL, &errmsg, uid);
 
   if (errmsg)
@@ -355,5 +366,4 @@ del_item (gpesyncd_context * ctx, guint uid, gchar * type, GError ** error)
 
   g_string_free (query, TRUE);
   return TRUE;
-
 }
