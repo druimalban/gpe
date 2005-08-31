@@ -161,7 +161,7 @@ int
 import_vcal (const gchar *data, size_t len)
 {
   MIMEDirProfile *profile = NULL;
-  MIMEDirVCal *cal;
+  MIMEDirVCal *cal = NULL;
   gchar *str;
   GError *error = NULL;
 
