@@ -1,4 +1,14 @@
 2005-08-31  Martin Felis <martin@silef.de>
+
+	* contacts.c, contacts.h: Changed the way items are committed.
+	* utils.c, utils.h: Removed functions, that are no more needed.
+	* gpe_sync.c, gpe_sync.h: Removed older code which was from the time
+	before the gpesyncd.
+	* calendar.c, calendar.h, todo.c, todo.h: New way items are committed.
+	* Makefile.am: Added calendar.* and todo.* to be compiled too.
+	
+2005-08-31  Martin Felis <martin@silef.de>
+	
 	* gpesync_client.c, gpesync_client.h: Added. It's the communication
 	backend for this plugin. It is the client for the gpesyncd.
 	* utils.c, utils.h: Added. They contain general function that can
@@ -10,6 +20,7 @@
 	gpesyncd on the pda.
 
 2005-08-13  Martin Felis <martin@silef.de>
+	
 	* gpe_db.h gpe_db.c: Implemented the tags_replace_category function,
 	which replaces the numbers of the cateogories to their names.
 	* gpe_sync.h gpe_sync.c: Added categories list, for
@@ -17,6 +28,7 @@
 	* contacts.c: Reading and writing now implemented.
 
 2005-08-02  Martin Felis <martin@silef.de>
+
 	* gpe_db.h gpe_db.c: Files added for easier querying/handling of the
 	results from nsqlc_exec().
 	* contacts.h contacts.c: Moved from gpe_adresses.c/h. I thought this
