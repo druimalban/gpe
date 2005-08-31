@@ -51,7 +51,6 @@ log_entry (action_t action, time_t time, struct task *task, char *info)
       free (err);
       return FALSE;
     }
-
   return TRUE;
 }
 
@@ -202,7 +201,6 @@ journal_callback (void *arg, int argc, char **argv, char **names)
   
   if (argc == 3)
     {
-//      struct task *t = arg;
       ti = atol(argv[0]);
       if (!strcmp(argv[1],"START"))
 	    {

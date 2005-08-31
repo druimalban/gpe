@@ -26,7 +26,6 @@
 #define _(_x) gettext(_x)
 #define JOURNAL_FILE "/tmp/journal.html"
 
-
 struct gpe_icon my_icons[] = {
   { "clock", },
   { "stop_clock", },
@@ -420,7 +419,7 @@ main(int argc, char *argv[])
 
   tree = gtk_ctree_new (2, 0);
   g_signal_connect (G_OBJECT(tree), "tree-select-row",
-		    tree_select_row, NULL);
+		    G_CALLBACK(tree_select_row), NULL);
 
   chatter = gtk_label_new ("");
   gtk_misc_set_alignment (GTK_MISC (chatter), 0.0, 0.5);

@@ -1,7 +1,10 @@
 2005-08-31 Philippe De Swert <philippedeswert@scarlet.be>
 
+	* release 0.18
 	* html.c: rewrite browser tests
+	* html.c: fixing timing info and adding duration field
 	* main.c: Make stop_timing behave correctly
+	* main.c: Remove fixing size of window
 	* basic Debian-isation.
 	* Taking maintainership
 

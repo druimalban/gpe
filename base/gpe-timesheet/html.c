@@ -1,7 +1,7 @@
 /*
  * This file is part of gpe-timeheet
  * (c) 2004 Florian Boor <florian.boor@kernelconcepts.de>
- * Copright (c) 2005 Philippe De Swert <philippedeswert@scarlet.be>
+ * (c) 2005 Philippe De Swert <philippedeswert@scarlet.be>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -57,15 +57,25 @@ int
 journal_add_line(time_t tstart, time_t tstop, 
                  const char *istart, const char *istop)
 {
-  int duration=1;
+  gchar *starttm, *stoptm;
+  char duration[24];
 
-  duration = ctime(&tstop) - ctime(&tstart);
+  stoptm = malloc(sizeof(char)*26);
+  starttm = malloc(sizeof(char)*26);
 
+  starttm = ctime_r(&tstart, starttm);
+  stoptm = ctime_r(&tstop, stoptm);
+
+  sprintf(duration, "%.2i h. %.2i min. %.2i sec.\n", (tstop - tstart)/3600, ((tstop - tstart)%3600)/60, 
+  		(((tstop - tstart)%3600)%60));
   myjournal = realloc(myjournal,sizeof(char*)*(++jlen));
   myjournal[jlen - 2] = 
-    g_strdup_printf("<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%d</td></tr>\n",
-	  ctime(&tstart), istart, ctime(&tstop), istop, duration);
+    g_strdup_printf("<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>\n",
+	  starttm, istart, stoptm, istop, duration);
   myjournal[jlen - 1] = NULL;
+
+  g_free(starttm);
+  g_free(stoptm);
   return jlen;
 }
 

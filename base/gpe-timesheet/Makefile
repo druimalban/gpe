@@ -1,12 +1,12 @@
 PREFIX = /usr/local
 PACKAGE = gpe-timesheet
-CVSBUILD = yes
+CVSBUILD = no
 VERSION = 0.16
 
 LINGUAS = id pt zh_TW fr ro cs nl ga ru sr sk sv es
 
-PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS)
-PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS)
+PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS) -g
+PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS) -g
 PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS) -lsqlite
 
 MEMBERS = main sql html
@@ -36,6 +36,7 @@ install-program: all $(PACKAGE).desktop
 
 clean:
 	rm -f $(PACKAGE) $(OBJS) $(DEPS) $(PACKAGE).desktop
+	rm -rf debian/gpe-timesheet
 
 include $(BUILD)/Makefile.translation
 include $(BUILD)/Makefile.dpkg_ipkg
