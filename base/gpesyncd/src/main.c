@@ -5,6 +5,10 @@
  *  modify it under the terms of the GNU General Public License
  *  as published by the Free Software Foundation; either version
  *  2 of the License, or (at your option) any later version.
+ *
+ *  Parts of this file are derieved from the nsqld from Phil Blundell
+ *  See http://handhelds.org/cgi-bin/cvsweb.cgi/gpe/base/nsqld/
+ *  for information about it.
  */
 
 #include "gpesyncd.h"
@@ -335,7 +339,8 @@ do_command (gpesyncd_context * ctx, gchar * command)
       else
 	g_string_append (ctx->result, "Error: No item found\n");
     }
-  else if ((!strcasecmp (cmd, "ADD")) && (type != GPE_DB_TYPE_UNKNOWN))
+  else if ((!strcasecmp (cmd, "ADD")) && (type != GPE_DB_TYPE_UNKNOWN)
+	   && (data))
     {
       switch (type)
 	{
@@ -357,7 +362,7 @@ do_command (gpesyncd_context * ctx, gchar * command)
 	g_string_printf (ctx->result, "OK:%d\n", modified);
     }
   else if ((!strcasecmp (cmd, "MODIFY")) && (type != GPE_DB_TYPE_UNKNOWN)
-	   && (uid > 0))
+	   && (data) && (uid > 0))
     {
       switch (type)
 	{
