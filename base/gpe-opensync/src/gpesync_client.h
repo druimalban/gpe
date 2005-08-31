@@ -23,6 +23,8 @@
 */
 #define GPESYNC_CLIENT_VERSION         "2.7.2"
 
+#define BUFFER_LENGTH 8192
+
 /*
 ** Make sure we can call this stuff from C++.
 */

@@ -148,7 +148,7 @@ send_lines (struct gpesync_client_query_context *q, char *p)
 static void
 read_response (struct gpesync_client_query_context *q)
 {
-  char buf[1024];
+  char buf[BUFFER_LENGTH];
   int p = 0;
   int len = 0;
   gboolean have_len = FALSE;
