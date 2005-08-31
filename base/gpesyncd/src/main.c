@@ -11,6 +11,72 @@
 
 int verbose = 0;
 
+int callback_list (void *arg, int argc, char **argv, char **names)
+{
+  GSList **tables = (GSList **) arg;
+  int i;
+  for (i=0; i < argc; i++)
+	*tables = g_slist_append (*tables, argv[i]);
+
+  return 0;
+}
+    
+gboolean gpesyncd_setup_databases (gpesyncd_context *ctx)
+{
+  GSList *tables = NULL, *iter;
+  gchar *err;
+  if (ctx->contact_db)
+  {
+        gchar *err = NULL;
+	sqlite_exec (ctx->todo_db, "select max(uid) from contacts", callback_list, &tables, &err);
+	if ( (err) && (!strcasecmp(err, "no such table: contacts")))
+	{
+	  fprintf (stderr, "No contacts tables found. Creating...");
+	  sqlite_exec (ctx->contact_db, "create table contacts (urn INTEGER NOT NULL, tag TEXT NOT NULL, value TEXT NOT NULL)", 0, 0, 0);
+	  sqlite_exec (ctx->contact_db, "create table contacts_config (id INTEGER PRIMARY KEY,   cgroup INTEGER NOT NULL, cidentifier TEXT NOT NULL, cvalue TEXT)", 0, 0, 0);
+	  sqlite_exec (ctx->contact_db, "INSERT INTO contacts_config VALUES(1,0,'Name','NAME')", 0, 0, 0);
+	  sqlite_exec (ctx->contact_db, "INSERT INTO contacts_config VALUES(2,0,'Phone','HOME.TELEPHONE')", 0, 0, 0);
+	  sqlite_exec (ctx->contact_db, "INSERT INTO contacts_config VALUES(3,0,'EMail','HOME.EMAIL')", 0, 0, 0);
+	  sqlite_exec (ctx->contact_db, "create table contacts_urn (urn INTEGER PRIMARY KEY, name TEXT, family_name TEXT)", 0, 0, 0);
+	  fprintf (stderr, " done.\n");
+	  g_free (err);
+	  err = NULL;
+	}
+  }
+  if (ctx->event_db)
+  {
+        gchar *err = NULL;
+	sqlite_exec (ctx->event_db, "select max(uid) from calendar", callback_list, &tables, &err);
+	if ( (err) && (!strcasecmp(err, "no such table: calendar")))
+	{
+	  fprintf (stderr, "No calendar tables found. Creating...");
+	  sqlite_exec (ctx->event_db, "create table calendar (uid INTEGER NOT NULL, tag TEXT NOT NULL, value TEXT)", 0, 0, 0);
+	  sqlite_exec (ctx->event_db, "create table calendar_dbinfo (version integer NOT NULL)", 0, 0, 0);
+	  sqlite_exec (ctx->event_db, "INSERT INTO calendar_dbinfo VALUES(1)", 0, 0, 0);
+	  sqlite_exec (ctx->event_db, "create table calendar_urn (uid INTEGER PRIMARY KEY)", 0, 0, 0);
+	  fprintf (stderr, " done.\n");
+	  g_free (err);
+	  err = NULL;
+	}
+  }
+  if (ctx->todo_db)
+  {
+        gchar *err = NULL;
+	sqlite_exec (ctx->todo_db, "select max(uid) from todo", callback_list, &tables, &err);
+	if ( (err) && (!strcasecmp(err, "no such table: todo")))
+	{
+	  fprintf (stderr, "No todo tables found. Creating...");
+	  sqlite_exec (ctx->todo_db, "create table todo (uid INTEGER NOT NULL, tag TEXT NOT NULL, value TEXT)", 0, 0, 0);
+	  sqlite_exec (ctx->todo_db, "create table todo_dbinfo (version integer NOT NULL)", 0, 0, 0);
+	  sqlite_exec (ctx->todo_db, "INSERT INTO todo_dbinfo VALUES(1)", 0, 0, 0);
+	  sqlite_exec (ctx->todo_db, "create table todo_urn (uid INTEGER PRIMARY KEY)", 0, 0, 0);
+	  fprintf (stderr, " done.\n");
+	  g_free (err);
+	  err = NULL;
+	}
+    }
+}
+
 gpesyncd_context *
 gpesyncd_context_new (char *err)
 {
@@ -510,6 +576,8 @@ main (int argc, char **argv)
 {
   gchar *err = NULL;
   gpesyncd_context *ctx = gpesyncd_context_new (err);
+
+  gpesyncd_setup_databases (ctx);
 
   g_type_init ();
 
