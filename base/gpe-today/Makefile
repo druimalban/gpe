@@ -1,6 +1,6 @@
 PACKAGE = gpe-today
 PREFIX = /usr/local
-VERSION = 0.09
+VERSION = 0.08
 CVSBUILD = yes
 #DEBUG = yes
 #EFENCE = yes
@@ -9,27 +9,26 @@ LINGUAS = vi tr es sr rw fi pt_BR pt de zh_CN zh_TW ga ro wa fr sv nl cs sk ru
 
 MEMBERS = main todo calendar date xsettings
 
-GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
-GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
-
-CPPFLAGS = -I../libgpewidget -I../libeventdb -I../libtododb -I../libxsettings -I../libxsettings-client -D_GNU_SOURCE
-
 ifeq ($(EFENCE),yes)
-LDFLAGS = -lefence
+PACKAGE_LDFLAGS = -lefence
 endif
 
 ifeq ($(DEBUG),yes)
-CFLAGS = -g
+package_CFLAGS = -g
 else
-CFLAGS = -Os -fomit-frame-pointer
+PACKAGE_CFLAGS = -Os -fomit-frame-pointer
 endif
 
-CFLAGS += -Wall $(GTKCFLAGS)
-LDFLAGS += $(GTKLDFLAGS) -L/usr/local/lib -L../libeventdb -leventdb -L../libtododb -ltododb -L../libxsettings -L../libxsettings-client -lXsettings-client -Wl,-rpath-link,../libxsettings -Wl,-rpath-link,../libgpepimc -Wl,-rpath-link,../libdisplaymigration
-CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
-#CFLAGS += -MD
-
 .SUFFIXES: .d
+
+ifeq ($(CVSBUILD),yes)
+PACKAGE_CPPFLAGS += -I../libeventdb -I../libtododb -I../libxsettings -I../libxsettings-client -I../libdisplaymigration -I../libgpepimc
+PACKAGE_LDFLAGS += -L../libeventdb -L../libtododb -L../libxsettings-client -Wl,-rpath-link,../libxsettings -L../libgpepimc
+endif
+PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS)
+PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS)
+PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS) -leventdb -ltododb -lXsettings-client -lsqlite -lgpepimc
+   
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
@@ -43,10 +42,10 @@ else
 BUILD = build
 endif
 
-all: $(PACKAGE) all-mo
+all: $(PACKAGE)
 
 $(PACKAGE): $(OBJS)
-	$(CC) -o $@ $^ -L../libgpewidget -lgpewidget -lsqlite $(LDFLAGS)
+	$(CC) -o $@ $^ $(LDFLAGS) $(PACKAGE_LDFLAGS)
 
 install-program: all $(PACKAGE).desktop
 	for i in $(PIXMAPS); do install -D -m 644 pixmaps/$$i $(DESTDIR)$(PREFIX)/share/$(PACKAGE)/pixmaps/$$i; done

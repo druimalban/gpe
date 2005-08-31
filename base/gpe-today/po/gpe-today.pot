@@ -7,7 +7,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-04-21 17:05+0100\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2005-09-01 00:13+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: main.c:183 gpe-today.desktop.in.h:2
+#: main.c:187 gpe-today.desktop.in.h:2
 msgid "Summary"
 msgstr ""
 
@@ -31,7 +32,11 @@ msgstr ""
 msgid "All day event"
 msgstr ""
 
-#: xsettings.c:80
+#: date.c:77
+msgid "%A, %d %B %Y"
+msgstr ""
+
+#: xsettings.c:83
 msgid "Cannot create XSettings client"
 msgstr ""
 
