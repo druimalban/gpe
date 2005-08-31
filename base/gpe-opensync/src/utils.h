@@ -1,12 +1,25 @@
+/*
+ * gpe-sync - A plugin for the opensync framework
+ * Copyright (C) 2005  Martin Felis <martin@silef.de>
+ * 
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307  USA
+ * 
+ */
+
 #ifndef UTILS_H
 #define UTILS_H
-
-
-osync_bool add_item (OSyncContext *ctx, const char *type, const char *data, gchar **error);
-
-osync_bool modify_item (OSyncContext *ctx, const char *type, unsigned int uid, const char *data, gchar **error);
-
-osync_bool delete_item (OSyncContext *ctx, const char *type, unsigned int uid, gchar **error);
 
 osync_bool parse_value_modified (gchar *string, gchar **uid, gchar **modified);
 
