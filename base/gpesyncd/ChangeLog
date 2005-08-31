@@ -1,5 +1,9 @@
 2005-08-31  Martin Felis  <martin@silef.de>
 
+	* main.c: Creation of contact database corrected.
+
+2005-08-31  Martin Felis  <martin@silef.de>
+
 	* import.c: Added a check whether there are any items in the
 	database.
 	* main.c: gpesyncd now creates tables if they do not yet exist. This
