@@ -227,7 +227,10 @@ add_item (gpesyncd_context * ctx, guint uid, gchar * type, gchar * data,
 
   g_object_unref (profile);
 
-  if (get_item_count (db, type) == 0)
+  int count = 0;
+  count = get_item_count (db, type);
+  
+  if (count == 0)
     uid = 1;
 
   if (uid == 0)
@@ -351,6 +354,8 @@ del_item (gpesyncd_context * ctx, guint uid, gchar * type, GError ** error)
   if (!strcasecmp (type, "contacts"))
     g_string_printf (query, "delete from %s_urn where urn='%d'", type, uid);
   if (!strcasecmp (type, "calendar"))
+    g_string_printf (query, "delete from %s_urn where uid='%d'", type, uid);
+  if (!strcasecmp (type, "todo"))
     g_string_printf (query, "delete from %s_urn where uid='%d'", type, uid);
 
   sqlite_exec_printf (db, query->str, NULL, NULL, &errmsg, uid);
