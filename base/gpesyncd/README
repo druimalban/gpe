@@ -1,6 +1,16 @@
+gpesyncd - A tool to import and export vevents, vcards and vtodos.
+
 This is a small tool to handle the exchange between the gpe databases
 and the vcard, vevent, vtodo formats.
 
 Type "help" to get some information what you can do.
+
+You can run this program in "remote" mode, that means for everything you
+want to write to it, you have to prepend the number of bytes you're
+actually writing.
+For example, you want to write "help", you type in: "4:help".
+Sounds useless, but when using it for syncing from a remote computer
+it knows when the input ends and you can even send newlines.
+To activate the remote mode, just run it with "gpesyncd --remote".
 
 Bug reports are VERY welcome!
