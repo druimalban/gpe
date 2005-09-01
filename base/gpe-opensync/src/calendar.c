@@ -1,3 +1,23 @@
+/*
+ * gpe-sync - A plugin for the opensync framework
+ * Copyright (C) 2005  Martin Felis <martin@silef.de>
+ * 
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307  USA
+ * 
+ */
+
 #include "gpe_sync.h"
 
 /*! \brief Commits changes to the gpe client
@@ -8,6 +28,8 @@
  */
 osync_bool gpe_calendar_commit_change (OSyncContext *ctx, OSyncChange *change)
 {
+	osync_debug("GPE_SYNC", 4, "start %s", __func__);
+
         gpe_environment *env = (gpe_environment *)osync_context_get_plugin_data(ctx);
 	gchar *result = NULL;
 	gchar *modified = NULL;
@@ -16,17 +38,22 @@ osync_bool gpe_calendar_commit_change (OSyncContext *ctx, OSyncChange *change)
 		
 	switch (osync_change_get_changetype (change)) {
 		case CHANGE_DELETED:
+			osync_debug("GPE_SYNC", 3, "calendar: delete item %d", atoi (osync_change_get_uid (change)));
 			gpesync_client_exec_printf (env->client, "del vevent %d", client_callback_string, &result, &error, atoi (osync_change_get_uid (change)));
 			break;
 		case CHANGE_ADDED:
+			osync_debug("GPE_SYNC", 3, "calenar: adding item: %s", osync_change_get_data (change));
 			gpesync_client_exec_printf (env->client, "add vevent %s", client_callback_string, &result, &error, osync_change_get_data (change));
 			break;
 		case CHANGE_MODIFIED:
+			osync_debug("GPE_SYNC", 3, "calendar: modifying item %d: %s", atoi (osync_change_get_uid (change)), osync_change_get_data (change));
 			gpesync_client_exec_printf (env->client, "modify vevent %d %s", client_callback_string, &result, &error, atoi (osync_change_get_uid (change)), osync_change_get_data (change));
 			break;
 		default:
 			osync_debug ("GPE_SYNC", 0, "Unknown change type");
 	}
+
+	osync_debug("GPE_SYNC", 3, "commit result: %s", result);
 
 	if (parse_value_modified (result, &result, &modified))
 	{
@@ -44,11 +71,12 @@ osync_bool gpe_calendar_commit_change (OSyncContext *ctx, OSyncChange *change)
 		}
 	} else {
 		osync_context_report_error (ctx, OSYNC_ERROR_GENERIC, "Couldn't process answer form gpesyncd: %s", result);
-
 	}
 	
 	if (result)
 		g_free (result);
+
+	osync_debug("GPE_SYNC", 4, "stop %s", __func__);
 	
 	return state;
 }
@@ -58,16 +86,19 @@ osync_bool gpe_calendar_commit_change (OSyncContext *ctx, OSyncChange *change)
  * \param ctx		Context of the plugin
  *
  */
-void gpe_calendar_get_changes(OSyncContext *ctx)
+osync_bool gpe_calendar_get_changes(OSyncContext *ctx)
 {
 	osync_debug("GPE_SYNC", 4, "start %s", __func__);
 
 	gpe_environment *env = (gpe_environment *)osync_context_get_plugin_data(ctx);
+	osync_bool state = FALSE;
+	
 	if (osync_member_get_slow_sync(env->member, "event"))
 	{
 		osync_debug("GPE_SYNC", 3, "Slow sync requested");
 		osync_hashtable_set_slow_sync(env->hashtable, "event");
 	}
+
 	gchar *errmsg = NULL;
 	GSList *uid_list = NULL, *iter;
 	gpesync_client_exec (env->client, "uidlist vevent", client_callback_list, &uid_list, &errmsg);
@@ -80,18 +111,23 @@ void gpe_calendar_get_changes(OSyncContext *ctx)
 	
 	if (errmsg)
 	{
-		if (strcasecmp (errmsg, "Error: No item found\n"))
+		if (strcasecmp (errmsg, "Error: No item found"))
 		{
-			g_free (uid_list->data);
-			g_slist_free (uid_list);
-			uid_list = NULL;
-			osync_context_report_error (ctx, OSYNC_ERROR_GENERIC, "Error getting todo uidlist: %s\n", errmsg);
+			osync_context_report_error (ctx, OSYNC_ERROR_GENERIC, "Error getting event uidlist: %s\n", errmsg);
 		} else {
-			g_free (uid_list->data);
-			g_slist_free (uid_list);
+		  	/* We haven't found any items, so go on. */
+			osync_debug("GPE_SYNC", 3, "calendar: No items found");
 			uid_list = NULL;
+			state = TRUE;
 		}
+	
+		g_slist_free (uid_list);
+		uid_list = NULL;
+
+		g_free (errmsg);
 	}
+	else
+	  state = TRUE;
 
 	GString *vevent_data = g_string_new("");
 
@@ -107,7 +143,7 @@ void gpe_calendar_get_changes(OSyncContext *ctx)
 			osync_context_report_error (ctx, OSYNC_ERROR_CONVERT, "Wrong uidlist item: %s\n");
 			g_slist_free (uid_list);
 
-			return;
+			return FALSE;
 		}
 
 		g_string_assign (vevent_data, "");
@@ -116,7 +152,6 @@ void gpe_calendar_get_changes(OSyncContext *ctx)
 
 		report_change (ctx, "event", uid, modified, vevent_data->str);
 		
-		g_string_assign (vevent_data, "");
 		g_free (iter->data);
 
 		/* We don't need to free modified and uid, because they
@@ -127,13 +162,16 @@ void gpe_calendar_get_changes(OSyncContext *ctx)
 	g_string_free (vevent_data, TRUE);
 
 	osync_hashtable_report_deleted(env->hashtable, ctx, "event");
-	g_slist_free (uid_list);
+	if (uid_list)
+		g_slist_free (uid_list);
 
 	osync_debug("GPE_SYNC", 4, "stop %s", __func__);
+
+	return state;
 }
 
 
-/*! \brief Tells the plugin to accept todos
+/*! \brief Tells the plugin to accept events
  *
  * \param info	The plugin info on which to operate
  */
@@ -145,5 +183,4 @@ void gpe_calendar_setup(OSyncPluginInfo *info)
 	osync_plugin_set_commit_objformat(info, "event", "vevent20", gpe_calendar_commit_change);
 	osync_plugin_set_access_objformat(info, "event", "vevent20", gpe_calendar_commit_change);
 	osync_debug("GPE_SYNC", 4, "stop %s", __func__);
-
 }
