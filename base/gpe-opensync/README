@@ -5,12 +5,26 @@ WARNING: This plugin is not yet finished. A lot of functions are still not yet
 written. Although there should be no damage to your files, it is not
 guaranteed that it works, so make backups!
 
-To compile this you need to have libnsqlc installed. Otherwise it won't work.
-Other dependencies should be reported from ./configure.
-
-You must use the cvs-version of libgpevtype. Otherwise some fields won't be
-synced!
+This plugin needs the gpesyncd installed on the gpe side. Syncing is done
+by using ssh, so this too has to be installed.
 
 See BUGS for known problems.
 
+See INSTALL for help installing and configuring the plugin.
+
+Hints for testing:
+When all the syncing does not work anymore, it might help to remove the
+~/.opensync folder, since opensync stores older states of the devices
+and so incorrect data might get synced.
+After it you need to recreate your sync pair.
+
 Have fun.
+Martin (martin@silef.de)
+
+Some personal notes:
+
+A BIG THANKS to google, for making the "Summer of Code"
+(http://code.google.com/summerofcode.html).
+and a BIG THANK AS LEAST AS BIG AS TO GOOGLE, to handhelds.org for doing all
+this great stuff and letting me code this while the summer of code for you.
+I REALLY enjoyed it (and hopefully still enjoy it).

@@ -1,14 +1,28 @@
+All works fine except:
+
 general:
-	- The first synchronization fails always. Just sync again and
-	everything is fine. Why??
+	The most problems are in the importing / exporting to gpe. The
+	most issues can be solved when implementing the fields in
+	libgpevtype.
+
+	Categories won't be synced correctly, since libgpevtype has no
+	support for it yet.
+	
+
+calendar: 
+	(evolution): Things won't be imported by evolution, because:
+	DTSTART: The time is exported as <time>+0xyz (timezone).
+	evolution expects it as <time> only.
+	UID: This field is missing, but evolution wants it.
+	DURATION: evolution doesn't use it, it wants DTEND, which also
+	does not get exported.
+
+todo:
+	When changing entries in evolution, opensync asks to Duplicate,
+	Ignore or to take the Newer version, but neither of them does
+	what you are expecting.
 
 contacts:
-	- no support for photo
-	- no support for birthday
-	- only export of category is working.
+	Some fields are not synced, like birthday, photo.
 
-tasks:
-	- nothing yet implemented
-
-calendar:
-	- nothing yet implemented
+Should there be any other bugs, feel free to contact me: <martin@silef.de>
