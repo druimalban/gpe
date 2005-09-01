@@ -199,6 +199,9 @@ gpesyncd_printf (gpesyncd_context * ctx, char *format, ...)
   g_vasprintf (&buf, format, ap);
   va_end (ap);
 
+  if (verbose)
+    fprintf (stderr, "[gpesyncd out]: %s\n", buf);
+
   if (ctx->ofp)
     {
       fprintf (ctx->ofp, "%d:%s", strlen (buf), buf);
@@ -232,8 +235,8 @@ get_next_token (gchar * str, int *num)
   if (num)
     *num += i + 1;
 
-  gchar *data = g_strdup (string->str);
-  g_string_free (string, TRUE);
+  gchar *data = string->str;
+  g_string_free (string, FALSE);
   return data;
 }
 
@@ -289,6 +292,8 @@ do_command (gpesyncd_context * ctx, gchar * command)
 	  if (uid > 0)
 	    pos += uidlen + 1;
 	}
+
+      g_free (buf);
     }
 
   if (pos < cmd_string->len)
@@ -306,11 +311,10 @@ do_command (gpesyncd_context * ctx, gchar * command)
   if (verbose)
     {
       if (data)
-	fprintf (stderr, "cmd: %s typestr: %s type: %d uid: %d data[0]: %c\n",
-		 cmd, buf, type, uid, data[0]);
+	fprintf (stderr, "cmd: %s type: %d uid: %d data[0]: %c\n",
+		 cmd, type, uid, data[0]);
       else
-	fprintf (stderr, "cmd: %s typestr: %s type: %d uid: %d\n", cmd, buf,
-		 type, uid);
+	fprintf (stderr, "cmd: %s type: %d uid: %d\n", cmd, type, uid);
     }
 
   if ((!strcasecmp (cmd, "GET")) && (type != GPE_DB_TYPE_UNKNOWN)
@@ -461,11 +465,8 @@ do_command (gpesyncd_context * ctx, gchar * command)
       replace_newline (cmd);
       g_string_append_printf (ctx->result, "Invalid command: %s\n", cmd);
     }
-  if (cmd)
-    g_free (cmd);
-
-  if (buf)
-    g_free (buf);
+  
+  g_free (cmd);
 
   if (verbose)
     fprintf (stderr, "error: %d, data: %d, cmd_result: %d\n", (int) error,
