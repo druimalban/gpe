@@ -263,7 +263,8 @@ gpesync_client_open (const char *addr, char **errmsg)
       dup2 (in_fds[1], 1);
       close (out_fds[1]);
       close (in_fds[0]);
-      fprintf (stderr, "connecting as %s to %s filename: %s\n", username, hostname, "gpesyncd");
+      if (verbose)
+        fprintf (stderr, "connecting as %s to %s filename: %s\n", username, hostname, "gpesyncd");
       execlp ("ssh", "ssh", "-l", username, hostname, "gpesyncd", "--remote",
 	      NULL);
       perror ("exec");
@@ -361,12 +362,10 @@ int client_callback_string (void *arg, int argc, char **argv)
 	  else
 	  {
 	    *data_str = g_realloc (*data_str, strlen (*data_str) + strlen (argv[i]) + 1); 
-            fprintf (stderr, "Havelen: %d Adding: %d ", strlen (*data_str), strlen (argv[i]));
 	  }
 
 	  *data_str = strcat (*data_str, argv[i]);
 	  *data_str = strcat (*data_str, "\0");
-	  fprintf (stderr, "= %d \n", strlen (*data_str));
 	}
 	
   return 0;
