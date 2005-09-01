@@ -1,13 +1,15 @@
 /*
- * Copyright (C) 2003 Philip Blundell <philb@gnu.org>
- *               2005 Martin Felis <martin@silef.de>
+ * Copyright (C) 2005 Martin Felis <martin@silef.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version
  * 2 of the License, or (at your option) any later version.
+ *
+ * Parts of this file are derieved from Phil Blundells libnsqlc.
+ * See http://handhelds.org/cgi-bin/cvsweb.cgi/gpe/base/libnsqlc/
+ * for more information.
  */
-
 
 #include <stdio.h>
 #include <unistd.h>
@@ -67,13 +69,20 @@ write_command (gpesync_client * ctx, const char *cmd, ...)
   va_end (va);
 
   if (verbose)
-    fprintf (stderr, "-> <%s>", buf);
+    fprintf (stderr, "[gpesyncclient out]: %s\n", buf);
 
   write (ctx->outfd, buf, strlen (buf));
 
   free (buf);
 }
 
+/*! \brief moves forward to the next line
+ *
+ * \param data	The string on which we want to move forward.
+ *
+ * \returns	A pointer to the beginning of the next line
+ * 		or on '\0'
+ */
 char *
 get_next_line (const char *data)
 {
@@ -95,11 +104,10 @@ get_next_line (const char *data)
   if (data[i] == '\n')
     g_string_append_c (string, data[i]);
 
-  gchar *token = NULL;
-  if (string->len > 0)
-    token = g_strdup (string->str);
-  g_string_free (string, TRUE);
-
+  gchar *token = string->str;
+  
+  g_string_free (string, FALSE);
+  
   return token;
 }
 
@@ -109,24 +117,27 @@ send_lines (struct gpesync_client_query_context *q, char *p)
   if (!q->aborting)
     {
       if (verbose)
-	fprintf (stderr, "gpe: send <%s>\n", p);
+	fprintf (stderr, "[gpesync_client out] <%s>\n", p);
       GSList *lines = NULL, *iter;
 
       int argc, i;
-      char **argv;
+      char **argv = NULL;
       char *line, *line_iter;
 
       line_iter = p;
       line = get_next_line (line_iter);
-      while (line)
-	{
-	  lines = g_slist_append (lines, g_strdup (line));
+      do
+        {
+	  lines = g_slist_append (lines, line);
 	  line_iter += strlen (line);
 	  line = get_next_line (line_iter);
 	}
+      while (line);
+//      g_free (line);
 
       argc = g_slist_length (lines);
       argv = g_malloc0 (sizeof (char *) * argc);
+      
       iter = lines;
       for (i = 0; i < argc; i++)
 	{
@@ -140,8 +151,9 @@ send_lines (struct gpesync_client_query_context *q, char *p)
 	  q->result = GPESYNC_CLIENT_ABORT;
 	  q->aborting = TRUE;
 	}
-      g_slist_free (lines);
+
       g_free (argv);
+      g_slist_free (lines);
     }
 }
 
@@ -182,7 +194,7 @@ read_response (struct gpesync_client_query_context *q)
 	}
       else
 	{
-	  if (p == len)
+	  if (p == len - 1)
 	    {
 	      buf[p] = c;
 	      buf[p + 1] = '\0';
@@ -193,6 +205,10 @@ read_response (struct gpesync_client_query_context *q)
       buf[p] = c;
       if (p < sizeof (buf) - 1)
 	p++;
+      else {
+	fprintf (stderr, "gpesync_client: Input buffer full\n");
+	exit (-1);
+      }
     }
 
   if (ctx->busy)
@@ -206,34 +222,28 @@ read_response (struct gpesync_client_query_context *q)
 }
 
 gpesync_client *
-gpesync_client_open_ssh (const char *database, int mode, char **errmsg)
+gpesync_client_open (const char *addr, char **errmsg)
 {
   gpesync_client *ctx;
-  gchar *filename = NULL;
   gchar *hostname = NULL;
   const gchar *username = NULL;
   gchar *str;
   gchar *p;
+
   int in_fds[2], out_fds[2];
   pid_t pid;
 
-  str = g_strdup (database);
+  str = g_strdup (addr);
 
-  p = strchr (str, ':');
+  p = strchr (str, '@');
   if (p)
     {
       *p = 0;
-      filename = p + 1;
-      p = strchr (str, '@');
-      if (p)
-	{
-	  *p = 0;
-	  hostname = p + 1;
-	  username = str;
-	}
-      else
-	hostname = str;
+      hostname = p + 1;
+      username = str;
     }
+  else
+    hostname = str;
 
   if (hostname == NULL)
     hostname = "localhost";
@@ -241,8 +251,6 @@ gpesync_client_open_ssh (const char *database, int mode, char **errmsg)
   if (username == NULL)
     username = g_get_user_name ();
 
-  if (filename == NULL)
-    filename = "gpesyncd";
   ctx = g_malloc0 (sizeof (struct gpesync_client));
 
   pipe (in_fds);
@@ -255,7 +263,7 @@ gpesync_client_open_ssh (const char *database, int mode, char **errmsg)
       dup2 (in_fds[1], 1);
       close (out_fds[1]);
       close (in_fds[0]);
-      fprintf (stderr, "connecting as %s to %s filename: %s\n", username, hostname, filename);
+      fprintf (stderr, "connecting as %s to %s filename: %s\n", username, hostname, "gpesyncd");
       execlp ("ssh", "ssh", "-l", username, hostname, "gpesyncd", "--remote",
 	      NULL);
       perror ("exec");
@@ -267,9 +275,11 @@ gpesync_client_open_ssh (const char *database, int mode, char **errmsg)
   ctx->outfd = out_fds[1];
   ctx->infd = in_fds[0];
 
-  ctx->hostname = g_strdup (hostname);
-  ctx->username = g_strdup (username);
-
+  ctx->hostname = (hostname);
+  ctx->username = (username);
+ 
+  g_free (str);
+  
   return ctx;
 }
 
@@ -281,7 +291,7 @@ gpesync_client_close (gpesync_client * ctx)
     close (ctx->outfd);
 
   g_free (ctx);
-  ctx = NULL;
+//  ctx = NULL;
 }
 
 int
@@ -293,8 +303,6 @@ gpesync_client_exec (gpesync_client * ctx, const char *command,
   g_string_append_printf (cmd, "%d:%s", strlen (command), command);
 
   memset (&query, 0, sizeof (query));
-  if (verbose)
-    fprintf (stderr, "gpe:querying <%s>\n", command);
   query.ctx = ctx;
   query.callback = cb;
   query.cb_data = cb_data;
@@ -334,10 +342,10 @@ int client_callback_list (void *arg, int argc, char **argv)
   GSList  **data_list = (GSList **) arg;
  
   for (i = 0; i < argc; i++)
-	{
-	  *data_list = g_slist_append (*data_list, argv[i]);
-	}
-	
+  {
+    *data_list = g_slist_append (*data_list, g_strdup (argv[i]));
+    g_free (argv[i]);
+  }	
   return 0;
 }
 
@@ -376,17 +384,11 @@ int client_callback_gstring (void *arg, int argc, char **argv)
 	
   return 0;
 }
-/*
-** The following four routines implement the varargs versions of the
-** gpesync_client_exec() and gpesync_client_get_table() interfaces.  See the gpesync_client.h
-** header files for a more detailed description of how these interfaces
-** work.
-**
-** These routines are all just simple wrappers.
-*/
+
 int gpesync_client_exec_printf(
-  gpesync_client *db,                   /* An open database */
-  const char *query_format,        /* printf-style format string for the SQL */
+  gpesync_client *db,                   /* A connected client */
+  const char *query_format,        /* printf-style format string for query
+  	                              to gpesyncd.*/
   gpesync_client_callback xCallback,    /* Callback function */
   void *pArg,                   /* 1st argument to callback function */
   char **errmsg,                /* Error msg written here */
