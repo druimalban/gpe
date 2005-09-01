@@ -1,9 +1,29 @@
+/*
+ * gpe-sync - A plugin for the opensync framework
+ * Copyright (C) 2005  Martin Felis <martin@silef.de>
+ * 
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307  USA
+ * 
+ */
+
 #include "gpe_sync.h"
 
 /*! \brief Initializes the plugin (needed for opensync)
  *
- * \param member	???
- * \param error		???
+ * \param member	The member of the sync pair
+ * \param error		If an error occurs it will be stored here
  */
 static void *initialize(OSyncMember *member, OSyncError **error)
 {
@@ -11,8 +31,6 @@ static void *initialize(OSyncMember *member, OSyncError **error)
 	char *configdata = NULL;
 	int configsize = 0;
 	
-	//You need to specify the <some name>_environment somewhere with
-	//all the members you need
 	gpe_environment *env = g_malloc0(sizeof(gpe_environment));
 	assert(env != NULL);
 
@@ -33,9 +51,8 @@ static void *initialize(OSyncMember *member, OSyncError **error)
 		return NULL;
 	}
 
-	//Process the configdata here and set the options on your environment
+	// Here we set some default values
 	env->member = member;
-
 	env->client = NULL;
 	
 	//Set up a hash to detect changes
@@ -59,10 +76,10 @@ static void connect(OSyncContext *ctx)
 	
 	OSyncError *error = NULL;
 
-	gchar *path = g_strdup_printf ("%s@%s:gpesyncd", env->username, env->device_addr);
+	gchar *path = g_strdup_printf ("%s@%s", env->username, env->device_addr);
 
 	char *client_err;
-	env->client = gpesync_client_open_ssh (path, 0, &client_err);
+	env->client = gpesync_client_open (path, &client_err);
 	if (env->client == NULL) {
 		osync_context_report_error(ctx, OSYNC_ERROR_NO_CONNECTION, client_err);
 		env->client = NULL;
@@ -77,14 +94,6 @@ static void connect(OSyncContext *ctx)
 	
 	osync_context_report_success(ctx);
 
-	// TODO: What is this??
-	//you can also use the anchor system to detect a device reset
-	//or some parameter change here. Check the docs to see how it works
-	//char *lanchor = NULL;
-	//Now you get the last stored anchor from the device
-	//if (!osync_anchor_compare(env->member, "lanchor", lanchor))
-	//	osync_member_set_slow_sync(env->member, "<object type to request a slow-sync>", TRUE);
-        
 	osync_debug("GPE_SYNC", 4, "stop: %s", __func__);
 }
 
@@ -96,12 +105,20 @@ static void get_changeinfo(OSyncContext *ctx)
 {
 	osync_debug("GPE_SYNC", 4, "start: %s", __func__);
 
-	gpe_contacts_get_changes(ctx);
-//	gpe_calendar_get_changes(ctx);
-//	gpe_todo_get_changes(ctx);
+	osync_bool get_contacts = FALSE,
+		   get_calendar = FALSE,
+		   get_todo     = FALSE;
+		   
+	get_contacts = gpe_contacts_get_changes(ctx);
+	get_calendar = gpe_calendar_get_changes(ctx);
+	get_todo = gpe_todo_get_changes(ctx);
 
-	//Now we need to answer the call
-	osync_context_report_success(ctx);
+	//Now we need to answer the call (if all went fine)
+	if (get_contacts && get_calendar && get_todo)
+	{
+		osync_context_report_success(ctx);
+	}
+
 	osync_debug("GPE_SYNC", 4, "stop: %s", __func__);
 }
 
@@ -118,11 +135,6 @@ static void sync_done(OSyncContext *ctx)
 	//If we have a hashtable we can now forget the already reported changes
 	osync_hashtable_forget(env->hashtable);
 	
-	//If we use anchors we have to update it now.
-	//char *lanchor = NULL;
-	//Now you get/calculate the current anchor of the device
-	//osync_anchor_update(env->member, "lanchor", lanchor);
-	
 	//Answer the call
 	osync_context_report_success(ctx);
 	osync_debug("GPE_SYNC", 4, "stop: %s", __func__);
@@ -137,13 +149,12 @@ static void disconnect(OSyncContext *ctx)
 	osync_debug("GPE_SYNC", 4, "start: %s", __func__);
 	gpe_environment *env = (gpe_environment *)osync_context_get_plugin_data(ctx);
 	
-	//Close all stuff you need to close
-	
 	//Close the hashtable
 	osync_hashtable_close(env->hashtable);
 	
 	if (env->client) {
 		gpesync_client_close (env->client);
+		env->client = NULL;
 	}
 
 	//Answer the call
@@ -159,12 +170,15 @@ static void finalize(void *data)
 {
 	osync_debug("GPE_SYNC", 4, "start: %s", __func__);
 	gpe_environment *env = (gpe_environment *)data;
+	
 	//Free all stuff that you have allocated here.
 	osync_hashtable_free(env->hashtable);
 	g_free(env->username);
 	g_free(env->device_addr);
+
 	if (env->client)
 	  gpesync_client_close (env->client);
+	
 	g_free(env);
 	osync_debug("GPE_SYNC", 4, "stop: %s", __func__);
 }
@@ -202,8 +216,8 @@ void get_info(OSyncEnv *env)
 	
 	// Now we got to tell opensync, which formats and what types we accept
 	gpe_contacts_setup (info);
-//	gpe_calendar_setup (info);
-//	gpe_todo_setup (info);
+	gpe_calendar_setup (info);
+	gpe_todo_setup (info);
 	
 	osync_debug("GPE_SYNC", 4, "stop: %s", __func__);
 }
