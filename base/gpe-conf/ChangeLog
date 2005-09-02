@@ -1,4 +1,7 @@
+2005-09-93	Florian Boor <florian.boor@kernelconcepts.de>
 
+	* theme.c: Move signal connction to avoid hang on xsettings start.
+	
 2005-08-25	Florian Boor <florian.boor@kernelconcepts.de>
 
 	* gpe-conf-sysinfo.desktop.in: Move sysinfo to utitlities desk.

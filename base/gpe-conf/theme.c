@@ -1175,9 +1175,6 @@ Theme_Build_Objects ()
   gtk_editable_set_editable (GTK_EDITABLE(GTK_COMBO(self.cbTheme)->entry), FALSE);
   gtk_widget_set_size_request (self.cbTheme, 120, -1);
   gtk_box_pack_start (GTK_BOX (hbox), self.cbTheme, FALSE, TRUE, 0);
-
-  gtk_signal_connect (GTK_OBJECT (GTK_COMBO (self.cbTheme)->entry), "changed",
-		      GTK_SIGNAL_FUNC (on_matchbox_entry_changed), NULL);
 			  
 #ifndef APPMGR_INTERFACE	
   label = gtk_label_new(NULL);
@@ -1680,6 +1677,9 @@ Theme_Build_Objects ()
   
   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.cPerformance), FALSE);
   mb_start_xsettings ();
+  
+  gtk_signal_connect (GTK_OBJECT (GTK_COMBO (self.cbTheme)->entry), "changed",
+		      GTK_SIGNAL_FUNC (on_matchbox_entry_changed), NULL);
 
   return notebook;
 }
