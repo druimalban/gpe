@@ -1,3 +1,11 @@
+2005-09-02  Matt Reimer <mreimer@vpop.net>
+
+	* Release version 0.66.
+
+2005-08-29  Matt Reimer <mreimer@vpop.net>
+
+	* Change instances of mbcontrol (now obsolete) to matchbox-remote.
+
 2005-08-29  Florian Boor <floriankernelconcepts.de>
 
 	* Release version 0.65.
