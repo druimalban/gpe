@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002, 2003 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2002, 2003, 2004 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -10,626 +10,211 @@
 #include <sys/types.h>
 #include <stdlib.h>
 #include <time.h>
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/stat.h>
 #include <libintl.h>
 #include <locale.h>
-#include <pty.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <signal.h>
-#include <sys/wait.h>
-#include <errno.h>
-#include <stdio.h>
 
 #include <gtk/gtk.h>
-#include <gdk/gdkx.h>
 
-#include <X11/Xlib.h>
-#include <X11/Xatom.h>
+#include <dbus/dbus.h>
+#include <dbus/dbus-glib.h>
+#include <dbus/dbus-glib-lowlevel.h>
 
-#include <gpe/init.h>
-#include <gpe/pixmaps.h>
-#include <gpe/errorbox.h>
-#include <gpe/spacing.h>
-#include <gpe/gpeiconlistview.h>
-#include <gpe/tray.h>
-#include <gpe/popup.h>
+#include "pin-ui.h"
 
-#include <sys/socket.h>
-#include <bluetooth/bluetooth.h>
-#include <bluetooth/hci.h>
-#include <bluetooth/hci_lib.h>
-#include <bluetooth/sdp.h>
+#define OLD_SERVICE_NAME   "org.handhelds.gpe.bluez"
+#define OLD_INTERFACE_NAME OLD_SERVICE_NAME ".PinAgent"
 
-#include "main.h"
-#include "sdp.h"
-#include "dbus.h"
-
-#include "dun.h"
-#include "lap.h"
-#include "pan.h"
-#include "headset.h"
-
-#include "obexserver.h"
-#include "obexclient.h"
+#define NEW_SERVICE_NAME   "org.bluez.PinAgent"
+#define NEW_INTERFACE_NAME NEW_SERVICE_NAME
 
 #define _(x) gettext(x)
 
-#define HCIATTACH "/etc/bluetooth/hciattach"
+extern DBusHandlerResult bluez_pin_handle_dbus_request (DBusConnection *connection, DBusMessage *message);
 
-static GThread *scan_thread;
+DBusHandlerResult
+handler_func (DBusConnection     *connection,
+	      DBusMessage        *message,
+	      void               *user_data)
+{
+  if (dbus_message_is_method_call (message, NEW_INTERFACE_NAME, "PinRequest"))
+    return bluez_pin_handle_dbus_request (connection, message);
+  
+  if (dbus_message_is_method_call (message, OLD_INTERFACE_NAME, "PinRequest"))
+    return bluez_pin_handle_dbus_request (connection, message);
 
-bdaddr_t src_addr = *BDADDR_ANY;
+  if (dbus_message_is_signal (message,
+                              DBUS_INTERFACE_ORG_FREEDESKTOP_LOCAL,
+                              "Disconnected"))
+    exit (0);
+  
+  return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+}
 
-struct gpe_icon my_icons[] = {
-  { "bt-on", "bluetooth/bt-on" },
-  { "bt-off", "bluetooth/bt-off" },
-  { "cellphone", "bluetooth/cellphone" },
-  { "network", "bluetooth/network" },
-  { "computer", "bluetooth/Computer" },
-  { "printer", "bluetooth/Printer" },
-  { "bt-logo" },
-  { NULL }
+static DBusObjectPathVTable dbus_vtable = {
+  NULL,
+  handler_func,
+  NULL
 };
 
-static GtkWidget *icon;
-
-static pid_t hciattach_pid;
-
-static GtkWidget *window;
-static GtkWidget *menu;
-static GtkWidget *menu_radio_on, *menu_radio_off;
-static GtkWidget *menu_devices;
-static GtkWidget *devices_window;
-static GtkWidget *iconlist;
-
-static GSList *devices;
-
-gboolean radio_is_on;
-GdkWindow *dock_window;
-GSList *service_desc_list;
-
-extern void bluez_pin_dbus_server_run (void);
-
-GtkWidget *
-bt_progress_dialog (gchar *text, GdkPixbuf *pixbuf)
+void
+bluez_pin_dbus_server_run (void)
 {
-  GtkWidget *window;
-  GtkWidget *label;
-  GtkWidget *image;
-  GtkWidget *hbox;
+  DBusConnection *connection;
+  DBusError error;
+  static const char *old_object_path = "/org/handhelds/gpe/bluez/PinAgent";
+  static const char *new_object_path = "/org/bluez/PinAgent"; 
+  int errors = 0;
 
-  window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-  hbox = gtk_hbox_new (FALSE, 0);
-  image = gtk_image_new_from_pixbuf (pixbuf);
-  label = gtk_label_new (text);
+  dbus_error_init (&error);
+  connection = dbus_bus_get (DBUS_BUS_SYSTEM, &error);
+  if (connection == NULL)
+    {
+      fprintf (stderr, "Failed to open connection to system message bus: %s\n",
+               error.message);
+      dbus_error_free (&error);
+      exit (1);
+    }
 
-  gtk_window_set_type_hint (GTK_WINDOW (window), GDK_WINDOW_TYPE_HINT_DIALOG);
-  
-  gtk_container_set_border_width (GTK_CONTAINER (hbox),
-					gpe_get_border ());
-	
-  gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
+  dbus_connection_setup_with_g_main (connection, NULL);
 
-  gtk_box_pack_start (GTK_BOX (hbox), image, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 0);
+  dbus_connection_register_object_path (connection, new_object_path, &dbus_vtable, NULL);
+  dbus_connection_register_object_path (connection, old_object_path, &dbus_vtable, NULL);
 
-  gtk_container_add (GTK_CONTAINER (window), hbox);
+  dbus_bus_acquire_service (connection, NEW_SERVICE_NAME, 0, &error);
+  if (dbus_error_is_set (&error))
+    {
+      fprintf (stderr, "Failed to acquire %s service: %s\n", NEW_SERVICE_NAME, error.message);
+      dbus_error_free (&error);
+      errors++;
+    }
 
-  g_object_set_data (G_OBJECT (window), "label", label);
+  dbus_bus_acquire_service (connection, OLD_SERVICE_NAME, 0, &error);
+  if (dbus_error_is_set (&error))
+    {
+      fprintf (stderr, "Failed to acquire %s service: %s\n", OLD_SERVICE_NAME, error.message);
+      dbus_error_free (&error);
+      errors++;
+    }
 
-  return window;
+  if (errors == 2)	/* Both services unavailable? */
+    exit (1);
 }
 
 void
-bt_progress_dialog_update (GtkWidget *w, gchar *new_text)
+legacy_pin_result (BluetoothPinRequest *req, gchar *result)
 {
-  GtkWidget *label;
+  if (result)
+    printf ("PIN:%s\n", result);
+  else
+    printf ("ERR\n");
 
-  label = GTK_WIDGET (g_object_get_data (G_OBJECT (w), "label"));
-  gtk_label_set_text (GTK_LABEL (label), new_text);
+  gtk_main_quit ();
 }
 
 void
-set_image(int sx, int sy)
+legacy_pin_request (gboolean outgoing, gchar *address, gchar *name)
 {
-  GdkBitmap *bitmap;
-  GdkPixbuf *sbuf, *dbuf;
-  int size;
-	
-  if (!sx)
-    {
-      sy = gdk_pixbuf_get_height(gtk_image_get_pixbuf(GTK_IMAGE(icon)));
-      sx = gdk_pixbuf_get_width(gtk_image_get_pixbuf(GTK_IMAGE(icon)));
-    }
-	
-  size = (sx > sy) ? sy : sx;
-  sbuf = gpe_find_icon (radio_is_on ? "bt-on" : "bt-off");
-	
-  dbuf = gdk_pixbuf_scale_simple(sbuf, size, size, GDK_INTERP_HYPER);
-  gdk_pixbuf_render_pixmap_and_mask (dbuf, NULL, &bitmap, 60);
-  gtk_widget_shape_combine_mask (GTK_WIDGET(window), NULL, 0, 0);
-  gtk_widget_shape_combine_mask (GTK_WIDGET(window), bitmap, 0, 0);
-  gdk_bitmap_unref (bitmap);
-  gtk_image_set_from_pixbuf(GTK_IMAGE(icon), dbuf);
-}
+  BluetoothPinRequest *req;
 
-static pid_t
-fork_hciattach (void)
-{
-  if (access (HCIATTACH, X_OK) == 0)
-    {
-      pid_t p = vfork ();
-      if (p == 0)
-	{
-	  execl (HCIATTACH, HCIATTACH, NULL);
-	  perror (HCIATTACH);
-	  _exit (1);
-	}
+  req = bluetooth_pin_request_new (outgoing, address, name);
 
-      return p;
-    }
-
-  return 0;
-}
-
-static void
-radio_on (void)
-{
-  sigset_t sigs;
-  int fd;
-
-  fd = socket (PF_BLUETOOTH, SOCK_DGRAM, BTPROTO_L2CAP);
-  if (fd < 0)
-    {
-      gpe_error_box (_("No kernel support for Bluetooth"));
-      return;
-    }
-  close (fd);
-
-  gtk_widget_hide (menu_radio_on);
-  gtk_widget_show (menu_radio_off);
-  gtk_widget_set_sensitive (menu_devices, TRUE);
-
-  radio_is_on = TRUE;
-  sigemptyset (&sigs);
-  sigaddset (&sigs, SIGCHLD);
-  sigprocmask (SIG_BLOCK, &sigs, NULL);
-  hciattach_pid = fork_hciattach ();
-  sigprocmask (SIG_UNBLOCK, &sigs, NULL);
-  set_image(0, 0);
-}
-
-static void
-do_stop_radio (void)
-{
-  radio_is_on = FALSE;
-
-  if (hciattach_pid)
-    {
-      kill (hciattach_pid, 15);
-      hciattach_pid = 0;
-    }
-
-  system ("/sbin/hciconfig hci0 down");
-}
-
-static void
-radio_off (void)
-{
-  gtk_widget_hide (menu_radio_off);
-  gtk_widget_show (menu_radio_on);
-  gtk_widget_set_sensitive (menu_devices, FALSE);
-
-  do_stop_radio ();
-  set_image(0, 0);
-}
-
-static gboolean
-devices_window_destroyed (void)
-{
-  devices_window = NULL;
-
-  return FALSE;
-}
-
-static void
-device_info (struct bt_device *bd)
-{
-  GtkWidget *window = gtk_dialog_new ();
-  GtkWidget *vbox1 = gtk_vbox_new (FALSE, 0);
-  GtkWidget *hbox1 = gtk_hbox_new (FALSE, 0);
-  GtkWidget *labelname = gtk_label_new (bd->name);
-  GtkWidget *labeladdr = gtk_label_new (batostr (&bd->bdaddr));
-  GtkWidget *image = gtk_image_new_from_pixbuf (bd->pixbuf);
-  GtkWidget *dismiss = gtk_button_new_from_stock (GTK_STOCK_OK);
-
-  gtk_window_set_title (GTK_WINDOW (window), _("Device information"));
-  gpe_set_window_icon (GTK_WIDGET (window), "bt-logo");
-
-  gtk_misc_set_alignment (GTK_MISC (labelname), 0.0, 0.5);
-  gtk_misc_set_alignment (GTK_MISC (labeladdr), 0.0, 0.5);
-      
-  gtk_box_pack_start (GTK_BOX (vbox1), labelname, TRUE, TRUE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox1), labeladdr, TRUE, TRUE, 0);
-      
-  gtk_box_pack_start (GTK_BOX (hbox1), vbox1, TRUE, TRUE, 8);
-  gtk_box_pack_start (GTK_BOX (hbox1), image, TRUE, TRUE, 8);
-      
-  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), hbox1, FALSE, FALSE, 0);
-
-  gtk_box_pack_end (GTK_BOX (GTK_DIALOG (window)->action_area), dismiss, FALSE, FALSE, 0);
-  
-  gtk_widget_realize (window);
-  gdk_window_set_transient_for (window->window, devices_window->window);
-  
-  gtk_widget_show_all (window);
-  
-  g_signal_connect_swapped (G_OBJECT (dismiss), "clicked", G_CALLBACK (gtk_widget_destroy), window);
-}
-
-static void
-show_device_info (GtkWidget *w, struct bt_device *this_device)
-{
-  device_info (this_device);
-}
-
-static void
-device_clicked (GtkWidget *widget, GdkEventButton *e, gpointer data)
-{
-  GSList *iter;
-  GtkWidget *device_menu;
-  GtkWidget *details;
-  struct bt_device *bd = (struct bt_device *)data;
-
-  device_menu = gtk_menu_new ();
-
-  details = gtk_menu_item_new_with_label (_("Details ..."));
-  g_signal_connect (G_OBJECT (details), "activate", G_CALLBACK (show_device_info), bd);
-  gtk_widget_show (details);
-  gtk_menu_append (GTK_MENU (device_menu), details);
-
-  for (iter = bd->services; iter; iter = iter->next)
-    {
-      struct bt_service *sv = iter->data;
-
-      if (sv->desc->popup_menu)
-	sv->desc->popup_menu (sv, device_menu);
-    }
-
-#if 0
-  g_signal_connect (G_OBJECT (device_menu), "hide", G_CALLBACK (gtk_widget_destroy), NULL);
-#endif
-
-  gtk_menu_popup (GTK_MENU (device_menu), NULL, NULL, NULL, widget, 1, GDK_CURRENT_TIME);
-}
-
-const gchar *
-icon_name_for_class (int class)
-{
-  const gchar *pixbuf_name;
-
-  switch (class & 0x1f00)
-    {
-    case 0x100:
-      pixbuf_name = "computer";
-      break;
-    case 0x200:
-      pixbuf_name = "cellphone";
-      break;
-    case 0x300:
-      pixbuf_name = "network";
-      break;
-    case 0x600:
-      pixbuf_name = "printer";
-      break;
-    default:
-      pixbuf_name = "bt-logo";
-      break;
-    }
-
-  return pixbuf_name;
-}
-
-static gboolean
-run_scan (gpointer data)
-{
-  bdaddr_t bdaddr;
-  inquiry_info *info = NULL;
-  int dev_id = -1;
-  int num_rsp, length, flags;
-  char name[248];
-  int i, dd;
-  GtkWidget *w;
-  GSList *iter;
-  const char *text;
-
-  gdk_threads_enter ();
-  w = bt_progress_dialog (_("Scanning for devices"), gpe_find_icon ("bt-logo"));
-  gtk_widget_show_all (w);
-  gdk_threads_leave ();
-
-  length  = 4;  /* ~10 seconds */
-  num_rsp = 10;
-  flags = 0;
-
-  num_rsp = hci_inquiry (dev_id, length, num_rsp, NULL, &info, flags);
-  if (num_rsp < 0) 
-    {
-      text = _("Inquiry failed");
-      goto error;
-    }
-
-  dd = hci_open_dev (0/*dev_id*/);
-  if (dd < 0) 
-    {
-      free (info);
-      text = _("HCI device open failed");
-      goto error;
-    }
-
-  for (i = 0; i < num_rsp; i++) 
-    {
-      struct bt_device *bd;
-      GSList *iter;
-      gboolean found = FALSE;
-
-      baswap (&bdaddr, &(info+i)->bdaddr);
-
-      for (iter = devices; iter; iter = iter->next)
-	{
-	  struct bt_device *d = (struct bt_device *)iter->data;
-	  if (memcmp (&d->bdaddr, &bdaddr, sizeof (bdaddr)) == 0)
-	    {
-	      found = TRUE;
-	      break;
-	    }
-	}
-
-      if (found)
-	continue;
-
-      memset(name, 0, sizeof(name));
-      if (hci_read_remote_name (dd, &(info+i)->bdaddr, sizeof(name), name, 25000) < 0)
-	strcpy (name, _("unknown"));
-
-      bd = g_malloc (sizeof (struct bt_device));
-      memset (bd, 0, sizeof (*bd));
-      bd->name = g_strdup (name);
-      memcpy (&bd->bdaddr, &bdaddr, sizeof (bdaddr));
-      bd->class = ((info+i)->dev_class[2] << 16) | ((info+i)->dev_class[1] << 8) | (info+i)->dev_class[0];
-
-      bd->pixbuf = gpe_find_icon (icon_name_for_class (bd->class));
-
-      gdk_pixbuf_ref (bd->pixbuf);
-
-      devices = g_slist_append (devices, bd);
-    }
-  
-  close (dd);
-  free (info);
-
-  gdk_threads_enter ();
-
-  gtk_widget_show_all (devices_window);
-
-  bt_progress_dialog_update (w, _("Retrieving service information"));
-  gdk_flush ();
-
-  for (iter = devices; iter; iter = iter->next)
-    {
-      struct bt_device *bd = iter->data;
-      GObject *item;
-      item = gpe_icon_list_view_add_item_pixbuf (GPE_ICON_LIST_VIEW (iconlist), bd->name, bd->pixbuf, bd);
-      g_signal_connect (G_OBJECT (item), "button-release", G_CALLBACK (device_clicked), bd);
-      
-      if (bd->sdp == FALSE)
-	{
-	  gdk_flush ();
-	  gdk_threads_leave ();
-
-	  bd->sdp = TRUE;
-	  sdp_browse_device (bd, PUBLIC_BROWSE_GROUP);
-
-	  gdk_threads_enter ();
-	}
-    }
-
-  gtk_widget_destroy (w);
-  gdk_flush ();
-
-  gdk_threads_leave ();
-
-  return TRUE;
-
- error:
-  gdk_threads_enter ();
-  gtk_widget_destroy (w);
-  gpe_perror_box_nonblocking (text);
-  gtk_widget_show_all (devices_window);
-  gdk_threads_leave ();
-  return FALSE;
-}
-
-static void
-show_devices (void)
-{
-  if (devices_window == NULL)
-    {
-      devices_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-
-      gtk_window_set_title (GTK_WINDOW (devices_window), _("Bluetooth devices"));
-      gpe_set_window_icon (devices_window, "bt-logo");
-
-      gtk_window_set_default_size (GTK_WINDOW (devices_window), 240, 240);
-
-      iconlist = gpe_icon_list_view_new ();
-      gtk_container_add (GTK_CONTAINER (devices_window), iconlist);
-      gpe_icon_list_view_set_embolden (GPE_ICON_LIST_VIEW (iconlist), FALSE);
-
-      g_signal_connect (G_OBJECT (devices_window), "destroy", 
-			G_CALLBACK (devices_window_destroyed), NULL);
-    }
-
-  gpe_icon_list_view_clear (GPE_ICON_LIST_VIEW (iconlist));
-
-  scan_thread = g_thread_create ((GThreadFunc) run_scan, NULL, FALSE, NULL);
-
-  if (scan_thread == NULL)
-    gpe_perror_box (_("Unable to scan for devices"));
-}
-
-static void
-sigchld_handler (int sig)
-{
-  int status;
-  pid_t p = waitpid (0, &status, WNOHANG);
-
-  if (p == hciattach_pid)
-    {
-      if (WIFSIGNALED (status) && (WTERMSIG (status) == SIGHUP))
-	{
-	  /* restart hciattach after hangup */
-	  hciattach_pid = fork_hciattach ();
-	}
-      else
-	{
-	  hciattach_pid = 0;
-	  if (radio_is_on)
-	    {
-	      gpe_error_box_nonblocking (_("hciattach died unexpectedly"));
-	      radio_off ();
-	    }
-	}
-    }
-  else if (p > 0)
-    {
-      fprintf (stderr, "unknown pid %d exited\n", p);
-    }
-}
-
-static void
-clicked (GtkWidget *w, GdkEventButton *ev)
-{
-  gtk_menu_popup (GTK_MENU (menu), NULL, NULL, gpe_popup_menu_position, w, ev->button, ev->time);
-}
-
-static void
-cancel_dock_message (guint id)
-{
-  gdk_threads_enter ();
-  gpe_system_tray_cancel_message (dock_window, id);
-  gdk_threads_leave ();
+  g_signal_connect (G_OBJECT (req), "result", G_CALLBACK (legacy_pin_result), NULL);
 }
 
 void
-schedule_message_delete (guint id, guint time)
+usage (char *argv[])
 {
-  g_timeout_add (time, (GSourceFunc) cancel_dock_message, (gpointer)id);
+  fprintf (stderr, _("Usage: %s <in|out> <address> [name]\n"), argv[0]);
+  fprintf (stderr, _(" or    %s --dbus\n"), argv[0]);
+  exit (1);
 }
 
-gboolean 
-configure_event (GtkWidget *window, GdkEventConfigure *event, GdkBitmap *bitmap_)
-{
-  if (event->type == GDK_CONFIGURE)
-    set_image(event->width, event->height);
-	
-  return FALSE;
-}
-
-int
+int 
 main (int argc, char *argv[])
 {
-  GdkBitmap *bitmap;
-  GtkWidget *menu_remove;
-  GtkTooltips *tooltips;
-  int dd;
+  char *dpy;
+  gboolean dbus_mode = FALSE;
+  gchar *address, *name = NULL;
 
-  g_thread_init (NULL);
-  gdk_threads_init ();
-
-  if (gpe_application_init (&argc, &argv) == FALSE)
-    exit (1);
+  dpy = getenv ("DISPLAY");
 
   setlocale (LC_ALL, "");
 
-  dd = hci_open_dev (0);
-  if (dd != -1)
-    {
-      radio_is_on = TRUE;
-      hci_close_dev (dd);
-    }
-
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
-  bind_textdomain_codeset (PACKAGE, "UTF-8");
   textdomain (PACKAGE);
 
-  gpe_bluetooth_init_dbus ();
+  if (argc > 1 && !strcmp (argv[1], "--dbus"))
+    dbus_mode = TRUE;
 
-  window = gtk_plug_new (0);
-  gtk_widget_realize (window);
-
-  gtk_window_set_title (GTK_WINDOW (window), _("Bluetooth control"));
-
-  signal (SIGCHLD, sigchld_handler);
-
-  menu = gtk_menu_new ();
-  menu_radio_on = gtk_menu_item_new_with_label (_("Switch radio on"));
-  menu_radio_off = gtk_menu_item_new_with_label (_("Switch radio off"));
-  menu_devices = gtk_menu_item_new_with_label (_("Devices..."));
-  menu_remove = gtk_menu_item_new_with_label (_("Remove from panel"));
-
-  g_signal_connect (G_OBJECT (menu_radio_on), "activate", G_CALLBACK (radio_on), NULL);
-  g_signal_connect (G_OBJECT (menu_radio_off), "activate", G_CALLBACK (radio_off), NULL);
-  g_signal_connect (G_OBJECT (menu_devices), "activate", G_CALLBACK (show_devices), NULL);
-  g_signal_connect (G_OBJECT (menu_remove), "activate", G_CALLBACK (gtk_main_quit), NULL);
-
-  if (! radio_is_on)
+  if (dbus_mode == FALSE && dpy == NULL)
     {
-      gtk_widget_set_sensitive (menu_devices, FALSE);
-      gtk_widget_show (menu_radio_on);
+      char *auth = NULL;
+      FILE *fp;
+      dpy = ":0";
+      fp = popen ("/bin/ps --format args --no-headers -C X -C XFree86", "r");
+      if (fp)
+	{
+	  char buf[1024];
+	  while (fgets (buf, sizeof (buf), fp))
+	    {
+	      char *p = strtok (buf, " ");
+	      int authf = 0;
+	      while (p)
+		{
+		  if (authf)
+		    {
+		      auth = strdup (p);
+		      authf = 0;
+		    }
+		  else if (p[0] == ':')
+		    dpy = strdup (p);
+		  else if (!strcmp (p, "-auth"))
+		    authf = 1;
+		  p = strtok (NULL, " ");
+		}
+	    }
+	  pclose (fp);
+	}
+      setenv ("DISPLAY", dpy, 0);
+      if (auth)
+	setenv ("XAUTHORITY", auth, 0);
     }
 
-  gtk_widget_show (menu_devices);
-  gtk_widget_show (menu_remove);
+  gtk_set_locale ();
+  gtk_init (&argc, &argv);
 
-  gtk_menu_append (GTK_MENU (menu), menu_radio_on);
-  gtk_menu_append (GTK_MENU (menu), menu_radio_off);
-  gtk_menu_append (GTK_MENU (menu), menu_devices);
-  gtk_menu_append (GTK_MENU (menu), menu_remove);
+  if (dbus_mode)
+    {
+      bluez_pin_dbus_server_run ();
 
-  if (gpe_load_icons (my_icons) == FALSE)
-    exit (1);
+      gtk_main ();
+    }
+  else
+    {
+      gboolean outgoing = FALSE;
 
-  icon = gtk_image_new_from_pixbuf (gpe_find_icon (radio_is_on ? "bt-on" : "bt-off"));
-  gtk_widget_show (icon);
+      if (argc < 3)
+	usage (argv);
 
-  gpe_set_window_icon (window, "bt-on");
+      if (strcmp (argv[1], "in") == 0)
+	outgoing = FALSE;
+      else if (strcmp (argv[1], "out") == 0)
+	outgoing = TRUE;
+      else
+	usage (argv);
 
-  tooltips = gtk_tooltips_new ();
-  gtk_tooltips_set_tip (GTK_TOOLTIPS (tooltips), window, _("This is the Bluetooth control.\nTap here to turn the radio on and off, or to see a list of Bluetooth devices."), NULL);
+      address = argv[2];
+      if (argc == 4)
+	name = argv[3];
 
-  g_signal_connect (G_OBJECT (window), "configure-event", G_CALLBACK (configure_event), bitmap);
-  g_signal_connect (G_OBJECT (window), "button-press-event", G_CALLBACK (clicked), NULL);
-  gtk_widget_add_events (window, GDK_BUTTON_PRESS_MASK);
+      legacy_pin_request (outgoing, address, name);
 
-  gtk_container_add (GTK_CONTAINER (window), icon);
-
-  gtk_widget_show (window);
-
-  atexit (do_stop_radio);
-
-  dun_init ();
-  lap_init ();
-  pan_init ();
-  headset_init ();
-  obex_init ();
-
-  dock_window = window->window;
-  gpe_system_tray_dock (window->window);
-
-  gdk_threads_enter ();
-  gtk_main ();
-  gdk_threads_leave ();
+      gtk_main ();
+    }
 
   exit (0);
 }
