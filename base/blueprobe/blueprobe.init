@@ -8,13 +8,15 @@ if [ -f /etc/sysconfig/bluetooth ]; then
 
   . /etc/sysconfig/bluetooth
 
-  # Turn echo off; if the bluetooth chip emits characters on power up,
-  # they would be echoed back to the chip, confusing it. This should only
-  # be necessary to do once, as hciattach turns echo off too (but too
-  # late the first time, since the bluetooth chip is powered up when the
-  # port is opened, before hciattach gets a chance to turn echo off).
-  echo "Turning echo off on ${BLUETOOTH_PORT}"
-  stty -echo < $BLUETOOTH_PORT
+  if [ $BLUETOOTH = "yes" ]; then
+    # Turn echo off; if the bluetooth chip emits characters on power up,
+    # they would be echoed back to the chip, confusing it. This should only
+    # be necessary to do once, as hciattach turns echo off too (but too
+    # late the first time, since the bluetooth chip is powered up when the
+    # port is opened, before hciattach gets a chance to turn echo off).
+    echo "Turning echo off on ${BLUETOOTH_PORT}"
+    stty -echo < $BLUETOOTH_PORT
+  fi
 
 else
   echo -n "Checking for built-in Bluetooth: "
