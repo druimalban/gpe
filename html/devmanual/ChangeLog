@@ -1,3 +1,9 @@
+2005-09-05  Florian Boor <florian.boor@kernelconcepts.de>
+
+    * basics.sgml: Add Philippe to the authors list.
+    * application.sgml: Start to merge in Philippe's section about the demo
+                        application.
+
 2005-08-28  Florian Boor <florian.boor@kernelconcepts.de>
 
     * porting.sgml: Additional information about i18n, X and GTK.

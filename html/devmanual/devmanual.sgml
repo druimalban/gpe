@@ -34,6 +34,13 @@
             <address role="email">nils.faerber@kernelconcepts.de</address>
           </affiliation>
         </author>
+        <author>
+          <firstname>Philippe</firstname>
+          <surname>De Swert</surname>
+          <affiliation>
+            <address role="email">philippedeswert@scarlet.be</address>
+          </affiliation>
+        </author>
         <copyright>
           <year>2005</year>
           <holder>GPE Team</holder>

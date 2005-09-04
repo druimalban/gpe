@@ -9,35 +9,69 @@
   </para>
 <section>
 <title>A GPE Application Step by Step</title>
-  <para>
-  To get an idea about how GPE applications look like and how they use the 
-  GTK toolkit we look at a simple GPE application first. We will go through
-  the complete code of it to explain the very basic steps of GPE application
-  development. Our example project will consist of these files:
-  <table frame='all'>
-  <title>Example Project Files</title>
-  <tgroup cols='2' align='left' colsep='1' rowsep='1'>
-    <colspec colname='Des'/>
-    <colspec colname='Val'/>
-    <thead>
-      <row>
-        <entry>Filename</entry>
-        <entry>Description</entry>
-      </row>
-    </thead>
-    <tbody>
-       <row><entry>gpe-demo.c</entry><entry>Application implementation.</entry></row>
-       <row><entry>gpe-demo.png</entry><entry>Application icon.</entry></row>
-       <row><entry>gpe-demo.dektop.in</entry><entry>Desktop entry file base.</entry></row>
-       <row><entry>configure.ac</entry><entry>Autotools support file (autoconf).</entry></row>
-       <row><entry>Makefile.am</entry><entry>Autotools support file (automake).</entry></row>
-       <row><entry>gpe-dist.am</entry><entry>Some generic GPE make targets.</entry></row>
-    </tbody>
-    </tgroup>
-  </table>
-
-
-  </para>
+    <section>
+    <title>Overview</title>
+      <para>
+      To get an idea about how GPE applications look like and how they use the 
+      GTK toolkit we look at a simple GPE application first. We will use an example 
+      application for this called gpe-hello. You can get the source for this either
+      from the GPE CVS or as a tarball from http://www.handhelds.org/~philippe. 
+      You will also need to install libgpewidget-dev on your development system 
+      to be able to compile and run it.
+      </para>
+    </section>
+    <section>
+    <title>Good Practices</title>
+      <para>
+      We try to encourage good coding styles and prefer to have GPE applications
+      that use the autotools for configuration. Please comment your code as 
+      much as possible. Also compile your programs with <emphasis>-Wall</emphasis>
+      to catch as much as possible potential errors. This makes it easier for 
+      you and anybody else that will try to fix the inevitable bugs, and help 
+      you write good programs.
+      </para>
+      <para>
+      Also you need to pay much attention to memory usage. So make sure you do 
+      not introduce memory leaks. As most systems where GPE (will) run(s) on 
+      are limited in memory and cannot afford memory leaks. Lots of tools like 
+      valgrind and memprof are available to check for this kind of errors.
+      </para>
+      <para>
+      Last but not least, for your program to become an official GPE application
+      it needs to be released under a free license like the GNU GPL/LGPL or the 
+      BSD license. 
+      </para>
+    </section>
+    <section>
+    <title>GPE Application Skeleton</title>
+      <para>
+      If you unpack the tarball you will see that it already contains quite a 
+      lot of files. They all have a specific function but are not always needed 
+      as some of them are auto-generated (these auto-generated files should 
+      not be placed in CVS. However try to use as much as possible of those.
+      <table frame='all'>
+      <title>Example Project Files</title>
+      <tgroup cols='2' align='left' colsep='1' rowsep='1'>
+        <colspec colname='Des'/>
+        <colspec colname='Val'/>
+        <thead>
+          <row>
+            <entry>Filename</entry>
+            <entry>Description</entry>
+          </row>
+        </thead>
+        <tbody>
+           <row><entry>gpe-demo.c</entry><entry>Application implementation.</entry></row>
+           <row><entry>gpe-demo.png</entry><entry>Application icon.</entry></row>
+           <row><entry>gpe-demo.dektop.in</entry><entry>Desktop entry file base.</entry></row>
+           <row><entry>configure.ac</entry><entry>Autotools support file (autoconf).</entry></row>
+           <row><entry>Makefile.am</entry><entry>Autotools support file (automake).</entry></row>
+           <row><entry>gpe-dist.am</entry><entry>Some generic GPE make targets.</entry></row>
+        </tbody>
+        </tgroup>
+      </table>
+      </para>
+    </section>  
 </section>
 <section>
 <title>Building and Testing</title>
