@@ -30,8 +30,6 @@
 #define _(String) gettext(String)
 
 GtkToolItem *stop_reload_button;
-GSList *booklist;
-GtkTreeIter iter;
 
 /* contains the necessary data for passing urls between the different functions */
 struct url_data {
@@ -65,7 +63,15 @@ GtkToolItem *hiding_button;
 struct bookmark_add {
 Webi *html;
 GtkWidget *entry;
+GtkWidget *treeview;
 int bookmark_type;
+};
+
+/* data container to fill in the bookmark tree */
+struct tree_action
+{
+Webi *html;
+GtkWidget *treeview;
 };
 
 /********************************************************
@@ -96,7 +102,7 @@ void hide_url_bar (GtkWidget * button, struct urlbar_data* url_bar);
 /* show bookmark window */
 void show_bookmarks (GtkWidget * button, Webi * html);
 /* bookmark add dialog */
-void show_add_dialog (GtkWidget *button, Webi *html);
+void show_add_dialog (GtkWidget *button, gpointer *data);
 
 /********************************************************
 	       url loading and handling
@@ -137,6 +143,8 @@ void delete_bookmarks (GtkWidget *button, gpointer *data);
 void open_bookmarks (GtkWidget *button, gpointer *data);
 /* toggle bookmark type */
 void toggle_type (GtkWidget *button, gpointer *data);
+/* add bookmark to list */
+void add_bookmark_func (GtkWidget *button, gpointer *data);
 
 
 /******************************************************

@@ -6,7 +6,7 @@ v0.16 - .....	- ../08/2005 - Philippe De Swert
 * Bookmarks
 * Fixed a bug that causes a segfault when loading a file that could not be found
 * Fixed some tiny memory leaks that popped up after passing it through Valgrind
-* Added a --disable-bookmarks flag (this way builds can be made without boomarks which requires sqlite)
+* Added a --disable-bookmarks flag (this way builds can be made without bookmarks which requires sqlite)
 * Internationalisation
 
 v0.15 - Happy Koen release - 31/07/2005 - Philippe De Swert

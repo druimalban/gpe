@@ -40,9 +40,10 @@
 
 //#define DEBUG /* uncomment this if you want debug output*/
 
-void set_default_settings(Webi *html, WebiSettings *ks)
+void
+set_default_settings (Webi * html, WebiSettings * ks)
 {
-  const gchar* http_proxy;
+  const gchar *http_proxy;
 
   ks->default_font_size = 11;
   ks->default_fixed_font_size = 11;
@@ -57,59 +58,159 @@ void set_default_settings(Webi *html, WebiSettings *ks)
   http_proxy = g_getenv ("http_proxy");
   if (!http_proxy)
     http_proxy = g_getenv ("HTTP_PROXY");
-  if (!http_proxy) {
-    http_proxy = "" ;
-  }
-  ks->http_proxy = g_strdup(http_proxy);
+  if (!http_proxy)
+    {
+      http_proxy = "";
+    }
+  ks->http_proxy = g_strdup (http_proxy);
 
   webi_set_settings (WEBI (html), ks);
 }
 
-void zoom_in (GtkWidget *zoom_in , gpointer *data)
+void
+zoom_in (GtkWidget * zoom_in, gpointer * data)
 {
   struct zoom_data *zoom;
   WebiSettings *set;
 
-  zoom = (struct zoom_data *)data;
+  zoom = (struct zoom_data *) data;
   set = zoom->settings;
   set->default_font_size++;
   set->default_fixed_font_size++;
-  webi_set_settings (WEBI(zoom->html), set);
+  webi_set_settings (WEBI (zoom->html), set);
 }
 
-void zoom_out (GtkWidget *zoom_out , gpointer *data)
+void
+zoom_out (GtkWidget * zoom_out, gpointer * data)
 {
   struct zoom_data *zoom;
   WebiSettings *set;
 
-  zoom = (struct zoom_data *)data;
+  zoom = (struct zoom_data *) data;
   set = zoom->settings;
   set->default_font_size--;
   set->default_fixed_font_size--;
-  webi_set_settings (WEBI(zoom->html), set);
+  webi_set_settings (WEBI (zoom->html), set);
 }
 
-void delete_bookmarks (GtkWidget *button, gpointer *data)
+void
+delete_bookmarks (GtkWidget * button, gpointer * data)
 {
-        if (gpe_question_ask("Really delete this bookmark or category?", "Delete?",
-                             "question", "!gtk-cancel", NULL,
-                             "!gtk-delete", NULL, NULL) == 1)
+  if (gpe_question_ask ("Really delete this bookmark or category?", "Delete?",
+			"question", "!gtk-cancel", NULL,
+			"!gtk-delete", NULL, NULL) == 1)
+    {
+        GtkTreeSelection *selection;
+        GtkTreeModel *model;
+        GtkTreeIter iter;
+        gchar *url;
+
+        selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(data));
+        model = gtk_tree_view_get_model (GTK_TREE_VIEW(data));
+
+        if (gtk_tree_selection_get_selected(selection, &model, &iter))
         {
+                gtk_tree_model_get(model, &iter, 0, &url, -1);
+#ifdef DEBUG
+		printf("Deleting url %s\n",url);
+#endif
+
+	//delete from db
+	//delete from list or refresh list when db backend is in
+		gtk_list_store_remove (GTK_LIST_STORE(model), &iter);
         }
+    }
 }
 
-void open_bookmarks (GtkWidget *button, gpointer *data)
+void
+open_bookmarks (GtkWidget * button, gpointer * data)
 {
-}
+	struct tree_action *open_data;
+	GtkTreeSelection *selection; 
+	GtkTreeModel *model;
+	GtkTreeIter iter;
+	gchar *url;
 
-void toggle_type (GtkWidget *button, gpointer *data)
-{
-	struct bookmark_add *test;
+	open_data = (struct tree_action *)data;
 	
-	test = (struct bookmark_add *)data;
-	
-	if(test->bookmark_type)
-		test->bookmark_type = 0;
+	selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(open_data->treeview));
+	model = gtk_tree_view_get_model (GTK_TREE_VIEW(open_data->treeview));
+
+	if (gtk_tree_selection_get_selected(selection, &model, &iter))
+	{
+		gtk_tree_model_get(model, &iter, 0, &url, -1);
+		url = (gchar *)parse_url(url);
+#ifdef DEBUG
+		printf("The selected url = %s\n", url);
+#endif
+		fetch_url(url, GTK_WIDGET(open_data->html));
+		g_free(url);
+	}
 	else
-		test->bookmark_type = 1;
+	{
+	 gpe_error_box("No bookmark selected!");
+	}
+}
+
+void
+toggle_type (GtkWidget * button, gpointer * data)
+{
+  struct bookmark_add *test;
+
+  test = (struct bookmark_add *) data;
+
+  if (test->bookmark_type)
+    test->bookmark_type = 0;
+  else
+    test->bookmark_type = 1;
+}
+
+void add_bookmark_func (GtkWidget *button, gpointer *data)
+{
+	struct bookmark_add *info;
+	GtkTreeModel *model;
+        GtkTreeIter iter;
+	const gchar *location;
+	
+	info = (struct bookmark_add *) data;
+
+        model = gtk_tree_view_get_model (GTK_TREE_VIEW(info->treeview));
+
+	if (info->bookmark_type == 0)
+	{
+      		location = webi_get_location (info->html);	
+#ifdef DEBUG
+		printf("bookmark value is %s\n", location);
+#endif
+		/* if we haven't visited any website beforehand the location will be null */
+		if(location != NULL)
+		{
+		// add to database
+		gtk_list_store_append(GTK_LIST_STORE(model), &iter);
+		gtk_list_store_set(GTK_LIST_STORE(model), &iter, 0, location, -1);
+		}
+		else
+		{
+			gpe_error_box("There is no current url!\n");
+		}
+	}
+	else
+	{
+		location = gtk_editable_get_chars (GTK_EDITABLE (info->entry), 0, -1);
+#ifdef DEBUG
+		printf("bookmark value is %s\n", location);
+#endif
+		if(location != NULL)
+                {
+                // add to database
+                gtk_list_store_append(GTK_LIST_STORE(model), &iter);
+                gtk_list_store_set(GTK_LIST_STORE(model), &iter, 0, location, -1);
+                }
+		else
+                {
+                        gpe_error_box("No url filled in!\n");
+                }
+
+	}
+
 }

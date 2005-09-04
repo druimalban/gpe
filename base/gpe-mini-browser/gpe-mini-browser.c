@@ -49,18 +49,19 @@
 
 static int fullscreen = 0;
 
-static void set_fullscreen (GtkWidget *button, GtkWidget *app)
+static void
+set_fullscreen (GtkWidget * button, GtkWidget * app)
 {
-	if(!fullscreen)
-	{
-		gtk_window_fullscreen(GTK_WINDOW (app));
-		fullscreen = 1;
-	}
-	else
-	{
-		gtk_window_unfullscreen(GTK_WINDOW (app));
-		fullscreen = 0;
-	}
+  if (!fullscreen)
+    {
+      gtk_window_fullscreen (GTK_WINDOW (app));
+      fullscreen = 1;
+    }
+  else
+    {
+      gtk_window_unfullscreen (GTK_WINDOW (app));
+      fullscreen = 0;
+    }
 }
 
 
@@ -68,9 +69,9 @@ int
 main (int argc, char *argv[])
 {
   GtkWidget *html, *app, *contentbox;	/* html engine, application window, content box of application window */
-  GtkWidget *toolbar, *urlbox=NULL;	/* toolbar, url entry box (big screen) */
-  GtkToolItem *back_button, *forward_button, *home_button, *bookmarks_button, 
-	        *fullscreen_button, *url_button=NULL;
+  GtkWidget *toolbar, *urlbox = NULL;	/* toolbar, url entry box (big screen) */
+  GtkToolItem *back_button, *forward_button, *home_button, *bookmarks_button,
+    *fullscreen_button, *url_button = NULL;
   GtkToolItem *separator, *separator2, *separator3;
   extern GtkToolItem *stop_reload_button;
   const gchar *base;
@@ -88,12 +89,14 @@ main (int argc, char *argv[])
 	{
 	case 'v':
 	  printf
-	    (_("GPE-mini-browser version 0.16. (C)2005, Philippe De Swert\n"));
+	    (_
+	     ("GPE-mini-browser version 0.16. (C)2005, Philippe De Swert\n"));
 	  exit (0);
 
 	default:
 	  printf
-	    (_("GPE-mini-browser, basic web browser application. (c)2005, Philippe De Swert\n"));
+	    (_
+	     ("GPE-mini-browser, basic web browser application. (c)2005, Philippe De Swert\n"));
 	  printf (_("Usage: gpe-mini-browser <URL>\n"));
 	  printf (_("Use -v for version info.\n"));
 	  exit (0);
@@ -132,7 +135,7 @@ main (int argc, char *argv[])
   html = webi_new ();
   webi_set_emit_internal_status (WEBI (html), TRUE);
 
-  set_default_settings(WEBI (html), &s );
+  set_default_settings (WEBI (html), &s);
 
   /* set rendering mode depending on screen size (when working in gtk-webcore) 
      if(width <=320)
@@ -146,8 +149,8 @@ main (int argc, char *argv[])
 
   /* Connect all the signals to the rendering object */
   /* cookies will only decently work when fixed in gtk-webcore */
-  g_signal_connect (WEBI (html), "set_cookie", G_CALLBACK (handle_cookie),
-		    NULL);
+  g_signal_connect (WEBI (html), "set_cookie", 
+		    G_CALLBACK (handle_cookie), NULL);
 
   g_signal_connect (WEBI (html), "load_start",
 		    G_CALLBACK (create_status_window), &status);
@@ -155,68 +158,72 @@ main (int argc, char *argv[])
   g_signal_connect (WEBI (html), "load_stop",
 		    G_CALLBACK (destroy_status_window), &status);
 
-  g_signal_connect (WEBI (html), "status", G_CALLBACK (activate_statusbar),
-		    &status);
-  g_signal_connect (WEBI (html), "title", G_CALLBACK (set_title), app);
+  g_signal_connect (WEBI (html), "status", 
+                    G_CALLBACK (activate_statusbar), &status);
+
+  g_signal_connect (WEBI (html), "title", 
+ 		    G_CALLBACK (set_title), app);
 
   /*add home,  back, forward, refresh / stop, url (small screen) */
   back_button = gtk_tool_button_new_from_stock (GTK_STOCK_GO_BACK);
-  gtk_tool_item_set_homogeneous(back_button, FALSE);
-  gtk_toolbar_insert(GTK_TOOLBAR (toolbar), back_button, -1);
+  gtk_tool_item_set_homogeneous (back_button, FALSE);
+  gtk_toolbar_insert (GTK_TOOLBAR (toolbar), back_button, -1);
 
   forward_button = gtk_tool_button_new_from_stock (GTK_STOCK_GO_FORWARD);
-  gtk_tool_item_set_homogeneous(forward_button, FALSE);
-  gtk_toolbar_insert(GTK_TOOLBAR (toolbar), forward_button, -1);
+  gtk_tool_item_set_homogeneous (forward_button, FALSE);
+  gtk_toolbar_insert (GTK_TOOLBAR (toolbar), forward_button, -1);
 
   stop_reload_button = gtk_tool_button_new_from_stock (GTK_STOCK_REFRESH);
-  gtk_tool_item_set_homogeneous(stop_reload_button, FALSE);
-  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), stop_reload_button, -1);   
+  gtk_tool_item_set_homogeneous (stop_reload_button, FALSE);
+  gtk_toolbar_insert (GTK_TOOLBAR (toolbar), stop_reload_button, -1);
 
   home_button = gtk_tool_button_new_from_stock (GTK_STOCK_HOME);
-  gtk_tool_item_set_homogeneous(home_button, FALSE);
-  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), home_button, -1);   
+  gtk_tool_item_set_homogeneous (home_button, FALSE);
+  gtk_toolbar_insert (GTK_TOOLBAR (toolbar), home_button, -1);
 
-  separator2 = gtk_separator_tool_item_new();
-  gtk_tool_item_set_homogeneous(separator2, FALSE);
-  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), separator2, -1);
+  separator2 = gtk_separator_tool_item_new ();
+  gtk_tool_item_set_homogeneous (separator2, FALSE);
+  gtk_toolbar_insert (GTK_TOOLBAR (toolbar), separator2, -1);
 
 #ifndef NOBOOKMARKS
   bookmarks_button = gtk_tool_button_new_from_stock (GTK_STOCK_INDENT);
-  gtk_tool_item_set_homogeneous(bookmarks_button, FALSE);
-  gtk_tool_button_set_label(GTK_TOOL_BUTTON(bookmarks_button), _("Bookmarks"));
-  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), bookmarks_button, -1);
-  
-  separator = gtk_separator_tool_item_new();
-  gtk_tool_item_set_homogeneous(separator, FALSE);
-  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), separator, -1); 
+  gtk_tool_item_set_homogeneous (bookmarks_button, FALSE);
+  gtk_tool_button_set_label (GTK_TOOL_BUTTON (bookmarks_button),
+			     _("Bookmarks"));
+  gtk_toolbar_insert (GTK_TOOLBAR (toolbar), bookmarks_button, -1);
+
+  separator = gtk_separator_tool_item_new ();
+  gtk_tool_item_set_homogeneous (separator, FALSE);
+  gtk_toolbar_insert (GTK_TOOLBAR (toolbar), separator, -1);
 #endif
 
   /* only show full Url bar if the screen is bigger than 240x320 | 320x240 */
   if ((width > 320) || (height > 320))
     {
-	urlbox = show_big_screen_interface(WEBI (html), toolbar, &s);
+      urlbox = show_big_screen_interface (WEBI (html), toolbar, &s);
     }
   else
     {
       url_button = gtk_tool_button_new_from_stock (GTK_STOCK_NETWORK);
-      gtk_tool_item_set_homogeneous(url_button, FALSE);
-      gtk_tool_button_set_label(GTK_TOOL_BUTTON(url_button), "Url");
-      gtk_toolbar_insert(GTK_TOOLBAR(toolbar), url_button, -1);
-      separator3 = gtk_separator_tool_item_new();
-      gtk_tool_item_set_homogeneous(separator3, FALSE);
-      gtk_toolbar_insert(GTK_TOOLBAR(toolbar), separator3, -1);
+      gtk_tool_item_set_homogeneous (url_button, FALSE);
+      gtk_tool_button_set_label (GTK_TOOL_BUTTON (url_button), "Url");
+      gtk_toolbar_insert (GTK_TOOLBAR (toolbar), url_button, -1);
+      separator3 = gtk_separator_tool_item_new ();
+      gtk_tool_item_set_homogeneous (separator3, FALSE);
+      gtk_toolbar_insert (GTK_TOOLBAR (toolbar), separator3, -1);
 
       g_signal_connect (GTK_OBJECT (url_button), "clicked",
-		    G_CALLBACK (show_url_window), html);
+			G_CALLBACK (show_url_window), html);
     }
 
 
   /* replace GTK_STOCK_ZOOM_FIT with GTK_STOCK_FULLSCREEN once GPE uses
      gtk 2.7.1 or higher. Or add it myself :-) */
   fullscreen_button = gtk_tool_button_new_from_stock (GTK_STOCK_ZOOM_FIT);
-  gtk_tool_item_set_homogeneous(fullscreen_button, FALSE);
-  gtk_tool_button_set_label(GTK_TOOL_BUTTON(fullscreen_button), _("Fullscreen"));
-  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), fullscreen_button, -1);
+  gtk_tool_item_set_homogeneous (fullscreen_button, FALSE);
+  gtk_tool_button_set_label (GTK_TOOL_BUTTON (fullscreen_button),
+			     _("Fullscreen"));
+  gtk_toolbar_insert (GTK_TOOLBAR (toolbar), fullscreen_button, -1);
 
   /* connect all button signals */
   g_signal_connect (GTK_OBJECT (back_button), "clicked",
@@ -229,29 +236,29 @@ main (int argc, char *argv[])
 		    G_CALLBACK (stop_reload_func), html);
 
   g_signal_connect (GTK_OBJECT (home_button), "clicked",
-		    G_CALLBACK (home_func), html);  
+		    G_CALLBACK (home_func), html);
 
   g_signal_connect (GTK_OBJECT (fullscreen_button), "clicked",
 		    G_CALLBACK (set_fullscreen), app);
-#ifndef NOBOOKMARKS 
+#ifndef NOBOOKMARKS
   g_signal_connect (GTK_OBJECT (bookmarks_button), "clicked",
 		    G_CALLBACK (show_bookmarks), html);
 #endif
 
   /* 
-	DEBUG CODE!
-   only show icons if the screen is 240x320 | 320x240 or smaller 
-  if ((width <= 240) || (height <= 240))
-    gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
-  gtk_toolbar_set_icon_size(GTK_TOOLBAR(toolbar), GTK_ICON_SIZE_SMALL_TOOLBAR);
-  
-    gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_BOTH);
-*/
+     DEBUG CODE!
+     only show icons if the screen is 240x320 | 320x240 or smaller 
+     if ((width <= 240) || (height <= 240))
+     gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
+     gtk_toolbar_set_icon_size(GTK_TOOLBAR(toolbar), GTK_ICON_SIZE_SMALL_TOOLBAR);
+
+     gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_BOTH);
+   */
   gtk_box_pack_start (GTK_BOX (contentbox), toolbar, FALSE, FALSE, 0);
   if ((width > 320) || (height > 320))
     {
-     gtk_box_pack_start (GTK_BOX (contentbox), urlbox, FALSE, FALSE, 0);
-     gtk_widget_show_all (urlbox);
+      gtk_box_pack_start (GTK_BOX (contentbox), urlbox, FALSE, FALSE, 0);
+      gtk_widget_show_all (urlbox);
     }
   gtk_box_pack_start (GTK_BOX (contentbox), html, TRUE, TRUE, 0);
   gtk_container_add (GTK_CONTAINER (app), contentbox);

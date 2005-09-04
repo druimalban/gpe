@@ -46,6 +46,10 @@ fetch_url (const gchar * url, GtkWidget * html)
   gboolean file = FALSE;
   gchar *cut;
 
+#ifdef DEBUG
+	fprintf (stderr, "url is %s\n", url);
+#endif
+
   file = g_str_has_prefix (url, "file");
   if (file)
     {
@@ -140,21 +144,21 @@ forward_func (GtkWidget * forward, GtkWidget * html)
     webi_go_forward (WEBI (html));
   else
     gpe_error_box ("no more pages forward!");
-  
+
 }
-  
+
 /* makes the engine go back one page */
 void
 back_func (GtkWidget * back, GtkWidget * html)
-{ 
+{
   if (webi_can_go_back (WEBI (html)))
     webi_go_back (WEBI (html));
   else
     gpe_error_box ("No more pages back!");
 
 
-} 
-  
+}
+
 /* makes the engine load the home page, if none exists default to gpe.handhelds.org :-) */
 void
 home_func (GtkWidget * home, GtkWidget * html)
@@ -164,17 +168,16 @@ home_func (GtkWidget * home, GtkWidget * html)
   else
     fetch_url (HOME_PAGE, GTK_WIDGET (html));
 }
-  
+
 /* tell the engine to stop or reload the current page */
 void
 stop_reload_func (GtkWidget * reload, GtkWidget * html)
 {
   const gchar *id;
 
-  id = gtk_tool_button_get_stock_id (GTK_TOOL_BUTTON(stop_reload_button));
-  if (!strcmp(id, "gtk-refresh"))
-	  webi_refresh (WEBI (html));
+  id = gtk_tool_button_get_stock_id (GTK_TOOL_BUTTON (stop_reload_button));
+  if (!strcmp (id, "gtk-refresh"))
+    webi_refresh (WEBI (html));
   else
-	  webi_stop_load (WEBI (html));
+    webi_stop_load (WEBI (html));
 }
-
