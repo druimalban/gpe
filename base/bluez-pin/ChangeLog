@@ -1,3 +1,11 @@
+2005-09-05  Phil Blundell  <philb@gnu.org>
+
+	* pin-dbus.c: Apply patch from pHilipp Zabel to support new D-BUS
+	API.
+
+	* main.c: Apply patch from Marcel Holtmann to make old-style PIN
+	helper work with X.org server.
+
 2005-04-19  Phil Blundell  <pb@mebius.nexus.co.uk>
 
 	* Version 0.25 released.

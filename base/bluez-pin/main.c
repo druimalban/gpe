@@ -155,7 +155,7 @@ main (int argc, char *argv[])
       char *auth = NULL;
       FILE *fp;
       dpy = ":0";
-      fp = popen ("/bin/ps --format args --no-headers -C X -C XFree86", "r");
+      fp = popen ("/bin/ps --format args --no-headers -C X -C Xorg -C XFree86", "r");
       if (fp)
 	{
 	  char buf[1024];
