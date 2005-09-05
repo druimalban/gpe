@@ -1,5 +1,9 @@
 2005-09-05  Phil Blundell  <philb@gnu.org>
 
+	* Version 0.26 released.
+
+2005-09-05  Phil Blundell  <philb@gnu.org>
+	
 	* pin-dbus.c: Apply patch from pHilipp Zabel to support new D-BUS
 	API.
 
