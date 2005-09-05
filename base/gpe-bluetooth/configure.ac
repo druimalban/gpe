@@ -26,6 +26,8 @@ AC_PROG_INTLTOOL([0.23])
 
 PKG_CHECK_MODULES(GPE_BLUETOOTH, $DEP_MODULES)
 
+AC_CHECK_LIB(dbus-1, dbus_message_iter_get_basic, AC_DEFINE(HAVE_DBUS_MESSAGE_ITER_GET_BASIC, 1, [Define to 1 if you have the dbus_message_iter_get_basic() function.]))
+
 AC_SUBST(GPE_BLUETOOTH_CFLAGS)
 AC_SUBST(GPE_BLUETOOTH_LIBS)
 

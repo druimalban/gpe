@@ -45,7 +45,11 @@ pin_handler_func (DBusConnection     *connection,
     return bluez_pin_handle_dbus_request (connection, message);
   
   if (dbus_message_is_signal (message,
+#ifdef DBUS_INTERFACE_LOCAL
+                              DBUS_INTERFACE_LOCAL,
+#else
                               DBUS_INTERFACE_ORG_FREEDESKTOP_LOCAL,
+#endif
                               "Disconnected"))
     exit (0);
   
@@ -67,7 +71,11 @@ obex_handler_func (DBusConnection     *connection,
     return obex_client_handle_dbus_request (connection, message);
   
   if (dbus_message_is_signal (message,
+#ifdef DBUS_INTERFACE_LOCAL
+                              DBUS_INTERFACE_LOCAL,
+#else
                               DBUS_INTERFACE_ORG_FREEDESKTOP_LOCAL,
+#endif
                               "Disconnected"))
     exit (0);
   
@@ -98,10 +106,18 @@ gpe_bluetooth_init_dbus (void)
 
       dbus_connection_register_object_path (connection, object_path1, &dbus_pin_vtable, NULL);
 
+#ifdef HAVE_DBUS_MESSAGE_ITER_GET_BASIC
+      dbus_bus_request_name (connection, PIN_SERVICE_NAME, 0, &error);
+#else
       dbus_bus_acquire_service (connection, PIN_SERVICE_NAME, 0, &error);
+#endif
       if (dbus_error_is_set (&error))
 	{
+#ifdef HAVE_DBUS_MESSAGE_ITER_GET_BASIC
+	  gpe_error_box_fmt (_("Failed to request name: %s"), error.message);
+#else
 	  gpe_error_box_fmt (_("Failed to acquire service: %s"), error.message);
+#endif
 	  dbus_error_free (&error);
 	}
     }
@@ -120,10 +136,18 @@ gpe_bluetooth_init_dbus (void)
 
       dbus_connection_register_object_path (connection, object_path2, &dbus_obex_vtable, NULL);
 
+#ifdef HAVE_DBUS_MESSAGE_ITER_GET_BASIC
+      dbus_bus_request_name (connection, OBEX_SERVICE_NAME, 0, &error);
+#else
       dbus_bus_acquire_service (connection, OBEX_SERVICE_NAME, 0, &error);
+#endif
       if (dbus_error_is_set (&error))
 	{
+#ifdef HAVE_DBUS_MESSAGE_ITER_GET_BASIC
+	  gpe_error_box_fmt (_("Failed to request name: %s"), error.message);
+#else
 	  gpe_error_box_fmt (_("Failed to acquire service: %s"), error.message);
+#endif
 	  dbus_error_free (&error);
 	}
     }

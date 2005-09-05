@@ -82,7 +82,11 @@ obex_client_handle_dbus_request (DBusConnection *connection, DBusMessage *messag
   if (dbus_message_iter_get_arg_type (&iter) != DBUS_TYPE_STRING)
     goto wrong_args;
 
+#ifdef HAVE_DBUS_MESSAGE_ITER_GET_BASIC
+  dbus_message_iter_get_basic (&iter, &filename);
+#else
   filename = dbus_message_iter_get_string (&iter);
+#endif
 
   if (!dbus_message_iter_next (&iter))
     goto wrong_args;
@@ -90,16 +94,28 @@ obex_client_handle_dbus_request (DBusConnection *connection, DBusMessage *messag
   if (dbus_message_iter_get_arg_type (&iter) != DBUS_TYPE_STRING)
     goto wrong_args;
 
+#ifdef HAVE_DBUS_MESSAGE_ITER_GET_BASIC
+  dbus_message_iter_get_basic (&iter, &mime_type);
+#else
   mime_type = dbus_message_iter_get_string (&iter);
+#endif
 
   if (!dbus_message_iter_next (&iter))
     goto wrong_args;
   
   if (dbus_message_iter_get_arg_type (&iter) != DBUS_TYPE_ARRAY
+#ifdef HAVE_DBUS_MESSAGE_ITER_GET_BASIC
+      || dbus_message_iter_get_element_type (&iter) != DBUS_TYPE_BYTE)
+#else
       || dbus_message_iter_get_array_type (&iter) != DBUS_TYPE_BYTE)
+#endif
     goto wrong_args;
 
+#ifdef HAVE_DBUS_MESSAGE_ITER_GET_BASIC
+  dbus_message_iter_get_fixed_array (&iter, &data, &len);
+#else
   dbus_message_iter_get_byte_array (&iter, &data, &len);
+#endif
 
   reply = dbus_message_new_method_return (message);
   if (!reply)
