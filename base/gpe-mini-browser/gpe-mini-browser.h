@@ -160,3 +160,5 @@ void stop_db (void);
 int insert_new_bookmark (char *bookmark);
 /* remove a bookmark from the db */
 int remove_bookmark (char *bookmark);
+/* load data from db and fill in tree */
+void load_db_data (GtkWidget *tree);

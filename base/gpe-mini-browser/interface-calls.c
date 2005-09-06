@@ -379,23 +379,17 @@ hide_url_bar (GtkWidget * button, struct urlbar_data *url_bar)
     {
       gtk_widget_hide (data->urlbox);
       data->hidden = 1;
-      gtk_tool_button_set_stock_id (GTK_TOOL_BUTTON (data->hiding_button),
-				    "gtk-redo");
-      gtk_tool_button_set_icon_widget (GTK_TOOL_BUTTON (data->hiding_button),
-				       NULL);
-      gtk_tool_button_set_label (GTK_TOOL_BUTTON (data->hiding_button),
-				 _("Show Url"));
+      gtk_tool_button_set_stock_id (GTK_TOOL_BUTTON (data->hiding_button), "gtk-redo");
+      gtk_tool_button_set_icon_widget (GTK_TOOL_BUTTON (data->hiding_button), NULL);
+      gtk_tool_button_set_label (GTK_TOOL_BUTTON (data->hiding_button), _("Show Url"));
     }
   else
     {
       gtk_widget_show_all (data->urlbox);
       data->hidden = 0;
-      gtk_tool_button_set_stock_id (GTK_TOOL_BUTTON (data->hiding_button),
-				    "gtk-undo");
-      gtk_tool_button_set_icon_widget (GTK_TOOL_BUTTON (data->hiding_button),
-				       NULL);
-      gtk_tool_button_set_label (GTK_TOOL_BUTTON (data->hiding_button),
-				 _("Hide Url"));
+      gtk_tool_button_set_stock_id (GTK_TOOL_BUTTON (data->hiding_button), "gtk-undo");
+      gtk_tool_button_set_icon_widget (GTK_TOOL_BUTTON (data->hiding_button), NULL);
+      gtk_tool_button_set_label (GTK_TOOL_BUTTON (data->hiding_button), _("Hide Url"));
     }
 
 }
@@ -452,6 +446,8 @@ show_bookmarks (GtkWidget * button, Webi * html)
 			   GTK_TREE_MODEL (model));
   selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(bookmark_list));
   gtk_tree_selection_set_mode (selection, GTK_SELECTION_SINGLE);
+
+  start_db();
 
   /* replace the following with a load and refresh from the db to fill in the list */
   int i;

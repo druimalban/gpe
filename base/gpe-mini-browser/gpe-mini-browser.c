@@ -89,14 +89,12 @@ main (int argc, char *argv[])
 	{
 	case 'v':
 	  printf
-	    (_
-	     ("GPE-mini-browser version 0.16. (C)2005, Philippe De Swert\n"));
+	    (_("GPE-mini-browser version 0.16. (C)2005, Philippe De Swert\n"));
 	  exit (0);
 
 	default:
 	  printf
-	    (_
-	     ("GPE-mini-browser, basic web browser application. (c)2005, Philippe De Swert\n"));
+	    (_("GPE-mini-browser, basic web browser application. (c)2005, Philippe De Swert\n"));
 	  printf (_("Usage: gpe-mini-browser <URL>\n"));
 	  printf (_("Use -v for version info.\n"));
 	  exit (0);

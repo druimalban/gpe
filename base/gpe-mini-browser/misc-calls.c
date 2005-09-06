@@ -116,6 +116,9 @@ delete_bookmarks (GtkWidget * button, gpointer * data)
 #endif
 
 	//delete from db
+	int err = remove_bookmark(url);
+	if (err)
+		gpe_error_box("error removing bookmark from db!\n");
 	//delete from list or refresh list when db backend is in
 		gtk_list_store_remove (GTK_LIST_STORE(model), &iter);
         }
@@ -179,30 +182,20 @@ void add_bookmark_func (GtkWidget *button, gpointer *data)
 	if (info->bookmark_type == 0)
 	{
       		location = webi_get_location (info->html);	
-#ifdef DEBUG
-		printf("bookmark value is %s\n", location);
-#endif
-		/* if we haven't visited any website beforehand the location will be null */
-		if(location != NULL)
-		{
-		// add to database
-		gtk_list_store_append(GTK_LIST_STORE(model), &iter);
-		gtk_list_store_set(GTK_LIST_STORE(model), &iter, 0, location, -1);
-		}
-		else
-		{
-			gpe_error_box("There is no current url!\n");
-		}
 	}
 	else
 	{
 		location = gtk_editable_get_chars (GTK_EDITABLE (info->entry), 0, -1);
+	}
 #ifdef DEBUG
 		printf("bookmark value is %s\n", location);
 #endif
 		if(location != NULL)
                 {
                 // add to database
+		int err = insert_new_bookmark((char *)location);
+		if (err)
+			gpe_error_box("Error accessing db!\n");
                 gtk_list_store_append(GTK_LIST_STORE(model), &iter);
                 gtk_list_store_set(GTK_LIST_STORE(model), &iter, 0, location, -1);
                 }
@@ -211,6 +204,5 @@ void add_bookmark_func (GtkWidget *button, gpointer *data)
                         gpe_error_box("No url filled in!\n");
                 }
 
-	}
 
 }

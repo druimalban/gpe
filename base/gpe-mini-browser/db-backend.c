@@ -45,7 +45,6 @@
 
 
 static sqlite *db = NULL;
-GSList *booklist;
 
 /* initialize db, return 0 if successful */
 int
@@ -83,13 +82,6 @@ start_db (void)
 void
 stop_db (void)
 {
-  GSList *iter;
-
-  for (iter = booklist; iter; iter = g_slist_next (iter))
-    //  todo_db_destroy_item (iter->data);
-    g_slist_free (booklist);
-  booklist = NULL;
-
   sqlite_close (db);
 }
 
@@ -97,21 +89,16 @@ int
 insert_new_bookmark (char *bookmark)
 {
   char *err;
-  const char *insert = "insert into bookmarks values ";
-  char *cmd = NULL;
 
-  strcpy (cmd, insert);
-  strcat (cmd, bookmark);
-  if (sqlite_exec (db, cmd, NULL, NULL, &err))
+  if (sqlite_exec_printf (db,
+                          "insert into bookmarks values ('%s')",
+                          NULL, NULL, &err,
+                          bookmark))
     {
       g_free (err);
-      g_free (cmd);
       return 1;
     }
-
-  booklist = g_slist_append (booklist, bookmark);
   g_free (err);
-  g_free (cmd);
 
   return 0;
 
@@ -121,21 +108,32 @@ int
 remove_bookmark (char *bookmark)
 {
   char *err;
-  const char *remove = "delete from bookmarks where bookmark=";
-  char *cmd = NULL;
 
-  strcpy (cmd, remove);
-  strcat (cmd, bookmark);
-  if (sqlite_exec (db, cmd, NULL, NULL, &err))
+  if (sqlite_exec_printf (db,
+                          "delete from bookmarks where bookmark='%s'",
+                          NULL, NULL, &err, bookmark))
     {
       g_free (err);
-      g_free (cmd);
       return 1;
     }
 
-  booklist = g_slist_remove (booklist, bookmark);
   g_free (err);
-  g_free (cmd);
 
   return 0;
+}
+
+void load_db_data (GtkWidget *tree)
+{
+	GtkTreeModel *model;
+        GtkTreeIter iter;
+	gchar *location;
+
+        model = gtk_tree_view_get_model (GTK_TREE_VIEW(tree));
+
+#ifdef DEBUG
+                printf("bookmark value is %s\n", location);
+#endif
+                gtk_list_store_append(GTK_LIST_STORE(model), &iter);
+                gtk_list_store_set(GTK_LIST_STORE(model), &iter, 0, location, -1);
+
 }

@@ -6,6 +6,11 @@ TODO:
 * improve progressbar display
 * history (special case of bookmarks)
 * some sort of status indication if clicking on links with infoprint or equivalent
+* alternating background color for the bookmarks
+* zoom buttons in small-screen interface
+* GtkEntryCompletion
+* categories to order bookmarks & bookmark sort
+* Download file option (wget ?)
 
 DONE:
 
