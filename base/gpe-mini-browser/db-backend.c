@@ -33,8 +33,6 @@
 
 #include <gdk/gdk.h>
 
-#include <glib.h>
-
 #include <sqlite.h>
 
 #include <gpe/errorbox.h>
@@ -42,6 +40,8 @@
 #include "gpe-mini-browser.h"
 
 #define DB_NAME "/.gpe/bookmarks"
+
+//#define DEBUG /* uncomment for debug info */
 
 
 static sqlite *db = NULL;
@@ -122,18 +122,41 @@ remove_bookmark (char *bookmark)
   return 0;
 }
 
-void load_db_data (GtkWidget *tree)
+int load_db_data (void *tree, int argc, char **argv, char **columnNames)
 {
 	GtkTreeModel *model;
         GtkTreeIter iter;
 	gchar *location;
 
         model = gtk_tree_view_get_model (GTK_TREE_VIEW(tree));
-
+	while (argc > 0)
+	{
+		location = *argv;
 #ifdef DEBUG
                 printf("bookmark value is %s\n", location);
 #endif
                 gtk_list_store_append(GTK_LIST_STORE(model), &iter);
                 gtk_list_store_set(GTK_LIST_STORE(model), &iter, 0, location, -1);
+		argv++;
+		argc--;
+	}
+	return 0;
 
 }
+
+int refresh_or_load_db(GtkWidget *tree)
+{
+  char *err;
+
+  if (sqlite_exec (db, "select * from bookmarks",
+                          load_db_data , tree, &err))
+    {
+      g_free (err);
+      return 1;
+    }
+
+  g_free (err);
+
+  return 0;
+}
+

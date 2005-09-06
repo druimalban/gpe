@@ -449,14 +449,15 @@ show_bookmarks (GtkWidget * button, Webi * html)
 
   start_db();
 
-  /* replace the following with a load and refresh from the db to fill in the list */
+  refresh_or_load_db(bookmark_list);
+  /* replace the following with a load and refresh from the db to fill in the list 
   int i;
   for (i = 0; i < 3; i++)
     {
       gchar *msg = "gpe.handhelds.org";
       gtk_list_store_append (GTK_LIST_STORE(model), &iter);
       gtk_list_store_set (GTK_LIST_STORE(model), &iter, 0, msg, -1);
-    }
+    }*/
 
   cell = gtk_cell_renderer_text_new ();
   column = gtk_tree_view_column_new_with_attributes ("Bookmarks", cell, 
@@ -477,6 +478,8 @@ show_bookmarks (GtkWidget * button, Webi * html)
 		    G_CALLBACK (open_bookmarks), &tree_info);
   g_signal_connect (GTK_OBJECT (open_bookmark), "clicked",
 		    G_CALLBACK (destroy_window), bookmarks_window);
+  g_signal_connect (GTK_OBJECT (bookmarks_window), "destroy",
+		    G_CALLBACK (stop_db), NULL);
 
   gtk_box_pack_start (GTK_BOX (bookbox), GTK_WIDGET (booktool), FALSE, FALSE,
 		      0);
