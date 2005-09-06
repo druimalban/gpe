@@ -152,6 +152,7 @@ create_window (char *announcetext)
 
       gtk_entry_set_text(GTK_ENTRY(AlarmComment),announcetext);
       gtk_entry_set_editable (GTK_ENTRY (AlarmComment), FALSE);
+      GTK_WIDGET_UNSET_FLAGS (AlarmComment, GTK_CAN_FOCUS);
     }
 
   strftime (buf, sizeof(buf), TIMEFMT, &tm);

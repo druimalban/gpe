@@ -18,6 +18,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <dlfcn.h>
 
 #include <gtk/gtk.h>
 #include <libintl.h>
@@ -29,6 +30,8 @@
 
 #define _(_x) gettext (_x)
 
+char *filename = NULL;
+int alarm_volume = 999;
 struct gpe_icon my_icons[] = {
   { "bell" },
   { "clock-popup" },
@@ -37,12 +40,14 @@ struct gpe_icon my_icons[] = {
 
 int times=0;
 
+	
+void* gst_handle=NULL;
+
 int
 main (int argc, char *argv[])
 {
   char *announcetext;
   GtkWidget *window;
-
   g_thread_init(NULL);
 
   if (gpe_application_init (&argc, &argv) == FALSE)
@@ -51,16 +56,30 @@ main (int argc, char *argv[])
   if (gpe_load_icons (my_icons) == FALSE)
     exit (1);
 
+  
   setlocale (LC_ALL, "");
 
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
   bind_textdomain_codeset (PACKAGE, "UTF-8");
   textdomain (PACKAGE);
 
-  if (argc >= 2)
-    announcetext = argv[1];
-  else
-    announcetext = NULL;
+  if (argc >= 2){
+  	announcetext = argv[1];
+	if(argc >= 3){
+		filename = argv[2];
+		gst_handle = dlopen("libgstreamer-0.8.so.1",RTLD_LAZY);
+		if(gst_handle)
+			printf("Gstreamer library loaded\n");
+		else
+			printf("Error: %s\n",dlerror());
+	}
+	if(argc == 4){
+		alarm_volume = atoi(argv[3]);
+	}
+  }else{
+	announcetext = NULL;
+  }
+  
   
   window = create_window (announcetext);
 
@@ -73,4 +92,3 @@ main (int argc, char *argv[])
 
   return 0;
 }
-
