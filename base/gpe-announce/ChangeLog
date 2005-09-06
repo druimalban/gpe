@@ -1,3 +1,13 @@
+2005-09-06  Luca De Cicco <ldecicco@gmail.com>       
+	* Make gst library loaded at runtime (dlopen)	
+	* main.c: added dlopen to handle runtime linking, new commandline
+	syntax
+        * callbacks.c: Added support for audio alarms
+	(mp3, ogg, gsm,...)using gst. New gpe-announce syntax is:
+	gpe-announce"something"	[<filename>[volume_level]]
+	* Makefile: add gst headers in cflags											
+
+
 2005-08-24  Philippe De Swert <philippedeswert@scarlet.be>
 
 	* release version 0.13
