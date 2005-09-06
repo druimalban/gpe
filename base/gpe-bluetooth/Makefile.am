@@ -25,8 +25,6 @@ dbusconf_DATA = bluez.conf
 peersdir = $(sysconfdir)/ppp/peers
 peers_DATA = peers/lap
 
-#pixmaps_extra_DATA = pixmaps/gpe-bluetooth.png
-
 desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
 @INTLTOOL_DESKTOP_RULE@
 service_DATA = $(service_in_files:.service.in=.service)
@@ -48,6 +46,9 @@ btscript_SCRIPTS = hciattach.sh
 btresumedir = $(sysconfdir)/apm/resume.d
 btresume_SCRIPTS = gpe-bluetooth-resume.sh
 
+pingladedir = $(datadir)/bluez-pin
+pinglade_DATA = bluez-pin-gpe.glade
+
 EXTRA_DIST = $(desktop_DATA) \
              $(pixmaps_DATA) \
              $(service_DATA) \
@@ -55,6 +56,7 @@ EXTRA_DIST = $(desktop_DATA) \
 	         $(peers_DATA) \
 	         $(btscript_SCRIPTS) \
 	         $(btresume_SCRIPTS) \
+			 $(pinglade_DATA) \
 	         gpe-bluetooth.desktop.in \
              intltool-extract.in \
              intltool-merge.in \
@@ -72,3 +74,6 @@ clean-local:
 
 include gpe-dist.am
 include gpe-tp.am
+
+install-data-hook:
+	cd $(DESTDIR)$(sysconfdir)/bluetooth && mv hciattach.sh hciattach
