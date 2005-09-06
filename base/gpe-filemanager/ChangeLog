@@ -1,3 +1,7 @@
+2005-09-06  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * bluetooth.c: Applied patch by pHilipp Zabel to support new DBUS API.
+
 2005-07-21  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * Release Version 0.23
