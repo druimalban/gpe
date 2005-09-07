@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=GPE Hello
+Comment=Tutorial program
+Exec=gpe-hello
+Terminal=0
+Type=Application
+Icon=gpe-hello.png
+Categories=Application;Utility;GPE
+StartupNotify=True
+
