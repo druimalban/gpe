@@ -47,7 +47,7 @@ static gchar *alarm_file, *prefs_file;
 #define FORMAT_ANALOGUE		2
 
 static gboolean show_seconds;
-static int format = FORMAT_ANALOGUE;
+static int format = FORMAT_24;
 
 gboolean prefs_window_open;
 gboolean alarm_window_open;
