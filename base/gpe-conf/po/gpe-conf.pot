@@ -61,7 +61,7 @@ msgid "Power"
 msgstr ""
 
 #: main.c:100
-msgid "Power safe Configuration"
+msgid "Configure Power Saving"
 msgstr ""
 
 #: main.c:102

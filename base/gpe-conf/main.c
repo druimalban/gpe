@@ -97,7 +97,7 @@ struct Applet applets[]=
     { &Theme_Build_Objects, &Unimplemented_Free_Objects, &Theme_Save, &Theme_Restore ,
 		N_("Theme") ,"theme", N_("Look and Feel"),PREFIX "/share/pixmaps/gpe-config-theme.png"},
     { &Sleep_Build_Objects, &Unimplemented_Free_Objects, &Sleep_Save, &Sleep_Restore ,
-		N_("Power") ,"sleep",N_("Power safe Configuration"),PREFIX "/share/pixmaps/gpe-config-sleep.png"},
+		N_("Power") ,"sleep",N_("Configure Power Saving"),PREFIX "/share/pixmaps/gpe-config-sleep.png"},
     { &Ownerinfo_Build_Objects, &Ownerinfo_Free_Objects, &Ownerinfo_Save, &Ownerinfo_Restore,
 		N_("Owner"), "ownerinfo", N_("Owner Information"),PREFIX "/share/pixmaps/gpe-config-ownerinfo.png"},
     { &Login_Setup_Build_Objects, &Login_Setup_Free_Objects, &Login_Setup_Save, &Login_Setup_Restore,

@@ -59,7 +59,7 @@ msgid "Power"
 msgstr "Điện"
 
 #: main.c:100
-msgid "Power safe Configuration"
+msgid "Configure Power Saving"
 msgstr "Cấu hình điện an toàn"
 
 #: main.c:102
