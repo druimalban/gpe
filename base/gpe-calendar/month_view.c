@@ -507,7 +507,6 @@ resize_table (GtkWidget *widget,
   static guint old_width, old_height;
   guint width = widget->allocation.width,
     height = widget->allocation.height;
-
   if (width != old_width || height != old_height)
     {
       old_width = width;
@@ -669,21 +668,34 @@ GtkWidget *
 month_view(void)
 {
   int day;
+  int width, height;
+  
   GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
-
+  GtkWidget *scrolled_window = gtk_scrolled_window_new (NULL, NULL);
+  
   draw = gtk_drawing_area_new ();
+  
   gtk_widget_show (draw);
+  gtk_widget_show (scrolled_window);
+  
+  
   g_signal_connect (G_OBJECT (draw), "expose_event",
                     G_CALLBACK (draw_expose_event), NULL);
+  
+   gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolled_window), draw);
 
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window),
+		                                      GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+    
+
+  
   datesel = gtk_date_sel_new (GTKDATESEL_MONTH);
   gtk_widget_show (datesel);
   GTK_WIDGET_SET_FLAGS(datesel, GTK_CAN_FOCUS);
   gtk_widget_grab_focus(datesel);
 
   gtk_box_pack_start (GTK_BOX (vbox), datesel, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), draw, TRUE, TRUE, 0);
-
+  gtk_box_pack_start (GTK_BOX (vbox), scrolled_window, TRUE, TRUE, 0);
   g_signal_connect(G_OBJECT (draw), "size-allocate",
                    G_CALLBACK (resize_table), NULL);
 
@@ -710,6 +722,9 @@ month_view(void)
   
   g_object_set_data(G_OBJECT(main_window),"datesel-month",datesel);
   
+  gtk_window_get_size (main_window,&width,&height);
+  gtk_widget_set_size_request (draw, width*.9, height*.65);
+
   calc_title_height (draw);
 
   return vbox;

@@ -1,3 +1,6 @@
+2005-09-09  Luca De Cicco <ldecicco@gmail.com>
+	* month_view.c: Adding support for scrolled window.
+
 2005-08-31  Florian Boor <florian.boor@kernelconcepts.de>
 
 	* Release version 0.65
