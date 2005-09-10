@@ -49,6 +49,12 @@
 
 static int fullscreen = 0;
 
+struct gpe_icon my_icons[] = 
+{
+  { "gpe-mini-browser-icon", PREFIX "/share/pixmaps/gpe-mini-browser.png" },
+  {NULL, NULL}
+};
+
 static void
 set_fullscreen (GtkWidget * button, GtkWidget * app)
 {
@@ -83,6 +89,9 @@ main (int argc, char *argv[])
 
   gpe_application_init (&argc, &argv);
 
+  if (gpe_load_icons (my_icons) == FALSE)
+    exit (1);
+
   while ((opt = getopt (argc, argv, "vh")) != -1)
     {
       switch (opt)
@@ -116,6 +125,7 @@ main (int argc, char *argv[])
   height = gdk_screen_height ();
   gtk_window_set_title (GTK_WINDOW (app), "mini-browser");
   gtk_window_set_default_size (GTK_WINDOW (app), width, height);
+  gpe_set_window_icon (app, "gpe-mini-browser-icon");
 
   //create boxes
   contentbox = gtk_vbox_new (FALSE, 0);

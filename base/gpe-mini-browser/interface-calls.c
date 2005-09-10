@@ -413,6 +413,8 @@ show_bookmarks (GtkWidget * button, Webi * html)
   bookmarks_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title (GTK_WINDOW (bookmarks_window), _("Bookmarks"));
   gtk_window_set_default_size (GTK_WINDOW (bookmarks_window), 240, 320);
+  gtk_window_set_type_hint (bookmarks_window, GDK_WINDOW_TYPE_HINT_DIALOG); 
+  gtk_window_set_decorated (bookmarks_window, TRUE);
 
   bookbox = gtk_vbox_new (FALSE, 0);
   booktool = GTK_TOOLBAR (gtk_toolbar_new ());
@@ -450,14 +452,6 @@ show_bookmarks (GtkWidget * button, Webi * html)
   start_db();
 
   refresh_or_load_db(bookmark_list);
-  /* replace the following with a load and refresh from the db to fill in the list 
-  int i;
-  for (i = 0; i < 3; i++)
-    {
-      gchar *msg = "gpe.handhelds.org";
-      gtk_list_store_append (GTK_LIST_STORE(model), &iter);
-      gtk_list_store_set (GTK_LIST_STORE(model), &iter, 0, msg, -1);
-    }*/
 
   cell = gtk_cell_renderer_text_new ();
   column = gtk_tree_view_column_new_with_attributes ("Bookmarks", cell, 

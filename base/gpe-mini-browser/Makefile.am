@@ -15,7 +15,7 @@ gpe_mini_browser_SOURCES +=
 CFLAGS += -DNOBOOKMARKS
 endif
 
-INCLUDES = @MINIBROWSER_CFLAGS@
+INCLUDES = @MINIBROWSER_CFLAGS@ -DPREFIX=\"@prefix@\"
 LDADD = @MINIBROWSER_LIBS@
 
 include gpe-dist.am
