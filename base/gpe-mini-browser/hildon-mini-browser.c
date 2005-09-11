@@ -211,6 +211,19 @@ main (int argc, char *argv[])
   gtk_tool_item_set_homogeneous (separator, FALSE);
   gtk_toolbar_insert (GTK_TOOLBAR (toolbar), separator, -1);
 
+#ifndef NOBOOKMARKS
+  bookmarks_button = gtk_tool_button_new_from_stock (GTK_STOCK_INDENT);
+  gtk_tool_item_set_homogeneous (bookmarks_button, FALSE);
+  gtk_tool_button_set_label (GTK_TOOL_BUTTON (bookmarks_button),
+                             _("Bookmarks"));
+  gtk_toolbar_insert (GTK_TOOLBAR (toolbar), bookmarks_button, -1);
+
+  separator = gtk_separator_tool_item_new ();
+  gtk_tool_item_set_homogeneous (separator, FALSE);
+  gtk_toolbar_insert (GTK_TOOLBAR (toolbar), separator, -1);
+#endif
+
+
   hildon_appview_set_toolbar (mainview, GTK_TOOLBAR (toolbar));
 
   urlbox = show_big_screen_interface (WEBI (html), toolbar, &s);
