@@ -5,6 +5,6 @@ Exec=gpe-mini-browser
 Terminal=0
 Type=Application
 Icon=gpe-mini-browser.png
-Categories=Application;Utility;GPE
+Categories=Application;PIM;GPE
 StartupNotify=True
 

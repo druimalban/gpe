@@ -78,7 +78,7 @@ main (int argc, char *argv[])
   GtkWidget *toolbar, *urlbox = NULL;	/* toolbar, url entry box (big screen) */
   GtkToolItem *back_button, *forward_button, *home_button, *bookmarks_button,
     *fullscreen_button, *url_button = NULL;
-  GtkToolItem *separator, *separator2, *separator3;
+  GtkToolItem *separator, *separator2;
   extern GtkToolItem *stop_reload_button;
   const gchar *base;
   gint width = 240, height = 320;
@@ -189,9 +189,9 @@ main (int argc, char *argv[])
   gtk_tool_item_set_homogeneous (home_button, FALSE);
   gtk_toolbar_insert (GTK_TOOLBAR (toolbar), home_button, -1);
 
-  separator2 = gtk_separator_tool_item_new ();
-  gtk_tool_item_set_homogeneous (separator2, FALSE);
-  gtk_toolbar_insert (GTK_TOOLBAR (toolbar), separator2, -1);
+  separator = gtk_separator_tool_item_new ();
+  gtk_tool_item_set_homogeneous (separator, FALSE);
+  gtk_toolbar_insert (GTK_TOOLBAR (toolbar), separator, -1);
 
 #ifndef NOBOOKMARKS
   bookmarks_button = gtk_tool_button_new_from_stock (GTK_STOCK_INDENT);
@@ -200,9 +200,6 @@ main (int argc, char *argv[])
 			     _("Bookmarks"));
   gtk_toolbar_insert (GTK_TOOLBAR (toolbar), bookmarks_button, -1);
 
-  separator = gtk_separator_tool_item_new ();
-  gtk_tool_item_set_homogeneous (separator, FALSE);
-  gtk_toolbar_insert (GTK_TOOLBAR (toolbar), separator, -1);
 #endif
 
   /* only show full Url bar if the screen is bigger than 240x320 | 320x240 */
@@ -216,9 +213,9 @@ main (int argc, char *argv[])
       gtk_tool_item_set_homogeneous (url_button, FALSE);
       gtk_tool_button_set_label (GTK_TOOL_BUTTON (url_button), "Url");
       gtk_toolbar_insert (GTK_TOOLBAR (toolbar), url_button, -1);
-      separator3 = gtk_separator_tool_item_new ();
-      gtk_tool_item_set_homogeneous (separator3, FALSE);
-      gtk_toolbar_insert (GTK_TOOLBAR (toolbar), separator3, -1);
+      separator2 = gtk_separator_tool_item_new ();
+      gtk_tool_item_set_homogeneous (separator2, FALSE);
+      gtk_toolbar_insert (GTK_TOOLBAR (toolbar), separator2, -1);
 
       g_signal_connect (GTK_OBJECT (url_button), "clicked",
 			G_CALLBACK (show_url_window), html);
