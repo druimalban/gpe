@@ -49,3 +49,6 @@ all-local:
 endif
 
 include gtk-doc.make
+
+distdir: dist-check-gtkdoc all
+

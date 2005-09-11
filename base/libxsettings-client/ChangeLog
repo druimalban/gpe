@@ -1,3 +1,13 @@
+2005-09-11  Phil Blundell  <philb@gnu.org>
+
+	* Version 0.15 released.
+	
+2005-09-11  Phil Blundell  <philb@gnu.org>
+
+	* doc/Makefile.am (distdir): Depend on dist-check-gtkdoc and all.
+
+	* configure.ac: Set package name to libXsettings-client.
+
 2005-09-10  Phil Blundell  <pb@reciva.com>
 
 	* doc/Makefile.am (GTKDOC_CC, GTKDOC_LD): Remove some definitions
