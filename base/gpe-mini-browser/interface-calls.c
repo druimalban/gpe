@@ -274,13 +274,15 @@ show_big_screen_interface (Webi * html, GtkWidget * toolbar,
 			   WebiSettings * set)
 {
   GtkWidget *urlbox;
-  GtkToolItem *sep2, *hide_button;
+  GtkToolItem *sep, *sep2, *hide_button;
   static struct urlbar_data hide;
 
   urlbox = create_url_bar (html);
 
-  add_zoom_buttons(html, toolbar, set);
-  
+  sep = gtk_separator_tool_item_new ();
+  gtk_tool_item_set_homogeneous (sep, FALSE);
+  gtk_toolbar_insert (GTK_TOOLBAR (toolbar), sep, -1);
+
   hide_button = gtk_tool_button_new_from_stock (GTK_STOCK_UNDO);
   gtk_tool_item_set_homogeneous (hide_button, FALSE);
   gtk_tool_button_set_label (GTK_TOOL_BUTTON (hide_button), _("Hide Url"));
@@ -289,6 +291,8 @@ show_big_screen_interface (Webi * html, GtkWidget * toolbar,
   sep2 = gtk_separator_tool_item_new ();
   gtk_tool_item_set_homogeneous (sep2, FALSE);
   gtk_toolbar_insert (GTK_TOOLBAR (toolbar), sep2, -1);
+
+  add_zoom_buttons(html, toolbar, set);
 
   /* fill in info for hiding */
 
