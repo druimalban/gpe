@@ -1,5 +1,5 @@
 /*
- * gpe-mini-browser v0.16
+ * gpe-mini-browser v0.17
  *
  * Basic web browser based on gtk-webcore 
  * 
@@ -135,8 +135,8 @@ int load_db_data (void *tree, int argc, char **argv, char **columnNames)
 #ifdef DEBUG
                 printf("bookmark value is %s\n", location);
 #endif
-                gtk_list_store_append(GTK_LIST_STORE(model), &iter);
-                gtk_list_store_set(GTK_LIST_STORE(model), &iter, 0, location, -1);
+                gtk_tree_store_append(GTK_TREE_STORE(model), &iter, NULL);
+                gtk_tree_store_set(GTK_TREE_STORE(model), &iter, 0, location, -1);
 		argv++;
 		argc--;
 	}

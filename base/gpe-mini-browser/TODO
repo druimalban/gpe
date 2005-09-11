@@ -6,13 +6,10 @@ TODO:
 * improve progressbar display
 * history (special case of bookmarks)
 * some sort of status indication if clicking on links with infoprint or equivalent
-* alternating background color for the bookmarks
-* zoom buttons in small-screen interface
 * GtkEntryCompletion
 * categories to order bookmarks & bookmark sort & ability to set home page from bookmarks
 * Download file option (wget ?)
 * bookmarks integration with gpe-contacts
-* bookmarks with Hildon interface
 
 DONE:
 
@@ -28,6 +25,9 @@ DONE:
 * hybrid stop/reload button (there is space now for a bookmarks button)
 * hiding of url-bar in Hildon/ big-screen mode
 * bookmarks (possible integration with gpe-contacts)
+* bookmarks with Hildon interface
+* zoom buttons in small-screen interface
+* alternating background color for the bookmarks
 
 POSTPONED / PARTIALLY DONE:
 

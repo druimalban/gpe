@@ -1,5 +1,5 @@
 /*
- * gpe-mini-browser v0.16
+ * gpe-mini-browser v0.17
  *
  * Basic web browser based on gtk-webcore 
  *
@@ -98,7 +98,7 @@ main (int argc, char *argv[])
 	{
 	case 'v':
 	  printf
-	    (_("GPE-mini-browser version 0.16. (C)2005, Philippe De Swert\n"));
+	    (_("GPE-mini-browser version 0.17. (C)2005, Philippe De Swert\n"));
 	  exit (0);
 
 	default:
@@ -232,6 +232,11 @@ main (int argc, char *argv[])
   gtk_tool_button_set_label (GTK_TOOL_BUTTON (fullscreen_button),
 			     _("Fullscreen"));
   gtk_toolbar_insert (GTK_TOOLBAR (toolbar), fullscreen_button, -1);
+
+  if ((width < 320) || (height <320))
+    {
+      add_zoom_buttons(WEBI(html), toolbar, &s);
+    }
 
   /* connect all button signals */
   g_signal_connect (GTK_OBJECT (back_button), "clicked",

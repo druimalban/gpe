@@ -1,5 +1,5 @@
 /*
- * gpe-mini-browser v0.15
+ * gpe-mini-browser v0.17
  *
  * Basic web browser based on gtk-webcore.
  * Hildon interface version for Maemo / Nokia 770
@@ -84,7 +84,7 @@ main (int argc, char *argv[])
 
   GtkWidget *html, *contentbox;	/* html engine, application window, content box of application window */
   GtkWidget *toolbar, *urlbox;	/* toolbar, url entry box (big screen), icon for url pop-up window (small screens) */
-  GtkToolItem *back_button, *forward_button, *home_button, *fullscreen_button;
+  GtkToolItem *back_button, *forward_button, *home_button, *fullscreen_button, *bookmarks_button;
   GtkToolItem *separator;
   extern GtkToolItem *stop_reload_button;
   const gchar *base;
@@ -95,7 +95,7 @@ main (int argc, char *argv[])
   WebiSettings s = { 0, };
 
   /* osso stuff  */
-  context = osso_initialize ("gpe-mini-browser", "0.15", TRUE, NULL);
+  context = osso_initialize ("gpe-mini-browser", "0.17", TRUE, NULL);
   if (context == NULL)
     {
       fprintf (stderr, "osso_initialize failed.\n");
@@ -110,14 +110,14 @@ main (int argc, char *argv[])
 	{
 	case 'v':
 	  printf
-	    ("GPE-mini-browser version 0.14. (C)2005, Philippe De Swert\n");
+	    (_("GPE-mini-browser version 0.17. (C)2005, Philippe De Swert\n"));
 	  exit (0);
 
 	default:
 	  printf
-	    ("GPE-mini-browser, basic web browser application. (c)2005, Philippe De Swert\n");
-	  printf ("Usage: gpe-mini-browser <URL>\n");
-	  printf ("Use -v for version info.\n");
+	    (_("GPE-mini-browser, basic web browser application. (c)2005, Philippe De Swert\n"));
+	  printf (_("Usage: gpe-mini-browser <URL>\n"));
+	  printf (_("Use -v for version info.\n"));
 	  exit (0);
 	}
     }
@@ -249,6 +249,11 @@ main (int argc, char *argv[])
 
   g_signal_connect (GTK_OBJECT (fullscreen_button), "clicked",
 		    G_CALLBACK (fullscreen), mainview);
+
+#ifndef NOBOOKMARKS
+    g_signal_connect (GTK_OBJECT (bookmarks_button), "clicked",
+                      G_CALLBACK (show_bookmarks), html);
+#endif
 
 //  gtk_toolbar_set_icon_size(GTK_TOOLBAR(toolbar), GTK_ICON_SIZE_SMALL_TOOLBAR);
 //  toolbar size seems to be the same, icons are clearer

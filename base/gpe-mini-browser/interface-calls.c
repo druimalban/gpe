@@ -1,5 +1,5 @@
 /*
- * gpe-mini-browser v0.16
+ * gpe-mini-browser v0.17
  *
  * Basic web browser based on gtk-webcore 
  * 
@@ -274,12 +274,45 @@ show_big_screen_interface (Webi * html, GtkWidget * toolbar,
 			   WebiSettings * set)
 {
   GtkWidget *urlbox;
-  GtkToolItem *zoom_in_button, *zoom_out_button, *sep, *sep2, *hide_button;
+  GtkToolItem *sep2, *hide_button;
   static struct urlbar_data hide;
 
   urlbox = create_url_bar (html);
 
-  /* fill in the data needed for the zoom functionality */
+  add_zoom_buttons(html, toolbar, set);
+  
+  hide_button = gtk_tool_button_new_from_stock (GTK_STOCK_UNDO);
+  gtk_tool_item_set_homogeneous (hide_button, FALSE);
+  gtk_tool_button_set_label (GTK_TOOL_BUTTON (hide_button), _("Hide Url"));
+  gtk_toolbar_insert (GTK_TOOLBAR (toolbar), hide_button, -1);
+
+  sep2 = gtk_separator_tool_item_new ();
+  gtk_tool_item_set_homogeneous (sep2, FALSE);
+  gtk_toolbar_insert (GTK_TOOLBAR (toolbar), sep2, -1);
+
+  /* fill in info for hiding */
+
+  hide.urlbox = urlbox;
+  hide.hidden = 0;		/* when hidden this value will be 1 */
+  hide.hiding_button = hide_button;
+
+  /* add button callbacks */
+  g_signal_connect (GTK_OBJECT (hide_button), "clicked",
+		    G_CALLBACK (hide_url_bar), &hide);
+
+  return (urlbox);
+}
+
+/* ======================================================== */
+
+void
+add_zoom_buttons (Webi *html, GtkWidget *toolbar, WebiSettings * set)
+{
+
+  GtkToolItem *zoom_in_button, *zoom_out_button, *sep;
+
+
+/* fill in the data needed for the zoom functionality */
   static struct zoom_data zoom;
 
   zoom.html = html;
@@ -299,30 +332,12 @@ show_big_screen_interface (Webi * html, GtkWidget * toolbar,
   gtk_tool_item_set_homogeneous (sep, FALSE);
   gtk_toolbar_insert (GTK_TOOLBAR (toolbar), sep, -1);
 
-  hide_button = gtk_tool_button_new_from_stock (GTK_STOCK_UNDO);
-  gtk_tool_item_set_homogeneous (hide_button, FALSE);
-  gtk_tool_button_set_label (GTK_TOOL_BUTTON (hide_button), _("Hide Url"));
-  gtk_toolbar_insert (GTK_TOOLBAR (toolbar), hide_button, -1);
-
-  sep2 = gtk_separator_tool_item_new ();
-  gtk_tool_item_set_homogeneous (sep2, FALSE);
-  gtk_toolbar_insert (GTK_TOOLBAR (toolbar), sep2, -1);
-
-  /* fill in info for hiding */
-
-  hide.urlbox = urlbox;
-  hide.hidden = 0;		/* when hidden this value will be 1 */
-  hide.hiding_button = hide_button;
-
   /* add button callbacks */
   g_signal_connect (GTK_OBJECT (zoom_in_button), "clicked",
 		    G_CALLBACK (zoom_in), &zoom);
   g_signal_connect (GTK_OBJECT (zoom_out_button), "clicked",
 		    G_CALLBACK (zoom_out), &zoom);
-  g_signal_connect (GTK_OBJECT (hide_button), "clicked",
-		    G_CALLBACK (hide_url_bar), &hide);
 
-  return (urlbox);
 }
 
 /* ======================================================== */
@@ -407,14 +422,13 @@ show_bookmarks (GtkWidget * button, Webi * html)
   GtkCellRenderer *cell;
   GtkTreeViewColumn *column;
   static struct tree_action tree_info;
-  GtkTreeIter iter;
   GtkTreeSelection *selection;
 
   bookmarks_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title (GTK_WINDOW (bookmarks_window), _("Bookmarks"));
   gtk_window_set_default_size (GTK_WINDOW (bookmarks_window), 240, 320);
-  gtk_window_set_type_hint (bookmarks_window, GDK_WINDOW_TYPE_HINT_DIALOG); 
-  gtk_window_set_decorated (bookmarks_window, TRUE);
+  gtk_window_set_type_hint (GTK_WINDOW(bookmarks_window), GDK_WINDOW_TYPE_HINT_DIALOG); 
+  gtk_window_set_decorated (GTK_WINDOW(bookmarks_window), TRUE);
 
   bookbox = gtk_vbox_new (FALSE, 0);
   booktool = GTK_TOOLBAR (gtk_toolbar_new ());
@@ -442,10 +456,11 @@ show_bookmarks (GtkWidget * button, Webi * html)
   tree_info.html = html;
   tree_info.treeview = bookmark_list;  
 
-  model = GTK_TREE_MODEL(gtk_list_store_new(1, G_TYPE_STRING));
+  model = GTK_TREE_MODEL(gtk_tree_store_new(1, G_TYPE_STRING));
   gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (bookmark_list), FALSE);
   gtk_tree_view_set_model (GTK_TREE_VIEW (bookmark_list),
 			   GTK_TREE_MODEL (model));
+  gtk_tree_view_set_rules_hint(GTK_TREE_VIEW(bookmark_list), TRUE);
   selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(bookmark_list));
   gtk_tree_selection_set_mode (selection, GTK_SELECTION_SINGLE);
 
@@ -454,7 +469,7 @@ show_bookmarks (GtkWidget * button, Webi * html)
   refresh_or_load_db(bookmark_list);
 
   cell = gtk_cell_renderer_text_new ();
-  column = gtk_tree_view_column_new_with_attributes ("Bookmarks", cell, 
+  column = gtk_tree_view_column_new_with_attributes (_("Bookmarks"), cell, 
 						     "text", 0, NULL);
 
   gtk_tree_view_append_column (GTK_TREE_VIEW (bookmark_list),

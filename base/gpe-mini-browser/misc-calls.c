@@ -1,5 +1,5 @@
 /*
- * gpe-mini-browser v0.16
+ * gpe-mini-browser v0.17
  *
  * Basic web browser based on gtk-webcore 
  * 
@@ -120,7 +120,7 @@ delete_bookmarks (GtkWidget * button, gpointer * data)
 	if (err)
 		gpe_error_box("error removing bookmark from db!\n");
 	//delete from list or refresh list when db backend is in
-		gtk_list_store_remove (GTK_LIST_STORE(model), &iter);
+		gtk_tree_store_remove (GTK_TREE_STORE(model), &iter);
         }
     }
 }
@@ -196,8 +196,8 @@ void add_bookmark_func (GtkWidget *button, gpointer *data)
 		int err = insert_new_bookmark((char *)location);
 		if (err)
 			gpe_error_box("Error accessing db!\n");
-                gtk_list_store_append(GTK_LIST_STORE(model), &iter);
-                gtk_list_store_set(GTK_LIST_STORE(model), &iter, 0, location, -1);
+                gtk_tree_store_append(GTK_TREE_STORE(model), &iter, NULL);
+                gtk_tree_store_set(GTK_TREE_STORE(model), &iter, 0, location, -1);
                 }
 		else
                 {

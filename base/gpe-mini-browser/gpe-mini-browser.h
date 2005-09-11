@@ -1,5 +1,5 @@
 /*
- * gpe-mini-browser v0.16
+ * gpe-mini-browser v0.17
  *
  * Basic web browser based on gtk-webcore 
  *
@@ -95,6 +95,8 @@ void set_title (Webi *html, GtkWidget *app_window);
 void update_text_entry (Webi *html, GtkWidget *entrybox);
 /* show urlbar and extra buttons for big screens */
 GtkWidget * show_big_screen_interface ( Webi *html, GtkWidget *toolbar, WebiSettings *set);
+/* add zoom buttons */
+void add_zoom_buttons (Webi *html, GtkWidget *toolbar, WebiSettings * set);
 /* show urlbar */
 GtkWidget * create_url_bar (Webi * html);
 /* hide urlbar */
