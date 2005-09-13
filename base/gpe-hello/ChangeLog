@@ -1,3 +1,8 @@
+2005-09-13  Florian Boor <florian@kernelconcepts.de>
+
+* Makefile.am: Add install of icon.
+  gpe-hello.c: Define "_".
+
 v0.1 - 15/08/2005 - Philippe De Swert <Philippedeswert@scarlet.be>
 
 * First revision of gpe-hello tutorial program

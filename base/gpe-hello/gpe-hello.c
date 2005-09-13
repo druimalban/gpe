@@ -39,6 +39,7 @@
 #include <gpe/pixmaps.h>
 #include <gpe/picturebutton.h> 
 
+#define _(x) gettext(x)
 //#define DEBUG /* uncomment this if you want debug output*/
 
 struct gpe_icon my_icons[] = 
