@@ -2,6 +2,9 @@
 
 * Makefile.am: Add install of icon.
   gpe-hello.c: Define "_".
+               Avoid the need of prototypes.
+			   Finish the window before creating content.
+			   Don't cast if not necessary.
 
 v0.1 - 15/08/2005 - Philippe De Swert <Philippedeswert@scarlet.be>
 

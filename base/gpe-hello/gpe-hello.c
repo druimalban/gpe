@@ -48,7 +48,10 @@ struct gpe_icon my_icons[] =
   {NULL, NULL}
 };
 
-static void hello_box (void);
+static void hello_box (void)
+{
+ gpe_error_box(_("Welcome to GPE!"));
+}
 
 int
 main (int argc, char *argv[])
@@ -66,16 +69,17 @@ main (int argc, char *argv[])
   app = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   g_signal_connect (G_OBJECT (app), "delete-event", gtk_main_quit, NULL);
   gtk_window_set_title (GTK_WINDOW (app), "GPE HELLO");
+  
   gtk_widget_realize (app);
+
+  //show icon in window decoration
+  gpe_set_window_icon (app, "hello");
 
   //set fullscreen (uncomment the following line if you want a fullscreen application)
   //gtk_window_fullscreen(GTK_WINDOW(app));
 
   //create boxes
   contentbox = gtk_hbox_new (FALSE, 0);
-
-  //show icon in window decoration
-  gpe_set_window_icon (app, "hello");
 
   //add a hello & quit button with a gtk stock icon
   hello_button = gpe_button_new_from_stock(GTK_STOCK_ABOUT, GPE_BUTTON_TYPE_BOTH);
@@ -88,20 +92,14 @@ main (int argc, char *argv[])
 		   G_CALLBACK(gtk_main_quit), NULL);
 
   //add buttons to the box
-  gtk_box_pack_start(GTK_BOX(contentbox), GTK_WIDGET(hello_button), TRUE, TRUE, 5);
-  gtk_box_pack_start(GTK_BOX(contentbox), GTK_WIDGET(quit_button), TRUE, TRUE, 5);
+  gtk_box_pack_start(GTK_BOX(contentbox), hello_button, TRUE, TRUE, 5);
+  gtk_box_pack_start(GTK_BOX(contentbox), quit_button, TRUE, TRUE, 5);
 
   //make everything viewable
   gtk_container_add (GTK_CONTAINER (app), contentbox);
 
-  gtk_widget_show_all (GTK_WIDGET (contentbox));
-  gtk_widget_show (GTK_WIDGET (app));
+  gtk_widget_show_all (app);
   gtk_main ();
 
   exit (0);
-}
-
-static void hello_box (void)
-{
- gpe_error_box(_("Welcome to GPE!"));
 }
