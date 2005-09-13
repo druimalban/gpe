@@ -56,14 +56,11 @@ int calendar_init(void)
 {
  	GdkPixmap *pix;
 	GdkBitmap *mask;
-	gchar *home = (gchar *) g_get_home_dir();
 
 	calendar.noevent = NULL;
 	
 	/* calendar db full path */
-	db_fname = g_malloc(strlen(home) + strlen(CALENDAR_DB) + 1);
-	strcpy(db_fname, home);
-	strcat(db_fname, CALENDAR_DB);
+	db_fname = g_strdup_printf("%s/%s", g_get_home_dir(), CALENDAR_DB);
 
 	calendar.toplevel = gtk_hbox_new(FALSE, 0);
 
@@ -71,8 +68,9 @@ int calendar_init(void)
 	calendar.vboxlogo = gtk_vbox_new(FALSE, 0);
 	gtk_box_pack_start(GTK_BOX(calendar.toplevel), calendar.vboxlogo, FALSE, FALSE, 5);
 
-	load_pixmap(IMAGEPATH(calendar.png), &pix, &mask, 130);
-	calendar.logo = gtk_pixmap_new(pix, mask);
+//	load_pixmap(IMAGEPATH(calendar.png), &pix, &mask, 130);
+	calendar.logo = gtk_image_new_from_file(IMAGEPATH(calendar.png));
+//	gbtk_pixmap_new(pix, mask);
 
 	gtk_box_pack_start(GTK_BOX(calendar.vboxlogo), calendar.logo, FALSE, FALSE, 0);
 
@@ -311,4 +309,3 @@ static void free_calendar_entries(void)
 	g_slist_free(calendar_entries);
 	calendar_entries = calendar.scroll->list = NULL;
 }
-

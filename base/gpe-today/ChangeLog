@@ -1,0 +1,5 @@
+2005-09-12  Florian Boor <florian@kernelconcepts.de>
+
+	* Introduce ChangeLog
+	* todo.c, calendar.c: Update pixmap loading to new standards.
+	                      Simplify database path generation.

@@ -87,14 +87,11 @@ void todo_init(void)
 	GtkWidget *vboxlogo, *logo;
 	GdkPixmap *pix;
 	GdkBitmap *mask;
-	gchar *home = (gchar *) g_get_home_dir();
 
 	todo.message = NULL;
 
 	/* todo db full path */
-	db_fname = g_malloc(strlen(home) + strlen(TODO_DB) + 1);
-	strcpy(db_fname, home);
-	strcat(db_fname, TODO_DB);
+	db_fname = g_strdup_printf("%s/%s", g_get_home_dir(), TODO_DB);
 
 	todo.toplevel = gtk_hbox_new(FALSE, 0);
 
@@ -102,8 +99,7 @@ void todo_init(void)
 	vboxlogo = gtk_vbox_new(FALSE, 0);
 	gtk_box_pack_start(GTK_BOX(todo.toplevel), vboxlogo, FALSE, FALSE, 5);
 
-	load_pixmap(IMAGEPATH(tasks.png), &pix, &mask, 130);
-	logo = gtk_pixmap_new(pix, mask);
+	logo = gtk_image_new_from_file(IMAGEPATH(tasks.png));
 	gtk_box_pack_start(GTK_BOX(vboxlogo), logo, FALSE, FALSE, 0);
 
 	/* scrollable pango layout list */
