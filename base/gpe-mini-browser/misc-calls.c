@@ -24,6 +24,7 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <stddef.h>
+#include <stdlib.h>
 
 #include <gtk/gtk.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
@@ -96,7 +97,7 @@ zoom_out (GtkWidget * zoom_out, gpointer * data)
 void
 delete_bookmarks (GtkWidget * button, gpointer * data)
 {
-  if (gpe_question_ask ("Really delete this bookmark or category?", "Delete?",
+  if (gpe_question_ask (_("Really delete this bookmark or category?"), "Delete?",
 			"question", "!gtk-cancel", NULL,
 			"!gtk-delete", NULL, NULL) == 1)
     {
@@ -115,11 +116,11 @@ delete_bookmarks (GtkWidget * button, gpointer * data)
 		printf("Deleting url %s\n",url);
 #endif
 
-	//delete from db
+	/* delete from db */
 	int err = remove_bookmark(url);
 	if (err)
-		gpe_error_box("error removing bookmark from db!\n");
-	//delete from list or refresh list when db backend is in
+		gpe_error_box(_("error removing bookmark from db!\n"));
+	/* delete from list */ 
 		gtk_tree_store_remove (GTK_TREE_STORE(model), &iter);
         }
     }
@@ -151,7 +152,7 @@ open_bookmarks (GtkWidget * button, gpointer * data)
 	}
 	else
 	{
-	 gpe_error_box("No bookmark selected!");
+	 gpe_error_box(_("No bookmark selected!"));
 	}
 }
 
@@ -195,14 +196,78 @@ void add_bookmark_func (GtkWidget *button, gpointer *data)
                 // add to database
 		int err = insert_new_bookmark((char *)location);
 		if (err)
-			gpe_error_box("Error accessing db!\n");
+			gpe_error_box(_("Error accessing db!\n"));
                 gtk_tree_store_append(GTK_TREE_STORE(model), &iter, NULL);
                 gtk_tree_store_set(GTK_TREE_STORE(model), &iter, 0, location, -1);
                 }
 		else
                 {
-                        gpe_error_box("No url filled in!\n");
+                        gpe_error_box(_("No url filled in!\n"));
                 }
 
 
+}
+
+int set_entry_completion(GtkWidget *entry)
+{
+	GtkTreeModel *model;
+        GtkEntryCompletion *completion;
+
+        model = create_completion_model ();
+		if(model == NULL)
+			return 0;
+
+        completion = gtk_entry_completion_new ();
+        gtk_entry_completion_set_model (completion, model);
+        gtk_entry_completion_set_text_column (completion, 0);
+        gtk_entry_completion_set_minimum_key_length (completion, 4);
+        gtk_entry_set_completion (GTK_ENTRY (entry), completion);
+
+	/*default should be replacing the contents of the entry by the selected content */
+
+	return 1;
+}
+
+GtkTreeModel *
+create_completion_model (void)
+{
+
+        gint count = 0;
+        GtkListStore *store;
+        GtkTreeIter iter;
+        FILE *file;
+	const char *home = getenv ("HOME");
+        char *buf;
+	size_t len;
+        char buffer[64];
+	
+	if (home == NULL)
+		    home = "";
+ 	len = strlen (home) + strlen (COMPLETION) + 1;
+ 	buf = g_malloc (len);
+ 	strcpy (buf, home);
+	strcat (buf, COMPLETION);
+
+        store = gtk_list_store_new (1, G_TYPE_STRING);
+
+        file = fopen(buf, "rw+");
+	if(!file)
+		return NULL;
+
+        while (fgets (buffer, 63, file)) 
+	{
+                buffer[strlen(buffer)-1] = 0;
+
+                gtk_list_store_append (store, &iter);
+                gtk_list_store_set (store, &iter, 0, buffer, -1);
+
+                count++;
+                if (count == 100)
+                      break;
+        }
+
+        fclose (file);
+	g_free(buf);
+
+        return GTK_TREE_MODEL (store);
 }

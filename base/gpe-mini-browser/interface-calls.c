@@ -63,6 +63,10 @@ show_url_window (GtkWidget * show, GtkWidget * html)
 
   hbox = gtk_hbox_new (FALSE, 0);
   entry = gtk_entry_new ();
+  /* set completion on url entry */
+  if(!set_entry_completion(entry))
+        gpe_error_box(_("No entry completion available\n"));
+ 
   gtk_entry_set_activates_default (GTK_ENTRY (entry), TRUE);
   label = gtk_label_new (_("Enter url:"));
   gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
@@ -359,6 +363,10 @@ create_url_bar (Webi * html)
   urlentry = gtk_entry_new ();
   gtk_entry_set_activates_default (GTK_ENTRY (urlentry), TRUE);
   okbutton = gpe_button_new_from_stock (GTK_STOCK_OK, GPE_BUTTON_TYPE_BOTH);
+
+  /* set completion on url entry */
+  if(!set_entry_completion(urlentry))
+	gpe_error_box(_("No entry completion available\n"));
 
   /* pack everything in the hbox */
   gtk_box_pack_start (GTK_BOX (urlbox), urllabel, FALSE, FALSE, 0);

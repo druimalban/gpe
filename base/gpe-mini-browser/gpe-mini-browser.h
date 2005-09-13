@@ -24,6 +24,7 @@
 
 /* General Defines */
 #define HOME_PAGE "file:///usr/share/doc/gpe/mini-browser-index.html"
+#define COMPLETION "/.gpe/browser-completion"
 
 /*internationalisation */
 #include <libintl.h>
@@ -147,6 +148,10 @@ void open_bookmarks (GtkWidget *button, gpointer *data);
 void toggle_type (GtkWidget *button, gpointer *data);
 /* add bookmark to list */
 void add_bookmark_func (GtkWidget *button, gpointer *data);
+/* set entry completion on an entry */
+int set_entry_completion(GtkWidget *entry);
+/* create entry completion model */
+GtkTreeModel * create_completion_model (void);
 
 
 /******************************************************
