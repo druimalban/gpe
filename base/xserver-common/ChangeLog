@@ -1,3 +1,8 @@
+2005-09-15  Florian Boor <florian@kernelconcepts.de>
+
+	* 11Zaurus: Apply patch by Justin Patrin to fix screen orientation 
+                    on Zaurus.
+
 2005-08-29  Florian Boor <florian@kernelconcepts.de>
 
 	* Release version 1.1

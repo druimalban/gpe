@@ -5,8 +5,19 @@ if [ -z "`which chkhinge`" ]; then
    exit 0
 fi
 
+module_id() {
+    # Get model name
+    echo `grep "^Hardware" /proc/cpuinfo | sed -e "s/.*: *//" | tr a-z A-Z`
+}
+
 chkhinge -e
 if [ $? = 12 ]; then
-   xrandr -o right
+   case `module_id` in
+   	*SPITZ | *AKITA | *BORZOI)
+   		DIRECTION="left" ;;
+        default)
+                DIRECTION="right" ;;
+   esac
+   xrandr -o $DIRECTION
 fi
 
