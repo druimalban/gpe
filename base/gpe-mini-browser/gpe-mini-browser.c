@@ -254,6 +254,9 @@ main (int argc, char *argv[])
   g_signal_connect (GTK_OBJECT (bookmarks_button), "clicked",
 		    G_CALLBACK (show_bookmarks), html);
 #endif
+  /* save completion list when we exit the program */
+  g_signal_connect (GTK_OBJECT (app), "destroy",
+		    G_CALLBACK (save_completion), NULL);
 
   /* 
      DEBUG CODE!

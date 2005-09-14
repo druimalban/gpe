@@ -30,7 +30,9 @@
 #include <libintl.h>
 #define _(String) gettext(String)
 
+/* global variables because I could not find a better solution */
 GtkToolItem *stop_reload_button;
+GtkListStore *completion_store;
 
 /* contains the necessary data for passing urls between the different functions */
 struct url_data {
@@ -152,6 +154,8 @@ void add_bookmark_func (GtkWidget *button, gpointer *data);
 int set_entry_completion(GtkWidget *entry);
 /* create entry completion model */
 GtkTreeModel * create_completion_model (void);
+/* save first 100 entries of the completion list to a file */
+void save_completion (GtkWidget *window);
 
 
 /******************************************************

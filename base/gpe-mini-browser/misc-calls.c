@@ -233,7 +233,6 @@ create_completion_model (void)
 {
 
         gint count = 0;
-        GtkListStore *store;
         GtkTreeIter iter;
         FILE *file;
 	const char *home = getenv ("HOME");
@@ -248,18 +247,19 @@ create_completion_model (void)
  	strcpy (buf, home);
 	strcat (buf, COMPLETION);
 
-        store = gtk_list_store_new (1, G_TYPE_STRING);
+        completion_store = gtk_list_store_new (1, G_TYPE_STRING);
 
-        file = fopen(buf, "rw+");
+        file = fopen(buf, "ro");
+	/* if file does not exist just start and skip reading in data */
 	if(!file)
-		return NULL;
+		return GTK_TREE_MODEL (completion_store);;
 
         while (fgets (buffer, 63, file)) 
 	{
                 buffer[strlen(buffer)-1] = 0;
 
-                gtk_list_store_append (store, &iter);
-                gtk_list_store_set (store, &iter, 0, buffer, -1);
+                gtk_list_store_append (completion_store, &iter);
+                gtk_list_store_set (completion_store, &iter, 0, buffer, -1);
 
                 count++;
                 if (count == 100)
@@ -269,5 +269,42 @@ create_completion_model (void)
         fclose (file);
 	g_free(buf);
 
-        return GTK_TREE_MODEL (store);
+        return GTK_TREE_MODEL (completion_store);
+}
+
+void save_completion (GtkWidget *window)
+{
+	gint count = 0;
+        GtkTreeIter iter;
+        FILE *file;
+	const char *home = getenv ("HOME");
+        char *buf;
+	size_t len;
+	gchar *buffer;
+	
+	buffer = malloc(sizeof(char)*64);
+
+	if (home == NULL)
+		    home = "";
+ 	len = strlen (home) + strlen (COMPLETION) + 1;
+ 	buf = g_malloc (len);
+ 	strcpy (buf, home);
+	strcat (buf, COMPLETION);
+
+	file = fopen(buf, "w");
+
+	if(!gtk_tree_model_get_iter_first (GTK_TREE_MODEL(completion_store), &iter))
+		goto end;
+	
+	while ( count < 100 )
+	{
+		gtk_tree_model_get(GTK_TREE_MODEL(completion_store), &iter, 0, buffer, -1);
+		fprintf(stdout, "%s\n", buffer);
+		count++;
+		if(!gtk_tree_model_iter_next (GTK_TREE_MODEL(completion_store), &iter))
+			goto end;
+	}
+end:	fclose(file);
+	g_free(buf);
+	g_free(buffer);
 }

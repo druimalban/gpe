@@ -103,6 +103,7 @@ load_text_entry (GtkWidget * Button, gpointer * text)
 {
   struct url_data *data;
   const gchar *url;
+  GtkTreeIter iter;
 
   data = (struct url_data *) text;
   webi_stop_load (WEBI (data->html));
@@ -113,6 +114,9 @@ load_text_entry (GtkWidget * Button, gpointer * text)
 #endif
   if (url != NULL)
     {
+      /* add to list before url is parsed to avoid the user having to use http:// for autocompletion */
+      gtk_list_store_insert(completion_store, &iter, 0);
+      gtk_list_store_set(completion_store, &iter, 0, url, -1);
       url = parse_url (url);
 #ifdef DEBUG
       printf ("fetching %s !\n", url);
