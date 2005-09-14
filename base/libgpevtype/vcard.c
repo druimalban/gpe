@@ -185,12 +185,15 @@ vcard_to_tags (MIMEDirVCard *vcard)
   
   while (t->tag)
     {
-      gchar *value;
+      gchar *value = NULL;
 
       g_object_get (G_OBJECT (vcard), t->vc ? t->vc : t->tag, &value, NULL);
 
       if (value)
-        data = gpe_tag_list_prepend (data, t->tag, g_strstrip (value));
+        {
+          data = gpe_tag_list_prepend (data, t->tag, g_strstrip (value));
+          value = NULL;
+        }
 
       t++;
     }
@@ -252,7 +255,7 @@ vcard_to_tags (MIMEDirVCard *vcard)
 	fprintf (stderr, "Unable to retrieve address.\n");
       l = g_list_next (l);
     }
-
+  l = NULL;
   g_object_get (G_OBJECT (vcard), "email-list", &l, NULL);
   while (l)
     {
@@ -282,6 +285,7 @@ vcard_to_tags (MIMEDirVCard *vcard)
       l = g_list_next (l);
     }
 
+  l = NULL;
   g_object_get (G_OBJECT (vcard), "phone-list", &l, NULL);
   while (l)
     {

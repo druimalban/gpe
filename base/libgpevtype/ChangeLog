@@ -1,3 +1,7 @@
+2005-09-15  Florian Boor  <florian@kernelconcepts.de>
+
+	* vcard.c: Ensure proper initialisation of pointers fixing segfault.
+
 2005-08-15  Florian Boor  <florian@kernelconcepts.de>
 
 	* debian/rules: Change prefix to match latest Hildon requirements.
