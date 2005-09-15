@@ -160,7 +160,7 @@ add_item (gpesyncd_context * ctx, guint uid, gchar * type, gchar * data,
 
   if (convert_error)
     {
-      error = &convert_error;
+      *error = convert_error;
       return FALSE;
     }
 
@@ -168,6 +168,11 @@ add_item (gpesyncd_context * ctx, guint uid, gchar * type, gchar * data,
     {
       MIMEDirVCard *vcard = NULL;
       vcard = mimedir_vcard_new_from_profile (profile, &convert_error);
+      if (convert_error)
+	{
+	  *error = convert_error;
+	  return FALSE;
+	}
 
       tags = vcard_to_tags (vcard);
 
@@ -184,7 +189,7 @@ add_item (gpesyncd_context * ctx, guint uid, gchar * type, gchar * data,
       vcal = mimedir_vcal_new_from_profile (profile, &convert_error);
       if (convert_error)
 	{
-	  error = &convert_error;
+	  *error = convert_error;
 	  return FALSE;
 	}
 
@@ -208,7 +213,7 @@ add_item (gpesyncd_context * ctx, guint uid, gchar * type, gchar * data,
       vcal = mimedir_vcal_new_from_profile (profile, &convert_error);
       if (convert_error)
 	{
-	  error = &convert_error;
+	  *error = convert_error;
 	  return FALSE;
 	}
 
