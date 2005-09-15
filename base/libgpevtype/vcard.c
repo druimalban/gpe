@@ -39,7 +39,6 @@ static struct tag_map map[] =
     { "work.title", "jobtitle"},
     { "category", "categories"},
     { "work.www", "url" },
-    { "title" , "honorific_prefix" },
     { NULL, NULL }
   };
 
