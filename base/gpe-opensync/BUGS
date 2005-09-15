@@ -5,22 +5,26 @@ general:
 	most issues can be solved when implementing the fields in
 	libgpevtype.
 
+	When changing an item on both sides, opensync asks to Duplicate,
+	Ignore, or to take the Newer item. But since libmimedir doesn't
+	support the LAST-MODIFIED field it, it is doing quite hard to
+	find out which is the newer one...
+	When Duplicating all works fine, but on the next sync it makes
+	a second duplicate on the non-gpe side. 
+
 	Categories won't be synced correctly, since libgpevtype has no
 	support for it yet.
 	
-
+	
 calendar: 
 	(evolution): Things won't be imported by evolution, because:
 	DTSTART: The time is exported as <time>+0xyz (timezone).
 	evolution expects it as <time> only.
-	UID: This field is missing, but evolution wants it.
 	DURATION: evolution doesn't use it, it wants DTEND, which also
 	does not get exported.
 
 todo:
-	When changing entries in evolution, opensync asks to Duplicate,
-	Ignore or to take the Newer version, but neither of them does
-	what you are expecting.
+	Some fields are not synced, like state.
 
 contacts:
 	Some fields are not synced, like birthday, photo.
