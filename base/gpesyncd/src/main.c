@@ -476,7 +476,7 @@ do_command (gpesyncd_context * ctx, gchar * command)
    * small "OK" */
   if (error)
     {
-      g_string_append_printf (ctx->result, "Error: %s", error->message);
+      g_string_append_printf (ctx->result, "Error: %s\n", error->message);
       g_error_free (error);
       error = NULL;
     }
@@ -559,6 +559,7 @@ command_loop (gpesyncd_context * ctx)
 	    }
 	}
       do_command (ctx, cmd_string->str);
+      g_string_assign (cmd_string, "");
     }
   g_string_free (cmd_string, TRUE);
 }
