@@ -39,6 +39,7 @@ static struct tag_map map[] =
   {
     { G_TYPE_STRING, "summary", NULL },
     { G_TYPE_STRING, "description", NULL },
+    { G_TYPE_STRING, "todoid", "uid" },
     { G_TYPE_INT, "priority", NULL },
     { G_TYPE_NONE, NULL, NULL }
   };

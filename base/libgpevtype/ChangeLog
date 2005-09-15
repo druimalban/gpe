@@ -1,5 +1,9 @@
 2005-09-15  Martin Felis  <martin@silef.de>
 
+	* vevent.c,vtodo.c: Added ex-/importation of uids of events and todos.
+
+2005-09-15  Martin Felis  <martin@silef.de>
+
 	* vcard.c: Fixed wrong definition of honorific_prefix.
 
 2005-09-15  Florian Boor  <florian@kernelconcepts.de>

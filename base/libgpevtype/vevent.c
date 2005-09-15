@@ -27,6 +27,7 @@ static struct tag_map map[] =
   {
     { G_TYPE_STRING, "summary", NULL },
     { G_TYPE_STRING, "description", NULL },
+    { G_TYPE_STRING, "eventid", "uid" },
     { G_TYPE_INT, "duration", NULL },
     { G_TYPE_INVALID, NULL, NULL }
   };
