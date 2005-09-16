@@ -16,7 +16,6 @@
 #include <gtk/gtk.h>
 #include <stdlib.h>
 #include <string.h>
-#include <gpe/gpe-iconlist.h>
 
 #include "package.h"
 #include "popupmenu.h"
