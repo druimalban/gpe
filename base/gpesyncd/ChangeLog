@@ -1,3 +1,8 @@
+2005-09-16  Martin Felis  <martin@silef.de>
+
+	* import.c, import.h, main.c: When adding an item, the uid of the
+	added item will be reported.
+
 2005-09-15  Martin Felis  <martin@silef.de>
 
 	* import.c: Errors from libmimedir are now reported correctly.

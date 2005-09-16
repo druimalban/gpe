@@ -346,24 +346,30 @@ do_command (gpesyncd_context * ctx, gchar * command)
   else if ((!strcasecmp (cmd, "ADD")) && (type != GPE_DB_TYPE_UNKNOWN)
 	   && (data))
     {
+      uid = 0;
       switch (type)
 	{
 	case GPE_DB_TYPE_VCARD:
 	  cmd_result =
-	    add_item (ctx, uid, "contacts", data, &modified, &error);
+	    add_item (ctx, &uid, "contacts", data, &modified, &error);
 	  break;
 	case GPE_DB_TYPE_VEVENT:
 	  cmd_result =
-	    add_item (ctx, uid, "calendar", data, &modified, &error);
+	    add_item (ctx, &uid, "calendar", data, &modified, &error);
 	  break;
 	case GPE_DB_TYPE_VTODO:
-	  cmd_result = add_item (ctx, uid, "todo", data, &modified, &error);
+	  cmd_result = add_item (ctx, &uid, "todo", data, &modified, &error);
 	  break;
 	default:
 	  g_string_append (ctx->result, "Error: wrong type\n");
 	}
-      if (cmd_result)
-	g_string_printf (ctx->result, "OK:%d\n", modified);
+      if (cmd_result) 
+        {
+	  /* We need to return the modified and the uid value so
+	   * that we can report changes to opensync */
+	  g_string_printf (ctx->result, "OK:%d:%d\n", modified, uid);
+	}
+      
     }
   else if ((!strcasecmp (cmd, "MODIFY")) && (type != GPE_DB_TYPE_UNKNOWN)
 	   && (data) && (uid > 0))

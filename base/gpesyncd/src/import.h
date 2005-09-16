@@ -12,7 +12,7 @@
 
 #include "gpesyncd.h"
 
-gboolean add_item (gpesyncd_context * ctx, guint uid, gchar * type,
+gboolean add_item (gpesyncd_context * ctx, guint * uid, gchar * type,
 		   gchar * data, guint * modified, GError ** error);
 
 gboolean modify_item (gpesyncd_context * ctx, guint uid, gchar * type,

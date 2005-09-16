@@ -144,7 +144,7 @@ item_exists (gpesyncd_context * ctx, guint uid, gchar * type, GError ** error)
 }
 
 gboolean
-add_item (gpesyncd_context * ctx, guint uid, gchar * type, gchar * data,
+add_item (gpesyncd_context * ctx, guint *uid, gchar * type, gchar * data,
 	  guint * modified, GError ** error)
 {
   GString *query = g_string_new ("");
@@ -234,12 +234,12 @@ add_item (gpesyncd_context * ctx, guint uid, gchar * type, gchar * data,
 
   int count = 0;
   count = get_item_count (db, type);
-  
+ 
   if (count == 0)
-    uid = 1;
+    *uid = 1;
 
-  if (uid == 0)
-    uid = get_new_uid (db, type);
+  if (*uid == 0)
+    *uid = get_new_uid (db, type);
 
   GString *modified_str = g_string_new ("");
   *modified = (int) time (NULL);
@@ -250,12 +250,12 @@ add_item (gpesyncd_context * ctx, guint uid, gchar * type, gchar * data,
     {
       gpe_tag_pair *p = tag_iter->data;
       sqlite_exec_printf (db, "insert into %q values (%d, upper('%q'), '%q')",
-			  NULL, NULL, &errmsg, type, uid, p->tag, p->value);
+			  NULL, NULL, &errmsg, type, *uid, p->tag, p->value);
     }
   if (errmsg)
     {
       g_set_error (error, 0, errorcode, "adding %s with uid %d: %s\n", type,
-		   uid, errmsg);
+		   *uid, errmsg);
       return FALSE;
     }
 
@@ -263,7 +263,7 @@ add_item (gpesyncd_context * ctx, guint uid, gchar * type, gchar * data,
     {
       sqlite_exec_printf (db,
 			  "insert into contacts_urn values ('%d', '%s', '%s', '%s')",
-			  NULL, NULL, &errmsg, uid, get_tag_value (tags,
+			  NULL, NULL, &errmsg, *uid, get_tag_value (tags,
 								   "name"),
 			  get_tag_value (tags, "family_name"),
 			  get_tag_value (tags, "company"));
@@ -272,20 +272,20 @@ add_item (gpesyncd_context * ctx, guint uid, gchar * type, gchar * data,
   else if (!strcasecmp (type, "calendar"))
     {
       sqlite_exec_printf (db, "insert into calendar_urn values (%d)", NULL,
-			  NULL, &errmsg, uid);
+			  NULL, &errmsg, *uid);
     }
   else if (!strcasecmp (type, "todo"))
     {
       sqlite_exec_printf (db,
 			  "insert into todo_urn values (%d)",
-			  NULL, NULL, &errmsg, uid);
+			  NULL, NULL, &errmsg, *uid);
     }
 
   errorcode += 10;
   if (errmsg)
     {
       g_set_error (error, 0, errorcode,
-		   "inserting in %s_urn with uid %d: %s\n", type, uid,
+		   "inserting in %s_urn with uid %d: %s\n", type, *uid,
 		   errmsg);
       return FALSE;
     }
@@ -307,7 +307,7 @@ modify_item (gpesyncd_context * ctx, guint uid, gchar * type, gchar * data,
   if (mod_result == FALSE)
     return FALSE;
 
-  mod_result = add_item (ctx, uid, type, data, modified, error);
+  mod_result = add_item (ctx, &uid, type, data, modified, error);
   return mod_result;
 }
 
