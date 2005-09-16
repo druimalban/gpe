@@ -1,6 +1,6 @@
 [Desktop Entry]
-Name=Mini Web Browser
-Comment=Browse the web
+_Name=Mini Web Browser
+_Comment=Browse the web
 Exec=gpe-mini-browser
 Terminal=0
 Type=Application

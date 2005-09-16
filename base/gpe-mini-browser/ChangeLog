@@ -1,5 +1,9 @@
 v0.17 - ..... - /2005 - Philippe De Swert
 
+* Add i18n support to autotools stuff and support for translated desktop files.
+* Fix saving of bookmarks.
+* Fix typo in configure.ac.
+* Add some files to remove on clean to make distcheck work.
 * zoom buttons for small screens - courtesy of the new toolbar API
 * moved from Glist to a real gtk_tree
 * alternating colours for bookmarks

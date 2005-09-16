@@ -280,10 +280,8 @@ void save_completion (GtkWidget *window)
 	const char *home = getenv ("HOME");
         char *buf;
 	size_t len;
-	gchar *buffer;
+	gchar *buffer = NULL;
 	
-	buffer = malloc(sizeof(char)*64);
-
 	if (home == NULL)
 		    home = "";
  	len = strlen (home) + strlen (COMPLETION) + 1;
@@ -298,13 +296,13 @@ void save_completion (GtkWidget *window)
 	
 	while ( count < 100 )
 	{
-		gtk_tree_model_get(GTK_TREE_MODEL(completion_store), &iter, 0, buffer, -1);
-		fprintf(stdout, "%s\n", buffer);
+		gtk_tree_model_get(GTK_TREE_MODEL(completion_store), &iter, 0, &buffer, -1);
 		count++;
+        fprintf(file, "%s\n", buffer);
+		g_free(buffer);
 		if(!gtk_tree_model_iter_next (GTK_TREE_MODEL(completion_store), &iter))
 			goto end;
 	}
 end:	fclose(file);
 	g_free(buf);
-	g_free(buffer);
 }

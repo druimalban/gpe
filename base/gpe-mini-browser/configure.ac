@@ -2,13 +2,23 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT(gpe-mini-browser, 0.17 philippedeswert@scarlet.be)
+AC_INIT(gpe-mini-browser, 0.17, philippedeswert@scarlet.be)
 AC_CONFIG_SRCDIR([gpe-mini-browser.c])
 AM_INIT_AUTOMAKE([foreign])
  
 AC_PROG_CC
 AC_STDC_HEADERS
 AC_PROG_INSTALL
+
+# i8n stuff
+AH_TEMPLATE([GETTEXT_PACKAGE], [Package name for gettext])
+GETTEXT_PACKAGE=$PACKAGE
+AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE")
+AC_SUBST(GETTEXT_PACKAGE)
+ALL_LINGUAS=""
+AM_GLIB_GNU_GETTEXT
+AC_PROG_INTLTOOL([0.23])
+
 
 # Hildon stuff
 
@@ -55,4 +65,4 @@ DEFINES="$DEFINES -DNDEBUG"
 AC_SUBST(MINIBROWSER_CFLAGS)
 AC_SUBST(MINIBROWSER_LIBS)
 
-AC_OUTPUT([Makefile])
+AC_OUTPUT([Makefile gpe-mini-browser.desktop.in po/Makefile.in hildon/gpe-mini-browser.desktop.in])

@@ -1,0 +1,8 @@
+gpe-mini-browser.desktop.in
+hildon/gpe-mini-browser.desktop.in
+db-backend.c
+hildon-mini-browser.c
+loading-calls.c
+gpe-mini-browser.c
+interface-calls.c
+misc-calls.c
