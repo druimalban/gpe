@@ -6,10 +6,10 @@ gpe_mini_browser_SOURCES = interface-calls.c loading-calls.c gpe-mini-browser.h 
 
 if HILDON
 gpe_mini_browser_SOURCES += hildon-mini-browser.c
-desktop_in_files = gpe-mini-browser.desktop.in 
+desktop_in_files = hildon/gpe-mini-browser.desktop.in 
 else
 gpe_mini_browser_SOURCES += gpe-mini-browser.c
-desktop_in_files = hildon/gpe-mini-browser.desktop.in 
+desktop_in_files = gpe-mini-browser.desktop.in 
 endif
 
 if BOOKMARK
