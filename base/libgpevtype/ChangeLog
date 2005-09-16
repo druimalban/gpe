@@ -1,3 +1,7 @@
+2005-09-16  Martin Felis  <martin@silef.de>
+
+	* vevent.c: Fixed timezone incompatibility.
+
 2005-09-15  Martin Felis  <martin@silef.de>
 
 	* vevent.c,vtodo.c: Added ex-/importation of uids of events and todos.

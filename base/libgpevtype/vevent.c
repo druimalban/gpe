@@ -23,17 +23,16 @@ struct tag_map
   gchar *vc;
 };
 
-static struct tag_map map[] =
-  {
-    { G_TYPE_STRING, "summary", NULL },
-    { G_TYPE_STRING, "description", NULL },
-    { G_TYPE_STRING, "eventid", "uid" },
-    { G_TYPE_INT, "duration", NULL },
-    { G_TYPE_INVALID, NULL, NULL }
-  };
+static struct tag_map map[] = {
+  {G_TYPE_STRING, "summary", NULL},
+  {G_TYPE_STRING, "description", NULL},
+  {G_TYPE_STRING, "eventid", "uid"},
+  {G_TYPE_INT, "duration", NULL},
+  {G_TYPE_INVALID, NULL, NULL}
+};
 
 static gboolean
-parse_date (const char *s, struct tm *tm, gboolean *date_only)
+parse_date (const char *s, struct tm *tm, gboolean * date_only)
 {
   char *p;
 
@@ -52,7 +51,8 @@ parse_date (const char *s, struct tm *tm, gboolean *date_only)
 }
 
 static gboolean
-vevent_interpret_tag (MIMEDirVEvent *event, const char *tag, const char *value)
+vevent_interpret_tag (MIMEDirVEvent * event, const char *tag,
+		      const char *value)
 {
   struct tag_map *t = &map[0];
   while (t->tag)
@@ -60,9 +60,11 @@ vevent_interpret_tag (MIMEDirVEvent *event, const char *tag, const char *value)
       if (!strcasecmp (t->tag, tag))
 	{
 	  if (t->type == G_TYPE_STRING)
-	    g_object_set (G_OBJECT (event), t->vc ? t->vc : t->tag, value, NULL);
+	    g_object_set (G_OBJECT (event), t->vc ? t->vc : t->tag, value,
+			  NULL);
 	  else if (t->type == G_TYPE_INT)
-	    g_object_set (G_OBJECT (event), t->vc ? t->vc : t->tag, atoi (value), NULL);
+	    g_object_set (G_OBJECT (event), t->vc ? t->vc : t->tag,
+			  atoi (value), NULL);
 	  else
 	    abort ();
 	  return TRUE;
@@ -79,9 +81,15 @@ vevent_interpret_tag (MIMEDirVEvent *event, const char *tag, const char *value)
 	{
 	  MIMEDirDateTime *date;
 
-	  date = mimedir_datetime_new_from_date (tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday);
+	  date =
+	    mimedir_datetime_new_from_date (tm.tm_year + 1900, tm.tm_mon + 1,
+					    tm.tm_mday);
 	  if (!date_only)
-	    mimedir_datetime_set_time (date, tm.tm_hour, tm.tm_min, tm.tm_sec);
+	    {
+	      mimedir_datetime_set_time (date, tm.tm_hour, tm.tm_min,
+					 tm.tm_sec);
+	      date->timezone = MIMEDIR_DATETIME_UTC;
+	    }
 
 	  g_object_set (G_OBJECT (event), "dtstart", date, NULL);
 	}
@@ -95,7 +103,7 @@ vevent_interpret_tag (MIMEDirVEvent *event, const char *tag, const char *value)
 }
 
 MIMEDirVEvent *
-vevent_from_tags (GSList *tags)
+vevent_from_tags (GSList * tags)
 {
   MIMEDirVEvent *vevent = mimedir_vevent_new ();
 
@@ -112,7 +120,7 @@ vevent_from_tags (GSList *tags)
 }
 
 GSList *
-vevent_to_tags (MIMEDirVEvent *vevent)
+vevent_to_tags (MIMEDirVEvent * vevent)
 {
   GSList *data = NULL;
   struct tag_map *t = &map[0];
@@ -124,7 +132,8 @@ vevent_to_tags (MIMEDirVEvent *vevent)
 	{
 	  gchar *value;
 
-	  g_object_get (G_OBJECT (vevent), t->vc ? t->vc : t->tag, &value, NULL);
+	  g_object_get (G_OBJECT (vevent), t->vc ? t->vc : t->tag, &value,
+			NULL);
 
 	  if (value)
 	    data = gpe_tag_list_prepend (data, t->tag, g_strstrip (value));
@@ -133,10 +142,13 @@ vevent_to_tags (MIMEDirVEvent *vevent)
 	{
 	  gint value;
 
-	  g_object_get (G_OBJECT (vevent), t->vc ? t->vc : t->tag, &value, NULL);
+	  g_object_get (G_OBJECT (vevent), t->vc ? t->vc : t->tag, &value,
+			NULL);
 
 	  if (value != 0)
-	    data = gpe_tag_list_prepend (data, t->tag, g_strdup_printf ("%d", value));
+	    data =
+	      gpe_tag_list_prepend (data, t->tag,
+				    g_strdup_printf ("%d", value));
 	}
       else
 	abort ();
@@ -147,18 +159,15 @@ vevent_to_tags (MIMEDirVEvent *vevent)
   g_object_get (G_OBJECT (vevent), "dtstart", &date, NULL);
   if (date)
     {
-      struct tm tm;
       gchar buf[256];
       MIMEDirDateTime *end_date;
       time_t start_t, end_t;
-  
-      mimedir_datetime_get_struct_tm (date, &tm);
 
-      strftime (buf, sizeof (buf), 
-		(date->flags & MIMEDIR_DATETIME_TIME) ? "%Y-%m-%d %H:%M" : "%Y-%m-%d",
-		&tm); 
-      
-      data = gpe_tag_list_prepend (data, "start", g_strdup (buf));
+      mimedir_datetime_to_utc (date);
+
+      data =
+	gpe_tag_list_prepend (data, "start",
+			      mimedir_datetime_to_string (date));
 
       g_object_get (G_OBJECT (vevent), "dtend", &end_date, NULL);
       if (end_date)
