@@ -1,4 +1,10 @@
-2005-09.16  Martin Felis <martin@silef.de>
+2005-09-16  Martin Felis <martin@silef.de>
+
+	* contacts.c, todo.c, calendar.c, utils.c, utils.h: Changed the
+	reporting of the uids. They will be now reported as
+	gpe-<type>-<uid>, so that file-sync can sort them out.
+
+2005-09-16  Martin Felis <martin@silef.de>
 
 	* contacts.c, todo.c, calendar.c: Fixed a bug that wouldn't let us
 	duplicate an item.

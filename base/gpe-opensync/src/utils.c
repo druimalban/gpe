@@ -20,6 +20,22 @@
 
 #include "gpe_sync.h"
 
+/*! \brief Reads the uid from "gpe-contact-0123"
+ *
+ * \param string	The string with the type and uid
+ *
+ * \return the part behind the last '-'
+ */
+int get_type_uid (const char *string)
+{
+  if (!string)
+    return 0;
+  gchar *p;
+  p = strrchr (string, '-');
+  *p++;
+  return atoi(p);
+}
+
 /*! \brief Seperates a string of the format "<a>:<b>" into "<a>" and "<b>"
  *
  * \param string	The string that should be separated
@@ -63,8 +79,16 @@ osync_bool report_change (OSyncContext *ctx, gchar *type, gchar *uid, gchar *has
 	osync_debug("GPE_SYNC", 3, "reporting item type: %s uid: %s hash: %s data size: %d", type, uid, hash, strlen (data));
 
 	gpe_environment *env = (gpe_environment *)osync_context_get_plugin_data (ctx);
-	OSyncChange *change = osync_change_new ();
-	osync_change_set_uid (change, g_strdup(uid));
+	OSyncChange *change;
+	change = osync_change_new ();
+
+	/* We report the uids as
+	 * gpe-contacts-0123, gpe-todo-0123, etc. so that file-sync
+	 * seperates the different types.
+	 */
+	gchar buf[25];
+	sprintf (buf, "gpe-%s-%s", type, uid);
+	osync_change_set_uid (change, g_strdup(buf));
 
 	if (!strcmp (type, "contact"))
 	{

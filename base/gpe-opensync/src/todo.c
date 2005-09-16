@@ -38,16 +38,16 @@ osync_bool gpe_todo_commit_change (OSyncContext *ctx, OSyncChange *change)
 		
 	switch (osync_change_get_changetype (change)) {
 		case CHANGE_DELETED:
-			osync_debug("GPE_SYNC", 3, "delete item %d", atoi (osync_change_get_uid (change)));
-			gpesync_client_exec_printf (env->client, "del vtodo %d", client_callback_string, &result, &error, atoi (osync_change_get_uid (change)));
+			osync_debug("GPE_SYNC", 3, "delete item %d", get_type_uid (osync_change_get_uid (change)));
+			gpesync_client_exec_printf (env->client, "del vtodo %d", client_callback_string, &result, &error, get_type_uid (osync_change_get_uid (change)));
 			break;
 		case CHANGE_ADDED:
 			osync_debug("GPE_SYNC", 3, "adding item: %s", osync_change_get_data (change));
 			gpesync_client_exec_printf (env->client, "add vtodo %s", client_callback_string, &result, &error, osync_change_get_data (change));
 			break;
 		case CHANGE_MODIFIED:
-			osync_debug("GPE_SYNC", 3, "modifying item %d: %s", atoi (osync_change_get_uid (change)), osync_change_get_data (change));
-			gpesync_client_exec_printf (env->client, "modify vtodo %d %s", client_callback_string, &result, &error, atoi (osync_change_get_uid (change)), osync_change_get_data (change));
+			osync_debug("GPE_SYNC", 3, "modifying item %d: %s", get_type_uid (osync_change_get_uid (change)), osync_change_get_data (change));
+			gpesync_client_exec_printf (env->client, "modify vtodo %d %s", client_callback_string, &result, &error, get_type_uid (osync_change_get_uid (change)), osync_change_get_data (change));
 			break;
 		default:
 			osync_debug ("GPE_SYNC", 0, "Unknown change type");
@@ -70,8 +70,10 @@ osync_bool gpe_todo_commit_change (OSyncContext *ctx, OSyncChange *change)
 				 * OK:MODIFIED:UID
 				 * so we can split value again */
 				gchar *uid = NULL;
+				gchar buf[25];
 				parse_value_modified (modified, &modified, &uid);
-				osync_change_set_uid (change, uid);
+				sprintf (buf, "gpe-todo-%s", uid);
+				osync_change_set_uid (change, g_strdup(buf));
 			}
 			osync_change_set_hash (change, modified);
 			osync_hashtable_update_hash (env->hashtable, change);

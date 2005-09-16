@@ -21,6 +21,8 @@
 #ifndef UTILS_H
 #define UTILS_H
 
+int get_type_uid (const char *string);
+
 osync_bool parse_value_modified (gchar *string, gchar **uid, gchar **modified);
 
 osync_bool report_change (OSyncContext *ctx, gchar *type, gchar *uid, gchar *hash, gchar *data);
