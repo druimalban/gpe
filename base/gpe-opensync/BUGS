@@ -6,22 +6,20 @@ general:
 	libgpevtype.
 
 	When changing an item on both sides, opensync asks to Duplicate,
-	Ignore, or to take the Newer item. But since libmimedir doesn't
-	support the LAST-MODIFIED field it, it is doing quite hard to
-	find out which is the newer one...
-	When Duplicating all works fine, but on the next sync it makes
-	a second duplicate on the non-gpe side. 
+	Ignore, or to take the Newer item. Here are some problems:
+	- Ignore doesn't work (might be a problem of opensync).
+	- Newer doesn't work for events and todos, since libmimedir doesn't
+	  support the tags LAST-MODIFIED, yet.
+	However duplicate works. So always use that!
 
 	Categories won't be synced correctly, since libgpevtype has no
 	support for it yet.
 	
-	
-calendar: 
-	(evolution): Things won't be imported by evolution, because:
-	DTSTART: The time is exported as <time>+0xyz (timezone).
-	evolution expects it as <time> only.
-	DURATION: evolution doesn't use it, it wants DTEND, which also
-	does not get exported.
+calendar:
+	libmimedir doesn't process the timezone, so if you created an item
+	on another device it will be synced with the wrong timezone.
+	If you created it in gpe, all should be fine.
+	Some fields are not synced, like Alarm and Recurrence.
 
 todo:
 	Some fields are not synced, like state.

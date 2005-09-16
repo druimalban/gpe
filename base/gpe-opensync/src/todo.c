@@ -60,6 +60,19 @@ osync_bool gpe_todo_commit_change (OSyncContext *ctx, OSyncChange *change)
 		if (!strcasecmp (result, "OK"))
 		{
 			state = TRUE;
+			if (osync_change_get_changetype (change) == CHANGE_ADDED)
+			{
+				/* We need to return the uid of the item
+				 * in the gpe databases also, so that the
+				 * mapping in opensync is correct.
+				 * Fortunately the command "add" returns
+				 * on success:
+				 * OK:MODIFIED:UID
+				 * so we can split value again */
+				gchar *uid = NULL;
+				parse_value_modified (modified, &modified, &uid);
+				osync_change_set_uid (change, uid);
+			}
 			osync_change_set_hash (change, modified);
 			osync_hashtable_update_hash (env->hashtable, change);
 			osync_context_report_success(ctx);
@@ -77,8 +90,8 @@ osync_bool gpe_todo_commit_change (OSyncContext *ctx, OSyncChange *change)
 	if (result)
 		g_free (result);
 
-	osync_debug("GPE_SYNC", 4, "stop %s", __func__);
-	
+	osync_debug("GPE_SYNC", 4, "stop %s returning: %d", __func__, state);
+		
 	return state;
 }
 
