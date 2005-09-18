@@ -118,7 +118,6 @@ osync_bool gpe_contacts_get_changes(OSyncContext *ctx)
 	GSList *uid_list = NULL, *iter;
 	gpesync_client_exec (env->client, "uidlist vcard", client_callback_list, &uid_list, &errmsg);
 
-
 	if ((uid_list) && (!strncasecmp ((gchar *)uid_list->data, "ERROR", 5)))
 	{
 	  errmsg = (gchar *) uid_list->data;
@@ -126,7 +125,7 @@ osync_bool gpe_contacts_get_changes(OSyncContext *ctx)
 	
 	if (errmsg)
 	{
-		if (strcasecmp (errmsg, "Error: No item found"))
+		if (strcasecmp (errmsg, "Error: No item found\n"))
 		{
 			osync_context_report_error (ctx, OSYNC_ERROR_GENERIC, "Error getting contact uidlist: %s\n", errmsg);
 		} else {

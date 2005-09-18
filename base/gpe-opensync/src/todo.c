@@ -125,7 +125,7 @@ osync_bool gpe_todo_get_changes(OSyncContext *ctx)
 	
 	if (errmsg)
 	{
-		if (strcasecmp (errmsg, "Error: No item found"))
+		if (strcasecmp (errmsg, "Error: No item found\n"))
 		{	osync_context_report_error (ctx, OSYNC_ERROR_GENERIC, "Error getting todo uidlist: %s\n", errmsg);
 		} else {
 		  	/* We haven't found any items, so go on. */
