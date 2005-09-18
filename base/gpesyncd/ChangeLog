@@ -1,3 +1,8 @@
+2005-09-17  Martin Felis  <martin@silef.de>
+
+	* main.c, gpesyncd.h: Removed fixed BUFFER_LENGTH. Using now a
+	GString for receiving buffer in remote mode.
+
 2005-09-16  Martin Felis  <martin@silef.de>
 
 	* import.c, import.h, main.c: When adding an item, the uid of the

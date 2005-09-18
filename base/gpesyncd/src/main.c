@@ -26,7 +26,14 @@ callback_list (void *arg, int argc, char **argv, char **names)
   return 0;
 }
 
-gboolean
+/*! \brief Initializes the databases
+ *
+ * \param ctx	The current context
+ *
+ * Opens the contacts, todo, calendar databases and initializes them
+ * with the default schemes if the databases didn't exist.
+ */
+void
 gpesyncd_setup_databases (gpesyncd_context * ctx)
 {
   GSList *tables = NULL, *iter;
@@ -112,6 +119,9 @@ gpesyncd_setup_databases (gpesyncd_context * ctx)
     }
 }
 
+/*! \brief Creates a new context
+ * 
+ */
 gpesyncd_context *
 gpesyncd_context_new (char *err)
 {
@@ -165,6 +175,8 @@ gpesyncd_context_new (char *err)
   return ctx;
 }
 
+/*! \brief Frees the memory of a context
+ */
 void
 gpesyncd_context_free (gpesyncd_context * ctx)
 {
@@ -189,6 +201,15 @@ gpesyncd_context_free (gpesyncd_context * ctx)
     }
 }
 
+/*! \brief Prints all the output
+ *
+ * \param ctx		the context
+ * \param *format	The string
+ *
+ * When using in remote mode, we need the length of the output
+ * at the beginning of it. (e.g.: "11:get vcard 3") so we can
+ * process the command / data correct.
+ */
 void
 gpesyncd_printf (gpesyncd_context * ctx, char *format, ...)
 {
@@ -252,6 +273,13 @@ replace_newline (gchar * str)
     }
 }
 
+/*! \brief executes a command
+ *
+ * \param ctx		The current context
+ * \param command	The command which should be executed
+ *
+ * \returns	FALSE, if we want to exit, otherwise TRUE
+ */
 gboolean
 do_command (gpesyncd_context * ctx, gchar * command)
 {
@@ -464,7 +492,7 @@ do_command (gpesyncd_context * ctx, gchar * command)
   else if (!strncasecmp (cmd, "QUIT", 4))
     {
       gpesyncd_printf (ctx, "Exiting!\n");
-      exit (0);
+      return FALSE;
     }
   else
     {
@@ -499,8 +527,10 @@ do_command (gpesyncd_context * ctx, gchar * command)
   return TRUE;
 }
 
-
-
+/*! \brief parses the commands from stdin
+ *
+ * \param ctx	The current context
+ */
 void
 command_loop (gpesyncd_context * ctx)
 {
@@ -564,12 +594,22 @@ command_loop (gpesyncd_context * ctx)
 		}
 	    }
 	}
-      do_command (ctx, cmd_string->str);
+      if (!do_command (ctx, cmd_string->str))
+	break;
       g_string_assign (cmd_string, "");
     }
+
+  gpesyncd_context_free (ctx);
   g_string_free (cmd_string, TRUE);
 }
 
+/* \brief Parses the commands from ctx->ifp
+ *
+ * \param ctx	The current context
+ *
+ * Reads the commands from ctx->ifp. They must have the length
+ * of the full command in the beginning of it.
+ */
 int
 remote_loop (gpesyncd_context * ctx)
 {
@@ -581,12 +621,12 @@ remote_loop (gpesyncd_context * ctx)
   ctx->ofp = stdout;
   ctx->ifp = stdin;
 
-  int p = 0;
   int len = 0;
   gboolean have_len = FALSE;
   char c;
 
-  char data[BUFFER_LENGTH];
+  GString *buf;
+  buf = g_string_new ("");
 
   while ((!ctx->quit) && (!feof (ctx->ifp)))
     {
@@ -596,41 +636,45 @@ remote_loop (gpesyncd_context * ctx)
 	{
 	  if (c == ':')
 	    {
-	      data[p] = '\0';
-	      len = atoi (data);
-	      p = 0;
-	      c = ' ';
+	      len = atoi (buf->str);
 	      have_len = TRUE;
+	      g_string_assign (buf, "");
+	      continue;
 	    }
 	  else if ((c > '9') || (c < '0'))
 	    {
-	      p = 0;
-	      c = ' ';
+	      g_string_assign (buf, "");
+	      len = 0;
+	      have_len = FALSE;
+	      continue;
 	    }
 	}
       else
 	{
-	  if (p == len)
+	  if (buf->len == len-1)
 	    {
-	      data[p] = c;
-	      data[p + 1] = '\0';
+	      g_string_append_c (buf, c);
+
 	      if (verbose)
-		fprintf (stderr, "Executing command: %s", data + 1);
-	      do_command (ctx, data + 1);
+		fprintf (stderr, "Executing command: %s", buf->str);
+
+	      /* If we want to exit, we have to break out
+	       * of this loop. */
+	      if (!do_command (ctx, buf->str))
+		  break;
+
+	      g_string_assign (buf, "");
 	      have_len = FALSE;
 	      len = 0;
-	      p = 0;
-	      c = ' ';
+	      continue;
 	    }
 	}
 
-      data[p] = c;
-      if (p < sizeof (data) - 1)
-	p++;
-
+      g_string_append_c (buf, c);
     }
 
-  g_free (ctx);
+  g_string_free (buf, TRUE);
+  gpesyncd_context_free (ctx);
 
   return 0;
 }
