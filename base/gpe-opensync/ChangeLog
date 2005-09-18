@@ -1,3 +1,10 @@
+2005-09-18  Martin Felis <martin@silef.de>
+
+	* gpesync_client.c, gpesync_client.h: Using now a GString instead
+	of a buffer with fixed length for receiving answers from gpesyncd.
+	* contacts.c, todo.c, calendar.c: Small change in reading answers
+	from gpesyncd.
+	
 2005-09-16  Martin Felis <martin@silef.de>
 
 	* contacts.c, todo.c, calendar.c, utils.c, utils.h: Changed the

@@ -18,11 +18,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <ctype.h>
-#include <sys/signal.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
 #include <errno.h>
-#include <netdb.h>
 #include <glib.h>
 #include <glib/gprintf.h>
 #include <stdarg.h>
@@ -69,7 +65,7 @@ write_command (gpesync_client * ctx, const char *cmd, ...)
   va_end (va);
 
   if (verbose)
-    fprintf (stderr, "[gpesyncclient out]: %s\n", buf);
+    fprintf (stderr, "[gpsyncclient write_command]: %s\n", buf);
 
   write (ctx->outfd, buf, strlen (buf));
 
@@ -84,56 +80,61 @@ write_command (gpesync_client * ctx, const char *cmd, ...)
  * 		or on '\0'
  */
 char *
-get_next_line (const char *data)
+get_next_line (const char *data, gsize *len)
 {
-  if (!strlen (data))
-    {
-      return NULL;
-    }
+  GString *string;
+ 
+  if (len)
+    *len = 0;
 
-  GString *string = g_string_new ("");
-  int i = 0;
-  do
-    {
-      if (data[i] != '\n')
-	g_string_append_c (string, data[i]);
-      i++;
-    }
-  while ((data[i] != '\0') && (data[i] != '\n'));
-
-  if (data[i] == '\n')
-    g_string_append_c (string, data[i]);
-
-  gchar *token = string->str;
+  string = g_string_new (NULL);
   
-  g_string_free (string, FALSE);
+  while ((data[*len] != '\n') && (data[*len] != '\0'))
+  {
+    g_string_append_c (string, data[*len]);
+    *len += 1;
+  }
+
+  if (data[*len] == '\n')
+    {
+      g_string_append_c (string, data[*len]);
+      *len += 1;
+    }
   
-  return token;
+  if (!string->str || string->str[0] == '\0')
+  {
+    g_string_free (string, TRUE);
+    return FALSE;
+  }
+  
+  return g_string_free (string, FALSE);
 }
 
 static void
-send_lines (struct gpesync_client_query_context *q, char *p)
+read_lines (struct gpesync_client_query_context *query_ctx, char *data)
 {
-  if (!q->aborting)
+  if (!query_ctx->aborting)
     {
       if (verbose)
-	fprintf (stderr, "[gpesync_client out] <%s>\n", p);
+	fprintf (stderr, "[gpesync_client lines_lines] \n<%s>\n", data);
       GSList *lines = NULL, *iter;
 
       int argc, i;
       char **argv = NULL;
       char *line, *line_iter;
 
-      line_iter = p;
-      line = get_next_line (line_iter);
+      /* We need to split the data in the sperate lines, so that
+       * we can read it as lists. */
+      int count = 0;
+      line_iter = data;
+      line = get_next_line (line_iter, &count);
       do
         {
 	  lines = g_slist_append (lines, line);
-	  line_iter += strlen (line);
-	  line = get_next_line (line_iter);
+	  line_iter += count;
+	  line = get_next_line (line_iter, &count);
 	}
       while (line);
-//      g_free (line);
 
       argc = g_slist_length (lines);
       argv = g_malloc0 (sizeof (char *) * argc);
@@ -145,11 +146,11 @@ send_lines (struct gpesync_client_query_context *q, char *p)
 	  iter = g_slist_next (iter);
 	}
 
-      if ( (q->callback != NULL) && (q->callback (q->cb_data, argc, argv)))
+      if ( (query_ctx->callback != NULL) && (query_ctx->callback (query_ctx->cb_data, argc, argv)))
 	{
 	  fprintf (stderr, "aborting query\n");
-	  q->result = GPESYNC_CLIENT_ABORT;
-	  q->aborting = TRUE;
+	  query_ctx->result = GPESYNC_CLIENT_ABORT;
+	  query_ctx->aborting = TRUE;
 	}
 
       g_free (argv);
@@ -158,15 +159,15 @@ send_lines (struct gpesync_client_query_context *q, char *p)
 }
 
 static void
-read_response (struct gpesync_client_query_context *q)
+read_response (struct gpesync_client_query_context *query_ctx)
 {
-  char buf[BUFFER_LENGTH];
-  int p = 0;
   int len = 0;
   gboolean have_len = FALSE;
   gpesync_client *ctx;
+  GString *buf;
 
-  ctx = q->ctx;
+  ctx = query_ctx->ctx;
+  buf = g_string_new ("");
 
   for (;;)
     {
@@ -185,38 +186,29 @@ read_response (struct gpesync_client_query_context *q)
 	{
 	  if (c == ':')
 	    {
-	      buf[p] = '\0';
-	      len = atoi (buf);
-	      p = 0;
-	      c = ' ';
+	      len = atoi (buf->str);
 	      have_len = TRUE;
+	      g_string_assign (buf, "");
+	      continue;
 	    }
 	}
       else
 	{
-	  if (p == len - 1)
+	  if (buf->len == len - 1)
 	    {
-	      buf[p] = c;
-	      buf[p + 1] = '\0';
+	      g_string_append_c (buf, c);
 	      break;
 	    }
 	}
 
-      buf[p] = c;
-      if (p < sizeof (buf) - 1)
-	p++;
-      else {
-	fprintf (stderr, "gpesync_client: Input buffer full\n");
-	exit (-1);
-      }
+      g_string_append_c (buf, c);
+
     }
 
   if (ctx->busy)
     {
-      char *p;
-
-      p = buf;
-      send_lines (q, p + 1);
+      read_lines (query_ctx, buf->str);
+      g_string_free (buf, TRUE);
       ctx->busy = 0;
     }
 }
@@ -375,7 +367,7 @@ int client_callback_gstring (void *arg, int argc, char **argv)
 {
   int i;
   GString  **data_str = (GString **) arg;
- 
+
   for (i = 0; i < argc; i++)
 	{
 	  g_string_append (*data_str, argv[i]);

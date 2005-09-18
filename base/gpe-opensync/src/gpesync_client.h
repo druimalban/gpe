@@ -15,8 +15,6 @@
 #define _GPE__CLIENT_H_
 #include <stdarg.h>     /* Needed for the definition of va_list */
 
-#define BUFFER_LENGTH 8192
-
 typedef struct gpesync_client gpesync_client;
 
 /*! \brief This opens a connection to the gpesyncd
