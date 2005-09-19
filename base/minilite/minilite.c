@@ -109,7 +109,7 @@ GtkWidget *icon;
 
 #define _(_x)  gettext (_x)
 
-#define SLIDER_HEIGHT	96
+#define SLIDER_HEIGHT	116
 
 struct gpe_icon my_icons[] = {
   { "minilite", PREFIX "/share/pixmaps/minilite.png" },
@@ -682,6 +682,8 @@ main (int argc, char **argv)
   GdkBitmap *bitmap;
   GtkTooltips *tooltips;
   GtkAdjustment *adj;
+  GtkWidget *box;
+  GtkWidget *pluslabel, *minuslabel;
 
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
@@ -762,7 +764,14 @@ main (int argc, char **argv)
   adj = gtk_range_get_adjustment (GTK_RANGE (slider)); 
   g_signal_connect (G_OBJECT (adj), "value-changed", G_CALLBACK (value_changed), NULL);
   
-  gtk_container_add (GTK_CONTAINER (slider_window), slider);
+  box = gtk_vbox_new (FALSE, 0);
+  pluslabel = gtk_label_new ("+");
+  minuslabel = gtk_label_new ("-");
+  gtk_box_pack_start (GTK_BOX (box), pluslabel, FALSE, FALSE, 0);
+  gtk_box_pack_end (GTK_BOX (box), minuslabel, FALSE, FALSE, 0);
+
+  gtk_box_pack_start (GTK_BOX (box), slider, TRUE, TRUE, 0);
+  gtk_container_add (GTK_CONTAINER (slider_window), box);
 
   g_signal_connect (G_OBJECT (window), "configure-event", G_CALLBACK (external_event), NULL);
   g_signal_connect (G_OBJECT (window), "button-press-event", G_CALLBACK (clicked), NULL);
@@ -772,7 +781,7 @@ main (int argc, char **argv)
 
   gtk_widget_add_events (slider_window, GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
 
-  gtk_widget_show (slider);
+  gtk_widget_show_all (box);
 
   gtk_main ();
 
