@@ -1,3 +1,8 @@
+2005-09-19  Martin Felis  <martin@silef.de>
+
+	* export.c: Fixed bug, which wouldn't report items that do not
+	have a modified tag (thanks koen).
+
 2005-09-17  Martin Felis  <martin@silef.de>
 
 	* main.c, gpesyncd.h: Removed fixed BUFFER_LENGTH. Using now a

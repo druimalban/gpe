@@ -28,6 +28,17 @@ item_list_callback (void *arg, int argc, char **argv, char **names)
 }
 
 static int
+item_string_callback (void *arg, int argc, char **argv, char **names)
+{
+  gchar **string = (gchar **) arg;
+  
+  if (argc == 1)
+    {
+      *string = g_strdup (argv[0]);
+    }
+  return 0;
+}
+static int
 tag_list_callback (void *arg, int argc, char **argv, char **names)
 {
   GSList **tags = (GSList **) arg;
@@ -123,50 +134,167 @@ get_todo (gpesyncd_context * ctx, guint uid, GError ** error)
   return data;
 }
 
+/*! \brief Returns a list of the uids and their modified tags
+ *
+ * \param ctx	The current context
+ * \param error	For error handling
+ *
+ */
 GSList *
 get_contact_uid_list (gpesyncd_context * ctx, GError ** error)
 {
-  GSList *list = NULL;
+  GSList *uid_list = NULL, *iter;
   char *err;
+
+  /* At first we need to get the uids: */
   if (sqlite_exec
       (ctx->contact_db,
-       "select urn,value from contacts where upper(tag)='MODIFIED' order by urn",
-       item_list_callback, &list, 0))
+       "select distinct urn from contacts",
+       item_list_callback, &uid_list, 0))
     {
       g_set_error (error, 0, 111, err);
       return NULL;
     }
-  return list;
+  GString *uid_modified = g_string_new ("");
+
+  /* Now we got to get their modified tags. */
+  for (iter = uid_list; iter; iter = g_slist_next (iter))
+    {
+      gchar *modified;  
+     
+      modified = NULL;
+
+      if (sqlite_exec_printf
+	  (ctx->contact_db,
+	   "select value from contacts where upper(tag)='MODIFIED' and urn=%s",
+	   item_string_callback, &modified, 0, (gchar *) iter->data))
+	{
+	  g_set_error (error, 0, 111, err);
+	  return NULL;
+	}
+     
+      /* if we didn't get one, report it as 0 */
+      if (modified)
+	g_string_printf (uid_modified, "%s:%s", (gchar *) iter->data, modified);
+      else
+	g_string_printf (uid_modified, "%s:0", (gchar *) iter->data);
+
+      g_free (modified);
+      g_free (iter->data);
+      iter->data = g_strdup (uid_modified->str);
+
+    }
+  g_string_free (uid_modified, TRUE);
+
+  return uid_list;
 }
 
+/*! \brief Returns a list of the uids and their modified tags
+ *
+ * \param ctx	The current context
+ * \param error	For error handling
+ *
+ */
 GSList *
 get_event_uid_list (gpesyncd_context * ctx, GError ** error)
 {
-  GSList *list = NULL;
+  GSList *uid_list = NULL, *iter;
   char *err;
+
+  /* At first we need to get the uids: */
   if (sqlite_exec
       (ctx->event_db,
-       "select uid,value from calendar where upper(tag)='MODIFIED' order by uid",
-       item_list_callback, &list, 0))
+       "select distinct uid from calendar",
+       item_list_callback, &uid_list, 0))
     {
-      g_set_error (error, 0, 112, err);
+      g_set_error (error, 0, 111, err);
       return NULL;
     }
-  return list;
+  GString *uid_modified = g_string_new ("");
+
+  /* Now we got to get their modified tags. */
+  for (iter = uid_list; iter; iter = g_slist_next (iter))
+    {
+      gchar *modified;  
+     
+      modified = NULL;
+
+      if (sqlite_exec_printf
+	  (ctx->event_db,
+	   "select value from calendar where upper(tag)='MODIFIED' and uid=%s",
+	   item_string_callback, &modified, 0, (gchar *) iter->data))
+	{
+	  g_set_error (error, 0, 111, err);
+	  return NULL;
+	}
+     
+      /* if we didn't get one, report it as 0 */
+      if (modified)
+	g_string_printf (uid_modified, "%s:%s", (gchar *) iter->data, modified);
+      else
+	g_string_printf (uid_modified, "%s:0", (gchar *) iter->data);
+
+      g_free (modified);
+      g_free (iter->data);
+      iter->data = g_strdup (uid_modified->str);
+
+    }
+  g_string_free (uid_modified, TRUE);
+
+  return uid_list;
 }
 
+/*! \brief Returns a list of the uids and their modified tags
+ *
+ * \param ctx	The current context
+ * \param error	For error handling
+ *
+ */
 GSList *
 get_todo_uid_list (gpesyncd_context * ctx, GError ** error)
 {
-  GSList *list = NULL;
+  GSList *uid_list = NULL, *iter;
   char *err;
+
+  /* At first we need to get the uids: */
   if (sqlite_exec
       (ctx->todo_db,
-       "select uid,value from todo where upper(tag)='MODIFIED' order by uid",
-       item_list_callback, &list, 0))
+       "select distinct uid from todo",
+       item_list_callback, &uid_list, 0))
     {
-      g_set_error (error, 0, 113, err);
+      g_set_error (error, 0, 111, err);
       return NULL;
     }
-  return list;
+  GString *uid_modified = g_string_new ("");
+
+  /* Now we got to get their modified tags. */
+  for (iter = uid_list; iter; iter = g_slist_next (iter))
+    {
+      gchar *modified;  
+     
+      modified = NULL;
+
+      if (sqlite_exec_printf
+	  (ctx->todo_db,
+	   "select value from todo where upper(tag)='MODIFIED' and uid=%s",
+	   item_string_callback, &modified, 0, (gchar *) iter->data))
+	{
+	  g_set_error (error, 0, 111, err);
+	  return NULL;
+	}
+     
+      /* if we didn't get one, report it as 0 */
+      if (modified)
+	g_string_printf (uid_modified, "%s:%s", (gchar *) iter->data, modified);
+      else
+	g_string_printf (uid_modified, "%s:0", (gchar *) iter->data);
+
+      g_free (modified);
+      g_free (iter->data);
+      iter->data = g_strdup (uid_modified->str);
+
+    }
+  g_string_free (uid_modified, TRUE);
+
+  return uid_list;
 }
