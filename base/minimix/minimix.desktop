@@ -4,5 +4,5 @@ Name=Volume control
 Comment=Panel based volume control
 Exec=minimix
 Type=PanelApp
-Icon=minimix.png
+Icon=stock_volume.png
 Categories=Panel;Utility;
