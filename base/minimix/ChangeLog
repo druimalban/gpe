@@ -1,0 +1,78 @@
+2005-09-19 17:39  Rene Wagner <rw@handhelds.org>
+	* ChangeLog: add cvs2cl generated ChangeLog
+
+2005-09-19 17:38  Rene Wagner <rw@handhelds.org>
+
+	* configure.ac: fix minor build system issue
+	  (PACKAGE_LOCALE_DIR wasn't defined correctly) and bump version to
+	  0.8
+
+2005-09-19 17:36  Rene Wagner <rw@handhelds.org>
+
+	* Makefile.am, minimix.c, minimix.desktop, stock_volume-0.png,
+	  stock_volume-max.png, stock_volume-med.png, stock_volume-min.png,
+	  stock_volume-mute.png, stock_volume.png: use GNOME
+	  volume icons; switch the panel icon depending on the current
+	  volume; add +/- labels; poll on the volume level
+
+2005-09-19 17:30  Rene Wagner <rw@handhelds.org>
+
+	* gpe-dist.am: sync with current gpe-dist.am so distcheck
+	  is used for uploads
+
+2005-07-29 22:37  Florian Boor <florian@kernelconcepts.de>
+
+	* configure.ac, minimix.c: Release Version 0.7.  Remove all traces
+	  of unused config.h.  Fix minor build issue ending up in a broken
+	  prefix.
+
+2005-07-29 22:03  Rene Wagner <rw@handhelds.org>
+
+	* Makefile.am, minimix.c, minimix.desktop: add .desktop; copy icon
+	  resizing code from minilite
+
+2005-02-28 21:16  Phil Blundell <pb@handhelds.org>
+
+	* gpe-dist.am: fix upload path in gpe-dist.am
+
+2004-11-16 00:44  Phil Blundell <pb@handhelds.org>
+
+	* configure.ac: 0.6
+
+2004-11-16 00:44  Phil Blundell <pb@handhelds.org>
+
+	* minimix.c: fix for multi-channel support
+
+2004-11-15 21:28  Phil Blundell <pb@handhelds.org>
+
+	* configure.ac: 0.5
+
+2004-11-15 21:28  Phil Blundell <pb@handhelds.org>
+
+	* minimix.c: correct return values from signal handlers
+
+2004-11-09 17:22  Florian Boor <florian@kernelconcepts.de>
+
+	* minimix.c: Fixed scale range.
+
+2004-10-26 01:32  Phil Blundell <pb@handhelds.org>
+
+	* configure.ac: 0.4
+
+2004-10-26 01:32  Phil Blundell <pb@handhelds.org>
+
+	* minimix.c: fix cut&paste error
+
+2004-10-16 20:12  Phil Blundell <pb@handhelds.org>
+
+	* configure.ac, minimix.c: 0.3
+
+2004-10-16 17:02  Phil Blundell <pb@handhelds.org>
+
+	* minimix.c: adjust some icon bits
+
+2004-10-16 17:00  Phil Blundell <pb@handhelds.org>
+
+	* Makefile.am, configure.ac, gpe-dist.am, minimix.c, minimix.png:
+	  add minimix, a simple volume control based on minilite
+
