@@ -1,3 +1,10 @@
+gpe-mini-browser (0.17-1) unstable; urgency=low
+
+  * Improved version with bookmarks, fullscreen mode, url bar hiding,
+    auto-completion,....
+ 
+ -- Philippe De Swert <philippedeswert@scarlet.be>  Sun, 18 Sep 2005 14:17:34 +0200
+
 gpe-mini-browser (0.15-1) unstable; urgency=low
 
   * Initial Release.

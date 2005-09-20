@@ -8,6 +8,7 @@ TODO:
 * some sort of status indication if clicking on links with infoprint or equivalent
 * GtkEntryCompletion
 * categories to order bookmarks & bookmark sort & ability to set home page from bookmarks
+* Hide bookmarks behind a description
 * Download file option (wget ?)
 * bookmarks integration with gpe-contacts
 

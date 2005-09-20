@@ -558,15 +558,15 @@ show_add_dialog (GtkWidget * button, gpointer *data)
   gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (add_dialog)->vbox),
 		      vbox, FALSE, FALSE, 0);
-
+  
   /* dialog buttons */
   add = gpe_button_new_from_stock (GTK_STOCK_ADD, GPE_BUTTON_TYPE_BOTH);
   cancel = gpe_button_new_from_stock (GTK_STOCK_CANCEL, GPE_BUTTON_TYPE_BOTH);
 
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (add_dialog)->action_area),
-		      cancel, TRUE, TRUE, 0);
+                     cancel, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (add_dialog)->action_area),
-		      add, TRUE, TRUE, 0);
+                     add, TRUE, TRUE, 0);
 
   /* connect the signals */
   g_signal_connect (GTK_OBJECT (cancel), "clicked",
@@ -584,3 +584,78 @@ show_add_dialog (GtkWidget * button, gpointer *data)
 
 }
 #endif
+
+/* ======================================================== */
+
+void show_history(GtkWidget *button, Webi *html)
+{
+  GtkWidget *history_dialog, *scroll;
+  GtkToolbar *bar;
+  GtkToolItem *open;
+  GtkWidget *vbox;
+  GtkWidget *treeview;
+  GtkTreeModel *model;
+  GtkCellRenderer *cell;
+  GtkTreeViewColumn *column;
+  GtkTreeSelection *selection;
+  static struct tree_action tree_info;
+
+  /* new dialog window */
+  history_dialog = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+  gtk_window_set_title (GTK_WINDOW (history_dialog), _("History"));
+  gtk_container_set_border_width (GTK_CONTAINER (history_dialog),
+                                  gpe_get_border ());
+  gtk_window_set_default_size (GTK_WINDOW (history_dialog), 240, 320);
+  gtk_window_set_type_hint (GTK_WINDOW(history_dialog), GDK_WINDOW_TYPE_HINT_DIALOG);
+  gtk_window_set_decorated (GTK_WINDOW(history_dialog), TRUE);
+
+  /* vbox for putting in scrolled window and button */
+  vbox = gtk_vbox_new (FALSE, 0);
+
+  /* scrolled window */
+  scroll = gtk_scrolled_window_new (NULL, NULL);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scroll),
+                                  GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC); 
+  /* create tree view */
+  treeview = gtk_tree_view_new(); 
+  model = GTK_TREE_MODEL(completion_store);
+
+  gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scroll),
+                                         GTK_WIDGET(treeview));
+  gtk_tree_view_set_model(GTK_TREE_VIEW(treeview), model);
+  gtk_widget_show(treeview);
+
+  gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (treeview), FALSE);
+  gtk_tree_view_set_rules_hint(GTK_TREE_VIEW(treeview), TRUE);
+  selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
+  gtk_tree_selection_set_mode (selection, GTK_SELECTION_SINGLE);
+
+  cell = gtk_cell_renderer_text_new ();
+  column = gtk_tree_view_column_new_with_attributes (_("History"), cell,
+                                                     "text", 0, NULL);
+
+  gtk_tree_view_append_column (GTK_TREE_VIEW(treeview),
+                               GTK_TREE_VIEW_COLUMN (column));
+
+  /* open selected history */
+  tree_info.html = html;
+  tree_info.treeview = GTK_WIDGET(treeview);
+  open = gtk_tool_button_new_from_stock (GTK_STOCK_OPEN); 
+
+  /* toolbar to add the button too */
+  bar = GTK_TOOLBAR(gtk_toolbar_new());
+  gtk_toolbar_insert (GTK_TOOLBAR(bar), open, -1);  
+
+  g_signal_connect(GTK_OBJECT(open), "clicked",
+		   G_CALLBACK(open_bookmarks), &tree_info);
+  g_signal_connect(GTK_OBJECT(open), "clicked",
+		   G_CALLBACK(destroy_window), history_dialog);
+
+  gtk_box_pack_start(GTK_BOX(vbox), GTK_WIDGET(bar), FALSE, FALSE, 0);
+  gtk_box_pack_start(GTK_BOX(vbox), scroll, TRUE, TRUE, 0);
+
+  gtk_container_add(GTK_CONTAINER(history_dialog), vbox);
+  gtk_widget_show_all(GTK_WIDGET(history_dialog));
+   
+}
+	

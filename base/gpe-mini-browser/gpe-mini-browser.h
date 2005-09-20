@@ -108,6 +108,8 @@ void hide_url_bar (GtkWidget * button, struct urlbar_data* url_bar);
 void show_bookmarks (GtkWidget * button, Webi * html);
 /* bookmark add dialog */
 void show_add_dialog (GtkWidget *button, gpointer *data);
+/* show history */
+void show_history(GtkWidget *button, Webi *html);
 
 /********************************************************
 	       url loading and handling

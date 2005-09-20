@@ -218,9 +218,6 @@ main (int argc, char *argv[])
                              _("Bookmarks"));
   gtk_toolbar_insert (GTK_TOOLBAR (toolbar), bookmarks_button, -1);
 
-  separator = gtk_separator_tool_item_new ();
-  gtk_tool_item_set_homogeneous (separator, FALSE);
-  gtk_toolbar_insert (GTK_TOOLBAR (toolbar), separator, -1);
 #endif
 
 

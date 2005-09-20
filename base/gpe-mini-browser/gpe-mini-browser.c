@@ -77,8 +77,8 @@ main (int argc, char *argv[])
   GtkWidget *html, *app, *contentbox;	/* html engine, application window, content box of application window */
   GtkWidget *toolbar, *urlbox = NULL;	/* toolbar, url entry box (big screen) */
   GtkToolItem *back_button, *forward_button, *home_button, *bookmarks_button,
-    *fullscreen_button, *url_button = NULL;
-  GtkToolItem *separator, *separator2;
+    *fullscreen_button, *url_button = NULL, *history_button;
+  GtkToolItem *separator, *separator2, *separator3;
   extern GtkToolItem *stop_reload_button;
   const gchar *base;
   gint width = 240, height = 320;
@@ -235,6 +235,15 @@ main (int argc, char *argv[])
       add_zoom_buttons(WEBI(html), toolbar, &s);
     }
 
+  /* add history button and separator */
+  separator3 = gtk_separator_tool_item_new ();
+  gtk_tool_item_set_homogeneous (separator3, FALSE);
+  gtk_toolbar_insert (GTK_TOOLBAR (toolbar), separator3, -1);
+  history_button = gtk_tool_button_new_from_stock (GTK_STOCK_HARDDISK);
+  gtk_tool_item_set_homogeneous (history_button, FALSE);
+  gtk_tool_button_set_label (GTK_TOOL_BUTTON (history_button), _("History"));
+  gtk_toolbar_insert (GTK_TOOLBAR (toolbar), history_button, -1);
+
   /* connect all button signals */
   g_signal_connect (GTK_OBJECT (back_button), "clicked",
 		    G_CALLBACK (back_func), html);
@@ -254,6 +263,9 @@ main (int argc, char *argv[])
   g_signal_connect (GTK_OBJECT (bookmarks_button), "clicked",
 		    G_CALLBACK (show_bookmarks), html);
 #endif
+  g_signal_connect (GTK_OBJECT (history_button), "clicked",
+                        G_CALLBACK (show_history), html);
+
   /* save completion list when we exit the program */
   g_signal_connect (GTK_OBJECT (app), "destroy",
 		    G_CALLBACK (save_completion), NULL);
