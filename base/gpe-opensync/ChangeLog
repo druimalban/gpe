@@ -1,3 +1,8 @@
+2005-09-22  Martin Felis <martin@silef.de>
+
+	* gpesync_client.c: Removed some errors when compiling with "-Werror"
+	- (thanks koen).
+	
 2005-09-18  Martin Felis <martin@silef.de>
 
 	* gpesync_client.c, gpesync_client.h: Using now a GString instead

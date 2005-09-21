@@ -125,7 +125,7 @@ read_lines (struct gpesync_client_query_context *query_ctx, char *data)
 
       /* We need to split the data in the sperate lines, so that
        * we can read it as lists. */
-      int count = 0;
+      gsize count = 0;
       line_iter = data;
       line = get_next_line (line_iter, &count);
       do
