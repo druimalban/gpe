@@ -242,7 +242,7 @@ get_last_token (gchar * str, int *num)
 }
 
 gchar *
-get_next_token (gchar * str, int *num)
+get_next_token (gchar * str, guint *num)
 {
   GString *string = g_string_new ("");
   int i = 0;
@@ -314,7 +314,7 @@ do_command (gpesyncd_context * ctx, gchar * command)
 
       if (pos < cmd_string->len)
 	{
-	  int uidlen = 0;
+	  guint uidlen = 0;
 	  uidstr = get_next_token (cmd_string->str + pos, &uidlen);
 	  uid = atoi (uidstr);
 	  if (uid > 0)

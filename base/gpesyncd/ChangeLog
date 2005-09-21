@@ -1,3 +1,8 @@
+2005-09-21  Martin Felis  <martin@silef.de>
+
+	* main.c: Removed some errors when compiling with -Werror (thanks
+	koen)
+
 2005-09-19  Martin Felis  <martin@silef.de>
 
 	* export.c: Fixed bug, which wouldn't report items that do not
