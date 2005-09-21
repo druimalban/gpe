@@ -43,8 +43,8 @@ journal_add_header(char* title)
     _("Journal for"), title);
   myjournal[2] = g_strdup("<table WIDTH=100% BORDER=0 CELLPADDING=0 CELLSPACING=0>\n");
   myjournal[3] = g_strdup_printf("<tr><th align=\"left\">%s</th><th " \
-    "align=\"left\">%s</th><th align=\"left\">%s</th><th align=\"left\">%s</th><th align=\"left\">%s</th></tr>",
-  	_("Start"), _("Comment"), _("End"), _("Comment"),  _("Duration"));
+    "align=\"left\">%s</th><th align=\"left\">%s</th><th align=\"left\">%s</th><th align=\"left\">%s</th><th align=\"left\">%s</th></tr>",
+  	_("Start"), _("Comment"), _("End"), _("Comment"),  _("Duration"), _("Notes"));
   myjournal[4] = NULL;
   jlen = 5;
   return jlen; /* curent length */
@@ -55,7 +55,7 @@ journal_add_header(char* title)
 /* this one adds a data line to journal list */
 int 
 journal_add_line(time_t tstart, time_t tstop, 
-                 const char *istart, const char *istop)
+                 const char *istart, const char *istop, const char *notes)
 {
   gchar *starttm, *stoptm;
   char duration[24];
@@ -66,7 +66,7 @@ journal_add_line(time_t tstart, time_t tstop,
   starttm = ctime_r(&tstart, starttm);
   stoptm = ctime_r(&tstop, stoptm);
 
-  sprintf(duration, "%.2i h. %.2i min. %.2i sec.\n", (tstop - tstart)/3600, ((tstop - tstart)%3600)/60, 
+  sprintf(duration, "%.2ld h. %.2ld min. %.2ld sec.\n", (tstop - tstart)/3600, ((tstop - tstart)%3600)/60, 
   		(((tstop - tstart)%3600)%60));
   myjournal = realloc(myjournal,sizeof(char*)*(++jlen));
   myjournal[jlen - 2] = 
