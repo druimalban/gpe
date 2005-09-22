@@ -39,6 +39,7 @@
 #include "users.h"
 #include "gpe-admin.h"
 #include "serial.h"
+#include "usb.h"
 #include "cardinfo.h"
 #include "tasks.h"
 #include "keys/keys.h"
@@ -108,6 +109,8 @@ struct Applet applets[]=
 		N_("GPE") ,"admin",N_("GPE Conf Administration"),PREFIX "/share/pixmaps/gpe-config-admin.png"},
     { &Serial_Build_Objects, &Serial_Free_Objects, &Serial_Save, &Serial_Restore ,
 		N_("Serial Ports") ,"serial", N_("Serial Port Configuration"),PREFIX "/share/pixmaps/gpe-config-serial.png"},
+    { &USB_Build_Objects, &Unimplemented_Free_Objects, &USB_Save, &USB_Restore ,
+		N_("USB") ,"usb", N_("USB Configuration"),PREFIX "/share/pixmaps/gpe-config-serial.png"},
     { &Cardinfo_Build_Objects, &Cardinfo_Free_Objects, &Unimplemented_Save, &Cardinfo_Restore ,
 		N_("PCMCIA/CF Cards") ,"cardinfo", N_("PCMCIA/CF Card Info and Config"),PREFIX "/share/pixmaps/gpe-config-cardinfo.png"},
     { &Sound_Build_Objects, &Sound_Free_Objects, &Sound_Save, &Sound_Restore , 

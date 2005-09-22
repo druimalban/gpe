@@ -411,6 +411,28 @@ suidloop (int write, int read)
 					if (pw)
 						update_passwd (pw, arg1);
 				}
+				else if (strcmp (cmd, "MODP") == 0)  /* modprobe kernel module */
+				{
+					int c, n = 0;
+					char *cmd;
+					fscanf(in, "%100s\n", arg1);	/* module */
+					while ((c = fgetc(in)) != '\n')	/* parameters */
+						arg2[n++] = (unsigned char)c;
+					arg2[n] = '\0';
+					cmd = g_strdup_printf("/sbin/modprobe %s %s", arg1, arg2);
+fprintf ("system (\"%s\");", cmd);
+
+					system (cmd);
+					g_free(cmd);
+				}
+				else if (strcmp (cmd, "RMOD") == 0)  /* rmmod kernel module */
+				{
+					gchar *cmd;
+					fscanf (in, "%100s", arg1);	/* module */
+					cmd = g_strdup_printf("/sbin/rmmod %s", arg1);
+					system (cmd);
+					g_free(cmd);
+				}
 			}	// if check_user_access
 			else	// clear buffer
 			{

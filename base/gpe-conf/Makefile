@@ -89,6 +89,7 @@ MEMBERS += cfgfile
 MEMBERS += gpe-admin
 MEMBERS += widgets/sp-color-slider
 MEMBERS += serial
+MEMBERS += usb
 MEMBERS += cardinfo
 MEMBERS += tools/interface
 MEMBERS += tasks

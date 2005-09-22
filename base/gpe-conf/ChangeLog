@@ -1,4 +1,9 @@
-2005-09-93	Florian Boor <florian.boor@kernelconcepts.de>
+2005-09-23	Florian Boor <florian.boor@kernelconcepts.de>
+
+	* Apply patch by Philipp Zabel to add an USB gadget mode selection appplet.
+	* usb.c, usb.h: New files.
+
+2005-09-03	Florian Boor <florian.boor@kernelconcepts.de>
 
 	* theme.c: Move signal connction to avoid hang on xsettings start.
 	
