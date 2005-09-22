@@ -36,7 +36,7 @@ static gchar *note_start = NULL;
 
 GSList *tasks, *root;
 
-static const char *actions[] = { "START", "STOP", "NOTE" };
+static const char *actions[] = { "START", "STOP" };
 
 gboolean
 log_entry (action_t action, time_t time, struct task *task, char *info)
@@ -203,16 +203,18 @@ journal_callback (void *arg, int argc, char **argv, char **names)
     {
       ti = atol(argv[0]);
       if (!strcmp(argv[1],"START"))
-	    {
+       {
           if (time_start != 0)
+	    {
               journal_add_line(time_start, ti, note_start, _("open"));
+	     }
           time_start = ti;
-		  note_start = g_strdup(argv[2]);
+	  note_start = g_strdup(argv[2]);
         }
-	    else
-        if (!strcmp(argv[1],"STOP"))
+       else if (!strcmp(argv[1],"STOP")){
           if (time_start) 
             journal_add_line(time_start, ti,note_start, argv[2]);
+        }		
     }
   return 0;
 }

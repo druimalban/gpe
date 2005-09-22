@@ -43,8 +43,8 @@ journal_add_header(char* title)
     _("Journal for"), title);
   myjournal[2] = g_strdup("<table WIDTH=100% BORDER=0 CELLPADDING=0 CELLSPACING=0>\n");
   myjournal[3] = g_strdup_printf("<tr><th align=\"left\">%s</th><th " \
-    "align=\"left\">%s</th><th align=\"left\">%s</th><th align=\"left\">%s</th><th align=\"left\">%s</th><th align=\"left\">%s</th></tr>",
-  	_("Start"), _("Comment"), _("End"), _("Comment"),  _("Duration"), _("Notes"));
+    "align=\"left\">%s</th><th align=\"left\">%s</th><th align=\"left\">%s</th><th align=\"left\">%s</th></tr>",
+  	_("Start"), _("Comment"), _("End"), _("Comment"),  _("Duration"));
   myjournal[4] = NULL;
   jlen = 5;
   return jlen; /* curent length */
@@ -55,7 +55,7 @@ journal_add_header(char* title)
 /* this one adds a data line to journal list */
 int 
 journal_add_line(time_t tstart, time_t tstop, 
-                 const char *istart, const char *istop, const char *notes)
+                 const char *istart, const char *istop)
 {
   gchar *starttm, *stoptm;
   char duration[24];

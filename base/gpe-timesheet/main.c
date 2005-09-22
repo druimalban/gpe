@@ -281,24 +281,6 @@ stop_timing (GtkWidget *w, gpointer user_data)
 }
 
 static void
-note (GtkWidget *w, gpointer user_data)
-{
-  GtkCTree *ct = GTK_CTREE (user_data);
-  if (GTK_CLIST (ct)->selection)
-    {
-      GtkCTreeNode *node = GTK_CTREE_NODE (GTK_CLIST (ct)->selection->data);
-      struct task *t;
-      gchar *text;
-      t = gtk_ctree_node_get_row_data (ct, node);
-      if (confirm_dialog (&text, NULL, t->description))
-	{
-	  log_entry (NOTE, time (NULL), t, text);
-	  g_free (text);
-	}
-    }
-}
-
-static void
 ui_delete_task (GtkWidget *w, gpointer user_data)
 {
   GtkCTree *ct = GTK_CTREE (user_data);
@@ -456,12 +438,6 @@ main(int argc, char *argv[])
 			   pw, (GtkSignalFunc)stop_timing, tree);
 
   set_active (0, 0);
-
-  p = gpe_find_icon ("edit");
-  pw = gtk_image_new_from_pixbuf (p);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Note"),
-			   _("Note"), _("Note"),
-			   pw, (GtkSignalFunc)note, tree);
 
   p = gpe_find_icon ("journal");
   pw = gtk_image_new_from_pixbuf (p);
