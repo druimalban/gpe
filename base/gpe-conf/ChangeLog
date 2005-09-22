@@ -1,5 +1,6 @@
 2005-09-23	Florian Boor <florian.boor@kernelconcepts.de>
 
+	* Makefile, gpe-conf-usb.desktop.in: Add desktop entry for usb applet.
 	* Apply patch by Philipp Zabel to add an USB gadget mode selection appplet.
 	* usb.c, usb.h: New files.
 

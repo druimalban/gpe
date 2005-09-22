@@ -43,6 +43,7 @@ EXTRA_DESKTOPS = \
 	gpe-conf-time.desktop.in \
 	gpe-conf-users.desktop.in \
 	gpe-conf-sysinfo.desktop.in \
+	gpe-conf-usb.desktop.in \
 	gpe-conf-sound.desktop.in
 
 ifeq ($(CVSBUILD),yes)

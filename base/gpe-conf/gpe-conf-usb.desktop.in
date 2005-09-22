@@ -1,0 +1,11 @@
+[Desktop Entry]
+Encoding=UTF-8
+_Name=USB Settings
+_Comment=Change USB settings
+Exec=gpe-conf usb
+Terminal=false
+Type=Application
+Icon=pccard-usb.png
+Categories=Application;SystemSettings;GPE;
+X-StartupNotify=true
+SingleInstance=true
