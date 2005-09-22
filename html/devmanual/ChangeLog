@@ -1,3 +1,9 @@
+2005-09-21  Florian Boor <florian.boor@kernelconcepts.de>
+
+    * application.sgml: How to build and test the demo application.
+    * environment.sgml: Add info about separator and note about compiling
+                        bits from CVS.
+
 2005-09-05  Florian Boor <florian.boor@kernelconcepts.de>
 
     * basics.sgml: Add Philippe to the authors list.
