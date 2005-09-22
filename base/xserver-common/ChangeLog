@@ -1,3 +1,9 @@
+2005-09-23  Florian Boor <florian@kernelconcepts.de>
+
+	* Apply patch by pHilipp Zabel to change keymap on hx4700.
+	* X11/hx4700.xmodmap: New File.
+	* X11/Xinit.d/12keymap: Add support for iPAQ hx4700.
+
 2005-09-15  Florian Boor <florian@kernelconcepts.de>
 
 	* 11Zaurus: Apply patch by Justin Patrin to fix screen orientation 
