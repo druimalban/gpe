@@ -85,8 +85,6 @@ static void refresh_todo_widget(void)
 void todo_init(void)
 {
 	GtkWidget *vboxlogo, *logo;
-	GdkPixmap *pix;
-	GdkBitmap *mask;
 
 	todo.message = NULL;
 

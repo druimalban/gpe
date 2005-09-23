@@ -61,7 +61,6 @@ static gboolean resize_callback(GtkWidget *wid, GdkEventConfigure *event,
 {
 	if ((gdk_screen_height() >= gdk_screen_width()) == window.mode) {
 		window.mode = !window.mode;
-		g_print("ROTATION\n");
 	}
 
         refresh_widgets();
@@ -136,7 +135,9 @@ void set_background(const char *spec)
                 && setting->type == XSETTINGS_TYPE_STRING) {
 
                 /* possible loop here if mb's setting is "<matchbox>" */
-                set_background(setting->data.v_string);
+				if (strstr(setting->data.v_string, ":") 
+					&& strlen(strstr(setting->data.v_string, ":")))
+				  set_background(strstr(setting->data.v_string, ":") + 1);
             }
             break;
         case TILED_BG_IMG:
@@ -152,10 +153,12 @@ void set_background(const char *spec)
 static void set_bg_pixmap(const char *path)
 {
     GtkWidget *wid = window.toplevel;
-    GdkPixmap *old_pix, *pix;
-    GdkBitmap *mask;
-        
-    if (load_pixmap_non_critical(path, &pix, &mask, 0xFF)) {
+    GdkPixmap *old_pix = NULL, *pix;
+	GError *err = NULL;
+	GdkBitmap *mask;        
+
+	if (load_pixmap_non_critical(path, &pix, &mask, 0xFF))
+    if (pix) {
         old_pix = g_object_get_data(G_OBJECT(wid), "bg-pixmap");
 
         wid->style->bg_pixmap[GTK_STATE_NORMAL] = pix;
@@ -170,7 +173,7 @@ static void set_bg_pixmap(const char *path)
             g_object_unref(old_pix);
             g_object_unref(old_pix);
             g_object_unref(old_pix);
-	}
+		}
 
         refresh_widgets();
     }
@@ -214,14 +217,6 @@ static void load_modules(void)
 
 	todo_init();
 	gtk_paned_pack2(GTK_PANED(window.vpan1), todo.toplevel, FALSE, FALSE);
-}
-
-void load_pixmap(const char *path, GdkPixmap **pixmap, GdkBitmap **mask, int alpha)
-{
-	if (!load_pixmap_non_critical(path, pixmap, mask, alpha)) {
-		gpe_error_box_fmt("Could not load pixmap\n%s", path);
-		exit(1);
-	}
 }
 
 /*

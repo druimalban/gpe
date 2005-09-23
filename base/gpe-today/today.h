@@ -67,12 +67,6 @@ void myscroll_update_upper_adjust(struct myscroll *scroll);
 
 void markup_printf(PangoLayout *pl, const char *fmt, ...);
 
-int load_pixmap_non_critical(const char *path, GdkPixmap **pixmap,
-                             GdkBitmap **mask, int alpha);
-
-void load_pixmap(const char *path, GdkPixmap **pixmap, GdkBitmap **mask,
-                 int alpha);
-
 void set_background(const char *spec);
 
 #endif /* !HAVE_TODAY_H */

@@ -15,8 +15,6 @@ static void date_box_press(GtkWidget *wid, gpointer data);
 
 void date_init(void)
 {
-	GdkPixmap *pix;
-	GdkBitmap *mask;
 	GtkWidget *date_icon, *hbox;
 
 	date.label_text = NULL;
@@ -29,8 +27,7 @@ void date_init(void)
 	gtk_container_add(GTK_CONTAINER(date.toplevel), hbox);
 
 	/* date icon */
-	load_pixmap(IMAGEPATH(date.png), &pix, &mask, 130);
-	date_icon = gtk_pixmap_new(pix, mask);
+	date_icon = gtk_image_new_from_file(IMAGEPATH(date.png));
 
 	gtk_box_pack_start(GTK_BOX(hbox), date_icon, FALSE, FALSE, 5);
 

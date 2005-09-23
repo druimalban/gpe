@@ -54,9 +54,6 @@ static void refresh_calendar_widget(void)
 
 int calendar_init(void)
 {
- 	GdkPixmap *pix;
-	GdkBitmap *mask;
-
 	calendar.noevent = NULL;
 	
 	/* calendar db full path */
@@ -68,9 +65,7 @@ int calendar_init(void)
 	calendar.vboxlogo = gtk_vbox_new(FALSE, 0);
 	gtk_box_pack_start(GTK_BOX(calendar.toplevel), calendar.vboxlogo, FALSE, FALSE, 5);
 
-//	load_pixmap(IMAGEPATH(calendar.png), &pix, &mask, 130);
 	calendar.logo = gtk_image_new_from_file(IMAGEPATH(calendar.png));
-//	gbtk_pixmap_new(pix, mask);
 
 	gtk_box_pack_start(GTK_BOX(calendar.vboxlogo), calendar.logo, FALSE, FALSE, 0);
 
