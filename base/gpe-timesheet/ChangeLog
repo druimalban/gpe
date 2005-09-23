@@ -1,3 +1,7 @@
+2004-09-23  Florian Boor <florian.boor@kernelconcepts.de>
+
+	* main.c: Reverse dialog button order to comply Gnome HIG.
+
 2005-08-31 Philippe De Swert <philippedeswert@scarlet.be>
 
 	* release 0.18

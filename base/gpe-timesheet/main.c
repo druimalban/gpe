@@ -201,9 +201,9 @@ confirm_dialog (gchar **text, gchar *action, gchar *action2)
   buttoncancel = gtk_button_new_from_stock (GTK_STOCK_CANCEL);
 
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (w)->action_area), 
-		      buttonok, TRUE, TRUE, 0);
-  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (w)->action_area), 
 		      buttoncancel, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (w)->action_area), 
+		      buttonok, TRUE, TRUE, 0);
 
   gtk_signal_connect (GTK_OBJECT (buttonok), "clicked", 
 		      GTK_SIGNAL_FUNC (confirm_click_ok), NULL);
