@@ -1,5 +1,7 @@
 2005-09-23  Florian Boor <florian@kernelconcepts.de>
 
+	* Still open: Background pixmap locations, bg colour.
+	* Some more background bits, fix todo update.
 	* More icon loading and background parsing fixes.
 
 2005-09-12  Florian Boor <florian@kernelconcepts.de>

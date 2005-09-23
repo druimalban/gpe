@@ -153,7 +153,7 @@ void set_background(const char *spec)
 static void set_bg_pixmap(const char *path)
 {
     GtkWidget *wid = window.toplevel;
-    GdkPixmap *old_pix = NULL, *pix;
+    GdkPixmap *old_pix = NULL, *pix = NULL;
 	GError *err = NULL;
 	GdkBitmap *mask;        
 
@@ -164,16 +164,12 @@ static void set_bg_pixmap(const char *path)
         wid->style->bg_pixmap[GTK_STATE_NORMAL] = pix;
         wid->style->bg_pixmap[GTK_STATE_ACTIVE] = pix;
         wid->style->bg_pixmap[GTK_STATE_PRELIGHT] = pix;
-        g_object_ref(pix);
-        g_object_ref(pix);
         gtk_widget_set_style(wid, wid->style);
         g_object_set_data(G_OBJECT(wid), "bg-pixmap", pix);
     
         if (old_pix) {
             g_object_unref(old_pix);
-            g_object_unref(old_pix);
-            g_object_unref(old_pix);
-		}
+	}
 
         refresh_widgets();
     }
@@ -227,13 +223,17 @@ int load_pixmap_non_critical(const char *path, GdkPixmap **pixmap,
                              GdkBitmap **mask, int alpha)
 {
 	GdkPixbuf *img;
+	int height, width;
 
 	img = gdk_pixbuf_new_from_file(path, NULL);
+	width = gdk_pixbuf_get_width(img);
+	height = gdk_pixbuf_get_height(img);
 	
 	if (!img)
 		return 0;
 
-	gdk_pixbuf_render_pixmap_and_mask(img, pixmap, mask, alpha);
+	*pixmap = gdk_pixmap_new(window.toplevel->window,  width, height, -1);
+	gdk_draw_pixbuf(*pixmap, NULL, img, 0, 0 , 0, 0, -1, -1, GDK_RGB_DITHER_NORMAL, 1, 1);
 	gdk_pixbuf_unref(img);
 
 	return 1;
@@ -270,6 +270,7 @@ gboolean myscroll_draw_cb(GtkWidget *wid, GdkEventExpose *event, gpointer data)
 		
 		if (y >= wid->allocation.height)
 			break;
+
 	}
 	
 	return TRUE;

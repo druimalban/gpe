@@ -170,14 +170,13 @@ static void refresh_todo_markup(struct display_item *di)
 		color = green;
 	else
 		color = black;
-
 	markup_printf(di->pl, "<span foreground=\"%s\">%s</span>", color, di->ti->summary);
 }
 
 gboolean todo_update(gpointer data)
 {
 	struct stat db;
-	static time_t prev_modified = 0;
+	static time_t prev_modified = -1;
 	time_t current_time;
 	GSList *iter;
 
@@ -188,7 +187,7 @@ gboolean todo_update(gpointer data)
 		return TRUE;
 	}
 
-	if (db.st_mtime > prev_modified) {
+	if (db.st_mtime != prev_modified) {
 		prev_modified = db.st_mtime;
 		todo_db_update();
 	}
