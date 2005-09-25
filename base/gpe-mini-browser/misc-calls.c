@@ -68,6 +68,9 @@ set_default_settings (Webi * html, WebiSettings * ks)
   webi_set_settings (WEBI (html), ks);
 }
 
+
+/*==============================================*/
+
 void
 zoom_in (GtkWidget * zoom_in, gpointer * data)
 {
@@ -93,6 +96,8 @@ zoom_out (GtkWidget * zoom_out, gpointer * data)
   set->default_fixed_font_size--;
   webi_set_settings (WEBI (zoom->html), set);
 }
+
+/*==============================================*/
 
 void
 delete_bookmarks (GtkWidget * button, gpointer * data)
@@ -126,13 +131,15 @@ delete_bookmarks (GtkWidget * button, gpointer * data)
     }
 }
 
+/*==============================================*/
+
 void
 open_bookmarks (GtkWidget * button, gpointer * data)
 {
 	struct tree_action *open_data;
 	GtkTreeSelection *selection; 
 	GtkTreeModel *model;
-	GtkTreeIter iter;
+	GtkTreeIter iter, iter2;
 	gchar *url;
 
 	open_data = (struct tree_action *)data;
@@ -147,6 +154,10 @@ open_bookmarks (GtkWidget * button, gpointer * data)
 #ifdef DEBUG
 		printf("The selected url = %s\n", url);
 #endif
+		/* add to history */
+                gtk_list_store_insert(completion_store, &iter2, 0);
+     		gtk_list_store_set(completion_store, &iter2, 0, url, -1);
+
 		fetch_url(url, GTK_WIDGET(open_data->html));
 		g_free(url);
 	}
@@ -155,6 +166,8 @@ open_bookmarks (GtkWidget * button, gpointer * data)
 	 gpe_error_box(_("No bookmark selected!"));
 	}
 }
+
+/*==============================================*/
 
 void
 toggle_type (GtkWidget * button, gpointer * data)
@@ -168,6 +181,8 @@ toggle_type (GtkWidget * button, gpointer * data)
   else
     test->bookmark_type = 1;
 }
+
+/*==============================================*/
 
 void add_bookmark_func (GtkWidget *button, gpointer *data)
 {
@@ -208,6 +223,8 @@ void add_bookmark_func (GtkWidget *button, gpointer *data)
 
 }
 
+/*==============================================*/
+
 int set_entry_completion(GtkWidget *entry)
 {
 	GtkTreeModel *model;
@@ -228,6 +245,8 @@ int set_entry_completion(GtkWidget *entry)
 	return 1;
 }
 
+/*==============================================*/
+
 GtkTreeModel *
 create_completion_model (void)
 {
@@ -235,17 +254,10 @@ create_completion_model (void)
         gint count = 0;
         GtkTreeIter iter;
         FILE *file;
-	const char *home = getenv ("HOME");
         char *buf;
-	size_t len;
         char buffer[64];
 	
-	if (home == NULL)
-		    home = "";
- 	len = strlen (home) + strlen (COMPLETION) + 1;
- 	buf = g_malloc (len);
- 	strcpy (buf, home);
-	strcat (buf, COMPLETION);
+        buf = history_location();
 
         completion_store = gtk_list_store_new (1, G_TYPE_STRING);
 
@@ -272,22 +284,17 @@ create_completion_model (void)
         return GTK_TREE_MODEL (completion_store);
 }
 
+/*==============================================*/
+
 void save_completion (GtkWidget *window)
 {
 	gint count = 0;
         GtkTreeIter iter;
         FILE *file;
-	const char *home = getenv ("HOME");
         char *buf;
-	size_t len;
 	gchar *buffer = NULL;
 	
-	if (home == NULL)
-		    home = "";
- 	len = strlen (home) + strlen (COMPLETION) + 1;
- 	buf = g_malloc (len);
- 	strcpy (buf, home);
-	strcat (buf, COMPLETION);
+        buf = history_location();
 
 	file = fopen(buf, "w");
 
@@ -305,4 +312,36 @@ void save_completion (GtkWidget *window)
 	}
 end:	fclose(file);
 	g_free(buf);
+}
+
+/*==============================================*/
+
+gchar * history_location (void)
+{
+	const char *home = getenv ("HOME");
+        char *buf;
+        size_t len;
+
+        if (home == NULL)
+                    home = "";
+        len = strlen (home) + strlen (COMPLETION) + 1;
+        buf = g_malloc (len);
+        strcpy (buf, home);
+        strcat (buf, COMPLETION);
+
+	return buf;
+}
+
+/*==============================================*/
+
+void clear_history(GtkWidget *button)
+{
+	char *filename;
+	FILE *file;
+
+	filename = history_location();
+	
+	file = fopen (filename, "w");
+	fclose(file);
+	gtk_list_store_clear(completion_store);
 }

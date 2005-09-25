@@ -1,12 +1,9 @@
 TODO:
 
-* history management
 * config file to keep zoom/font settings and bookmarks
 * support multiple windows
 * improve progressbar display
-* history (special case of bookmarks)
 * some sort of status indication if clicking on links with infoprint or equivalent
-* GtkEntryCompletion
 * categories to order bookmarks & bookmark sort & ability to set home page from bookmarks
 * Hide bookmarks behind a description
 * Download file option (wget ?)
@@ -29,6 +26,8 @@ DONE:
 * bookmarks with Hildon interface
 * zoom buttons in small-screen interface
 * alternating background color for the bookmarks
+* GtkEntryCompletion
+* history (special case of bookmarks)
 
 POSTPONED / PARTIALLY DONE:
 
@@ -36,3 +35,4 @@ POSTPONED / PARTIALLY DONE:
 -> provisions are in the code, however not yet implemented in gtk-webcore
 * cookie support. Working cookie support is in. However gtk-webcore does not handle
   them gracefully yet.
+* history management (clean up history, button to remove it, avoid doubles)

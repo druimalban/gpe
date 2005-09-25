@@ -7,6 +7,8 @@
  *
  * Copyright (c) 2005 Philippe De Swert
  *
+ * Thanks to Children of Bodom
+ *
  * Contact : philippedeswert@scarlet.be
  * 
  * This program is free software; you can redistribute it and/or modify
@@ -591,7 +593,7 @@ void show_history(GtkWidget *button, Webi *html)
 {
   GtkWidget *history_dialog, *scroll;
   GtkToolbar *bar;
-  GtkToolItem *open;
+  GtkToolItem *open, *clear;
   GtkWidget *vbox;
   GtkWidget *treeview;
   GtkTreeModel *model;
@@ -641,14 +643,21 @@ void show_history(GtkWidget *button, Webi *html)
   tree_info.html = html;
   tree_info.treeview = GTK_WIDGET(treeview);
   open = gtk_tool_button_new_from_stock (GTK_STOCK_OPEN); 
+  clear = gtk_tool_button_new_from_stock (GTK_STOCK_DELETE);
+  gtk_tool_button_set_label (GTK_TOOL_BUTTON (clear), _("Clear"));
 
   /* toolbar to add the button too */
   bar = GTK_TOOLBAR(gtk_toolbar_new());
   gtk_toolbar_insert (GTK_TOOLBAR(bar), open, -1);  
+  gtk_toolbar_insert (GTK_TOOLBAR(bar), clear, -1);
 
   g_signal_connect(GTK_OBJECT(open), "clicked",
 		   G_CALLBACK(open_bookmarks), &tree_info);
   g_signal_connect(GTK_OBJECT(open), "clicked",
+		   G_CALLBACK(destroy_window), history_dialog);
+  g_signal_connect(GTK_OBJECT(clear), "clicked", 
+		   G_CALLBACK(clear_history), NULL);
+  g_signal_connect(GTK_OBJECT(clear), "clicked",
 		   G_CALLBACK(destroy_window), history_dialog);
 
   gtk_box_pack_start(GTK_BOX(vbox), GTK_WIDGET(bar), FALSE, FALSE, 0);

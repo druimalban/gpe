@@ -158,6 +158,10 @@ int set_entry_completion(GtkWidget *entry);
 GtkTreeModel * create_completion_model (void);
 /* save first 100 entries of the completion list to a file */
 void save_completion (GtkWidget *window);
+/* find out where to save the data */
+gchar * history_location (void);
+/* clear history */
+void clear_history(GtkWidget *button);
 
 
 /******************************************************
