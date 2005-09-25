@@ -78,7 +78,7 @@ set_fullscreen (GtkWidget * button, gpointer * fullscreen_info)
 		gtk_widget_hide(info->urlbox);
 	fullscreen_popup = gtk_window_new (GTK_WINDOW_POPUP);
 
-        close_button = gpe_button_new_from_stock (GTK_STOCK_CLOSE, GPE_BUTTON_TYPE_ICON);
+        close_button = gpe_button_new_from_stock (GTK_STOCK_ZOOM_FIT, GPE_BUTTON_TYPE_ICON);
         g_signal_connect (G_OBJECT (close_button), "clicked",
                           G_CALLBACK (set_fullscreen), fullscreen_info);
 	g_signal_connect (G_OBJECT (close_button), "clicked",
