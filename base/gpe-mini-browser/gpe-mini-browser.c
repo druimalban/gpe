@@ -48,6 +48,7 @@
 //#define DEBUG /* uncomment this if you want debug output*/
 
 static int fullscreen = 0;
+static int totalscreen = 0;
 
 struct gpe_icon my_icons[] = 
 {
@@ -56,17 +57,44 @@ struct gpe_icon my_icons[] =
 };
 
 static void
-set_fullscreen (GtkWidget * button, GtkWidget * app)
+set_fullscreen (GtkWidget * button, gpointer * fullscreen_info)
 {
+  struct fullscreen_info *info;
+
+  info = (struct fullscreen_info *) fullscreen_info;
+
   if (!fullscreen)
     {
-      gtk_window_fullscreen (GTK_WINDOW (app));
+      gtk_window_fullscreen (GTK_WINDOW (info->app));
       fullscreen = 1;
     }
-  else
+  else if (fullscreen && !totalscreen)
     {
-      gtk_window_unfullscreen (GTK_WINDOW (app));
+	GtkWidget *close_button, *fullscreen_popup;
+
+	totalscreen = 1;
+	gtk_widget_hide(info->toolbar);
+	if(info->urlbox)
+		gtk_widget_hide(info->urlbox);
+	fullscreen_popup = gtk_window_new (GTK_WINDOW_POPUP);
+
+        close_button = gpe_button_new_from_stock (GTK_STOCK_CLOSE, GPE_BUTTON_TYPE_ICON);
+        g_signal_connect (G_OBJECT (close_button), "clicked",
+                          G_CALLBACK (set_fullscreen), fullscreen_info);
+	g_signal_connect (G_OBJECT (close_button), "clicked",
+			  G_CALLBACK (destroy_window), fullscreen_popup);
+        gtk_container_add (GTK_CONTAINER (fullscreen_popup), close_button);
+        gtk_widget_show_all (fullscreen_popup);
+
+    }
+  else if (totalscreen == 1 && fullscreen == 1)
+    {
+      gtk_window_unfullscreen (GTK_WINDOW (info->app));
+      gtk_widget_show_all(info->toolbar);
+      if(info->urlbox)
+	gtk_widget_show_all(info->urlbox);
       fullscreen = 0;
+      totalscreen = 0;
     }
 }
 
@@ -83,6 +111,7 @@ main (int argc, char *argv[])
   const gchar *base;
   gint width = 240, height = 320;
   static struct status_data status;
+  static struct fullscreen_info fsinfo;
   int opt;
 
   WebiSettings s = { 0, };
@@ -130,14 +159,19 @@ main (int argc, char *argv[])
   //create boxes
   contentbox = gtk_vbox_new (FALSE, 0);
 
+  //create toolbar and add to topbox
+  toolbar = gtk_toolbar_new ();
+
   //fill in status to be sure everything is filled in when used
   //status = (struct status_data*) malloc (sizeof (struct status_data));
   status.main_window = contentbox;
   status.pbar = NULL;
   status.exists = FALSE;
 
-  //create toolbar and add to topbox
-  toolbar = gtk_toolbar_new ();
+  /* fill in fullscreen info */
+  fsinfo.app = app;
+  fsinfo.toolbar = toolbar;
+  fsinfo.urlbox = NULL; /* set to NULL for small screen interface. Will be filled in when we actually have an urlbox */
 
   //create html object (must be created before function calls to html to avoid segfault)
   html = webi_new ();
@@ -206,6 +240,7 @@ main (int argc, char *argv[])
   if ((width > 320) || (height > 320))
     {
       urlbox = show_big_screen_interface (WEBI (html), toolbar, &s);
+      fsinfo.urlbox = urlbox;
     }
   else
     {
@@ -244,6 +279,7 @@ main (int argc, char *argv[])
   gtk_tool_button_set_label (GTK_TOOL_BUTTON (history_button), _("History"));
   gtk_toolbar_insert (GTK_TOOLBAR (toolbar), history_button, -1);
 
+
   /* connect all button signals */
   g_signal_connect (GTK_OBJECT (back_button), "clicked",
 		    G_CALLBACK (back_func), html);
@@ -258,7 +294,7 @@ main (int argc, char *argv[])
 		    G_CALLBACK (home_func), html);
 
   g_signal_connect (GTK_OBJECT (fullscreen_button), "clicked",
-		    G_CALLBACK (set_fullscreen), app);
+		    G_CALLBACK (set_fullscreen), &fsinfo);
 #ifndef NOBOOKMARKS
   g_signal_connect (GTK_OBJECT (bookmarks_button), "clicked",
 		    G_CALLBACK (show_bookmarks), html);

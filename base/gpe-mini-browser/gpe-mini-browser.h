@@ -77,6 +77,14 @@ Webi *html;
 GtkWidget *treeview;
 };
 
+/* fullscreen information */
+struct fullscreen_info
+{
+GtkWidget *app;
+GtkWidget *toolbar;
+GtkWidget *urlbox;
+};
+
 /********************************************************
 	      interface call primitives 
 	      see: interface-calls.c
