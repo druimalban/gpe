@@ -72,7 +72,7 @@ static void free_items(void)
 static void refresh_todo_widget(void)
 {
         myscroll_update_upper_adjust(todo.scroll);
-
+	
         if (todo.scroll->adjust->page_size >= todo.scroll->adjust->upper)
                 gtk_widget_hide(todo.scroll->scrollbar);
         else if (!GTK_WIDGET_VISIBLE(todo.scroll->scrollbar))
@@ -116,7 +116,7 @@ void todo_init(void)
 void todo_free(void)
 {
 	free_items();
-//	gtk_container_remove(GTK_CONTAINER(window.vbox1), todo.toplevel);
+
 	g_free(db_fname);
 	g_source_remove(todo_update_tag);
 

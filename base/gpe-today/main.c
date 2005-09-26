@@ -150,14 +150,48 @@ void set_background(const char *spec)
         }
 }
 
+/*
+ * return 0: failure
+ * return 1: success
+ */
+int load_pixmap_non_critical(const char *path, GdkPixmap **pixmap, int alpha)
+{
+	GdkPixbuf *img, *bg;
+	int height, width;
+
+	/* load image from file */
+	img = gdk_pixbuf_new_from_file(path, NULL);
+	if (!img)
+		return 0;
+	
+	/* determine dimensions */
+	width = gdk_pixbuf_get_width(img);
+	height = gdk_pixbuf_get_height(img);
+	
+	/* compose a new pixbuf with background instead of alpha channel to avoid 
+	   making random fb background visible. */
+	bg = gdk_pixbuf_new(GDK_COLORSPACE_RGB, FALSE, 
+	                    gdk_pixbuf_get_bits_per_sample(img), width, height);
+	gdk_pixbuf_fill(bg, 0);
+	gdk_pixbuf_composite(img, bg, 0, 0, width, height, 0, 0, 1, 1, 
+	                     GDK_INTERP_BILINEAR, alpha);
+
+
+	*pixmap = gdk_pixmap_new(window.toplevel->window,  width, height, -1);
+	gdk_draw_pixbuf(*pixmap, NULL, bg, 0, 0 , 0, 0, -1, -1, 
+	                GDK_RGB_DITHER_NORMAL, 1, 1);
+	gdk_pixbuf_unref(img);
+	gdk_pixbuf_unref(bg);
+
+	return 1;
+}
+
 static void set_bg_pixmap(const char *path)
 {
     GtkWidget *wid = window.toplevel;
     GdkPixmap *old_pix = NULL, *pix = NULL;
-	GError *err = NULL;
-	GdkBitmap *mask;        
 
-	if (load_pixmap_non_critical(path, &pix, &mask, 0xFF))
+	if (load_pixmap_non_critical(path, &pix, 0xFF))
     if (pix) {
         old_pix = g_object_get_data(G_OBJECT(wid), "bg-pixmap");
 
@@ -186,14 +220,18 @@ static void init_main_window(void)
 	gtk_window_set_title(GTK_WINDOW(window.toplevel), _("Summary"));
 	gtk_widget_set_name(window.toplevel, "main_window");
 	gtk_widget_realize(window.toplevel);
-	window.mode = PORTRAIT;
+	
+	if (gdk_screen_height() > gdk_screen_width())
+		window.mode = PORTRAIT;
+	else
+		window.mode = LANDSCAPE;
 	
 	window.vbox1 = gtk_vbox_new(FALSE, 0);
 	gtk_container_add(GTK_CONTAINER(window.toplevel), window.vbox1);
 
 	/* final stuff */
 	g_signal_connect(G_OBJECT(window.toplevel), "destroy",
-			 G_CALLBACK(gtk_exit), NULL);
+			 G_CALLBACK(gtk_main_quit), NULL);
 
 	g_signal_connect(G_OBJECT(window.toplevel), "configure-event",
 			 G_CALLBACK(resize_callback), NULL);
@@ -213,30 +251,6 @@ static void load_modules(void)
 
 	todo_init();
 	gtk_paned_pack2(GTK_PANED(window.vpan1), todo.toplevel, FALSE, FALSE);
-}
-
-/*
- * return 0: failure
- * return 1: success
- */
-int load_pixmap_non_critical(const char *path, GdkPixmap **pixmap,
-                             GdkBitmap **mask, int alpha)
-{
-	GdkPixbuf *img;
-	int height, width;
-
-	img = gdk_pixbuf_new_from_file(path, NULL);
-	width = gdk_pixbuf_get_width(img);
-	height = gdk_pixbuf_get_height(img);
-	
-	if (!img)
-		return 0;
-
-	*pixmap = gdk_pixmap_new(window.toplevel->window,  width, height, -1);
-	gdk_draw_pixbuf(*pixmap, NULL, img, 0, 0 , 0, 0, -1, -1, GDK_RGB_DITHER_NORMAL, 1, 1);
-	gdk_pixbuf_unref(img);
-
-	return 1;
 }
 
 void myscroll_adjust_cb(GtkAdjustment *adjustment, gpointer draw)
@@ -340,6 +354,9 @@ struct myscroll * myscroll_new(gboolean continuous)
 	else
 		g_signal_connect(G_OBJECT(scroll->scrollbar), "button-release-event",
 				 G_CALLBACK(myscroll_button_cb), scroll->draw);
+	
+	g_signal_connect(G_OBJECT(scroll->draw), "configure-event",
+			 G_CALLBACK(myscroll_size_cb), scroll);
 	
 	scroll->list = NULL;
 	scroll->yspacing = 2;

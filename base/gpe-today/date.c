@@ -75,7 +75,6 @@ void date_update(void)
 	
 	g_free(date.label_text);
 	date.label_text = g_locale_to_utf8(str, -1, NULL, NULL, NULL);
-	//date.label_text = g_strdup(str);
 
 	gtk_label_set_text(GTK_LABEL(date.label), date.label_text);
 }

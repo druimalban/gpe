@@ -1,3 +1,11 @@
+2005-09-26  Florian Boor <florian@kernelconcepts.de>
+
+	* main.c: Fix background image displaying. 
+	          Reordered code and removed old cruft.
+			  Fix scrollbar presence.
+			  Don't use deprecated gtk_exit(), use gtk_main_quit().
+			  Make sure window mode is initialized correctly.
+
 2005-09-23  Florian Boor <florian@kernelconcepts.de>
 
 	* Still open: Background pixmap locations, bg colour.
