@@ -491,7 +491,7 @@ int check_apm() {
 	if (debug) fprintf(dgfp,"You are NOT on external power. Its all good.....\n");
 #endif
 	runtime = info.battery_time;
-	if (runtime >= 0 && runtime < battery_level)
+	if (apm && runtime >= 0 && runtime < battery_level)
 	{
 #ifdef DEBUG
 		if (debug)

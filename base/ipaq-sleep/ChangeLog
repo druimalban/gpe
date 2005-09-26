@@ -1,3 +1,8 @@
+
+2005-09-26  Florian Boor <florian.boor@kernelconcepts.de>
+
+	* ipaq-sleep.c: Apply patch fixing apm switch.
+
 2004-09-20  Florian Boor <florian.boor@kernelconcepts.de>
 
 	* ipaq-sleep.h: Maybe just .sleep.conf? We use it on other platforms
