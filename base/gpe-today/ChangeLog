@@ -1,5 +1,7 @@
+
 2005-09-26  Florian Boor <florian@kernelconcepts.de>
 
+	* Release 0.10.
 	* main.c: Fix background image displaying. 
 	          Reordered code and removed old cruft.
 			  Fix scrollbar presence.
