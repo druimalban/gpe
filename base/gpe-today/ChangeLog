@@ -1,4 +1,7 @@
+2005-09-27  Florian Boor <florian@kernelconcepts.de>
 
+	* main.c: Set application icon.
+	
 2005-09-26  Florian Boor <florian@kernelconcepts.de>
 
 	* Release 0.10.

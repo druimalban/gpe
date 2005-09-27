@@ -218,6 +218,8 @@ static void init_main_window(void)
 {
 	window.toplevel = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	gtk_window_set_title(GTK_WINDOW(window.toplevel), _("Summary"));
+	gtk_window_set_icon_from_file(GTK_WINDOW(window.toplevel), 
+	                              PREFIX "/share/pixmaps/gpe-today.png", NULL);
 	gtk_widget_set_name(window.toplevel, "main_window");
 	gtk_widget_realize(window.toplevel);
 	
