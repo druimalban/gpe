@@ -916,8 +916,17 @@ build_edit_event_window (void)
 
   s                   = g_malloc0 (sizeof (struct edit_state));
     
-  gtk_window_set_transient_for (GTK_WINDOW(window), GTK_WINDOW(main_window));
-  gtk_window_set_modal (GTK_WINDOW(window), TRUE);
+
+  gpe_set_window_icon (window, "icon");
+  
+  /* if screen is large enough, make it a real dialog */
+  if ((gdk_screen_width() >= 300) && (gdk_screen_height() >= 300))
+    {
+      gtk_window_set_default_size (GTK_WINDOW (window), 280, 380);
+      gtk_window_set_type_hint(GTK_WINDOW(window), GDK_WINDOW_TYPE_HINT_DIALOG);
+      gtk_window_set_transient_for (GTK_WINDOW(window), GTK_WINDOW(main_window));
+      gtk_window_set_modal (GTK_WINDOW(window), TRUE);
+    }
   
   /* Scrolled window for event tab */
   scrolledwindowevent = gtk_scrolled_window_new (NULL, NULL);
@@ -1465,15 +1474,6 @@ build_edit_event_window (void)
 
   gtk_widget_show_all (vboxtop);
   recalculate_sensitivities (NULL, window);
-
-  gpe_set_window_icon (window, "icon");
-
-  gtk_window_set_default_size (GTK_WINDOW (window), 240, 340);
-  gtk_window_set_transient_for (GTK_WINDOW(window), GTK_WINDOW(main_window));
-  
-  /* if screen is large enough, make it a real dialog */
-  if (gdk_screen_width() > 320)
-    gtk_window_set_type_hint(GTK_WINDOW(window),GDK_WINDOW_TYPE_HINT_DIALOG);
   
   g_signal_connect (G_OBJECT (window), "delete_event",
                     G_CALLBACK (edit_finished), NULL);

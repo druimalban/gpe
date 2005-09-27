@@ -1,3 +1,7 @@
+2005-09-27  Florian Boor <florian.boor@kernelconcepts.de>
+
+    * event-ui.c: Improve window type selection to behave better using Matchbox.
+
 2005-09-09  Luca De Cicco <ldecicco@gmail.com>
 	* month_view.c: Adding support for scrolled window.
 
