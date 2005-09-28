@@ -258,8 +258,8 @@ create_completion_model (void)
         char buffer[64];
 	
         buf = history_location();
-
-        completion_store = gtk_list_store_new (1, G_TYPE_STRING);
+	if (!completion_store)
+	        completion_store = gtk_list_store_new (1, G_TYPE_STRING);
 
         file = fopen(buf, "ro");
 	/* if file does not exist just start and skip reading in data */

@@ -65,6 +65,7 @@ show_url_window (GtkWidget * show, GtkWidget * html)
 
   hbox = gtk_hbox_new (FALSE, 0);
   entry = gtk_entry_new ();
+
   /* set completion on url entry */
   set_entry_completion(entry);
  

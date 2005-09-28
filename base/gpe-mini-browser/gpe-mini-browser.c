@@ -244,6 +244,10 @@ main (int argc, char *argv[])
     }
   else
     {
+      /* create list here so that bookmarks will also be listed in the history 
+      before the entrycompletion is activated when the urlentry is created for the first time */
+      completion_store = gtk_list_store_new (1, G_TYPE_STRING);	
+
       url_button = gtk_tool_button_new_from_stock (GTK_STOCK_NETWORK);
       gtk_tool_item_set_homogeneous (url_button, FALSE);
       gtk_tool_button_set_label (GTK_TOOL_BUTTON (url_button), "Url");
