@@ -31,7 +31,7 @@
 
 Sketchpad sketchpad;
 
-GtkWidget * drawing_area;
+GtkWidget * drawing_area = NULL;
 GdkPixmap * drawing_area_pixmap_buffer;
 
 gboolean is_current_sketch_modified;
@@ -44,6 +44,8 @@ GdkColor black;
 GdkColor red    = {0, 65535, 0, 0 };
 GdkColor green  = {0, 0, 65535, 0 };
 GdkColor blue   = {0, 0, 0, 65535 };
+GdkColor yellow = {0, 65535, 65535, 0 };
+GdkColor orange = {0, 65535, 32767, 0 };
 
 gint drawing_area_width;
 gint drawing_area_height;
@@ -63,16 +65,17 @@ GdkCursor * cursor_eraser_small;
 GdkCursor * cursor_eraser_medium;
 GdkCursor * cursor_eraser_large;
 GdkCursor * cursor_eraser_xlarge;
-GdkCursor * _eraser_cursors_new(gchar * bits, gint width, gint height);//gint diameter);
+GdkCursor * _eraser_cursors_new(unsigned char * bits, gint width, gint height);//gint diameter);
 
 void    clear_drawing_area       ();
 
 void sketchpad_init(){
   drawing_area_pixmap_buffer = NULL;
   is_current_sketch_modified = FALSE;
-
-  drawing_area_width  = gdk_screen_width(); //SKETCH_WIDTH;
-  drawing_area_height = gdk_screen_height() - 26; // SKETCH_HEIGHT;
+  
+  /* set defaults, exact match is calculated later */
+  drawing_area_width  = 100;
+  drawing_area_height = 100;
 
   prev_pos_x = NO_PREV_POS;
   prev_pos_y = NO_PREV_POS;
@@ -80,6 +83,38 @@ void sketchpad_init(){
   tool  = PEN;
   brush = MEDIUM;
 }//sketchpad_init()
+
+/*
+ * Changes the drawing area's size, and ensures it's realized
+ */
+static void set_drawing_area_size(int width, int height){
+  drawing_area_width = width;
+  drawing_area_height = height;
+  gtk_widget_set_usize(drawing_area, width, height);
+
+  if(! GTK_WIDGET_REALIZED(drawing_area)){ //drawing_area->window == NULL
+    gtk_widget_realize(drawing_area);
+  }
+
+  // If the window size has changed, we will need to create a new pixmap.
+  if (drawing_area_pixmap_buffer){
+    gint oldwidth, oldheight;
+    gdk_drawable_get_size(GDK_DRAWABLE(drawing_area_pixmap_buffer),
+                          &oldwidth, &oldheight);
+    if (oldwidth != drawing_area_width || oldheight != drawing_area_height){
+      gdk_pixmap_unref(drawing_area_pixmap_buffer);
+      drawing_area_pixmap_buffer = NULL;
+    }
+  }
+
+  if(! drawing_area_pixmap_buffer){
+    drawing_area_pixmap_buffer = gdk_pixmap_new(drawing_area->window,
+						drawing_area_width,
+						drawing_area_height,
+						-1);
+  }
+}
+
 
 void window_sketchpad_init(GtkWidget * window_sketchpad){
 
@@ -91,6 +126,8 @@ void window_sketchpad_init(GtkWidget * window_sketchpad){
   gdk_colormap_alloc_color(colormap, &red,  FALSE,TRUE);
   gdk_colormap_alloc_color(colormap, &green,FALSE,TRUE);
   gdk_colormap_alloc_color(colormap, &blue, FALSE,TRUE);
+  gdk_colormap_alloc_color(colormap, &yellow, FALSE,TRUE);
+  gdk_colormap_alloc_color(colormap, &orange, FALSE,TRUE);
 
   current_color = &black;
 
@@ -117,25 +154,11 @@ void window_sketchpad_init(GtkWidget * window_sketchpad){
   cursor_pen     = cursor_none;
   cursor_eraser  = cursor_eraser_small;
   current_cursor = &cursor_pen;
-  
-  //--default tools
-  //..._set_active() calls on_radiobutton_brush_clicked ()
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (sketchpad.button_tools_pencil), TRUE);
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (sketchpad.button_brush_medium), TRUE);
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (sketchpad.button_color_black),  TRUE);
-
 }//window_sketchpad_init()
 
-GdkCursor * _eraser_cursors_new(gchar * bits, gint width, gint height){//gint diameter){
+GdkCursor * _eraser_cursors_new(unsigned char * bits, gint width, gint height){//gint diameter){
   GdkCursor * cursor;
   GdkPixmap * cursor_pixmap;
-  //diameter++;
-  //cursor_pixmap = gdk_pixmap_new (drawing_area->window, 16, 16, 1);
-  //gdk_draw_arc(cursor_pixmap, graphical_context, FALSE,
-  //             8, 8, MIN(16,diameter), MIN(16,diameter),
-  //             0, 23040);//23040 == 360*64
-  //cursor = gdk_cursor_new_from_pixmap(cursor_pixmap, cursor_pixmap,
-  //                                    &black, &white, diameter/2, diameter/2);
   cursor_pixmap = gdk_bitmap_create_from_data(NULL, bits, width, height);
   cursor        = gdk_cursor_new_from_pixmap(cursor_pixmap, cursor_pixmap,
                                              &black, &white,
@@ -199,8 +222,21 @@ void sketchpad_open_file(gchar * fullpath_filename){
 }//sketchpad_open_file()
 
 void sketchpad_new_sketch(){
-  drawing_area_width  = gdk_screen_width() - 26; //SKETCH_WIDTH;
-  drawing_area_height = gdk_screen_height() - 26 ; // SKETCH_HEIGHT;
+gint width,height;
+  drawing_area_pixmap_buffer = NULL;
+  is_current_sketch_modified = FALSE;
+
+  /* calculate exact size for the drawing area */
+  set_drawing_area_size(100, 100); /* turn off scrollbars */
+  gtk_widget_realize(gtk_widget_get_toplevel(drawing_area)); /* make sure widgets allocate space */
+  gtk_widget_realize(drawing_area->parent);
+  gtk_widget_realize(drawing_area->parent->parent);
+  gdk_drawable_get_size(GDK_DRAWABLE(drawing_area->parent->window), &width, &height);
+  width -= 4; /* used by the widget itself */
+  height -= 4;
+    
+  drawing_area_width  = width;
+  drawing_area_height = height;
   reset_drawing_area();
   is_current_sketch_modified = FALSE;
   sketchpad_reset_title();
@@ -351,36 +387,6 @@ void draw_line (gdouble x1, gdouble y1,
   }
 }
 
-/*
- * Changes the drawing area's size, and ensures it's realized
- */
-static void set_drawing_area_size(int width, int height){
-  drawing_area_width = width;
-  drawing_area_height = height;
-  gtk_widget_set_usize(drawing_area, width, height);
-
-  if(! GTK_WIDGET_REALIZED(drawing_area)){ //drawing_area->window == NULL
-    gtk_widget_realize(drawing_area);
-  }
-
-  // If the window size has changed, we will need to create a new pixmap.
-  if (drawing_area_pixmap_buffer){
-    gint oldwidth, oldheight;
-    gdk_drawable_get_size(GDK_DRAWABLE(drawing_area_pixmap_buffer),
-                          &oldwidth, &oldheight);
-    if (oldwidth != drawing_area_width || oldheight != drawing_area_height){
-      gdk_pixmap_unref(drawing_area_pixmap_buffer);
-      drawing_area_pixmap_buffer = NULL;
-    }
-  }
-
-  if(! drawing_area_pixmap_buffer){
-    drawing_area_pixmap_buffer = gdk_pixmap_new(drawing_area->window,
-						drawing_area_width,
-						drawing_area_height,
-						-1);
-  }
-}
 
 // Creates or recreates the drawing area buffer and paints it blank
 void reset_drawing_area(void){
@@ -396,6 +402,7 @@ void reset_drawing_area(void){
   if (graphical_context) 
 	  gdk_gc_unref(graphical_context);
   graphical_context = gdk_gc_new(drawing_area->window);
+  gdk_window_set_cursor(drawing_area->window, *current_cursor);
 }
 
 void sketchpad_refresh_drawing_area(void){

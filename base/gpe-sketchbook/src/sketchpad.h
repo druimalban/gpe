@@ -96,6 +96,8 @@ extern GdkColor black;
 extern GdkColor red;
 extern GdkColor green;
 extern GdkColor blue;
+extern GdkColor yellow;
+extern GdkColor orange;
 
 //void sketchpad_set_tool    (gint    tool);
 //void sketchpad_set_brush   (gint    brush);

@@ -44,10 +44,10 @@ GtkWidget * create_window_selector(){
   GtkWidget * selector;
 
   window_selector = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-#ifdef DESKTOP
-  gtk_window_set_default_size (GTK_WINDOW (window_selector), 240, 280);
-  gtk_window_set_position     (GTK_WINDOW (window_selector), GTK_WIN_POS_CENTER);
-#endif
+
+  if (gdk_screen_width() >= 800)
+    gtk_window_set_default_size (GTK_WINDOW (window_selector), 640, 480);
+
   gtk_signal_connect (GTK_OBJECT (window_selector), "destroy",
                       GTK_SIGNAL_FUNC (on_window_selector_destroy), NULL);
 
@@ -89,45 +89,41 @@ GtkWidget * selector_gui(){
 }
 
 GtkWidget * _selector_popup_new (GtkWidget *parent_button){
-  GtkWidget *vbox;//to return
+  GtkWidget *menu;//to return
 
   GtkWidget * button_new;
   GtkWidget * button_open;
   GtkWidget * button_import;
   GtkWidget * button_delete;
-  //GtkWidget * button_properties;
+  GtkWidget * image;
   GtkWidget * button_exit;
 
-  GtkStyle * style ;//FIXME !!! = sketchpad.window->style;
+  button_new        = gtk_image_menu_item_new_from_stock(GTK_STOCK_NEW, NULL);
+  button_open       = gtk_image_menu_item_new_from_stock(GTK_STOCK_OPEN, NULL);
+  button_import     = gtk_image_menu_item_new_with_label(_("Import"));
+  image = gtk_image_new_from_pixbuf(gpe_find_icon("import"));
+  gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(button_import), image);
+  button_delete     = gtk_image_menu_item_new_from_stock(GTK_STOCK_DELETE, NULL);
+  button_exit       = gtk_image_menu_item_new_from_stock(GTK_STOCK_QUIT, NULL);
 
-  button_new        = gpe_picture_button_aligned (style, _("New"),    "new",    GPE_POS_LEFT);
-  button_open       = gpe_picture_button_aligned (style, _("Edit"),   "edit",   GPE_POS_LEFT);
-  button_import     = gpe_picture_button_aligned (style, _("Import"), "import", GPE_POS_LEFT);
-  button_delete     = gpe_picture_button_aligned (style, _("Delete"), "delete", GPE_POS_LEFT);
-  //button_properties = gpe_picture_button_aligned (style, _("Properties"), "properties", GPE_POS_LEFT);
-  button_exit       = gpe_picture_button_aligned (style, _("Exit"),   "exit",   GPE_POS_LEFT);
-
-#define _BUTTON_SETUP(action) \
-              gtk_button_set_relief (GTK_BUTTON (button_ ##action), GTK_RELIEF_NONE);\
-              g_signal_connect (G_OBJECT (button_ ##action), "clicked",\
+#define _ITEM_SETUP(action) \
+              g_signal_connect (G_OBJECT (button_ ##action), "activate",\
               G_CALLBACK (on_button_selector_ ##action ##_clicked), NULL);
 
-  _BUTTON_SETUP(new);
-  _BUTTON_SETUP(import);
-  _BUTTON_SETUP(open);
-  _BUTTON_SETUP(delete);
-  //_BUTTON_SETUP(properties);
-  _BUTTON_SETUP(exit);
+  _ITEM_SETUP(new);
+  _ITEM_SETUP(import);
+  _ITEM_SETUP(open);
+  _ITEM_SETUP(delete);
+  _ITEM_SETUP(exit);
 
-  vbox = gtk_vbox_new (FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), button_new,        FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), button_open,       FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), button_delete,     FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), button_import,     FALSE, FALSE, 0);
-  //gtk_box_pack_start (GTK_BOX (vbox), button_properties, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), button_exit,     FALSE, FALSE, 0);
+  menu = gtk_menu_new();
+  gtk_menu_append(GTK_MENU(menu), button_new);
+  gtk_menu_append(GTK_MENU(menu), button_open);
+  gtk_menu_append(GTK_MENU(menu), button_import);
+  gtk_menu_append(GTK_MENU(menu), button_delete);
+  gtk_menu_append(GTK_MENU(menu), button_exit);
 
-  if(is_current_sketch_selected){//selector.sketch_is_selected){
+  if(is_current_sketch_selected){
     gtk_widget_set_sensitive(button_open,   TRUE);
     gtk_widget_set_sensitive(button_delete, TRUE);
   }
@@ -135,50 +131,76 @@ GtkWidget * _selector_popup_new (GtkWidget *parent_button){
     gtk_widget_set_sensitive(button_open,   FALSE);
     gtk_widget_set_sensitive(button_delete, FALSE);
   }
-  return vbox;
+  gtk_widget_show_all(menu);
+  return menu;
 }
 
 GtkWidget * build_selector_toolbar(){
   GtkWidget * toolbar;
-  GtkWidget * button;
   GdkPixbuf * pixbuf;
   GtkWidget * pixmap;
 
-  GtkWidget * files_popup_button;
+ // GtkWidget * files_popup_button;
+  GtkToolItem * item;
 
   toolbar = gtk_toolbar_new ();
   gtk_toolbar_set_orientation(GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);
 
-  pixbuf = gpe_find_icon ("new");
-  pixmap = gtk_image_new_from_pixbuf (pixbuf);
-  files_popup_button = popup_menu_button_new_from_stock (GTK_STOCK_NEW, _selector_popup_new, NULL);
-  gtk_button_set_relief (GTK_BUTTON (files_popup_button), GTK_RELIEF_NONE);
-  gtk_toolbar_append_widget(GTK_TOOLBAR (toolbar),
-                            files_popup_button, _("Sketch menu"), _("Sketch menu"));
-
+  item = gtk_tool_button_new_from_stock(GTK_STOCK_NEW);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
+  g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK(on_button_selector_new_clicked), NULL);
+    
+  item = gtk_tool_button_new_from_stock(GTK_STOCK_EDIT);
+  gtk_widget_set_sensitive(GTK_WIDGET(item), FALSE);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
+  g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK(on_button_selector_open_clicked), NULL);
+  selector.button_edit = GTK_WIDGET(item);
+    
+  item = gtk_tool_button_new_from_stock(GTK_STOCK_DELETE);
+  gtk_widget_set_sensitive(GTK_WIDGET(item), FALSE);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
+  g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK(on_button_selector_delete_clicked), NULL);
+  selector.button_delete = GTK_WIDGET(item);
+  
+/*  files_popup_button = gtk_menu_tool_button_new_from_stock(GTK_STOCK_NEW);
+  gtk_menu_tool_button_set_menu(GTK_MENU_TOOL_BUTTON(files_popup_button), _selector_popup_new(files_popup_button));
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), files_popup_button, -1);
   selector.files_popup_button = files_popup_button;  //keep a ref
+*/
+
+  item = gtk_tool_button_new_from_stock(GTK_STOCK_OPEN);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
+  g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK(on_button_selector_import_clicked), NULL);
+
+  item = gtk_separator_tool_item_new();
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
 
   pixbuf = gpe_find_icon ("icons");
   pixmap = gtk_image_new_from_pixbuf (pixbuf);
-  button = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
-                                    _("Toggle view"), _("Toggle view"),
-                                    pixmap,
-                                    GTK_SIGNAL_FUNC(on_button_selector_change_view_clicked), NULL);
-  g_object_set_data((GObject *) button, "icon_mode_icon", pixmap);
+  item = gtk_tool_button_new(pixmap, _("View"));
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
+  g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK(on_button_selector_change_view_clicked), NULL);
+
+  g_object_ref(pixmap);
+  g_object_set_data((GObject *) item, "icon_mode_icon", pixmap);
   pixbuf = gpe_find_icon ("list");
   pixmap = gtk_image_new_from_pixbuf (pixbuf);
-  g_object_set_data((GObject *) button, "list_mode_icon", pixmap);
-  selector.button_view = button;
+  g_object_ref(pixmap);
+  g_object_set_data((GObject *) item, "list_mode_icon", pixmap);
+  selector.button_view = GTK_WIDGET(item);
 
-  gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
+  item = gtk_tool_button_new_from_stock(GTK_STOCK_PREFERENCES);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
+  g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK(on_button_selector_preferences_clicked), NULL);
 
-  pixbuf = gpe_find_icon ("prefs");
-  pixmap = gtk_image_new_from_pixbuf (pixbuf);
-  button = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
-                                    _("Preferences"), _("Preferences"),
-				    pixmap,
-				    GTK_SIGNAL_FUNC(on_button_selector_preferences_clicked), NULL);
-
+  item = gtk_separator_tool_item_new();
+  gtk_separator_tool_item_set_draw(GTK_SEPARATOR_TOOL_ITEM(item), FALSE);
+  gtk_tool_item_set_expand(GTK_TOOL_ITEM(item), TRUE);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
+  
+  item = gtk_tool_button_new_from_stock(GTK_STOCK_QUIT);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
+  g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK(on_button_selector_exit_clicked), NULL);
   return toolbar;
 }
 

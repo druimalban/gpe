@@ -18,7 +18,7 @@
 #include "db.h"
 #include "selector.h"
 
-#define DEBUG
+//#define DEBUG
 #ifdef DEBUG
 #define TRACE(message...) {g_printerr(message); g_printerr("\n");}
 #else

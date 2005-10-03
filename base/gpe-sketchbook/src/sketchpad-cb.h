@@ -23,26 +23,26 @@
 /* general */
 void on_window_sketchpad_destroy   (GtkObject *object, gpointer user_data);
 void on_window_size_allocate       (GtkWidget *widget, GtkAllocation *a, gpointer data);
-void on_button_list_view_clicked   (GtkButton *button, gpointer user_data);
+void on_button_list_view_clicked   (GtkToolButton *button, gpointer user_data);
 gint on_key_press                  (GtkWidget *widget, GdkEventKey *ev, gpointer data);
 
 /* files toolbar*/
-void on_button_file_save_clicked   (GtkButton *button, gpointer user_data);
-void on_button_file_new_clicked    (GtkButton *button, gpointer user_data);
-void on_button_file_import_clicked (GtkButton *button, gpointer user_data);
-void on_button_file_properties_clicked (GtkButton *button, gpointer user_data);
-void on_button_file_delete_clicked (GtkButton *button, gpointer user_data);
-void on_button_file_exit_clicked   (GtkButton *button, gpointer unused);
+void on_button_file_save_clicked   (GtkToolButton *button, gpointer user_data);
+void on_button_file_new_clicked    (GtkToolButton *button, gpointer user_data);
+void on_button_file_import_clicked (GtkToolButton *button, gpointer user_data);
+void on_button_file_properties_clicked (GtkToolButton *button, gpointer user_data);
+void on_button_file_delete_clicked (GtkToolButton *button, gpointer user_data);
+void on_button_file_exit_clicked   (GtkToolButton *button, gpointer unused);
 
-void on_button_file_prev_clicked   (GtkButton *button, gpointer user_data);
-void on_button_file_next_clicked   (GtkButton *button, gpointer user_data);
+void on_button_file_prev_clicked   (GtkToolButton *button, gpointer user_data);
+void on_button_file_next_clicked   (GtkToolButton *button, gpointer user_data);
 
 /* Drawing toolbar */
-void on_radiobutton_tool_clicked   (GtkButton * button, gpointer user_data);
-void on_button_brushes_clicked     (GtkButton * button, gpointer brushbox);
-void on_button_colors_clicked      (GtkButton * button, gpointer colorbox);
-void on_radiobutton_brush_clicked  (GtkButton * button, gpointer user_data);
-void on_radiobutton_color_clicked  (GtkButton * button, gpointer user_data);
+void on_radiobutton_tool_clicked   (GtkToolButton * button, gpointer user_data);
+void on_button_brushes_clicked     (GtkToolButton * button, gpointer brushbox);
+void on_button_colors_clicked      (GtkToolButton * button, gpointer colorbox);
+void on_radiobutton_brush_clicked  (GtkToolButton * button, gpointer user_data);
+void on_radiobutton_color_clicked  (GtkToolButton * button, gpointer user_data);
 
 /* Drawing Area */
 gboolean on_drawing_area_configure_event     (GtkWidget *widget,

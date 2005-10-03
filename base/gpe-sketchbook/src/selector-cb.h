@@ -19,16 +19,17 @@
 #include "sketchpad-cb.h"
 
 void switch_to_page(guint page);
+enum {ACTION_CANCELED, ACTION_DONE};
 
 //--toolbar
 void on_window_selector_destroy        (GtkObject *object, gpointer  user_data);
-void on_button_selector_exit_clicked   (GtkButton *button, gpointer user_data);
-void on_button_selector_new_clicked    (GtkButton *button, gpointer  user_data);
-void on_button_selector_open_clicked   (GtkButton *button, gpointer  user_data);
-void on_button_selector_delete_clicked (GtkButton *button, gpointer  user_data);
-void on_button_selector_import_clicked (GtkButton *button, gpointer  user_data);
-void on_button_selector_change_view_clicked (GtkButton *button, gpointer user_data);
-void on_button_selector_preferences_clicked (GtkButton *button, gpointer _unused);
+void on_button_selector_exit_clicked   (GtkToolButton *button, gpointer user_data);
+void on_button_selector_new_clicked    (GtkToolButton *button, gpointer  user_data);
+void on_button_selector_open_clicked   (GtkToolButton *button, gpointer  user_data);
+void on_button_selector_delete_clicked (GtkToolButton *button, gpointer  user_data);
+void on_button_selector_import_clicked (GtkToolButton *button, gpointer  user_data);
+void on_button_selector_change_view_clicked (GtkToolButton *button, gpointer user_data);
+void on_button_selector_preferences_clicked (GtkToolButton *button, gpointer _unused);
 
 //--list
 gboolean on_treeview_event(GtkWidget *treeview, GdkEvent *event, gpointer the_model);

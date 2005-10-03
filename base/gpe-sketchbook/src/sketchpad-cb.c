@@ -31,6 +31,7 @@
 #include "dock.h"
 #include "gpe/question.h"
 #include "gpe/popup_menu.h"
+#include "gpe/pixmaps.h"
 
 //--i18n
 #include <libintl.h>
@@ -76,8 +77,6 @@ void on_window_size_allocate (GtkWidget     * widget,
 }
 
 
-enum {ACTION_CANCELED, ACTION_DONE};
-
 int _save_current_if_needed(){
   if(is_current_sketch_modified){
     int ret;
@@ -92,10 +91,9 @@ int _save_current_if_needed(){
   return ACTION_DONE;
 }
 
-void on_button_list_view_clicked(GtkButton *button, gpointer user_data){
+void on_button_list_view_clicked(GtkToolButton *button, gpointer user_data){
 
   //close popup, in case it was around
-  popup_menu_close (sketchpad.files_popup_button);
   
   if (_save_current_if_needed() == ACTION_CANCELED) return;
 
@@ -159,12 +157,11 @@ gint on_key_press(GtkWidget *widget, GdkEventKey *ev, gpointer data){
 
 //---------------------------------------------------------
 //--------------------- FILE TOOLBAR ----------------------
-void on_button_file_exit_clicked(GtkButton *button, gpointer unused){
-  popup_menu_close (sketchpad.files_popup_button);
+void on_button_file_exit_clicked(GtkToolButton *button, gpointer unused){
   sketchpad_exit(NULL);
 }
 
-void on_button_file_save_clicked(GtkButton *button, gpointer unused){
+void on_button_file_save_clicked(GtkToolButton *button, gpointer unused){
   gchar     * filename  = NULL;
   gchar     * title     = NULL;
   GdkPixbuf * thumbnail = NULL;
@@ -174,7 +171,6 @@ void on_button_file_save_clicked(GtkButton *button, gpointer unused){
   gint note_id = -1;
 
   if(!is_current_sketch_modified){
-    popup_menu_close (sketchpad.files_popup_button);
     return;
   }
 
@@ -187,7 +183,7 @@ void on_button_file_save_clicked(GtkButton *button, gpointer unused){
     gchar * path_string;
     path_string = g_strdup_printf("%d", current_sketch);
 
-    /*gboolean*/gtk_tree_model_get_iter_from_string( selector.listmodel, &iter, path_string);
+    gtk_tree_model_get_iter_from_string( selector.listmodel, &iter, path_string);
     g_free(path_string);
     gtk_tree_model_get(selector.listmodel, &iter,
                        ENTRY_ID, &note_id,
@@ -197,7 +193,6 @@ void on_button_file_save_clicked(GtkButton *button, gpointer unused){
                        -1);
   }
 
-  g_printerr("Saving %s\n", filename);
   file_save(filename); //FIXME: should catch saving errors
   
   if(selector.thumbnails_notloaded == FALSE){//--make thumbnail
@@ -258,40 +253,29 @@ void on_button_file_save_clicked(GtkButton *button, gpointer unused){
 
   is_current_sketch_modified = FALSE;
   sketchpad_reset_title();
-
-  //in case of direct call, button == NULL, ie: from on_button_file_new_clicked()
-  if(button) popup_menu_close (sketchpad.files_popup_button);
 }
 
-void on_button_file_new_clicked (GtkButton *button, gpointer user_data){
+void on_button_file_new_clicked (GtkToolButton *button, gpointer user_data){
   if(_save_current_if_needed() == ACTION_CANCELED){
-    popup_menu_close (sketchpad.files_popup_button);
     return;
   }
   current_sketch = SKETCH_NEW;
   sketchpad_new_sketch();
-
-  popup_menu_close (sketchpad.files_popup_button);
 }
 
-void on_button_file_import_clicked (GtkButton *button, gpointer user_data){
+void on_button_file_import_clicked (GtkToolButton *button, gpointer user_data){
   if(_save_current_if_needed() != ACTION_CANCELED){
     sketchpad_import_image();
   }
-  popup_menu_close (sketchpad.files_popup_button);
 }
 
-void on_button_file_properties_clicked (GtkButton *button, gpointer user_data){
+void on_button_file_properties_clicked (GtkToolButton *button, gpointer user_data){
   //does nothing yet
-  popup_menu_close (sketchpad.files_popup_button);
 }
 
 
-void on_button_file_delete_clicked (GtkButton *button, gpointer user_data){
+void on_button_file_delete_clicked (GtkToolButton *button, gpointer user_data){
   int ret;
-
-  //first close the popup, to avoid overlaping with the message box
-  popup_menu_close (sketchpad.files_popup_button);
 
   if(is_current_sketch_new) return;
   ret = gpe_question_ask (_("Delete current sketch?"), _("Question"), "question", 
@@ -301,7 +285,7 @@ void on_button_file_delete_clicked (GtkButton *button, gpointer user_data){
 }
 
 
-void on_button_file_prev_clicked (GtkButton *button, gpointer user_data){
+void on_button_file_prev_clicked (GtkToolButton *button, gpointer user_data){
   if(is_current_sketch_first || is_sketch_list_empty) return;
   if( _save_current_if_needed() == ACTION_CANCELED) return;
   if(is_current_sketch_new) current_sketch = SKETCH_LAST;
@@ -310,7 +294,7 @@ void on_button_file_prev_clicked (GtkButton *button, gpointer user_data){
 }
 
 
-void on_button_file_next_clicked (GtkButton *button, gpointer user_data){
+void on_button_file_next_clicked (GtkToolButton *button, gpointer user_data){
   if(is_current_sketch_new && !is_current_sketch_modified) return;
   if( _save_current_if_needed() == ACTION_CANCELED) return;
   if(is_current_sketch_last || is_current_sketch_new){
@@ -325,52 +309,47 @@ void on_button_file_next_clicked (GtkButton *button, gpointer user_data){
 
 //---------------------------------------------------------
 //--------------------- DRAWING TOOLBAR -------------------
-void on_radiobutton_tool_clicked (GtkButton *button, gpointer user_data){
+void on_radiobutton_tool_clicked (GtkToolButton *button, gpointer user_data){
   sketchpad_set_tool_s((gchar *) user_data);
 }
 
-void on_button_brushes_clicked(GtkButton * button, gpointer brushbox){
+void on_button_brushes_clicked(GtkToolButton * button, gpointer brushbox){
   gtk_widget_hide    (GTK_WIDGET (brushbox));
   gtk_widget_show_all(GTK_WIDGET (brushbox));
 }
 
-void on_button_colors_clicked(GtkButton * button, gpointer colorbox){
+void on_button_colors_clicked(GtkToolButton * button, gpointer colorbox){
   gtk_widget_hide    (GTK_WIDGET (colorbox));
   gtk_widget_show_all(GTK_WIDGET (colorbox));
 }
 
 
-void on_radiobutton_brush_clicked (GtkButton *button, gpointer brush){
-  GtkWidget * brushbox;
+void on_radiobutton_brush_clicked (GtkToolButton *button, gpointer brush){
   GtkWidget * topbutton;
   GtkWidget * topbutton_image;
   GdkPixbuf * button_image;
+  gchar *bname = g_strdup_printf("brush_%s",(gchar*)brush);
 
   sketchpad_set_brush_s((gchar *) brush);
 
-  brushbox  = gtk_widget_get_toplevel((GtkWidget *)button);
-  topbutton = gtk_object_get_data((GtkObject *) brushbox, "calling_button");
+  topbutton = g_object_get_data((GObject *) button, "parent");
+  topbutton_image = g_object_get_data((GObject *) topbutton, "pixmap");
 
-  topbutton_image = gtk_object_get_data((GtkObject *) topbutton, "pixmap");
-  button_image = gtk_image_get_pixbuf (GTK_IMAGE(GTK_BIN (button)->child));
+  button_image = gpe_find_icon (bname);
+  g_free(bname);
   gtk_image_set_from_pixbuf(GTK_IMAGE(topbutton_image), button_image);
-
-  gtk_widget_hide(GTK_WIDGET (brushbox));
 }
 
 
-void on_radiobutton_color_clicked (GtkButton *button, gpointer color){
-  GtkWidget * colorbox;
-  GtkWidget * topbutton;
+void on_radiobutton_color_clicked (GtkToolButton *button, gpointer color){
+  GtkWidget * topbutton, * cbutton;
 
   current_color = (GdkColor *)color;
 
-  colorbox  = gtk_widget_get_toplevel((GtkWidget *)button);
-  topbutton = gtk_object_get_data((GtkObject *) colorbox, "calling_button");
-  colorbox_button_set_color(GTK_WIDGET (topbutton), current_color);
-  //NOTE: if(tool == ERASER) sketchpad_set_tool_s("pencil"); (need toggle buttons)
+  topbutton = gtk_object_get_data((GtkObject *) button, "parent");
+  cbutton = gtk_object_get_data((GtkObject *) topbutton, "cbutton");
 
-  gtk_widget_hide(GTK_WIDGET (colorbox));
+  colorbox_button_set_color(GTK_WIDGET (cbutton), current_color);
 }
 
 //---------------------------------------------------------

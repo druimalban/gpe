@@ -40,7 +40,6 @@ gchar * file_new_fullpath_filename(){
            formated_time->tm_hour,
            formated_time->tm_min,
            formated_time->tm_sec);
-  //**/g_printerr("New file name: %s\n", fullpath_filename);
   return fullpath_filename;
 }
 
@@ -81,4 +80,3 @@ gint file_load_png(const gchar * fullpath_filename){
 
   return 1; 
 }//file_load_png()
-

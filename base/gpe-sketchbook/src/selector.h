@@ -34,6 +34,8 @@ typedef struct _selector {
   GtkWidget * files_popup_button;
 
   GtkWidget * button_view;  //to switch the icon (from gpe-sketchbook.c)
+  GtkWidget * button_edit;
+  GtkWidget * button_delete;
 
   gboolean thumbnails_notloaded;
 } Selector;

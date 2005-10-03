@@ -1,6 +1,11 @@
 GPE sketchbook NEWS
 
 * cvs
+- Support additional colours.
+- Update user interface
+  - Draw area size fills available space now.
+  - Flexible toolbars and menus like other GPE applications.
+  - Use new toolbar API
 - use GTK IconListView (allow selection)
 - add "Exit" action in menus
 - list: put sketch actions in a popup menu

@@ -27,6 +27,7 @@
 #include "gpe/pixmaps.h"
 #include "gpe/popup_menu.h"
 #include "gpe/picturebutton.h"
+#include "gpe/spacing.h"
 
 //--i18n
 #include <libintl.h>
@@ -36,6 +37,10 @@ GtkWidget * sketchpad_build_scrollable_drawing_area(gint width, gint height);
 GtkWidget * sketchpad_build_drawing_toolbar(GtkWidget * window);
 GtkWidget * sketchpad_build_files_toolbar(GtkWidget * window);
 void        sketchpad_fill_files_toolbar(GtkWidget * toolbar, GtkWidget * window);
+GtkWidget * sketchpad_build_alternate_drawing_toolbar(GtkWidget * window);
+GtkWidget * _files_popup_new (GtkWidget *parent_button);
+GtkWidget * _brushes_popup_new (GtkWidget *parent_button);
+GtkWidget * _color_popup_new (GtkWidget *parent_button);
 
 /**
  * Builds a top level window, integrating:
@@ -49,10 +54,10 @@ GtkWidget * sketchpad_build_window(){
   GtkWidget * sketchpad;
 
   window_sketchpad = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-#ifdef DESKTOP
-  gtk_window_set_default_size (GTK_WINDOW (window_sketchpad), 240, 280);
-  gtk_window_set_position     (GTK_WINDOW (window_sketchpad), GTK_WIN_POS_CENTER);
-#endif
+    
+  if (gdk_screen_width() >= 800)
+    gtk_window_set_default_size (GTK_WINDOW (window_sketchpad), 640, 480);
+  
   gtk_signal_connect (GTK_OBJECT (window_sketchpad), "delete_event",
                       GTK_SIGNAL_FUNC (on_window_sketchpad_destroy), NULL);
 
@@ -67,15 +72,14 @@ GtkWidget * sketchpad_gui(GtkWidget * toplevel_window){
 
   GtkWidget * scrollable_drawing_area;
   GtkWidget * drawing_toolbar;
-  //GtkWidget * files_toolbar; temporarily disabled (all buttons in drawing_toolbar)
 
   dock = gpe_dock_new();
 	gtk_signal_connect (GTK_OBJECT(toplevel_window), "size-allocate",
                       GTK_SIGNAL_FUNC (on_window_size_allocate),
                       dock);
 
-  drawing_toolbar         = sketchpad_build_drawing_toolbar(toplevel_window);
-  //files_toolbar           = sketchpad_build_files_toolbar(toplevel_window);
+  drawing_toolbar         = sketchpad_build_alternate_drawing_toolbar(toplevel_window);
+
   scrollable_drawing_area = sketchpad_build_scrollable_drawing_area(drawing_area_width,
                                                                     drawing_area_height);
 
@@ -125,8 +129,8 @@ GtkWidget * sketchpad_build_scrollable_drawing_area(gint width, gint height){
   //--scroled window
   scrolledwindow = GTK_SCROLLED_WINDOW(gtk_scrolled_window_new (NULL, NULL));
   gtk_scrolled_window_set_policy (scrolledwindow,
-                                  GTK_POLICY_ALWAYS,
-                                  GTK_POLICY_ALWAYS);
+                                  GTK_POLICY_AUTOMATIC,
+                                  GTK_POLICY_AUTOMATIC);
 
   gtk_signal_connect (GTK_OBJECT (scrolledwindow->vscrollbar), "adjust_bounds",
                       GTK_SIGNAL_FUNC (sketchpad_scroll_adjust_bounds),
@@ -175,6 +179,111 @@ GtkWidget * sketchpad_build_scrollable_drawing_area(gint width, gint height){
 GtkWidget * brushbox_new();
 GtkWidget * colorbox_new();
 
+
+GtkWidget * 
+sketchpad_build_alternate_drawing_toolbar(GtkWidget * window){
+  //draw toolbar
+  GtkWidget * toolbar;
+
+  GdkPixbuf * pixbuf;
+  GtkWidget * pixmap;
+
+  GtkWidget * files_popup_button;
+	
+  //brushes
+  GtkWidget * button_brushes;
+
+  //colors
+  GtkWidget * colorbutton;
+  GtkWidget * button_colors;
+  GtkToolItem *item;
+  GtkTooltips *tooltips;
+	
+  toolbar = gtk_toolbar_new ();
+  gtk_toolbar_set_orientation(GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);
+  gtk_toolbar_set_tooltips(GTK_TOOLBAR(toolbar), TRUE);
+	
+  tooltips = gtk_tooltips_new();
+  gtk_tooltips_enable(tooltips);
+  
+  files_popup_button = GTK_WIDGET(gtk_menu_tool_button_new_from_stock(GTK_STOCK_NEW));
+  gtk_tool_button_set_label(GTK_TOOL_BUTTON(files_popup_button), _("Sketch menu"));
+  gtk_menu_tool_button_set_menu(GTK_MENU_TOOL_BUTTON(files_popup_button), _files_popup_new(GTK_WIDGET(files_popup_button)));
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), GTK_TOOL_ITEM(files_popup_button), -1);
+  sketchpad.files_popup_button = files_popup_button;
+  gtk_tooltips_set_tip(tooltips, files_popup_button, _("Sketch file menu"), NULL);
+
+  if (gdk_screen_width() > 480) {
+    item = gtk_separator_tool_item_new();
+    gtk_separator_tool_item_set_draw(GTK_SEPARATOR_TOOL_ITEM(item), FALSE);
+    gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
+  }
+    
+  pixbuf = gpe_find_icon ("tool_pencil");
+  pixmap = gtk_image_new_from_pixbuf (pixbuf);
+  item = gtk_radio_tool_button_new(NULL);
+  gtk_tool_button_set_icon_widget(GTK_TOOL_BUTTON(item), pixmap);
+  gtk_tool_button_set_label(GTK_TOOL_BUTTON(item), _("Pencil"));
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
+  g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK(on_radiobutton_tool_clicked ), "pencil");
+  gtk_tooltips_set_tip(tooltips, GTK_WIDGET(item), _("Select pencil"), NULL);
+  sketchpad.button_tools_pencil  = GTK_WIDGET(item);
+  
+  pixbuf = gpe_find_icon ("tool_eraser");
+  pixmap = gtk_image_new_from_pixbuf (pixbuf);
+  item = gtk_radio_tool_button_new_from_widget(GTK_RADIO_TOOL_BUTTON(item));
+  gtk_tool_button_set_icon_widget(GTK_TOOL_BUTTON(item), pixmap);
+  gtk_tool_button_set_label(GTK_TOOL_BUTTON(item), _("Eraser"));
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
+  g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK(on_radiobutton_tool_clicked ), "eraser");
+  gtk_tooltips_set_tip(tooltips, GTK_WIDGET(item), _("Select eraser"), NULL);
+  sketchpad.button_tools_eraser  = GTK_WIDGET(item);
+
+  gtk_toggle_tool_button_set_active(GTK_TOGGLE_TOOL_BUTTON(sketchpad.button_tools_pencil), TRUE);
+
+  //--brushbox
+  pixbuf = gpe_find_icon ("brush_medium");//default value.
+  pixmap = gtk_image_new_from_pixbuf (pixbuf);
+  button_brushes = GTK_WIDGET(gtk_menu_tool_button_new(pixmap, _("Size")));
+  gtk_menu_tool_button_set_menu(GTK_MENU_TOOL_BUTTON(button_brushes), _brushes_popup_new(button_brushes));
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), GTK_TOOL_ITEM(button_brushes), -1);
+  gtk_tooltips_set_tip(tooltips, button_brushes, _("Select a pencil size"), NULL);
+  g_object_set_data(G_OBJECT(button_brushes), "pixmap", pixmap);
+
+  //--colorbox
+  colorbutton = gtk_event_box_new();
+  gtk_widget_set_usize (colorbutton,  16, 16);
+  gtk_container_set_border_width(GTK_CONTAINER(colorbutton), 0);
+  colorbox_button_set_color(colorbutton, &black);
+  
+  pixmap = gtk_image_new_from_pixbuf (pixbuf);
+  button_colors = GTK_WIDGET(gtk_menu_tool_button_new(colorbutton, _("Colour")));
+  gtk_menu_tool_button_set_menu(GTK_MENU_TOOL_BUTTON(button_colors), _color_popup_new(button_colors));
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), GTK_TOOL_ITEM(button_colors), -1);
+  gtk_tooltips_set_tip(tooltips, button_colors, _("Select a colour"), NULL);
+  g_object_set_data(G_OBJECT(button_colors), "cbutton", colorbutton);
+
+  pixbuf = gpe_find_icon ("list");
+  pixmap = gtk_image_new_from_pixbuf (pixbuf);
+  item = gtk_tool_button_new(pixmap, _("Show list"));
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
+  g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK(on_button_list_view_clicked), NULL);
+  gtk_tooltips_set_tip(tooltips, GTK_WIDGET(item), _("Show sketches list"), NULL);
+  
+  item = gtk_tool_button_new_from_stock(GTK_STOCK_GO_BACK);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
+  g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK(on_button_file_prev_clicked), NULL);
+  gtk_tooltips_set_tip(tooltips, GTK_WIDGET(item), _("Display previous sketch"), NULL);
+                           
+  item = gtk_tool_button_new_from_stock(GTK_STOCK_GO_FORWARD);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
+  g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK(on_button_file_next_clicked), NULL);
+  gtk_tooltips_set_tip(tooltips, GTK_WIDGET(item), _("Display next sketch"), NULL);
+
+  gtk_widget_show_all(toolbar);
+  return toolbar;	
+}
+
 GtkWidget * sketchpad_build_drawing_toolbar(GtkWidget * window){
   //draw toolbar
   GtkWidget * toolbar;
@@ -220,15 +329,12 @@ GtkWidget * sketchpad_build_drawing_toolbar(GtkWidget * window){
   \
   gtk_signal_connect (GTK_OBJECT (radiobutton_ ##TYPE ##_ ##ITEM), "clicked",\
                       GTK_SIGNAL_FUNC (on_radiobutton_ ##TYPE ##_clicked), SIG_PARAM);\
-  //**/g_printerr("--> %s\n", TOSTRING(TYPE ##_group));
-
 
   //--toolbox
   tool_group = NULL;
   MAKE_ITEM_RADIOBUTTON (tool, pencil, "pencil");
   MAKE_ITEM_RADIOBUTTON (tool, eraser, "eraser");
 
-  //keep a ref to set default //FIXME: get default from preference (when implemented!)
   sketchpad.button_tools_pencil  = radiobutton_tool_pencil;
   sketchpad.button_tools_eraser  = radiobutton_tool_eraser;
 
@@ -242,7 +348,6 @@ GtkWidget * sketchpad_build_drawing_toolbar(GtkWidget * window){
   gtk_container_add (GTK_CONTAINER (button_brushes), button_brushes_pixmap);
 
   brushbox = brushbox_new();
-  //**/gtk_window_set_transient_for(GTK_WINDOW(brushbox), GTK_WINDOW(window));
   gtk_object_set_data((GtkObject *) brushbox, "calling_button", button_brushes);
   gtk_signal_connect (GTK_OBJECT (button_brushes), "clicked",
                       GTK_SIGNAL_FUNC (on_button_brushes_clicked), brushbox);
@@ -254,7 +359,6 @@ GtkWidget * sketchpad_build_drawing_toolbar(GtkWidget * window){
   colorbox_button_set_color(button_colors, &black);//default color
 
   colorbox = colorbox_new();
-  //**/gtk_window_set_transient_for(GTK_WINDOW(colorbox), GTK_WINDOW(window));
   gtk_object_set_data((GtkObject *) colorbox, "calling_button", button_colors);
   gtk_signal_connect (GTK_OBJECT (button_colors), "clicked",
                       GTK_SIGNAL_FUNC (on_button_colors_clicked), colorbox);
@@ -264,7 +368,7 @@ GtkWidget * sketchpad_build_drawing_toolbar(GtkWidget * window){
                             radiobutton_tool_eraser, _("Select eraser"), _("Select eraser"));
   gtk_toolbar_append_widget(GTK_TOOLBAR (toolbar),
                             radiobutton_tool_pencil, _("Select pencil"), _("Select pencil"));
-  //gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
+
   gtk_toolbar_append_widget(GTK_TOOLBAR (toolbar), button_brushes, _("Brush size"), _("Brush size"));
   gtk_toolbar_append_widget(GTK_TOOLBAR (toolbar), button_colors,  _("Brush color"), _("Brush color"));
 
@@ -312,6 +416,7 @@ GtkWidget * _popupwindow (GtkWidget * widget){
 
 GtkWidget * brushbox_new(){
   GtkWidget * brushbox;
+  GtkWidget * label;
   GtkWidget * window;//dummy alias to brushbox (for the generic macro (...))
 
   GtkWidget * table_brushes;
@@ -324,26 +429,44 @@ GtkWidget * brushbox_new(){
   GdkPixbuf * pixbuf;
   GtkWidget * pixmap;
 
-  table_brushes = gtk_table_new (2, 2, FALSE);
+#define MAKE_ITEM_MENU(TYPE, ITEM, SIG_PARAM)  \
+  radiobutton_ ##TYPE ##_ ##ITEM    = gtk_radio_button_new (TYPE ##_group);\
+  TYPE ##_group = gtk_radio_button_group (GTK_RADIO_BUTTON (radiobutton_ ##TYPE ##_ ##ITEM));\
+  \
+  pixbuf = gpe_find_icon (  TOSTRING(TYPE ##_ ##ITEM)  );\
+  pixmap = gtk_image_new_from_pixbuf (pixbuf);\
+  gtk_button_set_relief (GTK_BUTTON (radiobutton_ ##TYPE ##_ ##ITEM), GTK_RELIEF_NONE);\
+  gtk_toggle_button_set_mode (GTK_TOGGLE_BUTTON (radiobutton_ ##TYPE ##_ ##ITEM), FALSE);\
+  \
+  gtk_container_add (GTK_CONTAINER (radiobutton_ ##TYPE ##_ ##ITEM), pixmap);\
+  \
+  gtk_signal_connect (GTK_OBJECT (radiobutton_ ##TYPE ##_ ##ITEM), "clicked",\
+                      GTK_SIGNAL_FUNC (on_radiobutton_ ##TYPE ##_clicked), SIG_PARAM);\
+ 
+  table_brushes = gtk_table_new (2, 4, FALSE);
   brushbox = _popupwindow (table_brushes);
   window = brushbox;
-
   brush_group = NULL;
-  MAKE_ITEM_RADIOBUTTON (brush, small , "small" );
-  MAKE_ITEM_RADIOBUTTON (brush, medium, "medium");
-  MAKE_ITEM_RADIOBUTTON (brush, large , "large" );
-  MAKE_ITEM_RADIOBUTTON (brush, xlarge, "xlarge");
+  MAKE_ITEM_MENU (brush, small , "small" );
+  MAKE_ITEM_MENU (brush, medium, "medium");
+  MAKE_ITEM_MENU (brush, large , "large" );
+  MAKE_ITEM_MENU (brush, xlarge, "xlarge");
 
-#define PACK_BRUSH_RADIOBUTTON(size, x, y, a, b) \
+#define PACK_BRUSH_RADIOBUTTON(size, x, y, a, b, t) \
   gtk_table_attach (GTK_TABLE (table_brushes), radiobutton_brush_ ##size, x, y, a, b, \
-                    (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (GTK_FILL), 0, 0);
+                    (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (GTK_FILL), 0, 0);\
+  label = gtk_label_new(t);\
+  gtk_misc_set_alignment(GTK_MISC(label),0.0,0.5);\
+  gtk_table_attach (GTK_TABLE (table_brushes), label, x+1, y+1, a, b, \
+                    GTK_FILL, GTK_FILL, 0, 0);
 
-  PACK_BRUSH_RADIOBUTTON (small,  0, 1, 1, 2);
-  PACK_BRUSH_RADIOBUTTON (medium, 0, 1, 0, 1);
-  PACK_BRUSH_RADIOBUTTON (large,  1, 2, 0, 1);
-  PACK_BRUSH_RADIOBUTTON (xlarge, 1, 2, 1, 2);
+  PACK_BRUSH_RADIOBUTTON (small,  0, 1, 0, 1, _("small"));
+  PACK_BRUSH_RADIOBUTTON (medium, 0, 1, 1, 2, _("medium"));
+  PACK_BRUSH_RADIOBUTTON (large,  0, 1, 2, 3, _("large"));
+  PACK_BRUSH_RADIOBUTTON (xlarge, 0, 1, 3, 4, _("very large"));
 
   //keep a ref to set default //FIXME: get default from preference (when implemented!)
+
   sketchpad.button_brush_small  = radiobutton_brush_small;
   sketchpad.button_brush_medium = radiobutton_brush_medium;
   sketchpad.button_brush_large  = radiobutton_brush_large;
@@ -402,15 +525,12 @@ GtkWidget * sketchpad_build_files_toolbar(GtkWidget * window){
 
   toolbar = gtk_toolbar_new ();
   gtk_toolbar_set_orientation(GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);
-  //gtk_toolbar_set_space_size    (GTK_TOOLBAR (toolbar), 0);
 
   sketchpad_fill_files_toolbar(toolbar, window);
 
   return toolbar;
 }//sketchpad_build_files_toolbar()
 
-
-GtkWidget * _files_popup_new (GtkWidget *parent_button);
 
 void sketchpad_fill_files_toolbar(GtkWidget * toolbar, GtkWidget * window){
   GdkPixbuf *pixbuf;
@@ -421,7 +541,6 @@ void sketchpad_fill_files_toolbar(GtkWidget * toolbar, GtkWidget * window){
   pixbuf = gpe_find_icon ("new");
   pixmap = gtk_image_new_from_pixbuf (pixbuf);
   files_popup_button = popup_menu_button_new (pixmap, _files_popup_new, NULL/* callback func */);
-  //files_popup_button = popup_menu_button_new_from_stock (GTK_STOCK_NEW, _files_popup_new, NULL);
   gtk_button_set_relief (GTK_BUTTON (files_popup_button), GTK_RELIEF_NONE);
   gtk_toolbar_append_widget(GTK_TOOLBAR (toolbar),
                             files_popup_button, _("Sketch menu"), _("Sketch menu"));
@@ -449,43 +568,156 @@ void sketchpad_fill_files_toolbar(GtkWidget * toolbar, GtkWidget * window){
 }
 
 GtkWidget * _files_popup_new (GtkWidget *parent_button){
-  GtkWidget *vbox;//to return
+  GtkWidget *menu;//to return
 
   GtkWidget * button_new;
   GtkWidget * button_import;
   GtkWidget * button_save;
   GtkWidget * button_delete;
-  //GtkWidget * button_properties;
   GtkWidget * button_exit;
+  GtkWidget * image;
 
-  GtkStyle * style = sketchbook.window->style;
+  button_new        = gtk_image_menu_item_new_from_stock(GTK_STOCK_NEW, NULL);
+  button_import     = gtk_image_menu_item_new_with_label(_("Import"));
+  button_save       = gtk_image_menu_item_new_from_stock(GTK_STOCK_SAVE, NULL);
+  image = gtk_image_new_from_pixbuf(gpe_find_icon("import"));
+  gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(button_import), image);
+  button_delete     = gtk_image_menu_item_new_from_stock(GTK_STOCK_DELETE, NULL);
+  button_exit       = gtk_image_menu_item_new_from_stock(GTK_STOCK_QUIT, NULL);
+  
+  menu = gtk_menu_new();
+    
+#define _ITEM_SETUP(action) \
+              g_signal_connect (G_OBJECT (button_ ##action), "activate",\
+              G_CALLBACK (on_button_file_ ##action ##_clicked), NULL); \
+              gtk_menu_append(menu, button_ ##action);
 
-  button_new        = gpe_picture_button_aligned (style, _("New"), "new", GPE_POS_LEFT);
-  button_import     = gpe_picture_button_aligned (style, _("Import"), "import", GPE_POS_LEFT);
-  button_save       = gpe_picture_button_aligned (style, _("Save"), "save", GPE_POS_LEFT);
-  button_delete     = gpe_picture_button_aligned (style, _("Delete"), "delete", GPE_POS_LEFT);
-  //button_properties = gpe_picture_button_aligned (style, _("Properties"), "properties", GPE_POS_LEFT);
-  button_exit       = gpe_picture_button_aligned (style, _("Exit"),   "exit",   GPE_POS_LEFT);
+  _ITEM_SETUP(new);
+  _ITEM_SETUP(import);
+  _ITEM_SETUP(save);
+  _ITEM_SETUP(delete);
+  _ITEM_SETUP(exit);
 
-#define _BUTTON_SETUP(action) \
-              gtk_button_set_relief (GTK_BUTTON (button_ ##action), GTK_RELIEF_NONE);\
-              g_signal_connect (G_OBJECT (button_ ##action), "clicked",\
-              G_CALLBACK (on_button_file_ ##action ##_clicked), NULL);
+  gtk_widget_show_all(menu);
+  return menu;
+}
 
-  _BUTTON_SETUP(new);
-  _BUTTON_SETUP(import);
-  _BUTTON_SETUP(save);
-  _BUTTON_SETUP(delete);
-  //_BUTTON_SETUP(properties);
-  _BUTTON_SETUP(exit);
+GtkWidget * _brushes_popup_new (GtkWidget *parent_button){
+  GtkWidget *menu;
 
-  vbox = gtk_vbox_new (FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), button_new,        FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), button_save,       FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), button_delete,     FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), button_import,     FALSE, FALSE, 0);
-  //gtk_box_pack_start (GTK_BOX (vbox), button_properties, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), button_exit,     FALSE, FALSE, 0);
+  GtkWidget * button_small;
+  GtkWidget * button_medium;
+  GtkWidget * button_large;
+  GtkWidget * button_xlarge;
+  GtkWidget * image;
 
-  return vbox;
+  button_small    = gtk_image_menu_item_new_with_label(_("Small"));
+  image = gtk_image_new_from_pixbuf(gpe_find_icon("brush_small"));
+  gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(button_small), image);
+    
+  button_medium    = gtk_image_menu_item_new_with_label(_("Medium"));
+  image = gtk_image_new_from_pixbuf(gpe_find_icon("brush_medium"));
+  gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(button_medium), image);
+
+  button_large    = gtk_image_menu_item_new_with_label(_("Large"));
+  image = gtk_image_new_from_pixbuf(gpe_find_icon("brush_large"));
+  gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(button_large), image);
+    
+  button_xlarge    = gtk_image_menu_item_new_with_label(_("Extra large"));
+  image = gtk_image_new_from_pixbuf(gpe_find_icon("brush_xlarge"));
+  gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(button_xlarge), image);
+
+  menu = gtk_menu_new();
+
+#define _ITEM_SETUP_B(action, param) \
+              g_signal_connect (G_OBJECT (button_ ##action), "activate",\
+              G_CALLBACK (on_radiobutton_brush_clicked), param);\
+	          gtk_object_set_data (GTK_OBJECT (button_ ##action), "parent", parent_button);\
+              gtk_menu_append(menu, button_ ##action);
+	
+  _ITEM_SETUP_B(small, "small");
+  _ITEM_SETUP_B(medium, "medium");
+  _ITEM_SETUP_B(large, "large");
+  _ITEM_SETUP_B(xlarge, "xlarge");
+
+  gtk_widget_show_all(menu);
+
+  return menu;
+}
+
+GtkWidget * _color_popup_new (GtkWidget *parent_button)
+{
+  GtkWidget *menu;
+
+  GtkWidget * button_black;
+  GtkWidget * button_red;
+  GtkWidget * button_blue;
+  GtkWidget * button_green;
+  GtkWidget * button_yellow;
+  GtkWidget * button_orange;
+  GtkWidget * cbutton_black;
+  GtkWidget * cbutton_red;
+  GtkWidget * cbutton_blue;
+  GtkWidget * cbutton_green;
+  GtkWidget * cbutton_yellow;
+  GtkWidget * cbutton_orange;
+
+  cbutton_black   = gtk_button_new();
+  cbutton_red     = gtk_button_new();
+  cbutton_blue    = gtk_button_new();
+  cbutton_green   = gtk_button_new();
+  cbutton_yellow  = gtk_button_new();
+  cbutton_orange  = gtk_button_new();
+  
+  colorbox_button_set_color(cbutton_black, &black);
+  colorbox_button_set_color(cbutton_red, &red);
+  colorbox_button_set_color(cbutton_blue, &blue);
+  colorbox_button_set_color(cbutton_green, &green);
+  colorbox_button_set_color(cbutton_orange, &orange);
+  colorbox_button_set_color(cbutton_yellow, &yellow);
+  gtk_button_set_relief (GTK_BUTTON (cbutton_black), GTK_RELIEF_NONE);
+  gtk_button_set_relief (GTK_BUTTON (cbutton_red), GTK_RELIEF_NONE);
+  gtk_button_set_relief (GTK_BUTTON (cbutton_blue), GTK_RELIEF_NONE);
+  gtk_button_set_relief (GTK_BUTTON (cbutton_green), GTK_RELIEF_NONE);
+  gtk_button_set_relief (GTK_BUTTON (cbutton_yellow), GTK_RELIEF_NONE);
+  gtk_button_set_relief (GTK_BUTTON (cbutton_orange), GTK_RELIEF_NONE);
+  
+  gtk_widget_set_sensitive(cbutton_black,FALSE);
+  gtk_widget_set_sensitive(cbutton_red,FALSE);
+  gtk_widget_set_sensitive(cbutton_blue,FALSE);
+  gtk_widget_set_sensitive(cbutton_green,FALSE);
+  gtk_widget_set_sensitive(cbutton_yellow,FALSE);
+  gtk_widget_set_sensitive(cbutton_orange,FALSE);
+
+  button_black   = gtk_image_menu_item_new_with_label(_("Black"));
+  button_blue    = gtk_image_menu_item_new_with_label(_("Blue"));
+  button_green   = gtk_image_menu_item_new_with_label(_("Green"));
+  button_red     = gtk_image_menu_item_new_with_label(_("Red"));
+  button_orange  = gtk_image_menu_item_new_with_label(_("Orange"));
+  button_yellow  = gtk_image_menu_item_new_with_label(_("Yellow"));
+  gtk_widget_set_usize(cbutton_black,  20, 20);
+  gtk_widget_set_usize(cbutton_red,    20, 20);
+  gtk_widget_set_usize(cbutton_blue,   20, 20);
+  gtk_widget_set_usize(cbutton_green,  20, 20);
+  gtk_widget_set_usize(cbutton_yellow, 20, 20);
+  gtk_widget_set_usize(cbutton_orange, 20, 20);
+  
+  menu = gtk_menu_new();
+#define _ITEM_SETUP_C(color) \
+              gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(button_ ##color), cbutton_ ##color); \
+              gtk_signal_connect (GTK_OBJECT (button_ ##color), "activate",\
+                      GTK_SIGNAL_FUNC (on_radiobutton_color_clicked), &color);\
+	          gtk_object_set_data (GTK_OBJECT (button_ ##color), "parent", parent_button); \
+              gtk_menu_append(menu, button_ ##color);
+
+  _ITEM_SETUP_C(black);
+  _ITEM_SETUP_C(red);
+  _ITEM_SETUP_C(blue);
+  _ITEM_SETUP_C(green);
+  _ITEM_SETUP_C(orange);
+  _ITEM_SETUP_C(yellow);
+
+  gtk_widget_show_all(menu);
+
+  return menu;
 }

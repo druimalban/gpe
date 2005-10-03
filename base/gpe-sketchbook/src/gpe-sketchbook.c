@@ -16,6 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 #include <gtk/gtk.h>
+#include <gdk/gdkkeysyms.h>
 #include <stdlib.h> //exit
 #include <locale.h>
 
@@ -50,15 +51,7 @@ static struct gpe_icon my_icons[] = {
   { "gpe-logo",      PREFIX "/share/gpe/pixmaps/gpe-logo.png" },
 
   //GPE stock icons
-  { "new",        "new"   },
-  { "open",       "edit"  },
   { "import",     "open"  },
-  { "delete",     "delete"},
-  { "save",       "save"  },
-  { "prefs",      "preferences"  },
-  { "properties", "properties"  },
-  { "left",       "left"  },
-  { "right",      "right" },
   { "list",       "list-view"},
   { "icons",      "icon-view"},
 
@@ -75,6 +68,66 @@ static struct gpe_icon my_icons[] = {
 
 void app_init(int argc, char ** argv);
 void gui_init();
+
+
+static gboolean
+window_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkTreeView *tree) {
+  int page = gtk_notebook_get_current_page(sketchbook.notebook);
+
+  /* common hotkeys */
+  if ((k->keyval == GDK_Return) && (page == PAGE_SELECTOR)) {
+    on_button_selector_open_clicked(NULL, NULL);
+    return TRUE;
+  }
+  
+  if (k->state & GDK_CONTROL_MASK)
+    {
+      switch (k->keyval)
+        {
+          case GDK_q:
+            if(_save_current_if_needed() == ACTION_CANCELED)
+              return TRUE;
+            app_quit();
+            return TRUE;
+          break;
+          case GDK_n:
+			switch (page) {
+			  case PAGE_SELECTOR:
+			    on_button_selector_new_clicked(NULL, NULL);
+			    return TRUE;
+			  case PAGE_SKETCHPAD:
+                if(_save_current_if_needed() == ACTION_CANCELED)
+                  return TRUE;
+                current_sketch = SKETCH_NEW;
+                sketchpad_new_sketch();
+				return TRUE;
+			}
+          break;
+          case GDK_d:
+			switch (page) {
+			  case PAGE_SELECTOR:
+                on_button_selector_delete_clicked(NULL, NULL);
+			    return TRUE;
+			  case PAGE_SKETCHPAD:
+                on_button_file_delete_clicked(NULL, NULL);
+			  return TRUE;
+			}
+		    return TRUE;
+          break;
+          case GDK_i:
+			sketchpad_import_image();
+            return TRUE;
+          break;
+          case GDK_s:
+			if (page == PAGE_SKETCHPAD)
+              on_button_file_save_clicked(NULL, NULL);
+		    return TRUE;
+          break;
+        }
+    }
+	return FALSE;
+}
+
 
 int main (int argc, char ** argv){
 
@@ -131,6 +184,7 @@ void on_notebook_switch_page(GtkNotebook * notebook,
     default:
       gtk_window_set_title (GTK_WINDOW (sketchbook.window), _("Sketchbook"));
   }
+  gdk_window_set_icon_name (sketchbook.window->window, _("Sketch"));
 }
 
 void gui_init(){
@@ -145,14 +199,15 @@ void gui_init(){
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   sketchbook.window = window;
 
-#ifdef DESKTOP
-  gtk_window_set_default_size (GTK_WINDOW (window), 240, 280);
-  gtk_window_set_position     (GTK_WINDOW (window), GTK_WIN_POS_CENTER);
-#endif
+  if (gdk_screen_width() >= 800)
+    gtk_window_set_default_size (GTK_WINDOW (window), 640, 480);
+  
   g_signal_connect (G_OBJECT (window), "delete_event",
                     G_CALLBACK (on_window_sketchpad_destroy), NULL);
 
   gpe_set_window_icon (window, "this_app_icon");
+  gtk_widget_realize (window);
+  gdk_window_set_icon_name (window->window, _("Sketch"));
 
   //--selector
   selector_ui = selector_gui();
@@ -201,16 +256,24 @@ void gui_init(){
     case PAGE_SELECTOR_ICON_TABLE:
       gtk_notebook_set_page(notebook, PAGE_SELECTOR);
       icons_mode = sketchbook.prefs.start_with == PAGE_SELECTOR_LIST;
-      on_button_selector_change_view_clicked (GTK_BUTTON (selector.button_view), NULL);
+      on_button_selector_change_view_clicked (GTK_TOOL_BUTTON (selector.button_view), NULL);
       break;
     case PAGE_SELECTOR:
       gtk_notebook_set_page(notebook, PAGE_SELECTOR);
       break;
     case PAGE_SKETCHPAD:
+      /* This one looks strange, eh? Every bit is necessary to make draw area 
+         detection work properly. */ 
       gtk_notebook_set_page(notebook, PAGE_SKETCHPAD);
+      gtk_widget_show_all (window); 
+      while (gtk_events_pending()) gtk_main_iteration();
+      sketchpad_new_sketch();
       break;
   }
 
+  g_signal_connect(G_OBJECT(window), "key_press_event", 
+                   G_CALLBACK(window_key_press_event), NULL);
+  
   gtk_widget_show (GTK_WIDGET(notebook));
   gtk_widget_show (window);
 

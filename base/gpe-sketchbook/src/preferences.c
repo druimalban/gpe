@@ -296,12 +296,12 @@ void reset_prefs_from_gui(){
   sketchbook.prefs.grow_on_scroll = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(_prefs_ui.grow_on_scroll));
 }
 
-void on_button_ok_clicked (GtkButton *button, gpointer _unused){
+void on_button_ok_clicked (GtkToolButton *button, gpointer _unused){
   reset_prefs_from_gui();
   //**/_print_prefs();
   gtk_notebook_set_page(sketchbook.notebook, PAGE_SELECTOR);
 }
-void on_button_no_clicked (GtkButton *button, gpointer _unused){
+void on_button_no_clicked (GtkToolButton *button, gpointer _unused){
   reset_gui_from_prefs();
   //**/_print_prefs();
   gtk_notebook_set_page(sketchbook.notebook, PAGE_SELECTOR);

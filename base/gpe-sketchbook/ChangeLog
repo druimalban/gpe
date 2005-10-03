@@ -1,3 +1,20 @@
+2005-10-02  Florian Boor  <florian.boor@kernelconcepts.de>
+
+	* Remove some debug code.
+	* Update NEWS file.
+
+2005-09-29  Florian Boor  <florian.boor@kernelconcepts.de>
+
+	* gpe-sketchbook.c: Remove some icons from load list.
+	* sketchpad-gui.c: Reorder and optimise toolbar.
+	* AUTHORS: Add myself.
+	* *-gui*: Modify callbacks to use GtkToolButtons instead of GtkButtons.
+    * selector-cb.c: Add activation of buttons.
+    * selector-gui.c, sketchpad-gui.c: Rewrite toolbar to use new GTK toolbar
+                                       API and common layout.
+    * *.c: Merge in changes from Netbook project.
+    * gpe-sketchbook.c, *gui.c: Change default window size behaviour.
+
 2005-07-29  Florian Boor  <florian.boor@kernelconcepts.de>
 
 	* src/Makefile: Use pkg-config for libgpewidget LDFLAGS.
@@ -6,6 +23,10 @@
 	
 2005-03-31  Florian Boor  <florian.boor@kernelconcepts.de>
 	* Don't use render.h.
+
+2004-08-06  Florian Boor  <florian.boor@kernelconcepts.de>
+
+	* Fixed several warnings on start. Removed debug output.
 
 2004-07-12  Florian Boor  <florian.boor@kernelconcepts.de>
 	* Set default sketch size to something related to screen size.

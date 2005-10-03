@@ -167,8 +167,6 @@ void load_thumbnails(){
   while (is_node) {
     gtk_tree_model_get(model, &iter, ENTRY_URL, &filename, -1);
 
-    /**/g_printerr("loading %s...", filename);
-
     pixbuf    = gdk_pixbuf_new_from_file(filename, NULL); //GError **error
     thumbnail = gdk_pixbuf_scale_simple (pixbuf, THUMBNAIL_SIZE, THUMBNAIL_SIZE,
                                          GDK_INTERP_BILINEAR);
@@ -176,8 +174,6 @@ void load_thumbnails(){
     gtk_list_store_set (GTK_LIST_STORE(model), &iter, ENTRY_THUMBNAIL, thumbnail, -1);
 
     while (gtk_events_pending ()) gtk_main_iteration ();
-
-    /**/g_printerr("done.\n");
 
     is_node = gtk_tree_model_iter_next(model, &iter);
   }

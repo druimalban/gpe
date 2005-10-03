@@ -40,28 +40,24 @@ void on_window_selector_destroy (GtkObject *object, gpointer user_data){
   app_quit();
 }
 
-void on_button_selector_exit_clicked (GtkButton *button, gpointer user_data){
+void on_button_selector_exit_clicked (GtkToolButton *button, gpointer user_data){
   app_quit();
 }
 
-void on_button_selector_new_clicked (GtkButton *button, gpointer user_data){
-  popup_menu_close (selector.files_popup_button);
+void on_button_selector_new_clicked (GtkToolButton *button, gpointer user_data){
   current_sketch = SKETCH_NEW;
   sketchpad_new_sketch();
   switch_to_page(PAGE_SKETCHPAD);
 }
 
-void on_button_selector_open_clicked (GtkButton *button, gpointer user_data){
-  popup_menu_close (selector.files_popup_button);
+void on_button_selector_open_clicked (GtkToolButton *button, gpointer user_data){
   if(!is_current_sketch_selected || is_current_sketch_new) return;
   open_indexed_sketch(current_sketch);
   switch_to_page(PAGE_SKETCHPAD);
 }
 
-void on_button_selector_delete_clicked (GtkButton *button, gpointer user_data){
+void on_button_selector_delete_clicked (GtkToolButton *button, gpointer user_data){
   int ret;
-
-  popup_menu_close (selector.files_popup_button);
 
   if(!is_current_sketch_selected || is_current_sketch_new) return;
 
@@ -72,34 +68,28 @@ void on_button_selector_delete_clicked (GtkButton *button, gpointer user_data){
 
 }
 
-void on_button_selector_import_clicked (GtkButton *button, gpointer user_data){
-  popup_menu_close (selector.files_popup_button);
+void on_button_selector_import_clicked (GtkToolButton *button, gpointer user_data){
   sketchpad_import_image();
 }
 
 
-void _switch_icon(GtkButton * button){
+void _switch_icon(GtkToolButton * button){
   GtkWidget * old_icon;
   GtkWidget * new_icon;
 
-  GtkWidget * vbox;//Button > VBox > ..., icon, ...
-  vbox = gtk_bin_get_child(GTK_BIN (button));
-
   if(icons_mode){
-    new_icon = gtk_object_get_data((GtkObject *) button, "list_mode_icon");
-    old_icon = gtk_object_get_data((GtkObject *) button, "icon_mode_icon");
+    new_icon = g_object_get_data(G_OBJECT(button), "list_mode_icon");
+    old_icon = g_object_get_data(G_OBJECT(button), "icon_mode_icon");
   }
   else{
-    new_icon = gtk_object_get_data((GtkObject *) button, "icon_mode_icon");
-    old_icon = gtk_object_get_data((GtkObject *) button, "list_mode_icon");
+    new_icon = g_object_get_data(G_OBJECT(button), "icon_mode_icon");
+    old_icon = g_object_get_data(G_OBJECT(button), "list_mode_icon");
   }  
-  g_object_ref(old_icon);
-  gtk_container_remove (GTK_CONTAINER (vbox), old_icon );
-  gtk_container_add    (GTK_CONTAINER (vbox), new_icon );
-  gtk_widget_show_now(new_icon);
+  gtk_tool_button_set_icon_widget(button, new_icon);
+  gtk_widget_show(new_icon);
 }
 
-void on_button_selector_change_view_clicked (GtkButton *button, gpointer user_data){
+void on_button_selector_change_view_clicked (GtkToolButton *button, gpointer user_data){
   if(icons_mode){//--> switch to LIST view
     gtk_widget_hide(selector.iconlist);
     gtk_widget_show(selector.textlist);
@@ -132,8 +122,14 @@ gboolean on_treeview_selection_change(GtkTreeSelection *selection,
     //FIXME: update selection on IconView
 
     current_sketch = indices[0];
+    gtk_widget_set_sensitive(selector.button_edit,   TRUE);
+    gtk_widget_set_sensitive(selector.button_delete, TRUE);
     set_current_sketch_selected();
     return TRUE;
+  }
+  else {
+    gtk_widget_set_sensitive(selector.button_edit,   FALSE);
+    gtk_widget_set_sensitive(selector.button_delete, FALSE);
   }
 
   return TRUE;
@@ -219,6 +215,6 @@ void on_iconlist_item_activated(GtkIconView *iconview, GtkTreePath *tree_path, g
 }
 
 
-void on_button_selector_preferences_clicked (GtkButton *button, gpointer _unused){
+void on_button_selector_preferences_clicked (GtkToolButton *button, gpointer _unused){
   switch_to_page(PAGE_PREFERENCES);
 }
