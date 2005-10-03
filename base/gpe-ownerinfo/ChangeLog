@@ -1,3 +1,10 @@
+2005-10-03  Florian Boor <florian@kernelconcepts.de>
+
+	* Makefile: Release version to 0.27
+	* gpe-ownerinfo.c: Simplify UI, use label for address. Change packing.
+	                   Removed some unused headers.
+					   Set hight to be at least 80 pixels.
+
 2005-08-23  Colin Marquardt  <colin@marquardt-home.de>
 
 	* po/es.po: Update courtesy J.Manrique.

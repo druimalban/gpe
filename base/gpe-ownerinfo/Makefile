@@ -1,5 +1,5 @@
 PACKAGE = gpe-ownerinfo
-VERSION = 0.26
+VERSION = 0.27
 PREFIX = /usr/local
 DEBUG = no
 CVSBUILD = yes

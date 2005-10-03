@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2002, 2003 Colin Marquardt <ipaq@marquardt-home.de>
+ *               2005 Florian Boor <florian@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,18 +21,14 @@
 #include <pwd.h>       /* for getpwnam() */
 #include <unistd.h>    /* for access() */
 
-#include <X11/Xlib.h>
-
 #include <gtk/gtk.h>
 #include <gdk/gdkx.h>
 #include <gdk/gdkkeysyms.h>
-#include <gdk-pixbuf/gdk-pixbuf.h>
 
 #include <gpe/errorbox.h>
 #include <gpe/init.h>
 #include <gpe/spacing.h>
 #include <gpe/pixmaps.h>
-#include <gpe/stylus.h>
 #include <gpe/translabel.h>
 
 #include "gpe-ownerinfo.h"
@@ -59,9 +56,6 @@ static GdkPixbuf *photopixbuf;
 static GtkWidget *smallphotobutton;
 static GtkWidget *bigphotobutton;
 static gchar *photofile = PREFIX "/share/gpe/pixmaps/gpe-logo.png";
-static PangoLayout *address_layout;
-static guint lost_height;
-static GtkWidget *scrollbar;
 
 /* redraw the pixbuf */
 static gboolean
@@ -271,56 +265,6 @@ maybe_upgrade_datafile ()
   }
 }
 
-
-static gboolean
-draw_address (GtkWidget *widget, GdkEventExpose *event, gpointer user_data)
-{
-  GtkAdjustment *adj = GTK_ADJUSTMENT (user_data);
-
-  gtk_paint_layout (widget->style,
-		    widget->window,
-		    GTK_WIDGET_STATE (widget),
-		    FALSE,
-		    &event->area,
-		    widget,
-		    "label",
-		    0, -(lost_height * adj->value),
-		    address_layout);
-
-  return TRUE;
-}
-
-static void
-do_scroll_address (GtkAdjustment *adj, gpointer user_data)
-{
-  GtkWidget *address = GTK_WIDGET (user_data);
-
-  gtk_widget_draw (address, NULL);
-}
-
-static void
-set_address_size (GtkWidget *widget, GtkAllocation *allocation, gpointer user_data)
-{
-  GtkAdjustment *adj = GTK_ADJUSTMENT (user_data);
-  guint width, height;
-
-  pango_layout_get_size (address_layout, &width, &height);
-  width /= PANGO_SCALE;
-  height /= PANGO_SCALE;
-
-  if (height < allocation->height)
-    height = allocation->height;
-
-  lost_height = height - allocation->height;
-
-  if (lost_height)
-    gtk_widget_show (scrollbar);
-  else
-    gtk_widget_hide (scrollbar);
-
-  adj->page_size = (double)allocation->height / (double)height;
-}
-
 static void
 translate_name_label (GtkWidget *namelabel, gpointer data)
 {
@@ -346,10 +290,8 @@ gpe_owner_info (void)
   GtkWidget *smallphotodrawingarea;
   GtkWidget *bigphotodrawingarea;
   GtkWidget *rightcolvbox;
-  GtkWidget *addresshbox;
-  GtkWidget *emptyvbox;
   GtkSizeGroup *sizegroup;
-  GtkObject *adjustment;
+  GtkWidget *sv, *vp;
   gint upgrade_result = UPGRADE_ERROR;
   
   /* gchar *gpe_catindent = gpe_get_catindent ();  */
@@ -370,7 +312,7 @@ gpe_owner_info (void)
   /* TRANSLATORS: the translations below should match 'Owner
      Information' (in gpe-conf) and 'Settings' (in mbdesktop) */
   owneraddress = g_strdup (_("Configurable with <i>Owner Information</i>"
-			     " under <i>Settings</i>."));
+			     " under <i>Settings</i>.\n test\n test \n test"));
 
   fp = fopen (GPE_OWNERINFO_DATA, "r");
   if (fp)
@@ -421,26 +363,20 @@ gpe_owner_info (void)
         }
       if (fgets (buf, sizeof (buf), fp))
         {
-	  ownerphone = g_strdup (buf);
-	  ownerphone[strlen (ownerphone)-1]='\0';
+          ownerphone = g_strdup (buf);
+          ownerphone[strlen (ownerphone)-1]='\0';
         }
       /* the rest is taken as address: */
       if ((numchar=fread (buf, 1, sizeof (buf), fp)))
       	{
-	  owneraddress = g_malloc (numchar + 1);
-	  memcpy (owneraddress, buf, numchar);
-	  owneraddress[numchar] = '\0';
+          owneraddress = g_malloc (numchar + 1);
+          memcpy (owneraddress, buf, numchar);
+          owneraddress[numchar] = '\0';
       	}
+	  else 
+		owneraddress = g_strdup("");
 
       fclose (fp);
-    }
-  else /* fp == NULL */
-    {
-      /* show default info: */
-      /*
-      gpe_perror_box (GPE_OWNERINFO_DATA);
-      exit (1);
-      */
     }
 
   /* FIXME: check error */
@@ -451,7 +387,6 @@ gpe_owner_info (void)
    * page 2 just the big photo:
    */
   notebook = gtk_notebook_new ();
-  gtk_widget_show (notebook);
   GTK_WIDGET_UNSET_FLAGS (notebook, GTK_CAN_FOCUS);
   gtk_notebook_set_show_tabs (GTK_NOTEBOOK (notebook), FALSE);
   gtk_notebook_set_show_border (GTK_NOTEBOOK (notebook), FALSE);
@@ -460,12 +395,9 @@ gpe_owner_info (void)
    * The first notebook page
    */
   mainvbox = gtk_vbox_new (FALSE, 0);
-  //mainvbox = gtk_vbox_new (FALSE, gpe_catspacing);
-  gtk_widget_show (mainvbox);
-  gtk_container_add (GTK_CONTAINER (notebook), mainvbox);
+  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), mainvbox, NULL);
 
   cathbox = gtk_hbox_new (FALSE, 0);
-  gtk_widget_show (cathbox);
   gtk_box_pack_start (GTK_BOX (mainvbox), cathbox, TRUE, TRUE, 0);
 
   indentedhbox = gtk_hbox_new (FALSE, 0);
@@ -473,84 +405,61 @@ gpe_owner_info (void)
   gtk_box_pack_start (GTK_BOX (cathbox), indentedhbox, TRUE, TRUE, 0);
 
   leftcolvbox = gtk_vbox_new (FALSE, 0);
-  gtk_widget_show (leftcolvbox);
-  //gtk_box_pack_start (GTK_BOX (indentedhbox), leftcolvbox, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (indentedhbox), leftcolvbox,
 		      FALSE, FALSE, gpe_boxspacing);
 
   namelabel = gtk_label_new (NULL);
   gtk_widget_add_translation_hook (namelabel, translate_name_label, NULL);
-  gtk_widget_show (namelabel);
   gtk_box_pack_start (GTK_BOX (leftcolvbox), namelabel, FALSE, TRUE, 0);
   gtk_label_set_justify (GTK_LABEL (namelabel), GTK_JUSTIFY_LEFT);
   gtk_misc_set_alignment (GTK_MISC (namelabel), 0, 0.5);
 
   address_button_vbox = gtk_vbox_new (FALSE, 0);
-  gtk_widget_show (address_button_vbox);
   gtk_box_pack_start (GTK_BOX (leftcolvbox), address_button_vbox, TRUE, TRUE, 0);
 
   smallphotobutton = gtk_button_new ();
-  gtk_widget_show (smallphotobutton);
   GTK_WIDGET_UNSET_FLAGS (smallphotobutton, GTK_CAN_FOCUS);
-  //  gtk_button_set_relief (GTK_BUTTON (smallphotobutton), GTK_RELIEF_NONE);
+  gtk_button_set_relief (GTK_BUTTON (smallphotobutton), GTK_RELIEF_NONE);
   gtk_box_pack_start (GTK_BOX (address_button_vbox), smallphotobutton, TRUE, TRUE, 0);
-  emptyvbox = gtk_vbox_new (FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (address_button_vbox), emptyvbox, TRUE, TRUE, 0);
 
   smallphotodrawingarea = gtk_drawing_area_new ();
   gtk_widget_add_events (GTK_WIDGET (smallphotodrawingarea),
 			 GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
   g_signal_connect (G_OBJECT (smallphotodrawingarea), "expose_event",  
                     G_CALLBACK (on_expose_event), NULL);
-  gtk_widget_show (smallphotodrawingarea);
   gtk_container_add (GTK_CONTAINER (smallphotobutton), smallphotodrawingarea);
   
-  rightcolvbox = gtk_vbox_new (FALSE, 0);
-  gtk_widget_show (rightcolvbox);
-  gtk_box_pack_start (GTK_BOX (indentedhbox), rightcolvbox, TRUE, TRUE, 0);
+  rightcolvbox = gtk_vbox_new (FALSE, gpe_boxspacing);
 
   name = gtk_label_new (ownername);
-  gtk_widget_show (name);
   gtk_box_pack_start (GTK_BOX (rightcolvbox), name, FALSE, TRUE, 0);
   gtk_label_set_justify (GTK_LABEL (name), GTK_JUSTIFY_LEFT);
   gtk_misc_set_alignment (GTK_MISC (name), 0, 0.5);
 
   email = gtk_label_new (owneremail);
-  gtk_widget_show (email);
   gtk_box_pack_start (GTK_BOX (rightcolvbox), email, FALSE, TRUE, 0);
   gtk_label_set_justify (GTK_LABEL (email), GTK_JUSTIFY_LEFT);
   gtk_misc_set_alignment (GTK_MISC (email), 0, 0.5);
 
   phone = gtk_label_new (ownerphone);
-  gtk_widget_show (phone);
   gtk_box_pack_start (GTK_BOX (rightcolvbox), phone, FALSE, TRUE, 0);
   gtk_label_set_justify (GTK_LABEL (phone), GTK_JUSTIFY_LEFT);
   gtk_misc_set_alignment (GTK_MISC (phone), 0, 0.5);
 
-  adjustment = gtk_adjustment_new (0, 0, 1.0, 0.1, 0.5, 1);
-  scrollbar = gtk_vscrollbar_new (GTK_ADJUSTMENT (adjustment));
-  address = gtk_drawing_area_new ();
-
-  address_layout = gtk_widget_create_pango_layout (address, NULL);
-  pango_layout_set_markup (address_layout, owneraddress, -1);
-
-  g_signal_connect (G_OBJECT (address), "size-allocate",
-		    G_CALLBACK (set_address_size), adjustment);
-  g_signal_connect (G_OBJECT (address), "expose-event",
-		    G_CALLBACK (draw_address), adjustment);
-
-  g_signal_connect (G_OBJECT (adjustment), "value-changed",
-		    G_CALLBACK (do_scroll_address), address);
-
-  addresshbox = gtk_hbox_new (FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (addresshbox), address, TRUE, TRUE, 0);
-  gtk_box_pack_start (GTK_BOX (addresshbox), scrollbar, FALSE, FALSE, 0);
-
-  gtk_widget_show (scrollbar);
-  gtk_widget_show (address);
-  gtk_widget_show (addresshbox);
-
-  gtk_box_pack_start (GTK_BOX (rightcolvbox), addresshbox, TRUE, TRUE, 0);
+  address = gtk_label_new(owneraddress);
+  gtk_label_set_justify (GTK_LABEL (address), GTK_JUSTIFY_LEFT);
+  gtk_misc_set_alignment (GTK_MISC (address), 0, 0.5);
+  gtk_label_set_line_wrap(GTK_LABEL(address), TRUE);
+  gtk_box_pack_start (GTK_BOX (rightcolvbox), address, FALSE, TRUE, 0);
+  
+  sv = gtk_scrolled_window_new(NULL, NULL);
+  gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(sv), GTK_POLICY_NEVER, 
+                                 GTK_POLICY_AUTOMATIC);
+  vp = gtk_viewport_new(NULL, NULL);
+  gtk_viewport_set_shadow_type(GTK_VIEWPORT(vp), GTK_SHADOW_NONE);  
+  gtk_container_add(GTK_CONTAINER(sv), vp);
+  gtk_container_add(GTK_CONTAINER(vp), rightcolvbox);
+  gtk_box_pack_start (GTK_BOX (indentedhbox), sv, TRUE, TRUE, 0);
 
   /*
    * The second notebook page
@@ -559,7 +468,7 @@ gpe_owner_info (void)
   gtk_widget_show (bigphotobutton);
   GTK_WIDGET_UNSET_FLAGS (bigphotobutton, GTK_CAN_FOCUS);
   gtk_button_set_relief (GTK_BUTTON (bigphotobutton), GTK_RELIEF_NONE);
-  gtk_container_add (GTK_CONTAINER (notebook), bigphotobutton);
+  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), bigphotobutton, NULL);
 
   bigphotodrawingarea = gtk_drawing_area_new ();
   gtk_widget_add_events (GTK_WIDGET (bigphotodrawingarea),
@@ -582,7 +491,7 @@ gpe_owner_info (void)
   /* end of drawing the GUI */
 
   gtk_label_set_markup (GTK_LABEL (name),
-			g_strdup_printf ("<span>%s</span>",
+			g_strdup_printf ("<span><b>%s</b></span>",
 					 ownername));
   gtk_label_set_selectable (GTK_LABEL (name), TRUE);
   /* maybe play with <span stretch='ultracondensed'> here, but we
@@ -596,6 +505,10 @@ gpe_owner_info (void)
 					 ownerphone));
   gtk_label_set_selectable (GTK_LABEL (phone), TRUE);
     
+  gtk_label_set_markup (GTK_LABEL (address),
+                        g_strdup_printf ("<span>%s</span>",
+					    owneraddress));
+                     
   gtk_signal_connect (GTK_OBJECT (smallphotobutton), "clicked",
 		      GTK_SIGNAL_FUNC (on_smallphotobutton_clicked),
 		      notebook);
@@ -603,5 +516,8 @@ gpe_owner_info (void)
 		      GTK_SIGNAL_FUNC (on_bigphotobutton_clicked),
 		      notebook);
 
+  gtk_widget_set_usize(notebook, -1, 80);
+  gtk_widget_show_all(notebook);
+  gtk_notebook_set_current_page(GTK_NOTEBOOK(notebook), 0);
   return notebook;
 }
