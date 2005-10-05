@@ -328,18 +328,21 @@ build_pipeline (player_t p, struct playlist *t, gboolean really_play)
   p->conv = gst_element_factory_make ("audioconvert", "aconv");
   p->audiopad = gst_element_get_pad (p->conv, "sink");
 
-  if (!p->filesrc || !p->decoder || !p->volume || !p->audiosink)
+  if (!p->filesrc || !p->decoder || !p->volume || !p->audiosink || !p->conv)
     {
-      gchar *msgstr = g_strdup(_("Problem creating player element:"));
-      
+      const gchar *msg = _("Problem creating player element:");
+      gchar *msgstr = NULL;      
+        
       if (!p->filesrc)
-          msgstr = g_strdup_printf("%s\n%s", msgstr, _("Data Source"));
+          msgstr = g_strdup_printf("%s\n%s", msg, _("Data Source"));
       if (!p->decoder)
-          msgstr = g_strdup_printf("%s\n%s", msgstr, _("Decoder"));
+          msgstr = g_strdup_printf("%s\n%s", msg, _("Decoder"));
       if (!p->volume)
-          msgstr = g_strdup_printf("%s\n%s", msgstr, _("Volume Control"));
+          msgstr = g_strdup_printf("%s\n%s", msg, _("Volume Control"));
       if (!p->audiosink)
-          msgstr = g_strdup_printf("%s\n%s", msgstr, _("Audio Output"));
+          msgstr = g_strdup_printf("%s\n%s", msg, _("Audio Output"));
+      if (!p->conv)
+          msgstr = g_strdup_printf("%s\n%s", msg, _("Audio Converter"));
 
       fprintf (stderr, "%s\n", msgstr);
       g_free(msgstr);
@@ -479,7 +482,7 @@ player_set_volume (player_t p, int v)
   g_value_init (&value, G_TYPE_FLOAT);
   g_value_set_float (&value, (float)v / 256);
   
-  g_object_set_property (G_OBJECT (p->volume), "volume", &value);
+  g_object_set (G_OBJECT (p->volume), "volume", (gfloat)v/256, NULL);
 }
 
 float
@@ -487,9 +490,10 @@ player_get_volume (player_t p)
 {
   float vol;
 
-  if (!G_IS_OBJECT(p->audiosink))
+  if (!G_IS_OBJECT(p->volume))
       return 0;
-  g_object_get (G_OBJECT (p->audiosink), "volume", &vol, NULL);
+  g_object_get (G_OBJECT (p->volume), "volume", &vol, NULL);
+  
   return (float)(vol * 256);
 }
 

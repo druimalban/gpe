@@ -1,3 +1,9 @@
+2005-10-06  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * gpe-nmf.c: Apply loaded list correctly.
+    * gstplayer.c: Add sanity check for converter element. Volume setting /
+                   reading needs some care. Fix volume retrieval element.
+
 2005-08-26  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * Makefile: Release version 0.22.

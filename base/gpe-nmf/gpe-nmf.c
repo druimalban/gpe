@@ -269,8 +269,17 @@ main (int argc, char *argv[])
   player_play (fe->player);
 
   buf = g_strdup_printf ("%s/.gpe/gpe-nmf-playlist.m3u", g_get_home_dir());
-  if (g_file_test (buf, G_FILE_TEST_EXISTS)) 
-      fe->playlist = playlist_m3u_load (buf);
+  if (g_file_test (buf, G_FILE_TEST_EXISTS))
+  {
+      struct playlist *pl = playlist_m3u_load (buf);
+          
+      fe->playlist = pl;
+      player_set_playlist (fe->player, pl);
+      player_set_index (fe->player, 1);
+      
+      fe->player->state = PLAYER_STATE_NULL;
+      fe->playing = FALSE;
+  }
   else
     fe->playlist = playlist_new_list ();
   g_free (buf);
