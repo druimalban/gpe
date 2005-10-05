@@ -1,7 +1,7 @@
 /*
  * gpe-conf
  *
- * Copyright (C) 2003, 2004  Florian Boor <florian.boor@kernelconcepts.de>
+ * Copyright (C) 2003 - 2005  Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -45,6 +45,7 @@
 /* local definitions */
 #define MODEL_INFO 		"/proc/hal/model"
 #define FAMILIAR_VINFO 	"/etc/familiar-version"
+#define DEBIAN_VINFO 	"/etc/debian_version"
 #define FAMILIAR_TIME 	"/etc/familiar-timestamp"
 #define OE_VERSION 		"/etc/version"
 #define PIC_LINUX 		PREFIX "/share/pixmaps/system-info.png"
@@ -270,19 +271,23 @@ get_distribution_version()
 	GError *err = NULL;
 	
 	/* check for Familiar */
-	if (g_file_get_contents(FAMILIAR_VINFO,&tmp,&len,&err))
+	if (g_file_get_contents(FAMILIAR_VINFO,&tmp,&len,NULL))
 	{
 		if (strchr(tmp,'\n'))
 			strchr(tmp,'\n')[0] = 0;
     	/*TRANSLATORS: "Familiar" is the name of a linux distribution.*/
-		result = g_strdup_printf("%s %s", _("Familiar"), g_strstrip(tmp));
+		result = g_strdup_printf("%s %s", _("Familiar"), g_strstrip(strstr(tmp, " ")));
 		g_free(tmp);
 	 	return result;
 	}
-	else
+	
+	/* check for Debian */
+	if (g_file_get_contents(DEBIAN_VINFO,&tmp,&len,NULL))
 	{
-		g_error_free(err);
-		err = NULL;
+    	/*TRANSLATORS: "Debian" is the name of a linux distribution.*/
+		result = g_strdup_printf("%s %s", _("Debian"), g_strstrip(tmp));
+		g_free(tmp);
+	 	return result;
 	}
 	
 	/* check for OpenEmbedded */
@@ -310,7 +315,7 @@ get_distribution_time()
 	char *tmp = NULL;
 	int len = 0;
 	GError *err = NULL;
-	
+
 	/* Familiar */
 	if (g_file_get_contents(FAMILIAR_TIME,&result,&len,&err))
 	{
@@ -342,7 +347,7 @@ get_distribution_time()
 		g_error_free(err);
 		err = NULL;
 	}
-	
+	if (!result) result = g_strdup("");
 	return result;
 }
 

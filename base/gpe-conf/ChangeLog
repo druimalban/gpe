@@ -1,3 +1,8 @@
+2005-10-05	Florian Boor <florian.boor@kernelconcepts.de>
+
+	* sysinfo.c: Make distribution detection code simpler and safer.
+	             Detect Debian distribution.
+
 2005-09-23	Florian Boor <florian.boor@kernelconcepts.de>
 
 	* Makefile, gpe-conf-usb.desktop.in: Add desktop entry for usb applet.
