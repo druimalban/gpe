@@ -1,3 +1,6 @@
+2005-10-07  Rene Wagner <rw@handhelds.org>
+
+	* gpe-login.session: Use correct gtkrc for gpe-login --autolock
 
 2005-08-29  Florian Boor <florian@kernelconcepts.de>
 
