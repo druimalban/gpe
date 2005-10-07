@@ -307,12 +307,12 @@ gpe_owner_info (void)
   /* TRANSLATORS: you should make sure to not use a 'fantasy' domain
      which might actually exist (maybe in the future). You can
      replace the 'nobody' though, or use '@example.org' (see RFC 2606) */
-  owneremail   = g_strdup (_("nobody@localhost.localdomain"));
+  owneremail   = g_strdup (_("nobody@localhost.net"));
   ownerphone   = g_strdup (_("+99 (9999) 999-9999"));
   /* TRANSLATORS: the translations below should match 'Owner
      Information' (in gpe-conf) and 'Settings' (in mbdesktop) */
   owneraddress = g_strdup (_("Configurable with <i>Owner Information</i>"
-			     " under <i>Settings</i>.\n test\n test \n test"));
+			     " under <i>Settings</i>."));
 
   fp = fopen (GPE_OWNERINFO_DATA, "r");
   if (fp)
@@ -323,8 +323,7 @@ gpe_owner_info (void)
 
       upgrade_result = maybe_upgrade_datafile ();
 
-      /* printf ("gpe-ownerinfo: upgrade_result: %d\n", upgrade_result); */
-      
+   
       if (upgrade_result == UPGRADE_NOT_NEEDED) {	
 	/*  we have at least datafile version 2, so we need to skip
 	 *  the 1st line and read the photo file name:
