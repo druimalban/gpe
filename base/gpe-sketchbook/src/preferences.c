@@ -231,7 +231,7 @@ GpePrefsResult gpe_prefs_set (gchar * key, GType type, gconstpointer pvalue){
 /********************************************************/
 
 void prefs_reset_defaults(){
-  sketchbook.prefs.joypad_scroll  = FALSE;
+  sketchbook.prefs.joypad_scroll  = TRUE;
   sketchbook.prefs.grow_on_scroll = TRUE;
   sketchbook.prefs.start_with     = PAGE_SELECTOR_LIST;
 }

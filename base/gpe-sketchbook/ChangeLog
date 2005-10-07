@@ -1,3 +1,8 @@
+2005-10-07  Florian Boor  <florian.boor@kernelconcepts.de>
+
+	* preferences.c: Make joypad scroll default.
+	* sketchbpad-gui.c: Rearrange toolbar, free some space.
+
 2005-10-02  Florian Boor  <florian.boor@kernelconcepts.de>
 
 	* Remove some debug code.

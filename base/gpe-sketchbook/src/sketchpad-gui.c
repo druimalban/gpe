@@ -206,12 +206,18 @@ sketchpad_build_alternate_drawing_toolbar(GtkWidget * window){
   tooltips = gtk_tooltips_new();
   gtk_tooltips_enable(tooltips);
   
-  files_popup_button = GTK_WIDGET(gtk_menu_tool_button_new_from_stock(GTK_STOCK_NEW));
+  pixbuf = gpe_find_icon ("list");
+  pixmap = gtk_image_new_from_pixbuf (pixbuf);
+  files_popup_button = gtk_menu_tool_button_new(pixmap, _("Show list"));
+  g_signal_connect(G_OBJECT(files_popup_button), "clicked", G_CALLBACK(on_button_list_view_clicked), NULL);
+  gtk_tooltips_set_tip(tooltips, GTK_WIDGET(files_popup_button), _("Show sketches list"), NULL);
+  
+  
   gtk_tool_button_set_label(GTK_TOOL_BUTTON(files_popup_button), _("Sketch menu"));
   gtk_menu_tool_button_set_menu(GTK_MENU_TOOL_BUTTON(files_popup_button), _files_popup_new(GTK_WIDGET(files_popup_button)));
   gtk_toolbar_insert(GTK_TOOLBAR(toolbar), GTK_TOOL_ITEM(files_popup_button), -1);
   sketchpad.files_popup_button = files_popup_button;
-  gtk_tooltips_set_tip(tooltips, files_popup_button, _("Sketch file menu"), NULL);
+  gtk_menu_tool_button_set_arrow_tooltip(files_popup_button, tooltips, _("Sketch file menu"), NULL);
 
   if (gdk_screen_width() > 480) {
     item = gtk_separator_tool_item_new();
@@ -252,7 +258,7 @@ sketchpad_build_alternate_drawing_toolbar(GtkWidget * window){
 
   //--colorbox
   colorbutton = gtk_event_box_new();
-  gtk_widget_set_usize (colorbutton,  16, 16);
+  gtk_widget_set_usize (colorbutton,  10, 10);
   gtk_container_set_border_width(GTK_CONTAINER(colorbutton), 0);
   colorbox_button_set_color(colorbutton, &black);
   
@@ -262,13 +268,6 @@ sketchpad_build_alternate_drawing_toolbar(GtkWidget * window){
   gtk_toolbar_insert(GTK_TOOLBAR(toolbar), GTK_TOOL_ITEM(button_colors), -1);
   gtk_tooltips_set_tip(tooltips, button_colors, _("Select a colour"), NULL);
   g_object_set_data(G_OBJECT(button_colors), "cbutton", colorbutton);
-
-  pixbuf = gpe_find_icon ("list");
-  pixmap = gtk_image_new_from_pixbuf (pixbuf);
-  item = gtk_tool_button_new(pixmap, _("Show list"));
-  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
-  g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK(on_button_list_view_clicked), NULL);
-  gtk_tooltips_set_tip(tooltips, GTK_WIDGET(item), _("Show sketches list"), NULL);
   
   item = gtk_tool_button_new_from_stock(GTK_STOCK_GO_BACK);
   gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
