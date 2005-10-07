@@ -1,5 +1,7 @@
 2005-10-07	Florian Boor <florian.boor@kernelconcepts.de>
 
+	* network.c: Make network dialog a normal window on small screens and 
+	             make it fit on screen.
 	* keys/keyctl.c: Fix gui layout.
 
 2005-10-05	Florian Boor <florian.boor@kernelconcepts.de>

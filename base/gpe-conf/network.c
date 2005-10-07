@@ -573,14 +573,22 @@ show_wificonfig(GtkWidget *window, NWInterface_t *iface)
 	char  tmp_key[256];
 	
 	dialog = gtk_dialog_new_with_buttons (_("WiFi config"),
-					GTK_WINDOW (window),
-					GTK_DIALOG_MODAL| GTK_DIALOG_DESTROY_WITH_PARENT,
+					NULL,
+					GTK_DIALOG_DESTROY_WITH_PARENT,
 					GTK_STOCK_CANCEL,
 					GTK_RESPONSE_REJECT,
 					NULL);
 	
-	gtk_window_set_default_size(GTK_WINDOW(dialog), 220, 320);
-
+	/* set window parameters depending on screen size */
+	if (gdk_screen_height() > 400)
+	{
+		gtk_window_set_default_size(GTK_WINDOW(dialog), 240, 320);
+		gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW (window));
+		gtk_window_set_modal(GTK_WINDOW(dialog), TRUE);
+	}
+	else
+		gtk_window_set_type_hint(GTK_WINDOW(dialog), GDK_WINDOW_TYPE_HINT_NORMAL);
+	
 	btnok = gtk_dialog_add_button(GTK_DIALOG(dialog), 
 	                              GTK_STOCK_OK, GTK_RESPONSE_OK);
 	GTK_WIDGET_SET_FLAGS(btnok, GTK_CAN_DEFAULT);
@@ -831,36 +839,37 @@ show_wificonfig(GtkWidget *window, NWInterface_t *iface)
 			  (GtkAttachOptions) (GTK_FILL),
 			  gpe_boxspacing, gpe_boxspacing);
 
-
-	rb = gtk_radio_button_new_with_label_from_widget (GTK_RADIO_BUTTON(rb), _("Key 4"));
-	gtk_tooltips_set_tip (tooltips, rb, help_selectkey, NULL);
-	gtk_widget_set_name (GTK_WIDGET (rb), "key4select");
-	gtk_widget_ref (rb);
-	gtk_object_set_data_full (GTK_OBJECT (table), "key4select", rb,
-				  (GtkDestroyNotify) gtk_widget_unref);
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (rb),
-				      iface->keynr == 4 ? TRUE : FALSE);
-
-
-	gtk_table_attach (GTK_TABLE (ctable), rb, 0, 1, 8, 9,
-			  (GtkAttachOptions) (GTK_FILL),
-			  (GtkAttachOptions) (GTK_FILL),
-			  gpe_boxspacing, gpe_boxspacing);
-	label = gtk_entry_new ();
-	gtk_tooltips_set_tip (tooltips, label, help_wepkey, NULL);
-	gtk_widget_set_name (GTK_WIDGET (label), "key4");
-	gtk_widget_ref (label);
-	gtk_object_remove_data (GTK_OBJECT (table), "key4");
-	gtk_object_set_data_full (GTK_OBJECT (table), "key4" , label,
-				  (GtkDestroyNotify) gtk_widget_unref);
+	if (gdk_screen_height() > 400)
+	{		
+		rb = gtk_radio_button_new_with_label_from_widget (GTK_RADIO_BUTTON(rb), _("Key 4"));
+		gtk_tooltips_set_tip (tooltips, rb, help_selectkey, NULL);
+		gtk_widget_set_name (GTK_WIDGET (rb), "key4select");
+		gtk_widget_ref (rb);
+		gtk_object_set_data_full (GTK_OBJECT (table), "key4select", rb,
+					  (GtkDestroyNotify) gtk_widget_unref);
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (rb),
+						  iface->keynr == 4 ? TRUE : FALSE);
 	
-	gtk_entry_set_text (GTK_ENTRY (label), key2text(iface->key[3]));
-	gtk_entry_set_editable (GTK_ENTRY (label), TRUE);
-	gtk_table_attach (GTK_TABLE (ctable), label, 1, 2, 8, 9,
-			  (GtkAttachOptions) (GTK_FILL),
-			  (GtkAttachOptions) (GTK_FILL),
-			  gpe_boxspacing, gpe_boxspacing);
-
+	
+		gtk_table_attach (GTK_TABLE (ctable), rb, 0, 1, 8, 9,
+				  (GtkAttachOptions) (GTK_FILL),
+				  (GtkAttachOptions) (GTK_FILL),
+				  gpe_boxspacing, gpe_boxspacing);
+		label = gtk_entry_new ();
+		gtk_tooltips_set_tip (tooltips, label, help_wepkey, NULL);
+		gtk_widget_set_name (GTK_WIDGET (label), "key4");
+		gtk_widget_ref (label);
+		gtk_object_remove_data (GTK_OBJECT (table), "key4");
+		gtk_object_set_data_full (GTK_OBJECT (table), "key4" , label,
+					  (GtkDestroyNotify) gtk_widget_unref);
+		
+		gtk_entry_set_text (GTK_ENTRY (label), key2text(iface->key[3]));
+		gtk_entry_set_editable (GTK_ENTRY (label), TRUE);
+		gtk_table_attach (GTK_TABLE (ctable), label, 1, 2, 8, 9,
+				  (GtkAttachOptions) (GTK_FILL),
+				  (GtkAttachOptions) (GTK_FILL),
+				  gpe_boxspacing, gpe_boxspacing);
+	}
 			       
 	gtk_widget_show_all(dialog);
 	response = gtk_dialog_run (GTK_DIALOG (dialog));
@@ -881,9 +890,11 @@ show_wificonfig(GtkWidget *window, NWInterface_t *iface)
 		label = gtk_object_get_data (GTK_OBJECT (table), "key3");
 		strncpy(iface->key[2], text2key(gtk_editable_get_chars(GTK_EDITABLE (label), 0, -1), tmp_key), 127);
 		
-		label = gtk_object_get_data (GTK_OBJECT (table), "key4");
-		strncpy(iface->key[3], text2key(gtk_editable_get_chars(GTK_EDITABLE (label), 0, -1), tmp_key), 127);
-
+		if (gdk_screen_height() > 400)
+		{		
+			label = gtk_object_get_data (GTK_OBJECT (table), "key4");
+			strncpy(iface->key[3], text2key(gtk_editable_get_chars(GTK_EDITABLE (label), 0, -1), tmp_key), 127);
+		}
 		label = gtk_object_get_data (GTK_OBJECT (table), "mode_managed");
 		iface->mode = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON (label)) ? MODE_MANAGED : MODE_ADHOC;
 		
