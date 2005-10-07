@@ -1,3 +1,7 @@
+2005-10-07	Florian Boor <florian.boor@kernelconcepts.de>
+
+	* keys/keyctl.c: Fix gui layout.
+
 2005-10-05	Florian Boor <florian.boor@kernelconcepts.de>
 
 	* sysinfo.c: Make distribution detection code simpler and safer.
