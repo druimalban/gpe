@@ -1,3 +1,12 @@
+2005-10-08	Florian Boor <florian.boor@kernelconcepts.de>
+
+	* HACKING: Remove some finished work from todo.
+	* network.c: Global proxy settings instead of dillorc.
+	             Rename "table" to better matching "notebook".
+	* applets.c, main.c, kbd.c, keyboard.c, network.c, main-info.c, 
+	  users/interface.c, sleep/interface.c, timeanddate.c, ownerinfo.c, theme.c:
+      Change deprecated GTK_OBJECT stuff to G_OBJECT.
+
 2005-10-07	Florian Boor <florian.boor@kernelconcepts.de>
 
     * main.c, cardinfo.c, network.c, applets.h: Change user inferface to 

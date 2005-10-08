@@ -617,8 +617,8 @@ build_colorbox ()
       label = sp_color_slider_new (csel->a[i]);
       gtk_widget_show (label);
       csel->s[i] = (SPColorSlider*)label;
-      gtk_signal_connect (GTK_OBJECT (csel->s[i]), "changed",
-			  GTK_SIGNAL_FUNC (sp_color_selector_update_sliders),
+      g_signal_connect (G_OBJECT (csel->s[i]), "changed",
+			  G_CALLBACK (sp_color_selector_update_sliders),
 			  NULL);
 
       sp_color_slider_set_map ((SPColorSlider*)label, NULL);
@@ -925,13 +925,13 @@ on_color_select (GtkWidget * widget, GdkEvent * event)
   gtk_container_add (GTK_CONTAINER (GTK_DIALOG (w)->vbox), build_colorbox ());
 	
   // pass calling widget to handler
-  g_signal_connect (GTK_OBJECT (w), "response",
+  g_signal_connect (G_OBJECT (w), "response",
 		    (void *) dialog_color_response, (gpointer) widget);
 
   gtk_adjustment_set_value(csel->a[0],(float)astyle->base[GTK_STATE_NORMAL].red/65534.0);
   gtk_adjustment_set_value(csel->a[1],(float)astyle->base[GTK_STATE_NORMAL].green/65534.0);
   gtk_adjustment_set_value(csel->a[2],(float)astyle->base[GTK_STATE_NORMAL].blue/65534.0);
-  gtk_signal_emit_by_name (GTK_OBJECT (csel->s[0]), "changed");
+  g_signal_emit_by_name (G_OBJECT (csel->s[0]), "changed");
 
   gtk_dialog_run (GTK_DIALOG (w));
 }
@@ -1237,8 +1237,8 @@ Theme_Build_Objects ()
   gtk_table_attach (GTK_TABLE (table), self.cDefault, 0, 2, 1, 2,
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
-  g_signal_connect (GTK_OBJECT (self.cDefault), "toggled",
-		       (update_enabled_widgets), NULL);
+  g_signal_connect (G_OBJECT (self.cDefault), "toggled",
+		       G_CALLBACK(update_enabled_widgets), NULL);
 #else
   gtk_table_attach (GTK_TABLE (table), label, 0, 2, 2, 3,
 		    (GtkAttachOptions) (table_attach_left_col_x),
@@ -1248,15 +1248,15 @@ Theme_Build_Objects ()
   gtk_table_attach (GTK_TABLE (table), self.cDefault, 0, 2, 3, 4,
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
-  g_signal_connect (GTK_OBJECT (self.cDefault), "toggled",
-		       (update_enabled_widgets), NULL);
+  g_signal_connect (G_OBJECT (self.cDefault), "toggled",
+		       G_CALLBACK(update_enabled_widgets), NULL);
 #endif
 #ifndef APPMGR_INTERFACE
   label = gtk_radio_button_new_with_label (NULL, _("Solid colour"));
   rg_background = label;
   self.rbSolid = label;
-  g_signal_connect (GTK_OBJECT (label), "toggled",
-		       (update_enabled_widgets), NULL);
+  g_signal_connect (G_OBJECT (label), "toggled",
+		       G_CALLBACK(update_enabled_widgets), NULL);
   gtk_table_attach (GTK_TABLE (table), label, 0, 1, 2, 3,
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
@@ -1276,7 +1276,7 @@ Theme_Build_Objects ()
   
   self.bColor1 = gtk_button_new();
   gtk_button_set_label(GTK_BUTTON(self.bColor1),_("Colour"));
-  g_signal_connect (GTK_OBJECT (self.bColor1), "clicked",
+  g_signal_connect (G_OBJECT (self.bColor1), "clicked",
 		    G_CALLBACK (on_color_select), NULL);
   gtk_table_attach (GTK_TABLE (table), self.bColor1, 1, 2, 2, 3,
 		    (GtkAttachOptions) (table_attach_left_col_x),
@@ -1286,8 +1286,8 @@ Theme_Build_Objects ()
     gtk_radio_button_new_with_label_from_widget (GTK_RADIO_BUTTON
 						 (rg_background),
 						 _("Colour gradient"));
-  g_signal_connect (GTK_OBJECT (label), "toggled",
-		       (update_enabled_widgets), NULL);
+  g_signal_connect (G_OBJECT (label), "toggled",
+		       G_CALLBACK(update_enabled_widgets), NULL);
   self.rbGrad = label;
   gtk_table_attach (GTK_TABLE (table), label, 0, 1, 3, 4,
 		    (GtkAttachOptions) (table_attach_left_col_x),
@@ -1295,7 +1295,7 @@ Theme_Build_Objects ()
 
   self.bColor2 = gtk_button_new();
   gtk_button_set_label(GTK_BUTTON(self.bColor2),_("Colour"));
-  g_signal_connect (GTK_OBJECT (self.bColor2), "clicked",
+  g_signal_connect (G_OBJECT (self.bColor2), "clicked",
 		    G_CALLBACK (on_color_select), NULL);
 			
   gtk_table_attach (GTK_TABLE (table), self.bColor2, 1, 2, 3, 4,
@@ -1305,7 +1305,7 @@ Theme_Build_Objects ()
   label =
     gtk_radio_button_new_with_label_from_widget (GTK_RADIO_BUTTON
 						 (rg_background), _("Image"));
-  g_signal_connect (GTK_OBJECT (label), "toggled",
+  g_signal_connect (G_OBJECT (label), "toggled",
 		       (update_enabled_widgets), NULL);
   self.rbImage = label;
   gtk_table_attach (GTK_TABLE (table), label, 0, 1, 7, 8,
@@ -1319,8 +1319,8 @@ Theme_Build_Objects ()
   gtk_widget_set_size_request (self.eImage, 150, -1);
 
   self.bOpen = gtk_button_new_from_stock (GTK_STOCK_OPEN);
-  gtk_signal_connect (GTK_OBJECT (self.bOpen), "pressed",
-		      GTK_SIGNAL_FUNC (choose_file), NULL);
+  g_signal_connect (G_OBJECT (self.bOpen), "pressed",
+		      G_CALLBACK (choose_file), NULL);
   gtk_table_attach (GTK_TABLE (table), self.bOpen, 1, 2, 8, 9,
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
@@ -1453,8 +1453,8 @@ Theme_Build_Objects ()
 
   self.bFont = GTK_WIDGET(popup_menu_button_new (GTK_STOCK_SELECT_FONT));
   g_object_set_data (G_OBJECT (self.bFont), "active", FALSE);
-  gtk_signal_connect (GTK_OBJECT (self.bFont), "pressed",
-		      GTK_SIGNAL_FUNC (select_font_popup), NULL);
+  g_signal_connect (G_OBJECT (self.bFont), "pressed",
+		      G_CALLBACK (select_font_popup), NULL);
   gtk_table_attach (GTK_TABLE (table), self.bFont, 0, 1, 2, 3,
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), gpe_boxspacing, 0);
@@ -1484,7 +1484,7 @@ Theme_Build_Objects ()
 		    (GtkAttachOptions) (table_attach_left_col_y), gpe_boxspacing, 0);
   self.bColorFont = gtk_button_new();
   gtk_button_set_label(GTK_BUTTON(self.bColorFont),_("Colour"));
-  g_signal_connect (GTK_OBJECT (self.bColorFont), "clicked",
+  g_signal_connect (G_OBJECT (self.bColorFont), "clicked",
 		    G_CALLBACK (on_color_select), NULL);
   gtk_table_attach (GTK_TABLE (table), self.bColorFont, 3, 4, 2, 3,
 		    (GtkAttachOptions) (table_attach_left_col_x),
@@ -1513,8 +1513,8 @@ Theme_Build_Objects ()
 
   self.bFontApp = GTK_WIDGET(popup_menu_button_new (GTK_STOCK_SELECT_FONT));
   g_object_set_data (G_OBJECT (self.bFontApp), "active", FALSE);
-  gtk_signal_connect (GTK_OBJECT (self.bFontApp), "pressed",
-		      GTK_SIGNAL_FUNC (select_font_popup), NULL);
+  g_signal_connect (G_OBJECT (self.bFontApp), "pressed",
+		      G_CALLBACK (select_font_popup), NULL);
   gtk_table_attach (GTK_TABLE (table), self.bFontApp, 0, 1, 6, 7,
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), gpe_boxspacing, 0);
@@ -1548,8 +1548,8 @@ Theme_Build_Objects ()
 
   self.bFontApp = GTK_WIDGET(popup_menu_button_new (GTK_STOCK_SELECT_FONT));
   g_object_set_data (G_OBJECT (self.bFontApp), "active", FALSE);
-  gtk_signal_connect (GTK_OBJECT (self.bFontApp), "pressed",
-		      GTK_SIGNAL_FUNC (select_font_popup), NULL);
+  g_signal_connect (G_OBJECT (self.bFontApp), "pressed",
+		      G_CALLBACK (select_font_popup), NULL);
   gtk_table_attach (GTK_TABLE (table), self.bFontApp, 0, 1, 14, 15,
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), gpe_boxspacing, 0);
@@ -1598,8 +1598,8 @@ Theme_Build_Objects ()
 
   self.bFontTerminal = GTK_WIDGET(popup_menu_button_new (GTK_STOCK_SELECT_FONT));
   g_object_set_data (G_OBJECT (self.bFontTerminal), "active", FALSE);
-  gtk_signal_connect (GTK_OBJECT (self.bFontTerminal), "pressed",
-		      GTK_SIGNAL_FUNC (select_font_popup), NULL);
+  g_signal_connect (G_OBJECT (self.bFontTerminal), "pressed",
+		      G_CALLBACK (select_font_popup), NULL);
   gtk_table_attach (GTK_TABLE (table), self.bFontTerminal, 0, 3, 2, 3,
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), gpe_boxspacing, 0);
@@ -1678,8 +1678,8 @@ Theme_Build_Objects ()
   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.cPerformance), FALSE);
   mb_start_xsettings ();
   
-  gtk_signal_connect (GTK_OBJECT (GTK_COMBO (self.cbTheme)->entry), "changed",
-		      GTK_SIGNAL_FUNC (on_matchbox_entry_changed), NULL);
+  g_signal_connect (G_OBJECT (GTK_COMBO (self.cbTheme)->entry), "changed",
+		      G_CALLBACK (on_matchbox_entry_changed), NULL);
 
   return notebook;
 }

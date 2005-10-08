@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-05-17 19:12+0200\n"
+"POT-Creation-Date: 2005-08-23 02:20+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -48,11 +48,11 @@ msgstr ""
 msgid "Network Setup"
 msgstr ""
 
-#: main.c:98 theme.c:1083
+#: main.c:98 theme.c:1144
 msgid "Theme"
 msgstr ""
 
-#: main.c:98 theme.c:1085 gpe-conf-theme.desktop.in.h:2
+#: main.c:98 theme.c:1146 gpe-conf-theme.desktop.in.h:2
 msgid "Look and Feel"
 msgstr ""
 
@@ -375,408 +375,412 @@ msgstr ""
 msgid "This interface definition already exists!"
 msgstr ""
 
-#: network.c:327
+#: network.c:326
 msgid "Do you want to delete this interface?"
 msgstr ""
 
-#: network.c:327 users/callbacks.c:138
+#: network.c:326 users/callbacks.c:138
 msgid "Question"
 msgstr ""
 
-#: network.c:576
+#: network.c:575
 msgid "WiFi config"
 msgstr ""
 
-#: network.c:607
+#: network.c:606
 #, c-format
 msgid "WiFi config for %s"
 msgstr ""
 
-#: network.c:619
+#: network.c:618
 msgid "ESSID"
 msgstr ""
 
-#: network.c:641
+#: network.c:640
 msgid "Mode"
 msgstr ""
 
-#: network.c:651
+#: network.c:650
 msgid "managed"
 msgstr ""
 
-#: network.c:663
+#: network.c:662
 msgid "ad-hoc"
 msgstr ""
 
-#: network.c:680
+#: network.c:679
 msgid "Channel"
 msgstr ""
 
-#: network.c:702
+#: network.c:700
 msgid "WEP"
 msgstr ""
 
-#: network.c:712
+#: network.c:710
 msgid "off"
 msgstr ""
 
-#: network.c:724
+#: network.c:722
 msgid "open"
 msgstr ""
 
-#: network.c:736
+#: network.c:734
 msgid "restricted"
 msgstr ""
 
-#: network.c:752
+#: network.c:750
 msgid "Key 1"
 msgstr ""
 
-#: network.c:780
+#: network.c:778
 msgid "Key 2"
 msgstr ""
 
-#: network.c:808
+#: network.c:806
 msgid "Key 3"
 msgstr ""
 
-#: network.c:837
+#: network.c:835
 msgid "Key 4"
 msgstr ""
 
-#: network.c:1043
+#: network.c:1040
 msgid "Address"
 msgstr ""
 
-#: network.c:1046
+#: network.c:1043
 msgid "Enter your IP address here, e.g. 192.168.1.2"
 msgstr ""
 
-#: network.c:1048
+#: network.c:1045
 msgid "Netmask"
 msgstr ""
 
-#: network.c:1051
+#: network.c:1048
 msgid "Enter your netmask here, e.g. 255.255.255.0 in most cases"
 msgstr ""
 
-#: network.c:1053
+#: network.c:1050
 msgid "Broadcast"
 msgstr ""
 
-#: network.c:1056
+#: network.c:1053
 msgid ""
 "Enter your broadcast address here, usually the same like your IP with 255 as "
 "last number."
 msgstr ""
 
-#: network.c:1058
+#: network.c:1055
 msgid "Gateway"
 msgstr ""
 
-#: network.c:1061
+#: network.c:1058
 msgid "Enter the IP Address of your default gateway here."
 msgstr ""
 
-#: network.c:1072 network.c:1189
+#: network.c:1069 network.c:1186
 msgid "WiFi device"
 msgstr ""
 
-#: network.c:1080 network.c:1197
+#: network.c:1077 network.c:1194
 msgid "Configure"
 msgstr ""
 
-#: network.c:1177
+#: network.c:1174
 msgid "Hostname"
 msgstr ""
 
-#: network.c:1180
+#: network.c:1177
 msgid "Enter your desired hostname here. This parameter is optional."
 msgstr ""
 
-#: network.c:1297
+#: network.c:1294
 msgid "Provider"
 msgstr ""
 
-#: network.c:1299
+#: network.c:1296
 msgid ""
 "Here you need to enter the name of the provider configuration to use for "
 "this interface."
 msgstr ""
 
-#: network.c:1322
+#: network.c:1319
 msgid "Global Settings"
 msgstr ""
 
-#: network.c:1364
+#: network.c:1361
 msgid "Proxy"
 msgstr ""
 
-#: network.c:1365
+#: network.c:1362
 msgid ""
 "If you want/need to use a proxy, enter it here. (This only applies to dillo "
 "for now.)"
 msgstr ""
 
-#: network.c:1371
+#: network.c:1368
 msgid "No proxy for"
 msgstr ""
 
-#: network.c:1373
+#: network.c:1370
 msgid ""
 "Here you should enter your local domain for that you don't want to use a "
 "proxy."
 msgstr ""
 
-#: network.c:1380
+#: network.c:1377
 msgid "DNS server"
 msgstr ""
 
-#: network.c:1383
+#: network.c:1380
 msgid "Enter the IP of the DNS(name-) server to use here."
 msgstr ""
 
-#: network.c:1554
+#: network.c:1551
 msgid ""
 "Here you may change the basic configuration type of your device.\n"
 "Use \"static\" for manual interface configuration, \"dhcp\" to use DHCP and "
 "\"ppp\" to make the device a point-to-point device."
 msgstr ""
 
-#: network.c:1560
+#: network.c:1557
 msgid "Enable this option if your device is a WiFi device"
 msgstr ""
 
-#: network.c:1562
+#: network.c:1559
 msgid "Click to set the wireless options for this device"
 msgstr ""
 
-#: network.c:1564
+#: network.c:1561
 msgid "Set the mode your WiFi card should work. (managed or ad-hoc)."
 msgstr ""
 
-#: network.c:1567
+#: network.c:1564
 msgid ""
 "Set the enrcyption mode: off for no WEP encryption, open for open system and "
 "restricted for resticted WEP connections only."
 msgstr ""
 
-#: network.c:1572
+#: network.c:1569
 msgid "Enter the essid of your WiFi network here."
 msgstr ""
 
-#: network.c:1575
+#: network.c:1572
 msgid "Enter your WEP key here in (iwconfig format), e.g.: \"s:12345\""
 msgstr ""
 
-#: network.c:1578
+#: network.c:1575
 msgid "Select the WEP key to use."
 msgstr ""
 
-#: network.c:1581
+#: network.c:1578
 msgid ""
 "Enter the channel number or frequency if needed. If not needed leave this "
 "field blank."
 msgstr ""
 
-#: network.c:1604
+#: network.c:1601
 msgid "Add Interface"
 msgstr ""
 
-#: network.c:1605
+#: network.c:1602
 msgid "Add a new Interface"
 msgstr ""
 
-#: network.c:1615
+#: network.c:1612
 msgid "Remove Interface"
 msgstr ""
 
-#: network.c:1616
+#: network.c:1613
 msgid "Remove current Interface"
 msgstr ""
 
-#: network.c:1630
+#: network.c:1627
 msgid "Information"
 msgstr ""
 
-#: network.c:1631
+#: network.c:1628
 msgid "Show current configuration."
 msgstr ""
 
-#: network.c:1649
+#: network.c:1647
 msgid "Couldn't read network configuration."
 msgstr ""
 
-#: network.c:1656
+#: network.c:1654
 msgid "global"
 msgstr ""
 
-#: theme.c:178
+#: theme.c:238
 msgid "Choose backgound image"
 msgstr ""
 
-#: theme.c:192
+#: theme.c:252
 msgid "You are not allowed to read this file, choose another."
 msgstr ""
 
-#: theme.c:213
+#: theme.c:273
 msgid "Succesfully changed background image."
 msgstr ""
 
-#: theme.c:214
+#: theme.c:274
 msgid "Use \"Look and Feel\" setup tool to change details."
 msgstr ""
 
-#: theme.c:538
+#: theme.c:598
 msgid "Red"
 msgstr ""
 
-#: theme.c:543
+#: theme.c:603
 msgid "Green"
 msgstr ""
 
-#: theme.c:548
+#: theme.c:608
 msgid "Blue"
 msgstr ""
 
-#: theme.c:858
+#: theme.c:918
 msgid "Select colour"
 msgstr ""
 
-#: theme.c:884 theme.c:958
+#: theme.c:944 theme.c:1018
 msgid "You don't have read access to selected background image!"
 msgstr ""
 
-#: theme.c:1095
+#: theme.c:1156
 msgid "Desktop Theme"
 msgstr ""
 
-#: theme.c:1107
+#: theme.c:1168
 msgid "Name"
 msgstr ""
 
-#: theme.c:1124
+#: theme.c:1185
 msgid "Icon Size"
 msgstr ""
 
-#: theme.c:1139
+#: theme.c:1200
 msgid "Visual Effects"
 msgstr ""
 
-#: theme.c:1145
+#: theme.c:1206
 msgid "Enable Visual Effects"
 msgstr ""
 
-#: theme.c:1152
+#: theme.c:1213
 msgid "Background"
 msgstr ""
 
-#: theme.c:1166 theme.c:1168
+#: theme.c:1227 theme.c:1229
 msgid "Background Settings"
 msgstr ""
 
-#: theme.c:1178 theme.c:1189
+#: theme.c:1239 theme.c:1250
 msgid "Theme Default"
 msgstr ""
 
-#: theme.c:1197
+#: theme.c:1258
 msgid "Solid colour"
 msgstr ""
 
-#: theme.c:1211
+#: theme.c:1272
 msgid "Horizontal"
 msgstr ""
 
-#: theme.c:1215
+#: theme.c:1276
 msgid "Vertical"
 msgstr ""
 
-#: theme.c:1220 theme.c:1239 theme.c:1422 theme.c:1428
+#: theme.c:1281 theme.c:1300 theme.c:1483 theme.c:1489
 msgid "Colour"
 msgstr ""
 
-#: theme.c:1230
+#: theme.c:1291
 msgid "Colour gradient"
 msgstr ""
 
-#: theme.c:1249
+#: theme.c:1310
 msgid "Image"
 msgstr ""
 
-#: theme.c:1275
+#: theme.c:1336
 msgid "Centered"
 msgstr ""
 
-#: theme.c:1279
+#: theme.c:1340
 msgid "Tiled"
 msgstr ""
 
-#: theme.c:1282
+#: theme.c:1343
 msgid "Stretched"
 msgstr ""
 
-#: theme.c:1289
+#: theme.c:1350
 msgid "Toolbars"
 msgstr ""
 
-#: theme.c:1301 theme.c:1303
+#: theme.c:1362 theme.c:1364
 msgid "Toolbar Style"
 msgstr ""
 
-#: theme.c:1312 theme.c:1341
+#: theme.c:1373 theme.c:1402
 msgid "Icons"
 msgstr ""
 
-#: theme.c:1317 theme.c:1345
+#: theme.c:1378 theme.c:1406
 msgid "Text"
 msgstr ""
 
-#: theme.c:1322
+#: theme.c:1383
 msgid "Both"
 msgstr ""
 
-#: theme.c:1327
+#: theme.c:1388
 msgid "Both H"
 msgstr ""
 
-#: theme.c:1348
+#: theme.c:1409
 msgid "Both (icon above text)"
 msgstr ""
 
-#: theme.c:1351
+#: theme.c:1412
 msgid "Both (icon left of text)"
 msgstr ""
 
-#: theme.c:1358
+#: theme.c:1419
 msgid "Toolbar Icon Size"
 msgstr ""
 
-#: theme.c:1374
+#: theme.c:1435
 msgid "Fonts"
 msgstr ""
 
-#: theme.c:1383 theme.c:1403
+#: theme.c:1444 theme.c:1464
 msgid "Desktop Font"
 msgstr ""
 
-#: theme.c:1390 theme.c:1450 theme.c:1485
+#: theme.c:1451 theme.c:1511 theme.c:1546 theme.c:1596
 msgid "Family"
 msgstr ""
 
-#: theme.c:1410 theme.c:1470 theme.c:1505 theme.c:1535
+#: theme.c:1471 theme.c:1531 theme.c:1566 theme.c:1616
 msgid "Size"
 msgstr ""
 
-#: theme.c:1439 theme.c:1441 theme.c:1463 theme.c:1498
+#: theme.c:1500 theme.c:1502 theme.c:1524 theme.c:1559
 msgid "Application Font"
 msgstr ""
 
-#: theme.c:1519
+#: theme.c:1580
 msgid "Terminal"
 msgstr ""
 
-#: theme.c:1528
+#: theme.c:1589
 msgid "Font"
+msgstr ""
+
+#: theme.c:1609
+msgid "Terminal Font"
 msgstr ""
 
 #: keys/keyctl.c:178
@@ -1036,7 +1040,7 @@ msgid ""
 " Please try again!"
 msgstr ""
 
-#: cfgfile.c:915
+#: cfgfile.c:919
 msgid "No write access to network configuration."
 msgstr ""
 
@@ -1781,88 +1785,87 @@ msgstr ""
 msgid "Could not open X session log.\n"
 msgstr ""
 
-#: battery.c:85
-#, c-format
-msgid "could not open touchscreen device '%s'\n"
+#: battery.c:190 battery.c:251
+msgid "unknown"
 msgstr ""
 
-#: battery.c:142 battery.c:199 battery.c:301
+#: battery.c:199 battery.c:259 battery.c:358
 msgid "Status: high"
 msgstr ""
 
-#: battery.c:145 battery.c:202 battery.c:305
+#: battery.c:202 battery.c:262 battery.c:362
 msgid "Status: low"
 msgstr ""
 
-#: battery.c:148 battery.c:205 battery.c:309
+#: battery.c:205 battery.c:265 battery.c:366
 msgid "Status: critical"
 msgstr ""
 
-#: battery.c:151 battery.c:208 battery.c:313
+#: battery.c:208 battery.c:268 battery.c:370
 msgid "Status: charging"
 msgstr ""
 
-#: battery.c:154 battery.c:211
+#: battery.c:211 battery.c:271
 msgid "Status: charge main"
 msgstr ""
 
-#: battery.c:157
+#: battery.c:214
 msgid "Status: dead"
 msgstr ""
 
-#: battery.c:160 battery.c:217 battery.c:299
+#: battery.c:217 battery.c:277 battery.c:356
 msgid "Status: full"
 msgstr ""
 
-#: battery.c:163 battery.c:220
+#: battery.c:220 battery.c:280
 msgid "Status: no battery"
 msgstr ""
 
-#: battery.c:166 battery.c:223 battery.c:242 battery.c:316
+#: battery.c:223 battery.c:283 battery.c:301 battery.c:373
 msgid "Status: unknown"
 msgstr ""
 
-#: battery.c:171
+#: battery.c:228
 msgid "learning"
 msgstr ""
 
-#: battery.c:175 battery.c:227
+#: battery.c:232 battery.c:287
 msgid "Voltage"
 msgstr ""
 
-#: battery.c:179 battery.c:231 battery.c:333
+#: battery.c:236 battery.c:291 battery.c:390
 msgid "AC connected"
 msgstr ""
 
-#: battery.c:181 battery.c:233 battery.c:335
+#: battery.c:238 battery.c:293 battery.c:392
 msgid "Lifetime"
 msgstr ""
 
-#: battery.c:214
+#: battery.c:274
 msgid "Status: not installed"
 msgstr ""
 
-#: battery.c:240
+#: battery.c:300
 msgid "not installed"
 msgstr ""
 
-#: battery.c:244
+#: battery.c:302
 msgid "Voltage: unknown"
 msgstr ""
 
-#: battery.c:246
+#: battery.c:303
 msgid "Lifetime: unknown"
 msgstr ""
 
-#: battery.c:291
+#: battery.c:348
 msgid "No battery"
 msgstr ""
 
-#: battery.c:396
+#: battery.c:453
 msgid "Internal battery"
 msgstr ""
 
-#: battery.c:400
+#: battery.c:457
 msgid "Jacket battery"
 msgstr ""
 

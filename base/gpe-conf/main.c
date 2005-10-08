@@ -255,14 +255,14 @@ void initwindow()
    
    wstyle = self.w->style;
 
-   gtk_signal_connect (GTK_OBJECT(self.w), "delete-event",
-		       (GtkSignalFunc) gtk_main_quit, NULL);
+   g_signal_connect (G_OBJECT(self.w), "delete-event",
+	                 G_CALLBACK(gtk_main_quit), NULL);
 
-   gtk_signal_connect (GTK_OBJECT(self.w), "delete-event",
-		       (GtkSignalFunc) killchild, NULL);
+   g_signal_connect (G_OBJECT(self.w), "delete-event",
+	                 G_CALLBACK(killchild), NULL);
 
-   gtk_signal_connect (GTK_OBJECT(self.w), "destroy", 
-      (GtkSignalFunc) gtk_main_quit, NULL);
+   g_signal_connect (G_OBJECT(self.w), "destroy", 
+	                 G_CALLBACK(gtk_main_quit), NULL);
 }
 
 
@@ -300,12 +300,12 @@ void make_container()
 
   GTK_WIDGET_SET_FLAGS(self.save, GTK_CAN_DEFAULT);
   GTK_WIDGET_SET_FLAGS(self.dismiss, GTK_CAN_DEFAULT);
-  gtk_signal_connect (GTK_OBJECT(self.save), "clicked",
-		      (GtkSignalFunc) Save_Callback, NULL);
-  gtk_signal_connect (GTK_OBJECT(self.cancel), "clicked",
-		      (GtkSignalFunc) Restore_Callback, NULL);
-  gtk_signal_connect (GTK_OBJECT(self.dismiss), "clicked",
-		      (GtkSignalFunc) Save_Callback, NULL);
+  g_signal_connect (G_OBJECT(self.save), "clicked",
+		      G_CALLBACK(Save_Callback), NULL);
+  g_signal_connect (G_OBJECT(self.cancel), "clicked",
+		      G_CALLBACK(Restore_Callback), NULL);
+  g_signal_connect (G_OBJECT(self.dismiss), "clicked",
+		      G_CALLBACK(Save_Callback), NULL);
 }
 
 

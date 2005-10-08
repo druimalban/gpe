@@ -444,19 +444,19 @@ create_userchange (pwlist *init,GtkWidget *parent)
 
   gtk_widget_grab_default(save);
 	
-  gtk_signal_connect (GTK_OBJECT (passwd), "clicked",
-                      GTK_SIGNAL_FUNC (users_on_passwd_clicked),
+  g_signal_connect (G_OBJECT (passwd), "clicked",
+                      G_CALLBACK(users_on_passwd_clicked),
                       (gpointer) self);
-  gtk_signal_connect (GTK_OBJECT (save), "clicked",
-                            GTK_SIGNAL_FUNC (users_on_save_clicked),
+  g_signal_connect (G_OBJECT (save), "clicked",
+                            G_CALLBACK (users_on_save_clicked),
                             (gpointer) self);
-  gtk_signal_connect (GTK_OBJECT (cancel), "clicked",
-                            GTK_SIGNAL_FUNC (users_on_cancel_clicked),
+  g_signal_connect (G_OBJECT (cancel), "clicked",
+                            G_CALLBACK(users_on_cancel_clicked),
                             (gpointer) self);
 
   /* in case of destruction by close (X) button */
-  gtk_signal_connect (GTK_OBJECT(userchange) , "destroy", 
-		      (GtkSignalFunc) freedata, (gpointer)self);
+  g_signal_connect (G_OBJECT(userchange) , "destroy", 
+		      G_CALLBACK(freedata), (gpointer)self);
   return userchange;
 }
 
@@ -574,21 +574,21 @@ create_passwindow (pwlist *init, GtkWidget *parent)
   GTK_WIDGET_SET_FLAGS (changepasswd, GTK_CAN_DEFAULT);
 
   gtk_widget_grab_default(changepasswd);
-  gtk_signal_connect (GTK_OBJECT (cancel), "clicked",
-                      GTK_SIGNAL_FUNC (users_on_passwdcancel_clicked),
+  g_signal_connect (G_OBJECT (cancel), "clicked",
+                      G_CALLBACK (users_on_passwdcancel_clicked),
                       (gpointer)self);
-  gtk_signal_connect (GTK_OBJECT (changepasswd), "clicked",
-                      GTK_SIGNAL_FUNC (users_on_changepasswd_clicked),
+  g_signal_connect (G_OBJECT (changepasswd), "clicked",
+                      G_CALLBACK (users_on_changepasswd_clicked),
                       (gpointer)self);
 
   if (parent)
- 	 gtk_signal_connect (GTK_OBJECT(passwindow) , "destroy", 
-		      (GtkSignalFunc) freedata, (gpointer)self);
+ 	 g_signal_connect (G_OBJECT(passwindow) , "destroy", 
+		      G_CALLBACK(freedata), (gpointer)self);
   else
   {
      set_own_password = TRUE;
- 	 gtk_signal_connect (GTK_OBJECT(passwindow) , "destroy", 
-		      gtk_main_quit, NULL);
+ 	 g_signal_connect (G_OBJECT(passwindow) , "destroy", 
+		      G_CALLBACK(gtk_main_quit), NULL);
   }
   return passwindow;
 }

@@ -80,8 +80,8 @@ create_GPE_Config_Sleep (ipaq_conf_t *ISconf)
   
   sleep_idle_spin_adj = gtk_adjustment_new (180, 0, 1800, 5, 10, 10);
   sleep_idle_spin = gtk_hscale_new(GTK_ADJUSTMENT (sleep_idle_spin_adj));
-  gtk_signal_connect (GTK_OBJECT (sleep_idle_spin), "format-value",
-                      GTK_SIGNAL_FUNC (change_scale_label),
+  g_signal_connect (G_OBJECT (sleep_idle_spin), "format-value",
+                      G_CALLBACK (change_scale_label),
                       NULL);
 
   gtk_widget_show (sleep_idle_spin);
@@ -111,8 +111,8 @@ create_GPE_Config_Sleep (ipaq_conf_t *ISconf)
   
   dim_spin_adj = gtk_adjustment_new (60, 0, 1800, 5, 10, 10);
   dim_spin = gtk_hscale_new (GTK_ADJUSTMENT (dim_spin_adj));
-  gtk_signal_connect (GTK_OBJECT (dim_spin), "format-value",
-                      GTK_SIGNAL_FUNC (change_scale_label),
+  g_signal_connect (G_OBJECT (dim_spin), "format-value",
+                      G_CALLBACK (change_scale_label),
                       NULL);
 
   gtk_widget_show (dim_spin);
@@ -136,8 +136,8 @@ create_GPE_Config_Sleep (ipaq_conf_t *ISconf)
   gtk_table_attach (GTK_TABLE (table1),dim_scale, 1, 3, 5, 6,
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (GTK_FILL), 0, 0);
-  gtk_signal_connect (GTK_OBJECT (dim_scale), "format-value",
-                      GTK_SIGNAL_FUNC (change_dim_scale_label),
+  g_signal_connect (G_OBJECT (dim_scale), "format-value",
+                      G_CALLBACK (change_dim_scale_label),
                       NULL);
 
 
@@ -194,57 +194,57 @@ create_GPE_Config_Sleep (ipaq_conf_t *ISconf)
 
   gtk_tooltips_set_tip (tooltips, sleep_probe_irq, _("Check IRQ activity"), NULL);
 
-  gtk_signal_connect (GTK_OBJECT (GPE_Config_Sleep), "delete_event",
-                      GTK_SIGNAL_FUNC (gtk_main_quit),
+  g_signal_connect (G_OBJECT (GPE_Config_Sleep), "delete_event",
+                      G_CALLBACK (gtk_main_quit),
                       NULL);
-  gtk_signal_connect (GTK_OBJECT (sleep_idle_spin), "value-changed",
-                      GTK_SIGNAL_FUNC (on_sleep_idle_spin_changed),
+  g_signal_connect (G_OBJECT (sleep_idle_spin), "value-changed",
+                      G_CALLBACK (on_sleep_idle_spin_changed),
                       ISconf);
 					  
-  gtk_signal_connect (GTK_OBJECT (sleep_idle_spin), "focus_out_event",
-                      GTK_SIGNAL_FUNC (on_sleep_idle_spin_focus_out_event),
+  g_signal_connect (G_OBJECT (sleep_idle_spin), "focus_out_event",
+                      G_CALLBACK (on_sleep_idle_spin_focus_out_event),
                       ISconf);
-  gtk_signal_connect (GTK_OBJECT (sleep_enable), "toggled",
-                      GTK_SIGNAL_FUNC (AS_checked),
+  g_signal_connect (G_OBJECT (sleep_enable), "toggled",
+                      G_CALLBACK (AS_checked),
                       ISconf);
-  gtk_signal_connect (GTK_OBJECT (dim_spin), "value-changed",
-                      GTK_SIGNAL_FUNC (on_dim_spin_changed),
+  g_signal_connect (G_OBJECT (dim_spin), "value-changed",
+                      G_CALLBACK (on_dim_spin_changed),
                       ISconf);
 					  
-  gtk_signal_connect (GTK_OBJECT (dim_spin), "focus_out_event",
-                      GTK_SIGNAL_FUNC (on_dim_spin_focus_out_event),
+  g_signal_connect (G_OBJECT (dim_spin), "focus_out_event",
+                      G_CALLBACK (on_dim_spin_focus_out_event),
                       ISconf);
 
-  gtk_signal_connect (GTK_OBJECT (dim_scale), "value-changed",
-                      GTK_SIGNAL_FUNC (on_dim_scale_changed),
+  g_signal_connect (G_OBJECT (dim_scale), "value-changed",
+                      G_CALLBACK (on_dim_scale_changed),
                       ISconf);
 					  
-  gtk_signal_connect (GTK_OBJECT (dim_scale), "focus_out_event",
-                      GTK_SIGNAL_FUNC (on_dim_scale_focus_out_event),
+  g_signal_connect (G_OBJECT (dim_scale), "focus_out_event",
+                      G_CALLBACK (on_dim_scale_focus_out_event),
                       (gpointer) blVal);
 					  
-  gtk_signal_connect (GTK_OBJECT (dim_enable), "toggled",
-                      GTK_SIGNAL_FUNC (AD_checked),
+  g_signal_connect (G_OBJECT (dim_enable), "toggled",
+                      G_CALLBACK (AD_checked),
                       ISconf);
-  gtk_signal_connect (GTK_OBJECT (sleep_cpu), "toggled",
-                      GTK_SIGNAL_FUNC (cpu_checked),
+  g_signal_connect (G_OBJECT (sleep_cpu), "toggled",
+                      G_CALLBACK (cpu_checked),
                       ISconf);
-  gtk_signal_connect (GTK_OBJECT (sleep_cpu_spin), "changed",
-                      GTK_SIGNAL_FUNC (on_sleep_cpu_spin_changed),
+  g_signal_connect (G_OBJECT (sleep_cpu_spin), "changed",
+                      G_CALLBACK (on_sleep_cpu_spin_changed),
                       ISconf);
-  gtk_signal_connect (GTK_OBJECT (sleep_cpu_spin), "focus_out_event",
-                      GTK_SIGNAL_FUNC (on_sleep_cpu_spin_focus_out_event),
+  g_signal_connect (G_OBJECT (sleep_cpu_spin), "focus_out_event",
+                      G_CALLBACK (on_sleep_cpu_spin_focus_out_event),
                       ISconf);
-  gtk_signal_connect (GTK_OBJECT (sleep_apm), "toggled",
-                      GTK_SIGNAL_FUNC (on_sleep_apm_toggled),
+  g_signal_connect (G_OBJECT (sleep_apm), "toggled",
+                      G_CALLBACK (on_sleep_apm_toggled),
                       ISconf);
-  gtk_signal_connect (GTK_OBJECT (sleep_probe_irq), "toggled",
-                      GTK_SIGNAL_FUNC (on_sleep_probe_irq_toggled),
+  g_signal_connect (G_OBJECT (sleep_probe_irq), "toggled",
+                      G_CALLBACK (on_sleep_probe_irq_toggled),
                       ISconf);
-  gtk_signal_connect (GTK_OBJECT (dim_scale), "focus_out_event",
-                      GTK_SIGNAL_FUNC (on_dim_scale_focus_out_event),
+  g_signal_connect (G_OBJECT (dim_scale), "focus_out_event",
+                      G_CALLBACK (on_dim_scale_focus_out_event),
                       (gpointer)blVal);
-  gtk_object_set_data (GTK_OBJECT (GPE_Config_Sleep), "tooltips", tooltips);
+  g_object_set_data (G_OBJECT (GPE_Config_Sleep), "tooltips", tooltips);
 
   return GPE_Config_Sleep;
 }

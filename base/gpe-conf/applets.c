@@ -344,23 +344,24 @@ ask_user_a_file (char *path, char *prompt,
 		GTK_WINDOW (fileselection1)->type = GTK_WINDOW_TOPLEVEL;
 
 		gtk_widget_show (ok_button1);
-		gtk_signal_connect (GTK_OBJECT (ok_button1), "clicked",
-				    GTK_SIGNAL_FUNC (select_fs),
-				    (gpointer) s);
+		g_signal_connect (G_OBJECT (ok_button1), "clicked",
+		                  G_CALLBACK (select_fs),
+		                  (gpointer) s);
 
 		gtk_widget_show (cancel_button1);
-		gtk_signal_connect (GTK_OBJECT (cancel_button1), "clicked",
-				    GTK_SIGNAL_FUNC (cancel_fs),
-				    (gpointer) s);
+		g_signal_connect (G_OBJECT (cancel_button1), "clicked",
+		                  G_CALLBACK (cancel_fs),
+		                  (gpointer) s);
 
-		gtk_signal_connect (GTK_OBJECT (s->fs), "destroy", (GtkSignalFunc) freedata, (gpointer) s);	// in case of destruction by close (X) button
+		g_signal_connect (G_OBJECT (s->fs), "destroy", G_CALLBACK(freedata),
+                          (gpointer) s);	// in case of destruction by close (X) button
 
-		g_signal_connect_swapped (GTK_OBJECT (ok_button1),
+		g_signal_connect_swapped (G_OBJECT (ok_button1),
 					  "clicked",
 					  G_CALLBACK (gtk_widget_destroy),
 					  (gpointer) s->fs);
 
-		g_signal_connect_swapped (GTK_OBJECT (cancel_button1),
+		g_signal_connect_swapped (G_OBJECT (cancel_button1),
 					  "clicked",
 					  G_CALLBACK (gtk_widget_destroy),
 					  (gpointer) s->fs);

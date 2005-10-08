@@ -250,30 +250,24 @@ GtkWidget *screen_Build_Objects()
                     (GtkAttachOptions) (table_attach_right_col_y), 0, gpe_boxspacing);
 
 
-  gtk_signal_connect (GTK_OBJECT (adjLight), "value_changed",
-                      GTK_SIGNAL_FUNC (on_brightness_hscale_draw),
-                      NULL);
+  g_signal_connect (G_OBJECT (adjLight), "value_changed",
+                    G_CALLBACK (on_brightness_hscale_draw), NULL);
 		  
-/*  gtk_signal_connect (GTK_OBJECT (self.screensaver), "format-value",
-                      GTK_SIGNAL_FUNC (change_screen_saver_label),
-                      NULL);
-*/
 #ifndef DISABLE_XRANDR
-  gtk_signal_connect (GTK_OBJECT (gtk_option_menu_get_menu(GTK_OPTION_MENU (self.rotation))), "selection-done",
-                      GTK_SIGNAL_FUNC (on_rotation_entry_changed),
-                      NULL);
+  g_signal_connect (G_OBJECT (gtk_option_menu_get_menu(GTK_OPTION_MENU (self.rotation))), "selection-done",
+                    G_CALLBACK (on_rotation_entry_changed),
+                    NULL);
 #endif
-  gtk_signal_connect (GTK_OBJECT (self.calibrate), "clicked",
-                      GTK_SIGNAL_FUNC (on_calibrate_button_clicked),
-                      NULL);
+  g_signal_connect (G_OBJECT (self.calibrate), "clicked",
+                    G_CALLBACK (on_calibrate_button_clicked),
+                    NULL);
   
   initval.brightness = get_brightness();
 #ifndef DISABLE_XRANDR
   initval.orientation = get_rotation();
 #endif    
-/*  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (self.screensaverbt1), ss_sec ? TRUE : FALSE);
-*/
-  gtk_timeout_add(2000,(GtkFunction)on_light_check,(gpointer)adjLight);
+
+  g_timeout_add(2000, (GSourceFunc)on_light_check, (gpointer)adjLight);
     
   initialising = 0;
 

@@ -247,7 +247,7 @@ Keyboard_Build_Objects (void)
 	gtk_container_add(GTK_CONTAINER(vp), table);
 	gtk_container_add(GTK_CONTAINER(sw), vp);
 	
-	gtk_object_set_data (GTK_OBJECT (table), "tooltips", tooltips);
+	g_object_set_data (G_OBJECT (table), "tooltips", tooltips);
 	gtk_tooltips_set_tip (tooltips, table, 
 	                      _("External keyboard configuration."), NULL);
 

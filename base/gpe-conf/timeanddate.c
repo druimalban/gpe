@@ -512,7 +512,7 @@ GtkWidget *Time_Build_Objects(gboolean nonroot)
 	  
 	  gtk_notebook_append_page(GTK_NOTEBOOK(notebook),self.categories,label);
 	  
-	  gtk_object_set_data(GTK_OBJECT(notebook),"tooltips",tooltips);
+	  g_object_set_data(G_OBJECT(notebook), "tooltips", tooltips);
 	  
 	  gtk_container_set_border_width (GTK_CONTAINER (self.categories), 0);
 	
@@ -576,8 +576,8 @@ GtkWidget *Time_Build_Objects(gboolean nonroot)
 	  gtk_tooltips_set_tip (tooltips, self.ntpserver, _("Select the timeserver to use to set the clock."), NULL);
 	
 	  self.internet = gtk_button_new_with_label(_("Get time from network"));
-	  gtk_signal_connect (GTK_OBJECT(self.internet), "clicked",
-				  (GtkSignalFunc) GetInternetTime, NULL);
+	  g_signal_connect (G_OBJECT(self.internet), "clicked",
+				  G_CALLBACK(GetInternetTime), NULL);
 	  gtk_widget_set_sensitive(self.internet,is_network_up());
 	  
 	  gtk_table_attach (GTK_TABLE (table), self.internet, 0, 3, 6, 7,

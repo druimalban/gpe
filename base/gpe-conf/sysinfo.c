@@ -87,13 +87,13 @@ t_deviceinfo;
 int
 get_flash_size()
 {
-	char **strv;
-	int len = 0;
+	gchar **strv;
+	guint len = 0;
 	GError *err = NULL;
-	int i = 0;
-	char *str = NULL;
-	int result = 0;
-	int v = 0;
+	gint i = 0;
+	gchar *str = NULL;
+	gint result = 0;
+	gint v = 0;
 	
 	/* read mtd info */
 	i=0;
@@ -162,11 +162,11 @@ get_device_info()
 	t_deviceinfo result;
 	struct utsname uinfo;
 #ifdef __arm__	
-	char **strv;
-	int len = 0;
+	gchar **strv;
+	guint len = 0;
 	GError *err = NULL;
-	int i = 0;
-	char *str = NULL;
+	gint i = 0;
+	gchar *str = NULL;
 #endif	
 	result.mach = M_OTHER;
 	result.model = NULL;
@@ -265,9 +265,9 @@ get_device_info()
 char *
 get_distribution_version()
 {
-	char *result = NULL;
-	char *tmp = NULL;
-	int len = 0;
+	gchar *result = NULL;
+	gchar *tmp = NULL;
+	guint len = 0;
 	GError *err = NULL;
 	
 	/* check for Familiar */
@@ -311,9 +311,9 @@ get_distribution_version()
 char *
 get_distribution_time()
 {
-	char *result = NULL;
-	char *tmp = NULL;
-	int len = 0;
+	gchar *result = NULL;
+	gchar *tmp = NULL;
+	guint len = 0;
 	GError *err = NULL;
 
 	/* Familiar */

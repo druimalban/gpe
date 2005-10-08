@@ -330,9 +330,9 @@ GtkWidget *Ownerinfo_Build_Objects()
   photo = gpe_create_pixmap (table, ownerphotofile, IMG_WIDTH, IMG_WIDTH);
   gtk_container_add (GTK_CONTAINER (button), photo);
 
-  gtk_signal_connect (GTK_OBJECT (button), "clicked",
-                      GTK_SIGNAL_FUNC (choose_photofile),
-                      NULL);
+  g_signal_connect (G_OBJECT (button), "clicked",
+                    G_CALLBACK (choose_photofile),
+                    NULL);
 
   /* ------------------------------------------------------------------------ */
   /* make the labels grey: */

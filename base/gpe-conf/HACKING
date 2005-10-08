@@ -9,15 +9,16 @@ You are welcome to participate at gpe and gpe-conf.
 
 -> What is missing?
 
-* Change application GUI to look like a GPE application.
 * Adaption to other hardware platforms than iPAQ. 
   - Button configuration files for several platforms.
 
 
 * Add config wizzard to network config tool.
 * Change date/time setup tool to use timezone definition files.
-* Fix proxy settup to work for all browsers and ipkg.
 * Add translation support to definition files.
+
+* Introduce an easy to use API for applications to retrieve settings instantly.
+  e.g. proxy changes.
 
 -> Here are some instruction to add a new module (Applet) to gpe-conf.
 

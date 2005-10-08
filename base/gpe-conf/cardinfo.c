@@ -1,7 +1,7 @@
 /*
  * gpe-conf
  *
- * Copyright (C) 2003  Florian Boor <florian.boor@kernelconcepts.de>
+ * Copyright (C) 2003 - 2005  Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -148,7 +148,7 @@ save_config (char *config, int socket)
 {
 	gchar *content, *tmpval;
 	gchar **lines = NULL;
-	gint length;
+	guint length;
 	gchar *delim = NULL;
 	FILE *fnew;
 	gint i = 0;
@@ -1136,8 +1136,8 @@ dialog_driver_response (GtkDialog * dialog, gint response, gpointer param)
 
 	if (response == GTK_RESPONSE_ACCEPT)
 	{
-		eDriver = gtk_object_get_data (GTK_OBJECT (dialog), "driver");
-		ident = gtk_object_get_data (GTK_OBJECT (dialog), "ident");
+		eDriver = g_object_get_data (G_OBJECT (dialog), "driver");
+		ident = g_object_get_data (G_OBJECT (dialog), "ident");
 
 		buf = g_strsplit (ident, "\n", 4);
 		if (buf)
@@ -1249,12 +1249,12 @@ do_driver_dialog (GtkWidget * parent_button)
 	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (w)->vbox), l, FALSE, TRUE,
 			    gpe_get_boxspacing ());
 
-	gtk_object_set_data (GTK_OBJECT (w), "ident", identmsg);
-	gtk_object_set_data (GTK_OBJECT (w), "driver", GTK_COMBO (cb)->entry);
+	g_object_set_data (G_OBJECT (w), "ident", identmsg);
+	g_object_set_data (G_OBJECT (w), "driver", GTK_COMBO (cb)->entry);
 
 	/* connect response, submit socket as param */
-	g_signal_connect (GTK_OBJECT (w), "response",
-			  (void *) dialog_driver_response, (void *) i);
+	g_signal_connect (G_OBJECT (w), "response",
+			  G_CALLBACK(dialog_driver_response), (void *) i);
 
 	gtk_dialog_run (GTK_DIALOG (w));
 }
@@ -1329,7 +1329,7 @@ Cardinfo_Build_Objects (gboolean ignore, GtkWidget* toolbar)
 	
 	notebook = gtk_notebook_new ();
 	gtk_container_set_border_width (GTK_CONTAINER (notebook), 0);
-	gtk_object_set_data (GTK_OBJECT (notebook), "tooltips", tooltips);
+	g_object_set_data (G_OBJECT (notebook), "tooltips", tooltips);
 
 	/* toolbar and packing */
 	gtk_box_pack_start (GTK_BOX (bookbox), notebook, TRUE, TRUE, 0);

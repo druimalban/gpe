@@ -419,7 +419,7 @@ Serial_Build_Objects (void)
 	notebook = gtk_notebook_new ();
 	gtk_container_set_border_width (GTK_CONTAINER (notebook),
 					gpe_get_border ());
-	gtk_object_set_data (GTK_OBJECT (notebook), "tooltips", tooltips);
+	g_object_set_data (G_OBJECT (notebook), "tooltips", tooltips);
 
 	/* port settings */
 

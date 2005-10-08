@@ -42,7 +42,7 @@ void Kbd_Save ()
 	while (l)
 	{
 		char *file;
-		file = gtk_object_get_data (GTK_OBJECT(l->data), "file");
+		file = g_object_get_data (G_OBJECT(l->data), "file");
 		if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(l->data)))
 		{
 			gchar *fn;
@@ -97,7 +97,7 @@ GtkWidget *setup_kb (GtkWidget *box, GtkWidget *opt, char *name, char *file)
 	else
 		radio = gtk_radio_button_new_with_label (NULL, name);
 
-	gtk_object_set_data (GTK_OBJECT(radio), "file", g_strdup(file));
+	g_object_set_data (G_OBJECT(radio), "file", g_strdup(file));
 
 	gtk_box_pack_start (GTK_BOX(box), radio, FALSE, FALSE, 0);
 

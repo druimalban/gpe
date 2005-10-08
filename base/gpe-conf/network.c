@@ -59,7 +59,7 @@
 extern NWInterface_t *iflist;
 extern gint iflen;
 extern GtkWidget *mainw;
-GtkWidget *table;
+GtkWidget *notebook;
 GtkWidget *create_nwstatic_widgets (NWInterface_t iface);
 GtkWidget *create_nwdhcp_widgets (NWInterface_t iface);
 GtkWidget *create_nwppp_widgets (NWInterface_t iface);
@@ -113,10 +113,10 @@ show_current_config (GtkWidget * button)
 	gtk_label_set_selectable(GTK_LABEL(label),TRUE);
 	gtk_widget_show (label);
 	gtk_container_add (GTK_CONTAINER (GTK_DIALOG (w)->vbox), label);
-	g_signal_connect_swapped (GTK_OBJECT (w),
+	g_signal_connect_swapped (G_OBJECT (w),
 				  "response",
 				  G_CALLBACK (gtk_widget_destroy),
-				  GTK_OBJECT (w));
+				  G_OBJECT (w));
 
 	gtk_dialog_run (GTK_DIALOG (w));
 
@@ -297,16 +297,16 @@ add_interface (GtkWidget * widget, gpointer d)
 		if (ctable)
 		{
 			label = gtk_label_new (iflist[i].name);
-			iflist[i].uipos = gtk_notebook_append_page (GTK_NOTEBOOK (table),
+			iflist[i].uipos = gtk_notebook_append_page (GTK_NOTEBOOK (notebook),
 			                                            GTK_WIDGET (ctable),
 			                                            label);
-			gtk_widget_show_all (table);
+			gtk_widget_show_all (notebook);
 			g_object_set_data(G_OBJECT(ctable), "ifnr", (gpointer)i);
 		}
 		else
 			iflist[i].uipos = -1;
 		
-		gtk_notebook_set_current_page (GTK_NOTEBOOK (table), -1);
+		gtk_notebook_set_current_page (GTK_NOTEBOOK (notebook), -1);
 	}
 }
 
@@ -316,20 +316,20 @@ remove_interface (GtkWidget * widget, gpointer d)
 	G_CONST_RETURN gchar *ifname;
 	GtkWidget *page;
 
-	page = gtk_notebook_get_nth_page (GTK_NOTEBOOK (table),
+	page = gtk_notebook_get_nth_page (GTK_NOTEBOOK (notebook),
 					  gtk_notebook_get_current_page
-					  (GTK_NOTEBOOK (table)));
+					  (GTK_NOTEBOOK (notebook)));
 	if (!page) 
 		return;
-	ifname = gtk_notebook_get_tab_label_text (GTK_NOTEBOOK (table), page);
+	ifname = gtk_notebook_get_tab_label_text (GTK_NOTEBOOK (notebook), page);
 	if (gpe_question_ask
 	    (_("Do you want to delete this interface?"), _("Question"),
 	     "question", "!gtk-no", NULL, "!gtk-yes", NULL, NULL))
 	{
 		iflist[get_section_nr (ifname)].status = NWSTATE_REMOVED;
-		gtk_notebook_remove_page (GTK_NOTEBOOK (table),
+		gtk_notebook_remove_page (GTK_NOTEBOOK (notebook),
 					  gtk_notebook_get_current_page
-					  (GTK_NOTEBOOK (table)));
+					  (GTK_NOTEBOOK (notebook)));
 	}
 }
 
@@ -341,8 +341,8 @@ changed_nwtype (GtkToggleButton * togglebutton, gpointer user_data)
 	gchar wname[100];
 	gint row;
 	
-	page = gtk_notebook_get_nth_page(GTK_NOTEBOOK (table), 
-	                                 gtk_notebook_get_current_page (GTK_NOTEBOOK (table)));
+	page = gtk_notebook_get_nth_page(GTK_NOTEBOOK (notebook), 
+	                                 gtk_notebook_get_current_page (GTK_NOTEBOOK (notebook)));
 	row = (gint)g_object_get_data(G_OBJECT(page), "ifnr");
 
 	if (!gtk_toggle_button_get_active (togglebutton))
@@ -351,7 +351,7 @@ changed_nwtype (GtkToggleButton * togglebutton, gpointer user_data)
 	// look who called us...
 	strcpy (wname, "static");
 	strcat (wname, iflist[row].name);
-	if (gtk_object_get_data (GTK_OBJECT (table), wname) == togglebutton)
+	if (g_object_get_data (G_OBJECT (notebook), wname) == togglebutton)
 	{
 		iflist[row].isstatic = TRUE;
 		iflist[row].isdhcp = FALSE;
@@ -359,7 +359,7 @@ changed_nwtype (GtkToggleButton * togglebutton, gpointer user_data)
 	}
 	strcpy (wname, "dhcp");
 	strcat (wname, iflist[row].name);
-	if (gtk_object_get_data (GTK_OBJECT (table), wname) == togglebutton)
+	if (g_object_get_data (G_OBJECT (notebook), wname) == togglebutton)
 	{
 		iflist[row].isstatic = FALSE;
 		iflist[row].isdhcp = TRUE;
@@ -367,7 +367,7 @@ changed_nwtype (GtkToggleButton * togglebutton, gpointer user_data)
 	}
 	strcpy (wname, "ppp");
 	strcat (wname, iflist[row].name);
-	if (gtk_object_get_data (GTK_OBJECT (table), wname) == togglebutton)
+	if (g_object_get_data (G_OBJECT (notebook), wname) == togglebutton)
 	{
 		iflist[row].isstatic = FALSE;
 		iflist[row].isdhcp = FALSE;
@@ -384,14 +384,14 @@ changed_nwtype (GtkToggleButton * togglebutton, gpointer user_data)
 	if (ctable)
 	{
 		label = gtk_label_new (iflist[row].name);
-		gtk_notebook_remove_page (GTK_NOTEBOOK (table),
+		gtk_notebook_remove_page (GTK_NOTEBOOK (notebook),
 					  gtk_notebook_get_current_page
-					  (GTK_NOTEBOOK (table)));
-		gtk_notebook_insert_page (GTK_NOTEBOOK (table),
+					  (GTK_NOTEBOOK (notebook)));
+		gtk_notebook_insert_page (GTK_NOTEBOOK (notebook),
 					  GTK_WIDGET (ctable), label,
 					  iflist[row].uipos);
-		gtk_widget_show_all (table);
-		gtk_notebook_set_page (GTK_NOTEBOOK (table),
+		gtk_widget_show_all (notebook);
+		gtk_notebook_set_page (GTK_NOTEBOOK (notebook),
 				      iflist[row].uipos);
 		g_object_set_data(G_OBJECT(ctable), "ifnr", (gpointer)row);
 	}
@@ -421,8 +421,8 @@ create_editable_entry (NWInterface_t * piface, GtkWidget * attach_to,
 	strcat (wname, piface->name);
 	gtk_widget_set_name (GTK_WIDGET (label), wname);
 	gtk_widget_ref (label);
-	gtk_object_remove_data (GTK_OBJECT (table), wname);
-	gtk_object_set_data_full (GTK_OBJECT (table), wname, label,
+	g_object_steal_data (G_OBJECT (notebook), wname);
+	g_object_set_data_full (G_OBJECT (notebook), wname, label,
 				  (GtkDestroyNotify) gtk_widget_unref);
 	gtk_entry_set_text (GTK_ENTRY (label), wdata);
 	gtk_entry_set_editable (GTK_ENTRY (label), TRUE);
@@ -451,8 +451,8 @@ create_editable_entry_simple (GtkWidget * attach_to, gchar * name,
 	gtk_tooltips_set_tip (tooltips, label, tooltip, NULL);
 	gtk_widget_set_name (GTK_WIDGET (label), name);
 	gtk_widget_ref (label);
-	gtk_object_remove_data (GTK_OBJECT (table), name);
-	gtk_object_set_data_full (GTK_OBJECT (table), name, label,
+	g_object_steal_data (G_OBJECT (notebook), name);
+	g_object_set_data_full (G_OBJECT (notebook), name, label,
 				  (GtkDestroyNotify) gtk_widget_unref);
 	if (wdata)
 		gtk_entry_set_text (GTK_ENTRY (label), wdata);
@@ -634,8 +634,8 @@ show_wificonfig(GtkWidget *window, NWInterface_t *iface)
 	gtk_tooltips_set_tip (tooltips, label, help_essid, NULL);
 	gtk_widget_set_name (GTK_WIDGET (label), "essid");
 	gtk_widget_ref (label);
-	gtk_object_remove_data (GTK_OBJECT (table), "essid");
-	gtk_object_set_data_full (GTK_OBJECT (table), "essid" , label,
+	g_object_steal_data (G_OBJECT (notebook), "essid");
+	g_object_set_data_full (G_OBJECT (notebook), "essid" , label,
 				  (GtkDestroyNotify) gtk_widget_unref);
 	
 	gtk_entry_set_text (GTK_ENTRY (label), iface->essid);
@@ -660,7 +660,7 @@ show_wificonfig(GtkWidget *window, NWInterface_t *iface)
 
 	gtk_widget_set_name (GTK_WIDGET (label), "mode_managed");
 	gtk_widget_ref (label);
-	gtk_object_set_data_full (GTK_OBJECT (table), "mode_managed", label,
+	g_object_set_data_full (G_OBJECT (notebook), "mode_managed", label,
 				  (GtkDestroyNotify) gtk_widget_unref);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (label),
 				      iface->mode == MODE_MANAGED ? TRUE : FALSE);
@@ -672,7 +672,7 @@ show_wificonfig(GtkWidget *window, NWInterface_t *iface)
 
 	gtk_widget_set_name (GTK_WIDGET (label), "mode_adhoc");
 	gtk_widget_ref (label);
-	gtk_object_set_data_full (GTK_OBJECT (table), "mode_adhoc", label,
+	g_object_set_data_full (G_OBJECT (notebook), "mode_adhoc", label,
 				  (GtkDestroyNotify) gtk_widget_unref);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (label),
 				      iface->mode != MODE_MANAGED ? TRUE : FALSE);
@@ -695,8 +695,8 @@ show_wificonfig(GtkWidget *window, NWInterface_t *iface)
 	gtk_tooltips_set_tip (tooltips, label, help_essid, NULL);
 	gtk_widget_set_name (GTK_WIDGET (label), "channel");
 	gtk_widget_ref (label);
-	gtk_object_remove_data (GTK_OBJECT (table), "channel");
-	gtk_object_set_data_full (GTK_OBJECT (table), "channel" , label,
+	g_object_steal_data (G_OBJECT (notebook), "channel");
+	g_object_set_data_full (G_OBJECT (notebook), "channel" , label,
 				  (GtkDestroyNotify) gtk_widget_unref);
 	gtk_entry_set_text (GTK_ENTRY (label), iface->channel);
 	gtk_entry_set_editable (GTK_ENTRY (label), TRUE);
@@ -720,7 +720,7 @@ show_wificonfig(GtkWidget *window, NWInterface_t *iface)
 
 	gtk_widget_set_name (GTK_WIDGET (label), "enc_off");
 	gtk_widget_ref (label);
-	gtk_object_set_data_full (GTK_OBJECT (table), "enc_off", label,
+	g_object_set_data_full (G_OBJECT (notebook), "enc_off", label,
 				  (GtkDestroyNotify) gtk_widget_unref);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (label),
 				      iface->encmode == ENC_OFF ? TRUE : FALSE);
@@ -732,7 +732,7 @@ show_wificonfig(GtkWidget *window, NWInterface_t *iface)
 
 	gtk_widget_set_name (GTK_WIDGET (label), "enc_open");
 	gtk_widget_ref (label);
-	gtk_object_set_data_full (GTK_OBJECT (table), "enc_open", label,
+	g_object_set_data_full (G_OBJECT (notebook), "enc_open", label,
 				  (GtkDestroyNotify) gtk_widget_unref);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (label),
 				      iface->encmode == ENC_OPEN ? TRUE : FALSE);
@@ -744,7 +744,7 @@ show_wificonfig(GtkWidget *window, NWInterface_t *iface)
 
 	gtk_widget_set_name (GTK_WIDGET (label), "enc_restricted");
 	gtk_widget_ref (label);
-	gtk_object_set_data_full (GTK_OBJECT (table), "enc_restricted", label,
+	g_object_set_data_full (G_OBJECT (notebook), "enc_restricted", label,
 				  (GtkDestroyNotify) gtk_widget_unref);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (label),
 				      iface->encmode == ENC_RESTRICTED ? TRUE : FALSE);
@@ -759,7 +759,7 @@ show_wificonfig(GtkWidget *window, NWInterface_t *iface)
 	gtk_tooltips_set_tip (tooltips, rb, help_selectkey, NULL);
 	gtk_widget_set_name (GTK_WIDGET (rb), "key1select");
 	gtk_widget_ref (rb);
-	gtk_object_set_data_full (GTK_OBJECT (table), "key1select", rb,
+	g_object_set_data_full (G_OBJECT (notebook), "key1select", rb,
 				  (GtkDestroyNotify) gtk_widget_unref);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (rb),
 				      iface->keynr == 1 ? TRUE : FALSE);
@@ -772,8 +772,8 @@ show_wificonfig(GtkWidget *window, NWInterface_t *iface)
 	gtk_tooltips_set_tip (tooltips, label, help_wepkey, NULL);
 	gtk_widget_set_name (GTK_WIDGET (label), "key1");
 	gtk_widget_ref (label);
-	gtk_object_remove_data (GTK_OBJECT (table), "key1");
-	gtk_object_set_data_full (GTK_OBJECT (table), "key1" , label,
+	g_object_steal_data (G_OBJECT (notebook), "key1");
+	g_object_set_data_full (G_OBJECT (notebook), "key1" , label,
 				  (GtkDestroyNotify) gtk_widget_unref);
 	
 	gtk_entry_set_text (GTK_ENTRY (label), key2text(iface->key[0]));
@@ -787,7 +787,7 @@ show_wificonfig(GtkWidget *window, NWInterface_t *iface)
 	gtk_tooltips_set_tip (tooltips, rb, help_selectkey, NULL);
 	gtk_widget_set_name (GTK_WIDGET (rb), "key2select");
 	gtk_widget_ref (rb);
-	gtk_object_set_data_full (GTK_OBJECT (table), "key2select", rb,
+	g_object_set_data_full (G_OBJECT (notebook), "key2select", rb,
 				  (GtkDestroyNotify) gtk_widget_unref);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (rb),
 				      iface->keynr == 2 ? TRUE : FALSE);
@@ -800,8 +800,8 @@ show_wificonfig(GtkWidget *window, NWInterface_t *iface)
 	gtk_tooltips_set_tip (tooltips, label, help_wepkey, NULL);
 	gtk_widget_set_name (GTK_WIDGET (label), "key2");
 	gtk_widget_ref (label);
-	gtk_object_remove_data (GTK_OBJECT (table), "key2");
-	gtk_object_set_data_full (GTK_OBJECT (table), "key2" , label,
+	g_object_steal_data (G_OBJECT (notebook), "key2");
+	g_object_set_data_full (G_OBJECT (notebook), "key2" , label,
 				  (GtkDestroyNotify) gtk_widget_unref);
 	
 	gtk_entry_set_text (GTK_ENTRY (label), key2text(iface->key[1]));
@@ -815,7 +815,7 @@ show_wificonfig(GtkWidget *window, NWInterface_t *iface)
 	gtk_tooltips_set_tip (tooltips, rb, help_selectkey, NULL);
 	gtk_widget_set_name (GTK_WIDGET (rb), "key3select");
 	gtk_widget_ref (rb);
-	gtk_object_set_data_full (GTK_OBJECT (table), "key3select", rb,
+	g_object_set_data_full (G_OBJECT (notebook), "key3select", rb,
 				  (GtkDestroyNotify) gtk_widget_unref);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (rb),
 				      iface->keynr == 3 ? TRUE : FALSE);
@@ -828,8 +828,8 @@ show_wificonfig(GtkWidget *window, NWInterface_t *iface)
 	gtk_tooltips_set_tip (tooltips, label, help_wepkey, NULL);
 	gtk_widget_set_name (GTK_WIDGET (label), "key3");
 	gtk_widget_ref (label);
-	gtk_object_remove_data (GTK_OBJECT (table), "key3");
-	gtk_object_set_data_full (GTK_OBJECT (table), "key3" , label,
+	g_object_steal_data (G_OBJECT (notebook), "key3");
+	g_object_set_data_full (G_OBJECT (notebook), "key3" , label,
 				  (GtkDestroyNotify) gtk_widget_unref);
 	
 	gtk_entry_set_text (GTK_ENTRY (label), key2text(iface->key[2]));
@@ -845,7 +845,7 @@ show_wificonfig(GtkWidget *window, NWInterface_t *iface)
 		gtk_tooltips_set_tip (tooltips, rb, help_selectkey, NULL);
 		gtk_widget_set_name (GTK_WIDGET (rb), "key4select");
 		gtk_widget_ref (rb);
-		gtk_object_set_data_full (GTK_OBJECT (table), "key4select", rb,
+		g_object_set_data_full (G_OBJECT (notebook), "key4select", rb,
 					  (GtkDestroyNotify) gtk_widget_unref);
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (rb),
 						  iface->keynr == 4 ? TRUE : FALSE);
@@ -859,8 +859,8 @@ show_wificonfig(GtkWidget *window, NWInterface_t *iface)
 		gtk_tooltips_set_tip (tooltips, label, help_wepkey, NULL);
 		gtk_widget_set_name (GTK_WIDGET (label), "key4");
 		gtk_widget_ref (label);
-		gtk_object_remove_data (GTK_OBJECT (table), "key4");
-		gtk_object_set_data_full (GTK_OBJECT (table), "key4" , label,
+		g_object_steal_data (G_OBJECT (notebook), "key4");
+		g_object_set_data_full (G_OBJECT (notebook), "key4" , label,
 					  (GtkDestroyNotify) gtk_widget_unref);
 		
 		gtk_entry_set_text (GTK_ENTRY (label), key2text(iface->key[3]));
@@ -876,51 +876,51 @@ show_wificonfig(GtkWidget *window, NWInterface_t *iface)
 	
 	if (response == GTK_RESPONSE_OK)
 	{
-		label = gtk_object_get_data (GTK_OBJECT (table), "essid");
+		label = g_object_get_data (G_OBJECT (notebook), "essid");
 		strncpy(iface->essid, gtk_editable_get_chars(GTK_EDITABLE (label), 0, -1), 31);
 		
-		label = gtk_object_get_data (GTK_OBJECT (table), "channel");
+		label = g_object_get_data (G_OBJECT (notebook), "channel");
 		strncpy(iface->channel, gtk_editable_get_chars(GTK_EDITABLE (label), 0, -1), 31);		
-		label = gtk_object_get_data (GTK_OBJECT (table), "key1");
+		label = g_object_get_data (G_OBJECT (notebook), "key1");
 		strncpy(iface->key[0], text2key(gtk_editable_get_chars(GTK_EDITABLE (label), 0, -1), tmp_key), 127);
 		
-		label = gtk_object_get_data (GTK_OBJECT (table), "key2");
+		label = g_object_get_data (G_OBJECT (notebook), "key2");
 		strncpy(iface->key[1], text2key(gtk_editable_get_chars(GTK_EDITABLE (label), 0, -1), tmp_key), 127);
 		
-		label = gtk_object_get_data (GTK_OBJECT (table), "key3");
+		label = g_object_get_data (G_OBJECT (notebook), "key3");
 		strncpy(iface->key[2], text2key(gtk_editable_get_chars(GTK_EDITABLE (label), 0, -1), tmp_key), 127);
 		
 		if (gdk_screen_height() > 400)
 		{		
-			label = gtk_object_get_data (GTK_OBJECT (table), "key4");
+			label = g_object_get_data (G_OBJECT (notebook), "key4");
 			strncpy(iface->key[3], text2key(gtk_editable_get_chars(GTK_EDITABLE (label), 0, -1), tmp_key), 127);
 		}
-		label = gtk_object_get_data (GTK_OBJECT (table), "mode_managed");
+		label = g_object_get_data (G_OBJECT (notebook), "mode_managed");
 		iface->mode = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON (label)) ? MODE_MANAGED : MODE_ADHOC;
 		
-		label = gtk_object_get_data (GTK_OBJECT (table), "enc_off");
+		label = g_object_get_data (G_OBJECT (notebook), "enc_off");
 		if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON (label)))
 		{
 			iface->encmode = ENC_OFF; 
 		} else 
 		{
-			label = gtk_object_get_data (GTK_OBJECT (table), "enc_open");
+			label = g_object_get_data (G_OBJECT (notebook), "enc_open");
 			iface->encmode = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON (label)) ? ENC_OPEN : ENC_RESTRICTED;
 		}
 		
-		label = gtk_object_get_data (GTK_OBJECT (table), "key1select");
+		label = g_object_get_data (G_OBJECT (notebook), "key1select");
 		if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON (label)))
 		{
 			iface->keynr = 1;
 		} else
 		{
-			label = gtk_object_get_data (GTK_OBJECT (table), "key2select");
+			label = g_object_get_data (G_OBJECT (notebook), "key2select");
 			if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON (label)))
 			{
 				iface->keynr = 2;
 			} else
 			{
-				label = gtk_object_get_data (GTK_OBJECT (table), "key3select");
+				label = g_object_get_data (G_OBJECT (notebook), "key3select");
 				if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON (label)))
 				{
 					iface->keynr = 3;
@@ -943,8 +943,8 @@ changed_wifi (GtkToggleButton * togglebutton, gpointer user_data)
 	gchar wname[100];
 	gint ifnr;
 	
-	page = gtk_notebook_get_nth_page(GTK_NOTEBOOK (table), 
-	                                 gtk_notebook_get_current_page (GTK_NOTEBOOK (table)));
+	page = gtk_notebook_get_nth_page(GTK_NOTEBOOK (notebook), 
+	                                 gtk_notebook_get_current_page (GTK_NOTEBOOK (notebook)));
 	ifnr = (gint)g_object_get_data(G_OBJECT(page), "ifnr");
 
 	strcpy (wname, "wificonfig");
@@ -952,7 +952,7 @@ changed_wifi (GtkToggleButton * togglebutton, gpointer user_data)
 	
 	iflist[ifnr].iswireless = gtk_toggle_button_get_active(togglebutton);
 	
-	widget = gtk_object_get_data (GTK_OBJECT (togglebutton), wname);
+	widget = g_object_get_data (G_OBJECT (togglebutton), wname);
 	
 	gtk_widget_set_sensitive(widget, iflist[ifnr].iswireless);
 }
@@ -963,8 +963,8 @@ clicked_wificonfig (GtkButton *button, gpointer user_data)
 	GtkWidget *page;
 	gint ifnr;
 	
-	page = gtk_notebook_get_nth_page(GTK_NOTEBOOK (table), 
-	                                 gtk_notebook_get_current_page (GTK_NOTEBOOK (table)));
+	page = gtk_notebook_get_nth_page(GTK_NOTEBOOK (notebook), 
+	                                 gtk_notebook_get_current_page (GTK_NOTEBOOK (notebook)));
 	ifnr = (gint)g_object_get_data(G_OBJECT(page), "ifnr");
 
 	show_wificonfig(gtk_widget_get_toplevel(GTK_WIDGET(button)), &iflist[ifnr]);
@@ -1009,12 +1009,12 @@ create_nwstatic_widgets (NWInterface_t iface)
 	strcat (wname, iface.name);
 	gtk_widget_set_name (GTK_WIDGET (label), wname);
 	gtk_widget_ref (label);
-	gtk_object_set_data_full (GTK_OBJECT (table), wname, label,
+	g_object_set_data_full (G_OBJECT (notebook), wname, label,
 				  (GtkDestroyNotify) gtk_widget_unref);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (label),
 				      iface.isstatic);
-	gtk_signal_connect (GTK_OBJECT (label), "toggled",
-			    GTK_SIGNAL_FUNC (changed_nwtype), NULL);
+	g_signal_connect (G_OBJECT (label), "toggled",
+			    G_CALLBACK (changed_nwtype), NULL);
 	gtk_container_add (GTK_CONTAINER (container), label);
 
 	label = gtk_radio_button_new_with_label_from_widget (GTK_RADIO_BUTTON
@@ -1024,12 +1024,12 @@ create_nwstatic_widgets (NWInterface_t iface)
 	strcat (wname, iface.name);
 	gtk_widget_set_name (GTK_WIDGET (label), wname);
 	gtk_widget_ref (label);
-	gtk_object_set_data_full (GTK_OBJECT (table), wname, label,
+	g_object_set_data_full (G_OBJECT (notebook), wname, label,
 				  (GtkDestroyNotify) gtk_widget_unref);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (label),
 				      iface.isdhcp);
-	gtk_signal_connect (GTK_OBJECT (label), "toggled",
-			    GTK_SIGNAL_FUNC (changed_nwtype), NULL);
+	g_signal_connect (G_OBJECT (label), "toggled",
+			    G_CALLBACK (changed_nwtype), NULL);
 	gtk_container_add (GTK_CONTAINER (container), label);
 
 	label = gtk_radio_button_new_with_label_from_widget (GTK_RADIO_BUTTON
@@ -1039,11 +1039,11 @@ create_nwstatic_widgets (NWInterface_t iface)
 	strcat (wname, iface.name);
 	gtk_widget_set_name (GTK_WIDGET (label), wname);
 	gtk_widget_ref (label);
-	gtk_object_set_data_full (GTK_OBJECT (table), wname, label,
+	g_object_set_data_full (G_OBJECT (notebook), wname, label,
 				  (GtkDestroyNotify) gtk_widget_unref);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (label), iface.isppp);
-	gtk_signal_connect (GTK_OBJECT (label), "toggled",
-			    GTK_SIGNAL_FUNC (changed_nwtype), NULL);
+	g_signal_connect (G_OBJECT (label), "toggled",
+			    G_CALLBACK (changed_nwtype), NULL);
 	gtk_container_add (GTK_CONTAINER (container), label);
 
 
@@ -1092,12 +1092,12 @@ create_nwstatic_widgets (NWInterface_t iface)
 	strcat (wname, iface.name);
 	gtk_widget_set_name(label, wname);
 	
-	gtk_object_set_data_full (GTK_OBJECT (togglebutton), wname, label,
+	g_object_set_data_full (G_OBJECT (togglebutton), wname, label,
 				  (GtkDestroyNotify) gtk_widget_unref);
-	gtk_signal_connect (GTK_OBJECT (togglebutton), "toggled",
-			    GTK_SIGNAL_FUNC (changed_wifi), NULL);
-	gtk_signal_connect (GTK_OBJECT (label), "clicked", 
-			    GTK_SIGNAL_FUNC (clicked_wificonfig), NULL);
+	g_signal_connect (G_OBJECT (togglebutton), "toggled",
+			    G_CALLBACK (changed_wifi), NULL);
+	g_signal_connect (G_OBJECT (label), "clicked", 
+			    G_CALLBACK (clicked_wificonfig), NULL);
 	gtk_widget_ref (label);
 	gtk_tooltips_set_tip (tooltips, togglebutton, help_wifi, NULL);
 	gtk_tooltips_set_tip (tooltips, label, help_wificonfig, NULL);
@@ -1143,12 +1143,12 @@ create_nwdhcp_widgets (NWInterface_t iface)
 	strcat (wname, iface.name);
 	gtk_widget_set_name (GTK_WIDGET (label), wname);
 	gtk_widget_ref (label);
-	gtk_object_set_data_full (GTK_OBJECT (table), wname, label,
+	g_object_set_data_full (G_OBJECT (notebook), wname, label,
 				  (GtkDestroyNotify) gtk_widget_unref);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (label),
 				      iface.isstatic);
-	gtk_signal_connect (GTK_OBJECT (label), "toggled",
-			    GTK_SIGNAL_FUNC (changed_nwtype), NULL);
+	g_signal_connect (G_OBJECT (label), "toggled",
+			    G_CALLBACK (changed_nwtype), NULL);
 	gtk_container_add (GTK_CONTAINER (container), label);
 
 	label = gtk_radio_button_new_with_label_from_widget (GTK_RADIO_BUTTON
@@ -1158,12 +1158,12 @@ create_nwdhcp_widgets (NWInterface_t iface)
 	strcat (wname, iface.name);
 	gtk_widget_set_name (GTK_WIDGET (label), wname);
 	gtk_widget_ref (label);
-	gtk_object_set_data_full (GTK_OBJECT (table), wname, label,
+	g_object_set_data_full (G_OBJECT (notebook), wname, label,
 				  (GtkDestroyNotify) gtk_widget_unref);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (label),
 				      iface.isdhcp);
-	gtk_signal_connect (GTK_OBJECT (label), "toggled",
-			    GTK_SIGNAL_FUNC (changed_nwtype), NULL);
+	g_signal_connect (G_OBJECT (label), "toggled",
+			    G_CALLBACK (changed_nwtype), NULL);
 	gtk_container_add (GTK_CONTAINER (container), label);
 
 	label = gtk_radio_button_new_with_label_from_widget (GTK_RADIO_BUTTON
@@ -1173,11 +1173,11 @@ create_nwdhcp_widgets (NWInterface_t iface)
 	strcat (wname, iface.name);
 	gtk_widget_set_name (GTK_WIDGET (label), wname);
 	gtk_widget_ref (label);
-	gtk_object_set_data_full (GTK_OBJECT (table), wname, label,
+	g_object_set_data_full (G_OBJECT (notebook), wname, label,
 				  (GtkDestroyNotify) gtk_widget_unref);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (label), iface.isppp);
-	gtk_signal_connect (GTK_OBJECT (label), "toggled",
-			    GTK_SIGNAL_FUNC (changed_nwtype), NULL);
+	g_signal_connect (G_OBJECT (label), "toggled",
+			    G_CALLBACK (changed_nwtype), NULL);
 	gtk_container_add (GTK_CONTAINER (container), label);
 
 
@@ -1209,13 +1209,13 @@ create_nwdhcp_widgets (NWInterface_t iface)
 	strcat (wname, iface.name);
 	gtk_widget_set_name(label, wname);
 	
-	gtk_object_set_data_full (GTK_OBJECT (togglebutton), wname, label,
+	g_object_set_data_full (G_OBJECT (togglebutton), wname, label,
 				  (GtkDestroyNotify) gtk_widget_unref);
-	gtk_signal_connect (GTK_OBJECT (togglebutton), "toggled",
-			    GTK_SIGNAL_FUNC (changed_wifi), NULL);
+	g_signal_connect (G_OBJECT (togglebutton), "toggled",
+			    G_CALLBACK (changed_wifi), NULL);
 
-	gtk_signal_connect (GTK_OBJECT (label), "clicked", 
-			    GTK_SIGNAL_FUNC (clicked_wificonfig), NULL);
+	g_signal_connect (G_OBJECT (label), "clicked", 
+			    G_CALLBACK (clicked_wificonfig), NULL);
 
 	gtk_widget_ref (label);
 	gtk_tooltips_set_tip (tooltips, togglebutton, help_wifi, NULL);
@@ -1263,12 +1263,12 @@ create_nwppp_widgets (NWInterface_t iface)
 	strcat (wname, iface.name);
 	gtk_widget_set_name (GTK_WIDGET (label), wname);
 	gtk_widget_ref (label);
-	gtk_object_set_data_full (GTK_OBJECT (table), wname, label,
+	g_object_set_data_full (G_OBJECT (notebook), wname, label,
 				  (GtkDestroyNotify) gtk_widget_unref);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (label),
 				      iface.isstatic);
-	gtk_signal_connect (GTK_OBJECT (label), "toggled",
-			    GTK_SIGNAL_FUNC (changed_nwtype), NULL);
+	g_signal_connect (G_OBJECT (label), "toggled",
+			    G_CALLBACK (changed_nwtype), NULL);
 	gtk_container_add (GTK_CONTAINER (container), label);
 
 	label = gtk_radio_button_new_with_label_from_widget (GTK_RADIO_BUTTON
@@ -1278,12 +1278,12 @@ create_nwppp_widgets (NWInterface_t iface)
 	strcat (wname, iface.name);
 	gtk_widget_set_name (GTK_WIDGET (label), wname);
 	gtk_widget_ref (label);
-	gtk_object_set_data_full (GTK_OBJECT (table), wname, label,
+	g_object_set_data_full (G_OBJECT (notebook), wname, label,
 				  (GtkDestroyNotify) gtk_widget_unref);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (label),
 				      iface.isdhcp);
-	gtk_signal_connect (GTK_OBJECT (label), "toggled",
-			    GTK_SIGNAL_FUNC (changed_nwtype), NULL);
+	g_signal_connect (G_OBJECT (label), "toggled",
+			    G_CALLBACK (changed_nwtype), NULL);
 	gtk_container_add (GTK_CONTAINER (container), label);
 
 	label = gtk_radio_button_new_with_label_from_widget (GTK_RADIO_BUTTON
@@ -1293,11 +1293,11 @@ create_nwppp_widgets (NWInterface_t iface)
 	strcat (wname, iface.name);
 	gtk_widget_set_name (GTK_WIDGET (label), wname);
 	gtk_widget_ref (label);
-	gtk_object_set_data_full (GTK_OBJECT (table), wname, label,
+	g_object_set_data_full (G_OBJECT (notebook), wname, label,
 				  (GtkDestroyNotify) gtk_widget_unref);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (label), iface.isppp);
-	gtk_signal_connect (GTK_OBJECT (label), "toggled",
-			    GTK_SIGNAL_FUNC (changed_nwtype), NULL);
+	g_signal_connect (G_OBJECT (label), "toggled",
+			    G_CALLBACK (changed_nwtype), NULL);
 	gtk_container_add (GTK_CONTAINER (container), label);
 
 
@@ -1340,23 +1340,22 @@ create_global_widgets ()
 	if (!getuid ())		// if we are root we change global config file
 	{
 		cfgfile = malloc (20 * sizeof (gchar));
-		sprintf (cfgfile, "%s", "/etc/dillorc");
+		sprintf (cfgfile, "%s", "/etc/profile");
 	}
 	else
 	{
 		cfgfile =
-			g_strdup_printf ("%s/.dillo/dillorc",
+			g_strdup_printf ("%s/.profile",
 					 g_get_home_dir ());
 		if (access (cfgfile, F_OK))
 		{
 
 			gchar *content;
 			FILE *fnew;
-			gint length;
+			guint length;
 			GError *err = NULL;
 
-			mkdir (g_strdup_printf("%s/.dillo", g_get_home_dir ()), S_IRWXU);
-			if (g_file_get_contents ("/etc/dillorc", &content,
+			if (g_file_get_contents ("/etc/profile", &content,
 				                     &length, &err))
 			{
 				fnew = fopen (cfgfile, "w");
@@ -1367,15 +1366,15 @@ create_global_widgets ()
 		}
 	}
 
-	//proxy for dillo
-	tmpval = get_file_var (cfgfile, "http_proxy");
+	// proxy, global setting
+	tmpval = get_file_var (cfgfile, "export http_proxy");
 	create_editable_entry_simple (ctable, "proxy", _("Proxy"), tmpval,
 				      _("If you want/need to use a proxy, enter it here. "\
 	                  "(This only applies to dillo for now.)"),
 				      1);
 	g_free (tmpval);
 
-	tmpval = get_file_var (cfgfile, "no_proxy");
+	tmpval = get_file_var (cfgfile, "export no_proxy");
 	create_editable_entry_simple (ctable, "no_proxy", _("No proxy for"),
 				      tmpval,
 				      _("Here you should enter your local domain for that you" \
@@ -1387,15 +1386,23 @@ create_global_widgets ()
 	tmpval = get_file_var ("/etc/resolv.conf", "nameserver");
 	create_editable_entry_simple (ctable, "nameserver", _("DNS server"),
 				      tmpval,
-				      _
-				      ("Enter the IP of the DNS(name-) server to use here."),
+				      _("Enter the IP of the DNS(name-) server to use here."),
 				      5);
 	g_free (tmpval);
 
-	label = gtk_object_get_data (GTK_OBJECT (table), "nameserver");
+	label = g_object_get_data (G_OBJECT (notebook), "nameserver");
 	gtk_widget_set_sensitive (label, have_access);
 
 	return ctable;
+}
+
+void 
+notebook_change_tab(GtkNotebook *notebook, GtkNotebookPage *page,
+                    guint page_num, gpointer user_data)
+{
+	GtkWidget *delbutton = g_object_get_data(G_OBJECT(notebook), "deletebutton");
+
+	gtk_widget_set_sensitive(delbutton, (page_num == 0) ? FALSE : TRUE);
 }
 
 
@@ -1403,7 +1410,7 @@ void
 Network_Free_Objects ()
 {
 	set_file_open (FALSE);
-	gtk_widget_destroy (table);
+	gtk_widget_destroy (notebook);
 }
 
 
@@ -1420,7 +1427,7 @@ Network_Save ()
 	{
 		strcpy (wname, "address");
 		strcat (wname, iflist[sect].name);
-		entry = gtk_object_get_data (GTK_OBJECT (table), wname);
+		entry = g_object_get_data (G_OBJECT (notebook), wname);
 		if (entry)
 		{
 			newval = gtk_editable_get_chars (GTK_EDITABLE (entry),
@@ -1429,7 +1436,7 @@ Network_Save ()
 		}
 		strcpy (wname, "netmask");
 		strcat (wname, iflist[sect].name);
-		entry = gtk_object_get_data (GTK_OBJECT (table), wname);
+		entry = g_object_get_data (G_OBJECT (notebook), wname);
 		if (entry)
 		{
 			newval = gtk_editable_get_chars (GTK_EDITABLE (entry),
@@ -1438,7 +1445,7 @@ Network_Save ()
 		}
 		strcpy (wname, "network");
 		strcat (wname, iflist[sect].name);
-		entry = gtk_object_get_data (GTK_OBJECT (table), wname);
+		entry = g_object_get_data (G_OBJECT (notebook), wname);
 		if (entry)
 		{
 			newval = gtk_editable_get_chars (GTK_EDITABLE (entry),
@@ -1447,7 +1454,7 @@ Network_Save ()
 		}
 		strcpy (wname, "gateway");
 		strcat (wname, iflist[sect].name);
-		entry = gtk_object_get_data (GTK_OBJECT (table), wname);
+		entry = g_object_get_data (G_OBJECT (notebook), wname);
 		if (entry)
 		{
 			newval = gtk_editable_get_chars (GTK_EDITABLE (entry),
@@ -1456,7 +1463,7 @@ Network_Save ()
 		}
 		strcpy (wname, "broadcast");
 		strcat (wname, iflist[sect].name);
-		entry = gtk_object_get_data (GTK_OBJECT (table), wname);
+		entry = g_object_get_data (G_OBJECT (notebook), wname);
 		if (entry)
 		{
 			newval = gtk_editable_get_chars (GTK_EDITABLE (entry),
@@ -1465,7 +1472,7 @@ Network_Save ()
 		}
 		strcpy (wname, "hostname");
 		strcat (wname, iflist[sect].name);
-		entry = gtk_object_get_data (GTK_OBJECT (table), wname);
+		entry = g_object_get_data (G_OBJECT (notebook), wname);
 		if (entry)
 		{
 			newval = gtk_editable_get_chars (GTK_EDITABLE (entry),
@@ -1474,7 +1481,7 @@ Network_Save ()
 		}
 		strcpy (wname, "provider");
 		strcat (wname, iflist[sect].name);
-		entry = gtk_object_get_data (GTK_OBJECT (table), wname);
+		entry = g_object_get_data (G_OBJECT (notebook), wname);
 		if (entry)
 		{
 			newval = gtk_editable_get_chars (GTK_EDITABLE (entry),
@@ -1483,7 +1490,7 @@ Network_Save ()
 		}
 		strcpy (wname, "static");
 		strcat (wname, iflist[sect].name);
-		entry = gtk_object_get_data (GTK_OBJECT (table), wname);
+		entry = g_object_get_data (G_OBJECT (notebook), wname);
 		if (entry)
 		{
 			iflist[sect].isstatic =
@@ -1492,7 +1499,7 @@ Network_Save ()
 		}
 		strcpy (wname, "dhcp");
 		strcat (wname, iflist[sect].name);
-		entry = gtk_object_get_data (GTK_OBJECT (table), wname);
+		entry = g_object_get_data (G_OBJECT (notebook), wname);
 		if (entry)
 		{
 			iflist[sect].isdhcp =
@@ -1501,7 +1508,7 @@ Network_Save ()
 		}
 		strcpy (wname, "ppp");
 		strcat (wname, iflist[sect].name);
-		entry = gtk_object_get_data (GTK_OBJECT (table), wname);
+		entry = g_object_get_data (G_OBJECT (notebook), wname);
 		if (entry)
 		{
 			iflist[sect].isppp =
@@ -1517,23 +1524,23 @@ Network_Save ()
 	// copy and activate interface config
 	suid_exec ("CPIF", "CPIF");
 
-	entry = gtk_object_get_data (GTK_OBJECT (table), "proxy");
+	entry = g_object_get_data (G_OBJECT (notebook), "proxy");
 	if (entry)
 	{
 		newval = gtk_editable_get_chars (GTK_EDITABLE (entry), 0, -1);
-		change_cfg_value (cfgfile, "http_proxy", newval, '=');
+		change_cfg_value (cfgfile, "export http_proxy", newval, '=');
 	}
-	entry = gtk_object_get_data (GTK_OBJECT (table), "no_proxy");
+	entry = g_object_get_data (G_OBJECT (notebook), "no_proxy");
 	if (entry)
 	{
 		newval = gtk_editable_get_chars (GTK_EDITABLE (entry), 0, -1);
-		change_cfg_value (cfgfile, "no_proxy", newval, '=');
+		change_cfg_value (cfgfile, "export no_proxy", newval, '=');
 	}
 	g_free (cfgfile);
 
 	// save nameserver
 	strcpy (wname, "nameserver");
-	entry = gtk_object_get_data (GTK_OBJECT (table), wname);
+	entry = g_object_get_data (G_OBJECT (notebook), wname);
 	if (entry)
 	{
 		newval = gtk_editable_get_chars (GTK_EDITABLE (entry), 0, -1);
@@ -1556,7 +1563,7 @@ Network_Build_Objects (gboolean ignore, GtkWidget *toolbar)
 	GtkWidget *label, *ctable, *tablebox;
 	gint row = 0;
 	gint num_int = 0;
-	GtkToolItem *item;
+	GtkToolItem *item, *delbutton;
 
 	help_devtype =
 		_("Here you may change the basic configuration type of "
@@ -1595,10 +1602,10 @@ Network_Build_Objects (gboolean ignore, GtkWidget *toolbar)
 	tooltips = gtk_tooltips_new ();
 
 	tablebox = gtk_vbox_new (FALSE, 0);
-	gtk_object_set_data (GTK_OBJECT (tablebox), "tooltips", tooltips);
+	g_object_set_data (G_OBJECT (tablebox), "tooltips", tooltips);
 
 	/* insert toolbar items */
-	item = gtk_tool_button_new_from_stock(GTK_STOCK_DELETE);
+	delbutton = item = gtk_tool_button_new_from_stock(GTK_STOCK_DELETE);
 	g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK(remove_interface), 
 	                 NULL);
 	gtk_tooltips_set_tip(tooltips, GTK_WIDGET(item), 
@@ -1629,15 +1636,16 @@ Network_Build_Objects (gboolean ignore, GtkWidget *toolbar)
 	
    	// create tabbed notebook
 	// this contains lookup list!
-	table = gtk_notebook_new ();
-	gtk_notebook_set_scrollable (GTK_NOTEBOOK(table), TRUE);
+	notebook = gtk_notebook_new ();
+	gtk_notebook_set_scrollable (GTK_NOTEBOOK(notebook), TRUE);
 
-	gtk_object_set_data (GTK_OBJECT (table), "table", table);
-	gtk_widget_set_name (GTK_WIDGET (table), "table");
+	g_object_set_data (G_OBJECT (notebook), "deletebutton", delbutton);
+	g_object_set_data (G_OBJECT (notebook), "notebook", notebook);
+	g_signal_connect (G_OBJECT(notebook), "switch-page", G_CALLBACK(notebook_change_tab), NULL);
 
-	gtk_container_set_border_width (GTK_CONTAINER (table), 2);	//gpe_border
+	gtk_container_set_border_width (GTK_CONTAINER (notebook), 2);	//gpe_border
 
-	gtk_container_add (GTK_CONTAINER (tablebox), table);
+	gtk_container_add (GTK_CONTAINER (tablebox), notebook);
 
 	if (!set_file_open (TRUE))
 		gpe_error_box (_("Couldn't read network configuration."));
@@ -1648,7 +1656,7 @@ Network_Build_Objects (gboolean ignore, GtkWidget *toolbar)
 	// create and add globals section
 	ctable = create_global_widgets ();
 	label = gtk_label_new (_("global"));
-	gtk_notebook_append_page (GTK_NOTEBOOK (table), GTK_WIDGET (ctable),
+	gtk_notebook_append_page (GTK_NOTEBOOK (notebook), GTK_WIDGET (ctable),
 				  label);
 
 	// add interface widgets
@@ -1666,7 +1674,7 @@ Network_Build_Objects (gboolean ignore, GtkWidget *toolbar)
 			if (!have_access)
 				gtk_widget_set_sensitive (ctable, FALSE);
 			label = gtk_label_new (iflist[row].name);
-			iflist[row].uipos = gtk_notebook_append_page (GTK_NOTEBOOK (table),
+			iflist[row].uipos = gtk_notebook_append_page (GTK_NOTEBOOK (notebook),
 			                                              GTK_WIDGET (ctable), 
 			                                              label);
 			g_object_set_data(G_OBJECT(ctable), "ifnr", (gpointer)row);
