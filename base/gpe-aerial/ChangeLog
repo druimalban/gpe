@@ -1,3 +1,8 @@
+2005-10-09		Florian Boor <florian.boor@kernelconcepts.de>
+
+	* prismstumbler.h: Update from prismstumbler CVS.
+	* main.c: Send device on command befor detecting card.
+
 2005-04-30		Florian Boor <florian.boor@kernelconcepts.de>
 	
 	* main.c: Removed obsolete header.

@@ -876,6 +876,7 @@ radio_on (void)
 		}
 	}
 	cfg.autosend = (gboolean) devices_window;
+	send_command (C_IFUP, 0); /* turn it on */
 	send_command (C_DETECT_CARD, 0);
 	
 	/* wait for prismstumbler to send config update */
