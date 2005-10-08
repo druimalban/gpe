@@ -33,6 +33,8 @@ extern "C" {
 #include <sys/time.h>
 #include <sys/resource.h>
 
+#include "iwlib.h"
+
 #define VERSIONSTR "Prismstumbler " VERSION
 
 #define MAX_BUFFER_SIZE 3000	/* Size of receive buffer */
@@ -46,6 +48,7 @@ extern "C" {
 #define DT_ORINOCO 0x02
 #define DT_HOSTAP  0x04
 #define DT_SCAN    0x08
+#define DT_CISCO   0x10
 
 #define PS_SOCKET "/tmp/.psintercom"
 #define PIC_SCANNER_OFF PREFIX "/share/pixmaps/stock_record.png"
@@ -54,10 +57,11 @@ extern "C" {
 
 extern const char *dhcpcommands[];
 
-#define DHCP_CMDCOUNT 3
+#define DHCP_CMDCOUNT 5
 
 #define SEQ_USERNET 0xFFFF
 
+#define WEPKEY_LEN 14 /* ( (128 - 24) / 8) + 1 */
 
 typedef enum
 {
@@ -79,7 +83,9 @@ typedef enum
 	C_DETECT_CARD,
 	C_ASSOCIATE,
 	C_GPSD,
-	C_IFDOWN
+	C_IFDOWN,
+	C_DETECT_DHCP,
+	C_IFUP
 }
 command_t;
 
@@ -153,7 +159,7 @@ typedef struct
 	char DestMac[20];
 	char SrcMac[20];
 	char BssId[20];
-	char SSID[33];
+	char SSID[IW_ESSID_MAX_SIZE];
 	int hasWep;
 	int isAp;
 	int Channel;
@@ -178,7 +184,7 @@ typedef struct
 {
 	int seqnr;			// sequence number 
 	int isvalid;
-	char ssid[33];
+	char ssid[IW_ESSID_MAX_SIZE];
 	char bssid[32];
 	time_t first, last;
 	char type[20];
@@ -187,7 +193,7 @@ typedef struct
 	unsigned char new_dst_ip[5];
 	char ap[16];
 	unsigned long pdata, psum, pint;
-	char wep_key[48];
+	char wep_key[WEPKEY_LEN];
 	float longitude, latitude;
 	int maxsiglevel;
 	int cursiglevel;
@@ -217,8 +223,8 @@ psnode_t;
 typedef struct
 {
 	char bssid[20];
-	char ssid[33];
-	int mode; 		// o = managed, 1 = ad-hoc
+	char ssid[IW_ESSID_MAX_SIZE];
+	int mode; 		// 0 = managed, 1 = ad-hoc
 	int wep;
 	int dhcp;
 	int channel;
@@ -226,7 +232,7 @@ typedef struct
 	unsigned char netmask[4];
 	unsigned char gateway[4];
 	unsigned char nameserver[4];
-	char wep_key[48];
+	char wep_key[WEPKEY_LEN];
 	int inrange;	
 	unsigned long userset;
 }
