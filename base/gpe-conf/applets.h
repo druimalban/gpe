@@ -6,7 +6,7 @@
 
 struct Applet
 {
-  GtkWidget *(*Build_Objects)(); // store his objets in a static self struct
+  GtkWidget *(*Build_Objects)(gboolean, GtkWidget *); // store his objets in a static self struct
   void (*Free_Objects)(); // free all but the Gtk Widgets
   void (*Save)();
   void (*Restore)();

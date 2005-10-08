@@ -1307,7 +1307,7 @@ Cardinfo_Restore ()
 }
 
 GtkWidget *
-Cardinfo_Build_Objects (void)
+Cardinfo_Build_Objects (gboolean ignore, GtkWidget* toolbar)
 {
 	GtkWidget *label, *ctype_pixmap;
 	GtkWidget *table, *hbox;
@@ -1323,7 +1323,9 @@ Cardinfo_Build_Objects (void)
 
 	/* main menu */ 
 	mMain = create_mMain(mainw);
-	gtk_box_pack_start(GTK_BOX(bookbox),mMain,FALSE,TRUE,0);
+	gtk_widget_show_all(mMain);
+	gtk_box_pack_start(GTK_BOX(toolbar->parent), mMain, FALSE, TRUE, 0);
+	gtk_box_reorder_child(GTK_BOX(toolbar->parent), mMain, 0);
 	
 	notebook = gtk_notebook_new ();
 	gtk_container_set_border_width (GTK_CONTAINER (notebook), 0);

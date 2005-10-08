@@ -74,10 +74,11 @@ static struct {
   GtkWidget *vbox;
   GtkWidget *viewport;
 
-  GtkWidget *save;
-  GtkWidget *cancel;
-  GtkWidget *dismiss;
-  
+  GtkToolItem *save;
+  GtkToolItem *cancel;
+  GtkToolItem *dismiss;
+  GtkWidget *toolbar;
+	
   int cur_applet;
   int alone_applet;
 
@@ -122,16 +123,10 @@ struct Applet applets[]=
     { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore ,
 		N_("Task background image") ,"task_background", N_("Only select background image."), PREFIX "/share/pixmaps/gpe-config-admin.png"}
   };
-  
+
 struct gpe_icon my_icons[] = {
-  { "save" },
-  { "cancel" },
-  { "delete" },
-  { "properties" },
-  { "new" },
   { "lock" },
   { "lock16" },
-  { "exit" },
   { "ownerphoto", "tux-48" },
   { "warning16", "warning16" },
   { "icon", NULL },
@@ -139,14 +134,15 @@ struct gpe_icon my_icons[] = {
 };
 
 
-#define count_icons 11
+#define count_icons 5
 
 int applets_nb = sizeof(applets) / sizeof(struct Applet);
 
 
-void Save_Callback()
+void Save_Callback(GtkWidget *sender)
 {
-  gpe_popup_infoprint(GDK_DISPLAY(), _("Settings saved"));
+  if (sender == GTK_WIDGET(self.save))
+	  gpe_popup_infoprint(GDK_DISPLAY(), _("Settings saved"));
   while (gtk_events_pending())
 	  gtk_main_iteration_do(FALSE);
   applets[self.cur_applet].Save();
@@ -192,42 +188,42 @@ void item_select(int useronly, gpointer user_data)
     }
   self.cur_applet = i;
 
-  self.applet = applets[i].Build_Objects(useronly);
+  self.applet = applets[i].Build_Objects(useronly, self.toolbar);
  
   if (self.applet)
   {
-  gtk_container_add(GTK_CONTAINER(self.viewport),self.applet);
+    gtk_container_add(GTK_CONTAINER(self.viewport),self.applet);
 	
-  gtk_window_set_title(GTK_WINDOW(self.w), applets[i].frame_label);
+    gtk_window_set_title(GTK_WINDOW(self.w), applets[i].frame_label);
 	
-  gtk_widget_show_all(self.applet);
+    gtk_widget_show_all(self.applet);
   
-  if(applets[self.cur_applet].Save != &Unimplemented_Save)
-  {
-    gtk_widget_show(self.save);
-	gtk_widget_grab_default(self.save);
-  }
-  else
-  {
-    gtk_widget_hide(self.save);
-  }  
-  
-  if(applets[self.cur_applet].Restore != &Unimplemented_Restore)
-  {
-	if(applets[self.cur_applet].Save == &Unimplemented_Save)
-	{
-      gtk_widget_hide(self.cancel);
-      gtk_widget_show(self.dismiss);
-      gtk_widget_grab_default(self.dismiss);
-	}
+    if(applets[self.cur_applet].Save != &Unimplemented_Save)
+    {
+      gtk_widget_show(GTK_WIDGET(self.save));
+      gtk_widget_grab_default(GTK_WIDGET(self.save));
+    }
     else
-	{
-      gtk_widget_hide(self.dismiss);
-      gtk_widget_show(self.cancel);
-	}
-  }
-  else
-    gtk_widget_hide(self.cancel);
+    {
+      gtk_widget_hide(GTK_WIDGET(self.save));
+    }  
+  
+    if(applets[self.cur_applet].Restore != &Unimplemented_Restore)
+    {
+      if(applets[self.cur_applet].Save == &Unimplemented_Save)
+	    {
+          gtk_widget_hide(GTK_WIDGET(self.cancel));
+          gtk_widget_show(GTK_WIDGET(self.dismiss));
+          gtk_widget_grab_default(GTK_WIDGET(self.dismiss));
+        }
+      else
+       {
+        gtk_widget_hide(GTK_WIDGET(self.dismiss));
+        gtk_widget_show(GTK_WIDGET(self.cancel));
+       }
+    }
+    else
+      gtk_widget_hide(GTK_WIDGET(self.cancel));
   }
 }
 
@@ -251,10 +247,10 @@ void initwindow()
    self.w = mainw = gtk_window_new(GTK_WINDOW_TOPLEVEL);
    gtk_widget_set_usize(GTK_WIDGET(self.w),240, 310);
 	
-   if ((size_x >= 640) && (size_y >= 480))
+   if ((size_x >= 480) && (size_y >= 480))
    {
       gtk_window_set_type_hint(GTK_WINDOW(self.w), GDK_WINDOW_TYPE_HINT_DIALOG);
-	  gtk_window_set_default_size(GTK_WINDOW(self.w), 320, 420);
+	  gtk_window_set_default_size(GTK_WINDOW(self.w), 460, 440);
    }
    
    wstyle = self.w->style;
@@ -272,34 +268,38 @@ void initwindow()
 
 void make_container()
 {
-  GtkWidget *hbuttons;
-
+  GtkToolItem *item;
+	
   GtkWidget *scrolledwindow = gtk_scrolled_window_new (NULL, NULL);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow),
 				  GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
 
+  self.toolbar = gtk_toolbar_new();
+  gtk_toolbar_set_orientation(GTK_TOOLBAR(self.toolbar), 
+	                          GTK_ORIENTATION_HORIZONTAL);	
+  gtk_box_pack_start(GTK_BOX(self.vbox), self.toolbar, FALSE, TRUE, 0);
+
+  self.cancel = gtk_tool_button_new_from_stock(GTK_STOCK_CANCEL);
+  self.save = gtk_tool_button_new_from_stock(GTK_STOCK_OK);
+  self.dismiss = gtk_tool_button_new_from_stock(GTK_STOCK_QUIT);
+
+  gtk_toolbar_insert(GTK_TOOLBAR(self.toolbar), self.cancel, -1);
+  gtk_toolbar_insert(GTK_TOOLBAR(self.toolbar), self.save, -1);
+  gtk_toolbar_insert(GTK_TOOLBAR(self.toolbar), self.dismiss, -1);
+
+  item = gtk_separator_tool_item_new();
+  gtk_tool_item_set_expand(GTK_TOOL_ITEM(item), TRUE);
+  gtk_separator_tool_item_set_draw(GTK_SEPARATOR_TOOL_ITEM(item), FALSE);
+  gtk_toolbar_insert(GTK_TOOLBAR(self.toolbar), item, 0);
+
   self.viewport = gtk_viewport_new (NULL, NULL);
-  gtk_container_add (GTK_CONTAINER (scrolledwindow),self.viewport);
+  gtk_container_add (GTK_CONTAINER (scrolledwindow), self.viewport);
   gtk_viewport_set_shadow_type (GTK_VIEWPORT (self.viewport), GTK_SHADOW_NONE);
 
   gtk_container_add (GTK_CONTAINER (self.vbox), scrolledwindow);
 
-  hbuttons = gtk_hbutton_box_new();
-  gtk_box_pack_end(GTK_BOX(self.vbox),hbuttons, FALSE, TRUE, 0);
-  gtk_container_set_border_width (GTK_CONTAINER (hbuttons), gpe_get_boxspacing() );
-
-  self.cancel = gpe_button_new_from_stock(GTK_STOCK_CANCEL,GPE_BUTTON_TYPE_BOTH);
-  gtk_box_pack_start(GTK_BOX(hbuttons),self.cancel,FALSE, TRUE, 0);
-
-  self.save = gpe_button_new_from_stock(GTK_STOCK_OK,GPE_BUTTON_TYPE_BOTH);
   GTK_WIDGET_SET_FLAGS(self.save, GTK_CAN_DEFAULT);
-  
-  gtk_box_pack_start(GTK_BOX(hbuttons),self.save,FALSE, TRUE, 0);
-
-  self.dismiss = gpe_button_new_from_stock(GTK_STOCK_CLOSE,GPE_BUTTON_TYPE_BOTH);
   GTK_WIDGET_SET_FLAGS(self.dismiss, GTK_CAN_DEFAULT);
-  gtk_box_pack_start(GTK_BOX(hbuttons),self.dismiss,FALSE, TRUE, 0);
-  
   gtk_signal_connect (GTK_OBJECT(self.save), "clicked",
 		      (GtkSignalFunc) Save_Callback, NULL);
   gtk_signal_connect (GTK_OBJECT(self.cancel), "clicked",

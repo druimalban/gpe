@@ -2,7 +2,7 @@
  * gpe-conf
  *
  * Copyright (C) 2002  Pierre TARDY <tardyp@free.fr>
- *               2003,2004  Florian Boor <florian.boor@kernelconcepts.de>
+ *               2003-2005  Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -202,15 +202,14 @@ void Users_Restore()
 }
 
 GtkWidget*
-Users_Build_Objects (gboolean password_only)
+Users_Build_Objects (gboolean password_only, GtkWidget *toolbar)
 {
   GtkWidget *vbox1 = NULL;
   GtkWidget *pw = NULL;
-  GtkWidget *toolbar = NULL;
-  GtkWidget *button1 = NULL;
-  GtkWidget *button2 = NULL;
-  GtkWidget *button3 = NULL;
-  GtkWidget *button4 = NULL;
+  GtkToolItem *button1 = NULL;
+  GtkToolItem *button2 = NULL;
+  GtkToolItem *button3 = NULL;
+  GtkToolItem *item;
 
   listTitles[0] = _("User Name");
   listTitles[1] = _("User Info");
@@ -220,42 +219,50 @@ Users_Build_Objects (gboolean password_only)
 
   if (!password_only)
   {
-  vbox1 = gtk_vbox_new (FALSE, 0);
-  gtk_container_set_border_width (GTK_CONTAINER (vbox1), border_width);
+    vbox1 = gtk_vbox_new (FALSE, 0);
+    gtk_container_set_border_width (GTK_CONTAINER (vbox1), border_width);
+	
+	pw = gtk_image_new_from_pixbuf (gpe_find_icon ("lock16"));
+	item = gtk_tool_button_new(pw, _("Password"));
+	g_signal_connect(G_OBJECT(item), "clicked", 
+	                 G_CALLBACK(password_change_clicked), NULL);
+//	gtk_tooltips_set_tip(tooltips, GTK_WIDGET(item), 
+//	                     _("Change oassword."), NULL);
+	gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, 0);
+    gtk_widget_show_all(GTK_WIDGET(item));
 
-  toolbar = gtk_toolbar_new ();
-  gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar),
-			       GTK_ORIENTATION_HORIZONTAL);
+	button1 = item = gtk_tool_button_new_from_stock(GTK_STOCK_DELETE);
+	gtk_tool_button_set_label(GTK_TOOL_BUTTON(item), _("Delete User"));
+	g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK(users_on_delete_clicked), 
+	                 NULL);
+//	gtk_tooltips_set_tip(tooltips, GTK_WIDGET(item), 
+//	                     _("Add a new user."), NULL);
+	gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, 0);
+    gtk_widget_show(GTK_WIDGET(item));
 
-  gtk_box_pack_start (GTK_BOX (vbox1), toolbar, FALSE, FALSE, 0);
-  gtk_box_reorder_child (GTK_BOX (vbox1), toolbar, 0);
-  gtk_widget_show (toolbar);
-
-  pw = gtk_image_new_from_pixbuf (gpe_find_icon ("new"));
-  button1 = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Add user"),
-			   _("Add user"), _("Add a new user"), pw,
-			   GTK_SIGNAL_FUNC (users_on_new_clicked), NULL);
-
-  pw = gtk_image_new_from_pixbuf (gpe_find_icon ("properties"));
-  button2 = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Edit user"),
-			   _("Edit user"), _("Edit existing user"), pw,
-			   GTK_SIGNAL_FUNC (users_on_edit_clicked), NULL);
-
-  pw = gtk_image_new_from_pixbuf (gpe_find_icon ("delete"));
-  button3 = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Delete user"),
-			   _("Delete user"), _("Delete existing user"), pw,
-			   GTK_SIGNAL_FUNC (users_on_delete_clicked), NULL);
-
-  pw = gtk_image_new_from_pixbuf (gpe_find_icon ("lock16"));
-  button4 = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Password"),
-			   _("Change password"), NULL, pw,
-			   GTK_SIGNAL_FUNC (password_change_clicked), NULL);
-			   
-  user_list = gtk_clist_new_with_titles (3,listTitles);
-  pw = gtk_scrolled_window_new(NULL,NULL);
-  gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(pw),
-                                 GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-  gtk_container_add (GTK_CONTAINER (pw), user_list);
+	button2 = item = gtk_tool_button_new_from_stock(GTK_STOCK_PROPERTIES);
+	gtk_tool_button_set_label(GTK_TOOL_BUTTON(item), _("Edit User"));
+	g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK(users_on_edit_clicked), 
+	                 NULL);
+//	gtk_tooltips_set_tip(tooltips, GTK_WIDGET(item), 
+//	                     _("Edit existing user"), NULL);
+	gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, 0);
+    gtk_widget_show(GTK_WIDGET(item));
+	
+	button3 = item = gtk_tool_button_new_from_stock(GTK_STOCK_NEW);
+	gtk_tool_button_set_label(GTK_TOOL_BUTTON(item), _("New User"));
+	g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK(users_on_new_clicked), 
+	                 NULL);
+//	gtk_tooltips_set_tip(tooltips, GTK_WIDGET(item), 
+//	                     _("Add a new user."), NULL);
+	gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, 0);
+    gtk_widget_show(GTK_WIDGET(item));
+	  
+    user_list = gtk_clist_new_with_titles (3, listTitles);
+    pw = gtk_scrolled_window_new(NULL,NULL);
+    gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(pw),
+                                   GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+    gtk_container_add (GTK_CONTAINER (pw), user_list);
   }
   
   InitPwList();
@@ -270,9 +277,9 @@ Users_Build_Objects (gboolean password_only)
       if (suid_exec("CHEK",""))
         {
 	      gtk_widget_set_sensitive(user_list, FALSE);
-	      gtk_widget_set_sensitive(button1, FALSE);
-	      gtk_widget_set_sensitive(button2, FALSE);
-	      gtk_widget_set_sensitive(button3, FALSE);
+	      gtk_widget_set_sensitive(GTK_WIDGET(button1), FALSE);
+	      gtk_widget_set_sensitive(GTK_WIDGET(button2), FALSE);
+	      gtk_widget_set_sensitive(GTK_WIDGET(button3), FALSE);
 	      have_access = FALSE;
         }
       else

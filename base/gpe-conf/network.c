@@ -1551,12 +1551,12 @@ Network_Restore ()
 
 
 GtkWidget *
-Network_Build_Objects ()
+Network_Build_Objects (gboolean ignore, GtkWidget *toolbar)
 {
-	GtkWidget *label, *ctable, *tablebox, *toolbar;
+	GtkWidget *label, *ctable, *tablebox;
 	gint row = 0;
 	gint num_int = 0;
-	GtkWidget *button;
+	GtkToolItem *item;
 
 	help_devtype =
 		_("Here you may change the basic configuration type of "
@@ -1597,52 +1597,37 @@ Network_Build_Objects ()
 	tablebox = gtk_vbox_new (FALSE, 0);
 	gtk_object_set_data (GTK_OBJECT (tablebox), "tooltips", tooltips);
 
-	// create toolbar
-	toolbar = gtk_toolbar_new ();
-	gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar),
-				     GTK_ORIENTATION_HORIZONTAL);
-
-	gtk_widget_set_name (toolbar, "toolbar");
-	gtk_widget_ref (toolbar);
-	gtk_widget_show (toolbar);
-	gtk_box_pack_start (GTK_BOX (tablebox), toolbar, FALSE, FALSE, 0);
-
-	label = gtk_image_new_from_pixbuf (gpe_find_icon ("new"));
-	button = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
-					  _("Add Interface"),
-					  _("Add a new Interface"), 
-					  NULL,
-					  label,
-					  (GtkSignalFunc) add_interface,
-					  NULL);
+	/* insert toolbar items */
+	item = gtk_tool_button_new_from_stock(GTK_STOCK_DELETE);
+	g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK(remove_interface), 
+	                 NULL);
+	gtk_tooltips_set_tip(tooltips, GTK_WIDGET(item), 
+	                     _("Remove current Interface"), NULL);
+	gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, 0);
 	if (!have_access)
-		gtk_widget_set_sensitive (button, FALSE);
-
-	label = gtk_image_new_from_pixbuf (gpe_find_icon ("delete"));
-	button = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
-					  _("Remove Interface"),
-					  _("Remove current Interface"),
-	                  NULL,
-					  label,
-					  (GtkSignalFunc) remove_interface,
-					  NULL);
+		gtk_widget_set_sensitive (GTK_WIDGET(item), FALSE);
+    gtk_widget_show(GTK_WIDGET(item));
+	
+	item = gtk_tool_button_new_from_stock(GTK_STOCK_ADD);
+	g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK(add_interface), 
+	                 NULL);
+	gtk_tooltips_set_tip(tooltips, GTK_WIDGET(item), 
+	                     _("Add a new Interface"), NULL);
+	gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, 0);
 	if (!have_access)
-		gtk_widget_set_sensitive (button, FALSE);
-
-	gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
-
-	label = gtk_image_new_from_stock (GTK_STOCK_DIALOG_INFO,
-					  gtk_toolbar_get_icon_size
-					  (GTK_TOOLBAR (toolbar)));
-	button = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
-					  _("Information"),
-					  _("Show current configuration."),
-					  NULL,
-					  label,
-					  (GtkSignalFunc) show_current_config,
-					  NULL);
-
-	// chreate tabbed notebook
+		gtk_widget_set_sensitive (GTK_WIDGET(item), FALSE);
+    gtk_widget_show(GTK_WIDGET(item));
+	
+	item = gtk_tool_button_new_from_stock(GTK_STOCK_DIALOG_INFO);
+	gtk_tool_button_set_label(GTK_TOOL_BUTTON(item), _("Info"));
+	g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK(show_current_config), 
+	                 NULL);
+	gtk_tooltips_set_tip(tooltips, GTK_WIDGET(item), 
+	                     _("Show current configuration."), NULL);
+	gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, 0);
+    gtk_widget_show(GTK_WIDGET(item));
+	
+   	// create tabbed notebook
 	// this contains lookup list!
 	table = gtk_notebook_new ();
 	gtk_notebook_set_scrollable (GTK_NOTEBOOK(table), TRUE);

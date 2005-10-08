@@ -1,5 +1,10 @@
 2005-10-07	Florian Boor <florian.boor@kernelconcepts.de>
 
+    * main.c, cardinfo.c, network.c, applets.h: Change user inferface to 
+	  use toolbars instead of dialog like button box. Several minor fixes.
+
+2005-10-07	Florian Boor <florian.boor@kernelconcepts.de>
+
 	* network.c: Make network dialog a normal window on small screens and 
 	             make it fit on screen.
 	* keys/keyctl.c: Fix gui layout.
