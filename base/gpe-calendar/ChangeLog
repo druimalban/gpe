@@ -1,3 +1,7 @@
+2005-10-10  Florian Boor <florian.boor@kernelconcepts.de>
+
+    * event-ui.c: Fix categories handling and restoring. (#1402)
+
 2005-09-27  Florian Boor <florian.boor@kernelconcepts.de>
 
     * event-ui.c: Improve window type selection to behave better using Matchbox.

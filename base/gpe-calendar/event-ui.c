@@ -1585,6 +1585,7 @@ edit_event (event_t ev)
       gtk_text_buffer_set_text (gtk_text_view_get_buffer (GTK_TEXT_VIEW (s->description)),
 				evd->description ? evd->description : "", -1);
       gtk_entry_set_text (GTK_ENTRY (s->summary), evd->summary ? evd->summary : "");
+      update_categories (w, evd->categories, s);
       event_db_forget_details (ev);
 
       localtime_r (&(ev->start), &tm);
