@@ -1,3 +1,9 @@
+
+2005-10-10  Florian Boor <florian@kernelconcepts.de>
+
+	* Apply patch by Koen Kooi to set correct DPI value for known
+          devices instead of 100 (Fixes #1407).
+
 2005-09-23  Florian Boor <florian@kernelconcepts.de>
 
 	* Apply patch by pHilipp Zabel to change keymap on hx4700.
