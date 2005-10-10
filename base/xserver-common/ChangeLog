@@ -1,6 +1,7 @@
 
 2005-10-10  Florian Boor <florian@kernelconcepts.de>
 
+	* Release Version 1.2
 	* Apply patch by Koen Kooi to set correct DPI value for known
           devices instead of 100 (Fixes #1407).
 
