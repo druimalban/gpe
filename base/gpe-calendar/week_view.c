@@ -113,13 +113,13 @@ draw_expose_event (GtkWidget *widget,
   black_gc = widget->style->black_gc;
   max_width = widget->allocation.width;
   max_height = widget->allocation.height;
-
+/*
   gdk_gc_set_clip_rectangle (black_gc, &event->area);
   gdk_gc_set_clip_rectangle (blue_gc, &event->area);
   gdk_gc_set_clip_rectangle (white_gc, &event->area);
   gdk_gc_set_clip_rectangle (yellow_gc, &event->area);
   gdk_gc_set_clip_rectangle (blue_gc, &event->area);
-
+*/
   for (day = 0; day < 7; day++)
     {
       GSList *iter;
@@ -420,7 +420,7 @@ week_view_update (void)
 static void
 day_changed_calendar (GtkWidget *widget)
 {
-  int day, month, year;
+  unsigned int day, month, year;
   struct tm tm;
 
   localtime_r (&viewtime, &tm);

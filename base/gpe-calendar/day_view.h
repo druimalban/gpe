@@ -13,5 +13,17 @@
 extern GtkWidget *day_view (void);
 extern gboolean day_view_combined_times;
 extern void day_free_lists(void);
+int day_view_init ();
+
+
+
+typedef struct day_page {
+	GtkWidget *widget;
+	guint width;
+	guint height;
+	guint height_min;
+	guint time_col_ratio;
+} *day_page_t ;
+
 
 #endif

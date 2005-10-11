@@ -1,3 +1,10 @@
+2005-10-11  Luca De Cicco <ldecicco@gmail.com>
+	* day_render.c, day_render.h: New files. They implement the day render
+	`class` to display events as boxes avoiding overlapping.
+	* day_view.c, day_view.h: Using day_render to display events instead
+	of obsolete clist 
+
+
 2005-10-10  Florian Boor <florian.boor@kernelconcepts.de>
 
     * event-ui.c: Fix categories handling and restoring. (#1402)

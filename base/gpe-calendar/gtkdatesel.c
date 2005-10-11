@@ -255,8 +255,10 @@ get_max_month_width (GtkDateSel *sel)
   PangoRectangle logical_rect;
   int max_width, i;
   gchar buffer[255];
+  gchar *str;
   struct tm tm;
 
+  memset(buffer, 0, 255);
   localtime_r (&sel->time, &tm);
 
   layout = gtk_widget_create_pango_layout (GTK_WIDGET (sel), NULL);
@@ -281,7 +283,10 @@ get_max_month_width (GtkDateSel *sel)
 	  /* NYS */
 	  break;
 	}
-      pango_layout_set_text (layout, buffer, -1);
+	  str = g_locale_to_utf8(buffer, strlen(buffer), NULL, NULL, NULL);
+      pango_layout_set_text (layout, str, -1);
+	  if (str) 
+		  g_free(str);
       pango_layout_get_pixel_extents (layout, NULL, &logical_rect);
       max_width = MAX (max_width, logical_rect.width + 8);
     }

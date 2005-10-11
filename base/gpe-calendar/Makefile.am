@@ -20,6 +20,7 @@ gpe_calendar_LDADD = $(DEPS_LIBS)
 gpe_calendar_SOURCES = globals.h main.c \
                        day_view.c day_view.h \
                        week_view.c week_view.h \
+		       day_render.c day_render.h \
  					   event-ui.c event-ui.h \
 					   month_view.c month_view.h \
   					   day_popup.c day_popup.h \

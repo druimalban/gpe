@@ -264,7 +264,6 @@ draw_expose_event (GtkWidget *widget,
 
       for (j = 0; j < (TOTAL_DAYS / 7); j++)
 	{
-	  guint height = 0;
 	  gchar *buffer;
 	  guint d = i + (7 * j) - week_offset;
 	  struct render_ctl *c = &rc[d];
@@ -722,8 +721,8 @@ month_view(void)
   
   g_object_set_data(G_OBJECT(main_window),"datesel-month",datesel);
   
-  gtk_window_get_size (main_window,&width,&height);
-  gtk_widget_set_size_request (draw, width*.9, height*.65);
+  gtk_window_get_size (GTK_WINDOW(main_window), &width, &height);
+  gtk_widget_set_size_request (GTK_WIDGET(draw), width*.9, height*.65);
 
   calc_title_height (draw);
 
