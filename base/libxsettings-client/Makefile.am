@@ -3,7 +3,7 @@ SUBDIRS = doc
 source_h = xsettings-client.h  xsettings-common.h
 source_c = xsettings-client.c  xsettings-common.c
 
-libxsincludedir=$(includedir)
+INCLUDES = -I $(includedir) $(X_CFLAGS)
 
 lib_LTLIBRARIES      = libXsettings-client.la
 
