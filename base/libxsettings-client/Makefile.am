@@ -5,6 +5,8 @@ source_c = xsettings-client.c  xsettings-common.c
 
 INCLUDES = -I $(includedir) $(X_CFLAGS)
 
+libxsincludedir = $(includedir)
+
 lib_LTLIBRARIES      = libXsettings-client.la
 
 libxsinclude_HEADERS= $(source_h)
