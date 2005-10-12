@@ -274,10 +274,13 @@ void day_view_expose ()
 	gdk_window_get_size (draw->window, &width, &height);
 	
 	if (width != page_app->width || height !=page_app->height)
-	{
-		day_render_update_offset (dr);
-		day_render_resize (dr, width, height);
-	}	
+    {
+		if (dr) 
+          {
+            day_render_update_offset (dr);
+		    day_render_resize (dr, width, height);
+          }
+    }	
 	day_page_draw_background (page_app);  	
 
 	if(dr == NULL )

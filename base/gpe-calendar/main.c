@@ -65,13 +65,13 @@ GtkWidget *notebook;
 extern GtkWidget* day_list;
 
 struct gpe_icon my_icons[] = {
-  { "day_view", "day_view" },
-  { "week_view", "week_view" },
-  { "month_view", "month_view" },
-  { "bell", "bell" },
-  { "recur", "recur" },
-  { "bell_recur", "bell_recur" },
-  { "icon", PREFIX "/share/pixmaps/gpe-calendar.png" },
+  { "day_view",   DAY_ICON },
+  { "week_view",  WEEK_ICON },
+  { "month_view", MONTH_ICON },
+  { "bell",        BELL_ICON },
+  { "recur",       RECUR_ICON },
+  { "bell_recur", BELLRECUR_ICON },
+  { "icon", APP_ICON },
   { NULL, NULL }
 };
 

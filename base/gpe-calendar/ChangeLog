@@ -1,3 +1,8 @@
+2005-10-13  Florian Boor <florian.boor@kernelconcepts.de>
+
+    * globals.h, main.c: Adapt icon loading to nasty Maemo environment.
+    * day_render.c: Add sanity check.
+
 2005-10-11  Luca De Cicco <ldecicco@gmail.com>
 	* day_render.c, day_render.h: New files. They implement the day render
 	`class` to display events as boxes avoiding overlapping.
