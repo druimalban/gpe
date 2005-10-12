@@ -5,7 +5,7 @@ DEBUG = no
 CVSBUILD = yes
 ENABLE_NLS = yes
 
-LINGUAS = de hu id pt pt_BR fr zh_TW ro sv nl sk cs ru sr es zh_CN vi fi tr
+LINGUAS = de hu id pt pt_BR fr zh_TW ro sv nl sk cs ru sr es zh_CN vi fi tr sl
 
 LIB_TARGET = libgpe-ownerinfo.a
 LIB_MEMBERS = $(PACKAGE)
@@ -49,7 +49,7 @@ install-program: all
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
 	install -s $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/
 	install -d $(DESTDIR)/etc/gpe/
-	
+
 install-devel: 
 	install -d $(DESTDIR)/$(PREFIX)/include
 	install -m644 gpe-ownerinfo.h $(DESTDIR)/$(PREFIX)/include/gpe-ownerinfo.h
