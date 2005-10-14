@@ -74,11 +74,11 @@ gboolean scroll_delay = FALSE;
 gboolean do_wrap = FALSE;
 static osso_context_t *context = NULL;
 
-#define DEFAULT_STRUCTURE PREFIX "/share/gpe-contacts/default-layout.xml"
-#define LARGE_STRUCTURE PREFIX "/share/gpe-contacts/default-layout-bigscreen.xml"
+#define DEFAULT_STRUCTURE "/var/lib/install/usr/share/gpe-contacts/default-layout.xml"
+#define LARGE_STRUCTURE "/var/lib/install/usr/share/gpe-contacts/default-layout-bigscreen.xml"
 
 struct gpe_icon my_icons[] = {
-  {"icon", PREFIX "/share/pixmaps/gpe-contacts.png" },
+  {"icon", "/var/lib/install/usr/share/pixmaps/gpe-contacts.png" },
   {NULL, NULL}
 };
 

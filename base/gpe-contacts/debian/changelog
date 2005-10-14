@@ -1,3 +1,9 @@
+gpe-contacts (0.42m2-1) unstable; urgency=low
+
+  * New package release prefix and updated icon path.
+
+ -- Florian Boor <florian.boor@kernelconcepts.de>  Fri, 14 Oct 2005 17:11:00 +0200
+ 
 gpe-contacts (0.41m2-1) unstable; urgency=low
 
   * New release, new package prefix and updated icon path.
