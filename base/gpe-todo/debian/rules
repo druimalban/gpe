@@ -7,7 +7,7 @@
 #export DH_VERBOSE=1
 
 include /usr/share/cdbs/1/class/autotools.mk
-DEB_CONFIGURE_USER_FLAGS=--enable-hildon --prefix=/var/lib/install/usr
+DEB_CONFIGURE_USER_FLAGS=--enable-hildon --prefix=/usr
 
 CFLAGS = -Wall -g
 

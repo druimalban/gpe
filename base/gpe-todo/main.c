@@ -31,11 +31,17 @@
 
 #include "todo.h"
 
-#define MY_PIXMAPS_DIR PREFIX "/share/gpe-todo"
+#ifdef IS_HILDON
+  #define MY_PIXMAPS_DIR "/var/lib/install/usr/share/gpe-todo"
+  #define MY_PREFIX "/var/lib/install/usr"
+#else
+  #define MY_PIXMAPS_DIR PREFIX "/share/gpe-todo"
+  #define MY_PREFIX PREFIX 
+#endif
 
 static struct gpe_icon my_icons[] = {
   { "high", MY_PIXMAPS_DIR "/flag-16.png" },
-  { "icon", PREFIX "/share/pixmaps/gpe-todo.png" },
+  { "icon", MY_PREFIX "/share/pixmaps/gpe-todo.png" },
   { "tick-box", MY_PIXMAPS_DIR "/tick-box.png" },
   { "notick-box", MY_PIXMAPS_DIR "/notick-box.png" },
   { "bar-box", MY_PIXMAPS_DIR "/bar-box.png" },

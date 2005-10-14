@@ -1,3 +1,9 @@
+gpe-todo (0.54m2-3) unstable; urgency=low
+
+  * Remove dependencies, change locations.
+  
+ -- Florian Boor <florian.boor@kernelconcepts.de>  Fri, 14 Oct 2005 19:40:21 +0200
+ 
 gpe-todo (0.54m2-2) unstable; urgency=low
 
   * Update dependencies.
