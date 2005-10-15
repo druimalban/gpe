@@ -1,3 +1,7 @@
+2005-10-15 Florian Boor <florian.boor@kernelconcepts.de>
+
+	* Makefile, po: Add Spanish and Slovenian translations.
+
 2005-08-26 Florian Boor <florian.boor@kernelconcepts.de>
 
 	* filechooser.c: Use different choosers depending on screen size.
