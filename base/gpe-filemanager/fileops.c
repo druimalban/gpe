@@ -101,7 +101,7 @@ transfer_callback(GnomeVFSXferProgressInfo *info, gpointer data)
   {
 	  case GNOME_VFS_XFER_PROGRESS_STATUS_OK:
           if (progress_dialog == NULL)
-              progress_dialog = progress_dialog_create("Transfer progress");
+              progress_dialog = progress_dialog_create(_("Transfer progress"));
           else if (info->bytes_total)
           {
             GtkWidget *bar = g_object_get_data(G_OBJECT(progress_dialog),"bar");
@@ -119,9 +119,9 @@ transfer_callback(GnomeVFSXferProgressInfo *info, gpointer data)
 	  break;
 	  case GNOME_VFS_XFER_PROGRESS_STATUS_VFSERROR:
 		  /* error query dialog */
-          text = g_strdup_printf ("Error: %s", 
+          text = g_strdup_printf ("%s %s", _("Error:"),
             gnome_vfs_result_to_string(info->vfs_status));
-          dialog = gtk_dialog_new_with_buttons ("Error", GTK_WINDOW (window), 
+          dialog = gtk_dialog_new_with_buttons (_("Error"), GTK_WINDOW (window), 
              GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT, 
              "_Skip", GTK_RESPONSE_HELP,
              "_Retry", GTK_RESPONSE_APPLY, 
@@ -156,7 +156,7 @@ transfer_callback(GnomeVFSXferProgressInfo *info, gpointer data)
 	  case GNOME_VFS_XFER_PROGRESS_STATUS_OVERWRITE:
 		 /* overwrite query dialog */
           text = g_strdup_printf ("Overwrite file:\n%s", info->target_name);
-          dialog = gtk_dialog_new_with_buttons ("File exists", GTK_WINDOW (window), 
+          dialog = gtk_dialog_new_with_buttons (_("File exists"), GTK_WINDOW (window), 
              GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT, 
              GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, 
              GTK_STOCK_YES, GTK_RESPONSE_YES,
@@ -164,7 +164,7 @@ transfer_callback(GnomeVFSXferProgressInfo *info, gpointer data)
          label = gtk_label_new(text);
          g_free(text);
          gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->vbox),label,FALSE,TRUE,0);
-         label = gtk_check_button_new_with_label("Apply to all");
+         label = gtk_check_button_new_with_label(_("Apply to all"));
          gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(label),FALSE);
          gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->vbox),label,FALSE,TRUE,0);
          gtk_widget_show_all(dialog);
@@ -280,7 +280,7 @@ copy_file (const gchar *src_uri_txt, const gchar *dest_uri_txt)
                                NULL);
   if ((result != GNOME_VFS_OK) && (result != GNOME_VFS_ERROR_INTERRUPTED))
     {
-      error = g_strdup_printf ("Error: %s", gnome_vfs_result_to_string(result));
+      error = g_strdup_printf ("%s %s", _("Error:"), gnome_vfs_result_to_string(result));
       gpe_error_box (error);
       g_free (error);
     }

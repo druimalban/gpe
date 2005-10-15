@@ -385,11 +385,11 @@ auth_callback (gconstpointer in,
   q_out->password = NULL;
 
   if (q_in->previous_attempt_failed)
-    label_text = g_strdup_printf ("<b>Login failed, please try again</b>\n%s", q_in->uri);
+    label_text = g_strdup_printf ("<b>%s</b>\n%s",_("Login failed, please try again"), q_in->uri);
   else
-    label_text = g_strdup_printf ("<b>Enter credentials to access</b>\n%s", q_in->uri);
+    label_text = g_strdup_printf ("<b>%s</b>\n%s", _("Enter credentials to access"), q_in->uri);
 
-  dialog_window = gtk_dialog_new_with_buttons ("Restricted Resource", 
+  dialog_window = gtk_dialog_new_with_buttons (_("Restricted Resource"), 
     GTK_WINDOW (window), GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT, 
     GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT, 
     GTK_STOCK_OK, GTK_RESPONSE_ACCEPT, NULL);
@@ -412,10 +412,10 @@ auth_callback (gconstpointer in,
   gtk_table_attach(GTK_TABLE(table),entry_user,1,2,1,2,GTK_FILL,GTK_FILL,0,0);
   gtk_table_attach(GTK_TABLE(table),entry_passwd,1,2,2,3,GTK_FILL,GTK_FILL,0,0);
   gtk_table_attach(GTK_TABLE(table),label,0,2,0,1,GTK_FILL,GTK_FILL,0,0);
-  label = gtk_label_new("Username");
+  label = gtk_label_new(_("Username"));
   gtk_misc_set_alignment(GTK_MISC(label),0,0.5);
   gtk_table_attach(GTK_TABLE(table),label,0,1,1,2,GTK_FILL,GTK_FILL,0,0);
-  label = gtk_label_new("Password");
+  label = gtk_label_new(_("Password"));
   gtk_misc_set_alignment(GTK_MISC(label),0,0.5);
   gtk_table_attach(GTK_TABLE(table),label,0,1,2,3,GTK_FILL,GTK_FILL,0,0);
   gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog_window)->vbox),table);
@@ -578,19 +578,19 @@ rename_file (GtkWidget *dialog_window, gint response_id)
         switch (result)
           {
           case GNOME_VFS_ERROR_READ_ONLY:
-            error = g_strdup ("File is read only.");
+            error = g_strdup (_("File is read only."));
             break;
           case GNOME_VFS_ERROR_ACCESS_DENIED:
-            error = g_strdup ("Access denied.");
+            error = g_strdup (_("Access denied."));
             break;
           case GNOME_VFS_ERROR_READ_ONLY_FILE_SYSTEM:
-            error = g_strdup ("Read only file system.");
+            error = g_strdup (_("Read only file system."));
             break;
           case GNOME_VFS_ERROR_FILE_EXISTS:
-            error = g_strdup ("Destination file already exists.");
+            error = g_strdup (_("Destination file already exists."));
             break;
           default:
-            error = g_strdup_printf ("Error: %s", 
+            error = g_strdup_printf ("%s: %s", _("Error"),
                                      gnome_vfs_result_to_string(result));
             break;
           }
@@ -616,9 +616,10 @@ popup_ask_rename_file ()
   GtkWidget *vbox, *label, *entry, *btnok;
   gchar *label_text;
 
-  label_text = g_strdup_printf ("Rename file %s to:", current_popup_file->vfs->name);
+  label_text = g_strdup_printf ("%s %s %s", _("Rename file"), 
+                                current_popup_file->vfs->name, _("to:"));
 
-  dialog_window = gtk_dialog_new_with_buttons ("Rename file", 
+  dialog_window = gtk_dialog_new_with_buttons (_("Rename file"), 
                                                GTK_WINDOW (window), 
                                                GTK_DIALOG_MODAL 
                                                  | GTK_DIALOG_DESTROY_WITH_PARENT, 
@@ -669,7 +670,7 @@ show_file_properties ()
   gtk_table_set_col_spacings(GTK_TABLE(table),gpe_get_boxspacing());
   
   /* location */
-  text = g_strdup_printf("<b>%s</b>","Location:");
+  text = g_strdup_printf("<b>%s</b>", _("Location:"));
   label = gtk_label_new(NULL);
   gtk_misc_set_alignment(GTK_MISC(label),1,0.5); /* align right, gnomish */
   gtk_label_set_markup(GTK_LABEL(label),text);
@@ -684,7 +685,7 @@ show_file_properties ()
   gtk_table_attach(GTK_TABLE(table),label,1,2,0,1,GTK_FILL,GTK_FILL,0,0);
 	
   /* size */
-  text = g_strdup_printf("<b>%s</b>","Size:");
+  text = g_strdup_printf("<b>%s</b>", _("Size:"));
   label = gtk_label_new(NULL);
   gtk_misc_set_alignment(GTK_MISC(label),1,0.5); /* align right, gnomish */
   gtk_label_set_markup(GTK_LABEL(label),text);
@@ -697,7 +698,7 @@ show_file_properties ()
   gtk_table_attach(GTK_TABLE(table),label,1,2,1,2,GTK_FILL,GTK_FILL,0,0);
   
   /* mime type */
-  text = g_strdup_printf("<b>%s</b>","MIME-Type:");
+  text = g_strdup_printf("<b>%s</b>", _("MIME-Type:"));
   label = gtk_label_new(NULL);
   gtk_misc_set_alignment(GTK_MISC(label),1,0.5); /* align right, gnomish */
   gtk_label_set_markup(GTK_LABEL(label),text);
@@ -708,7 +709,7 @@ show_file_properties ()
   gtk_table_attach(GTK_TABLE(table),label,1,2,2,3,GTK_FILL,GTK_FILL,0,0);
   
   /* change time */
-  text = g_strdup_printf("<b>%s</b>","Changed:");
+  text = g_strdup_printf("<b>%s</b>", _("Changed:"));
   label = gtk_label_new(NULL);
   gtk_misc_set_alignment(GTK_MISC(label),1,0.5); /* align right, gnomish */
   gtk_label_set_markup(GTK_LABEL(label),text);
@@ -738,7 +739,7 @@ ask_open_with (FileInformation *file_info)
   gchar *s;
 
   dialog_window = gtk_dialog_new ();
-  gtk_window_set_title (GTK_WINDOW(dialog_window), "Open With...");
+  gtk_window_set_title (GTK_WINDOW(dialog_window), _("Open With..."));
   gtk_window_set_transient_for (GTK_WINDOW(dialog_window), GTK_WINDOW(window));
   gtk_window_set_modal (GTK_WINDOW (dialog_window), TRUE);
   
@@ -1203,19 +1204,19 @@ make_view (void)
     switch (open_dir_result)
     {
     case GNOME_VFS_ERROR_READ_ONLY:
-      error = g_strdup ("Destination is read only.");
+      error = g_strdup (_("Destination is read only."));
       break;
     case GNOME_VFS_ERROR_ACCESS_DENIED:
-      error = g_strdup ("Access denied.");
+      error = g_strdup (_("Access denied."));
       break;
     case GNOME_VFS_ERROR_READ_ONLY_FILE_SYSTEM:
-      error = g_strdup ("Read only file system.");
+      error = g_strdup (_("Read only file system."));
       break;
 	case GNOME_VFS_ERROR_NOT_FOUND:
 	case GNOME_VFS_ERROR_GENERIC:
 	break;
     default:
-      error = g_strdup_printf ("Error: %s", 
+      error = g_strdup_printf ("%s %s", _("Error:"), 
 	                           gnome_vfs_result_to_string(open_dir_result));
     break;
     }

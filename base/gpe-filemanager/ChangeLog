@@ -1,3 +1,8 @@
+2005-10-15  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * main.c, fileops.c: Mark remaining strings for translation.
+    * Makefile, po: Add Slovenian and Spanish translation. 
+
 2005-09-06  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * bluetooth.c: Applied patch by pHilipp Zabel to support new DBUS API.

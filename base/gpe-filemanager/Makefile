@@ -5,6 +5,8 @@ CVSBUILD = yes
 VERSION = 0.23
 MIME_PIXMAPS = `cd pixmaps/document-icons && ls *.png`
 
+LINGUAS = es sl
+
 MEMBERS = main bluetooth guitools fileops
 
 ifeq ($(CVSBUILD),yes)
