@@ -1,32 +1,34 @@
-# Localización en castellano de gpe-aerial.
-# Copyright © 2004 Free Software Foundation, Inc.
-# This file is distributed under the same license as the gpe-aerial package.
-# J.Manrique <jsmanrique@asturlinux.org>, 2005.
+# -*- mode:po; coding:utf-8; -*- Slovenian message catalogue for gpe-aerial-0.2.10.
+# Copyright (C) 2005 Free Software Foundation, Inc.
+# Matej Urbančič <matej.urban@gmail.com>, 2005.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-aerial 0.2.10\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2004-06-12 01:19+0200\n"
-"PO-Revision-Date: 2005-08-22 10:43+0100\n"
-"Last-Translator: J.Manrique <jsmanrique@asturlinux.org>\n"
-"Language-Team: Spanish <es@li.org>\n"
+"PO-Revision-Date: 2005-10-11 13:46+0100\n"
+"Last-Translator: Matej Urbančič <matej.urban@gmail.com>\n"
+"Language-Team: Slovenian <translation-team-sl@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n%100==4 ? 3 : 0);\n"
+"X-Poedit-Language: Slovenian\n"
+"X-Poedit-Country: SLOVENIA\n"
+"X-Poedit-SourceCharset: utf-8\n"
 
 #: main.c:386
 msgid "Wireless networks"
-msgstr "Redes inalámbricas"
+msgstr "Brezžična omrežja"
 
 #: main.c:402
 msgid "This window shows all detected networks. It will be updated while the scanner is running. The colors tell you something about the possibility to connect to the net. Green=OK, yellow=maybe need some configuration, red=not possible."
-msgstr "Esta ventana muestra todas las redes detectadas. Será actualizada mientras se realiza la búsqueda de redes. Los colores explican la posibilidad de concectar con la red. Verde=OK, Amarillo=quizás necesita alguna configuración, Rojo=NO es posible."
+msgstr "Okno prikazuje vsa zaznana omrežja. Med delovanjem skenerja bo nadgrajeno. Barva vam pove, kakšna je možnost za povezavo v omrežje. Zelena=OK, rumena=potrebna nastavitve in rdeča=ni možno."
 
 #: main.c:410 netedit.c:231 netedit.c:422 netedit.c:424
 msgid "Mode"
-msgstr "Modo"
+msgstr "Način"
 
 #: main.c:420
 msgid "ESSID"
@@ -34,7 +36,7 @@ msgstr "ESSID"
 
 #: main.c:431
 msgid "CH"
-msgstr "Canal"
+msgstr "CH"
 
 #: main.c:442
 msgid "WEP"
@@ -42,87 +44,87 @@ msgstr "WEP"
 
 #: main.c:463
 msgid "Unable to scan for devices."
-msgstr "Imposible buscar dispositivos"
+msgstr "Ne morem zaznati naprav."
 
 #: main.c:597
 msgid "Successfully connected."
-msgstr "Conexión satisfactoria"
+msgstr "Uspešno povezan."
 
 #: main.c:611
 msgid "Ad-Hoc connections setup complete."
-msgstr "Configuración de conexiones Ad-Hoc completada."
+msgstr "Ad-Hoc nastavljanje povezave zaključeno."
 
 #: main.c:620
 msgid "Could not connect to wireless LAN."
-msgstr "No pudo conectar con red LAN inalámbrica."
+msgstr "Nisem se uspel povezati z brezžičnim LAN omrežjem."
 
 #: main.c:700
 msgid "Details..."
-msgstr "Detalles..."
+msgstr "Podrobnosti..."
 
 #: main.c:706
 msgid "Enter additional info"
-msgstr "Introduzca información adicional"
+msgstr "Vnesite dodatne informacije"
 
 #: main.c:713
 msgid "Try connect..."
-msgstr "Intentando conectar..."
+msgstr "Poskus povezovanja..."
 
 #: main.c:768
 msgid "Scanning for networks..."
-msgstr "Buscando redes..."
+msgstr "Preiskovanje omrežij..."
 
 #: main.c:867
 msgid "scanner died unexpectedly"
-msgstr "la búsqueda terminó inexperadamente"
+msgstr "Skener je nepričakovano ustavljen"
 
 #: main.c:966
 msgid "Wireless LAN control"
-msgstr "Control de LAN inlámbrica"
+msgstr "Nadzornik brezžičnega LAN omrežja"
 
 #: main.c:972
 msgid "Switch scanner on"
-msgstr "Empezar la búsqueda"
+msgstr "Vklopi  skener"
 
 #: main.c:974
 msgid "Switch scanner off"
-msgstr "Terminar la búsqueda"
+msgstr "Izklopi skener"
 
 #: main.c:975
 msgid "Networks..."
-msgstr "Redes..."
+msgstr "Omrežja..."
 
 #: main.c:976
 msgid "Remove from dock"
-msgstr "Quitar del panel"
+msgstr "Odstrani iz doka"
 
 #: main.c:977
 msgid "Turn WLAN off"
-msgstr "Apagar WLAN"
+msgstr "Izklopi WLAN"
 
 #: main.c:1022
 msgid "This is gpe-aerial - the wireless LAN selector."
-msgstr "Esto es gpe-aerial - selector de redes LAN inalámbricas"
+msgstr "To je gpe-aerial - povezovalec v brezžično LAN omrežje."
 
 #: netedit.c:103
 msgid "The key you entered is not valid."
-msgstr "La clave introducida no es válida"
+msgstr "Vneseni ključ ni pravilen."
 
 #: netedit.c:114
 msgid "The IP address you entered is not valid."
-msgstr "La dirección IP introducida no es válida"
+msgstr "Vneseni IP naslov ni pravilen."
 
 #: netedit.c:133
 msgid "The subnet mask address you entered is not valid."
-msgstr "La dirección de máscara de subred introducida no es válida"
+msgstr "Maska vnesenega podomrežja ni prava."
 
 #: netedit.c:152
 msgid "The gateway address you entered is not valid."
-msgstr "La dirección de puerta de enlace introducida no es válida"
+msgstr "Naslov vnesenega prehoda ni pravi."
 
 #: netedit.c:171
 msgid "The DNS server address you entered is not valid."
-msgstr "La dirección del servidor DNS introducida no es válida"
+msgstr "Naslov vnesenega DNS strežnika ni pravilen."
 
 #: netedit.c:227
 msgid "SSID"
@@ -130,23 +132,23 @@ msgstr "SSID"
 
 #: netedit.c:232
 msgid "Managed"
-msgstr "Managed"
+msgstr "Določeno"
 
 #: netedit.c:233 netedit.c:441
 msgid "Channel"
-msgstr "Canal"
+msgstr "Kanal"
 
 #: netedit.c:234 netedit.c:445 netedit.c:447
 msgid "WEP enabled"
-msgstr "WEP activado"
+msgstr "WEP omogočen"
 
 #: netedit.c:235
 msgid "Use DHCP"
-msgstr "Usar DHCP"
+msgstr "Uporabi DHCP"
 
 #: netedit.c:236
 msgid "DNS Server"
-msgstr "Servidor DNS"
+msgstr "DNS Strežnik"
 
 #: netedit.c:240
 msgid "Ad-Hoc"
@@ -154,112 +156,112 @@ msgstr "Ad-Hoc"
 
 #: netedit.c:244
 msgid "Gateway"
-msgstr "Puerta de enlace"
+msgstr "Prehod"
 
 #: netedit.c:246
 msgid "Subnet mask"
-msgstr "Máscara de subred"
+msgstr "Maska podomrežja"
 
 #: netedit.c:248
 msgid "IP Address"
-msgstr "Dirección IP"
+msgstr "IP Naslov"
 
 #: netedit.c:251
 msgid "WEP key"
-msgstr "Clave WEP"
+msgstr "WEP ključ"
 
 #: netedit.c:255
 msgid "Enter your desired IP address here, e.g. 192.168.1.2"
-msgstr "Introduzca aquí la dirección IP deseada, p.ej. 192.168.1.2"
+msgstr "Vnesite svoj IP naslov, npr. 192.168.1.2"
 
 #: netedit.c:256
 msgid "Enter your desired subnet mask here, usually it is set to 255.255.255.0"
-msgstr "Introduzca aquí la máscara de subred deseada, normalmente es 255.255.255.0"
+msgstr "Vnesite masko svojega podomrežja, navadno je ta 255.255.255.0 "
 
 #: netedit.c:257
 msgid "This field needs to contain the name of this wireless LAN."
-msgstr "Este campo debe contener el nombre de la red LAN inalámbrica"
+msgstr "To polje mora vsebovati ime brezžičnega LAN omrežja."
 
 #: netedit.c:258 netedit.c:259
 msgid "Here you select the type of your net, if you have an accesspoint select \"managed\", for direct connections \"ad-hoc\""
-msgstr "Seleccione aquí el tipo de red. Si tiene un punto de acceso seleccione \"managed\", para otras conexiones use \"ad-hoc\""
+msgstr "Tukaj izberite tip omrežja. V primeru, da imate določeno vstopno točko izberite \"določeno\", za neposredno povezavo pa \"ad-hoc\""
 
 #: netedit.c:260
 msgid "Select channel here, only needed in ad-hoc mode. Note: Not all channels are allowed in all countries."
-msgstr "Seleccione aquí el canal, necesario sólo en modo ad-hoc. Nota: No todos los cananles están permitidos en todos los países."
+msgstr "Izberi kanal samo za ad-hoc način. Opozorilo: Vsi kanali niso dovoljeni v vseh državah."
 
 #: netedit.c:261
 msgid "Get IP setup using DHCP."
-msgstr "Obtener IP usando DHCP."
+msgstr "Nastavitve IP naslova prevzemi preko DHCP."
 
 #: netedit.c:262
 msgid "Enter the IP of the default gateway to use."
-msgstr "Introduzca la IP para la puerta de enlace para usar por defecto."
+msgstr "Vnesite IP naslov privzetega prehoda."
 
 #: netedit.c:263
 msgid "Check this if WEP encryption is activated in this LAN."
-msgstr "Selecione esto si la encriptación WEP está activada en esta red LAN."
+msgstr "Odkljukajte, če je WEP šifriranje aktivirano v LAN omrežju."
 
 #: netedit.c:264
 msgid "Enter WEP key here. Use hex digits or set as ascii string (s: <keystring>)."
-msgstr "Introduzca la clave WEP aquí. Use cifras hexadecimales o una cadena ascii (s: <keystring>)."
+msgstr "Vnesite WEP ključ. Uporabite hex cifre ali pa nastavite kot ascii niz (s: <ključni niz>)."
 
 #: netedit.c:265
 msgid "Enter the IP address of the primary nameserver to be used in this net here."
-msgstr "Introduzca aquí la dirección IP del servidor de nombres primarios para usar en esta red."
+msgstr "Vnesi naslov IP za primarni imenski strežnik za izbrano mrežo."
 
 #: netedit.c:268
 msgid "Network editor"
-msgstr "Editor de red"
+msgstr "Urejevalnik Omrežja"
 
 #: netedit.c:407
 msgid "This dialog provides some information about the selected wireless LAN."
-msgstr "Este formulario provee de alguna información sobre la red LAN inalámbrica seleccionada."
+msgstr "Okno prikaže nekaj informacij o izbrani brezžičnem LAN omrežju."
 
 #: netedit.c:409
 msgid "Network information"
-msgstr "Información de red"
+msgstr "Informacije Omrežja"
 
 #: netedit.c:429
 msgid "Max. signal"
-msgstr "Señal max."
+msgstr "Najvišji signal"
 
 #: netedit.c:434 netedit.c:437
 msgid "Speed"
-msgstr "Veloc."
+msgstr "Hitrost"
 
 #: netedit.c:438
 msgid "unknown"
-msgstr "desconocida"
+msgstr "neznano"
 
 #: netedit.c:445 netedit.c:452 netedit.c:460
 msgid "yes"
-msgstr "sí"
+msgstr "da"
 
 #: netedit.c:447 netedit.c:455 netedit.c:462
 msgid "no"
-msgstr "no"
+msgstr "ne"
 
 #: netedit.c:451 netedit.c:454
 msgid "IPSec detected"
-msgstr "Detectada IPSec"
+msgstr "zaznan IPSec"
 
 #: netedit.c:459 netedit.c:462
 msgid "DHCP detected"
-msgstr "Detectado DHCP"
+msgstr "zaznan DHCP"
 
 #: netedit.c:466 netedit.c:472
 msgid "Subnet"
-msgstr "Subred"
+msgstr "Podomrežje"
 
 #: netedit.c:473
 msgid "<i>unknown</i>"
-msgstr "<i>desconocida</i>"
+msgstr "<i>neznano</i>"
 
 #: gpe-aerial.desktop.in.h:1
 msgid "Aerial"
-msgstr "Aerial"
+msgstr "Antena"
 
 #: gpe-aerial.desktop.in.h:2
 msgid "Panel based wireless LAN communications control"
-msgstr "Panel de control para redes LAN inalámbricas"
+msgstr "Okenska brezžična LAN komunikacijska kontrolna plošča"

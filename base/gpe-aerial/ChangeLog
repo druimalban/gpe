@@ -1,3 +1,8 @@
+
+2005-10-15		Florian Boor <florian.boor@kernelconcepts.de>
+
+	* Makefile, po: Update Spanish translation, add Slovenian translation.
+
 2005-10-09		Florian Boor <florian.boor@kernelconcepts.de>
 
 	* prismstumbler.h: Update from prismstumbler CVS.
