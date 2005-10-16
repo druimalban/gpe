@@ -30,15 +30,17 @@
 
 #ifdef BACKGROUND_IMAGE
 static GdkPixbuf *clock_background, *clock_background_24;
-static guint background_width, background_height;
-#endif
-
 static GdkPixbuf *day_night_wheel;
+#endif
 
 static GtkWidgetClass *parent_class;
 
 #define DEFAULT_RADIUS 64
 #define DEFAULT_BORDER 2
+
+/* Color usage */
+#define SELECTED_BG_COLOR(widget)	 (& (widget)->style->base[GTK_STATE_SELECTED])
+#define SELECTED_FG_COLOR(widget)	 (& (widget)->style->text[GTK_STATE_SELECTED])
 
 /**
  * GpeClockFace:
@@ -202,42 +204,86 @@ gpe_clock_face_expose (GtkWidget *widget,
   gdk_gc_set_clip_rectangle (gc, NULL);
   gdk_gc_set_clip_rectangle (white_gc, NULL);
 
+#ifdef BACKGROUND_IMAGE
   if (clock->use_background_image)
     {
       GdkRectangle pixbuf_rect, intersect_rect;
       GdkPixbuf *current_background;
 
       if (afternoon)
-	current_background = clock_background_24;
+	{
+	  if (clock_background_24 == NULL)
+	    clock_background_24 = gdk_pixbuf_new_from_file (PREFIX "/share/libgpewidget/clock24.png", NULL);
+	  current_background = clock_background_24;
+	}
       else
-	current_background = clock_background;
+	{
+	  if (clock_background == NULL)
+	    clock_background = gdk_pixbuf_new_from_file (PREFIX "/share/libgpewidget/clock.png", NULL);
+	  current_background = clock_background;
+	}
+
+      pixbuf_rect.width = gdk_pixbuf_get_width (current_background);
+      pixbuf_rect.height = gdk_pixbuf_get_height (current_background);
+      pixbuf_rect.x = clock->x_offset + clock->radius - pixbuf_rect.width / 2;
+      pixbuf_rect.y = clock->y_offset + clock->radius - pixbuf_rect.width / 2;
       
       if (event)
 	{
-	  pixbuf_rect.x = clock->x_offset;
-	  pixbuf_rect.y = clock->y_offset;
-	  pixbuf_rect.width = background_width;
-	  pixbuf_rect.height = background_height;
-	  
 	  if (gdk_rectangle_intersect (&pixbuf_rect, &event->area, &intersect_rect) == TRUE)
+#if GTK_CHECK_VERSION(2,2,0)
+	    gdk_draw_pixbuf (clock->backing_pixmap,
+			     clock->backing_gc, 
+			     current_background, 
+			     intersect_rect.x - pixbuf_rect.x,
+			     intersect_rect.y - pixbuf_rect.y, 
+			     intersect_rect.x, intersect_rect.y,
+			     intersect_rect.width, intersect_rect.height,
+			     GDK_RGB_DITHER_NONE, 0, 0);
+#else
 	    gdk_pixbuf_render_to_drawable (current_background, 
 					   clock->backing_pixmap,
 					   clock->backing_gc, 
-					   intersect_rect.x - clock->x_offset, intersect_rect.y - clock->y_offset, 
+					   intersect_rect.x - pixbuf_rect.x, intersect_rect.y - pixbuf_rect.y, 
 					   intersect_rect.x, intersect_rect.y,
 					   intersect_rect.width, intersect_rect.height,
 					   GDK_RGB_DITHER_NONE, 0, 0);
+#endif
 	}
       else
-	gdk_pixbuf_render_to_drawable (current_background, 
-				       clock->backing_pixmap,
-				       clock->backing_gc, 
-				       0, 0, clock->x_offset, clock->y_offset,
-				       gdk_pixbuf_get_width (clock_background), 
-				       gdk_pixbuf_get_height (clock_background), 
-				       GDK_RGB_DITHER_NONE, 0, 0);
-      
+        {
+#if GTK_CHECK_VERSION(2,2,0)
+          gdk_draw_pixbuf (clock->backing_pixmap,
+                           clock->backing_gc,
+                           current_background,
+                           0, 0,
+			   pixbuf_rect.x,
+			   pixbuf_rect.y,
+			   -1, -1, GDK_RGB_DITHER_NONE, 0, 0);
+                         
+#else
+	  gdk_pixbuf_render_to_drawable (current_background, 
+				         clock->backing_pixmap,
+				         clock->backing_gc, 
+				         0, 0,
+			                 pixbuf_rect.x,
+                		         pixbuf_rect.y,
+				         -1, -1, GDK_RGB_DITHER_NONE, 0, 0);
+#endif
+        }
 
+      if (day_night_wheel == NULL)
+        day_night_wheel = gdk_pixbuf_new_from_file (PREFIX "/share/libgpewidget/day-night-wheel.png", NULL);
+
+#if GTK_CHECK_VERSION(2,2,0)
+      gdk_draw_pixbuf(clock->backing_pixmap, 
+		      clock->backing_gc, 
+		      day_night_wheel, 
+		      0, 0, 
+		      (clock->x_offset + clock->radius) - (gdk_pixbuf_get_width (day_night_wheel) / 2), 
+		      (clock->y_offset + clock->radius) - (gdk_pixbuf_get_height (day_night_wheel) / 2), 
+		      -1, -1, GDK_RGB_DITHER_NONE, 0, 0);
+#else
       gdk_pixbuf_render_to_drawable (day_night_wheel, 
 				     clock->backing_pixmap, 
 				     clock->backing_gc, 
@@ -245,7 +291,8 @@ gpe_clock_face_expose (GtkWidget *widget,
 				     (clock->x_offset + clock->radius) - (gdk_pixbuf_get_width (day_night_wheel) / 2), 
 				     (clock->y_offset + clock->radius) - (gdk_pixbuf_get_height (day_night_wheel) / 2), 
 				     -1, -1, GDK_RGB_DITHER_NONE, 0, 0);
-      
+#endif
+
       gdk_draw_arc (clock->backing_pixmap, 
 		    widget->style->white_gc, TRUE,
 		    ((clock->x_offset + clock->radius) - (gdk_pixbuf_get_width (day_night_wheel) / 2)) - 2,
@@ -257,6 +304,7 @@ gpe_clock_face_expose (GtkWidget *widget,
 		    180 * 64);
     }
   else
+#endif /* BACKGROUND_IMAGE */
     {
 #ifdef HAVE_CAIRO
       cairo_set_source_rgba (clock->cr, 1, 1, 1, 1.0);
@@ -277,14 +325,17 @@ gpe_clock_face_expose (GtkWidget *widget,
 		 2 * M_PI);
       cairo_stroke (clock->cr);
 #else
+      gdk_gc_set_foreground (gc, SELECTED_BG_COLOR ((GtkWidget*)clock));
       gdk_draw_arc (clock->backing_pixmap, gc, TRUE,
 		    clock->x_offset, clock->y_offset,
 		    clock->radius * 2, clock->radius * 2,
 		    0, 360 * 64);
   
       gdk_draw_arc (clock->backing_pixmap, white_gc, TRUE,
-		    clock->x_offset + clock->border, clock->y_offset + clock->border,
-		    (clock->radius - clock->border) * 2, (clock->radius - clock->border) * 2,
+		    clock->x_offset + clock->border + clock->radius / 4,
+		    clock->y_offset + clock->border + clock->radius / 4,
+		    (3 * clock->radius / 4 - clock->border) * 2,
+		    (3 * clock->radius / 4 - clock->border) * 2,
 		    0, 360 * 64);
 #endif
 
@@ -303,19 +354,25 @@ gpe_clock_face_expose (GtkWidget *widget,
 	      
 	      angle = 2 * M_PI * i / 12;
 	      
-	      dx = sin (angle) * (clock->radius - clock->border - 10);
-	      dy = -cos (angle) * (clock->radius - clock->border - 10);
+	      dx = sin (angle) * (7 * clock->radius / 8 - clock->border);
+	      dy = -cos (angle) * (7 * clock->radius / 8 - clock->border);
 
 	      x = clock->x_offset + clock->radius + dx;
 	      y = clock->y_offset + clock->radius + dy;
 
-	      sprintf (buf, "%d", afternoon ? (i + 12) : i);
+	      sprintf (buf, "%d", afternoon ? (i ? i + 12 : 24) : (i ? i : 12));
 
 	      pango_layout_set_text (pl, buf, strlen (buf));
 	      pango_layout_get_size (pl, &width, &height);
 	      width /= PANGO_SCALE;
 	      height /= PANGO_SCALE;
 
+#if 1
+              gdk_gc_set_foreground (gc, SELECTED_FG_COLOR ((GtkWidget*)clock));
+              gdk_draw_layout(clock->backing_pixmap,
+                              gc,
+                              x - (width / 2), y - (height / 2), pl);
+#else
 	      gtk_paint_layout (widget->style,
 				clock->backing_pixmap,
 				GTK_WIDGET_STATE (widget),
@@ -324,6 +381,7 @@ gpe_clock_face_expose (GtkWidget *widget,
 				widget,
 				"label",
 				x - (width / 2), y - (height / 2), pl);
+#endif
 	    }
 	  
 	  g_object_unref (pl);
@@ -657,21 +715,7 @@ gpe_clock_face_size_request (GtkWidget	  *widget,
 static void
 gpe_clock_face_init (GpeClockFace *clock)
 {
-#ifdef BACKGROUND_IMAGE
-  if (clock_background == NULL)
-    clock_background = gdk_pixbuf_new_from_file (PREFIX "/share/libgpewidget/clock.png", NULL);
-  
-  if (clock_background_24 == NULL)
-    clock_background_24 = gdk_pixbuf_new_from_file (PREFIX "/share/libgpewidget/clock24.png", NULL);
-
-  background_width = gdk_pixbuf_get_width (clock_background);
-  background_height = gdk_pixbuf_get_height (clock_background);
-#endif
-  
-  if (day_night_wheel == NULL)
-    day_night_wheel = gdk_pixbuf_new_from_file (PREFIX "/share/libgpewidget/day-night-wheel.png", NULL);
-
-  // Double buffering doesn't play nicely with Render, so we will do that by hand
+  /* Double buffering doesn't play nicely with Render, so we will do that by hand */
   gtk_widget_set_double_buffered (GTK_WIDGET (clock), FALSE);
 
   clock->radius = DEFAULT_RADIUS;

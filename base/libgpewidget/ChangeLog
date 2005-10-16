@@ -1,3 +1,16 @@
+2005-10-16  Phil Blundell  <pb@reciva.com>
+
+	* doc/Makefile.am (GTKDOC_CC, GTKDOC_LD): Delete definitions that
+	automake seems to dislike.
+
+	Patch from Magnus Bergman:
+	* gpeclockface.c: Fix compile problems when BACKGROUND_IMAGE
+	disabled.
+	(gpe_clock_face_expose): Use gdk_draw_pixbuf if available.
+	Correct exposure calculation and hour numbering.  Perform lazy
+	loading of pixmaps if required.
+	(gpe_clock_face_init): Don't load pixmaps here.
+
 2005-10-13  Florian Boor <florian@kernelconcepts.de>
 
 	* Release Version 0.104
