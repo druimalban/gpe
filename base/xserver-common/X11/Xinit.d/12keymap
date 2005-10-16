@@ -22,5 +22,11 @@ case $MACHINE in
 	"HP iPAQ HX4700")
 		xmodmap - < /etc/X11/hx4700.xmodmap
 		;;
+	"HP iPAQ H1910")
+		xmodmap - < /etc/X11/h1910.xmodmap
+		;;
+	"Asus MyPal A716")
+		xmodmap - < /etc/X11/a716.xmodmap
+		;;
 esac
 
