@@ -1,5 +1,9 @@
 2005-10-16  Phil Blundell  <pb@reciva.com>
 
+	* Version 0.105 released.
+
+2005-10-16  Phil Blundell  <pb@reciva.com>
+
 	* doc/Makefile.am (GTKDOC_CC, GTKDOC_LD): Delete definitions that
 	automake seems to dislike.
 
