@@ -43,7 +43,7 @@ DISTCLEANFILES = intltool-extract \
                  intltool-update
 
 clean-local:
-	rm -f gpe-contacts.desktop
+	rm -f gpe-mini-browser.desktop
 	rm -f hildon/gpe-mini-browser.desktop
 	rm -f po/.intltool-merge-cache 
 	
