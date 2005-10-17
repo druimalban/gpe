@@ -281,8 +281,8 @@ prepare_icon (MBPixbufImage *img_icon, Pixmap pix)
 		      xcol_bg.red, xcol_bg.green, xcol_bg.blue, 0);
   x = (win_width - mb_pixbuf_img_get_width (img_icon)) / 2;
   y = (win_height - mb_pixbuf_img_get_height (img_icon)) / 2;
-  if ( x < 0) x = 0;
-  if ( y < 0) y = 0;
+  if ( x < 0) abort ();
+  if ( y < 0) abort ();
   mb_pixbuf_img_composite (mbpixbuf, img_backing, img_icon, x, y);
   mb_pixbuf_img_render_to_drawable (mbpixbuf, img_backing, pix, 0, 0);
   mb_pixbuf_img_free (mbpixbuf, img_backing);
@@ -300,6 +300,8 @@ main (int argc, char *argv[])
   int state = 0;
   int i;
   int no_button = 0;
+  int icon_width, icon_height;
+  XSizeHints *hints;
 
   g_type_init ();
 
@@ -339,14 +341,22 @@ main (int argc, char *argv[])
       exit (1);
     }
   
-  win_width = mb_pixbuf_img_get_width (img_icon);
-  win_height = mb_pixbuf_img_get_height (img_icon);
-  
+  icon_width = mb_pixbuf_img_get_width (img_icon);
+  icon_height = mb_pixbuf_img_get_height (img_icon);
+  win_width = icon_width;
+  win_height = icon_height;
+
   win_panel = XCreateSimpleWindow (dpy, DefaultRootWindow (dpy), 0, 0,
 				   win_width, win_height,
 				   0,
 				   BlackPixel (dpy, screen),
 				   WhitePixel (dpy, screen));
+  
+  hints = XAllocSizeHints ();
+  hints->width = hints->min_width = hints->max_width = icon_width;
+  hints->height = hints->min_height = hints->max_height = icon_height;
+  hints->flags = PSize | PMinSize | PMaxSize;
+  XSetWMNormalHints (dpy, win_panel, hints);
   
   XStoreName (dpy, win_panel, _("Interactive help"));
   
@@ -453,7 +463,11 @@ main (int argc, char *argv[])
 	      XFreePixmap (dpy, pixmap_active);
 
 	      win_width = xev.xconfigure.width;
+	      if (win_width < icon_width)
+		win_width = icon_width;
 	      win_height = xev.xconfigure.height;
+	      if (win_height < icon_height)
+		win_height = icon_height;
 
 	      pixmap = XCreatePixmap (dpy, win_panel, 
 				      win_width, win_height,

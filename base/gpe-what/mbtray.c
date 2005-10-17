@@ -411,15 +411,15 @@ mb_tray_get_bg_col(Display *dpy, XColor *xcol)
 			      &format, &n, &extra,
 			      (unsigned char **) &value);
 
-  TRAYDBG("got background %s\n", value);  
   if (status == Success && value != NULL)
     {
+      TRAYDBG("got background %s\n", value);  
       xcol->pixel = (Pixmap)atol(value+4);
       if (XQueryColor(dpy, DefaultColormap(dpy, DefaultScreen(dpy)), xcol))
 	return True;
     }
   
-  fprintf(stderr, "Failed to get panel background\n");
+  TRAYDBG("Failed to get panel background\n");
   XParseColor(dpy, DefaultColormap(dpy, DefaultScreen(dpy)), "white", xcol);
 
   return False;
