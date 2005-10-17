@@ -51,67 +51,6 @@
 
 //#define DEBUG /* uncomment this if you want debug output*/
 
-/*
-static void
-fullscreen (GtkWidget * button, HildonAppView * app)
-{
-  gboolean fullscreen;
-
-  fullscreen = hildon_appview_get_fullscreen (app);
-  if (!fullscreen)
-    hildon_appview_set_fullscreen (app, TRUE);
-  else
-    hildon_appview_set_fullscreen (app, FALSE);
-
-}*/
-
-static void
-set_fullscreen (GtkWidget * button, gpointer * fullscreen_info)
-{
-  static int fullscreen;
-  static int totalscreen;
-  struct fullscreen_info *info;
-
-  info = (struct fullscreen_info *) fullscreen_info;
-
-  if (!fullscreen)
-    {
-      gtk_window_fullscreen (GTK_WINDOW (info->app));
-      fullscreen = 1;
-    }
-  else if (fullscreen && !totalscreen)
-    {
-      GtkWidget *close_button, *fullscreen_popup;
-
-      totalscreen = 1;
-      gtk_widget_hide (info->toolbar);
-      if (info->urlbox)
-	gtk_widget_hide (info->urlbox);
-      fullscreen_popup = gtk_window_new (GTK_WINDOW_POPUP);
-
-      close_button =
-	gpe_button_new_from_stock (GTK_STOCK_ZOOM_FIT, GPE_BUTTON_TYPE_ICON);
-      g_signal_connect (G_OBJECT (close_button), "clicked",
-			G_CALLBACK (set_fullscreen), fullscreen_info);
-      g_signal_connect (G_OBJECT (close_button), "clicked",
-			G_CALLBACK (destroy_window), fullscreen_popup);
-      gtk_container_add (GTK_CONTAINER (fullscreen_popup), close_button);
-      gtk_widget_show_all (fullscreen_popup);
-
-    }
-  else if (totalscreen == 1 && fullscreen == 1)
-    {
-      gtk_window_unfullscreen (GTK_WINDOW (info->app));
-      gtk_widget_show_all (info->toolbar);
-      if (info->urlbox)
-	gtk_widget_show_all (info->urlbox);
-      fullscreen = 0;
-      totalscreen = 0;
-    }
-}
-
-
-
 static void
 osso_top_callback (const gchar * arguments, gpointer ptr)
 {
