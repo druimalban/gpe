@@ -245,7 +245,7 @@ set_entry_completion (GtkWidget * entry)
   completion = gtk_entry_completion_new ();
   gtk_entry_completion_set_model (completion, model);
   gtk_entry_completion_set_text_column (completion, 0);
-  gtk_entry_completion_set_minimum_key_length (completion, 4);
+  gtk_entry_completion_set_minimum_key_length (completion, 3);
   gtk_entry_set_completion (GTK_ENTRY (entry), completion);
 
   /*default should be replacing the contents of the entry by the selected content */
