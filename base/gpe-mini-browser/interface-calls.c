@@ -57,18 +57,19 @@ show_url_window (GtkWidget * show, GtkWidget * html)
   GtkWidget *hbox, *vbox;
   GtkWidget *label;
   GtkWidget *buttonok, *buttoncancel;
-  struct url_data *data;
+  static struct url_data data;
 
   /* create dialog window */
   url_window = gtk_dialog_new ();
+  gtk_window_set_modal(GTK_WINDOW (url_window), TRUE);
   gtk_window_set_title (GTK_WINDOW (url_window), _("Where to go to?"));
 
   hbox = gtk_hbox_new (FALSE, 0);
   entry = gtk_entry_new ();
 
   /* set completion on url entry */
-  set_entry_completion(entry);
- 
+  set_entry_completion (entry);
+
   gtk_entry_set_activates_default (GTK_ENTRY (entry), TRUE);
   label = gtk_label_new (_("Enter url:"));
   gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
@@ -97,20 +98,18 @@ show_url_window (GtkWidget * show, GtkWidget * html)
   GTK_WIDGET_SET_FLAGS (buttonok, GTK_CAN_DEFAULT);
   gtk_widget_grab_default (buttonok);
 
-  data = malloc (sizeof (struct url_data));
-  data->html = html;
-  data->entry = entry;
-  data->window = url_window;
+  data.html = html;
+  data.entry = entry;
 
   /* add button callbacks */
   g_signal_connect (GTK_OBJECT (buttonok), "clicked",
-		    G_CALLBACK (load_text_entry), (gpointer *) data);
+		    G_CALLBACK (load_text_entry), &data);
   g_signal_connect (GTK_OBJECT (buttoncancel), "clicked",
 		    G_CALLBACK (destroy_window), (gpointer *) url_window);
   g_signal_connect (GTK_OBJECT (buttonok), "clicked",
 		    G_CALLBACK (destroy_window), (gpointer *) url_window);
   g_signal_connect (GTK_OBJECT (entry), "activate",
-		    G_CALLBACK (load_text_entry), (gpointer *) data);
+		    G_CALLBACK (load_text_entry), &data);
   g_signal_connect (GTK_OBJECT (entry), "activate",
 		    G_CALLBACK (destroy_window), (gpointer *) url_window);
 
@@ -121,7 +120,7 @@ show_url_window (GtkWidget * show, GtkWidget * html)
 /* ======================================================== */
 
 void
-destroy_window (GtkButton * button, gpointer * window)
+destroy_window (GtkWidget *button, gpointer *window)
 {
   gtk_widget_destroy (GTK_WIDGET (window));
 }
@@ -298,7 +297,7 @@ show_big_screen_interface (Webi * html, GtkWidget * toolbar,
   gtk_tool_item_set_homogeneous (sep2, FALSE);
   gtk_toolbar_insert (GTK_TOOLBAR (toolbar), sep2, -1);
 
-  add_zoom_buttons(html, toolbar, set);
+  add_zoom_buttons (html, toolbar, set);
 
   /* fill in info for hiding */
 
@@ -316,7 +315,7 @@ show_big_screen_interface (Webi * html, GtkWidget * toolbar,
 /* ======================================================== */
 
 void
-add_zoom_buttons (Webi *html, GtkWidget *toolbar, WebiSettings * set)
+add_zoom_buttons (Webi * html, GtkWidget * toolbar, WebiSettings * set)
 {
 
   GtkToolItem *zoom_in_button, *zoom_out_button, *sep;
@@ -367,7 +366,7 @@ create_url_bar (Webi * html)
   okbutton = gpe_button_new_from_stock (GTK_STOCK_OK, GPE_BUTTON_TYPE_BOTH);
 
   /* set completion on url entry */
-  set_entry_completion(urlentry);
+  set_entry_completion (urlentry);
 
   /* pack everything in the hbox */
   gtk_box_pack_start (GTK_BOX (urlbox), urllabel, FALSE, FALSE, 0);
@@ -376,7 +375,7 @@ create_url_bar (Webi * html)
 
   data.html = (GtkWidget *) html;
   data.entry = urlentry;
-  data.window = NULL;		/* set to NULL to be easy to recognize to avoid freeing in load_text_entry  as this window is not destroyed unlike the pop-up */
+//  data.window = NULL;		/* set to NULL to be easy to recognize to avoid freeing in load_text_entry  as this window is not destroyed unlike the pop-up */
 
   g_signal_connect (GTK_OBJECT (okbutton), "clicked",
 		    G_CALLBACK (load_text_entry), &data);
@@ -389,7 +388,7 @@ create_url_bar (Webi * html)
   /*final settings */
   GTK_WIDGET_SET_FLAGS (okbutton, GTK_CAN_DEFAULT);
   gtk_button_set_relief (GTK_BUTTON (okbutton), GTK_RELIEF_NONE);
-  gtk_widget_grab_default (okbutton);
+  gtk_widget_activate (okbutton);
 
   return (urlbox);
 }
@@ -407,18 +406,25 @@ hide_url_bar (GtkWidget * button, struct urlbar_data *url_bar)
     {
       gtk_widget_hide (data->urlbox);
       data->hidden = 1;
-      gtk_tool_button_set_stock_id (GTK_TOOL_BUTTON (data->hiding_button), "gtk-redo");
-      gtk_tool_button_set_icon_widget (GTK_TOOL_BUTTON (data->hiding_button), NULL);
-      gtk_tool_button_set_label (GTK_TOOL_BUTTON (data->hiding_button), _("Show Url"));
+      gtk_tool_button_set_stock_id (GTK_TOOL_BUTTON (data->hiding_button),
+				    "gtk-redo");
+      gtk_tool_button_set_icon_widget (GTK_TOOL_BUTTON (data->hiding_button),
+				       NULL);
+      gtk_tool_button_set_label (GTK_TOOL_BUTTON (data->hiding_button),
+				 _("Show Url"));
     }
   else
     {
       gtk_widget_show_all (data->urlbox);
       data->hidden = 0;
-      gtk_tool_button_set_stock_id (GTK_TOOL_BUTTON (data->hiding_button), "gtk-undo");
-      gtk_tool_button_set_icon_widget (GTK_TOOL_BUTTON (data->hiding_button), NULL);
-      gtk_tool_button_set_label (GTK_TOOL_BUTTON (data->hiding_button), _("Hide Url"));
+      gtk_tool_button_set_stock_id (GTK_TOOL_BUTTON (data->hiding_button),
+				    "gtk-undo");
+      gtk_tool_button_set_icon_widget (GTK_TOOL_BUTTON (data->hiding_button),
+				       NULL);
+      gtk_tool_button_set_label (GTK_TOOL_BUTTON (data->hiding_button),
+				 _("Hide Url"));
     }
+    urlbar_hidden = data->hidden;
 
 }
 
@@ -440,8 +446,9 @@ show_bookmarks (GtkWidget * button, Webi * html)
   bookmarks_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title (GTK_WINDOW (bookmarks_window), _("Bookmarks"));
   gtk_window_set_default_size (GTK_WINDOW (bookmarks_window), 240, 320);
-  gtk_window_set_type_hint (GTK_WINDOW(bookmarks_window), GDK_WINDOW_TYPE_HINT_DIALOG); 
-  gtk_window_set_decorated (GTK_WINDOW(bookmarks_window), TRUE);
+  gtk_window_set_type_hint (GTK_WINDOW (bookmarks_window),
+			    GDK_WINDOW_TYPE_HINT_DIALOG);
+  gtk_window_set_decorated (GTK_WINDOW (bookmarks_window), TRUE);
 
   bookbox = gtk_vbox_new (FALSE, 0);
   booktool = GTK_TOOLBAR (gtk_toolbar_new ());
@@ -467,22 +474,22 @@ show_bookmarks (GtkWidget * button, Webi * html)
   // fill in the tree info struct
 
   tree_info.html = html;
-  tree_info.treeview = bookmark_list;  
+  tree_info.treeview = bookmark_list;
 
-  model = GTK_TREE_MODEL(gtk_tree_store_new(1, G_TYPE_STRING));
+  model = GTK_TREE_MODEL (gtk_tree_store_new (1, G_TYPE_STRING));
   gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (bookmark_list), FALSE);
   gtk_tree_view_set_model (GTK_TREE_VIEW (bookmark_list),
 			   GTK_TREE_MODEL (model));
-  gtk_tree_view_set_rules_hint(GTK_TREE_VIEW(bookmark_list), TRUE);
-  selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(bookmark_list));
+  gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (bookmark_list), TRUE);
+  selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (bookmark_list));
   gtk_tree_selection_set_mode (selection, GTK_SELECTION_SINGLE);
 
-  start_db();
+  start_db ();
 
-  refresh_or_load_db(bookmark_list);
+  refresh_or_load_db (bookmark_list);
 
   cell = gtk_cell_renderer_text_new ();
-  column = gtk_tree_view_column_new_with_attributes (_("Bookmarks"), cell, 
+  column = gtk_tree_view_column_new_with_attributes (_("Bookmarks"), cell,
 						     "text", 0, NULL);
 
   gtk_tree_view_append_column (GTK_TREE_VIEW (bookmark_list),
@@ -516,7 +523,7 @@ show_bookmarks (GtkWidget * button, Webi * html)
 /* ======================================================== */
 
 void
-show_add_dialog (GtkWidget * button, gpointer *data)
+show_add_dialog (GtkWidget * button, gpointer * data)
 {
   GtkWidget *add_dialog, *add_new, *add_current, *add;
   GtkWidget *hbox, *vbox;
@@ -561,15 +568,15 @@ show_add_dialog (GtkWidget * button, gpointer *data)
   gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (add_dialog)->vbox),
 		      vbox, FALSE, FALSE, 0);
-  
+
   /* dialog buttons */
   add = gpe_button_new_from_stock (GTK_STOCK_ADD, GPE_BUTTON_TYPE_BOTH);
   cancel = gpe_button_new_from_stock (GTK_STOCK_CANCEL, GPE_BUTTON_TYPE_BOTH);
 
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (add_dialog)->action_area),
-                     cancel, TRUE, TRUE, 0);
+		      cancel, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (add_dialog)->action_area),
-                     add, TRUE, TRUE, 0);
+		      add, TRUE, TRUE, 0);
 
   /* connect the signals */
   g_signal_connect (GTK_OBJECT (cancel), "clicked",
@@ -590,7 +597,8 @@ show_add_dialog (GtkWidget * button, gpointer *data)
 
 /* ======================================================== */
 
-void show_history(GtkWidget *button, Webi *html)
+void
+show_history (GtkWidget * button, Webi * html)
 {
   GtkWidget *history_dialog, *scroll;
   GtkToolbar *bar;
@@ -607,10 +615,11 @@ void show_history(GtkWidget *button, Webi *html)
   history_dialog = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title (GTK_WINDOW (history_dialog), _("History"));
   gtk_container_set_border_width (GTK_CONTAINER (history_dialog),
-                                  gpe_get_border ());
+				  gpe_get_border ());
   gtk_window_set_default_size (GTK_WINDOW (history_dialog), 240, 320);
-  gtk_window_set_type_hint (GTK_WINDOW(history_dialog), GDK_WINDOW_TYPE_HINT_DIALOG);
-  gtk_window_set_decorated (GTK_WINDOW(history_dialog), TRUE);
+  gtk_window_set_type_hint (GTK_WINDOW (history_dialog),
+			    GDK_WINDOW_TYPE_HINT_DIALOG);
+  gtk_window_set_decorated (GTK_WINDOW (history_dialog), TRUE);
 
   /* vbox for putting in scrolled window and button */
   vbox = gtk_vbox_new (FALSE, 0);
@@ -618,54 +627,53 @@ void show_history(GtkWidget *button, Webi *html)
   /* scrolled window */
   scroll = gtk_scrolled_window_new (NULL, NULL);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scroll),
-                                  GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC); 
+				  GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
   /* create tree view */
-  treeview = gtk_tree_view_new(); 
-  model = GTK_TREE_MODEL(completion_store);
+  treeview = gtk_tree_view_new ();
+  model = GTK_TREE_MODEL (completion_store);
 
   gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scroll),
-                                         GTK_WIDGET(treeview));
-  gtk_tree_view_set_model(GTK_TREE_VIEW(treeview), model);
-  gtk_widget_show(treeview);
+					 GTK_WIDGET (treeview));
+  gtk_tree_view_set_model (GTK_TREE_VIEW (treeview), model);
+  gtk_widget_show (treeview);
 
   gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (treeview), FALSE);
-  gtk_tree_view_set_rules_hint(GTK_TREE_VIEW(treeview), TRUE);
-  selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
+  gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (treeview), TRUE);
+  selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (treeview));
   gtk_tree_selection_set_mode (selection, GTK_SELECTION_SINGLE);
 
   cell = gtk_cell_renderer_text_new ();
   column = gtk_tree_view_column_new_with_attributes (_("History"), cell,
-                                                     "text", 0, NULL);
+						     "text", 0, NULL);
 
-  gtk_tree_view_append_column (GTK_TREE_VIEW(treeview),
-                               GTK_TREE_VIEW_COLUMN (column));
+  gtk_tree_view_append_column (GTK_TREE_VIEW (treeview),
+			       GTK_TREE_VIEW_COLUMN (column));
 
   /* open selected history */
   tree_info.html = html;
-  tree_info.treeview = GTK_WIDGET(treeview);
-  open = gtk_tool_button_new_from_stock (GTK_STOCK_OPEN); 
+  tree_info.treeview = GTK_WIDGET (treeview);
+  open = gtk_tool_button_new_from_stock (GTK_STOCK_OPEN);
   clear = gtk_tool_button_new_from_stock (GTK_STOCK_DELETE);
   gtk_tool_button_set_label (GTK_TOOL_BUTTON (clear), _("Clear"));
 
   /* toolbar to add the button too */
-  bar = GTK_TOOLBAR(gtk_toolbar_new());
-  gtk_toolbar_insert (GTK_TOOLBAR(bar), open, -1);  
-  gtk_toolbar_insert (GTK_TOOLBAR(bar), clear, -1);
+  bar = GTK_TOOLBAR (gtk_toolbar_new ());
+  gtk_toolbar_insert (GTK_TOOLBAR (bar), open, -1);
+  gtk_toolbar_insert (GTK_TOOLBAR (bar), clear, -1);
 
-  g_signal_connect(GTK_OBJECT(open), "clicked",
-		   G_CALLBACK(open_bookmarks), &tree_info);
-  g_signal_connect(GTK_OBJECT(open), "clicked",
-		   G_CALLBACK(destroy_window), history_dialog);
-  g_signal_connect(GTK_OBJECT(clear), "clicked", 
-		   G_CALLBACK(clear_history), NULL);
-  g_signal_connect(GTK_OBJECT(clear), "clicked",
-		   G_CALLBACK(destroy_window), history_dialog);
+  g_signal_connect (GTK_OBJECT (open), "clicked",
+		    G_CALLBACK (open_bookmarks), &tree_info);
+  g_signal_connect (GTK_OBJECT (open), "clicked",
+		    G_CALLBACK (destroy_window), history_dialog);
+  g_signal_connect (GTK_OBJECT (clear), "clicked",
+		    G_CALLBACK (clear_history), NULL);
+  g_signal_connect (GTK_OBJECT (clear), "clicked",
+		    G_CALLBACK (destroy_window), history_dialog);
 
-  gtk_box_pack_start(GTK_BOX(vbox), GTK_WIDGET(bar), FALSE, FALSE, 0);
-  gtk_box_pack_start(GTK_BOX(vbox), scroll, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), GTK_WIDGET (bar), FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), scroll, TRUE, TRUE, 0);
 
-  gtk_container_add(GTK_CONTAINER(history_dialog), vbox);
-  gtk_widget_show_all(GTK_WIDGET(history_dialog));
-   
+  gtk_container_add (GTK_CONTAINER (history_dialog), vbox);
+  gtk_widget_show_all (GTK_WIDGET (history_dialog));
+
 }
-	

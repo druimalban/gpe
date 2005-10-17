@@ -91,9 +91,8 @@ insert_new_bookmark (char *bookmark)
   char *err;
 
   if (sqlite_exec_printf (db,
-                          "insert into bookmarks values ('%s')",
-                          NULL, NULL, &err,
-                          bookmark))
+			  "insert into bookmarks values ('%s')",
+			  NULL, NULL, &err, bookmark))
     {
       g_free (err);
       return 1;
@@ -110,8 +109,8 @@ remove_bookmark (char *bookmark)
   char *err;
 
   if (sqlite_exec_printf (db,
-                          "delete from bookmarks where bookmark='%s'",
-                          NULL, NULL, &err, bookmark))
+			  "delete from bookmarks where bookmark='%s'",
+			  NULL, NULL, &err, bookmark))
     {
       g_free (err);
       return 1;
@@ -122,34 +121,35 @@ remove_bookmark (char *bookmark)
   return 0;
 }
 
-int load_db_data (void *tree, int argc, char **argv, char **columnNames)
+int
+load_db_data (void *tree, int argc, char **argv, char **columnNames)
 {
-	GtkTreeModel *model;
-        GtkTreeIter iter;
-	gchar *location;
+  GtkTreeModel *model;
+  GtkTreeIter iter;
+  gchar *location;
 
-        model = gtk_tree_view_get_model (GTK_TREE_VIEW(tree));
-	while (argc > 0)
-	{
-		location = *argv;
+  model = gtk_tree_view_get_model (GTK_TREE_VIEW (tree));
+  while (argc > 0)
+    {
+      location = *argv;
 #ifdef DEBUG
-                printf("bookmark value is %s\n", location);
+      printf ("bookmark value is %s\n", location);
 #endif
-                gtk_tree_store_append(GTK_TREE_STORE(model), &iter, NULL);
-                gtk_tree_store_set(GTK_TREE_STORE(model), &iter, 0, location, -1);
-		argv++;
-		argc--;
-	}
-	return 0;
+      gtk_tree_store_append (GTK_TREE_STORE (model), &iter, NULL);
+      gtk_tree_store_set (GTK_TREE_STORE (model), &iter, 0, location, -1);
+      argv++;
+      argc--;
+    }
+  return 0;
 
 }
 
-int refresh_or_load_db(GtkWidget *tree)
+int
+refresh_or_load_db (GtkWidget * tree)
 {
   char *err;
 
-  if (sqlite_exec (db, "select * from bookmarks",
-                          load_db_data , tree, &err))
+  if (sqlite_exec (db, "select * from bookmarks", load_db_data, tree, &err))
     {
       g_free (err);
       return 1;
@@ -159,4 +159,3 @@ int refresh_or_load_db(GtkWidget *tree)
 
   return 0;
 }
-

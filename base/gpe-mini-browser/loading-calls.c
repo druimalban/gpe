@@ -47,7 +47,7 @@ fetch_url (const gchar * url, GtkWidget * html)
   gchar *cut;
 
 #ifdef DEBUG
-	fprintf (stderr, "url is %s\n", url);
+  fprintf (stderr, "url is %s\n", url);
 #endif
 
   file = g_str_has_prefix (url, "file");
@@ -115,18 +115,14 @@ load_text_entry (GtkWidget * Button, gpointer * text)
   if (url != NULL)
     {
       /* add to list before url is parsed to avoid the user having to use http:// for autocompletion */
-      gtk_list_store_insert(completion_store, &iter, 0);
-      gtk_list_store_set(completion_store, &iter, 0, url, -1);
+      gtk_list_store_insert (completion_store, &iter, 0);
+      gtk_list_store_set (completion_store, &iter, 0, url, -1);
       url = parse_url (url);
 #ifdef DEBUG
       printf ("fetching %s !\n", url);
 #endif
       fetch_url (url, data->html);
     }
-  /* test if data->window !=NULL to find out if we can free data (if we have a static 
-     url bar on top for big screens we do not want to free data as it is not automatically recreated */
-  if (data->window != NULL)
-    g_free (data);
 }
 
 

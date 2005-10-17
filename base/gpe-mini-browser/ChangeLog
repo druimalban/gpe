@@ -1,13 +1,18 @@
-v0.17 - ..... - /2005 - Philippe De Swert
+v0.17 - No beer release - /2005 - Philippe De Swert
 
-* Add i18n support to autotools stuff and support for translated desktop files.
+* Add i18n support to autotools stuff and support for translated desktop files - courtesy of Florian Boor.
 * Fix saving of bookmarks.
 * Fix typo in configure.ac.
 * Add some files to remove on clean to make distcheck work.
 * zoom buttons for small screens - courtesy of the new toolbar API
 * moved from Glist to a real gtk_tree
 * alternating colours for bookmarks
-* fixed hildon/maemo to have bookmarks too
+* fixed Hildon/Maemo to have bookmarks too
+* misc Hildon/Maemo fixes
+* started to decently document the functions
+* fixed --disable-bookmarks to work again after all the new stuff got added
+* changed default CFLAGS to -Wall -Os -g (saves 4K when decently stripped :-)
+* Fixed bug that made gpe-mini-browser crash because you could open several url-windows (in small-screen mode)
 
 v0.16 - Tampere release	- 07/09/2005 - Philippe De Swert
 

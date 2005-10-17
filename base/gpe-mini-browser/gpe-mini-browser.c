@@ -47,66 +47,23 @@
 
 //#define DEBUG /* uncomment this if you want debug output*/
 
-static int fullscreen = 0;
-static int totalscreen = 0;
 
-struct gpe_icon my_icons[] = 
-{
-  { "gpe-mini-browser-icon", PREFIX "/share/pixmaps/gpe-mini-browser.png" },
+struct gpe_icon my_icons[] = {
+  {"gpe-mini-browser-icon", PREFIX "/share/pixmaps/gpe-mini-browser.png"},
   {NULL, NULL}
 };
-
-static void
-set_fullscreen (GtkWidget * button, gpointer * fullscreen_info)
-{
-  struct fullscreen_info *info;
-
-  info = (struct fullscreen_info *) fullscreen_info;
-
-  if (!fullscreen)
-    {
-      gtk_window_fullscreen (GTK_WINDOW (info->app));
-      fullscreen = 1;
-    }
-  else if (fullscreen && !totalscreen)
-    {
-	GtkWidget *close_button, *fullscreen_popup;
-
-	totalscreen = 1;
-	gtk_widget_hide(info->toolbar);
-	if(info->urlbox)
-		gtk_widget_hide(info->urlbox);
-	fullscreen_popup = gtk_window_new (GTK_WINDOW_POPUP);
-
-        close_button = gpe_button_new_from_stock (GTK_STOCK_ZOOM_FIT, GPE_BUTTON_TYPE_ICON);
-        g_signal_connect (G_OBJECT (close_button), "clicked",
-                          G_CALLBACK (set_fullscreen), fullscreen_info);
-	g_signal_connect (G_OBJECT (close_button), "clicked",
-			  G_CALLBACK (destroy_window), fullscreen_popup);
-        gtk_container_add (GTK_CONTAINER (fullscreen_popup), close_button);
-        gtk_widget_show_all (fullscreen_popup);
-
-    }
-  else if (totalscreen == 1 && fullscreen == 1)
-    {
-      gtk_window_unfullscreen (GTK_WINDOW (info->app));
-      gtk_widget_show_all(info->toolbar);
-      if(info->urlbox)
-	gtk_widget_show_all(info->urlbox);
-      fullscreen = 0;
-      totalscreen = 0;
-    }
-}
-
 
 int
 main (int argc, char *argv[])
 {
   GtkWidget *html, *app, *contentbox;	/* html engine, application window, content box of application window */
   GtkWidget *toolbar, *urlbox = NULL;	/* toolbar, url entry box (big screen) */
-  GtkToolItem *back_button, *forward_button, *home_button, *bookmarks_button,
+  GtkToolItem *back_button, *forward_button, *home_button,
     *fullscreen_button, *url_button = NULL, *history_button;
-  GtkToolItem *separator, *separator2, *separator3;
+#ifndef NOBOOKMARKS
+  GtkToolItem *bookmarks_button, *separator;
+#endif /* NOBOOKMARKS */
+  GtkToolItem *separator2, *separator3;
   extern GtkToolItem *stop_reload_button;
   const gchar *base;
   gint width = 240, height = 320;
@@ -127,12 +84,14 @@ main (int argc, char *argv[])
 	{
 	case 'v':
 	  printf
-	    (_("GPE-mini-browser version 0.17. (C)2005, Philippe De Swert\n"));
+	    (_
+	     ("GPE-mini-browser version 0.17. (C)2005, Philippe De Swert\n"));
 	  exit (0);
 
 	default:
 	  printf
-	    (_("GPE-mini-browser, basic web browser application. (c)2005, Philippe De Swert\n"));
+	    (_
+	     ("GPE-mini-browser, basic web browser application. (c)2005, Philippe De Swert\n"));
 	  printf (_("Usage: gpe-mini-browser <URL>\n"));
 	  printf (_("Use -v for version info.\n"));
 	  exit (0);
@@ -171,7 +130,7 @@ main (int argc, char *argv[])
   /* fill in fullscreen info */
   fsinfo.app = app;
   fsinfo.toolbar = toolbar;
-  fsinfo.urlbox = NULL; /* set to NULL for small screen interface. Will be filled in when we actually have an urlbox */
+  fsinfo.urlbox = NULL;		/* set to NULL for small screen interface. Will be filled in when we actually have an urlbox */
 
   //create html object (must be created before function calls to html to avoid segfault)
   html = webi_new ();
@@ -191,7 +150,7 @@ main (int argc, char *argv[])
 
   /* Connect all the signals to the rendering object */
   /* cookies will only decently work when fixed in gtk-webcore */
-  g_signal_connect (WEBI (html), "set_cookie", 
+  g_signal_connect (WEBI (html), "set_cookie",
 		    G_CALLBACK (handle_cookie), NULL);
 
   g_signal_connect (WEBI (html), "load_start",
@@ -200,11 +159,10 @@ main (int argc, char *argv[])
   g_signal_connect (WEBI (html), "load_stop",
 		    G_CALLBACK (destroy_status_window), &status);
 
-  g_signal_connect (WEBI (html), "status", 
-                    G_CALLBACK (activate_statusbar), &status);
+  g_signal_connect (WEBI (html), "status",
+		    G_CALLBACK (activate_statusbar), &status);
 
-  g_signal_connect (WEBI (html), "title", 
- 		    G_CALLBACK (set_title), app);
+  g_signal_connect (WEBI (html), "title", G_CALLBACK (set_title), app);
 
   /*add home,  back, forward, refresh / stop, url (small screen) */
   back_button = gtk_tool_button_new_from_stock (GTK_STOCK_GO_BACK);
@@ -223,11 +181,11 @@ main (int argc, char *argv[])
   gtk_tool_item_set_homogeneous (home_button, FALSE);
   gtk_toolbar_insert (GTK_TOOLBAR (toolbar), home_button, -1);
 
+#ifndef NOBOOKMARKS
   separator = gtk_separator_tool_item_new ();
   gtk_tool_item_set_homogeneous (separator, FALSE);
   gtk_toolbar_insert (GTK_TOOLBAR (toolbar), separator, -1);
 
-#ifndef NOBOOKMARKS
   bookmarks_button = gtk_tool_button_new_from_stock (GTK_STOCK_INDENT);
   gtk_tool_item_set_homogeneous (bookmarks_button, FALSE);
   gtk_tool_button_set_label (GTK_TOOL_BUTTON (bookmarks_button),
@@ -245,8 +203,8 @@ main (int argc, char *argv[])
   else
     {
       /* create list here so that bookmarks will also be listed in the history 
-      before the entrycompletion is activated when the urlentry is created for the first time */
-      completion_store = gtk_list_store_new (1, G_TYPE_STRING);	
+         before the entrycompletion is activated when the urlentry is created for the first time */
+      completion_store = gtk_list_store_new (1, G_TYPE_STRING);
 
       url_button = gtk_tool_button_new_from_stock (GTK_STOCK_NETWORK);
       gtk_tool_item_set_homogeneous (url_button, FALSE);
@@ -269,15 +227,16 @@ main (int argc, char *argv[])
 			     _("Fullscreen"));
   gtk_toolbar_insert (GTK_TOOLBAR (toolbar), fullscreen_button, -1);
 
-  if ((width < 320) || (height <320))
-    {
-      add_zoom_buttons(WEBI(html), toolbar, &s);
-    }
-
   /* add history button and separator */
   separator3 = gtk_separator_tool_item_new ();
   gtk_tool_item_set_homogeneous (separator3, FALSE);
   gtk_toolbar_insert (GTK_TOOLBAR (toolbar), separator3, -1);
+  /* add zoom to small-screen interface */
+  if ((width < 320) || (height < 320))
+    {
+      add_zoom_buttons (WEBI (html), toolbar, &s);
+    }
+
   history_button = gtk_tool_button_new_from_stock (GTK_STOCK_HARDDISK);
   gtk_tool_item_set_homogeneous (history_button, FALSE);
   gtk_tool_button_set_label (GTK_TOOL_BUTTON (history_button), _("History"));
@@ -304,7 +263,7 @@ main (int argc, char *argv[])
 		    G_CALLBACK (show_bookmarks), html);
 #endif
   g_signal_connect (GTK_OBJECT (history_button), "clicked",
-                        G_CALLBACK (show_history), html);
+		    G_CALLBACK (show_history), html);
 
   /* save completion list when we exit the program */
   g_signal_connect (GTK_OBJECT (app), "destroy",

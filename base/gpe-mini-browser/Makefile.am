@@ -4,9 +4,12 @@ bin_PROGRAMS = gpe-mini-browser
 
 gpe_mini_browser_SOURCES = interface-calls.c loading-calls.c gpe-mini-browser.h misc-calls.c
 
+CFLAGS = -Os -Wall -g
+
 if HILDON
 gpe_mini_browser_SOURCES += hildon-mini-browser.c
 desktop_in_files = hildon/gpe-mini-browser.desktop.in 
+CFLAGS += -DHILDON
 else
 gpe_mini_browser_SOURCES += gpe-mini-browser.c
 desktop_in_files = gpe-mini-browser.desktop.in 

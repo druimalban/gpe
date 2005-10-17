@@ -36,6 +36,7 @@
 #include <gpe/init.h>
 #include <gpe/errorbox.h>
 #include <gpe/question.h>
+#include <gpe/picturebutton.h>
 
 #include "gpe-mini-browser.h"
 
@@ -45,9 +46,13 @@ void
 set_default_settings (Webi * html, WebiSettings * ks)
 {
   const gchar *http_proxy;
-
+#ifndef HILDON
   ks->default_font_size = 11;
   ks->default_fixed_font_size = 11;
+#else
+  ks->default_font_size = 14;
+  ks->default_fixed_font_size = 14;
+#endif
   ks->minimum_font_size = 7;
   ks->serif_font_family = "serif";
   ks->sans_serif_font_family = "sans";
@@ -98,77 +103,78 @@ zoom_out (GtkWidget * zoom_out, gpointer * data)
 }
 
 /*==============================================*/
-
+#ifndef NOBOOKMARKS
 void
 delete_bookmarks (GtkWidget * button, gpointer * data)
 {
-  if (gpe_question_ask (_("Really delete this bookmark or category?"), "Delete?",
-			"question", "!gtk-cancel", NULL,
-			"!gtk-delete", NULL, NULL) == 1)
+  if (gpe_question_ask
+      (_("Really delete this bookmark or category?"), "Delete?", "question",
+       "!gtk-cancel", NULL, "!gtk-delete", NULL, NULL) == 1)
     {
-        GtkTreeSelection *selection;
-        GtkTreeModel *model;
-        GtkTreeIter iter;
-        gchar *url;
+      GtkTreeSelection *selection;
+      GtkTreeModel *model;
+      GtkTreeIter iter;
+      gchar *url;
 
-        selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(data));
-        model = gtk_tree_view_get_model (GTK_TREE_VIEW(data));
+      selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (data));
+      model = gtk_tree_view_get_model (GTK_TREE_VIEW (data));
 
-        if (gtk_tree_selection_get_selected(selection, &model, &iter))
-        {
-                gtk_tree_model_get(model, &iter, 0, &url, -1);
+      if (gtk_tree_selection_get_selected (selection, &model, &iter))
+	{
+	  gtk_tree_model_get (model, &iter, 0, &url, -1);
 #ifdef DEBUG
-		printf("Deleting url %s\n",url);
+	  printf ("Deleting url %s\n", url);
 #endif
 
-	/* delete from db */
-	int err = remove_bookmark(url);
-	if (err)
-		gpe_error_box(_("error removing bookmark from db!\n"));
-	/* delete from list */ 
-		gtk_tree_store_remove (GTK_TREE_STORE(model), &iter);
-        }
+	  /* delete from db */
+	  int err = remove_bookmark (url);
+	  if (err)
+	    gpe_error_box (_("error removing bookmark from db!\n"));
+	  /* delete from list */
+	  gtk_tree_store_remove (GTK_TREE_STORE (model), &iter);
+	}
+    }
+}
+
+#endif /* NOBOOKMARKS */
+/*==============================================*/
+void
+open_bookmarks (GtkWidget * button, gpointer * data)
+{
+  struct tree_action *open_data;
+  GtkTreeSelection *selection;
+  GtkTreeModel *model;
+  GtkTreeIter iter, iter2;
+  gchar *url;
+
+  open_data = (struct tree_action *) data;
+
+  selection =
+    gtk_tree_view_get_selection (GTK_TREE_VIEW (open_data->treeview));
+  model = gtk_tree_view_get_model (GTK_TREE_VIEW (open_data->treeview));
+
+  if (gtk_tree_selection_get_selected (selection, &model, &iter))
+    {
+      gtk_tree_model_get (model, &iter, 0, &url, -1);
+      url = (gchar *) parse_url (url);
+#ifdef DEBUG
+      printf ("The selected url = %s\n", url);
+#endif
+      /* add to history */
+      gtk_list_store_insert (completion_store, &iter2, 0);
+      gtk_list_store_set (completion_store, &iter2, 0, url, -1);
+
+      fetch_url (url, GTK_WIDGET (open_data->html));
+      g_free (url);
+    }
+  else
+    {
+      gpe_error_box (_("No bookmark selected!"));
     }
 }
 
 /*==============================================*/
-
-void
-open_bookmarks (GtkWidget * button, gpointer * data)
-{
-	struct tree_action *open_data;
-	GtkTreeSelection *selection; 
-	GtkTreeModel *model;
-	GtkTreeIter iter, iter2;
-	gchar *url;
-
-	open_data = (struct tree_action *)data;
-	
-	selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(open_data->treeview));
-	model = gtk_tree_view_get_model (GTK_TREE_VIEW(open_data->treeview));
-
-	if (gtk_tree_selection_get_selected(selection, &model, &iter))
-	{
-		gtk_tree_model_get(model, &iter, 0, &url, -1);
-		url = (gchar *)parse_url(url);
-#ifdef DEBUG
-		printf("The selected url = %s\n", url);
-#endif
-		/* add to history */
-                gtk_list_store_insert(completion_store, &iter2, 0);
-     		gtk_list_store_set(completion_store, &iter2, 0, url, -1);
-
-		fetch_url(url, GTK_WIDGET(open_data->html));
-		g_free(url);
-	}
-	else
-	{
-	 gpe_error_box(_("No bookmark selected!"));
-	}
-}
-
-/*==============================================*/
-
+#ifndef NOBOOKMARKS
 void
 toggle_type (GtkWidget * button, gpointer * data)
 {
@@ -184,65 +190,67 @@ toggle_type (GtkWidget * button, gpointer * data)
 
 /*==============================================*/
 
-void add_bookmark_func (GtkWidget *button, gpointer *data)
+void
+add_bookmark_func (GtkWidget * button, gpointer * data)
 {
-	struct bookmark_add *info;
-	GtkTreeModel *model;
-        GtkTreeIter iter;
-	const gchar *location;
-	
-	info = (struct bookmark_add *) data;
+  struct bookmark_add *info;
+  GtkTreeModel *model;
+  GtkTreeIter iter;
+  const gchar *location;
 
-        model = gtk_tree_view_get_model (GTK_TREE_VIEW(info->treeview));
+  info = (struct bookmark_add *) data;
 
-	if (info->bookmark_type == 0)
-	{
-      		location = webi_get_location (info->html);	
-	}
-	else
-	{
-		location = gtk_editable_get_chars (GTK_EDITABLE (info->entry), 0, -1);
-	}
+  model = gtk_tree_view_get_model (GTK_TREE_VIEW (info->treeview));
+
+  if (info->bookmark_type == 0)
+    {
+      location = webi_get_location (info->html);
+    }
+  else
+    {
+      location = gtk_editable_get_chars (GTK_EDITABLE (info->entry), 0, -1);
+    }
 #ifdef DEBUG
-		printf("bookmark value is %s\n", location);
+  printf ("bookmark value is %s\n", location);
 #endif
-		if(location != NULL)
-                {
-                // add to database
-		int err = insert_new_bookmark((char *)location);
-		if (err)
-			gpe_error_box(_("Error accessing db!\n"));
-                gtk_tree_store_append(GTK_TREE_STORE(model), &iter, NULL);
-                gtk_tree_store_set(GTK_TREE_STORE(model), &iter, 0, location, -1);
-                }
-		else
-                {
-                        gpe_error_box(_("No url filled in!\n"));
-                }
+  if (location != NULL)
+    {
+      // add to database
+      int err = insert_new_bookmark ((char *) location);
+      if (err)
+	gpe_error_box (_("Error accessing db!\n"));
+      gtk_tree_store_append (GTK_TREE_STORE (model), &iter, NULL);
+      gtk_tree_store_set (GTK_TREE_STORE (model), &iter, 0, location, -1);
+    }
+  else
+    {
+      gpe_error_box (_("No url filled in!\n"));
+    }
 
 
 }
-
+#endif /* NOBOOKMARKS */
 /*==============================================*/
 
-int set_entry_completion(GtkWidget *entry)
+int
+set_entry_completion (GtkWidget * entry)
 {
-	GtkTreeModel *model;
-        GtkEntryCompletion *completion;
+  GtkTreeModel *model;
+  GtkEntryCompletion *completion;
 
-        model = create_completion_model ();
-		if(model == NULL)
-			return 0;
+  model = create_completion_model ();
+  if (model == NULL)
+    return 0;
 
-        completion = gtk_entry_completion_new ();
-        gtk_entry_completion_set_model (completion, model);
-        gtk_entry_completion_set_text_column (completion, 0);
-        gtk_entry_completion_set_minimum_key_length (completion, 4);
-        gtk_entry_set_completion (GTK_ENTRY (entry), completion);
+  completion = gtk_entry_completion_new ();
+  gtk_entry_completion_set_model (completion, model);
+  gtk_entry_completion_set_text_column (completion, 0);
+  gtk_entry_completion_set_minimum_key_length (completion, 4);
+  gtk_entry_set_completion (GTK_ENTRY (entry), completion);
 
-	/*default should be replacing the contents of the entry by the selected content */
+  /*default should be replacing the contents of the entry by the selected content */
 
-	return 1;
+  return 1;
 }
 
 /*==============================================*/
@@ -251,97 +259,151 @@ GtkTreeModel *
 create_completion_model (void)
 {
 
-        gint count = 0;
-        GtkTreeIter iter;
-        FILE *file;
-        char *buf;
-        char buffer[64];
-	
-        buf = history_location();
-	if (!completion_store)
-	        completion_store = gtk_list_store_new (1, G_TYPE_STRING);
+  gint count = 0;
+  GtkTreeIter iter;
+  FILE *file;
+  char *buf;
+  char buffer[64];
 
-        file = fopen(buf, "ro");
-	/* if file does not exist just start and skip reading in data */
-	if(!file)
-		return GTK_TREE_MODEL (completion_store);;
+  buf = history_location ();
+  if (!completion_store)
+    completion_store = gtk_list_store_new (1, G_TYPE_STRING);
 
-        while (fgets (buffer, 63, file)) 
-	{
-                buffer[strlen(buffer)-1] = 0;
+  file = fopen (buf, "ro");
+  /* if file does not exist just start and skip reading in data */
+  if (!file)
+    return GTK_TREE_MODEL (completion_store);;
 
-                gtk_list_store_append (completion_store, &iter);
-                gtk_list_store_set (completion_store, &iter, 0, buffer, -1);
+  while (fgets (buffer, 63, file))
+    {
+      buffer[strlen (buffer) - 1] = 0;
 
-                count++;
-                if (count == 100)
-                      break;
-        }
+      gtk_list_store_append (completion_store, &iter);
+      gtk_list_store_set (completion_store, &iter, 0, buffer, -1);
 
-        fclose (file);
-	g_free(buf);
+      count++;
+      if (count == 100)
+	break;
+    }
 
-        return GTK_TREE_MODEL (completion_store);
+  fclose (file);
+  g_free (buf);
+
+  return GTK_TREE_MODEL (completion_store);
 }
 
 /*==============================================*/
 
-void save_completion (GtkWidget *window)
+void
+save_completion (GtkWidget * window)
 {
-	gint count = 0;
-        GtkTreeIter iter;
-        FILE *file;
-        char *buf;
-	gchar *buffer = NULL;
-	
-        buf = history_location();
+  gint count = 0;
+  GtkTreeIter iter;
+  FILE *file;
+  char *buf;
+  gchar *buffer = NULL;
 
-	file = fopen(buf, "w");
+  buf = history_location ();
 
-	if(!gtk_tree_model_get_iter_first (GTK_TREE_MODEL(completion_store), &iter))
-		goto end;
-	
-	while ( count < 100 )
-	{
-		gtk_tree_model_get(GTK_TREE_MODEL(completion_store), &iter, 0, &buffer, -1);
-		count++;
-        fprintf(file, "%s\n", buffer);
-		g_free(buffer);
-		if(!gtk_tree_model_iter_next (GTK_TREE_MODEL(completion_store), &iter))
-			goto end;
-	}
-end:	fclose(file);
-	g_free(buf);
+  file = fopen (buf, "w");
+
+  if (!gtk_tree_model_get_iter_first
+      (GTK_TREE_MODEL (completion_store), &iter))
+    goto end;
+
+  while (count < 100)
+    {
+      gtk_tree_model_get (GTK_TREE_MODEL (completion_store), &iter, 0,
+			  &buffer, -1);
+      count++;
+      fprintf (file, "%s\n", buffer);
+      g_free (buffer);
+      if (!gtk_tree_model_iter_next
+	  (GTK_TREE_MODEL (completion_store), &iter))
+	goto end;
+    }
+end:fclose (file);
+  g_free (buf);
 }
 
 /*==============================================*/
 
-gchar * history_location (void)
+gchar *
+history_location (void)
 {
-	const char *home = getenv ("HOME");
-        char *buf;
-        size_t len;
+  const char *home = getenv ("HOME");
+  char *buf;
+  size_t len;
 
-        if (home == NULL)
-                    home = "";
-        len = strlen (home) + strlen (COMPLETION) + 1;
-        buf = g_malloc (len);
-        strcpy (buf, home);
-        strcat (buf, COMPLETION);
+  if (home == NULL)
+    home = "";
+  len = strlen (home) + strlen (COMPLETION) + 1;
+  buf = g_malloc (len);
+  strcpy (buf, home);
+  strcat (buf, COMPLETION);
 
-	return buf;
+  return buf;
 }
 
 /*==============================================*/
 
-void clear_history(GtkWidget *button)
+void
+clear_history (GtkWidget * button)
 {
-	char *filename;
-	FILE *file;
+  char *filename;
+  FILE *file;
 
-	filename = history_location();
-	
-	file = fopen (filename, "w");
-	fclose(file);
-	gtk_list_store_clear(completion_store);
+  filename = history_location ();
+
+  file = fopen (filename, "w");
+  fclose (file);
+  gtk_list_store_clear (completion_store);
+}
+
+/*==============================================*/
+
+void
+set_fullscreen (GtkWidget * button, gpointer * fullscreen_info)
+{
+  static int fullscreen;
+  static int totalscreen;
+  struct fullscreen_info *info;
+
+  info = (struct fullscreen_info *) fullscreen_info;
+
+  if (!fullscreen)
+    {
+      gtk_window_fullscreen (GTK_WINDOW (info->app));
+      fullscreen = 1;
+    }
+  else if (fullscreen && !totalscreen)
+    {
+      GtkWidget *close_button, *fullscreen_popup;
+
+      totalscreen = 1;
+      gtk_widget_hide (info->toolbar);
+      if (info->urlbox)
+	gtk_widget_hide (info->urlbox);
+      fullscreen_popup = gtk_window_new (GTK_WINDOW_POPUP);
+
+      close_button =
+	gpe_button_new_from_stock (GTK_STOCK_ZOOM_FIT, GPE_BUTTON_TYPE_ICON);
+      g_signal_connect (G_OBJECT (close_button), "clicked",
+			G_CALLBACK (set_fullscreen), fullscreen_info);
+      g_signal_connect (G_OBJECT (close_button), "clicked",
+			G_CALLBACK (destroy_window), fullscreen_popup);
+      gtk_container_add (GTK_CONTAINER (fullscreen_popup), close_button);
+      gtk_widget_show_all (fullscreen_popup);
+
+    }
+  else if (totalscreen == 1 && fullscreen == 1)
+    {
+      gtk_window_unfullscreen (GTK_WINDOW (info->app));
+      gtk_widget_show_all (info->toolbar);
+      if (!urlbar_hidden)
+	      if (info->urlbox) 
+		gtk_widget_show_all (info->urlbox);
+      fullscreen = 0;
+      totalscreen = 0;
+    }
 }

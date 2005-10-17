@@ -51,7 +51,7 @@
 
 //#define DEBUG /* uncomment this if you want debug output*/
 
-
+/*
 static void
 fullscreen (GtkWidget * button, HildonAppView * app)
 {
@@ -63,7 +63,53 @@ fullscreen (GtkWidget * button, HildonAppView * app)
   else
     hildon_appview_set_fullscreen (app, FALSE);
 
+}*/
+
+static void
+set_fullscreen (GtkWidget * button, gpointer * fullscreen_info)
+{
+  static int fullscreen;
+  static int totalscreen;
+  struct fullscreen_info *info;
+
+  info = (struct fullscreen_info *) fullscreen_info;
+
+  if (!fullscreen)
+    {
+      gtk_window_fullscreen (GTK_WINDOW (info->app));
+      fullscreen = 1;
+    }
+  else if (fullscreen && !totalscreen)
+    {
+      GtkWidget *close_button, *fullscreen_popup;
+
+      totalscreen = 1;
+      gtk_widget_hide (info->toolbar);
+      if (info->urlbox)
+	gtk_widget_hide (info->urlbox);
+      fullscreen_popup = gtk_window_new (GTK_WINDOW_POPUP);
+
+      close_button =
+	gpe_button_new_from_stock (GTK_STOCK_ZOOM_FIT, GPE_BUTTON_TYPE_ICON);
+      g_signal_connect (G_OBJECT (close_button), "clicked",
+			G_CALLBACK (set_fullscreen), fullscreen_info);
+      g_signal_connect (G_OBJECT (close_button), "clicked",
+			G_CALLBACK (destroy_window), fullscreen_popup);
+      gtk_container_add (GTK_CONTAINER (fullscreen_popup), close_button);
+      gtk_widget_show_all (fullscreen_popup);
+
+    }
+  else if (totalscreen == 1 && fullscreen == 1)
+    {
+      gtk_window_unfullscreen (GTK_WINDOW (info->app));
+      gtk_widget_show_all (info->toolbar);
+      if (info->urlbox)
+	gtk_widget_show_all (info->urlbox);
+      fullscreen = 0;
+      totalscreen = 0;
+    }
 }
+
 
 
 static void
@@ -84,11 +130,13 @@ main (int argc, char *argv[])
 
   GtkWidget *html, *contentbox;	/* html engine, application window, content box of application window */
   GtkWidget *toolbar, *urlbox;	/* toolbar, url entry box (big screen), icon for url pop-up window (small screens) */
-  GtkToolItem *back_button, *forward_button, *home_button, *fullscreen_button, *bookmarks_button;
+  GtkToolItem *back_button, *forward_button, *home_button, *fullscreen_button,
+    *bookmarks_button;
   GtkToolItem *separator;
   extern GtkToolItem *stop_reload_button;
   const gchar *base;
-  struct status_data *status;
+  static struct status_data status;
+  static struct fullscreen_info fsinfo;
   int opt;
   osso_context_t *context;
 
@@ -110,12 +158,14 @@ main (int argc, char *argv[])
 	{
 	case 'v':
 	  printf
-	    (_("GPE-mini-browser version 0.17. (C)2005, Philippe De Swert\n"));
+	    (_
+	     ("GPE-mini-browser version 0.17. (C)2005, Philippe De Swert\n"));
 	  exit (0);
 
 	default:
 	  printf
-	    (_("GPE-mini-browser, basic web browser application. (c)2005, Philippe De Swert\n"));
+	    (_
+	     ("GPE-mini-browser, basic web browser application. (c)2005, Philippe De Swert\n"));
 	  printf (_("Usage: gpe-mini-browser <URL>\n"));
 	  printf (_("Use -v for version info.\n"));
 	  exit (0);
@@ -148,9 +198,9 @@ main (int argc, char *argv[])
   contentbox = gtk_vbox_new (FALSE, 0);
 
   //fill in status to be sure everything is filled in when used
-  status = malloc (sizeof (struct status_data));
-  status->main_window = contentbox;
-  status->exists = FALSE;
+  status.main_window = contentbox;
+  status.pbar = NULL;
+  status.exists = FALSE;
 
   //create toolbar and add to topbox
   toolbar = gtk_toolbar_new ();
@@ -181,13 +231,13 @@ main (int argc, char *argv[])
 		    NULL);
 
   g_signal_connect (WEBI (html), "load_start",
-		    G_CALLBACK (create_status_window), status);
+		    G_CALLBACK (create_status_window), &status);
 
   g_signal_connect (WEBI (html), "load_stop",
-		    G_CALLBACK (destroy_status_window), status);
+		    G_CALLBACK (destroy_status_window), &status);
 
   g_signal_connect (WEBI (html), "status", G_CALLBACK (activate_statusbar),
-		    status);
+		    &status);
   g_signal_connect (WEBI (html), "title", G_CALLBACK (set_title), app);
 
 /*add home,  back, forward, refresh / stop, url (small screen) */
@@ -207,15 +257,15 @@ main (int argc, char *argv[])
   gtk_tool_item_set_homogeneous (home_button, FALSE);
   gtk_toolbar_insert (GTK_TOOLBAR (toolbar), home_button, -1);
 
+#ifndef NOBOOKMARKS
   separator = gtk_separator_tool_item_new ();
   gtk_tool_item_set_homogeneous (separator, FALSE);
   gtk_toolbar_insert (GTK_TOOLBAR (toolbar), separator, -1);
 
-#ifndef NOBOOKMARKS
   bookmarks_button = gtk_tool_button_new_from_stock (GTK_STOCK_INDENT);
   gtk_tool_item_set_homogeneous (bookmarks_button, FALSE);
   gtk_tool_button_set_label (GTK_TOOL_BUTTON (bookmarks_button),
-                             _("Bookmarks"));
+			     _("Bookmarks"));
   gtk_toolbar_insert (GTK_TOOLBAR (toolbar), bookmarks_button, -1);
 
 #endif
@@ -224,6 +274,11 @@ main (int argc, char *argv[])
   hildon_appview_set_toolbar (mainview, GTK_TOOLBAR (toolbar));
 
   urlbox = show_big_screen_interface (WEBI (html), toolbar, &s);
+
+  /* fill in fullscreen info */
+  fsinfo.app = GTK_WIDGET (app);
+  fsinfo.toolbar = toolbar;
+  fsinfo.urlbox = urlbox;
 
 /* replace GTK_STOCK_ZOOM_FIT with GTK_STOCK_FULLSCREEN once GPE uses
      gtk 2.7.1 or higher. Or add it myself :-) */
@@ -245,11 +300,11 @@ main (int argc, char *argv[])
 		    G_CALLBACK (home_func), html);
 
   g_signal_connect (GTK_OBJECT (fullscreen_button), "clicked",
-		    G_CALLBACK (fullscreen), mainview);
+		    G_CALLBACK (set_fullscreen), &fsinfo);
 
 #ifndef NOBOOKMARKS
-    g_signal_connect (GTK_OBJECT (bookmarks_button), "clicked",
-                      G_CALLBACK (show_bookmarks), html);
+  g_signal_connect (GTK_OBJECT (bookmarks_button), "clicked",
+		    G_CALLBACK (show_bookmarks), html);
 #endif
 
 //  gtk_toolbar_set_icon_size(GTK_TOOLBAR(toolbar), GTK_ICON_SIZE_SMALL_TOOLBAR);

@@ -8,6 +8,8 @@ TODO:
 * Hide bookmarks behind a description
 * Download file option (wget ?)
 * bookmarks integration with gpe-contacts
+* strip -s gpe-mini-browser on install
+* Put applicationb specific info in the install file (document --disable-bookmarks and --enable-hildon)
 
 DONE:
 
@@ -17,17 +19,18 @@ DONE:
 * window title set to identify website
 * add zoom in/out buttons if bigger screen or in landscape mode
 * add hildon interface support (Nokia 770)
-* fullscreen mode
+* two fullscreen modes
 * remove exit button
 * moved to new GTK toolbar/toolitem API (allows to get to buttons that might be off-screen)
 * hybrid stop/reload button (there is space now for a bookmarks button)
 * hiding of url-bar in Hildon/ big-screen mode
-* bookmarks (possible integration with gpe-contacts)
+* bookmarks 
 * bookmarks with Hildon interface
 * zoom buttons in small-screen interface
 * alternating background color for the bookmarks
 * GtkEntryCompletion
 * history (special case of bookmarks)
+* default optimisation for size and use -Wall to identify possible problems
 
 POSTPONED / PARTIALLY DONE:
 
