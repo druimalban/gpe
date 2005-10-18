@@ -444,6 +444,7 @@ show_bookmarks (GtkWidget * button, Webi * html)
   GtkTreeSelection *selection;
 
   bookmarks_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+  gtk_window_set_modal (GTK_WINDOW (bookmarks_window), TRUE);
   gtk_window_set_title (GTK_WINDOW (bookmarks_window), _("Bookmarks"));
   gtk_window_set_default_size (GTK_WINDOW (bookmarks_window), 240, 320);
   gtk_window_set_type_hint (GTK_WINDOW (bookmarks_window),
@@ -464,6 +465,12 @@ show_bookmarks (GtkWidget * button, Webi * html)
   open_bookmark = gtk_tool_button_new_from_stock (GTK_STOCK_OPEN);
   gtk_tool_item_set_homogeneous (open_bookmark, FALSE);
   gtk_toolbar_insert (booktool, open_bookmark, -1);
+
+#ifdef HILDON
+  GtkToolItem *close_bookmark = gtk_tool_button_new_from_stock (GTK_STOCK_QUIT);
+  gtk_tool_item_set_homogeneous (close_bookmark, FALSE);
+  gtk_toolbar_insert (booktool, close_bookmark, -1);
+#endif
 
   // scrolled window with bookmark list
   scroll_window = gtk_scrolled_window_new (NULL, NULL);
@@ -509,6 +516,10 @@ show_bookmarks (GtkWidget * button, Webi * html)
 		    G_CALLBACK (destroy_window), bookmarks_window);
   g_signal_connect (GTK_OBJECT (bookmarks_window), "destroy",
 		    G_CALLBACK (stop_db), NULL);
+#ifdef HILDON
+  g_signal_connect (GTK_OBJECT (close_bookmark), "clicked",
+		    G_CALLBACK (destroy_window), bookmarks_window);
+#endif 
 
   gtk_box_pack_start (GTK_BOX (bookbox), GTK_WIDGET (booktool), FALSE, FALSE,
 		      0);
@@ -541,6 +552,7 @@ show_add_dialog (GtkWidget * button, gpointer * data)
   /* new dialog window */
   add_dialog = gtk_dialog_new ();
   gtk_window_set_title (GTK_WINDOW (add_dialog), _("Add a bookmark"));
+  gtk_window_set_modal (GTK_WINDOW (add_dialog), TRUE);
   gtk_container_set_border_width (GTK_CONTAINER (add_dialog),
 				  gpe_get_border ());
 
@@ -614,6 +626,7 @@ show_history (GtkWidget * button, Webi * html)
   /* new dialog window */
   history_dialog = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title (GTK_WINDOW (history_dialog), _("History"));
+  gtk_window_set_modal (GTK_WINDOW (history_dialog), TRUE);
   gtk_container_set_border_width (GTK_CONTAINER (history_dialog),
 				  gpe_get_border ());
   gtk_window_set_default_size (GTK_WINDOW (history_dialog), 240, 320);
