@@ -30,7 +30,7 @@ desktopdir = $(datadir)/applications/hildon
 desktop_in_files = hildon/gpe-contacts.desktop.in
 
 servicedir = $(libdir)/dbus-1.0/services
-service_in_files = hildon/org.gpe.gpe-contacts.service.in
+service_in_files = hildon/com.nokia.gpe-contacts.service.in
                    
 gpe_contacts_SOURCES += main-hildon.c pimc-ui.c pimc-ui.h
 
@@ -88,7 +88,7 @@ EXTRA_DIST = $(service_DATA) \
              $(pixmaps_extra_DATA) \
              $(meta_DATA) \
              hildon/default-layout-bigscreen.xml \
-             hildon/org.gpe.gpe-contacts.service.in \
+             hildon/com.nokia.gpe-contacts.service.in \
              hildon/gpe-contacts.desktop.in.in \
              hildon/gpe-contacts.png \
              intltool-extract.in \
@@ -124,4 +124,3 @@ deb: dist
 	
 include gpe-dist.am
 include gpe-tp.am
-

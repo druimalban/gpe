@@ -1,3 +1,0 @@
-[D-BUS Service]
-Name=org.gpe.gpe_contacts
-Exec=/var/lib/install/@prefix@/bin/gpe-contacts

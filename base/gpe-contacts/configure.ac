@@ -72,6 +72,6 @@ Makefile
 po/Makefile.in
 edit-vcard.desktop.in
 gpe-contacts.desktop.in
-hildon/org.gpe.gpe-contacts.service
+hildon/com.nokia.gpe-contacts.service
 hildon/gpe-contacts.desktop.in
 ])
