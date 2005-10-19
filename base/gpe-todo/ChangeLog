@@ -1,3 +1,8 @@
+2005-10-19  Florian Boor  <florian.boor@kernelconcepts.de>
+	* hildon/*.in: Rename service and service file.
+	* debian/*: One more update of locations and dependencies.
+	* main.c: Change pixmaps locations on maemo platform.
+
 2005-08-15  Florian Boor  <florian.boor@kernelconcepts.de>
 
 	* debian/rules: Change package prefix to meet latest hildon requirements.
