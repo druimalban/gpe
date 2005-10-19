@@ -8,6 +8,6 @@ Type=Application
 Icon=gpe-contacts
 X-Window-Icon=gpe-contacts
 X-Window-Icon-Dimmed=gpe-contacts
-X-Osso-Service=com.nokia.gpe_contacts
+X-Osso-Service=gpe_contacts
 X-HildonDesk-ShowInToolbar=true
 X-Osso-Type=application/x-executable
