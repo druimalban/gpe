@@ -1,3 +1,9 @@
+
+2005-10-19  Florian Boor <florian.boor@kernelconcepts.de>
+
+    * main.c: Apply patch to support fullscreen mode in Maemo environment.
+              A contribution by Devesh Kothari and Philippe De Swert.
+
 2005-10-13  Florian Boor <florian.boor@kernelconcepts.de>
 
     * globals.h, main.c: Adapt icon loading to nasty Maemo environment.

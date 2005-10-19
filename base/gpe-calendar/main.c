@@ -262,6 +262,15 @@ gpe_cal_exit (void)
   gtk_main_quit ();
 }
 
+#ifdef IS_HILDON
+static void
+gpe_cal_fullscreen_toggle (void)
+{
+  static int fullscreen_toggle = TRUE;
+  hildon_appview_set_fullscreen(main_window, fullscreen_toggle);
+  fullscreen_toggle = !fullscreen_toggle;
+}
+#endif /*IS_HILDON*/
 static int 
 import_one_file(gchar *filename)
 {
@@ -342,6 +351,16 @@ notebook_switch_page (GtkNotebook *notebook,
 static gboolean
 main_window_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *data)
 {
+#ifdef IS_HILDON
+    /* in hildon there is nothing like control, shift etc buttons */
+    switch (k->keyval)
+      {
+	case GDK_F6:
+	/* toggle button for going full screen */
+	gpe_cal_fullscreen_toggle();
+        break;	
+      }
+#else
   if (k->state & GDK_CONTROL_MASK)
     switch (k->keyval)
       {
@@ -359,6 +378,7 @@ main_window_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *data)
           gpe_cal_exit();
         break;	
       }
+#endif /*IS_HILDON*/
   /* ignore if ctrl or alt pressed */    
   if ((k->state & GDK_CONTROL_MASK) 
        || (k->state & GDK_MOD1_MASK))
@@ -664,9 +684,12 @@ main (int argc, char *argv[])
                    G_CALLBACK(notebook_switch_page),NULL);
   g_signal_connect (G_OBJECT (main_window), "key_press_event", 
 		    G_CALLBACK (main_window_key_press_event), NULL);
+#ifndef IS_HILDON
+  /* in case of hildon we use defualt behavious */
   gtk_widget_add_events (GTK_WIDGET (main_window), 
                          GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK);
-
+#endif /*IS_HILDON*/
+  
   gtk_widget_show (notebook);
 
   gpe_set_window_icon (main_window, "icon");
