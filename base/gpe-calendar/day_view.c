@@ -112,7 +112,7 @@ void day_page_draw_background (const day_page_t page)
 		gdk_draw_line (widget->window, gray_gc, 0, page->height / NUM_HOURS *i,page->width, page->height / NUM_HOURS*i);
 		gdk_draw_line (widget->window, white_gc,0, page->height / NUM_HOURS*i,page->width/page->time_col_ratio, page->height / NUM_HOURS*i);
 		
-		snprintf (buf, sizeof (buf), "<span size='%d'>%.2d:00</span>",page->height /NUM_HOURS*550,i);
+		snprintf (buf, sizeof (buf), "<span font_desc='normal'>%.2d:00</span>",i);
 		buffer = g_locale_to_utf8 (buf, -1, NULL, NULL, NULL);
 		pango_layout_set_markup (pl, buffer, strlen (buffer));
 		pango_layout_get_pixel_extents (pl, &pr, NULL);
