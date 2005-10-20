@@ -294,15 +294,24 @@ on_import_vcal (GtkWidget *widget, gpointer data)
 {
   GtkWidget *filesel, *feedbackdlg;
   
+#if IS_HILDON	
+  filesel = hildon_file_chooser_dialog_new(GTK_WINDOW(gtk_widget_get_toplevel(widget)), 
+                                                      GTK_FILE_CHOOSER_ACTION_OPEN);
+  gtk_file_chooser_set_select_multiple(GTK_FILE_CHOOSER(filesel), TRUE);
+#else
   filesel = gtk_file_selection_new(_("Choose file"));
   gtk_file_selection_set_select_multiple(GTK_FILE_SELECTION(filesel),TRUE);
-  
+#endif	
   if (gtk_dialog_run(GTK_DIALOG(filesel)) == GTK_RESPONSE_OK)
     {
       gchar *errstr = NULL;
       int ec = 0, i = 0;
+#ifdef IS_HILDON
+      gchar **files = gtk_file_chooser_get_filenames(GTK_FILE_CHOOSER(filesel));
+#else		
       gchar **files = 
         gtk_file_selection_get_selections(GTK_FILE_SELECTION(filesel));
+#endif
       gtk_widget_hide(filesel); 
       while (files[i])
         {

@@ -50,6 +50,6 @@ AC_OUTPUT([
 Makefile
 po/Makefile.in
 gpe-calendar.desktop.in
-hildon/org.gpe.gpe-calendar.service
+hildon/com.nokia.gpe-calendar.service
 hildon/gpe-calendar.desktop.in
 ])

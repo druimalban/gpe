@@ -1,3 +1,7 @@
+2005-10-20  Florian Boor <florian.boor@kernelconcepts.de>
+
+	* hildon/*.in, Makefile.am, configure.ac: Change dbus service name.
+	* main.c: Use Hildon file selection dialog in Hildon UI.
 
 2005-10-19  Florian Boor <florian.boor@kernelconcepts.de>
 

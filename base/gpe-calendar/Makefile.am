@@ -34,7 +34,7 @@ desktopdir = $(datadir)/applications/hildon
 desktop_in_files = hildon/gpe-calendar.desktop.in
 
 servicedir = $(libdir)/dbus-1.0/services
-service_in_files = hildon/org.gpe.gpe-calendar.service.in
+service_in_files = hildon/com.nokia.gpe-calendar.service.in
 
 else
 
@@ -57,7 +57,7 @@ pixmaps_DATA = pixmaps/gpe-calendar.png
 EXTRA_DIST = $(service_DATA) \
              $(pixmaps_DATA) \
              gpe-calendar.desktop.in.in \
-             hildon/org.gpe.gpe-calendar.service.in \
+             hildon/com.nokia.gpe-calendar.service.in \
              hildon/gpe-calendar.desktop.in.in \
              intltool-extract.in \
              intltool-merge.in \
