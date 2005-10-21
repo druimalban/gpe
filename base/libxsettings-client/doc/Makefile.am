@@ -1,5 +1,5 @@
 # The name of the module.
-DOC_MODULE=libxsettings-client
+DOC_MODULE=libXsettings-client
 
 # The top-level SGML file.
 DOC_MAIN_SGML_FILE=$(DOC_MODULE)-docs.sgml
@@ -50,5 +50,4 @@ endif
 
 include gtk-doc.make
 
-distdir: dist-check-gtkdoc all
-
+#distdir: dist-check-gtkdoc all

@@ -1,3 +1,10 @@
+2005-10-21  Florian Boor <florian@kernelconcepts.de>
+
+	* Makefile.am: Fix creation of .pc file causing a pile of nasty side 
+	               effects.
+	* debian/*, Makefile.am: Add support for createing maemo compatible 
+	                         debian packages.
+
 2005-10-12  Florian Boor <florian@kernelconcepts.de>
 
 	* Makefile.am: Make build system pick up X includes correctly.

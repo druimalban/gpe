@@ -25,6 +25,6 @@ AC_FUNC_MALLOC
 AC_FUNC_VPRINTF
 
 # Is gtk-doc tool suite installed? We need it for documentation.
-GTK_DOC_CHECK(1.2)
+GTK_DOC_CHECK(1.0)
 
 AC_OUTPUT(Makefile libxsettings-client.pc doc/Makefile)

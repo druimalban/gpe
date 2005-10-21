@@ -1,0 +1,5 @@
+libxsettings-client (0.15-1) unstable; urgency=low
+
+  * Initial release.
+
+ -- Florian Boor <florian@kernelconcepts.de>  Fri, 21 Oct 2005 16:38:00 +0200
