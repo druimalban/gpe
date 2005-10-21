@@ -398,7 +398,7 @@ reminder_view_expose_cb(GtkWidget *widget,
 int 
 day_view_init ()
 {
-	GdkGC *white_gc, *gray_gc, *black_gc;
+	GdkGC *white_gc, *post_him_yellow, *black_gc;
 
 	time_t end, start;
 	struct tm tm_start, tm_end ;
@@ -433,7 +433,6 @@ day_view_init ()
 	
 	
 	white_gc = draw->style->white_gc;
-	gray_gc = draw->style->bg_gc[GTK_STATE_NORMAL];
 	black_gc = draw->style->black_gc;
 	
 	  
@@ -441,7 +440,9 @@ day_view_init ()
 	{
 		day_render_delete (dr);
 	}
-	dr = day_render_new(draw,page_app,gray_gc,black_gc,viewtime,
+	/* Don't want to infinge some patents here */
+	post_him_yellow = pen_new(draw, 63222, 59110, 33667);
+	dr = day_render_new(draw,page_app,post_him_yellow,black_gc,viewtime,
   					5,5,NUM_HOURS,
 					ev_list);
 	
