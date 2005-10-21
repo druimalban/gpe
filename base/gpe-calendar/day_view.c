@@ -116,7 +116,7 @@ void day_page_draw_background (const day_page_t page)
 		buffer = g_locale_to_utf8 (buf, -1, NULL, NULL, NULL);
 		pango_layout_set_markup (pl, buffer, strlen (buffer));
 		pango_layout_get_pixel_extents (pl, &pr, NULL);
-		gr.width = pr.width;
+		gr.width =  page->width/page->time_col_ratio;
 		gr.height = pr.height*2;
 		gr.x = page->width/page->time_col_ratio/2 - pr.width/2 ;
 		gr.y = page->height / NUM_HOURS*i;
