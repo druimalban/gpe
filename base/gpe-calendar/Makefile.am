@@ -61,7 +61,12 @@ EXTRA_DIST = $(service_DATA) \
              hildon/gpe-calendar.desktop.in.in \
              intltool-extract.in \
              intltool-merge.in \
-             intltool-update.in
+             intltool-update.in \
+			 debian/rules \
+			 debian/links \
+			 debian/control \
+			 debian/changelog \
+			 debian/compat 
  
 
 DISTCLEANFILES = intltool-extract \

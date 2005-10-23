@@ -596,7 +596,7 @@ week_view_button_press (GtkWidget *widget, GdkEventButton *event, gpointer d)
     
 	      if (c != c_old) 
 		{
-		  pop_window = day_popup (main_window, &c->popup, FALSE);
+		  pop_window = day_popup (gtk_widget_get_toplevel(main_window), &c->popup, FALSE);
 		  c_old = c;
 		}
 	      else 

@@ -1,3 +1,18 @@
+2005-10-23  Florian Boor <florian.boor@kernelconcepts.de>
+
+	* day_render.c, day_view.c: Fixed some runtime warnings, some reformating.
+	* gtkdatesel.c: Avoid moving positions selecting a new day.
+	* gtkdatesel.c: Add header to avoid warning. Change forward/backward buttons
+	                in Hildon UI.
+	* month_view.c: Fix title height in Hildon UI.
+
+2005-10-21  Florian Boor <florian.boor@kernelconcepts.de>
+
+	* main.c: Fix service name, Hildon UI bits.
+	* Makefile.am: Add maemo package files to EXTRA_DIST.
+	* day-view.c, event-ui.c: Some more Hildon UI bits and reformating.
+	* gtkdatesel.c: Minor Hildon UI compatibility fix.
+
 2005-10-20  Florian Boor <florian.boor@kernelconcepts.de>
 
 	* hildon/*.in, Makefile.am, configure.ac: Change dbus service name.

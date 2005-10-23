@@ -715,11 +715,11 @@ click_categories (GtkWidget *b, GtkWidget *w)
   ui = gpe_pim_categories_dialog (s->categories, TRUE, G_CALLBACK (update_categories), s);
 #else
   ui = gpe_pim_categories_dialog (s->categories, G_CALLBACK (update_categories), s);
-#endif
 
   gtk_window_set_transient_for(GTK_WINDOW(ui),
                                GTK_WINDOW(gtk_widget_get_toplevel(b)));
   gtk_window_set_modal(GTK_WINDOW(ui), TRUE);
+#endif
 }
 
 gboolean
@@ -924,7 +924,7 @@ build_edit_event_window (void)
     {
       gtk_window_set_default_size (GTK_WINDOW (window), 280, 380);
       gtk_window_set_type_hint(GTK_WINDOW(window), GDK_WINDOW_TYPE_HINT_DIALOG);
-      gtk_window_set_transient_for (GTK_WINDOW(window), GTK_WINDOW(main_window));
+      gtk_window_set_transient_for (GTK_WINDOW(window), GTK_WINDOW(gtk_widget_get_toplevel(main_window)));
       gtk_window_set_modal (GTK_WINDOW(window), TRUE);
     }
   
@@ -1145,15 +1145,28 @@ build_edit_event_window (void)
   /* using GtkHBox here since GtkHButtonBox packs the widgets in a way
      that stop them fitting on a 240x320 screen.  */
   buttonbox           = gtk_hbox_new (FALSE, 2);
+  gtk_container_set_border_width (GTK_CONTAINER (buttonbox), border);
+
+#ifdef IS_HILDON
+  buttonok            = gtk_button_new_with_label (_("Save"));
+  buttoncancel        = gtk_button_new_with_label (_("Cancel"));
+  buttondelete        = gtk_button_new_with_label (_("Delete"));
+
+  gtk_box_pack_start (GTK_BOX (buttonbox), buttonok, TRUE, FALSE, 
+                      gpe_get_boxspacing());
+  gtk_box_pack_start (GTK_BOX (buttonbox), buttoncancel, TRUE, FALSE, 
+                      gpe_get_boxspacing());
+  gtk_box_pack_start (GTK_BOX (buttonbox), buttondelete, TRUE, FALSE, 
+                      gpe_get_boxspacing());
+#else
   buttonok            = gtk_button_new_from_stock (GTK_STOCK_SAVE);
   buttoncancel        = gtk_button_new_from_stock (GTK_STOCK_CANCEL);
   buttondelete        = gtk_button_new_from_stock (GTK_STOCK_DELETE);
 
-  gtk_container_set_border_width (GTK_CONTAINER (buttonbox), border);
-
   gtk_box_pack_start (GTK_BOX (buttonbox), buttondelete, TRUE, FALSE, 4);
   gtk_box_pack_start (GTK_BOX (buttonbox), buttoncancel, TRUE, FALSE, 4);
   gtk_box_pack_start (GTK_BOX (buttonbox), buttonok, TRUE, FALSE, 4);
+#endif
 
   g_signal_connect (G_OBJECT (buttonok), "clicked",
                     G_CALLBACK (click_ok), window);

@@ -164,7 +164,6 @@ button_press (GtkWidget *widget,
 			e_r = iter->data;
 			if ((x >= e_r->x && x <= e_r->x + e_r->width) && (y >= e_r->y && y <= e_r->y + e_r->height) )
 			  {
-				GtkStyle *style;
 				gint width, height;
 				GdkGC *black_gc;
 				found = TRUE;
@@ -180,18 +179,20 @@ button_press (GtkWidget *widget,
 				localtime_r (&end, &end_tm);
 				evd = event_db_get_details (e_r->event);
 				buffer = (char *)g_malloc (sizeof (char)*256);
-				style = gtk_style_new ();
-			
 				
-				snprintf (buffer, 256, "%s %.2d:%.2d-%.2d:%.2d %s\n\n%s",evd->summary,start_tm.tm_hour,start_tm.tm_min,end_tm.tm_hour,end_tm.tm_min,(e_r->event->flags & FLAG_ALARM ? "(A)":""),evd->description);
+				snprintf (buffer, 256, "%s %.2d:%.2d-%.2d:%.2d %s\n\n%s",
+				          evd->summary, start_tm.tm_hour, start_tm.tm_min, 
+				          end_tm.tm_hour,end_tm.tm_min, 
+				          (e_r->event->flags & FLAG_ALARM ? "(A)":""), 
+				          evd->description);
 				buffer = g_locale_to_utf8 (buffer, -1, NULL, NULL, NULL);
 				gtk_window_set_position (GTK_WINDOW (popup),GTK_WIN_POS_MOUSE);
-				gtk_window_set_default_size (GTK_WINDOW (popup), dr_->page->width/2, dr_->page->height*.8);
-				black_gc = pen_new( widget ,164,160,10);
-				gdk_draw_rectangle( popup->window, black_gc,TRUE, 0, 0, width-1 ,height-1);
-				gtk_label_set_text (GTK_LABEL (event_infos_popup),buffer);
+				gtk_window_set_default_size (GTK_WINDOW (popup), dr_->page->width/2, 
+				                             dr_->page->height*.8);
 				gtk_window_get_size (GTK_WINDOW (popup), &width, &height);
-				gtk_widget_show (popup);	
+				gtk_label_set_text (GTK_LABEL (event_infos_popup), buffer);
+				gtk_widget_show (popup);
+				
 				g_free (buffer);
 				break;
 			}	
@@ -348,10 +349,9 @@ reminder_view_init ()
 	{
 		day_render_delete(rem_render);
 	}
-	cream_gc = pen_new(rem_area, 65535, 64005,51100);
-	rem_render = day_render_new (rem_area,page_rem,cream_gc, black_gc,viewtime,
-					5,5,1,
-					rem_list);
+	cream_gc = pen_new(rem_area, 65535, 64005, 51100);
+	rem_render = day_render_new (rem_area,page_rem,cream_gc, black_gc, viewtime,
+					5, 5, 1, rem_list);
 		
 	
 	return TRUE;
@@ -360,7 +360,7 @@ reminder_view_init ()
 
 void reminder_view_expose ()
 {
-
+	gint len;
 	gint width=0, height=0;
 		
 	gdk_window_get_size(rem_area->window, &width, &height);
@@ -375,9 +375,10 @@ void reminder_view_expose ()
 	rem_render->offset.x = 0;
 	day_render_set_event_rectangles (rem_render);
 	
-    if(g_slist_length(rem_render->events))
+	len = g_slist_length(rem_render->events);
+    if(len)
 	{
-		gtk_widget_set_size_request (rem_area, -1, dr->page->height*0.08);				
+		gtk_widget_set_size_request (rem_area, -1, dr->page->height / 20);				
 		draw_appointments (rem_render);
 	} else {
 		gtk_widget_set_size_request (rem_area, -1, 0);		
@@ -434,17 +435,16 @@ day_view_init ()
 	
 	white_gc = draw->style->white_gc;
 	black_gc = draw->style->black_gc;
-	
 	  
 	if (dr)
 	{
 		day_render_delete (dr);
 	}
+	
 	/* Don't want to infinge some patents here */
 	post_him_yellow = pen_new(draw, 63222, 59110, 33667);
-	dr = day_render_new(draw,page_app,post_him_yellow,black_gc,viewtime,
-  					5,5,NUM_HOURS,
-					ev_list);
+	dr = day_render_new(draw, page_app, post_him_yellow, black_gc,viewtime,
+  					5, 5, NUM_HOURS, ev_list);
 	
 	return TRUE;
 }
@@ -512,7 +512,8 @@ scroll_to (GtkWidget *scrolled, gint hour)
 	lower  = 0.0;
 	upper = h;
 
-	adj = gtk_adjustment_new(value,lower,upper,step_increment, page_increment, page_size);
+	adj = GTK_ADJUSTMENT(gtk_adjustment_new(value,lower,upper,step_increment, 
+	                     page_increment, page_size));
 	
 	gtk_scrolled_window_set_vadjustment (GTK_SCROLLED_WINDOW (scrolled), adj);
 }
@@ -608,20 +609,27 @@ day_view (void)
   /* Popup needed to show infos about an appointment */
   
   scrolled_window = gtk_scrolled_window_new (NULL, NULL);
-  popup = gtk_window_new (GTK_WINDOW_POPUP);	
+  popup = gtk_window_new (GTK_WINDOW_POPUP);
   event_infos_popup = gtk_label_new (_(""));
-  gtk_misc_set_alignment (GTK_MISC (event_infos_popup),0,0);
-  gtk_misc_set_padding (GTK_MISC (event_infos_popup),gpe_get_border(),gpe_get_border());
-	
-  
-                                             
+  gtk_misc_set_alignment (GTK_MISC (event_infos_popup), 0, 0);
+  gtk_misc_set_padding (GTK_MISC (event_infos_popup), gpe_get_border(), 
+	                    gpe_get_border());
+
+#ifdef IS_HILDON
+  edit_event_button = gtk_button_new_with_label(_("Edit"));
+  delete_event_button = gtk_button_new_with_label (_("Delete"));
+#else
   edit_event_button = gtk_button_new_with_label("");
   delete_event_button = gtk_button_new_with_label ("");
+
   edit_img = gtk_image_new_from_stock (GTK_STOCK_EDIT,GTK_ICON_SIZE_SMALL_TOOLBAR);
   delete_img = gtk_image_new_from_stock (GTK_STOCK_DELETE,GTK_ICON_SIZE_SMALL_TOOLBAR);
   gtk_button_set_image ( GTK_BUTTON (edit_event_button), edit_img);
   gtk_button_set_image ( GTK_BUTTON (delete_event_button), delete_img);
-  
+  gtk_widget_show (edit_img);
+  gtk_widget_show (delete_img);
+#endif
+
   gtk_button_set_relief (GTK_BUTTON (edit_event_button), GTK_RELIEF_NONE);
   gtk_button_set_relief (GTK_BUTTON (delete_event_button), GTK_RELIEF_NONE);
   gtk_container_add (GTK_CONTAINER (popup), vbox_popup);
@@ -634,8 +642,6 @@ day_view (void)
   gtk_widget_show (vbox_popup);
   gtk_widget_show (edit_event_button);
   gtk_widget_show (delete_event_button);
-  gtk_widget_show (edit_img);
-  gtk_widget_show (delete_img);
   gtk_widget_show (event_infos_popup);
   
 
@@ -653,7 +659,6 @@ day_view (void)
   g_signal_connect (G_OBJECT (delete_event_button), "clicked",
 		  		   G_CALLBACK (delete_event_cb), NULL);
 
-	  
 	
   gtk_window_set_decorated (GTK_WINDOW (popup) , TRUE);
   gtk_window_set_resizable (GTK_WINDOW (popup), FALSE);
@@ -666,14 +671,16 @@ day_view (void)
   GTK_WIDGET_UNSET_FLAGS (calendar, GTK_CAN_FOCUS);  
 	
   draw = gtk_drawing_area_new ();
-  gdk_drawable_get_size (main_window->window, &win_width, &win_height);
+  if (!GTK_WIDGET_REALIZED(gtk_widget_get_toplevel(main_window)))
+	  gtk_widget_realize(gtk_widget_get_toplevel(main_window));
+  gdk_drawable_get_size (GTK_WIDGET(gtk_widget_get_toplevel(main_window))->window, 
+                         &win_width, &win_height);
   
-  gtk_widget_set_size_request (draw, win_width-10, win_height*2);
-  
+  gtk_widget_set_size_request (draw, -1 , win_height*2);
   
   rem_area = gtk_drawing_area_new ();
   
-  gtk_widget_set_size_request (rem_area, win_width-10, win_height*0.2 );
+  gtk_widget_set_size_request (rem_area, -1, win_height / 20 );
   
   gtk_widget_show (draw);	
   gtk_widget_show (rem_area);
@@ -695,7 +702,9 @@ day_view (void)
 
   
   gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolled_window),
-       draw);  
+       draw);
+  gtk_viewport_set_shadow_type(GTK_VIEWPORT(draw->parent), 
+                               GTK_SHADOW_NONE);
   
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window),
 		GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
@@ -707,6 +716,7 @@ day_view (void)
   gtk_box_pack_start (GTK_BOX (vbox), hbox, TRUE, TRUE, 0);
 
   gtk_box_pack_start (GTK_BOX (hbox), scrolled_window, TRUE, TRUE, 0);
+#ifndef IS_HILDON  
   if (landscape)
     {
       GtkWidget *sep;
@@ -718,7 +728,7 @@ day_view (void)
       gtk_widget_show (sep);
       gtk_widget_show (calendar);
     }
-
+#endif
   
 	
 	
@@ -742,10 +752,6 @@ day_view (void)
 
   
   g_object_set_data (G_OBJECT (main_window), "datesel-day", datesel);
-  
-    
-
- 
   
   return vbox;
 }

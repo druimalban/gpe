@@ -35,7 +35,7 @@
 #include <gpe/pim-categories-ui.h>
 #include <hildon-fm/hildon-widgets/hildon-file-chooser-dialog.h>
 #include <libosso.h>
-#define APPLICATION_DBUS_SERVICE "gpe-calendar"
+#define APPLICATION_DBUS_SERVICE "gpe_calendar"
 #endif
 
 #include "event-ui.h"
@@ -329,11 +329,11 @@ on_import_vcal (GtkWidget *widget, gpointer data)
           i++;  
         }
       if (ec)
-        feedbackdlg = gtk_message_dialog_new(GTK_WINDOW(main_window),
+        feedbackdlg = gtk_message_dialog_new(GTK_WINDOW(gtk_widget_get_toplevel(main_window)),
           GTK_DIALOG_MODAL, GTK_MESSAGE_INFO, GTK_BUTTONS_OK, 
           "%s %i %s\n%s",_("Import of"),ec,_("files failed:"),errstr);
       else
-        feedbackdlg = gtk_message_dialog_new(GTK_WINDOW(main_window),
+        feedbackdlg = gtk_message_dialog_new(GTK_WINDOW(gtk_widget_get_toplevel(main_window)),
           GTK_DIALOG_MODAL, GTK_MESSAGE_INFO, GTK_BUTTONS_OK, 
           _("Import successful"));
       gtk_dialog_run(GTK_DIALOG(feedbackdlg));
@@ -364,9 +364,9 @@ main_window_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *data)
     /* in hildon there is nothing like control, shift etc buttons */
     switch (k->keyval)
       {
-	case GDK_F6:
-	/* toggle button for going full screen */
-	gpe_cal_fullscreen_toggle();
+        case GDK_F6:
+        /* toggle button for going full screen */
+        gpe_cal_fullscreen_toggle();
         break;	
       }
 #else
@@ -537,6 +537,8 @@ main (int argc, char *argv[])
   main_appview = hildon_appview_new(_("Main"));
   hildon_app_set_appview(HILDON_APP(app), HILDON_APPVIEW(main_appview));
   main_window = main_appview;
+  
+  gtk_notebook_set_show_border(GTK_NOTEBOOK(notebook), FALSE);
 #else    
   main_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title (GTK_WINDOW (main_window), _("Calendar"));
@@ -549,8 +551,7 @@ main (int argc, char *argv[])
 
 #ifdef IS_HILDON
   /* Initialize maemo application */
-  osso_context = osso_initialize(
-  APPLICATION_DBUS_SERVICE, "0.1", TRUE, NULL);
+  osso_context = osso_initialize(APPLICATION_DBUS_SERVICE, "0.1", TRUE, NULL);
 
   /* Check that initialization was ok */
   if (osso_context == NULL)
@@ -651,6 +652,13 @@ main (int argc, char *argv[])
   GTK_WIDGET_UNSET_FLAGS(item, GTK_CAN_FOCUS);
   month_button = GTK_WIDGET(item);    
   
+  if (window_x > 260)
+    {	  
+      item = gtk_separator_tool_item_new();
+      gtk_separator_tool_item_set_draw(GTK_SEPARATOR_TOOL_ITEM(item), FALSE);
+      gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
+    }
+  
   pw = gtk_image_new_from_stock(GTK_STOCK_OPEN, 
                                 gtk_toolbar_get_icon_size(GTK_TOOLBAR (toolbar)));
   item = gtk_tool_button_new(pw, _("Import"));
@@ -697,11 +705,11 @@ main (int argc, char *argv[])
   /* in case of hildon we use defualt behavious */
   gtk_widget_add_events (GTK_WIDGET (main_window), 
                          GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK);
+						 
+  gpe_set_window_icon (main_window, "icon");
 #endif /*IS_HILDON*/
   
   gtk_widget_show (notebook);
-
-  gpe_set_window_icon (main_window, "icon");
 
 #ifdef IS_HILDON  
   gtk_widget_show_all(app);

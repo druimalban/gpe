@@ -251,8 +251,6 @@ day_popup (GtkWidget *parent, struct day_popup *p, gboolean show_items)
 
   gdk_window_get_pointer (NULL, &x, &y, NULL);
 
-  gtk_widget_show_all (frame);
-
   gtk_widget_realize (window);
   gtk_widget_size_request (window, &requisition);
   
@@ -268,7 +266,7 @@ day_popup (GtkWidget *parent, struct day_popup *p, gboolean show_items)
   g_signal_connect (G_OBJECT (window), "destroy",
                     G_CALLBACK (destroy_popup), parent);
 
-  gtk_widget_show (window);
+  gtk_widget_show_all (window);
 
   return window;
 }

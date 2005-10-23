@@ -134,13 +134,16 @@ calc_title_height (GtkWidget *widget)
       pango_layout_get_pixel_extents (pl, &pr, NULL);
 
       if (pr.height > max_height)
-	max_height = pr.height;
+        max_height = pr.height;
 
       g_free (s);
     }
 
+#ifdef IS_HILDON
+  title_height = max_height + 16;
+#else
   title_height = max_height + 8;
-
+#endif	
   g_object_unref (pl);
 }
 
@@ -234,7 +237,6 @@ draw_expose_event (GtkWidget *widget,
 
   width = widget->allocation.width;
   height = widget->allocation.height;
-
   gdk_window_clear_area (drawable, 
 			 event->area.x, event->area.y,
 			 event->area.width, event->area.height);
@@ -676,8 +678,8 @@ month_view(void)
   
   gtk_widget_show (draw);
   gtk_widget_show (scrolled_window);
-  
-  
+  gtk_widget_show (vbox);
+	  
   g_signal_connect (G_OBJECT (draw), "expose_event",
                     G_CALLBACK (draw_expose_event), NULL);
   
@@ -721,7 +723,9 @@ month_view(void)
   
   g_object_set_data(G_OBJECT(main_window),"datesel-month",datesel);
   
-  gtk_window_get_size (GTK_WINDOW(main_window), &width, &height);
+  gtk_widget_realize(main_window);
+  
+  gtk_window_get_size (GTK_WINDOW(gtk_widget_get_toplevel(main_window)), &width, &height);
   gtk_widget_set_size_request (GTK_WIDGET(draw), width*.9, height*.65);
 
   calc_title_height (draw);

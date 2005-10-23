@@ -19,10 +19,19 @@
 
 #include <time.h>
 #include <gtk/gtk.h>
+#include <string.h>
 #include "gtkdatesel.h"
 #include <libintl.h>
 
 #define _(x) dgettext(PACKAGE, x)
+
+#ifdef IS_HILDON
+  #define LABEL_ADD  16
+  #define ARROW_SIZE 30
+#else
+  #define LABEL_ADD   8
+  #define ARROW_SIZE 20
+#endif
 
 static guint my_signals[1];
 
@@ -288,7 +297,7 @@ get_max_month_width (GtkDateSel *sel)
 	  if (str) 
 		  g_free(str);
       pango_layout_get_pixel_extents (layout, NULL, &logical_rect);
-      max_width = MAX (max_width, logical_rect.width + 8);
+      max_width = MAX (max_width, logical_rect.width + LABEL_ADD);
     }
 
   g_object_unref (layout);
@@ -317,7 +326,7 @@ get_max_day_width (GtkDateSel *sel)
       strftime (buffer, sizeof (buffer), _("%d"), &tm);
       pango_layout_set_text (layout, buffer, -1);
       pango_layout_get_pixel_extents (layout, NULL, &logical_rect);
-      max_width = MAX (max_width, logical_rect.width + 8);
+      max_width = MAX (max_width, logical_rect.width + LABEL_ADD);
     }
   w = max_width;
   
@@ -329,7 +338,7 @@ get_max_day_width (GtkDateSel *sel)
       strftime (buffer, sizeof (buffer), _("%a"), &tm);
       pango_layout_set_text (layout, buffer, -1);
       pango_layout_get_pixel_extents (layout, NULL, &logical_rect);
-      max_width = MAX (max_width, logical_rect.width + 8);
+      max_width = MAX (max_width, logical_rect.width + LABEL_ADD);
     }
 
   g_object_unref (layout);
@@ -344,17 +353,20 @@ make_field (GtkDateSel *sel, struct elem *e,
 	    int max_width)
 {
   GtkWidget *arrow_l, *arrow_r, *arrow_button_l, *arrow_button_r;
-
+#ifdef IS_HILDON
+  arrow_l = gtk_image_new_from_stock(GTK_STOCK_GO_BACK, GTK_ICON_SIZE_SMALL_TOOLBAR);
+  arrow_r = gtk_image_new_from_stock(GTK_STOCK_GO_FORWARD, GTK_ICON_SIZE_SMALL_TOOLBAR);
+#else
   arrow_l = gtk_arrow_new (GTK_ARROW_LEFT, GTK_SHADOW_OUT);
   arrow_r = gtk_arrow_new (GTK_ARROW_RIGHT, GTK_SHADOW_OUT);
-
+#endif
   arrow_button_l = gtk_button_new ();
   arrow_button_r = gtk_button_new ();
   e->text = gtk_label_new ("");
   e->container = gtk_hbox_new (FALSE, 0);
 
-  gtk_widget_set_size_request (arrow_button_l, 20, 20);
-  gtk_widget_set_size_request (arrow_button_r, 20, 20);
+  gtk_widget_set_size_request (arrow_button_l, ARROW_SIZE, ARROW_SIZE);
+  gtk_widget_set_size_request (arrow_button_r, ARROW_SIZE, ARROW_SIZE);
   GTK_WIDGET_UNSET_FLAGS (arrow_button_l, GTK_CAN_FOCUS);
   GTK_WIDGET_UNSET_FLAGS (arrow_button_r, GTK_CAN_FOCUS);
 
@@ -403,7 +415,7 @@ gtk_date_sel_init (GtkDateSel *sel)
       g_snprintf (buffer, sizeof (buffer), "%d%d%d%d", i,i,i,i);
       pango_layout_set_text (layout, buffer, -1);	  
       pango_layout_get_pixel_extents (layout, NULL, &logical_rect);
-      max_year_width = MAX (max_year_width, logical_rect.width + 8);
+      max_year_width = MAX (max_year_width, logical_rect.width + LABEL_ADD);
     }
 
   max_day_width = get_max_day_width (sel);

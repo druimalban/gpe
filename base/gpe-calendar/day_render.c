@@ -237,8 +237,6 @@ draw_appointments (struct day_render *dr)
   iter = dr->event_rectangles;
   while (iter)
     {
-
-
       show_event (dr, (ev_rec_t) (iter->data), dr->normal_gc);
       iter = iter->next;
     }
@@ -764,12 +762,9 @@ day_render_event_show (struct day_render *dr, event_t event, GdkGC * gc)
       while ((reminder > dr->page->width) && reminder > 0)
 	{
 	  gdk_draw_rectangle (dr->draw, gc, TRUE, offset.x,
-			      (start->point).y + offset.y + dr->gap + (i -
-								       start->
-								       row_num
-								       -
-								       1) *
-			      dr->dy, dr->page->width, dr->dy - dr->gap);
+			      (start->point).y + offset.y + dr->gap 
+		            + (i - start->row_num - 1) * dr->dy, 
+		          dr->page->width, dr->dy - dr->gap);
 	  reminder -= dr->page->width;
 
 	  ++i;
