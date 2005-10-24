@@ -1,90 +1,94 @@
-# Vietnamese translation for gpe-conf-0.1.23.
-# Copyright © 2005 Free Software Foundation, Inc.
-# Clytie Siddall <clytie@riverland.net.au>, 2005.
-# 
+# -*- mode:po; coding:utf-8; -*- Slovenian message catalogue for gpe-conf-0.1.23.
+# Copyright (C) 2005 Free Software Foundation, Inc.
+# Matej Urbančič <matej.urban@gmail.com>, 2005.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-conf 0.1.23\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2005-04-02 17:50+0200\n"
-"PO-Revision-Date: 2005-04-15 17:27+0950\n"
-"Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
-"Language-Team: Vietnamese <gnomevi-list@lists.sourceforge.net> \n"
+"PO-Revision-Date: 2005-10-13 08:42+0100\n"
+"Last-Translator: Matej Urbančič <matej.urban@gmail.com>\n"
+"Language-Team: Slovenian <translation-team-sl@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n%100==4 ? 3 : 0);\n"
+"X-Poedit-Language: Slovenian\n"
+"X-Poedit-Country: SLOVENIA\n"
+"X-Poedit-SourceCharset: utf-8\n"
 
 #: main.c:90 timeanddate.c:542
 msgid "Time"
-msgstr "Giờ"
+msgstr "Čas"
 
 #: main.c:90
 msgid "Time and Date Setup"
-msgstr "Thiết lập giờ và ngày"
+msgstr "Nastavitve datuma in časa"
 
 #: main.c:92
 msgid "Screen"
-msgstr "Màn ảnh"
+msgstr "Ekran"
 
 #: main.c:92 gpe-conf-screen.desktop.in.h:1
 msgid "Screen Setup"
-msgstr "Thiết lập màn ảnh"
+msgstr "Nastavitve Ekrana"
 
 #: main.c:94
 msgid "Keys & Buttons"
-msgstr "Phím và nút"
+msgstr "Tipke & Gumbi"
 
 #: main.c:94
 msgid "Keys and Buttons Setup"
-msgstr "Thiết lập phím và cái nút"
+msgstr "Nastavitve tipk in gumbov"
 
 #: main.c:96 timeanddate.c:558
 msgid "Network"
-msgstr "mạng"
+msgstr "Omrežje"
 
 #: main.c:96 gpe-conf-network.desktop.in.h:1
 msgid "Network Setup"
-msgstr "Thiết lập mạng"
+msgstr "Nastavitve Omrežja"
 
 #: main.c:98 theme.c:1083
 msgid "Theme"
-msgstr "Đề tài"
+msgstr "Tema"
 
 #: main.c:98 theme.c:1085 gpe-conf-theme.desktop.in.h:2
 msgid "Look and Feel"
-msgstr "Hình thức và cảm giác"
+msgstr "Izgled in Občutek"
 
 #: main.c:100
 msgid "Power"
-msgstr "Điện"
+msgstr "Napajanje"
 
 #: main.c:100
 msgid "Power safe Configuration"
-msgstr "Cấu hình điện an toàn"
+msgstr "Nastavitve varnega napajanja"
 
 #: main.c:102
 msgid "Owner"
-msgstr "Người chủ"
+msgstr "Lastnik"
 
 #: main.c:102 gpe-conf-ownerinfo.desktop.in.h:1
 msgid "Owner Information"
-msgstr "Thông tin người chủ"
+msgstr "Podatki o lastniku"
 
 #: main.c:104
 msgid "Login"
-msgstr "Đăng nhập"
+msgstr "Prijava"
 
 #: main.c:104 gpe-conf-login-setup.desktop.in.h:1
 msgid "Login Setup"
-msgstr "Thiết lập đăng nhập"
+msgstr "Nastavitve prijave"
 
 #: main.c:106
 msgid "Users"
-msgstr "Người dùng"
+msgstr "Uporabniki"
 
 #: main.c:106
 msgid "User Administration"
-msgstr "Quản lý người dùng"
+msgstr "Urejanje Uporabnikov"
 
 #: main.c:108
 msgid "GPE"
@@ -92,82 +96,82 @@ msgstr "GPE"
 
 #: main.c:108
 msgid "GPE Conf Administration"
-msgstr "Quản lý GPE Conf"
+msgstr "GPE Administracija nastavitev"
 
 #: main.c:110 gpe-conf-serial.desktop.in.h:2
 msgid "Serial Ports"
-msgstr "Cổng nối tiếp"
+msgstr "Serijska vrata"
 
 #: main.c:110
 msgid "Serial Port Configuration"
-msgstr "Cấu hình cổng nối tiếp"
+msgstr "Orodje za nastavljanje serijskih vrat"
 
 #: main.c:112
 msgid "PCMCIA/CF Cards"
-msgstr "Thẻ PCMCIA/CF"
+msgstr "PCMCIA/CF Kartice"
 
 #: main.c:112
 msgid "PCMCIA/CF Card Info and Config"
-msgstr "Thông tin và cấu hình thẻ PCMCIA/CF"
+msgstr "PCMCIA/CF Informacije in nastavitve"
 
 #: main.c:114
 msgid "Sound"
-msgstr "Âm thanh"
+msgstr "Zvok"
 
 #: main.c:114
 msgid "Sound Setup"
-msgstr "Thiết lập phát âm thanh"
+msgstr "Nastavitve Zvoka"
 
 #: main.c:116
 msgid "Task nameserver"
-msgstr "Cộng việc chọn máy chủ tênc"
+msgstr "Opravilni imenski strežnik"
 
 #: main.c:116
 msgid "Task for changing nameserver"
-msgstr "Cộng việc thay đổi máy chủ tên"
+msgstr "Opravilo zamenjave imenskega strežnika"
 
 #: main.c:118
 msgid "Task sound"
-msgstr "Cộng việc phát âm thanh"
+msgstr "Zvok Naloge"
 
 #: main.c:118
 msgid "Command line task saving/restoring sound settings."
-msgstr "Công việc dòng lệnh để lưu/phục hồi thiết lập âm thanh"
+msgstr "Naloga ukazne vrstice za shranjevanje/prevzemanje nastavitev zvoka."
 
 #: main.c:120
 msgid "Task background image"
-msgstr "Công việc chọn ảnh nền"
+msgstr "Ozadje opravila."
 
 #: main.c:120
 msgid "Only select background image."
-msgstr "Chỉ chọn ảnh nền"
+msgstr "Izberi samo sliko ozadja."
 
 #: main.c:146
 msgid "Settings saved"
-msgstr "Lưu thiết lập rồi"
+msgstr "Nastavitve shranjene"
 
 #: main.c:162
 msgid "Aborted"
-msgstr "Bị hủy bỏ"
+msgstr "Prekinjeno"
 
 #: main.c:335
 #, c-format
 msgid "'task_nameserver' needs a new (and only one) nameserver as argument.\n"
-msgstr "Lệnh 'task_nameserver' (công_việc_máy-chủ-tên) cần chỉ một máy chủ tên mới là đối số.\n"
+msgstr "'task_nameserver' potrebuje nov (samo en) privzeti imenski strežnik.\n"
 
 #: main.c:353
 #, c-format
 msgid "'task_sound' needs (s)ave/(r)estore as argument.\n"
-msgstr "Lệnh 'task_sound' (công_việc_âm-thanh) cần (s)ave/(r)estore (lưu/phục hồi) là đối số.\n"
+msgstr "'task_sound' potrebuje privzeti mesto shranjevanja/prevzemanja.\n"
 
 #: main.c:421
 msgid "Warning: PCMCIA init failed."
-msgstr "Cảnh báo: không khởi động PCMCIA được."
+msgstr "Opozorilo: zagon PCMCIA ni uspel."
 
 #: main.c:453
 #, c-format
 msgid "This mode is disabled, please try:\n"
-msgstr "Chế độ này bị vô hiệu hóa nên hãy thử:\n"
+msgstr "Ta način je izključen. Poskusite:\n"
 
 #: main.c:454
 #, c-format
@@ -177,13 +181,13 @@ msgid ""
 "where AppletName is in:\n"
 msgstr ""
 "\n"
-"gpe-conf [tên_tiểu_ứng_dụng]\n"
-"mà tên_tiểu_ứng_dụng trong:\n"
+"gpe-conf [ImeApleta]\n"
+"ImeApleta je lahko v:\n"
 
 #: main.c:470
 #, c-format
 msgid "Applet %s unknown!\n"
-msgstr "Chưa biết tiểu ứng dụng %s.\n"
+msgstr "Neznan aplet %s !\n"
 
 #: main.c:471
 #, c-format
@@ -195,12 +199,12 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Cách sử dụng: gpe-conf [tên_tiểu_ứng_dụng]\n"
-"mà tên_tiểu_ứng_dụng trong:\n"
+"Uporaba: gpe-conf [ImeApleta]\n"
+"ImeApleta je lahko v:\n"
 
 #: applets.c:445
 msgid "Root access"
-msgstr "Truy cập chủ (root access)"
+msgstr "Skrbniški dostop"
 
 #: applets.c:459
 msgid ""
@@ -208,190 +212,190 @@ msgid ""
 "accessible for user root.\n"
 "Please enter password."
 msgstr ""
-"Một số tùy chọn chỉ cho\n"
-"ngươi dùng chủ sử dung.\n"
-"Hãy nhập mật khẩu."
+"Nekatere možnosti so\n"
+"dostopne samo skrbniku.\n"
+"Prosim, vnesite geslo."
 
 #: applets.c:506 screen/calibrate.c:32
 msgid "Sorry, wrong password."
-msgstr "Tiếc là mật khẩu không đúng."
+msgstr "Napačno geslo."
 
 #: timeanddate.c:424
 msgid "Time adjusted from network."
-msgstr "mạng mới điều chỉnh giờ."
+msgstr "Prevzemi strežniški čas."
 
 #: timeanddate.c:426
 msgid "Adjusting time from network failed."
-msgstr "mạng không điều chỉnh giờ được."
+msgstr "Prevzem strežniškega časa ni uspel."
 
 #: timeanddate.c:506
 msgid "Time & Date"
-msgstr "Giờ ngày"
+msgstr "Čas & Datum"
 
 #: timeanddate.c:522
 msgid "Date"
-msgstr "Ngày"
+msgstr "Datum"
 
 #: timeanddate.c:537
 msgid "Enter current date here or use button to select."
-msgstr "Ở đây thì hãy nhập ngày hiện hay sử dụng cái nút để chọn."
+msgstr "Vnesite trenutni čas ali izberite z gumbi."
 
 #: timeanddate.c:576
 msgid "Select the timeserver to use to set the clock."
-msgstr "Hãy chọn máy chủ thời gian sẽ lập đồng hồ."
+msgstr "Izberite časovni strežnik za nastavitev ure."
 
 #: timeanddate.c:578
 msgid "Get time from network"
-msgstr "Gọi giờ từ mạng"
+msgstr "Prevzemi omrežni čas"
 
 #: timeanddate.c:585
 msgid "If connected to the Internet, you may press this button to set the time on this device using the timeserver above."
-msgstr "Nếu kết nối đến Mạng thì bạn có thể bấm cái nút này để lập giờ của thiết bị này bằng cách sử dụng mấy chủ thờì gian ở trên."
+msgstr "Če ste povezani z internetom, lahko nastavite čas s pritiskom na ta gumb. Časovni strežnik mora biti zgoraj nastavljen."
 
 #: timeanddate.c:590 timeanddate.c:599
 msgid "Timezone"
-msgstr "Múi giờ"
+msgstr "Časovno območje"
 
 #: timeanddate.c:622
 msgid "Select your current timezone here. The setting applies after the next login."
-msgstr "Ở đây thì hãy chọn múi giờ hiện của bạn. Tùy chọn này hoặt động sau khi đăng nhập lại."
+msgstr "Izberite trenutno časovno območje. Nastavitve bodo uporabljen ob naslednji prijavi."
 
 #: timeanddate.c:630
 msgid "Daylight Saving"
-msgstr "Giờ giữ ban ngày"
+msgstr "Poletni čas"
 
 #: timeanddate.c:637
 msgid "Use daylight saving time"
-msgstr "Sử dụng giờ giữ ban ngày (giờ mùa hạ)"
+msgstr "Uporabi zamik poletnega časa"
 
 #: timeanddate.c:644
 msgid "Check this box if you want your device to handle daylight saving time for you."
-msgstr "Hãy đánh dấu trong hộp này nếu bạn muốn thiết bị mình tự động thay đổi đến/từ giờ giữ ban ngày."
+msgstr "Odkljukaj, če želite da naprava namesto vas ureja nastavitve poletnega časa."
 
 #: timeanddate.c:646
 msgid "Offset:"
-msgstr "Hiệu số:"
+msgstr "Odmik:"
 
 #: timeanddate.c:655
 msgid "Default"
-msgstr "Mặc định"
+msgstr "Privzeto"
 
 #: timeanddate.c:662
 msgid "Use default DST offset of one hour?"
-msgstr "Sử dụng hiệu số giờ giữ ban ngày mặc định là một tiếng phải không?"
+msgstr "Naj uporabim privzeti DST odmik ene ure?"
 
 #: timeanddate.c:667
 msgid "Hours"
-msgstr "Tiếng"
+msgstr "Ure"
 
 #: timeanddate.c:670
 msgid "Select daylight saving time offset hours here."
-msgstr "Ở đây thì hãy chọn hiệu số tiếng đốí với giờ giữ ban ngày."
+msgstr "Določite zamik ur za poletni čas."
 
 #: timeanddate.c:675
 msgid "Minutes"
-msgstr "Phút"
+msgstr "Minute"
 
 #: timeanddate.c:678
 msgid "Select daylight saving time offset minutes here."
-msgstr "Ở đây thì hãy chọn hiệu số phút đối với giờ giữ ban ngày."
+msgstr "Določite zamik minut za poletni čas."
 
 #: timeanddate.c:783
 msgid "To make timezone settings take effect, you'll need to log out and log in again."
-msgstr "Để áp dụng những tùy chọn múi giờ này thì bạn hãy đăng xuất rồi đăng nhập lại."
+msgstr "Nastavitve časovnega območja bodo veljale šele ob naslednji prijavi."
 
 #: screen/main.c:74
 msgid "Portrait"
-msgstr "Thẳng đứng"
+msgstr "Portret"
 
 #: screen/main.c:75
 msgid "Landscape (left)"
-msgstr "Nằm ngang (bên trái)"
+msgstr "Prečno (levo)"
 
 #: screen/main.c:76
 msgid "Inverted"
-msgstr "Bị đảo"
+msgstr "Preobrnjeno"
 
 #: screen/main.c:77
 msgid "Landscape (right)"
-msgstr "Nằm ngang (bên phải)"
+msgstr "Prečno (desno)"
 
 #: screen/main.c:104
 msgid "Light"
-msgstr "Ánh sáng"
+msgstr "Svetlost"
 
 #: screen/main.c:110
 msgid "Brightness"
-msgstr "Độ sáng"
+msgstr "Svetlost"
 
 #: screen/main.c:152
 msgid "Display"
-msgstr "Trình bày"
+msgstr "Zaslon"
 
 #: screen/main.c:156
 msgid "Rotation"
-msgstr "Xoay"
+msgstr "Obračanje"
 
 #: screen/main.c:176
 msgid "Touchscreen"
-msgstr "Màn ảnh sờ"
+msgstr "Zaslon, občutljiv na dotik"
 
 #: screen/main.c:180
 msgid "Calibrate"
-msgstr "Định chuẩn"
+msgstr "Umeri"
 
 #: screen/main.c:182
 msgid "Start"
-msgstr "Bắt đầu"
+msgstr "Začetek"
 
 #: screen/main.c:304 sleep/callbacks.c:47
 msgid "min"
-msgstr "phút"
+msgstr "min"
 
 #: screen/main.c:307 sleep/callbacks.c:50
 msgid "sec"
-msgstr "giây"
+msgstr "sek"
 
 #: keys/kbd.c:142
 msgid "Keyboard Geometry / Layout"
-msgstr "Bố trí bàn phím"
+msgstr "Geometrija tipkovnice / Ureditev"
 
 #: keys/kbd.c:182
 msgid "User defined"
-msgstr "Người dùng đinh nghĩa"
+msgstr "Uporabniško določeno"
 
 #: network.c:104
 msgid "Current Config"
-msgstr "Cấu hình hiện"
+msgstr "Trenutna nastavitev"
 
 #: network.c:233 ownerinfo.c:236
 msgid "Name:"
-msgstr "Tên:"
+msgstr "Ime:"
 
 #: network.c:239
 msgid "New Interface"
-msgstr "Giao diện mới"
+msgstr "Nov vmesnik"
 
 #: network.c:248
 msgid "This interface definition already exists!"
-msgstr "Lời định nghĩa giao diện này tồn tại rôi."
+msgstr "Določitev tega vmesnika že obstaja!"
 
 #: network.c:327
 msgid "Do you want to delete this interface?"
-msgstr "Bạn có muốn xóa bỏ giao diện này không?"
+msgstr "Želite izbrisati ta vmesnik?"
 
 #: network.c:327 users/callbacks.c:138
 msgid "Question"
-msgstr "Câu hỏi"
+msgstr "Vprašanje"
 
 #: network.c:576
 msgid "WiFi config"
-msgstr "Cấu hình WiFi"
+msgstr "Nastavitve WiFi"
 
 #: network.c:607
 #, c-format
 msgid "WiFi config for %s"
-msgstr "Cấu hình WiFi cho %s"
+msgstr "Nastavitve WiFi za %s"
 
 #: network.c:619
 msgid "ESSID"
@@ -399,19 +403,19 @@ msgstr "ESSID"
 
 #: network.c:641
 msgid "Mode"
-msgstr "Chế độ"
+msgstr "Način"
 
 #: network.c:651
 msgid "managed"
-msgstr "quản lý"
+msgstr "urejevano"
 
 #: network.c:663
 msgid "ad-hoc"
-msgstr "khớp lúc ấy"
+msgstr "ad-hoc"
 
 #: network.c:680
 msgid "Channel"
-msgstr "Kênh"
+msgstr "Kanal"
 
 #: network.c:702
 msgid "WEP"
@@ -419,592 +423,591 @@ msgstr "WEP"
 
 #: network.c:712
 msgid "off"
-msgstr "tất"
+msgstr "izključeno"
 
 #: network.c:724
 msgid "open"
-msgstr "mở"
+msgstr "odpri"
 
 #: network.c:736
 msgid "restricted"
-msgstr "bị hạn chế"
+msgstr "omejeno"
 
 #: network.c:752
 msgid "Key 1"
-msgstr "Khóa 1"
+msgstr "Ključ 1"
 
 #: network.c:780
 msgid "Key 2"
-msgstr "Khóa 2"
+msgstr "Ključ 2"
 
 #: network.c:808
 msgid "Key 3"
-msgstr "Khóa 3"
+msgstr "Ključ 3"
 
 #: network.c:837
 msgid "Key 4"
-msgstr "Khóa 4"
+msgstr "Ključ 4"
 
 #: network.c:1043
 msgid "Address"
-msgstr "Địa chỉ"
+msgstr "Naslov"
 
 #: network.c:1046
 msgid "Enter your IP address here, e.g. 192.168.1.2"
-msgstr "Ở đây thì hãy nhập địa chỉ IP của bạn, v.d. 192.168.1.2"
+msgstr "Vnesite naslov IP, npr. 192.168.1.2"
 
 #: network.c:1048
 msgid "Netmask"
-msgstr "Mặt nạ mạng"
+msgstr "Omrežna maska"
 
 #: network.c:1051
 msgid "Enter your netmask here, e.g. 255.255.255.0 in most cases"
-msgstr "Ở đây thì hãy nhập mặt nạ mạng của bạn, thường là 255.255.255.0 "
+msgstr "Vnesite omrežno masko, npr. 255.255.255.0"
 
 #: network.c:1053
 msgid "Broadcast"
-msgstr "Phát thanh"
+msgstr "Naslov za razpršeno oddajanje"
 
 #: network.c:1056
 msgid "Enter your broadcast address here, usually the same like your IP with 255 as last number."
-msgstr "Ở đây thì hãy nhập địa chỉ phát thanh của bạn, thường giống như địa chỉ IP còn cuối cùng số 255."
+msgstr "Vnesite naslov razpršenega oddajanja, ponavadi je to vaš IP z 255 namesto zadnje številke."
 
 #: network.c:1058
 msgid "Gateway"
-msgstr "Cổng ra"
+msgstr "Prehod"
 
 #: network.c:1061
 msgid "Enter the IP Address of your default gateway here."
-msgstr "Ở đây thì hãy nhập địa chỉ IP của cổng ra mặc định của bạn."
+msgstr "Vnesite naslov IP vašega privzetega prehoda."
 
 #: network.c:1072 network.c:1189
 msgid "WiFi device"
-msgstr "Thiết bị WiFi"
+msgstr "WiFi naprava"
 
 #: network.c:1080 network.c:1197
 msgid "Configure"
-msgstr "Định cấu hình"
+msgstr "Nastavitve"
 
 #: network.c:1177
 msgid "Hostname"
-msgstr "Tên máy"
+msgstr "Ime gostitelja"
 
 #: network.c:1180
 msgid "Enter your desired hostname here. This parameter is optional."
-msgstr "Ở đây thì hãy nhập tên máy (chủ) được muốn. Tham số này tùy chọn."
+msgstr "Vnesite želenega gostitelja. Nastavitev lahko izpustite. "
 
 #: network.c:1297
 msgid "Provider"
-msgstr "Cung cấp"
+msgstr "Ponudnik"
 
 #: network.c:1299
 msgid "Here you need to enter the name of the provider configuration to use for this interface."
-msgstr "Ở đây thì hãy nhập tên cấu hình của công ty cung cấp dịch vụ Mạng để sử dụng với giao diện này."
+msgstr "Vnesite ime nastavitve ponudnika za ta vmesnik."
 
 #: network.c:1322
 msgid "Global Settings"
-msgstr "Tham chiếu toàn cục"
+msgstr "Splošne Nastavitve"
 
 #: network.c:1364
 msgid "Proxy"
-msgstr "Máy chủ ủy nhiệm"
+msgstr "Posrednik"
 
 #: network.c:1365
 msgid "If you want/need to use a proxy, enter it here. (This only applies to dillo for now.)"
-msgstr "Nếu bạn muốn/cần sử dụng máy chủ ủy nhiệm thì hãy nhập nó ở đây. (Hiện chỉ áp dụng vào dillo.)"
+msgstr "Če potrebujete dostop preko posrednika, vnesite naslov tukaj. (Trenutno se nanaša samo na dillo.)"
 
 #: network.c:1371
 msgid "No proxy for"
-msgstr "Không ủy nhiệm"
+msgstr "Ni posrednika za"
 
 #: network.c:1373
 msgid "Here you should enter your local domain for that you don't want to use a proxy."
-msgstr "Ở đây thì bạn hãy nhập miền nào mà bạn không muốn sử dụng máy chủ ủy nhiệm với nó."
+msgstr "Vnesite domačo domeno, ki gre mimo posrednika."
 
 #: network.c:1380
 msgid "DNS server"
-msgstr "Máy chủ DNS"
+msgstr "DNS Strežnik"
 
 #: network.c:1383
 msgid "Enter the IP of the DNS(name-) server to use here."
-msgstr "Ở đây thì hãy nhập địa chỉ IP của máy chủ (tên) DNS để sử dụng."
+msgstr "Vnesite naslov IP privzetega DNS strežnika."
 
 #: network.c:1554
 msgid ""
 "Here you may change the basic configuration type of your device.\n"
 "Use \"static\" for manual interface configuration, \"dhcp\" to use DHCP and \"ppp\" to make the device a point-to-point device."
 msgstr ""
-"Ở đây thì bạn có thể thay đổi loại cấu hình cơ bản của thiết bị bạn.\n"
-"Hãy sử dụng \"static\" (tĩnh) để tự định cấu hình giao diện, \"dhcp\" để sử dụng DHCP và \"ppp\" để lập thiết bị là thiết bị điểm-sang-điểm."
+"Tu lahko spremenite osnovne nastavitve vaše naprave.\n"
+"Uporabite \"static\" za ročno nastavitev, \"dhcp\" za DHCP strežnik in \"ppp\" za točkovno povezavo med dvema napravama."
 
 #: network.c:1560
 msgid "Enable this option if your device is a WiFi device"
-msgstr "Hiệu lực tùy chọn này nếu thiết bị bạn loại WiFi"
+msgstr "Omogočite možnost, če je vaša naprava WiFi naprava"
 
 #: network.c:1562
 msgid "Click to set the wireless options for this device"
-msgstr "Hãy nhắp để lập những tùy chọn vô tuyến cho thiết bị này."
+msgstr "Kliknite za nastavitev brezžičnih možnosti za napravo"
 
 #: network.c:1564
 msgid "Set the mode your WiFi card should work. (managed or ad-hoc)."
-msgstr "Hãy chọn chế độ hoặt đông của thẻ WiFi (quản lý hay khớp lúc ấy)."
+msgstr "Določite način delovanja vaše WiFi kartice. (urejevano ali ad-hoc)."
 
 #: network.c:1567
 msgid "Set the enrcyption mode: off for no WEP encryption, open for open system and restricted for resticted WEP connections only."
-msgstr "Hãy lập chế độ mã hóa: Tất (không mã hóa WEP), Mở (hệ thống mở) hay Bị hạn chế (chỉ cho phép sự kết nốí WEP bị hạn chế)."
+msgstr "Določite način šifriranja: izklopljeno za nešifriran WEP, odprto za odprt sistem and omejeno za omejene WEP povezave."
 
 #: network.c:1572
 msgid "Enter the essid of your WiFi network here."
-msgstr "Ở đây thì hãy nhập essid của mạng WiFi của bạn."
+msgstr "Vnesite essid vašega WiFi omrežja."
 
 #: network.c:1575
 msgid "Enter your WEP key here in (iwconfig format), e.g.: \"s:12345\""
-msgstr "Ở đây thì hãy nhập khóa WEP của bạn bằng dạng iwconfig, v.d. \"s:12345\""
+msgstr "Vnesite vaš WEP ključ v obliki (format iwconfig), npr.: \"s:12345\""
 
 #: network.c:1578
 msgid "Select the WEP key to use."
-msgstr "Hãy chọn khóa WEP nào để sử dụng."
+msgstr "Izberite WEP ključ."
 
 #: network.c:1581
 msgid "Enter the channel number or frequency if needed. If not needed leave this field blank."
-msgstr "Hãy nhập số kênh hay tần số nếu cần thiết. Nếu không thì không hãy nhập gì."
+msgstr "Vnesite številko kanala ali frekvenco. Če to ni potrebno, pustite polje prazno. "
 
 #: network.c:1604
 msgid "Add Interface"
-msgstr "Thêm giao diện"
+msgstr "Dodaj vmesnik"
 
 #: network.c:1605
 msgid "Add a new Interface"
-msgstr "Thêm một giao diện mới"
+msgstr "Dodaj nov vmesnik"
 
 #: network.c:1615
 msgid "Remove Interface"
-msgstr "Bỏ giao diện"
+msgstr "Odstrani vmesnik"
 
 #: network.c:1616
 msgid "Remove current Interface"
-msgstr "Bỏ giao diện hiện có"
+msgstr "Odstrani trenutni vmesnik"
 
 #: network.c:1630
 msgid "Information"
-msgstr "Thông tin"
+msgstr "Informacije"
 
 #: network.c:1631
 msgid "Show current configuration."
-msgstr "Hiển thị cấu hình hiện có"
+msgstr "Pokaži trenutne nastavitve"
 
 #: network.c:1649
 msgid "Couldn't read network configuration."
-msgstr "Không đọc được cấu hình mạng."
+msgstr "Ne morem prebrati nastavitev omrežja."
 
 #: network.c:1656
 msgid "global"
-msgstr "toàn cục"
+msgstr "globalno"
 
 #: theme.c:178
 msgid "Choose backgound image"
-msgstr "Chọn ảnh nền"
+msgstr "Izberi sliko ozadja"
 
 #: theme.c:192
 msgid "You are not allowed to read this file, choose another."
-msgstr "Không cho phép bạn đọc tập tin này thì hãy chọn tập tin khác."
+msgstr "Nimate dovoljenja za branje te datoteke, izberite drugo."
 
 #: theme.c:213
 msgid "Succesfully changed background image."
-msgstr "Mới thay đổi ảnh nền."
+msgstr "Uspešno sem zamenjal sliko ozadja."
 
 #: theme.c:214
 msgid "Use \"Look and Feel\" setup tool to change details."
-msgstr "Sử dụng công cụ thiết lập \"Hình thức và cảm giác\" để thay đổi chi tiết."
+msgstr "Uporabi \"Pogled in Izgled\" orodje za spreminjanje podrobnosti."
 
 #: theme.c:538
 msgid "Red"
-msgstr "Màu đỏ"
+msgstr "Rdeča"
 
 #: theme.c:543
 msgid "Green"
-msgstr "Màu xanh lá cây"
+msgstr "Zelena"
 
 #: theme.c:548
 msgid "Blue"
-msgstr "Màu xanh nước biển"
+msgstr "Modra"
 
 #: theme.c:858
 msgid "Select colour"
-msgstr "Chọn màuy"
+msgstr "Izberi barvo"
 
 #: theme.c:884 theme.c:958
 msgid "You don't have read access to selected background image!"
-msgstr "Không cho phép bạn đọc ảnh nền được chọn."
+msgstr "Nimate dovoljenja za branje izbrane slike ozadja!"
 
 #: theme.c:1095
 msgid "Desktop Theme"
-msgstr "Đề tài màn hình nền"
+msgstr "Tema Namizja"
 
 #: theme.c:1107
 msgid "Name"
-msgstr "Tên"
+msgstr "Ime"
 
 #: theme.c:1124
 msgid "Icon Size"
-msgstr "Cỡ biểu tượng"
+msgstr "Velikost Ikone"
 
 #: theme.c:1139
 msgid "Visual Effects"
-msgstr "Hiệu ứng trực quan"
+msgstr "Vizualni efekti"
 
 #: theme.c:1145
 msgid "Enable Visual Effects"
-msgstr "Hiệu lực hiệu ứng trực quan"
+msgstr "Omogoči Vizualne Efekte"
 
 #: theme.c:1152
 msgid "Background"
-msgstr "Nền"
+msgstr "Ozadje"
 
 #: theme.c:1166 theme.c:1168
 msgid "Background Settings"
-msgstr "Tham chiếu nền"
+msgstr "Nastavitve Ozadja"
 
 #: theme.c:1178 theme.c:1189
 msgid "Theme Default"
-msgstr "Đề tài mặc định"
+msgstr "Privzeta Tema"
 
 #: theme.c:1197
 msgid "Solid colour"
-msgstr "Màu đầy"
+msgstr "Barva"
 
 #: theme.c:1211
 msgid "Horizontal"
-msgstr "Nằm ngang"
+msgstr "Horizontalno"
 
 #: theme.c:1215
 msgid "Vertical"
-msgstr "Đứng"
+msgstr "Vertikalno"
 
 #: theme.c:1220 theme.c:1239 theme.c:1422 theme.c:1428
 msgid "Colour"
-msgstr "Màu"
+msgstr "Barva"
 
 #: theme.c:1230
 msgid "Colour gradient"
-msgstr "Chuyển màu sắc"
+msgstr "Barvni preliv"
 
 #: theme.c:1249
 msgid "Image"
-msgstr "Ảnh"
+msgstr "Slika"
 
 #: theme.c:1275
 msgid "Centered"
-msgstr "Được để vào giữa"
+msgstr "Sredinjeno"
 
 #: theme.c:1279
 msgid "Tiled"
-msgstr "Được lát đều"
+msgstr "Zloženo"
 
 #: theme.c:1282
 msgid "Stretched"
-msgstr "Được căng ra"
+msgstr "Razširjeno"
 
 #: theme.c:1289
 msgid "Toolbars"
-msgstr "Thanh công cụ"
+msgstr "Orodna vrstica"
 
 #: theme.c:1301 theme.c:1303
 msgid "Toolbar Style"
-msgstr "Kiểu thanh công cụ"
+msgstr "Stil orodne vrstice"
 
 #: theme.c:1312 theme.c:1341
 msgid "Icons"
-msgstr "Biểu tượng"
+msgstr "Ikone"
 
 #: theme.c:1317 theme.c:1345
 msgid "Text"
-msgstr "Chữ"
+msgstr "Besedilo"
 
 #: theme.c:1322
 msgid "Both"
-msgstr "Cả hai"
+msgstr "Oboje"
 
 #: theme.c:1327
 msgid "Both H"
-msgstr "Cả hai H"
+msgstr "Oboje H"
 
 #: theme.c:1348
 msgid "Both (icon above text)"
-msgstr "Cả hai (biểu tượng trên chữ)"
+msgstr "Oboje (ikona nad besedilom)"
 
 #: theme.c:1351
 msgid "Both (icon left of text)"
-msgstr "Cả hai (biểu tượng bên trái chữ)"
+msgstr "Oboje (ikona levo od besedila)"
 
 #: theme.c:1358
 msgid "Toolbar Icon Size"
-msgstr "Cỡ biểu tượng thanh công cụ"
+msgstr "Velikost ikon orodne vrstice"
 
 #: theme.c:1374
 msgid "Fonts"
-msgstr "Phông chữ"
+msgstr "Pisave"
 
 #: theme.c:1383 theme.c:1403
 msgid "Desktop Font"
-msgstr "Phông chữ màn hình nền"
+msgstr "Pisava Namizja"
 
 #: theme.c:1390 theme.c:1450 theme.c:1485
 msgid "Family"
-msgstr "Nhóm"
+msgstr "Družina"
 
 #: theme.c:1410 theme.c:1470 theme.c:1505 theme.c:1535
 msgid "Size"
-msgstr "Cỡ"
+msgstr "Velikost"
 
 #: theme.c:1439 theme.c:1441 theme.c:1463 theme.c:1498
 msgid "Application Font"
-msgstr "Phông chữ ứng dụng"
+msgstr "Pisava programa"
 
 #: theme.c:1519
 msgid "Terminal"
-msgstr "Thiết bị cuối"
+msgstr "Terminal"
 
 #: theme.c:1528
 msgid "Font"
-msgstr "Phông chữ"
+msgstr "Pisava"
 
 #: keys/keyctl.c:168
 msgid "Button layout file is missing a global section."
-msgstr "Tập tin bố trị nút thiếu một phần toàn cục"
+msgstr "Datoteki z razporeditvijo gumbov manjka splošni oddelek."
 
 #: keys/keyctl.c:532
 msgid "Critical: Can't open keylaunchrc for writing!"
-msgstr "Nghiêm trọng: không mở được keylaunchrc để ghi."
+msgstr "Kritično: Ne morem odpreti keylaunchrc za pisanje!"
 
 #: keys/keyctl.c:555
 msgid "Could not restart key handler!"
-msgstr "Không thể khởi đông lại trình quản lý khóa."
+msgstr "Nisem uspel zagnati urejevalnika ključev!"
 
 #: keys/keyctl.c:578
 msgid "The file you selected is not executable."
-msgstr "Bạn đã chọn tập tin không chạy được."
+msgstr "Izbrana datoteka ni izvršljiva."
 
 #: ownerinfo.c:209
 msgid "Information about the Owner"
-msgstr "Thông tin về người chủ"
+msgstr "Informacije o lastniku"
 
 #: ownerinfo.c:217
 msgid "Only the user 'root' is allowed to change this information"
-msgstr "Chỉ cho phép ngươi dùng 'root' (chủ) thay đổi thông tin này."
+msgstr "Samo skrbnik lahko spremeni te informacije."
 
 #: ownerinfo.c:251
 msgid "E-Mail:"
-msgstr "Địa chỉ thư điện tử:"
+msgstr "e-Pošta:"
 
 #: ownerinfo.c:266
 msgid "Phone:"
-msgstr "Số đ.t.:"
+msgstr "Telefon:"
 
 #: ownerinfo.c:281
 msgid "Address:"
-msgstr "Địa chỉ nhà:"
+msgstr "Naslov:"
 
 #: ownerinfo.c:307
 msgid "Photofile:"
-msgstr "Tệp ảnh chụp:"
+msgstr "Foto datoteka:"
 
 #: login-setup.c:160
 msgid "Some of these settings can only be changed by the user 'root'."
-msgstr "Chỉ cho phép người dùng 'root' (chủ) thay đổi một số của tham chiếu này."
+msgstr "Nekatere nastavitve lahko spremeni samo skrbnik."
 
 #: login-setup.c:183 gpe-admin.c:85
 msgid "General"
-msgstr "Chung"
+msgstr "Splošno"
 
 #: login-setup.c:200
 msgid "Show owner information at login."
-msgstr "Hiển thị thông tin người chủ khi đăng nhập."
+msgstr "Pokaži podatke lastnika ob prijavi."
 
 #: login-setup.c:204
 msgid "Lock display on suspend."
-msgstr "Khi ngưng thì khóa màn hình."
+msgstr "Zakleni ob začasni zaustavitvi."
 
 #: login-setup.c:208
 msgid ""
 "Lock display on suspend. \n"
 "  (needs password)"
 msgstr ""
-"Khi ngưng thì khóa màn hình.\n"
-"(cần đến mật khẩu)"
+"Zakleni ekran ob izključitvi. \n"
+" (zahteva geslo)"
 
 #: login-setup.c:213
 msgid ""
 "Automatic login. \n"
 "  (without password)"
 msgstr ""
-"Tự động đăng nhập. \n"
-"  (không cần mật khẩu)"
+"Samodejna prijava. \n"
+" (brez gesla)"
 
 #: sleep/interface.c:67
 msgid "Auto sleep"
-msgstr "Tự động ngủ"
+msgstr "Zaspi samodejno"
 
 #: sleep/interface.c:77 sleep/interface.c:116
 msgid "enabled"
-msgstr "hoăt động"
+msgstr "omogočeno"
 
 #: sleep/interface.c:95
 msgid "sleep timeout"
-msgstr "thời hạn ngủ"
+msgstr "Zakasnitev spanja"
 
 #: sleep/interface.c:106
 msgid "Auto dim"
-msgstr "Tự động làm mờ"
+msgstr "Samodejna zatemnitev"
 
 #: sleep/interface.c:133
 msgid "backlight dim timeout"
-msgstr "thời hạn tất đèn nền"
+msgstr "Zakasnitev zatemnitve osvetljenosti ozadja"
 
 #: sleep/interface.c:142
 msgid "Auto dim level"
-msgstr "Mức tự động làm mờ"
+msgstr "Stopnja samodejne zatemnitve"
 
 #: sleep/interface.c:162
 msgid "Advanced Controls"
-msgstr "Điều kiện cấp cao"
+msgstr "Napredni nadzornik"
 
 #: sleep/interface.c:172
 msgid "CPU"
-msgstr "CPU"
+msgstr "CPE"
 
 #: sleep/interface.c:178
 msgid "Sleep on cpu less than load"
-msgstr "Ngủ khi có ít tiêm năng của đơn vị xử lý trung tâm (cpu) hơn trọng tải"
+msgstr "Zaspi ob najmanjši CPE obremenitvi"
 
 #: sleep/interface.c:182
 msgid "load below"
-msgstr "trọng tải thập hơn"
+msgstr "najmanjša obremenitev"
 
-# Re-visit this item
 #: sleep/interface.c:198
 msgid "APM"
 msgstr "APM"
 
 #: sleep/interface.c:204
 msgid "Sleep on AC"
-msgstr "Ngủ khi kết nối đến dòng điện xoay chiều (AC)"
+msgstr "Zaspi na AC"
 
 #: sleep/interface.c:206
 msgid "probe IRQs"
-msgstr "dò các IRQ"
+msgstr "preišči IRQs"
 
 #: sleep/interface.c:212
 msgid "Check IRQ activity"
-msgstr "Kiểm tra có IRQ hoặt độngh"
+msgstr "Preveri IRQ aktivnost"
 
 #: users/interface.c:215
 msgid "User Name"
-msgstr "Tên người dùng"
+msgstr "Uporabniško ime"
 
 #: users/interface.c:216
 msgid "User Info"
-msgstr "Thông tin người dùng"
+msgstr "Informacije o uporabniku"
 
 #: users/interface.c:217
 msgid "Home"
-msgstr "Chính"
+msgstr "Domov"
 
 #: users/interface.c:235 users/interface.c:236
 msgid "Add user"
-msgstr "Thêm người dùng"
+msgstr "Dodaj uporabnika"
 
 #: users/interface.c:236
 msgid "Add a new user"
-msgstr "Thêm một người dùng mới"
+msgstr "Dodaj novega uporabnika"
 
 #: users/interface.c:240 users/interface.c:241
 msgid "Edit user"
-msgstr "Sửa đổi người dung"
+msgstr "Uredi uporabnika"
 
 #: users/interface.c:241
 msgid "Edit existing user"
-msgstr "Sửa đổi người dùng tồn tại"
+msgstr "Uredi obstoječega uporabnika"
 
 #: users/interface.c:245 users/interface.c:246
 msgid "Delete user"
-msgstr "Xóa bỏ người dùng"
+msgstr "Zbriši uporabnika"
 
 #: users/interface.c:246
 msgid "Delete existing user"
-msgstr "Xóa bỏ người dùng tồn tại"
+msgstr "Zbriši obstoječega uporabnika"
 
 #: users/interface.c:250
 msgid "Password"
-msgstr "Mật khẩu"
+msgstr "Geslo"
 
 #: users/interface.c:251
 msgid "Change password"
-msgstr "Thay đổi mật khẩu"
+msgstr "Zamenjaj geslo"
 
 #: users/interface.c:320
 msgid "User settings"
-msgstr "Tham chiếu người dùng"
+msgstr "Nastavitve uporabnika"
 
 #: users/interface.c:334
 msgid "User Name:"
-msgstr "Tên người dùng:"
+msgstr "Ime uporabnika:"
 
 #: users/interface.c:350
 msgid "Password:"
-msgstr "Mật khẩu:"
+msgstr "Geslo:"
 
 #: users/interface.c:358
 msgid "User Info:"
-msgstr "Thông tin người dùng:"
+msgstr "Informacije o uporabniku:"
 
 #: users/interface.c:374
 msgid "Shell:"
-msgstr "Vỏ:"
+msgstr "Lupina:"
 
 #: users/interface.c:393
 msgid "Home:"
-msgstr "Chính:"
+msgstr "Dom:"
 
 #: users/interface.c:412
 msgid "Change"
-msgstr "Đổi"
+msgstr "Spremeni"
 
 #: users/interface.c:413
 msgid "Set"
-msgstr "Lập"
+msgstr "Nastavi"
 
 #: users/interface.c:478
 msgid "Change Password"
-msgstr "Đổi mật khẩu"
+msgstr "Zamenjaj geslo"
 
 #: users/interface.c:504
 msgid "Old Password:"
-msgstr "Mật khẩu cũ:"
+msgstr "Staro geslo:"
 
 #: users/interface.c:511
 msgid "New Password:"
-msgstr "Mật khẩu mới:"
+msgstr "Novo geslo:"
 
 #: users/interface.c:519
 msgid "Confirm:"
-msgstr "Xác nhận:"
+msgstr "Potrdi:"
 
 #: users/callbacks.c:107
 msgid "You need at least one user account!"
-msgstr "Cần ít nhất một tài khoản người dùng."
+msgstr "Potrebujeta vsaj en uporabniški račun!"
 
 #: users/callbacks.c:131
 msgid "You can't remove this user!"
-msgstr "Bạn không loại bỏ được ngươi dùng này."
+msgstr "Tega uporabnika ni mogoče odstraniti!"
 
 #: users/callbacks.c:136
 msgid ""
 "You can't remove\n"
 " system users!"
 msgstr ""
-"Bạn không loại bỏ được \n"
-"ngươi dùng hệ thông."
+"Ni mogoče odstraniti\n"
+" sistemski uporabnik!"
 
 #: users/callbacks.c:138
 msgid ""
@@ -1012,102 +1015,101 @@ msgid ""
 "This action is not revertable\n"
 "and is executed instantly."
 msgstr ""
-"Xóa bỏ ngươi dùng và toàn \n"
-"bộ dữ liệu của họ không?\n"
-"Không thể hoàn tác viêc này\n"
-"và nó ngay được thi hành."
+"Izbrišem uporabnika in vse\n"
+"njegove podatke? Teh ne bo\n"
+"nikoli  več možno povrniti."
 
 #: users/callbacks.c:173
 msgid "Please choose a user name."
-msgstr "Hãy chọn tên người dùng."
+msgstr "Prosim, izberite uporabniško ime."
 
 #: users/callbacks.c:191
 msgid "Please choose a home directory."
-msgstr "Hãy chọn thư mục chính."
+msgstr "Prosim izberite domačo mapo."
 
 #: users/callbacks.c:279
 msgid ""
 "The two new pass are different!\n"
 " Please try again!"
 msgstr ""
-"Hai mật khảu mới không khớp\n"
-"thì hãy thử lại."
+"Novi gesli sta različni!\n"
+" Prosim, poskusite znova!"
 
 #: users/callbacks.c:282
 msgid ""
 "Wrong password\n"
 " Please try again!"
 msgstr ""
-"Mật khẩu không đúng\n"
-"thì hãy thử lại."
+"Napačno geslo\n"
+" Prosim, poskusite znova!"
 
 #: cfgfile.c:915
 msgid "No write access to network configuration."
-msgstr "Không có quyền ghi cấu hình mạng."
+msgstr "Ni dovoljenja za pisanje nastavitev omrežja."
 
 #: gpe-admin.c:92
 msgid "Allow users to configure everything"
-msgstr "Cho phép mọi người dùng định cấu hình tất cả"
+msgstr "Dovoli uporabniku nastavljanje vsega"
 
 #: serial.c:428 serial.c:434
 msgid "Simple interface to serial port configuration. Disabled components are not installed."
-msgstr "Cấu hình đơn giản loại giao diện đến cổng nối tiếp. Sẽ không cài đặt đoạn mã bị vô hiệu hóa."
+msgstr "Enostaven vmesnik za nastavitev serijskih vrat. Onemogočene komponente niso naložene."
 
 #: serial.c:431
 msgid "Port A"
-msgstr "Cổng A"
+msgstr "Vrata A"
 
 #: serial.c:438
 msgid "Serial port default usage"
-msgstr "Cách sử dụng cổng nối tiếp"
+msgstr "Privzeta uporaba serijskih vrat"
 
 #: serial.c:443
 msgid "Select desired software to use serial port here."
-msgstr "Ở đây thì hãy chọn phần mềm được muốn để sử dụng cổng nối tiếp."
+msgstr "Izberite želeno programsko opremo za uporabo serijskih vrat."
 
 #: serial.c:446
 msgid "Console"
-msgstr "Kênh giao tác"
+msgstr "Konzola"
 
 #: serial.c:449
 msgid "This option runs console on serial port. (default)"
-msgstr "Tùy chọn này chạy kênh giao tác trên cổng nối tiếp (mặc định)."
+msgstr "Ta možnost zažene konzolo na serijskih vratih. (privzeto)"
 
 #: serial.c:457
 msgid "GPS Daemon"
-msgstr "GPS Daemon"
+msgstr "GPS demon"
 
 #: serial.c:462
 msgid "GPS Daemon (needs 'gpsd')"
-msgstr "Trình dành cho GPS (cần "
+msgstr "GPS demon (potrebuje 'gpsd')"
 
 #: serial.c:467
 msgid "This option enables the start of GPSD, which provides data from a GPS reciver to applications."
-msgstr "Tùy chọn này cho phép khởi động GPSD mà cung cấp dữ liệu từ thiết bị nhận GPS sang ứng dụng."
+msgstr "Ta možnost omogoči zagon GPSD, ki oskrbuje aplikacije s podatki GPS sprejemnika."
 
 #: serial.c:474
 msgid "Nothing (free)"
-msgstr "Không có (sẵn sàng)"
+msgstr "Nič (prostega)"
 
 #: serial.c:477
 msgid "Don't start any software that uses the serial port."
-msgstr "Không khởi động phần mềm nào sử dụng cổng nối tiếp."
+msgstr "Ne zaženi programske opreme, ki uporablja serijska vrata."
 
 #: serial.c:514 serial.c:521
 msgid "This page configures the GPS receiver software."
-msgstr "Trang này định cấu hình phần mềm của thiết bị nhận GPS."
+msgstr "Stran za nastavljanje programske opreme GPS sprejemnika."
 
 #: serial.c:518
 msgid "GPS Receiver"
-msgstr "Thiết bị nhận GPS"
+msgstr "GPS Sprejemnik"
 
 #: serial.c:525
 msgid "GPS settings"
-msgstr "Tham chiếu GPS"
+msgstr "GPS nastavitve"
 
 #: serial.c:531
 msgid "Receiver Type"
-msgstr "Loại thiết bị nhận"
+msgstr "Tip sprejemnika"
 
 #: serial.c:536
 msgid "NMEA"
@@ -1115,7 +1117,7 @@ msgstr "NMEA"
 
 #: serial.c:541
 msgid "The GPS receiver sends NMEA data (default, no need to change for most receivers)."
-msgstr "Thiết bị nhận GPS có gởi dữ liêu loại NMEA (mặc định nên không cần thay đổi gì cho phần lớn thiết bị)."
+msgstr "GPS sprejemnik pošilja NMEA podatke (privzeto, velja za večino sprejemnikov)."
 
 #: serial.c:547
 msgid "Earthmate"
@@ -1123,136 +1125,136 @@ msgstr "Earthmate"
 
 #: serial.c:553
 msgid "GPS receiver is an Earthmate GPS."
-msgstr "Thiết bị nhận GPS loại Earthmate."
+msgstr "GPS sprejemnik je Earthmate GPS."
 
 #: serial.c:557
 msgid "Baud Rate"
-msgstr "Tốc độ truyền (kbps)"
+msgstr "Hitrost prenosa v baudih"
 
 #: serial.c:573
 msgid "Serial Port"
-msgstr "Cổng nối tiếp"
+msgstr "Serijska vrata"
 
 #: cardinfo.c:104
 msgid "/_Card"
-msgstr "/_Thẻ"
+msgstr "/_Kartica"
 
 #: cardinfo.c:105
 msgid "/Card/_Insert"
-msgstr "/Thẻ/_Chèn"
+msgstr "/_Kartica/_Vstavi"
 
 #: cardinfo.c:106
 msgid "/Card/_Eject"
-msgstr "/Thẻ/Nhả _ra"
+msgstr "/_Kartica/_Izvrzi"
 
 #: cardinfo.c:107
 msgid "/Card/_Suspend"
-msgstr "/Thẻ/_Ngưng"
+msgstr "/_Kartica/_Zaustavi"
 
 #: cardinfo.c:108
 msgid "/Card/_Resume"
-msgstr "/Thẻ/Làm _tiếp"
+msgstr "/_Kartica/_Nadaljuj"
 
 #: cardinfo.c:109
 msgid "/Card/_Reset"
-msgstr "/Thẻ/_Lập lại"
+msgstr "/_Kartica/_Povrni"
 
 #: cardinfo.c:110
 msgid "/Card/s1"
-msgstr "/Thẻ/s1"
+msgstr "/_Kartica/s1"
 
 #: cardinfo.c:111
 msgid "/Card/_Assign Driver"
-msgstr "/Thẻ/_Gán trình điều khiển"
+msgstr "/_Kartica/_Dodeli gonilnik"
 
 #: cardinfo.c:112
 msgid "/Card/s2"
-msgstr "/Thẻ/s2"
+msgstr "/_Kartica/s2"
 
 #: cardinfo.c:113
 msgid "/Card/_Close"
-msgstr "/Thẻ/_Đóng"
+msgstr "/_Kartica/_Ugasni"
 
 #: cardinfo.c:114
 msgid "/_Help"
-msgstr "/Trợ _giúp"
+msgstr "/_Pomoč"
 
 #: cardinfo.c:115
 msgid "/_Help/Index"
-msgstr "/Trợ _giúp/Mục lục"
+msgstr "/_Pomoč/Kazalo"
 
 #: cardinfo.c:116
 msgid "/_Help/About"
-msgstr "/Trợ _giúp/Giới thiệu"
+msgstr "/_Pomoč/O programu"
 
 #: cardinfo.c:176 cardinfo.c:864
 msgid "card not recognized"
-msgstr "chưa chấp nhân thẻ"
+msgstr "ne prepoznam kartice"
 
 #: cardinfo.c:278 cardinfo.c:349
 msgid "Could not write to temporal config file."
-msgstr "Không thể ghi vào tập tin cấu hình tạm thờì."
+msgstr "ne morem pisati v začasno nastavitveno datoteko."
 
 #: cardinfo.c:555
 msgid "Could not open pidfile:"
-msgstr "Không mở được tập tin thông tin cá nhân (pidfile):"
+msgstr "Ne morem odpreti pid datoteke:"
 
 #: cardinfo.c:561
 msgid "Could not read pidfile"
-msgstr "Không đọc được tập tin thông tin cá nhân (pidfile)"
+msgstr "Ne morem prebrati pid datoteke"
 
 #: cardinfo.c:565
 msgid "Could not signal cardmgr:"
-msgstr "Không thể ra hiệu trình quản lý thẻ (cardmgr):"
+msgstr "Nisem uspel signalizirati cardmgr:"
 
 #: cardinfo.c:640
 msgid "gpe-conf must be setuid root to use cardinfo feature."
-msgstr "Để sử dụng tính gọi năng thông tin thẻ (cardinfo) thì cần phải lâp trình gpe-conf có quyền setuid root."
+msgstr "gpe-conf mora imeti pravice skrbnika za uporabo možnosti cardinfo."
 
 #: cardinfo.c:659
 msgid "No PCMCIA driver in '/proc/devices'"
-msgstr "Không có trình điều khiển PCMCIA trong thư mục '/proc/devices'"
+msgstr "Ni PCMCIA gonilnika v '/proc/devices'"
 
 #: cardinfo.c:662
 msgid "Could not open '/proc/devices'"
-msgstr "Không thể mở thư mục '/proc/devices'"
+msgstr "Ne morem odpreti '/proc/devices'"
 
 #: cardinfo.c:674
 msgid "No sockets found\n"
-msgstr "Chưa tìm ổ cắm nào\n"
+msgstr "Ne najdem vtiča\n"
 
 #: cardinfo.c:683
 msgid "Card Services release does not match!"
-msgstr "Phiên bản dịch vụ thẻ (Card Services) không khớp được."
+msgstr "Prenosi storitev kartice niso usklajeni!"
 
 #: cardinfo.c:688
 msgid "Could not get CS revision info!\n"
-msgstr "Không gọi được thông tin sửa lại phiên bản của dịch vụ thẻ (CS).\n"
+msgstr "Nisem uspel dobiti informacij o CS reviziji!\n"
 
 #: cardinfo.c:851
 msgid "flock(stabfile) failed"
-msgstr "không thi hành lệnh flock(stabfile) được"
+msgstr "flock(stabfile) prekinjen"
 
 #: cardinfo.c:870
 #, c-format
 msgid "no driver loaded"
-msgstr "chưa tải trình điều khiển thiết bị (driver)"
+msgstr "ni naloženega gonilnika"
 
 #: cardinfo.c:979
 msgid "ready"
-msgstr "sẵn sàng"
+msgstr "pripravljen"
 
 #: cardinfo.c:997
 msgid "not ready"
-msgstr "chưa sẵn sàng"
+msgstr "ni pripravljeno"
 
 #: cardinfo.c:1012
 msgid "suspended"
-msgstr "đã ngưng"
+msgstr "zaustavljen"
 
 #: cardinfo.c:1204
 msgid "Assign Driver"
-msgstr "Gán trình điều khiển"
+msgstr "Določi gonilnik"
 
 #: cardinfo.c:1213
 msgid ""
@@ -1260,53 +1262,53 @@ msgid ""
 "change the driver assignment for a\n"
 "PCMCIA or CF card."
 msgstr ""
-"Hộp thoại này cho phép ban chọn\n"
-"hay thay đổi trình điều khiển đối với\n"
-"thẻ PCMCIA hay CF."
+"To pogovorno okno vam dovoli\n"
+"izbrati/spremeniti določen gonilnik\n"
+"za PCMCIA ali CF kartico."
 
 #: cardinfo.c:1223
 msgid "Your current card identifies itself as:"
-msgstr "Thẻ hiện của bạn có thông tin này:"
+msgstr "Vaša trenutna kartica se javlja kot:"
 
 #: cardinfo.c:1237 cardinfo.c:1243
 msgid "Manuf. Id"
-msgstr "Mã chế tạo"
+msgstr "ID Proizvajalca"
 
 #: cardinfo.c:1237 cardinfo.c:1243
 msgid "Class"
-msgstr "Loại"
+msgstr "Razred"
 
 #: cardinfo.c:1341 cardinfo.c:1354
 msgid "PC/CF card socket information."
-msgstr "Thông tin ổ cắm của thẻ PC/CF."
+msgstr "Informacije o vtiču PC/CF kartice."
 
 #: cardinfo.c:1349
 msgid "Socket"
-msgstr "Ổ cắm"
+msgstr "Vtič"
 
 #: cardinfo.c:1380
 msgid "Information for socket"
-msgstr "Thông tin về ổ cắm"
+msgstr "Podatki za vtič"
 
 #: cardinfo.c:1389
 msgid "State:"
-msgstr "Tính trạng:"
+msgstr "Stanje:"
 
 #: cardinfo.c:1390
 msgid "Device:"
-msgstr "Thiết bị:"
+msgstr "Naprava:"
 
 #: cardinfo.c:1391
 msgid "Driver:"
-msgstr "Trình điều khiển:"
+msgstr "Gonilnik:"
 
 #: cardinfo.c:1392
 msgid "Type:"
-msgstr "Loại:"
+msgstr "Tip:"
 
 #: cardinfo.c:1393
 msgid "I/O:"
-msgstr "Vào/xuất:"
+msgstr "I/O:"
 
 #: cardinfo.c:1394
 msgid "IRQ:"
@@ -1314,28 +1316,28 @@ msgstr "IRQ:"
 
 #: cardinfo.c:1401
 msgid "Flags:"
-msgstr "Cờ:"
+msgstr "Zastave:"
 
 #: cardinfo.c:1418
 msgid "PCMCIA initialisation failed"
-msgstr "Không khởi động đươc PCMCIA"
+msgstr "Zagon PCMCIA ni uspel"
 
 #: tools/interface.c:315 tools/interface.c:515 tools/interface.c:531
 #: tools/interface.c:651
 msgid "[NONE SET]"
-msgstr "[Chưa lập gi]"
+msgstr "[NI DOLOČEN]"
 
 #: tools/interface.c:706 tools/interface.c:1704
 msgid "UNSPEC"
-msgstr "Chưa xác định"
+msgstr "UNSPEC"
 
 #: tools/interface.c:708
 msgid "UNIX Domain"
-msgstr "Miền UNIX"
+msgstr "UNIX Domena"
 
 #: tools/interface.c:711
 msgid "DARPA Internet"
-msgstr "Mạng DARPA"
+msgstr "DARPA Internet"
 
 #: tools/interface.c:714
 msgid "IPv6"
@@ -1376,78 +1378,78 @@ msgstr "Ash"
 #: tools/interface.c:765
 #, c-format
 msgid "Too many address family arguments.\n"
-msgstr "Có quá nhiều đối số loại nhóm địa chỉ.\n"
+msgstr "Preveč določil naslovnih družin.\n"
 
 #: tools/interface.c:776
 #, c-format
 msgid "Unknown address family '%s'.\n"
-msgstr "Chưa biết nhóm địa chỉ '%s'.\n"
+msgstr "Neznana naslovna družina '%s'.\n"
 
 #: tools/interface.c:839
 #, c-format
 msgid "Please don't supply more than one address family.\n"
-msgstr "Hãy nhập chỉ một nhóm địa chỉ thôi.\n"
+msgstr "Prosim ne dodajte več kot ene naslovne družine.\n"
 
 #: tools/interface.c:966
 #, c-format
 msgid "No usable address families found.\n"
-msgstr "Chưa tìm nhóm địa chỉ có thể sử dụng.\n"
+msgstr "Nisem našel uporabne naslovne družine.\n"
 
 #: tools/interface.c:1036
 #, c-format
 msgid "Warning: no inet socket available: %s\n"
-msgstr "Cảnh báo: chưa có ổ cắm inet sẵn sàng: %s\n"
+msgstr "Opozorilo: ni prostega inet vtiča: %s\n"
 
 #: tools/interface.c:1188
 #, c-format
 msgid "Warning: cannot open %s (%s). Limited output.\n"
-msgstr "Cảnh báo: không thể mở %s (%s). Dữ liệu xuất bị hạn chế.\n"
+msgstr "Opozorilo: ne morem odpreti %s (%s). Omejen izhod.\n"
 
 #: tools/interface.c:1431
 msgid "Device not found"
-msgstr "Chưa tìm thiết bị"
+msgstr "Ne najdem naprave"
 
 #: tools/interface.c:1435
 #, c-format
 msgid "%s: error fetching interface information: %s\n"
-msgstr "%s: gặp lỗi khi gọi thông tin giao diện: %s\n"
+msgstr "%s: napaka pri beleženju podatkov vmesnika: %s\n"
 
 #: tools/interface.c:1609
 #, c-format
 msgid "You cannot start PPP with this program.\n"
-msgstr "Trình này không thể khởi động giao thức PPP.\n"
+msgstr "S tem programom ne morete zagnati PPP.\n"
 
 #: tools/interface.c:1703
 msgid "Local Loopback"
-msgstr "Mạch nội bộ"
+msgstr "Lokalna povratna zanka"
 
 #: tools/interface.c:1706
 msgid "Serial Line IP"
-msgstr "Địa chỉ IP dòng nối tiếp"
+msgstr "Serijska IP linija"
 
 #: tools/interface.c:1707
 msgid "VJ Serial Line IP"
-msgstr "Địa chỉ IP dòng nối tiếp VJ"
+msgstr "VJ serijska IP linija"
 
 #: tools/interface.c:1708
 msgid "6-bit Serial Line IP"
-msgstr "Địa chỉ IP dòng nối tiếp 6-bit"
+msgstr "6-bitna serijska IP linija"
 
 #: tools/interface.c:1709
 msgid "VJ 6-bit Serial Line IP"
-msgstr "Địa chỉ IP dòng nối tiếp VJ 6-bit"
+msgstr "Vj 6-bitna serijska IP linija"
 
 #: tools/interface.c:1710
 msgid "Adaptive Serial Line IP"
-msgstr "Địa chỉ IP dòng nối tiếp co thể"
+msgstr "Prilagodljiva serijska IP linija"
 
 #: tools/interface.c:1713
 msgid "Ethernet"
-msgstr "Ethernet"
+msgstr "Eternet"
 
 #: tools/interface.c:1719
 msgid "Fiber Distributed Data Interface"
-msgstr "Giao diện dữ liệu được phân phối bằng sợi (FDDI)"
+msgstr "Porazdeljeni podatkovni vmesnik na vlaknu (FDDI)"
 
 #: tools/interface.c:1722
 msgid "HIPPI"
@@ -1455,15 +1457,15 @@ msgstr "HIPPI"
 
 #: tools/interface.c:1734
 msgid "generic X.25"
-msgstr "X.25 thuộc giống loàì"
+msgstr "Generic X.25"
 
 #: tools/interface.c:1737
 msgid "IPIP Tunnel"
-msgstr "Đường hầm IPIP"
+msgstr "IPIP Tunel"
 
 #: tools/interface.c:1740
 msgid "Point-to-Point Protocol"
-msgstr "Giao diện điểm-sang-điểm (PPP)"
+msgstr "Protokol med točkama"
 
 #: tools/interface.c:1743
 msgid "(Cisco)-HDLC"
@@ -1479,15 +1481,15 @@ msgstr "ARCnet"
 
 #: tools/interface.c:1750
 msgid "Frame Relay DLCI"
-msgstr "Sắp đặt khung dữ liệu theo kíp (frame relay) DLCI"
+msgstr "Preklapljanje okvirov DLCI"
 
 #: tools/interface.c:1751
 msgid "Frame Relay Access Device"
-msgstr "Thiết bị truy cập sắp đặt khung dữ liệu theo kíp (frame relay)"
+msgstr "Preklapljanje okvirov naprave za dostop"
 
 #: tools/interface.c:1754
 msgid "IPv6-in-IPv4"
-msgstr "IPv6-trong-IPv4"
+msgstr "IPv6-in-IPv4"
 
 #: tools/interface.c:1757
 msgid "IrLAP"
@@ -1495,36 +1497,36 @@ msgstr "IrLAP"
 
 #: tools/interface.c:1760
 msgid "16/4 Mbps Token Ring"
-msgstr "Ổ hiêu bài (Token Ring) 16/4 Mbps"
+msgstr "16/4 Mbps Token Ring"
 
 #: tools/interface.c:1762
 msgid "16/4 Mbps Token Ring (New)"
-msgstr "Ổ hiêu bài 16/4 Mbps Mới"
+msgstr "16/4 Mbps Token Ring (New)"
 
 #: tools/interface.c:1875
 #, c-format
 msgid "Interface %s"
-msgstr "Giao diện %s"
+msgstr "Vmesnik %s"
 
 #: tools/interface.c:1876
 #, c-format
 msgid "Type: %s"
-msgstr "Kiểu: %s"
+msgstr "Tip: %s"
 
 #: tools/interface.c:1885
 #, c-format
 msgid "Media: %s"
-msgstr "Môi giới: %s"
+msgstr "Mediji: %s"
 
 #: tools/interface.c:1890
 #, c-format
 msgid "(auto)"
-msgstr "(tự động)"
+msgstr "(samodejno)"
 
 #: tools/interface.c:1902
 #, c-format
 msgid "Address: %s\n"
-msgstr "Địa chỉ: %s\n"
+msgstr "Naslov: %s\n"
 
 #: tools/interface.c:1907
 #, c-format
@@ -1534,12 +1536,12 @@ msgstr "P-t-P: %s\n"
 #: tools/interface.c:1911
 #, c-format
 msgid "Netmask: %s\n"
-msgstr "Mặt nạ mang: %s\n"
+msgstr "Omrežna maska %s\n"
 
 #: tools/interface.c:1915
 #, c-format
 msgid "Broadcast: %s\n"
-msgstr "Phát thanh: %s\n"
+msgstr "Razpršeno oddajanje: %s\n"
 
 #: tools/interface.c:1927
 #, c-format
@@ -1549,78 +1551,78 @@ msgstr "HWaddr (MAC): %s\n"
 #: tools/interface.c:1957
 #, c-format
 msgid "IPv6 Address: %s/%d\n"
-msgstr "Địa chỉ IPv6: %s/%d\n"
+msgstr "Naslov IPv6: %s/%d\n"
 
 #: tools/interface.c:1960
 #, c-format
 msgid "Scope: "
-msgstr "Phạm vị:"
+msgstr "Obseg:"
 
 #: tools/interface.c:1965
 #, c-format
 msgid "Global"
-msgstr "Toàn cục"
+msgstr "Globalno"
 
 #: tools/interface.c:1968
 #, c-format
 msgid "Link"
-msgstr "Liên kết"
+msgstr "Povezava"
 
 #: tools/interface.c:1971
 #, c-format
 msgid "Site"
-msgstr "Nơi Mạng"
+msgstr "Stran"
 
 #: tools/interface.c:1974
 #, c-format
 msgid "Compat"
-msgstr "Tương thích"
+msgstr "Združljiv"
 
 #: tools/interface.c:1977
 #, c-format
 msgid "Host"
-msgstr "Máy chủ"
+msgstr "Gostitelj"
 
 #: tools/interface.c:1980
 #, c-format
 msgid "Unknown"
-msgstr "Chưa biết"
+msgstr "Neznano"
 
 #: sound/sound.c:250
 msgid "Audio Settings"
-msgstr "Tham chiếu âm thanh"
+msgstr "Nastavitve Zvoka"
 
 #: sound/sound.c:257
 msgid "Mute Everything"
-msgstr "Chặn tất cả tiếng"
+msgstr "Utišaj vse"
 
 #: sound/sound.c:298
 msgid "Alarm Settings"
-msgstr "Tham chiếu báo động"
+msgstr "Nastavitve alarma"
 
 #: sound/sound.c:305
 msgid "Enable Alarm Sound"
-msgstr "Hiệu lực âm thanh báo động"
+msgstr "Omogoči zvok alarma"
 
 #: sound/sound.c:312
 msgid "Automatic Volume (rising)"
-msgstr "Âm lượng tự động (tăng lên)"
+msgstr "Samodejna glasnost (rastoča)"
 
 #: sound/sound.c:322 sound/soundctrl.c:298
 msgid "Volume"
-msgstr "Âm lượng"
+msgstr "Glasnost"
 
 #: sound/sound.c:329
 msgid "Test"
-msgstr "Thử ra"
+msgstr "Test"
 
 #: keys/keyboard.c:75
 msgid "none"
-msgstr "không có"
+msgstr "noben"
 
 #: keys/keyboard.c:76
 msgid "Foldable"
-msgstr "Có thể gấp"
+msgstr "Zložljivo"
 
 #: keys/keyboard.c:77
 msgid "SnapNType"
@@ -1660,7 +1662,7 @@ msgstr "Benq Gamepad"
 
 #: keys/keyboard.c:86
 msgid "Pocketvik"
-msgstr "0"
+msgstr "Pocketvik"
 
 #: keys/keyboard.c:87
 msgid "Micro Foldaway"
@@ -1672,54 +1674,54 @@ msgstr "Micro Datapad"
 
 #: keys/keyboard.c:252
 msgid "External keyboard configuration."
-msgstr "Cấu hình bàn phím bên ngoại."
+msgstr "Nastavitve zunanje tipkovnice"
 
 #: keys/keyboard.c:255
 msgid "External Keyboard Port"
-msgstr "Thiết lập bàn phím ảop"
+msgstr "Vrata zunanje tipkovnice"
 
 #: keys/keyboard.c:262
 msgid "Here you may select your external keyboard model."
-msgstr "Ở đây thì bạn có thể chọn mẫu bàn phím bên ngoại."
+msgstr "Izberite model zunanje tipkovnice."
 
 #: keys/keyboard.c:283
 msgid "External Keyboard Type"
-msgstr "Kiểu bàn phím bên ngoại"
+msgstr "Tip zunanje tipkovnice"
 
 #: keys/keys.c:79
 msgid "Buttons"
-msgstr "Nút"
+msgstr "Gumbi"
 
 #: keys/keys.c:83
 msgid "Virtual Keyboard"
-msgstr "Bàn phím ảo"
+msgstr "Navidezna tipkovnica"
 
 #: keys/keys.c:87
 msgid "External Keyboard"
-msgstr "Bàn phím bên ngoại"
+msgstr "Zunanja tipkovnica"
 
 #: main-info.c:67
 #, c-format
 msgid "usage: gpe-info [page]\n"
-msgstr "cách sử dụng: gpe-info [trang]\n"
+msgstr "Uporaba: gpe-info [stran]\n"
 
 #: main-info.c:68
 #, c-format
 msgid "    Where page may be \"global\" (default)\n"
-msgstr "    Mà trang ấy có thể là \"global\" (toàn cục: là mặc định)\n"
+msgstr "    Stran je lahko \"globalna\" (privzeto)\n"
 
 #: main-info.c:78 gpe-conf-sysinfo.desktop.in.h:2
 msgid "System Information"
-msgstr "Thông tin hệ thống"
+msgstr "Informacije o sistemu"
 
 #: storage.c:166 storage.c:423
 msgid "System Memory"
-msgstr "Bộ nhớ hê thống"
+msgstr "Sistemski spomin"
 
 #. TRANSLATORS: MB == Mega Bytes
 #: storage.c:174 storage.c:443
 msgid "Free memory"
-msgstr "Bộ nhớ còn rảnh"
+msgstr "Prost spomin"
 
 #. TRANSLATORS: MB == Mega Bytes
 #: storage.c:176 storage.c:183 storage.c:329 storage.c:340 storage.c:445
@@ -1729,11 +1731,11 @@ msgstr "MB"
 
 #: storage.c:181 storage.c:328 storage.c:456
 msgid "Total:"
-msgstr "Tổng số:"
+msgstr "Skupaj:"
 
 #: storage.c:292
 msgid "Internal Flash"
-msgstr "Bộ nhớ cực nhanh nôi bộ"
+msgstr "Notranji spomin"
 
 #: storage.c:298
 msgid "MMC"
@@ -1741,132 +1743,132 @@ msgstr "MMC"
 
 #: storage.c:304
 msgid "Compact Flash"
-msgstr "Bộ nhớ cực nhanh gọn (CF)"
+msgstr "Flash kartica"
 
 #: storage.c:310
 msgid "Network Filesystem"
-msgstr "Hệ thống tập tin mạng"
+msgstr "Omrežni datotečni sistem"
 
 #: storage.c:330
 msgid "Mounted at "
-msgstr "Đươc lắp ở"
+msgstr "Priklopljeno na"
 
 #: storage.c:338
 msgid "Free space"
-msgstr "Sức chứa còn rảnh"
+msgstr "Prosto"
 
 #: logread.c:116
 msgid "Can't find circular buffer, is syslog running?\n"
-msgstr "Không tìm được bộ đệm tròn: trình syslog (bản ghi hệ thống) có chạy không?\n"
+msgstr "Ne najdem krožnega medpomnilnika. Je syslog zagnan?\n"
 
 #: logread.c:123
 msgid "Can't get access to syslogd's circular buffer."
-msgstr "Không truy cập được bộ đệm tròn của trình syslogd."
+msgstr "Ne morem dostopati do krožnega syslogd medpomnilnika."
 
 #: logread.c:130
 msgid "Can't get access to semaphore(s) for syslogd's circular buffer."
-msgstr "Không truy cập được semaphore đối với bộ đệm tròn của syslogd."
+msgstr "Ne morem dostopati do semaforjev za krožni syslogd medpomnilnik."
 
 #: logread.c:156
 msgid "<empty syslog>"
-msgstr "<syslog trống>"
+msgstr "<prazen syslog>"
 
 #: logread.c:227 logread.c:243
 msgid "System Log"
-msgstr "Bản ghi hệ thống"
+msgstr "Sistemski dnevnik"
 
 #: logread.c:252 logread.c:268
 msgid "Session Log"
-msgstr "Bản ghi phiên"
+msgstr "Dnevnik sej"
 
 #: logread.c:275
 msgid "Could not open X session log.\n"
-msgstr "Không mở được bản ghi phiên X.\n"
+msgstr "Nisem uspel odpreti dnevnika X seje.\n"
 
 #: battery.c:85
 #, c-format
 msgid "could not open touchscreen device '%s'\n"
-msgstr "không mở được thiết bị màn ảnh sờ '%s'\n"
+msgstr "Nisem uspel odpreti zaslona na dotik '%s'\n"
 
 #: battery.c:142 battery.c:199 battery.c:301
 msgid "Status: high"
-msgstr "Tình trạng: cao"
+msgstr "Status: visok"
 
 #: battery.c:145 battery.c:202 battery.c:305
 msgid "Status: low"
-msgstr "Tình trang: thập"
+msgstr "Status: nizek"
 
 #: battery.c:148 battery.c:205 battery.c:309
 msgid "Status: critical"
-msgstr "Tình trạng: gần chết"
+msgstr "Status: kritičen"
 
 #: battery.c:151 battery.c:208 battery.c:313
 msgid "Status: charging"
-msgstr "Tình trạng: "
+msgstr "Status: spreminjajoč"
 
 #: battery.c:154 battery.c:211
 msgid "Status: charge main"
-msgstr "Tình trạng: nạp điện chính"
+msgstr "Status: polnjenje glavne"
 
 #: battery.c:157
 msgid "Status: dead"
-msgstr "Tình trạng: chết rồi"
+msgstr "Status: mrtev"
 
 #: battery.c:160 battery.c:217 battery.c:299
 msgid "Status: full"
-msgstr "Tình trạng: đầy rồi"
+msgstr "Status: poln"
 
 #: battery.c:163 battery.c:220
 msgid "Status: no battery"
-msgstr "Tình trạng: không có pin"
+msgstr "Status: ni baterije"
 
 #: battery.c:166 battery.c:223 battery.c:242 battery.c:316
 msgid "Status: unknown"
-msgstr "Tình trạng: chưa biết"
+msgstr "Status: neznan"
 
 #: battery.c:171
 msgid "learning"
-msgstr "đang học biết"
+msgstr "učenje"
 
 #: battery.c:175 battery.c:227
 msgid "Voltage"
-msgstr "Điện áp"
+msgstr "Napetost"
 
 #: battery.c:179 battery.c:231 battery.c:333
 msgid "AC connected"
-msgstr "Kết nối đến AC rồi"
+msgstr "AC povezan."
 
 #: battery.c:181 battery.c:233 battery.c:335
 msgid "Lifetime"
-msgstr "Thời gian sống"
+msgstr "Življenjska doba"
 
 #: battery.c:214
 msgid "Status: not installed"
-msgstr "Tình trạng: chưa càì đặt"
+msgstr "Status: ni naložen"
 
 #: battery.c:240
 msgid "not installed"
-msgstr "chưa cài đặt"
+msgstr "ni naložen"
 
 #: battery.c:244
 msgid "Voltage: unknown"
-msgstr "Điện áp: chưa biết"
+msgstr "Napetost: neznana"
 
 #: battery.c:246
 msgid "Lifetime: unknown"
-msgstr "Thời gian sống: chưa biết"
+msgstr "Življenjska doba: neznana"
 
 #: battery.c:291
 msgid "No battery"
-msgstr "Không có pin"
+msgstr "Ni baterije"
 
 #: battery.c:396
 msgid "Internal battery"
-msgstr "Pin nội bộ"
+msgstr "Notranja baterija"
 
 #: battery.c:400
 msgid "Jacket battery"
-msgstr "Pin thêm ngoài"
+msgstr "Baterijski vložek"
 
 #: sysinfo.c:236
 msgid "ARM"
@@ -1874,11 +1876,11 @@ msgstr "ARM"
 
 #: sysinfo.c:239
 msgid "Intel x86 or compatible"
-msgstr "Intel x86 hay tương thích"
+msgstr "Intel x86 ali kompatibilen"
 
 #: sysinfo.c:240
 msgid "IBM type PC"
-msgstr "PC loại IBM<"
+msgstr "IBM tip PC"
 
 #: sysinfo.c:243
 msgid "Mips"
@@ -1886,29 +1888,29 @@ msgstr "Mips"
 
 #: sysinfo.c:245
 msgid "Silicon Graphics Machine"
-msgstr "Máy đồ họa silic (Silicon Graphics)"
+msgstr "Silicon Graphics naprava"
 
 #: sysinfo.c:249
 msgid "IBM Power or PowerPC"
-msgstr "IBM Power hay PowerPC"
+msgstr "IBM Power ali PowerPC"
 
 #. TRANSLATORS: "Familiar" is the name of a linux distribution.
 #: sysinfo.c:278
 msgid "Familiar"
-msgstr "Familiar (linux)"
+msgstr "Znano"
 
 #. TRANSLATORS: "OpenEmbedded" is the name of a linux distribution.
 #: sysinfo.c:292
 msgid "OpenEmbedded"
-msgstr "OpenEmbedded (linux)"
+msgstr "OpenEmbedded"
 
 #: sysinfo.c:334 sysinfo.c:336
 msgid "Build"
-msgstr "Số dựng"
+msgstr "Gradnja"
 
 #: sysinfo.c:438
 msgid "Network Status"
-msgstr "Trạng thái mạng"
+msgstr "Omrežni status"
 
 #: sysinfo.c:452 sysinfo.c:455
 msgid "HWaddr (MAC)"
@@ -1917,39 +1919,39 @@ msgstr "HWaddr (MAC)"
 #: sysinfo.c:466 sysinfo.c:467
 #, c-format
 msgid "Wireless"
-msgstr "Vô tuyến"
+msgstr "Brezžično"
 
 #: sysinfo.c:494
 msgid "Default Gateway"
-msgstr "Cổng ra mặc định"
+msgstr "Privzet Prehod"
 
 #: sysinfo.c:537
 msgid "System information"
-msgstr "Thông tin hệ thống"
+msgstr "Informacije o sistemu"
 
 #: sysinfo.c:547
 msgid "Version"
-msgstr "Phiên bản"
+msgstr "Verzija"
 
 #: sysinfo.c:579
 msgid "Distribution"
-msgstr "Sự phân phối"
+msgstr "Distribucija"
 
 #: sysinfo.c:604
 msgid "System"
-msgstr "Hệ điều hành"
+msgstr "Sistem"
 
 #: sysinfo.c:613
 msgid "Device information"
-msgstr "Thông tin thiết bị"
+msgstr "Informacije o napravi"
 
 #: sysinfo.c:625
 msgid "Device Name"
-msgstr "Tên thiết bị"
+msgstr "Ime naprave"
 
 #: sysinfo.c:644
 msgid "CPU:"
-msgstr "CPU:"
+msgstr "CPE:"
 
 #: sysinfo.c:657
 msgid "RAM:"
@@ -1957,100 +1959,100 @@ msgstr "RAM:"
 
 #: sysinfo.c:673
 msgid "Storage:"
-msgstr "Sức chứa:"
+msgstr "Skladišče:"
 
 #: sysinfo.c:685
 msgid "Hardware"
-msgstr "Phần cứng"
+msgstr "Strojna oprema"
 
 #: sysinfo.c:695
 msgid "Battery"
-msgstr "Pin"
+msgstr "Baterija"
 
 #: sysinfo.c:702
 msgid "Storage"
-msgstr "Sức chứa"
+msgstr "Skladiščenje"
 
 #: sysinfo.c:709
 msgid "Networks"
-msgstr "mạng"
+msgstr "Omrežja"
 
 #: sysinfo.c:716
 msgid "Log Display"
-msgstr "Trình bày bản ghi"
+msgstr "Prikaz dnevnika"
 
 #: gpe-conf.desktop.in.h:1
 msgid "Control Panel"
-msgstr "Bảng điều kiện"
+msgstr "Kontrolna plošča"
 
 #: gpe-conf-admin.desktop.in.h:1
 msgid "User Access"
-msgstr "Truy cập người dùng"
+msgstr "Uporabniški dostop"
 
 #: gpe-conf-admin.desktop.in.h:2
 msgid "User access administration"
-msgstr "Quản lý truy cập người dùng"
+msgstr "Administracija uporabniškega dostopa"
 
 #: gpe-conf-cardinfo.desktop.in.h:1
 msgid "PC/CF Cards"
-msgstr "Thẻ PC/CF"
+msgstr "PC/CF Kartice"
 
 #: gpe-conf-cardinfo.desktop.in.h:2
 msgid "PC/CF Cards info and config"
-msgstr "Thông tin và cấu hình thẻ PC/CF"
+msgstr "Nastavitve in podatki o PC/CF karticah"
 
 #: gpe-conf-keys.desktop.in.h:1
 msgid "Keyboard and Button Setup"
-msgstr "Thiết lập bàn phím và cái nút"
+msgstr "Nastavitve tipkovnice in gumbov"
 
 #: gpe-conf-keys.desktop.in.h:2
 msgid "Keys and Buttons"
-msgstr "Phím và Nút"
+msgstr "Tipke in Gumbi"
 
 #: gpe-conf-ownerinfo.desktop.in.h:2
 msgid "Set Owner Information"
-msgstr "Lập thông tin về người chủ"
+msgstr "Nastavi informacije lastnika"
 
 #: gpe-conf-serial.desktop.in.h:1
 msgid "Serial Port Settings"
-msgstr "Tham chiếu cổng nối tiếp"
+msgstr "Nastavitve serijskih vrat"
 
 #: gpe-conf-sleep.desktop.in.h:1
 msgid "Sleep Config"
-msgstr "Cấu hình ngủ"
+msgstr "Nastavitev spanja"
 
 #: gpe-conf-sleep.desktop.in.h:2
 msgid "Sleep Configuration"
-msgstr "Cấu hình thời gian trước thiết bị ngủ"
+msgstr "Nastavitve spanja"
 
 #: gpe-conf-theme.desktop.in.h:1
 msgid "Global Appearance Setup"
-msgstr "Thiết lập hình thức toàn cục"
+msgstr "Nastavitve splošnega izgleda"
 
 #: gpe-conf-time.desktop.in.h:1
 msgid "Date/Time Setup"
-msgstr "Lập Ngày/Giờ"
+msgstr "Datum/Čas Nastavitve"
 
 #: gpe-conf-time.desktop.in.h:2
 msgid "Setup Date and Time"
-msgstr "Thiết lập ngày và giờ hiện"
+msgstr "Nastavitve datuma in časa"
 
 #: gpe-conf-users.desktop.in.h:1
 msgid "Manage local users"
-msgstr "Quản lý người dùng địa phương"
+msgstr "Upravljanje z uporabniki"
 
 #: gpe-conf-users.desktop.in.h:2
 msgid "User Manager"
-msgstr "Quản lý người dùng"
+msgstr "Urejevalnik Uporabnikov"
 
 #: gpe-conf-sysinfo.desktop.in.h:1
 msgid "System Info"
-msgstr "Thông tin hệ thống"
+msgstr "Informacije o sistemu"
 
 #: gpe-conf-sound.desktop.in.h:1
 msgid "Sound Settings"
-msgstr "Tham chiếu âm thanh"
+msgstr "Nastavitve zvoka"
 
 #: gpe-conf-sound.desktop.in.h:2
 msgid "Sound defaults and setup"
-msgstr "Những tham chiếu mặc định và cách thiết lập âm thanh"
+msgstr "Privzete zvočne nastavitve"
