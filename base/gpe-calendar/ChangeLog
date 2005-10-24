@@ -1,3 +1,6 @@
+2005-10-24 Luca De Cicco <ldecicco@gmail.com>
+	* day_render.c: Displaying event boxes with rounded corners
+
 2005-10-23  Florian Boor <florian.boor@kernelconcepts.de>
 
 	* day_render.c, day_view.c: Fixed some runtime warnings, some reformating.
@@ -5,7 +8,7 @@
 	* gtkdatesel.c: Add header to avoid warning. Change forward/backward buttons
 	                in Hildon UI.
 	* month_view.c: Fix title height in Hildon UI.
-
+	
 2005-10-21  Florian Boor <florian.boor@kernelconcepts.de>
 
 	* main.c: Fix service name, Hildon UI bits.

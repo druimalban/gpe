@@ -161,6 +161,7 @@ show_event (const struct day_render *dr, const ev_rec_t event_rectangle,
   char buf[250], *buffer;
   PangoLayout *pl;
   GdkRectangle gr;
+  gint arc_size;
   gint offsetx, width = 0, height = 0;
   PangoRectangle pr;
 
@@ -189,21 +190,61 @@ show_event (const struct day_render *dr, const ev_rec_t event_rectangle,
   pango_layout_get_pixel_extents (pl, &pr, NULL);
   pango_layout_set_width (pl, PANGO_SCALE * gr.width);
   pango_layout_set_alignment (pl, PANGO_ALIGN_CENTER);
-
+  arc_size = dr->page->height/24/2 - 1;
+  if (arc_size < 7)
+  {
+	  /* Lower bound */
+	  arc_size = 7;
+  }
 
   /* Drawing appointment rectangle */
   gdk_draw_rectangle (dr->draw, dr->normal_gc, TRUE,
-		      offsetx, event_rectangle->y, width, height);
-
-  /* Draws rectangle */
-  gdk_draw_rectangle (dr->draw, dr->ol_gc, FALSE,
-		      offsetx, event_rectangle->y, width, height);
+		      offsetx, event_rectangle->y+arc_size, width, height-2*arc_size);
+  gdk_draw_rectangle (dr->draw, dr->normal_gc, TRUE,
+		      offsetx+arc_size, event_rectangle->y, width-2*arc_size, height);
+  
+  gdk_draw_line (dr->draw, dr->widget->style->black_gc, offsetx+arc_size,
+			     event_rectangle->y,offsetx+width-arc_size, event_rectangle->y);
+		      
+  gdk_draw_line (dr->draw, dr->widget->style->black_gc, offsetx+arc_size,
+			     event_rectangle->y+height,offsetx+width-arc_size, 
+				 event_rectangle->y+height);
+  gdk_draw_line (dr->draw, dr->widget->style->black_gc,
+				 offsetx,arc_size+event_rectangle->y,
+				 offsetx, event_rectangle->y+height-arc_size);
+  gdk_draw_line (dr->draw, dr->widget->style->black_gc,
+				 offsetx+width,arc_size+event_rectangle->y,
+				 offsetx+width, event_rectangle->y+height-arc_size);				 
+/* North-west corner */
+  gdk_draw_arc (dr->draw, dr->normal_gc, TRUE, offsetx, 
+		event_rectangle->y,arc_size*2,arc_size*2,90*64,90*64);
+  gdk_draw_arc (dr->draw, dr->widget->style->black_gc, FALSE, offsetx, 
+		event_rectangle->y,arc_size*2,arc_size*2,90*64,90*64);
+  /* North-east corner */
+  gdk_draw_arc (dr->draw, dr->normal_gc, TRUE, offsetx+width-arc_size*2, 
+		event_rectangle->y,arc_size*2,arc_size*2,0*64,90*64);
+  gdk_draw_arc (dr->draw, dr->widget->style->black_gc, FALSE, offsetx+width-arc_size*2, 
+		event_rectangle->y,arc_size*2,arc_size*2,0*64,90*64);
+  /* South-west corner */
+  gdk_draw_arc (dr->draw, dr->normal_gc, TRUE, offsetx, 
+		event_rectangle->y+height-2*arc_size,arc_size*2,arc_size*2,180*64,90*64);
+  gdk_draw_arc (dr->draw, dr->widget->style->black_gc, FALSE, offsetx, 
+		event_rectangle->y+height-2*arc_size,arc_size*2,arc_size*2,180*64,90*64);
+  /* South-east corner */
+  gdk_draw_arc (dr->draw, dr->normal_gc, TRUE, offsetx+width-arc_size*2, 
+		event_rectangle->y+height-2*arc_size,arc_size*2,arc_size*2,270*64,90*64);
+  gdk_draw_arc (dr->draw, dr->widget->style->black_gc, FALSE, offsetx+width-2*arc_size, 
+		event_rectangle->y+height-2*arc_size,arc_size*2,arc_size*2,270*64,90*64);	
   /* Write summary... */
+  
   gtk_paint_layout (dr->widget->style,
 		    dr->draw,
 		    GTK_WIDGET_STATE (dr->widget),
 		    FALSE, &gr, dr->widget, "label", gr.x, gr.y, pl);
-
+  
+		
+  		
+		
   if (event_rectangle->event->flags & FLAG_ALARM)
     {
       if (dr->capt->bell_pb)
