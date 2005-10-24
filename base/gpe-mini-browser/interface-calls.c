@@ -674,6 +674,13 @@ show_history (GtkWidget * button, Webi * html)
   gtk_toolbar_insert (GTK_TOOLBAR (bar), open, -1);
   gtk_toolbar_insert (GTK_TOOLBAR (bar), clear, -1);
 
+#ifdef HILDON
+    GtkToolItem *close_bookmark = gtk_tool_button_new_from_stock (GTK_STOCK_QUIT);
+    gtk_tool_item_set_homogeneous (close_bookmark, FALSE);
+    gtk_toolbar_insert (bar, close_bookmark, -1);
+    g_signal_connect (GTK_OBJECT (close_bookmark), "clicked",
+                      G_CALLBACK (destroy_window), history_dialog);
+#endif
   g_signal_connect (GTK_OBJECT (open), "clicked",
 		    G_CALLBACK (open_bookmarks), &tree_info);
   g_signal_connect (GTK_OBJECT (open), "clicked",

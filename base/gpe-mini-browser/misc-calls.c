@@ -368,6 +368,7 @@ set_fullscreen (GtkWidget * button, gpointer * fullscreen_info)
   static int fullscreen;
   static int totalscreen;
   struct fullscreen_info *info;
+  static GtkWidget *close_button, *fullscreen_popup;
 
   info = (struct fullscreen_info *) fullscreen_info;
 
@@ -378,7 +379,6 @@ set_fullscreen (GtkWidget * button, gpointer * fullscreen_info)
     }
   else if (fullscreen && !totalscreen)
     {
-      GtkWidget *close_button, *fullscreen_popup;
 
       totalscreen = 1;
       gtk_widget_hide (info->toolbar);
@@ -390,8 +390,6 @@ set_fullscreen (GtkWidget * button, gpointer * fullscreen_info)
 	gpe_button_new_from_stock (GTK_STOCK_ZOOM_FIT, GPE_BUTTON_TYPE_ICON);
       g_signal_connect (G_OBJECT (close_button), "clicked",
 			G_CALLBACK (set_fullscreen), fullscreen_info);
-      g_signal_connect (G_OBJECT (close_button), "clicked",
-			G_CALLBACK (destroy_window), fullscreen_popup);
       gtk_container_add (GTK_CONTAINER (fullscreen_popup), close_button);
       gtk_widget_show_all (fullscreen_popup);
 
@@ -399,6 +397,7 @@ set_fullscreen (GtkWidget * button, gpointer * fullscreen_info)
   else if (totalscreen == 1 && fullscreen == 1)
     {
       gtk_window_unfullscreen (GTK_WINDOW (info->app));
+      gtk_widget_destroy (GTK_WIDGET (fullscreen_popup));
       gtk_widget_show_all (info->toolbar);
       if (!urlbar_hidden)
 	      if (info->urlbox) 

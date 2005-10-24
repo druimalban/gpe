@@ -32,6 +32,7 @@
 
 #include <gtk/gtk.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
+#include <gdk/gdkkeysyms.h>
 #include <webi.h>
 
 #include <gdk/gdk.h>
@@ -59,6 +60,32 @@ osso_top_callback (const gchar * arguments, gpointer ptr)
   gtk_window_present (GTK_WINDOW (window));
 }
 
+static gboolean
+main_window_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *data)
+{
+    switch (k->keyval)
+      {
+       case GDK_F6:
+       		 /* toggle button for going full screen */
+      		 set_fullscreen(widget, (gpointer *)data);	       
+		 return TRUE;
+#if 0
+       case GDK_F7:
+		 /* zoom in */
+		 gtk_button_clicked (GTK_BUTTON(zoom_in_button));
+		 return TRUE;
+       case GDK_F8:
+       		/* zoom out */
+       		gtk_button_clicked (GTK_BUTTON(zoom_out_button));
+		return TRUE;
+#endif
+       default:
+	 	return FALSE;	 
+       
+      }
+    /* we should not get here */
+    return FALSE;
+}
 
 int
 main (int argc, char *argv[])
@@ -70,7 +97,7 @@ main (int argc, char *argv[])
   GtkWidget *html, *contentbox;	/* html engine, application window, content box of application window */
   GtkWidget *toolbar, *urlbox;	/* toolbar, url entry box (big screen), icon for url pop-up window (small screens) */
   GtkToolItem *back_button, *forward_button, *home_button, *fullscreen_button,
-    *bookmarks_button;
+    *bookmarks_button, *history_button, *separator3;
   GtkToolItem *separator;
   extern GtkToolItem *stop_reload_button;
   const gchar *base;
@@ -130,8 +157,6 @@ main (int argc, char *argv[])
   hildon_app_set_appview (app, mainview);
   gtk_widget_show_all (GTK_WIDGET (app));
   gtk_widget_show_all (GTK_WIDGET (mainview));
-
-  hildon_appview_set_fullscreen_key_allowed (mainview, TRUE);
 
   //create boxes
   contentbox = gtk_vbox_new (FALSE, 0);
@@ -225,6 +250,16 @@ main (int argc, char *argv[])
   gtk_tool_item_set_homogeneous (fullscreen_button, FALSE);
   gtk_toolbar_insert (GTK_TOOLBAR (toolbar), fullscreen_button, -1);
 
+/* add history button and separator */
+  separator3 = gtk_separator_tool_item_new ();
+  gtk_tool_item_set_homogeneous (separator3, FALSE);
+  gtk_toolbar_insert (GTK_TOOLBAR (toolbar), separator3, -1);
+
+  history_button = gtk_tool_button_new_from_stock (GTK_STOCK_HARDDISK);
+  gtk_tool_item_set_homogeneous (history_button, FALSE);
+  gtk_tool_button_set_label (GTK_TOOL_BUTTON (history_button), _("History"));
+  gtk_toolbar_insert (GTK_TOOLBAR (toolbar), history_button, -1);
+
   /* connect all button signals */
   g_signal_connect (GTK_OBJECT (back_button), "clicked",
 		    G_CALLBACK (back_func), html);
@@ -241,10 +276,19 @@ main (int argc, char *argv[])
   g_signal_connect (GTK_OBJECT (fullscreen_button), "clicked",
 		    G_CALLBACK (set_fullscreen), &fsinfo);
 
+  g_signal_connect (G_OBJECT (app), "key_press_event",
+                    G_CALLBACK (main_window_key_press_event), &fsinfo);
+
+  gtk_widget_add_events (GTK_WIDGET (app),
+                         GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK);
+
 #ifndef NOBOOKMARKS
   g_signal_connect (GTK_OBJECT (bookmarks_button), "clicked",
 		    G_CALLBACK (show_bookmarks), html);
 #endif
+
+  g_signal_connect (GTK_OBJECT (history_button), "clicked",
+		                      G_CALLBACK (show_history), html);
 
 //  gtk_toolbar_set_icon_size(GTK_TOOLBAR(toolbar), GTK_ICON_SIZE_SMALL_TOOLBAR);
 //  toolbar size seems to be the same, icons are clearer

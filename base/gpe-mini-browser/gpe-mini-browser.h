@@ -275,3 +275,4 @@ int remove_bookmark (char *bookmark);
 int load_db_data (void *tree, int argc, char **argv, char **columnNames);
 /* load in data from db */ 
 int refresh_or_load_db (GtkWidget *tree);
+
