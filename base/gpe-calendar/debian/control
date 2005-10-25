@@ -1,0 +1,11 @@
+Source: gpe-calendar
+Section: X11
+Priority: optional
+Maintainer: Florian Boor <florian.boor@kernelconcepts.de>
+Build-Depends: debhelper (>= 4.0.0)
+Standards-Version: 3.6.0
+
+Package: gpe-calendar
+Architecture: any
+Depends: maemo
+Description: This is a calendar application for GPE

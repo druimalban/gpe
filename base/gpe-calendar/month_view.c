@@ -140,7 +140,7 @@ calc_title_height (GtkWidget *widget)
     }
 
 #ifdef IS_HILDON
-  title_height = max_height + 16;
+  title_height = max_height + 20;
 #else
   title_height = max_height + 8;
 #endif	
