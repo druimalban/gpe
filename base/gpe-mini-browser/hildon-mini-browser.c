@@ -240,7 +240,7 @@ main (int argc, char *argv[])
   urlbox = show_big_screen_interface (WEBI (html), toolbar, &s);
 
   /* fill in fullscreen info */
-  fsinfo.app = GTK_WIDGET (app);
+  fsinfo.app = GTK_WIDGET (mainview);
   fsinfo.toolbar = toolbar;
   fsinfo.urlbox = urlbox;
 

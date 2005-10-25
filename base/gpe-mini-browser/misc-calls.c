@@ -40,6 +40,13 @@
 
 #include "gpe-mini-browser.h"
 
+#ifdef HILDON
+/* Hildon includes */
+#include <hildon-widgets/hildon-app.h>
+#include <hildon-widgets/hildon-appview.h>
+#include <libosso.h>
+#endif /*HILDON*/
+
 //#define DEBUG /* uncomment this if you want debug output*/
 
 void
@@ -374,7 +381,11 @@ set_fullscreen (GtkWidget * button, gpointer * fullscreen_info)
 
   if (!fullscreen)
     {
+#ifdef HILDON
+      hildon_appview_set_fullscreen (HILDON_APPVIEW (info->app), TRUE);
+#else      
       gtk_window_fullscreen (GTK_WINDOW (info->app));
+#endif
       fullscreen = 1;
     }
   else if (fullscreen && !totalscreen)
@@ -396,7 +407,11 @@ set_fullscreen (GtkWidget * button, gpointer * fullscreen_info)
     }
   else if (totalscreen == 1 && fullscreen == 1)
     {
+#ifdef HILDON
+      hildon_appview_set_fullscreen (HILDON_APPVIEW (info->app), FALSE);
+#else
       gtk_window_unfullscreen (GTK_WINDOW (info->app));
+#endif
       gtk_widget_destroy (GTK_WIDGET (fullscreen_popup));
       gtk_widget_show_all (info->toolbar);
       if (!urlbar_hidden)
