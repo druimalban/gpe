@@ -686,8 +686,11 @@ day_view (void)
   gtk_widget_show (rem_area);
   gtk_widget_show (scrolled_window);
   gtk_widget_show (hbox);
-  page_app = day_page_new(draw,5);
-  page_rem = day_page_new(rem_area,5);
+  if (gdk_screen_width() > 400)
+     page_app = day_page_new(draw, 8);
+  else
+     page_app = day_page_new(draw, 5);
+  page_rem = day_page_new(rem_area, 5);
 
   gtk_calendar_set_display_options (GTK_CALENDAR (calendar), 
 				    GTK_CALENDAR_SHOW_DAY_NAMES 

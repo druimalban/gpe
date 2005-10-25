@@ -204,7 +204,7 @@ draw_expose_event (GtkWidget *widget,
 		      
 		      pango_layout_get_pixel_extents (pl_evt, &pr, NULL);
 		      if (height < pr.height)
-			height = pr.height;
+                height = pr.height;
 		      ev->mark = TRUE;
 		      g_free (buffer);
 		    }
@@ -224,7 +224,7 @@ draw_expose_event (GtkWidget *widget,
 				pl_evt);
 
 	      if (height < pr.height)
-		height = pr.height;
+            height = pr.height;
 	      
 	      y += height + 2;
 	    }

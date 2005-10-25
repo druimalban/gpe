@@ -420,8 +420,8 @@ gtk_date_sel_init (GtkDateSel *sel)
 
   max_day_width = get_max_day_width (sel);
 
-  make_field (sel, &sel->day, day_click, day_update, max_day_width);
   make_field (sel, &sel->week, week_click, week_update, 0);
+  make_field (sel, &sel->day, day_click, day_update, max_day_width);
   make_field (sel, &sel->month, month_click, month_update, 0);
   make_field (sel, &sel->year, year_click, year_update, max_year_width);
 

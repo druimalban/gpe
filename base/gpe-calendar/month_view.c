@@ -265,7 +265,7 @@ draw_expose_event (GtkWidget *widget,
 			pl);
 
       for (j = 0; j < (TOTAL_DAYS / 7); j++)
-	{
+      {
 	  gchar *buffer;
 	  guint d = i + (7 * j) - week_offset;
 	  struct render_ctl *c = &rc[d];
@@ -306,22 +306,25 @@ draw_expose_event (GtkWidget *widget,
 
                   for (iter = c->popup.events; iter; iter = iter->next)
                     {
-	              y += pr.height + 2;
-
-	              event_t ev = iter->data;
-	              event_details_t evd = event_db_get_details (ev);
-
-	              pango_layout_set_width (pl_evt, xs * PANGO_SCALE);
-	              pango_layout_set_text (pl_evt, evd->summary, -1);
-	              gtk_paint_layout (widget->style,
-				        widget->window,
-				        GTK_WIDGET_STATE (widget),
-				        FALSE,
-				        &event->area,
-				        widget,
-				        "label",
-				        x + 2, y,
-				        pl_evt);
+                      gchar *m;
+                      y += pr.height + 2;
+    
+                      event_t ev = iter->data;
+                      event_details_t evd = event_db_get_details (ev);
+                      m = g_strdup_printf("<small>%s</small>", evd->summary);
+    
+                      pango_layout_set_width (pl_evt, xs * PANGO_SCALE);
+                      pango_layout_set_markup (pl_evt, m, -1);
+                      gtk_paint_layout (widget->style,
+                            widget->window,
+                            GTK_WIDGET_STATE (widget),
+                            FALSE,
+                            &event->area,
+                            widget,
+                            "label",
+                            x + 2, y,
+                            pl_evt);
+                      g_free(m);  
                     }
                 }
 	    }
@@ -422,7 +425,7 @@ month_view_update (void)
       if (c->popup.events)
         c->popup.events = NULL;
       if (rday == tm_start.tm_mday) 
-	active_day = day;
+        active_day = day;
     }
 
   for (day = 1; day <= days; day++)
@@ -442,14 +445,14 @@ month_view_update (void)
       end = mktime (&tm_end);
       
       if (!tm_start.tm_isdst) 
-	{
-	  start+=60*60;
-	  end+=60*60;
-	}
+        {
+          start+=60*60;
+          end+=60*60;
+        }
 
       if (day_events[day]) 
-	event_db_list_destroy (day_events[day]);
-      day_events[day] = event_db_list_for_period (start, end);
+        event_db_list_destroy (day_events[day]);
+          day_events[day] = event_db_list_for_period (start, end);
 
       for (iter = day_events[day]; iter; iter = iter->next)
         ((event_t)iter->data)->mark = FALSE;

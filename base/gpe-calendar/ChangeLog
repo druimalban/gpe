@@ -1,5 +1,8 @@
 2005-10-25  Florian Boor <florian.boor@kernelconcepts.de>
 
+	* gtkdatesel.c: Move week selector to the left.
+    * month_view.c: Reduce size of event summary text.
+    * day_view.c: Reduce width of time area on wide screens.
 	* debian: Add maemo debian packaging stuff.
 	* month_view.c: Make title a little bit higher.
 
