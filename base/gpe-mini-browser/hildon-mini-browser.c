@@ -239,10 +239,14 @@ main (int argc, char *argv[])
 
   urlbox = show_big_screen_interface (WEBI (html), toolbar, &s);
 
+  /* separator to make a clearer distinction between urlbar and website in Maemo */
+  GtkWidget *hseparator = gtk_hseparator_new();
+
   /* fill in fullscreen info */
   fsinfo.app = GTK_WIDGET (mainview);
   fsinfo.toolbar = toolbar;
   fsinfo.urlbox = urlbox;
+  fsinfo.hsep = hseparator;
 
 /* replace GTK_STOCK_ZOOM_FIT with GTK_STOCK_FULLSCREEN once GPE uses
      gtk 2.7.1 or higher. Or add it myself :-) */
@@ -293,7 +297,8 @@ main (int argc, char *argv[])
 //  gtk_toolbar_set_icon_size(GTK_TOOLBAR(toolbar), GTK_ICON_SIZE_SMALL_TOOLBAR);
 //  toolbar size seems to be the same, icons are clearer
 
-  gtk_box_pack_start (GTK_BOX (contentbox), urlbox, FALSE, FALSE, 0);
+  gtk_box_pack_end (GTK_BOX (contentbox), urlbox, FALSE, FALSE, 0);
+  gtk_box_pack_end (GTK_BOX (contentbox), hseparator, FALSE, FALSE, 0);
   gtk_widget_show_all (urlbox);
 
   gtk_box_pack_start (GTK_BOX (contentbox), html, TRUE, TRUE, 0);

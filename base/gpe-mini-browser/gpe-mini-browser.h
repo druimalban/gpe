@@ -111,6 +111,9 @@ struct fullscreen_info
 GtkWidget *app;
 GtkWidget *toolbar;
 GtkWidget *urlbox;
+#ifdef HILDON
+GtkWidget *hsep;
+#endif
 };
 
 /********************************************************

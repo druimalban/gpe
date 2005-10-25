@@ -446,7 +446,11 @@ show_bookmarks (GtkWidget * button, Webi * html)
   bookmarks_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_modal (GTK_WINDOW (bookmarks_window), TRUE);
   gtk_window_set_title (GTK_WINDOW (bookmarks_window), _("Bookmarks"));
+#ifdef HILDON
+  gtk_window_set_default_size (GTK_WINDOW (bookmarks_window), 420, 400);
+#else
   gtk_window_set_default_size (GTK_WINDOW (bookmarks_window), 240, 320);
+#endif /* HILDON */
   gtk_window_set_type_hint (GTK_WINDOW (bookmarks_window),
 			    GDK_WINDOW_TYPE_HINT_DIALOG);
   gtk_window_set_decorated (GTK_WINDOW (bookmarks_window), TRUE);
@@ -629,7 +633,11 @@ show_history (GtkWidget * button, Webi * html)
   gtk_window_set_modal (GTK_WINDOW (history_dialog), TRUE);
   gtk_container_set_border_width (GTK_CONTAINER (history_dialog),
 				  gpe_get_border ());
+#ifdef HILDON
+  gtk_window_set_default_size (GTK_WINDOW (history_dialog), 420, 400);
+#else
   gtk_window_set_default_size (GTK_WINDOW (history_dialog), 240, 320);
+#endif /* HILDON */
   gtk_window_set_type_hint (GTK_WINDOW (history_dialog),
 			    GDK_WINDOW_TYPE_HINT_DIALOG);
   gtk_window_set_decorated (GTK_WINDOW (history_dialog), TRUE);

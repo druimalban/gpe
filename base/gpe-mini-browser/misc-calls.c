@@ -392,6 +392,9 @@ set_fullscreen (GtkWidget * button, gpointer * fullscreen_info)
     {
 
       totalscreen = 1;
+#ifdef HILDON
+      gtk_widget_hide (info->hsep);
+#endif
       gtk_widget_hide (info->toolbar);
       if (info->urlbox)
 	gtk_widget_hide (info->urlbox);
@@ -409,6 +412,7 @@ set_fullscreen (GtkWidget * button, gpointer * fullscreen_info)
     {
 #ifdef HILDON
       hildon_appview_set_fullscreen (HILDON_APPVIEW (info->app), FALSE);
+      gtk_widget_show (info->hsep);
 #else
       gtk_window_unfullscreen (GTK_WINDOW (info->app));
 #endif
