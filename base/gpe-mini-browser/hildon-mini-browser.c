@@ -294,6 +294,10 @@ main (int argc, char *argv[])
   g_signal_connect (GTK_OBJECT (history_button), "clicked",
 		                      G_CALLBACK (show_history), html);
 
+ /* save completion list when we exit the program */
+    g_signal_connect (GTK_OBJECT (app), "destroy",
+		                        G_CALLBACK (save_completion), NULL);
+    
 //  gtk_toolbar_set_icon_size(GTK_TOOLBAR(toolbar), GTK_ICON_SIZE_SMALL_TOOLBAR);
 //  toolbar size seems to be the same, icons are clearer
 
