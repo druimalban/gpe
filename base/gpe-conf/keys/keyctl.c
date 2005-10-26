@@ -399,6 +399,9 @@ Keyctl_Build_Objects ()
 	gtk_container_set_border_width (GTK_CONTAINER(table), 2);
 	
 	self.edit = gtk_entry_new();
+	if (gdk_screen_width() < 280)
+		gtk_widget_set_size_request(self.edit, 110, -1);
+	
 	self.select = gtk_option_menu_new();
 	self.icon = gtk_image_new();
 	
@@ -413,7 +416,7 @@ Keyctl_Build_Objects ()
 	gtk_box_pack_start(GTK_BOX(vbox), table, FALSE, TRUE, 0);
 	
 	gtk_table_attach(GTK_TABLE(table),self.icon, 0, 1, 0, 2, GTK_FILL, GTK_FILL, 0, 0);
-	gtk_table_attach(GTK_TABLE(table),self.edit, 1, 2, 1, 2, GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
+	gtk_table_attach(GTK_TABLE(table),self.edit, 1, 2, 1, 2, GTK_FILL, GTK_FILL, 0, 0);
 	gtk_table_attach(GTK_TABLE(table),self.select, 1, 4, 0, 1, GTK_FILL, GTK_FILL, 0, 0);
 	gtk_table_attach(GTK_TABLE(table),bFile, 3, 4, 1, 2, GTK_FILL, GTK_FILL, 0, 0);
 	
@@ -448,7 +451,9 @@ Keyctl_Build_Objects ()
 	                 G_CALLBACK(on_menu_select), NULL);
 	g_signal_connect_after(G_OBJECT(self.edit), "changed",
 	                       G_CALLBACK(on_edit_changed), NULL);
+	
 	init_buttons ();
+	
 	if (self.buttons && self.buttons[0])
 	{
 		gchar *bname;

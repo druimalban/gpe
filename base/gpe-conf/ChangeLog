@@ -1,3 +1,9 @@
+2005-10-27	Florian Boor <florian.boor@kernelconcepts.de>
+
+	* sleep/interface.c, users/interface.c, main.c, applets.h: Get rid of 
+	   useless style stuff.
+	* keys.c: Shortened tab title.
+	* keyctl.c: Hack entry to have an appropriate size. Some minor fixes.
 
 2005-10-24	Florian Boor <florian.boor@kernelconcepts.de>
 

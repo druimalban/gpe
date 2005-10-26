@@ -44,7 +44,6 @@ freedata                               (GtkWidget       *ignored,
                                         gpointer         user_data); // to free data on destroy
 
 extern struct gpe_icon my_icons[];
-extern GtkStyle *wstyle; // for pixmaps
 extern GtkWidget *mainw; // for dialogs
 
 struct fstruct

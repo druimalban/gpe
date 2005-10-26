@@ -415,10 +415,9 @@ create_userchange (pwlist *init,GtkWidget *parent)
   gtk_widget_show (self->shell);
 
   
-  passwd = gpe_picture_button (wstyle,
+  passwd = gpe_picture_button (NULL,
                                strlen(init->pw.pw_passwd) ? _("Change") 
-							     : _("Set"), 
-						       "lock16");
+							     : _("Set"), "lock16");
 
   gtk_widget_show (passwd);
   gtk_table_attach (GTK_TABLE (table1), passwd, 1, 2, 1, 2,

@@ -29,7 +29,6 @@ GtkWidget *sleep_cpu;
 GtkWidget *sleep_probe_irq;
 GtkWidget *dim_scale;
 
-extern GtkStyle *wstyle;
 GtkWidget*
 create_GPE_Config_Sleep (ipaq_conf_t *ISconf)
 {

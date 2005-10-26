@@ -84,7 +84,7 @@ Keys_Build_Objects (void)
 	gtk_notebook_append_page(GTK_NOTEBOOK(notebook), page, label);
 	
 	page = Keyboard_Build_Objects();
-	label = gtk_label_new(_("External Keyboard"));
+	label = gtk_label_new(_("External Keyb."));
 	gtk_notebook_append_page(GTK_NOTEBOOK(notebook), page, label);
 	
 	return notebook;
