@@ -115,6 +115,7 @@ do_su (void)
 
   if ((strncmp (result, "Password:", 9))
 	  && (!strstr(result, "Gdk-WARNING"))
+	  && (!g_str_has_prefix(result, "urxvt:"))
  	  && (strlen(g_strstrip(result))))
     {
       gpe_error_box (result);
