@@ -1868,13 +1868,12 @@ char* if_to_infostr(struct interface *ptr)
     if (hw == NULL)
 	hw = get_hwntype(-1);
 
-    /*sprintf(tmp,_("<b>Interface %s</b>\nType: %s\n"), ptr->name, _(hw->title));*/
     {
       char s[256], t[256];
       
-      sprintf(s, _("Interface %s"), ptr->name);
+      sprintf(s, "%s%s %s%s", _("Interface:"), "<span foreground=\"blue\">", ptr->name, "</span>");
       sprintf(t, _("Type: %s"), _(hw->title));
-      sprintf(tmp, "<b>%s</b>\n%s\n", s, t);
+      sprintf(tmp, "<span size=\"large\">%s</span>\n%s\n", s, t);
     }
 
 	buffer = realloc(buffer,strlen(buffer)+strlen(tmp)+1);

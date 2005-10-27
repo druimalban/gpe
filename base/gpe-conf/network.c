@@ -85,7 +85,7 @@ show_current_config (GtkWidget * button)
 	char *tmp = NULL;
 	struct interface *ife;
 	struct interface *int_list;
-	GtkWidget *w, *label;
+	GtkWidget *w, *label, *sw;
 
 	int_list = if_getlist ();
 
@@ -94,8 +94,7 @@ show_current_config (GtkWidget * button)
 		if ((ife->flags & IFF_UP) && !(ife->flags & IFF_LOOPBACK))
 		{
 			tmp = if_to_infostr (ife);
-			buffer = realloc (buffer,
-					  strlen (tmp) + strlen (buffer) + 1);
+			buffer = realloc (buffer, strlen (tmp) + strlen (buffer) + 1);
 			strcat (buffer, tmp);
 			free (tmp);
 		}
@@ -108,11 +107,25 @@ show_current_config (GtkWidget * button)
 					 GTK_STOCK_CLOSE, GTK_RESPONSE_ACCEPT,
 					 NULL);
 
+	gtk_window_set_default_size(GTK_WINDOW(w), 230, 280);	
+	
 	label = gtk_label_new (NULL);
+	gtk_misc_set_alignment(GTK_MISC(label), 0, 0);
+printf("#%s#\n", buffer);
 	gtk_label_set_markup (GTK_LABEL (label), buffer);
-	gtk_label_set_selectable(GTK_LABEL(label),TRUE);
-	gtk_widget_show (label);
-	gtk_container_add (GTK_CONTAINER (GTK_DIALOG (w)->vbox), label);
+	gtk_label_set_selectable(GTK_LABEL(label), TRUE);
+	
+	sw = gtk_scrolled_window_new(NULL, NULL);
+	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(sw), 
+	                               GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+	gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(sw), label);
+	gtk_viewport_set_shadow_type(GTK_VIEWPORT(label->parent), GTK_SHADOW_NONE);
+	
+	gtk_widget_show_all (sw);
+	gtk_container_add (GTK_CONTAINER (GTK_DIALOG (w)->vbox), sw);
+	gtk_container_set_border_width (GTK_CONTAINER (GTK_DIALOG (w)->vbox), 
+	                                gpe_get_border());
+	
 	g_signal_connect_swapped (G_OBJECT (w),
 				  "response",
 				  G_CALLBACK (gtk_widget_destroy),

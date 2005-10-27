@@ -1,5 +1,7 @@
 2005-10-27	Florian Boor <florian.boor@kernelconcepts.de>
 
+	* tools/interface.c: Work around a gtk/pango bug, make text look nicer.
+	* network.c: Improve dialog design.
 	* sleep/interface.c, users/interface.c, main.c, applets.h: Get rid of 
 	   useless style stuff.
 	* keys.c: Shortened tab title.
