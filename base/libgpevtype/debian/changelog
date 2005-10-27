@@ -1,5 +1,11 @@
 libgpevtype (0.12m1-1) unstable; urgency=low
 
+  * Change prefix and dependencies.
+
+ -- Florian Boor <florian.boor@kernelconcepts.de>  Fri, 14 Oct 2005 15:17:44 +0200
+
+libgpevtype (0.12m1-1) unstable; urgency=low
+
   * New release.
 
  -- Florian Boor <florian.boor@kernelconcepts.de>  Mon, 25 Jul 2005 15:17:44 +0200

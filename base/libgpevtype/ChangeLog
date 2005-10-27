@@ -1,3 +1,7 @@
+2005-10-27  Florian Boor  <florian@kernelconcepts.de>
+
+        * debian/rules: Change prefix again.
+
 2005-09-16  Martin Felis  <martin@silef.de>
 
 	* vevent.c: Fixed timezone incompatibility.
