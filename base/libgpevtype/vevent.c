@@ -27,6 +27,10 @@ static struct tag_map map[] = {
   {G_TYPE_STRING, "summary", NULL},
   {G_TYPE_STRING, "description", NULL},
   {G_TYPE_STRING, "eventid", "uid"},
+  {G_TYPE_INT, "recur", "recurrence"},
+  {G_TYPE_INT, "rcount", "repeat"},
+  {G_TYPE_INT, "sequence", NULL},
+  {G_TYPE_INT, "modified", "dtstamp"},
   {G_TYPE_INT, "duration", NULL},
   {G_TYPE_INVALID, NULL, NULL}
 };
@@ -58,17 +62,17 @@ vevent_interpret_tag (MIMEDirVEvent * event, const char *tag,
   while (t->tag)
     {
       if (!strcasecmp (t->tag, tag))
-	{
-	  if (t->type == G_TYPE_STRING)
-	    g_object_set (G_OBJECT (event), t->vc ? t->vc : t->tag, value,
-			  NULL);
-	  else if (t->type == G_TYPE_INT)
-	    g_object_set (G_OBJECT (event), t->vc ? t->vc : t->tag,
-			  atoi (value), NULL);
-	  else
-	    abort ();
-	  return TRUE;
-	}
+        {
+          if (t->type == G_TYPE_STRING)
+            g_object_set (G_OBJECT (event), t->vc ? t->vc : t->tag, value,
+                  NULL);
+          else if (t->type == G_TYPE_INT)
+            g_object_set (G_OBJECT (event), t->vc ? t->vc : t->tag,
+                  atoi (value), NULL);
+          else
+            abort ();
+          return TRUE;
+        }
       t++;
     }
 
@@ -78,21 +82,21 @@ vevent_interpret_tag (MIMEDirVEvent * event, const char *tag,
       gboolean date_only;
 
       if (parse_date (value, &tm, &date_only))
-	{
-	  MIMEDirDateTime *date;
-
-	  date =
-	    mimedir_datetime_new_from_date (tm.tm_year + 1900, tm.tm_mon + 1,
-					    tm.tm_mday);
-	  if (!date_only)
-	    {
-	      mimedir_datetime_set_time (date, tm.tm_hour, tm.tm_min,
-					 tm.tm_sec);
-	      date->timezone = MIMEDIR_DATETIME_UTC;
-	    }
-
-	  g_object_set (G_OBJECT (event), "dtstart", date, NULL);
-	}
+        {
+          MIMEDirDateTime *date;
+    
+          date =
+            mimedir_datetime_new_from_date (tm.tm_year + 1900, tm.tm_mon + 1,
+                            tm.tm_mday);
+          if (!date_only)
+            {
+              mimedir_datetime_set_time (date, tm.tm_hour, tm.tm_min,
+                         tm.tm_sec);
+              date->timezone = MIMEDIR_DATETIME_UTC;
+            }
+    
+          g_object_set (G_OBJECT (event), "dtstart", date, NULL);
+        }
       else
 	fprintf (stderr, "couldn't parse date '%s'\n", value);
 
@@ -129,29 +133,29 @@ vevent_to_tags (MIMEDirVEvent * vevent)
   while (t->tag)
     {
       if (t->type == G_TYPE_STRING)
-	{
-	  gchar *value;
-
-	  g_object_get (G_OBJECT (vevent), t->vc ? t->vc : t->tag, &value,
-			NULL);
-
-	  if (value)
-	    data = gpe_tag_list_prepend (data, t->tag, g_strstrip (value));
-	}
+        {
+          gchar *value;
+    
+          g_object_get (G_OBJECT (vevent), t->vc ? t->vc : t->tag, &value,
+                NULL);
+    
+          if (value)
+            data = gpe_tag_list_prepend (data, t->tag, g_strstrip (value));
+        }
       else if (t->type == G_TYPE_INT)
-	{
-	  gint value;
-
-	  g_object_get (G_OBJECT (vevent), t->vc ? t->vc : t->tag, &value,
-			NULL);
-
-	  if (value != 0)
-	    data =
-	      gpe_tag_list_prepend (data, t->tag,
-				    g_strdup_printf ("%d", value));
-	}
+        {
+          gint value;
+    
+          g_object_get (G_OBJECT (vevent), t->vc ? t->vc : t->tag, &value,
+                NULL);
+    
+          if (value != 0)
+            data =
+              gpe_tag_list_prepend (data, t->tag,
+                        g_strdup_printf ("%d", value));
+        }
       else
-	abort ();
+        abort ();
 
       t++;
     }
@@ -166,21 +170,21 @@ vevent_to_tags (MIMEDirVEvent * vevent)
       mimedir_datetime_to_utc (date);
 
       data =
-	gpe_tag_list_prepend (data, "start",
-			      mimedir_datetime_to_string (date));
+    	gpe_tag_list_prepend (data, "start",
+                              mimedir_datetime_to_string (date));
 
       g_object_get (G_OBJECT (vevent), "dtend", &end_date, NULL);
       if (end_date)
-	{
-	  unsigned int duration;
-
-	  start_t = mimedir_datetime_get_time_t (date);
-	  end_t = mimedir_datetime_get_time_t (end_date);
-
-	  duration = end_t - start_t;
-	  sprintf (buf, "%d", duration);
-	  data = gpe_tag_list_prepend (data, "duration", g_strdup (buf));
-	}
+        {
+          unsigned int duration;
+    
+          start_t = mimedir_datetime_get_time_t (date);
+          end_t = mimedir_datetime_get_time_t (end_date);
+    
+          duration = end_t - start_t;
+          sprintf (buf, "%d", duration);
+          data = gpe_tag_list_prepend (data, "duration", g_strdup (buf));
+        }
     }
 
   return data;

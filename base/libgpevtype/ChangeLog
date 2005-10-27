@@ -1,3 +1,8 @@
+2005-10-28  Florian Boor  <florian@kernelconcepts.de>
+
+    * vevent.c: Extend translation map to become basically useful.
+                Some reformating.
+
 2005-10-27  Florian Boor  <florian@kernelconcepts.de>
 
         * debian/rules: Change prefix again.
