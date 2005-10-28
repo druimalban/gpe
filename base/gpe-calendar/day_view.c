@@ -165,7 +165,6 @@ button_press (GtkWidget *widget,
 			if ((x >= e_r->x && x <= e_r->x + e_r->width) && (y >= e_r->y && y <= e_r->y + e_r->height) )
 			  {
 				gint width, height;
-				GdkGC *black_gc;
 				found = TRUE;
 				sel_event = e_r->event;
 				char *buffer;
@@ -492,15 +491,25 @@ day_changed_calendar (GtkWidget *widget)
 }
 
 
-/* Go to hour h*/
+/* Go to hour h
+ * If h is negative it goes to the current hour
+ *
+ */
 void
 scroll_to (GtkWidget *scrolled, gint hour)
 {
 	GtkAdjustment *adj;
-	gint w = 0, h = 0,tmp;
-	tmp = h/NUM_HOURS;
-	
-	hour = hour;
+	gint w = 0, h = 0;
+	/* Scroll to the current hour */
+	if(hour < 0)
+	{
+		time_t now;
+		struct tm now_tm;
+		time (&now);
+		localtime_r (&now, &now_tm);
+		hour = MAX (now_tm.tm_hour - 1, 0) ;	
+	}
+		
 	gdouble page_increment, step_increment, page_size, upper, lower,value;
 	gtk_widget_get_size_request (draw, &w, &h);
 	
@@ -529,7 +538,7 @@ update_hook_callback()
   gtk_calendar_select_month (GTK_CALENDAR (calendar), tm.tm_mon, tm.tm_year + 1900);
   gtk_calendar_select_day (GTK_CALENDAR (calendar), tm.tm_mday);
   
-  scroll_to (scrolled_window, 7);      
+  scroll_to (scrolled_window, -1);      
   day_view_update ();
 
   reminder_view_update ();
@@ -587,7 +596,8 @@ changed_callback (GtkWidget *widget,
 		 GtkWidget *some)
 {
   viewtime = gtk_date_sel_get_time (GTK_DATE_SEL (widget));
-  scroll_to (scrolled_window, 7); 
+  
+  scroll_to (scrolled_window, -1); 
   day_view_update ();
   reminder_view_update ();
   return TRUE;

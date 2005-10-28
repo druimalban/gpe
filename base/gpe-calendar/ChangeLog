@@ -1,3 +1,7 @@
+2005-10-28 Luca De Cicco <ldecicco@gmail.com>
+	* day_view.c: Day view automatically scrolls to current hour if
+	possible
+
 2005-10-25  Florian Boor <florian.boor@kernelconcepts.de>
 
 	* gtkdatesel.c: Move week selector to the left.
