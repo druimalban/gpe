@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Take Screenshot
+Comment=Save a screenshot or upload it to http://handhelds.org/scap
+Exec=gpe-screenshot
+Terminal=0                                       
+Type=Application
+Icon=gpe-screenshot.png
+Categories=Action
+StartupNotify=False

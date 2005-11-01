@@ -1,0 +1,47 @@
+AC_INIT([GPE Screenshot], [0.4], [rw@handhelds.org], [gpe-screenshot])
+
+AC_CONFIG_SRCDIR([src/gpe-screenshot.c])
+AM_CONFIG_HEADER(config.h)
+AM_INIT_AUTOMAKE
+AM_MAINTAINER_MODE
+
+AC_PROG_CC
+AC_HEADER_STDC
+
+AH_TEMPLATE([GETTEXT_PACKAGE], [Package name for gettext])
+GETTEXT_PACKAGE=gpe-screenshot
+AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE")
+AC_SUBST(GETTEXT_PACKAGE)
+ALL_LINGUAS=""
+gpescreenshotlocaledir='${prefix}/${DATADIRNAME}/locale'
+AC_SUBST(gpescreenshotlocaledir)
+
+AM_GLIB_GNU_GETTEXT
+AC_PROG_INTLTOOL([0.23])
+
+AC_SUBST(CFLAGS)
+AC_SUBST(CPPFLAGS)
+AC_SUBST(LDFLAGS)
+
+dnl libraries
+GTK_MODULES="gtk+-2.0 >= 2.6.0 gthread-2.0"
+PKG_CHECK_MODULES(GTK, $GTK_MODULES)
+AC_SUBST(GTK_CFLAGS)
+AC_SUBST(GTK_LIBS)
+
+GLADE_MODULES="libglade-2.0 >= 2.4.2"
+PKG_CHECK_MODULES(GLADE, $GLADE_MODULES)
+AC_SUBST(GLADE_CFLAGS)
+AC_SUBST(GLADE_LIBS)
+
+#AC_CHECK_HEADERS(X11/extensions/shape.h, XSHAPE_LIBS="-lXext")
+XSHAPE_LIBS=""
+AC_SUBST(XSHAPE_LIBS)
+
+AC_CONFIG_FILES([
+Makefile
+src/Makefile
+po/Makefile.in
+])
+
+AC_OUTPUT
