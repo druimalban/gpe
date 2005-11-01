@@ -1,3 +1,8 @@
+2005-10-30	Florian Boor <florian.boor@kernelconcepts.de>
+
+	* Release Version 0.1.26
+	* Makefile: Version to 0.1.26
+	
 2005-10-27	Florian Boor <florian.boor@kernelconcepts.de>
 
 	* tools/interface.c: Work around a gtk/pango bug, make text look nicer.
