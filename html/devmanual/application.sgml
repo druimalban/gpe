@@ -43,7 +43,7 @@
       </para>
     </section>
     <section>
-    <title>GPE Application Skeleton</title>
+    <title>Introducing the GPE Application Skeleton</title>
       <para>
       If you unpack the tarball you will see that it already contains quite a 
       lot of files. They all have a specific function but are not always needed 
@@ -61,9 +61,9 @@
           </row>
         </thead>
         <tbody>
-           <row><entry>gpe-demo.c</entry><entry>Application implementation.</entry></row>
-           <row><entry>gpe-demo.png</entry><entry>Application icon.</entry></row>
-           <row><entry>gpe-demo.dektop.in</entry><entry>Desktop entry file base.</entry></row>
+           <row><entry>gpe-hello.c</entry><entry>Application implementation.</entry></row>
+           <row><entry>gpe-hello.png</entry><entry>Application icon.</entry></row>
+           <row><entry>gpe-hello.dektop.in</entry><entry>Desktop entry file base.</entry></row>
            <row><entry>configure.ac</entry><entry>Autotools support file (autoconf).</entry></row>
            <row><entry>Makefile.am</entry><entry>Autotools support file (automake).</entry></row>
            <row><entry>gpe-dist.am</entry><entry>Some generic GPE make targets.</entry></row>
@@ -71,8 +71,33 @@
         </tbody>
         </tgroup>
       </table>
+      For a detailed secription of the autotools setup for GPE applications see
+      the "Building and Testing" section below. For more generic information 
+      check out the GNU autoconf, automake and intltool manuals.
       </para>
-    </section>  
+    </section>
+    <section>
+    <title>Walking through the Code</title>
+    <para>
+    Currently this example only contains one file of C sourcecode containing 
+    the most important basic concepts of a GPE application. The file <filename>
+    gpe-hello.c</filename> looks like this:
+    </para>
+    <para>
+    Each file should start with a header identifying its author, license 
+    and purpose. In order to make code easy to maintain and reusable in other
+    open source applications this is very important. For important code which
+    likely to have many contributors and/or changes it might be useful to keep
+    a simple changelog at the end of the file header.
+    <programlisting>
+        <![CDATA[/*
+         * gpe-hello v0.2
+         *
+         * Tutorial program to learn programming for GPE 
+        ]]>
+    </programlisting>
+    </para>
+    </section>
 </section>
 <section>
 <title>Building and Testing</title>
@@ -92,6 +117,14 @@
   Our application checks for the presence of GTK+ libraries and libgpewidget.
   </para>
   <para>
+  After running the <command>configure</command> script the application may 
+  be built running <command>make</command>. Because almost all GPE applications 
+  will try to read its application icon from its installed location you will 
+  have to install any GPE application running <command>make install</command>
+  once before testing it.
+  </para>
+  <para>
+  Lets take a look at the autotools setup we use for this GPE application:
   </para>
 </section>
 <section>
