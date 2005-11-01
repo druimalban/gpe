@@ -1,3 +1,9 @@
+2005-10-31  Florian Boor <florian@kernelconcepts.de>
+
+* main.c: Replace C++ comments, some minor improvememnts.
+          Add more verbose comments, add toolbar.
+          Add GPE typical sizings and text area.
+
 2005-09-13  Florian Boor <florian@kernelconcepts.de>
 
 * Makefile.am: Add install of icon.
