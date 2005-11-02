@@ -254,7 +254,7 @@ GtkWidget *
 edit_item (struct todo_item *item, gint initial_category, GtkWindow *parent)
 {
   GtkWidget *window;
-  GtkWidget *table = gtk_table_new(5, 5, FALSE);
+  GtkWidget *table = gtk_table_new(6, 5, FALSE);
   GtkWidget *top_vbox = gtk_vbox_new (FALSE, 0);
   GtkWidget *text = gtk_text_view_new ();
   GtkWidget *buttonbox = gtk_hbox_new (FALSE, 0);
@@ -420,7 +420,7 @@ edit_item (struct todo_item *item, gint initial_category, GtkWindow *parent)
   gtk_misc_set_alignment (GTK_MISC (label_state), 0.0, 0.5);
   
   gtk_text_view_set_editable (GTK_TEXT_VIEW (text), TRUE);
-  gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (text), GTK_WRAP_WORD);
+  gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (text), GTK_WRAP_WORD_CHAR);
   
   /* Summary */
   gtk_table_attach(GTK_TABLE(table), label_summary, 0, 1, pos, pos+1, 
@@ -462,13 +462,16 @@ edit_item (struct todo_item *item, gint initial_category, GtkWindow *parent)
   gtk_table_attach(GTK_TABLE(table), label_details, 0, 1, pos, pos+1,
                    GTK_FILL, GTK_FILL, 0, 0);
   gtk_table_attach(GTK_TABLE(table), text, 1, 5, pos, pos+1,
-                   GTK_FILL | GTK_EXPAND, GTK_FILL | GTK_EXPAND, 0, 0);
+                   GTK_FILL, GTK_FILL | GTK_EXPAND, 0, 0);
   pos++;
   /* Categories */
   gtk_table_attach(GTK_TABLE(table), button_categories, 0, 2, pos, pos+1,
                    GTK_SHRINK | GTK_FILL, GTK_FILL, 0, 0);
   gtk_table_attach(GTK_TABLE(table), label_categories, 2, 5, pos, pos+1,
                    GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
+  /*HACK: This is a workaround for a bug in the GtkTextView implementation 
+    causing it to grow while entering text. */
+  gtk_widget_set_size_request(text, 5, -1);
 #else
   /* Categories */
   gtk_table_attach(GTK_TABLE(table), button_categories, 0, 2, pos, pos+1,
@@ -481,7 +484,11 @@ edit_item (struct todo_item *item, gint initial_category, GtkWindow *parent)
                    GTK_FILL, GTK_FILL, 0, 0);
   pos++;
   gtk_table_attach(GTK_TABLE(table), text, 0, 5, pos, pos+1,
-                   GTK_FILL | GTK_EXPAND, GTK_FILL | GTK_EXPAND, 0, 0);
+                   GTK_FILL, GTK_FILL | GTK_EXPAND, 0, 0);
+                   
+  /*HACK: This is a workaround for a bug in the GtkTextView implementation 
+    causing it to grow while entering text. */
+  gtk_widget_set_size_request(text, 5, -1);
 #endif    
   gtk_box_pack_start (GTK_BOX (top_vbox), scrolled_window, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (top_vbox), buttonbox, FALSE, FALSE, 0);
