@@ -226,13 +226,16 @@ build_children (GtkWidget *table, GSList *children, GtkWidget *pw, gboolean visi
           else
             gtk_widget_hide(ww);
           gtk_text_view_set_editable (GTK_TEXT_VIEW (ww), TRUE);
-          gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (ww), GTK_WRAP_WORD);
+          gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (ww), GTK_WRAP_WORD_CHAR);
           g_signal_connect(G_OBJECT(ww),"move_cursor",
             G_CALLBACK(tv_move_cursor),NULL);
           g_signal_connect(G_OBJECT(ww),"focus-in-event",
             G_CALLBACK(tv_focus_in),NULL);
           g_signal_connect(G_OBJECT(ww),"focus-out-event",
             G_CALLBACK(tv_focus_out),NULL);
+          /*HACK: This is a workaround for a bug in the GtkTextView implementation 
+            causing it to grow while entering text. */
+          gtk_widget_set_size_request(ww, 5, -1);
           
 #ifndef IS_HILDON
           gtk_widget_set_usize (GTK_WIDGET (ww), -1, 36);
@@ -249,7 +252,8 @@ build_children (GtkWidget *table, GSList *children, GtkWidget *pw, gboolean visi
           (*pos)++;
           if (e->name) gtk_table_attach(GTK_TABLE(table), w, 0, 1, *pos, *pos+1, 
                                         GTK_FILL, GTK_FILL, 0, 0);
-          gtk_table_attach_defaults(GTK_TABLE(table), ww, 1, 3, *pos, *pos+1);
+          gtk_table_attach(GTK_TABLE(table), ww, 1, 3, *pos, *pos+1, 
+                           GTK_FILL, GTK_FILL | GTK_EXPAND, 0, 0);
           add_tag (e->tag, ww, pw);
         break;
       
