@@ -72,6 +72,16 @@
 [Details - what should be possible, where are the limitations?]
   </para>
   <para>
+  This sketch can give you some raw impression about the design of a software 
+  framework using GPE.
+     <mediaobject>
+       <imageobject>
+         <imagedata fileref="gpe-arch.png" align="left" scale ="100" width="100%"/>
+       </imageobject>
+     </mediaobject>
+  
+  </para>
+  <para>
     For more generic information about how to become involved into Open Source 
     projects refer to [1] and [2]. For some information how to teach yourself 
     and how become a hacker you maybe want to read [3]. 

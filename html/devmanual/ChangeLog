@@ -1,3 +1,8 @@
+
+2005-11-03  Florian Boor <florian.boor@kernelconcepts.de>
+
+    * basics.sgml: Add GPE framework architecture sketch.
+
 2005-11-02  Florian Boor <florian.boor@kernelconcepts.de>
 
     * application.sgml: Rename example project, start decription of code.
