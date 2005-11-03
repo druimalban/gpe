@@ -232,9 +232,14 @@ gint width,height;
   gtk_widget_realize(drawing_area->parent);
   gtk_widget_realize(drawing_area->parent->parent);
   gdk_drawable_get_size(GDK_DRAWABLE(drawing_area->parent->window), &width, &height);
-  width -= 4; /* used by the widget itself */
-  height -= 4;
-    
+
+  /* if we use the joypad to grow we reduce the size to avoid scrollbars */
+  if (sketchbook.prefs.joypad_scroll && sketchbook.prefs.grow_on_scroll)
+  {
+    width -= 4; /* used by the widget itself */
+    height -= 4;
+  }
+  
   drawing_area_width  = width;
   drawing_area_height = height;
   reset_drawing_area();

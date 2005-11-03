@@ -116,8 +116,10 @@ GpePrefsResult gpe_prefs_get (gchar * key, GType type, gpointer pvalue){
     free(errmsg);
     return GPE_PREFS_ERROR;
   }
-
-  if(_pvalue == NULL){ _pvalue = g_strdup("");}
+  
+  /* if setting isn't present keep default */
+  if(_pvalue == NULL) 
+	  return GPE_PREFS_OK;
   //TRACE("GOT   > '%s'",  _pvalue);
 
   switch(type){
@@ -314,8 +316,9 @@ GtkWidget * preferences_gui(GtkWidget * window){
   GtkWidget * hbox;
   GtkWidget * button_no;
   GtkWidget * button_ok;
+  gint spacing = gpe_get_boxspacing();
 
-  vbox = gtk_vbox_new(FALSE, 4);
+  vbox = gtk_vbox_new(FALSE, spacing);
 
   //--Preferences
 
@@ -325,6 +328,7 @@ GtkWidget * preferences_gui(GtkWidget * window){
     GtkWidget * menu;
     GtkWidget * menu_item;
     GtkWidget * hbox;
+	  
     label = gtk_label_new(_("Start with"));
 
     menu = gtk_menu_new();
@@ -338,10 +342,10 @@ GtkWidget * preferences_gui(GtkWidget * window){
     option_menu = gtk_option_menu_new();
     gtk_option_menu_set_menu(GTK_OPTION_MENU(option_menu), menu);
     
-    hbox = gtk_hbox_new(FALSE, 4);
-    gtk_box_pack_start(GTK_BOX(hbox), label,        FALSE, FALSE, 4);
-    gtk_box_pack_start(GTK_BOX(hbox), option_menu,  TRUE, TRUE, 4);
-    gtk_box_pack_start(GTK_BOX(vbox), hbox,  FALSE, FALSE, 4);
+    hbox = gtk_hbox_new(FALSE, spacing);
+    gtk_box_pack_start(GTK_BOX(hbox), label,        FALSE, FALSE, spacing);
+    gtk_box_pack_start(GTK_BOX(hbox), option_menu,  TRUE, TRUE, spacing);
+    gtk_box_pack_start(GTK_BOX(vbox), hbox,  FALSE, FALSE, spacing);
 
     _prefs_ui.start_with = option_menu;
   }
@@ -349,14 +353,14 @@ GtkWidget * preferences_gui(GtkWidget * window){
   {//joypad scroll
     GtkWidget * check;
     check = gtk_check_button_new_with_label(_("Use joypad scrolling"));
-    gtk_box_pack_start(GTK_BOX(vbox), check,      FALSE, FALSE, 4);
+    gtk_box_pack_start(GTK_BOX(vbox), check,      FALSE, FALSE, spacing);
     _prefs_ui.joypad_scroll = check;
   }
 
   {//grow on scroll
     GtkWidget * check;
     check = gtk_check_button_new_with_label(_("Grow on scroll"));
-    gtk_box_pack_start(GTK_BOX(vbox), check,      FALSE, FALSE, 4);
+    gtk_box_pack_start(GTK_BOX(vbox), check,      FALSE, FALSE, spacing);
     _prefs_ui.grow_on_scroll = check;
   }
 
@@ -365,18 +369,18 @@ GtkWidget * preferences_gui(GtkWidget * window){
 
   //--Buttons
   button_ok = gpe_picture_button(window->style , _("OK")    , "!gtk-ok");
-  button_no = gpe_picture_button(window->style , _("Cancel"), "!gtk-no");
+  button_no = gpe_picture_button(window->style , _("Cancel"), "!gtk-cancel");
   g_signal_connect (G_OBJECT (button_ok), "clicked", G_CALLBACK (on_button_ok_clicked), NULL);
   g_signal_connect (G_OBJECT (button_no), "clicked", G_CALLBACK (on_button_no_clicked), NULL);
 
-  hbox = gtk_hbox_new(TRUE, 4);
-  gtk_container_set_border_width(GTK_CONTAINER(hbox),gpe_get_border());
-  gtk_box_pack_start (GTK_BOX (hbox), button_no, TRUE, TRUE, 4);
-  gtk_box_pack_start (GTK_BOX (hbox), button_ok, TRUE, TRUE, 4);
+  hbox = gtk_hbox_new(TRUE, spacing);
+  gtk_container_set_border_width(GTK_CONTAINER(hbox), gpe_get_border());
+  gtk_box_pack_start (GTK_BOX (hbox), button_no, TRUE, TRUE, spacing);
+  gtk_box_pack_start (GTK_BOX (hbox), button_ok, TRUE, TRUE, spacing);
 
   separator = gtk_hseparator_new();
-  gtk_box_pack_start(GTK_BOX(vbox), separator, FALSE, TRUE, 0);
   gtk_box_pack_end(GTK_BOX(vbox), hbox,      FALSE, TRUE, 0);
+  gtk_box_pack_end(GTK_BOX(vbox), separator, FALSE, TRUE, 0);
 
   gtk_widget_show_all(vbox);
   return vbox;

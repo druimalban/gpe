@@ -1,3 +1,12 @@
+2005-11-03  Florian Boor  <florian.boor@kernelconcepts.de>
+
+	* preferences.c: Use libgpewidget spacings instead of constant value.
+	                 Pack separator to the end of the box.
+					 Use correct stock item.
+					 Don't alter default setting of preference database doesn't
+					 contain some key.
+	* sketchpad.c: Turn scrollbars off if joypad and growing is on only.
+
 2005-10-07  Florian Boor  <florian.boor@kernelconcepts.de>
 
 	* preferences.c: Make joypad scroll default.
