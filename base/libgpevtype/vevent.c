@@ -15,6 +15,7 @@
 #include <assert.h>
 
 #include <gpe/vevent.h>
+#include <gpe/event-db.h>
 
 struct tag_map
 {
@@ -27,14 +28,23 @@ static struct tag_map map[] = {
   {G_TYPE_STRING, "summary", NULL},
   {G_TYPE_STRING, "description", NULL},
   {G_TYPE_STRING, "eventid", "uid"},
-  {G_TYPE_INT, "recur", "recurrence"},
-  {G_TYPE_INT, "rcount", "repeat"},
   {G_TYPE_INT, "sequence", NULL},
   {G_TYPE_INT, "modified", "dtstamp"},
   {G_TYPE_INT, "duration", NULL},
   {G_TYPE_INVALID, NULL, NULL}
 };
 
+static struct tag_map rec_map[] = {
+  {G_TYPE_INT, "recur", "frequency"},
+  {G_TYPE_INT, "rcount", "count"},
+  {G_TYPE_INT, "rincrement", "unit"},
+  {G_TYPE_INVALID, NULL, NULL}
+};
+
+static gint freq_map[] = { RECUR_NONE, RECUR_NONE, RECUR_NONE, RECUR_NONE, 
+                           RECUR_DAILY, RECUR_WEEKLY, RECUR_MONTHLY, 
+                           RECUR_YEARLY };
+  
 static gboolean
 parse_date (const char *s, struct tm *tm, gboolean * date_only)
 {
@@ -129,6 +139,7 @@ vevent_to_tags (MIMEDirVEvent * vevent)
   GSList *data = NULL;
   struct tag_map *t = &map[0];
   MIMEDirDateTime *date;
+  MIMEDirRecurrence *rec = NULL;
 
   while (t->tag)
     {
@@ -185,6 +196,48 @@ vevent_to_tags (MIMEDirVEvent * vevent)
           sprintf (buf, "%d", duration);
           data = gpe_tag_list_prepend (data, "duration", g_strdup (buf));
         }
+    }
+    
+  g_object_get (G_OBJECT (vevent), "recurrence", &rec, NULL);
+  if (rec)
+    {
+      struct tag_map *t = &rec_map[0];
+    
+      while (t->tag)
+        {
+            if (t->type == G_TYPE_INT)
+            {
+              gint value;
+        
+              g_object_get (G_OBJECT (rec), t->vc ? t->vc : t->tag, &value,
+                    NULL);
+        
+              if (!strcmp(t->tag, "recur") && (value <= RECUR_YEARLY) && (value > 0))
+                  value = freq_map[value];
+              
+              if (value != 0)
+                {
+                  data =
+                    gpe_tag_list_prepend (data, t->tag,
+                                          g_strdup_printf ("%d", value));
+                }
+            }
+          else
+            abort ();
+    
+          t++;
+        }
+
+      g_object_get (G_OBJECT (rec), "until", &date, NULL);
+      if (date)
+        {
+          mimedir_datetime_to_utc (date);
+    
+          data =
+            gpe_tag_list_prepend (data, "rend",
+                                  mimedir_datetime_to_string (date));
+        }
+        
     }
 
   return data;

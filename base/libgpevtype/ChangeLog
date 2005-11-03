@@ -1,3 +1,7 @@
+2005-11-03  Florian Boor  <florian@kernelconcepts.de>
+
+    * vevent.c: Implement basic import of recurring events.
+    
 2005-10-28  Florian Boor  <florian@kernelconcepts.de>
 
     * vevent.c: Extend translation map to become basically useful.
