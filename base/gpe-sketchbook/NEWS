@@ -1,6 +1,8 @@
 GPE sketchbook NEWS
 
-* cvs
+* 0.2.9 2005-11-04
+- Some minor updates of the preferences dialog.
+- Default to grow and joypad scroll without scrollbars.
 - Support additional colours.
 - Update user interface
   - Draw area size fills available space now.
