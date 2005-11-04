@@ -1,5 +1,5 @@
 PACKAGE = gpe-bootsplash
-VERSION = 1.14
+VERSION = 1.15
 CVSBUILD = yes
 
 PACKAGE_CFLAGS = `pkg-config --cflags gdk-pixbuf-2.0 libsvg-cairo` `pkg-config --libs gdk-pixbuf-2.0 libsvg-cairo` -DGTK2
