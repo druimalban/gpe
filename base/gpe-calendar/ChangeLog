@@ -1,3 +1,11 @@
+2005-11-05  Florian Boor <florian.boor@kernelconcepts.de>
+
+	* event-ui.c: Change some widget packing to clean up UI.
+	              Move categories and text to new "detail" tab to free screen 
+				  space for the keyboard.
+				  Remove shadows from viewports for a cleaner look.
+				  Remove some extra padding from button box.
+
 2005-10-28 Luca De Cicco <ldecicco@gmail.com>
 	* day_view.c: Day view automatically scrolls to current hour if
 	possible

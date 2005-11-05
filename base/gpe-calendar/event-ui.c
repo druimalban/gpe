@@ -812,7 +812,7 @@ build_edit_event_window (void)
   GtkWidget *notebookedit;
 
   /* Labels for the tabs */
-  GtkWidget *labeleventpage, *labelrecurpage, *labelalarmpage;
+  GtkWidget *labeleventpage, *labelrecurpage, *labelalarmpage, *labeldetailpage;
 
   /* SimpleMenu */
   GtkWidget *menutypehbox;
@@ -824,19 +824,18 @@ build_edit_event_window (void)
   GtkWidget *summaryentry;
 
   /* Start/End time widgets */
-  GtkWidget *startendtable, *datetimetable;
+  GtkWidget *startendtable, *datetimetable, *detailtable;
   GtkWidget *starttime, *endtime;
   GtkWidget *startdatelabel, *enddatelabel,
             *starttimelabel, *endtimelabel,
             *datelabel, *duelabel, *allowlabel;
 
   /* Description widgets */
-  GtkWidget *descriptionhbox;
   GtkWidget *description;
   GtkWidget *descriptionlabel;
 
   /* Categories widgets */
-  GtkWidget *cathbox, *catbutton, *catlabel;
+  GtkWidget *catbutton, *catlabel;
 
   /* Buttons !! */
   GtkWidget *buttonbox;
@@ -882,7 +881,8 @@ build_edit_event_window (void)
   GtkWidget *yearlylabelevery, *yearlyspin, *yearlylabels;
 
   GtkWidget *scrolledwindowevent, *scrolledwindowalarm, *scrolledwindowrecur;
-
+  GtkWidget *scrolledwindowdetail;
+  
   GtkAdjustment *endspin_adj, *dailyspin_adj, *weeklyspin_adj,
                 *monthlyspin_adj, *yearlyspin_adj;
   GtkAdjustment *taskadj;
@@ -896,6 +896,7 @@ build_edit_event_window (void)
   window              = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   notebookedit        = gtk_notebook_new ();
   labeleventpage      = gtk_label_new (_("Event"));
+  labeldetailpage     = gtk_label_new (_("Detail"));
   labelrecurpage      = gtk_label_new (_("Recurrence"));
   labelalarmpage      = gtk_label_new (_("Alarm"));
 
@@ -932,6 +933,7 @@ build_edit_event_window (void)
   scrolledwindowevent = gtk_scrolled_window_new (NULL, NULL);
   gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolledwindowevent),
                                          vboxevent);
+  gtk_viewport_set_shadow_type(GTK_VIEWPORT(vboxevent->parent), GTK_SHADOW_NONE);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindowevent),
                                   GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
 
@@ -1003,7 +1005,7 @@ build_edit_event_window (void)
   gtk_table_attach (GTK_TABLE (startendtable), starttimelabel, 2, 3, 0, 1,
                     0, 0, 0, boxspacing);
   gtk_table_attach (GTK_TABLE (startendtable), s->startdate, 3, 4, 0, 1,
-                    GTK_FILL, GTK_FILL, 0, 0);
+                    GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
   gtk_table_attach (GTK_TABLE (startendtable), enddatelabel, 0, 1, 1, 2,
                     0, 0, 0, boxspacing);
   gtk_table_attach (GTK_TABLE (startendtable), endtime, 1, 2, 1, 2,
@@ -1011,7 +1013,7 @@ build_edit_event_window (void)
   gtk_table_attach (GTK_TABLE (startendtable), endtimelabel, 2, 3, 1, 2,
                     0, 0, 0, boxspacing);
   gtk_table_attach (GTK_TABLE (startendtable), s->enddate, 3, 4, 1, 2,
-                    GTK_FILL, GTK_FILL, 0, 0);
+                    GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
 
   gtk_box_pack_start (GTK_BOX (vboxappointment), startendtable, FALSE, FALSE, 0);
 
@@ -1053,21 +1055,22 @@ build_edit_event_window (void)
   gtk_box_pack_start (GTK_BOX (vboxtask), hboxtask1, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vboxtask), hboxtask2, FALSE, FALSE, 0);
 
+  /* Detail table */
+  detailtable       = gtk_table_new (2, 4, FALSE);
+  gtk_container_set_border_width (GTK_CONTAINER(detailtable), border);
+  gtk_table_set_col_spacings (GTK_TABLE (detailtable), boxspacing);
+  gtk_table_set_row_spacings (GTK_TABLE (detailtable), boxspacing);
+  
   /* Categories */
-  cathbox = gtk_hbox_new (FALSE, 0);
   catbutton = gtk_button_new_with_label (_("Categories"));
-  catlabel = gtk_label_new (NULL);
-
-  gtk_box_pack_start (GTK_BOX (cathbox), catbutton, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (cathbox), catlabel, TRUE, TRUE, 4);
+  catlabel = gtk_label_new (_("Define categories by tapping the Categories button."));
+  gtk_label_set_line_wrap (GTK_LABEL(catlabel), TRUE);
   gtk_misc_set_alignment (GTK_MISC (catlabel), 0.0, 0.5);  
 
   g_signal_connect (G_OBJECT (catbutton), "clicked",
                     G_CALLBACK (click_categories), window);
 
   /* Description textarea */
-  descriptionhbox     = gtk_hbox_new (TRUE, boxspacing);
-
   description         = gtk_text_view_new ();
   gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (description), GTK_WRAP_WORD);
   gtk_text_view_set_editable (GTK_TEXT_VIEW (description), TRUE);
@@ -1081,8 +1084,16 @@ build_edit_event_window (void)
 
   descriptionlabel    = gtk_label_new (_("Description:"));
   gtk_misc_set_alignment(GTK_MISC (descriptionlabel), 0, 0.5);
-  gtk_widget_set_size_request (GTK_WIDGET (description), -1, 88);
-  gtk_container_add (GTK_CONTAINER (descriptionhbox), description);
+  gtk_widget_set_size_request (GTK_WIDGET (description), -1, 68);
+
+  gtk_table_attach(GTK_TABLE(detailtable), catbutton, 0, 1, 0, 1, 
+                   GTK_FILL, GTK_FILL, 0, 0);
+  gtk_table_attach(GTK_TABLE(detailtable), catlabel, 1, 2, 0, 1, 
+                   GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
+  gtk_table_attach(GTK_TABLE(detailtable), descriptionlabel, 0, 1, 1, 2, 
+                   GTK_FILL, GTK_FILL, 0, 0);
+  gtk_table_attach(GTK_TABLE(detailtable), description, 0, 2, 2, 3, 
+                   GTK_FILL, GTK_FILL, 0, 0);
   
   /* Putting the tab together */
   s->notebooktype = gtk_notebook_new ();
@@ -1095,10 +1106,16 @@ build_edit_event_window (void)
   gtk_box_pack_start (GTK_BOX (vboxevent), menutypehbox, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vboxevent), summaryhbox, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vboxevent), s->notebooktype, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vboxevent), cathbox, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vboxevent), descriptionlabel, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vboxevent), descriptionhbox, TRUE, TRUE, 0);
+  
   gtk_container_set_border_width (GTK_CONTAINER (vboxevent), border);
+
+  scrolledwindowdetail = gtk_scrolled_window_new (NULL, NULL);
+  gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolledwindowdetail),
+                                         detailtable);
+  gtk_viewport_set_shadow_type(GTK_VIEWPORT(detailtable->parent), GTK_SHADOW_NONE);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindowdetail),
+                                  GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+
 
   /* Alarm page */
   alarmhbox1          = gtk_hbox_new (FALSE, boxspacing);
@@ -1106,6 +1123,7 @@ build_edit_event_window (void)
   scrolledwindowalarm = gtk_scrolled_window_new (NULL, NULL);
   gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolledwindowalarm),
                                          vboxalarm);
+  gtk_viewport_set_shadow_type(GTK_VIEWPORT(vboxalarm->parent), GTK_SHADOW_NONE);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindowalarm),
                                   GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
   alarmmenu           = gtk_menu_new ();
@@ -1144,8 +1162,8 @@ build_edit_event_window (void)
   /* Button box */
   /* using GtkHBox here since GtkHButtonBox packs the widgets in a way
      that stop them fitting on a 240x320 screen.  */
-  buttonbox           = gtk_hbox_new (FALSE, 2);
-  gtk_container_set_border_width (GTK_CONTAINER (buttonbox), border);
+  buttonbox           = gtk_hbox_new (FALSE, 0);
+  gtk_container_set_border_width (GTK_CONTAINER (buttonbox), border / 2);
 
 #ifdef IS_HILDON
   buttonok            = gtk_button_new_with_label (_("Save"));
@@ -1163,9 +1181,9 @@ build_edit_event_window (void)
   buttoncancel        = gtk_button_new_from_stock (GTK_STOCK_CANCEL);
   buttondelete        = gtk_button_new_from_stock (GTK_STOCK_DELETE);
 
-  gtk_box_pack_start (GTK_BOX (buttonbox), buttondelete, TRUE, FALSE, 4);
-  gtk_box_pack_start (GTK_BOX (buttonbox), buttoncancel, TRUE, FALSE, 4);
-  gtk_box_pack_start (GTK_BOX (buttonbox), buttonok, TRUE, FALSE, 4);
+  gtk_box_pack_start (GTK_BOX (buttonbox), buttondelete, TRUE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (buttonbox), buttoncancel, TRUE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (buttonbox), buttonok, TRUE, FALSE, 0);
 #endif
 
   g_signal_connect (G_OBJECT (buttonok), "clicked",
@@ -1178,10 +1196,11 @@ build_edit_event_window (void)
   /* Reccurence page */
 
   vboxrepeattop = gtk_vbox_new (FALSE, gpe_get_boxspacing());
-  gtk_container_set_border_width(GTK_CONTAINER(vboxrepeattop),gpe_get_border());
+  gtk_container_set_border_width(GTK_CONTAINER(vboxrepeattop), gpe_get_border());
 
   scrolledwindowrecur = gtk_scrolled_window_new (NULL, NULL);
   gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolledwindowrecur), vboxrepeattop);
+  gtk_viewport_set_shadow_type(GTK_VIEWPORT(vboxrepeattop->parent), GTK_SHADOW_NONE);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindowrecur),
                                   GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
 
@@ -1250,7 +1269,6 @@ build_edit_event_window (void)
   s->weeklybox     = gtk_vbox_new (FALSE, 0);
 
   /* weekly hbox3 */
-  /*gtk_box_pack_start (GTK_BOX (s->weeklybox), weeklyhbox3, FALSE, FALSE, 0);*/
   weeklyhbox3      = gtk_hbox_new (FALSE, 0);
   weeklylabelevery = gtk_label_new (_("Every"));
   weeklylabelweeks = gtk_label_new (_("weeks, on:"));
@@ -1399,9 +1417,6 @@ build_edit_event_window (void)
                            FALSE, FALSE, 0);
   gtk_widget_set_sensitive (radiobuttonforever , FALSE);
 
-  /* endafter hbox */
-  /*gtk_box_pack_start (GTK_BOX (vboxend), hboxendafter, FALSE, FALSE, 0);*/
-
   /* end after radio button */
   vboxend_group = gtk_radio_button_group (GTK_RADIO_BUTTON (radiobuttonforever));
   radiobuttonendafter = gtk_radio_button_new_with_label (vboxend_group,
@@ -1444,6 +1459,8 @@ build_edit_event_window (void)
   gtk_box_pack_start (GTK_BOX (vboxtop), notebookedit, TRUE, TRUE, 2);
   gtk_notebook_append_page (GTK_NOTEBOOK (notebookedit), scrolledwindowevent,
                             labeleventpage);
+  gtk_notebook_append_page (GTK_NOTEBOOK (notebookedit), scrolledwindowdetail,
+                            labeldetailpage);
   gtk_notebook_append_page (GTK_NOTEBOOK (notebookedit), scrolledwindowalarm,
                             labelalarmpage);
   gtk_notebook_append_page (GTK_NOTEBOOK (notebookedit), scrolledwindowrecur,
