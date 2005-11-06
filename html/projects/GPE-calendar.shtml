@@ -21,15 +21,23 @@ Special functionality included is support for
 <LI> Recurring events with options for daily, workdays, weekends, monthly,
 yearly (birthdays or other anniversaries)
 <LI> Different view modes to give the user a good overview.
+<LI> Mimedir (vCal, iCal) data import.
 </UL>
 </P>
-<P>Future enhancements will include beaming entries via IrDA/Bluetooth OBEX in vCalendar format.</P>
+<P>
+Future enhancements will include event export and beaming entries via IrDA/Bluetooth OBEX in vCalendar format.
+</P>
 
 <H2>Status</H2>
+<p>
+The application is stable and functional for daily use. It makes use of a set of libraries and external tools such as <b>atd</b> and <b>gpe-announce</b>. The user interface is scalable and supports screens from small PDA portrait displays up to common PC screen sizes. Apart from GPE
+the user interface has basic support for the Hildon UI used for the Nokia 770.
+</p>
 <P>
 The source code can be found in <A href="../cvs.shtml">CVS</A>, module
 <B>gpe-calendar</B>.  Precompiled binaries for iPAQ are available in
 the Familiar <A href="http://familiar.handhelds.org/familiar/feeds/unstable/">unstable feed</A>.
+
 
 <H2>User interface</H2>
 <P>
@@ -38,5 +46,4 @@ the Familiar <A href="http://familiar.handhelds.org/familiar/feeds/unstable/">un
 <IMG SRC="/images/calendar-month.png" ALT="Month view">
 <IMG SRC="/images/calendar-event.png" ALT="New appointment entry">
 </P>
-
 <!--#include virtual="/includes/foot.shtml"-->
