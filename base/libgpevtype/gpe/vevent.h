@@ -11,11 +11,13 @@
 #define GPE_VEVENT_H
 
 #include <glib.h>
+#include <gpe/event-db.h>
 #include <mimedir/mimedir-vevent.h>
 
 #include <gpe/tag-db.h>
 
 extern MIMEDirVEvent *vevent_from_tags (GSList *tags);
+extern MIMEDirVEvent *vevent_from_event_t (event_t event);
 extern GSList *vevent_to_tags (MIMEDirVEvent *vevent);
 
 #endif

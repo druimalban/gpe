@@ -108,12 +108,99 @@ vevent_interpret_tag (MIMEDirVEvent * event, const char *tag,
           g_object_set (G_OBJECT (event), "dtstart", date, NULL);
         }
       else
-	fprintf (stderr, "couldn't parse date '%s'\n", value);
+        fprintf (stderr, "couldn't parse date '%s'\n", value);
 
       return TRUE;
     }
-
+    
+  /* handle recurring events */
+  t = &rec_map[0];
+  while (t->tag)
+    {
+      if (!strcasecmp (t->tag, tag))
+        {
+          MIMEDirRecurrence *rec = mimedir_vcomponent_get_recurrence((MIMEDirVComponent*)event);
+         
+          if (rec == NULL)
+            {
+              rec = mimedir_recurrence_new();
+              mimedir_vcomponent_set_recurrence((MIMEDirVComponent*)event, rec);
+            } 
+          if (t->type == G_TYPE_STRING)
+            g_object_set (G_OBJECT (rec), t->vc ? t->vc : t->tag, value,
+                  NULL);
+          else if (t->type == G_TYPE_INT)
+            g_object_set (G_OBJECT (rec), t->vc ? t->vc : t->tag,
+                  atoi (value), NULL);
+          else
+            abort ();
+          return TRUE;
+        }
+      t++;
+    }
+    
   return FALSE;
+}
+
+MIMEDirVEvent *
+vevent_from_event_t (event_t event)
+{
+  MIMEDirVEvent *vevent;
+  struct tm *tm;
+          
+  if (!event) 
+    return NULL;
+  
+  vevent = mimedir_vevent_new ();
+  
+  /* start time */
+  if ((tm = localtime(&(event->start))))
+    {
+      MIMEDirDateTime *date;
+
+      date =
+        mimedir_datetime_new_from_date (tm->tm_year + 1900, tm->tm_mon + 1,
+                        tm->tm_mday);
+
+      g_object_set (G_OBJECT (vevent), "dtstart", date, NULL);
+    }
+  else
+    {
+      g_object_unref(vevent);
+      return NULL;
+    }
+
+  /* retrieve data and fill fields */    
+  if (!event->details)
+    event_db_get_details(event);
+    
+  g_object_set (G_OBJECT (vevent), "duration", (gint)event->duration, NULL);
+  g_object_set (G_OBJECT (vevent), "uid", event->eventid, NULL);
+  g_object_set (G_OBJECT (vevent), "summary", event->details->summary, NULL);
+  g_object_set (G_OBJECT (vevent), "description", event->details->description, NULL);
+  
+  /* handle recurring events */
+  if ((event->recur) && (event->recur->type != RECUR_NONE))
+    {
+      MIMEDirRecurrence *rec = mimedir_recurrence_new();
+      mimedir_vcomponent_set_recurrence((MIMEDirVComponent*)vevent, rec);
+      g_object_set (G_OBJECT (rec), "frequency", event->recur->type + 3, NULL); /* hack, known offset */
+      g_object_set (G_OBJECT (rec), "count", event->recur->count, NULL);
+      g_object_set (G_OBJECT (rec), "unit", event->recur->increment, NULL);
+      
+      if (event->recur->end)     
+        if ((tm = localtime(&(event->recur->end))))
+          {
+            MIMEDirDateTime *date;
+    
+            date =
+              mimedir_datetime_new_from_date (tm->tm_year + 1900, tm->tm_mon + 1,
+                            tm->tm_mday);
+    
+            g_object_set (G_OBJECT (rec), "until", date, NULL);
+          }
+      }
+  return vevent;
 }
 
 MIMEDirVEvent *
