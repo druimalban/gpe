@@ -1,0 +1,20 @@
+Source: libgpeplugin
+Priority: optional
+Maintainer: Luca De Cicco <ldecicco@gmail.com>
+Build-Depends: debhelper (>= 4.0.0), autotools-dev
+Standards-Version: 3.6.1
+Section: libs
+
+Package: libgpeplugin-dev
+Section: libdev
+Architecture: any
+Depends: libgpeplugin0 (= ${Source-Version})
+Description: Plugin library
+
+
+
+Package: libgpeplugin0
+Section: libs
+Architecture: any
+Depends: maemo
+Description: Plugin library 
