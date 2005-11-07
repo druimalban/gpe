@@ -1,0 +1,23 @@
+			libgpeplugin 0.1
+
+This library is a facility to help developers to write GTK+ applications
+with pluggable modules. Simply speaking you write your gui as always without 
+adding it to any container or window and then you compile it as a shared library.
+Then you load all the plugins you want in the main application using the API 
+described below and call a function to render all the loaded plugins. 
+The result is a vertical or horizontal box with all plugins loaded in a scrolled
+window.
+
+The tree is organized as follow:
+
+src/ 		libgpeplugin sources
+include/	includes (actually just one file :) )
+examples/	
+  plugin_test.c		Application showing how to use the library
+  plugin_foo.c		Dummy plugin 
+  
+
+It has been written in one lonely day after my girlfriend
+left to paris (i love you Stefania!)
+
+
