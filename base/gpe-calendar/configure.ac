@@ -26,6 +26,28 @@ AC_SUBST(gpecalendar_localedir)
 AM_GLIB_GNU_GETTEXT
 AC_PROG_INTLTOOL([0.23])
 
+ dbus-glib-1
+AC_MSG_CHECKING([if D-Bus support has been enabled]);
+AC_ARG_ENABLE(
+  dbus,
+  [  --disable-dbus          compile without D-Bus support],
+  [ 
+    if test "$enable_dbus" = "yes"; then
+      AC_MSG_RESULT(yes)
+    else
+      AC_MSG_RESULT(no)
+    fi
+  ],
+  [ 
+    enable_dbus="yes";
+    AC_MSG_RESULT(yes) 
+  ]
+)
+if test "$enable_dbus" = "yes"; then
+    DEP_MODULES="$DEP_MODULES dbus-glib-1"
+    AC_DEFINE([USE_DBUS], [1], [Define to 1 to enable D-Bus support])
+fi
+
 ENABLE_HILDON=false
 
 AC_ARG_ENABLE(hildon,

@@ -45,6 +45,7 @@
 #include "week_view.h"
 #include "month_view.h"
 #include "import-vcal.h"
+#include "export-vcal.h"
 #include "gtkdatesel.h"
 
 #include <gpe/pim-categories.h>
@@ -522,6 +523,8 @@ main (int argc, char *argv[])
       times = g_list_append (times, g_strdup (buf));
     }
 
+  vcal_export_init();
+    
   vbox = gtk_vbox_new (FALSE, 0);
   notebook = gtk_notebook_new ();
 

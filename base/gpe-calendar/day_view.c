@@ -30,6 +30,7 @@
 #include "day_view.h"
 #include "day_render.h"
 #include "gtkdatesel.h"
+#include "export-vcal.h"
 
 #define _(x) gettext(x)
 #define NUM_HOURS 24
@@ -561,20 +562,16 @@ day_free_lists()
 }
 
 
-
-
 static gboolean 
-destroy_popup (GtkWidget *widget,
-		GdkEventButton *event,
-		gpointer d)
+destroy_popup (GtkWidget *widget, GdkEventButton *event, gpointer d)
 {
 	gtk_widget_hide (popup);
 	sel_event = NULL;
 	return TRUE;
 }
+
 static void
-delete_event_cb (GtkWidget *widget,
-		GtkWidget *a)
+delete_event_cb (GtkWidget *widget, GtkWidget *a)
 {
 	delete_event (sel_event, widget);
 	gtk_widget_hide (popup);
@@ -582,12 +579,32 @@ delete_event_cb (GtkWidget *widget,
 
 
 static void
-edit_event_cb (GtkWidget *widget,
-		GtkWidget *a)
+edit_event_cb (GtkWidget *widget, GtkWidget *a)
 {
 	GtkWidget *w;
 	w = edit_event (sel_event);
 	gtk_widget_show (w);
+	gtk_widget_hide (popup);
+}
+
+static void
+save_cb (GtkWidget *widget, GtkWidget *a)
+{
+	vcal_do_save (sel_event);
+	gtk_widget_hide (popup);
+}
+
+static void
+send_ir_cb (GtkWidget *widget, GtkWidget *a)
+{
+	vcal_do_send_irda (sel_event);
+	gtk_widget_hide (popup);
+}
+
+static void
+send_bt_cb (GtkWidget *widget, GtkWidget *a)
+{
+	vcal_do_send_bluetooth (sel_event);
 	gtk_widget_hide (popup);
 }
 
@@ -610,10 +627,8 @@ day_view (void)
 {
   GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
   GtkWidget *hbox = gtk_hbox_new (FALSE, 0);
-  GtkWidget *edit_event_button, *delete_event_button ;
-  GtkWidget *edit_img , *delete_img;
+  GtkWidget *edit_event_button, *delete_event_button, *send_bt_button, *send_ir_button, *save_button;
   GtkWidget *vbox_popup = gtk_vbox_new (FALSE, 0);
-  GtkWidget *hbox_popup = gtk_hbox_new (TRUE, 0);
   gboolean landscape;
   gint 	win_width, win_height;
   /* Popup needed to show infos about an appointment */
@@ -627,38 +642,34 @@ day_view (void)
 
 #ifdef IS_HILDON
   edit_event_button = gtk_button_new_with_label(_("Edit"));
-  delete_event_button = gtk_button_new_with_label (_("Delete"));
+  delete_event_button = gtk_button_new_with_label(_("Delete"));
 #else
-  edit_event_button = gtk_button_new_with_label("");
-  delete_event_button = gtk_button_new_with_label ("");
-
-  edit_img = gtk_image_new_from_stock (GTK_STOCK_EDIT,GTK_ICON_SIZE_SMALL_TOOLBAR);
-  delete_img = gtk_image_new_from_stock (GTK_STOCK_DELETE,GTK_ICON_SIZE_SMALL_TOOLBAR);
-  gtk_button_set_image ( GTK_BUTTON (edit_event_button), edit_img);
-  gtk_button_set_image ( GTK_BUTTON (delete_event_button), delete_img);
-  gtk_widget_show (edit_img);
-  gtk_widget_show (delete_img);
+  edit_event_button = gtk_button_new_from_stock(GTK_STOCK_EDIT);
+  delete_event_button = gtk_button_new_from_stock(GTK_STOCK_DELETE);
+  send_ir_button = gtk_button_new_with_label(_("Send via infared"));
+  send_bt_button = gtk_button_new_with_label(_("Send via bluetooth"));
+  save_button = gtk_button_new_from_stock(GTK_STOCK_SAVE);
 #endif
 
   gtk_button_set_relief (GTK_BUTTON (edit_event_button), GTK_RELIEF_NONE);
   gtk_button_set_relief (GTK_BUTTON (delete_event_button), GTK_RELIEF_NONE);
+  gtk_button_set_relief (GTK_BUTTON (send_ir_button), GTK_RELIEF_NONE);
+  gtk_button_set_relief (GTK_BUTTON (send_bt_button), GTK_RELIEF_NONE);
+  gtk_button_set_relief (GTK_BUTTON (save_button), GTK_RELIEF_NONE);
   gtk_container_add (GTK_CONTAINER (popup), vbox_popup);
   gtk_box_pack_start (GTK_BOX (vbox_popup), event_infos_popup, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox_popup) , hbox_popup, FALSE, FALSE, 0);
   
-  gtk_box_pack_start (GTK_BOX (hbox_popup), edit_event_button, TRUE, TRUE,4);
-  gtk_box_pack_start (GTK_BOX (hbox_popup), delete_event_button, TRUE, TRUE,4);
-  gtk_widget_show (hbox_popup); 
-  gtk_widget_show (vbox_popup);
-  gtk_widget_show (edit_event_button);
-  gtk_widget_show (delete_event_button);
-  gtk_widget_show (event_infos_popup);
+  gtk_box_pack_start (GTK_BOX (vbox_popup), edit_event_button, TRUE, TRUE, 4);
+  gtk_box_pack_start (GTK_BOX (vbox_popup), delete_event_button, TRUE, TRUE, 4);
+  gtk_box_pack_start (GTK_BOX (vbox_popup), save_button, TRUE, TRUE, 4);
+  gtk_box_pack_start (GTK_BOX (vbox_popup), send_ir_button, TRUE, TRUE, 4);
+  gtk_box_pack_start (GTK_BOX (vbox_popup), send_bt_button, TRUE, TRUE, 4);
+  gtk_widget_show_all (vbox_popup);
   
 
   gtk_widget_add_events (GTK_WIDGET (popup),
 			  	GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
   
-  			
   
   g_signal_connect (G_OBJECT (popup), "button-press-event",
 		                   G_CALLBACK (destroy_popup), NULL);
@@ -669,7 +680,15 @@ day_view (void)
   g_signal_connect (G_OBJECT (delete_event_button), "clicked",
 		  		   G_CALLBACK (delete_event_cb), NULL);
 
+  g_signal_connect (G_OBJECT (save_button), "clicked",
+		  		   G_CALLBACK (save_cb), NULL);
 	
+  g_signal_connect (G_OBJECT (send_ir_button), "clicked",
+		  		   G_CALLBACK (send_ir_cb), NULL);
+                   
+  g_signal_connect (G_OBJECT (send_ir_button), "clicked",
+		  		   G_CALLBACK (send_bt_cb), NULL);
+                   
   gtk_window_set_decorated (GTK_WINDOW (popup) , TRUE);
   gtk_window_set_resizable (GTK_WINDOW (popup), FALSE);
   gtk_window_set_modal ( GTK_WINDOW (popup), TRUE);

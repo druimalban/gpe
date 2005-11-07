@@ -1,3 +1,12 @@
+2005-11-07  Florian Boor <florian.boor@kernelconcepts.de>
+
+    * export-vcal.*: New files implementing event data export. Derived from
+                     gpe-contacts.
+    * configure.ac: Add parameter to switch DBus usage like in gpe-contacts.
+    * main.c: Initialize export stuff.
+    * day_view.c: Start to implement improved popup supporting data export.
+    * event.h: Obviously unused -> removed.
+
 2005-11-05  Florian Boor <florian.boor@kernelconcepts.de>
 
 	* event-ui.c: Change some widget packing to clean up UI.
