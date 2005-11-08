@@ -1,3 +1,7 @@
+2005-11-08	Florian Boor <florian.boor@kernelconcepts.de>
+
+	* theme.c: Allow smaller fonts.
+
 2005-10-30	Florian Boor <florian.boor@kernelconcepts.de>
 
 	* Release Version 0.1.26

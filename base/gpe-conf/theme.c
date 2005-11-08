@@ -1470,7 +1470,7 @@ Theme_Build_Objects ()
   gtk_table_attach (GTK_TABLE (table), label, 1, 2, 1, 2,
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), gpe_boxspacing, 0);
-  self.spFS = gtk_spin_button_new_with_range(5,20,1);
+  self.spFS = gtk_spin_button_new_with_range(3,20,1);
   gtk_spin_button_set_value(GTK_SPIN_BUTTON(self.spFS),7.0);
   gtk_table_attach (GTK_TABLE (table), self.spFS, 1, 2, 2, 3,
 		    (GtkAttachOptions) (table_attach_left_col_x),
@@ -1530,7 +1530,7 @@ Theme_Build_Objects ()
   gtk_table_attach (GTK_TABLE (table), label, 1, 2, 5, 6,
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), gpe_boxspacing, 0);
-  self.spFSApp = gtk_spin_button_new_with_range(5,20,1);
+  self.spFSApp = gtk_spin_button_new_with_range(3,20,1);
   gtk_spin_button_set_value(GTK_SPIN_BUTTON(self.spFSApp),8.0);
   gtk_table_attach (GTK_TABLE (table), self.spFSApp, 1, 2, 6, 7,
 		    (GtkAttachOptions) (table_attach_left_col_x),
@@ -1565,7 +1565,7 @@ Theme_Build_Objects ()
   gtk_table_attach (GTK_TABLE (table), label, 1, 2, 13, 14,
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), gpe_boxspacing, 0);
-  self.spFSApp = gtk_spin_button_new_with_range(5,16,1);
+  self.spFSApp = gtk_spin_button_new_with_range(3,16,1);
   gtk_spin_button_set_value(GTK_SPIN_BUTTON(self.spFSApp),8.0);
   gtk_table_attach (GTK_TABLE (table), self.spFSApp, 1, 2, 14, 15,
 		    (GtkAttachOptions) (table_attach_left_col_x),
@@ -1615,7 +1615,7 @@ Theme_Build_Objects ()
   gtk_table_attach (GTK_TABLE (table), label, 0, 1, 3, 4,
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), gpe_boxspacing, 0);
-  self.spFSTerminal = gtk_spin_button_new_with_range(5, 16, 1);
+  self.spFSTerminal = gtk_spin_button_new_with_range(3, 16, 1);
   gtk_table_attach (GTK_TABLE (table), self.spFSTerminal, 1, 2, 3, 4,
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), gpe_boxspacing, 0);
