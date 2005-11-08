@@ -36,9 +36,6 @@ struct gpe_icon my_icons[] = {
   { NULL, NULL }
 };
 
-
-static GdkWindow *top_level_window;
-
 static GtkWidget *btn_con, *btn_coff;
 
 
@@ -156,8 +153,6 @@ confirm_dialog (gchar **text, gchar *action, gchar *action2)
   GtkWidget *action_label, *action2_label;
   GtkWidget *frame, *entry;
 
-  gtk_widget_realize (w);
-  gdk_window_set_transient_for (w->window, top_level_window);
   gtk_window_set_title (GTK_WINDOW (w), _("Time Tracker"));
 
   gtk_widget_show (hbox);
@@ -223,13 +218,14 @@ confirm_dialog (gchar **text, gchar *action, gchar *action2)
 
   if (destroyed)
     return FALSE;
-
+#if 0
   {
     GtkTextBuffer *buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (entry));
     GtkTextIter start, end;
     gtk_text_buffer_get_bounds (buf, &start, &end);
     *text = gtk_text_buffer_get_text (buf, &start, &end, FALSE);
   }
+#endif
 
   destroyed = TRUE;
   gtk_widget_destroy (w);
@@ -254,7 +250,6 @@ start_timing (GtkWidget *w, gpointer user_data)
 	  t->started = TRUE;
 	  mark_started (ct, node);
 	  set_active (0, 1);
-	  g_free (text);
 	}
     }
 }
@@ -275,7 +270,6 @@ stop_timing (GtkWidget *w, gpointer user_data)
 	  log_entry (STOP, time (NULL), t, text);
 	  t->started = FALSE;
 	  set_active (1, 0);
-	  g_free (text);
 	}
     }
 }
@@ -378,8 +372,8 @@ main(int argc, char *argv[])
   GtkWidget *toolbar;
   GtkWidget *pw;
   GtkWidget *tree;
-  GtkWidget *chatter;
   GdkPixbuf *p;
+  GtkToolItem *new, *delete, *clock_in, *clock_out, *show_journal;
 
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
@@ -397,61 +391,62 @@ main(int argc, char *argv[])
     exit (1);
 
   toolbar = gtk_toolbar_new ();
-  gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);
 
   tree = gtk_ctree_new (2, 0);
   g_signal_connect (G_OBJECT(tree), "tree-select-row",
 		    G_CALLBACK(tree_select_row), NULL);
 
-  chatter = gtk_label_new ("");
-  gtk_misc_set_alignment (GTK_MISC (chatter), 0.0, 0.5);
-
   vbox_top = gtk_vbox_new (FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox_top), toolbar, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox_top), tree, TRUE, TRUE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox_top), chatter, FALSE, FALSE, 0);
 
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-  gtk_widget_realize (window);
-  top_level_window = window->window;
 
-  pw = gtk_image_new_from_stock (GTK_STOCK_NEW, GTK_ICON_SIZE_SMALL_TOOLBAR);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("New task"), 
-			   _("New task"), _("New task"),
-			   pw, (GtkSignalFunc)ui_new_task, tree);
+  new = gtk_tool_button_new_from_stock (GTK_STOCK_NEW);
+  gtk_tool_button_set_label (GTK_TOOL_BUTTON (new),  _("New task"));
+  gtk_toolbar_insert (GTK_TOOLBAR (toolbar), new, -1);
+  g_signal_connect (GTK_OBJECT (new), "clicked",
+                        G_CALLBACK (ui_new_task), tree);
 
-  pw = gtk_image_new_from_stock (GTK_STOCK_DELETE, GTK_ICON_SIZE_SMALL_TOOLBAR);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Delete task"),
-			   _("Delete task"), _("Delete task"),
-			   pw, (GtkSignalFunc)ui_delete_task, tree);
+  delete = gtk_tool_button_new_from_stock (GTK_STOCK_DELETE);
+  gtk_tool_button_set_label (GTK_TOOL_BUTTON(delete), _("Delete task"));
+  gtk_toolbar_insert (GTK_TOOLBAR(toolbar), delete, -1);
+  g_signal_connect (GTK_OBJECT(delete), "clicked",
+                    G_CALLBACK (ui_delete_task), tree);
 
   p = gpe_find_icon ("clock");
   pw = gtk_image_new_from_pixbuf (p);
-  btn_con = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Clock on"),
-			   _("Clock on"), _("Clock on"),
-			   pw, (GtkSignalFunc)start_timing, tree);
-  
+  clock_in = gtk_tool_button_new (GTK_WIDGET(pw), _("Clock in"));
+  gtk_toolbar_insert (GTK_TOOLBAR(toolbar), clock_in, -1);
+  g_signal_connect (GTK_OBJECT(clock_in), "clicked",
+                    G_CALLBACK (start_timing), tree);
+
   p = gpe_find_icon ("stop_clock");
   pw = gtk_image_new_from_pixbuf (p);
-  btn_coff = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Clock off"),
-			   _("Clock off"), _("Clock off"),
-			   pw, (GtkSignalFunc)stop_timing, tree);
-
-  set_active (0, 0);
+  clock_out = gtk_tool_button_new (GTK_WIDGET(pw), _("Clock out"));
+  gtk_toolbar_insert (GTK_TOOLBAR(toolbar), clock_out, -1);
+  g_signal_connect (GTK_OBJECT(clock_out), "clicked",
+                    G_CALLBACK (stop_timing), tree);
 
   p = gpe_find_icon ("journal");
   pw = gtk_image_new_from_pixbuf (p);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Journal"),
-			   _("Show journal"), _("Show journal"),
-			   pw, (GtkSignalFunc)journal, tree);
-			   
+  show_journal = gtk_tool_button_new (GTK_WIDGET(pw), _("Show journal"));
+  gtk_toolbar_insert (GTK_TOOLBAR(toolbar), show_journal, -1);
+  g_signal_connect (GTK_OBJECT(show_journal), "clicked",
+                    G_CALLBACK (journal), tree);
+
+  /* btn_con and btn_coff should be replaced decently by the new clock_in and clock_out items */
+  btn_con = GTK_WIDGET(clock_in);
+  btn_coff = GTK_WIDGET(clock_out);
+  set_active (0, 0);
+
   gtk_widget_show (toolbar);
   gtk_widget_show (vbox_top);
   gtk_widget_show (tree);
-  gtk_widget_show (chatter);
 
   scan_logs (root);
   load_tasks (root, GTK_CTREE (tree), NULL);
+  gtk_clist_set_column_min_width (GTK_CLIST (tree), 0, 200);
   
   gtk_container_add (GTK_CONTAINER (window), vbox_top);
 
@@ -461,16 +456,12 @@ main(int argc, char *argv[])
   g_signal_connect_after (G_OBJECT (window), "delete-event", 
 		    G_CALLBACK (gtk_exit), NULL);
 			
-  gtk_widget_realize (window);
-
   gpe_set_window_icon (window, "gpe-timesheet");
 
   gtk_window_set_title (GTK_WINDOW (window), _("Time Tracker"));
 
-  gtk_widget_show (window);
+  gtk_widget_show_all (window);
 
-  gtk_clist_set_column_width (GTK_CLIST (tree), 0, 
-			      tree->allocation.width - 32);
 
   gtk_main ();
 

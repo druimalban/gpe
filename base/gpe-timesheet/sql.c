@@ -51,6 +51,7 @@ log_entry (action_t action, time_t time, struct task *task, char *info)
       free (err);
       return FALSE;
     }
+  free (err);
   return TRUE;
 }
 
