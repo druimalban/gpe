@@ -1,4 +1,10 @@
-2004-09-23  Florian Boor <florian.boor@kernelconcepts.de>
+2005-11-09 Philippe De Swert <philippedeswert@scarlet.be>
+	
+	* main.c: general code clean-up
+	* main.c: moved to GtkToolItem's for the buttons
+	* sql.c: fixed a minor memory leak
+
+2005-09-23  Florian Boor <florian.boor@kernelconcepts.de>
 
 	* main.c: Reverse dialog button order to comply Gnome HIG.
 
