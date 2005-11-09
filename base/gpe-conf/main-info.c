@@ -76,7 +76,7 @@ void initwindow()
 {
    self.w = mainw = gtk_window_new(GTK_WINDOW_TOPLEVEL);
    gtk_window_set_title(GTK_WINDOW(self.w), _("System Information"));
-   gtk_widget_set_usize(GTK_WIDGET(self.w), 240, 310);
+   gtk_window_set_default_size(GTK_WINDOW(self.w), 240, 310);
 
    g_signal_connect (G_OBJECT(self.w), "delete-event",
 	                 G_CALLBACK(gtk_main_quit), NULL);
