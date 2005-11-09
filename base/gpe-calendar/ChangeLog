@@ -1,3 +1,9 @@
+2005-11-10  Florian Boor <florian.boor@kernelconcepts.de>
+
+    * dav_view.c: Clean up context popup, check if export mechanisms are 
+                  available.
+    * main.c: Proposed fix for visible, useless selectors.
+
 2005-11-07  Florian Boor <florian.boor@kernelconcepts.de>
 
     * export-vcal.*: New files implementing event data export. Derived from

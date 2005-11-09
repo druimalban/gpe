@@ -715,7 +715,8 @@ main (int argc, char *argv[])
   gtk_widget_show (notebook);
 
 #ifdef IS_HILDON  
-  gtk_widget_show_all(app);
+  gtk_widget_show(app);
+  gtk_widget_show(main_appview);
 #endif
   gtk_widget_show (main_window);
   gtk_widget_show (vbox);

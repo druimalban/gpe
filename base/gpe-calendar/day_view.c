@@ -40,15 +40,12 @@ static GSList *day_events[NUM_HOURS], *untimed_events;
 GtkWidget *rem_area ;
 static GtkWidget *datesel, *calendar, *scrolled_window;
 
-/* static GtkStyle *light_style, *dark_style, *time_style; 
-static GdkColor light_color, dark_color, time_color;
-*/
 /* Day renderer */
 event_t sel_event;
-day_page_t page_app,page_rem;
+day_page_t page_app, page_rem;
 /* Day events are visualised as rectangles */
 
-GtkWidget *draw, *popup, *event_infos_popup; 
+GtkWidget *draw, *popup, *event_infos_popup, *send_bt_button, *send_ir_button; 
 
 struct day_render *dr=NULL, *rem_render=NULL;
 
@@ -156,7 +153,7 @@ button_press (GtkWidget *widget,
 	y = event->y;
 	gtk_widget_hide (popup);
 	
-	
+	/* search for an event rectangle */
 	if (dr_->event_rectangles != NULL)
 	  {
 		for (iter = dr_->event_rectangles; iter; iter = iter->next)
@@ -165,6 +162,7 @@ button_press (GtkWidget *widget,
 			e_r = iter->data;
 			if ((x >= e_r->x && x <= e_r->x + e_r->width) && (y >= e_r->y && y <= e_r->y + e_r->height) )
 			  {
+                /* found... so update and show popup */
 				gint width, height;
 				found = TRUE;
 				sel_event = e_r->event;
@@ -191,6 +189,11 @@ button_press (GtkWidget *widget,
 				                             dr_->page->height*.8);
 				gtk_window_get_size (GTK_WINDOW (popup), &width, &height);
 				gtk_label_set_text (GTK_LABEL (event_infos_popup), buffer);
+                
+                /* check for available export methods */
+                gtk_widget_set_sensitive(send_bt_button, export_bluetooth_available());
+                gtk_widget_set_sensitive(send_ir_button, export_irda_available());
+              
 				gtk_widget_show (popup);
 				
 				g_free (buffer);
@@ -627,7 +630,7 @@ day_view (void)
 {
   GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
   GtkWidget *hbox = gtk_hbox_new (FALSE, 0);
-  GtkWidget *edit_event_button, *delete_event_button, *send_bt_button, *send_ir_button, *save_button;
+  GtkWidget *edit_event_button, *delete_event_button, *save_button;
   GtkWidget *vbox_popup = gtk_vbox_new (FALSE, 0);
   gboolean landscape;
   gint 	win_width, win_height;
@@ -646,24 +649,30 @@ day_view (void)
 #else
   edit_event_button = gtk_button_new_from_stock(GTK_STOCK_EDIT);
   delete_event_button = gtk_button_new_from_stock(GTK_STOCK_DELETE);
-  send_ir_button = gtk_button_new_with_label(_("Send via infared"));
-  send_bt_button = gtk_button_new_with_label(_("Send via bluetooth"));
   save_button = gtk_button_new_from_stock(GTK_STOCK_SAVE);
 #endif
-
+  send_ir_button = gtk_button_new_with_label(_("Send via infared"));
+  send_bt_button = gtk_button_new_with_label(_("Send via bluetooth"));
+  
   gtk_button_set_relief (GTK_BUTTON (edit_event_button), GTK_RELIEF_NONE);
   gtk_button_set_relief (GTK_BUTTON (delete_event_button), GTK_RELIEF_NONE);
   gtk_button_set_relief (GTK_BUTTON (send_ir_button), GTK_RELIEF_NONE);
   gtk_button_set_relief (GTK_BUTTON (send_bt_button), GTK_RELIEF_NONE);
   gtk_button_set_relief (GTK_BUTTON (save_button), GTK_RELIEF_NONE);
+  gtk_button_set_alignment (GTK_BUTTON (edit_event_button), 0, 0.5);
+  gtk_button_set_alignment (GTK_BUTTON (delete_event_button), 0, 0.5);
+  gtk_button_set_alignment (GTK_BUTTON (send_ir_button), 0, 0.5);
+  gtk_button_set_alignment (GTK_BUTTON (send_bt_button), 0, 0.5);
+  gtk_button_set_alignment (GTK_BUTTON (save_button), 0, 0.5);
+
   gtk_container_add (GTK_CONTAINER (popup), vbox_popup);
   gtk_box_pack_start (GTK_BOX (vbox_popup), event_infos_popup, FALSE, FALSE, 0);
   
-  gtk_box_pack_start (GTK_BOX (vbox_popup), edit_event_button, TRUE, TRUE, 4);
-  gtk_box_pack_start (GTK_BOX (vbox_popup), delete_event_button, TRUE, TRUE, 4);
-  gtk_box_pack_start (GTK_BOX (vbox_popup), save_button, TRUE, TRUE, 4);
-  gtk_box_pack_start (GTK_BOX (vbox_popup), send_ir_button, TRUE, TRUE, 4);
-  gtk_box_pack_start (GTK_BOX (vbox_popup), send_bt_button, TRUE, TRUE, 4);
+  gtk_box_pack_start (GTK_BOX (vbox_popup), edit_event_button, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox_popup), delete_event_button, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox_popup), save_button, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox_popup), send_ir_button, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox_popup), send_bt_button, TRUE, TRUE, 0);
   gtk_widget_show_all (vbox_popup);
   
 
