@@ -327,7 +327,7 @@ update_bat_values(gpointer data)
 		fclose(file_apm);
 		file_apm = fopen(PROC_APM, "r");
 		if (fscanf(file_apm,
-			       "%*f %*f %*s 0x%x 0x%x 0x%x %i%% %i %4s",
+			       "%*s %*s %*s 0x%x 0x%x 0x%x %i%% %i %4s",
 		           &ac_connected,
 		           &status,
 		           &flags,

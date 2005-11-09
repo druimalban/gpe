@@ -1,5 +1,6 @@
 2005-11-09	Florian Boor <florian.boor@kernelconcepts.de>
 
+	* battery.c: Try to make apm info parsing independent from locale.
 	* main.c, main-info.c: Remove bad hardcoded window widget size.
 	
 2005-11-08	Florian Boor <florian.boor@kernelconcepts.de>
