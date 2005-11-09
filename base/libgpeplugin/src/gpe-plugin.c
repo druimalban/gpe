@@ -353,10 +353,16 @@ xml_widget_read_start_element ( GMarkupParseContext *context,
 void plugin_add_to_box(gpe_plugin_t plugin, gchar *name)
 {
 	GtkWidget *w = plugin->frontend->scrolled;
-
+	GtkWidget *parent ;
+	
 	widget_box_t wb = (widget_box_t)g_hash_table_lookup(widgets, name);
 	/* printf ("Adding %p to parent %p\n", w, wb->widget); */
-	gtk_box_pack_start (GTK_BOX (wb->widget), w, TRUE, TRUE, 0);
+	if (!wb){
+		parent = _box;
+	}else{
+		parent = wb->widget;
+	}
+	gtk_box_pack_start (GTK_BOX (parent), w, TRUE, TRUE, 0);
 	plugin_add (plugin);
 	
 }
