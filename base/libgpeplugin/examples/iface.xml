@@ -1,0 +1,6 @@
+<vbox name="Vbox1">
+  <hbox name="Hbox2">
+  </hbox>
+  <hbox name="Hbox3">
+  </hbox>
+</vbox>
