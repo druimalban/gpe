@@ -1,3 +1,8 @@
+
+2005-11-09   Florian Boor <florian@kernelconcepts.de>
+
+	* Apply patch by Koen Kooi to fix settings for some iPAQs.
+
 2005-10-16   Florian Boor <florian@kernelconcepts.de>
 
 	* Apply patch by Pawel Kolodziejski to set modmap on 
