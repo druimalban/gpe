@@ -1,0 +1,7 @@
+2005-11-09 Luca De Cicco <ldecicco@gmail.com>
+	* gpe-plugin.c, gpe-plugin.h: Adding support for XML interface
+	definition.
+
+
+2005-11-08 Luca De Cicco <ldecicco@gmail.com>
+	* Initial check in.

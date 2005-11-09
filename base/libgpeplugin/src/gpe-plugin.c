@@ -8,6 +8,7 @@
  */
 
 #include <gpe/gpe-plugin.h>
+#include <string.h>
 
 /* All plugins */
 GSList *loaded_plugin=NULL;
@@ -18,6 +19,12 @@ GtkWidget *_main_widget = NULL;
 /* All plugins are contained here */
 GtkWidget *_box=NULL ;
 
+GSList *parent_list=NULL;
+GHashTable *widgets;
+gchar *parent=NULL;
+gint state;
+
+gboolean using_xml_interface = FALSE;
 
 gpe_plugin_orientation _orientation = GPE_PLUGIN_VERTICAL;
 
@@ -61,7 +68,6 @@ plugin_load_from_file (gchar *filename)
 	p = plugin_new(plugin->name,plugin->widget_new(), 
 				plugin->render_header, plugin->render_body, plugin->render_tail);
 
-/*	printf("plugin name: %s\n",plugin->name); */
 	return p;
 }
 
@@ -96,8 +102,12 @@ plugin_init (GtkWidget *w, gpe_plugin_orientation o)
 	_box = ( o == GPE_PLUGIN_HORIZONTAL ? gtk_hbox_new (FALSE, 0) : gtk_vbox_new (FALSE, 0) );
 	
 	gtk_container_add (GTK_CONTAINER (_main_widget), _box);	
-	printf ("Adding configure-event signal to exernal_event handler\n");
 	g_signal_connect (G_OBJECT (_main_widget), "configure-event", G_CALLBACK (external_event), NULL);
+	
+	widgets = g_hash_table_new (g_str_hash, g_str_equal);
+	parent = g_malloc(64);
+
+	
 }
 
 
@@ -175,7 +185,9 @@ void plugin_render_all ()
 			if (plugin)
 			{
 				/* Adding the plugin to the box */
-				gtk_box_pack_start (GTK_BOX (_box), plugin->frontend->scrolled, TRUE, TRUE, 0);
+				if (!using_xml_interface)
+					gtk_box_pack_start (GTK_BOX (_box), plugin->frontend->scrolled, TRUE, TRUE, 0);
+				
 				gtk_widget_show (plugin->frontend->scrolled);
 				gtk_widget_ref (plugin->frontend->scrolled);
 				gtk_widget_show (plugin->frontend->widget);
@@ -191,6 +203,9 @@ void plugin_render_all ()
 		gtk_widget_show_all (_box);		
 	}
 }
+
+
+
 
 /* Switches two plugins in the container widget */
 void plugin_switch (gpe_plugin_t p1, gpe_plugin_t p2)
@@ -212,4 +227,175 @@ void plugin_switch (gpe_plugin_t p1, gpe_plugin_t p2)
 	p2_item->data = p1;
 	p1_item->data = temp;
 	
+}
+
+/* Add widget named "name" to hash list */
+static gboolean add_widget (GHashTable **hash, box_type type, const gchar *name)
+{
+	widget_box_t wb = (widget_box_t)g_hash_table_lookup (*hash, name);
+	
+	if (! wb)
+	{
+		GtkWidget *w;
+		GtkWidget *parent_w;
+		widget_box_t w_box ;
+		widget_box_t new_w_box = (widget_box_t)g_malloc(sizeof(struct widget_box));
+		
+		if( parent != NULL){
+			w_box = (widget_box_t)g_hash_table_lookup(*hash, parent);
+		}else{
+			w_box = NULL;
+		}
+		/* If this is the first widget it has no parent so we will use the 
+			root widget 
+		*/
+		if(w_box){	
+			parent_w = w_box->widget;
+		}else{
+			parent_w = _box;
+		}
+		
+		/* TODO spacing written in xml*/
+		if (type == HBOX)
+		{
+			w = gtk_hbox_new (TRUE, 0);
+		}else{
+			w = gtk_vbox_new (TRUE, 0);
+		}
+		/* 
+			printf ("Adding widget %s(%p) child of %s(%p)\n", name, w,parent,parent_w); 
+		*/
+		gtk_box_pack_end (GTK_BOX (parent_w), w, TRUE, TRUE, 2);
+		
+		new_w_box->widget = w;
+		new_w_box->type = type;
+		g_hash_table_insert (*hash,g_locale_from_utf8 (name, -1, NULL, NULL, NULL), new_w_box);
+		return TRUE;
+	}else{
+		g_warning ("Already defined widget name: %s\n",name);
+
+		return FALSE;
+	}
+}
+
+static void set_parent (const gchar *name)
+{
+	strcpy(parent,name);
+	parent_list = g_slist_append (parent_list, (gpointer)(g_strdup(name)));
+	
+}
+
+static void unset_parent ()
+{
+	GSList *last = g_slist_last (parent_list );
+	gchar *oldparent = (gchar *)last->data;
+	
+	
+	if (parent_list == NULL){
+		g_warning ("unset_parent called before set_parent was called");
+		return ;
+	}
+	
+	strcpy (parent, oldparent);
+	parent_list = g_slist_delete_link (parent_list , last);
+}
+
+
+
+ /* Called for close tags </foo> */
+void 
+xml_widget_read_end_element (GMarkupParseContext *context,
+							const gchar         *element_name,
+							gpointer             user_data,
+							GError             **error)
+{
+	unset_parent();
+}
+
+
+void 
+xml_widget_read_start_element ( GMarkupParseContext *context,
+		const gchar *e_n,
+		const gchar **attr_names,
+		const gchar **attr_values,
+		gpointer user_data,
+		GError **error)
+{
+ 
+	
+	if (!strcmp (e_n, "vbox"))
+	{
+		state = VBOX;
+	}else if (!strcmp (e_n, "hbox")){
+		state = HBOX;
+	
+	}else {
+		state = ERROR;
+	}
+	
+	if (state != ERROR)
+	{
+		if (!strcmp (attr_names[0], "name"))
+		{
+			gchar *name = g_strdup(attr_values[0]);
+			add_widget (&widgets, state, name);
+			set_parent (name);
+			g_free( name);
+		}
+		else
+		{
+			state = ERROR;
+		}
+	}
+	
+}
+
+void plugin_add_to_box(gpe_plugin_t plugin, gchar *name)
+{
+	GtkWidget *w = plugin->frontend->scrolled;
+
+	widget_box_t wb = (widget_box_t)g_hash_table_lookup(widgets, name);
+	/* printf ("Adding %p to parent %p\n", w, wb->widget); */
+	gtk_box_pack_start (GTK_BOX (wb->widget), w, TRUE, TRUE, 0);
+	plugin_add (plugin);
+	
+}
+
+gboolean plugin_parse_xml_interface(gchar *file)
+{
+	FILE *fp;
+	GMarkupParser parser = {xml_widget_read_start_element,
+				xml_widget_read_end_element,NULL, NULL, NULL};	
+
+	GMarkupParseContext *pc = g_markup_parse_context_new(&parser, 0, NULL, NULL);
+	
+	
+	fp = fopen (file, "r");
+	if (fp == NULL)
+	{
+		g_warning ("Can't open xml interface file");
+		g_markup_parse_context_free (pc);
+		return FALSE;
+	}
+	while (! feof (fp))
+	{
+		char buf[1024];
+		int n;
+		GError *err = NULL;
+		
+		n = fread (buf, 1, 1024, fp);
+		if (g_markup_parse_context_parse (pc, buf, n, &err) == FALSE)
+		{
+          g_warning (err->message);
+          g_error_free (err);
+          g_markup_parse_context_free (pc);
+          fclose (fp);
+          return FALSE;
+        }
+    }
+	g_markup_parse_context_free (pc);
+    fclose (fp);
+	using_xml_interface = TRUE;
+	//g_hash_table_foreach(widgets, print_entry, NULL);	
+	return TRUE;
 }

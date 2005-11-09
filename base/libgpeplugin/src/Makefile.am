@@ -14,6 +14,6 @@ AM_CFLAGS =\
 
 lib_LTLIBRARIES = libgpeplugin.la
 
-libgpeplugin_la_SOURCES = gpe-plugin.c
+libgpeplugin_la_SOURCES = gpe-plugin.c 
 
 

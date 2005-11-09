@@ -59,6 +59,19 @@ typedef struct gpe_plugin
 	
 } *gpe_plugin_t ;
 
+typedef enum  { 
+		VBOX=0,
+		HBOX=1,
+		ERROR
+} box_type;
+
+typedef struct widget_box {
+	GtkWidget *widget;
+	box_type type;
+} *widget_box_t ;
+
+
+
 void 
 plugin_add (gpe_plugin_t plugin);
 
@@ -76,6 +89,14 @@ plugin_remove (gpe_plugin_t plugin);
 void 
 plugin_render_all ();
 
+void 
+plugin_add_to_box(gpe_plugin_t plugin, gchar *name);
+
+gpe_plugin_t 
+plugin_load_from_file (gchar *filename);
+
+gboolean
+plugin_parse_xml_interface(gchar *file);
 
 
 
