@@ -1160,23 +1160,25 @@ build_edit_event_window (void)
   gtk_container_set_border_width (GTK_CONTAINER (vboxrecur), border);
 
   /* Button box */
-  /* using GtkHBox here since GtkHButtonBox packs the widgets in a way
-     that stop them fitting on a 240x320 screen.  */
-  buttonbox           = gtk_hbox_new (FALSE, 0);
-  gtk_container_set_border_width (GTK_CONTAINER (buttonbox), border / 2);
 
 #ifdef IS_HILDON
+  buttonbox           = gtk_hbutton_box_new ();
   buttonok            = gtk_button_new_with_label (_("Save"));
   buttoncancel        = gtk_button_new_with_label (_("Cancel"));
   buttondelete        = gtk_button_new_with_label (_("Delete"));
 
-  gtk_box_pack_start (GTK_BOX (buttonbox), buttonok, TRUE, FALSE, 
+  gtk_box_pack_start (GTK_BOX (buttonbox), buttonok, FALSE, TRUE, 
                       gpe_get_boxspacing());
-  gtk_box_pack_start (GTK_BOX (buttonbox), buttoncancel, TRUE, FALSE, 
+  gtk_box_pack_start (GTK_BOX (buttonbox), buttoncancel, FALSE, TRUE, 
                       gpe_get_boxspacing());
-  gtk_box_pack_start (GTK_BOX (buttonbox), buttondelete, TRUE, FALSE, 
+  gtk_box_pack_start (GTK_BOX (buttonbox), buttondelete, FALSE, TRUE, 
                       gpe_get_boxspacing());
 #else
+  /* using GtkHBox here since GtkHButtonBox packs the widgets in a way
+     that stop them fitting on a 240x320 screen.  */
+  buttonbox           = gtk_hbox_new (FALSE, 0);
+  gtk_container_set_border_width (GTK_CONTAINER (buttonbox), border / 2);
+  
   buttonok            = gtk_button_new_from_stock (GTK_STOCK_SAVE);
   buttoncancel        = gtk_button_new_from_stock (GTK_STOCK_CANCEL);
   buttondelete        = gtk_button_new_from_stock (GTK_STOCK_DELETE);
@@ -1497,7 +1499,7 @@ build_edit_event_window (void)
   s->yearlyspin_adj = yearlyspin_adj;
   s->categories_label = catlabel;
 
-  gtk_box_pack_start (GTK_BOX (vboxtop), buttonbox, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vboxtop), buttonbox, FALSE, TRUE, 0);
   gtk_container_add (GTK_CONTAINER (window), vboxtop);
 
   g_object_set_data_full (G_OBJECT (window), "edit_state", s, destroy_user_data);

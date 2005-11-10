@@ -577,10 +577,12 @@ main (int argc, char *argv[])
   gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);
   GTK_WIDGET_UNSET_FLAGS(toolbar, GTK_CAN_FOCUS);
 
-#ifndef IS_HILDON
-  gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, FALSE, 0);
-#else
+#ifdef IS_HILDON
   hildon_appview_set_toolbar(HILDON_APPVIEW(main_appview), GTK_TOOLBAR(toolbar));
+  gtk_widget_show_all(main_appview);
+  gtk_widget_show_all(app);
+#else
+  gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, FALSE, 0);
 #endif
   gtk_box_pack_start (GTK_BOX (vbox), notebook, TRUE, TRUE, 0);
 
@@ -705,7 +707,7 @@ main (int argc, char *argv[])
   g_signal_connect (G_OBJECT (main_window), "key_press_event", 
 		    G_CALLBACK (main_window_key_press_event), NULL);
 #ifndef IS_HILDON
-  /* in case of hildon we use defualt behavious */
+  /* in case of hildon we use default behavious */
   gtk_widget_add_events (GTK_WIDGET (main_window), 
                          GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK);
 						 

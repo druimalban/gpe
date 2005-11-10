@@ -1,5 +1,8 @@
 2005-11-10  Florian Boor <florian.boor@kernelconcepts.de>
 
+	* event_ui.c: Use buttonbox for Hildon UI makes buttonl look much better.
+	* day_view.c: Fix widget creation.
+	* main.c: Fix missing toolbar.
     * dav_view.c: Clean up context popup, check if export mechanisms are 
                   available.
     * main.c: Proposed fix for visible, useless selectors.

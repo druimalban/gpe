@@ -649,8 +649,8 @@ day_view (void)
 #else
   edit_event_button = gtk_button_new_from_stock(GTK_STOCK_EDIT);
   delete_event_button = gtk_button_new_from_stock(GTK_STOCK_DELETE);
-  save_button = gtk_button_new_from_stock(GTK_STOCK_SAVE);
 #endif
+  save_button = gtk_button_new_from_stock(GTK_STOCK_SAVE);
   send_ir_button = gtk_button_new_with_label(_("Send via infared"));
   send_bt_button = gtk_button_new_with_label(_("Send via bluetooth"));
   
