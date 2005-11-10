@@ -1,6 +1,7 @@
 2005-11-10  Florian Boor <florian.boor@kernelconcepts.de>
 
     * day_view.c: Hide unavailable export buttons.
+                  Hide popup before opening selector.
     * export-vcal.c: Make Hildon UI compatible.
 	* event_ui.c: Use buttonbox for Hildon UI makes buttonl look much better.
 	* day_view.c: Fix widget creation.

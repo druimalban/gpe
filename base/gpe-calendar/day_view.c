@@ -600,8 +600,8 @@ edit_event_cb (GtkWidget *widget, GtkWidget *a)
 static void
 save_cb (GtkWidget *widget, GtkWidget *a)
 {
-	vcal_do_save (sel_event);
 	gtk_widget_hide (popup);
+	vcal_do_save (sel_event);
 }
 
 static void
