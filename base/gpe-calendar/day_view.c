@@ -191,9 +191,16 @@ button_press (GtkWidget *widget,
 				gtk_label_set_text (GTK_LABEL (event_infos_popup), buffer);
                 
                 /* check for available export methods */
-                gtk_widget_set_sensitive(send_bt_button, export_bluetooth_available());
-                gtk_widget_set_sensitive(send_ir_button, export_irda_available());
-              
+                if (export_bluetooth_available())
+                  gtk_widget_show(send_bt_button);
+                else
+                  gtk_widget_hide(send_bt_button);
+                
+                if (export_irda_available())
+                  gtk_widget_show(send_ir_button);
+                else
+                  gtk_widget_hide(send_ir_button);
+                
 				gtk_widget_show (popup);
 				
 				g_free (buffer);
@@ -646,11 +653,12 @@ day_view (void)
 #ifdef IS_HILDON
   edit_event_button = gtk_button_new_with_label(_("Edit"));
   delete_event_button = gtk_button_new_with_label(_("Delete"));
+  save_button = gtk_button_new_with_label(_("Save"));
 #else
   edit_event_button = gtk_button_new_from_stock(GTK_STOCK_EDIT);
   delete_event_button = gtk_button_new_from_stock(GTK_STOCK_DELETE);
-#endif
   save_button = gtk_button_new_from_stock(GTK_STOCK_SAVE);
+#endif
   send_ir_button = gtk_button_new_with_label(_("Send via infared"));
   send_bt_button = gtk_button_new_with_label(_("Send via bluetooth"));
   

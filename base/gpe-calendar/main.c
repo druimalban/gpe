@@ -580,7 +580,6 @@ main (int argc, char *argv[])
 #ifdef IS_HILDON
   hildon_appview_set_toolbar(HILDON_APPVIEW(main_appview), GTK_TOOLBAR(toolbar));
   gtk_widget_show_all(main_appview);
-  gtk_widget_show_all(app);
 #else
   gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, FALSE, 0);
 #endif

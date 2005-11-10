@@ -36,6 +36,11 @@ static DBusConnection *connection;
 #define IRDA_SERVICE_NAME   "org.handhelds.gpe.irda"
 #endif /* USE_DBUS */
 
+#ifdef IS_HILDON /* Hildon includes */
+#include <hildon-fm/hildon-widgets/hildon-file-chooser-dialog.h>
+#endif
+
+
 #define _(x) gettext(x)
 
 static gchar *
@@ -133,45 +138,43 @@ save_to_file(event_t event, const gchar *filename)
 }
 
 
-static void
-select_file_done (GtkWidget *w, GtkWidget *filesel)
-{
-  event_t event;
-  const gchar *filename;
-
-  event = (event_t)g_object_get_data (G_OBJECT (filesel), "event");
-
-  filename = gtk_file_selection_get_filename (GTK_FILE_SELECTION (filesel));
-  
-  if (save_to_file(event, filename))
-    goto error;
-  
-  gtk_widget_destroy (filesel);
-  return;
-
- error:
-  gpe_perror_box (filename);
-  gtk_widget_destroy (filesel);
-}
-
 void
 vcal_do_save (event_t event)
 {
   GtkWidget *filesel;
+  const gchar *filename;
 
+#ifdef IS_HILDON	
+  filesel = hildon_file_chooser_dialog_new(NULL, GTK_FILE_CHOOSER_ACTION_SAVE);
+  gtk_file_chooser_set_current_name(GTK_FILE_CHOOSER(filesel), "GPE.vcal");
+#else
   filesel = gtk_file_selection_new (_("Save as..."));
-
   gtk_file_selection_set_filename (GTK_FILE_SELECTION (filesel), "GPE.vcal");
-
   g_signal_connect_swapped (G_OBJECT (GTK_FILE_SELECTION (filesel)->cancel_button), 
 			    "clicked", G_CALLBACK (gtk_widget_destroy), filesel);
   
   g_signal_connect (G_OBJECT (GTK_FILE_SELECTION (filesel)->ok_button), 
 		    "clicked", G_CALLBACK (select_file_done), filesel);
-
-  g_object_set_data (G_OBJECT (filesel), "event", (gpointer)event);
+#endif
   
   gtk_widget_show_all (filesel);
+  if (gtk_dialog_run(GTK_DIALOG(filesel)) == GTK_RESPONSE_OK)
+    {
+#ifdef IS_HILDON
+      filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (filesel));
+#else
+      filename = gtk_file_selection_get_filename (GTK_FILE_SELECTION (filesel));
+#endif
+      if (save_to_file(event, filename))
+        goto error;
+    }
+  
+  gtk_widget_destroy (filesel);
+  return;
+
+ error:
+  gtk_widget_destroy (filesel);
+  gpe_perror_box (filename);
 }
 
 gboolean
