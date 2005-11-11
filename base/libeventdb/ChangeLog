@@ -1,3 +1,7 @@
+2005-11-11  Florian Boor <florian@kernelconcepts.de>
+
+	* libeventdb.pc.in: Correct prefix variable.
+
 2005-08-24  Martin Felis <martin@silef.de>
 
 	* event-db.c, gpe/event-db.h: Added eventid tag.
