@@ -39,7 +39,8 @@ void load_all_plugins ()
 void 
 plugin_add (gpe_plugin_t plugin)
 {
-	loaded_plugin = g_slist_append (loaded_plugin, plugin);
+	if ( plugin != NULL)
+		loaded_plugin = g_slist_append (loaded_plugin, plugin);
 }
 
 /* Load a .so plugin  */
