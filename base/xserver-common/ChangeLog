@@ -1,3 +1,7 @@
+2005-11-12   Florian Boor <florian@kernelconcepts.de>
+
+	* X11/Xinit.d/12keymap, X11/h6300.xmodmap: Add support for iPAQ
+                                                   h6300.
 
 2005-11-09   Florian Boor <florian@kernelconcepts.de>
 
