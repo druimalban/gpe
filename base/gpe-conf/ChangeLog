@@ -1,3 +1,7 @@
+2005-11-14	Florian Boor <florian.boor@kernelconcepts.de>
+
+	* main.c: Change window size behaviour because of looking ugly on 480x640.
+
 2005-11-09	Florian Boor <florian.boor@kernelconcepts.de>
 
 	* battery.c: Try to make apm info parsing independent from locale.
