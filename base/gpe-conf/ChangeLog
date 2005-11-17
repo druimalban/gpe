@@ -1,3 +1,7 @@
+2005-11-17	Florian Boor <florian.boor@kernelconcepts.de>
+
+	* theme.c: Disable xsettings notification client before changing settings.
+
 2005-11-14	Florian Boor <florian.boor@kernelconcepts.de>
 
 	* main.c: Change window size behaviour because of looking ugly on 480x640.

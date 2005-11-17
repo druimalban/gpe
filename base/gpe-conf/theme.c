@@ -978,6 +978,8 @@ Theme_Save (void)
 	int fs;
 	GtkWidget* label;
 	
+	xsettings_client_destroy(client);
+	
     /* background settings */
 	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self.cDefault)))
 	{
