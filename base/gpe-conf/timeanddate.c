@@ -766,6 +766,10 @@ void Time_Save()
 	  tm.tm_sec=s;
 	  tm.tm_isdst = isdst;
 	  t = timegm(&tm);
+	  /* If dst causes us to be in a different date than gmt, we need to 
+	     subtract a day. */
+	  if (((tm.tm_hour * 60 + tm.tm_min) + (tz.utcofs_h * (-60) + (tz.utcofs_m * -1))) > 1440)
+        t -= 86400;
 	  
 	  /* set time */ 
 	  snprintf(par,99,"%ld",t);
