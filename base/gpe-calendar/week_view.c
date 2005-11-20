@@ -30,7 +30,11 @@
 
 static GtkWidget *week_view_draw;
 static struct tm today;
+#ifdef IS_HILDON
+static guint min_cell_height = 47;
+#else
 static guint min_cell_height = 38;
+#endif
 static GtkWidget *datesel, *calendar;
 
 static guint time_width, available_width;
@@ -113,13 +117,7 @@ draw_expose_event (GtkWidget *widget,
   black_gc = widget->style->black_gc;
   max_width = widget->allocation.width;
   max_height = widget->allocation.height;
-/*
-  gdk_gc_set_clip_rectangle (black_gc, &event->area);
-  gdk_gc_set_clip_rectangle (blue_gc, &event->area);
-  gdk_gc_set_clip_rectangle (white_gc, &event->area);
-  gdk_gc_set_clip_rectangle (yellow_gc, &event->area);
-  gdk_gc_set_clip_rectangle (blue_gc, &event->area);
-*/
+  
   for (day = 0; day < 7; day++)
     {
       GSList *iter;
@@ -130,17 +128,21 @@ draw_expose_event (GtkWidget *widget,
   if (wide_mode)
     {
       for (day = 0; day < 7; day++)
-	{
-	  PangoRectangle pr;
-
-	  pango_layout_set_width (pl, max_width * PANGO_SCALE);
-	  pango_layout_set_markup (pl, week_days[day].string, strlen (week_days[day].string));
-	  pango_layout_get_pixel_extents (pl, &pr, NULL);
-	  if (pr.width > day_label_width)
-	    day_label_width = pr.width;
-	}
+        {
+          PangoRectangle pr;
+    
+          pango_layout_set_width (pl, max_width * PANGO_SCALE);
+          pango_layout_set_markup (pl, week_days[day].string, strlen (week_days[day].string));
+          pango_layout_get_pixel_extents (pl, &pr, NULL);
+          if (pr.width > day_label_width)
+            day_label_width = pr.width;
+        }
     }
 
+  gdk_draw_line (drawable, black_gc, 0, 0, 0, max_height);
+  gdk_draw_line (drawable, black_gc, max_width, 0, max_width, max_height);
+  gdk_draw_line (drawable, black_gc, 0, 0, max_width, 0);
+  gdk_draw_line (drawable, black_gc, 0, max_height, max_height, max_height);
   for (day = 0; day < 7; day++)
     {
       guint x, y = week_days[day].y0;
@@ -148,16 +150,17 @@ draw_expose_event (GtkWidget *widget,
       PangoRectangle pr;
 
       if (draw_sep)
-        gdk_draw_line (drawable, black_gc, 0, y, max_width, y);
+        gdk_draw_line (drawable, black_gc, 1, y, max_width, y);
 
       gdk_draw_rectangle (drawable, week_days[day].events ? white_gc :
                           (day < 5 ? yellow_gc : salmon_gc), 
-			  TRUE, 0, y + 1, max_width, max_height);
+			  TRUE, 1, y + 1, max_width, max_height);
 
       pango_layout_set_width (pl, max_width * PANGO_SCALE);
       pango_layout_set_markup (pl, week_days[day].string, strlen (week_days[day].string));
       pango_layout_get_pixel_extents (pl, &pr, NULL);
-      x = wide_mode ? 4 : max_width - pr.width - 8;
+      x = 4;
+//      x = wide_mode ? 4 : max_width - pr.width - 8;
       gtk_paint_layout (widget->style,
 			widget->window,
 			GTK_WIDGET_STATE (widget),
@@ -169,7 +172,7 @@ draw_expose_event (GtkWidget *widget,
 			pl);
 
       if (!wide_mode)
-	y += pr.height + 2;
+        y += pr.height + 2;
 
       if (week_days[day].events)
       {
@@ -180,7 +183,7 @@ draw_expose_event (GtkWidget *widget,
 	      struct tm tm;
 	      event_t ev = iter->data;
 	      event_details_t evd = event_db_get_details (ev);
-	      int x = wide_mode ? day_label_width + 8 : 2;
+	      int x = wide_mode ? day_label_width + 8 : 8;
 	      
 	      if ((ev->flags & FLAG_UNTIMED) == 0)
 		{
@@ -321,7 +324,7 @@ week_view_update (void)
       week_days[day].is_active = week_days[day].is_today;
       strftime (buf, sizeof (buf), "<b>%a %d %B</b>", &tm);
       if (d->string)
-	g_free (d->string);
+        g_free (d->string);
       d->string = g_locale_to_utf8 (buf, -1, NULL, NULL, NULL);
 
       c->popup.day = tm.tm_mday;
@@ -582,7 +585,7 @@ week_view_button_press (GtkWidget *widget, GdkEventButton *event, gpointer d)
 	    {
 	      int i;
 	      for (i = 0; i < 7; i++)
-		week_days[i].is_active = FALSE;
+            week_days[i].is_active = FALSE;
 	      week_days[get_day_from_y (y)].is_active = TRUE;
 	      viewtime = time_from_day (c->popup.year, c->popup.month, c->popup.day);
 	      gtk_calendar_select_month (GTK_CALENDAR (calendar), c->popup.month, c->popup.year + 1900);
@@ -592,7 +595,7 @@ week_view_button_press (GtkWidget *widget, GdkEventButton *event, gpointer d)
 	  else if (event->button == 3)
 	    {
 	      if (pop_window) 
-		gtk_widget_destroy (pop_window);
+            gtk_widget_destroy (pop_window);
     
 	      if (c != c_old) 
 		{
@@ -667,9 +670,11 @@ week_view (void)
       GtkWidget *sep;
       sep = gtk_vseparator_new ();
 
-      gtk_box_pack_start (GTK_BOX (hbox), sep, FALSE, FALSE, 0);
-      gtk_box_pack_start (GTK_BOX (hbox), calendar, FALSE, FALSE, 0);
-
+      gtk_box_pack_start (GTK_BOX (hbox), sep, FALSE, TRUE, 0);
+      gtk_box_pack_start (GTK_BOX (hbox), calendar, FALSE, TRUE, 0);
+#ifdef IS_HILDON
+      gtk_widget_set_size_request(calendar, 380, -1);
+#endif
       gtk_widget_show (sep);
       gtk_widget_show (calendar);
     }

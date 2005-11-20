@@ -62,7 +62,7 @@ gboolean force_today = FALSE;
 gboolean just_new = FALSE;
 
 GtkWidget *main_window, *pop_window;
-GtkWidget *notebook;
+GtkWidget *notebook, *toolbar;
 extern GtkWidget* day_list;
 
 struct gpe_icon my_icons[] = {
@@ -268,10 +268,20 @@ static void
 gpe_cal_fullscreen_toggle (void)
 {
   static int fullscreen_toggle = TRUE;
-  hildon_appview_set_fullscreen(main_window, fullscreen_toggle);
+  hildon_appview_set_fullscreen(HILDON_APPVIEW(main_window), fullscreen_toggle);
   fullscreen_toggle = !fullscreen_toggle;
 }
+
+static void
+toggle_toolbar(GtkCheckMenuItem *menuitem, gpointer user_data)
+{
+  if (gtk_check_menu_item_get_active(menuitem))
+    gtk_widget_show(toolbar);
+  else
+    gtk_widget_hide(toolbar);
+}
 #endif /*IS_HILDON*/
+
 static int 
 import_one_file(gchar *filename)
 {
@@ -412,8 +422,8 @@ static void
 create_app_menu(HildonAppView *appview)
 {
   GtkMenu *main_menu;
-  GtkWidget *item_appointment, *item_today, *item_day, *item_week,
-    *item_month, *item_import, *item_toolbar;
+  GtkWidget *item_appointment, *item_today, *item_import, *item_toolbar, 
+            *item_sep, *item_close;
 
   main_menu = hildon_appview_get_menu(appview);
 
@@ -429,14 +439,26 @@ create_app_menu(HildonAppView *appview)
   g_signal_connect(G_OBJECT(item_import), "activate", G_CALLBACK(on_import_vcal), NULL);
   gtk_menu_append(main_menu, item_import);
 
-  gtk_widget_show_all(main_menu);
+  item_toolbar = gtk_check_menu_item_new_with_label(_("Show toolbar"));
+  gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item_toolbar), TRUE);
+  g_signal_connect(G_OBJECT(item_toolbar), "activate", G_CALLBACK(toggle_toolbar), NULL);
+  gtk_menu_append(main_menu, item_toolbar);
+    
+  item_sep = gtk_separator_menu_item_new();
+  gtk_menu_append(main_menu, item_sep);
+  
+  item_close = gtk_menu_item_new_with_label(_("Quit"));
+  g_signal_connect(G_OBJECT(item_close), "activate", G_CALLBACK(gpe_cal_exit), NULL);
+  gtk_menu_append(main_menu, item_close);
+
+  gtk_widget_show_all(GTK_WIDGET(main_menu));
 }
 #endif
 	 
 int
 main (int argc, char *argv[])
 {
-  GtkWidget *vbox, *toolbar;
+  GtkWidget *vbox;
   GdkPixbuf *p;
   GtkWidget *pw;
   GtkToolItem *item;
@@ -688,7 +710,7 @@ main (int argc, char *argv[])
 #endif
 
 #ifdef IS_HILDON
-  create_app_menu(main_appview);
+  create_app_menu(HILDON_APPVIEW(main_appview));
 #endif
 	 
   gtk_notebook_set_show_tabs (GTK_NOTEBOOK (notebook), FALSE);
