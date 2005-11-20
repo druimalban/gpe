@@ -1,3 +1,9 @@
+2005-11-21  Florian Boor  <florian.boor@kernelconcepts.de>
+
+	* todo-ui.c: Use a buttonbox in hildon env to work around ugly themed button
+	             sizes.
+      list-ui.c: Fix runtime warning.
+
 2005-10-19  Florian Boor  <florian.boor@kernelconcepts.de>
 	* hildon/*.in: Rename service and service file.
 	* debian/*: One more update of locations and dependencies.

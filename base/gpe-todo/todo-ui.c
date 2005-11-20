@@ -257,11 +257,13 @@ edit_item (struct todo_item *item, gint initial_category, GtkWindow *parent)
   GtkWidget *table = gtk_table_new(6, 5, FALSE);
   GtkWidget *top_vbox = gtk_vbox_new (FALSE, 0);
   GtkWidget *text = gtk_text_view_new ();
-  GtkWidget *buttonbox = gtk_hbox_new (FALSE, 0);
   GtkWidget *buttonok;
   GtkWidget *buttoncancel;
 #ifdef IS_HILDON    
   GtkWidget *buttoncategories;
+  GtkWidget *buttonbox = gtk_hbutton_box_new();
+#else
+  GtkWidget *buttonbox = gtk_hbox_new (FALSE, 0);
 #endif    
   GtkWidget *buttondelete;
   GtkWidget *label_priority = gtk_label_new (_("Priority:"));

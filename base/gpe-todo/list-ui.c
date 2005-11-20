@@ -231,7 +231,8 @@ open_editing_window (GtkTreePath *path)
 
   gtk_tree_model_get (GTK_TREE_MODEL (list_store), &iter, COL_DATA, &i, -1);
 
-  gtk_widget_show_all (edit_item (i, -1, GTK_WINDOW(window)));
+  gtk_widget_show_all (edit_item (i, -1, 
+                                  GTK_WINDOW(gtk_widget_get_toplevel(window))));
 }
 
 void
