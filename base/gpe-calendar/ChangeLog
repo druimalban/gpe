@@ -1,5 +1,6 @@
 2005-11-21  Florian Boor <florian.boor@kernelconcepts.de>
 
+    * main.c: Add category editing button and menu item.
     * week_view.c, month_view.c, main.c: Several improvements and fixes in 
                                          display code. Improve hildon menu.
 

@@ -36,6 +36,7 @@
 #include <hildon-fm/hildon-widgets/hildon-file-chooser-dialog.h>
 #include <libosso.h>
 #define APPLICATION_DBUS_SERVICE "gpe_calendar"
+#define ICON_PATH "/usr/share/icons/hicolor/26x26/hildon"
 #endif
 
 #include "event-ui.h"
@@ -280,6 +281,18 @@ toggle_toolbar(GtkCheckMenuItem *menuitem, gpointer user_data)
   else
     gtk_widget_hide(toolbar);
 }
+
+static void
+edit_categories (GtkWidget *w)
+{
+  GtkWidget *dialog;
+
+  dialog = gpe_pim_categories_dialog (NULL, FALSE, NULL, NULL);
+  gtk_window_set_transient_for(GTK_WINDOW(dialog), 
+                               GTK_WINDOW(gtk_widget_get_toplevel(w)));
+  gtk_window_set_modal(GTK_WINDOW(dialog), TRUE);
+}
+
 #endif /*IS_HILDON*/
 
 static int 
@@ -423,7 +436,7 @@ create_app_menu(HildonAppView *appview)
 {
   GtkMenu *main_menu;
   GtkWidget *item_appointment, *item_today, *item_import, *item_toolbar, 
-            *item_sep, *item_close;
+            *item_sep, *item_close, *item_cat;
 
   main_menu = hildon_appview_get_menu(appview);
 
@@ -444,6 +457,10 @@ create_app_menu(HildonAppView *appview)
   g_signal_connect(G_OBJECT(item_toolbar), "activate", G_CALLBACK(toggle_toolbar), NULL);
   gtk_menu_append(main_menu, item_toolbar);
     
+  item_cat = gtk_menu_item_new_with_label(_("Edit catgories"));
+  g_signal_connect(G_OBJECT(item_cat), "activate", G_CALLBACK(edit_categories), NULL);
+  gtk_menu_append(main_menu, item_cat);
+  
   item_sep = gtk_separator_menu_item_new();
   gtk_menu_append(main_menu, item_sep);
   
@@ -694,7 +711,13 @@ main (int argc, char *argv[])
                        _("Open file to import an event from it."), NULL);
   GTK_WIDGET_UNSET_FLAGS(item, GTK_CAN_FOCUS);
 
-#ifndef IS_HILDON
+#ifdef IS_HILDON
+  pw = gtk_image_new_from_file(ICON_PATH "/qgn_list_gene_bullets.png");
+  item = gtk_tool_button_new(pw, _("Categories"));
+  g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK (edit_categories), 
+                       NULL);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
+#else
   item = gtk_separator_tool_item_new();
   gtk_separator_tool_item_set_draw(GTK_SEPARATOR_TOOL_ITEM(item), FALSE);
   gtk_tool_item_set_expand(item, TRUE);
@@ -706,7 +729,6 @@ main (int argc, char *argv[])
   gtk_tooltips_set_tip(tooltips, GTK_WIDGET(item), 
                        _("Tap here to exit the program"), NULL);
   GTK_WIDGET_UNSET_FLAGS(item, GTK_CAN_FOCUS);
-  
 #endif
 
 #ifdef IS_HILDON
