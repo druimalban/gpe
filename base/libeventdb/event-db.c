@@ -307,20 +307,20 @@ load_details_callback (void *arg, int argc, char *argv[], char **names)
     {
       event_details_t evd = arg;
       if (!strcasecmp (argv[0], "summary") && !evd->summary)
-	evd->summary = g_strdup (argv[1]);
+        evd->summary = g_strdup (argv[1]);
       else if (!strcasecmp (argv[0], "description") && !evd->description)
-	evd->description = g_strdup (argv[1]);
+        evd->description = g_strdup (argv[1]);
       else if (!strcasecmp (argv[0], "modified"))
-	{
-	  if (strchr (argv[1], '-'))
-	    parse_date (argv[1], &evd->modified, NULL);
-	  else
-	    evd->modified = strtoul (argv[1], NULL, 10);
-	}
+        {
+          if (strchr (argv[1], '-'))
+            parse_date (argv[1], &evd->modified, NULL);
+          else
+            evd->modified = strtoul (argv[1], NULL, 10);
+        }
       else if (!strcasecmp (argv[0], "sequence"))
-	evd->sequence = atoi (argv[1]);
+        evd->sequence = atoi (argv[1]);
       else if (!strcasecmp (argv[0], "category"))
-	evd->categories = g_slist_prepend (evd->categories, (gpointer)atoi (argv[1]));
+        evd->categories = g_slist_prepend (evd->categories, (gpointer)atoi (argv[1]));
     }
   return 0;
 }
@@ -799,7 +799,7 @@ event_db_write (event_t ev, char **err)
 	  || insert_values (sqliteh, ev->uid, "rcount", "%d", r->count)
 	  || insert_values (sqliteh, ev->uid, "rincrement", "%d", r->increment)
 	  || insert_values (sqliteh, ev->uid, "rdaymask", "%d", r->daymask))
-	goto exit;
+        goto exit;
 
       if (ev->recur->exceptions)
       {
@@ -810,14 +810,14 @@ event_db_write (event_t ev, char **err)
       }
       	      
       if (r->end != 0)
-	{
-	  gmtime_r (&r->end, &tm);
-	  strftime (buf_end, sizeof (buf_end), 
-		    (ev->flags & FLAG_UNTIMED) ? "%Y-%m-%d" : "%Y-%m-%d %H:%M",
-		    &tm); 
-	  if (insert_values (sqliteh, ev->uid, "rend", "%q", buf_end)) 
-	    goto exit;
-	}
+        {
+          gmtime_r (&r->end, &tm);
+          strftime (buf_end, sizeof (buf_end), 
+                (ev->flags & FLAG_UNTIMED) ? "%Y-%m-%d" : "%Y-%m-%d %H:%M",
+                &tm); 
+          if (insert_values (sqliteh, ev->uid, "rend", "%q", buf_end)) 
+            goto exit;
+        }
     }
 
   if (ev->flags & FLAG_ALARM)
