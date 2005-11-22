@@ -5,7 +5,7 @@ Version: VERSION
 Source: SOURCE
 Architecture: arm
 Maintainer: Phil Blundell <pb@debian.org>
-Depends: gpe-icons (>= 0.14), libgpewidget1 (>= 0.08), atd, libxsettings-client0, libeventdb0 (>= 0.06), libdisplaymigration0, libschedule0, libgpepimc0, gpe-calendar-locale*
-Description: GPE calendar
+Depends: gpe-icons (>= 0.14), libgpewidget1 (>= 0.08), atd, libxsettings-client0, libeventdb0 (>= 0.06), libschedule0, libgpepimc0, libgpevtype (>= 0.13), gpe-calendar-locale*
+Description: GPE calendar application
 Provides: gpe-calendar
 Replaces: gpe-calendar
