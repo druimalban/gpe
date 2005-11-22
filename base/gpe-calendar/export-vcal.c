@@ -152,9 +152,6 @@ vcal_do_save (event_t event)
   gtk_file_selection_set_filename (GTK_FILE_SELECTION (filesel), "GPE.vcal");
   g_signal_connect_swapped (G_OBJECT (GTK_FILE_SELECTION (filesel)->cancel_button), 
 			    "clicked", G_CALLBACK (gtk_widget_destroy), filesel);
-  
-  g_signal_connect (G_OBJECT (GTK_FILE_SELECTION (filesel)->ok_button), 
-		    "clicked", G_CALLBACK (select_file_done), filesel);
 #endif
   
   gtk_widget_show_all (filesel);

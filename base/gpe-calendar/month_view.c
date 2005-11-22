@@ -235,7 +235,10 @@ draw_expose_event (GtkWidget *widget,
   darea = GTK_DRAWING_AREA (widget);
   drawable = widget->window;
 
-  width = widget->allocation.width - 6;
+  width = widget->allocation.width;
+#ifdef IS_HILDON
+  width -= 6; /* Hildon seems to eat up some pixels itself :-( */
+#endif
   height = widget->allocation.height;
   gdk_window_clear_area (drawable, 
 			 event->area.x, event->area.y,
@@ -504,12 +507,15 @@ update_hook_callback()
 }
 
 static void
-resize_table (GtkWidget *widget,
-	      gpointer d)
+resize_table (GtkWidget *widget, gpointer d)
 {
   static guint old_width, old_height;
-  guint width = widget->allocation.width - 1,
-    height = widget->allocation.height;
+  guint width = widget->allocation.width, 
+        height = widget->allocation.height;
+#ifdef IS_HILDON
+  width -= 1; /* Hildon seems to eat up some pixels itself :-( */
+#endif
+    
   if (width != old_width || height != old_height)
     {
       old_width = width;

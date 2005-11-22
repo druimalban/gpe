@@ -1,3 +1,12 @@
+2005-11-22  Florian Boor <florian.boor@kernelconcepts.de>
+
+    * configure.ac: Push version number...
+    * month_view.c: Add some #ifdefs because sizing is a little bit different
+                    in the Hildon environment.
+    * export-vcal.c: Remove unused line breaking build.
+    * day-view.c, day-render.c: Make gap selectable again to have a reminder 
+                                area without gap. Some more minor changes.
+
 2005-11-21  Florian Boor <florian.boor@kernelconcepts.de>
 
     * main.c: Add category editing button and menu item.

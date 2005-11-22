@@ -360,8 +360,8 @@ reminder_view_init ()
 		day_render_delete(rem_render);
 	}
 	cream_gc = pen_new(rem_area, 65535, 64005, 51100);
-	rem_render = day_render_new (rem_area,page_rem,cream_gc, black_gc, viewtime,
-					5, 5, 1, rem_list);
+	rem_render = day_render_new (rem_area, page_rem, cream_gc, black_gc, 
+                                 viewtime, 5, 0, 1, rem_list);
 		
 	
 	return TRUE;
@@ -454,7 +454,7 @@ day_view_init ()
 	/* Don't want to infinge some patents here */
 	post_him_yellow = pen_new(draw, 63222, 59110, 33667);
 	dr = day_render_new(draw, page_app, post_him_yellow, black_gc,viewtime,
-  					5, 5, NUM_HOURS, ev_list);
+  					5, 4, NUM_HOURS, ev_list);
 	
 	return TRUE;
 }

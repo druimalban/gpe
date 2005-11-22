@@ -155,7 +155,7 @@ void
 show_event (const struct day_render *dr, const ev_rec_t event_rectangle,
 	    GdkGC * gc)
 {
-  guint length, gap;
+  guint length;
 
   event_details_t evd;
   char buf[250], *buffer;
@@ -172,18 +172,17 @@ show_event (const struct day_render *dr, const ev_rec_t event_rectangle,
   buffer = (char *) g_malloc (sizeof (char) * 260);
   snprintf (buf, sizeof (buf), "<span size='small'>%s</span>", evd->summary);
   buffer = g_locale_to_utf8 (buf, -1, NULL, NULL, NULL);
-  gap = 0.01 * dr->page->width;
 
-  length = event_rectangle->height - 2;
+  length = event_rectangle->height - 1;
   /* Rectangle used to write appointment summary */
 
-  gr.width = event_rectangle->width - gap - 2;
+  gr.width = event_rectangle->width - dr->gap - 2;
   gr.height = length - 1;
-  gr.x = event_rectangle->x + gap + 2;
+  gr.x = event_rectangle->x + dr->gap + 2;
   gr.y = event_rectangle->y + 1;
-  offsetx = event_rectangle->x + gap;
+  offsetx = event_rectangle->x + dr->gap;
 
-  width = event_rectangle->width - gap - 1;
+  width = event_rectangle->width - dr->gap - 1;
   height = length;
 
   pango_layout_set_markup (pl, buffer, strlen (buffer));
