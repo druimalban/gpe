@@ -1,3 +1,8 @@
+2005-11-22  Florian Boor  <florian@kernelconcepts.de>
+
+	* Release Version 0.13
+	* familiar/control: Change dependencies to newer libmimedir release.
+
 2005-11-06  Florian Boor  <florian@kernelconcepts.de>
 
     * vevent.c: Implement basic export of recurring events.
