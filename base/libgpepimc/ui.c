@@ -182,50 +182,19 @@ delete_category (GtkWidget *w, GtkWidget *tree_view)
   g_slist_free (refs);
 }
 
-static gboolean
-categories_button_press_event (GtkWidget *widget, GdkEventButton *b, GtkListStore *list_store)
+static void
+category_toggled(GtkCellRendererToggle *renderer, gchar *path, gpointer data)
 {
-  gboolean ret = FALSE;
+  GtkTreePath *tpath = gtk_tree_path_new_from_string(path);
+  GtkTreeIter iter;
+  GtkListStore *list_store = data;
+  gboolean active;
 
-  if (b->button == 1)
-    {
-      gint x, y;
-      GtkTreeViewColumn *col;
-      GtkTreePath *path;
-  
-      x = b->x;
-      y = b->y;
-      
-      if (gtk_tree_view_get_path_at_pos (GTK_TREE_VIEW (widget),
-					 x, y,
-					 &path, &col,
-					 NULL, NULL))
-	{
-	  GtkTreeViewColumn *toggle_col;
-	  GtkTreeIter iter;
-
-	  toggle_col = g_object_get_data (G_OBJECT (widget), "toggle-col");
-
-	  if (col == toggle_col)
-	    {
-	      gboolean active;
-
-	      gtk_tree_model_get_iter (GTK_TREE_MODEL (list_store), &iter, path);
-
-	      gtk_tree_model_get (GTK_TREE_MODEL (list_store), &iter, 0, &active, -1);
-
-	      active = !active;
-
-	      gtk_list_store_set (GTK_LIST_STORE (list_store), &iter, 0, active, -1);
-	      
-	      ret = TRUE;
-	    }
-
-	  gtk_tree_path_free (path);
-	}
-    }
-
-  return ret;
+  gtk_tree_model_get_iter (GTK_TREE_MODEL (list_store), &iter, tpath);
+  gtk_tree_model_get (GTK_TREE_MODEL (list_store), &iter, 0, &active, -1);
+  active = !active;
+  gtk_list_store_set (GTK_LIST_STORE (list_store), &iter, 0, active, -1);
+  gtk_tree_path_free(tpath);
 }
 
 static void
@@ -269,29 +238,28 @@ categories_dialog_ok (GtkWidget *w, gpointer p)
 	      struct gpe_pim_category *c = NULL;
 
 	      for (i = old_categories; i; i = i->next)
-		{
-		  c = i->data;
-		  
-		  if (c->id == id)
-		    break;
-		}
+            {
+              c = i->data;
+              
+              if (c->id == id)
+                break;
+            }
 
 	      if (i)
-		{
-		  old_categories = g_slist_remove_link (old_categories, i);
-		  g_slist_free (i);
-		  
-		  if (strcmp (c->name, title))
-		    {
-		      g_free ((void *)c->name);
-		      c->name = g_strdup (title);
-		      gpe_pim_category_rename (id, title);
-		    }
-		}
+            {
+              old_categories = g_slist_remove_link (old_categories, i);
+              g_slist_free (i);
+              
+              if (strcmp (c->name, title))
+                {
+                  g_free ((void *)c->name);
+                  c->name = g_strdup (title);
+                  gpe_pim_category_rename (id, title);
+                }
+            }
 	      else
-		selected = FALSE;		/* category was deleted by second party */
+            selected = FALSE;		/* category was deleted by second party */
 	    }
-
 	  if (selected)
 	    selected_categories = g_slist_prepend (selected_categories, (gpointer)id);
 
@@ -312,7 +280,6 @@ categories_dialog_ok (GtkWidget *w, gpointer p)
 
   if (callback)
     (*callback) (window, selected_categories, data);
-
   g_slist_free (selected_categories);
 
   gtk_widget_destroy (window);
@@ -363,15 +330,18 @@ gpe_pim_categories_dialog (GSList *selected_categories, GCallback callback, gpoi
   GtkCellRenderer *renderer;
   GtkTreeViewColumn *col;
   GSList *list;
+  GtkTreeSelection *sel;
+
 #ifdef IS_HILDON
   GtkWidget *newbutton, *deletebutton;
 #endif
-    
   window = gtk_dialog_new ();
 
   list_store = gtk_list_store_new (3, G_TYPE_BOOLEAN, G_TYPE_STRING, G_TYPE_INT);
 
   tree_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (list_store));
+  sel = gtk_tree_view_get_selection (GTK_TREE_VIEW (tree_view));
+  gtk_tree_selection_set_mode(sel, GTK_SELECTION_MULTIPLE);
 
 #ifndef IS_HILDON
     toolbar = gtk_toolbar_new ();
@@ -389,7 +359,7 @@ gpe_pim_categories_dialog (GSList *selected_categories, GCallback callback, gpoi
                   G_CALLBACK (delete_category), tree_view, -1);
     
     gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox),
-                toolbar, FALSE, FALSE, 0);
+                toolbar, FALSE, FALSE, 0);                
 #endif      
   sw = gtk_scrolled_window_new (NULL, NULL);
 
@@ -400,7 +370,6 @@ gpe_pim_categories_dialog (GSList *selected_categories, GCallback callback, gpoi
       GtkTreeIter titer;
 
       gtk_list_store_append (list_store, &titer);
-
       gtk_list_store_set (list_store, &titer, 
 			  0, g_slist_find (selected_categories, (gpointer)c->id) ? TRUE : FALSE,
 			  1, c->name, 
@@ -422,6 +391,8 @@ gpe_pim_categories_dialog (GSList *selected_categories, GCallback callback, gpoi
       gtk_tree_view_insert_column (GTK_TREE_VIEW (tree_view), col, -1);
     
       g_object_set_data (G_OBJECT (tree_view), "toggle-col", col);
+      g_signal_connect(G_OBJECT(renderer), "toggled", category_toggled, 
+                       (gpointer) list_store);
     }
   renderer = gtk_cell_renderer_text_new ();
   g_object_set (G_OBJECT (renderer), "editable", TRUE, NULL);
@@ -440,9 +411,6 @@ gpe_pim_categories_dialog (GSList *selected_categories, GCallback callback, gpoi
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw),
 				  GTK_POLICY_NEVER,
 				  GTK_POLICY_AUTOMATIC);
-
-  g_signal_connect (G_OBJECT (tree_view), "button_press_event", 
-		    G_CALLBACK (categories_button_press_event), list_store);
 
   gtk_container_add (GTK_CONTAINER (sw), tree_view);
 
@@ -475,6 +443,8 @@ gpe_pim_categories_dialog (GSList *selected_categories, GCallback callback, gpoi
     g_signal_connect (G_OBJECT (cancelbutton), "clicked", G_CALLBACK (categories_dialog_cancel), window);
 
 #ifdef IS_HILDON
+gtk_tree_view_set_hover_selection(GTK_TREE_VIEW(tree_view), FALSE);
+    
 if (select)
   {
     gtk_window_set_title (GTK_WINDOW (window), _("Select categories"));

@@ -1,3 +1,7 @@
+2005-11-23  Florian Boor  <florian@kernelconcepts.de>
+
+    * ui.c: Rewrite event handler to use toggle event from cell renderer.
+
 2005-07-25  Florian Boor  <florian@kernelconcepts.de>
 
 	* debian/*: Some minor dependency fix for maemo stuff.

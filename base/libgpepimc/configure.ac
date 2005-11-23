@@ -30,7 +30,6 @@ DEP_MODULES="gtk+-2.0 >= 2.2 glib-2.0 >= 2.2 sqlite libgpewidget"
 
 PKG_CHECK_MODULES(PIMC, $DEP_MODULES)
 
-
 ENABLE_HILDON=false
 
 AC_ARG_ENABLE(hildon,
@@ -47,12 +46,10 @@ if test x$ENABLE_HILDON = xtrue; then
     PIMC_CFLAGS="$PIMC_CFLAGS -DIS_HILDON"
 fi
 
-AC_SUBST(ENABLE_HILDON)
-AM_CONDITIONAL(HILDON, test x$ENABLE_HILDON = xtrue)
-
-#gtk-doc for documentation
 GTK_DOC_CHECK(1.2)
 
+AC_SUBST(ENABLE_HILDON)
+AM_CONDITIONAL(HILDON, test x$ENABLE_HILDON = xtrue)
 
 AC_CONFIG_FILES([Makefile libgpepimc.pc po/Makefile.in doc/Makefile])
 AC_OUTPUT
