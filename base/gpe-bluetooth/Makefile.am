@@ -5,6 +5,9 @@ INCLUDES = $(GPE_BLUETOOTH_CFLAGS) -I$(top_srcdir)/gpe -I$(top_srcdir) \
            -DDBUS_API_SUBJECT_TO_CHANGE \
            -DPACKAGE_LOCALE_DIR=\"@gpebluetooth_localedir@\"
 
+gpebluetoothlibdir = $(libdir)/gpe-bluetooth
+gpebluetoothlib_PROGRAMS = bnep-helper rfcomm-helper
+
 bin_PROGRAMS = gpe-bluetooth bnep-helper rfcomm-helper
 
 gpe_bluetooth_LDADD = @GPE_BLUETOOTH_LIBS@ -lopenobex -lsqlite
