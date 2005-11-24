@@ -1,3 +1,6 @@
+2005-11-24  Florian Boor <florian@kernelconcepts.de>
+
+	* linkres.phtml: Add link to wxEmbedded and SQL schemes.
 
 2005-11-06  Florian Boor <florian@kernelconcepts.de>
 
@@ -1725,4 +1728,3 @@
 	  projects/GPE-media.shtml, projects/GPE-notebook.shtml,
 	  projects/GPE-setup.shtml, projects/GPE-todo.shtml,
 	  projects/GPE-usqld.shtml: initial website import
-
