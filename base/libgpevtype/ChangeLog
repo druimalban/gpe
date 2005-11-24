@@ -1,3 +1,9 @@
+2005-11-23  Florian Boor  <florian@kernelconcepts.de>
+
+    * Release Version 0.14.
+    * familiar/contol, libgpevtype.pc.in, configure.ac: Add dependency to 
+                                                        libeventdb.
+
 2005-11-22  Florian Boor  <florian@kernelconcepts.de>
 
 	* Release Version 0.13

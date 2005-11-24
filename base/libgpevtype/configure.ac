@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT(libgpevtype, 0.13, gpe@handhelds.org)
+AC_INIT(libgpevtype, 0.14, gpe@handhelds.org)
 AC_CONFIG_SRCDIR([tag-db.c])
 AM_INIT_AUTOMAKE([foreign dist-bzip2])
 
@@ -11,7 +11,7 @@ AC_PROG_CC
 AC_PROG_LIBTOOL
 
 # depends on...
-DEP_MODULES="glib-2.0 >= 2.2 mimedir-1.0"
+DEP_MODULES="glib-2.0 >= 2.2 mimedir-1.0 libeventdb"
 
 
 PKG_CHECK_MODULES(VTYPE, $DEP_MODULES)

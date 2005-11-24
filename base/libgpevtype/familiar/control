@@ -5,5 +5,5 @@ Version: VERSION
 Source: SOURCE
 Architecture: arm
 Maintainer: Phil Blundell <pb@debian.org>
-Depends: libc6, libsqlite0, libglib2.0-0, libmimedir1 (>=0.3.1)
+Depends: libc6, libsqlite0, libglib2.0-0, libmimedir1 (>=0.3.1), libeventdb
 Description: GPE PIM data interchange library
