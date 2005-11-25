@@ -1,3 +1,10 @@
+2005-11-25  Florian Boor <florian@kernelconcepts.de>
+
+	* Makefile.am, 
+	  hildon/gpe.conf: Provide GPE data backup configuration for Maemo 
+	                   environment. (With this libgpewidget not only ensures 
+					   the existence of ~/.gpe but it makes sure it is backuped.)
+
 2005-10-16  Phil Blundell  <pb@reciva.com>
 
 	* Version 0.105 released.

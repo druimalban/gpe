@@ -2,7 +2,12 @@
 SUBDIRS = doc po
 
 if HILDON
+
 GPEWIDGET_CFLAGS += -DIS_HILDON
+
+backupcfgdir = $(sysconfdir)/osso-backup/applications
+backupcfg_DATA = hildon/gpe.conf
+
 endif
 
 lib_LTLIBRARIES = libgpewidget.la
@@ -51,7 +56,8 @@ EXTRA_DIST = $(pixmap_DATA) \
 			 debian/postinst \
 			 debian/postrm \
 			 debian/libgpewidget1.files \
-			 debian/libgpewidget-dev.files
+			 debian/libgpewidget-dev.files \
+			 hildon/gpe.conf
 			 
  
 DISTCLEANFILES = intltool-extract intltool-merge intltool-update po/.intltool-merge-cache *.d autom4te.cache

@@ -41,7 +41,7 @@ char *gpe_check_for_help (const char *appname);	/* can be used as a quick help c
 static GKeyFile *load_help_key_file (void);
 
 /** 
- * gpe_show_help
+ * gpe_show_help:
  * @appname: Name of the application to show help about.
  * @topic: String describing help topic.
  *
@@ -110,7 +110,7 @@ gpe_show_help (const char *appname, const char *topic)
 }
 
 /** 
- * gpe_check_for_help
+ * gpe_check_for_help:
  * @appname: Name of the application.
  *
  * Checks for the existance of any installed help. Returns NULL if no help, or

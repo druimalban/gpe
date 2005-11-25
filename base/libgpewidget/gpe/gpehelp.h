@@ -19,7 +19,6 @@
  * Boston, MA 02111-1307, USA. 
  */
 
-gboolean
-gpe_show_help(const char* appname, const char* topic);
+gboolean gpe_show_help(const char *appname, const char *topic);
 char *gpe_check_for_help (const char *appname);
 #endif
