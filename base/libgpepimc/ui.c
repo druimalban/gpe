@@ -341,9 +341,13 @@ gpe_pim_categories_dialog (GSList *selected_categories, GCallback callback, gpoi
 
   tree_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (list_store));
   sel = gtk_tree_view_get_selection (GTK_TREE_VIEW (tree_view));
-  gtk_tree_selection_set_mode(sel, GTK_SELECTION_MULTIPLE);
+  gtk_tree_selection_set_mode(sel, GTK_SELECTION_SINGLE);
 
-#ifndef IS_HILDON
+#ifdef IS_HILDON
+
+    g_object_set(G_OBJECT(tree_view), "allow-checkbox-mode", FALSE, NULL);
+
+#else
     toolbar = gtk_toolbar_new ();
     gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);
     gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);

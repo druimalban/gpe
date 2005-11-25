@@ -1,3 +1,7 @@
+2005-11-25  Florian Boor  <florian@kernelconcepts.de>
+
+    * ui.c: Fix Hildon incompatibility (allow-checkbox-mode).
+
 2005-11-23  Florian Boor  <florian@kernelconcepts.de>
 
     * ui.c: Rewrite event handler to use toggle event from cell renderer.
