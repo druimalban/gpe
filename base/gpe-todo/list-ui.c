@@ -639,7 +639,7 @@ top_level (GtkWidget *window)
   gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
   
 #ifdef IS_HILDON
-  create_app_menu (HILDON_APPVIEW(window));
+  create_app_menu (HILDON_APPVIEW(main_appview));
   
   w = gtk_image_new_from_file(ICON_PATH "/qgn_toolb_gene_refresh.png");
   item = gtk_tool_button_new(w, _("Refresh"));
@@ -656,7 +656,7 @@ top_level (GtkWidget *window)
       gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
     }
     
-  hildon_appview_set_toolbar(HILDON_APPVIEW(window), GTK_TOOLBAR(toolbar));
+  hildon_appview_set_toolbar(HILDON_APPVIEW(main_appview), GTK_TOOLBAR(toolbar));
 #else
   /* Insert refresh button if we have enough space */
   if (mode_landscape || large_screen)

@@ -51,4 +51,8 @@ struct menu_map
 
 extern struct menu_map state_map[];
 
+#ifdef IS_HILDON
+GtkWidget *main_appview;  
+#endif
+
 #endif

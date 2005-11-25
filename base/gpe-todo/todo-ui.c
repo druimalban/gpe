@@ -221,7 +221,6 @@ update_categories (GtkWidget *w, GSList *new, struct edit_todo *t)
   g_slist_free (t->selected_categories);
 
   t->selected_categories = g_slist_copy (new);
-
   str = build_categories_string (t);
   gtk_label_set_text (GTK_LABEL (t->categories_label), str);
   g_free (str);
@@ -234,7 +233,7 @@ change_categories (GtkWidget *w, struct edit_todo *t)
 {
   GtkWidget *dialog;
 
-#ifdef IS_HILDON    
+#ifdef IS_HILDON
   dialog = gpe_pim_categories_dialog (t->selected_categories, TRUE,
                                       G_CALLBACK (update_categories), t);
 #else
@@ -294,7 +293,7 @@ edit_item (struct todo_item *item, gint initial_category, GtkWindow *parent)
     {
       gtk_window_set_type_hint(GTK_WINDOW(window),
                                GDK_WINDOW_TYPE_HINT_DIALOG);
-      gtk_window_set_transient_for(GTK_WINDOW(window), parent);
+      gtk_window_set_transient_for(GTK_WINDOW(window), GTK_WINDOW(parent));
       gtk_window_set_modal(GTK_WINDOW(window), TRUE);
     }
     

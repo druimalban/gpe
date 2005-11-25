@@ -1,3 +1,8 @@
+2005-11-25  Florian Boor  <florian.boor@kernelconcepts.de>
+
+	* todo.h, main.c, todo-ui.c, list-ui.c: Some cleanups and fixed casting to 
+	                                        avoid runtime warnings.
+
 2005-11-21  Florian Boor  <florian.boor@kernelconcepts.de>
 
 	* todo-ui.c: Use a buttonbox in hildon env to work around ugly themed button

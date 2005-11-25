@@ -59,6 +59,9 @@ gboolean mode_landscape;
 extern GtkWidget *top_level (GtkWidget *window);
 
 #ifdef IS_HILDON
+
+GtkWidget *main_appview;  
+
 static void osso_top_callback (const gchar* arguments, gpointer ptr)
 {
     GtkWindow *window = ptr;
@@ -73,7 +76,6 @@ open_window (void)
   GtkWidget *top;
 #ifdef IS_HILDON
   GtkWidget *app;
-  GtkWidget *main_appview;  
   osso_context_t *context;
 #endif
     
@@ -86,9 +88,13 @@ open_window (void)
   hildon_app_set_title (HILDON_APP(app), _("ToDo"));
   main_appview = hildon_appview_new (_("List"));
   hildon_app_set_appview (HILDON_APP(app), HILDON_APPVIEW(main_appview));
-  window = main_appview;
+  window = app;
   gtk_widget_show_all (app);
   gtk_widget_show_all (main_appview);
+	
+  top = top_level (window);
+  gtk_container_add (GTK_CONTAINER (main_appview), top);
+	
   /* tell osso we are here or it will kill us */
   context = osso_initialize (OSSO_SERVICE_NAME, VERSION, TRUE, NULL);
   g_assert(context);
@@ -98,10 +104,9 @@ open_window (void)
   gtk_window_set_default_size (GTK_WINDOW (window), 240, 320);
   gtk_window_set_title (GTK_WINDOW (window), _("To-do list"));
   gpe_set_window_icon (window, "icon");
-#endif
-
   top = top_level (window);
   gtk_container_add (GTK_CONTAINER (window), top);
+#endif
 
   g_signal_connect (G_OBJECT (window), "delete-event",
 		    G_CALLBACK (gtk_main_quit), NULL);
