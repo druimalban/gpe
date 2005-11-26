@@ -1,3 +1,9 @@
+2005-11-26  Martin Felis  <martin@silef.de>
+
+    * vevent.c: Added support for the last-modified field. Fixed a smaller
+                bug, that wouldn't let us export vevents.
+    * vtodo.c: Added support for the last-modified field.
+
 2005-11-23  Florian Boor  <florian@kernelconcepts.de>
 
     * Release Version 0.14.

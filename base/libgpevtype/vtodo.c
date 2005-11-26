@@ -105,6 +105,14 @@ vtodo_interpret_tag (MIMEDirVTodo *todo, const char *tag, const char *value)
 
       return TRUE;
     }
+  if (!strcasecmp (tag, "modified"))
+    {
+      MIMEDirDateTime *date;
+
+      date = mimedir_datetime_new_from_time_t (atoi (value));
+
+      g_object_set (G_OBJECT (todo), "last-modified", date, NULL);
+    }
 
   return FALSE;
 }

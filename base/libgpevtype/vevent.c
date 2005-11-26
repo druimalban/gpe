@@ -29,7 +29,6 @@ static struct tag_map map[] = {
   {G_TYPE_STRING, "description", NULL},
   {G_TYPE_STRING, "eventid", "uid"},
   {G_TYPE_INT, "sequence", NULL},
-  {G_TYPE_INT, "modified", "dtstamp"},
   {G_TYPE_INT, "duration", NULL},
   {G_TYPE_INVALID, NULL, NULL}
 };
@@ -109,6 +108,16 @@ vevent_interpret_tag (MIMEDirVEvent * event, const char *tag,
         }
       else
         fprintf (stderr, "couldn't parse date '%s'\n", value);
+
+      return TRUE;
+    }
+    
+  if (!strcasecmp (tag, "modified"))
+    {
+      MIMEDirDateTime *date;
+
+      date = mimedir_datetime_new_from_time_t (atoi (value));
+      g_object_set (G_OBJECT (event), "last-modified", date, NULL);
 
       return TRUE;
     }
