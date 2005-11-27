@@ -24,6 +24,7 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <stddef.h>
+#include <stdlib.h>
 
 #include <gtk/gtk.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
@@ -163,10 +164,27 @@ back_func (GtkWidget * back, GtkWidget * html)
 void
 home_func (GtkWidget * home, GtkWidget * html)
 {
-  if (access (HOME_PAGE, F_OK))
-    fetch_url ("http://gpe.handhelds.org", GTK_WIDGET (html));
-  else
-    fetch_url (HOME_PAGE, GTK_WIDGET (html));
+   char *homepage=NULL;
+
+   homepage=malloc(sizeof(char)*60);
+   strncpy(homepage,"gpe.handhelds.org",18);
+
+   start_db();
+ 
+   if (!get_bookmark_home (homepage))
+   {
+	homepage = (char *)parse_url(homepage);
+	fetch_url(homepage,GTK_WIDGET(html));
+   }
+   else
+   {
+   	homepage = (char *)parse_url(homepage);
+        fetch_url(homepage,GTK_WIDGET(html));
+   }
+
+  stop_db(); 
+  free(homepage);
+   
 }
 
 /* tell the engine to stop or reload the current page */

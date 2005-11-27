@@ -43,6 +43,7 @@
 
 //#define DEBUG /* uncomment for debug info */
 
+int set_no_home(void);
 
 static sqlite *db = NULL;
 
@@ -51,7 +52,7 @@ int
 start_db (void)
 {
   static const char *create_str =
-    "create table bookmarks (bookmark TEXT NOT NULL);";
+    "create table bookmarks (bookmark TEXT NOT NULL, home INTEGER);";
 
   const char *home = getenv ("HOME");
   char *buf;
@@ -91,7 +92,7 @@ insert_new_bookmark (char *bookmark)
   char *err;
 
   if (sqlite_exec_printf (db,
-			  "insert into bookmarks values ('%s')",
+			  "insert into bookmarks values ('%s','0')",
 			  NULL, NULL, &err, bookmark))
     {
       g_free (err);
@@ -149,7 +150,78 @@ refresh_or_load_db (GtkWidget * tree)
 {
   char *err;
 
-  if (sqlite_exec (db, "select * from bookmarks", load_db_data, tree, &err))
+  if (sqlite_exec (db, "select bookmark from bookmarks", load_db_data, tree, &err))
+    {
+      g_free (err);
+      return 1;
+    }
+
+  g_free (err);
+
+  return 0;
+}
+
+int
+get_bookmark_home (char *home)
+{
+  char *err;
+
+  if (sqlite_exec (db, "select * from bookmarks where home=1", return_bookmark_home, home, &err))
+    {
+      printf("query failed!\n");
+      g_free (err);
+      return 1;
+    }
+
+  g_free (err);
+   
+  return 0;
+}
+
+int
+return_bookmark_home (void *home, int argc, char **argv, char **columnNames)
+{
+  int n;
+
+  if( *argv != NULL )
+    {
+      n = strlen(*argv);
+      if(n > 60)
+	return 1;
+      strncpy((char *)home, *argv, n+1);
+      return 0;
+    }
+  else
+      return 1;
+}
+
+int
+set_bookmark_home (char *selected)
+{
+  char *err;
+
+  if(set_no_home())
+      return 1;
+  if (sqlite_exec_printf (db, "update bookmarks set home=('1') where bookmark='%s'", NULL, NULL, &err, selected))
+    {
+      g_free (err);
+      return 1;
+    }
+#ifdef DEBUG
+  printf("the new homepage %s has been set !\n", selected);
+#endif
+  g_free (err);
+
+  return 0;
+
+}
+
+int
+set_no_home(void)
+{
+ char *err;
+
+ if (sqlite_exec_printf (db, "update bookmarks set home=('0') where home=1", NULL, NULL, &err))
     {
       g_free (err);
       return 1;

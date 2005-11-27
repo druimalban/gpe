@@ -47,7 +47,7 @@
 #include <libosso.h>
 #endif /*HILDON*/
 
-//#define DEBUG /* uncomment this if you want debug output*/
+#define DEBUG /* uncomment this if you want debug output*/
 
 void
 set_default_settings (Webi * html, WebiSettings * ks)
@@ -425,3 +425,35 @@ set_fullscreen (GtkWidget * button, gpointer * fullscreen_info)
       totalscreen = 0;
     }
 }
+
+/*==============================================*/
+
+void set_as_homepage (GtkWidget *button, gpointer *data)
+{
+  struct tree_action *open_data;
+  GtkTreeSelection *selection;
+  GtkTreeModel *model;
+  GtkTreeIter iter;
+  gchar *url;
+
+  open_data = (struct tree_action *) data;
+
+  selection =
+    gtk_tree_view_get_selection (GTK_TREE_VIEW (open_data->treeview));
+  model = gtk_tree_view_get_model (GTK_TREE_VIEW (open_data->treeview));
+
+  if (gtk_tree_selection_get_selected (selection, &model, &iter))
+    {
+      gtk_tree_model_get (model, &iter, 0, &url, -1);
+#ifdef DEBUG
+      printf ("The *new* home url = %s\n", url);
+#endif
+      set_bookmark_home(url);
+      g_free (url);
+    }
+  else
+    {
+      gpe_error_box (_("No bookmark selected!"));
+    }
+}
+

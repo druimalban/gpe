@@ -259,6 +259,8 @@ gchar * history_location (void);
 void clear_history(GtkWidget *button);
 /* fullscreen mode */
 void set_fullscreen (GtkWidget *button, gpointer *fullscreen_info);
+/* set selected bookmark as homepage */
+void set_as_homepage (GtkWidget *button, gpointer *data);
 
 
 /******************************************************
@@ -278,4 +280,9 @@ int remove_bookmark (char *bookmark);
 int load_db_data (void *tree, int argc, char **argv, char **columnNames);
 /* load in data from db */ 
 int refresh_or_load_db (GtkWidget *tree);
-
+/* retrieve the page that has been bookmarked as home */
+int get_bookmark_home (char *home);
+/* function that fills in the *home pointer (it recieves the data from the get_bookmark_home function)*/
+int return_bookmark_home (void *home, int argc, char **argv, char **columnNames);
+/* sets the selected bookmark as home */
+int set_bookmark_home (char *selected);

@@ -436,7 +436,7 @@ show_bookmarks (GtkWidget * button, Webi * html)
 {
   GtkWidget *bookmarks_window, *bookbox, *scroll_window, *bookmark_list;
   GtkToolbar *booktool;
-  GtkToolItem *add, *del, *open_bookmark;
+  GtkToolItem *add, *del, *open_bookmark, *set_home;
   GtkTreeModel *model;
   GtkCellRenderer *cell;
   GtkTreeViewColumn *column;
@@ -469,6 +469,10 @@ show_bookmarks (GtkWidget * button, Webi * html)
   open_bookmark = gtk_tool_button_new_from_stock (GTK_STOCK_OPEN);
   gtk_tool_item_set_homogeneous (open_bookmark, FALSE);
   gtk_toolbar_insert (booktool, open_bookmark, -1);
+
+  set_home = gtk_tool_button_new_from_stock (GTK_STOCK_HOME);
+  gtk_tool_item_set_homogeneous (set_home, FALSE);
+  gtk_toolbar_insert (booktool, set_home, -1);
 
 #ifdef HILDON
   GtkToolItem *close_bookmark = gtk_tool_button_new_from_stock (GTK_STOCK_QUIT);
@@ -520,6 +524,8 @@ show_bookmarks (GtkWidget * button, Webi * html)
 		    G_CALLBACK (destroy_window), bookmarks_window);
   g_signal_connect (GTK_OBJECT (bookmarks_window), "destroy",
 		    G_CALLBACK (stop_db), NULL);
+  g_signal_connect (GTK_OBJECT (set_home), "clicked",
+		    G_CALLBACK (set_as_homepage), &tree_info);
 #ifdef HILDON
   g_signal_connect (GTK_OBJECT (close_bookmark), "clicked",
 		    G_CALLBACK (destroy_window), bookmarks_window);

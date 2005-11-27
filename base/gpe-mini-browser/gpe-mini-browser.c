@@ -191,7 +191,7 @@ main (int argc, char *argv[])
   gtk_tool_button_set_label (GTK_TOOL_BUTTON (bookmarks_button),
 			     _("Bookmarks"));
   gtk_toolbar_insert (GTK_TOOLBAR (toolbar), bookmarks_button, -1);
-
+ 
 #endif
 
   /* only show full Url bar if the screen is bigger than 240x320 | 320x240 */
