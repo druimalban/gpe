@@ -111,7 +111,7 @@ show_current_config (GtkWidget * button)
 	
 	label = gtk_label_new (NULL);
 	gtk_misc_set_alignment(GTK_MISC(label), 0, 0);
-printf("#%s#\n", buffer);
+
 	gtk_label_set_markup (GTK_LABEL (label), buffer);
 	gtk_label_set_selectable(GTK_LABEL(label), TRUE);
 	
