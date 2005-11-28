@@ -33,10 +33,8 @@ void ask_user_a_file(char *path, char *prompt,
 		     void (*Cancel)(gpointer data),
 		     gpointer data);
 
-int runProg(char *cmd);
-
 // one usefull macro..
-int system_and_gfree(gchar *cmd);
+gint system_and_gfree(gchar *cmd);
 #define system_printf(y...)   system_and_gfree(g_strdup_printf(y))
 
 void

@@ -20,7 +20,7 @@ Sleep_Save ()
 {
   char		cmd[64];
   sprintf(cmd, "%s stop", ISconf->binCmd); 
-  runProg(cmd);
+  g_spawn_command_line_sync (cmd, NULL, NULL, NULL, NULL);
   if(save_ISconf(ISconf, ISconf->confName)) {
     char homeConf[MAXPATHLEN];
     sprintf(homeConf, "%s/ipaq-sleep.conf", getenv("HOME"));
@@ -28,7 +28,7 @@ Sleep_Save ()
       strcpy(ISconf->confName, homeConf);
   }
   sprintf(cmd, "%s start", ISconf->binCmd);
-  runProg(cmd);
+  g_spawn_command_line_sync (cmd, NULL, NULL, NULL, NULL);
 }
 
 void 

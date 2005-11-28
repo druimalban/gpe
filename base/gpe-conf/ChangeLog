@@ -1,3 +1,8 @@
+2005-11-28	Florian Boor <florian.boor@kernelconcepts.de>
+
+	*  applets.*, theme.c, sleep/callbacks.c, sleep/main.c:
+	   Replace custom spawn function by glib function.
+
 2005-11-19	Florian Boor <florian.boor@kernelconcepts.de>
 
 	* timeanddate.c: Fix time computation with DST set, fixing #1258.

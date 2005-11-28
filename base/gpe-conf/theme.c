@@ -884,8 +884,8 @@ on_matchbox_entry_changed (GtkWidget * menu, gpointer user_data)
 	                        -1);
   if ((tn) && (strlen (tn)))
     {
-	  if (use_xst)
-		system_printf (CMD_XST " write %s%s str %s", KEY_THEME, "ThemeName", tn);
+		if (use_xst)
+			system_printf (CMD_XST " write %s%s str %s", KEY_THEME, "ThemeName", tn);
     }
   if (tn)
     g_free (tn);
@@ -979,6 +979,7 @@ Theme_Save (void)
 	GtkWidget* label;
 	
 	xsettings_client_destroy(client);
+	gtk_widget_hide_all(mainw);	
 	
     /* background settings */
 	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self.cDefault)))

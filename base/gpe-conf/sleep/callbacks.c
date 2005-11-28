@@ -202,7 +202,9 @@ start_button (GtkButton       *button,
 {
   char		cmd[64];
   ipaq_conf_t	*ISconf = (ipaq_conf_t *)user_data;
-  sprintf(cmd, "%s stop", ISconf->binCmd); runProg(cmd);
+  sprintf(cmd, "%s stop", ISconf->binCmd); 
+  g_spawn_command_line_sync (cmd, NULL, NULL, NULL, NULL);
+
   if(save_ISconf(ISconf, ISconf->confName)) {
     char homeConf[MAXPATHLEN];
     sprintf(homeConf, "%s/.sleep.conf", getenv("HOME"));
@@ -210,7 +212,7 @@ start_button (GtkButton       *button,
       strcpy(ISconf->confName, homeConf);
   }
   sprintf(cmd, "%s start", ISconf->binCmd);
-  runProg(cmd);
+  g_spawn_command_line_sync (cmd, NULL, NULL, NULL, NULL);
 }
 
 
@@ -221,7 +223,7 @@ stop_button (GtkButton       *button,
   char		cmd[64];
   ipaq_conf_t	*ISconf = (ipaq_conf_t *)user_data;
   sprintf(cmd, "%s stop", ISconf->binCmd); 
-  runProg(cmd);
+  g_spawn_command_line_sync (cmd, NULL, NULL, NULL, NULL);
 }
 
 
