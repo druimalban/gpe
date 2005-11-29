@@ -1,3 +1,7 @@
+2005-11-29  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * Release version 0.55.
+
 2005-11-25  Florian Boor  <florian.boor@kernelconcepts.de>
 
 	* todo.h, main.c, todo-ui.c, list-ui.c: Some cleanups and fixed casting to 
