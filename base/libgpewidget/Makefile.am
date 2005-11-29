@@ -56,9 +56,9 @@ EXTRA_DIST = $(pixmap_DATA) \
 			 debian/postinst \
 			 debian/postrm \
 			 debian/libgpewidget1.files \
+			 debian/compat \ 
 			 debian/libgpewidget-dev.files \
 			 hildon/gpe.conf
-			 
  
 DISTCLEANFILES = intltool-extract intltool-merge intltool-update po/.intltool-merge-cache *.d autom4te.cache
 
