@@ -1,3 +1,10 @@
+2005-11-29  Florian Boor <florian.boor@kernelconcepts.de>
+
+    * event-ui.c: Use hildon dialog to ask about event starting in the past.
+    * configure.ac: Add hildon-libs as a dependency for maemo config.
+    * main.c: Some minor cleanup and event mask change.
+    * event-ui.c: Force modal dialog on all platforms works around a 
+                  matchbox issue and is better anyway.
 
 2005-11-23  Florian Boor <florian.boor@kernelconcepts.de>
 

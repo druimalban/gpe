@@ -447,15 +447,19 @@ click_ok (GtkWidget *widget, GtkWidget *d)
     {
       GtkWidget* dialog;
       gint ret;
-      
+#ifdef IS_HILDON
+      dialog = hildon_note_new_confirmation (GTK_WINDOW(d),
+                       _("Event starts in the past!\nSave anyway?"));
+#else        
       dialog = gtk_message_dialog_new (GTK_WINDOW(d),
                        GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
                        GTK_MESSAGE_WARNING,
                        GTK_BUTTONS_YES_NO,
                        _("Event starts in the past!\nSave anyway?"));
+#endif        
       ret = gtk_dialog_run (GTK_DIALOG(dialog));
       gtk_widget_destroy(dialog);
-      if (ret == GTK_RESPONSE_NO)
+      if ((ret == GTK_RESPONSE_NO) || (ret == GTK_RESPONSE_CANCEL))
         {
           event_db_destroy (ev);
           return;
@@ -715,11 +719,10 @@ click_categories (GtkWidget *b, GtkWidget *w)
   ui = gpe_pim_categories_dialog (s->categories, TRUE, G_CALLBACK (update_categories), s);
 #else
   ui = gpe_pim_categories_dialog (s->categories, G_CALLBACK (update_categories), s);
-
+#endif
   gtk_window_set_transient_for(GTK_WINDOW(ui),
                                GTK_WINDOW(gtk_widget_get_toplevel(b)));
   gtk_window_set_modal(GTK_WINDOW(ui), TRUE);
-#endif
 }
 
 gboolean

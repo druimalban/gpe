@@ -731,8 +731,11 @@ main (int argc, char *argv[])
   GTK_WIDGET_UNSET_FLAGS(item, GTK_CAN_FOCUS);
 #endif
 
+/* hildon has its special menu, GPE a window icon */
 #ifdef IS_HILDON
   create_app_menu(HILDON_APPVIEW(main_appview));
+#else
+  gpe_set_window_icon (main_window, "icon");
 #endif
 	 
   gtk_notebook_set_show_tabs (GTK_NOTEBOOK (notebook), FALSE);
@@ -749,13 +752,9 @@ main (int argc, char *argv[])
                    G_CALLBACK(notebook_switch_page),NULL);
   g_signal_connect (G_OBJECT (main_window), "key_press_event", 
 		    G_CALLBACK (main_window_key_press_event), NULL);
-#ifndef IS_HILDON
-  /* in case of hildon we use default behavious */
+            
   gtk_widget_add_events (GTK_WIDGET (main_window), 
                          GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK);
-						 
-  gpe_set_window_icon (main_window, "icon");
-#endif /*IS_HILDON*/
   
   gtk_widget_show (notebook);
 
