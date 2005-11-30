@@ -58,9 +58,6 @@ case `module_id` in
 		ARGS="$ARGS -dpi 100 -screen 320x240@270 -rgba vrgb" ;;
 	*Collie)
 		ARGS="$ARGS -dpi 100 -screen 320x240@270 -rgba vrgb"
-		# Horrible hack required to enable resuming after suspend
-		rm -f /dev/apm_bios
-		killall -9 apmd
 		;;
 	"SHARP Shepherd" | "SHARP Husky" | "SHARP Corgi")
 		ARGS="$ARGS -dpi 200 -rgba rgb" ;;
