@@ -47,13 +47,13 @@ do_edit_name_detail(GtkWindow *parent, struct person *p)
   
   while (suffixes[i])
     {
-      l_suffixes = g_list_append(l_suffixes, suffixes[i]);
+      l_suffixes = g_list_append(l_suffixes, gettext(suffixes[i]));
       i++;
     }
   i = 0; 
   while (titles[i])
     {
-      l_titles = g_list_append(l_titles, titles[i]);
+      l_titles = g_list_append(l_titles, gettext(titles[i]));
       i++;
     }
     
