@@ -1,3 +1,16 @@
+v0.18 - Snow release - 30/11/2005 - Philippe De Swert
+
+* Added posibility to set a custom bookmark
+* Fix history saving for hildon-mini-browser 
+* Hildon/Maemo : moved urlbar down, separator to make a better division between browser and rendered area, 
+  bigger bookmark and history window
+* Maemo fullscreen without widget decorations
+* Fixed fullscreen mode bug
+* Make sure that the upload also works in an automated fashion with make dist-upload
+* Making several dialogs modal to avoid the browser gets confused by incorrect handling, adding a close button 
+  for maemo as they were so smart to remove the close button from dialogs... (no further comment on that last issue)
+* New icon that should also be change-able by the theme change
+
 v0.17 - No beer release -17/10/2005 - Philippe De Swert
 
 * Add i18n support to autotools stuff and support for translated desktop files - courtesy of Florian Boor.
@@ -13,6 +26,8 @@ v0.17 - No beer release -17/10/2005 - Philippe De Swert
 * fixed --disable-bookmarks to work again after all the new stuff got added
 * changed default CFLAGS to -Wall -Os -g (saves 4K when decently stripped :-)
 * Fixed bug that made gpe-mini-browser crash because you could open several url-windows (in small-screen mode)
+* Fix type in Makefile.am to make sure that "make distcheck succeeds
+* change entry completion to start after 3 chars (request by Koen)
 
 v0.16 - Tampere release	- 07/09/2005 - Philippe De Swert
 

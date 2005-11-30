@@ -1,5 +1,5 @@
 Source: gpe-mini-browser
-Section: X11
+Section: x11
 Priority: optional
 Maintainer: Philippe De Swert <philippedeswert@scarlet.be>
 Build-Depends: debhelper (>= 4.0.0)

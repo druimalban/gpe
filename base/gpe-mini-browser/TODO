@@ -4,7 +4,7 @@ TODO:
 * support multiple windows
 * improve progressbar display
 * some sort of status indication if clicking on links with infoprint or equivalent
-* categories to order bookmarks & bookmark sort & ability to set home page from bookmarks
+* categories to order bookmarks & bookmark sort
 * Hide bookmarks behind a description
 * Download file option (wget ?)
 * bookmarks integration with gpe-contacts
@@ -31,6 +31,7 @@ DONE:
 * GtkEntryCompletion
 * history (special case of bookmarks)
 * default optimisation for size and use -Wall to identify possible problems
+*  ability to set home page from bookmarks
 
 POSTPONED / PARTIALLY DONE:
 

@@ -1,5 +1,5 @@
 /*
- * gpe-mini-browser v0.17
+ * gpe-mini-browser v0.18
  *
  * Basic web browser based on gtk-webcore 
  *
@@ -85,7 +85,7 @@ main (int argc, char *argv[])
 	case 'v':
 	  printf
 	    (_
-	     ("GPE-mini-browser version 0.17. (C)2005, Philippe De Swert\n"));
+	     ("GPE-mini-browser version 0.188888888. (C)2005, Philippe De Swert\n"));
 	  exit (0);
 
 	default:
