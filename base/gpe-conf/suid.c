@@ -420,7 +420,6 @@ suidloop (int write, int read)
 						arg2[n++] = (unsigned char)c;
 					arg2[n] = '\0';
 					cmd = g_strdup_printf("/sbin/modprobe %s %s", arg1, arg2);
-fprintf ("system (\"%s\");", cmd);
 
 					system (cmd);
 					g_free(cmd);

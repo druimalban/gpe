@@ -1,3 +1,7 @@
+2005-12-03	Florian Boor <florian.boor@kernelconcepts.de>
+
+	* Makefile: Remove obsolete linking against libXsettings.
+
 2005-11-28	Florian Boor <florian.boor@kernelconcepts.de>
 
 	*  applets.*, theme.c, sleep/callbacks.c, sleep/main.c:

@@ -1,20 +1,156 @@
-# Translation of gpe-conf-0.1.21.po to Russian
-# Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+# Translation of gpe-conf-0.1.25.po to Russian
+# Copyright (C) 2003, 2004, 2005 Free Software Foundation, Inc.
 # This file is distributed under the same license as the gpe-conf package.
-# Pavel Maryanov <acid_jack@ukr.net>, 2003, 2004.
+# Pavel Maryanov <acid_jack@ukr.net>, 2003, 2004, 2005.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-conf 0.1.21\n"
+"Project-Id-Version: gpe-conf 0.1.25\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-10-31 22:33+0100\n"
-"PO-Revision-Date: 2004-11-05 12:49+0200\n"
+"POT-Creation-Date: 2005-08-23 02:20+0200\n"
+"PO-Revision-Date: 2005-10-25 19:14+0300\n"
 "Last-Translator: Pavel Maryanov <acid_jack@ukr.net>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: KBabel 1.3\n"
+"X-Generator: KBabel 1.10.2\n"
+
+#: main.c:90 timeanddate.c:542
+msgid "Time"
+msgstr "Время"
+
+#: main.c:90
+msgid "Time and Date Setup"
+msgstr "Настройка даты и времени"
+
+#: main.c:92
+msgid "Screen"
+msgstr "Экран"
+
+#: main.c:92 gpe-conf-screen.desktop.in.h:1
+msgid "Screen Setup"
+msgstr "Настройка экрана"
+
+#: main.c:94
+msgid "Keys & Buttons"
+msgstr "Клавиши и кнопки"
+
+#: main.c:94
+msgid "Keys and Buttons Setup"
+msgstr "Настройка клавиш и кнопок"
+
+#: main.c:96 timeanddate.c:558
+msgid "Network"
+msgstr "Сеть"
+
+#: main.c:96 gpe-conf-network.desktop.in.h:1
+msgid "Network Setup"
+msgstr "Настройка сети"
+
+#: main.c:98 theme.c:1144
+msgid "Theme"
+msgstr "Тема"
+
+#: main.c:98 theme.c:1146 gpe-conf-theme.desktop.in.h:2
+msgid "Look and Feel"
+msgstr "Внешнее оформление"
+
+#: main.c:100
+msgid "Power"
+msgstr "Энергопотребление"
+
+#: main.c:100
+msgid "Power safe Configuration"
+msgstr "Настройка энергопотребления"
+
+#: main.c:102
+msgid "Owner"
+msgstr "Владелец"
+
+#: main.c:102 gpe-conf-ownerinfo.desktop.in.h:1
+msgid "Owner Information"
+msgstr "Информация о владельце"
+
+#: main.c:104
+msgid "Login"
+msgstr "Вход в систему"
+
+#: main.c:104 gpe-conf-login-setup.desktop.in.h:1
+msgid "Login Setup"
+msgstr "Настройка входа в систему"
+
+#: main.c:106
+msgid "Users"
+msgstr "Пользователи"
+
+#: main.c:106
+msgid "User Administration"
+msgstr "Администрирование пользователей"
+
+#: main.c:108
+msgid "GPE"
+msgstr "GPE"
+
+#: main.c:108
+msgid "GPE Conf Administration"
+msgstr "Администрирование конфигуратора GPE"
+
+#: main.c:110 gpe-conf-serial.desktop.in.h:2
+msgid "Serial Ports"
+msgstr "Последовательные порты"
+
+#: main.c:110
+msgid "Serial Port Configuration"
+msgstr "Настройка последовательного порта"
+
+#: main.c:112
+msgid "PCMCIA/CF Cards"
+msgstr "Карты PCMCIA/CF"
+
+#: main.c:112
+msgid "PCMCIA/CF Card Info and Config"
+msgstr "Информация и настройки карт PCMCIA/CF"
+
+#: main.c:114
+msgid "Sound"
+msgstr "Звук"
+
+#: main.c:114
+msgid "Sound Setup"
+msgstr "Настройка звука"
+
+#: main.c:116
+msgid "Task nameserver"
+msgstr "Сервер имён"
+
+#: main.c:116
+msgid "Task for changing nameserver"
+msgstr "Изменение сервера имён"
+
+#: main.c:118
+msgid "Task sound"
+msgstr "Звук"
+
+#: main.c:118
+msgid "Command line task saving/restoring sound settings."
+msgstr "Сохранение/восстановление звуковых настроек."
+
+#: main.c:120
+msgid "Task background image"
+msgstr "Фоновое изображение"
+
+#: main.c:120
+msgid "Only select background image."
+msgstr "Выбор фонового изображения."
+
+#: main.c:146
+msgid "Settings saved"
+msgstr "Настройки сохранены"
+
+#: main.c:162
+msgid "Aborted"
+msgstr "Прервано"
 
 #: main.c:335
 #, c-format
@@ -64,11 +200,11 @@ msgstr ""
 "Использование: gpe-conf [имя_апплета]\n"
 "где имя_апплета в:\n"
 
-#: applets.c:356
+#: applets.c:445
 msgid "Root access"
 msgstr "Доступ root'a"
 
-#: applets.c:370
+#: applets.c:459
 msgid ""
 "Some options are only\n"
 "accessible for user root.\n"
@@ -78,7 +214,7 @@ msgstr ""
 "только для пользователя root.\n"
 "Пожалуйста, введите пароль."
 
-#: applets.c:417 screen/calibrate.c:32
+#: applets.c:506 screen/calibrate.c:32
 msgid "Sorry, wrong password."
 msgstr "Извините, пароль неверный."
 
@@ -98,80 +234,72 @@ msgstr "Время и дата"
 msgid "Date"
 msgstr "Дата"
 
-#: timeanddate.c:536
+#: timeanddate.c:537
 msgid "Enter current date here or use button to select."
 msgstr "Введите здесь текущую дату или используйте для выбора кнопку."
 
-#: timeanddate.c:541
-msgid "Time"
-msgstr "Время"
-
-#: timeanddate.c:555
-msgid "Network"
-msgstr "Сеть"
-
-#: timeanddate.c:573
+#: timeanddate.c:576
 msgid "Select the timeserver to use to set the clock."
 msgstr "Выберите сервер времени, используемый для установки времени."
 
-#: timeanddate.c:575
+#: timeanddate.c:578
 msgid "Get time from network"
 msgstr "Получить время из сети"
 
-#: timeanddate.c:582
+#: timeanddate.c:585
 msgid "If connected to the Internet, you may press this button to set the time on this device using the timeserver above."
 msgstr "Если вы подключены к Интернету, вы можете нажать эту кнопку для установки времени на этом устройстве, используя указанный выше сервер времени."
 
-#: timeanddate.c:587 timeanddate.c:596
+#: timeanddate.c:590 timeanddate.c:599
 msgid "Timezone"
 msgstr "Часовой пояс"
 
-#: timeanddate.c:619
+#: timeanddate.c:622
 msgid "Select your current timezone here. The setting applies after the next login."
 msgstr "Выберите здесь свой текущий часовой пояс. Установки будут применены во время следующего входа в систему."
 
-#: timeanddate.c:627
+#: timeanddate.c:630
 msgid "Daylight Saving"
 msgstr "Переход на летнее время"
 
-#: timeanddate.c:634
+#: timeanddate.c:637
 msgid "Use daylight saving time"
 msgstr "Использовать переход на летнее время"
 
-#: timeanddate.c:641
+#: timeanddate.c:644
 msgid "Check this box if you want your device to handle daylight saving time for you."
 msgstr "Выберите этот пункт, если вы хотите, чтобы ваше устройство за вас управляло переходом на летнее время и обратно."
 
-#: timeanddate.c:643
+#: timeanddate.c:646
 msgid "Offset:"
 msgstr "Смещение:"
 
-#: timeanddate.c:652
+#: timeanddate.c:655
 msgid "Default"
 msgstr "По умолчанию"
 
-#: timeanddate.c:659
+#: timeanddate.c:662
 msgid "Use default DST offset of one hour?"
 msgstr "Использовать величину смещения по умолчанию в один час?"
 
-#: timeanddate.c:664
+#: timeanddate.c:667
 msgid "Hours"
 msgstr "Часы"
 
-#: timeanddate.c:667
+#: timeanddate.c:670
 msgid "Select daylight saving time offset hours here."
 msgstr "Выберите величину смещения в часах перехода на летнее время."
 
-#: timeanddate.c:672
+#: timeanddate.c:675
 msgid "Minutes"
 msgstr "Минуты"
 
-#: timeanddate.c:675
+#: timeanddate.c:678
 msgid "Select daylight saving time offset minutes here."
 msgstr "Выберите величину смещения в минутах перехода на летнее время."
 
-#: timeanddate.c:780
-msgid "To make timezone settings take effect,you'll need to log out and log in again."
+#: timeanddate.c:783
+msgid "To make timezone settings take effect, you'll need to log out and log in again."
 msgstr "Чтобы настройки часового пояса вступили в силу, вы должны выйти из системы и снова войти в неё."
 
 #: screen/main.c:74
@@ -218,192 +346,192 @@ msgstr "Калибровка"
 msgid "Start"
 msgstr "Пуск"
 
-#: screen/main.c:304 sleep/callbacks.c:47
+#: screen/main.c:304 sleep/callbacks.c:39
 msgid "min"
 msgstr "мин"
 
-#: screen/main.c:307 sleep/callbacks.c:50
+#: screen/main.c:307 sleep/callbacks.c:42
 msgid "sec"
 msgstr "сек"
 
-#: kbd.c:146
+#: keys/kbd.c:142
 msgid "Keyboard Geometry / Layout"
 msgstr "Геометрия/раскладка клавиатуры"
 
-#: kbd.c:186
+#: keys/kbd.c:182
 msgid "User defined"
 msgstr "Пользовательская"
 
-#: network.c:106
+#: network.c:104
 msgid "Current Config"
 msgstr "Текущая настройка"
 
-#: network.c:235 ownerinfo.c:237
+#: network.c:233 ownerinfo.c:237
 msgid "Name:"
 msgstr "Имя:"
 
-#: network.c:241
+#: network.c:239
 msgid "New Interface"
 msgstr "Новый интерфейс"
 
-#: network.c:250
+#: network.c:248
 msgid "This interface definition already exists!"
 msgstr "Определение этого интерфейса уже существует!"
 
-#: network.c:324
+#: network.c:326
 msgid "Do you want to delete this interface?"
 msgstr "Вы хотите удалить этот интерфейс?"
 
-#: network.c:324 keyctl.c:230 users/callbacks.c:115
+#: network.c:326 users/callbacks.c:138
 msgid "Question"
 msgstr "Вопрос"
 
-#: network.c:570
+#: network.c:575
 msgid "WiFi config"
 msgstr "Настройка WiFi"
 
-#: network.c:600
+#: network.c:606
 #, c-format
-msgid "<b>WiFi config for %s</b>"
-msgstr "<b>Настройка WiFi для %s</b>"
+msgid "WiFi config for %s"
+msgstr "Настройка WiFi для %s"
 
-#: network.c:610
+#: network.c:618
 msgid "ESSID"
 msgstr "ESSID"
 
-#: network.c:632
+#: network.c:640
 msgid "Mode"
 msgstr "Режим"
 
-#: network.c:642
+#: network.c:650
 msgid "managed"
 msgstr "управляемый"
 
-#: network.c:654
+#: network.c:662
 msgid "ad-hoc"
 msgstr "ad-hoc"
 
-#: network.c:671
+#: network.c:679
 msgid "Channel"
 msgstr "Канал"
 
-#: network.c:693
+#: network.c:700
 msgid "WEP"
 msgstr "WEP"
 
-#: network.c:703
+#: network.c:710
 msgid "off"
 msgstr "выкл."
 
-#: network.c:715
+#: network.c:722
 msgid "open"
 msgstr "открытое"
 
-#: network.c:727
+#: network.c:734
 msgid "restricted"
 msgstr "ограниченное"
 
-#: network.c:743
+#: network.c:750
 msgid "Key 1"
 msgstr "Клавиша 1"
 
-#: network.c:771
+#: network.c:778
 msgid "Key 2"
 msgstr "Клавиша 2"
 
-#: network.c:799
+#: network.c:806
 msgid "Key 3"
 msgstr "Клавиша 3"
 
-#: network.c:828
+#: network.c:835
 msgid "Key 4"
 msgstr "Клавиша 4"
 
-#: network.c:1030
+#: network.c:1040
 msgid "Address"
 msgstr "Адрес"
 
-#: network.c:1033
+#: network.c:1043
 msgid "Enter your IP address here, e.g. 192.168.1.2"
 msgstr "Введите свой IP-адрес, напр. 192.168.1.2"
 
-#: network.c:1035
+#: network.c:1045
 msgid "Netmask"
 msgstr "Сетевая маска"
 
-#: network.c:1038
+#: network.c:1048
 msgid "Enter your netmask here, e.g. 255.255.255.0 in most cases"
 msgstr "Введите свою сетевую маску, напр. 255.255.255.0 в большинстве случаев"
 
-#: network.c:1040
+#: network.c:1050
 msgid "Broadcast"
 msgstr "Широковещание"
 
-#: network.c:1043
+#: network.c:1053
 msgid "Enter your broadcast address here, usually the same like your IP with 255 as last number."
 msgstr "Введите свой широковещательный адрес, обычно такой же как ваш IP с 255 в качестве последнего числа."
 
-#: network.c:1045
+#: network.c:1055
 msgid "Gateway"
 msgstr "Шлюз"
 
-#: network.c:1048
+#: network.c:1058
 msgid "Enter the IP Address of your default gateway here."
 msgstr "Введите IP-адрес своего шлюза по умолчанию."
 
-#: network.c:1059 network.c:1176
+#: network.c:1069 network.c:1186
 msgid "WiFi device"
 msgstr "Устройство WiFi"
 
-#: network.c:1067 network.c:1184
+#: network.c:1077 network.c:1194
 msgid "Configure"
 msgstr "Настроить"
 
-#: network.c:1164
+#: network.c:1174
 msgid "Hostname"
 msgstr "Имя хоста"
 
-#: network.c:1167
+#: network.c:1177
 msgid "Enter your desired hostname here. This parameter is optional."
 msgstr "Введите желаемое имя для своего хоста. Этот параметр не обязателен."
 
-#: network.c:1284
+#: network.c:1294
 msgid "Provider"
 msgstr "Провайдер"
 
-#: network.c:1286
+#: network.c:1296
 msgid "Here you need to enter the name of the provider configuration to use for this interface."
 msgstr "Здесь необходимо ввести имя используемой настройки провайдера для этого интерфейса."
 
-#: network.c:1309
+#: network.c:1319
 msgid "Global Settings"
 msgstr "Общие настройки"
 
-#: network.c:1350
+#: network.c:1361
 msgid "Proxy"
 msgstr "Прокси"
 
-#: network.c:1351
+#: network.c:1362
 msgid "If you want/need to use a proxy, enter it here. (This only applies to dillo for now.)"
 msgstr "Если вы хотите/должны  использовать прокси, введите его здесь. (На сегодня это применимо только к dillo.)"
 
-#: network.c:1357
+#: network.c:1368
 msgid "No proxy for"
 msgstr "Нет прокси для"
 
-#: network.c:1359
+#: network.c:1370
 msgid "Here you should enter your local domain for that you don't want to use a proxy."
 msgstr "Здесь вы должны ввести свой локальный домен, для которого вы не хотите использовать прокси."
 
-#: network.c:1366
+#: network.c:1377
 msgid "DNS server"
 msgstr "Сервер DNS"
 
-#: network.c:1369
+#: network.c:1380
 msgid "Enter the IP of the DNS(name-) server to use here."
 msgstr "Введите IP используемого сервера DNS (доменных имен)."
 
-#: network.c:1540
+#: network.c:1551
 msgid ""
 "Here you may change the basic configuration type of your device.\n"
 "Use \"static\" for manual interface configuration, \"dhcp\" to use DHCP and \"ppp\" to make the device a point-to-point device."
@@ -411,291 +539,255 @@ msgstr ""
 "Здесь вы можете изменить основной тип настройки своего устройства.\n"
 "Используйте \"статический\" для ручной настройки интерфейса, \"dhcp\" для использования DHCP и \"ppp\", чтобы сделать устройство типа \"точка-точка\"."
 
-#: network.c:1546
+#: network.c:1557
 msgid "Enable this option if your device is a WiFi device"
 msgstr "Включите эту опцию, если ваше устройство является WiFi-устройством"
 
-#: network.c:1548
+#: network.c:1559
 msgid "Click to set the wireless options for this device"
 msgstr "Нажмите для установки параметров беспроводной связи для этого устройства"
 
-#: network.c:1550
+#: network.c:1561
 msgid "Set the mode your WiFi card should work. (managed or ad-hoc)."
 msgstr "Установите режим работы своей WiFi-карты (управляемый или ad-hoc)."
 
-#: network.c:1553
+#: network.c:1564
 msgid "Set the enrcyption mode: off for no WEP encryption, open for open system and restricted for resticted WEP connections only."
 msgstr "Установите режим шифрования: \"выкл.\" - без WEP-шифрования, \"открытое\" - открытая система и \"ограниченное\" - только ограниченные WEP-подключения."
 
-#: network.c:1558
+#: network.c:1569
 msgid "Enter the essid of your WiFi network here."
 msgstr "Введите essid своей сети WiFi."
 
-#: network.c:1561
+#: network.c:1572
 msgid "Enter your WEP key here in (iwconfig format), e.g.: \"s:12345\""
 msgstr "Введите свой WEP-ключ (в формате iwconfig), напр.: \"s:12345\""
 
-#: network.c:1564
+#: network.c:1575
 msgid "Select the WEP key to use."
 msgstr "Выберите используемый WEP-ключ."
 
-#: network.c:1567
+#: network.c:1578
 msgid "Enter the channel number or frequency if needed. If not needed leave this field blank."
 msgstr "Введите номер канала или частоту, если это необходимо. В противном случае оставьте это поле пустым."
 
-#: network.c:1590
+#: network.c:1601
 msgid "Add Interface"
 msgstr "Добавить интерфейс"
 
-#: network.c:1591
+#: network.c:1602
 msgid "Add a new Interface"
 msgstr "Добавить новый интерфейс"
 
-#: network.c:1601
+#: network.c:1612
 msgid "Remove Interface"
 msgstr "Удалить интерфейс"
 
-#: network.c:1602
+#: network.c:1613
 msgid "Remove current Interface"
 msgstr "Удалить текущий интерфейс"
 
-#: network.c:1616
+#: network.c:1627
 msgid "Information"
 msgstr "Информация"
 
-#: network.c:1617
+#: network.c:1628
 msgid "Show current configuration."
 msgstr "Показать текущую информацию"
 
-#: network.c:1635
+#: network.c:1647
 msgid "Couldn't read network configuration."
 msgstr "Невозможно прочитать настройку сети."
 
-#: network.c:1642
+#: network.c:1654
 msgid "global"
 msgstr "общий"
 
-#: theme.c:140
+#: theme.c:238
 msgid "Choose backgound image"
 msgstr "Выбрать фоновое изображение"
 
-#: theme.c:154
+#: theme.c:252
 msgid "You are not allowed to read this file, choose another."
 msgstr "Вам не разрешено читать этот файл, выберите другой."
 
-#: theme.c:175
+#: theme.c:273
 msgid "Succesfully changed background image."
 msgstr "Фоновое изображение изменено успешно."
 
-#: theme.c:176
+#: theme.c:274
 msgid "Use \"Look and Feel\" setup tool to change details."
 msgstr "Используйте утилиту \"Внешнее оформление\" для изменения деталей."
 
-#: theme.c:500
+#: theme.c:598
 msgid "Red"
 msgstr "Красный"
 
-#: theme.c:505
+#: theme.c:603
 msgid "Green"
 msgstr "Зеленый"
 
-#: theme.c:510
+#: theme.c:608
 msgid "Blue"
 msgstr "Синий"
 
-#: theme.c:820
+#: theme.c:918
 msgid "Select colour"
 msgstr "Выбрать цвет"
 
-#: theme.c:846 theme.c:920
+#: theme.c:944 theme.c:1018
 msgid "You don't have read access to selected background image!"
 msgstr "У вас нет прав на чтение выбранного фонового изображения!"
 
-#: theme.c:1040
-msgid "Theme"
-msgstr "Тема"
-
-#: theme.c:1042 gpe-conf-theme.desktop.in.h:2
-msgid "Look and Feel"
-msgstr "Внешнее оформление"
-
-#: theme.c:1052
+#: theme.c:1156
 msgid "Desktop Theme"
 msgstr "Тема рабочего стола"
 
-#: theme.c:1064
+#: theme.c:1168
 msgid "Name"
 msgstr "Имя"
 
-#: theme.c:1081
+#: theme.c:1185
 msgid "Icon Size"
 msgstr "Размер значков"
 
-#: theme.c:1096
+#: theme.c:1200
 msgid "Visual Effects"
 msgstr "Визуальные эффекты"
 
-#: theme.c:1102
+#: theme.c:1206
 msgid "Enable Visual Effects"
 msgstr "Включить визуальные эффекты"
 
-#: theme.c:1109
+#: theme.c:1213
 msgid "Background"
 msgstr "Фон"
 
-#: theme.c:1123 theme.c:1125
+#: theme.c:1227 theme.c:1229
 msgid "Background Settings"
 msgstr "Настройки фона"
 
-#: theme.c:1135 theme.c:1146
+#: theme.c:1239 theme.c:1250
 msgid "Theme Default"
 msgstr "Тема по умолчанию"
 
-#: theme.c:1154
+#: theme.c:1258
 msgid "Solid colour"
 msgstr "Сплошной цвет"
 
-#: theme.c:1168
+#: theme.c:1272
 msgid "Horizontal"
 msgstr "Горизонтальный"
 
-#: theme.c:1172
+#: theme.c:1276
 msgid "Vertical"
 msgstr "Вертикальный"
 
-#: theme.c:1177 theme.c:1196 theme.c:1379 theme.c:1385
+#: theme.c:1281 theme.c:1300 theme.c:1483 theme.c:1489
 msgid "Colour"
 msgstr "Цвет"
 
-#: theme.c:1187
+#: theme.c:1291
 msgid "Colour gradient"
 msgstr "Цветовой градиент"
 
-#: theme.c:1206
+#: theme.c:1310
 msgid "Image"
 msgstr "Изображение"
 
-#: theme.c:1232
+#: theme.c:1336
 msgid "Centered"
 msgstr "По центру"
 
-#: theme.c:1236
+#: theme.c:1340
 msgid "Tiled"
 msgstr "Мозаикой"
 
-#: theme.c:1239
+#: theme.c:1343
 msgid "Stretched"
 msgstr "Растянутое"
 
-#: theme.c:1246
+#: theme.c:1350
 msgid "Toolbars"
 msgstr "Панели инструментов"
 
-#: theme.c:1258 theme.c:1260
+#: theme.c:1362 theme.c:1364
 msgid "Toolbar Style"
 msgstr "Стиль панели инструментов"
 
-#: theme.c:1269 theme.c:1298
+#: theme.c:1373 theme.c:1402
 msgid "Icons"
 msgstr "Значки"
 
-#: theme.c:1274 theme.c:1302
+#: theme.c:1378 theme.c:1406
 msgid "Text"
 msgstr "Текст"
 
-#: theme.c:1279
+#: theme.c:1383
 msgid "Both"
 msgstr "Оба"
 
-#: theme.c:1284
+#: theme.c:1388
 msgid "Both H"
 msgstr "Оба H"
 
-#: theme.c:1305
+#: theme.c:1409
 msgid "Both (icon above text)"
 msgstr "Оба (значок над текстом)"
 
-#: theme.c:1308
+#: theme.c:1412
 msgid "Both (icon left of text)"
 msgstr "Оба (значок слева от текста)"
 
-#: theme.c:1315
+#: theme.c:1419
 msgid "Toolbar Icon Size"
 msgstr "Размер значков панели инструментов"
 
-#: theme.c:1331
+#: theme.c:1435
 msgid "Fonts"
 msgstr "Шрифты"
 
-#: theme.c:1340 theme.c:1360
+#: theme.c:1444 theme.c:1464
 msgid "Desktop Font"
 msgstr "Шрифт рабочего стола"
 
-#: theme.c:1347 theme.c:1407 theme.c:1442
+#: theme.c:1451 theme.c:1511 theme.c:1546 theme.c:1596
 msgid "Family"
 msgstr "Семейство"
 
-#: theme.c:1367 theme.c:1427 theme.c:1462
+#: theme.c:1471 theme.c:1531 theme.c:1566 theme.c:1616
 msgid "Size"
 msgstr "Размер"
 
-#: theme.c:1396 theme.c:1398 theme.c:1420 theme.c:1455
+#: theme.c:1500 theme.c:1502 theme.c:1524 theme.c:1559
 msgid "Application Font"
 msgstr "Шрифт приложения"
 
-#: keyctl.c:230
-msgid "Reset button config to default?"
-msgstr "Сбросить настройку кнопок на значение по умолчанию?"
+#: theme.c:1580
+msgid "Terminal"
+msgstr "Терминал"
 
-#: keyctl.c:248
-msgid "User Defined"
-msgstr "Определенные пользователем"
+#: theme.c:1589
+msgid "Font"
+msgstr "Шрифт"
 
-#: keyctl.c:249
-msgid "Record Memo"
-msgstr "Записи"
+#: theme.c:1609
+msgid "Terminal Font"
+msgstr "Шрифт терминала"
 
-#: keyctl.c:250
-msgid "Calendar"
-msgstr "Календарь"
+#: keys/keyctl.c:178
+msgid "Button layout file is missing a global section."
+msgstr "В файле с раскладкой кнопок отсутствует глобальный раздел."
 
-#: keyctl.c:251
-msgid "Contacts"
-msgstr "Контакты"
+#: keys/keyctl.c:549
+msgid "Critical: Can't open keylaunchrc for writing!"
+msgstr "Критическая ошибка: Невозможно открыть keylaunchrc для записи!"
 
-#: keyctl.c:252
-msgid "Taskmanager"
-msgstr "Менеджер задач"
+#: keys/keyctl.c:572
+msgid "Could not restart key handler!"
+msgstr "Невозможно перезапустить обработчик клавиш!"
 
-#: keyctl.c:253
-msgid "Audio Player"
-msgstr "Музыкальный проигрыватель"
-
-#: keyctl.c:254
-msgid "Web Browser"
-msgstr "Веб-браузер"
-
-#: keyctl.c:255
-msgid "To-do List"
-msgstr "Список To-do"
-
-#: keyctl.c:256
-msgid "Toggle Desktop"
-msgstr "Переключение рабочих столов"
-
-#: keyctl.c:277
-msgid "Defaults"
-msgstr "Значения по умолчанию"
-
-#: keyctl.c:442
-msgid "Critical: Can't open keylaunchrc for writing!\n"
-msgstr "Критическая ошибка: Невозможно открыть keylaunchrc для записи!\n"
-
-#: keyctl.c:464
-msgid "Could not restart key handler!\n"
-msgstr "Невозможно перезапустить обработчик клавиш!\n"
-
-#: keyctl.c:486
+#: keys/keyctl.c:595
 msgid "The file you selected is not executable."
 msgstr "Выбранный вами файл не является исполняемым."
 
@@ -723,23 +815,23 @@ msgstr "Адрес:"
 msgid "Photofile:"
 msgstr "Файл фото:"
 
-#: login-setup.c:118
+#: login-setup.c:160
 msgid "Some of these settings can only be changed by the user 'root'."
 msgstr "Некоторые из этих настроек могут быть изменены только пользователем 'root'."
 
-#: login-setup.c:141 gpe-admin.c:86
+#: login-setup.c:183 gpe-admin.c:85
 msgid "General"
 msgstr "Основные"
 
-#: login-setup.c:158
+#: login-setup.c:200
 msgid "Show owner information at login."
 msgstr "Показывать информацию о владельце при входе в систему."
 
-#: login-setup.c:162
+#: login-setup.c:204
 msgid "Lock display on suspend."
 msgstr "Блокировать экран при переходе в ждущий режим."
 
-#: login-setup.c:166
+#: login-setup.c:208
 msgid ""
 "Lock display on suspend. \n"
 "  (needs password)"
@@ -747,65 +839,69 @@ msgstr ""
 "Блокировать экран при переходе в ждущий режим. \n"
 "  (нужен пароль)"
 
-#: sleep/interface.c:67
+#: login-setup.c:213
+msgid ""
+"Automatic login. \n"
+"  (without password)"
+msgstr ""
+"Автоматически входить в систему. \n"
+"  (без пароля)"
+
+#: sleep/interface.c:65
 msgid "Auto sleep"
 msgstr "Автоматически переходить в спящий режим"
 
-#: sleep/interface.c:77 sleep/interface.c:116
+#: sleep/interface.c:75 sleep/interface.c:106
 msgid "enabled"
 msgstr "включен"
 
-#: sleep/interface.c:95
+#: sleep/interface.c:93
 msgid "sleep timeout"
 msgstr "тайм-аут перехода в спящий режим"
 
-#: sleep/interface.c:106
+#: sleep/interface.c:96
 msgid "Auto dim"
 msgstr "Автозатемнение"
 
-#: sleep/interface.c:133
+#: sleep/interface.c:123
 msgid "backlight dim timeout"
 msgstr "тайм-аут затемнения подсветки"
 
-#: sleep/interface.c:142
+#: sleep/interface.c:125
 msgid "Auto dim level"
 msgstr "Уровень автозатемнения"
 
-#: sleep/interface.c:162
+#: sleep/interface.c:145
 msgid "Advanced Controls"
 msgstr "Дополнительное управление"
 
-#: sleep/interface.c:172
+#: sleep/interface.c:155
 msgid "CPU"
 msgstr "Процессор"
 
-#: sleep/interface.c:178
+#: sleep/interface.c:161
 msgid "Sleep on cpu less than load"
 msgstr "Переходить в спящий режим при пониженной загрузке процессора"
 
-#: sleep/interface.c:182
+#: sleep/interface.c:165
 msgid "load below"
 msgstr "загрузка ниже"
 
-#: sleep/interface.c:198
+#: sleep/interface.c:181
 msgid "APM"
 msgstr "АУП"
 
-#: sleep/interface.c:204
+#: sleep/interface.c:187
 msgid "Sleep on AC"
 msgstr "Переходить в спящий режим при переменном токе"
 
-#: sleep/interface.c:206
+#: sleep/interface.c:189
 msgid "probe IRQs"
 msgstr "опрашивать прерывания"
 
-#: sleep/interface.c:212
+#: sleep/interface.c:195
 msgid "Check IRQ activity"
 msgstr "Проверять активность прерываний"
-
-#: sleep/callbacks.c:59
-msgid "%"
-msgstr "%"
 
 #: users/interface.c:215
 msgid "User Name"
@@ -899,7 +995,15 @@ msgstr "Новый пароль:"
 msgid "Confirm:"
 msgstr "Подтверждение:"
 
-#: users/callbacks.c:113
+#: users/callbacks.c:107
+msgid "You need at least one user account!"
+msgstr "У вас должна быть по как минимум одна учётная запись."
+
+#: users/callbacks.c:131
+msgid "You can't remove this user!"
+msgstr "Вы не можете удалить этого пользователя!"
+
+#: users/callbacks.c:136
 msgid ""
 "You can't remove\n"
 " system users!"
@@ -907,7 +1011,7 @@ msgstr ""
 "Вы не можете удалить\n"
 "системных пользователей!"
 
-#: users/callbacks.c:115
+#: users/callbacks.c:138
 msgid ""
 "Delete user and all its data?\n"
 "This action is not revertable\n"
@@ -917,15 +1021,15 @@ msgstr ""
 "Это безвозвратное действие\n"
 "и выполняется немедленно."
 
-#: users/callbacks.c:151
+#: users/callbacks.c:173
 msgid "Please choose a user name."
 msgstr "Пожалуйста, выберите имя пользователя."
 
-#: users/callbacks.c:169
+#: users/callbacks.c:191
 msgid "Please choose a home directory."
 msgstr "Пожалуйста, выберите домашний каталог."
 
-#: users/callbacks.c:256
+#: users/callbacks.c:279
 msgid ""
 "The two new pass are different!\n"
 " Please try again!"
@@ -933,7 +1037,7 @@ msgstr ""
 "Два новых пароля не совпадают!\n"
 " Пожалуйста, попробуйте еще раз!"
 
-#: users/callbacks.c:259
+#: users/callbacks.c:282
 msgid ""
 "Wrong password\n"
 " Please try again!"
@@ -941,11 +1045,11 @@ msgstr ""
 "Неверный пароль\n"
 " Пожалуйста, попробуйте еще раз!"
 
-#: cfgfile.c:891
+#: cfgfile.c:919
 msgid "No write access to network configuration."
 msgstr "Нет прав да запись конфигурации сети."
 
-#: gpe-admin.c:93
+#: gpe-admin.c:92
 msgid "Allow users to configure everything"
 msgstr "Разрешить пользователям настраивать все, что угодно"
 
@@ -1033,128 +1137,128 @@ msgstr "Скорость двоичной передачи"
 msgid "Serial Port"
 msgstr "Последовательный порт"
 
-#: cardinfo.c:105
+#: cardinfo.c:103
 msgid "/_Card"
 msgstr "/_Карточка"
 
-#: cardinfo.c:106
+#: cardinfo.c:104
 msgid "/Card/_Insert"
 msgstr "/Карточка/_Вставить"
 
-#: cardinfo.c:107
+#: cardinfo.c:105
 msgid "/Card/_Eject"
 msgstr "/Карточка/_Извлечь"
 
-#: cardinfo.c:108
+#: cardinfo.c:106
 msgid "/Card/_Suspend"
 msgstr "/Карточка/_Приостановить"
 
-#: cardinfo.c:109
+#: cardinfo.c:107
 msgid "/Card/_Resume"
 msgstr "/Карточка/В_озобновить"
 
-#: cardinfo.c:110
+#: cardinfo.c:108
 msgid "/Card/_Reset"
 msgstr "/Карточка/_Сбросить"
 
-#: cardinfo.c:111
+#: cardinfo.c:109
 msgid "/Card/s1"
 msgstr "/Карточка/s1"
 
-#: cardinfo.c:112
+#: cardinfo.c:110
 msgid "/Card/_Assign Driver"
 msgstr "/Карточка/_Назначить драйвер"
 
-#: cardinfo.c:113
+#: cardinfo.c:111
 msgid "/Card/s2"
 msgstr "/Карточка/s2"
 
-#: cardinfo.c:114
+#: cardinfo.c:112
 msgid "/Card/_Close"
 msgstr "/Карточка/_Закрыть"
 
-#: cardinfo.c:115
+#: cardinfo.c:113
 msgid "/_Help"
 msgstr "/_Справка"
 
-#: cardinfo.c:116
+#: cardinfo.c:114
 msgid "/_Help/Index"
 msgstr "/_Справка/Индекс"
 
-#: cardinfo.c:117
+#: cardinfo.c:115
 msgid "/_Help/About"
 msgstr "/_Справка/О программе"
 
-#: cardinfo.c:177 cardinfo.c:865
+#: cardinfo.c:175 cardinfo.c:863
 msgid "card not recognized"
 msgstr "карточка не распознана"
 
-#: cardinfo.c:279 cardinfo.c:350
+#: cardinfo.c:277 cardinfo.c:348
 msgid "Could not write to temporal config file."
 msgstr "Невозможно выполнить запись во временный файл настройки."
 
-#: cardinfo.c:556
+#: cardinfo.c:554
 msgid "Could not open pidfile:"
 msgstr "Невозможно открыть pid-файл:"
 
-#: cardinfo.c:562
+#: cardinfo.c:560
 msgid "Could not read pidfile"
 msgstr "Невозможно прочитать pid-файл"
 
-#: cardinfo.c:566
+#: cardinfo.c:564
 msgid "Could not signal cardmgr:"
 msgstr "Невозможно подать сигнал cardmgr:"
 
-#: cardinfo.c:641
+#: cardinfo.c:639
 msgid "gpe-conf must be setuid root to use cardinfo feature."
 msgstr "gpe-conf должен иметь suid root'a, чтобы использовать возможность cardinfo."
 
-#: cardinfo.c:660
+#: cardinfo.c:658
 msgid "No PCMCIA driver in '/proc/devices'"
 msgstr "Нет драйвера PCMCIA в '/proc/devices'"
 
-#: cardinfo.c:663
+#: cardinfo.c:661
 msgid "Could not open '/proc/devices'"
 msgstr "Невозможно открыть '/proc/devices'"
 
-#: cardinfo.c:675
+#: cardinfo.c:673
 msgid "No sockets found\n"
 msgstr "Сокеты не найдены\n"
 
-#: cardinfo.c:684
+#: cardinfo.c:682
 msgid "Card Services release does not match!"
 msgstr "Версии Card Services не совпадают!"
 
-#: cardinfo.c:689
+#: cardinfo.c:687
 msgid "Could not get CS revision info!\n"
 msgstr "Невозможно получить информацию о редакции CS!\n"
 
-#: cardinfo.c:852
+#: cardinfo.c:850
 msgid "flock(stabfile) failed"
 msgstr "flock(stabfile) завершился неудачей"
 
-#: cardinfo.c:871
+#: cardinfo.c:869
 #, c-format
 msgid "no driver loaded"
 msgstr "драйвер не загружен"
 
-#: cardinfo.c:980
+#: cardinfo.c:978
 msgid "ready"
 msgstr "готов"
 
-#: cardinfo.c:998
+#: cardinfo.c:996
 msgid "not ready"
 msgstr "не готов"
 
-#: cardinfo.c:1013
+#: cardinfo.c:1011
 msgid "suspended"
 msgstr "приостановлен"
 
-#: cardinfo.c:1205
+#: cardinfo.c:1203
 msgid "Assign Driver"
 msgstr "Назначить драйвер"
 
-#: cardinfo.c:1214
+#: cardinfo.c:1212
 msgid ""
 "This dialog allows you to select/\n"
 "change the driver assignment for a\n"
@@ -1164,59 +1268,59 @@ msgstr ""
 "изменить назначение драйвера для\n"
 "карты PCMCIA или CF."
 
-#: cardinfo.c:1224
+#: cardinfo.c:1222
 msgid "Your current card identifies itself as:"
 msgstr "Ваша текущая карта опознает себя как:"
 
-#: cardinfo.c:1238 cardinfo.c:1244
+#: cardinfo.c:1236 cardinfo.c:1242
 msgid "Manuf. Id"
 msgstr "Id производителя"
 
-#: cardinfo.c:1238 cardinfo.c:1244
+#: cardinfo.c:1236 cardinfo.c:1242
 msgid "Class"
 msgstr "Класс"
 
-#: cardinfo.c:1342 cardinfo.c:1355
+#: cardinfo.c:1340 cardinfo.c:1353
 msgid "PC/CF card socket information."
 msgstr "Информация о сокете карты PC/CF."
 
-#: cardinfo.c:1350
+#: cardinfo.c:1348
 msgid "Socket"
 msgstr "Сокет"
 
-#: cardinfo.c:1381
+#: cardinfo.c:1379
 msgid "Information for socket"
 msgstr "Информация для сокета"
 
-#: cardinfo.c:1390
+#: cardinfo.c:1388
 msgid "State:"
 msgstr "Состояние:"
 
-#: cardinfo.c:1391
+#: cardinfo.c:1389
 msgid "Device:"
 msgstr "Устройство:"
 
-#: cardinfo.c:1392
+#: cardinfo.c:1390
 msgid "Driver:"
 msgstr "Драйвер:"
 
-#: cardinfo.c:1393
+#: cardinfo.c:1391
 msgid "Type:"
 msgstr "Тип:"
 
-#: cardinfo.c:1394
+#: cardinfo.c:1392
 msgid "I/O:"
 msgstr "I/O:"
 
-#: cardinfo.c:1395
+#: cardinfo.c:1393
 msgid "IRQ:"
 msgstr "IRQ:"
 
-#: cardinfo.c:1402
+#: cardinfo.c:1400
 msgid "Flags:"
 msgstr "Флаги:"
 
-#: cardinfo.c:1419
+#: cardinfo.c:1417
 msgid "PCMCIA initialisation failed"
 msgstr "Сбой инициализации PCMCIA"
 
@@ -1296,7 +1400,7 @@ msgstr "Не найдены подходящие семейства адресо
 #: tools/interface.c:1036
 #, c-format
 msgid "Warning: no inet socket available: %s\n"
-msgstr "Предупреждение: сокет inet не доступен: %s\n"
+msgstr "Предупреждение: недоступен сокет inet: %s\n"
 
 #: tools/interface.c:1188
 #, c-format
@@ -1401,117 +1505,202 @@ msgstr "16/4 Мбит/с Token Ring"
 msgid "16/4 Mbps Token Ring (New)"
 msgstr "16/4 Мбит/с Token Ring (Новый)"
 
-#: tools/interface.c:1871
+#: tools/interface.c:1875
 #, c-format
-msgid ""
-"<b>Interface %s</b>\n"
-"Type: %s\n"
-msgstr ""
-"<b>Интерфейс %s</b>\n"
-"Тип: %s\n"
+msgid "Interface %s"
+msgstr "Интерфейс %s"
 
-#: tools/interface.c:1877
+#: tools/interface.c:1876
+#, c-format
+msgid "Type: %s"
+msgstr "Тип: %s"
+
+#: tools/interface.c:1885
 #, c-format
 msgid "Media: %s"
 msgstr "Среда: %s"
 
-#: tools/interface.c:1882
+#: tools/interface.c:1890
 #, c-format
 msgid "(auto)"
 msgstr "(авто)"
 
-#: tools/interface.c:1894
+#: tools/interface.c:1902
 #, c-format
 msgid "Address: %s\n"
 msgstr "Адрес: %s\n"
 
-#: tools/interface.c:1899
+#: tools/interface.c:1907
 #, c-format
 msgid "P-t-P: %s\n"
 msgstr "P-t-P: %s\n"
 
-#: tools/interface.c:1903
+#: tools/interface.c:1911
 #, c-format
 msgid "Netmask: %s\n"
 msgstr "Сетевая маска: %s\n"
 
-#: tools/interface.c:1907
+#: tools/interface.c:1915
 #, c-format
 msgid "Broadcast: %s\n"
 msgstr "Широковещание: %s\n"
 
-#: tools/interface.c:1919
+#: tools/interface.c:1927
 #, c-format
 msgid "HWaddr (MAC): %s\n"
 msgstr "HWaddr (MAC): %s\n"
 
-#: tools/interface.c:1949
+#: tools/interface.c:1957
 #, c-format
 msgid "IPv6 Address: %s/%d\n"
 msgstr "Адрес IPv6: %s/%d\n"
 
-#: tools/interface.c:1952
+#: tools/interface.c:1960
 #, c-format
 msgid "Scope: "
 msgstr "Область действия: "
 
-#: tools/interface.c:1957
+#: tools/interface.c:1965
 #, c-format
 msgid "Global"
 msgstr "Глобальный"
 
-#: tools/interface.c:1960
+#: tools/interface.c:1968
 #, c-format
 msgid "Link"
 msgstr "Ссылка"
 
-#: tools/interface.c:1963
+#: tools/interface.c:1971
 #, c-format
 msgid "Site"
 msgstr "Сайт"
 
-#: tools/interface.c:1966
+#: tools/interface.c:1974
 #, c-format
 msgid "Compat"
 msgstr "Совмест."
 
-#: tools/interface.c:1969
+#: tools/interface.c:1977
 #, c-format
 msgid "Host"
 msgstr "Хост"
 
-#: tools/interface.c:1972
+#: tools/interface.c:1980
 #, c-format
 msgid "Unknown"
 msgstr "Неизвестный"
 
-#: sound/sound.c:252
+#: sound/sound.c:250
 msgid "Audio Settings"
 msgstr "Настройки звука"
 
-#: sound/sound.c:259
+#: sound/sound.c:257
 msgid "Mute Everything"
 msgstr "Выкл. всё"
 
-#: sound/sound.c:300
+#: sound/sound.c:298
 msgid "Alarm Settings"
 msgstr "Настройки будильника"
 
-#: sound/sound.c:307
+#: sound/sound.c:305
 msgid "Enable Alarm Sound"
 msgstr "Включить звук будильника"
 
-#: sound/sound.c:314
+#: sound/sound.c:312
 msgid "Automatic Volume (rising)"
 msgstr "Автоматическая громкость (увелич.)"
 
-#: sound/sound.c:324 sound/soundctrl.c:283
+#: sound/sound.c:322 sound/soundctrl.c:298
 msgid "Volume"
 msgstr "Громкость"
 
-#: sound/sound.c:331
+#: sound/sound.c:329
 msgid "Test"
 msgstr "Проверка"
+
+#: keys/keyboard.c:75
+msgid "none"
+msgstr "отсутствует"
+
+#: keys/keyboard.c:76
+msgid "Foldable"
+msgstr "Foldable"
+
+#: keys/keyboard.c:77
+msgid "SnapNType"
+msgstr "SnapNType"
+
+#: keys/keyboard.c:78
+msgid "Stowaway"
+msgstr "Stowaway"
+
+#: keys/keyboard.c:79
+msgid "StowawayXT"
+msgstr "StowawayXT"
+
+#: keys/keyboard.c:80
+msgid "HP Slim"
+msgstr "HP Slim"
+
+#: keys/keyboard.c:81
+msgid "Smart BT"
+msgstr "Smart BT"
+
+#: keys/keyboard.c:82
+msgid "LIRC"
+msgstr "LIRC"
+
+#: keys/keyboard.c:83
+msgid "Belkin IR"
+msgstr "Belkin IR"
+
+#: keys/keyboard.c:84
+msgid "Flexis"
+msgstr "Flexis"
+
+#: keys/keyboard.c:85
+msgid "Benq Gamepad"
+msgstr "Benq Gamepad"
+
+#: keys/keyboard.c:86
+msgid "Pocketvik"
+msgstr "Pocketvik"
+
+#: keys/keyboard.c:87
+msgid "Micro Foldaway"
+msgstr "Micro Foldaway"
+
+#: keys/keyboard.c:88
+msgid "Micro Datapad"
+msgstr "Micro Datapad"
+
+#: keys/keyboard.c:252
+msgid "External keyboard configuration."
+msgstr "Настройка внешней клавиатуры."
+
+#: keys/keyboard.c:255
+msgid "External Keyboard Port"
+msgstr "Порт внешней клавиатуры"
+
+#: keys/keyboard.c:262
+msgid "Here you may select your external keyboard model."
+msgstr "Здесь вы можете выбрать модель внешней клавиатуры."
+
+#: keys/keyboard.c:283
+msgid "External Keyboard Type"
+msgstr "Тип внешней клавиатуры"
+
+#: keys/keys.c:79
+msgid "Buttons"
+msgstr "Кнопки"
+
+#: keys/keys.c:83
+msgid "Virtual Keyboard"
+msgstr "Виртуальная клавиатура"
+
+#: keys/keys.c:87
+msgid "External Keyboard"
+msgstr "Внешняя клавиатура"
 
 #: main-info.c:67
 #, c-format
@@ -1527,46 +1716,46 @@ msgstr "    Где страница может быть \"global\" (по умо�
 msgid "System Information"
 msgstr "Информация о системе"
 
-#: storage.c:167 storage.c:424
+#: storage.c:166 storage.c:423
 msgid "System Memory"
 msgstr "Системная память"
 
 #. TRANSLATORS: MB == Mega Bytes
-#: storage.c:175 storage.c:444
+#: storage.c:174 storage.c:443
 msgid "Free memory"
 msgstr "Свободная память"
 
 #. TRANSLATORS: MB == Mega Bytes
-#: storage.c:177 storage.c:184 storage.c:330 storage.c:341 storage.c:446
-#: storage.c:459 sysinfo.c:664 sysinfo.c:680
+#: storage.c:176 storage.c:183 storage.c:329 storage.c:340 storage.c:445
+#: storage.c:458 sysinfo.c:663 sysinfo.c:679
 msgid "MB"
 msgstr "МБ"
 
-#: storage.c:182 storage.c:329 storage.c:457
+#: storage.c:181 storage.c:328 storage.c:456
 msgid "Total:"
 msgstr "Всего:"
 
-#: storage.c:293
+#: storage.c:292
 msgid "Internal Flash"
 msgstr "Внутренний флэш"
 
-#: storage.c:299
+#: storage.c:298
 msgid "MMC"
 msgstr "MMC"
 
-#: storage.c:305
+#: storage.c:304
 msgid "Compact Flash"
 msgstr "Компактный флэш"
 
-#: storage.c:311
+#: storage.c:310
 msgid "Network Filesystem"
 msgstr "Сетевая файловая система"
 
-#: storage.c:331
+#: storage.c:330
 msgid "Mounted at "
 msgstr "Примонтирована на"
 
-#: storage.c:339
+#: storage.c:338
 msgid "Free space"
 msgstr "Свободное пространство"
 
@@ -1598,199 +1787,198 @@ msgstr "Журнал сеансов"
 msgid "Could not open X session log.\n"
 msgstr "Невозможно открыть журнал сеанса X.\n"
 
-#: battery.c:86
-#, c-format
-msgid "could not open touchscreen device '%s'\n"
-msgstr "невозможно открыть устройство сенсорного экрана '%s'\n"
+#: battery.c:190 battery.c:251
+msgid "unknown"
+msgstr "неизвестный"
 
-#: battery.c:143 battery.c:200 battery.c:319
+#: battery.c:199 battery.c:259 battery.c:358
 msgid "Status: high"
 msgstr "Статус: высокий"
 
-#: battery.c:146 battery.c:203 battery.c:323
+#: battery.c:202 battery.c:262 battery.c:362
 msgid "Status: low"
 msgstr "Статус: низкий"
 
-#: battery.c:149 battery.c:206 battery.c:327
+#: battery.c:205 battery.c:265 battery.c:366
 msgid "Status: critical"
 msgstr "Статус: критический"
 
-#: battery.c:152 battery.c:209 battery.c:331
+#: battery.c:208 battery.c:268 battery.c:370
 msgid "Status: charging"
 msgstr "Статус: заряжается"
 
-#: battery.c:155 battery.c:212
+#: battery.c:211 battery.c:271
 msgid "Status: charge main"
 msgstr "Статус: основная зарядка"
 
-#: battery.c:158
+#: battery.c:214
 msgid "Status: dead"
 msgstr "Статус: разряжен"
 
-#: battery.c:161 battery.c:218 battery.c:317
+#: battery.c:217 battery.c:277 battery.c:356
 msgid "Status: full"
 msgstr "Статус: заряжен"
 
-#: battery.c:164 battery.c:221
+#: battery.c:220 battery.c:280
 msgid "Status: no battery"
 msgstr "Статус: нет аккумулятора"
 
-#: battery.c:167 battery.c:224 battery.c:243 battery.c:334
+#: battery.c:223 battery.c:283 battery.c:301 battery.c:373
 msgid "Status: unknown"
 msgstr "Статус: неизвестный"
 
-#: battery.c:172
+#: battery.c:228
 msgid "learning"
 msgstr "изучается"
 
-#: battery.c:176 battery.c:228
+#: battery.c:232 battery.c:287
 msgid "Voltage"
 msgstr "Напряжение"
 
-#: battery.c:180 battery.c:232 battery.c:348
+#: battery.c:236 battery.c:291 battery.c:390
 msgid "AC connected"
 msgstr "Подключен к электросети"
 
-#: battery.c:182 battery.c:234 battery.c:350
+#: battery.c:238 battery.c:293 battery.c:392
 msgid "Lifetime"
 msgstr "Срок службы"
 
-#: battery.c:215
+#: battery.c:274
 msgid "Status: not installed"
 msgstr "Статус: не установлен"
 
-#: battery.c:241
+#: battery.c:300
 msgid "not installed"
 msgstr "не установлен"
 
-#: battery.c:245
+#: battery.c:302
 msgid "Voltage: unknown"
 msgstr "Напряжение: не известно"
 
-#: battery.c:247
+#: battery.c:303
 msgid "Lifetime: unknown"
 msgstr "Срок службы: не известен"
 
-#: battery.c:309
+#: battery.c:348
 msgid "No battery"
 msgstr "Аккумулятора нет"
 
-#: battery.c:409
+#: battery.c:453
 msgid "Internal battery"
 msgstr "Внутренний аккумулятор"
 
-#: battery.c:413
+#: battery.c:457
 msgid "Jacket battery"
 msgstr "Внешний аккумулятор"
 
-#: sysinfo.c:237
+#: sysinfo.c:236
 msgid "ARM"
 msgstr "ARM"
 
-#: sysinfo.c:240
+#: sysinfo.c:239
 msgid "Intel x86 or compatible"
 msgstr "Intel x86 или совместимый"
 
-#: sysinfo.c:241
+#: sysinfo.c:240
 msgid "IBM type PC"
 msgstr "IBM-PC"
 
-#: sysinfo.c:244
+#: sysinfo.c:243
 msgid "Mips"
 msgstr "Mips"
 
-#: sysinfo.c:246
+#: sysinfo.c:245
 msgid "Silicon Graphics Machine"
 msgstr "Silicon Graphics Machine"
 
-#: sysinfo.c:250
+#: sysinfo.c:249
 msgid "IBM Power or PowerPC"
 msgstr "IBM Power или PowerPC"
 
 #. TRANSLATORS: "Familiar" is the name of a linux distribution.
-#: sysinfo.c:279
+#: sysinfo.c:278
 msgid "Familiar"
 msgstr "Familiar"
 
-#. TRANSLATORS: "Familiar" is the name of a linux distribution.
-#: sysinfo.c:293
+#. TRANSLATORS: "OpenEmbedded" is the name of a linux distribution.
+#: sysinfo.c:292
 msgid "OpenEmbedded"
 msgstr "OpenEmbedded"
 
-#: sysinfo.c:335 sysinfo.c:337
+#: sysinfo.c:334 sysinfo.c:336
 msgid "Build"
 msgstr "Сборка"
 
-#: sysinfo.c:439
+#: sysinfo.c:438
 msgid "Network Status"
 msgstr "Статус сети"
 
-#: sysinfo.c:453 sysinfo.c:456
+#: sysinfo.c:452 sysinfo.c:455
 msgid "HWaddr (MAC)"
 msgstr "HWaddr (MAC)"
 
-#: sysinfo.c:467 sysinfo.c:468
+#: sysinfo.c:466 sysinfo.c:467
 #, c-format
 msgid "Wireless"
 msgstr "Беспроводная сеть"
 
-#: sysinfo.c:495
+#: sysinfo.c:494
 msgid "Default Gateway"
 msgstr "Шлюз по умолчанию"
 
-#: sysinfo.c:538
+#: sysinfo.c:537
 msgid "System information"
 msgstr "Информация о системе"
 
-#: sysinfo.c:548
+#: sysinfo.c:547
 msgid "Version"
 msgstr "Версия"
 
-#: sysinfo.c:580
+#: sysinfo.c:579
 msgid "Distribution"
 msgstr "Дистрибутив"
 
-#: sysinfo.c:605
+#: sysinfo.c:604
 msgid "System"
 msgstr "Система"
 
-#: sysinfo.c:614
+#: sysinfo.c:613
 msgid "Device information"
 msgstr "Информация об устройстве"
 
-#: sysinfo.c:626
+#: sysinfo.c:625
 msgid "Device Name"
 msgstr "Название устройства"
 
-#: sysinfo.c:645
+#: sysinfo.c:644
 msgid "CPU:"
 msgstr "Процессор:"
 
-#: sysinfo.c:658
+#: sysinfo.c:657
 msgid "RAM:"
 msgstr "ОЗУ:"
 
-#: sysinfo.c:674
+#: sysinfo.c:673
 msgid "Storage:"
 msgstr "Хранилище:"
 
-#: sysinfo.c:686
+#: sysinfo.c:685
 msgid "Hardware"
 msgstr "Оборудование"
 
-#: sysinfo.c:696
+#: sysinfo.c:695
 msgid "Battery"
 msgstr "Аккумулятор"
 
-#: sysinfo.c:703
+#: sysinfo.c:702
 msgid "Storage"
 msgstr "Хранилище"
 
-#: sysinfo.c:710
+#: sysinfo.c:709
 msgid "Networks"
 msgstr "Сети"
 
-#: sysinfo.c:717
+#: sysinfo.c:716
 msgid "Log Display"
 msgstr "Экран журнала"
 
@@ -1814,37 +2002,13 @@ msgstr "Карты PC/CF"
 msgid "PC/CF Cards info and config"
 msgstr "Информация и настройки карт PC/CF"
 
-#: gpe-conf-screen.desktop.in.h:1
-msgid "Screen Setup"
-msgstr "Настройка экрана"
+#: gpe-conf-keys.desktop.in.h:1
+msgid "Keyboard and Button Setup"
+msgstr "Настройка клавиатуры и кнопок"
 
-#: gpe-conf-kbd.desktop.in.h:1
-msgid "Virtual Keyboard"
-msgstr "Виртуальная клавиатура"
-
-#: gpe-conf-kbd.desktop.in.h:2
-msgid "Virtual Keyboard Setup"
-msgstr "Настройка виртуальной клавиатуры"
-
-#: gpe-conf-keyctl.desktop.in.h:1
-msgid "Button Config"
-msgstr "Настройка кнопок"
-
-#: gpe-conf-keyctl.desktop.in.h:2
-msgid "Button Configuration"
-msgstr "Настройка кнопок"
-
-#: gpe-conf-login-setup.desktop.in.h:1
-msgid "Login Setup"
-msgstr "Настройка входа в систему"
-
-#: gpe-conf-network.desktop.in.h:1
-msgid "Network Setup"
-msgstr "Настройка сети"
-
-#: gpe-conf-ownerinfo.desktop.in.h:1
-msgid "Owner Information"
-msgstr "Информация о владельце"
+#: gpe-conf-keys.desktop.in.h:2
+msgid "Keys and Buttons"
+msgstr "Клавиши и кнопки"
 
 #: gpe-conf-ownerinfo.desktop.in.h:2
 msgid "Set Owner Information"
@@ -1852,11 +2016,7 @@ msgstr "Установить информацию о владельце"
 
 #: gpe-conf-serial.desktop.in.h:1
 msgid "Serial Port Settings"
-msgstr "Установки последовательных портов"
-
-#: gpe-conf-serial.desktop.in.h:2
-msgid "Serial Ports"
-msgstr "Последовательные порты"
+msgstr "Параметры последовательного порта"
 
 #: gpe-conf-sleep.desktop.in.h:1
 msgid "Sleep Config"

@@ -47,8 +47,8 @@ EXTRA_DESKTOPS = \
 	gpe-conf-sound.desktop.in
 
 ifeq ($(CVSBUILD),yes)
-PACKAGE_CPPFLAGS += -I../libxsettings -I../libxsettings-client
-PACKAGE_LDFLAGS += -L../libxsettings -L../libxsettings-client
+PACKAGE_CPPFLAGS += -I../libxsettings-client
+PACKAGE_LDFLAGS += -L../libxsettings-client
 BUILD = ../build
 else
 BUILD = build
@@ -61,7 +61,7 @@ XLIBS = `pkg-config --libs x11`
 
 PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS) -I. 
 PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS) $(GTKCFLAGS) -I. $(XCFLAGS)  
-PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS) $(GTKLIBS) $(XLIBS) -lXsettings -lXsettings-client -lcrypt -lXrandr 
+PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS) $(GTKLIBS) $(XLIBS) -lXsettings-client -lcrypt -lXrandr 
 
 ifeq ($(DEBUG),yes)
 PACKAGE_CFLAGS += -g -DDEBUG
