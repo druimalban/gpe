@@ -1,3 +1,8 @@
+2005-12-04  Florian Boor <florian@kernelconcepts.de>
+
+	* people.coord, images/people.png, images/people_eu.png: Add Philippe and Martin.
+        * xplanet.config: Use worldmap from local directory. 
+
 2005-12-02  Florian Boor <florian@kernelconcepts.de>
 
 	* index.phtml: Update text from GpeWebUpdate wiki and some more additions.

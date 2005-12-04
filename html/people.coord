@@ -1,5 +1,6 @@
 # sorting order: from north to south
 # Lat    Long
+ 061.47   023.78 "philippe"                      # Tampere, .fi
  060.08   025.00 "luc"                           # Helsinki, .fi
  055.75   037.70 "elephantum"                    # Moscow, .ru
  055.57  -003.13 "moray"    align=above          # Edinburgh, .uk
@@ -11,6 +12,7 @@
  051.30   000.05 "dc"                            # London, .uk
  051.30   000.05 "mallum"   align=below          # East London, .uk
  050.52   008.02 "nils/florian/ole" align=right  # Netphen, .de
+ 049.24   008.42 "fng_sma"                       # Heidelberg, .de
  048.47   009.12 "colin"                         # Stuttgart, .de
  045.47   003.05 "pierre"                        # Clermont-Ferrand, .fr
  043.53  -005.67 "jsmanrique"                    # Gijón, .es
