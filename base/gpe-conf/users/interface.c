@@ -177,7 +177,7 @@ void Users_Save()
     }
   fclose(f);
   
-  suid_exec("CPPW","");
+  suid_exec("CPPW"," ");
   sleep(1);
   cur = pwroot;
   while(cur != NULL)
@@ -274,7 +274,7 @@ Users_Build_Objects (gboolean password_only, GtkWidget *toolbar)
       gtk_box_pack_start (GTK_BOX (vbox1), pw, TRUE, TRUE, 0);
   
       /* check if we have the permissions to change users */
-      if (suid_exec("CHEK",""))
+      if (suid_exec("CHEK"," "))
         {
 	      gtk_widget_set_sensitive(user_list, FALSE);
 	      gtk_widget_set_sensitive(GTK_WIDGET(button1), FALSE);

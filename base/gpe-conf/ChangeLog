@@ -1,5 +1,7 @@
 2005-12-03	Florian Boor <florian.boor@kernelconcepts.de>
 
+	* interface.c, login-setup.c, network.c, ownerinfo.c, users/interface.c:
+	  Avoid empty params to suid_exec().
 	* Makefile: Remove obsolete linking against libXsettings.
 
 2005-11-28	Florian Boor <florian.boor@kernelconcepts.de>

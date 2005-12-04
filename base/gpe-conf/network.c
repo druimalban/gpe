@@ -1610,7 +1610,7 @@ Network_Build_Objects (gboolean ignore, GtkWidget *toolbar)
 	
 	have_access = (access (NET_CONFIGFILE, W_OK) == 0);
 	if (!have_access)
-		have_access = !suid_exec ("CHEK", "");
+		have_access = !suid_exec ("CHEK", " ");
 
 	tooltips = gtk_tooltips_new ();
 

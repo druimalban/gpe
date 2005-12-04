@@ -136,7 +136,7 @@ GtkWidget *Login_Setup_Build_Objects()
 
   gchar *tstr;
 
-  if (suid_exec("CHEK",""))
+  if (suid_exec("CHEK"," "))
   {
     ownerinfo_show_writable = FALSE;
     login_lock_script_writable = FALSE;

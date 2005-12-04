@@ -401,7 +401,7 @@ void Ownerinfo_Save()
       gtk_text_buffer_set_text(gtk_text_view_get_buffer(GTK_TEXT_VIEW(address)),owneraddress,-1);
       fputs (owneraddress, fp);
       fclose (fp);
-	  suid_exec("CPOI","");
+	  suid_exec("CPOI","CPOI");
 	  /* more a hack than a feature */
 	  usleep(300000);
 	  restart_gpe_login();
