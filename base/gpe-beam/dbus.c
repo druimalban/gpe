@@ -40,7 +40,7 @@ obex_handler_func (DBusConnection     *connection,
     return obex_client_handle_dbus_request (connection, message);
   
   if (dbus_message_is_signal (message,
-                              DBUS_INTERFACE_ORG_FREEDESKTOP_LOCAL,
+                              DBUS_INTERFACE_LOCAL,
                               "Disconnected"))
     exit (0);
   
@@ -70,10 +70,10 @@ gpe_beam_init_dbus (void)
 
       dbus_connection_register_object_path (connection, object_path, &dbus_obex_vtable, NULL);
 
-      dbus_bus_acquire_service (connection, SERVICE_NAME, 0, &error);
+      dbus_bus_request_name (connection, SERVICE_NAME, 0, &error);
       if (dbus_error_is_set (&error))
 	{
-	  gpe_error_box_fmt (_("Failed to acquire service: %s"), error.message);
+	  gpe_error_box_fmt (_("Failed to request name: %s"), error.message);
 	  dbus_error_free (&error);
 	}
     }

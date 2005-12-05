@@ -73,7 +73,7 @@ obex_client_handle_dbus_request (DBusConnection *connection, DBusMessage *messag
   if (dbus_message_iter_get_arg_type (&iter) != DBUS_TYPE_STRING)
     goto wrong_args;
 
-  filename = dbus_message_iter_get_string (&iter);
+  dbus_message_iter_get_basic (&iter, &filename);
 
   if (!dbus_message_iter_next (&iter))
     goto wrong_args;
@@ -81,16 +81,16 @@ obex_client_handle_dbus_request (DBusConnection *connection, DBusMessage *messag
   if (dbus_message_iter_get_arg_type (&iter) != DBUS_TYPE_STRING)
     goto wrong_args;
 
-  mime_type = dbus_message_iter_get_string (&iter);
+  dbus_message_iter_get_basic (&iter, &mime_type);
 
   if (!dbus_message_iter_next (&iter))
     goto wrong_args;
   
   if (dbus_message_iter_get_arg_type (&iter) != DBUS_TYPE_ARRAY
-      || dbus_message_iter_get_array_type (&iter) != DBUS_TYPE_BYTE)
+      || dbus_message_iter_get_element_type (&iter) != DBUS_TYPE_BYTE)
     goto wrong_args;
 
-  dbus_message_iter_get_byte_array (&iter, &data, &len);
+  dbus_message_iter_get_fixed_array (&iter, &data, &len);
 
   reply = dbus_message_new_method_return (message);
   if (!reply)

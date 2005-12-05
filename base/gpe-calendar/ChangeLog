@@ -1,3 +1,9 @@
+
+2005-12-06  Florian Boor <florian.boor@kernelconcepts.de>
+
+    * export-vcal.c, configure.ac: Apply patch to support new DBus API
+                                   contributed by Philipp Zabel.
+
 2005-11-29  Florian Boor <florian.boor@kernelconcepts.de>
 
     * event-ui.c: Use hildon dialog to ask about event starting in the past.

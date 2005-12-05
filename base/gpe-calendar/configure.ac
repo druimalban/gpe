@@ -64,6 +64,9 @@ AC_SUBST(ENABLE_HILDON)
 
 AM_CONDITIONAL(HILDON, test x$ENABLE_HILDON = xtrue)
 PKG_CHECK_MODULES(DEPS, $DEP_MODULES)
+
+AC_CHECK_LIB(dbus-1, dbus_message_iter_get_basic, AC_DEFINE(HAVE_DBUS_MESSAGE_ITER_GET_BASIC, 1, [Define to 1 if you have the dbus_message_iter_get_basic() function.]))
+
 AC_SUBST(DEPS_CFLAGS)
 AC_SUBST(DEPS_LIBS)
 

@@ -1,3 +1,9 @@
+
+2005-12-06	Florian Boor <florian.boor@kernelconcepts.de>
+
+	* obexclient-dbus.c, dbus.c: Apply patch to support new DBus API
+                                     contributed by Philipp Zabel.
+
 2005-10-15	Florian Boor <florian.boor@kernelconcepts.de>
 
 	* Makefile: Add Slovenian translation.

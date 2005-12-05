@@ -72,11 +72,19 @@ vcal_do_send_bluetooth (event_t event)
 					  BLUETOOTH_SERVICE_NAME ".OBEX",
 					  "ObjectPush");
 
+#ifdef HAVE_DBUS_MESSAGE_ITER_GET_BASIC
+  dbus_message_iter_init_append (message, &iter);
+
+  dbus_message_iter_append_basic (&iter, DBUS_TYPE_STRING, "GPE.vcf");
+  dbus_message_iter_append_basic (&iter, DBUS_TYPE_STRING, "application/x-vcal");
+  dbus_message_iter_append_fixed_array (&iter, DBUS_TYPE_BYTE, vcal, strlen (vcal));
+#else
   dbus_message_append_iter_init (message, &iter);
 
   dbus_message_iter_append_string (&iter, "GPE.vcf");
   dbus_message_iter_append_string (&iter, "application/x-vcal");
   dbus_message_iter_append_byte_array (&iter, vcal, strlen (vcal));
+#endif
 
   dbus_connection_send (connection, message, NULL);
 
@@ -99,11 +107,19 @@ vcal_do_send_irda (event_t event)
 					  IRDA_SERVICE_NAME ".OBEX",
 					  "ObjectPush");
 
+#ifdef HAVE_DBUS_MESSAGE_ITER_GET_BASIC
+  dbus_message_iter_init_append (message, &iter);
+
+  dbus_message_iter_append_basic (&iter, DBUS_TYPE_STRING, "GPE.vcf");
+  dbus_message_iter_append_basic (&iter, DBUS_TYPE_STRING, "application/x-vcal");
+  dbus_message_iter_append_fixed_array (&iter, DBUS_TYPE_BYTE, vcal, strlen (vcal));
+#else
   dbus_message_append_iter_init (message, &iter);
 
   dbus_message_iter_append_string (&iter, "GPE.vcf");
   dbus_message_iter_append_string (&iter, "application/x-vcal");
   dbus_message_iter_append_byte_array (&iter, vcal, strlen (vcal));
+#endif
 
   dbus_connection_send (connection, message, NULL);
 
@@ -183,7 +199,11 @@ export_bluetooth_available (void)
   if (connection == NULL)
     return FALSE;
 
+#ifdef HAVE_DBUS_MESSAGE_ITER_GET_BASIC
+  r = dbus_bus_name_has_owner (connection, BLUETOOTH_SERVICE_NAME, NULL);
+#else
   r = dbus_bus_service_exists (connection, BLUETOOTH_SERVICE_NAME, NULL);
+#endif
 
   return r ? TRUE : FALSE;
 #else
@@ -200,7 +220,11 @@ export_irda_available (void)
   if (connection == NULL)
     return FALSE;
 
+#ifdef HAVE_DBUS_MESSAGE_ITER_GET_BASIC
+  r = dbus_bus_name_has_owner (connection, IRDA_SERVICE_NAME, NULL);
+#else
   r = dbus_bus_service_exists (connection, IRDA_SERVICE_NAME, NULL);
+#endif
 
   return r ? TRUE : FALSE;
 #else
