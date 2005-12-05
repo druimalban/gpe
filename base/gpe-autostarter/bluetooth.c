@@ -40,7 +40,7 @@ handle_bluetooth_message (DBusMessage *message, DBusMessageIter *iter)
   if (type != DBUS_TYPE_STRING)
     return;
 
-  action = dbus_message_iter_get_string (iter);
+  dbus_message_iter_get_basic (iter, &action);
 
   if (! strcmp (action, "register") || ! strcmp (action, "add"))
     {

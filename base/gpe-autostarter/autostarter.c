@@ -50,7 +50,7 @@ autostarter_handle_dbus_request (DBusConnection *connection, DBusMessage *messag
   if (type != DBUS_TYPE_STRING)
     return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
 
-  subsys = dbus_message_iter_get_string (&iter);
+  dbus_message_iter_get_basic (&iter, &subsys);
 
   if (!strcmp (subsys, "net"))
     return handle_net_message (message, &iter);
@@ -72,7 +72,7 @@ dbus_handler_func (DBusConnection     *connection,
     return autostarter_handle_dbus_request (connection, message);
   
   if (dbus_message_is_signal (message,
-                              DBUS_INTERFACE_ORG_FREEDESKTOP_LOCAL,
+                              DBUS_INTERFACE_LOCAL,
                               "Disconnected"))
     exit (0);
   
