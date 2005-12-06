@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+"http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<article>
+<articleinfo>
+	<title>Gpe-Calendar</title>
+</articleinfo>
+<sect1>
+	<title>Icon Explanations</title>
+<para>
+<itemizedlist>
+<listitem><mediaobject><imageobject><imagedata fileref="blankpage.png" format="PNG"/></imageobject></mediaobject><literallayout>Blank Page Icon - Create a new entry.</literallayout></listitem>
+<listitem><mediaobject><imageobject><imagedata fileref="home.png" format="PNG"/></imageobject></mediaobject><literallayout>Home Icon - Returns you to the current date.</literallayout></listitem>
+<listitem><mediaobject><imageobject><imagedata fileref="quit.png" format="PNG"/></imageobject></mediaobject><literallayout>Door Icon - Exit The Application</literallayout></listitem>
+</itemizedlist>
+</para>
+</sect1>
+<sect1>
+	<title>Setting your desired view</title>
+<para>
+It is best to use the view you find most convienent. (Explanations from left to right for icons at the top of the application)
+<itemizedlist>
+<listitem><para>The summary view allows for a more detailed day view.</para></listitem>
+<listitem><para>The day view breaks your apointments into hours.</para></listitem>
+<listitem><para>The week view shows any apointments going on for the selected week.</para></listitem>
+<listitem><para>The month view shades in the day if there is an apointment scheduled.</para></listitem>
+</itemizedlist>
+</para>
+</sect1>
+<sect1>
+	<title>Creating a new entry</title>
+<para>
+ To create a new apointment tap on the blank page icon near the top of the program. (See icon explanation list)
+<orderedlist>
+<listitem><para>Under the event tab you can select what type of event it is, either an appointment or a reminder.</para></listitem>
+<listitem><para>The summary is a short description of the event.</para></listitem>
+<listitem><para>The start is when the event starts, to select a date tap on the calendar icon and use the arrows and then tap on the day. To select a different time you can either tap on the down arrow and select the time or enter it using an input method. You can use these same instructions for the end selection too.</para></listitem>
+<listitem><para>The description is more indepth about the event.</para></listitem>
+<listitem><para>Under the Alarm tab you can be notified in minutes, hours, days or weeks before the event using the numric of your choice.</para></listitem>
+<listitem><para>Under the recurrence tab you can select if you want the event to repeat, this is usefull if you have weekly meetings at the same time each month. It can either go on forever or have a selected end date.</para></listitem>
+</orderedlist>
+</para>
+</sect1>
+</article>

@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+"http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<article>
+<articleinfo>
+	<title>Gpe-Contacts</title>
+</articleinfo>
+<sect1>
+	<title>Icon Explanations</title>
+<para>
+<itemizedlist>
+<listitem><mediaobject><imageobject><imagedata fileref="blankpage.png" format="PNG"/></imageobject></mediaobject><literallayout>Creates a new contact card.</literallayout></listitem>
+<listitem><mediaobject><imageobject><imagedata fileref="edit.png" format="PNG"/></imageobject></mediaobject><literallayout>Select a contact and than tap this icon to edit the contact.</literallayout></listitem>
+<listitem><mediaobject><imageobject><imagedata fileref="delete.png" format="PNG"/></imageobject></mediaobject><literallayout>Select a contact and than tap this icon to delete the contact.</literallayout></listitem>
+<listitem><mediaobject><imageobject><imagedata fileref="properties.png" format="PNG"/></imageobject></mediaobject><literallayout>Ajust the properties of the Gpe-Contacts application.</literallayout></listitem>
+<listitem><mediaobject><imageobject><imagedata fileref="quit.png" format="PNG"/></imageobject></mediaobject><literallayout>Exit The Application.</literallayout></listitem>
+</itemizedlist>
+</para>
+</sect1>
+<sect1>
+	<title>Creating a New Contact</title>
+<para>
+<mediaobject><imageobject><imagedata fileref="blankpage.png" format="PNG"/></imageobject></mediaobject>
+<orderedlist>
+<listitem><para>To create a new contact tap on the blank page icon. (see icon directly above)</para></listitem>
+<listitem><para>Under the personal tab you can enter the contacts name, summary, birthday, an image of the contact, and any categories the contact may fall under (See changing the program configuration). Tap in the area and enter your information using an input method, such as the on screen keyboard.</para></listitem>
+<listitem><para>To add the contacts birthday tap on the calendar icon and use the directional arrows to select the month and year. Tap on the day to display the date in the birthday section.</para></listitem>
+<listitem><para>Under the location tab you can enter many means of contacting the person, such as E-mail or mobile phone. Use the scroll bar on the right to enter in work information below the home information.</para></listitem>
+<listitem><para>Under the notes tab you can add whatever you like about the contact.</para></listitem>
+<listitem><para>Tap "Save" to save your contact.</para></listitem>
+</orderedlist>
+</para>
+</sect1>
+<sect1>
+	<title>Locating your contact in the database</title>
+<para>
+This Function is in the main application screen
+<orderedlist>
+<listitem><para>To find your contact in the listing tap in the first letter of the first name. Then tap on your contacts name to view the information in contact information at the bottom of the program.</para></listitem>
+</orderedlist>
+</para>
+</sect1>
+<sect1>
+	<title>Changing the program configuration</title>
+<para>
+<mediaobject><imageobject><imagedata fileref="properties.png" format="PNG"/></imageobject></mediaobject>
+The program configuration menu can be found by tapping the properties icon (see icon above) at the top of the main application window. You can then:
+<itemizedlist>
+<listitem><para>Create a new tab in the contact creation form like the location or notes category.</para></listitem>
+<listitem><para>Create a new group for that selected tab.</para></listitem>
+<listitem><para>Create a new field of input for the selected tab.</para></listitem>
+<listitem><para>Delete the selected tab/field.</para></listitem>
+</itemizedlist>
+Under the Categories tab you can create a category for your contact to fall under, as mentioned in "creating a new contact".
+</para>
+</sect1>
+</article>

@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+"http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<article>
+<articleinfo>
+	<title>Gpe-Today</title>
+</articleinfo>
+<sect1>
+	<title>About the Application</title>
+<para>
+<itemizedlist>
+<listitem><para>This application allows you to view your appointments for today, along with any items you have on your todolist.</para></listitem>
+<listitem><para>To add content here simply schedule appointments in Gpe-Calendar or add a(n) item(s) to Gpe-Todo.</para></listitem>
+</itemizedlist>
+</para>
+</sect1>
+</article>

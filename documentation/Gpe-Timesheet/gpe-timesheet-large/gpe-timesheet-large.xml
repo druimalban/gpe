@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+"http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<article>
+<articleinfo>
+	<title>Gpe-Timetracker</title>
+</articleinfo>
+<mediaobject><imageobject><imagedata fileref="gpebanner.png" format="PNG"/></imageobject></mediaobject>
+<sect1>
+	<title>Accessing the Program</title>
+<para>
+Gpe-Timetracker is accessable in the main application screen. To access it tap on the timetracker icon.
+<figure>
+	<title>GPE Main Screen</title>
+<mediaobject><imageobject><imagedata fileref="mainscreen.png" format="PNG"/></imageobject></mediaobject>
+</figure>
+<figure>
+	<title>Main Application Screen</title>
+<mediaobject><imageobject><imagedata fileref="mainappscreen.png" format="PNG"/></imageobject></mediaobject>
+</figure>
+</para>
+</sect1>
+<sect1>
+	<title>Icon Explanations</title>
+<para>
+<itemizedlist>
+<listitem><mediaobject><imageobject><imagedata fileref="blankpage.png" format="PNG"/></imageobject></mediaobject><literallayout>Blank Page Icon - Create a new item to track.</literallayout></listitem>
+<listitem><mediaobject><imageobject><imagedata fileref="delete.png" format="PNG"/></imageobject></mediaobject><literallayout>Trash Icon - Delete a selected item.</literallayout></listitem>
+<listitem><mediaobject><imageobject><imagedata fileref="edit.png" format="PNG"/></imageobject></mediaobject><literallayout>Edit Icon - Enter in notes pertaining to the task.</literallayout></listitem>
+<listitem><mediaobject><imageobject><imagedata fileref="clock.png" format="PNG"/></imageobject></mediaobject><literallayout>Green Clock - Clock in.</literallayout></listitem>
+<listitem><mediaobject><imageobject><imagedata fileref="stop_clock.png" format="PNG"/></imageobject></mediaobject><literallayout>Red Clock - Clock out.</literallayout></listitem>
+<listitem><mediaobject><imageobject><imagedata fileref="list-view.png" format="PNG"/></imageobject></mediaobject><literallayout>Journal - Show the logged info.</literallayout></listitem>
+</itemizedlist>
+</para>
+</sect1>
+<sect1>
+	<title>Using the Application</title>
+<para>
+<itemizedlist>
+<listitem><para> To clock in on an item select it form the list and then tap on the clock with the green check mark.</para></listitem>
+<listitem><para>To clock out of an item tap on the clock with the red x.</para></listitem>
+<listitem><para>When clocking in or out you are given the option for notes pertaining to the task.</para></listitem>
+<listitem><para>It is possible to add a sub item. Simply tap on the desired field and tap on the blank page icon and enter in a name.</para></listitem>
+<listitem><para>To add more notes about the item tap on the edit icon.</para></listitem>
+<listitem><para>To delete the item tap on the trash can.</para></listitem>
+</itemizedlist>
+<figure>
+	<title>New Item</title>
+<mediaobject><imageobject><imagedata fileref="newitem.png" format="PNG"/></imageobject></mediaobject>
+</figure>
+<figure>
+	<title>Clocking In</title>
+<mediaobject><imageobject><imagedata fileref="clockin.png" format="PNG"/></imageobject></mediaobject>
+</figure>
+<figure>
+	<title>Clocking Out</title>
+<mediaobject><imageobject><imagedata fileref="clockout.png" format="PNG"/></imageobject></mediaobject>
+</figure>
+<figure>
+	<title>Creating a Sub-Task</title>
+<mediaobject><imageobject><imagedata fileref="subtask.png" format="PNG"/></imageobject></mediaobject>
+</figure>
+<figure>
+	<title>Before Adding Notes</title>
+<mediaobject><imageobject><imagedata fileref="beforenotes.png" format="PNG"/></imageobject></mediaobject>
+</figure>
+<figure>
+	<title>After Adding Notes</title>
+<mediaobject><imageobject><imagedata fileref="afternotes.png" format="PNG"/></imageobject></mediaobject>
+</figure>
+</para>
+</sect1>
+</article>

@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+"http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<article>
+<articleinfo>
+	<title>Gpe-Sketchbook</title>
+</articleinfo>
+<mediaobject><imageobject><imagedata fileref="gpebanner.png" format="PNG"/></imageobject></mediaobject>
+<sect1>
+	<title>Accessing the Application</title>
+<para>
+The application is available from the main GPE screen. To access it tap on the sketchbook icon.
+<figure>
+	<title>GPE Main Screen</title>
+<mediaobject><imageobject><imagedata fileref="mainscreen.png" format="PNG"/></imageobject></mediaobject>
+</figure>
+</para>
+</sect1>
+<sect1>
+	<title>Icon Explanations</title>
+<para>
+<itemizedlist>
+<listitem><mediaobject><imageobject><imagedata fileref="blankpage.png" format="PNG"/></imageobject></mediaobject><literallayout>Blank Page Icon - Create a new sketch.</literallayout></listitem>
+<listitem><mediaobject><imageobject><imagedata fileref="edit.png" format="PNG"/></imageobject></mediaobject><literallayout>Edit Icon - Edit an image.</literallayout></listitem>
+<listitem><mediaobject><imageobject><imagedata fileref="delete.png" format="PNG"/></imageobject></mediaobject><literallayout>Trash Icon - Delete an image.</literallayout></listitem>
+<listitem><mediaobject><imageobject><imagedata fileref="folder.png" format="PNG"/></imageobject></mediaobject><literallayout>Folder Icon - Open an image.</literallayout></listitem>
+<listitem><mediaobject><imageobject><imagedata fileref="gallery.bmp" format="BMP"/></imageobject></mediaobject><literallayout>Gallery Icon - Alternate between thumbnail and list view.</literallayout></listitem>
+<listitem><mediaobject><imageobject><imagedata fileref="preferences.png" format="PNG"/></imageobject></mediaobject><literallayout>Preferences Icon - Change the program options.</literallayout></listitem>
+</itemizedlist>
+<note><para>When viewing in thumbnail style tapping on an image won't highlight it, instead it will be opened.</para></note>
+<figure>
+	<title>Main Screen Icon View</title>
+<mediaobject><imageobject><imagedata fileref="mainscreeniconview.png" format="PNG"/></imageobject></mediaobject>
+</figure>
+<figure>
+	<title>Main Screen List View</title>
+<mediaobject><imageobject><imagedata fileref="mainscreenlistview.png" format="PNG"/></imageobject></mediaobject>
+</figure>
+</para>
+</sect1>
+<sect1>
+	<title>Creating/Editing a sketch</title>
+<para>
+<orderedlist>
+<listitem><para>Tap on the blank page icon to create a sketch or select an image from the list/thumbnails to edit it.</para></listitem>
+<listitem><para>Have fun!</para></listitem>
+<listitem><para>When you close the window you will be presented with an option to save your sketch.</para></listitem>
+<listitem><para>If you are editing an image and choose discard when saving it, the image will revert to its last state.</para></listitem>
+</orderedlist>
+<figure>
+	<title>Color Selection</title>
+<mediaobject><imageobject><imagedata fileref="colorselection.png" format="PNG"/></imageobject></mediaobject>
+</figure>
+<figure>
+	<title>Size Selection</title>
+<mediaobject><imageobject><imagedata fileref="sizeselection.png" format="PNG"/></imageobject></mediaobject>
+</figure>
+<figure>
+	<title>Erase Function</title>
+<mediaobject><imageobject><imagedata fileref="erasefunction.png" format="PNG"/></imageobject></mediaobject>
+</figure>
+<figure>
+	<title>Saving an Image</title>
+<mediaobject><imageobject><imagedata fileref="saveimage.png" format="PNG"/></imageobject></mediaobject>
+</figure>
+</para>
+</sect1>
+<sect1>
+	<title>Program Configuration</title>
+<para>
+Tap on the preferences icon (see icon list above) in the main application to access these options:
+<itemizedlist>
+<listitem><para>In the 'Start with' selection box you can select if you want to see a list view of images, a icon view of images, or a new sketch when you open the program up.</para></listitem>
+<listitem><para>If joypad scrolling is enabled you can move the page scroll bars around in the sketch with the joypad.</para></listitem>
+<listitem><para>If grow on scroll is enabled the sketches dimensions will get bigger as you scroll from left to right or top to bottom and vice-versa.</para></listitem>
+</itemizedlist>
+<figure>
+	<title>Configuration Screen</title>
+<mediaobject><imageobject><imagedata fileref="configscreen.png" format="PNG"/></imageobject></mediaobject>
+</figure>
+</para>
+</sect1>
+<sect1>
+	<title>After Images</title>
+<para>
+<figure>
+	<title>List View</title>
+<mediaobject><imageobject><imagedata fileref="afterlistview.png" format="PNG"/></imageobject></mediaobject>
+</figure>
+<figure>
+	<title>Icon View</title>
+<mediaobject><imageobject><imagedata fileref="aftericonview.png" format="PNG"/></imageobject></mediaobject>
+</figure>
+</para>
+</sect1>
+</article>
