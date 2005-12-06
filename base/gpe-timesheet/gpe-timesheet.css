@@ -1,0 +1,24 @@
+h1
+{
+font-family: arial, 'sans serif'; 
+color: brown;
+}
+
+p,table
+{
+font-family: arial, 'sans serif'; 
+margin-left: 5pt;
+margin-right: 10pt;
+}
+
+p,th,td
+{
+font-size: 80%;
+}
+
+th {background-color:#CC99CC}
+
+body
+{
+background-color: #ffffff;
+}

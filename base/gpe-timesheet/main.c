@@ -16,9 +16,11 @@
 
 #include <gtk/gtk.h>
 
-#include <gpe/pixmaps.h>
 #include <gpe/init.h>
+#include <gpe/pixmaps.h>
 #include <gpe/smallbox.h>
+#include <gpe/errorbox.h>
+#include <gpe/gpehelp.h>
 
 #include "sql.h"
 #include "html.h"
@@ -37,7 +39,19 @@ struct gpe_icon my_icons[] = {
 };
 
 static GtkWidget *btn_con, *btn_coff;
+char *appname="gpe-timesheet";
 
+/* Show help */
+static void
+show_help (void)
+{
+ gboolean test;
+ char *topic = NULL;
+ 
+ test = gpe_show_help(appname, topic);
+ if (test == TRUE) 
+ 	gpe_error_box (_("Help not (or incorrectly) installed. Or no helpviewer application registered."));
+}
 
 /*
  * stop any clocked in task 
@@ -434,6 +448,17 @@ main(int argc, char *argv[])
   gtk_toolbar_insert (GTK_TOOLBAR(toolbar), show_journal, -1);
   g_signal_connect (GTK_OBJECT(show_journal), "clicked",
                     G_CALLBACK (journal), tree);
+
+  /* adding help button if help exists */
+  if(gpe_check_for_help(appname) != NULL)
+    {
+     GtkToolItem *help_icon;
+     pw = gtk_image_new_from_stock (GTK_STOCK_HELP, GTK_ICON_SIZE_SMALL_TOOLBAR);
+     help_icon = gtk_tool_button_new (GTK_WIDGET(pw), _("Help"));
+     gtk_toolbar_insert (GTK_TOOLBAR(toolbar), help_icon, -1);
+     g_signal_connect (GTK_OBJECT(help_icon), "clicked",
+		       G_CALLBACK (show_help), NULL);
+    }
 
   /* btn_con and btn_coff should be replaced decently by the new clock_in and clock_out items */
   btn_con = GTK_WIDGET(clock_in);

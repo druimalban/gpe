@@ -1,3 +1,11 @@
+2005-12-06 Philippe De Swert <philippedeswert@scarlet.be>
+	
+	* release version 0.19
+	* gpe-timesheet.css : Added css for the html output (a thank you to my brother Michael for the help with this)
+	* Makfile : adding install code for css file
+	* html.c : adding code for including the css in the html output
+	* main.c : added code to support help 
+
 2005-11-09 Philippe De Swert <philippedeswert@scarlet.be>
 	
 	* main.c: general code clean-up

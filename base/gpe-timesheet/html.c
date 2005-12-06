@@ -37,11 +37,11 @@ journal_add_header(char* title)
   if (!myjournal) 
     return -1;
   myjournal[0] = 
-    g_strdup_printf("<html>\n<head>\n<title>%s</title>\n</head>",
+    g_strdup_printf("<html>\n<head>\n<title>%s</title>\n<link rel=\"stylesheet\" type=\"text/css\" href=\"/usr/share/gpe-timesheet/gpe-timesheet.css\" />\n</head>",
       title);
   myjournal[1] = g_strdup_printf("<body>\n<h1>%s %s</h1>\n<p>",
     _("Journal for"), title);
-  myjournal[2] = g_strdup("<table WIDTH=100% BORDER=0 CELLPADDING=0 CELLSPACING=0>\n");
+  myjournal[2] = g_strdup("<table WIDTH=100% BORDER=1 CELLPADDING=0 CELLSPACING=0>\n");
   myjournal[3] = g_strdup_printf("<tr><th align=\"left\">%s</th><th " \
     "align=\"left\">%s</th><th align=\"left\">%s</th><th align=\"left\">%s</th><th align=\"left\">%s</th></tr>",
   	_("Start"), _("Comment"), _("End"), _("Comment"),  _("Duration"));

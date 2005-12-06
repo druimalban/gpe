@@ -31,6 +31,8 @@ install-program: all $(PACKAGE).desktop
 	install -s $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	mkdir -p $(DESTDIR)$(PREFIX)/share/pixmaps
 	install -m 644 $(PACKAGE).png $(DESTDIR)$(PREFIX)/share/pixmaps/$(PACKAGE).png
+	mkdir -p $(DESTDIR)$(PREFIX)/share/$(PACKAGE)
+	install -m 644 $(PACKAGE).css $(DESTDIR)$(PREFIX)/share/$(PACKAGE)/$(PACKAGE).css
 	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
 	install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications/$(PACKAGE).desktop
 

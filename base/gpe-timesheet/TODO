@@ -6,5 +6,4 @@ Things to do in gpe-timesheet
 - Improve journal output:
   - Show date in a single line.
   - Create summary at the end.
-  - improve table size, coloring etc.
 - integrate with gpe-todo
