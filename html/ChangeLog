@@ -1,3 +1,8 @@
+2005-12-06  Florian Boor <florian@kernelconcepts.de>
+
+	* people.coord, images/people.png, images/people_eu.png: Add Philipp.
+	* contact.phtml: likewise
+
 2005-12-04  Florian Boor <florian@kernelconcepts.de>
 
 	* people.coord, images/people.png, images/people_eu.png: Add Philippe and Martin.
