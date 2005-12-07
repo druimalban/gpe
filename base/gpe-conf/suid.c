@@ -281,7 +281,7 @@ suidloop (int write, int read)
 				else if (strcmp (cmd, "STZO") == 0)  // changes the timezone setting 
 				{
 					fscanf (in, "%100s", arg2);
-					set_timezone ("/etc/profile",arg2);
+					set_timezone (arg2);
 				}
 				else if (strcmp (cmd, "ULBS") == 0)  // turn login bg on/off
 				{

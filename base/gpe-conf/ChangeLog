@@ -1,5 +1,10 @@
 2005-12-07	Florian Boor <florian.boor@kernelconcepts.de>
 
+	* timeanddate.*, suid.c: Make timezone setting suid and go to the correct 
+	                         file.
+
+2005-12-07	Florian Boor <florian.boor@kernelconcepts.de>
+
 	* timezones.h, timeanddate.c: Basic support for timezones defined by
                                       timezone data contributed by Mika Laitio.	
 

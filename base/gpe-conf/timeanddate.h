@@ -6,6 +6,6 @@ void Time_Free_Objects();
 void Time_Save();
 void Time_Restore();
 
-void set_timezone (gchar *fprofile, gchar *zone);
+void set_timezone (gchar *zone);
 
 #endif
