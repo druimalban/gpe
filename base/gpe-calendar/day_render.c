@@ -57,8 +57,8 @@ events_overlap (event_t ev1, event_t ev2)
     {
       return TRUE;
     }
-  if ((ev1->start <= ev2->start && event_ends (ev1) <= ev2->start) ||
-      (ev1->start >= ev2->start && event_ends (ev2) >= ev1->start))
+  if ((ev1->start <= ev2->start && event_ends (ev1) < ev2->start) ||
+      (ev1->start >= ev2->start && event_ends (ev2) > ev1->start))
     {
       return TRUE;
     }
@@ -107,8 +107,7 @@ find_set (GNode * root, event_t ev)
 {
   found_node = NULL;
 
-  g_node_traverse (root, G_IN_ORDER, G_TRAVERSE_ALL, -1, find_set_in_list,
-		   ev);
+  g_node_traverse (root, G_IN_ORDER, G_TRAVERSE_ALL, -1, find_set_in_list, ev);
 
   return found_node;
 

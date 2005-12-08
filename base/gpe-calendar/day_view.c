@@ -95,7 +95,7 @@ void day_page_draw_background (const day_page_t page)
 	widget = page->widget;
 	pl = gtk_widget_create_pango_layout (widget, NULL);
 	white_gc = widget->style->white_gc;
-	gray_gc  = widget->style->bg_gc[GTK_STATE_NORMAL];
+	gray_gc  = pen_new(widget, 58905, 58905, 56610);
 	black_gc = widget->style->black_gc;
 	/* Row height */ 	
 	/* Draw the hour column */
@@ -133,7 +133,8 @@ void day_page_draw_background (const day_page_t page)
 	}
 	/* Draws the hours rectangle */
 	gdk_draw_rectangle(widget->window, black_gc, FALSE, 0,0, page->width/page->time_col_ratio, page->height-1);		
-	
+    
+    g_object_unref(gray_gc);
 }
 
 gboolean
@@ -279,7 +280,7 @@ void day_view_expose ()
 	GdkGC *white_gc, *gray_gc, *black_gc;
 	gint width=0, height=0;
 	white_gc = draw->style->white_gc;
-	gray_gc = draw->style->bg_gc[GTK_STATE_NORMAL];
+	gray_gc  = pen_new(draw, 58905, 58905, 56610);
 	black_gc = draw->style->black_gc;
 		
 	gdk_window_get_size (draw->window, &width, &height);
@@ -299,6 +300,8 @@ void day_view_expose ()
 	
 	day_render_set_event_rectangles (dr);
 	draw_appointments (dr);
+    
+    g_object_unref(gray_gc);
 }
 
 gboolean
@@ -313,7 +316,7 @@ day_view_expose_cb (GtkWidget *widget,
 int 
 reminder_view_init ()
 {
-	GdkGC *white_gc, *gray_gc, *black_gc, *cream_gc;
+	GdkGC *white_gc, *black_gc, *cream_gc;
 
 	
 	time_t end, start;
@@ -351,7 +354,6 @@ reminder_view_init ()
 	
 	
 	white_gc = rem_area->style->white_gc;
-	gray_gc = rem_area->style->bg_gc[GTK_STATE_NORMAL];
 	black_gc = rem_area->style->black_gc;
 	
 	   

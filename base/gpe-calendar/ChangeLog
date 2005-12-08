@@ -1,3 +1,9 @@
+2005-12-08  Florian Boor <florian.boor@kernelconcepts.de>
+    
+    * day_view.c: Use defined gray instead colour from style because this 
+                    depends on the theme.
+    * day_render.c: Make sequenced events without break become displayed in 
+                    sequence instead of overlapping.
 
 2005-12-06  Florian Boor <florian.boor@kernelconcepts.de>
 
