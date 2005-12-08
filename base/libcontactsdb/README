@@ -1,0 +1,19 @@
+libcontactsdb library
+
+This library encapsulates the gpe-contacts library 
+access methods in a manner that makes them useable
+not only by the gpe-contacts application (the source of
+the original code) but by any app.
+
+To use them, just
+#include <gpe/contacts-db.h>
+in your program and link with -lcontactsdb.
+
+See gpe/contacts-db.h for available functions and check out
+the gpe-contacts source for example usage.
+
+Enjoy,
+--
+2005-12-05
+Pat Deegan
+http://www.psychogenic.com

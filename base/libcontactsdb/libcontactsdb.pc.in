@@ -1,0 +1,11 @@
+prefix=@prefix@
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: libcontactsdb
+Description: GPE Contacts Database Interface
+Version: @VERSION@
+Requires: sqlite
+Libs: -L${libdir} -lcontactsdb
+Cflags: -I${includedir}

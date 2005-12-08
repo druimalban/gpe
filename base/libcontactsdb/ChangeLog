@@ -1,0 +1,11 @@
+2005-12-05  Pat Deegan  <linuxipaq@psychogenic.com>
+
+    * Makefile.am/configure.ac: libcontactsdb project created
+    * gpe/contacts-db.h: new header for public use of libcontactsdb,
+                          based on gpe-contacts db.h.  All functions,
+                          struct definitions and static members now
+                          use the 'contacts_' prefix.
+    * contacts-db.c: Source based on gpe-contacts db.c.
+    * libcontactsdb.pc.in: Pkg-config metainformation about library
+
+
