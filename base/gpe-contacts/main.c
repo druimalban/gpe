@@ -34,7 +34,7 @@
 #include <gpe/spacing.h>
 
 #include "support.h"
-#include "db.h"
+#include <gpe/contacts-db.h>
 #include "structure.h"
 #include "proto.h"
 #include "main.h"
@@ -72,8 +72,8 @@ struct gpe_icon my_icons[] = {
 static void
 menu_do_edit (void)
 {
-  struct person *p;
-  p = db_get_by_uid (menu_uid);
+  struct contacts_person *p;
+  p = contacts_db_get_by_uid (menu_uid);
   edit_person (p,  _("Edit Contact"), FALSE);
 }
 
@@ -83,7 +83,7 @@ menu_do_delete (void)
   if (gpe_question_ask (_("Really delete this contact?"), _("Confirm"), 
 			"question", "!gtk-cancel", NULL, "!gtk-delete", NULL, NULL) == 1)
     {
-      if (db_delete_by_uid (menu_uid))
+      if (contacts_db_delete_by_uid (menu_uid))
         update_display ();
     }
 }
@@ -105,7 +105,7 @@ load_panel_config (void)
 
   g_list_free (wlist);
 
-  count = db_get_config_values (CONFIG_PANEL, &list);
+  count = contacts_db_get_config_values (CONFIG_PANEL, &list);
   for (i = 0; i < count; i++)
     {
       lleft = gtk_label_new (list[2 * i + 2]);
@@ -121,7 +121,7 @@ load_panel_config (void)
 			GTK_FILL, 2, 2);
     }
 
-  db_free_result (list);
+  contacts_db_free_result (list);
 }
 
 static void
@@ -146,14 +146,14 @@ update_categories (void)
 static void
 new_contact (GtkWidget * widget, gpointer d)
 {
-  struct person *p;
+  struct contacts_person *p;
   GtkWidget *new_button, *edit_button;
 	  
   new_button = g_object_get_data(G_OBJECT(mainw), "new-button");
   edit_button = g_object_get_data(G_OBJECT(mainw), "edit-button");
   gtk_widget_set_sensitive (new_button, FALSE);
   gtk_widget_set_sensitive (edit_button, FALSE);
-  p = new_person ();
+  p = contacts_new_person ();
   edit_person (p, _("New Contact"), FALSE);
 }
 
@@ -167,7 +167,7 @@ edit_contact (GtkWidget * widget, gpointer d)
   if (gtk_tree_selection_get_selected (sel, &model, &iter))
     {
       guint uid;
-      struct person *p;
+      struct contacts_person *p;
       GtkWidget *new_button, *edit_button;
 	  
 	  new_button = g_object_get_data(G_OBJECT(mainw), "new-button");
@@ -175,7 +175,7 @@ edit_contact (GtkWidget * widget, gpointer d)
       gtk_widget_set_sensitive (new_button, FALSE);
       gtk_widget_set_sensitive (edit_button, FALSE);
       gtk_tree_model_get (GTK_TREE_MODEL (model), &iter, 1, &uid, -1);
-      p = db_get_by_uid (uid);
+      p = contacts_db_get_by_uid (uid);
       edit_person (p, _("Edit Contact"), FALSE);
     }
 }
@@ -203,7 +203,7 @@ delete_contact (GtkWidget * widget, gpointer d)
             }
           else
             path = gtk_tree_path_new_first();
-          if (db_delete_by_uid (uid))
+          if (contacts_db_delete_by_uid (uid))
             {
               update_display ();
               gtk_tree_view_set_cursor(GTK_TREE_VIEW(list_view), path, 
@@ -257,7 +257,7 @@ get_tag_name(const gchar* tag)
 }
 
 static gboolean
-pop_singles (GtkWidget *vbox, GSList *list, struct person *p)
+pop_singles (GtkWidget *vbox, GSList *list, struct contacts_person *p)
 {
   if (list)
     {
@@ -269,13 +269,13 @@ pop_singles (GtkWidget *vbox, GSList *list, struct person *p)
         {
           GSList *next = list->next;
           edit_thing_t e = list->data;
-          struct tag_value *tv = NULL;
+          struct contacts_tag_value *tv = NULL;
           GtkWidget *w;
           GtkWidget *l;
           gchar *name;
 
           if (e && e->tag) 
-             tv = db_find_tag(p, e->tag);
+             tv = contacts_db_find_tag(p, e->tag);
           if (tv && tv->value)
             {
               if (table == NULL) 
@@ -327,7 +327,7 @@ pop_singles (GtkWidget *vbox, GSList *list, struct person *p)
 }
 
 static gboolean
-build_children (GtkWidget *vbox, GSList *children, struct person *p)
+build_children (GtkWidget *vbox, GSList *children, struct contacts_person *p)
 {
   gboolean result = FALSE;
   GSList *child;
@@ -336,12 +336,12 @@ build_children (GtkWidget *vbox, GSList *children, struct person *p)
   for (child = children; child; child = child->next)
     {
       edit_thing_t e = child->data;
-      struct tag_value *tv = NULL;
+      struct contacts_tag_value *tv = NULL;
       GtkWidget *w;
       
       if (e && e->tag)
         {
-          tv = db_find_tag(p, e->tag);
+          tv = contacts_db_find_tag(p, e->tag);
         }
       if (!e->hidden)
         switch (e->type)
@@ -456,14 +456,14 @@ build_children (GtkWidget *vbox, GSList *children, struct person *p)
 }
 
 static int
-show_details (struct person *p)
+show_details (struct contacts_person *p)
 {
   GtkWidget *lleft, *lright;
   GtkTable *table;
   gint i;
   gpointer pchild;
   gchar *tagname;
-  struct tag_value *curtag;
+  struct contacts_tag_value *curtag;
   GList *wlist, *witer;
   GSList *page;
   GtkWidget *label;
@@ -543,9 +543,9 @@ show_details (struct person *p)
                 continue;
               lleft = ((GtkTableChild *) pchild)->widget;
               tagname =
-                db_get_config_tag (CONFIG_PANEL,
+                contacts_db_get_config_tag (CONFIG_PANEL,
                            g_strdup (gtk_label_get_text(GTK_LABEL (lleft))));
-              curtag = db_find_tag (p, tagname);
+              curtag = contacts_db_find_tag (p, tagname);
               if (curtag != NULL)
                 {
                   gtk_label_set_text (GTK_LABEL (lright), curtag->value);
@@ -568,7 +568,7 @@ show_details_window(GtkWidget *btn)
   GtkTreeSelection *sel;
   GtkTreeModel *model;
   GSList *page;
-  struct person *p;
+  struct contacts_person *p;
   
   /* get person data */
   sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(list_view));
@@ -576,7 +576,7 @@ show_details_window(GtkWidget *btn)
     {
       gint id;
       gtk_tree_model_get (model, &iter, 1, &id, -1);
-      p = db_get_by_uid (id);
+      p = contacts_db_get_by_uid (id);
     }
   else
     return;
@@ -638,7 +638,7 @@ show_details_window(GtkWidget *btn)
   gtk_widget_show_all(dlgDetail);
   gtk_dialog_run(GTK_DIALOG(dlgDetail));
   gtk_widget_destroy(dlgDetail);
-  discard_person (p);
+  contacts_discard_person (p);
 }
 
 void
@@ -646,7 +646,7 @@ selection_made (GtkTreeSelection *sel, GObject *o)
 {
   GtkTreeIter iter;
   guint id;
-  struct person *p;
+  struct contacts_person *p;
   GtkTreeModel *model;
   GtkWidget *edit_button, *delete_button, *new_button, *details_button;
 
@@ -659,9 +659,9 @@ selection_made (GtkTreeSelection *sel, GObject *o)
     {
       gtk_tree_model_get (model, &iter, 1, &id, -1);
 
-      p = db_get_by_uid (id);
+      p = contacts_db_get_by_uid (id);
       show_details (p);
-      discard_person (p);
+      contacts_discard_person (p);
 		
       gtk_widget_set_sensitive (edit_button, TRUE);
       gtk_widget_set_sensitive (delete_button, TRUE);
@@ -680,7 +680,7 @@ selection_made (GtkTreeSelection *sel, GObject *o)
 }
 
 static gboolean
-match_for_search (struct person *p, const gchar *text, struct gpe_pim_category *cat)
+match_for_search (struct contacts_person *p, const gchar *text, struct gpe_pim_category *cat)
 {
   gchar *fn;
   gchar *name;
@@ -723,10 +723,10 @@ match_for_search (struct person *p, const gchar *text, struct gpe_pim_category *
     {
       GSList *l;
       gboolean found = FALSE;
-      struct person *per = db_get_by_uid (p->id);
+      struct contacts_person *per = contacts_db_get_by_uid (p->id);
       for (l = per->data; l; l = l->next)
         {
-          struct tag_value *v = l->data;
+          struct contacts_tag_value *v = l->data;
           if (!strcasecmp (v->tag, "CATEGORY") && v->value)
             {
               guint c = atoi (v->value);
@@ -737,7 +737,7 @@ match_for_search (struct person *p, const gchar *text, struct gpe_pim_category *
                 }
             }
         }
-      discard_person(per);
+      contacts_discard_person(per);
       if (!found)
         return FALSE;
     }
@@ -769,25 +769,25 @@ do_search (GObject *obj, GtkWidget *entry)
       g_slist_free (l);
     }
 
-  sel_entries = db_get_entries_list (text, cat_id);
+  sel_entries = contacts_db_get_entries_list (text, cat_id);
   
   if (cat_id) 
     g_free(cat_id);
       
-  sel_entries = g_slist_sort (sel_entries, (GCompareFunc)sort_entries);
+  sel_entries = g_slist_sort (sel_entries, (GCompareFunc)contacts_sort_entries);
 
   gtk_list_store_clear (list_store);
   show_details(NULL);
 
   for (iter = sel_entries; iter; iter = iter->next)
     {
-      struct person *p = iter->data;
+      struct contacts_person *p = iter->data;
       GtkTreeIter titer;
       
       gtk_list_store_append (list_store, &titer);
       gtk_list_store_set (list_store, &titer, 0, p->name, 1, p->id, -1);
 
-      discard_person (p);
+      contacts_discard_person (p);
     }
   
   g_slist_free (sel_entries);
@@ -830,14 +830,14 @@ do_find (void)
   if (!all_entries)
     return;
   
-  all_entries = g_slist_sort (all_entries, (GCompareFunc)sort_entries);
+  all_entries = g_slist_sort (all_entries, (GCompareFunc)contacts_sort_entries);
 
   gtk_list_store_clear (list_store);
   show_details(NULL);
 
   for (iter = all_entries; iter; iter = iter->next)
     {
-      struct person *p = iter->data;
+      struct contacts_person *p = iter->data;
       GtkTreeIter titer;
       
       if (match_for_search (p, NULL, c))
@@ -846,7 +846,7 @@ do_find (void)
 	      gtk_list_store_set (list_store, &titer, 0, p->name, 1, p->id, -1);
         }
 
-      discard_person (p);
+      contacts_discard_person (p);
     }
   
   g_slist_free (all_entries);
@@ -1242,7 +1242,7 @@ on_import_vcard (GtkWidget *widget, gpointer data)
       gtk_widget_destroy(feedbackdlg);
     }
   gtk_widget_destroy(filesel);
-  db_open(FALSE);
+  contacts_db_open(FALSE);
   update_display();
 }
 
@@ -1404,7 +1404,7 @@ create_main (gboolean edit_structure)
   gtk_container_add (GTK_CONTAINER (scrolled_window), list_view);
   if (mode_landscape)
     {
-      gchar *cfgval = db_get_config_tag(CONFIG_LIST, "pos");
+      gchar *cfgval = contacts_db_get_config_tag(CONFIG_LIST, "pos");
       hbox1 = gtk_hbox_new(FALSE, gpe_get_boxspacing());
       gtk_box_pack_start (GTK_BOX (vbox1), hbox1, TRUE, TRUE, 0);
       if ((cfgval) && !strcmp(cfgval, "right"))
@@ -1605,18 +1605,18 @@ main (int argc, char *argv[])
   /* we are called to edit a users personal vcard */
   if (edit_vcard)
     {
-      struct person *p;
+      struct contacts_person *p;
       const gchar *MY_VCARD = g_strdup_printf("%s/.gpe/user.vcf", 
                                               g_get_home_dir());
   
-      if (db_open (TRUE))
+      if (contacts_db_open (TRUE))
         exit (1);
       load_well_known_tags ();
       load_structure (LARGE_STRUCTURE);
       
-      p = db_get_by_uid (1);
+      p = contacts_db_get_by_uid (1);
       if (!p)
-        p = new_person();
+        p = contacts_new_person();
       edit_person (p, _("My Card"), TRUE);
       gtk_main();
       if (save_to_file(1, MY_VCARD))
@@ -1627,7 +1627,7 @@ main (int argc, char *argv[])
    /* initialise data backends */ 
    gpe_pim_categories_init ();
  
-   if (db_open (FALSE))
+   if (contacts_db_open (FALSE))
     exit (1);
 
   load_well_known_tags ();

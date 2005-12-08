@@ -19,7 +19,7 @@
 
 #include <gpe/spacing.h>
 
-#include "db.h"
+#include <gpe/contacts-db.h>
 #include "structure.h"
 #include "namedetail.h"
 
@@ -32,7 +32,7 @@ gchar *titles[] = {N_("Dr."), N_("Miss"), N_("Mr."), N_("Mrs."), N_("Ms."), N_("
 gchar *suffixes[] = {N_("Jr."), N_("Esq."), N_("Sr."), N_("I"), N_("II"), N_("III"), NULL};
 
 gboolean
-do_edit_name_detail(GtkWindow *parent, struct person *p)
+do_edit_name_detail(GtkWindow *parent, struct contacts_person *p)
 {
   GtkWidget *dialog, *lgiven, *lfamily, *lsuffix, *ltitle, *lmiddle;
   GtkWidget *table, *egiven, *efamily, *esuffix, *etitle, *emiddle;
@@ -41,7 +41,7 @@ do_edit_name_detail(GtkWindow *parent, struct person *p)
   GList *l_suffixes = NULL, *l_titles = NULL;
   int i = 0;
   
-  struct tag_value *v;
+  struct contacts_tag_value *v;
   
   /* build lists */  
   
@@ -129,18 +129,18 @@ do_edit_name_detail(GtkWindow *parent, struct person *p)
                    GTK_FILL,0,0);
 
   /* fill in values */
-  v = db_find_tag(p,"TITLE");
+  v = contacts_db_find_tag(p,"TITLE");
   if (v && v->value) 
     gtk_entry_set_text(GTK_ENTRY(etitle),v->value);
   else
     gtk_entry_set_text(GTK_ENTRY(etitle),"");
-  v = db_find_tag(p,"GIVEN_NAME");
+  v = contacts_db_find_tag(p,"GIVEN_NAME");
   if (v && v->value) gtk_entry_set_text(GTK_ENTRY(egiven),v->value);
-  v = db_find_tag(p,"MIDDLE_NAME");
+  v = contacts_db_find_tag(p,"MIDDLE_NAME");
   if (v && v->value) gtk_entry_set_text(GTK_ENTRY(emiddle),v->value);
-  v = db_find_tag(p,"FAMILY_NAME");
+  v = contacts_db_find_tag(p,"FAMILY_NAME");
   if (v && v->value) gtk_entry_set_text(GTK_ENTRY(efamily),v->value);
-  v = db_find_tag(p,"HONORIFIC_SUFFIX");
+  v = contacts_db_find_tag(p,"HONORIFIC_SUFFIX");
   if (v && v->value) 
     gtk_entry_set_text(GTK_ENTRY(esuffix),v->value);
   else
@@ -152,12 +152,12 @@ do_edit_name_detail(GtkWindow *parent, struct person *p)
   if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_OK)
     {
       /* save values */
-      db_set_data(p, "TITLE", g_strdup(gtk_entry_get_text(GTK_ENTRY(etitle))));
-      db_set_data(p, "GIVEN_NAME", g_strdup(gtk_entry_get_text(GTK_ENTRY(egiven))));
-      db_set_data(p, "MIDDLE_NAME", g_strdup(gtk_entry_get_text(GTK_ENTRY(emiddle))));
-      db_set_data(p, "FAMILY_NAME", g_strdup(gtk_entry_get_text(GTK_ENTRY(efamily))));
-      db_set_data(p, "HONORIFIC_SUFFIX", g_strdup(gtk_entry_get_text(GTK_ENTRY(esuffix))));
-      db_set_data(p, "NAME", g_strdup(""));
+      contacts_db_set_data(p, "TITLE", g_strdup(gtk_entry_get_text(GTK_ENTRY(etitle))));
+      contacts_db_set_data(p, "GIVEN_NAME", g_strdup(gtk_entry_get_text(GTK_ENTRY(egiven))));
+      contacts_db_set_data(p, "MIDDLE_NAME", g_strdup(gtk_entry_get_text(GTK_ENTRY(emiddle))));
+      contacts_db_set_data(p, "FAMILY_NAME", g_strdup(gtk_entry_get_text(GTK_ENTRY(efamily))));
+      contacts_db_set_data(p, "HONORIFIC_SUFFIX", g_strdup(gtk_entry_get_text(GTK_ENTRY(esuffix))));
+      contacts_db_set_data(p, "NAME", g_strdup(""));
       gtk_widget_destroy(dialog);
       g_list_free(l_titles);
       g_list_free(l_suffixes);

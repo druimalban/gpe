@@ -17,7 +17,7 @@
 #include <gpe/pixmaps.h>
 
 #include "support.h"
-#include "db.h"
+#include <gpe/contacts-db.h>
 #include "proto.h"
 #include "categories.h"
 
@@ -279,13 +279,13 @@ categories_button_press_event (GtkWidget *widget, GdkEventButton *b, GtkListStor
 }
 
 gboolean
-is_in_category (struct person *p, struct category *c)
+is_in_category (struct contacts_person *p, struct category *c)
 {
   GSList *iter;
 
   for (iter = p->data; iter; iter = iter->next)
     {
-      struct tag_value *t = iter->data;
+      struct contacts_tag_value *t = iter->data;
 
       if (!strcasecmp (t->tag, "category"))
 	{
@@ -302,7 +302,7 @@ is_in_category (struct person *p, struct category *c)
 }
 
 void
-change_categories (struct person *p)
+change_categories (struct contacts_person *p)
 {
   GtkWidget *toolbar;
   GtkWidget *window;

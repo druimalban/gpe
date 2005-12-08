@@ -26,7 +26,7 @@
 #include "export.h"
 #include "main.h"
 #include "support.h"
-#include "db.h"
+#include <gpe/contacts-db.h>
 
 #include <gpe/vcard.h>
 #include <gpe/errorbox.h>
@@ -46,11 +46,11 @@ export_to_vcard (guint uid)
 {
   MIMEDirVCard *vcard;
   gchar *str;
-  struct person *p;
+  struct contacts_person *p;
 
-  p = db_get_by_uid (uid);
+  p = contacts_db_get_by_uid (uid);
   vcard = vcard_from_tags (p->data);
-  discard_person (p);
+  contacts_discard_person (p);
 
   str = mimedir_vcard_write_to_string (vcard);
   g_object_unref (vcard);

@@ -24,7 +24,7 @@
 
 #include "support.h"
 #include "structure.h"
-#include "db.h"
+#include <gpe/contacts-db.h>
 #include "main.h"
 #include "namedetail.h"
 
@@ -582,7 +582,7 @@ edit_window (gboolean isdialog)
 }
 
 static GSList *
-get_categories_list (struct person *p)
+get_categories_list (struct contacts_person *p)
 {
   GSList *iter;
   GSList *list = NULL;
@@ -591,7 +591,7 @@ get_categories_list (struct person *p)
 
   for (; iter; iter = iter->next)
     {
-      struct tag_value *t = iter->data;
+      struct contacts_tag_value *t = iter->data;
       if (!strcasecmp (t->tag, "category"))
         {
           int id = atoi (t->value);
@@ -603,7 +603,7 @@ get_categories_list (struct person *p)
 }
 
 gchar *
-build_categories_string (struct person *p)
+build_categories_string (struct contacts_person *p)
 {
   gchar *s = NULL;
   GSList *iter, *list;
@@ -636,7 +636,7 @@ build_categories_string (struct person *p)
 static void
 update_categories_list (GtkWidget *ui, GSList *selected, GtkWidget *edit)
 {
-  struct person *p;
+  struct contacts_person *p;
 #ifndef IS_HILDON
   GtkWidget *w;
   gchar *str;
@@ -644,11 +644,11 @@ update_categories_list (GtkWidget *ui, GSList *selected, GtkWidget *edit)
   GSList *iter;
 
   p = g_object_get_data (G_OBJECT (edit), "person");
-  db_delete_tag (p, "category");
+  contacts_db_delete_tag (p, "category");
 
   for (iter = selected; iter; iter = iter->next)
     {
-      db_set_multi_data (p, "category", g_strdup_printf ("%d", (int)iter->data));
+      contacts_db_set_multi_data (p, "category", g_strdup_printf ("%d", (int)iter->data));
     }
 
 #ifndef IS_HILDON
@@ -660,7 +660,7 @@ update_categories_list (GtkWidget *ui, GSList *selected, GtkWidget *edit)
 }
 
 void
-edit_person (struct person *p, gchar *title, gboolean isdialog)
+edit_person (struct contacts_person *p, gchar *title, gboolean isdialog)
 {
   GtkWidget *w = edit_window (isdialog);
 #ifdef IS_HILDON    
@@ -681,7 +681,7 @@ edit_person (struct person *p, gchar *title, gboolean isdialog)
         {
           GtkWidget *w = iter->data;
           gchar *tag = gtk_object_get_data (GTK_OBJECT (w), "db-tag");
-          struct tag_value *v = db_find_tag (p, tag);
+          struct contacts_tag_value *v = contacts_db_find_tag (p, tag);
           guint pos = 0;
           if (tag)
             {
@@ -759,7 +759,7 @@ edit_person (struct person *p, gchar *title, gboolean isdialog)
 }
 
 void
-update_edit (struct person *p, GtkWidget *w)
+update_edit (struct contacts_person *p, GtkWidget *w)
 {
   GtkWidget *nameentry[5];
   int namenum = 0;
@@ -773,7 +773,7 @@ update_edit (struct person *p, GtkWidget *w)
         {
           GtkWidget *w = iter->data;
           gchar *tag = gtk_object_get_data (GTK_OBJECT (w), "db-tag");
-          struct tag_value *v = db_find_tag (p, tag);
+          struct contacts_tag_value *v = contacts_db_find_tag (p, tag);
           guint pos = 0;
           if (v && v->value)
             {
@@ -878,7 +878,7 @@ update_edit (struct person *p, GtkWidget *w)
 
 
 void
-store_name_fields(struct person *p, const char *nametext)
+store_name_fields(struct contacts_person *p, const char *nametext)
 {
 char e[4][100];
 int num_elements, i;
@@ -897,7 +897,7 @@ char *suffix = NULL;
     /* scan first element for title */
     if (sscanf(sp, "%s", e[0]))
       {
-        struct tag_value *v;
+        struct contacts_tag_value *v;
         i = 0;
         
         while (titles[i])
@@ -914,7 +914,7 @@ char *suffix = NULL;
           }
         if (!has_title) /* find user defined title */
           {
-            v = db_find_tag(p, "TITLE");
+            v = contacts_db_find_tag(p, "TITLE");
             if (v && v->value && !strcasecmp(e[0], v->value))
               {
                 has_title = TRUE;
@@ -1015,11 +1015,11 @@ char *suffix = NULL;
             }
         break;
       }
-    db_set_data(p, "GIVEN_NAME", g_strdup(first));
-    db_set_data(p, "MIDDLE_NAME", g_strdup(middle));
-    db_set_data(p, "FAMILY_NAME", g_strdup(last));
-    db_set_data(p, "TITLE", g_strdup(title));
-    db_set_data(p, "HONORIFIC_SUFFIX", g_strdup(suffix));
+    contacts_db_set_data(p, "GIVEN_NAME", g_strdup(first));
+    contacts_db_set_data(p, "MIDDLE_NAME", g_strdup(middle));
+    contacts_db_set_data(p, "FAMILY_NAME", g_strdup(last));
+    contacts_db_set_data(p, "TITLE", g_strdup(title));
+    contacts_db_set_data(p, "HONORIFIC_SUFFIX", g_strdup(suffix));
 }
 
 
@@ -1028,7 +1028,7 @@ on_edit_save_clicked (GtkButton * button, gpointer user_data)
 {
   GtkWidget *edit = (GtkWidget *) user_data;
   GSList *tags;
-  struct person *p = g_object_get_data (G_OBJECT (edit), "person");
+  struct contacts_person *p = g_object_get_data (G_OBJECT (edit), "person");
   gchar *nametext = NULL;
   gboolean isdialog = (gboolean) g_object_get_data(G_OBJECT(edit), "isdialog");
   
@@ -1070,7 +1070,7 @@ on_edit_save_clicked (GtkButton * button, gpointer user_data)
           text = gtk_text_buffer_get_text (buf, &start, &end, FALSE);
         }
       tag = g_object_get_data (G_OBJECT (w), "db-tag");
-      db_set_data (p, tag, text);
+      contacts_db_set_data (p, tag, text);
       
       /* remember name */
       if (!strcasecmp(tag, "NAME"))
@@ -1092,7 +1092,7 @@ on_edit_save_clicked (GtkButton * button, gpointer user_data)
         g_slist_free(categories);
     } 
 #endif
-  if (commit_person (p))
+  if (contacts_commit_person (p))
     {
       gtk_widget_destroy (edit);
       if (isdialog)
@@ -1101,7 +1101,7 @@ on_edit_save_clicked (GtkButton * button, gpointer user_data)
         }
       else
         {
-          discard_person (p);
+          contacts_discard_person (p);
           update_display ();
         }
     }
@@ -1110,7 +1110,7 @@ on_edit_save_clicked (GtkButton * button, gpointer user_data)
 void
 on_categories_clicked (GtkButton *button, gpointer user_data)
 {
-  struct person *p;
+  struct contacts_person *p;
   GtkWidget *w;
 
   p = g_object_get_data (G_OBJECT (user_data), "person");
@@ -1288,7 +1288,7 @@ on_name_clicked (GtkButton *button, gpointer user_data)
 {
   GtkWindow *edit = user_data;
   GtkEntry *e = g_object_get_data(G_OBJECT(button), "edit");
-  struct person *p;
+  struct contacts_person *p;
   gchar *name;
 
   p = g_object_get_data (G_OBJECT (edit), "person");

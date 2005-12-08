@@ -17,7 +17,7 @@ bin_PROGRAMS = gpe-contacts
 
 gpe_contacts_LDADD = $(DEPS_LIBS)
 
-gpe_contacts_SOURCES = main.h configure.c db.c db.h \
+gpe_contacts_SOURCES = main.h configure.c \
                        editing.c export.c export.h \
                        finddlg.c finddlg.h import-vcard.c import-vcard.h \
                        namedetail.c namedetail.h old-db.c \

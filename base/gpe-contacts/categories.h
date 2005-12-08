@@ -1,2 +1,2 @@
-extern void change_categories (struct person *p);
+extern void change_categories (struct contacts_person *p);
 

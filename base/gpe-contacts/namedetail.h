@@ -4,6 +4,6 @@
 extern gchar *titles[];
 extern gchar *suffixes[];
 
-gboolean do_edit_name_detail(GtkWindow *parent, struct person *p);
+gboolean do_edit_name_detail(GtkWindow *parent, struct contacts_person *p);
 
 #endif /* _NAMEDETAIL_H */

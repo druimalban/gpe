@@ -30,7 +30,7 @@
 #include <gpe/spacing.h>
 
 #include "support.h"
-#include "db.h"
+#include <gpe/contacts-db.h>
 #include "structure.h"
 #include "proto.h"
 #include "main.h"
@@ -120,14 +120,14 @@ void
 on_compact_clicked (GtkButton *button, GtkWidget *lsize)
 {
   gchar *str;
-  str = db_compress();
+  str = contacts_db_compress();
   if (str) 
     {
       fprintf(stderr, "err %s\n", str);
     }
   else
     {
-      str = g_strdup_printf("%s %d %s", _("Current size:"), db_size(), 
+      str = g_strdup_printf("%s %d %s", _("Current size:"), contacts_db_size(), 
                             _("kB (optimised)"));
       gtk_label_set_text(GTK_LABEL(lsize), str);
     }
@@ -252,7 +252,7 @@ create_pageSetup (GObject *container)
 						  NULL);
   gtk_tree_view_insert_column (GTK_TREE_VIEW (tree_view), col, -1);
 
-  tagcount = db_get_tag_list (&taglist);
+  tagcount = contacts_db_get_tag_list (&taglist);
   for (i = 0; i < tagcount; i++)
     {
       cbField_items =
@@ -260,10 +260,10 @@ create_pageSetup (GObject *container)
     }
   gtk_combo_set_popdown_strings (GTK_COMBO (cbField), cbField_items);
   g_list_free (cbField_items);
-  db_free_result (taglist);
+  contacts_db_free_result (taglist);
 
   // reused some variables here...
-  tagcount = db_get_config_values (CONFIG_PANEL, &taglist);
+  tagcount = contacts_db_get_config_values (CONFIG_PANEL, &taglist);
   for (i = 1; i <= tagcount; i++)
     {
       /* label, then tag */
@@ -273,7 +273,7 @@ create_pageSetup (GObject *container)
       gtk_list_store_set (list_store, &iter, 0, taglist[2 * i], 1, taglist[2 * i + 1], -1);
     }
 
-  db_free_result (taglist);
+  contacts_db_free_result (taglist);
   return vbox9;
 }
 
@@ -304,7 +304,7 @@ create_pageLandSetup (GObject *container)
   gtk_table_attach(GTK_TABLE(table), w, 1, 2, 1, 2, GTK_FILL, GTK_FILL, 0, 0);
   w = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(w), _("right"));
   gtk_table_attach(GTK_TABLE(table), w, 2, 3, 1, 2, GTK_FILL, GTK_FILL, 0, 0);
-  cfgval = db_get_config_tag (CONFIG_LIST, "pos");
+  cfgval = contacts_db_get_config_tag (CONFIG_LIST, "pos");
   if (cfgval)
     {
       if (!strcmp(cfgval, "right"))
@@ -337,7 +337,7 @@ create_pageDatabase (GObject *container)
   g_free(markup);
   gtk_table_attach(GTK_TABLE(table), label, 0, 3, 0, 1, GTK_FILL, GTK_FILL, 0, 0);
   /* TRANSLATORS: kB = kilo bytes */
-  markup = g_strdup_printf("%s %d %s", _("Current size:"), db_size(), _("kB"));
+  markup = g_strdup_printf("%s %d %s", _("Current size:"), contacts_db_size(), _("kB"));
   lsize = gtk_label_new(markup);
   gtk_misc_set_alignment(GTK_MISC(lsize), 0.0, 0.5);
   gtk_table_attach(GTK_TABLE(table), lsize, 0, 3, 1, 2, GTK_FILL, GTK_FILL, 0, 0);
@@ -380,19 +380,19 @@ configure_ok_clicked (GtkWidget *widget, GtkWidget *window)
     
       if (w && gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(w)))
         {
-          db_update_config_values(CONFIG_LIST, "pos", "right");
+          contacts_db_update_config_values(CONFIG_LIST, "pos", "right");
           if (wh && wl)
             gtk_box_set_child_packing(GTK_BOX(wh), wl, FALSE, TRUE, 0, GTK_PACK_END);
         }
       else
         {
-          db_update_config_values(CONFIG_LIST, "pos", "left");
+          contacts_db_update_config_values(CONFIG_LIST, "pos", "left");
           if (wh && wl)
             gtk_box_set_child_packing(GTK_BOX(wh), wl, FALSE, TRUE, 0, GTK_PACK_START);
         }
     }
   /* panel config */
-  tagcount = db_get_config_values (CONFIG_PANEL, &taglist);
+  tagcount = contacts_db_get_config_values (CONFIG_PANEL, &taglist);
   
   if (list_store)
     {
@@ -419,7 +419,7 @@ configure_ok_clicked (GtkWidget *widget, GtkWidget *window)
           list = g_slist_prepend (list, label);
     
           if (!found)
-            db_add_config_values (CONFIG_PANEL, label, tag);
+            contacts_db_add_config_values (CONFIG_PANEL, label, tag);
     
         } while (gtk_tree_model_iter_next (GTK_TREE_MODEL (list_store), &iter));
         }
@@ -440,12 +440,12 @@ configure_ok_clicked (GtkWidget *widget, GtkWidget *window)
         }
     
           if (!found)
-        db_delete_config_values (CONFIG_PANEL, ttag);
+        contacts_db_delete_config_values (CONFIG_PANEL, ttag);
         }
       
       g_slist_free (list);
     
-      db_free_result (taglist);
+      contacts_db_free_result (taglist);
     
       load_panel_config ();
     }

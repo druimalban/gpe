@@ -1,8 +1,17 @@
-
 2005-12-06  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * export.c, configure.ac: Apply patch to support new DBus API
                               contributed by Philipp Zabel. 
+
+2005-12-05  Pat Deegan  <linuxipaq@psychogenic.com>
+
+    * db.c/db.h:  Removed these files, which control contacts db access,
+                    from project in order to separate this aspect into
+                    its own independent library.
+    * Makefile.am: Made changes to reflect deleted db.* files
+    * configure.ac: Modified DEP_MODULES to include libcontactsdb
+    * *.c/*.h: Changed all db related structs and calls to db functions
+                 to add the 'contacts_' prefix used by libcontactsdb.
 
 2005-12-01  Florian Boor  <florian.boor@kernelconcepts.de>
 
