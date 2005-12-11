@@ -49,6 +49,7 @@
       lot of files. They all have a specific function but are not always needed 
       as some of them are auto-generated (these auto-generated files should 
       not be placed in CVS. However try to use as much as possible of those.
+      </para>
       <table frame='all'>
       <title>Example Project Files</title>
       <tgroup cols='2' align='left' colsep='1' rowsep='1'>
@@ -68,9 +69,16 @@
            <row><entry>Makefile.am</entry><entry>Autotools support file (automake).</entry></row>
            <row><entry>gpe-dist.am</entry><entry>Some generic GPE make targets.</entry></row>
            <row><entry>autogen.sh</entry><entry>Shellscript to generate initial autoconf and automake files.</entry></row>
+	   <row><entry>ChangeLog</entry><entry>Contains a short description of changes and versioning.</entry></row>
+	   <row><entry>AUTHORS</entry><entry>Lists all the contributors to the program.</entry></row>
+	   <row><entry>INSTALL</entry><entry>Instructions on how to build and install your program.</entry></row>
+	   <row><entry>README</entry><entry>Short description of your program and miscellaneous information.</entry></row>
+	   <row><entry>LICENSE</entry><entry>Contains a copy of the license under which you distribute your program.</entry></row>
+	   <row><entry>TODO</entry><entry>A list of items/features you plan to implement in upcoming versions.</entry></row>
         </tbody>
         </tgroup>
       </table>
+      <para>
       For a detailed secription of the autotools setup for GPE applications see
       the "Building and Testing" section below. For more generic information 
       check out the GNU autoconf, automake and intltool manuals.
