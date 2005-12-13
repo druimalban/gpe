@@ -7,3 +7,4 @@ Things to do in gpe-timesheet
   - Show date in a single line.
   - Create summary at the end.
 - integrate with gpe-todo
+-the 'whoops, forgot to clock out' use case

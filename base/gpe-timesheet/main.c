@@ -232,14 +232,12 @@ confirm_dialog (gchar **text, gchar *action, gchar *action2)
 
   if (destroyed)
     return FALSE;
-#if 0
   {
     GtkTextBuffer *buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (entry));
     GtkTextIter start, end;
     gtk_text_buffer_get_bounds (buf, &start, &end);
     *text = gtk_text_buffer_get_text (buf, &start, &end, FALSE);
   }
-#endif
 
   destroyed = TRUE;
   gtk_widget_destroy (w);
