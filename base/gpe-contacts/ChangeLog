@@ -1,3 +1,8 @@
+2005-12-13  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * editing.c: Apply another patch by Olivier Berger to fix name prefix/suffix 
+                 translation.
+
 2005-12-06  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * export.c, configure.ac: Apply patch to support new DBus API

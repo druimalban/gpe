@@ -889,6 +889,7 @@ char *first = NULL;
 char *middle = NULL;
 char *last = NULL;
 char *suffix = NULL;
+char *refsuffix = NULL;
    
   if (!nametext) return;
   if (strlen(nametext) < 3) return;
@@ -902,7 +903,7 @@ char *suffix = NULL;
         
         while (titles[i])
           {
-            if (!strcasecmp(e[0], titles[i]))
+            if (!strcasecmp(e[0], gettext(titles[i])))
               {
                 has_title = TRUE;
                 title = sp;
@@ -935,11 +936,12 @@ char *suffix = NULL;
         i = 0;
         while (suffixes[i])
           {
-            if (!strcmp(suffix, suffixes[i]))
+	    refsuffix = gettext(suffixes[i]);
+            if (!strcmp(suffix, refsuffix))
               {
                 char *t;
                 has_suffix = TRUE;
-                t = strstr(sp, suffixes[i]);
+                t = strstr(sp, refsuffix);
                 if (t)
                   {
                     t--;
