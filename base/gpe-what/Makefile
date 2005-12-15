@@ -6,15 +6,13 @@ VERSION = 0.33
 
 MEMBERS = gpe-what mbtray
 
-PACKAGE_CFLAGS += -g $(STANDARD_CFLAGS) $(GTKCFLAGS)
-PACKAGE_LDFLAGS += $(GTKLIBS)
+PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GTKCFLAGS) `pkg-config --cflags libmb`
+PACKAGE_LDFLAGS += $(GTKLIBS) `pkg-config --libs libmb`
 PACKAGE_CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
-
-PACKAGE_LDFLAGS += -lmb
 
 ifeq ($(CVSBUILD),yes)
 BUILD = ../build
