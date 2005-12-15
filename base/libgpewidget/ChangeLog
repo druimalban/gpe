@@ -1,3 +1,10 @@
+2005-12-16 Philippe De Swert <philippedeswert@scarlet.be>
+
+	* Makefile.am : Added the necessary entries for building the gpedialog stuff
+	* gpe-dialog.c : New file containing the gpe_info_dialog 
+	* gpe/gpe-dialog.h : Include file that fits in with gpe-dialog.c
+	* gpehelp.c : Fixed some warnings
+
 2005-11-25  Florian Boor <florian@kernelconcepts.de>
 
 	* Makefile.am, 
