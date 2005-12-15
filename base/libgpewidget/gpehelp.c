@@ -60,7 +60,7 @@ gpe_show_help (const char *appname, const char *topic)
   gchar *helpadress;
   gchar *apps = "gpe-helpviewer gpe-mini-browser dillo minimo";
   gchar **app, **applist;
-  const gchar *command;
+  const gchar *command=NULL;
   gboolean spawn = FALSE;
 
   /* lookup help file */
@@ -107,6 +107,8 @@ gpe_show_help (const char *appname, const char *topic)
         g_free (helpadress); 
       return TRUE;
     }
+   /* should never get here */
+   return TRUE;
 }
 
 /** 
@@ -159,3 +161,4 @@ load_help_key_file (void)
   else
     return NULL;
 }
+
