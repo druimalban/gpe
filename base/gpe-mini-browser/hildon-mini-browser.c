@@ -1,5 +1,5 @@
 /*
- * gpe-mini-browser v0.18
+ * gpe-mini-browser v0.19
  *
  * Basic web browser based on gtk-webcore.
  * Hildon interface version for Maemo / Nokia 770
@@ -109,7 +109,7 @@ main (int argc, char *argv[])
   WebiSettings s = { 0, };
 
   /* osso stuff  */
-  context = osso_initialize ("gpe-mini-browser", "0.188888888", TRUE, NULL);
+  context = osso_initialize ("gpe-mini-browser", "0.19", TRUE, NULL);
   if (context == NULL)
     {
       fprintf (stderr, "osso_initialize failed.\n");
@@ -125,7 +125,7 @@ main (int argc, char *argv[])
 	case 'v':
 	  printf
 	    (_
-	     ("GPE-mini-browser version 0.18. (C)2005, Philippe De Swert\n"));
+	     ("GPE-mini-browser version 0.19. (C)2005, Philippe De Swert\n"));
 	  exit (0);
 
 	default:

@@ -1,5 +1,5 @@
 /*
- * gpe-mini-browser v0.18
+ * gpe-mini-browser v0.19
  *
  * Basic web browser based on gtk-webcore 
  * 
@@ -35,6 +35,7 @@
 #include <glib.h>
 #include <gpe/init.h>
 #include <gpe/errorbox.h>
+#include <gpe/gpedialog.h>
 
 #include "gpe-mini-browser.h"
 
@@ -65,13 +66,19 @@ fetch_url (const gchar * url, GtkWidget * html)
 	  fprintf (stderr, "Could not open %s\n", url);
 #endif
 	  file = TRUE;
-	  gpe_error_box ("Could not open file");
+	  gpe_error_box (_("Could not open file"));
 	}
       else
 	{
 	  file = FALSE;
 	}
     }
+
+  if (!strcmp (url, "about:"))
+    {
+      gpe_info_dialog (_("GPE mini-browser v0.19\n\nHTML engine : Gtk-webcore \n(http://gtk-webcore.sourceforge.net)\n\nCopyright (c) Philippe De Swert\n<philippedeswert@scarlet.be>\n"));
+    }
+
 
   if (!file)
     {
@@ -164,27 +171,27 @@ back_func (GtkWidget * back, GtkWidget * html)
 void
 home_func (GtkWidget * home, GtkWidget * html)
 {
-   char *homepage=NULL;
+  char *homepage = NULL;
 
-   homepage=malloc(sizeof(char)*60);
-   strncpy(homepage,"gpe.handhelds.org",18);
+  homepage = malloc (sizeof (char) * 60);
+  strncpy (homepage, "gpe.handhelds.org", 18);
 
-   start_db();
- 
-   if (!get_bookmark_home (homepage))
-   {
-	homepage = (char *)parse_url(homepage);
-	fetch_url(homepage,GTK_WIDGET(html));
-   }
-   else
-   {
-   	homepage = (char *)parse_url(homepage);
-        fetch_url(homepage,GTK_WIDGET(html));
-   }
+  start_db ();
 
-  stop_db(); 
-  free(homepage);
-   
+  if (!get_bookmark_home (homepage))
+    {
+      homepage = (char *) parse_url (homepage);
+      fetch_url (homepage, GTK_WIDGET (html));
+    }
+  else
+    {
+      homepage = (char *) parse_url (homepage);
+      fetch_url (homepage, GTK_WIDGET (html));
+    }
+
+  stop_db ();
+  free (homepage);
+
 }
 
 /* tell the engine to stop or reload the current page */
