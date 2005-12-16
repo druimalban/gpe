@@ -1,3 +1,8 @@
+2005-12-16 Philippe De Swert <philippedeswert@scarlet.be>
+
+	* main.c : remove badly placed ifdefs that made logging non-functional
+	* main.c : Added warning box if the user clicks the journal button without selecting an entry
+
 2005-12-06 Philippe De Swert <philippedeswert@scarlet.be>
 	
 	* release version 0.19

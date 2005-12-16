@@ -95,12 +95,17 @@ journal (GtkWidget *w, gpointer user_data)
       GtkCTreeNode *node = GTK_CTREE_NODE (GTK_CLIST (ct)->selection->data);
       struct task *t;
       t = gtk_ctree_node_get_row_data (ct, node);
+     
       /* here we go... */
       journal_add_header(t->description);
       scan_journal(g_slist_find(root,t));
       journal_add_footer();
       journal_to_file(JOURNAL_FILE);
       journal_show(JOURNAL_FILE);
+    }
+  else
+    {
+     gpe_error_box(_("No data selected for journal!"));
     }
 }
 
