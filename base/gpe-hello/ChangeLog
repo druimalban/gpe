@@ -1,17 +1,22 @@
+2005-12-16 Philippe De Swert <philippedeswert@scarlet.be>
+
+	* gpe-hello,c : -Replaced text area by a welcoming label
+			-Replaced nasty error box by gpe_info_dialog
+
 2005-10-31  Florian Boor <florian@kernelconcepts.de>
 
-* main.c: Replace C++ comments, some minor improvememnts.
-          Add more verbose comments, add toolbar.
-          Add GPE typical sizings and text area.
+	* gpe-hello.c: Replace C++ comments, some minor improvememnts.
+		  Add more verbose comments, add toolbar.
+	          Add GPE typical sizings and text area.
 
 2005-09-13  Florian Boor <florian@kernelconcepts.de>
 
-* Makefile.am: Add install of icon.
-  gpe-hello.c: Define "_".
-               Avoid the need of prototypes.
-			   Finish the window before creating content.
-			   Don't cast if not necessary.
+	* Makefile.am: Add install of icon.
+		       gpe-hello.c: Define "_".
+		       Avoid the need of prototypes.
+		       Finish the window before creating content.
+		       Don't cast if not necessary.
 
-v0.1 - 15/08/2005 - Philippe De Swert <Philippedeswert@scarlet.be>
+15/08/2005 - Philippe De Swert <Philippedeswert@scarlet.be>
 
-* First revision of gpe-hello tutorial program
+	* First revision of gpe-hello tutorial program v0.1

@@ -35,7 +35,7 @@
 
 /* gpe includes */
 #include <gpe/init.h>           /* gpe_application_init */
-#include <gpe/errorbox.h>       /* gpe_error_box */
+#include <gpe/gpedialog.h>       /* gpe_info_dialog */
 #include <gpe/pixmaps.h>        /* gpe_load_icons */
 #include <gpe/picturebutton.h>  /* gpe_button_new_from_stock */
 #include <gpe/spacing.h>        /* gpe_get_border, gpe_get_boxspacing */
@@ -58,7 +58,7 @@ struct gpe_icon my_icons[] =
 static void 
 hello_box (void)
 {
- gpe_error_box(_("Welcome to GPE!"));
+ gpe_info_dialog(_("Welcome to GPE!"));
 }
 
 
@@ -104,7 +104,7 @@ main (int argc, char *argv[])
 {
   GtkWidget *app;
   GtkWidget *contentbox, *quit_button, *hello_button;
-  GtkWidget *mainbox, *toolbar, *textarea;
+  GtkWidget *mainbox, *toolbar, *label;
 
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
@@ -131,8 +131,8 @@ main (int argc, char *argv[])
   /* call function creating main window toolbar, see above */
   toolbar = toolbar_create();
   
-  /* the text area is an example widget taking up the major part of the window */
-  textarea = gtk_text_view_new();
+  /* the label  is an example widget taking up the major part of the window */
+  label = gtk_label_new("Welcome to GPE!");
 
   /* create boxes */
   contentbox = gtk_hbox_new (FALSE, gpe_get_boxspacing());
@@ -157,7 +157,7 @@ main (int argc, char *argv[])
 
   /* pack the box with buttons and and the toolbar to the main box */
   gtk_box_pack_start(GTK_BOX(mainbox), toolbar, FALSE, TRUE, 0);
-  gtk_box_pack_start(GTK_BOX(mainbox), textarea, TRUE, TRUE, 0);
+  gtk_box_pack_start(GTK_BOX(mainbox), label, TRUE, TRUE, 0);
   gtk_box_pack_start(GTK_BOX(mainbox), contentbox, FALSE, TRUE, 0);
 
   /* add the main box to the window */
