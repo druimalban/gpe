@@ -52,7 +52,7 @@ void on_unknown_year_toggled (GtkToggleButton *togglebutton, gpointer user_data)
 void on_name_clicked (GtkButton *button, gpointer user_data);
 
 
-/* this is the filter for phone number edits */
+/* CALLBACK : this is the filter for phone number edits */
 void
 on_phone_insert_text(GtkEditable *editable, gchar *new_text,
                      gint new_text_length, gint *position,
@@ -522,6 +522,7 @@ create_edit (void)
 GtkWidget *
 edit_window (gboolean isdialog)
 {
+  /* Create the window */
   GtkWidget *w = create_edit ();
   GtkWidget *book = lookup_widget (w, "notebook2");
   GSList *page;
@@ -662,7 +663,9 @@ update_categories_list (GtkWidget *ui, GSList *selected, GtkWidget *edit)
 void
 edit_person (struct contacts_person *p, gchar *title, gboolean isdialog)
 {
-  GtkWidget *w = edit_window (isdialog);
+  /* Create the window */
+  GtkWidget *window = edit_window (isdialog);
+
 #ifdef IS_HILDON    
   GSList *catlist = NULL;
 #else    
@@ -670,35 +673,40 @@ edit_person (struct contacts_person *p, gchar *title, gboolean isdialog)
   GtkWidget *catlabel;
 #endif
     
-  gtk_window_set_title (GTK_WINDOW (w), title);
-  g_object_set_data(G_OBJECT(w), "isdialog", (gpointer)isdialog);  
+  gtk_window_set_title (GTK_WINDOW (window), title);
+  g_object_set_data(G_OBJECT(window), "isdialog", (gpointer)isdialog);  
   
   if (p)
     {
-      GSList *tags = gtk_object_get_data (GTK_OBJECT (w), "tag-widgets");
+      GSList *tags = gtk_object_get_data (GTK_OBJECT (window), "tag-widgets");
+
+      /* For all widgets corresponding to editable tags */
       GSList *iter;
       for (iter = tags; iter; iter = iter->next)
         {
-          GtkWidget *w = iter->data;
-          gchar *tag = gtk_object_get_data (GTK_OBJECT (w), "db-tag");
+          GtkWidget *widget = iter->data;
+
+	  /* Get the data associated to the corresponding tag in the database */
+          gchar *tag = gtk_object_get_data (GTK_OBJECT (widget), "db-tag");
           struct contacts_tag_value *v = contacts_db_find_tag (p, tag);
+
           guint pos = 0;
           if (tag)
             {
                if (!strcasecmp(tag, "NAME"))
                  {
-                   gtk_widget_grab_default(w);
-                   gtk_widget_grab_focus(w);
+                   gtk_widget_grab_default(widget);
+                   gtk_widget_grab_focus(widget);
                  }
             }
           if (v && v->value)
             {
-              if (GTK_IS_EDITABLE (w))
+              if (GTK_IS_EDITABLE (widget))
                 {
-                  gtk_editable_insert_text (GTK_EDITABLE (w), v->value,
+                  gtk_editable_insert_text (GTK_EDITABLE (widget), v->value,
                           strlen (v->value), &pos);
                 }
-              else if (GTK_IS_DATE_COMBO(w))
+              else if (GTK_IS_DATE_COMBO(widget))
                 {
                   if (v->value)
                     {
@@ -706,101 +714,170 @@ edit_person (struct contacts_person *p, gchar *title, gboolean isdialog)
                       GtkToggleButton *cbnoyear;
                       
                       sscanf (v->value, "%04d%02d%02d", &year, &month, &day);
-                      gtk_date_combo_set_date (GTK_DATE_COMBO (w), year, month, day);
+                      gtk_date_combo_set_date (GTK_DATE_COMBO (widget), year, month, day);
                       if (year == 0)
                         {
-                          gtk_date_combo_ignore_year(GTK_DATE_COMBO(w),TRUE);
-                          cbnoyear = g_object_get_data(G_OBJECT(w),"cbnoyear");
+                          gtk_date_combo_ignore_year(GTK_DATE_COMBO(widget),TRUE);
+                          cbnoyear = g_object_get_data(G_OBJECT(widget),"cbnoyear");
                           gtk_toggle_button_set_active(cbnoyear,TRUE);
                         }
                     }
                   else
-                    gtk_date_combo_clear (GTK_DATE_COMBO (w));
+                    gtk_date_combo_clear (GTK_DATE_COMBO (widget));
                 }
-              else if (GTK_IS_IMAGE(w))
+              else if (GTK_IS_IMAGE(widget))
                 {
                   if ((v->value) && !access(v->value,R_OK)) 
                     {
                       GdkPixbuf *buf;
-                      g_object_set_data(G_OBJECT(w), "filename", v->value);
+                      g_object_set_data(G_OBJECT(widget), "filename", v->value);
                       buf = gdk_pixbuf_new_from_file_at_size(v->value, IMG_WIDTH, 
                                                              IMG_HEIGHT, NULL);
-                      gtk_image_set_from_pixbuf(GTK_IMAGE(w), buf);
+                      gtk_image_set_from_pixbuf(GTK_IMAGE(widget), buf);
                       gdk_pixbuf_unref(buf);
                     }
                   else
-                    gtk_image_set_from_stock(GTK_IMAGE(w), 
+                    gtk_image_set_from_stock(GTK_IMAGE(widget), 
                       GTK_STOCK_MISSING_IMAGE, GTK_ICON_SIZE_BUTTON);
                 }
               else  
-                gtk_text_buffer_set_text (gtk_text_view_get_buffer (GTK_TEXT_VIEW (w)), 
+                gtk_text_buffer_set_text (gtk_text_view_get_buffer (GTK_TEXT_VIEW (widget)), 
                           v->value, -1);
             }
         }
-      gtk_object_set_data (GTK_OBJECT (w), "person", p);
+      gtk_object_set_data (GTK_OBJECT (window), "person", p);
 
 #ifdef IS_HILDON
       catlist = get_categories_list (p);
 #else
       /* display categories */  
       str = build_categories_string (p);
-      catlabel = lookup_widget (w, "categories-label");
+      catlabel = lookup_widget (window, "categories-label");
       gtk_label_set_text (GTK_LABEL (catlabel), str);
       g_free (str);
 #endif        
     }
 #ifdef IS_HILDON
-  populate_pim_categories_list(g_object_get_data(G_OBJECT(w), "categories"), 
+  populate_pim_categories_list(g_object_get_data(G_OBJECT(window), "categories"), 
                                catlist);
   if (catlist)
       g_slist_free(catlist);
 #endif  
-  gtk_widget_show (w);
+  gtk_widget_show (window);
+}
+
+/* Concatenate name parts. 
+   caller is responsible for freeing returned value */
+
+gchar *concatenate_name_parts(gchar *n1, gchar *n2, gchar *n3, gchar *n4,gchar *n5)
+{
+  gchar *ts = g_strdup("");
+  if (n1 && strlen(n1))
+    {
+      n1 = g_strdup_printf("%s%s ", ts, g_strstrip(n1));
+      g_free(ts);
+      ts = n1;
+    }
+  if (n2 && strlen(n2))
+    {
+      n1 = g_strdup_printf("%s%s ", ts, g_strstrip(n2));
+      g_free(ts);
+      ts = n1;
+    }
+  if (n3 && strlen(n3)) 
+    {
+      n1 = g_strdup_printf("%s%s ", ts, g_strstrip(n3));
+      g_free(ts);
+      ts = n1;
+    }
+  if (n4 && strlen(n4)) 
+    {
+      n1 = g_strdup_printf("%s%s ", ts, g_strstrip(n4));
+      g_free(ts);
+      ts = n1;
+    }
+  if (n5 && strlen(n5)) 
+    {
+      n1 = g_strdup_printf("%s%s", ts, g_strstrip(n5));
+      g_free(ts);
+      ts = n1;
+    }
+  g_strstrip(ts);
+  return ts;
 }
 
 void
-update_edit (struct contacts_person *p, GtkWidget *w)
+update_edit (struct contacts_person *p, GtkWidget *window)
 {
-  GtkWidget *nameentry[5];
+  GtkWidget *nameentry[6];
   int namenum = 0;
   int i;
-  gchar *n1 = NULL, *n2 = NULL, *n3 = NULL, *n4 = NULL, *n5 = NULL;
+  gchar *namepart[6];
+
+  for(i = 0; i < 6; i++)
+    {
+      nameentry[i] = NULL;
+      namepart[i] = NULL;
+    }
+
   if (p)
     {
-      GSList *tags = gtk_object_get_data (GTK_OBJECT (w), "tag-widgets");
+      GSList *tags = gtk_object_get_data (GTK_OBJECT (window), "tag-widgets");
+
+      /* For every widgets corresponding to tags in the window */
       GSList *iter;
       for (iter = tags; iter; iter = iter->next)
         {
-          GtkWidget *w = iter->data;
-          gchar *tag = gtk_object_get_data (GTK_OBJECT (w), "db-tag");
+          GtkWidget *widget = iter->data;
+          gchar *tag = gtk_object_get_data (GTK_OBJECT (widget), "db-tag");
           struct contacts_tag_value *v = contacts_db_find_tag (p, tag);
           guint pos = 0;
           if (v && v->value)
             {
-               /* collect data for name field update */
-              if (!strcasecmp(v->tag,"TITLE"))
-                n1 = v->value;
-              if (!strcasecmp(v->tag,"GIVEN_NAME"))
-                n2 = v->value;
-              if (!strcasecmp(v->tag,"MIDDLE_NAME"))
-                n3 = v->value;
-              if (!strcasecmp(v->tag,"FAMILY_NAME"))
-                n4 = v->value;
-              if (!strcasecmp(v->tag,"HONORIFIC_SUFFIX"))
-                n5 = v->value;
-              if (!strcasecmp(v->tag,"NAME"))
-              {
-                nameentry[namenum] = w;
-                namenum++;
-              }
+	      /* collect data for name field update */
+	      if (!strcasecmp(tag,"NAME"))
+		{
+		  nameentry[5] = widget;
+		  namepart[5] = v->value;
+		}
+              if (!strcasecmp(tag,"TITLE"))
+		{
+		  nameentry[0] = widget;
+		  namepart[0] = v->value;
+		  namenum++;
+		}
+              if (!strcasecmp(tag,"GIVEN_NAME"))
+		{
+		  nameentry[1] = widget;
+		  namepart[1] = v->value;
+		  namenum++;
+		}
+              if (!strcasecmp(tag,"MIDDLE_NAME"))
+		{
+		  nameentry[2] = widget;
+		  namepart[2] = v->value;
+		  namenum++;
+		}
+              if (!strcasecmp(tag,"FAMILY_NAME"))
+		{
+		  nameentry[3] = widget;
+		  namepart[3] = v->value;
+		  namenum++;
+		}
+              if (!strcasecmp(tag,"HONORIFIC_SUFFIX"))
+		{
+		  nameentry[4] = widget;
+		  namepart[4] = v->value;
+		  namenum++;
+		}
 
-              if (GTK_IS_EDITABLE (w))
+              if (GTK_IS_EDITABLE (widget))
                 {
-                  gtk_editable_delete_text(GTK_EDITABLE(w), 0, -1);
-                  gtk_editable_insert_text (GTK_EDITABLE (w), v->value,
+                  gtk_editable_delete_text(GTK_EDITABLE(widget), 0, -1);
+                  gtk_editable_insert_text (GTK_EDITABLE (widget), v->value,
                                             strlen (v->value), &pos);
                 }
-              else if (GTK_IS_DATE_COMBO(w))
+              else if (GTK_IS_DATE_COMBO(widget))
                 {
                   if (v->value)
                     {
@@ -808,71 +885,60 @@ update_edit (struct contacts_person *p, GtkWidget *w)
                       GtkToggleButton *cbnoyear;
                       
                       sscanf (v->value, "%04d%02d%02d", &year, &month, &day);
-                      gtk_date_combo_set_date (GTK_DATE_COMBO (w), year, month, day);
+                      gtk_date_combo_set_date (GTK_DATE_COMBO (widget), year, month, day);
                       if (year == 0)
                         {
-                          gtk_date_combo_ignore_year(GTK_DATE_COMBO(w),TRUE);
-                          cbnoyear = g_object_get_data(G_OBJECT(w),"cbnoyear");
+                          gtk_date_combo_ignore_year(GTK_DATE_COMBO(widget),TRUE);
+                          cbnoyear = g_object_get_data(G_OBJECT(widget),"cbnoyear");
                           gtk_toggle_button_set_active(cbnoyear,TRUE);
                         }
                     }
                   else
-                    gtk_date_combo_clear (GTK_DATE_COMBO (w));
+                    gtk_date_combo_clear (GTK_DATE_COMBO (widget));
                 }
-              else if (GTK_IS_IMAGE(w))
+              else if (GTK_IS_IMAGE(widget))
                 {
-                  g_object_set_data(G_OBJECT(w),"filename",v->value);
+                  g_object_set_data(G_OBJECT(widget),"filename",v->value);
                   if ((v->value) && !access(v->value,R_OK))
                     {
                       GdkPixbuf *buf;
-                      g_object_set_data(G_OBJECT(w), "filename", v->value);
+                      g_object_set_data(G_OBJECT(widget), "filename", v->value);
                       buf = gdk_pixbuf_new_from_file_at_size(v->value, IMG_WIDTH, 
                                                              IMG_HEIGHT, NULL);
-                      gtk_image_set_from_pixbuf(GTK_IMAGE(w), buf);
+                      gtk_image_set_from_pixbuf(GTK_IMAGE(widget), buf);
                       gdk_pixbuf_unref(buf);
                     }
                   else
-                    gtk_image_set_from_stock(GTK_IMAGE(w), 
+                    gtk_image_set_from_stock(GTK_IMAGE(widget), 
                       GTK_STOCK_MISSING_IMAGE, GTK_ICON_SIZE_BUTTON);
                 }
-              else if (GTK_IS_TEXT_VIEW(w))
-                gtk_text_buffer_set_text (gtk_text_view_get_buffer (GTK_TEXT_VIEW (w)), 
+              else if (GTK_IS_TEXT_VIEW(widget))
+                gtk_text_buffer_set_text (gtk_text_view_get_buffer (GTK_TEXT_VIEW (widget)), 
                           v->value, -1);
             }
+
         }
     }
 
   if (namenum)
     {
-      gchar *ts = g_strdup(n1);
-      if (n2)
-        {
-          n1 = g_strdup_printf("%s %s", ts, g_strstrip(n2));
-          g_free(ts);
-          ts = n1;
-        }
-      if (n3) 
-        {
-          n1 = g_strdup_printf("%s %s", ts, g_strstrip(n3));
-          g_free(ts);
-          ts = n1;
-        }
-      if (n4) 
-        {
-          n1 = g_strdup_printf("%s %s", ts, g_strstrip(n4));
-          g_free(ts);
-          ts = n1;
-        }
-      if (n5) 
-        {
-          n1 = g_strdup_printf("%s %s", ts, g_strstrip(n5));
-          g_free(ts);
-          ts = n1;
-        }
+      gchar *ts = concatenate_name_parts(namepart[0], namepart[1], namepart[2], namepart[3], namepart[4]);
 
-      for (i=0;i<namenum;i++)
-        gtk_entry_set_text(GTK_ENTRY(nameentry[i]), g_strstrip(ts));
+      /* First update value of concatenated name */
+      contacts_db_set_data(p, "NAME", g_strdup(ts));
+      if (nameentry[5])
+	gtk_entry_set_text(GTK_ENTRY(nameentry[5]), ts);
       g_free(ts);
+
+      /* Then the sub-components */
+      for (i = 0; i < 5; i++)
+	{
+	  if (nameentry[i])
+	    {
+	      gtk_entry_set_text(GTK_ENTRY(nameentry[i]), namepart[i]);
+	    }
+	}
+
     }
 }
 
@@ -880,23 +946,26 @@ update_edit (struct contacts_person *p, GtkWidget *w)
 void
 store_name_fields(struct contacts_person *p, const char *nametext)
 {
-char e[4][100];
-int num_elements, i;
-gboolean has_title = FALSE, has_suffix = FALSE;
-char *sp;
-char *title = NULL;
-char *first = NULL;
-char *middle = NULL;
-char *last = NULL;
-char *suffix = NULL;
-char *refsuffix = NULL;
+  char e[4][100];
+  int num_elements, i;
+  gboolean has_title = FALSE, has_suffix = FALSE;
+  char *sp;
+  /*  char *origsp; */
+  char *title = NULL;
+  char *first = NULL;
+  char *middle = NULL;
+  char *last = NULL;
+  char *suffix = NULL;
+  char *refsuffix = NULL;
    
   if (!nametext) return;
   if (strlen(nametext) < 3) return;
-    sp = g_strdup(nametext);
 
-    /* scan first element for title */
-    if (sscanf(sp, "%s", e[0]))
+  sp = g_strdup(nametext);
+  /*  origsp = sp; */
+
+  /* scan first element for title */
+  if (sscanf(sp, "%s", e[0]))
       {
         struct contacts_tag_value *v;
         i = 0;
@@ -964,10 +1033,10 @@ char *refsuffix = NULL;
       {
         case 0: 
         case EOF:
-        break;
+	  break;
         case 1: 
           last = e[0];
-        break;
+	  break;
         case 2: 
           if (strstr(sp, ","))
             {
@@ -985,7 +1054,7 @@ char *refsuffix = NULL;
                 last++;
               strrchr(sp, ' ')[0] = 0;
             }
-        break;
+	  break;
         default:
           if (strstr(sp, ","))
             {
@@ -1015,15 +1084,20 @@ char *refsuffix = NULL;
                   strrchr(first, ' ')[0] = 0;
                 }
             }
-        break;
+	  break;
       }
     contacts_db_set_data(p, "GIVEN_NAME", g_strdup(first));
     contacts_db_set_data(p, "MIDDLE_NAME", g_strdup(middle));
     contacts_db_set_data(p, "FAMILY_NAME", g_strdup(last));
     contacts_db_set_data(p, "TITLE", g_strdup(title));
     contacts_db_set_data(p, "HONORIFIC_SUFFIX", g_strdup(suffix));
+
+    /*    g_free(origsp); */
+
 }
 
+
+/* CALLBACK */
 
 void
 on_edit_save_clicked (GtkButton * button, gpointer user_data)
@@ -1033,6 +1107,7 @@ on_edit_save_clicked (GtkButton * button, gpointer user_data)
   struct contacts_person *p = g_object_get_data (G_OBJECT (edit), "person");
   gchar *nametext = NULL;
   gboolean isdialog = (gboolean) g_object_get_data(G_OBJECT(edit), "isdialog");
+  gchar *n1 = NULL, *n2 = NULL, *n3 = NULL, *n4 = NULL, *n5 = NULL;
   
   for (tags = g_object_get_data (G_OBJECT (edit), "tag-widgets");
        tags; tags = tags->next)
@@ -1074,16 +1149,49 @@ on_edit_save_clicked (GtkButton * button, gpointer user_data)
       tag = g_object_get_data (G_OBJECT (w), "db-tag");
       contacts_db_set_data (p, tag, text);
       
-      /* remember name */
+      /* remember name details components for later comparison */
+      if (!strcasecmp(tag,"TITLE"))
+	{
+	  n1 = text;
+	}
+      if (!strcasecmp(tag,"GIVEN_NAME"))
+	{
+	  n2 = text;
+	}
+      if (!strcasecmp(tag,"MIDDLE_NAME"))
+	{
+	  n3 = text;
+	}
+      if (!strcasecmp(tag,"FAMILY_NAME"))
+	{
+	  n4 = text;
+	}
+      if (!strcasecmp(tag,"HONORIFIC_SUFFIX"))
+	{
+	  n5 = text;
+	}
+
       if (!strcasecmp(tag, "NAME"))
         {
-            nametext = text;
+	  nametext = text;
         }
     }
 
-    /* handle name details */
+    /* handle name modification */
     if (nametext)
-      store_name_fields(p, nametext);
+      {
+	/* concatenate name details parts to compare previous values
+	   to potential recent change of "full" name */
+	gchar *oldnametext = concatenate_name_parts(n1, n2, n3, n4, n5);
+	
+	/* only if "full" name was changed since previous edition of
+	   name details, we need to parse again the name details and
+	   update name details values accordingly */
+	if(strcmp(nametext, oldnametext))
+	  store_name_fields(p, nametext);
+
+	g_free(oldnametext);
+      }
 
 #ifdef IS_HILDON
     {   
@@ -1285,19 +1393,40 @@ on_unknown_year_toggled (GtkToggleButton *togglebutton, gpointer user_data)
   gtk_date_combo_ignore_year(cb, gtk_toggle_button_get_active(togglebutton));
 }
 
+/* CALLBACK */
+
 void
 on_name_clicked (GtkButton *button, gpointer user_data)
 {
   GtkWindow *edit = user_data;
   GtkEntry *e = g_object_get_data(G_OBJECT(button), "edit");
   struct contacts_person *p;
-  gchar *name;
-
+  gchar *oldname = NULL, *name = NULL;
+  struct contacts_tag_value *v;
+ 
   p = g_object_get_data (G_OBJECT (edit), "person");
   
+  /* get the name displayed in the widget */
   name = gtk_editable_get_chars(GTK_EDITABLE(e), 0, -1);
-  store_name_fields(p, name);
+
+  /* get the name in the person's tags */
+  v = contacts_db_find_tag(p,"NAME");
+  if (v && v->value) 
+    oldname = v->value;
+
+  /* if both names differ, name was edited */
+  if(strcmp(oldname,name))
+    {
+    
+      /* so split the name into parts before editing details */
+      store_name_fields(p, name);
+    }
   g_free(name);
+
+  /* Display the name details dialog */
   if (do_edit_name_detail(edit, p))
-    update_edit(p, GTK_WIDGET(edit));
+    {
+      /* Then update contents of name widget */
+      update_edit(p, GTK_WIDGET(edit));
+    }
 }

@@ -1,3 +1,9 @@
+2005-12-16  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * editing.c: Apply patch to clean up name order logic and make it more 
+                 friendly to use. Soem general code cleanups and improved 
+                 comments. Contributed by Olivier Berger.
+                 
 2005-12-13  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * editing.c: Apply another patch by Olivier Berger to fix name prefix/suffix 
