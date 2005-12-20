@@ -1,3 +1,8 @@
+2005-12-20  Florian Boor <florian.boor@kernelconcepts.de>
+
+    * day_view.c: Proposed fix to avoid popup window getting in front of 
+                  dialog windows. (#1432)
+
 2005-12-08  Florian Boor <florian.boor@kernelconcepts.de>
     
     * day_view.c: Use defined gray instead colour from style because this 

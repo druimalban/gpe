@@ -585,8 +585,8 @@ destroy_popup (GtkWidget *widget, GdkEventButton *event, gpointer d)
 static void
 delete_event_cb (GtkWidget *widget, GtkWidget *a)
 {
-	delete_event (sel_event, widget);
 	gtk_widget_hide (popup);
+	delete_event (sel_event, widget);
 }
 
 
@@ -609,15 +609,15 @@ save_cb (GtkWidget *widget, GtkWidget *a)
 static void
 send_ir_cb (GtkWidget *widget, GtkWidget *a)
 {
-	vcal_do_send_irda (sel_event);
 	gtk_widget_hide (popup);
+	vcal_do_send_irda (sel_event);
 }
 
 static void
 send_bt_cb (GtkWidget *widget, GtkWidget *a)
 {
-	vcal_do_send_bluetooth (sel_event);
 	gtk_widget_hide (popup);
+	vcal_do_send_bluetooth (sel_event);
 }
 
 gboolean
