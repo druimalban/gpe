@@ -1,3 +1,12 @@
+2005-12-20  Florian Boor <florian@kernelconcepts.de>
+
+    * Release Version 0.22
+    * Makefile: Version to V 0.22.
+    * clock.c: Set time label bold and use sans font.
+               Update time only if necessary.
+               Change resizing behaviour.
+               Set window icon.
+
 2005-08-24  Philippe De Swert  <philippedeswert@scarlet.be>
 
 	* release v0.21
@@ -5,4 +14,3 @@
 2005-08-24  Joseph J. McCarthy <mccarthy@engrng.pitt.edu>
 
 	* clock.c: use new libschedule API
-	

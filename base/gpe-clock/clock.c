@@ -366,20 +366,29 @@ static void
 update_time_label (GtkWidget *label)
 {
   char buf[256];
+  static time_t t_stat = 0;
   time_t t;
   struct tm tm;
   const char *time_format;
   
   time (&t);
+  /* Check if we need to update, if not save power.
+   * Supress update if no seconds to show, 
+   * set if time set back, 60 sec no update or new minute started. */
+  if (!show_seconds && t_stat && (t_stat > t) && (((t - t_stat) < 60) || (t % 60)))
+    return;
+      
+  t_stat = t;
+  
   localtime_r (&t, &tm);
 
   if (format == FORMAT_24)
     {
-      time_format = show_seconds ? "%H:%M:%S" : "%H:%M";
+      time_format = show_seconds ? "<span font_desc=\"Sans\"><b>%H:%M:%S</b></span>": "<span font_desc=\"Sans\"><b>%H:%M</b></span>";
     }
   else
     {
-      time_format = show_seconds ? "%I:%M:%S%p" : "%I:%M%p";
+      time_format = show_seconds ? "<span font_desc=\"Sans\"><b>%I:%M:%S%p</b></span>" : "<span font_desc=\"Sans\"><b>%I:%M%p</b></span>";
     }
     
   strftime (buf, sizeof (buf), time_format, &tm);
@@ -389,10 +398,20 @@ update_time_label (GtkWidget *label)
 static void
 update_time_face (void)
 {
+  static time_t t_stat = 0;
   time_t t;
   struct tm tm;
-
+  const char *time_format;
+  
   time (&t);
+  /* Check if we need to update, if not save power.
+   * Supress update if no seconds to show, 
+   * set if time set back, 60 sec no update or new minute started. */
+  if (!show_seconds && t_stat && (t_stat > t) && (((t - t_stat) < 60) || (t % 60)))
+    return;
+      
+  t_stat = t;
+
   localtime_r (&t, &tm);
 
   gtk_adjustment_set_value (GTK_ADJUSTMENT (hour_adj), tm.tm_hour);
@@ -698,7 +717,7 @@ alarm_window (void)
   for (i = 0; i < 7; i++)
     {
       if (state.day_mask & (1 << i))
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (ctx->day_button[i]), TRUE);
+        gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (ctx->day_button[i]), TRUE);
     }
 
   ok_button = gtk_button_new_from_stock (GTK_STOCK_OK);
@@ -785,8 +804,7 @@ select_new_format (int new_format)
 gboolean 
 external_event(GtkWindow *window, GdkEventConfigure *event, gpointer user_data)
 {
-#if 0
-  gboolean flag_graphical_old = flag_graphical;
+/*  gboolean flag_graphical_old = flag_graphical;
 
   if (event->type == GDK_CONFIGURE)
   {
@@ -798,7 +816,9 @@ external_event(GtkWindow *window, GdkEventConfigure *event, gpointer user_data)
     if (!flag_graphical) 
       update_time_label (time_label);
   }
-#endif
+*/
+   update_time();
+    
   return FALSE;
 }
 
@@ -875,6 +895,7 @@ main (int argc, char *argv[])
 
   panel_window = gtk_plug_new (0);
   gtk_widget_set_name (panel_window, "gpe-clock");
+  gtk_window_set_icon_from_file (GTK_WINDOW(panel_window), PREFIX "/share/pixmaps/gpe-clock.png", NULL);
 
   if (format == FORMAT_ANALOGUE)
     {
