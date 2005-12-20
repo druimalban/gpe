@@ -1,5 +1,8 @@
 2005-12-20  Florian Boor <florian.boor@kernelconcepts.de>
-
+    
+    * day_render.c: Minor formating fix, fix segfault caused by broken 
+                    event descriptions. Maybe not perfect but no segfaults 
+                    anymore.
     * day_view.c: Proposed fix to avoid popup window getting in front of 
                   dialog windows. (#1432)
 

@@ -157,7 +157,7 @@ show_event (const struct day_render *dr, const ev_rec_t event_rectangle,
   guint length;
 
   event_details_t evd;
-  char buf[250], *buffer;
+  gchar buf[250], *buffer;
   PangoLayout *pl;
   GdkRectangle gr;
   gint arc_size;
@@ -168,9 +168,10 @@ show_event (const struct day_render *dr, const ev_rec_t event_rectangle,
 
 
   evd = event_db_get_details (event_rectangle->event);
-  buffer = (char *) g_malloc (sizeof (char) * 260);
   snprintf (buf, sizeof (buf), "<span size='small'>%s</span>", evd->summary);
   buffer = g_locale_to_utf8 (buf, -1, NULL, NULL, NULL);
+  if (!buffer)
+      buffer = g_strdup(buf);
 
   length = event_rectangle->height - 1;
   /* Rectangle used to write appointment summary */
@@ -246,24 +247,22 @@ show_event (const struct day_render *dr, const ev_rec_t event_rectangle,
   if (event_rectangle->event->flags & FLAG_ALARM)
     {
       if (dr->capt->bell_pb)
-	{
-	  gint width_pix, height_pix;
-	  width_pix = gdk_pixbuf_get_width (dr->capt->bell_pb);
-	  height_pix = gdk_pixbuf_get_height (dr->capt->bell_pb);
-
-	  gdk_draw_pixbuf (dr->draw,
-			   dr->normal_gc,
-			   dr->capt->bell_pb,
-			   0, 0,
-			   offsetx + width - width_pix - 1,
-			   event_rectangle->y + 1, MIN (width_pix, width - 1),
-			   MIN (height_pix, height - 1),
-			   GDK_RGB_DITHER_NORMAL, 0, 0);
-	}
+        {
+          gint width_pix, height_pix;
+          width_pix = gdk_pixbuf_get_width (dr->capt->bell_pb);
+          height_pix = gdk_pixbuf_get_height (dr->capt->bell_pb);
+    
+          gdk_draw_pixbuf (dr->draw,
+                   dr->normal_gc,
+                   dr->capt->bell_pb,
+                   0, 0,
+                   offsetx + width - width_pix - 1,
+                   event_rectangle->y + 1, MIN (width_pix, width - 1),
+                   MIN (height_pix, height - 1),
+                   GDK_RGB_DITHER_NORMAL, 0, 0);
+        }
     }
   g_free (buffer);
-
-
 }
 
 
