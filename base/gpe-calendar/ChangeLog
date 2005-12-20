@@ -1,5 +1,8 @@
 2005-12-20  Florian Boor <florian.boor@kernelconcepts.de>
     
+    * day_view.c, event-ui.c, globals.h: Apply patch to fix segfault 
+      deleting events with alerts contributed by Denny Priebe.
+    * day_view.c: Fix warnings when casting button to window.
     * day_render.c: Minor formating fix, fix segfault caused by broken 
                     event descriptions. Maybe not perfect but no segfaults 
                     anymore.

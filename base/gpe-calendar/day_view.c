@@ -237,7 +237,7 @@ delete_event (event_t ev, GtkWidget *d)
   event_details_t ev_d;
   recur_t r;
   
-  ev_real = (event_t)ev->cloned_ev;
+  ev_real = get_cloned_ev(ev);
   ev_d = event_db_get_details (ev_real);
      
   if (ev_real->recur)
@@ -248,7 +248,7 @@ delete_event (event_t ev, GtkWidget *d)
         {			  
           if (ev_real->flags & FLAG_ALARM)
             {
-              unschedule_alarm (ev_real, d);
+              unschedule_alarm (ev_real, gtk_widget_get_toplevel(d));
               schedule_next (0,0, d);
             }
           event_db_remove (ev_real);
@@ -264,7 +264,7 @@ delete_event (event_t ev, GtkWidget *d)
     {			  
       if (ev_real->flags & FLAG_ALARM)
         {
-          unschedule_alarm (ev_real,d);
+          unschedule_alarm (ev_real, gtk_widget_get_toplevel(d));
           schedule_next (0,0,d);
         }
       event_db_remove (ev_real);

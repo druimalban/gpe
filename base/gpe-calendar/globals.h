@@ -60,3 +60,6 @@ extern GdkFont *yearfont, *datefont;
   #define BELLRECUR_ICON "bell_recur"
   #define APP_ICON       PREFIX "/share/pixmaps/gpe-calendar.png"
 #endif
+
+#define get_cloned_ev(arg) \
+  ((arg->flags & FLAG_CLONE) ? (event_t)arg->cloned_ev : arg)

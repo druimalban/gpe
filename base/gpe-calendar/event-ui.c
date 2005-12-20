@@ -206,7 +206,7 @@ weekly_toggled (GtkWidget *widget,
 void
 unschedule_alarm (event_t ev, GtkWidget *d)
 {
-  event_t ev_real = (event_t)ev->cloned_ev;
+  event_t ev_real = get_cloned_ev(ev);
 
   if (!schedule_cancel_alarm (ev_real->uid, ev->start)) 
   {
@@ -243,7 +243,7 @@ schedule_next (guint skip, guint uid, GtkWidget *d)
 
       if (ev->flags & FLAG_ALARM) 
 	{
-	  ev_real = (event_t)ev->cloned_ev;
+	  ev_real = get_cloned_ev(ev);
 	  ev_d = event_db_get_details (ev_real);
 	  if (((int)(ev->start) != (int)skip) && (uid!=ev_real->uid))
 	    {
@@ -292,7 +292,7 @@ click_delete (GtkWidget *widget, GtkWidget *d)
   event_details_t ev_d;
   recur_t r;
   
-  ev_real = (event_t)ev->cloned_ev;
+  ev_real = get_cloned_ev(ev);
   ev_d = event_db_get_details (ev_real);
      
   if (ev_real->recur)
@@ -346,7 +346,7 @@ click_ok (GtkWidget *widget, GtkWidget *d)
     
   if (s->ev)
     {
-      ev = (event_t)(s->ev->cloned_ev);
+      ev = get_cloned_ev(s->ev);
       ev_d = event_db_get_details (ev);
       if (ev->flags & FLAG_ALARM)
         unschedule_alarm (s->ev, gtk_widget_get_toplevel(widget));
@@ -607,7 +607,7 @@ check_constrains(struct edit_state *s)
       time_t start_t, end_t;
       event_t ev;
       
-      ev = (event_t)(s->ev->cloned_ev);
+      ev = get_cloned_ev(s->ev);
       
       /* Appointment */
       char *start = gtk_editable_get_chars (GTK_EDITABLE (GTK_COMBO
