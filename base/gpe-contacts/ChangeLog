@@ -1,3 +1,8 @@
+2005-12-21  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * editing.c: Apply patch by Olivier Berger to fix segfault opening
+                 name detail dialog.
+
 2005-12-16  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * editing.c: Apply patch to clean up name order logic and make it more 

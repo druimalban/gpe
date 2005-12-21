@@ -1401,7 +1401,8 @@ on_name_clicked (GtkButton *button, gpointer user_data)
   GtkWindow *edit = user_data;
   GtkEntry *e = g_object_get_data(G_OBJECT(button), "edit");
   struct contacts_person *p;
-  gchar *oldname = NULL, *name = NULL;
+  gchar *oldname = "";
+  gchar *name = NULL;
   struct contacts_tag_value *v;
  
   p = g_object_get_data (G_OBJECT (edit), "person");

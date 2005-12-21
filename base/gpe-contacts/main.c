@@ -46,7 +46,7 @@
 
 GtkWidget *categories_smenu;
 GtkWidget *mainw;
-GtkListStore *list_store;
+static GtkListStore *list_store;
 GtkWidget *list_view;
 GtkWidget *search_entry;
 GtkWidget *popup_menu;
