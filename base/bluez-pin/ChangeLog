@@ -4,8 +4,9 @@
 
 2005-12-26  Phil Blundell  <pb@reciva.com>
 
-	* Makefile (CFLAGS): Add -D_BSD_SOURCE.
-	
+	* Makefile (CFLAGS): Add -D_BSD_SOURCE.	
+	* main.c: Remove support for "old" interfaces.
+
 2005-09-05  Phil Blundell  <philb@gnu.org>
 
 	* Version 0.26 released.

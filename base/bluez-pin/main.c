@@ -25,11 +25,8 @@
 
 #include "pin-ui.h"
 
-#define OLD_SERVICE_NAME   "org.handhelds.gpe.bluez"
-#define OLD_INTERFACE_NAME OLD_SERVICE_NAME ".PinAgent"
-
-#define NEW_SERVICE_NAME   "org.bluez.PinAgent"
-#define NEW_INTERFACE_NAME NEW_SERVICE_NAME
+#define SERVICE_NAME   "org.bluez.PinAgent"
+#define INTERFACE_NAME SERVICE_NAME
 
 #define _(x) gettext(x)
 
@@ -40,14 +37,11 @@ handler_func (DBusConnection     *connection,
 	      DBusMessage        *message,
 	      void               *user_data)
 {
-  if (dbus_message_is_method_call (message, NEW_INTERFACE_NAME, "PinRequest"))
+  if (dbus_message_is_method_call (message, INTERFACE_NAME, "PinRequest"))
     return bluez_pin_handle_dbus_request (connection, message);
   
-  if (dbus_message_is_method_call (message, OLD_INTERFACE_NAME, "PinRequest"))
-    return bluez_pin_handle_dbus_request (connection, message);
-
   if (dbus_message_is_signal (message,
-                              DBUS_INTERFACE_ORG_FREEDESKTOP_LOCAL,
+                              DBUS_INTERFACE_LOCAL,
                               "Disconnected"))
     exit (0);
   
@@ -67,7 +61,6 @@ bluez_pin_dbus_server_run (void)
   DBusError error;
   static const char *old_object_path = "/org/handhelds/gpe/bluez/PinAgent";
   static const char *new_object_path = "/org/bluez/PinAgent"; 
-  int errors = 0;
 
   dbus_error_init (&error);
   connection = dbus_bus_get (DBUS_BUS_SYSTEM, &error);
@@ -84,24 +77,13 @@ bluez_pin_dbus_server_run (void)
   dbus_connection_register_object_path (connection, new_object_path, &dbus_vtable, NULL);
   dbus_connection_register_object_path (connection, old_object_path, &dbus_vtable, NULL);
 
-  dbus_bus_acquire_service (connection, NEW_SERVICE_NAME, 0, &error);
+  dbus_bus_request_name (connection, SERVICE_NAME, 0, &error);
   if (dbus_error_is_set (&error))
     {
-      fprintf (stderr, "Failed to acquire %s service: %s\n", NEW_SERVICE_NAME, error.message);
+      fprintf (stderr, "Failed to acquire %s service: %s\n", SERVICE_NAME, error.message);
       dbus_error_free (&error);
-      errors++;
+      exit (1);
     }
-
-  dbus_bus_acquire_service (connection, OLD_SERVICE_NAME, 0, &error);
-  if (dbus_error_is_set (&error))
-    {
-      fprintf (stderr, "Failed to acquire %s service: %s\n", OLD_SERVICE_NAME, error.message);
-      dbus_error_free (&error);
-      errors++;
-    }
-
-  if (errors == 2)	/* Both services unavailable? */
-    exit (1);
 }
 
 void
