@@ -36,6 +36,7 @@
 #include <gpe/init.h>
 #include <gpe/errorbox.h>
 #include <gpe/question.h>
+#include <gpe/gpedialog.h>
 #include <gpe/picturebutton.h>
 
 #include "gpe-mini-browser.h"
@@ -47,7 +48,7 @@
 #include <libosso.h>
 #endif /*HILDON*/
 
-#define DEBUG /* uncomment this if you want debug output*/
+//#define DEBUG /* uncomment this if you want debug output*/
 
 void
 set_default_settings (Webi * html, WebiSettings * ks)
@@ -435,6 +436,7 @@ void set_as_homepage (GtkWidget *button, gpointer *data)
   GtkTreeModel *model;
   GtkTreeIter iter;
   gchar *url;
+  GString *info;
 
   open_data = (struct tree_action *) data;
 
@@ -448,8 +450,12 @@ void set_as_homepage (GtkWidget *button, gpointer *data)
 #ifdef DEBUG
       printf ("The *new* home url = %s\n", url);
 #endif
+      info = g_string_new("The new home url is \0");
+      info = g_string_append(info, url);
+      gpe_info_dialog(info->str);
       set_bookmark_home(url);
       g_free (url);
+      g_string_free(info, TRUE);
     }
   else
     {
