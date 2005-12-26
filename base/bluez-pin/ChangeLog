@@ -1,3 +1,11 @@
+2005-12-26  Phil Blundell  <pb@reciva.com>
+
+	* Version 0.27 released.
+
+2005-12-26  Phil Blundell  <pb@reciva.com>
+
+	* Makefile (CFLAGS): Add -D_BSD_SOURCE.
+	
 2005-09-05  Phil Blundell  <philb@gnu.org>
 
 	* Version 0.26 released.

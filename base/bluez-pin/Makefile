@@ -4,7 +4,7 @@ PACKAGE = bluez-pin
 CVSBUILD = yes
 GTK2 = yes
 LINGUAS = zh_CN ga hu fi fr el eo cs de vi tr uk sk sv sr af rm ro ru rw wa pl nl pt_BR id
-VERSION = 0.26
+VERSION = 0.27
 
 ifeq ($(CVSBUILD),yes)
 BUILD = ../build
@@ -14,7 +14,7 @@ endif
 
 CFLAGS += -O2 -g
 
-CFLAGS += `pkg-config --cflags gtk+-2.0 libglade-2.0 dbus-glib-1 gconf-2.0` -DGTK_DISABLE_DEPRECATED -DDBUS_API_SUBJECT_TO_CHANGE
+CFLAGS += `pkg-config --cflags gtk+-2.0 libglade-2.0 dbus-glib-1 gconf-2.0` -DGTK_DISABLE_DEPRECATED -DDBUS_API_SUBJECT_TO_CHANGE -D_BSD_SOURCE
 LDFLAGS += `pkg-config --libs gtk+-2.0 libglade-2.0 dbus-glib-1 gconf-2.0` -lbluetooth
 CFLAGS += -Wall
 
