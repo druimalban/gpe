@@ -218,12 +218,43 @@ configure_event (GtkWidget * window, GdkEventConfigure * event,
 }
 
 void
-clicked (GtkWidget * w, gpointer userdata)
+released (GtkWidget * w, GdkEventButton *b, gpointer userdata)
+{
+  if (help_status == HS_FINALIZE)
+    {
+      XUngrabPointer (dpy, b->time);
+      help_status = HS_INACTIVE;
+      set_image (0, 0);
+    }
+}
+
+void
+clicked (GtkWidget * w, GdkEventButton *b, gpointer userdata)
 {
   if (help_status == HS_SELECT)
-    help_status = HS_INACTIVE;
+    {
+      Window w;
+      int x, y;
+
+      w = find_deepest_window (dpy, DefaultRootWindow (dpy), DefaultRootWindow (dpy),
+			       b->x_root, b->y_root, &x, &y);
+      
+      last_x = b->x_root;
+      last_y = b->y_root;
+      
+      if (handle_click (w, w, x, y) == FALSE)
+	popup_box (_("No help available here."), -1, b->x_root, b->y_root, HELP_TIMEOUT);
+
+      help_status = HS_FINALIZE;
+    }
   else
-    help_status = HS_SELECT;
+    {
+      XGrabPointer (dpy, GDK_WINDOW_XWINDOW (w->window), False, ButtonPressMask | ButtonReleaseMask,
+		    GrabModeAsync, GrabModeAsync,
+		    None, None, b->time);
+      help_status = HS_SELECT;
+    }
+
   set_image (0, 0);
 }
 
@@ -329,8 +360,10 @@ main (int argc, char *argv[])
 		    G_CALLBACK (configure_event), NULL);
   g_signal_connect (G_OBJECT (window), "button-press-event",
 		    G_CALLBACK (clicked), NULL);
+  g_signal_connect (G_OBJECT (window), "button-release-event",
+		    G_CALLBACK (released), NULL);
   gtk_widget_add_events (window,
-			 GDK_BUTTON_PRESS_MASK | GDK_PROPERTY_CHANGE_MASK |
+			 GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_PROPERTY_CHANGE_MASK |
 			 GDK_STRUCTURE_MASK);
 
   gtk_container_add (GTK_CONTAINER (window), icon);
