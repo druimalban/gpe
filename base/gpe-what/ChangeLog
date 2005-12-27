@@ -1,0 +1,8 @@
+2005-12-27  Florian Boor  <florian@kernelconcepts.de>
+
+    gpe-what.c: First part of GTK based implementation. Replace Xlib and libmb
+                bits by GTK/GDK.
+                Still missing: Help display, popup sizing and replacement of
+                               some Xlib calls.
+                               
+    Makefile: New version, change members.

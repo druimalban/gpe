@@ -2,12 +2,12 @@ PREFIX = /usr/local
 PACKAGE = gpe-what
 #DEBUG = yes
 CVSBUILD = yes
-VERSION = 0.33
+VERSION = 0.40
 
-MEMBERS = gpe-what mbtray
+MEMBERS = gpe-what
 
-PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GTKCFLAGS) `pkg-config --cflags libmb`
-PACKAGE_LDFLAGS += $(GTKLIBS) `pkg-config --libs libmb`
+PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS) `pkg-config --cflags freetype2 pangoxft`
+PACKAGE_LDFLAGS += $(GPELIBS)  `pkg-config --libs freetype2 pangoxft`
 PACKAGE_CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
