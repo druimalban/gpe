@@ -51,8 +51,8 @@
 
 #define COMMAND_IR_ON  PREFIX "/bin/irsw on"
 #define COMMAND_IR_OFF PREFIX "/bin/irsw off"
-#define COMMAND_VCARD_IMPORT PREFIX "/bin/gpe-contacts -i " IR_INBOX "/%s"
-#define COMMAND_VCAL_IMPORT PREFIX "/bin/gpe-calendar -i " IR_INBOX "/%s"
+#define COMMAND_VCARD_IMPORT PREFIX "/bin/gpe-contacts -i '" IR_INBOX "/%s'"
+#define COMMAND_VCAL_IMPORT PREFIX "/bin/gpe-calendar -i '" IR_INBOX "/%s'"
 #define IR_DISCOVERY "/proc/net/irda/discovery"
 #define IR_DISCOVERY_STATUS "/proc/sys/net/irda/discovery"
 static const gchar *MY_VCARD;

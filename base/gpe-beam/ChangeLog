@@ -1,3 +1,6 @@
+2005-12-29	Florian Boor <florian.boor@kernelconcepts.de>
+
+	* main.c: Quote import command filenames fixing #1439
 
 2005-12-06	Florian Boor <florian.boor@kernelconcepts.de>
 
