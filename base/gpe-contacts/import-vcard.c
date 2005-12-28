@@ -110,32 +110,37 @@ do_import_vcard (MIMEDirVCard *card)
 }
 
 int
-import_vcard (const gchar *data, size_t len)
+import_vcard (const gchar *filename)
 {
-  MIMEDirVCard *card = NULL;
-  MIMEDirProfile *profile;
-  gchar *str;
   GError *error = NULL;
+  GList *cardlist, *l;
+  MIMEDirVCard *card = NULL;
+  int result = 0;
 
-  str = g_malloc (len + 1);
-  memcpy (str, data, len);
-  str[len] = 0;
+  cardlist = mimedir_vcard_read_file (filename, &error);
 
-  profile = mimedir_profile_new(NULL);
-  mimedir_profile_parse(profile, str, &error);
-  if (!error)
-    card = mimedir_vcard_new_from_profile (profile, &error);
- 
-  g_free (str);
+  if (error) {
+    fprintf (stderr, "import_vcard : %s\n",
+	     error->message);
+    g_error_free (error);
+    return -1;
+  }
 
-  if (card)
-    {
-	  int result;
+  for (l = cardlist; l != NULL && result == 0; l = g_list_next (l)) {
 
-      result = do_import_vcard (card);
-      g_object_unref (card);
-      g_object_unref (profile);
-      return result;
-    }
-  return -3;
+    if( l->data != NULL && MIMEDIR_IS_VCARD (l->data)) {
+
+	card = l->data;
+	result = do_import_vcard (card);
+      }
+    else
+      result = -3;
+  }
+
+  /* Cleanup */
+
+  mimedir_vcard_free_list (cardlist);
+  
+  return result;
+
 }

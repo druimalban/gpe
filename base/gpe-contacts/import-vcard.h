@@ -17,6 +17,6 @@
 #ifndef _IMPORT_VCARD_H
 #define _IMPORT_VCARD_H
 
-extern int import_vcard (const gchar *data, size_t len);
+extern int import_vcard (const gchar *filename);
 
 #endif /* _IMPORT-VCARD_H */

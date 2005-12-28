@@ -1,3 +1,8 @@
+2005-12-29  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * import-vcard.* main.c: Apply patch by Olivier Berger to make import of 
+                             multiple vcards in one file possible.
+
 2005-12-21  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * editing.c: Apply patch by Olivier Berger to fix segfault opening

@@ -1185,19 +1185,12 @@ on_main_focus(GtkWindow *window,  GdkEventExpose *event,gpointer user_data)
 static int 
 import_one_file(const gchar *filename)
 {
-  GError *err = NULL;
-  gchar *content = NULL;
-  gsize count = 0;
   int result = 0;
-	
-  if (g_file_get_contents(filename, &content, &count, &err))
-    {
-      result = import_vcard(content, count);
-      g_free(content);
-    }
-  else
-    result = -1;
+
+  result = import_vcard(filename);
+
   return result;
+
 }
 
 static void
@@ -1566,13 +1559,16 @@ main (int argc, char *argv[])
   /* check command line args */
   while ((arg = getopt(argc, argv, "ni:v")) >= 0)
   {
+    /* -n suppress edition of the structure in the preferences */
     if (arg == 'n')
       {
         edit_structure = FALSE;
         break;
       }
+    /* -i imports a file */
     if (arg == 'i')
 		ifile = optarg;
+    /* -v edits owner's vcard */
     if (arg == 'v')
       edit_vcard = TRUE;
   }
@@ -1609,6 +1605,7 @@ main (int argc, char *argv[])
       const gchar *MY_VCARD = g_strdup_printf("%s/.gpe/user.vcf", 
                                               g_get_home_dir());
   
+      /* Open vcard database */
       if (contacts_db_open (TRUE))
         exit (1);
       load_well_known_tags ();
@@ -1627,8 +1624,9 @@ main (int argc, char *argv[])
    /* initialise data backends */ 
    gpe_pim_categories_init ();
  
+   /* Open contacts database */
    if (contacts_db_open (FALSE))
-    exit (1);
+     exit (1);
 
   load_well_known_tags ();
 
