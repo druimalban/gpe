@@ -504,17 +504,19 @@ day_changed_calendar (GtkWidget *widget)
 }
 
 
-/* Go to hour h
+/* 
+ * Go to hour h
  * If h is negative it goes to the current hour
- *
  */
 void
 scroll_to (GtkWidget *scrolled, gint hour)
 {
 	GtkAdjustment *adj;
 	gint w = 0, h = 0;
+	gdouble value;
+    
 	/* Scroll to the current hour */
-	if(hour < 0)
+	if (hour < 0)
 	{
 		time_t now;
 		struct tm now_tm;
@@ -523,21 +525,10 @@ scroll_to (GtkWidget *scrolled, gint hour)
 		hour = MAX (now_tm.tm_hour - 1, 0) ;	
 	}
 		
-	gdouble page_increment, step_increment, page_size, upper, lower,value;
 	gtk_widget_get_size_request (draw, &w, &h);
-	
-	page_increment = h/2;	
-	step_increment = h/NUM_HOURS;
-	
-	page_size = h;
-	value = (gdouble)hour/NUM_HOURS *h;
-	lower  = 0.0;
-	upper = h;
-
-	adj = GTK_ADJUSTMENT(gtk_adjustment_new(value,lower,upper,step_increment, 
-	                     page_increment, page_size));
-	
-	gtk_scrolled_window_set_vadjustment (GTK_SCROLLED_WINDOW (scrolled), adj);
+	value = (gdouble)hour/NUM_HOURS * h;
+	adj = gtk_scrolled_window_get_vadjustment(GTK_SCROLLED_WINDOW(scrolled));
+    gtk_adjustment_set_value(adj, value);
 }
 
 

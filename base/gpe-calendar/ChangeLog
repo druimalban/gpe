@@ -1,3 +1,7 @@
+2005-12-29  Florian Boor <florian.boor@kernelconcepts.de>
+
+    * day_view.c: Clean up scroll code, fix memory leak.
+
 2005-12-20  Florian Boor <florian.boor@kernelconcepts.de>
     
     * day_view.c, event-ui.c, globals.h: Apply patch to fix segfault 
