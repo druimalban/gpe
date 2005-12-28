@@ -1,3 +1,10 @@
+2005-12-28  Florian Boor  <florian@kernelconcepts.de>
+
+    gpe-what.c: Improve popup window look and behaviour.
+                Add icon to popups, improve popup type selection.
+                Remove debug code and unused headers.
+    Makefile: Add freetype includes/libraries.
+
 2005-12-27  Florian Boor  <florian@kernelconcepts.de>
 
     gpe-what.c: First part of GTK based implementation. Replace Xlib and libmb

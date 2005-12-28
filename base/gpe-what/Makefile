@@ -6,8 +6,8 @@ VERSION = 0.40
 
 MEMBERS = gpe-what
 
-PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS) `pkg-config --cflags freetype2 pangoxft`
-PACKAGE_LDFLAGS += $(GPELIBS)  `pkg-config --libs freetype2 pangoxft`
+PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS) `pkg-config --cflags gtk+-2.0 libgpewidget freetype2`
+PACKAGE_LDFLAGS += $(GPELIBS)  `pkg-config --libs gtk+-2.0 libgpewidget freetype2`
 PACKAGE_CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))

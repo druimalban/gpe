@@ -10,23 +10,19 @@
 
 #include <sys/types.h>
 #include <stdlib.h>
-#include <time.h>
 #include <libintl.h>
 #include <locale.h>
 #include <stdio.h>
+#include <string.h>
 
 #include <gtk/gtk.h>
 #include <gdk/gdkx.h>
 
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
-#include <X11/extensions/shape.h>
-#include <pango/pango.h>
-#include <pango/pangoxft.h>
 
 #include <gpe/init.h>
 #include <gpe/pixmaps.h>
-#include <gpe/errorbox.h>
 #include <gpe/spacing.h>
 #include <gpe/tray.h>
 #include <gpe/popup.h>
@@ -47,27 +43,25 @@ typedef enum
   HS_FINALIZE
 } t_status;
 
+typedef enum
+{
+  PU_INFO,
+  PU_HELP
+} t_popup;
 
 static GtkWidget *icon;
 static GtkWidget *window;
 static GdkWindow *dock_window;
 static t_status help_status = HS_INACTIVE;
 static GdkDisplay *display;
-
 static GdkAtom help_atom, infoprint_atom;
-
 
 static Display *dpy;
 static int screen;
 
-#define XPADDING 8
-#define YPADDING 4
-
-#define HELP_TIMEOUT 10000
+#define HELP_TIMEOUT  5000
 #define INFO_TIMEOUT  4000
 
-int xoff, yoff;
-int win_width, win_height;
 int last_x = 0, last_y = 0;
 
 
@@ -81,34 +75,64 @@ close_popup (GtkWidget * popup)
 }
 
 static void
-popup_box (const char *text, int length, int x, int y, int timeout)
+popup_box (const gchar *text, gint length, gint x, gint y, gint type)
 {
-  GtkWidget *popup, *label, *frame;
-  gint width = 100;
+  GtkWidget *popup, *label, *frame, *box, *icon;
+  GtkRequisition req;
+  GdkGeometry geometry;
+  gint spacing = gpe_get_border ();
+  gint width = 18;
   gint height = 18;
+  gint timeout;
 
   popup = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   label = gtk_label_new (text);
   frame = gtk_frame_new (NULL);
+  box = gtk_hbox_new (FALSE, gpe_get_boxspacing());
+    
+  if (type == PU_HELP)
+    {      
+       icon = gtk_image_new_from_stock(GTK_STOCK_HELP, 
+                                     GTK_ICON_SIZE_SMALL_TOOLBAR);
+       timeout = HELP_TIMEOUT;
+    }
+  else if (type == PU_INFO)
+    {      
+       icon = gtk_image_new_from_stock(GTK_STOCK_DIALOG_INFO, 
+                                     GTK_ICON_SIZE_SMALL_TOOLBAR);
+       timeout = INFO_TIMEOUT;
+    }
+  else /* unknown type */
+      return;
 
   gtk_window_set_default_size (GTK_WINDOW (popup), width, height);
+  gtk_window_set_decorated (GTK_WINDOW (popup), FALSE);
+  gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
+  gtk_container_set_border_width (GTK_CONTAINER (box), spacing);
+    
+  gtk_box_pack_start_defaults(GTK_BOX(box), icon);
+  gtk_box_pack_start_defaults(GTK_BOX(box), label);
+  gtk_container_add (GTK_CONTAINER (frame), box);
+  gtk_container_add (GTK_CONTAINER (popup), frame);
+  gtk_widget_show_all (popup);
+  gtk_widget_size_request (popup, &req);
 
   if (x >= 0)
     {
       gtk_widget_set_uposition (GTK_WIDGET (popup), x, y);
+      geometry.max_width = gdk_screen_width () - spacing - x;
+      geometry.max_height = (gdk_screen_height () - y) / 2;
     }
   else
     {
       gtk_widget_set_uposition (GTK_WIDGET (popup),
-				gdk_screen_width () - width - 5, 5);
+				gdk_screen_width () - req.width - spacing, spacing);
+      geometry.max_width = gdk_screen_width () - spacing;
+      geometry.max_height = gdk_screen_height () / 2;
     }
-
-  gtk_window_set_decorated (GTK_WINDOW (popup), FALSE);
-  gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
-  gtk_container_add (GTK_CONTAINER (frame), label);
-  gtk_container_add (GTK_CONTAINER (popup), frame);
-  gtk_widget_show_all (popup);
-
+  gtk_window_set_geometry_hints (GTK_WINDOW(popup), frame, &geometry, 
+                                 GDK_HINT_MAX_SIZE);
+    
   g_timeout_add (timeout, (GSourceFunc) close_popup, popup);
 }
 
@@ -243,7 +267,7 @@ clicked (GtkWidget * w, GdkEventButton *b, gpointer userdata)
       last_y = b->y_root;
       
       if (handle_click (w, w, x, y) == FALSE)
-	popup_box (_("No help available here."), -1, b->x_root, b->y_root, HELP_TIMEOUT);
+        popup_box (_("No help available here."), -1, b->x_root, b->y_root, PU_HELP);
 
       help_status = HS_FINALIZE;
     }
@@ -275,14 +299,13 @@ do_help_message (GdkXEvent * xevent, GdkEvent * event, gpointer data)
   unsigned long nitems, bytes_after;
   Atom type;
   int format;
-  printf ("debug: help message\n");
 
   if (XGetWindowProperty
       (dpy, gdk_x11_drawable_get_xid (dock_window),
        gdk_x11_atom_to_xatom (help_atom), 0, 65536, False, XA_STRING, &type,
        &format, &nitems, &bytes_after, &prop) == Success)
     {
-      popup_box (prop, nitems, last_x, last_y, HELP_TIMEOUT);
+      popup_box (prop, nitems, last_x, last_y, PU_HELP);
       XFree (prop);
     }
 
@@ -302,7 +325,7 @@ do_infoprint_message (GdkXEvent * xevent, GdkEvent * event, gpointer data)
 			  False, XA_STRING, &type, &format, &nitems,
 			  &bytes_after, &prop) == Success)
     {
-      popup_box (prop, nitems, -1, -1, INFO_TIMEOUT);
+      popup_box (prop, nitems, -1, -1, PU_INFO);
       XFree (prop);
     }
 
