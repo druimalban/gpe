@@ -1,5 +1,14 @@
 2005-12-29  Florian Boor  <florian@kernelconcepts.de>
 
+    gpe-what.c: Add some hacks to improve infoprint popup position.
+    Add autotools support files: Makefile.am, autogen.sh, configure.ac,
+                                 gpe-dist.am, gpe-tp.am, gpe-what.desktop.in.in,
+                                 po/POTFILES.in
+    Remove obsolete files: gpe-what.desktop.in.in, mbtray.c, mbtray.h, Makefile
+
+
+2005-12-29  Florian Boor  <florian@kernelconcepts.de>
+
 	gpe-what.c: Global filter workaround to make infoprints work on ARM.
 	            Still open: Position setup corrections, proper solution for 
 				            infoprints.

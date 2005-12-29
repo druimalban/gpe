@@ -114,14 +114,18 @@ popup_box (const gchar *text, gint length, gint x, gint y, gint type)
   gtk_box_pack_start_defaults(GTK_BOX(box), label);
   gtk_container_add (GTK_CONTAINER (frame), box);
   gtk_container_add (GTK_CONTAINER (popup), frame);
+  gtk_widget_realize (label);
+  while (gtk_events_pending()) gtk_main_iteration();
   gtk_widget_show_all (popup);
+  while (gtk_events_pending()) gtk_main_iteration();
   gtk_widget_size_request (popup, &req);
-
+gtk_widget_hide(popup);
   if (x >= 0)
     {
       gtk_widget_set_uposition (GTK_WIDGET (popup), x, y);
       geometry.max_width = gdk_screen_width () - spacing - x;
       geometry.max_height = (gdk_screen_height () - y) / 2;
+printf("pos x %d y %d \n", x, y);   
     }
   else
     {
@@ -129,9 +133,11 @@ popup_box (const gchar *text, gint length, gint x, gint y, gint type)
 				gdk_screen_width () - req.width - spacing, spacing);
       geometry.max_width = gdk_screen_width () - spacing;
       geometry.max_height = gdk_screen_height () / 2;
+printf("pos x %d y %d \n", gdk_screen_width () - req.width - spacing, spacing);   
     }
   gtk_window_set_geometry_hints (GTK_WINDOW(popup), frame, &geometry, 
                                  GDK_HINT_MAX_SIZE);
+  gtk_widget_show_all (popup);
     
   g_timeout_add (timeout, (GSourceFunc) close_popup, popup);
 }
@@ -362,7 +368,6 @@ int
 main (int argc, char *argv[])
 {
   GtkTooltips *tooltips;
-  GdkAtom astring;
 
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
@@ -418,13 +423,14 @@ main (int argc, char *argv[])
   display = gdk_display_get_default ();
   help_atom = gdk_atom_intern ("_GPE_INTERACTIVE_HELP", FALSE);
   infoprint_atom = gdk_atom_intern ("_GPE_INFOPRINT", FALSE);
-  astring = gdk_atom_intern ("STRING", FALSE);
+  
   gdk_property_change (dock_window, help_atom,
 		       gdk_x11_xatom_to_atom_for_display (display, XA_STRING),
 		       8, GDK_PROP_MODE_REPLACE, NULL, 0);
 
   g_signal_connect (G_OBJECT (window), "property-notify-event",
 		    G_CALLBACK (on_property_change), NULL);
+            
 //  gdk_window_add_filter (dock_window, on_event, NULL);
   gdk_window_add_filter (NULL, on_event, NULL);
   setup_xdisplay ();

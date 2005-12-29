@@ -1,7 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
-Name=Interactive help
-Comment=Displays tooltips in a window
+_Name=Interactive help
+_Comment=Displays tooltips in a window
 Exec=gpe-what
 Type=PanelApp
 Icon=gpe-what.png
