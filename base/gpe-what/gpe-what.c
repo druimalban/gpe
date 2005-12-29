@@ -83,13 +83,11 @@ popup_box (const gchar *text, gint length, gint x, gint y, gint type)
   gint spacing = gpe_get_border ();
   gint width = 18;
   gint height = 18;
-  gint timeout, xofs, lwidth, isize;
+  gint timeout, xsize, lwidth, isize;
   PangoLayout *layout;
 
-  popup = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-  label = gtk_label_new (text);
-  frame = gtk_frame_new (NULL);
-  box = gtk_hbox_new (FALSE, gpe_get_boxspacing());
+  if ((text == NULL) || !strlen(text))
+    return;      
     
   if (type == PU_HELP)
     {      
@@ -106,6 +104,11 @@ popup_box (const gchar *text, gint length, gint x, gint y, gint type)
   else /* unknown type */
       return;
 
+  popup = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+  label = gtk_label_new (text);
+  frame = gtk_frame_new (NULL);
+  box = gtk_hbox_new (FALSE, gpe_get_boxspacing());
+  
   gtk_window_set_default_size (GTK_WINDOW (popup), width, height);
   gtk_window_set_decorated (GTK_WINDOW (popup), FALSE);
   gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
@@ -117,23 +120,26 @@ popup_box (const gchar *text, gint length, gint x, gint y, gint type)
   gtk_container_add (GTK_CONTAINER (popup), frame);
   gtk_widget_realize (label);
   
-  gtk_label_get_layout_offsets(GTK_LABEL(label), &xofs, NULL);
-  layout = gtk_label_get_layout(label);
+  gtk_label_get_layout_offsets(GTK_LABEL(label), &xsize, NULL);
+  layout = gtk_label_get_layout(GTK_LABEL(label));
   pango_layout_get_pixel_size(layout, &lwidth, NULL); 
   
   gtk_icon_size_lookup(GTK_ICON_SIZE_SMALL_TOOLBAR, &isize, NULL);
-  xofs = xofs + lwidth + 6 + isize + gpe_get_boxspacing() + (spacing * 2);
+  xsize = xsize + lwidth + 6 + isize + gpe_get_boxspacing() + (spacing * 2);
 
   if (x >= 0)
     {
-      gtk_widget_set_uposition (GTK_WIDGET (popup), x, y);
       geometry.max_width = gdk_screen_width () - spacing - x;
       geometry.max_height = (gdk_screen_height () - y) / 2;
+      if ((gdk_screen_width() < (xsize + x)) && (x > (gdk_screen_width()/2)))
+          gtk_widget_set_uposition (GTK_WIDGET (popup), x - xsize, y);
+      else
+          gtk_widget_set_uposition (GTK_WIDGET (popup), x, y);
     }
   else
     {
       gtk_widget_set_uposition (GTK_WIDGET (popup),
-				gdk_screen_width () - xofs - spacing, spacing);
+				gdk_screen_width () - xsize - spacing, spacing);
       geometry.max_width = gdk_screen_width () - spacing;
       geometry.max_height = gdk_screen_height () / 2;
     }
@@ -433,7 +439,7 @@ main (int argc, char *argv[])
 		    G_CALLBACK (on_property_change), NULL);
             
 //  gdk_window_add_filter (dock_window, on_event, NULL);
-  gdk_window_add_filter (NULL, on_event, NULL);
+  gdk_window_add_filter (NULL, (GdkFilterFunc)on_event, NULL);
   setup_xdisplay ();
 
   gtk_widget_add_events (window,
