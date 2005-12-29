@@ -1,3 +1,9 @@
+2005-12-29  Florian Boor  <florian@kernelconcepts.de>
+
+	gpe-what.c: Global filter workaround to make infoprints work on ARM.
+	            Still open: Position setup corrections, proper solution for 
+				            infoprints.
+
 2005-12-28  Florian Boor  <florian@kernelconcepts.de>
 
     gpe-what.c: Improve popup window look and behaviour.

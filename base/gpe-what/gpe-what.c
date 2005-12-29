@@ -344,6 +344,20 @@ on_property_change (GtkWidget * widget, GdkEventProperty * event,
   return FALSE;
 }
 
+GdkFilterReturn
+on_event (XEvent *xevent, GdkEvent * event,
+		    gpointer user_data)
+{
+	if (xevent->type == PropertyNotify)
+	{
+//		printf("property notification (X) %i\n%s\n", event->type, gdk_x11_get_xatom_name_for_display (display, xevent->xproperty.atom));
+		if (xevent->xproperty.atom == gdk_x11_atom_to_xatom(infoprint_atom))
+			do_infoprint_message(NULL, NULL, NULL);
+	}
+	
+  return GDK_FILTER_CONTINUE;
+}
+
 int
 main (int argc, char *argv[])
 {
@@ -394,11 +408,11 @@ main (int argc, char *argv[])
   gtk_widget_show (window);
 
   dock_window = window->window;
-  gpe_system_tray_dock (dock_window);
-  gdk_window_set_events (dock_window,
+  gdk_window_set_events (dock_window, gdk_window_get_events(dock_window) | 
 			 GDK_EXPOSURE_MASK | GDK_BUTTON_PRESS_MASK |
 			 GDK_PROPERTY_CHANGE_MASK | GDK_STRUCTURE_MASK |
 			 GDK_BUTTON_RELEASE_MASK);
+  gpe_system_tray_dock (dock_window);
 
 
   display = gdk_display_get_default ();
@@ -408,14 +422,16 @@ main (int argc, char *argv[])
   gdk_property_change (dock_window, help_atom,
 		       gdk_x11_xatom_to_atom_for_display (display, XA_STRING),
 		       8, GDK_PROP_MODE_REPLACE, NULL, 0);
-  gdk_display_request_selection_notification (display, infoprint_atom);
-  gdk_display_request_selection_notification (display, help_atom);
 
   g_signal_connect (G_OBJECT (window), "property-notify-event",
 		    G_CALLBACK (on_property_change), NULL);
-
+//  gdk_window_add_filter (dock_window, on_event, NULL);
+  gdk_window_add_filter (NULL, on_event, NULL);
   setup_xdisplay ();
 
+  gtk_widget_add_events (window,
+			 GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_PROPERTY_CHANGE_MASK |
+			 GDK_STRUCTURE_MASK);
   gtk_main ();
 
   exit (0);
