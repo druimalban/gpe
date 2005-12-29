@@ -83,7 +83,8 @@ popup_box (const gchar *text, gint length, gint x, gint y, gint type)
   gint spacing = gpe_get_border ();
   gint width = 18;
   gint height = 18;
-  gint timeout;
+  gint timeout, xofs, lwidth, isize;
+  PangoLayout *layout;
 
   popup = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   label = gtk_label_new (text);
@@ -115,25 +116,26 @@ popup_box (const gchar *text, gint length, gint x, gint y, gint type)
   gtk_container_add (GTK_CONTAINER (frame), box);
   gtk_container_add (GTK_CONTAINER (popup), frame);
   gtk_widget_realize (label);
-  while (gtk_events_pending()) gtk_main_iteration();
-  gtk_widget_show_all (popup);
-  while (gtk_events_pending()) gtk_main_iteration();
-  gtk_widget_size_request (popup, &req);
-gtk_widget_hide(popup);
+  
+  gtk_label_get_layout_offsets(GTK_LABEL(label), &xofs, NULL);
+  layout = gtk_label_get_layout(label);
+  pango_layout_get_pixel_size(layout, &lwidth, NULL); 
+  
+  gtk_icon_size_lookup(GTK_ICON_SIZE_SMALL_TOOLBAR, &isize, NULL);
+  xofs = xofs + lwidth + 6 + isize + gpe_get_boxspacing() + (spacing * 2);
+
   if (x >= 0)
     {
       gtk_widget_set_uposition (GTK_WIDGET (popup), x, y);
       geometry.max_width = gdk_screen_width () - spacing - x;
       geometry.max_height = (gdk_screen_height () - y) / 2;
-printf("pos x %d y %d \n", x, y);   
     }
   else
     {
       gtk_widget_set_uposition (GTK_WIDGET (popup),
-				gdk_screen_width () - req.width - spacing, spacing);
+				gdk_screen_width () - xofs - spacing, spacing);
       geometry.max_width = gdk_screen_width () - spacing;
       geometry.max_height = gdk_screen_height () / 2;
-printf("pos x %d y %d \n", gdk_screen_width () - req.width - spacing, spacing);   
     }
   gtk_window_set_geometry_hints (GTK_WINDOW(popup), frame, &geometry, 
                                  GDK_HINT_MAX_SIZE);
@@ -279,8 +281,8 @@ clicked (GtkWidget * w, GdkEventButton *b, gpointer userdata)
     }
   else
     {
-      XGrabPointer (dpy, GDK_WINDOW_XWINDOW (w->window), False, ButtonPressMask | ButtonReleaseMask,
-		    GrabModeAsync, GrabModeAsync,
+      XGrabPointer (dpy, GDK_WINDOW_XWINDOW (w->window), False, 
+            ButtonPressMask | ButtonReleaseMask, GrabModeAsync, GrabModeAsync,
 		    None, None, b->time);
       help_status = HS_SELECT;
     }
@@ -306,8 +308,7 @@ do_help_message (GdkXEvent * xevent, GdkEvent * event, gpointer data)
   Atom type;
   int format;
 
-  if (XGetWindowProperty
-      (dpy, gdk_x11_drawable_get_xid (dock_window),
+  if (XGetWindowProperty (dpy, gdk_x11_drawable_get_xid (dock_window),
        gdk_x11_atom_to_xatom (help_atom), 0, 65536, False, XA_STRING, &type,
        &format, &nitems, &bytes_after, &prop) == Success)
     {
