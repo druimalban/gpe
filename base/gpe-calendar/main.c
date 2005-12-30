@@ -298,21 +298,10 @@ edit_categories (GtkWidget *w)
 static int 
 import_one_file(gchar *filename)
 {
-/*  GError *err = NULL;
-  gchar *content;
-  gsize count;
- */   
   int result = 0;
-/*	
-  if (g_file_get_contents(filename,&content,&count,&err))
-    {
- */   
-      result = import_vcal(filename);
-/*      g_free(content);
-    }
-  else
-    result = -1;
-    */
+    
+  result = import_vcal(filename);
+    
   return result;
 }
 
