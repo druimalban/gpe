@@ -1,0 +1,5 @@
+2005-12-30  Phil Blundell  <pb@reciva.com>
+
+	* Makefile.am (install-exec-hook): New.
+	(bin_PROGRAMS): Remove bnep-helper, rfcomm-helper.
+	

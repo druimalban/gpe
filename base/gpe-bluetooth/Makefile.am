@@ -5,10 +5,10 @@ INCLUDES = $(GPE_BLUETOOTH_CFLAGS) -I$(top_srcdir)/gpe -I$(top_srcdir) \
            -DDBUS_API_SUBJECT_TO_CHANGE \
            -DPACKAGE_LOCALE_DIR=\"@gpebluetooth_localedir@\"
 
+bin_PROGRAMS = gpe-bluetooth
 gpebluetoothlibdir = $(libdir)/gpe-bluetooth
 gpebluetoothlib_PROGRAMS = bnep-helper rfcomm-helper
 
-bin_PROGRAMS = gpe-bluetooth bnep-helper rfcomm-helper
 
 gpe_bluetooth_LDADD = @GPE_BLUETOOTH_LIBS@ -lopenobex -lsqlite
 gpe_bluetooth_SOURCES = main.c dun.c sdp.c pan.c lap.c rfcomm.c pin-ui.c dbus.c pin-dbus.c headset.c obexserver.c obex-vcard.c obex-vcal.c obex-unknown.c obexclient.c obex-glib.c obexclient-dbus.c main.h sdp.h dun.h dbus.h pan.h lap.h headset.h obexclient.h obexserver.h bnep.h rfcomm.h obex-glib.h pin-ui.h
@@ -55,12 +55,12 @@ pinglade_DATA = bluez-pin-gpe.glade
 EXTRA_DIST = $(desktop_DATA) \
              $(pixmaps_DATA) \
              $(service_DATA) \
-	         $(dbusconf_DATA) \
-	         $(peers_DATA) \
-	         $(btscript_SCRIPTS) \
-	         $(btresume_SCRIPTS) \
-			 $(pinglade_DATA) \
-	         gpe-bluetooth.desktop.in \
+	     $(dbusconf_DATA) \
+	     $(peers_DATA) \
+	     $(btscript_SCRIPTS) \
+	     $(btresume_SCRIPTS) \
+	     $(pinglade_DATA) \
+	     gpe-bluetooth.desktop.in \
              intltool-extract.in \
              intltool-merge.in \
              intltool-update.in
@@ -80,3 +80,7 @@ include gpe-tp.am
 
 install-data-hook:
 	cd $(DESTDIR)$(sysconfdir)/bluetooth && mv hciattach.sh hciattach
+
+install-exec-hook:
+	chmod u+s $(DESTDIR)$(gpebluetoothlibdir)/bnep-helper
+	chmod u+s $(DESTDIR)$(gpebluetoothlibdir)/rfcomm-helper
