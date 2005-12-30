@@ -39,8 +39,9 @@ typedef struct event_details_s
   unsigned long sequence;
   time_t modified;
 
-  char *summary;
-  char *description;
+  gchar *summary;
+  gchar *description;
+  gchar *location;  
   
   GSList *categories;
 } *event_details_t;

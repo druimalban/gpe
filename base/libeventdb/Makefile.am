@@ -2,7 +2,7 @@ SUBDIRS = doc
 
 lib_LTLIBRARIES = libeventdb.la
 
-INCLUDES = @EVENTDB_CFLAGS@ -DPACKAGE_LOCALE_DIR=\"@datadir@/locale/@PACKAGE_NAME@\"
+INCLUDES = @EVENTDB_CFLAGS@ -D_XOPEN_SOURCE -DPACKAGE_LOCALE_DIR=\"@datadir@/locale/@PACKAGE_NAME@\"
 
 libeventdb_la_LIBADD = @EVENTDB_LIBS@
 

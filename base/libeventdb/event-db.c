@@ -310,6 +310,8 @@ load_details_callback (void *arg, int argc, char *argv[], char **names)
         evd->summary = g_strdup (argv[1]);
       else if (!strcasecmp (argv[0], "description") && !evd->description)
         evd->description = g_strdup (argv[1]);
+      else if (!strcasecmp (argv[0], "location") && !evd->location)
+        evd->location = g_strdup (argv[1]);
       else if (!strcasecmp (argv[0], "modified"))
         {
           if (strchr (argv[1], '-'))
@@ -362,20 +364,22 @@ event_db_forget_details (event_t ev)
   if (ev->details)
     {
       if (ev->details->ref == 0)
-	fprintf (stderr, "details refcount was already zero!\n");
+        fprintf (stderr, "details refcount was already zero!\n");
       else
-	ev->details->ref--;
+        ev->details->ref--;
 
       if (ev->details->ref == 0)
-	{
-	  event_details_t evd = ev->details;
-	  if (evd->description)
-	    g_free (evd->description);
-	  if (evd->summary)
-	    g_free (evd->summary);
-	  g_slist_free (evd->categories);
-	  g_free (evd);
-	}
+        {
+          event_details_t evd = ev->details;
+          if (evd->description)
+            g_free (evd->description);
+          if (evd->location)
+            g_free (evd->location);
+          if (evd->summary)
+            g_free (evd->summary);
+          g_slist_free (evd->categories);
+          g_free (evd);
+	    }
       ev->details = NULL;
     }
 }
@@ -773,11 +777,14 @@ event_db_write (event_t ev, char **err)
   if (!ev->eventid)
     {
       ev->eventid = event_db_make_eventid();
+#ifdef DEBUG        
       printf ("Made new eventid: %s\n", ev->eventid);
+#endif
     }
   
   if ((ev_d->summary && insert_values (sqliteh, ev->uid, "summary", "%q", ev_d->summary))
       || (ev_d->description && insert_values (sqliteh, ev->uid, "description", "%q", ev_d->description))
+      || (ev_d->location && insert_values (sqliteh, ev->uid, "location", "%q", ev_d->location))
       || insert_values (sqliteh, ev->uid, "duration", "%d", ev->duration)
       || insert_values (sqliteh, ev->uid, "modified", "%lu", modified)
       || insert_values (sqliteh, ev->uid, "start", "%q", buf_start)
@@ -788,7 +795,7 @@ event_db_write (event_t ev, char **err)
   for (iter = ev_d->categories; iter; iter = iter->next)
     {
       if (insert_values (sqliteh, ev->uid, "category", "%d", (int)iter->data))
-	goto exit;
+        goto exit;
     }
 
   if (ev->recur)
@@ -823,7 +830,7 @@ event_db_write (event_t ev, char **err)
   if (ev->flags & FLAG_ALARM)
     {
       if (insert_values (sqliteh, ev->uid, "alarm", "%d", ev->alarm))
-	goto exit;
+       goto exit;
     }
 
   rc = TRUE;
@@ -870,7 +877,7 @@ event_db_flush (event_t ev)
 gboolean
 event_db_add (event_t ev)
 {
-  char *err;
+  gchar *err = NULL;
   gboolean rollback = FALSE;
 
   if (sqlite_exec (sqliteh, "begin transaction", NULL, NULL, &err))
@@ -887,7 +894,7 @@ event_db_add (event_t ev)
 
   if (event_db_add_internal (ev) == FALSE)
     {
-      err = strdup ("Could not insert event");
+      err = g_strdup ("Could not insert event");
       goto error;
     }
 
@@ -901,7 +908,7 @@ event_db_add (event_t ev)
   if (rollback)
     sqlite_exec (sqliteh, "rollback transaction", NULL, NULL, NULL);
   gpe_error_box (err);
-  free (err);
+  g_free (err);
   return FALSE;
 }
 
