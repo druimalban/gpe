@@ -1,3 +1,8 @@
+2005-12-30  Florian Boor  <florian@kernelconcepts.de>
+
+	* Makefile.am: Move chmod statements to install-data-hook due
+	               to automake limitations.
+
 2005-12-30  Phil Blundell  <pb@reciva.com>
 
 	* Makefile.am (install-exec-hook): New.

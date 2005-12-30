@@ -80,7 +80,5 @@ include gpe-tp.am
 
 install-data-hook:
 	cd $(DESTDIR)$(sysconfdir)/bluetooth && mv hciattach.sh hciattach
-
-install-exec-hook:
 	chmod u+s $(DESTDIR)$(gpebluetoothlibdir)/bnep-helper
 	chmod u+s $(DESTDIR)$(gpebluetoothlibdir)/rfcomm-helper
