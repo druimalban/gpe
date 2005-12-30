@@ -133,13 +133,13 @@ static void
 do_import_vcal (MIMEDirVCal *vcal)
 {
   GSList *list, *iter;
-
+    
   list = mimedir_vcal_get_event_list (vcal);
-  
+    
   for (iter = list; iter; iter = iter->next)
     {
       MIMEDirVEvent *vevent;
-      vevent = MIMEDIR_VEVENT (list->data);
+      vevent = MIMEDIR_VEVENT (iter->data);
       do_import_vevent (vevent);
     }
 
@@ -150,7 +150,7 @@ do_import_vcal (MIMEDirVCal *vcal)
   for (iter = list; iter; iter = iter->next)
     {
       MIMEDirVTodo *vtodo;
-      vtodo = MIMEDIR_VTODO (list->data);
+      vtodo = MIMEDIR_VTODO (iter->data);
       do_import_vtodo (vtodo);
     }
 
@@ -158,33 +158,36 @@ do_import_vcal (MIMEDirVCal *vcal)
 }
 
 int
-import_vcal (const gchar *data, size_t len)
+import_vcal (const gchar *filename)
 {
-  MIMEDirProfile *profile = NULL;
   MIMEDirVCal *cal = NULL;
-  gchar *str;
   GError *error = NULL;
+  GList *callist, *l;
+  int result = 0;
 
-  str = g_malloc (len + 1);
-  memcpy (str, data, len);
-  str[len] = 0;
+  callist = mimedir_vcal_read_file (filename, &error);
 
-  profile = mimedir_profile_new(NULL);
-  mimedir_profile_parse(profile, str, &error);
-  if (!error)
-    cal = mimedir_vcal_new_from_profile (profile, &error);
- 
-  g_free (str);
-
-  if (cal)
+  if (error) 
     {
-      do_import_vcal (cal);
-      g_object_unref (cal);
-      g_object_unref (profile);
-      return 0;
-    }
-  else
-    {
+      fprintf (stderr, "import_vcal : %s\n",
+	       error->message);
+      g_error_free (error);
       return -1;
     }
+
+  for (l = callist; l != NULL && result == 0; l = g_list_next (l))
+    {
+      if( l->data != NULL && MIMEDIR_IS_VCAL (l->data)) 
+        {
+           cal = l->data;
+           do_import_vcal (cal);
+        }
+      else
+        result = -3;
+    }
+
+  /* Cleanup */
+  mimedir_vcal_free_list (callist);
+  
+  return result;	
 }
