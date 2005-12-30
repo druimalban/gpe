@@ -1,6 +1,6 @@
 2005-12-30  Florian Boor  <florian@kernelconcepts.de>
-
-	gpe-what.c: Change popup colour, add some comments. Remove old popup before
+    familiar/control: Remove matchbox dependency.
+    gpe-what.c: Change popup colour, add some comments. Remove old popup before
 	            displaying a new one.
 				Shorter timeouts.
 
