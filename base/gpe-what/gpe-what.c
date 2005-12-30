@@ -50,6 +50,7 @@ typedef enum
 } t_popup;
 
 static GtkWidget *icon;
+static GtkWidget *popup = NULL;
 static GtkWidget *window;
 static GdkWindow *dock_window;
 static t_status help_status = HS_INACTIVE;
@@ -58,26 +59,29 @@ static GdkAtom help_atom, infoprint_atom;
 
 static Display *dpy;
 static int screen;
+static guint timeout_id = 0;
+static int last_x = 0, last_y = 0;
 
-#define HELP_TIMEOUT  5000
-#define INFO_TIMEOUT  4000
-
-int last_x = 0, last_y = 0;
+#define HELP_TIMEOUT  4000
+#define INFO_TIMEOUT  3000
 
 
 static gboolean
-close_popup (GtkWidget * popup)
+close_popup (GtkWidget *mypopup)
 {
-  if (GTK_IS_WIDGET (popup))
-    gtk_widget_destroy (popup);
-
+  if (GTK_IS_WIDGET (mypopup))
+    {
+      gtk_widget_destroy (mypopup);
+	  popup = NULL;
+	  timeout_id = 0;
+	}
   return FALSE;
 }
 
 static void
 popup_box (const gchar *text, gint length, gint x, gint y, gint type)
 {
-  GtkWidget *popup, *label, *frame, *box, *icon;
+  GtkWidget *label, *frame, *box, *icon;
   GtkRequisition req;
   GdkGeometry geometry;
   gint spacing = gpe_get_border ();
@@ -85,10 +89,20 @@ popup_box (const gchar *text, gint length, gint x, gint y, gint type)
   gint height = 18;
   gint timeout, xsize, lwidth, isize;
   PangoLayout *layout;
+  GdkColor color;
 
   if ((text == NULL) || !strlen(text))
     return;      
-    
+
+  /* If there is still an open box, destroy old one. */
+  if (popup)
+    {
+	  g_source_remove (timeout_id);
+	  gtk_widget_destroy(popup);
+	  popup = NULL;
+	}
+  
+  /* Set icon and timeout according to popup type.*/
   if (type == PU_HELP)
     {      
        icon = gtk_image_new_from_stock(GTK_STOCK_HELP, 
@@ -104,10 +118,16 @@ popup_box (const gchar *text, gint length, gint x, gint y, gint type)
   else /* unknown type */
       return;
 
+  /* create popup widgets */
   popup = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   label = gtk_label_new (text);
   frame = gtk_frame_new (NULL);
   box = gtk_hbox_new (FALSE, gpe_get_boxspacing());
+
+  /* set popup clour and frame apperance */
+  gtk_frame_set_shadow_type(GTK_FRAME(frame), GTK_SHADOW_ETCHED_OUT);
+  gdk_color_parse ("#F8E784", &color);
+  gtk_widget_modify_bg (popup, GTK_STATE_NORMAL, &color);
   
   gtk_window_set_default_size (GTK_WINDOW (popup), width, height);
   gtk_window_set_decorated (GTK_WINDOW (popup), FALSE);
@@ -119,7 +139,8 @@ popup_box (const gchar *text, gint length, gint x, gint y, gint type)
   gtk_container_add (GTK_CONTAINER (frame), box);
   gtk_container_add (GTK_CONTAINER (popup), frame);
   gtk_widget_realize (label);
-  
+ 
+  /* Calculate size used by the popup.*/ 
   gtk_label_get_layout_offsets(GTK_LABEL(label), &xsize, NULL);
   layout = gtk_label_get_layout(GTK_LABEL(label));
   pango_layout_get_pixel_size(layout, &lwidth, NULL); 
@@ -127,6 +148,9 @@ popup_box (const gchar *text, gint length, gint x, gint y, gint type)
   gtk_icon_size_lookup(GTK_ICON_SIZE_SMALL_TOOLBAR, &isize, NULL);
   xsize = xsize + lwidth + 6 + isize + gpe_get_boxspacing() + (spacing * 2);
 
+  /* Place popup on window according to given coordinates. Default to the top 
+     right corner if no coordinates given. */
+	 
   if (x >= 0)
     {
       geometry.max_width = gdk_screen_width () - spacing - x;
@@ -147,7 +171,7 @@ popup_box (const gchar *text, gint length, gint x, gint y, gint type)
                                  GDK_HINT_MAX_SIZE);
   gtk_widget_show_all (popup);
     
-  g_timeout_add (timeout, (GSourceFunc) close_popup, popup);
+  timeout_id = g_timeout_add (timeout, (GSourceFunc) close_popup, popup);
 }
 
 static void
