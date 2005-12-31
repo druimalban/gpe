@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT(libeventdb, 0.17, gpe@handhelds.org)
+AC_INIT(libeventdb, 0.18, gpe@handhelds.org)
 AC_CONFIG_SRCDIR([event-db.c])
 AM_INIT_AUTOMAKE([foreign dist-bzip2])
 
