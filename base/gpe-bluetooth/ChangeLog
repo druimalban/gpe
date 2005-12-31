@@ -4,7 +4,8 @@
 
 2005-12-31  Phil Blundell  <pb@reciva.com>
 
-	* mkinstalldirs: New file (via "glib-gettextize").
+	* mkinstalldirs: New file.
+	* Makefile.am (EXTRA_DIST): Distribute it.
 
 2005-12-30  Florian Boor  <florian@kernelconcepts.de>
 

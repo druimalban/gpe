@@ -63,7 +63,8 @@ EXTRA_DIST = $(desktop_DATA) \
 	     gpe-bluetooth.desktop.in \
              intltool-extract.in \
              intltool-merge.in \
-             intltool-update.in
+             intltool-update.in \
+	     mkinstalldirs
 
 DISTCLEANFILES = intltool-extract \
                  intltool-merge \
