@@ -1,3 +1,7 @@
+2005-12-31  Phil Blundell  <pb@reciva.com>
+
+	* Version 0.48 released.
+
 2005-12-30  Florian Boor  <florian@kernelconcepts.de>
 
 	* Makefile.am: Move chmod statements to install-data-hook due
