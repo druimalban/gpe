@@ -1,3 +1,9 @@
+2005-12-31  Florian Boor  <florian@kernelconcepts.de>
+
+    * Makefile.am: Include GPE specific stuff.
+    * gpe-tp.am, gpe-dist.am: New files.
+    * contacts-db.c: Remove unused code.
+
 2005-12-05  Pat Deegan  <linuxipaq@psychogenic.com>
 
     * Makefile.am/configure.ac: libcontactsdb project created

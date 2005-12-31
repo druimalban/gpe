@@ -22,13 +22,6 @@
 
 #define _(x) (x)
 
-#if 0
-#include "db.h"
-#include "structure.h"
-#include "support.h"
-#include "main.h"
-#endif
-
 #define DB_NAME_CONTACTS "/.gpe/contacts"
 #define DB_NAME_VCARD "/.gpe/vcard"
 

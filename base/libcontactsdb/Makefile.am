@@ -17,3 +17,5 @@ gpeinclude_HEADERS = gpe/contacts-db.h
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libcontactsdb.pc
 
+include gpe-dist.am
+include gpe-tp.am
