@@ -1,5 +1,6 @@
 2005-12-31  Florian Boor  <florian@kernelconcepts.de>
 
+    * Release version 0.1.
     * Makefile.am: Include GPE specific stuff.
     * gpe-tp.am, gpe-dist.am: New files.
     * contacts-db.c: Remove unused code.
