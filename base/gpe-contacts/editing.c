@@ -253,7 +253,7 @@ build_children (GtkWidget *table, GSList *children, GtkWidget *pw, gboolean visi
           if (e->name) gtk_table_attach(GTK_TABLE(table), w, 0, 1, *pos, *pos+1, 
                                         GTK_FILL, GTK_FILL, 0, 0);
           gtk_table_attach(GTK_TABLE(table), ww, 1, 3, *pos, *pos+1, 
-                           GTK_FILL, GTK_FILL | GTK_EXPAND, 0, 0);
+                           GTK_FILL | GTK_EXPAND, GTK_FILL | GTK_EXPAND, 0, 0);
           add_tag (e->tag, ww, pw);
         break;
       

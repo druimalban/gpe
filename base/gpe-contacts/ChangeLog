@@ -1,5 +1,6 @@
 2005-12-31  Florian Boor  <florian.boor@kernelconcepts.de>
 
+    * editing.c: Change packing of GtkTextViews to fix size problem in hildon env.
     * main-hildon.c: Modify likewise, new import_vcard() parameters, comments.
 
 2005-12-29  Florian Boor  <florian.boor@kernelconcepts.de>
