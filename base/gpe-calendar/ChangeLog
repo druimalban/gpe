@@ -1,5 +1,6 @@
 2005-12-31  Florian Boor <florian.boor@kernelconcepts.de>
 
+    * event-ui.c: Support location information in events.
     * day_view.c: Improve popup behaviour, add sanity checks and frame.
 
 2005-12-30  Florian Boor <florian.boor@kernelconcepts.de>

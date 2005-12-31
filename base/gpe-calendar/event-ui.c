@@ -54,6 +54,7 @@ struct edit_state
 
   GtkWidget *description;
   GtkWidget *summary;
+  GtkWidget *location;
 
   GtkWidget *radiobuttonforever, *radiobuttonendafter,
             *radiobuttonendon, *datecomboendon;
@@ -479,8 +480,11 @@ click_ok (GtkWidget *widget, GtkWidget *d)
   if (ev_d->summary)
     g_free (ev_d->summary);
 
-  ev_d->summary = gtk_editable_get_chars (GTK_EDITABLE (s->summary),
-                                          0, -1);
+  ev_d->summary = gtk_editable_get_chars (GTK_EDITABLE (s->summary), 0, -1);
+  
+  if (ev_d->location)
+    g_free (ev_d->location);
+  ev_d->location = gtk_editable_get_chars (GTK_EDITABLE (s->location), 0, -1);
 
   g_slist_free (ev_d->categories);
   ev_d->categories = g_slist_copy (s->categories);
@@ -889,6 +893,7 @@ build_edit_event_window (void)
   GtkAdjustment *endspin_adj, *dailyspin_adj, *weeklyspin_adj,
                 *monthlyspin_adj, *yearlyspin_adj;
   GtkAdjustment *taskadj;
+  GtkWidget *locationlabel;
 
   /* End of declarations */
 
@@ -948,9 +953,6 @@ build_edit_event_window (void)
   s->optionmenutype   = gtk_simple_menu_new ();
   gtk_simple_menu_append_item (GTK_SIMPLE_MENU (s->optionmenutype), _("Appointment"));
   gtk_simple_menu_append_item (GTK_SIMPLE_MENU (s->optionmenutype), _("Reminder"));
-#if 0
-  gtk_simple_menu_append_item (GTK_SIMPLE_MENU (s->optionmenutype), _("Task"));
-#endif
   g_signal_connect (G_OBJECT (s->optionmenutype), "changed",
                     G_CALLBACK (set_notebook_page), s);
 
@@ -1063,7 +1065,10 @@ build_edit_event_window (void)
   gtk_container_set_border_width (GTK_CONTAINER(detailtable), border);
   gtk_table_set_col_spacings (GTK_TABLE (detailtable), boxspacing);
   gtk_table_set_row_spacings (GTK_TABLE (detailtable), boxspacing);
-  
+  /* location  */  
+  locationlabel     = gtk_label_new (_("Location:"));
+  s->location       = gtk_entry_new ();
+  gtk_misc_set_alignment (GTK_MISC(locationlabel), 0, 0.5);
   /* Categories */
   catbutton = gtk_button_new_with_label (_("Categories"));
   catlabel = gtk_label_new (_("Define categories by tapping the Categories button."));
@@ -1089,13 +1094,17 @@ build_edit_event_window (void)
   gtk_misc_set_alignment(GTK_MISC (descriptionlabel), 0, 0.5);
   gtk_widget_set_size_request (GTK_WIDGET (description), -1, 68);
 
-  gtk_table_attach(GTK_TABLE(detailtable), catbutton, 0, 1, 0, 1, 
+  gtk_table_attach(GTK_TABLE(detailtable), locationlabel, 0, 1, 0, 1, 
                    GTK_FILL, GTK_FILL, 0, 0);
-  gtk_table_attach(GTK_TABLE(detailtable), catlabel, 1, 2, 0, 1, 
+  gtk_table_attach(GTK_TABLE(detailtable), s->location, 1, 2, 0, 1, 
                    GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
-  gtk_table_attach(GTK_TABLE(detailtable), descriptionlabel, 0, 1, 1, 2, 
+  gtk_table_attach(GTK_TABLE(detailtable), catbutton, 0, 1, 1, 2, 
                    GTK_FILL, GTK_FILL, 0, 0);
-  gtk_table_attach(GTK_TABLE(detailtable), description, 0, 2, 2, 3, 
+  gtk_table_attach(GTK_TABLE(detailtable), catlabel, 1, 2, 1, 2, 
+                   GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
+  gtk_table_attach(GTK_TABLE(detailtable), descriptionlabel, 0, 1, 2, 3, 
+                   GTK_FILL, GTK_FILL, 0, 0);
+  gtk_table_attach(GTK_TABLE(detailtable), description, 0, 2, 3, 4, 
                    GTK_FILL, GTK_FILL, 0, 0);
   
   /* Putting the tab together */
@@ -1620,6 +1629,7 @@ edit_event (event_t ev)
       gtk_text_buffer_set_text (gtk_text_view_get_buffer (GTK_TEXT_VIEW (s->description)),
 				evd->description ? evd->description : "", -1);
       gtk_entry_set_text (GTK_ENTRY (s->summary), evd->summary ? evd->summary : "");
+      gtk_entry_set_text (GTK_ENTRY (s->location), evd->location ? evd->location : "");
       update_categories (w, evd->categories, s);
       event_db_forget_details (ev);
 
@@ -1648,7 +1658,7 @@ edit_event (event_t ev)
  
       if (ev->flags & FLAG_ALARM)
         {
-	  unsigned int unit = 0;	/* minutes */
+          unsigned int unit = 0;	/* minutes */
 
           gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->alarmbutton), TRUE);
 
@@ -1657,10 +1667,10 @@ edit_event (event_t ev)
 	      unsigned int i;
 
 	      for (i = 0; i < 4; i++)
-		{
-		  if ((ev->alarm % alarm_multipliers[i]) == 0)
-		    unit = i;
-		}
+            {
+		      if ((ev->alarm % alarm_multipliers[i]) == 0)
+		        unit = i;
+            }
 	    }
 
           gtk_spin_button_set_value (GTK_SPIN_BUTTON (s->alarmspin), ev->alarm / alarm_multipliers[unit]);
