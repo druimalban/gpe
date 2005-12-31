@@ -1252,18 +1252,10 @@ on_main_focus(GtkWindow *window,  GdkEventExpose *event,gpointer user_data)
 static int 
 import_one_file(const gchar *filename)
 {
-  GError *err = NULL;
-  gchar *content = NULL;
-  gsize count = 0;
   int result = 0;
 	
-  if (g_file_get_contents(filename, &content, &count, &err))
-    {
-      result = import_vcard(content, count);
-      g_free(content);
-    }
-  else
-    result = -1;
+  result = import_vcard(filename);
+
   return result;
 }
 
@@ -1715,13 +1707,16 @@ main (int argc, char *argv[])
   /* check command line args */
   while ((arg = getopt(argc, argv, "ni:v")) >= 0)
   {
+    /* -n suppress edition of the structure in the preferences */
     if (arg == 'n')
       {
         edit_structure = FALSE;
         break;
       }
+    /* -i imports a file */
     if (arg == 'i')
 		ifile = optarg;
+    /* -v edits owner's vcard */
     if (arg == 'v')
       edit_vcard = TRUE;
   }    
