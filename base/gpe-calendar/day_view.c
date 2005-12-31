@@ -167,7 +167,8 @@ button_press (GtkWidget *widget,
 				gint width, height;
 				found = TRUE;
 				sel_event = e_r->event;
-				char *buffer;
+				gchar *buffer = NULL;
+				gchar *tbuffer = NULL;
 				event_details_t evd;
 				struct tm start_tm, end_tm;
 				time_t end;
@@ -183,14 +184,18 @@ button_press (GtkWidget *widget,
 				          evd->summary, start_tm.tm_hour, start_tm.tm_min, 
 				          end_tm.tm_hour,end_tm.tm_min, 
 				          (e_r->event->flags & FLAG_ALARM ? "(A)":""), 
-				          evd->description);
-				buffer = g_locale_to_utf8 (buffer, -1, NULL, NULL, NULL);
+				          evd->description ? evd->description : "");
+				tbuffer = g_locale_to_utf8 (buffer, -1, NULL, NULL, NULL);
 				gtk_window_set_position (GTK_WINDOW (popup),GTK_WIN_POS_MOUSE);
 				gtk_window_set_default_size (GTK_WINDOW (popup), dr_->page->width/2, 
 				                             dr_->page->height*.8);
 				gtk_window_get_size (GTK_WINDOW (popup), &width, &height);
-				gtk_label_set_text (GTK_LABEL (event_infos_popup), buffer);
-                
+                if (buffer)
+    				gtk_label_set_text (GTK_LABEL (event_infos_popup), 
+                                        tbuffer ? tbuffer : buffer);
+                else
+    				gtk_label_set_text (GTK_LABEL (event_infos_popup), "");
+                    
                 /* check for available export methods */
                 if (export_bluetooth_available())
                   gtk_widget_show(send_bt_button);
@@ -203,8 +208,11 @@ button_press (GtkWidget *widget,
                   gtk_widget_hide(send_ir_button);
                 
 				gtk_widget_show (popup);
-				
-				g_free (buffer);
+
+				if (tbuffer) 
+                    g_free (tbuffer);
+				if (buffer) 
+                    g_free (buffer);
 				break;
 			}	
 		}
@@ -634,11 +642,14 @@ day_view (void)
   GtkWidget *vbox_popup = gtk_vbox_new (FALSE, 0);
   gboolean landscape;
   gint 	win_width, win_height;
+  GtkWidget *frame;
+    
   /* Popup needed to show infos about an appointment */
-  
   scrolled_window = gtk_scrolled_window_new (NULL, NULL);
   popup = gtk_window_new (GTK_WINDOW_POPUP);
-  event_infos_popup = gtk_label_new (_(""));
+  frame = gtk_frame_new(NULL);
+    
+  event_infos_popup = gtk_label_new ("");
   gtk_misc_set_alignment (GTK_MISC (event_infos_popup), 0, 0);
   gtk_misc_set_padding (GTK_MISC (event_infos_popup), gpe_get_border(), 
 	                    gpe_get_border());
@@ -666,15 +677,17 @@ day_view (void)
   gtk_button_set_alignment (GTK_BUTTON (send_bt_button), 0, 0.5);
   gtk_button_set_alignment (GTK_BUTTON (save_button), 0, 0.5);
 
-  gtk_container_add (GTK_CONTAINER (popup), vbox_popup);
-  gtk_box_pack_start (GTK_BOX (vbox_popup), event_infos_popup, FALSE, FALSE, 0);
+  gtk_container_add (GTK_CONTAINER (popup), frame);
+  gtk_container_add (GTK_CONTAINER (frame), vbox_popup);
+  gtk_box_pack_start (GTK_BOX (vbox_popup), event_infos_popup, FALSE, TRUE, 0);
   
-  gtk_box_pack_start (GTK_BOX (vbox_popup), edit_event_button, TRUE, TRUE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox_popup), delete_event_button, TRUE, TRUE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox_popup), save_button, TRUE, TRUE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox_popup), send_ir_button, TRUE, TRUE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox_popup), send_bt_button, TRUE, TRUE, 0);
-  gtk_widget_show_all (vbox_popup);
+  gtk_box_pack_start (GTK_BOX (vbox_popup), edit_event_button, FALSE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox_popup), delete_event_button, FALSE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox_popup), save_button, FALSE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox_popup), send_ir_button, FALSE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox_popup), send_bt_button, FALSE, TRUE, 0);
+  
+  gtk_widget_show_all (frame);
   
 
   gtk_widget_add_events (GTK_WIDGET (popup),

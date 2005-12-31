@@ -1,3 +1,7 @@
+2005-12-31  Florian Boor <florian.boor@kernelconcepts.de>
+
+    * day_view.c: Improve popup behaviour, add sanity checks and frame.
+
 2005-12-30  Florian Boor <florian.boor@kernelconcepts.de>
 
     * import-vcal.*, main.c: Fix and clean up vcal/ics import.
