@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gpe-contacts-0.32\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-08-31 23:43+0200\n"
+"POT-Creation-Date: 2006-01-01 20:16+0100\n"
 "PO-Revision-Date: 2004-12-29 12:00-0500\n"
 "Last-Translator: Laurentiu Buzdugan <lbuz@rolix.org>\n"
 "Language-Team: Romanian <translation-team-ro@lists.sourceforge.net>\n"
@@ -162,35 +162,35 @@ msgstr "Editeazã vcard-ul personal"
 msgid "My VCard"
 msgstr "VCard-ul meu"
 
-#: ../editing.c:114 ../main.c:1352
+#: ../editing.c:114 ../main.c:1345
 msgid "Details"
 msgstr "Detalii"
 
-#: ../editing.c:271
+#: ../editing.c:275
 msgid "no year"
 msgstr "nici un an"
 
-#: ../editing.c:450 ../namedetail.c:66 ../structure.c:177
+#: ../editing.c:454 ../namedetail.c:66 ../structure.c:177
 msgid "Cancel"
 msgstr "Renunþã"
 
-#: ../editing.c:451 ../namedetail.c:64
+#: ../editing.c:455 ../namedetail.c:64
 msgid "OK"
 msgstr ""
 
-#: ../editing.c:452
+#: ../editing.c:456
 msgid "Image..."
 msgstr ""
 
-#: ../editing.c:560 ../main.c:502 ../main.c:629
+#: ../editing.c:565 ../main.c:502 ../main.c:629
 msgid "Categories"
 msgstr "Categorii"
 
-#: ../editing.c:1168
+#: ../editing.c:1282
 msgid "Select image"
 msgstr "Selecteazã imagine"
 
-#: ../export.c:168
+#: ../export.c:184
 msgid "Save as..."
 msgstr "Salveazã ca..."
 
@@ -204,7 +204,7 @@ msgstr "Gãseºte Contacte"
 msgid "Search for:"
 msgstr "Cautã:"
 
-#: ../gpe-contacts.desktop.in.h:1 ../main.c:1288
+#: ../gpe-contacts.desktop.in.h:1 ../main.c:1281
 msgid "Contacts"
 msgstr "Contacte"
 
@@ -238,86 +238,86 @@ msgstr "Nici un contact selectat"
 
 #. create and set up dialog
 #. * detail section *
-#: ../main.c:585 ../main.c:1424 ../main.c:1496
+#: ../main.c:585 ../main.c:1417 ../main.c:1489
 msgid "Contact"
 msgstr "Contact"
 
-#: ../main.c:1208
+#: ../main.c:1201
 msgid "Choose file"
 msgstr ""
 
-#: ../main.c:1236
+#: ../main.c:1229
 msgid "Import of"
 msgstr ""
 
-#: ../main.c:1236
+#: ../main.c:1229
 msgid "files failed:"
 msgstr ""
 
-#: ../main.c:1240
+#: ../main.c:1233
 msgid "Import successful"
 msgstr ""
 
-#: ../main.c:1305
+#: ../main.c:1298
 msgid "Tap this button to add a new contact."
 msgstr "Apãsaþi acest buton pentru a adãuga un nou contact."
 
-#: ../main.c:1314
+#: ../main.c:1307
 msgid "Tap here to edit the selected contact."
 msgstr "Apãsaþi aici pentru a edita contactul selectat."
 
-#: ../main.c:1324
+#: ../main.c:1317
 msgid "Tap here to delete the selected contact."
 msgstr "Apãsaþi aici pentru a ºterge contactul selectat."
 
-#: ../main.c:1344
+#: ../main.c:1337
 msgid "Find a contact by searching for any data."
 msgstr "Cautã un contact cãutând pentru orice date."
 
-#: ../main.c:1354
+#: ../main.c:1347
 msgid "Tap here to show contacts details."
 msgstr "Apãsaþi aici pentru a afiºa detalii despre contact."
 
-#: ../main.c:1364
+#: ../main.c:1357
 msgid "Tap here to configure this program."
 msgstr "Apãsaþi aici pentru a configura acest program."
 
-#: ../main.c:1372
+#: ../main.c:1365
 msgid "Import"
 msgstr ""
 
-#: ../main.c:1374
+#: ../main.c:1367
 msgid "Open file to import a contact from it."
 msgstr ""
 
-#: ../main.c:1387
+#: ../main.c:1380
 msgid "Tap here to exit gpe-contacts."
 msgstr "Apãsaþi aici pentru a ieºi din gpe-contacts."
 
 #. * find and categories section *
-#: ../main.c:1453
+#: ../main.c:1446
 msgid "Find:"
 msgstr "Cautã:"
 
-#: ../main.c:1460
+#: ../main.c:1453
 msgid "in"
 msgstr "în"
 
-#: ../main.c:1590
+#: ../main.c:1586
 #, c-format
 msgid "Could not import file %s."
 msgstr ""
 
-#: ../main.c:1595
+#: ../main.c:1591
 #, c-format
 msgid "File %s imported sucessfully."
 msgstr ""
 
-#: ../main.c:1620
+#: ../main.c:1617
 msgid "My Card"
 msgstr "Cardul meu"
 
-#: ../main.c:1623
+#: ../main.c:1620
 msgid "Saving vcard failed"
 msgstr "Salvarea vcard-ului a eºuat"
 

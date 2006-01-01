@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gpe-contacts 0.12\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-08-31 23:43+0200\n"
+"POT-Creation-Date: 2006-01-01 20:16+0100\n"
 "PO-Revision-Date: 2004-09-02 19:04-0300\n"
 "Last-Translator: Marcus Moreira de Souza <marcus@frb.br>\n"
 "Language-Team: Brazilian Portuguese <ldp-br@bazar.conectiva.com.br>\n"
@@ -160,38 +160,38 @@ msgstr ""
 msgid "My VCard"
 msgstr ""
 
-#: ../editing.c:114 ../main.c:1352
+#: ../editing.c:114 ../main.c:1345
 #, fuzzy
 msgid "Details"
 msgstr "Painel de Detalhes"
 
-#: ../editing.c:271
+#: ../editing.c:275
 msgid "no year"
 msgstr ""
 
-#: ../editing.c:450 ../namedetail.c:66 ../structure.c:177
+#: ../editing.c:454 ../namedetail.c:66 ../structure.c:177
 msgid "Cancel"
 msgstr "Cancelar"
 
-#: ../editing.c:451 ../namedetail.c:64
+#: ../editing.c:455 ../namedetail.c:64
 msgid "OK"
 msgstr ""
 
-#: ../editing.c:452
+#: ../editing.c:456
 #, fuzzy
 msgid "Image..."
 msgstr "Imagem"
 
-#: ../editing.c:560 ../main.c:502 ../main.c:629
+#: ../editing.c:565 ../main.c:502 ../main.c:629
 msgid "Categories"
 msgstr "Categorias"
 
-#: ../editing.c:1168
+#: ../editing.c:1282
 #, fuzzy
 msgid "Select image"
 msgstr "Apagar item"
 
-#: ../export.c:168
+#: ../export.c:184
 msgid "Save as..."
 msgstr ""
 
@@ -206,7 +206,7 @@ msgstr "Contatos"
 msgid "Search for:"
 msgstr ""
 
-#: ../gpe-contacts.desktop.in.h:1 ../main.c:1288
+#: ../gpe-contacts.desktop.in.h:1 ../main.c:1281
 msgid "Contacts"
 msgstr "Contatos"
 
@@ -242,91 +242,91 @@ msgstr "Nenhum recipiente selecionado"
 
 #. create and set up dialog
 #. * detail section *
-#: ../main.c:585 ../main.c:1424 ../main.c:1496
+#: ../main.c:585 ../main.c:1417 ../main.c:1489
 msgid "Contact"
 msgstr "Contato"
 
-#: ../main.c:1208
+#: ../main.c:1201
 #, fuzzy
 msgid "Choose file"
 msgstr "clique para escolher o arquivo"
 
-#: ../main.c:1236
+#: ../main.c:1229
 msgid "Import of"
 msgstr ""
 
-#: ../main.c:1236
+#: ../main.c:1229
 msgid "files failed:"
 msgstr ""
 
-#: ../main.c:1240
+#: ../main.c:1233
 msgid "Import successful"
 msgstr ""
 
-#: ../main.c:1305
+#: ../main.c:1298
 #, fuzzy
 msgid "Tap this button to add a new contact."
 msgstr "Clique aqui para adicionar um novo contato."
 
-#: ../main.c:1314
+#: ../main.c:1307
 msgid "Tap here to edit the selected contact."
 msgstr "clique aqui para editar o contato selecionado."
 
-#: ../main.c:1324
+#: ../main.c:1317
 msgid "Tap here to delete the selected contact."
 msgstr "Clique aqui para apagar o contato selecionado."
 
-#: ../main.c:1344
+#: ../main.c:1337
 msgid "Find a contact by searching for any data."
 msgstr ""
 
-#: ../main.c:1354
+#: ../main.c:1347
 #, fuzzy
 msgid "Tap here to show contacts details."
 msgstr "Clique aqui para adicionar um novo contato."
 
-#: ../main.c:1364
+#: ../main.c:1357
 #, fuzzy
 msgid "Tap here to configure this program."
 msgstr "Clique aqui para configurar o programa."
 
-#: ../main.c:1372
+#: ../main.c:1365
 msgid "Import"
 msgstr ""
 
-#: ../main.c:1374
+#: ../main.c:1367
 msgid "Open file to import a contact from it."
 msgstr ""
 
-#: ../main.c:1387
+#: ../main.c:1380
 #, fuzzy
 msgid "Tap here to exit gpe-contacts."
 msgstr "clique aqui para editar o contato selecionado."
 
 #. * find and categories section *
-#: ../main.c:1453
+#: ../main.c:1446
 msgid "Find:"
 msgstr "Procurar:"
 
-#: ../main.c:1460
+#: ../main.c:1453
 msgid "in"
 msgstr "em"
 
-#: ../main.c:1590
+#: ../main.c:1586
 #, fuzzy, c-format
 msgid "Could not import file %s."
 msgstr "Impossível encontrar o arquivo pixmap: %s"
 
-#: ../main.c:1595
+#: ../main.c:1591
 #, c-format
 msgid "File %s imported sucessfully."
 msgstr ""
 
-#: ../main.c:1620
+#: ../main.c:1617
 msgid "My Card"
 msgstr ""
 
-#: ../main.c:1623
+#: ../main.c:1620
 msgid "Saving vcard failed"
 msgstr ""
 

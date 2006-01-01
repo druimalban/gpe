@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gpe-contacts 0.37\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-08-31 23:43+0200\n"
+"POT-Creation-Date: 2006-01-01 20:16+0100\n"
 "PO-Revision-Date: 2005-05-03 14:48-0400\n"
 "Last-Translator: Aleksandar Jelenak <jelenak@netlinkplus.net>\n"
 "Language-Team: Serbian <gnu@prevod.org>\n"
@@ -151,36 +151,36 @@ msgstr "Уреди лични vcard"
 msgid "My VCard"
 msgstr "Мој VCard"
 
-#: ../editing.c:114 ../main.c:1352
+#: ../editing.c:114 ../main.c:1345
 msgid "Details"
 msgstr "Детаљи"
 
-#: ../editing.c:271
+#: ../editing.c:275
 msgid "no year"
 msgstr "без године"
 
-#: ../editing.c:450 ../namedetail.c:66 ../structure.c:177
+#: ../editing.c:454 ../namedetail.c:66 ../structure.c:177
 msgid "Cancel"
 msgstr "Поништи"
 
-#: ../editing.c:451 ../namedetail.c:64
+#: ../editing.c:455 ../namedetail.c:64
 msgid "OK"
 msgstr ""
 
-#: ../editing.c:452
+#: ../editing.c:456
 #, fuzzy
 msgid "Image..."
 msgstr "Слика"
 
-#: ../editing.c:560 ../main.c:502 ../main.c:629
+#: ../editing.c:565 ../main.c:502 ../main.c:629
 msgid "Categories"
 msgstr "Категорије"
 
-#: ../editing.c:1168
+#: ../editing.c:1282
 msgid "Select image"
 msgstr "Изабери слику"
 
-#: ../export.c:168
+#: ../export.c:184
 msgid "Save as..."
 msgstr "Сачувај као..."
 
@@ -194,7 +194,7 @@ msgstr "Нађи контакте"
 msgid "Search for:"
 msgstr "Претрага за:"
 
-#: ../gpe-contacts.desktop.in.h:1 ../main.c:1288
+#: ../gpe-contacts.desktop.in.h:1 ../main.c:1281
 msgid "Contacts"
 msgstr "Контакти"
 
@@ -228,86 +228,86 @@ msgstr "Без изабраног контакта."
 
 #. create and set up dialog
 #. * detail section *
-#: ../main.c:585 ../main.c:1424 ../main.c:1496
+#: ../main.c:585 ../main.c:1417 ../main.c:1489
 msgid "Contact"
 msgstr "Контакт"
 
-#: ../main.c:1208
+#: ../main.c:1201
 msgid "Choose file"
 msgstr "Изабери датотеку"
 
-#: ../main.c:1236
+#: ../main.c:1229
 msgid "Import of"
 msgstr "Увоз"
 
-#: ../main.c:1236
+#: ../main.c:1229
 msgid "files failed:"
 msgstr "датотека није успело:"
 
-#: ../main.c:1240
+#: ../main.c:1233
 msgid "Import successful"
 msgstr "Увоз успешан"
 
-#: ../main.c:1305
+#: ../main.c:1298
 msgid "Tap this button to add a new contact."
 msgstr "Лупни овде за нови контакт."
 
-#: ../main.c:1314
+#: ../main.c:1307
 msgid "Tap here to edit the selected contact."
 msgstr "Лупни овде за уређивање означеног контакта."
 
-#: ../main.c:1324
+#: ../main.c:1317
 msgid "Tap here to delete the selected contact."
 msgstr "Лупни овде за брисање означеног контакта."
 
-#: ../main.c:1344
+#: ../main.c:1337
 msgid "Find a contact by searching for any data."
 msgstr "Нађи контакт тражећи по било ком податку."
 
-#: ../main.c:1354
+#: ../main.c:1347
 msgid "Tap here to show contacts details."
 msgstr "Лупни овде за детаље контакта."
 
-#: ../main.c:1364
+#: ../main.c:1357
 msgid "Tap here to configure this program."
 msgstr "Лупни овде за подешавање програма."
 
-#: ../main.c:1372
+#: ../main.c:1365
 msgid "Import"
 msgstr "Увоз"
 
-#: ../main.c:1374
+#: ../main.c:1367
 msgid "Open file to import a contact from it."
 msgstr "Отвори датотеку због увоза контакта."
 
-#: ../main.c:1387
+#: ../main.c:1380
 msgid "Tap here to exit gpe-contacts."
 msgstr "Лупни овде за напуштање gpe-contacts."
 
 #. * find and categories section *
-#: ../main.c:1453
+#: ../main.c:1446
 msgid "Find:"
 msgstr "Нађи:"
 
-#: ../main.c:1460
+#: ../main.c:1453
 msgid "in"
 msgstr "у"
 
-#: ../main.c:1590
+#: ../main.c:1586
 #, c-format
 msgid "Could not import file %s."
 msgstr "Не могу увести датотеку „%s“."
 
-#: ../main.c:1595
+#: ../main.c:1591
 #, c-format
 msgid "File %s imported sucessfully."
 msgstr "Датотека „%s“ увезена успешно.."
 
-#: ../main.c:1620
+#: ../main.c:1617
 msgid "My Card"
 msgstr "Моја карта"
 
-#: ../main.c:1623
+#: ../main.c:1620
 msgid "Saving vcard failed"
 msgstr "Снимање vcard није успело"
 
