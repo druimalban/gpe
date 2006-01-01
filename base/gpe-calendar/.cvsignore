@@ -23,3 +23,6 @@ configure
 *.tar.gz
 *.tar.bz2
 Makefile.in
+gpe-calendar.desktop.in
+Makefile
+
