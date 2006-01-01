@@ -1,3 +1,7 @@
+2006-01-01  Phil Blundell  <pb@reciva.com>
+
+	* doc/Makefile.am (GTKDOC_CC, GTKDOC_LD): Delete duplicated
+	definitions to stop automake freaking out.
 
 2005-12-31  Florian Boor <florian@kernelconcepts.de>
 
