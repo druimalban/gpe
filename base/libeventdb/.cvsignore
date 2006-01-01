@@ -1,4 +1,11 @@
 *.pc
 *.d
 libeventdb.so.0
+Makefile.in
+ltmain.sh
+configure
+config.sub
+config.guess
+autom4te.cache
+aclocal.m4
 
