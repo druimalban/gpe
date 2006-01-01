@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+"http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<article>
+<articleinfo>
+<mediaobject><imageobject><imagedata fileref="gpebanner.png" format="PNG"/></imageobject></mediaobject>
+	<title>Gpe-Record-Memo</title>
+</articleinfo>
+<sect1>
+	<title>Accessing the Program</title>
+<para>
+Gpe-Record-Memo is accessable in the utilities folder. To access it tap on the record memo icon.
+<figure>
+	<title>GPE Utilities Folder</title>
+<mediaobject><imageobject><imagedata fileref="utilitiesfolder.png" format="PNG"/></imageobject></mediaobject>
+</figure>
+<figure>
+	<title>Main Application Screen</title>
+<mediaobject><imageobject><imagedata fileref="mainappscreen.png" format="PNG"/></imageobject></mediaobject>
+</figure>
+</para>
+</sect1>
+<sect1>
+	<title>Using the Application</title>
+<para>
+To record a memo simply type in your desired memo name and tap ok. When you are finished recording tap ok to save your memo.
+<note><para>One some devices, this application can be accessed additionally through the 'record' button.</para></note>
+</para>
+<figure>
+	<title>Recording in Action</title>
+<mediaobject><imageobject><imagedata fileref="recordingmemo.png" format="PNG"/></imageobject></mediaobject>
+</figure>
+</sect1>
+</article>

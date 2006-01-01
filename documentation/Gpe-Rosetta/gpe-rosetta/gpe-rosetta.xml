@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+"http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<article>
+<articleinfo>
+	<title>Gpe-Rosetta</title>
+</articleinfo>
+<sect1>
+	<title>Icon Explanations</title>
+<para>
+<itemizedlist>
+<listitem><mediaobject><imageobject><imagedata fileref="gotolast.png" format="PNG"/></imageobject></mediaobject><literallayout>Go to the begining of the database.</literallayout></listitem>
+<listitem><mediaobject><imageobject><imagedata fileref="back.png" format="PNG"/></imageobject></mediaobject><literallayout>Go to the previous item in the database.</literallayout></listitem>
+<listitem><mediaobject><imageobject><imagedata fileref="forward.png" format="PNG"/></imageobject></mediaobject><literallayout>Go to the next item in the database.</literallayout></listitem>
+<listitem><mediaobject><imageobject><imagedata fileref="gotolast.png" format="PNG"/></imageobject></mediaobject><literallayout>Go to the Last Item in the database.</literallayout></listitem>
+<listitem><mediaobject><imageobject><imagedata fileref="paintbrush.png" format="PNG"/></imageobject></mediaobject><literallayout>Learn a stroke.</literallayout></listitem>
+<listitem><mediaobject><imageobject><imagedata fileref="quit.png" format="PNG"/></imageobject></mediaobject><literallayout>Exit The Application.</literallayout></listitem>
+</itemizedlist>
+</para>
+</sect1>
+<sect1>
+	<title>Using the Application</title>
+<para>
+To train for you handwritting:
+<orderedlist>
+<listitem><para>Use the arrows in the program to find the selected character.</para></listitem>
+<listitem><para>Write in the blank box under the toolbar.</para></listitem>
+<listitem><para>Your stroke will then replace one of the two options of strokes for that character.</para></listitem>
+</orderedlist>
+Next to the training tab is the test tab. You can then test out your strokes and see if they are recognized.
+</para>
+</sect1>
+</article>
