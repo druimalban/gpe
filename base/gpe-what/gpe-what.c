@@ -110,12 +110,16 @@ handle_size_allocate (GtkWidget *w, GtkAllocation *a)
 
   /* North-west corner */
   gdk_draw_arc (bitmap, one_gc, TRUE, x0, y0, arc_size * 2, arc_size * 2, 90*64, 90*64);
+  gdk_draw_arc (bitmap, one_gc, FALSE, x0, y0, arc_size * 2, arc_size * 2, 90*64, 90*64);
   /* North-east corner */
   gdk_draw_arc (bitmap, one_gc, TRUE, x1 - arc_size * 2, y0, arc_size * 2, arc_size * 2, 0*64, 90*64);
+  gdk_draw_arc (bitmap, one_gc, FALSE, x1 - arc_size * 2, y0, arc_size * 2, arc_size * 2, 0*64, 90*64);
   /* South-west corner */
   gdk_draw_arc (bitmap, one_gc, TRUE, x0, y1 - arc_size * 2, arc_size * 2, arc_size * 2, 180*64, 90*64);
+  gdk_draw_arc (bitmap, one_gc, FALSE, x0, y1 - arc_size * 2, arc_size * 2, arc_size * 2, 180*64, 90*64);
   /* South-east corner */
   gdk_draw_arc (bitmap, one_gc, TRUE, x1 - arc_size * 2, y1 - arc_size * 2, arc_size * 2, arc_size * 2, 270*64, 90*64);	
+  gdk_draw_arc (bitmap, one_gc, FALSE, x1 - arc_size * 2, y1 - arc_size * 2, arc_size * 2, arc_size * 2, 270*64, 90*64);	
 
   /* Middle */
   gdk_draw_rectangle (bitmap, one_gc, TRUE, x0 + arc_size, y0 + arc_size, width - arc_size * 2, height - arc_size * 2);
