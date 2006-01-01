@@ -11,7 +11,7 @@ AC_PROG_INSTALL
 
 
 DEP_MODULES="gtk+-2.0 >= 2.4 glib-2.0 >= 2.2 libgpewidget libgpepimc \
-             libgpevtype sqlite mimedir-1.0 libschedule libeventdb libxsettings-client"
+             libgpevtype sqlite mimedir-1.0 libschedule libeventdb >= 0.18 libxsettings-client"
 
 # i8n stuff
 AH_TEMPLATE([GETTEXT_PACKAGE], [Package name for gettext])
