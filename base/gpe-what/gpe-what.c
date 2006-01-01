@@ -61,6 +61,7 @@ static Display *dpy;
 static int screen;
 static guint timeout_id = 0;
 static int last_x = 0, last_y = 0;
+static int arc_size = 16;
 
 #define HELP_TIMEOUT  4000
 #define INFO_TIMEOUT  3000
@@ -72,16 +73,108 @@ close_popup (GtkWidget *mypopup)
   if (GTK_IS_WIDGET (mypopup))
     {
       gtk_widget_destroy (mypopup);
-	  popup = NULL;
-	  timeout_id = 0;
-	}
+      popup = NULL;
+      timeout_id = 0;
+    }
   return FALSE;
+}
+
+static gboolean
+handle_size_allocate (GtkWidget *w, GtkAllocation *a)
+{
+  GdkBitmap *bitmap;
+  GdkGC *zero_gc, *one_gc;
+  GdkColor zero, one;
+  int x0, y0, x1, y1;
+  int width, height;
+
+  width = a->width + 1;
+  height = a->height + 1;
+
+  x0 = y0 = 0;
+  x1 = width - 1;
+  y1 = height - 1;
+
+  bitmap = gdk_pixmap_new (NULL, width, height, 1);
+  
+  zero_gc = gdk_gc_new (bitmap);
+  one_gc = gdk_gc_new (bitmap);
+
+  zero.pixel = 0;
+  one.pixel = 1;
+
+  gdk_gc_set_foreground (zero_gc, &zero);
+  gdk_gc_set_foreground (one_gc, &one);
+
+  gdk_draw_rectangle (bitmap, zero_gc, TRUE, 0, 0, width, height);
+
+  /* North-west corner */
+  gdk_draw_arc (bitmap, one_gc, TRUE, x0, y0, arc_size * 2, arc_size * 2, 90*64, 90*64);
+  /* North-east corner */
+  gdk_draw_arc (bitmap, one_gc, TRUE, x1 - arc_size * 2, y0, arc_size * 2, arc_size * 2, 0*64, 90*64);
+  /* South-west corner */
+  gdk_draw_arc (bitmap, one_gc, TRUE, x0, y1 - arc_size * 2, arc_size * 2, arc_size * 2, 180*64, 90*64);
+  /* South-east corner */
+  gdk_draw_arc (bitmap, one_gc, TRUE, x1 - arc_size * 2, y1 - arc_size * 2, arc_size * 2, arc_size * 2, 270*64, 90*64);	
+
+  /* Middle */
+  gdk_draw_rectangle (bitmap, one_gc, TRUE, x0 + arc_size, y0 + arc_size, width - arc_size * 2, height - arc_size * 2);
+
+  /* Top */
+  gdk_draw_rectangle (bitmap, one_gc, TRUE, x0 + arc_size, y0, width - arc_size * 2, arc_size);
+  /* Bottom */
+  gdk_draw_rectangle (bitmap, one_gc, TRUE, x0 + arc_size, y1 - arc_size, width - arc_size * 2, arc_size);
+  /* Left */
+  gdk_draw_rectangle (bitmap, one_gc, TRUE, x0, y0 + arc_size, arc_size, height - arc_size * 2);
+  /* Right */
+  gdk_draw_rectangle (bitmap, one_gc, TRUE, x1 - arc_size, y0 + arc_size, arc_size, height - arc_size * 2);
+
+  g_object_unref (one_gc);
+  g_object_unref (zero_gc);
+
+  gtk_widget_shape_combine_mask (w, bitmap, 0, 0);
+
+  g_object_unref (bitmap);
+}
+
+static gboolean
+handle_expose (GtkWidget *w, GdkEventExpose *ev, GtkWidget *child)
+{
+  GdkGC *black_gc;
+  GdkDrawable *dr;
+  int x0, y0, x1, y1;
+
+  black_gc = w->style->black_gc;
+  dr = w->window;
+  x0 = y0 = 0;
+  x1 = w->allocation.width - 1;
+  y1 = w->allocation.height - 1;
+
+  /* North-west corner */
+  gdk_draw_arc (dr, black_gc, FALSE, x0, y0, arc_size * 2, arc_size * 2, 90*64, 90*64);
+  /* North-east corner */
+  gdk_draw_arc (dr, black_gc, FALSE, x1 - arc_size * 2, y0, arc_size * 2, arc_size * 2, 0*64, 90*64);
+  /* South-west corner */
+  gdk_draw_arc (dr, black_gc, FALSE, x0, y1 - arc_size * 2, arc_size * 2, arc_size * 2, 180*64, 90*64);
+  /* South-east corner */
+  gdk_draw_arc (dr, black_gc, FALSE, x1 - arc_size * 2, y1 - arc_size * 2, arc_size * 2, arc_size * 2, 270*64, 90*64);	
+
+  /* Join them up */
+  gdk_draw_line (dr, black_gc, x0 + arc_size, y0, x1 - arc_size, y0);
+  gdk_draw_line (dr, black_gc, x0 + arc_size, y1, x1 - arc_size, y1);
+  gdk_draw_line (dr, black_gc, x0, y0 + arc_size, x0, y1 - arc_size);
+  gdk_draw_line (dr, black_gc, x1, y0 + arc_size, x1, y1 - arc_size);
+
+  /* Draw the contents */
+  gtk_container_propagate_expose (GTK_CONTAINER (w), child, ev);
+
+  return TRUE;
 }
 
 static void
 popup_box (const gchar *text, gint length, gint x, gint y, gint type)
 {
-  GtkWidget *label, *frame, *box, *icon;
+  GtkWidget *label, *box, *icon;
   GtkRequisition req;
   GdkGeometry geometry;
   gint spacing = gpe_get_border ();
@@ -97,35 +190,36 @@ popup_box (const gchar *text, gint length, gint x, gint y, gint type)
   /* If there is still an open box, destroy old one. */
   if (popup)
     {
-	  g_source_remove (timeout_id);
-	  gtk_widget_destroy(popup);
-	  popup = NULL;
-	}
+      g_source_remove (timeout_id);
+      gtk_widget_destroy(popup);
+      popup = NULL;
+    }
   
   /* Set icon and timeout according to popup type.*/
   if (type == PU_HELP)
     {      
-       icon = gtk_image_new_from_stock(GTK_STOCK_HELP, 
-                                     GTK_ICON_SIZE_SMALL_TOOLBAR);
-       timeout = HELP_TIMEOUT;
+      icon = gtk_image_new_from_stock(GTK_STOCK_HELP, 
+				      GTK_ICON_SIZE_SMALL_TOOLBAR);
+      timeout = HELP_TIMEOUT;
     }
   else if (type == PU_INFO)
     {      
-       icon = gtk_image_new_from_stock(GTK_STOCK_DIALOG_INFO, 
-                                     GTK_ICON_SIZE_SMALL_TOOLBAR);
-       timeout = INFO_TIMEOUT;
+      icon = gtk_image_new_from_stock(GTK_STOCK_DIALOG_INFO, 
+				      GTK_ICON_SIZE_SMALL_TOOLBAR);
+      timeout = INFO_TIMEOUT;
     }
   else /* unknown type */
-      return;
+    return;
 
   /* create popup widgets */
   popup = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   label = gtk_label_new (text);
-  frame = gtk_frame_new (NULL);
   box = gtk_hbox_new (FALSE, gpe_get_boxspacing());
 
+  g_signal_connect (G_OBJECT (popup), "expose-event", G_CALLBACK (handle_expose), box);
+  g_signal_connect (G_OBJECT (popup), "size-allocate", G_CALLBACK (handle_size_allocate), NULL);
+
   /* set popup clour and frame apperance */
-  gtk_frame_set_shadow_type(GTK_FRAME(frame), GTK_SHADOW_ETCHED_OUT);
   gdk_color_parse ("#F8E784", &color);
   gtk_widget_modify_bg (popup, GTK_STATE_NORMAL, &color);
   
@@ -136,8 +230,7 @@ popup_box (const gchar *text, gint length, gint x, gint y, gint type)
     
   gtk_box_pack_start_defaults(GTK_BOX(box), icon);
   gtk_box_pack_start_defaults(GTK_BOX(box), label);
-  gtk_container_add (GTK_CONTAINER (frame), box);
-  gtk_container_add (GTK_CONTAINER (popup), frame);
+  gtk_container_add (GTK_CONTAINER (popup), box);
   gtk_widget_realize (label);
  
   /* Calculate size used by the popup.*/ 
@@ -167,7 +260,8 @@ popup_box (const gchar *text, gint length, gint x, gint y, gint type)
       geometry.max_width = gdk_screen_width () - spacing;
       geometry.max_height = gdk_screen_height () / 2;
     }
-  gtk_window_set_geometry_hints (GTK_WINDOW(popup), frame, &geometry, 
+
+  gtk_window_set_geometry_hints (GTK_WINDOW(popup), box, &geometry, 
                                  GDK_HINT_MAX_SIZE);
   gtk_widget_show_all (popup);
     

@@ -1,3 +1,7 @@
+2006-01-01  Phil Blundell  <pb@reciva.com>
+
+	* gpe-what.c (handle_size_allocate, handle_expose): New.
+	(popup_box): Use them.  Remove GtkFrame.
 
 2005-12-31  Florian Boor  <florian@kernelconcepts.de>
 
