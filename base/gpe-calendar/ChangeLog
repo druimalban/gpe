@@ -1,6 +1,7 @@
 2006-01-01  Phil Blundell  <pb@reciva.com>
 
-	* configure.ac: Require libeventdb >= 0.18.
+	* configure.ac: Require libeventdb >= 0.18 and libgpevtype >=
+	0.14.
 
 2005-12-31  Florian Boor <florian.boor@kernelconcepts.de>
 
