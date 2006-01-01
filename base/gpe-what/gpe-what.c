@@ -92,8 +92,8 @@ handle_size_allocate (GtkWidget *w, GtkAllocation *a)
   height = a->height + 1;
 
   x0 = y0 = 0;
-  x1 = width - 1;
-  y1 = height - 1;
+  x1 = width - 2;
+  y1 = height - 2;
 
   bitmap = gdk_pixmap_new (NULL, width, height, 1);
   
@@ -119,7 +119,7 @@ handle_size_allocate (GtkWidget *w, GtkAllocation *a)
   gdk_draw_arc (bitmap, one_gc, FALSE, x0, y1 - arc_size * 2, arc_size * 2, arc_size * 2, 180*64, 90*64);
   /* South-east corner */
   gdk_draw_arc (bitmap, one_gc, TRUE, x1 - arc_size * 2, y1 - arc_size * 2, arc_size * 2, arc_size * 2, 270*64, 90*64);	
-  gdk_draw_arc (bitmap, one_gc, FALSE, x1 - arc_size * 2, y1 - arc_size * 2, arc_size * 2, arc_size * 2, 270*64, 90*64);	
+  gdk_draw_arc (bitmap, one_gc, FALSE, x1 - arc_size * 2, y1 - arc_size * 2, arc_size * 2, arc_size * 2, 270*64, 90*64);
 
   /* Middle */
   gdk_draw_rectangle (bitmap, one_gc, TRUE, x0 + arc_size, y0 + arc_size, width - arc_size * 2, height - arc_size * 2);
