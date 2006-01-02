@@ -93,7 +93,7 @@ handle_size_allocate (GtkWidget *w, GtkAllocation *a)
 
   x0 = y0 = 0;
   x1 = width - 2;
-  y1 = height - 2;
+  y1 = height - 1;
 
   bitmap = gdk_pixmap_new (NULL, width, height, 1);
   
@@ -160,7 +160,7 @@ handle_expose (GtkWidget *w, GdkEventExpose *ev, GtkWidget *child)
   gdk_draw_arc (dr, black_gc, FALSE, x1 - arc_size * 2, y0, arc_size * 2, arc_size * 2, 0*64, 90*64);
   /* South-west corner */
   gdk_draw_arc (dr, black_gc, FALSE, x0, y1 - arc_size * 2, arc_size * 2, arc_size * 2, 180*64, 90*64);
-  /* South-east corner */
+ /* South-east corner */
   gdk_draw_arc (dr, black_gc, FALSE, x1 - arc_size * 2, y1 - arc_size * 2, arc_size * 2, arc_size * 2, 270*64, 90*64);	
 
   /* Join them up */
@@ -184,7 +184,7 @@ popup_box (const gchar *text, gint length, gint x, gint y, gint type)
   gint spacing = gpe_get_border ();
   gint width = 18;
   gint height = 18;
-  gint timeout, xsize, lwidth, isize;
+  gint timeout, xsize, lwidth, iwidth, ysize, lheight, iheight, xpos, ypos;
   PangoLayout *layout;
   GdkColor color;
 
@@ -238,24 +238,40 @@ popup_box (const gchar *text, gint length, gint x, gint y, gint type)
   gtk_widget_realize (label);
  
   /* Calculate size used by the popup.*/ 
-  gtk_label_get_layout_offsets(GTK_LABEL(label), &xsize, NULL);
+  gtk_label_get_layout_offsets(GTK_LABEL(label), &xsize, &ysize);
   layout = gtk_label_get_layout(GTK_LABEL(label));
-  pango_layout_get_pixel_size(layout, &lwidth, NULL); 
+  pango_layout_get_pixel_size(layout, &lwidth, &lheight); 
   
-  gtk_icon_size_lookup(GTK_ICON_SIZE_SMALL_TOOLBAR, &isize, NULL);
-  xsize = xsize + lwidth + 6 + isize + gpe_get_boxspacing() + (spacing * 2);
+  gtk_icon_size_lookup(GTK_ICON_SIZE_SMALL_TOOLBAR, &iwidth, &iheight);
+  xsize = xsize + lwidth + 6 + iwidth + gpe_get_boxspacing() + (spacing * 2);
+  ysize = ysize + lheight + 6 + iheight;
 
   /* Place popup on window according to given coordinates. Default to the top 
      right corner if no coordinates given. */
 	 
   if (x >= 0)
     {
-      geometry.max_width = gdk_screen_width () - spacing - x;
-      geometry.max_height = (gdk_screen_height () - y) / 2;
       if ((gdk_screen_width() < (xsize + x)) && (x > (gdk_screen_width()/2)))
-          gtk_widget_set_uposition (GTK_WIDGET (popup), x - xsize, y);
+        {
+          xpos = x - xsize;
+          geometry.max_width = gdk_screen_width () - spacing - (x - xsize);
+        }
       else
-          gtk_widget_set_uposition (GTK_WIDGET (popup), x, y);
+        {
+          xpos = x;
+          geometry.max_width = gdk_screen_width () - spacing - x;
+        }
+      if ((gdk_screen_height() < (ysize + y)) && (y > (gdk_screen_height()/2)))
+        {
+          ypos = y - ysize;
+          geometry.max_height = gdk_screen_height () / 2;
+        }
+      else
+        {
+          ypos = y;
+          geometry.max_height = gdk_screen_height () / 2;
+        }
+      gtk_widget_set_uposition (GTK_WIDGET (popup), xpos, ypos);
     }
   else
     {
@@ -485,9 +501,13 @@ on_event (XEvent *xevent, GdkEvent * event,
 {
 	if (xevent->type == PropertyNotify)
 	{
-//		printf("property notification (X) %i\n%s\n", event->type, gdk_x11_get_xatom_name_for_display (display, xevent->xproperty.atom));
 		if (xevent->xproperty.atom == gdk_x11_atom_to_xatom(infoprint_atom))
 			do_infoprint_message(NULL, NULL, NULL);
+		if ((xevent->xproperty.atom == gdk_x11_atom_to_xatom(help_atom)) 
+             && (xevent->xproperty.state == PropertyNewValue) 
+             && (xevent->xproperty.window == gdk_x11_drawable_get_xid (dock_window)))
+			do_help_message(NULL, NULL, NULL);
+        return GDK_FILTER_REMOVE;
 	}
 	
   return GDK_FILTER_CONTINUE;

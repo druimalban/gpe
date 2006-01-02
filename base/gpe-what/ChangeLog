@@ -1,3 +1,7 @@
+2006-01-01  Florian Boor  <florian@kernelconcepts.de>
+
+	* gpe-what.c: Improve event handling and popup sizing and location.
+    
 2006-01-01  Phil Blundell  <pb@reciva.com>
 
 	* Version 0.41 released.
