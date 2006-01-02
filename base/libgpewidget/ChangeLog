@@ -1,3 +1,8 @@
+2006-01-03  Florian Boor <florian@kernelconcepts.de>
+
+	* Version 0.106 released.
+	* Makefile.am: Remove not existing debian/compat from EXTRA_DIST. 
+    
 2006-01-02  Phil Blundell  <pb@reciva.com>
 
 	* screensize.c (gdk_screen_width): Fix signed/unsigned warnings.
