@@ -1,3 +1,12 @@
+2006-01-02  Phil Blundell  <pb@reciva.com>
+
+	* screensize.c (gdk_screen_width): Fix signed/unsigned warnings.
+	(gdk_screen_height): Likewise.
+	* translabel.c (filter): Likewise.
+	* gpewindowbits.c (gpe_get_wm_class): Likewise.
+	(gpe_get_window_name): Likewise.
+	* gpehelp.c (gpe_show_help): Fix g_free(const char *) warning.
+
 2005-12-16 Philippe De Swert <philippedeswert@scarlet.be>
 
 	* Makefile.am : Added the necessary entries for building the gpedialog stuff

@@ -95,7 +95,8 @@ gpe_get_wm_class (Display *dpy, Window w, gchar **instance, gchar **class)
   Atom actual_type;
   int actual_format;
   unsigned long nitems, bytes_after;
-  unsigned char *prop = NULL;
+  unsigned char *uprop = NULL;
+  char *prop;
   int rc;
 
   initialize (dpy);
@@ -103,8 +104,10 @@ gpe_get_wm_class (Display *dpy, Window w, gchar **instance, gchar **class)
   gdk_error_trap_push ();
 
   rc = XGetWindowProperty (dpy, w, XA_WM_CLASS,
-			  0, G_MAXLONG, False, XA_STRING, &actual_type, &actual_format,
-			  &nitems, &bytes_after, &prop);
+			   0, G_MAXLONG, False, XA_STRING, &actual_type, &actual_format,
+			   &nitems, &bytes_after, &uprop);
+
+  prop = (char *)uprop;
 
   if (gdk_error_trap_pop () || rc != Success || prop == NULL)
     return FALSE;
@@ -181,7 +184,8 @@ gpe_get_window_name (Display *dpy, Window w)
   Atom actual_type;
   int actual_format;
   unsigned long nitems, bytes_after;
-  unsigned char *prop = NULL;
+  unsigned char *uprop = NULL;
+  char *prop;
   gchar *name = NULL;
   int rc;
 
@@ -191,7 +195,9 @@ gpe_get_window_name (Display *dpy, Window w)
 
   rc = XGetWindowProperty (dpy, w, atoms[_NET_WM_NAME],
 			  0, G_MAXLONG, False, atoms[UTF8_STRING], &actual_type, &actual_format,
-			  &nitems, &bytes_after, &prop);
+			  &nitems, &bytes_after, &uprop);
+
+  prop = (char *)uprop;
 
   if (gdk_error_trap_pop () || rc != Success)
     return NULL;
@@ -207,7 +213,9 @@ gpe_get_window_name (Display *dpy, Window w)
 
       rc = XGetWindowProperty (dpy, w, XA_WM_NAME,
 			       0, G_MAXLONG, False, XA_STRING, &actual_type, &actual_format,
-			       &nitems, &bytes_after, &prop);
+			       &nitems, &bytes_after, &uprop);
+
+      prop = (char *)uprop;
 
       if (gdk_error_trap_pop () || rc != Success)
 	return FALSE;

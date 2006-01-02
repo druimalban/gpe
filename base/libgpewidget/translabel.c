@@ -59,27 +59,27 @@ filter (GdkXEvent *xevp, GdkEvent *ev, gpointer p)
 	  int actual_format;
 	  unsigned long actual_length;
 	  unsigned long bytes_after;
-	  unsigned char *prop = NULL;
+	  char *prop = NULL;
 
 	  if (XGetWindowProperty (xev->xany.display, xev->xany.window, 
 				  atom, 0, 65536, False, XA_STRING,
 				  &actual_type, &actual_format,
-				  &actual_length, &bytes_after, &prop) == Success
+				  &actual_length, &bytes_after, (unsigned char **)&prop) == Success
 	      && actual_length > 0
 	      && actual_type == XA_STRING)
 	    {
 	      GSList *iter;
-
+	      
 #ifdef ENABLE_NLS
 	      setlocale (LC_MESSAGES, prop);
 #endif
-      for (iter = widgets; iter; iter = iter->next)
+	      for (iter = widgets; iter; iter = iter->next)
 		{
 		  GtkWidget *w = GTK_WIDGET (iter->data);
 		  void (*func)(GtkWidget *, void *) = g_object_get_data (G_OBJECT (w), 
 									 "translate-callback");
 		  gpointer data = g_object_get_data (G_OBJECT (w), "translate-callback-data");
-
+		  
 		  if (func)
 		    func (w, data);
 		}

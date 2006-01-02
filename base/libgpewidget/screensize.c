@@ -24,7 +24,8 @@
 gint
 gdk_screen_width (void)
 {
-  guint x, y, w, h, b, d;
+  gint x, y;
+  guint w, h, b, d;
   Window r;
   XGetGeometry (GDK_DISPLAY (), GDK_ROOT_WINDOW (), &r, &x, &y, &w, &h, &b, &d);
   return w;
@@ -33,7 +34,8 @@ gdk_screen_width (void)
 gint
 gdk_screen_height (void)
 {
-  guint x, y, w, h, b, d;
+  gint x, y;
+  guint w, h, b, d;
   Window r;
   XGetGeometry (GDK_DISPLAY (), GDK_ROOT_WINDOW (), &r, &x, &y, &w, &h, &b, &d);
   return h;

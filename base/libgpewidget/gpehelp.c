@@ -100,7 +100,7 @@ gpe_show_help (const char *appname, const char *topic)
     }
   if (!spawn)
     {
-      g_free (command);
+      g_free ((char *)command);
       g_free (helpfile);
       g_strfreev (applist); 
       if (helpadress != helpfile)
