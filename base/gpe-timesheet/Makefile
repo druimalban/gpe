@@ -1,7 +1,7 @@
 PREFIX = /usr/local
 PACKAGE = gpe-timesheet
 CVSBUILD = yes
-VERSION = 0.19
+VERSION = 0.20
 
 LINGUAS = id pt zh_TW fr ro cs nl ga ru sr sk sv es
 

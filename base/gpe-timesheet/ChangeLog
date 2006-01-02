@@ -1,3 +1,11 @@
+2006-01-02 Philippe De Swert <philippedeswert@scarlet.be>
+
+	* release 0.20
+	* Makefile : bump version number 
+	* main.c : avoid confusing user depending on selection and avoiding the creation
+		   of strange subtasks
+	* html.c : Add footer with time total
+
 2005-12-16 Philippe De Swert <philippedeswert@scarlet.be>
 
 	* main.c : remove badly placed ifdefs that made logging non-functional

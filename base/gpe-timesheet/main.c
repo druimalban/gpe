@@ -313,6 +313,9 @@ ui_new_task (GtkWidget *w, gpointer p)
   gchar *text[2];
   struct task *pt = NULL;
 
+  /* removing this avoids creating strange subtasks which don't
+     show in the reports + avoids confusing the user creating a new 
+     node or leaf depending on the selection
   if (GTK_CLIST (ctree)->selection)
     {
       gchar *text;
@@ -323,9 +326,9 @@ ui_new_task (GtkWidget *w, gpointer p)
 			       NULL, NULL, NULL, NULL, &leaf, NULL);
       if (leaf)
 	gtk_ctree_set_node_info (ctree, parent, text, 0,
-				 NULL, NULL, NULL, NULL, FALSE, TRUE);
+				 NULL, NULL, NULL, NULL, TRUE, TRUE);
     }
-  
+  */
   text[0] = smallbox (_("New task"), _("Name"), "");
   text[1] = "";
   if (text[0])

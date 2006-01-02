@@ -27,11 +27,16 @@ static gchar *apps = "/usr/bin/gpe-helpviewer /usr/bin/gpe-mini-browser /usr/bin
 
 static char **myjournal = NULL;
 static int jlen = 0;
+static time_t totaltime = 0;
 
 /* adds the document header */
 int 
 journal_add_header(char* title)
 {
+  /* set totaltime to 0 here as this is executed before the calculation and this garantees us that a following journal
+     creation will not influence the totaltime */
+  totaltime = 0;
+
   /* if you change len here, change return value too */
   myjournal = malloc(5 * sizeof(char*));
   if (!myjournal) 
@@ -41,7 +46,7 @@ journal_add_header(char* title)
       title);
   myjournal[1] = g_strdup_printf("<body>\n<h1>%s %s</h1>\n<p>",
     _("Journal for"), title);
-  myjournal[2] = g_strdup("<table WIDTH=100% BORDER=1 CELLPADDING=0 CELLSPACING=0>\n");
+  myjournal[2] = g_strdup("<table WIDTH=100% BORDER=0 CELLPADDING=0 CELLSPACING=0>\n");
   myjournal[3] = g_strdup_printf("<tr><th align=\"left\">%s</th><th " \
     "align=\"left\">%s</th><th align=\"left\">%s</th><th align=\"left\">%s</th><th align=\"left\">%s</th></tr>",
   	_("Start"), _("Comment"), _("End"), _("Comment"),  _("Duration"));
@@ -73,6 +78,8 @@ journal_add_line(time_t tstart, time_t tstop,
     g_strdup_printf("<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>\n",
 	  starttm, istart, stoptm, istop, duration);
   myjournal[jlen - 1] = NULL;
+ 
+  totaltime = totaltime + (tstop - tstart);
 
   g_free(starttm);
   g_free(stoptm);
@@ -86,11 +93,11 @@ journal_add_footer(int length)
 {
   myjournal = realloc(myjournal,sizeof(char*)*(++jlen));
   myjournal[jlen - 2] = 
-    g_strdup_printf("</table>\n</p>\n</body>\n</html>");
+    g_strdup_printf("<tr><th colspan=3></th><th align=left>Total time</th><th align=left>%.2ld h. %.2ld min. %.2ld sec.</th>\n</table></p></body>\n</html>",
+		    totaltime/3600, (totaltime%3600)/60, ((totaltime%3600)%60) );
   myjournal[jlen - 1] = NULL;
   return jlen;
 }
-
 
 /* dump string vector to file */
 int 

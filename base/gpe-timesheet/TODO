@@ -5,6 +5,5 @@ Things to do in gpe-timesheet
 - Port GtkCtree to GtkTreeView.
 - Improve journal output:
   - Show date in a single line.
-  - Create summary at the end.
 - integrate with gpe-todo
 -the 'whoops, forgot to clock out' use case
