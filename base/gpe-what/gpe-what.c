@@ -127,11 +127,11 @@ handle_size_allocate (GtkWidget *w, GtkAllocation *a)
   /* Top */
   gdk_draw_rectangle (bitmap, one_gc, TRUE, x0 + arc_size, y0, width - arc_size * 2, arc_size);
   /* Bottom */
-  gdk_draw_rectangle (bitmap, one_gc, TRUE, x0 + arc_size, y1 - arc_size, width - arc_size * 2, arc_size);
+  gdk_draw_rectangle (bitmap, one_gc, TRUE, x0 + arc_size, y1 - arc_size, width - arc_size * 2, arc_size + 1);
   /* Left */
   gdk_draw_rectangle (bitmap, one_gc, TRUE, x0, y0 + arc_size, arc_size, height - arc_size * 2);
   /* Right */
-  gdk_draw_rectangle (bitmap, one_gc, TRUE, x1 - arc_size, y0 + arc_size, arc_size, height - arc_size * 2);
+  gdk_draw_rectangle (bitmap, one_gc, TRUE, x1 - arc_size, y0 + arc_size, arc_size + 1, height - arc_size * 2);
 
   g_object_unref (one_gc);
   g_object_unref (zero_gc);
@@ -183,7 +183,7 @@ popup_box (const gchar *text, gint length, gint x, gint y, gint type)
   GdkGeometry geometry;
   gint spacing = gpe_get_border ();
   gint width = 18;
-  gint height = 18;
+  gint height = 32;
   gint timeout, xsize, lwidth, iwidth, ysize, lheight, iheight, xpos, ypos;
   PangoLayout *layout;
   GdkColor color;
