@@ -980,8 +980,8 @@ build_edit_event_window (void)
   starttime           = gtk_combo_new ();
   endtime             = gtk_combo_new ();
   
-  gtk_widget_set_size_request (starttime, 40, -1);
-  gtk_widget_set_size_request (endtime, 40, -1);
+  gtk_widget_set_size_request (starttime, 42, -1);
+  gtk_widget_set_size_request (endtime, 42, -1);
 
   gtk_combo_set_popdown_strings (GTK_COMBO (starttime), times);
   gtk_combo_set_popdown_strings (GTK_COMBO (endtime), times);
