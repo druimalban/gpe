@@ -1,3 +1,7 @@
+2006-01-03  Florian Boor <florian.boor@kernelconcepts.de>
+
+    * event-ui.c: Tune dropdown box sizes fixing #1423.
+    
 2006-01-01  Phil Blundell  <pb@reciva.com>
 
 	* configure.ac: Require libeventdb >= 0.18 and libgpevtype >=

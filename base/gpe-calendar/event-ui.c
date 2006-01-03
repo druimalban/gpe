@@ -979,6 +979,9 @@ build_edit_event_window (void)
 
   starttime           = gtk_combo_new ();
   endtime             = gtk_combo_new ();
+  
+  gtk_widget_set_size_request (starttime, 40, -1);
+  gtk_widget_set_size_request (endtime, 40, -1);
 
   gtk_combo_set_popdown_strings (GTK_COMBO (starttime), times);
   gtk_combo_set_popdown_strings (GTK_COMBO (endtime), times);
@@ -992,7 +995,9 @@ build_edit_event_window (void)
   
   gtk_misc_set_alignment (GTK_MISC (startdatelabel), 0, 0.5);
   gtk_misc_set_alignment (GTK_MISC (enddatelabel), 0, 0.5);
-
+  gtk_misc_set_alignment (GTK_MISC (starttimelabel), 0, 0.5);
+  gtk_misc_set_alignment (GTK_MISC (endtimelabel), 0, 0.5);
+  
   s->startdate        = gtk_date_combo_new ();
   s->enddate          = gtk_date_combo_new ();
   s->reminderdate     = gtk_date_combo_new ();
@@ -1006,7 +1011,7 @@ build_edit_event_window (void)
   gtk_table_attach (GTK_TABLE (startendtable), startdatelabel, 0, 1, 0, 1,
                     0, 0, 0, boxspacing);
   gtk_table_attach (GTK_TABLE (startendtable), starttime, 1, 2, 0, 1,
-                    GTK_EXPAND | GTK_FILL, GTK_FILL, 0, 0);
+                    GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
   gtk_table_attach (GTK_TABLE (startendtable), starttimelabel, 2, 3, 0, 1,
                     0, 0, 0, boxspacing);
   gtk_table_attach (GTK_TABLE (startendtable), s->startdate, 3, 4, 0, 1,
@@ -1014,7 +1019,7 @@ build_edit_event_window (void)
   gtk_table_attach (GTK_TABLE (startendtable), enddatelabel, 0, 1, 1, 2,
                     0, 0, 0, boxspacing);
   gtk_table_attach (GTK_TABLE (startendtable), endtime, 1, 2, 1, 2,
-                    GTK_EXPAND | GTK_FILL, GTK_FILL, 0, 0);
+                    GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
   gtk_table_attach (GTK_TABLE (startendtable), endtimelabel, 2, 3, 1, 2,
                     0, 0, 0, boxspacing);
   gtk_table_attach (GTK_TABLE (startendtable), s->enddate, 3, 4, 1, 2,
