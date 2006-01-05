@@ -24,6 +24,15 @@ if [ -e /dev/mixer ]; then
 chown $USER /dev/mixer
 fi
 
+if [ -e /dev/snd/controlC0 ]; then
+chown $USER /dev/snd/controlC0
+fi
+
+# serial device (GSM phone of HTC devices)
+if [ -e /dev/tts/0 ]; then
+chown $USER /dev/tts/0
+fi
+
 # touchscreen devices #
 
 if [ -e /dev/touchscreen/0raw ]; then
