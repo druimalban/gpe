@@ -98,7 +98,7 @@ journal (GtkWidget *w, gpointer user_data)
      
       /* here we go... */
       journal_add_header(t->description);
-      scan_journal(g_slist_find(root,t));
+      scan_journal(t);
       journal_add_footer();
       journal_to_file(JOURNAL_FILE);
       journal_show(JOURNAL_FILE);
@@ -219,13 +219,13 @@ confirm_dialog (gchar **text, gchar *action, gchar *action2)
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (w)->action_area), 
 		      buttonok, TRUE, TRUE, 0);
 
-  gtk_signal_connect (GTK_OBJECT (buttonok), "clicked", 
-		      GTK_SIGNAL_FUNC (confirm_click_ok), NULL);
-  gtk_signal_connect (GTK_OBJECT (buttoncancel), "clicked", 
-		      GTK_SIGNAL_FUNC (confirm_click_cancel), w);
+  g_signal_connect (G_OBJECT (buttonok), "clicked", 
+		      G_CALLBACK (confirm_click_ok), NULL);
+  g_signal_connect (G_OBJECT (buttoncancel), "clicked", 
+		      G_CALLBACK (confirm_click_cancel), w);
 
-  gtk_signal_connect (GTK_OBJECT (w), "destroy",
-		      (GtkSignalFunc)confirm_note_destruction, &destroyed);
+  g_signal_connect (G_OBJECT (w), "destroy",
+		      G_CALLBACK(confirm_note_destruction), &destroyed);
 
   gtk_window_set_modal (GTK_WINDOW (w), TRUE);
   gtk_widget_show_all (w);
@@ -393,7 +393,7 @@ main(int argc, char *argv[])
   GtkWidget *pw;
   GtkWidget *tree;
   GdkPixbuf *p;
-  GtkToolItem *new, *delete, *clock_in, *clock_out, *show_journal;
+  GtkToolItem *new, *delete, *clock_in, *clock_out, *show_journal, *quit, *sep;
 
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
@@ -421,51 +421,62 @@ main(int argc, char *argv[])
   gtk_box_pack_start (GTK_BOX (vbox_top), tree, TRUE, TRUE, 0);
 
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+  gtk_window_set_default_size (GTK_WINDOW(window), 400, 400);
 
   new = gtk_tool_button_new_from_stock (GTK_STOCK_NEW);
   gtk_tool_button_set_label (GTK_TOOL_BUTTON (new),  _("New task"));
   gtk_toolbar_insert (GTK_TOOLBAR (toolbar), new, -1);
-  g_signal_connect (GTK_OBJECT (new), "clicked",
+  g_signal_connect (G_OBJECT (new), "clicked",
                         G_CALLBACK (ui_new_task), tree);
 
   delete = gtk_tool_button_new_from_stock (GTK_STOCK_DELETE);
   gtk_tool_button_set_label (GTK_TOOL_BUTTON(delete), _("Delete task"));
   gtk_toolbar_insert (GTK_TOOLBAR(toolbar), delete, -1);
-  g_signal_connect (GTK_OBJECT(delete), "clicked",
+  g_signal_connect (G_OBJECT(delete), "clicked",
                     G_CALLBACK (ui_delete_task), tree);
 
   p = gpe_find_icon ("clock");
   pw = gtk_image_new_from_pixbuf (p);
   clock_in = gtk_tool_button_new (GTK_WIDGET(pw), _("Clock in"));
   gtk_toolbar_insert (GTK_TOOLBAR(toolbar), clock_in, -1);
-  g_signal_connect (GTK_OBJECT(clock_in), "clicked",
+  g_signal_connect (G_OBJECT(clock_in), "clicked",
                     G_CALLBACK (start_timing), tree);
 
   p = gpe_find_icon ("stop_clock");
   pw = gtk_image_new_from_pixbuf (p);
   clock_out = gtk_tool_button_new (GTK_WIDGET(pw), _("Clock out"));
   gtk_toolbar_insert (GTK_TOOLBAR(toolbar), clock_out, -1);
-  g_signal_connect (GTK_OBJECT(clock_out), "clicked",
+  g_signal_connect (G_OBJECT(clock_out), "clicked",
                     G_CALLBACK (stop_timing), tree);
 
   p = gpe_find_icon ("journal");
   pw = gtk_image_new_from_pixbuf (p);
   show_journal = gtk_tool_button_new (GTK_WIDGET(pw), _("Show journal"));
   gtk_toolbar_insert (GTK_TOOLBAR(toolbar), show_journal, -1);
-  g_signal_connect (GTK_OBJECT(show_journal), "clicked",
+  g_signal_connect (G_OBJECT(show_journal), "clicked",
                     G_CALLBACK (journal), tree);
 
   /* adding help button if help exists */
   if(gpe_check_for_help(appname) != NULL)
     {
-     GtkToolItem *help_icon;
-     pw = gtk_image_new_from_stock (GTK_STOCK_HELP, GTK_ICON_SIZE_SMALL_TOOLBAR);
-     help_icon = gtk_tool_button_new (GTK_WIDGET(pw), _("Help"));
-     gtk_toolbar_insert (GTK_TOOLBAR(toolbar), help_icon, -1);
-     g_signal_connect (GTK_OBJECT(help_icon), "clicked",
-		       G_CALLBACK (show_help), NULL);
+      GtkToolItem *help_icon;
+      pw = gtk_image_new_from_stock (GTK_STOCK_HELP, GTK_ICON_SIZE_SMALL_TOOLBAR);
+      help_icon = gtk_tool_button_new (GTK_WIDGET(pw), _("Help"));
+      gtk_toolbar_insert (GTK_TOOLBAR(toolbar), help_icon, -1);
+      g_signal_connect (G_OBJECT(help_icon), "clicked",
+                        G_CALLBACK (show_help), NULL);
     }
 
+   sep = gtk_separator_tool_item_new ();
+   gtk_separator_tool_item_set_draw (GTK_SEPARATOR_TOOL_ITEM(sep), FALSE);
+   gtk_tool_item_set_expand (GTK_TOOL_ITEM(sep), TRUE);
+   gtk_toolbar_insert (GTK_TOOLBAR(toolbar), sep, -1);
+    
+   quit = gtk_tool_button_new_from_stock (GTK_STOCK_QUIT);
+   gtk_toolbar_insert (GTK_TOOLBAR(toolbar), quit, -1);
+   g_signal_connect (G_OBJECT(quit), "clicked",
+                     G_CALLBACK (gtk_main_quit), NULL);
+  
   /* btn_con and btn_coff should be replaced decently by the new clock_in and clock_out items */
   btn_con = GTK_WIDGET(clock_in);
   btn_coff = GTK_WIDGET(clock_out);

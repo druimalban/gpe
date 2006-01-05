@@ -132,8 +132,7 @@ journal_show(const char *filename)
   pid_t p_html;
 	
   /* check if the file is readable */
-  printf("filename = %s\n", filename);
-  if (access(filename,R_OK))
+  if (access(filename, R_OK))
     return -1;
 	
   /* make array of strings to be able to check for the different aplications */

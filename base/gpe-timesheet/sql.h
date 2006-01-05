@@ -37,6 +37,6 @@ extern void delete_task (struct task *t);
 
 extern gboolean log_entry (action_t action, time_t time, struct task *task, char *info);
 extern void scan_logs (GSList *);
-extern void scan_journal (GSList *list);
+extern void scan_journal (struct task *tstart);
 
 #endif

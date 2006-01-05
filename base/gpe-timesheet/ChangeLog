@@ -1,3 +1,11 @@
+2006-01-05  Florian Boor <florian.boor@kernelconcepts.de>
+
+    * html.c: Remove debug code, minor formating change.
+    * sql.c, sql.h, main.c: Change scan_journal() parameter, fix memory leak
+      and journal generation.
+    * main.c: Add quit button, replace ancient gtk object stuff.
+    * main.c: Set window default size.
+
 2006-01-02 Philippe De Swert <philippedeswert@scarlet.be>
 
 	* release 0.20

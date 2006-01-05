@@ -205,49 +205,51 @@ journal_callback (void *arg, int argc, char **argv, char **names)
       ti = atol(argv[0]);
       if (!strcmp(argv[1],"START"))
        {
-          if (time_start != 0)
-	    {
+         if (time_start != 0)
+           {
               journal_add_line(time_start, ti, note_start, _("open"));
-	     }
-          time_start = ti;
-	  note_start = g_strdup(argv[2]);
-        }
+           }
+           time_start = ti;
+           note_start = g_strdup(argv[2]);
+         }
        else if (!strcmp(argv[1],"STOP")){
-          if (time_start) 
-            journal_add_line(time_start, ti,note_start, argv[2]);
+          if (time_start)
+            {              
+              journal_add_line(time_start, ti, note_start, argv[2]);
+              g_free(note_start);
+              time_start = 0;
+            }
         }		
     }
   return 0;
 }
 
 void
-scan_journal (GSList *list)
+scan_journal (struct task *t)
 {
   GSList *iter;
-  for (iter = list; iter; iter = iter->next)
-    {
-      struct task *t = iter->data;
 
-      t->started = FALSE;
-	  
-      if (t->children)
-        scan_journal (t->children);
-      else
-	{
+  for (iter = t->children; iter; iter = iter->next)
+    {
+      struct task *tc = iter->data;
+
+      tc->started = FALSE;
+	  scan_journal (tc);
+    }
+        {
 	  char *err;
 	  int r;
 
-	  r = sqlite_exec_printf (sqliteh, "select time, action, info from log where task=%d", 
+	  r = sqlite_exec_printf (sqliteh, "select time, action, info from log where task=%d order by time", 
 				  journal_callback, t, &err,
 				  t->id);
 	  if (r != 0 && r != SQLITE_ABORT)
 	    {
 	      gpe_error_box (err);
-	      free (err);
+	      g_free (err);
 	      return;
 	    }
 	}
-    }
 }
 
 struct task *
