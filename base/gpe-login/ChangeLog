@@ -1,3 +1,7 @@
+2006-01-05  Phil Blundell  <pb@reciva.com>
+
+	* Version 0.84 released.
+
 2006-01-05  Florian Boor <florian@kernelconcepts.de>
 
     * gpe-login.pre-session: Set device permissins for HTC smartphones.

@@ -2,7 +2,7 @@ PREFIX = /usr/local
 PACKAGE = gpe-login
 CVSBUILD = yes
 GTK2 = yes
-VERSION = 0.83
+VERSION = 0.84
 DEBUG = no
 LINGUAS = 
 
