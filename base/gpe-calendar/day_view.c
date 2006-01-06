@@ -520,8 +520,8 @@ void
 scroll_to (GtkWidget *scrolled, gint hour)
 {
 	GtkAdjustment *adj;
-	gint w = 0, h = 0;
-	gdouble value;
+	gint h = 0;
+    gdouble upper, lower, value;
     
 	/* Scroll to the current hour */
 	if (hour < 0)
@@ -533,9 +533,14 @@ scroll_to (GtkWidget *scrolled, gint hour)
 		hour = MAX (now_tm.tm_hour - 1, 0) ;	
 	}
 		
-	gtk_widget_get_size_request (draw, &w, &h);
+	gtk_widget_get_size_request (draw, NULL, &h);
 	value = (gdouble)hour/NUM_HOURS * h;
 	adj = gtk_scrolled_window_get_vadjustment(GTK_SCROLLED_WINDOW(scrolled));
+    
+	lower  = 0.0;
+	upper = h;
+
+    gtk_adjustment_clamp_page(adj, lower, upper);
     gtk_adjustment_set_value(adj, value);
 }
 

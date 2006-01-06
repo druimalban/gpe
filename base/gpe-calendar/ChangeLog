@@ -1,3 +1,8 @@
+2006-01-06  Florian Boor <florian.boor@kernelconcepts.de>
+
+    * Release version 0.67.
+    * day-view.c: Fix adjustment bounds.
+    
 2006-01-03  Florian Boor <florian.boor@kernelconcepts.de>
 
     * event-ui.c: Tune dropdown box sizes fixing #1423.
