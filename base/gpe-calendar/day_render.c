@@ -9,7 +9,6 @@
  *
  */
 
-#include "day_render.h"
 #include <gpe/event-db.h>
 #include <sys/types.h>
 #include <stdio.h>
@@ -22,6 +21,9 @@
 #include <gdk/gdkkeysyms.h>
 #include <glib.h>
 #include <gpe/pixmaps.h>
+
+#include "day_render.h"
+#include "day_view.h"
 
 #define event_ends(event) ((event)->start + (event)->duration)
 
@@ -613,7 +615,7 @@ day_render_new (GtkWidget * widget,
   day_render_set_event_rectangles (dr);
 
   g_signal_connect (G_OBJECT (dr->widget), "button-press-event",
-		    G_CALLBACK (button_press), dr);
+		    G_CALLBACK (day_view_button_press), dr);
   return dr;
 
 }
@@ -626,7 +628,7 @@ day_render_delete (struct day_render *dr)
   if (dr != NULL)
     {
       g_signal_handlers_disconnect_by_func (G_OBJECT (dr->widget),
-					    button_press, dr);
+					    day_view_button_press, dr);
       GSList *iter;
       iter = dr->event_rectangles;
       while (iter)
@@ -890,3 +892,4 @@ pen_new (GtkWidget * widget, guint red, guint green, guint blue)
 
   return pen_color_gc;
 }
+

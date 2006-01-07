@@ -37,20 +37,20 @@
 
 static GSList *day_events[NUM_HOURS], *untimed_events;
 
-GtkWidget *rem_area;
+static GtkWidget *rem_area;
 static GtkWidget *datesel, *calendar, *scrolled_window;
 
 /* Day renderer */
-event_t sel_event;
-day_page_t page_app, page_rem;
+static event_t sel_event;
+static day_page_t page_app, page_rem;
 /* Day events are visualised as rectangles */
 
-GtkWidget *draw, *popup, *event_infos_popup, *send_bt_button, *send_ir_button;
+static GtkWidget *draw, *popup, *event_infos_popup, *send_bt_button, *send_ir_button;
 
-struct day_render *dr, *rem_render;
+static struct day_render *dr, *rem_render;
 
 /* Day page constructor */
-day_page_t
+static day_page_t
 day_page_new (GtkWidget * widget, guint time_col_ratio)
 {
   gint width, height, tmp;
@@ -69,7 +69,7 @@ day_page_new (GtkWidget * widget, guint time_col_ratio)
   return this;
 }
 
-void
+static void
 day_page_draw_empty (const day_page_t page)
 {
   GdkGC *white_gc, *black_gc;
@@ -85,7 +85,7 @@ day_page_draw_empty (const day_page_t page)
 }
 
 /* Day page background */
-void
+static void
 day_page_draw_background (const day_page_t page)
 {
   GdkGC *gray_gc, *white_gc, *black_gc;
@@ -143,7 +143,7 @@ day_page_draw_background (const day_page_t page)
 }
 
 gboolean
-button_press (GtkWidget * widget, GdkEventButton * event, gpointer d)
+day_view_button_press (GtkWidget * widget, GdkEventButton * event, gpointer d)
 {
   GSList *iter;
 
@@ -237,8 +237,7 @@ button_press (GtkWidget * widget, GdkEventButton * event, gpointer d)
   return TRUE;
 }
 
-
-void
+static void
 delete_event (event_t ev, GtkWidget * d)
 {
   event_t ev_real;
@@ -284,8 +283,7 @@ delete_event (event_t ev, GtkWidget * d)
   event_db_forget_details (ev_real);
 }
 
-
-void
+static void
 day_view_expose ()
 {
   GdkGC *white_gc, *gray_gc, *black_gc;
@@ -315,7 +313,7 @@ day_view_expose ()
   g_object_unref (gray_gc);
 }
 
-gboolean
+static gboolean
 day_view_expose_cb (GtkWidget * widget,
 		    GdkEventExpose * event, gpointer user_data)
 {
@@ -323,7 +321,7 @@ day_view_expose_cb (GtkWidget * widget,
   return TRUE;
 }
 
-int
+static int
 reminder_view_init ()
 {
   GdkGC *white_gc, *black_gc, *cream_gc;
@@ -370,7 +368,7 @@ reminder_view_init ()
   return TRUE;
 }
 
-void
+static void
 reminder_view_expose ()
 {
   gint len;
@@ -399,14 +397,13 @@ reminder_view_expose ()
     }
 }
 
-gboolean
+static gboolean
 reminder_view_expose_cb (GtkWidget * widget,
 			 GdkEventExpose * ev, gpointer user_data)
 {
   reminder_view_expose ();
   return TRUE;
 }
-
 
 int
 day_view_init ()
@@ -499,7 +496,7 @@ day_changed_calendar (GtkWidget * widget)
  * Go to hour h
  * If h is negative it goes to the current hour
  */
-void
+static void
 scroll_to (GtkWidget * scrolled, gint hour)
 {
   GtkAdjustment *adj;
@@ -523,11 +520,14 @@ scroll_to (GtkWidget * scrolled, gint hour)
   lower = 0.0;
   upper = h;
 
+  if (value > (adj->upper - adj->page_size))
+    value = adj->upper - adj->page_size;
+
   gtk_adjustment_clamp_page (adj, lower, upper);
   gtk_adjustment_set_value (adj, value);
 }
 
-gboolean
+static gboolean
 update_hook_callback ()
 {
   struct tm tm;
@@ -676,10 +676,8 @@ day_view (void)
 
   gtk_widget_show_all (frame);
 
-
   gtk_widget_add_events (GTK_WIDGET (popup),
 			 GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
-
 
   g_signal_connect (G_OBJECT (popup), "button-press-event",
 		    G_CALLBACK (destroy_popup), NULL);

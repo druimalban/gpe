@@ -96,9 +96,6 @@ ev_rec_t
 day_render_event_show_big (struct day_render *, event_t event, GdkGC * gc,
 			   GSList * ol_period);
 
-extern gboolean
-button_press (GtkWidget * widget, GdkEventButton * event, gpointer d);
-
 void day_render_resize (struct day_render *dr, guint width, guint height);
 
 void day_render_set_event_rectangles (struct day_render *dr);

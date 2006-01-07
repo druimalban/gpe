@@ -1,5 +1,21 @@
 2006-01-07  Phil Blundell  <pb@reciva.com>
 
+	* day_view.c (scroll_to): Manually clamp value at upper limit to
+	avoid undesirable "over-scroll" effect.
+
+2006-01-07  Phil Blundell  <pb@reciva.com>
+
+	* day_view.c: Fix numerous missing "static" qualifiers.
+	(button_press): Rename to...
+	(day_view_button_press): ... this.
+	* day_view.h (day_view_button_press): New prototype.
+	(day_view_init): Mark extern.
+	* day_render.c (day_render_new): Update reference to above function.
+	(day_render_delete): Likewise.
+	* day_render.h (button_press): Delete prototype.
+	
+2006-01-07  Phil Blundell  <pb@reciva.com>
+
 	* day_view.c: Adjust formatting and comments.
 
 2006-01-06  Florian Boor <florian.boor@kernelconcepts.de>
