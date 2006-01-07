@@ -49,9 +49,11 @@ static GtkWidget *draw, *popup, *event_infos_popup, *send_bt_button, *send_ir_bu
 
 static struct day_render *dr, *rem_render;
 
+static void day_page_calc_time_width (day_page_t page);
+
 /* Day page constructor */
 static day_page_t
-day_page_new (GtkWidget * widget, guint time_col_ratio)
+day_page_new (GtkWidget * widget)
 {
   gint width, height, tmp;
   day_page_t this;
@@ -65,7 +67,9 @@ day_page_new (GtkWidget * widget, guint time_col_ratio)
   this->height = height;
   this->height_min = height;
   this->widget = widget;
-  this->time_col_ratio = time_col_ratio;
+  
+  day_page_calc_time_width (this);
+
   return this;
 }
 
@@ -84,6 +88,33 @@ day_page_draw_empty (const day_page_t page)
 
 }
 
+static void
+day_page_calc_time_width (day_page_t page)
+{
+  PangoLayout *pl;
+  PangoRectangle pr;
+  guint width = 0;
+  int i;
+
+  pl = gtk_widget_create_pango_layout (page->widget, NULL);
+
+  for (i = 0; i < NUM_HOURS; i++)
+    {
+      char buf[40], *buffer;
+
+      snprintf (buf, sizeof (buf), "<span font_desc='normal'>%.2d:00</span>", i);
+      buffer = g_locale_to_utf8 (buf, -1, NULL, NULL, NULL);
+      pango_layout_set_markup (pl, buffer, strlen (buffer));
+      pango_layout_get_pixel_extents (pl, &pr, NULL);
+      width = MAX (width, pr.width);
+
+      g_free (buffer);
+    }
+
+  page->time_width = width + 3;
+  g_object_unref (pl);
+}
+
 /* Day page background */
 static void
 day_page_draw_background (const day_page_t page)
@@ -99,32 +130,31 @@ day_page_draw_background (const day_page_t page)
   white_gc = widget->style->white_gc;
   gray_gc = pen_new (widget, 58905, 58905, 56610);
   black_gc = widget->style->black_gc;
+
   /* Row height */
   /* Draw the hour column */
   gdk_draw_rectangle (widget->window, white_gc, TRUE, 0, 0, page->width,
 		      page->height);
   gdk_draw_rectangle (widget->window, gray_gc, TRUE, 0, 0,
-		      page->width / page->time_col_ratio, page->height);
+		      page->time_width, page->height);
 
   for (i = 0; i < NUM_HOURS; i++)
     {
       char buf[40], *buffer;
-      buffer = (char *) g_malloc (sizeof (char) * 256);
       gdk_draw_line (widget->window, gray_gc, 0, page->height / NUM_HOURS * i,
 		     page->width, page->height / NUM_HOURS * i);
       gdk_draw_line (widget->window, white_gc, 0,
 		     page->height / NUM_HOURS * i,
-		     page->width / page->time_col_ratio,
+		     page->time_width,
 		     page->height / NUM_HOURS * i);
 
-      snprintf (buf, sizeof (buf), "<span font_desc='normal'>%.2d:00</span>",
-		i);
+      snprintf (buf, sizeof (buf), "<span font_desc='normal'>%.2d:00</span>", i);
       buffer = g_locale_to_utf8 (buf, -1, NULL, NULL, NULL);
       pango_layout_set_markup (pl, buffer, strlen (buffer));
       pango_layout_get_pixel_extents (pl, &pr, NULL);
-      gr.width = page->width / page->time_col_ratio;
+      gr.width = pr.width * 2;
       gr.height = pr.height * 2;
-      gr.x = page->width / page->time_col_ratio / 2 - pr.width / 2;
+      gr.x = 0;
       gr.y = page->height / NUM_HOURS * i;
 
       gtk_paint_layout (widget->style,
@@ -136,9 +166,10 @@ day_page_draw_background (const day_page_t page)
     }
 
   /* Draws the hours rectangle */
-  gdk_draw_rectangle (widget->window, black_gc, FALSE, 0, 0,
-		      page->width / page->time_col_ratio, page->height - 1);
+  gdk_draw_line (widget->window, black_gc, page->time_width, 0,
+		 page->time_width, page->height - 1);
 
+  g_object_unref (pl);
   g_object_unref (gray_gc);
 }
 
@@ -723,11 +754,8 @@ day_view (void)
   gtk_widget_show (rem_area);
   gtk_widget_show (scrolled_window);
   gtk_widget_show (hbox);
-  if (gdk_screen_width () > 400)
-    page_app = day_page_new (draw, 8);
-  else
-    page_app = day_page_new (draw, 5);
-  page_rem = day_page_new (rem_area, 5);
+  page_app = day_page_new (draw);
+  page_rem = day_page_new (rem_area);
 
   gtk_calendar_set_display_options (GTK_CALENDAR (calendar),
 				    GTK_CALENDAR_SHOW_DAY_NAMES

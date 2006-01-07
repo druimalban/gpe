@@ -17,11 +17,11 @@ extern int day_view_init ();
 extern gboolean day_view_button_press (GtkWidget * widget, GdkEventButton * event, gpointer d);
 
 typedef struct day_page {
-	GtkWidget *widget;
-	guint width;
-	guint height;
-	guint height_min;
-	guint time_col_ratio;
+  GtkWidget *widget;
+  guint width;
+  guint height;
+  guint height_min;
+  guint time_width;
 } *day_page_t ;
 
 

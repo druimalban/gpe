@@ -18,7 +18,7 @@
 #include <gpe/event-db.h>
 #include "day_view.h"
 
-#define day_render_update_offset( dr )  ((dr)->offset.x = ((dr)->page->width)/((dr)->page->time_col_ratio))
+#define day_render_update_offset( dr )  ((dr)->offset.x = (dr)->page->time_width)
 /* Day Caption */
 typedef struct caption
 {

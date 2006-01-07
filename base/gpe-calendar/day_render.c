@@ -602,7 +602,7 @@ day_render_new (GtkWidget * widget,
   dr->dy = (page->height) / (dr->rows + 2);
   dr->normal_gc = app_gc;
   dr->ol_gc = overl_gc;
-  dr->offset.x = page->width / page->time_col_ratio;
+  dr->offset.x = page->time_width;
   dr->offset.y = 0;
 
   pbuf = gpe_find_icon ("bell");

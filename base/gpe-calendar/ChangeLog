@@ -1,5 +1,19 @@
 2006-01-07  Phil Blundell  <pb@reciva.com>
 
+	* day_view.c (day_page_draw_background): Fix two memory leaks.
+	Use page->time_width, not ->time_col_ratio.  Remove unnecessary
+	black line on left hand side to save horizontal real estate.
+	Align time strings to the left rather than centering.
+	(day_page_calc_time_width): New.
+	(day_page_new): Call it.  Argument "time_col_ratio" deleted.
+	(day_view): Update call to day_page_new.
+	* day_view.h (struct day_page): Replace time_col_ratio with
+	time_width.
+	* day_render.h (day_render_update_offset): Likewise.	
+	* day_render.c (day_render_new): Likewise.
+
+2006-01-07  Phil Blundell  <pb@reciva.com>
+
 	* day_view.c (scroll_to): Manually clamp value at upper limit to
 	avoid undesirable "over-scroll" effect.
 
