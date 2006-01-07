@@ -10,8 +10,6 @@
 #ifndef GPESYNCD_H
 #define GPESYNCD_H
 
-#include <glib.h>
-#include <glib/gprintf.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -21,11 +19,24 @@
 #include <mimedir/mimedir.h>
 #include <mimedir/mimedir-vcard.h>
 
+#include <errno.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <sys/wait.h>
+#include <signal.h>
+
+#include <glib.h>
+#include <glib/gprintf.h>
+
 #include <gpe/vcard.h>
 #include <gpe/vevent.h>
 #include <gpe/vtodo.h>
 
 #define _GNU_SOURCE
+
+#define BUFFER_LEN 25 
 
 typedef enum
 {
@@ -40,7 +51,9 @@ typedef enum
 typedef struct
 {
   FILE *ifp, *ofp;
-
+  int socket;
+  int remote;
+  
   sqlite *contact_db;
   sqlite *event_db;
   sqlite *todo_db;
