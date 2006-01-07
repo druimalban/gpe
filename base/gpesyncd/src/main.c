@@ -119,6 +119,60 @@ gpesyncd_setup_databases (gpesyncd_context * ctx)
     }
 }
 
+/*! \brief Checks whether an ip is allowed to connect or not
+ * 
+ * \param ip	The ip adress
+ *
+ * The check is done by comparing every line of
+ * $HOME/.gpe/gpesyncd.allow with ip. If the ip is found,
+ * 1 is returned, otherwise 0.
+ */
+int
+check_ip (const char *ip)
+{
+  char *home;
+  char *path;
+  char buffer[16];
+  FILE *fp;
+
+  home = getenv ("HOME");
+  path =
+    calloc (sizeof (char) * strlen (home) + strlen ("/.gpe/gpesyncd.allow") +
+	    1, 1);
+
+  if (!path)
+    {
+      fprintf (stderr,
+	       "Couldn't allocate enough memory for the ip-filter!\n");
+      return 0;
+    }
+
+  sprintf (path, "%s/.gpe/gpesyncd.allow", home);
+
+  fp = fopen (path, "r");
+  if (!fp)
+    {
+      fprintf (stderr, "Error opening %s\n", path);
+      return 0;
+    }
+
+  while (!feof (fp))
+    {
+      bzero (buffer, 16);
+      fgets (buffer, 16, fp);
+      buffer[strlen (buffer) - 1] = '\0';
+      if (!strcmp (buffer, ip))
+	{
+	  fclose (fp);
+	  return 1;
+	}
+    }
+
+  fclose (fp);
+
+  return 0;
+}
+
 /*! \brief Creates a new context
  * 
  */
@@ -136,6 +190,7 @@ gpesyncd_context_new (char *err)
 
   ctx->ifp = NULL;
   ctx->ofp = NULL;
+  ctx->socket = 0;
 
   len = strlen (home) + strlen ("/./gpe/calendar") + 1;
   buf = g_malloc0 (len);
@@ -223,7 +278,7 @@ gpesyncd_printf (gpesyncd_context * ctx, char *format, ...)
   if (verbose)
     fprintf (stderr, "[gpesyncd out]: %s\n", buf);
 
-  if (ctx->ofp)
+  if (ctx->remote)
     {
       fprintf (ctx->ofp, "%d:%s", strlen (buf), buf);
       fflush (ctx->ofp);
@@ -242,7 +297,7 @@ get_last_token (gchar * str, int *num)
 }
 
 gchar *
-get_next_token (gchar * str, guint *num)
+get_next_token (gchar * str, guint * num)
 {
   GString *string = g_string_new ("");
   int i = 0;
@@ -268,7 +323,7 @@ replace_newline (gchar * str)
   c = strchr (str, '\n');
   while (c)
     {
-      c[0] = '%';
+      c[0] = ' ';
       c = strchr (str, '\n');
     }
 }
@@ -296,6 +351,8 @@ do_command (gpesyncd_context * ctx, gchar * command)
   gboolean cmd_result = FALSE;
 
   //printf ("Processing command %s\n", command);
+
+  g_string_assign (ctx->result, "");
 
   cmd = get_next_token (cmd_string->str, &pos);
 
@@ -391,13 +448,13 @@ do_command (gpesyncd_context * ctx, gchar * command)
 	default:
 	  g_string_append (ctx->result, "Error: wrong type\n");
 	}
-      if (cmd_result) 
-        {
+      if (cmd_result)
+	{
 	  /* We need to return the modified and the uid value so
 	   * that we can report changes to opensync */
 	  g_string_printf (ctx->result, "OK:%d:%d\n", modified, uid);
 	}
-      
+
     }
   else if ((!strcasecmp (cmd, "MODIFY")) && (type != GPE_DB_TYPE_UNKNOWN)
 	   && (data) && (uid > 0))
@@ -497,9 +554,9 @@ do_command (gpesyncd_context * ctx, gchar * command)
   else
     {
       replace_newline (cmd);
-      g_string_append_printf (ctx->result, "Invalid command: %s\n", cmd);
+      g_string_printf (ctx->result, "Invalid command: %s\n", cmd);
     }
-  
+
   g_free (cmd);
 
   if (verbose)
@@ -521,8 +578,9 @@ do_command (gpesyncd_context * ctx, gchar * command)
       else
 	g_string_append_printf (ctx->result, "UNKNOWN ERROR\n");
     }
-  gpesyncd_printf (ctx, ctx->result->str);
-  g_string_assign (ctx->result, "");
+
+  if (!ctx->socket)
+    gpesyncd_printf (ctx, ctx->result->str);
 
   return TRUE;
 }
@@ -541,11 +599,11 @@ command_loop (gpesyncd_context * ctx)
     {
       g_string_assign (cmd_string, "");
 
-      gchar c = fgetc (stdin);
+      gchar c = fgetc (ctx->ifp);
       do
 	{
 	  g_string_append_c (cmd_string, c);
-	  c = fgetc (stdin);
+	  c = fgetc (ctx->ifp);
 	}
       while (c != '\n');
       g_string_append_c (cmd_string, c);
@@ -573,11 +631,11 @@ command_loop (gpesyncd_context * ctx)
 		  do
 		    {
 		      g_string_assign (read_buffer, "");
-		      c = fgetc (stdin);
+		      c = fgetc (ctx->ifp);
 		      do
 			{
 			  g_string_append_c (read_buffer, c);
-			  c = fgetc (stdin);
+			  c = fgetc (ctx->ifp);
 			}
 		      while (c != '\n');
 		      g_string_append_c (read_buffer, '\n');
@@ -651,7 +709,7 @@ remote_loop (gpesyncd_context * ctx)
 	}
       else
 	{
-	  if (buf->len == len-1)
+	  if (buf->len == len - 1)
 	    {
 	      g_string_append_c (buf, c);
 
@@ -661,7 +719,7 @@ remote_loop (gpesyncd_context * ctx)
 	      /* If we want to exit, we have to break out
 	       * of this loop. */
 	      if (!do_command (ctx, buf->str))
-		  break;
+		break;
 
 	      g_string_assign (buf, "");
 	      have_len = FALSE;
@@ -675,6 +733,173 @@ remote_loop (gpesyncd_context * ctx)
 
   g_string_free (buf, TRUE);
   gpesyncd_context_free (ctx);
+
+  return 0;
+}
+
+int
+daemon_loop (gpesyncd_context * ctx)
+{
+  gint n, sent_bytes;
+  gchar buffer[BUFFER_LEN];
+  gchar *result;
+  GString *command;
+
+  bzero (buffer, BUFFER_LEN);
+
+  command = g_string_new ("");
+
+  while (n = read (ctx->socket, buffer, BUFFER_LEN - 1))
+    {
+      if (n < 0)
+	perror ("reading from socket");
+
+      g_string_append_len (command, buffer, strlen (buffer));
+      if (strlen (buffer) < BUFFER_LEN - 1)
+	break;
+      bzero (buffer, BUFFER_LEN);
+    }
+
+  if (!strncasecmp (command->str, "quit", 4))
+    return 1;
+
+  do_command (ctx, command->str);
+
+  sent_bytes = 0;
+  while (sent_bytes < ctx->result->len)
+    {
+      n = send (ctx->socket, ctx->result->str, ctx->result->len, 0);
+      if (n < 0)
+	{
+	  perror ("sending through socket!");
+	  exit (1);
+	}
+      sent_bytes += n;
+    }
+  g_string_free (command, TRUE);
+
+  return 0;
+}
+
+void
+sigchld_handler (int s)
+{
+  while (waitpid (-1, NULL, WNOHANG) > 0);
+}
+
+/*! \brief Sets up a port and listens on that for incoming connections
+ *
+ * \param ctx	The context of the gpesyncd
+ *
+ * This is just a standard function, taken from beej's socket tutorial.
+ */
+int
+setup_daemon (gpesyncd_context * ctx, int port)
+{
+  int sockfd, new_fd, n, doquit;
+  struct sockaddr_in daemon_addr;
+  struct sockaddr_in client_addr;
+  socklen_t sin_size;
+  struct sigaction sa;
+  int yes = 1;
+
+  if ((sockfd = socket (PF_INET, SOCK_STREAM, 0)) == -1)
+    {
+      perror ("socket");
+      exit (1);
+    }
+
+  if (setsockopt (sockfd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof (int)) == -1)
+    {
+      perror ("setsockopt");
+      exit (1);
+    }
+
+  daemon_addr.sin_family = AF_INET;
+  daemon_addr.sin_port = htons (port);
+  daemon_addr.sin_addr.s_addr = INADDR_ANY;
+  memset (&(daemon_addr.sin_zero), '\0', 8);
+
+  if (bind
+      (sockfd, (struct sockaddr *) &daemon_addr,
+       sizeof (struct sockaddr)) == -1)
+    {
+      perror ("bind");
+      exit (1);
+    }
+
+  if (listen (sockfd, 10) == -1)
+    {
+      perror ("listen");
+      exit (1);
+    }
+
+  sa.sa_handler = sigchld_handler;
+  sigemptyset (&sa.sa_mask);
+  sa.sa_flags = SA_RESTART;
+  if (sigaction (SIGCHLD, &sa, NULL) == -1)
+    {
+      perror ("sigaction");
+      exit (1);
+    }
+
+  fprintf (stderr, "Running Daemon mode. Listening on Port %d\n", port);
+  while (1)
+    {
+      sin_size = sizeof (struct sockaddr_in);
+      if ((new_fd = accept (sockfd, (struct sockaddr *) &client_addr,
+			    &sin_size)) == -1)
+	{
+	  perror ("accept");
+	  continue;
+	}
+
+      if (check_ip (inet_ntoa (client_addr.sin_addr)))
+	{
+	  if (send (new_fd, "OK\n", 3, 0) < 3)
+	    {
+	      perror ("sending");
+	      shutdown (new_fd, SHUT_RDWR);
+	    }
+	  else
+	    {
+	      printf ("gpesyncd: allowing connection from %s\n",
+		      inet_ntoa (client_addr.sin_addr));
+
+
+	      if (!fork ())
+		{
+		  close (sockfd);
+
+		  ctx->socket = new_fd;
+
+		  doquit = 0;
+		  while (!doquit)
+		    doquit = daemon_loop (ctx);
+
+		  if (shutdown (new_fd, SHUT_RDWR))
+		    perror ("closing socket");
+		  exit (0);
+		}
+	    }
+	}
+      else
+	{
+
+	  if (send (new_fd, "Your're not allowed to connect!\n", 33, 0) < 33)
+	    {
+	      perror ("sending");
+	      fprintf (stderr, "Error sending blocking message\n");
+	    }
+
+	  fprintf (stderr, "gpesyncd: blocking connection from %s\n",
+		   inet_ntoa (client_addr.sin_addr));
+
+	  if (shutdown (new_fd, SHUT_RDWR))
+	    perror ("closing socket");
+	}
+
+    }
 
   return 0;
 }
@@ -695,14 +920,29 @@ main (int argc, char **argv)
       return -1;
     }
 
-  int remote = 0;
-  if (argc == 2)
-    if (!strcasecmp (argv[1], "--REMOTE"))
-      {
-	remote = 1;
-	remote_loop (ctx);
-	exit (0);
-      }
+  ctx->remote = 0;
+  if (argc > 1)
+    {
+      if (!strcasecmp (argv[1], "--remote"))
+	{
+	  ctx->remote = 1;
+	  remote_loop (ctx);
+	  exit (0);
+	}
+      else if (!strcmp (argv[1], "-D"))
+	{
+	  int port = 6446;
+
+	  if (argc == 3)
+	    port = atoi (argv[2]);
+
+	  setup_daemon (ctx, port);
+	  exit (0);
+	}
+    }
+
+  ctx->ifp = stdin;
+  ctx->ofp = stdout;
 
   command_loop (ctx);
 

@@ -5,6 +5,9 @@ and the vcard, vevent, vtodo formats.
 
 Type "help" to get some information what you can do.
 
+MODES
+
+REMOTE MODE
 You can run this program in "remote" mode, that means for everything you
 want to write to it, you have to prepend the number of bytes you're
 actually writing.
@@ -12,5 +15,17 @@ For example, you want to write "help", you type in: "4:help".
 Sounds useless, but when using it for syncing from a remote computer
 it knows when the input ends and you can even send newlines.
 To activate the remote mode, just run it with "gpesyncd --remote".
+
+DAEMON MODE
+To activate the daemon mode run it with "gpesyncd -D". You can specify
+optionally the port by adding a portnumber after the -D parameter,
+e.g. "gpesyncd -D 2442" will listen on port 2442. The default port is 6446.
+
+Only ip's that are listed in $HOME/.gpe/gpesyncd.allow are allowed
+to connect to the gpesyncd. You can add ip-adresses while running the
+daemon, whenever someone tries to connect to the daemon, it'll check
+all the listed ip's whether they are alowed or not.
+
+No wildcards or something like gpesyncd.deny are implemented!
 
 Bug reports are VERY welcome!

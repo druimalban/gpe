@@ -1,3 +1,14 @@
+2006-01-07  Martin Felis <martin@silef.de>
+	
+	* main.c: You can now access the gpesyncd over tcp/ip.
+	
+2005-11-13  gettextize  <bug-gnu-gettext@gnu.org>
+
+	* Makefile.am (SUBDIRS): Add po, m4.
+	(ACLOCAL_AMFLAGS): New variable.
+	(EXTRA_DIST): Add config.rpath, mkinstalldirs.
+	* configure.ac (AC_OUTPUT): Add po/Makefile.in, m4/Makefile.
+
 2005-09-21  Martin Felis  <martin@silef.de>
 
 	* main.c: Removed some errors when compiling with -Werror (thanks
