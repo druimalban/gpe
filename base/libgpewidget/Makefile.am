@@ -47,6 +47,10 @@ pixmapdir = $(datadir)/libgpewidget
 
 pixmap_DATA = pixmaps/clock.png pixmaps/clock24.png pixmaps/day-night-wheel.png
 
+bin_PROGRAMS = infoprint
+infoprint_SOURCES = infoprint-main.c
+infoprint_LDADD = -lgpewidget
+
 EXTRA_DIST = $(pixmap_DATA) \
              intltool-extract.in \
              intltool-merge.in \

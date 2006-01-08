@@ -1,5 +1,8 @@
 2006-01-08  Phil Blundell  <pb@reciva.com>
 
+	* infoprint-main.c: New file.
+	* Makefile.am (infoprint_SOURCES, bin_PROGRAMS): New.
+
 	* gpeclockface.c (DEFAULT_HAND_WIDTH): New.
 	(struct _GpeClockFace): New member hand_width_set.
 	(gpe_clock_face_expose) [HAVE_CAIRO]: Draw central black "spindle"
