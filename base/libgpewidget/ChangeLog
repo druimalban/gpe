@@ -1,5 +1,9 @@
 2006-01-08  Phil Blundell  <pb@reciva.com>
 
+	* Version 0.107 released.
+
+2006-01-08  Phil Blundell  <pb@reciva.com>
+
 	* infoprint-main.c: New file.
 	* Makefile.am (infoprint_SOURCES, bin_PROGRAMS): New.
 
