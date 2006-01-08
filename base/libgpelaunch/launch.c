@@ -501,6 +501,8 @@ gpe_launch_program_with_callback (Display *dpy, char *exec, char *name, gboolean
   int screen;
   pid_t pid;
   int i;
+  int save_errno;
+  char *errstring;
 
   if (startup_notify)
     {
@@ -541,7 +543,10 @@ gpe_launch_program_with_callback (Display *dpy, char *exec, char *name, gboolean
       if (startup_notify)
 	sn_launcher_context_setup_child_process (context);
       do_exec (exec);
+      save_errno = errno;
       perror (exec);
+      errstring = g_strdup_printf ("%s: %s", exec, strerror (save_errno));
+      execl (LIBEXECDIR "/libgpelaunch/launch-failure", "launch-failure", errstring, NULL);
       _exit (1);
       
     default:

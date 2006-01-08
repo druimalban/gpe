@@ -23,4 +23,5 @@ libtool
 *.pc
 *.tar.gz
 *.tar.bz2
+launch-failure
 
