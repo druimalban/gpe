@@ -10,6 +10,10 @@ backupcfg_DATA = hildon/gpe.conf
 
 endif
 
+if CAIRO
+GPEWIDGET_CFLAGS += -DHAVE_CAIRO
+endif
+
 lib_LTLIBRARIES = libgpewidget.la
 
 INCLUDES = $(GPEWIDGET_CFLAGS) -I$(top_srcdir)/gpe -I$(top_srcdir) \
@@ -23,7 +27,7 @@ libgpewidget_la_SOURCES = gtkdatecombo.c errorbox.c init.c pixmaps.c smallbox.c 
 						  gpeiconlistitem.c gpeclockface.c gpe-iconlist.c \
 						  gpewindowlist.c gpehelp.c gpeiconlistview.c \
 						  gpewindowbits.c infoprint.c gpedialog.c link-warning.h
-						  
+
 libgpewidget_la_LDFLAGS = @GPEWIDGET_LIBS@ -version-info 1:0:0
 
 gpeincludedir = $(includedir)/gpe
@@ -59,7 +63,7 @@ EXTRA_DIST = $(pixmap_DATA) \
              debian/libgpewidget1.files \
              debian/libgpewidget-dev.files \
              hildon/gpe.conf
- 
+
 DISTCLEANFILES = intltool-extract intltool-merge intltool-update po/.intltool-merge-cache *.d autom4te.cache
 
 deb: dist
@@ -68,6 +72,6 @@ deb: dist
 	cd $(top_builddir)/debian-build/$(PACKAGE)-$(VERSION) && dpkg-buildpackage -S -D -rfakeroot
 	cd $(top_builddir)/debian-build/$(PACKAGE)-$(VERSION) && dpkg-buildpackage -D -rfakeroot
 	-rm -rf $(top_builddir)/debian-build/$(PACKAGE)-$(VERSION)
-	
+
 include gpe-dist.am
 include gpe-tp.am

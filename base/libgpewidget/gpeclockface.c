@@ -54,6 +54,7 @@ struct _GpeClockFace
   guint radius;
   guint border;
   double hand_width;
+  gboolean radius_set;
 
   gboolean use_background_image;
   gboolean label_hours;
@@ -332,10 +333,10 @@ gpe_clock_face_expose (GtkWidget *widget,
 		    0, 360 * 64);
   
       gdk_draw_arc (clock->backing_pixmap, white_gc, TRUE,
-		    clock->x_offset + clock->border + clock->radius / 4,
-		    clock->y_offset + clock->border + clock->radius / 4,
-		    (3 * clock->radius / 4 - clock->border) * 2,
-		    (3 * clock->radius / 4 - clock->border) * 2,
+		    clock->x_offset + clock->border,
+		    clock->y_offset + clock->border,
+		    (clock->radius - clock->border) * 2,
+		    (clock->radius - clock->border) * 2,
 		    0, 360 * 64);
 #endif
 
@@ -594,6 +595,8 @@ static void
 gpe_clock_face_size_allocate (GtkWidget     *widget,
 			      GtkAllocation *allocation)
 {
+  GpeClockFace *clock = GPE_CLOCK_FACE (widget);
+
   widget->allocation = *allocation;
 
   if (GTK_WIDGET_REALIZED (widget))
@@ -604,6 +607,24 @@ gpe_clock_face_size_allocate (GtkWidget     *widget,
 
       gpe_clock_face_unprepare_xrender (widget);
       gpe_clock_face_prepare_xrender (widget);
+    }
+  
+  if (!clock->radius_set)
+    {
+      int min, new_radius;
+
+      min = MIN (allocation->width, allocation->height);
+      
+      new_radius = (min / 2) - 1;
+
+      if (new_radius != clock->radius)
+	{
+	  clock->radius = new_radius;
+	  gtk_widget_queue_resize (widget);
+	  
+	  if (clock->radius != DEFAULT_RADIUS)
+	    clock->use_background_image = FALSE;
+	}
     }
 }
 
@@ -708,8 +729,8 @@ gpe_clock_face_size_request (GtkWidget	  *widget,
 {
   GpeClockFace *clock = GPE_CLOCK_FACE (widget);
 
-  requisition->height = (clock->radius + 3) * 2;
-  requisition->width = (clock->radius + 3) * 2;
+  requisition->height = (clock->radius + 1) * 2;
+  requisition->width = (clock->radius + 1) * 2;
 }
 
 static void
@@ -718,6 +739,7 @@ gpe_clock_face_init (GpeClockFace *clock)
   /* Double buffering doesn't play nicely with Render, so we will do that by hand */
   gtk_widget_set_double_buffered (GTK_WIDGET (clock), FALSE);
 
+  clock->radius_set = FALSE;
   clock->radius = DEFAULT_RADIUS;
   clock->border = DEFAULT_BORDER;
   clock->use_background_image = TRUE;
@@ -760,6 +782,7 @@ gpe_clock_face_set_do_grabs (GpeClockFace *clock, gboolean yes)
 void
 gpe_clock_face_set_radius (GpeClockFace *clock, guint radius)
 {
+  clock->radius_set = TRUE;
   clock->radius = radius;
   if (clock->radius != DEFAULT_RADIUS)
     clock->use_background_image = FALSE;

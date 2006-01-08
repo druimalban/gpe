@@ -1,3 +1,19 @@
+2006-01-08  Phil Blundell  <pb@reciva.com>
+
+	* gpeclockface.c (struct _GpeClockFace): New member radius_set.
+	(gpe_clock_face_expose): Improve non-cairo drawing code.
+	(gpe_clock_face_size_allocate): Allow radius to follow size
+	allocation if not specified explicitly.  Try harder to get a
+	square allocation from parent container.
+	(gpe_clock_face_size_request): Tweak arithmetic.
+	(gpe_clock_face_init): Clear clock->radius_set.
+	(gpe_clock_face_set_radius): Set clock->radius_set.
+
+	* Makefile.am (GPEWIDGET_CFLAGS) [CAIRO]: Add -DHAVE_CAIRO.
+	* configure.ac: Make "--disable-cairo" work as expected.  Use
+	cairo by default if it's installed, and mention it in the
+	configuration summary.  Add automake conditional for CAIRO.
+
 2006-01-03  Florian Boor <florian@kernelconcepts.de>
 
 	* Version 0.106 released.

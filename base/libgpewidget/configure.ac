@@ -22,6 +22,7 @@ AC_PROG_INTLTOOL([0.23])
 # Checks for programs.
 AC_PROG_CC
 AC_PROG_LIBTOOL
+PKG_PROG_PKG_CONFIG
 
 #gtk-doc for documentation
 GTK_DOC_CHECK(1.2)
@@ -32,11 +33,10 @@ DEPS="gtk+-2.0 >= 2.4 glib-2.0 >= 2.6"
 AC_ARG_ENABLE(cairo,
 [  --enable-cairo         Enable using Cairo rendering toolkit],
 [
-        ENABLE_CAIRO=true
-        DEPS="$DEPS cairo >= 0.4.0"
+	ENABLE_CAIRO=$enableval
 ],
 [
-        ENABLE_CAIRO=false
+       	PKG_CHECK_EXISTS(cairo, [ENABLE_CAIRO=yes], [ENABLE_CAIRO=no])
 ])
 
 ENABLE_HILDON=false
@@ -51,14 +51,16 @@ AC_ARG_ENABLE(hildon,
 ])
 
 AC_SUBST(ENABLE_HILDON)
+AC_SUBST(ENABLE_CAIRO)
 
 AM_CONDITIONAL(HILDON, test x$ENABLE_HILDON = xtrue)
+AM_CONDITIONAL(CAIRO, test x$ENABLE_CAIRO = xyes)
+
+if test x$ENABLE_CAIRO = xyes; then
+    DEPS="$DEPS cairo >= 0.4.0"
+fi
 
 PKG_CHECK_MODULES(GPEWIDGET, $DEPS)
-
-if test x$ENABLE_CAIRO = xtrue; then
-    GPEWIDGET_CFLAGS="$GPEWIDGET_CFLAGS -DHAVE_CAIRO"
-fi
 
 AC_SUBST(PREFIX)
 AC_SUBST(CFLAGS)
@@ -75,6 +77,7 @@ echo "
 Configuration:
 
 - Compiler...........: ${CC}
+- Cairo..............: ${ENABLE_CAIRO}
 
 ######################################
 
