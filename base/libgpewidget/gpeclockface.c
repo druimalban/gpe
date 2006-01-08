@@ -37,6 +37,7 @@ static GtkWidgetClass *parent_class;
 
 #define DEFAULT_RADIUS 64
 #define DEFAULT_BORDER 2
+#define DEFAULT_HAND_WIDTH 3
 
 /* Color usage */
 #define SELECTED_BG_COLOR(widget)	 (& (widget)->style->base[GTK_STATE_SELECTED])
@@ -55,6 +56,7 @@ struct _GpeClockFace
   guint border;
   double hand_width;
   gboolean radius_set;
+  gboolean hand_width_set;
 
   gboolean use_background_image;
   gboolean label_hours;
@@ -325,6 +327,13 @@ gpe_clock_face_expose (GtkWidget *widget,
 		 0,
 		 2 * M_PI);
       cairo_stroke (clock->cr);
+      cairo_arc (clock->cr,
+		 clock->x_offset + clock->radius,
+		 clock->y_offset + clock->radius,
+		 clock->hand_width,
+		 0,
+		 2 * M_PI);
+      cairo_fill (clock->cr);
 #else
       gdk_gc_set_foreground (gc, SELECTED_BG_COLOR ((GtkWidget*)clock));
       gdk_draw_arc (clock->backing_pixmap, gc, TRUE,
@@ -592,6 +601,19 @@ gpe_clock_face_unprepare_xrender (GtkWidget *widget)
 }
 
 static void
+gpe_clock_face_do_set_radius (GpeClockFace *clock, guint new_radius)
+{
+  clock->radius = new_radius;
+  gtk_widget_queue_resize (GTK_WIDGET (clock));
+	  
+  if (clock->radius != DEFAULT_RADIUS)
+    clock->use_background_image = FALSE;
+
+  if (!clock->hand_width_set)
+    clock->hand_width = new_radius / 40;
+}
+
+static void
 gpe_clock_face_size_allocate (GtkWidget     *widget,
 			      GtkAllocation *allocation)
 {
@@ -611,20 +633,14 @@ gpe_clock_face_size_allocate (GtkWidget     *widget,
   
   if (!clock->radius_set)
     {
-      int min, new_radius;
-
-      min = MIN (allocation->width, allocation->height);
+      int min_size, new_radius;
       
-      new_radius = (min / 2) - 1;
+      min_size = MIN (allocation->width, allocation->height);      
+
+      new_radius = (min_size / 2) - 1;
 
       if (new_radius != clock->radius)
-	{
-	  clock->radius = new_radius;
-	  gtk_widget_queue_resize (widget);
-	  
-	  if (clock->radius != DEFAULT_RADIUS)
-	    clock->use_background_image = FALSE;
-	}
+	gpe_clock_face_do_set_radius (clock, new_radius);
     }
 }
 
@@ -740,11 +756,12 @@ gpe_clock_face_init (GpeClockFace *clock)
   gtk_widget_set_double_buffered (GTK_WIDGET (clock), FALSE);
 
   clock->radius_set = FALSE;
+  clock->hand_width_set = FALSE;
   clock->radius = DEFAULT_RADIUS;
   clock->border = DEFAULT_BORDER;
+  clock->hand_width = DEFAULT_HAND_WIDTH;
   clock->use_background_image = TRUE;
   clock->label_hours = FALSE;
-  clock->hand_width = 3;
 
   clock->backing_pixmap = NULL;
   clock->backing_gc = NULL;
@@ -783,9 +800,7 @@ void
 gpe_clock_face_set_radius (GpeClockFace *clock, guint radius)
 {
   clock->radius_set = TRUE;
-  clock->radius = radius;
-  if (clock->radius != DEFAULT_RADIUS)
-    clock->use_background_image = FALSE;
+  gpe_clock_face_do_set_radius (clock, radius);
 }
 
 void
@@ -804,6 +819,7 @@ void
 gpe_clock_face_set_hand_width (GpeClockFace *clock, double width)
 {
   clock->hand_width = width;
+  clock->hand_width_set = TRUE;
 }
 
 GType

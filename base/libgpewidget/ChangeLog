@@ -1,5 +1,18 @@
 2006-01-08  Phil Blundell  <pb@reciva.com>
 
+	* gpeclockface.c (DEFAULT_HAND_WIDTH): New.
+	(struct _GpeClockFace): New member hand_width_set.
+	(gpe_clock_face_expose) [HAVE_CAIRO]: Draw central black "spindle"
+	to hide ends of hands.
+	(gpe_clock_face_do_set_radius): New.
+	(gpe_clock_face_size_allocate): Call it.
+	(gpe_clock_face_set_radius): Likewise.
+	(gpe_clock_face_init): Clear clock->hand_width_set.  Use
+	DEFAULT_HAND_WIDTH as default hand width.
+	(gpe_clock_face_set_hand_width): Set clock->hand_width_set.
+
+2006-01-08  Phil Blundell  <pb@reciva.com>
+
 	* gpeclockface.c (struct _GpeClockFace): New member radius_set.
 	(gpe_clock_face_expose): Improve non-cairo drawing code.
 	(gpe_clock_face_size_allocate): Allow radius to follow size
