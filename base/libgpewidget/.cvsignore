@@ -36,4 +36,5 @@ libtool
 *.lo
 .libs
 .deps
+infoprint
 
