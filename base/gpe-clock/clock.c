@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003, 2004 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2003, 2004, 2005 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -776,7 +776,6 @@ select_new_format (int new_format)
       
       face = gpe_clock_face_new (GTK_ADJUSTMENT (hour_adj), GTK_ADJUSTMENT (minute_adj), NULL);
       gpe_clock_face_set_do_grabs (GPE_CLOCK_FACE (face), FALSE);
-      gpe_clock_face_set_radius (GPE_CLOCK_FACE (face), 16);
       gpe_clock_face_set_label_hours (GPE_CLOCK_FACE (face), FALSE);
       gpe_clock_face_set_hand_width (GPE_CLOCK_FACE (face), 1.0);
       gtk_widget_show (face);
@@ -904,7 +903,6 @@ main (int argc, char *argv[])
   
       face = gpe_clock_face_new (GTK_ADJUSTMENT (hour_adj), GTK_ADJUSTMENT (minute_adj), NULL);
       gpe_clock_face_set_do_grabs (GPE_CLOCK_FACE (face), FALSE);
-      gpe_clock_face_set_radius (GPE_CLOCK_FACE (face), 16);
       gpe_clock_face_set_label_hours (GPE_CLOCK_FACE (face), FALSE);
       gpe_clock_face_set_hand_width (GPE_CLOCK_FACE (face), 1.0);
 
