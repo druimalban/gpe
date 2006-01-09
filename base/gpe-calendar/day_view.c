@@ -111,7 +111,12 @@ day_page_calc_time_width (day_page_t page)
       g_free (buffer);
     }
 
+#ifdef IS_HILDON
+  width = width * 1.6;
+#endif
+    
   page->time_width = width + 3;
+    
   g_object_unref (pl);
 }
 
@@ -154,7 +159,7 @@ day_page_draw_background (const day_page_t page)
       pango_layout_get_pixel_extents (pl, &pr, NULL);
       gr.width = pr.width * 2;
       gr.height = pr.height * 2;
-      gr.x = 0;
+      gr.x = 1;
       gr.y = page->height / NUM_HOURS * i;
 
       gtk_paint_layout (widget->style,
@@ -328,10 +333,10 @@ day_view_expose ()
   if (width != page_app->width || height != page_app->height)
     {
       if (dr)
-	{
-	  day_render_update_offset (dr);
-	  day_render_resize (dr, width, height);
-	}
+       {
+         day_render_update_offset (dr);
+         day_render_resize (dr, width, height);
+       }
     }
   day_page_draw_background (page_app);
 
@@ -437,7 +442,7 @@ reminder_view_expose_cb (GtkWidget * widget,
 }
 
 int
-day_view_init ()
+day_view_init (void)
 {
   GdkGC *white_gc, *post_him_yellow, *black_gc;
 
@@ -464,7 +469,7 @@ day_view_init ()
     {
       event_t ev = iter->data;
       if (ev->duration != 0)
-	ev_list = g_slist_append (ev_list, ev);
+        ev_list = g_slist_append (ev_list, ev);
     }
 
   white_gc = draw->style->white_gc;
@@ -484,7 +489,7 @@ day_view_init ()
 }
 
 void
-day_view_update ()
+day_view_update (void)
 {
   day_view_init ();
   day_view_expose ();
@@ -803,9 +808,6 @@ day_view (void)
 
   g_signal_connect (G_OBJECT (rem_area), "expose_event",
 		    G_CALLBACK (reminder_view_expose_cb), NULL);
-
-  g_signal_connect (G_OBJECT (datesel), "changed",
-		    G_CALLBACK (changed_callback), NULL);
 
   gtk_widget_add_events (GTK_WIDGET (datesel),
 			 GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK);

@@ -1,3 +1,13 @@
+2006-01-09  Florian Boor <florian.boor@kernelconcepts.de>
+
+    * day_view.c (day_page_calc_time_width): Increase size for maemo, no idea 
+    why it does not work as expected here. 
+    (day_page_draw_background): Add a one pixel sized gap before time labels.
+    (day_view): Don't connect "changed" signal, seems to cause duplicated 
+    updates resulting in flickering and slow performance.    
+    Some minor formating fixes.
+    * event_ui.c (build_edit_event_window): Use a different size for maemo.
+
 2006-01-07  Phil Blundell  <pb@reciva.com>
 
 	* day_view.c (day_page_draw_background): Fix two memory leaks.
@@ -39,6 +49,7 @@
     
 2006-01-03  Florian Boor <florian.boor@kernelconcepts.de>
 
+    * event-ui.c: Two more pixels.
     * event-ui.c: Tune dropdown box sizes fixing #1423.
     
 2006-01-01  Phil Blundell  <pb@reciva.com>

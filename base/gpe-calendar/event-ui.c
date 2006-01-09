@@ -979,10 +979,14 @@ build_edit_event_window (void)
 
   starttime           = gtk_combo_new ();
   endtime             = gtk_combo_new ();
-  
+
+#ifdef IS_HILDON
+  gtk_widget_set_size_request (starttime, 96, -1);
+  gtk_widget_set_size_request (endtime, 96, -1);
+#else
   gtk_widget_set_size_request (starttime, 42, -1);
   gtk_widget_set_size_request (endtime, 42, -1);
-
+#endif
   gtk_combo_set_popdown_strings (GTK_COMBO (starttime), times);
   gtk_combo_set_popdown_strings (GTK_COMBO (endtime), times);
   gtk_combo_set_use_arrows (GTK_COMBO(starttime), FALSE);
