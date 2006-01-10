@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-12-06 17:56+0200\n"
+"POT-Creation-Date: 2006-01-02 23:01+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,47 +21,51 @@ msgid ""
 "Help not (or incorrectly) installed. Or no helpviewer application registered."
 msgstr ""
 
-#: main.c:170 main.c:486 gpe-timesheet.desktop.in.h:2
+#: main.c:108
+msgid "No data selected for journal!"
+msgstr ""
+
+#: main.c:175 main.c:492 gpe-timesheet.desktop.in.h:2
 msgid "Time Tracker"
 msgstr ""
 
-#: main.c:200
+#: main.c:205
 msgid "Notes"
 msgstr ""
 
-#: main.c:261
+#: main.c:264
 msgid "Clocking in:"
 msgstr ""
 
-#: main.c:281
+#: main.c:284
 msgid "Clocking out:"
 msgstr ""
 
-#: main.c:326 main.c:420
+#: main.c:332 main.c:426
 msgid "New task"
 msgstr ""
 
-#: main.c:326
+#: main.c:332
 msgid "Name"
 msgstr ""
 
-#: main.c:426
+#: main.c:432
 msgid "Delete task"
 msgstr ""
 
-#: main.c:433
+#: main.c:439
 msgid "Clock in"
 msgstr ""
 
-#: main.c:440
+#: main.c:446
 msgid "Clock out"
 msgstr ""
 
-#: main.c:447
+#: main.c:453
 msgid "Show journal"
 msgstr ""
 
-#: main.c:457
+#: main.c:463
 msgid "Help"
 msgstr ""
 
@@ -69,27 +73,27 @@ msgstr ""
 msgid "open"
 msgstr ""
 
-#: html.c:43
+#: html.c:48
 msgid "Journal for"
 msgstr ""
 
-#: html.c:47
+#: html.c:52
 msgid "Start"
 msgstr ""
 
-#: html.c:47
+#: html.c:52
 msgid "Comment"
 msgstr ""
 
-#: html.c:47
+#: html.c:52
 msgid "End"
 msgstr ""
 
-#: html.c:47
+#: html.c:52
 msgid "Duration"
 msgstr ""
 
-#: html.c:105
+#: html.c:112
 msgid "Could not create output file!"
 msgstr ""
 
