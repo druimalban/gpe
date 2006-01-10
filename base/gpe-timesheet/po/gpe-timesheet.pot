@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-01-02 23:01+0200\n"
+"POT-Creation-Date: 2006-01-10 21:49+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,7 +25,7 @@ msgstr ""
 msgid "No data selected for journal!"
 msgstr ""
 
-#: main.c:175 main.c:492 gpe-timesheet.desktop.in.h:2
+#: main.c:175 main.c:503 gpe-timesheet.desktop.in.h:2
 msgid "Time Tracker"
 msgstr ""
 
@@ -41,7 +41,7 @@ msgstr ""
 msgid "Clocking out:"
 msgstr ""
 
-#: main.c:332 main.c:426
+#: main.c:332 main.c:427
 msgid "New task"
 msgstr ""
 
@@ -49,23 +49,23 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
-#: main.c:432
+#: main.c:433
 msgid "Delete task"
 msgstr ""
 
-#: main.c:439
+#: main.c:440
 msgid "Clock in"
 msgstr ""
 
-#: main.c:446
+#: main.c:447
 msgid "Clock out"
 msgstr ""
 
-#: main.c:453
+#: main.c:454
 msgid "Show journal"
 msgstr ""
 
-#: main.c:463
+#: main.c:464
 msgid "Help"
 msgstr ""
 
