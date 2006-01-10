@@ -170,6 +170,7 @@ build_pim_categories_list (void)
     gtk_list_store_new (3, G_TYPE_BOOLEAN, G_TYPE_STRING, G_TYPE_INT);
 
   tree_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (list_store));
+  g_object_set(G_OBJECT(tree_view), "allow-checkbox-mode", FALSE, NULL);
    
   sw = gtk_scrolled_window_new(NULL, NULL);
 

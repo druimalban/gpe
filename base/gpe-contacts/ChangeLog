@@ -1,3 +1,8 @@
+2006-01-10  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * pimc-ui.c (build_pim_categories_list): Reset useless Hildon GTK 
+      modification.
+
 2006-01-01  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * configure.ac: Release Version 0.43.
