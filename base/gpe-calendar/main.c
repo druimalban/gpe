@@ -432,60 +432,62 @@ main_window_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *data)
 static void
 create_app_menu(HildonAppView *appview)
 {
-  GtkMenu *main_menu;
-  GtkWidget *item_appointment, *item_today, *item_import, *item_toolbar, 
-            *item_sep, *item_close, *item_cat, 
-            *item_day, *item_week, *item_month;
-
-  main_menu = hildon_appview_get_menu(appview);
-
-  item_appointment = gtk_menu_item_new_with_label(_("New appointment"));
-  g_signal_connect(G_OBJECT(item_appointment), "activate", G_CALLBACK(new_appointment), NULL);
-  gtk_menu_append(main_menu, item_appointment);
-
-  item_today = gtk_menu_item_new_with_label(_("Today"));
-  g_signal_connect(G_OBJECT(item_today), "activate", set_today, NULL);
-  gtk_menu_append(main_menu, item_today);
-
-  item_import = gtk_menu_item_new_with_label(_("Import"));
-  g_signal_connect(G_OBJECT(item_import), "activate", G_CALLBACK(on_import_vcal), NULL);
-  gtk_menu_append(main_menu, item_import);
-
-  item_sep = gtk_separator_menu_item_new();
-  gtk_menu_append(main_menu, item_sep);
-
-  item_day = gtk_menu_item_new_with_label(_("Show Day"));
-  g_signal_connect(G_OBJECT(item_day), "activate", G_CALLBACK(menu_toggled), day_button);
-  gtk_menu_append(main_menu, item_day);
-  
-  item_week = gtk_menu_item_new_with_label(_("Show Week"));
-  g_signal_connect(G_OBJECT(item_week), "activate", G_CALLBACK(menu_toggled), week_button);
-  gtk_menu_append(main_menu, item_week);
-
-  item_month = gtk_menu_item_new_with_label(_("Show Month"));
-  g_signal_connect(G_OBJECT(item_month), "activate", G_CALLBACK(menu_toggled), month_button);
-  gtk_menu_append(main_menu, item_month);
-
-  item_sep = gtk_separator_menu_item_new();
-  gtk_menu_append(main_menu, item_sep);
+  GtkMenu *menu_main = hildon_appview_get_menu(appview);
+  GtkWidget *menu_event = gtk_menu_new();
+  GtkWidget *menu_categories = gtk_menu_new();
+  GtkWidget *menu_view = gtk_menu_new();
+  GtkWidget *menu_tools = gtk_menu_new();
     
-  item_toolbar = gtk_check_menu_item_new_with_label(_("Show toolbar"));
+  GtkWidget *item_event = gtk_menu_item_new_with_label(_("Event"));
+  GtkWidget *item_categories = gtk_menu_item_new_with_label(_("Categories"));
+  GtkWidget *item_view = gtk_menu_item_new_with_label(_("View"));
+  GtkWidget *item_close = gtk_menu_item_new_with_label(_("Close"));
+  GtkWidget *item_add = gtk_menu_item_new_with_label(_("Add new"));
+  GtkWidget *item_delete = gtk_menu_item_new_with_label(_("Delete"));
+  GtkWidget *item_catedit = gtk_menu_item_new_with_label(_("Edit categories"));
+  GtkWidget *item_toolbar = gtk_check_menu_item_new_with_label(_("Show toolbar"));
+  GtkWidget *item_tools = gtk_menu_item_new_with_label(_("Tools"));
+  GtkWidget *item_import = gtk_menu_item_new_with_label(_("Import vCal / ICS"));
+  GtkWidget *item_today = gtk_menu_item_new_with_label(_("Today"));
+  GtkWidget *item_day = gtk_menu_item_new_with_label(_("Day"));
+  GtkWidget *item_week = gtk_menu_item_new_with_label(_("Week"));
+  GtkWidget *item_month = gtk_menu_item_new_with_label(_("Month"));
+  GtkWidget *item_sep = gtk_separator_menu_item_new();
+
+  gtk_menu_item_set_submenu(GTK_MENU_ITEM(item_event), menu_event);
+  gtk_menu_item_set_submenu(GTK_MENU_ITEM(item_categories), menu_categories);
+  gtk_menu_item_set_submenu(GTK_MENU_ITEM(item_view), menu_view);
+  gtk_menu_item_set_submenu(GTK_MENU_ITEM(item_tools), menu_tools);
+
+  gtk_menu_append(menu_main, item_event);
+  gtk_menu_append(menu_main, item_categories);
+  gtk_menu_append(menu_main, item_view);
+  gtk_menu_append(menu_main, item_tools);
+  gtk_menu_append(menu_main, item_close);
+  
+  gtk_menu_append(menu_event, item_add);
+  gtk_menu_append(menu_view, item_today);
+  gtk_menu_append(menu_tools, item_import);
+  gtk_menu_append(menu_view, item_day);
+  gtk_menu_append(menu_view, item_week);
+  gtk_menu_append(menu_view, item_month);
+  gtk_menu_append(menu_view, item_sep);
+  gtk_menu_append(menu_view, item_toolbar);
+  gtk_menu_append(menu_categories, item_catedit);
+  
   gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item_toolbar), TRUE);
+  
+  g_signal_connect(G_OBJECT(item_add), "activate", G_CALLBACK(new_appointment), NULL);
+  g_signal_connect(G_OBJECT(item_today), "activate", G_CALLBACK(set_today), NULL);
+  g_signal_connect(G_OBJECT(item_import), "activate", G_CALLBACK(on_import_vcal), NULL);
+  g_signal_connect(G_OBJECT(item_day), "activate", G_CALLBACK(menu_toggled), day_button);
+  g_signal_connect(G_OBJECT(item_week), "activate", G_CALLBACK(menu_toggled), week_button);
+  g_signal_connect(G_OBJECT(item_month), "activate", G_CALLBACK(menu_toggled), month_button);
   g_signal_connect(G_OBJECT(item_toolbar), "activate", G_CALLBACK(toggle_toolbar), NULL);
-  gtk_menu_append(main_menu, item_toolbar);
-    
-  item_cat = gtk_menu_item_new_with_label(_("Edit catgories"));
-  g_signal_connect(G_OBJECT(item_cat), "activate", G_CALLBACK(edit_categories), NULL);
-  gtk_menu_append(main_menu, item_cat);
-  
-  item_sep = gtk_separator_menu_item_new();
-  gtk_menu_append(main_menu, item_sep);
-  
-  item_close = gtk_menu_item_new_with_label(_("Quit"));
+  g_signal_connect(G_OBJECT(item_catedit), "activate", G_CALLBACK(edit_categories), NULL);
   g_signal_connect(G_OBJECT(item_close), "activate", G_CALLBACK(gpe_cal_exit), NULL);
-  gtk_menu_append(main_menu, item_close);
 
-  gtk_widget_show_all(GTK_WIDGET(main_menu));
+  gtk_widget_show_all(GTK_WIDGET(menu_main));
 }
 #endif
 	 

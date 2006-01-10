@@ -1,5 +1,7 @@
 2006-01-10  Florian Boor <florian.boor@kernelconcepts.de>
 
+    * main.c (create_app_menu): Make a shiny new menu according to the UI
+    guidelines.
     * day_view.c: Another try to make updating faster and more efficient.
     (update_hook_callback), (day_changed_calendar): Remove explicit call of 
     update functions, this is covered by changed callback.
