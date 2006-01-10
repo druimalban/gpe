@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT(gpe-mini-browser, 0.18, philippedeswert@scarlet.be)
+AC_INIT(gpe-mini-browser, 0.19, philippedeswert@scarlet.be)
 AC_CONFIG_SRCDIR([gpe-mini-browser.c])
 AM_INIT_AUTOMAKE([foreign])
  

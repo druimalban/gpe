@@ -1,5 +1,5 @@
 /*
- * gpe-mini-browser v0.18
+ * gpe-mini-browser v0.19
  *
  * Basic web browser based on gtk-webcore 
  *
