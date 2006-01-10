@@ -524,10 +524,6 @@ day_render_set_event_rectangles (struct day_render *dr)
 
   gtk_widget_add_events (GTK_WIDGET (dr->widget),
 			 GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
-
-
-
-
 }
 
 void
@@ -632,12 +628,13 @@ day_render_delete (struct day_render *dr)
       GSList *iter;
       iter = dr->event_rectangles;
       while (iter)
-	{
-	  event_rect_delete (iter->data);
-	  iter = iter->next;
-	}
+       {
+         event_rect_delete (iter->data);
+         iter = iter->next;
+       }
 
       g_slist_free (dr->event_rectangles);
+      g_slist_free (dr->events);
       g_free (dr->capt);
       g_free (dr);
     }
@@ -772,9 +769,8 @@ day_render_event_show (struct day_render *dr, event_t event, GdkGC * gc)
 
   if (!event_starts_today (dr, event))
     {
-      length =
-	(guint) (((float) event->start + (float) event->duration -
-		  (float) dr->date) / 3600.0 * (float) dr->dx);
+      length = (guint) (((float) event->start + (float) event->duration -
+               (float) dr->date) / 3600.0 * (float) dr->dx);
     }
   else
     {
@@ -800,80 +796,32 @@ day_render_event_show (struct day_render *dr, event_t event, GdkGC * gc)
       reminder = length - (dr->page->width - (start->point).x);
 
       while ((reminder > dr->page->width) && reminder > 0)
-	{
-	  gdk_draw_rectangle (dr->draw, gc, TRUE, offset.x,
-			      (start->point).y + offset.y + dr->gap 
-		            + (i - start->row_num - 1) * dr->dy, 
-		          dr->page->width, dr->dy - dr->gap);
-	  reminder -= dr->page->width;
-
-	  ++i;
-	  if (i > dr->rows)
-	    {
-	      break;
-	    }
-	}
+        {
+          gdk_draw_rectangle (dr->draw, gc, TRUE, offset.x,
+                      (start->point).y + offset.y + dr->gap 
+                        + (i - start->row_num - 1) * dr->dy, 
+                      dr->page->width, dr->dy - dr->gap);
+          reminder -= dr->page->width;
+    
+          ++i;
+          if (i > dr->rows)
+            {
+              break;
+            }
+        }
       if (i <= dr->rows)
-	{
-	  gdk_draw_rectangle (dr->draw, gc, TRUE, offset.x,
-			      (start->point).y + offset.y + dr->gap + (i -
-								       start->
-								       row_num
-								       -
-								       1) *
-			      dr->dy, reminder, dr->dy - dr->gap);
-	}
+        {
+          gdk_draw_rectangle (dr->draw, gc, TRUE, offset.x,
+                      (start->point).y + offset.y + dr->gap + (i -
+                                           start->
+                                           row_num
+                                           -
+                                           1) *
+                      dr->dy, reminder, dr->dy - dr->gap);
+        }
     }
 }
 
-#if 0
-
-/* Renders day caption */
-void
-day_render_caption_show (struct day_render *dr)
-{
-  caption_show (dr->capt);
-}
-
-/* Show day with events and stuff. */
-void
-day_render_events_show (struct day_render *dr, GSList * events, GdkGC * gc)
-{
-  GSList *iter;
-
-  for (iter = events; iter; iter = iter->next)
-    {
-      day_render_event_show (dr, iter->data, gc);
-
-    }
-}
-
-/* Renders day element... */
-void
-day_render_show (struct day_render *dr)
-{
-  GSList *ol_list, *iter;
-  day_render_caption_show (dr);
-  /* shows events if any... */
-  if (dr->events != NULL)
-    day_render_events_show (dr, dr->events, dr->normal_gc);
-
-  /* shows overlapping areas if any... */
-  ol_list = day_render_find_overlapping (dr->events);
-  if (ol_list != NULL)
-    {
-      day_render_events_show (dr, ol_list, dr->ol_gc);
-    }
-
-  iter = ol_list;
-  while (iter)
-    {
-      g_free (iter->data);
-      iter = iter->next;
-    }
-
-}
-#endif
 GdkGC *
 pen_new (GtkWidget * widget, guint red, guint green, guint blue)
 {
@@ -892,4 +840,3 @@ pen_new (GtkWidget * widget, guint red, guint green, guint blue)
 
   return pen_color_gc;
 }
-

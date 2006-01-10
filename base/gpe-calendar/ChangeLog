@@ -1,3 +1,16 @@
+2006-01-10  Florian Boor <florian.boor@kernelconcepts.de>
+
+    * day_view.c: Another try to make updating faster and more efficient.
+    (update_hook_callback), (day_changed_calendar): Remove explicit call of 
+    update functions, this is covered by changed callback.
+    (reminder_view_expose): Reorder function calls/sanity check to avoid 
+    segfault. 
+    (day_view_init): Update view instead of creating a new one.
+    * week_view.c (week_view): Change calendar size a bit, remove separator
+    in Hildon env.
+    * day_render.c: Remove unused code. Some indentation fixes.
+    * main.c: (create_app_menu) Extend hildon menu. (toggle_menu) New function.
+
 2006-01-09  Florian Boor <florian.boor@kernelconcepts.de>
 
     * day_view.c (day_page_calc_time_width): Increase size for maemo, no idea 

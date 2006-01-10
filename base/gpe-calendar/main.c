@@ -257,6 +257,12 @@ button_toggled (GtkWidget *widget, gpointer data)
 }
 
 static void
+menu_toggled (GtkWidget *widget, gpointer data)
+{
+  gtk_toggle_tool_button_set_active (GTK_TOGGLE_TOOL_BUTTON (data), TRUE);
+}
+
+static void
 gpe_cal_exit (void)
 {
   schedule_next (0, 0, NULL);
@@ -428,7 +434,8 @@ create_app_menu(HildonAppView *appview)
 {
   GtkMenu *main_menu;
   GtkWidget *item_appointment, *item_today, *item_import, *item_toolbar, 
-            *item_sep, *item_close, *item_cat;
+            *item_sep, *item_close, *item_cat, 
+            *item_day, *item_week, *item_month;
 
   main_menu = hildon_appview_get_menu(appview);
 
@@ -444,6 +451,24 @@ create_app_menu(HildonAppView *appview)
   g_signal_connect(G_OBJECT(item_import), "activate", G_CALLBACK(on_import_vcal), NULL);
   gtk_menu_append(main_menu, item_import);
 
+  item_sep = gtk_separator_menu_item_new();
+  gtk_menu_append(main_menu, item_sep);
+
+  item_day = gtk_menu_item_new_with_label(_("Show Day"));
+  g_signal_connect(G_OBJECT(item_day), "activate", G_CALLBACK(menu_toggled), day_button);
+  gtk_menu_append(main_menu, item_day);
+  
+  item_week = gtk_menu_item_new_with_label(_("Show Week"));
+  g_signal_connect(G_OBJECT(item_week), "activate", G_CALLBACK(menu_toggled), week_button);
+  gtk_menu_append(main_menu, item_week);
+
+  item_month = gtk_menu_item_new_with_label(_("Show Month"));
+  g_signal_connect(G_OBJECT(item_month), "activate", G_CALLBACK(menu_toggled), month_button);
+  gtk_menu_append(main_menu, item_month);
+
+  item_sep = gtk_separator_menu_item_new();
+  gtk_menu_append(main_menu, item_sep);
+    
   item_toolbar = gtk_check_menu_item_new_with_label(_("Show toolbar"));
   gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item_toolbar), TRUE);
   g_signal_connect(G_OBJECT(item_toolbar), "activate", G_CALLBACK(toggle_toolbar), NULL);

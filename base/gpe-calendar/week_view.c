@@ -646,7 +646,7 @@ week_view (void)
   gtk_calendar_set_display_options (GTK_CALENDAR (calendar), 
 				    GTK_CALENDAR_SHOW_DAY_NAMES 
 				    | (week_starts_monday ? GTK_CALENDAR_WEEK_START_MONDAY : 0));
-
+    
   datesel = gtk_date_sel_new (GTKDATESEL_WEEK);
 
   gtk_widget_show (draw);
@@ -668,14 +668,14 @@ week_view (void)
   if (landscape)
     {
       GtkWidget *sep;
-      sep = gtk_vseparator_new ();
-
-      gtk_box_pack_start (GTK_BOX (hbox), sep, FALSE, TRUE, 0);
-      gtk_box_pack_start (GTK_BOX (hbox), calendar, FALSE, TRUE, 0);
 #ifdef IS_HILDON
-      gtk_widget_set_size_request(calendar, 380, -1);
-#endif
+      gtk_widget_set_size_request(calendar, 240, -1);
+#else
+      sep = gtk_vseparator_new ();
+      gtk_box_pack_start (GTK_BOX (hbox), sep, FALSE, TRUE, 0);
       gtk_widget_show (sep);
+#endif
+      gtk_box_pack_start (GTK_BOX (hbox), calendar, FALSE, TRUE, 0);
       gtk_widget_show (calendar);
     }
 

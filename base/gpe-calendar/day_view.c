@@ -320,7 +320,7 @@ delete_event (event_t ev, GtkWidget * d)
 }
 
 static void
-day_view_expose ()
+day_view_expose (void)
 {
   GdkGC *white_gc, *gray_gc, *black_gc;
   gint width = 0, height = 0;
@@ -385,10 +385,10 @@ reminder_view_init ()
     {
       event_t ev = iter->data;
       if (ev->duration == 0)
-	{
-	  /* Reminder */
-	  rem_list = g_slist_append (rem_list, ev);
-	}
+        {
+          /* Reminder */
+          rem_list = g_slist_append (rem_list, ev);
+        }
     }
 
   white_gc = rem_area->style->white_gc;
@@ -410,12 +410,13 @@ reminder_view_expose ()
   gint len;
   gint width = 0, height = 0;
 
-  gdk_window_get_size (rem_area->window, &width, &height);
-  if (width != page_rem->width || height != page_rem->height)
-    day_render_resize (rem_render, width, height);
-
   if (rem_render == NULL)
     reminder_view_init ();
+  
+  gdk_window_get_size (rem_area->window, &width, &height);
+    
+  if (width != page_rem->width || height != page_rem->height)
+    day_render_resize (rem_render, width, height);
 
   day_page_draw_empty (page_rem);
   rem_render->offset.x = 0;
@@ -477,14 +478,17 @@ day_view_init (void)
 
   if (dr)
     {
-      day_render_delete (dr);
+      g_slist_free (dr->events);
+      dr->events = ev_list;
+      dr->date = start;
     }
-
-  /* Don't want to infinge some patents here */
-  post_him_yellow = pen_new (draw, 63222, 59110, 33667);
-  dr = day_render_new (draw, page_app, post_him_yellow, black_gc, viewtime,
-		       5, 4, NUM_HOURS, ev_list);
-
+  else
+    {
+      /* Don't want to infinge some patents here */
+      post_him_yellow = pen_new (draw, 63222, 59110, 33667);
+      dr = day_render_new (draw, page_app, post_him_yellow, black_gc, viewtime,
+                           5, 4, NUM_HOURS, ev_list);
+    }
   return TRUE;
 }
 
@@ -522,9 +526,6 @@ day_changed_calendar (GtkWidget * widget)
       viewtime = mktime (&tm);
 
       set_time_all_views ();
-
-      day_view_update ();
-      reminder_view_update ();
     }
 }
 
@@ -568,16 +569,12 @@ update_hook_callback ()
 {
   struct tm tm;
   localtime_r (&viewtime, &tm);
-
+  
   gtk_date_sel_set_time (GTK_DATE_SEL (datesel), viewtime);
   gtk_calendar_select_month (GTK_CALENDAR (calendar), tm.tm_mon,
 			     tm.tm_year + 1900);
   gtk_calendar_select_day (GTK_CALENDAR (calendar), tm.tm_mday);
-
-  scroll_to (scrolled_window, -1);
-  day_view_update ();
-
-  reminder_view_update ();
+  
   return TRUE;
 }
 
@@ -768,6 +765,7 @@ day_view (void)
 				       GTK_CALENDAR_WEEK_START_MONDAY : 0));
 
   datesel = gtk_date_sel_new (GTKDATESEL_FULL);
+
   gtk_widget_show (datesel);
 
   g_signal_connect (G_OBJECT (calendar),
@@ -809,6 +807,9 @@ day_view (void)
   g_signal_connect (G_OBJECT (rem_area), "expose_event",
 		    G_CALLBACK (reminder_view_expose_cb), NULL);
 
+  g_signal_connect (G_OBJECT (datesel), "changed",
+		    G_CALLBACK (changed_callback), NULL);
+    
   gtk_widget_add_events (GTK_WIDGET (datesel),
 			 GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK);
 
