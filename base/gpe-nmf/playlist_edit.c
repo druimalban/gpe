@@ -171,9 +171,17 @@ select_file_done (GtkWidget *w, GtkWidget *fs)
     }
 
   if (fe->current_path)
-      g_free(fe->current_path);
-  fe->current_path = isdir(s) ? g_strdup(s) : g_path_get_dirname (s);
-      strcat(fe->current_path,"/");
+    g_free(fe->current_path);
+  if (isdir (s))
+    {
+      fe->current_path = g_strdup_printf ("%s/", s);
+    }
+  else
+    {
+      gchar *dir = g_path_get_dirname (s);
+      fe->current_path = g_strdup_printf ("%s/", dir);
+      g_free (dir);
+    }
   
   fe->fs_open = FALSE;
 
