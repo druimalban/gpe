@@ -3,7 +3,7 @@ PACKAGE = gpe-nmf
 DEBUG = no
 CVSBUILD = yes
 GST = yes
-GST_VERSION = 0.8
+GST_VERSION = 0.10
 VERSION = 0.22
 
 MEMBERS = gpe-nmf playlist_edit
@@ -30,7 +30,7 @@ else
 PACKAGE_CFLAGS += -I/usr/include/gpe
 BUILD = build
 endif
-PACKAGE_LDFLAGS += $(GPELIBS) $(GTKLDFLAGS)
+PACKAGE_LDFLAGS += $(GPELIBS) $(GTKLDFLAGS) 
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))

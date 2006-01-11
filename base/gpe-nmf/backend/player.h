@@ -36,15 +36,10 @@ struct player
   gboolean new_track;
 
   player_state state;
-  GstElement *filesrc, *decoder, *audiosink, *thread, *volume;
-  GstElement *conv, *audio;
-  GstPad *audiopad;
+  GstElement *audio;
   
   int opt_shuffle;
   int opt_loop;
-
-  char *source_elem;
-  char *sink_elem;
 };
 
 typedef struct player *player_t;
