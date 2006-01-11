@@ -941,7 +941,7 @@ main (int argc, char *argv[])
   tooltips = gtk_tooltips_new ();
   gtk_tooltips_set_tip (GTK_TOOLTIPS (tooltips), panel_window, _("This is the clock.\nTap here to set the alarm, set the time, or change the display format."), NULL);
 
-  g_timeout_add (1000, (GtkFunction) update_time, NULL);
+  g_timeout_add (10000, (GtkFunction) update_time, NULL);
 
   XSelectInput (dpy, DefaultRootWindow (dpy), PropertyChangeMask);
   gpe_launch_install_filter ();

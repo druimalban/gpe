@@ -1,3 +1,11 @@
+2006-01-11  Phil Blundell  <pb@reciva.com>
+
+	* Version 0.23 released.
+
+2006-01-11  Phil Blundell  <pb@reciva.com>
+
+	* clock.c (main): Only update time every ten seconds.
+
 2006-01-08  Phil Blundell  <pb@reciva.com>
 
 	* clock.c (select_new_format): Don't set radius on clockface
