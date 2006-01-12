@@ -1,0 +1,257 @@
+# -*- mode:po; coding:utf-8; -*- Slovenian message catalogue for gpe-package-0.3.
+# Copyright (C) 2005 Free Software Foundation, Inc.
+# Matej Urbančič <matej.urban@gmail.com>, 2005.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-package 0.3\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2005-08-26 15:13+0200\n"
+"PO-Revision-Date: 2005-10-13 14:38+0100\n"
+"Last-Translator: Matej Urbančič <matej.urban@gmail.com>\n"
+"Language-Team: Slovenian <translation-team-sl@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n%100==4 ? 3 : 0);\n"
+"X-Poedit-Language: Slovenian\n"
+"X-Poedit-Country: SLOVENIA\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+#: main.c:45
+msgid "Unable to fork"
+msgstr "Ne morem razdvojiti"
+
+#: interface.c:67
+msgid "Help for this application is not installed."
+msgstr "Pomoč za ta program ni naložena."
+
+#: interface.c:120
+msgid "/_File"
+msgstr "/_Datoteka"
+
+#: interface.c:121
+msgid "/File/_Install file"
+msgstr "/_Datoteka/_Naloži datoteko"
+
+#: interface.c:122
+msgid "/_File/s1"
+msgstr "/_Datoteka/s1"
+
+#: interface.c:123
+msgid "/File/_Close"
+msgstr "/_Datoteka/_Zapri"
+
+#: interface.c:124
+msgid "/_Packages"
+msgstr "/_Paketi"
+
+#: interface.c:125
+msgid "/Packages/Show Insta_lled"
+msgstr "/_Paketi/Pokaži na_ložene"
+
+#: interface.c:126
+msgid "/Packages/Show _Not Installed"
+msgstr "/_Paketi/Pokaži _Nenaložene"
+
+#: interface.c:127
+msgid "/_Packages/s2"
+msgstr "/_Paketi/s2"
+
+#: interface.c:128
+msgid "/Packages/Show _Info"
+msgstr "/_Paketi/Pokaž_i podrobnosti"
+
+#: interface.c:129 interface.c:132
+msgid "/_Packages/s3"
+msgstr "/_Paketi/s3"
+
+#: interface.c:130
+msgid "/Packages/_Update lists"
+msgstr "/_Paketi/Nad_gradi listo"
+
+#: interface.c:131
+msgid "/Packages/Upgrade _System"
+msgstr "/_Paketi/Nadgradi _sistem"
+
+#: interface.c:133
+msgid "/Packages/_Apply"
+msgstr "/_Paketi/Upor_abi"
+
+#: interface.c:134
+msgid "/_Help"
+msgstr "/_Pomoč"
+
+#: interface.c:135
+msgid "/_Help/Index"
+msgstr "/_Pomoč/Kazalo"
+
+#: interface.c:136
+msgid "/_Help/About"
+msgstr "/_Pomoč/O Programu"
+
+#: interface.c:187
+msgid "Package information"
+msgstr "Podrobnosti o paketu"
+
+#: interface.c:276
+msgid "Reading packages list..."
+msgstr "Prebiram listo paketov..."
+
+#: interface.c:282
+msgid "Updating package lists"
+msgstr "Posodabljam listo paketov"
+
+#: interface.c:285
+msgid "Upgrading installed system"
+msgstr "Posodabljam naložen sistem"
+
+#: interface.c:288
+msgid "Installing"
+msgstr "Nalagam"
+
+#: interface.c:291
+msgid "Retrieving package information"
+msgstr "Prenašam podatke o paketu"
+
+#: interface.c:294
+msgid "Working..."
+msgstr "Delam ..."
+
+#: interface.c:390
+msgid "Updating views, please wait..."
+msgstr "Posodabljam poglede. Prosim, počakajte ..."
+
+#: interface.c:502
+msgid "Command finished. Please check log messages for errors."
+msgstr "Ukaz končan. Prosim, preglejte dnevnik sporočil za napake."
+
+#: interface.c:522
+msgid "Package selection was changed. Really exit?"
+msgstr "Izbor paketov je spremenjen. Naj zares izklopim?"
+
+#: interface.c:551
+msgid "IPKG backend failure, cannot continue."
+msgstr "IPKG napaka, ne morem nadaljevati."
+
+#: interface.c:558
+msgid "Communication error, cannot continue."
+msgstr "Napaka pri komuniciranju. Ne morem nadaljevati."
+
+#: interface.c:572
+msgid ""
+"An error occurred.\n"
+"Please consult the message log\n"
+"for hints what went wrong."
+msgstr ""
+"Prišlo je do napake.\n"
+"Prosim, preglejte dnevnik sporočil\n"
+"za podrobnejši opis napake."
+
+#: interface.c:658
+msgid "The selected file could not be accessed."
+msgstr "Ne morem dostopati do izbrane datoteke."
+
+#: interface.c:769
+msgid "Make sure your internet connection is up or your update source is available and press OK to continue."
+msgstr "Prepričajte se, da je internetna ali mrežna povezava vzpostavljena in pritisnite enter za nadaljevanje."
+
+#: interface.c:785
+msgid "Some packages could not be updated, please check your configuration."
+msgstr "Nekaterih paketov nisem uspel posodobiti. Prosim preglejte nastavitve."
+
+#: interface.c:788
+msgid "System updated sucessfully."
+msgstr "Sistem je uspešno nadgrajen."
+
+#: interface.c:814
+msgid "Some lists could not be updated, please check your configuration."
+msgstr "Nekaterih list nisem uspel posodobiti. Prosim preglejte nastavitve."
+
+#: interface.c:817
+msgid "Package lists updated successfully."
+msgstr "Lista paketov je uspešno posodobljena."
+
+#: interface.c:830
+msgid "changes could not be applied."
+msgstr "sprememb nisem uspel prilepiti."
+
+#: interface.c:834
+msgid "Packages installed sucessfully."
+msgstr "Paketi so bili uspešno nameščeni."
+
+#: interface.c:920 gpe-package.desktop.in.h:2
+msgid "Package Manager"
+msgstr "Urejevalec paketov"
+
+#: interface.c:970
+msgid "List"
+msgstr "Lista"
+
+#: interface.c:975
+msgid "Package List"
+msgstr "Lista paketov"
+
+#: interface.c:999
+msgid "Inst."
+msgstr "Nalož."
+
+#: interface.c:1009 feededit.c:112 feededit.c:352
+msgid "Name"
+msgstr "Ime"
+
+#: interface.c:1022
+msgid "Messages"
+msgstr "Sporočila"
+
+#: interface.c:1027
+msgid "Messages Log"
+msgstr "Dnevnik sporočil"
+
+#: interface.c:1037
+msgid "This window shows all messages from the packet manager."
+msgstr "V tem oknu so vsa sporočila urejevalnika paketov."
+
+#: interface.c:1044
+msgid "Feeds"
+msgstr "Dovajanje"
+
+#: filechooser.c:40
+msgid "Choose packages"
+msgstr "Izberite pakete"
+
+#: feededit.c:82
+msgid "Could not open"
+msgstr "Nisem mogel odpreti"
+
+#: feededit.c:83
+msgid "for writing."
+msgstr "za pisanje."
+
+#: feededit.c:103
+msgid "Feed Properties"
+msgstr "Lastnosti dovoda"
+
+#: feededit.c:117
+msgid "Location (URL)"
+msgstr "Lokacija (URL)"
+
+#: feededit.c:122
+msgid "Compressed"
+msgstr "Stisnjen"
+
+#: feededit.c:225
+msgid "Delete selected feed?"
+msgstr "Izbriši izbran dovod"
+
+#: feededit.c:315
+msgid "Package Feeds"
+msgstr "Dovod paketov"
+
+#: feededit.c:361
+msgid "Location"
+msgstr "Lokacija"
+
+#: gpe-package.desktop.in.h:1
+msgid "Install and update packages"
+msgstr "Naloži in posodobi pakete"
