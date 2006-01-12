@@ -1,3 +1,7 @@
+2006-01-12  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * Makefile, po/vi.po, po/sv.po: Add Vietnamese and Swedish translations.
+
 2005-10-15  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * main.c, fileops.c: Mark remaining strings for translation.
