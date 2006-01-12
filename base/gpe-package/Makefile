@@ -7,7 +7,7 @@ STRIP = strip
 PREFIX = /usr/local
 DESTDIR = /
 
-LINGUAS = sl es
+LINGUAS = sl es vi sv
 
 EXTRA_DESKTOPS = gpe-package.desktop.in 
 HELPFILE = gpe-package.html
