@@ -305,7 +305,7 @@ schedule_set_alarm (guint id, time_t start, const gchar *action, gboolean calend
   
   sprintf(call_at, "/usr/bin/at -q g -f /tmp/atjob.txt %02d:%02d %02d.%02d.%02d 2>&1", tm.tm_hour, tm.tm_min, tm.tm_mday, tm.tm_mon+1, tm.tm_year-100);
   
-  if ((at_return=popen(call_at, "r")) != NULL)
+  if (!access("/usr/bin/at", X_OK) && ((at_return=popen(call_at, "r")) != NULL))
     {
       char erase_tmpat[32];
       if (calendar_alarm)
@@ -376,4 +376,3 @@ schedule_cancel_alarm (guint id, time_t start)
   return cancel_alarm_uid(alarm_uid);
 #endif
 }
-
