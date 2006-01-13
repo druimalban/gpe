@@ -270,7 +270,7 @@ paint_callback ( MBTrayApp *app, Drawable drw )
 { 
 	MBPixbufImage *img_backing = NULL;
 	int use_index = net_is_on ? ICON_NET_ON : ICON_NET_OFF;
-  
+	
 	img_backing = mb_tray_app_get_background (app, Pixbuf);
 
 	mb_pixbuf_img_composite(Pixbuf, img_backing, 
@@ -310,7 +310,7 @@ resized (MBTrayApp *mb, int width, int height)
 	net_status_icons[ICON_NET_ON] = mb_pixbuf_img_scale(Pixbuf, img, size, size);
 	mb_pixbuf_img_free(Pixbuf, img);
 	
-	pixmap = gpe_find_icon("net-on");	
+	pixmap = gpe_find_icon("net-off");	
 	img = mb_pixbuf_img_new_from_data (Pixbuf, gdk_pixbuf_get_pixels(pixmap), 
 		                               gdk_pixbuf_get_width(pixmap), 
 	                                   gdk_pixbuf_get_height(pixmap), 
