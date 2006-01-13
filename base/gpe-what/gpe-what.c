@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002, 2003 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2002 - 2006 Philip Blundell <philb@gnu.org>
  *               2005 Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
@@ -88,11 +88,11 @@ handle_size_allocate (GtkWidget *w, GtkAllocation *a)
   int x0, y0, x1, y1;
   int width, height;
 
-  width = a->width + 1;
-  height = a->height + 1;
+  width = a->width;
+  height = a->height;
 
   x0 = y0 = 0;
-  x1 = width - 2;
+  x1 = width - 1;
   y1 = height - 1;
 
   bitmap = gdk_pixmap_new (NULL, width, height, 1);
