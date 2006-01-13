@@ -211,6 +211,8 @@ unschedule_alarm (event_t ev, GtkWidget *d)
 
   if (!schedule_cancel_alarm (ev_real->uid, ev->start)) 
   {
+/* silently ignore for Maemo, we do not have scheduling here :-( */
+#ifndef IS_HILDON      
     GtkWidget* dialog;
                 
     dialog = gtk_message_dialog_new (GTK_WINDOW(d),
@@ -219,8 +221,8 @@ unschedule_alarm (event_t ev, GtkWidget *d)
     	   GTK_BUTTONS_CLOSE,
     	   _("There is a problem with the scheduling daemon (perhaps atd is not running)!\nThis can cause issues."));
     gtk_dialog_run (GTK_DIALOG(dialog));
-    gtk_widget_destroy(dialog);
-      
+    gtk_widget_destroy(dialog);      
+#endif
   }
 }
 
@@ -253,17 +255,20 @@ schedule_next (guint skip, guint uid, GtkWidget *d)
 	      action = g_strdup_printf ("gpe-announce '%s'\ngpe-calendar -s %ld -e %ld &\n",
 					ev_d->summary, (long)ev->start, ev_real->uid);
 	      if (!schedule_set_alarm (ev->uid, ev->start, action, TRUE)) 
-	      {
-	        GtkWidget* dialog;
+            {
+/* silently ignore for Maemo, we do not have scheduling here :-( */
+#ifndef IS_HILDON      
+	          GtkWidget* dialog;
                 
-		dialog = gtk_message_dialog_new (GTK_WINDOW(d),
-                       GTK_DIALOG_DESTROY_WITH_PARENT,
-                       GTK_MESSAGE_WARNING,
-                       GTK_BUTTONS_CLOSE,
-                       _("There is a problem with the scheduling daemon (perhaps atd is not running)!\nThis can cause issues."));
-		gtk_dialog_run (GTK_DIALOG(dialog));
-                gtk_widget_destroy(dialog);
-              }
+              dialog = gtk_message_dialog_new (GTK_WINDOW(d),
+                         GTK_DIALOG_DESTROY_WITH_PARENT,
+                         GTK_MESSAGE_WARNING,
+                         GTK_BUTTONS_CLOSE,
+                         _("There is a problem with the scheduling daemon (perhaps atd is not running)!\nThis can cause issues."));
+                  gtk_dialog_run (GTK_DIALOG(dialog));
+                  gtk_widget_destroy(dialog);
+#endif
+            }
 	      g_free (action);
 	      break;
 	    }

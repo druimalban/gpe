@@ -1,3 +1,8 @@
+2006-01-13  Florian Boor <florian.boor@kernelconcepts.de>
+
+    * event-ui.c (schedule_next), (unschedule_alarm): Silently ignore errors in
+    Maemo, we don't have at here... for now.
+
 2006-01-10  Florian Boor <florian.boor@kernelconcepts.de>
 
     * main.c (create_app_menu): Make a shiny new menu according to the UI
