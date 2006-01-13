@@ -1,3 +1,6 @@
+2006-01-13 Florian Boor <florian.boor@kernelconcepts.de>
+	* Remove generated Makefile.in files.
+
 2005-11-09 Luca De Cicco <ldecicco@gmail.com>
 	* gpe-plugin.c, gpe-plugin.h: Adding support for XML interface
 	definition.
