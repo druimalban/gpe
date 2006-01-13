@@ -1,3 +1,10 @@
+
+2006-01-13  Florian Boor <florian@kernelconcepts.de>
+
+	* Release version 0.16.
+	* Add documentation files not generated per default.
+	* doc/gtk-doc.am: Fix error breaking distcheck.
+
 2005-10-21  Florian Boor <florian@kernelconcepts.de>
 
 	* Makefile.am: Fix creation of .pc file causing a pile of nasty side 

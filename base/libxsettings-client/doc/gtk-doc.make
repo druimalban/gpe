@@ -135,8 +135,8 @@ if ENABLE_GTK_DOC
 dist-check-gtkdoc:
 else
 dist-check-gtkdoc:
-	@echo "*** gtk-doc must be installed and enabled in order to make dist"
-	@false
+	@echo "*** gtk-doc should be installed and enabled in order to make dist"
+	@true
 endif
 
 dist-hook: dist-check-gtkdoc dist-hook-local
