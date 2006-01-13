@@ -57,15 +57,6 @@ EXTRA_DIST = $(pixmap_DATA) \
              intltool-update.in \
              libtool-cross.patch \
              mkinstalldirs \
-             debian/changelog \
-             debian/copyright \
-             debian/control \
-             debian/rules \
-             debian/docs \
-             debian/postinst \
-             debian/postrm \
-             debian/libgpewidget1.files \
-             debian/libgpewidget-dev.files \
              hildon/gpe.conf
 
 DISTCLEANFILES = intltool-extract intltool-merge intltool-update po/.intltool-merge-cache *.d autom4te.cache

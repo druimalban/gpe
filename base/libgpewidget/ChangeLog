@@ -1,3 +1,7 @@
+2006-01-13  Florian Boor <florian@kernelconcepts.de>
+
+	* Makefile.am: Remove debian files from EXTRA_DIST.
+
 2006-01-08  Phil Blundell  <pb@reciva.com>
 
 	* Version 0.107 released.
