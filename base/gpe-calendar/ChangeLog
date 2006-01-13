@@ -1,5 +1,6 @@
 2006-01-13  Florian Boor <florian.boor@kernelconcepts.de>
 
+    * Release version 0.68.
     * event-ui.c (schedule_next), (unschedule_alarm): Silently ignore errors in
     Maemo, we don't have at here... for now.
 
