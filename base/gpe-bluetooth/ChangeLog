@@ -1,3 +1,14 @@
+2006-01-14  Phil Blundell  <pb@reciva.com>
+
+	* configure.ac (DEP_MODULES): Require libcontactsdb 0.3.
+
+	* obex-vcard.c (do_import_vcard): Open and close contacts database
+	to ensure tables are created.
+
+	* main.c (check_radio_startup): New function.
+	(radio_on): Display progress dialog while radio is starting.
+	(sigchld_handler): Destroy progress dialog if still displayed.
+
 2005-12-31  Phil Blundell  <pb@reciva.com>
 
 	* Version 0.48 released.

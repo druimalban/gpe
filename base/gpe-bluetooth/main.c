@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002, 2003 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2002, 2003, 2006 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -81,6 +81,7 @@ static GtkWidget *menu_radio_on, *menu_radio_off;
 static GtkWidget *menu_devices;
 static GtkWidget *devices_window;
 static GtkWidget *iconlist;
+static GtkWidget *radio_on_progress;
 
 static GSList *devices;
 
@@ -172,6 +173,28 @@ fork_hciattach (void)
   return 0;
 }
 
+#define RADIO_ON_POLL_TIME	500
+
+static void
+check_radio_startup (guint id)
+{
+  int dd;
+
+  dd = hci_open_dev (0);
+  if (dd != -1)
+    {
+      hci_close_dev (dd);
+
+      if (radio_on_progress)
+	{
+	  gtk_widget_destroy (radio_on_progress);
+	  radio_on_progress = NULL;
+	}
+    }
+  else
+    g_timeout_add (RADIO_ON_POLL_TIME, (GSourceFunc) check_radio_startup, NULL);
+}
+
 static void
 radio_on (void)
 {
@@ -190,13 +213,25 @@ radio_on (void)
   gtk_widget_show (menu_radio_off);
   gtk_widget_set_sensitive (menu_devices, TRUE);
 
-  radio_is_on = TRUE;
   sigemptyset (&sigs);
   sigaddset (&sigs, SIGCHLD);
   sigprocmask (SIG_BLOCK, &sigs, NULL);
   hciattach_pid = fork_hciattach ();
   sigprocmask (SIG_UNBLOCK, &sigs, NULL);
-  set_image(0, 0);
+
+  if (hciattach_pid == 0)
+    {
+      gpe_perror_box (_("Couldn't exec " HCIATTACH));
+      return;
+    }
+
+  radio_on_progress = bt_progress_dialog (_("Energising radio"), gpe_find_icon ("bt-logo"));
+  gtk_widget_show_all (radio_on_progress);
+
+  g_timeout_add (RADIO_ON_POLL_TIME, (GSourceFunc) check_radio_startup, NULL);
+
+  radio_is_on = TRUE;
+  set_image (0, 0);
 }
 
 static void
@@ -498,6 +533,18 @@ sigchld_handler (int sig)
 	    {
 	      gpe_error_box_nonblocking (_("hciattach died unexpectedly"));
 	      radio_off ();
+	    }
+	  else
+	    {
+	      if (radio_on_progress)
+		{
+		  gdk_threads_enter ();
+		  gtk_widget_destroy (radio_on_progress);
+		  gdk_threads_leave ();
+		  radio_on_progress = NULL;
+		}
+
+	      gpe_perror_box_nonblocking (_("Radio startup failed"));
 	    }
 	}
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2004, 2006 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -24,6 +24,7 @@
 #include <mimedir/mimedir-vcard.h>
 
 #include <gpe/vcard.h>
+#include <gpe/contacts-db.h>
 
 #include <sqlite.h>
 
@@ -46,6 +47,9 @@ do_import_vcard (MIMEDirVCard *card)
   char *family_name = NULL;
   char *given_name = NULL;
   char *company = NULL;
+
+  contacts_db_open (FALSE);
+  contacts_db_close ();
 
   home = g_get_home_dir ();
   

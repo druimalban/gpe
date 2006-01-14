@@ -1,7 +1,7 @@
 dnl Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT(gpe-bluetooth,0.48,gpe@handhelds.org)
+AC_INIT(gpe-bluetooth,0.49,gpe@handhelds.org)
 AC_CONFIG_SRCDIR([main.c])
 AM_INIT_AUTOMAKE([foreign dist-bzip2])
 
@@ -9,7 +9,7 @@ AC_PROG_CC
 AC_STDC_HEADERS
 AC_PROG_INSTALL
 
-DEP_MODULES="gtk+-2.0 >= 2.2 glib-2.0 >= 2.2 libgpewidget libgpevtype dbus-glib-1 libglade-2.0 mimedir-1.0 gthread-2.0 bluez"
+DEP_MODULES="gtk+-2.0 >= 2.2 glib-2.0 >= 2.2 libgpewidget libgpevtype dbus-glib-1 libglade-2.0 mimedir-1.0 gthread-2.0 bluez libcontactsdb >= 0.3"
 
 # i8n stuff
 AH_TEMPLATE([GETTEXT_PACKAGE], [Package name for gettext])
