@@ -266,6 +266,15 @@ contacts_db_open (gboolean open_vcard)
   return 0;
 }
 
+int
+contacts_db_close (void)
+{
+  if (contacts_db) 
+    sqlite_close(contacts_db);
+  contacts_db = NULL;
+  return 0;
+}
+
 struct contacts_tag_value *
 contacts_new_tag_value (gchar * tag, gchar * value)
 {

@@ -10,6 +10,7 @@
 
 extern int db_open (gboolean open_vcard);
 extern int contacts_db_open (gboolean open_vcard);
+extern int contacts_db_close (void);
 
 struct contacts_tag_value
 {

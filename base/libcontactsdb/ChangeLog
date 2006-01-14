@@ -1,3 +1,9 @@
+2006-01-14  Phil Blundell  <pb@reciva.com>
+
+	* gpe/contacts-db.h (contacts_db_close): New prototype.
+	(db_open): Deleted.
+	* contacts-db.c (contacts_db_close): New function.
+
 2005-12-31  Florian Boor  <florian@kernelconcepts.de>
 
     * Release version 0.1.
