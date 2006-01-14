@@ -1,5 +1,9 @@
 2006-01-14  Phil Blundell  <pb@reciva.com>
 
+	* contacts-db.c: Reindent.
+
+2006-01-14  Phil Blundell  <pb@reciva.com>
+
 	* gpe/contacts-db.h (contacts_db_close): New prototype.
 	(db_open): Deleted.
 	* contacts-db.c (contacts_db_close): New function.
