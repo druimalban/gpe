@@ -4,5 +4,5 @@ AUTOLOGIN="false"
 
 if [ "$AUTOLOGIN" = "true" ]; then
   USER="root"
-  HOME="/root"
+  HOME=`grep ^${USER}: /etc/passwd |cut -d: -f6`
 fi
