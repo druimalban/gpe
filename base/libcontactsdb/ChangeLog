@@ -1,5 +1,18 @@
 2006-01-14  Phil Blundell  <pb@reciva.com>
 
+	* Version 0.3 released.
+
+2006-01-14  Phil Blundell  <pb@reciva.com>
+
+	* old-db.c: New file, copied from gpe-contacts.
+	* Makefile.am (libcontactsdb_la_SOURCES): Add it.
+
+	* contacts-db.c (migrate_old_categories): Rename prototype to...
+	(contacts_db_migrate_old_categories): ... this.
+	* contacts-db.c (contacts_db_open): Adjust call to above function.
+
+2006-01-14  Phil Blundell  <pb@reciva.com>
+
 	* Version 0.2 released.
 
 2006-01-14  Phil Blundell  <pb@reciva.com>

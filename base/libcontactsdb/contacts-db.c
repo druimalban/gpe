@@ -30,7 +30,7 @@
 static sqlite *contacts_db = NULL;
 
 #ifndef IS_HILDON
-extern void migrate_old_categories (sqlite * db);
+extern void contacts_db_migrate_old_categories (sqlite * db);
 #endif
 
 /* contacts full data in tag/value pairs */
@@ -273,7 +273,7 @@ contacts_db_open (gboolean open_vcard)
   else
     contacts_check_table_update ();
 
-  migrate_old_categories (contacts_db);
+  contacts_db_migrate_old_categories (contacts_db);
 #endif
   contacts_db_check_tags ();
 

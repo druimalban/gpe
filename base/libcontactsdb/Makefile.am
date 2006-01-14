@@ -8,9 +8,8 @@ INCLUDES = @CONTACTSDB_CFLAGS@
 LDADD = @CONTACTSDB_LIBS@
 
 libcontactsdb_la_LIBADD = @CONTACTSDB_LIBS@
-libcontactsdb_la_SOURCES = contacts-db.c gpe/contacts-db.h
+libcontactsdb_la_SOURCES = contacts-db.c gpe/contacts-db.h old-db.c
 
-	
 gpeincludedir = $(includedir)/gpe
 gpeinclude_HEADERS = gpe/contacts-db.h
 
