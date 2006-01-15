@@ -43,6 +43,7 @@
 #include "main.h"
 #include "sdp.h"
 #include "dbus.h"
+#include "progress.h"
 
 #include "dun.h"
 #include "lap.h"
@@ -90,45 +91,6 @@ GdkWindow *dock_window;
 GSList *service_desc_list;
 
 extern void bluez_pin_dbus_server_run (void);
-
-GtkWidget *
-bt_progress_dialog (gchar *text, GdkPixbuf *pixbuf)
-{
-  GtkWidget *window;
-  GtkWidget *label;
-  GtkWidget *image;
-  GtkWidget *hbox;
-
-  window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-  hbox = gtk_hbox_new (FALSE, 0);
-  image = gtk_image_new_from_pixbuf (pixbuf);
-  label = gtk_label_new (text);
-
-  gtk_window_set_type_hint (GTK_WINDOW (window), GDK_WINDOW_TYPE_HINT_DIALOG);
-  
-  gtk_container_set_border_width (GTK_CONTAINER (hbox),
-					gpe_get_border ());
-	
-  gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
-
-  gtk_box_pack_start (GTK_BOX (hbox), image, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 0);
-
-  gtk_container_add (GTK_CONTAINER (window), hbox);
-
-  g_object_set_data (G_OBJECT (window), "label", label);
-
-  return window;
-}
-
-void
-bt_progress_dialog_update (GtkWidget *w, gchar *new_text)
-{
-  GtkWidget *label;
-
-  label = GTK_WIDGET (g_object_get_data (G_OBJECT (w), "label"));
-  gtk_label_set_text (GTK_LABEL (label), new_text);
-}
 
 void
 set_image(int sx, int sy)
@@ -462,8 +424,7 @@ run_scan (gpointer data)
 	  gdk_flush ();
 	  gdk_threads_leave ();
 
-	  bd->sdp = TRUE;
-	  sdp_browse_device (bd, PUBLIC_BROWSE_GROUP);
+	  bd->sdp = sdp_browse_device (bd, PUBLIC_BROWSE_GROUP);
 
 	  gdk_threads_enter ();
 	}
@@ -513,46 +474,85 @@ show_devices (void)
     gpe_perror_box (_("Unable to scan for devices"));
 }
 
-static void
-sigchld_handler (int sig)
+static gboolean sigchld_signalled;
+
+static void 
+sigchld_handler (int signo)
+{
+  sigchld_signalled = TRUE;
+}
+
+static gboolean
+sigchld_source_dispatch (GSource *source, GSourceFunc callback, gpointer user_data)
 {
   int status;
-  pid_t p = waitpid (0, &status, WNOHANG);
+  pid_t p;
 
-  if (p == hciattach_pid)
+  sigchld_signalled = FALSE;
+  
+  do
     {
-      if (WIFSIGNALED (status) && (WTERMSIG (status) == SIGHUP))
+      p = waitpid (0, &status, WNOHANG);
+      if (p < 0)
+	perror ("waitpid");
+
+      if (p == hciattach_pid)
 	{
-	  /* restart hciattach after hangup */
-	  hciattach_pid = fork_hciattach ();
-	}
-      else
-	{
-	  hciattach_pid = 0;
-	  if (radio_is_on)
+	  if (WIFSIGNALED (status) && (WTERMSIG (status) == SIGHUP))
 	    {
-	      gpe_error_box_nonblocking (_("hciattach died unexpectedly"));
-	      radio_off ();
+	      /* restart hciattach after hangup */
+	      hciattach_pid = fork_hciattach ();
 	    }
 	  else
 	    {
-	      if (radio_on_progress)
+	      hciattach_pid = 0;
+	      if (radio_is_on)
 		{
-		  gdk_threads_enter ();
-		  gtk_widget_destroy (radio_on_progress);
-		  gdk_threads_leave ();
-		  radio_on_progress = NULL;
+		  gpe_error_box_nonblocking (_("hciattach died unexpectedly"));
+		  radio_off ();
 		}
-
-	      gpe_perror_box_nonblocking (_("Radio startup failed"));
+	      else
+		{
+		  if (radio_on_progress)
+		    {
+		      gtk_widget_destroy (radio_on_progress);
+		      radio_on_progress = NULL;
+		    }
+		  
+		  gpe_perror_box_nonblocking (_("Radio startup failed"));
+		}
 	    }
 	}
-    }
-  else if (p > 0)
-    {
-      fprintf (stderr, "unknown pid %d exited\n", p);
-    }
+      else if (p > 0)
+	{
+	  fprintf (stderr, "unknown pid %d exited\n", p);
+	}
+    } while (p > 0);
+
+  return TRUE;
 }
+
+static gboolean
+sigchld_source_prepare (GSource *source, gint *timeout)
+{
+  *timeout = -1;
+  return sigchld_signalled;
+}
+
+static gboolean
+sigchld_source_check (GSource *source)
+{
+  return sigchld_signalled;
+}
+
+static GSourceFuncs
+sigchld_source_funcs = 
+  {
+    sigchld_source_prepare,
+    sigchld_source_check,
+    sigchld_source_dispatch,
+    NULL
+  };
 
 static void
 clicked (GtkWidget *w, GdkEventButton *ev)
@@ -590,6 +590,7 @@ main (int argc, char *argv[])
   GtkWidget *menu_remove;
   GtkTooltips *tooltips;
   int dd;
+  GSource *sigchld_source;
 
   g_thread_init (NULL);
   gdk_threads_init ();
@@ -618,6 +619,8 @@ main (int argc, char *argv[])
   gtk_window_set_title (GTK_WINDOW (window), _("Bluetooth control"));
 
   signal (SIGCHLD, sigchld_handler);
+  sigchld_source = g_source_new (&sigchld_source_funcs, sizeof (GSource));
+  g_source_attach (sigchld_source, NULL);
 
   menu = gtk_menu_new ();
   menu_radio_on = gtk_menu_item_new_with_label (_("Switch radio on"));

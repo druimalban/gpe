@@ -1,4 +1,29 @@
+2006-01-15  Phil Blundell  <pb@reciva.com>
+
+	* progress.c (handle_progress_expose,
+	handle_progress_size_allocate): New functions.
+	(bt_progress_dialog): Set window as not decorated.  Set handlers
+	for expose and size-allocate events.
+
+2006-01-15  Phil Blundell  <pb@reciva.com>
+
+	* main.c (bt_progress_dialog, bt_progress_dialog_update): Move
+	to...
+	* progress.c: ... here.  New file.
+	* progress.h: New header.
+	* Makefile.am (gpe_bluetooth_SOURCES): Add these new files.
+
+2006-01-15  Phil Blundell  <pb@reciva.com>
+
+	* main.c (sigchld_source_dispatch): New function.
+	(sigchld_source_prepare): Likewise.
+	(sigchld_source_check): Likewise.
+	(main): Add GSource for SIGCHLD handler.
+
 2006-01-14  Phil Blundell  <pb@reciva.com>
+
+	* main.c (run_scan): Only set bd->sdp if service information was
+	successfully retrieved.
 
 	* configure.ac (DEP_MODULES): Require libcontactsdb 0.3.
 

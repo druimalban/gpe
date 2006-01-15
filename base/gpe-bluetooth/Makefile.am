@@ -11,7 +11,7 @@ gpebluetoothlib_PROGRAMS = bnep-helper rfcomm-helper
 
 
 gpe_bluetooth_LDADD = @GPE_BLUETOOTH_LIBS@ -lopenobex -lsqlite
-gpe_bluetooth_SOURCES = main.c dun.c sdp.c pan.c lap.c rfcomm.c pin-ui.c dbus.c pin-dbus.c headset.c obexserver.c obex-vcard.c obex-vcal.c obex-unknown.c obexclient.c obex-glib.c obexclient-dbus.c main.h sdp.h dun.h dbus.h pan.h lap.h headset.h obexclient.h obexserver.h bnep.h rfcomm.h obex-glib.h pin-ui.h
+gpe_bluetooth_SOURCES = main.c dun.c sdp.c pan.c lap.c rfcomm.c pin-ui.c dbus.c pin-dbus.c headset.c obexserver.c obex-vcard.c obex-vcal.c obex-unknown.c obexclient.c obex-glib.c obexclient-dbus.c main.h sdp.h dun.h dbus.h pan.h lap.h headset.h obexclient.h obexserver.h bnep.h rfcomm.h obex-glib.h pin-ui.h progress.c progress.h
 bnep_helper_SOURCES = bnep-helper.c
 bnep_helper_LDADD = -lbluetooth
 rfcomm_helper_SOURCES = rfcomm-helper.c
