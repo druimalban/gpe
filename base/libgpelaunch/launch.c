@@ -30,8 +30,6 @@
 #include <libsn/sn-launcher.h>
 #include <libsn/sn-monitor.h>
 
-#include <gpe/errorbox.h>
-
 #include "config.h"
 #include "gpe/launch.h"
 
@@ -532,7 +530,7 @@ gpe_launch_program_with_callback (Display *dpy, char *exec, char *name, gboolean
   switch (pid)
     {
     case -1:
-      gpe_perror_box ("fork");
+      perror ("fork");
       return FALSE;
 
     case 0:
