@@ -1,5 +1,9 @@
 2006-01-15  Phil Blundell  <pb@reciva.com>
 
+	* Version 0.49 released.
+
+2006-01-15  Phil Blundell  <pb@reciva.com>
+
 	* progress.c (handle_progress_expose,
 	handle_progress_size_allocate): New functions.
 	(bt_progress_dialog): Set window as not decorated.  Set handlers
