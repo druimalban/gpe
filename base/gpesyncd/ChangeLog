@@ -1,3 +1,7 @@
+2006-01-16  Martin Felis <martin@silef.de>
+
+	* BUGS: Added BUGS file.
+
 2006-01-07  Martin Felis <martin@silef.de>
 	
 	* main.c: You can now access the gpesyncd over tcp/ip.

@@ -1,0 +1,20 @@
+general:
+	The most issues can be solved when implementing the fields in 
+	libgpevtype.
+
+	Categories won't be synced correctly, since libgpevtype has no
+	support for it yet.
+	
+calendar:
+	libmimedir doesn't process the timezone, so if you created an item
+	on another device it will be synced with the wrong timezone.
+	If you created it in gpe, all should be fine.
+	Some fields are not synced, like Alarm and Recurrence.
+
+todo:
+	Some fields are not synced, like state.
+
+contacts:
+	Some fields are not synced, like birthday, photo.
+
+Should there be any other bugs, feel free to contact me: <martin@silef.de>
