@@ -1,3 +1,8 @@
+#ifndef GPE_LAUNCH_H
+#define GPE_LAUNCH_H
+
+#include <glib.h>
+
 enum launch_status
   {
     LAUNCH_STARTING,
@@ -18,3 +23,4 @@ extern void gpe_launch_monitor_display (Display *dpy);
 
 extern void gpe_launch_activate_window (Display *dpy, Window win);
 
+#endif
