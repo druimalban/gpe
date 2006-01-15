@@ -1,7 +1,7 @@
 /*
  * GPE program launcher library
  *
- * Copyright (c) 2004 Phil Blundell
+ * Copyright (c) 2004, 2006 Phil Blundell
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,9 +21,6 @@
 #include <signal.h>
 #include <stdio.h>
 
-#include <gtk/gtk.h>
-#include <gdk/gdkx.h>
-
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
 
@@ -34,6 +31,20 @@
 #include "gpe/launch.h"
 
 #define MAX_ARGS 255
+
+/* "Borrowed" definitions from GDK.  */
+typedef void GdkEvent;
+typedef void GdkXEvent;	  /* Can be cast to window system specific
+			   * even type, XEvent on X11, MSG on Win32.
+			   */
+
+typedef enum {
+  GDK_FILTER_CONTINUE,	  /* Event not handled, continue processesing */
+  GDK_FILTER_TRANSLATE,	  /* Native event translated into a GDK event and
+                             stored in the "event" structure that was
+                             passed in */
+  GDK_FILTER_REMOVE	  /* Terminate processing, removing event */
+} GdkFilterReturn;
 
 struct sn_display_map
 {
@@ -242,10 +253,26 @@ client_map_process_event (struct sn_display_map *map, XEvent *xev)
     read_client_map (map);
 }
 
-static GdkFilterReturn
-sn_event_filter (GdkXEvent *xevp, GdkEvent *ev, gpointer p)
+GdkFilterReturn
+gpe_launch_gdk_event_filter (GdkXEvent *xevp, GdkEvent *ev, gpointer p)
 {
   XEvent *xev = (XEvent *)xevp;
+
+  return gpe_launch_process_event (xev) ? GDK_FILTER_REMOVE : GDK_FILTER_CONTINUE;
+}
+
+extern void gdk_window_add_filter (void *window, void *function, void *data) __attribute__ ((weak));
+
+void
+gpe_launch_install_filter (void)
+{
+  if (gdk_window_add_filter != NULL)
+    gdk_window_add_filter (NULL, gpe_launch_gdk_event_filter, NULL);
+}
+
+int
+gpe_launch_process_event (XEvent *xev)
+{
   SnDisplay *sn_dpy = NULL;
   GSList *l;
   struct sn_display_map *map;
@@ -263,18 +290,12 @@ sn_event_filter (GdkXEvent *xevp, GdkEvent *ev, gpointer p)
   if (sn_dpy)
     {
       if (sn_display_process_event (sn_dpy, xev))
-	return GDK_FILTER_REMOVE;
+	return 1;
 
       client_map_process_event (map, xev);
     }
 
-  return GDK_FILTER_CONTINUE;
-}
-
-void
-gpe_launch_install_filter (void)
-{
-  gdk_window_add_filter (NULL, sn_event_filter, NULL);
+  return 0;
 }
 
 static SnDisplay *

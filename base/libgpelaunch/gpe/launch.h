@@ -22,5 +22,6 @@ extern gchar *gpe_launch_get_binary_for_window (Display *dpy, Window w);
 extern void gpe_launch_monitor_display (Display *dpy);
 
 extern void gpe_launch_activate_window (Display *dpy, Window win);
+extern int gpe_launch_process_event (XEvent *xev);
 
 #endif
