@@ -1,3 +1,12 @@
+2006-01-15  Phil Blundell  <pb@reciva.com>
+
+	* day_popup.c (handle_expose_event): New function.
+	(handle_configure_event): Likewise.
+	(day_popup): Remove GtkFrame around window contents and draw a
+	simple black border instead.  Use window size from configure event
+	so that positioning works correctly.  Always display "New" button,
+	regardless of showing appointments or not.
+
 2006-01-13  Florian Boor <florian.boor@kernelconcepts.de>
 
     * Release version 0.68.

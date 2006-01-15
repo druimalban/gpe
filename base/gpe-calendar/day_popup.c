@@ -102,14 +102,45 @@ key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *window)
   return FALSE;
 }
 
+static gboolean
+handle_expose_event (GtkWidget *w, GdkEventExpose *ev, GtkWidget *child)
+{
+  gdk_window_clear (w->window);
+
+  gdk_draw_rectangle (w->window, w->style->black_gc, FALSE, 0, 0, 
+		      w->allocation.width - 1, w->allocation.height - 1);
+  
+  /* Draw the contents */
+  gtk_container_propagate_expose (GTK_CONTAINER (w), child, ev);
+
+  return TRUE;
+}
+
+static gboolean
+handle_configure_event (GtkWidget *window, GdkEventConfigure *ev, gpointer user_data)
+{
+  gint x, y;
+  gint screen_width, screen_height;
+
+  /* Adjust the window's position to try to keep it on the screen.  */
+  x = (gint)g_object_get_data (G_OBJECT (window), "x");
+  y = (gint)g_object_get_data (G_OBJECT (window), "y");
+
+  screen_width = gdk_screen_width ();
+  screen_height = gdk_screen_height ();
+
+  x = CLAMP (x, 0, MAX (0, screen_width - ev->width));
+  y = CLAMP (y, 0, MAX (0, screen_height - ev->height));
+
+  gtk_widget_set_uposition (window, MAX (x, 0), MAX (y, 0));
+
+  return FALSE;
+}
 
 GtkWidget *
 day_popup (GtkWidget *parent, struct day_popup *p, gboolean show_items)
 {
-  GtkRequisition requisition;
   gint x, y;
-  gint screen_width;
-  gint screen_height;
   GtkWidget *window = gtk_window_new (GTK_WINDOW_POPUP);
   GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
   GtkWidget *hbox = gtk_hbox_new (FALSE, 0);
@@ -118,7 +149,6 @@ day_popup (GtkWidget *parent, struct day_popup *p, gboolean show_items)
   GtkWidget *new_button = NULL;
   GtkWidget *label;
   GtkWidget *contents = NULL;
-  GtkWidget *frame;
   char buf[256];
   struct tm tm;
   gchar *gs;
@@ -153,53 +183,53 @@ day_popup (GtkWidget *parent, struct day_popup *p, gboolean show_items)
           gtk_clist_clear (GTK_CLIST (contents));
       
           while (events)
-        {
-          GdkPixmap *pmap;
-          GdkBitmap *bmap;
+	    {
+	      GdkPixmap *pmap;
+	      GdkBitmap *bmap;
           
-          event_t ev = events->data;
-          event_details_t evd = event_db_get_details (ev);
-          char *p = buf;
-          size_t s = sizeof (buf), l;
-          gchar *lineinfo[1];
-    
-          localtime_r (&ev->start, &tm);
-          l = strftime (p, s, TIMEFMT, &tm);
-          s -= l;
-          p += l;
-    
-          snprintf (p, s - 1, " %s", evd->summary);
-          p[s - 1] = 0;
-          
-          lineinfo[0] = buf;
-          
-          gtk_clist_append (GTK_CLIST (contents), lineinfo);
-    
-          gtk_clist_set_row_data (GTK_CLIST (contents), row, ev);
-          
-          if ((ev->flags & FLAG_ALARM) && ev->recur)
-            {
-              if (gpe_find_icon_pixmap ("bell_recur", &pmap, &bmap))
-            gtk_clist_set_pixtext (GTK_CLIST (contents), row, 0, buf, 5,
-                           pmap, bmap);
-            }
-          else if (ev->flags & FLAG_ALARM)
-            { 
-              if (gpe_find_icon_pixmap ("bell", &pmap, &bmap))
-            gtk_clist_set_pixtext (GTK_CLIST (contents), row, 0, buf, 5,
-                           pmap, bmap);
-            }
-          else if (ev->recur)
-            {
-              if (gpe_find_icon_pixmap ("recur", &pmap, &bmap))
-            gtk_clist_set_pixtext (GTK_CLIST (contents), row, 0, buf, 5,
-                           pmap, bmap);
-            }
-            
-          row++;
-          events = events->next;
-        }
-        
+	      event_t ev = events->data;
+	      event_details_t evd = event_db_get_details (ev);
+	      char *p = buf;
+	      size_t s = sizeof (buf), l;
+	      gchar *lineinfo[1];
+	      
+	      localtime_r (&ev->start, &tm);
+	      l = strftime (p, s, TIMEFMT, &tm);
+	      s -= l;
+	      p += l;
+	      
+	      snprintf (p, s - 1, " %s", evd->summary);
+	      p[s - 1] = 0;
+	      
+	      lineinfo[0] = buf;
+	      
+	      gtk_clist_append (GTK_CLIST (contents), lineinfo);
+	      
+	      gtk_clist_set_row_data (GTK_CLIST (contents), row, ev);
+	      
+	      if ((ev->flags & FLAG_ALARM) && ev->recur)
+		{
+		  if (gpe_find_icon_pixmap ("bell_recur", &pmap, &bmap))
+		    gtk_clist_set_pixtext (GTK_CLIST (contents), row, 0, buf, 5,
+					   pmap, bmap);
+		}
+	      else if (ev->flags & FLAG_ALARM)
+		{ 
+		  if (gpe_find_icon_pixmap ("bell", &pmap, &bmap))
+		    gtk_clist_set_pixtext (GTK_CLIST (contents), row, 0, buf, 5,
+					   pmap, bmap);
+		}
+	      else if (ev->recur)
+		{
+		  if (gpe_find_icon_pixmap ("recur", &pmap, &bmap))
+		    gtk_clist_set_pixtext (GTK_CLIST (contents), row, 0, buf, 5,
+					   pmap, bmap);
+		}
+	      
+	      row++;
+	      events = events->next;
+	    }
+	  
           gtk_clist_thaw (GTK_CLIST (contents));
           g_signal_connect (G_OBJECT (contents), "select_row",
                             G_CALLBACK (selection_made), window);
@@ -209,14 +239,12 @@ day_popup (GtkWidget *parent, struct day_popup *p, gboolean show_items)
           contents = gtk_label_new (_("No appointments"));
         }
     }
-  else  /* !show_items */
-    {
-      new_button = 
-        gpe_button_new_from_stock (GTK_STOCK_NEW, GPE_BUTTON_TYPE_BOTH);
-      gtk_button_set_relief (GTK_BUTTON (new_button), GTK_RELIEF_NONE);
-      g_signal_connect (G_OBJECT (new_button), "clicked",
+
+  new_button = 
+    gpe_button_new_from_stock (GTK_STOCK_NEW, GPE_BUTTON_TYPE_BOTH);
+  gtk_button_set_relief (GTK_BUTTON (new_button), GTK_RELIEF_NONE);
+  g_signal_connect (G_OBJECT (new_button), "clicked",
                     G_CALLBACK (do_new_event), p);
-    }
 
   gtk_button_set_relief (GTK_BUTTON (close_button), GTK_RELIEF_NONE);
   gtk_button_set_relief (GTK_BUTTON (day_button), GTK_RELIEF_NONE);
@@ -240,31 +268,24 @@ day_popup (GtkWidget *parent, struct day_popup *p, gboolean show_items)
   gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
   if (contents)
     gtk_box_pack_start (GTK_BOX (vbox), contents, TRUE, TRUE, 0);
-  if (new_button)
-    gtk_box_pack_start (GTK_BOX (vbox), new_button, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), new_button, TRUE, TRUE, 0);
 
-  frame = gtk_frame_new (NULL);
-  gtk_container_add (GTK_CONTAINER (frame), vbox);
-  gtk_container_add (GTK_CONTAINER (window), frame);
+  gtk_container_add (GTK_CONTAINER (window), vbox);
 
   gtk_window_set_transient_for (GTK_WINDOW (window), GTK_WINDOW (parent));
 
   gdk_window_get_pointer (NULL, &x, &y, NULL);
 
-  gtk_widget_realize (window);
-  gtk_widget_size_request (window, &requisition);
-  
-  screen_width = gdk_screen_width ();
-  screen_height = gdk_screen_height ();
+  x -= 2;
+  y += 4;
 
-  x = CLAMP (x - 2, 0, MAX (0, screen_width - requisition.width));
-  y = CLAMP (y + 4, 0, MAX (0, screen_height - requisition.height));
-  
-  gtk_widget_set_uposition (window, MAX (x, 0), MAX (y, 0));
+  g_object_set_data (G_OBJECT (window), "x", (gpointer)x);
+  g_object_set_data (G_OBJECT (window), "y", (gpointer)y);
 
   g_object_set_data (G_OBJECT (parent), "popup-handle", window);
-  g_signal_connect (G_OBJECT (window), "destroy",
-                    G_CALLBACK (destroy_popup), parent);
+  g_signal_connect (G_OBJECT (window), "destroy", G_CALLBACK (destroy_popup), parent);
+  g_signal_connect (G_OBJECT (window), "configure_event", G_CALLBACK (handle_configure_event), NULL);
+  g_signal_connect (G_OBJECT (window), "expose_event", G_CALLBACK (handle_expose_event), vbox);
 
   gtk_widget_show_all (window);
 
