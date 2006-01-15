@@ -1,3 +1,14 @@
+2006-01-15		Florian Boor <florian.boor@kernelconcepts.de>
+
+	* Release Version 0.6
+	* configure.ac, *.am, po/POTFILES.in: Autotools support.
+	* gpe-mininet.desktop.in renamed to gpe-mininet.desktop.in.in
+	* main.c: Major cleanup and port to use GPE plug instead of libmb.
+	          Make use of glib capabilities.
+			  Use infoprints instead of tray message.
+	* main.c, pixmaps/*48.png: Add additional icons for bigger panels.
+	* main.c (clicked): Use gpe function to set menu position.
+	
 2006-01-13		Florian Boor <florian.boor@kernelconcepts.de>
 
 	* main.c: Fix status icon.

@@ -1,5 +1,5 @@
 /*
- * gpe-mininet (c) 2004, 2005 Florian Boor <florian.boor@kernelconcepts.de>
+ * gpe-mininet (c) 2004 - 2006 Florian Boor <florian.boor@kernelconcepts.de>
  *
  * Basic applet skeleton taken from gpe-bluetooth (see below)
  *
@@ -19,7 +19,6 @@
 #include <locale.h>
 #include <unistd.h>
 #include <signal.h>
-#include <sys/wait.h>
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
@@ -30,8 +29,8 @@
 #include <gpe/init.h>
 #include <gpe/pixmaps.h>
 #include <gpe/errorbox.h>
-//#include <gpe/tray.h>
-#include <libmb/mb.h>
+#include <gpe/tray.h>
+#include <gpe/infoprint.h>
 #include <gpe/popup.h>
 #include <gpe/spacing.h>
 
@@ -50,14 +49,11 @@
 struct gpe_icon my_icons[] = {
 	{"net-on", "net-on"},
 	{"net-off", "net-off"},
+	{"net-on-48", "net-on-48"},
+	{"net-off-48", "net-off-48"},
 	{"gpe-mininet", "gpe-mininet"},
 	{NULL}
 };
-
-
-MBPixbuf      *Pixbuf;
-MBPixbufImage *AppImage;
-MBTrayApp *app = NULL;
 
 typedef enum
 {
@@ -67,9 +63,10 @@ typedef enum
 }
 n_images;
 
-MBPixbufImage *net_status_icons[NUM_ICONS];
 
+static GdkWindow *dock_window;
 static GtkWidget *menu;
+static GtkWidget *icon;
 
 gboolean net_is_on = FALSE;
 
@@ -169,14 +166,9 @@ update_netstatus (void)
 	
 	if (net_is_on != oldstatus)
 	{
-		mb_tray_app_repaint (app);
-		mb_tray_app_tray_send_message (app, 
+		gpe_popup_infoprint(GDK_DISPLAY(),
 			net_is_on ? _("Network connection established.") 
-				: _("Network connection lost.")
-			, 8000);
-		
-//		g_timeout_add (10000, (GSourceFunc) remove_dock_message,
-//		       (gpointer) msg_id);
+				: _("Network connection lost."));
 	}
 	return TRUE;
 }
@@ -192,40 +184,28 @@ app_shutdown ()
 static void
 do_network_info (void)
 {
-	pid_t pid;
-	
-	pid = fork();
-	switch (pid)
+	GError *err = NULL;
+
+	if (!g_spawn_command_line_async (BIN_INFO " " PARAM_INFO, &err))
 	{
-		case -1: 
-			gpe_error_box (_("Could not start info tool!\n"));
-		break;
-		case  0: 
-			execlp(BIN_INFO,BIN_INFO,PARAM_INFO,NULL);
-		break;
-		default: 
-		break;
-	} 
+		gpe_error_box (_("Could not start network info tool!"));
+		g_printerr("err gpe-mininet: %s\n", err->message);
+		g_error_free(err);
+	}
 }
 
 
 static void
 do_network_config (void)
 {
-	pid_t pid;
-	
-	pid = fork();
-	switch (pid)
+	GError *err = NULL;
+
+	if (!g_spawn_command_line_async (BIN_CONFIG " " PARAM_CONFIG, &err))
 	{
-		case -1: 
-			gpe_error_box (_("Could not start config tool!\n"));
-		break;
-		case  0: 
-			execlp(BIN_CONFIG,BIN_CONFIG,PARAM_CONFIG,NULL);
-		break;
-		default: 
-		break;
-	} 
+		gpe_error_box (_("Could not start network configuration tool!"));
+		g_printerr("err gpe-mininet: %s\n", err->message);
+		g_error_free(err);
+	}
 }
 
 static void
@@ -236,12 +216,10 @@ sigterm_handler (int sig)
 
 
 static void
-clicked (MBTrayApp *app, int x, int y, Bool is_released )
-//clicked (GtkWidget * w, GdkEventButton * ev)
+clicked (GtkWidget *w, GdkEventButton *ev, gpointer data)
 {
-	gtk_menu_popup (GTK_MENU (menu), NULL, NULL, NULL/*gpe_popup_menu_position*/,
-		NULL,0, gtk_get_current_event_time());
-			//w, ev->button, ev->time);
+	gtk_menu_popup (GTK_MENU (menu), NULL, NULL, gpe_popup_menu_position,
+	                w, ev->button, ev->time);
 }
 
 
@@ -264,72 +242,41 @@ rtnl_connect_glib (int fd)
 	g_io_add_watch (chan, G_IO_IN, rtnl_callback, (gpointer)fd);
 }
 
-
-void 
-paint_callback ( MBTrayApp *app, Drawable drw ) 
-{ 
-	MBPixbufImage *img_backing = NULL;
-	int use_index = net_is_on ? ICON_NET_ON : ICON_NET_OFF;
-	
-	img_backing = mb_tray_app_get_background (app, Pixbuf);
-
-	mb_pixbuf_img_composite(Pixbuf, img_backing, 
-			  net_status_icons[use_index], 
-			  0, 0);
-	mb_pixbuf_img_render_to_drawable(Pixbuf, img_backing, drw, 0, 0);
-	mb_pixbuf_img_free( Pixbuf, img_backing );
-}
-
-
-GdkFilterReturn
-event_filter (GdkXEvent *xev, GdkEvent *gev, gpointer data)
+/* handle resizing */
+gboolean 
+external_event(GtkWindow *window, GdkEventConfigure *event, gpointer user_data)
 {
-	XEvent    *ev  = (XEvent *)xev;
-	MBTrayApp *app = (MBTrayApp*)data;
-	mb_tray_handle_xevent (app, ev); 
-	return GDK_FILTER_CONTINUE;
+	GdkBitmap *bitmap;
+	GdkPixbuf *sbuf, *dbuf;
+	gint size;
+
+	if (event->type == GDK_CONFIGURE)
+	{
+		size = (event->width < event->height) ? event->height : event->width;
+		if (size > 16)
+			sbuf = gpe_find_icon ( net_is_on ? "net-on-48" : "net-off-48" );
+		else
+			sbuf = gpe_find_icon ( net_is_on ? "net-on" : "net-off" );
+		dbuf = gdk_pixbuf_scale_simple(sbuf, size, size, GDK_INTERP_HYPER);
+		gdk_pixbuf_render_pixmap_and_mask (dbuf, NULL, &bitmap, 64);
+		gtk_widget_shape_combine_mask (GTK_WIDGET(window), NULL, 1, 0);
+		gtk_widget_shape_combine_mask (GTK_WIDGET(window), bitmap, 1, 0);
+		gdk_bitmap_unref (bitmap);
+		gtk_image_set_from_pixbuf (GTK_IMAGE(icon), dbuf);
+	}
+	return FALSE;
 }
 
-void
-resized (MBTrayApp *mb, int width, int height)
-{
-	GdkPixbuf *pixmap;
-	MBPixbufImage *img;
-	int size;
-	
-	mb_pixbuf_img_free(Pixbuf, net_status_icons[ICON_NET_ON]);
-	mb_pixbuf_img_free(Pixbuf, net_status_icons[ICON_NET_OFF]);
-	
-	size = (width > height) ? height : width;
-	Pixbuf = mb_pixbuf_new(mb_tray_app_xdisplay(app), mb_tray_app_xscreen(app));
-	pixmap = gpe_find_icon("net-on");	
-	img = mb_pixbuf_img_new_from_data (Pixbuf, gdk_pixbuf_get_pixels(pixmap), 
-		                               gdk_pixbuf_get_width(pixmap), 
-	                                   gdk_pixbuf_get_height(pixmap), 
-	                                   gdk_pixbuf_get_has_alpha(pixmap));
-	net_status_icons[ICON_NET_ON] = mb_pixbuf_img_scale(Pixbuf, img, size, size);
-	mb_pixbuf_img_free(Pixbuf, img);
-	
-	pixmap = gpe_find_icon("net-off");	
-	img = mb_pixbuf_img_new_from_data (Pixbuf, gdk_pixbuf_get_pixels(pixmap), 
-		                               gdk_pixbuf_get_width(pixmap), 
-	                                   gdk_pixbuf_get_height(pixmap), 
-	                                   gdk_pixbuf_get_has_alpha(pixmap));
-	net_status_icons[ICON_NET_OFF] = mb_pixbuf_img_scale(Pixbuf, img, size, size);
-	mb_pixbuf_img_free(Pixbuf, img);
-	
-}
 
 int
 main (int argc, char *argv[])
 {
-//	Display *dpy;
-//	GtkWidget *window;
-//	GdkBitmap *bitmap;
+	Display *dpy;
+	GtkWidget *window;
 	GtkWidget *menu_remove;
 	GtkWidget *menu_config;
 	GtkWidget *menu_info;
-	GdkPixbuf *pixmap;
+	GtkTooltips *tooltips;
 
 	if (gpe_application_init (&argc, &argv) == FALSE)
 		exit (1);
@@ -349,14 +296,12 @@ main (int argc, char *argv[])
 
 	rtnl_connect_glib (netlink_fd);
 
-	app = mb_tray_app_new_with_display (_("Network Control"), NULL, paint_callback, &argc, &argv, GDK_DISPLAY() );
-	  
-/*	window = gtk_plug_new (0);
-	gtk_widget_set_usize (window, 16, 16);
+	window = gtk_plug_new (0);
+	gtk_window_set_resizable(GTK_WINDOW(window), TRUE);
 	gtk_widget_realize (window);
 
 	gtk_window_set_title (GTK_WINDOW (window), _("Network Control"));
-*/
+
 	signal (SIGTERM, sigterm_handler);
 
 	menu = gtk_menu_new ();
@@ -372,8 +317,8 @@ main (int argc, char *argv[])
 	g_signal_connect (G_OBJECT (menu_remove), "activate",
 			  G_CALLBACK (app_shutdown), NULL);
 
-	gtk_widget_set_sensitive(menu_info,!access(BIN_INFO,X_OK));
-	gtk_widget_set_sensitive(menu_config,!access(BIN_CONFIG,X_OK));
+	gtk_widget_set_sensitive(menu_info, !access(BIN_INFO, X_OK));
+	gtk_widget_set_sensitive(menu_config, !access(BIN_CONFIG, X_OK));
 
 	gtk_widget_show (menu_info);
 	gtk_widget_show (menu_config);
@@ -388,34 +333,10 @@ main (int argc, char *argv[])
 
 	net_is_on = net_get_status();
 
-
-	Pixbuf = mb_pixbuf_new(mb_tray_app_xdisplay(app), mb_tray_app_xscreen(app));
-    pixmap = gpe_find_icon("net-on");	
-	net_status_icons[ICON_NET_ON] = mb_pixbuf_img_new_from_data (Pixbuf, gdk_pixbuf_get_pixels(pixmap), 
-		gdk_pixbuf_get_width(pixmap), gdk_pixbuf_get_height(pixmap), gdk_pixbuf_get_has_alpha(pixmap));
-    pixmap = gpe_find_icon("net-off");	
-	net_status_icons[ICON_NET_OFF] = mb_pixbuf_img_new_from_data (Pixbuf, gdk_pixbuf_get_pixels(pixmap), 
-		gdk_pixbuf_get_width(pixmap), gdk_pixbuf_get_height(pixmap), gdk_pixbuf_get_has_alpha(pixmap));
-
-	mb_tray_app_set_button_callback (app, clicked);
-	mb_tray_app_set_resize_callback (app, resized);
-	mb_tray_app_main_init(app);
-
-	gdk_window_add_filter (NULL, event_filter, (gpointer)app );
-
-/*	mb_tray_app_main(app);	
-	icon = gtk_image_new_from_pixbuf (
-			gpe_find_icon(net_is_on ? "net-on" :
-				"net-off")); 
-
-	gtk_widget_show (icon);
-	gdk_pixbuf_render_pixmap_and_mask (
-		gpe_find_icon (net_is_on ? "net-on" : "net-off"), NULL,
-					   &bitmap, 128);
-	
-	gtk_widget_shape_combine_mask (window, bitmap, 0, 0);
-	gdk_bitmap_unref (bitmap);
-
+	icon = gtk_image_new_from_pixbuf (gpe_find_icon(net_is_on ? "net-on" :
+	                                                "net-off")); 
+	gtk_misc_set_alignment (GTK_MISC(icon), 0, 0);
+	gtk_widget_show (icon);	
 	gpe_set_window_icon (window, "gpe-mininet");
 
 	tooltips = gtk_tooltips_new ();
@@ -423,18 +344,20 @@ main (int argc, char *argv[])
 			      _("This is gpe-mininet - the network control applet."), NULL);
 
 	g_signal_connect (G_OBJECT (window), "button-press-event",
-			  G_CALLBACK (clicked), NULL);
+	                  G_CALLBACK (clicked), NULL);
+	g_signal_connect (G_OBJECT (window), "configure-event", 
+	                  G_CALLBACK (external_event), NULL);
 	gtk_widget_add_events (window, GDK_BUTTON_PRESS_MASK);
 
 	gtk_container_add (GTK_CONTAINER (window), icon);
 
-	dpy = GDK_WINDOW_XDISPLAY (window->window);
+	dock_window = window->window;
+	dpy = GDK_WINDOW_XDISPLAY (dock_window);
 
 	gtk_widget_show (window);
 
-	dock_window = window;
-	gpe_system_tray_dock (window->window);
-*/
+	gpe_system_tray_dock (dock_window);
+
 	gtk_main ();
 	
 	exit (0);
