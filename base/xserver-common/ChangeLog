@@ -1,5 +1,14 @@
 2006-01-15  Phil Blundell  <pb@reciva.com>
 
+	* Version 1.5 released.
+
+2006-01-15  Phil Blundell  <pb@reciva.com>
+
+	* X11/Xdefaults (Xft.dpi): Set to 100.
+	* X11/Xserver: Revert last change.  Heh.
+
+2006-01-15  Phil Blundell  <pb@reciva.com>
+
 	* Version 1.4 released.
 
 2006-01-15  Phil Blundell  <pb@reciva.com>
