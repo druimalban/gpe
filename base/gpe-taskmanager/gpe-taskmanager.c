@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2003, 2006 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -23,6 +23,7 @@
 #include <gpe/errorbox.h>
 #include <gpe/gpewindowlist.h>
 #include <gpe/picturebutton.h>
+#include <gpe/launch.h>
 
 #define _(_x) gettext (_x)
 
@@ -45,7 +46,10 @@ char *atom_names[] =
     "_NET_WM_PING",
     "WM_DELETE_WINDOW",
     "_NET_CLIENT_LIST",
-    "_NET_ACTIVE_WINDOW"
+    "_NET_ACTIVE_WINDOW",
+    "_NET_WM_WINDOW_TYPE",
+    "_NET_WM_WINDOW_TYPE_DESKTOP",
+    "_NET_WM_WINDOW_TYPE_DOCK",
   };
 
 #define WM_PROTOCOLS 0
@@ -53,14 +57,26 @@ char *atom_names[] =
 #define WM_DELETE_WINDOW 2
 #define _NET_CLIENT_LIST 3
 #define _NET_ACTIVE_WINDOW 4
+#define _NET_WM_WINDOW_TYPE 5
+#define _NET_WM_WINDOW_TYPE_DESKTOP 6
+#define _NET_WM_WINDOW_TYPE_DOCK 7
 
 void
 add_window (Display *dpy, Window w)
 {
   GtkTreeIter iter;
-  gchar *name = gpe_get_window_name (dpy, w);
-  GdkPixbuf *icon = gpe_get_window_icon (dpy, w);
+  gchar *name;
+  GdkPixbuf *icon;
+  Atom type;
 
+  /* Don't add panels or desktop windows */
+  type = gpe_get_window_property (dpy, w, atoms[_NET_WM_WINDOW_TYPE]);
+  if (type == atoms[_NET_WM_WINDOW_TYPE_DOCK] || type == atoms[_NET_WM_WINDOW_TYPE_DESKTOP])
+    return;
+
+  name = gpe_get_window_name (dpy, w);
+  icon = gpe_get_window_icon (dpy, w); 
+  
   gtk_list_store_append (list_store, &iter);
   gtk_list_store_set (list_store, &iter, 0, name, 1, w, -1);
   if (icon)
@@ -107,7 +123,7 @@ set_highlight (Display *dpy)
 
 			  path = gtk_tree_model_get_path (GTK_TREE_MODEL (list_store), &iter);
 
-			  gtk_tree_view_set_cursor (list_view, path, NULL, FALSE);
+			  gtk_tree_view_set_cursor (GTK_TREE_VIEW (list_view), path, NULL, FALSE);
 
 			  gtk_tree_path_free (path);
 			  break;
@@ -282,6 +298,21 @@ kill_task (GtkWidget *w, GtkWidget *list_view)
   return TRUE;
 }
 
+static void
+row_activated (GtkTreeView *treeview, GtkTreePath *path, GtkTreeViewColumn *col, GtkTreeModel *model)
+{
+  GtkTreeIter iter;
+
+  if (gtk_tree_model_get_iter (model, &iter, path))
+    {
+      Window w;
+
+      gtk_tree_model_get (model, &iter, 1, &w, -1);
+
+      gpe_launch_activate_window (dpy, w);
+    }
+}
+
 void
 task_manager (void)
 {
@@ -299,6 +330,9 @@ task_manager (void)
   column = gtk_tree_view_column_new_with_attributes (_("Icon"), renderer, "pixbuf", 2, NULL);
   gtk_tree_view_append_column (GTK_TREE_VIEW (list_view), column);
 
+  g_signal_connect (G_OBJECT (list_view), "row-activated", G_CALLBACK (row_activated), 
+		    GTK_TREE_MODEL (list_store));
+
   renderer = gtk_cell_renderer_text_new ();
   column = gtk_tree_view_column_new_with_attributes (_("Running programs"), renderer,
 						     "text", 0, NULL);
@@ -310,7 +344,7 @@ task_manager (void)
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), scrolled, TRUE, TRUE, 0);
 
   close_button = gtk_button_new_from_stock (GTK_STOCK_CLOSE);
-  kill_button = gpe_picture_button (NULL, _("Kill program"), "kill");
+  kill_button = gpe_picture_button (NULL, _("Kill"), "kill");
 
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), close_button, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), kill_button, FALSE, FALSE, 0);

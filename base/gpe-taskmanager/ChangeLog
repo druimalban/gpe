@@ -1,3 +1,15 @@
+2006-01-15  Phil Blundell  <pb@reciva.com>
+
+	* Version 0.19 released.
+
+2006-01-15  Phil Blundell  <pb@reciva.com>
+
+	* gpe-taskmanager.c (add_window): Don't add DESKTOP or DOCK
+	windows.
+	(row_activated): New function.
+	(task_manager): Install handler for row-activated signal.
+
+	* Makefile (PACKAGE_LDFLAGS): Link with -lgpelaunch.
 
 2005-04-22  Florian Boor <florian@kernelconcepts.de>
 
