@@ -12,6 +12,7 @@ AC_PROG_CC
 AC_PROG_LIBTOOL
 
 PKG_CHECK_MODULES(LAUNCHER, glib-2.0 libstartup-notification-1.0)
+PKG_CHECK_MODULES(LAUNCHER_GTK, gtk+-2.0)
 
 AC_CONFIG_FILES([Makefile libgpelaunch.pc])
 AC_OUTPUT
