@@ -8,3 +8,4 @@ Description: GPE launcher library
 Version: @PACKAGE_VERSION@
 Libs: -L${libdir} -lgpelaunch
 Cflags: -I${includedir}
+Requires: glib-2.0
