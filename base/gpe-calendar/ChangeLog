@@ -1,5 +1,7 @@
 2006-01-15  Phil Blundell  <pb@reciva.com>
 
+	* week_view.c (week_view_button_press): Tweak formatting.
+
 	* day_popup.c (handle_expose_event): New function.
 	(handle_configure_event): Likewise.
 	(day_popup): Remove GtkFrame around window contents and draw a

@@ -585,7 +585,7 @@ week_view_button_press (GtkWidget *widget, GdkEventButton *event, gpointer d)
 	    {
 	      int i;
 	      for (i = 0; i < 7; i++)
-            week_days[i].is_active = FALSE;
+		week_days[i].is_active = FALSE;
 	      week_days[get_day_from_y (y)].is_active = TRUE;
 	      viewtime = time_from_day (c->popup.year, c->popup.month, c->popup.day);
 	      gtk_calendar_select_month (GTK_CALENDAR (calendar), c->popup.month, c->popup.year + 1900);
@@ -595,7 +595,7 @@ week_view_button_press (GtkWidget *widget, GdkEventButton *event, gpointer d)
 	  else if (event->button == 3)
 	    {
 	      if (pop_window) 
-            gtk_widget_destroy (pop_window);
+		gtk_widget_destroy (pop_window);
     
 	      if (c != c_old) 
 		{
