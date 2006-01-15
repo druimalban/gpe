@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001, 2002, 2003, 2004 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2001, 2002, 2003, 2004, 2006 Philip Blundell <philb@gnu.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -22,6 +22,8 @@
 #include <string.h>
 #include "gtkdatesel.h"
 #include <libintl.h>
+
+#include "globals.h"
 
 #define _(x) dgettext(PACKAGE, x)
 
@@ -64,31 +66,6 @@ struct _GtkDateSelClass
 };
 
 static GtkHBoxClass *parent_class = NULL;
-
-static int
-days_in_month (struct tm *tm)
-{
-  if (tm->tm_mon == 1)
-    {
-      guint y = 1900 + tm->tm_year;
-      if ((y % 4) == 0
-          && (((y % 100) != 0) || (y % 400) == 0))
-        return 29;
-      else
-        return 28;
-    }
-
-  switch (tm->tm_mon)
-    {
-    case 3:
-    case 5:
-    case 8:
-    case 10:
-      return 30;
-    default:
-      return 31;
-    }
-}
 
 void
 gtk_date_sel_move_day (GtkDateSel *sel, int d)
@@ -145,7 +122,7 @@ gtk_date_sel_move_month (GtkDateSel *sel, int d)
           tm.tm_mon = 0;
         }
     }
-  mdays = days_in_month (&tm);
+  mdays = days_in_month (tm.tm_year + 1900, tm.tm_mon);
   if (tm.tm_mday > mdays)
     {
       sel->day_clamped = tm.tm_mday;
@@ -179,7 +156,7 @@ year_click (GtkWidget *w, GtkDateSel *sel)
   guint mdays;
   localtime_r (&sel->time, &tm);
   tm.tm_year += d;
-  mdays = days_in_month (&tm);
+  mdays = days_in_month (tm.tm_year + 1900, tm.tm_mon);
   if (tm.tm_mday > mdays)
     {
       sel->day_clamped = tm.tm_mday;
@@ -202,20 +179,14 @@ static void
 format_text (time_t *time, GtkWidget *w, char *fmt)
 {
   struct tm tm;
-  char buf[64];
-  gchar *sbuf, *sfmt;
+  gchar *sbuf;
   localtime_r (time, &tm);
-  sfmt = g_locale_from_utf8 (fmt, -1, NULL, NULL, NULL);
-  if (sfmt)
+
+  sbuf = strftime_strdup_utf8_utf8 (fmt, &tm);
+  if (sbuf)
     {
-      strftime (buf, sizeof (buf), sfmt, &tm);
-      sbuf = g_locale_to_utf8 (buf, -1, NULL, NULL, NULL);
-      if (sbuf)
-	{
-	  gtk_label_set_text (GTK_LABEL (w), sbuf);
-	  g_free (sbuf);
-	}
-      g_free (sfmt);
+      gtk_label_set_text (GTK_LABEL (w), sbuf);
+      g_free (sbuf);
     }
 }
 
@@ -263,11 +234,8 @@ get_max_month_width (GtkDateSel *sel)
   PangoLayout *layout;
   PangoRectangle logical_rect;
   int max_width, i;
-  gchar buffer[255];
-  gchar *str;
   struct tm tm;
 
-  memset(buffer, 0, 255);
   localtime_r (&sel->time, &tm);
 
   layout = gtk_widget_create_pango_layout (GTK_WIDGET (sel), NULL);
@@ -275,27 +243,29 @@ get_max_month_width (GtkDateSel *sel)
   max_width = 0;
   for (i = 0; i < 11; i++)
     {
+      gchar *str = NULL;
+
       tm.tm_mon = i;
 
       switch (sel->month_style)
 	{
 	case GTKDATESEL_MONTH_SHORT:
-	  strftime (buffer, sizeof (buffer), _("%b"), &tm);
+	  str = strftime_strdup_utf8_utf8 (_("%b"), &tm);
 	  break;
 	case GTKDATESEL_MONTH_LONG:
-	  strftime (buffer, sizeof (buffer), _("%B"), &tm);
+	  str = strftime_strdup_utf8_utf8 (_("%B"), &tm);
 	  break;
 	case GTKDATESEL_MONTH_NUMERIC:
-	  strftime (buffer, sizeof (buffer), _("%m"), &tm);
+	  str = strftime_strdup_utf8_utf8 (_("%m"), &tm);
 	  break;
 	case GTKDATESEL_MONTH_ROMAN:
 	  /* NYS */
 	  break;
 	}
-	  str = g_locale_to_utf8(buffer, strlen(buffer), NULL, NULL, NULL);
+
       pango_layout_set_text (layout, str, -1);
-	  if (str) 
-		  g_free(str);
+      g_free (str);
+
       pango_layout_get_pixel_extents (layout, NULL, &logical_rect);
       max_width = MAX (max_width, logical_rect.width + LABEL_ADD);
     }
@@ -311,8 +281,8 @@ get_max_day_width (GtkDateSel *sel)
   PangoLayout *layout;
   PangoRectangle logical_rect;
   int max_width, i, w;
-  gchar buffer[255];
   struct tm tm;
+  gchar *str;
 
   localtime_r (&sel->time, &tm);
 
@@ -323,8 +293,10 @@ get_max_day_width (GtkDateSel *sel)
     {
       tm.tm_mday = i;
 
-      strftime (buffer, sizeof (buffer), _("%d"), &tm);
-      pango_layout_set_text (layout, buffer, -1);
+      str = strftime_strdup_utf8_utf8 (_("%d"), &tm);
+      pango_layout_set_text (layout, str, -1);
+      g_free (str);
+
       pango_layout_get_pixel_extents (layout, NULL, &logical_rect);
       max_width = MAX (max_width, logical_rect.width + LABEL_ADD);
     }
@@ -335,8 +307,10 @@ get_max_day_width (GtkDateSel *sel)
     {
       tm.tm_wday = i;
 
-      strftime (buffer, sizeof (buffer), _("%a"), &tm);
-      pango_layout_set_text (layout, buffer, -1);
+      str = strftime_strdup_utf8_utf8 (_("%a"), &tm);
+      pango_layout_set_text (layout, str, -1);
+      g_free (str);
+
       pango_layout_get_pixel_extents (layout, NULL, &logical_rect);
       max_width = MAX (max_width, logical_rect.width + LABEL_ADD);
     }

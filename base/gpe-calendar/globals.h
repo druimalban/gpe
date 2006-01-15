@@ -33,6 +33,8 @@ extern GdkBitmap *close_mask, *day_mask;
 extern GtkWidget *main_window, *pop_window;
 
 extern GdkFont *yearfont, *datefont;
+extern gchar *strftime_strdup_utf8_locale (const char *fmt, struct tm *tm);
+extern gchar *strftime_strdup_utf8_utf8 (const char *fmt, struct tm *tm);
 
 #define SECONDS_IN_DAY (24*60*60)
 

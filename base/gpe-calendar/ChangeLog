@@ -1,5 +1,23 @@
 2006-01-15  Phil Blundell  <pb@reciva.com>
 
+	* gtkdatesel.c (days_in_month): Deleted.  All callers adjusted to
+	use version in main.c instead.
+	(get_max_month_width): Use strftime_strdup_utf8_utf8.
+	(format_text): Likewise.
+	(get_max_day_width): Likewise.
+	* event-ui.c (check_constrains): Likewise.
+	(new_event): Likewise.
+	(edit_event): Likewise.
+	* week_view.c (draw_expose_event): Likewise.
+	(week_view_update): Likewise.
+	* day_popup.c (day_popup): Likewise.
+	* main.c (menu_toggled): Wrap in IS_HILDON guard.
+	(strftime_strdup_utf8_utf8): New function.
+	(strftime_strdup_utf8_locale): Likewise.
+	(main): Use strftime_strdup_utf8_locale.
+	* globals.h (strftime_strdup_utf8_utf8): Add prototype.
+	(strftime_strdup_utf8_utf8): Likewise.
+	
 	* week_view.c (week_view_button_press): Tweak formatting.
 
 	* day_popup.c (handle_expose_event): New function.

@@ -611,7 +611,6 @@ check_constrains(struct edit_state *s)
 {
     if ((s->page == 0) && (s->ev))
     {
-      char buf[32];
       struct tm tm_start, tm_end;
       time_t start_t, end_t;
       event_t ev;
@@ -652,10 +651,13 @@ check_constrains(struct edit_state *s)
 
       if (start_t == end_t)
         {
-          tm_end.tm_hour+=1;
-          strftime (buf, sizeof(buf), TIMEFMT, &tm_end);
-          gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (s->endtime)->entry), buf);
+	  gchar *timestr;
+          tm_end.tm_hour += 1;
+	  timestr = strftime_strdup_utf8_locale (TIMEFMT, &tm_end);
+          gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (s->endtime)->entry), timestr);
+	  g_free (timestr);
         }
+
       g_free (end);
       g_free (start);
       ev->start = start_t;
@@ -1578,7 +1580,7 @@ new_event (time_t t, guint timesel)
   if (w)
     {
       struct tm tm;
-      char buf[32];
+      gchar *timestr;
       struct edit_state *s = g_object_get_data (G_OBJECT (w),
                                                 "edit_state");
 
@@ -1588,16 +1590,18 @@ new_event (time_t t, guint timesel)
       gtk_widget_set_sensitive (s->deletebutton, FALSE);
 
       localtime_r (&t, &tm);
-      strftime (buf, sizeof(buf), TIMEFMT, &tm);
-      gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (s->starttime)->entry), buf);
+      timestr = strftime_strdup_utf8_locale (TIMEFMT, &tm);
+      gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (s->starttime)->entry), timestr);
+      g_free (timestr);
       gtk_date_combo_set_date (GTK_DATE_COMBO (s->startdate),
                                tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
       gtk_date_combo_set_date (GTK_DATE_COMBO (s->reminderdate),
                                tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
       t += 60 * 60;
       localtime_r (&t, &tm);
-      strftime (buf, sizeof(buf), TIMEFMT, &tm);
-      gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (s->endtime)->entry), buf);
+      timestr = strftime_strdup_utf8_locale (TIMEFMT, &tm);
+      gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (s->endtime)->entry), timestr);
+      g_free (timestr);
       gtk_date_combo_set_date (GTK_DATE_COMBO (s->enddate),
                                tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
 
@@ -1632,7 +1636,7 @@ edit_event (event_t ev)
     {
       time_t end;
       struct tm tm;
-      char buf[32];
+      gchar *timestr;
       struct edit_state *s = g_object_get_data (G_OBJECT (w),
                                                 "edit_state");
 
@@ -1648,17 +1652,19 @@ edit_event (event_t ev)
       event_db_forget_details (ev);
 
       localtime_r (&(ev->start), &tm);
-      strftime (buf, sizeof(buf), TIMEFMT, &tm);
-      gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (s->starttime)->entry), buf);
+      timestr = strftime_strdup_utf8_locale (TIMEFMT, &tm);
+      gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (s->starttime)->entry), timestr);
+      g_free (timestr);
       gtk_date_combo_set_date (GTK_DATE_COMBO (s->startdate),
                                tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
       gtk_date_combo_set_date (GTK_DATE_COMBO (s->reminderdate),
                                tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
 
-      end=ev->start+ev->duration;
+      end = ev->start + ev->duration;
       localtime_r (&end, &tm);
-      strftime (buf, sizeof(buf), TIMEFMT, &tm);
-      gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (s->endtime)->entry), buf);
+      timestr = strftime_strdup_utf8_locale (TIMEFMT, &tm);
+      gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (s->endtime)->entry), timestr);
+      g_free (timestr);
       gtk_notebook_set_page (GTK_NOTEBOOK (s->notebookedit), 0);
       gtk_date_combo_set_date (GTK_DATE_COMBO (s->enddate),
                                tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);

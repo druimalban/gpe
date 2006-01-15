@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001, 2002, 2003 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2001, 2002, 2003, 2006 Philip Blundell <philb@gnu.org>
  * Hildon adaption 2005 by Matthias Steinbauer <matthias@steinbauer.org>
  * Toolbar new API conversion 2005 by Florian Boor <florian@kernelconcepts.de>
  *
@@ -117,8 +117,41 @@ time_from_day (int year, int month, int day)
   return selected_time;
 }
 
+/* Call strftime() on the format and convert the result to UTF-8.  Any
+   non-% expressions in the format must be in the locale's character
+   set, since they will undergo UTF-8 conversion.  Careful with
+   translations!  */
+gchar *
+strftime_strdup_utf8_locale (const char *fmt, struct tm *tm)
+{
+  char buf[1024];
+  size_t n;
+
+  buf[0] = '\001';
+  n = strftime (buf, sizeof (buf), fmt, tm);
+  if (n == 0 && buf[0] == '\001')
+    return NULL;		/* Something went wrong */
+
+  return g_locale_to_utf8 (buf, -1, NULL, NULL, NULL);
+}
+
+/* As above but format string is UTF-8.  */
+gchar *
+strftime_strdup_utf8_utf8 (const char *fmt, struct tm *tm)
+{
+  gchar *sfmt, *sval;
+
+  sfmt = g_locale_from_utf8 (fmt, -1, NULL, NULL, NULL);
+  if (sfmt == NULL)
+    return NULL;		/* Conversion failed */
+  sval = strftime_strdup_utf8_locale (sfmt, tm);
+  g_free (sfmt);
+
+  return sval;
+}
+
 void
-set_time_all_views(void)
+set_time_all_views (void)
 {
   gpointer ds;
   
@@ -256,11 +289,13 @@ button_toggled (GtkWidget *widget, gpointer data)
     new_view (data);
 }
 
+#ifdef IS_HILDON
 static void
 menu_toggled (GtkWidget *widget, gpointer data)
 {
   gtk_toggle_tool_button_set_active (GTK_TOGGLE_TOOL_BUTTON (data), TRUE);
 }
+#endif
 
 static void
 gpe_cal_exit (void)
@@ -566,19 +601,16 @@ main (int argc, char *argv[])
 	
   for (hour = 0; hour < 24; hour++)
     {
-      char buf[32];
       struct tm tm;
       time_t t=time(NULL);
 
       localtime_r (&t, &tm);
       tm.tm_hour = hour;
       tm.tm_min = 0;
-      strftime (buf, sizeof(buf), TIMEFMT, &tm);
-      times = g_list_append (times, g_strdup (buf));
+      times = g_list_append (times, strftime_strdup_utf8_locale (TIMEFMT, &tm));
       tm.tm_hour = hour;
       tm.tm_min = 30;
-      strftime (buf, sizeof(buf), TIMEFMT, &tm);
-      times = g_list_append (times, g_strdup (buf));
+      times = g_list_append (times, strftime_strdup_utf8_locale (TIMEFMT, &tm));
     }
 
   vcal_export_init();

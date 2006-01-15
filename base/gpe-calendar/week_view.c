@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001, 2002, 2004, 2005 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2001, 2002, 2004, 2005, 2006 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -179,7 +179,6 @@ draw_expose_event (GtkWidget *widget,
 	  for (iter = week_days[day].events; iter; iter = iter->next)
 	    {
 	      guint height = 0;
-	      char buf[256];
 	      struct tm tm;
 	      event_t ev = iter->data;
 	      event_details_t evd = event_db_get_details (ev);
@@ -190,11 +189,13 @@ draw_expose_event (GtkWidget *widget,
 		  if (ev->mark == FALSE)
 		    {
 		      gchar *buffer;
+
 		      localtime_r (&ev->start, &tm);
-		      strftime (buf, sizeof (buf), "%H:%M", &tm);
-		      buffer = g_locale_to_utf8 (buf, -1, NULL,
-						 NULL, NULL);
-		      pango_layout_set_text (pl_evt, buffer, strlen (buffer));
+
+		      buffer = strftime_strdup_utf8_locale ("%H:%M", &tm);
+		      pango_layout_set_text (pl_evt, buffer, -1);
+		      g_free (buffer);
+
 		      gtk_paint_layout (widget->style,
 					widget->window,
 					GTK_WIDGET_STATE (widget),
@@ -207,9 +208,8 @@ draw_expose_event (GtkWidget *widget,
 		      
 		      pango_layout_get_pixel_extents (pl_evt, &pr, NULL);
 		      if (height < pr.height)
-                height = pr.height;
+			height = pr.height;
 		      ev->mark = TRUE;
-		      g_free (buffer);
 		    }
 		}
 	      
@@ -305,7 +305,6 @@ week_view_update (void)
 
   for (day = 0; day < 7; day++)
     {
-      char buf[32];
       struct week_day *d = &week_days[day];
       struct render_ctl *c = &d->rc;
 
@@ -322,10 +321,10 @@ week_view_update (void)
 		       && tm.tm_mon == today.tm_mon 
 		       && tm.tm_year == today.tm_year);
       week_days[day].is_active = week_days[day].is_today;
-      strftime (buf, sizeof (buf), "<b>%a %d %B</b>", &tm);
+
       if (d->string)
         g_free (d->string);
-      d->string = g_locale_to_utf8 (buf, -1, NULL, NULL, NULL);
+      d->string = strftime_strdup_utf8_utf8 ("<b>%a %d %B</b>", &tm);
 
       c->popup.day = tm.tm_mday;
       c->popup.year = tm.tm_year;
@@ -350,28 +349,21 @@ week_view_update (void)
           /* calculate width required to display times */
           PangoRectangle pr;
           event_t ev = (event_t)iter->data;
-          char buf[32];
-          char *p = buf;
-          size_t l = sizeof (buf) - 1;
-          gchar *s;
+
           if ((ev->flags & FLAG_UNTIMED) == 0)
             {
               if (ev->mark == FALSE)
                 {
-                  size_t n;
+		  gchar *s;
                   localtime_r (&ev->start, &tm);
-                  n = strftime (p, l, "%H:%M", &tm);
-                  p += n;
-                  l -= n;
-                }
-    
-              ev->mark = TRUE;
-              s = g_locale_to_utf8 (buf, -1, NULL, NULL, NULL);
-              pango_layout_set_text (pl_evt, s, strlen (s));
-              pango_layout_get_pixel_extents (pl_evt, &pr, NULL);
-              if (time_width < pr.width)
-                time_width = pr.width;
-              g_free (s);
+		  s = strftime_strdup_utf8_locale ("%H:%M", &tm);
+                  ev->mark = TRUE;
+		  pango_layout_set_text (pl_evt, s, -1);
+		  pango_layout_get_pixel_extents (pl_evt, &pr, NULL);
+		  if (time_width < pr.width)
+		    time_width = pr.width;
+		  g_free (s);
+		}
             }
         }
     }

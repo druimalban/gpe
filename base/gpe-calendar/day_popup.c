@@ -149,7 +149,6 @@ day_popup (GtkWidget *parent, struct day_popup *p, gboolean show_items)
   GtkWidget *new_button = NULL;
   GtkWidget *label;
   GtkWidget *contents = NULL;
-  char buf[256];
   struct tm tm;
   gchar *gs;
 
@@ -162,9 +161,8 @@ day_popup (GtkWidget *parent, struct day_popup *p, gboolean show_items)
   tm.tm_mon = p->month;
   tm.tm_mday = p->day;
   mktime (&tm);
-  strftime (buf, sizeof (buf), "%a %d %B", &tm);
-
-  gs = g_locale_to_utf8 (buf, -1, NULL, NULL, NULL);
+  
+  gs = strftime_strdup_utf8_locale ("%a %d %B", &tm);
   label = gtk_label_new (gs);
   g_free (gs);
   
@@ -186,46 +184,42 @@ day_popup (GtkWidget *parent, struct day_popup *p, gboolean show_items)
 	    {
 	      GdkPixmap *pmap;
 	      GdkBitmap *bmap;
-          
 	      event_t ev = events->data;
 	      event_details_t evd = event_db_get_details (ev);
-	      char *p = buf;
-	      size_t s = sizeof (buf), l;
 	      gchar *lineinfo[1];
-	      
+	      gchar *timestr;
+
 	      localtime_r (&ev->start, &tm);
-	      l = strftime (p, s, TIMEFMT, &tm);
-	      s -= l;
-	      p += l;
-	      
-	      snprintf (p, s - 1, " %s", evd->summary);
-	      p[s - 1] = 0;
-	      
-	      lineinfo[0] = buf;
+	      timestr = strftime_strdup_utf8_locale (TIMEFMT, &tm);
+	      lineinfo[0] = g_strdup_printf ("%s %s", timestr, evd->summary);
 	      
 	      gtk_clist_append (GTK_CLIST (contents), lineinfo);
+
+	      g_free (timestr);
 	      
 	      gtk_clist_set_row_data (GTK_CLIST (contents), row, ev);
 	      
 	      if ((ev->flags & FLAG_ALARM) && ev->recur)
 		{
 		  if (gpe_find_icon_pixmap ("bell_recur", &pmap, &bmap))
-		    gtk_clist_set_pixtext (GTK_CLIST (contents), row, 0, buf, 5,
+		    gtk_clist_set_pixtext (GTK_CLIST (contents), row, 0, lineinfo[0], 5,
 					   pmap, bmap);
 		}
 	      else if (ev->flags & FLAG_ALARM)
 		{ 
 		  if (gpe_find_icon_pixmap ("bell", &pmap, &bmap))
-		    gtk_clist_set_pixtext (GTK_CLIST (contents), row, 0, buf, 5,
+		    gtk_clist_set_pixtext (GTK_CLIST (contents), row, 0, lineinfo[0], 5,
 					   pmap, bmap);
 		}
 	      else if (ev->recur)
 		{
 		  if (gpe_find_icon_pixmap ("recur", &pmap, &bmap))
-		    gtk_clist_set_pixtext (GTK_CLIST (contents), row, 0, buf, 5,
+		    gtk_clist_set_pixtext (GTK_CLIST (contents), row, 0, lineinfo[0], 5,
 					   pmap, bmap);
 		}
 	      
+	      g_free (lineinfo[0]);
+
 	      row++;
 	      events = events->next;
 	    }
