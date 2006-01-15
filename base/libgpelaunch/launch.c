@@ -166,11 +166,11 @@ read_client_map (struct sn_display_map *map)
 {
   Atom type;
   int format;
-  long bytes_after;
+  unsigned long bytes_after;
   unsigned char *data = NULL;
-  long n_items;
+  unsigned long n_items;
   int result;
-  unsigned char *p, *key = NULL, *value = NULL;
+  char *p, *key = NULL, *value = NULL;
   GSList *l;
 
   /* flush old data */
@@ -198,7 +198,7 @@ read_client_map (struct sn_display_map *map)
       return;
     }
 
-  p = data;
+  p = (char *)data;
 
   while (*p != '\0')
     {
