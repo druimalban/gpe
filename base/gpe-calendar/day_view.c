@@ -558,7 +558,6 @@ scroll_to (GtkWidget * scrolled, gint hour)
   if (value > (adj->upper - adj->page_size))
     value = adj->upper - adj->page_size;
 
-  gtk_adjustment_clamp_page (adj, lower, upper);
   gtk_adjustment_set_value (adj, value);
 }
 

@@ -1,5 +1,10 @@
 2006-01-16  Phil Blundell  <pb@reciva.com>
 
+	* day_view.c (scroll_to): Remove mysterious call to
+	gtk_adjustment_clamp_page to prevent extraneous redraws.
+
+2006-01-16  Phil Blundell  <pb@reciva.com>
+
 	* day_view.c (day_view_init): Remove unused variable white_gc.
 	Unref newly created GC since day_render now takes a reference.
 	(reminder_view_expose): Remove useless call to g_slist_length.
