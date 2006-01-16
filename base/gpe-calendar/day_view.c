@@ -78,16 +78,12 @@ day_page_new (GtkWidget * widget)
 static void
 day_page_draw_empty (const day_page_t page)
 {
-  GdkGC *white_gc, *black_gc;
+  GdkGC *white_gc;
 
   white_gc = page->widget->style->white_gc;
-  black_gc = page->widget->style->black_gc;
 
   gdk_draw_rectangle (page->widget->window, white_gc,
 		      TRUE, 0, 0, page->width, page->height);
-  gdk_draw_rectangle (page->widget->window, black_gc,
-		      FALSE, 0, 0, page->width - 1, page->height - 1);
-
 }
 
 static void

@@ -1,5 +1,8 @@
 2006-01-16  Phil Blundell  <pb@reciva.com>
 
+	* day_view.c (day_page_draw_empty): Don't draw black rectangle
+	around event bubbles.
+
 	* week_view.c (draw_expose_event): Use logical extents, not ink
 	extents, from Pango layout.
 	(week_view_update): Likewise.
