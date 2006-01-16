@@ -124,7 +124,7 @@ day_page_calc_time_width (day_page_t page)
 static void
 day_page_draw_background (const day_page_t page)
 {
-  GdkGC *gray_gc, *white_gc, *black_gc;
+  GdkGC *white_gc, *black_gc;
   GtkWidget *widget;
   guint i;
   PangoLayout *pl;
@@ -133,7 +133,6 @@ day_page_draw_background (const day_page_t page)
   widget = page->widget;
   pl = gtk_widget_create_pango_layout (widget, NULL);
   white_gc = widget->style->white_gc;
-  gray_gc = pen_new (widget, 58905, 58905, 56610);
   black_gc = widget->style->black_gc;
 
   /* Row height */
@@ -175,7 +174,6 @@ day_page_draw_background (const day_page_t page)
 		 page->time_width, page->height - 1);
 
   g_object_unref (pl);
-  g_object_unref (gray_gc);
 }
 
 gboolean
@@ -322,10 +320,9 @@ delete_event (event_t ev, GtkWidget * d)
 static void
 day_view_expose (void)
 {
-  GdkGC *white_gc, *gray_gc, *black_gc;
+  GdkGC *white_gc, *black_gc;
   gint width = 0, height = 0;
   white_gc = draw->style->white_gc;
-  gray_gc = pen_new (draw, 58905, 58905, 56610);
   black_gc = draw->style->black_gc;
 
   gdk_window_get_size (draw->window, &width, &height);
@@ -345,8 +342,6 @@ day_view_expose (void)
 
   day_render_set_event_rectangles (dr);
   draw_appointments (dr);
-
-  g_object_unref (gray_gc);
 }
 
 static gboolean
@@ -360,12 +355,11 @@ day_view_expose_cb (GtkWidget * widget,
 static int
 reminder_view_init ()
 {
-  GdkGC *white_gc, *black_gc, *cream_gc;
+  GdkGC *black_gc, *cream_gc;
 
   time_t end, start;
   struct tm tm_start, tm_end;
   GSList *events, *iter, *rem_list = NULL;
-
 
   localtime_r (&viewtime, &tm_start);
 
@@ -391,15 +385,25 @@ reminder_view_init ()
         }
     }
 
-  white_gc = rem_area->style->white_gc;
-  black_gc = rem_area->style->black_gc;
-
   if (rem_render)
-    day_render_delete (rem_render);
+    {
+      day_render_delete (rem_render);
+      rem_render = NULL;
+    }
 
+  if (rem_list == NULL)
+    {
+      gtk_widget_hide (rem_area);
+      return TRUE;
+    }
+
+  black_gc = rem_area->style->black_gc;
   cream_gc = pen_new (rem_area, 65535, 64005, 51100);
   rem_render = day_render_new (rem_area, page_rem, cream_gc, black_gc,
 			       viewtime, 5, 0, 1, rem_list);
+  g_object_unref (cream_gc);
+
+  gtk_widget_show (rem_area);
 
   return TRUE;
 }
@@ -407,11 +411,10 @@ reminder_view_init ()
 static void
 reminder_view_expose ()
 {
-  gint len;
   gint width = 0, height = 0;
 
   if (rem_render == NULL)
-    reminder_view_init ();
+    return;
   
   gdk_window_get_size (rem_area->window, &width, &height);
     
@@ -422,16 +425,8 @@ reminder_view_expose ()
   rem_render->offset.x = 0;
   day_render_set_event_rectangles (rem_render);
 
-  len = g_slist_length (rem_render->events);
-  if (len)
-    {
-      gtk_widget_set_size_request (rem_area, -1, dr->page->height / 20);
-      draw_appointments (rem_render);
-    }
-  else
-    {
-      gtk_widget_set_size_request (rem_area, -1, 0);
-    }
+  gtk_widget_set_size_request (rem_area, -1, dr->page->height / 20);
+  draw_appointments (rem_render);
 }
 
 static gboolean
@@ -445,12 +440,9 @@ reminder_view_expose_cb (GtkWidget * widget,
 int
 day_view_init (void)
 {
-  GdkGC *white_gc, *post_him_yellow, *black_gc;
-
   time_t end, start;
   struct tm tm_start, tm_end;
   GSList *events, *iter, *ev_list = NULL;
-
 
   localtime_r (&viewtime, &tm_start);
 
@@ -473,9 +465,6 @@ day_view_init (void)
         ev_list = g_slist_append (ev_list, ev);
     }
 
-  white_gc = draw->style->white_gc;
-  black_gc = draw->style->black_gc;
-
   if (dr)
     {
       g_slist_free (dr->events);
@@ -485,10 +474,14 @@ day_view_init (void)
   else
     {
       /* Don't want to infinge some patents here */
+      GdkGC *black_gc, *post_him_yellow;
+      black_gc = rem_area->style->black_gc;
       post_him_yellow = pen_new (draw, 63222, 59110, 33667);
       dr = day_render_new (draw, page_app, post_him_yellow, black_gc, viewtime,
                            5, 4, NUM_HOURS, ev_list);
+      g_object_unref (post_him_yellow);
     }
+
   return TRUE;
 }
 
@@ -503,7 +496,8 @@ void
 reminder_view_update ()
 {
   reminder_view_init ();
-  reminder_view_expose ();
+  if (rem_render)
+    reminder_view_expose ();
 }
 
 static void
@@ -515,7 +509,6 @@ day_changed_calendar (GtkWidget * widget)
   localtime_r (&viewtime, &tm);
 
   gtk_calendar_get_date (GTK_CALENDAR (widget), &year, &month, &day);
-
 
   if (tm.tm_year != (year - 1900) || tm.tm_mon != month || tm.tm_mday != day)
     {
@@ -680,8 +673,8 @@ day_view (void)
   delete_event_button = gtk_button_new_from_stock (GTK_STOCK_DELETE);
   save_button = gtk_button_new_from_stock (GTK_STOCK_SAVE);
 #endif
-  send_ir_button = gtk_button_new_with_label (_("Send via infared"));
-  send_bt_button = gtk_button_new_with_label (_("Send via bluetooth"));
+  send_ir_button = gtk_button_new_with_label (_("Send via infra-red"));
+  send_bt_button = gtk_button_new_with_label (_("Send via Bluetooth"));
 
   gtk_button_set_relief (GTK_BUTTON (edit_event_button), GTK_RELIEF_NONE);
   gtk_button_set_relief (GTK_BUTTON (delete_event_button), GTK_RELIEF_NONE);
@@ -727,7 +720,7 @@ day_view (void)
   g_signal_connect (G_OBJECT (send_ir_button), "clicked",
 		    G_CALLBACK (send_ir_cb), NULL);
 
-  g_signal_connect (G_OBJECT (send_ir_button), "clicked",
+  g_signal_connect (G_OBJECT (send_bt_button), "clicked",
 		    G_CALLBACK (send_bt_cb), NULL);
 
   gtk_window_set_decorated (GTK_WINDOW (popup), TRUE);
@@ -771,7 +764,6 @@ day_view (void)
   g_signal_connect (G_OBJECT (calendar),
 		    "day-selected", G_CALLBACK (day_changed_calendar), NULL);
 
-
   gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW
 					 (scrolled_window), draw);
   gtk_viewport_set_shadow_type (GTK_VIEWPORT (draw->parent), GTK_SHADOW_NONE);
@@ -814,6 +806,8 @@ day_view (void)
 			 GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK);
 
   g_object_set_data (G_OBJECT (main_window), "datesel-day", datesel);
+
+  gray_gc = pen_new (draw, 58905, 58905, 56610);
 
   return vbox;
 }

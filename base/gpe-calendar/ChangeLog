@@ -1,3 +1,27 @@
+2006-01-16  Phil Blundell  <pb@reciva.com>
+
+	* day_popup.c (destroy_popup): Call gtk_grab_remove.
+	(button_press_event): New function.
+	(day_popup): Install pointer grab on popup window.
+
+	* day_render.c (day_render_new): Take references to GCs.
+	(day_render_delete): Drop them.
+	* day_view.c (day_view): Attach "send with bluetooth" button to
+	send_bt_cb(), not send_ir_cb().  Correctly capitalise "Bluetooth".
+	Fix typo in "Send via infra-red".  Create global gray_gc.
+	(day_view_init): Remove unused variable white_gc.  Unref newly
+	created GC since day_render now takes a reference.
+	(reminder_view_expose): Remove useless call to g_slist_length.
+	Return without doing anything if rem_render==NULL.
+	(reminder_view_update): Only call reminder_view_expose if list of
+	events is not empty.
+	(reminder_view_init): Remove unused variable white_gc.  Unref
+	newly created cream_gc.  Show or hide drawing area depending on
+	whether there are any events.
+	(day_view_expose): Use global gray_gc rather than creating and
+	destroying one locally.
+	(day_page_draw_background): Likewise.
+
 2006-01-15  Phil Blundell  <pb@reciva.com>
 
 	* gtkdatesel.c (days_in_month): Deleted.  All callers adjusted to

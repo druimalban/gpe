@@ -28,7 +28,6 @@
 
 #define _(x) gettext(x)
 
-
 static void
 do_new_event (GtkWidget *widget, gpointer user_data)
 {
@@ -49,6 +48,7 @@ do_new_event (GtkWidget *widget, gpointer user_data)
 static void
 destroy_popup (GtkWidget *widget, GtkWidget *parent)
 {
+  gtk_grab_remove (widget);
   g_object_set_data (G_OBJECT (parent), "popup-handle", NULL);
   pop_window = NULL;
 }
@@ -95,10 +95,10 @@ static gboolean
 key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *window)
 {
   if (k->keyval == GDK_Escape) 
-  {
-    gtk_widget_destroy(window);
-    return TRUE;
-  }
+    {
+      gtk_widget_destroy(window);
+      return TRUE;
+    }
   return FALSE;
 }
 
@@ -135,6 +135,36 @@ handle_configure_event (GtkWidget *window, GdkEventConfigure *ev, gpointer user_
   gtk_widget_set_uposition (window, MAX (x, 0), MAX (y, 0));
 
   return FALSE;
+}
+
+static gint
+button_press_event (GtkWidget *widget, GdkEvent *event, gpointer data)
+{
+  GtkWidget *child;
+
+  child = gtk_get_event_widget (event);
+
+  /* We don't ask for button press events on the grab widget, so
+   *  if an event is reported directly to the grab widget, it must
+   *  be on a window outside the application (and thus we remove
+   *  the popup window). Otherwise, we check if the widget is a child
+   *  of the grab widget, and only remove the popup window if it
+   *  is not.
+   */
+  if (child != widget)
+    {
+      while (child)
+	{
+	  if (child == widget)
+	    return FALSE;
+
+	  child = child->parent;
+	}
+    }
+  
+  gtk_widget_destroy (widget);
+  
+  return TRUE;
 }
 
 GtkWidget *
@@ -276,12 +306,20 @@ day_popup (GtkWidget *parent, struct day_popup *p, gboolean show_items)
   g_object_set_data (G_OBJECT (window), "x", (gpointer)x);
   g_object_set_data (G_OBJECT (window), "y", (gpointer)y);
 
+  gtk_widget_set_uposition (window, x, y);
+
   g_object_set_data (G_OBJECT (parent), "popup-handle", window);
   g_signal_connect (G_OBJECT (window), "destroy", G_CALLBACK (destroy_popup), parent);
   g_signal_connect (G_OBJECT (window), "configure_event", G_CALLBACK (handle_configure_event), NULL);
   g_signal_connect (G_OBJECT (window), "expose_event", G_CALLBACK (handle_expose_event), vbox);
+  g_signal_connect (G_OBJECT (window), "button_press_event", G_CALLBACK (button_press_event), NULL);
 
   gtk_widget_show_all (window);
+
+  gdk_pointer_grab (window->window, TRUE,
+		    GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK,
+		    NULL, NULL, gtk_get_current_event_time ());
+  gtk_grab_add (window);
 
   return window;
 }

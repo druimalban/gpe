@@ -601,6 +601,9 @@ day_render_new (GtkWidget * widget,
   dr->offset.x = page->time_width;
   dr->offset.y = 0;
 
+  g_object_ref (dr->normal_gc);
+  g_object_ref (dr->ol_gc);
+
   pbuf = gpe_find_icon ("bell");
 
 
@@ -633,6 +636,8 @@ day_render_delete (struct day_render *dr)
          iter = iter->next;
        }
 
+      g_object_unref (dr->ol_gc);
+      g_object_unref (dr->normal_gc);
       g_slist_free (dr->event_rectangles);
       g_slist_free (dr->events);
       g_free (dr->capt);
