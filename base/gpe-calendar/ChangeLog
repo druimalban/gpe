@@ -1,5 +1,13 @@
 2006-01-16  Phil Blundell  <pb@reciva.com>
 
+	* day_render.c (found_node, make_set,events_overlap, 
+	find_set_in_list, find_set, union_set, find_overlapping_sets,
+	show_event, ol_sets_to_rectangles, event_rect_new): Make static.
+	(caption_show, caption_set_pango): Guard unused code with #if 0.
+	* day_render.h (find_overlapping_sets): Delete prototype.
+
+2006-01-16  Phil Blundell  <pb@reciva.com>
+
 	* day_view.c (scroll_to): Remove mysterious call to
 	gtk_adjustment_clamp_page to prevent extraneous redraws.
 

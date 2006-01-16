@@ -90,8 +90,6 @@ void day_render_show_big (struct day_render *);
 
 GSList *day_render_find_overlapping (GSList * events);
 
-GNode *find_overlapping_sets (GSList * events);
-
 ev_rec_t
 day_render_event_show_big (struct day_render *, event_t event, GdkGC * gc,
 			   GSList * ol_period);

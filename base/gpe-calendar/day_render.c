@@ -27,13 +27,12 @@
 
 #define event_ends(event) ((event)->start + (event)->duration)
 
-
-GSList *found_node;
+static GSList *found_node;
 
 /**
  * Make new set used by overlapping set 
  */
-GNode *
+static GNode *
 make_set (event_t e)
 {
   GSList *set = NULL;
@@ -43,7 +42,7 @@ make_set (event_t e)
 
 }
 
-gboolean
+static gboolean
 events_overlap (event_t ev1, event_t ev2)
 {				
   /* Event overlaps if and only if they intersect */
@@ -70,8 +69,7 @@ events_overlap (event_t ev1, event_t ev2)
     }
 }
 
-
-gboolean
+static gboolean
 find_set_in_list (GNode * node, gpointer data)
 {
   GSList *iter, *ol_set;
@@ -104,7 +102,7 @@ find_set_in_list (GNode * node, gpointer data)
 }
 
 /* Returns the overlapping set */
-GSList *
+static GSList *
 find_set (GNode * root, event_t ev)
 {
   found_node = NULL;
@@ -112,18 +110,16 @@ find_set (GNode * root, event_t ev)
   g_node_traverse (root, G_IN_ORDER, G_TRAVERSE_ALL, -1, find_set_in_list, ev);
 
   return found_node;
-
-
 }
 
 
-GSList *
+static GSList *
 union_set (GSList * set, const event_t ev)
 {
   return (g_slist_append (set, ev));
 }
 
-GNode *
+static GNode *
 find_overlapping_sets (GSList * events)
 {
   GNode *root;
@@ -152,7 +148,7 @@ find_overlapping_sets (GSList * events)
   return root;
 }
 
-void
+static void
 show_event (const struct day_render *dr, const ev_rec_t event_rectangle,
 	    GdkGC * gc)
 {
@@ -283,7 +279,6 @@ draw_appointments (struct day_render *dr)
 }
 
 
-
 /*
  * Caption functions.
  */
@@ -331,6 +326,7 @@ caption_with_pango_new (guint day, guint width, guint height, GdkPoint offset,
   return this;
 }
 
+#if 0
 void
 caption_set_pango (caption_t this, PangoLayout * pl)
 {
@@ -371,12 +367,13 @@ caption_show (caption_t this)
 
   if (this->day == 19)
     gdk_draw_rectangle (this->draw->window, this->gc, TRUE,
-			this->offset.x + gr.width * 1.2,
+\			this->offset.x + gr.width * 1.2,
 			this->offset.y + this->height * .5,
 			this->height * 0.8, this->height * 0.8);
 
   g_free (buffer);
 }
+#endif
 
 /* 
  * Returns true if event started today.
@@ -408,9 +405,7 @@ event_starts_today (const struct day_render *dr, const event_t ev)
     }
 }
 
-
-
-ev_rec_t
+static ev_rec_t
 event_rect_new (const struct day_render * dr, const event_t event,
 		gint column, gint columns)
 {
@@ -472,10 +467,7 @@ event_rect_delete (ev_rec_t ev)
   g_free (ev);
 }
 
-
-
-
-GSList *
+static GSList *
 ol_sets_to_rectangles (const struct day_render *dr, GNode * node)
 {
   GSList *iter, *ev_rects = NULL;
