@@ -137,6 +137,9 @@ day_page_draw_background (const day_page_t page)
   white_gc = widget->style->white_gc;
   black_gc = widget->style->black_gc;
 
+  if (! gray_gc)
+    gray_gc = pen_new (draw, 58905, 58905, 56610);
+
   /* Row height */
   /* Draw the hour column */
   gdk_draw_rectangle (widget->window, white_gc, TRUE, 0, 0, page->width,
@@ -808,8 +811,6 @@ day_view (void)
 			 GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK);
 
   g_object_set_data (G_OBJECT (main_window), "datesel-day", datesel);
-
-  gray_gc = pen_new (draw, 58905, 58905, 56610);
 
   return vbox;
 }
