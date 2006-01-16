@@ -1,5 +1,9 @@
 2006-01-16  Phil Blundell  <pb@reciva.com>
 
+	* Version 0.69 released.
+
+2006-01-16  Phil Blundell  <pb@reciva.com>
+
 	* day_view.c (day_page_draw_empty): Don't draw black rectangle
 	around event bubbles.
 
