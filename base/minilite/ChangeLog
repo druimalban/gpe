@@ -1,5 +1,9 @@
 2005-09-19	Rene Wagner <rw@handhelds.org>
 
+    * Release 0.50.
+
+2005-09-19	Rene Wagner <rw@handhelds.org>
+
     * minilite.c: Add +/- labels to sync visual appearance with minimix.
 
 2005-07-29	Florian Boor <florian.boor@kernelconcepts.de>
