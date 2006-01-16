@@ -60,9 +60,7 @@ struct week_day
 
 
 static gint
-draw_expose_event (GtkWidget *widget,
-		   GdkEventExpose *event,
-		   gpointer user_data)
+draw_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer user_data)
 {
   GtkDrawingArea *darea;
   GdkDrawable *drawable;
@@ -133,7 +131,7 @@ draw_expose_event (GtkWidget *widget,
     
           pango_layout_set_width (pl, max_width * PANGO_SCALE);
           pango_layout_set_markup (pl, week_days[day].string, strlen (week_days[day].string));
-          pango_layout_get_pixel_extents (pl, &pr, NULL);
+          pango_layout_get_pixel_extents (pl, NULL, &pr);
           if (pr.width > day_label_width)
             day_label_width = pr.width;
         }
@@ -158,7 +156,7 @@ draw_expose_event (GtkWidget *widget,
 
       pango_layout_set_width (pl, max_width * PANGO_SCALE);
       pango_layout_set_markup (pl, week_days[day].string, strlen (week_days[day].string));
-      pango_layout_get_pixel_extents (pl, &pr, NULL);
+      pango_layout_get_pixel_extents (pl, NULL, &pr);
       x = 4;
 //      x = wide_mode ? 4 : max_width - pr.width - 8;
       gtk_paint_layout (widget->style,
@@ -206,7 +204,7 @@ draw_expose_event (GtkWidget *widget,
 					x, y,
 					pl_evt);
 		      
-		      pango_layout_get_pixel_extents (pl_evt, &pr, NULL);
+		      pango_layout_get_pixel_extents (pl_evt, NULL, &pr);
 		      if (height < pr.height)
 			height = pr.height;
 		      ev->mark = TRUE;
@@ -215,7 +213,7 @@ draw_expose_event (GtkWidget *widget,
 	      
 	      pango_layout_set_width (pl_evt, available_width * PANGO_SCALE);
 	      pango_layout_set_text (pl_evt, evd->summary, -1);
-	      pango_layout_get_pixel_extents (pl_evt, &pr, NULL);
+	      pango_layout_get_pixel_extents (pl_evt, NULL, &pr);
 	      gtk_paint_layout (widget->style,
 				widget->window,
 				GTK_WIDGET_STATE (widget),
@@ -359,7 +357,7 @@ week_view_update (void)
 		  s = strftime_strdup_utf8_locale ("%H:%M", &tm);
                   ev->mark = TRUE;
 		  pango_layout_set_text (pl_evt, s, -1);
-		  pango_layout_get_pixel_extents (pl_evt, &pr, NULL);
+		  pango_layout_get_pixel_extents (pl_evt, NULL, &pr);
 		  if (time_width < pr.width)
 		    time_width = pr.width;
 		  g_free (s);
@@ -379,19 +377,18 @@ week_view_update (void)
 
       pango_layout_set_width (pl, week_view_draw->allocation.width * PANGO_SCALE);
       pango_layout_set_markup (pl, week_days[day].string, strlen (week_days[day].string));
-      pango_layout_get_pixel_extents (pl, &pr, NULL);
+      pango_layout_get_pixel_extents (pl, NULL, &pr);
       height = pr.height + 2;
 
       if (week_days[day].events)
         {
-    
           for (iter = week_days[day].events; iter; iter = iter->next)
             {
               event_t ev = iter->data;
               event_details_t evd = event_db_get_details (ev);
               pango_layout_set_width (pl_evt, available_width * PANGO_SCALE);
               pango_layout_set_text (pl_evt, evd->summary, -1);
-              pango_layout_get_pixel_extents (pl_evt, &pr, NULL);
+              pango_layout_get_pixel_extents (pl_evt, NULL, &pr);
               height += pr.height + 2;
             }
         }

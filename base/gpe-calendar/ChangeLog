@@ -1,9 +1,26 @@
 2006-01-16  Phil Blundell  <pb@reciva.com>
 
+	* week_view.c (draw_expose_event): Use logical extents, not ink
+	extents, from Pango layout.
+	(week_view_update): Likewise.
+
+	* day_render.c (show_event): Remove spurious call to
+	g_locale_to_utf8().  Replace fixed-size snprintf buffer with call
+	to g_strdup_printf.
+	(caption_show): Likewise.  Fix 256-byte memory leak.
+	(caption_new): Deleted.
+	(caption_with_pango_new): Remove argument pl.  Make Pango layout
+	construction unconditional.  Rename to caption_new.
+	(caption_delete): New function.
+	(day_render_delete): Call it.
+
+2006-01-16  Phil Blundell  <pb@reciva.com>
+
 	* day_render.c (found_node, make_set,events_overlap, 
 	find_set_in_list, find_set, union_set, find_overlapping_sets,
 	show_event, ol_sets_to_rectangles, event_rect_new): Make static.
 	(caption_show, caption_set_pango): Guard unused code with #if 0.
+
 	* day_render.h (find_overlapping_sets): Delete prototype.
 
 2006-01-16  Phil Blundell  <pb@reciva.com>

@@ -155,7 +155,7 @@ show_event (const struct day_render *dr, const ev_rec_t event_rectangle,
   guint length;
 
   event_details_t evd;
-  gchar buf[250], *buffer;
+  gchar *buffer;
   PangoLayout *pl;
   GdkRectangle gr;
   gint arc_size;
@@ -164,12 +164,8 @@ show_event (const struct day_render *dr, const ev_rec_t event_rectangle,
 
   pl = gtk_widget_create_pango_layout (dr->widget, NULL);
 
-
   evd = event_db_get_details (event_rectangle->event);
-  snprintf (buf, sizeof (buf), "<span size='small'>%s</span>", evd->summary);
-  buffer = g_locale_to_utf8 (buf, -1, NULL, NULL, NULL);
-  if (!buffer)
-      buffer = g_strdup(buf);
+  buffer = g_strdup_printf ("<span size='small'>%s</span>", evd->summary);
 
   length = event_rectangle->height - 1;
   /* Rectangle used to write appointment summary */
@@ -260,6 +256,7 @@ show_event (const struct day_render *dr, const ev_rec_t event_rectangle,
                    GDK_RGB_DITHER_NORMAL, 0, 0);
         }
     }
+  g_object_unref (pl);
   g_free (buffer);
 }
 
@@ -284,16 +281,13 @@ draw_appointments (struct day_render *dr)
  */
 
 /* Caption Constructor*/
-#define caption_new(day, width, height, offset,gc,widget,bell) caption_with_pango_new((day),(width),(height),(offset),(gc),(widget),bell ,NULL)
-
 /** 
- * Caption constructor specifing pango layout
+ * Caption constructor
  * widget is the widget where you want pango layout will be drawn
  */
 caption_t
-caption_with_pango_new (guint day, guint width, guint height, GdkPoint offset,
-			GdkGC * gc, GtkWidget * widget, GdkPixbuf * bell,
-			PangoLayout * pl)
+caption_new (guint day, guint width, guint height, GdkPoint offset,
+	     GdkGC * gc, GtkWidget * widget, GdkPixbuf * bell)
 {
   caption_t this;
 
@@ -302,20 +296,13 @@ caption_with_pango_new (guint day, guint width, guint height, GdkPoint offset,
   if (this == NULL)
     return NULL;
 
-  if (pl != NULL)
+  if (widget == NULL)
     {
-      this->pl = pl;
+      g_free (this);
+      return NULL;
     }
-  else
-    {
-      if (widget == NULL)
-	{
-	  g_free (this);
-	  return NULL;
-	}
 
-      this->pl = gtk_widget_create_pango_layout (widget, NULL);
-    }
+  this->pl = gtk_widget_create_pango_layout (widget, NULL);
   this->draw = widget;
   this->day = day;
   this->height = height;
@@ -324,6 +311,13 @@ caption_with_pango_new (guint day, guint width, guint height, GdkPoint offset,
   this->bell_pb = bell;
   this->gc = gc;
   return this;
+}
+
+void
+caption_delete (caption_t capt)
+{
+  g_object_unref (capt->pl);
+  g_free (capt);
 }
 
 #if 0
@@ -336,18 +330,13 @@ caption_set_pango (caption_t this, PangoLayout * pl)
 void
 caption_show (caption_t this)
 {
-  char buf[40], *buffer;
+  char *buffer;
   PangoRectangle pr;
   GdkRectangle gr;
 
-  buffer = (char *) g_malloc (sizeof (char) * 256);
-
   /* Displays day number */
-  snprintf (buf, sizeof (buf), "<span size='%d'>%d</span>",
-	    this->height * 800, this->day);
-
-
-  buffer = g_locale_to_utf8 (buf, -1, NULL, NULL, NULL);
+  buffer = g_strdup_printf ("<span size='%d'>%d</span>",
+			    this->height * 800, this->day);
 
   pango_layout_set_markup (this->pl, buffer, strlen (buffer));
   pango_layout_get_pixel_extents (this->pl, &pr, NULL);
@@ -632,7 +621,7 @@ day_render_delete (struct day_render *dr)
       g_object_unref (dr->normal_gc);
       g_slist_free (dr->event_rectangles);
       g_slist_free (dr->events);
-      g_free (dr->capt);
+      caption_delete (dr->capt);
       g_free (dr);
     }
 }
