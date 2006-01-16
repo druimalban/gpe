@@ -2,29 +2,27 @@ PACKAGE = startup-monitor
 PREFIX = /usr/local
 CVSBUILD = yes
 DEBUG = no
-VERSION = 0.18-1
+VERSION = 0.18-2
 
 LINGUAS = 
 
 MEMBERS = monitor
 
-CPPFLAGS = -D_GNU_SOURCE `pkg-config --cflags libstartup-notification-1.0` -DSN_API_NOT_YET_FROZEN `pkg-config --cflags glib-2.0`
+PACKAGE_CPPFLAGS = -D_GNU_SOURCE `pkg-config --cflags libstartup-notification-1.0` -DSN_API_NOT_YET_FROZEN `pkg-config --cflags glib-2.0 libmb`
 
 ifeq ($(DEBUG),yes)
-CFLAGS += -O2 -g
-LDFLAGS = -g #-lefence
+PACKAGE_CFLAGS += -O2 -g
+PACKAGE_LDFLAGS = -g
 else
-CFLAGS += -Os -fomit-frame-pointer
+PACKAGE_CFLAGS += -Os -fomit-frame-pointer
 endif
 
-CFLAGS += -Wall
-LDFLAGS += `pkg-config --libs x11` -lXext -lmb `pkg-config --libs libstartup-notification-1.0` `pkg-config --libs glib-2.0`
-CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
-CFLAGS += -MD
+PACKAGE_CFLAGS += -Wall
+PACKAGE_LDFLAGS += `pkg-config --libs x11` -lXext -lmb `pkg-config --libs libstartup-notification-1.0` `pkg-config --libs glib-2.0 libmb`
+PACKAGE_CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
+PACKAGE_CFLAGS += -MD
 
 .SUFFIXES: .d
-
-export PKG_CONFIG_PATH = $(BUILD)
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
@@ -39,7 +37,7 @@ endif
 all: $(PACKAGE) all-mo
 
 $(PACKAGE): $(OBJS)
-	$(CC) -o $@ $^ $(LDFLAGS)
+	$(CC) -o $@ $^ $(PACKAGE_LDFLAGS) $(LDFLAGS)
 
 install-program: all
 	mkdir -p $(DESTDIR)$(PREFIX)/bin

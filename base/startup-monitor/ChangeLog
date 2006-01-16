@@ -1,0 +1,6 @@
+
+2006-01-16  Florian Boor <florian.boor@kernelconcepts.de>
+
+	* Release 0.18-2.
+	* monitor.c: Change location of libmatchbox headers.
+	* Makefile: Update to become compatible to OE.

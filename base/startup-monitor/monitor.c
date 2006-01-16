@@ -34,7 +34,7 @@
 #include <glib.h>
 #include <time.h>
 
-#include <mb/mbpixbuf.h>
+#include <libmb/mbpixbuf.h>
 
 #define TIMEOUT		20
 #define POLLTIME	10
