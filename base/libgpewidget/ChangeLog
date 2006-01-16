@@ -1,3 +1,15 @@
+2006-01-16  Phil Blundell  <pb@reciva.com>
+
+	* gpeclockface.c (gpe_clock_face_expose): Increase minute hand
+	length to 0.9 * radius.  Respect clock->border when using Cairo.
+	(struct _GpeClockFace): New member border_set.
+	(gpe_clock_face_set_border): New function.
+	(gpe_clock_face_do_set_radius): Set border based on radius if not
+	explicitly set.
+	(gpe_clock_face_init): Clear clock->border_set.
+
+	* gpe/gpeclockface.h (gpe_clock_face_set_border): New prototype.
+
 2006-01-13  Florian Boor <florian@kernelconcepts.de>
 
 	* Makefile.am: Remove debian files from EXTRA_DIST.

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003, 2005 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2003, 2005, 2006 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -57,6 +57,7 @@ struct _GpeClockFace
   double hand_width;
   gboolean radius_set;
   gboolean hand_width_set;
+  gboolean border_set;
 
   gboolean use_background_image;
   gboolean label_hours;
@@ -320,6 +321,7 @@ gpe_clock_face_expose (GtkWidget *widget,
 		 2 * M_PI);
       cairo_fill (clock->cr);
       cairo_set_source_rgba (clock->cr, 0, 0, 0, 1.0);
+      cairo_set_line_width (clock->cr, clock->border);
       cairo_arc (clock->cr,
 		 clock->x_offset + clock->radius,
 		 clock->y_offset + clock->radius,
@@ -400,7 +402,7 @@ gpe_clock_face_expose (GtkWidget *widget,
 
   if (clock->second_adj != NULL)
     draw_hand (clock, clock->second_angle, 7 * clock->radius / 8, 1);
-  draw_hand (clock, clock->minute_angle, 7 * clock->radius / 8, clock->hand_width);
+  draw_hand (clock, clock->minute_angle, 9 * clock->radius / 10, clock->hand_width);
   draw_hand (clock, clock->hour_angle, 3 * clock->radius / 5, clock->hand_width);
 
   gdk_draw_drawable (drawable, gc, clock->backing_pixmap, 0, 0, 0, 0, 
@@ -611,6 +613,9 @@ gpe_clock_face_do_set_radius (GpeClockFace *clock, guint new_radius)
 
   if (!clock->hand_width_set)
     clock->hand_width = new_radius / 40;
+
+  if (!clock->border_set)
+    clock->border = (new_radius < 16) ? DEFAULT_BORDER / 2 : DEFAULT_BORDER;
 }
 
 static void
@@ -757,6 +762,7 @@ gpe_clock_face_init (GpeClockFace *clock)
 
   clock->radius_set = FALSE;
   clock->hand_width_set = FALSE;
+  clock->border_set = FALSE;
   clock->radius = DEFAULT_RADIUS;
   clock->border = DEFAULT_BORDER;
   clock->hand_width = DEFAULT_HAND_WIDTH;
@@ -801,6 +807,13 @@ gpe_clock_face_set_radius (GpeClockFace *clock, guint radius)
 {
   clock->radius_set = TRUE;
   gpe_clock_face_do_set_radius (clock, radius);
+}
+
+void
+gpe_clock_face_set_border (GpeClockFace *clock, guint border)
+{
+  clock->border_set = TRUE;
+  clock->border = border;
 }
 
 void

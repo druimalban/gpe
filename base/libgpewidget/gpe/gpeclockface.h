@@ -36,7 +36,7 @@ void		gpe_clock_face_set_radius (GpeClockFace *clock, guint radius);
 void		gpe_clock_face_set_use_background_image (GpeClockFace *clock, gboolean yes);
 void		gpe_clock_face_set_label_hours (GpeClockFace *clock, gboolean yes);
 void		gpe_clock_face_set_hand_width (GpeClockFace *clock, double width);
-
+void		gpe_clock_face_set_border (GpeClockFace *clock, guint border);
 
 GdkBitmap      *gpe_clock_face_get_shape (GpeClockFace *clock);
 
