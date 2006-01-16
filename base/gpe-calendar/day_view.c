@@ -40,6 +40,8 @@ static GSList *day_events[NUM_HOURS], *untimed_events;
 static GtkWidget *rem_area;
 static GtkWidget *datesel, *calendar, *scrolled_window;
 
+static GdkGC *gray_gc;
+
 /* Day renderer */
 static event_t sel_event;
 static day_page_t page_app, page_rem;
