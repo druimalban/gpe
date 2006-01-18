@@ -1,3 +1,12 @@
+2006-01-18		Florian Boor <florian.boor@kernelconcepts.de>
+
+	* main.c: Fix icon update.
+	* pixmaps/*48.png: Replace misleading icons by new ones - one original 
+	from Tango project (License: Creative Commons Attribution Share-Alike license) 
+	and one derived from the Tango icon. Many thanks to the Tango project
+	for providing such a great set of icons!
+	
+
 2006-01-15		Florian Boor <florian.boor@kernelconcepts.de>
 
 	* Release Version 0.6

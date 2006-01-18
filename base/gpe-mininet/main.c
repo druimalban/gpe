@@ -64,7 +64,7 @@ typedef enum
 n_images;
 
 
-static GdkWindow *dock_window;
+static GtkWidget *window;
 static GtkWidget *menu;
 static GtkWidget *icon;
 
@@ -77,6 +77,26 @@ static int netlink_fd;
 
 #define RTF_UP  0x1
 
+static void
+update_icon(gint size)
+{
+	GdkBitmap *bitmap;
+	GdkPixbuf *sbuf, *dbuf;
+	
+	if (size <= 0)
+		size = gdk_pixbuf_get_width(gtk_image_get_pixbuf(GTK_IMAGE(icon)));
+	
+	if (size > 16)
+		sbuf = gpe_find_icon ( net_is_on ? "net-on-48" : "net-off-48" );
+	else
+		sbuf = gpe_find_icon ( net_is_on ? "net-on" : "net-off" );
+	dbuf = gdk_pixbuf_scale_simple(sbuf, size, size, GDK_INTERP_HYPER);
+	gdk_pixbuf_render_pixmap_and_mask (dbuf, NULL, &bitmap, 64);
+	gtk_widget_shape_combine_mask (GTK_WIDGET(window), NULL, 1, 0);
+	gtk_widget_shape_combine_mask (GTK_WIDGET(window), bitmap, 1, 0);
+	gdk_bitmap_unref (bitmap);
+	gtk_image_set_from_pixbuf (GTK_IMAGE(icon), dbuf);
+}
 
 static gboolean
 net_get_status()
@@ -169,6 +189,7 @@ update_netstatus (void)
 		gpe_popup_infoprint(GDK_DISPLAY(),
 			net_is_on ? _("Network connection established.") 
 				: _("Network connection lost."));
+		update_icon(0);
 	}
 	return TRUE;
 }
@@ -246,23 +267,12 @@ rtnl_connect_glib (int fd)
 gboolean 
 external_event(GtkWindow *window, GdkEventConfigure *event, gpointer user_data)
 {
-	GdkBitmap *bitmap;
-	GdkPixbuf *sbuf, *dbuf;
 	gint size;
 
 	if (event->type == GDK_CONFIGURE)
 	{
 		size = (event->width < event->height) ? event->height : event->width;
-		if (size > 16)
-			sbuf = gpe_find_icon ( net_is_on ? "net-on-48" : "net-off-48" );
-		else
-			sbuf = gpe_find_icon ( net_is_on ? "net-on" : "net-off" );
-		dbuf = gdk_pixbuf_scale_simple(sbuf, size, size, GDK_INTERP_HYPER);
-		gdk_pixbuf_render_pixmap_and_mask (dbuf, NULL, &bitmap, 64);
-		gtk_widget_shape_combine_mask (GTK_WIDGET(window), NULL, 1, 0);
-		gtk_widget_shape_combine_mask (GTK_WIDGET(window), bitmap, 1, 0);
-		gdk_bitmap_unref (bitmap);
-		gtk_image_set_from_pixbuf (GTK_IMAGE(icon), dbuf);
+		update_icon(size);
 	}
 	return FALSE;
 }
@@ -272,7 +282,6 @@ int
 main (int argc, char *argv[])
 {
 	Display *dpy;
-	GtkWidget *window;
 	GtkWidget *menu_remove;
 	GtkWidget *menu_config;
 	GtkWidget *menu_info;
@@ -350,13 +359,12 @@ main (int argc, char *argv[])
 	gtk_widget_add_events (window, GDK_BUTTON_PRESS_MASK);
 
 	gtk_container_add (GTK_CONTAINER (window), icon);
-
-	dock_window = window->window;
-	dpy = GDK_WINDOW_XDISPLAY (dock_window);
+	
+	dpy = GDK_WINDOW_XDISPLAY (window->window);
 
 	gtk_widget_show (window);
 
-	gpe_system_tray_dock (dock_window);
+	gpe_system_tray_dock (window->window);
 
 	gtk_main ();
 	
