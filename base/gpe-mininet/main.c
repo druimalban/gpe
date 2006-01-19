@@ -99,7 +99,7 @@ update_icon(gint size)
 }
 
 static gboolean
-net_get_status()
+net_get_status(void)
 {
 	FILE *pipe;
 	char buffer[256];
@@ -177,23 +177,46 @@ net_get_status()
 	return result;
 }
 
+static gboolean
+cancel_message(gpointer data)
+{
+	guint id = (guint)data;
+	gpe_system_tray_cancel_message(window->window, id);
+	return FALSE;
+}
+
 gboolean
 update_netstatus (void)
 {
 	gboolean oldstatus = net_is_on;
+	guint msgid;
 	
 	net_is_on = net_get_status();
 	
 	if (net_is_on != oldstatus)
 	{
-		gpe_popup_infoprint(GDK_DISPLAY(),
-			net_is_on ? _("Network connection established.") 
-				: _("Network connection lost."));
+		msgid = gpe_system_tray_send_message (window->window, 
+		          net_is_on ? _("Network connection established.") 
+                  : _("Network connection lost."), (unsigned int)0);
+		g_timeout_add(4500, (GSourceFunc)cancel_message, (gpointer)msgid);
 		update_icon(0);
 	}
 	return TRUE;
 }
 
+gboolean
+update_wireless (gchar *essid)
+{
+	guint msgid;
+	gchar *msg = g_strdup_printf("%s %s", _("New wireless link: "), essid);
+	
+	msgid = gpe_system_tray_send_message (window->window, msg, (unsigned int)0);
+	g_timeout_add(4500, (GSourceFunc)cancel_message, (gpointer)msgid);
+
+	g_free(msg);
+	
+	return TRUE;
+}
 
 static void
 app_shutdown ()
