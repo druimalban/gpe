@@ -716,6 +716,8 @@ void main_loop (void) {
 					if (debug) fprintf(dgfp,"Going to sleep....\n");
 #endif
 					do_sleep ();
+					set_backlight (current_bl);
+					dimmed=0;					
 					total_unused=0;
 				}
 			}

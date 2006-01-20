@@ -1,3 +1,7 @@
+2006-01-20  Florian Boor <florian.boor@kernelconcepts.de>
+
+	* Version 0.9 released.
+	* ipaq-sleep.c: Reset dimmed display after resume.
 
 2005-09-26  Florian Boor <florian.boor@kernelconcepts.de>
 
