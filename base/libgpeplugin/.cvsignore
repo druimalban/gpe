@@ -1,0 +1,11 @@
+Makefile
+Makefile.in
+aclocal.m4
+config.*
+configure
+libgpeplugin.pc
+libtool
+ltmain.sh
+stamp-h1
+.deps
+
