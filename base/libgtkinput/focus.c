@@ -24,15 +24,29 @@
 #include <gdk/gdk.h>
 #include <gdk/gdkx.h>
 
-static GSList *displays;
 static GdkAtom gpe_input_manager;
 
 struct display_record
 {
-  Display *dpy;
   Window input_manager;
   Atom atom;
 };
+
+static void
+selection_owner_change (GObject *obj, GdkEventOwnerChange *ev, GdkDisplay *gdpy)
+{
+  struct display_record *r;
+
+  r = g_object_get_data (G_OBJECT (gdpy), "gpe-input-manager");
+  if (r)
+    {
+      Display *dpy;
+      dpy = gdk_x11_display_get_xdisplay (gdpy);
+      r->input_manager = XGetSelectionOwner (dpy, r->atom);
+
+      printf ("owner change event %x %x\n", ev->owner, r->input_manager);
+    }
+}
 
 static gboolean
 send_focus_request (GdkWindow *gdkw, gboolean in)
@@ -41,7 +55,6 @@ send_focus_request (GdkWindow *gdkw, gboolean in)
   Display *dpy;
   Window manager;
   Atom atom;
-  GSList *l;
   struct display_record *r;
 
 #ifdef DEBUG
@@ -51,24 +64,18 @@ send_focus_request (GdkWindow *gdkw, gboolean in)
   gdpy = gdk_drawable_get_display (gdkw);
   dpy = gdk_x11_display_get_xdisplay (gdpy);
 
-  for (l = displays; l; l = l->next)
+  r = g_object_get_data (G_OBJECT (gdpy), "gpe-input-manager");
+  if (r == NULL)
     {
-      r = l->data;
+      GtkClipboard *clipboard;
 
-      if (r->dpy == dpy)
-	break;
-    }
-
-  if (l == NULL)
-    {
       r = g_new (struct display_record, 1);
-      r->dpy = dpy;
       r->atom = gdk_x11_atom_to_xatom_for_display (gdpy, gpe_input_manager);
       r->input_manager = XGetSelectionOwner (dpy, r->atom);
-      displays = g_slist_prepend (displays, r);
+      g_object_set_data (G_OBJECT (gdpy), "gpe-input-manager", r);
 
-      if (!gdk_display_request_selection_notification (gdpy, gpe_input_manager))
-	fprintf (stderr, "couldn't register for selection notifications\n");
+      clipboard = gtk_clipboard_get_for_display (gdpy, gpe_input_manager);
+      g_signal_connect (G_OBJECT (clipboard), "owner-change", G_CALLBACK (selection_owner_change), NULL);
     }
 
   manager = r->input_manager;
@@ -123,13 +130,6 @@ focus_watcher (GSignalInvocationHint *ihint,
 #endif
       if (GTK_IS_EDITABLE (widget) || GTK_IS_TEXT_VIEW (widget))
 	send_focus_request (widget->window, event->focus_change.in);
-    }
-  else if (event->type == GDK_OWNER_CHANGE)
-    {
-      if (event->owner_change.selection == gpe_input_manager)
-	{
-	  printf ("selection owner has changed\n");
-	}
     }
 
   return TRUE;

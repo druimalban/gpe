@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT(libgtkinput, 0.1, gpe@handhelds.org)
+AC_INIT(libgtkinput, 0.2, gpe@handhelds.org)
 AC_CONFIG_SRCDIR([focus.c])
 AM_INIT_AUTOMAKE([foreign dist-bzip2])
 
