@@ -25,19 +25,31 @@
 #include <gdk/gdkx.h>
 
 static GSList *displays;
+static GdkAtom gpe_input_manager;
 
 struct display_record
 {
   Display *dpy;
   Window input_manager;
-  Atom gpe_input_manager_atom;
+  Atom atom;
 };
 
 static gboolean
-get_manager_for_display (Display *dpy, Window *manager, Atom *atom)
+send_focus_request (GdkWindow *gdkw, gboolean in)
 {
+  GdkDisplay *gdpy;
+  Display *dpy;
+  Window manager;
+  Atom atom;
   GSList *l;
   struct display_record *r;
+
+#ifdef DEBUG
+  fprintf (stderr, "sending request %d\n", in);
+#endif
+
+  gdpy = gdk_drawable_get_display (gdkw);
+  dpy = gdk_x11_display_get_xdisplay (gdpy);
 
   for (l = displays; l; l = l->next)
     {
@@ -51,14 +63,40 @@ get_manager_for_display (Display *dpy, Window *manager, Atom *atom)
     {
       r = g_new (struct display_record, 1);
       r->dpy = dpy;
-      r->gpe_input_manager_atom = XInternAtom (dpy, "_GPE_INPUT_MANAGER", False);
-      r->input_manager = XGetSelectionOwner (dpy, r->gpe_input_manager_atom);
+      r->atom = gdk_x11_atom_to_xatom_for_display (gdpy, gpe_input_manager);
+      r->input_manager = XGetSelectionOwner (dpy, r->atom);
       displays = g_slist_prepend (displays, r);
+
+      if (!gdk_display_request_selection_notification (gdpy, gpe_input_manager))
+	fprintf (stderr, "couldn't register for selection notifications\n");
     }
 
-  *manager = r->input_manager;
-  *atom = r->gpe_input_manager_atom;
-  return r->input_manager ? TRUE : FALSE;
+  manager = r->input_manager;
+  atom = r->atom;
+
+  if (manager)
+    {
+      Window w;
+      XClientMessageEvent ev;
+
+      w = gdk_x11_drawable_get_xid (gdkw);
+
+      memset (&ev, 0, sizeof (ev));
+
+      gdk_error_trap_push ();
+      ev.type = ClientMessage;
+      ev.format = 32;
+      ev.message_type = atom;
+      ev.data.l[0] = in ? 1 : 2;
+      ev.data.l[1] = w;
+      XSendEvent (dpy, manager, False, SubstructureNotifyMask, (XEvent *)&ev);
+      XFlush (dpy);
+      gdk_error_trap_pop ();
+
+      return TRUE;
+    }
+
+  return FALSE;
 }
 
 static gboolean
@@ -78,34 +116,19 @@ focus_watcher (GSignalInvocationHint *ihint,
   event = g_value_get_boxed (param_values + 1);
   widget = GTK_WIDGET (object);
 
-  if (event->type == GDK_FOCUS_CHANGE && widget->parent == NULL)
+  if (event->type == GDK_FOCUS_CHANGE)
     {
-      GdkWindow *gdkw;
-      Display *dpy;
-      Window manager;
-      Atom atom;
- 
-      gdkw = widget->window;
-      dpy = gdk_x11_drawable_get_xdisplay (gdkw);
-
-      if (get_manager_for_display (dpy, &manager, &atom))
+#ifdef DEBUG
+      fprintf (stderr, "focus event %d %x\n", event->focus_change.in, widget);
+#endif
+      if (GTK_IS_EDITABLE (widget) || GTK_IS_TEXT_VIEW (widget))
+	send_focus_request (widget->window, event->focus_change.in);
+    }
+  else if (event->type == GDK_OWNER_CHANGE)
+    {
+      if (event->owner_change.selection == gpe_input_manager)
 	{
-	  Window w;
-	  XClientMessageEvent ev;
-
-	  w = gdk_x11_drawable_get_xid (gdkw);
-
-	  memset (&ev, 0, sizeof (ev));
-
-	  gdk_error_trap_push ();
-	  ev.type = ClientMessage;
-	  ev.format = 32;
-	  ev.message_type = atom;
-	  ev.data.l[0] = event->focus_change.in ? 1 : 2;
-	  ev.data.l[1] = w;
-	  XSendEvent (dpy, manager, False, SubstructureNotifyMask, (XEvent *)&ev);
-	  XFlush (dpy);
-	  gdk_error_trap_pop ();
+	  printf ("selection owner has changed\n");
 	}
     }
 
@@ -119,4 +142,6 @@ gtk_module_init (gint *argc, gchar ***argv)
 
   g_signal_add_emission_hook (g_signal_lookup ("event-after", GTK_TYPE_WINDOW), 0,
 			      focus_watcher, NULL, (GDestroyNotify) NULL);
+
+  gpe_input_manager = gdk_atom_intern ("_GPE_INPUT_MANAGER", FALSE);
 }
