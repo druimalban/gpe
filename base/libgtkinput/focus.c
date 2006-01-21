@@ -40,11 +40,10 @@ selection_owner_change (GObject *obj, GdkEventOwnerChange *ev, GdkDisplay *gdpy)
   r = g_object_get_data (G_OBJECT (gdpy), "gpe-input-manager");
   if (r)
     {
-      Display *dpy;
-      dpy = gdk_x11_display_get_xdisplay (gdpy);
-      r->input_manager = XGetSelectionOwner (dpy, r->atom);
-
-      printf ("owner change event %x %x\n", ev->owner, r->input_manager);
+      r->input_manager = ev->owner;
+#ifdef DEBUG
+      printf ("owner change event %x\n", ev->owner);
+#endif
     }
 }
 
@@ -75,7 +74,7 @@ send_focus_request (GdkWindow *gdkw, gboolean in)
       g_object_set_data (G_OBJECT (gdpy), "gpe-input-manager", r);
 
       clipboard = gtk_clipboard_get_for_display (gdpy, gpe_input_manager);
-      g_signal_connect (G_OBJECT (clipboard), "owner-change", G_CALLBACK (selection_owner_change), NULL);
+      g_signal_connect (G_OBJECT (clipboard), "owner-change", G_CALLBACK (selection_owner_change), gdpy);
     }
 
   manager = r->input_manager;
@@ -97,7 +96,7 @@ send_focus_request (GdkWindow *gdkw, gboolean in)
       ev.data.l[0] = in ? 1 : 2;
       ev.data.l[1] = w;
       XSendEvent (dpy, manager, False, SubstructureNotifyMask, (XEvent *)&ev);
-      XFlush (dpy);
+      XSync (dpy, False);
       gdk_error_trap_pop ();
 
       return TRUE;
