@@ -1,3 +1,11 @@
+2006-01-21  Philipp Zabel <pzabel@gmx.de>
+
+	* gpe-login.c: Add supplementary groups configured in
+		       /etc/gpe/gpe-login.conf to the login process.
+	* gpe-login.conf: Set supplementary group list to include
+			  audio and video by default.
+	* Makefile: Install new default gpe-login.conf.
+
 2006-01-14  Phil Blundell  <pb@reciva.com>
 
 	* Makefile: Version 0.85 released.

@@ -63,6 +63,7 @@ install-program: gpe-login gpe-lock-display
 	install -d $(DESTDIR)/etc/X11/Xinit.d
 	install -m 755 gpe-login.xinit $(DESTDIR)/etc/X11/Xinit.d/99gpe-login
 	install -d $(DESTDIR)/etc/gpe
+	install -m 644 gpe-login.conf $(DESTDIR)/etc/gpe/
 	install -m 644 locale.alias $(DESTDIR)/etc/gpe/
 	install -d $(DESTDIR)/etc/sysconfig
 	install -m 644 gpe-login.sysconfig $(DESTDIR)/etc/sysconfig/gpelogin

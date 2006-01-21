@@ -73,6 +73,7 @@ static pid_t setup_pid;
 static pid_t kbd_pid;
 static const char *xkbd_path = "xkbd";
 static const char *xkbd_str;
+static gchar **add_groups;
 static gboolean force_xkbd;
 static const char *display;
 
@@ -395,6 +396,10 @@ static void
 do_login (const char *name, uid_t uid, gid_t gid, char *dir, char *shell)
 {
   int fd;
+  int ngroups, naddgroups, ngroups_max = sysconf (_SC_NGROUPS_MAX);
+  struct group *grp;
+  gchar **g;
+  gid_t *groups;
   cleanup_children ();
 
   pre_session (name);
@@ -406,6 +411,26 @@ do_login (const char *name, uid_t uid, gid_t gid, char *dir, char *shell)
   /* establish the user's environment */
   if (initgroups (name, gid))
     perror ("initgroups");
+
+  /* add supplementary group membership */
+  if (add_groups)
+    {
+      ngroups = getgroups (0, NULL);
+      naddgroups = g_strv_length (add_groups);
+      groups = (gid_t *) malloc ((ngroups + naddgroups) * sizeof (gid_t));
+      if (!groups)
+	perror ("malloc");
+      if (!getgroups (ngroups, groups))
+	perror ("getgroups");
+      g = add_groups;
+      while ((ngroups_max > ngroups + 1) && (*g))
+	{
+	  if ((grp = getgrnam (*g++)))
+	    groups[ngroups++] = grp->gr_gid;
+	}
+      if (setgroups (ngroups, groups))
+	perror ("setgroups");
+    }
 
   if (setgid (gid)) 
     {
@@ -1615,11 +1640,19 @@ main (int argc, char *argv[])
 	      else if (!strncmp (p, "xkbd", 4))
 		{
 		  char *q = p + 4;
-		  while (isspace (*p))
-		    p++;
+		  while (isspace (*q))
+		    q++;
 		  force_xkbd = TRUE;
 		  if (*q && *q != '\n')
 		    xkbd_str = q;
+		}
+	      else if (!strncmp (p, "addgroups", 9))
+		{
+		  char *q = p + 9;
+		  while (isspace (*q))
+		    q++;
+		  if (*q && *q != '\n')
+		    add_groups = g_strsplit (q, ",", 0);
 		}
 	    }
 	}
