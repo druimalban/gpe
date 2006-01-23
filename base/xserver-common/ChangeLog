@@ -1,3 +1,9 @@
+2006-01-23  Florian Boor <florian@kernelconcepts.de>
+
+	*  X11/Xinit.d/12keymap: Apply patch to support additional Zaurus  
+           models by Matthias 'CoreDump' Hentges. 
+	* X11/slcXXXX.xmodmap: New file
+
 2006-01-15  Phil Blundell  <pb@reciva.com>
 
 	* Version 1.5 released.

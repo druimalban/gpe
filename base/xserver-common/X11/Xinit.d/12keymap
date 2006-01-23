@@ -10,6 +10,13 @@ case $MACHINE in
 				;;
 			esac
 		;;
+	"SHARP Akita" | "SHARP Borzoi" | "SHARP Spitz")
+		case `uname -r` in
+			2.4*)
+				xmodmap - < /etc/X11/slcXXXX.xmodmap
+				;;
+			esac
+		;;				
         "Sharp-Collie")
                 xmodmap - < /etc/X11/collie.xmodmap
                 ;;
