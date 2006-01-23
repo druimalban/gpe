@@ -1,4 +1,12 @@
+2006-01-22		Florian Boor <florian.boor@kernelconcepts.de>
 
+	* main.c: Use glib function to fork scanner. Add menu separator. Slow down 
+	          signal display update.
+	* Rename netdb.* to netinfodb.* to avoid name conflict with glibc.
+	* main.c: Use more userfriendly descriptions.
+	          Stop scanner by command instead of signal.
+	* netinfodb.c: Add additional database fields.
+			  
 2005-10-15		Florian Boor <florian.boor@kernelconcepts.de>
 
 	* Makefile, po: Update Spanish translation, add Slovenian translation.

@@ -32,9 +32,20 @@ extern "C" {
 #include <sys/socket.h>
 #include <sys/time.h>
 #include <sys/resource.h>
+#include <iwlib.h>
 
-#include "iwlib.h"
+#if defined(DEBUG)
+	#define debug_message(fmt, args...) fprintf(stderr, fmt, ## args)
+	#define info_message(fmt, args...) fprintf(stderr, fmt, ##args)
+#else
+	#define debug_message(fmt, args...)
+	#define info_message(fmt, args...) if(!QUIET_MODE) \
+		fprintf(stderr, fmt, ##args)
+#endif
 
+#define critical_message(fmt, args...) fprintf(stderr, fmt, ##args)
+
+	
 #define VERSIONSTR "Prismstumbler " VERSION
 
 #define MAX_BUFFER_SIZE 3000	/* Size of receive buffer */
@@ -85,7 +96,8 @@ typedef enum
 	C_GPSD,
 	C_IFDOWN,
 	C_DETECT_DHCP,
-	C_IFUP
+	C_IFUP,
+	C_EXIT
 }
 command_t;
 
@@ -276,17 +288,6 @@ typedef struct
 	}content;
 }
 psmessage_t;
-
-
-
-void HelpAndBye (void);
-void psmain (int socket);
-extern void update_colors ();
-extern int newnet_count;
-extern char device_capture[6];
-
-void update_all (ScanResult_t *aresult, int sock);
-extern int QUIET_MODE;
 
 #ifdef __cplusplus
 }  /* End of the 'extern "C"' block */

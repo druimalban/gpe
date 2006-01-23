@@ -33,7 +33,7 @@ PACKAGE_CFLAGS +=  -Wall $(GPECFLAGS) $(GTKCFLAGS)
 PACKAGE_LDFLAGS += $(GPELIBS) $(GTKLDFLAGS) -lsqlite
 
 
-MEMBERS  = main netdb netedit
+MEMBERS  = main netinfodb netedit
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))

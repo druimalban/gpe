@@ -1,5 +1,5 @@
 /*
- * gpe-aerial (c) 2003, 2004 Florian Boor <florian.boor@kernelconcepts.de>
+ * gpe-aerial (c) 2003 - 2006 Florian Boor <florian.boor@kernelconcepts.de>
  *
  * Networks editor/information module.
  *

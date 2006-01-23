@@ -1,5 +1,5 @@
 /*
- * gpe-aerial (c) 2003 - 2005 Florian Boor <florian.boor@kernelconcepts.de>
+ * gpe-aerial (c) 2003 - 2006 Florian Boor <florian.boor@kernelconcepts.de>
  *
  * Basic applet skeleton taken from gpe-bluetooth (see below)
  *
@@ -42,7 +42,7 @@
 
 #include "main.h"
 #include "prismstumbler.h"
-#include "netdb.h"
+#include "netinfodb.h"
 #include "netedit.h"
 
 #define _(x) gettext(x)
@@ -169,7 +169,6 @@ static void
 device_off (GtkWidget * w)
 {
 	radio_off();
-	send_command (C_IFDOWN, 0);
 }
 
 static void
@@ -357,19 +356,16 @@ send_command (command_t cmd, int par)
 static int
 fork_scanner ()
 {
-	if (access (SCANNER_EXEC, X_OK) == 0)
+	GError *err = NULL;
+	if (!g_spawn_command_line_async (SCANNER_EXEC " -q", &err))
 	{
-		pid_t p = vfork ();
-		if (p == 0)
-		{
-			execl (SCANNER_EXEC, SCANNER_EXEC, "-q", NULL);
-			perror (SCANNER_EXEC);
-			_exit (1);
-		}
-
-		return p;
+		gchar *msg;
+		msg = g_strdup_printf("%s: %s", _("Unable to start scanner process"), err->message);
+		gpe_perror_box(msg);
+		g_error_free (err);
+		g_free (msg);
+		return 1;
 	}
-
 	return 0;
 }
 
@@ -407,6 +403,7 @@ bt_progress_dialog (gchar * text, GdkPixbuf * pixbuf)
 
 	gtk_window_set_type_hint (GTK_WINDOW (window),
 				  GDK_WINDOW_TYPE_HINT_DIALOG);
+	gtk_window_set_title(GTK_WINDOW (window), _("Status"));
 
 	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
 
@@ -459,7 +456,7 @@ show_networks (void)
 											"configuration, red=not possible."),NULL);
 		
 		renderer = gtk_cell_renderer_pixbuf_new ();
-		column = gtk_tree_view_column_new_with_attributes (_("Mode"),
+		column = gtk_tree_view_column_new_with_attributes (_("Type"),
 								   renderer,
 								   "pixbuf",
 								   COL_ICON,
@@ -469,7 +466,7 @@ show_networks (void)
 		gtk_tree_view_append_column (GTK_TREE_VIEW (tree), column);
 
 		renderer = gtk_cell_renderer_text_new ();
-		column = gtk_tree_view_column_new_with_attributes (_("ESSID"),
+		column = gtk_tree_view_column_new_with_attributes (_("Name"),
 								   renderer,
 								   "text",
 								   COL_SSID,
@@ -507,7 +504,6 @@ show_networks (void)
 				  NULL);
 	}
 
-
 	scan_thread =
 		g_thread_create ((GThreadFunc) run_scan, NULL, FALSE, NULL);
 
@@ -539,6 +535,7 @@ radio_off (void)
 	image_set(0);
 	
 	draw_signal (0);
+	send_command (C_IFDOWN, 0);
 }
 
 
@@ -955,8 +952,7 @@ aerial_shutdown ()
 	{
 		cfg.scan = FALSE;
 		send_config ();
-		kill (scanner_pid, SIGTERM);
-		scanner_pid = 0;
+		send_command(C_EXIT, 0);
 	}
 
 	gtk_main_quit ();
@@ -985,6 +981,7 @@ main (int argc, char *argv[])
 	GdkBitmap *bitmap;
 	GtkWidget *menu_remove;
 	GtkWidget *menu_off;
+	GtkWidget *menu_sep;
 	GtkTooltips *tooltips;
 	int i;
 
@@ -1035,7 +1032,8 @@ main (int argc, char *argv[])
 		gtk_menu_item_new_with_label (_("Switch scanner off"));
 	menu_devices = gtk_menu_item_new_with_label (_("Networks..."));
 	menu_remove = gtk_menu_item_new_with_label (_("Remove from dock"));
-	menu_off = gtk_menu_item_new_with_label (_("Turn WLAN off"));
+	menu_off = gtk_menu_item_new_with_label (_("Disconnect"));
+	menu_sep = gtk_separator_menu_item_new ();
 
 	g_signal_connect (G_OBJECT (menu_radio_on), "activate",
 			  G_CALLBACK (radio_on), NULL);
@@ -1056,11 +1054,13 @@ main (int argc, char *argv[])
 	gtk_widget_show (menu_devices);
 	gtk_widget_show (menu_remove);
 	gtk_widget_show (menu_off);
+	gtk_widget_show (menu_sep);
 
 	gtk_menu_append (GTK_MENU (menu), menu_radio_on);
 	gtk_menu_append (GTK_MENU (menu), menu_radio_off);
 	gtk_menu_append (GTK_MENU (menu), menu_devices);
 	gtk_menu_append (GTK_MENU (menu), menu_off);
+	gtk_menu_append (GTK_MENU (menu), menu_sep);
 	gtk_menu_append (GTK_MENU (menu), menu_remove);
 
 	if (gpe_load_icons (my_icons) == FALSE)
@@ -1100,7 +1100,7 @@ main (int argc, char *argv[])
 	dock_window = window->window;
 	gpe_system_tray_dock (window->window);
 
-	gtk_timeout_add (1000, (GtkFunction) update_linklevel, NULL);
+	gtk_timeout_add (2000, (GtkFunction) update_linklevel, NULL);
 
 	gdk_threads_enter ();
 	gtk_main ();
