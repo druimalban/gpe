@@ -1,3 +1,8 @@
+
+2006-01-24  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * editing.c (store_name_fields): Fix segfault parsing names separated by comma.
+
 2006-01-10  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * pimc-ui.c (build_pim_categories_list): Reset useless Hildon GTK 

@@ -1049,10 +1049,14 @@ store_name_fields(struct contacts_person *p, const char *nametext)
           else
             {
               first = sp;
-              last = strrchr(sp, ' ') + 1;
-              while (strlen(last) && isblank(last[0]))
-                last++;
-              strrchr(sp, ' ')[0] = 0;
+              last = strrchr(sp, ' ');
+              if (last != NULL)
+                {
+                  last++;
+                  while (strlen(last) && isblank(last[0]))
+                    last++;
+                  strrchr(sp, ' ')[0] = 0;
+                }
             }
 	  break;
         default:
@@ -1064,10 +1068,14 @@ store_name_fields(struct contacts_person *p, const char *nametext)
                 first++;
               strstr(sp, ",")[0] = 0;
               
-              middle = strrchr(first, ' ') + 1;
-              while (strlen(middle) && isblank(middle[0]))
-                middle++;
-              strrchr(first, ' ')[0] = 0;
+              middle = strrchr(first, ' ');
+              if (middle != NULL)
+                {
+                  middle++;
+                  while (strlen(middle) && isblank(middle[0]))
+                    middle++;
+                  strrchr(first, ' ')[0] = 0;
+                }
             }
           else
             {
@@ -1078,10 +1086,14 @@ store_name_fields(struct contacts_person *p, const char *nametext)
                   while (strlen(last) && isblank(last[0]))
                     last++;
                   strrchr(sp, ' ')[0] = 0;
-                  middle = strrchr(first, ' ') + 1;
-                  while (strlen(middle) && isblank(middle[0]))
-                    middle++;
-                  strrchr(first, ' ')[0] = 0;
+                  middle = strrchr(first, ' ');
+                  if (middle != NULL)
+                    {
+                      middle++;
+                      while (strlen(middle) && isblank(middle[0]))
+                        middle++;
+                      strrchr(first, ' ')[0] = 0;
+                    }
                 }
             }
 	  break;
