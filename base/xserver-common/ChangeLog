@@ -1,3 +1,7 @@
+2006-01-24  Florian Boor <florian@kernelconcepts.de>
+
+	* Version 1.6 released.
+
 2006-01-23  Florian Boor <florian@kernelconcepts.de>
 
 	*  X11/Xinit.d/12keymap: Apply patch to support additional Zaurus  
