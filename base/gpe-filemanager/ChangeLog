@@ -1,3 +1,9 @@
+2006-01-26  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * Release version 0.24.
+    * Makefile: Generate translated desktop file.
+    * Move and update gpe-filemanager.desktop to .in.
+
 2006-01-12  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * Makefile, po/vi.po, po/sv.po: Add Vietnamese and Swedish translations.

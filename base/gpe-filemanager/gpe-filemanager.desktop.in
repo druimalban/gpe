@@ -1,7 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
-Name=File Manager
-Comment=GPE File Manager
+_Name=File Manager
+_Comment=GPE File Manager
 Exec=gpe-filemanager
 Terminal=0
 Type=Application
