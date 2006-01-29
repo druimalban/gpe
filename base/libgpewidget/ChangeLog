@@ -1,3 +1,7 @@
+2006-01-29  Phil Blundell  <pb@reciva.com>
+
+	* mkinstalldirs: New file.
+
 2006-01-16  Phil Blundell  <pb@reciva.com>
 
 	* gpeclockface.c (gpe_clock_face_expose): Increase minute hand
