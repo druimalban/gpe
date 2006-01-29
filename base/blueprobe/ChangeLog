@@ -1,0 +1,6 @@
+2006-01-29  Phil Blundell  <pb@reciva.com>
+
+	* blueprobe.init: Apply patch from arjan@anymore.nl to add support
+	for iPAQ h1940 and Acer n30.
+
+
