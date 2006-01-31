@@ -3,11 +3,12 @@
 # This file is distributed under the same license as the gpe-ownerinfo package.
 # J.Manrique <jsmanrique@asturlinux.org>, 2004.
 #
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-ownerinfo 0.22\n"
 "POT-Creation-Date: 2003-10-10 00:14+0200\n"
-"PO-Revision-Date: 2005-08-23 00:09+0200\n"
+"PO-Revision-Date: 2005-08-22 11:45+0100\n"
 "Last-Translator: J.Manrique <jsmanrique@asturlinux.org>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
