@@ -1592,6 +1592,7 @@ new_event (time_t t, guint timesel)
       localtime_r (&t, &tm);
       timestr = strftime_strdup_utf8_locale (TIMEFMT, &tm);
       gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (s->starttime)->entry), timestr);
+      gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (s->remindertime)->entry), timestr);
       g_free (timestr);
       gtk_date_combo_set_date (GTK_DATE_COMBO (s->startdate),
                                tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
@@ -1615,13 +1616,15 @@ new_event (time_t t, guint timesel)
       s->page = 0;
       gtk_notebook_set_page (GTK_NOTEBOOK (s->notebooktype), s->page);
 	  
+      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->remindertimebutton), FALSE);
+
       entry = g_object_get_data(G_OBJECT(w), "default-entry");
       if (entry)
         {
-	      gtk_widget_grab_focus(entry);
-          gtk_editable_select_region(GTK_EDITABLE(entry), 0, 0);
+	  gtk_widget_grab_focus (entry);
+          gtk_editable_select_region (GTK_EDITABLE (entry), 0, 0);
         }
-	}
+    }
 
   return w;
 }
@@ -1675,6 +1678,18 @@ edit_event (event_t ev)
                                    ev->duration == 0);
       s->page = (ev->duration == 0);
       gtk_notebook_set_page (GTK_NOTEBOOK (s->notebooktype), s->page);
+
+      if (ev->duration == 0)
+	{
+	  /* Reminder */
+	  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->remindertimebutton),
+					(ev->flags & FLAG_UNTIMED) ? FALSE : TRUE);
+
+	  localtime_r (&ev->start, &tm);
+	  timestr = strftime_strdup_utf8_locale (TIMEFMT, &tm);
+	  gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (s->remindertime)->entry), timestr);
+	  g_free (timestr);
+	}
  
       if (ev->flags & FLAG_ALARM)
         {
