@@ -1,3 +1,18 @@
+2006-02-01  Phil Blundell  <pb@reciva.com>
+
+	* event-db.c (event_db_clear_recurrence): New function.
+	(event_sort_func): Handle both recurring and non recurring events.
+	(event_sort_func_recur): Deleted.
+	(recurring_events, one_shot_events): Change from GSList to GList.
+	All uses updated.
+	(event_db_add_internal): Set ev->list.
+	(event_db_write): Move event between lists if required; just
+	re-sort if not.
+	(event_db_list_for_period_internal): Remove unnecessary scanning
+	of returned list.
+	* gpe/event-db.h (event_db_clear_recurrence): Add prototype.
+	(struct event_s): Add list.
+
 2006-01-01  Phil Blundell  <pb@reciva.com>
 
 	* doc/Makefile.am (GTKDOC_CC, GTKDOC_LD): Delete duplicated

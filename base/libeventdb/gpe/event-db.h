@@ -86,7 +86,9 @@ typedef struct event_s
   event_details_t details;
   gboolean mark;
   gpointer *cloned_ev;
-  char *eventid; 
+  char *eventid;
+
+  GList **list;
 } *event_t;
 
 #define EVENT_DB_USE_MEMCHUNK
@@ -148,5 +150,6 @@ extern GSList *event_db_untimed_list_for_period (time_t start, time_t end, gbool
 extern void event_db_list_destroy (GSList *);
 
 extern recur_t event_db_get_recurrence (event_t ev);
+extern void event_db_clear_recurrence (event_t ev);
 
 #endif
