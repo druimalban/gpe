@@ -1,3 +1,8 @@
+
+2006-02-01  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * main.c: Add missing bind_textdomain_codeset() fixing #932.
+
 2006-01-26  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * Release version 0.24.

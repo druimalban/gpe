@@ -1732,6 +1732,7 @@ main (int argc, char *argv[])
   setlocale (LC_ALL, "");
 
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
+  bind_textdomain_codeset (PACKAGE, "UTF-8");
   textdomain (PACKAGE);
   
   bluetooth_init ();
