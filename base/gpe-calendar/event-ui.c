@@ -349,15 +349,17 @@ click_ok (GtkWidget *widget, GtkWidget *d)
   gboolean new_event = FALSE;
   GtkTextIter start, end;
   GtkTextBuffer *buf;
+  gboolean was_recur;
     
   if (s->ev)
     {
-      ev = get_cloned_ev(s->ev);
+      ev = get_cloned_ev (s->ev);
       ev_d = event_db_get_details (ev);
       if (ev->flags & FLAG_ALARM)
         unschedule_alarm (s->ev, gtk_widget_get_toplevel(widget));
       ev_d->sequence++;
-      ev_d->modified=time(NULL);
+      ev_d->modified = time (NULL);
+      was_recur = (ev->flags & FLAG_RECUR) ? TRUE : FALSE;
     }
   else
     {
@@ -508,10 +510,8 @@ click_ok (GtkWidget *widget, GtkWidget *d)
 
   if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->radiobuttonnone)))
     {
-      if (ev->recur)
-        g_free (ev->recur);
-      ev->flags |= FLAG_RECUR;
-      ev->recur = NULL;
+      event_db_clear_recurrence (ev);
+      ev->flags |= FLAG_RECUR;		// ?!
     }
   else
     {

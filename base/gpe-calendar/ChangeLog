@@ -3,6 +3,7 @@
 	* event-ui.c (edit_event): Correctly initialize reminder time
 	field and corresponding checkbox.
 	(new_event): Likewise.
+	(click_ok): Use event_db_clear_recurrence when appropriate.
 
 2006-01-16  Phil Blundell  <pb@reciva.com>
 
