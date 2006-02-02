@@ -29,3 +29,9 @@ intltool-update
 intltool-update.in
 ltmain.sh
 .deps
+edit-vcard.desktop.in
+gpe-contacts.desktop.in
+linguas
+stamp-h.in
+config.in
+config.h.in
