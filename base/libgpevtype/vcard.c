@@ -332,12 +332,24 @@ vcard_to_tags (MIMEDirVCard *vcard)
   /* populate name field */
   g_object_get (G_OBJECT (vcard), "givenname", &fn, NULL);
   g_object_get (G_OBJECT (vcard), "familyname", &ln, NULL);
-  g_strstrip(fn);
-  g_strstrip(ln);
-  name = g_strdup_printf("%s %s", fn, ln);
-  g_free(fn);
-  g_free(ln);
-  gpe_tag_list_prepend(data, "NAME", name);
+  if (fn)
+    g_strstrip (fn);
+  if (ln)
+    g_strstrip (ln);
+  
+  name = NULL;
+  if (fn && ln)
+    name = g_strdup_printf ("%s %s", fn, ln);
+  else if (ln)
+    name = g_strdup (ln);
+  else if (fn)
+    name = g_strdup (ln);
+
+  if (name)
+    gpe_tag_list_prepend (data, "NAME", name);
+
+  g_free (fn);
+  g_free (ln);
 	
   return data;
 }
