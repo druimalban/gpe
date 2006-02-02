@@ -46,14 +46,6 @@ all-local:
 	@echo
 	@echo "Use \"configure --enable-gtk-doc\" to enable documentation"
 	@echo
-
-distdir:
-	@echo
-	@echo "** Must enable gtk-doc to make dist."
-	@echo
-	@exit 1
 endif
-
-libgpewidget-sections.txt: scan-build.stamp
 
 include gtk-doc.make
