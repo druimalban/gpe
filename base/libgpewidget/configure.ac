@@ -78,6 +78,7 @@ Configuration:
 
 - Compiler...........: ${CC}
 - Cairo..............: ${ENABLE_CAIRO}
+- Documentation......: ${enable_gtk_doc}
 
 ######################################
 

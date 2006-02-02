@@ -1,5 +1,13 @@
 2006-02-02  Phil Blundell  <pb@reciva.com>
 
+	* doc/Makefile.am (distdir): Diagnose attempts to make dist while
+	gtk-doc not enabled.
+	(libgpewidget-sections.txt): Depend on
+	scan-build.stamp so that "make dist" works.
+	* configure.ac: Say whether gtk-doc is, in fact, enabled.
+
+2006-02-02  Phil Blundell  <pb@reciva.com>
+
 	* Version 0.108 released.
 
 2006-02-01  Florian Boor <florian@kernelconcepts.de>
