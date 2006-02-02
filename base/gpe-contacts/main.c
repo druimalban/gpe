@@ -1178,7 +1178,6 @@ on_main_focus(GtkWindow *window,  GdkEventExpose *event,gpointer user_data)
 {
   GtkWidget *searchentry = user_data;
   
-  gtk_widget_grab_focus(searchentry);
   gtk_editable_select_region(GTK_EDITABLE(searchentry),0,-1);
 }
 
@@ -1651,7 +1650,7 @@ main (int argc, char *argv[])
 
   gpe_set_window_icon (mainw, "icon");
   gtk_widget_show_all (mainw);
-  gtk_widget_grab_focus (GTK_WIDGET (g_object_get_data (G_OBJECT (mainw), "entry")));
+  gtk_widget_grab_focus (GTK_WIDGET (mainw));
 
   path = gtk_tree_path_new_first();
   gtk_tree_view_set_cursor(GTK_TREE_VIEW(list_view), path, NULL, FALSE);

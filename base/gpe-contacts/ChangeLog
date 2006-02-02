@@ -1,3 +1,13 @@
+2006-02-02  Phil Blundell  <pb@reciva.com>
+
+	* main.c (main): Put focus in main window, not search entry field.
+	(on_main_focus): Don't grab focus into search entry, just leave it
+	in the window.
+
+2006-01-14  Phil Blundell  <pb@reciva.com>
+
+	* structure.c (load_structure): Use GLib functions rather than
+	manual string hackery.
 
 2006-01-24  Florian Boor  <florian.boor@kernelconcepts.de>
 

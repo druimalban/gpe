@@ -655,16 +655,9 @@ gboolean
 load_structure (gchar* default_structure)
 {
   gchar *buf;
-  size_t len;
-  char *home = getenv ("HOME");
   gboolean rc = TRUE;
-  if (home == NULL)
-    home = "";
-  
-  len = strlen (home) + strlen (LAYOUT_NAME) + 1;
-  buf = g_malloc (len);
-  strcpy (buf, home);
-  strcat (buf, LAYOUT_NAME);
+
+  buf = g_strdup_printf ("%s/%s", g_get_home_dir (), LAYOUT_NAME);
   
   if (access (buf, F_OK))
     read_structure (default_structure);
