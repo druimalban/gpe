@@ -1,5 +1,9 @@
 2006-02-03  Phil Blundell  <pb@reciva.com>
 
+	* Version 0.86 released.
+
+2006-02-03  Phil Blundell  <pb@reciva.com>
+
 	* X11/gpe-login.pre-session: Avoid busybox bug by checking for
 	symlinks before calling chown.
 
