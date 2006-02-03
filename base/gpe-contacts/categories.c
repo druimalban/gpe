@@ -287,7 +287,7 @@ is_in_category (struct contacts_person *p, struct category *c)
     {
       struct contacts_tag_value *t = iter->data;
 
-      if (!strcasecmp (t->tag, "category"))
+      if (!strcasecmp (t->tag, "CATEGORY"))
 	{
 	  guint uid;
 

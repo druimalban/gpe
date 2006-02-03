@@ -1,3 +1,8 @@
+2006-02-03  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * categories.c (is_in_category), editing.c (update_categories_list):
+    Use uppercase tag to avoid compatibility issues. Fixes bug #1453.
+
 2006-02-02  Phil Blundell  <pb@reciva.com>
 
 	* main.c (main): Put focus in main window, not search entry field.

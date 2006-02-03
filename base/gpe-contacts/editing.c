@@ -645,11 +645,11 @@ update_categories_list (GtkWidget *ui, GSList *selected, GtkWidget *edit)
   GSList *iter;
 
   p = g_object_get_data (G_OBJECT (edit), "person");
-  contacts_db_delete_tag (p, "category");
+  contacts_db_delete_tag (p, "CATEGORY");
 
   for (iter = selected; iter; iter = iter->next)
     {
-      contacts_db_set_multi_data (p, "category", g_strdup_printf ("%d", (int)iter->data));
+      contacts_db_set_multi_data (p, "CATEGORY", g_strdup_printf ("%d", (int)iter->data));
     }
 
 #ifndef IS_HILDON
