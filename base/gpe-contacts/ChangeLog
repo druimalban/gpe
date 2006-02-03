@@ -1,5 +1,12 @@
 2006-02-03  Florian Boor  <florian.boor@kernelconcepts.de>
 
+    * main.c, main-hildon.c (do_find), (do_search):
+    Display company field in list if name is empty. Fixes #1477.
+    * main.c (create_main): Increase default size to get an unfolded toolbar
+    on large screens.
+
+2006-02-03  Florian Boor  <florian.boor@kernelconcepts.de>
+
     * categories.c (is_in_category), editing.c (update_categories_list):
     Use uppercase tag to avoid compatibility issues. Fixes bug #1453.
 

@@ -785,7 +785,8 @@ do_search (GObject *obj, GtkWidget *entry)
       GtkTreeIter titer;
       
       gtk_list_store_append (list_store, &titer);
-      gtk_list_store_set (list_store, &titer, 0, p->name, 1, p->id, -1);
+      gtk_list_store_set (list_store, &titer, 0, 
+                          (p->name[0] != '(') ? p->name : p->company, 1, p->id, -1);
 
       contacts_discard_person (p);
     }
@@ -843,7 +844,8 @@ do_find (void)
       if (match_for_search (p, NULL, c))
         {
 	      gtk_list_store_append (list_store, &titer);
-	      gtk_list_store_set (list_store, &titer, 0, p->name, 1, p->id, -1);
+	      gtk_list_store_set (list_store, &titer, 0, 
+                              (p->name[0] != '(') ? p->name : p->company, 1, p->id, -1);
         }
 
       contacts_discard_person (p);
@@ -1266,7 +1268,7 @@ create_main (gboolean edit_structure)
   
   if (mode_large_screen)
     {
-       size_x = 620;
+       size_x = 720;
        size_y = 400;
     }
   else
