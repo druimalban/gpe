@@ -1,3 +1,8 @@
+2006-02-03  Phil Blundell  <pb@reciva.com>
+
+	* X11/gpe-login.pre-session: Avoid busybox bug by checking for
+	symlinks before calling chown.
+
 2006-01-21  Philipp Zabel <pzabel@gmx.de>
 
 	* gpe-login.c: Add supplementary groups configured in

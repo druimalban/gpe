@@ -16,11 +16,11 @@ if [ -e /dev/misc/buzzer ]; then
 chown $USER /dev/misc/buzzer
 fi
 
-if [ -e /dev/dsp ]; then
+if [ -e /dev/dsp ] && ! [ -h /dev/dsp ]; then
 chown $USER /dev/dsp
 fi
 
-if [ -e /dev/mixer ]; then
+if [ -e /dev/mixer ] && ! [ -h /dev/mixer ]; then
 chown $USER /dev/mixer
 fi
 
