@@ -43,21 +43,21 @@ fi
 # start off server in conventional location.
 case `module_id` in
 	"HP iPAQ H3100" | "HP iPAQ H3800")
-		ARGS="$ARGS -dpi 100 -screen 320x240@90 -rgba vrgb" ;;
+		ARGS="$ARGS -dpi 100 -rgba vrgb -screen 320x240@90" ;;
 	"HP iPAQ H3600" | "HP iPAQ H3700" | "HP iPAQ H3900")
-		ARGS="$ARGS -screen 320x240@270 -dpi 100 -rgba vbgr" ;;
+		ARGS="$ARGS -dpi 100 -rgba vbgr -screen 320x240@270" ;;
 	"HP iPAQ H5400" | "HP iPAQ H2200")
 		ARGS="$ARGS -dpi 100 -rgba rgb" ;;
         "HP iPAQ HX4700")
                 ARGS="$ARGS -dpi 200" ;;
 	"Ramses")
 		# What is this "vt2" in aid of?
-		ARGS="$ARGS -dpi 100 -screen 320x240@90 -rgba vrgb vt2" ;;
+		ARGS="$ARGS -dpi 100 -rgba vrgb -screen 320x240@90 vt2" ;;
 	# both 'Sharp-Collie' and just 'Collie' have been reported
 	*Poodle)
-		ARGS="$ARGS -dpi 100 -screen 320x240@270 -rgba vrgb" ;;
+		ARGS="$ARGS -dpi 100 -rgba vrgb -screen 320x240@270" ;;
 	*Collie)
-		ARGS="$ARGS -dpi 100 -screen 320x240@270 -rgba vrgb"
+		ARGS="$ARGS -dpi 100 -rgba vrgb -screen 320x240@270"
 		;;
 	"SHARP Shepherd" | "SHARP Husky" | "SHARP Corgi")
 		ARGS="$ARGS -dpi 200 -rgba rgb" ;;
