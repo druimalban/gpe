@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2001, 2002, 2003, 2004, 2006 Philip Blundell <philb@gnu.org>
- *               2004, 2005 Florian Boor <florian@kernelconcepts.de>
+ *               2004 - 2006 Florian Boor <florian@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -388,11 +388,9 @@ contacts_db_get_entries (void)
   char *err;
   int r;
 
-  r =
-    sqlite_exec (contacts_db,
-		 "select urn, name, family_name from contacts_urn",
-		 contacts_read_one_entry, &list, &err);
-
+  r = sqlite_exec (contacts_db,
+             "select urn, name, family_name, company from contacts_urn",
+             contacts_read_one_entry, &list, &err);
   if (r)
     {
       gpe_error_box (err);
@@ -418,30 +416,29 @@ contacts_db_get_entries_list (const gchar * name, const gchar * cat)
 
   if (no_name && !no_cat)
     {
-      r = sqlite_exec_printf
-	(contacts_db,
-	 "select contacts_urn.urn, contacts_urn.name, contacts_urn.family_name, contacts_urn.company "
-	 "from contacts_urn, contacts where contacts_urn.urn = contacts.urn "
-	 "and contacts.tag = 'CATEGORY' and contacts.value like '%%%q%%'",
-	 contacts_read_one_entry, &list, &err, cat);
+      r = sqlite_exec_printf (contacts_db,
+                 "select contacts_urn.urn, contacts_urn.name, contacts_urn.family_name, contacts_urn.company "
+                 "from contacts_urn, contacts where contacts_urn.urn = contacts.urn "
+                 "and contacts.tag = 'CATEGORY' and contacts.value like '%q%%'",
+                 contacts_read_one_entry, &list, &err, cat);
     }
   else if (no_cat)
     {
-      r = sqlite_exec_printf
-	(contacts_db, "select * from contacts_urn where name like '%%%q%%' "
-	 "or family_name like '%%%q%%' or company like '%%%q%%'",
-	 contacts_read_one_entry, &list, &err, name, name, name);
+      r = sqlite_exec_printf (contacts_db, 
+                 "select urn, name, family_name, company from contacts_urn where name like '%q%%' "
+	             "or family_name like '%q%%' or company like '%q%%'",
+	             contacts_read_one_entry, &list, &err, name, name, name);
     }
   else
     {
-      r = sqlite_exec_printf
-	(contacts_db, "select urn from contacts where tag = 'CATEGORY' "
-	 "and value = '%%%q%%' and urn IN "
-	 "(select distinct urn from contacts where "
-	 "(tag = 'NAME' or tag = 'GIVEN_NAME' "
-	 "or tag = 'FAMILY_NAME' or tag = 'COMPANY')"
-	 "and value like '%%%q%%')",
-	 contacts_read_one_entry, &list, &err, cat, name);
+      r = sqlite_exec_printf (contacts_db, 
+                 "select urn, name, family_name, company from contacts where tag = 'CATEGORY' "
+                 "and value = '%q%%' and urn IN "
+                 "(select distinct urn from contacts where "
+                 "(tag = 'NAME' or tag = 'GIVEN_NAME' "
+                 "or tag = 'FAMILY_NAME' or tag = 'COMPANY')"
+                 "and value like '%q%%')",
+                 contacts_read_one_entry, &list, &err, cat, name);
     }
 
   if (r)
@@ -471,30 +468,27 @@ contacts_db_get_entries_finddlg (const gchar * str, const gchar * cat)
 
   if (has_cat && has_str)
     {
-      r =
-	sqlite_exec_printf (contacts_db,
-			    "select distinct contacts_urn.urn, contacts_urn.name, contacts_urn.family_name, contacts_urn.company "
-			    "from contacts_urn, contacts where (contacts_urn.urn = contacts.urn) and (contacts.tag = 'CATEGORY') "
-			    "and contacts.value = '%q' and contacts.urn in (select distinct urn from contacts where value like '%%%q%%');",
+      r = sqlite_exec_printf (contacts_db,
+                "select distinct contacts_urn.urn, contacts_urn.name, contacts_urn.family_name, contacts_urn.company "
+                "from contacts_urn, contacts where (contacts_urn.urn = contacts.urn) and (contacts.tag = 'CATEGORY') "
+                "and contacts.value = '%q' and contacts.urn in (select distinct urn from contacts where value like '%%%q%%');",
 			    contacts_read_one_entry, &list, &err, cat, str);
     }
   else if (has_cat)
     {
-      r =
-	sqlite_exec_printf (contacts_db,
-			    "select distinct contacts_urn.urn, contacts_urn.name, contacts_urn.family_name, contacts_urn.company "
-			    "from contacts_urn, contacts where (contacts_urn.urn = contacts.urn) and (contacts.tag = 'CATEGORY') "
-			    "and contacts.value = '%q'",
-			    contacts_read_one_entry, &list, &err, cat);
+      r = sqlite_exec_printf (contacts_db,
+                "select distinct contacts_urn.urn, contacts_urn.name, contacts_urn.family_name, contacts_urn.company "
+                "from contacts_urn, contacts where (contacts_urn.urn = contacts.urn) and (contacts.tag = 'CATEGORY') "
+                "and contacts.value = '%q'",
+                contacts_read_one_entry, &list, &err, cat);
     }
   else
     {
-      r =
-	sqlite_exec_printf (contacts_db,
-			    "select distinct contacts_urn.urn, contacts_urn.name, contacts_urn.family_name, contacts_urn.company "
-			    "from contacts_urn, contacts where (contacts_urn.urn = contacts.urn) "
-			    "and contacts.urn in (select distinct urn from contacts where value like '%%%q%%');",
-			    contacts_read_one_entry, &list, &err, str);
+      r = sqlite_exec_printf (contacts_db,
+                "select distinct contacts_urn.urn, contacts_urn.name, contacts_urn.family_name, contacts_urn.company "
+                "from contacts_urn, contacts where (contacts_urn.urn = contacts.urn) "
+                "and contacts.urn in (select distinct urn from contacts where value like '%%%q%%');",
+                contacts_read_one_entry, &list, &err, str);
     }
 
   if (r)
@@ -518,18 +512,15 @@ contacts_db_get_entries_filtered (const gchar * filter)
     return contacts_db_get_entries ();
 
   if (filter)
-    r =
-      sqlite_exec_printf (contacts_db,
-			  "select urn, name, family_name from contacts_urn "
-			  "where (family_name like '%c%%' or family_name like '%c%%' or family_name like '%c%%')",
-			  contacts_read_one_entry, &list, &err, filter[0],
-			  filter[1], filter[2]);
+    r = sqlite_exec_printf (contacts_db,
+              "select urn, name, family_name, company from contacts_urn "
+              "where (family_name like '%c%%' or family_name like '%c%%' or family_name like '%c%%')",
+              contacts_read_one_entry, &list, &err, filter[0], filter[1], filter[2]);
   else
-    r =
-      sqlite_exec (contacts_db,
-		   "select urn, name, family_name from contacts_urn "
-		   "where lower(substr(family_name,1,1)) not between 'a' and 'z'",
-		   contacts_read_one_entry, &list, &err);
+    r = sqlite_exec (contacts_db,
+              "select urn, name, family_name from contacts_urn "
+              "where lower(substr(family_name,1,1)) not between 'a' and 'z'",
+              contacts_read_one_entry, &list, &err);
 
   if (r)
     {
@@ -561,35 +552,31 @@ contacts_db_get_entries_list_filtered (const gchar * str,
     }
   else if (!has_str && has_cat)
     {
-      r = sqlite_exec_printf
-	(contacts_db,
-	 "select contacts_urn.urn, contacts_urn.name, contacts_urn.family_name, contacts_urn.company "
-	 "from contacts_urn, contacts where contacts_urn.urn = contacts.urn "
-	 "and contacts.tag = 'CATEGORY' and contacts.value like '%%%q%%' and "
-	 "(contacts_urn.family_name like '%%%q%%') and (contacts_urn.family_name like '%c%%' or contacts_urn.family_name like '%c%%')",
-	 contacts_read_one_entry, &list, &err, cat, filter[0], filter[1],
-	 filter[2]);
+      r = sqlite_exec_printf (contacts_db,
+                "select contacts_urn.urn, contacts_urn.name, contacts_urn.family_name, contacts_urn.company "
+                "from contacts_urn, contacts where contacts_urn.urn = contacts.urn "
+                "and contacts.tag = 'CATEGORY' and contacts.value like '%q%%' and "
+                "(contacts_urn.family_name like '%c%%') and " 
+                "(contacts_urn.family_name like '%c%%' or contacts_urn.family_name like '%c%%')",
+                contacts_read_one_entry, &list, &err, cat, filter[0], filter[1], filter[2]);
     }
   else if (has_cat)
     {
-      r = sqlite_exec_printf
-	(contacts_db,
-	 "select contacts_urn.urn, contacts_urn.name, contacts_urn.family_name, contacts_urn.company "
-	 "from contacts_urn, contacts where contacts_urn.urn = contacts.urn "
-	 "and contacts.tag = 'CATEGORY' and contacts.value like '%%%q%%' and "
-	 "(contacts_urn.family_name like '%%%q%%') and (contacts_urn.family_name like '%c%%' or contacts_urn.family_name like '%c%%')",
-	 contacts_read_one_entry, &list, &err, cat, str, filter[0], filter[1],
-	 filter[2]);
+      r = sqlite_exec_printf (contacts_db,
+                "select contacts_urn.urn, contacts_urn.name, contacts_urn.family_name, contacts_urn.company "
+                "from contacts_urn, contacts where contacts_urn.urn = contacts.urn "
+                "and contacts.tag = 'CATEGORY' and contacts.value like '%%%q%%' and "
+                "(contacts_urn.family_name like '%c%%') and "
+                "(contacts_urn.family_name like '%c%%' or contacts_urn.family_name like '%c%%')",
+                contacts_read_one_entry, &list, &err, cat, str, filter[0], filter[1], filter[2]);
     }
   else
     {
-      r = sqlite_exec_printf
-	(contacts_db,
-	 "select distinct contacts_urn.urn, contacts_urn.name, contacts_urn.family_name, contacts_urn.company "
-	 "from contacts_urn, contacts where contacts_urn.urn = contacts.urn "
-	 "and (contacts_urn.family_name like '%%%q%%') and (contacts_urn.family_name like '%c%%' or contacts_urn.family_name like '%c%%')",
-	 contacts_read_one_entry, &list, &err, str, filter[0], filter[1],
-	 filter[2]);
+      r = sqlite_exec_printf (contacts_db,
+                     "select distinct contacts_urn.urn, contacts_urn.name, contacts_urn.family_name, contacts_urn.company "
+                     "from contacts_urn, contacts where contacts_urn.urn = contacts.urn "
+                     "and (contacts_urn.family_name like '%c%%') and (contacts_urn.family_name like '%c%%' or contacts_urn.family_name like '%c%%')",
+                     contacts_read_one_entry, &list, &err, str, filter[0], filter[1], filter[2]);
     }
 
   if (r)
@@ -653,8 +640,7 @@ contacts_db_delete_by_uid (guint uid)
 
   r =
     sqlite_exec_printf (contacts_db,
-			"delete from contacts_urn where urn='%d'", NULL, NULL,
-			&err, uid);
+			"delete from contacts_urn where urn='%d'", NULL, NULL, &err, uid);
   if (r)
     goto error;
 
@@ -776,20 +762,20 @@ contacts_commit_person (struct contacts_person *p)
     {
       struct contacts_tag_value *v = iter->data;
       if (v->value && v->value[0] && (strcasecmp (v->tag, "MODIFIED")))
-	{
-	  r = sqlite_exec_printf (contacts_db,
-				  "insert into contacts values(%d,'%q','%q')",
-				  NULL, NULL, &err, p->id, v->tag, v->value);
-	  if (r)
-	    goto error;
-
-	  if (!strcasecmp (v->tag, "NAME"))
-	    p->name = g_strdup (v->value);
-	  else if (!strcasecmp (v->tag, "FAMILY_NAME"))
-	    p->family_name = g_strdup (v->value);
-	  else if (!strcasecmp (v->tag, "COMPANY"))
-	    p->company = g_strdup (v->value);
-	}
+        {
+          r = sqlite_exec_printf (contacts_db,
+                      "insert into contacts values(%d,'%q','%q')",
+                      NULL, NULL, &err, p->id, v->tag, v->value);
+          if (r)
+            goto error;
+    
+          if (!strcasecmp (v->tag, "NAME"))
+            p->name = g_strdup (v->value);
+          else if (!strcasecmp (v->tag, "FAMILY_NAME"))
+            p->family_name = g_strdup (v->value);
+          else if (!strcasecmp (v->tag, "COMPANY"))
+            p->company = g_strdup (v->value);
+        }
     }
 
   r = sqlite_exec_printf (contacts_db,

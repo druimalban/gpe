@@ -1,3 +1,14 @@
+2006-02-03  Florian Boor  <florian@kernelconcepts.de>
+
+    * contact-db.c: Some formation improvements in various functions.
+    (contacts_db_get_entries), (contacts_db_get_entries_list), 
+    (contacts_db_get_entries_list): Select company field to become displayed 
+    if name is empty.
+    (contacts_db_get_entries_list), (contacts_db_get_entries_filtered), 
+    (contacts_db_get_entries_list_filtered): Fix SQL code to return entries 
+    starting with search pattern only. Fix wrong SQL format string.
+    
+
 2006-01-14  Phil Blundell  <pb@reciva.com>
 
 	* Version 0.3 released.
@@ -41,5 +52,3 @@
                           use the 'contacts_' prefix.
     * contacts-db.c: Source based on gpe-contacts db.c.
     * libcontactsdb.pc.in: Pkg-config metainformation about library
-
-
