@@ -6,5 +6,5 @@ Exec=gpe-gallery
 Terminal=0
 Type=Application
 Icon=gpe-gallery.png
-Categories=Application;Utility;GPE;
+Categories=Application;Utility;Media;GPE;
 StartupNotify=true
