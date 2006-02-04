@@ -53,6 +53,9 @@ static struct day_render *dr, *rem_render;
 
 static void day_page_calc_time_width (day_page_t page);
 
+static gboolean scrolling;
+static gboolean scroll_floating;
+
 /* Day page constructor */
 static day_page_t
 day_page_new (GtkWidget * widget)
@@ -537,10 +540,8 @@ scroll_to (GtkWidget * scrolled, gint hour)
   /* Scroll to the current hour */
   if (hour < 0)
     {
-      time_t now;
       struct tm now_tm;
-      time (&now);
-      localtime_r (&now, &now_tm);
+      localtime_r (&viewtime, &now_tm);
       hour = MAX (now_tm.tm_hour - 1, 0);
     }
 
@@ -554,7 +555,26 @@ scroll_to (GtkWidget * scrolled, gint hour)
   if (value > (adj->upper - adj->page_size))
     value = adj->upper - adj->page_size;
 
+  scrolling = TRUE;
   gtk_adjustment_set_value (adj, value);
+  scrolling = FALSE;
+}
+
+void
+day_view_scroll (gboolean force)
+{
+  if (force || scroll_floating)
+    {
+      scroll_to (scrolled_window, -1);
+      scroll_floating = TRUE;
+    }
+}
+
+static void
+sink_scroller (void)
+{
+  if (!scrolling)
+    scroll_floating = FALSE;
 }
 
 static gboolean
@@ -575,8 +595,10 @@ void
 day_free_lists ()
 {
   int hour;
+
   if (untimed_events)
     event_db_list_destroy (untimed_events);
+
   untimed_events = NULL;
   for (hour = 0; hour <= 23; hour++)
     if (day_events[hour])
@@ -600,7 +622,6 @@ delete_event_cb (GtkWidget * widget, GtkWidget * a)
   gtk_widget_hide (popup);
   delete_event (sel_event, widget);
 }
-
 
 static void
 edit_event_cb (GtkWidget * widget, GtkWidget * a)
@@ -637,9 +658,9 @@ changed_callback (GtkWidget * widget, GtkWidget * some)
 {
   viewtime = gtk_date_sel_get_time (GTK_DATE_SEL (widget));
 
-  scroll_to (scrolled_window, -1);
   day_view_update ();
   reminder_view_update ();
+
   return TRUE;
 }
 
@@ -653,9 +674,13 @@ day_view (void)
   gboolean landscape;
   gint win_width, win_height;
   GtkWidget *frame;
+  GtkAdjustment *adj;
 
   /* Popup needed to show infos about an appointment */
   scrolled_window = gtk_scrolled_window_new (NULL, NULL);
+  adj = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (scrolled_window));
+  g_signal_connect (G_OBJECT (adj), "value-changed", G_CALLBACK (sink_scroller), NULL);
+
   popup = gtk_window_new (GTK_WINDOW_POPUP);
   frame = gtk_frame_new (NULL);
 

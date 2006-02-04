@@ -379,6 +379,10 @@ click_ok (GtkWidget *widget, GtkWidget *d)
           start_t -= 60*60;
           end_t -= 60*60;
         }
+
+      /* Zero length appointments would be confused with reminders, so make them one second long.  */
+      if (end_t == start_t)
+	end_t++;
     }
   else
     {
@@ -776,7 +780,7 @@ note_date_change_appt (GtkDateCombo  *c, struct edit_state *s)
     {
       note_date_change (s);
       if (s->end_date_floating)
-	gtk_date_combo_set_date (s->enddate, c->year, c->month, c->day);
+	gtk_date_combo_set_date (GTK_DATE_COMBO (s->enddate), c->year, c->month, c->day);
     }
 }
 

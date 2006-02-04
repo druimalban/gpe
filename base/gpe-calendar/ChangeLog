@@ -1,5 +1,14 @@
 2006-02-04  Phil Blundell  <pb@reciva.com>
 
+	* day_view.c (day_view_scroll): New function.
+	(changed_callback): Don't call scroll_to() here.
+	(day_view): Connect "changed" signal to scrollbar adjustment.
+	(sink_scroller): New function.
+	* day_view.h (day_view_scroll): New prototype.
+	* main.c (set_time_and_day_view): Call day_view_scroll.
+	(set_today): Likewise.
+	(main): Likewise.
+
 	* event-ui.c (struct edit_state): New members end_date_floating,
 	end_time_floating.
 	(new_event): Set them to TRUE.
@@ -11,6 +20,8 @@
 	for time selection.  All uses of these widgets updated.
 	(new_event): Mark end time and date as floating.
 	(edit_event): Always initialize reminder fields.
+	(click_ok): Enforce minimum appointment length of one second.
+
 	* globals.h (times): Deleted.
 	* main.c (times): Likewise.
 	(main): Remove code to build list of time strings.

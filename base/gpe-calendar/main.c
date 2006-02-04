@@ -272,7 +272,7 @@ new_appointment (void)
 }
 
 static void
-set_today(void)
+set_today (void)
 {
   static time_t selected_time;
 
@@ -285,16 +285,18 @@ set_today(void)
   else
     viewtime = selected_time;
   
-  set_time_all_views();
+  set_time_all_views ();
+  day_view_scroll (TRUE);
 }
 
 void
-set_time_and_day_view(time_t selected_time)
+set_time_and_day_view (time_t selected_time)
 {
-  viewtime=selected_time;
+  viewtime = selected_time;
   gtk_toggle_tool_button_set_active (GTK_TOGGLE_TOOL_BUTTON (day_button), TRUE);
   new_view (day);
-  update_current_view();
+  update_current_view ();
+  day_view_scroll (TRUE);
 }
 
 static void
@@ -554,7 +556,7 @@ main (int argc, char *argv[])
   osso_context_t *osso_context;
 #endif
 
-  guint hour, skip=0, uid=0;
+  guint skip=0, uid=0;
   int option_letter;
   gboolean schedule_only=FALSE;
   extern char *optarg;
@@ -825,6 +827,7 @@ main (int argc, char *argv[])
   gtk_toggle_tool_button_set_active (GTK_TOGGLE_TOOL_BUTTON (day_button), TRUE);
   gtk_toggle_tool_button_set_active (GTK_TOGGLE_TOOL_BUTTON (today_button), FALSE);
   new_view (day);
+  day_view_scroll (TRUE);
 
   gtk_main ();
 

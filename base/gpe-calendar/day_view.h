@@ -15,6 +15,7 @@ extern gboolean day_view_combined_times;
 extern void day_free_lists (void);
 extern int day_view_init ();
 extern gboolean day_view_button_press (GtkWidget * widget, GdkEventButton * event, gpointer d);
+extern void day_view_scroll (gboolean);
 
 typedef struct day_page {
   GtkWidget *widget;
