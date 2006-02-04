@@ -4,11 +4,14 @@
 
 2006-02-04  Phil Blundell  <pb@reciva.com>
 
-	* gpetimesel.c (struct _GpeTimeSelClass): Add "changed".
+	* gpetimesel.c (struct _GpeTimeSelClass): Add "changed", "clock".
 	(gpe_time_sel_emit_changed): New function.
 	(note_change): Likewise.
 	(gpe_time_sel_init): Connect signal handler to GtkAdjustments.
 	(gpe_time_sel_class_init): Register "changed" signal.
+	(gpe_time_sel_set_time): Say that the time is changing.
+	(button_press): Call gtk_grab_remove.
+	* gpe/gpetimesel.h (struct _GpeTimeSel): Add "changing_time".
 	
 	* gpe/gtkdatecombo.h (struct _GtkDateComboClass): Add "changed".
 	* gtkdatecombo.c (gtk_date_combo_emit_changed): New function.
