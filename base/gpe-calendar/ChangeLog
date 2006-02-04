@@ -15,7 +15,8 @@
 	note_day_change_reminder, note_day_change_task): New functions.
 	(struct edit_state): Add recur_day_floating.
 	(sink_weekly): New function.
-	(new_event): Correctly set day-of-week recurrence buttons.
+	(new_event): Correctly set day-of-week recurrence buttons.  Set
+	s->recur_day_floating.
 
 2006-02-01  Phil Blundell  <pb@reciva.com>
 
