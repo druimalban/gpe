@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001, 2002, 2003, 2004, 2005 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -78,6 +78,8 @@ struct edit_state
   guint page;
 
   event_t ev;
+
+  gboolean recur_day_floating;
 };
 
 static GtkWidget *cached_window;
@@ -183,26 +185,6 @@ recalculate_sensitivities (GtkWidget *widget,
         gtk_widget_hide (s->yearlybox);
     }
 }
-
-
-static void
-weekly_toggled (GtkWidget *widget,
-                           GtkWidget *d)
-{
-  struct edit_state *s = g_object_get_data (G_OBJECT (d), "edit_state");
-  if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget)))
-  {
-     if (!s->ev || !s->ev->recur || !s->ev->recur->daymask)
-     {
-        time_t t = time(NULL);
-        struct tm *lt = localtime(&t);
-          
-        gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->checkbuttonwday[(lt->tm_wday+6)%7]), TRUE);
-     }
-  }
-  recalculate_sensitivities(widget, d);
-}
-
 
 void
 unschedule_alarm (event_t ev, GtkWidget *d)
@@ -810,6 +792,56 @@ event_ui_key_press_event (GtkWidget *widget, GdkEventKey *k, gpointer data)
   return FALSE;
 }
 
+static void
+sink_weekly (GtkWidget *widget, struct edit_state *s)
+{
+  s->recur_day_floating = FALSE;
+}
+
+static void
+note_date_change (struct edit_state *s)
+{
+  if (s->recur_day_floating)
+    {
+      GtkDateCombo *c;
+      int wday, i;
+
+      switch (s->page)
+	{
+	case 0:  c = GTK_DATE_COMBO (s->startdate); break;
+	case 1:  c = GTK_DATE_COMBO (s->reminderdate); break;
+	case 2:  c = GTK_DATE_COMBO (s->taskdate); break;
+	default: return;
+	}
+      
+      wday = day_of_week (c->year, c->month + 1, c->day);
+
+      for (i = 0; i < 7; i++)
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->checkbuttonwday[i]), (i == wday) ? TRUE : FALSE);
+    }
+}
+
+static void
+note_date_change_appt (GtkWidget *widget, struct edit_state *s)
+{
+  if (s->page == 0)
+    note_date_change (s);
+}
+
+static void
+note_date_change_reminder (GtkWidget *widget, struct edit_state *s)
+{
+  if (s->page == 1)
+    note_date_change (s);
+}
+
+static void
+note_date_change_task (GtkWidget *widget, struct edit_state *s)
+{
+  if (s->page == 2)
+    note_date_change (s);
+}
+
 static GtkWidget *
 build_edit_event_window (void)
 {
@@ -932,7 +964,6 @@ build_edit_event_window (void)
 
   s                   = g_malloc0 (sizeof (struct edit_state));
     
-
   gpe_set_window_icon (window, "icon");
   
   /* if screen is large enough, make it a real dialog */
@@ -996,8 +1027,8 @@ build_edit_event_window (void)
 #endif
   gtk_combo_set_popdown_strings (GTK_COMBO (starttime), times);
   gtk_combo_set_popdown_strings (GTK_COMBO (endtime), times);
-  gtk_combo_set_use_arrows (GTK_COMBO(starttime), FALSE);
-  gtk_combo_set_use_arrows (GTK_COMBO(endtime), FALSE);
+  gtk_combo_set_use_arrows (GTK_COMBO (starttime), FALSE);
+  gtk_combo_set_use_arrows (GTK_COMBO (endtime), FALSE);
 
   startdatelabel      = gtk_label_new (_("Start at:"));
   enddatelabel        = gtk_label_new (_("End at:"));
@@ -1013,6 +1044,10 @@ build_edit_event_window (void)
   s->enddate          = gtk_date_combo_new ();
   s->reminderdate     = gtk_date_combo_new ();
   s->taskdate         = gtk_date_combo_new ();
+
+  g_signal_connect (G_OBJECT (s->startdate), "changed", G_CALLBACK (note_date_change_appt), s);
+  g_signal_connect (G_OBJECT (s->reminderdate), "changed", G_CALLBACK (note_date_change_reminder), s);
+  g_signal_connect (G_OBJECT (s->taskdate), "changed", G_CALLBACK (note_date_change_task), s);
 
   gtk_date_combo_week_starts_monday (GTK_DATE_COMBO (s->startdate), week_starts_monday);
   gtk_date_combo_week_starts_monday (GTK_DATE_COMBO (s->enddate), week_starts_monday);
@@ -1268,7 +1303,7 @@ build_edit_event_window (void)
   g_signal_connect (G_OBJECT (radiobuttondaily), "toggled",
                     G_CALLBACK (recalculate_sensitivities), window);
   g_signal_connect (G_OBJECT (radiobuttonweekly), "toggled",
-                    G_CALLBACK (weekly_toggled), window);
+                    G_CALLBACK (recalculate_sensitivities), window);
   g_signal_connect (G_OBJECT (radiobuttonmonthly), "toggled",
                     G_CALLBACK (recalculate_sensitivities), window);
   g_signal_connect (G_OBJECT (radiobuttonyearly), "toggled",
@@ -1324,6 +1359,7 @@ build_edit_event_window (void)
       gtk_table_attach_defaults (GTK_TABLE (weeklytable), b, i, i + 1, 0, 1);
       s->checkbuttonwday[i] = b;
       g_free (gs);
+      g_signal_connect (G_OBJECT (b), "clicked", G_CALLBACK (sink_weekly), s);
     }
   for (i = 3; i < 6; i++)
     {
@@ -1331,7 +1367,8 @@ build_edit_event_window (void)
       GtkWidget *b = gtk_check_button_new_with_label (gs);
       gtk_table_attach_defaults (GTK_TABLE (weeklytable), b, i - 3, i - 2, 1, 2);
       s->checkbuttonwday[i] = b;
-      g_free(gs);
+      g_free (gs);
+      g_signal_connect (G_OBJECT (b), "clicked", G_CALLBACK (sink_weekly), s);
     }
   for (i = 6; i < 7; i++)
     {
@@ -1340,6 +1377,7 @@ build_edit_event_window (void)
       gtk_table_attach_defaults (GTK_TABLE (weeklytable), b, i - 6, i - 5, 2, 3);
       s->checkbuttonwday[i] = b;
       g_free (gs);
+      g_signal_connect (G_OBJECT (b), "clicked", G_CALLBACK (sink_weekly), s);
     }
 
 /* monthly hbox */
@@ -1581,6 +1619,7 @@ new_event (time_t t, guint timesel)
     {
       struct tm tm;
       gchar *timestr;
+      int i, wday;
       struct edit_state *s = g_object_get_data (G_OBJECT (w),
                                                 "edit_state");
 
@@ -1618,7 +1657,13 @@ new_event (time_t t, guint timesel)
 	  
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->remindertimebutton), FALSE);
 
-      entry = g_object_get_data(G_OBJECT(w), "default-entry");
+      wday = day_of_week (tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday);
+      for (i = 0; i < 7; i++)
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->checkbuttonwday[i]), (i == wday) ? TRUE : FALSE);
+
+      s->recur_day_floating = TRUE;
+
+      entry = g_object_get_data (G_OBJECT (w), "default-entry");
       if (entry)
         {
 	  gtk_widget_grab_focus (entry);
@@ -1640,6 +1685,7 @@ edit_event (event_t ev)
       time_t end;
       struct tm tm;
       gchar *timestr;
+      int i;
       struct edit_state *s = g_object_get_data (G_OBJECT (w),
                                                 "edit_state");
 
@@ -1702,12 +1748,12 @@ edit_event (event_t ev)
 	      unsigned int i;
 
 	      for (i = 0; i < 4; i++)
-            {
-		      if ((ev->alarm % alarm_multipliers[i]) == 0)
-		        unit = i;
-            }
+		{
+		  if ((ev->alarm % alarm_multipliers[i]) == 0)
+		    unit = i;
+		}
 	    }
-
+	  
           gtk_spin_button_set_value (GTK_SPIN_BUTTON (s->alarmspin), ev->alarm / alarm_multipliers[unit]);
 	  gtk_option_menu_set_history (GTK_OPTION_MENU (s->alarmoption), unit);
         }
@@ -1718,6 +1764,9 @@ edit_event (event_t ev)
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->radiobuttonweekly), FALSE);
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->radiobuttonmonthly), FALSE);
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->radiobuttonyearly), FALSE);
+
+      for (i = 0; i < 7; i++)
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->checkbuttonwday[i]), FALSE);
 
       if (ev->recur)
         {

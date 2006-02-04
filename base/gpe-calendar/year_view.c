@@ -60,22 +60,6 @@ calc_geometry (GtkWidget *widget)
     gtk_widget_set_usize (widget, -1, y);
 }
 
-static guint
-day_of_week(guint year, guint month, guint day)
-{
-  guint result;
-
-  if (month < 3) 
-    {
-      month += 12;
-      --year;
-    }
-
-  result = day + (13 * month - 27)/5 + year + year/4
-    - year/100 + year/400;
-  return ((result + 6) % 7);
-}
-
 static gint
 draw_expose_event (GtkWidget *widget,
 		   GdkEventExpose *event,

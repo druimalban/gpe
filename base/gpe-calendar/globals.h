@@ -35,6 +35,7 @@ extern GtkWidget *main_window, *pop_window;
 extern GdkFont *yearfont, *datefont;
 extern gchar *strftime_strdup_utf8_locale (const char *fmt, struct tm *tm);
 extern gchar *strftime_strdup_utf8_utf8 (const char *fmt, struct tm *tm);
+extern guint day_of_week(guint year, guint month, guint day);
 
 #define SECONDS_IN_DAY (24*60*60)
 

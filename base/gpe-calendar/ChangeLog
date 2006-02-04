@@ -1,3 +1,22 @@
+2006-02-04  Phil Blundell  <pb@reciva.com>
+
+	* configure.ac (DEP_MODULES): Require libgpewidget 0.109.
+
+	* year_view.c (day_of_week): Move to...
+	* main.c: ... here.
+	* globals.h (day_of_week): Add prototype for above.
+	* month_view.c (day_of_week): Delete "spare" copy of this function.
+
+	* event-ui.c (weekly_toggled): Deleted.
+	(build_edit_event_window): Use recalculate_sensitivities in place
+	of above function.  Connect "clicked" handler to day-of-week
+	recurrence buttons; connect "changed" handler to date selectors.
+	(note_day_change, note_day_change_appt,
+	note_day_change_reminder, note_day_change_task): New functions.
+	(struct edit_state): Add recur_day_floating.
+	(sink_weekly): New function.
+	(new_event): Correctly set day-of-week recurrence buttons.
+
 2006-02-01  Phil Blundell  <pb@reciva.com>
 
 	* event-ui.c (edit_event): Correctly initialize reminder time

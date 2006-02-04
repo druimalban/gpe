@@ -92,6 +92,22 @@ static guint nr_days[] = { 31, 28, 31, 30, 31, 30,
 			   31, 31, 30, 31, 30, 31 };
 
 guint
+day_of_week (guint year, guint month, guint day)
+{
+  guint result;
+
+  if (month < 3) 
+    {
+      month += 12;
+      --year;
+    }
+
+  result = day + (13 * month - 27)/5 + year + year/4
+    - year/100 + year/400;
+  return ((result + 6) % 7);
+}
+
+guint
 days_in_month (guint year, guint month)
 {
   if (month == 1)

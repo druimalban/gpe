@@ -10,7 +10,7 @@ AC_STDC_HEADERS
 AC_PROG_INSTALL
 
 
-DEP_MODULES="gtk+-2.0 >= 2.4 glib-2.0 >= 2.2 libgpewidget libgpepimc \
+DEP_MODULES="gtk+-2.0 >= 2.4 glib-2.0 >= 2.2 libgpewidget >= 0.109 libgpepimc \
              libgpevtype >= 0.14 sqlite mimedir-1.0 libschedule libeventdb >= 0.18 libxsettings-client"
 
 # i8n stuff
