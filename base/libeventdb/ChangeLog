@@ -1,3 +1,8 @@
+2006-02-04  Phil Blundell  <pb@reciva.com>
+
+	* event-db.c (event_db_clear_recurrence): Don't crash if no
+	recurrence was set.
+
 2006-02-01  Phil Blundell  <pb@reciva.com>
 
 	* event-db.c (event_db_clear_recurrence): New function.
@@ -37,7 +42,7 @@
 	* event-db.c: Minor formating changes.
 
 2005-11-11  Florian Boor <florian@kernelconcepts.de>
-
+\
 	* libeventdb.pc.in: Correct prefix variable.
 
 2005-08-24  Martin Felis <martin@silef.de>

@@ -844,12 +844,6 @@ exit:
   return rc;
 }
 
-void
-event_db_recurrence_changed (event_t ev)
-{
-  
-}
-
 gboolean
 event_db_flush (event_t ev)
 {
@@ -976,8 +970,11 @@ event_db_get_recurrence (event_t ev)
 void
 event_db_clear_recurrence (event_t ev)
 {
-  event_db__free_recur (ev->recur);
-  ev->recur = NULL;
+  if (ev->recur)
+    {
+      event_db__free_recur (ev->recur);
+      ev->recur = NULL;
+    }
 }
 
 gboolean
