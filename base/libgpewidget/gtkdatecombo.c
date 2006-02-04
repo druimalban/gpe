@@ -170,7 +170,7 @@ drop_calendar (GtkWidget *widget, GtkDateCombo *dp)
     }
 }
 
-gboolean 
+static gboolean 
 verify_date (GtkWidget *entry, GdkEventFocus *event, GtkDateCombo *cb)
 {
   const gchar *text = gtk_entry_get_text (GTK_ENTRY (entry));
@@ -186,6 +186,7 @@ verify_date (GtkWidget *entry, GdkEventFocus *event, GtkDateCombo *cb)
   if (ret)
     {
       gtk_date_combo_set_date (cb, time.tm_year+1900, time.tm_mon, time.tm_mday);
+      gtk_date_combo_emit_changed (cb);
       cb->set = TRUE;
     }
   else
@@ -382,7 +383,6 @@ gtk_date_combo_set_date (GtkDateCombo *dp, guint year, guint month, guint day)
   dp->month = month;
   dp->day = day;
   update_text (dp);
-  gtk_date_combo_emit_changed (dp);
 }
 
 void

@@ -4,10 +4,16 @@
 
 2006-02-04  Phil Blundell  <pb@reciva.com>
 
+	* gpetimesel.c (struct _GpeTimeSelClass): Add "changed".
+	(gpe_time_sel_emit_changed): New function.
+	(note_change): Likewise.
+	(gpe_time_sel_init): Connect signal handler to GtkAdjustments.
+	(gpe_time_sel_class_init): Register "changed" signal.
+	
 	* gpe/gtkdatecombo.h (struct _GtkDateComboClass): Add "changed".
 	* gtkdatecombo.c (gtk_date_combo_emit_changed): New function.
 	(click_calendar): Call it.
-	(gtk_date_combo_set_date): Likewise.
+	(verify_date): Likewise.  Make static.
 	(gtk_date_combo_class_init): Register "changed" signal.
 
 2006-02-02  Phil Blundell  <pb@reciva.com>

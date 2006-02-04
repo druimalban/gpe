@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2003, 2006 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -26,11 +26,27 @@
 struct _GpeTimeSelClass 
 {
   GtkHBoxClass parent_class;
+
+  void (*changed)           (struct _GpeTimeSel *);
 };
 
 static GtkHBoxClass *parent_class;
 
 static GdkPixbuf *popup_button;
+
+static guint my_signals[1];
+
+static void
+gpe_time_sel_emit_changed (GpeTimeSel *sel)
+{
+  g_signal_emit (G_OBJECT (sel), my_signals[0], 0);
+}
+
+static void
+note_change (GObject *obj, GpeTimeSel *sel)
+{
+  gpe_time_sel_emit_changed (sel);
+}
 
 static gint
 spin_button_output (GtkSpinButton *spin_button)
@@ -40,6 +56,7 @@ spin_button_output (GtkSpinButton *spin_button)
   if (strcmp (buf, gtk_entry_get_text (GTK_ENTRY (spin_button))))
     gtk_entry_set_text (GTK_ENTRY (spin_button), buf);
   g_free (buf);
+
   return TRUE;
 }
 
@@ -152,6 +169,8 @@ gpe_time_sel_init (GpeTimeSel *sel)
   
   g_signal_connect (G_OBJECT (sel->hour_spin), "output", G_CALLBACK (spin_button_output), NULL);
   g_signal_connect (G_OBJECT (sel->minute_spin), "output", G_CALLBACK (spin_button_output), NULL);
+  g_signal_connect (G_OBJECT (sel->hour_adj), "value-changed", G_CALLBACK (note_change), sel);
+  g_signal_connect (G_OBJECT (sel->minute_adj), "value-changed", G_CALLBACK (note_change), sel);
  
   sel->label = gtk_label_new (":");
 
@@ -204,6 +223,14 @@ gpe_time_sel_class_init (GpeTimeSelClass * klass)
   widget_class = (GtkWidgetClass *) klass;
 
   widget_class->show = gpe_time_sel_show;
+
+  my_signals[0] = g_signal_new ("changed",
+				G_TYPE_FROM_CLASS (klass),
+				G_SIGNAL_RUN_LAST,
+				G_STRUCT_OFFSET (struct _GpeTimeSelClass, changed),
+				NULL, NULL,
+				gtk_marshal_VOID__VOID,
+				G_TYPE_NONE, 0);
 }
 
 GtkType
