@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001, 2002, 2003 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2001, 2002, 2003, 2006 Philip Blundell <philb@gnu.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,6 +25,14 @@
 #include "stylus.h"
 #include "pixmaps.h"
 #include "gtkdatecombo.h"
+
+static guint my_signals[1];
+
+static void
+gtk_date_combo_emit_changed (GtkDateCombo *c)
+{
+  g_signal_emit (G_OBJECT (c), my_signals[0], 0);
+}
 
 static void
 popdown_calendar (GtkDateCombo *combo)
@@ -121,6 +129,7 @@ click_calendar (GtkWidget *widget, GtkDateCombo *combo)
   combo->set = TRUE;
   update_text (combo);
   popdown_calendar (combo);
+  gtk_date_combo_emit_changed (combo);
 }
 
 static void
@@ -324,6 +333,14 @@ gtk_date_combo_class_init (GtkDateComboClass * klass)
   widget_class->show = gtk_date_combo_show;
 
   oclass->destroy = gtk_date_combo_destroy;
+
+  my_signals[0] = g_signal_new ("changed",
+				G_TYPE_FROM_CLASS (klass),
+				G_SIGNAL_RUN_LAST,
+				G_STRUCT_OFFSET (struct _GtkDateComboClass, changed),
+				NULL, NULL,
+				gtk_marshal_VOID__VOID,
+				G_TYPE_NONE, 0);
 }
 
 GType
@@ -365,6 +382,7 @@ gtk_date_combo_set_date (GtkDateCombo *dp, guint year, guint month, guint day)
   dp->month = month;
   dp->day = day;
   update_text (dp);
+  gtk_date_combo_emit_changed (dp);
 }
 
 void
@@ -391,6 +409,6 @@ gtk_date_combo_ignore_year (GtkDateCombo *combo, gboolean yes)
       combo->ignore_year = yes;
       if (combo->year == 0) 
         combo->year = 2000;
-      update_text(combo);
+      update_text (combo);
     }
 }

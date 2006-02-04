@@ -1,3 +1,15 @@
+2006-02-04  Phil Blundell  <pb@reciva.com>
+
+	* Version 0.109 released.
+
+2006-02-04  Phil Blundell  <pb@reciva.com>
+
+	* gpe/gtkdatecombo.h (struct _GtkDateComboClass): Add "changed".
+	* gtkdatecombo.c (gtk_date_combo_emit_changed): New function.
+	(click_calendar): Call it.
+	(gtk_date_combo_set_date): Likewise.
+	(gtk_date_combo_class_init): Register "changed" signal.
+
 2006-02-02  Phil Blundell  <pb@reciva.com>
 
 	* configure.ac: Say whether gtk-doc is, in fact, enabled.

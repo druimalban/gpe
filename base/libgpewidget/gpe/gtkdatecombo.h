@@ -44,6 +44,8 @@ struct _GtkDateCombo
 struct _GtkDateComboClass 
 {
   GtkHBoxClass parent_class;
+
+  void (*changed)           (struct _GtkDateCombo *);
 };
 
 typedef struct _GtkDateCombo	   GtkDateCombo;
