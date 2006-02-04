@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001, 2002 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2001, 2002, 2006 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -11,7 +11,6 @@
 #include <time.h>
 #include <gpe/event-db.h>
 
-extern GList *times;
 extern time_t viewtime;
 extern gboolean force_today;
 

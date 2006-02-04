@@ -31,6 +31,7 @@
 #include <gpe/schedule.h>
 #include <gpe/pim-categories.h>
 #include <gpe/pim-categories-ui.h>
+#include <gpe/gpetimesel.h>
 
 #include "globals.h"
 #include "event-ui.h"
@@ -80,6 +81,7 @@ struct edit_state
   event_t ev;
 
   gboolean recur_day_floating;
+  gboolean end_date_floating, end_time_floating;
 };
 
 static GtkWidget *cached_window;
@@ -95,7 +97,6 @@ destroy_user_data (gpointer p)
   g_slist_free (s->categories);
   g_free (p);
 }
-
 
 static void
 recalculate_sensitivities (GtkWidget *widget,
@@ -355,13 +356,6 @@ click_ok (GtkWidget *widget, GtkWidget *d)
   if (s->page == 0)
     {
       /* Appointment */
-      char *start = gtk_editable_get_chars (GTK_EDITABLE (GTK_COMBO
-                                                          (s->starttime)->entry),
-                                            0, -1);
-      char *end = gtk_editable_get_chars (GTK_EDITABLE (GTK_COMBO
-                                                        (s->endtime)->entry),
-                                          0, -1);
-
       memset (&tm_start, 0, sizeof (struct tm));
       tm_start.tm_year = GTK_DATE_COMBO (s->startdate)->year - 1900;
       tm_start.tm_mon = GTK_DATE_COMBO (s->startdate)->month;
@@ -372,8 +366,8 @@ click_ok (GtkWidget *widget, GtkWidget *d)
       tm_end.tm_mon = GTK_DATE_COMBO (s->enddate)->month;
       tm_end.tm_mday = GTK_DATE_COMBO (s->enddate)->day;
 
-      strptime (start, TIMEFMT, &tm_start);
-      strptime (end, TIMEFMT, &tm_end);
+      gpe_time_sel_get_time (GPE_TIME_SEL (s->starttime), (guint *)&tm_start.tm_hour, (guint *)&tm_start.tm_min);
+      gpe_time_sel_get_time (GPE_TIME_SEL (s->endtime), (guint *)&tm_end.tm_hour, (guint *)&tm_end.tm_min);
 
       start_t = mktime (&tm_start);
       end_t = mktime (&tm_end);
@@ -385,9 +379,6 @@ click_ok (GtkWidget *widget, GtkWidget *d)
           start_t -= 60*60;
           end_t -= 60*60;
         }
-
-      g_free (end);
-      g_free (start);
     }
   else
     {
@@ -399,10 +390,7 @@ click_ok (GtkWidget *widget, GtkWidget *d)
 
       if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->remindertimebutton)))
         {
-          char *start = gtk_editable_get_chars (GTK_EDITABLE (GTK_COMBO
-                                                              (s->remindertime)->entry),
-                                                0, -1);
-          strptime (start, TIMEFMT, &tm_start);
+	  gpe_time_sel_get_time (GPE_TIME_SEL (s->remindertime), (guint *)&tm_start.tm_hour, (guint *)&tm_start.tm_min);
         }
       else
         {
@@ -548,18 +536,12 @@ click_ok (GtkWidget *widget, GtkWidget *d)
       else if (gtk_toggle_button_get_active
                (GTK_TOGGLE_BUTTON (s->radiobuttonendon)))
         {
-          char *rend = gtk_editable_get_chars (GTK_EDITABLE (GTK_COMBO
-                                                             (s->endtime)->entry),
-                                               0, -1);
           memset (&tm_rend, 0, sizeof (struct tm));
 
           tm_rend.tm_year = GTK_DATE_COMBO (s->datecomboendon)->year - 1900;
           tm_rend.tm_mon = GTK_DATE_COMBO (s->datecomboendon)->month;
           tm_rend.tm_mday = GTK_DATE_COMBO (s->datecomboendon)->day;
-
-          strptime (rend, TIMEFMT, &tm_rend);
-
-          g_free (rend);
+	  gpe_time_sel_get_time (GPE_TIME_SEL (s->endtime), (guint *)&tm_rend.tm_hour, (guint *)&tm_rend.tm_min);
 
           rend_t = mktime (&tm_rend);
 
@@ -588,73 +570,12 @@ click_ok (GtkWidget *widget, GtkWidget *d)
   edit_finished (d);
 }
 
-static void
-check_constrains(struct edit_state *s)
-{
-    if ((s->page == 0) && (s->ev))
-    {
-      struct tm tm_start, tm_end;
-      time_t start_t, end_t;
-      event_t ev;
-      
-      ev = get_cloned_ev(s->ev);
-      
-      /* Appointment */
-      char *start = gtk_editable_get_chars (GTK_EDITABLE (GTK_COMBO
-                                                          (s->starttime)->entry),
-                                            0, -1);
-      char *end = gtk_editable_get_chars (GTK_EDITABLE (GTK_COMBO
-                                                        (s->endtime)->entry),
-                                          0, -1);
-
-      memset (&tm_start, 0, sizeof (struct tm));
-      tm_start.tm_year = GTK_DATE_COMBO (s->startdate)->year - 1900;
-      tm_start.tm_mon = GTK_DATE_COMBO (s->startdate)->month;
-      tm_start.tm_mday = GTK_DATE_COMBO (s->startdate)->day;
-
-      memset (&tm_end, 0, sizeof (struct tm));
-      tm_end.tm_year = GTK_DATE_COMBO (s->enddate)->year - 1900;
-      tm_end.tm_mon = GTK_DATE_COMBO (s->enddate)->month;
-      tm_end.tm_mday = GTK_DATE_COMBO (s->enddate)->day;
-
-      strptime (start, TIMEFMT, &tm_start);
-      strptime (end, TIMEFMT, &tm_end);
-
-      start_t = mktime (&tm_start);
-      end_t = mktime (&tm_end);
-
-      /* If DST was in effect, mktime will have "helpfully" incremented the
-         hour.  */
-      if (tm_start.tm_isdst)
-        {
-          start_t -= 60*60;
-          end_t -= 60*60;
-        }
-
-      if (start_t == end_t)
-        {
-	  gchar *timestr;
-          tm_end.tm_hour += 1;
-	  timestr = strftime_strdup_utf8_locale (TIMEFMT, &tm_end);
-          gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (s->endtime)->entry), timestr);
-	  g_free (timestr);
-        }
-
-      g_free (end);
-      g_free (start);
-      ev->start = start_t;
-      ev->duration = end_t - start_t;
-    }
-
-}
-
 static gboolean
 set_notebook_page (GtkWidget *w, struct edit_state *s)
 {
   guint i = gtk_option_menu_get_history (GTK_OPTION_MENU (w));
   gtk_notebook_set_page (GTK_NOTEBOOK (s->notebooktype), i);
   s->page = i;
-  check_constrains(s);
   gtk_widget_draw (s->notebooktype, NULL);
   
   return FALSE;
@@ -799,6 +720,33 @@ sink_weekly (GtkWidget *widget, struct edit_state *s)
 }
 
 static void
+sink_end_date (GtkWidget *widget, struct edit_state *s)
+{
+  s->end_date_floating = FALSE;
+  s->end_time_floating = FALSE;
+}
+
+static void
+sink_end_time (GtkWidget *widget, struct edit_state *s)
+{
+  s->end_time_floating = FALSE;
+}
+
+static void
+note_time_change (GtkWidget *widget, struct edit_state *s)
+{
+  guint hour, minute;
+
+  gpe_time_sel_get_time (GPE_TIME_SEL (widget), &hour, &minute);
+
+  if (s->end_time_floating)
+    {
+      hour++;
+      gpe_time_sel_set_time (GPE_TIME_SEL (s->endtime), hour, minute);
+    }
+}
+
+static void
 note_date_change (struct edit_state *s)
 {
   if (s->recur_day_floating)
@@ -822,10 +770,14 @@ note_date_change (struct edit_state *s)
 }
 
 static void
-note_date_change_appt (GtkWidget *widget, struct edit_state *s)
+note_date_change_appt (GtkDateCombo  *c, struct edit_state *s)
 {
   if (s->page == 0)
-    note_date_change (s);
+    {
+      note_date_change (s);
+      if (s->end_date_floating)
+	gtk_date_combo_set_date (s->enddate, c->year, c->month, c->day);
+    }
 }
 
 static void
@@ -1015,20 +967,11 @@ build_edit_event_window (void)
   gtk_table_set_col_spacings (GTK_TABLE (startendtable), boxspacing);
   gtk_table_set_row_spacings (GTK_TABLE (startendtable), boxspacing);
 
-  starttime           = gtk_combo_new ();
-  endtime             = gtk_combo_new ();
-
-#ifdef IS_HILDON
-  gtk_widget_set_size_request (starttime, 96, -1);
-  gtk_widget_set_size_request (endtime, 96, -1);
-#else
-  gtk_widget_set_size_request (starttime, 42, -1);
-  gtk_widget_set_size_request (endtime, 42, -1);
-#endif
-  gtk_combo_set_popdown_strings (GTK_COMBO (starttime), times);
-  gtk_combo_set_popdown_strings (GTK_COMBO (endtime), times);
-  gtk_combo_set_use_arrows (GTK_COMBO (starttime), FALSE);
-  gtk_combo_set_use_arrows (GTK_COMBO (endtime), FALSE);
+  starttime           = gpe_time_sel_new ();
+  endtime             = gpe_time_sel_new ();
+  
+  g_signal_connect (G_OBJECT (starttime), "changed", G_CALLBACK (note_time_change), s);
+  g_signal_connect (G_OBJECT (endtime), "changed", G_CALLBACK (sink_end_time), s);
 
   startdatelabel      = gtk_label_new (_("Start at:"));
   enddatelabel        = gtk_label_new (_("End at:"));
@@ -1048,6 +991,8 @@ build_edit_event_window (void)
   g_signal_connect (G_OBJECT (s->startdate), "changed", G_CALLBACK (note_date_change_appt), s);
   g_signal_connect (G_OBJECT (s->reminderdate), "changed", G_CALLBACK (note_date_change_reminder), s);
   g_signal_connect (G_OBJECT (s->taskdate), "changed", G_CALLBACK (note_date_change_task), s);
+  
+  g_signal_connect (G_OBJECT (s->enddate), "changed", G_CALLBACK (sink_end_date), s);
 
   gtk_date_combo_week_starts_monday (GTK_DATE_COMBO (s->startdate), week_starts_monday);
   gtk_date_combo_week_starts_monday (GTK_DATE_COMBO (s->enddate), week_starts_monday);
@@ -1082,9 +1027,7 @@ build_edit_event_window (void)
   g_signal_connect (G_OBJECT (s->remindertimebutton), "clicked",
                     G_CALLBACK (recalculate_sensitivities), window);
 
-  s->remindertime     = gtk_combo_new ();
-  gtk_combo_set_popdown_strings (GTK_COMBO (s->remindertime), times);
-  gtk_combo_set_use_arrows (GTK_COMBO(s->remindertime), FALSE);
+  s->remindertime     = gpe_time_sel_new ();
 
   gtk_table_attach (GTK_TABLE (datetimetable), datelabel, 0, 1, 0, 1,
                     0, GTK_EXPAND | GTK_FILL, 0, boxspacing);
@@ -1582,8 +1525,8 @@ build_edit_event_window (void)
                          GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK);
   
   GTK_WIDGET_SET_FLAGS (summaryentry, GTK_CAN_DEFAULT);
-  gtk_widget_grab_default(summaryentry);
-  g_object_set_data(G_OBJECT(window), "default-entry", summaryentry);
+  gtk_widget_grab_default (summaryentry);
+  g_object_set_data(G_OBJECT (window), "default-entry", summaryentry);
   
   return window;
 }
@@ -1618,7 +1561,6 @@ new_event (time_t t, guint timesel)
   if (w)
     {
       struct tm tm;
-      gchar *timestr;
       int i, wday;
       struct edit_state *s = g_object_get_data (G_OBJECT (w),
                                                 "edit_state");
@@ -1629,19 +1571,15 @@ new_event (time_t t, guint timesel)
       gtk_widget_set_sensitive (s->deletebutton, FALSE);
 
       localtime_r (&t, &tm);
-      timestr = strftime_strdup_utf8_locale (TIMEFMT, &tm);
-      gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (s->starttime)->entry), timestr);
-      gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (s->remindertime)->entry), timestr);
-      g_free (timestr);
+      gpe_time_sel_set_time (GPE_TIME_SEL (s->starttime), tm.tm_hour, tm.tm_min);
+      gpe_time_sel_set_time (GPE_TIME_SEL (s->remindertime), tm.tm_hour, tm.tm_min);
       gtk_date_combo_set_date (GTK_DATE_COMBO (s->startdate),
                                tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
       gtk_date_combo_set_date (GTK_DATE_COMBO (s->reminderdate),
                                tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
       t += 60 * 60;
       localtime_r (&t, &tm);
-      timestr = strftime_strdup_utf8_locale (TIMEFMT, &tm);
-      gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (s->endtime)->entry), timestr);
-      g_free (timestr);
+      gpe_time_sel_set_time (GPE_TIME_SEL (s->endtime), tm.tm_hour, tm.tm_min);
       gtk_date_combo_set_date (GTK_DATE_COMBO (s->enddate),
                                tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
 
@@ -1662,6 +1600,8 @@ new_event (time_t t, guint timesel)
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->checkbuttonwday[i]), (i == wday) ? TRUE : FALSE);
 
       s->recur_day_floating = TRUE;
+      s->end_date_floating = TRUE;
+      s->end_time_floating = TRUE;
 
       entry = g_object_get_data (G_OBJECT (w), "default-entry");
       if (entry)
@@ -1684,7 +1624,6 @@ edit_event (event_t ev)
     {
       time_t end;
       struct tm tm;
-      gchar *timestr;
       int i;
       struct edit_state *s = g_object_get_data (G_OBJECT (w),
                                                 "edit_state");
@@ -1701,9 +1640,8 @@ edit_event (event_t ev)
       event_db_forget_details (ev);
 
       localtime_r (&(ev->start), &tm);
-      timestr = strftime_strdup_utf8_locale (TIMEFMT, &tm);
-      gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (s->starttime)->entry), timestr);
-      g_free (timestr);
+      gpe_time_sel_set_time (GPE_TIME_SEL (s->starttime), tm.tm_hour, tm.tm_min);
+      gpe_time_sel_set_time (GPE_TIME_SEL (s->remindertime), tm.tm_hour, tm.tm_min);
       gtk_date_combo_set_date (GTK_DATE_COMBO (s->startdate),
                                tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
       gtk_date_combo_set_date (GTK_DATE_COMBO (s->reminderdate),
@@ -1711,9 +1649,7 @@ edit_event (event_t ev)
 
       end = ev->start + ev->duration;
       localtime_r (&end, &tm);
-      timestr = strftime_strdup_utf8_locale (TIMEFMT, &tm);
-      gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (s->endtime)->entry), timestr);
-      g_free (timestr);
+      gpe_time_sel_set_time (GPE_TIME_SEL (s->endtime), tm.tm_hour, tm.tm_min);
       gtk_notebook_set_page (GTK_NOTEBOOK (s->notebookedit), 0);
       gtk_date_combo_set_date (GTK_DATE_COMBO (s->enddate),
                                tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
@@ -1725,17 +1661,9 @@ edit_event (event_t ev)
       s->page = (ev->duration == 0);
       gtk_notebook_set_page (GTK_NOTEBOOK (s->notebooktype), s->page);
 
-      if (ev->duration == 0)
-	{
-	  /* Reminder */
-	  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->remindertimebutton),
-					(ev->flags & FLAG_UNTIMED) ? FALSE : TRUE);
-
-	  localtime_r (&ev->start, &tm);
-	  timestr = strftime_strdup_utf8_locale (TIMEFMT, &tm);
-	  gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (s->remindertime)->entry), timestr);
-	  g_free (timestr);
-	}
+      /* Reminder */
+      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->remindertimebutton),
+				    (ev->flags & FLAG_UNTIMED) ? FALSE : TRUE);
  
       if (ev->flags & FLAG_ALARM)
         {

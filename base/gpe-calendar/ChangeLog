@@ -1,5 +1,22 @@
 2006-02-04  Phil Blundell  <pb@reciva.com>
 
+	* event-ui.c (struct edit_state): New members end_date_floating,
+	end_time_floating.
+	(new_event): Set them to TRUE.
+	(sink_end_date, sink_end_time, note_time_change): New functions.
+	(note_date_change_appt): Set end date here if it was floating.
+	(check_constrains): Deleted.
+	(set_notebook_page): Remove call to above function.
+	(build_edit_event_window): Use GpeTimeSel rather than combo box
+	for time selection.  All uses of these widgets updated.
+	(new_event): Mark end time and date as floating.
+	(edit_event): Always initialize reminder fields.
+	* globals.h (times): Deleted.
+	* main.c (times): Likewise.
+	(main): Remove code to build list of time strings.
+
+2006-02-04  Phil Blundell  <pb@reciva.com>
+
 	* configure.ac (DEP_MODULES): Require libgpewidget 0.109.
 
 	* year_view.c (day_of_week): Move to...

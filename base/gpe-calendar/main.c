@@ -57,7 +57,6 @@
 
 extern gboolean gpe_calendar_start_xsettings (void);
 
-GList *times;
 time_t viewtime;
 gboolean force_today = FALSE;
 gboolean just_new = FALSE;
@@ -615,20 +614,6 @@ main (int argc, char *argv[])
       exit (EXIT_SUCCESS);
     }
 	
-  for (hour = 0; hour < 24; hour++)
-    {
-      struct tm tm;
-      time_t t=time(NULL);
-
-      localtime_r (&t, &tm);
-      tm.tm_hour = hour;
-      tm.tm_min = 0;
-      times = g_list_append (times, strftime_strdup_utf8_locale (TIMEFMT, &tm));
-      tm.tm_hour = hour;
-      tm.tm_min = 30;
-      times = g_list_append (times, strftime_strdup_utf8_locale (TIMEFMT, &tm));
-    }
-
   vcal_export_init();
     
   vbox = gtk_vbox_new (FALSE, 0);
