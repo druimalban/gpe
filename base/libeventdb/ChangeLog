@@ -1,3 +1,7 @@
+2006-02-05  Phil Blundell  <pb@reciva.com>
+
+	* Version 0.19 released.
+
 2006-02-04  Phil Blundell  <pb@reciva.com>
 
 	* event-db.c (event_db_clear_recurrence): Don't crash if no
