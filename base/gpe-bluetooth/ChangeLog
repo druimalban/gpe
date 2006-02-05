@@ -1,5 +1,9 @@
 2006-02-05  Phil Blundell  <pb@reciva.com>
 
+	* Version 0.51 released.
+
+2006-02-05  Phil Blundell  <pb@reciva.com>
+
 	* main.c (sdp_session): New global.
 	(main): Create a global SDP session.
 	* main.h (sdp_session): Declare.
