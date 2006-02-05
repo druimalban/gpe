@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2004, 2006 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -27,6 +27,7 @@
 
 #include "obexserver.h"
 #include "obex-glib.h"
+#include "main.h"
 
 #define OBEX_PUSH_HANDLE	10
 
@@ -225,7 +226,7 @@ add_opush (sdp_session_t *session, uint8_t chan)
   
   sdp_set_info_attr(&record, "OBEX Object Push", 0, 0);
   
-  if (sdp_record_register(session, &record, SDP_RECORD_PERSIST) < 0)
+  if (sdp_record_register(session, &record, 0) < 0)
     ret = FALSE;
 
   sdp_data_free(channel);
@@ -241,19 +242,10 @@ add_opush (sdp_session_t *session, uint8_t chan)
 static int 
 add_service (void)
 {
-  sdp_session_t *sess;
-  bdaddr_t interface;
-  gboolean ret;
-
-  sess = sdp_connect (&interface, BDADDR_LOCAL, 0);
-
-  if (!sess)
+  if (!sdp_session)
     return FALSE;
-
-  ret = add_opush (sess, 10);
-
-  sdp_close(sess);
-  return ret;
+  
+  return add_opush (sdp_session, 10);
 }
 
 int

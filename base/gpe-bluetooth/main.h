@@ -38,3 +38,4 @@ extern void schedule_message_delete (guint id, guint time);
 
 extern const gchar *icon_name_for_class (int class);
 
+extern sdp_session_t *sdp_session;

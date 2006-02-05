@@ -60,6 +60,7 @@
 static GThread *scan_thread;
 
 bdaddr_t src_addr = *BDADDR_ANY;
+sdp_session_t *sdp_session;
 
 struct gpe_icon my_icons[] = {
   { "bt-on", "bluetooth/bt-on" },
@@ -592,6 +593,7 @@ main (int argc, char *argv[])
   GtkTooltips *tooltips;
   int dd;
   GSource *sigchld_source;
+  bdaddr_t interface;
 
   g_thread_init (NULL);
   gdk_threads_init ();
@@ -668,6 +670,8 @@ main (int argc, char *argv[])
   gtk_widget_show (window);
 
   atexit (do_stop_radio);
+
+  sdp_session = sdp_connect (&interface, BDADDR_LOCAL, 0);
 
   dun_init ();
   lap_init ();

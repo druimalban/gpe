@@ -1,5 +1,13 @@
 2006-02-05  Phil Blundell  <pb@reciva.com>
 
+	* main.c (sdp_session): New global.
+	(main): Create a global SDP session.
+	* main.h (sdp_session): Declare.
+	* obexserver.c (add_opush): Don't set PERSIST flag on SDP record.
+	(add_service): Use above-mentioned global SDP session.
+
+2006-02-05  Phil Blundell  <pb@reciva.com>
+
 	* main.c (check_radio_startup): Correct ghastly mistake with
 	return value from GSource.
 
