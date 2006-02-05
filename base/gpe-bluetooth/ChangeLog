@@ -1,5 +1,21 @@
 2006-02-05  Phil Blundell  <pb@reciva.com>
 
+	* obexclient.c (obex_service_desc): New global.
+	(find_obex_service): Use it.
+	(obex_do_connect): Avoid inappropriate use of perror().
+	(obex_scan, send_vcard_done, really_send_my_vcard, send_my_vcard,
+	obex_popup_menu, obex_client_init): New functions.
+	* obexclient.h (obex_client_init): Add prototype.
+	* main.c (main): Call obex_client_init.
+
+	* obexclient-dbus.c: Correct unmarshaling of OBEX payload with
+	DBUS 0.60.
+
+2006-02-05  Phil Blundell  <pb@reciva.com>
+
+	* obexserver.c (obex_conn_event): Make static.
+	(add_service): Likewise.
+
 	* main.c (check_radio_startup): Set radio_is_on here.
 	(radio_on): But not here.
 

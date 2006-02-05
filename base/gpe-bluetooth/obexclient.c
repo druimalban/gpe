@@ -67,6 +67,7 @@ struct obex_push_req
 
 static GStaticMutex active_reqs_mutex = G_STATIC_MUTEX_INIT;
 static GList *active_reqs;
+static struct bt_service_desc obex_service_desc;
 
 static void
 run_callback (struct obex_push_req *req, gboolean result)
@@ -86,14 +87,11 @@ find_obex_service (bdaddr_t *bdaddr, int *port)
   sdp_list_t *attrid, *search, *seq, *next;
   uint32_t range = 0x0000ffff;
   int status = -1;
-  uuid_t group;
   sdp_session_t *sess;
   gboolean found = FALSE;
 
-  sdp_uuid16_create (&group, OBEX_OBJPUSH_SVCLASS_ID);
-
   attrid = sdp_list_append (0, &range);
-  search = sdp_list_append (0, &group);
+  search = sdp_list_append (0, &obex_service_desc.uuid);
   sess = sdp_connect (BDADDR_ANY, bdaddr, 0);
   if (!sess) 
     return FALSE;
@@ -222,6 +220,7 @@ obex_do_connect (gpointer data)
   GtkWidget *w;
   obex_object_t *object;
   int r;
+  gboolean use_perror = TRUE;
   
   gdk_threads_enter ();
   w = bt_progress_dialog (_("Connecting"), gpe_find_icon ("bt-logo"));
@@ -232,6 +231,7 @@ obex_do_connect (gpointer data)
   if (find_obex_service (&req->bdaddr, &port) == FALSE)
     {
       text = _("Selected device lacks OBEX support");
+      use_perror = FALSE;
       goto error;
     }
 
@@ -266,7 +266,10 @@ obex_do_connect (gpointer data)
   gdk_threads_enter ();
   gtk_widget_destroy (w);
   gdk_flush ();
-  gpe_perror_box_nonblocking (text);
+  if (use_perror)
+    gpe_perror_box_nonblocking (text);
+  else
+    gpe_error_box_nonblocking (text);
   gdk_threads_leave ();
   run_callback (req, FALSE);
 }
@@ -513,4 +516,104 @@ obex_object_push (const gchar *filename, const gchar *mimetype, const gchar *dat
     }
 
   return TRUE;
+}
+
+struct bt_service_obex
+{
+  struct bt_service service;
+  struct bt_device *bd;
+};
+
+static struct bt_service *
+obex_scan (sdp_record_t *rec, struct bt_device *bd)
+{
+  struct bt_service_obex *s;
+
+  s = g_malloc (sizeof (*s));
+
+  s->service.desc = &obex_service_desc;
+  s->bd = bd;
+
+  return (struct bt_service *)s;
+}
+
+static void
+send_vcard_done (gboolean success, void *data)
+{
+  g_free (data);
+}
+
+static gboolean
+really_send_my_vcard (struct bt_service_obex *svc)
+{
+  struct obex_push_req *req;
+  gchar *filename;
+  gchar *data;
+  gsize length;
+  GError *error;
+
+  filename = g_strdup_printf ("%s/.gpe/user.vcf", g_get_home_dir ());
+
+  if (access (filename, R_OK) && errno == ENOENT)
+    {
+      if (system ("gpe-contacts -v"))
+	{
+	  g_free (filename);
+	  return FALSE;
+	}
+    }
+
+  error = NULL;
+  if (!g_file_get_contents (filename, &data, &length, &error))
+    {
+      gdk_threads_enter ();
+      gpe_error_box (error->message);
+      gdk_threads_leave ();
+      g_error_free (error);
+      g_free (filename);
+      return FALSE;
+    }
+
+  req = g_new (struct obex_push_req, 1);
+  baswap (&req->bdaddr, &svc->bd->bdaddr);
+  req->filename = "user.vcf";
+  req->mimetype = "application/x-vcard";
+  req->data = data;
+  req->len = length;
+  req->callback = send_vcard_done;
+  req->cb_data = data;
+
+  obex_do_connect (req);
+}
+
+static void
+send_my_vcard (GtkWidget *w, struct bt_service_obex *svc)
+{
+  GThread *thread;
+
+  thread = g_thread_create ((GThreadFunc)really_send_my_vcard, svc, FALSE, NULL);
+}
+
+static void
+obex_popup_menu (struct bt_service *svc, GtkWidget *menu)
+{
+  struct bt_service_obex *obex;
+  GtkWidget *w;
+  obex = (struct bt_service_obex *)svc;
+
+  w = gtk_menu_item_new_with_label (_("Send my vCard"));
+  g_signal_connect (G_OBJECT (w), "activate", G_CALLBACK (send_my_vcard), svc);
+
+  gtk_widget_show (w);
+  gtk_menu_append (GTK_MENU (menu), w);
+}
+
+void
+obex_client_init (void)
+{
+  sdp_uuid16_create (&obex_service_desc.uuid, OBEX_OBJPUSH_SVCLASS_ID);
+  obex_service_desc.scan = obex_scan;
+  obex_service_desc.popup_menu = obex_popup_menu;
+
+  service_desc_list = g_slist_prepend (service_desc_list, &obex_service_desc);
 }

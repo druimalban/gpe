@@ -119,7 +119,7 @@ handle_request (obex_t *handle, obex_object_t *object, int event, int cmd)
     }
 }
 
-void
+static void
 obex_conn_event (obex_t *handle, obex_object_t *object, int mode, int event, int obex_cmd, int obex_rsp)
 {
   switch (event)
@@ -238,7 +238,7 @@ add_opush (sdp_session_t *session, uint8_t chan)
   return ret;
 }
 
-int 
+static int 
 add_service (void)
 {
   sdp_session_t *sess;

@@ -673,6 +673,7 @@ main (int argc, char *argv[])
   pan_init ();
   headset_init ();
   obex_init ();
+  obex_client_init ();
 
   dock_window = window->window;
   gpe_system_tray_dock (window->window);

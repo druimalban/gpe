@@ -112,7 +112,12 @@ obex_client_handle_dbus_request (DBusConnection *connection, DBusMessage *messag
     goto wrong_args;
 
 #ifdef HAVE_DBUS_MESSAGE_ITER_GET_BASIC
-  dbus_message_iter_get_fixed_array (&iter, &data, &len);
+  DBusMessageIter sub;
+  unsigned char *data2;
+  dbus_message_iter_recurse (&iter, &sub);
+  dbus_message_iter_get_fixed_array (&sub, &data2, &len);
+  data = dbus_malloc (len);
+  memcpy (data, data2, len);
 #else
   dbus_message_iter_get_byte_array (&iter, &data, &len);
 #endif
