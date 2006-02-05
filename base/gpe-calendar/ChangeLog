@@ -1,5 +1,11 @@
 2006-02-05  Phil Blundell  <pb@reciva.com>
 
+	* day_view.c (day_view): Don't display sidebar calendar on QVGA
+	screens, even in landscape orientation.
+	* week_view.c (week_view): Likewise.
+
+2006-02-05  Phil Blundell  <pb@reciva.com>
+
 	* Version 0.70 released.
 
 2006-02-05  Phil Blundell  <pb@reciva.com>

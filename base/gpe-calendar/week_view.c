@@ -626,7 +626,7 @@ week_view (void)
   gboolean landscape;
   GtkWidget *hbox;
 
-  landscape = gdk_screen_width () > gdk_screen_height () ? TRUE : FALSE;
+  landscape = (gdk_screen_width () > gdk_screen_height () && gdk_screen_width >= 640) ? TRUE : FALSE;
   hbox = gtk_hbox_new (FALSE, 0);
 
   calendar = gtk_calendar_new ();
