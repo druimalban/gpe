@@ -9,10 +9,12 @@ event-db
 
 </para>
 
+
 <!-- ##### SECTION See_Also ##### -->
 <para>
 
 </para>
+
 
 <!-- ##### SECTION Stability_Level ##### -->
 
@@ -337,5 +339,13 @@ event-db
 
 @ev: 
 @Returns: 
+
+
+<!-- ##### FUNCTION event_db_clear_recurrence ##### -->
+<para>
+
+</para>
+
+@ev: 
 
 

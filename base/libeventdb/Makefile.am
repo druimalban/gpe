@@ -14,4 +14,6 @@ gpeinclude_HEADERS = gpe/event-db.h
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libeventdb.pc
 
+DISTCHECK_CONFIGURE_FLAGS = --enable-gtk-doc
+
 include gpe-dist.am
