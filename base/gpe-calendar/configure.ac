@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT(gpe-calendar,0.69,gpe@handhelds.org)
+AC_INIT(gpe-calendar,0.70,gpe@handhelds.org)
 
 AC_CONFIG_SRCDIR([main.c])
 AM_INIT_AUTOMAKE([foreign dist-bzip2])
@@ -11,7 +11,7 @@ AC_PROG_INSTALL
 
 
 DEP_MODULES="gtk+-2.0 >= 2.4 glib-2.0 >= 2.2 libgpewidget >= 0.109 libgpepimc \
-             libgpevtype >= 0.14 sqlite mimedir-1.0 libschedule libeventdb >= 0.18 libxsettings-client"
+             libgpevtype >= 0.14 sqlite mimedir-1.0 libschedule libeventdb >= 0.19 libxsettings-client"
 
 # i8n stuff
 AH_TEMPLATE([GETTEXT_PACKAGE], [Package name for gettext])

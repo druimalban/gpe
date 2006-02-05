@@ -669,6 +669,7 @@ day_view (void)
 {
   GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
   GtkWidget *hbox = gtk_hbox_new (FALSE, 0);
+  GtkWidget *inner_vbox = gtk_vbox_new (FALSE, 0);
   GtkWidget *edit_event_button, *delete_event_button, *save_button;
   GtkWidget *vbox_popup = gtk_vbox_new (FALSE, 0);
   gboolean landscape;
@@ -774,6 +775,7 @@ day_view (void)
   gtk_widget_show (rem_area);
   gtk_widget_show (scrolled_window);
   gtk_widget_show (hbox);
+  gtk_widget_show (inner_vbox);
   page_app = day_page_new (draw);
   page_rem = day_page_new (rem_area);
 
@@ -797,10 +799,13 @@ day_view (void)
 				  GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 
   gtk_box_pack_start (GTK_BOX (vbox), datesel, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), rem_area, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), hbox, TRUE, TRUE, 0);
 
-  gtk_box_pack_start (GTK_BOX (hbox), scrolled_window, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox), inner_vbox, TRUE, TRUE, 0);
+  
+  gtk_box_pack_start (GTK_BOX (inner_vbox), rem_area, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (inner_vbox), scrolled_window, TRUE, TRUE, 0);
+
 #ifndef IS_HILDON
   if (landscape)
     {
