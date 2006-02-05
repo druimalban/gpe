@@ -137,7 +137,7 @@ fork_hciattach (void)
 
 #define RADIO_ON_POLL_TIME	500
 
-static void
+gboolean
 check_radio_startup (guint id)
 {
   int dd;
@@ -155,9 +155,10 @@ check_radio_startup (guint id)
 
       radio_is_on = TRUE;
       set_image (0, 0);
+      return FALSE;
     }
-  else
-    g_timeout_add (RADIO_ON_POLL_TIME, (GSourceFunc) check_radio_startup, NULL);
+
+  return TRUE;
 }
 
 static void

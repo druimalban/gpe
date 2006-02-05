@@ -1,5 +1,14 @@
 2006-02-05  Phil Blundell  <pb@reciva.com>
 
+	* main.c (check_radio_startup): Correct ghastly mistake with
+	return value from GSource.
+
+2006-02-05  Phil Blundell  <pb@reciva.com>
+
+	* Version 0.50 released.
+
+2006-02-05  Phil Blundell  <pb@reciva.com>
+
 	* obexclient.c (obex_service_desc): New global.
 	(find_obex_service): Use it.
 	(obex_do_connect): Avoid inappropriate use of perror().
