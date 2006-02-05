@@ -1,7 +1,7 @@
 /*
  * gpe-shield
  *
- * Copyright (C) 2004  kernel concepts
+ * Copyright (C) 2004, 2006  kernel concepts
  * Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
@@ -70,7 +70,7 @@ static int rules_altered = 0;
 static GtkWidget *notebook;
 static GtkWidget *treeview;
 static GtkTreeStore *store = NULL;
-static GtkWidget *bApply, *bAdd, *bRemove, *bEdit;
+static GtkToolItem *bApply, *bAdd, *bRemove, *bEdit;
 static GtkWidget *miLoad, *miSave, *miApply;
 static GtkWidget *mMain;
 GtkWidget *fMain;
@@ -102,7 +102,6 @@ static GtkItemFactoryEntry mMain_items[] = {
   { N_("/Rules/_Add"), "", on_add_clicked, MI_ADD , "<StockItem>", GTK_STOCK_ADD},
   { N_("/Rules/_Edit"), "", on_edit_clicked, MI_ADD , "<StockItem>", GTK_STOCK_PROPERTIES},
   { N_("/Rules/_Delete"), "", on_remove_clicked, MI_DELETE , "<StockItem>", GTK_STOCK_DELETE},
-/*  { N_("/Rules/_Info"), "", on_info_clicked, MI_INFO , "<Item>"},*/
   { N_("/Rules/s2"), NULL , NULL,    0, "<Separator>"},
   { N_("/Rules/Appl_y"), "", on_rules_apply_clicked, MI_RULES_APPLY, "<StockItem>", GTK_STOCK_APPLY},
   { N_("/_Help"),         NULL, NULL,           0, "<Branch>" },
@@ -531,9 +530,9 @@ void do_message_dlg(int type,char *msg)
 void do_end_command()
 {
     gtk_widget_set_sensitive(miLoad, rules_can_load());
-    gtk_widget_set_sensitive(miSave,TRUE);
-    gtk_widget_set_sensitive(miApply,get_network_control());
-    gtk_widget_set_sensitive(bApply,get_network_control());
+    gtk_widget_set_sensitive(miSave, TRUE);
+    gtk_widget_set_sensitive(miApply, get_network_control());
+    gtk_widget_set_sensitive(GTK_WIDGET(bApply), get_network_control());
 	if (running_command == CMD_ADD) 
 		update_tree();
 	running_command = CMD_NONE;
@@ -692,25 +691,6 @@ mainloop (int argc, char *argv[])
 	return 0;
 }
 
-/*
-gboolean   
-tv_row_clicked(GtkTreeView *treeview, GtkTreePath *arg1, 
-	GtkTreeViewColumn *arg2, gpointer user_data)
-{
-	GtkTreeSelection *selection;
-	GtkTreeIter iter;
-	int status;
-
-	selection = gtk_tree_view_get_selection (treeview);
-	if (gtk_tree_selection_get_selected (selection, NULL, &iter) == FALSE) 
-		return FALSE;
-	gtk_tree_model_get (GTK_TREE_MODEL (store), &iter, COL_ACTIVE, &status, -1);
-	status = !status;
-	gtk_tree_store_set (GTK_TREE_STORE (store), &iter, COL_ACTIVE, status, -1);
-	return TRUE;
-}
-*/
-
 static void
 list_toggle_inst (GtkCellRendererToggle * cellrenderertoggle,
 		  gchar * path_str, gpointer model_data)
@@ -775,12 +755,12 @@ create_fMain (void)
   GtkWidget *vbox;
   GtkWidget *cur;
   GtkWidget *toolbar;
-  GtkWidget *pw;
   GtkTooltips *tooltips;
   GtkCellRenderer *renderer;
   GtkTreeViewColumn *column;
-  char *tmp;
-  int size_x, size_y;
+  GtkToolItem *sep, *pw;
+  gchar *tmp;
+  gint size_x, size_y;
 
   /* init tree storage stuff */
   store = gtk_tree_store_new (N_COLUMNS,
@@ -815,40 +795,57 @@ create_fMain (void)
   gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar),
 			       GTK_ORIENTATION_HORIZONTAL);
 
-  bApply = gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_APPLY,
-			   _("Apply rules to your system"), NULL,
-			   (GtkSignalFunc) on_rules_apply_clicked , NULL, -1);
-			   
-  bAdd = gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_ADD,
-			   _("Add a new rule"), NULL,
-			   (GtkSignalFunc) on_add_clicked , NULL, -1);
-			   
-  bRemove = gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_REMOVE,
-			   _("Remove selected rule"), NULL,
-			   (GtkSignalFunc) on_remove_clicked , NULL, -1);
-			   
-  bEdit = gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_PROPERTIES,
-			   _("Edit selected rule"), NULL,
-			   (GtkSignalFunc) on_edit_clicked , NULL, -1);
-			   
-  gtk_toolbar_append_space(GTK_TOOLBAR(toolbar));
+  bApply = gtk_tool_button_new_from_stock(GTK_STOCK_APPLY);
+  g_signal_connect(G_OBJECT(bApply), "clicked", 
+                   G_CALLBACK(on_rules_apply_clicked), NULL);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), bApply, -1);
+  gtk_tooltips_set_tip(tooltips, GTK_WIDGET(bApply), 
+                       _("Apply rules to your system"), NULL);
+
+  bAdd = gtk_tool_button_new_from_stock(GTK_STOCK_ADD);
+  g_signal_connect(G_OBJECT(bAdd), "clicked", 
+                   G_CALLBACK(on_add_clicked), NULL);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), bAdd, -1);
+  gtk_tooltips_set_tip(tooltips, GTK_WIDGET(bAdd), 
+                       _("Add a new rule"), NULL);
+			   			   
+  bRemove = gtk_tool_button_new_from_stock(GTK_STOCK_REMOVE);
+  g_signal_connect(G_OBJECT(bRemove), "clicked", 
+                   G_CALLBACK(on_remove_clicked), NULL);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), bRemove, -1);
+  gtk_tooltips_set_tip(tooltips, GTK_WIDGET(bRemove), 
+                       _("Remove selected rule"), NULL);
+  		   
+  bEdit = gtk_tool_button_new_from_stock(GTK_STOCK_EDIT);
+  g_signal_connect(G_OBJECT(bEdit), "clicked", 
+                   G_CALLBACK(on_edit_clicked), NULL);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), bEdit, -1);
+  gtk_tooltips_set_tip(tooltips, GTK_WIDGET(bRemove), 
+                       _("Edit selected rule"), NULL);
+
+  sep = gtk_separator_tool_item_new();
+  gtk_separator_tool_item_set_draw(GTK_SEPARATOR_TOOL_ITEM(sep), FALSE);
+  gtk_tool_item_set_expand(sep, TRUE);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), sep, -1);
   
-  pw = gtk_image_new_from_pixbuf(gpe_find_icon ("exit"));
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Exit"),
-			   _("Close application"), NULL, pw,
-			   (GtkSignalFunc) do_safe_exit, NULL);
-			   
-  gtk_box_pack_start(GTK_BOX(vbox),toolbar,FALSE,TRUE,0);
+  pw = gtk_tool_button_new_from_stock(GTK_STOCK_QUIT);
+  g_signal_connect(G_OBJECT(pw), "clicked", 
+                   G_CALLBACK(do_safe_exit), NULL);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), pw, -1);
+  gtk_tooltips_set_tip(tooltips, GTK_WIDGET(pw), 
+                       _("Close application"), NULL);
+					   			   
+  gtk_box_pack_start(GTK_BOX(vbox), toolbar, FALSE, TRUE, 0);
 
   /* notebook */
   
   notebook = gtk_notebook_new();	
-  gtk_box_pack_start(GTK_BOX(vbox),notebook,TRUE,TRUE,0);
+  gtk_box_pack_start(GTK_BOX(vbox), notebook, TRUE, TRUE, 0);
 	
-  gtk_object_set_data(GTK_OBJECT(notebook),"tooltips",tooltips);
+  gtk_object_set_data(GTK_OBJECT(notebook), "tooltips", tooltips);
   
   /* installed tab */	
-  vbox = gtk_vbox_new(FALSE,gpe_get_boxspacing());
+  vbox = gtk_vbox_new(FALSE, gpe_get_boxspacing());
 
   cur = gtk_label_new(_("Rules"));
   gtk_notebook_append_page(GTK_NOTEBOOK(notebook),vbox,cur);

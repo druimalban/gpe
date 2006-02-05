@@ -1,5 +1,5 @@
 PACKAGE = gpe-shield
-VERSION = 0.8
+VERSION = 0.9
 NATIVE = yes
 CVSBUILD = yes
 DEBUG = no
@@ -16,8 +16,6 @@ EXTRA_DESKTOPS = gpe-shield.desktop.in
 HELPFILE = gpe-shield.html
 
 ifeq ($(CVSBUILD),yes)
-PACKAGE_LDFLAGS += -L../libgpewidget -L.
-PACKAGE_CFLAGS += -I../libgpewidget -I.
 BUILD = ../build
 else
 BUILD = build
@@ -25,7 +23,7 @@ endif
 
 PACKAGE_CPPFLAGS = $(STANDARD_CPPFLAGS)
 PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GTKCFLAGS) $(GPECFLAGS)
-PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS) $(GTKLIBS)
+PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS) $(GTKLIBS) `pkg-config --libs libgpewidget`
 
 
 MEMBERS  = main interface backend editrule

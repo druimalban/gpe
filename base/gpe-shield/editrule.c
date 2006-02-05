@@ -1,8 +1,7 @@
 /*
  * gpe-shield
  *
- * Copyright (C) 2004 kernel concepts
- * Florian Boor <florian.boor@kernelconcepts.de>
+ * Copyright (C) 2004, 2006 Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -76,9 +75,9 @@ update_widgets(GtkWidget* sender)
 
 
 static GtkWidget*
-create_dialog()
+create_dialog(void)
 {
-	GtkWidget *dialog, *label, *table;
+	GtkWidget *dialog, *label, *table, *sw;
 	gchar *text;
 	GList *slTarget = NULL;
 	GList *slChain = NULL;
@@ -105,12 +104,20 @@ create_dialog()
 	                                GTK_STOCK_CANCEL,GTK_RESPONSE_CANCEL,
 	                                GTK_STOCK_OK,GTK_RESPONSE_OK,
 	                                NULL);
-	table = gtk_table_new(4,3,FALSE);
-	gtk_table_set_col_spacings(GTK_TABLE(table),gpe_get_boxspacing());
-	gtk_table_set_row_spacings(GTK_TABLE(table),gpe_get_boxspacing());
-	gtk_container_set_border_width(GTK_CONTAINER(table),gpe_get_border());
+	gtk_window_set_default_size(GTK_WINDOW(dialog), 240, 300);
+	sw = gtk_scrolled_window_new(NULL, NULL);
+	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(sw), 
+	                               GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 	
-	gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->vbox),table,TRUE,TRUE,0);
+	gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->vbox), sw, TRUE, TRUE, 0);
+	
+	table = gtk_table_new(4, 3, FALSE);
+	gtk_table_set_col_spacings(GTK_TABLE(table), gpe_get_boxspacing());
+	gtk_table_set_row_spacings(GTK_TABLE(table), gpe_get_boxspacing());
+	gtk_container_set_border_width(GTK_CONTAINER(table), gpe_get_border());
+	
+	gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(sw), table);
+	gtk_viewport_set_shadow_type(GTK_VIEWPORT(table->parent), GTK_SHADOW_NONE);
 	
 	label = gtk_label_new(NULL);
 	gtk_misc_set_alignment(GTK_MISC(label), 0, 0.5);

@@ -1,7 +1,7 @@
 /*
  * gpe-shield
  *
- * Copyright (C) 2004, 2005 kernel concepts
+ * Copyright (C) 2004 - 2006 kernel concepts
  * Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
@@ -509,6 +509,7 @@ gboolean
 find_iptables ()
 {
 	gchar *test;
+	gchar *iptdir, *t, *path, *newpath;
 	
 	if (!access(IPTABLES_CMD1,X_OK))
 		IPTABLES_CMD = IPTABLES_CMD1;
@@ -520,7 +521,23 @@ find_iptables ()
 		IPTABLES_CMD = IPTABLES_CMD4;
 	if (!IPTABLES_CMD)
 		return FALSE;
+	
 	test = g_strdup_printf("%s -L", IPTABLES_CMD);
+	
+	/* modify PATH environment */
+	t = g_strdup(IPTABLES_CMD);
+	iptdir = dirname(t);
+	path = getenv("PATH");
+	if (path)
+	{
+		if (!strcmp(iptdir, "/sbin"))
+			newpath = g_strdup_printf("%s:%s", path, iptdir);
+		else
+			newpath = g_strdup_printf("%s:%s:/sbin", path, iptdir);
+		setenv("PATH", newpath, 1);
+	}
+	g_free(t);
+	
 	if (system(test) != EXIT_SUCCESS)
 	{
 		g_free(test);
@@ -534,15 +551,16 @@ find_iptables ()
 
 int
 suidloop (int csock)
-{	
+{
 	sock = csock;
 
+	/* check for iptables */
 	if (!find_iptables())
 	{
 		fprintf(stderr, "Iptables support not found, exiting.\n");
 		send_message(PK_STATUS, CMD_NO_IPTABLES, NULL);
 	}
-	
+		
 	while (wait_message ()) ;
 		
 	close (sock);

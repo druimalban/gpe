@@ -1,3 +1,11 @@
+2006-02-04 Florian Boor <florian.boor@kernelconcepts.de>
+
+	* Released Version 0.9
+	* backend.c: Set PATH to cover mostr likely position of insmod.
+	* interface.c: Rewrite toolbar to new API, some clanups.
+	* editrule.c: Set default window sizes and add scrolled window.
+	* Makefile: New version and fix build with crosstoolchain.
+	
 2005-05-03 Florian Boor <florian.boor@kernelconcepts.de>
 
 	* Released Version 0.8
