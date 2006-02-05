@@ -152,6 +152,9 @@ check_radio_startup (guint id)
 	  gtk_widget_destroy (radio_on_progress);
 	  radio_on_progress = NULL;
 	}
+
+      radio_is_on = TRUE;
+      set_image (0, 0);
     }
   else
     g_timeout_add (RADIO_ON_POLL_TIME, (GSourceFunc) check_radio_startup, NULL);
@@ -191,9 +194,6 @@ radio_on (void)
   gtk_widget_show_all (radio_on_progress);
 
   g_timeout_add (RADIO_ON_POLL_TIME, (GSourceFunc) check_radio_startup, NULL);
-
-  radio_is_on = TRUE;
-  set_image (0, 0);
 }
 
 static void
