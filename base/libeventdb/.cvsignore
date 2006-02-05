@@ -6,6 +6,14 @@ ltmain.sh
 configure
 config.sub
 config.guess
+config.status
 autom4te.cache
 aclocal.m4
+.deps
+.libs
+*.lo
+*.la
+libtool
+config.log
+Makefile
 
