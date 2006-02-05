@@ -1,3 +1,9 @@
+2006-02-05  Phil Blundell  <pb@reciva.com>
+
+	* export.c (menu_do_send_bluetooth): Correct marshalling of OBEX
+	request with DBUS 0.60.
+	(menu_do_send_irda): Likewise.
+
 2006-02-03  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * main.c, main-hildon.c (do_find), (do_search):
@@ -11,6 +17,8 @@
     Use uppercase tag to avoid compatibility issues. Fixes bug #1453.
 
 2006-02-02  Phil Blundell  <pb@reciva.com>
+
+	* mkinstalldirs: New file.
 
 	* main.c (main): Put focus in main window, not search entry field.
 	(on_main_focus): Don't grab focus into search entry, just leave it
