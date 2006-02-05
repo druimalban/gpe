@@ -1,7 +1,7 @@
 dnl Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT(gpe-bluetooth,0.49,gpe@handhelds.org)
+AC_INIT(gpe-bluetooth,0.50,gpe@handhelds.org)
 AC_CONFIG_SRCDIR([main.c])
 AM_INIT_AUTOMAKE([foreign dist-bzip2])
 
