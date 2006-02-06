@@ -123,36 +123,36 @@ pop_singles (GtkWidget *vtable, GSList *list, GtkWidget *pw, gboolean visible, g
             {
               if (l) 
                 gtk_table_attach(GTK_TABLE(vtable), l, 2, 3, *pos, *pos+1, 
-                                 GTK_FILL, GTK_FILL, 0, 0);
-              gtk_table_attach_defaults(GTK_TABLE(vtable), w, 3, 4, *pos, *pos+1);
+                                 GTK_FILL, 0, 0, 0);
+              gtk_table_attach(GTK_TABLE(vtable), w, 3, 4, *pos, *pos+1, GTK_EXPAND | GTK_FILL, 0, 0, 0);
               if (b) 
-                gtk_table_attach_defaults(GTK_TABLE(vtable), b, 4, 5, *pos, *pos+1);
+                gtk_table_attach(GTK_TABLE(vtable), b, 4, 5, *pos, *pos+1, GTK_EXPAND | GTK_FILL, 0, 0, 0);
             }
           else
             {
               (*pos)++;
               if (l) 
                 gtk_table_attach(GTK_TABLE(vtable), l, 0, 1, *pos, *pos+1, 
-                                 GTK_FILL, GTK_FILL, 0, 0);
+                                 GTK_FILL, 0, 0, 0);
               if (mode_large_screen)
                 {
                   if (!next && !b)
-                    gtk_table_attach_defaults(GTK_TABLE(vtable), w, 1, 4, *pos, *pos+1);
+                    gtk_table_attach(GTK_TABLE(vtable), w, 1, 4, *pos, *pos+1, GTK_EXPAND | GTK_FILL, 0, 0, 0);
                   else
-                    gtk_table_attach_defaults(GTK_TABLE(vtable), w, 1, 2, *pos, *pos+1);
+                    gtk_table_attach(GTK_TABLE(vtable), w, 1, 2, *pos, *pos+1, GTK_EXPAND | GTK_FILL, 0, 0, 0);
                   if (b)
                     gtk_table_attach(GTK_TABLE(vtable), b, 3, 4, *pos, *pos+1, 
-                                     GTK_FILL, GTK_FILL, 0, 0);
+                                     GTK_FILL, 0, 0, 0);
                 }
               else
                 {
                   if (!next && !b)
-                    gtk_table_attach_defaults(GTK_TABLE(vtable), w, 1, 3, *pos, *pos+1);
+                    gtk_table_attach(GTK_TABLE(vtable), w, 1, 3, *pos, *pos+1, GTK_EXPAND | GTK_FILL, 0, 0, 0);
                   else
-                    gtk_table_attach_defaults(GTK_TABLE(vtable), w, 1, 2, *pos, *pos+1);
+                    gtk_table_attach(GTK_TABLE(vtable), w, 1, 2, *pos, *pos+1, GTK_EXPAND | GTK_FILL, 0, 0, 0);
                   if (b)
                     gtk_table_attach(GTK_TABLE(vtable), b, 2, 3, *pos, *pos+1, 
-                                    GTK_FILL, GTK_FILL, 0, 0);
+                                    GTK_FILL, 0, 0, 0);
 
                 }
             }
@@ -208,7 +208,7 @@ build_children (GtkWidget *table, GSList *children, GtkWidget *pw, gboolean visi
                 singles = NULL;
                 (*pos)++;
                 gtk_table_attach(GTK_TABLE(table), w, 0, 3, *pos, *pos+1, 
-                                 GTK_FILL, GTK_FILL, 0, 0);
+                                 GTK_FILL, 0, 0, 0);
                 if (e->hidden)
                     gtk_widget_hide(w);
               }
@@ -290,9 +290,9 @@ build_children (GtkWidget *table, GSList *children, GtkWidget *pw, gboolean visi
             }
           (*pos)++;
           gtk_table_attach(GTK_TABLE(table), l, 0, 1, *pos, *pos+1, 
-                           GTK_FILL, GTK_FILL, 0, 0);
-          gtk_table_attach_defaults(GTK_TABLE(table), datecombo, 1, 2, *pos, *pos+1);
-          gtk_table_attach_defaults(GTK_TABLE(table), cbnoyear, 2, 3, *pos, *pos+1);
+                           GTK_FILL, 0, 0, 0);
+          gtk_table_attach(GTK_TABLE(table), datecombo, 1, 2, *pos, *pos+1, 0, 0, 0, 0);
+          gtk_table_attach(GTK_TABLE(table), cbnoyear, 2, 3, *pos, *pos+1, 0, 0, 0, 0);
           add_tag (e->tag, datecombo, pw);
         }
         break;
@@ -337,7 +337,7 @@ build_children (GtkWidget *table, GSList *children, GtkWidget *pw, gboolean visi
           (*pos)++;
           if (e->name)
               gtk_table_attach(GTK_TABLE(table), l, 0, 1, *pos, *pos+1, 
-                               GTK_FILL, GTK_FILL, 0, 0);
+                               GTK_FILL, 0, 0, 0);
           gtk_table_attach_defaults(GTK_TABLE(table), sw, 1, 3, *pos, *pos+1);
 #endif          
           add_tag (e->tag, image, pw);
@@ -569,7 +569,7 @@ edit_window (gboolean isdialog)
           gtk_box_pack_start (GTK_BOX (cathbox), catlabel, TRUE, TRUE, 0);
           pos++;
           gtk_table_attach (GTK_TABLE (table), cathbox, 0, 3, pos, pos+1, 
-                            GTK_FILL, GTK_FILL, 0, 0);
+                            GTK_FILL, 0, 0, 0);
           g_signal_connect (G_OBJECT (catbutton), "clicked",
                             G_CALLBACK (on_categories_clicked), w);
           g_object_set_data (G_OBJECT (w), "categories-label", catlabel);

@@ -1,3 +1,9 @@
+2006-02-06  Phil Blundell  <pb@reciva.com>
+
+	* editing.c (build_children): Tweak packing of widgets into table.
+	(pop_singles): Likewise.
+	(edit_window): Likewise.
+
 2006-02-05  Phil Blundell  <pb@reciva.com>
 
 	* export.c (menu_do_send_bluetooth): Correct marshalling of OBEX
