@@ -1,5 +1,9 @@
 2006-02-06  Phil Blundell  <pb@reciva.com>
 
+	* Version 0.71 released.
+
+2006-02-06  Phil Blundell  <pb@reciva.com>
+
 	* globals.h (is_reminder): New macro.
 	* day_render.c (events_overlap): Use it.
 	(event_rect_new): Likewise.

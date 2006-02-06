@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT(gpe-calendar,0.70,gpe@handhelds.org)
+AC_INIT(gpe-calendar,0.71,gpe@handhelds.org)
 
 AC_CONFIG_SRCDIR([main.c])
 AM_INIT_AUTOMAKE([foreign dist-bzip2])
