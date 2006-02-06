@@ -1,5 +1,18 @@
 2006-01-11  Phil Blundell  <pb@reciva.com>
 
+	* Version 0.24 released.
+
+2006-02-06  Phil Blundell  <pb@reciva.com>
+
+	* clock.c (main): Set name on panel window.  Delete unused
+	variable.
+	(struct alarm_state): Make hour and minute unsigned.
+	(update_time_label): Delete unused variable.
+	(external_event): Re-implement automatic format selection.
+	(click_ok): Clear auto_format flag.
+
+2006-01-11  Phil Blundell  <pb@reciva.com>
+
 	* Version 0.23 released.
 
 2006-01-11  Phil Blundell  <pb@reciva.com>

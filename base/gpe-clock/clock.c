@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003, 2004, 2005 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2003, 2004, 2005, 2006 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -42,15 +42,17 @@ GtkObject *hour_adj, *minute_adj;
 
 static gchar *alarm_file, *prefs_file;
 
+#define FORMAT_NONE		-1
 #define FORMAT_12	        0
 #define FORMAT_24		1
 #define FORMAT_ANALOGUE		2
 
 static gboolean show_seconds;
-static int format = FORMAT_24;
+static int format = FORMAT_NONE;
 
 gboolean prefs_window_open;
 gboolean alarm_window_open;
+gboolean auto_format;
 
 #define SHORT_TERM_ALARMS
 
@@ -58,7 +60,7 @@ struct alarm_state
 {
   gboolean active;
 
-  int hour, minute;
+  guint hour, minute;
 
   gboolean date_flag;
   int day, month, year;
@@ -401,7 +403,6 @@ update_time_face (void)
   static time_t t_stat = 0;
   time_t t;
   struct tm tm;
-  const char *time_format;
   
   time (&t);
   /* Check if we need to update, if not save power.
@@ -453,6 +454,7 @@ click_ok (GtkWidget *w, GtkWidget *window)
 {
   flush_prefs ();
   gtk_widget_destroy (window);
+  auto_format = FALSE;
 }
 
 static void
@@ -764,7 +766,7 @@ select_new_format (int new_format)
       gtk_object_destroy (hour_adj);
       gtk_object_destroy (minute_adj);
     }
-  else
+  else if (format == FORMAT_24 || format == FORMAT_12)
     gtk_widget_destroy (time_label);
 
   format = new_format;
@@ -801,26 +803,20 @@ select_new_format (int new_format)
 
 /* handle resizing */
 gboolean 
-external_event(GtkWindow *window, GdkEventConfigure *event, gpointer user_data)
+external_event (GtkWindow *window, GdkEventConfigure *event, gpointer user_data)
 {
-/*  gboolean flag_graphical_old = flag_graphical;
+  if (auto_format)
+    {
+      if (event->height >= 32 && format != FORMAT_ANALOGUE)
+	select_new_format (FORMAT_ANALOGUE);
+      else if (event->height < 32 && format != FORMAT_24)
+	select_new_format (FORMAT_24);
+    }
 
-  if (event->type == GDK_CONFIGURE)
-  {
-    flag_graphical = (event->height >= 32);
-    if (flag_graphical_old != flag_graphical)
-      {
-      }
-
-    if (!flag_graphical) 
-      update_time_label (time_label);
-  }
-*/
-   update_time();
+  update_time();
     
   return FALSE;
 }
-
 
 int
 main (int argc, char *argv[])
@@ -838,7 +834,6 @@ main (int argc, char *argv[])
 
   while (1)
     {
-      int this_option_optind = optind ? optind : 1;
       int option_index = 0;
       int c;
 
@@ -875,6 +870,9 @@ main (int argc, char *argv[])
   set_defaults ();
   load_prefs ();
 
+  if (format == FORMAT_NONE)
+    auto_format = TRUE;
+
   menu = gtk_menu_new ();
   menu_prefs = gtk_menu_item_new_with_label (_("Preferences"));
   menu_set_time = gtk_menu_item_new_with_label (_("Set the time"));
@@ -893,8 +891,10 @@ main (int argc, char *argv[])
   g_signal_connect (G_OBJECT (menu_alarm), "activate", G_CALLBACK (alarm_window), NULL);
 
   panel_window = gtk_plug_new (0);
+  gtk_widget_realize (panel_window);
+  gtk_window_set_title (GTK_WINDOW (panel_window), _("Clock"));
   gtk_widget_set_name (panel_window, "gpe-clock");
-  gtk_window_set_icon_from_file (GTK_WINDOW(panel_window), PREFIX "/share/pixmaps/gpe-clock.png", NULL);
+  gtk_window_set_icon_from_file (GTK_WINDOW (panel_window), PREFIX "/share/pixmaps/gpe-clock.png", NULL);
 
   if (format == FORMAT_ANALOGUE)
     {
@@ -912,7 +912,7 @@ main (int argc, char *argv[])
 
       g_signal_connect (G_OBJECT (face), "button-press-event", G_CALLBACK (clicked), menu);
     }
-  else
+  else if (format == FORMAT_24 || format == FORMAT_12)
     {
       time_label = gtk_label_new (NULL);
       gtk_widget_set_name (time_label, "time_label");
