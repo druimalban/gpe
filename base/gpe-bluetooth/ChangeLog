@@ -1,5 +1,9 @@
 2006-02-06  Phil Blundell  <pb@reciva.com>
 
+	* Version 0.52 released.
+
+2006-02-06  Phil Blundell  <pb@reciva.com>
+
 	* main.c (main): Also select for GDK_BUTTON_RELEASE_MASK on panel
 	window.  Disable "Remove from panel" menu item for now.
 	
