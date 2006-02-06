@@ -24,6 +24,7 @@
 
 #include "day_render.h"
 #include "day_view.h"
+#include "globals.h"
 
 #define event_ends(event) ((event)->start + (event)->duration)
 
@@ -46,7 +47,7 @@ static gboolean
 events_overlap (event_t ev1, event_t ev2)
 {				
   /* Event overlaps if and only if they intersect */
-  if (ev1->duration == 0 && ev2->duration == 0)
+  if (is_reminder (ev1) && is_reminder (ev2))
     {
       return TRUE;
     }
@@ -443,10 +444,8 @@ event_rect_new (const struct day_render * dr, const event_t event,
   ev_rect->width = (dr->page->width - dr->offset.x) / columns;
   ev_rect->height = MAX (length, dr->page->height / dr->hours);
   ev_rect->event = event;
-  if (event->duration == 0)	/* This is a reminder */
-    {
-      ev_rect->y = 0;
-    }
+  if (is_reminder (event))	/* This is a reminder */
+    ev_rect->y = 0;
   return (ev_rect);
 }
 

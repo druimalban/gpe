@@ -1,5 +1,11 @@
 2006-02-06  Phil Blundell  <pb@reciva.com>
 
+	* globals.h (is_reminder): New macro.
+	* day_render.c (events_overlap): Use it.
+	(event_rect_new): Likewise.
+	(day_view_init): Likewise.
+	(reminder_view_init): Likewise.
+	
 	* export-vcal.c (vcal_do_send_bluetooth): Correct data marshalling
 	for D-BUS 0.60.
 

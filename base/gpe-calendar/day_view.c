@@ -382,7 +382,7 @@ reminder_view_init ()
   for (iter = events; iter; iter = iter->next)
     {
       event_t ev = iter->data;
-      if (ev->duration == 0)
+      if (is_reminder (ev))
         {
           /* Reminder */
           rem_list = g_slist_append (rem_list, ev);
@@ -465,7 +465,7 @@ day_view_init (void)
   for (iter = events; iter; iter = iter->next)
     {
       event_t ev = iter->data;
-      if (ev->duration != 0)
+      if (!is_reminder (ev))
         ev_list = g_slist_append (ev_list, ev);
     }
 
@@ -754,7 +754,7 @@ day_view (void)
   gtk_window_set_modal (GTK_WINDOW (popup), TRUE);
   /* end popup */
 
-  landscape = (gdk_screen_width () > gdk_screen_height () && gdk_screen_width >= 640) ? TRUE : FALSE;
+  landscape = (gdk_screen_width () > gdk_screen_height () && gdk_screen_width () >= 640) ? TRUE : FALSE;
 
   calendar = gtk_calendar_new ();
   GTK_WIDGET_UNSET_FLAGS (calendar, GTK_CAN_FOCUS);

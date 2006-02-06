@@ -65,3 +65,5 @@ extern guint day_of_week(guint year, guint month, guint day);
 
 #define get_cloned_ev(arg) \
   ((arg->flags & FLAG_CLONE) ? (event_t)arg->cloned_ev : arg)
+
+#define is_reminder(ev) (ev->duration == 0 && (ev->flags & FLAG_UNTIMED))
