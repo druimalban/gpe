@@ -64,6 +64,7 @@ vcal_do_send_bluetooth (event_t event)
   gchar *vcal;
   DBusMessage *message;
   DBusMessageIter iter;
+  gchar *filename, *mimetype;
 
   vcal = export_to_vcal (event);
 
@@ -72,17 +73,19 @@ vcal_do_send_bluetooth (event_t event)
 					  BLUETOOTH_SERVICE_NAME ".OBEX",
 					  "ObjectPush");
 
-#ifdef HAVE_DBUS_MESSAGE_ITER_GET_BASIC
-  dbus_message_iter_init_append (message, &iter);
+  filename = "GPE.vcf";
+  mimetype = "application/x-vcal";
 
-  dbus_message_iter_append_basic (&iter, DBUS_TYPE_STRING, "GPE.vcf");
-  dbus_message_iter_append_basic (&iter, DBUS_TYPE_STRING, "application/x-vcal");
-  dbus_message_iter_append_fixed_array (&iter, DBUS_TYPE_BYTE, vcal, strlen (vcal));
+#ifdef HAVE_DBUS_MESSAGE_ITER_GET_BASIC
+  dbus_message_append_args (message, DBUS_TYPE_STRING, &filename,
+			    DBUS_TYPE_STRING, &mimetype,
+			    DBUS_TYPE_ARRAY, DBUS_TYPE_BYTE, 
+			    &vcal, strlen (vcal), DBUS_TYPE_INVALID);
 #else
   dbus_message_append_iter_init (message, &iter);
 
-  dbus_message_iter_append_string (&iter, "GPE.vcf");
-  dbus_message_iter_append_string (&iter, "application/x-vcal");
+  dbus_message_iter_append_string (&iter, filename);
+  dbus_message_iter_append_string (&iter, mimetype);
   dbus_message_iter_append_byte_array (&iter, vcal, strlen (vcal));
 #endif
 

@@ -1629,8 +1629,10 @@ edit_event (event_t ev)
       time_t end;
       struct tm tm;
       int i;
-      struct edit_state *s = g_object_get_data (G_OBJECT (w),
-                                                "edit_state");
+      struct edit_state *s = g_object_get_data (G_OBJECT (w), "edit_state");
+	
+      s->ev = ev;
+      ev = get_cloned_ev (ev);
 
       gtk_window_set_title (GTK_WINDOW (w), _("Calendar: Edit event"));
 
@@ -1757,8 +1759,6 @@ edit_event (event_t ev)
         }
 	else 
 	  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->radiobuttonnone), TRUE);
-	
-	s->ev = ev;
     }
 
   return w;
