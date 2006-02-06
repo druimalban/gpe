@@ -39,3 +39,7 @@ extern void schedule_message_delete (guint id, guint time);
 extern const gchar *icon_name_for_class (int class);
 
 extern sdp_session_t *sdp_session;
+
+extern gboolean radio_on_then (GCallback callback, gpointer data);
+extern void radio_off (void);
+

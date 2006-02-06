@@ -79,6 +79,8 @@ run_callback (struct obex_push_req *req, gboolean result)
   (*cb)(result, req->cb_data);
 
   g_free (req);
+
+  radio_off ();
 }
 
 static gboolean
@@ -491,12 +493,25 @@ obex_choose_destination (gpointer data)
   return FALSE;
 }
 
+static void
+choose_destination_wrapper (struct obex_push_req *req)
+{
+  GThread *thread;
+
+  thread = g_thread_create ((GThreadFunc) obex_choose_destination, req, FALSE, NULL);
+
+  if (thread == NULL)
+    {
+      run_callback (req, FALSE);
+      g_free (req);
+    }
+}
+
 gboolean
 obex_object_push (const gchar *filename, const gchar *mimetype, const gchar *data, size_t len,
 		  GCallback callback, gpointer cb_data)
 {
   struct obex_push_req *req;
-  GThread *thread;
 
   req = g_new (struct obex_push_req, 1);
 
@@ -507,9 +522,7 @@ obex_object_push (const gchar *filename, const gchar *mimetype, const gchar *dat
   req->callback = callback;
   req->cb_data = cb_data;
 
-  thread = g_thread_create ((GThreadFunc) obex_choose_destination, req, FALSE, NULL);
-
-  if (thread == NULL)
+  if (radio_on_then (G_CALLBACK (choose_destination_wrapper), req) == FALSE)
     {
       g_free (req);
       return FALSE;
@@ -580,18 +593,24 @@ really_send_my_vcard (struct bt_service_obex *svc)
   req->mimetype = "application/x-vcard";
   req->data = data;
   req->len = length;
-  req->callback = send_vcard_done;
+  req->callback = G_CALLBACK (send_vcard_done);
   req->cb_data = data;
 
   obex_do_connect (req);
 }
 
 static void
-send_my_vcard (GtkWidget *w, struct bt_service_obex *svc)
+send_my_vcard (struct bt_service_obex *svc)
 {
   GThread *thread;
 
   thread = g_thread_create ((GThreadFunc)really_send_my_vcard, svc, FALSE, NULL);
+}
+
+static void
+send_my_vcard_wrapper (GtkWidget *w, struct bt_service_obex *svc)
+{
+  radio_on_then (G_CALLBACK (send_my_vcard), svc);
 }
 
 static void
@@ -602,7 +621,7 @@ obex_popup_menu (struct bt_service *svc, GtkWidget *menu)
   obex = (struct bt_service_obex *)svc;
 
   w = gtk_menu_item_new_with_label (_("Send my vCard"));
-  g_signal_connect (G_OBJECT (w), "activate", G_CALLBACK (send_my_vcard), svc);
+  g_signal_connect (G_OBJECT (w), "activate", G_CALLBACK (send_my_vcard_wrapper), svc);
 
   gtk_widget_show (w);
   gtk_menu_append (GTK_MENU (menu), w);

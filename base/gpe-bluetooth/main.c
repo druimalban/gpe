@@ -39,6 +39,7 @@
 #include <bluetooth/hci.h>
 #include <bluetooth/hci_lib.h>
 #include <bluetooth/sdp.h>
+#include <bluetooth/sdp_lib.h>
 
 #include "main.h"
 #include "sdp.h"
@@ -90,6 +91,17 @@ static GSList *devices;
 gboolean radio_is_on;
 GdkWindow *dock_window;
 GSList *service_desc_list;
+
+struct callback_record
+{
+  GCallback callback;
+  gpointer data;
+};
+
+typedef void (*radio_start_callback)(gpointer);
+static GSList *radio_start_callbacks;
+static gboolean radio_starting;
+static int radio_use_count;
 
 extern void bluez_pin_dbus_server_run (void);
 
@@ -146,6 +158,8 @@ check_radio_startup (guint id)
   dd = hci_open_dev (0);
   if (dd != -1)
     {
+      GSList *l;
+
       hci_close_dev (dd);
 
       if (radio_on_progress)
@@ -155,15 +169,30 @@ check_radio_startup (guint id)
 	}
 
       radio_is_on = TRUE;
+      radio_starting = FALSE;
       set_image (0, 0);
+
+      if (radio_start_callbacks)
+	{
+	  for (l = radio_start_callbacks; l; l = l->next)
+	    {
+	      struct callback_record *c = l->data;
+	      ((radio_start_callback)c->callback) (c->data);
+	    }
+
+	  g_slist_free (radio_start_callbacks);
+
+	  radio_start_callbacks = NULL;
+	}
+
       return FALSE;
     }
 
   return TRUE;
 }
 
-static void
-radio_on (void)
+static gboolean
+do_start_radio (void)
 {
   sigset_t sigs;
   int fd;
@@ -172,7 +201,7 @@ radio_on (void)
   if (fd < 0)
     {
       gpe_error_box (_("No kernel support for Bluetooth"));
-      return;
+      return FALSE;
     }
   close (fd);
 
@@ -189,19 +218,22 @@ radio_on (void)
   if (hciattach_pid == 0)
     {
       gpe_perror_box (_("Couldn't exec " HCIATTACH));
-      return;
+      return FALSE;
     }
 
   radio_on_progress = bt_progress_dialog (_("Energising radio"), gpe_find_icon ("bt-logo"));
   gtk_widget_show_all (radio_on_progress);
+  radio_starting = TRUE;
 
   g_timeout_add (RADIO_ON_POLL_TIME, (GSourceFunc) check_radio_startup, NULL);
+  return TRUE;
 }
 
 static void
 do_stop_radio (void)
 {
   radio_is_on = FALSE;
+  radio_starting = FALSE;
 
   if (hciattach_pid)
     {
@@ -210,17 +242,79 @@ do_stop_radio (void)
     }
 
   system ("/sbin/hciconfig hci0 down");
-}
+  set_image (0, 0);
 
-static void
-radio_off (void)
-{
   gtk_widget_hide (menu_radio_off);
   gtk_widget_show (menu_radio_on);
   gtk_widget_set_sensitive (menu_devices, FALSE);
+}
 
-  do_stop_radio ();
-  set_image(0, 0);
+void
+radio_on (void)
+{
+  if (!radio_is_on)
+    do_start_radio ();
+  radio_use_count++;
+}
+
+void
+radio_off (void)
+{
+  radio_use_count--;
+
+  if (radio_use_count == 0)
+    do_stop_radio ();
+}
+
+gboolean
+radio_on_then (GCallback callback, gpointer data)
+{
+  struct callback_record *c;
+
+  radio_use_count++;
+
+  if (radio_is_on)
+    {
+      ((radio_start_callback)callback) (data);
+      return TRUE;
+    }
+
+  c = g_new (struct callback_record, 1);
+  c->callback = callback;
+  c->data = data;
+  radio_start_callbacks = g_slist_prepend (radio_start_callbacks, c);
+  if (!radio_starting)
+    {
+      if (!do_start_radio ())
+	{
+	  radio_start_callbacks = g_slist_remove (radio_start_callbacks, c);
+	  g_free (c);
+	  radio_use_count--;
+	  return FALSE;
+	}
+    }
+
+  return TRUE;
+}
+
+static void
+radio_on_menu (void)
+{
+  radio_on ();
+
+  gtk_widget_hide (menu_radio_on);
+  gtk_widget_show (menu_radio_off);
+  gtk_widget_set_sensitive (menu_devices, TRUE);
+}
+
+static void
+radio_off_menu (void)
+{
+  radio_off ();
+
+  gtk_widget_hide (menu_radio_off);
+  gtk_widget_show (menu_radio_on);
+  gtk_widget_set_sensitive (menu_devices, FALSE);
 }
 
 static gboolean
@@ -522,6 +616,7 @@ sigchld_source_dispatch (GSource *source, GSourceFunc callback, gpointer user_da
 		    }
 		  
 		  gpe_perror_box_nonblocking (_("Radio startup failed"));
+		  radio_starting = FALSE;
 		}
 	    }
 	}
@@ -589,7 +684,9 @@ int
 main (int argc, char *argv[])
 {
   GdkBitmap *bitmap;
+#ifdef REMOVE_FROM_PANEL
   GtkWidget *menu_remove;
+#endif
   GtkTooltips *tooltips;
   int dd;
   GSource *sigchld_source;
@@ -629,12 +726,10 @@ main (int argc, char *argv[])
   menu_radio_on = gtk_menu_item_new_with_label (_("Switch radio on"));
   menu_radio_off = gtk_menu_item_new_with_label (_("Switch radio off"));
   menu_devices = gtk_menu_item_new_with_label (_("Devices..."));
-  menu_remove = gtk_menu_item_new_with_label (_("Remove from panel"));
 
-  g_signal_connect (G_OBJECT (menu_radio_on), "activate", G_CALLBACK (radio_on), NULL);
-  g_signal_connect (G_OBJECT (menu_radio_off), "activate", G_CALLBACK (radio_off), NULL);
+  g_signal_connect (G_OBJECT (menu_radio_on), "activate", G_CALLBACK (radio_on_menu), NULL);
+  g_signal_connect (G_OBJECT (menu_radio_off), "activate", G_CALLBACK (radio_off_menu), NULL);
   g_signal_connect (G_OBJECT (menu_devices), "activate", G_CALLBACK (show_devices), NULL);
-  g_signal_connect (G_OBJECT (menu_remove), "activate", G_CALLBACK (gtk_main_quit), NULL);
 
   if (! radio_is_on)
     {
@@ -643,12 +738,17 @@ main (int argc, char *argv[])
     }
 
   gtk_widget_show (menu_devices);
-  gtk_widget_show (menu_remove);
 
   gtk_menu_append (GTK_MENU (menu), menu_radio_on);
   gtk_menu_append (GTK_MENU (menu), menu_radio_off);
   gtk_menu_append (GTK_MENU (menu), menu_devices);
+
+#ifdef REMOVE_FROM_PANEL  
+  menu_remove = gtk_menu_item_new_with_label (_("Remove from panel"));
+  g_signal_connect (G_OBJECT (menu_remove), "activate", G_CALLBACK (gtk_main_quit), NULL);
+  gtk_widget_show (menu_remove);
   gtk_menu_append (GTK_MENU (menu), menu_remove);
+#endif
 
   if (gpe_load_icons (my_icons) == FALSE)
     exit (1);
@@ -663,7 +763,7 @@ main (int argc, char *argv[])
 
   g_signal_connect (G_OBJECT (window), "configure-event", G_CALLBACK (configure_event), bitmap);
   g_signal_connect (G_OBJECT (window), "button-press-event", G_CALLBACK (clicked), NULL);
-  gtk_widget_add_events (window, GDK_BUTTON_PRESS_MASK);
+  gtk_widget_add_events (window, GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
 
   gtk_container_add (GTK_CONTAINER (window), icon);
 
