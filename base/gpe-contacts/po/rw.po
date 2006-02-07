@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gpe-contacts 0.32\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-01-01 20:16+0100\n"
+"POT-Creation-Date: 2006-02-07 02:04+0100\n"
 "PO-Revision-Date: 2005-04-04 10:55-0700\n"
 "Last-Translator: Steven Michael Murphy <murf@e-tools.com>\n"
 "Language-Team: Kinyarwanda <translation-team-rw@lists.sourceforge.net>\n"
@@ -181,7 +181,7 @@ msgstr "Bwite"
 msgid "My VCard"
 msgstr ""
 
-#: ../editing.c:114 ../main.c:1345
+#: ../editing.c:114 ../main.c:1346
 msgid "Details"
 msgstr "Birambuye"
 
@@ -206,13 +206,13 @@ msgstr ""
 msgid "Categories"
 msgstr "Ibyiciro"
 
-#: ../editing.c:1282
+#: ../editing.c:1294
 #, fuzzy
 msgid "Select image"
 msgstr "Ishusho"
 
 # sfx2/source\doc\doc.src:STR_SAVEASDOC.text
-#: ../export.c:184
+#: ../export.c:190
 #, fuzzy
 msgid "Save as..."
 msgstr "Gushyingura muri..."
@@ -228,7 +228,7 @@ msgstr ""
 msgid "Search for:"
 msgstr "Gushakisha:"
 
-#: ../gpe-contacts.desktop.in.h:1 ../main.c:1281
+#: ../gpe-contacts.desktop.in.h:1 ../main.c:1282
 msgid "Contacts"
 msgstr "Aho kubariza"
 
@@ -302,93 +302,93 @@ msgstr "Umuntu Byahiswemo"
 # Box Headings
 #. create and set up dialog
 #. * detail section *
-#: ../main.c:585 ../main.c:1417 ../main.c:1489
+#: ../main.c:585 ../main.c:1418 ../main.c:1490
 msgid "Contact"
 msgstr "Umuntu"
 
-#: ../main.c:1201
+#: ../main.c:1202
 msgid "Choose file"
 msgstr ""
 
-#: ../main.c:1229
+#: ../main.c:1230
 msgid "Import of"
 msgstr ""
 
-#: ../main.c:1229
+#: ../main.c:1230
 msgid "files failed:"
 msgstr ""
 
-#: ../main.c:1233
+#: ../main.c:1234
 msgid "Import successful"
 msgstr ""
 
-#: ../main.c:1298
+#: ../main.c:1299
 #, fuzzy
 msgid "Tap this button to add a new contact."
 msgstr "iyi Akabuto Kuri Kongeramo a Gishya Umuntu"
 
-#: ../main.c:1307
+#: ../main.c:1308
 #, fuzzy
 msgid "Tap here to edit the selected contact."
 msgstr "Kuri Guhindura i Byahiswemo Umuntu"
 
-#: ../main.c:1317
+#: ../main.c:1318
 #, fuzzy
 msgid "Tap here to delete the selected contact."
 msgstr "Kuri Gusiba i Byahiswemo Umuntu"
 
-#: ../main.c:1337
+#: ../main.c:1338
 #, fuzzy
 msgid "Find a contact by searching for any data."
 msgstr "a Umuntu ku Ishakisha kugirango Ibyatanzwe"
 
-#: ../main.c:1347
+#: ../main.c:1348
 #, fuzzy
 msgid "Tap here to show contacts details."
 msgstr "Kuri Garagaza Aho kubariza Birambuye"
 
-#: ../main.c:1357
+#: ../main.c:1358
 #, fuzzy
 msgid "Tap here to configure this program."
 msgstr "Kuri Kugena Imiterere iyi Porogaramu"
 
-#: ../main.c:1365
+#: ../main.c:1366
 msgid "Import"
 msgstr ""
 
-#: ../main.c:1367
+#: ../main.c:1368
 msgid "Open file to import a contact from it."
 msgstr ""
 
-#: ../main.c:1380
+#: ../main.c:1381
 #, fuzzy
 msgid "Tap here to exit gpe-contacts."
 msgstr "Kuri Gusohoka Aho kubariza"
 
 #. * find and categories section *
-#: ../main.c:1446
+#: ../main.c:1447
 msgid "Find:"
 msgstr "Shaka:"
 
-#: ../main.c:1453
+#: ../main.c:1454
 msgid "in"
 msgstr "in"
 
-#: ../main.c:1586
+#: ../main.c:1587
 #, c-format
 msgid "Could not import file %s."
 msgstr ""
 
-#: ../main.c:1591
+#: ../main.c:1592
 #, c-format
 msgid "File %s imported sucessfully."
 msgstr ""
 
-#: ../main.c:1617
+#: ../main.c:1618
 msgid "My Card"
 msgstr ""
 
-#: ../main.c:1620
+#: ../main.c:1621
 #, fuzzy
 msgid "Saving vcard failed"
 msgstr "Byanze"

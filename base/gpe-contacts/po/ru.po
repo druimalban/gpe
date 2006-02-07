@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gpe-contacts-0.32\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-01-01 20:16+0100\n"
+"POT-Creation-Date: 2006-02-07 02:04+0100\n"
 "PO-Revision-Date: 2004-11-05 12:02+0200\n"
 "Last-Translator: Pavel Maryanov <acid_jack@ukr.net>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -160,7 +160,7 @@ msgstr "Редактировать личную v-карточку"
 msgid "My VCard"
 msgstr "Моя V-карточка"
 
-#: ../editing.c:114 ../main.c:1345
+#: ../editing.c:114 ../main.c:1346
 msgid "Details"
 msgstr "Подробности"
 
@@ -184,11 +184,11 @@ msgstr ""
 msgid "Categories"
 msgstr "Категории"
 
-#: ../editing.c:1282
+#: ../editing.c:1294
 msgid "Select image"
 msgstr "Выбрать изображение"
 
-#: ../export.c:184
+#: ../export.c:190
 msgid "Save as..."
 msgstr "Сохранить как..."
 
@@ -202,7 +202,7 @@ msgstr "Найти контакт"
 msgid "Search for:"
 msgstr "Поиск:"
 
-#: ../gpe-contacts.desktop.in.h:1 ../main.c:1281
+#: ../gpe-contacts.desktop.in.h:1 ../main.c:1282
 msgid "Contacts"
 msgstr "Контакты"
 
@@ -236,86 +236,86 @@ msgstr "Контакт не выбран."
 
 #. create and set up dialog
 #. * detail section *
-#: ../main.c:585 ../main.c:1417 ../main.c:1489
+#: ../main.c:585 ../main.c:1418 ../main.c:1490
 msgid "Contact"
 msgstr "Контакт"
 
-#: ../main.c:1201
+#: ../main.c:1202
 msgid "Choose file"
 msgstr ""
 
-#: ../main.c:1229
+#: ../main.c:1230
 msgid "Import of"
 msgstr ""
 
-#: ../main.c:1229
+#: ../main.c:1230
 msgid "files failed:"
 msgstr ""
 
-#: ../main.c:1233
+#: ../main.c:1234
 msgid "Import successful"
 msgstr ""
 
-#: ../main.c:1298
+#: ../main.c:1299
 msgid "Tap this button to add a new contact."
 msgstr "Нажмите на эту кнопку, чтобы добавить новый контакт."
 
-#: ../main.c:1307
+#: ../main.c:1308
 msgid "Tap here to edit the selected contact."
 msgstr "Нажмите сюда, чтобы редактировать выбранный контакт."
 
-#: ../main.c:1317
+#: ../main.c:1318
 msgid "Tap here to delete the selected contact."
 msgstr "Нажмите сюда, чтобы редактировать удалить выбранный контакт."
 
-#: ../main.c:1337
+#: ../main.c:1338
 msgid "Find a contact by searching for any data."
 msgstr "Поиск контакта по любому типу данных."
 
-#: ../main.c:1347
+#: ../main.c:1348
 msgid "Tap here to show contacts details."
 msgstr "Нажмите сюда, чтобы вывести подробности о контакте."
 
-#: ../main.c:1357
+#: ../main.c:1358
 msgid "Tap here to configure this program."
 msgstr "Нажмите сюда, чтобы настроить эту программу."
 
-#: ../main.c:1365
+#: ../main.c:1366
 msgid "Import"
 msgstr ""
 
-#: ../main.c:1367
+#: ../main.c:1368
 msgid "Open file to import a contact from it."
 msgstr ""
 
-#: ../main.c:1380
+#: ../main.c:1381
 msgid "Tap here to exit gpe-contacts."
 msgstr "Нажмите сюда, чтобы выйти из gpe-contacts."
 
 #. * find and categories section *
-#: ../main.c:1446
+#: ../main.c:1447
 msgid "Find:"
 msgstr "Найти:"
 
-#: ../main.c:1453
+#: ../main.c:1454
 msgid "in"
 msgstr "в"
 
-#: ../main.c:1586
+#: ../main.c:1587
 #, c-format
 msgid "Could not import file %s."
 msgstr ""
 
-#: ../main.c:1591
+#: ../main.c:1592
 #, c-format
 msgid "File %s imported sucessfully."
 msgstr ""
 
-#: ../main.c:1617
+#: ../main.c:1618
 msgid "My Card"
 msgstr "Моя карточка"
 
-#: ../main.c:1620
+#: ../main.c:1621
 msgid "Saving vcard failed"
 msgstr "Не удалось сохранить v-карточку"
 

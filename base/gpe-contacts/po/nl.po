@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gpe-contacts 0.12\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-01-01 20:16+0100\n"
+"POT-Creation-Date: 2006-02-07 02:04+0100\n"
 "PO-Revision-Date: 2003-08-05 14:36+0100\n"
 "Last-Translator: Elros Cyriatan <cyriatan@fastmail.fm>\n"
 "Language-Team: Dutch <vertaling@nl.linux.org>\n"
@@ -159,7 +159,7 @@ msgstr ""
 msgid "My VCard"
 msgstr ""
 
-#: ../editing.c:114 ../main.c:1345
+#: ../editing.c:114 ../main.c:1346
 #, fuzzy
 msgid "Details"
 msgstr "Detail paneel"
@@ -185,12 +185,12 @@ msgstr "Afbeelding"
 msgid "Categories"
 msgstr "Categorieen"
 
-#: ../editing.c:1282
+#: ../editing.c:1294
 #, fuzzy
 msgid "Select image"
 msgstr "Punt verwijderen"
 
-#: ../export.c:184
+#: ../export.c:190
 msgid "Save as..."
 msgstr ""
 
@@ -205,7 +205,7 @@ msgstr "Contacten"
 msgid "Search for:"
 msgstr ""
 
-#: ../gpe-contacts.desktop.in.h:1 ../main.c:1281
+#: ../gpe-contacts.desktop.in.h:1 ../main.c:1282
 msgid "Contacts"
 msgstr "Contacten"
 
@@ -241,91 +241,91 @@ msgstr "Geen omvatter geselecteerd"
 
 #. create and set up dialog
 #. * detail section *
-#: ../main.c:585 ../main.c:1417 ../main.c:1489
+#: ../main.c:585 ../main.c:1418 ../main.c:1490
 msgid "Contact"
 msgstr "Contact"
 
-#: ../main.c:1201
+#: ../main.c:1202
 #, fuzzy
 msgid "Choose file"
 msgstr "klik om bestand te kiezen"
 
-#: ../main.c:1229
+#: ../main.c:1230
 msgid "Import of"
 msgstr ""
 
-#: ../main.c:1229
+#: ../main.c:1230
 msgid "files failed:"
 msgstr ""
 
-#: ../main.c:1233
+#: ../main.c:1234
 msgid "Import successful"
 msgstr ""
 
-#: ../main.c:1298
+#: ../main.c:1299
 #, fuzzy
 msgid "Tap this button to add a new contact."
 msgstr "Druk hier om een nieuw contact toe te voegen."
 
-#: ../main.c:1307
+#: ../main.c:1308
 msgid "Tap here to edit the selected contact."
 msgstr "Druk hier om het geselecteerde contact te bewerken."
 
-#: ../main.c:1317
+#: ../main.c:1318
 msgid "Tap here to delete the selected contact."
 msgstr "Druk hier om het geselecteerde contact de verwijderen."
 
-#: ../main.c:1337
+#: ../main.c:1338
 msgid "Find a contact by searching for any data."
 msgstr ""
 
-#: ../main.c:1347
+#: ../main.c:1348
 #, fuzzy
 msgid "Tap here to show contacts details."
 msgstr "Druk hier om een nieuw contact toe te voegen."
 
-#: ../main.c:1357
+#: ../main.c:1358
 #, fuzzy
 msgid "Tap here to configure this program."
 msgstr "Druk hier om het programma in te stellen."
 
-#: ../main.c:1365
+#: ../main.c:1366
 msgid "Import"
 msgstr ""
 
-#: ../main.c:1367
+#: ../main.c:1368
 msgid "Open file to import a contact from it."
 msgstr ""
 
-#: ../main.c:1380
+#: ../main.c:1381
 #, fuzzy
 msgid "Tap here to exit gpe-contacts."
 msgstr "Druk hier om het geselecteerde contact te bewerken."
 
 #. * find and categories section *
-#: ../main.c:1446
+#: ../main.c:1447
 msgid "Find:"
 msgstr "Zoeken:"
 
-#: ../main.c:1453
+#: ../main.c:1454
 msgid "in"
 msgstr "in"
 
-#: ../main.c:1586
+#: ../main.c:1587
 #, fuzzy, c-format
 msgid "Could not import file %s."
 msgstr "Kon afbeeldingsbestand niet vinden: %s"
 
-#: ../main.c:1591
+#: ../main.c:1592
 #, c-format
 msgid "File %s imported sucessfully."
 msgstr ""
 
-#: ../main.c:1617
+#: ../main.c:1618
 msgid "My Card"
 msgstr ""
 
-#: ../main.c:1620
+#: ../main.c:1621
 msgid "Saving vcard failed"
 msgstr ""
 

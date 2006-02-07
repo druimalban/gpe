@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gpe-contacts 0.32\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-01-01 20:16+0100\n"
+"POT-Creation-Date: 2006-02-07 02:04+0100\n"
 "PO-Revision-Date: 2004-11-09 17:49+0200\n"
 "Last-Translator: Luc Pionchon <luc@handhelds.org>\n"
 "Language-Team: French <traduc@traduc.org>\n"
@@ -157,7 +157,7 @@ msgstr "Éditer ma carte de visite (vcard)"
 msgid "My VCard"
 msgstr "Ma Carte"
 
-#: ../editing.c:114 ../main.c:1345
+#: ../editing.c:114 ../main.c:1346
 msgid "Details"
 msgstr "Détails"
 
@@ -182,11 +182,11 @@ msgstr "Photo"
 msgid "Categories"
 msgstr "Catégories"
 
-#: ../editing.c:1282
+#: ../editing.c:1294
 msgid "Select image"
 msgstr "Sélectionner une image"
 
-#: ../export.c:184
+#: ../export.c:190
 msgid "Save as..."
 msgstr "Enregistrer sous..."
 
@@ -200,7 +200,7 @@ msgstr "Rechercher"
 msgid "Search for:"
 msgstr "Rechercher :"
 
-#: ../gpe-contacts.desktop.in.h:1 ../main.c:1281
+#: ../gpe-contacts.desktop.in.h:1 ../main.c:1282
 msgid "Contacts"
 msgstr "Contacts"
 
@@ -234,87 +234,87 @@ msgstr "Aucun contact sélectionné"
 
 #. create and set up dialog
 #. * detail section *
-#: ../main.c:585 ../main.c:1417 ../main.c:1489
+#: ../main.c:585 ../main.c:1418 ../main.c:1490
 msgid "Contact"
 msgstr "Contact"
 
-#: ../main.c:1201
+#: ../main.c:1202
 #, fuzzy
 msgid "Choose file"
 msgstr "Cliquer pour sélectionner un fichier"
 
-#: ../main.c:1229
+#: ../main.c:1230
 msgid "Import of"
 msgstr ""
 
-#: ../main.c:1229
+#: ../main.c:1230
 msgid "files failed:"
 msgstr ""
 
-#: ../main.c:1233
+#: ../main.c:1234
 msgid "Import successful"
 msgstr ""
 
-#: ../main.c:1298
+#: ../main.c:1299
 msgid "Tap this button to add a new contact."
 msgstr "Cliquer ici pour ajouter un contact."
 
-#: ../main.c:1307
+#: ../main.c:1308
 msgid "Tap here to edit the selected contact."
 msgstr "Cliquer ici pour éditer le contact sélectionné."
 
-#: ../main.c:1317
+#: ../main.c:1318
 msgid "Tap here to delete the selected contact."
 msgstr "Cliquer ici pour supprimer le contact sélectionné."
 
-#: ../main.c:1337
+#: ../main.c:1338
 msgid "Find a contact by searching for any data."
 msgstr "Trouver un contact À partir de n'importe quelle donnée."
 
-#: ../main.c:1347
+#: ../main.c:1348
 msgid "Tap here to show contacts details."
 msgstr "Cliquer ici pour afficher les détails."
 
-#: ../main.c:1357
+#: ../main.c:1358
 msgid "Tap here to configure this program."
 msgstr "Cliquer ici pour configurer le programme."
 
-#: ../main.c:1365
+#: ../main.c:1366
 msgid "Import"
 msgstr ""
 
-#: ../main.c:1367
+#: ../main.c:1368
 msgid "Open file to import a contact from it."
 msgstr ""
 
-#: ../main.c:1380
+#: ../main.c:1381
 msgid "Tap here to exit gpe-contacts."
 msgstr "Cliquer ici pour quitter le programme."
 
 #. * find and categories section *
-#: ../main.c:1446
+#: ../main.c:1447
 msgid "Find:"
 msgstr "Trouver :"
 
-#: ../main.c:1453
+#: ../main.c:1454
 msgid "in"
 msgstr "pour"
 
-#: ../main.c:1586
+#: ../main.c:1587
 #, fuzzy, c-format
 msgid "Could not import file %s."
 msgstr "Impossible de trouver l'image : %s"
 
-#: ../main.c:1591
+#: ../main.c:1592
 #, c-format
 msgid "File %s imported sucessfully."
 msgstr ""
 
-#: ../main.c:1617
+#: ../main.c:1618
 msgid "My Card"
 msgstr "Ma Carte"
 
-#: ../main.c:1620
+#: ../main.c:1621
 msgid "Saving vcard failed"
 msgstr "Échec de la sauvegarde au format vcard"
 
