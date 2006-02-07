@@ -1,3 +1,10 @@
+2006-02-07  Phil Blundell  <pb@reciva.com>
+
+	* week_view.c (week_view): Attach handler to size-allocate signal
+	on scrolled window.  Make vertical scrollbar policy ALWAYS.
+	(week_view_update): Make minimum size for each cell be 1/7 of the
+	available window height.
+
 2006-02-06  Phil Blundell  <pb@reciva.com>
 
 	* Version 0.71 released.

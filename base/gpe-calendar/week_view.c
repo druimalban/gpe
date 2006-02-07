@@ -31,15 +31,17 @@
 static GtkWidget *week_view_draw;
 static struct tm today;
 #ifdef IS_HILDON
-static guint min_cell_height = 47;
+#define REALLY_MIN_CELL_HEIGHT 47
 #else
-static guint min_cell_height = 38;
+#define REALLY_MIN_CELL_HEIGHT 38
 #endif
 static GtkWidget *datesel, *calendar;
 
 static guint time_width, available_width;
 
 static struct render_ctl *c_old;
+
+static GtkWidget *scroller;
 
 struct render_ctl
 {
@@ -289,6 +291,10 @@ week_view_update (void)
   PangoLayout *pl = gtk_widget_create_pango_layout (GTK_WIDGET (week_view_draw), NULL);
   PangoLayout *pl_evt = gtk_widget_create_pango_layout (GTK_WIDGET (week_view_draw), NULL);
   GSList *iter;
+  guint min_cell_height;
+
+  min_cell_height = MAX (scroller->allocation.height / 7, 
+			 REALLY_MIN_CELL_HEIGHT);
 
   localtime_r (&t, &today);
 
@@ -393,9 +399,9 @@ week_view_update (void)
             }
         }
 
-    if (height < min_cell_height)
-      height = min_cell_height;
-
+      if (height < min_cell_height)
+	height = min_cell_height;
+      
       week_days[day].y0 = y;
       y += height;
       week_days[day].y1 = y;
@@ -622,9 +628,13 @@ week_view (void)
 {
   GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
   GtkWidget *draw = gtk_drawing_area_new ();
-  GtkWidget *scroller = gtk_scrolled_window_new (NULL, NULL);
   gboolean landscape;
   GtkWidget *hbox;
+
+  scroller = gtk_scrolled_window_new (NULL, NULL);
+
+  g_signal_connect (G_OBJECT (scroller), "size_allocate", 
+		    G_CALLBACK (week_view_update), NULL);
 
   landscape = (gdk_screen_width () > gdk_screen_height () && gdk_screen_width () >= 640) ? TRUE : FALSE;
   hbox = gtk_hbox_new (FALSE, 0);
@@ -648,7 +658,7 @@ week_view (void)
 
   gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scroller), draw);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scroller),
-				  GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+				  GTK_POLICY_NEVER, GTK_POLICY_ALWAYS);
 
   gtk_box_pack_start (GTK_BOX (vbox), datesel, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), hbox, TRUE, TRUE, 0);
