@@ -6,7 +6,7 @@ module_id() {
 
 # Read the h2200 bluetooth radio version out of the asset data in flash.
 h2200_radio_version() {
-	dd if=/dev/mtdblock1 bs=1 skip=126968 count=5 | tr -d \\0
+	dd if=/dev/mtdblock1 bs=1 skip=126968 count=5 2>/dev/null | tr -d \\0
 }
 
 if [ -f /etc/sysconfig/bluetooth ]; then
@@ -34,11 +34,9 @@ else
 	RADIO_VER=`h2200_radio_version`
 	case $RADIO_VER in
 	  "141")  # Zeevo
-	  	echo "found Zeevo bluetooth chip"
 	  	PROTO=any
 		;;
 	  "525")  # CSR
-	  	echo "found CSR bluetooth chip"
 	  	PROTO=bcsp
 		;;
 	  *)
