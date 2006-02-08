@@ -1,3 +1,7 @@
+2006-02-08  Florian Boor <florian.boor@kernelconcepts.de>
+
+    * environment.sgml: Add section about local installation and test.
+    * devmanual.sgml: Update Revision and dates.
 
 2005-11-03  Florian Boor <florian.boor@kernelconcepts.de>
 

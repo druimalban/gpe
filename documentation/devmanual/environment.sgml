@@ -60,7 +60,111 @@
     gpe-bootsplash, libgpewidget if activated), libmatchbox (gpe-what, 
     gpe-mininet).
   </para>
+  <para>
+    One important thing to know is that not all parts of GPE use autoconf and
+	automake. Therefore you currently need to know two different ways to pass
+	build parameters to get the software built in the correct way. All bits
+	using autotools are built in this way:
+	<screen>
+	./configure --prefix=/someprefix --host=some-host
+	make
+	make install
+	</screen>
+	If the part you intend to compile ships with a Makefile instead of a 
+	<command>configure</command> script this meand that it isn't using 
+	autotools. To compile this you need to pass necessary parameters to 
+	make directly. For example:
+	<screen>
+	make PREFIX=someprefix CC=some-gcc
+	make PREFIX=someprefix install
+	</screen>
+	Usually you just wnat to use the defaults if you wnat to compile for
+	your PC you are on. In this case just omit any parameter, the build prefix
+	defaults to <command>/usr/local</command> which should be correct in the 
+	most cases.
+	<note><para>If you are building from CVS you need to generate the configure
+	script first by running autoconf, automake, intltool and friends in the 
+	correct order. Ususally applications ship an <command>autogen.sh</command>
+	which does this for you.</para></note>
+  </para>
 </section>
+<section>
+  <title>Local installation and test environment</title>
+  	<para>
+		In order to develop or evaluate GPE applications on a PC without 
+		crosscompiling it is very useful to have a local test setup. 
+		Instead of an emulator which is used for similar application frameworks 
+		you only need an X server for GPE. To get a PDA-like test environment 
+		you can use Xoo (formerly matchbox-nest) to emulate the look and 
+		feel of your device. If your distribution ships the packages to set up
+		Some applications and libraries necessary for the GPE test environment 
+		are available in Ubuntu and Debian. What you should have installed is 
+		this:
+	  <itemizedlist>
+		   <listitem><para>matchbox</para></listitem>
+		   <listitem><para>matchbox-desktop</para></listitem>
+		   <listitem><para>matchbox-panel</para></listitem>
+		   <listitem><para>Xephyr or Xnest</para></listitem>
+		   <listitem><para>Xoo or matchbox-nest</para></listitem>
+		   <listitem><para>matchbox</para></listitem>
+	  </itemizedlist>
+	    All of this should be available in distributions based on Debian.
+  	</para>
+	<para>
+		Then start to build the very basic GPE bits you need to get everything up
+		and running.
+		<orderedlist>
+		   <listitem><para>Build and install gpe-confd, if you install
+             gpe-confd on your local system remove /etc/X11/Xsession.d/70gpe-confd
+			 as it might break Gnome.</para></listitem>
+		   <listitem><para>Build and install libgpewidget, if you don't have 
+		   Cairo you maybe want to --disable-cairo.</para></listitem>
+		   <listitem><para>Install gpe-conf unless you intend to use 
+		   (and emulate) a device with a big (>640x480) screen.</para></listitem>
+		</orderedlist>
+		If you have everything in place you are ready for a test run to bring
+		up the whole thing. First start 
+		<command>Xoo</command> or <command>
+		matchbox-nest</command>. These default to provide a nested X server 
+		running on the local display :1.
+		If you want to use a custom screen size or do not have these you can
+		run Xnest like this:
+		<screen>
+			Xnest -ac -geometry 240x320 :1
+		</screen>
+		Adjust the geometry parameters according to the display resolution of 
+		your need.
+	</para>
+	<para>
+		In a terminal window set the correct DISPLAY environment fot the nested 
+		X server:
+		<screen>
+			export DISPLAY=:1
+		</screen>
+	</para>
+	<para>
+		Then bring up your session and configuration server from this terminal:
+		<screen>
+			matchbox-session&
+			gpe-confd&
+		</screen>
+	</para>
+	<para>
+		And finally start the gpe-conf look & feel tool to set up font sizes 
+		and toolbar display either from the desktop you just launched 
+		(Settings->Look & Feel) or from terminal (gpe-conf theme).
+	</para>
+	<para>
+		You now have the basic environment to build and test GPE applications.
+		To build the remaining GPE applications you the dependency list at 
+		<ulink url="http://handhelds.org:8080/gpe/wiki?p=GpeDependencyMap">
+		http://handhelds.org:8080/gpe/wiki?p=GpeDependencyMap</ulink>
+		might help to identify the dependencies. If you build GPE software 
+		which is not listed there please add it to the wiki, it is editable 
+		by anyone.
+	</para>
+</section>
+  
 
 <section>
 <title>Target Binaries and Cross Compiling</title>

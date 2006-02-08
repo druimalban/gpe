@@ -42,7 +42,7 @@
           </affiliation>
         </author>
         <copyright>
-          <year>2005</year>
+          <year>2005, 2006</year>
           <holder>GPE Team</holder>
         </copyright>
         <title>GPE Development Manual</title>
@@ -55,9 +55,9 @@
         </legalnotice>
         <revhistory>
           <revision>
-            <revnumber>0.4</revnumber>
-            <date>20051103</date>
-            <revremark>Draft in progress...</revremark>
+            <revnumber>0.5</revnumber>
+            <date>20060208</date>
+            <revremark>Work in progress...</revremark>
           </revision>
         </revhistory>
 
