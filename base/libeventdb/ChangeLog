@@ -1,3 +1,13 @@
+2006-02-11  Florian Boor <florian@kernelconcepts.de>
+
+	* Version 0.20 released.
+    * event-db.c, event-db.h: Add documentation.
+    * event-db.c (event_db_make_eventid): Make static.
+    * event-db.h: Make all parameters named to avoid confusing gtk-doc.
+	* doc/libeventdb-docs.sgml: Change documentation license to 
+	become LGPL.
+    * doc/tmpl/event-db.sgml: Add proper section titles.
+
 2006-02-05  Phil Blundell  <pb@reciva.com>
 
 	* Version 0.19 released.

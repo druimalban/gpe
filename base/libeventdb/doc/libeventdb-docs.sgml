@@ -22,10 +22,10 @@
 	<legalnotice>
       <para>
         This document may be distributed under the terms and
-        conditions of the Open Publication License, v1.0 or
+        conditions of the Lesser General Public License, v2.1 or
         later. (Current version is available at
-		<ulink url=" http://www.opencontent.org/openpub/"
-        type="http">http://www.opencontent.org/openpub/</ulink> )
+		<ulink url="http://www.gnu.org/copyleft/lesser.html"
+        type="http">http://www.gnu.org/copyleft/lesser.html</ulink> )
       </para>
     </legalnotice>
   </bookinfo>

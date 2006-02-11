@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2002, 2006 Philip Blundell <philb@gnu.org>
+ *               2006, Florian Boor <florian@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -70,8 +71,8 @@ event_db_add_internal (event_t ev)
 
 /* Here we create an globally unique eventid, which we
  * can use to reference this event in an vcal, etc. */
-gchar *
-event_db_make_eventid ()
+static gchar *
+event_db_make_eventid (void)
 {
   static char *hostname;
   static char buffer [512];
@@ -234,6 +235,14 @@ dbinfo_callback (void *arg, int argc, char **argv, char **names)
   return 0;
 }
 
+/**
+ * event_db_start:
+ *
+ * Initialise the event database for use. Needs to be called on application
+ * start before acessing events.
+ *
+ * Returns: #TRUE on success, #FALSE otherwise.
+ */
 gboolean
 event_db_start (void)
 {
@@ -319,6 +328,20 @@ load_details_callback (void *arg, int argc, char *argv[], char **names)
   return 0;
 }
 
+/**
+ * event_db_get_details:
+ * @ev: Event to get details for.
+ * 
+ * Retrieves detailed information for a given event and increments the 
+ * reference counter of the #event_details_t structure which will be 
+ * attached to the event. If the event details are already
+ * there they will not be loaded again but the reference counter is increased. 
+ * If you mant to make sure the event details are updated you need to use 
+ * event_db_forget_details() first. 
+ * 
+ *
+ * Returns: The #event_details_t event detail data attached to the event.
+ */
 event_details_t
 event_db_get_details (event_t ev)
 {
@@ -335,12 +358,12 @@ event_db_get_details (event_t ev)
 
       if (sqlite_exec_printf (sqliteh, "select tag,value from calendar where uid=%d",
 			      load_details_callback, evd, &err, ev->uid))
-	{
-	  gpe_error_box (err);
-	  free (err);
-	  g_free (evd);
-	  return NULL;
-	}
+        {
+          gpe_error_box (err);
+          free (err);
+          g_free (evd);
+          return NULL;
+        }
       
       ev->details = evd;
     }
@@ -350,6 +373,13 @@ event_db_get_details (event_t ev)
   return evd;
 }
 
+/**
+ * event_db_forget_details:
+ * @ev: Event to get details for.
+ * 
+ * Decrease the reference counter of the event detail information in an #event_t. 
+ * If the reference counter is #0 the detail information is freed.
+ */
 void
 event_db_forget_details (event_t ev)
 {
@@ -376,6 +406,13 @@ event_db_forget_details (event_t ev)
     }
 }
 
+/**
+ * event_db_stop:
+ *
+ * Closes the event database and frees all remaining events in memory.
+ * 
+ * Returns: #TRUE on success, #FALSE otherwise.
+ */
 gboolean
 event_db_stop (void)
 {
@@ -422,6 +459,12 @@ event_db_find_by_uid (guint uid)
 	     "warning: event_db_find_by_uid is obsolescent: use the ev->cloned_ev pointer directly.");
 */
 
+/**
+ * event_db_list_destroy:
+ * @l: Event list
+ *
+ * This function frees a given list of events including the list itself. 
+ */
 void
 event_db_list_destroy (GSList *l)
 {
@@ -436,6 +479,15 @@ event_db_list_destroy (GSList *l)
   g_slist_free (l);
 }
 
+/**
+ * event_db_clone:
+ * @ev: Event to clone.
+ * 
+ * Clones a given event. The new event is marked to be a clone instead of 
+ * the original event by setting the #FLAG_CLONE flag.
+ *
+ * Returns: The event clone.
+ */
 event_t
 event_db_clone (event_t ev)
 {
@@ -678,12 +730,30 @@ event_db_list_for_period_internal (time_t start, time_t end, gboolean untimed,
   return list;
 }
 
+/**
+ * event_db_list_for_period:
+ * @start: Start time
+ * @end: End time
+ * 
+ * Create a list of all events for a given period.
+ *
+ * Returns: A list of events.
+ */
 GSList *
 event_db_list_for_period (time_t start, time_t end)
 {
   return event_db_list_for_period_internal (start, end, FALSE, FALSE, FALSE, 0);
 }
 
+/**
+ * event_db_list_alarms_for_period:
+ * @start: Start time
+ * @end: End time
+ * 
+ * Create a list of all alarm events for a given period.
+ *
+ * Returns: A list of events.
+ */
 GSList *
 event_db_list_alarms_for_period (time_t start, time_t end)
 {
@@ -708,12 +778,33 @@ event_db_list_alarms_for_period (time_t start, time_t end)
   return(return_list);
 }
 
+/**
+ * event_db_untimed_list_for_period:
+ * @start: Start time
+ * @end: End time
+ * @yes:
+ * 
+ * Create a list of all untimed events for a given period.
+ *
+ * Returns: A list of events.
+ */
 GSList *
 event_db_untimed_list_for_period (time_t start, time_t end, gboolean yes)
 {
   return event_db_list_for_period_internal (start, end, yes, TRUE, FALSE, 0);
 }
 
+/**
+ * event_db_list_for_future:
+ * @start: Start time
+ * @max: Maximum number of events to retrieve.
+ * 
+ * Get a list of all future events starting at a given time. The total amount 
+ * of events may be limited by the @max parameter. Set this to 0 for an 
+ * unlimited amount of events.
+ *
+ * Returns: A list of events.
+ */
 GSList *
 event_db_list_for_future (time_t start, guint max)
 {
@@ -844,6 +935,14 @@ exit:
   return rc;
 }
 
+/**
+ * event_db_flush:
+ * @ev: Event
+ * 
+ * Remove an event from the database.
+ *
+ * Returns: #TRUE on success, #FALSE otherwise.
+ */
 gboolean
 event_db_flush (event_t ev)
 {
@@ -870,7 +969,16 @@ event_db_flush (event_t ev)
   return FALSE;
 }
 
-/* Add an event to both the in-memory list and the SQL database */
+/**
+ * event_db_add:
+ * @ev: Event
+ * 
+ * Add an event to both the in-memory list and the SQL database. This makes 
+ * sure the event is accessible by all application including the application
+ * which adds the event instantly.
+ *
+ * Returns: #TRUE on success, #FALSE otherwise.
+ */
 gboolean
 event_db_add (event_t ev)
 {
@@ -909,8 +1017,14 @@ event_db_add (event_t ev)
   return FALSE;
 }
 
-/* Remove an event from both the in-memory list and the SQL database 
-   from ev pointer */
+/**
+ * event_db_remove:
+ * @ev: Event
+ * 
+ * This function removes an event from the event database. 
+ * 
+ * Returns: #TRUE on success, #FALSE otherwise.
+ */
 gboolean
 event_db_remove (event_t ev)
 {
@@ -926,6 +1040,13 @@ event_db_remove (event_t ev)
   return TRUE;
 }
 
+/**
+ * event_db_new:
+ *
+ * Create and initialise a new #event_t event structure.
+ *
+ * Returns: A new event.
+ */
 event_t
 event_db_new (void)
 {
@@ -933,6 +1054,12 @@ event_db_new (void)
   return ev;
 }
 
+/**
+ * event_db_destroy:
+ * @ev: Event
+ * 
+ * Free a given event.
+ */
 void
 event_db_destroy (event_t ev)
 {
@@ -946,6 +1073,15 @@ event_db_destroy (event_t ev)
   event_db__free_event (ev);
 }
 
+/**
+ * event_db_alloc_details:
+ * @ev: Event
+ * 
+ * Allocates a new, clean #event_details_t structure which is attached to
+ * the given event.
+ *
+ * Returns: The new details structure.
+ */
 event_details_t
 event_db_alloc_details (event_t ev)
 {
@@ -954,6 +1090,14 @@ event_db_alloc_details (event_t ev)
   return ev->details;
 }
 
+/**
+ * event_db_get_recurrence:
+ * @ev: Event
+ * 
+ * Retrieves recurrence information for an event.
+ *
+ * Returns: Recurrence information for the given event.
+ */
 recur_t
 event_db_get_recurrence (event_t ev)
 {
@@ -967,6 +1111,12 @@ event_db_get_recurrence (event_t ev)
   return ev->recur;
 }
 
+/**
+ * event_db_clear_recurrence:
+ * @ev: Event
+ * 
+ * Frees the recurrence information of a given event.
+ */
 void
 event_db_clear_recurrence (event_t ev)
 {
@@ -977,6 +1127,13 @@ event_db_clear_recurrence (event_t ev)
     }
 }
 
+/**
+ * event_db_refresh:
+ *
+ * Refresh event information from database on disk.
+ *
+ * Returns: #TRUE on success, #FALSE otherwise.
+ */
 gboolean
 event_db_refresh (void)
 {

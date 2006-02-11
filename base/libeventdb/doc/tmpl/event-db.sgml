@@ -1,20 +1,19 @@
 <!-- ##### SECTION Title ##### -->
-event-db
+Event Database
 
 <!-- ##### SECTION Short_Description ##### -->
 
+Event database programmers interface.
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
 
 </para>
 
-
 <!-- ##### SECTION See_Also ##### -->
 <para>
 
 </para>
-
 
 <!-- ##### SECTION Stability_Level ##### -->
 
@@ -201,8 +200,10 @@ event-db
 
 </para>
 
-@Param1: 
+@ev: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@Param1: 
 
 
 <!-- ##### FUNCTION event_db_remove ##### -->
@@ -210,8 +211,10 @@ event-db
 
 </para>
 
-@Param1: 
+@ev: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@Param1: 
 
 
 <!-- ##### FUNCTION event_db_flush ##### -->
@@ -228,8 +231,10 @@ event-db
 
 </para>
 
-@Param1: 
+@ev: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@Param1: 
 
 
 <!-- ##### FUNCTION event_db_new ##### -->
@@ -254,6 +259,8 @@ event-db
 
 </para>
 
+@ev: 
+<!-- # Unused Parameters # -->
 @Param1: 
 
 
@@ -262,8 +269,10 @@ event-db
 
 </para>
 
-@Param1: 
+@ev: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@Param1: 
 
 
 <!-- ##### FUNCTION event_db_get_details ##### -->
@@ -271,8 +280,10 @@ event-db
 
 </para>
 
-@Param1: 
+@ev: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@Param1: 
 
 
 <!-- ##### FUNCTION event_db_forget_details ##### -->
@@ -280,6 +291,8 @@ event-db
 
 </para>
 
+@ev: 
+<!-- # Unused Parameters # -->
 @Param1: 
 
 
@@ -329,6 +342,8 @@ event-db
 
 </para>
 
+@l: 
+<!-- # Unused Parameters # -->
 @Param1: 
 
 
@@ -339,13 +354,5 @@ event-db
 
 @ev: 
 @Returns: 
-
-
-<!-- ##### FUNCTION event_db_clear_recurrence ##### -->
-<para>
-
-</para>
-
-@ev: 
 
 
