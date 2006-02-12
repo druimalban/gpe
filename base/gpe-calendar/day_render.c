@@ -619,7 +619,7 @@ day_render_delete (struct day_render *dr)
       g_object_unref (dr->ol_gc);
       g_object_unref (dr->normal_gc);
       g_slist_free (dr->event_rectangles);
-      g_slist_free (dr->events);
+      event_db_list_destroy (dr->events);
       caption_delete (dr->capt);
       g_free (dr);
     }

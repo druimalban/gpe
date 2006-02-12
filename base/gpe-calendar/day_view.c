@@ -35,8 +35,6 @@
 #define _(x) gettext(x)
 #define NUM_HOURS 24
 
-static GSList *day_events[NUM_HOURS], *untimed_events;
-
 static GtkWidget *rem_area;
 static GtkWidget *datesel, *calendar, *scrolled_window;
 
@@ -363,7 +361,7 @@ reminder_view_init ()
 
   time_t end, start;
   struct tm tm_start, tm_end;
-  GSList *events, *iter, *rem_list = NULL;
+  GSList *rem_list;
 
   localtime_r (&viewtime, &tm_start);
 
@@ -377,17 +375,7 @@ reminder_view_init ()
   tm_end.tm_sec = 0;
   end = mktime (&tm_end);
 
-  events = event_db_list_for_period (start, end);
-
-  for (iter = events; iter; iter = iter->next)
-    {
-      event_t ev = iter->data;
-      if (is_reminder (ev))
-        {
-          /* Reminder */
-          rem_list = g_slist_append (rem_list, ev);
-        }
-    }
+  rem_list = event_db_untimed_list_for_period (start, end, TRUE);
 
   if (rem_render)
     {
@@ -589,23 +577,6 @@ update_hook_callback ()
   gtk_calendar_select_day (GTK_CALENDAR (calendar), tm.tm_mday);
   
   return TRUE;
-}
-
-void
-day_free_lists ()
-{
-  int hour;
-
-  if (untimed_events)
-    event_db_list_destroy (untimed_events);
-
-  untimed_events = NULL;
-  for (hour = 0; hour <= 23; hour++)
-    if (day_events[hour])
-      {
-	event_db_list_destroy (day_events[hour]);
-	day_events[hour] = NULL;
-      }
 }
 
 static gboolean

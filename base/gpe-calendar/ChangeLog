@@ -1,3 +1,14 @@
+2006-02-12  Phil Blundell  <pb@reciva.com>
+
+	* day_view.c (reminder_view_init): Use
+	event_db_untimed_list_for_period.
+
+	* day_render.c (day_render_delete): Call event_db_list_destroy.
+	* main.c (on_import_vcal): Don't call day_free_lists.
+	* day_view.c (day_free_lists): Deleted.
+	(day_events, untimed_events): Likewise.
+	* day_view.h (day_free_lists): Likewise.
+	
 2006-02-07  Phil Blundell  <pb@reciva.com>
 
 	* week_view.c (week_view): Attach handler to size-allocate signal

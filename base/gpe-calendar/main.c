@@ -414,7 +414,6 @@ on_import_vcal (GtkWidget *widget, gpointer data)
       gtk_widget_destroy(feedbackdlg);
     }
   gtk_widget_destroy(filesel);
-  day_free_lists();
   week_free_lists();
   month_free_lists();
   event_db_refresh();
