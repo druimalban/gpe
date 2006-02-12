@@ -1,3 +1,9 @@
+2006-02-12  Phil Blundell  <pb@reciva.com>
+
+	* event-db.c (event_sort_func): Improve sorting.
+	(event_db_list_for_period_internal): Correct handling of maximum
+	event count.
+
 2006-02-11  Florian Boor <florian@kernelconcepts.de>
 
 	* Version 0.20 released.

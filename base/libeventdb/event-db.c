@@ -48,12 +48,10 @@ static gint
 event_sort_func (const event_t ev1, const event_t ev2)
 {
   if (!ev1->recur || !ev2->recur)
-    return (ev1->start > ev2->start) ? 1 : 0;
+    return ev1->start - ev2->start;
   recur_t r1 = ev1->recur;
   recur_t r2 = ev2->recur;
-  if(!r1->end) return (0);
-  else if (!r2->end) return (1);
-  else return (r1->end > r2->end) ? 0 : 1;
+  return r1->end - r2->end;
 }
 
 /* Add an event to the in-memory list */
@@ -550,7 +548,7 @@ event_db_list_for_period_internal (time_t start, time_t end, gboolean untimed,
       clone = event_db_clone(ev);
       clone->start = event_start;
       list = g_slist_insert_sorted (list, clone, (GCompareFunc)event_sort_func);
-      if (events++ == max)
+      if (++events == max)
 	return list;
     }
   
@@ -610,7 +608,7 @@ event_db_list_for_period_internal (time_t start, time_t end, gboolean untimed,
 	  	  else clone->start = clone_start;
 		  clone->flags |= FLAG_RECUR;
 	  	  list = g_slist_insert_sorted (list, clone, (GCompareFunc)event_sort_func);
-		  if (events++ == max)
+		  if (++events == max)
 		    return list;
 	       }
 	    }
@@ -646,7 +644,7 @@ event_db_list_for_period_internal (time_t start, time_t end, gboolean untimed,
 	    	  else clone->start = clone_start;
 	    	  clone->flags |= FLAG_RECUR;
 	    	  list = g_slist_insert_sorted (list, clone, (GCompareFunc)event_sort_func);
-		  if (events++ == max)
+		  if (++events == max)
 		    return list;
 	    	}
 	      }
@@ -682,7 +680,7 @@ event_db_list_for_period_internal (time_t start, time_t end, gboolean untimed,
 	  	  else clone->start = clone_start;
 	  	  clone->flags |= FLAG_RECUR;
 	  	  list = g_slist_insert_sorted (list, clone, (GCompareFunc)event_sort_func);
-		  if (events++ == max)
+		  if (++events == max)
 		    return list;
 	       }
 	  }
@@ -719,7 +717,7 @@ event_db_list_for_period_internal (time_t start, time_t end, gboolean untimed,
 		  else clone->start = clone_start;
 		  clone->flags |= FLAG_RECUR;
 		  list = g_slist_insert_sorted (list, clone, (GCompareFunc)event_sort_func);
-		  if (events++ == max)
+		  if (++events == max)
 		    return list;
 		}
 	    }
