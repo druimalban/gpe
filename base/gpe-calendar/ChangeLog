@@ -1,5 +1,9 @@
 2006-02-12  Phil Blundell  <pb@reciva.com>
 
+	* Version 0.72 released.
+
+2006-02-12  Phil Blundell  <pb@reciva.com>
+
 	* day_view.c (reminder_view_init): Use
 	event_db_untimed_list_for_period.
 
