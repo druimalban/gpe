@@ -99,9 +99,14 @@ day_page_calc_time_width (day_page_t page)
 
   for (i = 0; i < NUM_HOURS; i++)
     {
-      char buf[40], *buffer;
+      char buf[60], *buffer;
+      struct tm tm;
+      char timebuf[10];
 
-      snprintf (buf, sizeof (buf), "<span font_desc='normal'>%.2d:00</span>", i);
+      memset(&tm, 0, sizeof(tm));
+      tm.tm_hour = i;
+      strftime (timebuf, sizeof (timebuf), "%X", &tm);
+      snprintf (buf, sizeof (buf), "<span font_desc='normal'>%s</span>", timebuf);
       buffer = g_locale_to_utf8 (buf, -1, NULL, NULL, NULL);
       pango_layout_set_markup (pl, buffer, strlen (buffer));
       pango_layout_get_pixel_extents (pl, &pr, NULL);
@@ -146,7 +151,9 @@ day_page_draw_background (const day_page_t page)
 
   for (i = 0; i < NUM_HOURS; i++)
     {
-      char buf[40], *buffer;
+      char buf[60], *buffer;
+      struct tm tm;
+      char timebuf[10];
       gdk_draw_line (widget->window, gray_gc, 0, page->height / NUM_HOURS * i,
 		     page->width, page->height / NUM_HOURS * i);
       gdk_draw_line (widget->window, white_gc, 0,
@@ -154,7 +161,11 @@ day_page_draw_background (const day_page_t page)
 		     page->time_width,
 		     page->height / NUM_HOURS * i);
 
-      snprintf (buf, sizeof (buf), "<span font_desc='normal'>%.2d:00</span>", i);
+      memset(&tm, 0, sizeof(tm));
+      tm.tm_hour = i;
+      strftime (timebuf, sizeof (timebuf), "%X", &tm);
+  
+      snprintf (buf, sizeof (buf), "<span font_desc='normal'>%s</span>", timebuf);
       buffer = g_locale_to_utf8 (buf, -1, NULL, NULL, NULL);
       pango_layout_set_markup (pl, buffer, strlen (buffer));
       pango_layout_get_pixel_extents (pl, &pr, NULL);
@@ -628,7 +639,7 @@ gboolean
 changed_callback (GtkWidget * widget, GtkWidget * some)
 {
   viewtime = gtk_date_sel_get_time (GTK_DATE_SEL (widget));
-
+    
   day_view_update ();
   reminder_view_update ();
 
@@ -758,7 +769,7 @@ day_view (void)
   datesel = gtk_date_sel_new (GTKDATESEL_FULL);
 
   gtk_widget_show (datesel);
-
+  
   g_signal_connect (G_OBJECT (calendar),
 		    "day-selected", G_CALLBACK (day_changed_calendar), NULL);
 
