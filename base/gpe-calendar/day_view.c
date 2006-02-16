@@ -93,19 +93,26 @@ day_page_calc_time_width (day_page_t page)
   PangoLayout *pl;
   PangoRectangle pr;
   guint width = 0;
-  int i;
+  gint i;
+  gboolean is_ampm;
+  struct tm tm;
+  char timebuf[10];
+    
+  memset(&tm, 0, sizeof(tm));
+  is_ampm = strftime (timebuf, sizeof (timebuf), "%p", &tm) ? TRUE : FALSE;
 
   pl = gtk_widget_create_pango_layout (page->widget, NULL);
 
   for (i = 0; i < NUM_HOURS; i++)
     {
       char buf[60], *buffer;
-      struct tm tm;
-      char timebuf[10];
 
       memset(&tm, 0, sizeof(tm));
       tm.tm_hour = i;
-      strftime (timebuf, sizeof (timebuf), "%X", &tm);
+      if (is_ampm)
+        strftime (timebuf, sizeof (timebuf), "%I:%M %p", &tm);
+      else
+        strftime (timebuf, sizeof (timebuf), "%R", &tm);
       snprintf (buf, sizeof (buf), "<span font_desc='normal'>%s</span>", timebuf);
       buffer = g_locale_to_utf8 (buf, -1, NULL, NULL, NULL);
       pango_layout_set_markup (pl, buffer, strlen (buffer));
@@ -119,7 +126,7 @@ day_page_calc_time_width (day_page_t page)
   width = width * 1.6;
 #endif
     
-  page->time_width = width + 3;
+  page->time_width = width + 4;
     
   g_object_unref (pl);
 }
@@ -134,6 +141,13 @@ day_page_draw_background (const day_page_t page)
   PangoLayout *pl;
   GdkRectangle gr;
   PangoRectangle pr;
+  char timebuf[10];
+  struct tm tm;
+  gboolean is_ampm;
+    
+  memset(&tm, 0, sizeof(tm));
+  is_ampm = strftime (timebuf, sizeof (timebuf), "%p", &tm) ? TRUE : FALSE;
+  
   widget = page->widget;
   pl = gtk_widget_create_pango_layout (widget, NULL);
   white_gc = widget->style->white_gc;
@@ -152,8 +166,6 @@ day_page_draw_background (const day_page_t page)
   for (i = 0; i < NUM_HOURS; i++)
     {
       char buf[60], *buffer;
-      struct tm tm;
-      char timebuf[10];
       gdk_draw_line (widget->window, gray_gc, 0, page->height / NUM_HOURS * i,
 		     page->width, page->height / NUM_HOURS * i);
       gdk_draw_line (widget->window, white_gc, 0,
@@ -163,7 +175,10 @@ day_page_draw_background (const day_page_t page)
 
       memset(&tm, 0, sizeof(tm));
       tm.tm_hour = i;
-      strftime (timebuf, sizeof (timebuf), "%X", &tm);
+      if (is_ampm)
+        strftime (timebuf, sizeof (timebuf), "%I:%M %p", &tm);
+      else
+        strftime (timebuf, sizeof (timebuf), "%R", &tm);
   
       snprintf (buf, sizeof (buf), "<span font_desc='normal'>%s</span>", timebuf);
       buffer = g_locale_to_utf8 (buf, -1, NULL, NULL, NULL);

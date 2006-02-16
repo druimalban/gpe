@@ -1,5 +1,11 @@
 2006-02-15  Florian Boor <florian.boor@kernelconcepts.de>
 
+    * day_view.c (day_page_draw_background): Full working support for AM/PM 
+    timezones.
+    (day_page_calc_time_width): likewise + make column one pixel wider.
+
+2006-02-15  Florian Boor <florian.boor@kernelconcepts.de>
+
     * day_view.c (day_page_draw_background), (day_page_calc_time_width):
     Support time formating depending on locale setting. Needs additional fix to
     get rid of the seconds.
