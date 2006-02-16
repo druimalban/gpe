@@ -86,6 +86,7 @@ gboolean week_starts_monday = TRUE;
 gboolean day_view_combined_times;
 gchar collected_keys[32] = "";
 gint ccpos = 0;
+const gchar *TIMEFMT;
 
 static guint nr_days[] = { 31, 28, 31, 30, 31, 30, 
 			   31, 31, 30, 31, 30, 31 };
@@ -549,7 +550,7 @@ main (int argc, char *argv[])
   GdkPixbuf *p;
   GtkWidget *pw;
   GtkToolItem *item;
-  GtkTooltips *tooltips;
+  GtkTooltips *tooltips;    
 #ifdef IS_HILDON
   GtkWidget *app, *main_appview;
   osso_context_t *osso_context;
@@ -560,6 +561,14 @@ main (int argc, char *argv[])
   gboolean schedule_only=FALSE;
   extern char *optarg;
   gchar *ifile = NULL;
+  gchar timebuf[3];
+  struct tm tm;
+    
+  memset(&tm, 0, sizeof(tm));
+  if (strftime (timebuf, sizeof (timebuf), "%p", &tm))
+      TIMEFMT = "%I:%M %p";
+  else
+      TIMEFMT = "%R";
 
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);

@@ -94,13 +94,9 @@ day_page_calc_time_width (day_page_t page)
   PangoRectangle pr;
   guint width = 0;
   gint i;
-  gboolean is_ampm;
   struct tm tm;
   char timebuf[10];
     
-  memset(&tm, 0, sizeof(tm));
-  is_ampm = strftime (timebuf, sizeof (timebuf), "%p", &tm) ? TRUE : FALSE;
-
   pl = gtk_widget_create_pango_layout (page->widget, NULL);
 
   for (i = 0; i < NUM_HOURS; i++)
@@ -109,10 +105,8 @@ day_page_calc_time_width (day_page_t page)
 
       memset(&tm, 0, sizeof(tm));
       tm.tm_hour = i;
-      if (is_ampm)
-        strftime (timebuf, sizeof (timebuf), "%I:%M %p", &tm);
-      else
-        strftime (timebuf, sizeof (timebuf), "%R", &tm);
+      strftime (timebuf, sizeof (timebuf), TIMEFMT, &tm);
+        
       snprintf (buf, sizeof (buf), "<span font_desc='normal'>%s</span>", timebuf);
       buffer = g_locale_to_utf8 (buf, -1, NULL, NULL, NULL);
       pango_layout_set_markup (pl, buffer, strlen (buffer));
@@ -143,10 +137,6 @@ day_page_draw_background (const day_page_t page)
   PangoRectangle pr;
   char timebuf[10];
   struct tm tm;
-  gboolean is_ampm;
-    
-  memset(&tm, 0, sizeof(tm));
-  is_ampm = strftime (timebuf, sizeof (timebuf), "%p", &tm) ? TRUE : FALSE;
   
   widget = page->widget;
   pl = gtk_widget_create_pango_layout (widget, NULL);
@@ -175,10 +165,7 @@ day_page_draw_background (const day_page_t page)
 
       memset(&tm, 0, sizeof(tm));
       tm.tm_hour = i;
-      if (is_ampm)
-        strftime (timebuf, sizeof (timebuf), "%I:%M %p", &tm);
-      else
-        strftime (timebuf, sizeof (timebuf), "%R", &tm);
+      strftime (timebuf, sizeof (timebuf), TIMEFMT, &tm);
   
       snprintf (buf, sizeof (buf), "<span font_desc='normal'>%s</span>", timebuf);
       buffer = g_locale_to_utf8 (buf, -1, NULL, NULL, NULL);
@@ -234,6 +221,7 @@ day_view_button_press (GtkWidget * widget, GdkEventButton * event, gpointer d)
 	      sel_event = e_r->event;
 	      gchar *buffer = NULL;
 	      gchar *tbuffer = NULL;
+          gchar *strstart, *strend;
 	      event_details_t evd;
 	      struct tm start_tm, end_tm;
 	      time_t end;
@@ -243,13 +231,17 @@ day_view_button_press (GtkWidget * widget, GdkEventButton * event, gpointer d)
 	      localtime_r (&(e_r->event->start), &start_tm);
 	      localtime_r (&end, &end_tm);
 	      evd = event_db_get_details (e_r->event);
-	      buffer = (char *) g_malloc (sizeof (char) * 256);
+	      buffer = g_malloc (sizeof (gchar) * 256);
+          strstart = strftime_strdup_utf8_locale (TIMEFMT, &start_tm);
+          strend = strftime_strdup_utf8_locale (TIMEFMT, &end_tm);
 
-	      snprintf (buffer, 256, "%s %.2d:%.2d-%.2d:%.2d %s\n\n%s",
-			evd->summary, start_tm.tm_hour, start_tm.tm_min,
-			end_tm.tm_hour, end_tm.tm_min,
+	      snprintf (buffer, 256, "%s %s-%s %s\n\n%s",
+			evd->summary, strstart, strend,
 			(e_r->event->flags & FLAG_ALARM ? "(A)" : ""),
 			evd->description ? evd->description : "");
+          g_free(strstart);
+          g_free(strend);
+          
 	      tbuffer = g_locale_to_utf8 (buffer, -1, NULL, NULL, NULL);
 	      gtk_window_set_position (GTK_WINDOW (popup), GTK_WIN_POS_MOUSE);
 	      gtk_window_set_default_size (GTK_WINDOW (popup),

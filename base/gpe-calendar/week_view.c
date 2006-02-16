@@ -83,7 +83,7 @@ draw_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer user_data)
   gboolean draw_sep = FALSE;
   gboolean wide_mode = FALSE;
   gint day_label_width = 0;
-
+    
   g_return_val_if_fail (widget != NULL, TRUE);
   g_return_val_if_fail (GTK_IS_DRAWING_AREA (widget), TRUE);
 
@@ -160,7 +160,6 @@ draw_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer user_data)
       pango_layout_set_markup (pl, week_days[day].string, strlen (week_days[day].string));
       pango_layout_get_pixel_extents (pl, NULL, &pr);
       x = 4;
-//      x = wide_mode ? 4 : max_width - pr.width - 8;
       gtk_paint_layout (widget->style,
 			widget->window,
 			GTK_WIDGET_STATE (widget),
@@ -192,7 +191,7 @@ draw_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer user_data)
 
 		      localtime_r (&ev->start, &tm);
 
-		      buffer = strftime_strdup_utf8_locale ("%H:%M", &tm);
+              buffer = strftime_strdup_utf8_locale (TIMEFMT, &tm);
 		      pango_layout_set_text (pl_evt, buffer, -1);
 		      g_free (buffer);
 
@@ -292,14 +291,14 @@ week_view_update (void)
   PangoLayout *pl_evt = gtk_widget_create_pango_layout (GTK_WIDGET (week_view_draw), NULL);
   GSList *iter;
   guint min_cell_height;
-
-  min_cell_height = MAX (scroller->allocation.height / 7, 
-			 REALLY_MIN_CELL_HEIGHT);
+  
+  min_cell_height = MAX (scroller->allocation.height / 7, REALLY_MIN_CELL_HEIGHT);
 
   localtime_r (&t, &today);
 
   t = viewtime;
   localtime_r (&t, &tm);
+  
   if (week_starts_monday)
     tm.tm_wday = (tm.tm_wday + 6) % 7;
   t -= SECONDS_IN_DAY * tm.tm_wday;
@@ -358,16 +357,16 @@ week_view_update (void)
             {
               if (ev->mark == FALSE)
                 {
-		  gchar *s;
+	        	  gchar *s;
                   localtime_r (&ev->start, &tm);
-		  s = strftime_strdup_utf8_locale ("%H:%M", &tm);
+                  s = strftime_strdup_utf8_locale (TIMEFMT, &tm);
                   ev->mark = TRUE;
-		  pango_layout_set_text (pl_evt, s, -1);
-		  pango_layout_get_pixel_extents (pl_evt, NULL, &pr);
-		  if (time_width < pr.width)
-		    time_width = pr.width;
-		  g_free (s);
-		}
+                  pango_layout_set_text (pl_evt, s, -1);
+                  pango_layout_get_pixel_extents (pl_evt, NULL, &pr);
+                  if (time_width < pr.width)
+                    time_width = pr.width;
+                  g_free (s);
+                }
             }
         }
     }

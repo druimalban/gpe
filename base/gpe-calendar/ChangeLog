@@ -1,5 +1,13 @@
 2006-02-15  Florian Boor <florian.boor@kernelconcepts.de>
 
+    * globals.h, main.c (main): Implement a cleverer solution using the global 
+    time formating string.
+    * day_view.c (day_page_draw_background): Use better solution.
+    (day_page_calc_time_width): likewise
+    * week_view.c (draw_expose_event): likewise
+
+2006-02-15  Florian Boor <florian.boor@kernelconcepts.de>
+
     * day_view.c (day_page_draw_background): Full working support for AM/PM 
     timezones.
     (day_page_calc_time_width): likewise + make column one pixel wider.

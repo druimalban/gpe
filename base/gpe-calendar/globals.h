@@ -38,8 +38,9 @@ extern guint day_of_week(guint year, guint month, guint day);
 
 #define SECONDS_IN_DAY (24*60*60)
 
+extern const gchar *TIMEFMT;
+
 /* stuff that could perhaps be configurable */
-#define TIMEFMT "%R"
 #define MONTHTIMEFMT "%a %d"
 
 /* Maemo's stupid application installer uses a wrong prefix, 
