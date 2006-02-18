@@ -12,8 +12,8 @@ PACKAGE_LDFLAGS += -L../libxsettings
 endif
 
 PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS)
-PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) -lsqlite `pkg-config --libs glib-2.0` -lXsettings
-PACKAGE_CFLAGS += $(STANDARD_CFLAGS) `pkg-config --cflags glib-2.0`
+PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) -lsqlite `pkg-config --libs glib-2.0 x11` -lXsettings
+PACKAGE_CFLAGS += $(STANDARD_CFLAGS) `pkg-config --cflags glib-2.0 x11`
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
