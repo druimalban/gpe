@@ -211,6 +211,7 @@ static void schedule_alarm(const gchar *buf, time_t when)
 	else
 		text = g_strdup_printf ("gpe-announce\n");
 	schedule_set_alarm (1234, when, text, FALSE);
+	
 	g_free (text);
 }
 
@@ -324,12 +325,8 @@ gint bells_and_whistles ()
   
 	if((get_vol(&curl, &curr, SOUND_MIXER_VOLUME) == -1)
 		|| (get_vol(&curpcml, &curpcmr, SOUND_MIXER_PCM) == -1))
-	{
-		VolumeReset = FALSE;
-		printf("Unable to get volume\n");
-	}
-	set_vol(100, 100, SOUND_MIXER_PCM);
-	
+			VolumeReset = FALSE;
+		
 	signal (SIGINT, buzzer_off);
 
 	if (sound_config != CFG_NOSOUND)
@@ -338,9 +335,15 @@ gint bells_and_whistles ()
 	if (sound_config != CFG_NOSOUND)
 	{
 		if (sound_config == CFG_AUTOMATIC)
+		{
+			set_vol(100, 100, SOUND_MIXER_PCM);
 			set_vol(50, 50, SOUND_MIXER_VOLUME);
-		else
+		}
+		else if (VolumeReset)
+		{
+			set_vol(100, 100, SOUND_MIXER_PCM);
 			set_vol(sound_config, sound_config, SOUND_MIXER_VOLUME);
+		}
 	}
 	PlayAlarmStop = FALSE;
 	if (pthread_create(&SoundThread, NULL, play_alarm, NULL) != 0) {
@@ -360,9 +363,11 @@ gint on_snooze_clicked (GtkButton *button, gpointer user_data)
 	PlayAlarmStop = TRUE;
 	set_buzzer (0, 0);
 	pthread_join(SoundThread, NULL);
-	set_vol(curl, curr, SOUND_MIXER_VOLUME);
-	set_vol(curpcml, curpcmr, SOUND_MIXER_PCM);
-
+	if (VolumeReset)
+	{
+		set_vol(curl, curr, SOUND_MIXER_VOLUME);
+		set_vol(curpcml, curpcmr, SOUND_MIXER_PCM);
+	}
 	AlarmComment = gtk_object_get_data (AlarmWin, "AlarmComment");
 	HoursSpin = GTK_SPIN_BUTTON (gtk_object_get_data (AlarmWin,
 				     "HoursSpin"));
@@ -373,8 +378,7 @@ gint on_snooze_clicked (GtkButton *button, gpointer user_data)
 		    gtk_spin_button_get_value_as_int(MinutesSpin) * 60;
 
 	if (AlarmComment)
-		schedule_alarm(gtk_entry_get_text (GTK_ENTRY (AlarmComment)),
-			       viewtime);
+		schedule_alarm(gtk_entry_get_text (GTK_ENTRY (AlarmComment)), viewtime);
 	else
 		schedule_alarm(NULL, viewtime);
 

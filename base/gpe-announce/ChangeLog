@@ -1,3 +1,7 @@
+2006-02-21  Joe McCarthy <jjmcc@pitt.edu>
+
+        * callbacks.c: fix use of VoluemReset flag and snooze handling 
+	
 2005-09-06  Luca De Cicco <ldecicco@gmail.com>       
 	* Make gst library loaded at runtime (dlopen)	
 	* main.c: added dlopen to handle runtime linking, new commandline
