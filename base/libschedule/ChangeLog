@@ -1,3 +1,7 @@
+2006-02-21  Joseph J. McCarthy  <mccarthy@granular.che.pitt.edu>
+
+        * atd.c : fix some non-calendar alarm stuff 
+	
 2006-01-13  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * atd.c (schedule_set_alarm): Verify if at binary is executable, bad things

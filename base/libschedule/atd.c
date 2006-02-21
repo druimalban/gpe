@@ -305,11 +305,11 @@ schedule_set_alarm (guint id, time_t start, const gchar *action, gboolean calend
   
   sprintf(call_at, "/usr/bin/at -q g -f /tmp/atjob.txt %02d:%02d %02d.%02d.%02d 2>&1", tm.tm_hour, tm.tm_min, tm.tm_mday, tm.tm_mon+1, tm.tm_year-100);
   
-  if (!access("/usr/bin/at", X_OK) && ((at_return=popen(call_at, "r")) != NULL))
-    {
-      char erase_tmpat[32];
-      if (calendar_alarm)
+  if (calendar_alarm)
+  {
+    if (!access("/usr/bin/at", X_OK) && ((at_return=popen(call_at, "r")) != NULL))
       {
+        char erase_tmpat[32];
         char junk[4];
 	do
 	{
@@ -328,16 +328,24 @@ schedule_set_alarm (guint id, time_t start, const gchar *action, gboolean calend
 	    return FALSE;
 	  }
 	}
-      }
-      pclose (at_return);
-      sprintf(erase_tmpat, "rm /tmp/atjob.txt");
-      /*system(erase_tmpat);*/
-    }
+        pclose (at_return);
+        sprintf(erase_tmpat, "rm /tmp/atjob.txt");
+        system(erase_tmpat);
+     }
+     else
+     {
+        fprintf(stderr, "ERROR: Date string was invalid or could not run 'at'.  Is 'atd' running?/n");
+        return FALSE;
+     }
+  }
   else
-    {
-      fprintf(stderr, "ERROR: Date string was invalid or could not run 'at'.  Is 'atd' running?/n");
-      return FALSE;
-    }
+  {
+    char erase_tmpat[32];
+        
+    system(call_at);
+    sprintf(erase_tmpat, "rm /tmp/atjob.txt");
+    system(erase_tmpat);
+  }
   return TRUE;
 #endif
 }
