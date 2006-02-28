@@ -1,3 +1,8 @@
+2006-02-28  Florian Boor  <florian@kernelconcepts.de>
+
+    * Release version 0.6
+    * Change documentation license to LGPL to avoid license chaos.
+
 2005-11-25  Florian Boor  <florian@kernelconcepts.de>
 
     * ui.c: Fix Hildon incompatibility (allow-checkbox-mode).
