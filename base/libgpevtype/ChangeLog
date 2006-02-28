@@ -1,3 +1,8 @@
+2006-02-28  Florian Boor  <florian@kernelconcepts.de>
+
+    * Release Version 0.16.
+    * Change documentation license to become the same like the code license.
+
 2006-02-04  Florian Boor  <florian@kernelconcepts.de>
 
     * Release Version 0.15.
