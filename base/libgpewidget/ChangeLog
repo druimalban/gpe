@@ -1,3 +1,9 @@
+2006-03-01  Florian Boor <florian@kernelconcepts.de>
+
+	* Version 0.110 released.
+	* doc/libgpewidget-docs.sgml: Change license of documentation to
+          become the same like library license (LGPL).
+
 2006-02-04  Phil Blundell  <pb@reciva.com>
 
 	* Version 0.109 released.
