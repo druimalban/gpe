@@ -86,7 +86,9 @@ endif
 EXTRA_DIST = $(service_DATA) \
              $(pixmaps_DATA) \
              $(pixmaps_extra_DATA) \
-             $(meta_DATA) \
+             default-layout-bigscreen.xml \
+             default-layout.xml \
+             well-known-tags \
              hildon/default-layout-bigscreen.xml \
              hildon/com.nokia.gpe-contacts.service.in \
              hildon/gpe-contacts.desktop.in.in \
