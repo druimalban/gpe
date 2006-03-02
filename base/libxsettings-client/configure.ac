@@ -1,6 +1,6 @@
 # Process this file with autoconf to produce a configure script.
 
-AC_INIT(libXsettings-client, 0.16, gpe@handhelds.org)
+AC_INIT(libXsettings-client, 0.17, gpe@handhelds.org)
 AC_CONFIG_SRCDIR([xsettings-client.c])
 AM_INIT_AUTOMAKE([foreign dist-bzip2])
 AM_CONFIG_HEADER(config.h)
