@@ -14,14 +14,6 @@ gpeinclude_HEADERS = gpe/tag-db.h gpe/vevent.h \
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libgpevtype.pc
 
-EXTRA_DIST = debian/changelog \
-             debian/control \
-             debian/copyright \
-			 debian/compat \
-			 debian/rules \
-			 debian/libgpevtype-dev.files \
-			 debian/libgpevtype0.files
-
 clean-local:
 	rm -rf po/.intltool-merge-cache *.d autom4te.cache
 

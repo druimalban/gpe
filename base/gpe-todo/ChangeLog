@@ -1,3 +1,7 @@
+2006-03-07  Florian Boor  <florian.boor@kernelconcepts.de>
+    * Makefile.am: Do not ship debian package support in the
+                   distribution because of conflicting package types.
+
 2005-11-29  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * Release version 0.55.

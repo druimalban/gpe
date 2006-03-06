@@ -63,14 +63,6 @@ EXTRA_DIST = $(desktop_DATA) \
              intltool-extract.in \
              intltool-merge.in \
              intltool-update.in \
-             debian/changelog \
-             debian/compat \
-             debian/copyright \
-             debian/control \
-             debian/rules \
-             debian/docs \
-             debian/dirs \
-             debian/links \
              hildon/gpe-todo.desktop.in.in \
              hildon/com.nokia.gpe-todo.service.in \
              hildon/gpe-todo.png

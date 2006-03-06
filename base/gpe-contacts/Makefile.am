@@ -95,15 +95,7 @@ EXTRA_DIST = $(service_DATA) \
              hildon/gpe-contacts.png \
              intltool-extract.in \
              intltool-merge.in \
-             intltool-update.in \
-             debian/changelog \
-             debian/compat \
-             debian/copyright \
-             debian/control \
-             debian/rules \
-             debian/dirs \
-             debian/links
- 
+             intltool-update.in 
 
 DISTCLEANFILES = intltool-extract \
                  intltool-merge \
