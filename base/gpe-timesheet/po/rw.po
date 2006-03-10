@@ -1,6 +1,6 @@
-# Kinyarwanda translations for gpe-timesheet package.
+# Kinyarwanda translations for gpe-todo package.
 # Copyright (C) 2005 Free Software Foundation, Inc.
-# This file is distributed under the same license as the gpe-timesheet package.
+# This file is distributed under the same license as the gpe-todo package.
 # Steve Murphy <murf@e-tools.com>, 2005.
 # Steve performed initial rough translation from compendium built from translations provided by the following translators:
 # Philibert Ndandali  <ndandali@yahoo.fr>, 2005.
@@ -14,8 +14,8 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-timesheet 0.11\n"
-"POT-Creation-Date: 2003-02-20 20:25+0000\n"
+"Project-Id-Version: gpe-todo 0.32\n"
+"POT-Creation-Date: 2003-02-14 19:50+0000\n"
 "PO-Revision-Date: 2005-04-04 10:55-0700\n"
 "Last-Translator: Steven Michael Murphy <murf@e-tools.com>\n"
 "Language-Team: Kinyarwanda <translation-team-rw@lists.sourceforge.net>\n"
@@ -23,59 +23,154 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: main.c:95 main.c:406 gpe-timesheet.desktop.in.h:2
-msgid "Time Tracker"
+#: main.c:60
+#, fuzzy
+msgid "To-do list"
+msgstr "Urutonde"
+
+#: todo-ui.c:269
+#, fuzzy
+msgid "Select categories"
+msgstr "Ibyiciro"
+
+#: todo-ui.c:291
+msgid "Summary:"
+msgstr "Incamake:"
+
+#: todo-ui.c:292
+msgid "Details"
+msgstr "Birambuye"
+
+#: todo-ui.c:298
+#, fuzzy
+msgid "Not started"
+msgstr "Itaratangira"
+
+#: todo-ui.c:298
+#, fuzzy
+msgid "In progress"
+msgstr "Aho bigeze"
+
+#: todo-ui.c:299
+msgid "Completed"
 msgstr ""
 
-#: main.c:125
-msgid "Notes"
-msgstr "ibisobanuro"
+#: todo-ui.c:321
+msgid "Due:"
+msgstr ""
 
-#: main.c:138
-msgid "OK"
-msgstr "OKE"
+# sw/source\ui\misc\glossary.src:DLG_GLOSSARY.PB_BIB.text
+#: todo-ui.c:336
+#, fuzzy
+msgid "Categories:"
+msgstr "Ibyiciro..."
 
-#: main.c:139
+#: todo-ui.c:429
+#, fuzzy
+msgid "Edit to-do item"
+msgstr "Kuri Ikintu"
+
+#: todo-ui.c:436
+#, fuzzy
+msgid "New item"
+msgstr "Ikintu"
+
+#: list-ui.c:52
+msgid "All items"
+msgstr ""
+
+#: list-ui.c:81
+#, fuzzy
+msgid "Permanently delete all completed items?"
+msgstr "Gusiba Byose"
+
+#: list-ui.c:81
+msgid "Confirm"
+msgstr "Emeza"
+
+#: list-ui.c:82 configure.c:217
+msgid "Delete"
+msgstr "Gusiba"
+
+#: list-ui.c:82
 msgid "Cancel"
 msgstr "Kureka"
 
-#: main.c:191
+#: list-ui.c:333 configure.c:210
+msgid "New"
+msgstr "Gishya"
+
+#: list-ui.c:334 list-ui.c:335
 #, fuzzy
-msgid "Clocking in:"
-msgstr "in"
+msgid "Add a new item"
+msgstr "a Gishya Ikintu"
 
-#: main.c:210
+#: list-ui.c:340
+msgid "Configure"
+msgstr "Kugena Imiterere"
+
+#: list-ui.c:341 list-ui.c:342
 #, fuzzy
-msgid "Clocking out:"
-msgstr "Inyuma"
+msgid "Configure categories"
+msgstr "Ibyiciro"
 
-#: main.c:272 main.c:359 main.c:360
-msgid "New task"
-msgstr "Igikorwa gishya"
-
-#: main.c:272
-msgid "Name"
-msgstr "Izina"
-
-#: main.c:365 main.c:366
-#, fuzzy
-msgid "Delete task"
-msgstr "Igikorwa"
-
-#: main.c:371 main.c:372
-#, fuzzy
-msgid "Clock on"
-msgstr "ku"
-
-#: main.c:377 main.c:378
-#, fuzzy
-msgid "Clock off"
-msgstr "Bidakora"
-
-#: main.c:383 main.c:384
-msgid "Note"
-msgstr "Igisobanuro"
-
-#: gpe-timesheet.desktop.in.h:1
-msgid "GPE Timesheet"
+#: list-ui.c:347
+msgid "Purge"
 msgstr ""
+
+#: list-ui.c:348 list-ui.c:349
+msgid "Purge completed items"
+msgstr ""
+
+#: list-ui.c:354
+#, fuzzy
+msgid "Re-sort"
+msgstr "Ishungura"
+
+#: list-ui.c:355 list-ui.c:356
+#, fuzzy
+msgid "Move completed items to the end of the list"
+msgstr "Kuri i Impera Bya i Urutonde"
+
+#: list-ui.c:361
+msgid "Exit"
+msgstr "Gusohoka"
+
+#: list-ui.c:362 list-ui.c:363
+#, fuzzy
+msgid "Exit the program"
+msgstr "i Porogaramu"
+
+#: configure.c:58
+#, fuzzy
+msgid "Category name must not be blank"
+msgstr "Izina: OYA Ahatanditseho"
+
+#: configure.c:68
+#, fuzzy
+msgid "A category by that name already exists"
+msgstr "A Icyiciro ku Izina:"
+
+#: configure.c:106
+#, fuzzy
+msgid "To-do list: Categories"
+msgstr "Urutonde"
+
+#: configure.c:139
+#, fuzzy
+msgid "New category"
+msgstr "Icyiciro gishya"
+
+#: configure.c:172
+msgid "Categories"
+msgstr "Ibyiciro"
+
+#: configure.c:211 configure.c:212
+#, fuzzy
+msgid "Create a new category"
+msgstr "a Gishya Icyiciro"
+
+#: configure.c:218 configure.c:219
+#, fuzzy
+msgid "Delete the selected category"
+msgstr "i Byahiswemo Icyiciro"

@@ -2,6 +2,7 @@
 #define _GPE_TIMESHEET_HTML_H
 
 #include "sql.h"
+#include <gtk/gtk.h>
 
 int journal_add_header(char* title);
 int journal_add_line(time_t tstart, time_t tstop, 

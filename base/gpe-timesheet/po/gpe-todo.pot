@@ -1,0 +1,193 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2005-06-20 16:51+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../gpe-todo.desktop.in.h:1
+msgid "GPE To-do List"
+msgstr ""
+
+#: ../gpe-todo.desktop.in.h:2 ../main.c:93
+msgid "To-do list"
+msgstr ""
+
+#: ../list-ui.c:123
+msgid "All items"
+msgstr ""
+
+#: ../list-ui.c:150
+msgid "Show completed"
+msgstr ""
+
+#: ../list-ui.c:188 ../todo-ui.c:327
+msgid "OK"
+msgstr ""
+
+#: ../list-ui.c:189 ../todo-ui.c:328
+msgid "Cancel"
+msgstr ""
+
+#: ../list-ui.c:536
+msgid "Item"
+msgstr ""
+
+#: ../list-ui.c:537 ../list-ui.c:653
+msgid "Categories"
+msgstr ""
+
+#: ../list-ui.c:538
+msgid "View"
+msgstr ""
+
+#: ../list-ui.c:539
+msgid "Tools"
+msgstr ""
+
+#: ../list-ui.c:540
+msgid "Close"
+msgstr ""
+
+#: ../list-ui.c:541
+msgid "Open..."
+msgstr ""
+
+#: ../list-ui.c:542
+msgid "Add new"
+msgstr ""
+
+#: ../list-ui.c:543
+msgid "Edit categories"
+msgstr ""
+
+#: ../list-ui.c:544
+msgid "Show toolbar"
+msgstr ""
+
+#: ../list-ui.c:545
+msgid "Delete completed items"
+msgstr ""
+
+#: ../list-ui.c:546
+msgid "Move completed items to the end"
+msgstr ""
+
+#: ../list-ui.c:622
+msgid "New"
+msgstr ""
+
+#: ../list-ui.c:632 ../todo-ui.c:330
+msgid "Delete"
+msgstr ""
+
+#: ../list-ui.c:645
+msgid "Refresh"
+msgstr ""
+
+#: ../list-ui.c:679
+msgid "Show:"
+msgstr ""
+
+#: ../list-ui.c:738
+msgid "Status"
+msgstr ""
+
+#: ../list-ui.c:744
+msgid "Summary"
+msgstr ""
+
+#: ../list-ui.c:756
+msgid "Due Date"
+msgstr ""
+
+#: ../list-ui.c:761
+msgid "Category"
+msgstr ""
+
+#: ../main.c:80
+msgid "ToDo"
+msgstr ""
+
+#: ../main.c:81
+msgid "List"
+msgstr ""
+
+#: ../todo-ui.c:154
+msgid "Not started"
+msgstr ""
+
+#: ../todo-ui.c:155
+msgid "In progress"
+msgstr ""
+
+#: ../todo-ui.c:156
+msgid "Completed"
+msgstr ""
+
+#: ../todo-ui.c:157
+msgid "Abandoned"
+msgstr ""
+
+#: ../todo-ui.c:163
+msgid "High"
+msgstr ""
+
+#: ../todo-ui.c:164
+msgid "Standard"
+msgstr ""
+
+#: ../todo-ui.c:165
+msgid "Low"
+msgstr ""
+
+#: ../todo-ui.c:267
+msgid "Priority:"
+msgstr ""
+
+#: ../todo-ui.c:269
+msgid "Status:"
+msgstr ""
+
+#: ../todo-ui.c:272
+msgid "Summary:"
+msgstr ""
+
+#: ../todo-ui.c:273
+msgid "Details:"
+msgstr ""
+
+#: ../todo-ui.c:302 ../todo-ui.c:305
+msgid "Categories:"
+msgstr ""
+
+#: ../todo-ui.c:329
+msgid "Categories..."
+msgstr ""
+
+#: ../todo-ui.c:358
+msgid "Due:"
+msgstr ""
+
+#: ../todo-ui.c:373
+msgid "Define categories by tapping Categories button."
+msgstr ""
+
+#: ../todo-ui.c:520
+msgid "Edit Item"
+msgstr ""
+
+#: ../todo-ui.c:531
+msgid "New item"
+msgstr ""

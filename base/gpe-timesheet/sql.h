@@ -11,14 +11,16 @@
 #define SQL_H
 
 #include <glib.h>
+#include <gtk/gtk.h>
+#include <string.h>
 
 struct task
 {
   guint id;
   gchar *description;
   guint time_cf;
-  GSList *children;
-  struct task *parent;
+  GSList *children; // is it really necessary?
+  guint parent;
   gboolean started;
 };
 
@@ -29,14 +31,33 @@ typedef enum
     NOTE
   } action_t;
 
-extern gboolean sql_start (void);
-extern GSList *tasks, *root;
+typedef enum
+{
+  ID,
+  ICON_STARTED,
+  DESCRIPTION,
+  STATUS,
+  STARTED,
+  NUM_COLS
+} columns_store;
 
-extern struct task *new_task (gchar *description, struct task *parent);
-extern void delete_task (struct task *t);
+extern gboolean sql_start (void);
+//extern GSList *tasks, *root;
+extern GSList *children_list;
+
+extern struct task *new_task (gchar *description, guint parent);
+//extern void delete_task (struct task *t);
+extern void delete_task (int idx);
+extern void delete_children (int idx);
 
 extern gboolean log_entry (action_t action, time_t time, struct task *task, char *info);
 extern void scan_logs (GSList *);
+extern void scan_todo (GSList *);
 extern void scan_journal (struct task *tstart);
+
+extern int load_to_treestore(void *arg, int argc, char **argv, char **names);
+
+extern GtkTreeStore *global_task_store;
+extern GtkTreeIter *global_task_iter;
 
 #endif

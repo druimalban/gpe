@@ -19,7 +19,6 @@
 #include <gpe/errorbox.h>
 
 #include "sql.h"
-#include "html.h"
 
 #define _(x) gettext(x)
 
@@ -34,7 +33,7 @@ static guint max_task_id;
 static time_t time_start = 0;
 static gchar *note_start = NULL;
 
-GSList *tasks, *root;
+GSList *children_list;
 
 static const char *actions[] = { "START", "STOP" };
 
@@ -55,23 +54,8 @@ log_entry (action_t action, time_t time, struct task *task, char *info)
   return TRUE;
 }
 
-struct task *
-find_by_id (guint id)
-{
-  GSList *iter;
-
-  for (iter = tasks; iter; iter = iter->next)
-    {
-      struct task *t = iter->data;
-      if (t->id == id)
-	return t;
-    }
-
-  return NULL;
-}
-
 static struct task *
-internal_note_task (guint id, gchar *text, guint elapsed, struct task *pt)
+internal_note_task (guint id, gchar *text, guint elapsed, guint pt)
 {
   struct task *t;
 
@@ -82,11 +66,7 @@ internal_note_task (guint id, gchar *text, guint elapsed, struct task *pt)
   t->children = NULL;
   t->parent = pt;
   t->started = 0;
-  if (pt)
-    pt->children = g_slist_append (pt->children, t);
-  else
-    root = g_slist_append (root, t);
-  tasks = g_slist_append (tasks, t);
+
   if (id > max_task_id)
     max_task_id = id;
 
@@ -97,14 +77,12 @@ static int
 load_callback (void *arg, int argc, char **argv, char **names)
 {
   if (argc == 4)
-    {
-      struct task *pt = NULL;
-      guint parent = atoi (argv[3]);
-      if (parent)
-	pt = find_by_id (parent);
-      internal_note_task (atoi (argv[0]), argv[1], atoi (argv[2]), 
-			  pt);
-    }
+  {
+    guint parent = atoi (argv[3]);
+
+    internal_note_task (atoi (argv[0]), argv[1], atoi (argv[2]), 
+            parent);
+  }
 
   return 0;
 }
@@ -133,15 +111,66 @@ sql_start (void)
 
   sqlite_exec (sqliteh, schema_str, NULL, NULL, &err);
 
-  if (sqlite_exec (sqliteh, "select id, description, cftime, parent from tasks", 
-		   load_callback, NULL, &err))
-    {
-      gpe_error_box (err);
-      free (err);
-      return FALSE;
-    }  
+  global_task_store = gtk_tree_store_new (NUM_COLS,
+  G_TYPE_UINT,GDK_TYPE_PIXBUF, G_TYPE_STRING,G_TYPE_STRING,G_TYPE_BOOLEAN);
+
+  if (sqlite_exec (sqliteh, "select id, description, cftime, parent from tasks where parent=0", load_to_treestore, NULL, &err))
+  {
+    gpe_error_box (err);
+    free (err);
+    return FALSE;
+  }
 
   return TRUE;
+}
+
+
+/* this loads data from DB directly into GtkTreeViews */
+
+int load_to_treestore(void *arg, int argc, char **argv, char **names)
+{
+  if (argc==4)
+    {
+      GtkTreeIter iter, *parent;
+      char *query, *err;
+      int test;
+
+      parent=arg;
+      query = g_malloc( sizeof (char)*80);
+
+      /* insert current element into treestore */
+      gtk_tree_store_append (global_task_store, &iter, parent);
+      gtk_tree_store_set (global_task_store, &iter, ID, atoi(argv[0]), DESCRIPTION, argv[1],-1);
+      parent=&iter;
+
+      /* remember the max index seen until now */
+      if (atoi(argv[0]) > max_task_id)
+        max_task_id = atoi(argv[0]);
+
+      /* prepare select statement for children */
+      strcpy (query, "select id, description, cftime, parent from tasks where parent=");
+      query = strcat(query,argv[0]);
+
+      /*  and call recursively the load_to_treestore when reading datas
+          in order to load also children */
+      if (sqlite_exec (sqliteh, query, load_to_treestore, parent, &err))
+      {
+        gpe_error_box(err);
+        g_free (err);
+        return 99;
+      }
+      g_free (query);
+      return 0;
+    }
+}
+
+int initial_loading(void)
+{
+    char *err;
+    GtkTreeIter *parent = NULL;
+
+    sqlite_exec (sqliteh, "select id, description, cftime, parent from tasks where parent=0", load_to_treestore, parent, &err);
+    free (err);
 }
 
 static int
@@ -164,64 +193,36 @@ scan_log_callback (void *arg, int argc, char **argv, char **names)
   return 0;
 }
 
-void
-scan_logs (GSList *list)
-{
-  GSList *iter;
-  for (iter = list; iter; iter = iter->next)
-    {
-      struct task *t = iter->data;
-
-      t->started = FALSE;
-	  
-      if (t->children)
-        scan_logs (t->children);
-      else
-	{
-	  char *err;
-	  int r;
-
-	  r = sqlite_exec_printf (sqliteh, 
-		          "select time, action from log where task=%d order by time desc", 
-				  scan_log_callback, t, &err,
-				  t->id);
-	  if (r != 0 && r != SQLITE_ABORT)
-	    {
-	      gpe_error_box (err);
-	      free (err);
-	      return;
-	    }
-	}
-    }
-}
-
 static int
-journal_callback (void *arg, int argc, char **argv, char **names)
+scan_journal_cb (void *arg, int argc, char **argv, char **names)
 {
   time_t ti;
-  
+
   if (argc == 3)
     {
       ti = atol(argv[0]);
       if (!strcmp(argv[1],"START"))
        {
          if (time_start != 0)
-           {
-              journal_add_line(time_start, ti, note_start, _("open"));
-           }
+          {
+            journal_list_add_line(time_start, ti, note_start, _("open"));
+          }
            time_start = ti;
            note_start = g_strdup(argv[2]);
-         }
-       else if (!strcmp(argv[1],"STOP")){
+       }
+       else if (!strcmp(argv[1],"STOP"))
+        {
           if (time_start)
-            {              
-              journal_add_line(time_start, ti, note_start, argv[2]);
+            {
+              journal_list_add_line(time_start, ti, note_start, argv[2]);
               g_free(note_start);
               time_start = 0;
             }
-        }		
+        }
     }
+
   return 0;
+
 }
 
 void
@@ -241,7 +242,7 @@ scan_journal (struct task *t)
 	  int r;
 
 	  r = sqlite_exec_printf (sqliteh, "select time, action, info from log where task=%d order by time", 
-				  journal_callback, t, &err,
+				  scan_journal_cb, t, &err,
 				  t->id);
 	  if (r != 0 && r != SQLITE_ABORT)
 	    {
@@ -253,7 +254,7 @@ scan_journal (struct task *t)
 }
 
 struct task *
-new_task (gchar *description, struct task *parent)
+new_task (gchar *description, guint parent)
 {
   char *err;
   guint new_id = max_task_id + 1;
@@ -261,10 +262,10 @@ new_task (gchar *description, struct task *parent)
   if (sqlite_exec_printf (sqliteh,
 			  "insert into tasks values (%d, '%q', %d, %d)",
 			  NULL, NULL, &err,
-			  new_id, description, 0, parent ? parent->id : 0))
+			  new_id, description, 0, parent))
     {
       gpe_error_box (err);
-      free (err);
+      g_free (err);
       return NULL;
     }
 
@@ -272,40 +273,77 @@ new_task (gchar *description, struct task *parent)
 }
 
 void
-delete_task (struct task *t)
+delete_task (int idx)
 {
   char *err;
 
-  if (t->children)
-    {
-      GSList *iter;
-      for (iter = t->children; iter; iter = iter->next)
-	delete_task (iter->data);
-    }
-
   if (sqlite_exec_printf (sqliteh,
 			  "delete from tasks where id=%d",
-			  NULL, NULL, &err, t->id))
-    {
-      gpe_error_box (err);
-      free (err);
-      return;
-    }
+			  NULL, NULL, &err, idx))
+  {
+    gpe_error_box (err);
+    free (err);
+    return;
+  }
 
   if (sqlite_exec_printf (sqliteh,
 			  "delete from log where task=%d",
-			  NULL, NULL, &err, t->id))
+			  NULL, NULL, &err, idx))
     {
       gpe_error_box (err);
       free (err);
       return;
     }
+}
 
-  tasks = g_slist_remove (tasks, t);
-  if (t->parent)
-    t->parent->children = g_slist_remove (t->parent->children, t);
-  else
-    root = g_slist_remove (root, t);
-  g_free (t->description);
-  g_free (t);
+void delete_child(gpointer data, gpointer user_data)
+{
+  guint idx = (guint) data;
+  delete_task(idx);
+}
+
+void delete_children (int idx)
+{
+  children_list = NULL;
+
+  find_children (idx);
+  g_slist_foreach (children_list, delete_child, NULL);
+
+}
+
+int find_children_cb (void *arg, int argc, char **argv, char **names)
+{
+  char *err;
+
+  if (argc=2)
+    {
+    if (sqlite_exec_printf (sqliteh,
+                          "select id, parent from tasks where parent=%s",
+                          find_children_cb,
+                          NULL, &err, argv[0]))
+      {
+        gpe_error_box(err);
+        g_free (err);
+        return;
+      }
+
+    children_list = g_slist_prepend (children_list,GINT_TO_POINTER(atoi(argv[0])));
+
+    return 0;
+
+    }
+}
+
+int find_children (int idx)
+{
+  char *err;
+
+  if (sqlite_exec_printf  (sqliteh,
+                          "select id, parent from tasks where parent=%d",
+                          find_children_cb, NULL, &err, idx))
+    {
+      gpe_error_box(err);
+      free (err);
+      return;
+    }
 }

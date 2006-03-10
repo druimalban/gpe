@@ -2,7 +2,6 @@ Things to do in gpe-timesheet
 
 - Add a sync feature. 
 - Show summarized time in tree.
-- Port GtkCtree to GtkTreeView.
 - Improve journal output:
   - Show date in a single line.
 - integrate with gpe-todo

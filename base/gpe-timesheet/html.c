@@ -23,6 +23,7 @@
 
 #define _(x) gettext(x)
 #define FILE_URL_PREFIX "file://"
+
 static gchar *apps = "/usr/bin/gpe-helpviewer /usr/bin/gpe-mini-browser /usr/bin/dillo /usr/bin/minimo /usr/bin/firefox";
 
 static char **myjournal = NULL;
@@ -121,7 +122,6 @@ journal_to_file(const char *filename)
   myjournal = NULL;
   return 0;
 }
-
 
 /* display output file in html browser */
 int 

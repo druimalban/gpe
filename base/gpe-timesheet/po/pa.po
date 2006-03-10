@@ -1,0 +1,153 @@
+# translation of gpe-todo-0.32.po to Punjabi
+# This file is distributed under the same license as the PACKAGE package.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER.
+# Amanpreet Singh Alam[ਆਲਮ] <amanpreetalam@yahoo.com>, 2005.
+# Amanpreet Singh Alam[ਆਲਮ] <amanpreetalam@yahoo.com>, 2005.
+# Amanpreet Singh Alam[ਆਲਮ] <amanpreetalam@yahoo.com>, 2005.
+# Amanpreet Singh Alam[ਆਲਮ] <amanpreetalam@yahoo.com>, 2005.
+# Amanpreet Singh Alam[ਆਲਮ] <amanpreetalam@yahoo.com>, 2005.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-todo-0.32\n"
+"POT-Creation-Date: 2003-02-14 19:50+0000\n"
+"PO-Revision-Date: 2005-05-04 18:55+0530\n"
+"Last-Translator: Amanpreet Singh Alam <aalam@redhat.com>\n"
+"Language-Team: Punjabi <fedora-trans-pa@redhat.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.9.1\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: main.c:60
+msgid "To-do list"
+msgstr "ਕਰਨ ਲਈ ਸੂਚੀ"
+
+#: todo-ui.c:269
+msgid "Select categories"
+msgstr "ਵਰਗ ਚੁਣੋ"
+
+#: todo-ui.c:291
+msgid "Summary:"
+msgstr "ਸੰਖੇਪ:"
+
+#: todo-ui.c:292
+msgid "Details"
+msgstr "ਵੇਰਵਾ"
+
+#: todo-ui.c:298
+msgid "Not started"
+msgstr "ਸ਼ੁਰੂ ਨਹੀਂ"
+
+#: todo-ui.c:298
+msgid "In progress"
+msgstr "ਜਾਰੀ"
+
+#: todo-ui.c:299
+msgid "Completed"
+msgstr "ਮੁਕੰਮਲ"
+
+#: todo-ui.c:321
+msgid "Due:"
+msgstr "ਮਿਆਦ:"
+
+#: todo-ui.c:336
+msgid "Categories:"
+msgstr "ਵਰਗ:"
+
+#: todo-ui.c:429
+msgid "Edit to-do item"
+msgstr "ਕਰਨ ਲਈ ਇਕਾਈ ਸੋਧ"
+
+#: todo-ui.c:436
+msgid "New item"
+msgstr "ਨਵੀਂ ਇਕਾਈ"
+
+#: list-ui.c:52
+msgid "All items"
+msgstr "ਸਭ ਇਕਾਈਆਂ"
+
+#: list-ui.c:81
+msgid "Permanently delete all completed items?"
+msgstr "ਕਈ ਮੁਕੰਮਲ ਕਾਰਜ ਪੱਕੇ ਤੌਰ ਤੇ ਖਤਮ ਕਰਨੇ ਹਨ?"
+
+#: list-ui.c:81
+msgid "Confirm"
+msgstr "ਪੁਸ਼ਟੀ"
+
+#: list-ui.c:82 configure.c:217
+msgid "Delete"
+msgstr "ਹਟਾਓ"
+
+#: list-ui.c:82
+msgid "Cancel"
+msgstr "ਰੱਦ ਕਰੋ"
+
+#: list-ui.c:333 configure.c:210
+msgid "New"
+msgstr "ਨਵਾਂ"
+
+#: list-ui.c:334 list-ui.c:335
+msgid "Add a new item"
+msgstr "ਨਵੀਂ ਇਕਾਈ ਸ਼ਾਮਲ"
+
+#: list-ui.c:340
+msgid "Configure"
+msgstr "ਸੰਰਚਨਾ"
+
+#: list-ui.c:341 list-ui.c:342
+msgid "Configure categories"
+msgstr "ਵਰਗ ਸੰਰਚਨਾ"
+
+#: list-ui.c:347
+msgid "Purge"
+msgstr "ਕੱਢੋ"
+
+#: list-ui.c:348 list-ui.c:349
+msgid "Purge completed items"
+msgstr "ਮੁਕੰਮਲ ਕਾਰਜ ਕੱਢੋ"
+
+#: list-ui.c:354
+msgid "Re-sort"
+msgstr "ਮੁੜ-ਕ੍ਰਮਬੱਧ"
+
+#: list-ui.c:355 list-ui.c:356
+msgid "Move completed items to the end of the list"
+msgstr "ਮੁਕੰਮਲ ਕੰਮਾਂ ਨੂੰ ਸੂਚੀ ਦੇ ਅੰਤ ਵਿੱਚ ਭੇਜੋ"
+
+#: list-ui.c:361
+msgid "Exit"
+msgstr "ਬਾਹਰ"
+
+#: list-ui.c:362 list-ui.c:363
+msgid "Exit the program"
+msgstr "ਕਾਰਜ ਤੋ ਬਾਹਰ"
+
+#: configure.c:58
+msgid "Category name must not be blank"
+msgstr "ਵਰਗ ਨਾਂ ਖਾਲੀ ਨਹੀਂ ਹੋ ਸਕਦਾ ਹੈ"
+
+#: configure.c:68
+msgid "A category by that name already exists"
+msgstr "ਇਸ ਨਾਂ ਨਾਲ ਵਰਗ ਪਹਿਲਾਂ ਹੀ ਮੌਜੂਦ ਹੈ"
+
+#: configure.c:106
+msgid "To-do list: Categories"
+msgstr "ਕਰਨ ਲਈ: ਵਰਗ"
+
+#: configure.c:139
+msgid "New category"
+msgstr "ਨਵਾਂ ਵਰਗ"
+
+#: configure.c:172
+msgid "Categories"
+msgstr "ਵਰਗ"
+
+#: configure.c:211 configure.c:212
+msgid "Create a new category"
+msgstr "ਨਵਾਂ ਵਰਗ ਬਣਾਉ"
+
+#: configure.c:218 configure.c:219
+msgid "Delete the selected category"
+msgstr "ਚੁਣਿਆ ਵਰਗ ਹਟਾਓ"

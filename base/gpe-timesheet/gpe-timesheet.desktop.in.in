@@ -1,0 +1,11 @@
+[Desktop Entry]
+Encoding=UTF-8
+_Name=Timesheet
+_Comment=GPE Timesheet
+Exec=gpe-todo
+Terminal=false
+Type=Application
+Icon=gpe-todo.png
+Categories=Application;PIM;Office;GPE;
+StartupNotify=true
+X-SingleInstance=true

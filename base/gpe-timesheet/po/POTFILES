@@ -1,0 +1,4 @@
+	../gpe-todo.desktop.in \
+	../list-ui.c \
+	../main.c \
+	../todo-ui.c
