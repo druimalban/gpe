@@ -1,0 +1,1 @@
+shlibs:Depends=dbus-1 (>= 0.23.4), dbus-glib-1 (>= 0.23.4), hildon-lgpl0 (>= 0.9.59-1), libatk1.0-0 (>= 1.9.0), libc6 (>= 2.3.2.ds1-4), libglib2.0-0 (>= 2.6.0), libgtk2.0-0 (>= 2:2.6.4-1.osso76), libosso1 (>= 0.9.19-1), libpango1.0-0 (>= 1.8.1), libsqlite0 (>= 2.8.13)
