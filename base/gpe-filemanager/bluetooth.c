@@ -47,6 +47,7 @@ do_send_file (const gchar *service, const gchar *path, const gchar *method,
   GnomeVFSHandle *handle;
   GnomeVFSResult r;
   GnomeVFSFileSize real_size;
+  gchar *filename, *mimetype;
 
   if (info->size > MAX_SIZE)
     {
@@ -68,17 +69,19 @@ do_send_file (const gchar *service, const gchar *path, const gchar *method,
 
   message = dbus_message_new_method_call (service, path, method, "ObjectPush");
 
+  filename = basename (uri);
+  mimetype = info->mime_type ? info->mime_type : "application/data";
+   
 #ifdef DBUS_INTERFACE_LOCAL
-  dbus_message_iter_init_append (message, &iter);
-
-  dbus_message_iter_append_basic (&iter, DBUS_TYPE_STRING, basename (uri));
-  dbus_message_iter_append_basic (&iter, DBUS_TYPE_STRING, info->mime_type ? info->mime_type : "application/data");
-  dbus_message_iter_append_fixed_array (&iter, DBUS_TYPE_BYTE, data, real_size);
+  dbus_message_append_args (message, DBUS_TYPE_STRING, &filename,
+			    DBUS_TYPE_STRING, &mimetype,
+			    DBUS_TYPE_ARRAY, DBUS_TYPE_BYTE, 
+			    &data, real_size, DBUS_TYPE_INVALID);
 #else
   dbus_message_append_iter_init (message, &iter);
 
-  dbus_message_iter_append_string (&iter, basename (uri));
-  dbus_message_iter_append_string (&iter, info->mime_type ? info->mime_type : "application/data");
+  dbus_message_iter_append_string (&iter, filename);
+  dbus_message_iter_append_string (&iter, mimetype);
   dbus_message_iter_append_byte_array (&iter, data, real_size);
 #endif
 
