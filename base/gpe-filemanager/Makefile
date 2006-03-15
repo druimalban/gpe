@@ -2,7 +2,7 @@ PREFIX = /usr/local
 PACKAGE = gpe-filemanager
 DEBUG = no
 CVSBUILD = yes
-VERSION = 0.24
+VERSION = 0.25
 MIME_PIXMAPS = `cd pixmaps/document-icons && ls *.png`
 
 LINGUAS = es sl sv vi

@@ -1,3 +1,7 @@
+2006-03-15  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * Release version 0.25.
+
 2006-03-13  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * bluetooth.c: Fix for segfault sending files via bluetooth.
