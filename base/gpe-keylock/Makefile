@@ -1,24 +1,23 @@
 PACKAGE = gpe-keylock
 PREFIX = /usr/local
 DEBUG = no
-GTK2 = yes
 CVSBUILD = yes
-VERSION = 0.11
+VERSION = 0.12
 
 LINGUAS = 
 
 MEMBERS = gpe-keylock
 
-CPPFLAGS = -D_GNU_SOURCE
+PACKAGE_CPPFLAGS = -D_GNU_SOURCE
 ifeq ($(DEBUG),yes)
-CFLAGS += -O2 -g
-LDFLAGS = -g #-lefence
+PACKAGE_CFLAGS += -O2 -g
+PACKAGE_LDFLAGS = -g
 else
-CFLAGS += -Os -fomit-frame-pointer
+PACKAGE_CFLAGS += -Os -fomit-frame-pointer
 endif
-CFLAGS += -Wall $(GTKCFLAGS)
-LDFLAGS += $(GTKLIBS)
-CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
+PACKAGE_CFLAGS += -Wall $(GTKCFLAGS)
+PACKAGE_LDFLAGS += $(GTKLIBS)
+PACKAGE_CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 CFLAGS += -MD
 
 .SUFFIXES: .d
@@ -36,15 +35,13 @@ endif
 all: $(PACKAGE) all-mo
 
 $(PACKAGE): $(OBJS)
-	$(CC) -o $@ $^ $(LDFLAGS)
+	$(CC) -o $@ $^ $(LDFLAGS) $(PACKAGE_LDFLAGS)
 
 install-program: all all-desktop
 	install -d $(DESTDIR)$(PREFIX)/bin
 	install -s $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	install -d $(DESTDIR)$(PREFIX)/share/pixmaps
 	install -m 644 $(PACKAGE).png $(DESTDIR)$(PREFIX)/share/pixmaps/$(PACKAGE).png
-#	install -d $(DESTDIR)$(PREFIX)/share/applications
-#	install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications/$(PACKAGE).desktop
 
 clean:
 	rm -f $(PACKAGE) $(OBJS) $(DEPS)

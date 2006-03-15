@@ -1,0 +1,4 @@
+2006-03-15  Florian Boor <florian.boor@kernelconcepts.de>
+
+	* Release version 0.12
+	* Fix Makefile to become more compatible with OE.
