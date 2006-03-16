@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2003, 2006 Philip Blundell <philb@gnu.org>
+ *                     2006 Florian Boor <florian@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -244,6 +245,22 @@ really_kill_client (Display *dpy, Window w)
   return TRUE;
 }
 
+
+static void
+activate_window (Display *dpy, Window win)
+{
+  XEvent ev;
+
+  memset (&ev, 0, sizeof ev);
+  ev.xclient.type = ClientMessage;
+  ev.xclient.window = win;
+  ev.xclient.message_type = atoms[_NET_ACTIVE_WINDOW];
+  ev.xclient.format = 32;
+
+  XSendEvent (dpy, RootWindow (dpy, DefaultScreen (dpy)), False, SubstructureRedirectMask, &ev);
+}
+
+
 gboolean
 kill_window (Display *dpy, Window w)
 {
@@ -289,8 +306,27 @@ kill_task (GtkWidget *w, GtkWidget *list_view)
       Window w;
 
       gtk_tree_model_get (GTK_TREE_MODEL (model), &iter, 1, &w, -1);
-
       kill_window (dpy, w);
+    }
+  else
+    gpe_error_box (_("No program is selected"));
+
+  return TRUE;
+}
+
+gboolean
+activate_task (GtkWidget *w, GtkWidget *list_view)
+{
+  GtkTreeSelection *sel = gtk_tree_view_get_selection (GTK_TREE_VIEW (list_view));
+  GtkTreeIter iter;
+  GtkTreeModel *model;
+  
+  if (gtk_tree_selection_get_selected (sel, &model, &iter))
+    {
+      Window w;
+
+      gtk_tree_model_get (GTK_TREE_MODEL (model), &iter, 1, &w, -1);
+      activate_window (dpy, w);
     }
   else
     gpe_error_box (_("No program is selected"));
@@ -318,7 +354,7 @@ task_manager (void)
 {
   GtkWidget *window = gtk_dialog_new ();
   GtkWidget *scrolled = gtk_scrolled_window_new (NULL, NULL);
-  GtkWidget *kill_button, *close_button;
+  GtkWidget *kill_button, *close_button, *activate_button;
   GtkCellRenderer *renderer;
   GtkTreeViewColumn *column;
 
@@ -343,11 +379,30 @@ task_manager (void)
   gtk_container_add (GTK_CONTAINER (scrolled), list_view);
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), scrolled, TRUE, TRUE, 0);
 
-  close_button = gtk_button_new_from_stock (GTK_STOCK_CLOSE);
-  kill_button = gpe_picture_button (NULL, _("Kill"), "kill");
+  if (gdk_screen_width() < 300)
+    {
+        GtkWidget *ico;
+        ico = gtk_image_new_from_stock(GTK_STOCK_CLOSE, GTK_ICON_SIZE_SMALL_TOOLBAR);
+        gtk_widget_show(ico);
+        close_button = gtk_button_new();
+        gtk_container_add(GTK_CONTAINER(close_button), ico);
+        kill_button = gpe_picture_button (NULL, NULL, "kill");
 
-  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), close_button, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), kill_button, FALSE, FALSE, 0);
+        ico = gtk_image_new_from_stock(GTK_STOCK_JUMP_TO, GTK_ICON_SIZE_SMALL_TOOLBAR);
+        gtk_widget_show(ico);
+        activate_button = gtk_button_new();
+        gtk_container_add(GTK_CONTAINER(activate_button), ico);
+ 	}
+  else
+    {
+      close_button = gtk_button_new_from_stock (GTK_STOCK_CLOSE);
+      kill_button = gpe_picture_button (NULL, _("Kill"), "kill");
+      activate_button = gtk_button_new_from_stock (GTK_STOCK_JUMP_TO);
+    }
+  gtk_button_box_set_child_size(GTK_BUTTON_BOX (GTK_DIALOG (window)->action_area), 24, 24);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), kill_button, FALSE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), activate_button, FALSE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), close_button, FALSE, TRUE, 0);
   
   gdk_window_add_filter (NULL, window_filter, NULL);
 
@@ -356,6 +411,7 @@ task_manager (void)
   update_list (dpy);
 
   g_signal_connect (G_OBJECT (kill_button), "clicked", G_CALLBACK (kill_task), list_view);
+  g_signal_connect (G_OBJECT (activate_button), "clicked", G_CALLBACK (activate_task), list_view);
   g_signal_connect (G_OBJECT (close_button), "clicked", G_CALLBACK (gtk_main_quit), NULL);
   g_signal_connect (G_OBJECT (window), "delete_event", G_CALLBACK (gtk_main_quit), NULL);
 

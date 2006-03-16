@@ -1,3 +1,7 @@
+2006-03-16  Florian Boor <florian@kernelconcepts.de>
+
+	* Add support to switch to a running task.
+
 2006-01-15  Phil Blundell  <pb@reciva.com>
 
 	* Version 0.19 released.
