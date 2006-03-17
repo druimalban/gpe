@@ -1,3 +1,8 @@
+2006-03-17  Florian Boor <florian@kernelconcepts.de>
+
+    * (activate_task): Use libgpelaunch function instead of activate_window().
+	* (activate_window): removed
+
 2006-03-16  Florian Boor <florian@kernelconcepts.de>
 
 	* Add support to switch to a running task.
@@ -74,5 +79,3 @@
 
 	* po/nl.po: New file, courtesy Elros Cyriatan.
 	* Makefile (LINGUAS): Add nl.
-	
-

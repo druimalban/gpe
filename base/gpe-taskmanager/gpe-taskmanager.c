@@ -246,21 +246,6 @@ really_kill_client (Display *dpy, Window w)
 }
 
 
-static void
-activate_window (Display *dpy, Window win)
-{
-  XEvent ev;
-
-  memset (&ev, 0, sizeof ev);
-  ev.xclient.type = ClientMessage;
-  ev.xclient.window = win;
-  ev.xclient.message_type = atoms[_NET_ACTIVE_WINDOW];
-  ev.xclient.format = 32;
-
-  XSendEvent (dpy, RootWindow (dpy, DefaultScreen (dpy)), False, SubstructureRedirectMask, &ev);
-}
-
-
 gboolean
 kill_window (Display *dpy, Window w)
 {
@@ -326,7 +311,7 @@ activate_task (GtkWidget *w, GtkWidget *list_view)
       Window w;
 
       gtk_tree_model_get (GTK_TREE_MODEL (model), &iter, 1, &w, -1);
-      activate_window (dpy, w);
+      gpe_launch_activate_window (dpy, w);
     }
   else
     gpe_error_box (_("No program is selected"));
