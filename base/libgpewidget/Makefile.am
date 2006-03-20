@@ -24,7 +24,7 @@ libgpewidget_la_SOURCES = gtkdatecombo.c errorbox.c init.c pixmaps.c smallbox.c 
                           dirbrowser.c picturebutton.c stylus.c screensize.c \
 						  question.c gtksimplemenu.c spacing.c tray.c \
 						  translabel.c popup.c popup_menu.c gpetimesel.c \
-						  gpeiconlistitem.c gpeclockface.c gpe-iconlist.c \
+						  gpeiconlistitem.c gpeclockface.c \
 						  gpewindowlist.c gpehelp.c gpeiconlistview.c \
 						  gpewindowbits.c infoprint.c gpedialog.c link-warning.h
 
@@ -33,12 +33,11 @@ libgpewidget_la_LDFLAGS = @GPEWIDGET_LIBS@ -version-info 1:0:0
 gpeincludedir = $(includedir)/gpe
 gpeinclude_HEADERS = gpe/init.h gpe/errorbox.h gpe/smallbox.h gpe/pixmaps.h gpe/gtkdatecombo.h \
                      gpe/dirbrowser.h gpe/stylus.h gpe/picturebutton.h gpe/spacing.h \
-					 gpe/translabel.h gpe/question.h gpe/windows.h gpe/gpe-iconlist.h \
+					 gpe/translabel.h gpe/question.h gpe/windows.h \
 					 gpe/gtksimplemenu.h gpe/gpewindowlist.h gpe/tray.h gpe/popup.h \
 					 gpe/gpeiconlistview.h gpe/gpeclockface.h gpe/gpeiconlistitem.h \
 					 gpe/infoprint.h gpe/gpetimesel.h gpe/gpehelp.h gpe/popup_menu.h \
 					 gpe/gpedialog.h
-
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libgpewidget.pc

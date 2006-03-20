@@ -69,7 +69,7 @@ the name passed to the function otherwise.
 </para>
 
 @name: Icon name to get.
-@error: Retuned error information if function fails.
+@error: Returned error information if function fails.
 @Returns: Pixbuf of icon or NULL on failure.
 
 
@@ -91,5 +91,3 @@ Set the icon of a window from a named icon in storage list.
 
 @window: Window to set icon for.
 @icon: Icon name.
-
-

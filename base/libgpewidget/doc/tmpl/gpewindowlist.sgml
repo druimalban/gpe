@@ -1,11 +1,13 @@
 <!-- ##### SECTION Title ##### -->
-gpewindowlist
+GpeWindowList
 
 <!-- ##### SECTION Short_Description ##### -->
-
+Application window list.
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
+An object maintaining a list of open windows. This can be used for 
+task managers and window selection applications.
 
 </para>
 
@@ -121,6 +123,4 @@ gpewindowlist
 
 @dpy: 
 @w: 
-@Returns: 
-
-
+@Returns:

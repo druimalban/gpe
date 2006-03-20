@@ -46,18 +46,21 @@ extern "C" {
  */
 struct gpe_icon
 {
-  const char *shortname;
-  const char *filename;
+  const gchar *shortname;
+  const gchar *filename;
   GdkPixbuf *pixbuf;
 };
 
 extern gboolean gpe_load_icons (struct gpe_icon *);
-extern GdkPixbuf *gpe_find_icon (const char *name);
-extern GdkPixbuf *gpe_find_icon_scaled (const char *name, GtkIconSize size);
-extern GdkPixbuf *gpe_try_find_icon (const char *name, gchar **error);
-extern gboolean gpe_find_icon_pixmap (const char *name,
+extern GdkPixbuf *gpe_find_icon (const gchar *name);
+extern GdkPixbuf *gpe_find_icon_scaled (const gchar *name, GtkIconSize size);
+extern GdkPixbuf *gpe_find_icon_scaled_free (const gchar *name, gint width, gint height);
+extern GdkPixbuf *gpe_try_find_icon (const gchar *name, gchar **error);
+extern gboolean gpe_find_icon_pixmap (const gchar *name,
 				      GdkPixmap **pixmap,
 				      GdkBitmap **bitmap);
+extern void gpe_set_theme (const gchar *theme_name);
+
 
 extern void gpe_set_window_icon (GtkWidget *window, gchar *icon);
 

@@ -35,22 +35,26 @@
 #define _(x) (x)
 #endif
 
-static GData *pbdata;
+#define GPE_THEME_LOCATION      PREFIX "/share/gpe/pixmaps/"
+#define DEFAULT_ICON_LOCATION   PREFIX "/share/pixmaps/"
+#define SYSTEM_ICON_LOCATION    "/usr/share/pixmaps/"
+
+static GData *pbdata = NULL;
 
 static const gchar *theme_dir_tail = "/.gpe/pixmaps";
 #ifdef IS_HILDON
 static const gchar *default_theme_dir = "/usr/share/icons/hicolor/26x26";
 #else
-static const gchar *default_theme_dir = PREFIX "/share/gpe/pixmaps/default";
+static const gchar *default_theme_dir = GPE_THEME_LOCATION "default";
 #endif
 
-static const gchar *theme_dir;
+static gchar *theme_dir = NULL;
 
 static GdkPixbuf *
-gpe_load_one_icon (const char *filename, gchar **error)
+gpe_load_one_icon (const gchar *filename, gchar **error)
 {
   const gchar *pathname;
-  char buf[1024];
+  gchar buf[1024];
   GdkPixbuf *pb;
   GError *g_error = NULL;
   
@@ -73,6 +77,22 @@ gpe_load_one_icon (const char *filename, gchar **error)
           snprintf (buf, sizeof (buf) - 1, "%s/%s.png", default_theme_dir, 
                     filename);
           buf[sizeof (buf) - 1] = 0;
+          if (access (buf, R_OK) == 0)
+            found = TRUE;
+        }
+      if (found == FALSE)
+        {
+          snprintf (buf, sizeof (buf) - 1, "%s/%s.png", SYSTEM_ICON_LOCATION, 
+                    filename);
+          buf[sizeof (buf) - 1] = 0;
+          if (access (buf, R_OK) == 0)
+            found = TRUE;
+        }
+      if (found == FALSE)
+        {
+          snprintf (buf, sizeof (buf) - 1, "%s/%s.png", DEFAULT_ICON_LOCATION, 
+                    filename);
+          buf[sizeof (buf) - 1] = 0;
         }
       pathname = buf;
     }
@@ -88,10 +108,36 @@ gpe_load_one_icon (const char *filename, gchar **error)
   return pb;
 }
 
+/**
+ * gpe_set_theme:
+ * @theme_name: Name of the theme to be used for GPE.
+ *
+ * Set the name of the theme used by GPE functions. This will cause GPE icon 
+ * functions to load icons from the given theme instead of the default location
+ * (if the icon is present in the selected theme). The name of the theme points
+ * GPE to the directory in $PREFIX/share/gpe/pixmaps where to search for the 
+ * themed icons. How the actual theme is set and changed needs to be handled
+ * by the application.
+ * Passing NULL to @theme_name resets the theme to the default/user theme.
+ */
+void
+gpe_set_theme (const gchar *theme_name)
+{
+  if (theme_dir != NULL)
+      g_free (theme_dir);
+  
+  if (theme_name == NULL)
+    {
+      theme_dir = NULL;
+      return;
+    }
+  theme_dir = g_strdup_printf ("%s%s", GPE_THEME_LOCATION, theme_name);
+}
+
 gboolean 
 gpe_load_icons (struct gpe_icon *p)
 {
-  gchar *home = getenv ("HOME");
+  const gchar *home = g_get_home_dir();
   gchar *buf;
   size_t s;
   gboolean ok = TRUE;
@@ -107,12 +153,15 @@ gpe_load_icons (struct gpe_icon *p)
       strcat (buf, theme_dir_tail);
   
       if (access (buf, F_OK) == 0)
-	theme_dir = g_strdup (buf);
+        theme_dir = g_strdup (buf);
       else
-	theme_dir = default_theme_dir;
- 
-      g_datalist_init (&pbdata);
+        theme_dir = g_strdup(default_theme_dir);
     }
+    
+  if (pbdata == NULL) 
+    g_datalist_init (&pbdata);
+  else
+    g_datalist_clear (&pbdata);
   
   while (p->shortname)
     {
@@ -121,13 +170,13 @@ gpe_load_icons (struct gpe_icon *p)
 				     &error);
 
       if (p->pixbuf == NULL)
-	{
-	  gpe_error_box (error);
-	  g_free (error);
-	  ok = FALSE;
-	}
+        {
+          gpe_error_box (error);
+          g_free (error);
+          ok = FALSE;
+        }
 
-      g_datalist_set_data (&pbdata, p->shortname, p);
+      g_datalist_set_data_full (&pbdata, p->shortname, p, g_object_unref);
       p++;
     }
 
@@ -135,7 +184,7 @@ gpe_load_icons (struct gpe_icon *p)
 }
 
 GdkPixbuf *
-gpe_try_find_icon (const char *name, gchar **error)
+gpe_try_find_icon (const gchar *name, gchar **error)
 {
   struct gpe_icon *p = g_datalist_get_data (&pbdata, name);
 
@@ -147,7 +196,7 @@ gpe_try_find_icon (const char *name, gchar **error)
          p = g_malloc (sizeof (struct gpe_icon));
          p->shortname = g_strdup (name);
          p->pixbuf = buf;
-         g_datalist_set_data (&pbdata, p->shortname, p);
+         g_datalist_set_data_full (&pbdata, p->shortname, p, g_object_unref);
        }
     }
   
@@ -155,7 +204,7 @@ gpe_try_find_icon (const char *name, gchar **error)
 }
 
 GdkPixbuf *
-gpe_find_icon (const char *name)
+gpe_find_icon (const gchar *name)
 {
   struct gpe_icon *p = g_datalist_get_data (&pbdata, name);
 
@@ -171,10 +220,10 @@ gpe_find_icon (const char *name)
 }
 
 GdkPixbuf *
-gpe_find_icon_scaled (const char *name, GtkIconSize size)
+gpe_find_icon_scaled (const gchar *name, GtkIconSize size)
 {
   GdkPixbuf *p = gpe_find_icon (name);
-  int width, height;
+  gint width, height;
 
   if (gtk_icon_size_lookup (size, &width, &height))
     p = gdk_pixbuf_scale_simple (p, width, height, GDK_INTERP_BILINEAR);
@@ -182,8 +231,28 @@ gpe_find_icon_scaled (const char *name, GtkIconSize size)
   return p;
 }
 
+/** 
+ * gpe_find_icon_scaled_free:
+ * @name: name of the icon to find
+ * @width: designated icon width
+ * @height: designated icon height
+ * 
+ * Find an icon by name and scale it to a new size defined by the user.
+ * 
+ * Returns: New allocated and scaled pixbuf.
+ */
+GdkPixbuf *
+gpe_find_icon_scaled_free (const gchar *name, gint width, gint height)
+{
+  GdkPixbuf *p = gpe_find_icon (name);
+
+  p = gdk_pixbuf_scale_simple (p, width, height, GDK_INTERP_BILINEAR);
+
+  return p;
+}
+
 gboolean
-gpe_find_icon_pixmap (const char *name, GdkPixmap **pixmap, GdkBitmap **bitmap)
+gpe_find_icon_pixmap (const gchar *name, GdkPixmap **pixmap, GdkBitmap **bitmap)
 {
   GdkPixbuf *pixbuf = gpe_find_icon (name);
   gdk_pixbuf_render_pixmap_and_mask (pixbuf,

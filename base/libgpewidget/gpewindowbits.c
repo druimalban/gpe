@@ -230,6 +230,15 @@ gpe_get_window_name (Display *dpy, Window w)
   return name;
 }
 
+/**
+ * gpe_get_window_icon:
+ * @dpy: X display to use
+ * @w: Window to query for icon
+ *
+ * Query a window for its icon. 
+ *
+ * Returns: A new allocated GdkPixbuf on succes, NULL on failure.
+ */
 GdkPixbuf *
 gpe_get_window_icon (Display *dpy, Window w)
 {
@@ -260,13 +269,13 @@ gpe_get_window_icon (Display *dpy, Window w)
       guchar *p = pixels;
       
       for (i = 0; i < w * h; i++)
-	{
-	  gulong l = prop[2 + i];
-	  *(p++) = (l & 0x00ff0000) >> 16;
-	  *(p++) = (l & 0x0000ff00) >> 8;
-	  *(p++) = (l & 0x000000ff);
-	  *(p++) = (l & 0xff000000) >> 24;
-	}
+        {
+          gulong l = prop[2 + i];
+          *(p++) = (l & 0x00ff0000) >> 16;
+          *(p++) = (l & 0x0000ff00) >> 8;
+          *(p++) = (l & 0x000000ff);
+          *(p++) = (l & 0xff000000) >> 24;
+        }
       
       pixbuf = gdk_pixbuf_new_from_data (pixels,
 					 GDK_COLORSPACE_RGB,

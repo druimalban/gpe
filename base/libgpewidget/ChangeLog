@@ -1,3 +1,20 @@
+2006-03-20  Florian Boor <florian@kernelconcepts.de>
+
+    * pixmaps.c (gpe_load_icons): Use glib function to determine homedir.
+      Support calling this function multiple times:
+      - Clear pblist if already initialized.
+      - Set destructor function to pixbufs.
+      (gpe_set_theme), (gpe_find_icon_scaled_free): New functions.
+      (gpe_load_one_icon): Try loading from default icon locations (like
+      /usr/share/pixmaps and PREFIX /share/pixmaps) too.
+    * pixmaps.h: Add new functions (gpe_set_theme, gpe_find_icon_scaled_free)
+    * pixmaps.c, pixmaps.h: Use compatible but more portable gchar instead 
+      of char data type.
+    * pixmaps.sgml: Fix typo.
+    * Makefile.am: Remove obsolete gpe-iconlist stuff.
+    * gpewindowlist.sgml: Add some documentation.
+    * gpewindowbits.c: Document gpe_get_window_icon().
+
 2006-03-01  Florian Boor <florian@kernelconcepts.de>
 
 	* Version 0.110 released.
