@@ -1,5 +1,10 @@
 2006-03-20  Florian Boor <florian@kernelconcepts.de>
 
+    * pixmaps.c (gpe_icon_free_dynamic): New destructor function.
+      (gpe_load_icons, gpe_try_find_icon): Use destructor function.
+
+2006-03-20  Florian Boor <florian@kernelconcepts.de>
+
     * pixmaps.c (gpe_load_icons): Use glib function to determine homedir.
       Support calling this function multiple times:
       - Clear pblist if already initialized.
