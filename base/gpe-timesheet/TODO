@@ -4,5 +4,4 @@ Things to do in gpe-timesheet
 - Show summarized time in tree.
 - Improve journal output:
   - Show date in a single line.
-- integrate with gpe-todo
--the 'whoops, forgot to clock out' use case
+- check maemo build

@@ -49,12 +49,17 @@
 #define JOURNAL_FILE "/tmp/journal.html"
 
 static struct gpe_icon my_icons[] = {
+// for hildon compiling and testing remember to set main.h PREFIXES
+// and to comment out gpe-timesheet line
+// 'til hildonization is completed
   { "clock", MY_PIXMAPS_DIR "/clock.png"},
   { "stop_clock", MY_PIXMAPS_DIR "/stop_clock.png" },
   { "tick", MY_PIXMAPS_DIR "/tick.png"},
   { "gpe-timesheet", MY_PREFIX "/share/pixmaps/gpe-timesheet.png" },
   { "edit", MY_PIXMAPS_DIR "/edit.png"},
   { "journal", MY_PIXMAPS_DIR "/list-view.png"},
+  { "media_play", MY_PIXMAPS_DIR "/media-play.png"},
+  { "media_stop", MY_PIXMAPS_DIR "/media-stop.png"},
   { NULL, NULL }
 
 };
@@ -128,8 +133,8 @@ open_window (void)
   g_assert(context);
   osso_application_set_top_cb(context, osso_top_callback, ( gpointer )app);
 
-  gtk_widget_show_all (app);
-  gtk_widget_show_all (main_appview);
+  gtk_widget_show (app);
+  gtk_widget_show (main_appview);
 
 #else
 
@@ -144,7 +149,6 @@ open_window (void)
   g_signal_connect (G_OBJECT(main_window), "delete-event", G_CALLBACK (gtk_main_quit), NULL);
 
   gtk_widget_show (main_window);
-
 }
 
 int
@@ -163,6 +167,9 @@ main(int argc, char *argv[])
     exit (1);
 
   if (sql_start () == FALSE)
+    exit (1);
+
+  if (sql_append_todo () == FALSE)
     exit (1);
 
   open_window ();

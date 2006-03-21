@@ -1,3 +1,8 @@
+2006-03-21 Philippe De Swert <philippedeswert@scarlet.be>
+
+	* Added todo integration and other improvements. Big thanks to Michele Giorgini <md6604@mclink.it>
+	* corrected bug that made the maemo journal stuff show up in GPE
+
 2006-03-11 Philippe De Swert <philippedeswert@scarlet.be>
 
 	* Big overhaul. Credits and thanks to Michele Giorgini <md6604@mclink.it>

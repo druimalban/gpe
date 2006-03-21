@@ -19,8 +19,9 @@ struct task
   guint id;
   gchar *description;
   guint time_cf;
-  GSList *children; // is it really necessary?
+  //GSList *children; // is it really necessary?
   guint parent;
+  guint todo_id;
   gboolean started;
 };
 
@@ -38,6 +39,7 @@ typedef enum
   DESCRIPTION,
   STATUS,
   STARTED,
+  TODO_ID,
   NUM_COLS
 } columns_store;
 
@@ -45,15 +47,16 @@ extern gboolean sql_start (void);
 //extern GSList *tasks, *root;
 extern GSList *children_list;
 
-extern struct task *new_task (gchar *description, guint parent);
+extern struct task *new_task (gchar *description, guint parent, guint todo_id);
 //extern void delete_task (struct task *t);
 extern void delete_task (int idx);
 extern void delete_children (int idx);
 
-extern gboolean log_entry (action_t action, time_t time, struct task *task, char *info);
+extern gboolean log_entry (action_t action, time_t time, struct task *task, const char *info);
+extern gboolean check_if_item_has_logs (int id);
 extern void scan_logs (GSList *);
-extern void scan_todo (GSList *);
-extern void scan_journal (struct task *tstart);
+//extern void scan_journal (struct task *tstart);
+extern void scan_journal (gint id);
 
 extern int load_to_treestore(void *arg, int argc, char **argv, char **names);
 
