@@ -1,0 +1,43 @@
+# -*- mode:po; coding:utf-8; -*- Slovenian message catalogue for bluez-pin.
+# Copyright (C) 2005 Free Software Foundation, Inc.
+# Matej Urbančič <matej.urban@gmail.com>, 2005.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: bluez-pin-0.08\n"
+"POT-Creation-Date: 2003-02-21 00:12+0000\n"
+"PO-Revision-Date: 2005-09-29 10:40+0100\n"
+"Last-Translator: Matej Urbančič <matej.urban@gmail.com>\n"
+"Language-Team: Slovenian <translation-team-sl@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n%100==4 ? 3 : 0);\n"
+"X-Poedit-Language: Slovenian\n"
+"X-Poedit-Country: SLOVENIA\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+#: bluez-pin.c:127
+msgid "Outgoing connection to"
+msgstr "Odhajajoča povezava na"
+
+#: bluez-pin.c:128
+msgid "Incoming connection from"
+msgstr "Prihajajoča povezava od"
+
+#: bluez-pin.c:134
+msgid "PIN:"
+msgstr "PIN:"
+
+#: bluez-pin.c:137
+msgid "Save in database"
+msgstr "Shrani v bazo"
+
+#: bluez-pin.c:179
+msgid "Bluetooth PIN"
+msgstr "Bluetooth PIN"
+
+#: bluez-pin.c:191
+#, c-format
+msgid "Usage: %s <in|out> <address>\n"
+msgstr "Uporaba: %s <in|out><naslov>\n"

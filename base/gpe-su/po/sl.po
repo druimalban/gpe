@@ -1,0 +1,31 @@
+# -*- mode:po; coding:utf-8; -*- Slovenian message catalogue for gpe-su-0.09.
+# Copyright (C) 2005 Free Software Foundation, Inc.
+# Matej Urbančič <matej.urban@gmail.com>, 2005.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-su-0.09\n"
+"Report-Msgid-Bugs-To: bug-bison@gnu.org\n"
+"POT-Creation-Date: 2003-09-06 00:36+0100\n"
+"PO-Revision-Date: 2005-10-11 13:57+0100\n"
+"Last-Translator: Matej Urbančič <matej.urban@gmail.com>\n"
+"Language-Team: Slovenian <translation-team-sl@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n%100==4 ? 3 : 0);\n"
+"X-Poedit-Language: Slovenian\n"
+"X-Poedit-Country: SLOVENIA\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+#: gpe-su.c:164
+msgid "Enter password for root:"
+msgstr "Vnesite skrbniško geslo:"
+
+#: gpe-su.desktop.in.h:1
+msgid "Root shell"
+msgstr "Skrbiška lupina"
+
+#: gpe-su.desktop.in.h:2
+msgid "gpe-su"
+msgstr "gpe-su"

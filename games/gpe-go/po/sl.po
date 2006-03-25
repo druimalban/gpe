@@ -1,0 +1,89 @@
+# -*- mode:po; coding:utf-8; -*- Slovenian message catalogue for gpe-go-0.05.
+# Copyright (C) 2005 Free Software Foundation, Inc.
+# Matej Urbančič <matej.urban@gmail.com>, 2005.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-go-0.05\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2003-11-09 22:28+0200\n"
+"PO-Revision-Date: 2005-10-11 13:54+0100\n"
+"Last-Translator: Matej Urbančič <matej.urban@gmail.com>\n"
+"Language-Team: Slovenian <translation-team-sl@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n%100==4 ? 3 : 0);\n"
+"X-Poedit-Language: Slovenian\n"
+"X-Poedit-Country: SLOVENIA\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+#: gpe-go.c:754
+#, c-format
+msgid "B:%d  W:%d "
+msgstr "B:%d  W:%d "
+
+#: gpe-go.c:1083
+#, c-format
+msgid "Cannot save the game into %s."
+msgstr "Ne morem shraniti igre v %s"
+
+#: gpe-go.c:1357
+msgid "New..."
+msgstr "Novo..."
+
+#: gpe-go.c:1358
+msgid "Save..."
+msgstr "Shrani..."
+
+#: gpe-go.c:1359
+msgid "Load..."
+msgstr "Naloži..."
+
+#: gpe-go.c:1419
+msgid "Game menu"
+msgstr "Meni Igre"
+
+#: gpe-go.c:1427
+msgid "First"
+msgstr "Prvi"
+
+#: gpe-go.c:1428 gpe-go.c:1429
+msgid "Go to the beginning of the game"
+msgstr "Vrni se na začetek igre"
+
+#: gpe-go.c:1435
+msgid "Undo"
+msgstr "Razveljavi"
+
+#: gpe-go.c:1441
+msgid "Redo"
+msgstr "Uveljavi"
+
+#: gpe-go.c:1447
+msgid "Last"
+msgstr "Zadnji"
+
+#: gpe-go.c:1448 gpe-go.c:1449
+msgid "Go to the end of the game"
+msgstr "pojdi na konec igre"
+
+#: gpe-go.c:1457
+msgid "B:0  W:0 "
+msgstr "B:0  W:0"
+
+#: gpe-go.c:1467
+msgid "Pass"
+msgstr "Prepusti"
+
+#: gpe-go.c:1467
+msgid "Pass your turn"
+msgstr "Prepusti svoj klic"
+
+#: gpe-go.desktop.in.h:1
+msgid "GPE Go"
+msgstr "GPE Go"
+
+#: gpe-go.desktop.in.h:2
+msgid "Go"
+msgstr "Pojdi"
