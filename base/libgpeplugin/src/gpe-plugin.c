@@ -7,7 +7,7 @@
  * 2 of the License, or (at your option) any later version.
  */
 
-#include <gpe/gpe-plugin.h>
+#include "gpe/gpe-plugin.h"
 #include <string.h>
 
 /* All plugins */
@@ -17,14 +17,14 @@ GSList *loaded_plugin=NULL;
 GtkWidget *_main_widget = NULL;
 
 /* All plugins are contained here */
-GtkWidget *_box=NULL ;
+static GtkWidget *_box=NULL ;
 
-GSList *parent_list=NULL;
-GHashTable *widgets;
-gchar *parent=NULL;
-gint state;
+static GSList *parent_list=NULL;
+static GHashTable *widgets;
+static gchar *parent=NULL;
+static gint state;
 
-gboolean using_xml_interface = FALSE;
+static gboolean using_xml_interface = FALSE;
 
 gpe_plugin_orientation _orientation = GPE_PLUGIN_VERTICAL;
 
@@ -43,9 +43,15 @@ plugin_add (gpe_plugin_t plugin)
 		loaded_plugin = g_slist_append (loaded_plugin, plugin);
 }
 
-/* Load a .so plugin  */
+/** 
+ * plugin_load_from_file:
+ * @filename: Name of the plugin object to load.
+ *
+ * Use this function to load an external shared object (.so) file as a plugin.  
+ * Returns: A pointer to a new allocated plugin object or NULL on failure.
+ */
 gpe_plugin_t 
-plugin_load_from_file (gchar *filename)
+plugin_load_from_file (const gchar *filename)
 {
 	GModule *module;
 	__plugin_t *plugin;	
@@ -56,7 +62,7 @@ plugin_load_from_file (gchar *filename)
 	module = g_module_open (filename, G_MODULE_BIND_LAZY);
 	if (!module)
 	{
-		g_warning ("%s",g_module_error ());
+		g_warning ("%s", g_module_error ());
 		g_warning ("Can't open plugin %s\n",filename);
 		return NULL;
 	}
@@ -66,15 +72,15 @@ plugin_load_from_file (gchar *filename)
 		g_warning ("Can't find __plugin__ symbol");
 		return NULL;
 	}	
-	p = plugin_new(plugin->name,plugin->widget_new(), 
+	p = plugin_new(plugin->name, plugin->widget_new(), 
 				plugin->render_header, plugin->render_body, plugin->render_tail);
 
 	return p;
 }
 
-/* Stolen from minilite */
 /* FIXME */
-gboolean external_event(GtkWindow *window, GdkEventConfigure *event, gpointer user_data)
+static gboolean 
+external_event(GtkWindow *window, GdkEventConfigure *event, gpointer user_data)
 { 
 	/*
 	if (event->type == GDK_CONFIGURE)
@@ -94,7 +100,13 @@ gboolean external_event(GtkWindow *window, GdkEventConfigure *event, gpointer us
 	return FALSE;
 }
 
-
+/** 
+ * plugin_init:
+ * @w: Parent widget
+ * @o: Desired orientation
+ *
+ * Initialize a plugin configuration for a parent widget.
+ */
 void 
 plugin_init (GtkWidget *w, gpe_plugin_orientation o)
 {
@@ -106,19 +118,21 @@ plugin_init (GtkWidget *w, gpe_plugin_orientation o)
 	g_signal_connect (G_OBJECT (_main_widget), "configure-event", G_CALLBACK (external_event), NULL);
 	
 	widgets = g_hash_table_new (g_str_hash, g_str_equal);
-	parent = g_malloc(64);
-
-	
+	parent = NULL;
 }
 
 
-void 
+static void 
 plugin_frontend_delete (gpe_plugin_frontend_t fe)
 {
+	if (fe->widget)
+		gtk_widget_destroy (fe->widget);
+	if (fe->scrolled)
+		gtk_widget_destroy (fe->scrolled);
 	g_free (fe);
 }
 
-void
+static void
 plugin_delete (gpe_plugin_t p)
 {
 	plugin_frontend_delete (p->frontend);
@@ -126,9 +140,14 @@ plugin_delete (gpe_plugin_t p)
 }
 
 
-
-/* removes a plugin */
-void plugin_remove (gpe_plugin_t plugin)
+/**
+ * plugin_remove:
+ * @plugin: Plugin to remove.
+ * 
+ * Removes a plugin from the plugin list and frees its allocated data.
+ */
+void 
+plugin_remove (gpe_plugin_t plugin)
 {
 	if (plugin)
 	{
@@ -141,6 +160,12 @@ void plugin_remove (gpe_plugin_t plugin)
 	}
 }
 
+/**
+ * plugin_frontend_new:
+ * @widget: Plugin to remove.
+ * 
+ * Constructs a new plugin frontent struct from a given widget.
+ */
 gpe_plugin_frontend_t
 plugin_frontend_new (GtkWidget *widget)
 {
@@ -155,13 +180,26 @@ plugin_frontend_new (GtkWidget *widget)
 	fe->scrolled = gtk_scrolled_window_new (NULL, NULL);
 	
 	gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (fe->scrolled),
-       										widget);  
-	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (fe->scrolled), GTK_POLICY_AUTOMATIC,GTK_POLICY_AUTOMATIC);
+       										widget);
+	gtk_viewport_set_shadow_type (GTK_VIEWPORT (fe->scrolled->parent), 
+	                              GTK_SHADOW_NONE);
+	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (fe->scrolled), 
+	                                GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 	return fe;
 }
 
+/**
+ * plugin_new:
+ * @name: Identifier for the plugin.
+ * @widget: Frontend widget.
+ * @render_header: First renderer function.
+ * @render_body: Second renderer function.
+ * @render_tail: Third renderer function.
+ * 
+ * Constructs a new plugin from a set of components.
+ */
 gpe_plugin_t
-plugin_new (gchar *name,GtkWidget *widget, void *render_header, 
+plugin_new (gchar *name, GtkWidget *widget, void *render_header, 
 			void *render_body, void *render_tail)
 {
 	gpe_plugin_t plugin = g_malloc (sizeof (struct gpe_plugin ));
@@ -175,7 +213,8 @@ plugin_new (gchar *name,GtkWidget *widget, void *render_header,
 }
 
 /* Renders all loaded plugins */
-void plugin_render_all ()
+void 
+plugin_render_all (void)
 {
 	if (loaded_plugin)
 	{
@@ -206,8 +245,6 @@ void plugin_render_all ()
 }
 
 
-
-
 /* Switches two plugins in the container widget */
 void plugin_switch (gpe_plugin_t p1, gpe_plugin_t p2)
 {
@@ -231,7 +268,8 @@ void plugin_switch (gpe_plugin_t p1, gpe_plugin_t p2)
 }
 
 /* Add widget named "name" to hash list */
-static gboolean add_widget (GHashTable **hash, box_type type, const gchar *name)
+static gboolean 
+add_widget (GHashTable **hash, box_type type, const gchar *name)
 {
 	widget_box_t wb = (widget_box_t)g_hash_table_lookup (*hash, name);
 	
@@ -279,14 +317,18 @@ static gboolean add_widget (GHashTable **hash, box_type type, const gchar *name)
 	}
 }
 
-static void set_parent (const gchar *name)
+static void 
+set_parent (const gchar *name)
 {
-	strcpy(parent,name);
-	parent_list = g_slist_append (parent_list, (gpointer)(g_strdup(name)));
+	if (parent)
+		g_free (parent);
+	parent = g_strdup (name);
 	
+	parent_list = g_slist_append (parent_list, (gpointer)(g_strdup(name)));
 }
 
-static void unset_parent ()
+static void 
+unset_parent (void)
 {
 	GSList *last = g_slist_last (parent_list );
 	gchar *oldparent = (gchar *)last->data;
@@ -297,7 +339,9 @@ static void unset_parent ()
 		return ;
 	}
 	
-	strcpy (parent, oldparent);
+	if (parent)
+		g_free (parent);
+	parent = g_strdup (oldparent);
 	parent_list = g_slist_delete_link (parent_list , last);
 }
 
@@ -351,7 +395,13 @@ xml_widget_read_start_element ( GMarkupParseContext *context,
 	
 }
 
-void plugin_add_to_box(gpe_plugin_t plugin, gchar *name)
+/**
+ * plugin_add_to_box:
+ *
+ *
+ */
+void 
+plugin_add_to_box(gpe_plugin_t plugin, gchar *name)
 {
 	GtkWidget *w = plugin->frontend->scrolled;
 	GtkWidget *parent ;
@@ -365,10 +415,18 @@ void plugin_add_to_box(gpe_plugin_t plugin, gchar *name)
 	}
 	gtk_box_pack_start (GTK_BOX (parent), w, TRUE, TRUE, 0);
 	plugin_add (plugin);
-	
 }
 
-gboolean plugin_parse_xml_interface(gchar *file)
+/**
+ * plugin_parse_xml_interface:
+ * @file: Name of interface description file.
+ *
+ * Parses an user interface layout description from a XML (in fact a 
+ * Pango Markup) file. This cna be used for a more advanced arrangement of 
+ * plugins.
+ */
+gboolean 
+plugin_parse_xml_interface(const gchar *file)
 {
 	FILE *fp;
 	GMarkupParser parser = {xml_widget_read_start_element,
@@ -403,6 +461,6 @@ gboolean plugin_parse_xml_interface(gchar *file)
 	g_markup_parse_context_free (pc);
     fclose (fp);
 	using_xml_interface = TRUE;
-	//g_hash_table_foreach(widgets, print_entry, NULL);	
+	
 	return TRUE;
 }

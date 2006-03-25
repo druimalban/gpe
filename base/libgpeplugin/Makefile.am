@@ -1,4 +1,4 @@
-SUBDIRS = src examples 
+SUBDIRS = src examples doc
 
 #libgpeplugindocdir = ${prefix}/doc/libgpeplugin
 #libgpeplugindoc_DATA = \

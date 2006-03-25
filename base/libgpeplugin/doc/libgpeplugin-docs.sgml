@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
+               "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<book id="index" xmlns:xi="http://www.w3.org/2003/XInclude">
+  <bookinfo>
+	  <title>GPE Manual: libgpeplugin Reference Manual</title>
+	
+      <authorgroup>
+      <author>
+        <firstname>Florian</firstname>
+        <surname>Boor</surname>
+        <affiliation>
+          <orgname>handhelds.org</orgname>
+        </affiliation>
+        <authorblurb>
+          <para>
+            <email>florian@handhelds.org</email>
+          </para>
+        </authorblurb>
+      </author>
+    </authorgroup>    
+	<legalnotice>
+      <para>
+         This document may be distributed under the terms and
+         conditions of the Lesser General Public License, v2.1 or
+         later. (Current version is available at
+                 <ulink url="http://www.gnu.org/copyleft/lesser.html"
+         type="http">http://www.gnu.org/copyleft/lesser.html</ulink> )
+      </para>
+    </legalnotice>
+  </bookinfo>
+
+      <abstract>
+	      <para>
+		  Libgpeplugin provides an advanced interface for pluggable user interfaces.
+	      </para>
+	  </abstract>
+    <para>
+    </para>
+  <chapter>
+    <title>Programmers Interface</title>
+    <xi:include href="xml/gpe-plugin.xml"/>
+  </chapter>
+  <para>
+  The libschedule library was developed and is maintained by Luca De Cicco. 
+  </para>
+</book>

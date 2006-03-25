@@ -1,0 +1,106 @@
+<!-- ##### SECTION Title ##### -->
+libgpeplugin
+
+<!-- ##### SECTION Short_Description ##### -->
+A library for modular user interfaces.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+The GPE plugin library can be used to create applications with
+variable user interfaces using loadable plugins.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### MACRO DECL_PLUGIN ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO DEFINE_WIDGET ##### -->
+<para>
+
+</para>
+
+@widget_: 
+
+
+<!-- ##### MACRO DEFINE_RENDER_BODY ##### -->
+<para>
+
+</para>
+
+@rfunc: 
+
+
+<!-- ##### MACRO DEFINE_RENDER_HEADER ##### -->
+<para>
+
+</para>
+
+@rfunc: 
+
+
+<!-- ##### MACRO DEFINE_RENDER_TAIL ##### -->
+<para>
+
+</para>
+
+@rfunc: 
+
+
+<!-- ##### MACRO DEFINE_NAME ##### -->
+<para>
+
+</para>
+
+@name_: 
+
+
+<!-- ##### MACRO DECL_END ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### ENUM gpe_plugin_orientation ##### -->
+<para>
+
+</para>
+
+@GPE_PLUGIN_VERTICAL: 
+@GPE_PLUGIN_HORIZONTAL: 
+
+<!-- ##### USER_FUNCTION GtkWidgetNew ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### USER_FUNCTION RenderFunc ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### ENUM box_type ##### -->
+<para>
+
+</para>
+
+@VBOX: 
+@HBOX: 
+@ERROR: 
+

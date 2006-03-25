@@ -21,7 +21,8 @@
 #define DEFINE_NAME(name_)  .name = name_,
 #define DECL_END };	
 
-typedef enum { 	GPE_PLUGIN_VERTICAL = 0,
+typedef enum { 	
+	    GPE_PLUGIN_VERTICAL = 0,
 		GPE_PLUGIN_HORIZONTAL
 } gpe_plugin_orientation;
 	
@@ -93,10 +94,10 @@ void
 plugin_add_to_box(gpe_plugin_t plugin, gchar *name);
 
 gpe_plugin_t 
-plugin_load_from_file (gchar *filename);
+plugin_load_from_file (const gchar *filename);
 
 gboolean
-plugin_parse_xml_interface(gchar *file);
+plugin_parse_xml_interface(const gchar *file);
 
 
 

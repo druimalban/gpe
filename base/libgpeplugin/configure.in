@@ -10,7 +10,7 @@ AC_HEADER_STDC
 
 AM_PROG_LIBTOOL
 
-
+GTK_DOC_CHECK(1.2)
 
 dnl Checks for libraries.
 DEP_MODULES="gtk+-2.0 >= 2.2 glib-2.0 >= 2.2 gmodule-2.0"
@@ -83,5 +83,6 @@ Makefile
 libgpeplugin.pc
 src/Makefile
 examples/Makefile
+doc/Makefile
 ])
 

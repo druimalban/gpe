@@ -1,0 +1,168 @@
+<!-- ##### SECTION ./tmpl/config.sgml:Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/config.sgml:See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/config.sgml:Short_Description ##### -->
+
+
+
+<!-- ##### SECTION ./tmpl/config.sgml:Stability_Level ##### -->
+
+
+
+<!-- ##### SECTION ./tmpl/config.sgml:Title ##### -->
+config
+
+
+<!-- ##### MACRO HAVE_DLFCN_H ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO HAVE_INTTYPES_H ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO HAVE_MEMORY_H ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO HAVE_STDINT_H ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO HAVE_STDLIB_H ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO HAVE_STRINGS_H ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO HAVE_STRING_H ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO HAVE_SYS_STAT_H ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO HAVE_SYS_TYPES_H ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO HAVE_UNISTD_H ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO PACKAGE ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO PACKAGE_BUGREPORT ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO PACKAGE_DATA_DIR ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO PACKAGE_DOC_DIR ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO PACKAGE_HELP_DIR ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO PACKAGE_MENU_DIR ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO PACKAGE_NAME ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO PACKAGE_PIXMAPS_DIR ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO PACKAGE_SOURCE_DIR ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO PACKAGE_STRING ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO PACKAGE_TARNAME ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO PACKAGE_VERSION ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO STDC_HEADERS ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO VERSION ##### -->
+<para>
+
+</para>
+
+
