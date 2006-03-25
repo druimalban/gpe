@@ -1,0 +1,41 @@
+# Traditional Chinese Messages for bluez-pin
+# Copyright (C) 2005 Free Software Foundation, Inc.
+# This file is distributed under the same license as the bluez-pin package.
+# Wei-Lun Chao <chaoweilun@pcmail.com.tw>, 2005
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: bluez-pin 0.08\n"
+"POT-Creation-Date: 2003-02-21 00:12+0000\n"
+"PO-Revision-Date: 2005-09-27 10:45+0800\n"
+"Last-Translator: Wei-Lun Chao <chaoweilun@pcmail.com.tw>\n"
+"Language-Team: Chinese (traditional) <zh-l10n@linux.org.tw>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: bluez-pin.c:127
+msgid "Outgoing connection to"
+msgstr "向外的連線傳送至"
+
+#: bluez-pin.c:128
+msgid "Incoming connection from"
+msgstr "向內的連線來自於"
+
+#: bluez-pin.c:134
+msgid "PIN:"
+msgstr "PIN:"
+
+#: bluez-pin.c:137
+msgid "Save in database"
+msgstr "儲存於資料庫"
+
+#: bluez-pin.c:179
+msgid "Bluetooth PIN"
+msgstr "藍芽 PIN"
+
+#: bluez-pin.c:191
+#, c-format
+msgid "Usage: %s <in|out> <address>\n"
+msgstr "用法: %s <in|out> <位址>\n"

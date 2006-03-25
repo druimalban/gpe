@@ -1,0 +1,41 @@
+# Kurdish translation of bluez-pin.
+# Copyright (C) 2005 bluez-pin GNU GPL.
+# This file is distributed under the same license as the bluez-pin package.
+# Abdullah Ulas <potkal@bioinformatics.org>, 2005.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: bluez-pin 0.08\n"
+"POT-Creation-Date: 2003-02-21 00:12+0000\n"
+"PO-Revision-Date: 2005-04-22 16:47+0300\n"
+"Last-Translator: Abdullah Ulas <potkal@bioinformatics.org>\n"
+"Language-Team: Kurdish <ku@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-9\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: bluez-pin.c:127
+msgid "Outgoing connection to"
+msgstr "Gîrîdana derva kû dîçe"
+
+#: bluez-pin.c:128
+msgid "Incoming connection from"
+msgstr "Gîrîdana derva kû tê"
+
+#: bluez-pin.c:134
+msgid "PIN:"
+msgstr "PIN:"
+
+#: bluez-pin.c:137
+msgid "Save in database"
+msgstr "Nava datayê da qeyd bîke"
+
+#: bluez-pin.c:179
+msgid "Bluetooth PIN"
+msgstr "Dranê þîn PIN"
+
+#: bluez-pin.c:191
+#, c-format
+msgid "Usage: %s <in|out> <address>\n"
+msgstr "Xebat: %s <hatîn|çûyîn> <adrês>\n"
