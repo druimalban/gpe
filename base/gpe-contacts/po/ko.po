@@ -1,0 +1,437 @@
+# gpe-contacts Korean Translation
+# This file is distributed under the same license as the test package.
+# Soohyung Cho <xfree@paran.com>, 2006.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-contacts 0.42\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2005-08-31 23:43+0200\n"
+"PO-Revision-Date: 2006-03-15 23:14+0900\n"
+"Last-Translator: Soohyung Cho <xfree@paran.com>\n"
+"Language-Team: Korean <translation-team-ko@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../categories.c:105
+msgid "Category name must not be blank"
+msgstr "카테고리 이름은 비어있으면 안됩니다"
+
+#: ../categories.c:115
+msgid "A category by that name already exists"
+msgstr "같은 이름의 카테고리가 이미 존재합니다"
+
+#: ../categories.c:147
+msgid "Name:"
+msgstr "이름"
+
+#: ../categories.c:174 ../categories.c:328
+msgid "New category"
+msgstr "새 카테고리"
+
+#: ../categories.c:329
+msgid "Tap here to add a new category."
+msgstr "새 카테고리를 추가하려면 이곳을 눌러주세요"
+
+#: ../categories.c:333
+msgid "Delete category"
+msgstr "카테고리를 삭제합니다"
+
+#: ../categories.c:334
+msgid "Tap here to delete the selected category."
+msgstr "선택한 카테고리를 삭제하려면 이곳을 눌러주세요"
+
+#: ../categories.c:401
+msgid "Select categories"
+msgstr "카테고리 선택"
+
+#. TRANSLATORS: kB = kilo bytes
+#: ../configure.c:130 ../configure.c:340
+msgid "Current size:"
+msgstr "현재 크기:"
+
+#: ../configure.c:131
+msgid "kB (optimised)"
+msgstr "kB (최적화됨)"
+
+#: ../configure.c:177
+msgid "Detail panel:"
+msgstr "패널 세부사항"
+
+#: ../configure.c:206
+msgid "NAME"
+msgstr "이름"
+
+#: ../configure.c:216
+msgid "Add"
+msgstr "추가"
+
+#: ../configure.c:223
+msgid "Remove"
+msgstr "삭제"
+
+#: ../configure.c:245
+msgid "Label"
+msgstr "레이블"
+
+#: ../configure.c:250
+msgid "Data item"
+msgstr "데이타 항목"
+
+#: ../configure.c:294
+msgid "Screen Layout"
+msgstr "화면 레이아웃"
+
+#: ../configure.c:300
+msgid "List position"
+msgstr "위치 목록"
+
+#: ../configure.c:303
+msgid "left"
+msgstr "왼쪽"
+
+#: ../configure.c:305
+msgid "right"
+msgstr "오른쪽"
+
+#: ../configure.c:333
+msgid "Database Size"
+msgstr "데이타베이스 크기"
+
+#: ../configure.c:340
+msgid "kB"
+msgstr ""
+
+#: ../configure.c:345
+msgid "Actions"
+msgstr "수행"
+
+#: ../configure.c:352
+msgid "Optimise database"
+msgstr "데이타베이스 최적화"
+
+#: ../configure.c:355
+msgid "Run"
+msgstr "실행"
+
+#: ../configure.c:461
+msgid "Editing Layout"
+msgstr "편집 레이아웃"
+
+#: ../configure.c:463
+msgid "Setup"
+msgstr "설정"
+
+#: ../configure.c:464
+msgid "Database"
+msgstr "데이타베이스"
+
+#: ../configure.c:496
+msgid "Contacts: Configuration"
+msgstr "연락처: 구성"
+
+#: ../db.c:255
+msgid "Name"
+msgstr "이름"
+
+#: ../db.c:256
+msgid "Phone"
+msgstr "전화"
+
+#: ../db.c:257
+msgid "EMail"
+msgstr "전자우편"
+
+#: ../edit-vcard.desktop.in.h:1
+msgid "Edit personal vcard"
+msgstr "개인 V카드 편집"
+
+#: ../edit-vcard.desktop.in.h:2
+msgid "My VCard"
+msgstr "내 V카드"
+
+#: ../editing.c:114 ../main.c:1352
+msgid "Details"
+msgstr "세부사항"
+
+#: ../editing.c:271
+msgid "no year"
+msgstr "없는 년도"
+
+#: ../editing.c:450 ../namedetail.c:66 ../structure.c:177
+msgid "Cancel"
+msgstr "취소"
+
+#: ../editing.c:451 ../namedetail.c:64
+msgid "OK"
+msgstr "확인"
+
+#: ../editing.c:452
+msgid "Image..."
+msgstr "이미지..."
+
+#: ../editing.c:560 ../main.c:502 ../main.c:629
+msgid "Categories"
+msgstr "카테고리"
+
+#: ../editing.c:1168
+msgid "Select image"
+msgstr "이미지 선택"
+
+#: ../export.c:168
+msgid "Save as..."
+msgstr "...로 저장"
+
+#. create dialog window
+#: ../finddlg.c:37
+msgid "Find Contacts"
+msgstr "연락처 찾기"
+
+#. supply action area
+#: ../finddlg.c:49
+msgid "Search for:"
+msgstr "찾기:"
+
+#: ../gpe-contacts.desktop.in.h:1 ../main.c:1288
+msgid "Contacts"
+msgstr "연락처"
+
+#: ../gpe-contacts.desktop.in.h:2
+msgid "GPE Contacts"
+msgstr "GPE 연락처"
+
+#: ../main.c:77 ../main.c:179
+msgid "Edit Contact"
+msgstr "연락처 편집"
+
+#: ../main.c:83 ../main.c:195
+msgid "Really delete this contact?"
+msgstr "정말로 이 연락처를 삭제하겠습니까?"
+
+#: ../main.c:83 ../main.c:195 ../structure.c:176
+msgid "Confirm"
+msgstr "승인"
+
+#: ../main.c:135
+msgid "All categories"
+msgstr "모든 카테고리"
+
+#: ../main.c:157
+msgid "New Contact"
+msgstr "새 연락처"
+
+#: ../main.c:513
+msgid "No contact selected."
+msgstr "연락처를 선택하지 않았습니다."
+
+#. create and set up dialog
+#. * detail section *
+#: ../main.c:585 ../main.c:1424 ../main.c:1496
+msgid "Contact"
+msgstr "연락처"
+
+#: ../main.c:1208
+msgid "Choose file"
+msgstr "파일 선택"
+
+#: ../main.c:1236
+msgid "Import of"
+msgstr "가져오기"
+
+#: ../main.c:1236
+msgid "files failed:"
+msgstr "파일 오류:"
+
+#: ../main.c:1240
+msgid "Import successful"
+msgstr "가져오기 성공"
+
+#: ../main.c:1305
+msgid "Tap this button to add a new contact."
+msgstr "새 연락처를 추가하려면 이 버튼을 눌러주세요."
+
+#: ../main.c:1314
+msgid "Tap here to edit the selected contact."
+msgstr "선택한 연락처를 편집하려면 이곳을 눌러주세요."
+
+#: ../main.c:1324
+msgid "Tap here to delete the selected contact."
+msgstr "선택한 연락처를 삭제하려면 이곳을 눌러주세요."
+
+#: ../main.c:1344
+msgid "Find a contact by searching for any data."
+msgstr "어떤 데이터라도 검색으로 연락처를 찾아냅니다."
+
+#: ../main.c:1354
+msgid "Tap here to show contacts details."
+msgstr "자세한 연락처를 보려면 이곳을 눌러주세요."
+
+#: ../main.c:1364
+msgid "Tap here to configure this program."
+msgstr "이 프로그램을 구성하려면 이곳을 눌러주세요."
+
+#: ../main.c:1372
+msgid "Import"
+msgstr "가져오기"
+
+#: ../main.c:1374
+msgid "Open file to import a contact from it."
+msgstr "연락처를 가져오기 위해 파일을 엽니다."
+
+#: ../main.c:1387
+msgid "Tap here to exit gpe-contacts."
+msgstr "gpe-contacts을 종료하려면 이곳을 눌러주세요."
+
+#. * find and categories section *
+#: ../main.c:1453
+msgid "Find:"
+msgstr "찾기:"
+
+#: ../main.c:1460
+msgid "in"
+msgstr "내부"
+
+#: ../main.c:1590
+#, c-format
+msgid "Could not import file %s."
+msgstr "%s 파일을 가져올 수 없습니다."
+
+#: ../main.c:1595
+#, c-format
+msgid "File %s imported sucessfully."
+msgstr "%s 파일을 가져왔습니다."
+
+#: ../main.c:1620
+msgid "My Card"
+msgstr "내 카드"
+
+#: ../main.c:1623
+msgid "Saving vcard failed"
+msgstr "V카드 저장 실패"
+
+#. TRANSLATORS: These abbreviations are a list of common titles used in a name
+#: ../namedetail.c:30
+msgid "Dr."
+msgstr ""
+
+#: ../namedetail.c:30
+msgid "Miss"
+msgstr ""
+
+#: ../namedetail.c:30
+msgid "Mr."
+msgstr ""
+
+#: ../namedetail.c:30
+msgid "Mrs."
+msgstr ""
+
+#: ../namedetail.c:30
+msgid "Ms."
+msgstr ""
+
+#: ../namedetail.c:30
+msgid "Prof."
+msgstr ""
+
+#: ../namedetail.c:30
+msgid "Sir"
+msgstr ""
+
+#. TRANSLATORS: This is a list of common name suffixes
+#: ../namedetail.c:32
+msgid "Jr."
+msgstr ""
+
+#: ../namedetail.c:32
+msgid "Esq."
+msgstr ""
+
+#: ../namedetail.c:32
+msgid "Sr."
+msgstr ""
+
+#: ../namedetail.c:32
+msgid "I"
+msgstr ""
+
+#: ../namedetail.c:32
+msgid "II"
+msgstr ""
+
+#: ../namedetail.c:32
+msgid "III"
+msgstr ""
+
+#: ../namedetail.c:62 ../namedetail.c:69
+msgid "Edit Name Details"
+msgstr "자세한 이름 편집"
+
+#: ../namedetail.c:97
+msgid "First name:"
+msgstr "이름:"
+
+#: ../namedetail.c:98
+msgid "Middle name:"
+msgstr "가운데 이름:"
+
+#: ../namedetail.c:99
+msgid "Last name:"
+msgstr "성:"
+
+#: ../namedetail.c:100
+msgid "Suffix:"
+msgstr "붙임:"
+
+#: ../namedetail.c:101
+msgid "Title:"
+msgstr "제목:"
+
+#: ../structure.c:105 ../structure.c:235
+msgid "New page"
+msgstr "새 문서"
+
+#: ../structure.c:105 ../structure.c:124 ../structure.c:149
+msgid "Title"
+msgstr "제목"
+
+#: ../structure.c:124
+msgid "New group"
+msgstr "새 그룹"
+
+#: ../structure.c:136 ../structure.c:166
+msgid "No container selected"
+msgstr "컨테이너가 선택되지 않았습니다"
+
+#: ../structure.c:150
+msgid "Tag"
+msgstr "테그"
+
+#: ../structure.c:152
+msgid "New field"
+msgstr "새 항목"
+
+#: ../structure.c:176
+msgid "Really delete this field?"
+msgstr "이 항목을 정말로 삭제하겠습니까?"
+
+#: ../structure.c:177
+msgid "Delete"
+msgstr "지우기"
+
+#: ../structure.c:234
+msgid "Page"
+msgstr "문서"
+
+#: ../structure.c:235
+msgid "Tap here to add a page."
+msgstr "새 문서를 추가하려면 이곳을 눌러주세요."
+
+#: ../structure.c:251
+msgid "Delete item"
+msgstr "항목 지우기"
+
+#: ../structure.c:251
+msgid "Tap here to delete the selected item."
+msgstr "선택한 항목을 삭제하려면 이곳을 눌러주세요."

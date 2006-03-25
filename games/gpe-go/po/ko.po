@@ -1,0 +1,85 @@
+# gpe-go Korean Translation
+# This file is distributed under the same license as the test package.
+# Soohyung Cho <xfree@paran.com>, 2006.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-go 0.05\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2003-11-09 22:28+0200\n"
+"PO-Revision-Date: 2006-03-23 23:14+0900\n"
+"Last-Translator: Soohyung Cho <xfree@paran.com>\n"
+"Language-Team: Korean <translation-team-ko@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: gpe-go.c:754
+#, c-format
+msgid "B:%d  W:%d "
+msgstr ""
+
+#: gpe-go.c:1083
+#, c-format
+msgid "Cannot save the game into %s."
+msgstr "%s에 저장할 수 없습니다."
+
+#: gpe-go.c:1357
+msgid "New..."
+msgstr "새..."
+
+#: gpe-go.c:1358
+msgid "Save..."
+msgstr "저장..."
+
+#: gpe-go.c:1359
+msgid "Load..."
+msgstr "로드..."
+
+#: gpe-go.c:1419
+msgid "Game menu"
+msgstr "게임 메뉴"
+
+#: gpe-go.c:1427
+msgid "First"
+msgstr "처음"
+
+#: gpe-go.c:1428 gpe-go.c:1429
+msgid "Go to the beginning of the game"
+msgstr "게임 처음으로 가기"
+
+#: gpe-go.c:1435
+msgid "Undo"
+msgstr "이전으로 되돌리기"
+
+#: gpe-go.c:1441
+msgid "Redo"
+msgstr "앞으로 되돌리기"
+
+#: gpe-go.c:1447
+msgid "Last"
+msgstr "마지막"
+
+#: gpe-go.c:1448 gpe-go.c:1449
+msgid "Go to the end of the game"
+msgstr "게임 마지막으로 가기"
+
+#: gpe-go.c:1457
+msgid "B:0  W:0 "
+msgstr "검은돌:0  흰돌:0"
+
+#: gpe-go.c:1467
+msgid "Pass"
+msgstr "지나가기"
+
+#: gpe-go.c:1467
+msgid "Pass your turn"
+msgstr "한수 지나가기"
+
+#: gpe-go.desktop.in.h:1
+msgid "GPE Go"
+msgstr "GPE 바둑"
+
+#: gpe-go.desktop.in.h:2
+msgid "Go"
+msgstr "바둑"
