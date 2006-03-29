@@ -1,10 +1,11 @@
 [Desktop Entry]
 Encoding=UTF-8
-_Name=Time Tracker
+_Name=Timesheet
 _Comment=GPE Timesheet
 Exec=gpe-timesheet
 Terminal=false
 Type=Application
 Icon=gpe-timesheet.png
-Categories=Application;PIM;GPE;
+Categories=Application;PIM;Office;GPE;
 StartupNotify=true
+X-SingleInstance=true
