@@ -1,5 +1,6 @@
 /*
  *  Copyright (C) 2004 Luca De Cicco <ldecicco@gmx.net> 
+ *  Copyright (C) Neal H. Walfield <neal@walfield.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -26,10 +27,510 @@
 #include "day_view.h"
 #include "globals.h"
 
+static GNode *find_overlapping_sets (GSList * events);
+static GSList *ol_sets_to_rectangles (const GtkDayRender *dr, GNode * node);
+
+/* Number of seconds a day render covers.  */
+#define period  (60 * 60 * 24)
+
 #define event_ends(event) ((event)->start + (event)->duration)
 
+static GdkPixbuf *bell_pb;
 static GSList *found_node;
+
+struct event_rect
+{
+  gfloat width;
+  gfloat height;
+  gfloat x;
+  gfloat y;
+  event_t event;
+};
 
+/* Create a new event rectangle.  */
+static struct event_rect *event_rect_new (const GtkDayRender * dr,
+					  const event_t event,
+					  gint column, gint columns);
+
+/* Delete an event rectangle returned by event_rect_new.  */
+static void event_rect_delete (struct event_rect *ev);
+
+static void event_rect_draw (const GtkDayRender *dr,
+			     guint canvas_width, guint canvas_height,
+			     const struct event_rect *event_rectangle,
+			     GdkGC * gc);
+
+static void gtk_day_render_update_extents (GtkDayRender *day_render);
+
+struct _GtkDayRender
+{
+  GtkDrawingArea drawing_area;
+
+  GdkGC *normal_gc;		/* Normal event color.  */
+  GdkGC *ol_gc;			/* Overlapping areas color. */
+  guint cols;			/* Number of columns, i.e. how many hours in a row. */
+  guint gap;			/* Gap between event boxes. */
+  time_t date;			/* Date of this day */
+  GSList *events;		/* Events associated to this day. */
+  GSList *event_rectangles;
+
+  /* The height and width of the display window.  */
+  guint width;
+  guint height;
+
+  /* Whether to draw the hours or not.  */
+  gboolean hour_column;
+
+  /* Cache of gray.  */
+  GdkGC *gray_gc;
+
+  /* The width of the time column.  */
+  guint time_width;
+
+  /* Number of rows.  */
+  guint rows;
+  /* The height of a row in pixels.  */
+  guint row_height;
+};
+
+typedef struct
+{
+  GtkDrawingAreaClass drawing_area_class;
+  GtkWidgetClass parent_class;
+
+  void (* event_clicked) (GtkDayRender *day_render);
+  void (* row_clicked) (GtkDayRender *day_render);
+
+  guint event_click_signal;
+  guint row_click_signal;
+} GtkDayRenderClass;
+
+static void gtk_day_render_base_class_init (gpointer class);
+static void gtk_day_render_init (GTypeInstance *instance, gpointer klass);
+static void gtk_day_render_dispose (GObject *object);
+static void gtk_day_render_finalize (GObject *object);
+
+static gboolean gtk_day_render_expose (GtkWidget *widget,
+				       GdkEventExpose *event);
+static gboolean gtk_day_render_configure (GtkWidget *widget,
+					  GdkEventConfigure *event);
+static gboolean gtk_day_render_button_press (GtkWidget *widget,
+					     GdkEventButton *event);
+
+static GtkWidgetClass *parent_class;
+
+GType
+gtk_day_render_get_type (void)
+{
+  static GType type = 0;
+
+  if (! type)
+    {
+      static const GTypeInfo day_render_info =
+      {
+	sizeof (GtkDayRenderClass),
+	gtk_day_render_base_class_init,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	sizeof (struct _GtkDayRender),
+	0,
+	gtk_day_render_init,
+      };
+
+      type = g_type_register_static (gtk_drawing_area_get_type (),
+				     "DayRender", &day_render_info, 0);
+    }
+
+  return type;
+}
+
+static void
+gtk_day_render_base_class_init (gpointer klass)
+{
+  GObjectClass *object_class;
+  GtkWidgetClass *widget_class;
+  GtkDayRenderClass *render_class;
+
+  parent_class = g_type_class_ref (gtk_drawing_area_get_type ());
+
+  object_class = G_OBJECT_CLASS (klass);
+  object_class->finalize = gtk_day_render_finalize;
+  object_class->dispose = gtk_day_render_dispose;
+
+  widget_class = (GtkWidgetClass *) klass;
+  widget_class->expose_event = gtk_day_render_expose;
+  widget_class->configure_event = gtk_day_render_configure;
+  widget_class->button_press_event = gtk_day_render_button_press;
+
+  render_class = (GtkDayRenderClass *) klass;
+  render_class->event_click_signal
+    = g_signal_new ("event-clicked",
+		    G_OBJECT_CLASS_TYPE (object_class),
+		    G_SIGNAL_RUN_LAST,
+		    G_STRUCT_OFFSET (GtkDayRenderClass, event_clicked),
+		    NULL,
+		    NULL,
+		    g_cclosure_marshal_VOID__POINTER,
+		    G_TYPE_NONE,
+		    1,
+		    G_TYPE_POINTER);
+  render_class->row_click_signal
+    = g_signal_new ("row-clicked",
+		    G_OBJECT_CLASS_TYPE (object_class),
+		    G_SIGNAL_RUN_LAST,
+		    G_STRUCT_OFFSET (GtkDayRenderClass, row_clicked),
+		    NULL,
+		    NULL,
+		    g_cclosure_marshal_VOID__UINT,
+		    G_TYPE_NONE,
+		    1,
+		    G_TYPE_UINT);
+}
+
+static void
+gtk_day_render_init (GTypeInstance *instance, gpointer klass)
+{
+  GtkDayRender *day_render = GTK_DAY_RENDER (instance);
+
+  day_render->gray_gc = 0;
+  day_render->width = 0;
+  day_render->height = 0;
+}
+
+GtkWidget *
+gtk_day_render_new (GdkGC *app_gc,
+		    GdkGC *overl_gc,
+		    time_t date,
+		    guint cols, guint gap,
+		    gboolean hour_column, guint rows, GSList *events)
+{
+  GtkWidget *widget;
+  GtkDayRender *day_render;
+  struct tm time;
+
+  g_return_val_if_fail (cols >= 0, NULL);
+
+  widget = gtk_type_new (gtk_day_render_get_type ());
+  day_render = GTK_DAY_RENDER (widget);
+
+  localtime_r (&date, &time);
+  time.tm_hour = 0;
+  time.tm_min = 0;
+
+  day_render->rows = rows;
+  day_render->date = mktime (&time);
+  day_render->cols = cols;
+  day_render->gap = gap;
+  day_render->hour_column = hour_column;
+
+  day_render->normal_gc = app_gc;
+  g_object_ref (day_render->normal_gc);
+  day_render->ol_gc = overl_gc;
+  g_object_ref (day_render->ol_gc);
+
+  gtk_day_render_set_events (day_render, events);
+
+  gtk_day_render_update_extents (day_render);
+
+  gtk_widget_add_events (widget,
+			 GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
+
+  return widget;
+}
+
+static void
+gtk_day_render_dispose (GObject *obj)
+{
+  /* Chain up to the parent class */
+  G_OBJECT_CLASS (parent_class)->dispose (obj);
+}
+
+static void
+gtk_day_render_finalize (GObject *object)
+{
+  GtkDayRender *day_render;
+  GSList *er;
+
+  g_return_if_fail (object);
+  g_return_if_fail (GTK_IS_DAY_RENDER (object));
+
+  day_render = (GtkDayRender *) object;
+
+  g_object_unref (day_render->ol_gc);
+  g_object_unref (day_render->normal_gc);
+
+  for (er = day_render->event_rectangles; er; er = er->next)
+    event_rect_delete ((struct event_rect *) er->data);
+  g_slist_free (day_render->event_rectangles);
+
+  event_db_list_destroy (day_render->events);
+
+  G_OBJECT_CLASS (parent_class)->finalize (object);
+}
+
+static gboolean
+gtk_day_render_expose (GtkWidget *widget, GdkEventExpose *event)
+{
+  GtkDayRender *day_render;
+  GdkGC *white_gc, *black_gc;
+  PangoLayout *pl;
+  guint i;
+  guint top;
+  GSList *er;
+
+  g_return_val_if_fail (widget, FALSE);
+  g_return_val_if_fail (GTK_IS_DAY_RENDER (widget), FALSE);
+  g_return_val_if_fail (event, FALSE);
+
+  if (event->count > 0)
+    return FALSE;
+
+  day_render = GTK_DAY_RENDER (widget);
+
+  white_gc = widget->style->white_gc;
+  black_gc = widget->style->black_gc;
+
+  pl = gtk_widget_create_pango_layout (widget, NULL);
+  
+  if (! day_render->gray_gc)
+    day_render->gray_gc = pen_new (widget, 58905, 58905, 56610);
+
+  /* Start with a white background.  */
+  gdk_draw_rectangle (widget->window, white_gc, TRUE,
+		      0, 0, day_render->width - 1, day_render->height - 1);
+  if (day_render->hour_column)
+    /* Draw the hour column's background.  */
+    gdk_draw_rectangle (widget->window, day_render->gray_gc, TRUE,
+			0, 0, day_render->time_width, day_render->height - 1);
+
+  /* And now each row's background.  */
+  for (i = 0; i < day_render->rows; i ++)
+    {
+      top = i * (gfloat) day_render->height / day_render->rows;
+
+      /* Draw a gray line to separating each row.  */
+      gdk_draw_line (widget->window, day_render->gray_gc,
+		     day_render->time_width, top, day_render->width - 1, top);
+
+      if (day_render->hour_column)
+	{
+	  time_t tm;
+	  struct tm ftm;
+	  char timebuf[10];
+	  char buf[60], *buffer;
+	  GdkRectangle gr;
+	  PangoRectangle pr;
+
+	  gdk_draw_line (widget->window, white_gc,
+			 0, top, day_render->time_width - 1, top);
+
+	  tm = day_render->date + i * ((gfloat) period / day_render->rows);
+	  localtime_r (&tm, &ftm);
+	  strftime (timebuf, sizeof (timebuf), TIMEFMT, &ftm);
+	  snprintf (buf, sizeof (buf), "<span font_desc='normal'>%s</span>",
+		    timebuf);
+	  buffer = g_locale_to_utf8 (buf, -1, NULL, NULL, NULL);
+	  pango_layout_set_markup (pl, buffer, strlen (buffer));
+	  pango_layout_get_pixel_extents (pl, &pr, NULL);
+
+	  gr.width = pr.width * 2;
+	  gr.height = pr.height * 2;
+	  gr.x = 1;
+	  gr.y = top;
+
+	  gtk_paint_layout (widget->style,
+			    widget->window,
+			    GTK_WIDGET_STATE (widget),
+			    FALSE, &gr, widget, "label", gr.x, gr.y, pl);
+
+	  g_free (buffer);
+	}
+    }
+
+  /* Draw a line at the bottom of the last row.  */
+  gdk_draw_line (widget->window, day_render->gray_gc,
+		 day_render->time_width, day_render->height - 1,
+		 day_render->width - 1, day_render->height - 1);
+  if (day_render->hour_column)
+    gdk_draw_line (widget->window, white_gc,
+		   0, day_render->height - 1,
+		   day_render->time_width - 1, day_render->height - 1);
+
+  if (day_render->hour_column)
+    /* Draw the black vertical line dividing the hour column from the
+       events.  */
+    gdk_draw_line (widget->window, black_gc,
+		   day_render->time_width, 0,
+		   day_render->time_width, day_render->height - 1);
+
+  g_object_unref (pl);
+
+  /* Now, draw the events.  */
+  for (er = day_render->event_rectangles; er; er = er->next)
+    event_rect_draw (day_render, day_render->width, day_render->height,
+		     (struct event_rect *) (er->data), day_render->normal_gc);
+
+  return FALSE;
+}
+
+static gboolean
+gtk_day_render_configure (GtkWidget *widget, GdkEventConfigure *event)
+{
+  GtkDayRender *day_render = GTK_DAY_RENDER (widget);
+  gboolean update = FALSE;
+
+  if (day_render->width != event->width)
+    {
+      day_render->width = event->width;
+      update = TRUE;
+    }
+
+  if (day_render->height != event->height)
+    {
+      day_render->height = event->height;
+      update = TRUE;
+    }
+
+  if (update)
+    gtk_widget_queue_draw (GTK_WIDGET (day_render));
+
+  return FALSE;
+}
+
+static gboolean
+gtk_day_render_button_press (GtkWidget *widget, GdkEventButton *event)
+{
+  GtkDayRender *day_render = GTK_DAY_RENDER (widget);
+  gfloat x = event->x / day_render->width;
+  gfloat y = event->y / day_render->height;
+  GSList *er;
+  GtkDayRenderClass *drclass
+    = (GtkDayRenderClass *) G_OBJECT_GET_CLASS (day_render);
+
+  /* search for an event rectangle */
+  for (er = day_render->event_rectangles; er; er = er->next)
+    {
+      struct event_rect *e_r = er->data;
+      if ((x >= e_r->x && x <= e_r->x + e_r->width)
+	  && (y >= e_r->y && y <= e_r->y + e_r->height))
+	/* Click was within E_R.  Send the appropriate signal.  */
+	{
+	  GValue args[2];
+	  GValue rv;
+
+	  args[0].g_type = 0;
+	  g_value_init (&args[0], G_TYPE_FROM_INSTANCE (G_OBJECT (widget)));
+	  g_value_set_instance (&args[0], widget);
+        
+	  args[1].g_type = 0;
+	  g_value_init (&args[1], G_TYPE_POINTER);
+	  g_value_set_pointer (&args[1], e_r->event);
+
+	  g_signal_emitv (args, drclass->event_click_signal, 0, &rv);
+	  break;
+	}
+    }
+
+  if (! er)
+    /* Click was not within an event rectangle send a canvas click
+       event.  */
+    {
+      GValue args[2];
+	  GValue rv;
+
+      args[0].g_type = 0;
+      g_value_init (&args[0], G_TYPE_FROM_INSTANCE (G_OBJECT (widget)));
+      g_value_set_instance (&args[0], widget);
+        
+      args[1].g_type = 0;
+      g_value_init (&args[1], G_TYPE_INT);
+      g_value_set_int (&args[1], (gint) (y * day_render->rows));
+
+      g_signal_emitv (args, drclass->row_click_signal, 0, &rv);
+    }
+
+  return FALSE;
+}
+
+void
+gtk_day_render_set_events (GtkDayRender *day_render, GSList *events)
+{
+  g_slist_free (day_render->events);
+  day_render->events = events;
+
+  day_render->event_rectangles
+    = ol_sets_to_rectangles (day_render,
+			     find_overlapping_sets (day_render->events));
+
+  gtk_widget_queue_draw (GTK_WIDGET (day_render));
+}
+
+void
+gtk_day_render_set_date (GtkDayRender *day_render, time_t date)
+{
+  if (day_render->date != date)
+    {
+      day_render->date = date;
+      gtk_widget_queue_draw (GTK_WIDGET (day_render));
+    }
+}
+
+/* Update the calculated extents (DAY_RENDER->TIME_WIDTH and
+   DAY_RENDER->ROW_HEIGHT) of DAY_RENDER.  */
+static void
+gtk_day_render_update_extents (GtkDayRender *day_render)
+{
+  gint i;
+  PangoLayout *pl;
+  guint width;
+  guint height;
+    
+  pl = gtk_widget_create_pango_layout (GTK_WIDGET (day_render), NULL);
+
+  width = 0;
+  height = 0;
+  for (i = 0; i < day_render->rows; i++)
+    {
+      time_t tm;
+      struct tm ftm;
+      char timebuf[10];
+      char buf[60], *buffer;
+      PangoRectangle pr;
+
+      tm = day_render->date + i * ((gfloat) period / day_render->rows);
+      localtime_r (&tm, &ftm);
+      strftime (timebuf, sizeof (timebuf), TIMEFMT, &ftm);
+        
+      snprintf (buf, sizeof (buf), "<span font_desc='normal'>%s</span>",
+		timebuf);
+      buffer = g_locale_to_utf8 (buf, -1, NULL, NULL, NULL);
+      pango_layout_set_markup (pl, buffer, strlen (buffer));
+      pango_layout_get_pixel_extents (pl, &pr, NULL);
+      width = MAX (width, pr.width);
+      height = MAX (height, pr.height);
+
+      g_free (buffer);
+    }
+
+#ifdef IS_HILDON
+  width = width * 1.6;
+#endif
+
+  if (day_render->hour_column)
+    day_render->time_width = width + 4;
+  else
+    day_render->time_width = 0;
+
+  day_render->row_height = height + 6;
+    
+  gtk_widget_set_size_request (GTK_WIDGET (day_render),
+			       -1, day_render->row_height * day_render->rows);
+
+  g_object_unref (pl);
+}
+
 /**
  * Make new set used by overlapping set 
  */
@@ -150,661 +651,203 @@ find_overlapping_sets (GSList * events)
 }
 
 static void
-show_event (const struct day_render *dr, const ev_rec_t event_rectangle,
-	    GdkGC * gc)
+event_rect_draw (const GtkDayRender *dr,
+		 guint canvas_width, guint canvas_height,
+		 const struct event_rect *event_rectangle, GdkGC *gc)
 {
-  guint length;
-
-  event_details_t evd;
-  gchar *buffer;
+  GdkDrawable *w;
   PangoLayout *pl;
+  event_details_t evd;
+  gint x, y, width, height;
   GdkRectangle gr;
+  gchar *buffer;
   gint arc_size;
-  gint offsetx, width = 0, height = 0;
   PangoRectangle pr;
 
-  pl = gtk_widget_create_pango_layout (dr->widget, NULL);
+  w = GTK_WIDGET (dr)->window;
+  pl = gtk_widget_create_pango_layout (GTK_WIDGET (dr), NULL);
 
   evd = event_db_get_details (event_rectangle->event);
   buffer = g_strdup_printf ("<span size='small'>%s</span>", evd->summary);
 
-  length = event_rectangle->height - 1;
   /* Rectangle used to write appointment summary */
+  x = dr->time_width + (gint) ((canvas_width - dr->time_width)
+			       * event_rectangle->x) + dr->gap;
+  y = (gint) (canvas_height * event_rectangle->y) + 1;
+  width = (gint) ((canvas_width - dr->time_width) * event_rectangle->width)
+    - dr->gap - 1;
+  height = (gint) (canvas_height * event_rectangle->height) - 1;
 
-  gr.width = event_rectangle->width - dr->gap - 2;
-  gr.height = length - 1;
-  gr.x = event_rectangle->x + dr->gap + 2;
-  gr.y = event_rectangle->y + 1;
-  offsetx = event_rectangle->x + dr->gap;
 
-  width = event_rectangle->width - dr->gap - 1;
-  height = length;
+  gr.width = width - 1;
+  gr.height = height;
+  gr.x = x + 2;
+  gr.y = y + 1;
 
   pango_layout_set_markup (pl, buffer, strlen (buffer));
   pango_layout_get_pixel_extents (pl, &pr, NULL);
   pango_layout_set_width (pl, PANGO_SCALE * gr.width);
   pango_layout_set_alignment (pl, PANGO_ALIGN_CENTER);
-  arc_size = dr->page->height/24/2 - 1;
-  if (arc_size < 7)
-  {
-	  /* Lower bound */
-	  arc_size = 7;
-  }
 
-  /* Drawing appointment rectangle */
-  gdk_draw_rectangle (dr->draw, dr->normal_gc, TRUE,
-		      offsetx, event_rectangle->y+arc_size, width, height-2*arc_size);
-  gdk_draw_rectangle (dr->draw, dr->normal_gc, TRUE,
-		      offsetx+arc_size, event_rectangle->y, width-2*arc_size, height);
-  
-  gdk_draw_line (dr->draw, dr->widget->style->black_gc, offsetx+arc_size,
-			     event_rectangle->y,offsetx+width-arc_size, event_rectangle->y);
-		      
-  gdk_draw_line (dr->draw, dr->widget->style->black_gc, offsetx+arc_size,
-			     event_rectangle->y+height,offsetx+width-arc_size, 
-				 event_rectangle->y+height);
-  gdk_draw_line (dr->draw, dr->widget->style->black_gc,
-				 offsetx,arc_size+event_rectangle->y,
-				 offsetx, event_rectangle->y+height-arc_size);
-  gdk_draw_line (dr->draw, dr->widget->style->black_gc,
-				 offsetx+width,arc_size+event_rectangle->y,
-				 offsetx+width, event_rectangle->y+height-arc_size);				 
-/* North-west corner */
-  gdk_draw_arc (dr->draw, dr->normal_gc, TRUE, offsetx, 
-		event_rectangle->y,arc_size*2,arc_size*2,90*64,90*64);
-  gdk_draw_arc (dr->draw, dr->widget->style->black_gc, FALSE, offsetx, 
-		event_rectangle->y,arc_size*2,arc_size*2,90*64,90*64);
+  arc_size = dr->row_height / 2 - 1;
+  if (arc_size < 7)
+    /* Lower bound */
+    arc_size = 7;
+
+  /* "Flood" the rectangle.  */
+  if (height > 2 * arc_size)
+    gdk_draw_rectangle (w, dr->normal_gc, TRUE,
+			x, y + arc_size, width, height - 2 * arc_size);
+  if (width > 2 * arc_size)
+    gdk_draw_rectangle (w, dr->normal_gc, TRUE,
+			x + arc_size, y, width - 2 * arc_size, height);
+
+  /* Draw the outline.  */
+
+  /* Top.  */
+  gdk_draw_line (w, GTK_WIDGET (dr)->style->black_gc,
+		 x + arc_size, y, x + width - 1 - arc_size, y);
+  /* Bottom.  */
+  gdk_draw_line (w, GTK_WIDGET (dr)->style->black_gc,
+		 x + arc_size, y + height - 1,
+		 x + width - 1 - arc_size, y + height - 1);
+  /* Left.  */
+  gdk_draw_line (w, GTK_WIDGET (dr)->style->black_gc,
+		 x, arc_size + y, x, y + height - 1 - arc_size);
+  /* Right.  */
+  gdk_draw_line (w, GTK_WIDGET (dr)->style->black_gc,
+		 x + width - 1, arc_size + y,
+		 x + width - 1, y + height - 1 - arc_size);
+
+  /* Draw the corners.  */
+
+  /* North-west corner */
+  gdk_draw_arc (w, dr->normal_gc, TRUE,
+		x, y, arc_size * 2, arc_size * 2, 90 * 64, 90 * 64);
+  gdk_draw_arc (w, GTK_WIDGET (dr)->style->black_gc, FALSE,
+		x, y, arc_size * 2, arc_size * 2, 90 * 64, 90 * 64);
   /* North-east corner */
-  gdk_draw_arc (dr->draw, dr->normal_gc, TRUE, offsetx+width-arc_size*2, 
-		event_rectangle->y,arc_size*2,arc_size*2,0*64,90*64);
-  gdk_draw_arc (dr->draw, dr->widget->style->black_gc, FALSE, offsetx+width-arc_size*2, 
-		event_rectangle->y,arc_size*2,arc_size*2,0*64,90*64);
+  gdk_draw_arc (w, dr->normal_gc, TRUE,
+		x + width - 1 - 2 * arc_size, y,
+		arc_size * 2, arc_size * 2, 0 * 64, 90 * 64);
+  gdk_draw_arc (w, GTK_WIDGET (dr)->style->black_gc, FALSE,
+		x + width - 1 - arc_size * 2, y,
+		arc_size * 2, arc_size * 2, 0 * 64, 90 * 64);
   /* South-west corner */
-  gdk_draw_arc (dr->draw, dr->normal_gc, TRUE, offsetx, 
-		event_rectangle->y+height-2*arc_size,arc_size*2,arc_size*2,180*64,90*64);
-  gdk_draw_arc (dr->draw, dr->widget->style->black_gc, FALSE, offsetx, 
-		event_rectangle->y+height-2*arc_size,arc_size*2,arc_size*2,180*64,90*64);
+  gdk_draw_arc (w, dr->normal_gc, TRUE,
+		x, y + height - 1 - 2 * arc_size,
+		arc_size * 2, arc_size * 2, 180 * 64, 90 * 64);
+  gdk_draw_arc (w, GTK_WIDGET (dr)->style->black_gc, FALSE,
+		x, y + height - 1 - 2 * arc_size,
+		arc_size * 2, arc_size * 2, 180 * 64, 90 * 64);
   /* South-east corner */
-  gdk_draw_arc (dr->draw, dr->normal_gc, TRUE, offsetx+width-arc_size*2, 
-		event_rectangle->y+height-2*arc_size,arc_size*2,arc_size*2,270*64,90*64);
-  gdk_draw_arc (dr->draw, dr->widget->style->black_gc, FALSE, offsetx+width-2*arc_size, 
-		event_rectangle->y+height-2*arc_size,arc_size*2,arc_size*2,270*64,90*64);	
+  gdk_draw_arc (w, dr->normal_gc, TRUE,
+		x + width - 1 - 2 * arc_size, y + height - 1 - 2 * arc_size,
+		arc_size * 2, arc_size * 2, 270 * 64, 90 * 64);
+  gdk_draw_arc (w, GTK_WIDGET (dr)->style->black_gc, FALSE,
+		x + width - 1 - 2 * arc_size, y + height - 1 - 2 * arc_size,
+		arc_size * 2, arc_size * 2, 270 * 64, 90 * 64);	
+
   /* Write summary... */
-  
-  gtk_paint_layout (dr->widget->style,
-		    dr->draw,
-		    GTK_WIDGET_STATE (dr->widget),
-		    FALSE, &gr, dr->widget, "label", gr.x, gr.y, pl);
-  
-		
-  		
-		
+  gtk_paint_layout (GTK_WIDGET (dr)->style, w, GTK_WIDGET_STATE (dr),
+		    FALSE, &gr, GTK_WIDGET (dr), "label", gr.x, gr.y, pl);
+
   if (event_rectangle->event->flags & FLAG_ALARM)
     {
-      if (dr->capt->bell_pb)
-        {
-          gint width_pix, height_pix;
-          width_pix = gdk_pixbuf_get_width (dr->capt->bell_pb);
-          height_pix = gdk_pixbuf_get_height (dr->capt->bell_pb);
+      if (! bell_pb)
+	/* Load the icon.  */
+	bell_pb = gpe_find_icon ("bell");
+      if (bell_pb)
+	{
+	  gint width_pix, height_pix;
+	  width_pix = gdk_pixbuf_get_width (bell_pb);
+	  height_pix = gdk_pixbuf_get_height (bell_pb);
     
-          gdk_draw_pixbuf (dr->draw,
-                   dr->normal_gc,
-                   dr->capt->bell_pb,
-                   0, 0,
-                   offsetx + width - width_pix - 1,
-                   event_rectangle->y + 1, MIN (width_pix, width - 1),
-                   MIN (height_pix, height - 1),
-                   GDK_RGB_DITHER_NORMAL, 0, 0);
-        }
+	  gdk_draw_pixbuf (w,
+			   dr->normal_gc,
+			   bell_pb,
+			   0, 0,
+			   x + width - width_pix - 1,
+			   y + 1, MIN (width_pix, width - 1),
+			   MIN (height_pix, height - 1),
+			   GDK_RGB_DITHER_NORMAL, 0, 0);
+	}
     }
+
   g_object_unref (pl);
   g_free (buffer);
 }
 
-
-
-void
-draw_appointments (struct day_render *dr)
-{
-  GSList *iter;
-
-  iter = dr->event_rectangles;
-  while (iter)
-    {
-      show_event (dr, (ev_rec_t) (iter->data), dr->normal_gc);
-      iter = iter->next;
-    }
-}
-
-
-/*
- * Caption functions.
- */
-
-/* Caption Constructor*/
-/** 
- * Caption constructor
- * widget is the widget where you want pango layout will be drawn
- */
-caption_t
-caption_new (guint day, guint width, guint height, GdkPoint offset,
-	     GdkGC * gc, GtkWidget * widget, GdkPixbuf * bell)
-{
-  caption_t this;
-
-  this = (struct caption *) g_malloc (sizeof (struct caption));
-
-  if (this == NULL)
-    return NULL;
-
-  if (widget == NULL)
-    {
-      g_free (this);
-      return NULL;
-    }
-
-  this->pl = gtk_widget_create_pango_layout (widget, NULL);
-  this->draw = widget;
-  this->day = day;
-  this->height = height;
-  this->width = width;
-  this->offset = offset;
-  this->bell_pb = bell;
-  this->gc = gc;
-  return this;
-}
-
-void
-caption_delete (caption_t capt)
-{
-  g_object_unref (capt->pl);
-  g_free (capt);
-}
-
-#if 0
-void
-caption_set_pango (caption_t this, PangoLayout * pl)
-{
-  this->pl = pl;
-}
-
-void
-caption_show (caption_t this)
-{
-  char *buffer;
-  PangoRectangle pr;
-  GdkRectangle gr;
-
-  /* Displays day number */
-  buffer = g_strdup_printf ("<span size='%d'>%d</span>",
-			    this->height * 800, this->day);
-
-  pango_layout_set_markup (this->pl, buffer, strlen (buffer));
-  pango_layout_get_pixel_extents (this->pl, &pr, NULL);
-
-  gr.width = pr.width;
-  gr.height = pr.height * 2;
-  gr.x = this->offset.x;
-  gr.y = this->offset.y;
-  /* Draw day number in the upper left corner */
-  gtk_paint_layout (this->draw->style,
-		    this->draw->window,
-		    GTK_WIDGET_STATE (this->draw),
-		    FALSE,
-		    &gr,
-		    this->draw,
-		    "label", this->offset.x, this->offset.y, this->pl);
-
-  if (this->day == 19)
-    gdk_draw_rectangle (this->draw->window, this->gc, TRUE,
-\			this->offset.x + gr.width * 1.2,
-			this->offset.y + this->height * .5,
-			this->height * 0.8, this->height * 0.8);
-
-  g_free (buffer);
-}
-#endif
-
-/* 
- * Returns true if event started today.
- *
- * ev: Event to check
- */
-gboolean
-event_starts_today (const struct day_render *dr, const event_t ev)
-{
-  time_t today, tomorrow;
-  struct tm td;
-
-  today = dr->date;
-  localtime_r (&today, &td);
-  td.tm_hour = 0;
-  td.tm_min = 0;
-  td.tm_sec = 0;
-
-  today = mktime (&td);
-
-  tomorrow = today + 60 * 60 * 24;
-  if (ev->start <= tomorrow && ev->start >= today)
-    {
-      return TRUE;
-    }
-  else
-    {
-      return FALSE;
-    }
-}
-
-static ev_rec_t
-event_rect_new (const struct day_render * dr, const event_t event,
+static struct event_rect *
+event_rect_new (const GtkDayRender * dr, const event_t event,
 		gint column, gint columns)
 {
-  GdkPoint offset;
-  gint len_t, length;
-  ev_rec_t ev_rect = (struct ev_rec *) g_malloc (sizeof (struct ev_rec));
+  struct event_rect *ev_rect = g_malloc (sizeof (struct event_rect));
 
-  offset.x = 0;
-  if (!event_starts_today (dr, event))
+  if (is_reminder (event))
     {
-      len_t = event->start + event->duration - dr->date;
-      length =
-	(guint) ((float) len_t / (3600.0 * 24.0) * (float) dr->page->height);
-      offset.y = 0;		/* Event starts at 00:00 */
+      ev_rect->y = 0;
+      ev_rect->height = 1;
     }
   else
     {
-      struct tm start_tm;
-      guint duration;
-
-      localtime_r (&event->start, &start_tm);
-
-      if (event->duration < 3600 * 24)
-	{
-	  duration = event->duration;
-	}
+      if (event->start < dr->date)
+	/* Event starts prior to DR's start.  */
+	ev_rect->y = 0;
       else
-	{
-	  duration = 3600 * 24;
-	}
+	ev_rect->y = ((gfloat) (event->start - dr->date)) / period;
 
-      len_t = duration;
-      offset.y =
-	(float) (start_tm.tm_hour * 3600 +
-		 start_tm.tm_min * 60) / (float) (3600 * 24) *
-	dr->page->height;
-
-      length =
-	(guint) ((float) len_t / (3600.0 * 24.0) * (float) dr->page->height);
+      if (event->duration == 0)
+	ev_rect->height = 1.0 / dr->rows;
+      else if (event->start + event->duration < dr->date + period)
+	/* Event ends prior to DR's end.  */
+	ev_rect->height
+	  = (gfloat) (event->start + event->duration - dr->date) / period
+	  - ev_rect->y;
+      else
+	ev_rect->height = 1 - ev_rect->y;
     }
 
-  offset.x = column * (dr->page->width - dr->offset.x) / columns;
+  ev_rect->x = (gfloat) column / columns;
+  ev_rect->width = 1.0 / columns;
 
-  ev_rect->x = offset.x + dr->offset.x;
-  ev_rect->y = offset.y;
-  ev_rect->width = (dr->page->width - dr->offset.x) / columns;
-  ev_rect->height = MAX (length, dr->page->height / dr->hours);
   ev_rect->event = event;
-  if (is_reminder (event))	/* This is a reminder */
-    ev_rect->y = 0;
-  return (ev_rect);
+
+  return ev_rect;
 }
 
-void
-event_rect_delete (ev_rec_t ev)
+static void
+event_rect_delete (struct event_rect *ev)
 {
   g_free (ev);
 }
 
 static GSList *
-ol_sets_to_rectangles (const struct day_render *dr, GNode * node)
+ol_sets_to_rectangles (const GtkDayRender *dr, GNode * node)
 {
   GSList *iter, *ev_rects = NULL;
   GNode *n;
-  gint column = 0;
+  gint column;
   event_t ev;
   gint columns;
+  struct event_rect *event_rect;
 
-  ev_rec_t event_rect;
-  n = node->children;
-  while (n)
+  for (n = node->children; n; n = n->next)
     {
-
       column = 0;
 
       columns = g_slist_length (n->data);
-      iter = n->data;
-      while (iter)
+      for (iter = n->data; iter; iter = g_slist_next (iter))
 	{
 	  ev = (event_t) iter->data;
 
 	  event_rect = event_rect_new (dr, ev, column, columns);
 	  ++column;
 	  ev_rects = g_slist_append (ev_rects, event_rect);
-	  iter = g_slist_next (iter);
-
 	}
-      n = n->next;
     }
-  n = node->children;
 
   return ev_rects;
-}
-
-
-/*
- * Day render functions
- */
-
-void
-day_render_set_event_rectangles (struct day_render *dr)
-{
-  GNode *olset;
-  olset = find_overlapping_sets (dr->events);
-  dr->event_rectangles = ol_sets_to_rectangles (dr, olset);
-
-  gtk_widget_add_events (GTK_WIDGET (dr->widget),
-			 GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
-}
-
-void
-page_height_set (day_page_t page, gint height)
-{
-  page->height = MAX (page->height_min, height);
-}
-
-void
-day_render_resize (struct day_render *dr, guint width, guint height)
-{
-  gint tmp;
-  tmp = height / dr->hours;
-
-  dr->page->width = width;
-  page_height_set (dr->page, tmp * dr->hours);
-
-
-  dr->dy = (height) / (dr->rows + 2);
-  day_render_update_offset (dr);
-}
-
-
-/* 
- * Constructor of day_render object
- *
- * app_gc: Appointment color
- * overl_gc: Color of overlapping zones
- * date: date of the day
- * width: Width of the drawing area
- * height: Height of the drawing area
- * cols: Number of columns
- * gap: Gap between lines
- * offset: Offset from the (0,0) of the drawing area
- * events: List of events of the day
- */
-struct day_render *
-day_render_new (GtkWidget * widget,
-		day_page_t page,
-		GdkGC * app_gc,
-		GdkGC * overl_gc,
-		time_t date,
-		guint cols, guint gap, guint hours, GSList * events)
-{
-  struct tm time;
-  struct day_render *dr;
-
-  GdkPixbuf *pbuf;
-
-
-
-  if (cols <= 0 || widget == NULL || page == NULL)
-    {
-      return NULL;
-    }
-  localtime_r (&date, &time);
-
-  time.tm_hour = 0;
-  time.tm_min = 0;
-
-  dr = (struct day_render *) g_malloc (sizeof (struct day_render));
-  dr->hours = hours;
-  dr->page = page;
-  dr->widget = widget;
-  dr->draw = widget->window;
-  dr->date = mktime (&time);
-  dr->cols = cols;
-  dr->rows = dr->hours / cols;
-  dr->gap = gap;
-  dr->events = events;
-  dr->dx = page->width / cols;
-  dr->dy = (page->height) / (dr->rows + 2);
-  dr->normal_gc = app_gc;
-  dr->ol_gc = overl_gc;
-  dr->offset.x = page->time_width;
-  dr->offset.y = 0;
-
-  g_object_ref (dr->normal_gc);
-  g_object_ref (dr->ol_gc);
-
-  pbuf = gpe_find_icon ("bell");
-
-
-  dr->capt =
-    caption_new (time.tm_mday, dr->page->width, dr->dy * 2.5, dr->offset,
-		 overl_gc, widget, pbuf);
-
-  day_render_set_event_rectangles (dr);
-
-  g_signal_connect (G_OBJECT (dr->widget), "button-press-event",
-		    G_CALLBACK (day_view_button_press), dr);
-  return dr;
-
-}
-
-
-
-void
-day_render_delete (struct day_render *dr)
-{
-  if (dr != NULL)
-    {
-      g_signal_handlers_disconnect_by_func (G_OBJECT (dr->widget),
-					    day_view_button_press, dr);
-      GSList *iter;
-      iter = dr->event_rectangles;
-      while (iter)
-       {
-         event_rect_delete (iter->data);
-         iter = iter->next;
-       }
-
-      g_object_unref (dr->ol_gc);
-      g_object_unref (dr->normal_gc);
-      g_slist_free (dr->event_rectangles);
-      event_db_list_destroy (dr->events);
-      caption_delete (dr->capt);
-      g_free (dr);
-    }
-}
-
-
-
-/* 
- * Returns true if event started today.
- *
- * ev: Event to check
- */
-gboolean
-event_ends_today (const struct day_render *dr, const event_t ev)
-{
-  GTime today, tomorrow;
-  today = dr->date;
-  tomorrow = today + 60 * 60 * 24;
-
-  if (ev->start + ev->duration <= tomorrow)
-    {
-      return TRUE;
-    }
-  else
-    {
-      return FALSE;
-    }
-}
-
-/**
- * Given events list it returns the overlapping intervals in a GSList
- * 
- */
-GSList *
-day_render_find_overlapping (GSList * events)
-{
-  GSList *iter1, *iter2;
-  GSList *ol_list = NULL;
-  event_t ol_event, ev1, ev2;
-
-  for (iter1 = events; iter1; iter1 = iter1->next)
-    {
-      for (iter2 = iter1->next; iter2; iter2 = iter2->next)
-	{
-	  ev1 = iter1->data;
-	  ev2 = iter2->data;
-	  if (ev2->start >= ev1->start
-	      && ev2->start <= ev1->start + ev1->duration)
-	    {
-	      struct tm a;
-	      if (event_ends (ev2) < event_ends (ev1))
-		{
-
-		  localtime_r (&(ev2->start), &a);
-
-		  ol_list = g_slist_append (ol_list, ev2);
-
-		}
-	      else
-		{
-		  gint duration;
-		  localtime_r (&(ev2->start), &a);
-		  duration = event_ends (ev1) - (guint) (ev2->start);
-		  if (duration)
-		    {
-		      ol_event = (event_t) g_malloc (sizeof (event_t));
-		      ol_event->start = ev2->start;
-		      ol_event->duration = duration;
-		      ol_list = g_slist_append (ol_list, ol_event);
-		    }
-		}
-
-	    }
-	}
-
-    }
-  return ol_list;
-}
-
-
-/*
- * Returns where the event starts (x,y and row number)
- *
- */
-row_t
-day_render_event_starts (struct day_render * dr, event_t event)
-{
-  row_t start;
-  start = (row_t) malloc (sizeof (row_t));
-  if (event_starts_today (dr, event))
-    {
-      struct tm time;
-      GdkPoint point;
-
-      localtime_r (&(event->start), &time);
-      point.x =
-	((guint) ((float) time.tm_hour + (float) time.tm_min / 60.0) %
-	 dr->cols) * dr->dx + dr->gap;
-      point.y =
-	((guint) ((float) time.tm_hour + (float) time.tm_min / 60.0) /
-	 dr->cols) * dr->dy + dr->capt->height * 1.2;
-      start->row_num =
-	(guint) ((float) time.tm_hour +
-		 (float) time.tm_min / 60.0) / dr->cols;
-      start->point = point;
-
-    }
-  else
-    {
-      /* Event doesn't start today, so for today it starts since 00:00 */
-      (start->point).x = 0;
-      (start->point).y = dr->capt->height * 1.2;
-      start->row_num = 0;
-    }
-  return start;
-}
-
-
-/* Renders an event with gc color. Note that also an overlapping event
- * is rendered with this function. 
- */
-void
-day_render_event_show (struct day_render *dr, event_t event, GdkGC * gc)
-{
-  row_t start;
-  guint height;
-  GdkPoint offset = dr->offset;
-  guint length;
-  height = dr->dy;
-  start = day_render_event_starts (dr, event);
-
-
-  if (!event_starts_today (dr, event))
-    {
-      length = (guint) (((float) event->start + (float) event->duration -
-               (float) dr->date) / 3600.0 * (float) dr->dx);
-    }
-  else
-    {
-      length = (guint) (((float) event->duration) / 3600.0 * (float) dr->dx);
-    }
-
-  if (length + (start->point).x < dr->page->width)
-    {
-      /*It fits in a row... */
-      gdk_draw_rectangle (dr->draw, gc, TRUE, (start->point).x + offset.x,
-			  (start->point).y + offset.y + dr->gap, length,
-			  dr->dy - dr->gap);
-    }
-  else
-    {
-      /* Draw first rectangle */
-      int i = start->row_num + 1;
-      guint reminder = 0;
-      gdk_draw_rectangle (dr->draw, gc, TRUE, (start->point).x + offset.x,
-			  (start->point).y + offset.y + dr->gap,
-			  dr->page->width - (start->point).x,
-			  dr->dy - dr->gap);
-      reminder = length - (dr->page->width - (start->point).x);
-
-      while ((reminder > dr->page->width) && reminder > 0)
-        {
-          gdk_draw_rectangle (dr->draw, gc, TRUE, offset.x,
-                      (start->point).y + offset.y + dr->gap 
-                        + (i - start->row_num - 1) * dr->dy, 
-                      dr->page->width, dr->dy - dr->gap);
-          reminder -= dr->page->width;
-    
-          ++i;
-          if (i > dr->rows)
-            {
-              break;
-            }
-        }
-      if (i <= dr->rows)
-        {
-          gdk_draw_rectangle (dr->draw, gc, TRUE, offset.x,
-                      (start->point).y + offset.y + dr->gap + (i -
-                                           start->
-                                           row_num
-                                           -
-                                           1) *
-                      dr->dy, reminder, dr->dy - dr->gap);
-        }
-    }
 }
 
 GdkGC *

@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2001, 2002, 2004, 2005, 2006 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2006 Neal H. Walfield <neal@walfield.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -35,260 +36,204 @@
 #define _(x) gettext(x)
 #define NUM_HOURS 24
 
-static GtkWidget *rem_area;
-static GtkWidget *datesel, *calendar, *scrolled_window;
-
-static GdkGC *gray_gc;
-
-/* Day renderer */
-static event_t sel_event;
-static day_page_t page_app, page_rem;
-/* Day events are visualised as rectangles */
-
-static GtkWidget *draw, *popup, *event_infos_popup, *send_bt_button, *send_ir_button;
-
-static struct day_render *dr, *rem_render;
-
-static void day_page_calc_time_width (day_page_t page);
-
-static gboolean scrolling;
-static gboolean scroll_floating;
-
-/* Day page constructor */
-static day_page_t
-day_page_new (GtkWidget * widget)
+struct _GtkDayView
 {
-  gint width, height, tmp;
-  day_page_t this;
+  GtkVBox widget;
 
-  gtk_widget_get_size_request (widget, &width, &height);
-  tmp = height / NUM_HOURS;
-  height = tmp * NUM_HOURS;
+  /*
+      Basic layout of a DayView:
 
-  this = (struct day_page *) g_malloc (sizeof (struct day_page));
-  this->width = width;
-  this->height = height;
-  this->height_min = height;
-  this->widget = widget;
-  
-  day_page_calc_time_width (this);
+       /-DayView------------------------------------\
+       | /-event_box--------------\ /-calendar----\ |
+       | | /-reminders----------\ | |             | |
+       | | |                    | | |             | |
+       | | \--------------------/ | |             | |
+       | | /-appointment_window-\ | |             | |
+       | | |/-appointments-----\| | |             | |
+       | | ||                  || | |             | |
+       | | |\------------------/| | |             | |
+       | | \--------------------/ | |             | |
+       | \------------------------/ \-------------/ |
+       \--------------------------------------------/
+   */
 
-  return this;
-}
+  GtkWidget *datesel;
+  GtkWidget *calendar;
 
-static void
-day_page_draw_empty (const day_page_t page)
+  gboolean scrolling;
+  gboolean scroll_floating;
+  GtkWidget *event_box;
+
+  GtkDayRender *reminders;
+  GtkWidget *appointment_window;
+  GtkDayRender *appointments;
+
+  /* Currently selected event (if any).  */
+  event_t sel_event;
+
+  /* A popup menu for events.  */
+  GtkWidget *event_menu;
+  /* A label describing the clicked event.  */
+  GtkWidget *event_menu_info;
+};
+
+typedef struct
 {
-  GdkGC *white_gc;
+  GtkVBoxClass vbox_class;
+  GObjectClass parent_class;
+} DayViewClass;
 
-  white_gc = page->widget->style->white_gc;
+static void gtk_day_view_base_class_init (gpointer klass);
+static void gtk_day_view_init (GTypeInstance *instance, gpointer klass);
+static void gtk_day_view_dispose (GObject *obj);
+static void gtk_day_view_finalize (GObject *object);
 
-  gdk_draw_rectangle (page->widget->window, white_gc,
-		      TRUE, 0, 0, page->width, page->height);
-}
+static GtkWidgetClass *parent_class;
 
-static void
-day_page_calc_time_width (day_page_t page)
+GType
+gtk_day_view_get_type (void)
 {
-  PangoLayout *pl;
-  PangoRectangle pr;
-  guint width = 0;
-  gint i;
-  struct tm tm;
-  char timebuf[10];
-    
-  pl = gtk_widget_create_pango_layout (page->widget, NULL);
+  static GType type = 0;
 
-  for (i = 0; i < NUM_HOURS; i++)
+  if (! type)
     {
-      char buf[60], *buffer;
+      static const GTypeInfo info =
+      {
+	sizeof (DayViewClass),
+	gtk_day_view_base_class_init,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	sizeof (struct _GtkDayView),
+	0,
+	gtk_day_view_init
+      };
 
-      memset(&tm, 0, sizeof(tm));
-      tm.tm_hour = i;
-      strftime (timebuf, sizeof (timebuf), TIMEFMT, &tm);
-        
-      snprintf (buf, sizeof (buf), "<span font_desc='normal'>%s</span>", timebuf);
-      buffer = g_locale_to_utf8 (buf, -1, NULL, NULL, NULL);
-      pango_layout_set_markup (pl, buffer, strlen (buffer));
-      pango_layout_get_pixel_extents (pl, &pr, NULL);
-      width = MAX (width, pr.width);
-
-      g_free (buffer);
+      type = g_type_register_static (gtk_vbox_get_type (),
+				     "GtkDayView", &info, 0);
     }
 
-#ifdef IS_HILDON
-  width = width * 1.6;
-#endif
-    
-  page->time_width = width + 4;
-    
-  g_object_unref (pl);
+  return type;
 }
 
-/* Day page background */
 static void
-day_page_draw_background (const day_page_t page)
+gtk_day_view_base_class_init (gpointer klass)
 {
-  GdkGC *white_gc, *black_gc;
-  GtkWidget *widget;
-  guint i;
-  PangoLayout *pl;
-  GdkRectangle gr;
-  PangoRectangle pr;
-  char timebuf[10];
-  struct tm tm;
-  
-  widget = page->widget;
-  pl = gtk_widget_create_pango_layout (widget, NULL);
-  white_gc = widget->style->white_gc;
-  black_gc = widget->style->black_gc;
+  GObjectClass *object_class;
+  GtkWidgetClass *widget_class;
 
-  if (! gray_gc)
-    gray_gc = pen_new (draw, 58905, 58905, 56610);
+  parent_class = g_type_class_ref (gtk_vbox_get_type ());
 
-  /* Row height */
-  /* Draw the hour column */
-  gdk_draw_rectangle (widget->window, white_gc, TRUE, 0, 0, page->width,
-		      page->height);
-  gdk_draw_rectangle (widget->window, gray_gc, TRUE, 0, 0,
-		      page->time_width, page->height);
+  object_class = G_OBJECT_CLASS (klass);
+  object_class->finalize = gtk_day_view_finalize;
+  object_class->dispose = gtk_day_view_dispose;
 
-  for (i = 0; i < NUM_HOURS; i++)
-    {
-      char buf[60], *buffer;
-      gdk_draw_line (widget->window, gray_gc, 0, page->height / NUM_HOURS * i,
-		     page->width, page->height / NUM_HOURS * i);
-      gdk_draw_line (widget->window, white_gc, 0,
-		     page->height / NUM_HOURS * i,
-		     page->time_width,
-		     page->height / NUM_HOURS * i);
-
-      memset(&tm, 0, sizeof(tm));
-      tm.tm_hour = i;
-      strftime (timebuf, sizeof (timebuf), TIMEFMT, &tm);
-  
-      snprintf (buf, sizeof (buf), "<span font_desc='normal'>%s</span>", timebuf);
-      buffer = g_locale_to_utf8 (buf, -1, NULL, NULL, NULL);
-      pango_layout_set_markup (pl, buffer, strlen (buffer));
-      pango_layout_get_pixel_extents (pl, &pr, NULL);
-      gr.width = pr.width * 2;
-      gr.height = pr.height * 2;
-      gr.x = 1;
-      gr.y = page->height / NUM_HOURS * i;
-
-      gtk_paint_layout (widget->style,
-			widget->window,
-			GTK_WIDGET_STATE (widget),
-			FALSE, &gr, widget, "label", gr.x, gr.y, pl);
-
-      g_free (buffer);
-    }
-
-  /* Draws the hours rectangle */
-  gdk_draw_line (widget->window, black_gc, page->time_width, 0,
-		 page->time_width, page->height - 1);
-
-  g_object_unref (pl);
+  widget_class = (GtkWidgetClass *) klass;
 }
 
-gboolean
-day_view_button_press (GtkWidget * widget, GdkEventButton * event, gpointer d)
+static void
+gtk_day_view_init (GTypeInstance *instance, gpointer klass)
 {
-  GSList *iter;
+  GtkDayView *day_view = GTK_DAY_VIEW (instance);
 
-  guint x, y;
+  day_view->reminders = 0;
+  day_view->appointments = 0;
+  day_view->sel_event = 0;
+}
+
+static void
+gtk_day_view_dispose (GObject *obj)
+{
+  /* Chain up to the parent class */
+  G_OBJECT_CLASS (parent_class)->dispose (obj);
+}
+
+static void
+gtk_day_view_finalize (GObject *object)
+{
+  GtkDayView *day_view;
+
+  g_return_if_fail (object);
+  g_return_if_fail (GTK_IS_DAY_VIEW (object));
+
+  day_view = (GtkDayView *) object;
+
+  if (day_view->reminders)
+    gtk_widget_destroy (GTK_WIDGET (day_view->reminders));
+  if (day_view->appointments)
+    gtk_widget_destroy (GTK_WIDGET (day_view->appointments));
+
+  gtk_widget_destroy (day_view->event_menu);
+
+  G_OBJECT_CLASS (parent_class)->finalize (object);
+}
+
+static gboolean
+day_view_row_clicked (GtkWidget *widget, gint row, gpointer d)
+{
+  GtkDayView *day_view = GTK_DAY_VIEW (d);
+  struct tm tm;
   GtkWidget *w;
-  gboolean found = FALSE;
-  struct day_render *dr_ = (struct day_render *) d;
 
-  x = event->x;
-  y = event->y;
-  gtk_widget_hide (popup);
+  gtk_widget_hide (day_view->event_menu);
 
-  /* search for an event rectangle */
-  if (dr_->event_rectangles != NULL)
-    {
-      for (iter = dr_->event_rectangles; iter; iter = iter->next)
-	{
-	  ev_rec_t e_r;
-	  e_r = iter->data;
-	  if ((x >= e_r->x && x <= e_r->x + e_r->width)
-	      && (y >= e_r->y && y <= e_r->y + e_r->height))
-	    {
-	      /* found... so update and show popup */
-	      gint width, height;
-	      found = TRUE;
-	      sel_event = e_r->event;
-	      gchar *buffer = NULL;
-	      gchar *tbuffer = NULL;
-          gchar *strstart, *strend;
-	      event_details_t evd;
-	      struct tm start_tm, end_tm;
-	      time_t end;
+  localtime_r (&viewtime, &tm);
+  tm.tm_hour = row;
+  tm.tm_min = 0;
 
-	      end = (time_t) (e_r->event->duration + e_r->event->start);
+  w = new_event (mktime (&tm), 1);
+  gtk_widget_show (w);
 
-	      localtime_r (&(e_r->event->start), &start_tm);
-	      localtime_r (&end, &end_tm);
-	      evd = event_db_get_details (e_r->event);
-	      buffer = g_malloc (sizeof (gchar) * 256);
-          strstart = strftime_strdup_utf8_locale (TIMEFMT, &start_tm);
-          strend = strftime_strdup_utf8_locale (TIMEFMT, &end_tm);
+  return FALSE;
+}
 
-	      snprintf (buffer, 256, "%s %s-%s %s\n\n%s",
-			evd->summary, strstart, strend,
-			(e_r->event->flags & FLAG_ALARM ? "(A)" : ""),
-			evd->description ? evd->description : "");
-          g_free(strstart);
-          g_free(strend);
-          
-	      tbuffer = g_locale_to_utf8 (buffer, -1, NULL, NULL, NULL);
-	      gtk_window_set_position (GTK_WINDOW (popup), GTK_WIN_POS_MOUSE);
-	      gtk_window_set_default_size (GTK_WINDOW (popup),
-					   dr_->page->width / 2,
-					   dr_->page->height * .8);
-	      gtk_window_get_size (GTK_WINDOW (popup), &width, &height);
-	      if (buffer)
-		gtk_label_set_text (GTK_LABEL (event_infos_popup),
-				    tbuffer ? tbuffer : buffer);
-	      else
-		gtk_label_set_text (GTK_LABEL (event_infos_popup), "");
+static gboolean
+day_view_event_clicked (GtkWidget *widget, gpointer event_p, gpointer d)
+{
+  GtkDayView *day_view = GTK_DAY_VIEW (d);
+  event_t event = event_p;
+  gchar *buffer = NULL;
+  gchar *tbuffer = NULL;
+  gchar *strstart, *strend;
+  event_details_t evd;
+  struct tm start_tm, end_tm;
+  time_t end;
 
-	      /* check for available export methods */
-	      if (export_bluetooth_available ())
-		gtk_widget_show (send_bt_button);
-	      else
-		gtk_widget_hide (send_bt_button);
+  gtk_widget_hide (day_view->event_menu);
 
-	      if (export_irda_available ())
-		gtk_widget_show (send_ir_button);
-	      else
-		gtk_widget_hide (send_ir_button);
+  day_view->sel_event = event;
 
-	      gtk_widget_show (popup);
+  end = (time_t) (event->duration + event->start);
 
-	      if (tbuffer)
-		g_free (tbuffer);
-	      if (buffer)
-		g_free (buffer);
-	      break;
-	    }
-	}
-    }
+  localtime_r (&(event->start), &start_tm);
+  localtime_r (&end, &end_tm);
+  evd = event_db_get_details (event);
+  buffer = g_malloc (sizeof (gchar) * 256);
+  strstart = strftime_strdup_utf8_locale (TIMEFMT, &start_tm);
+  strend = strftime_strdup_utf8_locale (TIMEFMT, &end_tm);
 
-  if (!found)
-    {
-      struct tm tm;
-      int hour;
-      localtime_r (&viewtime, &tm);
-      hour = (int) (((float) y / (float) dr_->page->height) * NUM_HOURS);
-      tm.tm_hour = hour;
-      tm.tm_min = 0;
+  snprintf (buffer, 256, "%s %s-%s %s\n\n%s",
+	    evd->summary, strstart, strend,
+	    (event->flags & FLAG_ALARM ? "(A)" : ""),
+	    evd->description ? evd->description : "");
+  g_free(strstart);
+  g_free(strend);
+  tbuffer = g_locale_to_utf8 (buffer, -1, NULL, NULL, NULL);
+  gtk_label_set_text (GTK_LABEL (day_view->event_menu_info),
+		      tbuffer ? tbuffer : (buffer ? buffer : ""));
 
-      w = new_event (mktime (&tm), 1);
-      gtk_widget_show (w);
-    }
-  return TRUE;
+  gtk_window_set_position (GTK_WINDOW (day_view->event_menu),
+			   GTK_WIN_POS_MOUSE);
+
+  gtk_widget_show (day_view->event_menu);
+
+  if (tbuffer)
+    g_free (tbuffer);
+  if (buffer)
+    g_free (buffer);
+
+  return FALSE;
 }
 
 static void
@@ -337,49 +282,17 @@ delete_event (event_t ev, GtkWidget * d)
   event_db_forget_details (ev_real);
 }
 
-static void
-day_view_expose (void)
-{
-  GdkGC *white_gc, *black_gc;
-  gint width = 0, height = 0;
-  white_gc = draw->style->white_gc;
-  black_gc = draw->style->black_gc;
-
-  gdk_window_get_size (draw->window, &width, &height);
-
-  if (width != page_app->width || height != page_app->height)
-    {
-      if (dr)
-       {
-         day_render_update_offset (dr);
-         day_render_resize (dr, width, height);
-       }
-    }
-  day_page_draw_background (page_app);
-
-  if (dr == NULL)
-    day_view_init ();
-
-  day_render_set_event_rectangles (dr);
-  draw_appointments (dr);
-}
-
+/* The datesel changed, adjust the date appropriately.  */
 static gboolean
-day_view_expose_cb (GtkWidget * widget,
-		    GdkEventExpose * event, gpointer user_data)
+datesel_changed (GtkWidget *datesel, GtkWidget *widget)
 {
-  day_view_expose ();
-  return TRUE;
-}
-
-static int
-reminder_view_init ()
-{
-  GdkGC *black_gc, *cream_gc;
-
+  GtkDayView *day_view = GTK_DAY_VIEW (widget);
+  GSList *reminders;
   time_t end, start;
   struct tm tm_start, tm_end;
-  GSList *rem_list;
+  GSList *events, *appointments, *iter;
+
+  viewtime = gtk_date_sel_get_time (GTK_DATE_SEL (datesel));
 
   localtime_r (&viewtime, &tm_start);
 
@@ -393,121 +306,101 @@ reminder_view_init ()
   tm_end.tm_sec = 0;
   end = mktime (&tm_end);
 
-  rem_list = event_db_untimed_list_for_period (start, end, TRUE);
 
-  if (rem_render)
-    {
-      day_render_delete (rem_render);
-      rem_render = NULL;
-    }
-
-  if (rem_list == NULL)
-    {
-      gtk_widget_hide (rem_area);
-      return TRUE;
-    }
-
-  black_gc = rem_area->style->black_gc;
-  cream_gc = pen_new (rem_area, 65535, 64005, 51100);
-  rem_render = day_render_new (rem_area, page_rem, cream_gc, black_gc,
-			       viewtime, 5, 0, 1, rem_list);
-  g_object_unref (cream_gc);
-
-  gtk_widget_show (rem_area);
-
-  return TRUE;
-}
-
-static void
-reminder_view_expose ()
-{
-  gint width = 0, height = 0;
-
-  if (rem_render == NULL)
-    return;
-  
-  gdk_window_get_size (rem_area->window, &width, &height);
-    
-  if (width != page_rem->width || height != page_rem->height)
-    day_render_resize (rem_render, width, height);
-
-  day_page_draw_empty (page_rem);
-  rem_render->offset.x = 0;
-  day_render_set_event_rectangles (rem_render);
-
-  gtk_widget_set_size_request (rem_area, -1, dr->page->height / 20);
-  draw_appointments (rem_render);
-}
-
-static gboolean
-reminder_view_expose_cb (GtkWidget * widget,
-			 GdkEventExpose * ev, gpointer user_data)
-{
-  reminder_view_expose ();
-  return TRUE;
-}
-
-int
-day_view_init (void)
-{
-  time_t end, start;
-  struct tm tm_start, tm_end;
-  GSList *events, *iter, *ev_list = NULL;
-
-  localtime_r (&viewtime, &tm_start);
-
-  tm_start.tm_hour = 0;
-  tm_start.tm_min = 0;
-  tm_start.tm_sec = 0;
-  start = mktime (&tm_start);
-  localtime_r (&viewtime, &tm_end);
-  tm_end.tm_hour = 23;
-  tm_end.tm_min = 59;
-  tm_end.tm_sec = 0;
-  end = mktime (&tm_end);
-
+  /* Get the appointments for the current period.  */
   events = event_db_list_for_period (start, end);
-
+  reminders = NULL;
+  appointments = NULL;
   for (iter = events; iter; iter = iter->next)
     {
       event_t ev = iter->data;
-      if (!is_reminder (ev))
-        ev_list = g_slist_append (ev_list, ev);
+      if (is_reminder (ev))
+        reminders = g_slist_append (reminders, ev);
+      else
+        appointments = g_slist_append (appointments, ev);
     }
 
-  if (dr)
+  if (! reminders && day_view->reminders)
+    /* There are no longer any reminders, destroy its render area.  */
     {
-      g_slist_free (dr->events);
-      dr->events = ev_list;
-      dr->date = start;
+      gtk_container_remove (GTK_CONTAINER (day_view->event_box),
+			    GTK_WIDGET (day_view->reminders));
+      day_view->reminders = NULL;
+    }
+
+  if (reminders)
+    {
+      if (! day_view->reminders)
+	/* We have reminders but no render area.  Create one.  */
+	{
+	  GdkGC *black_gc, *cream_gc;
+
+	  black_gc = GTK_WIDGET (day_view)->style->black_gc;
+	  cream_gc = pen_new (GTK_WIDGET (day_view), 65535, 64005, 51100);
+
+	  day_view->reminders
+	    = GTK_DAY_RENDER (gtk_day_render_new (cream_gc, black_gc,
+						  viewtime, 5, 0, FALSE, 1,
+						  reminders));
+
+	  g_signal_connect (G_OBJECT (day_view->reminders), "event-clicked",
+			    G_CALLBACK (day_view_event_clicked), day_view);
+	  g_signal_connect (G_OBJECT (day_view->reminders), "row-clicked",
+			    G_CALLBACK (day_view_row_clicked), day_view);
+
+	  g_object_unref (cream_gc);
+	  gtk_widget_show (GTK_WIDGET (day_view->reminders));
+
+	  gtk_box_pack_start (GTK_BOX (day_view->event_box),
+			      GTK_WIDGET (day_view->reminders),
+			      FALSE, FALSE, 0);
+	}
+      else
+	/* Set the new reminder list.  */
+	{
+	  gtk_day_render_set_date (day_view->reminders, start);
+	  gtk_day_render_set_events (day_view->reminders, reminders);
+	}
+    }
+
+  if (day_view->appointments)
+    {
+      gtk_day_render_set_date (day_view->appointments, start);
+      gtk_day_render_set_events (day_view->appointments, appointments);
     }
   else
     {
       /* Don't want to infinge some patents here */
       GdkGC *black_gc, *post_him_yellow;
-      black_gc = rem_area->style->black_gc;
-      post_him_yellow = pen_new (draw, 63222, 59110, 33667);
-      dr = day_render_new (draw, page_app, post_him_yellow, black_gc, viewtime,
-                           5, 4, NUM_HOURS, ev_list);
+
+      black_gc = GTK_WIDGET (day_view)->style->black_gc;
+      post_him_yellow = pen_new (GTK_WIDGET (day_view), 63222, 59110, 33667);
+
+      day_view->appointments
+	= GTK_DAY_RENDER (gtk_day_render_new (post_him_yellow, black_gc,
+					      viewtime,
+					      5, 4, TRUE, NUM_HOURS,
+					      appointments));
+
+      g_signal_connect (G_OBJECT (day_view->appointments), "event-clicked",
+			G_CALLBACK (day_view_event_clicked), day_view);
+      g_signal_connect (G_OBJECT (day_view->appointments), "row-clicked",
+			G_CALLBACK (day_view_row_clicked), day_view);
+
       g_object_unref (post_him_yellow);
+
+      gtk_widget_show (GTK_WIDGET (day_view->appointments));
+
+      gtk_scrolled_window_add_with_viewport
+	(GTK_SCROLLED_WINDOW (day_view->appointment_window),
+	 GTK_WIDGET (day_view->appointments));
+
+      gtk_viewport_set_shadow_type
+	(GTK_VIEWPORT (GTK_WIDGET (day_view->appointments)->parent),
+	 GTK_SHADOW_NONE);
     }
 
   return TRUE;
-}
-
-void
-day_view_update (void)
-{
-  day_view_init ();
-  day_view_expose ();
-}
-
-void
-reminder_view_update ()
-{
-  reminder_view_init ();
-  if (rem_render)
-    reminder_view_expose ();
 }
 
 static void
@@ -537,7 +430,7 @@ day_changed_calendar (GtkWidget * widget)
  * If h is negative it goes to the current hour
  */
 static void
-scroll_to (GtkWidget * scrolled, gint hour)
+scroll_to (GtkDayView *day_view, gint hour)
 {
   GtkAdjustment *adj;
   gint h = 0;
@@ -551,9 +444,10 @@ scroll_to (GtkWidget * scrolled, gint hour)
       hour = MAX (now_tm.tm_hour - 1, 0);
     }
 
-  gtk_widget_get_size_request (draw, NULL, &h);
+  gtk_widget_get_size_request (GTK_WIDGET (day_view->appointments), NULL, &h);
   value = (gdouble) hour / NUM_HOURS * h;
-  adj = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (scrolled));
+  adj = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW
+					     (day_view->appointment_window));
 
   lower = 0.0;
   upper = h;
@@ -561,239 +455,265 @@ scroll_to (GtkWidget * scrolled, gint hour)
   if (value > (adj->upper - adj->page_size))
     value = adj->upper - adj->page_size;
 
-  scrolling = TRUE;
+  day_view->scrolling = TRUE;
   gtk_adjustment_set_value (adj, value);
-  scrolling = FALSE;
+  day_view->scrolling = FALSE;
 }
 
 void
-day_view_scroll (gboolean force)
+gtk_day_view_scroll (GtkDayView *day_view, gboolean force)
 {
-  if (force || scroll_floating)
+  if (force || day_view->scroll_floating)
     {
-      scroll_to (scrolled_window, -1);
-      scroll_floating = TRUE;
+      scroll_to (day_view, -1);
+      day_view->scroll_floating = TRUE;
     }
 }
 
 static void
-sink_scroller (void)
+sink_scroller (GtkAdjustment *adjustment, gpointer data)
 {
-  if (!scrolling)
-    scroll_floating = FALSE;
+  GtkDayView *day_view = GTK_DAY_VIEW (data);
+  if (!day_view->scrolling)
+    day_view->scroll_floating = FALSE;
 }
 
 static gboolean
-update_hook_callback ()
+update_hook_callback (GtkDayView *day_view)
 {
   struct tm tm;
   localtime_r (&viewtime, &tm);
   
-  gtk_date_sel_set_time (GTK_DATE_SEL (datesel), viewtime);
-  gtk_calendar_select_month (GTK_CALENDAR (calendar), tm.tm_mon,
+  gtk_date_sel_set_time (GTK_DATE_SEL (day_view->datesel), viewtime);
+  gtk_calendar_select_month (GTK_CALENDAR (day_view->calendar), tm.tm_mon,
 			     tm.tm_year + 1900);
-  gtk_calendar_select_day (GTK_CALENDAR (calendar), tm.tm_mday);
+  gtk_calendar_select_day (GTK_CALENDAR (day_view->calendar), tm.tm_mday);
   
   return TRUE;
 }
 
 static gboolean
-destroy_popup (GtkWidget * widget, GdkEventButton * event, gpointer d)
+event_menu_destroy (GtkWidget * widget, GdkEventButton * event, gpointer d)
 {
-  gtk_widget_hide (popup);
-  sel_event = NULL;
+  GtkDayView *day_view = GTK_DAY_VIEW (d);
+
+  gtk_widget_hide (day_view->event_menu);
+  day_view->sel_event = NULL;
   return TRUE;
 }
 
 static void
-delete_event_cb (GtkWidget * widget, GtkWidget * a)
+delete_event_cb (GtkWidget *widget, GtkWidget *d)
 {
-  gtk_widget_hide (popup);
-  delete_event (sel_event, widget);
+  GtkDayView *day_view = GTK_DAY_VIEW (d);
+
+  gtk_widget_hide (day_view->event_menu);
+  delete_event (day_view->sel_event, widget);
 }
 
 static void
-edit_event_cb (GtkWidget * widget, GtkWidget * a)
+edit_event_cb (GtkWidget *widget, GtkWidget *d)
 {
+  GtkDayView *day_view = GTK_DAY_VIEW (d);
   GtkWidget *w;
-  w = edit_event (sel_event);
+
+  w = edit_event (day_view->sel_event);
   gtk_widget_show (w);
-  gtk_widget_hide (popup);
+  gtk_widget_hide (day_view->event_menu);
 }
 
 static void
-save_cb (GtkWidget * widget, GtkWidget * a)
+save_cb (GtkWidget *widget, GtkWidget *d)
 {
-  gtk_widget_hide (popup);
-  vcal_do_save (sel_event);
+  GtkDayView *day_view = GTK_DAY_VIEW (d);
+
+  gtk_widget_hide (day_view->event_menu);
+  vcal_do_save (day_view->sel_event);
 }
 
 static void
-send_ir_cb (GtkWidget * widget, GtkWidget * a)
+send_ir_cb (GtkWidget *widget, GtkWidget *d)
 {
-  gtk_widget_hide (popup);
-  vcal_do_send_irda (sel_event);
+  GtkDayView *day_view = GTK_DAY_VIEW (d);
+
+  gtk_widget_hide (day_view->event_menu);
+  vcal_do_send_irda (day_view->sel_event);
 }
 
 static void
-send_bt_cb (GtkWidget * widget, GtkWidget * a)
+send_bt_cb (GtkWidget *widget, GtkWidget *d)
 {
-  gtk_widget_hide (popup);
-  vcal_do_send_bluetooth (sel_event);
+  GtkDayView *day_view = GTK_DAY_VIEW (d);
+
+  gtk_widget_hide (day_view->event_menu);
+  vcal_do_send_bluetooth (day_view->sel_event);
 }
 
-gboolean
-changed_callback (GtkWidget * widget, GtkWidget * some)
+static void
+gtk_event_menu_new (GtkDayView *day_view)
 {
-  viewtime = gtk_date_sel_get_time (GTK_DATE_SEL (widget));
-    
-  day_view_update ();
-  reminder_view_update ();
-
-  return TRUE;
-}
-
-GtkWidget *
-day_view (void)
-{
-  GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
-  GtkWidget *hbox = gtk_hbox_new (FALSE, 0);
-  GtkWidget *inner_vbox = gtk_vbox_new (FALSE, 0);
-  GtkWidget *edit_event_button, *delete_event_button, *save_button;
-  GtkWidget *vbox_popup = gtk_vbox_new (FALSE, 0);
-  gboolean landscape;
-  gint win_width, win_height;
   GtkWidget *frame;
-  GtkAdjustment *adj;
+  GtkWidget *vbox;
 
-  /* Popup needed to show infos about an appointment */
-  scrolled_window = gtk_scrolled_window_new (NULL, NULL);
-  adj = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (scrolled_window));
-  g_signal_connect (G_OBJECT (adj), "value-changed", G_CALLBACK (sink_scroller), NULL);
-
-  popup = gtk_window_new (GTK_WINDOW_POPUP);
+  day_view->event_menu = gtk_window_new (GTK_WINDOW_POPUP);
   frame = gtk_frame_new (NULL);
+  vbox = gtk_vbox_new (FALSE, 0);
 
-  event_infos_popup = gtk_label_new ("");
-  gtk_misc_set_alignment (GTK_MISC (event_infos_popup), 0, 0);
-  gtk_misc_set_padding (GTK_MISC (event_infos_popup), gpe_get_border (),
-			gpe_get_border ());
+  gtk_container_add (GTK_CONTAINER (day_view->event_menu), frame);
+  gtk_container_add (GTK_CONTAINER (frame), vbox);
+
+  /* The event title.  */
+  day_view->event_menu_info = gtk_label_new ("");
+  gtk_misc_set_alignment (GTK_MISC (day_view->event_menu_info), 0, 0);
+  gtk_misc_set_padding (GTK_MISC (day_view->event_menu_info),
+			gpe_get_border (), gpe_get_border ());
+  gtk_box_pack_start (GTK_BOX (vbox), day_view->event_menu_info,
+		      FALSE, TRUE, 0);
+
+  /* Create an edit button.  */
+  {
+    GtkWidget *edit;
 
 #ifdef IS_HILDON
-  edit_event_button = gtk_button_new_with_label (_("Edit"));
-  delete_event_button = gtk_button_new_with_label (_("Delete"));
-  save_button = gtk_button_new_with_label (_("Save"));
+    edit = gtk_button_new_with_label (_("Edit"));
 #else
-  edit_event_button = gtk_button_new_from_stock (GTK_STOCK_EDIT);
-  delete_event_button = gtk_button_new_from_stock (GTK_STOCK_DELETE);
-  save_button = gtk_button_new_from_stock (GTK_STOCK_SAVE);
+    edit = gtk_button_new_from_stock (GTK_STOCK_EDIT);
 #endif
-  send_ir_button = gtk_button_new_with_label (_("Send via infra-red"));
-  send_bt_button = gtk_button_new_with_label (_("Send via Bluetooth"));
+    gtk_button_set_relief (GTK_BUTTON (edit), GTK_RELIEF_NONE);
+    gtk_button_set_alignment (GTK_BUTTON (edit), 0, 0.5);
+    gtk_box_pack_start (GTK_BOX (vbox), edit,
+			FALSE, TRUE, 0);
+    g_signal_connect (G_OBJECT (edit), "clicked",
+		      G_CALLBACK (edit_event_cb), day_view);
+  }
 
-  gtk_button_set_relief (GTK_BUTTON (edit_event_button), GTK_RELIEF_NONE);
-  gtk_button_set_relief (GTK_BUTTON (delete_event_button), GTK_RELIEF_NONE);
-  gtk_button_set_relief (GTK_BUTTON (send_ir_button), GTK_RELIEF_NONE);
-  gtk_button_set_relief (GTK_BUTTON (send_bt_button), GTK_RELIEF_NONE);
-  gtk_button_set_relief (GTK_BUTTON (save_button), GTK_RELIEF_NONE);
-  gtk_button_set_alignment (GTK_BUTTON (edit_event_button), 0, 0.5);
-  gtk_button_set_alignment (GTK_BUTTON (delete_event_button), 0, 0.5);
-  gtk_button_set_alignment (GTK_BUTTON (send_ir_button), 0, 0.5);
-  gtk_button_set_alignment (GTK_BUTTON (send_bt_button), 0, 0.5);
-  gtk_button_set_alignment (GTK_BUTTON (save_button), 0, 0.5);
+  /* A delete button.  */
+  {
+    GtkWidget *delete;
 
-  gtk_container_add (GTK_CONTAINER (popup), frame);
-  gtk_container_add (GTK_CONTAINER (frame), vbox_popup);
-  gtk_box_pack_start (GTK_BOX (vbox_popup), event_infos_popup, FALSE, TRUE,
-		      0);
+#ifdef IS_HILDON
+    delete = gtk_button_new_with_label (_("Delete"));
+#else
+    delete = gtk_button_new_from_stock (GTK_STOCK_DELETE);
+#endif
+    gtk_button_set_relief (GTK_BUTTON (delete), GTK_RELIEF_NONE);
+    gtk_button_set_alignment (GTK_BUTTON (delete), 0, 0.5);
+    gtk_box_pack_start (GTK_BOX (vbox), delete,
+			FALSE, TRUE, 0);
+    g_signal_connect (G_OBJECT (delete), "clicked",
+		      G_CALLBACK (delete_event_cb), day_view);
+  }
 
-  gtk_box_pack_start (GTK_BOX (vbox_popup), edit_event_button, FALSE, TRUE,
-		      0);
-  gtk_box_pack_start (GTK_BOX (vbox_popup), delete_event_button, FALSE, TRUE,
-		      0);
-  gtk_box_pack_start (GTK_BOX (vbox_popup), save_button, FALSE, TRUE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox_popup), send_ir_button, FALSE, TRUE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox_popup), send_bt_button, FALSE, TRUE, 0);
+  /* And a save button.  */
+  {
+    GtkWidget *save;
+#ifdef IS_HILDON
+    save = gtk_button_new_with_label (_("Save"));
+#else
+    save = gtk_button_new_from_stock (GTK_STOCK_SAVE);
+#endif
+    gtk_button_set_relief (GTK_BUTTON (save), GTK_RELIEF_NONE);
+    gtk_button_set_alignment (GTK_BUTTON (save), 0, 0.5);
+    gtk_box_pack_start (GTK_BOX (vbox), save, FALSE, TRUE, 0);
+    g_signal_connect (G_OBJECT (save), "clicked",
+		      G_CALLBACK (save_cb), day_view);
+
+  }
+
+  /* Create a Send via infra-red button if infra-red is available.  */
+  if (export_irda_available ())
+    {
+      GtkWidget *send_ir_button;
+
+      send_ir_button = gtk_button_new_with_label (_("Send via infra-red"));
+      gtk_button_set_relief (GTK_BUTTON (send_ir_button), GTK_RELIEF_NONE);
+      gtk_button_set_alignment (GTK_BUTTON (send_ir_button), 0, 0.5);
+      gtk_box_pack_start (GTK_BOX (vbox), send_ir_button,
+			  FALSE, TRUE, 0);
+      g_signal_connect (G_OBJECT (send_ir_button), "clicked",
+			G_CALLBACK (send_ir_cb), day_view);
+    }
+
+  /* Create a Send via Bluetooth button if bluetooth is available.  */
+  if (export_bluetooth_available ())
+    {
+      GtkWidget *send_bt_button;
+
+      send_bt_button = gtk_button_new_with_label (_("Send via Bluetooth"));
+      gtk_button_set_relief (GTK_BUTTON (send_bt_button), GTK_RELIEF_NONE);
+      gtk_button_set_alignment (GTK_BUTTON (send_bt_button), 0, 0.5);
+      gtk_box_pack_start (GTK_BOX (vbox), send_bt_button,
+			  FALSE, TRUE, 0);
+      g_signal_connect (G_OBJECT (send_bt_button), "clicked",
+			G_CALLBACK (send_bt_cb), day_view);
+    }
+
+  gtk_widget_add_events (GTK_WIDGET (day_view->event_menu),
+			 GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
+
+  g_signal_connect (G_OBJECT (day_view->event_menu), "button-press-event",
+		    G_CALLBACK (event_menu_destroy), day_view);
 
   gtk_widget_show_all (frame);
 
-  gtk_widget_add_events (GTK_WIDGET (popup),
-			 GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
+  gtk_window_set_decorated (GTK_WINDOW (day_view->event_menu), TRUE);
+  gtk_window_set_resizable (GTK_WINDOW (day_view->event_menu), FALSE);
+  gtk_window_set_modal (GTK_WINDOW (day_view->event_menu), TRUE);
+}
 
-  g_signal_connect (G_OBJECT (popup), "button-press-event",
-		    G_CALLBACK (destroy_popup), NULL);
+GtkWidget *
+gtk_day_view_new (void)
+{
+  GtkDayView *day_view;
+  GtkWidget *hbox = gtk_hbox_new (FALSE, 0);
+  GtkAdjustment *adj;
+  gboolean landscape;
 
-  g_signal_connect (G_OBJECT (edit_event_button), "clicked",
-		    G_CALLBACK (edit_event_cb), NULL);
+  day_view = GTK_DAY_VIEW (g_object_new (gtk_day_view_get_type (), NULL));
+  gtk_event_menu_new (day_view);
 
-  g_signal_connect (G_OBJECT (delete_event_button), "clicked",
-		    G_CALLBACK (delete_event_cb), NULL);
+  day_view->event_box = gtk_vbox_new (FALSE, 0);
 
-  g_signal_connect (G_OBJECT (save_button), "clicked",
-		    G_CALLBACK (save_cb), NULL);
-
-  g_signal_connect (G_OBJECT (send_ir_button), "clicked",
-		    G_CALLBACK (send_ir_cb), NULL);
-
-  g_signal_connect (G_OBJECT (send_bt_button), "clicked",
-		    G_CALLBACK (send_bt_cb), NULL);
-
-  gtk_window_set_decorated (GTK_WINDOW (popup), TRUE);
-  gtk_window_set_resizable (GTK_WINDOW (popup), FALSE);
-  gtk_window_set_modal (GTK_WINDOW (popup), TRUE);
-  /* end popup */
+  day_view->appointment_window = gtk_scrolled_window_new (NULL, NULL);
+  adj = gtk_scrolled_window_get_vadjustment
+    (GTK_SCROLLED_WINDOW (day_view->appointment_window));
+  g_signal_connect (G_OBJECT (adj), "value-changed",
+		    G_CALLBACK (sink_scroller), (gpointer) day_view);
 
   landscape = (gdk_screen_width () > gdk_screen_height () && gdk_screen_width () >= 640) ? TRUE : FALSE;
 
-  calendar = gtk_calendar_new ();
-  GTK_WIDGET_UNSET_FLAGS (calendar, GTK_CAN_FOCUS);
+  day_view->calendar = gtk_calendar_new ();
+  GTK_WIDGET_UNSET_FLAGS (day_view->calendar, GTK_CAN_FOCUS);
 
-  draw = gtk_drawing_area_new ();
-  if (!GTK_WIDGET_REALIZED (gtk_widget_get_toplevel (main_window)))
-    gtk_widget_realize (gtk_widget_get_toplevel (main_window));
-  gdk_drawable_get_size (GTK_WIDGET (gtk_widget_get_toplevel (main_window))->
-			 window, &win_width, &win_height);
-
-  gtk_widget_set_size_request (draw, -1, win_height * 2);
-
-  rem_area = gtk_drawing_area_new ();
-
-  gtk_widget_set_size_request (rem_area, -1, win_height / 20);
-
-  gtk_widget_show (draw);
-  gtk_widget_show (rem_area);
-  gtk_widget_show (scrolled_window);
+  gtk_widget_show (day_view->appointment_window);
   gtk_widget_show (hbox);
-  gtk_widget_show (inner_vbox);
-  page_app = day_page_new (draw);
-  page_rem = day_page_new (rem_area);
+  gtk_widget_show (day_view->event_box);
 
-  gtk_calendar_set_display_options (GTK_CALENDAR (calendar),
+  gtk_calendar_set_display_options (GTK_CALENDAR (day_view->calendar),
 				    GTK_CALENDAR_SHOW_DAY_NAMES
 				    | (week_starts_monday ?
 				       GTK_CALENDAR_WEEK_START_MONDAY : 0));
 
-  datesel = gtk_date_sel_new (GTKDATESEL_FULL);
+  day_view->datesel = gtk_date_sel_new (GTKDATESEL_FULL);
 
-  gtk_widget_show (datesel);
+  gtk_widget_show (day_view->datesel);
   
-  g_signal_connect (G_OBJECT (calendar),
+  g_signal_connect (G_OBJECT (day_view->calendar),
 		    "day-selected", G_CALLBACK (day_changed_calendar), NULL);
 
-  gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW
-					 (scrolled_window), draw);
-  gtk_viewport_set_shadow_type (GTK_VIEWPORT (draw->parent), GTK_SHADOW_NONE);
+  gtk_scrolled_window_set_policy
+    (GTK_SCROLLED_WINDOW (day_view->appointment_window),
+     GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 
-  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window),
-				  GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+  GTK_VBOX (day_view);
+  gtk_box_pack_start (GTK_BOX (day_view), day_view->datesel, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (day_view), hbox, TRUE, TRUE, 0);
 
-  gtk_box_pack_start (GTK_BOX (vbox), datesel, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), hbox, TRUE, TRUE, 0);
-
-  gtk_box_pack_start (GTK_BOX (hbox), inner_vbox, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox), day_view->event_box, TRUE, TRUE, 0);
   
-  gtk_box_pack_start (GTK_BOX (inner_vbox), rem_area, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (inner_vbox), scrolled_window, TRUE, TRUE, 0);
+  gtk_box_pack_end (GTK_BOX (day_view->event_box),
+		    day_view->appointment_window,
+		    TRUE, TRUE, 0);
 
 #ifndef IS_HILDON
   if (landscape)
@@ -802,29 +722,23 @@ day_view (void)
       sep = gtk_vseparator_new ();
 
       gtk_box_pack_start (GTK_BOX (hbox), sep, FALSE, FALSE, 0);
-      gtk_box_pack_start (GTK_BOX (hbox), calendar, FALSE, FALSE, 0);
+      gtk_box_pack_start (GTK_BOX (hbox), day_view->calendar, FALSE, FALSE, 0);
 
       gtk_widget_show (sep);
-      gtk_widget_show (calendar);
+      gtk_widget_show (day_view->calendar);
     }
 #endif
 
-  g_object_set_data (G_OBJECT (vbox), "update_hook",
+  g_object_set_data (G_OBJECT (day_view), "update_hook",
 		     (gpointer) update_hook_callback);
 
-  g_signal_connect (G_OBJECT (draw), "expose_event",
-		    G_CALLBACK (day_view_expose_cb), NULL);
-
-  g_signal_connect (G_OBJECT (rem_area), "expose_event",
-		    G_CALLBACK (reminder_view_expose_cb), NULL);
-
-  g_signal_connect (G_OBJECT (datesel), "changed",
-		    G_CALLBACK (changed_callback), NULL);
+  g_signal_connect (G_OBJECT (day_view->datesel), "changed",
+		    G_CALLBACK (datesel_changed), day_view);
     
-  gtk_widget_add_events (GTK_WIDGET (datesel),
+  gtk_widget_add_events (GTK_WIDGET (day_view->datesel),
 			 GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK);
 
-  g_object_set_data (G_OBJECT (main_window), "datesel-day", datesel);
+  g_object_set_data (G_OBJECT (main_window), "datesel-day", day_view->datesel);
 
-  return vbox;
+  return GTK_WIDGET (day_view);
 }

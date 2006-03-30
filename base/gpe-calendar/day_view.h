@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2002, 2005, 2006 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2006 Neal H. Walfield <neal@walfield.org>.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -10,19 +11,22 @@
 #ifndef DAY_VIEW_H
 #define DAY_VIEW_H
 
-extern GtkWidget *day_view (void);
-extern gboolean day_view_combined_times;
-extern int day_view_init ();
-extern gboolean day_view_button_press (GtkWidget * widget, GdkEventButton * event, gpointer d);
-extern void day_view_scroll (gboolean);
+struct _GtkDayView;
+typedef struct _GtkDayView GtkDayView;
 
-typedef struct day_page {
-  GtkWidget *widget;
-  guint width;
-  guint height;
-  guint height_min;
-  guint time_width;
-} *day_page_t ;
+#define GTK_DAY_VIEW(obj) \
+  GTK_CHECK_CAST (obj, gtk_day_view_get_type (), struct _GtkDayView)
+#define GTK_DAY_VIEW_CLASS(klass) \
+  GTK_CHECK_CLASS_CAST (klass, gtk_day_view_get_type (), DayViewClass)
+#define GTK_IS_DAY_VIEW(obj) GTK_CHECK_TYPE (obj, gtk_day_view_get_type ())
 
+/* Return GType of a day view.  */
+extern GType gtk_day_view_get_type (void);
+
+/* Create a new day view.  */
+extern GtkWidget *gtk_day_view_new (void);
+
+/* Scroll.  */
+extern void gtk_day_view_scroll (GtkDayView *day_view, gboolean force);
 
 #endif

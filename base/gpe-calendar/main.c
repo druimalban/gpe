@@ -188,8 +188,8 @@ update_view (GtkWidget *view)
   gpointer p = g_object_get_data (G_OBJECT (view), "update_hook");
   if (p)
     {
-      void (*f)(void) = p;
-      f ();
+      void (*f)(GtkWidget *) = p;
+      f (view);
     }
 }
 
@@ -287,7 +287,7 @@ set_today (void)
     viewtime = selected_time;
   
   set_time_all_views ();
-  day_view_scroll (TRUE);
+  gtk_day_view_scroll (GTK_DAY_VIEW (day), TRUE);
 }
 
 void
@@ -297,7 +297,7 @@ set_time_and_day_view (time_t selected_time)
   gtk_toggle_tool_button_set_active (GTK_TOGGLE_TOOL_BUTTON (day_button), TRUE);
   new_view (day);
   update_current_view ();
-  day_view_scroll (TRUE);
+  gtk_day_view_scroll (GTK_DAY_VIEW (day), TRUE);
 }
 
 static void
@@ -668,7 +668,7 @@ main (int argc, char *argv[])
 
   time (&viewtime);
   week = week_view ();
-  day = day_view ();
+  day = gtk_day_view_new ();
   month = month_view ();
   
   tooltips = gtk_tooltips_new();
@@ -835,7 +835,7 @@ main (int argc, char *argv[])
   gtk_toggle_tool_button_set_active (GTK_TOGGLE_TOOL_BUTTON (day_button), TRUE);
   gtk_toggle_tool_button_set_active (GTK_TOGGLE_TOOL_BUTTON (today_button), FALSE);
   new_view (day);
-  day_view_scroll (TRUE);
+  gtk_day_view_scroll (GTK_DAY_VIEW (day), TRUE);
 
   gtk_main ();
 

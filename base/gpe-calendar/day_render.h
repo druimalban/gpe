@@ -1,5 +1,6 @@
 /*
  *  Copyright (C) 2004 Luca De Cicco <ldecicco@gmx.net> 
+ *  Copyright (C) 2006 Neal H. Walfield <neal@walfield.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -18,87 +19,39 @@
 #include <gpe/event-db.h>
 #include "day_view.h"
 
-#define day_render_update_offset( dr )  ((dr)->offset.x = (dr)->page->time_width)
-/* Day Caption */
-typedef struct caption
-{
-  GtkWidget *draw;		/* Drawable */
-  guint day;			/* Day number */
-  guint width;			/* Caption Width */
-  guint height;			/* Caption Height */
-  GdkPoint offset;		/* Offset in the drawable */
-  GdkGC *gc;			/* background Color  */
-  GdkPixbuf *bell_pb;		/* Bell Pixbuf */
-  PangoLayout *pl;		/* Pango layout */
+struct _GtkDayRender;
+typedef struct _GtkDayRender GtkDayRender;
 
-  /* Other stuff here... */
+#define GTK_DAY_RENDER(obj) \
+  GTK_CHECK_CAST (obj, gtk_day_render_get_type (), struct _GtkDayRender)
+#define GTK_DAY_RENDER_CLASS(klass) \
+  GTK_CHECK_CLASS_CAST (klass, gtk_day_render_get_type (), DayRenderClass)
+#define GTK_IS_DAY_RENDER(obj) GTK_CHECK_TYPE (obj, gtk_day_render_get_type ())
 
-} *caption_t;
+/* Create a new day_render object.  APP_GC is the appointment color,
+   OVERL_GC is the color of overlapping zones, DATE is the date,
+   WIDTH, the width of the drawing area, HEIGHT, the height of the
+   drawing area, COLS, the number of columns, GAP is the GAP between
+   lines, OFFSET is the offset from the (0,0) of the drawing area, and
+   EVENTS is a list of events for the day.  */
+GtkWidget *gtk_day_render_new (GdkGC *app_gc,
+			       GdkGC *overl_gc,
+			       time_t date,
+			       guint cols, guint gap,
+			       gboolean hour_column, guint rows,
+			       GSList *events);
 
+/* Return the type of a GtkDayRender.  */
+extern GType gtk_day_render_get_type (void);
 
-struct day_render
-{
-  caption_t capt;
-  GdkDrawable *draw;
-  GtkWidget *widget;
-  day_page_t page;
-  GdkGC *normal_gc;		/*Normal event color */
-  GdkGC *ol_gc;			/* Overlapping areas color */
-  guint width;			/* rectangle width */
-  guint height;			/* rectangle height */
-  guint cols;			/* Number of columns, i.e. how many hours in a row. */
-  guint rows;
-  guint gap;			/* Define gap... */
-  time_t date;			/* Date of this day */
-  guint dx;
-  guint dy;
-  GdkPoint offset;
-  guint hours;
-  GSList *events;		/* Events associated to this day. */
-  GSList *event_rectangles;
-};
+/* Set the list of events connected to DAY_RENDER to EVENTS.  If
+   DAY_RENDER already has a list of events, that list is first
+   freed.  */
+extern void gtk_day_render_set_events (GtkDayRender *day_render,
+				       GSList *events);
 
-typedef struct row
-{
-  GdkPoint point;
-  guint row_num;
-
-} *row_t;
-
-typedef struct ev_rec
-{
-  guint width;
-  guint height;
-  guint x;
-  guint y;
-  event_t event;
-} *ev_rec_t;
-
-struct day_render *day_render_new (GtkWidget * widget,
-				   day_page_t page,
-				   GdkGC * app_gc,
-				   GdkGC * overl_gc,
-				   time_t date,
-				   guint cols, guint gap, guint hours,
-				   GSList * events);
-
-void day_render_delete (struct day_render *dr);
-
-void day_render_show (struct day_render *);
-
-void day_render_show_big (struct day_render *);
-
-GSList *day_render_find_overlapping (GSList * events);
-
-ev_rec_t
-day_render_event_show_big (struct day_render *, event_t event, GdkGC * gc,
-			   GSList * ol_period);
-
-void day_render_resize (struct day_render *dr, guint width, guint height);
-
-void day_render_set_event_rectangles (struct day_render *dr);
-
-void draw_appointments (struct day_render *dr);
+/* Set DAY_RENDER's date to DATE.  */
+extern void gtk_day_render_set_date (GtkDayRender *day_render, time_t date);
 
 GdkGC *pen_new (GtkWidget * widget, guint red, guint green, guint blue);
 

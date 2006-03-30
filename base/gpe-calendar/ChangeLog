@@ -1,3 +1,150 @@
+2006-03-28  Neal H. Walfield  <neal@gnu.org>
+
+        Make DayView and DayRender proper gtk objects and cleanly separate
+        their functionality.
+
+        * day_view.h (struct _GtkDayView): New struct.
+        (GtkDayView): New typedef.
+        (GTK_DAY_VIEW): New macro.
+        (GTK_DAY_VIEW_CLASS): New macro.
+        (GTK_IS_DAY_VIEW): New macro.
+        (gtk_day_view_get_type): New declaration.
+        (gtk_day_view_new): Renamed from day_view.
+        (gtk_day_view_scroll): Renamed from day_view_scroll.
+        (struct day_page): Removed struct.
+        (day_view_combined_times): Remove declaration.
+        (day_view_init): Remove declaration.
+        (day_view_button_press): Remove declaration.
+        (day_page_t): Removed typedef.
+        * day_view.c (rem_area, datesel, calendar, scrolled_window,
+        sel_event; page_app, page_rem, dr, rem_render, scrolling,
+        scroll_floating): Remove global variables and fold into...
+        (struct _GtkDayView): ... this new struct.
+        (DayViewClass): New typedef.
+        (parent_class): New global variable.
+        (day_page_new): Rename to gtk_day_view_new.
+        (gtk_day_view_get_type): New function.
+        (gtk_day_view_base_class_init): New function.
+        (gtk_day_view_init): New function.
+        (gtk_day_view_dispose): New function.
+        (gtk_day_view_finalize): New function.
+        (day_page_draw_background): New function.
+        (day_view_button_press): Split function into...
+        (day_view_row_clicked): this new function...
+        (day_view_event_clicked): and this new function...
+        * day_render.c (gtk_day_render_button_press): and this new
+        function.
+        * day_view.c (day_view_expose): Move function to...
+        * day_render.c (gtk_day_render_expose): ...here.
+        * day_view.c (reminder_view_expose): Move function to...
+        * day_render.c (gtk_day_render_expose): ...here.
+        (day_page_draw_empty): Remove function.
+        (day_page_calc_time_width): Move from here...
+        * day_render.c (gtk_day_render_update_extents): ... to here.
+        * day_view.c (day_view_expose_cb): Remove function.
+        (reminder_view_init): Move this functionality...
+        (reminder_view_expose): and this...
+        (day_view_init): and this...
+        (day_view_expose): and this...
+        (changed_callback): and this...
+        (datesel_changed): ... to here.
+        (reminder_view_expose_cb): Remove function.
+        (day_view_update): Remove function.
+        (scroll_to): Update to use a GtkDayView rather than globals.
+        (day_view_scroll): Rename...
+        (gtk_day_view_scroll): ...to this.  Update to use a GtkDayView
+        rather than globals.
+        (sink_scroller): Update to use a GtkDayView rather than globals.
+        (update_hook_callback): Likewise.
+        (event_menu_destroy): Likewise.
+        (delete_event_cb): Likewise.
+        (edit_event_cb): Likewise.
+        (save_cb): Likewise.
+        (send_ir_cb): Likewise.
+        (send_bt_cb): Likewise.
+        (day_view): Split this function into...
+        (gtk_event_menu_new): this...
+        (gtk_day_view_new): and this.  Update to use a GtkDayView rather
+        than globals.
+        * day_render.h (day_render_update_offset): Remove macro.
+        (caption): Remove structure.
+        (struct day_render): Move...
+        * day_render.c (struct GtkDayRender): ... here.
+        * day_render.h (row): Remove structure.
+        (ev_rec): Move...
+        * day_render.h (struct event_rect): ... here and make widt,
+        height, x and y floats which are percentages of the canvas.
+        (struct _GtkDayRender): New struct.
+        (GtkDayRender): New typedef.
+        (GTK_DAY_RENDER): New macro.
+        (GTK_DAY_RENDER_CLASS): New macro.
+        (GTK_IS_DAY_RENDER): New macro.
+        (day_render_new): Rename to...
+        (gtk_day_render_new): ... this.
+        (gtk_day_render_get_type): New declaration.
+        (gtk_day_render_set_events): New declaration.
+        (day_render_delete): Remove.
+        (day_render_show): Remove.
+        (day_render_show_big): Remove.
+        (day_render_find_overlapping): Remove.
+        (day_render_event_show_big): Remove.
+        (day_render_find_overlapping): Remove.
+        (day_render_event_show_big): Remove.
+        (day_render_resize): Remove.
+        (day_render_set_event_rectangles): Remove.
+        (draw_appointments): Remove.
+        * day_render.c (find_overlapping_sets): New forward.
+        (ol_sets_to_rectangles): Likewise.
+        (period): New macro.
+        (bell_pb): New global.
+        (event_rect_new): New declaration.
+        (event_rect_delete): New declaration.
+        (event_rect_draw): New declaration.
+        (struct _GtkDayRender): New structure.
+        (GtkDayRenderClass): New typedef.
+        (gtk_day_render_base_class_init): New declaration.
+        (gtk_day_render_init): New declaration.
+        (gtk_day_render_dispose): New declaration.
+        (gtk_day_render_finalize): New declaration.
+        (gtk_day_render_expose): New declaration.
+        (gtk_day_render_configure): New declaration.
+        (gtk_day_render_button_press): New declaration.
+        (parent_class): New global.
+        (gtk_day_render_get_type): New function.
+        (gtk_day_render_base_class_init): New function.
+        (day_render_new): Move this functionaltiy from here...
+        (gtk_day_render_init): ... to here...
+        (gtk_day_render_new): ... and to here.
+        (gtk_day_render_dispose): New function.
+        (day_render_delete): Move this functionaltiy from here...
+        (gtk_day_render_finalize): ... to here.
+        (draw_appointments): Integrate functionality into...
+        (gtk_day_render_expose): ... to here.
+        (gtk_day_render_configure): New function.
+        (day_render_set_event_rectangles): Remame to...
+        (gtk_day_render_set_events): ... this.
+        (gtk_day_render_set_date): New function.
+        (show_event): Rename to...
+        (event_rect_draw): ... this and calculate the rectangle in terms
+        of the new paramters CANVAS_HEIGHT and CANVAS_WIDTH and the
+        percentages in EVENT_RECTANGLE.  Also, tune the rectangle to
+        exactly fit in the prescribed area.  Load BELL_PB if required.
+        (event_rect_new): Calculate x, y, height and width as percentages.
+        (event_rect_delete): Add static attribute.
+        (ol_sets_to_rectangles): Pretty up code.
+        (caption_new): Remove function.
+        (caption_delete): Remove function.
+        (caption_set_pango): Remove function.
+        (caption_show): Remove function.
+        (event_starts_today): Remove function.
+        (page_height_set): Remove function.
+        (day_render_resize): Remove function.
+        (event_ends_today): Remove function.
+        (day_render_find_overlapping): Remove function.
+        (day_render_event_starts): Remove function.
+        (day_render_event_show): Remove function.
+       * main.c (update_view): Pass VIEW to F.
+
 2006-02-15  Florian Boor <florian.boor@kernelconcepts.de>
 
     * globals.h, main.c (main): Implement a cleverer solution using the global 
