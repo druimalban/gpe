@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2001, 2002, 2003, 2004, 2006 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2006 Neal H. Walfield <neal@walfield.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,9 +20,11 @@
 
 #include <time.h>
 #include <gtk/gtk.h>
+#include <gdk/gdkkeysyms.h>
 #include <string.h>
 #include "gtkdatesel.h"
 #include <libintl.h>
+#include <stdlib.h>
 
 #include "globals.h"
 
@@ -40,7 +43,7 @@ static guint my_signals[1];
 struct elem
 {
   GtkWidget *container;
-  GtkWidget *text;
+  GtkWidget *display;
 };
 
 struct _GtkDateSel
@@ -175,14 +178,100 @@ year_click (GtkWidget *w, GtkDateSel *sel)
   g_signal_emit (G_OBJECT (sel), my_signals[0], 0);
 }
 
+static gboolean
+year_update (GtkWidget *sel, GtkWidget *entry)
+{
+  struct tm tm;
+  gchar *year;
+
+  localtime_r (&GTK_DATE_SEL (sel)->time, &tm);
+  year = strftime_strdup_utf8_utf8 (_("%Y"), &tm);
+  if (year)
+    {
+      gtk_entry_set_text (GTK_ENTRY (entry), year);
+      g_free (year);
+    }
+
+  return FALSE;
+}
+
+static gboolean
+year_key_press (GtkWidget *entry, GdkEventKey *event, GtkWidget *sel)
+{
+  int index;
+  struct tm tm;
+
+  if (event->keyval != GDK_Return)
+    return FALSE;
+
+  index = atoi (gtk_entry_get_text (GTK_ENTRY (entry)));
+
+  localtime_r (&GTK_DATE_SEL (sel)->time, &tm);
+
+  if (index >= 1900)
+    tm.tm_year = index - 1900;
+  else
+    /* If e.g. a two digit year, go to with 2000 + index.  */
+    tm.tm_year = 100 + index;
+
+  GTK_DATE_SEL (sel)->time = mktime (&tm);
+  g_signal_emit (G_OBJECT (sel), my_signals[0], 0);
+
+  gtk_editable_select_region (GTK_EDITABLE (entry), 0, -1);
+
+  return FALSE;
+}
+
+static gboolean
+month_change (GtkComboBox *combo, GtkDateSel *sel)
+{
+  int index;
+  struct tm tm;
+  guint mdays;
+
+  index = gtk_combo_box_get_active (combo);
+  if (index < 0)
+    return FALSE;
+
+  localtime_r (&sel->time, &tm);
+  tm.tm_mon = index;
+  mdays = days_in_month (tm.tm_year + 1900, tm.tm_mon);
+  if (tm.tm_mday > mdays)
+    {
+      sel->day_clamped = tm.tm_mday;
+      tm.tm_mday = mdays;
+    }
+  else
+    {
+      if (sel->day_clamped != -1)
+        {
+          tm.tm_mday = mdays;
+          if (tm.tm_mday > sel->day_clamped)
+            tm.tm_mday = sel->day_clamped;
+        }
+    }
+  sel->time = mktime (&tm);
+  g_signal_emit (G_OBJECT (sel), my_signals[0], 0);
+
+  return FALSE;
+}
+
 static void
-format_text (time_t *time, GtkWidget *w, char *fmt)
+month_update (GtkDateSel *sel, GtkWidget *combo)
+{
+  struct tm tm;
+  localtime_r (&sel->time, &tm);
+  gtk_combo_box_set_active (GTK_COMBO_BOX (combo), tm.tm_mon);
+}
+
+static void
+week_update (GtkDateSel *sel, GtkWidget *w)
 {
   struct tm tm;
   gchar *sbuf;
-  localtime_r (time, &tm);
+  localtime_r (&sel->time, &tm);
 
-  sbuf = strftime_strdup_utf8_utf8 (fmt, &tm);
+  sbuf = strftime_strdup_utf8_utf8 (_("Week %V"), &tm);
   if (sbuf)
     {
       gtk_label_set_text (GTK_LABEL (w), sbuf);
@@ -190,42 +279,57 @@ format_text (time_t *time, GtkWidget *w, char *fmt)
     }
 }
 
-static void
-year_update (GtkDateSel *sel, GtkWidget *w)
+static gboolean
+day_update (GtkWidget *sel, GtkWidget *entry)
 {
-  format_text (&sel->time, w, _("%Y"));
-}
+  struct tm tm;
+  gchar *day;
 
-static void
-month_update (GtkDateSel *sel, GtkWidget *w)
-{
-  switch (sel->month_style)
+  localtime_r (&GTK_DATE_SEL (sel)->time, &tm);
+  day = strftime_strdup_utf8_utf8 (_("%d"), &tm);
+  if (day)
     {
-    case GTKDATESEL_MONTH_SHORT:
-      format_text (&sel->time, w, _("%b"));
-      break;
-    case GTKDATESEL_MONTH_LONG:
-      format_text (&sel->time, w, _("%B"));
-      break;
-    case GTKDATESEL_MONTH_NUMERIC:
-      format_text (&sel->time, w, _("%m"));
-      break;
-    case GTKDATESEL_MONTH_ROMAN:
-      /* NYS */
-      break;
+      gtk_entry_set_text (GTK_ENTRY (entry), day);
+      g_free (day);
     }
+
+  return FALSE;
 }
 
-static void
-week_update (GtkDateSel *sel, GtkWidget *w)
+static gboolean
+day_key_press (GtkWidget *entry, GdkEventKey *event, GtkWidget *sel)
 {
-  format_text (&sel->time, w, _("Week %V"));
+  int index;
+  struct tm tm;
+  guint mdays;
+
+  if (event->keyval != GDK_Return)
+    return FALSE;
+
+  index = atoi (gtk_entry_get_text (GTK_ENTRY (entry)));
+  if (index <= 0)
+    index = 1;
+
+  localtime_r (&GTK_DATE_SEL (sel)->time, &tm);
+  mdays = days_in_month (tm.tm_year + 1900, tm.tm_mon);
+  if (index > mdays)
+    index = mdays;
+
+  tm.tm_mday = index;
+  GTK_DATE_SEL (sel)->time = mktime (&tm);
+  g_signal_emit (G_OBJECT (sel), my_signals[0], 0);
+
+  gtk_editable_select_region (GTK_EDITABLE (entry), 0, -1);
+
+  return FALSE;
 }
 
-static void
-day_update (GtkDateSel *sel, GtkWidget *w)
+static gboolean
+entry_button_press (GtkWidget *entry, GdkEventKey *event, gpointer data)
 {
-  format_text (&sel->time, w, _("%a, %d"));
+  gtk_editable_select_region (GTK_EDITABLE (entry), 0, -1);
+  gtk_widget_grab_focus (entry);
+  return TRUE;
 }
 
 static int
@@ -320,23 +424,25 @@ get_max_day_width (GtkDateSel *sel)
   return w + max_width;
 }
 
+/* Assumes that E->DISPLAY is valid.  */
 static void
-make_field (GtkDateSel *sel, struct elem *e, 
-	    void (*click)(GtkWidget *, GtkDateSel *),
-            void (*update)(GtkDateSel *, GtkWidget *),
-	    int max_width)
+make_field (GtkDateSel *sel, struct elem *e,
+	    void (*click)(GtkWidget *, GtkDateSel *))
 {
+  GTK_IS_WIDGET (e->display);
+
   GtkWidget *arrow_l, *arrow_r, *arrow_button_l, *arrow_button_r;
 #ifdef IS_HILDON
-  arrow_l = gtk_image_new_from_stock(GTK_STOCK_GO_BACK, GTK_ICON_SIZE_SMALL_TOOLBAR);
-  arrow_r = gtk_image_new_from_stock(GTK_STOCK_GO_FORWARD, GTK_ICON_SIZE_SMALL_TOOLBAR);
+  arrow_l = gtk_image_new_from_stock(GTK_STOCK_GO_BACK,
+				     GTK_ICON_SIZE_SMALL_TOOLBAR);
+  arrow_r = gtk_image_new_from_stock(GTK_STOCK_GO_FORWARD,
+				     GTK_ICON_SIZE_SMALL_TOOLBAR);
 #else
   arrow_l = gtk_arrow_new (GTK_ARROW_LEFT, GTK_SHADOW_OUT);
   arrow_r = gtk_arrow_new (GTK_ARROW_RIGHT, GTK_SHADOW_OUT);
 #endif
   arrow_button_l = gtk_button_new ();
   arrow_button_r = gtk_button_new ();
-  e->text = gtk_label_new ("");
   e->container = gtk_hbox_new (FALSE, 0);
 
   gtk_widget_set_size_request (arrow_button_l, ARROW_SIZE, ARROW_SIZE);
@@ -356,55 +462,11 @@ make_field (GtkDateSel *sel, struct elem *e,
   g_signal_connect (G_OBJECT (arrow_button_l), "clicked", G_CALLBACK (click), sel);
   g_signal_connect (G_OBJECT (arrow_button_r), "clicked", G_CALLBACK (click), sel);
 
-  gtk_widget_set_usize (e->text, max_width, -1);
-
   gtk_box_pack_start (GTK_BOX (e->container), arrow_button_l, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (e->container), e->text, TRUE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (e->container), e->display, TRUE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (e->container), arrow_button_r, FALSE, FALSE, 0);
 
   gtk_box_pack_start (GTK_BOX (sel->subbox), e->container, FALSE, FALSE, 0);
-
-  g_signal_connect (G_OBJECT (sel), "changed", G_CALLBACK (update), e->text);
-  update (sel, e->text);
-}
-
-static void
-gtk_date_sel_init (GtkDateSel *sel)
-{
-  PangoLayout *layout;
-  PangoRectangle logical_rect;
-  int max_year_width, i, max_day_width;
-  gchar buffer[255];
-
-  layout = gtk_widget_create_pango_layout (GTK_WIDGET (sel), NULL);
-
-  time (&sel->time);
-  sel->day_clamped = -1;
-
-  sel->subbox = gtk_hbox_new (FALSE, 0);
-
-  max_year_width = 0;
-  for (i=0; i<10; i++)
-    {
-      g_snprintf (buffer, sizeof (buffer), "%d%d%d%d", i,i,i,i);
-      pango_layout_set_text (layout, buffer, -1);	  
-      pango_layout_get_pixel_extents (layout, NULL, &logical_rect);
-      max_year_width = MAX (max_year_width, logical_rect.width + LABEL_ADD);
-    }
-
-  max_day_width = get_max_day_width (sel);
-
-  make_field (sel, &sel->week, week_click, week_update, 0);
-  make_field (sel, &sel->day, day_click, day_update, max_day_width);
-  make_field (sel, &sel->month, month_click, month_update, 0);
-  make_field (sel, &sel->year, year_click, year_update, max_year_width);
-
-  gtk_date_sel_set_month_style (sel, GTKDATESEL_MONTH_SHORT);
-
-  gtk_widget_show (sel->subbox);
-  gtk_box_pack_start (GTK_BOX (sel), sel->subbox, TRUE, FALSE, 0);
-
-  g_object_unref (layout);
 }
 
 static void
@@ -431,6 +493,7 @@ gtk_date_sel_show (GtkWidget *widget)
       show_field (&sel->month);
       break;
     case GTKDATESEL_WEEK:       /* week, year */
+      show_field (&sel->month);
       show_field (&sel->week);
       break;
     case GTKDATESEL_MONTH:      /* month, year */
@@ -483,7 +546,7 @@ gtk_date_sel_get_type (void)
         NULL, /* class data */
         sizeof (GtkDateSel),
         0, /* # preallocs */
-        (GInstanceInitFunc) gtk_date_sel_init,
+        (GInstanceInitFunc) NULL,
       };
 
       date_sel_type = g_type_register_static (GTK_TYPE_HBOX, "GTKDateSel",
@@ -496,7 +559,92 @@ GtkWidget *
 gtk_date_sel_new (GtkDateSelMode mode)
 {
   GtkWidget *w = GTK_WIDGET (gtk_type_new (gtk_date_sel_get_type ()));
-  GTK_DATE_SEL (w)->mode = mode;
+  GtkDateSel *sel = GTK_DATE_SEL (w);
+  int i;
+  gchar buffer[255];
+
+  sel->mode = mode;
+
+  time (&sel->time);
+  sel->day_clamped = -1;
+
+  sel->subbox = gtk_hbox_new (FALSE, 0);
+
+  if (mode == GTKDATESEL_WEEK)
+    /* Display the week.  */
+    {
+      struct elem *e = &sel->week;
+
+      e->display = gtk_label_new ("");
+      make_field (sel, e, week_click);
+
+      g_signal_connect (G_OBJECT (sel), "changed",
+			G_CALLBACK (week_update), e->display);
+    }
+  if (mode == GTKDATESEL_FULL)
+    /* Display the day.  */
+    {
+      struct elem *e = &sel->day;
+
+      e->display = gtk_entry_new ();
+      gtk_entry_set_width_chars (GTK_ENTRY (e->display), 3);
+      make_field (sel, e, day_click);
+
+      g_signal_connect (G_OBJECT (sel), "changed",
+			G_CALLBACK (day_update),
+			e->display);
+      g_signal_connect (G_OBJECT (e->display), "key-press-event",
+			G_CALLBACK (day_key_press), sel);
+      g_signal_connect (G_OBJECT (e->display), "button-press-event",
+			G_CALLBACK (entry_button_press), 0);
+    }
+  if (mode == GTKDATESEL_FULL || mode == GTKDATESEL_MONTH
+      || mode == GTKDATESEL_WEEK)
+    /* Display the month.  */
+    {
+      struct elem *e = &sel->month;
+      struct tm tm;
+
+      sel->month.display = gtk_combo_box_new_text ();
+      make_field (sel, &sel->month, month_click);
+      sel->month_style = GTKDATESEL_MONTH_SHORT;
+
+      for (i = 0; i < 12; i ++)
+	{
+	  gchar *str;
+
+	  tm.tm_mon = i;
+	  str = strftime_strdup_utf8_utf8 (_("%b"), &tm);
+	  gtk_combo_box_append_text (GTK_COMBO_BOX (e->display), str);
+	  g_free (str);
+	}
+
+      g_signal_connect (G_OBJECT (sel), "changed", G_CALLBACK (month_update),
+			e->display);
+      g_signal_connect (G_OBJECT (e->display), "changed",
+			G_CALLBACK (month_change), sel);
+    }
+
+  /* Always display the year.  */
+  {
+      struct elem *e = &sel->year;
+
+      e->display = gtk_entry_new ();
+      gtk_entry_set_width_chars (GTK_ENTRY (e->display), 5);
+      make_field (sel, e, year_click);
+
+      g_signal_connect (G_OBJECT (sel), "changed",
+			G_CALLBACK (year_update),
+			e->display);
+      g_signal_connect (G_OBJECT (e->display), "key-press-event",
+			G_CALLBACK (year_key_press), sel);
+      g_signal_connect (G_OBJECT (e->display), "button-press-event",
+			G_CALLBACK (entry_button_press), 0);
+    }
+
+  gtk_widget_show (sel->subbox);
+  gtk_box_pack_start (GTK_BOX (sel), sel->subbox, TRUE, FALSE, 0);
+
   return w;
 }
 
@@ -535,5 +683,5 @@ gtk_date_sel_set_month_style (GtkDateSel *sel, GtkDateSelMonthStyle style)
 {
   sel->month_style = style;
 
-  gtk_widget_set_usize (sel->month.text, get_max_month_width (sel), -1);
+  gtk_widget_set_usize (sel->month.display, get_max_month_width (sel), -1);
 }

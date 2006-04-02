@@ -1,3 +1,28 @@
+2006-04-01  Neal H. Walfield  <neal@gnu.org>
+
+        * gtkdatesel.c: Include <gdk/gdkkeysyms.h> and <stdlib.h>.
+        (struct elem): Rename field text to display.  Update users.
+        (year_update): Change to update the year's GtkEntry.
+        (year_key_press): New function.
+        (month_change): New function.
+        (month_update): Change to update the month's GtkComboBox.
+        (day_update): Change to update the day's GtkEntry.
+        (day_key_press): New function.
+        (entry_button_press): New function.
+        (make_field): Require the caller to make sure that E->DISPLAY is
+        valid.  Remove argument UPDATE and MAX_WIDTH.  Remove code which
+        sets the update signal handler and the width of E->DISPLAY.
+        (gtk_date_sel_init): Remove function and integrate functionality
+        into...
+        (gtk_date_sel_new): ... here.  Only build components required by
+        MODE.  Make the day display not a GtkLabel but a GtkEntry, the
+        month and year displays not GtkLabel's but GtkComboBox's.  Don't
+        wire the maximum width anymore.
+        (gtk_date_sel_show): When showing the week view, don't just show
+        the week number and the year, also show the month.
+        (gtk_date_sel_get_type): Don't provide a GInstanceInitFunc when
+        building DATE_SEL_INFO.
+
 2006-04-02  Phil Blundell  <pb@reciva.com>
 
 	* main.c (main): Move time format checking code after setlocale
