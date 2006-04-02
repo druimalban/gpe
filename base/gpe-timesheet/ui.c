@@ -899,7 +899,6 @@ btn_con = GTK_WIDGET(clock_in);
 btn_coff = GTK_WIDGET(clock_out);
 set_active (0,0);
 gtk_widget_show_all (main_vbox);
-//gtk_widget_show_all (GTK_CONTAINER(main_toolbar));
 
 #ifndef IS_HILDON
 /* if we are not in Hildon we should hide the journal specific toolbar */

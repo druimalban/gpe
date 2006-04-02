@@ -2,12 +2,17 @@
   #define _GPE_TIMESHEET_UI_H
 #endif
 
-#ifndef HILDON
-  #define MY_PIXMAPS_DIR PREFIX "/share/gpe/pixmaps/default"
+/* nasty workaround for evil application installer in maemo */
+#ifndef IS_HILDON
   #define MY_PREFIX PREFIX
 #else
-  #define MY_PIXMAPS_DIR PREFIX "/icons/hicolor/26x26"
-  #define MY_PREFIX PREFIX
+  #define MY_PREFIX "/var/lib/install/" PREFIX 
+#endif
+/* end of nasty workaround */
+
+#define MY_PIXMAPS_DIR MY_PREFIX "/share/gpe/pixmaps/default"
+#ifdef IS_HILDON
+  #define ICON_PATH PREFIX "/share/icons/hicolor/26x26/hildon"
 #endif
 
 #include <sys/types.h>
