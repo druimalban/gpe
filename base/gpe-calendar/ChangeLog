@@ -1,5 +1,11 @@
 2006-04-01  Neal H. Walfield  <neal@gnu.org>
 
+        * export-vcal.c (vcal_do_save): Don't connect a signal handler to
+        the cancel button which destroys the dialog as we destroy anyway,
+        i.e. avoid a double free.
+
+2006-04-01  Neal H. Walfield  <neal@gnu.org>
+
         * gtkdatesel.c: Include <gdk/gdkkeysyms.h> and <stdlib.h>.
         (struct elem): Rename field text to display.  Update users.
         (year_update): Change to update the year's GtkEntry.

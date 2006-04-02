@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2004 Philip Blundell <philb@gnu.org>
  *               2005 Florian Boor <florian@kernelconcepts.de> 
+ * Copyright (C) 2006 Neal H. Walfield <neal@walfield.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -169,8 +170,6 @@ vcal_do_save (event_t event)
 #else
   filesel = gtk_file_selection_new (_("Save as..."));
   gtk_file_selection_set_filename (GTK_FILE_SELECTION (filesel), "GPE.vcal");
-  g_signal_connect_swapped (G_OBJECT (GTK_FILE_SELECTION (filesel)->cancel_button), 
-			    "clicked", G_CALLBACK (gtk_widget_destroy), filesel);
 #endif
   
   gtk_widget_show_all (filesel);
