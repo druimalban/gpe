@@ -1,5 +1,5 @@
 
-#SUBDIRS = po
+SUBDIRS = po
 
 ENABLE_HILDON = @ENABLE_HILDON@
 
@@ -60,9 +60,9 @@ EXTRA_DIST = $(desktop_DATA) \
              $(pixmaps_DATA) \
 			 $(service_DATA) \
              $(pixmaps_extra_DATA) \
-#             intltool-extract.in \
-#             intltool-merge.in \
-#             intltool-update.in \
+             intltool-extract.in \
+             intltool-merge.in \
+             intltool-update.in \
              debian/changelog \
              debian/compat \
              debian/copyright \
@@ -70,7 +70,6 @@ EXTRA_DIST = $(desktop_DATA) \
              debian/rules \
              debian/docs \
              debian/dirs \
-             debian/links \
              hildon/gpe-timesheet.desktop.in.in \
              hildon/com.nokia.gpe-timesheet.service.in \
              hildon/gpe-timesheet.png
@@ -92,5 +91,5 @@ deb: dist
 	cd $(top_builddir)/debian-build/$(PACKAGE)-$(VERSION) && dpkg-buildpackage -rfakeroot
 	-rm -rf $(top_builddir)/debian-build/$(PACKAGE)-$(VERSION)
 	
-#include gpe-dist.ami
-#include gpe-tp.am
+include gpe-dist.am
+include gpe-tp.am

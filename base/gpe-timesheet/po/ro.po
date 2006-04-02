@@ -1,0 +1,77 @@
+# Mesajele în limba românã pentru gpe-timesheet.
+# Copyright (C) 2003 Free Software Foundation, Inc.
+# Acest fiºier este distribuit sub aceeaºi licenþã ca ºi pachetul gpe-timesheet.
+# Laurentiu Buzdugan <buzdugan@voyager.net>, 2003.
+#
+#
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-timesheet 0.11\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2004-05-03 01:23+0100\n"
+"PO-Revision-Date: 2003-05-05 12:00-0500\n"
+"Last-Translator: Laurentiu Buzdugan <buzdugan@voyager.net>\n"
+"Language-Team: Romanian <translation-team-ro@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-2\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: main.c:122 main.c:453 gpe-timesheet.desktop.in.h:2
+msgid "Time Tracker"
+msgstr "Urmãrire Timp"
+
+#: main.c:152
+msgid "Notes"
+msgstr "Note"
+
+#: main.c:211
+msgid "Clocking in:"
+msgstr "Pontare început:"
+
+#: main.c:232
+msgid "Clocking out:"
+msgstr "Pontare sfârºit:"
+
+#: main.c:296 main.c:398 main.c:399
+msgid "New task"
+msgstr "Acþiune nouã"
+
+#: main.c:296
+msgid "Name"
+msgstr "Nume"
+
+#: main.c:403 main.c:404
+msgid "Delete task"
+msgstr "ªterge acþiune"
+
+#: main.c:409 main.c:410
+msgid "Clock on"
+msgstr "Ceas pornit"
+
+#: main.c:415 main.c:416
+msgid "Clock off"
+msgstr "Ceas oprit"
+
+#: main.c:423 main.c:424
+msgid "Note"
+msgstr "Notã"
+
+#: main.c:430
+msgid "Journal"
+msgstr ""
+
+#: main.c:431
+msgid "Show journal"
+msgstr ""
+
+#: gpe-timesheet.desktop.in.h:1
+msgid "GPE Timesheet"
+msgstr "GPE Timesheet"
+
+#~ msgid "OK"
+#~ msgstr "OK"
+
+#~ msgid "Cancel"
+#~ msgstr "Renunþã"

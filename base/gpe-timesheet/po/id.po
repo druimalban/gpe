@@ -1,0 +1,75 @@
+# gpe-timesheet-0.11 (Indonesian)
+# Copyright (C) 2003 Free Software Foundation, Inc.
+# This file is distributed under the same license as the PACKAGE package.
+# Tedi Heriyanto <tedi_h@gmx.net>, 2003
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-timesheet 0.11\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2004-05-03 01:23+0100\n"
+"PO-Revision-Date: 2003-03-07 12:53GMT+0700\n"
+"Last-Translator: Tedi Heriyanto <tedi_h@gmx.net>\n"
+"Language-Team: Indonesian <translation-team-id@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 0.9.6\n"
+
+#: main.c:122 main.c:453 gpe-timesheet.desktop.in.h:2
+msgid "Time Tracker"
+msgstr "Time Tracker"
+
+#: main.c:152
+msgid "Notes"
+msgstr "Catatan"
+
+#: main.c:211
+msgid "Clocking in:"
+msgstr "Clocking in:"
+
+#: main.c:232
+msgid "Clocking out:"
+msgstr "Clocking out:"
+
+#: main.c:296 main.c:398 main.c:399
+msgid "New task"
+msgstr "Tugas baru"
+
+#: main.c:296
+msgid "Name"
+msgstr "Nama"
+
+#: main.c:403 main.c:404
+msgid "Delete task"
+msgstr "Hapus tugas"
+
+#: main.c:409 main.c:410
+msgid "Clock on"
+msgstr "Pasang jam"
+
+#: main.c:415 main.c:416
+msgid "Clock off"
+msgstr "Matikan jam"
+
+#: main.c:423 main.c:424
+msgid "Note"
+msgstr "Catatan"
+
+#: main.c:430
+msgid "Journal"
+msgstr ""
+
+#: main.c:431
+msgid "Show journal"
+msgstr ""
+
+#: gpe-timesheet.desktop.in.h:1
+msgid "GPE Timesheet"
+msgstr "GPE Timesheet"
+
+#~ msgid "OK"
+#~ msgstr "OK"
+
+#~ msgid "Cancel"
+#~ msgstr "Batal"

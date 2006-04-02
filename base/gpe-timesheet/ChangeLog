@@ -1,3 +1,10 @@
+2006-04-02  Florian Boor <florian.boor@kernelconcepts.de>
+
+	* ui.c: Make text more consistent, improve usage of stock icons.
+	* autogen.sh: Use system automake without version. Versions need to be checked or handled on build machine.
+	* Makefile.am: Add i18n support, fix comments.
+	* po/*, tp, configure.ac: Add i18n again.
+
 2006-03-21 Philippe De Swert <philippedeswert@scarlet.be>
 
 	* Added todo integration and other improvements. Big thanks to Michele Giorgini <md6604@mclink.it>

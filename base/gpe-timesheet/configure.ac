@@ -17,7 +17,7 @@ AH_TEMPLATE([GETTEXT_PACKAGE], [Package name for gettext])
 GETTEXT_PACKAGE=$PACKAGE
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE")
 AC_SUBST(GETTEXT_PACKAGE)
-ALL_LINGUAS="cs de es fr id nl pt_BR pt ro ru sk sr sv vi wa zh_TW"
+ALL_LINGUAS="id pt zh_TW fr ro cs nl ga ru sr sk sv es"
 
 gpetimesheet_localedir='${prefix}/${DATADIRNAME}/locale'
 AC_SUBST(gpetimesheet_localedir)
@@ -50,7 +50,7 @@ AC_SUBST(DEPS_LIBS)
 
 AC_OUTPUT([
 Makefile
-po/Makefile.in
+po/Makefile
 gpe-timesheet.desktop.in
 hildon/com.nokia.gpe-timesheet.service
 hildon/gpe-timesheet.desktop.in

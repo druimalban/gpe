@@ -1,0 +1,72 @@
+# translation of gpe-timesheet.po to Czech
+# Copyright (C) 2003 Free Software Foundation, Inc.
+# Libor Klepac <elkropac@students.zcu.cz>, 2003.
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-timesheet 0.11\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2004-05-03 01:23+0100\n"
+"PO-Revision-Date: 2003-10-08 23:29+0100\n"
+"Last-Translator: Libor Klepac <elkropac@students.zcu.cz>\n"
+"Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: main.c:122 main.c:453 gpe-timesheet.desktop.in.h:2
+msgid "Time Tracker"
+msgstr "Plánovač času"
+
+#: main.c:152
+msgid "Notes"
+msgstr "Poznámky"
+
+#: main.c:211
+msgid "Clocking in:"
+msgstr "Začínám s:"
+
+#: main.c:232
+msgid "Clocking out:"
+msgstr "Končím s:"
+
+#: main.c:296 main.c:398 main.c:399
+msgid "New task"
+msgstr "Nový úkol"
+
+#: main.c:296
+msgid "Name"
+msgstr "Jméno"
+
+#: main.c:403 main.c:404
+msgid "Delete task"
+msgstr "Smazat úkol"
+
+#: main.c:409 main.c:410
+msgid "Clock on"
+msgstr "Začít"
+
+#: main.c:415 main.c:416
+msgid "Clock off"
+msgstr "Ukončit"
+
+#: main.c:423 main.c:424
+msgid "Note"
+msgstr "Poznámka"
+
+#: main.c:430
+msgid "Journal"
+msgstr ""
+
+#: main.c:431
+msgid "Show journal"
+msgstr ""
+
+#: gpe-timesheet.desktop.in.h:1
+msgid "GPE Timesheet"
+msgstr "GPE Plánovač času"
+
+#~ msgid "OK"
+#~ msgstr "Budiž"
+
+#~ msgid "Cancel"
+#~ msgstr "Zrušit"

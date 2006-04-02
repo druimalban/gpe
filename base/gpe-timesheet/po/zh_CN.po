@@ -1,0 +1,77 @@
+# Simplified Chinese messages for gpe-timesheet
+# Copyright (C) 2003 Free Software Foundation, Inc.
+# This file is distributed under the same license as the gpe-timesheet package.
+# Meng Jie <zuxyhere@eastday.com>, 2004.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-timesheet 0.11\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2004-05-03 01:23+0100\n"
+"PO-Revision-Date: 2004-11-15 21:59+0800\n"
+"Last-Translator: Meng Jie <zuxyhere@eastday.com>\n"
+"Language-Team: Chinese (simplified) <i18n-translation@lists.linux.net.cn>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Basepath: d:\\msys\\source\\gpe-timesheet-0.11\n"
+"X-Poedit-Language: Chinese\n"
+"X-Poedit-Country: CHINA\n"
+
+#: main.c:122 main.c:453 gpe-timesheet.desktop.in.h:2
+msgid "Time Tracker"
+msgstr "用时追踪程序"
+
+#: main.c:152
+msgid "Notes"
+msgstr "备注"
+
+#: main.c:211
+msgid "Clocking in:"
+msgstr "将要签到："
+
+#: main.c:232
+msgid "Clocking out:"
+msgstr "将出签出："
+
+#: main.c:296 main.c:398 main.c:399
+msgid "New task"
+msgstr "新任务"
+
+#: main.c:296
+msgid "Name"
+msgstr "名称"
+
+#: main.c:403 main.c:404
+msgid "Delete task"
+msgstr "删除任务"
+
+#: main.c:409 main.c:410
+msgid "Clock on"
+msgstr "签到"
+
+#: main.c:415 main.c:416
+msgid "Clock off"
+msgstr "签出"
+
+#: main.c:423 main.c:424
+msgid "Note"
+msgstr "备注"
+
+#: main.c:430
+msgid "Journal"
+msgstr ""
+
+#: main.c:431
+msgid "Show journal"
+msgstr ""
+
+#: gpe-timesheet.desktop.in.h:1
+msgid "GPE Timesheet"
+msgstr "GPE 时间表"
+
+#~ msgid "OK"
+#~ msgstr "确定"
+
+#~ msgid "Cancel"
+#~ msgstr "取消"

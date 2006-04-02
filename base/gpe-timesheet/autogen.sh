@@ -30,9 +30,9 @@ intltoolize --copy --automake
 
 libtoolize --copy --force
 
-aclocal-1.8 $ACLOCAL_FLAGS
+aclocal $ACLOCAL_FLAGS
 
-automake-1.8 -a $am_opt
+automake -a $am_opt
 autoconf
 ./configure --enable-maintainer-mode "$@"
 

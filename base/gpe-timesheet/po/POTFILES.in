@@ -1,4 +1,6 @@
-gpe-todo.desktop.in
-list-ui.c
+gpe-timesheet.desktop.in
+ui.c
 main.c
-todo-ui.c
+sql.c
+journal.c
+hildon/gpe-timesheet.desktop.in

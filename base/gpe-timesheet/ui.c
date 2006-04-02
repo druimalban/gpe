@@ -1,6 +1,6 @@
 /*
  * This file is part of gpe-timeheet
- * (c) 2004 Florian Boor <florian.boor@kernelconcepts.de>
+ * (c) 2004, 2006 Florian Boor <florian.boor@kernelconcepts.de>
  * (c) 2005 Philippe De Swert <philippedeswert@scarlet.be>
  * (c) 2006 Michele Giorgini <md6604@mclink.it>
  *
@@ -20,7 +20,7 @@
 #include <locale.h>
 #include <string.h>
 
-// gdk-gtk-gpe includes
+/* gdk-gtk-gpe includes */
 #include <gdk/gdkkeysyms.h>
 #include <gtk/gtk.h>
 #include <gpe/init.h>
@@ -31,7 +31,7 @@
 #include <gpe/gpedialog.h>
 #include <gpe/gtkdatecombo.h>
 
-// timesheet includes
+/* timesheet includes */
 #include "sql.h"
 #include "journal.h"
 #include "ui.h"
@@ -616,7 +616,7 @@ GtkWidget * create_interface(GtkWidget *main_window)
     gtk_tool_item_set_expand (GTK_TOOL_ITEM(sep), TRUE);
     gtk_toolbar_insert (GTK_TOOLBAR(journal_toolbar), sep, -1);
   /* back to tasks button */
-    back = gtk_tool_button_new_from_stock (GTK_STOCK_QUIT);
+    back = gtk_tool_button_new_from_stock (GTK_STOCK_GO_BACK);
     gtk_tool_button_set_label (GTK_TOOL_BUTTON (back),  _("Back to tasks"));
     gtk_toolbar_insert (GTK_TOOLBAR(journal_toolbar), back, -1);
 #endif
@@ -645,21 +645,19 @@ GtkWidget * create_interface(GtkWidget *main_window)
     new = gtk_tool_button_new_from_stock (GTK_STOCK_NEW);
     gtk_tool_button_set_label (GTK_TOOL_BUTTON (new),  _("New task"));
   /* new sub-task button */
-    new_sub = gtk_tool_button_new_from_stock (GTK_STOCK_NEW);
+    new_sub = gtk_tool_button_new_from_stock (GTK_STOCK_ADD);
     gtk_tool_button_set_label (GTK_TOOL_BUTTON (new_sub),  _("Sub-task"));
   /* delete task button */
     delete = gtk_tool_button_new_from_stock (GTK_STOCK_DELETE);
     gtk_tool_button_set_label (GTK_TOOL_BUTTON(delete), _("Delete task"));
   /* refresh task list button */
-    refresh = gtk_tool_button_new_from_stock (GTK_STOCK_EDIT);
-    gtk_tool_button_set_label (GTK_TOOL_BUTTON(refresh), _("Refresh task list"));
+    refresh = gtk_tool_button_new_from_stock (GTK_STOCK_REFRESH);
   /* edit task/journal button */
     edit = gtk_tool_button_new_from_stock (GTK_STOCK_EDIT);
-    gtk_tool_button_set_label (GTK_TOOL_BUTTON(edit), _("Edit journal line"));
   /* show inline journal button */
     p = gpe_find_icon ("journal");
     pw = gtk_image_new_from_pixbuf (p);
-    show = gtk_tool_button_new (GTK_WIDGET(pw), _("Show logs"));
+    show = gtk_tool_button_new (GTK_WIDGET(pw), _("Show journal"));
 #endif
 
 /*this is the code for the sequence of widgets into main toolbar */
