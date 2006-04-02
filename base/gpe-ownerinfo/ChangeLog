@@ -1,3 +1,9 @@
+2006-04-02  Colin Marquardt  <colin@marquardt-home.de>
+
+	* Makefile (LINGUAS): Add ko.
+
+	* po/ko.po: New Korean translation courtesy Soohyung Cho.
+
 2006-01-31  Florian Boor <florian@kernelconcepts.de>
 
 	* po/es.po: Update translation.
