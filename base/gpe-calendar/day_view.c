@@ -289,23 +289,17 @@ datesel_changed (GtkWidget *datesel, GtkWidget *widget)
   GtkDayView *day_view = GTK_DAY_VIEW (widget);
   GSList *reminders;
   time_t end, start;
-  struct tm tm_start, tm_end;
+  struct tm tm_start;
   GSList *events, *appointments, *iter;
 
   viewtime = gtk_date_sel_get_time (GTK_DATE_SEL (datesel));
 
   localtime_r (&viewtime, &tm_start);
-
   tm_start.tm_hour = 0;
   tm_start.tm_min = 0;
   tm_start.tm_sec = 0;
   start = mktime (&tm_start);
-  localtime_r (&viewtime, &tm_end);
-  tm_end.tm_hour = 23;
-  tm_end.tm_min = 59;
-  tm_end.tm_sec = 0;
-  end = mktime (&tm_end);
-
+  end = start + 30 * 60 * 60 - 1;
 
   /* Get the appointments for the current period.  */
   events = event_db_list_for_period (start, end);
@@ -315,7 +309,10 @@ datesel_changed (GtkWidget *datesel, GtkWidget *widget)
     {
       event_t ev = iter->data;
       if (is_reminder (ev))
-        reminders = g_slist_append (reminders, ev);
+	{
+	  if (start <= ev->start && ev->start <= start + 24 * 60 * 60)
+	    reminders = g_slist_append (reminders, ev);
+	}
       else
         appointments = g_slist_append (appointments, ev);
     }
@@ -339,8 +336,9 @@ datesel_changed (GtkWidget *datesel, GtkWidget *widget)
 	  cream_gc = pen_new (GTK_WIDGET (day_view), 65535, 64005, 51100);
 
 	  day_view->reminders
-	    = GTK_DAY_RENDER (gtk_day_render_new (cream_gc, black_gc,
-						  viewtime, 5, 0, FALSE, 1,
+	    = GTK_DAY_RENDER (gtk_day_render_new (start, 24 * 60 * 60,
+						  1, 0, 0,
+						  cream_gc, 1, FALSE,
 						  reminders));
 
 	  g_signal_connect (G_OBJECT (day_view->reminders), "event-clicked",
@@ -377,9 +375,10 @@ datesel_changed (GtkWidget *datesel, GtkWidget *widget)
       post_him_yellow = pen_new (GTK_WIDGET (day_view), 63222, 59110, 33667);
 
       day_view->appointments
-	= GTK_DAY_RENDER (gtk_day_render_new (post_him_yellow, black_gc,
-					      viewtime,
-					      5, 4, TRUE, NUM_HOURS,
+	= GTK_DAY_RENDER (gtk_day_render_new (start, 30 * 60 * 60,
+					      30, 7, 12,
+					      post_him_yellow,
+					      4, TRUE,
 					      appointments));
 
       g_signal_connect (G_OBJECT (day_view->appointments), "event-clicked",

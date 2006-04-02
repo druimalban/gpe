@@ -28,18 +28,23 @@ typedef struct _GtkDayRender GtkDayRender;
   GTK_CHECK_CLASS_CAST (klass, gtk_day_render_get_type (), DayRenderClass)
 #define GTK_IS_DAY_RENDER(obj) GTK_CHECK_TYPE (obj, gtk_day_render_get_type ())
 
-/* Create a new day_render object.  APP_GC is the appointment color,
-   OVERL_GC is the color of overlapping zones, DATE is the date,
-   WIDTH, the width of the drawing area, HEIGHT, the height of the
-   drawing area, COLS, the number of columns, GAP is the GAP between
-   lines, OFFSET is the offset from the (0,0) of the drawing area, and
-   EVENTS is a list of events for the day.  */
-GtkWidget *gtk_day_render_new (GdkGC *app_gc,
-			       GdkGC *overl_gc,
-			       time_t date,
-			       guint cols, guint gap,
-			       gboolean hour_column, guint rows,
-			       GSList *events);
+/* Create a new day_render object.  DATE is start of the period that
+   the day render is displaying, DURATION is the duration (in
+   seconds).  ROWS is the number of rows to use (thus a row is
+   DURATION / ROWS seconds long).  ROWS_HARD_FIRST indicates the first
+   row which must be displayed even if it contains no events.
+   ROWS_HARD indicates the number of rows which must be shown starting
+   with row ROWS_HARD_FIRST.  Event rectangles will be colored with
+   APP_GC.  GUTTER is the number of pixels to leave empty around an
+   event rectangle.  HOUR_COLUMN indicates if an hour column should be
+   drawn.  EVENTS is a list of events to display.  */
+extern GtkWidget *gtk_day_render_new (time_t date, gint duration,
+				      gint rows,
+				      gint rows_hard_first,
+				      gint rows_hard,
+				      GdkGC *app_gc, gint gutter,
+				      gboolean hour_column, 
+				      GSList *events);
 
 /* Return the type of a GtkDayRender.  */
 extern GType gtk_day_render_get_type (void);

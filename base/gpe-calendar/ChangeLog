@@ -1,3 +1,43 @@
+2006-03-31  Neal H. Walfield  <neal@gnu.org>
+
+	* day_render.h (gtk_day_render_new): Add new arguments duration,
+	rows_hard_first and rows_hard.  Remove arguments cols and ol_gc.
+	Update callers.
+	* day_render.c (period): Remove define.
+	(event_rect_new): Don't mark the DAY_RENDER as const.
+	(struct _GtkDayRender): Remove unused field ol_gc and cols.
+	Rename width to visible_width and height to visible_height and
+	update users.  Add duration, event_earliest, event_latest, height,
+	offset_y, rows_hard_first, rows_hard, rows_visible_first and
+	rows_visible.  Changed all fields that were a guint to a gint.
+	(gtk_day_render_new): Implement initialization for new arguments
+	duration, rows_hard_first and rows_hard.  Remove initialization
+	for cols and ol_gc.
+	(event_rect_draw): Integrated into...
+	(gtk_day_render_expose): ... this function.  Make i and top gints,
+	not guints.  When iterating over the rows to draw, start with row
+	DAY_RENDER->ROWS_VISIBLE_FIRST and paint exactly
+	DAY_RENDER->ROWS_VISIBLE rows.  Scale the drawing operations to
+	fill the canvas given that only DAY_RENDER->ROWS_VISIBLE rows are
+	visible.  Don't draw a line at the bottom of the canvas.
+	(gtk_day_render_configure): If UPDATE is true also call
+	gtk_day_render_update_extents.
+	(gtk_day_render_button_press): Change row calculation to take into
+	account the number of rows actually drawn.
+	(gtk_day_render_set_events): Reset DAY_RENDER->EVENT_EARLIEST and
+	DAY_RENDER->EVENT_LATEST.  Call gtk_day_render_update_extents.
+	(gtk_day_render_update_extents): Only update
+	DAY_RENDER->ROW_HEIGHT and DAY_RENDER->TIME_WIDTH the first time
+	the function is called.  Also compute
+	DAY_RENDER->ROWS_VISIBLE_FIRST and DAY_RENDER->ROWS_VISIBLE.
+	Request a window size based on the number of visible rows.
+	(event_rect_new): Update DAY_RENDER->EVENT_EARLIEST and
+	DAY_RENDER->EVENT_LATEST as required.
+	* day_view.c (datesel_changed): Remove variable tm_end.  Get the
+	list of events for the next 30 hours.  Only add those events that
+	happen in the next 24 hours to REMINDERS.  Pass START, not
+	VIEWTIME to gtk_day_render_new.
+
 2006-03-28  Neal H. Walfield  <neal@gnu.org>
 
         Make DayView and DayRender proper gtk objects and cleanly separate
