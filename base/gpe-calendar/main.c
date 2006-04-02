@@ -564,12 +564,6 @@ main (int argc, char *argv[])
   gchar timebuf[3];
   struct tm tm;
     
-  memset(&tm, 0, sizeof(tm));
-  if (strftime (timebuf, sizeof (timebuf), "%p", &tm))
-      TIMEFMT = "%I:%M %p";
-  else
-      TIMEFMT = "%R";
-
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
 
@@ -577,6 +571,12 @@ main (int argc, char *argv[])
     exit (1);
 
   setlocale (LC_ALL, "");
+
+  memset (&tm, 0, sizeof (tm));
+  if (strftime (timebuf, sizeof (timebuf), "%p", &tm))
+    TIMEFMT = "%I:%M %p";
+  else
+    TIMEFMT = "%R";
 
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
   bind_textdomain_codeset (PACKAGE, "UTF-8");
