@@ -1,7 +1,84 @@
+2006-04-03  Neal H. Walfield  <neal@gnu.org>
+
+	* month_view.h (struct _GtkMonthView): New structure.
+	(GtkMonthView): New typedef.
+	(GTK_MONTH_VIEW): New macro.
+	(GTK_MONTH_VIEW_CLASS): New macro.
+	(GTK_IS_MONTH_VIEW): New macro.
+	(month_view): Rename from this...
+	(gtk_month_view_new): ... to this and update callers.
+	(month_free_lists): Remove declaration.
+	* month_view.c: Don't include <stdio.h>, <stdlib.h> or <string.h>.
+	(TOTAL_WEEKS): New macro.
+	(WIDTH_DELTA): New macro.
+	(is_today): New macro.
+	(struct _GtkMonthView): New structure.
+	(day_events, datesel, draw, render_ctl, rc): Move from here...
+	(struct _GtkMonthView): ... to this structure and update users.
+	(c_old, active_day): Move from here...
+	(struct _GtkMonthView): ... to this structure, rename to has_popup
+	and focused_day respective, and update users.
+	(month_view_update): Remove declaration.
+	(GtkMonthViewClass): New typedef.
+	(gtk_month_view_base_class_init): New declaration.
+	(gtk_month_view_init): New declaration.
+	(gtk_month_view_dispose): New declaration.
+	(gtk_month_view_finalize): New declaration.
+	(parent_class): New global.
+	(gtk_month_view_get_type): New function.
+	(gtk_month_view_base_class_init): New function.
+	(gtk_month_view_init): New function.
+	(gtk_month_view_dispose): New function.
+	(gtk_month_view_finalize): New function.
+	(gtk_month_view_cell_box): New function.
+	(gtk_month_view_cell_at): New function.
+	(gtk_month_view_invalidate_cell): New function.
+	(button_press): Don't display the popup menu if C is invalid.  If
+	left clicking on a non-focused cell, move to that cell.  If that
+	includes changing to a new month, do that.  If clicking on an
+	focused cell, move to the day view of that cell.  Don't do this
+	for a double click.  Only call month_view_update is really
+	necessary.
+	(days1, days2): Merge to...
+	(days_of_week): ... to this and update users.
+	(calc_title_height): Change argument from a GtkWidget to a
+	GtkMonthView.  Don't use strlen, just pass -1 to
+	pango_layout_set_text.
+	(draw_expose_event): Expose the remaining arguments which are
+	passed to an expose event.  Precisely draw each event in its area
+	avoiding treading on a neighbor.  Only redraw those events which
+	require a redraw.  Use pen_new where possible.  Don't waste time
+	calling gdk_gc_set_clip_rectangle.  Collapse loops.  Don't forget
+	to unref PL_EVT.
+	(month_view_update): Take two new parameters, MONTH_VIEW and
+	FORCE.  Only update if the month actually changed or if FORCE is
+	true.  Compress loops.
+	(changed_callback): Rename from this...
+	(datesel_changed): ... to this.  The second parameter is a
+	GtkMonthView, pass it to month_view_update.
+	(update_hook_callback): Take an additional parameter, the view.
+	Pass it to month_view_update.
+	(resize_table): Add two parameters, the GtkAllocation and the
+	GtkMonthView.  Pre-adjust the width with WIDTH_DELTA.  Queue a
+	draw, don't actually perform one immediately.
+	(month_view_key_press_event): Compress code.  Only call
+	month_view_update when required.  When reaching an edge which
+	would require scrolling to the next (or previous month), actually
+	do it.
+	(month_free_lists): Remove function.
+	(month_view): Rename funtion...
+	(gtk_month_view_new): ... to this.  Pass MONTH_VIEW to the various
+	signal handlers as the user data parameter.  Request size based on
+	MONTH_VIEW->TITLE_HEIGHT.
+	* day_render.h (pen_new): Move declaration from here...
+	* globals.h (pen_new): ... to here.
+	* day_render.c (pen_new): Move function from here...
+	* main.c (pen_new): ... to here.
+
 2006-04-01  Neal H. Walfield  <neal@gnu.org>
 
         * export-vcal.c (vcal_do_save): Don't connect a signal handler to
-        the cancel button which destroys the dialog as we destroy anyway,
+        the cancel button which destroys the dialog as we destroy it anyway,
         i.e. avoid a double free.
 
 2006-04-01  Neal H. Walfield  <neal@gnu.org>

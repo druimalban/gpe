@@ -916,22 +916,3 @@ ol_sets_to_rectangles (GtkDayRender *day_render, GNode * node)
 
   return ev_rects;
 }
-
-GdkGC *
-pen_new (GtkWidget * widget, guint red, guint green, guint blue)
-{
-  GdkColormap *colormap;
-  GdkGC *pen_color_gc;
-  GdkColor pen_color;
-
-  colormap = gdk_window_get_colormap (widget->window);
-  pen_color_gc = gdk_gc_new (widget->window);
-  gdk_gc_copy (pen_color_gc, widget->style->black_gc);
-  pen_color.red = red;
-  pen_color.green = green;
-  pen_color.blue = blue;
-  gdk_colormap_alloc_color (colormap, &pen_color, FALSE, TRUE);
-  gdk_gc_set_foreground (pen_color_gc, &pen_color);
-
-  return pen_color_gc;
-}

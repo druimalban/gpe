@@ -133,6 +133,25 @@ time_from_day (int year, int month, int day)
   return selected_time;
 }
 
+GdkGC *
+pen_new (GtkWidget * widget, guint red, guint green, guint blue)
+{
+  GdkColormap *colormap;
+  GdkGC *pen_color_gc;
+  GdkColor pen_color;
+
+  colormap = gdk_window_get_colormap (widget->window);
+  pen_color_gc = gdk_gc_new (widget->window);
+  gdk_gc_copy (pen_color_gc, widget->style->black_gc);
+  pen_color.red = red;
+  pen_color.green = green;
+  pen_color.blue = blue;
+  gdk_colormap_alloc_color (colormap, &pen_color, FALSE, TRUE);
+  gdk_gc_set_foreground (pen_color_gc, &pen_color);
+
+  return pen_color_gc;
+}
+
 /* Call strftime() on the format and convert the result to UTF-8.  Any
    non-% expressions in the format must be in the locale's character
    set, since they will undergo UTF-8 conversion.  Careful with
@@ -416,7 +435,6 @@ on_import_vcal (GtkWidget *widget, gpointer data)
     }
   gtk_widget_destroy(filesel);
   week_free_lists();
-  month_free_lists();
   event_db_refresh();
   update_all_views();  
 }

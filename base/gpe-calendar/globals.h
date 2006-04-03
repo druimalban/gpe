@@ -25,6 +25,7 @@ extern void set_time_and_day_view(time_t selected_time);
 extern void set_time_all_views(void);
 extern time_t time_from_day(int year, int month, int day);
 
+extern GdkGC *pen_new (GtkWidget *widget, guint red, guint green, guint blue);
 
 extern GdkPixmap *close_pix, *day_pix;
 extern GdkBitmap *close_mask, *day_mask;

@@ -58,6 +58,4 @@ extern void gtk_day_render_set_events (GtkDayRender *day_render,
 /* Set DAY_RENDER's date to DATE.  */
 extern void gtk_day_render_set_date (GtkDayRender *day_render, time_t date);
 
-GdkGC *pen_new (GtkWidget * widget, guint red, guint green, guint blue);
-
 #endif /* DAY_RENDER_H */
