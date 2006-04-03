@@ -1,5 +1,10 @@
 2006-04-03  Neal H. Walfield  <neal@gnu.org>
 
+	* main.c (main): Really update all callers of month_view to call
+	gtk_month_view_new.
+	
+2006-04-03  Neal H. Walfield  <neal@gnu.org>
+
 	* month_view.h (struct _GtkMonthView): New structure.
 	(GtkMonthView): New typedef.
 	(GTK_MONTH_VIEW): New macro.
