@@ -75,6 +75,8 @@ struct _GtkDayView
   GtkWidget *event_menu;
   /* A label describing the clicked event.  */
   GtkWidget *event_menu_info;
+
+  time_t date;
 };
 
 typedef struct
@@ -140,6 +142,7 @@ gtk_day_view_init (GTypeInstance *instance, gpointer klass)
   day_view->reminders = 0;
   day_view->appointments = 0;
   day_view->sel_event = 0;
+  day_view->date = (time_t) -1;
 }
 
 static void
@@ -158,11 +161,6 @@ gtk_day_view_finalize (GObject *object)
   g_return_if_fail (GTK_IS_DAY_VIEW (object));
 
   day_view = (GtkDayView *) object;
-
-  if (day_view->reminders)
-    gtk_widget_destroy (GTK_WIDGET (day_view->reminders));
-  if (day_view->appointments)
-    gtk_widget_destroy (GTK_WIDGET (day_view->appointments));
 
   gtk_widget_destroy (day_view->event_menu);
 
@@ -282,19 +280,30 @@ delete_event (event_t ev, GtkWidget * d)
   event_db_forget_details (ev_real);
 }
 
-/* The datesel changed, adjust the date appropriately.  */
-static gboolean
-datesel_changed (GtkWidget *datesel, GtkWidget *widget)
+static void
+day_view_update (GtkDayView *day_view, gboolean force)
 {
-  GtkDayView *day_view = GTK_DAY_VIEW (widget);
-  GSList *reminders;
   time_t end, start;
   struct tm tm_start;
+  GSList *reminders, *cleanup;
   GSList *events, *appointments, *iter;
 
-  viewtime = gtk_date_sel_get_time (GTK_DATE_SEL (datesel));
-
   localtime_r (&viewtime, &tm_start);
+
+  if (! force)
+    {
+      struct tm tm;
+      localtime_r (&day_view->date, &tm);
+
+      if (tm.tm_year == tm_start.tm_year && tm.tm_yday == tm_start.tm_yday)
+	/* Same day, nothing to do.  */
+	{
+	  day_view->date = viewtime;
+	  return;
+	}
+    }
+  day_view->date = viewtime;
+
   tm_start.tm_hour = 0;
   tm_start.tm_min = 0;
   tm_start.tm_sec = 0;
@@ -305,6 +314,7 @@ datesel_changed (GtkWidget *datesel, GtkWidget *widget)
   events = event_db_list_for_period (start, end);
   reminders = NULL;
   appointments = NULL;
+  cleanup = NULL;
   for (iter = events; iter; iter = iter->next)
     {
       event_t ev = iter->data;
@@ -312,10 +322,15 @@ datesel_changed (GtkWidget *datesel, GtkWidget *widget)
 	{
 	  if (start <= ev->start && ev->start <= start + 24 * 60 * 60)
 	    reminders = g_slist_append (reminders, ev);
+	  else
+	    cleanup = g_slist_append (cleanup, ev);
 	}
       else
         appointments = g_slist_append (appointments, ev);
     }
+
+  if (cleanup)
+    event_db_list_destroy (cleanup);
 
   if (! reminders && day_view->reminders)
     /* There are no longer any reminders, destroy its render area.  */
@@ -398,21 +413,43 @@ datesel_changed (GtkWidget *datesel, GtkWidget *widget)
 	(GTK_VIEWPORT (GTK_WIDGET (day_view->appointments)->parent),
 	 GTK_SHADOW_NONE);
     }
+}
 
-  return TRUE;
+static gboolean
+datesel_changed (GtkWidget *widget, GtkWidget *dv)
+{
+  GtkDayView *day_view = GTK_DAY_VIEW (dv);
+  struct tm vtm;
+  struct tm dstm;
+
+  localtime_r (&viewtime, &vtm);
+  viewtime = gtk_date_sel_get_time (GTK_DATE_SEL (widget));
+  localtime_r (&viewtime, &dstm);
+
+  if (dstm.tm_year != vtm.tm_year || dstm.tm_yday != vtm.tm_yday)
+    {
+      gtk_calendar_select_month (GTK_CALENDAR (day_view->calendar),
+				 dstm.tm_mon, dstm.tm_year + 1900);
+      gtk_calendar_select_day (GTK_CALENDAR (day_view->calendar),
+			       dstm.tm_mday);
+
+      day_view_update (day_view, FALSE);
+    }
+
+  return FALSE;
 }
 
 static void
-day_changed_calendar (GtkWidget * widget)
+calendar_changed (GtkWidget *widget, GtkWidget *dv)
 {
-  guint day, month, year;
+  GtkDayView *day_view = GTK_DAY_VIEW (dv);
+  int day, month, year;
   struct tm tm;
 
   localtime_r (&viewtime, &tm);
-
   gtk_calendar_get_date (GTK_CALENDAR (widget), &year, &month, &day);
 
-  if (tm.tm_year != (year - 1900) || tm.tm_mon != month || tm.tm_mday != day)
+  if (tm.tm_year != year - 1900 || tm.tm_mon != month || tm.tm_mday != day)
     {
       tm.tm_year = year - 1900;
       tm.tm_mon = month;
@@ -420,7 +457,9 @@ day_changed_calendar (GtkWidget * widget)
 
       viewtime = mktime (&tm);
 
-      set_time_all_views ();
+      gtk_date_sel_set_time (GTK_DATE_SEL (day_view->datesel), viewtime);
+
+      day_view_update (day_view, FALSE);
     }
 }
 
@@ -477,18 +516,20 @@ sink_scroller (GtkAdjustment *adjustment, gpointer data)
     day_view->scroll_floating = FALSE;
 }
 
-static gboolean
-update_hook_callback (GtkDayView *day_view)
+static void
+update_hook_callback (GtkWidget *dv)
 {
+  GtkDayView *day_view = GTK_DAY_VIEW (dv);
+
   struct tm tm;
-  localtime_r (&viewtime, &tm);
-  
   gtk_date_sel_set_time (GTK_DATE_SEL (day_view->datesel), viewtime);
-  gtk_calendar_select_month (GTK_CALENDAR (day_view->calendar), tm.tm_mon,
-			     tm.tm_year + 1900);
+  localtime_r (&viewtime, &tm);
+  gtk_calendar_select_month (GTK_CALENDAR (day_view->calendar),
+			     tm.tm_mon, tm.tm_year + 1900);
   gtk_calendar_select_day (GTK_CALENDAR (day_view->calendar), tm.tm_mday);
-  
-  return TRUE;
+
+  /* Force a reload of the events.  */
+  day_view_update (day_view, TRUE);
 }
 
 static gboolean
@@ -660,7 +701,7 @@ gtk_event_menu_new (GtkDayView *day_view)
   gtk_window_set_modal (GTK_WINDOW (day_view->event_menu), TRUE);
 }
 
-GtkWidget *
+GtkDayView *
 gtk_day_view_new (void)
 {
   GtkDayView *day_view;
@@ -698,7 +739,8 @@ gtk_day_view_new (void)
   gtk_widget_show (day_view->datesel);
   
   g_signal_connect (G_OBJECT (day_view->calendar),
-		    "day-selected", G_CALLBACK (day_changed_calendar), NULL);
+		    "day-selected", G_CALLBACK (calendar_changed),
+		    day_view);
 
   gtk_scrolled_window_set_policy
     (GTK_SCROLLED_WINDOW (day_view->appointment_window),
@@ -739,5 +781,5 @@ gtk_day_view_new (void)
 
   g_object_set_data (G_OBJECT (main_window), "datesel-day", day_view->datesel);
 
-  return GTK_WIDGET (day_view);
+  return day_view;
 }

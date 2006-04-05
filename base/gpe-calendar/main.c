@@ -685,7 +685,7 @@ main (int argc, char *argv[])
 
   time (&viewtime);
   week = GTK_WIDGET (gtk_week_view_new ());
-  day = gtk_day_view_new ();
+  day = GTK_WIDGET (gtk_day_view_new ());
   month = GTK_WIDGET (gtk_month_view_new ());
   
   tooltips = gtk_tooltips_new();

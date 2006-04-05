@@ -24,7 +24,7 @@ typedef struct _GtkDayView GtkDayView;
 extern GType gtk_day_view_get_type (void);
 
 /* Create a new day view.  */
-extern GtkWidget *gtk_day_view_new (void);
+extern GtkDayView *gtk_day_view_new (void);
 
 /* Scroll.  */
 extern void gtk_day_view_scroll (GtkDayView *day_view, gboolean force);

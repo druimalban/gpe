@@ -1,5 +1,28 @@
 2006-04-05  Neal H. Walfield  <neal@gnu.org>
 
+	* day_view.c (struct _GtkDayView): Add field, date.
+	(gtk_day_view_init): Initialize DAY_VIEW->DATE.
+	(datesel_changed): Move bulk of code from here...
+	(day_view_update): ... to here.  Only update if FORCE is true or
+	if the day actually changed.  Free events which are not used.
+	(datesel_changed): If time changed, update DAY_VIEW->CALENDAR and
+	call day_view_update.
+	(day_changed_calendar): Rename from this...
+	(calendar_changed): ... to this and update callers.  Don't call
+	set_time_all_views.  If time changed, update DAY_VIEW->DATESEL and
+	call day_view_update.
+	(update_hook_callback): Change return type to void.  Change first
+	parameter to a GtkWidget *.  Call day_view_update.
+	(gtk_day_view_new): Change return type to GtkDayView *.
+
+	(gtk_day_view_finalize): Don't free DAY_VIEW->APPOINTMENTS or
+	DAY_VIEW->REMINDERS.
+
+	* day_view.h (gtk_day_view_new): Change to return a GtkDayView *.
+	Update users.
+
+2006-04-05  Neal H. Walfield  <neal@gnu.org>
+
 	* week_view.h (struct _GtkWeekView): New structure.
 	(GtkWeekView): New tyepdef.
 	(GTK_WEEK_VIEW): New macro.
