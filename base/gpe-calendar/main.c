@@ -434,7 +434,6 @@ on_import_vcal (GtkWidget *widget, gpointer data)
       gtk_widget_destroy(feedbackdlg);
     }
   gtk_widget_destroy(filesel);
-  week_free_lists();
   event_db_refresh();
   update_all_views();  
 }
@@ -685,7 +684,7 @@ main (int argc, char *argv[])
   gtk_container_add (GTK_CONTAINER (main_window), vbox);
 
   time (&viewtime);
-  week = week_view ();
+  week = GTK_WIDGET (gtk_week_view_new ());
   day = gtk_day_view_new ();
   month = GTK_WIDGET (gtk_month_view_new ());
   

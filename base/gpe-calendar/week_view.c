@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2001, 2002, 2004, 2005, 2006 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2006 Neal H. Walfield <neal@walfield.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -8,9 +9,6 @@
  */
 
 #include <sys/types.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include <time.h>
 #include <libintl.h>
 
@@ -28,77 +26,180 @@
 
 #define _(x) gettext(x)
 
-static GtkWidget *week_view_draw;
-static struct tm today;
 #ifdef IS_HILDON
 #define REALLY_MIN_CELL_HEIGHT 47
 #else
 #define REALLY_MIN_CELL_HEIGHT 38
 #endif
-static GtkWidget *datesel, *calendar;
-
-static guint time_width, available_width;
-
-static struct render_ctl *c_old;
-
-static GtkWidget *scroller;
-
-struct render_ctl
-{
-  struct day_popup popup;
-  gboolean valid;
-  gboolean today;
-};
 
 struct week_day
 {
-  guint y0, y1;
-  gchar *string;
-  GSList *events;
-  gboolean is_today;
-  gboolean is_active;
-  struct render_ctl rc;
-} week_days[7];
+  /* Valid if HAVE_EXTENTS is true.  */
+  int top;
+  int height;
 
+  /* Banner to display for this day.  */
+  gchar *banner;
+
+  /* The list of events.  */
+  GSList *events;
+
+  struct day_popup popup;
+};
+
+struct _GtkWeekView
+{
+  GtkVBox widget;
+
+  struct week_day days[7];
+  gboolean have_extents;
+
+  GtkWidget *draw;
+  GtkWidget *scroller;
+  GtkWidget *datesel, *calendar;
+
+  /* The week day (if any) which the popup menu is for.  */
+  struct week_day *has_popup;
+
+  /* With required by the banners.  */
+  gint banner_width;
+  /* Width required by the time fields.  */
+  gint time_width;
+  /* Current canvas width and height.  */
+  gint width, height;
+
+  /* Day with the focus.  */
+  int focused_day;
+
+  time_t date;
+};
+
+typedef struct
+{
+  GtkVBoxClass vbox_class;
+  GObjectClass parent_class;
+} GtkWeekViewClass;
+
+static void gtk_week_view_base_class_init (gpointer klass);
+static void gtk_week_view_init (GTypeInstance *instance, gpointer klass);
+static void gtk_week_view_dispose (GObject *obj);
+static void gtk_week_view_finalize (GObject *object);
+
+static GtkWidgetClass *parent_class;
+
+GType
+gtk_week_view_get_type (void)
+{
+  static GType type = 0;
+
+  if (! type)
+    {
+      static const GTypeInfo info =
+      {
+	sizeof (GtkWeekViewClass),
+	gtk_week_view_base_class_init,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	sizeof (struct _GtkWeekView),
+	0,
+	gtk_week_view_init
+      };
+
+      type = g_type_register_static (gtk_vbox_get_type (),
+				     "GtkWeekView", &info, 0);
+    }
+
+  return type;
+}
+
+static void
+gtk_week_view_base_class_init (gpointer klass)
+{
+  GObjectClass *object_class;
+  GtkWidgetClass *widget_class;
+
+  parent_class = g_type_class_ref (gtk_vbox_get_type ());
+
+  object_class = G_OBJECT_CLASS (klass);
+  object_class->finalize = gtk_week_view_finalize;
+  object_class->dispose = gtk_week_view_dispose;
+
+  widget_class = (GtkWidgetClass *) klass;
+}
+
+static void
+gtk_week_view_init (GTypeInstance *instance, gpointer klass)
+{
+  GtkWeekView *week_view = GTK_WEEK_VIEW (instance);
+
+  week_view->have_extents = FALSE;
+  week_view->height = 0;
+  week_view->width = 0;
+  week_view->date = (time_t) -1;
+  week_view->has_popup = 0;
+}
+
+static void
+gtk_week_view_dispose (GObject *obj)
+{
+  /* Chain up to the parent class */
+  G_OBJECT_CLASS (parent_class)->dispose (obj);
+}
+
+static void
+gtk_week_view_finalize (GObject *object)
+{
+  GtkWeekView *week_view = GTK_WEEK_VIEW (object);
+  int day;
+
+  for (day = 0; day < 7; day++)
+    {
+      struct week_day *d = &week_view->days[day];
+      if (d->banner)
+	g_free (d->banner);
+      if (d->events)
+        {
+          event_db_list_destroy (d->events);
+          d->events = NULL;
+        }
+    }
+
+  G_OBJECT_CLASS (parent_class)->finalize (object);
+}
+
+static void
+gtk_week_view_invalidate_day (GtkWeekView *week_view, gint i)
+{
+  struct week_day *day = &week_view->days[i];
+
+  gtk_widget_queue_draw_area (week_view->draw, 0, day->top,
+			      week_view->width, day->height);
+}
 
 static gint
-draw_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer user_data)
+draw_expose_event (GtkWidget *widget, GdkEventExpose *event, GtkWidget *wv)
 {
-  GtkDrawingArea *darea;
-  GdkDrawable *drawable;
+  GtkWeekView *week_view = GTK_WEEK_VIEW (wv);
+  GdkDrawable *drawable = widget->window;
   GdkGC *black_gc;
   GdkGC *white_gc;
   GdkGC *blue_gc;
   GdkGC *yellow_gc;
   GdkGC *salmon_gc;
-  guint max_width;
-  guint max_height;
-  guint day;
-  GdkColor blue;
   GdkColor yellow;
   GdkColor salmon;
   GdkColormap *colormap;
   PangoLayout *pl = gtk_widget_create_pango_layout (GTK_WIDGET (widget), NULL);
-  PangoLayout *pl_evt = gtk_widget_create_pango_layout (GTK_WIDGET (widget), NULL);
-  gboolean draw_sep = FALSE;
-  gboolean wide_mode = FALSE;
-  gint day_label_width = 0;
+  PangoLayout *pl_evt = gtk_widget_create_pango_layout (GTK_WIDGET (widget),
+							NULL);
+  gboolean wide_mode = widget->allocation.width > widget->allocation.height;
+  int i;
     
-  g_return_val_if_fail (widget != NULL, TRUE);
-  g_return_val_if_fail (GTK_IS_DRAWING_AREA (widget), TRUE);
+  blue_gc = pen_new (widget, 0, 0, 0xffff);
 
-  if (widget->allocation.width > widget->allocation.height)
-    wide_mode = TRUE;
-
-  blue_gc = gdk_gc_new (widget->window);
-  gdk_gc_copy (blue_gc, widget->style->black_gc);
   colormap = gdk_window_get_colormap (widget->window);
-  blue.red = 0;
-  blue.green = 0;
-  blue.blue = 0xffff;
-  gdk_colormap_alloc_color (colormap, &blue, FALSE, TRUE);
-  gdk_gc_set_foreground (blue_gc, &blue);
-
   yellow_gc = gdk_gc_new (widget->window);
   gdk_gc_copy (yellow_gc, widget->style->black_gc);
   gdk_color_parse ("palegoldenrod", &yellow);
@@ -111,55 +212,74 @@ draw_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer user_data)
   gdk_colormap_alloc_color (colormap, &salmon, FALSE, TRUE);
   gdk_gc_set_foreground (salmon_gc, &salmon);
 
-  darea = GTK_DRAWING_AREA (widget);
-  drawable = widget->window;
   white_gc = widget->style->white_gc;
   black_gc = widget->style->black_gc;
-  max_width = widget->allocation.width;
-  max_height = widget->allocation.height;
-  
-  for (day = 0; day < 7; day++)
+
+  int day_start, day_end;
+  int top;
+  if (week_view->have_extents)
     {
-      GSList *iter;
-      for (iter = week_days[day].events; iter; iter = iter->next)
-        ((event_t)iter->data)->mark = FALSE;
+      /* Find the first day with damage.  */
+      for (day_start = 0; day_start < 7; day_start ++)
+	if (event->area.y
+	    < (week_view->days[day_start].top
+	       + week_view->days[day_start].height))
+	  break;
+
+      top = week_view->days[day_start].top;
+
+      /* Find the last day with damage.  */
+      for (day_end = day_start; day_end < 7; day_end ++)
+	if (week_view->days[day_end].top + week_view->days[day_end].height
+	    >= event->area.y + event->area.height)
+	  break;
+      day_end = MIN (day_end, 6);
+    }
+  else
+    {
+      day_start = 0;
+      day_end = 6;
+      top = 0;
     }
 
+  /* Calculate the amount of space for the text.  */
+  int text_width = week_view->draw->allocation.width - week_view->time_width;
   if (wide_mode)
-    {
-      for (day = 0; day < 7; day++)
-        {
-          PangoRectangle pr;
-    
-          pango_layout_set_width (pl, max_width * PANGO_SCALE);
-          pango_layout_set_markup (pl, week_days[day].string, strlen (week_days[day].string));
-          pango_layout_get_pixel_extents (pl, NULL, &pr);
-          if (pr.width > day_label_width)
-            day_label_width = pr.width;
-        }
-    }
+    text_width -= week_view->banner_width;
 
-  gdk_draw_line (drawable, black_gc, 0, 0, 0, max_height);
-  gdk_draw_line (drawable, black_gc, max_width, 0, max_width, max_height);
-  gdk_draw_line (drawable, black_gc, 0, 0, max_width, 0);
-  gdk_draw_line (drawable, black_gc, 0, max_height, max_height, max_height);
-  for (day = 0; day < 7; day++)
+  /* Display each day.  */
+  for (i = day_start; i <= day_end; i ++)
     {
-      guint x, y = week_days[day].y0;
+      struct week_day *day = &week_view->days[i];
+      GdkGC *color;
       GSList *iter;
       PangoRectangle pr;
+      int left = 4;
+      int banner_height;
 
-      if (draw_sep)
-        gdk_draw_line (drawable, black_gc, 1, y, max_width, y);
+      day->top = top;
 
-      gdk_draw_rectangle (drawable, week_days[day].events ? white_gc :
-                          (day < 5 ? yellow_gc : salmon_gc), 
-			  TRUE, 1, y + 1, max_width, max_height);
+      /* Color the day's background appropriately.  */
+      if (day->events)
+	color = white_gc;
+      else
+	{
+	  if (week_starts_monday)
+	    color = i >= 5 ? salmon_gc : yellow_gc;
+	  else
+	    color = i == 0 || i == 6 ? salmon_gc : yellow_gc;
+	}
+      gdk_draw_rectangle (drawable, color, TRUE,
+			  0, day->top, week_view->width,
+			  week_view->have_extents
+			  ? day->height : week_view->height);
 
-      pango_layout_set_width (pl, max_width * PANGO_SCALE);
-      pango_layout_set_markup (pl, week_days[day].string, strlen (week_days[day].string));
+      /* Leave a gap at the top.  */
+      top += 2;
+
+      /* Paint the day's banner.  */
+      pango_layout_set_markup (pl, day->banner, -1);
       pango_layout_get_pixel_extents (pl, NULL, &pr);
-      x = 4;
       gtk_paint_layout (widget->style,
 			widget->window,
 			GTK_WIDGET_STATE (widget),
@@ -167,92 +287,113 @@ draw_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer user_data)
 			&event->area,
 			widget,
 			"label",
-			x, y,
+			left, top,
 			pl);
+      banner_height = pr.height + 2 /* Gap.  */;
 
-      if (!wide_mode)
-        y += pr.height + 2;
+      /* In wide mode, the events start to the right of the banners;
+	 in narrow mode, immediately under.  */
+      if (wide_mode)
+	left += week_view->banner_width;
+      else
+        top += banner_height;
 
-      if (week_days[day].events)
-      {
-	  for (iter = week_days[day].events; iter; iter = iter->next)
+      /* Display each event.  */
+      for (iter = day->events; iter; iter = iter->next)
+	{
+	  guint height = 0;
+	  event_t ev = iter->data;
+	  event_details_t evd = event_db_get_details (ev);
+	      
+	  /* Paint the time for events which have a time stamp.  */
+	  if ((ev->flags & FLAG_UNTIMED) == 0)
 	    {
-	      guint height = 0;
 	      struct tm tm;
-	      event_t ev = iter->data;
-	      event_details_t evd = event_db_get_details (ev);
-	      int x = wide_mode ? day_label_width + 8 : 8;
-	      
-	      if ((ev->flags & FLAG_UNTIMED) == 0)
+
+	      localtime_r (&ev->start, &tm);
+
+	      /* Also, only display the time if this is the day on
+		 which the event starts.  */
+	      if (tm.tm_year == day->popup.year
+		  && tm.tm_mon == day->popup.month
+		  && tm.tm_mday == day->popup.day)
 		{
-		  if (ev->mark == FALSE)
-		    {
-		      gchar *buffer;
+		  gchar *buffer = strftime_strdup_utf8_locale (TIMEFMT, &tm);
+		  pango_layout_set_text (pl_evt, buffer, -1);
+		  g_free (buffer);
 
-		      localtime_r (&ev->start, &tm);
-
-              buffer = strftime_strdup_utf8_locale (TIMEFMT, &tm);
-		      pango_layout_set_text (pl_evt, buffer, -1);
-		      g_free (buffer);
-
-		      gtk_paint_layout (widget->style,
-					widget->window,
-					GTK_WIDGET_STATE (widget),
-					FALSE,
-					&event->area,
-					widget,
-					"label",
-					x, y,
-					pl_evt);
+		  gtk_paint_layout (widget->style,
+				    widget->window,
+				    GTK_WIDGET_STATE (widget),
+				    FALSE,
+				    &event->area,
+				    widget,
+				    "label",
+				    left, top,
+				    pl_evt);
 		      
-		      pango_layout_get_pixel_extents (pl_evt, NULL, &pr);
-		      if (height < pr.height)
-			height = pr.height;
-		      ev->mark = TRUE;
-		    }
+		  pango_layout_get_pixel_extents (pl_evt, NULL, &pr);
+		  height = pr.height;
 		}
-	      
-	      pango_layout_set_width (pl_evt, available_width * PANGO_SCALE);
-	      pango_layout_set_text (pl_evt, evd->summary, -1);
-	      pango_layout_get_pixel_extents (pl_evt, NULL, &pr);
-	      gtk_paint_layout (widget->style,
-				widget->window,
-				GTK_WIDGET_STATE (widget),
-				FALSE,
-				&event->area,
-				widget,
-				"label",
-				x + time_width + 4, y,
-				pl_evt);
-
-	      if (height < pr.height)
-            height = pr.height;
-	      
-	      y += height + 2;
 	    }
+
+	  /* Paint the event summary.  */
+	  pango_layout_set_width (pl_evt, text_width * PANGO_SCALE);
+	  pango_layout_set_text (pl_evt, evd->summary, -1);
+	  pango_layout_get_pixel_extents (pl_evt, NULL, &pr);
+	  gtk_paint_layout (widget->style,
+			    widget->window,
+			    GTK_WIDGET_STATE (widget),
+			    FALSE,
+			    &event->area,
+			    widget,
+			    "label",
+			    left + week_view->time_width, top,
+			    pl_evt);
+
+	  if (height < pr.height)
+	    height = pr.height;
+
+	  /* Leave a gap of two pixels.  */
+	  top += height + 2;
 	}
 
-      if (week_days[day].is_today)
-        {
-          gdk_draw_rectangle (drawable, blue_gc, FALSE, 0,
-                              week_days[day].y0, max_width, 
-                              week_days[day].y1 - week_days[day].y0);
-          gdk_draw_rectangle (drawable, blue_gc, FALSE, 1, 
-                              week_days[day].y0 + 1, max_width - 2, 
-                              week_days[day].y1 - week_days[day].y0 - 2);
-          draw_sep = FALSE;
-        }
+      top = MAX (top, day->top + banner_height);
+      /* For the frame.  */
+      top ++;
+
+      /* Save the calculated height.  */
+      if (! week_view->have_extents)
+	day->height = top - day->top + 1;
       else
-       draw_sep = TRUE;
+	g_assert (day->height == top - day->top + 1);
+
+      if (i == week_view->focused_day)
+	/* Highlight today.  */
+	gdk_draw_rectangle (drawable, blue_gc, FALSE,
+			    0, day->top,
+			    week_view->width - 1,  day->height - 2);
+
+      gdk_draw_line (drawable, black_gc,
+		     0, day->top + day->height - 1,
+		     week_view->width - 1,  day->top + day->height - 1);
+
+      top ++;
   }
 
-  {
-    guint y = week_days[6].y1;
+  if (! week_view->have_extents)
+    {
+      int bottom = week_view->days[6].top + week_view->days[6].height;
 
-    if (draw_sep)
-      gdk_draw_line (drawable, black_gc, 0, y, max_width, y);
-    gdk_draw_rectangle (drawable, white_gc, TRUE, 0, y + 1, max_width, max_height);
-  }
+      /* When painting the original backgrounds, we overestimated.
+	 Clear any unused space.  */
+      gdk_window_clear_area (widget->window, 0, bottom,
+			     week_view->width, week_view->height - bottom);
+
+      gtk_widget_set_size_request (week_view->draw,
+				   week_view->time_width + 100, bottom);
+    }
+  week_view->have_extents = TRUE;
 
   gdk_gc_unref (blue_gc);
   gdk_gc_unref (yellow_gc);
@@ -264,167 +405,207 @@ draw_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer user_data)
   return TRUE;
 }
 
-
-void
-week_free_lists()
+/* The drawing area changed size.  */
+static void
+resize (GtkWidget *widget, GtkAllocation *allocation, GtkWidget *wv)
 {
-  int day;
-  for (day = 0; day < 7; day++)
+  GtkWeekView *week_view = GTK_WEEK_VIEW (wv);
+  gint width = allocation->width;
+  gint height = allocation->height;
+
+  if (width != week_view->width || height != week_view->height)
     {
-      struct week_day *d = &week_days[day];
-      if (d->events)
-        {
-          event_db_list_destroy (d->events);
-          d->events = NULL;
-        }
+      week_view->have_extents = FALSE;
+
+      week_view->width = width;
+      week_view->height = height;
+
+      gtk_widget_queue_draw (GTK_WIDGET (week_view->draw));
     }
 }
 
 static void
-week_view_update (void)
+week_view_update (GtkWeekView *week_view, gboolean force)
 {
   guint day;
-  time_t t = viewtime;
-  struct tm tm;
-  guint y = 0;
-  PangoLayout *pl = gtk_widget_create_pango_layout (GTK_WIDGET (week_view_draw), NULL);
-  PangoLayout *pl_evt = gtk_widget_create_pango_layout (GTK_WIDGET (week_view_draw), NULL);
+  struct tm start;
+  PangoLayout *pl
+    = gtk_widget_create_pango_layout (GTK_WIDGET (week_view->draw), NULL);
+  PangoLayout *pl_evt
+    = gtk_widget_create_pango_layout (GTK_WIDGET (week_view->draw), NULL);
   GSList *iter;
-  guint min_cell_height;
-  
-  min_cell_height = MAX (scroller->allocation.height / 7, REALLY_MIN_CELL_HEIGHT);
 
-  localtime_r (&t, &today);
+  struct tm current;
+  struct tm vt;
 
-  t = viewtime;
-  localtime_r (&t, &tm);
-  
+  localtime_r (&week_view->date, &current);
+  week_view->date = viewtime;
+  localtime_r (&week_view->date, &vt);
+
+  int start_of_week = vt.tm_yday - vt.tm_wday;
   if (week_starts_monday)
-    tm.tm_wday = (tm.tm_wday + 6) % 7;
-  t -= SECONDS_IN_DAY * tm.tm_wday;
-  t -= tm.tm_sec + (60 * tm.tm_min) + (60 * 60 * tm.tm_hour);
+    {
+      if (vt.tm_wday == 0)
+	start_of_week -= 6;
+      else
+	start_of_week ++;
+    }
 
-  time_width = 0;
+  if (! force
+      && vt.tm_year == current.tm_year
+      && start_of_week <= current.tm_yday
+      && current.tm_yday < start_of_week + 7)
+    /* Same week.  */
+    {
+      if (vt.tm_yday - start_of_week != week_view->focused_day)
+	/* Different day: change the focus.  */
+	{
+	  gtk_week_view_invalidate_day (week_view, week_view->focused_day);
+	  week_view->focused_day = vt.tm_yday - start_of_week;
+	  gtk_week_view_invalidate_day (week_view, week_view->focused_day);
+	}
+      return;
+    }
 
+  /* Calculate the beginning of the week being careful with respect to
+     DST.  */
+  start = vt;
+  if ((start.tm_yday - start_of_week) > start.tm_mday)
+    /* The start of the week starts last month.  */
+    {
+      if (start.tm_mon == 0)
+	/* Which also happens to be last year.  */
+	{
+	  start.tm_year --;
+	  start.tm_mon = 11;
+	}
+      else
+	start.tm_mon --;
+
+      int days = days_in_month (start.tm_year, start.tm_mon);
+      start.tm_mday = days + vt.tm_mday;
+    }
+  start.tm_mday -= (start.tm_yday - start_of_week);
+
+  /* Load the events for each day and figure out the focused day.  */
+  week_view->focused_day = -1;
+  time_t t = mktime (&start);
   for (day = 0; day < 7; day++)
     {
-      struct week_day *d = &week_days[day];
-      struct render_ctl *c = &d->rc;
+      struct week_day *d = &week_view->days[day];
+      struct tm start, end;
+      time_t s, e;
 
       if (d->events)
         event_db_list_destroy (d->events);
 
-      d->events = event_db_untimed_list_for_period (t, t + SECONDS_IN_DAY - 1, TRUE);
+      localtime_r (&t, &start);
+      start.tm_hour = 0;
+      start.tm_min = 0;
+      start.tm_sec = 0;
+      s = mktime (&start);
+
+      end = start;
+      end.tm_hour = 23;
+      end.tm_min = 59;
+      end.tm_sec = 59;
+      e = mktime (&end);
+
+      /* Tomorrow.  */
+      t = e + 1;
+
+      d->events = event_db_untimed_list_for_period (s, e, TRUE);
       d->events = g_slist_concat (d->events, 
-				  event_db_untimed_list_for_period (t, t + SECONDS_IN_DAY - 1, 
+				  event_db_untimed_list_for_period (s, e, 
 								    FALSE));
 
-      localtime_r (&t, &tm);
-      week_days[day].is_today = (tm.tm_mday == today.tm_mday 
-		       && tm.tm_mon == today.tm_mon 
-		       && tm.tm_year == today.tm_year);
-      week_days[day].is_active = week_days[day].is_today;
+      if (start.tm_mday == vt.tm_mday
+	  && start.tm_mon == vt.tm_mon
+	  && start.tm_year == vt.tm_year)
+	week_view->focused_day = day;
 
-      if (d->string)
-        g_free (d->string);
-      d->string = strftime_strdup_utf8_utf8 ("<b>%a %d %B</b>", &tm);
+      if (d->banner)
+        g_free (d->banner);
+      d->banner = strftime_strdup_utf8_utf8 ("<b>%a %d %B</b> ", &start);
 
-      c->popup.day = tm.tm_mday;
-      c->popup.year = tm.tm_year;
-      c->popup.month = tm.tm_mon;
-      c->valid = TRUE;
-      c->popup.events = week_days[day].events;
-      c->today = ((tm.tm_year == today.tm_year + 1900
-		   && tm.tm_mon == today.tm_mon
-		   && tm.tm_mday == today.tm_mday)) ? TRUE : FALSE;
-      
-      t += SECONDS_IN_DAY;
-
-      for (iter = week_days[day].events; iter; iter = iter->next)
-        ((event_t)iter->data)->mark = FALSE;
+      d->popup.day = start.tm_mday;
+      d->popup.year = start.tm_year;
+      d->popup.month = start.tm_mon;
+      d->popup.events = week_view->days[day].events;
     }
+  g_assert (0 <= week_view->focused_day && week_view->focused_day < 7);
 
+  /* Calculate WEEKVIEW->BANNER_WIDTH, the minimum width required to
+     display each day's banner.  */
+  week_view->banner_width = 0;
   for (day = 0; day < 7; day++)
     {
-      struct week_day *d = &week_days[day];
-      for (iter = d->events; iter; iter = iter->next)
-        {
-          /* calculate width required to display times */
-          PangoRectangle pr;
-          event_t ev = (event_t)iter->data;
-
-          if ((ev->flags & FLAG_UNTIMED) == 0)
-            {
-              if (ev->mark == FALSE)
-                {
-	        	  gchar *s;
-                  localtime_r (&ev->start, &tm);
-                  s = strftime_strdup_utf8_locale (TIMEFMT, &tm);
-                  ev->mark = TRUE;
-                  pango_layout_set_text (pl_evt, s, -1);
-                  pango_layout_get_pixel_extents (pl_evt, NULL, &pr);
-                  if (time_width < pr.width)
-                    time_width = pr.width;
-                  g_free (s);
-                }
-            }
-        }
-    }
-
-  time_width += 2;
-
-  available_width = week_view_draw->allocation.width - time_width - 2;
-
-  for (day = 0; day < 7; day++)
-    {
-      guint height;
       PangoRectangle pr;
-
-      pango_layout_set_width (pl, week_view_draw->allocation.width * PANGO_SCALE);
-      pango_layout_set_markup (pl, week_days[day].string, strlen (week_days[day].string));
-      pango_layout_get_pixel_extents (pl, NULL, &pr);
-      height = pr.height + 2;
-
-      if (week_days[day].events)
-        {
-          for (iter = week_days[day].events; iter; iter = iter->next)
-            {
-              event_t ev = iter->data;
-              event_details_t evd = event_db_get_details (ev);
-              pango_layout_set_width (pl_evt, available_width * PANGO_SCALE);
-              pango_layout_set_text (pl_evt, evd->summary, -1);
-              pango_layout_get_pixel_extents (pl_evt, NULL, &pr);
-              height += pr.height + 2;
-            }
-        }
-
-      if (height < min_cell_height)
-	height = min_cell_height;
-      
-      week_days[day].y0 = y;
-      y += height;
-      week_days[day].y1 = y;
-    }    
     
-  gtk_widget_set_usize (week_view_draw, -1, y);
+      pango_layout_set_markup (pl, week_view->days[day].banner, -1);
+      pango_layout_get_pixel_extents (pl, NULL, &pr);
+      week_view->banner_width = MAX (pr.width, week_view->banner_width);
+    }
 
-  gtk_widget_draw (week_view_draw, NULL);
+  /* Calculate WEEK_VIEW->TIME_WIDTH, the maximum width required by
+     any event's time stamp.  */
+  week_view->time_width = 0;
+  for (day = 0; day < 7; day++)
+    for (iter = week_view->days[day].events; iter; iter = iter->next)
+      {
+	event_t ev = iter->data;
+	if ((ev->flags & FLAG_UNTIMED) != 0)
+	  /* Reminder, i.e. no time.  */
+	  continue;
+
+	struct tm tm;
+	localtime_r (&ev->start, &tm);
+
+	if (! (tm.tm_year == week_view->days[day].popup.year
+	       && tm.tm_mon == week_view->days[day].popup.month
+	       && tm.tm_mday == week_view->days[day].popup.day))
+	  /* Doesn't start today.  As such, we don't show the
+	     date.  */
+	  continue;
+
+	PangoRectangle pr;
+
+	localtime_r (&ev->start, &tm);
+	gchar *buffer = strftime_strdup_utf8_locale (TIMEFMT, &tm);
+	pango_layout_set_text (pl_evt, buffer, -1);
+	g_free (buffer);
+	pango_layout_get_pixel_extents (pl_evt, NULL, &pr);
+
+	week_view->time_width = MAX (pr.width, week_view->time_width);
+      }
+  if (week_view->time_width > 0)
+    /* Add a small gap.  */
+    week_view->time_width += 5;
+
+  week_view->have_extents = FALSE;
+
+  gtk_widget_queue_draw (week_view->draw);
 
   g_object_unref (pl);
   g_object_unref (pl_evt);
 }
 
+/* There is a circular dependency between updating the datesel and the
+   calendar.  When the calendar is changed, it propagates changes to
+   the datesel.  Likewise, when the datesel changes, it propagates
+   changes to the calendar.  To break this cycle, both only propagate
+   if required.  */
 static void
-day_changed_calendar (GtkWidget *widget)
+calendar_day_changed (GtkWidget *widget, GtkWidget *wv)
 {
+  GtkWeekView *week_view = GTK_WEEK_VIEW (wv);
   unsigned int day, month, year;
   struct tm tm;
 
   localtime_r (&viewtime, &tm);
-
   gtk_calendar_get_date (GTK_CALENDAR (widget), &year, &month, &day);
 
-  if (tm.tm_year != (year - 1900) || tm.tm_mon != month || tm.tm_mday != day)
+  if (tm.tm_year != year - 1900 || tm.tm_mon != month || tm.tm_mday != day)
     {
       tm.tm_year = year - 1900;
       tm.tm_mon = month;
@@ -432,273 +613,286 @@ day_changed_calendar (GtkWidget *widget)
 
       viewtime = mktime (&tm);
 
-      set_time_all_views ();
-      week_view_update ();
+      gtk_date_sel_set_time (GTK_DATE_SEL (week_view->datesel), viewtime);
+
+      week_view_update (week_view, FALSE);
     }
 }
 
 static void
-day_changed_datesel (GtkWidget *widget, GtkWidget *entry)
+datesel_changed (GtkWidget *widget, GtkWidget *wv)
 {
-  struct tm tm;
-  viewtime = gtk_date_sel_get_time (GTK_DATE_SEL (widget));
-  localtime_r (&viewtime, &tm);
-  gtk_calendar_select_month (GTK_CALENDAR (calendar), tm.tm_mon, tm.tm_year + 1900);
-  gtk_calendar_select_day (GTK_CALENDAR (calendar), tm.tm_mday);
+  GtkWeekView *week_view = GTK_WEEK_VIEW (wv);
+  struct tm vtm;
+  struct tm dstm;
 
-  week_view_update ();
+
+  localtime_r (&viewtime, &vtm);
+  viewtime = gtk_date_sel_get_time (GTK_DATE_SEL (widget));
+  localtime_r (&viewtime, &dstm);
+
+  if (dstm.tm_year != vtm.tm_year || dstm.tm_yday != vtm.tm_yday)
+    {
+      gtk_calendar_select_month (GTK_CALENDAR (week_view->calendar),
+				 dstm.tm_mon, dstm.tm_year + 1900);
+      gtk_calendar_select_day (GTK_CALENDAR (week_view->calendar),
+			       dstm.tm_mday);
+
+      week_view_update (week_view, FALSE);
+    }
 }
 
 static void
-update_hook_callback (void)
+update_hook_callback (GtkWidget *wv)
 {
-  struct tm tm;
-  gtk_date_sel_set_time (GTK_DATE_SEL (datesel), viewtime);
-  localtime_r (&viewtime, &tm);
-  gtk_calendar_select_month (GTK_CALENDAR (calendar), tm.tm_mon, tm.tm_year + 1900);
-  gtk_calendar_select_day (GTK_CALENDAR (calendar), tm.tm_mday);
+  GtkWeekView *week_view = GTK_WEEK_VIEW (wv);
 
-  week_view_update ();
+  struct tm tm;
+  gtk_date_sel_set_time (GTK_DATE_SEL (week_view->datesel), viewtime);
+  localtime_r (&viewtime, &tm);
+  gtk_calendar_select_month (GTK_CALENDAR (week_view->calendar),
+			     tm.tm_mon, tm.tm_year + 1900);
+  gtk_calendar_select_day (GTK_CALENDAR (week_view->calendar), tm.tm_mday);
+
+  /* For a reload of the events.  */
+  week_view_update (week_view, TRUE);
 }
 
 static gboolean
-week_view_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *data)
+week_view_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *wv)
 {
-  int i;
-  struct render_ctl *c;
+  GtkWeekView *week_view = GTK_WEEK_VIEW (wv);
+  struct week_day *d = &week_view->days[week_view->focused_day];
 
   switch (k->keyval)
     {
     case GDK_Escape:
-      for (i=0;i<7;i++)
-	if (week_days[i].is_active)
-	  {
-	    c = &week_days[i].rc;
-	    if (c->valid)
-	      {
-		if (pop_window) 
-		  gtk_widget_destroy (pop_window);
-                pop_window = NULL;
-                c_old = NULL;
-	      }    
-	  }
+      if (pop_window) 
+	gtk_widget_destroy (pop_window);
+      pop_window = NULL;
+      week_view->has_popup = NULL;
       return TRUE;
 
     case GDK_Left:
-      gtk_date_sel_move_week (GTK_DATE_SEL (datesel), -1);
+      gtk_date_sel_move_week (GTK_DATE_SEL (week_view->datesel), -1);
       return TRUE;
 
     case GDK_Right:
-      gtk_date_sel_move_week (GTK_DATE_SEL (datesel), 1);
+      gtk_date_sel_move_week (GTK_DATE_SEL (week_view->datesel), 1);
       return TRUE;
 
     case GDK_Down:
-      gtk_date_sel_move_day (GTK_DATE_SEL (datesel), 1);
+      gtk_date_sel_move_day (GTK_DATE_SEL (week_view->datesel), 1);
       return TRUE;
 
     case GDK_Up:
-      gtk_date_sel_move_day (GTK_DATE_SEL (datesel), -1);
+      gtk_date_sel_move_day (GTK_DATE_SEL (week_view->datesel), -1);
       return TRUE;
 
     case GDK_space:
-      for (i=0;i<7;i++)
-	if (week_days[i].is_active) 
-	  break;
-            
-      c = &week_days[i].rc;
-      if (c->valid)
-        {
-          if (pop_window) 
-            gtk_widget_destroy (pop_window);
-	  if (c != c_old) 
-            {
-              pop_window = day_popup (main_window, &c->popup, FALSE);
-              c_old = c;
-            }
-	  else 
-	    {
-	      pop_window = NULL;
-	      c_old = NULL;
-	    }
+      if (pop_window) 
+	gtk_widget_destroy (pop_window);
+      if (d != week_view->has_popup) 
+	{
+	  pop_window = day_popup (main_window, &d->popup, FALSE);
+	  week_view->has_popup = d;
+	}
+      else 
+	{
+	  pop_window = NULL;
+	  week_view->has_popup = NULL;
 	}
       return TRUE;
 
     case GDK_Return:
-      for (i=0;i<7;i++)
-	if (week_days[i].is_active) break;
-      
-      c = &week_days[i].rc;
-      if (c->valid)
-        {
-          struct tm tm;
-          time_t selected_time;
-          localtime_r (&viewtime, &tm);
-          tm.tm_year = c->popup.year;//- 1900;
-          tm.tm_mon = c->popup.month;
-          tm.tm_mday = c->popup.day;
-          tm.tm_hour = 0;
-          tm.tm_min = 0;
-          tm.tm_sec = 0;
-          selected_time = mktime (&tm);
-          if (pop_window) 
-            gtk_widget_destroy (pop_window);
-          set_time_and_day_view (selected_time);    
-        }
-      return TRUE; 
+      /* Zoom to the day view.  */
+      {
+	struct tm tm;
+
+	if (pop_window) 
+	  gtk_widget_destroy (pop_window);
+	pop_window = NULL;
+	week_view->has_popup = NULL;
+
+	localtime_r (&viewtime, &tm);
+	tm.tm_year = d->popup.year;//- 1900;
+	tm.tm_mon = d->popup.month;
+	tm.tm_mday = d->popup.day;
+	tm.tm_hour = 0;
+	tm.tm_min = 0;
+	tm.tm_sec = 0;
+	set_time_and_day_view (mktime (&tm));    
+
+	return TRUE; 
+      }
     }
   
   return FALSE;
 }
 
-
-static int
-get_day_from_y(int yc)
-{
-  int i;
-  for (i=0;i<7;i++)
-    {
-      if ((week_days[i].y0 <= yc) && (week_days[i].y1 >= yc))
-        return i;
-    }
-  return 0;
-}
-
-
 static gboolean
-week_view_button_press (GtkWidget *widget, GdkEventButton *event, gpointer d)
+week_view_button_press (GtkWidget *widget, GdkEventButton *event,
+			  GtkWidget *wv)
 {
+  GtkWeekView *week_view = GTK_WEEK_VIEW (wv);
   guint y = event->y;
-  struct render_ctl *c;
+  int day;
+  struct week_day *d;
 
-  c = &week_days[get_day_from_y (y)].rc;
-  if (c->valid)
+  /* Can't have pressed a button without having drawn the view at
+     least once.  */
+  g_assert (week_view->have_extents);
+
+  /* Which day was clicked?  */
+  for (day = 0; day < 7; day ++)
+    if ((week_view->days[day].top <= y)
+	&& (week_view->days[day].top + week_view->days[day].height >= y))
+      break;
+  if (day == 7)
+    /* Nothing valid... */
+    return FALSE;
+
+  d = &week_view->days[day];
+  if (event->type == GDK_BUTTON_PRESS)
     {
-      if (event->type == GDK_BUTTON_PRESS)
-        {
-	  if (event->button == 1)
+      if (event->button == 1)
+	{
+	  if (week_view->focused_day == day)
+	    /* This day is focused, zoom to the day view.  */
 	    {
-	      int i;
-	      for (i = 0; i < 7; i++)
-		week_days[i].is_active = FALSE;
-	      week_days[get_day_from_y (y)].is_active = TRUE;
-	      viewtime = time_from_day (c->popup.year, c->popup.month, c->popup.day);
-	      gtk_calendar_select_month (GTK_CALENDAR (calendar), c->popup.month, c->popup.year + 1900);
-	      gtk_calendar_select_day (GTK_CALENDAR (calendar), c->popup.day);
-	      week_view_update();
-	    }
-	  else if (event->button == 3)
-	    {
+	      struct tm tm;
+
 	      if (pop_window) 
 		gtk_widget_destroy (pop_window);
-    
-	      if (c != c_old) 
-		{
-		  pop_window = day_popup (gtk_widget_get_toplevel(main_window), &c->popup, FALSE);
-		  c_old = c;
-		}
-	      else 
-		{
-		  pop_window = NULL;
-		  c_old = NULL;
-		}
+	      pop_window = NULL;
+	      week_view->has_popup = NULL;
+
+	      localtime_r (&viewtime, &tm);
+	      tm.tm_year = d->popup.year;
+	      tm.tm_mon = d->popup.month;
+	      tm.tm_mday = d->popup.day;
+	      set_time_and_day_view (mktime (&tm));
 	    }
-        }
-      else if (event->type == GDK_2BUTTON_PRESS)
-        {
-          struct tm tm;
-          time_t selected_time;
-          localtime_r (&viewtime, &tm);
-          tm.tm_year = c->popup.year;
-          tm.tm_mon = c->popup.month;
-          tm.tm_mday = c->popup.day;
-          selected_time = mktime (&tm);
-          if (pop_window) 
-            gtk_widget_destroy (pop_window);
-          set_time_and_day_view (selected_time);    
-        }
+	  else
+	    {
+	      /* Focus the day.  */
+	      viewtime = time_from_day (d->popup.year, d->popup.month,
+					d->popup.day);
+	      gtk_calendar_select_month (GTK_CALENDAR (week_view->calendar),
+					 d->popup.month, d->popup.year + 1900);
+	      gtk_calendar_select_day (GTK_CALENDAR (week_view->calendar),
+				       d->popup.day);
+	      week_view_update (week_view, FALSE);
+
+	      /* In case the draw doesn't have the focus.  */
+	      gtk_widget_grab_focus (week_view->draw);
+	    }
+	}
+      else if (event->button == 3)
+	{
+	  if (pop_window) 
+	    gtk_widget_destroy (pop_window);
+    
+	  if (d != week_view->has_popup) 
+	    {
+	      pop_window = day_popup (gtk_widget_get_toplevel (main_window),
+				      &d->popup, FALSE);
+	      week_view->has_popup = d;
+	    }
+	  else 
+	    {
+	      pop_window = NULL;
+	      week_view->has_popup = NULL;
+	    }
+	}
     }
   
   return TRUE;
 }
 
-
-GtkWidget *
-week_view (void)
+GtkWeekView *
+gtk_week_view_new (void)
 {
-  GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
-  GtkWidget *draw = gtk_drawing_area_new ();
+  GtkWeekView *week_view;
   gboolean landscape;
   GtkWidget *hbox;
 
-  scroller = gtk_scrolled_window_new (NULL, NULL);
+  week_view = GTK_WEEK_VIEW (g_object_new (gtk_week_view_get_type (), NULL));
+  week_view->scroller = gtk_scrolled_window_new (NULL, NULL);
+  week_view->draw = gtk_drawing_area_new ();
 
-  g_signal_connect (G_OBJECT (scroller), "size_allocate", 
-		    G_CALLBACK (week_view_update), NULL);
+  g_signal_connect (G_OBJECT (week_view->draw), "size-allocate", 
+		    G_CALLBACK (resize), week_view);
 
-  landscape = (gdk_screen_width () > gdk_screen_height () && gdk_screen_width () >= 640) ? TRUE : FALSE;
+  landscape = (gdk_screen_width () > gdk_screen_height ()
+	       && gdk_screen_width () >= 640) ? TRUE : FALSE;
   hbox = gtk_hbox_new (FALSE, 0);
 
-  calendar = gtk_calendar_new ();
-  GTK_WIDGET_UNSET_FLAGS (calendar, GTK_CAN_FOCUS);  
+  week_view->calendar = gtk_calendar_new ();
+  GTK_WIDGET_UNSET_FLAGS (week_view->calendar, GTK_CAN_FOCUS);  
 
-  gtk_calendar_set_display_options (GTK_CALENDAR (calendar), 
+  gtk_calendar_set_display_options (GTK_CALENDAR (week_view->calendar), 
 				    GTK_CALENDAR_SHOW_DAY_NAMES 
-				    | (week_starts_monday ? GTK_CALENDAR_WEEK_START_MONDAY : 0));
+				    | (week_starts_monday
+				       ? GTK_CALENDAR_WEEK_START_MONDAY : 0));
     
-  datesel = gtk_date_sel_new (GTKDATESEL_WEEK);
+  week_view->datesel = gtk_date_sel_new (GTKDATESEL_WEEK);
 
-  gtk_widget_show (draw);
-  gtk_widget_show (scroller);
-  gtk_widget_show (datesel);
+  gtk_widget_show (week_view->draw);
+  gtk_widget_show (week_view->scroller);
+  gtk_widget_show (week_view->datesel);
   gtk_widget_show (hbox);
 
-  g_signal_connect (G_OBJECT (draw), "expose_event",
-                    G_CALLBACK (draw_expose_event), datesel);
+  g_signal_connect (G_OBJECT (week_view->draw), "expose_event",
+                    G_CALLBACK (draw_expose_event), week_view);
 
-  gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scroller), draw);
-  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scroller),
-				  GTK_POLICY_NEVER, GTK_POLICY_ALWAYS);
+  gtk_scrolled_window_add_with_viewport
+    (GTK_SCROLLED_WINDOW (week_view->scroller), week_view->draw);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (week_view->scroller),
+				  GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 
-  gtk_box_pack_start (GTK_BOX (vbox), datesel, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), hbox, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (week_view), week_view->datesel,
+		      FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (week_view), hbox, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox), week_view->scroller, TRUE, TRUE, 0);
 
-  gtk_box_pack_start (GTK_BOX (hbox), scroller, TRUE, TRUE, 0);
   if (landscape)
     {
       GtkWidget *sep;
 #ifdef IS_HILDON
-      gtk_widget_set_size_request(calendar, 240, -1);
+      gtk_widget_set_size_request(week_view->calendar, 240, -1);
 #else
       sep = gtk_vseparator_new ();
       gtk_box_pack_start (GTK_BOX (hbox), sep, FALSE, TRUE, 0);
       gtk_widget_show (sep);
 #endif
-      gtk_box_pack_start (GTK_BOX (hbox), calendar, FALSE, TRUE, 0);
-      gtk_widget_show (calendar);
+      gtk_box_pack_start (GTK_BOX (hbox), week_view->calendar, FALSE, TRUE, 0);
+      gtk_widget_show (week_view->calendar);
     }
 
-  g_signal_connect (G_OBJECT (calendar), 
+  g_signal_connect (G_OBJECT (week_view->calendar), 
 		    "day-selected",
-		    G_CALLBACK (day_changed_calendar), NULL);
+		    G_CALLBACK (calendar_day_changed), week_view);
 
-  g_signal_connect (G_OBJECT (datesel), "changed",
-                    G_CALLBACK (day_changed_datesel), NULL);
+  g_signal_connect (G_OBJECT (week_view->datesel), "changed",
+                    G_CALLBACK (datesel_changed), week_view);
 
-  g_object_set_data (G_OBJECT (vbox), "update_hook",
+  g_object_set_data (G_OBJECT (week_view), "update_hook",
                      (gpointer) update_hook_callback);
 
-  week_view_draw = draw;
-  
-  GTK_WIDGET_SET_FLAGS (datesel, GTK_CAN_FOCUS);
-  gtk_widget_grab_focus (datesel);
-  g_signal_connect (G_OBJECT (datesel), "key_press_event", 
-		    G_CALLBACK (week_view_key_press_event), NULL);
-  g_signal_connect(G_OBJECT (draw), "button-press-event",
-                   G_CALLBACK (week_view_button_press), NULL);
+  GTK_WIDGET_SET_FLAGS (week_view->datesel, GTK_CAN_FOCUS);
+  gtk_widget_grab_focus (week_view->datesel);
+  g_signal_connect (G_OBJECT (week_view->datesel), "key_press_event", 
+		    G_CALLBACK (week_view_key_press_event), week_view);
+  g_signal_connect (G_OBJECT (week_view->draw), "button-press-event",
+                    G_CALLBACK (week_view_button_press), week_view);
 
-  gtk_widget_add_events (GTK_WIDGET (draw), GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
-  gtk_widget_add_events (GTK_WIDGET (datesel), GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK);
+  gtk_widget_add_events (GTK_WIDGET (week_view->draw),
+			 GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
+  gtk_widget_add_events (GTK_WIDGET (week_view->datesel),
+			 GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK);
   
-  g_object_set_data(G_OBJECT(main_window),"datesel-week",datesel);
-  return vbox;
+  g_object_set_data (G_OBJECT(main_window),"datesel-week", week_view->datesel);
+
+  return week_view;
 }

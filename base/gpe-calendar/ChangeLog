@@ -1,3 +1,80 @@
+2006-04-05  Neal H. Walfield  <neal@gnu.org>
+
+	* week_view.h (struct _GtkWeekView): New structure.
+	(GtkWeekView): New tyepdef.
+	(GTK_WEEK_VIEW): New macro.
+	(GTK_WEEK_VIEW_CLASS): New macro.
+	(GTK_IS_WEEK_VIEW): New macro.
+	(gtk_week_view_get_type): New declaration.
+	(week_view): Rename from this...
+	(gtk_week_view_new): ... to this.  Change return type to
+	GtkWeekView *.  Update callers.
+	(week_free_lists): Remove declaration.
+	* week_view.c: Don't include <stdio.h>, <stdlib.h> or <string.h>.
+	(struct render_ctl): Remove this structure.  Add POPUP to...
+	(struct week_day): ... this structure.  Rename y0 to top, y1 to
+	height.  Rename string to banner.  Remove is_today and is_active.
+	Update users.
+	(week_view_draw, available_width, c_old, today): Move from here...
+	(struct _GtkWeekView): ... to here.  Rename to draw, width and
+	has_popup, and date respectively.  Update users.
+	(datesel, calendar, time_width, scroller, week_days): Move from
+	here...
+	(struct _GtkWeekView): ... to here.  Add have_extents,
+	banner_width, height and focused_day.
+	(GtkWeekViewClass): New structure.
+	(gtk_week_view_base_class_init): New declaration.
+	(gtk_week_view_init): New declaration.
+	(gtk_week_view_dispose): New declaration.
+	(gtk_week_view_finalize): New declaration.
+	(parent_class): New global static.
+	(gtk_week_view_get_type): New function.
+	(gtk_week_view_base_class_init): New function.
+	(gtk_week_view_init): New function.
+	(gtk_week_view_dispose): New function.
+	(gtk_week_view_finalize): New function.
+	(gtk_week_view_invalidate_day): New function.
+	(draw_expose_event): Use pen_new where possible.  Rewrite to more
+	precisely draw the days within their respective bounding boxes.
+	Don't reserve 1/7 of the screen for each day: only allocate as
+	much as needed to maximize use of real estate.  As far as
+	possible, only redraw damaged areas.  Don't mark the events, just
+	check if the start matches the day we are drawing.  Correctly
+	color the days when WEEK_STARTS_MONDAY is false.  Save the
+	calculated extents.  Clear any unused drawing area to the
+	background color as required.
+	(week_free_lists): Remove function.
+	(resize): On a change, set WEEK_VIEW->HAVE_EXTENTS as false.
+	Queue a redraw of WEEK_VIEW->DRAW.
+	(week_view_update): Take two new parameters: a GtkWeekView and a
+	boolean which forces an update.  Only update if the week changed
+	or we are forced to.  If the week didn't change but the day did,
+	change WEEK_VIEW->FOCUSED_DAY and damage the drawing area
+	appropriately.  Correctly calculate the start of the week taking
+	into account days sometimes have more or less than 24 hours.  When
+	creating each day's banner, add a space at the end.  Don't
+	calculate the height of each day: do that lazily when drawing the
+	view the first time.
+	(calendar_day_changed): Don't call set_time_all_views.  Keep
+	WEEK_VIEW->DATESEL in sync.  When calling week_view_update, don't
+	force an update.
+	(datesel_changed): Keep WEEK_VIEW->CALENDAR in sync.  When calling
+	week_view_update, don't force an update.
+	(update_hook_callback): Require another parameter, a GtkWeekView
+	*.  When calling week_view_update, force an update.
+	(week_view_key_press_event): All days are valid.  Don't forget to
+	set POP_WINDOW to NULL and WEEK_VIEW->HAS_POPUP after destroying
+	POP_WINDOW.
+	(get_day_from_y): Remove function.
+	(week_view_button_press): Use calculated extents.  Rather than on
+	a double click, if an focused day is clicked, zoom to that day.
+	On focus, give WEEK_VIEW->DRAW the focus.
+	(week_view): Rename from this...
+	(gtk_week_view_new): ... to this.  Return a GtkWeekView.  Pass
+	WEEK_VIEW as user data when setting up the various signal
+	handlers.
+	* main.c (on_import_vcal): Don't call week_free_lists.
+
 2006-04-03  Neal H. Walfield  <neal@gnu.org>
 
 	* main.c (main): Really update all callers of month_view to call
