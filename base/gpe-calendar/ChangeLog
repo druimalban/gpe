@@ -1,5 +1,12 @@
 2006-04-05  Neal H. Walfield  <neal@gnu.org>
 
+	* month_view.c (gtk_month_view_init): Set MONTH_VIEW->HAS_POPUP to
+	0.
+	(button_press): Likewise as well as POP_WINDOW.
+	(month_view_key_press_event): Likewise.
+
+2006-04-05  Neal H. Walfield  <neal@gnu.org>
+
 	* day_view.c (struct _GtkDayView): Add field, date.
 	(gtk_day_view_init): Initialize DAY_VIEW->DATE.
 	(datesel_changed): Move bulk of code from here...

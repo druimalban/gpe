@@ -155,6 +155,7 @@ gtk_month_view_init (GTypeInstance *instance, gpointer klass)
   month_view->height = 0;
   month_view->weeks = TOTAL_WEEKS;
   month_view->date = (time_t) -1;
+  month_view->has_popup = 0;
 
   for (day = 0; day < MAX_DAYS_IN_MONTH; day ++)
     month_view->day_events[day] = NULL;
@@ -331,6 +332,8 @@ button_press (GtkWidget *widget, GdkEventButton *event, GtkWidget *mv)
 	      selected_time = mktime (&tm);
 	      if (pop_window) 
 		gtk_widget_destroy (pop_window);
+	      pop_window = NULL;
+	      month_view->has_popup = NULL;
 	      set_time_and_day_view (selected_time);
 	    }
 	}
@@ -817,6 +820,8 @@ month_view_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *mv)
           selected_time = mktime (&tm);
           if (pop_window) 
 	    gtk_widget_destroy (pop_window);
+	  month_view->has_popup = NULL;
+	  pop_window = NULL;
           set_time_and_day_view (selected_time);    
         }
       return TRUE; 
