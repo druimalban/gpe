@@ -32,6 +32,7 @@
 #include "day_render.h"
 #include "gtkdatesel.h"
 #include "export-vcal.h"
+#include "event-cal.h"
 
 #define _(x) gettext(x)
 #define NUM_HOURS 24
@@ -282,6 +283,9 @@ day_view_update (GtkDayView *day_view, gboolean force)
 	gtk_calendar_select_day (GTK_CALENDAR (day_view->calendar),
 				 vt.tm_mday);
       }
+
+    if (force)
+      gtk_event_cal_reload_events (GTK_EVENT_CAL (day_view->calendar));
   }
 
   /* Check if the day view needs updating.  */
@@ -741,7 +745,7 @@ gtk_day_view_new (void)
   landscape = gdk_screen_width () > gdk_screen_height ()
     && gdk_screen_width () >= 640;
 
-  day_view->calendar = gtk_calendar_new ();
+  day_view->calendar = gtk_event_cal_new ();
   GTK_WIDGET_UNSET_FLAGS (day_view->calendar, GTK_CAN_FOCUS);
 
   gtk_widget_show (day_view->appointment_window);

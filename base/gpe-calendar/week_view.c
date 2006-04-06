@@ -23,6 +23,7 @@
 #include "day_popup.h"
 
 #include "gtkdatesel.h"
+#include "event-cal.h"
 
 #define _(x) gettext(x)
 
@@ -467,6 +468,9 @@ week_view_update (GtkWeekView *week_view, gboolean force)
 	gtk_calendar_select_day (GTK_CALENDAR (week_view->calendar),
 				 vt.tm_mday);
       }
+
+    if (force)
+      gtk_event_cal_reload_events (GTK_EVENT_CAL (week_view->calendar));
   }
 
   /* Determine if the datesel needs an update.  */
@@ -834,7 +838,7 @@ gtk_week_view_new (void)
 	       && gdk_screen_width () >= 640) ? TRUE : FALSE;
   hbox = gtk_hbox_new (FALSE, 0);
 
-  week_view->calendar = gtk_calendar_new ();
+  week_view->calendar = gtk_event_cal_new ();
   GTK_WIDGET_UNSET_FLAGS (week_view->calendar, GTK_CAN_FOCUS);  
 
   gtk_calendar_set_display_options (GTK_CALENDAR (week_view->calendar), 

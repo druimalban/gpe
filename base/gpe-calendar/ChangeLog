@@ -1,5 +1,19 @@
 2006-04-06  Neal H. Walfield  <neal@gnu.org>
 
+	* event-cal.h: New file.
+	* event-cal.c: New file.
+	* Makefile.am (gpe_calendar_SOURCES): Add event-cal.c and
+	event-cal.h.
+	* day_view.c: Include "event-cal.h".
+	(day_view_update): If force is true, make DAY_VIEW->CALENDAR
+	reread the event database.
+	* week_view.c: Include "event-cal.h".
+	(week_view_update): If force is true, make WEEK_VIEW->CALENDAR
+	reread the event database.
+	(gtk_week_view_new): Make a GtkEventCal, not a GtkCalendar.
+
+2006-04-06  Neal H. Walfield  <neal@gnu.org>
+
 	* main.c (today_button): Remove global variable.
 	(force_today): Make this global static...
 	(set_today): ... a local static in this function.  Only revert to
