@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2002 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2006 Neal H. Walfield <neal@walfield.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -53,7 +54,7 @@ typedef enum
 
 GType           gtk_date_sel_get_type (void);
 
-GtkWidget      *gtk_date_sel_new (GtkDateSelMode mode);
+GtkWidget      *gtk_date_sel_new (GtkDateSelMode mode, time_t time);
 
 time_t          gtk_date_sel_get_time (GtkDateSel *sel);
 void            gtk_date_sel_set_time (GtkDateSel *sel, time_t time);

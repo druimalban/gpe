@@ -89,6 +89,8 @@ static void gtk_day_view_base_class_init (gpointer klass);
 static void gtk_day_view_init (GTypeInstance *instance, gpointer klass);
 static void gtk_day_view_dispose (GObject *obj);
 static void gtk_day_view_finalize (GObject *object);
+static void gtk_day_view_show (GtkWidget *object);
+static void day_view_update (GtkDayView *day_view, gboolean force);
 
 static GtkWidgetClass *parent_class;
 
@@ -132,6 +134,7 @@ gtk_day_view_base_class_init (gpointer klass)
   object_class->dispose = gtk_day_view_dispose;
 
   widget_class = (GtkWidgetClass *) klass;
+  widget_class->show = gtk_day_view_show;
 }
 
 static void
@@ -165,6 +168,16 @@ gtk_day_view_finalize (GObject *object)
   gtk_widget_destroy (day_view->event_menu);
 
   G_OBJECT_CLASS (parent_class)->finalize (object);
+}
+
+static void
+gtk_day_view_show (GtkWidget *widget)
+{
+  GtkDayView *day_view = GTK_DAY_VIEW (widget);
+
+  day_view_update (day_view, TRUE);
+
+  GTK_WIDGET_CLASS (parent_class)->show (widget);
 }
 
 static gboolean
@@ -235,79 +248,62 @@ day_view_event_clicked (GtkWidget *widget, gpointer event_p, gpointer d)
 }
 
 static void
-delete_event (event_t ev, GtkWidget * d)
-{
-  event_t ev_real;
-  event_details_t ev_d;
-  recur_t r;
-
-  ev_real = get_cloned_ev (ev);
-  ev_d = event_db_get_details (ev_real);
-
-  if (ev_real->recur)
-    {
-      if (gpe_question_ask
-	  (_
-	   ("Delete all recurring entries?\n(If no, delete this instance only)"),
-	   _("Question"), "question", "!gtk-no", NULL, "!gtk-yes", NULL,
-	   NULL))
-	{
-	  if (ev_real->flags & FLAG_ALARM)
-	    {
-	      unschedule_alarm (ev_real, gtk_widget_get_toplevel (d));
-	      schedule_next (0, 0, d);
-	    }
-	  event_db_remove (ev_real);
-	}
-      else
-	{
-	  r = event_db_get_recurrence (ev_real);
-	  r->exceptions = g_slist_append (r->exceptions, (void *) ev->start);
-	  event_db_flush (ev_real);
-	}
-    }
-  else
-    {
-      if (ev_real->flags & FLAG_ALARM)
-	{
-	  unschedule_alarm (ev_real, gtk_widget_get_toplevel (d));
-	  schedule_next (0, 0, d);
-	}
-      event_db_remove (ev_real);
-    }
-
-  update_all_views ();
-  event_db_forget_details (ev_real);
-}
-
-static void
 day_view_update (GtkDayView *day_view, gboolean force)
 {
+  struct tm vt;
   time_t end, start;
-  struct tm tm_start;
   GSList *reminders, *cleanup;
   GSList *events, *appointments, *iter;
 
-  localtime_r (&viewtime, &tm_start);
+  localtime_r (&viewtime, &vt);
 
+  /* Check if the datesel needs updating.  */
+  {
+    time_t dstime;
+    struct tm dstm;
+
+    dstime = gtk_date_sel_get_time (GTK_DATE_SEL (day_view->datesel));
+    localtime_r (&dstime, &dstm);
+
+    if (dstm.tm_year != vt.tm_year || dstm.tm_yday != vt.tm_yday)
+      gtk_date_sel_set_time (GTK_DATE_SEL (day_view->datesel), viewtime);
+  }
+
+  /* Check if the calendar needs updating.  */
+  {
+    int day, month, year;
+
+    gtk_calendar_get_date (GTK_CALENDAR (day_view->calendar),
+			   &year, &month, &day);
+    if (vt.tm_year != year - 1900 || vt.tm_mon != month || vt.tm_mday != day)
+      {
+	gtk_calendar_select_month (GTK_CALENDAR (day_view->calendar),
+				   vt.tm_mon, vt.tm_year + 1900);
+	gtk_calendar_select_day (GTK_CALENDAR (day_view->calendar),
+				 vt.tm_mday);
+      }
+  }
+
+  /* Check if the day view needs updating.  */
   if (! force)
     {
       struct tm tm;
       localtime_r (&day_view->date, &tm);
 
-      if (tm.tm_year == tm_start.tm_year && tm.tm_yday == tm_start.tm_yday)
+      if (tm.tm_year == vt.tm_year && tm.tm_yday == vt.tm_yday)
 	/* Same day, nothing to do.  */
 	{
 	  day_view->date = viewtime;
 	  return;
 	}
     }
+
   day_view->date = viewtime;
 
-  tm_start.tm_hour = 0;
-  tm_start.tm_min = 0;
-  tm_start.tm_sec = 0;
-  start = mktime (&tm_start);
+  vt.tm_hour = 0;
+  vt.tm_min = 0;
+  vt.tm_sec = 0;
+  start = mktime (&vt);
   end = start + 30 * 60 * 60 - 1;
 
   /* Get the appointments for the current period.  */
@@ -419,22 +415,9 @@ static gboolean
 datesel_changed (GtkWidget *widget, GtkWidget *dv)
 {
   GtkDayView *day_view = GTK_DAY_VIEW (dv);
-  struct tm vtm;
-  struct tm dstm;
 
-  localtime_r (&viewtime, &vtm);
   viewtime = gtk_date_sel_get_time (GTK_DATE_SEL (widget));
-  localtime_r (&viewtime, &dstm);
-
-  if (dstm.tm_year != vtm.tm_year || dstm.tm_yday != vtm.tm_yday)
-    {
-      gtk_calendar_select_month (GTK_CALENDAR (day_view->calendar),
-				 dstm.tm_mon, dstm.tm_year + 1900);
-      gtk_calendar_select_day (GTK_CALENDAR (day_view->calendar),
-			       dstm.tm_mday);
-
-      day_view_update (day_view, FALSE);
-    }
+  day_view_update (day_view, FALSE);
 
   return FALSE;
 }
@@ -449,18 +432,12 @@ calendar_changed (GtkWidget *widget, GtkWidget *dv)
   localtime_r (&viewtime, &tm);
   gtk_calendar_get_date (GTK_CALENDAR (widget), &year, &month, &day);
 
-  if (tm.tm_year != year - 1900 || tm.tm_mon != month || tm.tm_mday != day)
-    {
-      tm.tm_year = year - 1900;
-      tm.tm_mon = month;
-      tm.tm_mday = day;
+  tm.tm_year = year - 1900;
+  tm.tm_mon = month;
+  tm.tm_mday = day;
+  viewtime = mktime (&tm);
 
-      viewtime = mktime (&tm);
-
-      gtk_date_sel_set_time (GTK_DATE_SEL (day_view->datesel), viewtime);
-
-      day_view_update (day_view, FALSE);
-    }
+  day_view_update (day_view, FALSE);
 }
 
 /* 
@@ -543,12 +520,53 @@ event_menu_destroy (GtkWidget * widget, GdkEventButton * event, gpointer d)
 }
 
 static void
-delete_event_cb (GtkWidget *widget, GtkWidget *d)
+delete_event_cb (GtkWidget *widget, GtkWidget *dv)
 {
-  GtkDayView *day_view = GTK_DAY_VIEW (d);
+  GtkDayView *day_view = GTK_DAY_VIEW (dv);
+  event_t ev_real;
+  event_details_t ev_d;
+  recur_t r;
 
   gtk_widget_hide (day_view->event_menu);
-  delete_event (day_view->sel_event, widget);
+
+  ev_real = get_cloned_ev (day_view->sel_event);
+  ev_d = event_db_get_details (ev_real);
+
+  if (ev_real->recur)
+    {
+      if (gpe_question_ask
+	  (_
+	   ("Delete all recurring entries?\n(If no, delete this instance only)"),
+	   _("Question"), "question", "!gtk-no", NULL, "!gtk-yes", NULL,
+	   NULL))
+	{
+	  if (ev_real->flags & FLAG_ALARM)
+	    {
+	      unschedule_alarm (ev_real, gtk_widget_get_toplevel (widget));
+	      schedule_next (0, 0, widget);
+	    }
+	  event_db_remove (ev_real);
+	}
+      else
+	{
+	  r = event_db_get_recurrence (ev_real);
+	  r->exceptions = g_slist_append (r->exceptions,
+					  (void *) day_view->sel_event->start);
+	  event_db_flush (ev_real);
+	}
+    }
+  else
+    {
+      if (ev_real->flags & FLAG_ALARM)
+	{
+	  unschedule_alarm (ev_real, gtk_widget_get_toplevel (widget));
+	  schedule_next (0, 0, widget);
+	}
+      event_db_remove (ev_real);
+    }
+
+  day_view_update (day_view, TRUE);
+  event_db_forget_details (ev_real);
 }
 
 static void
@@ -701,7 +719,7 @@ gtk_event_menu_new (GtkDayView *day_view)
   gtk_window_set_modal (GTK_WINDOW (day_view->event_menu), TRUE);
 }
 
-GtkDayView *
+GtkWidget *
 gtk_day_view_new (void)
 {
   GtkDayView *day_view;
@@ -720,7 +738,8 @@ gtk_day_view_new (void)
   g_signal_connect (G_OBJECT (adj), "value-changed",
 		    G_CALLBACK (sink_scroller), (gpointer) day_view);
 
-  landscape = (gdk_screen_width () > gdk_screen_height () && gdk_screen_width () >= 640) ? TRUE : FALSE;
+  landscape = gdk_screen_width () > gdk_screen_height ()
+    && gdk_screen_width () >= 640;
 
   day_view->calendar = gtk_calendar_new ();
   GTK_WIDGET_UNSET_FLAGS (day_view->calendar, GTK_CAN_FOCUS);
@@ -734,7 +753,7 @@ gtk_day_view_new (void)
 				    | (week_starts_monday ?
 				       GTK_CALENDAR_WEEK_START_MONDAY : 0));
 
-  day_view->datesel = gtk_date_sel_new (GTKDATESEL_FULL);
+  day_view->datesel = gtk_date_sel_new (GTKDATESEL_FULL, viewtime);
 
   gtk_widget_show (day_view->datesel);
   
@@ -779,7 +798,5 @@ gtk_day_view_new (void)
   gtk_widget_add_events (GTK_WIDGET (day_view->datesel),
 			 GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK);
 
-  g_object_set_data (G_OBJECT (main_window), "datesel-day", day_view->datesel);
-
-  return day_view;
+  return GTK_WIDGET (day_view);
 }

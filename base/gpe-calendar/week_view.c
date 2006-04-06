@@ -84,6 +84,8 @@ static void gtk_week_view_base_class_init (gpointer klass);
 static void gtk_week_view_init (GTypeInstance *instance, gpointer klass);
 static void gtk_week_view_dispose (GObject *obj);
 static void gtk_week_view_finalize (GObject *object);
+static void gtk_week_view_show (GtkWidget *object);
+static void week_view_update (GtkWeekView *week_view, gboolean force);
 
 static GtkWidgetClass *parent_class;
 
@@ -127,6 +129,7 @@ gtk_week_view_base_class_init (gpointer klass)
   object_class->dispose = gtk_week_view_dispose;
 
   widget_class = (GtkWidgetClass *) klass;
+  widget_class->show = gtk_week_view_show;
 }
 
 static void
@@ -170,6 +173,16 @@ gtk_week_view_finalize (GObject *object)
 }
 
 static void
+gtk_week_view_show (GtkWidget *widget)
+{
+  GtkWeekView *week_view = GTK_WEEK_VIEW (widget);
+
+  week_view_update (week_view, TRUE);
+
+  GTK_WIDGET_CLASS (parent_class)->show (widget);
+}
+
+static void
 gtk_week_view_invalidate_day (GtkWeekView *week_view, gint i)
 {
   struct week_day *day = &week_view->days[i];
@@ -196,7 +209,7 @@ draw_expose_event (GtkWidget *widget, GdkEventExpose *event, GtkWidget *wv)
 							NULL);
   gboolean wide_mode = widget->allocation.width > widget->allocation.height;
   int i;
-    
+
   blue_gc = pen_new (widget, 0, 0, 0xffff);
 
   colormap = gdk_window_get_colormap (widget->window);
@@ -427,6 +440,8 @@ resize (GtkWidget *widget, GtkAllocation *allocation, GtkWidget *wv)
 static void
 week_view_update (GtkWeekView *week_view, gboolean force)
 {
+  struct tm current;
+  struct tm vt;
   guint day;
   struct tm start;
   PangoLayout *pl
@@ -435,13 +450,36 @@ week_view_update (GtkWeekView *week_view, gboolean force)
     = gtk_widget_create_pango_layout (GTK_WIDGET (week_view->draw), NULL);
   GSList *iter;
 
-  struct tm current;
-  struct tm vt;
-
   localtime_r (&week_view->date, &current);
   week_view->date = viewtime;
   localtime_r (&week_view->date, &vt);
 
+  /* Determine if the calendar needs an update.  */
+  {
+    unsigned int day, month, year;
+    gtk_calendar_get_date (GTK_CALENDAR (week_view->calendar),
+			   &year, &month, &day);
+
+    if (year - 1900 != vt.tm_year || month != vt.tm_mon || day != vt.tm_mday)
+      {
+	gtk_calendar_select_month (GTK_CALENDAR (week_view->calendar),
+				   vt.tm_mon, vt.tm_year + 1900);
+	gtk_calendar_select_day (GTK_CALENDAR (week_view->calendar),
+				 vt.tm_mday);
+      }
+  }
+
+  /* Determine if the datesel needs an update.  */
+  {
+    time_t ds = gtk_date_sel_get_time (GTK_DATE_SEL (week_view->datesel));
+    struct tm dst;
+    localtime_r (&ds, &dst);
+
+    if (dst.tm_year != vt.tm_year || dst.tm_yday != vt.tm_yday)
+      gtk_date_sel_set_time (GTK_DATE_SEL (week_view->datesel), viewtime);
+  }
+
+  /* Determine if we need to update the cached information.  */
   int start_of_week = vt.tm_yday - vt.tm_wday;
   if (week_starts_monday)
     {
@@ -590,11 +628,6 @@ week_view_update (GtkWeekView *week_view, gboolean force)
   g_object_unref (pl_evt);
 }
 
-/* There is a circular dependency between updating the datesel and the
-   calendar.  When the calendar is changed, it propagates changes to
-   the datesel.  Likewise, when the datesel changes, it propagates
-   changes to the calendar.  To break this cycle, both only propagate
-   if required.  */
 static void
 calendar_day_changed (GtkWidget *widget, GtkWidget *wv)
 {
@@ -602,57 +635,30 @@ calendar_day_changed (GtkWidget *widget, GtkWidget *wv)
   unsigned int day, month, year;
   struct tm tm;
 
-  localtime_r (&viewtime, &tm);
   gtk_calendar_get_date (GTK_CALENDAR (widget), &year, &month, &day);
+  localtime_r (&viewtime, &tm);
 
-  if (tm.tm_year != year - 1900 || tm.tm_mon != month || tm.tm_mday != day)
-    {
-      tm.tm_year = year - 1900;
-      tm.tm_mon = month;
-      tm.tm_mday = day;
+  tm.tm_year = year - 1900;
+  tm.tm_mon = month;
+  tm.tm_mday = day;
+  viewtime = mktime (&tm);
 
-      viewtime = mktime (&tm);
-
-      gtk_date_sel_set_time (GTK_DATE_SEL (week_view->datesel), viewtime);
-
-      week_view_update (week_view, FALSE);
-    }
+  week_view_update (week_view, FALSE);
 }
 
 static void
 datesel_changed (GtkWidget *widget, GtkWidget *wv)
 {
   GtkWeekView *week_view = GTK_WEEK_VIEW (wv);
-  struct tm vtm;
-  struct tm dstm;
 
-
-  localtime_r (&viewtime, &vtm);
   viewtime = gtk_date_sel_get_time (GTK_DATE_SEL (widget));
-  localtime_r (&viewtime, &dstm);
-
-  if (dstm.tm_year != vtm.tm_year || dstm.tm_yday != vtm.tm_yday)
-    {
-      gtk_calendar_select_month (GTK_CALENDAR (week_view->calendar),
-				 dstm.tm_mon, dstm.tm_year + 1900);
-      gtk_calendar_select_day (GTK_CALENDAR (week_view->calendar),
-			       dstm.tm_mday);
-
-      week_view_update (week_view, FALSE);
-    }
+  week_view_update (week_view, FALSE);
 }
 
 static void
 update_hook_callback (GtkWidget *wv)
 {
   GtkWeekView *week_view = GTK_WEEK_VIEW (wv);
-
-  struct tm tm;
-  gtk_date_sel_set_time (GTK_DATE_SEL (week_view->datesel), viewtime);
-  localtime_r (&viewtime, &tm);
-  gtk_calendar_select_month (GTK_CALENDAR (week_view->calendar),
-			     tm.tm_mon, tm.tm_year + 1900);
-  gtk_calendar_select_day (GTK_CALENDAR (week_view->calendar), tm.tm_mday);
 
   /* For a reload of the events.  */
   week_view_update (week_view, TRUE);
@@ -810,7 +816,7 @@ week_view_button_press (GtkWidget *widget, GdkEventButton *event,
   return TRUE;
 }
 
-GtkWeekView *
+GtkWidget *
 gtk_week_view_new (void)
 {
   GtkWeekView *week_view;
@@ -836,7 +842,7 @@ gtk_week_view_new (void)
 				    | (week_starts_monday
 				       ? GTK_CALENDAR_WEEK_START_MONDAY : 0));
     
-  week_view->datesel = gtk_date_sel_new (GTKDATESEL_WEEK);
+  week_view->datesel = gtk_date_sel_new (GTKDATESEL_WEEK, viewtime);
 
   gtk_widget_show (week_view->draw);
   gtk_widget_show (week_view->scroller);
@@ -892,7 +898,5 @@ gtk_week_view_new (void)
   gtk_widget_add_events (GTK_WIDGET (week_view->datesel),
 			 GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK);
   
-  g_object_set_data (G_OBJECT(main_window),"datesel-week", week_view->datesel);
-
-  return week_view;
+  return GTK_WIDGET (week_view);
 }

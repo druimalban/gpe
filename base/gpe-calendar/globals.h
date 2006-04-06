@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2001, 2002, 2006 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2006 Neal H. Walfield <neal@walfield.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -14,15 +15,13 @@
 extern time_t viewtime;
 extern gboolean force_today;
 
-extern void update_current_view (void);
-extern void update_all_views (void);
+extern void update_view (void);
 
 extern guint days_in_month (guint year, guint month);
 extern gboolean week_starts_monday;
 extern guint week_offset;
 extern gboolean day_view_combined_times;
 extern void set_time_and_day_view(time_t selected_time);
-extern void set_time_all_views(void);
 extern time_t time_from_day(int year, int month, int day);
 
 extern GdkGC *pen_new (GtkWidget *widget, guint red, guint green, guint blue);

@@ -45,7 +45,7 @@ notify_func (const char *name, XSettingsAction action,
 	      if (week_starts_monday) week_offset=0;
 	      else week_offset=1;
 	      if (push_new_changes)
-		update_current_view ();
+		update_view ();
 	    }
 	}
       else if (!strcasecmp (p, "Calendar/day-view-combined-times"))
@@ -54,7 +54,7 @@ notify_func (const char *name, XSettingsAction action,
 	    {
 	      day_view_combined_times = setting->data.v_int ? TRUE : FALSE;
 	      if (push_new_changes)
-		update_current_view ();
+		update_view ();
 	    }
 	}
     }

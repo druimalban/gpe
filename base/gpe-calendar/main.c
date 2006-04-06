@@ -2,6 +2,7 @@
  * Copyright (C) 2001, 2002, 2003, 2006 Philip Blundell <philb@gnu.org>
  * Hildon adaption 2005 by Matthias Steinbauer <matthias@steinbauer.org>
  * Toolbar new API conversion 2005 by Florian Boor <florian@kernelconcepts.de>
+ * Copyright (C) 2006 Neal H. Walfield <neal@walfield.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -62,7 +63,7 @@ gboolean force_today = FALSE;
 gboolean just_new = FALSE;
 
 GtkWidget *main_window, *pop_window;
-GtkWidget *notebook, *toolbar;
+GtkWidget *view_container, *toolbar;
 extern GtkWidget* day_list;
 
 struct gpe_icon my_icons[] = {
@@ -76,7 +77,7 @@ struct gpe_icon my_icons[] = {
   { NULL, NULL }
 };
 
-static GtkWidget *day, *week, *month, *current_view;
+static GtkWidget *current_view;
 static GtkWidget *day_button, *week_button, *month_button, *today_button;
 
 guint window_x = 240, window_y = 310;
@@ -186,69 +187,14 @@ strftime_strdup_utf8_utf8 (const char *fmt, struct tm *tm)
 }
 
 void
-set_time_all_views (void)
+update_view (void)
 {
-  gpointer ds;
-  
-  ds = g_object_get_data (G_OBJECT (main_window), "datesel-week");
-  if (ds)
-    gtk_date_sel_set_time(GTK_DATE_SEL (ds), viewtime);
-  ds = g_object_get_data (G_OBJECT (main_window), "datesel-month");
-  if (ds)
-    gtk_date_sel_set_time (GTK_DATE_SEL (ds), viewtime);
-  ds = g_object_get_data(G_OBJECT (main_window), "datesel-day");
-  if (ds)
-    gtk_date_sel_set_time (GTK_DATE_SEL (ds), viewtime);
-}
-
-void
-update_view (GtkWidget *view)
-{
-  gpointer p = g_object_get_data (G_OBJECT (view), "update_hook");
+  gpointer p = g_object_get_data (G_OBJECT (current_view), "update_hook");
   if (p)
     {
       void (*f)(GtkWidget *) = p;
-      f (view);
+      f (current_view);
     }
-}
-
-void
-update_current_view (void)
-{
-  if (current_view)
-    update_view (current_view);
-}
-
-void
-update_all_views (void)
-{
-  update_view (day);
-  update_view (week);
-  update_view (month);
-}
-
-static void
-new_view (GtkWidget *widget)
-{
-  guint i = 0;
-  GtkWidget *w;
-
-  if (pop_window)
-    gtk_widget_destroy (pop_window);
-
-  do
-    {
-      w = gtk_notebook_get_nth_page (GTK_NOTEBOOK (notebook), i);
-      if (w == widget)
-        {
-          current_view = w;
-          gtk_notebook_set_page (GTK_NOTEBOOK (notebook), i);
-          if (w == day) /* nasty hack to compensate missing update of clist */
-            update_current_view();
-          return;
-        }
-      i++;
-    } while (w != NULL);
 }
 
 static gboolean
@@ -305,8 +251,23 @@ set_today (void)
   else
     viewtime = selected_time;
   
-  set_time_all_views ();
-  gtk_day_view_scroll (GTK_DAY_VIEW (day), TRUE);
+  update_view ();
+}
+
+static void
+new_view (GtkWidget * (*new) (void))
+{
+  if (pop_window)
+    gtk_widget_destroy (pop_window);
+  pop_window = NULL;
+
+  if (current_view)
+    gtk_container_remove (GTK_CONTAINER (view_container), current_view);
+
+  current_view = new ();
+  gtk_box_pack_start (GTK_BOX (view_container), current_view,
+		      TRUE, TRUE, 0);
+  gtk_widget_show (current_view);
 }
 
 void
@@ -314,16 +275,14 @@ set_time_and_day_view (time_t selected_time)
 {
   viewtime = selected_time;
   gtk_toggle_tool_button_set_active (GTK_TOGGLE_TOOL_BUTTON (day_button), TRUE);
-  new_view (day);
-  update_current_view ();
-  gtk_day_view_scroll (GTK_DAY_VIEW (day), TRUE);
+  new_view (gtk_day_view_new);
 }
 
 static void
-button_toggled (GtkWidget *widget, gpointer data)
+view_button_clicked (GtkWidget *widget, gpointer new)
 {
   if (gtk_toggle_tool_button_get_active (GTK_TOGGLE_TOOL_BUTTON (widget)))
-    new_view (data);
+    new_view (new);
 }
 
 #ifdef IS_HILDON
@@ -435,18 +394,8 @@ on_import_vcal (GtkWidget *widget, gpointer data)
     }
   gtk_widget_destroy(filesel);
   event_db_refresh();
-  update_all_views();  
+  update_view ();  
 }
-
-static void
-notebook_switch_page (GtkNotebook *notebook,
-                      GtkNotebookPage *page,
-                      guint page_num,
-                      gpointer user_data)
-{
-  set_time_all_views();
-}
-
 
 static gboolean
 main_window_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *data)
@@ -644,7 +593,7 @@ main (int argc, char *argv[])
   vcal_export_init();
     
   vbox = gtk_vbox_new (FALSE, 0);
-  notebook = gtk_notebook_new ();
+  view_container = gtk_vbox_new (FALSE, 0);
 
   /* main window */
   window_x = gdk_screen_width() / 2;
@@ -658,8 +607,6 @@ main (int argc, char *argv[])
   main_appview = hildon_appview_new(_("Main"));
   hildon_app_set_appview(HILDON_APP(app), HILDON_APPVIEW(main_appview));
   main_window = main_appview;
-  
-  gtk_notebook_set_show_border(GTK_NOTEBOOK(notebook), FALSE);
 #else    
   main_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title (GTK_WINDOW (main_window), _("Calendar"));
@@ -684,9 +631,6 @@ main (int argc, char *argv[])
   gtk_container_add (GTK_CONTAINER (main_window), vbox);
 
   time (&viewtime);
-  week = GTK_WIDGET (gtk_week_view_new ());
-  day = GTK_WIDGET (gtk_day_view_new ());
-  month = GTK_WIDGET (gtk_month_view_new ());
   
   tooltips = gtk_tooltips_new();
   gtk_tooltips_enable(tooltips);
@@ -701,7 +645,8 @@ main (int argc, char *argv[])
 #else
   gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, FALSE, 0);
 #endif
-  gtk_box_pack_start (GTK_BOX (vbox), notebook, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), view_container, TRUE, TRUE, 0);
+  gtk_widget_show (view_container);
 
   item = gtk_tool_button_new_from_stock(GTK_STOCK_NEW);
   g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK(new_appointment), NULL);
@@ -736,13 +681,15 @@ main (int argc, char *argv[])
       gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
     }
 
+  /* Initialize the day view button.  */
   p = gpe_find_icon_scaled ("day_view", 
                             gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
   pw = gtk_image_new_from_pixbuf (p);
   item = gtk_radio_tool_button_new(NULL);
   gtk_tool_button_set_label(GTK_TOOL_BUTTON(item), _("Day"));
   gtk_tool_button_set_icon_widget(GTK_TOOL_BUTTON(item), pw);
-  g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK(button_toggled), day);
+  g_signal_connect(G_OBJECT(item), "clicked",
+		   G_CALLBACK (view_button_clicked), gtk_day_view_new);
   gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
   gtk_tooltips_set_tip(tooltips, GTK_WIDGET(item), 
                        _("Tap here to select day-at-a-time view."), NULL);
@@ -750,24 +697,28 @@ main (int argc, char *argv[])
   day_button = GTK_WIDGET(item);    
     
     
+  /* Initialize the week view button.  */
   p = gpe_find_icon_scaled ("week_view", gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
   pw = gtk_image_new_from_pixbuf (p);
   item = gtk_radio_tool_button_new_from_widget(GTK_RADIO_TOOL_BUTTON(item));
   gtk_tool_button_set_label(GTK_TOOL_BUTTON(item), _("Week"));
   gtk_tool_button_set_icon_widget(GTK_TOOL_BUTTON(item), pw);
-  g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK(button_toggled), week);
+  g_signal_connect(G_OBJECT(item), "clicked",
+		   G_CALLBACK (view_button_clicked), gtk_week_view_new);
   gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
   gtk_tooltips_set_tip(tooltips, GTK_WIDGET(item), 
                        _("Tap here to select week-at-a-time view."), NULL);
   GTK_WIDGET_UNSET_FLAGS(item, GTK_CAN_FOCUS);
   week_button = GTK_WIDGET(item);    
   
+  /* Initialize the month view button.  */
   p = gpe_find_icon_scaled ("month_view", gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
   pw = gtk_image_new_from_pixbuf (p);
   item = gtk_radio_tool_button_new_from_widget(GTK_RADIO_TOOL_BUTTON(item));
   gtk_tool_button_set_label(GTK_TOOL_BUTTON(item), _("Month"));
   gtk_tool_button_set_icon_widget(GTK_TOOL_BUTTON(item), pw);
-  g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK(button_toggled), month);
+  g_signal_connect (G_OBJECT(item), "clicked",
+		    G_CALLBACK (view_button_clicked), gtk_month_view_new);
   gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
   gtk_tooltips_set_tip(tooltips, GTK_WIDGET(item), 
                        _("Tap here to select month-at-a-time view."), NULL);
@@ -817,26 +768,12 @@ main (int argc, char *argv[])
   gpe_set_window_icon (main_window, "icon");
 #endif
 	 
-  gtk_notebook_set_show_tabs (GTK_NOTEBOOK (notebook), FALSE);
-
-  gtk_widget_show (day);
-  gtk_widget_show (week);
-  gtk_widget_show (month);
-
-  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), day, NULL);
-  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), week, NULL);
-  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), month, NULL);
-
-  g_signal_connect(G_OBJECT(notebook),"switch-page",
-                   G_CALLBACK(notebook_switch_page),NULL);
   g_signal_connect (G_OBJECT (main_window), "key_press_event", 
 		    G_CALLBACK (main_window_key_press_event), NULL);
             
   gtk_widget_add_events (GTK_WIDGET (main_window), 
                          GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK);
   
-  gtk_widget_show (notebook);
-
 #ifdef IS_HILDON  
   gtk_widget_show(app);
   gtk_widget_show(main_appview);
@@ -847,12 +784,11 @@ main (int argc, char *argv[])
 
   gpe_calendar_start_xsettings ();
 
-  update_all_views ();
-
   gtk_toggle_tool_button_set_active (GTK_TOGGLE_TOOL_BUTTON (day_button), TRUE);
   gtk_toggle_tool_button_set_active (GTK_TOGGLE_TOOL_BUTTON (today_button), FALSE);
-  new_view (day);
-  gtk_day_view_scroll (GTK_DAY_VIEW (day), TRUE);
+
+  new_view (gtk_day_view_new);
+  gtk_day_view_scroll (GTK_DAY_VIEW (current_view), TRUE);
 
   gtk_main ();
 

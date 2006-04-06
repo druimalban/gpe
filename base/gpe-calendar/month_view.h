@@ -23,6 +23,6 @@ typedef struct _GtkMonthView GtkMonthView;
 /* Return GType of a month view.  */
 extern GType gtk_month_view_get_type (void);
 
-extern GtkMonthView *gtk_month_view_new (void);
+extern GtkWidget *gtk_month_view_new (void);
 
 #endif

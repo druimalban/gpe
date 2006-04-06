@@ -99,6 +99,8 @@ static void gtk_month_view_base_class_init (gpointer klass);
 static void gtk_month_view_init (GTypeInstance *instance, gpointer klass);
 static void gtk_month_view_dispose (GObject *obj);
 static void gtk_month_view_finalize (GObject *object);
+static void gtk_month_view_show (GtkWidget *object);
+static void month_view_update (GtkMonthView *month_view, gboolean force);
 
 static GtkWidgetClass *parent_class;
 
@@ -142,6 +144,7 @@ gtk_month_view_base_class_init (gpointer klass)
   object_class->dispose = gtk_month_view_dispose;
 
   widget_class = (GtkWidgetClass *) klass;
+  widget_class->show = gtk_month_view_show;
 }
 
 static void
@@ -179,6 +182,16 @@ gtk_month_view_finalize (GObject *object)
       event_db_list_destroy (month_view->day_events[i]);
 
   G_OBJECT_CLASS (parent_class)->finalize (object);
+}
+
+static void
+gtk_month_view_show (GtkWidget *widget)
+{
+  GtkMonthView *month_view = GTK_MONTH_VIEW (widget);
+
+  month_view_update (month_view, TRUE);
+
+  GTK_WIDGET_CLASS (parent_class)->show (widget);
 }
 
 /* Get the bounding box of a cell.  Only return those dimensions for
@@ -611,15 +624,27 @@ month_view_update (GtkMonthView *month_view, gboolean force)
   guint days;
   guint year, month;
   guint wday;
-  struct tm now;
+  struct tm vt;
   struct tm current;
 
   localtime_r (&month_view->date, &current);
   month_view->date = viewtime;
-  localtime_r (&month_view->date, &now);
+  localtime_r (&month_view->date, &vt);
+
+  /* Check if the datesel needs updating.  */
+  {
+    time_t dstime;
+    struct tm dstm;
+
+    dstime = gtk_date_sel_get_time (GTK_DATE_SEL (month_view->datesel));
+    localtime_r (&dstime, &dstm);
+
+    if (dstm.tm_year != vt.tm_year || dstm.tm_yday != vt.tm_yday)
+      gtk_date_sel_set_time (GTK_DATE_SEL (month_view->datesel), viewtime);
+  }
 
   if (! force
-      && current.tm_year == now.tm_year && current.tm_mon == now.tm_mon)
+      && current.tm_year == vt.tm_year && current.tm_mon == vt.tm_mon)
     /* Same month.  */
     return;
 
@@ -830,7 +855,7 @@ month_view_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *mv)
   return FALSE;
 }
 
-GtkMonthView *
+GtkWidget *
 gtk_month_view_new (void)
 {
   GtkMonthView *month_view;
@@ -843,7 +868,6 @@ gtk_month_view_new (void)
   
   gtk_widget_show (month_view->draw);
   gtk_widget_show (scrolled_window);
-  gtk_widget_show (GTK_WIDGET (month_view));
 	  
   g_signal_connect (G_OBJECT (month_view->draw), "expose_event",
                     G_CALLBACK (draw_expose_event), month_view);
@@ -854,7 +878,7 @@ gtk_month_view_new (void)
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window),
 				  GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
   
-  month_view->datesel = gtk_date_sel_new (GTKDATESEL_MONTH);
+  month_view->datesel = gtk_date_sel_new (GTKDATESEL_MONTH, viewtime);
   gtk_widget_show (month_view->datesel);
   GTK_WIDGET_SET_FLAGS (month_view->datesel, GTK_CAN_FOCUS);
   gtk_widget_grab_focus (month_view->datesel);
@@ -882,9 +906,6 @@ gtk_month_view_new (void)
   g_object_set_data (G_OBJECT (month_view), "update_hook",
                      (gpointer) update_hook_callback);
                      
-  g_object_set_data (G_OBJECT (main_window), "datesel-month",
-		     month_view->datesel);
-  
   gtk_widget_realize (main_window);
   
   calc_title_height (month_view);
@@ -893,5 +914,5 @@ gtk_month_view_new (void)
 			       month_view->title_height * 7,
 			       month_view->title_height * 7);
 
-  return month_view;
+  return GTK_WIDGET (month_view);
 }

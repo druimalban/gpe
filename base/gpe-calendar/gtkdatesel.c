@@ -556,16 +556,15 @@ gtk_date_sel_get_type (void)
 }
 
 GtkWidget *
-gtk_date_sel_new (GtkDateSelMode mode)
+gtk_date_sel_new (GtkDateSelMode mode, time_t time)
 {
   GtkWidget *w = GTK_WIDGET (gtk_type_new (gtk_date_sel_get_type ()));
   GtkDateSel *sel = GTK_DATE_SEL (w);
   int i;
-  gchar buffer[255];
 
   sel->mode = mode;
 
-  time (&sel->time);
+  sel->time = time;
   sel->day_clamped = -1;
 
   sel->subbox = gtk_hbox_new (FALSE, 0);
@@ -580,6 +579,8 @@ gtk_date_sel_new (GtkDateSelMode mode)
 
       g_signal_connect (G_OBJECT (sel), "changed",
 			G_CALLBACK (week_update), e->display);
+
+      week_update (sel, e->display);
     }
   if (mode == GTKDATESEL_FULL)
     /* Display the day.  */
@@ -597,6 +598,8 @@ gtk_date_sel_new (GtkDateSelMode mode)
 			G_CALLBACK (day_key_press), sel);
       g_signal_connect (G_OBJECT (e->display), "button-press-event",
 			G_CALLBACK (entry_button_press), 0);
+
+      day_update (w, e->display);
     }
   if (mode == GTKDATESEL_FULL || mode == GTKDATESEL_MONTH
       || mode == GTKDATESEL_WEEK)
@@ -623,6 +626,8 @@ gtk_date_sel_new (GtkDateSelMode mode)
 			e->display);
       g_signal_connect (G_OBJECT (e->display), "changed",
 			G_CALLBACK (month_change), sel);
+
+      month_update (sel, e->display);
     }
 
   /* Always display the year.  */
@@ -640,6 +645,8 @@ gtk_date_sel_new (GtkDateSelMode mode)
 			G_CALLBACK (year_key_press), sel);
       g_signal_connect (G_OBJECT (e->display), "button-press-event",
 			G_CALLBACK (entry_button_press), 0);
+
+      year_update (w, e->display);
     }
 
   gtk_widget_show (sel->subbox);

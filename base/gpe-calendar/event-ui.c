@@ -316,7 +316,7 @@ click_delete (GtkWidget *widget, GtkWidget *d)
       event_db_remove (ev_real);
   }
   
-  update_all_views ();
+  update_view ();
   event_db_forget_details (ev_real);
   edit_finished (d);
 }
@@ -569,7 +569,7 @@ click_ok (GtkWidget *widget, GtkWidget *d)
 
   event_db_forget_details (ev);
 
-  update_all_views ();
+  update_view ();
 
   edit_finished (d);
 }

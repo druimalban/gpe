@@ -1,3 +1,97 @@
+2006-04-06  Neal H. Walfield  <neal@gnu.org>
+
+	* main.c (notebook): Remove variable.
+	(view_container): New variable.
+	(day): Remove variable.
+	(week): Likewise.
+	(month): Likewise.
+	(set_time_all_views): Remove function.
+	(update_view): Don't pass the view to update as a parameter, just
+	use CURRENT_VIEW.
+	(update_current_view): Remove function.
+	(update_all_views): Likewise.
+	(set_today): Don't call set_time_all_views but update_view.
+	(new_view): Rewrite to accept a constructor function as the
+	argument.  If CURRENT_VIEW is non-NULL, destroy.  Invoke the
+	constructor, add the resulting widget to VIEW_CONTAINER and show
+	it.
+	(set_time_and_day_view): Don't call update_current_view.
+	(button_toggled): Rename from this...
+	(view_button_clicked): ... to this.  Update users.
+	(on_import_vcal): Don't call update_all_views but update_view.
+	(main_window_key_press_event): Remove function.
+	(main): Don't create a GtkNotebook but a GtkVBox.  Don't create a
+	GtkDayView, GtkWeekView or GtkMonthView.  Pass gtk_day_view_new as
+	the user data argument to the click call back of the day view
+	button.  Likewise gtk_week_view_new for the week view button and
+	gtk_month_view_new for the month view button.  Don't call
+	update_all_views.  Pass gtk_day_view_new as the parameter to
+	new_view.
+	* globals.h (update_view): New declaration.
+	(update_current_view): Remove declaration.
+	(update_all_views): Remove declaration.
+	(set_time_all_views): Remove declaration.
+	* gtkdatesel.h (gtk_date_sel_new): Take new parameter, the initial
+	time.
+	* gtkdatesel.c (gtk_date_sel_new): Take new parameter, the initial
+	time.
+	(gtk_date_sel_new): Remove unused variable buffer.
+	(gtk_date_sel_new): Call week_update after creating the week
+	display, day_update after creating the day display, month_update
+	after creating the month display and year_update after creating
+	the year display.
+	* day_view.h (gtk_day_view_new): Return a GtkWidget *, not a
+	GtkDayView *.
+	* day_view.c (gtk_day_view_show): New declaration.
+	(gtk_day_view_base_class_init): Initialize WIDGET_CLASS->SHOW to
+	gtk_day_view_show.
+	(gtk_day_view_show): New function.
+	(day_view_update): Fold function into...
+	(delete_event_cb): ... this function.  Don't call update_all_views
+	but day_view_update.
+	(day_view_update): Check if DAY_VIEW->DATESEL needs an update.
+	Check if DAY_VIEW->CALENDAR needs an update.
+	(datesel_changed): Don't update DAY_VIEW->CALENDAR, just always
+	call day_view_update.
+	(calendar_changed): Don't udpate DAY_VIEW->DATESEL, just always
+	call day_view_update.
+	(gtk_day_view_new): Return a GtkWidget *, not a GtkDayView *.
+	Pass VIEWTIME to gtk_date_sel_new.  Don't set the "datesel-day"
+	property on MAIN_WINDOW.
+	* week_view.h (gtk_week_view_new): Return a GtkWidget *, not a
+	GtkDayView *.
+	* week_view.c (gtk_week_view_show): New declaration.
+	(week_view_update): Likewise.
+	(gtk_week_view_base_class_init): Initialize WIDGET_CLASS->SHOW to
+	gtk_week_view_show.
+	(gtk_week_view_show): New function.
+	(week_view_update): Check if WEEK_VIEW->DATESEL needs to be
+	updated.  Check if WEEK_VIEW->DATESEL needs to be updated.
+	(calendar_day_changed): Don't udpate DAY_VIEW->DATESEL, just
+	always call day_view_update.
+	(datesel_changed): Don't update DAY_VIEW->CALENDAR, just always
+	call day_view_update.
+	(update_hook_callback): Don't update WEEK_VIEW->CALENDAR or
+	WEEK_VIEW->DATESEL.
+	(gtk_week_view_new): Return a GtkWidget *, not a GtkWeekView *.
+	Pass VIEWTIME to gtk_date_sel_new.  Don't set the "datesel-week"
+	property on MAIN_WINDOW.
+	* month_view.h (gtk_month_view_new): Return a GtkWidget *, not a
+	GtkDayView *.
+	* month_view.c (gtk_month_view_show): New declaration.
+	(month_view_update): Likewise.
+	(gtk_month_view_base_class_init): Initialize WIDGET_CLASS->SHOW to
+	gtk_month_view_show.
+	(gtk_month_view_show): New function.
+	(month_view_update): Check if MONTH_VIEW->DATESEL needs to be
+	updated.
+	(gtk_month_view_new): Return a GtkWidget *, not a GtkMonthView *.
+	Don't show MONTH_VIEW.  Pass VIEWTIME to gtk_date_sel_new.  Don't
+	set the "datesel-month" property on MAIN_WINDOW.  * event-ui.c
+	(click_delete): Don't call update_all_views but update_view.
+	(click_ok): Likewise.
+	* xsettings.c (notify_func): Likewise.
+
 2006-04-05  Neal H. Walfield  <neal@gnu.org>
 
 	* month_view.c (gtk_month_view_init): Set MONTH_VIEW->HAS_POPUP to
