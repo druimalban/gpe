@@ -1,5 +1,16 @@
 2006-04-06  Neal H. Walfield  <neal@gnu.org>
 
+	* main.c (today_button): Remove global variable.
+	(force_today): Make this global static...
+	(set_today): ... a local static in this function.  Only revert to
+	the saved time if the current view is today.  Otherwise, just go
+	to today.
+	(main): Don't make the today button a toggle.
+	* globals.h (force_today): Remove declaration.
+	* month_view.c (draw_expose_event): Don't check force_today.
+
+2006-04-06  Neal H. Walfield  <neal@gnu.org>
+
 	* main.c (notebook): Remove variable.
 	(view_container): New variable.
 	(day): Remove variable.

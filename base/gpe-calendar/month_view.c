@@ -594,8 +594,7 @@ draw_expose_event (GtkWidget *widget,
 				  x + 1, y + 1, w - 2, h - 2);
 	    }
 
-	  if ((!force_today && day == month_view->focused_day)
-	      || (force_today && is_today (c)))
+	  if (day == month_view->focused_day)
 	    /* Highlight this day.  */
 	    gdk_draw_rectangle (drawable, blue_gc, FALSE,
 				x, y + 1, w - 2, h - 2);

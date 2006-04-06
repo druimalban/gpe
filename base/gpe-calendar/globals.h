@@ -13,7 +13,6 @@
 #include <gpe/event-db.h>
 
 extern time_t viewtime;
-extern gboolean force_today;
 
 extern void update_view (void);
 

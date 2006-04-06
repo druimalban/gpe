@@ -59,7 +59,6 @@
 extern gboolean gpe_calendar_start_xsettings (void);
 
 time_t viewtime;
-gboolean force_today = FALSE;
 gboolean just_new = FALSE;
 
 GtkWidget *main_window, *pop_window;
@@ -78,7 +77,7 @@ struct gpe_icon my_icons[] = {
 };
 
 static GtkWidget *current_view;
-static GtkWidget *day_button, *week_button, *month_button, *today_button;
+static GtkWidget *day_button, *week_button, *month_button;
 
 guint window_x = 240, window_y = 310;
 
@@ -240,16 +239,37 @@ new_appointment (void)
 static void
 set_today (void)
 {
-  static time_t selected_time;
+  static time_t saved_time;
 
-  force_today = !force_today;
-  if (force_today)
+  if (saved_time)
     {
-      selected_time = viewtime;
-      time (&viewtime);
-    } 
+      time_t now;
+      struct tm ntm;
+      struct tm vtm;
+
+      time (&now);
+      localtime_r (&now, &ntm);
+      localtime_r (&viewtime, &vtm);
+
+      if (ntm.tm_year != vtm.tm_year || ntm.tm_yday != vtm.tm_yday)
+	/* Current view time is not today.  Go to today.  */
+	{
+	  saved_time = viewtime;
+	  viewtime = now;
+	}
+      else
+	/* Current view time is today.  Go to the saved time.  */
+	{
+	  viewtime = saved_time;
+	  saved_time = 0;
+	}
+    }
   else
-    viewtime = selected_time;
+    /* No saved time.  Just go to today.  */
+    {
+      saved_time = viewtime;
+      time (&viewtime);
+    }
   
   update_view ();
 }
@@ -648,6 +668,7 @@ main (int argc, char *argv[])
   gtk_box_pack_start (GTK_BOX (vbox), view_container, TRUE, TRUE, 0);
   gtk_widget_show (view_container);
 
+  /* Initialize new event button.  */
   item = gtk_tool_button_new_from_stock(GTK_STOCK_NEW);
   g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK(new_appointment), NULL);
   gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
@@ -662,17 +683,15 @@ main (int argc, char *argv[])
       gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
     }
 
+  /* Initialize the "now" button.  */
   pw = gtk_image_new_from_stock (GTK_STOCK_HOME, 
                                  gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
-  item = gtk_toggle_tool_button_new();
-  gtk_tool_button_set_label(GTK_TOOL_BUTTON(item), _("Today"));
-  gtk_tool_button_set_icon_widget(GTK_TOOL_BUTTON(item), pw);
+  item = gtk_tool_button_new (pw, _("Today"));
   g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK(set_today), NULL);
   gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
   gtk_tooltips_set_tip(tooltips, GTK_WIDGET(item), 
                        _("Switch to today and stay there/return to day selecting."), NULL);
   GTK_WIDGET_UNSET_FLAGS(item, GTK_CAN_FOCUS);
-  today_button = GTK_WIDGET(item);    
     
   if (window_x > 260) 
     {	  
@@ -785,8 +804,6 @@ main (int argc, char *argv[])
   gpe_calendar_start_xsettings ();
 
   gtk_toggle_tool_button_set_active (GTK_TOGGLE_TOOL_BUTTON (day_button), TRUE);
-  gtk_toggle_tool_button_set_active (GTK_TOGGLE_TOOL_BUTTON (today_button), FALSE);
-
   new_view (gtk_day_view_new);
   gtk_day_view_scroll (GTK_DAY_VIEW (current_view), TRUE);
 
