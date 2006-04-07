@@ -1,3 +1,8 @@
+2006-04-07  Florian Boor  <florian@kernelconcepts.de>
+
+    * event-ui.c (build_edit_event_window): Nicer looking layout: replace 
+      boxes with table.
+    
 2006-04-06  Neal H. Walfield  <neal@gnu.org>
 
 	* event-cal.h: New file.

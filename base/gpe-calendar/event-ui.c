@@ -817,11 +817,10 @@ build_edit_event_window (void)
   GtkWidget *labeleventpage, *labelrecurpage, *labelalarmpage, *labeldetailpage;
 
   /* SimpleMenu */
-  GtkWidget *menutypehbox;
+  GtkWidget *menutable;
   GtkWidget *menutypelabel;
 
   /* Summary widgets */
-  GtkWidget *summaryhbox;
   GtkWidget *summarylabel;
   GtkWidget *summaryentry;
 
@@ -939,8 +938,10 @@ build_edit_event_window (void)
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindowevent),
                                   GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
 
-  menutypehbox        = gtk_hbox_new (FALSE, boxspacing);
+  menutable           = gtk_table_new (2, 2, FALSE);
   menutypelabel       = gtk_label_new (_("Type:"));
+  gtk_table_set_col_spacings (GTK_TABLE (menutable), boxspacing); 
+  gtk_table_set_row_spacings (GTK_TABLE (menutable), boxspacing);
   gtk_misc_set_alignment (GTK_MISC (menutypelabel), 0.0, 0.5);
 
   /* Simple menu for choosing type of task */
@@ -954,17 +955,21 @@ build_edit_event_window (void)
   gtk_simple_menu_append_item (GTK_SIMPLE_MENU (s->optionmenutask), _("Days"));
   gtk_simple_menu_append_item (GTK_SIMPLE_MENU (s->optionmenutask), _("Weeks"));
 
-  gtk_box_pack_start (GTK_BOX (menutypehbox), menutypelabel, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (menutypehbox), s->optionmenutype, TRUE, TRUE, 0);
+  gtk_table_attach (GTK_TABLE (menutable), menutypelabel, 0, 1 , 0, 1, 
+                    GTK_FILL, GTK_FILL, 0, 0);
+  gtk_table_attach (GTK_TABLE (menutable), s->optionmenutype, 1, 2 , 0, 1, 
+                    GTK_EXPAND | GTK_FILL, GTK_FILL, 0, 0);
+  
   /* Building the summary wigets */
-  summaryhbox         = gtk_hbox_new (FALSE, boxspacing);
   summaryentry        = gtk_entry_new ();
   summarylabel        = gtk_label_new (_("Text:"));
   
   gtk_misc_set_alignment (GTK_MISC (summarylabel),0,0.5);
 
-  gtk_box_pack_start (GTK_BOX (summaryhbox), summarylabel, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (summaryhbox), summaryentry, TRUE, TRUE, 0);
+  gtk_table_attach (GTK_TABLE (menutable), summarylabel, 0, 1 , 1, 2,
+                    GTK_FILL, GTK_FILL, 0, 0);
+  gtk_table_attach (GTK_TABLE (menutable), summaryentry, 1, 2 , 1, 2, 
+                    GTK_EXPAND | GTK_FILL, GTK_FILL, 0, 0);
 
   /* table for start/end time/date */
   startendtable       = gtk_table_new (2, 4, FALSE);
@@ -1063,6 +1068,7 @@ build_edit_event_window (void)
   gtk_container_set_border_width (GTK_CONTAINER(detailtable), border);
   gtk_table_set_col_spacings (GTK_TABLE (detailtable), boxspacing);
   gtk_table_set_row_spacings (GTK_TABLE (detailtable), boxspacing);
+  
   /* location  */  
   locationlabel     = gtk_label_new (_("Location:"));
   s->location       = gtk_entry_new ();
@@ -1113,8 +1119,7 @@ build_edit_event_window (void)
   gtk_notebook_append_page (GTK_NOTEBOOK (s->notebooktype), vboxreminder, NULL);
   gtk_notebook_append_page (GTK_NOTEBOOK (s->notebooktype), vboxtask, NULL);
 
-  gtk_box_pack_start (GTK_BOX (vboxevent), menutypehbox, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vboxevent), summaryhbox, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vboxevent), menutable, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vboxevent), s->notebooktype, FALSE, FALSE, 0);
   
   gtk_container_set_border_width (GTK_CONTAINER (vboxevent), border);
