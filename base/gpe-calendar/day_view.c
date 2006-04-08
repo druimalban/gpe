@@ -33,6 +33,7 @@
 #include "gtkdatesel.h"
 #include "export-vcal.h"
 #include "event-cal.h"
+#include "event-list.h"
 
 #define _(x) gettext(x)
 #define NUM_HOURS 24
@@ -60,6 +61,7 @@ struct _GtkDayView
 
   GtkWidget *datesel;
   GtkWidget *calendar;
+  GtkWidget *event_list;
 
   gboolean scrolling;
   gboolean scroll_floating;
@@ -283,9 +285,6 @@ day_view_update (GtkDayView *day_view, gboolean force)
 	gtk_calendar_select_day (GTK_CALENDAR (day_view->calendar),
 				 vt.tm_mday);
       }
-
-    if (force)
-      gtk_event_cal_reload_events (GTK_EVENT_CAL (day_view->calendar));
   }
 
   /* Check if the day view needs updating.  */
@@ -300,6 +299,12 @@ day_view_update (GtkDayView *day_view, gboolean force)
 	  day_view->date = viewtime;
 	  return;
 	}
+    }
+
+  if (force)
+    {
+      gtk_event_cal_reload_events (GTK_EVENT_CAL (day_view->calendar));
+      gtk_event_list_reload_events (GTK_EVENT_LIST (day_view->event_list));
     }
 
   day_view->date = viewtime;
@@ -757,6 +762,8 @@ gtk_day_view_new (void)
 				    | (week_starts_monday ?
 				       GTK_CALENDAR_WEEK_START_MONDAY : 0));
 
+  day_view->event_list = gtk_event_list_new ();
+
   day_view->datesel = gtk_date_sel_new (GTKDATESEL_FULL, viewtime);
 
   gtk_widget_show (day_view->datesel);
@@ -783,13 +790,21 @@ gtk_day_view_new (void)
   if (landscape)
     {
       GtkWidget *sep;
+      GtkWidget *vbox;
       sep = gtk_vseparator_new ();
 
       gtk_box_pack_start (GTK_BOX (hbox), sep, FALSE, FALSE, 0);
-      gtk_box_pack_start (GTK_BOX (hbox), day_view->calendar, FALSE, FALSE, 0);
+      vbox = gtk_vbox_new (FALSE, 0);
+      gtk_box_pack_start (GTK_BOX (hbox), vbox, FALSE, FALSE, 0);
+      gtk_box_pack_start (GTK_BOX (vbox), day_view->calendar, FALSE,
+			  FALSE, 0);
+      gtk_box_pack_start (GTK_BOX (vbox), day_view->event_list, TRUE,
+			  TRUE, 0);
 
       gtk_widget_show (sep);
+      gtk_widget_show (vbox);
       gtk_widget_show (day_view->calendar);
+      gtk_widget_show (day_view->event_list);
     }
 #endif
 

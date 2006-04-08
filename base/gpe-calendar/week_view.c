@@ -24,6 +24,7 @@
 
 #include "gtkdatesel.h"
 #include "event-cal.h"
+#include "event-list.h"
 
 #define _(x) gettext(x)
 
@@ -57,7 +58,7 @@ struct _GtkWeekView
 
   GtkWidget *draw;
   GtkWidget *scroller;
-  GtkWidget *datesel, *calendar;
+  GtkWidget *datesel, *calendar, *event_list;
 
   /* The week day (if any) which the popup menu is for.  */
   struct week_day *has_popup;
@@ -468,9 +469,6 @@ week_view_update (GtkWeekView *week_view, gboolean force)
 	gtk_calendar_select_day (GTK_CALENDAR (week_view->calendar),
 				 vt.tm_mday);
       }
-
-    if (force)
-      gtk_event_cal_reload_events (GTK_EVENT_CAL (week_view->calendar));
   }
 
   /* Determine if the datesel needs an update.  */
@@ -482,6 +480,12 @@ week_view_update (GtkWeekView *week_view, gboolean force)
     if (dst.tm_year != vt.tm_year || dst.tm_yday != vt.tm_yday)
       gtk_date_sel_set_time (GTK_DATE_SEL (week_view->datesel), viewtime);
   }
+
+  if (force)
+    {
+      gtk_event_cal_reload_events (GTK_EVENT_CAL (week_view->calendar));
+      gtk_event_list_reload_events (GTK_EVENT_LIST (week_view->event_list));
+    }
 
   /* Determine if we need to update the cached information.  */
   int start_of_week = vt.tm_yday - vt.tm_wday;
@@ -845,7 +849,9 @@ gtk_week_view_new (void)
 				    GTK_CALENDAR_SHOW_DAY_NAMES 
 				    | (week_starts_monday
 				       ? GTK_CALENDAR_WEEK_START_MONDAY : 0));
-    
+
+  week_view->event_list = gtk_event_list_new ();
+
   week_view->datesel = gtk_date_sel_new (GTKDATESEL_WEEK, viewtime);
 
   gtk_widget_show (week_view->draw);
@@ -869,6 +875,8 @@ gtk_week_view_new (void)
   if (landscape)
     {
       GtkWidget *sep;
+      GtkWidget *vbox;
+
 #ifdef IS_HILDON
       gtk_widget_set_size_request(week_view->calendar, 240, -1);
 #else
@@ -876,8 +884,15 @@ gtk_week_view_new (void)
       gtk_box_pack_start (GTK_BOX (hbox), sep, FALSE, TRUE, 0);
       gtk_widget_show (sep);
 #endif
-      gtk_box_pack_start (GTK_BOX (hbox), week_view->calendar, FALSE, TRUE, 0);
+      vbox = gtk_vbox_new (FALSE, 0);
+      gtk_box_pack_start (GTK_BOX (hbox), vbox, FALSE, FALSE, 0);
+      gtk_box_pack_start (GTK_BOX (vbox), week_view->calendar, FALSE,
+			  FALSE, 0);
+      gtk_box_pack_start (GTK_BOX (vbox), week_view->event_list, TRUE,
+			  TRUE, 0);
+      gtk_widget_show (vbox);
       gtk_widget_show (week_view->calendar);
+      gtk_widget_show (week_view->event_list);
     }
 
   g_signal_connect (G_OBJECT (week_view->calendar), 

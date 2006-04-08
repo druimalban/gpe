@@ -1,3 +1,22 @@
+2006-04-08  Neal H. Walfield  <neal@gnu.org>
+
+	* event-list.h: New file.
+	* event-list.c: New file.
+	* Makefile.am (gpe_calendar_SOURCES): Add event-list.c and
+	event-list.h.
+	* day_view.c: Include "event-list.h".
+	(struct _GtkDayView): New field, event_list.
+	(day_view_update): If FORCE is true, cause DAY_VIEW->EVENT_LIST
+	to reload.
+	(gtk_day_view_new): Initialize DAY_VIEW->EVENT_LIST.  Add
+	DAY_VIEW->EVENT_LIST just below DAY_VIEW->CALENDAR.
+	* week_view.c: Include "event-list.h".
+	(struct _GtkWeekView): New field, event_list.
+	(week_view_update): If FORCE is true, cause WEEK_VIEW->EVENT_LIST
+	to reload.
+	(gtk_week_view_new): Initialize WEEK_VIEW->EVENT_LIST.  Add
+	WEEK_VIEW->EVENT_LIST just below WEEK_VIEW->CALENDAR.
+
 2006-04-07  Florian Boor  <florian@kernelconcepts.de>
 
     * event-ui.c (build_edit_event_window): Nicer looking layout: replace 
