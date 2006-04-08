@@ -1,5 +1,9 @@
 2006-04-08  Neal H. Walfield  <neal@gnu.org>
 
+	* gtkdatesel.c (get_max_day_width): Remove dead code.
+
+2006-04-08  Neal H. Walfield  <neal@gnu.org>
+
 	* event-list.h: New file.
 	* event-list.c: New file.
 	* Makefile.am (gpe_calendar_SOURCES): Add event-list.c and

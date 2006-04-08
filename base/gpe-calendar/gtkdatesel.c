@@ -379,51 +379,6 @@ get_max_month_width (GtkDateSel *sel)
   return max_width;
 }
 
-static int
-get_max_day_width (GtkDateSel *sel)
-{
-  PangoLayout *layout;
-  PangoRectangle logical_rect;
-  int max_width, i, w;
-  struct tm tm;
-  gchar *str;
-
-  localtime_r (&sel->time, &tm);
-
-  layout = gtk_widget_create_pango_layout (GTK_WIDGET (sel), NULL);
-
-  max_width = 0;
-  for (i = 0; i < 31; i++)
-    {
-      tm.tm_mday = i;
-
-      str = strftime_strdup_utf8_utf8 (_("%d"), &tm);
-      pango_layout_set_text (layout, str, -1);
-      g_free (str);
-
-      pango_layout_get_pixel_extents (layout, NULL, &logical_rect);
-      max_width = MAX (max_width, logical_rect.width + LABEL_ADD);
-    }
-  w = max_width;
-  
-  max_width = 0;
-  for (i = 0; i < 7; i++)
-    {
-      tm.tm_wday = i;
-
-      str = strftime_strdup_utf8_utf8 (_("%a"), &tm);
-      pango_layout_set_text (layout, str, -1);
-      g_free (str);
-
-      pango_layout_get_pixel_extents (layout, NULL, &logical_rect);
-      max_width = MAX (max_width, logical_rect.width + LABEL_ADD);
-    }
-
-  g_object_unref (layout);
-
-  return w + max_width;
-}
-
 /* Assumes that E->DISPLAY is valid.  */
 static void
 make_field (GtkDateSel *sel, struct elem *e,
