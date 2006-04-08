@@ -1,3 +1,5 @@
 2006-04-08  Florian Boor <florian@kernelconcepts.de>
 
+    * gpe-windowlist.desktop.in.in: Honor prefix. 
+    * main.c: Workaround to make work on iPAQ.
 	* Initial import, basically working.

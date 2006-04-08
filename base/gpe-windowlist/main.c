@@ -190,7 +190,10 @@ window_added (GPEWindowList *list, Window w)
   gchar *class;
 
   type = gpe_get_window_property (dpy, w, atoms[_NET_WM_WINDOW_TYPE]);
-  if ((type == atoms[_NET_WM_WINDOW_TYPE_DOCK]) || (type == atoms[_NET_WM_WINDOW_TYPE_DESKTOP]))
+/*  if (type == atoms[_NET_WM_WINDOW_TYPE_DOCK])
+    return;
+ */ 
+  if (type == atoms[_NET_WM_WINDOW_TYPE_DESKTOP])
     return;
 
   if (gpe_get_window_property (dpy, w, atoms[_NET_WM_STATE_HIDDEN]) != None)
