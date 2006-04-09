@@ -1,3 +1,7 @@
+2006-04-09  Florian Boor <florian@kernelconcepts.de>
+
+	* gpe-taskmanager.c main(): Fix array size, allocate atom list dynamically.
+
 2006-03-17  Florian Boor <florian@kernelconcepts.de>
 
     * (activate_task): Use libgpelaunch function instead of activate_window().

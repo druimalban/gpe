@@ -39,7 +39,7 @@ GtkListStore *list_store;
 GtkWidget *list_view;
 Window my_w;
 
-Atom atoms[4];
+Atom *atoms;
 
 char *atom_names[] = 
   {
@@ -425,6 +425,7 @@ main (int argc, char *argv[])
   bind_textdomain_codeset (PACKAGE, "UTF-8");
 
   dpy = GDK_DISPLAY ();
+  atoms = g_malloc0 (sizeof (Atom) * sizeof (atom_names) / sizeof (atom_names[0]));
 
   XInternAtoms (dpy, atom_names, sizeof (atom_names) / sizeof (atom_names[0]),
 		False, atoms);
