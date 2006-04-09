@@ -35,14 +35,14 @@ typedef struct _GtkDayRender GtkDayRender;
    row which must be displayed even if it contains no events.
    ROWS_HARD indicates the number of rows which must be shown starting
    with row ROWS_HARD_FIRST.  Event rectangles will be colored with
-   APP_GC.  GUTTER is the number of pixels to leave empty around an
+   APP.  GUTTER is the number of pixels to leave empty around an
    event rectangle.  HOUR_COLUMN indicates if an hour column should be
    drawn.  EVENTS is a list of events to display.  */
 extern GtkWidget *gtk_day_render_new (time_t date, gint duration,
 				      gint rows,
 				      gint rows_hard_first,
 				      gint rows_hard,
-				      GdkGC *app_gc, gint gutter,
+				      GdkColor app, gint gutter,
 				      gboolean hour_column, 
 				      GSList *events);
 

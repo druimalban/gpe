@@ -27,9 +27,10 @@ gpe_calendar_SOURCES = globals.h main.c					\
 					   xsettings.c			\
 					   gtkdatesel.c gtkdatesel.h	\
 					   import-vcal.c import-vcal.h	\
-					   export-vcal.c export-vcal.h  \
+					   export-vcal.c export-vcal.h	\
 			event-cal.c event-cal.h				\
-			event-list.c event-list.h
+			event-list.c event-list.h			\
+			view.c view.h
 
 if HILDON
 

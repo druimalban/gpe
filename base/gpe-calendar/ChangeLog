@@ -1,5 +1,129 @@
 2006-04-09  Neal H. Walfield  <neal@gnu.org>
 
+	* view.h: New file.
+	* view.c: New file.
+	* Makefile.am (gpe_calendar_SOURCES): Add view.c and view.h.
+	* main.c: Include "view.h", "event-cal.h" and "event-list.h".
+	(datesel, calendar, event_list): New global variables.
+	(update_view): Don't look up the "update_hook" on the view, call
+	gtk_view_reload_events.  Also call gtk_event_cal_reload_events.
+	(propagate_time): New function.
+	(datesel_changed): New function.
+	(calendar_changed): New function.
+	(time_changed): New function.
+	(new_view): When invoking NEW, pass VIEWTIME.  Connect
+	time_changed to the new view's "time-changed" signal.
+	(view_button_clicked): Show CALENDAR.
+	(month_view_button_clicked): New function.
+	(main): Limit WINDOW_X to 1000 and WINDOW_Y to 800.  Incorporate
+	CALENDAR, DATESEL and EVENT_LIST into the layout.
+	* day_view.h (gtk_day_view_new): Accept new parameter, time.
+	Update callers.
+	* day_view.c: Include "view.h".
+	(struct _GtkDayView): Make widget not a GtkVBox but a GtkView.
+	Remove fields datesel, calendar, event_list, event_box and date
+	and update users.
+	(DayViewClass): Remove field vbox_class, add field view_class.
+	(gtk_day_view_show): Remove declaration.
+	(day_view_update): Likewise.
+	(gtk_day_view_set_time): New declaration.
+	(gtk_day_view_reload_events): Likewise.
+	(gtk_day_view_get_type): Inherit from a GtkView, not a GtkVBox.
+	(gtk_day_view_base_class_init): Likewise.  Don't initialize
+	WIDGET_CLASS->SHOW.  Initialize VIEW_CLASS->SET_TIME to
+	gtk_day_view_set_time and VIEW_CLASS->RELOAD_EVENTS to
+	GTK_RELOAD_EVENTS.
+	(gtk_day_view_init): Don't initialize DAY_VIEW->DATE.
+	(gtk_day_view_show): Remove function.
+	(gtk_day_view_set_time): New function.
+	(day_view_row_clicked): Don't use VIEWTIME, use the date stored in
+	DAY_VIEW.
+	(day_view_update): Rename from this...
+	(gtk_day_view_reload_events): ... to this and update callers.
+	Remove force parameter.  Don't check if we need to update; assume
+	that we do.
+	(datesel_changed): Remove function.
+	(calendar_changed): Remove function.
+	(scroll_to): Don't use VIEWTIME, use the date stored in DAY_VIEW.
+	(event_menu_destroy): Remove function.
+	(gtk_day_view_new): Accept new parameter, time.  Don't set the
+	"update_hook" data on DAY_VIEW.  Don't create a datesel, calendar
+	or event_list and refactor layout accordingly.
+	* day_render.h: Don't require a GdkGC * but a GdkColor.  Update
+	users.
+	* day_render.c (struct _GtkDayRender): New field, app.  Rename
+	normal_gc to app_gc and update users.
+	(gtk_day_render_new): Don't require a GdkGC * but a GdkColor.
+	Assign this to DAY_RENDER->APP.
+	(gtk_day_render_expose): And allocate DAY_RENDER->APP_GC here when
+	needed.
+	* week_view.h (gtk_week_view_new): Accept new parameter, time.
+	Update callers.
+	* week_view.c: Include "view.h".
+	(struct _GtkWeekView): Make widget a GtkView, not a GtkVBox.
+	(struct _GtkWeekView): Remove fields datesel, calendar, event_list
+	and date and update users.
+	(GtkWeekViewClass): Remove field vbox_class, add field view_class.
+	(gtk_week_view_show): Remove declaration.
+	(week_view_update): Likewise.
+	(gtk_week_view_set_time): New declaration.
+	(gtk_week_view_reload_events): Likewise.
+	(gtk_week_view_get_type): Inherit from a GtkView, not a GtkVBox.
+	(gtk_week_view_base_class_init): Likewise.  Don't initialize
+	WIDGET_CLASS->SHOW.  Set VIEW_CLASS->SET_TIME to
+	gtk_month_view_set_time and VIEW_CLASS->RELOAD_EVENTS to
+	gtk_month_view_reload_events.
+	(gtk_week_view_init): Don't initialize WEEK_VIEW->DATE.
+	(gtk_week_view_show): Remove function.
+	(gtk_week_view_set_time): New function.
+	(week_view_update): Rename from this...
+	(gtk_week_view_reload_events): ... to this.  Remove parameter
+	force; always update.  Don't update WEEK_VIEW->CALENDAR or
+	WEEK_VIEW->DATESEL.  Don't use VIEWTIME, use the date in
+	MONTH_VIEW.
+	(calendar_day_changed): Remove function.
+	(datesel_changed): Likewise.
+	(update_hook_callback): Likewise.
+	(week_view_key_press_event): Don't update WEEK_VIEW->DATESEL, call
+	gtk_view_set_time.  Don't use VIEWTIME, use the time in WEEK_VIEW.
+	(week_view_button_press): Likewise.
+	(gtk_week_view_new): Take new parameter, time.  Don't set the
+	"update_hook" data on WEEK_VIEW.  Don't create a datesel, calendar
+	or event_list and refactor layout accordingly.
+	* month_view.h (gtk_month_view_new): Accept new parameter, time.
+	Update callers.
+	* month_view.c: Include "view.h".
+	(struct _GtkMonthView): Make widget a GtkView, not a GtkVBox.
+	Remove field datesel and date and update users.
+	(GtkMonthViewClass): Remove field vbox_class, add field
+	view_class.
+	(gtk_month_view_show): Remove declaration.
+	(month_view_update): Likewise.
+	(gtk_month_view_set_time): New declaration.
+	(gtk_month_view_reload_events): Likewise.
+	(gtk_month_view_get_type): Inherit from a GtkView, not a GtkVBox.
+	(gtk_month_view_base_class_init): Likewise.  Don't initialize
+	WIDGET_CLASS->SHOW.  Set VIEW_CLASS->SET_TIME to
+	gtk_month_view_set_time and VIEW_CLASS->RELOAD_EVENTS to
+	gtk_month_view_reload_events.
+	(gtk_month_view_init): Don't initialize MONTH_VIEW->DATE.
+	(gtk_month_view_show): Remove function.
+	(gtk_month_view_set_time): New function.
+	(button_press): Don't use VIEWTIME, change MONTH_VIEW->FOCUSED_DAY
+	or change the focus; just call gtk_view_set_time.
+	(month_view_key_press_event): Likewise.
+	(month_view_update): Rename from this...
+	(gtk_month_view_reload_events): ... to this.  Remove parameter
+	force; always update.  Don't update MONTH_VIEW->DATESEL.  Don't
+	use VIEWTIME, use the date in MONTH_VIEW.
+	(datesel_changed): New function.
+	(update_hook_callback): New function.
+	(gtk_month_view_new): Take new parameter, time.  Don't realize
+	MAIN_WINDOW.  Don't set the "update_hook" data on MONTH_VIEW.
+	Don't create a datesel and refactor layout accordingly.
+
+2006-04-09  Neal H. Walfield  <neal@gnu.org>
+
 	* event-cal.c (update_cal): Check if the date changed using the
 	year and month in the GtkEventCal, not the GtkCalendar.
 

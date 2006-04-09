@@ -26,6 +26,7 @@
 #include <gpe/schedule.h>
 #include <gpe/stylus.h>
 #include <gpe/spacing.h>
+#include "view.h"
 #include "event-ui.h"
 #include "globals.h"
 #include "day_view.h"
@@ -40,32 +41,25 @@
 
 struct _GtkDayView
 {
-  GtkVBox widget;
+  GtkView widget;
 
   /*
       Basic layout of a DayView:
 
-       /-DayView------------------------------------\
-       | /-event_box--------------\ /-calendar----\ |
-       | | /-reminders----------\ | |             | |
-       | | |                    | | |             | |
-       | | \--------------------/ | |             | |
-       | | /-appointment_window-\ | |             | |
-       | | |/-appointments-----\| | |             | |
-       | | ||                  || | |             | |
-       | | |\------------------/| | |             | |
-       | | \--------------------/ | |             | |
-       | \------------------------/ \-------------/ |
-       \--------------------------------------------/
+       /-DayView----------------\
+       | /-reminders----------\ |
+       | |                    | |
+       | \--------------------/ |
+       | /-appointment_window-\ |
+       | |/-appointments-----\| |
+       | ||                  || |
+       | |\------------------/| |
+       | \--------------------/ |
+       \------------------------/
    */
-
-  GtkWidget *datesel;
-  GtkWidget *calendar;
-  GtkWidget *event_list;
 
   gboolean scrolling;
   gboolean scroll_floating;
-  GtkWidget *event_box;
 
   GtkDayRender *reminders;
   GtkWidget *appointment_window;
@@ -78,13 +72,11 @@ struct _GtkDayView
   GtkWidget *event_menu;
   /* A label describing the clicked event.  */
   GtkWidget *event_menu_info;
-
-  time_t date;
 };
 
 typedef struct
 {
-  GtkVBoxClass vbox_class;
+  GtkViewClass view_class;
   GObjectClass parent_class;
 } DayViewClass;
 
@@ -92,8 +84,8 @@ static void gtk_day_view_base_class_init (gpointer klass);
 static void gtk_day_view_init (GTypeInstance *instance, gpointer klass);
 static void gtk_day_view_dispose (GObject *obj);
 static void gtk_day_view_finalize (GObject *object);
-static void gtk_day_view_show (GtkWidget *object);
-static void day_view_update (GtkDayView *day_view, gboolean force);
+static void gtk_day_view_set_time (GtkView *view, time_t time);
+static void gtk_day_view_reload_events (GtkView *view);
 
 static GtkWidgetClass *parent_class;
 
@@ -117,7 +109,7 @@ gtk_day_view_get_type (void)
 	gtk_day_view_init
       };
 
-      type = g_type_register_static (gtk_vbox_get_type (),
+      type = g_type_register_static (gtk_view_get_type (),
 				     "GtkDayView", &info, 0);
     }
 
@@ -129,15 +121,19 @@ gtk_day_view_base_class_init (gpointer klass)
 {
   GObjectClass *object_class;
   GtkWidgetClass *widget_class;
+  GtkViewClass *view_class;
 
-  parent_class = g_type_class_ref (gtk_vbox_get_type ());
+  parent_class = g_type_class_ref (gtk_view_get_type ());
 
   object_class = G_OBJECT_CLASS (klass);
   object_class->finalize = gtk_day_view_finalize;
   object_class->dispose = gtk_day_view_dispose;
 
   widget_class = (GtkWidgetClass *) klass;
-  widget_class->show = gtk_day_view_show;
+
+  view_class = (GtkViewClass *) klass;
+  view_class->set_time = gtk_day_view_set_time;
+  view_class->reload_events = gtk_day_view_reload_events;
 }
 
 static void
@@ -148,7 +144,6 @@ gtk_day_view_init (GTypeInstance *instance, gpointer klass)
   day_view->reminders = 0;
   day_view->appointments = 0;
   day_view->sel_event = 0;
-  day_view->date = (time_t) -1;
 }
 
 static void
@@ -174,25 +169,31 @@ gtk_day_view_finalize (GObject *object)
 }
 
 static void
-gtk_day_view_show (GtkWidget *widget)
+gtk_day_view_set_time (GtkView *view, time_t current)
 {
-  GtkDayView *day_view = GTK_DAY_VIEW (widget);
+  time_t new = gtk_view_get_time (view);
+  struct tm c_tm;
+  struct tm n_tm;
 
-  day_view_update (day_view, TRUE);
+  localtime_r (&current, &c_tm);
+  localtime_r (&new, &n_tm);
 
-  GTK_WIDGET_CLASS (parent_class)->show (widget);
+  if (c_tm.tm_year != n_tm.tm_year || c_tm.tm_yday != n_tm.tm_yday)
+    /* Day changed.  */
+    gtk_day_view_reload_events (view);
 }
 
 static gboolean
 day_view_row_clicked (GtkWidget *widget, gint row, gpointer d)
 {
   GtkDayView *day_view = GTK_DAY_VIEW (d);
+  time_t t = gtk_view_get_time (GTK_VIEW (day_view));
   struct tm tm;
   GtkWidget *w;
 
   gtk_widget_hide (day_view->event_menu);
 
-  localtime_r (&viewtime, &tm);
+  localtime_r (&t, &tm);
   tm.tm_hour = row;
   tm.tm_min = 0;
 
@@ -251,63 +252,16 @@ day_view_event_clicked (GtkWidget *widget, gpointer event_p, gpointer d)
 }
 
 static void
-day_view_update (GtkDayView *day_view, gboolean force)
+gtk_day_view_reload_events (GtkView *view)
 {
+  GtkDayView *day_view = GTK_DAY_VIEW (view);
+  time_t t = gtk_view_get_time (view);
   struct tm vt;
   time_t end, start;
   GSList *reminders, *cleanup;
   GSList *events, *appointments, *iter;
 
-  localtime_r (&viewtime, &vt);
-
-  /* Check if the datesel needs updating.  */
-  {
-    time_t dstime;
-    struct tm dstm;
-
-    dstime = gtk_date_sel_get_time (GTK_DATE_SEL (day_view->datesel));
-    localtime_r (&dstime, &dstm);
-
-    if (dstm.tm_year != vt.tm_year || dstm.tm_yday != vt.tm_yday)
-      gtk_date_sel_set_time (GTK_DATE_SEL (day_view->datesel), viewtime);
-  }
-
-  /* Check if the calendar needs updating.  */
-  {
-    int day, month, year;
-
-    gtk_calendar_get_date (GTK_CALENDAR (day_view->calendar),
-			   &year, &month, &day);
-    if (vt.tm_year != year - 1900 || vt.tm_mon != month || vt.tm_mday != day)
-      {
-	gtk_calendar_select_month (GTK_CALENDAR (day_view->calendar),
-				   vt.tm_mon, vt.tm_year + 1900);
-	gtk_calendar_select_day (GTK_CALENDAR (day_view->calendar),
-				 vt.tm_mday);
-      }
-  }
-
-  /* Check if the day view needs updating.  */
-  if (! force)
-    {
-      struct tm tm;
-      localtime_r (&day_view->date, &tm);
-
-      if (tm.tm_year == vt.tm_year && tm.tm_yday == vt.tm_yday)
-	/* Same day, nothing to do.  */
-	{
-	  day_view->date = viewtime;
-	  return;
-	}
-    }
-
-  if (force)
-    {
-      gtk_event_cal_reload_events (GTK_EVENT_CAL (day_view->calendar));
-      gtk_event_list_reload_events (GTK_EVENT_LIST (day_view->event_list));
-    }
-
-  day_view->date = viewtime;
+  localtime_r (&t, &vt);
 
   vt.tm_hour = 0;
   vt.tm_min = 0;
@@ -340,7 +294,7 @@ day_view_update (GtkDayView *day_view, gboolean force)
   if (! reminders && day_view->reminders)
     /* There are no longer any reminders, destroy its render area.  */
     {
-      gtk_container_remove (GTK_CONTAINER (day_view->event_box),
+      gtk_container_remove (GTK_CONTAINER (day_view),
 			    GTK_WIDGET (day_view->reminders));
       day_view->reminders = NULL;
     }
@@ -350,15 +304,15 @@ day_view_update (GtkDayView *day_view, gboolean force)
       if (! day_view->reminders)
 	/* We have reminders but no render area.  Create one.  */
 	{
-	  GdkGC *black_gc, *cream_gc;
-
-	  black_gc = GTK_WIDGET (day_view)->style->black_gc;
-	  cream_gc = pen_new (GTK_WIDGET (day_view), 65535, 64005, 51100);
+	  GdkColor cream;
+	  cream.red = 65535;
+	  cream.green = 64005;
+	  cream.blue = 51100;
 
 	  day_view->reminders
 	    = GTK_DAY_RENDER (gtk_day_render_new (start, 24 * 60 * 60,
 						  1, 0, 0,
-						  cream_gc, 1, FALSE,
+						  cream, 1, FALSE,
 						  reminders));
 
 	  g_signal_connect (G_OBJECT (day_view->reminders), "event-clicked",
@@ -366,10 +320,9 @@ day_view_update (GtkDayView *day_view, gboolean force)
 	  g_signal_connect (G_OBJECT (day_view->reminders), "row-clicked",
 			    G_CALLBACK (day_view_row_clicked), day_view);
 
-	  g_object_unref (cream_gc);
 	  gtk_widget_show (GTK_WIDGET (day_view->reminders));
 
-	  gtk_box_pack_start (GTK_BOX (day_view->event_box),
+	  gtk_box_pack_start (GTK_BOX (day_view),
 			      GTK_WIDGET (day_view->reminders),
 			      FALSE, FALSE, 0);
 	}
@@ -389,10 +342,10 @@ day_view_update (GtkDayView *day_view, gboolean force)
   else
     {
       /* Don't want to infinge some patents here */
-      GdkGC *black_gc, *post_him_yellow;
-
-      black_gc = GTK_WIDGET (day_view)->style->black_gc;
-      post_him_yellow = pen_new (GTK_WIDGET (day_view), 63222, 59110, 33667);
+      GdkColor post_him_yellow;
+      post_him_yellow.red = 63222;
+      post_him_yellow.green = 59110;
+      post_him_yellow.blue = 33667;
 
       day_view->appointments
 	= GTK_DAY_RENDER (gtk_day_render_new (start, 30 * 60 * 60,
@@ -406,8 +359,6 @@ day_view_update (GtkDayView *day_view, gboolean force)
       g_signal_connect (G_OBJECT (day_view->appointments), "row-clicked",
 			G_CALLBACK (day_view_row_clicked), day_view);
 
-      g_object_unref (post_him_yellow);
-
       gtk_widget_show (GTK_WIDGET (day_view->appointments));
 
       gtk_scrolled_window_add_with_viewport
@@ -420,35 +371,6 @@ day_view_update (GtkDayView *day_view, gboolean force)
     }
 }
 
-static gboolean
-datesel_changed (GtkWidget *widget, GtkWidget *dv)
-{
-  GtkDayView *day_view = GTK_DAY_VIEW (dv);
-
-  viewtime = gtk_date_sel_get_time (GTK_DATE_SEL (widget));
-  day_view_update (day_view, FALSE);
-
-  return FALSE;
-}
-
-static void
-calendar_changed (GtkWidget *widget, GtkWidget *dv)
-{
-  GtkDayView *day_view = GTK_DAY_VIEW (dv);
-  int day, month, year;
-  struct tm tm;
-
-  localtime_r (&viewtime, &tm);
-  gtk_calendar_get_date (GTK_CALENDAR (widget), &year, &month, &day);
-
-  tm.tm_year = year - 1900;
-  tm.tm_mon = month;
-  tm.tm_mday = day;
-  viewtime = mktime (&tm);
-
-  day_view_update (day_view, FALSE);
-}
-
 /* 
  * Go to hour h
  * If h is negative it goes to the current hour
@@ -456,6 +378,7 @@ calendar_changed (GtkWidget *widget, GtkWidget *dv)
 static void
 scroll_to (GtkDayView *day_view, gint hour)
 {
+  time_t t = gtk_view_get_time (GTK_VIEW (day_view));
   GtkAdjustment *adj;
   gint h = 0;
   gdouble upper, lower, value;
@@ -464,7 +387,7 @@ scroll_to (GtkDayView *day_view, gint hour)
   if (hour < 0)
     {
       struct tm now_tm;
-      localtime_r (&viewtime, &now_tm);
+      localtime_r (&t, &now_tm);
       hour = MAX (now_tm.tm_hour - 1, 0);
     }
 
@@ -500,22 +423,6 @@ sink_scroller (GtkAdjustment *adjustment, gpointer data)
   GtkDayView *day_view = GTK_DAY_VIEW (data);
   if (!day_view->scrolling)
     day_view->scroll_floating = FALSE;
-}
-
-static void
-update_hook_callback (GtkWidget *dv)
-{
-  GtkDayView *day_view = GTK_DAY_VIEW (dv);
-
-  struct tm tm;
-  gtk_date_sel_set_time (GTK_DATE_SEL (day_view->datesel), viewtime);
-  localtime_r (&viewtime, &tm);
-  gtk_calendar_select_month (GTK_CALENDAR (day_view->calendar),
-			     tm.tm_mon, tm.tm_year + 1900);
-  gtk_calendar_select_day (GTK_CALENDAR (day_view->calendar), tm.tm_mday);
-
-  /* Force a reload of the events.  */
-  day_view_update (day_view, TRUE);
 }
 
 static gboolean
@@ -574,7 +481,7 @@ delete_event_cb (GtkWidget *widget, GtkWidget *dv)
       event_db_remove (ev_real);
     }
 
-  day_view_update (day_view, TRUE);
+  gtk_day_view_reload_events (GTK_VIEW (day_view));
   event_db_forget_details (ev_real);
 }
 
@@ -729,93 +636,27 @@ gtk_event_menu_new (GtkDayView *day_view)
 }
 
 GtkWidget *
-gtk_day_view_new (void)
+gtk_day_view_new (time_t time)
 {
   GtkDayView *day_view;
-  GtkWidget *hbox = gtk_hbox_new (FALSE, 0);
   GtkAdjustment *adj;
-  gboolean landscape;
 
   day_view = GTK_DAY_VIEW (g_object_new (gtk_day_view_get_type (), NULL));
   gtk_event_menu_new (day_view);
-
-  day_view->event_box = gtk_vbox_new (FALSE, 0);
 
   day_view->appointment_window = gtk_scrolled_window_new (NULL, NULL);
   adj = gtk_scrolled_window_get_vadjustment
     (GTK_SCROLLED_WINDOW (day_view->appointment_window));
   g_signal_connect (G_OBJECT (adj), "value-changed",
 		    G_CALLBACK (sink_scroller), (gpointer) day_view);
-
-  landscape = gdk_screen_width () > gdk_screen_height ()
-    && gdk_screen_width () >= 640;
-
-  day_view->calendar = gtk_event_cal_new ();
-  GTK_WIDGET_UNSET_FLAGS (day_view->calendar, GTK_CAN_FOCUS);
-
-  gtk_widget_show (day_view->appointment_window);
-  gtk_widget_show (hbox);
-  gtk_widget_show (day_view->event_box);
-
-  gtk_calendar_set_display_options (GTK_CALENDAR (day_view->calendar),
-				    GTK_CALENDAR_SHOW_DAY_NAMES
-				    | (week_starts_monday ?
-				       GTK_CALENDAR_WEEK_START_MONDAY : 0));
-
-  day_view->event_list = gtk_event_list_new ();
-
-  day_view->datesel = gtk_date_sel_new (GTKDATESEL_FULL, viewtime);
-
-  gtk_widget_show (day_view->datesel);
-  
-  g_signal_connect (G_OBJECT (day_view->calendar),
-		    "day-selected", G_CALLBACK (calendar_changed),
-		    day_view);
-
   gtk_scrolled_window_set_policy
     (GTK_SCROLLED_WINDOW (day_view->appointment_window),
      GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-
-  GTK_VBOX (day_view);
-  gtk_box_pack_start (GTK_BOX (day_view), day_view->datesel, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (day_view), hbox, TRUE, TRUE, 0);
-
-  gtk_box_pack_start (GTK_BOX (hbox), day_view->event_box, TRUE, TRUE, 0);
-  
-  gtk_box_pack_end (GTK_BOX (day_view->event_box),
-		    day_view->appointment_window,
+  gtk_box_pack_end (GTK_BOX (day_view), day_view->appointment_window,
 		    TRUE, TRUE, 0);
+  gtk_widget_show (day_view->appointment_window);
 
-#ifndef IS_HILDON
-  if (landscape)
-    {
-      GtkWidget *sep;
-      GtkWidget *vbox;
-      sep = gtk_vseparator_new ();
-
-      gtk_box_pack_start (GTK_BOX (hbox), sep, FALSE, FALSE, 0);
-      vbox = gtk_vbox_new (FALSE, 0);
-      gtk_box_pack_start (GTK_BOX (hbox), vbox, FALSE, FALSE, 0);
-      gtk_box_pack_start (GTK_BOX (vbox), day_view->calendar, FALSE,
-			  FALSE, 0);
-      gtk_box_pack_start (GTK_BOX (vbox), day_view->event_list, TRUE,
-			  TRUE, 0);
-
-      gtk_widget_show (sep);
-      gtk_widget_show (vbox);
-      gtk_widget_show (day_view->calendar);
-      gtk_widget_show (day_view->event_list);
-    }
-#endif
-
-  g_object_set_data (G_OBJECT (day_view), "update_hook",
-		     (gpointer) update_hook_callback);
-
-  g_signal_connect (G_OBJECT (day_view->datesel), "changed",
-		    G_CALLBACK (datesel_changed), day_view);
-    
-  gtk_widget_add_events (GTK_WIDGET (day_view->datesel),
-			 GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK);
+  gtk_view_set_time (GTK_VIEW (day_view), time);
 
   return GTK_WIDGET (day_view);
 }

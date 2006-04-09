@@ -56,7 +56,9 @@ struct _GtkDayRender
 {
   GtkDrawingArea drawing_area;
 
-  GdkGC *normal_gc;		/* Normal event color.  */
+  GdkColor app;			/* Appointment event color.  */
+  GdkGC *app_gc;
+
   gint gap;			/* Gap between event boxes. */
 
   /* Start of period to display */
@@ -223,7 +225,7 @@ GtkWidget *
 gtk_day_render_new (time_t date, gint duration, gint rows,
 		    gint rows_hard_first,
 		    gint rows_hard,
-		    GdkGC *app_gc, gint gap,
+		    GdkColor app, gint gap,
 		    gboolean hour_column, 
 		    GSList *events)
 {
@@ -245,8 +247,7 @@ gtk_day_render_new (time_t date, gint duration, gint rows,
   day_render->rows = rows;
   day_render->rows_hard_first = rows_hard_first;
   day_render->rows_hard = rows_hard;
-  day_render->normal_gc = app_gc;
-  g_object_ref (day_render->normal_gc);
+  day_render->app = app;
   day_render->gap = gap;
   day_render->hour_column = hour_column;
   gtk_day_render_set_events (day_render, events);
@@ -277,7 +278,8 @@ gtk_day_render_finalize (GObject *object)
 
   day_render = (GtkDayRender *) object;
 
-  g_object_unref (day_render->normal_gc);
+  if (day_render->app_gc)
+    g_object_unref (day_render->app_gc);
 
   for (er = day_render->event_rectangles; er; er = er->next)
     event_rect_delete ((struct event_rect *) er->data);
@@ -318,6 +320,11 @@ gtk_day_render_expose (GtkWidget *widget, GdkEventExpose *event)
   
   if (! day_render->gray_gc)
     day_render->gray_gc = pen_new (widget, 58905, 58905, 56610);
+  if (! day_render->app_gc)
+    day_render->app_gc = pen_new (widget, day_render->app.red,
+				  day_render->app.green,
+				  day_render->app.blue);
+
 
   /* Start with a white background.  */
   gdk_draw_rectangle (widget->window, white_gc, TRUE,
@@ -431,10 +438,10 @@ gtk_day_render_expose (GtkWidget *widget, GdkEventExpose *event)
 
       /* "Flood" the rectangle.  */
       if (height > 2 * arc_size)
-	gdk_draw_rectangle (w, day_render->normal_gc, TRUE,
+	gdk_draw_rectangle (w, day_render->app_gc, TRUE,
 			    x, y + arc_size, width, height - 2 * arc_size);
       if (width > 2 * arc_size)
-	gdk_draw_rectangle (w, day_render->normal_gc, TRUE,
+	gdk_draw_rectangle (w, day_render->app_gc, TRUE,
 			    x + arc_size, y, width - 2 * arc_size, height);
 
       /* Draw the outline.  */
@@ -457,26 +464,26 @@ gtk_day_render_expose (GtkWidget *widget, GdkEventExpose *event)
       /* Draw the corners.  */
 
       /* North-west corner */
-      gdk_draw_arc (w, day_render->normal_gc, TRUE,
+      gdk_draw_arc (w, day_render->app_gc, TRUE,
 		    x, y, arc_size * 2, arc_size * 2, 90 * 64, 90 * 64);
       gdk_draw_arc (w, GTK_WIDGET (day_render)->style->black_gc, FALSE,
 		    x, y, arc_size * 2, arc_size * 2, 90 * 64, 90 * 64);
       /* North-east corner */
-      gdk_draw_arc (w, day_render->normal_gc, TRUE,
+      gdk_draw_arc (w, day_render->app_gc, TRUE,
 		    x + width - 1 - 2 * arc_size, y,
 		    arc_size * 2, arc_size * 2, 0 * 64, 90 * 64);
       gdk_draw_arc (w, GTK_WIDGET (day_render)->style->black_gc, FALSE,
 		    x + width - 1 - arc_size * 2, y,
 		    arc_size * 2, arc_size * 2, 0 * 64, 90 * 64);
       /* South-west corner */
-      gdk_draw_arc (w, day_render->normal_gc, TRUE,
+      gdk_draw_arc (w, day_render->app_gc, TRUE,
 		    x, y + height - 1 - 2 * arc_size,
 		    arc_size * 2, arc_size * 2, 180 * 64, 90 * 64);
       gdk_draw_arc (w, GTK_WIDGET (day_render)->style->black_gc, FALSE,
 		    x, y + height - 1 - 2 * arc_size,
 		    arc_size * 2, arc_size * 2, 180 * 64, 90 * 64);
       /* South-east corner */
-      gdk_draw_arc (w, day_render->normal_gc, TRUE,
+      gdk_draw_arc (w, day_render->app_gc, TRUE,
 		    x + width - 1 - 2 * arc_size, y + height - 1 - 2 * arc_size,
 		    arc_size * 2, arc_size * 2, 270 * 64, 90 * 64);
       gdk_draw_arc (w, GTK_WIDGET (day_render)->style->black_gc, FALSE,
@@ -501,7 +508,7 @@ gtk_day_render_expose (GtkWidget *widget, GdkEventExpose *event)
 	      height_pix = gdk_pixbuf_get_height (bell_pb);
     
 	      gdk_draw_pixbuf (w,
-			       day_render->normal_gc,
+			       day_render->app_gc,
 			       bell_pb,
 			       0, 0,
 			       x + width - width_pix - 1,

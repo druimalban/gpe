@@ -23,6 +23,6 @@ typedef struct _GtkWeekView GtkWeekView;
 /* Return GType of a week view.  */
 extern GType gtk_week_view_get_type (void);
 
-extern GtkWidget *gtk_week_view_new (void);
+extern GtkWidget *gtk_week_view_new (time_t time);
 
 #endif
