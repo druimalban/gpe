@@ -56,6 +56,8 @@ GType           gtk_date_sel_get_type (void);
 
 GtkWidget      *gtk_date_sel_new (GtkDateSelMode mode, time_t time);
 
+extern void gtk_date_sel_set_mode (GtkDateSel *datesel, GtkDateSelMode mode);
+
 time_t          gtk_date_sel_get_time (GtkDateSel *sel);
 void            gtk_date_sel_set_time (GtkDateSel *sel, time_t time);
 void            gtk_date_sel_set_month_style (GtkDateSel *sel, GtkDateSelMonthStyle style);

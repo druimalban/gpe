@@ -406,7 +406,9 @@ make_field (GtkDateSel *sel, struct elem *e,
   GTK_WIDGET_UNSET_FLAGS (arrow_button_r, GTK_CAN_FOCUS);
 
   gtk_container_add (GTK_CONTAINER (arrow_button_l), arrow_l);
+  gtk_widget_show (arrow_l);
   gtk_container_add (GTK_CONTAINER (arrow_button_r), arrow_r);
+  gtk_widget_show (arrow_r);
 
   gtk_button_set_relief (GTK_BUTTON (arrow_button_l), GTK_RELIEF_NONE);
   gtk_button_set_relief (GTK_BUTTON (arrow_button_r), GTK_RELIEF_NONE);
@@ -418,46 +420,13 @@ make_field (GtkDateSel *sel, struct elem *e,
   g_signal_connect (G_OBJECT (arrow_button_r), "clicked", G_CALLBACK (click), sel);
 
   gtk_box_pack_start (GTK_BOX (e->container), arrow_button_l, FALSE, FALSE, 0);
+  gtk_widget_show (arrow_button_l);
   gtk_box_pack_start (GTK_BOX (e->container), e->display, TRUE, FALSE, 0);
+  gtk_widget_show (e->display);
   gtk_box_pack_start (GTK_BOX (e->container), arrow_button_r, FALSE, FALSE, 0);
+  gtk_widget_show (arrow_button_r);
 
   gtk_box_pack_start (GTK_BOX (sel->subbox), e->container, FALSE, FALSE, 0);
-}
-
-static void
-show_field (struct elem *e)
-{
-  gtk_widget_show_all (e->container);
-}
-
-static void
-gtk_date_sel_show (GtkWidget *widget)
-{
-  GtkDateSel *sel;
-
-  g_return_if_fail (widget != NULL);
-  g_return_if_fail (GTK_IS_DATE_SEL (widget));
-
-  GTK_WIDGET_CLASS (parent_class)->show (widget);
-
-  sel = GTK_DATE_SEL (widget);
-  switch (sel->mode)
-    {
-    case GTKDATESEL_FULL:       /* day, month, year */
-      show_field (&sel->day);
-      show_field (&sel->month);
-      break;
-    case GTKDATESEL_WEEK:       /* week, year */
-      show_field (&sel->month);
-      show_field (&sel->week);
-      break;
-    case GTKDATESEL_MONTH:      /* month, year */
-      show_field (&sel->month);
-      break;
-    case GTKDATESEL_YEAR:       /* year */
-      break;
-    }
-  show_field (&sel->year);
 }
 
 static void
@@ -469,8 +438,6 @@ gtk_date_sel_class_init (GtkDateSelClass * klass)
   parent_class = gtk_type_class (gtk_hbox_get_type ());
   oclass       = (GObjectClass *) klass;
   widget_class = (GtkWidgetClass *) klass;
-
-  widget_class->show = gtk_date_sel_show;
 
   my_signals[0] = g_signal_new ("changed",
                                 G_OBJECT_CLASS_TYPE (oclass),
@@ -510,99 +477,106 @@ gtk_date_sel_get_type (void)
   return date_sel_type;
 }
 
+void
+gtk_date_sel_set_mode (GtkDateSel *datesel, GtkDateSelMode mode)
+{
+  datesel->mode = mode;
+
+  if (mode == GTKDATESEL_WEEK)
+    /* Display the week.  */
+    {
+      gtk_widget_show (datesel->week.container);
+      week_update (datesel, datesel->week.display);
+    }
+  else
+    gtk_widget_hide (datesel->week.container);
+
+  if (mode == GTKDATESEL_FULL)
+    /* Display the day.  */
+    {
+      gtk_widget_show (datesel->day.container);
+      day_update (GTK_WIDGET (datesel), datesel->day.display);
+    }
+  else
+    gtk_widget_hide (datesel->day.container);
+
+  if (mode == GTKDATESEL_FULL || mode == GTKDATESEL_MONTH
+      || mode == GTKDATESEL_WEEK)
+    /* Display the month.  */
+    {
+      gtk_widget_show (datesel->month.container);
+      month_update (datesel, datesel->month.display);
+    }
+  else
+    gtk_widget_hide (datesel->month.container);
+}
+
 GtkWidget *
 gtk_date_sel_new (GtkDateSelMode mode, time_t time)
 {
   GtkWidget *w = GTK_WIDGET (gtk_type_new (gtk_date_sel_get_type ()));
   GtkDateSel *sel = GTK_DATE_SEL (w);
+  struct elem *e;
+  struct tm tm;
   int i;
-
-  sel->mode = mode;
 
   sel->time = time;
   sel->day_clamped = -1;
 
   sel->subbox = gtk_hbox_new (FALSE, 0);
 
-  if (mode == GTKDATESEL_WEEK)
-    /* Display the week.  */
+  e = &sel->week;
+  e->display = gtk_label_new ("");
+  make_field (sel, e, week_click);
+  g_signal_connect (G_OBJECT (sel), "changed",
+		    G_CALLBACK (week_update), e->display);
+
+  e = &sel->day;
+  e->display = gtk_entry_new ();
+  gtk_entry_set_width_chars (GTK_ENTRY (e->display), 3);
+  make_field (sel, e, day_click);
+  g_signal_connect (G_OBJECT (sel), "changed",
+		    G_CALLBACK (day_update),
+		    e->display);
+  g_signal_connect (G_OBJECT (e->display), "key-press-event",
+		    G_CALLBACK (day_key_press), sel);
+  g_signal_connect (G_OBJECT (e->display), "button-press-event",
+		    G_CALLBACK (entry_button_press), 0);
+
+  e = &sel->month;
+  sel->month.display = gtk_combo_box_new_text ();
+  make_field (sel, &sel->month, month_click);
+  sel->month_style = GTKDATESEL_MONTH_SHORT;
+  for (i = 0; i < 12; i ++)
     {
-      struct elem *e = &sel->week;
+      gchar *str;
 
-      e->display = gtk_label_new ("");
-      make_field (sel, e, week_click);
-
-      g_signal_connect (G_OBJECT (sel), "changed",
-			G_CALLBACK (week_update), e->display);
-
-      week_update (sel, e->display);
+      tm.tm_mon = i;
+      str = strftime_strdup_utf8_utf8 (_("%b"), &tm);
+      gtk_combo_box_append_text (GTK_COMBO_BOX (e->display), str);
+      g_free (str);
     }
-  if (mode == GTKDATESEL_FULL)
-    /* Display the day.  */
-    {
-      struct elem *e = &sel->day;
+  g_signal_connect (G_OBJECT (sel), "changed", G_CALLBACK (month_update),
+		    e->display);
+  g_signal_connect (G_OBJECT (e->display), "changed",
+		    G_CALLBACK (month_change), sel);
 
-      e->display = gtk_entry_new ();
-      gtk_entry_set_width_chars (GTK_ENTRY (e->display), 3);
-      make_field (sel, e, day_click);
+  e = &sel->year;
+  e->display = gtk_entry_new ();
+  gtk_entry_set_width_chars (GTK_ENTRY (e->display), 5);
+  make_field (sel, e, year_click);
+  g_signal_connect (G_OBJECT (sel), "changed",
+		    G_CALLBACK (year_update),
+		    e->display);
+  g_signal_connect (G_OBJECT (e->display), "key-press-event",
+		    G_CALLBACK (year_key_press), sel);
+  g_signal_connect (G_OBJECT (e->display), "button-press-event",
+		    G_CALLBACK (entry_button_press), 0);
 
-      g_signal_connect (G_OBJECT (sel), "changed",
-			G_CALLBACK (day_update),
-			e->display);
-      g_signal_connect (G_OBJECT (e->display), "key-press-event",
-			G_CALLBACK (day_key_press), sel);
-      g_signal_connect (G_OBJECT (e->display), "button-press-event",
-			G_CALLBACK (entry_button_press), 0);
+  year_update (w, e->display);
+  gtk_widget_show (e->container);
 
-      day_update (w, e->display);
-    }
-  if (mode == GTKDATESEL_FULL || mode == GTKDATESEL_MONTH
-      || mode == GTKDATESEL_WEEK)
-    /* Display the month.  */
-    {
-      struct elem *e = &sel->month;
-      struct tm tm;
-
-      sel->month.display = gtk_combo_box_new_text ();
-      make_field (sel, &sel->month, month_click);
-      sel->month_style = GTKDATESEL_MONTH_SHORT;
-
-      for (i = 0; i < 12; i ++)
-	{
-	  gchar *str;
-
-	  tm.tm_mon = i;
-	  str = strftime_strdup_utf8_utf8 (_("%b"), &tm);
-	  gtk_combo_box_append_text (GTK_COMBO_BOX (e->display), str);
-	  g_free (str);
-	}
-
-      g_signal_connect (G_OBJECT (sel), "changed", G_CALLBACK (month_update),
-			e->display);
-      g_signal_connect (G_OBJECT (e->display), "changed",
-			G_CALLBACK (month_change), sel);
-
-      month_update (sel, e->display);
-    }
-
-  /* Always display the year.  */
-  {
-      struct elem *e = &sel->year;
-
-      e->display = gtk_entry_new ();
-      gtk_entry_set_width_chars (GTK_ENTRY (e->display), 5);
-      make_field (sel, e, year_click);
-
-      g_signal_connect (G_OBJECT (sel), "changed",
-			G_CALLBACK (year_update),
-			e->display);
-      g_signal_connect (G_OBJECT (e->display), "key-press-event",
-			G_CALLBACK (year_key_press), sel);
-      g_signal_connect (G_OBJECT (e->display), "button-press-event",
-			G_CALLBACK (entry_button_press), 0);
-
-      year_update (w, e->display);
-    }
+  gtk_date_sel_set_mode (sel, mode);
 
   gtk_widget_show (sel->subbox);
   gtk_box_pack_start (GTK_BOX (sel), sel->subbox, TRUE, FALSE, 0);

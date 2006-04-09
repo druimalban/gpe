@@ -371,13 +371,25 @@ set_time_and_day_view (time_t selected_time)
 }
 
 static void
-view_button_clicked (GtkWidget *widget, gpointer new)
+day_view_button_clicked (GtkWidget *widget, gpointer d)
 {
   if (! gtk_toggle_tool_button_get_active (GTK_TOGGLE_TOOL_BUTTON (widget)))
     return;
 
+  gtk_date_sel_set_mode (datesel, GTKDATESEL_FULL);
   gtk_widget_show (GTK_WIDGET (calendar));
-  new_view (new);
+  new_view (gtk_day_view_new);
+}
+
+static void
+week_view_button_clicked (GtkWidget *widget, gpointer d)
+{
+  if (! gtk_toggle_tool_button_get_active (GTK_TOGGLE_TOOL_BUTTON (widget)))
+    return;
+
+  gtk_date_sel_set_mode (datesel, GTKDATESEL_WEEK);
+  gtk_widget_show (GTK_WIDGET (calendar));
+  new_view (gtk_week_view_new);
 }
 
 static void
@@ -386,6 +398,7 @@ month_view_button_clicked (GtkWidget *widget, gpointer d)
   if (! gtk_toggle_tool_button_get_active (GTK_TOGGLE_TOOL_BUTTON (widget)))
     return;
 
+  gtk_date_sel_set_mode (datesel, GTKDATESEL_MONTH);
   gtk_widget_hide (GTK_WIDGET (calendar));
   new_view (gtk_month_view_new);
 }
@@ -814,7 +827,7 @@ main (int argc, char *argv[])
   gtk_tool_button_set_label(GTK_TOOL_BUTTON(item), _("Day"));
   gtk_tool_button_set_icon_widget(GTK_TOOL_BUTTON(item), pw);
   g_signal_connect(G_OBJECT(item), "clicked",
-		   G_CALLBACK (view_button_clicked), gtk_day_view_new);
+		   G_CALLBACK (day_view_button_clicked), NULL);
   gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
   gtk_tooltips_set_tip(tooltips, GTK_WIDGET(item), 
                        _("Tap here to select day-at-a-time view."), NULL);
@@ -828,7 +841,7 @@ main (int argc, char *argv[])
   gtk_tool_button_set_label(GTK_TOOL_BUTTON(item), _("Week"));
   gtk_tool_button_set_icon_widget(GTK_TOOL_BUTTON(item), pw);
   g_signal_connect(G_OBJECT(item), "clicked",
-		   G_CALLBACK (view_button_clicked), gtk_week_view_new);
+		   G_CALLBACK (week_view_button_clicked), NULL);
   gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
   gtk_tooltips_set_tip(tooltips, GTK_WIDGET(item), 
                        _("Tap here to select week-at-a-time view."), NULL);

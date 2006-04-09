@@ -1,5 +1,25 @@
 2006-04-09  Neal H. Walfield  <neal@gnu.org>
 
+	* gtkdatesel.h (gtk_date_sel_set_mode): New declaration.
+	* gtkdatesel.c (make_field): Show ARROW_L, ARROW_R,
+	ARROW_BUTTON_L, E->DISPLAY and ARROW_BUTTON_R.
+	(show_field): Remove function.
+	(gtk_date_sel_show): Remove function.
+	(gtk_date_sel_class_init): Don't initialize WIDGET_CLASS->SHOW.
+	(gtk_date_sel_set_mode): New function.
+	(gtk_date_sel_new): Create all four fields independent of MODE.
+	Call gtk_date_sel_set_mode to show only those required for MODE.
+	* main.c (view_button_clicked): Remove function.
+	(day_view_button_clicked): New function.
+	(week_view_button_clicked): New function.
+	(month_view_button_clicked): Also call gtk_date_sel_set_mode to
+	change DATESEL to the appropriate mode.
+	(main): Connect DAY_BUTTON's clicked callback to
+	day_view_button_clicked.  Connect WEEK_BUTTON's clicked callback
+	to week_view_button_clicked.
+	
+2006-04-09  Neal H. Walfield  <neal@gnu.org>
+
 	* view.h: New file.
 	* view.c: New file.
 	* Makefile.am (gpe_calendar_SOURCES): Add view.c and view.h.
