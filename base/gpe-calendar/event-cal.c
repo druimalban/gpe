@@ -119,6 +119,7 @@ gtk_event_cal_finalize (GObject *object)
 static void
 update_cal (GtkCalendar *cal, gboolean force)
 {
+  GtkEventCal *event_cal = GTK_EVENT_CAL (cal);
   int year, month, day;
   struct tm start_tm;
   struct tm end_tm;
@@ -127,14 +128,14 @@ update_cal (GtkCalendar *cal, gboolean force)
   GSList *events;
   GSList *e;
 
+  gtk_calendar_get_date (cal, &year, &month, &day);
+  if (! force && event_cal->year == year && event_cal->month == month)
+    return;
+
   gtk_calendar_clear_marks (cal);
 
-  gtk_calendar_get_date (cal, &year, &month, &day);
-
-  if (! force && cal->year == year && cal->month == month)
-    return;
-  cal->year = year;
-  cal->month = month;
+  event_cal->year = year;
+  event_cal->month = month;
 
   start_tm.tm_year = year - 1900;
   start_tm.tm_mon = month;

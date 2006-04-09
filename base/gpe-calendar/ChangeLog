@@ -1,5 +1,10 @@
 2006-04-09  Neal H. Walfield  <neal@gnu.org>
 
+	* event-cal.c (update_cal): Check if the date changed using the
+	year and month in the GtkEventCal, not the GtkCalendar.
+
+2006-04-09  Neal H. Walfield  <neal@gnu.org>
+
 	* event-list.c (struct _GtkEventList): Add fields date and tm.
 	(date_cell_data_func): Interpret user data as the associated
 	GtkEventList.  Provide more descriptive dates.
