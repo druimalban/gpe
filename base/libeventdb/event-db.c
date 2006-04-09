@@ -557,6 +557,7 @@ event_db_list_for_period_internal (time_t start, time_t end, gboolean untimed,
       event_t ev = iter->data, clone;
       time_t event_start = ev->start, clone_start;
       recur_t r = ev->recur;
+      time_t window_start = start;
       
       if (untimed_significant)
 	{
@@ -577,149 +578,198 @@ event_db_list_for_period_internal (time_t start, time_t end, gboolean untimed,
       if (alarms && !(ev->flags & FLAG_ALARM))
 	continue;
 
+      localtime_r (&event_start, &tm_event);
+
       switch (r->type)
 	{
 	case RECUR_NONE:
 	  abort ();
 	  
 	case RECUR_DAILY:
-	  localtime_r (&start, &tm_display);
-          localtime_r (&event_start, &tm_event);
-	  if ((tm_event.tm_yday-tm_display.tm_yday)%r->increment==0) 
+	  while (window_start < end)
 	    {
-	      tm_event.tm_mon=tm_display.tm_mon;
-	      tm_event.tm_year=tm_display.tm_year;
-	      tm_event.tm_mday=tm_display.tm_mday;
-	    }; 
-	  clone_start=mktime(&tm_event);
-	  if (alarms) clone_start-=ev->alarm;
-	  if (clone_start <= end && (clone_start + ev->duration) > start) 
-	    {
-	      gboolean skip=FALSE;
-	      if (alarms) clone_start+=ev->alarm;
-	      if (r->exceptions) 
-	  	for (iter2 = r->exceptions; iter2; iter2 = g_slist_next (iter2))
-	  	  if ((long)iter2->data == (long)clone_start) skip=TRUE;
-	       if(alarms && start>clone_start-ev->alarm) skip=TRUE;
-	       if (!skip)
-	       {
-	  	  clone = event_db_clone(ev);
-	  	  if (alarms) clone->start = clone_start-ev->alarm;
-	  	  else clone->start = clone_start;
-		  clone->flags |= FLAG_RECUR;
-	  	  list = g_slist_insert_sorted (list, clone, (GCompareFunc)event_sort_func);
-		  if (++events == max)
-		    return list;
-	       }
+	      localtime_r (&window_start, &tm_display);
+
+	      if ((tm_event.tm_yday - tm_display.tm_yday) % r->increment ==0) 
+		{
+		  tm_event.tm_mon = tm_display.tm_mon;
+		  tm_event.tm_year = tm_display.tm_year;
+		  tm_event.tm_mday = tm_display.tm_mday;
+		}
+
+	      clone_start = mktime (&tm_event);
+
+	      if (alarms) 
+		clone_start -= ev->alarm;
+
+	      if (clone_start <= end && (clone_start + ev->duration) > window_start)
+		{
+		  gboolean skip=FALSE;
+
+		  if (alarms) 
+		    clone_start += ev->alarm;
+
+		  if (r->exceptions)
+		    { 
+		      for (iter2 = r->exceptions; iter2; iter2 = g_slist_next (iter2))
+			{
+			  if ((long)iter2->data == (long)clone_start) 
+			    skip = TRUE;
+			}
+		    }
+
+		  if (alarms && window_start>clone_start-ev->alarm) 
+		    skip = TRUE;
+
+		  if (!skip)
+		    {
+		      clone = event_db_clone (ev);
+
+		      if (alarms) 
+			clone->start -= ev->alarm;
+		      else 
+			clone->start = clone_start;
+		      clone->flags |= FLAG_RECUR;
+		      list = g_slist_insert_sorted (list, clone, (GCompareFunc)event_sort_func);
+		      if (++events == max)
+			return list;
+		    }
+		}
+
+	      window_start += SECONDS_IN_DAY;
 	    }
 	  break;
 
 	case RECUR_WEEKLY:
-          localtime_r (&start, &tm_display);
-          localtime_r (&event_start, &tm_event);
-	  if (((r->daymask & MON && tm_display.tm_wday==1) ||
-	     (r->daymask & TUE && tm_display.tm_wday==2) ||
-	     (r->daymask & WED && tm_display.tm_wday==3) ||
-	     (r->daymask & THU && tm_display.tm_wday==4) ||
-	     (r->daymask & FRI && tm_display.tm_wday==5) ||
-	     (r->daymask & SAT && tm_display.tm_wday==6) ||
-	     (r->daymask & SUN && tm_display.tm_wday==0))) {
-	    tm_event.tm_mon=tm_display.tm_mon;
-	    tm_event.tm_year=tm_display.tm_year;
-	    tm_event.tm_mday=tm_display.tm_mday;
-	    clone_start=mktime(&tm_event);
-	    if (alarms) clone_start-=ev->alarm;
-	    if (clone_start <= end && (clone_start + ev->duration) > start) 
+	  while (window_start < end)
 	    {
-	      gboolean skip=FALSE;
-	      if (alarms) clone_start+=ev->alarm;
-	      if (r->exceptions) 
-	    	for (iter2 = r->exceptions; iter2; iter2 = g_slist_next (iter2))
-	    	  if ((long)iter2->data == (long)clone_start) skip=TRUE;
-	      if(alarms && start>clone_start-ev->alarm) skip=TRUE;
-	      if (!skip)
-	    	{
-	    	  clone = event_db_clone(ev);
-	    	  if (alarms) clone->start = clone_start-ev->alarm;
-	    	  else clone->start = clone_start;
-	    	  clone->flags |= FLAG_RECUR;
-	    	  list = g_slist_insert_sorted (list, clone, (GCompareFunc)event_sort_func);
-		  if (++events == max)
-		    return list;
-	    	}
-	      }
+	      localtime_r (&window_start, &tm_display);
+	      if (((r->daymask & MON && tm_display.tm_wday==1) ||
+		   (r->daymask & TUE && tm_display.tm_wday==2) ||
+		   (r->daymask & WED && tm_display.tm_wday==3) ||
+		   (r->daymask & THU && tm_display.tm_wday==4) ||
+		   (r->daymask & FRI && tm_display.tm_wday==5) ||
+		   (r->daymask & SAT && tm_display.tm_wday==6) ||
+		   (r->daymask & SUN && tm_display.tm_wday==0))) 
+		{
+		  tm_event.tm_mon=tm_display.tm_mon;
+		  tm_event.tm_year=tm_display.tm_year;
+		  tm_event.tm_mday=tm_display.tm_mday;
+		  clone_start=mktime(&tm_event);
+		  if (alarms) clone_start-=ev->alarm;
+		  
+		  if (clone_start <= end && (clone_start + ev->duration) > window_start)
+		    {
+		      gboolean skip=FALSE;
+		      if (alarms) clone_start+=ev->alarm;
+		      if (r->exceptions) 
+			for (iter2 = r->exceptions; iter2; iter2 = g_slist_next (iter2))
+			  if ((long)iter2->data == (long)clone_start) skip=TRUE;
+
+		      if (alarms && window_start > clone_start-ev->alarm) 
+			skip = TRUE;
+
+		      if (!skip)
+			{
+			  clone = event_db_clone(ev);
+			  if (alarms) clone->start = clone_start-ev->alarm;
+			  else clone->start = clone_start;
+			  clone->flags |= FLAG_RECUR;
+			  list = g_slist_insert_sorted (list, clone, (GCompareFunc)event_sort_func);
+			  if (++events == max)
+			    return list;
+			}
+		    }
+		}
+	      
+	      window_start += 7 * SECONDS_IN_DAY;
 	    }
 	  break;
 
 	case RECUR_MONTHLY:
-          localtime_r (&start, &tm_display);
-          localtime_r (&event_start, &tm_event);
-	  month_diff=tm_display.tm_mon-tm_event.tm_mon +
-	   (tm_display.tm_year-tm_event.tm_year)*12;
-	  if ((tm_display.tm_mday==tm_event.tm_mday) &&
-	   (month_diff%r->increment)==0) 
+	  while (window_start < end)
 	    {
-	      tm_event.tm_mon=tm_display.tm_mon;
-	      tm_event.tm_year=tm_display.tm_year;
-	      tm_event.tm_mday=tm_display.tm_mday;
-	    }; 
-	  clone_start=mktime(&tm_event);
-	  if (alarms) clone_start-=ev->alarm;
-	  if (clone_start <= end && (clone_start + ev->duration) > start) 
-	    {
-	      gboolean skip=FALSE;
-	      if (alarms) clone_start+=ev->alarm;
-	      if (r->exceptions) 
-	  	for (iter2 = r->exceptions; iter2; iter2 = g_slist_next (iter2))
-	  	  if ((long)iter2->data == (long)clone_start) skip=TRUE;
-	       if(alarms && start>clone_start-ev->alarm) skip=TRUE;
-	       if (!skip)
-	       {
-	  	  clone = event_db_clone(ev);
-	  	  if (alarms) clone->start = clone_start-ev->alarm;
-	  	  else clone->start = clone_start;
-	  	  clone->flags |= FLAG_RECUR;
-	  	  list = g_slist_insert_sorted (list, clone, (GCompareFunc)event_sort_func);
-		  if (++events == max)
-		    return list;
-	       }
-	  }
+	      localtime_r (&window_start, &tm_display);
+	      month_diff=tm_display.tm_mon-tm_event.tm_mon +
+		(tm_display.tm_year-tm_event.tm_year)*12;
+	      if ((tm_display.tm_mday==tm_event.tm_mday) &&
+		  (month_diff%r->increment)==0) 
+		{
+		  tm_event.tm_mon=tm_display.tm_mon;
+		  tm_event.tm_year=tm_display.tm_year;
+		  tm_event.tm_mday=tm_display.tm_mday;
+		}; 
+	      clone_start=mktime(&tm_event);
+	      if (alarms) clone_start-=ev->alarm;
+	      if (clone_start <= end && (clone_start + ev->duration) > window_start) 
+		{
+		  gboolean skip=FALSE;
+		  if (alarms) clone_start+=ev->alarm;
+		  if (r->exceptions) 
+		    for (iter2 = r->exceptions; iter2; iter2 = g_slist_next (iter2))
+		      if ((long)iter2->data == (long)clone_start) skip=TRUE;
+		  if(alarms && window_start>clone_start-ev->alarm) skip=TRUE;
+		  if (!skip)
+		    {
+		      clone = event_db_clone(ev);
+		      if (alarms) clone->start = clone_start-ev->alarm;
+		      else clone->start = clone_start;
+		      clone->flags |= FLAG_RECUR;
+		      list = g_slist_insert_sorted (list, clone, (GCompareFunc)event_sort_func);
+		      if (++events == max)
+			return list;
+		    }
+		}
+	      
+	      tm_display.tm_mon++;
+	      if (tm_display.tm_mon > 11)
+		{
+		  tm_display.tm_mon = 0;
+		  tm_display.tm_year++;
+		}
+	      window_start = mktime (&tm_display);
+	    }
 	  break;
 
 	case RECUR_YEARLY:
-          localtime_r (&start, &tm_display);
-          localtime_r (&event_start, &tm_event);
-	  if ((tm_display.tm_mon==tm_event.tm_mon) &&
-	   (tm_display.tm_mday==tm_event.tm_mday) &&
-	   ((tm_display.tm_year-tm_event.tm_year)%r->increment)==0) 
+	  while (window_start < end)
 	    {
-	      tm_event.tm_mon=tm_display.tm_mon;
-	      tm_event.tm_year=tm_display.tm_year;
-	      tm_event.tm_mday=tm_display.tm_mday;
-	    }; 
-	  clone_start=mktime(&tm_event);
-	  if (alarms) clone_start-=ev->alarm;
-	  if (clone_start <= end && (clone_start + ev->duration) > start) 
-	    {
-	      gboolean skip=FALSE;
-	      if (alarms) clone_start+=ev->alarm;
-	      if (r->exceptions)
+	      localtime_r (&window_start, &tm_display);
+	      if ((tm_display.tm_mon==tm_event.tm_mon) &&
+		  (tm_display.tm_mday==tm_event.tm_mday) &&
+		  ((tm_display.tm_year-tm_event.tm_year)%r->increment)==0) 
 		{
-		  for (iter2 = r->exceptions; iter2; iter2 = g_slist_next (iter2))
-		    if ((long)iter2->data == (long)clone_start) skip=TRUE;
-		}
-	      if(alarms && start>clone_start-ev->alarm) 
-		skip = TRUE;
-	      if (!skip)
+		  tm_event.tm_mon=tm_display.tm_mon;
+		  tm_event.tm_year=tm_display.tm_year;
+		  tm_event.tm_mday=tm_display.tm_mday;
+		}; 
+	      clone_start=mktime(&tm_event);
+	      if (alarms) clone_start-=ev->alarm;
+	      if (clone_start <= end && (clone_start + ev->duration) > window_start)
 		{
-		  clone = event_db_clone(ev);
-		  if (alarms) clone->start = clone_start-ev->alarm;
-		  else clone->start = clone_start;
-		  clone->flags |= FLAG_RECUR;
-		  list = g_slist_insert_sorted (list, clone, (GCompareFunc)event_sort_func);
-		  if (++events == max)
-		    return list;
+		  gboolean skip=FALSE;
+		  if (alarms) clone_start+=ev->alarm;
+		  if (r->exceptions)
+		    {
+		      for (iter2 = r->exceptions; iter2; iter2 = g_slist_next (iter2))
+			if ((long)iter2->data == (long)clone_start) skip=TRUE;
+		    }
+		  if(alarms && window_start > clone_start-ev->alarm) 
+		    skip = TRUE;
+		  if (!skip)
+		    {
+		      clone = event_db_clone(ev);
+		      if (alarms) clone->start = clone_start-ev->alarm;
+		      else clone->start = clone_start;
+		      clone->flags |= FLAG_RECUR;
+		      list = g_slist_insert_sorted (list, clone, (GCompareFunc)event_sort_func);
+		      if (++events == max)
+			return list;
+		    }
 		}
+
+	      tm_display.tm_year++;
+	      window_start = mktime (&tm_display);
 	    }
 	  break;
   	}
