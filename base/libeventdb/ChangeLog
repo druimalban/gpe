@@ -1,5 +1,11 @@
 2006-04-09  Phil Blundell  <pb@reciva.com>
 
+	* event-db.c (event_db_list_for_period_internal): Examine
+	potential recurrences more closely to work around limitations in
+	checking logic.
+
+2006-04-09  Phil Blundell  <pb@reciva.com>
+
 	* event-db.c (event_db_list_for_period_internal): Expand
 	recurrence of events that occur multiple times in the period.
 

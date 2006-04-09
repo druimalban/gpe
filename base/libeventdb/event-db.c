@@ -558,7 +558,7 @@ event_db_list_for_period_internal (time_t start, time_t end, gboolean untimed,
       time_t event_start = ev->start, clone_start;
       recur_t r = ev->recur;
       time_t window_start = start;
-      
+
       if (untimed_significant)
 	{
 	  /* Ignore events with wrong untimed status */
@@ -682,7 +682,7 @@ event_db_list_for_period_internal (time_t start, time_t end, gboolean untimed,
 		    }
 		}
 	      
-	      window_start += 7 * SECONDS_IN_DAY;
+	      window_start += SECONDS_IN_DAY;
 	    }
 	  break;
 
@@ -721,13 +721,7 @@ event_db_list_for_period_internal (time_t start, time_t end, gboolean untimed,
 		    }
 		}
 	      
-	      tm_display.tm_mon++;
-	      if (tm_display.tm_mon > 11)
-		{
-		  tm_display.tm_mon = 0;
-		  tm_display.tm_year++;
-		}
-	      window_start = mktime (&tm_display);
+	      window_start += SECONDS_IN_DAY;
 	    }
 	  break;
 
@@ -768,8 +762,7 @@ event_db_list_for_period_internal (time_t start, time_t end, gboolean untimed,
 		    }
 		}
 
-	      tm_display.tm_year++;
-	      window_start = mktime (&tm_display);
+	      window_start += SECONDS_IN_DAY;
 	    }
 	  break;
   	}
