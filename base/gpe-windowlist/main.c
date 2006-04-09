@@ -46,27 +46,18 @@ struct gpe_icon my_icons[] = {
   { NULL, NULL }
 };
 
+struct timeout_record
+{
+  GPEWindowList *list;
+  Window w;
+};
+
 static GList *windows;
 static Display *dpy;
 static GtkWidget *icon;
 static GdkPixbuf *other_icon;
 
-Atom atoms[11];
-
-char *atom_names[] =
-  {
-    "_NET_WM_WINDOW_TYPE_DOCK",
-    "_NET_WM_WINDOW_TYPE",
-    "_NET_WM_STATE_HIDDEN",
-    "_NET_WM_SKIP_PAGER",
-    "_NET_WM_WINDOW_TYPE_DESKTOP",
-    "_NET_ACTIVE_WINDOW",
-    "_NET_SHOWING_DESKTOP",
-    "_NET_SYSTEM_TRAY_OPCODE",
-    "_NET_SYSTEM_TRAY_MESSAGE_DATA",
-    "MANAGER",
-    "_NET_SYSTEM_TRAY_S0"
-};
+Atom *atoms;
 
 struct window_record
 {
@@ -112,74 +103,6 @@ gpe_get_wm_icon_name (Display *dpy, Window w)
   return name;
 }
 
-static Window
-get_transient_for (Display *dpy, Window w)
-{
-  Window result = None;
-  Atom actual_type;
-  int actual_format;
-  unsigned long nitems, bytes_after;
-  unsigned char *prop = NULL;
-  int rc;
-
-  gdk_error_trap_push ();
-
-  rc = XGetWindowProperty (dpy, w, XA_WM_TRANSIENT_FOR,
-			  0, 1, False, XA_WINDOW, &actual_type, &actual_format,
-			  &nitems, &bytes_after, &prop);
-
-  if (gdk_error_trap_pop () || rc != Success)
-    return None;
-
-  if (prop)
-    {
-      memcpy (&result, prop, sizeof (result));
-      XFree (prop);
-    }
-  return result;
-}
-
-static gboolean
-is_override_redirect (Display *dpy, Window w)
-{
-  XWindowAttributes attr;
-
-  gdk_error_trap_push ();
-  
-  XGetWindowAttributes (dpy, w, &attr);
-  
-  if (gdk_error_trap_pop ())
-    return FALSE;
-
-  return attr.override_redirect ? TRUE : FALSE;
-}
-
-static gboolean
-is_viewable (Display *dpy, Window w)
-{
-  Window active_w = None;
-  Atom actual_type;
-  int actual_format;
-  unsigned long nitems, bytes_after;
-  unsigned char *prop = NULL;
-  int rc;
-
-  rc = XGetWindowProperty (dpy, DefaultRootWindow (dpy), atoms[_NET_ACTIVE_WINDOW],
-			  0, 1, False, XA_WINDOW, &actual_type, &actual_format,
-			  &nitems, &bytes_after, &prop);
-
-  if (rc != Success)
-    return FALSE;
-
-  if (prop)
-    {
-      memcpy (&active_w, prop, sizeof (active_w));
-      XFree (prop);
-    }
-
-  return active_w == w ? TRUE : FALSE;
-}
-
 
 static void
 window_added (GPEWindowList *list, Window w)
@@ -188,29 +111,17 @@ window_added (GPEWindowList *list, Window w)
   Atom type;
   Window leader;
   gchar *class;
-
+  
   type = gpe_get_window_property (dpy, w, atoms[_NET_WM_WINDOW_TYPE]);
-/*  if (type == atoms[_NET_WM_WINDOW_TYPE_DOCK])
+  if (type == atoms[_NET_WM_WINDOW_TYPE_DOCK])
     return;
- */ 
+ 
   if (type == atoms[_NET_WM_WINDOW_TYPE_DESKTOP])
     return;
-
-  if (gpe_get_window_property (dpy, w, atoms[_NET_WM_STATE_HIDDEN]) != None)
+  
+  if (type == atoms[_NET_WM_WINDOW_TYPE_TOOLBAR])
     return;
-
-  if (gpe_get_window_property (dpy, w, atoms[_NET_WM_SKIP_PAGER]) != None)
-    return;
-
-  if (get_transient_for (dpy, w) != None)
-    return;
-
-  if (is_override_redirect (dpy, w))
-    return;
-
-  if (gpe_get_wm_class (dpy, w, NULL, &class) == FALSE)
-    return;
-
+  
   leader = gpe_get_wm_leader (dpy, w);
   if (leader == None)
     leader = w;
@@ -236,12 +147,6 @@ window_added (GPEWindowList *list, Window w)
 
   windows = g_list_append (windows, r);
 }
-
-struct timeout_record
-{
-  GPEWindowList *list;
-  Window w;
-};
 
 static gboolean
 timeout_func (void *p)
@@ -340,29 +245,6 @@ popup_window_list (GtkWidget *widget, GdkEventButton *button, GList *windows)
                   widget, button->button, button->time);
 }
 
-void
-raise_one_window (GList *windows)
-{
-  GList *l;
-  gboolean use_next = FALSE;
-
-  for (l = windows; l; l = l->next)
-    {
-      struct window_record *r = l->data;
-
-      if (use_next)
-        {
-          raise_window (r);
-          return;
-        }
-
-      if (is_viewable (dpy, r->w))
-        use_next = TRUE;
-    }
-
-  raise_window (windows->data);
-}
-
 
 /* handle resizing */
 static gboolean 
@@ -411,7 +293,10 @@ main (int argc, char **argv)
     }
   
   dpy = gdk_x11_get_default_xdisplay ();
-  XInternAtoms (dpy, atom_names, 11, False, atoms);
+  XSelectInput (dpy, DefaultRootWindow (dpy), PropertyChangeMask | StructureNotifyMask);
+  atoms = g_malloc0 (sizeof (Atom) * sizeof (atom_names) / sizeof (atom_names[0]));
+  XInternAtoms (dpy, atom_names, sizeof (atom_names) / sizeof (atom_names[0]),
+                False, atoms);
   
   window = gtk_plug_new (0);
   gtk_window_set_resizable(GTK_WINDOW(window), TRUE);
@@ -447,7 +332,6 @@ main (int argc, char **argv)
   add_initial_windows (GPE_WINDOW_LIST (list));
 
   gpe_launch_install_filter ();
-  XSelectInput (dpy, DefaultRootWindow (dpy), PropertyChangeMask | StructureNotifyMask);
   
   g_signal_connect (G_OBJECT (list), "window-added", G_CALLBACK (window_added_callback), NULL);
   g_signal_connect (G_OBJECT (list), "window-removed", G_CALLBACK (window_removed), NULL);
