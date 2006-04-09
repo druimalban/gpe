@@ -39,6 +39,10 @@ struct _GtkEventList
   GSList *events;
 
   guint timeout;
+
+  /* Time of last update.  */
+  time_t date;
+  struct tm tm;
 };
 
 typedef struct
@@ -120,22 +124,56 @@ date_cell_data_func (GtkTreeViewColumn *col,
 		     GtkCellRenderer *renderer,
 		     GtkTreeModel *model,
 		     GtkTreeIter *iter,
-		     gpointer user_data)
+		     gpointer el)
 {
+  GtkEventList *event_list = GTK_EVENT_LIST (el);
   event_t ev;
   struct tm tm;
   gchar *buffer;
+  gboolean dealloc = TRUE;;
   
   gtk_tree_model_get (model, iter, COL_EVENT, &ev, -1);
 
   localtime_r (&ev->start, &tm);
   if (is_reminder (ev))
-    buffer = strftime_strdup_utf8_locale ("%b %d", &tm);
+    {
+      if (tm.tm_year == event_list->tm.tm_year
+	  && tm.tm_yday == event_list->tm.tm_yday)
+	{
+	  buffer = _("Today");
+	  dealloc = FALSE;
+	}
+      else
+	buffer = strftime_strdup_utf8_locale (_("%b %d"), &tm);
+    }
   else
-    buffer = strftime_strdup_utf8_locale ("%b %d %R", &tm);
+    {
+      if (ev->start < event_list->date)
+	/* Starts in the past.  */
+	{
+	  time_t end = ev->start + ev->duration;
+
+	  localtime_r (&end, &tm);
+	  if (tm.tm_year == event_list->tm.tm_year
+	      && tm.tm_yday == event_list->tm.tm_yday)
+	    buffer = strftime_strdup_utf8_locale (_("Until %R"), &tm);
+	  else
+	    buffer = strftime_strdup_utf8_locale (_("Until %b %d"), &tm);
+	}
+      else
+	{
+	  if (tm.tm_year == event_list->tm.tm_year
+	      && tm.tm_yday == event_list->tm.tm_yday)
+	    buffer = strftime_strdup_utf8_locale (_("%R"), &tm);
+	  else
+	    buffer = strftime_strdup_utf8_locale (_("%b %d %R"), &tm);
+	}
+    }
 
   g_object_set(renderer, "text", buffer, NULL);
-  g_free (buffer);
+
+  if (dealloc)
+    g_free (buffer);
 }
 
 static void
@@ -219,7 +257,8 @@ gtk_event_list_init (GTypeInstance *instance, gpointer klass)
   renderer = gtk_cell_renderer_text_new ();
   gtk_tree_view_column_pack_start (col, renderer, TRUE);
   gtk_tree_view_column_set_cell_data_func (col, renderer,
-					   date_cell_data_func, NULL, NULL);
+					   date_cell_data_func, event_list,
+					   NULL);
 
   col = gtk_tree_view_column_new ();
   gtk_tree_view_append_column (event_list->view, col);
@@ -266,9 +305,11 @@ gtk_event_list_reload_events (GtkEventList *event_list)
   list = gtk_list_store_new (1, G_TYPE_POINTER);
 
   /* Get the events for the next 14 days.  */
-  time_t t = time (NULL);
-  event_list->events = event_db_list_for_period (t, t + 14 * 24 * 60 * 60);
-  time_t first_to_end = 0;
+  event_list->date = time (NULL);
+  event_list->events = event_db_list_for_period (event_list->date,
+						 event_list->date
+						 + 14 * 24 * 60 * 60);
+  time_t next_change = 0;
   for (e = event_list->events; e; e = e->next)
     {
       event_t ev = e->data;
@@ -277,10 +318,12 @@ gtk_event_list_reload_events (GtkEventList *event_list)
       gtk_list_store_append (list, &iter);
       gtk_list_store_set (list, &iter, COL_EVENT, ev, -1);
 
-      if (! first_to_end)
-	first_to_end = ev->start + ev->duration;
+      if (! next_change)
+	next_change = ev->start + ev->duration;
       else
-	first_to_end = MIN (first_to_end, ev->start + ev->duration);
+	next_change = MIN (next_change, ev->start + ev->duration);
+      if (ev->start >= event_list->date)
+	next_change = MIN (next_change, ev->start);
     }
 
   /* Add the new model.  */
@@ -289,29 +332,25 @@ gtk_event_list_reload_events (GtkEventList *event_list)
   if (event_list->events)
     /* Schedule a callback for a refresh.  */
     {
-      do
-	{
-	  if (event_list->timeout > 0)
-	    g_source_remove (event_list->timeout);
+      if (event_list->timeout > 0)
+	g_source_remove (event_list->timeout);
 
-	  time_t t = time (NULL);
-	  int dur = first_to_end - t;
-	  if (dur < 0)
-	    {
-	      printf ("%ld - %ld = %d\n", first_to_end, t, dur);
-	      goto restart;
-	    }
-	  if (dur == 0)
-	    dur = 1;
-	  event_list->timeout = g_timeout_add (dur * 1000,
-					       (GSourceFunc)
-					       (gtk_event_list_reload_events),
-					       event_list);
-	}
-      /* If it took more than 10 seconds to add the timeout then the
+      int dur = next_change - event_list->date;
+      if (dur == 0)
+	dur = 1;
+      event_list->timeout = g_timeout_add (dur * 1000,
+					   (GSourceFunc)
+					   (gtk_event_list_reload_events),
+					   event_list);
+
+
+      /* If it took more than 10 seconds to do all of this then the
 	 machine/process went to sleep between getting the time and
 	 setting the timeout.  Try again.  */
-      while (time (NULL) - t > 10);
+      if (time (NULL) - event_list->date > 10)
+	goto restart;
+
+      localtime_r (&event_list->date, &event_list->tm);
     }
 }
 

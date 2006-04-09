@@ -1,3 +1,14 @@
+2006-04-09  Neal H. Walfield  <neal@gnu.org>
+
+	* event-list.c (struct _GtkEventList): Add fields date and tm.
+	(date_cell_data_func): Interpret user data as the associated
+	GtkEventList.  Provide more descriptive dates.
+	(gtk_event_list_init): Pass EVENT_LIST as user data to
+	date_cell_data_func.
+	(gtk_event_list_reload_events): Save the time in EVENT_LIST->DATE
+	and EVENT_LIST->TM.  Don't just look for the end of the next
+	event: find the first status change.
+
 2006-04-08  Neal H. Walfield  <neal@gnu.org>
 
 	* gtkdatesel.c (get_max_day_width): Remove dead code.
