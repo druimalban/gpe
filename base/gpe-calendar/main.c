@@ -367,6 +367,7 @@ void
 set_time_and_day_view (time_t selected_time)
 {
   viewtime = selected_time;
+  propagate_time ();
   gtk_toggle_tool_button_set_active (GTK_TOGGLE_TOOL_BUTTON (day_button), TRUE);
   new_view (gtk_day_view_new);
 }

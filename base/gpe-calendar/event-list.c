@@ -17,6 +17,7 @@
    along with this program; if not, write to the Free Software
    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111, USA. */
 
+#include <gdk/gdkkeysyms.h>
 #include <gtk/gtk.h>
 #include <gpe/event-db.h>
 #include <libintl.h>
@@ -197,7 +198,7 @@ button_press (GtkWidget *widget, GdkEventButton *event, gpointer user_data)
   GtkTreeView *view = GTK_TREE_VIEW (widget);
   GtkTreePath *path;
   GtkTreeModel *model;
-  GtkTreeIter   iter;
+  GtkTreeIter iter;
 
   if (event->type != GDK_BUTTON_PRESS)
     /* We only catch single clicks.  */
@@ -219,6 +220,36 @@ button_press (GtkWidget *widget, GdkEventButton *event, gpointer user_data)
       /* We allow the event to propagate so that the cell is
 	 highlighted.  */
       return FALSE;
+    }
+
+  return FALSE;
+}
+
+static gboolean
+key_press (GtkWidget *widget, GdkEventKey *k, gpointer d)
+{
+  GtkTreeView *view = GTK_TREE_VIEW (widget);
+
+  switch (k->keyval)
+    {
+    case GDK_space:
+    case GDK_Return:
+      {
+	GtkTreeSelection *sel = gtk_tree_view_get_selection (view);
+	GtkTreeModel *model;
+	GtkTreeIter iter;
+	event_t ev;
+
+	if (! gtk_tree_selection_get_selected (sel, &model, &iter))
+	  return FALSE;
+
+	gtk_tree_model_get (model, &iter, COL_EVENT, &ev, -1);
+	set_time_and_day_view (ev->start);
+	return TRUE;
+      }
+
+    default:
+      break;
     }
 
   return FALSE;
@@ -246,6 +277,8 @@ gtk_event_list_init (GTypeInstance *instance, gpointer klass)
 
   g_signal_connect (event_list->view, "button-press-event",
 		    (GCallback) button_press, NULL);
+  g_signal_connect (event_list->view, "key_press_event",
+		    (GCallback) key_press, NULL);
 
   /* We don't need to waste space showing the headers.  */
   gtk_tree_view_set_headers_visible (event_list->view, FALSE);

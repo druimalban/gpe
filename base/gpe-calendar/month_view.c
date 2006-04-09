@@ -766,16 +766,14 @@ month_view_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *mv)
   else if (k->keyval == GDK_Up)
     i = -7;
 
-  if (month_view->focused_day + i >= 0
-      && month_view->focused_day + i < month_view->weeks * 7
-      && c[i].valid)
-    /* Same month.  */
-    gtk_view_set_time (GTK_VIEW (month_view),
-		       time_from_day (c->popup.year, c->popup.month,
-				      c->popup.day)
-		       + i * 24 * 60 * 60);
   if (i)
-    return TRUE;
+    {
+      gtk_view_set_time (GTK_VIEW (month_view),
+			 time_from_day (c->popup.year, c->popup.month,
+					c->popup.day)
+			 + i * 24 * 60 * 60);
+      return TRUE;
+    }
 
   if (k->keyval == GDK_space)
     {

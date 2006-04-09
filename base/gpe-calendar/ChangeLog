@@ -1,5 +1,20 @@
 2006-04-09  Neal H. Walfield  <neal@gnu.org>
 
+	* day_view.c (delete_event_cb): Call update_view, not
+	gtk_day_view_reload_events.
+
+	* event-list.c: Include <gdk/gdkkeysyms.h>.
+	(key_press): New function.
+	(gtk_event_list_init): Connect key_press to EVENT_LIST->VIEW's
+	"key_press_event" signal handler.
+
+	* main.c (set_time_and_day_view): Call propagate_time.
+
+	* month_view.c (month_view_key_press_event): If I is non-zero,
+	always call gtk_view_set_time.
+
+2006-04-09  Neal H. Walfield  <neal@gnu.org>
+
 	* main.c (propagate_time): New declaration.
 	(update_view): Always call gtk_event_cal_reload_events.  Also call
 	gtk_event_list_reload_events.

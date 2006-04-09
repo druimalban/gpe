@@ -481,7 +481,7 @@ delete_event_cb (GtkWidget *widget, GtkWidget *dv)
       event_db_remove (ev_real);
     }
 
-  gtk_day_view_reload_events (GTK_VIEW (day_view));
+  update_view ();
   event_db_forget_details (ev_real);
 }
 
