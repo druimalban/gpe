@@ -85,6 +85,8 @@ static GtkEventCal *calendar;
 static GtkEventList *event_list;
 static GtkWidget *day_button, *week_button, *month_button;
 
+static void propagate_time (void);
+
 guint window_x = 240, window_y = 310;
 
 guint week_offset = 0;
@@ -195,10 +197,9 @@ void
 update_view (void)
 {
   if (current_view)
-    {
-      gtk_view_reload_events (GTK_VIEW (current_view));
-      gtk_event_cal_reload_events (calendar);
-    }
+    gtk_view_reload_events (GTK_VIEW (current_view));
+  gtk_event_cal_reload_events (calendar);
+  gtk_event_list_reload_events (event_list);
 }
 
 static gboolean
@@ -276,7 +277,7 @@ set_today (void)
       time (&viewtime);
     }
   
-  update_view ();
+  propagate_time ();
 }
 
 static void

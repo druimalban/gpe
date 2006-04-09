@@ -803,6 +803,7 @@ gtk_week_view_new (time_t time)
 			 GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
   g_signal_connect (G_OBJECT (week_view->draw), "key_press_event", 
 		    G_CALLBACK (week_view_key_press_event), week_view);
+  GTK_WIDGET_SET_FLAGS (week_view->draw, GTK_CAN_FOCUS);
   gtk_widget_show (week_view->draw);
 
   gtk_view_set_time (GTK_VIEW (week_view), time);

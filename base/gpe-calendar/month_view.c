@@ -853,7 +853,8 @@ gtk_month_view_new (time_t time)
 			 GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
   g_signal_connect (G_OBJECT (month_view->draw), "key_press_event", 
 		    G_CALLBACK (month_view_key_press_event), month_view);
-            
+  GTK_WIDGET_SET_FLAGS (month_view->draw, GTK_CAN_FOCUS);
+
   calc_title_height (month_view);
 
   gtk_widget_set_size_request (GTK_WIDGET(month_view->draw),

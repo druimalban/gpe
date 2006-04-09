@@ -1,5 +1,24 @@
 2006-04-09  Neal H. Walfield  <neal@gnu.org>
 
+	* main.c (propagate_time): New declaration.
+	(update_view): Always call gtk_event_cal_reload_events.  Also call
+	gtk_event_list_reload_events.
+
+	(set_today): Call propagate_time, not update_view.
+
+	* event-list.c (gtk_event_list_init): Set "scale" on RENDERER to
+	0.8.
+
+	(gtk_event_list_reload_events): Rename next_change to next_reload.
+	Initialize it to two days in the future.  Simply code given that
+	NEXT_RELOAD is initialized.
+
+	* month_view.c (gtk_month_view_new): Make MONTH_VIEW->DRAW
+	focusable.
+	* week_view.c (gtk_week_view_new): Likewise for WEEK_VIEW->DRAW.
+
+2006-04-09  Neal H. Walfield  <neal@gnu.org>
+
 	* gtkdatesel.h (gtk_date_sel_set_mode): New declaration.
 	* gtkdatesel.c (make_field): Show ARROW_L, ARROW_R,
 	ARROW_BUTTON_L, E->DISPLAY and ARROW_BUTTON_R.
@@ -17,7 +36,7 @@
 	(main): Connect DAY_BUTTON's clicked callback to
 	day_view_button_clicked.  Connect WEEK_BUTTON's clicked callback
 	to week_view_button_clicked.
-	
+
 2006-04-09  Neal H. Walfield  <neal@gnu.org>
 
 	* view.h: New file.

@@ -188,7 +188,7 @@ summary_cell_data_func (GtkTreeViewColumn *col,
 
   gtk_tree_model_get (model, iter, COL_EVENT, &ev, -1);
   evd = event_db_get_details (ev);
-  g_object_set(renderer, "text", evd->summary, NULL);
+  g_object_set (renderer, "text", evd->summary, NULL);
 }
 
 static gboolean
@@ -255,6 +255,7 @@ gtk_event_list_init (GTypeInstance *instance, gpointer klass)
   gtk_tree_view_append_column (event_list->view, col);
 
   renderer = gtk_cell_renderer_text_new ();
+  g_object_set (renderer, "scale", 0.8, NULL);
   gtk_tree_view_column_pack_start (col, renderer, TRUE);
   gtk_tree_view_column_set_cell_data_func (col, renderer,
 					   date_cell_data_func, event_list,
@@ -264,6 +265,7 @@ gtk_event_list_init (GTypeInstance *instance, gpointer klass)
   gtk_tree_view_append_column (event_list->view, col);
 
   renderer = gtk_cell_renderer_text_new ();
+  g_object_set (renderer, "scale", 0.8, NULL);
   gtk_tree_view_column_pack_start (col, renderer, TRUE);
   gtk_tree_view_column_set_cell_data_func (col, renderer,
 					   summary_cell_data_func, NULL, NULL);
@@ -309,7 +311,7 @@ gtk_event_list_reload_events (GtkEventList *event_list)
   event_list->events = event_db_list_for_period (event_list->date,
 						 event_list->date
 						 + 14 * 24 * 60 * 60);
-  time_t next_change = 0;
+  time_t next_reload = 2 * 24 * 60 * 60;
   for (e = event_list->events; e; e = e->next)
     {
       event_t ev = e->data;
@@ -318,12 +320,9 @@ gtk_event_list_reload_events (GtkEventList *event_list)
       gtk_list_store_append (list, &iter);
       gtk_list_store_set (list, &iter, COL_EVENT, ev, -1);
 
-      if (! next_change)
-	next_change = ev->start + ev->duration;
-      else
-	next_change = MIN (next_change, ev->start + ev->duration);
+      next_reload = MIN (next_reload, ev->start + ev->duration);
       if (ev->start >= event_list->date)
-	next_change = MIN (next_change, ev->start);
+	next_reload = MIN (next_reload, ev->start);
     }
 
   /* Add the new model.  */
@@ -335,10 +334,9 @@ gtk_event_list_reload_events (GtkEventList *event_list)
       if (event_list->timeout > 0)
 	g_source_remove (event_list->timeout);
 
-      int dur = next_change - event_list->date;
-      if (dur == 0)
-	dur = 1;
-      event_list->timeout = g_timeout_add (dur * 1000,
+      if (next_reload == 0)
+	next_reload = 1;
+      event_list->timeout = g_timeout_add (next_reload * 1000,
 					   (GSourceFunc)
 					   (gtk_event_list_reload_events),
 					   event_list);
