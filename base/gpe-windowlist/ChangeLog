@@ -1,5 +1,7 @@
 2006-04-09  Florian Boor <florian@kernelconcepts.de>
 
+    * main.c: Remove some more stuff, don't display windows without title
+      and destroy dynamically generated widgets.
     * main.c: Remove class stuff.
     * globals.h, main.c: Remove some unneeded stuff and fix some checks.
 

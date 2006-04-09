@@ -56,6 +56,7 @@ static GList *windows;
 static Display *dpy;
 static GtkWidget *icon;
 static GdkPixbuf *other_icon;
+static GtkWidget *menu;
 
 Atom *atoms;
 
@@ -64,7 +65,6 @@ struct window_record
   Window w;
   Window leader;
 
-  gchar *icon_name;
   GdkPixbuf *icon;
 };
 
@@ -72,36 +72,8 @@ void
 raise_window (struct window_record *r)
 {
   gpe_launch_activate_window (dpy, r->w);
+  gtk_widget_destroy (menu);
 }
-
-static gchar *
-gpe_get_wm_icon_name (Display *dpy, Window w)
-{
-  Atom actual_type;
-  int actual_format;
-  unsigned long nitems, bytes_after;
-  unsigned char *prop = NULL;
-  gchar *name = NULL;
-  int rc;
-
-  gdk_error_trap_push ();
-
-  rc = XGetWindowProperty (dpy, w, XA_WM_ICON_NAME,
-			  0, G_MAXLONG, False, XA_STRING, &actual_type, &actual_format,
-			  &nitems, &bytes_after, &prop);
-
-  if (gdk_error_trap_pop () || rc != Success)
-    return NULL;
-
-  if (nitems)
-    {
-      name = g_strdup (prop);
-      XFree (prop);
-    }
-
-  return name;
-}
-
 
 static void
 window_added (GPEWindowList *list, Window w)
@@ -127,17 +99,7 @@ window_added (GPEWindowList *list, Window w)
   r = g_malloc0 (sizeof (*r));
   r->w = w;
   r->leader = leader;
-  r->icon_name = gpe_get_wm_icon_name (dpy, w);
-  if (r->icon_name == NULL)
-    r->icon_name = gpe_get_wm_icon_name (dpy, leader);
-  if (r->icon_name == NULL)
-    r->icon_name = gpe_get_window_name (dpy, leader);
-  if (r->icon_name == NULL)
-    r->icon_name = gpe_get_window_name (dpy, w);
-  if (r->icon_name == NULL)
-    r->icon_name = gpe_get_window_name (dpy, leader);
-  if (r->icon_name == NULL)
-    r->icon_name = g_strdup ("?");
+  
   r->icon = gpe_get_window_icon (dpy, w);
   if (r->icon == NULL)
     r->icon = other_icon;
@@ -199,7 +161,6 @@ add_initial_windows (GPEWindowList *list)
 void
 popup_window_list (GtkWidget *widget, GdkEventButton *button, GList *windows)
 {
-  GtkWidget *menu;
   GList *l;
 
   menu = gtk_menu_new ();
@@ -217,7 +178,7 @@ popup_window_list (GtkWidget *widget, GdkEventButton *button, GList *windows)
       if (name == NULL && r->leader != r->w)
         name = gpe_get_window_name (dpy, r->leader);  
       if (name == NULL)
-        name = g_strdup ("?");
+        continue;
 
       item = gtk_image_menu_item_new_with_label (name);
       
