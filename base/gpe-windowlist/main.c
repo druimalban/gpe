@@ -64,7 +64,6 @@ struct window_record
   Window w;
   Window leader;
 
-  gchar *class;
   gchar *icon_name;
   GdkPixbuf *icon;
 };
@@ -110,7 +109,6 @@ window_added (GPEWindowList *list, Window w)
   struct window_record *r;
   Atom type;
   Window leader;
-  gchar *class;
   
   type = gpe_get_window_property (dpy, w, atoms[_NET_WM_WINDOW_TYPE]);
   if (type == atoms[_NET_WM_WINDOW_TYPE_DOCK])
@@ -143,8 +141,7 @@ window_added (GPEWindowList *list, Window w)
   r->icon = gpe_get_window_icon (dpy, w);
   if (r->icon == NULL)
     r->icon = other_icon;
-  r->class = class;
-
+ 
   windows = g_list_append (windows, r);
 }
 
