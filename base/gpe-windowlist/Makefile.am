@@ -1,10 +1,11 @@
-#SUBDIRS = po
+SUBDIRS = po
 
 bin_PROGRAMS = gpe-windowlist
 
 gpe_windowlist_SOURCES = main.c globals.h
 
-gpe_windowlist_CFLAGS = @DEPS_CFLAGS@ -DPREFIX=\"@prefix@\" -D_GNU_SOURCE -Wall
+gpe_windowlist_CFLAGS = @DEPS_CFLAGS@ -DPREFIX=\"@prefix@\" -D_GNU_SOURCE -Wall \
+                        -DPAKCKAGE_LOCALE_DIR=\"$(PACKAGE_LOCALE_DIR)\"
            
 LDADD = @DEPS_LIBS@
 
@@ -31,7 +32,8 @@ DISTCLEANFILES = intltool-extract \
                  intltool-update \
                  po/POTFILES \
                  po/.intltool-merge-cache \
-                 apps/gpe-windowlist.desktop
+                 gpe-windowlist.desktop \
+                 po/stamp-it
 
 include gpe-dist.am
 include gpe-tp.am

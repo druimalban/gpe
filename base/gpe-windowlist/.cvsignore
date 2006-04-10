@@ -1,0 +1,13 @@
+gpe-windowlist
+*.gz
+*.bz2
+intltool-extract
+intltool-extract.in
+intltool-merge
+intltool-merge.in
+intltool-update
+intltool-update.in
+ltmain.sh
+mkinstalldirs
+stamp-h1
+*.desktop
