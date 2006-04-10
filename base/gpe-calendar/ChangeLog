@@ -1,3 +1,13 @@
+2006-04-10  Neal H. Walfield  <neal@gnu.org>
+
+	* day_render.c (struct _GtkDayRender): New fields time_gc and
+	hour_bar_repaint.
+	(gtk_day_render_finalize): Deallocate DAY_RENDER->TIME_GC and
+	DAY_RENDER->HOUR_BAR_REPAINT if required.
+	(hour_bar_move): New function.
+	(gtk_day_render_expose): If the displayed day contains the current
+	time, draw an hour bar and set up a timer to update it.
+
 2006-04-09  Neal H. Walfield  <neal@gnu.org>
 
 	* day_view.c (delete_event_cb): Call update_view, not

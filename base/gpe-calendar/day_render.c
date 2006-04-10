@@ -54,10 +54,17 @@ static void gtk_day_render_update_extents (GtkDayRender *day_render);
 
 struct _GtkDayRender
 {
-  GtkDrawingArea drawing_area;
+  GtkDrawingArea widget;
 
-  GdkColor app;			/* Appointment event color.  */
+  /* Appointment event color.  */
+  GdkColor app;
   GdkGC *app_gc;
+  /* Color to highlight the current time.  */
+  GdkGC *time_gc;
+
+  /* When we draw the hour bar, we'd like to update it every 10
+     minutes.  */
+  guint hour_bar_repaint;
 
   gint gap;			/* Gap between event boxes. */
 
@@ -280,6 +287,12 @@ gtk_day_render_finalize (GObject *object)
 
   if (day_render->app_gc)
     g_object_unref (day_render->app_gc);
+  if (day_render->time_gc)
+    g_object_unref (day_render->time_gc);
+
+  if (day_render->hour_bar_repaint > 0)
+    /* Cancel any outstanding timeout.  */
+    g_source_remove (day_render->hour_bar_repaint);
 
   for (er = day_render->event_rectangles; er; er = er->next)
     event_rect_delete ((struct event_rect *) er->data);
@@ -288,6 +301,15 @@ gtk_day_render_finalize (GObject *object)
   event_db_list_destroy (day_render->events);
 
   G_OBJECT_CLASS (parent_class)->finalize (object);
+}
+
+static gboolean
+hour_bar_move (gpointer d)
+{
+  GtkDayRender *day_render = GTK_DAY_RENDER (d);
+  gtk_widget_queue_draw (GTK_WIDGET (day_render));
+
+  return TRUE;
 }
 
 static gboolean
@@ -324,8 +346,6 @@ gtk_day_render_expose (GtkWidget *widget, GdkEventExpose *event)
     day_render->app_gc = pen_new (widget, day_render->app.red,
 				  day_render->app.green,
 				  day_render->app.blue);
-
-
   /* Start with a white background.  */
   gdk_draw_rectangle (widget->window, white_gc, TRUE,
 		      0, 0,
@@ -333,10 +353,42 @@ gtk_day_render_expose (GtkWidget *widget, GdkEventExpose *event)
 		      day_render->visible_height - 1);
   if (day_render->hour_column)
     /* Draw the hour column's background.  */
-    gdk_draw_rectangle (widget->window, day_render->gray_gc, TRUE,
-			0, 0,
-			day_render->time_width,
-			day_render->visible_height - 1);
+    {
+      gdk_draw_rectangle (widget->window, day_render->gray_gc, TRUE,
+			  0, 0,
+			  day_render->time_width,
+			  day_render->visible_height - 1);
+
+      time_t t = time (NULL) - day_render->date;
+      time_t start = day_render->rows_visible_first
+	* day_render->duration / day_render->rows;
+      time_t end = (day_render->rows_visible_first + day_render->rows_visible)
+	* day_render->duration / day_render->rows;
+
+      if (start <= t && t <= end)
+	{
+	  if (! day_render->time_gc)
+	    /* Accent green.  */
+	    day_render->time_gc = pen_new (widget, 0x4600, 0xA000, 0x4600);
+
+	  int m = day_render->visible_height * (t - start) / (end - start);
+	  int h = day_render->visible_height / day_render->rows_visible / 2;
+
+	  gdk_draw_rectangle (widget->window, day_render->time_gc, TRUE,
+			      0, m - h / 2, day_render->visible_width, h);
+
+	  /* Repaint approximately every 10 minutes.  */
+	  if (! day_render->hour_bar_repaint)
+	    day_render->hour_bar_repaint
+	      = g_timeout_add (10 * 60 * 1000, hour_bar_move, day_render);
+	}
+      else if (day_render->hour_bar_repaint > 0)
+	/* Cancel any outstanding timeout.  */
+	{
+	  g_source_remove (day_render->hour_bar_repaint);
+	  day_render->hour_bar_repaint = 0;
+	}
+    }
 
   /* And now each row's background.  */
   for (i = day_render->rows_visible_first;
