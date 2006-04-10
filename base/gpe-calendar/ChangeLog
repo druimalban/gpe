@@ -1,5 +1,10 @@
 2006-04-10  Neal H. Walfield  <neal@gnu.org>
 
+	* day_render.c (gtk_day_render_expose): Also print the
+	EVD->LOCATION and EVD->DESCRIPTION.
+
+2006-04-10  Neal H. Walfield  <neal@gnu.org>
+
 	* day_render.c (struct _GtkDayRender): New fields time_gc and
 	hour_bar_repaint.
 	(gtk_day_render_finalize): Deallocate DAY_RENDER->TIME_GC and

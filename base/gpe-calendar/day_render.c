@@ -460,7 +460,14 @@ gtk_day_render_expose (GtkWidget *widget, GdkEventExpose *event)
       w = GTK_WIDGET (day_render)->window;
 
       evd = event_db_get_details (event_rectangle->event);
-      buffer = g_strdup_printf ("<span size='small'>%s</span>", evd->summary);
+      buffer
+	= g_strdup_printf ("<span size='small'><b>%s</b>%s%s%s%s</span>",
+			   evd->summary,
+			   evd->summary && strlen (evd->summary)
+			   && (evd->location || evd->description) ? ": " : "",
+			   evd->location ? evd->location : "",
+			   evd->location && strlen (evd->location) ? "\n" : "",
+			   evd->description ? evd->description : "");
 
       /* Rectangle used to write appointment summary */
       x = day_render->time_width
@@ -474,7 +481,7 @@ gtk_day_render_expose (GtkWidget *widget, GdkEventExpose *event)
       height = (gint) (day_render->height * event_rectangle->height) - 1;
 
       gr.width = width - 1;
-      gr.height = height;
+      gr.height = height - 2;
       gr.x = x + 2;
       gr.y = y + 1;
 
