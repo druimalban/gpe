@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2002 Philip Blundell <philb@gnu.org>
+ *               2006 Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -26,12 +27,19 @@ struct gpe_pim_category
 {
   const gchar *name;
   guint id;
+  const gchar *colour;
 };
 
+/* basic functions */
 extern gboolean gpe_pim_categories_init (void);
 extern GSList *gpe_pim_categories_list (void);
 
 extern gboolean gpe_pim_category_new (const gchar *title, gint *id);
 extern const gchar *gpe_pim_category_name (gint id);
+extern gboolean gpe_pim_category_rename (gint id, gchar *new_name);
+
+/* colour functions */
+extern gboolean gpe_pim_category_set_colour (gint id, const gchar *new_colour);
+extern const gchar *gpe_pim_category_colour (gint id);
 
 #endif

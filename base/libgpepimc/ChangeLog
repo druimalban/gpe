@@ -1,3 +1,17 @@
+2006-04-12  Florian Boor  <florian@kernelconcepts.de>
+
+    * db.c (load_one): Load colour field.
+      (check_table_update): New function for database update.
+      (gpe_pim_category_colour): New function
+      (gpe_pim_category_new): Initialise colour field in db.
+      (gpe_pim_category_set_colour): New function.
+    * pim-categories.h: Add new color related functions and missing rename 
+                        function. Add colour field to category struct.
+    * Makefile.am: Set library version.
+    * configure.ac: Version to 0.7
+    * Remove some duplicated stuff from doc/Makefile.am.
+    * Document new functions.
+
 2006-02-28  Florian Boor  <florian@kernelconcepts.de>
 
     * Release version 0.6
