@@ -2,6 +2,8 @@
 #define GPE_LAUNCH_H
 
 #include <glib.h>
+#include <X11/Xlib.h>
+
 
 enum launch_status
   {
