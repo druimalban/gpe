@@ -180,7 +180,7 @@ gtk_month_view_finalize (GObject *object)
 
   for (i = 0; i < MAX_DAYS_IN_MONTH; i++)
     if (month_view->day_events[i]) 
-      event_db_list_destroy (month_view->day_events[i]);
+      event_list_unref (month_view->day_events[i]);
 
   G_OBJECT_CLASS (parent_class)->finalize (object);
 }
@@ -575,9 +575,9 @@ draw_expose_event (GtkWidget *widget,
                       gchar *m;
                       top += pr.height + 2;
 
-                      event_t ev = iter->data;
-                      event_details_t evd = event_db_get_details (ev);
-                      m = g_strdup_printf("<small>%s</small>", evd->summary);
+                      Event *ev = iter->data;
+                      m = g_strdup_printf("<small>%s</small>",
+					  event_get_summary (ev));
     
                       pango_layout_set_width (pl_evt, w * PANGO_SCALE);
                       pango_layout_set_markup (pl_evt, m, -1);
@@ -639,7 +639,6 @@ gtk_month_view_reload_events (GtkView *view)
   guint day;
   time_t start, end;
   struct tm tm_start, tm_end;
-  GSList *iter;
   guint days;
   guint year, month;
   guint wday;
@@ -685,18 +684,16 @@ gtk_month_view_reload_events (GtkView *view)
         }
 
       if (month_view->day_events[day])
-        event_db_list_destroy (month_view->day_events[day]);
-      month_view->day_events[day] = event_db_list_for_period (start, end);
-
-      for (iter = month_view->day_events[day]; iter; iter = iter->next)
-        ((event_t) iter->data)->mark = FALSE;
+        event_list_unref (month_view->day_events[day]);
+      month_view->day_events[day] = event_db_list_for_period (event_db,
+							      start, end);
     }
 
   /* Destroy any remain events.  */
   for (; day < MAX_DAYS_IN_MONTH; day++)
     if (month_view->day_events[day])
       {
-	event_db_list_destroy (month_view->day_events[day]);
+	event_list_unref (month_view->day_events[day]);
 	month_view->day_events[day] = NULL;
       }
 

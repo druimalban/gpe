@@ -152,10 +152,11 @@ vevent_interpret_tag (MIMEDirVEvent * event, const char *tag,
 }
 
 MIMEDirVEvent *
-vevent_from_event_t (event_t event)
+vevent_from_event_t (Event *event)
 {
   MIMEDirVEvent *vevent;
-  struct tm *tm;
+  time_t t;
+  struct tm tm;
           
   if (!event) 
     return NULL;
@@ -163,13 +164,14 @@ vevent_from_event_t (event_t event)
   vevent = mimedir_vevent_new ();
   
   /* start time */
-  if ((tm = localtime(&(event->start))))
+  t = event_get_start (event);
+  if (localtime_r (&t, &tm))
     {
       MIMEDirDateTime *date;
 
       date =
-        mimedir_datetime_new_from_date (tm->tm_year + 1900, tm->tm_mon + 1,
-                        tm->tm_mday);
+        mimedir_datetime_new_from_date (tm.tm_year + 1900, tm.tm_mon + 1,
+                        tm.tm_mday);
 
       g_object_set (G_OBJECT (vevent), "dtstart", date, NULL);
     }
@@ -180,31 +182,32 @@ vevent_from_event_t (event_t event)
     }
 
   /* retrieve data and fill fields */    
-  if (!event->details)
-    event_db_get_details(event);
-    
-  g_object_set (G_OBJECT (vevent), "duration", (gint)event->duration, NULL);
-  g_object_set (G_OBJECT (vevent), "uid", event->eventid, NULL);
-  g_object_set (G_OBJECT (vevent), "summary", event->details->summary, NULL);
-  g_object_set (G_OBJECT (vevent), "description", event->details->description, NULL);
+  g_object_set (G_OBJECT (vevent),
+		"duration", (gint) event_get_duration (event), NULL);
+  g_object_set (G_OBJECT (vevent), "uid", event_get_eventid (event), NULL);
+  g_object_set (G_OBJECT (vevent),
+		"summary", event_get_summary (event), NULL);
+  g_object_set (G_OBJECT (vevent),
+		"description", event_get_description (event), NULL);
   
   /* handle recurring events */
-  if ((event->recur) && (event->recur->type != RECUR_NONE))
+  if (event_is_recurrence (event))
     {
+      recur_t r = event_get_recurrence (event);
       MIMEDirRecurrence *rec = mimedir_recurrence_new();
       mimedir_vcomponent_set_recurrence((MIMEDirVComponent*)vevent, rec);
-      g_object_set (G_OBJECT (rec), "frequency", event->recur->type + 3, NULL); /* hack, known offset */
-      g_object_set (G_OBJECT (rec), "count", event->recur->count, NULL);
-      g_object_set (G_OBJECT (rec), "unit", event->recur->increment, NULL);
+      g_object_set (G_OBJECT (rec), "frequency", r->type + 3, NULL); /* hack, known offset */
+      g_object_set (G_OBJECT (rec), "count", r->count, NULL);
+      g_object_set (G_OBJECT (rec), "unit", r->increment, NULL);
       
-      if (event->recur->end)     
-        if ((tm = localtime(&(event->recur->end))))
+      if (r->end)     
+        if (localtime_r(&(r->end), &tm))
           {
             MIMEDirDateTime *date;
     
             date =
-              mimedir_datetime_new_from_date (tm->tm_year + 1900, tm->tm_mon + 1,
-                            tm->tm_mday);
+              mimedir_datetime_new_from_date (tm.tm_year + 1900, tm.tm_mon + 1,
+                            tm.tm_mday);
     
             g_object_set (G_OBJECT (rec), "until", date, NULL);
           }

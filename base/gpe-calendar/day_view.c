@@ -66,7 +66,7 @@ struct _GtkDayView
   GtkDayRender *appointments;
 
   /* Currently selected event (if any).  */
-  event_t sel_event;
+  Event *sel_event;
 
   /* A popup menu for events.  */
   GtkWidget *event_menu;
@@ -207,31 +207,32 @@ static gboolean
 day_view_event_clicked (GtkWidget *widget, gpointer event_p, gpointer d)
 {
   GtkDayView *day_view = GTK_DAY_VIEW (d);
-  event_t event = event_p;
+  Event *event = event_p;
   gchar *buffer = NULL;
   gchar *tbuffer = NULL;
   gchar *strstart, *strend;
-  event_details_t evd;
   struct tm start_tm, end_tm;
-  time_t end;
 
   gtk_widget_hide (day_view->event_menu);
 
   day_view->sel_event = event;
 
-  end = (time_t) (event->duration + event->start);
+  time_t start = event_get_start (event);
+  time_t end = (time_t) (start + event_get_duration (event));
 
-  localtime_r (&(event->start), &start_tm);
+  localtime_r (&start, &start_tm);
   localtime_r (&end, &end_tm);
-  evd = event_db_get_details (event);
   buffer = g_malloc (sizeof (gchar) * 256);
   strstart = strftime_strdup_utf8_locale (TIMEFMT, &start_tm);
   strend = strftime_strdup_utf8_locale (TIMEFMT, &end_tm);
 
+  const char *summary = event_get_summary (event);
+  const char *description = event_get_description (event);
+
   snprintf (buffer, 256, "%s %s-%s %s\n\n%s",
-	    evd->summary, strstart, strend,
-	    (event->flags & FLAG_ALARM ? "(A)" : ""),
-	    evd->description ? evd->description : "");
+	    summary, strstart, strend,
+	    event_get_alarm (event) ? "(A)" : "",
+	    description ? description : "");
   g_free(strstart);
   g_free(strend);
   tbuffer = g_locale_to_utf8 (buffer, -1, NULL, NULL, NULL);
@@ -270,26 +271,27 @@ gtk_day_view_reload_events (GtkView *view)
   end = start + 30 * 60 * 60 - 1;
 
   /* Get the appointments for the current period.  */
-  events = event_db_list_for_period (start, end);
+  events = event_db_list_for_period (event_db, start, end);
   reminders = NULL;
   appointments = NULL;
   cleanup = NULL;
   for (iter = events; iter; iter = iter->next)
     {
-      event_t ev = iter->data;
+      Event *ev = iter->data;
       if (is_reminder (ev))
 	{
-	  if (start <= ev->start && ev->start <= start + 24 * 60 * 60)
+	  if (start <= event_get_start (ev)
+	      && event_get_start (ev) <= start + 24 * 60 * 60)
 	    reminders = g_slist_append (reminders, ev);
 	  else
 	    cleanup = g_slist_append (cleanup, ev);
 	}
       else
-        appointments = g_slist_append (appointments, ev);
+	appointments = g_slist_append (appointments, ev);
     }
 
   if (cleanup)
-    event_db_list_destroy (cleanup);
+    event_list_unref (cleanup);
 
   if (! reminders && day_view->reminders)
     /* There are no longer any reminders, destroy its render area.  */
@@ -439,50 +441,43 @@ static void
 delete_event_cb (GtkWidget *widget, GtkWidget *dv)
 {
   GtkDayView *day_view = GTK_DAY_VIEW (dv);
-  event_t ev_real;
-  event_details_t ev_d;
-  recur_t r;
+  Event *ev = day_view->sel_event;
 
   gtk_widget_hide (day_view->event_menu);
 
-  ev_real = get_cloned_ev (day_view->sel_event);
-  ev_d = event_db_get_details (ev_real);
-
-  if (ev_real->recur)
+  if (event_is_recurrence (ev))
     {
       if (gpe_question_ask
 	  (_
-	   ("Delete all recurring entries?\n(If no, delete this instance only)"),
+	   ("Delete all recurring entries?\n"
+	    "(If no, delete this instance only)"),
 	   _("Question"), "question", "!gtk-no", NULL, "!gtk-yes", NULL,
 	   NULL))
 	{
-	  if (ev_real->flags & FLAG_ALARM)
+	  if (event_get_alarm (ev))
 	    {
-	      unschedule_alarm (ev_real, gtk_widget_get_toplevel (widget));
+	      unschedule_alarm (ev, gtk_widget_get_toplevel (widget));
 	      schedule_next (0, 0, widget);
 	    }
-	  event_db_remove (ev_real);
+	  event_remove (ev);
 	}
       else
 	{
-	  r = event_db_get_recurrence (ev_real);
-	  r->exceptions = g_slist_append (r->exceptions,
-					  (void *) day_view->sel_event->start);
-	  event_db_flush (ev_real);
+	  event_add_exception (ev, event_get_start (ev));
+	  event_flush (ev);
 	}
     }
   else
     {
-      if (ev_real->flags & FLAG_ALARM)
+      if (event_get_alarm (ev))
 	{
-	  unschedule_alarm (ev_real, gtk_widget_get_toplevel (widget));
+	  unschedule_alarm (ev, gtk_widget_get_toplevel (widget));
 	  schedule_next (0, 0, widget);
 	}
-      event_db_remove (ev_real);
+      event_remove (ev);
     }
 
   update_view ();
-  event_db_forget_details (ev_real);
 }
 
 static void

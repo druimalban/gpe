@@ -45,7 +45,7 @@ static DBusConnection *connection;
 #define _(x) gettext(x)
 
 static gchar *
-export_to_vcal (event_t event)
+export_to_vcal (Event *event)
 {
   MIMEDirVEvent *vevent;
   gchar *str;
@@ -59,7 +59,7 @@ export_to_vcal (event_t event)
 }
 
 void
-vcal_do_send_bluetooth (event_t event)
+vcal_do_send_bluetooth (Event *event)
 {
 #ifdef USE_DBUS
   gchar *vcal;
@@ -97,7 +97,7 @@ vcal_do_send_bluetooth (event_t event)
 }
 
 void
-vcal_do_send_irda (event_t event)
+vcal_do_send_irda (Event *event)
 {
 #ifdef USE_DBUS
   gchar *vcal;
@@ -132,7 +132,7 @@ vcal_do_send_irda (event_t event)
 }
 
 gboolean
-save_to_file(event_t event, const gchar *filename)
+save_to_file(Event *event, const gchar *filename)
 {
   gchar *vcal;
   int fd;
@@ -159,7 +159,7 @@ save_to_file(event_t event, const gchar *filename)
 
 
 void
-vcal_do_save (event_t event)
+vcal_do_save (Event *event)
 {
   GtkWidget *filesel;
   const gchar *filename;

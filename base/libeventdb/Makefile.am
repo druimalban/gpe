@@ -6,7 +6,7 @@ INCLUDES = @EVENTDB_CFLAGS@ -D_XOPEN_SOURCE -DPACKAGE_LOCALE_DIR=\"@datadir@/loc
 
 libeventdb_la_LDFLAGS = @EVENTDB_LIBS@ -version-info 0:1:0
 
-libeventdb_la_SOURCES = event-db.c old-db.c gpe/event-db.h
+libeventdb_la_SOURCES = event-db.c gpe/event-db.h
 
 gpeincludedir = $(includedir)/gpe
 gpeinclude_HEADERS = gpe/event-db.h

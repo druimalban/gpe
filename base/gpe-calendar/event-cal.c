@@ -137,6 +137,7 @@ update_cal (GtkCalendar *cal, gboolean force)
   event_cal->year = year;
   event_cal->month = month;
 
+  memset (&start_tm, 0, sizeof (start_tm));
   start_tm.tm_year = year - 1900;
   start_tm.tm_mon = month;
   start_tm.tm_mday = 1;
@@ -153,23 +154,24 @@ update_cal (GtkCalendar *cal, gboolean force)
   end_tm.tm_sec = 59;
   end = mktime (&end_tm);
 
-  events = event_db_list_for_period (start, end);
+  events = event_db_list_for_period (event_db, start, end);
 
   for (e = events; e; e = e->next)
     {
-      event_t ev = e->data;
+      Event *ev = e->data;
       struct tm tm;
       time_t t;
       int start, end;
       int i;
 
-      localtime_r (&ev->start, &tm);
+      t = event_get_start (ev);
+      localtime_r (&t, &tm);
       if (tm.tm_year < start_tm.tm_year)
 	start = 0;
       else
 	start = MAX (tm.tm_yday - start_tm.tm_yday + 1, 0);
 
-      t = ev->start + ev->duration;
+      t = event_get_start (ev) + event_get_duration (ev);
       localtime_r (&t, &tm);
       if (end_tm.tm_year < tm.tm_year)
 	end = days;
@@ -179,7 +181,7 @@ update_cal (GtkCalendar *cal, gboolean force)
       for (i = start; i <= end; i ++)
 	gtk_calendar_mark_day (cal, i);
     }
-  event_db_list_destroy (events);
+  event_list_unref (events);
 }
 
 static void

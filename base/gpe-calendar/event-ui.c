@@ -78,7 +78,7 @@ struct edit_state
 
   guint page;
 
-  event_t ev;
+  Event *ev;
 
   gboolean recur_day_floating;
   gboolean end_date_floating, end_time_floating;
@@ -188,11 +188,9 @@ recalculate_sensitivities (GtkWidget *widget,
 }
 
 void
-unschedule_alarm (event_t ev, GtkWidget *d)
+unschedule_alarm (Event *ev, GtkWidget *d)
 {
-  event_t ev_real = get_cloned_ev(ev);
-
-  if (!schedule_cancel_alarm (ev_real->uid, ev->start)) 
+  if (!schedule_cancel_alarm (event_get_uid (ev), event_get_start (ev)))
   {
 /* silently ignore for Maemo, we do not have scheduling here :-( */
 #ifndef IS_HILDON      
@@ -215,29 +213,29 @@ schedule_next (guint skip, guint uid, GtkWidget *d)
   GSList *events = NULL, *iter;
   struct tm tm;
   time_t end, start = time(NULL);
-  event_details_t ev_d;
 
   localtime_r (&start, &tm);
   tm.tm_year++;
   end=mktime (&tm);
 
-  events = event_db_list_alarms_for_period (start, end);
+  events = event_db_list_alarms_for_period (event_db, start, end);
 
   for (iter = events; iter; iter = g_slist_next (iter))
     {
-      event_t ev_real, ev = iter->data;
+      Event *ev = EVENT (iter->data);
 
-      if (ev->flags & FLAG_ALARM) 
+      if (event_get_alarm (ev))
 	{
-	  ev_real = get_cloned_ev(ev);
-	  ev_d = event_db_get_details (ev_real);
-	  if (((int)(ev->start) != (int)skip) && (uid!=ev_real->uid))
+	  if (event_get_start (ev) != skip && event_get_uid (ev) != uid)
 	    {
 	      gchar *action;
 
 	      action = g_strdup_printf ("gpe-announce '%s'\ngpe-calendar -s %ld -e %ld &\n",
-					ev_d->summary, (long)ev->start, ev_real->uid);
-	      if (!schedule_set_alarm (ev->uid, ev->start, action, TRUE)) 
+					event_get_summary (ev),
+					event_get_start (ev),
+					event_get_uid (ev));
+	      if (!schedule_set_alarm (event_get_uid (ev),
+				       event_get_start (ev), action, TRUE)) 
             {
 /* silently ignore for Maemo, we do not have scheduling here :-( */
 #ifndef IS_HILDON      
@@ -257,7 +255,7 @@ schedule_next (guint skip, guint uid, GtkWidget *d)
 	    }
 	}
     }
-    event_db_list_destroy (events);
+    event_list_unref (events);
 }
 
 static gboolean
@@ -277,47 +275,39 @@ static void
 click_delete (GtkWidget *widget, GtkWidget *d)
 {
   struct edit_state *s = g_object_get_data (G_OBJECT (d), "edit_state");
-  event_t ev = s->ev, ev_real;
-  event_details_t ev_d;
+  Event *ev = s->ev;
   recur_t r;
   
-  ev_real = get_cloned_ev(ev);
-  ev_d = event_db_get_details (ev_real);
-     
-  if (ev_real->recur)
+  r = event_is_recurrence (ev);
+  if (r)
     {
       if (gpe_question_ask(
         _("Delete all recurring entries?\n(If no, delete this instance only)"), 
         _("Question"), "question", "!gtk-no", NULL, "!gtk-yes", NULL, NULL))
         {			  
-          if (ev_real->flags & FLAG_ALARM)
+          if (event_get_alarm (ev))
             {
               unschedule_alarm (ev, gtk_widget_get_toplevel(widget));
               schedule_next (0,0, gtk_widget_get_toplevel(widget));
             }
           
-          event_db_remove (ev_real);
+          event_remove (ev);
         }
       else 
-        {
-          r = event_db_get_recurrence (ev_real);
-          r->exceptions = g_slist_append (r->exceptions, (void *)ev->start);
-          event_db_flush (ev_real);
-        }
+	event_add_exception (ev, event_get_start (ev));
     }
   else
     {			  
-      if (ev_real->flags & FLAG_ALARM)
+      if (event_get_alarm (ev))
         {
           unschedule_alarm (ev, gtk_widget_get_toplevel(widget));
           schedule_next (0,0, gtk_widget_get_toplevel(widget));
         }
       
-      event_db_remove (ev_real);
+      event_remove (ev);
   }
   
   update_view ();
-  event_db_forget_details (ev_real);
   edit_finished (d);
 }
 
@@ -325,33 +315,26 @@ static void
 click_ok (GtkWidget *widget, GtkWidget *d)
 {
   struct edit_state *s = g_object_get_data (G_OBJECT (d), "edit_state");
-  event_t ev;
-  event_details_t ev_d;
+  Event *ev;
   struct tm tm_start, tm_end, tm_rend, tm_daystart;
   time_t start_t, end_t, rend_t;
   gboolean new_event = FALSE;
   GtkTextIter start, end;
   GtkTextBuffer *buf;
   gboolean was_recur;
-    
+
   if (s->ev)
     {
-      ev = get_cloned_ev (s->ev);
-      ev_d = event_db_get_details (ev);
-      if (ev->flags & FLAG_ALARM)
+      ev = s->ev;
+      if (event_get_alarm (ev))
         unschedule_alarm (s->ev, gtk_widget_get_toplevel(widget));
-      ev_d->sequence++;
-      ev_d->modified = time (NULL);
-      was_recur = (ev->flags & FLAG_RECUR) ? TRUE : FALSE;
+      was_recur = event_is_recurrence (ev);
     }
   else
     {
-      ev = event_db_new ();
-      ev_d = event_db_alloc_details (ev);
+      ev = event_new (event_db, NULL);
       new_event = TRUE;
     }
-
-  ev->flags = 0;
 
   if (s->page == 0)
     {
@@ -383,6 +366,8 @@ click_ok (GtkWidget *widget, GtkWidget *d)
       /* Zero length appointments would be confused with reminders, so make them one second long.  */
       if (end_t == start_t)
 	end_t++;
+
+      event_clear_untimed (ev);
     }
   else
     {
@@ -395,10 +380,11 @@ click_ok (GtkWidget *widget, GtkWidget *d)
       if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->remindertimebutton)))
         {
 	  gpe_time_sel_get_time (GPE_TIME_SEL (s->remindertime), (guint *)&tm_start.tm_hour, (guint *)&tm_start.tm_min);
+	  event_clear_untimed (ev);
         }
       else
         {
-          ev->flags |= FLAG_UNTIMED;
+	  event_set_untimed (ev);
           tm_start.tm_hour = 12;
         }
 
@@ -415,7 +401,7 @@ click_ok (GtkWidget *widget, GtkWidget *d)
   if (end_t < start_t)
     {
       gpe_error_box (_("End time must not be earlier than start time"));
-      event_db_destroy (ev);
+      g_object_unref (ev);
       return;
     }
 
@@ -424,8 +410,8 @@ click_ok (GtkWidget *widget, GtkWidget *d)
   tm_daystart.tm_mon = GTK_DATE_COMBO (s->startdate)->month;
   tm_daystart.tm_mday = GTK_DATE_COMBO (s->startdate)->day;
       
-  if (((start_t < time(NULL)) && !(ev->flags & FLAG_UNTIMED))
-    || ((ev->flags & FLAG_UNTIMED) && (start_t < mktime(&tm_daystart))))
+  if (((start_t < time(NULL)) && !event_is_untimed (ev))
+      || (event_is_untimed (ev) && (start_t < mktime(&tm_daystart))))
     {
       GtkWidget* dialog;
       gint ret;
@@ -443,56 +429,50 @@ click_ok (GtkWidget *widget, GtkWidget *d)
       gtk_widget_destroy(dialog);
       if ((ret == GTK_RESPONSE_NO) || (ret == GTK_RESPONSE_CANCEL))
         {
-          event_db_destroy (ev);
+          g_object_unref (ev);
           return;
         }
     }
     
-  ev->start = start_t;
-  ev->duration = end_t - start_t;
+  event_set_start (ev, start_t);
+  event_set_duration (ev, end_t - start_t);
 
-  if (ev_d->description)
-    g_free (ev_d->description);
+  buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (s->description));
+  gtk_text_buffer_get_bounds (buf, &start, &end);
+  event_set_description (ev,
+			 gtk_text_buffer_get_text (buf, &start, &end, FALSE));
 
-    buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (s->description));
-    gtk_text_buffer_get_bounds (buf, &start, &end);
-    ev_d->description = gtk_text_buffer_get_text (buf, &start, &end, FALSE);
-
-  if (ev_d->summary)
-    g_free (ev_d->summary);
-
-  ev_d->summary = gtk_editable_get_chars (GTK_EDITABLE (s->summary), 0, -1);
+  event_set_summary (ev, gtk_editable_get_chars (GTK_EDITABLE (s->summary),
+						 0, -1));
   
-  if (ev_d->location)
-    g_free (ev_d->location);
-  ev_d->location = gtk_editable_get_chars (GTK_EDITABLE (s->location), 0, -1);
+  event_set_location (ev,
+		      gtk_editable_get_chars (GTK_EDITABLE (s->location),
+					      0, -1));
 
-  g_slist_free (ev_d->categories);
-  ev_d->categories = g_slist_copy (s->categories);
+  event_set_categories (ev, g_slist_copy (s->categories));
 
   if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->alarmbutton)))
     {
       unsigned int mi;
  
       mi = gtk_option_menu_get_history (GTK_OPTION_MENU (s->alarmoption));
-      
-      ev->flags |= FLAG_ALARM;
-      ev->alarm = alarm_multipliers[mi] * gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (s->alarmspin));
+
+      event_set_alarm (ev, alarm_multipliers[mi]
+		       * gtk_spin_button_get_value_as_int
+		       (GTK_SPIN_BUTTON (s->alarmspin)));
     }
   else
-    ev->flags &= ~FLAG_ALARM;
+    event_set_alarm (ev, 0);
 
+  recur_t r = event_get_recurrence (ev);
   if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->radiobuttonnone)))
     {
-      event_db_clear_recurrence (ev);
-      ev->flags |= FLAG_RECUR;		// ?!
+      r->type = RECUR_NONE;
     }
   else
     {
-      recur_t r = event_db_get_recurrence (ev);
-      ev->flags &= ~FLAG_RECUR;
-      
-      if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->radiobuttondaily)))
+      if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON
+					(s->radiobuttondaily)))
         {
           r->type = RECUR_DAILY;
           r->increment = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (s->dailyspin));
@@ -559,15 +539,10 @@ click_ok (GtkWidget *widget, GtkWidget *d)
         }
     }
 
-  if (new_event)
-    event_db_add (ev);
-  else
-    event_db_flush (ev);
+  event_flush (ev);
 
-  if (ev->flags & FLAG_ALARM)
+  if (event_get_alarm (ev))
     schedule_next (0,0, gtk_widget_get_toplevel(widget));
-
-  event_db_forget_details (ev);
 
   update_view ();
 
@@ -613,7 +588,8 @@ build_categories_string (struct edit_state *es)
 }
 
 static void
-update_categories (GtkWidget *ui, GSList *new, struct edit_state *s)
+update_categories (GtkWidget *ui, GSList *new,
+		   struct edit_state *s)
 {
   gchar *str;
 
@@ -1624,10 +1600,9 @@ new_event (time_t t, guint timesel)
 }
 
 GtkWidget *
-edit_event (event_t ev)
+edit_event (Event *ev)
 {
   GtkWidget *w = edit_event_window ();
-  event_details_t evd;
 
   if (w)
     {
@@ -1637,20 +1612,21 @@ edit_event (event_t ev)
       struct edit_state *s = g_object_get_data (G_OBJECT (w), "edit_state");
 	
       s->ev = ev;
-      ev = get_cloned_ev (ev);
 
       gtk_window_set_title (GTK_WINDOW (w), _("Calendar: Edit event"));
 
       gtk_widget_set_sensitive (s->deletebutton, TRUE);
-      evd = event_db_get_details (ev);
-      gtk_text_buffer_set_text (gtk_text_view_get_buffer (GTK_TEXT_VIEW (s->description)),
-				evd->description ? evd->description : "", -1);
-      gtk_entry_set_text (GTK_ENTRY (s->summary), evd->summary ? evd->summary : "");
-      gtk_entry_set_text (GTK_ENTRY (s->location), evd->location ? evd->location : "");
-      update_categories (w, evd->categories, s);
-      event_db_forget_details (ev);
+      gtk_text_buffer_set_text (gtk_text_view_get_buffer
+				(GTK_TEXT_VIEW (s->description)),
+				event_get_description (ev) ?: "", -1);
+      gtk_entry_set_text (GTK_ENTRY (s->summary),
+			  event_get_summary (ev) ?: "");
+      gtk_entry_set_text (GTK_ENTRY (s->location),
+			  event_get_location (ev) ?: "");
+      update_categories (w, event_get_categories (ev), s);
 
-      localtime_r (&(ev->start), &tm);
+      time_t start = event_get_start (ev);
+      localtime_r (&start, &tm);
       gpe_time_sel_set_time (GPE_TIME_SEL (s->starttime), tm.tm_hour, tm.tm_min);
       gpe_time_sel_set_time (GPE_TIME_SEL (s->remindertime), tm.tm_hour, tm.tm_min);
       gtk_date_combo_set_date (GTK_DATE_COMBO (s->startdate),
@@ -1658,7 +1634,7 @@ edit_event (event_t ev)
       gtk_date_combo_set_date (GTK_DATE_COMBO (s->reminderdate),
                                tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
 
-      end = ev->start + ev->duration;
+      end = event_get_start (ev) + event_get_duration (ev);
       localtime_r (&end, &tm);
       gpe_time_sel_set_time (GPE_TIME_SEL (s->endtime), tm.tm_hour, tm.tm_min);
       gtk_notebook_set_page (GTK_NOTEBOOK (s->notebookedit), 0);
@@ -1668,32 +1644,27 @@ edit_event (event_t ev)
       /* we assume that "Appointment" is at index = 0
        * and "Reminder" is at index = 1 */
       gtk_option_menu_set_history (GTK_OPTION_MENU (s->optionmenutype),
-                                   ev->duration == 0);
-      s->page = (ev->duration == 0);
+                                   event_get_duration (ev) == 0);
+      s->page = (event_get_duration (ev) == 0);
       gtk_notebook_set_page (GTK_NOTEBOOK (s->notebooktype), s->page);
 
       /* Reminder */
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->remindertimebutton),
-				    (ev->flags & FLAG_UNTIMED) ? FALSE : TRUE);
+				    (event_is_untimed (ev)));
  
-      if (ev->flags & FLAG_ALARM)
+      if (event_get_alarm (ev))
         {
           unsigned int unit = 0;	/* minutes */
+	  unsigned int i;
 
           gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->alarmbutton), TRUE);
-
-	  if (ev->alarm)
+	  for (i = 0; i < 4; i++)
 	    {
-	      unsigned int i;
-
-	      for (i = 0; i < 4; i++)
-		{
-		  if ((ev->alarm % alarm_multipliers[i]) == 0)
-		    unit = i;
-		}
+	      if ((event_get_alarm (ev) % alarm_multipliers[i]) == 0)
+		unit = i;
 	    }
 	  
-          gtk_spin_button_set_value (GTK_SPIN_BUTTON (s->alarmspin), ev->alarm / alarm_multipliers[unit]);
+          gtk_spin_button_set_value (GTK_SPIN_BUTTON (s->alarmspin), event_get_alarm (ev) / alarm_multipliers[unit]);
 	  gtk_option_menu_set_history (GTK_OPTION_MENU (s->alarmoption), unit);
         }
       else
@@ -1707,10 +1678,9 @@ edit_event (event_t ev)
       for (i = 0; i < 7; i++)
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->checkbuttonwday[i]), FALSE);
 
-      if (ev->recur)
+      if (event_is_recurrence (ev))
         {
-          recur_t r = ev->recur;
-
+	  recur_t r = event_get_recurrence (ev);
           switch (r->type)
             {
             case RECUR_NONE:

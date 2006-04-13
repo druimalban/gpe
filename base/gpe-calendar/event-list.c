@@ -128,14 +128,16 @@ date_cell_data_func (GtkTreeViewColumn *col,
 		     gpointer el)
 {
   GtkEventList *event_list = GTK_EVENT_LIST (el);
-  event_t ev;
+  Event *ev;
+  time_t t;
   struct tm tm;
   gchar *buffer;
   gboolean dealloc = TRUE;;
   
   gtk_tree_model_get (model, iter, COL_EVENT, &ev, -1);
 
-  localtime_r (&ev->start, &tm);
+  t = event_get_start (ev);
+  localtime_r (&t, &tm);
   if (is_reminder (ev))
     {
       if (tm.tm_year == event_list->tm.tm_year
@@ -149,10 +151,10 @@ date_cell_data_func (GtkTreeViewColumn *col,
     }
   else
     {
-      if (ev->start < event_list->date)
+      if (event_get_start (ev) < event_list->date)
 	/* Starts in the past.  */
 	{
-	  time_t end = ev->start + ev->duration;
+	  time_t end = event_get_start (ev) + event_get_duration (ev);
 
 	  localtime_r (&end, &tm);
 	  if (tm.tm_year == event_list->tm.tm_year
@@ -184,12 +186,10 @@ summary_cell_data_func (GtkTreeViewColumn *col,
 			GtkTreeIter *iter,
 			gpointer user_data)
 {
-  event_t ev;
-  event_details_t evd;
+  Event *ev;
 
   gtk_tree_model_get (model, iter, COL_EVENT, &ev, -1);
-  evd = event_db_get_details (ev);
-  g_object_set (renderer, "text", evd->summary, NULL);
+  g_object_set (renderer, "text", event_get_summary (ev), NULL);
 }
 
 static gboolean
@@ -211,11 +211,11 @@ button_press (GtkWidget *widget, GdkEventButton *event, gpointer user_data)
 
   if (gtk_tree_model_get_iter (model, &iter, path))
     {
-      event_t ev;
+      Event *ev;
 
       gtk_tree_model_get (model, &iter, COL_EVENT, &ev, -1);
 
-      set_time_and_day_view (ev->start);
+      set_time_and_day_view (event_get_start (ev));
 
       /* We allow the event to propagate so that the cell is
 	 highlighted.  */
@@ -238,13 +238,13 @@ key_press (GtkWidget *widget, GdkEventKey *k, gpointer d)
 	GtkTreeSelection *sel = gtk_tree_view_get_selection (view);
 	GtkTreeModel *model;
 	GtkTreeIter iter;
-	event_t ev;
+	Event *ev;
 
 	if (! gtk_tree_selection_get_selected (sel, &model, &iter))
 	  return FALSE;
 
 	gtk_tree_model_get (model, &iter, COL_EVENT, &ev, -1);
-	set_time_and_day_view (ev->start);
+	set_time_and_day_view (event_get_start (ev));
 	return TRUE;
       }
 
@@ -329,7 +329,7 @@ gtk_event_list_reload_events (GtkEventList *event_list)
       list = GTK_LIST_STORE (model);
 
       /* And release the events.  */
-      event_db_list_destroy (event_list->events);
+      event_list_unref (event_list->events);
 
       /* Drop our reference.  */
       g_object_unref (list);
@@ -341,21 +341,23 @@ gtk_event_list_reload_events (GtkEventList *event_list)
 
   /* Get the events for the next 14 days.  */
   event_list->date = time (NULL);
-  event_list->events = event_db_list_for_period (event_list->date,
+  event_list->events = event_db_list_for_period (event_db,
+						 event_list->date,
 						 event_list->date
 						 + 14 * 24 * 60 * 60);
   time_t next_reload = 2 * 24 * 60 * 60;
   for (e = event_list->events; e; e = e->next)
     {
-      event_t ev = e->data;
+      Event *ev = e->data;
 
       /* Add a new row to the model.  */
       gtk_list_store_append (list, &iter);
       gtk_list_store_set (list, &iter, COL_EVENT, ev, -1);
 
-      next_reload = MIN (next_reload, ev->start + ev->duration);
-      if (ev->start >= event_list->date)
-	next_reload = MIN (next_reload, ev->start);
+      next_reload = MIN (next_reload,
+			 event_get_start (ev) + event_get_duration (ev));
+      if (event_get_start (ev) >= event_list->date)
+	next_reload = MIN (next_reload, event_get_start (ev));
     }
 
   /* Add the new model.  */

@@ -61,6 +61,17 @@
 
 extern gboolean gpe_calendar_start_xsettings (void);
 
+#define CALENDAR_FILE_ "/.gpe/calendar"
+#define CALENDAR_FILE \
+  ({ \
+    const char *home = g_get_home_dir (); \
+    char *buffer = alloca (strlen (home) + strlen (CALENDAR_FILE_) + 1); \
+    sprintf (buffer, "%s" CALENDAR_FILE_, home); \
+    buffer; \
+   })
+
+EventDB *event_db;
+
 time_t viewtime;
 gboolean just_new = FALSE;
 
@@ -417,7 +428,7 @@ static void
 gpe_cal_exit (void)
 {
   schedule_next (0, 0, NULL);
-  event_db_stop ();
+  g_object_unref (event_db);
   gtk_main_quit ();
 }
 
@@ -513,7 +524,7 @@ on_import_vcal (GtkWidget *widget, gpointer data)
       gtk_widget_destroy(feedbackdlg);
     }
   gtk_widget_destroy(filesel);
-  event_db_refresh();
+
   update_view ();  
 }
 
@@ -667,7 +678,8 @@ main (int argc, char *argv[])
   bind_textdomain_codeset (PACKAGE, "UTF-8");
   textdomain (PACKAGE);
 
-  if (event_db_start () == FALSE)
+  event_db = event_db_new (CALENDAR_FILE);
+  if (! event_db)
     exit (1);
 
   if (gpe_pim_categories_init () == FALSE)

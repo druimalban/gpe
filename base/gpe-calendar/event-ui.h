@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2002 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2006 Neal H. Walfield <neal@walfield.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -16,10 +17,10 @@
 
 #include <gpe/event-db.h>
 
-extern GtkWidget *new_event(time_t t, guint timesel);
-extern GtkWidget *edit_event(event_t ev);
+extern GtkWidget *new_event (time_t t, guint timesel);
+extern GtkWidget *edit_event (Event *ev);
 
-extern void unschedule_alarm(event_t ev, GtkWidget *d);
-extern void schedule_next(guint, guint, GtkWidget *d);
+extern void unschedule_alarm (Event *ev, GtkWidget *d);
+extern void schedule_next (guint, guint, GtkWidget *d);
 
 #endif

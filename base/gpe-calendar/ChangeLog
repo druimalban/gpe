@@ -1,3 +1,35 @@
+2006-04-13  Neal H. Walfield  <neal@gnu.org>
+
+	* day_popup.c: Synchronize libeventdb API changes.
+	* day_render.c: Likewise.
+	* day_view.c: Likewise.
+	* event-cal.c: Likewise.
+	* event-list.c: Likewise.
+	* event-ui.h: Likewise.
+	* event-ui.c: Likewise.
+	* export-vcal.h: Likewise.
+	* export-vcal.c: Likewise.
+	* globals.h: Likewise.
+	(event_db): New declaration.
+	(get_cloned_ev): Remove define.
+	* main.c: Synchronize libeventdb API changes.
+	(CALENDAR_FILE): New macro.
+	(event_db): New variable.
+	(on_import_vcal): Don't call event_db_refresh.
+	(main): Initialize EVENT_DB.
+	* month_view.c: Synchronize libeventdb API changes.
+	* week_view.c: Likewise.
+
+	* import-vcal.c: Include <gpe/event-db.h> and "globals.h".
+	(CALENDAR_DB_NAME): Remove define.
+	(parse_date): New function, imported from libevent-db.
+	(do_import_vevent): Don't open an sqlite session, insert directly
+	into EVENT_DB using the libeventdb API.
+
+	* day_render.c (gtk_day_render_set_events): Destroy
+	DAY_RENDER->EVENT_RECTANGLES.
+	* event-cal.c (update_cal): Clear START_TM to 0.
+
 2006-04-10  Neal H. Walfield  <neal@gnu.org>
 
 	* day_render.c (gtk_day_render_expose): Also print the

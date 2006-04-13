@@ -167,7 +167,7 @@ gtk_week_view_finalize (GObject *object)
 	g_free (d->banner);
       if (d->events)
         {
-          event_db_list_destroy (d->events);
+          event_list_unref (d->events);
           d->events = NULL;
         }
     }
@@ -346,15 +346,16 @@ draw_expose_event (GtkWidget *widget, GdkEventExpose *event, GtkWidget *wv)
       for (iter = day->events; iter; iter = iter->next)
 	{
 	  guint height = 0;
-	  event_t ev = iter->data;
-	  event_details_t evd = event_db_get_details (ev);
+	  Event *ev = iter->data;
 	      
 	  /* Paint the time for events which have a time stamp.  */
-	  if ((ev->flags & FLAG_UNTIMED) == 0)
+	  if (! event_is_untimed (ev))
 	    {
+	      time_t t;
 	      struct tm tm;
 
-	      localtime_r (&ev->start, &tm);
+	      t = event_get_start (ev);
+	      localtime_r (&t, &tm);
 
 	      /* Also, only display the time if this is the day on
 		 which the event starts.  */
@@ -383,7 +384,7 @@ draw_expose_event (GtkWidget *widget, GdkEventExpose *event, GtkWidget *wv)
 
 	  /* Paint the event summary.  */
 	  pango_layout_set_width (pl_evt, text_width * PANGO_SCALE);
-	  pango_layout_set_text (pl_evt, evd->summary, -1);
+	  pango_layout_set_text (pl_evt, event_get_summary (ev), -1);
 	  pango_layout_get_pixel_extents (pl_evt, NULL, &pr);
 	  gtk_paint_layout (widget->style,
 			    widget->window,
@@ -524,7 +525,7 @@ gtk_week_view_reload_events (GtkView *view)
       time_t s, e;
 
       if (d->events)
-        event_db_list_destroy (d->events);
+        event_list_unref (d->events);
 
       localtime_r (&t, &start);
       start.tm_hour = 0;
@@ -541,9 +542,10 @@ gtk_week_view_reload_events (GtkView *view)
       /* Tomorrow.  */
       t = e + 1;
 
-      d->events = event_db_untimed_list_for_period (s, e, TRUE);
+      d->events = event_db_untimed_list_for_period (event_db, s, e, TRUE);
       d->events = g_slist_concat (d->events, 
-				  event_db_untimed_list_for_period (s, e, 
+				  event_db_untimed_list_for_period (event_db,
+								    s, e, 
 								    FALSE));
 
       if (start.tm_mday == tm.tm_mday
@@ -580,13 +582,14 @@ gtk_week_view_reload_events (GtkView *view)
   for (day = 0; day < 7; day++)
     for (iter = week_view->days[day].events; iter; iter = iter->next)
       {
-	event_t ev = iter->data;
-	if ((ev->flags & FLAG_UNTIMED) != 0)
+	Event *ev = iter->data;
+	if (event_is_untimed (ev))
 	  /* Reminder, i.e. no time.  */
 	  continue;
 
+	time_t t = event_get_start (ev);
 	struct tm tm;
-	localtime_r (&ev->start, &tm);
+	localtime_r (&t, &tm);
 
 	if (! (tm.tm_year == week_view->days[day].popup.year
 	       && tm.tm_mon == week_view->days[day].popup.month
@@ -597,7 +600,6 @@ gtk_week_view_reload_events (GtkView *view)
 
 	PangoRectangle pr;
 
-	localtime_r (&ev->start, &tm);
 	gchar *buffer = strftime_strdup_utf8_locale (TIMEFMT, &tm);
 	pango_layout_set_text (pl_evt, buffer, -1);
 	g_free (buffer);

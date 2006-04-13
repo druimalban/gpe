@@ -28,7 +28,8 @@
 static GNode *find_overlapping_sets (GSList * events);
 static GSList *ol_sets_to_rectangles (GtkDayRender *dr, GNode * node);
 
-#define event_ends(event) ((event)->start + (event)->duration)
+#define event_ends(event) \
+  (event_get_start (event) + event_get_duration (event))
 
 static GdkPixbuf *bell_pb;
 static GSList *found_node;
@@ -39,12 +40,12 @@ struct event_rect
   gfloat height;
   gfloat x;
   gfloat y;
-  event_t event;
+  Event *event;
 };
 
 /* Create a new event rectangle.  */
 static struct event_rect *event_rect_new (GtkDayRender *day_render,
-					  const event_t event,
+					  Event *event,
 					  gint column, gint columns);
 
 /* Delete an event rectangle returned by event_rect_new.  */
@@ -298,7 +299,7 @@ gtk_day_render_finalize (GObject *object)
     event_rect_delete ((struct event_rect *) er->data);
   g_slist_free (day_render->event_rectangles);
 
-  event_db_list_destroy (day_render->events);
+  event_list_unref (day_render->events);
 
   G_OBJECT_CLASS (parent_class)->finalize (object);
 }
@@ -450,7 +451,6 @@ gtk_day_render_expose (GtkWidget *widget, GdkEventExpose *event)
     {
       struct event_rect *event_rectangle = er->data;
       GdkDrawable *w;
-      event_details_t evd;
       gint x, y, width, height;
       GdkRectangle gr;
       gchar *buffer;
@@ -459,15 +459,17 @@ gtk_day_render_expose (GtkWidget *widget, GdkEventExpose *event)
 
       w = GTK_WIDGET (day_render)->window;
 
-      evd = event_db_get_details (event_rectangle->event);
+      const char *summary = event_get_summary (event_rectangle->event);
+      const char *location = event_get_location (event_rectangle->event);
+      const char *description = event_get_description (event_rectangle->event);
       buffer
 	= g_strdup_printf ("<span size='small'><b>%s</b>%s%s%s%s</span>",
-			   evd->summary,
-			   evd->summary && strlen (evd->summary)
-			   && (evd->location || evd->description) ? ": " : "",
-			   evd->location ? evd->location : "",
-			   evd->location && strlen (evd->location) ? "\n" : "",
-			   evd->description ? evd->description : "");
+			   summary,
+			   summary && strlen (summary)
+			   && (location || description) ? ": " : "",
+			   location ? location : "",
+			   location && strlen (location) ? "\n" : "",
+			   description ? description : "");
 
       /* Rectangle used to write appointment summary */
       x = day_render->time_width
@@ -555,7 +557,7 @@ gtk_day_render_expose (GtkWidget *widget, GdkEventExpose *event)
 			FALSE, &gr, GTK_WIDGET (day_render), "label",
 			gr.x, gr.y, pl);
 
-      if (event_rectangle->event->flags & FLAG_ALARM)
+      if (event_get_alarm (event_rectangle->event))
 	{
 	  if (! bell_pb)
 	    /* Load the icon.  */
@@ -670,11 +672,17 @@ gtk_day_render_button_press (GtkWidget *widget, GdkEventButton *event)
 void
 gtk_day_render_set_events (GtkDayRender *day_render, GSList *events)
 {
-  g_slist_free (day_render->events);
+  GSList *er;
+
+  event_list_unref (day_render->events);
   day_render->events = events;
 
   day_render->event_earliest = day_render->date + day_render->duration;
   day_render->event_latest = day_render->date;
+
+  for (er = day_render->event_rectangles; er; er = er->next)
+    event_rect_delete ((struct event_rect *) er->data);
+  g_slist_free (day_render->event_rectangles);
 
   day_render->event_rectangles
     = ol_sets_to_rectangles (day_render,
@@ -781,7 +789,7 @@ gtk_day_render_update_extents (GtkDayRender *day_render)
  * Make new set used by overlapping set 
  */
 static GNode *
-make_set (event_t e)
+make_set (Event *e)
 {
   GSList *set = NULL;
   set = g_slist_append (set, e);
@@ -791,38 +799,28 @@ make_set (event_t e)
 }
 
 static gboolean
-events_overlap (event_t ev1, event_t ev2)
+events_overlap (Event *ev1, Event *ev2)
 {				
   /* Event overlaps if and only if they intersect */
   if (is_reminder (ev1) && is_reminder (ev2))
-    {
-      return TRUE;
-    }
+    return TRUE;
   if (ev1 == ev2)
-    {
-      return FALSE;
-    }
-  if (ev1->start == ev2->start && event_ends (ev1) == event_ends (ev2))
-    {
-      return TRUE;
-    }
-  if ((ev1->start <= ev2->start && event_ends (ev1) < ev2->start) ||
-      (ev1->start >= ev2->start && event_ends (ev2) > ev1->start))
-    {
-      return TRUE;
-    }
-  else
-    {
-      return FALSE;
-    }
+    return FALSE;
+  if (event_get_start (ev1) == event_get_start (ev2)
+      && event_ends (ev1) == event_ends (ev2))
+    return TRUE;
+  return (event_get_start (ev1) <= event_get_start (ev2)
+	  && event_ends (ev1) < event_get_start (ev2))
+    || (event_get_start (ev1) >= event_get_start (ev2)
+	&& event_ends (ev2) > event_get_start (ev1));
 }
 
 static gboolean
 find_set_in_list (GNode * node, gpointer data)
 {
   GSList *iter, *ol_set;
-  event_t ev = (event_t) data;
-  event_t ev2;
+  Event *ev = data;
+  Event *ev2;
 
 
   if (node == NULL)
@@ -835,7 +833,7 @@ find_set_in_list (GNode * node, gpointer data)
 
   for (iter = ol_set; iter; iter = iter->next)
     {
-      ev2 = (event_t) iter->data;
+      ev2 = iter->data;
       if (ev2 == ev)
 	continue;		/* Ignore us */
 
@@ -851,7 +849,7 @@ find_set_in_list (GNode * node, gpointer data)
 
 /* Returns the overlapping set */
 static GSList *
-find_set (GNode * root, event_t ev)
+find_set (GNode * root, Event *ev)
 {
   found_node = NULL;
 
@@ -862,7 +860,7 @@ find_set (GNode * root, event_t ev)
 
 
 static GSList *
-union_set (GSList * set, const event_t ev)
+union_set (GSList * set, Event *ev)
 {
   return (g_slist_append (set, ev));
 }
@@ -876,11 +874,9 @@ find_overlapping_sets (GSList * events)
 
   root = g_node_new (NULL);
 
-
   for (iter = events; iter; iter = iter->next)
     {
-
-      event_t ev = (event_t) iter->data;
+      Event *ev = iter->data;
       set = find_set (root, ev);
 
       if (set == NULL)		/* the event doesn't overlap */
@@ -897,7 +893,7 @@ find_overlapping_sets (GSList * events)
 }
 
 static struct event_rect *
-event_rect_new (GtkDayRender *day_render, const event_t event,
+event_rect_new (GtkDayRender *day_render, Event *event,
 		gint column, gint columns)
 {
   struct event_rect *ev_rect = g_malloc (sizeof (struct event_rect));
@@ -909,20 +905,21 @@ event_rect_new (GtkDayRender *day_render, const event_t event,
     }
   else
     {
-      if (event->start < day_render->date)
+      if (event_get_start (event) < day_render->date)
 	/* Event starts prior to DAY_RENDER's start.  */
 	ev_rect->y = 0;
       else
-	ev_rect->y = ((gfloat) (event->start - day_render->date))
+	ev_rect->y = ((gfloat) (event_get_start (event) - day_render->date))
 	  / day_render->duration;
 
-      if (event->duration == 0)
+      if (event_get_duration (event) == 0)
 	ev_rect->height = 1.0 / day_render->rows;
-      else if (event->start + event->duration
+      else if (event_get_start (event) + event_get_duration (event)
 	       < day_render->date + day_render->duration)
 	/* Event ends prior to DAY_RENDER's end.  */
 	ev_rect->height
-	  = (gfloat) (event->start + event->duration - day_render->date)
+	  = (gfloat) (event_get_start (event) + event_get_duration (event)
+		      - day_render->date)
 	  / day_render->duration - ev_rect->y;
       else
 	ev_rect->height = 1 - ev_rect->y;
@@ -934,16 +931,18 @@ event_rect_new (GtkDayRender *day_render, const event_t event,
   ev_rect->event = event;
 
   /* Is this the earliest event so far?  */
-  if (event->start < day_render->event_earliest)
-    day_render->event_earliest = MAX (event->start, day_render->date);
+  if (event_get_start (event) < day_render->event_earliest)
+    day_render->event_earliest = MAX (event_get_start (event),
+				      day_render->date);
   /* The latest?  */
   if (day_render->event_latest
-      < event->start + (is_reminder (event) && event->duration == 0
-			? 60 * 60 : event->duration))
+      < event_get_start (event)
+      + (is_reminder (event) && event_get_duration (event) == 0
+	 ? 60 * 60 : event_get_duration (event)))
     day_render->event_latest
-      = MIN (event->start +
-	     (is_reminder (event) && event->duration == 0
-	      ? 60 * 60 : event->duration),
+      = MIN (event_get_start (event) +
+	     (is_reminder (event) && event_get_duration (event) == 0
+	      ? 60 * 60 : event_get_duration (event)),
 	     day_render->date + day_render->duration);
 
   return ev_rect;
@@ -961,7 +960,7 @@ ol_sets_to_rectangles (GtkDayRender *day_render, GNode * node)
   GSList *iter, *ev_rects = NULL;
   GNode *n;
   gint column;
-  event_t ev;
+  Event *ev;
   gint columns;
   struct event_rect *event_rect;
 
@@ -972,7 +971,7 @@ ol_sets_to_rectangles (GtkDayRender *day_render, GNode * node)
       columns = g_slist_length (n->data);
       for (iter = n->data; iter; iter = g_slist_next (iter))
 	{
-	  ev = (event_t) iter->data;
+	  ev = EVENT (iter->data);
 
 	  event_rect = event_rect_new (day_render, ev, column, columns);
 	  ++column;

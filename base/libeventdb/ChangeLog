@@ -1,3 +1,201 @@
+2006-04-13  Neal H. Walfield  <neal@gnu.org>
+
+	* gpe/event-db.h: Include <glib-object.h>.
+	(struct _EventDB): New struct.
+	(EventDB): New typedef.
+	(struct event_details_s): Move from here...
+	* event-db.c (struct event_details): ... to here.
+	* gpe/event-db.h (event_details_t): Remove tyepdef, update users
+	to use struct event_details * instead.
+	(FLAG_UNTIMED): Move from here...
+	* event-db.c (FLAG_UNTIMED): ... to here.
+	* gpe/event-db.h (FLAG_ALARM, FLAG_TENTATIVE, FLAG_CLONE,
+	FLAG_RECUR): Remove.
+	(struct calendar_time_s): Remove struct.
+	(calendar_time_t): Remove typedef, update users to use time_t
+	directly.
+	(struct event_s): Move from here...
+	* event-db.c (struct _Event): ... to here.  Remove field mark.
+	Rename cloned_ev to clone_source.  Remove field list.  Add fields
+	modified and dead.
+	* gpe/event-db.h (EVENT_DB_USE_MEMCHUNK, 
+	event_db__alloc_recur and event_db__free_recur): Move defines from
+	here...
+	* event-db.c: ... to here.
+	* gpe/event-db.h (recur_chunk, event_chunk): Remove declarations.
+	(EVENT_TYPE): New define.
+	(EVENT): Likewise.
+	(EVENT_CLASS): Likewise.
+	(EventClass): New typedef.
+	(struct _Event): New structure.
+	(event_t): Rename from this...
+	(Event): ... to this.  Update all users.
+	(event_get_type): New declaration.
+	* event-db.c (dbversion, sqliteh, recurring_events,
+	one_shot_events, uid): Move global variables from here...
+	(struct _EventDB): ... to this new structure.  Update users.
+	(EventDBClass): New typedef.
+	(EVENT_DB_TYPE): New macro.
+	(EVENT_DB): Likewise.
+	(EVENT_DB_CLASS): Likewise.
+	(event_db_get_type): New declaration.
+	(event_db_start): Remove declaration.
+	(event_db_refresh): Likewise.
+	(event_db_stop): Likewise.
+	(event_db_add): Likewise.
+	(event_db_remove): Rename from this...
+	(event_remove): ... to this.  Update callers.
+	(event_db_flush): Rename from this...
+	(event_flush): ... to this.  Update callers.
+	(event_db_clone): Remove declaration.
+	(event_db_new): Rename from this...
+	(event_new): ... to this and take two additional parameters: an
+	EventDB and an optional event id.  Update callers.
+	(event_db_destroy): Remove declaration.
+	(event_db_alloc_details): Remove declaration.
+	(event_db_get_details): Remove declaration.
+	(event_db_forget_details): Remove declaration.
+	(event_db_list_for_period): Take an additional parameter, an
+	EventDB.  Update callers.
+	(event_db_list_alarms_for_period): Likewise.
+	(event_db_list_for_future): Likewise.
+	(event_db_untimed_list_for_period): Likewise.
+	(event_db_find_by_uid): Likewise.
+	(event_db_list_destroy): Rename from this...
+	(event_list_unref): ... to this.
+	(event_db_new): New declaration.
+	(event_is_recurrence): Likewise.
+	(event_db_get_recurrence): Rename from this...
+	(event_get_recurrence): ... to this.  Update callers.
+	(event_db_clear_recurrence): Rename from this...
+	(event_clear_recurrence): ... to this.  Update callers.
+	(event_get_start): New declartion.
+	(event_set_start): Likewise.
+	(event_get_duration): Likewise.
+	(event_set_duration): Likewise.
+	(event_get_alarm): Likewise.
+	(event_set_alarm): Likewise.
+	(event_is_untimed): Likewise.
+	(event_set_untimed): Likewise.
+	(event_clear_untimed): Likewise.
+	(event_get_uid): Likewise.
+	(event_get_eventid): Likewise.
+	(event_get_summary): Likewise.
+	(event_set_summary): Likewise.
+	(event_get_description): Likewise.
+	(event_set_description): Likewise.
+	(event_get_location): Likewise.
+	(event_set_location): Likewise.
+	(event_get_categories): Likewise.
+	(event_add_category): Likewise.
+	(event_set_categories): Likewise.
+	(event_add_exception): Likewise.
+	* event-db.c: Include <libintl.h> and <glib-object.h>.
+	(fname): Remove variable.
+	(LIVE, STAMP, NO_CLONE, RESOLVE_CLONE): New macros.
+	(event_db_class_init): New declaration.
+	(event_db_init): Likewise.
+	(event_db_dispose): Likewise.
+	(event_db_finalize): Likewise.
+	(event_db_parent_class): New variable.
+	(event_db_get_type): New function.
+	(event_db_class_init): New function.
+	(event_db_init): New function.
+	(event_db_dispose): New function.
+	(event_db_finalize): New function.
+	(event_class_init): New declaration.
+	(event_init): Likewise.
+	(event_dispose): Likewise.
+	(event_finalize): Likewise.
+	(event_parent_class): New variable.
+	(event_get_type): New function.
+	(event_class_init): Likewise.
+	(event_init): Likewise.
+	(event_dispose): Likewise.
+	(event_details): New declaration.
+	(event_write): Likewise.
+	(event_db_remove_internal): Likewise.
+	(event_finalize): New function.
+	(convert_old_db): Remove declaration.
+	(event_chunk): Remove definition.
+	(recur_chunk): Mark static.
+	(event_sort_func): Make parameters void *.  Always sort by the
+	event's start time.
+	(event_db_add_internal): Use event_is_recurrence to determine if
+	an event is a recurring event.  Add asserts.
+	(event_db_remove_internal): Likewise.
+	(load_callback): Get the EventDB from ARG.  Don't use
+	event_db__alloc_event to allocate a new event, use g_object_new.
+	Initialize EV->EDB to EDB.  Don't use event_db__free_event to free
+	EV, use g_object_unref.  After adding EV to EDB's table, get a
+	reference.
+	(event_db_new): New function.
+	(event_db_get_details): Rename from this...
+	(event_details): ... to this.  Take a new parameter,
+	fill_from_disk.  Update callers.
+	(event_db_forget_details): Remove function.
+	(event_db_stop): Remove function.
+	(event_db_find_by_uid): Add a reference to EV before returning it.
+	(event_db_list_destroy): Rename from this...
+	(event_list_unref): ... to this.  Don't call event_db__free_event,
+	call g_object_unref.
+	(event_db_clone): Rename from this...
+	(event_clone): ... to this.  Mark static.  Don't use
+	event_db__alloc_event to allocate a new Event, use g_object_new.
+	Add a reference to EV.	Don't set FLAG_CLONE.  Update callers.
+	(event_db_list_for_period_internal): Use event_clone only when we
+	need to modify the event.  Otherwise, just add a reference to EV.
+	Check if EV has an alarm not by checking for FLAG_ALARM but
+	checking if EV->ALARM is non-zero.  Don't mark recurring events
+	with FLAG_RECUR.
+	(event_db_list_for_period): Take new parameter, the EventDB to
+	use.
+	(event_db_list_alarms_for_period): Likewise.
+	(event_db_untimed_list_for_period): Likewise.
+	(event_db_list_for_future): Likewise.
+	(event_db_write): Rename from this...
+	(event_write): ... to this.  Update callers.  Don't assume that
+	EV->DETAILS is non-NULL.  Don't use the current time as the modify
+	value, use EV->MODIFIED.  Always write EV->ALARM.  Don't update
+	the list: we know that the order has not changed.
+	(event_db_flush): Rename from this...
+	(event_flush): ... to this.
+	(event_db_remove): Rename from this...
+	(event_remove): ... to this.  Mark EV->DEAD as TRUE.
+	(event_db_new): Rename from this...
+	(event_new): ... to this and take two additional parameters: an
+	EventDB and an optional event id.  Use g_object_new to allocate a
+	new Event, not event_db__alloc_event.  Only create an event id if
+	EVENTID is NULL.  Add a reference for EDB.
+	(event_db_get_recurrence): Rename from this...
+	(event_get_recurrence): ... to this.
+	(event_is_recurrence): New function.
+	(event_db_clear_recurrence): Rename from this...
+	(event_clear_recurrence): ... to this.  Modify the underlying
+	event.  Change the modification time.
+	(event_db_alloc_details): Remove function.
+	(event_get_start): New function.
+	(event_set_start): New function.
+	(GET_SET): New macro.  Use it to create the getters and setters
+	for duration and alarm.
+	(GET_SET_FLAG): New macro.  Use it to create the is, get and clear
+	methods for FLAG_UNTIMED.
+	(event_get_uid): New function.
+	(event_get_eventid): New function.
+	(GET_SET_STRING): New macro.  Use it to create the getters and
+	setters for summary, location and description.
+	(event_get_categories): New function.
+	(event_add_category): New function.
+	(event_set_categories): New function.
+	(event_add_exception): New function.
+	(event_db_refresh): Remove function.
+	* old-db.c: Remove file.
+	(load_callback0): Move from here...
+	* event-db.c (event_db_new): ... to here.
+	* old-db.c: (convert_old_db): Move from here...
+	* event-db.c (event_db_new): ... to here.
+	* Makefile.am (libeventdb_la_SOURCES): Remove old-db.c.
+
 2006-04-09  Phil Blundell  <pb@reciva.com>
 
 	* event-db.c (event_db_list_for_period_internal): Examine

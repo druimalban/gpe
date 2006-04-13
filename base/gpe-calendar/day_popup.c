@@ -78,11 +78,10 @@ static void
 selection_made (GtkWidget *clist, gint row, gint column,
 		GdkEventButton *event, GtkWidget *widget)
 {
-  event_t ev;
+  Event *ev;
     
   if (event->type == GDK_2BUTTON_PRESS)
     {
-     
       ev = gtk_clist_get_row_data (GTK_CLIST (clist), row);
       
       gtk_widget_show (edit_event (ev));
@@ -214,14 +213,15 @@ day_popup (GtkWidget *parent, struct day_popup *p, gboolean show_items)
 	    {
 	      GdkPixmap *pmap;
 	      GdkBitmap *bmap;
-	      event_t ev = events->data;
-	      event_details_t evd = event_db_get_details (ev);
+	      Event *ev = events->data;
 	      gchar *lineinfo[1];
 	      gchar *timestr;
 
-	      localtime_r (&ev->start, &tm);
+	      time_t t = event_get_start (ev);
+	      localtime_r (&t, &tm);
 	      timestr = strftime_strdup_utf8_locale (TIMEFMT, &tm);
-	      lineinfo[0] = g_strdup_printf ("%s %s", timestr, evd->summary);
+	      lineinfo[0] = g_strdup_printf ("%s %s", timestr,
+					     event_get_summary (ev));
 	      
 	      gtk_clist_append (GTK_CLIST (contents), lineinfo);
 
@@ -229,19 +229,19 @@ day_popup (GtkWidget *parent, struct day_popup *p, gboolean show_items)
 	      
 	      gtk_clist_set_row_data (GTK_CLIST (contents), row, ev);
 	      
-	      if ((ev->flags & FLAG_ALARM) && ev->recur)
+	      if ((event_get_alarm (ev)) && event_is_recurrence (ev))
 		{
 		  if (gpe_find_icon_pixmap ("bell_recur", &pmap, &bmap))
 		    gtk_clist_set_pixtext (GTK_CLIST (contents), row, 0, lineinfo[0], 5,
 					   pmap, bmap);
 		}
-	      else if (ev->flags & FLAG_ALARM)
+	      else if (event_get_alarm (ev))
 		{ 
 		  if (gpe_find_icon_pixmap ("bell", &pmap, &bmap))
 		    gtk_clist_set_pixtext (GTK_CLIST (contents), row, 0, lineinfo[0], 5,
 					   pmap, bmap);
 		}
-	      else if (ev->recur)
+	      else if (event_is_recurrence (ev))
 		{
 		  if (gpe_find_icon_pixmap ("recur", &pmap, &bmap))
 		    gtk_clist_set_pixtext (GTK_CLIST (contents), row, 0, lineinfo[0], 5,

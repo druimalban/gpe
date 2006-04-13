@@ -12,6 +12,8 @@
 #include <time.h>
 #include <gpe/event-db.h>
 
+extern EventDB *event_db;
+
 extern time_t viewtime;
 
 extern void update_view (void);
@@ -63,7 +65,5 @@ extern const gchar *TIMEFMT;
   #define APP_ICON       PREFIX "/share/pixmaps/gpe-calendar.png"
 #endif
 
-#define get_cloned_ev(arg) \
-  ((arg->flags & FLAG_CLONE) ? (event_t)arg->cloned_ev : arg)
-
-#define is_reminder(ev) (ev->duration == 0 && (ev->flags & FLAG_UNTIMED))
+#define is_reminder(ev) \
+  (event_get_duration (ev) == 0 && event_is_untimed (ev))

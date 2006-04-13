@@ -21,63 +21,124 @@
 
 #include <mimedir/mimedir-vcal.h>
 
+#include <sqlite.h>
 #include <gpe/vevent.h>
 #include <gpe/vtodo.h>
+#include <gpe/event-db.h>
 
-#include <sqlite.h>
+#include "globals.h"
 
 #define _(x)  (x)
 
-#define CALENDAR_DB_NAME "/.gpe/calendar"
 #define TODO_DB_NAME "/.gpe/todo"
+
+static gboolean
+parse_date (const char *s, time_t *t, gboolean *date_only)
+{
+  struct tm tm;
+
+  char *p;
+  memset (&tm, 0, sizeof (tm));
+  p = strptime (s, "%Y-%m-%d", &tm);
+  if (p == NULL)
+    {
+      fprintf (stderr, "Unable to parse date: %s\n", s);
+      return FALSE;
+    }
+
+  p = strptime (p, " %H:%M", &tm);
+
+  if (date_only)
+    *date_only = (p == NULL) ? TRUE : FALSE;
+
+  *t = timegm (&tm);
+  return TRUE;
+}
 
 static void
 do_import_vevent (MIMEDirVEvent *event)
 {
-  sqlite *db;
   GSList *tags, *i;
-  char *buf;
-  const gchar *home;
-  char *err = NULL;
-  int id;
-
-  home = g_get_home_dir ();
-  
-  buf = g_strdup_printf ("%s%s", home, CALENDAR_DB_NAME);
-
-  db = sqlite_open (buf, 0, &err);
-  g_free (buf);
-
-  if (db == NULL)
-    {
-      gpe_error_box (err);
-      free (err);
-      return;
-    }
- 
-  if (sqlite_exec (db, "insert into calendar_urn values (NULL)", NULL, NULL, &err) != SQLITE_OK)
-    {
-      gpe_error_box (err);
-      free (err);
-      sqlite_close (db);
-      return;
-    }
-
-  id = sqlite_last_insert_rowid (db);
+  Event *ev;
 
   tags = vevent_to_tags (event);
 
+  /* First find the eventid.  */
+  const char *eventid = NULL;
+  for (i = tags; i; i = i->next)
+    {
+      gpe_tag_pair *t = i->data;
+      if (!strcasecmp (t->tag, "eventid"))
+	{
+	  eventid = t->value;
+	  break;
+	}
+    }
+
+  ev = event_new (event_db, eventid);
+
+  /* Now load the event.  */
   for (i = tags; i; i = i->next)
     {
       gpe_tag_pair *t = i->data;
 
-      sqlite_exec_printf (db, "insert into calendar values ('%d', '%q', '%q')", NULL, NULL, NULL,
-			  id, t->tag, t->value);
+      if (!strcasecmp (t->tag, "start"))
+	{
+	  time_t start;
+	  gboolean untimed;
+
+	  parse_date (t->value, &start, &untimed);
+	  event_set_start (ev, start);
+
+	  if (untimed)
+	    event_set_untimed (ev);
+	}
+      else if (!strcasecmp (t->tag, "eventid"))
+	/* Ignore, we already have this.  */;
+      else if (!strcasecmp (t->tag, "rend"))
+	{
+	  recur_t r = event_get_recurrence (ev);
+	  parse_date (t->value, &r->end, NULL);
+	}
+      else if (!strcasecmp (t->tag, "rcount"))
+	{
+	  recur_t r = event_get_recurrence (ev);
+	  r->count = atoi (t->value);
+	}
+      else if (!strcasecmp (t->tag, "rincrement"))
+	{
+	  recur_t r = event_get_recurrence (ev);
+	  r->increment = atoi (t->value);
+	}
+      else if (!strcasecmp (t->tag, "rdaymask"))
+	{
+	  recur_t r = event_get_recurrence (ev);
+	  r->daymask = atoi (t->value);
+	}
+      else if (!strcasecmp (t->tag, "rexceptions"))
+	{
+	  recur_t r = event_get_recurrence (ev);
+	  long rmtime = (long)atoi (t->value);
+	  r->exceptions = g_slist_append(r->exceptions,	(void *)rmtime);
+	}
+      else if (!strcasecmp (t->tag, "recur"))
+	{
+	  recur_t r = event_get_recurrence (ev);
+	  r->type = atoi (t->value);
+	}
+      else if (!strcasecmp (t->tag, "duration"))
+	event_set_duration (ev, atoi (t->value));
+      else if (!strcasecmp (t->tag, "alarm"))
+	event_set_alarm (ev, atoi (t->value));
+      else
+	fprintf (stderr,
+		 "While importing eventid %s, ignored unknown tag %s\n",
+		 eventid, t->tag);
     }
   
   gpe_tag_list_free (tags);
 
-  sqlite_close (db);
+  event_flush (ev);
 }
 
 static void

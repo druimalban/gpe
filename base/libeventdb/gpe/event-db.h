@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2002 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2006 Neal H. Walfield <neal@walfield.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -12,6 +13,7 @@
 
 #define SECONDS_IN_DAY (24*60*60)
 
+#include <glib-object.h>
 #include <glib.h>
 #include <time.h>
 
@@ -23,6 +25,9 @@
 #define SAT  (1 << 5)
 #define SUN  (1 << 6)
 
+struct _EventDB;
+typedef struct _EventDB EventDB;
+
 typedef enum
 {
   RECUR_NONE,
@@ -31,39 +36,6 @@ typedef enum
   RECUR_MONTHLY,
   RECUR_YEARLY
 } recur_type_t;
-
-/**
- * *event_details_t:
- *
- * Detail information for an event.
- */
-typedef struct event_details_s
-{
-  guint ref;
-
-  unsigned long sequence;
-  time_t modified;
-
-  gchar *summary;
-  gchar *description;
-  gchar *location;  
-  
-  GSList *categories;
-} *event_details_t;
-
-#define FLAG_UNTIMED   (1 << 0)
-#define FLAG_ALARM     (1 << 1)
-#define FLAG_TENTATIVE (1 << 2)
-#define FLAG_CLONE     (1 << 3)
-#define FLAG_RECUR     (1 << 4)
-
-struct calendar_time_s
-{
-  GDate date;
-  GTime time;
-};
-
-typedef time_t calendar_time_t;
 
 /**
  * *recur_t:
@@ -82,90 +54,134 @@ typedef struct recur_s
   time_t end;			/* 0 == perpetual */
 } *recur_t;
 
-/**
- * event_t:
- *
- * This data type holds all basic information of an event. More detailed 
- * event information are covered by the 'details' and 'recur' members.
- */
-typedef struct event_s
+#define EVENT_TYPE (event_get_type ())
+#define EVENT(obj) \
+  (G_TYPE_CHECK_INSTANCE_CAST ((obj), EVENT_TYPE, struct _Event))
+#define EVENT_CLASS(klass) \
+  GTK_CHECK_CLASS_CAST (klass, EVENT_TYPE, struct _EventCLass)
+
+typedef struct
 {
+  GObjectClass gobject_class;
+  GObjectClass parent_class;
+} EventClass;
+
+struct _Event;
+typedef struct _Event Event;
+
+extern GType event_get_type (void);
+
+struct _EventDB
+{
+  GObject object;
+
+  unsigned long dbversion;
+  void *sqliteh;
+
+  GList *recurring_events, *one_shot_events;
+
+  /* Largest UID which we know of.  */
   unsigned long uid;
+};
 
-  calendar_time_t start;
-  unsigned long duration;	/* 0 == instantaneous */
-  unsigned long alarm;		/* seconds before event */
-  unsigned long flags;
+typedef struct
+{
+  GObjectClass gobject_class;
+  GObjectClass parent_class;
 
-  recur_t recur;
-  
-  event_details_t details;
-  gboolean mark;
-  gpointer *cloned_ev;
-  char *eventid;
+  /* Signals.  */
+  guint event_new_signal;
+  void (*event_new) (EventDB *view, Event *event);
+  guint event_removed_signal;
+  void (*event_removed) (EventDB *view, Event *event);
+  guint event_changed_signal;
+  void (*event_changed) (EventDB *view, Event *event);
+} EventDBClass;
 
-  GList **list;
-} *event_t;
+#define EVENT_DB_TYPE (event_db_get_type ())
+#define EVENT_DB(obj) \
+  (G_TYPE_CHECK_INSTANCE_CAST ((obj), EVENT_DB_TYPE, struct _EventDB))
+#define EVENT_DB_CLASS(klass) \
+  GTK_CHECK_CLASS_CAST (klass, EVENT_DB_TYPE, struct _EventDBCLass)
 
-#define EVENT_DB_USE_MEMCHUNK
+/* Return GType of a view.  */
+extern GType event_db_get_type (void);
 
-#ifdef EVENT_DB_USE_MEMCHUNK
+/* Open a new database.  */
+extern EventDB *event_db_new (const char *filename);
 
-extern GMemChunk *event_chunk, *recur_chunk;
+/* Search the event database EVD for the event with the uid UID.  */
+extern Event *event_db_find_by_uid (EventDB *evd, guint uid);
 
-#define event_db__alloc_event()		\
-	(event_t)g_mem_chunk_alloc0 (event_chunk)
+/* Return the events in the event database EVD which occur between
+   START and END.  */
+extern GSList *event_db_list_for_period (EventDB *evd,
+					 time_t start, time_t end);
+/* Like event_db_list but returns the events whose alarm goes off
+   between START and END.  */
+extern GSList *event_db_list_alarms_for_period (EventDB *evd,
+						time_t start, time_t end);
+/* Returns up to the MAX events which occur following START.  */
+extern GSList *event_db_list_for_future (EventDB *evd,
+					 time_t start, guint max);
+/* Like event_db_list_for_period but only for untimed events
+   (i.e. which with a 0 length duration).  */
+extern GSList *event_db_untimed_list_for_period (EventDB *evd,
+						 time_t start, time_t end,
+						 gboolean yes);
 
-#define event_db__alloc_recur()		\
-	(recur_t)g_mem_chunk_alloc0 (recur_chunk)
+/* Create a new event in database EDB.  */
+extern Event *event_new (EventDB *edb, const char *event_id);
 
-#define event_db__free_event(_x)	\
-	g_mem_chunk_free (event_chunk, _x)
+/* Flush event EV to the DB now.  */
+extern gboolean event_flush (Event *ev);
 
-#define event_db__free_recur(_x)	\
-	g_mem_chunk_free (recur_chunk, _x)
+/* Remove event EV from the underlying DB and dereference it.  */
+extern gboolean event_remove (Event *ev);
 
-#else
+/* g_object unref each Event * on the list and destroy the list.  */
+extern void event_list_unref (GSList *l);
 
-#define event_db__alloc_event()		\
-	(event_t)g_malloc0 (sizeof (struct event_s))
+/* Return whether an event is a recurrent event.  */
+extern gboolean event_is_recurrence (Event *ev) __attribute__ ((pure));
+/* Return the event's recurrence data.  If this is changed, you must
+   call event_flush.  */
+extern recur_t event_get_recurrence (Event *ev) __attribute__ ((pure));
+extern void event_clear_recurrence (Event *ev);
 
-#define event_db__alloc_recur()		\
-	(recur_t)g_malloc0 (sizeof (struct recur_s))
+extern time_t event_get_start (Event *ev) __attribute__ ((pure));
+extern void event_set_start (Event *ev, time_t time);
 
-#define event_db__free_event(_x)	\
-	g_free (_x)
+extern unsigned long event_get_duration (Event *ev) __attribute__ ((pure));
+extern void event_set_duration (Event *ev, unsigned long duration);
 
-#define event_db__free_recur(_x)	\
-	g_free (_x)
+extern unsigned long event_get_alarm (Event *ev) __attribute__ ((pure));
+extern void event_set_alarm (Event *ev, unsigned long alarm);
 
-#endif
+extern gboolean event_is_untimed (Event *ev) __attribute__ ((pure));
+extern void event_set_untimed (Event *ev);
+extern void event_clear_untimed (Event *ev);
 
-extern gboolean event_db_start (void);
-extern gboolean event_db_refresh (void);
-extern gboolean event_db_stop (void);
+extern unsigned long event_get_uid (Event *ev) __attribute__ ((pure));
+extern const char *event_get_eventid (Event *ev) __attribute__ ((pure));
 
-extern gboolean event_db_add (event_t ev);
-extern gboolean event_db_remove (event_t ev);
 
-extern gboolean event_db_flush (event_t ev);
+extern const char *event_get_summary (Event *ev) __attribute__ ((pure));
+extern void event_set_summary (Event *ev, const char *summary);
 
-extern event_t event_db_clone (event_t ev);
-extern event_t event_db_new (void);
-extern event_t event_db_find_by_uid (guint uid);
-extern void event_db_destroy (event_t ev);
+extern const char *event_get_description (Event *ev) __attribute__ ((pure));
+extern void event_set_description (Event *ev, const char *description);
 
-extern event_details_t event_db_alloc_details (event_t ev);
-extern event_details_t event_db_get_details (event_t ev);
-extern void event_db_forget_details (event_t ev);
+extern const char *event_get_location (Event *ev) __attribute__ ((pure));
+extern void event_set_location (Event *ev, const char *location);
 
-extern GSList *event_db_list_for_period (time_t start, time_t end);
-extern GSList *event_db_list_alarms_for_period (time_t start, time_t end);
-extern GSList *event_db_list_for_future (time_t start, guint max);
-extern GSList *event_db_untimed_list_for_period (time_t start, time_t end, gboolean yes);
-extern void event_db_list_destroy (GSList *l);
+extern const GSList *const event_get_categories (Event *ev)
+     __attribute__ ((pure));
+extern void event_add_category (Event *ev, int category);
+/* After calling this function, EV owns CATEGORIES.  If you need to
+   continue to use CATEGORIES, pass a copy.  */
+extern void event_set_categories (Event *ev, GSList *categories);
 
-extern recur_t event_db_get_recurrence (event_t ev);
-extern void event_db_clear_recurrence (event_t ev);
+extern void event_add_exception (Event *ev, time_t start);
 
 #endif
