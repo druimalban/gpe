@@ -204,8 +204,10 @@ button_press (GtkWidget *widget, GdkEventButton *event, gpointer user_data)
     /* We only catch single clicks.  */
     return FALSE;
 
-  gtk_tree_view_get_path_at_pos (view, event->x, event->y,
-				 &path, NULL, NULL, NULL);
+  if (! gtk_tree_view_get_path_at_pos (view, event->x, event->y,
+				       &path, NULL, NULL, NULL))
+    /* No row at curser.  */
+    return FALSE;
 
   model = gtk_tree_view_get_model (view);
 

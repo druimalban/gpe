@@ -1,3 +1,8 @@
+2006-04-16  Neal H. Walfield  <neal@gnu.org>
+
+	* event-list.c (button_press): If there is no row at the cursor
+	position, just return.
+
 2006-04-13  Neal H. Walfield  <neal@gnu.org>
 
 	* day_popup.c: Synchronize libeventdb API changes.
