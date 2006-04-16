@@ -1,3 +1,11 @@
+2006-04-15  Florian Boor <florian@kernelconcepts.de>
+
+    * Makefile.am: Add new files.
+    * colordialog.*: Shiny new GPE colour selection dialog.
+    * color-slider.*: New files incuding a new slider widget with coloured 
+      background. Derived from the old GtkWidget SpColorSlider by 
+      Lauris Kaplinski.
+
 2006-03-20  Florian Boor <florian@kernelconcepts.de>
 
     * pixmaps.c (gpe_icon_free_dynamic): New destructor function.
