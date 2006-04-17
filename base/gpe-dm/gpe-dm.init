@@ -2,13 +2,7 @@
 
 set -e
 
-killproc() {            # kill the named process(es)
-        pid=`/bin/ps -e x |
-             /bin/grep $1 |
-             /bin/grep -v grep |
-             /bin/sed -e 's/^  *//' -e 's/ .*//'`
-        [ "$pid" != "" ] && kill $pid
-}
+PIDFILE="/var/run/gpe-dm.pid"
 
 case "$1" in
   start)
@@ -18,7 +12,7 @@ case "$1" in
 
   stop)
         echo "Stopping GPE display manager: gpe-dm"
-        killproc /usr/bin/gpe-dm
+        kill `cat ${PIDFILE}`
 	dd if=/dev/zero of=/dev/fb0 2>/dev/null || dd if=/dev/zero of=/dev/fb/0 2>/dev/null
   ;;
 

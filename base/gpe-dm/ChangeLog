@@ -1,3 +1,8 @@
+2006-04-15 Alberto Garcia Hierro <skyhusker@handhelds.org>
+	* gpe-dm.c: Fix some warnings.
+	* gpe-dm.c: Add pidfile creation.
+	* gpe-dm.init: Read the pidfile instead of calling ps.
+
 2005-08-29  Florian Boor  <florian@kernelconcepts.de>
 
 	* Release Version 0.48

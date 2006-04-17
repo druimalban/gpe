@@ -14,6 +14,7 @@
 #include <libintl.h>
 #include <time.h>
 #include <stdio.h>
+#include <string.h>
 #include <errno.h>
 #include <syslog.h>
 #include <locale.h>
@@ -26,6 +27,8 @@
 
 #define SERVER_CRASH_TIME		5
 #define SERVER_CRASHING_THRESHOLD	3
+
+#define PIDFILE "/var/run/gpe-dm.pid"
 
 static pid_t xserver_pid;
 static pid_t session_pid;
@@ -66,7 +69,7 @@ start_server (gboolean crashed)
       int err;
       execl (xserver, xserver, dpyname, "-noreset", NULL);
       err = errno;
-      syslog (LOG_DAEMON | LOG_WARNING, _("gpe-dm: couldn't exec %s: %d\n"), xserver, strerror (err));
+      syslog (LOG_DAEMON | LOG_WARNING, _("gpe-dm: couldn't exec %s: %s\n"), xserver, strerror (err));
       _exit (1);
     }
   server_started = t;
@@ -84,6 +87,29 @@ shutdown (int s)
   exit (128 + s);
 }
 
+void
+create_pidfile (void)
+{
+  FILE *fd;
+    
+  fd = fopen (PIDFILE, "w");
+
+  if (!fd)
+    {
+      fprintf (stderr, "Could not open pidfile '%s'\n", PIDFILE);
+      return;
+    }
+
+  fprintf (fd, "%d", getpid());
+  fclose (fd);
+}
+
+void
+remove_pidfile (void)
+{
+  unlink (PIDFILE);
+}
+
 int
 main(int argc, char *argv[])
 {
@@ -95,6 +121,9 @@ main(int argc, char *argv[])
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
   bind_textdomain_codeset (PACKAGE, "UTF-8");
   textdomain (PACKAGE);
+  
+  atexit (remove_pidfile); 
+  create_pidfile ();
 
   dpyname = ":0";
 
@@ -132,7 +161,7 @@ main(int argc, char *argv[])
 	  int err;
 	  execl (XINIT, XINIT, NULL);
 	  err = errno;
-	  syslog (LOG_DAEMON | LOG_WARNING, _("gpe-dm: couldn't exec %s: %d\n"), XINIT, strerror (err));
+	  syslog (LOG_DAEMON | LOG_WARNING, _("gpe-dm: couldn't exec %s: %s\n"), XINIT, strerror (err));
 	  _exit (1);
 	}
 
