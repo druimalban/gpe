@@ -151,12 +151,6 @@ set_widget_color_gdk (GtkWidget *widget, GdkColor color)
 {
   gtk_widget_modify_bg (widget, GTK_STATE_NORMAL, &color);
   gtk_widget_modify_fg (widget, GTK_STATE_NORMAL, &color);
-  gtk_widget_modify_bg (widget, GTK_STATE_ACTIVE, &color);
-  gtk_widget_modify_fg (widget, GTK_STATE_ACTIVE, &color);
-  gtk_widget_modify_bg (widget, GTK_STATE_PRELIGHT, &color);
-  gtk_widget_modify_fg (widget, GTK_STATE_PRELIGHT, &color);
-  gtk_widget_modify_text (widget, GTK_STATE_NORMAL, &color);
-  gtk_widget_modify_base (widget, GTK_STATE_NORMAL, &color);
 }
 
 static void
