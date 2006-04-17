@@ -11,6 +11,7 @@
 #include <sys/types.h>
 #include <time.h>
 #include <langinfo.h>
+#include <string.h>
 
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
@@ -568,30 +569,54 @@ draw_expose_event (GtkWidget *widget,
               if (c->popup.events)
                 {
                   GSList *iter;
-		  gint top = y;
+		  int len = 0;
 
                   for (iter = c->popup.events; iter; iter = iter->next)
-                    {
-                      gchar *m;
-                      top += pr.height + 2;
-
+		    {
                       Event *ev = iter->data;
-                      m = g_strdup_printf("<small>%s</small>",
-					  event_get_summary (ev));
-    
-                      pango_layout_set_width (pl_evt, w * PANGO_SCALE);
-                      pango_layout_set_markup (pl_evt, m, -1);
-                      gtk_paint_layout (widget->style,
-					widget->window,
-					GTK_WIDGET_STATE (widget),
-					FALSE,
-					&event->area,
-					widget,
-					"label",
-					x + 2, top,
-					pl_evt);
-                      g_free(m);  
-                    }
+		      len += strlen (event_get_summary (ev)) + 1;
+		    }
+		  len ++;
+
+		  char *buffer = g_malloc (len);
+		  char *p = buffer;
+                  for (iter = c->popup.events; iter; iter = iter->next)
+		    {
+                      Event *ev = iter->data;
+		      char *t;
+
+		      memcpy (p, event_get_summary (ev),
+			      strlen (event_get_summary (ev)) + 1);
+		      /* Replace '\n''s with spaces.  */
+		      for (t = strchr (p, '\n'); t; t = strchr (t, '\n'))
+			*t = ' ';
+
+		      /* Advance p.  */
+		      p += strlen (event_get_summary (ev));
+		      p[0] = '\n';
+		      p ++;
+		    }
+		  *p = '\0';
+
+		  gint top = y + pr.height + 2;
+
+		  pango_layout_set_width (pl_evt, w * PANGO_SCALE);
+		  pango_layout_set_text (pl_evt, buffer, -1);
+		  pango_layout_get_pixel_extents (pl_evt, NULL, &pr);
+		  if (pr.height > y + h - 1 - top + 1)
+		    pango_layout_set_width (pl_evt, -1);
+
+		  gtk_paint_layout (widget->style,
+				    widget->window,
+				    GTK_WIDGET_STATE (widget),
+				    FALSE,
+				    &event->area,
+				    widget,
+				    "label",
+				    x + 2, top,
+				    pl_evt);
+
+		  g_free(buffer);
                 }
 	    }
 	  else

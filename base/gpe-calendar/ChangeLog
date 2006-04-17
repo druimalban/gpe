@@ -1,5 +1,10 @@
 2006-04-17  Neal H. Walfield  <neal@gnu.org>
 
+	* month_view.c (draw_expose_event): Turn word wrap off when
+	vertical space is at a premium.
+
+2006-04-17  Neal H. Walfield  <neal@gnu.org>
+
 	* day_render.c (struct _GtkDayRender): Add field hour_bar_pos.
 	Rename row_height to row_height_min and update users.
 	(HOUR_BAR_HEIGHT): New macro.
