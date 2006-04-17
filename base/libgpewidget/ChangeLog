@@ -1,3 +1,7 @@
+2006-04-18  Florian Boor <florian@kernelconcepts.de>
+
+    * colordialog.c: Improved preview area.
+    
 2006-04-17  Florian Boor <florian@kernelconcepts.de>
 
     * colordialog.c: Terminate button list, fix includes.

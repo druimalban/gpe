@@ -222,7 +222,7 @@ color_selector_update_sliders (ColorSlider *slider, gpointer data)
 static GtkWidget *
 build_colorbox (GpeColorDialog *dialog, GpeColorDialogPrivate *priv)
 {
-  GtkWidget *label, *button, *slider;
+  GtkWidget *label, *button, *slider, *preview;
   GtkWidget *colorbox;
   guint gpe_border = gpe_get_border ();
   guint gpe_boxspacing = gpe_get_boxspacing ();
@@ -236,7 +236,10 @@ build_colorbox (GpeColorDialog *dialog, GpeColorDialogPrivate *priv)
 
   button = gtk_button_new ();
   GTK_WIDGET_UNSET_FLAGS (button, GTK_CAN_FOCUS);
-  priv->previewbutton = button;
+  
+  preview = gtk_event_box_new ();
+  gtk_container_add (GTK_CONTAINER (button), preview);
+  priv->previewbutton = preview;
   gtk_widget_set_size_request(button, 30, 30 + 6 * gpe_boxspacing);
   gtk_table_attach (GTK_TABLE (colorbox), button, 2, 3, 0, 3,
 			        GTK_FILL, GTK_FILL, 0, 0);
