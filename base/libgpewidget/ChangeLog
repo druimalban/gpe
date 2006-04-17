@@ -1,3 +1,8 @@
+2006-04-17  Florian Boor <florian@kernelconcepts.de>
+
+    * colordialog.c: Terminate button list, fix includes.
+      Check if colour was allocated successfully. 
+
 2006-04-15  Florian Boor <florian@kernelconcepts.de>
 
     * Makefile.am: Add new files.

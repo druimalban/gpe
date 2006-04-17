@@ -24,9 +24,9 @@
 #include <string.h>
 #include <libintl.h>
 #include <gtk/gtk.h>
-#include <gpe/color-slider.h>
-#include <gpe/spacing.h>
 
+#include "gpe/color-slider.h"
+#include "gpe/spacing.h"
 #include "gpe/colordialog.h"
 
 #define _(x) gettext(x)
@@ -151,6 +151,12 @@ set_widget_color_gdk (GtkWidget *widget, GdkColor color)
 {
   gtk_widget_modify_bg (widget, GTK_STATE_NORMAL, &color);
   gtk_widget_modify_fg (widget, GTK_STATE_NORMAL, &color);
+  gtk_widget_modify_bg (widget, GTK_STATE_ACTIVE, &color);
+  gtk_widget_modify_fg (widget, GTK_STATE_ACTIVE, &color);
+  gtk_widget_modify_bg (widget, GTK_STATE_PRELIGHT, &color);
+  gtk_widget_modify_fg (widget, GTK_STATE_PRELIGHT, &color);
+  gtk_widget_modify_text (widget, GTK_STATE_NORMAL, &color);
+  gtk_widget_modify_base (widget, GTK_STATE_NORMAL, &color);
 }
 
 static void
@@ -208,9 +214,15 @@ color_selector_update_sliders (ColorSlider *slider, gpointer data)
   new_color.red   = r * 256;
   new_color.green = g * 256;
   new_color.blue  = b * 256;
-  gdk_colormap_alloc_color (gdk_colormap_get_system(), &new_color, FALSE, TRUE);
-  dialog->cur_color_gdk = new_color;
-  set_widget_color_gdk (priv->previewbutton, new_color);
+  if (gdk_colormap_alloc_color (gdk_colormap_get_system(), &new_color, FALSE, TRUE))
+    {
+      g_printerr ("Warning: unable to allocate colour.");
+    }
+    else
+    {
+      dialog->cur_color_gdk = new_color;
+      set_widget_color_gdk (priv->previewbutton, new_color);
+    }
 }
 
 static GtkWidget *
@@ -281,7 +293,7 @@ gpe_color_dialog_init (GpeColorDialog *dialog)
 
   gtk_dialog_add_buttons (GTK_DIALOG (dialog),
                           GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT,
-                          GTK_STOCK_OK, GTK_RESPONSE_ACCEPT);
+                          GTK_STOCK_OK, GTK_RESPONSE_ACCEPT, NULL);
     
   colorbox = build_colorbox (dialog, priv);
   gtk_widget_show_all (colorbox);
