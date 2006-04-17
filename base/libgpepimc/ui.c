@@ -179,7 +179,7 @@ category_dialog (GtkWidget *w, GtkTreeView *tree_view, gboolean new)
 
   vbox = GTK_DIALOG (window)->vbox;
 
-  table = gtk_table_new (2, 2, FALSE);
+  table = gtk_table_new (2, 3, FALSE);
   gtk_table_set_col_spacings (GTK_TABLE (table), spacing);
   gtk_table_set_row_spacings (GTK_TABLE (table), spacing);
 
@@ -195,6 +195,7 @@ category_dialog (GtkWidget *w, GtkTreeView *tree_view, gboolean new)
   bluebutton   = gtk_button_new ();
   previewbutton= gtk_button_new ();
   cbutton = gpe_button_new_from_stock (GTK_STOCK_SELECT_COLOR, GPE_BUTTON_TYPE_ICON);
+  gtk_button_set_relief (GTK_BUTTON (previewbutton), GTK_RELIEF_NONE);
 
   redbox    = gtk_event_box_new ();
   greenbox  = gtk_event_box_new ();
@@ -206,7 +207,7 @@ category_dialog (GtkWidget *w, GtkTreeView *tree_view, gboolean new)
   gtk_widget_set_size_request (greenbox,  width, height);
   gtk_widget_set_size_request (yellowbox, width, height);
   gtk_widget_set_size_request (bluebox,   width, height);
-  gtk_widget_set_size_request (previewbox, width / 2, height);
+  gtk_widget_set_size_request (previewbox, width, height);
   
   gtk_container_add (GTK_CONTAINER (redbutton),    redbox);
   gtk_container_add (GTK_CONTAINER (greenbutton),  greenbox);
@@ -214,7 +215,6 @@ category_dialog (GtkWidget *w, GtkTreeView *tree_view, gboolean new)
   gtk_container_add (GTK_CONTAINER (bluebutton),   bluebox);
   gtk_container_add (GTK_CONTAINER (previewbutton),previewbox);
 
-  gtk_box_pack_start (GTK_BOX (hbox), previewbutton, FALSE, TRUE, spacing); 
   gtk_box_pack_start (GTK_BOX (hbox), redbutton, FALSE, TRUE, 0); 
   gtk_box_pack_start (GTK_BOX (hbox), greenbutton, FALSE, TRUE, 0); 
   gtk_box_pack_start (GTK_BOX (hbox), yellowbutton, FALSE, TRUE, 0); 
@@ -224,7 +224,8 @@ category_dialog (GtkWidget *w, GtkTreeView *tree_view, gboolean new)
   gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1, GTK_FILL, GTK_FILL, 0, 0);
   gtk_table_attach (GTK_TABLE (table), name, 1, 2, 0, 1, GTK_FILL, GTK_FILL, 0, 0);
   gtk_table_attach (GTK_TABLE (table), clabel, 0, 1, 1, 2, GTK_FILL, GTK_FILL, 0, 0);
-  gtk_table_attach (GTK_TABLE (table), hbox, 1, 2, 1, 2, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_table_attach (GTK_TABLE (table), previewbutton, 1, 2, 1, 2, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_table_attach (GTK_TABLE (table), hbox, 1, 2, 2, 3, GTK_FILL, GTK_FILL, 0, 0);
   
   g_signal_connect (G_OBJECT (cbutton), "clicked", G_CALLBACK (select_color), window);
   
@@ -513,6 +514,32 @@ change_category_name (GtkCellRendererText *cell,
   gtk_list_store_set (list_store, &iter, LS_NAME, new_text, -1);
 }
 
+static void 
+list_select_row (GtkTreeView *treeview, gpointer data)
+{
+    GtkTreeModel *model = gtk_tree_view_get_model(treeview);
+    GtkWidget *parent = data;
+    GtkWidget *editbutton = g_object_get_data (G_OBJECT (parent), "edit-button");
+    GtkWidget *deletebutton = g_object_get_data (G_OBJECT (parent), "delete-button");
+    GtkTreeSelection *sel;
+    
+    sel = gtk_tree_view_get_selection(treeview);
+    if (gtk_tree_selection_get_selected(sel, NULL, NULL))
+      {
+        if (editbutton)
+          gtk_widget_set_sensitive(GTK_WIDGET(editbutton), TRUE);
+        if (deletebutton)
+          gtk_widget_set_sensitive(GTK_WIDGET(deletebutton), TRUE);
+	  }
+    else
+      {
+        if (editbutton)
+          gtk_widget_set_sensitive(GTK_WIDGET(editbutton), FALSE);
+        if (deletebutton)
+          gtk_widget_set_sensitive(GTK_WIDGET(deletebutton), FALSE);
+	  }
+}
+
 #ifdef IS_HILDON
 GtkWidget *
 gpe_pim_categories_dialog (GSList *selected_categories, gboolean select, 
@@ -524,7 +551,7 @@ gpe_pim_categories_dialog (GSList *selected_categories, GCallback callback, gpoi
 {
   GtkWidget *toolbar;
   GtkWidget *window;
-  GtkWidget *sw;
+  GtkWidget *sw, *editbutton = NULL, *deletebutton = NULL;
   GSList *iter;
   GtkWidget *okbutton = NULL, *cancelbutton = NULL;
   GtkListStore *list_store;
@@ -535,7 +562,7 @@ gpe_pim_categories_dialog (GSList *selected_categories, GCallback callback, gpoi
   GtkTreeSelection *sel;
 
 #ifdef IS_HILDON
-  GtkWidget *newbutton, *deletebutton;
+  GtkWidget *newbutton;
 #endif
     
   window = gtk_dialog_new ();
@@ -561,16 +588,17 @@ gpe_pim_categories_dialog (GSList *selected_categories, GCallback callback, gpoi
                   _("Tap here to add a new category."),
                   G_CALLBACK (new_category), tree_view, -1);
     
-    gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_PROPERTIES,
+    editbutton = gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_PROPERTIES,
                   _("Modify category"), 
                   _("Tap here to modify the selected category."),
                   G_CALLBACK (modify_category), tree_view, -1);
                   
-    gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_DELETE,
+    deletebutton = gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_DELETE,
                   _("Delete category"), 
                   _("Tap here to delete the selected category."),
                   G_CALLBACK (delete_category), tree_view, -1);
-    
+    gtk_widget_set_sensitive (editbutton, FALSE);
+    gtk_widget_set_sensitive (deletebutton, FALSE);
     gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox),
                 toolbar, FALSE, FALSE, 0);                
 #endif      
@@ -645,7 +673,12 @@ gpe_pim_categories_dialog (GSList *selected_categories, GCallback callback, gpoi
   {
     okbutton = gtk_button_new_with_label (_("Close"));
     newbutton = gtk_button_new_with_label (_("New"));
+    editbutton = gtk_button_new_with_label (_("Edit"));
     deletebutton = gtk_button_new_with_label (_("Delete"));
+    gtk_widget_set_sensitive (deletebutton, FALSE);
+    gtk_widget_set_sensitive (editbutton, FALSE);
+    g_signal_connect (G_OBJECT (editbutton), "clicked", 
+                      G_CALLBACK (modify_category), tree_view);
   }
 #else
   okbutton = gtk_button_new_from_stock (GTK_STOCK_OK);
@@ -653,6 +686,8 @@ gpe_pim_categories_dialog (GSList *selected_categories, GCallback callback, gpoi
 #endif
 
   g_object_set_data (G_OBJECT (window), "list_store", list_store);
+  g_object_set_data (G_OBJECT (window), "edit-button", editbutton);
+  g_object_set_data (G_OBJECT (window), "delete-button", deletebutton);
 
   if (okbutton) 
     g_signal_connect (G_OBJECT (okbutton), "clicked", G_CALLBACK (categories_dialog_ok), window);
@@ -672,6 +707,7 @@ else
   {
     gtk_window_set_title (GTK_WINDOW (window), _("Edit categories"));
     gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), newbutton, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), editbutton, TRUE, TRUE, 0);
     gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), deletebutton, TRUE, TRUE, 0);
     gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), okbutton, TRUE, TRUE, 0);
     g_signal_connect (G_OBJECT (newbutton), "clicked", G_CALLBACK (new_category), list_store);
@@ -689,6 +725,8 @@ else
   gtk_window_set_default_size (GTK_WINDOW (window), 240, 320);
 
   g_signal_connect_swapped (G_OBJECT (window), "destroy", G_CALLBACK (g_object_unref), list_store);
+  g_signal_connect_after(G_OBJECT(tree_view), "cursor-changed", 
+	                     G_CALLBACK(list_select_row), (gpointer)(window)); 
 
   g_object_set_data (G_OBJECT (window), "callback", callback);
   g_object_set_data (G_OBJECT (window), "callback-data", data);

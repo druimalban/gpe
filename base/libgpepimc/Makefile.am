@@ -8,7 +8,7 @@ endif
 INCLUDES = $(PIMC_CFLAGS) -DPACKAGE_LOCALE_DIR=\"@datadir@/locale/@PACKAGE_NAME@\"
 
 libgpepimc_la_LIBADD = @PIMC_LIBS@
-libgpepimc_la_LDFLAGS = -version-info 0:1:0
+libgpepimc_la_LDFLAGS = -version-info 0:0:0
 
 libgpepimc_la_SOURCES = ui.c db.c gpe/pim-categories.h gpe/pim-categories-ui.h \
                         internal.h

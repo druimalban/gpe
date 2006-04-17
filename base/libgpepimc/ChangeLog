@@ -1,3 +1,8 @@
+2006-04-18  Florian Boor  <florian@kernelconcepts.de>
+
+    * ui.c: Activate buttons only if category selected.
+      Change box packaging to fit on qvga screens.
+
 2006-04-17  Florian Boor  <florian@kernelconcepts.de>
 
     * ui.c: Category editing, minor GtkObject -> GObject conversion.
