@@ -216,12 +216,12 @@ color_selector_update_sliders (ColorSlider *slider, gpointer data)
   new_color.blue  = b * 256;
   if (gdk_colormap_alloc_color (gdk_colormap_get_system(), &new_color, FALSE, TRUE))
     {
-      g_printerr ("Warning: unable to allocate colour.");
-    }
-    else
-    {
       dialog->cur_color_gdk = new_color;
       set_widget_color_gdk (priv->previewbutton, new_color);
+    }
+  else
+    {
+      g_printerr ("Warning: unable to allocate colour.\n");
     }
 }
 
