@@ -1,3 +1,19 @@
+2006-04-17  Florian Boor  <florian@kernelconcepts.de>
+
+    * ui.c: Category editing, minor GtkObject -> GObject conversion.
+      Rename (do_new_category) to (do_update_category), make this function
+      able to update existing categories.
+      Rename (new_category) to (category_dialog) and take parameter depending
+      on what the desired action is.
+      (new_category), (modify_category): New functions calling (category_dialog)
+      Implement colour palette functions and preview widget.
+    * db.c: minor improvements and replacing of free() with g_free();  
+
+2006-04-16  Florian Boor  <florian@kernelconcepts.de>
+
+    * db.c (check_table_update): Fix typo causing data loss.
+    * ui.c: Introduce colour column and column constants.
+
 2006-04-12  Florian Boor  <florian@kernelconcepts.de>
 
     * db.c (load_one): Load colour field.

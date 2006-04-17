@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2001, 2002, 2003, 2004 Philip Blundell <philb@gnu.org>
+ *               2006 Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -15,21 +16,88 @@
 #include <gpe/errorbox.h>
 #include <gpe/spacing.h>
 #include <gpe/pixmaps.h>
+#include <gpe/colordialog.h>
+#include <gpe/picturebutton.h>
 
 #include "gpe/pim-categories.h"
 
 #include "internal.h"
 
+#
+enum 
+{ 
+  LS_CHECKED,
+  LS_NAME,
+  LS_ID,
+  LS_COLOR,
+  LS_DUMMY,
+  LS_MAX
+};
+
 #define _(x) (x)
 
+static gchar *col_palette_red    = "#FF0000";
+static gchar *col_palette_green  = "#00FF00";
+static gchar *col_palette_yellow = "#FFFF00";
+static gchar *col_palette_blue   = "#0000FF";
+
 static void
-do_new_category (GtkWidget *widget, GtkWidget *d)
+set_widget_color_str (GtkWidget *widget, const gchar *colstr)
 {
-  GtkWidget *entry = gtk_object_get_data (GTK_OBJECT (d), "entry");
-  char *title = gtk_editable_get_chars (GTK_EDITABLE (entry), 0, -1);
+  GdkColormap *map;
+  static GdkColor colour;
+    
+  gdk_color_parse (colstr, &colour);
+  map = gdk_colormap_get_system ();
+  gdk_colormap_alloc_color (map, &colour, FALSE, TRUE);
+  gtk_widget_modify_bg (widget, GTK_STATE_NORMAL, &colour);
+  gtk_widget_modify_fg (widget, GTK_STATE_NORMAL, &colour);
+}
+
+static void
+palette_color (GtkWidget *w, gpointer data)
+{
+  GtkWidget *parent = gtk_widget_get_toplevel (w);
+  GtkWidget *preview = g_object_get_data (G_OBJECT (parent), "preview");
+  gchar *cur_col = g_object_get_data (G_OBJECT (parent), "col");
+  const gchar *colstr = data;
+    
+  g_free (cur_col);
+  g_object_set_data (G_OBJECT (parent), "col", g_strdup (colstr));
+  set_widget_color_str (preview, colstr);
+}
+
+static void
+select_color (GtkWidget *w, gpointer data)
+{
+  GtkWidget *parent = data;
+  GtkWidget *dlg;
+  GtkWidget *preview = g_object_get_data (G_OBJECT (parent), "preview");
+  gchar *cur_col = g_object_get_data (G_OBJECT (parent), "col");
+ 
+  dlg = gpe_color_dialog_new (GTK_WINDOW(parent), GTK_DIALOG_MODAL, 
+                              cur_col ? cur_col : "#FFFFFF");
+  
+  if (gtk_dialog_run (GTK_DIALOG(dlg)) == GTK_RESPONSE_ACCEPT)
+    {
+      const gchar *col = gpe_color_dialog_get_color_str(GPE_COLOR_DIALOG (dlg));
+      g_free (cur_col);
+      g_object_set_data (G_OBJECT (parent), "col", g_strdup (col));
+      set_widget_color_str (preview, col);      
+    }
+  gtk_widget_destroy (dlg);    
+}
+
+static void
+do_update_category (GtkWidget *widget, GtkWidget *d)
+{
+  GtkWidget *entry = g_object_get_data (G_OBJECT (d), "entry");
+  gchar *title = gtk_editable_get_chars (GTK_EDITABLE (entry), 0, -1);
+  gchar *col = g_object_get_data (G_OBJECT (d), "col"); 
   GSList *l, *list;
   GtkTreeIter iter;
   GtkListStore *list_store;
+  gint id = (gint)g_object_get_data (G_OBJECT (d), "id"); /* will be -1 if new */
 
   list_store = g_object_get_data (G_OBJECT (d), "list-store");
 
@@ -44,23 +112,45 @@ do_new_category (GtkWidget *widget, GtkWidget *d)
   for (l = list; l; l = l->next)
     {
       struct gpe_pim_category *c = l->data;
-      if (!strcasecmp (title, c->name))
-	{
-	  gpe_error_box (_("A category by that name already exists"));
-	  gtk_widget_destroy (d);
-	  return;
-	}
+      if ((!strcasecmp (title, c->name) && ((id == -1) || ((id != -1) && (id != c->id)))))
+        {
+          gpe_error_box (_("A category by that name already exists"));
+          gtk_widget_destroy (d);
+          return;
+        }
     }
   g_slist_free (list);
-
-  gtk_list_store_append (list_store, &iter);
-  gtk_list_store_set (list_store, &iter, 0, FALSE, 1, title, 2, -1, -1);
-
+  
+  if (id == -1)
+    {
+      gtk_list_store_append (list_store, &iter);
+    }
+  else
+    {
+      gint iter_id = -1;
+      gtk_tree_model_get_iter_first (GTK_TREE_MODEL (list_store), &iter);
+      
+      while (1)
+        {
+          gtk_tree_model_get (GTK_TREE_MODEL (list_store), &iter, 
+                              LS_ID, &iter_id, -1);
+          if (iter_id == id)
+            break;
+          if (!gtk_tree_model_iter_next (GTK_TREE_MODEL (list_store), &iter))
+            {
+              gtk_widget_destroy (d); /* not found - should never be reached */
+              return;
+            }
+        }
+    }
+  gtk_list_store_set (list_store, &iter, LS_CHECKED, FALSE, LS_DUMMY, "  ", 
+                      LS_NAME, title, LS_ID, id, LS_COLOR, col, -1);
+  g_free (col);
   gtk_widget_destroy (d);
 }
 
 static void
-new_category (GtkWidget *w, GtkListStore *list_store)
+category_dialog (GtkWidget *w, GtkTreeView *tree_view, gboolean new)
 {
   GtkWidget *window;
   GtkWidget *vbox;
@@ -68,10 +158,19 @@ new_category (GtkWidget *w, GtkListStore *list_store)
   GtkWidget *cancel;
   GtkWidget *label;
   GtkWidget *name;
+  GtkWidget *table;
+  GtkWidget *clabel;
+  GtkWidget *cbutton;
+  GtkWidget *previewbox, *previewbutton;
   GtkWidget *hbox;
+  GtkWidget *redbutton, *greenbutton, *yellowbutton, *bluebutton;
+  GtkWidget *redbox, *greenbox, *yellowbox, *bluebox;
   guint spacing;
+  gint width, height;
+  GtkListStore *list_store = GTK_LIST_STORE (gtk_tree_view_get_model (tree_view));
 
   spacing = gpe_get_boxspacing ();
+  gtk_icon_size_lookup (GTK_ICON_SIZE_SMALL_TOOLBAR, &width, &height);
 
   window = gtk_dialog_new ();
 
@@ -80,13 +179,64 @@ new_category (GtkWidget *w, GtkListStore *list_store)
 
   vbox = GTK_DIALOG (window)->vbox;
 
-  hbox = gtk_hbox_new (FALSE, 0);
+  table = gtk_table_new (2, 2, FALSE);
+  gtk_table_set_col_spacings (GTK_TABLE (table), spacing);
+  gtk_table_set_row_spacings (GTK_TABLE (table), spacing);
 
   label = gtk_label_new (_("Name:"));
   name = gtk_entry_new ();
+  clabel = gtk_label_new (_("Colour:"));
   
-  gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (hbox), name, TRUE, TRUE, 2);
+  hbox = gtk_hbox_new (FALSE, spacing);
+  
+  redbutton    = gtk_button_new ();
+  greenbutton  = gtk_button_new ();
+  yellowbutton = gtk_button_new ();
+  bluebutton   = gtk_button_new ();
+  previewbutton= gtk_button_new ();
+  cbutton = gpe_button_new_from_stock (GTK_STOCK_SELECT_COLOR, GPE_BUTTON_TYPE_ICON);
+
+  redbox    = gtk_event_box_new ();
+  greenbox  = gtk_event_box_new ();
+  yellowbox = gtk_event_box_new ();
+  bluebox   = gtk_event_box_new ();
+  previewbox= gtk_event_box_new ();
+
+  gtk_widget_set_size_request (redbox,    width, height);
+  gtk_widget_set_size_request (greenbox,  width, height);
+  gtk_widget_set_size_request (yellowbox, width, height);
+  gtk_widget_set_size_request (bluebox,   width, height);
+  gtk_widget_set_size_request (previewbox, width / 2, height);
+  
+  gtk_container_add (GTK_CONTAINER (redbutton),    redbox);
+  gtk_container_add (GTK_CONTAINER (greenbutton),  greenbox);
+  gtk_container_add (GTK_CONTAINER (yellowbutton), yellowbox);
+  gtk_container_add (GTK_CONTAINER (bluebutton),   bluebox);
+  gtk_container_add (GTK_CONTAINER (previewbutton),previewbox);
+
+  gtk_box_pack_start (GTK_BOX (hbox), previewbutton, FALSE, TRUE, spacing); 
+  gtk_box_pack_start (GTK_BOX (hbox), redbutton, FALSE, TRUE, 0); 
+  gtk_box_pack_start (GTK_BOX (hbox), greenbutton, FALSE, TRUE, 0); 
+  gtk_box_pack_start (GTK_BOX (hbox), yellowbutton, FALSE, TRUE, 0); 
+  gtk_box_pack_start (GTK_BOX (hbox), bluebutton, FALSE, TRUE, 0); 
+  gtk_box_pack_start (GTK_BOX (hbox), cbutton, FALSE, TRUE, 0); 
+  
+  gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_table_attach (GTK_TABLE (table), name, 1, 2, 0, 1, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_table_attach (GTK_TABLE (table), clabel, 0, 1, 1, 2, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_table_attach (GTK_TABLE (table), hbox, 1, 2, 1, 2, GTK_FILL, GTK_FILL, 0, 0);
+  
+  g_signal_connect (G_OBJECT (cbutton), "clicked", G_CALLBACK (select_color), window);
+  
+  g_signal_connect (G_OBJECT (redbutton),   "clicked", G_CALLBACK (palette_color), col_palette_red);
+  g_signal_connect (G_OBJECT (greenbutton), "clicked", G_CALLBACK (palette_color), col_palette_green);
+  g_signal_connect (G_OBJECT (yellowbutton),"clicked", G_CALLBACK (palette_color), col_palette_yellow);
+  g_signal_connect (G_OBJECT (bluebutton),  "clicked", G_CALLBACK (palette_color), col_palette_blue);
+
+  set_widget_color_str (redbox,    col_palette_red);
+  set_widget_color_str (greenbox,  col_palette_green);
+  set_widget_color_str (yellowbox, col_palette_yellow);
+  set_widget_color_str (bluebox,   col_palette_blue);
 
 #ifdef IS_HILDON
   ok = gtk_button_new_with_label (_("OK"));
@@ -108,29 +258,69 @@ new_category (GtkWidget *w, GtkListStore *list_store)
   GTK_WIDGET_SET_FLAGS (ok, GTK_CAN_DEFAULT);
   gtk_widget_grab_default (ok);
 
-  g_signal_connect (G_OBJECT (ok), "clicked", 
-		    G_CALLBACK (do_new_category), window);
-  
-  g_signal_connect (G_OBJECT (name), "activate", 
-		    G_CALLBACK (do_new_category), window);
+  if (new)  
+    {
+      gtk_window_set_title (GTK_WINDOW (window), _("New category"));
+      g_object_set_data (G_OBJECT (window), "id", (gpointer)-1);
+      set_widget_color_str (previewbox, "white");
+    }
+  else
+    {
+      GtkTreeSelection *sel;
+      GtkTreeIter cur_iter;
+      gint cur_id;
+      gchar *cur_name, *cur_colour;
+        
+      gtk_window_set_title (GTK_WINDOW (window), _("Edit category"));
 
+      sel = gtk_tree_view_get_selection (GTK_TREE_VIEW (tree_view));
+      gtk_tree_selection_get_selected (sel, NULL, &cur_iter);
+      gtk_tree_model_get (GTK_TREE_MODEL (list_store), &cur_iter, LS_NAME, &cur_name, 
+                          LS_COLOR, &cur_colour, LS_ID, &cur_id, -1);
+      if (cur_name)
+          gtk_entry_set_text (GTK_ENTRY (name), cur_name);
+      g_free (cur_name);
+      
+      g_object_set_data (G_OBJECT (window), "col", (gpointer)cur_colour);
+      g_object_set_data (G_OBJECT (window), "id", (gpointer)cur_id);
+      
+      if (cur_colour) 
+        set_widget_color_str (previewbox, cur_colour);
+    }
+
+  g_signal_connect (G_OBJECT (ok), "clicked", 
+                    G_CALLBACK (do_update_category), window);
+  g_signal_connect (G_OBJECT (name), "activate", 
+                    G_CALLBACK (do_update_category), window);
   g_signal_connect_swapped (G_OBJECT (cancel), "clicked", 
 			    G_CALLBACK (gtk_widget_destroy), window);
 
-  gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, spacing);
+  gtk_box_pack_start (GTK_BOX (vbox), table, FALSE, FALSE, spacing);
 
-  gtk_object_set_data (GTK_OBJECT (window), "entry", name);
-  
-  gtk_window_set_title (GTK_WINDOW (window), _("New category"));
-
+  g_object_set_data (G_OBJECT (window), "entry", name);
+  g_object_set_data (G_OBJECT (window), "preview", previewbox);
+ 
   gpe_set_window_icon (window, "icon");
 
   gtk_container_set_border_width (GTK_CONTAINER (window), gpe_get_border ());
+
 
   g_object_set_data (G_OBJECT (window), "list-store", list_store);
 
   gtk_widget_show_all (window);
   gtk_widget_grab_focus (name);
+}
+
+static void
+new_category (GtkWidget *w, GtkTreeView *tree_view)
+{
+  category_dialog (w, tree_view, TRUE);
+}
+
+static void
+modify_category (GtkWidget *w, GtkTreeView *tree_view)
+{
+  category_dialog (w, tree_view, FALSE);
 }
 
 static void
@@ -167,14 +357,14 @@ delete_category (GtkWidget *w, GtkWidget *tree_view)
       ref = riter->data;
       path = gtk_tree_row_reference_get_path (ref);
       if (path)
-	{
-	  GtkTreeIter it;
-	  
-	  if (gtk_tree_model_get_iter (model, &it, path))
-	    gtk_list_store_remove (GTK_LIST_STORE (model), &it);
-
-	  gtk_tree_path_free (path);
-	}
+        {
+          GtkTreeIter it;
+          
+          if (gtk_tree_model_get_iter (model, &it, path))
+            gtk_list_store_remove (GTK_LIST_STORE (model), &it);
+    
+          gtk_tree_path_free (path);
+        }
 
       gtk_tree_row_reference_free (ref);
     }
@@ -191,9 +381,9 @@ category_toggled(GtkCellRendererToggle *renderer, gchar *path, gpointer data)
   gboolean active;
 
   gtk_tree_model_get_iter (GTK_TREE_MODEL (list_store), &iter, tpath);
-  gtk_tree_model_get (GTK_TREE_MODEL (list_store), &iter, 0, &active, -1);
+  gtk_tree_model_get (GTK_TREE_MODEL (list_store), &iter, LS_CHECKED, &active, -1);
   active = !active;
-  gtk_list_store_set (GTK_LIST_STORE (list_store), &iter, 0, active, -1);
+  gtk_list_store_set (GTK_LIST_STORE (list_store), &iter, LS_CHECKED, active, -1);
   gtk_tree_path_free(tpath);
 }
 
@@ -226,13 +416,18 @@ categories_dialog_ok (GtkWidget *w, gpointer p)
       do 
 	{
 	  gint id;
-	  gchar *title;
+	  gchar *title, *col;
 	  gboolean selected;
 	  
-	  gtk_tree_model_get (GTK_TREE_MODEL (list_store), &iter, 0, &selected, 1, &title, 2, &id, -1);
+	  gtk_tree_model_get (GTK_TREE_MODEL (list_store), &iter, 
+                          LS_CHECKED, &selected, LS_NAME, &title, 
+                          LS_ID, &id, LS_COLOR, &col, -1);
 
 	  if (id == -1)
-	    gpe_pim_category_new (title, &id);
+        {  
+	      gpe_pim_category_new (title, &id);
+          gpe_pim_category_set_colour (id, col);
+        }
 	  else
 	    {
 	      struct gpe_pim_category *c = NULL;
@@ -255,6 +450,13 @@ categories_dialog_ok (GtkWidget *w, gpointer p)
                   g_free ((void *)c->name);
                   c->name = g_strdup (title);
                   gpe_pim_category_rename (id, title);
+                }
+              if ((!c->colour) || (col && (strcmp (c->colour, col))))
+                {
+                  if (c->colour) 
+                    g_free ((void *)c->colour);
+                  c->colour = g_strdup (col);
+                  gpe_pim_category_set_colour (id, col);
                 }
             }
 	      else
@@ -305,10 +507,10 @@ change_category_name (GtkCellRendererText *cell,
       return;
     }
 
-  gtk_tree_model_get (GTK_TREE_MODEL (list_store), &iter, 2, &id, -1);
+  gtk_tree_model_get (GTK_TREE_MODEL (list_store), &iter, LS_ID, &id, -1);
 
   /* Update the name in the list, it will be updated in the db on ok. */
-  gtk_list_store_set (list_store, &iter, 1, new_text, -1);
+  gtk_list_store_set (list_store, &iter, LS_NAME, new_text, -1);
 }
 
 #ifdef IS_HILDON
@@ -335,9 +537,11 @@ gpe_pim_categories_dialog (GSList *selected_categories, GCallback callback, gpoi
 #ifdef IS_HILDON
   GtkWidget *newbutton, *deletebutton;
 #endif
+    
   window = gtk_dialog_new ();
 
-  list_store = gtk_list_store_new (3, G_TYPE_BOOLEAN, G_TYPE_STRING, G_TYPE_INT);
+  list_store = gtk_list_store_new (LS_MAX, G_TYPE_BOOLEAN, G_TYPE_STRING, 
+                                   G_TYPE_INT, G_TYPE_STRING, G_TYPE_STRING);
 
   tree_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (list_store));
   sel = gtk_tree_view_get_selection (GTK_TREE_VIEW (tree_view));
@@ -355,8 +559,13 @@ gpe_pim_categories_dialog (GSList *selected_categories, GCallback callback, gpoi
     gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_NEW,
                   _("New category"), 
                   _("Tap here to add a new category."),
-                  G_CALLBACK (new_category), list_store, -1);
+                  G_CALLBACK (new_category), tree_view, -1);
     
+    gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_PROPERTIES,
+                  _("Modify category"), 
+                  _("Tap here to modify the selected category."),
+                  G_CALLBACK (modify_category), tree_view, -1);
+                  
     gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_DELETE,
                   _("Delete category"), 
                   _("Tap here to delete the selected category."),
@@ -375,13 +584,19 @@ gpe_pim_categories_dialog (GSList *selected_categories, GCallback callback, gpoi
 
       gtk_list_store_append (list_store, &titer);
       gtk_list_store_set (list_store, &titer, 
-			  0, g_slist_find (selected_categories, (gpointer)c->id) ? TRUE : FALSE,
-			  1, c->name, 
-			  2, c->id, 
-			  -1);
+			  LS_CHECKED, g_slist_find (selected_categories, (gpointer)c->id) ? TRUE : FALSE,
+			  LS_NAME, c->name, 
+			  LS_ID, c->id,
+              LS_COLOR, c->colour,
+              LS_DUMMY, "  ", -1);
     }
   g_slist_free (list);
 
+  renderer = gtk_cell_renderer_text_new ();
+  col = gtk_tree_view_column_new_with_attributes (NULL, renderer,
+                              "text", LS_DUMMY, 
+                              "cell-background", LS_COLOR, NULL);
+  gtk_tree_view_insert_column (GTK_TREE_VIEW (tree_view), col, -1);
 #ifdef IS_HILDON
   if (select)
 #endif
@@ -389,20 +604,18 @@ gpe_pim_categories_dialog (GSList *selected_categories, GCallback callback, gpoi
       renderer = gtk_cell_renderer_toggle_new ();
       g_object_set (G_OBJECT (renderer), "activatable", TRUE, NULL);
       col = gtk_tree_view_column_new_with_attributes (NULL, renderer,
-                              "active", 0,
-                              NULL);
+                              "active", LS_CHECKED, NULL);
     
       gtk_tree_view_insert_column (GTK_TREE_VIEW (tree_view), col, -1);
     
       g_object_set_data (G_OBJECT (tree_view), "toggle-col", col);
-      g_signal_connect(G_OBJECT(renderer), "toggled", category_toggled, 
-                       (gpointer) list_store);
+      g_signal_connect(G_OBJECT(renderer), "toggled", 
+                       G_CALLBACK(category_toggled), (gpointer) list_store);
     }
   renderer = gtk_cell_renderer_text_new ();
   g_object_set (G_OBJECT (renderer), "editable", TRUE, NULL);
-  col = gtk_tree_view_column_new_with_attributes (NULL, renderer,
-						  "text", 1,
-						  NULL);
+  col = gtk_tree_view_column_new_with_attributes (NULL, renderer, 
+                                                  "text", LS_NAME, NULL);
 
   g_signal_connect (G_OBJECT (renderer), "edited", 
                     G_CALLBACK(change_category_name),

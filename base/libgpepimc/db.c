@@ -45,12 +45,12 @@ load_one (void *arg, int argc, char **argv, char **names)
   if (argc == 3)
     {
       GSList **list = (GSList **) arg;
-      struct gpe_pim_category *c = g_malloc (sizeof (*c));
+      struct gpe_pim_category *c = g_malloc0 (sizeof (*c));
 
       c->id = atoi (argv[0]);
       c->name = g_strdup (argv[1]);
-      c->colour = g_strdup (argv[2]);
-
+      if (argv[2] && strcmp (argv[2], "(NULL)"))
+        c->colour = g_strdup (argv[2]);
       *list = g_slist_prepend (*list, c);
     }
 
@@ -66,7 +66,7 @@ check_table_update (void)
   GSList *entries = NULL, *iter = NULL;
 
   /* check if we have the colour field */
-  r = sqlite_exec (db, "select colour from catgory", NULL, NULL, &err);
+  r = sqlite_exec (db, "select colour from category", NULL, NULL, &err);
 
   if (r) /* r > 0 indicates a failure, need to recreate that table with new schema */
     {
@@ -255,7 +255,7 @@ gpe_pim_category_rename (gint id, gchar *new_name)
   if (r)
     {
       gpe_error_box (err);
-      free (err);
+      g_free (err);
       return FALSE;
     }
   return TRUE;
@@ -284,7 +284,7 @@ gpe_pim_category_set_colour (gint id, const gchar *new_colour)
   if (r)
     {
       gpe_error_box (err);
-      free (err);
+      g_free (err);
       return FALSE;
     }
   return TRUE;
