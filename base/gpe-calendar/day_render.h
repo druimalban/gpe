@@ -49,13 +49,10 @@ extern GtkWidget *gtk_day_render_new (time_t date, gint duration,
 /* Return the type of a GtkDayRender.  */
 extern GType gtk_day_render_get_type (void);
 
-/* Set the list of events connected to DAY_RENDER to EVENTS.  If
-   DAY_RENDER already has a list of events, that list is first
-   freed.  */
+/* Set the list of events connected to DAY_RENDER to EVENTS and the
+   date to DATE.  If DAY_RENDER already has a list of events, that
+   list is first freed.  */
 extern void gtk_day_render_set_events (GtkDayRender *day_render,
-				       GSList *events);
-
-/* Set DAY_RENDER's date to DATE.  */
-extern void gtk_day_render_set_date (GtkDayRender *day_render, time_t date);
+				       GSList *events, time_t date);
 
 #endif /* DAY_RENDER_H */

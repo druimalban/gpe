@@ -29,12 +29,6 @@
 
 #define _(x) gettext(x)
 
-#ifdef IS_HILDON
-#define REALLY_MIN_CELL_HEIGHT 47
-#else
-#define REALLY_MIN_CELL_HEIGHT 38
-#endif
-
 struct week_day
 {
   /* Valid if HAVE_EXTENTS is true.  */

@@ -330,17 +330,11 @@ gtk_day_view_reload_events (GtkView *view)
 	}
       else
 	/* Set the new reminder list.  */
-	{
-	  gtk_day_render_set_date (day_view->reminders, start);
-	  gtk_day_render_set_events (day_view->reminders, reminders);
-	}
+	gtk_day_render_set_events (day_view->reminders, reminders, start);
     }
 
   if (day_view->appointments)
-    {
-      gtk_day_render_set_date (day_view->appointments, start);
-      gtk_day_render_set_events (day_view->appointments, appointments);
-    }
+    gtk_day_render_set_events (day_view->appointments, appointments, start);
   else
     {
       /* Don't want to infinge some patents here */

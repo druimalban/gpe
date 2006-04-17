@@ -1,3 +1,40 @@
+2006-04-17  Neal H. Walfield  <neal@gnu.org>
+
+	* day_render.c (struct _GtkDayRender): Add field hour_bar_pos.
+	Rename row_height to row_height_min and update users.
+	(HOUR_BAR_HEIGHT): New macro.
+	(hour_bar_calc): New function.
+	(hour_bar_move): Don't simply queue a redraw: calculate where the
+	hour bar will be and save it in DAY_RENDER->HOUR_BAR_POS.  Only
+	redraw the areas that are damaged.  Only return TRUE if the hour
+	bar still needs to be drawn.
+	(gtk_day_render_expose): Don't recalculate the hour bar position
+	here, just use DAY_RENDER->HOUR_BAR_POS.  Don't set or remove the
+	timer.  Be careful not to paint the vertical line separating rows
+	over the hour bar.
+	(gtk_day_render_update_extents): Call hour_bar_calc.
+
+	(gtk_day_render_expose): Set PL's wrap attribute to
+	PANGO_WRAP_WORD_CHAR.  When space is at a premium, try to show
+	more text in various ways.  Vertically center the text.  Really
+	only print the colon when location or description are present.
+
+	(gtk_day_render_update_extents): Get the logical extents, not the
+	ink extents when calculating WIDTH and HEIGHT.  Don't special case
+	hildon.  Add 4 extra pixels to the height, not 6.
+
+	* day_render.h (gtk_day_render_set_events): Take new paramter
+	date, update callers.
+	(gtk_day_render_set_date): Remove declaration.
+	* day_render.c (gtk_day_render_set_events): Take a new parameter,
+	date.
+	(gtk_day_render_update_extents): Remove function.
+
+	* gtkdatesel.c (gtk_date_sel_new): Set the month combo box to have
+	three columns.
+	
+	* week_view.c (REALLY_MIN_CELL_HEIGHT): Remove unused define.
+
 2006-04-16  Neal H. Walfield  <neal@gnu.org>
 
 	* event-list.c (button_press): If there is no row at the cursor

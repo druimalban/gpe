@@ -66,6 +66,8 @@ struct _GtkDayRender
   /* When we draw the hour bar, we'd like to update it every 10
      minutes.  */
   guint hour_bar_repaint;
+  /* Center of the hour_bar.  */
+  int hour_bar_pos;
 
   gint gap;			/* Gap between event boxes. */
 
@@ -92,7 +94,7 @@ struct _GtkDayRender
      displaying all possible rows.  VISIBLE_WIDTH and VISIBLE_HEIGHT
      account for the visible rows.  Multiplying an event rectangle (Y)
      coordinate by HEIGHT and adding the OFFSET_Y yields the display
-     coordinate.  _*/
+     coordinate.  */
   gint height;
   gint offset_y;
 
@@ -119,8 +121,8 @@ struct _GtkDayRender
   gint rows_visible_first;
   gint rows_visible;
 
-  /* The height of a row in pixels.  */
-  gint row_height;
+  /* The minimum height of a row in pixels.  */
+  gint row_height_min;
 };
 
 typedef struct
@@ -250,7 +252,6 @@ gtk_day_render_new (time_t date, gint duration, gint rows,
   widget = gtk_type_new (gtk_day_render_get_type ());
   day_render = GTK_DAY_RENDER (widget);
 
-  day_render->date = date;
   day_render->duration = duration;
   day_render->rows = rows;
   day_render->rows_hard_first = rows_hard_first;
@@ -258,7 +259,7 @@ gtk_day_render_new (time_t date, gint duration, gint rows,
   day_render->app = app;
   day_render->gap = gap;
   day_render->hour_column = hour_column;
-  gtk_day_render_set_events (day_render, events);
+  gtk_day_render_set_events (day_render, events, date);
 
   gtk_day_render_update_extents (day_render);
 
@@ -304,13 +305,66 @@ gtk_day_render_finalize (GObject *object)
   G_OBJECT_CLASS (parent_class)->finalize (object);
 }
 
+#define HOUR_BAR_HEIGHT(dr) ((dr)->visible_height / (dr)->rows_visible)
+
+static gboolean hour_bar_move (gpointer d);
+
+/* Calculate the position of the hour bar.  */
+static void
+hour_bar_calc (GtkDayRender *day_render)
+{
+  time_t t = time (NULL) - day_render->date;
+  time_t start = day_render->rows_visible_first
+    * day_render->duration / day_render->rows;
+  time_t end = (day_render->rows_visible_first + day_render->rows_visible)
+    * day_render->duration / day_render->rows;
+
+  if (start <= t && t <= end)
+    {
+      day_render->hour_bar_pos
+	= day_render->visible_height * (t - start) / (end - start);
+
+      if (! day_render->hour_bar_repaint)
+	/* Repaint approximately every 10 minutes.  */
+	day_render->hour_bar_repaint
+	  = g_timeout_add (10 * 60 * 1000, hour_bar_move, day_render);
+    }
+  else
+    day_render->hour_bar_pos = -1;
+}
+
+/* Callback to move the hour bar periodically.  */
 static gboolean
 hour_bar_move (gpointer d)
 {
   GtkDayRender *day_render = GTK_DAY_RENDER (d);
-  gtk_widget_queue_draw (GTK_WIDGET (day_render));
+  int top = day_render->hour_bar_pos - HOUR_BAR_HEIGHT (day_render) / 2;
+  int bottom = day_render->hour_bar_pos + HOUR_BAR_HEIGHT (day_render) / 2;
 
-  return TRUE;
+  gtk_widget_queue_draw_area (GTK_WIDGET (day_render),
+			      0, top,
+			      day_render->visible_width, bottom - top + 1);
+
+  hour_bar_calc (day_render);
+
+  if (day_render->hour_bar_pos >= 0)
+    /* Still visible.  */
+    {
+      top = day_render->hour_bar_pos - HOUR_BAR_HEIGHT (day_render) / 2;
+      bottom = day_render->hour_bar_pos + HOUR_BAR_HEIGHT (day_render) / 2;
+
+      gtk_widget_queue_draw_area (GTK_WIDGET (day_render),
+				  0, top,
+				  day_render->visible_width, bottom - top + 1);
+
+      return TRUE;
+    }
+  else
+    /* The hour bar is no longer visible: don't recalculate.  */
+    {
+      day_render->hour_bar_repaint = 0;
+      return FALSE;
+    }
 }
 
 static gboolean
@@ -340,6 +394,8 @@ gtk_day_render_expose (GtkWidget *widget, GdkEventExpose *event)
   black_gc = widget->style->black_gc;
 
   pl = gtk_widget_create_pango_layout (widget, NULL);
+  pango_layout_set_alignment (pl, PANGO_ALIGN_CENTER);
+  pango_layout_set_wrap (pl, PANGO_WRAP_WORD_CHAR);
   
   if (! day_render->gray_gc)
     day_render->gray_gc = pen_new (widget, 58905, 58905, 56610);
@@ -357,37 +413,22 @@ gtk_day_render_expose (GtkWidget *widget, GdkEventExpose *event)
     {
       gdk_draw_rectangle (widget->window, day_render->gray_gc, TRUE,
 			  0, 0,
-			  day_render->time_width,
+			  day_render->time_width - 1,
 			  day_render->visible_height - 1);
 
-      time_t t = time (NULL) - day_render->date;
-      time_t start = day_render->rows_visible_first
-	* day_render->duration / day_render->rows;
-      time_t end = (day_render->rows_visible_first + day_render->rows_visible)
-	* day_render->duration / day_render->rows;
-
-      if (start <= t && t <= end)
+      if (day_render->hour_bar_pos >= 0)
+	/* Paint the hour bar.  */
 	{
 	  if (! day_render->time_gc)
 	    /* Accent green.  */
 	    day_render->time_gc = pen_new (widget, 0x4600, 0xA000, 0x4600);
 
-	  int m = day_render->visible_height * (t - start) / (end - start);
-	  int h = day_render->visible_height / day_render->rows_visible / 2;
-
 	  gdk_draw_rectangle (widget->window, day_render->time_gc, TRUE,
-			      0, m - h / 2, day_render->visible_width, h);
-
-	  /* Repaint approximately every 10 minutes.  */
-	  if (! day_render->hour_bar_repaint)
-	    day_render->hour_bar_repaint
-	      = g_timeout_add (10 * 60 * 1000, hour_bar_move, day_render);
-	}
-      else if (day_render->hour_bar_repaint > 0)
-	/* Cancel any outstanding timeout.  */
-	{
-	  g_source_remove (day_render->hour_bar_repaint);
-	  day_render->hour_bar_repaint = 0;
+			      0,
+			      day_render->hour_bar_pos
+			      - HOUR_BAR_HEIGHT (day_render) / 2,
+			      day_render->visible_width - 1,
+			      HOUR_BAR_HEIGHT (day_render) / 2);
 	}
     }
 
@@ -398,10 +439,22 @@ gtk_day_render_expose (GtkWidget *widget, GdkEventExpose *event)
     {
       top = i * day_render->height / day_render->rows - day_render->offset_y;
 
-      /* Draw a gray line to separating each row.  */
-      gdk_draw_line (widget->window, day_render->gray_gc,
-		     day_render->time_width, top,
-		     day_render->visible_width - 1, top);
+      /* Draw a gray line to separating each row but don't draw over
+	 the hour bar.  */
+      if (day_render->hour_bar_pos >= 0
+	  && ! ((day_render->hour_bar_pos - HOUR_BAR_HEIGHT (day_render) / 2
+		 <= top)
+		&& (top <= day_render->hour_bar_pos
+		    + HOUR_BAR_HEIGHT (day_render) / 2)))
+	{
+	  if (day_render->hour_column)
+	    gdk_draw_line (widget->window, white_gc,
+			   0, top, day_render->time_width - 1, top);
+
+	  gdk_draw_line (widget->window, day_render->gray_gc,
+			 day_render->time_width, top,
+			 day_render->visible_width - 1, top);
+	}
 
       if (day_render->hour_column)
 	{
@@ -411,9 +464,6 @@ gtk_day_render_expose (GtkWidget *widget, GdkEventExpose *event)
 	  char buf[60], *buffer;
 	  GdkRectangle gr;
 	  PangoRectangle pr;
-
-	  gdk_draw_line (widget->window, white_gc,
-			 0, top, day_render->time_width - 1, top);
 
 	  tm = day_render->date
 	    + i * ((gfloat) day_render->duration / day_render->rows);
@@ -459,40 +509,20 @@ gtk_day_render_expose (GtkWidget *widget, GdkEventExpose *event)
 
       w = GTK_WIDGET (day_render)->window;
 
-      const char *summary = event_get_summary (event_rectangle->event);
-      const char *location = event_get_location (event_rectangle->event);
-      const char *description = event_get_description (event_rectangle->event);
-      buffer
-	= g_strdup_printf ("<span size='small'><b>%s</b>%s%s%s%s</span>",
-			   summary,
-			   summary && strlen (summary)
-			   && (location || description) ? ": " : "",
-			   location ? location : "",
-			   location && strlen (location) ? "\n" : "",
-			   description ? description : "");
-
       /* Rectangle used to write appointment summary */
       x = day_render->time_width
 	+ (gint) ((day_render->visible_width - day_render->time_width)
 		  * event_rectangle->x)
 	+ day_render->gap;
       y = (gint) (day_render->height * event_rectangle->y)
-	+ 1 - day_render->offset_y;
+        - day_render->offset_y;
       width = (gint) ((day_render->visible_width - day_render->time_width)
-		      * event_rectangle->width) - 2 * day_render->gap - 1;
-      height = (gint) (day_render->height * event_rectangle->height) - 1;
+		      * event_rectangle->width) - 2 * day_render->gap;
+      height = (gint) (day_render->height * event_rectangle->height);
+      if (height < day_render->row_height_min)
+	height = day_render->row_height_min;
 
-      gr.width = width - 1;
-      gr.height = height - 2;
-      gr.x = x + 2;
-      gr.y = y + 1;
-
-      pango_layout_set_markup (pl, buffer, strlen (buffer));
-      pango_layout_get_pixel_extents (pl, &pr, NULL);
-      pango_layout_set_width (pl, PANGO_SCALE * gr.width);
-      pango_layout_set_alignment (pl, PANGO_ALIGN_CENTER);
-
-      arc_size = day_render->row_height / 2 - 1;
+      arc_size = day_render->row_height_min / 2 - 1;
       if (arc_size < 7)
 	/* Lower bound */
 	arc_size = 7;
@@ -552,6 +582,63 @@ gtk_day_render_expose (GtkWidget *widget, GdkEventExpose *event)
 		    arc_size * 2, arc_size * 2, 270 * 64, 90 * 64);	
 
       /* Write summary... */
+      const char *summary = event_get_summary (event_rectangle->event);
+      const char *location = event_get_location (event_rectangle->event);
+      const char *description = event_get_description (event_rectangle->event);
+
+      char *text (const char *loc_desc_sep)
+	{
+	  return
+	    g_strdup_printf ("<b>%s</b>%s%s%s%s",
+			     summary,
+			     (summary && summary[0]
+			      && ((location && location[0])
+				  || (description && description[0])))
+			     ? ": " : "",
+			     location ? location : "",
+			     location && location[0] ? loc_desc_sep : "",
+			     description ? description : "");
+	}
+
+      buffer = text ("\n");
+
+      gr.width = width - 1;
+      gr.height = height - 2;
+      gr.x = x + 1;
+
+      pango_layout_set_width (pl, PANGO_SCALE * gr.width);
+      pango_layout_set_markup (pl, buffer, -1);
+
+      pango_layout_get_pixel_extents (pl, NULL, &pr);
+      if (pr.height >= gr.height)
+	/* Text doesn't fit, try removing "\n" between the location
+	   and the description.  */
+	{
+	  g_free (buffer);
+	  buffer = text ("; ");
+	  pango_layout_set_markup (pl, buffer, -1);
+	  pango_layout_get_pixel_extents (pl, NULL, &pr);
+	}
+      if (pr.height >= gr.height)
+	/* Try replaing all "\n"'s with spaces.  */
+	{
+	  char *p;
+	  for (p = strchr (buffer, '\n'); p; p = strchr (p, '\n'))
+	    *p = ' ';
+	  pango_layout_set_markup (pl, buffer, -1);
+	  pango_layout_get_pixel_extents (pl, NULL, &pr);
+	}
+
+      if (pr.height >= gr.height)
+	/* Still doesn't fit, simply cut off the bottom of the
+	   text.  */
+	gr.y = y + 1;
+      else
+	/* Vertically center the text.  */
+	gr.y = (y + 1) + (gr.height - pr.height) / 2;
+
+      g_free (buffer);
+
       gtk_paint_layout (GTK_WIDGET (day_render)->style, w,
 			GTK_WIDGET_STATE (day_render),
 			FALSE, &gr, GTK_WIDGET (day_render), "label",
@@ -578,8 +665,6 @@ gtk_day_render_expose (GtkWidget *widget, GdkEventExpose *event)
 			       GDK_RGB_DITHER_NORMAL, 0, 0);
 	    }
 	}
-
-      g_free (buffer);
     }
 
   g_object_unref (pl);
@@ -658,7 +743,7 @@ gtk_day_render_button_press (GtkWidget *widget, GdkEventButton *event)
       args[0].g_type = 0;
       g_value_init (&args[0], G_TYPE_FROM_INSTANCE (G_OBJECT (widget)));
       g_value_set_instance (&args[0], widget);
-        
+
       args[1].g_type = 0;
       g_value_init (&args[1], G_TYPE_INT);
       g_value_set_int (&args[1], (gint) (y * day_render->rows));
@@ -670,9 +755,12 @@ gtk_day_render_button_press (GtkWidget *widget, GdkEventButton *event)
 }
 
 void
-gtk_day_render_set_events (GtkDayRender *day_render, GSList *events)
+gtk_day_render_set_events (GtkDayRender *day_render, GSList *events,
+			   time_t date)
 {
   GSList *er;
+
+  day_render->date = date;
 
   event_list_unref (day_render->events);
   day_render->events = events;
@@ -692,22 +780,12 @@ gtk_day_render_set_events (GtkDayRender *day_render, GSList *events)
   gtk_widget_queue_draw (GTK_WIDGET (day_render));
 }
 
-void
-gtk_day_render_set_date (GtkDayRender *day_render, time_t date)
-{
-  if (day_render->date != date)
-    {
-      day_render->date = date;
-      gtk_widget_queue_draw (GTK_WIDGET (day_render));
-    }
-}
-
 /* Update the calculated extents (DAY_RENDER->TIME_WIDTH and
-   DAY_RENDER->ROW_HEIGHT) of DAY_RENDER.  */
+   DAY_RENDER->ROW_HEIGHT_MIN) of DAY_RENDER.  */
 static void
 gtk_day_render_update_extents (GtkDayRender *day_render)
 {
-  if (! day_render->row_height)
+  if (! day_render->row_height_min)
     {
       gint i;
       PangoLayout *pl;
@@ -735,7 +813,7 @@ gtk_day_render_update_extents (GtkDayRender *day_render)
 		    timebuf);
 	  buffer = g_locale_to_utf8 (buf, -1, NULL, NULL, NULL);
 	  pango_layout_set_markup (pl, buffer, strlen (buffer));
-	  pango_layout_get_pixel_extents (pl, &pr, NULL);
+	  pango_layout_get_pixel_extents (pl, NULL, &pr);
 	  width = MAX (width, pr.width);
 	  height = MAX (height, pr.height);
 
@@ -743,16 +821,12 @@ gtk_day_render_update_extents (GtkDayRender *day_render)
 	}
       g_object_unref (pl);
 
-#ifdef IS_HILDON
-      width = width * 1.6;
-#endif
-
       if (day_render->hour_column)
 	day_render->time_width = width + 4;
       else
 	day_render->time_width = 0;
 
-      day_render->row_height = height + 6;
+      day_render->row_height_min = height + 4;
     }
 
   /* Determine the first row we need to show.  */
@@ -778,11 +852,12 @@ gtk_day_render_update_extents (GtkDayRender *day_render)
   day_render->offset_y = day_render->height
     * day_render->rows_visible_first / day_render->rows;
 
+  hour_bar_calc (day_render);
+
   /* Request a window size.  */
   gtk_widget_set_size_request (GTK_WIDGET (day_render), -1,
-			       day_render->row_height
+			       day_render->row_height_min
 			       * day_render->rows_visible);
-
 }
 
 /**

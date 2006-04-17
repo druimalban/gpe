@@ -556,6 +556,7 @@ gtk_date_sel_new (GtkDateSelMode mode, time_t time)
       gtk_combo_box_append_text (GTK_COMBO_BOX (e->display), str);
       g_free (str);
     }
+  gtk_combo_box_set_wrap_width (GTK_COMBO_BOX (e->display), 3);
   g_signal_connect (G_OBJECT (sel), "changed", G_CALLBACK (month_update),
 		    e->display);
   g_signal_connect (G_OBJECT (e->display), "changed",
