@@ -1,6 +1,7 @@
 
 2006-04-18  Florian Boor  <florian@kernelconcepts.de>
 
+	* Relese version 0.43
 	* gpe-what.c (popup_box): Close window on tap.
 
 2006-01-13  Florian Boor  <florian@kernelconcepts.de>
