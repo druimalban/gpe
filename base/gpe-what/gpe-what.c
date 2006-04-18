@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2002 - 2006 Philip Blundell <philb@gnu.org>
- *               2005 Florian Boor <florian.boor@kernelconcepts.de>
+ *               2005, 2006 Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -220,8 +220,12 @@ popup_box (const gchar *text, gint length, gint x, gint y, gint type)
   label = gtk_label_new (text);
   box = gtk_hbox_new (FALSE, gpe_get_boxspacing());
 
+  gtk_widget_add_events (popup, GDK_BUTTON_PRESS_MASK);
+  
   g_signal_connect (G_OBJECT (popup), "expose-event", G_CALLBACK (handle_expose), box);
   g_signal_connect (G_OBJECT (popup), "size-allocate", G_CALLBACK (handle_size_allocate), NULL);
+  g_signal_connect (G_OBJECT (popup), "button-press-event", 
+                    G_CALLBACK (close_popup), popup);
 
   /* set popup clour and frame apperance */
   gdk_color_parse ("#F8E784", &color);
