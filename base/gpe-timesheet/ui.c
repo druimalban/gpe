@@ -902,9 +902,6 @@ gtk_widget_show_all (main_vbox);
 /* if we are not in Hildon we should hide the journal specific toolbar */
 gtk_widget_hide(journal_vbox);
 gtk_widget_hide(journal_toolbar);
-#else
-/* otherwise we should hide the right frame containing the journal */
-gtk_widget_hide(rframe);
 #endif
 
 return main_vbox;

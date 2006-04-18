@@ -1,10 +1,7 @@
-
 SUBDIRS = po
 
-ENABLE_HILDON = @ENABLE_HILDON@
-
 if HILDON
-DEPS_CFLAGS += -DIS_HILDON
+CFLAGS += -DIS_HILDON
 endif
 
 INCLUDES = $(DEPS_CFLAGS) -I$(top_srcdir)/gpe -I$(top_srcdir) \
@@ -57,8 +54,7 @@ pixmaps_extradir = $(datadir)/pixmaps
 
 
 EXTRA_DIST = $(desktop_DATA) \
-             $(pixmaps_DATA) \
-			 $(service_DATA) \
+             $(service_DATA) \
              $(pixmaps_extra_DATA) \
              intltool-extract.in \
              intltool-merge.in \

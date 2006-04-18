@@ -8,6 +8,7 @@ AM_INIT_AUTOMAKE([foreign dist-bzip2])
 AC_PROG_CC
 AC_STDC_HEADERS
 AC_PROG_INSTALL
+AC_PROG_LIBTOOL
 
 
 DEP_MODULES="gtk+-2.0 >= 2.2 glib-2.0 >= 2.2 libgpewidget libtododb"
