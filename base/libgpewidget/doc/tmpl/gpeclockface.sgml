@@ -1,41 +1,42 @@
 <!-- ##### SECTION Title ##### -->
-GpeClockFace
+gpeclockface
 
 <!-- ##### SECTION Short_Description ##### -->
-Clock face widget
+
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-A widget to display an analogue clock face.
 
 </para>
+
 
 <!-- ##### SECTION See_Also ##### -->
 <para>
-Used by: #GpeTimeSel widget, gpe-watch, gpe-clock
+
 </para>
+
 
 <!-- ##### SECTION Stability_Level ##### -->
 
 
 <!-- ##### MACRO GPE_TYPE_CLOCK_FACE ##### -->
 <para>
-Type checking macro.
+
 </para>
 
 
 
 <!-- ##### MACRO GPE_CLOCK_FACE ##### -->
 <para>
-Macro to cast a an object (usually GtkWidget*) to GpeClockFace type.
+
 </para>
 
-@obj: Object to cast.
+@obj: 
 
 
 <!-- ##### MACRO GTK_CLOCK_GET_CLASS ##### -->
 <para>
-Macro to return class from object instance.
+
 </para>
 
 @obj: 
@@ -55,76 +56,83 @@ Macro to return class from object instance.
 
 <!-- ##### FUNCTION gpe_clock_face_get_type ##### -->
 <para>
-Returns type for a GpeClockFace widget. Internally used to create a new 
-instance of a GpeClockFace.
+
 </para>
 
-@Returns: Object type
+@Returns: 
 
 
 <!-- ##### FUNCTION gpe_clock_face_new ##### -->
 <para>
-Create a new instance of a GpeClockFace widget.
+
 </para>
 
-@Param1: Adjustmennt for hour setting.
-@Param2: Adjustment for minute setting.
-@Param3: Adjustment for second setting.
-@Returns: New GpeClockFace widget.
+@Param1: 
+@Param2: 
+@Param3: 
+@Returns: 
 
 
 <!-- ##### FUNCTION gpe_clock_face_set_do_grabs ##### -->
 <para>
-Set wether to allow user interactive moving of the hands or not.
+
 </para>
 
-@clock: Widget
-@yes: TRUE to allow, FALSE to deny
+@clock: 
+@yes: 
 
 
 <!-- ##### FUNCTION gpe_clock_face_set_radius ##### -->
 <para>
-Sets the radius of the clockface (in pixels).
+
 </para>
 
-@clock: Widget
-@radius: New radius.
+@clock: 
+@radius: 
 
 
 <!-- ##### FUNCTION gpe_clock_face_set_use_background_image ##### -->
 <para>
-Set if the widget should use a background image.
+
 </para>
 
-@clock: Widget
-@yes: TRUE to enable, FALSE to disable
+@clock: 
+@yes: 
 
 
 <!-- ##### FUNCTION gpe_clock_face_set_label_hours ##### -->
 <para>
-Turn hour labels on the clockface on/off.
+
 </para>
 
-@clock: Widget
-@yes: TRUE to enable, FALSE to disable
+@clock: 
+@yes: 
 
 
 <!-- ##### FUNCTION gpe_clock_face_set_hand_width ##### -->
 <para>
-Change the width of clock hands.
+
 </para>
 
-@clock: Widget
-@width: New with in pixels.
+@clock: 
+@width: 
+
+
+<!-- ##### FUNCTION gpe_clock_face_set_border ##### -->
+<para>
+
+</para>
+
+@clock: 
+@border: 
 
 
 <!-- ##### FUNCTION gpe_clock_face_get_shape ##### -->
 <para>
-Returns the shape mask of the given clockface widget. This is used to set up 
-a shaped window only containing a GtkClockFace widget.
+
 </para>
 
-@clock: Widget
-@Returns: The widget's shape mask
+@clock: 
+@Returns: 
 
 

@@ -1,20 +1,20 @@
 <!-- ##### SECTION Title ##### -->
-Tray Tools
+tray
 
 <!-- ##### SECTION Short_Description ##### -->
-Useful functions dealing with trays.
+
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-Some functions that provide easier handling of applications that dock 
-to some kind of tray or panel. (e.g. a notification area of a Gnome panel 
-or a Matchbox-Panel.)
+
 </para>
+
 
 <!-- ##### SECTION See_Also ##### -->
 <para>
-Used by: gpe-aerial, gpe-bluetooth, gpe-beam and gpe-buttonbox
+
 </para>
+
 
 <!-- ##### SECTION Stability_Level ##### -->
 

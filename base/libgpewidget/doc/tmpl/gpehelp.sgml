@@ -1,32 +1,30 @@
 <!-- ##### SECTION Title ##### -->
-GPE simple help
+gpehelp
 
 <!-- ##### SECTION Short_Description ##### -->
-Call external help browser.
+
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-Simple interface to provide a call for an external application 
-to display help information. Currently this is fixed to a list
-of help browsers (gpe-helpviewer, gpe-mini-browser, dillo, minimo). 
-The help system is configured in /etc/gpe/gpe-help.conf.
-For an example how to provide help for applications check out 
-gpe-edit.
+
 </para>
+
 
 <!-- ##### SECTION See_Also ##### -->
 <para>
 
 </para>
 
+
 <!-- ##### SECTION Stability_Level ##### -->
 
 
 <!-- ##### FUNCTION gpe_show_help ##### -->
 <para>
+
 </para>
 
-@appname: 
+@book: 
 @topic: 
 @Returns: 
 

@@ -2,71 +2,82 @@
 GtkDateCombo
 
 <!-- ##### SECTION Short_Description ##### -->
-Widget to display and alter a date.
+
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-The GtkDateCombo widget is used to display a formated date value. The display 
-format used for the date depends on the locale setting. Additionally this
-widget provides a calendar popup for easy value changes. Direct editing
-of the date value in the display entry of the widget is supported too.
+
 </para>
+
 
 <!-- ##### SECTION See_Also ##### -->
 <para>
 
 </para>
 
+
 <!-- ##### SECTION Stability_Level ##### -->
 
 
-<!-- ##### FUNCTION gtk_date_combo_new ##### -->
+<!-- ##### STRUCT GtkDateCombo ##### -->
 <para>
-Creates a new GtkDateCombo widget.
+
 </para>
 
-@Returns: New Widget
+@hbox: 
+@cal: 
+@calw: 
+@entry: 
+@button: 
+@cal_open: 
+@year: 
+@month: 
+@day: 
+@set: 
+@ignore_year: 
+
+<!-- ##### FUNCTION gtk_date_combo_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
 
 
 <!-- ##### FUNCTION gtk_date_combo_set_date ##### -->
 <para>
-Set the date of a GtkDateCombo widget. The date is defined with three separate 
-values representating year, month and date.
+
 </para>
 
-@Param1: Widget
-@year: Year value to set
-@month: Month value
-@day: Day
+@Param1: 
+@year: 
+@month: 
+@day: 
 
 
 <!-- ##### FUNCTION gtk_date_combo_clear ##### -->
 <para>
-Remove all settings/values from a date combo.
+
 </para>
 
-@dp: Widget
+@dp: 
 
 
 <!-- ##### FUNCTION gtk_date_combo_week_starts_monday ##### -->
 <para>
-This method changes the display behaviour of the calendar popup.
-It will display a week starting sunday if set to FALSE, if set to TRUE
-weeks will be displayed starting monday.
+
 </para>
 
-@Param1: Widget
-@Param2: TRUE to have weeks starting monday, FALSE otherwise.
+@Param1: 
+@Param2: 
 
 
 <!-- ##### FUNCTION gtk_date_combo_ignore_year ##### -->
 <para>
-If this function is enabled the widget will show and take dates without a 
-year value. This is used for recurring events like holidays and birthdays.
-Default behaviour is to have dates including a year.
+
 </para>
 
-@Param1: Widget
-@Param2: TRUE to enable, FALSE to disable
+@Param1: 
+@Param2: 
 
 

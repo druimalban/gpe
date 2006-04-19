@@ -1,44 +1,39 @@
 <!-- ##### SECTION Title ##### -->
-Question
+question
 
 <!-- ##### SECTION Short_Description ##### -->
-Question Dialogs
+
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-These functions provide support for displaying simple interactive question
-dialogs and handle the users answers.
+
 </para>
+
 
 <!-- ##### SECTION See_Also ##### -->
 <para>
 
 </para>
 
+
 <!-- ##### SECTION Stability_Level ##### -->
 
 
 <!-- ##### FUNCTION gpe_question_ask ##### -->
 <para>
-Opens a blocking question dialog presenting a variable set of buttons to select
-an answer from. The buttons may contain icons. Button definitions are passed
-to the function in a list containing both label text and icon name for each button.
-The label ist the first part of the button definition, the icon name the second.
-To indicate a stock icon prepend the name by a '!' character.
-It is possible to add buttons without icons setting using NULL for the icon
-parameter.
+
 </para>
 
-@qn: Question text
-@title: Dialog title
-@iconname: GPE icon to use (needs to be loaded before calling this function)
-@Varargs: Variable list of icon definitions. Terminate list with NULL.
-@Returns: Position of button clicked.
+@qn: 
+@title: 
+@iconname: 
+@Varargs: 
+@Returns: 
 
 
 <!-- ##### FUNCTION gpe_question_ask_yn ##### -->
 <para>
-[Deprecated, do not use.]
+
 </para>
 
 @qn: 

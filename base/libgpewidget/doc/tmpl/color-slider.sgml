@@ -1,0 +1,142 @@
+<!-- ##### SECTION Title ##### -->
+Color Slider
+
+<!-- ##### SECTION Short_Description ##### -->
+A slider widget with coloured background.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+This widget is mostly used for colour selectors to achieve a compact
+repestation of what will the impact of adjusting a slider to the resulting 
+colour.
+</para>
+
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### MACRO TYPE_COLOR_SLIDER ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO COLOR_SLIDER ##### -->
+<para>
+
+</para>
+
+@o: 
+
+
+<!-- ##### MACRO COLOR_SLIDER_CLASS ##### -->
+<para>
+
+</para>
+
+@k: 
+
+
+<!-- ##### MACRO IS_COLOR_SLIDER ##### -->
+<para>
+
+</para>
+
+@o: 
+
+
+<!-- ##### MACRO IS_COLOR_SLIDER_CLASS ##### -->
+<para>
+
+</para>
+
+@k: 
+
+
+<!-- ##### STRUCT ColorSliderPrivate ##### -->
+<para>
+
+</para>
+
+@dispose_has_run: 
+
+<!-- ##### STRUCT ColorSlider ##### -->
+<para>
+
+</para>
+
+@parent: 
+@dragging: 
+@adjustment: 
+@value: 
+@oldvalue: 
+@c0: 
+@c1: 
+@b0: 
+@b1: 
+@bmask: 
+@mapsize: 
+@map: 
+@priv: 
+
+<!-- ##### FUNCTION color_slider_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION color_slider_new ##### -->
+<para>
+
+</para>
+
+@adjustment: 
+@Returns: 
+
+
+<!-- ##### FUNCTION color_slider_set_adjustment ##### -->
+<para>
+
+</para>
+
+@slider: 
+@adjustment: 
+
+
+<!-- ##### FUNCTION color_slider_set_colors ##### -->
+<para>
+
+</para>
+
+@slider: 
+@start: 
+@end: 
+
+
+<!-- ##### FUNCTION color_slider_set_map ##### -->
+<para>
+
+</para>
+
+@slider: 
+@map: 
+
+
+<!-- ##### FUNCTION color_slider_set_background ##### -->
+<para>
+
+</para>
+
+@slider: 
+@dark: 
+@light: 
+@size:

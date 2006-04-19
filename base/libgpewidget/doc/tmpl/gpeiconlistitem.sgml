@@ -1,19 +1,20 @@
 <!-- ##### SECTION Title ##### -->
-GpeIconListItem
+gpeiconlistitem
 
 <!-- ##### SECTION Short_Description ##### -->
-Icon item to use with GpeIconListView
+
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-The GpeIconListItem represents a single item inside of a GpeIconListView.
 
 </para>
+
 
 <!-- ##### SECTION See_Also ##### -->
 <para>
 
 </para>
+
 
 <!-- ##### SECTION Stability_Level ##### -->
 

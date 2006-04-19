@@ -1,45 +1,45 @@
 <!-- ##### SECTION Title ##### -->
-Popup
+popup
 
 <!-- ##### SECTION Short_Description ##### -->
-Popup window tools.
+
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-Functions used for popup and dock windows.
 
 </para>
+
 
 <!-- ##### SECTION See_Also ##### -->
 <para>
-Used by: minilite, minimix
+
 </para>
+
 
 <!-- ##### SECTION Stability_Level ##### -->
 
 
 <!-- ##### FUNCTION gpe_get_win_position ##### -->
 <para>
-Return a window's position.
+
 </para>
 
-@dpy: Display
-@win: Window to query for position
-@x: Pointer to X position
-@y: Pointer to Y position
-@Returns: TRUE on success, FALSE otherwise.
+@dpy: 
+@win: 
+@x: 
+@y: 
+@Returns: 
 
 
 <!-- ##### FUNCTION gpe_popup_menu_position ##### -->
 <para>
-This functions is used to determine a popup menu's position on screen. This is
-usually used for constructing popup menus.
+
 </para>
 
-@menu: Popup menu to get position of.
-@x: Pointer to X position
-@y: Pointer to Y position
-@push: (unused)
-@p: Widget
+@menu: 
+@x: 
+@y: 
+@push: 
+@p: 
 
 

@@ -1,0 +1,111 @@
+<!-- ##### SECTION Title ##### -->
+Color Dialog
+
+<!-- ##### SECTION Short_Description ##### -->
+The GPE Colour selection dialog
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+The GPE Colour selection dialog is a smal and fast dialog to select 
+free defineable RGB colour values. In contrast to #GtkColorDialog it 
+is much faster and simpler to fit the needs of mobile devices.
+</para>
+
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### MACRO COL_STR_LEN ##### -->
+<para>
+Maximum length of the colour description string.
+</para>
+
+
+
+<!-- ##### MACRO COLOR_F_TO_U ##### -->
+<para>
+
+</para>
+
+@v: 
+
+
+<!-- ##### MACRO RGBA32_U_COMPOSE ##### -->
+<para>
+
+</para>
+
+@r: 
+@g: 
+@b: 
+@a: 
+
+
+<!-- ##### MACRO RGBA32_F_COMPOSE ##### -->
+<para>
+
+</para>
+
+@r: 
+@g: 
+@b: 
+@a: 
+
+
+<!-- ##### STRUCT GpeColorDialog ##### -->
+<para>
+The widget struct has no public members which should accessed directly.
+</para>
+
+
+<!-- ##### FUNCTION gpe_color_dialog_new ##### -->
+<para>
+
+</para>
+
+@parent: 
+@flags: 
+@initcolor: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gpe_color_dialog_get_color_str ##### -->
+<para>
+
+</para>
+
+@color_dialog: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gpe_color_dialog_set_color_str ##### -->
+<para>
+
+</para>
+
+@color_dialog: 
+@colordesc: 
+
+
+<!-- ##### FUNCTION gpe_color_dialog_get_color_gdk ##### -->
+<para>
+
+</para>
+
+@color_dialog: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gpe_color_dialog_set_color_gdk ##### -->
+<para>
+
+</para>
+
+@color_dialog: 
+@new_color:

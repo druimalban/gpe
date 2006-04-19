@@ -1,42 +1,40 @@
 <!-- ##### SECTION Title ##### -->
-Init
+init
 
 <!-- ##### SECTION Short_Description ##### -->
-Initialisation of applications
+
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-Functions used for application initialisation.
 
 </para>
+
 
 <!-- ##### SECTION See_Also ##### -->
 <para>
-Used by: Any GPE application.
+
 </para>
+
 
 <!-- ##### SECTION Stability_Level ##### -->
 
 
 <!-- ##### FUNCTION gpe_application_init ##### -->
 <para>
-Initialise a GPE application. This function is called on startup of a GPE
-application. It replaces gtk_init() which is used in normal GTK applications.
+
 </para>
 
-@argc: argument count passed to main()
-@argv: argument array passed to main()
-@Returns: TRUE on success, FALSE on failure
+@argc: 
+@argv: 
+@Returns: 
 
 
 <!-- ##### FUNCTION gpe_saved_args ##### -->
 <para>
-Returns the arguments passed to gpe_application_init(). The returned values are
-pointers to the data stored by gpe_application_init(), don't modify them if
-you don't exactly know what are you doing.
+
 </para>
 
-@argc: Filled with number of arguments in argv.
-@argv: Argument vector.
+@argc: 
+@argv: 
 
 
