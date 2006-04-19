@@ -1,20 +1,18 @@
 <!-- ##### SECTION Title ##### -->
-gtksimplemenu
+GtkSimpleMenu
 
 <!-- ##### SECTION Short_Description ##### -->
-
+Simple menu widget
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-
+This widget provides a simple selection menu with an easy to use interface.
 </para>
-
 
 <!-- ##### SECTION See_Also ##### -->
 <para>
 
 </para>
-
 
 <!-- ##### SECTION Stability_Level ##### -->
 
@@ -46,6 +44,8 @@ gtksimplemenu
 
 @sel: 
 @item: 
+<!-- # Unused Parameters # -->
+@items: 
 
 
 <!-- ##### FUNCTION gtk_simple_menu_flush ##### -->

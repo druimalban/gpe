@@ -1,62 +1,65 @@
 <!-- ##### SECTION Title ##### -->
-errorbox
+Error Messages
 
 <!-- ##### SECTION Short_Description ##### -->
 
+Display error messages.
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
 
-</para>
+These functions are used to display error messages. The output will take place in 
+an error dialog and on stderr.
 
+
+</para>
 
 <!-- ##### SECTION See_Also ##### -->
 <para>
 
 </para>
 
-
 <!-- ##### SECTION Stability_Level ##### -->
 
 
 <!-- ##### FUNCTION gpe_error_box ##### -->
 <para>
-
+Creates and shows normal, blocking error dialog.
 </para>
 
-@text: 
+@text: Error message
 
 
 <!-- ##### FUNCTION gpe_error_box_nonblocking ##### -->
 <para>
-
+Creates and shows a non-blocking error message.
 </para>
 
-@text: 
+@text: Error message
 
 
 <!-- ##### FUNCTION gpe_perror_box ##### -->
 <para>
-
+Shows an error message with perror style information.
 </para>
 
-@text: 
+@text: Error message
 
 
 <!-- ##### FUNCTION gpe_perror_box_nonblocking ##### -->
 <para>
-
+Shows an error message with perror style information, non-blocking version.
 </para>
 
-@text: 
+@text: Error message
 
 
 <!-- ##### FUNCTION gpe_error_box_fmt ##### -->
 <para>
-
+Shows a formated error message using a printf style argument list.
 </para>
 
-@format: 
-@Varargs: 
+@format: Message format string
+@Varargs: Argument list
 
 

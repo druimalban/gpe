@@ -1,71 +1,71 @@
 <!-- ##### SECTION Title ##### -->
-popup_menu
+Popup menus
 
 <!-- ##### SECTION Short_Description ##### -->
-
+Functions to construct popup menus.
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-
+In order to construct popup menus for various purposes libgpewidget contains
+some functions to make construction of this kind of menus easier.
 </para>
-
 
 <!-- ##### SECTION See_Also ##### -->
 <para>
-
+Used by: gpe-sketchbook, gpe-word
 </para>
-
 
 <!-- ##### SECTION Stability_Level ##### -->
 
 
 <!-- ##### FUNCTION popup_menu_button_new ##### -->
 <para>
-
+Create a new menu button containing a given widget.
 </para>
 
-@child: 
-@Returns: 
+@child: Widget to put into the menu button.
+@Returns: New menu button.
 
 
 <!-- ##### FUNCTION popup_menu_button_new_from_stock ##### -->
 <para>
-
+Create a menu buton containing a stock item.
 </para>
 
-@stock_id: 
-@Returns: 
+@stock_id: Id of the stock item to use.
+@Returns: New menu button.
 
 
 <!-- ##### FUNCTION toggle_popup_menu ##### -->
 <para>
-
+This function the status of the menu attached to a menu button. If the menu is
+shown the function hides it, if it is hidden the function shows it.
 </para>
 
-@parent_button: 
+@parent_button: Menu button the menu belongs to.
 
 
 <!-- ##### FUNCTION popup_menu_close ##### -->
 <para>
-
+Close a popup menu.
 </para>
 
-@parent_button: 
+@parent_button: Menu button the menu belongs to.
 
 
 <!-- ##### FUNCTION popup_menu_button_new_type_font ##### -->
 <para>
-
+Create a menu button for font selection.
 </para>
 
-@Returns: 
+@Returns: A new menu button.
 
 
 <!-- ##### FUNCTION popup_menu_button_new_type_color ##### -->
 <para>
-
+Create a menu button for color selection.
 </para>
 
-@Returns: 
+@Returns: A new menu button.
 
 

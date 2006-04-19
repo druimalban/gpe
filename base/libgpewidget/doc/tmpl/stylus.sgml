@@ -1,20 +1,20 @@
 <!-- ##### SECTION Title ##### -->
-stylus
+Stylus Input
 
 <!-- ##### SECTION Short_Description ##### -->
-
+Stylus mode information.
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
+Function to get information if GUI is set up for stylus 
+user input or not.
 
 </para>
-
 
 <!-- ##### SECTION See_Also ##### -->
 <para>
 
 </para>
-
 
 <!-- ##### SECTION Stability_Level ##### -->
 

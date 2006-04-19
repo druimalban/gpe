@@ -11,12 +11,10 @@ repestation of what will the impact of adjusting a slider to the resulting
 colour.
 </para>
 
-
 <!-- ##### SECTION See_Also ##### -->
 <para>
 
 </para>
-
 
 <!-- ##### SECTION Stability_Level ##### -->
 
@@ -139,4 +137,6 @@ colour.
 @slider: 
 @dark: 
 @light: 
-@size:
+@size: 
+
+
