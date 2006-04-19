@@ -139,7 +139,7 @@ open_window (void)
 #else
 
   main_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-  gtk_window_set_default_size (GTK_WINDOW (main_window), 240, 320);
+  gtk_window_set_default_size (GTK_WINDOW (main_window), 780, 400);
   gtk_window_set_title (GTK_WINDOW (main_window), _("TimeTracker"));
   gpe_set_window_icon (main_window, "gpe-timesheet");
   main_vbox = GTK_WIDGET(create_interface(main_window));

@@ -1,3 +1,9 @@
+2006-04-19  Florian Boor <florian.boor@kernelconcepts.de>
+
+	* ui.c: Activate journal button only if a task is selected.
+	* ui.c, main.c: Shorten labels and increase default window size to
+                        make all buttons fit into the window.
+
 2006-04-02  Florian Boor <florian.boor@kernelconcepts.de>
 
 	* ui.c: Make text more consistent, improve usage of stock icons.

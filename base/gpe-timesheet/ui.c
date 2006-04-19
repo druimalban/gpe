@@ -40,6 +40,7 @@
 
 char *appname="gpe-timesheet";
 static GtkWidget *btn_con, *btn_coff;
+static GtkWidget *btn_journal = NULL;
 
 GtkWidget *main_appview;
 
@@ -407,6 +408,10 @@ view_selected_row_cb (GtkTreeSelection *selection, gpointer data)
 
   if (gtk_tree_selection_get_selected (selection, &model, &iter))
   {
+    /* turn on journal view button */
+    if (btn_journal) 
+      gtk_widget_set_sensitive (btn_journal, TRUE);
+      
     if (gtk_tree_model_iter_has_child (model, &iter))
       set_active (0,0);
     else
@@ -438,6 +443,13 @@ view_selected_row_cb (GtkTreeSelection *selection, gpointer data)
           }
           g_free(t);
       }
+  }
+  else
+  {
+    /* turn off journal view button */
+    if (btn_journal) 
+      gtk_widget_set_sensitive (btn_journal, FALSE);
+      
   }
 }
 
@@ -649,7 +661,6 @@ GtkWidget * create_interface(GtkWidget *main_window)
     gtk_tool_button_set_label (GTK_TOOL_BUTTON (new_sub),  _("Sub-task"));
   /* delete task button */
     delete = gtk_tool_button_new_from_stock (GTK_STOCK_DELETE);
-    gtk_tool_button_set_label (GTK_TOOL_BUTTON(delete), _("Delete task"));
   /* refresh task list button */
     refresh = gtk_tool_button_new_from_stock (GTK_STOCK_REFRESH);
   /* edit task/journal button */
@@ -657,7 +668,8 @@ GtkWidget * create_interface(GtkWidget *main_window)
   /* show inline journal button */
     p = gpe_find_icon ("journal");
     pw = gtk_image_new_from_pixbuf (p);
-    show = gtk_tool_button_new (GTK_WIDGET(pw), _("Show journal"));
+    show = gtk_tool_button_new (GTK_WIDGET(pw), _("Journal"));
+    gtk_widget_set_sensitive (GTK_WIDGET(show), FALSE);
 #endif
 
 /*this is the code for the sequence of widgets into main toolbar */
@@ -895,6 +907,7 @@ GtkWidget * create_interface(GtkWidget *main_window)
 /* last stuff */
 btn_con = GTK_WIDGET(clock_in);
 btn_coff = GTK_WIDGET(clock_out);
+btn_journal = GTK_WIDGET(show);
 set_active (0,0);
 gtk_widget_show_all (main_vbox);
 
