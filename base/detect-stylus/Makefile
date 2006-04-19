@@ -27,10 +27,13 @@ endif
 
 #export PKG_CONFIG_PATH = $(BUILD)
 
-all: $(PACKAGE)
+all: $(PACKAGE) detect-tsdevice
 
 $(PACKAGE): $(OBJS)
 	$(CC) -o $@ $^ $(STANDARD_LDFLAGS) $(LDFLAGS) $(PACKAGE_LDFLAGS)
+
+detect-tsdevice: detect-tsdevice.c
+	$(CC) -o $@ $^ $(STANDARD_CFLAGS) $(CFLAGS) $(PACKAGE_CFLAGS) $(STANDARD_LDFLAGS) $(LDFLAGS) $(PACKAGE_LDFLAGS)
 
 install-program: all
 	mkdir -p $(DESTDIR)$(PREFIX)/bin/

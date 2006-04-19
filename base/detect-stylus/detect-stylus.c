@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002, 2004 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2002, 2004, 2006 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -55,6 +55,9 @@ main (int argc, char *argv[])
       if (!strcmp (argv[i], "--device"))
 	flag_device = 1;
     }
+
+  if (flag_device)
+    fprintf (stderr, "%s: warning: the \"--device\" flag is obsolete, use detect-tsdevice instead.\n", argv[0]);
 
   fd = try_open ("/dev/touchscreen/0");
   
@@ -128,7 +131,7 @@ main (int argc, char *argv[])
       root = RootWindow (dpy, 0);
       atom = XInternAtom (dpy, "_GPE_STYLUS_MODE", 0);
       
-      XChangeProperty (dpy, root, atom, XA_INTEGER, 8, PropModeReplace, &b, 1);
+      XChangeProperty (dpy, root, atom, XA_INTEGER, 8, PropModeReplace, (unsigned char *)&b, 1);
 
       XCloseDisplay (dpy);
       if (access("/usr/bin/xrdb", X_OK))
