@@ -28,19 +28,19 @@ AC_PROG_LIBTOOL
 DEP_MODULES="gtk+-2.0 >= 2.2 glib-2.0 >= 2.2 sqlite libgpewidget"
 
 
-PKG_CHECK_MODULES(PIMC, $DEP_MODULES)
-
 ENABLE_HILDON=false
 
 AC_ARG_ENABLE(hildon,
 [  --enable-hildon         Enable Hildon GUI],
 [
         ENABLE_HILDON=true
-        DEP_MODULES="$DEP_MODULES hildon-lgpl"
+        DEP_MODULES="$DEP_MODULES hildon-lgpl hildon-libs"
 ],
 [
          ENABLE_HILDON=false
 ])
+
+PKG_CHECK_MODULES(PIMC, $DEP_MODULES)
 
 if test x$ENABLE_HILDON = xtrue; then
     PIMC_CFLAGS="$PIMC_CFLAGS -DIS_HILDON"

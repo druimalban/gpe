@@ -217,7 +217,7 @@ gpe_pim_category_new (const gchar *name, gint *id)
   
   *id = sqlite_last_insert_rowid (db);
 
-  c = g_malloc (sizeof (*c));
+  c = g_malloc0 (sizeof (*c));
 
   c->id = *id;
   c->name = g_strdup (name);

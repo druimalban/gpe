@@ -1,3 +1,23 @@
+2006-04-21  Jan Arne Petersen <jpetersen@jpetersen.org>
+
+	Add support for some specific hildon widgets.
+	* configure.ac: add hildon-lgpl and hildon-libs to DEP_MODULES
+	* ui.c (color_changed), (set_widget_color_str), (category_dialog): Use
+	HildonColorButton and HildonCaption.
+
+	Fixed some Bugs.
+	* db.c (gpe_pim_category_new): Use g_malloc0 to clear colour field.
+	* ui.c (palette_color), (select_color), (do_update_category),
+	(category_dialog): Use g_object_set_data_full with g_free as
+	GDestroyNotify for the 'col' data.
+	* ui.c (do_update_category), (category_dialog): Use 'path' instead of
+	id to identify the currently edited category to fix the edit new
+	categories bug (and some others).
+	* ui.c (gpe_pim_categories_dialog): Remove unneeded LS_DUMMY column.
+	* ui.c (categories_dialog_ok): Fix new category color bug.
+	* ui.c (gpe_pim_categories_dialog): Fix data for new_category
+	callback.
+
 2006-04-20  Florian Boor  <florian@kernelconcepts.de>
 
 	* Minor documentation fixes.
