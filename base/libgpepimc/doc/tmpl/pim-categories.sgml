@@ -16,6 +16,9 @@ NOTE: currently all categories are global.
 
 </para>
 
+<!-- ##### SECTION Stability_Level ##### -->
+
+
 <!-- ##### STRUCT gpe_pim_category ##### -->
 <para>
 A category
@@ -23,6 +26,7 @@ A category
 
 @name: Name of the category
 @id:   Id of the category
+@colour: Colour assigned to identify this category in GUI applications
 
 <!-- ##### FUNCTION gpe_pim_categories_init ##### -->
 <para>
@@ -58,5 +62,34 @@ Returns the name of the category with specified @id.
 
 @id: the id of the category
 @Returns: the name of the category
+
+
+<!-- ##### FUNCTION gpe_pim_category_rename ##### -->
+<para>
+
+</para>
+
+@id: 
+@new_name: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gpe_pim_category_set_colour ##### -->
+<para>
+
+</para>
+
+@id: 
+@new_colour: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gpe_pim_category_colour ##### -->
+<para>
+
+</para>
+
+@id: 
+@Returns: 
 
 

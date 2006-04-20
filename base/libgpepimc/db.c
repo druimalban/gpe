@@ -242,6 +242,15 @@ gpe_pim_category_delete (struct gpe_pim_category *c)
   categories = g_slist_remove (categories, c);
 }
 
+/**
+ * gpe_pim_category_rename:
+ * @id: Category id
+ * @new_name: String
+ *
+ * Rename an existing category.
+ *
+ * Returns: %TRUE on success, %FALSE otherwise.
+ */
 gboolean
 gpe_pim_category_rename (gint id, gchar *new_name)
 {
@@ -264,12 +273,12 @@ gpe_pim_category_rename (gint id, gchar *new_name)
 /**
  * gpe_pim_category_set_colour:
  * @id: Category id
- * @colour: Colour description.
+ * @new_colour: Colour description.
  *
  * Set the colour descrition for a category. Valid strings are 
- * symbolic names like 'green' or HTML-like RGB values e.g. #11FF11.
+ * symbolic names like 'green' or HTML-like RGB values e.g. <quote>#11FF11</quote>
  *
- * Returns: TRUE on success, false otherwise.
+ * Returns: %TRUE on success, %FALSE otherwise.
  */
 gboolean
 gpe_pim_category_set_colour (gint id, const gchar *new_colour)

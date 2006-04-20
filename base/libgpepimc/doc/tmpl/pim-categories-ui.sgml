@@ -16,12 +16,16 @@ for all applications and a minimum amount of redundant code.
 Used by: gpe-contacts, gpe-todo, gpe-calendar
 </para>
 
+<!-- ##### SECTION Stability_Level ##### -->
+
+
 <!-- ##### FUNCTION gpe_pim_categories_dialog ##### -->
 <para>
 Creates a dialog to manage categories.
 </para>
 
 @selected_categories: List of currently selected categories.
+@select: 
 @callback: Function to call after category selection change.
 @data: Pointer to pass to callback.
 @Returns: Dialog widget.

@@ -23,7 +23,6 @@
 
 #include "internal.h"
 
-#
 enum 
 { 
   LS_CHECKED,

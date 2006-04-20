@@ -1,3 +1,7 @@
+2006-04-20  Florian Boor  <florian@kernelconcepts.de>
+
+	* Minor documentation fixes.
+	
 2006-04-18  Florian Boor  <florian@kernelconcepts.de>
 
     * ui.c: Activate buttons only if category selected.
