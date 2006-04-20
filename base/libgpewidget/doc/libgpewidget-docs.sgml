@@ -34,6 +34,8 @@
 
   <chapter>
     <title>Interface Description</title>
+    <xi:include href="xml/color-slider.xml"/>
+    <xi:include href="xml/colordialog.xml"/>
     <xi:include href="xml/gpe-iconlist.xml"/>
     <xi:include href="xml/gtkdatecombo.xml"/>
     <xi:include href="xml/gtksimplemenu.xml"/>
