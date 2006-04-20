@@ -31,6 +31,8 @@ for a time value and an extra button which opens a time selection popup.
 @label: 
 @button: 
 @popup: 
+@clock: 
+@changing_time: 
 
 <!-- ##### STRUCT GpeTimeSelClass ##### -->
 <!--

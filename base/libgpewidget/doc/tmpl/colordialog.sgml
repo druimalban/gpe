@@ -56,12 +56,6 @@ Maximum length of the colour description string.
 @a: 
 
 
-<!-- ##### STRUCT GpeColorDialog ##### -->
-<para>
-The widget struct has no public members which should accessed directly.
-</para>
-
-
 <!-- ##### FUNCTION gpe_color_dialog_new ##### -->
 <para>
 

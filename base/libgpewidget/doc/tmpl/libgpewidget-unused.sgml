@@ -1,3 +1,28 @@
+<!-- ##### STRUCT ColorSlider ##### -->
+<para>
+
+</para>
+
+@parent: 
+@dragging: 
+@adjustment: 
+@value: 
+@oldvalue: 
+@c0: 
+@c1: 
+@b0: 
+@b1: 
+@bmask: 
+@mapsize: 
+@map: 
+@priv: 
+
+<!-- ##### STRUCT GpeColorDialog ##### -->
+<para>
+The widget struct has no public members which should accessed directly.
+</para>
+
+
 <!-- ##### FUNCTION gpe_render_icon ##### -->
 <para>
 [obsolete, use gtk_image_new_from_pixbuf()]

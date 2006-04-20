@@ -300,12 +300,14 @@ gpe_color_dialog_init (GpeColorDialog *dialog)
 
 /**
  * gpe_color_dialog_get_color_str:
- * @dialog: a #GpeColorDialog
+ * @color_dialog: a #GpeColorDialog
  *
  * Get a pointer to the string GRB representation of the currently selected 
  * colour. The description has the form #rrggbb.
  *
  * Since: 0.111
+ *
+ * Returns: Colour string, the value must not be altered or freed.
  **/
 G_CONST_RETURN gchar *
 gpe_color_dialog_get_color_str (GpeColorDialog *color_dialog)
@@ -318,7 +320,7 @@ gpe_color_dialog_get_color_str (GpeColorDialog *color_dialog)
 /**
  * gpe_color_dialog_set_color_str:
  * @color_dialog: a #GpeColorDialog
- * @new_color: new colour
+ * @colordesc: String description of the new colour.
  *
  * Set the selection dialog to the given colour defined by a string value.
  * This may be any string description XParseColor is able to interpret. e.g. 
@@ -436,7 +438,8 @@ gpe_color_dialog_get_property (GObject *object, guint prop_id,
 
 /**
  * gpe_color_dialog_new:
- * @parent: transient parent, or NULL for none 
+ * @parent: The transient parent, or NULL for none.
+ * @flags: A #GtkDialogFlags mask for the dialog window.
  * @initcolor: initial colour
  *
  * Creates a small colour selection dialog suitable for use on small 

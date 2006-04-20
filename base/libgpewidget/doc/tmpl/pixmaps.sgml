@@ -60,6 +60,17 @@ renders a given icon to one of the common GTK icon sizes.
 @Returns: A new allocated pixbuf containing the icon of the desired size.
 
 
+<!-- ##### FUNCTION gpe_find_icon_scaled_free ##### -->
+<para>
+
+</para>
+
+@name: 
+@width: 
+@height: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gpe_try_find_icon ##### -->
 <para>
 This function is used to get an icon which is not necessarily loaded when 
@@ -84,6 +95,14 @@ the name passed to the function otherwise.
 @Returns: 
 
 
+<!-- ##### FUNCTION gpe_set_theme ##### -->
+<para>
+
+</para>
+
+@theme_name: 
+
+
 <!-- ##### FUNCTION gpe_set_window_icon ##### -->
 <para>
 Set the icon of a window from a named icon in storage list.
@@ -91,3 +110,5 @@ Set the icon of a window from a named icon in storage list.
 
 @window: Window to set icon for.
 @icon: Icon name.
+
+

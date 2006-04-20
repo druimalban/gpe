@@ -236,9 +236,10 @@ gpe_window_list_class_init (GPEWindowListClass * klass)
 
 /**
  * gpe_window_list_get_type:
- * @Returns: a GType
  *
- * Returns the GType for GPEWindowList objects.
+ * Get the  the #GObject type for GPEWindowList objects.
+ *
+ * Returns: a #GType
  */
 GType
 gpe_window_list_get_type (void)
@@ -270,6 +271,8 @@ gpe_window_list_get_type (void)
  * @screen: a screen
  *
  * Create a GPEWindowList object for the specified GdkScreen.
+ *
+ * Returns: A new #GpeWindowList object instance.
  */
 GObject *
 gpe_window_list_new (GdkScreen *screen)
@@ -311,9 +314,11 @@ window_filter (GdkXEvent *xev, GdkEvent *gev, gpointer d)
 /**
  * gpe_window_list_get_clients:
  * @list: a GPEWindowList
- * @Returns: a GList of Window pointers
  *
- * Retrieve a list of the active clients on the screen associated with this GPEWindowList.
+ * Retrieve a list of the active clients on the screen associated 
+ * with this GPEWindowList.
+ *
+ * Returns: A #GList of #Window pointers.
  */
 GList *
 gpe_window_list_get_clients (GPEWindowList *list)
