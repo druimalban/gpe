@@ -46,7 +46,7 @@ pixmaps_extradir = $(datadir)/pixmaps
 btscriptdir = $(sysconfdir)/bluetooth
 btscript_SCRIPTS = hciattach.sh
 
-btresumedir = $(sysconfdir)/apm/resume.d
+btresumedir = $(sysconfdir)/apm/scripts.d
 btresume_SCRIPTS = gpe-bluetooth-resume.sh
 
 pingladedir = $(datadir)/bluez-pin
@@ -71,10 +71,10 @@ DISTCLEANFILES = intltool-extract \
                  intltool-update
 
 clean-local:
-	rm -f gpe-bluetooth.desktop
-	rm -f po/.intltool-merge-cache 
-	rm -rf autom4te.cache
-	rm -f *.d *~
+	$(RM) gpe-bluetooth.desktop
+	$(RM) po/.intltool-merge-cache 
+	$(RM) -r autom4te.cache
+	$(RM) *.d *~
 
 include gpe-dist.am
 include gpe-tp.am
@@ -83,3 +83,6 @@ install-data-hook:
 	cd $(DESTDIR)$(sysconfdir)/bluetooth && mv hciattach.sh hciattach
 	chmod u+s $(DESTDIR)$(gpebluetoothlibdir)/bnep-helper
 	chmod u+s $(DESTDIR)$(gpebluetoothlibdir)/rfcomm-helper
+	mkdir -p $(DESTDIR)$(sysconfdir)/apm/resume.d
+	$(LN_S) $(btresumedir)/$(btresume_SCRIPTS) $(DESTDIR)$(sysconfdir)/apm/resume.d/50-$(btresume_SCRIPTS:.sh=)
+

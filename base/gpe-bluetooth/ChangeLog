@@ -1,3 +1,8 @@
+2006-04-20  Florian Boor <florian.boor@kernelconcepts.de>
+
+	* Apply patch by Alberto Garcia Hierro and Marek Chlup to fix
+          installation of the resume script.
+
 2006-02-06  Phil Blundell  <pb@reciva.com>
 
 	* Version 0.52 released.
