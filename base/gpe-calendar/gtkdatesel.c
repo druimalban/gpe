@@ -53,7 +53,6 @@ struct _GtkDateSel
 
   struct elem day, week, month, year;
 
-  guint day_width, month_width, year_width, week_width;
   gint day_clamped;
 
   time_t time;
@@ -332,51 +331,30 @@ entry_button_press (GtkWidget *entry, GdkEventKey *event, gpointer data)
   return TRUE;
 }
 
-static int
-get_max_month_width (GtkDateSel *sel)
+static char *
+month (GtkDateSel *sel, int mon)
 {
-  PangoLayout *layout;
-  PangoRectangle logical_rect;
-  int max_width, i;
+  const char *fmt;
   struct tm tm;
 
-  localtime_r (&sel->time, &tm);
-
-  layout = gtk_widget_create_pango_layout (GTK_WIDGET (sel), NULL);
-
-  max_width = 0;
-  for (i = 0; i < 11; i++)
+  switch (sel->month_style)
     {
-      gchar *str = NULL;
-
-      tm.tm_mon = i;
-
-      switch (sel->month_style)
-	{
-	case GTKDATESEL_MONTH_SHORT:
-	  str = strftime_strdup_utf8_utf8 (_("%b"), &tm);
-	  break;
-	case GTKDATESEL_MONTH_LONG:
-	  str = strftime_strdup_utf8_utf8 (_("%B"), &tm);
-	  break;
-	case GTKDATESEL_MONTH_NUMERIC:
-	  str = strftime_strdup_utf8_utf8 (_("%m"), &tm);
-	  break;
-	case GTKDATESEL_MONTH_ROMAN:
-	  /* NYS */
-	  break;
-	}
-
-      pango_layout_set_text (layout, str, -1);
-      g_free (str);
-
-      pango_layout_get_pixel_extents (layout, NULL, &logical_rect);
-      max_width = MAX (max_width, logical_rect.width + LABEL_ADD);
+    case GTKDATESEL_MONTH_SHORT:
+      fmt = _("%b");
+      break;
+    case GTKDATESEL_MONTH_LONG:
+      fmt = _("%B");
+      break;
+    case GTKDATESEL_MONTH_NUMERIC:
+      fmt = _("%m");
+      break;
+    case GTKDATESEL_MONTH_ROMAN:
+    default:
+      return NULL;
     }
 
-  g_object_unref (layout);
-
-  return max_width;
+  tm.tm_mon = mon;
+  return strftime_strdup_utf8_utf8 (fmt, &tm);
 }
 
 /* Assumes that E->DISPLAY is valid.  */
@@ -511,13 +489,189 @@ gtk_date_sel_set_mode (GtkDateSel *datesel, GtkDateSelMode mode)
     gtk_widget_hide (datesel->month.container);
 }
 
+#define GTK_TYPE_MONTH_CELL_RENDERER (month_cell_renderer_get_type ())
+#define MONTH_CELL_RENDERER(obj) \
+  (G_TYPE_CHECK_INSTANCE_CAST ((obj), GTK_TYPE_MONTH_CELL_RENDERER, MonthCellRenderer))
+#define MONTH_CELL_RENDERER_CLASS(klass) \
+  (G_TYPE_CHECK_CLASS_CAST ((klass), \
+                            GTK_TYPE_MONTH_CELL_RENDERER, MonthCellRendererClass))
+#define MONTH_CELL_RENDERER_GET_CLASS(obj) \
+  (G_TYPE_INSTANCE_GET_CLASS ((obj), \
+                              GTK_TYPE_MONTH_CELL_RENDERER, MonthCellRendererClass))
+
+typedef struct
+{
+  GtkCellRendererClass cell_renderer;
+} MonthCellRendererClass;
+
+static GObjectClass *month_parent_class;
+
+typedef struct
+{
+  GtkCellRenderer cell_renderer;
+  char *month;
+  gboolean bold;
+} MonthCellRenderer;
+
+static void month_cell_renderer_class_init (MonthCellRendererClass *klass);
+
+static GType
+month_cell_renderer_get_type (void)
+{
+  static GType type;
+
+  if (! type)
+    {
+      static const GTypeInfo info =
+      {
+        sizeof (MonthCellRendererClass),
+        NULL,
+        NULL,
+        month_cell_renderer_class_init,
+        NULL,
+        NULL,
+        sizeof (MonthCellRenderer),
+        0,
+        NULL
+      };
+
+      type = g_type_register_static (gtk_cell_renderer_get_type (),
+				     "MonthCellRenderer",
+				     &info, 0);
+    }
+
+  return type;
+}
+
+static void month_cell_renderer_finalize (GObject *object);
+static void month_cell_renderer_render (GtkCellRenderer *cell,
+					GdkWindow *window,
+					GtkWidget *widget,
+					GdkRectangle *background_area,
+					GdkRectangle *cell_area,
+					GdkRectangle *expose_area,
+					GtkCellRendererState flags);
+static void month_cell_renderer_get_size (GtkCellRenderer *cell,
+					  GtkWidget *widget,
+					  GdkRectangle *cell_area,
+					  gint *x_offset,
+					  gint *y_offset,
+					  gint *width,
+					  gint *height);
+static void
+month_cell_renderer_class_init (MonthCellRendererClass *klass)
+{
+  month_parent_class = g_type_class_peek_parent (klass);
+
+  GObjectClass *object_class = G_OBJECT_CLASS (klass);
+  object_class->finalize = month_cell_renderer_finalize;
+  
+  GtkCellRendererClass *cell_class = GTK_CELL_RENDERER_CLASS (klass);
+  cell_class->get_size = month_cell_renderer_get_size;
+  cell_class->render = month_cell_renderer_render;
+}
+
+static void
+month_cell_renderer_finalize (GObject *object)
+{
+  g_free (MONTH_CELL_RENDERER (object)->month);
+
+  (* G_OBJECT_CLASS (month_parent_class)->finalize) (object);
+}
+
+static PangoLayout*
+get_layout (MonthCellRenderer *cell,
+            GtkWidget *widget,
+	    int force_bold)
+{
+  PangoLayout *layout;
+
+  if (force_bold || cell->bold)
+    {
+      char *buf = g_strdup_printf ("<b>%s</b>", cell->month);
+      layout = gtk_widget_create_pango_layout (widget, NULL);
+      pango_layout_set_markup (layout, buf, -1);
+      g_free (buf);
+    }
+  else
+    layout = gtk_widget_create_pango_layout (widget, cell->month);
+
+  return layout;
+}
+
+static void
+month_cell_renderer_get_size (GtkCellRenderer *cell,
+			      GtkWidget *widget,
+			      GdkRectangle *cell_area,
+			      gint *x_offset,
+			      gint *y_offset,
+			      gint *width,
+			      gint *height)
+{
+  MonthCellRenderer *month_cell_renderer = MONTH_CELL_RENDERER (cell);
+
+  PangoLayout *pl = get_layout (month_cell_renderer, widget, 1);
+  PangoRectangle rect;
+  pango_layout_get_pixel_extents (pl, NULL, &rect);
+  g_object_unref (pl);
+
+  if (height)
+    *height = 2 + rect.height;
+  if (width)
+    *width = 2 + rect.width;
+}
+
+static void
+month_cell_renderer_render (GtkCellRenderer *cell,
+			    GdkWindow *window,
+			    GtkWidget *widget,
+			    GdkRectangle *background_area,
+			    GdkRectangle *cell_area,
+			    GdkRectangle *expose_area,
+			    GtkCellRendererState flags)
+{
+  PangoLayout *pl = get_layout (MONTH_CELL_RENDERER (cell), widget, 0);
+
+  gtk_paint_layout (widget->style, window, GTK_WIDGET_STATE (widget),
+                    TRUE, expose_area, widget,
+                    "cellrenderertext",
+                    cell_area->x + 1,
+                    cell_area->y + 1,
+                    pl);
+
+  g_object_unref (pl);
+}
+
+static GtkCellRenderer *
+month_cell_renderer_new (void)
+{
+  return g_object_new (GTK_TYPE_MONTH_CELL_RENDERER, NULL);
+}
+
+static void
+month_cell_data_func (GtkCellLayout *cell_layout,
+		      GtkCellRenderer *cell_renderer,
+		      GtkTreeModel *model,
+		      GtkTreeIter *iter,
+		      gpointer data)
+{
+  MonthCellRenderer *cell = MONTH_CELL_RENDERER (cell_renderer);
+  GtkDateSel *sel = data;
+  int mon;
+
+  gtk_tree_model_get (model, iter, 0, &mon, -1);
+  g_free (cell->month);
+  cell->month = month (sel, mon);
+  cell->bold
+    = gtk_combo_box_get_active (GTK_COMBO_BOX (sel->month.display)) == mon;
+}
+
 GtkWidget *
 gtk_date_sel_new (GtkDateSelMode mode, time_t time)
 {
   GtkWidget *w = GTK_WIDGET (gtk_type_new (gtk_date_sel_get_type ()));
   GtkDateSel *sel = GTK_DATE_SEL (w);
   struct elem *e;
-  struct tm tm;
   int i;
 
   sel->time = time;
@@ -544,19 +698,32 @@ gtk_date_sel_new (GtkDateSelMode mode, time_t time)
 		    G_CALLBACK (entry_button_press), 0);
 
   e = &sel->month;
-  sel->month.display = gtk_combo_box_new_text ();
-  make_field (sel, &sel->month, month_click);
-  sel->month_style = GTKDATESEL_MONTH_SHORT;
+  /* Create the model.  */
+  GtkListStore *list = gtk_list_store_new (1, G_TYPE_INT);
+  GtkTreeIter iter;
   for (i = 0; i < 12; i ++)
     {
-      gchar *str;
-
-      tm.tm_mon = i;
-      str = strftime_strdup_utf8_utf8 (_("%b"), &tm);
-      gtk_combo_box_append_text (GTK_COMBO_BOX (e->display), str);
-      g_free (str);
+      gtk_list_store_append (list, &iter);
+      gtk_list_store_set (list, &iter, 0, i, -1);
     }
+  e->display = gtk_combo_box_new_with_model (GTK_TREE_MODEL (list));
+  g_object_unref (list);
+
+  gtk_date_sel_set_month_style (sel, GTKDATESEL_MONTH_SHORT);
+
+  /* Set the renderer.  */
+  GtkCellRenderer *renderer = month_cell_renderer_new ();
+
+  gtk_cell_layout_clear (GTK_CELL_LAYOUT (e->display));
+  gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (e->display), renderer, FALSE);
+  gtk_cell_layout_set_cell_data_func (GTK_CELL_LAYOUT (e->display),
+				      renderer,
+				      month_cell_data_func, sel, NULL);
+  make_field (sel, &sel->month, month_click);
+
+  /* Three columns.  */
   gtk_combo_box_set_wrap_width (GTK_COMBO_BOX (e->display), 3);
+
   g_signal_connect (G_OBJECT (sel), "changed", G_CALLBACK (month_update),
 		    e->display);
   g_signal_connect (G_OBJECT (e->display), "changed",
@@ -599,7 +766,7 @@ gtk_date_sel_set_time (GtkDateSel *sel, time_t time)
 }
 
 void
-gtk_date_sel_set_day(GtkDateSel *sel, int year, int month, int day)
+gtk_date_sel_set_day (GtkDateSel *sel, int year, int month, int day)
 {
   struct tm tm;
   time_t selected_time;
@@ -619,6 +786,4 @@ void
 gtk_date_sel_set_month_style (GtkDateSel *sel, GtkDateSelMonthStyle style)
 {
   sel->month_style = style;
-
-  gtk_widget_set_usize (sel->month.display, get_max_month_width (sel), -1);
 }

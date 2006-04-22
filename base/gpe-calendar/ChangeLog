@@ -1,3 +1,25 @@
+2006-04-22  Neal H. Walfield  <neal@gnu.org>
+
+	* gtkdatesel.c (struct _GtkDateSel): Remove fields day_width,
+	month_width, year_width, week_width.
+
+	(get_max_month_width): Remove function.
+	(gtk_date_sel_set_month_style): Don't call get_max_month_width.
+
+	(month): New function.
+	(GTK_TYPE_MONTH_CELL_RENDERER): New macro.
+	(MonthCellRendererClass): New structure.
+	(MonthCellRenderer): Likewise.
+	(month_cell_renderer_get_type): New function.
+	(month_cell_renderer_class_init): Likewise.
+	(month_cell_renderer_finalize): Likewise.
+	(get_layout): Likewise.
+	(month_cell_renderer_get_size): Likewise.
+	(month_cell_renderer_render): Likewise.
+	(month_cell_renderer_new): Likewise.
+	(month_cell_data_func): Change to use the MonthCellRenderer.
+	(gtk_date_sel_new): Use a MonthCellRenderer, not a GtkListStore.
+
 2006-04-17  Neal H. Walfield  <neal@gnu.org>
 
 	* month_view.c (draw_expose_event): Turn word wrap off when
