@@ -1,3 +1,12 @@
+2006-04-22  Phil Blundell  <pb@reciva.com>
+
+	* standard.mbdock: Apply patch from Rene Wagner to fix ordering
+	and reinstate volume control.
+
+2006-02-09  Phil Blundell  <pb@reciva.com>
+
+	* X11/Xsession.d/98standard-apps: Add missing ampersand.
+
 2005-09-02  Matt Reimer <mreimer@vpop.net>
 
 	* Release version 0.66.

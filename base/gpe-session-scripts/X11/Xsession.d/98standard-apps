@@ -14,7 +14,7 @@ if [ ! -f $HOME/.matchbox/mbdock.session ]; then
   cp /etc/gpe/gpe.mbdock $HOME/.matchbox/mbdock.session
 
   if [ "$time_set_already" = "no" ]; then
-    gpe-conf time user_only
+    gpe-conf time user_only &
   fi
 
   gpe-question --icon !gtk-dialog-info --question "<b>Welcome to GPE!</b>
