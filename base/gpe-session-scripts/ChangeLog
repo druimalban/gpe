@@ -1,5 +1,9 @@
 2006-04-22  Phil Blundell  <pb@reciva.com>
 
+	* Version 0.67 released.
+
+2006-04-22  Phil Blundell  <pb@reciva.com>
+
 	* standard.mbdock: Apply patch from Rene Wagner to fix ordering
 	and reinstate volume control.
 
