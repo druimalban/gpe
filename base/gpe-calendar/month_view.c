@@ -30,13 +30,6 @@
 #define TOTAL_WEEKS (TOTAL_DAYS / 7)
 #define MAX_DAYS_IN_MONTH 32
 
-#ifdef IS_HILDON
-/* Hildon seems to eat up some pixels itself :-( */
-#  define WIDTH_DELTA -6
-#else
-#  define WIDTH_DELTA 0
-#endif
-
 /* A render control.  POPUP is only contains valid data if VALID is
    true.  */
 struct render_ctl
@@ -98,6 +91,7 @@ static void gtk_month_view_base_class_init (gpointer klass);
 static void gtk_month_view_init (GTypeInstance *instance, gpointer klass);
 static void gtk_month_view_dispose (GObject *obj);
 static void gtk_month_view_finalize (GObject *object);
+static void gtk_month_view_realize (GtkWidget *);
 static void gtk_month_view_set_time (GtkView *view, time_t time);
 static void gtk_month_view_reload_events (GtkView *view);
 
@@ -140,10 +134,11 @@ gtk_month_view_base_class_init (gpointer klass)
   parent_class = g_type_class_ref (gtk_view_get_type ());
 
   object_class = G_OBJECT_CLASS (klass);
-  object_class->finalize = gtk_month_view_finalize;
   object_class->dispose = gtk_month_view_dispose;
+  object_class->finalize = gtk_month_view_finalize;
 
-  widget_class = (GtkWidgetClass *) klass;
+  widget_class = GTK_WIDGET_CLASS (klass);
+  widget_class->realize = gtk_month_view_realize;
 
   view_class = (GtkViewClass *) klass;
   view_class->set_time = gtk_month_view_set_time;
@@ -184,6 +179,28 @@ gtk_month_view_finalize (GObject *object)
       event_list_unref (month_view->day_events[i]);
 
   G_OBJECT_CLASS (parent_class)->finalize (object);
+}
+
+static void
+gtk_month_view_realize (GtkWidget *widget)
+{
+  GtkMonthView *month_view = GTK_MONTH_VIEW (widget);
+
+  PangoLayout *pl = gtk_widget_create_pango_layout (widget, NULL);
+  PangoContext *context = pango_layout_get_context (pl);
+  PangoFontMetrics *metrics
+    = pango_context_get_metrics (context,
+				 widget->style->font_desc,
+				 pango_context_get_language (context));
+
+  month_view->title_height = (pango_font_metrics_get_ascent (metrics)
+			      + pango_font_metrics_get_descent (metrics))
+    / PANGO_SCALE;
+
+  g_object_unref (pl);
+  pango_font_metrics_unref (metrics);
+
+  GTK_WIDGET_CLASS (parent_class)->realize (widget);
 }
 
 /* Get the bounding box of a cell.  Only return those dimensions for
@@ -379,38 +396,6 @@ button_press (GtkWidget *widget, GdkEventButton *event, GtkWidget *mv)
 /* 0, 7 are Sunday.  */
 static nl_item days_of_week[] = 
   { ABDAY_1, ABDAY_2, ABDAY_3, ABDAY_4, ABDAY_5, ABDAY_6, ABDAY_7, ABDAY_1 };
-
-static void
-calc_title_height (GtkMonthView *month_view)
-{
-  GtkWidget *widget = month_view->draw;
-  PangoLayout *pl;
-  PangoRectangle pr;
-  int i;
-  int max_height = 0;
-
-  pl = gtk_widget_create_pango_layout (GTK_WIDGET (widget), NULL);
-
-  for (i = 0; i < 7; i++)
-    {
-      gchar *s = g_locale_to_utf8 (nl_langinfo (days_of_week[i]), -1,
-                                   NULL, NULL, NULL);
-      pango_layout_set_text (pl, s, -1);
-      pango_layout_get_pixel_extents (pl, &pr, NULL);
-
-      if (pr.height > max_height)
-        max_height = pr.height;
-
-      g_free (s);
-    }
-
-#ifdef IS_HILDON
-  month_view->title_height = max_height + 20;
-#else
-  month_view->title_height = max_height + 8;
-#endif	
-  g_object_unref (pl);
-}
 
 static gint
 draw_expose_event (GtkWidget *widget,
@@ -751,7 +736,7 @@ static void
 resize_table (GtkWidget *widget, GtkAllocation *allocation, GtkWidget *mv)
 {
   GtkMonthView *month_view = GTK_MONTH_VIEW (mv);
-  gint width = allocation->width + WIDTH_DELTA;
+  gint width = allocation->width;
   gint height = allocation->height;
 
   if (width != month_view->width || height != month_view->height)
@@ -874,8 +859,6 @@ gtk_month_view_new (time_t time)
   g_signal_connect (G_OBJECT (month_view->draw), "key_press_event", 
 		    G_CALLBACK (month_view_key_press_event), month_view);
   GTK_WIDGET_SET_FLAGS (month_view->draw, GTK_CAN_FOCUS);
-
-  calc_title_height (month_view);
 
   gtk_widget_set_size_request (GTK_WIDGET(month_view->draw),
 			       month_view->title_height * 7,

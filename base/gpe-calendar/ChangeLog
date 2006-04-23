@@ -1,5 +1,17 @@
 2006-04-23  Neal H. Walfield  <neal@gnu.org>
 
+	* month_view.c (WIDTH_DELTA): Don't define.
+	(gtk_month_view_realize): New function.  Calculate
+	MONTH_VIEW->TITLE_HEIGHT here using the average font height.
+	(gtk_month_view_base_class_init): Set WIDGET_CLASS->REALIZE to
+	gtk_month_view_realize.
+	(calc_title_height): Remove function.
+	(resize_table): Don't include WIDTH_DELTA when calculating the
+	width.
+	(gtk_month_view_new): Don't call calc_title_height.
+
+2006-04-23  Neal H. Walfield  <neal@gnu.org>
+
 	* day_render.c (gtk_day_render_base_class_init): Set
 	widget_class->size_request to GTK_DAY_RENDER_SIZE_REQUEST.
 	(gtk_day_render_size_request): New function, calculate
