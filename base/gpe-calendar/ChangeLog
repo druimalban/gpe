@@ -1,5 +1,10 @@
 2006-04-23  Neal H. Walfield  <neal@gnu.org>
 
+	* event-cal.c: Include <string.h>.
+	(update_cal): Make year, month and day unsigned.
+
+2006-04-23  Neal H. Walfield  <neal@gnu.org>
+
 	* month_view.c (WIDTH_DELTA): Don't define.
 	(gtk_month_view_realize): New function.  Calculate
 	MONTH_VIEW->TITLE_HEIGHT here using the average font height.

@@ -17,6 +17,7 @@
    along with this program; if not, write to the Free Software
    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111, USA. */
 
+#include <string.h>
 #include <gtk/gtk.h>
 #include <gpe/event-db.h>
 #include "globals.h"
@@ -120,7 +121,7 @@ static void
 update_cal (GtkCalendar *cal, gboolean force)
 {
   GtkEventCal *event_cal = GTK_EVENT_CAL (cal);
-  int year, month, day;
+  unsigned int year, month, day;
   struct tm start_tm;
   struct tm end_tm;
   int days;
