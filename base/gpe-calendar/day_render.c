@@ -16,6 +16,7 @@
 #include <time.h>
 #include <langinfo.h>
 #include <time.h>
+#include <libintl.h>
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 #include <glib.h>
@@ -24,6 +25,8 @@
 #include "day_render.h"
 #include "day_view.h"
 #include "globals.h"
+
+#define _(x) gettext(x)
 
 static GNode *find_overlapping_sets (GSList * events);
 static GSList *ol_sets_to_rectangles (GtkDayRender *dr, GNode * node);

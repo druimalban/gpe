@@ -1,5 +1,10 @@
 2006-04-23  Neal H. Walfield  <neal@gnu.org>
 
+	* day_render.c: Include <libintl.h>.
+	(_): Define.
+	
+2006-04-23  Neal H. Walfield  <neal@gnu.org>
+
 	* week_view.c (gtk_week_view_reload_events): Update call to
 	event_db_untimed_list_for_period to reflect new API.
 
