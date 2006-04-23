@@ -27,7 +27,7 @@
 
 #define EVENT_DB_USE_MEMCHUNK
 #ifdef EVENT_DB_USE_MEMCHUNK
-extern GMemChunk *recur_chunk;
+static GMemChunk *recur_chunk;
 #define event_db__alloc_recur()		\
 	(recur_t)g_mem_chunk_alloc0 (recur_chunk)
 #define event_db__free_recur(_x)	\
@@ -39,8 +39,35 @@ extern GMemChunk *recur_chunk;
 	g_free (_x)
 #endif
 
+typedef struct
+{
+  GObjectClass gobject_class;
+  GObjectClass parent_class;
+
+  /* Signals.  */
+  guint event_new_signal;
+  void (*event_new) (EventDB *view, Event *event);
+  guint event_removed_signal;
+  void (*event_removed) (EventDB *view, Event *event);
+  guint event_changed_signal;
+  void (*event_changed) (EventDB *view, Event *event);
+} EventDBClass;
+
+struct _EventDB
+{
+  GObject object;
+
+  unsigned long dbversion;
+  void *sqliteh;
+
+  GList *events;
+
+  /* Largest UID which we know of.  */
+  unsigned long uid;
+};
+
 /**
- * *event_details_t:
+ * struct event_details
  *
  * Detail information for an event.
  */
@@ -56,7 +83,12 @@ struct event_details
   /* List of integers.  */
   GSList *categories;
 };
-typedef struct event_details *event_details_t;
+
+struct _EventClass
+{
+  GObjectClass gobject_class;
+  GObjectClass parent_class;
+};
 
 /**
  * event_t:
@@ -211,27 +243,17 @@ event_db_finalize (GObject *object)
   EventDB *edb = EVENT_DB (object);
   GList *iter;
 
-  for (iter = edb->one_shot_events; iter; iter = g_list_next (iter))
+  for (iter = edb->events; iter; iter = g_list_next (iter))
     {
       Event *ev = EVENT (iter->data);
 
       if (ev->clone_source)
-	g_critical ("edb->one_shot_events contains cloned event "
+	g_critical ("edb->events contains cloned event "
 		    "(i.e. events still reference database)!");
       else
 	g_object_unref (ev);
     }
-
-  for (iter = edb->recurring_events; iter; iter = g_list_next (iter))
-    {
-      Event *ev = EVENT (iter->data);
-
-      if (ev->clone_source)
-	g_critical ("edb->recurring_events contains cloned event "
-		    "(i.e. events still reference database)!");
-      else
-	g_object_unref (ev);
-    }
+  g_list_free (edb->events);
 
   sqlite_close (edb->sqliteh);
 
@@ -354,17 +376,6 @@ event_finalize (GObject *object)
 }
 
 
-static const char *schema_str = 
-"create table calendar (uid integer NOT NULL, tag text, value text)";
-static const char *schema2_str = 
-"create table calendar_urn (uid INTEGER PRIMARY KEY)";
-static const char *schema_info = 
-"create table calendar_dbinfo (version integer NOT NULL)";
-
-#ifdef EVENT_DB_USE_MEMCHUNK
-static GMemChunk *recur_chunk;
-#endif
-
 static gint
 event_sort_func (const void *a, const void *b)
 {
@@ -378,33 +389,24 @@ event_sort_func (const void *a, const void *b)
 static void
 event_db_add_internal (Event *ev)
 {
-  GList **list;
-
   g_return_if_fail (! ev->clone_source);
 
   if (ev->uid >= ev->edb->uid)
     ev->edb->uid = ev->uid + 1;
 
-  list = event_is_recurrence (ev)
-    ? &ev->edb->recurring_events : &ev->edb->one_shot_events;
-  *list = g_list_insert_sorted (*list, ev, event_sort_func); 
+  ev->edb->events = g_list_insert_sorted (ev->edb->events, ev,
+					  event_sort_func); 
 }
 
 /* Remove an event from the in-memory list */
 static void
 event_db_remove_internal (Event *ev)
 {
-  GList **list;
-
   NO_CLONE (ev);
 
-  list = event_is_recurrence (ev)
-    ? &ev->edb->recurring_events : &ev->edb->one_shot_events;
-  g_assert (g_list_find (*list, ev));
-  *list = g_list_remove (*list, ev);
-
-  g_assert (! g_list_find (ev->edb->one_shot_events, ev));
-  g_assert (! g_list_find (ev->edb->recurring_events, ev));
+  g_assert (g_list_find (ev->edb->events, ev));
+  ev->edb->events = g_list_remove (ev->edb->events, ev);
+  g_assert (! g_list_find (ev->edb->events, ev));
 }
 
 /* Here we create a globally unique eventid, which we
@@ -451,110 +453,6 @@ parse_date (char *s, time_t *t, gboolean *date_only)
 }
 
 static int
-load_data_callback (void *arg, int argc, char **argv, char **names)
-{
-  if (argc == 2)
-    {
-      Event *ev = arg;
-     
-      if (!strcasecmp (argv[0], "start"))
-	{
-	  gboolean untimed;
-
-	  parse_date (argv[1], &ev->start, &untimed);
-
-	  if (untimed)
-	    {
-	      ev->flags |= FLAG_UNTIMED;
-	      ev->start += 12 * 60 * 60;
-	    }
-	}
-      else if (!strcasecmp (argv[0], "eventid"))
-	{
-	  ev->eventid = g_strdup (argv[1]);
-	}
-      else if (!strcasecmp (argv[0], "rend"))
-	{
-	  recur_t r = event_get_recurrence (ev);
-	  parse_date (argv[1], &r->end, NULL);
-	}
-      else if (!strcasecmp (argv[0], "rcount"))
-	{
-	  recur_t r = event_get_recurrence (ev);
-	  r->count = atoi (argv[1]);
-	}
-      else if (!strcasecmp (argv[0], "rincrement"))
-	{
-	  recur_t r = event_get_recurrence (ev);
-	  r->increment = atoi (argv[1]);
-	}
-      else if (!strcasecmp (argv[0], "rdaymask"))
-	{
-	  recur_t r = event_get_recurrence (ev);
-	  r->daymask = atoi (argv[1]);
-	}
-      else if (!strcasecmp (argv[0], "rexceptions"))
-	{
-	  recur_t r = event_get_recurrence (ev);
-	  long rmtime = (long)atoi (argv[1]);
-	  r->exceptions = g_slist_append(r->exceptions,	(void *)rmtime);
-	}
-      else if (!strcasecmp (argv[0], "recur"))
-	{
-	  recur_t r = event_get_recurrence (ev);
-	  r->type = atoi (argv[1]);
-	}
-      else if (!strcasecmp (argv[0], "duration"))
-	{
-	  ev->duration = atoi (argv[1]);
-	}
-      else if (!strcasecmp (argv[0], "alarm"))
-	{
-	  ev->alarm = atoi (argv[1]);
-	}
-    }
-
-  return 0;
-}
-
-static int
-load_callback (void *arg, int argc, char **argv, char **names)
-{
-  EventDB *edb = arg;
-
-  if (argc == 1)
-    {
-      char *err;
-      guint uid = atoi (argv[0]);
-      Event *ev = EVENT (g_object_new (event_get_type (), NULL));
-      ev->edb = edb;
-      ev->uid = uid;
-      if (sqlite_exec_printf (edb->sqliteh,
-			      "select tag,value from calendar where uid=%d", 
-			      load_data_callback, ev, &err, uid))
-	{
-	  gpe_error_box (err);
-	  free (err);
-	  g_object_unref (ev);
-	  return 1;
-	}
-
-      if (ev->recur && ev->recur->type == RECUR_NONE)
-	{
-	  /* Old versions of gpe-calendar dumped out a load of recurrence tags
-	     even for a one-shot event.  */
-	  event_db__free_recur (ev->recur);
-	  ev->recur = NULL;
-	}
-
-      event_db_add_internal (ev);
-      /* EDB holds a reference.  */
-      g_object_ref (ev);
-    }
-  return 0;
-}
-
-static int
 dbinfo_callback (void *arg, int argc, char **argv, char **names)
 {
   EventDB *edb = EVENT_DB (arg);
@@ -590,20 +488,127 @@ event_db_new (const char *fname)
   if (edb->sqliteh == NULL)
     goto error;
 
-  sqlite_exec (edb->sqliteh, schema_info, NULL, NULL, &err);
-  
+  /* Get the calendar db version.  */
+  sqlite_exec (edb->sqliteh,
+	       "create table calendar_dbinfo (version integer NOT NULL)",
+	       NULL, NULL, &err);
   if (sqlite_exec (edb->sqliteh, "select version from calendar_dbinfo",
 		   dbinfo_callback, edb, &err))
     goto error;
 
-  sqlite_exec (edb->sqliteh, schema_str, NULL, NULL, &err);
-  sqlite_exec (edb->sqliteh, schema2_str, NULL, NULL, &err);
+  /* A verion 1 database considers of two tables: calendar_urn and
+     calendar.  */
+  sqlite_exec (edb->sqliteh,
+	       "create table calendar"
+	       " (uid integer NOT NULL, tag text, value text)",
+	       NULL, NULL, &err);
+  sqlite_exec (edb->sqliteh,
+	       "create table calendar_urn (uid INTEGER PRIMARY KEY)",
+	       NULL, NULL, &err);
       
   if (edb->dbversion == 1) 
     {
+      int load_data_callback (void *arg, int argc, char **argv,
+			      char **names)
+	{
+	  if (argc == 2)
+	    {
+	      Event *ev = arg;
+     
+	      if (!strcasecmp (argv[0], "start"))
+		{
+		  gboolean untimed;
+
+		  parse_date (argv[1], &ev->start, &untimed);
+
+		  if (untimed)
+		    {
+		      ev->flags |= FLAG_UNTIMED;
+		      ev->start += 12 * 60 * 60;
+		    }
+		}
+	      else if (!strcasecmp (argv[0], "eventid"))
+		ev->eventid = g_strdup (argv[1]);
+	      else if (!strcasecmp (argv[0], "rend"))
+		{
+		  recur_t r = event_get_recurrence (ev);
+		  parse_date (argv[1], &r->end, NULL);
+		}
+	      else if (!strcasecmp (argv[0], "rcount"))
+		{
+		  recur_t r = event_get_recurrence (ev);
+		  r->count = atoi (argv[1]);
+		}
+	      else if (!strcasecmp (argv[0], "rincrement"))
+		{
+		  recur_t r = event_get_recurrence (ev);
+		  r->increment = atoi (argv[1]);
+		}
+	      else if (!strcasecmp (argv[0], "rdaymask"))
+		{
+		  recur_t r = event_get_recurrence (ev);
+		  r->daymask = atoi (argv[1]);
+		}
+	      else if (!strcasecmp (argv[0], "rexceptions"))
+		{
+		  recur_t r = event_get_recurrence (ev);
+		  long rmtime = (long)atoi (argv[1]);
+		  r->exceptions = g_slist_append(r->exceptions,
+						 (void *) rmtime);
+		}
+	      else if (!strcasecmp (argv[0], "recur"))
+		{
+		  recur_t r = event_get_recurrence (ev);
+		  r->type = atoi (argv[1]);
+		}
+	      else if (!strcasecmp (argv[0], "duration"))
+		ev->duration = atoi (argv[1]);
+	      else if (!strcasecmp (argv[0], "alarm"))
+		ev->alarm = atoi (argv[1]);
+	    }
+
+	  return 0;
+	}
+
+      int uid_load_callback (void *arg, int argc, char **argv, char **names)
+	{
+	  EventDB *edb = arg;
+
+	  if (argc == 1)
+	    {
+	      char *err;
+	      guint uid = atoi (argv[0]);
+	      Event *ev = EVENT (g_object_new (event_get_type (), NULL));
+	      ev->edb = edb;
+	      ev->uid = uid;
+	      if (sqlite_exec_printf (edb->sqliteh,
+				      "select tag,value from calendar where uid=%d", 
+				      load_data_callback, ev, &err, uid))
+		{
+		  gpe_error_box (err);
+		  free (err);
+		  g_object_unref (ev);
+		  return 1;
+		}
+
+	      if (ev->recur && ev->recur->type == RECUR_NONE)
+		{
+		  /* Old versions of gpe-calendar dumped out a load of
+		     recurrence tags even for a one-shot event.  */
+		  event_db__free_recur (ev->recur);
+		  ev->recur = NULL;
+		}
+
+	      event_db_add_internal (ev);
+	      /* EDB holds a reference.  */
+	      g_object_ref (ev);
+	    }
+	  return 0;
+	}
+
       /* Load all the records into memory.  */
       if (sqlite_exec (edb->sqliteh, "select uid from calendar_urn",
-		       load_callback, edb, &err))
+		       uid_load_callback, edb, &err))
 	goto error;
     }
   else if (edb->dbversion == 0)
@@ -649,10 +654,9 @@ event_db_new (const char *fname)
 	  return 0;
 	}
 
-      if (sqlite_exec (edb->sqliteh,
-		       "select uid, start, duration, alarmtime, recurring, summary, description from events",
-		       load_callback0, edb, &err))
-	goto error;
+      sqlite_exec (edb->sqliteh,
+		   "select uid, start, duration, alarmtime, recurring, summary, description from events",
+		   load_callback0, edb, &err);
 
       if (sqlite_exec_printf (edb->sqliteh,
 			      "insert into calendar_dbinfo (version) values (%d)", 
@@ -746,22 +750,11 @@ event_db_find_by_uid (EventDB *edb, guint uid)
 {
   GList *iter;
     
-  for (iter = edb->one_shot_events; iter; iter = g_list_next (iter))
+  for (iter = edb->events; iter; iter = g_list_next (iter))
     {
       Event *ev = iter->data;
       
       if (ev->uid == uid)
-	{
-	  g_object_ref (ev);
-	  return ev;
-	}
-    }
-
-  for (iter = edb->recurring_events; iter; iter = g_list_next (iter))
-    {
-      Event *ev = iter->data;
-       
-      if (ev->uid == uid) 
 	{
 	  g_object_ref (ev);
 	  return ev;
@@ -812,289 +805,256 @@ event_clone (Event *ev)
   return n;
 }
 
-static GSList *
-event_db_list_for_period_internal (EventDB *edb, time_t start, time_t end,
-				   gboolean untimed, 
-				   gboolean untimed_significant,
-				   gboolean alarms, 
-				   guint max)
+/* Return the number of days in MONTH month in year YEAR.  */
+static guint
+days_in_month (guint year, guint month)
 {
-  GList *iter;
-  GSList *iter2;
-  GSList *list = NULL;
-  struct tm tm_event, tm_display;
-  long int month_diff;
-  int events = 0;
-	  
-  if (end == 0)		/* ??? pb */
-    {
-      struct tm tm_current;
+  static const guint nr_days[] = { 31, 28, 31, 30, 31, 30, 
+				   31, 31, 30, 31, 30, 31 };
 
-      localtime_r (&start, &tm_current);
-  
-      tm_current.tm_year+=1;
-      end = mktime (&tm_current);
+  g_assert (month <= 11);
+
+  if (month == 1)
+    {
+      return ((year % 4) == 0
+	      && ((year % 100) != 0
+		  || (year % 400) == 0)) ? 29 : 28;
     }
-  
-  for (iter = edb->one_shot_events; iter; iter = g_list_next (iter))
+
+  return nr_days[month];
+}
+
+
+/* Interpret T as a localtime and advance it by ADVANCE days.  */
+static time_t
+time_add_days (time_t t, int advance)
+{
+  struct tm tm;
+  int days;
+
+  localtime_r (&t, &tm);
+  while (advance > 0)
     {
-      Event *ev = iter->data;
-      time_t event_start = ev->start;
-
-      LIVE (ev);
-      
-      if (untimed_significant)
+      days = days_in_month (tm.tm_year, tm.tm_mon);
+      if (tm.tm_mday + advance > days)
 	{
-	  /* Ignore events with wrong untimed status */
-	  if (untimed != ((ev->flags & FLAG_UNTIMED) != 0))
-	    continue;
-	}
-
-      /* Stop if event hasn't started yet */
-      if (end && event_start > end)
-	break;
-      
-      /* Skip events without alarms when applicable */
-      if (alarms && !ev->alarm)
-	continue;
-
-      /* Skip events that have finished already */
-      if ((event_start + ev->duration < start)
-	  || (ev->duration && ((event_start + ev->duration == start))))
-	continue;
-
-      if (alarms)
-	{
-	  ev = event_clone (ev);
-	  ev->start -= ev->alarm;
+	  advance -= days - tm.tm_mday + 1;
+	  tm.tm_mday = 1;
+	  tm.tm_mon ++;
+	  if (tm.tm_mon == 12)
+	    {
+	      tm.tm_mon = 0;
+	      tm.tm_year ++;
+	    }
 	}
       else
-	g_object_ref (ev);
-      
-      list = g_slist_insert_sorted (list, ev, event_sort_func);
-      if (++events == max)
-	return list;
-    }
-  
-  for (iter = edb->recurring_events; iter; iter = g_list_next (iter))
-    {
-      Event *ev = iter->data, *clone;
-      time_t event_start = ev->start, clone_start;
-      recur_t r = ev->recur;
-      time_t window_start = start;
-
-      LIVE (ev);
-      
-      if (untimed_significant)
 	{
-	  /* Ignore events with wrong untimed status */
-	  if (untimed != ((ev->flags & FLAG_UNTIMED) != 0))
-	    continue;
+	  tm.tm_mday += advance;
+	  break;
 	}
+    }
 
-      /* Stop if all remaining events are finished already */
-      if (r->end && start > r->end)
+  return mktime (&tm);
+}
+
+static GSList *
+event_db_list_for_period_internal (EventDB *edb,
+				   time_t period_start, time_t period_end,
+				   gboolean only_untimed, 
+				   gboolean alarms)
+{
+  GSList *list = NULL;
+  GList *iter;
+
+  for (iter = edb->events; iter; iter = g_list_next (iter))
+    {
+      Event *ev = iter->data;
+      LIVE (ev);
+
+      if (alarms && !ev->alarm)
+	/* We are looking for alarms but this event doesn't have
+	   one.  */
+	continue;
+
+      if (only_untimed && ev->duration)
+	continue;
+
+      recur_t r = ev->recur;
+      /* End of recurrence period.  */
+      time_t recur_end;
+      if (event_is_recurrence (ev))
+	{
+	  if (! r->end)
+	    /* Never ends.  */
+	    recur_end = 0;
+	  else
+	    recur_end = r->end;
+	}
+      else
+	recur_end = ev->start + ev->duration;
+
+      if (recur_end && recur_end < period_start)
+	/* Event finishes prior to START.  */
+	continue;
+
+      /* Start of first instance.  */
+      time_t recur_start = ev->start;
+      if (alarms)
+	/* Or, in the case of alarms, when the alarm goes off.  */
+	recur_start -= ev->alarm;
+      
+      if (period_end < recur_start)
+	/* Event starts after PERIOD_END.  (In which case all
+	   subsequent events start after PERIOD_END.)  */
 	break;
 
-      /* Skip events that haven't started yet */
-      if (end && event_start > end)
-	continue;
-      
-      /* Skip events without alarms when applicable */
-      if (alarms && !ev->alarm)
-	continue;
-
-      localtime_r (&event_start, &tm_event);
-
-      switch (r->type)
+      if (event_is_recurrence (ev))
 	{
-	case RECUR_NONE:
-	  g_critical ("Event on recurrence list marked RECUR_NONE.");
-	  continue;
-	  
-	case RECUR_DAILY:
-	  while (window_start < end)
+	  if (r->type == RECUR_WEEKLY && r->daymask)
+	    /* This is a weekly recurrence with a day mask: find the
+	       first day which, starting with S, occurs in
+	       R->DAYMASK.  */
 	    {
-	      localtime_r (&window_start, &tm_display);
+	      struct tm tm;
+	      localtime_r (&recur_start, &tm);
 
-	      if ((tm_event.tm_yday - tm_display.tm_yday) % r->increment ==0) 
+	      int i;
+	      for (i = tm.tm_wday; i < tm.tm_wday + 7; i ++)
+		/* R->DAYMASK is Monday based, not Sunday.  */
+		if ((1 << ((i - 1) % 7)) & r->daymask)
+		  break;
+	      if (i != tm.tm_wday)
+		recur_start = time_add_days (recur_start, i - tm.tm_wday);
+	    }
+
+	  /* Cache the representation of S.  */
+	  struct tm orig;
+	  localtime_r (&recur_start, &orig);
+
+	  int count;
+	  int increment = r->increment > 0 ? r->increment : 1;
+	  for (count = 0;
+	       recur_start <= period_end
+		 && (! recur_end || recur_start <= recur_end)
+		 && (r->count == 0 || count < r->count);
+	       count ++)
+	    {
+	      if (period_start <= recur_start + ev->duration)
+		/* This instance occurs during the period.  Add
+		   it to LIST...  */
 		{
-		  tm_event.tm_mon = tm_display.tm_mon;
-		  tm_event.tm_year = tm_display.tm_year;
-		  tm_event.tm_mday = tm_display.tm_mday;
-		}
+		  GSList *i;
 
-	      clone_start = mktime (&tm_event);
+		  /* ... unless there happens to be an exception.  */
+		  for (i = r->exceptions; i; i = g_slist_next (i))
+		    if ((long) i->data == recur_start)
+		      break;
 
-	      if (alarms) 
-		clone_start -= ev->alarm;
-
-	      if (clone_start <= end && (clone_start + ev->duration) > window_start)
-		{
-		  gboolean skip=FALSE;
-
-		  if (alarms) 
-		    clone_start += ev->alarm;
-
-		  if (r->exceptions)
-		    { 
-		      for (iter2 = r->exceptions; iter2; iter2 = g_slist_next (iter2))
-			{
-			  if ((long)iter2->data == (long)clone_start) 
-			    skip = TRUE;
-			}
-		    }
-
-		  if (alarms && window_start>clone_start-ev->alarm) 
-		    skip = TRUE;
-
-		  if (!skip)
+		  if (! i)
+		    /* No exception found: instantiate this recurrence
+		       and add it to LIST.  */
 		    {
-		      clone = event_clone (ev);
-
-		      if (alarms) 
-			clone->start -= ev->alarm;
-		      else 
-			clone->start = clone_start;
+		      Event *clone = event_clone (ev);
+		      clone->start = recur_start;
 		      list = g_slist_insert_sorted (list, clone,
 						    event_sort_func);
-		      if (++events == max)
-			return list;
 		    }
 		}
 
-	      window_start += SECONDS_IN_DAY;
-	    }
-	  break;
-
-	case RECUR_WEEKLY:
-	  while (window_start < end)
-	    {
-	      localtime_r (&window_start, &tm_display);
-	      if (((r->daymask & MON && tm_display.tm_wday==1) ||
-		   (r->daymask & TUE && tm_display.tm_wday==2) ||
-		   (r->daymask & WED && tm_display.tm_wday==3) ||
-		   (r->daymask & THU && tm_display.tm_wday==4) ||
-		   (r->daymask & FRI && tm_display.tm_wday==5) ||
-		   (r->daymask & SAT && tm_display.tm_wday==6) ||
-		   (r->daymask & SUN && tm_display.tm_wday==0))) 
+	      /* Advance to the next recurrence.  */
+	      switch (r->type)
 		{
-		  tm_event.tm_mon=tm_display.tm_mon;
-		  tm_event.tm_year=tm_display.tm_year;
-		  tm_event.tm_mday=tm_display.tm_mday;
-		  clone_start=mktime(&tm_event);
-		  if (alarms) clone_start-=ev->alarm;
-		  
-		  if (clone_start <= end && (clone_start + ev->duration) > window_start)
+		case RECUR_DAILY:
+		  /* Advance S by INCREMENT days.  */
+		  recur_start = time_add_days (recur_start, increment);
+		  break;
+
+		case RECUR_WEEKLY:
+		  if (! r->daymask)
+		    /* Empty day mask, simply advance S by
+		       INCREMENT weeks.  */
+		    recur_start = time_add_days (recur_start, 7 * increment);
+		  else
 		    {
-		      gboolean skip=FALSE;
-		      if (alarms) clone_start+=ev->alarm;
-		      if (r->exceptions) 
-			for (iter2 = r->exceptions; iter2; iter2 = g_slist_next (iter2))
-			  if ((long)iter2->data == (long)clone_start) skip=TRUE;
-
-		      if (alarms && window_start > clone_start-ev->alarm) 
-			skip = TRUE;
-
-		      if (!skip)
-			{
-			  clone = event_clone(ev);
-			  if (alarms) clone->start = clone_start-ev->alarm;
-			  else clone->start = clone_start;
-			  list = g_slist_insert_sorted (list, clone,
-							event_sort_func);
-			  if (++events == max)
-			    return list;
-			}
+		      struct tm tm;
+		      localtime_r (&recur_start, &tm);
+		      int i;
+		      for (i = tm.tm_wday + 1; i < tm.tm_wday + 1 + 7; i ++)
+			/* R->DAYMASK is Monday based, not Sunday.  */
+			if ((1 << ((i - 1) % 7)) & r->daymask)
+			  {
+			    if ((i % 7) == orig.tm_wday)
+			      /* We wrapped a week: increment by
+				 INCREMENT - 1 weeks as well.  */
+			      recur_start
+				= time_add_days (recur_start,
+						 7 * (increment - 1)
+						 + i - tm.tm_wday);
+			    else
+			      recur_start
+				= time_add_days (recur_start, i - tm.tm_wday);
+			    break;
+			  }
 		    }
+		  break;
+
+		case RECUR_MONTHLY:
+		  {
+		    int i;
+		    struct tm tm;
+		    for (i = increment; i > 0; i --)
+		      {
+			localtime_r (&recur_start, &tm);
+			recur_start
+			  = time_add_days (recur_start,
+					   days_in_month (tm.tm_year,
+							  tm.tm_mon));
+		      }
+		    break;
+		  }
+
+		case RECUR_YEARLY:
+		  {
+		    struct tm tm;
+		    localtime_r (&recur_start, &tm);
+		    tm.tm_year += increment;
+		    if (tm.tm_mon == 1 && tm.tm_mday == 29
+			&& days_in_month (tm.tm_year, tm.tm_mon) == 28)
+		      /* XXX: If the recurrence is Feb 29th and there
+			 is no Feb 29th this year then we simply clamp
+			 to the 28th.  */
+		      tm.tm_mday = 28;
+		    else
+		      {
+			if (tm.tm_mon == 1 && tm.tm_mday == 28)
+			  /* This recurrence is Feb 28th.  Are we
+			     supposed to recur on the 29th?  */
+			  {
+			    if (orig.tm_mday == 29
+				&& days_in_month (tm.tm_year, tm.tm_mon) == 29)
+			      /* Yes, and moreover, this year, Feb has
+				 a 29th.  */
+			      tm.tm_mday = 29;
+			  }
+		      }
+		
+		    recur_start = mktime (&tm);
+		    break;
+		  }
+
+		default:
+		  g_critical ("Event %s has an invalid recurrence type: %d\n",
+			      ev->eventid, r->type);
+		  break;
 		}
-	      
-	      window_start += SECONDS_IN_DAY;
 	    }
-	  break;
-
-	case RECUR_MONTHLY:
-	  while (window_start < end)
-	    {
-	      localtime_r (&window_start, &tm_display);
-	      month_diff=tm_display.tm_mon-tm_event.tm_mon +
-		(tm_display.tm_year-tm_event.tm_year)*12;
-	      if ((tm_display.tm_mday==tm_event.tm_mday) &&
-		  (month_diff%r->increment)==0) 
-		{
-		  tm_event.tm_mon=tm_display.tm_mon;
-		  tm_event.tm_year=tm_display.tm_year;
-		  tm_event.tm_mday=tm_display.tm_mday;
-		}; 
-	      clone_start=mktime(&tm_event);
-	      if (alarms) clone_start-=ev->alarm;
-	      if (clone_start <= end && (clone_start + ev->duration) > window_start) 
-		{
-		  gboolean skip=FALSE;
-		  if (alarms) clone_start+=ev->alarm;
-		  if (r->exceptions) 
-		    for (iter2 = r->exceptions; iter2; iter2 = g_slist_next (iter2))
-		      if ((long)iter2->data == (long)clone_start) skip=TRUE;
-		  if(alarms && window_start>clone_start-ev->alarm) skip=TRUE;
-		  if (!skip)
-		    {
-		      clone = event_clone(ev);
-		      if (alarms) clone->start = clone_start-ev->alarm;
-		      else clone->start = clone_start;
-		      list = g_slist_insert_sorted (list, clone,
-						    event_sort_func);
-		      if (++events == max)
-			return list;
-		    }
-		}
-	      
-	      window_start += SECONDS_IN_DAY;
-	    }
-	  break;
-
-	case RECUR_YEARLY:
-	  while (window_start < end)
-	    {
-	      localtime_r (&window_start, &tm_display);
-	      if ((tm_display.tm_mon==tm_event.tm_mon) &&
-		  (tm_display.tm_mday==tm_event.tm_mday) &&
-		  ((tm_display.tm_year-tm_event.tm_year)%r->increment)==0) 
-		{
-		  tm_event.tm_mon=tm_display.tm_mon;
-		  tm_event.tm_year=tm_display.tm_year;
-		  tm_event.tm_mday=tm_display.tm_mday;
-		}; 
-	      clone_start=mktime(&tm_event);
-	      if (alarms) clone_start-=ev->alarm;
-	      if (clone_start <= end && (clone_start + ev->duration) > window_start)
-		{
-		  gboolean skip=FALSE;
-		  if (alarms) clone_start+=ev->alarm;
-		  if (r->exceptions)
-		    {
-		      for (iter2 = r->exceptions; iter2; iter2 = g_slist_next (iter2))
-			if ((long)iter2->data == (long)clone_start) skip=TRUE;
-		    }
-		  if(alarms && window_start > clone_start-ev->alarm) 
-		    skip = TRUE;
-		  if (!skip)
-		    {
-		      clone = event_clone(ev);
-		      if (alarms)
-			clone->start = clone_start - ev->alarm;
-		      else
-			clone->start = clone_start;
-		      list = g_slist_insert_sorted (list, clone,
-						    event_sort_func);
-		      if (++events == max)
-			return list;
-		    }
-		}
-
-	      window_start += SECONDS_IN_DAY;
-	    }
-	  break;
-  	}
+	}
+      else
+	/* Not a recurrence.  */
+	{
+	  g_object_ref (ev);
+	  list = g_slist_insert_sorted (list, ev, event_sort_func);
+	}
     }
 
   return list;
@@ -1102,8 +1062,8 @@ event_db_list_for_period_internal (EventDB *edb, time_t start, time_t end,
 
 /**
  * event_db_list_for_period:
- * @start: Start time
- * @end: End time
+ * @start: Start time (inclusive)
+ * @end: End time (inclusive)
  * 
  * Create a list of all events for a given period.
  *
@@ -1112,8 +1072,7 @@ event_db_list_for_period_internal (EventDB *edb, time_t start, time_t end,
 GSList *
 event_db_list_for_period (EventDB *edb, time_t start, time_t end)
 {
-  return event_db_list_for_period_internal (edb, start, end,
-					    FALSE, FALSE, FALSE, 0);
+  return event_db_list_for_period_internal (edb, start, end, FALSE, FALSE);
 }
 
 /**
@@ -1128,89 +1087,22 @@ event_db_list_for_period (EventDB *edb, time_t start, time_t end)
 GSList *
 event_db_list_alarms_for_period (EventDB *edb, time_t start, time_t end)
 {
-  GSList *return_list = NULL;
-  time_t shifted_end;
-  struct tm tm_shift;
-  
-  localtime_r (&start, &tm_shift);
-  tm_shift.tm_mday++;
-  tm_shift.tm_hour=0;
-  tm_shift.tm_min=0;
-  tm_shift.tm_sec=1;
-  shifted_end=mktime(&tm_shift);
-  return_list = event_db_list_for_period_internal (edb, start, shifted_end,
-						   FALSE, FALSE, TRUE, 0);
-  start=shifted_end;
-   
-  while (!return_list && start<end)
-    {
-      return_list
-	= event_db_list_for_period_internal (edb,
-					     start, start+SECONDS_IN_DAY,
-					     FALSE, FALSE, TRUE, 0);
-      start+=SECONDS_IN_DAY;
-    }
-  return(return_list);
+  return event_db_list_for_period_internal (edb, start, end, FALSE, TRUE);
 }
 
 /**
  * event_db_untimed_list_for_period:
  * @start: Start time
  * @end: End time
- * @yes:
  * 
  * Create a list of all untimed events for a given period.
  *
  * Returns: A list of events.
  */
 GSList *
-event_db_untimed_list_for_period (EventDB *edb, time_t start, time_t end,
-				  gboolean yes)
+event_db_untimed_list_for_period (EventDB *edb, time_t start, time_t end)
 {
-  return event_db_list_for_period_internal (edb, start, end,
-					    yes, TRUE, FALSE, 0);
-}
-
-/**
- * event_db_list_for_future:
- * @start: Start time
- * @max: Maximum number of events to retrieve.
- * 
- * Get a list of all future events starting at a given time. The total amount 
- * of events may be limited by the @max parameter. Set this to 0 for an 
- * unlimited amount of events.
- *
- * Returns: A list of events.
- */
-GSList *
-event_db_list_for_future (EventDB *edb, time_t start, guint max)
-{
-  int NUMBER_OF_DAYS=14;
-  int day_inc;
-  GSList *return_list = NULL;
-  time_t shifted_end;
-  struct tm tm_shift;
-  
-  localtime_r (&start, &tm_shift);
-  tm_shift.tm_mday++;
-  tm_shift.tm_hour=0;
-  tm_shift.tm_min=0;
-  tm_shift.tm_sec=1;
-  shifted_end=mktime(&tm_shift);
-  return_list = event_db_list_for_period_internal (edb, start, shifted_end,
-						   FALSE, FALSE, TRUE, 0);
-  start=shifted_end;
-   
-  for (day_inc=0;day_inc<NUMBER_OF_DAYS;day_inc++) 
-    {
-      return_list = g_slist_concat (return_list,
-				    event_db_list_for_period_internal
-				    (edb, start, start+SECONDS_IN_DAY,
-				     FALSE, FALSE, FALSE, max));
-      start+=SECONDS_IN_DAY;
-    }
-  
-  return return_list;
+  return event_db_list_for_period_internal (edb, start, end, TRUE, FALSE);
 }
 
 #define insert_values(db, id, key, format, value)	\
@@ -1585,7 +1477,7 @@ GET_SET_STRING(summary)
 GET_SET_STRING(location)
 GET_SET_STRING(description)
 
-const GSList *const
+const GSList *
 event_get_categories (Event *ev)
 {
   LIVE (ev);

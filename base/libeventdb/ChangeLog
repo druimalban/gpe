@@ -1,3 +1,56 @@
+2006-04-23  Neal H. Walfield  <neal@gnu.org>
+
+	* Makefile.am (INCLUDES): Rename from this...
+	(AM_CPPFLAGS): ... to this.
+	(libeventdb_la_LDFLAGS): Bump the so version.
+	(check_PROGRAMS): New.
+	(test_event_list_SOURCES): Likewise.
+	(test_event_list_LDADD): Likewise.
+	(test_recur_daily_SOURCES): Likewise.
+	(test_recur_daily_LDADD): Likewise.
+	(test_recur_weekly_SOURCES): Likewise.
+	(test_recur_weekly_LDADD): Likewise.
+	(test_recur_monthly_SOURCES): Likewise.
+	(test_recur_monthly_LDADD): Likewise.
+	* test-event-list.c: New file.
+	* test-recur-daily.c: Likewise.
+	* test-recur-monthly.c: Likewise.
+	* test-recur-weekly.c: Likewise.
+	* test-skeleton.c: Likewise.  Imported revision 1.30 from glibc
+	(http://sourceware.org/cgi-bin/cvsweb.cgi/libc/test-skeleton.c?cvsroot=glibc).
+
+	* gpe/event-db.h (event_db_list_for_future): Remove declaration.
+	(event_db_untimed_list_for_period): Remove parameter yes.
+	* event-db.c (event_db_list_for_period_internal): Rewrite.  Remove
+	parameters untimed_significant and max.  Update callers.
+	(event_db_list_alarms_for_period): Simply use
+	event_db_list_for_period_internal.
+	(event_db_untimed_list_for_period): Likewise and remove parameter
+	yes.
+	(event_db_list_for_future): Remove function.
+	
+	* event-db.c (schema_str): Use value directly and remove variable.
+	(schema2_str): Likewise.
+	(schema_info): Likewise.
+	(load_data_callback): Make a nested function in event_db_new.
+	(load_callback): Likewise.
+	(event_db_new): Don't fail if we can't read a version 0 database.
+	
+	* gpe/event-db.h (EventClass): Move from here...
+	* event-db.c: (EventClass): ... to here.
+	* gpe/event-db.h (struct _EventDB): Move from here...
+	* event-db.c: (struct _EventDB): ... to here.  Remove fields
+	one_shot_events and recurring_events.  Add field events.  Update
+	callers.
+	* gpe/event-db.h (EventDBClass): Move from here...
+	* event-db.c: (EventDBClass): ... to here.
+	(event_details_t): Remove typedef.
+
+	* event-db.c (recur_chunk): Mark static.
+
+	* event-db.c (event_get_categories): Remove const.
+	* gpe/event-db.h (event_get_categories): Remove const.
+
 2006-04-13  Neal H. Walfield  <neal@gnu.org>
 
 	* gpe/event-db.h: Include <glib-object.h>.
