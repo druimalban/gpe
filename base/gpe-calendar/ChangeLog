@@ -1,5 +1,10 @@
 2006-04-23  Neal H. Walfield  <neal@gnu.org>
 
+	* day_render.c (gtk_day_render_expose): Don't forget to free
+	UNTIL.
+
+2006-04-23  Neal H. Walfield  <neal@gnu.org>
+
 	* day_render.c (gtk_day_render_expose): If the event doesn't end
 	during the displayed period, include text about when it does ends.
 

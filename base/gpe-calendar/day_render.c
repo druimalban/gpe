@@ -704,6 +704,7 @@ gtk_day_render_expose (GtkWidget *widget, GdkEventExpose *event)
 	gr.y = (y + 1) + (gr.height - pr.height) / 2;
 
       g_free (buffer);
+      g_free (until);
 
       gtk_paint_layout (GTK_WIDGET (day_render)->style, w,
 			GTK_WIDGET_STATE (day_render),
