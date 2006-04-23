@@ -104,9 +104,6 @@ struct _GtkDayRender
   /* Cache of gray.  */
   GdkGC *gray_gc;
 
-  /* The width of the time column.  */
-  gint time_width;
-
   /* Number of rows.  */
   gint rows;
 
@@ -121,6 +118,8 @@ struct _GtkDayRender
   gint rows_visible_first;
   gint rows_visible;
 
+  /* Width of the time column in pixels.  */
+  gint time_width;
   /* The minimum height of a row in pixels.  */
   gint row_height_min;
 };
@@ -142,6 +141,8 @@ static void gtk_day_render_init (GTypeInstance *instance, gpointer klass);
 static void gtk_day_render_dispose (GObject *object);
 static void gtk_day_render_finalize (GObject *object);
 
+static void gtk_day_render_size_request (GtkWidget *widget,
+					 GtkRequisition *requisition);
 static gboolean gtk_day_render_expose (GtkWidget *widget,
 				       GdkEventExpose *event);
 static gboolean gtk_day_render_configure (GtkWidget *widget,
@@ -192,6 +193,7 @@ gtk_day_render_base_class_init (gpointer klass)
   object_class->dispose = gtk_day_render_dispose;
 
   widget_class = (GtkWidgetClass *) klass;
+  widget_class->size_request = gtk_day_render_size_request;
   widget_class->expose_event = gtk_day_render_expose;
   widget_class->configure_event = gtk_day_render_configure;
   widget_class->button_press_event = gtk_day_render_button_press;
@@ -367,6 +369,34 @@ hour_bar_move (gpointer d)
     }
 }
 
+static void
+gtk_day_render_size_request (GtkWidget *widget,
+			     GtkRequisition *requisition)
+{
+  GtkDayRender *day_render = GTK_DAY_RENDER (widget);
+  PangoLayout *pl = gtk_widget_create_pango_layout (widget, NULL);
+  PangoContext *context = pango_layout_get_context (pl);
+  PangoFontMetrics *metrics
+    = pango_context_get_metrics (context,
+				 widget->style->font_desc,
+				 pango_context_get_language (context));
+
+  day_render->row_height_min = (pango_font_metrics_get_ascent (metrics)
+				+ pango_font_metrics_get_descent (metrics))
+    / PANGO_SCALE + 1;
+
+  requisition->height
+    = MAX (requisition->height,
+	   day_render->row_height_min * day_render->rows_visible);
+
+  requisition->width
+    = MAX (requisition->width,
+	   pango_font_metrics_get_approximate_char_width (metrics) * 24 / PANGO_SCALE);
+
+  g_object_unref (pl);
+  pango_font_metrics_unref (metrics);
+}
+
 static gboolean
 gtk_day_render_expose (GtkWidget *widget, GdkEventExpose *event)
 {
@@ -396,24 +426,19 @@ gtk_day_render_expose (GtkWidget *widget, GdkEventExpose *event)
   pl = gtk_widget_create_pango_layout (widget, NULL);
   pango_layout_set_alignment (pl, PANGO_ALIGN_CENTER);
   pango_layout_set_wrap (pl, PANGO_WRAP_WORD_CHAR);
-  
+
   if (! day_render->gray_gc)
     day_render->gray_gc = pen_new (widget, 58905, 58905, 56610);
   if (! day_render->app_gc)
     day_render->app_gc = pen_new (widget, day_render->app.red,
 				  day_render->app.green,
 				  day_render->app.blue);
-  /* Start with a white background.  */
-  gdk_draw_rectangle (widget->window, white_gc, TRUE,
-		      0, 0,
-		      day_render->visible_width - 1,
-		      day_render->visible_height - 1);
   if (day_render->hour_column)
     /* Draw the hour column's background.  */
     {
       gdk_draw_rectangle (widget->window, day_render->gray_gc, TRUE,
 			  0, 0,
-			  day_render->time_width - 1,
+			  day_render->visible_width - 1,
 			  day_render->visible_height - 1);
 
       if (day_render->hour_bar_pos >= 0)
@@ -430,7 +455,67 @@ gtk_day_render_expose (GtkWidget *widget, GdkEventExpose *event)
 			      day_render->visible_width - 1,
 			      HOUR_BAR_HEIGHT (day_render) / 2);
 	}
+
+      int time_width = 0;
+      for (i = day_render->rows_visible_first;
+	   i <= day_render->rows_visible_first + day_render->rows_visible;
+	   i ++)
+	{
+	  time_t tm;
+	  struct tm ftm;
+	  char timebuf[10];
+	  char buf[60], *buffer;
+	  GdkRectangle gr;
+	  PangoRectangle pr;
+
+	  top = i * day_render->height / day_render->rows
+	    - day_render->offset_y;
+
+	  tm = day_render->date
+	    + i * ((gfloat) day_render->duration / day_render->rows);
+	  localtime_r (&tm, &ftm);
+	  strftime (timebuf, sizeof (timebuf), TIMEFMT, &ftm);
+	  snprintf (buf, sizeof (buf), "<span font_desc='normal'>%s</span>",
+		    timebuf);
+	  buffer = g_locale_to_utf8 (buf, -1, NULL, NULL, NULL);
+	  pango_layout_set_markup (pl, buffer, -1);
+	  pango_layout_get_pixel_extents (pl, NULL, &pr);
+
+	  gr.width = pr.width;
+	  gr.height = pr.height;
+	  gr.x = 1;
+	  gr.y = top;
+
+	  if (! day_render->time_width)
+	    time_width = MAX (time_width, pr.width + 2);
+
+	  gtk_paint_layout (widget->style,
+			    widget->window,
+			    GTK_WIDGET_STATE (widget),
+			    FALSE, &gr, widget, "label", gr.x, gr.y, pl);
+
+	  g_free (buffer);
+	}
+      if (! day_render->time_width)
+	day_render->time_width = time_width;
     }
+  else
+    day_render->time_width = 0;
+
+  /* Start with a white background.  */
+  gdk_draw_rectangle (widget->window, white_gc, TRUE,
+		      day_render->time_width, 0,
+		      day_render->visible_width - 1,
+		      day_render->visible_height - 1);
+
+  if (day_render->hour_column && day_render->hour_bar_pos >= 0)
+    /* Draw the hour bar over the white background.  */
+    gdk_draw_rectangle (widget->window, day_render->time_gc, TRUE,
+			day_render->time_width,
+			day_render->hour_bar_pos
+			- HOUR_BAR_HEIGHT (day_render) / 2,
+			day_render->visible_width - 1,
+			HOUR_BAR_HEIGHT (day_render) / 2);
 
   /* And now each row's background.  */
   for (i = day_render->rows_visible_first;
@@ -454,38 +539,6 @@ gtk_day_render_expose (GtkWidget *widget, GdkEventExpose *event)
 	  gdk_draw_line (widget->window, day_render->gray_gc,
 			 day_render->time_width, top,
 			 day_render->visible_width - 1, top);
-	}
-
-      if (day_render->hour_column)
-	{
-	  time_t tm;
-	  struct tm ftm;
-	  char timebuf[10];
-	  char buf[60], *buffer;
-	  GdkRectangle gr;
-	  PangoRectangle pr;
-
-	  tm = day_render->date
-	    + i * ((gfloat) day_render->duration / day_render->rows);
-	  localtime_r (&tm, &ftm);
-	  strftime (timebuf, sizeof (timebuf), TIMEFMT, &ftm);
-	  snprintf (buf, sizeof (buf), "<span font_desc='normal'>%s</span>",
-		    timebuf);
-	  buffer = g_locale_to_utf8 (buf, -1, NULL, NULL, NULL);
-	  pango_layout_set_markup (pl, buffer, strlen (buffer));
-	  pango_layout_get_pixel_extents (pl, &pr, NULL);
-
-	  gr.width = pr.width * 2;
-	  gr.height = pr.height * 2;
-	  gr.x = 1;
-	  gr.y = top;
-
-	  gtk_paint_layout (widget->style,
-			    widget->window,
-			    GTK_WIDGET_STATE (widget),
-			    FALSE, &gr, widget, "label", gr.x, gr.y, pl);
-
-	  g_free (buffer);
 	}
     }
 
@@ -780,55 +833,11 @@ gtk_day_render_set_events (GtkDayRender *day_render, GSList *events,
   gtk_widget_queue_draw (GTK_WIDGET (day_render));
 }
 
-/* Update the calculated extents (DAY_RENDER->TIME_WIDTH and
-   DAY_RENDER->ROW_HEIGHT_MIN) of DAY_RENDER.  */
+/* Update the calculated extents (DAY_RENDER->ROW_HEIGHT_MIN) of
+   DAY_RENDER.  */
 static void
 gtk_day_render_update_extents (GtkDayRender *day_render)
 {
-  if (! day_render->row_height_min)
-    {
-      gint i;
-      PangoLayout *pl;
-      gint width;
-      gint height;
-
-      pl = gtk_widget_create_pango_layout (GTK_WIDGET (day_render), NULL);
-
-      width = 0;
-      height = 0;
-      for (i = 0; i < day_render->rows; i++)
-	{
-	  time_t tm;
-	  struct tm ftm;
-	  char timebuf[10];
-	  char buf[60], *buffer;
-	  PangoRectangle pr;
-
-	  tm = day_render->date
-	    + i * ((gfloat) day_render->duration / day_render->rows);
-	  localtime_r (&tm, &ftm);
-	  strftime (timebuf, sizeof (timebuf), TIMEFMT, &ftm);
-        
-	  snprintf (buf, sizeof (buf), "<span font_desc='normal'>%s</span>",
-		    timebuf);
-	  buffer = g_locale_to_utf8 (buf, -1, NULL, NULL, NULL);
-	  pango_layout_set_markup (pl, buffer, strlen (buffer));
-	  pango_layout_get_pixel_extents (pl, NULL, &pr);
-	  width = MAX (width, pr.width);
-	  height = MAX (height, pr.height);
-
-	  g_free (buffer);
-	}
-      g_object_unref (pl);
-
-      if (day_render->hour_column)
-	day_render->time_width = width + 4;
-      else
-	day_render->time_width = 0;
-
-      day_render->row_height_min = height + 4;
-    }
-
   /* Determine the first row we need to show.  */
   g_assert (day_render->date <= day_render->event_earliest);
   day_render->rows_visible_first
@@ -854,10 +863,11 @@ gtk_day_render_update_extents (GtkDayRender *day_render)
 
   hour_bar_calc (day_render);
 
-  /* Request a window size.  */
-  gtk_widget_set_size_request (GTK_WIDGET (day_render), -1,
-			       day_render->row_height_min
-			       * day_render->rows_visible);
+  if (day_render->row_height_min)
+    /* Request a window size.  */
+    gtk_widget_set_size_request (GTK_WIDGET (day_render), -1,
+				 day_render->row_height_min
+				 * day_render->rows_visible);
 }
 
 /**

@@ -1,3 +1,16 @@
+2006-04-23  Neal H. Walfield  <neal@gnu.org>
+
+	* day_render.c (gtk_day_render_base_class_init): Set
+	widget_class->size_request to GTK_DAY_RENDER_SIZE_REQUEST.
+	(gtk_day_render_size_request): New function, calculate
+	DAY_RENDER->ROW_HEIGHT_MIN here.
+	(gtk_day_render_expose): Calculate time_width here as required.
+	Rearrange code so that there is no penalty.
+	(gtk_day_render_update_extents): Don't calc
+	DAY_RENDER->ROW_HEIGHT_MIN or DAY_RENDER->TIME_WIDTH here.  Don't
+	request a window size unless the widget has already received a
+	size request event.
+
 2006-04-22  Neal H. Walfield  <neal@gnu.org>
 
 	* gtkdatesel.c (struct _GtkDateSel): Remove fields day_width,
