@@ -57,10 +57,11 @@ struct _GtkWeekView
   /* The week day (if any) which the popup menu is for.  */
   struct week_day *has_popup;
 
-  /* With required by the banners.  */
+  /* Width required by the banners, valid if HAVE_EXTENTS is true.  */
   gint banner_width;
-  /* Width required by the time fields.  */
+  /* Width required by the time fields, valid if HAVE_EXTENTS is true.  */
   gint time_width;
+
   /* Current canvas width and height.  */
   gint width, height;
 
@@ -278,6 +279,55 @@ draw_expose_event (GtkWidget *widget, GdkEventExpose *event, GtkWidget *wv)
       day_start = 0;
       day_end = 6;
       top = 0;
+
+      /* Calculate WEEKVIEW->BANNER_WIDTH, the minimum width required to
+	 display each day's banner.  */
+      int day;
+      week_view->banner_width = 0;
+      for (day = 0; day < 7; day++)
+	{
+	  PangoRectangle pr;
+    
+	  pango_layout_set_markup (pl, week_view->days[day].banner, -1);
+	  pango_layout_get_pixel_extents (pl, NULL, &pr);
+	  week_view->banner_width = MAX (pr.width, week_view->banner_width);
+	}
+
+      /* Calculate WEEK_VIEW->TIME_WIDTH, the maximum width required by
+	 any event's time stamp.  */
+      GSList *iter;
+      week_view->time_width = 0;
+      for (day = 0; day < 7; day++)
+	for (iter = week_view->days[day].events; iter; iter = iter->next)
+	  {
+	    Event *ev = iter->data;
+	    if (event_is_untimed (ev))
+	      /* Reminder, i.e. no time.  */
+	      continue;
+
+	    time_t t = event_get_start (ev);
+	    struct tm tm;
+	    localtime_r (&t, &tm);
+
+	    if (! (tm.tm_year == week_view->days[day].popup.year
+		   && tm.tm_mon == week_view->days[day].popup.month
+		   && tm.tm_mday == week_view->days[day].popup.day))
+	      /* Doesn't start today.  As such, we don't show the
+		 date.  */
+	      continue;
+
+	    PangoRectangle pr;
+
+	    gchar *buffer = strftime_strdup_utf8_locale (TIMEFMT, &tm);
+	    pango_layout_set_text (pl_evt, buffer, -1);
+	    g_free (buffer);
+	    pango_layout_get_pixel_extents (pl_evt, NULL, &pr);
+
+	    week_view->time_width = MAX (pr.width, week_view->time_width);
+	  }
+      if (week_view->time_width > 0)
+	/* Add a small gap.  */
+	week_view->time_width += 5;
     }
 
   /* Calculate the amount of space for the text.  */
@@ -475,7 +525,6 @@ gtk_week_view_reload_events (GtkView *view)
     = gtk_widget_create_pango_layout (GTK_WIDGET (week_view->draw), NULL);
   PangoLayout *pl_evt
     = gtk_widget_create_pango_layout (GTK_WIDGET (week_view->draw), NULL);
-  GSList *iter;
 
   localtime_r (&now, &tm);
 
@@ -557,53 +606,6 @@ gtk_week_view_reload_events (GtkView *view)
       d->popup.events = week_view->days[day].events;
     }
   g_assert (0 <= week_view->focused_day && week_view->focused_day < 7);
-
-  /* Calculate WEEKVIEW->BANNER_WIDTH, the minimum width required to
-     display each day's banner.  */
-  week_view->banner_width = 0;
-  for (day = 0; day < 7; day++)
-    {
-      PangoRectangle pr;
-    
-      pango_layout_set_markup (pl, week_view->days[day].banner, -1);
-      pango_layout_get_pixel_extents (pl, NULL, &pr);
-      week_view->banner_width = MAX (pr.width, week_view->banner_width);
-    }
-
-  /* Calculate WEEK_VIEW->TIME_WIDTH, the maximum width required by
-     any event's time stamp.  */
-  week_view->time_width = 0;
-  for (day = 0; day < 7; day++)
-    for (iter = week_view->days[day].events; iter; iter = iter->next)
-      {
-	Event *ev = iter->data;
-	if (event_is_untimed (ev))
-	  /* Reminder, i.e. no time.  */
-	  continue;
-
-	time_t t = event_get_start (ev);
-	struct tm tm;
-	localtime_r (&t, &tm);
-
-	if (! (tm.tm_year == week_view->days[day].popup.year
-	       && tm.tm_mon == week_view->days[day].popup.month
-	       && tm.tm_mday == week_view->days[day].popup.day))
-	  /* Doesn't start today.  As such, we don't show the
-	     date.  */
-	  continue;
-
-	PangoRectangle pr;
-
-	gchar *buffer = strftime_strdup_utf8_locale (TIMEFMT, &tm);
-	pango_layout_set_text (pl_evt, buffer, -1);
-	g_free (buffer);
-	pango_layout_get_pixel_extents (pl_evt, NULL, &pr);
-
-	week_view->time_width = MAX (pr.width, week_view->time_width);
-      }
-  if (week_view->time_width > 0)
-    /* Add a small gap.  */
-    week_view->time_width += 5;
 
   week_view->have_extents = FALSE;
 
