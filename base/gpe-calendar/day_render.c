@@ -639,10 +639,21 @@ gtk_day_render_expose (GtkWidget *widget, GdkEventExpose *event)
       const char *location = event_get_location (event_rectangle->event);
       const char *description = event_get_description (event_rectangle->event);
 
+      char *until = NULL;
+      time_t end = event_get_start (event_rectangle->event)
+	+ event_get_duration (event_rectangle->event);
+      if (end > day_render->date + day_render->duration)
+	{
+	  struct tm tm;
+	  localtime_r (&end, &tm);
+
+	  until = strftime_strdup_utf8_locale (_("Until %b %d"), &tm);
+	}
+
       char *text (const char *loc_desc_sep)
 	{
 	  return
-	    g_strdup_printf ("<b>%s</b>%s%s%s%s",
+	    g_strdup_printf ("<b>%s</b>%s%s%s%s%s%s",
 			     summary,
 			     (summary && summary[0]
 			      && ((location && location[0])
@@ -650,7 +661,9 @@ gtk_day_render_expose (GtkWidget *widget, GdkEventExpose *event)
 			     ? ": " : "",
 			     location ? location : "",
 			     location && location[0] ? loc_desc_sep : "",
-			     description ? description : "");
+			     description ? description : "",
+			     until && until[0] ? loc_desc_sep : "",
+			     until ? until : "");
 	}
 
       buffer = text ("\n");
