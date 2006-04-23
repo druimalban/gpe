@@ -1,5 +1,10 @@
 2006-04-23  Neal H. Walfield  <neal@gnu.org>
 
+	* event-list.c (gtk_event_list_reload_events): Correctly calculate
+	NEXT_RELOAD.
+	
+2006-04-23  Neal H. Walfield  <neal@gnu.org>
+
 	* week_view.c (gtk_week_view_reload_events): Move code which
 	calculates WEEK_VIEW->BANNER_WIDTH and WEEK_VIEW->TIME_WIDTH from
 	here...

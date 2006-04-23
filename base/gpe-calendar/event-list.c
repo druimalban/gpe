@@ -347,7 +347,7 @@ gtk_event_list_reload_events (GtkEventList *event_list)
 						 event_list->date,
 						 event_list->date
 						 + 14 * 24 * 60 * 60);
-  time_t next_reload = 2 * 24 * 60 * 60;
+  time_t next_reload = event_list->date + 2 * 24 * 60 * 60;
   for (e = event_list->events; e; e = e->next)
     {
       Event *ev = e->data;
@@ -371,6 +371,14 @@ gtk_event_list_reload_events (GtkEventList *event_list)
       if (event_list->timeout > 0)
 	g_source_remove (event_list->timeout);
 
+      if (next_reload < event_list->date)
+	{
+	  g_warning ("next_reload (%ld) < event_list->date (%ld)",
+		     next_reload, event_list->date);
+	  next_reload = event_list->date;
+	}
+
+      next_reload -= event_list->date;
       if (next_reload == 0)
 	next_reload = 1;
       event_list->timeout = g_timeout_add (next_reload * 1000,
