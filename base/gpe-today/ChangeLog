@@ -1,3 +1,9 @@
+2006-04-23  Florian Boor <florian@kernelconcepts.de>
+
+	* Release 0.11.
+    * main.c: Fix resize loop.
+	* Makefile: Update to use pkgconfig.
+
 2005-09-27  Florian Boor <florian@kernelconcepts.de>
 
 	* main.c: Set application icon.

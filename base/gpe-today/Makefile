@@ -1,9 +1,8 @@
 PACKAGE = gpe-today
 PREFIX = /usr/local
-VERSION = 0.10
+VERSION = 0.11
 CVSBUILD = yes
-#DEBUG = yes
-#EFENCE = yes
+DEBUG = yes
 
 LINGUAS = vi tr es sr rw fi pt_BR pt de zh_CN zh_TW ga ro wa fr sv nl cs sk ru
 
@@ -14,19 +13,15 @@ PACKAGE_LDFLAGS = -lefence
 endif
 
 ifeq ($(DEBUG),yes)
-package_CFLAGS = -g
+PACKAGE_CFLAGS = -g
 else
 PACKAGE_CFLAGS = -Os -fomit-frame-pointer
 endif
 
 .SUFFIXES: .d
 
-ifeq ($(CVSBUILD),yes)
-PACKAGE_CPPFLAGS += -I../libeventdb -I../libtododb -I../libxsettings -I../libxsettings-client -I../libdisplaymigration -I../libgpepimc
-PACKAGE_LDFLAGS += -L../libeventdb -L../libtododb -L../libxsettings-client -Wl,-rpath-link,../libxsettings -L../libgpepimc
-endif
 PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS)
-PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS)
+PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS) `pkg-config --cflags libeventdb libtododb libxsettings-client sqlite libgpepimc` 
 PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS) -leventdb -ltododb -lXsettings-client -lsqlite -lgpepimc
    
 

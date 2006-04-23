@@ -28,6 +28,7 @@ static void load_modules(void);
 static void set_bg_pixmap(const char *path);
 static void set_bg_color(const char *color);
 static void refresh_widgets(void);
+static GtkWidget *last_wid = NULL;
 
 int main(int argc, char **argv)
 {
@@ -123,10 +124,12 @@ void set_background(const char *spec)
         if (type) {
             arg = spec + offset;
         }
-
         switch (type) {
-        case NO_SPEC: /* assume spec == filename */
-            set_bg_pixmap(spec);
+        case NO_SPEC: /* assume spec == filename if a . within */
+            if (strstr (spec, "."))
+                set_bg_pixmap(spec);
+            else
+                set_bg_color(spec);
             break;
         case MBDESKTOP_BG:
             if (conf.xst_client &&
@@ -211,7 +214,11 @@ static void set_bg_pixmap(const char *path)
 
 static void set_bg_color(const char *color)
 {
-    /* TODO */
+  GdkColor col;
+
+  gdk_color_parse (color, &col);    
+  gdk_colormap_alloc_color (gdk_colormap_get_system(), &col, FALSE, TRUE);
+  gtk_widget_modify_bg (window.toplevel, GTK_STATE_NORMAL, &col);
 }
 
 static void init_main_window(void)
@@ -220,7 +227,7 @@ static void init_main_window(void)
 	gtk_window_set_title(GTK_WINDOW(window.toplevel), _("Summary"));
 	gtk_window_set_icon_from_file(GTK_WINDOW(window.toplevel), 
 	                              PREFIX "/share/pixmaps/gpe-today.png", NULL);
-	gtk_widget_set_name(window.toplevel, "main_window");
+    gtk_window_set_default_size (GTK_WINDOW (window.toplevel), 300, 400);
 	gtk_widget_realize(window.toplevel);
 	
 	if (gdk_screen_height() > gdk_screen_width())
@@ -319,8 +326,13 @@ gboolean myscroll_size_cb(GtkWidget *wid, GdkEventConfigure *ev, gpointer data)
 {
 	struct myscroll *scroll = data;
 	GSList *i;
-	
-	scroll->adjust->page_size = ev->height;
+
+    if (wid == last_wid)
+        return FALSE;
+    
+    last_wid = wid;
+
+	scroll->adjust->page_size = (gdouble) ev->height;
 	scroll->adjust->value = 0;
 	scroll->width = ev->width;
 	
@@ -330,7 +342,7 @@ gboolean myscroll_size_cb(GtkWidget *wid, GdkEventConfigure *ev, gpointer data)
 	}
 	
 	myscroll_update_upper_adjust(scroll);
-	
+
 	if (scroll->adjust->page_size >= scroll->adjust->upper)
 		gtk_widget_hide(scroll->scrollbar);
 	else if (!GTK_WIDGET_VISIBLE(scroll->scrollbar))
