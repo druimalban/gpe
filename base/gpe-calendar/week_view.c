@@ -585,11 +585,7 @@ gtk_week_view_reload_events (GtkView *view)
       /* Tomorrow.  */
       t = e + 1;
 
-      d->events = event_db_untimed_list_for_period (event_db, s, e, TRUE);
-      d->events = g_slist_concat (d->events, 
-				  event_db_untimed_list_for_period (event_db,
-								    s, e, 
-								    FALSE));
+      d->events = event_db_untimed_list_for_period (event_db, s, e);
 
       if (start.tm_mday == tm.tm_mday
 	  && start.tm_mon == tm.tm_mon

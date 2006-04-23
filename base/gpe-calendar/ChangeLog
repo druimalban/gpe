@@ -1,5 +1,10 @@
 2006-04-23  Neal H. Walfield  <neal@gnu.org>
 
+	* week_view.c (gtk_week_view_reload_events): Update call to
+	event_db_untimed_list_for_period to reflect new API.
+
+2006-04-23  Neal H. Walfield  <neal@gnu.org>
+
 	* day_render.c (gtk_day_render_expose): Don't forget to free
 	UNTIL.
 
