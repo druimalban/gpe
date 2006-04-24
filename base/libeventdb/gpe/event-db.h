@@ -25,9 +25,6 @@
 #define SAT  (1 << 5)
 #define SUN  (1 << 6)
 
-struct _EventDB;
-typedef struct _EventDB EventDB;
-
 typedef enum
 {
   RECUR_NONE,
@@ -44,14 +41,26 @@ typedef enum
  */
 typedef struct recur_s
 {
+  /* iCal's FREQ property.  */
   recur_type_t type;
-  
+
+  /* The number of times this recurrence set is expanded.  0 means
+     there is no limit.  */
   unsigned int count;
+  /* iCal's interval property: the number of units to skip.  If the
+     recurrence type is RECUR_YEARLY then the first recurrence occurs
+     INCREMENT years after the initial start.  */
   unsigned int increment;
-  unsigned long daymask;	/* bit 0 = Mon, bit 1 = Tue, etc */
+  /* Only meaningful when TYPE is RECUR_WEEKLY: if bit 0 is set then
+     occur on Mon, bit 1, Tue, etc.  */
+  unsigned long daymask;
+
+  /* A list of start times to exclude.  Must match the start of a
+     recurrence exactly.  */
   GSList *exceptions;
-  
-  time_t end;			/* 0 == perpetual */
+
+  /* No recurrences beyond this time.  0 means forever.  */
+  time_t end;
 } *recur_t;
 
 #define EVENT_TYPE (event_get_type ())
@@ -60,43 +69,16 @@ typedef struct recur_s
 #define EVENT_CLASS(klass) \
   GTK_CHECK_CLASS_CAST (klass, EVENT_TYPE, struct _EventCLass)
 
-typedef struct
-{
-  GObjectClass gobject_class;
-  GObjectClass parent_class;
-} EventClass;
+struct _EventClass;
+typedef struct _EventClass EventClass;
 
 struct _Event;
 typedef struct _Event Event;
 
 extern GType event_get_type (void);
 
-struct _EventDB
-{
-  GObject object;
-
-  unsigned long dbversion;
-  void *sqliteh;
-
-  GList *recurring_events, *one_shot_events;
-
-  /* Largest UID which we know of.  */
-  unsigned long uid;
-};
-
-typedef struct
-{
-  GObjectClass gobject_class;
-  GObjectClass parent_class;
-
-  /* Signals.  */
-  guint event_new_signal;
-  void (*event_new) (EventDB *view, Event *event);
-  guint event_removed_signal;
-  void (*event_removed) (EventDB *view, Event *event);
-  guint event_changed_signal;
-  void (*event_changed) (EventDB *view, Event *event);
-} EventDBClass;
+struct _EventDB;
+typedef struct _EventDB EventDB;
 
 #define EVENT_DB_TYPE (event_db_get_type ())
 #define EVENT_DB(obj) \
@@ -121,16 +103,13 @@ extern GSList *event_db_list_for_period (EventDB *evd,
    between START and END.  */
 extern GSList *event_db_list_alarms_for_period (EventDB *evd,
 						time_t start, time_t end);
-/* Returns up to the MAX events which occur following START.  */
-extern GSList *event_db_list_for_future (EventDB *evd,
-					 time_t start, guint max);
 /* Like event_db_list_for_period but only for untimed events
    (i.e. which with a 0 length duration).  */
 extern GSList *event_db_untimed_list_for_period (EventDB *evd,
-						 time_t start, time_t end,
-						 gboolean yes);
+						 time_t start, time_t end);
 
-/* Create a new event in database EDB.  */
+/* Create a new event in database EDB.  If EVENTID is NULL, one is
+   fabricated.  */
 extern Event *event_new (EventDB *edb, const char *event_id);
 
 /* Flush event EV to the DB now.  */
@@ -175,7 +154,7 @@ extern void event_set_description (Event *ev, const char *description);
 extern const char *event_get_location (Event *ev) __attribute__ ((pure));
 extern void event_set_location (Event *ev, const char *location);
 
-extern const GSList *const event_get_categories (Event *ev)
+extern const GSList *event_get_categories (Event *ev)
      __attribute__ ((pure));
 extern void event_add_category (Event *ev, int category);
 /* After calling this function, EV owns CATEGORIES.  If you need to
