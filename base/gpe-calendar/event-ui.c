@@ -1710,26 +1710,37 @@ edit_event (Event *ev)
               break;
             }
 
+	  /* Turn all of the buttons off.  */
+	  gtk_toggle_button_set_active
+	    (GTK_TOGGLE_BUTTON (s->radiobuttonendon), FALSE);
+	  gtk_toggle_button_set_active
+	    (GTK_TOGGLE_BUTTON (s->radiobuttonendafter), FALSE);
+	  gtk_toggle_button_set_active
+	    (GTK_TOGGLE_BUTTON (s->radiobuttonforever), FALSE);
+
+	  /* Then turn the right one on.  */
           if (r->end)
-            {
+	    gtk_toggle_button_set_active
+	      (GTK_TOGGLE_BUTTON (s->radiobuttonendon), TRUE);
+          else if (r->count)
+	    gtk_toggle_button_set_active
+	      (GTK_TOGGLE_BUTTON (s->radiobuttonendafter), TRUE);
+	  else
+	    gtk_toggle_button_set_active
+	      (GTK_TOGGLE_BUTTON (s->radiobuttonforever), TRUE);
+
+	  if (r->end)
+	    {
               localtime_r (&r->end, &tm);
               gtk_date_combo_set_date (GTK_DATE_COMBO (s->datecomboendon),
-                                       tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
-              gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->radiobuttonendon),
-                                            TRUE);
-              gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->radiobuttonforever),
-                                            FALSE);
-            }
-          else
-            {
-              gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->radiobuttonendon),
-                                            FALSE);
-              gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->radiobuttonforever),
-                                            TRUE);
-            }
+                                       tm.tm_year + 1900, tm.tm_mon,
+				       tm.tm_mday);
+	    }
+	  gtk_spin_button_set_value (GTK_SPIN_BUTTON (s->endspin), r->count);
         }
-	else 
-	  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->radiobuttonnone), TRUE);
+      else 
+	gtk_toggle_button_set_active
+	  (GTK_TOGGLE_BUTTON (s->radiobuttonnone), TRUE);
     }
 
   return w;
