@@ -942,20 +942,16 @@ main (int argc, char *argv[])
 			 GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK);
   gtk_widget_show (GTK_WIDGET (datesel));
 
-  GtkBox *primary = GTK_BOX (gtk_hbox_new (FALSE, 0));
+  GtkPaned *primary = GTK_PANED (gtk_hpaned_new ());
   gtk_box_pack_start (win, GTK_WIDGET (primary), TRUE, TRUE, 0);
   gtk_widget_show (GTK_WIDGET (primary));
 
   view_container = gtk_vbox_new (FALSE, 0);
-  gtk_box_pack_start (primary, GTK_WIDGET (view_container), TRUE, TRUE, 0);
+  gtk_paned_pack1 (primary, GTK_WIDGET (view_container), TRUE, FALSE);
   gtk_widget_show (GTK_WIDGET (view_container));
 
-  GtkWidget *sep = gtk_vseparator_new ();
-  gtk_box_pack_start (primary, sep, FALSE, FALSE, 0);
-  gtk_widget_show (sep);
-
   GtkBox *sidebar = GTK_BOX (gtk_vbox_new (FALSE, 0));
-  gtk_box_pack_start (primary, GTK_WIDGET (sidebar), FALSE, FALSE, 0);
+  gtk_paned_pack2 (primary, GTK_WIDGET (sidebar), FALSE, TRUE);
   gtk_widget_show (GTK_WIDGET (sidebar));
 
   GTK_WIDGET_UNSET_FLAGS (calendar, GTK_CAN_FOCUS);

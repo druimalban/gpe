@@ -1,5 +1,10 @@
 2006-04-24  Neal H. Walfield  <neal@gnu.org>
 
+	* main.c (main): Make PRIMARY a pane, not a box.  Update users.
+	Don't create SEP.
+
+2006-04-24  Neal H. Walfield  <neal@gnu.org>
+
 	* event-list.c (gtk_event_list_base_class_init): Correctly
 	initialize PARENT_CLASS.
 
