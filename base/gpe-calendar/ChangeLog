@@ -1,5 +1,17 @@
 2006-04-24  Neal H. Walfield  <neal@gnu.org>
 
+	* event-ui.c (click_delete): Use event_is_recurrence to check if
+	an event is a recurrence.
+	(click_ok): Remove unused variables new_event and was_recur.  Use
+	event_get_recurrence_start to get the start of the recurrence
+	rather than event_get_start.  Use event_set_recurrence_start to
+	set the start of the recurrence.
+	(edit_event): Use event_get_recurrence_start to get the start of
+	the recurrence rather than event_get_start.  Use
+	event_get_recurrence_type rather then checking R->TYPE.
+
+2006-04-24  Neal H. Walfield  <neal@gnu.org>
+
 	* event-ui.c (build_edit_event_window): Add HBOXENDAFTER to
 	VBOXEND.  Change the ENDLABEL text to "recurrences".
 

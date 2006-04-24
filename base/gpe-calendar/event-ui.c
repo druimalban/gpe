@@ -277,10 +277,8 @@ click_delete (GtkWidget *widget, GtkWidget *d)
 {
   struct edit_state *s = g_object_get_data (G_OBJECT (d), "edit_state");
   Event *ev = s->ev;
-  recur_t r;
   
-  r = event_is_recurrence (ev);
-  if (r)
+  if (event_is_recurrence (ev))
     {
       if (gpe_question_ask(
         _("Delete all recurring entries?\n(If no, delete this instance only)"), 
@@ -319,23 +317,17 @@ click_ok (GtkWidget *widget, GtkWidget *d)
   Event *ev;
   struct tm tm_start, tm_end, tm_rend, tm_daystart;
   time_t start_t, end_t, rend_t;
-  gboolean new_event = FALSE;
   GtkTextIter start, end;
   GtkTextBuffer *buf;
-  gboolean was_recur;
 
   if (s->ev)
     {
       ev = s->ev;
       if (event_get_alarm (ev))
         unschedule_alarm (s->ev, gtk_widget_get_toplevel(widget));
-      was_recur = event_is_recurrence (ev);
     }
   else
-    {
-      ev = event_new (event_db, NULL);
-      new_event = TRUE;
-    }
+    ev = event_new (event_db, NULL);
 
   if (s->page == 0)
     {
@@ -435,7 +427,7 @@ click_ok (GtkWidget *widget, GtkWidget *d)
         }
     }
     
-  event_set_start (ev, start_t);
+  event_set_recurrence_start (ev, start_t);
   event_set_duration (ev, end_t - start_t);
 
   buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (s->description));
@@ -1628,7 +1620,7 @@ edit_event (Event *ev)
 			  event_get_location (ev) ?: "");
       update_categories (w, event_get_categories (ev), s);
 
-      time_t start = event_get_start (ev);
+      time_t start = event_get_recurrence_start (ev);
       localtime_r (&start, &tm);
       gpe_time_sel_set_time (GPE_TIME_SEL (s->starttime), tm.tm_hour, tm.tm_min);
       gpe_time_sel_set_time (GPE_TIME_SEL (s->remindertime), tm.tm_hour, tm.tm_min);
@@ -1637,7 +1629,7 @@ edit_event (Event *ev)
       gtk_date_combo_set_date (GTK_DATE_COMBO (s->reminderdate),
                                tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
 
-      end = event_get_start (ev) + event_get_duration (ev);
+      end = start + event_get_duration (ev);
       localtime_r (&end, &tm);
       gpe_time_sel_set_time (GPE_TIME_SEL (s->endtime), tm.tm_hour, tm.tm_min);
       gtk_notebook_set_page (GTK_NOTEBOOK (s->notebookedit), 0);
@@ -1684,7 +1676,7 @@ edit_event (Event *ev)
       if (event_is_recurrence (ev))
         {
 	  recur_t r = event_get_recurrence (ev);
-          switch (r->type)
+          switch (event_get_recurrence_type (ev))
             {
             case RECUR_NONE:
               abort ();
