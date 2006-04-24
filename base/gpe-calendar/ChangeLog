@@ -1,5 +1,11 @@
 2006-04-24  Neal H. Walfield  <neal@gnu.org>
 
+	* event-ui.c (edit_event): Set S->PAGE as a function of the result
+	of is_reminder, not event_get_duration.  Invert the logic used to
+	set S->REMINDERTIMEBUTTON.
+
+2006-04-24  Neal H. Walfield  <neal@gnu.org>
+
 	* day_render.c (gtk_day_render_button_press): Take into account
 	the minimum event rectangle height.
 

@@ -329,14 +329,16 @@ click_ok (GtkWidget *widget, GtkWidget *d)
   else
     ev = event_new (event_db, NULL);
 
+  memset (&tm_start, 0, sizeof (struct tm));
+  tm_start.tm_year = GTK_DATE_COMBO (s->startdate)->year - 1900;
+  tm_start.tm_mon = GTK_DATE_COMBO (s->startdate)->month;
+  tm_start.tm_mday = GTK_DATE_COMBO (s->startdate)->day;
+
+  start_t = mktime (&tm_start);
+
   if (s->page == 0)
     {
       /* Appointment */
-      memset (&tm_start, 0, sizeof (struct tm));
-      tm_start.tm_year = GTK_DATE_COMBO (s->startdate)->year - 1900;
-      tm_start.tm_mon = GTK_DATE_COMBO (s->startdate)->month;
-      tm_start.tm_mday = GTK_DATE_COMBO (s->startdate)->day;
-
       memset (&tm_end, 0, sizeof (struct tm));
       tm_end.tm_year = GTK_DATE_COMBO (s->enddate)->year - 1900;
       tm_end.tm_mon = GTK_DATE_COMBO (s->enddate)->month;
@@ -345,7 +347,6 @@ click_ok (GtkWidget *widget, GtkWidget *d)
       gpe_time_sel_get_time (GPE_TIME_SEL (s->starttime), (guint *)&tm_start.tm_hour, (guint *)&tm_start.tm_min);
       gpe_time_sel_get_time (GPE_TIME_SEL (s->endtime), (guint *)&tm_end.tm_hour, (guint *)&tm_end.tm_min);
 
-      start_t = mktime (&tm_start);
       end_t = mktime (&tm_end);
 
       /* If DST was in effect, mktime will have "helpfully" incremented the
@@ -365,11 +366,6 @@ click_ok (GtkWidget *widget, GtkWidget *d)
   else
     {
       /* Reminder */
-      memset (&tm_start, 0, sizeof (struct tm));
-      tm_start.tm_year = GTK_DATE_COMBO (s->reminderdate)->year - 1900;
-      tm_start.tm_mon = GTK_DATE_COMBO (s->reminderdate)->month;
-      tm_start.tm_mday = GTK_DATE_COMBO (s->reminderdate)->day;
-
       if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->remindertimebutton)))
         {
 	  gpe_time_sel_get_time (GPE_TIME_SEL (s->remindertime), (guint *)&tm_start.tm_hour, (guint *)&tm_start.tm_min);
@@ -380,8 +376,6 @@ click_ok (GtkWidget *widget, GtkWidget *d)
 	  event_set_untimed (ev);
           tm_start.tm_hour = 12;
         }
-
-      start_t = mktime (&tm_start);
 
       /* If DST was in effect, mktime will have "helpfully" incremented the
          hour.  */
@@ -1640,12 +1634,12 @@ edit_event (Event *ev)
        * and "Reminder" is at index = 1 */
       gtk_option_menu_set_history (GTK_OPTION_MENU (s->optionmenutype),
                                    event_get_duration (ev) == 0);
-      s->page = (event_get_duration (ev) == 0);
+      s->page = is_reminder (ev) ? 1 : 0;
       gtk_notebook_set_page (GTK_NOTEBOOK (s->notebooktype), s->page);
 
       /* Reminder */
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->remindertimebutton),
-				    (event_is_untimed (ev)));
+				    (!event_is_untimed (ev)));
  
       if (event_get_alarm (ev))
         {
