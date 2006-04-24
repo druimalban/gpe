@@ -25,14 +25,14 @@
 #define SAT  (1 << 5)
 #define SUN  (1 << 6)
 
-typedef enum
+enum event_recurrence_type
 {
   RECUR_NONE,
   RECUR_DAILY,
   RECUR_WEEKLY,
   RECUR_MONTHLY,
   RECUR_YEARLY
-} recur_type_t;
+};
 
 /**
  * *recur_t:
@@ -42,7 +42,7 @@ typedef enum
 typedef struct recur_s
 {
   /* iCal's FREQ property.  */
-  recur_type_t type;
+  enum event_recurrence_type type;
 
   /* The number of times this recurrence set is expanded.  0 means
      there is no limit.  */
@@ -136,6 +136,20 @@ extern void event_set_duration (Event *ev, unsigned long duration);
 
 extern unsigned long event_get_alarm (Event *ev) __attribute__ ((pure));
 extern void event_set_alarm (Event *ev, unsigned long alarm);
+
+/* Recurrence type.  */
+extern enum event_recurrence_type event_get_recurrence_type (Event *ev)
+     __attribute__ ((pure));
+extern void event_set_recurrence_type (Event *ev,
+				       enum event_recurrence_type type);
+
+/* Start of the recurrence set.  */
+extern time_t event_get_recurrence_start (Event *ev) __attribute__ ((pure));
+extern void event_set_recurrence_start (Event *ev, time_t start);
+
+/* End of the recurrence set.  */
+extern time_t event_get_recurrence_end (Event *ev) __attribute__ ((pure));
+extern void event_set_recurrence_end (Event *ev, time_t end);
 
 extern gboolean event_is_untimed (Event *ev) __attribute__ ((pure));
 extern void event_set_untimed (Event *ev);

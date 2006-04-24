@@ -1,3 +1,22 @@
+2006-04-24  Neal H. Walfield  <neal@gnu.org>
+
+	* gpe/event-db.h (recur_type_t): Rename from this...
+	(enum event_recurrence_type): ... to this.  Update users.
+	(event_get_recurrence_type): New declaration.
+	(event_set_recurrence_type): Likewise.
+	(event_get_recurrence_start): Likewise.
+	(event_set_recurrence_start): Likewise.
+	(event_get_recurrence_end): Likewise.
+	(event_set_recurrence_end): Likewise.
+	* event-db.c (GET_SET): Don't reuse field as the variable name,
+	take a new parameter instead.
+	(event_get_recurrence_type): New function.
+	(event_set_recurrence_type): Likewise.
+	(event_get_recurrence_start): Likewise.
+	(event_set_recurrence_start): Likewise.
+	(event_get_recurrence_end): Likewise.
+	(event_set_recurrence_end): Likewise.
+
 2006-04-23  Neal H. Walfield  <neal@gnu.org>
 
 	* Makefile.am (INCLUDES): Rename from this...

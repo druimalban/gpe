@@ -1381,9 +1381,9 @@ event_set_start (Event *ev, time_t start)
   event_db_add_internal (ev);
 }
 
-#define GET_SET(type, field) \
+#define GET_SET(type, name, field) \
   type \
-  event_get_##field (Event *ev) \
+  event_get_##name (Event *ev) \
   { \
     LIVE (ev); \
     ev = RESOLVE_CLONE (ev); \
@@ -1391,16 +1391,19 @@ event_set_start (Event *ev, time_t start)
   } \
  \
   void \
-  event_set_##field (Event *ev, type field) \
+  event_set_##name (Event *ev, type value) \
   { \
     LIVE (ev); \
     ev = RESOLVE_CLONE (ev); \
     STAMP (ev); \
-    ev->field = field; \
+    ev->field = value; \
   }
 
-GET_SET (unsigned long, duration)
-GET_SET (unsigned long, alarm)
+GET_SET (unsigned long, duration, duration)
+GET_SET (unsigned long, alarm, alarm)
+GET_SET (enum event_recurrence_type, recurrence_type, recur->type)
+GET_SET (time_t, recurrence_start, start)
+GET_SET (time_t, recurrence_end, recur->end)
 
 #define GET_SET_FLAG(flag, FLAG) \
   gboolean \
