@@ -329,16 +329,14 @@ click_ok (GtkWidget *widget, GtkWidget *d)
   else
     ev = event_new (event_db, NULL);
 
-  memset (&tm_start, 0, sizeof (struct tm));
-  tm_start.tm_year = GTK_DATE_COMBO (s->startdate)->year - 1900;
-  tm_start.tm_mon = GTK_DATE_COMBO (s->startdate)->month;
-  tm_start.tm_mday = GTK_DATE_COMBO (s->startdate)->day;
-
-  start_t = mktime (&tm_start);
-
   if (s->page == 0)
     {
       /* Appointment */
+      memset (&tm_start, 0, sizeof (struct tm));
+      tm_start.tm_year = GTK_DATE_COMBO (s->startdate)->year - 1900;
+      tm_start.tm_mon = GTK_DATE_COMBO (s->startdate)->month;
+      tm_start.tm_mday = GTK_DATE_COMBO (s->startdate)->day;
+
       memset (&tm_end, 0, sizeof (struct tm));
       tm_end.tm_year = GTK_DATE_COMBO (s->enddate)->year - 1900;
       tm_end.tm_mon = GTK_DATE_COMBO (s->enddate)->month;
@@ -347,6 +345,7 @@ click_ok (GtkWidget *widget, GtkWidget *d)
       gpe_time_sel_get_time (GPE_TIME_SEL (s->starttime), (guint *)&tm_start.tm_hour, (guint *)&tm_start.tm_min);
       gpe_time_sel_get_time (GPE_TIME_SEL (s->endtime), (guint *)&tm_end.tm_hour, (guint *)&tm_end.tm_min);
 
+      start_t = mktime (&tm_start);
       end_t = mktime (&tm_end);
 
       /* If DST was in effect, mktime will have "helpfully" incremented the
@@ -365,6 +364,12 @@ click_ok (GtkWidget *widget, GtkWidget *d)
     }
   else
     {
+      /* Appointment */
+      memset (&tm_start, 0, sizeof (struct tm));
+      tm_start.tm_year = GTK_DATE_COMBO (s->reminderdate)->year - 1900;
+      tm_start.tm_mon = GTK_DATE_COMBO (s->reminderdate)->month;
+      tm_start.tm_mday = GTK_DATE_COMBO (s->reminderdate)->day;
+
       /* Reminder */
       if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->remindertimebutton)))
         {
@@ -376,6 +381,8 @@ click_ok (GtkWidget *widget, GtkWidget *d)
 	  event_set_untimed (ev);
           tm_start.tm_hour = 12;
         }
+
+      start_t = mktime (&tm_start);
 
       /* If DST was in effect, mktime will have "helpfully" incremented the
          hour.  */
