@@ -92,7 +92,7 @@ gtk_event_list_base_class_init (gpointer klass)
   GObjectClass *object_class;
   GtkWidgetClass *widget_class;
 
-  parent_class = g_type_class_ref (gtk_vbox_get_type ());
+  parent_class = g_type_class_peek_parent (klass);
 
   object_class = G_OBJECT_CLASS (klass);
   object_class->finalize = gtk_event_list_finalize;

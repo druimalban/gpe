@@ -1,4 +1,9 @@
 2006-04-24  Neal H. Walfield  <neal@gnu.org>
+
+	* event-list.c (gtk_event_list_base_class_init): Correctly
+	initialize PARENT_CLASS.
+
+2006-04-24  Neal H. Walfield  <neal@gnu.org>
 	Reported by Jan Arne Petersen.
 
 	* event-ui.c (edit_event): Make S->RADIOBUTTONENDAFTER active if
