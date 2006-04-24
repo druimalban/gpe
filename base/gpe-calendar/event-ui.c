@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2006 Neal H. Walfield <neal@walfield.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -1414,6 +1415,8 @@ build_edit_event_window (void)
   gtk_widget_set_sensitive (radiobuttonforever , FALSE);
 
   /* end after radio button */
+  gtk_box_pack_start (GTK_BOX (vboxend), hboxendafter,
+		      FALSE, TRUE, 0);
   vboxend_group = gtk_radio_button_group (GTK_RADIO_BUTTON (radiobuttonforever));
   radiobuttonendafter = gtk_radio_button_new_with_label (vboxend_group,
                                                          _("end after"));
@@ -1441,7 +1444,7 @@ build_edit_event_window (void)
                            TRUE, TRUE, 2);
 
   /* events label */
-  endlabel= gtk_label_new (_("events"));
+  endlabel = gtk_label_new (_("recurrences"));
   gtk_box_pack_start (GTK_BOX (hboxendafter), endlabel, FALSE, FALSE, 0);
   gtk_widget_set_sensitive (endlabel, FALSE);
 
