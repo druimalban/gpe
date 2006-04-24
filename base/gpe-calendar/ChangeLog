@@ -1,5 +1,10 @@
 2006-04-24  Neal H. Walfield  <neal@gnu.org>
 
+	* day_render.c (gtk_day_render_button_press): Take into account
+	the minimum event rectangle height.
+
+2006-04-24  Neal H. Walfield  <neal@gnu.org>
+
 	* event-ui.c (click_delete): Use event_is_recurrence to check if
 	an event is a recurrence.
 	(click_ok): Remove unused variables new_event and was_recur.  Use

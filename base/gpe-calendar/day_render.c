@@ -780,11 +780,13 @@ gtk_day_render_button_press (GtkWidget *widget, GdkEventButton *event)
     = (GtkDayRenderClass *) G_OBJECT_GET_CLASS (day_render);
 
   /* search for an event rectangle */
+  gfloat height_min
+    = (gfloat) day_render->row_height_min / day_render->height;
   for (er = day_render->event_rectangles; er; er = er->next)
     {
       struct event_rect *e_r = er->data;
       if ((x >= e_r->x && x <= e_r->x + e_r->width)
-	  && (y >= e_r->y && y <= e_r->y + e_r->height))
+	  && y >= e_r->y && y <= e_r->y + MAX (height_min, e_r->height))
 	/* Click was within E_R.  Send the appropriate signal.  */
 	{
 	  GValue args[2];
