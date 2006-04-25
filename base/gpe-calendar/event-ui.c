@@ -360,7 +360,7 @@ click_ok (GtkWidget *widget, GtkWidget *d)
       if (end_t == start_t)
 	end_t++;
 
-      event_clear_untimed (ev);
+      event_set_untimed (ev, FALSE);
     }
   else
     {
@@ -374,11 +374,11 @@ click_ok (GtkWidget *widget, GtkWidget *d)
       if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->remindertimebutton)))
         {
 	  gpe_time_sel_get_time (GPE_TIME_SEL (s->remindertime), (guint *)&tm_start.tm_hour, (guint *)&tm_start.tm_min);
-	  event_clear_untimed (ev);
+	  event_set_untimed (ev, FALSE);
         }
       else
         {
-	  event_set_untimed (ev);
+	  event_set_untimed (ev, TRUE);
           tm_start.tm_hour = 12;
         }
 
@@ -404,8 +404,8 @@ click_ok (GtkWidget *widget, GtkWidget *d)
   tm_daystart.tm_mon = GTK_DATE_COMBO (s->startdate)->month;
   tm_daystart.tm_mday = GTK_DATE_COMBO (s->startdate)->day;
       
-  if (((start_t < time(NULL)) && !event_is_untimed (ev))
-      || (event_is_untimed (ev) && (start_t < mktime(&tm_daystart))))
+  if (((start_t < time(NULL)) && !event_get_untimed (ev))
+      || (event_get_untimed (ev) && (start_t < mktime(&tm_daystart))))
     {
       GtkWidget* dialog;
       gint ret;
@@ -1646,7 +1646,7 @@ edit_event (Event *ev)
 
       /* Reminder */
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->remindertimebutton),
-				    (!event_is_untimed (ev)));
+				    (!event_get_untimed (ev)));
  
       if (event_get_alarm (ev))
         {

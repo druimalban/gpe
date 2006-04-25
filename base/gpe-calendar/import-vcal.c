@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2004 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2006 Neal H. Walfield <neal@walfield.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -88,10 +89,8 @@ do_import_vevent (MIMEDirVEvent *event)
 	  gboolean untimed;
 
 	  parse_date (t->value, &start, &untimed);
-	  event_set_start (ev, start);
-
-	  if (untimed)
-	    event_set_untimed (ev);
+	  event_set_recurrence_start (ev, start);
+	  event_set_untimed (ev, untimed);
 	}
       else if (!strcasecmp (t->tag, "eventid"))
 	/* Ignore, we already have this.  */;

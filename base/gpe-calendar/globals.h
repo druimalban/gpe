@@ -66,4 +66,4 @@ extern const gchar *TIMEFMT;
 #endif
 
 #define is_reminder(ev) \
-  (event_get_duration (ev) == 0 && event_is_untimed (ev))
+  (event_get_duration (ev) == 0 && event_get_untimed (ev))

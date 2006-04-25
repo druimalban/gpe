@@ -301,7 +301,7 @@ draw_expose_event (GtkWidget *widget, GdkEventExpose *event, GtkWidget *wv)
 	for (iter = week_view->days[day].events; iter; iter = iter->next)
 	  {
 	    Event *ev = iter->data;
-	    if (event_is_untimed (ev))
+	    if (event_get_untimed (ev))
 	      /* Reminder, i.e. no time.  */
 	      continue;
 
@@ -393,7 +393,7 @@ draw_expose_event (GtkWidget *widget, GdkEventExpose *event, GtkWidget *wv)
 	  Event *ev = iter->data;
 	      
 	  /* Paint the time for events which have a time stamp.  */
-	  if (! event_is_untimed (ev))
+	  if (! event_get_untimed (ev))
 	    {
 	      time_t t;
 	      struct tm tm;
