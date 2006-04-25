@@ -1,5 +1,10 @@
 2006-04-25  Neal H. Walfield  <neal@gnu.org>
 
+	* week_view.c (gtk_week_view_reload_events): Call
+	event_db_list_for_period, not event_db_list_untimed_for_period.
+
+2006-04-25  Neal H. Walfield  <neal@gnu.org>
+
 	* event-ui.c: Synchronize libeventdb API changes to
 	event_get_untimed and event_set_untimed.
 	* globals.h: Likewise.
