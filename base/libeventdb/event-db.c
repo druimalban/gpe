@@ -64,6 +64,11 @@ struct _EventDB
 
   /* Largest UID which we know of.  */
   unsigned long uid;
+
+  /* A list of events that need to be flushed to backing store.  */
+  GSList *laundry_list;
+  /* The idle source.  */
+  guint laundry_buzzer;
 };
 
 /**
@@ -126,7 +131,12 @@ struct _Event
     { \
       event_details (ev, TRUE); \
       ev->details->modified = time (NULL); \
-      ev->modified = TRUE; \
+      if (! ev->modified) \
+        { \
+          ev->modified = TRUE; \
+          g_object_ref (ev); \
+          add_to_laundry_pile (ev); \
+        } \
     } \
   while (0)
 #define NO_CLONE(ev) g_return_if_fail (! ev->clone_source)
@@ -1094,7 +1104,7 @@ event_db_untimed_list_for_period (EventDB *edb, time_t start, time_t end)
 	sqlite_exec_printf (db, "insert into calendar values (%d, '%q', '" format "')", \
 			    NULL, NULL, err, id, key, value)
 
-/* Dump out an event to the SQL database */
+/* Dump an event to the SQL database.  */
 static gboolean
 event_write (Event *ev, char **err)
 {
@@ -1178,6 +1188,7 @@ event_write (Event *ev, char **err)
   if (insert_values (ev->edb->sqliteh, ev->uid, "alarm", "%d", ev->alarm))
     goto exit;
 
+  ev->modified = FALSE;
   rc = TRUE;
 exit:
   return rc;
@@ -1218,6 +1229,42 @@ event_flush (Event *ev)
   gpe_error_box (err);
   free (err);
   return FALSE;
+}
+
+/* Write all dirty events EDB->LAUNDRY_LIST to backing store.  Called
+   by the idle loop and set in add_to_laundry_pile.  */
+static gboolean
+do_laundry (gpointer data)
+{
+  EventDB *edb = EVENT_DB (data);
+  GSList *l;
+
+  for (l = edb->laundry_list; l; l = g_slist_next (l))
+    {
+      Event *e = EVENT (l->data);
+      if (e->modified)
+	event_flush (e);
+      g_object_unref (e);
+    }
+
+  /* Destroy the list.  */
+  g_slist_free (edb->laundry_list); 
+  edb->laundry_list = NULL;
+
+  /* Don't run again.  */
+  edb->laundry_buzzer = 0;
+  return FALSE;
+}
+
+/* EV is dirty (i.e. needs to be written to disk) but do it when we
+   are idle.  */
+static void
+add_to_laundry_pile (Event *ev)
+{
+  ev->edb->laundry_list
+    = g_slist_prepend (ev->edb->laundry_list, ev);
+  if (! ev->edb->laundry_buzzer)
+    g_idle_add (do_laundry, ev->edb);
 }
 
 /**

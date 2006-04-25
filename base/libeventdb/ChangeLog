@@ -1,5 +1,15 @@
 2006-04-25  Neal H. Walfield  <neal@gnu.org>
 
+	* event-db.c (struct _EventDB): Add fields laundry_list and
+	laundry_buzzer.
+	(STAMP): If EV->MODIFIED is not true, add a reference and add to
+	the laundry pile.
+	(event_write): On success, set EV->MODIFIED to FALSE.
+	(do_laundry): New function.
+	(add_to_laundry_pile): New function.
+
+2006-04-25  Neal H. Walfield  <neal@gnu.org>
+
 	* gpe/event-db.h (event_is_untimed, event_set_untimed,
 	event_clear_untimed): Removed declarations.
 	(event_get_untimed, event_set_untimed): New declarations.
