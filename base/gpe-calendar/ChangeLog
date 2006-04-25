@@ -1,3 +1,11 @@
+2006-04-25  Neal H. Walfield  <neal@gnu.org>
+
+	* event-ui.c: Synchronize libeventdb API changes to
+	event_get_untimed and event_set_untimed.
+	* globals.h: Likewise.
+	* import-vcal.c: Likewise.
+	* week_view.c: Likewise.
+
 2006-04-24  Neal H. Walfield  <neal@gnu.org>
 
 	* main.c (main): Make PRIMARY a pane, not a box.  Update users.
