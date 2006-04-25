@@ -151,9 +151,8 @@ extern void event_set_recurrence_start (Event *ev, time_t start);
 extern time_t event_get_recurrence_end (Event *ev) __attribute__ ((pure));
 extern void event_set_recurrence_end (Event *ev, time_t end);
 
-extern gboolean event_is_untimed (Event *ev) __attribute__ ((pure));
-extern void event_set_untimed (Event *ev);
-extern void event_clear_untimed (Event *ev);
+extern gboolean event_get_untimed (Event *ev) __attribute__ ((pure));
+extern void event_set_untimed (Event *ev, gboolean value);
 
 extern unsigned long event_get_uid (Event *ev) __attribute__ ((pure));
 extern const char *event_get_eventid (Event *ev) __attribute__ ((pure));

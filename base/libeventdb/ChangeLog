@@ -1,3 +1,21 @@
+2006-04-25  Neal H. Walfield  <neal@gnu.org>
+
+	* gpe/event-db.h (event_is_untimed, event_set_untimed,
+	event_clear_untimed): Removed declarations.
+	(event_get_untimed, event_set_untimed): New declarations.
+	* event-db.c (FLAG_UNTIMED): Remove define.
+	(struct _Event): Remove field flags, add field untimed.  Update
+	users.
+	(GET_SET): Break the getter code into...
+	(GET): ... this define.  Use this to implement event_get_uid and
+	event_get_eventid.
+	(GET_SET_FLAG): Remove define.
+	(event_is_untimed, event_set_untimed, event_clear_untimed):
+	Removed functions.
+	(event_get_untimed, event_set_untimed): New functions.
+
+	(event_db_new.load_callback0): Simply use parse_date.
+
 2006-04-24  Neal H. Walfield  <neal@gnu.org>
 
 	* gpe/event-db.h (recur_type_t): Rename from this...

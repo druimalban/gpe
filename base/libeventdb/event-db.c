@@ -106,9 +106,6 @@ struct _Event
   unsigned long duration;	/* 0 == instantaneous */
   unsigned long alarm;		/* seconds before event */
 
-#define FLAG_UNTIMED   (1 << 0)
-  unsigned long flags;
-
   recur_t recur;
   
   struct event_details *details;
@@ -120,6 +117,7 @@ struct _Event
 
   gboolean dead;
   gboolean modified;
+  gboolean untimed;
 };
 
 #define LIVE(ev) (g_assert (! ev->dead))
@@ -433,8 +431,8 @@ static gboolean
 parse_date (char *s, time_t *t, gboolean *date_only)
 {
   struct tm tm;
-
   char *p;
+
   memset (&tm, 0, sizeof (tm));
   p = strptime (s, "%Y-%m-%d", &tm);
   if (p == NULL)
@@ -523,7 +521,7 @@ event_db_new (const char *fname)
 
 		  if (untimed)
 		    {
-		      ev->flags |= FLAG_UNTIMED;
+		      ev->untimed = TRUE;
 		      ev->start += 12 * 60 * 60;
 		    }
 		}
@@ -620,29 +618,16 @@ event_db_new (const char *fname)
 	  if (argc == 7)
 	    {
 	      Event *ev = EVENT (g_object_new (event_get_type (), NULL));
-	      char *p;
-	      struct tm tm;
 
 	      ev->edb = edb;
-	      ev->flags = 0;
 	      ev->uid = atoi (argv[0]);
-	      event_details (ev, FALSE);
 
-	      memset (&tm, 0, sizeof (tm));
-	      p = strptime (argv[1], "%Y-%m-%d", &tm);
-	      if (p == NULL)
-		{
-		  fprintf (stderr, "Unable to parse date: %s\n", argv[1]);
-		  return 1;
-		}
-	      p = strptime (p, " %H:%M", &tm);
-	      if (p == NULL)
-		ev->flags |= FLAG_UNTIMED;
-      
-	      ev->start = timegm (&tm);
+	      parse_date (argv[1], &ev->start, &ev->untimed);
+
 	      ev->duration = argv[2] ? atoi(argv[2]) : 0;
 	      ev->alarm = atoi (argv[3]);
 
+	      event_details (ev, FALSE);
 	      ev->details->summary = g_strdup (argv[5]);
 	      ev->details->description = g_strdup (argv[6]);
 
@@ -1120,7 +1105,7 @@ event_write (Event *ev, char **err)
 
   gmtime_r (&ev->start, &tm);
   strftime (buf_start, sizeof (buf_start), 
-	    (ev->flags & FLAG_UNTIMED) ? "%Y-%m-%d" : "%Y-%m-%d %H:%M",
+	    ev->untimed ? "%Y-%m-%d" : "%Y-%m-%d %H:%M",
 	    &tm);  
 
   if (!ev->eventid)
@@ -1183,7 +1168,7 @@ event_write (Event *ev, char **err)
         {
           gmtime_r (&r->end, &tm);
           strftime (buf_end, sizeof (buf_end), 
-                (ev->flags & FLAG_UNTIMED) ? "%Y-%m-%d" : "%Y-%m-%d %H:%M",
+                ev->untimed ? "%Y-%m-%d" : "%Y-%m-%d %H:%M",
                 &tm); 
           if (insert_values (ev->edb->sqliteh, ev->uid, "rend", "%q", buf_end)) 
             goto exit;
@@ -1381,7 +1366,7 @@ event_set_start (Event *ev, time_t start)
   event_db_add_internal (ev);
 }
 
-#define GET_SET(type, name, field) \
+#define GET(type, name, field) \
   type \
   event_get_##name (Event *ev) \
   { \
@@ -1389,7 +1374,10 @@ event_set_start (Event *ev, time_t start)
     ev = RESOLVE_CLONE (ev); \
     return ev->field; \
   } \
- \
+
+#define GET_SET(type, name, field) \
+  GET (type, name, field) \
+  \
   void \
   event_set_##name (Event *ev, type value) \
   { \
@@ -1405,54 +1393,10 @@ GET_SET (enum event_recurrence_type, recurrence_type, recur->type)
 GET_SET (time_t, recurrence_start, start)
 GET_SET (time_t, recurrence_end, recur->end)
 
-#define GET_SET_FLAG(flag, FLAG) \
-  gboolean \
-  event_is_##flag (Event *ev) \
-  { \
-    LIVE (ev); \
-    ev = RESOLVE_CLONE (ev); \
-    return !! (ev->flags & FLAG); \
-  } \
- \
-  void \
-  event_set_##flag (Event *ev) \
-  { \
-    LIVE (ev); \
-    ev = RESOLVE_CLONE (ev); \
-    if ((ev->flags & FLAG) == FLAG) \
-      return;  \
-    STAMP (ev); \
-    ev->flags |= FLAG; \
-  } \
- \
-  void \
-  event_clear_##flag (Event *ev) \
-  { \
-    LIVE (ev); \
-    ev = RESOLVE_CLONE (ev); \
-    if ((ev->flags & FLAG) == 0) \
-      return;  \
-    STAMP (ev); \
-    ev->flags &= ~FLAG; \
-  }
+GET_SET (gboolean, untimed, untimed);
 
-GET_SET_FLAG (untimed, FLAG_UNTIMED)
-
-unsigned long
-event_get_uid (Event *ev)
-{
-  LIVE (ev);
-  ev = RESOLVE_CLONE (ev);
-  return ev->uid;
-}
-
-const char *
-event_get_eventid (Event *ev)
-{
-  LIVE (ev);
-  ev = RESOLVE_CLONE (ev);
-  return ev->eventid;
-}
+GET (unsigned long, uid, uid)
+GET (const char *, eventid, eventid)
 
 #define GET_SET_STRING(field) \
   const char * \
