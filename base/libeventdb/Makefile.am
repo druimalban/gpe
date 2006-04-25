@@ -18,9 +18,9 @@ DISTCHECK_CONFIGURE_FLAGS = --enable-gtk-doc
 
 # Test suite
 check_PROGRAMS = test-event-list test-recur-daily test-recur-weekly	\
-	test-recur-monthly
+	test-recur-monthly test-alarms
 TESTS = test-event-list test-recur-daily test-recur-weekly	\
-	test-recur-monthly
+	test-recur-monthly test-alarms
 
 test_event_list_SOURCES = test-event-list.c gpe/event-db.h test-skeleton.h
 test_event_list_LDADD = libeventdb.la
@@ -31,5 +31,7 @@ test_recur_weekly_LDADD = libeventdb.la
 test_recur_monthly_SOURCES = test-recur-monthly.c gpe/event-db.h	\
 	test-skeleton.h
 test_recur_monthly_LDADD = libeventdb.la
+test_alarms_SOURCES = test-alarms.c gpe/event-db.h test-skeleton.h
+test_alarms_LDADD = libeventdb.la
 
 include gpe-dist.am

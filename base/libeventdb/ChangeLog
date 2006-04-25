@@ -1,5 +1,16 @@
 2006-04-25  Neal H. Walfield  <neal@gnu.org>
 
+	* event-db.c: Correctly list alarms.
+	* Makefile.am (check_PROGRAMS): Add test-alarms.
+	(TESTS): Likewise.
+	(test_alarms_SOURCES): New.
+	(test_alarms_LDADD): Likewise.
+
+	* event-db.c (event_db_list_for_period_internal): An event is
+	untimed if EV->UNTIMED is set, not if EV->DURATION is 0.
+
+2006-04-25  Neal H. Walfield  <neal@gnu.org>
+
 	* event-db.c (struct _EventDB): Add fields laundry_list and
 	laundry_buzzer.
 	(STAMP): If EV->MODIFIED is not true, add a reference and add to

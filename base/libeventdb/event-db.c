@@ -871,7 +871,7 @@ event_db_list_for_period_internal (EventDB *edb,
 	   one.  */
 	continue;
 
-      if (only_untimed && ev->duration)
+      if (only_untimed && ! ev->untimed)
 	continue;
 
       recur_t r = ev->recur;
@@ -894,14 +894,17 @@ event_db_list_for_period_internal (EventDB *edb,
 
       /* Start of first instance.  */
       time_t recur_start = ev->start;
-      if (alarms)
-	/* Or, in the case of alarms, when the alarm goes off.  */
-	recur_start -= ev->alarm;
       
-      if (period_end < recur_start)
-	/* Event starts after PERIOD_END.  (In which case all
-	   subsequent events start after PERIOD_END.)  */
-	break;
+      if (period_end < recur_start - (alarms ? ev->alarm : 0))
+	/* Event starts after PERIOD_END.  */
+	{
+	  if (alarms)
+	    continue;
+	  else
+	    /* (In which case all subsequent events start after
+	       PERIOD_END.)  */
+	    break;
+	}
 
       if (event_is_recurrence (ev))
 	{
@@ -926,15 +929,16 @@ event_db_list_for_period_internal (EventDB *edb,
 	  struct tm orig;
 	  localtime_r (&recur_start, &orig);
 
-	  int count;
 	  int increment = r->increment > 0 ? r->increment : 1;
+	  int count;
 	  for (count = 0;
-	       recur_start <= period_end
+	       recur_start - (alarms ? ev->alarm : 0) <= period_end
 		 && (! recur_end || recur_start <= recur_end)
 		 && (r->count == 0 || count < r->count);
 	       count ++)
 	    {
-	      if (period_start <= recur_start + ev->duration)
+	      if ((alarms && period_start <= recur_start - ev->alarm)
+		  || (! alarms && period_start <= recur_start + ev->duration))
 		/* This instance occurs during the period.  Add
 		   it to LIST...  */
 		{
@@ -1047,8 +1051,14 @@ event_db_list_for_period_internal (EventDB *edb,
       else
 	/* Not a recurrence.  */
 	{
-	  g_object_ref (ev);
-	  list = g_slist_insert_sorted (list, ev, event_sort_func);
+	  if (! alarms
+	      || (alarms
+		  && period_start <= recur_start - ev->alarm
+		  && recur_start - ev->alarm <= period_end))
+	    {
+	      g_object_ref (ev);
+	      list = g_slist_insert_sorted (list, ev, event_sort_func);
+	    }
 	}
     }
 
