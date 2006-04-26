@@ -1,3 +1,8 @@
+
+2006-04-27  Florian Boor <florian@kernelconcepts.de>
+
+	* X11/hx4700.xmodmap: Revert last fix, that was wrong.
+
 2006-02-16  Florian Boor <florian@kernelconcepts.de>
 
 	* Version 1.8 released.
