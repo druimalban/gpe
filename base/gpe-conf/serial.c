@@ -43,14 +43,9 @@
 #define INITTAB "/etc/inittab"
 #define GPSD_CONFIG "/etc/gpsd.conf"
 
-#ifdef MACH_IPAQPXA
-  #define FIRST_SERIAL "/dev/ttyS0"
+#ifdef MACH_IPAQ
+  #define FIRST_SERIAL "/dev/ttyC0"
 #else
-  #ifdef MACH_IPAQ
-    #define FIRST_SERIAL "/dev/ttyC0"
-  #endif
-#endif
-#ifndef FIRST_SERIAL
   #define FIRST_SERIAL "/dev/ttyS0"
 #endif
 

@@ -1,7 +1,89 @@
 2006-04-27	Florian Boor <florian.boor@kernelconcepts.de>
 
+	* Merge STABLE_01 branch.
+	* device.c, device.h: Fix typos and Netbook id string.
+	                      Add some easy to detect MIPS based workstations.
 	* device.c, device.h: New files for device encapsulation.
 	* Makefile: Add new members.
+
+2006-04-21	Florian Boor <florian.boor@kernelconcepts.de>
+
+	* device.*: New files for device handling code.
+	* Makefile: Add new files, remove the obsolete compile time platform 
+	  switches.
+
+2006-03-28	Florian Boor <florian.boor@kernelconcepts.de>
+
+	* Updated sv translation, Add ko translation contributed by Soohyung Cho.
+
+2006-03-15	Florian Boor <florian.boor@kernelconcepts.de>
+
+	* Release Version 0.1.31
+	* data/key-commands, key-layout: Update for Zaurus support (by Patrick Steiner)
+	* data/key-commands: Set flags to turn off startup notification.
+
+2006-03-06	Florian Boor <florian.boor@kernelconcepts.de>
+
+	* sysinfo.c: Add version info code for Ångström and correct name for 770.
+
+2006-02-20	Florian Boor <florian.boor@kernelconcepts.de>
+
+	* network.c: Fix segfault on systems without /proc/sys/wireless.
+
+2006-02-16	Florian Boor <florian.boor@kernelconcepts.de>
+
+	* Release Version 0.1.30
+	* network.c: Make info window bigger, fixes #1539.
+
+2006-02-03	Florian Boor <florian.boor@kernelconcepts.de>
+
+	* serial.c: Remove obsolete line.
+	* cardinfo.c: Fix formating...
+	
+2006-02-01	Florian Boor <florian.boor@kernelconcepts.de>
+
+	* main.c: Remove abort infoprint fixing #1471.
+	* serial.c: Use ttyC0 for serial port on all ipaq models. (#1444)
+
+2006-01-31	Florian Boor <florian.boor@kernelconcepts.de>
+
+	* theme.c: Disable effects due to bugs in other applications necessary 
+	           to support them.
+	* theme.c: Set matchbox desktop title font to prevent unreadable fonts 
+	           at hight resolutions. (fixes #1478)
+	* brightness.c: Major update from minilite.c. 
+	                Use glib data types instead of standard ones.
+					Support arbitary sysfs interfaces and non-standard one for 
+					Nokia 770. (fixes #1482 and #1483)
+
+2006-01-27	Florian Boor <florian.boor@kernelconcepts.de>
+	
+	* brightness.c: Add support for mq1100, patch by Matt Reimer fixing #1479.
+
+2006-01-24	Florian Boor <florian.boor@kernelconcepts.de>
+
+	* Release Version 0.1.29
+	
+2006-01-23	Florian Boor <florian.boor@kernelconcepts.de>
+
+	* sysinfo.c: Apply patch to read OpenZaurus version info 
+	             (Markin 'hrw' Juszkiewicz).
+	* suid.c: Make sure modprobe and rmmod are able to find insmod.
+	* cardinfo.c: Remove obsolete card services version check. 
+	              Update translations.
+
+2006-01-03	Florian Boor <florian.boor@kernelconcepts.de>
+
+	* Release Version 0.1.28
+	* network.c: Some cleanups, resolve space issues with larger fonts.
+	* keys.c, theme.c: Fix issues with font sizes.
+	* brightness.c: Fix warnings about data type mismatch.
+	* usb.c: Fix multiple warnings. Replace file selector which doesn't work
+	         on small displays.
+
+2005-12-21	Florian Boor <florian.boor@kernelconcepts.de>
+
+	* Release version 0.1.27
 
 2005-12-07	Florian Boor <florian.boor@kernelconcepts.de>
 
@@ -12,7 +94,6 @@
 
 	* timezones.h, timeanddate.c: Basic support for timezones defined by
                                       timezone data contributed by Mika Laitio.	
-
 2005-12-03	Florian Boor <florian.boor@kernelconcepts.de>
 
 	* interface.c, login-setup.c, network.c, ownerinfo.c, users/interface.c:

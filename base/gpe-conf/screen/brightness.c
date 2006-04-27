@@ -22,6 +22,7 @@
 #include <fcntl.h>
 #include <linux/ioctl.h>
 #include <sys/ioctl.h>
+#include <dirent.h>
 
 #include <gdk/gdk.h>
 
@@ -38,7 +39,8 @@ typedef enum
 	P_SIMPAD,
 	P_SIMPAD_NEW,
     P_GENERIC,
-	P_SYSFS
+	P_SYSCLASS_770,
+	P_SYSCLASS
 }t_platform;
 
 
@@ -80,29 +82,62 @@ struct h3600_ts_backlight {
 #define GENERIC_PROC_DRIVER "/proc/driver/backlight"
 
 /* Linux 2.6 sysfs interface */
+#define SYSCLASS 	"/sys/class/backlight/"
 #define SYS_STATE_ON  0
 #define SYS_STATE_OFF 4
-static char *SYS_BRIGHTNESS = NULL;
-static char *SYS_MAXBRIGHTNESS = NULL;
-static char *SYS_POWER = NULL;
-static char *SYS_LCDPOWER = NULL;
+static gchar *SYS_BRIGHTNESS = NULL;
+static gchar *SYS_MAXBRIGHTNESS = NULL;
+static gchar *SYS_POWER = NULL;
 
-const char *sysbdevs[] = 
-{
-	"/sys/class/backlight/sa1100fb",
-	"/sys/class/backlight/pxafb",
-	"/sys/class/backlight/s3c2410-bl",
-	NULL
-};
+/* wrong sysclass path on Nokia 770 */
+#define SYSCLASS_770 	"/sys/devices/platform/omapfb/panel/"
 
 static t_platform platform = P_NONE;
 
+static gchar
+*get_sysclass_bl(void)
+{
+	DIR *dp;
+	gchar *dentry;
+	struct dirent *d;
+
+	if((dp = opendir(SYSCLASS)) == NULL) {
+		fprintf(stderr, "unable to open %s", SYSCLASS);
+		return NULL;
+	}
+
+	while((d = readdir(dp))) {
+		if (!(strcmp(d->d_name, ".") == 0) &&
+			!(strcmp(d->d_name, "..") == 0))
+			asprintf(&dentry, "%s%s", SYSCLASS, d->d_name);
+	}
+	closedir(dp);
+	return dentry;
+}
+
+static void
+setup_sysclass(void)
+{
+	gchar *bl_dev;
+	
+	bl_dev = get_sysclass_bl();
+	
+	SYS_BRIGHTNESS = g_strdup_printf("%s/brightness", bl_dev);
+	SYS_MAXBRIGHTNESS = g_strdup_printf("%s/max_brightness", bl_dev);
+	SYS_POWER = g_strdup_printf("%s/power", bl_dev);
+}
+
+static void
+setup_sysclass_770(void)
+{
+	SYS_BRIGHTNESS = g_strdup_printf("%s/backlight_level", SYSCLASS_770);
+	SYS_MAXBRIGHTNESS = g_strdup_printf("%s/backlight_max", SYSCLASS_770);
+	SYS_POWER = NULL;
+}
 
 static t_platform
 detect_platform(void)
 {
-	int i = 0;
-	
 	if (!access(TS_DEV,R_OK))
 		return P_IPAQ;
 	if (!access(PROC_LIGHT,R_OK))
@@ -117,18 +152,17 @@ detect_platform(void)
 		return P_SIMPAD;
 	if (!access(GENERIC_PROC_DRIVER,R_OK))
 		return P_GENERIC;
-	while (sysbdevs[i])
+	if (!access(SYSCLASS_770, R_OK))
 	{
-		if (!access(sysbdevs[i], R_OK))
-		{
-			SYS_BRIGHTNESS = g_strdup_printf("%s/brightness", sysbdevs[i]);
-			SYS_MAXBRIGHTNESS = g_strdup_printf("%s/max_brightness", sysbdevs[i]);
-			SYS_POWER = g_strdup_printf("%s/power", sysbdevs[i]);
-			SYS_LCDPOWER = g_strdup_printf("/sys/class/lcd/%s/power", strrchr(sysbdevs[i],'/')+1);
-			return P_SYSFS;
-		}
-		i++;
+		setup_sysclass_770();
+		return P_SYSCLASS_770;
 	}
+	if (!access(SYSCLASS, R_OK))
+	{
+		setup_sysclass();
+		return P_SYSCLASS;
+	}
+	
 	return P_NONE;
 }
 
@@ -144,7 +178,7 @@ sysfs_set_level(int level)
 {
   FILE *f_light;
   FILE *f_max;
-  int val, maxlevel;
+  gint val, maxlevel;
   
   if ( level > 255 ) level = 255;
   if ( level < 1 ) level = 1;
@@ -175,7 +209,41 @@ sysfs_set_level(int level)
     fprintf(f_light,"%d\n",  level ? SYS_STATE_ON : SYS_STATE_OFF);
   	fclose(f_light);
   }
-  f_light = fopen(SYS_LCDPOWER, "w");
+  
+  return level;
+}
+
+gint 
+sysclass_set_level(gint level)
+{
+  FILE *f_light;
+  FILE *f_max;
+  gint val, maxlevel;
+  
+  if ( level > 255 ) level = 255;
+  if ( level < 1 ) level = 1;
+
+  f_max = fopen(SYS_MAXBRIGHTNESS, "r");
+  if (f_max != NULL)
+  {
+    fscanf(f_max,"%d", &maxlevel);
+    fclose(f_max);
+  }
+  val = ( level == 1 ) ? 1 : ( level * maxlevel ) / 255;
+  if (val > maxlevel)
+  {
+    val = maxlevel;
+  }
+  f_light = fopen(SYS_BRIGHTNESS, "w");
+  if (f_light != NULL)
+  {
+    fprintf(f_light,"%d\n", val);
+  	fclose(f_light);
+  }
+  else
+	  return -1;
+  
+  f_light = fopen(SYS_POWER, "w");
   if (f_light != NULL)
   {
     fprintf(f_light,"%d\n",  level ? SYS_STATE_ON : SYS_STATE_OFF);
@@ -186,29 +254,29 @@ sysfs_set_level(int level)
 }
 
 int 
-sysfs_get_level(void)
+sysclass_get_level(void)
 {
   FILE *f_light;
   FILE *f_max;
-  double factor, maxlevel, level;
+  gfloat level, maxlevel, factor;
   
   f_max = fopen(SYS_MAXBRIGHTNESS, "r");
   if (f_max != NULL)
   {
-  	fscanf(f_max,"%d", &maxlevel);
-  	fclose(f_max);
+    fscanf(f_max,"%f", &maxlevel);
+    fclose(f_max);
   }
   factor = 255/maxlevel;
   f_light = fopen(SYS_BRIGHTNESS, "r");
   if (f_light != NULL)
   {
-  	fscanf(f_light,"%d", &level);
+  	fscanf(f_light,"%f", &level);
   	fclose(f_light);
-	level = level * factor;
-	if (level > 255)
-	{
-		level = 255;
-	}
+    level = level * factor;
+    if (level > 255)
+    {
+      level = 255;
+    }
 	return (int)level;
   }
   return -1;
@@ -218,7 +286,7 @@ int
 generic_set_level(int level)
 {
   FILE *f_light;
-  int val = level/8;
+  gint val = level/8;
   
   if (val < 1) val = 1;
   f_light = fopen(GENERIC_PROC_DRIVER,"w");
@@ -232,7 +300,7 @@ generic_set_level(int level)
 	  return -1;
 }
 
-int 
+gint 
 generic_get_level(void)
 {
   FILE *f_light;
@@ -248,7 +316,7 @@ generic_get_level(void)
   return -1;
 }  
 
-int 
+gint 
 simpad_new_set_level(int level)
 {
   FILE *f_light;
@@ -265,11 +333,11 @@ simpad_new_set_level(int level)
 	  return -1;
 }
 
-int 
+gint 
 simpad_new_get_level(void)
 {
   FILE *f_light;
-  int level;
+  gint level;
   
   f_light = fopen(SIMPAD_BACKLIGHT_REG_NEW,"r");
   if (f_light != NULL)
@@ -282,7 +350,7 @@ simpad_new_get_level(void)
 }  
 
 
-int 
+gint 
 simpad_set_level(int level)
 {
   int val;
@@ -303,11 +371,11 @@ simpad_set_level(int level)
 	  return -1;
 }
 
-int 
+gint 
 simpad_get_level(void)
 {
   FILE *f_light;
-  int level;
+  gint level;
   
   f_light = fopen(SIMPAD_BACKLIGHT_REG,"r");
   if (f_light >= 0)
@@ -321,10 +389,10 @@ simpad_get_level(void)
   return -1;
 }  
 
-int 
+gint 
 corgi_set_level(int level)
 {
-	int fd, val, len, res = -1;
+	gint fd, val, len, res = -1;
 	gchar buf[20];
 	
 	if ((fd = open(CORGI_FL, O_WRONLY)) >= 0)
@@ -337,10 +405,10 @@ corgi_set_level(int level)
 	return ((res < 0) ? -1 : level);
 }
 
-int 
+gint 
 corgi_get_level(void)
 {
-	int val, res;
+	gint val, res;
 	FILE *fd;
 	
 	if ((fd = fopen(CORGI_FL, O_RDONLY)) != NULL)
@@ -353,8 +421,8 @@ corgi_get_level(void)
 	return (-1);
 }
 
-int 
-zaurus_set_level(int level)
+gint 
+zaurus_set_level(gint level)
 {
 	int fd, val, res = -1;
 	
@@ -370,17 +438,17 @@ zaurus_set_level(int level)
 }
 
 /* seems to be missing in kernel implementation */
-int 
+gint 
 zaurus_get_level(void)
 {
 	return 25;	
 }
 
 
-int 
-ipaq_set_level(int level)
+gint 
+ipaq_set_level(gint level)
 {
-	int light_fd;
+	gint light_fd;
 	struct h3600_ts_backlight bl;
 
 	light_fd = open (TS_DEV, O_RDONLY);
@@ -423,8 +491,8 @@ ipaq_get_level(void)
 	return -1;
 }
 
-int 
-integral_set_level(int level)
+gint 
+integral_set_level(gint level)
 {
   FILE *f_light;
   
@@ -439,11 +507,11 @@ integral_set_level(int level)
 	  return -1;
 }
 
-int 
+gint 
 integral_get_level(void)
 {
   FILE *f_light;
-  int level;
+  gint level;
   
   f_light = fopen(PROC_LIGHT,"r");
   if (f_light != NULL)
@@ -456,7 +524,8 @@ integral_get_level(void)
 }  
 
 
-void set_brightness (int brightness)
+void 
+set_brightness (gint brightness)
 {
 	if (brightness < 0)
 		brightness = 0;
@@ -489,16 +558,18 @@ void set_brightness (int brightness)
 	case P_GENERIC:
 		generic_set_level(brightness);
 	break;
-	case P_SYSFS:
-		sysfs_set_level(brightness);
-	break;
+	case P_SYSCLASS:
+	case P_SYSCLASS_770:
+		sysclass_set_level(brightness);
+	break;	
 	default:
 	break;
 	}
 }
 
 
-int get_brightness ()
+gint 
+get_brightness (void)
 {
 	
 	if (platform == P_NONE)
@@ -527,9 +598,10 @@ int get_brightness ()
 	case P_GENERIC:
 		return generic_get_level();
 	break;
-	case P_SYSFS:
-		return sysfs_get_level();
-	break;
+	case P_SYSCLASS:
+	case P_SYSCLASS_770:
+		return sysclass_get_level();
+	break;	
 	default:
 		return 0;
 	break;

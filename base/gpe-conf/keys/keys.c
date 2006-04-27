@@ -80,7 +80,7 @@ Keys_Build_Objects (void)
 	gtk_notebook_append_page(GTK_NOTEBOOK(notebook), page, label);
 	
 	page = Kbd_Build_Objects();
-	label = gtk_label_new(_("Virtual Keyboard"));
+	label = gtk_label_new(_("Virtual Keyb."));
 	gtk_notebook_append_page(GTK_NOTEBOOK(notebook), page, label);
 	
 	page = Keyboard_Build_Objects();

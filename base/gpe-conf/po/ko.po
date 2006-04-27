@@ -1,173 +1,173 @@
-# Vietnamese translation for GPE Conf.
-# Copyright © 2005 Free Software Foundation, Inc.
-# Clytie Siddall <clytie@riverland.net.au>, 2005.
-# 
+# gpe-conf Korean Translation
+# This file is distributed under the same license as the test package.
+# Soohyung Cho <xfree@paran.com>, 2006.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-conf 0.1.25\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2005-08-23 02:20+0200\n"
-"PO-Revision-Date: 2005-11-13 13:11+1050\n"
-"Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
-"Language-Team: Vietnamese <gnomevi-list@lists.sourceforge.net> \n"
+"PO-Revision-Date: 2006-03-20 23:14+0900\n"
+"Last-Translator: Soohyung Cho <xfree@paran.com>\n"
+"Language-Team: Korean <translation-team-ko@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: main.c:90 timeanddate.c:542
 msgid "Time"
-msgstr "Giờ"
+msgstr "시간"
 
 #: main.c:90
 msgid "Time and Date Setup"
-msgstr "Thiết lập ngày giờ"
+msgstr "시간과 날짜 설정"
 
 #: main.c:92
 msgid "Screen"
-msgstr "Màn ảnh"
+msgstr "화면"
 
 #: main.c:92 gpe-conf-screen.desktop.in.h:1
 msgid "Screen Setup"
-msgstr "Thiết lập màn ảnh"
+msgstr "화면 설정"
 
 #: main.c:94
 msgid "Keys & Buttons"
-msgstr "Phím và nút"
+msgstr "키 & 버튼"
 
 #: main.c:94
 msgid "Keys and Buttons Setup"
-msgstr "Thiết lập phím và cái nút"
+msgstr "키와 버튼 설정"
 
 #: main.c:96 timeanddate.c:558
 msgid "Network"
-msgstr "mạng"
+msgstr "네트웍"
 
 #: main.c:96 gpe-conf-network.desktop.in.h:1
 msgid "Network Setup"
-msgstr "Thiết lập mạng"
+msgstr "네트웍 설정"
 
 #: main.c:98 theme.c:1144
 msgid "Theme"
-msgstr "Đề tài"
+msgstr "테마"
 
 #: main.c:98 theme.c:1146 gpe-conf-theme.desktop.in.h:2
 msgid "Look and Feel"
-msgstr "Hình thức và cảm giác"
+msgstr "룩 앤 필"
 
 #: main.c:100
 msgid "Power"
-msgstr "Điện"
+msgstr "전원"
 
 #: main.c:100
 msgid "Power safe Configuration"
-msgstr "Cấu hình điện an toàn"
+msgstr "끄기 구성"
 
 #: main.c:102
 msgid "Owner"
-msgstr "Người chủ"
+msgstr "소유자"
 
 #: main.c:102 gpe-conf-ownerinfo.desktop.in.h:1
 msgid "Owner Information"
-msgstr "Thông tin người chủ"
+msgstr "소유자 정보"
 
 #: main.c:104
 msgid "Login"
-msgstr "Đăng nhập"
+msgstr "로그인"
 
 #: main.c:104 gpe-conf-login-setup.desktop.in.h:1
 msgid "Login Setup"
-msgstr "Thiết lập đăng nhập"
+msgstr "로그인 설정"
 
 #: main.c:106
 msgid "Users"
-msgstr "Người dùng"
+msgstr "사용자"
 
 #: main.c:106
 msgid "User Administration"
-msgstr "Quản lý người dùng"
+msgstr "사용자 관리"
 
 #: main.c:108
 msgid "GPE"
-msgstr "GPE"
+msgstr ""
 
 #: main.c:108
 msgid "GPE Conf Administration"
-msgstr "Quản lý GPE Conf"
+msgstr "GPE 설정 관리"
 
 #: main.c:110 gpe-conf-serial.desktop.in.h:2
 msgid "Serial Ports"
-msgstr "Cổng nối tiếp"
+msgstr "시리얼 포트"
 
 #: main.c:110
 msgid "Serial Port Configuration"
-msgstr "Cấu hình cổng nối tiếp"
+msgstr "시리얼 포트 설정"
 
 #: main.c:112
 msgid "PCMCIA/CF Cards"
-msgstr "Thẻ PCMCIA/CF"
+msgstr "PCMCIA/CF 카드"
 
 #: main.c:112
 msgid "PCMCIA/CF Card Info and Config"
-msgstr "Thông tin và cấu hình thẻ PCMCIA/CF"
+msgstr "PCMCIA/CF 카드 정보와 설정"
 
 #: main.c:114
 msgid "Sound"
-msgstr "Âm thanh"
+msgstr "사운드"
 
 #: main.c:114
 msgid "Sound Setup"
-msgstr "Thiết lập phát âm thanh"
+msgstr "사운드 설정"
 
 #: main.c:116
 msgid "Task nameserver"
-msgstr "Cộng việc chọn máy chủ tênc"
+msgstr "네임서버 테스크"
 
 #: main.c:116
 msgid "Task for changing nameserver"
-msgstr "Cộng việc thay đổi máy chủ tên"
+msgstr "네임서버 변경을 위한 테스크"
 
 #: main.c:118
 msgid "Task sound"
-msgstr "Cộng việc phát âm thanh"
+msgstr "사운드 테스크"
 
 #: main.c:118
 msgid "Command line task saving/restoring sound settings."
-msgstr "Công việc dòng lệnh để lưu/phục hồi sở thíchm thanh."
+msgstr "사운드 설정 저장/복구를 위한 커맨드라인 테스크"
 
 #: main.c:120
 msgid "Task background image"
-msgstr "Công việc chọn ảnh nền"
+msgstr "배경 이미지 테스크"
 
 #: main.c:120
 msgid "Only select background image."
-msgstr "Chỉ chọn ảnh nền"
+msgstr "배경 이미지만 선택해 주세요."
 
 #: main.c:146
 msgid "Settings saved"
-msgstr "Đã lưu s thích"
+msgstr "설정이 저장되었습니다"
 
 #: main.c:162
 msgid "Aborted"
-msgstr "Bị hủy bỏ"
+msgstr "취소되었습니다"
 
 #: main.c:335
 #, c-format
 msgid "'task_nameserver' needs a new (and only one) nameserver as argument.\n"
-msgstr "Lệnh 'task_nameserver' (công_việc_máy-chủ-tên) cần chỉ một máy chủ tên mới là đối số.\n"
+msgstr "'네임서버 테스크'는 새로운 (그리고 단 하나의) 네임서버 인자를 필요로 합니다.\n"
 
 #: main.c:353
 #, c-format
 msgid "'task_sound' needs (s)ave/(r)estore as argument.\n"
-msgstr "Lệnh 'task_sound' (công_việc_âm-thanh) cần (s)ave/(r)estore (lưu/phục hồi) là đối số.\n"
+msgstr "'사운드 테스크'는 (s)저장/(r)복구 인자를 필요로 합니다.\n"
 
 #: main.c:421
 msgid "Warning: PCMCIA init failed."
-msgstr "Cảnh báo: không khởi động PCMCIA được."
+msgstr "경고: PCMCIA 초기화가 실패하였습니다."
 
 #: main.c:453
 #, c-format
 msgid "This mode is disabled, please try:\n"
-msgstr "Chế độ này bị vô hiệu hóa nên hãy thử:\n"
+msgstr "이 모드는 비활성화 되어 있습니다. 다시 시도해 주세요:\n"
 
 #: main.c:454
 #, c-format
@@ -177,13 +177,13 @@ msgid ""
 "where AppletName is in:\n"
 msgstr ""
 "\n"
-"gpe-conf [tên_tiểu_ứng_dụng]\n"
-"mà tên_tiểu_ứng_dụng trong:\n"
+"gpe-conf [애플릿이름]\n"
+"애플릿이름은 어디에 있나요:\n"
 
 #: main.c:470
 #, c-format
 msgid "Applet %s unknown!\n"
-msgstr "Chưa biết tiểu ứng dụng %s.\n"
+msgstr "알려지지 않은 %s 애플릿입니다!\n"
 
 #: main.c:471
 #, c-format
@@ -195,12 +195,12 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Cách sử dụng: gpe-conf [tên_tiểu_ứng_dụng]\n"
-"mà tên_tiểu_ứng_dụng trong:\n"
+"사용: gpe-conf [애플릿이름]\n"
+"애플릿이름은 어디에 있나요:\n"
 
 #: applets.c:445
 msgid "Root access"
-msgstr "Truy cập chủ (root access)"
+msgstr "루트 접근"
 
 #: applets.c:459
 msgid ""
@@ -208,807 +208,806 @@ msgid ""
 "accessible for user root.\n"
 "Please enter password."
 msgstr ""
-"Một số tùy chọn chỉ cho\n"
-"ngươi dùng chủ sử dung.\n"
-"Hãy nhập mật khẩu."
+"몇몇 옵션들은 오직\n"
+"루트 사용자에 의해서만 가능합니다.\n"
+"패스워드를 입력해 주세요."
 
 #: applets.c:506 screen/calibrate.c:32
 msgid "Sorry, wrong password."
-msgstr "Tiếc là mật khẩu không đúng."
+msgstr "죄송합니다, 잘못된 패스워드입니다."
 
 #: timeanddate.c:424
 msgid "Time adjusted from network."
-msgstr "mạng mới điều chỉnh giờ."
+msgstr "네트웍으로부터 시간을 설정합니다."
 
 #: timeanddate.c:426
 msgid "Adjusting time from network failed."
-msgstr "mạng không điều chỉnh giờ được."
+msgstr "네트웍으로부터 시간을 설정하는데 실패하였습니다."
 
 #: timeanddate.c:506
 msgid "Time & Date"
-msgstr "Giờ ngày"
+msgstr "시간 & 날짜"
 
 #: timeanddate.c:522
 msgid "Date"
-msgstr "Ngày"
+msgstr "날짜"
 
 #: timeanddate.c:537
 msgid "Enter current date here or use button to select."
-msgstr "Ở đây thì hãy nhập ngày hiện hay sử dụng cái nút để chọn."
+msgstr "현재 날짜를 이곳에 입력하거나 선택 버튼을 사용하세요."
 
 #: timeanddate.c:576
 msgid "Select the timeserver to use to set the clock."
-msgstr "Hãy chọn máy chủ thời gian sẽ lập đồng hồ."
+msgstr "시간을 설정 하는데 사용 할 타임서버를 선택하세요."
 
 #: timeanddate.c:578
 msgid "Get time from network"
-msgstr "Gọi giờ từ mạng"
+msgstr "네트웍으로부터 시간을 얻어옵니다"
 
 #: timeanddate.c:585
 msgid "If connected to the Internet, you may press this button to set the time on this device using the timeserver above."
-msgstr "Nếu kết nối đến Mạng thì bạn có thể bấm cái nút này để lập giờ của thiết bị này bằng cách sử dụng mấy chủ thờì gian ở trên."
+msgstr "인터넷에 연결되어 있고, 위의 타임서버를 이 디바이스에 사용하려면 이 버튼을 눌러주세요."
 
 #: timeanddate.c:590 timeanddate.c:599
 msgid "Timezone"
-msgstr "Múi giờ"
+msgstr "타임존"
 
 #: timeanddate.c:622
 msgid "Select your current timezone here. The setting applies after the next login."
-msgstr "Ở đây thì hãy chọn múi giờ hiện của bạn. Tùy chọn này hoặt động sau khi đăng nhập lại."
+msgstr "현재의 타임존 지역을 이곳에 선택하세요. 변경된 설정값은 다음번 로그인 후에 적용됩니다."
 
 #: timeanddate.c:630
 msgid "Daylight Saving"
-msgstr "Giờ giữ ban ngày"
+msgstr "일광시간 절약제"
 
 #: timeanddate.c:637
 msgid "Use daylight saving time"
-msgstr "Sử dụng giờ giữ ban ngày (giờ mùa hạ)"
+msgstr "일광시간 절약제를 사용합니다"
 
 #: timeanddate.c:644
 msgid "Check this box if you want your device to handle daylight saving time for you."
-msgstr "Hãy đánh dấu trong hộp này nếu bạn muốn thiết bị mình tự động thay đổi đến/từ giờ giữ ban ngày."
+msgstr "일광시간 절약제를 사용하려면 이곳을 체크해 주세요. "
 
 #: timeanddate.c:646
 msgid "Offset:"
-msgstr "Hiệu số:"
+msgstr "오프셋"
 
 #: timeanddate.c:655
 msgid "Default"
-msgstr "Mặc định"
+msgstr "기본"
 
 #: timeanddate.c:662
 msgid "Use default DST offset of one hour?"
-msgstr "Sử dụng hiệu số giờ giữ ban ngày mặc định là một tiếng phải không?"
+msgstr "한 시간으로 설정된 기본 DST 오프셋을 사용할까요?"
 
 #: timeanddate.c:667
 msgid "Hours"
-msgstr "Tiếng"
+msgstr "시간"
 
 #: timeanddate.c:670
 msgid "Select daylight saving time offset hours here."
-msgstr "Ở đây thì hãy chọn hiệu số tiếng đốí với giờ giữ ban ngày."
+msgstr "일광시간 절약제의 시간을 이곳에서 선택해 주세요."
 
 #: timeanddate.c:675
 msgid "Minutes"
-msgstr "Phút"
+msgstr "분"
 
 #: timeanddate.c:678
 msgid "Select daylight saving time offset minutes here."
-msgstr "Ở đây thì hãy chọn hiệu số phút đối với giờ giữ ban ngày."
+msgstr "일광시간 절약제의 분을 이곳에서 선택해 주세요."
 
 #: timeanddate.c:783
 msgid "To make timezone settings take effect, you'll need to log out and log in again."
-msgstr "Để áp dụng sở thích i giờ này thì bạn hãy đăng xuất rồi đăng nhập lại."
+msgstr "타임존 설정을 적용하려면, 로그아웃 후 재 로그인이 필요합니다."
 
 #: screen/main.c:74
 msgid "Portrait"
-msgstr "Thẳng đứng"
+msgstr "세로"
 
 #: screen/main.c:75
 msgid "Landscape (left)"
-msgstr "Nằm ngang (bên trái)"
+msgstr "가로 (왼쪽)"
 
 #: screen/main.c:76
 msgid "Inverted"
-msgstr "Bị đảo"
+msgstr "반전"
 
 #: screen/main.c:77
 msgid "Landscape (right)"
-msgstr "Nằm ngang (bên phải)"
+msgstr "가로 (오른쪽)"
 
 #: screen/main.c:104
 msgid "Light"
-msgstr "Ánh sáng"
+msgstr "빛"
 
 #: screen/main.c:110
 msgid "Brightness"
-msgstr "Độ sáng"
+msgstr "밝기"
 
 #: screen/main.c:152
 msgid "Display"
-msgstr "Trình bày"
+msgstr "화면"
 
 #: screen/main.c:156
 msgid "Rotation"
-msgstr "Xoay"
+msgstr "회전"
 
 #: screen/main.c:176
 msgid "Touchscreen"
-msgstr "Màn ảnh sờ"
+msgstr "터치스크린"
 
 #: screen/main.c:180
 msgid "Calibrate"
-msgstr "Định chuẩn"
+msgstr "칼리브레이션"
 
 #: screen/main.c:182
 msgid "Start"
-msgstr "Bắt đầu"
+msgstr "시작"
 
 #: screen/main.c:304 sleep/callbacks.c:39
 msgid "min"
-msgstr "phút"
+msgstr "분"
 
 #: screen/main.c:307 sleep/callbacks.c:42
 msgid "sec"
-msgstr "giây"
+msgstr "초"
 
 #: keys/kbd.c:142
 msgid "Keyboard Geometry / Layout"
-msgstr "Bố trí bàn phím"
+msgstr "키보드 배치 / 레이아웃"
 
 #: keys/kbd.c:182
 msgid "User defined"
-msgstr "Người dùng đinh nghĩa"
+msgstr "사용자 정의"
 
 #: network.c:104
 msgid "Current Config"
-msgstr "Cấu hình hiện"
+msgstr "현재 설정"
 
 #: network.c:233 ownerinfo.c:237
 msgid "Name:"
-msgstr "Tên:"
+msgstr "이름:"
 
 #: network.c:239
 msgid "New Interface"
-msgstr "Giao diện mới"
+msgstr "새로운 인터페이스"
 
 #: network.c:248
 msgid "This interface definition already exists!"
-msgstr "Lời định nghĩa giao diện này tồn tại rôi."
+msgstr "이 인터페이스 설정은 이미 존재합니다!"
 
 #: network.c:326
 msgid "Do you want to delete this interface?"
-msgstr "Bạn có muốn xóa bỏ giao diện này không?"
+msgstr "이 인터페이스를 삭제하길 원합니까?"
 
 #: network.c:326 users/callbacks.c:138
 msgid "Question"
-msgstr "Câu hỏi"
+msgstr "질문"
 
 #: network.c:575
 msgid "WiFi config"
-msgstr "Cấu hình WiFi"
+msgstr "WiFi 설정"
 
 #: network.c:606
 #, c-format
 msgid "WiFi config for %s"
-msgstr "Cấu hình WiFi cho %s"
+msgstr "%s를 위한 WiFi 설정"
 
 #: network.c:618
 msgid "ESSID"
-msgstr "ESSID"
+msgstr ""
 
 #: network.c:640
 msgid "Mode"
-msgstr "Chế độ"
+msgstr "모드"
 
 #: network.c:650
 msgid "managed"
-msgstr "quản lý"
+msgstr ""
 
 #: network.c:662
 msgid "ad-hoc"
-msgstr "khớp lúc ấy"
+msgstr "애드-혹"
 
 #: network.c:679
 msgid "Channel"
-msgstr "Kênh"
+msgstr "채널"
 
 #: network.c:700
 msgid "WEP"
-msgstr "WEP"
+msgstr ""
 
 #: network.c:710
 msgid "off"
-msgstr "tất"
+msgstr "끄기"
 
 #: network.c:722
 msgid "open"
-msgstr "mở"
+msgstr "열기"
 
 #: network.c:734
 msgid "restricted"
-msgstr "bị hạn chế"
+msgstr "제한됨"
 
 #: network.c:750
 msgid "Key 1"
-msgstr "Khóa 1"
+msgstr "키 1"
 
 #: network.c:778
 msgid "Key 2"
-msgstr "Khóa 2"
+msgstr "키 2"
 
 #: network.c:806
 msgid "Key 3"
-msgstr "Khóa 3"
+msgstr "키 3"
 
 #: network.c:835
 msgid "Key 4"
-msgstr "Khóa 4"
+msgstr "키 4"
 
 #: network.c:1040
 msgid "Address"
-msgstr "Địa chỉ"
+msgstr "주소"
 
 #: network.c:1043
 msgid "Enter your IP address here, e.g. 192.168.1.2"
-msgstr "Ở đây thì hãy nhập địa chỉ IP của bạn, v.d. 192.168.1.2"
+msgstr "IP주소를 이곳에 입력해 주세요, 예를 들어 192.168.1.2"
 
 #: network.c:1045
 msgid "Netmask"
-msgstr "Mặt nạ mạng"
+msgstr "넷마스크"
 
 #: network.c:1048
 msgid "Enter your netmask here, e.g. 255.255.255.0 in most cases"
-msgstr "Ở đây thì hãy nhập mặt nạ mạng của bạn, thường là 255.255.255.0"
+msgstr "넷마스크를 이곳에 입력해 주세요, 예를 들어 대부분의 경우 255.255.255.0"
 
 #: network.c:1050
 msgid "Broadcast"
-msgstr "Phát thanh"
+msgstr "브로드케스트"
 
 #: network.c:1053
 msgid "Enter your broadcast address here, usually the same like your IP with 255 as last number."
-msgstr "Ở đây thì hãy nhập địa chỉ phát thanh của bạn, thường giống như địa chỉ IP còn cuối cùng số 255."
+msgstr "브로드케스트 주소를 이곳에 입력해 주세요, 일반적으로 마지막 번호가 255인 IP 주소와 동일합니다."
 
 #: network.c:1055
 msgid "Gateway"
-msgstr "Cổng ra"
+msgstr "게이트웨이"
 
 #: network.c:1058
 msgid "Enter the IP Address of your default gateway here."
-msgstr "Ở đây thì hãy nhập địa chỉ IP của cổng ra mặc định của bạn."
+msgstr "기본 게이트웨이의 IP 주소를 이곳에 입력해 주세요."
 
 #: network.c:1069 network.c:1186
 msgid "WiFi device"
-msgstr "Thiết bị WiFi"
+msgstr "WiFi 디바이스"
 
 #: network.c:1077 network.c:1194
 msgid "Configure"
-msgstr "Định cấu hình"
+msgstr "설정"
 
 #: network.c:1174
 msgid "Hostname"
-msgstr "Tên máy"
+msgstr "호스트이름"
 
 #: network.c:1177
 msgid "Enter your desired hostname here. This parameter is optional."
-msgstr "Ở đây thì hãy nhập tên máy (chủ) được muốn. Tham số này tùy chọn."
+msgstr "이곳에서 원하시는 호스트이름을 입력해 주세요. 이 인자는 선택적입니다."
 
 #: network.c:1294
 msgid "Provider"
-msgstr "Cung cấp"
+msgstr "제공자"
 
 #: network.c:1296
 msgid "Here you need to enter the name of the provider configuration to use for this interface."
-msgstr "Ở đây thì hãy nhập tên cấu hình của công ty cung cấp dịch vụ Mạng để sử dụng với giao diện này."
+msgstr "이곳에서 이 인터페이스에 대한 제공자 구성의 이름을 입력해 주세요."
 
 #: network.c:1319
 msgid "Global Settings"
-msgstr "Sở thíchoàn cục"
+msgstr "전체 설정"
 
 #: network.c:1361
 msgid "Proxy"
-msgstr "Ủáy chủ ủy nhiệm"
+msgstr "프록시"
 
 #: network.c:1362
 msgid "If you want/need to use a proxy, enter it here. (This only applies to dillo for now.)"
-msgstr "Nếu bạn muốn/cần sử dụng máy chủ ủy nhiệm thì hãy nhập nó ở đây. (Hiện chỉ áp dụng vào dillo.)"
+msgstr "프록시를 사용하시려면, 이곳에서 입력해 주세요. (현재는 dillo에만 적용됩니다.)"
 
 #: network.c:1368
 msgid "No proxy for"
-msgstr "Không ủy nhiệm cho"
+msgstr "프록시가 없음:"
 
 #: network.c:1370
 msgid "Here you should enter your local domain for that you don't want to use a proxy."
-msgstr "Ở đây thì bạn hãy nhập miền nào mà bạn không muốn sử dụng máy phục vụy nhiệm với nó."
+msgstr "프록시를 사용하지 않으려면 이곳에서 로컬 도메인을 입력해야 합니다."
 
 #: network.c:1377
 msgid "DNS server"
-msgstr "Máy chủ DNS"
+msgstr "DNS 서버"
 
 #: network.c:1380
 msgid "Enter the IP of the DNS(name-) server to use here."
-msgstr "Ở đây thì hãy nhập địa chỉ IP của máy chủ (tên) DNS để sử dụng."
+msgstr "이곳에서 사용하실 DNS(이름-) 서버의 IP를 입력해 주세요."
 
 #: network.c:1551
 msgid ""
 "Here you may change the basic configuration type of your device.\n"
 "Use \"static\" for manual interface configuration, \"dhcp\" to use DHCP and \"ppp\" to make the device a point-to-point device."
 msgstr ""
-"Ở đây thì bạn có thể thay đổi loại cấu hình cơ bản của thiết bị bạn.\n"
-"Hãy sử dụng \"static\" (tĩnh) để tự định cấu hình giao diện, \"dhcp\" để sử dụng DHCP và \"ppp\" để lập thiết bị là thiết bị điểm-sang-điểm."
+"이곳에서 디바이스의 기본 구성을 변경할 수 있습니다.\n"
+"인터페이스 구성을 직접 입력하시려면 \"static\"을 선택해 주세요, DHCP를 사용하려면 \"dhcp\"를 point-to-point를 사용하려면 \"ppp\"를 선택해 주세요."
 
 #: network.c:1557
 msgid "Enable this option if your device is a WiFi device"
-msgstr "Hiệu lực tùy chọn này nếu thiết bị bạn loại WiFi"
+msgstr "이 옵션은 디바이스를 WiFi 디바이스로 활성화 합니다"
 
 #: network.c:1559
 msgid "Click to set the wireless options for this device"
-msgstr "Hãy nhắp để lập những tùy chọn vô tuyến cho thiết bị này."
+msgstr "디바이스의 무선 옵션을 설정하려면 클릭해 주세요"
 
 #: network.c:1561
 msgid "Set the mode your WiFi card should work. (managed or ad-hoc)."
-msgstr "Hãy chọn chế độ hoặt đông của thẻ WiFi (quản lý hay khớp lúc ấy)."
+msgstr "WiFi 카드를 동작시키려면 모드를 설정해 주세요. (managed 혹은 ad-hoc)."
 
 #: network.c:1564
 msgid "Set the enrcyption mode: off for no WEP encryption, open for open system and restricted for resticted WEP connections only."
-msgstr "Hãy lập chế độ mã hóa: Tất (không mã hóa WEP), Mở (hệ thống mở) hay Bị hạn chế (chỉ cho phép sự kết nốí WEP bị hạn chế)."
+msgstr "암호화 모드를 설정해 주세요: WEP 암호화를 사용하지 않으려면 선택하지 마세요, '공개'는 공개 시스템이고 '제한적'은 제한적인 WEB 연결만 사용합니다."
 
 #: network.c:1569
 msgid "Enter the essid of your WiFi network here."
-msgstr "Ở đây thì hãy nhập essid của mạng WiFi của bạn."
+msgstr "이곳에서 WiFi 네트웍의 essid를 입력해 주세요."
 
 #: network.c:1572
 msgid "Enter your WEP key here in (iwconfig format), e.g.: \"s:12345\""
-msgstr "Ở đây thì hãy nhập khóa WEP của bạn bằng dạng iwconfig, v.d. \"s:12345\""
+msgstr "이곳에서 WEP 키를 입력해 주세요 (iwconfig 형태), e.g.: \"s:12345\""
 
 #: network.c:1575
 msgid "Select the WEP key to use."
-msgstr "Hãy chọn khóa WEP nào để sử dụng."
+msgstr "사용하실 WEP 키를 선택해 주세요."
 
 #: network.c:1578
 msgid "Enter the channel number or frequency if needed. If not needed leave this field blank."
-msgstr "Hãy nhập số kênh hay tần số nếu cần thiết. Nếu không thì không hãy nhập gì."
+msgstr "필요하다면 채널 개수나 주파수를 입력해 주세요. 필요하지 않으면 빈칸으로 남겨두세요."
 
 #: network.c:1601
 msgid "Add Interface"
-msgstr "Thêm giao diện"
+msgstr "새 인터페이스 추가"
 
 #: network.c:1602
 msgid "Add a new Interface"
-msgstr "Thêm một giao diện mới"
+msgstr "새 인터페이스 추가"
 
 #: network.c:1612
 msgid "Remove Interface"
-msgstr "Bỏ giao diện"
+msgstr "현재 인터페이스 제거"
 
 #: network.c:1613
 msgid "Remove current Interface"
-msgstr "Bỏ giao diện hiện có"
+msgstr "현재 인터페이스 제거"
 
 #: network.c:1627
 msgid "Information"
-msgstr "Thông tin"
+msgstr "소유자 정보"
 
 #: network.c:1628
 msgid "Show current configuration."
-msgstr "Hiển thị cấu hình hiện có"
+msgstr "현재 구성을 보여줍니다."
 
 #: network.c:1647
 msgid "Couldn't read network configuration."
-msgstr "Không đọc được cấu hình mạng."
+msgstr "네트웍 구성을 읽을 수 없습니다."
 
 #: network.c:1654
 msgid "global"
-msgstr "toàn cục"
+msgstr "전체"
 
 #: theme.c:238
 msgid "Choose backgound image"
-msgstr "Chọn ảnh nền"
+msgstr "배경 이미지를 선택합니다"
 
 #: theme.c:252
 msgid "You are not allowed to read this file, choose another."
-msgstr "Không cho phép bạn đọc tập tin này thì hãy chọn tập tin khác."
+msgstr "이 화일은 허용되지 않습니다, 다른 화일을 선택해 주세요."
 
 #: theme.c:273
 msgid "Succesfully changed background image."
-msgstr "Mới thay đổi ảnh nền."
+msgstr "성공적으로 배경 이미지를 변경하였습니다."
 
 #: theme.c:274
 msgid "Use \"Look and Feel\" setup tool to change details."
-msgstr "Sử dụng công cụ thiết lập \"Hình thức và cảm giác\" để thay đổi chi tiết."
+msgstr "자세한 설정을 위해 \"룩 앤 필\" 설정 도구를 사용합니다."
 
 #: theme.c:598
 msgid "Red"
-msgstr "Màu đỏ"
+msgstr "빨강"
 
 #: theme.c:603
 msgid "Green"
-msgstr "Màu xanh lá cây"
+msgstr "초록"
 
 #: theme.c:608
 msgid "Blue"
-msgstr "Màu xanh nước biển"
+msgstr "파랑"
 
 #: theme.c:918
 msgid "Select colour"
-msgstr "Chọn màuy"
+msgstr "색상을 선택해 주세요"
 
 #: theme.c:944 theme.c:1018
 msgid "You don't have read access to selected background image!"
-msgstr "Không cho phép bạn đọc ảnh nền được chọn."
+msgstr "선택하신 배경 이미지를 읽어들일 권한이 없습니다!"
 
 #: theme.c:1156
 msgid "Desktop Theme"
-msgstr "Đề tài màn hình nền"
+msgstr "데스크탑 테마"
 
 #: theme.c:1168
 msgid "Name"
-msgstr "Tên"
+msgstr "이름"
 
 #: theme.c:1185
 msgid "Icon Size"
-msgstr "Cỡ biểu tượng"
+msgstr "아이콘 크기"
 
 #: theme.c:1200
 msgid "Visual Effects"
-msgstr "Hiệu ứng trực quan"
+msgstr "영상 효과"
 
 #: theme.c:1206
 msgid "Enable Visual Effects"
-msgstr "Hiệu lực hiệu ứng trực quan"
+msgstr "영상 효과를 활성화합니다"
 
 #: theme.c:1213
 msgid "Background"
-msgstr "Nền"
+msgstr "배경"
 
 #: theme.c:1227 theme.c:1229
 msgid "Background Settings"
-msgstr "Sở thíchền"
+msgstr "배경 설정"
 
 #: theme.c:1239 theme.c:1250
 msgid "Theme Default"
-msgstr "Đề tài mặc định"
+msgstr "기본 테마"
 
 #: theme.c:1258
 msgid "Solid colour"
-msgstr "Màu đầy"
+msgstr "단순한 색상"
 
 #: theme.c:1272
 msgid "Horizontal"
-msgstr "Nằm ngang"
+msgstr "수평"
 
 #: theme.c:1276
 msgid "Vertical"
-msgstr "Đứng"
+msgstr "수직"
 
 #: theme.c:1281 theme.c:1300 theme.c:1483 theme.c:1489
 msgid "Colour"
-msgstr "Màu"
+msgstr "색상"
 
 #: theme.c:1291
 msgid "Colour gradient"
-msgstr "Chuyển màu sắc"
+msgstr "그라디언트 색상"
 
 #: theme.c:1310
 msgid "Image"
-msgstr "Ảnh"
+msgstr "이미지"
 
 #: theme.c:1336
 msgid "Centered"
-msgstr "Được để vào giữa"
+msgstr "가운데"
 
 #: theme.c:1340
 msgid "Tiled"
-msgstr "Được lát đều"
+msgstr "타일"
 
 #: theme.c:1343
 msgid "Stretched"
-msgstr "Được căng ra"
+msgstr "늘임"
 
 #: theme.c:1350
 msgid "Toolbars"
-msgstr "Thanh công cụ"
+msgstr "툴바"
 
 #: theme.c:1362 theme.c:1364
 msgid "Toolbar Style"
-msgstr "Kiểu thanh công cụ"
+msgstr "툴바 스타일"
 
 #: theme.c:1373 theme.c:1402
 msgid "Icons"
-msgstr "Biểu tượng"
+msgstr "아이콘"
 
 #: theme.c:1378 theme.c:1406
 msgid "Text"
-msgstr "Chữ"
+msgstr "문자"
 
 #: theme.c:1383
 msgid "Both"
-msgstr "Cả hai"
+msgstr "둘다"
 
 #: theme.c:1388
 msgid "Both H"
-msgstr "Cả hai H"
+msgstr "둘다 H"
 
 #: theme.c:1409
 msgid "Both (icon above text)"
-msgstr "Cả hai (biểu tượng trên chữ)"
+msgstr "둘다 (문자 위의 아이콘)"
 
 #: theme.c:1412
 msgid "Both (icon left of text)"
-msgstr "Cả hai (biểu tượng bên trái chữ)"
+msgstr "둘다 (문자 왼쪽의 아이콘)"
 
 #: theme.c:1419
 msgid "Toolbar Icon Size"
-msgstr "Cỡ biểu tượng thanh công cụ"
+msgstr "툴바 아이콘 크기"
 
 #: theme.c:1435
 msgid "Fonts"
-msgstr "Phông chữ"
+msgstr "폰트"
 
 #: theme.c:1444 theme.c:1464
 msgid "Desktop Font"
-msgstr "Phông chữ màn hình nền"
+msgstr "데스크탑 폰트"
 
 #: theme.c:1451 theme.c:1511 theme.c:1546 theme.c:1596
 msgid "Family"
-msgstr "Nhóm"
+msgstr "패밀리"
 
 #: theme.c:1471 theme.c:1531 theme.c:1566 theme.c:1616
 msgid "Size"
-msgstr "Cỡ"
+msgstr "크기"
 
 #: theme.c:1500 theme.c:1502 theme.c:1524 theme.c:1559
 msgid "Application Font"
-msgstr "Phông chữ ứng dụng"
+msgstr "응용 프로그램 폰트"
 
 #: theme.c:1580
 msgid "Terminal"
-msgstr "Thiết bị cuối"
+msgstr "터미널"
 
 #: theme.c:1589
 msgid "Font"
-msgstr "Phông chữ"
+msgstr "폰트"
 
 #: theme.c:1609
 msgid "Terminal Font"
-msgstr "Phông chữ tiết bị cuối"
+msgstr "터미널 폰트"
 
 #: keys/keyctl.c:178
 msgid "Button layout file is missing a global section."
-msgstr "Tập tin bố trị nút thiếu một phần toàn cục"
+msgstr "버튼 레이아웃 파일이 global 섹션을 포함하고 있지 않습니다."
 
 #: keys/keyctl.c:549
 msgid "Critical: Can't open keylaunchrc for writing!"
-msgstr "Nghiêm trọng: không mở được keylaunchrc để ghi."
+msgstr "치명적 오류: keylaunchrc를 열 수 없습니다!"
 
 #: keys/keyctl.c:572
 msgid "Could not restart key handler!"
-msgstr "Không thể khởi đông lại trình quản lý khóa."
+msgstr "키 핸들러를 재시작할 수 없습니다!"
 
 #: keys/keyctl.c:595
 msgid "The file you selected is not executable."
-msgstr "Bạn đã chọn tập tin không chạy được."
+msgstr "선택한 파일은 실행 파일이 아닙니다."
 
 #: ownerinfo.c:210
 msgid "Information about the Owner"
-msgstr "Thông tin về người chủ"
+msgstr "소유자 정보"
 
 #: ownerinfo.c:218
 msgid "Only the user 'root' is allowed to change this information"
-msgstr "Chỉ cho phép ngươi dùng 'root' (chủ) thay đổi thông tin này."
+msgstr "'root' 사용자만이 이 정보를 수정할 수 있습니다"
 
 #: ownerinfo.c:252
 msgid "E-Mail:"
-msgstr "Địa chỉ thư điện tử:"
+msgstr "전자우편:"
 
 #: ownerinfo.c:267
 msgid "Phone:"
-msgstr "Số đ.t.:"
+msgstr "전화:"
 
 #: ownerinfo.c:282
 msgid "Address:"
-msgstr "Địa chỉ nhà:"
+msgstr "주소:"
 
 #: ownerinfo.c:308
 msgid "Photofile:"
-msgstr "Tệp ảnh chụp:"
+msgstr "사진화일:"
 
 #: login-setup.c:160
 msgid "Some of these settings can only be changed by the user 'root'."
-msgstr "Chỉ cho phép người dùng 'root' (chủ) thay đổi một số của sở thíchày."
+msgstr "몇몇의 이러한 설정은 오직 '루트' 사용자에 의해서만 변경이 가능합니다."
 
 #: login-setup.c:183 gpe-admin.c:85
 msgid "General"
-msgstr "Chung"
+msgstr "일반"
 
 #: login-setup.c:200
 msgid "Show owner information at login."
-msgstr "Hiển thị thông tin người chủ khi đăng nhập."
+msgstr "로그인 할 때 소유자 정보 보기."
 
 #: login-setup.c:204
 msgid "Lock display on suspend."
-msgstr "Khi ngưng thì khóa màn hình."
+msgstr "서스팬드 시 화면 잠그기."
 
 #: login-setup.c:208
 msgid ""
 "Lock display on suspend. \n"
 "  (needs password)"
 msgstr ""
-"Khi ngưng thì khóa màn hình.\n"
-"(cần đến mật khẩu)"
+"서스팬드 시 화면 잠그기. \n"
+"  (패스워드 필요)"
 
 #: login-setup.c:213
 msgid ""
 "Automatic login. \n"
 "  (without password)"
 msgstr ""
-"Tự động đăng nhập. \n"
-"  (không cần mật khẩu)"
+"자동 로그인. \n"
+"  (패스워드 필요없음)"
 
 #: sleep/interface.c:65
 msgid "Auto sleep"
-msgstr "Tự động ngủ"
+msgstr "자동 꺼짐"
 
 #: sleep/interface.c:75 sleep/interface.c:106
 msgid "enabled"
-msgstr "hoăt động"
+msgstr "활성화됨"
 
 #: sleep/interface.c:93
 msgid "sleep timeout"
-msgstr "thời hạn ngủ"
+msgstr "꺼짐 시간 설정"
 
 #: sleep/interface.c:96
 msgid "Auto dim"
-msgstr "Tự động làm mờ"
+msgstr "자동 흐려짐"
 
 #: sleep/interface.c:123
 msgid "backlight dim timeout"
-msgstr "thời hạn tất đèn nền"
+msgstr "흐려짐 시간 설정"
 
 #: sleep/interface.c:125
 msgid "Auto dim level"
-msgstr "Mức tự động làm mờ"
+msgstr "자동 흐려짐 수준"
 
 #: sleep/interface.c:145
 msgid "Advanced Controls"
-msgstr "Điều kiện cấp cao"
+msgstr "향상된 제어"
 
 #: sleep/interface.c:155
 msgid "CPU"
-msgstr "CPU"
+msgstr ""
 
 #: sleep/interface.c:161
 msgid "Sleep on cpu less than load"
-msgstr "Ngủ khi có ít tiêm năng của đơn vị xử lý trung tâm (cpu) hơn trọng tải"
+msgstr "부하걸리기 전에 cpu 꺼짐"
 
 #: sleep/interface.c:165
 msgid "load below"
-msgstr "trọng tải thập hơn"
+msgstr "다음과 같이 부하걸림"
 
-# Re-visit this item
 #: sleep/interface.c:181
 msgid "APM"
-msgstr "APM"
+msgstr ""
 
 #: sleep/interface.c:187
 msgid "Sleep on AC"
-msgstr "Ngủ khi kết nối đến dòng điện xoay chiều (AC)"
+msgstr "AC 꺼짐"
 
 #: sleep/interface.c:189
 msgid "probe IRQs"
-msgstr "dò các IRQ"
+msgstr "IRQ 인식"
 
 #: sleep/interface.c:195
 msgid "Check IRQ activity"
-msgstr "Kiểm tra có IRQ hoặt độngh"
+msgstr "IRQ 활동을 점검해 주세요"
 
 #: users/interface.c:215
 msgid "User Name"
-msgstr "Tên người dùng"
+msgstr "사용자 이름"
 
 #: users/interface.c:216
 msgid "User Info"
-msgstr "Thông tin người dùng"
+msgstr "사용자 정보"
 
 #: users/interface.c:217
 msgid "Home"
-msgstr "Chính"
+msgstr "홈"
 
 #: users/interface.c:235 users/interface.c:236
 msgid "Add user"
-msgstr "Thêm người dùng"
+msgstr "사용자 추가"
 
 #: users/interface.c:236
 msgid "Add a new user"
-msgstr "Thêm một người dùng mới"
+msgstr "새 인터페이스를 추가합니다"
 
 #: users/interface.c:240 users/interface.c:241
 msgid "Edit user"
-msgstr "Sửa đổi người dung"
+msgstr "사용자 편집"
 
 #: users/interface.c:241
 msgid "Edit existing user"
-msgstr "Sửa đổi người dùng tồn tại"
+msgstr "기존 사용자를 편집합니다"
 
 #: users/interface.c:245 users/interface.c:246
 msgid "Delete user"
-msgstr "Xóa bỏ người dùng"
+msgstr "사용자 삭제"
 
 #: users/interface.c:246
 msgid "Delete existing user"
-msgstr "Xóa bỏ người dùng tồn tại"
+msgstr "사용자 삭제"
 
 #: users/interface.c:250
 msgid "Password"
-msgstr "Mật khẩu"
+msgstr "패스워드"
 
 #: users/interface.c:251
 msgid "Change password"
-msgstr "Thay đổi mật khẩu"
+msgstr "패스워드 변경"
 
 #: users/interface.c:320
 msgid "User settings"
-msgstr "Sở thíchgười dùng"
+msgstr "사용자 설정"
 
 #: users/interface.c:334
 msgid "User Name:"
-msgstr "Tên người dùng:"
+msgstr "사용자 이름:"
 
 #: users/interface.c:350
 msgid "Password:"
-msgstr "Mật khẩu:"
+msgstr "패스워드:"
 
 #: users/interface.c:358
 msgid "User Info:"
-msgstr "Thông tin người dùng:"
+msgstr "사용자 정보:"
 
 #: users/interface.c:374
 msgid "Shell:"
-msgstr "Vỏ:"
+msgstr "쉘:"
 
 #: users/interface.c:393
 msgid "Home:"
-msgstr "Chính:"
+msgstr "홈:"
 
 #: users/interface.c:412
 msgid "Change"
-msgstr "Đổi"
+msgstr "변경"
 
 #: users/interface.c:413
 msgid "Set"
-msgstr "Lập"
+msgstr "설정"
 
 #: users/interface.c:478
 msgid "Change Password"
-msgstr "Đổi mật khẩu"
+msgstr "패스워드 변경"
 
 #: users/interface.c:504
 msgid "Old Password:"
-msgstr "Mật khẩu cũ:"
+msgstr "이전 패스워드:"
 
 #: users/interface.c:511
 msgid "New Password:"
-msgstr "Mật khẩu mới:"
+msgstr "새로운 패스워드:"
 
 #: users/interface.c:519
 msgid "Confirm:"
-msgstr "Xác nhận:"
+msgstr "확인:"
 
 #: users/callbacks.c:107
 msgid "You need at least one user account!"
-msgstr "Cần ít nhất một tài khoản người dùng."
+msgstr "적어도 한명의 사용자를 필요로 합니다!"
 
 #: users/callbacks.c:131
 msgid "You can't remove this user!"
-msgstr "Bạn không loại bỏ được ngươi dùng này."
+msgstr "이 사용자를 제거할 수 없습니다!"
 
 #: users/callbacks.c:136
 msgid ""
 "You can't remove\n"
 " system users!"
 msgstr ""
-"Bạn không loại bỏ được \n"
-"ngươi dùng hệ thông."
+"시스템 사용자를 제거할\n"
+" 수 없습니다!"
 
 #: users/callbacks.c:138
 msgid ""
@@ -1016,247 +1015,246 @@ msgid ""
 "This action is not revertable\n"
 "and is executed instantly."
 msgstr ""
-"Xóa bỏ ngươi dùng và toàn \n"
-"bộ dữ liệu của họ không?\n"
-"Không thể hoàn tác viêc này\n"
-"và nó ngay được thi hành."
+"사용자와 그의 모든 데이터를 삭제하겠습니까?\n"
+"삭제한 후에는 복구할 수 없으며\n"
+"즉시 삭제됩니다."
 
 #: users/callbacks.c:173
 msgid "Please choose a user name."
-msgstr "Hãy chọn tên người dùng."
+msgstr "사용자 이름을 선택해 주세요."
 
 #: users/callbacks.c:191
 msgid "Please choose a home directory."
-msgstr "Hãy chọn thư mục chính."
+msgstr "홈 디렉토리를 선택해 주세요."
 
 #: users/callbacks.c:279
 msgid ""
 "The two new pass are different!\n"
 " Please try again!"
 msgstr ""
-"Hai mật khảu mới không khớp\n"
-"thì hãy thử lại."
+"새로운 두 패스워드가 일치하지 않습니다!\n"
+" 다시 시도해 주세요!"
 
 #: users/callbacks.c:282
 msgid ""
 "Wrong password\n"
 " Please try again!"
 msgstr ""
-"Mật khẩu không đúng\n"
-"thì hãy thử lại."
+"잘못된 패스워드\n"
+" 다시 시도해 주세요!"
 
 #: cfgfile.c:919
 msgid "No write access to network configuration."
-msgstr "Không có quyền ghi cấu hình mạng."
+msgstr "네트웍 설정을 기록할 권한이 없습니다."
 
 #: gpe-admin.c:92
 msgid "Allow users to configure everything"
-msgstr "Cho phép mọi người dùng định cấu hình tất cả"
+msgstr "일반 사용자가 모든것을 설정할 수 있도록 허용합니다"
 
 #: serial.c:428 serial.c:434
 msgid "Simple interface to serial port configuration. Disabled components are not installed."
-msgstr "Cấu hình đơn giản loại giao diện đến cổng nối tiếp. Sẽ không cài đặt đoạn mã bị vô hiệu hóa."
+msgstr "시리얼 포트 설정을 위한 단순한 인터페이스. 비활성화된 컴포넌트는 설치되지 않았습니다."
 
 #: serial.c:431
 msgid "Port A"
-msgstr "Cổng A"
+msgstr "포트 A"
 
 #: serial.c:438
 msgid "Serial port default usage"
-msgstr "Cách sử dụng cổng nối tiếp"
+msgstr "시리얼 포트 기본 사용법"
 
 #: serial.c:443
 msgid "Select desired software to use serial port here."
-msgstr "Ở đây thì hãy chọn phần mềm được muốn để sử dụng cổng nối tiếp."
+msgstr "시리얼 포트 사용을 위해 필요한 소프트웨어는 이곳에서 선택해 주세요."
 
 #: serial.c:446
 msgid "Console"
-msgstr "Kênh giao tác"
+msgstr "콘솔"
 
 #: serial.c:449
 msgid "This option runs console on serial port. (default)"
-msgstr "Tùy chọn này chạy kênh giao tác trên cổng nối tiếp (mặc định)."
+msgstr "이 옵션은 콘솔이 시리얼 포트에서 동작합니다. (기본)"
 
 #: serial.c:457
 msgid "GPS Daemon"
-msgstr "GPS Daemon"
+msgstr "GPS 데몬"
 
 #: serial.c:462
 msgid "GPS Daemon (needs 'gpsd')"
-msgstr "Trình dành cho GPS (cần 'gpsd')"
+msgstr "GPS 데몬 ('gpsd' 필요)"
 
 #: serial.c:467
 msgid "This option enables the start of GPSD, which provides data from a GPS reciver to applications."
-msgstr "Tùy chọn này cho phép khởi động GPSD mà cung cấp dữ liệu từ thiết bị nhận GPS sang ứng dụng."
+msgstr "이 옵션은 GPSD의 시작을 활성화합니다, GPSD는 GPS 수신기로부터 온 데이터를어플리케이션에 제공합니다."
 
 #: serial.c:474
 msgid "Nothing (free)"
-msgstr "Không có (rảnh"
+msgstr "사용하지 않음 (자유롭게 사용)"
 
 #: serial.c:477
 msgid "Don't start any software that uses the serial port."
-msgstr "Không khởi động phần mềm nào sử dụng cổng nối tiếp."
+msgstr "시리얼 포트를 사용하는 소프트웨어는 시작하지 마세요."
 
 #: serial.c:514 serial.c:521
 msgid "This page configures the GPS receiver software."
-msgstr "Trang này định cấu hình phần mềm của thiết bị nhận GPS."
+msgstr "GPS 수신기 소프트웨어를 구성합니다."
 
 #: serial.c:518
 msgid "GPS Receiver"
-msgstr "Thiết bị nhận GPS"
+msgstr "GPS 수신기"
 
 #: serial.c:525
 msgid "GPS settings"
-msgstr "Sở thíchPS"
+msgstr "GPS 설정"
 
 #: serial.c:531
 msgid "Receiver Type"
-msgstr "Loại thiết bị nhận"
+msgstr "수신기 형태"
 
 #: serial.c:536
 msgid "NMEA"
-msgstr "NMEA"
+msgstr ""
 
 #: serial.c:541
 msgid "The GPS receiver sends NMEA data (default, no need to change for most receivers)."
-msgstr "Thiết bị nhận GPS có gởi dữ liêu loại NMEA (mặc định nên không cần thay đổi gì cho phần lớn thiết bị)."
+msgstr "GPS 수신기가 NMEA 데이터를 보냅니다 (기본값, 대부분의 수신기들은 변경할 필요가 없습니다)."
 
 #: serial.c:547
 msgid "Earthmate"
-msgstr "Earthmate"
+msgstr ""
 
 #: serial.c:553
 msgid "GPS receiver is an Earthmate GPS."
-msgstr "Thiết bị nhận GPS loại Earthmate."
+msgstr "GPS 수신기가 Earthmate GPS 입니다."
 
 #: serial.c:557
 msgid "Baud Rate"
-msgstr "Tốc độ truyền (kbps)"
+msgstr "전송률"
 
 #: serial.c:573
 msgid "Serial Port"
-msgstr "Cổng nối tiếp"
+msgstr "시리얼 포트"
 
 #: cardinfo.c:103
 msgid "/_Card"
-msgstr "/_Thẻ"
+msgstr "/카드(_C)"
 
 #: cardinfo.c:104
 msgid "/Card/_Insert"
-msgstr "/Thẻ/_Chèn"
+msgstr "/카드/삽입(_I)"
 
 #: cardinfo.c:105
 msgid "/Card/_Eject"
-msgstr "/Thẻ/Nhả _ra"
+msgstr "/카드/꺼내기(_E)"
 
 #: cardinfo.c:106
 msgid "/Card/_Suspend"
-msgstr "/Thẻ/_Ngưng"
+msgstr "/카드/지연(_S)"
 
 #: cardinfo.c:107
 msgid "/Card/_Resume"
-msgstr "/Thẻ/Làm _tiếp"
+msgstr "/카드/계속(_R)"
 
 #: cardinfo.c:108
 msgid "/Card/_Reset"
-msgstr "/Thẻ/_Lập lại"
+msgstr "/카드/초기화(_R)"
 
 #: cardinfo.c:109
 msgid "/Card/s1"
-msgstr "/Thẻ/s1"
+msgstr "/카드/s1"
 
 #: cardinfo.c:110
 msgid "/Card/_Assign Driver"
-msgstr "/Thẻ/_Gán trình điều khiển"
+msgstr "/카드/드라이버 할당(_A)"
 
 #: cardinfo.c:111
 msgid "/Card/s2"
-msgstr "/Thẻ/s2"
+msgstr "/카드/s2"
 
 #: cardinfo.c:112
 msgid "/Card/_Close"
-msgstr "/Thẻ/_Đóng"
+msgstr "/카드/닫기(_C)"
 
 #: cardinfo.c:113
 msgid "/_Help"
-msgstr "/Trợ _giúp"
+msgstr "/도움말(_H)"
 
 #: cardinfo.c:114
 msgid "/_Help/Index"
-msgstr "/Trợ _giúp/Mục lục"
+msgstr "/도움말(_H)/목차"
 
 #: cardinfo.c:115
 msgid "/_Help/About"
-msgstr "/Trợ _giúp/Giới thiệu"
+msgstr "/도움말(_H)/정보"
 
 #: cardinfo.c:175 cardinfo.c:863
 msgid "card not recognized"
-msgstr "chưa chấp nhân thẻ"
+msgstr "카드를 인식하지 못했습니다"
 
 #: cardinfo.c:277 cardinfo.c:348
 msgid "Could not write to temporal config file."
-msgstr "Không thể ghi vào tập tin cấu hình tạm thờì."
+msgstr "임시 파일에 기록할 수 없습니다."
 
 #: cardinfo.c:554
 msgid "Could not open pidfile:"
-msgstr "Không mở được tập tin thông tin cá nhân (pidfile):"
+msgstr "pid파일을 열 수 없습니다:"
 
 #: cardinfo.c:560
 msgid "Could not read pidfile"
-msgstr "Không đọc được tập tin thông tin cá nhân (pidfile)"
+msgstr "pid파일을 읽을 수 없습니다"
 
 #: cardinfo.c:564
 msgid "Could not signal cardmgr:"
-msgstr "Không thể ra hiệu trình quản lý thẻ (cardmgr):"
+msgstr "cardmgr에 시그널을 보낼 수 없습니다:"
 
 #: cardinfo.c:639
 msgid "gpe-conf must be setuid root to use cardinfo feature."
-msgstr "Để sử dụng tính gọi năng thông tin thẻ (cardinfo) thì cần phải lâp trình gpe-conf có quyền setuid root."
+msgstr "cardinfo 기능을 사용하려면 gpe-conf는 setuid 루트 속성을 갖고 있어야 합니다."
 
 #: cardinfo.c:658
 msgid "No PCMCIA driver in '/proc/devices'"
-msgstr "Không có trình điều khiển PCMCIA trong thư mục '/proc/devices'"
+msgstr "'/proc/devices'에 PCMCIA 드라이버가 발견되지 않았습니다"
 
 #: cardinfo.c:661
 msgid "Could not open '/proc/devices'"
-msgstr "Không thể mở thư mục '/proc/devices'"
+msgstr "'/proc/devices'를 열 수 없습니다"
 
 #: cardinfo.c:673
 msgid "No sockets found\n"
-msgstr "Chưa tìm ổ cắm nào\n"
+msgstr "소켓이 없습니다\n"
 
 #: cardinfo.c:682
 msgid "Card Services release does not match!"
-msgstr "Phiên bản dịch vụ thẻ (Card Services) không khớp được."
+msgstr "카드 서비스 릴리즈가 일치하지 않습니다!"
 
 #: cardinfo.c:687
 msgid "Could not get CS revision info!\n"
-msgstr "Không gọi được thông tin sửa lại phiên bản của dịch vụ thẻ (CS).\n"
+msgstr "CS 리비전 정보를 얻을 수 없습니다!\n"
 
 #: cardinfo.c:850
 msgid "flock(stabfile) failed"
-msgstr "không thi hành lệnh flock(stabfile) được"
+msgstr ""
 
 #: cardinfo.c:869
 #, c-format
 msgid "no driver loaded"
-msgstr "chưa tải trình điều khiển thiết bị (driver)"
+msgstr "드라이버를 로드하지 못했습니다"
 
 #: cardinfo.c:978
 msgid "ready"
-msgstr "sẵn sàng"
+msgstr "준비"
 
 #: cardinfo.c:996
 msgid "not ready"
-msgstr "chưa sẵn sàng"
+msgstr "준비 안됨"
 
 #: cardinfo.c:1011
 msgid "suspended"
-msgstr "đã ngưng"
+msgstr "지연됨"
 
 #: cardinfo.c:1203
 msgid "Assign Driver"
-msgstr "Gán trình điều khiển"
+msgstr "드라이버 할당"
 
 #: cardinfo.c:1212
 msgid ""
@@ -1264,799 +1262,795 @@ msgid ""
 "change the driver assignment for a\n"
 "PCMCIA or CF card."
 msgstr ""
-"Hộp thoại này cho phép ban chọn\n"
-"hay thay đổi trình điều khiển đối với\n"
-"thẻ PCMCIA hay CF."
+"이 다이얼로그는 PCMCIA 혹은 CF 카드의/\n"
+"드라이버 할당을 변경할 수 있도록 합니다."
 
 #: cardinfo.c:1222
 msgid "Your current card identifies itself as:"
-msgstr "Thẻ hiện của bạn có thông tin này:"
+msgstr "현재 카드 정보:"
 
 #: cardinfo.c:1236 cardinfo.c:1242
 msgid "Manuf. Id"
-msgstr "Mã chế tạo"
+msgstr "제조 Id"
 
 #: cardinfo.c:1236 cardinfo.c:1242
 msgid "Class"
-msgstr "Loại"
+msgstr "클래스"
 
 #: cardinfo.c:1340 cardinfo.c:1353
 msgid "PC/CF card socket information."
-msgstr "Thông tin ổ cắm của thẻ PC/CF."
+msgstr "PC/CF 카드 소켓 정보."
 
 #: cardinfo.c:1348
 msgid "Socket"
-msgstr "Ổ cắm"
+msgstr "소켓"
 
 #: cardinfo.c:1379
 msgid "Information for socket"
-msgstr "Thông tin về ổ cắm"
+msgstr "소켓 정보"
 
 #: cardinfo.c:1388
 msgid "State:"
-msgstr "Tính trạng:"
+msgstr "상태:"
 
 #: cardinfo.c:1389
 msgid "Device:"
-msgstr "Thiết bị:"
+msgstr "디바이스:"
 
 #: cardinfo.c:1390
 msgid "Driver:"
-msgstr "Trình điều khiển:"
+msgstr "드라이버:"
 
 #: cardinfo.c:1391
 msgid "Type:"
-msgstr "Loại:"
+msgstr "형태:"
 
 #: cardinfo.c:1392
 msgid "I/O:"
-msgstr "Vào/xuất:"
+msgstr ""
 
 #: cardinfo.c:1393
 msgid "IRQ:"
-msgstr "IRQ:"
+msgstr ""
 
 #: cardinfo.c:1400
 msgid "Flags:"
-msgstr "Cờ:"
+msgstr "플래그:"
 
 #: cardinfo.c:1417
 msgid "PCMCIA initialisation failed"
-msgstr "Không khởi động đươc PCMCIA"
+msgstr "PCMCIA 설치를 못했습니다"
 
 #: tools/interface.c:315 tools/interface.c:515 tools/interface.c:531
 #: tools/interface.c:651
 msgid "[NONE SET]"
-msgstr "[Chưa lập gi]"
+msgstr ""
 
 #: tools/interface.c:706 tools/interface.c:1704
 msgid "UNSPEC"
-msgstr "Chưa xác định"
+msgstr ""
 
 #: tools/interface.c:708
 msgid "UNIX Domain"
-msgstr "Miền UNIX"
+msgstr "UNIX 도메인"
 
 #: tools/interface.c:711
 msgid "DARPA Internet"
-msgstr "Mạng DARPA"
+msgstr "DARPA 인터넷"
 
 #: tools/interface.c:714
 msgid "IPv6"
-msgstr "IPv6"
+msgstr ""
 
 #: tools/interface.c:717 tools/interface.c:1725
 msgid "AMPR AX.25"
-msgstr "AMPR AX.25"
+msgstr ""
 
 #: tools/interface.c:720 tools/interface.c:1731
 msgid "AMPR NET/ROM"
-msgstr "AMPR NET/ROM"
+msgstr ""
 
 #: tools/interface.c:723
 msgid "Novell IPX"
-msgstr "Novell IPX"
+msgstr "노벨 IPX"
 
 #: tools/interface.c:726
 msgid "Appletalk DDP"
-msgstr "Appletalk DDP"
+msgstr ""
 
 #: tools/interface.c:729 tools/interface.c:1766
 msgid "Econet"
-msgstr "Econet"
+msgstr ""
 
 #: tools/interface.c:732
 msgid "CCITT X.25"
-msgstr "CCITT X.25"
+msgstr ""
 
 #: tools/interface.c:735 tools/interface.c:1728
 msgid "AMPR ROSE"
-msgstr "AMPR ROSE"
+msgstr ""
 
 #: tools/interface.c:738 tools/interface.c:1716
 msgid "Ash"
-msgstr "Ash"
+msgstr ""
 
 #: tools/interface.c:765
 #, c-format
 msgid "Too many address family arguments.\n"
-msgstr "Có quá nhiều đối số loại nhóm địa chỉ.\n"
+msgstr "너무 많은 주소 패밀리를 입력하였습니다.\n"
 
 #: tools/interface.c:776
 #, c-format
 msgid "Unknown address family '%s'.\n"
-msgstr "Chưa biết nhóm địa chỉ '%s'.\n"
+msgstr "'%s'는 알려지지 않은 주소 패밀리 입니다.\n"
 
 #: tools/interface.c:839
 #, c-format
 msgid "Please don't supply more than one address family.\n"
-msgstr "Hãy nhập chỉ một nhóm địa chỉ thôi.\n"
+msgstr "하나 이상의 주소 패밀리를 제공하지 마십시오.\n"
 
 #: tools/interface.c:966
 #, c-format
 msgid "No usable address families found.\n"
-msgstr "Chưa tìm nhóm địa chỉ có thể sử dụng.\n"
+msgstr "사용 가능한 주소 패밀리가 발견되지 않았습니다.\n"
 
 #: tools/interface.c:1036
 #, c-format
 msgid "Warning: no inet socket available: %s\n"
-msgstr "Cảnh báo: chưa có ổ cắm inet sẵn sàng: %s\n"
+msgstr "오류: inet 소켓이 잘못되었습니다: %s\n"
 
 #: tools/interface.c:1188
 #, c-format
 msgid "Warning: cannot open %s (%s). Limited output.\n"
-msgstr "Cảnh báo: không thể mở %s (%s). Dữ liệu xuất bị hạn chế.\n"
+msgstr "오류: %s (%s)를 열 수 없습니다. 제한된 출력입니다.\n"
 
 #: tools/interface.c:1431
 msgid "Device not found"
-msgstr "Chưa tìm thiết bị"
+msgstr "디바이스가 발견되지 않았습니다"
 
 #: tools/interface.c:1435
 #, c-format
 msgid "%s: error fetching interface information: %s\n"
-msgstr "%s: gặp lỗi khi gọi thông tin giao diện: %s\n"
+msgstr "%s: 인터페이스 정보를 가져오는데 문제가 발생하였습니다: %s\n"
 
 #: tools/interface.c:1609
 #, c-format
 msgid "You cannot start PPP with this program.\n"
-msgstr "Trình này không thể khởi động giao thức PPP.\n"
+msgstr "PPP는 이 프로그램과 함께 실행될 수 없습니다.\n"
 
 #: tools/interface.c:1703
 msgid "Local Loopback"
-msgstr "Mạch nội bộ"
+msgstr "로컬 루프백"
 
 #: tools/interface.c:1706
 msgid "Serial Line IP"
-msgstr "Địa chỉ IP dòng nối tiếp"
+msgstr "시리얼 라인 IP"
 
 #: tools/interface.c:1707
 msgid "VJ Serial Line IP"
-msgstr "Địa chỉ IP dòng nối tiếp VJ"
+msgstr "VJ 시리얼 라인 IP"
 
 #: tools/interface.c:1708
 msgid "6-bit Serial Line IP"
-msgstr "Địa chỉ IP dòng nối tiếp 6-bit"
+msgstr "6-비트 시리얼 라인 IP"
 
 #: tools/interface.c:1709
 msgid "VJ 6-bit Serial Line IP"
-msgstr "Địa chỉ IP dòng nối tiếp VJ 6-bit"
+msgstr "VJ 6-비트 시리얼 라인 IP"
 
 #: tools/interface.c:1710
 msgid "Adaptive Serial Line IP"
-msgstr "Địa chỉ IP dòng nối tiếp co thể"
+msgstr "Adaptive 시리얼 라인 IP"
 
 #: tools/interface.c:1713
 msgid "Ethernet"
-msgstr "Ethernet"
+msgstr "이더넷"
 
 #: tools/interface.c:1719
 msgid "Fiber Distributed Data Interface"
-msgstr "Giao diện dữ liệu được phân phối bằng sợi (FDDI)"
+msgstr "광 분산 데이터 인터페이스"
 
 #: tools/interface.c:1722
 msgid "HIPPI"
-msgstr "HIPPI"
+msgstr ""
 
 #: tools/interface.c:1734
 msgid "generic X.25"
-msgstr "X.25 thuộc giống loàì"
+msgstr ""
 
 #: tools/interface.c:1737
 msgid "IPIP Tunnel"
-msgstr "Đường hầm IPIP"
+msgstr "IPIP 터널"
 
 #: tools/interface.c:1740
 msgid "Point-to-Point Protocol"
-msgstr "Giao diện điểm-sang-điểm (PPP)"
+msgstr "Point-to-Point 프로토콜"
 
 #: tools/interface.c:1743
 msgid "(Cisco)-HDLC"
-msgstr "(Cisco)-HDLC"
+msgstr "(시스코)-HDLC"
 
 #: tools/interface.c:1744
 msgid "LAPB"
-msgstr "LAPB"
+msgstr ""
 
 #: tools/interface.c:1747
 msgid "ARCnet"
-msgstr "ARCnet"
+msgstr ""
 
 #: tools/interface.c:1750
 msgid "Frame Relay DLCI"
-msgstr "Sắp đặt khung dữ liệu theo kíp (frame relay) DLCI"
+msgstr "프레임 릴레이 DLCI"
 
 #: tools/interface.c:1751
 msgid "Frame Relay Access Device"
-msgstr "Thiết bị truy cập sắp đặt khung dữ liệu theo kíp (frame relay)"
+msgstr "프레임 릴레이 엑세스 디바이스"
 
 #: tools/interface.c:1754
 msgid "IPv6-in-IPv4"
-msgstr "IPv6-trong-IPv4"
+msgstr ""
 
 #: tools/interface.c:1757
 msgid "IrLAP"
-msgstr "IrLAP"
+msgstr ""
 
 #: tools/interface.c:1760
 msgid "16/4 Mbps Token Ring"
-msgstr "Ổ hiêu bài (Token Ring) 16/4 Mbps"
+msgstr "16/4 Mbps 토큰 링"
 
 #: tools/interface.c:1762
 msgid "16/4 Mbps Token Ring (New)"
-msgstr "Ổ hiêu bài 16/4 Mbps Mới"
+msgstr "16/4 Mbps 토큰 링 (새로운)"
 
 #: tools/interface.c:1875
 #, c-format
 msgid "Interface %s"
-msgstr "Giao diện %s"
+msgstr "인터페이스 %s"
 
 #: tools/interface.c:1876
 #, c-format
 msgid "Type: %s"
-msgstr "Kiểu: %s"
+msgstr "형태: %s"
 
 #: tools/interface.c:1885
 #, c-format
 msgid "Media: %s"
-msgstr "Môi giới: %s"
+msgstr "미디어: %s"
 
 #: tools/interface.c:1890
 #, c-format
 msgid "(auto)"
-msgstr "(tự động)"
+msgstr "(자동)"
 
 #: tools/interface.c:1902
 #, c-format
 msgid "Address: %s\n"
-msgstr "Địa chỉ: %s\n"
+msgstr "주소: %s\n"
 
 #: tools/interface.c:1907
 #, c-format
 msgid "P-t-P: %s\n"
-msgstr "P-t-P: %s\n"
+msgstr ""
 
 #: tools/interface.c:1911
 #, c-format
 msgid "Netmask: %s\n"
-msgstr "Mặt nạ mang: %s\n"
+msgstr "넷마스크: %s\n"
 
 #: tools/interface.c:1915
 #, c-format
 msgid "Broadcast: %s\n"
-msgstr "Phát thanh: %s\n"
+msgstr "브로드케스트: %s\n"
 
 #: tools/interface.c:1927
 #, c-format
 msgid "HWaddr (MAC): %s\n"
-msgstr "HWaddr (MAC): %s\n"
+msgstr ""
 
 #: tools/interface.c:1957
 #, c-format
 msgid "IPv6 Address: %s/%d\n"
-msgstr "Địa chỉ IPv6: %s/%d\n"
+msgstr "IPv6 주소: %s/%d\n"
 
 #: tools/interface.c:1960
 #, c-format
 msgid "Scope: "
-msgstr "Phạm vị: "
+msgstr "영역: "
 
 #: tools/interface.c:1965
 #, c-format
 msgid "Global"
-msgstr "Toàn cục"
+msgstr "전체"
 
 #: tools/interface.c:1968
 #, c-format
 msgid "Link"
-msgstr "Liên kết"
+msgstr "링크"
 
 #: tools/interface.c:1971
 #, c-format
 msgid "Site"
-msgstr "Nơi Mạng"
+msgstr "사이트"
 
 #: tools/interface.c:1974
 #, c-format
 msgid "Compat"
-msgstr "Tương thích"
+msgstr ""
 
 #: tools/interface.c:1977
 #, c-format
 msgid "Host"
-msgstr "Máy chủ"
+msgstr "호스트"
 
 #: tools/interface.c:1980
 #, c-format
 msgid "Unknown"
-msgstr "Chưa biết"
+msgstr "알려지지 않음"
 
 #: sound/sound.c:250
 msgid "Audio Settings"
-msgstr "Sở thíchm thanh"
+msgstr "오디오 설정"
 
 #: sound/sound.c:257
 msgid "Mute Everything"
-msgstr "Chặn tất cả tiếng"
+msgstr "음소거"
 
 #: sound/sound.c:298
 msgid "Alarm Settings"
-msgstr "Sở thícháo động"
+msgstr "알람 설정"
 
 #: sound/sound.c:305
 msgid "Enable Alarm Sound"
-msgstr "Hiệu lực âm thanh báo động"
+msgstr "알람 소리 활성화"
 
 #: sound/sound.c:312
 msgid "Automatic Volume (rising)"
-msgstr "Âm lượng tự động (tăng lên)"
+msgstr "자동 볼륨 (키우기)"
 
 #: sound/sound.c:322 sound/soundctrl.c:298
 msgid "Volume"
-msgstr "Âm lượng"
+msgstr "볼륨"
 
 #: sound/sound.c:329
 msgid "Test"
-msgstr "Thử ra"
+msgstr "테스트"
 
 #: keys/keyboard.c:75
 msgid "none"
-msgstr "không có"
+msgstr "없음"
 
 #: keys/keyboard.c:76
 msgid "Foldable"
-msgstr "Có thể gấp"
+msgstr ""
 
 #: keys/keyboard.c:77
 msgid "SnapNType"
-msgstr "SnapNType"
+msgstr ""
 
 #: keys/keyboard.c:78
 msgid "Stowaway"
-msgstr "Stowaway"
+msgstr ""
 
 #: keys/keyboard.c:79
 msgid "StowawayXT"
-msgstr "StowawayXT"
+msgstr ""
 
 #: keys/keyboard.c:80
 msgid "HP Slim"
-msgstr "HP Slim"
+msgstr ""
 
 #: keys/keyboard.c:81
 msgid "Smart BT"
-msgstr "Smart BT"
+msgstr ""
 
 #: keys/keyboard.c:82
 msgid "LIRC"
-msgstr "LIRC"
+msgstr ""
 
 #: keys/keyboard.c:83
 msgid "Belkin IR"
-msgstr "Belkin IR"
+msgstr ""
 
 #: keys/keyboard.c:84
 msgid "Flexis"
-msgstr "Flexis"
+msgstr ""
 
 #: keys/keyboard.c:85
 msgid "Benq Gamepad"
-msgstr "Benq Gamepad"
+msgstr ""
 
 #: keys/keyboard.c:86
 msgid "Pocketvik"
-msgstr "0"
+msgstr ""
 
 #: keys/keyboard.c:87
 msgid "Micro Foldaway"
-msgstr "Micro Foldaway"
+msgstr ""
 
 #: keys/keyboard.c:88
 msgid "Micro Datapad"
-msgstr "Micro Datapad"
+msgstr ""
 
 #: keys/keyboard.c:252
 msgid "External keyboard configuration."
-msgstr "Cấu hình bàn phím bên ngoại."
+msgstr "외장 키보드 구성."
 
 #: keys/keyboard.c:255
 msgid "External Keyboard Port"
-msgstr "Thiết lập bàn phím ảop"
+msgstr "외장 키보드 포트"
 
 #: keys/keyboard.c:262
 msgid "Here you may select your external keyboard model."
-msgstr "Ở đây thì bạn có thể chọn mẫu bàn phím bên ngoại."
+msgstr "이곳에서 외장 키보드 모델을 선택할 수 있습니다."
 
 #: keys/keyboard.c:283
 msgid "External Keyboard Type"
-msgstr "Kiểu bàn phím bên ngoại"
+msgstr "외장 키보드 형태"
 
 #: keys/keys.c:79
 msgid "Buttons"
-msgstr "Nút"
+msgstr "버튼"
 
 #: keys/keys.c:83
 msgid "Virtual Keyboard"
-msgstr "Bàn phím ảo"
+msgstr "가상 키보드"
 
 #: keys/keys.c:87
 msgid "External Keyboard"
-msgstr "Bàn phím bên ngoại"
+msgstr "외장 키보드"
 
 #: main-info.c:67
 #, c-format
 msgid "usage: gpe-info [page]\n"
-msgstr "cách sử dụng: gpe-info [trang]\n"
+msgstr ""
 
 #: main-info.c:68
 #, c-format
 msgid "    Where page may be \"global\" (default)\n"
-msgstr "    Mà trang ấy có thể là \"global\" (toàn cục: là mặc định)\n"
+msgstr ""
 
 #: main-info.c:78 gpe-conf-sysinfo.desktop.in.h:2
 msgid "System Information"
-msgstr "Thông tin hệ thống"
+msgstr "시스템 정보"
 
 #: storage.c:166 storage.c:423
 msgid "System Memory"
-msgstr "Bộ nhớ hê thống"
+msgstr "시스템 메모리"
 
 #. TRANSLATORS: MB == Mega Bytes
 #: storage.c:174 storage.c:443
 msgid "Free memory"
-msgstr "Bộ nhớ còn rảnh"
+msgstr "남은 메모리"
 
 #. TRANSLATORS: MB == Mega Bytes
 #: storage.c:176 storage.c:183 storage.c:329 storage.c:340 storage.c:445
 #: storage.c:458 sysinfo.c:663 sysinfo.c:679
 msgid "MB"
-msgstr "MB"
+msgstr ""
 
 #: storage.c:181 storage.c:328 storage.c:456
 msgid "Total:"
-msgstr "Tổng số:"
+msgstr "합계:"
 
 #: storage.c:292
 msgid "Internal Flash"
-msgstr "Bộ nhớ cực nhanh nôi bộ"
+msgstr "내부 플래쉬"
 
 #: storage.c:298
 msgid "MMC"
-msgstr "MMC"
+msgstr ""
 
 #: storage.c:304
 msgid "Compact Flash"
-msgstr "Bộ nhớ cực nhanh gọn (CF)"
+msgstr "컴팩트 플래쉬"
 
 #: storage.c:310
 msgid "Network Filesystem"
-msgstr "Hệ thống tập tin mạng"
+msgstr "네트웍 파일시스템"
 
 #: storage.c:330
 msgid "Mounted at "
-msgstr "Đươc lắp ở "
+msgstr "마운트 됨 "
 
 #: storage.c:338
 msgid "Free space"
-msgstr "Sức chứa còn rảnh"
+msgstr "남은 공간"
 
 #: logread.c:116
 msgid "Can't find circular buffer, is syslog running?\n"
-msgstr "Không tìm được bộ đệm tròn: trình syslog (bản ghi hệ thống) có chạy không?\n"
+msgstr "원형 버퍼를 찾을 수 없습니다, syslog가 실행중에 있습니까?\n"
 
 #: logread.c:123
 msgid "Can't get access to syslogd's circular buffer."
-msgstr "Không truy cập được bộ đệm tròn của trình syslogd."
+msgstr "syslogd의 원형 버퍼에 접근할 수 없습니다."
 
 #: logread.c:130
 msgid "Can't get access to semaphore(s) for syslogd's circular buffer."
-msgstr "Không truy cập được semaphore đối với bộ đệm tròn của syslogd."
+msgstr "syslogd의 원형 버퍼에 접근할 세마포어를 얻을 수 없습니다."
 
 #: logread.c:156
 msgid "<empty syslog>"
-msgstr "<syslog trống>"
+msgstr "<빈 syslog>"
 
 #: logread.c:227 logread.c:243
 msgid "System Log"
-msgstr "Bản ghi hệ thống"
+msgstr "시스템 로그"
 
 #: logread.c:252 logread.c:268
 msgid "Session Log"
-msgstr "Bản ghi phiên"
+msgstr "세션 로그"
 
 #: logread.c:275
 msgid "Could not open X session log.\n"
-msgstr "Không mở được bản ghi phiên X.\n"
+msgstr "X 세션 로그를 열 수 없습니다.\n"
 
 #: battery.c:190 battery.c:251
 msgid "unknown"
-msgstr "chưa biết"
+msgstr "모름"
 
 #: battery.c:199 battery.c:259 battery.c:358
 msgid "Status: high"
-msgstr "Tình trạng: cao"
+msgstr "상태: 높음"
 
 #: battery.c:202 battery.c:262 battery.c:362
 msgid "Status: low"
-msgstr "Tình trang: thấ"
+msgstr "상태: 낮음"
 
 #: battery.c:205 battery.c:265 battery.c:366
 msgid "Status: critical"
-msgstr "Tình trạng: gần chết"
+msgstr "상태: 치명적임"
 
 #: battery.c:208 battery.c:268 battery.c:370
 msgid "Status: charging"
-msgstr "Tình trạng: đạng sạc"
+msgstr "상태: 충전중"
 
 #: battery.c:211 battery.c:271
 msgid "Status: charge main"
-msgstr "Tình trạng: nạp điện chính"
+msgstr "상태: 메인 충전"
 
 #: battery.c:214
 msgid "Status: dead"
-msgstr "Tình trạng: chết"
+msgstr "상태: 죽음"
 
 #: battery.c:217 battery.c:277 battery.c:356
 msgid "Status: full"
-msgstr "Tình trạng: đầy"
+msgstr "상태: 가득 충전됨"
 
 #: battery.c:220 battery.c:280
 msgid "Status: no battery"
-msgstr "Tình trạng: không có pin"
+msgstr "상태: 배터리 없음"
 
 #: battery.c:223 battery.c:283 battery.c:301 battery.c:373
 msgid "Status: unknown"
-msgstr "Tình trạng: chưa biết"
+msgstr "상태: 모름"
 
 #: battery.c:228
 msgid "learning"
-msgstr "đang học biết"
+msgstr "배우기"
 
 #: battery.c:232 battery.c:287
 msgid "Voltage"
-msgstr "Điện áp"
+msgstr "전압"
 
 #: battery.c:236 battery.c:291 battery.c:390
 msgid "AC connected"
-msgstr "Đã kt nối đến AC"
+msgstr "AC 연결됨"
 
 #: battery.c:238 battery.c:293 battery.c:392
 msgid "Lifetime"
-msgstr "Thời gian sống"
+msgstr "남은 시간"
 
 #: battery.c:274
 msgid "Status: not installed"
-msgstr "Tình trạng: chưa cài đặt"
+msgstr "상태: 설치되지 않음"
 
 #: battery.c:300
 msgid "not installed"
-msgstr "chưa cài đặt"
+msgstr "설치되지 않음"
 
 #: battery.c:302
 msgid "Voltage: unknown"
-msgstr "Điện áp: chưa biết"
+msgstr "전압: 모름"
 
 #: battery.c:303
 msgid "Lifetime: unknown"
-msgstr "Thời gian sống: chưa biết"
+msgstr "남은 시간: 모름"
 
 #: battery.c:348
 msgid "No battery"
-msgstr "Không có pin"
+msgstr "배터리 없음"
 
 #: battery.c:453
 msgid "Internal battery"
-msgstr "Pin nội bộ"
+msgstr "내부 배터리"
 
 #: battery.c:457
 msgid "Jacket battery"
-msgstr "Pin thêm ngoài"
+msgstr "추가 배터리"
 
 #: sysinfo.c:236
 msgid "ARM"
-msgstr "ARM"
+msgstr ""
 
 #: sysinfo.c:239
 msgid "Intel x86 or compatible"
-msgstr "Intel x86 hay tương thích"
+msgstr "인텔 x86 혹은 호환"
 
 #: sysinfo.c:240
 msgid "IBM type PC"
-msgstr "PC loại IBM"
+msgstr "IBM 형태의 PC"
 
 #: sysinfo.c:243
 msgid "Mips"
-msgstr "Mips"
+msgstr "밉스"
 
 #: sysinfo.c:245
 msgid "Silicon Graphics Machine"
-msgstr "Máy đồ họa silic (Silicon Graphics)"
+msgstr "실리콘 그래픽스"
 
 #: sysinfo.c:249
 msgid "IBM Power or PowerPC"
-msgstr "IBM Power hay PowerPC"
+msgstr "IBM 파워 혹은 파워PC"
 
 #. TRANSLATORS: "Familiar" is the name of a linux distribution.
 #: sysinfo.c:278
 msgid "Familiar"
-msgstr "Familiar (linux)"
+msgstr "퍼밀리어"
 
 #. TRANSLATORS: "OpenEmbedded" is the name of a linux distribution.
 #: sysinfo.c:292
 msgid "OpenEmbedded"
-msgstr "OpenEmbedded (linux)"
+msgstr "오픈임베디드"
 
 #: sysinfo.c:334 sysinfo.c:336
 msgid "Build"
-msgstr "Số dựng"
+msgstr "빌드"
 
 #: sysinfo.c:438
 msgid "Network Status"
-msgstr "Trạng thái mạng"
+msgstr "네트웍 상태"
 
 #: sysinfo.c:452 sysinfo.c:455
 msgid "HWaddr (MAC)"
-msgstr "HWaddr (MAC)"
+msgstr ""
 
 #: sysinfo.c:466 sysinfo.c:467
 #, c-format
 msgid "Wireless"
-msgstr "Vô tuyến"
+msgstr "무선"
 
 #: sysinfo.c:494
 msgid "Default Gateway"
-msgstr "Cổng ra mặc định"
+msgstr "기본 게이트웨이"
 
 #: sysinfo.c:537
 msgid "System information"
-msgstr "Thông tin hệ thống"
+msgstr "시스템 정보"
 
 #: sysinfo.c:547
 msgid "Version"
-msgstr "Phiên bản"
+msgstr "버전"
 
 #: sysinfo.c:579
 msgid "Distribution"
-msgstr "Sự phân phối"
+msgstr "배포"
 
 #: sysinfo.c:604
 msgid "System"
-msgstr "Hệ điều hành"
+msgstr "시스템"
 
 #: sysinfo.c:613
 msgid "Device information"
-msgstr "Thông tin thiết bị"
+msgstr "디바이스 정보"
 
 #: sysinfo.c:625
 msgid "Device Name"
-msgstr "Tên thiết bị"
+msgstr "디바이스 이름"
 
 #: sysinfo.c:644
 msgid "CPU:"
-msgstr "CPU:"
+msgstr ""
 
 #: sysinfo.c:657
 msgid "RAM:"
-msgstr "RAM:"
+msgstr "램:"
 
 #: sysinfo.c:673
 msgid "Storage:"
-msgstr "Sức chứa:"
+msgstr "저장소:"
 
 #: sysinfo.c:685
 msgid "Hardware"
-msgstr "Phần cứng"
+msgstr "하드웨어"
 
 #: sysinfo.c:695
 msgid "Battery"
-msgstr "Pin"
+msgstr "배터리"
 
 #: sysinfo.c:702
 msgid "Storage"
-msgstr "Sức chứa"
+msgstr "저장소"
 
 #: sysinfo.c:709
 msgid "Networks"
-msgstr "Các ạng"
+msgstr "네트웍"
 
 #: sysinfo.c:716
 msgid "Log Display"
-msgstr "Trình bày bản ghi"
+msgstr "로그 보기"
 
 #: gpe-conf.desktop.in.h:1
 msgid "Control Panel"
-msgstr "Bảng điều kiện"
+msgstr "제어판"
 
 #: gpe-conf-admin.desktop.in.h:1
 msgid "User Access"
-msgstr "Truy cập người dùng"
+msgstr "사용자 제어"
 
 #: gpe-conf-admin.desktop.in.h:2
 msgid "User access administration"
-msgstr "Quản lý truy cập người dùng"
+msgstr "사용자 제어 관리"
 
 #: gpe-conf-cardinfo.desktop.in.h:1
 msgid "PC/CF Cards"
-msgstr "Thẻ PC/CF"
+msgstr "PC/CF 카드"
 
 #: gpe-conf-cardinfo.desktop.in.h:2
 msgid "PC/CF Cards info and config"
-msgstr "Thông tin và cấu hình thẻ PC/CF"
+msgstr "PC/CF 카드 정보와 설정"
 
 #: gpe-conf-keys.desktop.in.h:1
 msgid "Keyboard and Button Setup"
-msgstr "Thiết lập bàn phím và cái nút"
+msgstr "키보드와 버튼 설정"
 
 #: gpe-conf-keys.desktop.in.h:2
 msgid "Keys and Buttons"
-msgstr "Phím và Nút"
+msgstr "키와 버튼"
 
 #: gpe-conf-ownerinfo.desktop.in.h:2
 msgid "Set Owner Information"
-msgstr "Lập thông tin về người chủ"
+msgstr "사용자 정보 설정"
 
 #: gpe-conf-serial.desktop.in.h:1
 msgid "Serial Port Settings"
-msgstr "Sở thích ng nối tiếp"
+msgstr "시리얼 포트 설정"
 
 #: gpe-conf-sleep.desktop.in.h:1
 msgid "Sleep Config"
-msgstr "Cấu hình ngủ"
+msgstr "끄기 구성"
 
 #: gpe-conf-sleep.desktop.in.h:2
 msgid "Sleep Configuration"
-msgstr "Cấu hình thời gian trước thiết bị ngủ"
+msgstr "끄기 구성"
 
 #: gpe-conf-theme.desktop.in.h:1
 msgid "Global Appearance Setup"
-msgstr "Thiết lập hình thức toàn cục"
+msgstr "전체 모양 설정"
 
 #: gpe-conf-time.desktop.in.h:1
 msgid "Date/Time Setup"
-msgstr "Lập Ngày/Giờ"
+msgstr "날짜/시간 설정"
 
 #: gpe-conf-time.desktop.in.h:2
 msgid "Setup Date and Time"
-msgstr "Thiết lập ngày giờ"
+msgstr "날짜와 시간 설정"
 
 #: gpe-conf-users.desktop.in.h:1
 msgid "Manage local users"
-msgstr "Quản lý các gười dùng địa phương"
+msgstr "사용자 관리"
 
 #: gpe-conf-users.desktop.in.h:2
 msgid "User Manager"
-msgstr "Quản lý người dùng"
+msgstr "사용자 관리자"
 
 #: gpe-conf-sysinfo.desktop.in.h:1
 msgid "System Info"
-msgstr "Thông tin hệ thống"
+msgstr "시스템 정보"
 
 #: gpe-conf-sound.desktop.in.h:1
 msgid "Sound Settings"
-msgstr "Sở thíchm thanh"
+msgstr "사운드 설정"
 
 #: gpe-conf-sound.desktop.in.h:2
 msgid "Sound defaults and setup"
-msgstr "Những tham chiếu mặc định và cách thiết lập âm thanh"
-
-#~ msgid "could not open touchscreen device '%s'\n"
-#~ msgstr "không mở được thiết bị màn ảnh sờ '%s'\n"
+msgstr "사운드 기본과 설정"

@@ -36,7 +36,6 @@
 #include "parser.h"
 
 
-#define TS_DEV "/dev/touchscreen/0raw"
 #define PROC_BATTERY "/proc/asic/battery"
 #define HAL_BATTERY "/proc/hal/battery"
 #define PROC_APM "/proc/apm"

@@ -45,6 +45,8 @@
 /* local definitions */
 #define MODEL_INFO 		"/proc/hal/model"
 #define FAMILIAR_VINFO 	"/etc/familiar-version"
+#define OPENZAURUS_VINFO 	"/etc/openzaurus-version"
+#define ANGSTROM_VINFO 	"/etc/angstrom-version"
 #define DEBIAN_VINFO 	"/etc/debian_version"
 #define FAMILIAR_TIME 	"/etc/familiar-timestamp"
 #define OE_VERSION 		"/etc/version"
@@ -67,6 +69,7 @@ typedef enum
 	M_IPAQ,
 	M_SIMPAD,
 	M_ZAURUS,
+	M_N770,
 	M_OTHER
 }
 t_mach;
@@ -222,7 +225,13 @@ get_device_info()
 					g_free(result.model);
 					result.model = g_strdup("Sharp Zaurus (Shepherd)");
 				}
-				if (strstr(strv[i],"Siemens")) //needs to be verfied
+				if (strstr(strv[i],"OMAP1510/1610/1710"))
+				{
+					result.mach = M_N770;
+					g_free(result.model);
+					result.model = g_strdup("Nokia 770");
+				}
+				if (strstr(strv[i],"Siemens"))
 				{
 					result.mach = M_SIMPAD;
 				}
@@ -281,11 +290,33 @@ get_distribution_version()
 	 	return result;
 	}
 	
+	/* check for OpenZaurus */
+	if (g_file_get_contents(OPENZAURUS_VINFO,&tmp,&len,NULL))
+	{
+		if (strchr(tmp,'\n'))
+			strchr(tmp,'\n')[0] = 0;
+    	/*TRANSLATORS: "OpenZaurus" is the name of a linux distribution.*/
+		result = g_strdup_printf("%s %s", _("OpenZaurus"), g_strstrip(strstr(tmp, " ")));
+		g_free(tmp);
+	 	return result;
+	}
+	
 	/* check for Debian */
-	if (g_file_get_contents(DEBIAN_VINFO,&tmp,&len,NULL))
+	if (g_file_get_contents(DEBIAN_VINFO, &tmp, &len, NULL))
 	{
     	/*TRANSLATORS: "Debian" is the name of a linux distribution.*/
 		result = g_strdup_printf("%s %s", _("Debian"), g_strstrip(tmp));
+		g_free(tmp);
+	 	return result;
+	}
+	
+	/* check for Angstrom */
+	if (g_file_get_contents(ANGSTROM_VINFO, &tmp, &len, NULL))
+	{
+		if (strchr(tmp,'\n'))
+			strchr(tmp,'\n')[0] = 0;
+    	/*TRANSLATORS: "Ångström" is the name of a linux distribution.*/
+		result = g_strdup_printf("%s %s", _("Ångström"), g_strstrip(strstr(tmp, " ")));
 		g_free(tmp);
 	 	return result;
 	}

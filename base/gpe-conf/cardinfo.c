@@ -630,7 +630,6 @@ int
 init_pcmcia_suid ()
 {
 	int major;
-	servinfo_t serv;
 
 	if (geteuid () != 0)
 	{
@@ -654,8 +653,7 @@ init_pcmcia_suid ()
 	{
 		if (major == -ENODEV)
 			PCMCIA_ERROR =
-				g_strdup (_
-					  ("No PCMCIA driver in '/proc/devices'"));
+				g_strdup (_("No PCMCIA driver in '/proc/devices'"));
 		else
 			PCMCIA_ERROR =
 				g_strdup (_("Could not open '/proc/devices'"));
@@ -674,19 +672,6 @@ init_pcmcia_suid ()
 		return -1;
 	}
 
-	if (ioctl (st[0].fd, DS_GET_CARD_SERVICES_INFO, &serv) == 0)
-	{
-		if (serv.Revision != CS_RELEASE_CODE)
-			PCMCIA_ERROR =
-				g_strdup (_
-					  ("Card Services release does not match!"));
-	}
-	else
-	{
-		PCMCIA_ERROR =
-			g_strdup (_("Could not get CS revision info!\n"));
-		return -1;
-	}
 	return 0;
 }
 

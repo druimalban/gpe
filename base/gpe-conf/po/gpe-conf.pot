@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-11-01 13:27+0100\n"
+"POT-Creation-Date: 2006-02-17 02:08+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -48,11 +48,11 @@ msgstr ""
 msgid "Network Setup"
 msgstr ""
 
-#: main.c:99 theme.c:1144
+#: main.c:99 theme.c:1145
 msgid "Theme"
 msgstr ""
 
-#: main.c:99 theme.c:1146 gpe-conf-theme.desktop.in.h:2
+#: main.c:99 theme.c:1147 gpe-conf-theme.desktop.in.h:2
 msgid "Look and Feel"
 msgstr ""
 
@@ -156,30 +156,26 @@ msgstr ""
 msgid "Settings saved"
 msgstr ""
 
-#: main.c:160
-msgid "Aborted"
-msgstr ""
-
-#: main.c:335
+#: main.c:336
 #, c-format
 msgid "'task_nameserver' needs a new (and only one) nameserver as argument.\n"
 msgstr ""
 
-#: main.c:353
+#: main.c:354
 #, c-format
 msgid "'task_sound' needs (s)ave/(r)estore as argument.\n"
 msgstr ""
 
-#: main.c:421
+#: main.c:422
 msgid "Warning: PCMCIA init failed."
 msgstr ""
 
-#: main.c:453
+#: main.c:454
 #, c-format
 msgid "This mode is disabled, please try:\n"
 msgstr ""
 
-#: main.c:454
+#: main.c:455
 #, c-format
 msgid ""
 "\n"
@@ -187,12 +183,12 @@ msgid ""
 "where AppletName is in:\n"
 msgstr ""
 
-#: main.c:470
+#: main.c:471
 #, c-format
 msgid "Applet %s unknown!\n"
 msgstr ""
 
-#: main.c:471
+#: main.c:472
 #, c-format
 msgid ""
 "\n"
@@ -201,18 +197,18 @@ msgid ""
 "where AppletName is in:\n"
 msgstr ""
 
-#: applets.c:446
+#: applets.c:413
 msgid "Root access"
 msgstr ""
 
-#: applets.c:460
+#: applets.c:427
 msgid ""
 "Some options are only\n"
 "accessible for user root.\n"
 "Please enter password."
 msgstr ""
 
-#: applets.c:507 screen/calibrate.c:32
+#: applets.c:474 screen/calibrate.c:32
 msgid "Sorry, wrong password."
 msgstr ""
 
@@ -301,7 +297,7 @@ msgstr ""
 msgid "Select daylight saving time offset minutes here."
 msgstr ""
 
-#: timeanddate.c:783
+#: timeanddate.c:787
 msgid ""
 "To make timezone settings take effect, you'll need to log out and log in "
 "again."
@@ -452,162 +448,166 @@ msgstr ""
 msgid "Key 4"
 msgstr ""
 
-#: network.c:1064
+#: network.c:1011 network.c:1138 network.c:1255
+msgid "Interface"
+msgstr ""
+
+#: network.c:1061
 msgid "Address"
 msgstr ""
 
-#: network.c:1067
+#: network.c:1063
 msgid "Enter your IP address here, e.g. 192.168.1.2"
 msgstr ""
 
-#: network.c:1069
+#: network.c:1064
 msgid "Netmask"
 msgstr ""
 
-#: network.c:1072
+#: network.c:1066
 msgid "Enter your netmask here, e.g. 255.255.255.0 in most cases"
 msgstr ""
 
-#: network.c:1074
+#: network.c:1068
 msgid "Broadcast"
 msgstr ""
 
-#: network.c:1077
+#: network.c:1070
 msgid ""
 "Enter your broadcast address here, usually the same like your IP with 255 as "
 "last number."
 msgstr ""
 
-#: network.c:1079
+#: network.c:1072
 msgid "Gateway"
 msgstr ""
 
-#: network.c:1082
+#: network.c:1074
 msgid "Enter the IP Address of your default gateway here."
 msgstr ""
 
-#: network.c:1093 network.c:1210
+#: network.c:1083 network.c:1197
 msgid "WiFi device"
 msgstr ""
 
-#: network.c:1101 network.c:1218
+#: network.c:1091 network.c:1205
 msgid "Configure"
 msgstr ""
 
-#: network.c:1198
+#: network.c:1188
 msgid "Hostname"
 msgstr ""
 
-#: network.c:1201
+#: network.c:1190
 msgid "Enter your desired hostname here. This parameter is optional."
 msgstr ""
 
-#: network.c:1318
+#: network.c:1305
 msgid "Provider"
 msgstr ""
 
-#: network.c:1320
+#: network.c:1307
 msgid ""
 "Here you need to enter the name of the provider configuration to use for "
 "this interface."
 msgstr ""
 
-#: network.c:1343
+#: network.c:1330
 msgid "Global Settings"
 msgstr ""
 
-#: network.c:1384
+#: network.c:1371
 msgid "Proxy"
 msgstr ""
 
-#: network.c:1385
+#: network.c:1372
 msgid ""
 "If you want/need to use a proxy, enter it here. (This only applies to dillo "
 "for now.)"
 msgstr ""
 
-#: network.c:1391
+#: network.c:1378
 msgid "No proxy for"
 msgstr ""
 
-#: network.c:1393
+#: network.c:1380
 msgid ""
 "Here you should enter your local domain for that you don't want to use a "
 "proxy."
 msgstr ""
 
-#: network.c:1400
+#: network.c:1387
 msgid "DNS server"
 msgstr ""
 
-#: network.c:1402
+#: network.c:1389
 msgid "Enter the IP of the DNS(name-) server to use here."
 msgstr ""
 
-#: network.c:1582
+#: network.c:1569
 msgid ""
 "Here you may change the basic configuration type of your device.\n"
 "Use \"static\" for manual interface configuration, \"dhcp\" to use DHCP and "
 "\"ppp\" to make the device a point-to-point device."
 msgstr ""
 
-#: network.c:1588
+#: network.c:1575
 msgid "Enable this option if your device is a WiFi device"
 msgstr ""
 
-#: network.c:1590
+#: network.c:1577
 msgid "Click to set the wireless options for this device"
 msgstr ""
 
-#: network.c:1592
+#: network.c:1579
 msgid "Set the mode your WiFi card should work. (managed or ad-hoc)."
 msgstr ""
 
-#: network.c:1595
+#: network.c:1582
 msgid ""
 "Set the enrcyption mode: off for no WEP encryption, open for open system and "
 "restricted for resticted WEP connections only."
 msgstr ""
 
-#: network.c:1600
+#: network.c:1587
 msgid "Enter the essid of your WiFi network here."
 msgstr ""
 
-#: network.c:1603
+#: network.c:1590
 msgid "Enter your WEP key here in (iwconfig format), e.g.: \"s:12345\""
 msgstr ""
 
-#: network.c:1606
+#: network.c:1593
 msgid "Select the WEP key to use."
 msgstr ""
 
-#: network.c:1609
+#: network.c:1596
 msgid ""
 "Enter the channel number or frequency if needed. If not needed leave this "
 "field blank."
 msgstr ""
 
-#: network.c:1625
+#: network.c:1612
 msgid "Remove current Interface"
 msgstr ""
 
-#: network.c:1635
+#: network.c:1622
 msgid "Add a new Interface"
 msgstr ""
 
-#: network.c:1642
+#: network.c:1629
 msgid "Info"
 msgstr ""
 
-#: network.c:1646
+#: network.c:1633
 msgid "Show current configuration."
 msgstr ""
 
-#: network.c:1664
+#: network.c:1651
 msgid "Couldn't read network configuration."
 msgstr ""
 
-#: network.c:1671
+#: network.c:1658
 msgid "global"
 msgstr ""
 
@@ -639,147 +639,135 @@ msgstr ""
 msgid "Blue"
 msgstr ""
 
-#: theme.c:918
+#: theme.c:915
 msgid "Select colour"
 msgstr ""
 
-#: theme.c:944 theme.c:1018
+#: theme.c:941 theme.c:1018
 msgid "You don't have read access to selected background image!"
 msgstr ""
 
-#: theme.c:1156
+#: theme.c:1157
 msgid "Desktop Theme"
 msgstr ""
 
-#: theme.c:1168
+#: theme.c:1169
 msgid "Name"
 msgstr ""
 
-#: theme.c:1182
+#: theme.c:1183
 msgid "Icon Size"
 msgstr ""
 
-#: theme.c:1197
+#: theme.c:1198
 msgid "Visual Effects"
 msgstr ""
 
-#: theme.c:1203
+#: theme.c:1204
 msgid "Enable Visual Effects"
 msgstr ""
 
-#: theme.c:1210
+#: theme.c:1211
 msgid "Background"
 msgstr ""
 
-#: theme.c:1224 theme.c:1226
+#: theme.c:1225 theme.c:1227
 msgid "Background Settings"
 msgstr ""
 
-#: theme.c:1236 theme.c:1247
+#: theme.c:1237 theme.c:1248
 msgid "Theme Default"
 msgstr ""
 
-#: theme.c:1255
+#: theme.c:1256
 msgid "Solid colour"
 msgstr ""
 
-#: theme.c:1269
+#: theme.c:1270
 msgid "Horizontal"
 msgstr ""
 
-#: theme.c:1273
+#: theme.c:1274
 msgid "Vertical"
 msgstr ""
 
-#: theme.c:1278 theme.c:1297 theme.c:1480 theme.c:1486
+#: theme.c:1279 theme.c:1298 theme.c:1473 theme.c:1479
 msgid "Colour"
 msgstr ""
 
-#: theme.c:1288
+#: theme.c:1289
 msgid "Colour gradient"
 msgstr ""
 
-#: theme.c:1307
+#: theme.c:1308
 msgid "Image"
 msgstr ""
 
-#: theme.c:1333
-msgid "Centered"
+#: theme.c:1334
+msgid "Center"
 msgstr ""
 
-#: theme.c:1337
-msgid "Tiled"
+#: theme.c:1338
+msgid "Tile"
 msgstr ""
 
-#: theme.c:1340
-msgid "Stretched"
+#: theme.c:1341
+msgid "Stretch"
 msgstr ""
 
-#: theme.c:1347
+#: theme.c:1348
 msgid "Toolbars"
 msgstr ""
 
-#: theme.c:1359 theme.c:1361
+#: theme.c:1360 theme.c:1362
 msgid "Toolbar Style"
 msgstr ""
 
-#: theme.c:1370 theme.c:1399
+#: theme.c:1371 theme.c:1395
 msgid "Icons"
 msgstr ""
 
-#: theme.c:1375 theme.c:1403
+#: theme.c:1376 theme.c:1399
 msgid "Text"
 msgstr ""
 
-#: theme.c:1380
+#: theme.c:1381 theme.c:1402
 msgid "Both"
 msgstr ""
 
-#: theme.c:1385
-msgid "Both H"
-msgstr ""
-
-#: theme.c:1406
-msgid "Both (icon above text)"
-msgstr ""
-
 #: theme.c:1409
-msgid "Both (icon left of text)"
-msgstr ""
-
-#: theme.c:1416
 msgid "Toolbar Icon Size"
 msgstr ""
 
-#: theme.c:1432
+#: theme.c:1425
 msgid "Fonts"
 msgstr ""
 
-#: theme.c:1441 theme.c:1461
+#: theme.c:1434 theme.c:1454
 msgid "Desktop Font"
 msgstr ""
 
-#: theme.c:1448 theme.c:1508 theme.c:1543 theme.c:1593
+#: theme.c:1441 theme.c:1501 theme.c:1536 theme.c:1586
 msgid "Family"
 msgstr ""
 
-#: theme.c:1468 theme.c:1528 theme.c:1563 theme.c:1613
+#: theme.c:1461 theme.c:1521 theme.c:1556 theme.c:1606
 msgid "Size"
 msgstr ""
 
-#: theme.c:1497 theme.c:1499 theme.c:1521 theme.c:1556
+#: theme.c:1490 theme.c:1492 theme.c:1514 theme.c:1549
 msgid "Application Font"
 msgstr ""
 
-#: theme.c:1577
+#: theme.c:1570
 msgid "Terminal"
 msgstr ""
 
-#: theme.c:1586
+#: theme.c:1579
 msgid "Font"
 msgstr ""
 
-#: theme.c:1606
+#: theme.c:1599
 msgid "Terminal Font"
 msgstr ""
 
@@ -1032,133 +1020,137 @@ msgstr ""
 msgid "Allow users to configure everything"
 msgstr ""
 
-#: serial.c:428 serial.c:434
+#: serial.c:423 serial.c:429
 msgid ""
 "Simple interface to serial port configuration. Disabled components are not "
 "installed."
 msgstr ""
 
-#: serial.c:431
+#: serial.c:426
 msgid "Port A"
 msgstr ""
 
-#: serial.c:438
+#: serial.c:433
 msgid "Serial port default usage"
 msgstr ""
 
-#: serial.c:443
+#: serial.c:438
 msgid "Select desired software to use serial port here."
 msgstr ""
 
-#: serial.c:446
+#: serial.c:441
 msgid "Console"
 msgstr ""
 
-#: serial.c:449
+#: serial.c:444
 msgid "This option runs console on serial port. (default)"
 msgstr ""
 
-#: serial.c:457
+#: serial.c:452
 msgid "GPS Daemon"
 msgstr ""
 
-#: serial.c:462
+#: serial.c:457
 msgid "GPS Daemon (needs 'gpsd')"
 msgstr ""
 
-#: serial.c:467
+#: serial.c:462
 msgid ""
 "This option enables the start of GPSD, which provides data from a GPS "
 "reciver to applications."
 msgstr ""
 
-#: serial.c:474
+#: serial.c:469
 msgid "Nothing (free)"
 msgstr ""
 
-#: serial.c:477
+#: serial.c:472
 msgid "Don't start any software that uses the serial port."
 msgstr ""
 
-#: serial.c:514 serial.c:521
+#: serial.c:509 serial.c:516
 msgid "This page configures the GPS receiver software."
 msgstr ""
 
-#: serial.c:518
+#: serial.c:513
 msgid "GPS Receiver"
 msgstr ""
 
-#: serial.c:525
+#: serial.c:520
 msgid "GPS settings"
 msgstr ""
 
-#: serial.c:531
+#: serial.c:526
 msgid "Receiver Type"
 msgstr ""
 
-#: serial.c:536
+#: serial.c:531
 msgid "NMEA"
 msgstr ""
 
-#: serial.c:541
+#: serial.c:536
 msgid ""
 "The GPS receiver sends NMEA data (default, no need to change for most "
 "receivers)."
 msgstr ""
 
-#: serial.c:547
+#: serial.c:542
 msgid "Earthmate"
 msgstr ""
 
-#: serial.c:553
+#: serial.c:548
 msgid "GPS receiver is an Earthmate GPS."
 msgstr ""
 
-#: serial.c:557
+#: serial.c:552
 msgid "Baud Rate"
 msgstr ""
 
-#: serial.c:573 usb.c:237
+#: serial.c:568 usb.c:258
 msgid "Serial Port"
 msgstr ""
 
-#: usb.c:220
+#: usb.c:80
+msgid "Choose backing file"
+msgstr ""
+
+#: usb.c:240
 msgid "USB Peripheral Mode"
 msgstr ""
 
-#: usb.c:227
+#: usb.c:247
 msgid "Ethernet Networking"
 msgstr ""
 
-#: usb.c:232 sysinfo.c:707
+#: usb.c:252 sysinfo.c:719
 msgid "Storage"
 msgstr ""
 
-#: usb.c:245
+#: usb.c:267
 msgid "Storage Behaviour"
 msgstr ""
 
-#: usb.c:252
+#: usb.c:274
 msgid "CF/SD Card Reader"
 msgstr ""
 
-#: usb.c:258
+#: usb.c:280
 msgid "File-backed"
 msgstr ""
 
-#: usb.c:264
-msgid "backing file"
+#: usb.c:290
+msgid "Select"
 msgstr ""
 
-#: usb.c:268
+#: usb.c:298
 msgid "Allow write access"
 msgstr ""
 
-#: usb.c:277
+#: usb.c:307
 msgid "Serial Settings"
 msgstr ""
 
-#: usb.c:284
+#: usb.c:314
 msgid "Use CDC ACM"
 msgstr ""
 
@@ -1214,7 +1206,7 @@ msgstr ""
 msgid "/_Help/About"
 msgstr ""
 
-#: cardinfo.c:175 cardinfo.c:863
+#: cardinfo.c:175 cardinfo.c:848
 msgid "card not recognized"
 msgstr ""
 
@@ -1234,115 +1226,107 @@ msgstr ""
 msgid "Could not signal cardmgr:"
 msgstr ""
 
-#: cardinfo.c:639
+#: cardinfo.c:638
 msgid "gpe-conf must be setuid root to use cardinfo feature."
 msgstr ""
 
-#: cardinfo.c:658
+#: cardinfo.c:656
 msgid "No PCMCIA driver in '/proc/devices'"
 msgstr ""
 
-#: cardinfo.c:661
+#: cardinfo.c:659
 msgid "Could not open '/proc/devices'"
 msgstr ""
 
-#: cardinfo.c:673
+#: cardinfo.c:671
 msgid "No sockets found\n"
 msgstr ""
 
-#: cardinfo.c:682
-msgid "Card Services release does not match!"
-msgstr ""
-
-#: cardinfo.c:687
-msgid "Could not get CS revision info!\n"
-msgstr ""
-
-#: cardinfo.c:850
+#: cardinfo.c:835
 msgid "flock(stabfile) failed"
 msgstr ""
 
-#: cardinfo.c:869
+#: cardinfo.c:854
 #, c-format
 msgid "no driver loaded"
 msgstr ""
 
-#: cardinfo.c:978
+#: cardinfo.c:963
 msgid "ready"
 msgstr ""
 
-#: cardinfo.c:996
+#: cardinfo.c:981
 msgid "not ready"
 msgstr ""
 
-#: cardinfo.c:1011
+#: cardinfo.c:996
 msgid "suspended"
 msgstr ""
 
-#: cardinfo.c:1203
+#: cardinfo.c:1188
 msgid "Assign Driver"
 msgstr ""
 
-#: cardinfo.c:1212
+#: cardinfo.c:1197
 msgid ""
 "This dialog allows you to select/\n"
 "change the driver assignment for a\n"
 "PCMCIA or CF card."
 msgstr ""
 
-#: cardinfo.c:1222
+#: cardinfo.c:1207
 msgid "Your current card identifies itself as:"
 msgstr ""
 
-#: cardinfo.c:1236 cardinfo.c:1242
+#: cardinfo.c:1221 cardinfo.c:1227
 msgid "Manuf. Id"
 msgstr ""
 
-#: cardinfo.c:1236 cardinfo.c:1242
+#: cardinfo.c:1221 cardinfo.c:1227
 msgid "Class"
 msgstr ""
 
-#: cardinfo.c:1342 cardinfo.c:1355
+#: cardinfo.c:1327 cardinfo.c:1340
 msgid "PC/CF card socket information."
 msgstr ""
 
-#: cardinfo.c:1350
+#: cardinfo.c:1335
 msgid "Socket"
 msgstr ""
 
-#: cardinfo.c:1381
+#: cardinfo.c:1366
 msgid "Information for socket"
 msgstr ""
 
-#: cardinfo.c:1390
+#: cardinfo.c:1375
 msgid "State:"
 msgstr ""
 
-#: cardinfo.c:1391
+#: cardinfo.c:1376
 msgid "Device:"
 msgstr ""
 
-#: cardinfo.c:1392
+#: cardinfo.c:1377
 msgid "Driver:"
 msgstr ""
 
-#: cardinfo.c:1393
+#: cardinfo.c:1378
 msgid "Type:"
 msgstr ""
 
-#: cardinfo.c:1394
+#: cardinfo.c:1379
 msgid "I/O:"
 msgstr ""
 
-#: cardinfo.c:1395
+#: cardinfo.c:1380
 msgid "IRQ:"
 msgstr ""
 
-#: cardinfo.c:1402
+#: cardinfo.c:1387
 msgid "Flags:"
 msgstr ""
 
-#: cardinfo.c:1419
+#: cardinfo.c:1404
 msgid "PCMCIA initialisation failed"
 msgstr ""
 
@@ -1716,7 +1700,7 @@ msgid "Buttons"
 msgstr ""
 
 #: keys/keys.c:83
-msgid "Virtual Keyboard"
+msgid "Virtual Keyb."
 msgstr ""
 
 #: keys/keys.c:87
@@ -1748,7 +1732,7 @@ msgstr ""
 
 #. TRANSLATORS: MB == Mega Bytes
 #: storage.c:176 storage.c:183 storage.c:329 storage.c:340 storage.c:445
-#: storage.c:458 sysinfo.c:668 sysinfo.c:684
+#: storage.c:458 sysinfo.c:680 sysinfo.c:696
 msgid "MB"
 msgstr ""
 
@@ -1808,199 +1792,204 @@ msgstr ""
 msgid "Could not open X session log.\n"
 msgstr ""
 
-#: battery.c:190 battery.c:251
+#: battery.c:189 battery.c:250
 msgid "unknown"
 msgstr ""
 
-#: battery.c:199 battery.c:259 battery.c:358
+#: battery.c:198 battery.c:258 battery.c:357
 msgid "Status: high"
 msgstr ""
 
-#: battery.c:202 battery.c:262 battery.c:362
+#: battery.c:201 battery.c:261 battery.c:361
 msgid "Status: low"
 msgstr ""
 
-#: battery.c:205 battery.c:265 battery.c:366
+#: battery.c:204 battery.c:264 battery.c:365
 msgid "Status: critical"
 msgstr ""
 
-#: battery.c:208 battery.c:268 battery.c:370
+#: battery.c:207 battery.c:267 battery.c:369
 msgid "Status: charging"
 msgstr ""
 
-#: battery.c:211 battery.c:271
+#: battery.c:210 battery.c:270
 msgid "Status: charge main"
 msgstr ""
 
-#: battery.c:214
+#: battery.c:213
 msgid "Status: dead"
 msgstr ""
 
-#: battery.c:217 battery.c:277 battery.c:356
+#: battery.c:216 battery.c:276 battery.c:355
 msgid "Status: full"
 msgstr ""
 
-#: battery.c:220 battery.c:280
+#: battery.c:219 battery.c:279
 msgid "Status: no battery"
 msgstr ""
 
-#: battery.c:223 battery.c:283 battery.c:301 battery.c:373
+#: battery.c:222 battery.c:282 battery.c:300 battery.c:372
 msgid "Status: unknown"
 msgstr ""
 
-#: battery.c:228
+#: battery.c:227
 msgid "learning"
 msgstr ""
 
-#: battery.c:232 battery.c:287
+#: battery.c:231 battery.c:286
 msgid "Voltage"
 msgstr ""
 
-#: battery.c:236 battery.c:291 battery.c:390
+#: battery.c:235 battery.c:290 battery.c:389
 msgid "AC connected"
 msgstr ""
 
-#: battery.c:238 battery.c:293 battery.c:392
+#: battery.c:237 battery.c:292 battery.c:391
 msgid "Lifetime"
 msgstr ""
 
-#: battery.c:274
+#: battery.c:273
 msgid "Status: not installed"
 msgstr ""
 
-#: battery.c:300
+#: battery.c:299
 msgid "not installed"
 msgstr ""
 
-#: battery.c:302
+#: battery.c:301
 msgid "Voltage: unknown"
 msgstr ""
 
-#: battery.c:303
+#: battery.c:302
 msgid "Lifetime: unknown"
 msgstr ""
 
-#: battery.c:348
+#: battery.c:347
 msgid "No battery"
 msgstr ""
 
-#: battery.c:453
+#: battery.c:452
 msgid "Internal battery"
 msgstr ""
 
-#: battery.c:457
+#: battery.c:456
 msgid "Jacket battery"
 msgstr ""
 
-#: sysinfo.c:237
+#: sysinfo.c:238
 msgid "ARM"
 msgstr ""
 
-#: sysinfo.c:240
+#: sysinfo.c:241
 msgid "Intel x86 or compatible"
 msgstr ""
 
-#: sysinfo.c:241
+#: sysinfo.c:242
 msgid "IBM type PC"
 msgstr ""
 
-#: sysinfo.c:244
+#: sysinfo.c:245
 msgid "Mips"
 msgstr ""
 
-#: sysinfo.c:246
+#: sysinfo.c:247
 msgid "Silicon Graphics Machine"
 msgstr ""
 
-#: sysinfo.c:250
+#: sysinfo.c:251
 msgid "IBM Power or PowerPC"
 msgstr ""
 
 #. TRANSLATORS: "Familiar" is the name of a linux distribution.
-#: sysinfo.c:279
+#: sysinfo.c:280
 msgid "Familiar"
 msgstr ""
 
+#. TRANSLATORS: "OpenZaurus" is the name of a linux distribution.
+#: sysinfo.c:291
+msgid "OpenZaurus"
+msgstr ""
+
 #. TRANSLATORS: "Debian" is the name of a linux distribution.
-#: sysinfo.c:288
+#: sysinfo.c:300
 msgid "Debian"
 msgstr ""
 
 #. TRANSLATORS: "OpenEmbedded" is the name of a linux distribution.
-#: sysinfo.c:297
+#: sysinfo.c:309
 msgid "OpenEmbedded"
 msgstr ""
 
-#: sysinfo.c:339 sysinfo.c:341
+#: sysinfo.c:351 sysinfo.c:353
 msgid "Build"
 msgstr ""
 
-#: sysinfo.c:443
+#: sysinfo.c:455
 msgid "Network Status"
 msgstr ""
 
-#: sysinfo.c:457 sysinfo.c:460
+#: sysinfo.c:469 sysinfo.c:472
 msgid "HWaddr (MAC)"
 msgstr ""
 
-#: sysinfo.c:471 sysinfo.c:472
+#: sysinfo.c:483 sysinfo.c:484
 #, c-format
 msgid "Wireless"
 msgstr ""
 
-#: sysinfo.c:499
+#: sysinfo.c:511
 msgid "Default Gateway"
 msgstr ""
 
-#: sysinfo.c:542
+#: sysinfo.c:554
 msgid "System information"
 msgstr ""
 
-#: sysinfo.c:552
+#: sysinfo.c:564
 msgid "Version"
 msgstr ""
 
-#: sysinfo.c:584
+#: sysinfo.c:596
 msgid "Distribution"
 msgstr ""
 
-#: sysinfo.c:609
+#: sysinfo.c:621
 msgid "System"
 msgstr ""
 
-#: sysinfo.c:618
+#: sysinfo.c:630
 msgid "Device information"
 msgstr ""
 
-#: sysinfo.c:630
+#: sysinfo.c:642
 msgid "Device Name"
 msgstr ""
 
-#: sysinfo.c:649
+#: sysinfo.c:661
 msgid "CPU:"
 msgstr ""
 
-#: sysinfo.c:662
+#: sysinfo.c:674
 msgid "RAM:"
 msgstr ""
 
-#: sysinfo.c:678
+#: sysinfo.c:690
 msgid "Storage:"
 msgstr ""
 
-#: sysinfo.c:690
+#: sysinfo.c:702
 msgid "Hardware"
 msgstr ""
 
-#: sysinfo.c:700
+#: sysinfo.c:712
 msgid "Battery"
 msgstr ""
 
-#: sysinfo.c:714
+#: sysinfo.c:726
 msgid "Networks"
 msgstr ""
 
-#: sysinfo.c:721
+#: sysinfo.c:733
 msgid "Log Display"
 msgstr ""
 

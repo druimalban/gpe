@@ -32,6 +32,8 @@
 #include <gpe/errorbox.h>
 #include <gpe/spacing.h>
 
+#include "applets.h"
+
 enum {
 	USB_MODE_ETHER,
 	USB_MODE_STORAGE,
@@ -58,6 +60,7 @@ struct
 	GtkWidget *storage_card_reader;
 	GtkWidget *storage_file_backed;
 	GtkWidget *storage_backing_file;
+	GtkWidget *storage_backing_file_select;
 	GtkWidget *storage_allow_write;
 	GtkWidget *serial_label;
 	GtkWidget *serial_cdc_acm;
@@ -68,6 +71,23 @@ struct
 self;
 
 /* gtk callbacks */
+
+void
+on_file_select (GtkWidget *w, gpointer data)
+{
+  GtkWidget *filesel;
+  
+  filesel = gtk_file_selection_new(_("Choose backing file"));
+  
+  if (gtk_dialog_run(GTK_DIALOG(filesel)) == GTK_RESPONSE_OK)
+    {
+      const gchar *file = 
+        gtk_file_selection_get_filename(GTK_FILE_SELECTION(filesel));
+      gtk_widget_hide(filesel); 
+	  gtk_entry_set_text (GTK_ENTRY(self.storage_backing_file), file);
+    }
+  gtk_widget_destroy(filesel);
+}
 
 void
 on_g_ether_toggled (GtkRadioButton *w, gpointer data)
@@ -121,6 +141,7 @@ on_storage_file_backed_toggled (GtkRadioButton *w, gpointer data)
 	int active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (w));
 
 	gtk_widget_set_sensitive (self.storage_backing_file, active);
+	gtk_widget_set_sensitive (self.storage_backing_file_select, active);
 
 	if (active)
 		self.new.storage_mode = STORAGE_MODE_FILE_BACKED;
@@ -144,7 +165,8 @@ void
 USB_Save ()
 {
 	int do_rmmod_insmod = (self.new.usb_mode != self.old.usb_mode);
-	gchar *buf, *file;
+	gchar *buf = NULL;
+	const gchar *file;
 
 	if (!do_rmmod_insmod) {
 		switch (self.new.usb_mode) {
@@ -172,8 +194,7 @@ USB_Save ()
 					"file=/dev/hda,/dev/mmcblk0 ro=%d,%d", ro, ro);
 				break;
 			case STORAGE_MODE_FILE_BACKED:
-				file = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER
-								(self.storage_backing_file));
+			    file = gtk_entry_get_text(GTK_ENTRY(self.storage_backing_file));
 				if (!file) return;
 				buf = g_strdup_printf ("g_file_storage file=%s ro=%d", file, ro);
 				break;
@@ -200,10 +221,9 @@ GtkWidget *
 USB_Build_Objects (void)
 {
 	GtkWidget *table;
-	GtkWidget *tw;
+	GtkWidget *tw, *ti;
 	gchar *ts = NULL;
-	gchar *err = NULL;
-	
+
 	/* init something */
 
 	/*	- lsmod and check active usb mode */
@@ -229,16 +249,18 @@ USB_Build_Objects (void)
                      GTK_FILL, 0, 0);
 	g_signal_connect_after(G_OBJECT(tw), "toggled", 
 	                       G_CALLBACK(on_g_ether_toggled), USB_MODE_ETHER);
-	tw = gtk_radio_button_new_with_label_from_widget(tw, _("Storage"));
+	tw = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(tw), _("Storage"));
 	gtk_table_attach(GTK_TABLE(table), tw, 0, 3, 2, 3, GTK_FILL | GTK_EXPAND,
                      GTK_FILL, 0, 0);
 	g_signal_connect_after(G_OBJECT(tw), "toggled",
-	                       G_CALLBACK(on_g_file_storage_toggled), USB_MODE_STORAGE);
-	tw = gtk_radio_button_new_with_label_from_widget(tw, _("Serial Port"));
+	                       G_CALLBACK(on_g_file_storage_toggled), 
+						   (gpointer)USB_MODE_STORAGE);
+	tw = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(tw), _("Serial Port"));
 	gtk_table_attach(GTK_TABLE(table), tw, 0, 3, 3, 4, GTK_FILL | GTK_EXPAND,
                      GTK_FILL, 0, 0);
 	g_signal_connect_after(G_OBJECT(tw), "toggled",
-	                       G_CALLBACK(on_g_serial_toggled), USB_MODE_SERIAL);
+	                       G_CALLBACK(on_g_serial_toggled), 
+						   (gpointer)USB_MODE_SERIAL);
 
 	/* storage options section */ 
 	tw = gtk_label_new(NULL);
@@ -255,18 +277,26 @@ USB_Build_Objects (void)
 	g_signal_connect_after(G_OBJECT(tw), "toggled", 
 	                       G_CALLBACK(on_storage_card_reader_toggled), NULL);
 	self.storage_card_reader = tw;
-	tw = gtk_radio_button_new_with_label_from_widget(tw, _("File-backed"));
+	tw = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(tw), _("File-backed"));
 	gtk_table_attach(GTK_TABLE(table), tw, 0, 1, 6, 7, GTK_FILL | GTK_EXPAND,
                      GTK_FILL, 0, 0);
 	g_signal_connect_after(G_OBJECT(tw), "toggled", 
 	                       G_CALLBACK(on_storage_file_backed_toggled), NULL);
 	self.storage_file_backed = tw;
-	tw = gtk_file_chooser_button_new(_("backing file"), GTK_FILE_CHOOSER_ACTION_OPEN);
-	gtk_table_attach(GTK_TABLE(table), tw, 1, 3, 6, 7, GTK_FILL | GTK_EXPAND,
+	tw = gtk_entry_new ();
+	gtk_table_attach(GTK_TABLE(table), tw, 0, 2, 7, 8, GTK_FILL | GTK_EXPAND,
                      GTK_FILL, 0, 0);
-	self.storage_backing_file = tw;
+    self.storage_backing_file = tw;
+	tw = gtk_button_new_with_label(_("Select"));
+	ti = gtk_image_new_from_stock(GTK_STOCK_OPEN, GTK_ICON_SIZE_BUTTON);
+	gtk_button_set_image(GTK_BUTTON(tw), ti);
+	gtk_table_attach(GTK_TABLE(table), tw, 3, 4, 7, 8, GTK_FILL,
+                     GTK_FILL, 0, 0);
+	g_signal_connect(G_OBJECT(tw), "clicked", G_CALLBACK(on_file_select), NULL);
+    self.storage_backing_file_select = tw;
+
 	tw = gtk_check_button_new_with_label(_("Allow write access"));
-	gtk_table_attach(GTK_TABLE(table), tw, 0, 3, 7, 8, GTK_FILL | GTK_EXPAND,
+	gtk_table_attach(GTK_TABLE(table), tw, 0, 3, 8, 9, GTK_FILL | GTK_EXPAND,
                      GTK_FILL, 0, 0);
 	g_signal_connect_after(G_OBJECT(tw), "toggled",
 	                       G_CALLBACK(on_storage_allow_write_toggled), NULL);
@@ -278,11 +308,11 @@ USB_Build_Objects (void)
 	gtk_label_set_markup(GTK_LABEL(tw),ts);
 	gtk_misc_set_alignment(GTK_MISC(tw),0,0.5);
 	g_free(ts);
-	gtk_table_attach(GTK_TABLE(table), tw, 0, 3, 8, 9, 
+	gtk_table_attach(GTK_TABLE(table), tw, 0, 3, 9, 10, 
 	                 GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
 	self.serial_label = tw;
 	tw = gtk_check_button_new_with_label(_("Use CDC ACM"));
-	gtk_table_attach(GTK_TABLE(table), tw, 0, 3, 9, 10, GTK_FILL,
+	gtk_table_attach(GTK_TABLE(table), tw, 0, 3, 10, 11, GTK_FILL,
                      GTK_FILL, 0, 0);
 	g_signal_connect_after(G_OBJECT(tw), "toggled",
 	                       G_CALLBACK(on_serial_cdc_acm_toggled), NULL);
@@ -292,6 +322,7 @@ USB_Build_Objects (void)
 	gtk_widget_set_sensitive (self.storage_card_reader, FALSE);
 	gtk_widget_set_sensitive (self.storage_file_backed, FALSE);
 	gtk_widget_set_sensitive (self.storage_backing_file, FALSE);
+	gtk_widget_set_sensitive (self.storage_backing_file_select, FALSE);
 	gtk_widget_set_sensitive (self.storage_allow_write, FALSE);
 	gtk_widget_set_sensitive (self.serial_label, FALSE);
 	gtk_widget_set_sensitive (self.serial_cdc_acm, FALSE);

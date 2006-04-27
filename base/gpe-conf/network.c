@@ -107,7 +107,7 @@ show_current_config (GtkWidget * button)
 					 GTK_STOCK_CLOSE, GTK_RESPONSE_ACCEPT,
 					 NULL);
 
-	gtk_window_set_default_size(GTK_WINDOW(w), 230, 280);	
+	gtk_window_set_default_size(GTK_WINDOW(w), 400, 400);	
 	
 	label = gtk_label_new (NULL);
 	gtk_misc_set_alignment(GTK_MISC(label), 0, 0);
@@ -289,19 +289,23 @@ add_interface (GtkWidget * widget, gpointer d)
 			i = iflen-1;
 			
 			fd = fopen(_PATH_PROCNET_WIRELESS, "r");
-			fgets(buffer, 256, fd);		// chuck first two lines;
-			fgets(buffer, 256, fd);
-			while (!feof(fd)) {
-				if (fgets(buffer, 256, fd) == NULL)
-					break;
-				name = buffer;
-				sep = strrchr(buffer, ':');
-				if (sep) *sep = 0;
-				while(*name == ' ') name++;
-				if (!strcmp(name, ifname))
-					iflist[iflen - 1].iswireless = TRUE;
-			}
+			if (fd != NULL)
+			{
+				fgets(buffer, 256, fd);		// chuck first two lines;
+				fgets(buffer, 256, fd);
+				while (!feof(fd)) 
+				{
+					if (fgets(buffer, 256, fd) == NULL)
+						break;
+					name = buffer;
+					sep = strrchr(buffer, ':');
+					if (sep) *sep = 0;
+					while(*name == ' ') name++;
+					if (!strcmp(name, ifname))
+						iflist[iflen - 1].iswireless = TRUE;
+				}
 			fclose(fd);
+			}
 		}
 		else
 			i = existing;
@@ -440,7 +444,7 @@ create_editable_entry (NWInterface_t * piface, GtkWidget * attach_to,
 	gtk_entry_set_text (GTK_ENTRY (label), wdata);
 	gtk_entry_set_editable (GTK_ENTRY (label), TRUE);
 	gtk_table_attach (GTK_TABLE (attach_to), label, 1, 2, clnr, clnr + 1,
-			  (GtkAttachOptions) (GTK_FILL),
+			  (GtkAttachOptions) (GTK_FILL | GTK_EXPAND),
 			  (GtkAttachOptions) (GTK_FILL),
 			  gpe_boxspacing, gpe_boxspacing);
 }
@@ -995,26 +999,24 @@ create_nwstatic_widgets (NWInterface_t iface)
 
 	// page headers
 
-	ctable = gtk_table_new (7, 2, FALSE);
-
-	container = gtk_hbox_new (TRUE, 0);
+	ctable = gtk_table_new (8, 4, FALSE);
+	gtk_table_set_col_spacings(GTK_TABLE(ctable), gpe_boxspacing);
+	gtk_table_set_row_spacings(GTK_TABLE(ctable), gpe_boxspacing);
+	
+	container = gtk_hbox_new (TRUE, gpe_boxspacing);
 
 	gtk_container_set_border_width (GTK_CONTAINER (ctable), gpe_border);
 
-	gtk_table_attach (GTK_TABLE (ctable), container, 1, 2, 0, 1,
-			  (GtkAttachOptions) (GTK_FILL),
-			  (GtkAttachOptions) (GTK_FILL),
-			  gpe_boxspacing, gpe_boxspacing);
+	gtk_table_attach (GTK_TABLE (ctable), container, 0, 2, 1, 2,
+			  GTK_FILL, GTK_FILL, 0, 0);
 
 	label = gtk_label_new (NULL);
 	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-	tmpval = g_strdup_printf ("<b>%s</b>", iface.name);
+	tmpval = g_strdup_printf ("<b>%s %s</b>",_("Interface"), iface.name);
 	gtk_label_set_markup (GTK_LABEL (label), tmpval);
 	g_free (tmpval);
-	gtk_table_attach (GTK_TABLE (ctable), label, 0, 1, 0, 1,
-			  (GtkAttachOptions) (GTK_FILL),
-			  (GtkAttachOptions) (GTK_FILL),
-			  gpe_boxspacing, gpe_boxspacing);
+	gtk_table_attach (GTK_TABLE (ctable), label, 0, 2, 0, 1, GTK_FILL,
+			  GTK_FILL, 0, 0);
 
 	label = gtk_radio_button_new_with_label_from_widget (NULL, "static");
 	gtk_tooltips_set_tip (tooltips, label, help_devtype, NULL);
@@ -1024,8 +1026,7 @@ create_nwstatic_widgets (NWInterface_t iface)
 	gtk_widget_ref (label);
 	g_object_set_data_full (G_OBJECT (notebook), wname, label,
 				  (GtkDestroyNotify) gtk_widget_unref);
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (label),
-				      iface.isstatic);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (label), iface.isstatic);
 	g_signal_connect (G_OBJECT (label), "toggled",
 			    G_CALLBACK (changed_nwtype), NULL);
 	gtk_container_add (GTK_CONTAINER (container), label);
@@ -1062,31 +1063,24 @@ create_nwstatic_widgets (NWInterface_t iface)
 
 	// page items  
 	create_editable_entry (&iface, ctable, "address", _("Address"),
-			       iface.address,
-			       _
-			       ("Enter your IP address here, e.g. 192.168.1.2"),
-			       1);
+			       iface.address, 
+				   _("Enter your IP address here, e.g. 192.168.1.2"), 2);
 	create_editable_entry (&iface, ctable, "netmask", _("Netmask"),
-			       iface.netmask,
-			       _
-			       ("Enter your netmask here, e.g. 255.255.255.0 in most cases"),
-			       2);
+			       iface.netmask, 
+				   _("Enter your netmask here, e.g. 255.255.255.0 in most cases"),
+			       3);
 	create_editable_entry (&iface, ctable, "broadcast", _("Broadcast"),
 			       iface.broadcast,
-			       _
-			       ("Enter your broadcast address here, usually the same like your IP with 255 as last number."),
-			       3);
+			       _("Enter your broadcast address here, usually the same like your IP with 255 as last number."),
+			       4);
 	create_editable_entry (&iface, ctable, "gateway", _("Gateway"),
 			       iface.gateway,
-			       _
-			       ("Enter the IP Address of your default gateway here."),
+			       _("Enter the IP Address of your default gateway here."),
 			       5);
 			       
 	container = gtk_hbox_new (TRUE, 0);
-	gtk_table_attach (GTK_TABLE (ctable), container, 0, 2, 6, 7,
-			  (GtkAttachOptions) (GTK_FILL),
-			  (GtkAttachOptions) (GTK_FILL),
-			  gpe_boxspacing, gpe_boxspacing);
+	gtk_table_attach (GTK_TABLE (ctable), container, 0, 2, 7, 8, GTK_FILL,
+			  GTK_FILL, 0, 0);
 
 
 #ifndef NO_WIFI
@@ -1099,6 +1093,9 @@ create_nwstatic_widgets (NWInterface_t iface)
 	gtk_widget_ref (togglebutton);
 
 	label = gtk_button_new_with_label(_("Configure"));
+	gtk_button_set_image(GTK_BUTTON(label), 
+	                     gtk_image_new_from_stock(GTK_STOCK_PROPERTIES, 
+						                          GTK_ICON_SIZE_BUTTON));
 	gtk_container_add(GTK_CONTAINER(container), label);
 	gtk_widget_set_sensitive(label, iface.iswireless);
 	strcpy (wname, "wificonfig");
@@ -1131,24 +1128,22 @@ create_nwdhcp_widgets (NWInterface_t iface)
 	// page headers
 
 	ctable = gtk_table_new (7, 2, FALSE);
+	gtk_table_set_col_spacings(GTK_TABLE(ctable), gpe_boxspacing);
+	gtk_table_set_row_spacings(GTK_TABLE(ctable), gpe_boxspacing);
 	container = gtk_hbox_new (TRUE, 0);
 
 	gtk_container_set_border_width (GTK_CONTAINER (ctable), gpe_border);
 
-	gtk_table_attach (GTK_TABLE (ctable), container, 1, 2, 0, 1,
-			  (GtkAttachOptions) (GTK_FILL),
-			  (GtkAttachOptions) (GTK_FILL),
-			  gpe_boxspacing, gpe_boxspacing);
+	gtk_table_attach (GTK_TABLE (ctable), container, 0, 2, 1, 2,
+			  GTK_FILL, GTK_FILL, 0, 0);
 
 	label = gtk_label_new (NULL);
 	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-	tmpval = g_strdup_printf ("<b>%s</b>", iface.name);
+	tmpval = g_strdup_printf ("<b>%s %s</b>", _("Interface"), iface.name);
 	gtk_label_set_markup (GTK_LABEL (label), tmpval);
 	g_free (tmpval);
-	gtk_table_attach (GTK_TABLE (ctable), label, 0, 1, 0, 1,
-			  (GtkAttachOptions) (GTK_FILL),
-			  (GtkAttachOptions) (GTK_FILL),
-			  gpe_boxspacing, gpe_boxspacing);
+	gtk_table_attach (GTK_TABLE (ctable), label, 0, 2, 0, 1, 
+	                  GTK_FILL, GTK_FILL, 0, 0);
 
 	label = gtk_radio_button_new_with_label_from_widget (NULL, "static");
 	gtk_tooltips_set_tip (tooltips, label, help_devtype, NULL);
@@ -1173,8 +1168,7 @@ create_nwdhcp_widgets (NWInterface_t iface)
 	gtk_widget_ref (label);
 	g_object_set_data_full (G_OBJECT (notebook), wname, label,
 				  (GtkDestroyNotify) gtk_widget_unref);
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (label),
-				      iface.isdhcp);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (label), iface.isdhcp);
 	g_signal_connect (G_OBJECT (label), "toggled",
 			    G_CALLBACK (changed_nwtype), NULL);
 	gtk_container_add (GTK_CONTAINER (container), label);
@@ -1197,14 +1191,11 @@ create_nwdhcp_widgets (NWInterface_t iface)
 	// page items  
 	create_editable_entry (&iface, ctable, "hostname", _("Hostname"),
 			       iface.hostname,
-			       _
-			       ("Enter your desired hostname here. This parameter is optional."),
-			       1);
+			       _("Enter your desired hostname here. This parameter is optional."),
+			       2);
 	container = gtk_hbox_new (TRUE, 0);
 	gtk_table_attach (GTK_TABLE (ctable), container, 0, 2, 6, 7,
-			  (GtkAttachOptions) (GTK_FILL),
-			  (GtkAttachOptions) (GTK_FILL),
-			  gpe_boxspacing, gpe_boxspacing);
+			          GTK_FILL, GTK_FILL, 0, 0);
 
 #ifndef NO_WIFI
 	togglebutton = gtk_check_button_new_with_label(_("WiFi device"));
@@ -1216,6 +1207,9 @@ create_nwdhcp_widgets (NWInterface_t iface)
 	gtk_widget_ref (togglebutton);
 
 	label = gtk_button_new_with_label(_("Configure"));
+	gtk_button_set_image(GTK_BUTTON(label), 
+	                     gtk_image_new_from_stock(GTK_STOCK_PROPERTIES, 
+						                          GTK_ICON_SIZE_BUTTON));
 	gtk_container_add(GTK_CONTAINER(container), label);
 	gtk_widget_set_sensitive(label, iface.iswireless);
 	strcpy (wname, "wificonfig");
@@ -1251,24 +1245,22 @@ create_nwppp_widgets (NWInterface_t iface)
 	// page headers
 
 	ctable = gtk_table_new (3, 7, FALSE);
-	container = gtk_hbox_new (TRUE, 0);
+	gtk_table_set_col_spacings(GTK_TABLE(ctable), gpe_boxspacing);
+	gtk_table_set_row_spacings(GTK_TABLE(ctable), gpe_boxspacing);
+	container = gtk_hbox_new (TRUE, gpe_boxspacing);
 
 	gtk_container_set_border_width (GTK_CONTAINER (ctable), gpe_border);
 
-	gtk_table_attach (GTK_TABLE (ctable), container, 1, 2, 0, 1,
-			  (GtkAttachOptions) (GTK_FILL),
-			  (GtkAttachOptions) (GTK_FILL),
-			  gpe_boxspacing, gpe_boxspacing);
+	gtk_table_attach (GTK_TABLE (ctable), container, 0, 2, 1, 2,
+			          GTK_FILL, GTK_FILL, 0, 0);
 
 	label = gtk_label_new (NULL);
 	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-	tmpval = g_strdup_printf ("<b>%s</b>", iface.name);
+	tmpval = g_strdup_printf ("<b>%s %s</b>",_("Interface"), iface.name);
 	gtk_label_set_markup (GTK_LABEL (label), tmpval);
 	g_free (tmpval);
-	gtk_table_attach (GTK_TABLE (ctable), label, 0, 1, 0, 1,
-			  (GtkAttachOptions) (GTK_FILL),
-			  (GtkAttachOptions) (GTK_FILL),
-			  gpe_boxspacing, gpe_boxspacing);
+	gtk_table_attach (GTK_TABLE (ctable), label, 0, 2, 0, 1,
+			          GTK_FILL, GTK_FILL, 0, 0);
 
 	label = gtk_radio_button_new_with_label_from_widget (NULL, "static");
 	gtk_tooltips_set_tip (tooltips, label, help_devtype, NULL);
@@ -1293,8 +1285,7 @@ create_nwppp_widgets (NWInterface_t iface)
 	gtk_widget_ref (label);
 	g_object_set_data_full (G_OBJECT (notebook), wname, label,
 				  (GtkDestroyNotify) gtk_widget_unref);
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (label),
-				      iface.isdhcp);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (label), iface.isdhcp);
 	g_signal_connect (G_OBJECT (label), "toggled",
 			    G_CALLBACK (changed_nwtype), NULL);
 	gtk_container_add (GTK_CONTAINER (container), label);
@@ -1319,7 +1310,7 @@ create_nwppp_widgets (NWInterface_t iface)
 			       iface.provider,
 			       _("Here you need to enter the name of the provider " \
 				   "configuration to use for this interface."),
-			       1);
+			       2);
 	return ctable;
 }
 

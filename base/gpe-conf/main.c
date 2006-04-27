@@ -157,7 +157,6 @@ void Save_Callback(GtkWidget *sender)
 
 void Restore_Callback()
 {
-  gpe_popup_infoprint(GDK_DISPLAY(), _("Aborted"));
   while (gtk_events_pending())
 	  gtk_main_iteration_do(FALSE);
   applets[self.cur_applet].Restore();

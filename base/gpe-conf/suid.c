@@ -419,7 +419,7 @@ suidloop (int write, int read)
 					while ((c = fgetc(in)) != '\n')	/* parameters */
 						arg2[n++] = (unsigned char)c;
 					arg2[n] = '\0';
-					cmd = g_strdup_printf("/sbin/modprobe %s %s", arg1, arg2);
+					cmd = g_strdup_printf("PATH=/sbin:$PATH modprobe %s %s", arg1, arg2);
 
 					system (cmd);
 					g_free(cmd);
@@ -428,7 +428,7 @@ suidloop (int write, int read)
 				{
 					gchar *cmd;
 					fscanf (in, "%100s", arg1);	/* module */
-					cmd = g_strdup_printf("/sbin/rmmod %s", arg1);
+					cmd = g_strdup_printf("PATH=/sbin:$PATH rmmod %s", arg1);
 					system (cmd);
 					g_free(cmd);
 				}

@@ -1,13 +1,13 @@
-# -*- mode:po; coding:utf-8; -*- Slovenian message catalogue for gpe-conf-0.1.23.
+# -*- mode:po; coding:utf-8; -*- Slovenian message catalogue for gpe-conf-0.1.25.
 # Copyright (C) 2005 Free Software Foundation, Inc.
 # Matej Urbančič <matej.urban@gmail.com>, 2005.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-conf 0.1.23\n"
+"Project-Id-Version: gpe-conf 0.1.25\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-04-02 17:50+0200\n"
-"PO-Revision-Date: 2005-10-13 08:42+0100\n"
+"POT-Creation-Date: 2005-08-23 02:20+0200\n"
+"PO-Revision-Date: 2005-11-04 12:45+0100\n"
 "Last-Translator: Matej Urbančič <matej.urban@gmail.com>\n"
 "Language-Team: Slovenian <translation-team-sl@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -50,11 +50,11 @@ msgstr "Omrežje"
 msgid "Network Setup"
 msgstr "Nastavitve Omrežja"
 
-#: main.c:98 theme.c:1083
+#: main.c:98 theme.c:1144
 msgid "Theme"
 msgstr "Tema"
 
-#: main.c:98 theme.c:1085 gpe-conf-theme.desktop.in.h:2
+#: main.c:98 theme.c:1146 gpe-conf-theme.desktop.in.h:2
 msgid "Look and Feel"
 msgstr "Izgled in Občutek"
 
@@ -348,11 +348,11 @@ msgstr "Umeri"
 msgid "Start"
 msgstr "Začetek"
 
-#: screen/main.c:304 sleep/callbacks.c:47
+#: screen/main.c:304 sleep/callbacks.c:39
 msgid "min"
 msgstr "min"
 
-#: screen/main.c:307 sleep/callbacks.c:50
+#: screen/main.c:307 sleep/callbacks.c:42
 msgid "sec"
 msgstr "sek"
 
@@ -368,7 +368,7 @@ msgstr "Uporabniško določeno"
 msgid "Current Config"
 msgstr "Trenutna nastavitev"
 
-#: network.c:233 ownerinfo.c:236
+#: network.c:233 ownerinfo.c:237
 msgid "Name:"
 msgstr "Ime:"
 
@@ -380,160 +380,160 @@ msgstr "Nov vmesnik"
 msgid "This interface definition already exists!"
 msgstr "Določitev tega vmesnika že obstaja!"
 
-#: network.c:327
+#: network.c:326
 msgid "Do you want to delete this interface?"
 msgstr "Želite izbrisati ta vmesnik?"
 
-#: network.c:327 users/callbacks.c:138
+#: network.c:326 users/callbacks.c:138
 msgid "Question"
 msgstr "Vprašanje"
 
-#: network.c:576
+#: network.c:575
 msgid "WiFi config"
 msgstr "Nastavitve WiFi"
 
-#: network.c:607
+#: network.c:606
 #, c-format
 msgid "WiFi config for %s"
 msgstr "Nastavitve WiFi za %s"
 
-#: network.c:619
+#: network.c:618
 msgid "ESSID"
 msgstr "ESSID"
 
-#: network.c:641
+#: network.c:640
 msgid "Mode"
 msgstr "Način"
 
-#: network.c:651
+#: network.c:650
 msgid "managed"
 msgstr "urejevano"
 
-#: network.c:663
+#: network.c:662
 msgid "ad-hoc"
 msgstr "ad-hoc"
 
-#: network.c:680
+#: network.c:679
 msgid "Channel"
 msgstr "Kanal"
 
-#: network.c:702
+#: network.c:700
 msgid "WEP"
 msgstr "WEP"
 
-#: network.c:712
+#: network.c:710
 msgid "off"
 msgstr "izključeno"
 
-#: network.c:724
+#: network.c:722
 msgid "open"
 msgstr "odpri"
 
-#: network.c:736
+#: network.c:734
 msgid "restricted"
 msgstr "omejeno"
 
-#: network.c:752
+#: network.c:750
 msgid "Key 1"
 msgstr "Ključ 1"
 
-#: network.c:780
+#: network.c:778
 msgid "Key 2"
 msgstr "Ključ 2"
 
-#: network.c:808
+#: network.c:806
 msgid "Key 3"
 msgstr "Ključ 3"
 
-#: network.c:837
+#: network.c:835
 msgid "Key 4"
 msgstr "Ključ 4"
 
-#: network.c:1043
+#: network.c:1040
 msgid "Address"
 msgstr "Naslov"
 
-#: network.c:1046
+#: network.c:1043
 msgid "Enter your IP address here, e.g. 192.168.1.2"
 msgstr "Vnesite naslov IP, npr. 192.168.1.2"
 
-#: network.c:1048
+#: network.c:1045
 msgid "Netmask"
 msgstr "Omrežna maska"
 
-#: network.c:1051
+#: network.c:1048
 msgid "Enter your netmask here, e.g. 255.255.255.0 in most cases"
 msgstr "Vnesite omrežno masko, npr. 255.255.255.0"
 
-#: network.c:1053
+#: network.c:1050
 msgid "Broadcast"
 msgstr "Naslov za razpršeno oddajanje"
 
-#: network.c:1056
+#: network.c:1053
 msgid "Enter your broadcast address here, usually the same like your IP with 255 as last number."
 msgstr "Vnesite naslov razpršenega oddajanja, ponavadi je to vaš IP z 255 namesto zadnje številke."
 
-#: network.c:1058
+#: network.c:1055
 msgid "Gateway"
 msgstr "Prehod"
 
-#: network.c:1061
+#: network.c:1058
 msgid "Enter the IP Address of your default gateway here."
 msgstr "Vnesite naslov IP vašega privzetega prehoda."
 
-#: network.c:1072 network.c:1189
+#: network.c:1069 network.c:1186
 msgid "WiFi device"
 msgstr "WiFi naprava"
 
-#: network.c:1080 network.c:1197
+#: network.c:1077 network.c:1194
 msgid "Configure"
 msgstr "Nastavitve"
 
-#: network.c:1177
+#: network.c:1174
 msgid "Hostname"
 msgstr "Ime gostitelja"
 
-#: network.c:1180
+#: network.c:1177
 msgid "Enter your desired hostname here. This parameter is optional."
 msgstr "Vnesite želenega gostitelja. Nastavitev lahko izpustite. "
 
-#: network.c:1297
+#: network.c:1294
 msgid "Provider"
 msgstr "Ponudnik"
 
-#: network.c:1299
+#: network.c:1296
 msgid "Here you need to enter the name of the provider configuration to use for this interface."
 msgstr "Vnesite ime nastavitve ponudnika za ta vmesnik."
 
-#: network.c:1322
+#: network.c:1319
 msgid "Global Settings"
 msgstr "Splošne Nastavitve"
 
-#: network.c:1364
+#: network.c:1361
 msgid "Proxy"
 msgstr "Posrednik"
 
-#: network.c:1365
+#: network.c:1362
 msgid "If you want/need to use a proxy, enter it here. (This only applies to dillo for now.)"
 msgstr "Če potrebujete dostop preko posrednika, vnesite naslov tukaj. (Trenutno se nanaša samo na dillo.)"
 
-#: network.c:1371
+#: network.c:1368
 msgid "No proxy for"
 msgstr "Ni posrednika za"
 
-#: network.c:1373
+#: network.c:1370
 msgid "Here you should enter your local domain for that you don't want to use a proxy."
 msgstr "Vnesite domačo domeno, ki gre mimo posrednika."
 
-#: network.c:1380
+#: network.c:1377
 msgid "DNS server"
 msgstr "DNS Strežnik"
 
-#: network.c:1383
+#: network.c:1380
 msgid "Enter the IP of the DNS(name-) server to use here."
 msgstr "Vnesite naslov IP privzetega DNS strežnika."
 
-#: network.c:1554
+#: network.c:1551
 msgid ""
 "Here you may change the basic configuration type of your device.\n"
 "Use \"static\" for manual interface configuration, \"dhcp\" to use DHCP and \"ppp\" to make the device a point-to-point device."
@@ -541,275 +541,279 @@ msgstr ""
 "Tu lahko spremenite osnovne nastavitve vaše naprave.\n"
 "Uporabite \"static\" za ročno nastavitev, \"dhcp\" za DHCP strežnik in \"ppp\" za točkovno povezavo med dvema napravama."
 
-#: network.c:1560
+#: network.c:1557
 msgid "Enable this option if your device is a WiFi device"
 msgstr "Omogočite možnost, če je vaša naprava WiFi naprava"
 
-#: network.c:1562
+#: network.c:1559
 msgid "Click to set the wireless options for this device"
 msgstr "Kliknite za nastavitev brezžičnih možnosti za napravo"
 
-#: network.c:1564
+#: network.c:1561
 msgid "Set the mode your WiFi card should work. (managed or ad-hoc)."
 msgstr "Določite način delovanja vaše WiFi kartice. (urejevano ali ad-hoc)."
 
-#: network.c:1567
+#: network.c:1564
 msgid "Set the enrcyption mode: off for no WEP encryption, open for open system and restricted for resticted WEP connections only."
 msgstr "Določite način šifriranja: izklopljeno za nešifriran WEP, odprto za odprt sistem and omejeno za omejene WEP povezave."
 
-#: network.c:1572
+#: network.c:1569
 msgid "Enter the essid of your WiFi network here."
 msgstr "Vnesite essid vašega WiFi omrežja."
 
-#: network.c:1575
+#: network.c:1572
 msgid "Enter your WEP key here in (iwconfig format), e.g.: \"s:12345\""
 msgstr "Vnesite vaš WEP ključ v obliki (format iwconfig), npr.: \"s:12345\""
 
-#: network.c:1578
+#: network.c:1575
 msgid "Select the WEP key to use."
 msgstr "Izberite WEP ključ."
 
-#: network.c:1581
+#: network.c:1578
 msgid "Enter the channel number or frequency if needed. If not needed leave this field blank."
 msgstr "Vnesite številko kanala ali frekvenco. Če to ni potrebno, pustite polje prazno. "
 
-#: network.c:1604
+#: network.c:1601
 msgid "Add Interface"
 msgstr "Dodaj vmesnik"
 
-#: network.c:1605
+#: network.c:1602
 msgid "Add a new Interface"
 msgstr "Dodaj nov vmesnik"
 
-#: network.c:1615
+#: network.c:1612
 msgid "Remove Interface"
 msgstr "Odstrani vmesnik"
 
-#: network.c:1616
+#: network.c:1613
 msgid "Remove current Interface"
 msgstr "Odstrani trenutni vmesnik"
 
-#: network.c:1630
+#: network.c:1627
 msgid "Information"
 msgstr "Informacije"
 
-#: network.c:1631
+#: network.c:1628
 msgid "Show current configuration."
 msgstr "Pokaži trenutne nastavitve"
 
-#: network.c:1649
+#: network.c:1647
 msgid "Couldn't read network configuration."
 msgstr "Ne morem prebrati nastavitev omrežja."
 
-#: network.c:1656
+#: network.c:1654
 msgid "global"
 msgstr "globalno"
 
-#: theme.c:178
+#: theme.c:238
 msgid "Choose backgound image"
 msgstr "Izberi sliko ozadja"
 
-#: theme.c:192
+#: theme.c:252
 msgid "You are not allowed to read this file, choose another."
 msgstr "Nimate dovoljenja za branje te datoteke, izberite drugo."
 
-#: theme.c:213
+#: theme.c:273
 msgid "Succesfully changed background image."
 msgstr "Uspešno sem zamenjal sliko ozadja."
 
-#: theme.c:214
+#: theme.c:274
 msgid "Use \"Look and Feel\" setup tool to change details."
 msgstr "Uporabi \"Pogled in Izgled\" orodje za spreminjanje podrobnosti."
 
-#: theme.c:538
+#: theme.c:598
 msgid "Red"
 msgstr "Rdeča"
 
-#: theme.c:543
+#: theme.c:603
 msgid "Green"
 msgstr "Zelena"
 
-#: theme.c:548
+#: theme.c:608
 msgid "Blue"
 msgstr "Modra"
 
-#: theme.c:858
+#: theme.c:918
 msgid "Select colour"
 msgstr "Izberi barvo"
 
-#: theme.c:884 theme.c:958
+#: theme.c:944 theme.c:1018
 msgid "You don't have read access to selected background image!"
 msgstr "Nimate dovoljenja za branje izbrane slike ozadja!"
 
-#: theme.c:1095
+#: theme.c:1156
 msgid "Desktop Theme"
 msgstr "Tema Namizja"
 
-#: theme.c:1107
+#: theme.c:1168
 msgid "Name"
 msgstr "Ime"
 
-#: theme.c:1124
+#: theme.c:1185
 msgid "Icon Size"
 msgstr "Velikost Ikone"
 
-#: theme.c:1139
+#: theme.c:1200
 msgid "Visual Effects"
 msgstr "Vizualni efekti"
 
-#: theme.c:1145
+#: theme.c:1206
 msgid "Enable Visual Effects"
 msgstr "Omogoči Vizualne Efekte"
 
-#: theme.c:1152
+#: theme.c:1213
 msgid "Background"
 msgstr "Ozadje"
 
-#: theme.c:1166 theme.c:1168
+#: theme.c:1227 theme.c:1229
 msgid "Background Settings"
 msgstr "Nastavitve Ozadja"
 
-#: theme.c:1178 theme.c:1189
+#: theme.c:1239 theme.c:1250
 msgid "Theme Default"
 msgstr "Privzeta Tema"
 
-#: theme.c:1197
+#: theme.c:1258
 msgid "Solid colour"
 msgstr "Barva"
 
-#: theme.c:1211
+#: theme.c:1272
 msgid "Horizontal"
 msgstr "Horizontalno"
 
-#: theme.c:1215
+#: theme.c:1276
 msgid "Vertical"
 msgstr "Vertikalno"
 
-#: theme.c:1220 theme.c:1239 theme.c:1422 theme.c:1428
+#: theme.c:1281 theme.c:1300 theme.c:1483 theme.c:1489
 msgid "Colour"
 msgstr "Barva"
 
-#: theme.c:1230
+#: theme.c:1291
 msgid "Colour gradient"
 msgstr "Barvni preliv"
 
-#: theme.c:1249
+#: theme.c:1310
 msgid "Image"
 msgstr "Slika"
 
-#: theme.c:1275
+#: theme.c:1336
 msgid "Centered"
 msgstr "Sredinjeno"
 
-#: theme.c:1279
+#: theme.c:1340
 msgid "Tiled"
 msgstr "Zloženo"
 
-#: theme.c:1282
+#: theme.c:1343
 msgid "Stretched"
 msgstr "Razširjeno"
 
-#: theme.c:1289
+#: theme.c:1350
 msgid "Toolbars"
 msgstr "Orodna vrstica"
 
-#: theme.c:1301 theme.c:1303
+#: theme.c:1362 theme.c:1364
 msgid "Toolbar Style"
 msgstr "Stil orodne vrstice"
 
-#: theme.c:1312 theme.c:1341
+#: theme.c:1373 theme.c:1402
 msgid "Icons"
 msgstr "Ikone"
 
-#: theme.c:1317 theme.c:1345
+#: theme.c:1378 theme.c:1406
 msgid "Text"
 msgstr "Besedilo"
 
-#: theme.c:1322
+#: theme.c:1383
 msgid "Both"
 msgstr "Oboje"
 
-#: theme.c:1327
+#: theme.c:1388
 msgid "Both H"
 msgstr "Oboje H"
 
-#: theme.c:1348
+#: theme.c:1409
 msgid "Both (icon above text)"
 msgstr "Oboje (ikona nad besedilom)"
 
-#: theme.c:1351
+#: theme.c:1412
 msgid "Both (icon left of text)"
 msgstr "Oboje (ikona levo od besedila)"
 
-#: theme.c:1358
+#: theme.c:1419
 msgid "Toolbar Icon Size"
 msgstr "Velikost ikon orodne vrstice"
 
-#: theme.c:1374
+#: theme.c:1435
 msgid "Fonts"
 msgstr "Pisave"
 
-#: theme.c:1383 theme.c:1403
+#: theme.c:1444 theme.c:1464
 msgid "Desktop Font"
 msgstr "Pisava Namizja"
 
-#: theme.c:1390 theme.c:1450 theme.c:1485
+#: theme.c:1451 theme.c:1511 theme.c:1546 theme.c:1596
 msgid "Family"
 msgstr "Družina"
 
-#: theme.c:1410 theme.c:1470 theme.c:1505 theme.c:1535
+#: theme.c:1471 theme.c:1531 theme.c:1566 theme.c:1616
 msgid "Size"
 msgstr "Velikost"
 
-#: theme.c:1439 theme.c:1441 theme.c:1463 theme.c:1498
+#: theme.c:1500 theme.c:1502 theme.c:1524 theme.c:1559
 msgid "Application Font"
 msgstr "Pisava programa"
 
-#: theme.c:1519
+#: theme.c:1580
 msgid "Terminal"
 msgstr "Terminal"
 
-#: theme.c:1528
+#: theme.c:1589
 msgid "Font"
 msgstr "Pisava"
 
-#: keys/keyctl.c:168
+#: theme.c:1609
+msgid "Terminal Font"
+msgstr "Terminalska pisava"
+
+#: keys/keyctl.c:178
 msgid "Button layout file is missing a global section."
 msgstr "Datoteki z razporeditvijo gumbov manjka splošni oddelek."
 
-#: keys/keyctl.c:532
+#: keys/keyctl.c:549
 msgid "Critical: Can't open keylaunchrc for writing!"
 msgstr "Kritično: Ne morem odpreti keylaunchrc za pisanje!"
 
-#: keys/keyctl.c:555
+#: keys/keyctl.c:572
 msgid "Could not restart key handler!"
 msgstr "Nisem uspel zagnati urejevalnika ključev!"
 
-#: keys/keyctl.c:578
+#: keys/keyctl.c:595
 msgid "The file you selected is not executable."
 msgstr "Izbrana datoteka ni izvršljiva."
 
-#: ownerinfo.c:209
+#: ownerinfo.c:210
 msgid "Information about the Owner"
 msgstr "Informacije o lastniku"
 
-#: ownerinfo.c:217
+#: ownerinfo.c:218
 msgid "Only the user 'root' is allowed to change this information"
 msgstr "Samo skrbnik lahko spremeni te informacije."
 
-#: ownerinfo.c:251
+#: ownerinfo.c:252
 msgid "E-Mail:"
 msgstr "e-Pošta:"
 
-#: ownerinfo.c:266
+#: ownerinfo.c:267
 msgid "Phone:"
 msgstr "Telefon:"
 
-#: ownerinfo.c:281
+#: ownerinfo.c:282
 msgid "Address:"
 msgstr "Naslov:"
 
-#: ownerinfo.c:307
+#: ownerinfo.c:308
 msgid "Photofile:"
 msgstr "Foto datoteka:"
 
@@ -845,59 +849,59 @@ msgstr ""
 "Samodejna prijava. \n"
 " (brez gesla)"
 
-#: sleep/interface.c:67
+#: sleep/interface.c:65
 msgid "Auto sleep"
 msgstr "Zaspi samodejno"
 
-#: sleep/interface.c:77 sleep/interface.c:116
+#: sleep/interface.c:75 sleep/interface.c:106
 msgid "enabled"
 msgstr "omogočeno"
 
-#: sleep/interface.c:95
+#: sleep/interface.c:93
 msgid "sleep timeout"
 msgstr "Zakasnitev spanja"
 
-#: sleep/interface.c:106
+#: sleep/interface.c:96
 msgid "Auto dim"
 msgstr "Samodejna zatemnitev"
 
-#: sleep/interface.c:133
+#: sleep/interface.c:123
 msgid "backlight dim timeout"
 msgstr "Zakasnitev zatemnitve osvetljenosti ozadja"
 
-#: sleep/interface.c:142
+#: sleep/interface.c:125
 msgid "Auto dim level"
 msgstr "Stopnja samodejne zatemnitve"
 
-#: sleep/interface.c:162
+#: sleep/interface.c:145
 msgid "Advanced Controls"
 msgstr "Napredni nadzornik"
 
-#: sleep/interface.c:172
+#: sleep/interface.c:155
 msgid "CPU"
 msgstr "CPE"
 
-#: sleep/interface.c:178
+#: sleep/interface.c:161
 msgid "Sleep on cpu less than load"
 msgstr "Zaspi ob najmanjši CPE obremenitvi"
 
-#: sleep/interface.c:182
+#: sleep/interface.c:165
 msgid "load below"
 msgstr "najmanjša obremenitev"
 
-#: sleep/interface.c:198
+#: sleep/interface.c:181
 msgid "APM"
 msgstr "APM"
 
-#: sleep/interface.c:204
+#: sleep/interface.c:187
 msgid "Sleep on AC"
 msgstr "Zaspi na AC"
 
-#: sleep/interface.c:206
+#: sleep/interface.c:189
 msgid "probe IRQs"
 msgstr "preišči IRQs"
 
-#: sleep/interface.c:212
+#: sleep/interface.c:195
 msgid "Check IRQ activity"
 msgstr "Preveri IRQ aktivnost"
 
@@ -1043,7 +1047,7 @@ msgstr ""
 "Napačno geslo\n"
 " Prosim, poskusite znova!"
 
-#: cfgfile.c:915
+#: cfgfile.c:919
 msgid "No write access to network configuration."
 msgstr "Ni dovoljenja za pisanje nastavitev omrežja."
 
@@ -1135,128 +1139,128 @@ msgstr "Hitrost prenosa v baudih"
 msgid "Serial Port"
 msgstr "Serijska vrata"
 
-#: cardinfo.c:104
+#: cardinfo.c:103
 msgid "/_Card"
 msgstr "/_Kartica"
 
-#: cardinfo.c:105
+#: cardinfo.c:104
 msgid "/Card/_Insert"
 msgstr "/_Kartica/_Vstavi"
 
-#: cardinfo.c:106
+#: cardinfo.c:105
 msgid "/Card/_Eject"
 msgstr "/_Kartica/_Izvrzi"
 
-#: cardinfo.c:107
+#: cardinfo.c:106
 msgid "/Card/_Suspend"
 msgstr "/_Kartica/_Zaustavi"
 
-#: cardinfo.c:108
+#: cardinfo.c:107
 msgid "/Card/_Resume"
 msgstr "/_Kartica/_Nadaljuj"
 
-#: cardinfo.c:109
+#: cardinfo.c:108
 msgid "/Card/_Reset"
 msgstr "/_Kartica/_Povrni"
 
-#: cardinfo.c:110
+#: cardinfo.c:109
 msgid "/Card/s1"
 msgstr "/_Kartica/s1"
 
-#: cardinfo.c:111
+#: cardinfo.c:110
 msgid "/Card/_Assign Driver"
 msgstr "/_Kartica/_Dodeli gonilnik"
 
-#: cardinfo.c:112
+#: cardinfo.c:111
 msgid "/Card/s2"
 msgstr "/_Kartica/s2"
 
-#: cardinfo.c:113
+#: cardinfo.c:112
 msgid "/Card/_Close"
 msgstr "/_Kartica/_Ugasni"
 
-#: cardinfo.c:114
+#: cardinfo.c:113
 msgid "/_Help"
 msgstr "/_Pomoč"
 
-#: cardinfo.c:115
+#: cardinfo.c:114
 msgid "/_Help/Index"
 msgstr "/_Pomoč/Kazalo"
 
-#: cardinfo.c:116
+#: cardinfo.c:115
 msgid "/_Help/About"
 msgstr "/_Pomoč/O programu"
 
-#: cardinfo.c:176 cardinfo.c:864
+#: cardinfo.c:175 cardinfo.c:863
 msgid "card not recognized"
 msgstr "ne prepoznam kartice"
 
-#: cardinfo.c:278 cardinfo.c:349
+#: cardinfo.c:277 cardinfo.c:348
 msgid "Could not write to temporal config file."
 msgstr "ne morem pisati v začasno nastavitveno datoteko."
 
-#: cardinfo.c:555
+#: cardinfo.c:554
 msgid "Could not open pidfile:"
 msgstr "Ne morem odpreti pid datoteke:"
 
-#: cardinfo.c:561
+#: cardinfo.c:560
 msgid "Could not read pidfile"
 msgstr "Ne morem prebrati pid datoteke"
 
-#: cardinfo.c:565
+#: cardinfo.c:564
 msgid "Could not signal cardmgr:"
 msgstr "Nisem uspel signalizirati cardmgr:"
 
-#: cardinfo.c:640
+#: cardinfo.c:639
 msgid "gpe-conf must be setuid root to use cardinfo feature."
 msgstr "gpe-conf mora imeti pravice skrbnika za uporabo možnosti cardinfo."
 
-#: cardinfo.c:659
+#: cardinfo.c:658
 msgid "No PCMCIA driver in '/proc/devices'"
 msgstr "Ni PCMCIA gonilnika v '/proc/devices'"
 
-#: cardinfo.c:662
+#: cardinfo.c:661
 msgid "Could not open '/proc/devices'"
 msgstr "Ne morem odpreti '/proc/devices'"
 
-#: cardinfo.c:674
+#: cardinfo.c:673
 msgid "No sockets found\n"
 msgstr "Ne najdem vtiča\n"
 
-#: cardinfo.c:683
+#: cardinfo.c:682
 msgid "Card Services release does not match!"
 msgstr "Prenosi storitev kartice niso usklajeni!"
 
-#: cardinfo.c:688
+#: cardinfo.c:687
 msgid "Could not get CS revision info!\n"
 msgstr "Nisem uspel dobiti informacij o CS reviziji!\n"
 
-#: cardinfo.c:851
+#: cardinfo.c:850
 msgid "flock(stabfile) failed"
 msgstr "flock(stabfile) prekinjen"
 
-#: cardinfo.c:870
+#: cardinfo.c:869
 #, c-format
 msgid "no driver loaded"
 msgstr "ni naloženega gonilnika"
 
-#: cardinfo.c:979
+#: cardinfo.c:978
 msgid "ready"
 msgstr "pripravljen"
 
-#: cardinfo.c:997
+#: cardinfo.c:996
 msgid "not ready"
 msgstr "ni pripravljeno"
 
-#: cardinfo.c:1012
+#: cardinfo.c:1011
 msgid "suspended"
 msgstr "zaustavljen"
 
-#: cardinfo.c:1204
+#: cardinfo.c:1203
 msgid "Assign Driver"
 msgstr "Določi gonilnik"
 
-#: cardinfo.c:1213
+#: cardinfo.c:1212
 msgid ""
 "This dialog allows you to select/\n"
 "change the driver assignment for a\n"
@@ -1266,59 +1270,59 @@ msgstr ""
 "izbrati/spremeniti določen gonilnik\n"
 "za PCMCIA ali CF kartico."
 
-#: cardinfo.c:1223
+#: cardinfo.c:1222
 msgid "Your current card identifies itself as:"
 msgstr "Vaša trenutna kartica se javlja kot:"
 
-#: cardinfo.c:1237 cardinfo.c:1243
+#: cardinfo.c:1236 cardinfo.c:1242
 msgid "Manuf. Id"
 msgstr "ID Proizvajalca"
 
-#: cardinfo.c:1237 cardinfo.c:1243
+#: cardinfo.c:1236 cardinfo.c:1242
 msgid "Class"
 msgstr "Razred"
 
-#: cardinfo.c:1341 cardinfo.c:1354
+#: cardinfo.c:1340 cardinfo.c:1353
 msgid "PC/CF card socket information."
 msgstr "Informacije o vtiču PC/CF kartice."
 
-#: cardinfo.c:1349
+#: cardinfo.c:1348
 msgid "Socket"
 msgstr "Vtič"
 
-#: cardinfo.c:1380
+#: cardinfo.c:1379
 msgid "Information for socket"
 msgstr "Podatki za vtič"
 
-#: cardinfo.c:1389
+#: cardinfo.c:1388
 msgid "State:"
 msgstr "Stanje:"
 
-#: cardinfo.c:1390
+#: cardinfo.c:1389
 msgid "Device:"
 msgstr "Naprava:"
 
-#: cardinfo.c:1391
+#: cardinfo.c:1390
 msgid "Driver:"
 msgstr "Gonilnik:"
 
-#: cardinfo.c:1392
+#: cardinfo.c:1391
 msgid "Type:"
 msgstr "Tip:"
 
-#: cardinfo.c:1393
+#: cardinfo.c:1392
 msgid "I/O:"
 msgstr "I/O:"
 
-#: cardinfo.c:1394
+#: cardinfo.c:1393
 msgid "IRQ:"
 msgstr "IRQ:"
 
-#: cardinfo.c:1401
+#: cardinfo.c:1400
 msgid "Flags:"
 msgstr "Zastave:"
 
-#: cardinfo.c:1418
+#: cardinfo.c:1417
 msgid "PCMCIA initialisation failed"
 msgstr "Zagon PCMCIA ni uspel"
 
@@ -1785,88 +1789,87 @@ msgstr "Dnevnik sej"
 msgid "Could not open X session log.\n"
 msgstr "Nisem uspel odpreti dnevnika X seje.\n"
 
-#: battery.c:85
-#, c-format
-msgid "could not open touchscreen device '%s'\n"
-msgstr "Nisem uspel odpreti zaslona na dotik '%s'\n"
+#: battery.c:190 battery.c:251
+msgid "unknown"
+msgstr "neznano"
 
-#: battery.c:142 battery.c:199 battery.c:301
+#: battery.c:199 battery.c:259 battery.c:358
 msgid "Status: high"
 msgstr "Status: visok"
 
-#: battery.c:145 battery.c:202 battery.c:305
+#: battery.c:202 battery.c:262 battery.c:362
 msgid "Status: low"
 msgstr "Status: nizek"
 
-#: battery.c:148 battery.c:205 battery.c:309
+#: battery.c:205 battery.c:265 battery.c:366
 msgid "Status: critical"
 msgstr "Status: kritičen"
 
-#: battery.c:151 battery.c:208 battery.c:313
+#: battery.c:208 battery.c:268 battery.c:370
 msgid "Status: charging"
 msgstr "Status: spreminjajoč"
 
-#: battery.c:154 battery.c:211
+#: battery.c:211 battery.c:271
 msgid "Status: charge main"
 msgstr "Status: polnjenje glavne"
 
-#: battery.c:157
+#: battery.c:214
 msgid "Status: dead"
 msgstr "Status: mrtev"
 
-#: battery.c:160 battery.c:217 battery.c:299
+#: battery.c:217 battery.c:277 battery.c:356
 msgid "Status: full"
 msgstr "Status: poln"
 
-#: battery.c:163 battery.c:220
+#: battery.c:220 battery.c:280
 msgid "Status: no battery"
 msgstr "Status: ni baterije"
 
-#: battery.c:166 battery.c:223 battery.c:242 battery.c:316
+#: battery.c:223 battery.c:283 battery.c:301 battery.c:373
 msgid "Status: unknown"
 msgstr "Status: neznan"
 
-#: battery.c:171
+#: battery.c:228
 msgid "learning"
 msgstr "učenje"
 
-#: battery.c:175 battery.c:227
+#: battery.c:232 battery.c:287
 msgid "Voltage"
 msgstr "Napetost"
 
-#: battery.c:179 battery.c:231 battery.c:333
+#: battery.c:236 battery.c:291 battery.c:390
 msgid "AC connected"
 msgstr "AC povezan."
 
-#: battery.c:181 battery.c:233 battery.c:335
+#: battery.c:238 battery.c:293 battery.c:392
 msgid "Lifetime"
 msgstr "Življenjska doba"
 
-#: battery.c:214
+#: battery.c:274
 msgid "Status: not installed"
 msgstr "Status: ni naložen"
 
-#: battery.c:240
+#: battery.c:300
 msgid "not installed"
 msgstr "ni naložen"
 
-#: battery.c:244
+#: battery.c:302
 msgid "Voltage: unknown"
 msgstr "Napetost: neznana"
 
-#: battery.c:246
+#: battery.c:303
 msgid "Lifetime: unknown"
 msgstr "Življenjska doba: neznana"
 
-#: battery.c:291
+#: battery.c:348
 msgid "No battery"
 msgstr "Ni baterije"
 
-#: battery.c:396
+#: battery.c:453
 msgid "Internal battery"
 msgstr "Notranja baterija"
 
-#: battery.c:400
+#: battery.c:457
 msgid "Jacket battery"
 msgstr "Baterijski vložek"
 

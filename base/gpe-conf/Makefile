@@ -1,5 +1,5 @@
 PACKAGE = gpe-conf
-VERSION = 0.1.26
+VERSION = 0.1.31
 CVSBUILD = yes
 DEBUG = no
 INSTALL = install
@@ -11,23 +11,7 @@ MACHINE = unknown
 
 CFLAGS += -MD
 
-LINGUAS = pt ro de fr cs nl sv sk ru pt_BR zh_CN vi rw sl
-
-ifeq ($(MACHINE),h3600)
-PACKAGE_CPPFLAGS += -DMACH_IPAQ
-PACKAGE_CFLAGS += -DMACH_IPAQ
-endif
-
-ifeq ($(MACHINE),h3900)
-PACKAGE_CPPFLAGS += -DMACH_IPAQ -DMACH_IPAQPXA
-PACKAGE_CFLAGS += -DMACH_IPAQ -DMACH_IPAQPXA
-endif
-
-ifeq ($(MACHINE),simpad)
-PACKAGE_CPPFLAGS += -DMACH_SIMPAD
-PACKAGE_CFLAGS += -DMACH_SIMPAD
-endif
-
+LINGUAS = pt ro de fr cs nl sv sk ru pt_BR zh_CN vi rw sl ko
 
 EXTRA_DESKTOPS = \
 	gpe-conf-admin.desktop.in \
@@ -47,8 +31,6 @@ EXTRA_DESKTOPS = \
 	gpe-conf-sound.desktop.in
 
 ifeq ($(CVSBUILD),yes)
-PACKAGE_CPPFLAGS += -I../libxsettings-client
-PACKAGE_LDFLAGS += -L../libxsettings-client
 BUILD = ../build
 else
 BUILD = build
@@ -58,10 +40,12 @@ GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
 GTKLDFLAGS = `pkg-config --libs gtk+-2.0 gdk-2.0` 
 XCFLAGS = `pkg-config --cflags x11`
 XLIBS = `pkg-config --libs x11`
+GPECFLAGS = `pkg-config --cflags libgpewidget`
+GPELIBS = `pkg-config --libs libgpewidget`
 
 PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS) -I. 
 PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS) $(GTKCFLAGS) -I. $(XCFLAGS)  
-PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS) $(GTKLIBS) $(XLIBS) -lXsettings-client -lcrypt -lXrandr 
+PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS) $(GTKLIBS) $(XLIBS) -lXsettings-client -lcrypt 
 
 ifeq ($(DEBUG),yes)
 PACKAGE_CFLAGS += -g -DDEBUG

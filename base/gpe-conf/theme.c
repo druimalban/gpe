@@ -2,7 +2,7 @@
  * gpe-conf
  *
  * Copyright (C) 2002  Pierre TARDY <tardyp@free.fr>
- *               2003-2005 Florian Boor <florian.boor@kernelconcepts.de>
+ *               2003-2006 Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -680,9 +680,6 @@ notify_func (const char *name,
 				case GTK_TOOLBAR_BOTH:
 					gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.rbToolBoth),TRUE);
 				break;
-				case GTK_TOOLBAR_BOTH_HORIZ:
-					gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.rbToolBothH),TRUE);
-				break;
 				default:
 					gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.rbToolIcons),TRUE);
 				break;
@@ -1047,11 +1044,14 @@ Theme_Save (void)
 	else
 		system_printf (CMD_XST " write %s%s str %s", KEY_MATCHBOX, "COMPOSITE", "off");
 	
-	/* desktop font type and size */
+	/* desktop and desktop title font type and size */
 	label = g_object_get_data (G_OBJECT (self.bFont), "label");
 	clabel = gtk_label_get_text(GTK_LABEL(label));
 	fs = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(self.spFS));
-	confstr = g_strdup_printf(CMD_XST " write %s%s str \"%s-%i\"", KEY_MATCHBOX, "Desktop/Font", clabel,fs);
+	confstr = g_strdup_printf(CMD_XST " write %s%s str \"%s-%i\"", KEY_MATCHBOX, "Desktop/Font", clabel, fs);
+	system(confstr);
+	free(confstr);
+	confstr = g_strdup_printf(CMD_XST " write %s%s str \"%s-%i\"", KEY_MATCHBOX, "Desktop/TitleFont", clabel, fs);
 	system(confstr);
 	free(confstr);
 	
@@ -1083,8 +1083,6 @@ Theme_Save (void)
 		fs = GTK_TOOLBAR_TEXT;
 	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self.rbToolBoth)))
 		fs = GTK_TOOLBAR_BOTH;
-	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self.rbToolBothH)))
-		fs = GTK_TOOLBAR_BOTH_HORIZ;
 	system_printf (CMD_XST " write %s%s int %d", KEY_GTK, "ToolbarStyle", fs);
 	
 	/* terminal */
@@ -1333,14 +1331,14 @@ Theme_Build_Objects ()
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
 			
-  label = gtk_radio_button_new_with_label (NULL, _("Centered"));
+  label = gtk_radio_button_new_with_label (NULL, _("Center"));
   rg_img = label;
   self.rbImgCent = label;
   gtk_box_pack_start(GTK_BOX(hbox),label,FALSE,TRUE,0);
-  label = gtk_radio_button_new_with_label_from_widget (GTK_RADIO_BUTTON(rg_img), _("Tiled"));
+  label = gtk_radio_button_new_with_label_from_widget (GTK_RADIO_BUTTON(rg_img), _("Tile"));
   self.rbImgTiled = label;
   gtk_box_pack_start(GTK_BOX(hbox),label,FALSE,TRUE,0);
-  label = gtk_radio_button_new_with_label_from_widget (GTK_RADIO_BUTTON(rg_img), _("Stretched"));
+  label = gtk_radio_button_new_with_label_from_widget (GTK_RADIO_BUTTON(rg_img), _("Stretch"));
   self.rbImgStr = label;
   gtk_box_pack_start(GTK_BOX(hbox),label,FALSE,TRUE,0);
 			
@@ -1384,11 +1382,6 @@ Theme_Build_Objects ()
   gtk_table_attach (GTK_TABLE (table), self.rbToolBoth, 2, 3, 1, 2,
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
-  self.rbToolBothH =  gtk_radio_button_new_with_label_from_widget 
-  						(GTK_RADIO_BUTTON(self.rbToolIcons), _("Both H"));
-  gtk_table_attach (GTK_TABLE (table), self.rbToolBothH, 3, 4, 1, 2,
-		    (GtkAttachOptions) (table_attach_left_col_x),
-		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
 #else
   gtk_table_attach (GTK_TABLE (table), label, 0, 3, 10, 11,
 		    (GtkAttachOptions) (table_attach_left_col_x),
@@ -1406,11 +1399,8 @@ Theme_Build_Objects ()
   						(GTK_RADIO_BUTTON(self.rbToolIcons), _("Text"));
   gtk_box_pack_start(GTK_BOX(hbox), self.rbToolText, FALSE, TRUE, 0);
   self.rbToolBoth =  gtk_radio_button_new_with_label_from_widget 
-  						(GTK_RADIO_BUTTON(self.rbToolIcons), _("Both (icon above text)"));
+  						(GTK_RADIO_BUTTON(self.rbToolIcons), _("Both"));
   gtk_box_pack_start(GTK_BOX(hbox), self.rbToolBoth, FALSE, TRUE, 0);
-  self.rbToolBothH =  gtk_radio_button_new_with_label_from_widget 
-  						(GTK_RADIO_BUTTON(self.rbToolIcons), _("Both (icon left of text)"));
-  gtk_box_pack_start(GTK_BOX(hbox), self.rbToolBothH, FALSE, TRUE, 0);
 #endif
 
 #ifndef APPMGR_INTERFACE	
@@ -1684,6 +1674,9 @@ Theme_Build_Objects ()
   g_signal_connect (G_OBJECT (GTK_COMBO (self.cbTheme)->entry), "changed",
 		      G_CALLBACK (on_matchbox_entry_changed), NULL);
 
+/* hack to work around compositioning issue */
+  gtk_widget_set_sensitive(self.cPerformance, FALSE);
+  
   return notebook;
 }
 
