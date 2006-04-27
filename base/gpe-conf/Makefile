@@ -100,6 +100,7 @@ MEMBERS += sound/soundctrl
 MEMBERS += sound/alarmctrl
 MEMBERS += keys/keyboard
 MEMBERS += keys/keys
+MEMBERS += device
 
 MEMBERS_INFO  = main-info
 MEMBERS_INFO += storage
