@@ -1,6 +1,7 @@
 
 2006-04-27  Florian Boor <florian@kernelconcepts.de>
 
+	* Release version 1.9
 	* X11/Xserver: Startup parameters for the c8000 based devices.
 	* X11/hx4700.xmodmap: Revert last fix, that was wrong.
 
