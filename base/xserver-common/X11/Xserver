@@ -67,6 +67,8 @@ case `module_id` in
 		ARGS="$ARGS -dpi 100 -rgba rgb" ;;
 	"Generic OMAP1510/1610/1710")
 		ARGS="$ARGS -dpi 220 -mouse /dev/input/event0" ;;
+	"Cellon C8000 Board")
+		ARGS="$ARGS -dpi 100 -screen 240x320,10,1" ;;		
 esac
 
 exec $XSERVER $ARGS $*
