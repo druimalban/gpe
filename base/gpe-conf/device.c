@@ -24,9 +24,9 @@
 
 typedef struct
 {
-	gint id;
+	DeviceID_t id;
 	gchar *pattern[5];
-}DeviceMap_t;
+} DeviceMap_t;
 
 static DeviceMap_t DeviceMap[] = { \
 	{ DEV_IPAQ_SA, { "HP iPAQ H3100", "HP iPAQ H3600", "HP iPAQ H3700", "HP iPAQ H3800" } }, \
@@ -52,6 +52,36 @@ static DeviceMap_t DeviceMap[] = { \
 	{ DEV_SGI_OCTANE, { "SGI IP30", "SGI Octane" } },
 };
 
+/* Keep in sync with DeviceId_t defintion. */
+static DeviceID_t IdClassVector[] = 
+{
+	DEVICE_CLASS_NONE,
+	DEVICE_CLASS_PDA,
+	DEVICE_CLASS_PDA,
+	DEVICE_CLASS_TABLET,
+	DEVICE_CLASS_PDA,
+	DEVICE_CLASS_PDA,
+	DEVICE_CLASS_PDA,
+	DEVICE_CLASS_PDA,
+	DEVICE_CLASS_PDA,
+	DEVICE_CLASS_PDA,
+	DEVICE_CLASS_PDA,
+	DEVICE_CLASS_PDA,
+	DEVICE_CLASS_TABLET,
+	DEVICE_CLASS_MDE,
+	DEVICE_CLASS_MDE,
+	DEVICE_CLASS_CELLPHONE,
+	DEVICE_CLASS_TABLET,
+	DEVICE_CLASS_PDA,
+	DEVICE_CLASS_PC,
+	DEVICE_CLASS_PC,
+	DEVICE_CLASS_PC,
+	DEVICE_CLASS_PC,
+	DEVICE_CLASS_PC,
+	DEVICE_CLASS_PC,
+	DEVICE_CLASS_PC,
+	DEVICE_CLASS_PC,
+};
 
 DeviceID_t 
 device_get_id (void)
@@ -92,11 +122,52 @@ device_get_id (void)
 					}
 				}
 			}
+			
+			if (strstr (strv[i], "fdiv_bug"))
+			{
+				id = DEV_X86;
+				g_strfreev(strv);
+				return id;
+			}
+			
+			if (strstr (strv[i], "machine"))
+			{
+				id = DEV_POWERPC;
+				g_strfreev(strv);
+				return id;
+			}
+			
+			if (strstr (strv[i], "promlib"))
+			{
+				id = DEV_SPARC;
+				g_strfreev(strv);
+				return id;
+			}
+			
+			if (strstr (strv[i], ": Alpha"))
+			{
+				id = DEV_ALPHA;
+				g_strfreev(strv);
+				return id;
+			}
+			
 			i++;
 		}
 		g_strfreev(strv);
 	}
 	
 	id = DEV_UNKNOWN;
+
 	return id;
+}
+
+DeviceClassID_t
+device_get_class_id (DeviceID_t device_id)
+{
+	if ((device_id >= 0) && (device_id < DEV_MAX))
+		return 
+			IdClassVector [device_id];
+	else
+		return
+			DEVICE_CLASS_NONE;
 }

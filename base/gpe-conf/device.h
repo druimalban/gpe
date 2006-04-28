@@ -25,7 +25,20 @@ typedef enum
 	DEV_SGI_INDY,
 	DEV_SGI_INDIGO2,
 	DEV_SGI_OCTANE,
+	DEV_X86,
+	DEV_POWERPC,
+	DEV_SPARC,
+	DEV_ALPHA,
 	DEV_MAX
-}DeviceID_t;
+} DeviceID_t;
+
+typedef enum {
+	DEVICE_CLASS_NONE        = 0x00,
+	DEVICE_CLASS_PDA         = 0x01,
+	DEVICE_CLASS_PC          = 0x02,
+	DEVICE_CLASS_TABLET      = 0x04,
+	DEVICE_CLASS_CELLPHONE   = 0x08,
+	DEVICE_CLASS_MDE         = 0x10
+} DeviceClassID_t;
 
 #endif

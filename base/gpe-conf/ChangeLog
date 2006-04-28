@@ -1,3 +1,7 @@
+2006-04-28	Florian Boor <florian.boor@kernelconcepts.de>
+
+	* device.c, device.h: Add device classes.
+
 2006-04-27	Florian Boor <florian.boor@kernelconcepts.de>
 
 	* Merge STABLE_01 branch.
