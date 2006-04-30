@@ -31,7 +31,7 @@ DONE:
 * GtkEntryCompletion
 * history (special case of bookmarks)
 * default optimisation for size and use -Wall to identify possible problems
-*  ability to set home page from bookmarks
+* ability to set home page from bookmarks
 
 POSTPONED / PARTIALLY DONE:
 

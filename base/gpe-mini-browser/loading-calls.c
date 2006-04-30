@@ -3,7 +3,7 @@
  *
  * Basic web browser based on gtk-webcore 
  * 
- * Interface calls.
+ * Page loading calls.
  *
  * Copyright (c) 2005 Philippe De Swert
  *

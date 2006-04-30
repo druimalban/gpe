@@ -136,7 +136,7 @@ create_status_window (Webi * html, gpointer * status_data)
   data = (struct status_data *) status_data;
   /* the stop signal is not always generated. Like when you click on a link in a page
      before it is fully loaded. So to avoid several status bars to appear (and not all 
-     disappearing), check if there is already one and remoce it. */
+     disappearing), check if there is already one and remove it. */
   if (data->exists == TRUE)
     {
       gtk_widget_destroy (GTK_WIDGET (data->statusbox));
@@ -212,7 +212,7 @@ activate_statusbar (Webi * html, WebiLoadStatus * status,
   /* test if an error occured */
   if (status->status == WEBI_LOADING_ERROR)
     {
-      gpe_error_box (_("An error occured loading the webpage!"));
+      gpe_error_box (_("An error occured loading the webpage! Check your connection."));
     }
 
   /* copied from the reference implementation of osb-browser, needs to be improved for this app */

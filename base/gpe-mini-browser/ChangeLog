@@ -1,3 +1,10 @@
+v0.20 - Jyväskylä release ???? - Philippe De Swert
+
+* small typo fixes in documentation and code comments
+* Improve user warnings for web-page loading errors
+* localisation fixes
+
+
 v0.19 - New Year release - 10/01/2006 - Philippe De Swert
 
 * adding about: reaction in url window

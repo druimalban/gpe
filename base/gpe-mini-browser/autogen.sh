@@ -26,12 +26,12 @@ if test "$GETTEXTIZE"; then
  test -r aclocal.m4 && chmod u+w aclocal.m4
 fi
 echo "Running intltoolize..."
-intltoolize --copy --automake
+intltoolize --copy --automake --force
 
 libtoolize --copy --force
 
-aclocal-1.7 $ACLOCAL_FLAGS
+aclocal $ACLOCAL_FLAGS
 
-automake-1.7 -a $am_opt
+automake -a $am_opt
 autoconf
 
