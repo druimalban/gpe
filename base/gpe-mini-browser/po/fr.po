@@ -1,0 +1,138 @@
+# Gpe-mini-browser, the GPE basic browser translation file (French/ Francais)).
+# Copyright (C) 2006 Philippe De Swert
+# This file is distributed under the same license as the gpe-mini-browser package.
+# Philippe De Swert, <philippedeswert@scarlet.be>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-mini-browser 0.19\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2006-04-30 14:46+0300\n"
+"PO-Revision-Date: 2006-04-30 14:46+0300\n"
+"Last-Translator: Philippe De Swert <philippedeswert@scarlet.be>\n"
+"Language-Team: none\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../gpe-mini-browser.desktop.in.h:1
+msgid "Browse the web"
+msgstr "Surfez le web"
+
+#: ../gpe-mini-browser.desktop.in.h:2
+msgid "Mini Web Browser"
+msgstr "Mini butineur"
+
+#: ../hildon-mini-browser.c:128 ../gpe-mini-browser.c:88
+#, c-format
+msgid "GPE-mini-browser version 0.19. (C)2005, Philippe De Swert\n"
+msgstr "GPE-mini-browser version 0.19. (C)2005, Philippe De Swert\n"
+
+#: ../hildon-mini-browser.c:134 ../gpe-mini-browser.c:94
+#, c-format
+msgid ""
+"GPE-mini-browser, basic web browser application. (c)2005, Philippe De Swert\n"
+msgstr "GPE-mini-browser, simple butineur. (c)2005, Philippe De Swert\n"
+
+#: ../hildon-mini-browser.c:135 ../gpe-mini-browser.c:95
+#, c-format
+msgid "Usage: gpe-mini-browser <URL>\n"
+msgstr "Utilisation: gpe-mini-browser <URL>\n"
+
+#: ../hildon-mini-browser.c:136 ../gpe-mini-browser.c:96
+#, c-format
+msgid "Use -v for version info.\n"
+msgstr "Utilisez -v pour obtenit la version du logiciel.\n"
+
+#: ../hildon-mini-browser.c:232 ../gpe-mini-browser.c:192
+#: ../interface-calls.c:448 ../interface-calls.c:507
+msgid "Bookmarks"
+msgstr "marque-pages"
+
+#: ../hildon-mini-browser.c:264 ../gpe-mini-browser.c:242
+#: ../interface-calls.c:638 ../interface-calls.c:673
+msgid "History"
+msgstr "historique"
+
+#: ../loading-calls.c:69
+msgid "Could not open file"
+msgstr "Impossible d'ouvrir le fichier"
+
+#: ../loading-calls.c:79
+msgid ""
+"GPE mini-browser v0.19\n"
+"\n"
+"HTML engine : Gtk-webcore \n"
+"(http://gtk-webcore.sourceforge.net)\n"
+"\n"
+"Copyright (c) Philippe De Swert\n"
+"<philippedeswert@scarlet.be>\n"
+msgstr ""
+
+#: ../gpe-mini-browser.c:227
+msgid "Fullscreen"
+msgstr "Plein ecran"
+
+#: ../interface-calls.c:65
+msgid "Where to go to?"
+msgstr "Ou aller?"
+
+#: ../interface-calls.c:74
+msgid "Enter url:"
+msgstr "Adresse web:"
+
+#: ../interface-calls.c:155
+msgid "loading"
+msgstr "chargement"
+
+#: ../interface-calls.c:215
+msgid "An error occured loading the webpage! Check your connection."
+msgstr "Il y a eu une erreur de chargement! Verfiez votre connection."
+
+#: ../interface-calls.c:293 ../interface-calls.c:425
+msgid "Hide Url"
+msgstr "Cachez la barre d'adresse"
+
+#: ../interface-calls.c:362
+msgid " Url:"
+msgstr "Adresse web:"
+
+#: ../interface-calls.c:414
+msgid "Show Url"
+msgstr "Montrez la barre d'adresse"
+
+#: ../interface-calls.c:564
+msgid "Add a bookmark"
+msgstr "Ajouter un signet"
+
+#: ../interface-calls.c:572
+msgid "Add current web page"
+msgstr "Ajoutez cette page web"
+
+#: ../interface-calls.c:578
+msgid "Add new :"
+msgstr "Ajouter un nouvaux signet"
+
+#: ../interface-calls.c:684
+msgid "Clear"
+msgstr ""
+
+#: ../misc-calls.c:119
+msgid "Really delete this bookmark or category?"
+msgstr "Etez vous sur de vouloir enlever ce signet?"
+
+#: ../misc-calls.c:140
+msgid "error removing bookmark from db!\n"
+msgstr "Impossible d'enlever le signet de ka base de donnees!\n"
+
+#: ../misc-calls.c:180 ../misc-calls.c:462
+msgid "No bookmark selected!"
+msgstr "Pas de signet selectionne"
+
+#: ../misc-calls.c:229
+msgid "Error accessing db!\n"
+msgstr "Erreur d'access de la base de donnees!\n"
+
+#: ../misc-calls.c:235
+msgid "No url filled in!\n"
+msgstr "Pas d' addresse web!\n"
