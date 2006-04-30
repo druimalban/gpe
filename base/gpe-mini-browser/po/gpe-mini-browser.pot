@@ -1,0 +1,139 @@
+# Gpe-mini-browser, the GPE basic browser translation file.
+# Copyright (C) 2006 Philippe De Swert
+# This file is distributed under the same license as the gpe-mini-browser package.
+# Philippe De Swert, <philippedeswert@scarlet.be>
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2006-04-30 14:46+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../gpe-mini-browser.desktop.in.h:1
+msgid "Browse the web"
+msgstr ""
+
+#: ../gpe-mini-browser.desktop.in.h:2
+msgid "Mini Web Browser"
+msgstr ""
+
+#: ../hildon-mini-browser.c:128 ../gpe-mini-browser.c:88
+#, c-format
+msgid "GPE-mini-browser version 0.19. (C)2005, Philippe De Swert\n"
+msgstr ""
+
+#: ../hildon-mini-browser.c:134 ../gpe-mini-browser.c:94
+#, c-format
+msgid ""
+"GPE-mini-browser, basic web browser application. (c)2005, Philippe De Swert\n"
+msgstr ""
+
+#: ../hildon-mini-browser.c:135 ../gpe-mini-browser.c:95
+#, c-format
+msgid "Usage: gpe-mini-browser <URL>\n"
+msgstr ""
+
+#: ../hildon-mini-browser.c:136 ../gpe-mini-browser.c:96
+#, c-format
+msgid "Use -v for version info.\n"
+msgstr ""
+
+#: ../hildon-mini-browser.c:232 ../gpe-mini-browser.c:192
+#: ../interface-calls.c:448 ../interface-calls.c:507
+msgid "Bookmarks"
+msgstr ""
+
+#: ../hildon-mini-browser.c:264 ../gpe-mini-browser.c:242
+#: ../interface-calls.c:638 ../interface-calls.c:673
+msgid "History"
+msgstr ""
+
+#: ../loading-calls.c:69
+msgid "Could not open file"
+msgstr ""
+
+#: ../loading-calls.c:79
+msgid ""
+"GPE mini-browser v0.19\n"
+"\n"
+"HTML engine : Gtk-webcore \n"
+"(http://gtk-webcore.sourceforge.net)\n"
+"\n"
+"Copyright (c) Philippe De Swert\n"
+"<philippedeswert@scarlet.be>\n"
+msgstr ""
+
+#: ../gpe-mini-browser.c:227
+msgid "Fullscreen"
+msgstr ""
+
+#: ../interface-calls.c:65
+msgid "Where to go to?"
+msgstr ""
+
+#: ../interface-calls.c:74
+msgid "Enter url:"
+msgstr ""
+
+#: ../interface-calls.c:155
+msgid "loading"
+msgstr ""
+
+#: ../interface-calls.c:215
+msgid "An error occured loading the webpage! Check your connection."
+msgstr ""
+
+#: ../interface-calls.c:293 ../interface-calls.c:425
+msgid "Hide Url"
+msgstr ""
+
+#: ../interface-calls.c:362
+msgid " Url:"
+msgstr ""
+
+#: ../interface-calls.c:414
+msgid "Show Url"
+msgstr ""
+
+#: ../interface-calls.c:564
+msgid "Add a bookmark"
+msgstr ""
+
+#: ../interface-calls.c:572
+msgid "Add current web page"
+msgstr ""
+
+#: ../interface-calls.c:578
+msgid "Add new :"
+msgstr ""
+
+#: ../interface-calls.c:684
+msgid "Clear"
+msgstr ""
+
+#: ../misc-calls.c:119
+msgid "Really delete this bookmark or category?"
+msgstr ""
+
+#: ../misc-calls.c:140
+msgid "error removing bookmark from db!\n"
+msgstr ""
+
+#: ../misc-calls.c:180 ../misc-calls.c:462
+msgid "No bookmark selected!"
+msgstr ""
+
+#: ../misc-calls.c:229
+msgid "Error accessing db!\n"
+msgstr ""
+
+#: ../misc-calls.c:235
+msgid "No url filled in!\n"
+msgstr ""
