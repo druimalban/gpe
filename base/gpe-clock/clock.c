@@ -892,7 +892,7 @@ main (int argc, char *argv[])
 
   panel_window = gtk_plug_new (0);
   gtk_widget_realize (panel_window);
-  gtk_window_set_title (GTK_WINDOW (panel_window), _("Clock"));
+  gtk_window_set_title (GTK_WINDOW (panel_window), _("Alarm clock"));
   gtk_widget_set_name (panel_window, "gpe-clock");
   gtk_window_set_icon_from_file (GTK_WINDOW (panel_window), PREFIX "/share/pixmaps/gpe-clock.png", NULL);
 

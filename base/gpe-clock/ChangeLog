@@ -1,3 +1,13 @@
+2006-05-01  Phil Blundell  <pb@reciva.com>
+
+	* Version 0.25 released.
+	
+2006-05-01  Phil Blundell  <pb@reciva.com>
+
+	Patch from Marcin Juszkiewicz:
+	* clock.c (main): Set window title to "Alarm clock" for
+	consistency with .desktop file.
+
 2006-01-11  Phil Blundell  <pb@reciva.com>
 
 	* Version 0.24 released.
