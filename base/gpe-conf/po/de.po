@@ -69,7 +69,7 @@ msgstr ""
 
 #: applets.c:405 ipaqscreen/calibrate.c:34
 msgid "Sorry, wrong password."
-msgstr "Falsches Paﬂword."
+msgstr "Falsches Paﬂwort."
 
 #: timeanddate.c:436
 msgid "Time & Date"

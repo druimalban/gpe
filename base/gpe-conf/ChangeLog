@@ -1,3 +1,10 @@
+2006-05-03	Florian Boor <florian.boor@kernelconcepts.de>
+
+	* timezones.h, timeanddate.c: Implement timezone reading and update of 
+	available timezones from filesystem. Merge in patch for improved city
+	selection by Mika Laitio. Make use of GtkComboBox based selection. 
+	Remove, reformat and clean up code.
+
 2006-04-28	Florian Boor <florian.boor@kernelconcepts.de>
 
 	* device.c, device.h: Add device classes.
