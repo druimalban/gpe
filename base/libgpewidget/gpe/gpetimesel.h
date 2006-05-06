@@ -29,6 +29,12 @@ struct _GpeTimeSel
   GtkWidget *clock;
 
   gboolean changing_time;
+
+  GtkWidget *hour_edit, *minute_edit;
+  GtkWidget *p_hbox;
+
+  gboolean dragging;
+  gboolean editing;
 };
 
 /**

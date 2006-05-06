@@ -1,3 +1,18 @@
+2006-05-06  Phil Blundell  <pb@reciva.com>
+
+	* gpetimesel.c (note_change): Update the entry fields if
+	appropriate.
+	(find_deepest_window, propagate_button_event): New.
+	(do_popup): Set grab on toplevel window not clock face.  Create
+	spin buttons, put them in a box, and factor this into shape
+	calculations.
+	(button_press, button_release): Propagate events as appropriate.
+	Keep in step with do_popup grab behaviour.
+	(insert_text_handler, update_from_entry): New.	
+	(gpe_time_sel_init): Create entry fields not spinbuttons.
+	* gpe/gpetimesel.h (struct _GpeTimeSel): Add hour_edit,
+	minute_edit, p_hbox, dragging, editing.
+
 2006-04-20  Florian Boor <florian@kernelconcepts.de>
 
     * colordialog.c, gpewindowlist.c: Fix some documentation issues.
