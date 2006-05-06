@@ -1,5 +1,7 @@
 2006-05-06  Phil Blundell  <pb@reciva.com>
 
+	* configure.ac: Require libeventdb >= 0.29.
+
 	* main.c (main): Suppress sidebar on small or portrait-format
 	screens.
 
