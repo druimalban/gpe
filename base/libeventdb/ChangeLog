@@ -1,3 +1,7 @@
+2006-05-06  Phil Blundell  <pb@reciva.com>
+
+	* configure.ac: Set version to 0.29.
+
 2006-04-25  Neal H. Walfield  <neal@gnu.org>
 
 	* event-db.c: Correctly list alarms.
