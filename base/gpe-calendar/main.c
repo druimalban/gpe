@@ -950,25 +950,28 @@ main (int argc, char *argv[])
   gtk_paned_pack1 (primary, GTK_WIDGET (view_container), TRUE, FALSE);
   gtk_widget_show (GTK_WIDGET (view_container));
 
-  GtkBox *sidebar = GTK_BOX (gtk_vbox_new (FALSE, 0));
-  gtk_paned_pack2 (primary, GTK_WIDGET (sidebar), FALSE, TRUE);
-  gtk_widget_show (GTK_WIDGET (sidebar));
+  if (landscape)
+    {
+      GtkBox *sidebar = GTK_BOX (gtk_vbox_new (FALSE, 0));
+      gtk_paned_pack2 (primary, GTK_WIDGET (sidebar), FALSE, TRUE);
+      gtk_widget_show (GTK_WIDGET (sidebar));
 
-  GTK_WIDGET_UNSET_FLAGS (calendar, GTK_CAN_FOCUS);
-  gtk_calendar_set_display_options (GTK_CALENDAR (calendar),
-				    GTK_CALENDAR_SHOW_DAY_NAMES
-				    | (week_starts_monday ?
-				       GTK_CALENDAR_WEEK_START_MONDAY : 0));
-  gtk_box_pack_start (sidebar, GTK_WIDGET (calendar), FALSE, FALSE, 0);
-  g_signal_connect (G_OBJECT (calendar),
-		    "day-selected", G_CALLBACK (calendar_changed), NULL);
-
-  gtk_widget_show (GTK_WIDGET (calendar));
-
-  event_list = GTK_EVENT_LIST (gtk_event_list_new ());
-  gtk_box_pack_start (sidebar, GTK_WIDGET (event_list), TRUE, TRUE, 0);
-  gtk_widget_set_size_request (GTK_WIDGET (event_list), 150, 150);
-  gtk_widget_show (GTK_WIDGET (event_list));
+      GTK_WIDGET_UNSET_FLAGS (calendar, GTK_CAN_FOCUS);
+      gtk_calendar_set_display_options (GTK_CALENDAR (calendar),
+					GTK_CALENDAR_SHOW_DAY_NAMES
+					| (week_starts_monday ?
+					   GTK_CALENDAR_WEEK_START_MONDAY : 0));
+      gtk_box_pack_start (sidebar, GTK_WIDGET (calendar), FALSE, FALSE, 0);
+      g_signal_connect (G_OBJECT (calendar),
+			"day-selected", G_CALLBACK (calendar_changed), NULL);
+      
+      gtk_widget_show (GTK_WIDGET (calendar));
+      
+      event_list = GTK_EVENT_LIST (gtk_event_list_new ());
+      gtk_box_pack_start (sidebar, GTK_WIDGET (event_list), TRUE, TRUE, 0);
+      gtk_widget_set_size_request (GTK_WIDGET (event_list), 150, 150);
+      gtk_widget_show (GTK_WIDGET (event_list));
+    }
 
   gpe_calendar_start_xsettings ();
 

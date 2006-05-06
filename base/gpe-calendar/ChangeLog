@@ -1,3 +1,8 @@
+2006-05-06  Phil Blundell  <pb@reciva.com>
+
+	* main.c (main): Suppress sidebar on small or portrait-format
+	screens.
+
 2006-04-25  Neal H. Walfield  <neal@gnu.org>
 
 	* week_view.c (gtk_week_view_reload_events): Call
