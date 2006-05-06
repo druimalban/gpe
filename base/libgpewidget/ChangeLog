@@ -1,5 +1,9 @@
 2006-05-06  Phil Blundell  <pb@reciva.com>
 
+	* Version 0.111 released.
+
+2006-05-06  Phil Blundell  <pb@reciva.com>
+
 	* gpetimesel.c (note_change): Update the entry fields if
 	appropriate.
 	(find_deepest_window, propagate_button_event): New.
