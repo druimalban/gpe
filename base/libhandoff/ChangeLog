@@ -1,0 +1,11 @@
+2006-05-08  Neal H. Walfield  <neal@gnu.org>
+
+	* ChangeLog: New file mentioning itself in this line.
+	* configure.ac: New file.
+	* Makefile.am: New file.
+	* autogen.sh: New file.
+	* gpe-dist.am: New file.
+	* libhandoff.pc.in: New file.
+	* handoff.c: New file.
+	* handoff.h: New file.
+
