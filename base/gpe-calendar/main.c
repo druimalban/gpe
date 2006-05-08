@@ -209,8 +209,10 @@ update_view (void)
 {
   if (current_view)
     gtk_view_reload_events (GTK_VIEW (current_view));
-  gtk_event_cal_reload_events (calendar);
-  gtk_event_list_reload_events (event_list);
+  if (calendar)
+    gtk_event_cal_reload_events (calendar);
+  if (event_list)
+    gtk_event_list_reload_events (event_list);
 }
 
 static gboolean
@@ -933,7 +935,6 @@ main (int argc, char *argv[])
 
 
   datesel = GTK_DATE_SEL (gtk_date_sel_new (GTKDATESEL_FULL, viewtime));
-  calendar = GTK_EVENT_CAL (gtk_event_cal_new ());
 
   gtk_box_pack_start (win, GTK_WIDGET (datesel), FALSE, FALSE, 0);
   g_signal_connect (G_OBJECT (datesel), "changed",
@@ -956,6 +957,7 @@ main (int argc, char *argv[])
       gtk_paned_pack2 (primary, GTK_WIDGET (sidebar), FALSE, TRUE);
       gtk_widget_show (GTK_WIDGET (sidebar));
 
+      calendar = GTK_EVENT_CAL (gtk_event_cal_new ());
       GTK_WIDGET_UNSET_FLAGS (calendar, GTK_CAN_FOCUS);
       gtk_calendar_set_display_options (GTK_CALENDAR (calendar),
 					GTK_CALENDAR_SHOW_DAY_NAMES
