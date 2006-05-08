@@ -1,0 +1,5 @@
+Tue, 9 May 2006 00:42 +0300 Philippe De Swert <philippedeswert@scarlet.be>
+
+* viewer.c : Added file extension check to avoid crashes on non-pdb files
+* viewer.c : Exiting and warning the user when we have an invalid pdb file
+* Changelog : Added changelog

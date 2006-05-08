@@ -27,6 +27,7 @@
 #include <gpe/init.h>
 #include <gpe/pixmaps.h>
 #include <gpe/picturebutton.h>
+#include <gpe/errorbox.h>
 #define _(_x) gettext (_x)
 
 #include <stdlib.h>             /* for exit() */
@@ -1630,7 +1631,8 @@ ui_show_document (UI * ui, char *docpath)
     if (!doc)
       {
           fprintf (stderr, "Error opening document %s\n", docpath);
-          return;
+	  gpe_error_box("Error opening document! Exiting!");
+          exit(1);
       }
 
     i = plkr_GetHomeRecordID (doc);
@@ -1947,9 +1949,9 @@ main (ac, av, envp)
      char **envp;
 
 {
-    int i;
+    int i,pdb;
     struct stat buf;
-    char *document_path;
+    char *document_path=NULL,*pdb_check;
     // gboolean status;
     char *usage_format = "Usage:  %s [--unicode] [--dpi=N] [--verbose] [--scale=SCALE] DOCUMENT-FILE\n";
 
@@ -2020,6 +2022,19 @@ main (ac, av, envp)
 	
       } else
           document_path = av[i];
+
+    pdb = strlen(document_path);
+    if (document_path != NULL)
+	{
+	    pdb_check = document_path;
+    	    pdb_check = pdb_check + (sizeof(char)*(pdb -3));
+            if(strcmp(pdb_check, "pdb"))
+		{
+		 gpe_error_box("This file is not a pdb file! Exiting!");
+		 return 1;
+		}
+	}
+    
 
     if (stat (document_path, &buf) != 0)
       {
