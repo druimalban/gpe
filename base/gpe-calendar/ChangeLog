@@ -1,6 +1,10 @@
 2006-05-08  Philip Blundell  <pb@reciva.com>
 
 	* main.c (update_view): Don't attempt to update nonexistent widgets.
+	(month_view_button_clicked): Likewise.
+	(week_view_button_clicked): Likewise.	
+	(day_view_button_clicked): Likewise.	
+	(propagate_time): Likewise.
 	(main): Move calendar creation inside if-block.
 
 2006-05-06  Phil Blundell  <pb@reciva.com>

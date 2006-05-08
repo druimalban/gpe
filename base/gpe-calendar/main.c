@@ -301,13 +301,16 @@ propagate_time (void)
 
   localtime_r (&viewtime, &tm);
 
-  /* Calendar needs an update?  */
-  gtk_calendar_get_date (GTK_CALENDAR (calendar), &year, &month, &day);
-  if (tm.tm_year != year - 1900 || tm.tm_mon != month)
-    gtk_calendar_select_month (GTK_CALENDAR (calendar),
-			       tm.tm_mon, tm.tm_year + 1900);
-  if (tm.tm_mday != day)
-    gtk_calendar_select_day (GTK_CALENDAR (calendar), tm.tm_mday);
+  if (calendar)
+    {
+      /* Calendar needs an update?  */
+      gtk_calendar_get_date (GTK_CALENDAR (calendar), &year, &month, &day);
+      if (tm.tm_year != year - 1900 || tm.tm_mon != month)
+	gtk_calendar_select_month (GTK_CALENDAR (calendar),
+				   tm.tm_mon, tm.tm_year + 1900);
+      if (tm.tm_mday != day)
+	gtk_calendar_select_day (GTK_CALENDAR (calendar), tm.tm_mday);
+    }
 
   time_t ds;
   struct tm dstm;
@@ -392,7 +395,8 @@ day_view_button_clicked (GtkWidget *widget, gpointer d)
     return;
 
   gtk_date_sel_set_mode (datesel, GTKDATESEL_FULL);
-  gtk_widget_show (GTK_WIDGET (calendar));
+  if (calendar)
+    gtk_widget_show (GTK_WIDGET (calendar));
   new_view (gtk_day_view_new);
 }
 
@@ -403,7 +407,8 @@ week_view_button_clicked (GtkWidget *widget, gpointer d)
     return;
 
   gtk_date_sel_set_mode (datesel, GTKDATESEL_WEEK);
-  gtk_widget_show (GTK_WIDGET (calendar));
+  if (calendar)
+    gtk_widget_show (GTK_WIDGET (calendar));
   new_view (gtk_week_view_new);
 }
 
@@ -414,7 +419,8 @@ month_view_button_clicked (GtkWidget *widget, gpointer d)
     return;
 
   gtk_date_sel_set_mode (datesel, GTKDATESEL_MONTH);
-  gtk_widget_hide (GTK_WIDGET (calendar));
+  if (calendar)
+    gtk_widget_hide (GTK_WIDGET (calendar));
   new_view (gtk_month_view_new);
 }
 
