@@ -20,7 +20,4 @@
 extern GtkWidget *new_event (time_t t, guint timesel);
 extern GtkWidget *edit_event (Event *ev);
 
-extern void unschedule_alarm (Event *ev, GtkWidget *d);
-extern void schedule_next (guint, guint, GtkWidget *d);
-
 #endif

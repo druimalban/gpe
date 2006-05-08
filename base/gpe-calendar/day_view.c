@@ -23,7 +23,6 @@
 #include <gpe/pixmaps.h>
 #include <gpe/event-db.h>
 #include <gpe/question.h>
-#include <gpe/schedule.h>
 #include <gpe/stylus.h>
 #include <gpe/spacing.h>
 #include "view.h"
@@ -447,14 +446,7 @@ delete_event_cb (GtkWidget *widget, GtkWidget *dv)
 	    "(If no, delete this instance only)"),
 	   _("Question"), "question", "!gtk-no", NULL, "!gtk-yes", NULL,
 	   NULL))
-	{
-	  if (event_get_alarm (ev))
-	    {
-	      unschedule_alarm (ev, gtk_widget_get_toplevel (widget));
-	      schedule_next (0, 0, widget);
-	    }
-	  event_remove (ev);
-	}
+	event_remove (ev);
       else
 	{
 	  event_add_exception (ev, event_get_start (ev));
@@ -462,14 +454,7 @@ delete_event_cb (GtkWidget *widget, GtkWidget *dv)
 	}
     }
   else
-    {
-      if (event_get_alarm (ev))
-	{
-	  unschedule_alarm (ev, gtk_widget_get_toplevel (widget));
-	  schedule_next (0, 0, widget);
-	}
-      event_remove (ev);
-    }
+    event_remove (ev);
 
   update_view ();
 }

@@ -29,7 +29,6 @@
 #include <gpe/gtksimplemenu.h>
 #include <gpe/event-db.h>
 #include <gpe/spacing.h>
-#include <gpe/schedule.h>
 #include <gpe/pim-categories.h>
 #include <gpe/pim-categories-ui.h>
 #include <gpe/gpetimesel.h>
@@ -188,77 +187,6 @@ recalculate_sensitivities (GtkWidget *widget,
     }
 }
 
-void
-unschedule_alarm (Event *ev, GtkWidget *d)
-{
-  if (!schedule_cancel_alarm (event_get_uid (ev), event_get_start (ev)))
-  {
-/* silently ignore for Maemo, we do not have scheduling here :-( */
-#ifndef IS_HILDON      
-    GtkWidget* dialog;
-                
-    dialog = gtk_message_dialog_new (GTK_WINDOW(d),
-    	   GTK_DIALOG_DESTROY_WITH_PARENT,
-    	   GTK_MESSAGE_WARNING,
-    	   GTK_BUTTONS_CLOSE,
-    	   _("There is a problem with the scheduling daemon (perhaps atd is not running)!\nThis can cause issues."));
-    gtk_dialog_run (GTK_DIALOG(dialog));
-    gtk_widget_destroy(dialog);      
-#endif
-  }
-}
-
-void
-schedule_next (guint skip, guint uid, GtkWidget *d)
-{
-  GSList *events = NULL, *iter;
-  struct tm tm;
-  time_t end, start = time(NULL);
-
-  localtime_r (&start, &tm);
-  tm.tm_year++;
-  end=mktime (&tm);
-
-  events = event_db_list_alarms_for_period (event_db, start, end);
-
-  for (iter = events; iter; iter = g_slist_next (iter))
-    {
-      Event *ev = EVENT (iter->data);
-
-      if (event_get_alarm (ev))
-	{
-	  if (event_get_start (ev) != skip && event_get_uid (ev) != uid)
-	    {
-	      gchar *action;
-
-	      action = g_strdup_printf ("gpe-announce '%s'\ngpe-calendar -s %ld -e %ld &\n",
-					event_get_summary (ev),
-					event_get_start (ev),
-					event_get_uid (ev));
-	      if (!schedule_set_alarm (event_get_uid (ev),
-				       event_get_start (ev), action, TRUE)) 
-            {
-/* silently ignore for Maemo, we do not have scheduling here :-( */
-#ifndef IS_HILDON      
-	          GtkWidget* dialog;
-                
-              dialog = gtk_message_dialog_new (GTK_WINDOW(d),
-                         GTK_DIALOG_DESTROY_WITH_PARENT,
-                         GTK_MESSAGE_WARNING,
-                         GTK_BUTTONS_CLOSE,
-                         _("There is a problem with the scheduling daemon (perhaps atd is not running)!\nThis can cause issues."));
-                  gtk_dialog_run (GTK_DIALOG(dialog));
-                  gtk_widget_destroy(dialog);
-#endif
-            }
-	      g_free (action);
-	      break;
-	    }
-	}
-    }
-    event_list_unref (events);
-}
-
 static gboolean
 edit_finished (GtkWidget *d)
 {
@@ -283,28 +211,12 @@ click_delete (GtkWidget *widget, GtkWidget *d)
       if (gpe_question_ask(
         _("Delete all recurring entries?\n(If no, delete this instance only)"), 
         _("Question"), "question", "!gtk-no", NULL, "!gtk-yes", NULL, NULL))
-        {			  
-          if (event_get_alarm (ev))
-            {
-              unschedule_alarm (ev, gtk_widget_get_toplevel(widget));
-              schedule_next (0,0, gtk_widget_get_toplevel(widget));
-            }
-          
-          event_remove (ev);
-        }
+	event_remove (ev);
       else 
 	event_add_exception (ev, event_get_start (ev));
     }
   else
-    {			  
-      if (event_get_alarm (ev))
-        {
-          unschedule_alarm (ev, gtk_widget_get_toplevel(widget));
-          schedule_next (0,0, gtk_widget_get_toplevel(widget));
-        }
-      
-      event_remove (ev);
-  }
+    event_remove (ev);
   
   update_view ();
   edit_finished (d);
@@ -321,11 +233,7 @@ click_ok (GtkWidget *widget, GtkWidget *d)
   GtkTextBuffer *buf;
 
   if (s->ev)
-    {
-      ev = s->ev;
-      if (event_get_alarm (ev))
-        unschedule_alarm (s->ev, gtk_widget_get_toplevel(widget));
-    }
+    ev = s->ev;
   else
     ev = event_new (event_db, NULL);
 
@@ -364,13 +272,12 @@ click_ok (GtkWidget *widget, GtkWidget *d)
     }
   else
     {
-      /* Appointment */
+      /* Reminder */
       memset (&tm_start, 0, sizeof (struct tm));
       tm_start.tm_year = GTK_DATE_COMBO (s->reminderdate)->year - 1900;
       tm_start.tm_mon = GTK_DATE_COMBO (s->reminderdate)->month;
       tm_start.tm_mday = GTK_DATE_COMBO (s->reminderdate)->day;
 
-      /* Reminder */
       if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->remindertimebutton)))
         {
 	  gpe_time_sel_get_time (GPE_TIME_SEL (s->remindertime), (guint *)&tm_start.tm_hour, (guint *)&tm_start.tm_min);
@@ -423,6 +330,8 @@ click_ok (GtkWidget *widget, GtkWidget *d)
       gtk_widget_destroy(dialog);
       if ((ret == GTK_RESPONSE_NO) || (ret == GTK_RESPONSE_CANCEL))
         {
+	  if (ev != s->ev)
+	    event_remove (ev);
           g_object_unref (ev);
           return;
         }
@@ -534,9 +443,6 @@ click_ok (GtkWidget *widget, GtkWidget *d)
     }
 
   event_flush (ev);
-
-  if (event_get_alarm (ev))
-    schedule_next (0,0, gtk_widget_get_toplevel(widget));
 
   update_view ();
 

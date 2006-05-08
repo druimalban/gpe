@@ -1,3 +1,44 @@
+2006-05-08  Neal H. Walfield  <neal@gnu.org>
+
+	* event-ui.h (unschedule_alarm): Remove declaration.  Update
+	callers.
+	(schedule_next): Likewise.
+	* event-ui.c: Don't include <gpe/schedule.h>.
+	(unschedule_alarm): Remove function.
+	(schedule_next): Likewise.
+	(click_ok): When cancelling the creation of a new an event, also
+	call event_remove.
+	* configure.ac (DEP_MODULES): Add libhandoff dependency.
+	* Makefile.am (gpe_calendar_SOURCES): Add alarm-dialog.c and
+	alarm-dialog.h.
+	* alarm-dialog.c: New file.
+	* alarm-dialog.h: New file.
+	* main.c: Include <gpe/schedule.h>, <handoff.h> and
+	"alarm-dialog.h".
+	(gpe_calendar): New variable.
+	(alarm_button): New variable.
+	(schedule_wakeup): New function.
+	(update_view): Call schedule_wakeup.
+	(alarm_dialog): New variable.
+	(alarm_dialog_show_event): New function.
+	(alarm_dialog_required): New function.
+	(alarm_fired): New function.
+	(alarms_process_pending): New function.
+	(alarm_button_clicked): New function.
+	(gpe_cal_exit): Don't call schedule_next.
+	(create_app_menu): Create new item, "Alarms".
+	(import_file): New function.
+	(handoff_callback): New function.
+	(handoff_serialize): New function.
+	(main): After creating EVENT_DB, add an idle source to call
+	alarms_process_pending and another to call schedule_wakeup.  Move
+	option parsing earlier.  While parsing option, collect the files
+	to import in STATE and in IMPORT_FILES.  Create a handoff object.
+	Add a new vertical separator and a new button, "Alarms," to the
+	toolbar.  When importing files, call import_file.  Only initialize
+	VIEWTIME if not already initialized.
+	* day_view.c: Don't include <gpe/schedule.h>.
+
 2006-05-08  Philip Blundell  <pb@reciva.com>
 
 	* main.c (update_view): Don't attempt to update nonexistent widgets.

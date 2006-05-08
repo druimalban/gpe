@@ -30,7 +30,8 @@ gpe_calendar_SOURCES = globals.h main.c					\
 					   export-vcal.c export-vcal.h	\
 			event-cal.c event-cal.h				\
 			event-list.c event-list.h			\
-			view.c view.h
+			view.c view.h					\
+			alarm-dialog.c alarm-dialog.h
 
 if HILDON
 

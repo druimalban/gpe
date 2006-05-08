@@ -28,6 +28,9 @@
 #include <gpe/errorbox.h>
 
 #include <gpe/event-db.h>
+#include <gpe/schedule.h>
+
+#include <handoff.h>
 
 #ifdef IS_HILDON
 /* Hildon includes */
@@ -52,6 +55,7 @@
 #include "gtkdatesel.h"
 #include "event-cal.h"
 #include "event-list.h"
+#include "alarm-dialog.h"
 
 #include <gpe/pim-categories.h>
 
@@ -69,6 +73,9 @@ extern gboolean gpe_calendar_start_xsettings (void);
     sprintf (buffer, "%s" CALENDAR_FILE_, home); \
     buffer; \
    })
+
+/* Absolute path to the executable.  */
+static const char *gpe_calendar;
 
 EventDB *event_db;
 
@@ -94,7 +101,7 @@ static GtkWidget *current_view;
 static GtkDateSel *datesel;
 static GtkEventCal *calendar;
 static GtkEventList *event_list;
-static GtkWidget *day_button, *week_button, *month_button;
+static GtkWidget *day_button, *week_button, *month_button, *alarm_button;
 
 static void propagate_time (void);
 
@@ -204,6 +211,42 @@ strftime_strdup_utf8_utf8 (const char *fmt, struct tm *tm)
   return sval;
 }
 
+/* Schedule atd to wake us up when the next alarm goes off.  */
+static gboolean
+schedule_wakeup (gboolean reload)
+{
+  static int broken_at;
+  if (broken_at)
+    return FALSE;
+
+  static Event *ev;
+  static time_t wakeup;
+  if (ev && ! reload)
+    return FALSE;
+
+  if (ev)
+    {
+      schedule_cancel_alarm (event_get_uid (ev), wakeup);
+      g_object_unref (ev);
+    }
+
+  ev = event_db_next_alarm (event_db, time (NULL));
+  if (ev)
+    {
+      char *action = g_strdup_printf ("%s -s 0", gpe_calendar);
+      wakeup = event_get_start (ev) - event_get_alarm (ev);
+      if (! schedule_set_alarm (event_get_uid (ev), wakeup,
+				action, TRUE))
+	{
+	  g_warning ("Failed to run at to schedule next alarm");
+	  broken_at = 1;
+	}
+      g_free (action);
+    }
+
+  return FALSE;
+}
+
 void
 update_view (void)
 {
@@ -213,6 +256,7 @@ update_view (void)
     gtk_event_cal_reload_events (calendar);
   if (event_list)
     gtk_event_list_reload_events (event_list);
+  schedule_wakeup (TRUE);
 }
 
 static gboolean
@@ -424,6 +468,64 @@ month_view_button_clicked (GtkWidget *widget, gpointer d)
   new_view (gtk_month_view_new);
 }
 
+static AlarmDialog *alarm_dialog;
+
+static void
+alarm_dialog_show_event (AlarmDialog *alarm_dialog, Event *ev)
+{
+  set_time_and_day_view (event_get_start (ev));
+  gtk_widget_hide (GTK_WIDGET (alarm_dialog));
+}
+
+static void
+alarm_dialog_required (void)
+{
+  if (! alarm_dialog)
+    {
+      alarm_dialog = ALARM_DIALOG (alarm_dialog_new ());
+      gtk_window_set_transient_for (GTK_WINDOW (alarm_dialog),
+				    GTK_WINDOW (main_window));
+
+      g_signal_connect (G_OBJECT (alarm_dialog), "show-event",
+			G_CALLBACK (alarm_dialog_show_event), NULL);
+
+    }
+}
+
+static void
+alarm_fired (EventDB *edb, Event *ev)
+{
+  alarm_dialog_required ();
+
+  alarm_dialog_add_event (alarm_dialog, ev);
+
+  gtk_window_present (GTK_WINDOW (alarm_dialog));
+}
+
+static gboolean
+alarms_process_pending (gpointer data)
+{
+  EventDB *event_db = EVENT_DB (data);
+
+  g_signal_connect (G_OBJECT (event_db), "alarm-fired",
+                    G_CALLBACK (alarm_fired), NULL);
+  GSList *list = event_db_list_unacknowledged_alarms (event_db);
+  GSList *i;
+  for (i = list; i; i = g_slist_next (i))
+    alarm_fired (event_db, EVENT (i->data));
+  event_list_unref (list);
+
+  /* Don't run again.  */
+  return FALSE;
+}
+
+static void
+alarm_button_clicked (GtkWidget *widget, gpointer d)
+{
+  alarm_dialog_required ();
+  gtk_widget_show (GTK_WIDGET (alarm_dialog));
+}
+
 #ifdef IS_HILDON
 static void
 menu_toggled (GtkWidget *widget, gpointer data)
@@ -435,7 +537,6 @@ menu_toggled (GtkWidget *widget, gpointer data)
 static void
 gpe_cal_exit (void)
 {
-  schedule_next (0, 0, NULL);
   g_object_unref (event_db);
   gtk_main_quit ();
 }
@@ -610,6 +711,7 @@ create_app_menu(HildonAppView *appview)
   GtkWidget *item_week = gtk_menu_item_new_with_label(_("Week"));
   GtkWidget *item_month = gtk_menu_item_new_with_label(_("Month"));
   GtkWidget *item_sep = gtk_separator_menu_item_new();
+  GtkWidget *item_alarms = gtk_menu_item_new_with_label(_("Alarms"));
 
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(item_event), menu_event);
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(item_categories), menu_categories);
@@ -629,6 +731,7 @@ create_app_menu(HildonAppView *appview)
   gtk_menu_append(menu_view, item_week);
   gtk_menu_append(menu_view, item_month);
   gtk_menu_append(menu_view, item_sep);
+  gtk_menu_append(menu_view, item_alarms);
   gtk_menu_append(menu_view, item_toolbar);
   gtk_menu_append(menu_categories, item_catedit);
   
@@ -640,6 +743,7 @@ create_app_menu(HildonAppView *appview)
   g_signal_connect(G_OBJECT(item_day), "activate", G_CALLBACK(menu_toggled), day_button);
   g_signal_connect(G_OBJECT(item_week), "activate", G_CALLBACK(menu_toggled), week_button);
   g_signal_connect(G_OBJECT(item_month), "activate", G_CALLBACK(menu_toggled), month_button);
+  g_signal_connect(G_OBJECT(item_alarms), "activate", G_CALLBACK(alarm_button_clicked), NULL);
   g_signal_connect(G_OBJECT(item_toolbar), "activate", G_CALLBACK(toggle_toolbar), NULL);
   g_signal_connect(G_OBJECT(item_catedit), "activate", G_CALLBACK(edit_categories), NULL);
   g_signal_connect(G_OBJECT(item_close), "activate", G_CALLBACK(gpe_cal_exit), NULL);
@@ -647,7 +751,77 @@ create_app_menu(HildonAppView *appview)
   gtk_widget_show_all(GTK_WIDGET(menu_main));
 }
 #endif
-	 
+
+static void
+import_file (char *ifile)
+{
+  GtkWidget *dialog;
+  if (import_one_file (ifile))
+    dialog = gtk_message_dialog_new (NULL, 0, GTK_MESSAGE_INFO,
+				     GTK_BUTTONS_OK,
+				     _("Could not import file %s."),
+				     ifile);
+  else
+    dialog = gtk_message_dialog_new (NULL, 0, GTK_MESSAGE_INFO,
+				     GTK_BUTTONS_OK,
+				     _("File %s imported sucessfully."),
+				     ifile);
+  gtk_dialog_run (GTK_DIALOG (dialog));
+  gtk_widget_destroy (dialog);
+}
+
+/* Another instance started and has passed some state to us.  */
+static void
+handoff_callback (Handoff *handoff, char *data)
+{
+  char *line = data;
+  while (line && *line)
+    {
+      char *var = line;
+
+      char *end = strchr (line, '\n');
+      if (! end)
+	{
+	  end = line + strlen (line);
+	  line = 0;
+	}
+      else
+	line = end + 1;
+      *end = 0;
+
+      char *equal = strchr (var, '=');
+      if (equal)
+	*equal = 0;
+
+      char *value;
+      if (equal)
+	value = equal + 1;
+      else
+	value = NULL;
+
+      if (strcmp (var, "IMPORT_FILE") == 0 && value)
+	import_file (value);
+      else if (strcmp (var, "VIEWTIME") == 0 && value)
+	{
+	  time_t t = atoi (value);
+	  if (t > 0)
+	    viewtime = t;
+	}
+      else if (strcmp (var, "FOCUS") == 0)
+	gtk_window_present (GTK_WINDOW (main_window));
+      else
+	g_warning ("%s: Unknown command: %s", __func__, var);
+    }
+}
+
+/* Serialize our state: another instance will take over (e.g. on
+   another display).  */
+static char *
+handoff_serialize (Handoff *handoff)
+{
+  return g_strdup_printf ("VIEWTIME=%ld\n", viewtime);
+}
+
 int
 main (int argc, char *argv[])
 {
@@ -660,22 +834,90 @@ main (int argc, char *argv[])
   osso_context_t *osso_context;
 #endif
 
-  guint skip=0, uid=0;
-  int option_letter;
+  if (g_path_is_absolute (argv[0]))
+    gpe_calendar = argv[0];
+  else
+    gpe_calendar = g_build_filename (g_get_current_dir (), argv[0], NULL);
+
+  setlocale (LC_ALL, "");
+
+  /* Initialize the g_object system.  */
+  g_type_init ();
+
+  /* Parse the arguments.  */
   gboolean schedule_only=FALSE;
+  char *state = NULL;
+  GSList *import_files = NULL;
+
+  int option_letter;
   extern char *optarg;
-  gchar *ifile = NULL;
-  gchar timebuf[3];
-  struct tm tm;
-    
+  while ((option_letter = getopt (argc, argv, "s:e:i:")) != -1)
+    {
+      if (option_letter == 's')
+	schedule_only = TRUE;
+      else if (option_letter == 'i')
+	{
+	  char *s = g_strdup_printf ("%s%sIMPORT_FILE=%s",
+				     state ?: "", state ? "\n" : "", optarg);
+	  g_free (state);
+	  state = s;
+
+	  import_files = g_slist_append (import_files, optarg);
+	}
+    }
+
+  if (! schedule_only)
+    {
+      char *s = g_strdup_printf ("%s%sFOCUS", state ?: "", state ? "\n" : "");
+      g_free (state);
+      state = s;
+    }
+
+  /* See if there is another instance of gpe-calendar already running.
+     If so, try to handoff any arguments and exit.  Otherwise, take
+     over.  */
+
+  Handoff *handoff = handoff_new ();
+
+  const char *home = g_get_home_dir ();
+#define RENDEZ_VOUS "/.gpe-calendar-rendezvous"
+  char *rendez_vous = alloca (strlen (home) + strlen (RENDEZ_VOUS) + 1);
+  sprintf (rendez_vous, "%s" RENDEZ_VOUS, home);
+
+  g_signal_connect (G_OBJECT (handoff), "handoff",
+                    G_CALLBACK (handoff_callback), NULL);
+
+  if (handoff_handoff (handoff, rendez_vous, state,
+		       schedule_only ? FALSE : TRUE,
+		       handoff_serialize, NULL))
+    exit (EXIT_SUCCESS);
+  if (schedule_only)
+    /* No instance running but called with -s.  */
+    {
+      event_db = event_db_new (CALENDAR_FILE);
+      if (! event_db)
+	{
+	  g_critical ("Failed to open event database.");
+	  exit (1);
+	}
+
+      schedule_wakeup (1);
+      exit (EXIT_SUCCESS);
+    }
+  g_free (state);
+
+  /* Start gpe-calendar.  */
+
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
 
   if (gpe_load_icons (my_icons) == FALSE)
     exit (1);
 
-  setlocale (LC_ALL, "");
+  /* Set the TIMEFMT.  */
 
+  gchar timebuf[3];
+  struct tm tm;
   memset (&tm, 0, sizeof (tm));
   if (strftime (timebuf, sizeof (timebuf), "%p", &tm))
     TIMEFMT = "%I:%M %p";
@@ -686,48 +928,26 @@ main (int argc, char *argv[])
   bind_textdomain_codeset (PACKAGE, "UTF-8");
   textdomain (PACKAGE);
 
+  /* Load the event database.  */
   event_db = event_db_new (CALENDAR_FILE);
   if (! event_db)
-    exit (1);
+    {
+      g_critical ("Failed to open event database.");
+      exit (1);
+    }
+  /* Process the pending alarms once the system is up and running.  */
+  g_idle_add (alarms_process_pending, event_db);
+  /* And schedule the next wake up.  */
+  g_idle_add ((GSourceFunc) schedule_wakeup, 0);
 
   if (gpe_pim_categories_init () == FALSE)
     exit (1);
 
-  while ((option_letter = getopt (argc, argv, "s:e:i:")) != -1)
-    {
-      if (option_letter == 's')
-        {
-	      skip = atol (optarg);
-	      schedule_only = TRUE;
-        }
-
-      if (option_letter == 'e')
-        uid = atol (optarg);
-	  if (option_letter == 'i')
-		ifile = optarg;
-    }
-
-  schedule_next (skip, uid, NULL);
-
-  if (schedule_only)
-    exit (EXIT_SUCCESS);
-  
-  if (ifile)
-    {
-	  GtkWidget *dialog;
-      if (import_one_file(ifile))
-        dialog = gtk_message_dialog_new(NULL,0,GTK_MESSAGE_INFO,
-	                                    GTK_BUTTONS_OK,
-	                                    _("Could not import file %s."),
-	                                    ifile);
-	  else
-        dialog = gtk_message_dialog_new(NULL,0,GTK_MESSAGE_INFO,
-	                                      GTK_BUTTONS_OK,
-	                                      _("File %s imported sucessfully."),
-	                                      ifile);
-      gtk_dialog_run(GTK_DIALOG(dialog));
-      exit (EXIT_SUCCESS);
-    }
+  /* Import any files specified on the command line.  */
+  GSList *i;
+  for (i = import_files; i; i = i->next)
+    import_file (i->data);
+  g_slist_free (import_files);
 	
   vcal_export_init();
     
@@ -741,8 +961,10 @@ main (int argc, char *argv[])
     return OSSO_ERROR;
   }
 #endif
-	 
-  time (&viewtime);
+
+  /* If a display migration occurred, this may already be set.  */
+  if (! viewtime)
+    time (&viewtime);
 
   /* Build the main window.  */
   window_x = CLAMP (gdk_screen_width () / 2, 240, 1000);
@@ -882,7 +1104,28 @@ main (int argc, char *argv[])
   gtk_tooltips_set_tip(tooltips, GTK_WIDGET(item), 
                        _("Tap here to select month-at-a-time view."), NULL);
   GTK_WIDGET_UNSET_FLAGS(item, GTK_CAN_FOCUS);
-  month_button = GTK_WIDGET(item);    
+  month_button = GTK_WIDGET (item);
+
+  if (window_x > 260)
+    {	  
+      item = gtk_separator_tool_item_new();
+      gtk_separator_tool_item_set_draw(GTK_SEPARATOR_TOOL_ITEM(item), FALSE);
+      gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
+    }
+  
+  /* Initialize the alarm button.  */
+  p = gpe_find_icon_scaled ("bell",
+			    gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
+  pw = gtk_image_new_from_pixbuf (p);
+  item = gtk_tool_button_new (pw, _("Alarms"));
+  g_signal_connect (G_OBJECT (item), "clicked",
+		    G_CALLBACK (alarm_button_clicked), NULL);
+  gtk_toolbar_insert (GTK_TOOLBAR (toolbar), item, -1);
+  gtk_tooltips_set_tip (tooltips, GTK_WIDGET (item), 
+			_("Tap here to view alarms pending acknowledgement."),
+			NULL);
+  GTK_WIDGET_UNSET_FLAGS (item, GTK_CAN_FOCUS);
+  alarm_button = GTK_WIDGET (item);
   
   if (window_x > 260)
     {	  
