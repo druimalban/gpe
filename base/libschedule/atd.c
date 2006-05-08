@@ -142,13 +142,13 @@ static gchar *
 alarm_filename (guint id, time_t start)
 {
   uid_t uid = getuid ();
-  return g_strdup_printf ("%s/%ld.%ld-%ld", ATD_BASE, start, id, uid);
+  return g_strdup_printf ("%s/%ld.%d-%d", ATD_BASE, start, id, uid);
 }
 
 static gchar *
 write_tail (guint id, time_t start)
 {
-  return g_strdup_printf ("#!# %ld %ld", id, start);
+  return g_strdup_printf ("#!# %d %ld", id, start);
 }
 
 static gchar *
@@ -279,6 +279,7 @@ schedule_set_alarm (guint id, time_t start, const gchar *action, gboolean calend
 #endif
     
   fwrite (action, sizeof(char), strlen (action), fp);
+  fwrite ("\n", 1, 1, fp);
 
 #ifndef HAVE_AT
   fwrite (condensorplate_1, sizeof(char), strlen (condensorplate_1), fp);

@@ -1,3 +1,9 @@
+2006-05-08  Neal H. Walfield  <neal@gnu.org>
+
+	* atd.c (alarm_filename): Use correct format conversions.
+	(write_tail): Likewise.
+	(schedule_set_alarm): Print a newline after writing ACTION to FP.
+
 2006-04-09  Neal H. Walfield  <neal@gnu.org>
 
 	* configure.ac: Check for libgpewidget.
