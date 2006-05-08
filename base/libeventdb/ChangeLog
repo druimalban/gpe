@@ -1,3 +1,50 @@
+2006-05-08  Neal H. Walfield  <neal@gnu.org>
+
+	* gpe/event-db.h (EVENT_TYPE_DB): Rename from this...
+	(TYPE_EVENT_DB): ... to this.  Update users.
+	(IS_EVENT_DB): New macro.
+	(IS_EVENT_DB_CLASS): New macro.
+	(EVENT_DB_GET_CLASS): New macro.
+	(EventDBAlarmFiredFunc): New typedef.
+	(event_db_next_alarm): New declaration.
+	(event_db_list_unacknowledged_alarms): New declaration.
+	(event_acknowledge): New declaration.
+	* event-db.c (EventDBClass): Add fields alarm_fired_signal and
+	alarm_fired.
+	(struct _EventDB): Add fields upcoming_alarms, period_end, alarm
+	and alarms_fired_through.
+	(RESOLVE_CLONE): Don't use a local variable named e, use _e to
+	avoid possible name conflicts.
+	(event_db_class_init): Initialize EDB_CLASS->ALARM_FIRED_SIGNAL.
+	(event_db_finalize): Cancel EDB->ALARM and EDB->LAUNDRY_BUZZER as
+	required.  Call do_laundry if EDB->LAUNDRY_BUZZER was set.  Clean
+	up EDB->UPCOMING_ALARMS.
+	(event_db_set_alarms_fired_through): New function.
+	(event_mark_unacknowledged): Likewise.
+	(event_acknowledge): Likewise.
+	(event_remove_upcoming_alarms): Likewise.
+	(event_add_upcoming_alarms): Likewise.
+	(buzzer): Likewise.
+	(event_db_list_unacknowledged_alarms): Likewise.
+	(event_db_new): Read EDB->ALARMS_FIRED_THROUGH from new table
+	alarms_fired_through.  Create new table alarms_unacknowledged.
+	(event_db_list_for_period_internal): Break the body of this
+	function into...
+	(event_list): ... this function.  Provide parameter to limit the
+	number of instances returned.  Update callers.
+	(event_db_next_alarm): New function.
+	(event_write): If there is no recurrence data, save recur as
+	RECUR_NONE.
+	(event_remove): Acknowledge any outstanding alarm and remove from
+	the upcoming alarm list.
+	(event_set_start): Before changing EV->START, acknowledge any
+	outstanding alarm and remove from upcoming alarm list.  After
+	changing, call event_add_upcoming_events.
+	(GET_SET): Add new parameter alarm_hazard.  If TRUE, before
+	changing EV->FIELD, acknowledge any outstanding alarm and remove
+	from upcoming alarm list.  After changing, call
+	event_add_upcoming_events.  Update users.
+
 2006-05-06  Phil Blundell  <pb@reciva.com>
 
 	* configure.ac: Set version to 0.29.

@@ -51,6 +51,8 @@ typedef struct
   void (*event_removed) (EventDB *view, Event *event);
   guint event_changed_signal;
   void (*event_changed) (EventDB *view, Event *event);
+  guint alarm_fired_signal;
+  EventDBAlarmFiredFunc alarm_fired;
 } EventDBClass;
 
 struct _EventDB
@@ -69,6 +71,20 @@ struct _EventDB
   GSList *laundry_list;
   /* The idle source.  */
   guint laundry_buzzer;
+
+  /* The list of events with upcoming alarms.  We hold a reference to
+     each.  */
+  GSList *upcoming_alarms;
+  /* EVENTS contains alarms until this point in time.  */
+  time_t period_end;
+
+  /* The alarm source.  */
+  guint alarm;
+
+  /* The point through which alarms have been fired (when an alarm
+     fires, it is entered into the alarms_unacknowledged table and
+     only removed once it has been acknowledged).  */
+  time_t alarms_fired_through;
 };
 
 /**
@@ -142,10 +158,10 @@ struct _Event
 #define NO_CLONE(ev) g_return_if_fail (! ev->clone_source)
 #define RESOLVE_CLONE(ev) \
   ({ \
-    Event *e = ev; \
-    while (e->clone_source) \
-      e = e->clone_source; \
-    e; \
+    Event *_e = ev; \
+    while (_e->clone_source) \
+      _e = _e->clone_source; \
+    _e; \
    })
 
 static void event_db_class_init (gpointer klass, gpointer klass_data);
@@ -229,7 +245,17 @@ event_db_class_init (gpointer klass, gpointer klass_data)
 		    G_TYPE_NONE,
 		    1,
 		    G_TYPE_POINTER);
-
+  edb_class->alarm_fired_signal
+    = g_signal_new ("alarm-fired",
+		    G_OBJECT_CLASS_TYPE (object_class),
+		    G_SIGNAL_RUN_LAST,
+		    G_STRUCT_OFFSET (EventDBClass, alarm_fired),
+		    NULL,
+		    NULL,
+		    g_cclosure_marshal_VOID__POINTER,
+		    G_TYPE_NONE,
+		    1,
+		    G_TYPE_POINTER);
 }
 
 static void
@@ -245,27 +271,351 @@ event_db_dispose (GObject *obj)
   G_OBJECT_CLASS (event_db_parent_class)->dispose (obj);
 }
 
+static gboolean do_laundry (gpointer data);
+
 static void
 event_db_finalize (GObject *object)
 {
   EventDB *edb = EVENT_DB (object);
-  GList *iter;
 
-  for (iter = edb->events; iter; iter = g_list_next (iter))
+  /* Cancel any outstanding timeouts.  */
+  if (edb->alarm)
+    g_source_remove (edb->alarm);
+  if (edb->laundry_buzzer)
     {
-      Event *ev = EVENT (iter->data);
-
-      if (ev->clone_source)
-	g_critical ("edb->events contains cloned event "
-		    "(i.e. events still reference database)!");
-      else
-	g_object_unref (ev);
+      g_source_remove (edb->laundry_buzzer);
+      do_laundry (edb);
     }
-  g_list_free (edb->events);
+
+  {
+    GSList *i;
+    GSList *next = edb->upcoming_alarms;
+    while (next)
+      {
+	i = next;
+	next = i->next;
+
+	Event *ev = EVENT (i->data);
+	g_object_unref (ev);
+      }
+    g_slist_free (edb->upcoming_alarms);
+  }
+
+  {
+    GList *i;
+    GList *next = edb->events;
+    while (next)
+      {
+	i = next;
+	next = i->next;
+
+	Event *ev = EVENT (i->data);
+
+	if (ev->clone_source)
+	  g_critical ("edb->events contains cloned event "
+		      "(i.e. events still reference database)!");
+	else
+	  g_object_unref (ev);
+      }
+    g_list_free (edb->events);
+  }
 
   sqlite_close (edb->sqliteh);
 
   G_OBJECT_CLASS (event_db_parent_class)->finalize (object);
+}
+
+static void
+event_db_set_alarms_fired_through (EventDB *edb, time_t t)
+{
+  int err;
+  char *str;
+
+  sqlite_exec (edb->sqliteh,
+	       "delete from alarms_fired_through", NULL, NULL, NULL);
+  err = sqlite_exec_printf (edb->sqliteh,
+			    "insert into alarms_fired_through"
+			    " (time) values (%d)",
+			    NULL, NULL, &str, t);
+  if (err)
+    {
+      g_critical ("%s: %s", __func__, str);
+      g_free (str);
+    }
+
+  edb->alarms_fired_through = t;
+}
+
+/* Mark EV's alarm as having fired but yet not been acknowledged.  */
+static void
+event_mark_unacknowledged (Event *ev)
+{
+  int err;
+  char *str;
+
+  err = sqlite_exec_printf (ev->edb->sqliteh,
+			    "insert into alarms_unacknowledged"
+			    " (uid, start) values (%d, %d)",
+			    NULL, NULL, &str,
+			    event_get_uid (ev), event_get_start (ev));
+  if (err)
+    {
+      g_critical ("%s: %s", __func__, str);
+      g_free (str);
+    }
+}
+
+/* Acknowledge that event EV has fired.  If EV has no alarm, has not
+   yet fired or already been acknowledged, does nothing.  */
+void
+event_acknowledge (Event *ev)
+{
+  char *err;
+
+  if (sqlite_exec_printf (ev->edb->sqliteh,
+			  "delete from alarms_unacknowledged"
+			  " where uid=%d and start=%d",
+			  NULL, NULL, &err,
+			  event_get_uid (ev), event_get_start (ev)))
+    {
+      g_warning ("%s: removing event %ld from unacknowledged list: %s",
+		 __func__, event_get_uid (ev), err);
+      g_free (err);
+    }
+}
+
+/* Remove any instantiations of EV's source from the upcoming alarm
+   list.  */
+static void
+event_remove_upcoming_alarms (Event *ev)
+{
+  ev = RESOLVE_CLONE (ev);
+
+  GSList *i;
+  GSList *next = ev->edb->upcoming_alarms;
+  while (next)
+    {
+      i = next;
+      next = i->next;
+
+      Event *e = EVENT (i->data);
+      if (RESOLVE_CLONE (e) == ev)
+	{
+	  g_object_unref (e);
+	  ev->edb->upcoming_alarms
+	    = g_slist_delete_link (ev->edb->upcoming_alarms, i);
+	}
+    }
+}
+
+static GSList *event_list (Event *ev, time_t period_start, time_t period_end,
+			   int max, gboolean per_alarm);
+static gboolean buzzer (gpointer data);
+
+/* EV is new or has recently changed: check to see if it has an alarm
+   which will go off in the near future.  */
+static void
+event_add_upcoming_alarms (Event *ev)
+{
+  if (! ev->edb->alarm)
+    /* Alarms have not yet been activated.  */
+    return;
+
+  time_t now = time (NULL);
+  GSList *list = event_list (ev, now, ev->edb->period_end, 0, TRUE);
+  if (! list)
+    return;
+
+  ev->edb->upcoming_alarms = g_slist_concat (list, ev->edb->upcoming_alarms);
+
+  /* We remove the timeout source and call buzzer.  Although no alarm
+     has fired, it will calculate when the next timeout needs to
+     fire.  */
+  if (ev->edb->alarm)
+    g_source_remove (ev->edb->alarm);
+  buzzer (ev->edb);
+}
+
+/* Invoked by a timeout source when either an alarm should go off or
+   when we need to look for additional upcoming events.  */
+static gboolean
+buzzer (gpointer data)
+{
+  EventDB *edb = EVENT_DB (data);
+
+  time_t now = time (NULL);
+  if (edb->period_end < now)
+    {
+      g_assert (! edb->upcoming_alarms);
+#define PERIOD_LENGTH 24 * 60 * 60
+      edb->period_end = now + PERIOD_LENGTH;
+    }
+
+  /* When the next alarm fires (or when we need to refresh the
+     upcoming event list).  */
+  time_t next_alarm = edb->period_end;
+
+  if (! edb->upcoming_alarms)
+    {
+      /* Get the alarms since EDB->ALARMS_FIRED_THROUGH and
+	 until EDB_PERIOD_END.  */
+      edb->upcoming_alarms
+	= event_db_list_alarms_for_period (edb,
+					   edb->alarms_fired_through + 1,
+					   edb->period_end);
+      edb->period_end = now + PERIOD_LENGTH;
+
+      /* And advance alarms_fired_through to NOW.  */
+      event_db_set_alarms_fired_through (edb, now);
+    }
+
+  GSList *next = edb->upcoming_alarms;
+  GSList *i;
+  while (next)
+    {
+      i = next;
+      next = i->next;
+
+      Event *ev = EVENT (i->data);
+
+      /* Has this event gone off?  */
+      if (event_get_start (ev) - event_get_alarm (ev) <= now)
+	{
+	  /* Mark it as unacknowledged.  */
+	  event_mark_unacknowledged (EVENT (i->data));
+
+	  /* And signal the user a signal.  */
+	  GValue args[2];
+	  GValue rv;
+
+	  args[0].g_type = 0;
+	  g_value_init (&args[0], G_TYPE_FROM_INSTANCE (G_OBJECT (edb)));
+	  g_value_set_instance (&args[0], edb);
+        
+	  args[1].g_type = 0;
+	  g_value_init (&args[1], G_TYPE_POINTER);
+	  g_value_set_pointer (&args[1], ev);
+
+	  g_signal_emitv (args,
+			  EVENT_DB_GET_CLASS (edb)->alarm_fired_signal,
+			  0, &rv);
+
+	  /* Remove from the upcoming alarms list.  */
+	  edb->upcoming_alarms = g_slist_delete_link (edb->upcoming_alarms, i);
+	  /* And drop our reference.  */
+	  g_object_unref (ev);
+	}
+      else
+	/* No, in which case will this be the next alarm to go
+	   fire?  */
+	next_alarm = MIN (next_alarm,
+			  event_get_start (ev) - event_get_alarm (ev));
+    }
+
+  edb->alarm = g_timeout_add ((next_alarm - now) * 1000, buzzer, edb);
+
+  /* Don't trigger this timeout again.  */
+  return FALSE;
+}
+
+GSList *
+event_db_list_unacknowledged_alarms (EventDB *edb)
+{
+  GSList *list = NULL;
+
+  /* We can't remove stale rows in the callback as the database is
+     locked.  We collect them here and then iterate over this list
+     later.  */
+  struct removal
+  {
+    unsigned int uid;
+    time_t start;
+  };
+  GSList *removals = NULL;
+
+  int callback (void *arg, int argc, char **argv, char **names)
+    {
+      if (argc != 2)
+	{
+	  g_warning ("%s: expected 2 arguments, got %d", __func__, argc);
+	  return 0;
+	}
+
+      unsigned int uid = atoi (argv[0]);
+      time_t t = atoi (argv[1]);
+
+      Event *ev = event_db_find_by_uid (edb, uid);
+      if (! ev)
+	{
+	  g_warning ("%s: event %s not found", __func__, argv[0]);
+	  goto remove;
+	}
+
+      if (t == 0)
+	{
+	  g_warning ("%s: unacknowledged event %s has 0 start time (%s)!",
+		     __func__, argv[0], argv[1]);
+	  goto remove;
+	}
+
+      GSList *l = event_list (ev, t, t, 0, FALSE);
+      if (! l)
+	{
+	  g_warning ("%s: no instance of event %s at %s",
+		     __func__, argv[0], argv[1]);
+	  goto remove;
+	}
+
+      if (l->next)
+	g_warning ("%s: multiple instantiations of event %s!",
+		   __func__, argv[0]);
+
+      list = g_slist_concat (list, l);
+
+      return 0;
+
+    remove:
+      {
+	struct removal *r = g_malloc (sizeof (struct removal));
+	r->uid = uid;
+	r->start = t;
+	removals = g_slist_prepend (removals, r);
+
+	return 0;
+      }
+    }
+
+  char *err;
+  if (sqlite_exec (edb->sqliteh,
+		   "select uid, start from alarms_unacknowledged",
+		   callback, NULL, &err))
+    {
+      g_warning ("%s: %s", __func__, err);
+      g_free (err);
+    }
+
+  /* Kill any stale entries.  */
+  GSList *i;
+  for (i = removals; i; i = g_slist_next (i))
+    {
+      struct removal *r = i->data;
+      char *err;
+      if (sqlite_exec_printf (edb->sqliteh,
+			      "delete from alarms_unacknowledged"
+			      " where uid=%d and start=%d",
+			      NULL, NULL, &err, r->uid, r->start))
+	{
+	  g_warning ("%s: while removing stale entry uid=%d,start=%ld, %s",
+		     __func__, r->uid, r->start, err);
+	  g_free (err);
+	}
+      g_free (r);
+    }
+  g_slist_free (removals);
+
+  buzzer (edb);
+
+  return list;
 }
 
 static void event_class_init (gpointer klass, gpointer klass_data);
@@ -349,7 +699,7 @@ event_finalize (GObject *object)
       char *err;
       if (! event_write (event, &err))
 	{
-	  g_critical ("event_write: %s\n", err);
+	  g_critical ("event_write: %s", err);
 	  free (err);
 	}
     }
@@ -504,7 +854,7 @@ event_db_new (const char *fname)
 		   dbinfo_callback, edb, &err))
     goto error;
 
-  /* A verion 1 database considers of two tables: calendar_urn and
+  /* A verion 1 database consists of several tables: calendar_urn and
      calendar.  */
   sqlite_exec (edb->sqliteh,
 	       "create table calendar"
@@ -513,7 +863,36 @@ event_db_new (const char *fname)
   sqlite_exec (edb->sqliteh,
 	       "create table calendar_urn (uid INTEGER PRIMARY KEY)",
 	       NULL, NULL, &err);
-      
+
+  /* Read EDB->ALARMS_FIRED_THROUGH.  */
+  edb->alarms_fired_through = time (NULL);
+  sqlite_exec (edb->sqliteh,
+	       "create table alarms_fired_through (time INTEGER)",
+	       NULL, NULL, &err);
+
+  int alarms_fired_through_callback (void *arg, int argc, char **argv,
+					   char **names)
+    {
+      EventDB *edb = EVENT_DB (arg);
+      if (argc == 1)
+	{
+	  int t = atoi (argv[0]);
+	  if (t > 0)
+	    edb->alarms_fired_through = t;
+	}
+
+      return 0;
+    }
+  sqlite_exec (edb->sqliteh, "select time from alarms_fired_through",
+	       alarms_fired_through_callback, edb, &err);
+
+  /* A table of events whose alarm fired before
+     EDB->ALARMS_FIRED_THROUGH but were not yet acknowledged.  */
+  sqlite_exec (edb->sqliteh,
+	       "create table alarms_unacknowledged"
+	       " (uid INTEGER, start INTEGER NOT NULL)",
+	       NULL, NULL, &err);
+
   if (edb->dbversion == 1) 
     {
       int load_data_callback (void *arg, int argc, char **argv,
@@ -800,7 +1179,7 @@ event_clone (Event *ev)
   return n;
 }
 
-/* Return the number of days in MONTH month in year YEAR.  */
+/* Return the number of days in month MONTH in year YEAR.  */
 static guint
 days_in_month (guint year, guint month)
 {
@@ -852,6 +1231,242 @@ time_add_days (time_t t, int advance)
   return mktime (&tm);
 }
 
+/* List up to MAX (0 means unlimited) instances of EV which occur
+   between PERIOD_START and PERIOD_END, inclusive.  If PER_ALARM is
+   true then the instances which have an alarm which goes off between
+   PERIOD_START and PERIOD_END are returned.  */
+static GSList *
+event_list (Event *ev, time_t period_start, time_t period_end, int max,
+	    gboolean per_alarm)
+{
+  int event_count = 0;
+
+  if (per_alarm && ! ev->alarm)
+    /* We are looking for alarms but this event doesn't have
+       one.  */
+    return NULL;
+
+  recur_t r = ev->recur;
+  /* End of recurrence period.  */
+  time_t recur_end;
+  if (event_is_recurrence (ev))
+    {
+      if (! r->end)
+	/* Never ends.  */
+	recur_end = 0;
+      else
+	recur_end = r->end;
+    }
+  else
+    recur_end = ev->start + ev->duration;
+
+  if (recur_end && recur_end < period_start)
+    /* Event finishes prior to PERIOD_START.  */
+    return NULL;
+
+  /* Start of first instance.  */
+  time_t recur_start = ev->start;
+      
+  if (period_end && period_end < recur_start - (per_alarm ? ev->alarm : 0))
+    /* Event starts after PERIOD_END.  */
+    return NULL;
+
+  if (event_is_recurrence (ev))
+    {
+      if (r->type == RECUR_WEEKLY && r->daymask)
+	/* This is a weekly recurrence with a day mask: find the
+	   first day which, starting with S, occurs in
+	   R->DAYMASK.  */
+	{
+	  struct tm tm;
+	  localtime_r (&recur_start, &tm);
+
+	  int i;
+	  for (i = tm.tm_wday; i < tm.tm_wday + 7; i ++)
+	    /* R->DAYMASK is Monday based, not Sunday.  */
+	    if ((1 << ((i - 1) % 7)) & r->daymask)
+	      break;
+	  if (i != tm.tm_wday)
+	    recur_start = time_add_days (recur_start, i - tm.tm_wday);
+	}
+
+      /* Cache the representation of S.  */
+      struct tm orig;
+      localtime_r (&recur_start, &orig);
+
+      GSList *list = NULL;
+      int increment = r->increment > 0 ? r->increment : 1;
+      int count;
+      for (count = 0;
+	   (! period_end
+	    || recur_start - (per_alarm ? ev->alarm : 0) <= period_end)
+	     && (! recur_end || recur_start <= recur_end)
+	     && (r->count == 0 || count < r->count);
+	   count ++)
+	{
+	  if ((per_alarm && period_start <= recur_start - ev->alarm)
+	      || (! per_alarm && period_start <= recur_start + ev->duration))
+	    /* This instance occurs during the period.  Add
+	       it to LIST...  */
+	    {
+	      GSList *i;
+
+	      /* ... unless there happens to be an exception.  */
+	      for (i = r->exceptions; i; i = g_slist_next (i))
+		if ((long) i->data == recur_start)
+		  break;
+
+	      if (! i)
+		/* No exception found: instantiate this recurrence
+		   and add it to LIST.  */
+		{
+		  Event *clone = event_clone (ev);
+		  clone->start = recur_start;
+		  list = g_slist_insert_sorted (list, clone,
+						event_sort_func);
+
+		  event_count ++;
+		  if (event_count == max)
+		    break;
+		}
+	    }
+
+	  /* Advance to the next recurrence.  */
+	  switch (r->type)
+	    {
+	    case RECUR_DAILY:
+	      /* Advance S by INCREMENT days.  */
+	      recur_start = time_add_days (recur_start, increment);
+	      break;
+
+	    case RECUR_WEEKLY:
+	      if (! r->daymask)
+		/* Empty day mask, simply advance S by
+		   INCREMENT weeks.  */
+		recur_start = time_add_days (recur_start, 7 * increment);
+	      else
+		{
+		  struct tm tm;
+		  localtime_r (&recur_start, &tm);
+		  int i;
+		  for (i = tm.tm_wday + 1; i < tm.tm_wday + 1 + 7; i ++)
+		    /* R->DAYMASK is Monday based, not Sunday.  */
+		    if ((1 << ((i - 1) % 7)) & r->daymask)
+		      {
+			if ((i % 7) == orig.tm_wday)
+			  /* We wrapped a week: increment by
+			     INCREMENT - 1 weeks as well.  */
+			  recur_start
+			    = time_add_days (recur_start,
+					     7 * (increment - 1)
+					     + i - tm.tm_wday);
+			else
+			  recur_start
+			    = time_add_days (recur_start, i - tm.tm_wday);
+			break;
+		      }
+		}
+	      break;
+
+	    case RECUR_MONTHLY:
+	      {
+		int i;
+		struct tm tm;
+		for (i = increment; i > 0; i --)
+		  {
+		    localtime_r (&recur_start, &tm);
+		    recur_start
+		      = time_add_days (recur_start,
+				       days_in_month (tm.tm_year,
+						      tm.tm_mon));
+		  }
+		break;
+	      }
+
+	    case RECUR_YEARLY:
+	      {
+		struct tm tm;
+		localtime_r (&recur_start, &tm);
+		tm.tm_year += increment;
+		if (tm.tm_mon == 1 && tm.tm_mday == 29
+		    && days_in_month (tm.tm_year, tm.tm_mon) == 28)
+		  /* XXX: If the recurrence is Feb 29th and there
+		     is no Feb 29th this year then we simply clamp
+		     to the 28th.  */
+		  tm.tm_mday = 28;
+		else
+		  {
+		    if (tm.tm_mon == 1 && tm.tm_mday == 28)
+		      /* This recurrence is Feb 28th.  Are we
+			 supposed to recur on the 29th?  */
+		      {
+			if (orig.tm_mday == 29
+			    && days_in_month (tm.tm_year, tm.tm_mon) == 29)
+			  /* Yes, and moreover, this year, Feb has
+			     a 29th.  */
+			  tm.tm_mday = 29;
+		      }
+		  }
+		
+		recur_start = mktime (&tm);
+		break;
+	      }
+
+	    default:
+	      g_critical ("Event %s has an invalid recurrence type: %d\n",
+			  ev->eventid, r->type);
+	      break;
+	    }
+	}
+      return list;
+    }
+  else
+    /* Not a recurrence.  */
+    {
+      if (! per_alarm
+	  || (per_alarm
+	      && period_start <= recur_start - ev->alarm
+	      && (! period_end || recur_start - ev->alarm <= period_end)))
+	{
+	  g_object_ref (ev);
+	  return g_slist_append (NULL, ev);
+	}
+
+      return NULL;
+    }
+}
+
+Event *
+event_db_next_alarm (EventDB *edb, time_t now)
+{
+  GList *iter;
+  GSList *list;
+  Event *next = NULL;
+
+  for (iter = edb->events; iter; iter = iter->next)
+    {
+      Event *ev = EVENT (iter->data);
+      list = event_list (ev, now, 0, 1, TRUE);
+      if (list)
+	{
+	  if (! next)
+	    next = ev;
+	  else if (event_get_start (ev) - event_get_alarm (ev)
+		   < event_get_start (next) - event_get_alarm (next))
+	    {
+	      g_object_unref (next);
+	      next = ev;
+	    }
+	  else
+	    g_object_unref (ev);
+
+	  g_slist_free (list);
+	}
+    }
+
+  return next;
+}
+
 static GSList *
 event_db_list_for_period_internal (EventDB *edb,
 				   time_t period_start, time_t period_end,
@@ -861,41 +1476,15 @@ event_db_list_for_period_internal (EventDB *edb,
   GSList *list = NULL;
   GList *iter;
 
-  for (iter = edb->events; iter; iter = g_list_next (iter))
+  for (iter = edb->events; iter; iter = iter->next)
     {
       Event *ev = iter->data;
       LIVE (ev);
 
-      if (alarms && !ev->alarm)
-	/* We are looking for alarms but this event doesn't have
-	   one.  */
-	continue;
-
       if (only_untimed && ! ev->untimed)
 	continue;
 
-      recur_t r = ev->recur;
-      /* End of recurrence period.  */
-      time_t recur_end;
-      if (event_is_recurrence (ev))
-	{
-	  if (! r->end)
-	    /* Never ends.  */
-	    recur_end = 0;
-	  else
-	    recur_end = r->end;
-	}
-      else
-	recur_end = ev->start + ev->duration;
-
-      if (recur_end && recur_end < period_start)
-	/* Event finishes prior to START.  */
-	continue;
-
-      /* Start of first instance.  */
-      time_t recur_start = ev->start;
-      
-      if (period_end < recur_start - (alarms ? ev->alarm : 0))
+      if (period_end < ev->start - (alarms ? ev->alarm : 0))
 	/* Event starts after PERIOD_END.  */
 	{
 	  if (alarms)
@@ -906,160 +1495,8 @@ event_db_list_for_period_internal (EventDB *edb,
 	    break;
 	}
 
-      if (event_is_recurrence (ev))
-	{
-	  if (r->type == RECUR_WEEKLY && r->daymask)
-	    /* This is a weekly recurrence with a day mask: find the
-	       first day which, starting with S, occurs in
-	       R->DAYMASK.  */
-	    {
-	      struct tm tm;
-	      localtime_r (&recur_start, &tm);
-
-	      int i;
-	      for (i = tm.tm_wday; i < tm.tm_wday + 7; i ++)
-		/* R->DAYMASK is Monday based, not Sunday.  */
-		if ((1 << ((i - 1) % 7)) & r->daymask)
-		  break;
-	      if (i != tm.tm_wday)
-		recur_start = time_add_days (recur_start, i - tm.tm_wday);
-	    }
-
-	  /* Cache the representation of S.  */
-	  struct tm orig;
-	  localtime_r (&recur_start, &orig);
-
-	  int increment = r->increment > 0 ? r->increment : 1;
-	  int count;
-	  for (count = 0;
-	       recur_start - (alarms ? ev->alarm : 0) <= period_end
-		 && (! recur_end || recur_start <= recur_end)
-		 && (r->count == 0 || count < r->count);
-	       count ++)
-	    {
-	      if ((alarms && period_start <= recur_start - ev->alarm)
-		  || (! alarms && period_start <= recur_start + ev->duration))
-		/* This instance occurs during the period.  Add
-		   it to LIST...  */
-		{
-		  GSList *i;
-
-		  /* ... unless there happens to be an exception.  */
-		  for (i = r->exceptions; i; i = g_slist_next (i))
-		    if ((long) i->data == recur_start)
-		      break;
-
-		  if (! i)
-		    /* No exception found: instantiate this recurrence
-		       and add it to LIST.  */
-		    {
-		      Event *clone = event_clone (ev);
-		      clone->start = recur_start;
-		      list = g_slist_insert_sorted (list, clone,
-						    event_sort_func);
-		    }
-		}
-
-	      /* Advance to the next recurrence.  */
-	      switch (r->type)
-		{
-		case RECUR_DAILY:
-		  /* Advance S by INCREMENT days.  */
-		  recur_start = time_add_days (recur_start, increment);
-		  break;
-
-		case RECUR_WEEKLY:
-		  if (! r->daymask)
-		    /* Empty day mask, simply advance S by
-		       INCREMENT weeks.  */
-		    recur_start = time_add_days (recur_start, 7 * increment);
-		  else
-		    {
-		      struct tm tm;
-		      localtime_r (&recur_start, &tm);
-		      int i;
-		      for (i = tm.tm_wday + 1; i < tm.tm_wday + 1 + 7; i ++)
-			/* R->DAYMASK is Monday based, not Sunday.  */
-			if ((1 << ((i - 1) % 7)) & r->daymask)
-			  {
-			    if ((i % 7) == orig.tm_wday)
-			      /* We wrapped a week: increment by
-				 INCREMENT - 1 weeks as well.  */
-			      recur_start
-				= time_add_days (recur_start,
-						 7 * (increment - 1)
-						 + i - tm.tm_wday);
-			    else
-			      recur_start
-				= time_add_days (recur_start, i - tm.tm_wday);
-			    break;
-			  }
-		    }
-		  break;
-
-		case RECUR_MONTHLY:
-		  {
-		    int i;
-		    struct tm tm;
-		    for (i = increment; i > 0; i --)
-		      {
-			localtime_r (&recur_start, &tm);
-			recur_start
-			  = time_add_days (recur_start,
-					   days_in_month (tm.tm_year,
-							  tm.tm_mon));
-		      }
-		    break;
-		  }
-
-		case RECUR_YEARLY:
-		  {
-		    struct tm tm;
-		    localtime_r (&recur_start, &tm);
-		    tm.tm_year += increment;
-		    if (tm.tm_mon == 1 && tm.tm_mday == 29
-			&& days_in_month (tm.tm_year, tm.tm_mon) == 28)
-		      /* XXX: If the recurrence is Feb 29th and there
-			 is no Feb 29th this year then we simply clamp
-			 to the 28th.  */
-		      tm.tm_mday = 28;
-		    else
-		      {
-			if (tm.tm_mon == 1 && tm.tm_mday == 28)
-			  /* This recurrence is Feb 28th.  Are we
-			     supposed to recur on the 29th?  */
-			  {
-			    if (orig.tm_mday == 29
-				&& days_in_month (tm.tm_year, tm.tm_mon) == 29)
-			      /* Yes, and moreover, this year, Feb has
-				 a 29th.  */
-			      tm.tm_mday = 29;
-			  }
-		      }
-		
-		    recur_start = mktime (&tm);
-		    break;
-		  }
-
-		default:
-		  g_critical ("Event %s has an invalid recurrence type: %d\n",
-			      ev->eventid, r->type);
-		  break;
-		}
-	    }
-	}
-      else
-	/* Not a recurrence.  */
-	{
-	  if (! alarms
-	      || (alarms
-		  && period_start <= recur_start - ev->alarm
-		  && recur_start - ev->alarm <= period_end))
-	    {
-	      g_object_ref (ev);
-	      list = g_slist_insert_sorted (list, ev, event_sort_func);
-	    }
-	}
+      GSList *l = event_list (ev, period_start, period_end, 0, alarms);
+      list = g_slist_concat (list, l);
     }
 
   return list;
@@ -1194,6 +1631,12 @@ event_write (Event *ev, char **err)
             goto exit;
         }
     }
+  else
+    {
+      if (insert_values (ev->edb->sqliteh, ev->uid, "recur", "%d", RECUR_NONE))
+	goto exit;
+    }
+
 
   if (insert_values (ev->edb->sqliteh, ev->uid, "alarm", "%d", ev->alarm))
     goto exit;
@@ -1299,6 +1742,14 @@ event_remove (Event *ev)
 		      "delete from calendar_urn where uid=%d", 
 		      NULL, NULL, NULL, ev->uid);
 
+  if (ev->alarm)
+    {
+      /* If the event was unacknowledged, acknowledge it now.  */
+      event_acknowledge (ev);
+      /* And remove it from the upcoming alarm list.  */
+      event_remove_upcoming_alarms (ev);
+    }
+
   ev->dead = TRUE;
 
   return TRUE;
@@ -1331,7 +1782,7 @@ event_new (EventDB *edb, const char *eventid)
   if (eventid)
     ev->eventid = g_strdup (eventid);
   else
-    ev->eventid = event_db_make_eventid();
+    ev->eventid = event_db_make_eventid ();
 
   event_db_add_internal (ev);
   /* Take a reference for EDB.  */
@@ -1418,9 +1869,19 @@ event_set_start (Event *ev, time_t start)
   if (ev->start == start)
     return;
 
+  if (ev->alarm)
+    {
+      /* If the event was unacknowledged, acknowledge it now.  */
+      event_acknowledge (ev);
+      /* And remove it from the upcoming alarm list.  */
+      event_remove_upcoming_alarms (ev);
+    }
   event_db_remove_internal (ev);
   ev->start = start;
   event_db_add_internal (ev);
+  if (ev->alarm)
+    /* And remove it from the upcoming alarm list.  */
+    event_add_upcoming_alarms (ev);
 }
 
 #define GET(type, name, field) \
@@ -1432,7 +1893,7 @@ event_set_start (Event *ev, time_t start)
     return ev->field; \
   } \
 
-#define GET_SET(type, name, field) \
+#define GET_SET(type, name, field, alarm_hazard) \
   GET (type, name, field) \
   \
   void \
@@ -1441,16 +1902,23 @@ event_set_start (Event *ev, time_t start)
     LIVE (ev); \
     ev = RESOLVE_CLONE (ev); \
     STAMP (ev); \
+    if ((alarm_hazard) && ev->alarm) \
+      { \
+        event_acknowledge (ev); \
+        event_remove_upcoming_alarms (ev); \
+      } \
     ev->field = value; \
+    if ((alarm_hazard) && ev->alarm) \
+      event_add_upcoming_alarms (ev); \
   }
 
-GET_SET (unsigned long, duration, duration)
-GET_SET (unsigned long, alarm, alarm)
-GET_SET (enum event_recurrence_type, recurrence_type, recur->type)
-GET_SET (time_t, recurrence_start, start)
-GET_SET (time_t, recurrence_end, recur->end)
+GET_SET (unsigned long, duration, duration, FALSE)
+GET_SET (unsigned long, alarm, alarm, TRUE)
+GET_SET (enum event_recurrence_type, recurrence_type, recur->type, FALSE)
+GET_SET (time_t, recurrence_start, start, TRUE)
+GET_SET (time_t, recurrence_end, recur->end, TRUE)
 
-GET_SET (gboolean, untimed, untimed);
+GET_SET (gboolean, untimed, untimed, FALSE);
 
 GET (unsigned long, uid, uid)
 GET (const char *, eventid, eventid)

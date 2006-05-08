@@ -80,20 +80,34 @@ extern GType event_get_type (void);
 struct _EventDB;
 typedef struct _EventDB EventDB;
 
-#define EVENT_DB_TYPE (event_db_get_type ())
+#define TYPE_EVENT_DB             (event_db_get_type ())
 #define EVENT_DB(obj) \
-  (G_TYPE_CHECK_INSTANCE_CAST ((obj), EVENT_DB_TYPE, struct _EventDB))
+  (G_TYPE_CHECK_INSTANCE_CAST ((obj), TYPE_EVENT_DB, EventDB))
 #define EVENT_DB_CLASS(klass) \
-  GTK_CHECK_CLASS_CAST (klass, EVENT_DB_TYPE, struct _EventDBCLass)
+  (G_TYPE_CHECK_CLASS_CAST ((klass), TYPE_EVENT_DB, EventDBClass))
+#define IS_EVENT_DB(obj) \
+  (G_TYPE_CHECK_INSTANCE_TYPE ((obj), TYPE_EVENT_DB))
+#define IS_EVENT_DB_CLASS(klass) \
+  (G_TYPE_CHECK_CLASS_TYPE ((klass), TYPE_EVENT_DB))
+#define EVENT_DB_GET_CLASS(obj) \
+  (G_TYPE_INSTANCE_GET_CLASS ((obj), TYPE_EVENT_DB, EventDBClass))
 
 /* Return GType of a view.  */
 extern GType event_db_get_type (void);
+
+/* An event db signals the "alarm-fired" signal when an event's alarm
+   goes off (but only after a call to
+   event_db_list_unacknowledged_alarms).  */
+typedef void (*EventDBAlarmFiredFunc) (EventDB *, Event *);
 
 /* Open a new database.  */
 extern EventDB *event_db_new (const char *filename);
 
 /* Search the event database EVD for the event with the uid UID.  */
 extern Event *event_db_find_by_uid (EventDB *evd, guint uid);
+
+/* Return the event whose alarm will first go off at or after NOW.  */
+extern Event *event_db_next_alarm (EventDB *edb, time_t now);
 
 /* Return the events in the event database EVD which occur between
    START and END.  */
@@ -108,6 +122,12 @@ extern GSList *event_db_list_alarms_for_period (EventDB *evd,
 extern GSList *event_db_untimed_list_for_period (EventDB *evd,
 						 time_t start, time_t end);
 
+/* Returns the list of unacknowledged events since EDB was last such
+   down and turns on the "alarm-fire" event.  Only call this function
+   once at start up after having connected to the "alarm-fire"
+   signal.  */
+extern GSList *event_db_list_unacknowledged_alarms (EventDB *edb);
+
 /* Create a new event in database EDB.  If EVENTID is NULL, one is
    fabricated.  */
 extern Event *event_new (EventDB *edb, const char *event_id);
@@ -117,6 +137,10 @@ extern gboolean event_flush (Event *ev);
 
 /* Remove event EV from the underlying DB and dereference it.  */
 extern gboolean event_remove (Event *ev);
+
+/* Acknowledge that EV's alarm went off.  If EV does not have an alarm
+   or it would go off in the future, does nothing.  */
+extern void event_acknowledge (Event *ev);
 
 /* g_object unref each Event * on the list and destroy the list.  */
 extern void event_list_unref (GSList *l);
