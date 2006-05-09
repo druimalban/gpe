@@ -1,3 +1,10 @@
+2006-05-09  Neal H. Walfield  <neal@gnu.org>
+
+	* gpe/event-db.h (event_set_start): Remove declaration.
+	* event-db.c (event_set_recurrence_start): Remove function.
+	(event_set_start): Rename from this...
+	(event_set_recurrence_start): ... to this.
+
 2006-05-08  Neal H. Walfield  <neal@gnu.org>
 
 	* gpe/event-db.h (EVENT_TYPE_DB): Rename from this...

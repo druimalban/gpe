@@ -1859,31 +1859,6 @@ event_get_start (Event *ev)
   return ev->start;
 }
 
-void
-event_set_start (Event *ev, time_t start)
-{
-  LIVE (ev);
-  ev = RESOLVE_CLONE (ev);
-  STAMP (ev);
-
-  if (ev->start == start)
-    return;
-
-  if (ev->alarm)
-    {
-      /* If the event was unacknowledged, acknowledge it now.  */
-      event_acknowledge (ev);
-      /* And remove it from the upcoming alarm list.  */
-      event_remove_upcoming_alarms (ev);
-    }
-  event_db_remove_internal (ev);
-  ev->start = start;
-  event_db_add_internal (ev);
-  if (ev->alarm)
-    /* And remove it from the upcoming alarm list.  */
-    event_add_upcoming_alarms (ev);
-}
-
 #define GET(type, name, field) \
   type \
   event_get_##name (Event *ev) \
@@ -1915,7 +1890,33 @@ event_set_start (Event *ev, time_t start)
 GET_SET (unsigned long, duration, duration, FALSE)
 GET_SET (unsigned long, alarm, alarm, TRUE)
 GET_SET (enum event_recurrence_type, recurrence_type, recur->type, FALSE)
-GET_SET (time_t, recurrence_start, start, TRUE)
+GET (time_t, recurrence_start, start)
+
+void
+event_set_recurrence_start (Event *ev, time_t start)
+{
+  LIVE (ev);
+  ev = RESOLVE_CLONE (ev);
+  STAMP (ev);
+
+  if (ev->start == start)
+    return;
+
+  if (ev->alarm)
+    {
+      /* If the event was unacknowledged, acknowledge it now.  */
+      event_acknowledge (ev);
+      /* And remove it from the upcoming alarm list.  */
+      event_remove_upcoming_alarms (ev);
+    }
+  event_db_remove_internal (ev);
+  ev->start = start;
+  event_db_add_internal (ev);
+  if (ev->alarm)
+    /* And remove it from the upcoming alarm list.  */
+    event_add_upcoming_alarms (ev);
+}
+
 GET_SET (time_t, recurrence_end, recur->end, TRUE)
 
 GET_SET (gboolean, untimed, untimed, FALSE);

@@ -153,7 +153,6 @@ extern recur_t event_get_recurrence (Event *ev) __attribute__ ((pure));
 extern void event_clear_recurrence (Event *ev);
 
 extern time_t event_get_start (Event *ev) __attribute__ ((pure));
-extern void event_set_start (Event *ev, time_t time);
 
 extern unsigned long event_get_duration (Event *ev) __attribute__ ((pure));
 extern void event_set_duration (Event *ev, unsigned long duration);
