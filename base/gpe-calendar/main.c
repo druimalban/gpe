@@ -219,18 +219,15 @@ schedule_wakeup (gboolean reload)
   if (broken_at)
     return FALSE;
 
-  static Event *ev;
+  static unsigned long uid;
   static time_t wakeup;
-  if (ev && ! reload)
+  if (uid && ! reload)
     return FALSE;
 
-  if (ev)
-    {
-      schedule_cancel_alarm (event_get_uid (ev), wakeup);
-      g_object_unref (ev);
-    }
+  if (uid)
+    schedule_cancel_alarm (uid, wakeup);
 
-  ev = event_db_next_alarm (event_db, time (NULL));
+  Event *ev = event_db_next_alarm (event_db, time (NULL));
   if (ev)
     {
       char *action = g_strdup_printf ("%s -s 0", gpe_calendar);
@@ -242,6 +239,7 @@ schedule_wakeup (gboolean reload)
 	  broken_at = 1;
 	}
       g_free (action);
+      g_object_unref (ev);
     }
 
   return FALSE;

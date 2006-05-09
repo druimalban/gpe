@@ -1,5 +1,10 @@
 2006-05-09  Neal H. Walfield  <neal@gnu.org>
 
+	* main.c (schedule_wakeup): Don't cache the event, we only need
+	the uid.
+
+2006-05-09  Neal H. Walfield  <neal@gnu.org>
+
 	* day_view.c (gtk_day_view_reload_events): When an event is not
 	needed, dereference it immediately.  Free EVENTS.
 
