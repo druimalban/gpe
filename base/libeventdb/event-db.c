@@ -84,7 +84,6 @@ struct event_details
   gchar *description;
   gchar *location;  
   
-  unsigned long sequence;
   time_t modified;
 
   /* List of integers.  */
@@ -112,6 +111,9 @@ struct _Event
   time_t start;
   unsigned long duration;	/* 0 == instantaneous */
   unsigned long alarm;		/* seconds before event */
+
+  /* Sequence number.  */
+  unsigned long sequence;
 
   struct event_details *details;
   struct _Event *clone_source;
@@ -935,6 +937,8 @@ event_db_new (const char *fname)
 		ev->duration = atoi (argv[1]);
 	      else if (!strcasecmp (argv[0], "alarm"))
 		ev->alarm = atoi (argv[1]);
+	      else if (!strcasecmp (argv[0], "sequence"))
+		ev->sequence = atoi (argv[1]);
 	    }
 
 	  return 0;
@@ -1055,8 +1059,6 @@ load_details_callback (void *arg, int argc, char *argv[], char **names)
           else
             evd->modified = strtoul (argv[1], NULL, 10);
         }
-      else if (!strcasecmp (argv[0], "sequence"))
-        evd->sequence = atoi (argv[1]);
       else if (!strcasecmp (argv[0], "category"))
         evd->categories = g_slist_prepend (evd->categories,
 					   (gpointer)atoi (argv[1]));
@@ -1104,6 +1106,25 @@ event_db_find_by_uid (EventDB *edb, guint uid)
       Event *ev = iter->data;
       
       if (ev->uid == uid)
+	{
+	  g_object_ref (ev);
+	  return ev;
+	}
+    }
+
+  return NULL;
+}
+
+Event *
+event_db_find_by_eventid (EventDB *edb, const char *eventid)
+{
+  GList *iter;
+    
+  for (iter = edb->events; iter; iter = g_list_next (iter))
+    {
+      Event *ev = iter->data;
+      
+      if (strcmp (ev->eventid, eventid) == 0)
 	{
 	  g_object_ref (ev);
 	  return ev;
@@ -1279,7 +1300,7 @@ event_list (Event *ev, time_t period_start, time_t period_end, int max,
 	   count ++)
 	{
 	  if ((per_alarm && period_start <= recur_start - ev->alarm)
-	      || (! per_alarm && period_start <= recur_start + ev->duration))
+	      || (! per_alarm && period_start < recur_start + ev->duration))
 	    /* This instance occurs during the period.  Add
 	       it to LIST...  */
 	    {
@@ -1389,7 +1410,7 @@ event_list (Event *ev, time_t period_start, time_t period_end, int max,
 	    default:
 	      g_critical ("Event %s has an invalid recurrence type: %d\n",
 			  ev->eventid, ev->type);
-	      break;
+	      return NULL;
 	    }
 	}
       return list;
@@ -1586,9 +1607,7 @@ event_write (Event *ev, char **err)
 	      && insert_values (ev->edb->sqliteh, ev->uid,
 				"location", "%q", evd->location))
 	  || insert_values (ev->edb->sqliteh, ev->uid,
-			    "modified", "%lu", evd->modified)
-	  || insert_values (ev->edb->sqliteh, ev->uid,
-			    "sequence", "%d", evd->sequence))
+			    "modified", "%lu", evd->modified))
 	goto exit;
 
       for (iter = evd->categories; iter; iter = iter->next)
@@ -1601,7 +1620,10 @@ event_write (Event *ev, char **err)
 
   if (insert_values (ev->edb->sqliteh, ev->uid, "duration", "%d", ev->duration)
       || insert_values (ev->edb->sqliteh, ev->uid, "start", "%q", buf_start)
-      || insert_values (ev->edb->sqliteh, ev->uid, "eventid", "%q", ev->eventid))
+      || insert_values (ev->edb->sqliteh, ev->uid,
+			"eventid", "%q", ev->eventid)
+      || insert_values (ev->edb->sqliteh, ev->uid,
+			"sequence", "%d", ev->sequence))
     goto exit;
 
   if (insert_values (ev->edb->sqliteh, ev->uid, "recur", "%d", ev->type)
@@ -1773,7 +1795,18 @@ event_new (EventDB *edb, const char *eventid)
 
   ev->uid = sqlite_last_insert_rowid (edb->sqliteh);
   if (eventid)
-    ev->eventid = g_strdup (eventid);
+    {
+      Event *t = event_db_find_by_eventid (edb, eventid);
+      if (t)
+	{
+	  g_critical ("Attempted to add event with an eventid "
+		      "which is already present in the database.");
+	  g_object_unref (t);
+	  return NULL;
+	}
+	  
+      ev->eventid = g_strdup (eventid);
+    }
   else
     ev->eventid = event_db_make_eventid ();
 
@@ -1835,6 +1868,7 @@ event_get_start (Event *ev)
 
 GET_SET (unsigned long, duration, duration, FALSE)
 GET_SET (unsigned long, alarm, alarm, TRUE)
+GET_SET (guint32, sequence, sequence, FALSE)
 GET_SET (enum event_recurrence_type, recurrence_type, type, TRUE)
 GET (time_t, recurrence_start, start)
 

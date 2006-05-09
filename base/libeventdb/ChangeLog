@@ -1,5 +1,22 @@
 2006-05-09  Neal H. Walfield  <neal@gnu.org>
 
+	* gpe/event-db.h (event_db_find_by_uid): New declaration.
+	(event_db_find_by_eventid): Likewise.
+	(event_get_sequence): Likewise.
+	(event_set_sequence): Likewise.
+	* event-db.c (struct event_details): Move field sequence from
+	here...
+	(struct _Event): ... to here.  Update users.
+	(event_db_find_by_eventid): New function.
+	(event_list): RECUR_START + EV->DURATION names the first invalid
+	second, not the last valid second.  If EV->TYPE is invalid,
+	return.
+	(event_new): Check that EVENTID is unique.
+	(event_get_sequence): New function.
+	(event_set_sequence): Likewise.
+
+2006-05-09  Neal H. Walfield  <neal@gnu.org>
+
 	* gpe/event-db.h (recur_s): Remove structure and relocate
 	fields from here...
 	* event-db.c (struct _Event): ... to here.  Update users.

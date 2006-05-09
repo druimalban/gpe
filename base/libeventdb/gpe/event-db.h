@@ -99,6 +99,13 @@ extern GSList *event_db_untimed_list_for_period (EventDB *evd,
    the "alarm-fire" signal.  */
 extern GSList *event_db_list_unacknowledged_alarms (EventDB *edb);
 
+/* Look up an event by its uid.  Returns the event or NULL if no event
+   in the database has uid UID.  */
+extern Event *event_db_find_by_uid (EventDB *edb, guint uid);
+/* Look up an event by its eventid.  Returns the event or NULL if no
+   event in the database has eventid EVENTID.  */
+extern Event *event_db_find_by_eventid (EventDB *edb, const char *eventid);
+
 /* This function has a GCompareFunc type signature and can be passed
    to e.g. g_slist_sort.
 
@@ -115,8 +122,9 @@ extern gint event_compare_func (gconstpointer a, gconstpointer b);
 extern gint event_alarm_compare_func (gconstpointer a, gconstpointer b);
 
 /* Create a new event in database EDB.  If EVENTID is NULL, one is
-   fabricated.  */
-extern Event *event_new (EventDB *edb, const char *event_id);
+   fabricated.  If EVENTID is provided, it must be unique.  (Check
+   using event_db_get_by_eventid first.)  */
+extern Event *event_new (EventDB *edb, const char *eventid);
 
 /* Flush event EV to the DB now.  */
 extern gboolean event_flush (Event *ev);
@@ -138,6 +146,12 @@ extern void event_set_duration (Event *ev, unsigned long duration);
 
 extern unsigned long event_get_alarm (Event *ev) __attribute__ ((pure));
 extern void event_set_alarm (Event *ev, unsigned long alarm);
+
+/* The event's sequence number, i.e. the number of significant
+   revisions.  (Normally automatically updated at each important
+   change to the event, e.g. change of start, end, location, etc.)  */
+extern guint32 event_get_sequence (Event *ev) __attribute__ ((pure));
+extern void event_set_sequence (Event *ev, guint32 sequence);
 
 /* Recurrence type.  */
 extern enum event_recurrence_type event_get_recurrence_type (Event *ev)
