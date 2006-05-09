@@ -193,15 +193,19 @@ vevent_from_event_t (Event *event)
   /* handle recurring events */
   if (event_is_recurrence (event))
     {
-      recur_t r = event_get_recurrence (event);
       MIMEDirRecurrence *rec = mimedir_recurrence_new();
       mimedir_vcomponent_set_recurrence((MIMEDirVComponent*)vevent, rec);
-      g_object_set (G_OBJECT (rec), "frequency", r->type + 3, NULL); /* hack, known offset */
-      g_object_set (G_OBJECT (rec), "count", r->count, NULL);
-      g_object_set (G_OBJECT (rec), "unit", r->increment, NULL);
-      
-      if (r->end)     
-        if (localtime_r(&(r->end), &tm))
+      g_object_set (G_OBJECT (rec),
+		    /* hack, known offset */
+		    "frequency", event_get_recurrence_type (event) + 3, NULL);
+      g_object_set (G_OBJECT (rec),
+		    "count", event_get_recurrence_count (event), NULL);
+      g_object_set (G_OBJECT (rec),
+		    "unit", event_get_recurrence_increment (event), NULL);
+
+      time_t end = event_get_recurrence_end (event);
+      if (end)
+        if (localtime_r(&end, &tm))
           {
             MIMEDirDateTime *date;
     

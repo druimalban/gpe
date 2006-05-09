@@ -213,7 +213,7 @@ click_delete (GtkWidget *widget, GtkWidget *d)
         _("Question"), "question", "!gtk-no", NULL, "!gtk-yes", NULL, NULL))
 	event_remove (ev);
       else 
-	event_add_exception (ev, event_get_start (ev));
+	event_add_recurrence_exception (ev, event_get_start (ev));
     }
   else
     event_remove (ev);
@@ -367,57 +367,56 @@ click_ok (GtkWidget *widget, GtkWidget *d)
   else
     event_set_alarm (ev, 0);
 
-  recur_t r = event_get_recurrence (ev);
   if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->radiobuttonnone)))
-    {
-      r->type = RECUR_NONE;
-    }
+    event_set_recurrence_type (ev, RECUR_NONE);
   else
     {
       if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON
 					(s->radiobuttondaily)))
         {
-          r->type = RECUR_DAILY;
-          r->increment = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (s->dailyspin));
-          r->daymask = 0;
+	  event_set_recurrence_type (ev, RECUR_DAILY);
+	  event_set_recurrence_increment
+	    (ev, gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (s->dailyspin)));
         }
       else if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->radiobuttonweekly)))
         {
           guint i;
-          r->type = RECUR_WEEKLY;
-          r->increment = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (s->weeklyspin));
-          r->daymask = 0;
 
+	  event_set_recurrence_type (ev, RECUR_WEEKLY);
+	  event_set_recurrence_increment
+	    (ev, gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (s->weeklyspin)));
+
+	  int daymask = 0;
           for (i = 0; i < 7; i++)
-            {
-              if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->checkbuttonwday[i])))
-                r->daymask |= 1 << i;
-            }
+	    if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->checkbuttonwday[i])))
+	      daymask |= 1 << i;
+	  event_set_recurrence_daymask (ev, daymask);
         }
       else if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->radiobuttonmonthly)))
         {
-          r->type = RECUR_MONTHLY;
-          r->increment=gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (s->monthlyspin));
-          r->daymask=0;
+	  event_set_recurrence_type (ev, RECUR_MONTHLY);
+	  event_set_recurrence_increment
+	    (ev, gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (s->monthlyspin)));
         }
       else if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->radiobuttonyearly)))
         {
-          r->type = RECUR_YEARLY;
-          r->increment=gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (s->yearlyspin));
-          r->daymask=0;
+	  event_set_recurrence_type (ev, RECUR_YEARLY);
+	  event_set_recurrence_increment
+	    (ev, gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (s->yearlyspin)));
         }
 
       if (gtk_toggle_button_get_active
           (GTK_TOGGLE_BUTTON (s->radiobuttonforever)))
         {
-          r->count=0;
-          r->end=0;
+	  event_set_recurrence_count (ev, 0);
+	  event_set_recurrence_end (ev, 0);
         }
       else if (gtk_toggle_button_get_active
                (GTK_TOGGLE_BUTTON (s->radiobuttonendafter)))
         {
-          r->count=gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (s->endspin));
-          r->end=0;
+	  event_set_recurrence_count
+	    (ev, gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (s->endspin)));
+          event_set_recurrence_end (ev, 0);
         }
 
       else if (gtk_toggle_button_get_active
@@ -437,8 +436,8 @@ click_ok (GtkWidget *widget, GtkWidget *d)
           if (tm_rend.tm_isdst)
             rend_t -= 60*60;
 
-          r->count = 0;
-          r->end = rend_t;
+	  event_set_recurrence_count (ev, 0);
+	  event_set_recurrence_end (ev, rend_t);
         }
     }
 
@@ -1582,7 +1581,6 @@ edit_event (Event *ev)
 
       if (event_is_recurrence (ev))
         {
-	  recur_t r = event_get_recurrence (ev);
           switch (event_get_recurrence_type (ev))
             {
             case RECUR_NONE:
@@ -1590,29 +1588,34 @@ edit_event (Event *ev)
 
             case RECUR_DAILY:
               gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->radiobuttondaily), TRUE);
-              gtk_spin_button_set_value (GTK_SPIN_BUTTON (s->dailyspin), r->increment);
+              gtk_spin_button_set_value (GTK_SPIN_BUTTON (s->dailyspin),
+					 event_get_recurrence_increment (ev));
               break;
 
             case RECUR_WEEKLY:
               gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->radiobuttonweekly), TRUE);
-              gtk_spin_button_set_value (GTK_SPIN_BUTTON (s->weeklyspin), r->increment);
-              if (r->daymask & MON) gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->checkbuttonwday[0]), 1);
-              if (r->daymask & TUE) gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->checkbuttonwday[1]), 1);
-              if (r->daymask & WED) gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->checkbuttonwday[2]), 1);
-              if (r->daymask & THU) gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->checkbuttonwday[3]), 1);
-              if (r->daymask & FRI) gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->checkbuttonwday[4]), 1);
-              if (r->daymask & SAT) gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->checkbuttonwday[5]), 1);
-              if (r->daymask & SUN) gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->checkbuttonwday[6]), 1);
+              gtk_spin_button_set_value (GTK_SPIN_BUTTON (s->weeklyspin),
+					 event_get_recurrence_increment (ev));
+	      int daymask = event_get_recurrence_daymask (ev);
+              if (daymask & MON) gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->checkbuttonwday[0]), 1);
+              if (daymask & TUE) gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->checkbuttonwday[1]), 1);
+              if (daymask & WED) gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->checkbuttonwday[2]), 1);
+              if (daymask & THU) gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->checkbuttonwday[3]), 1);
+              if (daymask & FRI) gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->checkbuttonwday[4]), 1);
+              if (daymask & SAT) gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->checkbuttonwday[5]), 1);
+              if (daymask & SUN) gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->checkbuttonwday[6]), 1);
               break;
 
             case RECUR_MONTHLY:
               gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->radiobuttonmonthly), TRUE);
-              gtk_spin_button_set_value (GTK_SPIN_BUTTON (s->monthlyspin), r->increment);
+              gtk_spin_button_set_value (GTK_SPIN_BUTTON (s->monthlyspin),
+					 event_get_recurrence_increment (ev));
               break;
 
             case RECUR_YEARLY:
               gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->radiobuttonyearly), TRUE);
-              gtk_spin_button_set_value (GTK_SPIN_BUTTON (s->yearlyspin), r->increment);
+              gtk_spin_button_set_value (GTK_SPIN_BUTTON (s->yearlyspin),
+					 event_get_recurrence_increment (ev));
               break;
             }
 
@@ -1625,24 +1628,26 @@ edit_event (Event *ev)
 	    (GTK_TOGGLE_BUTTON (s->radiobuttonforever), FALSE);
 
 	  /* Then turn the right one on.  */
-          if (r->end)
+	  time_t end = event_get_recurrence_end (ev);
+          if (end)
 	    gtk_toggle_button_set_active
 	      (GTK_TOGGLE_BUTTON (s->radiobuttonendon), TRUE);
-          else if (r->count)
+          else if (event_get_recurrence_count (ev))
 	    gtk_toggle_button_set_active
 	      (GTK_TOGGLE_BUTTON (s->radiobuttonendafter), TRUE);
 	  else
 	    gtk_toggle_button_set_active
 	      (GTK_TOGGLE_BUTTON (s->radiobuttonforever), TRUE);
 
-	  if (r->end)
+	  if (end)
 	    {
-              localtime_r (&r->end, &tm);
+              localtime_r (&end, &tm);
               gtk_date_combo_set_date (GTK_DATE_COMBO (s->datecomboendon),
                                        tm.tm_year + 1900, tm.tm_mon,
 				       tm.tm_mday);
 	    }
-	  gtk_spin_button_set_value (GTK_SPIN_BUTTON (s->endspin), r->count);
+	  gtk_spin_button_set_value (GTK_SPIN_BUTTON (s->endspin),
+				     event_get_recurrence_count (ev));
         }
       else 
 	gtk_toggle_button_set_active

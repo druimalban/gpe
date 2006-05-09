@@ -96,35 +96,20 @@ do_import_vevent (MIMEDirVEvent *event)
 	/* Ignore, we already have this.  */;
       else if (!strcasecmp (t->tag, "rend"))
 	{
-	  recur_t r = event_get_recurrence (ev);
-	  parse_date (t->value, &r->end, NULL);
+	  time_t end;
+	  parse_date (t->value, &end, NULL);
+	  event_set_recurrence_end (ev, end);
 	}
       else if (!strcasecmp (t->tag, "rcount"))
-	{
-	  recur_t r = event_get_recurrence (ev);
-	  r->count = atoi (t->value);
-	}
+	event_set_recurrence_count (ev, atoi (t->value));
       else if (!strcasecmp (t->tag, "rincrement"))
-	{
-	  recur_t r = event_get_recurrence (ev);
-	  r->increment = atoi (t->value);
-	}
+	event_set_recurrence_increment (ev, atoi (t->value));
       else if (!strcasecmp (t->tag, "rdaymask"))
-	{
-	  recur_t r = event_get_recurrence (ev);
-	  r->daymask = atoi (t->value);
-	}
+	event_set_recurrence_daymask (ev, atoi (t->value));
       else if (!strcasecmp (t->tag, "rexceptions"))
-	{
-	  recur_t r = event_get_recurrence (ev);
-	  long rmtime = (long)atoi (t->value);
-	  r->exceptions = g_slist_append(r->exceptions,	(void *)rmtime);
-	}
+	event_add_recurrence_exception (ev, (time_t) atoi (t->value));
       else if (!strcasecmp (t->tag, "recur"))
-	{
-	  recur_t r = event_get_recurrence (ev);
-	  r->type = atoi (t->value);
-	}
+	event_set_recurrence_type (ev, atoi (t->value));
       else if (!strcasecmp (t->tag, "duration"))
 	event_set_duration (ev, atoi (t->value));
       else if (!strcasecmp (t->tag, "alarm"))

@@ -1,5 +1,14 @@
 2006-05-09  Neal H. Walfield  <neal@gnu.org>
 
+	* day_view.c (delete_event_cb): Synchronize with libevent-db API
+	changes.
+	* event-ui.c (click_delete): Likewise.
+	(click_ok): Likewise.
+	(edit_event): Likewise.
+	* import-vcal.c (do_import_vevent): Likewise.
+
+2006-05-09  Neal H. Walfield  <neal@gnu.org>
+
 	* event-list.c (gtk_event_list_reload_events): Sort
 	EVENT_LIST->EVENTS.
 	* main.c (alarms_process_pending): Sort LIST.

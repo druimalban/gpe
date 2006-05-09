@@ -34,35 +34,6 @@ enum event_recurrence_type
   RECUR_YEARLY
 };
 
-/**
- * *recur_t:
- *
- * Structure to hold recurrence information.
- */
-typedef struct recur_s
-{
-  /* iCal's FREQ property.  */
-  enum event_recurrence_type type;
-
-  /* The number of times this recurrence set is expanded.  0 means
-     there is no limit.  */
-  unsigned int count;
-  /* iCal's interval property: the number of units to skip.  If the
-     recurrence type is RECUR_YEARLY then the first recurrence occurs
-     INCREMENT years after the initial start.  */
-  unsigned int increment;
-  /* Only meaningful when TYPE is RECUR_WEEKLY: if bit 0 is set then
-     occur on Mon, bit 1, Tue, etc.  */
-  unsigned long daymask;
-
-  /* A list of start times to exclude.  Must match the start of a
-     recurrence exactly.  */
-  GSList *exceptions;
-
-  /* No recurrences beyond this time.  0 means forever.  */
-  time_t end;
-} *recur_t;
-
 #define EVENT_TYPE (event_get_type ())
 #define EVENT(obj) \
   (G_TYPE_CHECK_INSTANCE_CAST ((obj), EVENT_TYPE, struct _Event))
@@ -160,13 +131,6 @@ extern void event_acknowledge (Event *ev);
 /* g_object unref each Event * on the list and destroy the list.  */
 extern void event_list_unref (GSList *l);
 
-/* Return whether an event is a recurrent event.  */
-extern gboolean event_is_recurrence (Event *ev) __attribute__ ((pure));
-/* Return the event's recurrence data.  If this is changed, you must
-   call event_flush.  */
-extern recur_t event_get_recurrence (Event *ev) __attribute__ ((pure));
-extern void event_clear_recurrence (Event *ev);
-
 extern time_t event_get_start (Event *ev) __attribute__ ((pure));
 
 extern unsigned long event_get_duration (Event *ev) __attribute__ ((pure));
@@ -181,6 +145,14 @@ extern enum event_recurrence_type event_get_recurrence_type (Event *ev)
 extern void event_set_recurrence_type (Event *ev,
 				       enum event_recurrence_type type);
 
+/* Type of recurrence.  */
+#define event_is_recurrence(ev) \
+  (event_get_recurrence_type ((ev)) != RECUR_NONE)
+extern enum event_recurrence_type event_get_recurrence_type (Event *ev)
+     __attribute__ ((pure));
+extern void event_set_recurrence_type (Event *ev,
+				       enum event_recurrence_type type);
+
 /* Start of the recurrence set.  */
 extern time_t event_get_recurrence_start (Event *ev) __attribute__ ((pure));
 extern void event_set_recurrence_start (Event *ev, time_t start);
@@ -188,6 +160,27 @@ extern void event_set_recurrence_start (Event *ev, time_t start);
 /* End of the recurrence set.  */
 extern time_t event_get_recurrence_end (Event *ev) __attribute__ ((pure));
 extern void event_set_recurrence_end (Event *ev, time_t end);
+
+/* Number of times the recurrence is expanded.  If 0, then this not
+   does constrain the number of recurrences.  */
+extern guint32 event_get_recurrence_count (Event *ev)
+     __attribute__ ((pure));
+extern void event_set_recurrence_count (Event *ev, guint32 count);
+
+/* iCal's interval property: the number of units to skip.  If the
+   recurrence type is RECUR_YEARLY then the first recurrence occurs
+   INCREMENT years after the initial start.  */
+extern guint32 event_get_recurrence_increment (Event *ev)
+     __attribute__ ((pure));
+extern void event_set_recurrence_increment (Event *ev, guint32 increment);
+     
+/* The day mask is only meaningful if TYPE is RECUR_WEEKLY: if bit 0
+   is set then occurs on Mon, bit 1, Tue, etc.  */
+extern guint64 event_get_recurrence_daymask (Event *ev)
+     __attribute__ ((pure));
+extern void event_set_recurrence_daymask (Event *ev, guint64 daymask);
+
+extern void event_add_recurrence_exception (Event *ev, time_t start);
 
 extern gboolean event_get_untimed (Event *ev) __attribute__ ((pure));
 extern void event_set_untimed (Event *ev, gboolean value);
@@ -211,7 +204,5 @@ extern void event_add_category (Event *ev, int category);
 /* After calling this function, EV owns CATEGORIES.  If you need to
    continue to use CATEGORIES, pass a copy.  */
 extern void event_set_categories (Event *ev, GSList *categories);
-
-extern void event_add_exception (Event *ev, time_t start);
 
 #endif

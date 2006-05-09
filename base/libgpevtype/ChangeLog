@@ -1,3 +1,8 @@
+2006-05-09  Neal H. Walfield  <neal@gnu.org>
+
+	* vevent.c (vevent_from_event_t): Synchronize with libevent-db
+	API changes.
+
 2006-05-06  Phil Blundell  <pb@reciva.com>
 
 	* configure.ac (DEP_MODULES): Demand libeventdb 0.29 or newer.

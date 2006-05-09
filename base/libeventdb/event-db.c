@@ -25,20 +25,6 @@
 
 #define _(x) gettext(x)
 
-#define EVENT_DB_USE_MEMCHUNK
-#ifdef EVENT_DB_USE_MEMCHUNK
-static GMemChunk *recur_chunk;
-#define event_db__alloc_recur()		\
-	(recur_t)g_mem_chunk_alloc0 (recur_chunk)
-#define event_db__free_recur(_x)	\
-	g_mem_chunk_free (recur_chunk, _x)
-#else
-#define event_db__alloc_recur()		\
-	(recur_t)g_malloc0 (sizeof (struct recur_s))
-#define event_db__free_recur(_x)	\
-	g_free (_x)
-#endif
-
 typedef struct
 {
   GObjectClass gobject_class;
@@ -127,11 +113,32 @@ struct _Event
   unsigned long duration;	/* 0 == instantaneous */
   unsigned long alarm;		/* seconds before event */
 
-  recur_t recur;
-  
   struct event_details *details;
   struct _Event *clone_source;
   char *eventid;
+
+  /* Recurrence properties.  */
+
+  /* iCal's FREQ property.  */
+  enum event_recurrence_type type;
+
+  /* The number of times this recurrence set is expanded.  0 means
+     there is no limit.  */
+  unsigned int count;
+  /* iCal's interval property: the number of units to skip.  If the
+     recurrence type is RECUR_YEARLY then the first recurrence occurs
+     INCREMENT years after the initial start.  */
+  unsigned int increment;
+  /* Only meaningful when TYPE is RECUR_WEEKLY: if bit 0 is set then
+     occur on Mon, bit 1, Tue, etc.  */
+  unsigned long daymask;
+
+  /* A list of start times to exclude.  Must match the start of a
+     recurrence exactly.  */
+  GSList *exceptions;
+
+  /* No recurrences beyond this time.  0 means forever.  */
+  time_t end;
 
   /* The EventDB to which event belongs.  */
   EventDB *edb;
@@ -718,8 +725,6 @@ event_finalize (GObject *object)
       g_free (evd);
     }
 
-  if (event->recur)
-    event_db__free_recur (event->recur);
   if (event->eventid)
     g_free (event->eventid);
 
@@ -836,12 +841,6 @@ event_db_new (const char *fname)
   EventDB *edb = EVENT_DB (g_object_new (event_db_get_type (), NULL));
   char *err;
 
-#ifdef EVENT_DB_USE_MEMCHUNK
-  if (! recur_chunk)
-    recur_chunk = g_mem_chunk_new ("recur", sizeof (struct recur_s), 4096,
-				   G_ALLOC_AND_FREE);
-#endif
-
   edb->sqliteh = sqlite_open (fname, 0, &err);
   if (edb->sqliteh == NULL)
     goto error;
@@ -917,37 +916,21 @@ event_db_new (const char *fname)
 	      else if (!strcasecmp (argv[0], "eventid"))
 		ev->eventid = g_strdup (argv[1]);
 	      else if (!strcasecmp (argv[0], "rend"))
-		{
-		  recur_t r = event_get_recurrence (ev);
-		  parse_date (argv[1], &r->end, NULL);
-		}
+		parse_date (argv[1], &ev->end, NULL);
 	      else if (!strcasecmp (argv[0], "rcount"))
-		{
-		  recur_t r = event_get_recurrence (ev);
-		  r->count = atoi (argv[1]);
-		}
+		ev->count = atoi (argv[1]);
 	      else if (!strcasecmp (argv[0], "rincrement"))
-		{
-		  recur_t r = event_get_recurrence (ev);
-		  r->increment = atoi (argv[1]);
-		}
+		ev->increment = atoi (argv[1]);
 	      else if (!strcasecmp (argv[0], "rdaymask"))
-		{
-		  recur_t r = event_get_recurrence (ev);
-		  r->daymask = atoi (argv[1]);
-		}
+		ev->daymask = atoi (argv[1]);
 	      else if (!strcasecmp (argv[0], "rexceptions"))
 		{
-		  recur_t r = event_get_recurrence (ev);
 		  long rmtime = (long)atoi (argv[1]);
-		  r->exceptions = g_slist_append(r->exceptions,
-						 (void *) rmtime);
+		  ev->exceptions = g_slist_append (ev->exceptions,
+						   (void *) rmtime);
 		}
 	      else if (!strcasecmp (argv[0], "recur"))
-		{
-		  recur_t r = event_get_recurrence (ev);
-		  r->type = atoi (argv[1]);
-		}
+		ev->type = atoi (argv[1]);
 	      else if (!strcasecmp (argv[0], "duration"))
 		ev->duration = atoi (argv[1]);
 	      else if (!strcasecmp (argv[0], "alarm"))
@@ -976,14 +959,6 @@ event_db_new (const char *fname)
 		  free (err);
 		  g_object_unref (ev);
 		  return 1;
-		}
-
-	      if (ev->recur && ev->recur->type == RECUR_NONE)
-		{
-		  /* Old versions of gpe-calendar dumped out a load of
-		     recurrence tags even for a one-shot event.  */
-		  event_db__free_recur (ev->recur);
-		  ev->recur = NULL;
 		}
 
 	      event_db_add_internal (ev);
@@ -1246,16 +1221,15 @@ event_list (Event *ev, time_t period_start, time_t period_end, int max,
        one.  */
     return NULL;
 
-  recur_t r = ev->recur;
   /* End of recurrence period.  */
   time_t recur_end;
   if (event_is_recurrence (ev))
     {
-      if (! r->end)
+      if (! ev->end)
 	/* Never ends.  */
 	recur_end = 0;
       else
-	recur_end = r->end;
+	recur_end = ev->end;
     }
   else
     recur_end = ev->start + ev->duration;
@@ -1273,18 +1247,18 @@ event_list (Event *ev, time_t period_start, time_t period_end, int max,
 
   if (event_is_recurrence (ev))
     {
-      if (r->type == RECUR_WEEKLY && r->daymask)
+      if (ev->type == RECUR_WEEKLY && ev->daymask)
 	/* This is a weekly recurrence with a day mask: find the
 	   first day which, starting with S, occurs in
-	   R->DAYMASK.  */
+	   EV->DAYMASK.  */
 	{
 	  struct tm tm;
 	  localtime_r (&recur_start, &tm);
 
 	  int i;
 	  for (i = tm.tm_wday; i < tm.tm_wday + 7; i ++)
-	    /* R->DAYMASK is Monday based, not Sunday.  */
-	    if ((1 << ((i - 1) % 7)) & r->daymask)
+	    /* EV->DAYMASK is Monday based, not Sunday.  */
+	    if ((1 << ((i - 1) % 7)) & ev->daymask)
 	      break;
 	  if (i != tm.tm_wday)
 	    recur_start = time_add_days (recur_start, i - tm.tm_wday);
@@ -1295,13 +1269,13 @@ event_list (Event *ev, time_t period_start, time_t period_end, int max,
       localtime_r (&recur_start, &orig);
 
       GSList *list = NULL;
-      int increment = r->increment > 0 ? r->increment : 1;
+      int increment = ev->increment > 0 ? ev->increment : 1;
       int count;
       for (count = 0;
 	   (! period_end
 	    || recur_start - (per_alarm ? ev->alarm : 0) <= period_end)
 	     && (! recur_end || recur_start <= recur_end)
-	     && (r->count == 0 || count < r->count);
+	     && (ev->count == 0 || count < ev->count);
 	   count ++)
 	{
 	  if ((per_alarm && period_start <= recur_start - ev->alarm)
@@ -1312,7 +1286,7 @@ event_list (Event *ev, time_t period_start, time_t period_end, int max,
 	      GSList *i;
 
 	      /* ... unless there happens to be an exception.  */
-	      for (i = r->exceptions; i; i = g_slist_next (i))
+	      for (i = ev->exceptions; i; i = g_slist_next (i))
 		if ((long) i->data == recur_start)
 		  break;
 
@@ -1332,7 +1306,7 @@ event_list (Event *ev, time_t period_start, time_t period_end, int max,
 	    }
 
 	  /* Advance to the next recurrence.  */
-	  switch (r->type)
+	  switch (ev->type)
 	    {
 	    case RECUR_DAILY:
 	      /* Advance S by INCREMENT days.  */
@@ -1340,7 +1314,7 @@ event_list (Event *ev, time_t period_start, time_t period_end, int max,
 	      break;
 
 	    case RECUR_WEEKLY:
-	      if (! r->daymask)
+	      if (! ev->daymask)
 		/* Empty day mask, simply advance S by
 		   INCREMENT weeks.  */
 		recur_start = time_add_days (recur_start, 7 * increment);
@@ -1350,8 +1324,8 @@ event_list (Event *ev, time_t period_start, time_t period_end, int max,
 		  localtime_r (&recur_start, &tm);
 		  int i;
 		  for (i = tm.tm_wday + 1; i < tm.tm_wday + 1 + 7; i ++)
-		    /* R->DAYMASK is Monday based, not Sunday.  */
-		    if ((1 << ((i - 1) % 7)) & r->daymask)
+		    /* EV->DAYMASK is Monday based, not Sunday.  */
+		    if ((1 << ((i - 1) % 7)) & ev->daymask)
 		      {
 			if ((i % 7) == orig.tm_wday)
 			  /* We wrapped a week: increment by
@@ -1414,7 +1388,7 @@ event_list (Event *ev, time_t period_start, time_t period_end, int max,
 
 	    default:
 	      g_critical ("Event %s has an invalid recurrence type: %d\n",
-			  ev->eventid, r->type);
+			  ev->eventid, ev->type);
 	      break;
 	    }
 	}
@@ -1630,36 +1604,29 @@ event_write (Event *ev, char **err)
       || insert_values (ev->edb->sqliteh, ev->uid, "eventid", "%q", ev->eventid))
     goto exit;
 
-  recur_t r = ev->recur;
-  if (r)
-    {
-      if (insert_values (ev->edb->sqliteh, ev->uid, "recur", "%d", r->type)
-	  || insert_values (ev->edb->sqliteh, ev->uid, "rcount", "%d", r->count)
-	  || insert_values (ev->edb->sqliteh, ev->uid, "rincrement", "%d", r->increment)
-	  || insert_values (ev->edb->sqliteh, ev->uid, "rdaymask", "%d", r->daymask))
-        goto exit;
+  if (insert_values (ev->edb->sqliteh, ev->uid, "recur", "%d", ev->type)
+      || insert_values (ev->edb->sqliteh, ev->uid, "rcount", "%d", ev->count)
+      || insert_values (ev->edb->sqliteh, ev->uid, "rincrement", "%d",
+			ev->increment)
+      || insert_values (ev->edb->sqliteh, ev->uid, "rdaymask", "%d",
+			ev->daymask))
+    goto exit;
 
-      if (ev->recur->exceptions)
-	{
-	  GSList *iter;
-	  for (iter = ev->recur->exceptions; iter; iter = g_slist_next (iter))
-	    if (insert_values (ev->edb->sqliteh, ev->uid, "rexceptions", "%d",
-			       (long) iter->data)) goto exit;
-	}
+  if (ev->exceptions)
+    {
+      GSList *iter;
+      for (iter = ev->exceptions; iter; iter = g_slist_next (iter))
+	if (insert_values (ev->edb->sqliteh, ev->uid, "rexceptions", "%d",
+			   (long) iter->data)) goto exit;
+    }
       	      
-      if (r->end != 0)
-        {
-          gmtime_r (&r->end, &tm);
-          strftime (buf_end, sizeof (buf_end), 
+  if (ev->end != 0)
+    {
+      gmtime_r (&ev->end, &tm);
+      strftime (buf_end, sizeof (buf_end), 
                 ev->untimed ? "%Y-%m-%d" : "%Y-%m-%d %H:%M",
                 &tm); 
-          if (insert_values (ev->edb->sqliteh, ev->uid, "rend", "%q", buf_end)) 
-            goto exit;
-        }
-    }
-  else
-    {
-      if (insert_values (ev->edb->sqliteh, ev->uid, "recur", "%d", RECUR_NONE))
+      if (insert_values (ev->edb->sqliteh, ev->uid, "rend", "%q", buf_end)) 
 	goto exit;
     }
 
@@ -1830,53 +1797,6 @@ event_new (EventDB *edb, const char *eventid)
   return NULL;
 }
 
-/**
- * event_get_recurrence:
- * @ev: Event
- * 
- * Retrieves recurrence information for an event.
- *
- * Returns: Recurrence information for the given event.
- */
-recur_t
-event_get_recurrence (Event *ev)
-{
-  LIVE (ev);
-  ev = RESOLVE_CLONE (ev);
-
-  if (ev->recur)
-    return ev->recur;
-
-  ev->recur = event_db__alloc_recur ();
-  ev->recur->type = RECUR_NONE;
-  return ev->recur;
-}
-
-gboolean
-event_is_recurrence (Event *ev)
-{
-  LIVE (ev);
-  ev = RESOLVE_CLONE (ev);
-  if (ev->recur == NULL)
-    return FALSE;
-
-  return !(ev->recur->type == RECUR_NONE);
-}
-
-void
-event_clear_recurrence (Event *ev)
-{
-  LIVE (ev);
-  ev = RESOLVE_CLONE (ev);
-  STAMP (ev);
-
-  if (ev->recur == NULL)
-    return;
-
-  event_db__free_recur (ev->recur);
-  ev->recur = NULL;
-}
-
 time_t
 event_get_start (Event *ev)
 {
@@ -1915,7 +1835,7 @@ event_get_start (Event *ev)
 
 GET_SET (unsigned long, duration, duration, FALSE)
 GET_SET (unsigned long, alarm, alarm, TRUE)
-GET_SET (enum event_recurrence_type, recurrence_type, recur->type, FALSE)
+GET_SET (enum event_recurrence_type, recurrence_type, type, TRUE)
 GET (time_t, recurrence_start, start)
 
 void
@@ -1943,7 +1863,10 @@ event_set_recurrence_start (Event *ev, time_t start)
     event_add_upcoming_alarms (ev);
 }
 
-GET_SET (time_t, recurrence_end, recur->end, TRUE)
+GET_SET (time_t, recurrence_end, end, TRUE)
+GET_SET (guint32, recurrence_count, count, TRUE)
+GET_SET (guint32, recurrence_increment, increment, TRUE)
+GET_SET (guint64, recurrence_daymask, daymask, TRUE)
 
 GET_SET (gboolean, untimed, untimed, FALSE);
 
@@ -2008,13 +1931,11 @@ event_set_categories (Event *ev, GSList *categories)
 }
 
 void
-event_add_exception (Event *ev, time_t start)
+event_add_recurrence_exception (Event *ev, time_t start)
 {
   LIVE (ev);
   ev = RESOLVE_CLONE (ev);
   STAMP (ev);
-  g_return_if_fail (ev->recur);
 
-  ev->recur->exceptions = g_slist_append (ev->recur->exceptions,
-					  (void *) start);
+  ev->exceptions = g_slist_append (ev->exceptions, (void *) start);
 }

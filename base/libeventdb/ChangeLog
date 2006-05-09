@@ -1,5 +1,38 @@
 2006-05-09  Neal H. Walfield  <neal@gnu.org>
 
+	* gpe/event-db.h (recur_s): Remove structure and relocate
+	fields from here...
+	* event-db.c (struct _Event): ... to here.  Update users.
+	* gpe/event-db.h (event_get_recurrence): Remove declaration.
+	(event_clear_recurrence): Likewise.
+	(event_is_recurrence): Replace declaration with define.
+	(event_get_recurrence_type): New declaration.
+	(event_set_recurrence_type): Likewise.
+	(event_get_recurrence_count): Likewise.
+	(event_set_recurrence_count): Likewise.
+	(event_get_recurrence_increment): Likewise.
+	(event_set_recurrence_increment): Likewise.
+	(event_get_recurrence_daymask): Likewise.
+	(event_set_recurrence_daymask): Likewise.
+	(event_add_exception): Rename from this...
+	(event_add_recurrence_exception): ... to this.
+	* event-db.c (recur_chunk): Remove variable.
+	(event_db__alloc_recur): Don't define.
+	(event_db__free_recur): Don't define.
+	(event_get_recurrence): Remove function.
+	(event_is_recurrence): Likewise.
+	(event_clear_recurrence): Likewise.
+	(event_get_recurrence_count): Likewise.
+	(event_set_recurrence_count): Likewise.
+	(event_get_recurrence_increment): Likewise.
+	(event_set_recurrence_increment): Likewise.
+	(event_get_recurrence_daymask): Likewise.
+	(event_set_recurrence_daymask): Likewise.
+	(event_add_exception): Rename from this...
+	(event_add_recurrence_exception): ... to this.
+
+2006-05-09  Neal H. Walfield  <neal@gnu.org>
+
 	* gpe/event-db.h: Note that none of the functions which return a
 	GSList return a sorted list.
 	(event_compare_func): New declaration.

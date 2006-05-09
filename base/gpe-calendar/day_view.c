@@ -447,7 +447,7 @@ delete_event_cb (GtkWidget *widget, GtkWidget *dv)
 	event_remove (ev);
       else
 	{
-	  event_add_exception (ev, event_get_start (ev));
+	  event_add_recurrence_exception (ev, event_get_start (ev));
 	  event_flush (ev);
 	}
     }
