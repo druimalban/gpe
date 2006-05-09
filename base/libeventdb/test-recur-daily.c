@@ -46,7 +46,7 @@ do_test (int argc, char *argv[])
     error (1, 0, "evend_db_new");
 
   Event *ev = event_new (edb, NULL);
-  event_set_start (ev, now);
+  event_set_recurrence_start (ev, now);
 #define D 100
   event_set_duration (ev, D);
   recur_t r = event_get_recurrence (ev);
@@ -59,7 +59,7 @@ do_test (int argc, char *argv[])
   event_flush (ev);
 
   Event *ev2 = event_new (edb, NULL);
-  event_set_start (ev2, now + D);
+  event_set_recurrence_start (ev2, now + D);
   event_set_duration (ev2, D);
   r = event_get_recurrence (ev2);
   /* Every day until 10 days from start.  */

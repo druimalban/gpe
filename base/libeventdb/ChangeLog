@@ -5,6 +5,13 @@
 	(event_set_start): Rename from this...
 	(event_set_recurrence_start): ... to this.
 
+	* test-alarms.c (do_test): Don't call event_set_start but
+	event_set_recurrence_start.
+	* test-event-list.c (do_test): Likewise.
+	* test-recur-daily.c (do_test): Likewise.
+	* test-recur-monthly.c (do_test): Likewise.
+	* test-recur-weekly.c (do_test): Likewise.
+
 2006-05-08  Neal H. Walfield  <neal@gnu.org>
 
 	* gpe/event-db.h (EVENT_TYPE_DB): Rename from this...

@@ -56,7 +56,7 @@ do_test (int argc, char *argv[])
 
   /* One time event -- no alarm.  */
   Event *ev = event_new (edb, NULL);
-  event_set_start (ev, now);
+  event_set_recurrence_start (ev, now);
 #define D 100
   event_set_duration (ev, D);
   event_flush (ev);
@@ -64,14 +64,14 @@ do_test (int argc, char *argv[])
   /* One time event -- alarm.  */
   Event *ev2 = event_new (edb, NULL);
 #define ALARM 10
-  event_set_start (ev2, now + INTERVAL * 2 + ALARM * 2);
+  event_set_recurrence_start (ev2, now + INTERVAL * 2 + ALARM * 2);
   event_set_duration (ev2, D);
   event_set_alarm (ev2, ALARM);
   event_flush (ev2);
 
   /* Daily event -- alarm.  */
   Event *ev3 = event_new (edb, NULL);
-  event_set_start (ev3, now + ALARM);
+  event_set_recurrence_start (ev3, now + ALARM);
   event_set_duration (ev3, 1);
   event_set_alarm (ev3, ALARM);
   recur_t r = event_get_recurrence (ev3);

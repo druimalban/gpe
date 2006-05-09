@@ -46,7 +46,7 @@ do_test (int argc, char *argv[])
     error (1, 0, "evend_db_new");
 
   Event *ev = event_new (edb, NULL);
-  event_set_start (ev, now);
+  event_set_recurrence_start (ev, now);
 #define D 100
   event_set_duration (ev, D);
   event_flush (ev);
