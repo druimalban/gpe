@@ -1,5 +1,15 @@
 2006-05-09  Neal H. Walfield  <neal@gnu.org>
 
+	* gpe/event-db.h: Note that none of the functions which return a
+	GSList return a sorted list.
+	(event_compare_func): New declaration.
+	(event_alarm_compare_func): Likewise.
+
+	* event-db.c (event_compare_func): New function.
+	(event_alarm_compare_func): Likewise.
+
+2006-05-09  Neal H. Walfield  <neal@gnu.org>
+
 	* gpe/event-db.h (event_set_start): Remove declaration.
 	* event-db.c (event_set_recurrence_start): Remove function.
 	(event_set_start): Rename from this...

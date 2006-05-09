@@ -1551,6 +1551,32 @@ event_db_untimed_list_for_period (EventDB *edb, time_t start, time_t end)
 	sqlite_exec_printf (db, "insert into calendar values (%d, '%q', '" format "')", \
 			    NULL, NULL, err, id, key, value)
 
+gint
+event_compare_func (gconstpointer a, gconstpointer b)
+{
+  Event *i = EVENT (a);
+  Event *j = EVENT (b);
+
+  if (i->start < j->start)
+    return -1;
+  if (j->start < i->start)
+    return 1;
+  if (i->duration < j->duration)
+    return -1;
+  if (j->duration < i->duration)
+    return -1;
+  return 0;
+}
+
+gint
+event_alarm_compare_func (gconstpointer a, gconstpointer b)
+{
+  Event *i = EVENT (a);
+  Event *j = EVENT (b);
+
+  return (i->start - i->alarm) - (j->start - j->alarm);
+}
+
 /* Dump an event to the SQL database.  */
 static gboolean
 event_write (Event *ev, char **err)

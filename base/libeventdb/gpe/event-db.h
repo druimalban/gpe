@@ -110,23 +110,38 @@ extern Event *event_db_find_by_uid (EventDB *evd, guint uid);
 extern Event *event_db_next_alarm (EventDB *edb, time_t now);
 
 /* Return the events in the event database EVD which occur between
-   START and END.  */
+   START and END.  The list is not sorted.  */
 extern GSList *event_db_list_for_period (EventDB *evd,
 					 time_t start, time_t end);
 /* Like event_db_list but returns the events whose alarm goes off
-   between START and END.  */
+   between START and END.  The list is not sorted.  */
 extern GSList *event_db_list_alarms_for_period (EventDB *evd,
 						time_t start, time_t end);
 /* Like event_db_list_for_period but only for untimed events
-   (i.e. which with a 0 length duration).  */
+   (i.e. which with a 0 length duration).  The list is not sorted.  */
 extern GSList *event_db_untimed_list_for_period (EventDB *evd,
 						 time_t start, time_t end);
 
-/* Returns the list of unacknowledged events since EDB was last such
-   down and turns on the "alarm-fire" event.  Only call this function
-   once at start up after having connected to the "alarm-fire"
-   signal.  */
+/* Returns the list of unacknowledged events since EDB was last shut
+   down and turns on the "alarm-fire" event.  The list is not sorted.
+   Only call this function once at start up after having connected to
+   the "alarm-fire" signal.  */
 extern GSList *event_db_list_unacknowledged_alarms (EventDB *edb);
+
+/* This function has a GCompareFunc type signature and can be passed
+   to e.g. g_slist_sort.
+
+   Returns -1 if A occurs before B (or, if they start at the same
+   time, if A is shorter).  Returns 1 if B occurs before A (or, if
+   they start at the same time, if B is shorter).  Otherwise 0.  */
+extern gint event_compare_func (gconstpointer a, gconstpointer b);
+
+/* This function has a GCompareFunc type signature and can be passed
+   to e.g. g_slist_sort.
+
+   Returns -1 if A's alarm goes off before B's.  Returns 1 if B's
+   alarm goes off before A's.  Otherwise 0.  */
+extern gint event_alarm_compare_func (gconstpointer a, gconstpointer b);
 
 /* Create a new event in database EDB.  If EVENTID is NULL, one is
    fabricated.  */
