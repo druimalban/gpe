@@ -1,5 +1,10 @@
 2006-05-09  Neal H. Walfield  <neal@gnu.org>
 
+	* day_view.c (gtk_day_view_reload_events): When an event is not
+	needed, dereference it immediately.  Free EVENTS.
+
+2006-05-09  Neal H. Walfield  <neal@gnu.org>
+
 	* day_render.c (event_ends): Remove define.
 	(found_node): Remove variable.
 	(make_set): Likewise.

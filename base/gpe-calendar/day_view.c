@@ -258,7 +258,7 @@ gtk_day_view_reload_events (GtkView *view)
   time_t t = gtk_view_get_time (view);
   struct tm vt;
   time_t end, start;
-  GSList *reminders, *cleanup;
+  GSList *reminders;
   GSList *events, *appointments, *iter;
 
   localtime_r (&t, &vt);
@@ -273,7 +273,6 @@ gtk_day_view_reload_events (GtkView *view)
   events = event_db_list_for_period (event_db, start, end);
   reminders = NULL;
   appointments = NULL;
-  cleanup = NULL;
   for (iter = events; iter; iter = iter->next)
     {
       Event *ev = iter->data;
@@ -283,14 +282,13 @@ gtk_day_view_reload_events (GtkView *view)
 	      && event_get_start (ev) <= start + 24 * 60 * 60)
 	    reminders = g_slist_append (reminders, ev);
 	  else
-	    cleanup = g_slist_append (cleanup, ev);
+	    g_object_unref (ev);
 	}
       else
 	appointments = g_slist_append (appointments, ev);
     }
 
-  if (cleanup)
-    event_list_unref (cleanup);
+  g_slist_free (events);
 
   if (! reminders && day_view->reminders)
     /* There are no longer any reminders, destroy its render area.  */
