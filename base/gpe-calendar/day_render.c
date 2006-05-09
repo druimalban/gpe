@@ -28,14 +28,14 @@
 
 #define _(x) gettext(x)
 
-static GNode *find_overlapping_sets (GSList * events);
-static GSList *ol_sets_to_rectangles (GtkDayRender *dr, GNode * node);
-
-#define event_ends(event) \
-  (event_get_start (event) + event_get_duration (event))
+// #define DEBUG
+#ifdef DEBUG
+#define D(x) x
+#else
+#define D(x) do { } while (0)
+#endif
 
 static GdkPixbuf *bell_pb;
-static GSList *found_node;
 
 struct event_rect
 {
@@ -46,10 +46,9 @@ struct event_rect
   Event *event;
 };
 
-/* Create a new event rectangle.  */
-static struct event_rect *event_rect_new (GtkDayRender *day_render,
-					  Event *event,
-					  gint column, gint columns);
+static struct event_rect * event_rect_new (GtkDayRender *day_render,
+					   Event *event,
+					   gfloat x, gfloat width);
 
 /* Delete an event rectangle returned by event_rect_new.  */
 static void event_rect_delete (struct event_rect *ev);
@@ -826,12 +825,239 @@ gtk_day_render_button_press (GtkWidget *widget, GdkEventButton *event)
   return FALSE;
 }
 
+static void
+calc_events_positions (GtkDayRender *day_render)
+{
+  GSList *er;
+
+  /* Free any extant rectangles.  */
+  for (er = day_render->event_rectangles; er; er = er->next)
+    event_rect_delete ((struct event_rect *) er->data);
+  g_slist_free (day_render->event_rectangles);
+  day_render->event_rectangles = NULL;
+
+  /* If there are no events, then we are done.  */
+  if (! day_render->events)
+    return;
+
+  /* Return TRUE if A and B overlap, FALSE otherwise.  */
+  gboolean overlap (Event *a, Event *b)
+    {
+      if (event_get_start (a) <= event_get_start (b)
+	  && (event_get_start (b)
+	      < event_get_start (a) + event_get_duration (a)))
+	/* Start of B occurs during A.  */
+	return TRUE;
+      if (event_get_start (b) <= event_get_start (a)
+	  && (event_get_start (a)
+	      < event_get_start (b) + event_get_duration (b)))
+	/* Start of A occurs during B.  */
+	return TRUE;
+      if (event_get_start (b) < event_get_start (a) + event_get_duration (a)
+	  && (event_get_start (a) + event_get_duration (a)
+	      <= event_get_start (b) + event_get_duration (b)))
+	/* End of A occurs during B.  */
+	return TRUE;
+      /* We don't need to check if the end of B occurs during A as
+	 this cannot occur without one of the above conditions also
+	 occuring.  */
+      return FALSE;
+    }
+
+  /* Returns -1 if A occurs before B (or, if they start at the same
+     time, if A is shorter).  Returns 1 if B occurs before A (or, if
+     they start at the same time, if B is shorter).  Otherwise 0.  */
+  gint cmp (Event *a, Event *b)
+    {
+      if (event_get_start (a) < event_get_start (b))
+	return -1;
+      else if (event_get_start (b) < event_get_start (a))
+	return 1;
+      else if (event_get_duration (a) < event_get_duration (b))
+	return -1;
+      else if (event_get_duration (b) < event_get_duration (a))
+	return 1;
+      return 0;
+    }
+
+  /* Calculate the number of other events with which each event
+     directly overlaps.  */
+  int n = g_slist_length (day_render->events);
+  struct info
+  {
+    Event *event;
+    int direct_overlap;
+  };
+  struct info info[n];
+  memset (info, 0, sizeof (info));
+
+  int i, j;
+  GSList *a, *b;
+  for (a = day_render->events, i = 0; a; a = a->next, i ++)
+    {
+      info[i].event = a->data;
+
+      for (b = a->next, j = i + 1; b; b = b->next, j ++)
+	if (overlap (a->data, b->data))
+	  {
+	    info[i].direct_overlap ++;
+	    info[j].direct_overlap ++;
+	  }
+    }
+
+  /* A and B overlap.  Returns TRUE if A dominates B.  An event
+     dominates another if it directly overlaps with more events than
+     the other or, if the direct overlap is equivalent and it occurs
+     earlier.  */
+  gboolean dominates (struct info *a, struct info *b)
+    {
+      if (a->direct_overlap > b->direct_overlap)
+	return TRUE;
+      if (b->direct_overlap > a->direct_overlap)
+	return FALSE;
+      return cmp (a->event, b->event) < 0;
+    }
+
+  /* Given node N, insert it into the tree.  */
+  void insert (GNode *root, GNode *node)
+    {
+      struct info *n = node->data;
+      GNode *child;
+
+      D (printf ("%s:%d: inserting %s\n",
+		 __func__, __LINE__, event_get_summary (n->event)));
+
+      child = root->children;
+      while (child)
+	{
+	  struct info *c = child->data;
+
+	  if (overlap (c->event, n->event))
+	    /* CHILD and NODE overlap.  */
+	    {
+	      D (printf ("%s:%d: %.10s overlaps with %.10s\n",
+			 __func__, __LINE__,
+			 event_get_summary (n->event),
+			 event_get_summary (c->event)));
+
+	      if (dominates (n, c))
+		/* N dominates C (and transitively, everything which C
+		   dominates is also dominated by N).  Replace C with
+		   N and proceed to insert C under N.  If may also be
+		   the case that N dominates some of the events
+		   following C.  Consider those.  One of those may in
+		   turn dominate C.  */
+		{
+		  g_node_insert_before (root, child, node);
+
+		  GNode *next;
+		  do
+		    {
+		      D (printf ("%s:%d: %s (%d) dominates %s (%d)\n",
+				 __func__, __LINE__,
+				 event_get_summary (n->event),
+				 n->direct_overlap,
+				 event_get_summary (c->event),
+				 c->direct_overlap));
+
+		      next = child->next;
+		      g_node_unlink (child);
+		      g_node_append (node, child);
+
+		      if (! next)
+			break;
+
+		      child = next;
+		      c = child->data;
+		    }
+		  while (overlap (c->event, n->event)
+			 && dominates (n, c));
+
+		  if (next && overlap (c->event, n->event) && dominates (c, n))
+		    {
+		      D (printf ("%s:%d: and is dominated by %.10s (%d)\n",
+				 __func__, __LINE__,
+				 event_get_summary (c->event),
+				 c->direct_overlap));
+		      g_node_unlink (node);
+		      g_node_prepend (child, node);
+		    }
+		  break;
+		}
+	      else
+		{
+		  D (printf (" continuing with %.10s as root\n",
+			     event_get_summary (c->event)));
+
+		  /* C dominates N.  N belongs under C.  */
+		  root = child;
+		  child = child->children;
+		}
+	    }
+	  else if (cmp (n->event, c->event) < 0)
+	    {
+	      D (printf ("%s:%d: %.10s occurs before %.10s\n",
+			 __func__, __LINE__,
+			 event_get_summary (n->event),
+			 event_get_summary (c->event)));
+	      g_node_insert_before (root, child, node);
+	      break;
+	    }
+	  else if (! child->next)
+	    {
+	      /* CHILD ends before NODE but a child of CHILD could
+		 overlap with NODE.  */
+	      child = child->children;
+	    }
+	  else
+	    child = child->next;
+	}
+
+      if (! child)
+	/* Occurs after any child.  */
+	{
+	  D (printf ("%s:%d: %.10s occurs after any child of %.10s\n",
+		     __func__, __LINE__,
+		     event_get_summary (n->event),
+		     root->data
+		     ? event_get_summary (((struct info *) root->data)->event)
+		     : "ROOT"));
+	  g_node_append (root, node);
+	}
+    }
+
+  GNode *root = g_node_new (NULL);
+  for (i = 0; i < n; i ++)
+    insert (root, g_node_new (&info[i]));
+
+  void traverse (GNode *node, gfloat left)
+    {
+      if (node->data)
+	{
+	  struct info *info = node->data;
+	  int cols = g_node_max_height (node);
+	  gfloat width = left / cols;
+
+	  D (printf ("Event %.10s at depth=%d, x=%g, width=%g\n",
+		     event_get_summary (info->event),
+		     g_node_depth (node), 1 - left, width));
+	  event_rect_new (day_render, info->event, 1 - left, width);
+
+	  left -= width;
+	}
+
+      GNode *i;
+      for (i = node->children; i; i = i->next)
+	traverse (i, left);
+    }
+
+  traverse (root, 1);
+}
+
 void
 gtk_day_render_set_events (GtkDayRender *day_render, GSList *events,
 			   time_t date)
 {
-  GSList *er;
-
   day_render->date = date;
 
   event_list_unref (day_render->events);
@@ -840,13 +1066,7 @@ gtk_day_render_set_events (GtkDayRender *day_render, GSList *events,
   day_render->event_earliest = day_render->date + day_render->duration;
   day_render->event_latest = day_render->date;
 
-  for (er = day_render->event_rectangles; er; er = er->next)
-    event_rect_delete ((struct event_rect *) er->data);
-  g_slist_free (day_render->event_rectangles);
-
-  day_render->event_rectangles
-    = ol_sets_to_rectangles (day_render,
-			     find_overlapping_sets (day_render->events));
+  calc_events_positions (day_render);
 
   gtk_day_render_update_extents (day_render);
   gtk_widget_queue_draw (GTK_WIDGET (day_render));
@@ -889,116 +1109,9 @@ gtk_day_render_update_extents (GtkDayRender *day_render)
 				 * day_render->rows_visible);
 }
 
-/**
- * Make new set used by overlapping set 
- */
-static GNode *
-make_set (Event *e)
-{
-  GSList *set = NULL;
-  set = g_slist_append (set, e);
-
-  return g_node_new (set);
-
-}
-
-static gboolean
-events_overlap (Event *ev1, Event *ev2)
-{				
-  /* Event overlaps if and only if they intersect */
-  if (is_reminder (ev1) && is_reminder (ev2))
-    return TRUE;
-  if (ev1 == ev2)
-    return FALSE;
-  if (event_get_start (ev1) == event_get_start (ev2)
-      && event_ends (ev1) == event_ends (ev2))
-    return TRUE;
-  return (event_get_start (ev1) <= event_get_start (ev2)
-	  && event_ends (ev1) < event_get_start (ev2))
-    || (event_get_start (ev1) >= event_get_start (ev2)
-	&& event_ends (ev2) > event_get_start (ev1));
-}
-
-static gboolean
-find_set_in_list (GNode * node, gpointer data)
-{
-  GSList *iter, *ol_set;
-  Event *ev = data;
-  Event *ev2;
-
-
-  if (node == NULL)
-    {
-      found_node = NULL;
-      return TRUE;
-    }
-
-  ol_set = node->data;
-
-  for (iter = ol_set; iter; iter = iter->next)
-    {
-      ev2 = iter->data;
-      if (ev2 == ev)
-	continue;		/* Ignore us */
-
-      if (events_overlap (ev, ev2))
-	{
-	  found_node = ol_set;
-	  return TRUE;
-	}
-    }
-  found_node = NULL;
-  return FALSE;
-}
-
-/* Returns the overlapping set */
-static GSList *
-find_set (GNode * root, Event *ev)
-{
-  found_node = NULL;
-
-  g_node_traverse (root, G_IN_ORDER, G_TRAVERSE_ALL, -1, find_set_in_list, ev);
-
-  return found_node;
-}
-
-
-static GSList *
-union_set (GSList * set, Event *ev)
-{
-  return (g_slist_append (set, ev));
-}
-
-static GNode *
-find_overlapping_sets (GSList * events)
-{
-  GNode *root;
-  GSList *iter = NULL;
-  GSList *set = NULL;
-
-  root = g_node_new (NULL);
-
-  for (iter = events; iter; iter = iter->next)
-    {
-      Event *ev = iter->data;
-      set = find_set (root, ev);
-
-      if (set == NULL)		/* the event doesn't overlap */
-	{
-	  g_node_insert (root, -1, make_set (ev));
-	}
-      else
-	{
-	  set = union_set (set, ev);
-	}
-    }
-
-  return root;
-}
-
 static struct event_rect *
 event_rect_new (GtkDayRender *day_render, Event *event,
-		gint column, gint columns)
+		gfloat x, gfloat width)
 {
   struct event_rect *ev_rect = g_malloc (sizeof (struct event_rect));
 
@@ -1029,10 +1142,9 @@ event_rect_new (GtkDayRender *day_render, Event *event,
 	ev_rect->height = 1 - ev_rect->y;
     }
 
-  ev_rect->x = (gfloat) column / columns;
-  ev_rect->width = 1.0 / columns;
-
   ev_rect->event = event;
+  ev_rect->x = x;
+  ev_rect->width = width;
 
   /* Is this the earliest event so far?  */
   if (event_get_start (event) < day_render->event_earliest)
@@ -1049,6 +1161,9 @@ event_rect_new (GtkDayRender *day_render, Event *event,
 	      ? 60 * 60 : event_get_duration (event)),
 	     day_render->date + day_render->duration);
 
+  day_render->event_rectangles
+    = g_slist_prepend (day_render->event_rectangles, ev_rect);
+
   return ev_rect;
 }
 
@@ -1056,32 +1171,4 @@ static void
 event_rect_delete (struct event_rect *ev)
 {
   g_free (ev);
-}
-
-static GSList *
-ol_sets_to_rectangles (GtkDayRender *day_render, GNode * node)
-{
-  GSList *iter, *ev_rects = NULL;
-  GNode *n;
-  gint column;
-  Event *ev;
-  gint columns;
-  struct event_rect *event_rect;
-
-  for (n = node->children; n; n = n->next)
-    {
-      column = 0;
-
-      columns = g_slist_length (n->data);
-      for (iter = n->data; iter; iter = g_slist_next (iter))
-	{
-	  ev = EVENT (iter->data);
-
-	  event_rect = event_rect_new (day_render, ev, column, columns);
-	  ++column;
-	  ev_rects = g_slist_append (ev_rects, event_rect);
-	}
-    }
-
-  return ev_rects;
 }
