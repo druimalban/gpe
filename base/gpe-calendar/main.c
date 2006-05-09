@@ -576,8 +576,10 @@ import_one_file(gchar *filename)
 {
   int result = 0;
     
-  result = import_vcal(filename);
+  result = import_vcal (filename);
     
+  update_view ();
+
   return result;
 }
 

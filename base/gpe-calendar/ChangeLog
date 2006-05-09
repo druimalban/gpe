@@ -1,5 +1,16 @@
 2006-05-09  Neal H. Walfield  <neal@gnu.org>
 
+	* import-vcal.c (parse_date): Remove function.
+	(do_import_vevent): Rewrite.
+
+	* main.c (import_one_file): Call update_view after loading a
+	calendar.
+
+	* event-cal.c (update_cal): T is the last valid second, not first
+	invalid second.
+
+2006-05-09  Neal H. Walfield  <neal@gnu.org>
+
 	* day_view.c (delete_event_cb): Synchronize with libevent-db API
 	changes.
 	* event-ui.c (click_delete): Likewise.

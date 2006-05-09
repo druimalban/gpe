@@ -33,96 +33,184 @@
 
 #define TODO_DB_NAME "/.gpe/todo"
 
-static gboolean
-parse_date (const char *s, time_t *t, gboolean *date_only)
-{
-  struct tm tm;
-
-  char *p;
-  memset (&tm, 0, sizeof (tm));
-  p = strptime (s, "%Y-%m-%d", &tm);
-  if (p == NULL)
-    {
-      fprintf (stderr, "Unable to parse date: %s\n", s);
-      return FALSE;
-    }
-
-  p = strptime (p, " %H:%M", &tm);
-
-  if (date_only)
-    *date_only = (p == NULL) ? TRUE : FALSE;
-
-  *t = timegm (&tm);
-  return TRUE;
-}
-
 static void
 do_import_vevent (MIMEDirVEvent *event)
 {
-  GSList *tags, *i;
   Event *ev;
 
-  tags = vevent_to_tags (event);
+  char *uid = NULL;
+  g_object_get (event, "uid", &uid, NULL);
+  if (uid)
+    ev = event_db_find_by_eventid (event_db, uid);
+  if (! ev)
+    ev = event_new (event_db, uid);
 
-  /* First find the eventid.  */
-  const char *eventid = NULL;
-  for (i = tags; i; i = i->next)
+  MIMEDirDateTime *dtstart = NULL;
+  g_object_get (event, "dtstart", &dtstart, NULL);
+  if (! dtstart)
     {
-      gpe_tag_pair *t = i->data;
-      if (!strcasecmp (t->tag, "eventid"))
-	{
-	  eventid = t->value;
-	  break;
-	}
+      g_critical ("%s: Event %s has no dtstart", __func__, uid);
+      goto out;
     }
 
-  ev = event_new (event_db, eventid);
+  mimedir_datetime_to_utc (dtstart);
+  time_t start = mimedir_datetime_get_time_t (dtstart);
+  event_set_recurrence_start (ev, start);
+  event_set_untimed (ev, (dtstart->flags & MIMEDIR_DATETIME_TIME) == 0);
+  g_object_unref (dtstart);
 
-  /* Now load the event.  */
-  for (i = tags; i; i = i->next)
+  MIMEDirDateTime *dtend = NULL;
+  g_object_get (event, "dtend", &dtend, NULL);
+  time_t end;
+  if (dtend)
     {
-      gpe_tag_pair *t = i->data;
+      mimedir_datetime_to_utc (dtend);
+      end = mimedir_datetime_get_time_t (dtend);
+      event_set_duration (ev, end - start);
+      g_object_unref (dtend);
+    }
+  else
+    {
+      int duration;
+      g_object_get (event, "duration", &duration, NULL);
 
-      if (!strcasecmp (t->tag, "start"))
+      if (duration)
 	{
-	  time_t start;
-	  gboolean untimed;
-
-	  parse_date (t->value, &start, &untimed);
-	  event_set_recurrence_start (ev, start);
-	  event_set_untimed (ev, untimed);
+	  event_set_duration (ev, duration);
+	  end = start + duration;
 	}
-      else if (!strcasecmp (t->tag, "eventid"))
-	/* Ignore, we already have this.  */;
-      else if (!strcasecmp (t->tag, "rend"))
-	{
-	  time_t end;
-	  parse_date (t->value, &end, NULL);
-	  event_set_recurrence_end (ev, end);
-	}
-      else if (!strcasecmp (t->tag, "rcount"))
-	event_set_recurrence_count (ev, atoi (t->value));
-      else if (!strcasecmp (t->tag, "rincrement"))
-	event_set_recurrence_increment (ev, atoi (t->value));
-      else if (!strcasecmp (t->tag, "rdaymask"))
-	event_set_recurrence_daymask (ev, atoi (t->value));
-      else if (!strcasecmp (t->tag, "rexceptions"))
-	event_add_recurrence_exception (ev, (time_t) atoi (t->value));
-      else if (!strcasecmp (t->tag, "recur"))
-	event_set_recurrence_type (ev, atoi (t->value));
-      else if (!strcasecmp (t->tag, "duration"))
-	event_set_duration (ev, atoi (t->value));
-      else if (!strcasecmp (t->tag, "alarm"))
-	event_set_alarm (ev, atoi (t->value));
       else
-	fprintf (stderr,
-		 "While importing eventid %s, ignored unknown tag %s\n",
-		 eventid, t->tag);
+	end = start;
     }
-  
-  gpe_tag_list_free (tags);
+
+  int trigger;
+  g_object_get (event, "trigger", &trigger, NULL);
+  if (trigger)
+    {
+      gboolean trigger_end;
+      int alarm;
+
+      g_object_get (event, "trigger-end", &trigger_end, NULL);
+      if (trigger_end)
+	alarm = end - trigger;
+      else
+	alarm = start - trigger;
+
+      if (alarm < 0)
+	alarm = 1;
+	
+      event_set_alarm (ev, alarm);
+    }
+
+#if 0
+  GList *categories = NULL;
+  g_object_get (event, "category-list", &categories, NULL);
+
+  GList *i;
+  for (i = categories; i; i = i->next)
+    {
+      event_add_category (ev, map category name to integer...);
+      g_free (i->data);
+    }
+  g_list_free (categories);
+#endif
+
+  char *summary = NULL;
+  g_object_get (event, "summary", &summary, NULL);
+  if (summary)
+    event_set_summary (ev, summary);
+  g_free (summary);
+
+  char *description = NULL;
+  g_object_get (event, "description", &description, NULL);
+  if (description)
+    event_set_description (ev, description);
+  g_free (description);
+
+  const char *location_uri;
+  const char *location
+    = mimedir_vcomponent_get_location (MIMEDIR_VCOMPONENT (event),
+				       &location_uri);
+  if (location && location_uri)
+    {
+      char *s = NULL;
+      s = g_strdup_printf ("%s\n%s", location, location_uri);
+      event_set_location (ev, s);
+      g_free (s);
+    }
+  else if (location)
+    event_set_location (ev, location);
+  else if (location_uri)
+    event_set_location (ev, location_uri);
+
+  int sequence;
+  g_object_get (event, "sequence", &sequence, NULL);
+  event_set_sequence (ev, sequence);
+
+  MIMEDirRecurrence *recurrence
+    = mimedir_vcomponent_get_recurrence (MIMEDIR_VCOMPONENT (event));
+  if (recurrence)
+    {
+      /* XXX: Add EXDATE (exceptions) when libmimedir supports it.  */
+      /* XXX: Add RDATE (BYDAY, etc.) when libmimedir supports it.  */
+
+      MIMEDirDateTime *until = NULL;
+      g_object_get (recurrence, "until", &until, NULL);
+      if (until)
+	{
+	  mimedir_datetime_to_utc (until);
+	  event_set_recurrence_end (ev, mimedir_datetime_get_time_t (until));
+	}
+
+      int frequency;
+      g_object_get (recurrence, "frequency", &frequency, NULL);
+
+      enum event_recurrence_type type = RECUR_NONE;
+      switch (frequency)
+	{
+	case RECURRENCE_DAILY:
+	  type = RECUR_DAILY;
+	  break;
+	case RECURRENCE_WEEKLY:
+	  type = RECUR_WEEKLY;
+	  break;
+	case RECURRENCE_MONTHLY:
+	  type = RECUR_MONTHLY;
+	  break;
+	case RECURRENCE_YEARLY:
+	  type = RECUR_YEARLY;
+	  break;
+	default:
+	  {
+	    char *s = mimedir_recurrence_write_to_string (recurrence);
+	    g_warning ("%s: Unhandeled recurrence type: %s", __func__, s);
+	    g_free (s);
+	    break;
+	  }
+	}
+      event_set_recurrence_type (ev, type);
+
+#if 0
+      int unit;
+      g_object_get (recurrence, "unit", &unit, NULL);
+      char *units;
+      g_object_get (recurrence, "units", &units, NULL);
+#endif
+
+      int count;
+      g_object_get (recurrence, "count", &count, NULL);
+      event_set_recurrence_count (ev, count);
+
+      if (until)
+	g_object_unref (until);
+
+      g_object_unref (recurrence);
+    }
 
   event_flush (ev);
+ out:
+  g_free (uid);
+  g_object_unref (ev);
 }
 
 static void

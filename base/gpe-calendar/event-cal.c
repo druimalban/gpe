@@ -172,7 +172,7 @@ update_cal (GtkCalendar *cal, gboolean force)
       else
 	start = MAX (tm.tm_yday - start_tm.tm_yday + 1, 0);
 
-      t = event_get_start (ev) + event_get_duration (ev);
+      t = event_get_start (ev) + event_get_duration (ev) - 1;
       localtime_r (&t, &tm);
       if (end_tm.tm_year < tm.tm_year)
 	end = days;
