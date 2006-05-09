@@ -347,6 +347,7 @@ gtk_event_list_reload_events (GtkEventList *event_list)
 						 event_list->date,
 						 event_list->date
 						 + 14 * 24 * 60 * 60);
+  event_list->events = g_slist_sort (event_list->events, event_compare_func);
   time_t next_reload = event_list->date + 2 * 24 * 60 * 60;
   for (e = event_list->events; e; e = e->next)
     {

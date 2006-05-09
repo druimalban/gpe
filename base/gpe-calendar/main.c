@@ -508,6 +508,7 @@ alarms_process_pending (gpointer data)
   g_signal_connect (G_OBJECT (event_db), "alarm-fired",
                     G_CALLBACK (alarm_fired), NULL);
   GSList *list = event_db_list_unacknowledged_alarms (event_db);
+  list = g_slist_sort (list, event_alarm_compare_func);
   GSList *i;
   for (i = list; i; i = g_slist_next (i))
     alarm_fired (event_db, EVENT (i->data));
