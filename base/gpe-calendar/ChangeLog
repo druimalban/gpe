@@ -1,3 +1,10 @@
+2006-05-10  Neal H. Walfield  <neal@gnu.org>
+
+	* import-vcal.c (extract_time): New function.
+	(do_import_vevent): Use it rather than mimedir_datetime_get_time_t
+	to get the time.  Check if EVENT is an all day event, if so, mark
+	as untimed.  Don't unref RECURRENCE.
+
 2006-05-09  Neal H. Walfield  <neal@gnu.org>
 
 	* import-vcal.c (parse_date): Remove function.

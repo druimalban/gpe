@@ -33,6 +33,33 @@
 
 #define TODO_DB_NAME "/.gpe/todo"
 
+static time_t
+extract_time (MIMEDirDateTime *dt)
+{
+  struct tm tm;
+  memset (&tm, 0, sizeof (tm));
+
+  tm.tm_year = dt->year - 1900;
+  tm.tm_mon = dt->month - 1;
+  tm.tm_mday = dt->day;
+
+  if ((dt->flags & MIMEDIR_DATETIME_TIME))
+    {
+      tm.tm_hour = dt->hour;
+      tm.tm_min = dt->minute;
+      tm.tm_sec = dt->second;
+    }
+
+  /* Get mktime to figure out if dst is in effect during this time or
+     not.  */
+  tm.tm_isdst = -1;
+
+  if ((dt->flags & MIMEDIR_DATETIME_TIME))
+    return timegm (&tm) + dt->timezone;
+  else
+    return mktime (&tm);
+}
+
 static void
 do_import_vevent (MIMEDirVEvent *event)
 {
@@ -53,8 +80,7 @@ do_import_vevent (MIMEDirVEvent *event)
       goto out;
     }
 
-  mimedir_datetime_to_utc (dtstart);
-  time_t start = mimedir_datetime_get_time_t (dtstart);
+  time_t start = extract_time (dtstart);
   event_set_recurrence_start (ev, start);
   event_set_untimed (ev, (dtstart->flags & MIMEDIR_DATETIME_TIME) == 0);
   g_object_unref (dtstart);
@@ -64,8 +90,7 @@ do_import_vevent (MIMEDirVEvent *event)
   time_t end;
   if (dtend)
     {
-      mimedir_datetime_to_utc (dtend);
-      end = mimedir_datetime_get_time_t (dtend);
+      end = extract_time (dtend);
       event_set_duration (ev, end - start);
       g_object_unref (dtend);
     }
@@ -82,6 +107,9 @@ do_import_vevent (MIMEDirVEvent *event)
       else
 	end = start;
     }
+
+  if (mimedir_vcomponent_get_allday (event))
+    event_set_untimed (ev, TRUE);
 
   int trigger;
   g_object_get (event, "trigger", &trigger, NULL);
@@ -204,7 +232,7 @@ do_import_vevent (MIMEDirVEvent *event)
       if (until)
 	g_object_unref (until);
 
-      g_object_unref (recurrence);
+      /* We don't own a reference to recurrence, don't unref it.  */
     }
 
   event_flush (ev);
