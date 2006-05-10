@@ -1,5 +1,10 @@
 2006-05-10  Neal H. Walfield  <neal@gnu.org>
 
+	* import-vcal.c (extract_time): Take into account that
+	DT->TIMEZONE may be MIMEDIR_DATETIME_NOTZ or MIMEDIR_DATETIME_UTC.
+
+2006-05-10  Neal H. Walfield  <neal@gnu.org>
+
 	* import-vcal.c (do_import_vevent): Set EV to NULL.  Support days
 	of the week for weekly recurrences.
 
