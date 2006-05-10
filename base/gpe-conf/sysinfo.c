@@ -259,7 +259,7 @@ get_device_info()
 	result.cpu = g_strdup(_("IBM Power or PowerPC"));
 #endif
 	if (!result.model)
-		result.model = g_strdup_printf("%s (%s)", uinfo.machine, MACHINE);
+		result.model = g_strdup_printf("%s", uinfo.machine);
 #endif
 	
 	/* memory and flash size */
