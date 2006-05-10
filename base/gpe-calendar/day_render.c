@@ -643,7 +643,7 @@ gtk_day_render_expose (GtkWidget *widget, GdkEventExpose *event)
 
       char *until = NULL;
       time_t end = event_get_start (event_rectangle->event)
-	+ event_get_duration (event_rectangle->event);
+	+ event_get_duration (event_rectangle->event) - 1;
       if (end > day_render->date + day_render->duration)
 	{
 	  struct tm tm;

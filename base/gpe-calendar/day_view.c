@@ -279,7 +279,7 @@ gtk_day_view_reload_events (GtkView *view)
       if (is_reminder (ev))
 	{
 	  if (start <= event_get_start (ev)
-	      && event_get_start (ev) <= start + 24 * 60 * 60)
+	      && event_get_start (ev) < start + 24 * 60 * 60)
 	    reminders = g_slist_append (reminders, ev);
 	  else
 	    g_object_unref (ev);

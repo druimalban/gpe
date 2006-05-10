@@ -1,5 +1,11 @@
 2006-05-10  Neal H. Walfield  <neal@gnu.org>
 
+	* day_render.c (gtk_day_render_expose): Subtract one from END.
+	* day_view.c (gtk_day_view_reload_events): The day ends before
+	midnight, not at midnight.
+
+2006-05-10  Neal H. Walfield  <neal@gnu.org>
+
 	* month_view.c (gtk_month_view_reload_events): Sort the results of
 	event_db_list_for_period.
 	* week_view.c (gtk_week_view_reload_events): Likewise.
