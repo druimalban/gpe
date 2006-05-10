@@ -968,8 +968,9 @@ main (int argc, char *argv[])
     time (&viewtime);
 
   /* Build the main window.  */
-  window_x = CLAMP (gdk_screen_width () / 2, 240, 1000);
-  window_y = CLAMP (gdk_screen_height () / 2, 310, 800);
+  window_x = CLAMP (gdk_screen_width () * 7 / 8, 240, 1000);
+  window_y = CLAMP (gdk_screen_height () * 7 / 8, 310, 800);
+  int tiny = gdk_screen_width () < 300;
   int landscape = gdk_screen_width () > gdk_screen_height ()
     && gdk_screen_width () >= 640;
 
@@ -1193,7 +1194,8 @@ main (int argc, char *argv[])
 			 GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK);
   gtk_widget_show (GTK_WIDGET (datesel));
 
-  GtkPaned *primary = GTK_PANED (gtk_hpaned_new ());
+  GtkPaned *primary
+    = GTK_PANED ((landscape ? &gtk_hpaned_new : &gtk_vpaned_new) ());
   gtk_box_pack_start (win, GTK_WIDGET (primary), TRUE, TRUE, 0);
   gtk_widget_show (GTK_WIDGET (primary));
 
@@ -1201,9 +1203,15 @@ main (int argc, char *argv[])
   gtk_paned_pack1 (primary, GTK_WIDGET (view_container), TRUE, FALSE);
   gtk_widget_show (GTK_WIDGET (view_container));
 
-  if (landscape)
+  if (! tiny)
     {
-      GtkBox *sidebar = GTK_BOX (gtk_vbox_new (FALSE, 0));
+      GtkWidget *sidebar;
+
+      if (landscape)
+	sidebar = gtk_vbox_new (FALSE, 0);
+      else
+	sidebar = gtk_hpaned_new ();
+
       gtk_paned_pack2 (primary, GTK_WIDGET (sidebar), FALSE, TRUE);
       gtk_widget_show (GTK_WIDGET (sidebar));
 
@@ -1213,14 +1221,24 @@ main (int argc, char *argv[])
 					GTK_CALENDAR_SHOW_DAY_NAMES
 					| (week_starts_monday ?
 					   GTK_CALENDAR_WEEK_START_MONDAY : 0));
-      gtk_box_pack_start (sidebar, GTK_WIDGET (calendar), FALSE, FALSE, 0);
+      if (landscape)
+	gtk_box_pack_start (GTK_BOX (sidebar), GTK_WIDGET (calendar),
+			    FALSE, FALSE, 0);
+      else
+	gtk_paned_pack1 (GTK_PANED (sidebar), GTK_WIDGET (calendar),
+			 FALSE, TRUE);
+
       g_signal_connect (G_OBJECT (calendar),
 			"day-selected", G_CALLBACK (calendar_changed), NULL);
-      
       gtk_widget_show (GTK_WIDGET (calendar));
       
       event_list = GTK_EVENT_LIST (gtk_event_list_new ());
-      gtk_box_pack_start (sidebar, GTK_WIDGET (event_list), TRUE, TRUE, 0);
+      if (landscape)
+	gtk_box_pack_start (GTK_BOX (sidebar), GTK_WIDGET (event_list),
+			    TRUE, TRUE, 0);
+      else
+	gtk_paned_pack2 (GTK_PANED (sidebar), GTK_WIDGET (event_list),
+			 TRUE, FALSE);
       gtk_widget_set_size_request (GTK_WIDGET (event_list), 150, 150);
       gtk_widget_show (GTK_WIDGET (event_list));
     }
