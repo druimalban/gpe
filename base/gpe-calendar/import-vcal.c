@@ -195,7 +195,7 @@ do_import_vevent (MIMEDirVEvent *event)
 	  event_set_recurrence_end (ev, mimedir_datetime_get_time_t (until));
 	}
 
-      int frequency;
+      int frequency = 0;
       g_object_get (recurrence, "frequency", &frequency, NULL);
 
       enum event_recurrence_type type = RECUR_NONE;
@@ -207,7 +207,7 @@ do_import_vevent (MIMEDirVEvent *event)
 	case RECURRENCE_WEEKLY:
 	  type = RECUR_WEEKLY;
 
-	  int unit;
+	  int unit = 0;
 	  g_object_get (recurrence, "unit", &unit, NULL);
 	  if (unit == RECURRENCE_WEEKLY)
 	    {
@@ -273,9 +273,14 @@ do_import_vevent (MIMEDirVEvent *event)
 	}
       event_set_recurrence_type (ev, type);
 
-      int count;
+      int count = 0;
       g_object_get (recurrence, "count", &count, NULL);
       event_set_recurrence_count (ev, count);
+
+      int interval = 0;
+      g_object_get (recurrence, "interval", &interval, NULL);
+      if (interval)
+	event_set_recurrence_increment (ev, interval);
 
       if (until)
 	g_object_unref (until);
