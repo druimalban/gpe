@@ -713,27 +713,29 @@ event_finalize (GObject *object)
 	}
     }
 
-  /* Free any details.  */
-  struct event_details *evd = event->details;
-  if (evd)
+  if (! event->clone_source)
     {
-      if (evd->description)
-	g_free (evd->description);
-      if (evd->location)
-	g_free (evd->location);
-      if (evd->summary)
-	g_free (evd->summary);
-      g_slist_free (evd->categories);
-      g_free (evd);
+      /* Free any details.  */
+      struct event_details *evd = event->details;
+      if (evd)
+	{
+	  if (evd->description)
+	    g_free (evd->description);
+	  if (evd->location)
+	    g_free (evd->location);
+	  if (evd->summary)
+	    g_free (evd->summary);
+	  g_slist_free (evd->categories);
+	  g_free (evd);
+	}
+
+      if (event->eventid)
+	g_free (event->eventid);
+
+      event_db_remove_internal (event);
     }
-
-  if (event->eventid)
-    g_free (event->eventid);
-
-  if (event->clone_source)
+  else
     g_object_unref (event->clone_source);
-
-  event_db_remove_internal (event);
 
   event->dead = TRUE;
 
@@ -754,7 +756,7 @@ event_sort_func (const void *a, const void *b)
 static void
 event_db_add_internal (Event *ev)
 {
-  g_return_if_fail (! ev->clone_source);
+  NO_CLONE (ev);
 
   if (ev->uid >= ev->edb->uid)
     ev->edb->uid = ev->uid + 1;

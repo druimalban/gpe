@@ -1,3 +1,9 @@
+2006-05-10  Neal H. Walfield  <neal@gnu.org>
+
+	* event-db.c (event_finalize): Only free the various fields if EV
+	is not a clone.
+	(event_db_add_internal): Call NO_CLONE.
+
 2006-05-09  Neal H. Walfield  <neal@gnu.org>
 
 	* gpe/event-db.h (event_db_find_by_uid): New declaration.
