@@ -1,5 +1,9 @@
 2006-05-10  Neal H. Walfield  <neal@gnu.org>
 
+	* import-vcal.c (extract_time): Fix timezone calculation logic.
+
+2006-05-10  Neal H. Walfield  <neal@gnu.org>
+
 	* main.c (main): Start with 7/8's of the screen's width and
 	height, not half.  If LANDSCAPE is FALSE, make PRIMARY a
 	GtkVPaned.  Conditionalize the calendar and event box on TINY, not

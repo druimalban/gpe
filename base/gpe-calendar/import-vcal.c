@@ -54,16 +54,16 @@ extract_time (MIMEDirDateTime *dt)
      not.  */
   tm.tm_isdst = -1;
 
-  if ((dt->flags & MIMEDIR_DATETIME_TIME)
-      && dt->timezone != MIMEDIR_DATETIME_NOTZ)
+  if ((dt->flags & MIMEDIR_DATETIME_TIME) == 0
+      || dt->timezone == MIMEDIR_DATETIME_NOTZ)
+    return mktime (&tm);
+  else
     {
       time_t t = timegm (&tm);
       if (dt->timezone != MIMEDIR_DATETIME_UTC)
 	t += dt->timezone;
       return t;
     }
-  else
-    return mktime (&tm);
 }
 
 static void
