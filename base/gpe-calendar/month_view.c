@@ -695,8 +695,9 @@ gtk_month_view_reload_events (GtkView *view)
 
       if (month_view->day_events[day])
         event_list_unref (month_view->day_events[day]);
-      month_view->day_events[day] = event_db_list_for_period (event_db,
-							      start, end);
+      month_view->day_events[day]
+	= g_slist_sort (event_db_list_for_period (event_db, start, end),
+			event_compare_func);
     }
 
   /* Destroy any remain events.  */

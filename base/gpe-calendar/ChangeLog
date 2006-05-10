@@ -1,5 +1,11 @@
 2006-05-10  Neal H. Walfield  <neal@gnu.org>
 
+	* month_view.c (gtk_month_view_reload_events): Sort the results of
+	event_db_list_for_period.
+	* week_view.c (gtk_week_view_reload_events): Likewise.
+
+2006-05-10  Neal H. Walfield  <neal@gnu.org>
+
 	* import-vcal.c (extract_time): New function.
 	(do_import_vevent): Use it rather than mimedir_datetime_get_time_t
 	to get the time.  Check if EVENT is an all day event, if so, mark
