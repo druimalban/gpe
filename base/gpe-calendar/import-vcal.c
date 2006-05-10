@@ -63,8 +63,7 @@ extract_time (MIMEDirDateTime *dt)
 static void
 do_import_vevent (MIMEDirVEvent *event)
 {
-  Event *ev;
-
+  Event *ev = NULL;
   char *uid = NULL;
   g_object_get (event, "uid", &uid, NULL);
   if (uid)
@@ -108,7 +107,7 @@ do_import_vevent (MIMEDirVEvent *event)
 	end = start;
     }
 
-  if (mimedir_vcomponent_get_allday (event))
+  if (mimedir_vcomponent_get_allday (MIMEDIR_VCOMPONENT (event)))
     event_set_untimed (ev, TRUE);
 
   int trigger;
@@ -201,6 +200,56 @@ do_import_vevent (MIMEDirVEvent *event)
 	  break;
 	case RECURRENCE_WEEKLY:
 	  type = RECUR_WEEKLY;
+
+	  int unit;
+	  g_object_get (recurrence, "unit", &unit, NULL);
+	  if (unit == RECURRENCE_WEEKLY)
+	    {
+	      char *units;
+	      g_object_get (recurrence, "units", &units, NULL);
+
+	      int daymask = 0;
+	      char *p = units;
+	      while (p && *p)
+		{
+		  while (*p == ' ' || *p == ',')
+		    p ++;
+
+		  int check (char *day, int shift)
+		    {
+		      if (strncmp (p, day, 2) == 0
+			  && (p[2] == ',' || p[2] == ' ' || p[2] == 0))
+			{
+			  daymask |= 1 << shift;
+			  p += 2;
+			  return TRUE;
+			}
+		      return FALSE;
+		    }
+
+		  if (check ("MO", 0))
+		    continue;
+		  if (check ("TU", 1))
+		    continue;
+		  if (check ("WE", 2))
+		    continue;
+		  if (check ("TH", 3))
+		    continue;
+		  if (check ("FR", 4))
+		    continue;
+		  if (check ("SA", 5))
+		    continue;
+		  if (check ("SU", 6))
+		    continue;
+		  /* Invalid character?  */
+		  p = strchr (p, ',');
+		}
+
+	      event_set_recurrence_daymask (ev, daymask);
+
+	      g_free (units);
+	    }
+
 	  break;
 	case RECURRENCE_MONTHLY:
 	  type = RECUR_MONTHLY;
@@ -217,13 +266,6 @@ do_import_vevent (MIMEDirVEvent *event)
 	  }
 	}
       event_set_recurrence_type (ev, type);
-
-#if 0
-      int unit;
-      g_object_get (recurrence, "unit", &unit, NULL);
-      char *units;
-      g_object_get (recurrence, "units", &units, NULL);
-#endif
 
       int count;
       g_object_get (recurrence, "count", &count, NULL);

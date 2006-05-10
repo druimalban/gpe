@@ -1,5 +1,10 @@
 2006-05-10  Neal H. Walfield  <neal@gnu.org>
 
+	* import-vcal.c (do_import_vevent): Set EV to NULL.  Support days
+	of the week for weekly recurrences.
+
+2006-05-10  Neal H. Walfield  <neal@gnu.org>
+
 	* day_render.c (gtk_day_render_expose): Subtract one from END.
 	* day_view.c (gtk_day_view_reload_events): The day ends before
 	midnight, not at midnight.
