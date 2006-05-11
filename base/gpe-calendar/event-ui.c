@@ -244,25 +244,19 @@ click_ok (GtkWidget *widget, GtkWidget *d)
       tm_start.tm_year = GTK_DATE_COMBO (s->startdate)->year - 1900;
       tm_start.tm_mon = GTK_DATE_COMBO (s->startdate)->month;
       tm_start.tm_mday = GTK_DATE_COMBO (s->startdate)->day;
+      tm_start.tm_isdst = -1;
 
       memset (&tm_end, 0, sizeof (struct tm));
       tm_end.tm_year = GTK_DATE_COMBO (s->enddate)->year - 1900;
       tm_end.tm_mon = GTK_DATE_COMBO (s->enddate)->month;
       tm_end.tm_mday = GTK_DATE_COMBO (s->enddate)->day;
+      tm_end.tm_isdst = -1;
 
       gpe_time_sel_get_time (GPE_TIME_SEL (s->starttime), (guint *)&tm_start.tm_hour, (guint *)&tm_start.tm_min);
       gpe_time_sel_get_time (GPE_TIME_SEL (s->endtime), (guint *)&tm_end.tm_hour, (guint *)&tm_end.tm_min);
 
       start_t = mktime (&tm_start);
       end_t = mktime (&tm_end);
-
-      /* If DST was in effect, mktime will have "helpfully" incremented the
-         hour.  */
-      if (tm_start.tm_isdst)
-        {
-          start_t -= 60*60;
-          end_t -= 60*60;
-        }
 
       /* Zero length appointments would be confused with reminders, so make them one second long.  */
       if (end_t == start_t)
@@ -277,6 +271,7 @@ click_ok (GtkWidget *widget, GtkWidget *d)
       tm_start.tm_year = GTK_DATE_COMBO (s->reminderdate)->year - 1900;
       tm_start.tm_mon = GTK_DATE_COMBO (s->reminderdate)->month;
       tm_start.tm_mday = GTK_DATE_COMBO (s->reminderdate)->day;
+      tm_start.tm_isdst = -1;
 
       if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->remindertimebutton)))
         {
@@ -290,12 +285,6 @@ click_ok (GtkWidget *widget, GtkWidget *d)
         }
 
       start_t = mktime (&tm_start);
-
-      /* If DST was in effect, mktime will have "helpfully" incremented the
-         hour.  */
-      if (tm_start.tm_isdst)
-        start_t -= 60*60;
-
       end_t = start_t;
     }
 

@@ -2,6 +2,7 @@
 
 	* month_view.c (gtk_month_view_reload_events): Let mktime
 	compensate for DST.
+	* event-ui.c (click_ok): Likewise.
 
 2006-05-11  Neal H. Walfield  <neal@gnu.org>
 
