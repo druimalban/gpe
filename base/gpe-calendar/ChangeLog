@@ -1,5 +1,21 @@
 2006-05-11  Neal H. Walfield  <neal@gnu.org>
 
+	* main.c (just_new): Mark static.
+	(view_container): Likewise.
+	(toolbar): Likewise.
+	(day_list): Remove unused declaration.
+	(my_icons): Mark static.
+	(window_x): Remove definition and make a local variable...
+	(main): ... here.
+	(window_y): Remove definition and make a local variable...
+	(main): ... here.
+	(week_offset): Don't explicitly initialize to 0.
+	(collected_keys): Mark static.
+	(ccpos): Likewise.
+	(time_from_day): Set TM.TM_ISDST to -1.
+
+2006-05-11  Neal H. Walfield  <neal@gnu.org>
+
 	* month_view.c (gtk_month_view_reload_events): Let mktime
 	compensate for DST.
 	* event-ui.c (click_ok): Likewise.

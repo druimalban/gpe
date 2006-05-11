@@ -77,13 +77,12 @@ static const char *gpe_calendar;
 EventDB *event_db;
 
 time_t viewtime;
-gboolean just_new = FALSE;
+static gboolean just_new = FALSE;
 
 GtkWidget *main_window, *pop_window;
-GtkWidget *view_container, *toolbar;
-extern GtkWidget* day_list;
+static GtkWidget *view_container, *toolbar;
 
-struct gpe_icon my_icons[] = {
+static struct gpe_icon my_icons[] = {
   { "day_view",   DAY_ICON },
   { "week_view",  WEEK_ICON },
   { "month_view", MONTH_ICON },
@@ -102,13 +101,11 @@ static GtkWidget *day_button, *week_button, *month_button, *alarm_button;
 
 static void propagate_time (void);
 
-guint window_x = 240, window_y = 310;
-
-guint week_offset = 0;
+guint week_offset;
 gboolean week_starts_monday = TRUE;
 gboolean day_view_combined_times;
-gchar collected_keys[32] = "";
-gint ccpos = 0;
+static gchar collected_keys[32] = "";
+static gint ccpos;
 const gchar *TIMEFMT;
 
 static guint nr_days[] = { 31, 28, 31, 30, 31, 30, 
@@ -152,6 +149,7 @@ time_from_day (int year, int month, int day)
   tm.tm_year = year;
   tm.tm_mon = month;
   tm.tm_mday = day;
+  tm.tm_isdst = -1;
   selected_time = mktime (&tm);
   return selected_time;
 }
@@ -969,8 +967,8 @@ main (int argc, char *argv[])
     time (&viewtime);
 
   /* Build the main window.  */
-  window_x = CLAMP (gdk_screen_width () * 7 / 8, 240, 1000);
-  window_y = CLAMP (gdk_screen_height () * 7 / 8, 310, 800);
+  guint window_x = CLAMP (gdk_screen_width () * 7 / 8, 240, 1000);
+  guint window_y = CLAMP (gdk_screen_height () * 7 / 8, 310, 800);
   int tiny = gdk_screen_width () < 300;
   int landscape = gdk_screen_width () > gdk_screen_height ()
     && gdk_screen_width () >= 640;
