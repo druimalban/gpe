@@ -1,5 +1,10 @@
 2006-05-11  Neal H. Walfield  <neal@gnu.org>
 
+	* event-cal.c (update_cal): Freeze and thaw CAL for old versions
+	of Gtk+.
+
+2006-05-11  Neal H. Walfield  <neal@gnu.org>
+
 	* main.c (main): If the import filename is a relative filename,
 	create an absolute file name.
 

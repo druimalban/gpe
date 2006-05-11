@@ -133,6 +133,7 @@ update_cal (GtkCalendar *cal, gboolean force)
   if (! force && event_cal->year == year && event_cal->month == month)
     return;
 
+  gtk_calendar_freeze (cal);
   gtk_calendar_clear_marks (cal);
 
   event_cal->year = year;
@@ -183,6 +184,7 @@ update_cal (GtkCalendar *cal, gboolean force)
 	gtk_calendar_mark_day (cal, i);
     }
   event_list_unref (events);
+  gtk_calendar_thaw (cal);
 }
 
 static void
