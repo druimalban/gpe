@@ -1,5 +1,10 @@
 2006-05-11  Neal H. Walfield  <neal@gnu.org>
 
+	* month_view.c (gtk_month_view_reload_events): Let mktime
+	compensate for DST.
+
+2006-05-11  Neal H. Walfield  <neal@gnu.org>
+
 	* main.c: Don't include <sys/types.h>, <stdio.h> or <unistd.h>.
 	* day_view.c: Don't include <sys/types.h>, <stdio.h>, <stdlib.h>,
 	<gpe/stylus.h>, "gtkdatesel.h", "event-cal.h" or "event-list.h".

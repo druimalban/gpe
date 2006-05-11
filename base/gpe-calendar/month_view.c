@@ -666,6 +666,7 @@ gtk_month_view_reload_events (GtkView *view)
       tm_start.tm_min = 0;
       tm_start.tm_sec = 0;
       tm_start.tm_mday = day + 1;
+      tm_start.tm_isdst = -1;
       start = mktime (&tm_start);
 
       localtime_r (&t, &tm_end);
@@ -673,14 +674,9 @@ gtk_month_view_reload_events (GtkView *view)
       tm_end.tm_min = 59;
       tm_end.tm_sec = 59;
       tm_end.tm_mday = day + 1;
+      tm_end.tm_isdst = -1;
       end = mktime (&tm_end);
       
-      if (!tm_start.tm_isdst) 
-        {
-          start += 60*60;
-          end += 60*60;
-        }
-
       if (month_view->day_events[day])
         event_list_unref (month_view->day_events[day]);
       month_view->day_events[day]
