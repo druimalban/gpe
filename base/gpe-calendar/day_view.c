@@ -8,9 +8,6 @@
  * 2 of the License, or (at your option) any later version.
  */
 
-#include <sys/types.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include <time.h>
 #include <libintl.h>
@@ -23,17 +20,13 @@
 #include <gpe/pixmaps.h>
 #include <gpe/event-db.h>
 #include <gpe/question.h>
-#include <gpe/stylus.h>
 #include <gpe/spacing.h>
 #include "view.h"
 #include "event-ui.h"
 #include "globals.h"
 #include "day_view.h"
 #include "day_render.h"
-#include "gtkdatesel.h"
 #include "export-vcal.h"
-#include "event-cal.h"
-#include "event-list.h"
 
 #define _(x) gettext(x)
 #define NUM_HOURS 24

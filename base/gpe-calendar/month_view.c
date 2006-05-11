@@ -8,7 +8,6 @@
  * 2 of the License, or (at your option) any later version.
  */
 
-#include <sys/types.h>
 #include <time.h>
 #include <langinfo.h>
 #include <string.h>
@@ -19,32 +18,21 @@
 
 #include <gpe/event-db.h>
 #include "view.h"
-#include "event-ui.h"
 #include "globals.h"
 #include "month_view.h"
 #include "day_popup.h"
-
-#include "gtkdatesel.h"
 
 #define TOTAL_DAYS (6 * 7)
 #define TOTAL_WEEKS (TOTAL_DAYS / 7)
 #define MAX_DAYS_IN_MONTH 32
 
-/* A render control.  POPUP is only contains valid data if VALID is
+/* A render control.  POPUP only contains valid data if VALID is
    true.  */
 struct render_ctl
 {
   struct day_popup popup;
   gboolean valid;
 };
-
-#define is_today(c) \
-  ({ \
-     struct tm tm; \
-     localtime_r (&viewtime, &tm); \
-     tm.tm_year == (c)->popup.year && tm.tm_mon == c->popup.month \
-       && tm.tm_mday == c->popup.day; \
-   })
 
 /* A month view consists of a number of cells: 7 per row up to 6
    columns (as that is the maximum number of weeks any week requires

@@ -8,7 +8,6 @@
  * 2 of the License, or (at your option) any later version.
  */
 
-#include <sys/types.h>
 #include <time.h>
 #include <libintl.h>
 
@@ -16,16 +15,11 @@
 #include <gdk/gdkkeysyms.h>
 
 #include <gpe/event-db.h>
-#include <gpe/stylus.h>
 
 #include "view.h"
 #include "globals.h"
 #include "week_view.h"
 #include "day_popup.h"
-
-#include "gtkdatesel.h"
-#include "event-cal.h"
-#include "event-list.h"
 
 #define _(x) gettext(x)
 
