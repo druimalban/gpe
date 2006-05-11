@@ -1,3 +1,11 @@
+2006-05-11  Neal H. Walfield  <neal@gnu.org>
+
+	* event-db.c (event_db_new): Don't add 12 hours to untimed events.
+	(parse_date): If date is untimed, return the corresponding start
+	of the day in the current timezone.
+	(event_write): If date in untimed, save the corresponding start of
+	the date in UTC.
+
 2006-05-10  Neal H. Walfield  <neal@gnu.org>
 
 	* event-db.c (struct _Event): Rip the majority of this structure

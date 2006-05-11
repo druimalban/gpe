@@ -875,6 +875,7 @@ parse_date (char *s, time_t *t, gboolean *date_only)
   char *p;
 
   memset (&tm, 0, sizeof (tm));
+  tm.tm_isdst = -1;
   p = strptime (s, "%Y-%m-%d", &tm);
   if (p == NULL)
     {
@@ -887,7 +888,14 @@ parse_date (char *s, time_t *t, gboolean *date_only)
   if (date_only)
     *date_only = (p == NULL) ? TRUE : FALSE;
 
-  *t = timegm (&tm);
+  if (p)
+    /* The time is in UTC.  */
+    *t = timegm (&tm);
+  else
+    /* There is no time component but we want to identify the start of
+       the day in the local time zone.  */
+    *t = mktime (&tm);
+
   return TRUE;
 }
 
@@ -984,10 +992,7 @@ event_db_new (const char *fname)
 		  parse_date (argv[1], &ev->event.start, &untimed);
 
 		  if (untimed)
-		    {
-		      ev->untimed = TRUE;
-		      ev->event.start += 12 * 60 * 60;
-		    }
+		    ev->untimed = TRUE;
 		}
 	      else if (!strcasecmp (argv[0], "eventid"))
 		ev->eventid = g_strdup (argv[1]);
@@ -1279,6 +1284,7 @@ time_add_days (time_t t, int advance)
   int days;
 
   localtime_r (&t, &tm);
+  tm.tm_isdst = -1;
   while (advance > 0)
     {
       days = days_in_month (tm.tm_year, tm.tm_mon);
@@ -1664,7 +1670,10 @@ event_write (EventSource *ev, char **err)
   gboolean rc = FALSE;
   GSList *iter;
 
-  gmtime_r (&ev->event.start, &tm);
+  if (ev->untimed)
+    localtime_r (&ev->event.start, &tm);
+  else
+    gmtime_r (&ev->event.start, &tm);
   strftime (buf_start, sizeof (buf_start), 
 	    ev->untimed ? "%Y-%m-%d" : "%Y-%m-%d %H:%M",
 	    &tm);  
