@@ -1,4 +1,10 @@
 2006-05-11  Neal H. Walfield  <neal@gnu.org>
+	Reported by Koen Kooi  <koen@dominion.kabel.utwente.nl>
+
+	* day_render.c (gtk_day_render_expose): Display the lines
+	separating the hours when the Bain's line is not present.
+
+2006-05-11  Neal H. Walfield  <neal@gnu.org>
 
 	* event-cal.c (update_cal): Freeze and thaw CAL for old versions
 	of Gtk+.

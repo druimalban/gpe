@@ -526,13 +526,14 @@ gtk_day_render_expose (GtkWidget *widget, GdkEventExpose *event)
     {
       top = i * day_render->height / day_render->rows - day_render->offset_y;
 
-      /* Draw a gray line to separating each row but don't draw over
-	 the hour bar.  */
-      if (day_render->hour_bar_pos >= 0
-	  && ! ((day_render->hour_bar_pos - HOUR_BAR_HEIGHT (day_render) / 2
-		 <= top)
-		&& (top <= day_render->hour_bar_pos
-		    + HOUR_BAR_HEIGHT (day_render) / 2)))
+      /* Draw a gray line to separate each row but don't draw over the
+	 hour bar.  */
+      if ((day_render->hour_bar_pos >= 0
+	   && ! ((day_render->hour_bar_pos - HOUR_BAR_HEIGHT (day_render) / 2
+		  <= top)
+		 && (top <= day_render->hour_bar_pos
+		     + HOUR_BAR_HEIGHT (day_render) / 2)))
+	  || day_render->hour_bar_pos == -1)
 	{
 	  if (day_render->hour_column)
 	    gdk_draw_line (widget->window, white_gc,
