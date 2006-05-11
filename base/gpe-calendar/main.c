@@ -830,10 +830,15 @@ main (int argc, char *argv[])
   osso_context_t *osso_context;
 #endif
 
+  char *current_dir = NULL;
+
   if (g_path_is_absolute (argv[0]))
     gpe_calendar = argv[0];
   else
-    gpe_calendar = g_build_filename (g_get_current_dir (), argv[0], NULL);
+    {
+      current_dir = g_get_current_dir ();
+      gpe_calendar = g_build_filename (current_dir, argv[0], NULL);
+    }
 
   setlocale (LC_ALL, "");
 
@@ -853,10 +858,13 @@ main (int argc, char *argv[])
 	schedule_only = TRUE;
       else if (option_letter == 'i')
 	{
+	  if (! current_dir)
+	    current_dir = g_get_current_dir ();
+
 	  char *s
 	    = g_strdup_printf ("%s%sIMPORT_FILE=%s%s%s",
 			       state ?: "", state ? "\n" : "",
-			       *optarg == '/' ? "" : g_get_current_dir (),
+			       *optarg == '/' ? "" : current_dir,
 			       *optarg == '/' ? "" : G_DIR_SEPARATOR_S,
 			       optarg);
 	  g_free (state);
@@ -865,6 +873,9 @@ main (int argc, char *argv[])
 	  import_files = g_slist_append (import_files, optarg);
 	}
     }
+
+  if (current_dir)
+    g_free (current_dir);
 
   if (! schedule_only)
     {

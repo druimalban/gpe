@@ -1,5 +1,10 @@
 2006-05-11  Neal H. Walfield  <neal@gnu.org>
 
+	* main.c (main): Cache the current directory and free it when no
+	longer needed.
+
+2006-05-11  Neal H. Walfield  <neal@gnu.org>
+
 	* event-ui.c (click_ok): Let mktime compensate for DST.
 
 2006-05-11  Neal H. Walfield  <neal@gnu.org>
