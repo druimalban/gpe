@@ -1052,6 +1052,8 @@ calc_events_positions (GtkDayRender *day_render)
     }
 
   traverse (root, 1);
+
+  g_node_destroy (root);
 }
 
 void
