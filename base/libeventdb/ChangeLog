@@ -1,5 +1,10 @@
 2006-05-11  Neal H. Walfield  <neal@gnu.org>
 
+	* event-db.c (event_list): RECUR_END is the first invalid second,
+	not the last valid second.
+
+2006-05-11  Neal H. Walfield  <neal@gnu.org>
+
 	* event-db.c (event_db_new): Don't add 12 hours to untimed events.
 	(parse_date): If date is untimed, return the corresponding start
 	of the day in the current timezone.

@@ -1337,7 +1337,7 @@ event_list (EventSource *ev, time_t period_start, time_t period_end, int max,
   else
     recur_end = ev->event.start + ev->duration;
 
-  if (recur_end && recur_end < period_start)
+  if (recur_end && recur_end <= period_start)
     /* Event finishes prior to PERIOD_START.  */
     return NULL;
 
