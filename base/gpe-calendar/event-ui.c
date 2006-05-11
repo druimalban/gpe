@@ -331,15 +331,17 @@ click_ok (GtkWidget *widget, GtkWidget *d)
 
   buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (s->description));
   gtk_text_buffer_get_bounds (buf, &start, &end);
-  event_set_description (ev,
-			 gtk_text_buffer_get_text (buf, &start, &end, FALSE));
+  char *text = gtk_text_buffer_get_text (buf, &start, &end, FALSE);
+  event_set_description (ev, text);
+  g_free (text);
 
-  event_set_summary (ev, gtk_editable_get_chars (GTK_EDITABLE (s->summary),
-						 0, -1));
+  text = gtk_editable_get_chars (GTK_EDITABLE (s->summary), 0, -1);
+  event_set_summary (ev, text);
+  g_free (text);
   
-  event_set_location (ev,
-		      gtk_editable_get_chars (GTK_EDITABLE (s->location),
-					      0, -1));
+  text = gtk_editable_get_chars (GTK_EDITABLE (s->location), 0, -1);
+  event_set_location (ev, text);
+  g_free (text);
 
   event_set_categories (ev, g_slist_copy (s->categories));
 
