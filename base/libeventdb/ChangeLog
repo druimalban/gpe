@@ -1,3 +1,8 @@
+2006-05-12  Florian Boor <florian@kernelconcepts.de>
+
+	* event-db.c (event_db_find_by_eventid): Avoid fault if an
+	id is NULL. 
+
 2006-05-11  Neal H. Walfield  <neal@gnu.org>
 
 	* event-db.c (event_list): RECUR_END is the first invalid second,

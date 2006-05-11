@@ -1200,16 +1200,18 @@ Event *
 event_db_find_by_eventid (EventDB *edb, const char *eventid)
 {
   GList *iter;
-    
+  
+  g_return_val_if_fail (eventid, NULL);
+  
   for (iter = edb->events; iter; iter = g_list_next (iter))
     {
       EventSource *ev = iter->data;
       
-      if (strcmp (ev->eventid, eventid) == 0)
-	{
-	  g_object_ref (ev);
-	  return EVENT (ev);
-	}
+      if (ev->eventid && (strcmp (ev->eventid, eventid) == 0))
+        {
+          g_object_ref (ev);
+          return EVENT (ev);
+        }
     }
 
   return NULL;
