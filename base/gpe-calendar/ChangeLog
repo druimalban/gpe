@@ -1,3 +1,7 @@
+2006-05-11  Neal H. Walfield  <neal@gnu.org>
+
+	* import-vcal.c (do_import_vevent): Ignore the allday property.
+
 2006-05-10  Neal H. Walfield  <neal@gnu.org>
 
 	* import-vcal.c (extract_time): Fix timezone calculation logic.

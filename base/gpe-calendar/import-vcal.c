@@ -54,10 +54,17 @@ extract_time (MIMEDirDateTime *dt)
      not.  */
   tm.tm_isdst = -1;
 
-  if ((dt->flags & MIMEDIR_DATETIME_TIME) == 0
-      || dt->timezone == MIMEDIR_DATETIME_NOTZ)
+  if ((dt->flags & MIMEDIR_DATETIME_TIME) == 0)
+    /* Untimed: return the start of the day in the local time time zone
+       in UTC.  */
+    return mktime (&tm);
+  else if (dt->timezone == MIMEDIR_DATETIME_NOTZ)
+    /* No time zone: return this time in the local time zone in
+       UTC.  */
     return mktime (&tm);
   else
+    /* The time is in UTC or the time zone relative to UTC is
+       provided.  */
     {
       time_t t = timegm (&tm);
       if (dt->timezone != MIMEDIR_DATETIME_UTC)
@@ -90,6 +97,12 @@ do_import_vevent (MIMEDirVEvent *event)
   event_set_untimed (ev, (dtstart->flags & MIMEDIR_DATETIME_TIME) == 0);
   g_object_unref (dtstart);
 
+#if 0
+  /* XXX: What should we do if the event is marked as an all day
+     event?  */
+  mimedir_vcomponent_get_allday (MIMEDIR_VCOMPONENT (event));
+#endif
+
   MIMEDirDateTime *dtend = NULL;
   g_object_get (event, "dtend", &dtend, NULL);
   time_t end;
@@ -112,9 +125,6 @@ do_import_vevent (MIMEDirVEvent *event)
       else
 	end = start;
     }
-
-  if (mimedir_vcomponent_get_allday (MIMEDIR_VCOMPONENT (event)))
-    event_set_untimed (ev, TRUE);
 
   int trigger;
   g_object_get (event, "trigger", &trigger, NULL);
