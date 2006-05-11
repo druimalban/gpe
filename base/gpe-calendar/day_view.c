@@ -200,7 +200,6 @@ day_view_event_clicked (GtkWidget *widget, gpointer event_p, gpointer d)
 {
   GtkDayView *day_view = GTK_DAY_VIEW (d);
   Event *event = event_p;
-  gchar *buffer = NULL;
   gchar *tbuffer = NULL;
   gchar *strstart, *strend;
   struct tm start_tm, end_tm;
@@ -213,18 +212,27 @@ day_view_event_clicked (GtkWidget *widget, gpointer event_p, gpointer d)
   time_t end = (time_t) (start + event_get_duration (event));
 
   localtime_r (&start, &start_tm);
-  localtime_r (&end, &end_tm);
-  buffer = g_malloc (sizeof (gchar) * 256);
   strstart = strftime_strdup_utf8_locale (TIMEFMT, &start_tm);
-  strend = strftime_strdup_utf8_locale (TIMEFMT, &end_tm);
+
+  if (end == start)
+    strend = 0;
+  else
+    {
+      localtime_r (&end, &end_tm);
+      strend = strftime_strdup_utf8_locale (TIMEFMT, &end_tm);
+    }
 
   const char *summary = event_get_summary (event);
   const char *description = event_get_description (event);
 
-  snprintf (buffer, 256, "%s %s-%s %s\n\n%s",
-	    summary, strstart, strend,
+  char buffer[64];
+  snprintf (buffer, 64, "%s %s%s%s %s%s%s",
+	    summary,
+	    strstart, strend ? "-" : "", strend ?: "",
 	    event_get_alarm (event) ? "(A)" : "",
+	    description ? "\n" : "",
 	    description ? description : "");
+  buffer[64] = 0;
   g_free(strstart);
   g_free(strend);
   tbuffer = g_locale_to_utf8 (buffer, -1, NULL, NULL, NULL);
@@ -238,8 +246,6 @@ day_view_event_clicked (GtkWidget *widget, gpointer event_p, gpointer d)
 
   if (tbuffer)
     g_free (tbuffer);
-  if (buffer)
-    g_free (buffer);
 
   return FALSE;
 }

@@ -1,5 +1,10 @@
 2006-05-11  Neal H. Walfield  <neal@gnu.org>
 
+	* day_view.c (day_view_event_clicked): Improve formatting of the
+	information label.
+
+2006-05-11  Neal H. Walfield  <neal@gnu.org>
+
 	* event-ui.c (click_ok): Free the strings returned by
 	gtk_text_buffer_get_text and gtk_editable_get_chars.
 
