@@ -1,5 +1,10 @@
 2006-05-11  Neal H. Walfield  <neal@gnu.org>
 
+	* main.c (main): If the import filename is a relative filename,
+	create an absolute file name.
+
+2006-05-11  Neal H. Walfield  <neal@gnu.org>
+
 	* day_render.c (calc_events_positions): Free ROOT.
 
 2006-05-11  Neal H. Walfield  <neal@gnu.org>

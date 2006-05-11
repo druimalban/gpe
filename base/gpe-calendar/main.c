@@ -858,8 +858,12 @@ main (int argc, char *argv[])
 	schedule_only = TRUE;
       else if (option_letter == 'i')
 	{
-	  char *s = g_strdup_printf ("%s%sIMPORT_FILE=%s",
-				     state ?: "", state ? "\n" : "", optarg);
+	  char *s
+	    = g_strdup_printf ("%s%sIMPORT_FILE=%s%s%s",
+			       state ?: "", state ? "\n" : "",
+			       *optarg == '/' ? "" : g_get_current_dir (),
+			       *optarg == '/' ? "" : G_DIR_SEPARATOR_S,
+			       optarg);
 	  g_free (state);
 	  state = s;
 
