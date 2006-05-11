@@ -1,5 +1,9 @@
 2006-05-11  Neal H. Walfield  <neal@gnu.org>
 
+	* event-ui.c (click_ok): Let mktime compensate for DST.
+
+2006-05-11  Neal H. Walfield  <neal@gnu.org>
+
 	* main.c (just_new): Mark static.
 	(view_container): Likewise.
 	(toolbar): Likewise.

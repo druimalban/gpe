@@ -416,14 +416,10 @@ click_ok (GtkWidget *widget, GtkWidget *d)
           tm_rend.tm_year = GTK_DATE_COMBO (s->datecomboendon)->year - 1900;
           tm_rend.tm_mon = GTK_DATE_COMBO (s->datecomboendon)->month;
           tm_rend.tm_mday = GTK_DATE_COMBO (s->datecomboendon)->day;
+	  tm_rend.tm_isdst = -1;
 	  gpe_time_sel_get_time (GPE_TIME_SEL (s->endtime), (guint *)&tm_rend.tm_hour, (guint *)&tm_rend.tm_min);
 
           rend_t = mktime (&tm_rend);
-
-          /* If DST was in effect, mktime will have "helpfully" incremented the
-             hour.  */
-          if (tm_rend.tm_isdst)
-            rend_t -= 60*60;
 
 	  event_set_recurrence_count (ev, 0);
 	  event_set_recurrence_end (ev, rend_t);
