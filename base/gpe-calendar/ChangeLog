@@ -1,9 +1,15 @@
 2006-05-12  Neal H. Walfield  <neal@gnu.org>
 
+	* day_view.c (gtk_day_view_reload_events): Add all day events to
+	the reminder area.
+
+2006-05-12  Neal H. Walfield  <neal@gnu.org>
+
 	* day_view.c (gtk_day_view_key_press_event): New function.
 	(gtk_day_view_base_class_init): Set WIDGET_CLASS->KEY_PRESS_EVENT
 	to it.
 	(gtk_day_view_new): Make DAY_VIEW focusable.
+
 	* main.c (new_view): Give CURRENT_VIEW the focus.
 
 2006-05-12  Neal H. Walfield  <neal@gnu.org>

@@ -302,14 +302,20 @@ gtk_day_view_reload_events (GtkView *view)
   for (iter = events; iter; iter = iter->next)
     {
       Event *ev = iter->data;
-      if (is_reminder (ev))
-	{
-	  if (start <= event_get_start (ev)
-	      && event_get_start (ev) < start + 24 * 60 * 60)
-	    reminders = g_slist_append (reminders, ev);
-	  else
-	    g_object_unref (ev);
-	}
+      if (event_get_start (ev) <= start
+	  && (start + 24 * 60 * 60
+	      <= event_get_start (ev) + event_get_duration (ev)))
+	  /* All day event or a multi-day event.  */
+	reminders = g_slist_append (reminders, ev);
+      else if (event_get_duration (ev) == 0
+	       && event_get_start (ev) < start + 24 * 60 * 60)
+	/* Normal reminder.  */
+	reminders = g_slist_append (reminders, ev);
+      else if (event_get_duration (ev) == 0
+	       || (event_get_start (ev) == start + 24 * 60 * 60
+		   && event_get_duration (ev) == 24 * 60 * 60))
+	/* An all day event or reminder which occurs tomorrow.  */
+	g_object_unref (ev);
       else
 	appointments = g_slist_append (appointments, ev);
     }
