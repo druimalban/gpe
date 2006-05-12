@@ -194,23 +194,25 @@ alarm_dialog_init (GTypeInstance *instance, gpointer klass)
   gtk_widget_show (GTK_WIDGET (vbox));
 
   /* A button box at the bottom.  */
-  GtkBox *buttons = GTK_BOX (gtk_hbutton_box_new ());
-  gtk_button_box_set_layout (GTK_BUTTON_BOX (buttons), GTK_BUTTONBOX_END);
-  gtk_container_set_border_width (GTK_CONTAINER (buttons), 4);
-  gtk_box_set_spacing (buttons, 8);
-  gtk_box_pack_end (vbox, GTK_WIDGET (buttons), FALSE, TRUE, 0);
+  GtkBox *hbox = GTK_BOX (gtk_hbox_new (FALSE, 0));
+  gtk_box_pack_end (vbox, GTK_WIDGET (hbox), FALSE, TRUE, 0);
+  gtk_widget_show (GTK_WIDGET (hbox));
+
+  GtkBox *buttons = GTK_BOX (gtk_hbox_new (TRUE, 4));
+  gtk_container_set_border_width (GTK_CONTAINER (buttons), 2);
+  gtk_box_pack_end (hbox, GTK_WIDGET (buttons), FALSE, FALSE, 0);
   gtk_widget_show (GTK_WIDGET (buttons));
 
   GtkWidget *button = gtk_button_new_with_label (_("Acknowledge All"));
   g_signal_connect (G_OBJECT (button), "clicked",
                     G_CALLBACK (ack_all_events_clicked), alarm_dialog);
-  gtk_box_pack_end (buttons, button, FALSE, TRUE, 0);
+  gtk_box_pack_start (buttons, button, FALSE, TRUE, 0);
   gtk_widget_show (button);
 
   button = gtk_button_new_with_label (_("Dismiss"));
   g_signal_connect (G_OBJECT (button), "clicked",
                     G_CALLBACK (dismiss_clicked), alarm_dialog);
-  gtk_box_pack_end (buttons, button, FALSE, TRUE, 0);
+  gtk_box_pack_start (buttons, button, FALSE, TRUE, 0);
   gtk_widget_show (button);
 
   /* And a separator just above it.  */
