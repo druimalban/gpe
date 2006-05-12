@@ -1,5 +1,14 @@
 2006-05-12  Neal H. Walfield  <neal@gnu.org>
 
+	* gtkdatesel.c (gtk_date_sel_size_allocate): New function.
+	(gtk_date_sel_class_init): Set WIDGET_CLASS->SIZE_ALLOCATE to it.
+	(gtk_date_sel_set_mode): Show DATESEL->YEAR.CONTAINER.
+
+	(month_cell_renderer_class_init): Use a correct type signature to
+	avoid a warning.
+
+2006-05-12  Neal H. Walfield  <neal@gnu.org>
+
 	* day_render.c (gtk_day_render_expose): Don't print the minutes.
 
 2006-05-11  Neal H. Walfield  <neal@gnu.org>

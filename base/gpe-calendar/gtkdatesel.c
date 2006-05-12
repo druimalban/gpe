@@ -407,6 +407,9 @@ make_field (GtkDateSel *sel, struct elem *e,
   gtk_box_pack_start (GTK_BOX (sel->subbox), e->container, FALSE, FALSE, 0);
 }
 
+static void gtk_date_sel_size_allocate (GtkWidget *widget,
+					GtkAllocation *allocation);
+
 static void
 gtk_date_sel_class_init (GtkDateSelClass * klass)
 {
@@ -414,8 +417,9 @@ gtk_date_sel_class_init (GtkDateSelClass * klass)
   GtkWidgetClass *widget_class;
 
   parent_class = gtk_type_class (gtk_hbox_get_type ());
-  oclass       = (GObjectClass *) klass;
+  oclass = (GObjectClass *) klass;
   widget_class = (GtkWidgetClass *) klass;
+  widget_class->size_allocate = gtk_date_sel_size_allocate;
 
   my_signals[0] = g_signal_new ("changed",
                                 G_OBJECT_CLASS_TYPE (oclass),
@@ -487,6 +491,33 @@ gtk_date_sel_set_mode (GtkDateSel *datesel, GtkDateSelMode mode)
     }
   else
     gtk_widget_hide (datesel->month.container);
+
+  gtk_widget_show (datesel->year.container);
+}
+
+static void
+gtk_date_sel_size_allocate (GtkWidget *widget,
+			    GtkAllocation *allocation)
+{
+  GtkDateSel *datesel = GTK_DATE_SEL (widget);
+
+  int width = 0;
+  if (datesel->mode == GTKDATESEL_WEEK)
+    width += GTK_WIDGET (datesel->week.container)->requisition.width;
+  if (datesel->mode == GTKDATESEL_FULL)
+    width += GTK_WIDGET (datesel->day.container)->requisition.width;
+  if (datesel->mode == GTKDATESEL_FULL
+      || datesel->mode == GTKDATESEL_MONTH
+      || datesel->mode == GTKDATESEL_WEEK)
+    width += GTK_WIDGET (datesel->month.container)->requisition.width;
+
+  width += GTK_WIDGET (datesel->year.container)->requisition.width;
+  if (width > GTK_WIDGET (datesel)->allocation.width)
+    gtk_widget_hide (datesel->year.container);
+  else
+    gtk_widget_show (datesel->year.container);
+
+  GTK_WIDGET_CLASS (parent_class)->size_allocate (widget, allocation);
 }
 
 #define GTK_TYPE_MONTH_CELL_RENDERER (month_cell_renderer_get_type ())
@@ -513,7 +544,8 @@ typedef struct
   gboolean bold;
 } MonthCellRenderer;
 
-static void month_cell_renderer_class_init (MonthCellRendererClass *klass);
+static void month_cell_renderer_class_init (gpointer klass,
+					    gpointer data);
 
 static GType
 month_cell_renderer_get_type (void)
@@ -559,7 +591,7 @@ static void month_cell_renderer_get_size (GtkCellRenderer *cell,
 					  gint *width,
 					  gint *height);
 static void
-month_cell_renderer_class_init (MonthCellRendererClass *klass)
+month_cell_renderer_class_init (gpointer klass, gpointer data)
 {
   month_parent_class = g_type_class_peek_parent (klass);
 
