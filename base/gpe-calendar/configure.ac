@@ -11,7 +11,7 @@ AC_PROG_INSTALL
 
 
 DEP_MODULES="gtk+-2.0 >= 2.4 glib-2.0 >= 2.2 libgpewidget >= 0.109 libgpepimc \
-             libgpevtype >= 0.14 sqlite mimedir-1.0 libschedule libeventdb >= 0.29 libxsettings-client libhandoff"
+             libgpevtype >= 0.14 sqlite mimedir-1.0 libeventdb >= 0.29 libxsettings-client libhandoff"
 
 # i8n stuff
 AH_TEMPLATE([GETTEXT_PACKAGE], [Package name for gettext])
@@ -49,7 +49,6 @@ if test "$enable_dbus" = "yes"; then
 fi
 
 ENABLE_HILDON=false
-
 AC_ARG_ENABLE(hildon,
 [  --enable-hildon         Enable Hildon GUI],
 [
@@ -59,11 +58,21 @@ AC_ARG_ENABLE(hildon,
 [
 	ENABLE_HILDON=false
 ])
-
 AC_SUBST(ENABLE_HILDON)
-
 AM_CONDITIONAL(HILDON, test x$ENABLE_HILDON = xtrue)
+
+# See if we should use libschedule.
+AC_ARG_WITH(libschedule,
+	[AC_HELP_STRING([--without-libschedule],[disable use of libschedule])])
+if test x$with_libschedule != xno
+then
+  DEP_MODULES="$DEP_MODULES libschedule"
+  AC_DEFINE(WITH_LIBSCHEDULE)
+fi
+
+
 PKG_CHECK_MODULES(DEPS, $DEP_MODULES)
+
 
 AC_CHECK_LIB(dbus-1, dbus_message_iter_get_basic, AC_DEFINE(HAVE_DBUS_MESSAGE_ITER_GET_BASIC, 1, [Define to 1 if you have the dbus_message_iter_get_basic() function.]))
 

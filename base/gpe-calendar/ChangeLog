@@ -1,5 +1,13 @@
 2006-05-12  Neal H. Walfield  <neal@gnu.org>
 
+	* configure.ac: Add option to disable the use of libschedule.
+	(DEP_MODULES): Only include libschedule if with_libschedule isn't
+	"no".
+	* main.c [! WITH_LIBSCHEDULE]: Don't include <gpe/schedule.h>.
+	(schedule_wakeup) [! WITH_LIBSCHEDULE]: Just return FALSE.
+
+2006-05-12  Neal H. Walfield  <neal@gnu.org>
+
 	* day_view.c (gtk_day_view_reload_events): Add all day events to
 	the reminder area.
 

@@ -25,7 +25,10 @@
 #include <gpe/errorbox.h>
 
 #include <gpe/event-db.h>
+
+#ifdef WITH_LIBSCHEDULE
 #include <gpe/schedule.h>
+#endif
 
 #include <handoff.h>
 
@@ -210,6 +213,7 @@ strftime_strdup_utf8_utf8 (const char *fmt, struct tm *tm)
 static gboolean
 schedule_wakeup (gboolean reload)
 {
+#ifdef WITH_LIBSCHEDULE
   static int broken_at;
   if (broken_at)
     return FALSE;
@@ -236,6 +240,7 @@ schedule_wakeup (gboolean reload)
       g_free (action);
       g_object_unref (ev);
     }
+#endif
 
   return FALSE;
 }
