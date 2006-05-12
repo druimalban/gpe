@@ -76,6 +76,8 @@ static void gtk_day_view_base_class_init (gpointer klass);
 static void gtk_day_view_init (GTypeInstance *instance, gpointer klass);
 static void gtk_day_view_dispose (GObject *obj);
 static void gtk_day_view_finalize (GObject *object);
+static gboolean gtk_day_view_key_press_event (GtkWidget *widget,
+					      GdkEventKey *event);
 static void gtk_day_view_set_time (GtkView *view, time_t time);
 static void gtk_day_view_reload_events (GtkView *view);
 
@@ -122,6 +124,7 @@ gtk_day_view_base_class_init (gpointer klass)
   object_class->dispose = gtk_day_view_dispose;
 
   widget_class = (GtkWidgetClass *) klass;
+  widget_class->key_press_event = gtk_day_view_key_press_event;
 
   view_class = (GtkViewClass *) klass;
   view_class->set_time = gtk_day_view_set_time;
@@ -158,6 +161,30 @@ gtk_day_view_finalize (GObject *object)
   gtk_widget_destroy (day_view->event_menu);
 
   G_OBJECT_CLASS (parent_class)->finalize (object);
+}
+
+static gboolean
+gtk_day_view_key_press_event (GtkWidget *widget, GdkEventKey *event)
+{
+  switch (event->keyval)
+    {
+    case GDK_Left:
+    case GDK_Up:
+    case GDK_Page_Up:
+      gtk_view_set_time (GTK_VIEW (widget),
+			 gtk_view_get_time (GTK_VIEW (widget))
+			 - 24 * 60 * 60);
+      return TRUE;
+    case GDK_Right:
+    case GDK_Down:
+    case GDK_Page_Down:
+      gtk_view_set_time (GTK_VIEW (widget),
+			 gtk_view_get_time (GTK_VIEW (widget))
+			 + 24 * 60 * 60);
+      return TRUE;
+    default:
+      return FALSE;
+    }
 }
 
 static void
@@ -613,6 +640,7 @@ gtk_day_view_new (time_t time)
   GtkAdjustment *adj;
 
   day_view = GTK_DAY_VIEW (g_object_new (gtk_day_view_get_type (), NULL));
+  GTK_WIDGET_SET_FLAGS (GTK_WIDGET (day_view), GTK_CAN_FOCUS);
   gtk_event_menu_new (day_view);
 
   day_view->appointment_window = gtk_scrolled_window_new (NULL, NULL);

@@ -414,6 +414,7 @@ new_view (GtkWidget * (*new) (time_t time))
   g_signal_connect (G_OBJECT (current_view),
 		    "time-changed", G_CALLBACK (time_changed), NULL);
   gtk_widget_show (current_view);
+  gtk_widget_grab_focus (current_view);
 }
 
 void
