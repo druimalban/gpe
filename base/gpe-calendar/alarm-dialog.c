@@ -184,6 +184,9 @@ alarm_dialog_init (GTypeInstance *instance, gpointer klass)
   AlarmDialog *alarm_dialog = ALARM_DIALOG (instance);
   GtkWindow *window = GTK_WINDOW (instance);
 
+  g_signal_connect (G_OBJECT (window), "delete",
+		    G_CALLBACK (gtk_widget_hide_on_delete), NULL);
+
   gtk_window_set_title (window, _("Alarms"));
   gtk_window_set_position (window, GTK_WIN_POS_CENTER_ON_PARENT);
 

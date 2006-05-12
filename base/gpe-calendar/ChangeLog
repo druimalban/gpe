@@ -1,5 +1,10 @@
 2006-05-12  Neal H. Walfield  <neal@gnu.org>
 
+	* alarm-dialog.c (alarm_dialog_init): Connect
+	gtk_widget_hide_on_delete to the "delete" signal of WINDOW.
+
+2006-05-12  Neal H. Walfield  <neal@gnu.org>
+
 	* alarm-dialog.c (alarm_dialog_init): Don't use a button box as it
 	takes up too much space on a QVGA device.
 
