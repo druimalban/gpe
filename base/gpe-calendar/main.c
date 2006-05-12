@@ -245,16 +245,29 @@ schedule_wakeup (gboolean reload)
   return FALSE;
 }
 
-void
-update_view (void)
+static guint reload_source;
+
+static gboolean
+hand_reload (gpointer data)
 {
-  if (current_view)
-    gtk_view_reload_events (GTK_VIEW (current_view));
   if (calendar)
     gtk_event_cal_reload_events (calendar);
   if (event_list)
     gtk_event_list_reload_events (event_list);
   schedule_wakeup (TRUE);
+
+  reload_source = 0;
+  /* Don't run again.  */
+  return FALSE;
+}
+
+void
+update_view (void)
+{
+  if (current_view)
+    gtk_view_reload_events (GTK_VIEW (current_view));
+  if (! reload_source)
+    reload_source = g_idle_add (hand_reload, 0);
 }
 
 static gboolean

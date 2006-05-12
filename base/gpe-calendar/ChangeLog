@@ -1,5 +1,13 @@
 2006-05-12  Neal H. Walfield  <neal@gnu.org>
 
+	* main.c (reload_source): New variable.
+	(hard_reload): New function.
+	(update_view): Don't reload the calendar and event_list here.
+	Instead, add an idle source to call hard_reload if one doesn't
+	already exist.
+
+2006-05-12  Neal H. Walfield  <neal@gnu.org>
+
 	* month_view.c (month_view_key_press_event): Rename from this...
 	(gtk_month_view_key_press_event): ... to this.  Remove user_data
 	argument.
