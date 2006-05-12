@@ -476,9 +476,12 @@ gtk_day_render_expose (GtkWidget *widget, GdkEventExpose *event)
 	  tm = day_render->date
 	    + i * ((gfloat) day_render->duration / day_render->rows);
 	  localtime_r (&tm, &ftm);
-	  strftime (timebuf, sizeof (timebuf), TIMEFMT, &ftm);
+
+	  char *am = nl_langinfo (AM_STR);
+	  strftime (timebuf, sizeof (timebuf),
+		    am && *am ? "%I%P" : "%H", &ftm);
 	  snprintf (buf, sizeof (buf), "<span font_desc='normal'>%s</span>",
-		    timebuf);
+		    *timebuf == '0' ? &timebuf[1] : timebuf);
 	  buffer = g_locale_to_utf8 (buf, -1, NULL, NULL, NULL);
 	  pango_layout_set_markup (pl, buffer, -1);
 	  pango_layout_get_pixel_extents (pl, NULL, &pr);

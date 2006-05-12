@@ -1,3 +1,7 @@
+2006-05-12  Neal H. Walfield  <neal@gnu.org>
+
+	* day_render.c (gtk_day_render_expose): Don't print the minutes.
+
 2006-05-11  Neal H. Walfield  <neal@gnu.org>
 
 	* day_view.c (day_view_event_clicked): Improve formatting of the
