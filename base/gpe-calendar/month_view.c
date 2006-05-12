@@ -82,6 +82,8 @@ static void gtk_month_view_finalize (GObject *object);
 static void gtk_month_view_realize (GtkWidget *);
 static void gtk_month_view_set_time (GtkView *view, time_t time);
 static void gtk_month_view_reload_events (GtkView *view);
+static gboolean gtk_month_view_key_press_event (GtkWidget *widget,
+						GdkEventKey *k);
 
 static GtkWidgetClass *parent_class;
 
@@ -127,6 +129,7 @@ gtk_month_view_base_class_init (gpointer klass)
 
   widget_class = GTK_WIDGET_CLASS (klass);
   widget_class->realize = gtk_month_view_realize;
+  widget_class->key_press_event = gtk_month_view_key_press_event;
 
   view_class = (GtkViewClass *) klass;
   view_class->set_time = gtk_month_view_set_time;
@@ -734,9 +737,9 @@ resize_table (GtkWidget *widget, GtkAllocation *allocation, GtkWidget *mv)
 }
 
 static gboolean
-month_view_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *mv)
+gtk_month_view_key_press_event (GtkWidget *widget, GdkEventKey *k)
 {
-  GtkMonthView *month_view = GTK_MONTH_VIEW (mv);
+  GtkMonthView *month_view = GTK_MONTH_VIEW (widget);
   struct render_ctl *c = &month_view->rc[month_view->focused_day];
   int i;
  
@@ -822,6 +825,7 @@ gtk_month_view_new (time_t time)
 
   month_view = GTK_MONTH_VIEW (g_object_new (gtk_month_view_get_type (),
 					     NULL));
+  GTK_WIDGET_SET_FLAGS (month_view, GTK_CAN_FOCUS);
 
   scrolled_window = gtk_scrolled_window_new (NULL, NULL);
   gtk_box_pack_start (GTK_BOX (month_view), scrolled_window, TRUE, TRUE, 0);
@@ -839,11 +843,6 @@ gtk_month_view_new (time_t time)
                     G_CALLBACK (resize_table), month_view);
   g_signal_connect (G_OBJECT (month_view->draw), "button-press-event",
 		    G_CALLBACK (button_press), month_view);
-  gtk_widget_add_events (GTK_WIDGET (month_view->draw), 
-			 GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
-  g_signal_connect (G_OBJECT (month_view->draw), "key_press_event", 
-		    G_CALLBACK (month_view_key_press_event), month_view);
-  GTK_WIDGET_SET_FLAGS (month_view->draw, GTK_CAN_FOCUS);
 
   gtk_widget_set_size_request (GTK_WIDGET(month_view->draw),
 			       month_view->title_height * 7,

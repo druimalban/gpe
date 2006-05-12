@@ -75,6 +75,9 @@ static void gtk_week_view_dispose (GObject *obj);
 static void gtk_week_view_finalize (GObject *object);
 static void gtk_week_view_set_time (GtkView *view, time_t time);
 static void gtk_week_view_reload_events (GtkView *view);
+static gboolean gtk_week_view_key_press_event (GtkWidget *widget,
+					       GdkEventKey *k);
+
 
 static GtkWidgetClass *parent_class;
 
@@ -119,6 +122,7 @@ gtk_week_view_base_class_init (gpointer klass)
   object_class->dispose = gtk_week_view_dispose;
 
   widget_class = (GtkWidgetClass *) klass;
+  widget_class->key_press_event = gtk_week_view_key_press_event;
 
   view_class = (GtkViewClass *) klass;
   view_class->set_time = gtk_week_view_set_time;
@@ -607,9 +611,9 @@ gtk_week_view_reload_events (GtkView *view)
 }
 
 static gboolean
-week_view_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *wv)
+gtk_week_view_key_press_event (GtkWidget *widget, GdkEventKey *k)
 {
-  GtkWeekView *week_view = GTK_WEEK_VIEW (wv);
+  GtkWeekView *week_view = GTK_WEEK_VIEW (widget);
   struct week_day *d = &week_view->days[week_view->focused_day];
 
   int i = 0;
@@ -770,6 +774,7 @@ gtk_week_view_new (time_t time)
   GtkWeekView *week_view;
 
   week_view = GTK_WEEK_VIEW (g_object_new (gtk_week_view_get_type (), NULL));
+  GTK_WIDGET_SET_FLAGS (week_view, GTK_CAN_FOCUS);
 
   /* Create the scroller.  */
   week_view->scroller = gtk_scrolled_window_new (NULL, NULL);
@@ -788,11 +793,6 @@ gtk_week_view_new (time_t time)
     (GTK_SCROLLED_WINDOW (week_view->scroller), week_view->draw);
   g_signal_connect (G_OBJECT (week_view->draw), "button-press-event",
                     G_CALLBACK (week_view_button_press), week_view);
-  gtk_widget_add_events (GTK_WIDGET (week_view->draw),
-			 GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
-  g_signal_connect (G_OBJECT (week_view->draw), "key_press_event", 
-		    G_CALLBACK (week_view_key_press_event), week_view);
-  GTK_WIDGET_SET_FLAGS (week_view->draw, GTK_CAN_FOCUS);
   gtk_widget_show (week_view->draw);
 
   gtk_view_set_time (GTK_VIEW (week_view), time);

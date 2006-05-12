@@ -1,5 +1,24 @@
 2006-05-12  Neal H. Walfield  <neal@gnu.org>
 
+	* month_view.c (month_view_key_press_event): Rename from this...
+	(gtk_month_view_key_press_event): ... to this.  Remove user_data
+	argument.
+	(gtk_month_view_base_class_init): Set
+	WIDGET_CLASS->KEY_PRESS_EVENT to it.
+	(gtk_month_view_new): Make MONTH_VIEW focusable, not
+	MONTH_VIEW->DRAW.  Don't set up a key press event handler for
+	MONTH_VIEW->DRAW
+	* week_view.c (week_view_key_press_event): Rename from this...
+	(gtk_week_view_key_press_event): ... to this.  Remove user_data
+	argument.
+	(gtk_week_view_base_class_init): Set WIDGET_CLASS->KEY_PRESS_EVENT
+	to it.
+	(gtk_week_view_new): Make WEEK_VIEW focusable, not
+	WEEK_VIEW->DRAW.  Don't set up a key press event handler for
+	WEEK_VIEW->DRAW
+
+2006-05-12  Neal H. Walfield  <neal@gnu.org>
+
 	* configure.ac: Add option to disable the use of libschedule.
 	(DEP_MODULES): Only include libschedule if with_libschedule isn't
 	"no".
