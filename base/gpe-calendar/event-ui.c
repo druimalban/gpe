@@ -844,8 +844,8 @@ build_edit_event_window (void)
   g_signal_connect (G_OBJECT (starttime), "changed", G_CALLBACK (note_time_change), s);
   g_signal_connect (G_OBJECT (endtime), "changed", G_CALLBACK (sink_end_time), s);
 
-  startdatelabel      = gtk_label_new (_("Start at:"));
-  enddatelabel        = gtk_label_new (_("End at:"));
+  startdatelabel      = gtk_label_new (_("Start:"));
+  enddatelabel        = gtk_label_new (_("End:"));
   starttimelabel      = gtk_label_new (_("on:"));
   endtimelabel        = gtk_label_new (_("on:"));
   
@@ -871,19 +871,19 @@ build_edit_event_window (void)
   gtk_date_combo_week_starts_monday (GTK_DATE_COMBO (s->taskdate), week_starts_monday);
 
   gtk_table_attach (GTK_TABLE (startendtable), startdatelabel, 0, 1, 0, 1,
-                    0, 0, 0, boxspacing);
+                    GTK_FILL, GTK_FILL, 0, 0);
   gtk_table_attach (GTK_TABLE (startendtable), starttime, 1, 2, 0, 1,
                     GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
   gtk_table_attach (GTK_TABLE (startendtable), starttimelabel, 2, 3, 0, 1,
-                    0, 0, 0, boxspacing);
+                    GTK_FILL, GTK_FILL, 0, boxspacing);
   gtk_table_attach (GTK_TABLE (startendtable), s->startdate, 3, 4, 0, 1,
                     GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
   gtk_table_attach (GTK_TABLE (startendtable), enddatelabel, 0, 1, 1, 2,
-                    0, 0, 0, boxspacing);
+                    GTK_FILL, GTK_FILL, 0, 0);
   gtk_table_attach (GTK_TABLE (startendtable), endtime, 1, 2, 1, 2,
                     GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
   gtk_table_attach (GTK_TABLE (startendtable), endtimelabel, 2, 3, 1, 2,
-                    0, 0, 0, boxspacing);
+                    GTK_FILL, GTK_FILL, 0, boxspacing);
   gtk_table_attach (GTK_TABLE (startendtable), s->enddate, 3, 4, 1, 2,
                     GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
 
