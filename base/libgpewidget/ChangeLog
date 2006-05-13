@@ -1,6 +1,11 @@
+2006-05-13  Phil Blundell  <pb@reciva.com>
+
+	* gpetimesel.c (gpe_time_sel_init): Adjust packing options on
+	entry widgets.
+
 2006-05-13  Florian Boor <florian@kernelconcepts.de>
 
-    * gpetimesel.c (gpe_time_sel_init): Set width of entrys to two chars.
+	* gpetimesel.c (gpe_time_sel_init): Set width of entrys to two chars.
 
 2006-05-06  Phil Blundell  <pb@reciva.com>
 

@@ -405,9 +405,9 @@ gpe_time_sel_init (GpeTimeSel *sel)
   sel->popup = NULL;
   sel->dragging = sel->editing = FALSE;
 
-  gtk_box_pack_start (GTK_BOX (sel), sel->hour_edit, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (sel), sel->hour_edit, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (sel), sel->label, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (sel), sel->minute_edit, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (sel), sel->minute_edit, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (sel), sel->button, FALSE, FALSE, 0);
 
   g_signal_connect (G_OBJECT (sel->button), "clicked", G_CALLBACK (do_popup), sel);
