@@ -1,5 +1,10 @@
 2006-05-13  Neal H. Walfield  <neal@gnu.org>
 
+	* month_view.c (draw_expose_event): Use a smaller font.  Improve
+	layout.
+
+2006-05-13  Neal H. Walfield  <neal@gnu.org>
+
 	* month_view.c (button_press): Rename from this...
 	(gtk_month_view_button_press_event): ... to this.  Don't take a
 	user data parameter.

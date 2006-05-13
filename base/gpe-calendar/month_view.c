@@ -508,8 +508,6 @@ draw_expose_event (GtkWidget *widget,
 	  if (c->valid)
 	    {
 	      GdkGC *color;
-	      gchar *buffer;
-	      char buf[10];
 
 	      if (c->popup.events)
 		color = cream_gc;
@@ -530,10 +528,59 @@ draw_expose_event (GtkWidget *widget,
 	      gdk_draw_line (drawable, black_gc,
 			     x + w - 1, y + 1, x + w - 1, y + h - 1);
 
-	      snprintf (buf, sizeof (buf), "%d", c->popup.day);
-	      buffer = g_locale_to_utf8 (buf, -1, NULL, NULL, NULL);
-	      pango_layout_set_text (pl, buffer, -1);
-	      pango_layout_get_pixel_extents (pl, &pr, NULL);
+#define PRE "<span size='small'>"
+#define POST "</span>"
+#define NUM_WIDTH 10
+	      int len = sizeof (PRE) + sizeof (POST) + NUM_WIDTH + 1;
+              if (c->popup.events)
+                {
+                  GSList *iter;
+                  for (iter = c->popup.events; iter; iter = iter->next)
+		    {
+                      Event *ev = iter->data;
+		      len += strlen (event_get_summary (ev)) + 1;
+		    }
+		  /* NUL character.  */
+		  len ++;
+		}
+
+	      char *buffer = g_malloc (len);
+	      char *p = buffer;
+
+	      p = stpcpy (p, PRE);
+	      int written = sprintf (p, "%d", c->popup.day);
+	      p += written > NUM_WIDTH ? NUM_WIDTH : written;
+
+	      *p = ' ';
+	      p ++;
+	      
+              if (c->popup.events)
+                {
+                  GSList *iter;
+		  for (iter = c->popup.events; iter; iter = iter->next)
+		    {
+                      Event *ev = iter->data;
+		      char *t = p;
+
+		      p = stpcpy (p, event_get_summary (ev));
+		      /* Replace '\n''s with spaces.  */
+		      for (t = strchr (t, '\n'); t; t = strchr (t, '\n'))
+			*t = ' ';
+
+		      /* Replace the \0 with a \n.  */
+		      p[0] = '\n';
+		      p ++;
+		    }
+		}
+
+	      strcpy (p, POST);
+
+	      pango_layout_set_width (pl_evt, w * PANGO_SCALE);
+	      pango_layout_set_markup (pl_evt, buffer, -1);
+	      pango_layout_get_pixel_extents (pl_evt, NULL, &pr);
+	      if (pr.height > y + h)
+		pango_layout_set_width (pl_evt, -1);
+
 	      gtk_paint_layout (widget->style,
 				widget->window,
 				GTK_WIDGET_STATE (widget),
@@ -542,61 +589,9 @@ draw_expose_event (GtkWidget *widget,
 				widget,
 				"label",
 				x + 2, y,
-				pl);
-	      g_free (buffer);
+				pl_evt);
 
-              if (c->popup.events)
-                {
-                  GSList *iter;
-		  int len = 0;
-
-                  for (iter = c->popup.events; iter; iter = iter->next)
-		    {
-                      Event *ev = iter->data;
-		      len += strlen (event_get_summary (ev)) + 1;
-		    }
-		  len ++;
-
-		  char *buffer = g_malloc (len);
-		  char *p = buffer;
-                  for (iter = c->popup.events; iter; iter = iter->next)
-		    {
-                      Event *ev = iter->data;
-		      char *t;
-
-		      memcpy (p, event_get_summary (ev),
-			      strlen (event_get_summary (ev)) + 1);
-		      /* Replace '\n''s with spaces.  */
-		      for (t = strchr (p, '\n'); t; t = strchr (t, '\n'))
-			*t = ' ';
-
-		      /* Advance p.  */
-		      p += strlen (event_get_summary (ev));
-		      p[0] = '\n';
-		      p ++;
-		    }
-		  *p = '\0';
-
-		  gint top = y + pr.height + 2;
-
-		  pango_layout_set_width (pl_evt, w * PANGO_SCALE);
-		  pango_layout_set_text (pl_evt, buffer, -1);
-		  pango_layout_get_pixel_extents (pl_evt, NULL, &pr);
-		  if (pr.height > y + h - 1 - top + 1)
-		    pango_layout_set_width (pl_evt, -1);
-
-		  gtk_paint_layout (widget->style,
-				    widget->window,
-				    GTK_WIDGET_STATE (widget),
-				    FALSE,
-				    &event->area,
-				    widget,
-				    "label",
-				    x + 2, top,
-				    pl_evt);
-
-		  g_free(buffer);
-                }
+	      g_free(buffer);
 	    }
 	  else
 	    /* Not a valid date.  */
