@@ -84,6 +84,8 @@ static void gtk_month_view_set_time (GtkView *view, time_t time);
 static void gtk_month_view_reload_events (GtkView *view);
 static gboolean gtk_month_view_key_press_event (GtkWidget *widget,
 						GdkEventKey *k);
+static gboolean gtk_month_view_button_press_event (GtkWidget *widget,
+						   GdkEventButton *event);
 
 static GtkWidgetClass *parent_class;
 
@@ -130,6 +132,7 @@ gtk_month_view_base_class_init (gpointer klass)
   widget_class = GTK_WIDGET_CLASS (klass);
   widget_class->realize = gtk_month_view_realize;
   widget_class->key_press_event = gtk_month_view_key_press_event;
+  widget_class->button_press_event = gtk_month_view_button_press_event;
 
   view_class = (GtkViewClass *) klass;
   view_class->set_time = gtk_month_view_set_time;
@@ -295,9 +298,9 @@ gtk_month_view_set_time (GtkView *view, time_t current)
 }
 
 static gboolean
-button_press (GtkWidget *widget, GdkEventButton *event, GtkWidget *mv)
+gtk_month_view_button_press_event (GtkWidget *widget, GdkEventButton *event)
 {
-  GtkMonthView *month_view = GTK_MONTH_VIEW (mv);
+  GtkMonthView *month_view = GTK_MONTH_VIEW (widget);
   int col, row;
   int day;
   struct render_ctl *c;
@@ -841,8 +844,6 @@ gtk_month_view_new (time_t time)
 					 month_view->draw);
   g_signal_connect (G_OBJECT (month_view->draw), "size-allocate",
                     G_CALLBACK (resize_table), month_view);
-  g_signal_connect (G_OBJECT (month_view->draw), "button-press-event",
-		    G_CALLBACK (button_press), month_view);
 
   gtk_widget_set_size_request (GTK_WIDGET(month_view->draw),
 			       month_view->title_height * 7,

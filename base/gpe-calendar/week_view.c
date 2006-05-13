@@ -77,6 +77,8 @@ static void gtk_week_view_set_time (GtkView *view, time_t time);
 static void gtk_week_view_reload_events (GtkView *view);
 static gboolean gtk_week_view_key_press_event (GtkWidget *widget,
 					       GdkEventKey *k);
+static gboolean gtk_week_view_button_press_event (GtkWidget *widget,
+						  GdkEventButton *event);
 
 
 static GtkWidgetClass *parent_class;
@@ -123,6 +125,7 @@ gtk_week_view_base_class_init (gpointer klass)
 
   widget_class = (GtkWidgetClass *) klass;
   widget_class->key_press_event = gtk_week_view_key_press_event;
+  widget_class->button_press_event = gtk_week_view_button_press_event;
 
   view_class = (GtkViewClass *) klass;
   view_class->set_time = gtk_week_view_set_time;
@@ -693,10 +696,9 @@ gtk_week_view_key_press_event (GtkWidget *widget, GdkEventKey *k)
 }
 
 static gboolean
-week_view_button_press (GtkWidget *widget, GdkEventButton *event,
-			GtkWidget *wv)
+gtk_week_view_button_press_event (GtkWidget *widget, GdkEventButton *event)
 {
-  GtkWeekView *week_view = GTK_WEEK_VIEW (wv);
+  GtkWeekView *week_view = GTK_WEEK_VIEW (widget);
   guint y = event->y;
   int day;
   struct week_day *d;
@@ -778,6 +780,8 @@ gtk_week_view_new (time_t time)
 
   /* Create the scroller.  */
   week_view->scroller = gtk_scrolled_window_new (NULL, NULL);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (week_view->scroller),
+				  GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
   gtk_box_pack_start (GTK_BOX (week_view), week_view->scroller, TRUE, TRUE, 0);
   gtk_widget_show (week_view->scroller);
 
@@ -787,12 +791,8 @@ gtk_week_view_new (time_t time)
                     G_CALLBACK (draw_expose_event), week_view);
   g_signal_connect (G_OBJECT (week_view->draw), "size-allocate", 
 		    G_CALLBACK (resize), week_view);
-  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (week_view->scroller),
-				  GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
   gtk_scrolled_window_add_with_viewport
     (GTK_SCROLLED_WINDOW (week_view->scroller), week_view->draw);
-  g_signal_connect (G_OBJECT (week_view->draw), "button-press-event",
-                    G_CALLBACK (week_view_button_press), week_view);
   gtk_widget_show (week_view->draw);
 
   gtk_view_set_time (GTK_VIEW (week_view), time);

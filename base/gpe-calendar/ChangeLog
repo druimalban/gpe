@@ -1,3 +1,22 @@
+2006-05-13  Neal H. Walfield  <neal@gnu.org>
+
+	* month_view.c (button_press): Rename from this...
+	(gtk_month_view_button_press_event): ... to this.  Don't take a
+	user data parameter.
+	(gtk_month_view_base_class_init): Set
+	WIDGET_CLASS->BUTTON_PRESS_EVENT to
+	gtk_month_view_button_press_event.
+	(gtk_month_view_new): Don't connect a "button-press-event" signal
+	handler to MONTH_VIEW->DRAW.
+	* week_view.c (week_view_button_press): Rename from this...
+	(gtk_week_view_button_press_event): ... to this.  Don't take a
+	user data parameter.
+	(gtk_week_view_base_class_init): Set
+	WIDGET_CLASS->BUTTON_PRESS_EVENT to
+	gtk_week_view_button_press_event.
+	(gtk_week_view_new): Don't connect a "button-press-event" signal
+	handler to WEEK_VIEW->DRAW.
+
 2006-05-12  Neal H. Walfield  <neal@gnu.org>
 
 	* main.c (reload_source): New variable.
