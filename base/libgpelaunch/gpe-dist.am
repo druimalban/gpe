@@ -4,9 +4,10 @@ dist-upload: distcheck
 	scp $(PACKAGE)-$(VERSION).tar.bz2 $(USER)@handhelds.org:/home/ftp/projects/gpe/source/
 
 tag:
-	cvs tag $(CVSTAG)
+	@cd $(srcdir) && if cvs update -p -r$(CVSTAG) >/dev/null 2>&1; then echo "** Tag $(CVSTAG) already exists."; echo "** Use \"make retag\" if you really want to move this tag."; exit 1; fi
+	cd $(srcdir) && cvs tag $(CVSTAG)
 
 retag:
-	cvs tag -F $(CVSTAG)
+	cd $(srcdir) && cvs tag -F $(CVSTAG)
 
 source: tag dist-upload

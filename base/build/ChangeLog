@@ -1,3 +1,9 @@
+2006-05-13  Phil Blundell  <pb@reciva.com>
+
+	* gpe-dist.am (tag): Abort if sources are already tagged at
+	current version.  Change to $(srcdir) before performing cvs
+	operations.
+
 2005-09-11  Phil Blundell  <philb@gnu.org>
 
 	* gpe-dist.am (dist-upload): Use distcheck.
