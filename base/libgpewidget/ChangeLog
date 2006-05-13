@@ -1,3 +1,7 @@
+2006-05-13  Florian Boor <florian@kernelconcepts.de>
+
+    * gpetimesel.c (gpe_time_sel_init): Set width of entrys to two chars.
+
 2006-05-06  Phil Blundell  <pb@reciva.com>
 
 	* Version 0.111 released.

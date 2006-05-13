@@ -379,6 +379,8 @@ gpe_time_sel_init (GpeTimeSel *sel)
 
   sel->hour_edit = gtk_entry_new ();
   sel->minute_edit = gtk_entry_new ();
+  gtk_entry_set_width_chars (GTK_ENTRY (sel->hour_edit), 2);
+  gtk_entry_set_width_chars (GTK_ENTRY (sel->minute_edit), 2);
 
   g_object_set_data (G_OBJECT (sel->hour_edit), "sel", sel);
   g_object_set_data (G_OBJECT (sel->minute_edit), "sel", sel);
@@ -458,15 +460,15 @@ gpe_time_sel_get_type (void)
     {
       static const GTypeInfo time_sel_info =
       {
-	sizeof (GpeTimeSelClass),
-	(GBaseInitFunc) NULL,
-	(GBaseFinalizeFunc) NULL,
-	(GClassInitFunc) gpe_time_sel_class_init,
-	(GClassFinalizeFunc) NULL,
-	NULL /* class_data */,
-	sizeof (GpeTimeSel),
-	0 /* n_preallocs */,
-	(GInstanceInitFunc) gpe_time_sel_init,
+        sizeof (GpeTimeSelClass),
+        (GBaseInitFunc) NULL,
+        (GBaseFinalizeFunc) NULL,
+        (GClassInitFunc) gpe_time_sel_class_init,
+        (GClassFinalizeFunc) NULL,
+        NULL /* class_data */,
+        sizeof (GpeTimeSel),
+        0 /* n_preallocs */,
+        (GInstanceInitFunc) gpe_time_sel_init,
       };
 
       time_sel_type = g_type_register_static (GTK_TYPE_HBOX, "GpeTimeSel", &time_sel_info, (GTypeFlags)0);
