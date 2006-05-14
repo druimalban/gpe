@@ -1,5 +1,10 @@
 2006-05-14  Neal H. Walfield  <neal@gnu.org>
 
+	* event-ui.c (note_time_change): Really correctly calculate the
+	new end time.
+
+2006-05-14  Neal H. Walfield  <neal@gnu.org>
+
 	* event-ui.c (cached_window_destroy_source): New variable.
 	(cached_window_destroy): New function.
 	(edit_finished): Set a timer to destroy the cached window in 5

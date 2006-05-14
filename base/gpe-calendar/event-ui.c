@@ -627,13 +627,13 @@ note_time_change (GtkWidget *widget, struct edit_state *s)
 
   if (s->end_time_floating)
     {
-      hour++;
-
       struct tm tm;
       memset (&tm, 0, sizeof (struct tm));
       tm.tm_year = GTK_DATE_COMBO (s->startdate)->year - 1900;
       tm.tm_mon = GTK_DATE_COMBO (s->startdate)->month;
       tm.tm_mday = GTK_DATE_COMBO (s->startdate)->day;
+      tm.tm_hour = hour;
+      tm.tm_min = minute;
       tm.tm_isdst = -1;
       time_t t = mktime (&tm) + 60 * 60;
       localtime_r (&t, &tm);
@@ -641,7 +641,7 @@ note_time_change (GtkWidget *widget, struct edit_state *s)
       gtk_date_combo_set_date (GTK_DATE_COMBO (s->enddate),
 			       tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
 
-      gpe_time_sel_set_time (GPE_TIME_SEL (s->endtime), hour % 24, minute);
+      gpe_time_sel_set_time (GPE_TIME_SEL (s->endtime), tm.tm_hour, tm.tm_min);
     }
 }
 
