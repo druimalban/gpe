@@ -1,7 +1,22 @@
+2006-05-14  Neal H. Walfield  <neal@gnu.org>
+
+	* event-ui.c (cached_window_destroy_source): New variable.
+	(cached_window_destroy): New function.
+	(edit_finished): Set a timer to destroy the cached window in 5
+	minutes if it is not reused.
+	(edit_event_window): If using CACHED_WINDOW, clear any time out.
+
+	(note_time_change): Correctly calculate the next hour.
+
+	(build_edit_event_window): Reduce code repetition.
+
+	(event_ui_init): Remove unused function.
+
 2006-05-13  Florian Boor  <florian@kernelconcepts.de>
 
-    * event_ui.c (build_edit_event_window): Shorten start and end labels a 
-    little bit and optimize packing. It fits on qvga screens again.
+	* event_ui.c (build_edit_event_window): Shorten start and end
+	labels a little bit and optimize packing. It fits on qvga screens
+	again.
 
 2006-05-13  Neal H. Walfield  <neal@gnu.org>
 

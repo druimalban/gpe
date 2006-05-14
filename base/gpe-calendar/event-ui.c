@@ -187,6 +187,20 @@ recalculate_sensitivities (GtkWidget *widget,
     }
 }
 
+static guint cached_window_destroy_source;
+
+static gboolean
+cached_window_destroy (gpointer data)
+{
+  if (cached_window)
+    {
+      gtk_widget_destroy (cached_window);
+      cached_window = NULL;
+    }
+      
+  return FALSE;
+}
+
 static gboolean
 edit_finished (GtkWidget *d)
 {
@@ -195,7 +209,13 @@ edit_finished (GtkWidget *d)
   if (cached_window)
     gtk_widget_destroy (d);
   else
-    cached_window = d;
+    {
+      cached_window = d;
+      /* Remove cached window in 5 minutes.  */
+      cached_window_destroy_source
+	= g_timeout_add ((time (NULL) + 5 * 60 * 60) * 1000,
+			 cached_window_destroy, NULL);
+    }
 
   return TRUE;
 }
@@ -608,7 +628,20 @@ note_time_change (GtkWidget *widget, struct edit_state *s)
   if (s->end_time_floating)
     {
       hour++;
-      gpe_time_sel_set_time (GPE_TIME_SEL (s->endtime), hour, minute);
+
+      struct tm tm;
+      memset (&tm, 0, sizeof (struct tm));
+      tm.tm_year = GTK_DATE_COMBO (s->startdate)->year - 1900;
+      tm.tm_mon = GTK_DATE_COMBO (s->startdate)->month;
+      tm.tm_mday = GTK_DATE_COMBO (s->startdate)->day;
+      tm.tm_isdst = -1;
+      time_t t = mktime (&tm) + 60 * 60;
+      localtime_r (&t, &tm);
+
+      gtk_date_combo_set_date (GTK_DATE_COMBO (s->enddate),
+			       tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
+
+      gpe_time_sel_set_time (GPE_TIME_SEL (s->endtime), hour % 24, minute);
     }
 }
 
@@ -782,9 +815,11 @@ build_edit_event_window (void)
   s                   = g_malloc0 (sizeof (struct edit_state));
     
   gpe_set_window_icon (window, "icon");
+
+  int tiny = (gdk_screen_width() <= 300) || (gdk_screen_height() <= 400);
   
   /* if screen is large enough, make it a real dialog */
-  if ((gdk_screen_width() >= 300) && (gdk_screen_height() >= 300))
+  if (! tiny)
     {
       gtk_window_set_default_size (GTK_WINDOW (window), 280, 380);
       gtk_window_set_type_hint(GTK_WINDOW(window), GDK_WINDOW_TYPE_HINT_DIALOG);
@@ -1164,31 +1199,14 @@ build_edit_event_window (void)
   weeklytable      = gtk_table_new (3, 3, FALSE);
   gtk_box_pack_start (GTK_BOX (s->weeklybox), weeklytable, FALSE, FALSE, 0);
 
-  gchar *gs;
+  for (i = 0; i < 7; i++)
+    {
+      gchar *gs;
   
-  for (i = 0; i < 3; i++)
-    {
       gs = g_locale_to_utf8 (nl_langinfo(days[i]), -1, NULL, NULL, NULL);
       GtkWidget *b = gtk_check_button_new_with_label (gs);
-      gtk_table_attach_defaults (GTK_TABLE (weeklytable), b, i, i + 1, 0, 1);
-      s->checkbuttonwday[i] = b;
-      g_free (gs);
-      g_signal_connect (G_OBJECT (b), "clicked", G_CALLBACK (sink_weekly), s);
-    }
-  for (i = 3; i < 6; i++)
-    {
-      gs = g_locale_to_utf8 (nl_langinfo(days[i]), -1, NULL, NULL, NULL);
-      GtkWidget *b = gtk_check_button_new_with_label (gs);
-      gtk_table_attach_defaults (GTK_TABLE (weeklytable), b, i - 3, i - 2, 1, 2);
-      s->checkbuttonwday[i] = b;
-      g_free (gs);
-      g_signal_connect (G_OBJECT (b), "clicked", G_CALLBACK (sink_weekly), s);
-    }
-  for (i = 6; i < 7; i++)
-    {
-      gs = g_locale_to_utf8 (nl_langinfo(days[i]), -1, NULL, NULL, NULL);
-      GtkWidget *b = gtk_check_button_new_with_label (gs);
-      gtk_table_attach_defaults (GTK_TABLE (weeklytable), b, i - 6, i - 5, 2, 3);
+      gtk_table_attach_defaults (GTK_TABLE (weeklytable), b,
+				 i % 3, (i % 3) + 1, i / 3, (i / 3) + 1);
       s->checkbuttonwday[i] = b;
       g_free (gs);
       g_signal_connect (G_OBJECT (b), "clicked", G_CALLBACK (sink_weekly), s);
@@ -1413,17 +1431,16 @@ edit_event_window (void)
     {
       w = cached_window;
       cached_window = NULL;
+      if (cached_window_destroy_source)
+	{
+	  g_source_remove (cached_window_destroy_source);
+	  cached_window_destroy_source = 0;
+	}
     }
   else
     w = build_edit_event_window ();
 
   return w;
-}
-
-void
-event_ui_init (void)
-{
-  cached_window = build_edit_event_window ();
 }
 
 GtkWidget *
