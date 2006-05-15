@@ -74,10 +74,9 @@ do_test (int argc, char *argv[])
   event_set_recurrence_start (ev3, now + ALARM);
   event_set_duration (ev3, 1);
   event_set_alarm (ev3, ALARM);
-  recur_t r = event_get_recurrence (ev3);
-  r->type = RECUR_DAILY;
+  event_set_recurrence_type (ev3, RECUR_DAILY);
 #define COUNT 10
-  r->count = COUNT;
+  event_set_recurrence_count (ev3, COUNT);
   event_flush (ev3);
 
   int seen[3] = { 0, 0, 0 };

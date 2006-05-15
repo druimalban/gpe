@@ -49,23 +49,21 @@ do_test (int argc, char *argv[])
   event_set_recurrence_start (ev, now);
 #define D 100
   event_set_duration (ev, D);
-  recur_t r = event_get_recurrence (ev);
   /* Every other day.  */
-  r->type = RECUR_DAILY;
+  event_set_recurrence_type (ev, RECUR_DAILY);
 #define INCREMENT 2
-  r->increment = INCREMENT;
+  event_set_recurrence_increment (ev, INCREMENT);
 #define COUNT 10
-  r->count = COUNT;
+  event_set_recurrence_count (ev, COUNT);
   event_flush (ev);
 
   Event *ev2 = event_new (edb, NULL);
   event_set_recurrence_start (ev2, now + D);
   event_set_duration (ev2, D);
-  r = event_get_recurrence (ev2);
   /* Every day until 10 days from start.  */
-  r->type = RECUR_DAILY;
+  event_set_recurrence_type (ev2, RECUR_DAILY);
 #define END now + 10 * 24 * 60 * 60
-  r->end = END;
+  event_set_recurrence_end (ev2, END);
   event_flush (ev2);
 
   int i;

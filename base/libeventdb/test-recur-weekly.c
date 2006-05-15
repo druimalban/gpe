@@ -58,35 +58,32 @@ do_test (int argc, char *argv[])
   event_set_recurrence_start (ev, now);
 #define D 100
   event_set_duration (ev, D);
-  recur_t r = event_get_recurrence (ev);
   /* Every four weeks.  */
-  r->type = RECUR_WEEKLY;
+  event_set_recurrence_type (ev, RECUR_WEEKLY);
 #define EV_INCREMENT 4
-  r->increment = EV_INCREMENT;
+  event_set_recurrence_increment (ev, EV_INCREMENT);
 #define COUNT 10
-  r->count = COUNT;
+  event_set_recurrence_count (ev, COUNT);
   event_flush (ev);
 
   Event *ev2 = event_new (edb, NULL);
   event_set_recurrence_start (ev2, now);
   event_set_duration (ev2, D);
-  r = event_get_recurrence (ev2);
   /* Every 3 weeks until 10 weeks from start.  */
-  r->type = RECUR_WEEKLY;
+  event_set_recurrence_type (ev2, RECUR_WEEKLY);
 #define EV2_INCREMENT 2
-  r->increment = EV2_INCREMENT;
+  event_set_recurrence_increment (ev2, EV2_INCREMENT);
 #define END now + 10 * 7 * 24 * 60 * 60
-  r->end = END;
+  event_set_recurrence_end (ev2, END);
   /* But only sundays, mondays and fridays.  */
-  r->daymask = SUN | MON | FRI;
+  event_set_recurrence_daymask (ev2, SUN | MON | FRI);
   event_flush (ev2);
 
   int i;
   int expected_ev2_count;
   for (i = 0; i < COUNT * EV_INCREMENT * 2 * 7; i ++)
     {
-      /* XXX: Day light savings time...  */
-      time_t t = now + i * 24 * 60 * 60;
+      time_t t = now + i * 24 * 60 * 60 + 12 * 60 * 60;
       GSList *list = event_db_list_for_period (edb, now, t);
 
       GSList *e;

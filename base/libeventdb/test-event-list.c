@@ -60,7 +60,7 @@ do_test (int argc, char *argv[])
     {
       GSList *evs = event_db_list_for_period (edb, t, t);
 
-      if (now <= t && t <= now + D)
+      if (now <= t && t < now + D)
 	{
 	  if (! evs || evs->next
 	      || event_get_uid (ev) != event_get_uid (evs->data))

@@ -1,5 +1,16 @@
 2006-05-15  Neal H. Walfield  <neal@gnu.org>
 
+	* test-event-list.c (do_test): Fix off by one error.
+	* test-alarms.c (do_test): Don't use depreciated recur_t but the
+	appropriate getter and setter functions.
+	* test-recur-daily.c (do_test): Likewise.
+	* test-recur-monthly.c (do_test): Likewise and fix off by one
+	error.
+	* test-recur-weekly.c (do_test): Don't use depreciated recur_t but
+	the appropriate getter and setter functions.  Avoid DST problem.
+
+2006-05-15  Neal H. Walfield  <neal@gnu.org>
+
 	* event-db.c (event_list): It's spelt g_slist_prepend.
 	(event_sort_func): Remove function.  Update users to use
 	event_compare_func instead.

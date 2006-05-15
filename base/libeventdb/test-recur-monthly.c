@@ -36,7 +36,7 @@ do_test (int argc, char *argv[])
   time_t now;
 
   memset (&tm, 0, sizeof (tm));
-  /* January 1, 2006.  */
+  /* January 1, 2006 at 13:00.  */
   tm.tm_year = 2006 - 1900;
   tm.tm_mon = 0;
   tm.tm_mday = 1;
@@ -58,26 +58,24 @@ do_test (int argc, char *argv[])
   event_set_recurrence_start (ev, now);
 #define D 100
   event_set_duration (ev, D);
-  recur_t r = event_get_recurrence (ev);
   /* Every four months.  */
-  r->type = RECUR_MONTHLY;
+  event_set_recurrence_type (ev, RECUR_MONTHLY);
 #define EV_INCREMENT 4
-  r->increment = EV_INCREMENT;
+  event_set_recurrence_increment (ev, EV_INCREMENT);
   /* Two instances.  */
 #define EV_COUNT 2
-  r->count = EV_COUNT;
+  event_set_recurrence_count (ev, EV_COUNT);
   event_flush (ev);
 
   /* Every month until November.  */
   Event *ev2 = event_new (edb, NULL);
   event_set_recurrence_start (ev2, now);
   event_set_duration (ev2, D);
-  r = event_get_recurrence (ev2);
-  r->type = RECUR_MONTHLY;
+  event_set_recurrence_type (ev2, RECUR_MONTHLY);
   struct tm end = tm;
   end.tm_mon = 10;
 #define END mktime (&end)
-  r->end = END;
+  event_set_recurrence_end (ev2, END + 1);
   event_flush (ev2);
 
   int i;
