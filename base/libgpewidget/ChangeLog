@@ -1,3 +1,36 @@
+2006-05-15  Neal H. Walfield  <neal@gnu.org>
+
+	* gpetimesel.c (GTK_TYPE_NUM_CELL_RENDERER): New marco.
+	(NUM_CELL_RENDERER): Likewise.
+	(NUM_CELL_RENDERER_CLASS): Likewise.
+	(NUM_CELL_RENDERER_GET_CLASS): Likewise.
+	(NumCellRendererClass): New typedef.
+	(num_parent_class): New variable.
+	(NumCellRenderer): New typedef.
+	(num_cell_renderer_get_type): New function.
+	(num_cell_renderer_class_init): Likewise.
+	(num_cell_renderer_finalize): Likewise.
+	(get_layout): Likewise.
+	(num_cell_renderer_get_size): Likewise.
+	(num_cell_renderer_render): Likewise.
+	(num_cell_renderer_new): Likewise.
+	(num_cell_data_func): Likewise.
+	(find_deepest_window): Turn recursive function into an iterative
+	function.
+	(adj_change): New function.
+	(do_popup): Create SEL->HOUR_ADJ and SEL_MINUTE_ADJ here.
+	(insert_text_handler): Remove function.
+	(combo_entry_change): New function.
+	(entry_key_press_event): Likewise.
+	(hour_model): New variable.
+	(minute_model): New variable.
+	(squash_pointer): New function.
+	(gpe_time_sel_init): Rewrite to use GtkComboBoxEntry's.
+	(gpe_time_sel_show): Remove function.
+	(gpe_time_sel_get_time): Update to use the GtkComboBoxEntry's and
+	clamp the values within sane ranges.
+	(gpe_time_sel_set_time): Update to use the GtkComboBoxEntry's.
+
 2006-05-13  Phil Blundell  <pb@reciva.com>
 
 	* Version 0.112 released.

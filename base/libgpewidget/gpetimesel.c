@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2003, 2006 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2006 Neal H. Walfield <neal@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -25,6 +26,202 @@
 #define _(x) (x)
 #endif
 
+#define GTK_TYPE_NUM_CELL_RENDERER (num_cell_renderer_get_type ())
+#define NUM_CELL_RENDERER(obj) \
+  (G_TYPE_CHECK_INSTANCE_CAST ((obj), GTK_TYPE_NUM_CELL_RENDERER, NumCellRenderer))
+#define NUM_CELL_RENDERER_CLASS(klass) \
+  (G_TYPE_CHECK_CLASS_CAST ((klass), \
+                            GTK_TYPE_NUM_CELL_RENDERER, NumCellRendererClass))
+#define NUM_CELL_RENDERER_GET_CLASS(obj) \
+  (G_TYPE_INSTANCE_GET_CLASS ((obj), \
+                              GTK_TYPE_NUM_CELL_RENDERER, NumCellRendererClass))
+
+typedef struct
+{
+  GtkCellRendererClass cell_renderer;
+} NumCellRendererClass;
+
+static GObjectClass *num_parent_class;
+
+typedef struct
+{
+  GtkCellRenderer cell_renderer;
+  char *fmt;
+  char *num;
+  gboolean bold;
+} NumCellRenderer;
+
+static void num_cell_renderer_class_init (gpointer klass, gpointer data);
+
+static GType
+num_cell_renderer_get_type (void)
+{
+  static GType type;
+
+  if (! type)
+    {
+      static const GTypeInfo info =
+      {
+        sizeof (NumCellRendererClass),
+        NULL,
+        NULL,
+        num_cell_renderer_class_init,
+        NULL,
+        NULL,
+        sizeof (NumCellRenderer),
+        0,
+        NULL
+      };
+
+      type = g_type_register_static (gtk_cell_renderer_get_type (),
+				     "NumCellRenderer", &info, 0);
+    }
+
+  return type;
+}
+
+static void num_cell_renderer_finalize (GObject *object);
+static void num_cell_renderer_render (GtkCellRenderer *cell,
+				      GdkWindow *window,
+				      GtkWidget *widget,
+				      GdkRectangle *background_area,
+				      GdkRectangle *cell_area,
+				      GdkRectangle *expose_area,
+				      GtkCellRendererState flags);
+static void num_cell_renderer_get_size (GtkCellRenderer *cell,
+					GtkWidget *widget,
+					GdkRectangle *cell_area,
+					gint *x_offset,
+					gint *y_offset,
+					gint *width,
+					gint *height);
+
+static void
+num_cell_renderer_class_init (gpointer klass, gpointer data)
+{
+  num_parent_class = g_type_class_peek_parent (klass);
+
+  GObjectClass *object_class = G_OBJECT_CLASS (klass);
+  object_class->finalize = num_cell_renderer_finalize;
+  
+  GtkCellRendererClass *cell_class = GTK_CELL_RENDERER_CLASS (klass);
+  cell_class->get_size = num_cell_renderer_get_size;
+  cell_class->render = num_cell_renderer_render;
+}
+
+static void
+num_cell_renderer_finalize (GObject *object)
+{
+  NumCellRenderer *renderer = NUM_CELL_RENDERER (object);
+
+  if (renderer->fmt)
+    {
+      g_free (renderer->num);
+      g_free (renderer->fmt);
+    }
+
+  (* G_OBJECT_CLASS (num_parent_class)->finalize) (object);
+}
+
+static PangoLayout*
+get_layout (NumCellRenderer *cell,
+            GtkWidget *widget,
+	    int force_bold)
+{
+  PangoLayout *layout;
+
+  if (force_bold || cell->bold)
+    {
+      char *buf = g_strdup_printf ("<b>%s</b>", cell->num);
+      layout = gtk_widget_create_pango_layout (widget, NULL);
+      pango_layout_set_markup (layout, buf, -1);
+      g_free (buf);
+    }
+  else
+    layout = gtk_widget_create_pango_layout (widget, cell->num);
+
+  return layout;
+}
+
+static void
+num_cell_renderer_get_size (GtkCellRenderer *cell,
+			    GtkWidget *widget,
+			    GdkRectangle *cell_area,
+			    gint *x_offset,
+			    gint *y_offset,
+			    gint *width,
+			    gint *height)
+{
+  NumCellRenderer *num_cell_renderer = NUM_CELL_RENDERER (cell);
+
+  PangoLayout *pl = get_layout (num_cell_renderer, widget, 1);
+  PangoRectangle rect;
+  pango_layout_get_pixel_extents (pl, NULL, &rect);
+  g_object_unref (pl);
+
+  if (height)
+    *height = 2 + rect.height;
+  if (width)
+    *width = 2 + rect.width;
+}
+
+static void
+num_cell_renderer_render (GtkCellRenderer *cell,
+			  GdkWindow *window,
+			  GtkWidget *widget,
+			  GdkRectangle *background_area,
+			  GdkRectangle *cell_area,
+			  GdkRectangle *expose_area,
+			  GtkCellRendererState flags)
+{
+  PangoLayout *pl = get_layout (NUM_CELL_RENDERER (cell), widget, 0);
+
+  gtk_paint_layout (widget->style, window, GTK_WIDGET_STATE (widget),
+                    TRUE, expose_area, widget,
+                    "cellrenderertext",
+                    cell_area->x + 1,
+                    cell_area->y + 1,
+                    pl);
+
+  g_object_unref (pl);
+}
+
+static GtkCellRenderer *
+num_cell_renderer_new (void)
+{
+  return g_object_new (GTK_TYPE_NUM_CELL_RENDERER, NULL);
+}
+
+static void
+num_cell_data_func (GtkCellLayout *cell_layout,
+		    GtkCellRenderer *cell_renderer,
+		    GtkTreeModel *model,
+		    GtkTreeIter *iter,
+		    gpointer data)
+{
+  NumCellRenderer *cell = NUM_CELL_RENDERER (cell_renderer);
+  char *num;
+
+  gtk_tree_model_get (model, iter, 0, &num, -1);
+  if (cell->fmt)
+    {
+      g_free (cell->num);
+      cell->num = g_strdup_printf (cell->fmt, num);
+    }
+  else
+    cell->num = num;
+
+  GtkTreeIter active_iter;
+  if (gtk_combo_box_get_active_iter (GTK_COMBO_BOX (data), &active_iter))
+    {
+      char *active_num;
+      gtk_tree_model_get (model, &active_iter, 0, &active_num, -1);
+      cell->bold = strcmp (num, active_num) == 0;
+    }
+  else
+    cell->bold = 0;
+}
+
 struct _GpeTimeSelClass 
 {
   GtkHBoxClass parent_class;
@@ -44,37 +241,6 @@ gpe_time_sel_emit_changed (GpeTimeSel *sel)
   g_signal_emit (G_OBJECT (sel), my_signals[0], 0);
 }
 
-static void
-note_change (GObject *obj, GpeTimeSel *sel)
-{
-  gchar *buf;
-
-  if (!sel->editing)
-    {
-      buf = g_strdup_printf ("%02d", (int)GTK_ADJUSTMENT (sel->hour_adj)->value);
-      gtk_entry_set_text (GTK_ENTRY (sel->hour_edit), buf);
-      g_free (buf);
-      buf = g_strdup_printf ("%02d", (int)GTK_ADJUSTMENT (sel->minute_adj)->value);
-      gtk_entry_set_text (GTK_ENTRY (sel->minute_edit), buf);
-      g_free (buf);
-    }
-  
-  if (!sel->changing_time)
-    gpe_time_sel_emit_changed (sel);
-}
-
-static gint
-spin_button_output (GtkSpinButton *spin_button)
-{
-  gchar *buf = g_strdup_printf ("%02d", (int)spin_button->adjustment->value);
-
-  if (strcmp (buf, gtk_entry_get_text (GTK_ENTRY (spin_button))))
-    gtk_entry_set_text (GTK_ENTRY (spin_button), buf);
-  g_free (buf);
-
-  return TRUE;
-}
-
 static Window
 find_deepest_window (Display * dpy, Window grandfather, Window parent,
 		     int x, int y, int *rx, int *ry)
@@ -82,18 +248,24 @@ find_deepest_window (Display * dpy, Window grandfather, Window parent,
   int dest_x, dest_y;
   Window child;
 
-  XTranslateCoordinates (dpy, grandfather, parent, x, y,
-			 &dest_x, &dest_y, &child);
-
-  if (child == None)
+  while (1)
     {
-      *rx = dest_x;
-      *ry = dest_y;
+      XTranslateCoordinates (dpy, grandfather, parent, x, y,
+			     &dest_x, &dest_y, &child);
 
-      return parent;
+      if (child == None)
+	{
+	  *rx = dest_x;
+	  *ry = dest_y;
+
+	  return parent;
+	}
+
+      grandfather = parent;
+      parent = child;
+      x = dest_x;
+      y = dest_y;
     }
-
-  return find_deepest_window (dpy, parent, child, dest_x, dest_y, rx, ry);
 }
 
 static void
@@ -188,6 +360,31 @@ button_release (GtkWidget *w, GdkEventButton *b, GpeTimeSel *sel)
 }
 
 static void
+adj_change (GObject *obj, GpeTimeSel *sel)
+{
+  char buf[3];
+  snprintf (buf, sizeof (buf), "%d",
+	    (int)GTK_ADJUSTMENT (sel->hour_adj)->value);
+  gtk_entry_set_text (GTK_ENTRY (GTK_BIN (sel->hour_edit)->child), buf);
+
+  snprintf (buf, sizeof (buf), "%02d",
+	    (int)GTK_ADJUSTMENT (sel->minute_adj)->value);
+  gtk_entry_set_text (GTK_ENTRY (GTK_BIN (sel->minute_edit)->child), buf);
+}
+
+static gint
+spin_button_output (GtkSpinButton *spin_button)
+{
+  gchar *buf = g_strdup_printf ("%02d", (int)spin_button->adjustment->value);
+
+  if (strcmp (buf, gtk_entry_get_text (GTK_ENTRY (spin_button))))
+    gtk_entry_set_text (GTK_ENTRY (spin_button), buf);
+  g_free (buf);
+
+  return TRUE;
+}
+
+static void
 do_popup (GtkWidget *button, GpeTimeSel *sel)
 {
   if (sel->popup)
@@ -195,6 +392,9 @@ do_popup (GtkWidget *button, GpeTimeSel *sel)
       gtk_widget_hide (sel->popup);
       gtk_widget_destroy (sel->popup);
       sel->popup = NULL;
+
+      sel->hour_adj = NULL;
+      sel->minute_adj = NULL;
     }
   else
     {
@@ -209,6 +409,21 @@ do_popup (GtkWidget *button, GpeTimeSel *sel)
       GtkWidget *hbox2;
       GdkGC *zero_gc, *one_gc;
       GdkColor zero, one;
+
+      sel->hour_adj = gtk_adjustment_new (0, 0, 23, 1, 15, 15);
+      sel->minute_adj = gtk_adjustment_new (0, 0, 59, 1, 15, 15);
+
+      int hour = atoi (gtk_entry_get_text
+		       (GTK_ENTRY (GTK_BIN (sel->hour_edit)->child)));
+      int minute = atoi (gtk_entry_get_text
+			 (GTK_ENTRY (GTK_BIN (sel->minute_edit)->child)));
+      gtk_adjustment_set_value (GTK_ADJUSTMENT (sel->hour_adj), hour);
+      gtk_adjustment_set_value (GTK_ADJUSTMENT (sel->minute_adj), minute);
+
+      g_signal_connect (G_OBJECT (sel->hour_adj),
+			"value-changed", G_CALLBACK (adj_change), sel);
+      g_signal_connect (G_OBJECT (sel->minute_adj),
+			"value-changed", G_CALLBACK (adj_change), sel);
 
       sel->hour_spin = gtk_spin_button_new (GTK_ADJUSTMENT (sel->hour_adj), 1, 0);
       sel->minute_spin = gtk_spin_button_new (GTK_ADJUSTMENT (sel->minute_adj), 1, 0);
@@ -319,6 +534,13 @@ do_popup (GtkWidget *button, GpeTimeSel *sel)
 }
 
 static void
+combo_entry_change (GObject *obj, GpeTimeSel *sel)
+{
+  if (!sel->changing_time)
+    gpe_time_sel_emit_changed (sel);
+}
+
+static void
 insert_text_handler (GtkEditable *editable,
                      const gchar *text,
                      gint         length,
@@ -333,7 +555,7 @@ insert_text_handler (GtkEditable *editable,
       if (! isdigit (text[i]))
 	ok = FALSE;
     }
-
+ 
   if (ok)
     {
       g_signal_handlers_block_by_func (editable,
@@ -346,88 +568,149 @@ insert_text_handler (GtkEditable *editable,
   g_signal_stop_emission_by_name (editable, "insert_text"); 
 }
 
-static void
-update_from_entry (GtkWidget *w, GtkAdjustment *adj)
+static int
+entry_key_press_event (GtkWidget *widget, GdkEventKey *k)
 {
-  const char *p;
-  int n;
-  GpeTimeSel *sel;
+  /* Translate common handwriting errors.  */
+  if (k->keyval == 'l')
+    k->keyval = '1';
+  if (k->keyval == 'o' || k->keyval == 'O')
+    k->keyval = '0';
 
-  sel = g_object_get_data (G_OBJECT (w), "sel");
+  return FALSE;
+}
 
-  p = gtk_entry_get_text (GTK_ENTRY (w));
-  if (p[0])
-    {
-      n = atoi (p);
-      sel->editing = TRUE;
-      gtk_adjustment_set_value (adj, n);
-      sel->editing = FALSE;
-    }
+static GtkListStore *hour_model;
+static GtkListStore *minute_model;
+
+static void
+squash_pointer (gpointer data, GObject *object)
+{
+  g_assert (* (GObject **) data == object);
+  * (GObject **) data = NULL;
 }
 
 static void
 gpe_time_sel_init (GpeTimeSel *sel)
 {
-  sel->hour_adj = gtk_adjustment_new (0, 0, 23, 1, 15, 15);
-  sel->minute_adj = gtk_adjustment_new (0, 0, 59, 1, 15, 15);
-  
-  g_object_ref (sel->hour_adj);
-  g_object_ref (sel->minute_adj);
+  int hour_model_deref = 0;
+  if (! hour_model)
+    /* Create the model.  */
+    {
+      hour_model = gtk_list_store_new (1, G_TYPE_STRING);
 
-  g_signal_connect (G_OBJECT (sel->hour_adj), "value-changed", G_CALLBACK (note_change), sel);
-  g_signal_connect (G_OBJECT (sel->minute_adj), "value-changed", G_CALLBACK (note_change), sel);
+      int i;
+      for (i = 0; i < 24; i ++)
+	{
+	  GtkTreeIter iter;
+	  gtk_list_store_append (hour_model, &iter);
+	  gtk_list_store_set (hour_model, &iter,
+			      0, g_strdup_printf ("%d", i), -1);
+	}
 
-  sel->hour_edit = gtk_entry_new ();
-  sel->minute_edit = gtk_entry_new ();
-  gtk_entry_set_width_chars (GTK_ENTRY (sel->hour_edit), 2);
-  gtk_entry_set_width_chars (GTK_ENTRY (sel->minute_edit), 2);
+      g_object_weak_ref (G_OBJECT (hour_model), squash_pointer, &hour_model);
+      hour_model_deref = 1;
+    }
 
-  g_object_set_data (G_OBJECT (sel->hour_edit), "sel", sel);
-  g_object_set_data (G_OBJECT (sel->minute_edit), "sel", sel);
-  g_signal_connect (G_OBJECT (sel->hour_edit), "changed", G_CALLBACK (update_from_entry), sel->hour_adj);
-  g_signal_connect (G_OBJECT (sel->minute_edit), "changed", G_CALLBACK (update_from_entry), sel->minute_adj);
-  g_signal_connect (G_OBJECT (sel->hour_edit), "insert_text", G_CALLBACK (insert_text_handler), sel);
-  g_signal_connect (G_OBJECT (sel->minute_edit), "insert_text", G_CALLBACK (insert_text_handler), sel);
+  int minute_model_deref = 0;
+  if (! minute_model)
+    /* Create the model.  */
+    {
+      minute_model = gtk_list_store_new (1, G_TYPE_STRING);
 
+      int i;
+      for (i = 0; i < 60; i += 5)
+	{
+	  GtkTreeIter iter;
+	  gtk_list_store_append (minute_model, &iter);
+	  gtk_list_store_set (minute_model, &iter,
+			      0, g_strdup_printf ("%02d", i), -1);
+	}
+
+      g_object_weak_ref (G_OBJECT (minute_model), squash_pointer,
+			 &minute_model);
+      minute_model_deref = 1;
+    }
+
+  /* The hour. */
+  sel->hour_edit
+    = gtk_combo_box_entry_new_with_model (GTK_TREE_MODEL (hour_model), 0);
+  if (hour_model_deref)
+    g_object_unref (hour_model);
+  gtk_combo_box_set_wrap_width (GTK_COMBO_BOX (sel->hour_edit), 12);
+  gtk_entry_set_width_chars (GTK_ENTRY (GTK_BIN (sel->hour_edit)->child), 3);
+  gtk_entry_set_max_length (GTK_ENTRY (GTK_BIN (sel->hour_edit)->child), 2);
+  gtk_entry_set_alignment (GTK_ENTRY (GTK_BIN (sel->hour_edit)->child), 1);
+
+  /* Set our custom renderer.  */
+  GtkCellRenderer *renderer = num_cell_renderer_new ();
+  gtk_cell_layout_clear (GTK_CELL_LAYOUT (sel->hour_edit));
+  gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (sel->hour_edit),
+			      renderer, FALSE);
+  gtk_cell_layout_set_cell_data_func (GTK_CELL_LAYOUT (sel->hour_edit),
+				      renderer,
+				      num_cell_data_func, sel->hour_edit,
+				      NULL);
+  g_signal_connect (G_OBJECT (sel->hour_edit), "changed",
+		    G_CALLBACK (combo_entry_change), sel);
+  g_signal_connect (G_OBJECT (GTK_BIN (sel->hour_edit)->child),
+		    "insert_text", G_CALLBACK (insert_text_handler), sel);
+  g_signal_connect (G_OBJECT (GTK_BIN (sel->hour_edit)->child),
+		    "key-press-event", G_CALLBACK (entry_key_press_event),
+		    NULL);
+
+  gtk_box_pack_start (GTK_BOX (sel), sel->hour_edit, FALSE, FALSE, 0);
+  gtk_widget_show (sel->hour_edit);
+
+  /* The `:'.  */
   sel->label = gtk_label_new (":");
+  gtk_widget_show (sel->label);
+  gtk_box_pack_start (GTK_BOX (sel), sel->label, FALSE, FALSE, 0);
 
-  if (popup_button == NULL)
-    popup_button = gpe_try_find_icon ("clock-popup", NULL);
+  /* The minute.  */
+  sel->minute_edit
+    = gtk_combo_box_entry_new_with_model (GTK_TREE_MODEL (minute_model), 0);
+  if (minute_model_deref)
+    g_object_unref (minute_model);
+  gtk_combo_box_set_wrap_width (GTK_COMBO_BOX (sel->minute_edit), 3);
+  gtk_entry_set_width_chars (GTK_ENTRY (GTK_BIN (sel->minute_edit)->child), 3);
+  gtk_entry_set_max_length (GTK_ENTRY (GTK_BIN (sel->minute_edit)->child), 2);
+  gtk_entry_set_alignment (GTK_ENTRY (GTK_BIN (sel->minute_edit)->child), 0);
+
+  /* Set our custom renderer.  */
+  renderer = num_cell_renderer_new ();
+  NUM_CELL_RENDERER (renderer)->fmt = g_strdup (":%s");
+  gtk_cell_layout_clear (GTK_CELL_LAYOUT (sel->minute_edit));
+  gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (sel->minute_edit),
+			      renderer, FALSE);
+  gtk_cell_layout_set_cell_data_func (GTK_CELL_LAYOUT (sel->minute_edit),
+				      renderer,
+				      num_cell_data_func, sel->minute_edit,
+				      NULL);
+  g_signal_connect (G_OBJECT (sel->minute_edit), "changed",
+		    G_CALLBACK (combo_entry_change), sel);
+  g_signal_connect (G_OBJECT (GTK_BIN (sel->minute_edit)->child),
+		    "insert_text", G_CALLBACK (insert_text_handler), sel);
+  g_signal_connect (G_OBJECT (GTK_BIN (sel->minute_edit)->child),
+		    "key-press-event", G_CALLBACK (entry_key_press_event),
+		    NULL);
+
+  gtk_box_pack_start (GTK_BOX (sel), sel->minute_edit, FALSE, FALSE, 0);
+  gtk_widget_show (sel->minute_edit);
+
 
   sel->button = gtk_button_new ();
 
+  if (popup_button == NULL)
+    popup_button = gpe_try_find_icon ("clock-popup", NULL);
   if (popup_button)
     {
       GtkWidget *image = gtk_image_new_from_pixbuf (popup_button);
       gtk_container_add (GTK_CONTAINER (sel->button), image);
     }
-
-  sel->popup = NULL;
-  sel->dragging = sel->editing = FALSE;
-
-  gtk_box_pack_start (GTK_BOX (sel), sel->hour_edit, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (sel), sel->label, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (sel), sel->minute_edit, FALSE, FALSE, 0);
+  g_signal_connect (G_OBJECT (sel->button), "clicked",
+		    G_CALLBACK (do_popup), sel);
   gtk_box_pack_start (GTK_BOX (sel), sel->button, FALSE, FALSE, 0);
-
-  g_signal_connect (G_OBJECT (sel->button), "clicked", G_CALLBACK (do_popup), sel);
-}
-
-static void
-gpe_time_sel_show (GtkWidget *widget)
-{
-  GpeTimeSel *sel;
-
-  g_return_if_fail (widget != NULL);
-  g_return_if_fail (GPE_IS_TIME_SEL (widget));
-
-  sel = GPE_TIME_SEL (widget);
-
-  gtk_widget_show (sel->hour_edit);
-  gtk_widget_show (sel->minute_edit);
-  gtk_widget_show (sel->label);
-
-  GTK_WIDGET_CLASS (parent_class)->show (widget);
 }
 
 static void
@@ -440,15 +723,16 @@ gpe_time_sel_class_init (GpeTimeSelClass * klass)
   oclass = (GObjectClass *) klass;
   widget_class = (GtkWidgetClass *) klass;
 
-  widget_class->show = gpe_time_sel_show;
-
-  my_signals[0] = g_signal_new ("changed",
-				G_TYPE_FROM_CLASS (klass),
-				G_SIGNAL_RUN_LAST,
-				G_STRUCT_OFFSET (struct _GpeTimeSelClass, changed),
-				NULL, NULL,
-				gtk_marshal_VOID__VOID,
-				G_TYPE_NONE, 0);
+  my_signals[0]
+    = g_signal_new ("changed",
+		    G_OBJECT_CLASS_TYPE (klass),
+		    G_SIGNAL_RUN_LAST,
+		    G_STRUCT_OFFSET (struct _GpeTimeSelClass, changed),
+		    NULL,
+		    NULL,
+		    g_cclosure_marshal_VOID__VOID,
+		    G_TYPE_NONE,
+		    0);
 }
 
 GtkType
@@ -480,17 +764,37 @@ void
 gpe_time_sel_get_time (GpeTimeSel *sel, guint *hour, guint *minute)
 {
   if (hour)
-    *hour = (guint) gtk_adjustment_get_value (GTK_ADJUSTMENT (sel->hour_adj));
+    *hour = CLAMP (atoi (gtk_entry_get_text
+			 (GTK_ENTRY (GTK_BIN (sel->hour_edit)->child))),
+		   0, 23);
   if (minute)
-    *minute = (guint) gtk_adjustment_get_value (GTK_ADJUSTMENT (sel->minute_adj));
+    *minute = CLAMP (atoi (gtk_entry_get_text
+			   (GTK_ENTRY (GTK_BIN (sel->minute_edit)->child))),
+		     0, 60);
 }
 
 void
 gpe_time_sel_set_time (GpeTimeSel *sel, guint hour, guint minute)
 {
+  g_return_if_fail (hour <= 23);
+  g_return_if_fail (minute <= 59);
+
   sel->changing_time = TRUE;
-  gtk_adjustment_set_value (GTK_ADJUSTMENT (sel->hour_adj), hour);
-  gtk_adjustment_set_value (GTK_ADJUSTMENT (sel->minute_adj), minute);
+  if (sel->hour_adj)
+    gtk_adjustment_set_value (GTK_ADJUSTMENT (sel->hour_adj), hour);
+  if (sel->minute_adj)
+    gtk_adjustment_set_value (GTK_ADJUSTMENT (sel->minute_adj), minute);
+
+  gtk_combo_box_set_active (GTK_COMBO_BOX (sel->hour_edit), hour);
+  if (minute % 5 == 0)
+    gtk_combo_box_set_active (GTK_COMBO_BOX (sel->minute_edit), minute / 5);
+  else
+    {
+      char m[3];
+      sprintf (m, "%02d", minute);
+      gtk_entry_set_text (GTK_ENTRY (GTK_BIN (sel->minute_edit)->child), m);
+    }
+
   sel->changing_time = FALSE;
 }
 
