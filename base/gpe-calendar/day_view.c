@@ -56,14 +56,6 @@ struct _GtkDayView
   GtkDayRender *reminders;
   GtkWidget *appointment_window;
   GtkDayRender *appointments;
-
-  /* Currently selected event (if any).  */
-  Event *sel_event;
-
-  /* A popup menu for events.  */
-  GtkWidget *event_menu;
-  /* A label describing the clicked event.  */
-  GtkWidget *event_menu_info;
 };
 
 typedef struct
@@ -138,7 +130,6 @@ gtk_day_view_init (GTypeInstance *instance, gpointer klass)
 
   day_view->reminders = 0;
   day_view->appointments = 0;
-  day_view->sel_event = 0;
 }
 
 static void
@@ -157,8 +148,6 @@ gtk_day_view_finalize (GObject *object)
   g_return_if_fail (GTK_IS_DAY_VIEW (object));
 
   day_view = (GtkDayView *) object;
-
-  gtk_widget_destroy (day_view->event_menu);
 
   G_OBJECT_CLASS (parent_class)->finalize (object);
 }
@@ -210,8 +199,6 @@ day_view_row_clicked (GtkWidget *widget, gint row, gpointer d)
   struct tm tm;
   GtkWidget *w;
 
-  gtk_widget_hide (day_view->event_menu);
-
   localtime_r (&t, &tm);
   tm.tm_hour = row;
   tm.tm_min = 0;
@@ -222,18 +209,15 @@ day_view_row_clicked (GtkWidget *widget, gint row, gpointer d)
   return FALSE;
 }
 
+static GtkMenu *event_menu_new (const char *info, Event *ev);
+
 static gboolean
 day_view_event_clicked (GtkWidget *widget, gpointer event_p, gpointer d)
 {
-  GtkDayView *day_view = GTK_DAY_VIEW (d);
-  Event *event = event_p;
+  Event *event = EVENT (event_p);
   gchar *tbuffer = NULL;
   gchar *strstart, *strend;
   struct tm start_tm, end_tm;
-
-  gtk_widget_hide (day_view->event_menu);
-
-  day_view->sel_event = event;
 
   time_t start = event_get_start (event);
   time_t end = (time_t) (start + event_get_duration (event));
@@ -253,23 +237,28 @@ day_view_event_clicked (GtkWidget *widget, gpointer event_p, gpointer d)
   const char *description = event_get_description (event);
 
   char buffer[64];
-  snprintf (buffer, 64, "%s %s%s%s %s%s%s",
-	    summary,
-	    strstart, strend ? "-" : "", strend ?: "",
-	    event_get_alarm (event) ? "(A)" : "",
-	    description ? "\n" : "",
-	    description ? description : "");
+  int l = snprintf (buffer, 64, "%s %s%s%s %s%s%s",
+		    summary,
+		    strstart, strend ? "-" : "", strend ?: "",
+		    event_get_alarm (event) ? "(A)" : "",
+		    description ? "\n" : "",
+		    description ? description : "");
   buffer[64] = 0;
+  if (l > sizeof (buffer))
+    l = sizeof (buffer);
+  l --;
+  while (buffer[l] == '\n')
+    buffer[l --] = 0;
+    
   g_free(strstart);
   g_free(strend);
   tbuffer = g_locale_to_utf8 (buffer, -1, NULL, NULL, NULL);
-  gtk_label_set_text (GTK_LABEL (day_view->event_menu_info),
-		      tbuffer ? tbuffer : (buffer ? buffer : ""));
 
-  gtk_window_set_position (GTK_WINDOW (day_view->event_menu),
-			   GTK_WIN_POS_MOUSE);
+  GtkMenu *event_menu
+    = event_menu_new (tbuffer ? tbuffer : (buffer ? buffer : ""), event);
 
-  gtk_widget_show (day_view->event_menu);
+  gtk_menu_popup (event_menu, NULL, NULL, NULL, NULL,
+		  0, gtk_get_current_event_time());
 
   if (tbuffer)
     g_free (tbuffer);
@@ -347,7 +336,7 @@ gtk_day_view_reload_events (GtkView *view)
 						  reminders));
 
 	  g_signal_connect (G_OBJECT (day_view->reminders), "event-clicked",
-			    G_CALLBACK (day_view_event_clicked), day_view);
+			    G_CALLBACK (day_view_event_clicked), NULL);
 	  g_signal_connect (G_OBJECT (day_view->reminders), "row-clicked",
 			    G_CALLBACK (day_view_row_clicked), day_view);
 
@@ -380,7 +369,7 @@ gtk_day_view_reload_events (GtkView *view)
 					      appointments));
 
       g_signal_connect (G_OBJECT (day_view->appointments), "event-clicked",
-			G_CALLBACK (day_view_event_clicked), day_view);
+			G_CALLBACK (day_view_event_clicked), NULL);
       g_signal_connect (G_OBJECT (day_view->appointments), "row-clicked",
 			G_CALLBACK (day_view_row_clicked), day_view);
 
@@ -450,23 +439,18 @@ sink_scroller (GtkAdjustment *adjustment, gpointer data)
     day_view->scroll_floating = FALSE;
 }
 
-static gboolean
-event_menu_destroy (GtkWidget * widget, GdkEventButton * event, gpointer d)
+static void
+event_menu_destroy (GtkWidget *widget, gpointer d)
 {
-  GtkDayView *day_view = GTK_DAY_VIEW (d);
-
-  gtk_widget_hide (day_view->event_menu);
-  day_view->sel_event = NULL;
-  return TRUE;
+  Event *ev = EVENT (d);
+  g_object_unref (ev);
+  gtk_widget_destroy (widget);
 }
 
 static void
-delete_event_cb (GtkWidget *widget, GtkWidget *dv)
+delete_event_cb (GtkWidget *widget, gpointer d)
 {
-  GtkDayView *day_view = GTK_DAY_VIEW (dv);
-  Event *ev = day_view->sel_event;
-
-  gtk_widget_hide (day_view->event_menu);
+  Event *ev = EVENT (d);
 
   if (event_is_recurrence (ev))
     {
@@ -490,79 +474,62 @@ delete_event_cb (GtkWidget *widget, GtkWidget *dv)
 }
 
 static void
-edit_event_cb (GtkWidget *widget, GtkWidget *d)
+edit_event_cb (GtkWidget *widget, gpointer d)
 {
-  GtkDayView *day_view = GTK_DAY_VIEW (d);
-  GtkWidget *w;
-
-  w = edit_event (day_view->sel_event);
+  GtkWidget *w = edit_event (EVENT (d));
   gtk_widget_show (w);
-  gtk_widget_hide (day_view->event_menu);
 }
 
 static void
-save_cb (GtkWidget *widget, GtkWidget *d)
+save_cb (GtkWidget *widget, gpointer d)
 {
-  GtkDayView *day_view = GTK_DAY_VIEW (d);
-
-  gtk_widget_hide (day_view->event_menu);
-  vcal_do_save (day_view->sel_event);
+  vcal_do_save (EVENT (d));
 }
 
 static void
-send_ir_cb (GtkWidget *widget, GtkWidget *d)
+send_ir_cb (GtkWidget *widget, gpointer d)
 {
-  GtkDayView *day_view = GTK_DAY_VIEW (d);
-
-  gtk_widget_hide (day_view->event_menu);
-  vcal_do_send_irda (day_view->sel_event);
+  vcal_do_send_irda (EVENT (d));
 }
 
 static void
-send_bt_cb (GtkWidget *widget, GtkWidget *d)
+send_bt_cb (GtkWidget *widget, gpointer d)
 {
-  GtkDayView *day_view = GTK_DAY_VIEW (d);
-
-  gtk_widget_hide (day_view->event_menu);
-  vcal_do_send_bluetooth (day_view->sel_event);
+  vcal_do_send_bluetooth (EVENT (d));
 }
 
-static void
-gtk_event_menu_new (GtkDayView *day_view)
+static GtkMenu *
+event_menu_new (const char *info, Event *ev)
 {
-  GtkWidget *frame;
-  GtkWidget *vbox;
+  int i = 0;
 
-  day_view->event_menu = gtk_window_new (GTK_WINDOW_POPUP);
-  frame = gtk_frame_new (NULL);
-  vbox = gtk_vbox_new (FALSE, 0);
+  g_object_ref (ev);
 
-  gtk_container_add (GTK_CONTAINER (day_view->event_menu), frame);
-  gtk_container_add (GTK_CONTAINER (frame), vbox);
+  GtkMenu *menu = GTK_MENU (gtk_menu_new ());
 
   /* The event title.  */
-  day_view->event_menu_info = gtk_label_new ("");
-  gtk_misc_set_alignment (GTK_MISC (day_view->event_menu_info), 0, 0);
-  gtk_misc_set_padding (GTK_MISC (day_view->event_menu_info),
-			gpe_get_border (), gpe_get_border ());
-  gtk_box_pack_start (GTK_BOX (vbox), day_view->event_menu_info,
-		      FALSE, TRUE, 0);
+  if (info)
+    {
+      GtkWidget *event_menu_info = gtk_menu_item_new_with_label (info);
+      gtk_widget_show (event_menu_info);
+      gtk_menu_attach (menu, event_menu_info, 0, 1, i, i + 1);
+      i ++;
+    }
 
   /* Create an edit button.  */
   {
     GtkWidget *edit;
 
 #ifdef IS_HILDON
-    edit = gtk_button_new_with_label (_("Edit"));
+    edit = gtk_menu_item_new_with_label (_("Edit"));
 #else
-    edit = gtk_button_new_from_stock (GTK_STOCK_EDIT);
+    edit = gtk_image_menu_item_new_from_stock (GTK_STOCK_EDIT, NULL);
 #endif
-    gtk_button_set_relief (GTK_BUTTON (edit), GTK_RELIEF_NONE);
-    gtk_button_set_alignment (GTK_BUTTON (edit), 0, 0.5);
-    gtk_box_pack_start (GTK_BOX (vbox), edit,
-			FALSE, TRUE, 0);
-    g_signal_connect (G_OBJECT (edit), "clicked",
-		      G_CALLBACK (edit_event_cb), day_view);
+    g_signal_connect (G_OBJECT (edit), "activate",
+		      G_CALLBACK (edit_event_cb), ev);
+    gtk_widget_show (edit);
+    gtk_menu_attach (menu, edit, 0, 1, i, i + 1);
+    i ++;
   }
 
   /* A delete button.  */
@@ -570,32 +537,31 @@ gtk_event_menu_new (GtkDayView *day_view)
     GtkWidget *delete;
 
 #ifdef IS_HILDON
-    delete = gtk_button_new_with_label (_("Delete"));
+    delete = gtk_menu_item_new_with_label (_("Delete"));
 #else
-    delete = gtk_button_new_from_stock (GTK_STOCK_DELETE);
+    delete = gtk_image_menu_item_new_from_stock (GTK_STOCK_DELETE, NULL);
 #endif
-    gtk_button_set_relief (GTK_BUTTON (delete), GTK_RELIEF_NONE);
-    gtk_button_set_alignment (GTK_BUTTON (delete), 0, 0.5);
-    gtk_box_pack_start (GTK_BOX (vbox), delete,
-			FALSE, TRUE, 0);
-    g_signal_connect (G_OBJECT (delete), "clicked",
-		      G_CALLBACK (delete_event_cb), day_view);
+    g_signal_connect (G_OBJECT (delete), "activate",
+		      G_CALLBACK (delete_event_cb), ev);
+    gtk_widget_show (delete);
+    gtk_menu_attach (menu, delete, 0, 1, i, i + 1);
+    i ++;
   }
 
   /* And a save button.  */
   {
     GtkWidget *save;
-#ifdef IS_HILDON
-    save = gtk_button_new_with_label (_("Save"));
-#else
-    save = gtk_button_new_from_stock (GTK_STOCK_SAVE);
-#endif
-    gtk_button_set_relief (GTK_BUTTON (save), GTK_RELIEF_NONE);
-    gtk_button_set_alignment (GTK_BUTTON (save), 0, 0.5);
-    gtk_box_pack_start (GTK_BOX (vbox), save, FALSE, TRUE, 0);
-    g_signal_connect (G_OBJECT (save), "clicked",
-		      G_CALLBACK (save_cb), day_view);
 
+#ifdef IS_HILDON
+    save = gtk_menu_item_new_with_label (_("Save"));
+#else
+    save = gtk_image_menu_item_new_from_stock (GTK_STOCK_SAVE, NULL);
+#endif
+    g_signal_connect (G_OBJECT (save), "activate",
+		      G_CALLBACK (save_cb), ev);
+    gtk_widget_show (save);
+    gtk_menu_attach (menu, save, 0, 1, i, i + 1);
+    i ++;
   }
 
   /* Create a Send via infra-red button if infra-red is available.  */
@@ -603,13 +569,12 @@ gtk_event_menu_new (GtkDayView *day_view)
     {
       GtkWidget *send_ir_button;
 
-      send_ir_button = gtk_button_new_with_label (_("Send via infra-red"));
-      gtk_button_set_relief (GTK_BUTTON (send_ir_button), GTK_RELIEF_NONE);
-      gtk_button_set_alignment (GTK_BUTTON (send_ir_button), 0, 0.5);
-      gtk_box_pack_start (GTK_BOX (vbox), send_ir_button,
-			  FALSE, TRUE, 0);
-      g_signal_connect (G_OBJECT (send_ir_button), "clicked",
-			G_CALLBACK (send_ir_cb), day_view);
+      send_ir_button = gtk_menu_item_new_with_label (_("Send via infra-red"));
+      g_signal_connect (G_OBJECT (send_ir_button), "activate",
+			G_CALLBACK (send_ir_cb), ev);
+      gtk_widget_show (send_ir_button);
+      gtk_menu_attach (menu, send_ir_button, 0, 1, i, i + 1);
+      i ++;
     }
 
   /* Create a Send via Bluetooth button if bluetooth is available.  */
@@ -617,26 +582,18 @@ gtk_event_menu_new (GtkDayView *day_view)
     {
       GtkWidget *send_bt_button;
 
-      send_bt_button = gtk_button_new_with_label (_("Send via Bluetooth"));
-      gtk_button_set_relief (GTK_BUTTON (send_bt_button), GTK_RELIEF_NONE);
-      gtk_button_set_alignment (GTK_BUTTON (send_bt_button), 0, 0.5);
-      gtk_box_pack_start (GTK_BOX (vbox), send_bt_button,
-			  FALSE, TRUE, 0);
-      g_signal_connect (G_OBJECT (send_bt_button), "clicked",
-			G_CALLBACK (send_bt_cb), day_view);
+      send_bt_button = gtk_menu_item_new_with_label (_("Send via Bluetooth"));
+      g_signal_connect (G_OBJECT (send_bt_button), "activate",
+			G_CALLBACK (send_bt_cb), ev);
+      gtk_widget_show (send_bt_button);
+      gtk_menu_attach (menu, send_bt_button, 0, 1, i, i + 1);
+      i ++;
     }
 
-  gtk_widget_add_events (GTK_WIDGET (day_view->event_menu),
-			 GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
+  g_signal_connect (G_OBJECT (menu), "selection-done",
+		    G_CALLBACK (event_menu_destroy), ev);
 
-  g_signal_connect (G_OBJECT (day_view->event_menu), "button-press-event",
-		    G_CALLBACK (event_menu_destroy), day_view);
-
-  gtk_widget_show_all (frame);
-
-  gtk_window_set_decorated (GTK_WINDOW (day_view->event_menu), TRUE);
-  gtk_window_set_resizable (GTK_WINDOW (day_view->event_menu), FALSE);
-  gtk_window_set_modal (GTK_WINDOW (day_view->event_menu), TRUE);
+  return menu;
 }
 
 GtkWidget *
@@ -647,7 +604,6 @@ gtk_day_view_new (time_t time)
 
   day_view = GTK_DAY_VIEW (g_object_new (gtk_day_view_get_type (), NULL));
   GTK_WIDGET_SET_FLAGS (GTK_WIDGET (day_view), GTK_CAN_FOCUS);
-  gtk_event_menu_new (day_view);
 
   day_view->appointment_window = gtk_scrolled_window_new (NULL, NULL);
   adj = gtk_scrolled_window_get_vadjustment

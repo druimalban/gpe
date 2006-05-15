@@ -1,3 +1,34 @@
+2006-05-15  Neal H. Walfield  <neal@gnu.org>
+
+	* day_view.c (struct _GtkDayView): Remove sel_event, event_menu
+	and event_menu_info.
+	(gtk_day_view_init): Don't initialize SEL->SEL_EVENT.
+	(gtk_day_view_finalize): Don't destroy DAY_VIEW->EVENT_MENU.
+	(day_view_row_clicked): Don't hide DAY_VIEW->EVENT_MENU.
+	(day_view_event_clicked): Don't hide DAY_VIEW->EVENT_MENU.  Don't
+	set DAY_VIEW->SEL->EVENT.  Call event_menu_new to create a menu.
+	Call gtk_menu_popup to show the menu.
+	(gtk_day_view_reload_events): Don't pass a user data parameter to
+	DAY_VIEW->REMINDER's or DAY_VIEW->APPOINTMENTS "event-clicked"
+	callback.
+	(event_menu_destroy): The user data parameter is now the event.
+	Unref it.  Destroy WIDGET.
+	(delete_event_cb): The user data parameter is now the event.
+	Don't hide the menu.
+	(edit_event_cb): Likewise.
+	(save_cb): Likewise.
+	(send_ir_cb): Likewise.
+	(send_bt_cb): Likewise.
+	(event_menu_new): Don't take a GtkDayView as a parameter.  Take a
+	string string to use as the info string, an event to use and
+	return a GtkMenu.  Rewrite to use a GtkMenu and to make the
+	various constituents GtkMenuItems.  Connect the event as the user
+	data parameter to the signals.  Connect the menu's
+	"selection-done" signal to event_menu_destroy.
+	(gtk_day_view_new): Don't call event_menu_new here.
+
+	(day_view_event_clicked):  Chop any trailing \n's off of BUFFER.
+
 2006-05-14  Neal H. Walfield  <neal@gnu.org>
 
 	* event-ui.c (note_time_change): Really correctly calculate the
