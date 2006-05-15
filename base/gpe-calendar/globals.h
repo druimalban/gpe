@@ -66,4 +66,18 @@ extern const gchar *TIMEFMT;
 #endif
 
 #define is_reminder(ev) \
-  (event_get_duration (ev) == 0 && event_get_untimed (ev))
+  ({ int ret = 0; \
+     if (event_get_duration (ev) == 0 && event_get_untimed (ev)) \
+       ret = 1; \
+     else if (event_get_duration (ev) == 24 * 60 * 60) \
+       { \
+         time_t s = event_get_start (ev); \
+         struct tm tm; \
+         localtime_r (&s, &tm); \
+         ret = tm.tm_hour == 0 && tm.tm_min == 0 && tm.tm_sec == 0; \
+       } \
+     ret; \
+    })
+
+	 
+         

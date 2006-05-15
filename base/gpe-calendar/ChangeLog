@@ -1,5 +1,29 @@
 2006-05-15  Neal H. Walfield  <neal@gnu.org>
 
+	* event-list.c: Include <stdlib.h>.
+	(ARROW_SIZE): Define.
+	(struct _GtkEventList): Change widget to a GtkVBox.  Add new
+	fields entry and combo.
+	(gtk_event_list_get_type): Inherit from a GtkVBox.
+	(time_to_string): New function.
+	(date_cell_data_func): Use time_to_string where possible.
+	(end_cell_data_func): New function.
+	(arrow_click): New function.
+	(reload): Likewise.
+	(gtk_event_list_init): Create a horizontal spin box for the factor
+	and a combo box to select the units for the amount of time to
+	show.  Enable alternating row colors.  Add a third column which
+	displays the end time.
+	(gtk_event_list_reload_events): Get events covering not the next
+	two weeks but using the values in the entry and combo.
+
+	(button_press): Only zoom to the event on a button 1 click.
+
+	* globals.h (is_reminder): Consider events which start at midnight
+	and last exactly 24 hours reminders.
+
+2006-05-15  Neal H. Walfield  <neal@gnu.org>
+
 	* globals.h (FUTURE_ICON): New macro.
 	* main.c (squash_pointer): New function.
 	(display_tiny): New variable.
