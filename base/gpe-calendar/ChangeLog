@@ -1,5 +1,10 @@
 2006-05-15  Neal H. Walfield  <neal@gnu.org>
 
+	* alarm-dialog.c (alarm_dialog_init): It's spelt "delete-event",
+	not "delete".
+
+2006-05-15  Neal H. Walfield  <neal@gnu.org>
+
 	* day_popup.h (day_popup): Return a GtkMenu *.  Don't take a
 	window as a parameter.
 	* day_popup.c: Rewrite to use a GtkMenu.
