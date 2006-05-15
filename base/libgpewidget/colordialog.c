@@ -427,7 +427,7 @@ gpe_color_dialog_get_property (GObject *object, guint prop_id,
       g_value_set_string (value, gpe_color_dialog_get_color_str (dialog));
       break;
     case PROP_COLOR_GDK:
-      g_value_set_pointer (value, (gpointer*)gpe_color_dialog_get_color_gdk (dialog));
+      g_value_set_pointer (value, (gpointer)gpe_color_dialog_get_color_gdk (dialog));
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
