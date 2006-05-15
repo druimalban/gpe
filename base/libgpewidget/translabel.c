@@ -59,7 +59,7 @@ filter (GdkXEvent *xevp, GdkEvent *ev, gpointer p)
 	  int actual_format;
 	  unsigned long actual_length;
 	  unsigned long bytes_after;
-	  char *prop = NULL;
+	  unsigned char *prop = NULL;
 
 	  if (XGetWindowProperty (xev->xany.display, xev->xany.window, 
 				  atom, 0, 65536, False, XA_STRING,

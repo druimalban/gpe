@@ -103,7 +103,7 @@ do_get_clients (GPEWindowList *list, Window **ret, guint *nr)
   Atom actual_type;
   int actual_format;
   unsigned long nitems, bytes_after = 0;
-  char *prop = NULL;
+  unsigned char *prop = NULL;
 
   root = gdk_screen_get_root_window (list->screen);
 
