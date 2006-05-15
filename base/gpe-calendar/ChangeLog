@@ -1,5 +1,26 @@
 2006-05-15  Neal H. Walfield  <neal@gnu.org>
 
+	* globals.h (FUTURE_ICON): New macro.
+	* main.c (squash_pointer): New function.
+	(display_tiny): New variable.
+	(display_landscape): Likewise.
+	(my_icons): Add "future_view".
+	(main_bin): New variable.
+	(upcoming_button): Likewise.
+	(main): Move the code which creates the calendar view from here...
+	(cal_view_build): ... to this new function.
+	(struct upcoming_restore): New structure.
+	(upcoming_view_off): New function.
+	(cal_view_expire): Likewise.
+	(upcoming_view_button_clicked): Likewise.
+	(create_app_menu): Add an entry for the upcoming events view.
+	(main): Replace local variable TINY with global static
+	DISPLAY_TINY.  Replace local variable landscape with global static
+	DISPLAY_LANDSCAPE.  Add a button for the upcoming view.  Put the
+	calendar view in MAIN_BIN and MAIN_BIN in WIN.
+
+2006-05-15  Neal H. Walfield  <neal@gnu.org>
+
 	* alarm-dialog.c (alarm_dialog_init): It's spelt "delete-event",
 	not "delete".
 
