@@ -14,8 +14,6 @@
 
 extern EventDB *event_db;
 
-extern time_t viewtime;
-
 extern void update_view (void);
 
 extern guint days_in_month (guint year, guint month);
@@ -30,7 +28,7 @@ extern GdkGC *pen_new (GtkWidget *widget, guint red, guint green, guint blue);
 extern GdkPixmap *close_pix, *day_pix;
 extern GdkBitmap *close_mask, *day_mask;
 
-extern GtkWidget *main_window, *pop_window;
+extern GtkWidget *main_window;
 
 extern GdkFont *yearfont, *datefont;
 extern gchar *strftime_strdup_utf8_locale (const char *fmt, struct tm *tm);

@@ -79,10 +79,10 @@ static const char *gpe_calendar;
 
 EventDB *event_db;
 
-time_t viewtime;
+static time_t viewtime;
 static gboolean just_new = FALSE;
 
-GtkWidget *main_window, *pop_window;
+GtkWidget *main_window;
 static GtkWidget *view_container, *toolbar;
 
 static struct gpe_icon my_icons[] = {
@@ -419,10 +419,6 @@ time_changed (GtkView *view, time_t time, gpointer data)
 static void
 new_view (GtkWidget * (*new) (time_t time))
 {
-  if (pop_window)
-    gtk_widget_destroy (pop_window);
-  pop_window = NULL;
-
   if (current_view)
     gtk_container_remove (GTK_CONTAINER (view_container), current_view);
 

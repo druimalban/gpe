@@ -48,9 +48,6 @@ struct _GtkWeekView
   GtkWidget *draw;
   GtkWidget *scroller;
 
-  /* The week day (if any) which the popup menu is for.  */
-  struct week_day *has_popup;
-
   /* Width required by the banners, valid if HAVE_EXTENTS is true.  */
   gint banner_width;
   /* Width required by the time fields, valid if HAVE_EXTENTS is true.  */
@@ -140,7 +137,6 @@ gtk_week_view_init (GTypeInstance *instance, gpointer klass)
   week_view->have_extents = FALSE;
   week_view->height = 0;
   week_view->width = 0;
-  week_view->has_popup = 0;
 }
 
 static void
@@ -622,13 +618,6 @@ gtk_week_view_key_press_event (GtkWidget *widget, GdkEventKey *k)
   int i = 0;
   switch (k->keyval)
     {
-    case GDK_Escape:
-      if (pop_window) 
-	gtk_widget_destroy (pop_window);
-      pop_window = NULL;
-      week_view->has_popup = NULL;
-      return TRUE;
-
     case GDK_Left:
       i = -7;
       break;
@@ -646,18 +635,9 @@ gtk_week_view_key_press_event (GtkWidget *widget, GdkEventKey *k)
       break;
 
     case GDK_space:
-      if (pop_window) 
-	gtk_widget_destroy (pop_window);
-      if (d != week_view->has_popup) 
-	{
-	  pop_window = day_popup (main_window, &d->popup, FALSE);
-	  week_view->has_popup = d;
-	}
-      else 
-	{
-	  pop_window = NULL;
-	  week_view->has_popup = NULL;
-	}
+      gtk_menu_popup (day_popup (&d->popup, FALSE),
+		      NULL, NULL, NULL, NULL,
+		      0, gtk_get_current_event_time());
       return TRUE;
 
     case GDK_Return:
@@ -665,11 +645,6 @@ gtk_week_view_key_press_event (GtkWidget *widget, GdkEventKey *k)
       {
 	time_t t = gtk_view_get_time (GTK_VIEW (week_view));
 	struct tm tm;
-
-	if (pop_window) 
-	  gtk_widget_destroy (pop_window);
-	pop_window = NULL;
-	week_view->has_popup = NULL;
 
 	localtime_r (&t, &tm);
 	tm.tm_year = d->popup.year;//- 1900;
@@ -727,11 +702,6 @@ gtk_week_view_button_press_event (GtkWidget *widget, GdkEventButton *event)
 	      time_t t = gtk_view_get_time (GTK_VIEW (week_view));
 	      struct tm tm;
 
-	      if (pop_window) 
-		gtk_widget_destroy (pop_window);
-	      pop_window = NULL;
-	      week_view->has_popup = NULL;
-
 	      localtime_r (&t, &tm);
 	      tm.tm_year = d->popup.year;
 	      tm.tm_mon = d->popup.month;
@@ -749,22 +719,9 @@ gtk_week_view_button_press_event (GtkWidget *widget, GdkEventButton *event)
 	    }
 	}
       else if (event->button == 3)
-	{
-	  if (pop_window) 
-	    gtk_widget_destroy (pop_window);
-    
-	  if (d != week_view->has_popup) 
-	    {
-	      pop_window = day_popup (gtk_widget_get_toplevel (main_window),
-				      &d->popup, FALSE);
-	      week_view->has_popup = d;
-	    }
-	  else 
-	    {
-	      pop_window = NULL;
-	      week_view->has_popup = NULL;
-	    }
-	}
+	gtk_menu_popup (day_popup (&d->popup, FALSE),
+			NULL, NULL, NULL, NULL,
+			event->button, event->time);
     }
   
   return TRUE;

@@ -55,8 +55,6 @@ struct _GtkMonthView
   /* Day which has the focus.  */
   guint focused_day;
 
-  /* Day which the popup menu is showing (if any!).  */
-  struct render_ctl *has_popup;
   /* One for each cell.  */
   struct render_ctl rc[TOTAL_DAYS];
 
@@ -149,7 +147,6 @@ gtk_month_view_init (GTypeInstance *instance, gpointer klass)
   month_view->width = 0;
   month_view->height = 0;
   month_view->weeks = TOTAL_WEEKS;
-  month_view->has_popup = 0;
 
   for (day = 0; day < MAX_DAYS_IN_MONTH; day ++)
     month_view->day_events[day] = NULL;
@@ -316,19 +313,10 @@ gtk_month_view_button_press_event (GtkWidget *widget, GdkEventButton *event)
       if (event->button == 3)
 	/* Right click.  Popup a menu.  */
 	{
-	  if (pop_window) 
-	    gtk_widget_destroy (pop_window);
-
-	  if (c->valid && c != month_view->has_popup) 
-	    {
-	      pop_window = day_popup (main_window, &c->popup, TRUE);
-	      month_view->has_popup = c;
-	    }
-	  else 
-	    {
-	      pop_window = NULL;
-	      month_view->has_popup = NULL;
-	    }
+	  if (c->valid)
+	    gtk_menu_popup (day_popup (&c->popup, TRUE),
+			    NULL, NULL, NULL, NULL,
+			    event->button, event->time);
 	}
       else
 	/* Left click.  Select the day.  */
@@ -373,10 +361,6 @@ gtk_month_view_button_press_event (GtkWidget *widget, GdkEventButton *event)
 	      tm.tm_mon = c->popup.month;
 	      tm.tm_mday = c->popup.day;
 	      selected_time = mktime (&tm);
-	      if (pop_window) 
-		gtk_widget_destroy (pop_window);
-	      pop_window = NULL;
-	      month_view->has_popup = NULL;
 	      set_time_and_day_view (selected_time);
 	    }
 	}
@@ -642,12 +626,6 @@ gtk_month_view_reload_events (GtkView *view)
   guint year, month;
   guint wday;
 
-  /* Destroy any popup window.  */
-  if (pop_window) 
-    gtk_widget_destroy (pop_window);
-  pop_window = NULL;
-  month_view->has_popup = NULL;
-
   localtime_r (&t, &tm_start);
   year = tm_start.tm_year + 1900;
   month = tm_start.tm_mon;
@@ -741,14 +719,6 @@ gtk_month_view_key_press_event (GtkWidget *widget, GdkEventKey *k)
   struct render_ctl *c = &month_view->rc[month_view->focused_day];
   int i;
  
-  if (k->keyval == GDK_Escape && c->valid)
-    {
-      if (pop_window) 
-	gtk_widget_destroy (pop_window);
-      pop_window = NULL;
-      month_view->has_popup = NULL;
-    }    
-
   i = 0;
   if (k->keyval == GDK_Right)
     i = 1;
@@ -771,20 +741,9 @@ gtk_month_view_key_press_event (GtkWidget *widget, GdkEventKey *k)
   if (k->keyval == GDK_space)
     {
       if (c->valid)
-        {
-          if (pop_window) 
-            gtk_widget_destroy (pop_window);
-	  if (c != month_view->has_popup) 
-            {
-              pop_window = day_popup (main_window, &c->popup, TRUE);
-              month_view->has_popup = c;
-            }
-           else 
-            {
-              pop_window = NULL;
-              month_view->has_popup = NULL;
-            }
-         }
+	gtk_menu_popup (day_popup (&c->popup, TRUE),
+			NULL, NULL, NULL, NULL,
+			0, gtk_get_current_event_time());
       return TRUE;
     }  
      
@@ -803,10 +762,6 @@ gtk_month_view_key_press_event (GtkWidget *widget, GdkEventKey *k)
           tm.tm_min = 0;
           tm.tm_sec = 0;
           selected_time = mktime (&tm);
-          if (pop_window) 
-	    gtk_widget_destroy (pop_window);
-	  month_view->has_popup = NULL;
-	  pop_window = NULL;
           set_time_and_day_view (selected_time);    
         }
       return TRUE; 

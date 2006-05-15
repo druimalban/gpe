@@ -1,5 +1,25 @@
 2006-05-15  Neal H. Walfield  <neal@gnu.org>
 
+	* day_popup.h (day_popup): Return a GtkMenu *.  Don't take a
+	window as a parameter.
+	* day_popup.c: Rewrite to use a GtkMenu.
+	* globals.h (viewtime): Remove declaration.
+	(pop_window): Remove declaration.
+	* month_view.c (struct _GtkMonthView): Remove field has_popup.
+	(gtk_month_view_button_press_event): Don't destroy POP_WINDOW.
+	Just create a day_popup and pop it up.
+	(gtk_month_view_key_press_event): Likewise.
+	(gtk_month_view_reload_events): Don't destroy POP_WINDOW.
+	* week_view.c (struct _GtkWeekView): Remove field has_popup.
+	(gtk_week_view_key_press_event): Don't destroy POP_WINDOW.
+	Just create a day_popup and pop it up.
+	(gtk_week_view_button_press_event): Likewise.
+	* main.c (viewtime): Mark static.
+	(pop_window): Remove declaration.
+	(new_view): Don't destroy POP_WINDOW.
+
+2006-05-15  Neal H. Walfield  <neal@gnu.org>
+
 	* day_view.c (struct _GtkDayView): Remove sel_event, event_menu
 	and event_menu_info.
 	(gtk_day_view_init): Don't initialize SEL->SEL_EVENT.
