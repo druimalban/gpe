@@ -25,12 +25,8 @@ extern time_t time_from_day(int year, int month, int day);
 
 extern GdkGC *pen_new (GtkWidget *widget, guint red, guint green, guint blue);
 
-extern GdkPixmap *close_pix, *day_pix;
-extern GdkBitmap *close_mask, *day_mask;
-
 extern GtkWidget *main_window;
 
-extern GdkFont *yearfont, *datefont;
 extern gchar *strftime_strdup_utf8_locale (const char *fmt, struct tm *tm);
 extern gchar *strftime_strdup_utf8_utf8 (const char *fmt, struct tm *tm);
 extern guint day_of_week(guint year, guint month, guint day);
@@ -38,9 +34,6 @@ extern guint day_of_week(guint year, guint month, guint day);
 #define SECONDS_IN_DAY (24*60*60)
 
 extern const gchar *TIMEFMT;
-
-/* stuff that could perhaps be configurable */
-#define MONTHTIMEFMT "%a %d"
 
 /* Maemo's stupid application installer uses a wrong prefix, 
  * so we define the icon files here. */

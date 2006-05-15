@@ -1,5 +1,15 @@
 2006-05-15  Neal H. Walfield  <neal@gnu.org>
 
+	* globals.h (close_pix): Remove unused declaration.
+	(day_pix): Likewise.
+	(close_mask): Likewise.
+	(day_mask): Likewise.
+	(yearfont): Likewise.
+	(datefont): Likewise.
+	(MONTHTIMEFMT): Remove unused define.
+
+2006-05-15  Neal H. Walfield  <neal@gnu.org>
+
 	* event-list.c: Include <stdlib.h>.
 	(ARROW_SIZE): Define.
 	(struct _GtkEventList): Change widget to a GtkVBox.  Add new
