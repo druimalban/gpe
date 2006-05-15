@@ -1,3 +1,9 @@
+2006-05-15  Neal H. Walfield  <neal@gnu.org>
+
+	* event-db.c (event_list): It's spelt g_slist_prepend.
+	(event_sort_func): Remove function.  Update users to use
+	event_compare_func instead.
+
 2006-05-12  Florian Boor <florian@kernelconcepts.de>
 
 	* event-db.c (event_db_find_by_eventid): Avoid fault if an

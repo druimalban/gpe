@@ -819,15 +819,6 @@ event_source_finalize (GObject *object)
   G_OBJECT_CLASS (event_parent_class)->finalize (object);
 }
 
-static gint
-event_sort_func (const void *a, const void *b)
-{
-  Event *ev1 = EVENT (a);
-  Event *ev2 = EVENT (b);
-
-  return ev1->start - ev2->start;
-}
-
 /* Add an event to the in-memory list */
 static void
 event_db_add_internal (EventSource *ev)
@@ -836,7 +827,7 @@ event_db_add_internal (EventSource *ev)
     ev->edb->uid = ev->uid + 1;
 
   ev->edb->events = g_list_insert_sorted (ev->edb->events, ev,
-					  event_sort_func); 
+					  event_compare_func);
 }
 
 /* Remove an event from the in-memory list */
@@ -1401,8 +1392,7 @@ event_list (EventSource *ev, time_t period_start, time_t period_end, int max,
 		{
 		  Event *clone = event_clone (ev);
 		  clone->start = recur_start;
-		  list = g_slist_insert_sorted (list, clone,
-						event_sort_func);
+		  list = g_slist_prepend (list, clone);
 
 		  event_count ++;
 		  if (event_count == max)
