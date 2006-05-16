@@ -463,7 +463,7 @@ gtk_day_render_expose (GtkWidget *widget, GdkEventExpose *event)
 	   i <= day_render->rows_visible_first + day_render->rows_visible;
 	   i ++)
 	{
-	  time_t tm;
+	  time_t t;
 	  struct tm ftm;
 	  char timebuf[10];
 	  char buf[60], *buffer;
@@ -473,9 +473,14 @@ gtk_day_render_expose (GtkWidget *widget, GdkEventExpose *event)
 	  top = i * day_render->height / day_render->rows
 	    - day_render->offset_y;
 
-	  tm = day_render->date
-	    + i * ((gfloat) day_render->duration / day_render->rows);
-	  localtime_r (&tm, &ftm);
+	  t = day_render->date
+	    + (gfloat) i * day_render->duration / day_render->rows;
+	  /* XXX: On Mips and Arm based machines we often end up with
+	     up to 60 seconds error!  We only require the hour
+	     component so add a few minutes to make sure that we get
+	     the right hour.  */
+	  t += 5 * 60;
+	  localtime_r (&t, &ftm);
 
 	  char *am = nl_langinfo (AM_STR);
 	  strftime (timebuf, sizeof (timebuf),
