@@ -1,3 +1,7 @@
+2006-05-16  Florian Boor <florian@kernelconcepts.de>
+
+	* configure.ac: Remove unused gettext bits breaking builds.
+
 2006-01-16  Martin Felis <martin@silef.de>
 
 	* BUGS: Added BUGS file.
