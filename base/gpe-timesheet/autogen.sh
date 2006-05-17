@@ -29,7 +29,7 @@ if test "$GETTEXTIZE"; then
 fi
 
 echo "Running intltoolize..."
-intltoolize --copy --automake
+intltoolize --copy --automake --force
 
 libtoolize --copy --force
 

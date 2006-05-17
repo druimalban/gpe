@@ -45,6 +45,10 @@
 #include "html.h"
 #include "journal.h"
 
+/* common variables */
+GtkTreeStore *global_task_store;
+
+/* function definitions */
 static void show_help (void);
 static void view_selected_row_cb (GtkTreeSelection *selection, gpointer data);
 static void ui_new_task (GtkWidget *w, gpointer p);
@@ -52,10 +56,7 @@ static void ui_delete_task (GtkWidget *w, gpointer data);
 static void start_timing (GtkWidget *w, gpointer data);
 static void stop_timing (GtkWidget *w, gpointer data);
 void prepare_onscreen_journal (GtkTreeSelection *selection, gpointer data);
-gboolean stop_timing_all_cb (GtkTreeModel *m, GtkTreePath *p, GtkTreeIter *i, gpointer data);
+//gboolean stop_timing_all_cb (GtkTreeModel *m, GtkTreePath *p, GtkTreeIter *i, gpointer data);
 static void toggle_toolbar(GtkCheckMenuItem *menuitem, gpointer user_data);
-static GtkWidget * create_main_toolbar (void);
 
-GtkTreeStore *global_task_store;
-GtkTreeIter *taskiter;
 

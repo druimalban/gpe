@@ -45,8 +45,9 @@ static GtkWidget *btn_journal = NULL;
 GtkWidget *main_appview;
 
 /* first some procedures not strictly correlated to ui
-   but regarding the inner core functions of the program */
+   but regarding the inner core functions of the program 
 
+TODO: FIX this, they are not used and do not work as is...
 gboolean 
 stop_timing_all_cb  (GtkTreeModel *model,
                     GtkTreePath   *path,
@@ -54,7 +55,7 @@ stop_timing_all_cb  (GtkTreeModel *model,
                     gpointer      user_data)
 { /*  stop any clocked in task 
   *   not efficient, but works */
-
+/*
   struct task *t;
   t = g_malloc (sizeof (struct task));
 
@@ -71,6 +72,18 @@ stop_timing_all_cb  (GtkTreeModel *model,
   return FALSE;
 }
 
+static gboolean
+exit_app (GtkWidget *w, GdkEvent *evt, gpointer user_data)
+{ /* exits the application */
+/*  GtkTreeModel *model = gtk_tree_view_get_model(user_data);
+
+  gtk_tree_model_foreach(model,stop_timing_all_cb,NULL);
+
+  return FALSE;
+}
+
+*/
+
 static void
 show_help (void)
 { /* show help */
@@ -80,16 +93,6 @@ show_help (void)
  test = gpe_show_help(appname, topic);
  if (test == TRUE)
  	gpe_error_box (_("Help not (or incorrectly) installed. Or no helpviewer application registered."));
-}
-
-static gboolean
-exit_app (GtkWidget *w, GdkEvent *evt, gpointer user_data)
-{ /* exits the application */
-  GtkTreeModel *model = gtk_tree_view_get_model(user_data);
-
-  gtk_tree_model_foreach(model,stop_timing_all_cb,NULL);
-
-  return FALSE;
 }
 
 static void

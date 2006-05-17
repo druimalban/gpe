@@ -1,3 +1,12 @@
+2006-05-18 Philippe De Swert <philippedeswert@scarlet.be>
+
+	* autogen.sh: added po/Makefile.in.in updating
+	* configure.ac: corrected po/Makefile.in problem
+	* ui.c: general clean-up (remove unused functions)
+	* ui.h: clean-up (see ui.c)
+	* Makefile.am: remove html.c and html.h from build as they are unused atm as
+		       the html export code is broken
+
 2006-04-19  Florian Boor <florian.boor@kernelconcepts.de>
 
 	* ui.c: Activate journal button only if a task is selected.

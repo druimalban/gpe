@@ -51,7 +51,7 @@ AC_SUBST(DEPS_LIBS)
 
 AC_OUTPUT([
 Makefile
-po/Makefile
+po/Makefile.in
 gpe-timesheet.desktop.in
 hildon/com.nokia.gpe-timesheet.service
 hildon/gpe-timesheet.desktop.in
