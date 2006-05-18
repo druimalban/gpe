@@ -1,5 +1,10 @@
 2006-05-18  Neal H. Walfield  <neal@gnu.org>
 
+	* main.c (cal_view_build): Add a weak reference to CALENDAR which
+	squashes CALENDAR when it is destroyed.
+
+2006-05-18  Neal H. Walfield  <neal@gnu.org>
+
 	* day_popup.c (day_popup): If the event is a reminder, don't
 	display the time.  If the event does not start on the day in
 	question, display until when the event lasts.

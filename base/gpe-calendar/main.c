@@ -424,7 +424,7 @@ calendar_changed (GtkWidget *cal, gpointer data)
   propagate_time ();
 }
 
-/* Bulid the layout for the cal view.  If *event_list is not NULL,
+/* Build the layout for the cal view.  If *event_list is not NULL,
    then assumes a reference to *EVENT_LIST and uses it rather than
    creating a new one.  (If DISPLAY_TINY is true and as a result, the
    sidebar is not displayed and *EVENT_LIST is not-NULL, then a
@@ -480,6 +480,7 @@ cal_view_build (GtkEventList **event_list)
       gtk_widget_show (GTK_WIDGET (sidebar));
 
       calendar = GTK_EVENT_CAL (gtk_event_cal_new ());
+      g_object_weak_ref (G_OBJECT (calendar), squash_pointer, &calendar);
       GTK_WIDGET_UNSET_FLAGS (calendar, GTK_CAN_FOCUS);
       gtk_calendar_set_display_options (GTK_CALENDAR (calendar),
 					GTK_CALENDAR_SHOW_DAY_NAMES
