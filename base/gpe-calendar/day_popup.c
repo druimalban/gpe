@@ -126,15 +126,35 @@ day_popup (struct day_popup *p, gboolean show_events)
 	{
 	  Event *ev = EVENT (l->data);
 
-	  time_t t = event_get_start (ev);
-	  localtime_r (&t, &tm);
-	  char *timestr = strftime_strdup_utf8_locale (TIMEFMT, &tm);
+	  char *timestr = NULL;
+	  if (! is_reminder (ev))
+	    {
+	      time_t t = event_get_start (ev);
+	      localtime_r (&t, &tm);
+	      if (tm.tm_mday == p->day && tm.tm_mon == p->month
+		  && tm.tm_year == p->year)
+		timestr = strftime_strdup_utf8_locale (TIMEFMT, &tm);
+	      else
+		{
+		  time_t end = event_get_start (ev) + event_get_duration (ev);
+		  localtime_r (&end, &tm);
+		  if (tm.tm_mday == p->day && tm.tm_mon == p->month
+		      && tm.tm_year == p->year)
+		    {
+		      char *b;
+		      b = strftime_strdup_utf8_locale (TIMEFMT, &tm);
+		      timestr = g_strdup_printf (_("Until %s"), b);
+		      g_free (b);
+		    }
+		}
+	    }
 	  char summary[60];
 
 	  snprintf (summary, sizeof (summary) - 1,
-		    "%s %s", timestr, event_get_summary (ev));
+		    "%s %s", timestr ? timestr : "", event_get_summary (ev));
 	  summary[60] = 0;
-	  g_free (timestr);
+	  if (timestr)
+	    g_free (timestr);
 
 	  /* Convert new lines to spaces.  */
 	  char *s = summary;

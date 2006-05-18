@@ -1,6 +1,12 @@
+2006-05-18  Neal H. Walfield  <neal@gnu.org>
+
+	* day_popup.c (day_popup): If the event is a reminder, don't
+	display the time.  If the event does not start on the day in
+	question, display until when the event lasts.
+
 2006-05-16  Neal H. Walfield  <neal@gnu.org>
 
-	* day_render.c (gtk_day_render_expose): Corrent the calculation of
+	* day_render.c (gtk_day_render_expose): Correct the calculation of
 	the hour for machines with broken (?) FPUs.
 
 2006-05-15  Neal H. Walfield  <neal@gnu.org>
