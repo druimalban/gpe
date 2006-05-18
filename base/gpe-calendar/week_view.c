@@ -35,7 +35,7 @@ struct week_day
   /* The list of events.  */
   GSList *events;
 
-  struct day_popup popup;
+  GDate date;
 };
 
 struct _GtkWeekView
@@ -133,10 +133,6 @@ static void
 gtk_week_view_init (GTypeInstance *instance, gpointer klass)
 {
   GtkWeekView *week_view = GTK_WEEK_VIEW (instance);
-
-  week_view->have_extents = FALSE;
-  week_view->height = 0;
-  week_view->width = 0;
 }
 
 static void
@@ -220,7 +216,6 @@ draw_expose_event (GtkWidget *widget, GdkEventExpose *event, GtkWidget *wv)
   GtkWeekView *week_view = GTK_WEEK_VIEW (wv);
   GdkDrawable *drawable = widget->window;
   GdkGC *black_gc;
-  GdkGC *white_gc;
   GdkGC *blue_gc;
   GdkGC *yellow_gc;
   GdkGC *salmon_gc;
@@ -248,7 +243,6 @@ draw_expose_event (GtkWidget *widget, GdkEventExpose *event, GtkWidget *wv)
   gdk_colormap_alloc_color (colormap, &salmon, FALSE, TRUE);
   gdk_gc_set_foreground (salmon_gc, &salmon);
 
-  white_gc = widget->style->white_gc;
   black_gc = widget->style->black_gc;
 
   int day_start, day_end;
@@ -302,22 +296,19 @@ draw_expose_event (GtkWidget *widget, GdkEventExpose *event, GtkWidget *wv)
 	      /* Reminder, i.e. no time.  */
 	      continue;
 
-	    time_t t = event_get_start (ev);
-	    struct tm tm;
-	    localtime_r (&t, &tm);
+	    GDate date;
+	    g_date_set_time (&date, event_get_start (ev));
 
-	    if (! (tm.tm_year == week_view->days[day].popup.year
-		   && tm.tm_mon == week_view->days[day].popup.month
-		   && tm.tm_mday == week_view->days[day].popup.day))
+	    if (g_date_compare (&date, &week_view->days[day].date) != 0)
 	      /* Doesn't start today.  As such, we don't show the
 		 date.  */
 	      continue;
 
 	    PangoRectangle pr;
 
-	    gchar *buffer = strftime_strdup_utf8_locale (TIMEFMT, &tm);
+	    char buffer[100];
+	    g_date_strftime (buffer, sizeof (buffer), TIMEFMT, &date);
 	    pango_layout_set_text (pl_evt, buffer, -1);
-	    g_free (buffer);
 	    pango_layout_get_pixel_extents (pl_evt, NULL, &pr);
 
 	    week_view->time_width = MAX (pr.width, week_view->time_width);
@@ -345,15 +336,10 @@ draw_expose_event (GtkWidget *widget, GdkEventExpose *event, GtkWidget *wv)
       day->top = top;
 
       /* Color the day's background appropriately.  */
-      if (day->events)
-	color = white_gc;
+      if (week_starts_monday)
+	color = i >= 5 ? salmon_gc : yellow_gc;
       else
-	{
-	  if (week_starts_monday)
-	    color = i >= 5 ? salmon_gc : yellow_gc;
-	  else
-	    color = i == 0 || i == 6 ? salmon_gc : yellow_gc;
-	}
+	color = i == 0 || i == 6 ? salmon_gc : yellow_gc;
       gdk_draw_rectangle (drawable, color, TRUE,
 			  0, day->top, week_view->width,
 			  week_view->have_extents
@@ -392,21 +378,16 @@ draw_expose_event (GtkWidget *widget, GdkEventExpose *event, GtkWidget *wv)
 	  /* Paint the time for events which have a time stamp.  */
 	  if (! event_get_untimed (ev))
 	    {
-	      time_t t;
-	      struct tm tm;
-
-	      t = event_get_start (ev);
-	      localtime_r (&t, &tm);
-
+	      GDate date;
+	      g_date_set_time (&date, event_get_start (ev));
+	      
 	      /* Also, only display the time if this is the day on
 		 which the event starts.  */
-	      if (tm.tm_year == day->popup.year
-		  && tm.tm_mon == day->popup.month
-		  && tm.tm_mday == day->popup.day)
+	      if (g_date_compare (&date, &day->date) == 0)
 		{
-		  gchar *buffer = strftime_strdup_utf8_locale (TIMEFMT, &tm);
+		  char buffer[100];
+		  g_date_strftime (buffer, sizeof (buffer), TIMEFMT, &date);
 		  pango_layout_set_text (pl_evt, buffer, -1);
-		  g_free (buffer);
 
 		  gtk_paint_layout (widget->style,
 				    widget->window,
@@ -594,10 +575,9 @@ gtk_week_view_reload_events (GtkView *view)
         g_free (d->banner);
       d->banner = strftime_strdup_utf8_utf8 ("<b>%a %d %B</b> ", &start);
 
-      d->popup.day = start.tm_mday;
-      d->popup.year = start.tm_year;
-      d->popup.month = start.tm_mon;
-      d->popup.events = week_view->days[day].events;
+      g_date_set_dmy (&d->date,
+		      start.tm_mday, start.tm_mon + 1, start.tm_year + 1900);
+      d->events = week_view->days[day].events;
     }
   g_assert (0 <= week_view->focused_day && week_view->focused_day < 7);
 
@@ -635,7 +615,7 @@ gtk_week_view_key_press_event (GtkWidget *widget, GdkEventKey *k)
       break;
 
     case GDK_space:
-      gtk_menu_popup (day_popup (&d->popup, FALSE),
+      gtk_menu_popup (day_popup (&d->date, NULL),
 		      NULL, NULL, NULL, NULL,
 		      0, gtk_get_current_event_time());
       return TRUE;
@@ -643,16 +623,8 @@ gtk_week_view_key_press_event (GtkWidget *widget, GdkEventKey *k)
     case GDK_Return:
       /* Zoom to the day view.  */
       {
-	time_t t = gtk_view_get_time (GTK_VIEW (week_view));
 	struct tm tm;
-
-	localtime_r (&t, &tm);
-	tm.tm_year = d->popup.year;//- 1900;
-	tm.tm_mon = d->popup.month;
-	tm.tm_mday = d->popup.day;
-	tm.tm_hour = 0;
-	tm.tm_min = 0;
-	tm.tm_sec = 0;
+	g_date_to_struct_tm (&d->date, &tm);
 	set_time_and_day_view (mktime (&tm));    
 
 	return TRUE; 
@@ -699,27 +671,22 @@ gtk_week_view_button_press_event (GtkWidget *widget, GdkEventButton *event)
 	  if (week_view->focused_day == day)
 	    /* This day is focused, zoom to the day view.  */
 	    {
-	      time_t t = gtk_view_get_time (GTK_VIEW (week_view));
 	      struct tm tm;
-
-	      localtime_r (&t, &tm);
-	      tm.tm_year = d->popup.year;
-	      tm.tm_mon = d->popup.month;
-	      tm.tm_mday = d->popup.day;
+	      g_date_to_struct_tm (&d->date, &tm);
 	      set_time_and_day_view (mktime (&tm));
 	    }
 	  else
 	    {
-	      gtk_view_set_time (GTK_VIEW (week_view),
-				 time_from_day (d->popup.year, d->popup.month,
-						d->popup.day));
+	      struct tm tm;
+	      g_date_to_struct_tm (&d->date, &tm);
+	      gtk_view_set_time (GTK_VIEW (week_view), mktime (&tm));
 
 	      /* In case the draw doesn't have the focus.  */
 	      gtk_widget_grab_focus (week_view->draw);
 	    }
 	}
       else if (event->button == 3)
-	gtk_menu_popup (day_popup (&d->popup, FALSE),
+	gtk_menu_popup (day_popup (&d->date, FALSE),
 			NULL, NULL, NULL, NULL,
 			event->button, event->time);
     }

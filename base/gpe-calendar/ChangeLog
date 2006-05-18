@@ -1,5 +1,48 @@
 2006-05-18  Neal H. Walfield  <neal@gnu.org>
 
+	* day_popup.h (struct day_popup): Remove structure.
+	(day_popup): Take a GDate indicating the date and a list of events
+	as parameters.  Update callers.
+	* day_popup.c (day_clicked): Make the user data a GDate * and
+	adapt code.
+	(new_clicked): Likewise.
+	(day_popup): Take a GDate indicating the date and a list of events
+	as parameters.  Update code accordingly.
+	* week_view.c (struct week_day): Remove field popup, add field
+	date.  Update users.
+	* month_view.c (struct render_ctl): Remove structure.
+	(struct day): New structure.
+	(struct _GtkMonthView): Remove fields day_events and rc.  Add
+	field day.  Update users.
+
+	* month_view.c (TOTAL_DAYS): Rename marco...
+	(MAX_DAYS): ... to this.  Update users.
+	(TOTAL_WEEKS): Remove macro.
+	(MAX_DAYS_IN_MONTH): Remove macro.
+	(gtk_month_view_set_time): All days are valid, change the month if
+	the day is not part of the current month.
+	(gtk_month_view_button_press_event): All days are valid, just pop
+	up the menu.
+	(gtk_month_view_key_press_event): Likewise.
+	(draw_expose_event): All days are valid.
+	(gtk_month_view_reload_events): Populate all days with events.
+
+	* day_popup.c (struct data): New structure.
+	(destroy): New function.
+	(day_popup): Make a copy of the date and take a reference to each
+	event and add a callback to destroy it when the menu is destroyed.
+
+	* week_view.c (draw_expose_event): Don't make the background of
+	days with events cream: just use the normal background based on
+	the day of the week.
+	* month_view.c (draw_expose_event): Likewise.
+
+	* week_view.c (gtk_week_view_init): Don't waste cycles
+	initializing fields to 0.
+	* month_view.c (gtk_month_view_init): Likewise.
+	
+2006-05-18  Neal H. Walfield  <neal@gnu.org>
+
 	* main.c (cal_view_build): Add a weak reference to CALENDAR which
 	squashes CALENDAR when it is destroyed.
 

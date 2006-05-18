@@ -22,41 +22,35 @@
 #include "month_view.h"
 #include "day_popup.h"
 
-#define TOTAL_DAYS (6 * 7)
-#define TOTAL_WEEKS (TOTAL_DAYS / 7)
-#define MAX_DAYS_IN_MONTH 32
+#define MAX_DAYS (6 * 7)
 
-/* A render control.  POPUP only contains valid data if VALID is
-   true.  */
-struct render_ctl
+/* Describes each cell: the date it represents and the events occuring
+   that day.  */
+struct day
 {
-  struct day_popup popup;
-  gboolean valid;
+  GDate date;
+  GSList *events;
 };
 
 /* A month view consists of a number of cells: 7 per row up to 6
    columns (as that is the maximum number of weeks any week requires
    independent of the day it starts on.
 
-   Each cell that actually display a day from the displayed month has
-   a render control associated with it.  This render control is marked
-   as valid and has the date the cell represents and a pointer to the
-   event list (if any).  The event list can also be found in
-   DAY_EVENTS.  DAY_EVENTS is indexed by the cells day in the month,
-   NOT BY THE CELL number.  */
+   Each cell has a render control associated with it.  This render
+   control is marked as valid and has the date the cell represents and
+   a pointer to the event list (if any).  The event list can also be
+   found in DAY_EVENTS.  DAY_EVENTS is indexed by the cells day in the
+   month, NOT BY THE CELL number.  */
 struct _GtkMonthView
 {
   GtkView widget;
   GtkWidget *draw;
 
-  /* Events attacked to the day.  */
-  GSList *day_events[MAX_DAYS_IN_MONTH];
+  /* Events attached to the day.  */
+  struct day day[MAX_DAYS];
 
   /* Day which has the focus.  */
   guint focused_day;
-
-  /* One for each cell.  */
-  struct render_ctl rc[TOTAL_DAYS];
 
   /* Amount of canvas allocated.  */
   gint width, height;
@@ -95,17 +89,17 @@ gtk_month_view_get_type (void)
   if (! type)
     {
       static const GTypeInfo info =
-      {
-	sizeof (GtkMonthViewClass),
-	gtk_month_view_base_class_init,
-	NULL,
-	NULL,
-	NULL,
-	NULL,
-	sizeof (struct _GtkMonthView),
-	0,
-	gtk_month_view_init
-      };
+	{
+	  sizeof (GtkMonthViewClass),
+	  gtk_month_view_base_class_init,
+	  NULL,
+	  NULL,
+	  NULL,
+	  NULL,
+	  sizeof (struct _GtkMonthView),
+	  0,
+	  gtk_month_view_init
+	};
 
       type = g_type_register_static (gtk_view_get_type (),
 				     "GtkMonthView", &info, 0);
@@ -141,15 +135,6 @@ static void
 gtk_month_view_init (GTypeInstance *instance, gpointer klass)
 {
   GtkMonthView *month_view = GTK_MONTH_VIEW (instance);
-  int day;
-
-  month_view->focused_day = 0;
-  month_view->width = 0;
-  month_view->height = 0;
-  month_view->weeks = TOTAL_WEEKS;
-
-  for (day = 0; day < MAX_DAYS_IN_MONTH; day ++)
-    month_view->day_events[day] = NULL;
 }
 
 static void
@@ -165,9 +150,9 @@ gtk_month_view_finalize (GObject *object)
   GtkMonthView *month_view = GTK_MONTH_VIEW (object);
   gint i;
 
-  for (i = 0; i < MAX_DAYS_IN_MONTH; i++)
-    if (month_view->day_events[i]) 
-      event_list_unref (month_view->day_events[i]);
+  for (i = 0; i < MAX_DAYS; i++)
+    if (month_view->day[i].events) 
+      event_list_unref (month_view->day[i].events);
 
   G_OBJECT_CLASS (parent_class)->finalize (object);
 }
@@ -278,20 +263,20 @@ gtk_month_view_set_time (GtkView *view, time_t current)
     /* Same month.  */
     {
       int offset = 0;
-      while (! month_view->rc[offset].valid)
+      while (g_date_get_month (&month_view->day[offset].date)
+	     != current_tm.tm_mon + 1)
 	offset ++;
 
-      if (new_tm.tm_mday - 1 != month_view->focused_day - offset)
+      if (new_tm.tm_mday - 1 + offset != month_view->focused_day)
 	/* But different day.  */
 	{
 	  gtk_month_view_invalidate_cell (month_view, month_view->focused_day);
 	  month_view->focused_day = new_tm.tm_mday - 1 + offset;
 	  gtk_month_view_invalidate_cell (month_view, month_view->focused_day);
 	}
-      return;
     }
-
-  gtk_month_view_reload_events (view);
+  else
+    gtk_month_view_reload_events (view);
 }
 
 static gboolean
@@ -300,69 +285,31 @@ gtk_month_view_button_press_event (GtkWidget *widget, GdkEventButton *event)
   GtkMonthView *month_view = GTK_MONTH_VIEW (widget);
   int col, row;
   int day;
-  struct render_ctl *c;
+  struct day *c;
 
   gtk_month_view_cell_at (month_view, event->x, event->y, &col, &row);
   day = col + row * 7;
   if (day < 0 || day >= 7 * month_view->weeks)
     return FALSE;
-  c = &month_view->rc[day];
+  c = &month_view->day[day];
 
   if (event->type == GDK_BUTTON_PRESS)
     {
       if (event->button == 3)
 	/* Right click.  Popup a menu.  */
-	{
-	  if (c->valid)
-	    gtk_menu_popup (day_popup (&c->popup, TRUE),
-			    NULL, NULL, NULL, NULL,
-			    event->button, event->time);
-	}
-      else
+	gtk_menu_popup (day_popup (&c->date, c->events),
+			NULL, NULL, NULL, NULL,
+			event->button, event->time);
+      else if (event->button == 1)
 	/* Left click.  Select the day.  */
 	{
+	  struct tm tm;
+	  g_date_to_struct_tm (&c->date, &tm);
+
 	  if (day != month_view->focused_day)
-	    {
-	      if (month_view->rc[day].valid)
-		gtk_view_set_time (GTK_VIEW (month_view),
-				   time_from_day (c->popup.year,
-						  c->popup.month,
-						  c->popup.day));
-	      else
-		/* Change months.  */
-		{
-		  int d = day < 7 ? 1 : -1;
-		  int i = 0;
-
-		  /* Determine the number of days before (or after)
-		     the month.  */
-		  while (! c[i].valid)
-		    i += d;
-
-		  gtk_view_set_time (GTK_VIEW (month_view),
-				     time_from_day (c[i].popup.year,
-						    c[i].popup.month,
-						    c[i].popup.day)
-				    - i * 24 * 60 * 60);
-		}
-
-	      /* In case the draw doesn't have the focus.  */
-	      gtk_widget_grab_focus (month_view->draw);
-	    }
+	    gtk_view_set_time (GTK_VIEW (month_view), mktime (&tm));
 	  else
-	    /* Click on an active box: move to the day view.  */
-	    {
-	      time_t t = gtk_view_get_time (GTK_VIEW (month_view));
-	      struct tm tm;
-	      time_t selected_time;
-
-	      localtime_r (&t, &tm);
-	      tm.tm_year = c->popup.year;
-	      tm.tm_mon = c->popup.month;
-	      tm.tm_mday = c->popup.day;
-	      selected_time = mktime (&tm);
-	      set_time_and_day_view (selected_time);
-	    }
+	    set_time_and_day_view (mktime (&tm));
 	}
 
       return TRUE;
@@ -385,8 +332,6 @@ draw_expose_event (GtkWidget *widget,
   GdkDrawable *drawable;
   GdkGC *black_gc;
   GdkGC *gray_gc;
-  GdkGC *white_gc;
-  GdkGC *cream_gc;
   GdkGC *light_gray_gc;
   GdkGC *yellow_gc;
   GdkGC *salmon_gc;
@@ -404,7 +349,6 @@ draw_expose_event (GtkWidget *widget,
   g_return_val_if_fail (widget != NULL, TRUE);
   g_return_val_if_fail (GTK_IS_DRAWING_AREA (widget), TRUE);
 
-  cream_gc = pen_new (widget, 65535, 64005, 61200);
   light_gray_gc = pen_new (widget, 53040, 53040, 53040);
   blue_gc = pen_new (widget, 0, 0, 0xffff);
 
@@ -422,7 +366,6 @@ draw_expose_event (GtkWidget *widget,
   gdk_colormap_alloc_color (colormap, &salmon, FALSE, TRUE);
   gdk_gc_set_foreground (salmon_gc, &salmon);
 
-  white_gc = widget->style->white_gc;
   gray_gc = widget->style->bg_gc[GTK_STATE_NORMAL];
   black_gc = widget->style->black_gc;
 
@@ -464,7 +407,7 @@ draw_expose_event (GtkWidget *widget,
       for (col = col_start; col <= col_last; col ++)
 	{
 	  gint day = col + (7 * row);
-	  struct render_ctl *c = &month_view->rc[day];
+	  struct day *c = &month_view->day[day];
 	  gint x, w;
 
 	  gtk_month_view_cell_box (month_view, col, 0, &x, NULL, &w, NULL);
@@ -489,111 +432,86 @@ draw_expose_event (GtkWidget *widget,
 				pl);
 	    }
 
-	  if (c->valid)
-	    {
-	      GdkGC *color;
+	  GdkGC *color;
 
-	      if (c->popup.events)
-		color = cream_gc;
-	      else
-		{
-		  if (week_starts_monday)
-		    color = col >= 5 ? salmon_gc : yellow_gc;
-		  else
-		    color = col == 0 || col == 6 ? salmon_gc : yellow_gc;
-		}
+	  if (week_starts_monday)
+	    color = col >= 5 ? salmon_gc : yellow_gc;
+	  else
+	    color = col == 0 || col == 6 ? salmon_gc : yellow_gc;
 
-	      gdk_draw_rectangle (drawable, color, TRUE, x, y + 1, w, h);
+	  gdk_draw_rectangle (drawable, color, TRUE, x, y + 1, w, h);
 
-	      /* Draw the top edge of the box.  */
-	      gdk_draw_line (drawable, black_gc,
-			     x, y, x + w - 1, y);
-	      /* Draw the right hand side of the box.  */
-	      gdk_draw_line (drawable, black_gc,
-			     x + w - 1, y + 1, x + w - 1, y + h - 1);
+	  /* Draw the top edge of the box.  */
+	  gdk_draw_line (drawable, black_gc,
+			 x, y, x + w - 1, y);
+	  /* Draw the right hand side of the box.  */
+	  gdk_draw_line (drawable, black_gc,
+			 x + w - 1, y + 1, x + w - 1, y + h - 1);
 
 #define PRE "<span size='small'>"
 #define POST "</span>"
 #define NUM_WIDTH 10
-	      int len = sizeof (PRE) + sizeof (POST) + NUM_WIDTH + 1;
-              if (c->popup.events)
-                {
-                  GSList *iter;
-                  for (iter = c->popup.events; iter; iter = iter->next)
-		    {
-                      Event *ev = iter->data;
-		      len += strlen (event_get_summary (ev)) + 1;
-		    }
-		  /* NUL character.  */
-		  len ++;
-		}
-
-	      char *buffer = g_malloc (len);
-	      char *p = buffer;
-
-	      p = stpcpy (p, PRE);
-	      int written = sprintf (p, "%d", c->popup.day);
-	      p += written > NUM_WIDTH ? NUM_WIDTH : written;
-
-	      *p = ' ';
-	      p ++;
-	      
-              if (c->popup.events)
-                {
-                  GSList *iter;
-		  for (iter = c->popup.events; iter; iter = iter->next)
-		    {
-                      Event *ev = iter->data;
-		      char *t = p;
-
-		      p = stpcpy (p, event_get_summary (ev));
-		      /* Replace '\n''s with spaces.  */
-		      for (t = strchr (t, '\n'); t; t = strchr (t, '\n'))
-			*t = ' ';
-
-		      /* Replace the \0 with a \n.  */
-		      p[0] = '\n';
-		      p ++;
-		    }
-		}
-
-	      strcpy (p, POST);
-
-	      pango_layout_set_width (pl_evt, w * PANGO_SCALE);
-	      pango_layout_set_markup (pl_evt, buffer, -1);
-	      pango_layout_get_pixel_extents (pl_evt, NULL, &pr);
-	      if (pr.height > y + h)
-		pango_layout_set_width (pl_evt, -1);
-
-	      gtk_paint_layout (widget->style,
-				widget->window,
-				GTK_WIDGET_STATE (widget),
-				FALSE,
-				&event->area,
-				widget,
-				"label",
-				x + 2, y,
-				pl_evt);
-
-	      g_free(buffer);
-	    }
-	  else
-	    /* Not a valid date.  */
+	  int len = sizeof (PRE) + sizeof (POST) + NUM_WIDTH + 1;
+	  if (c->events)
 	    {
-	      /* Draw the top edge of the box.  */
-	      gdk_draw_line (drawable, black_gc,
-			     x, y, x + w - 1, y);
-	      /* Draw the right hand side of the box.  */
-	      gdk_draw_line (drawable,
-			     col < 6
-			     && month_view->rc[(col + 1) + row * 7].valid
-			     ? black_gc : light_gray_gc,
-			     x + w - 1, y + 1, x + w - 1, y + h - 1);
-
-	      /* And flood it gray.  */
-	      gdk_draw_rectangle (drawable, gray_gc, TRUE,
-				  x + 1, y + 1, w - 2, h - 2);
+	      GSList *iter;
+	      for (iter = c->events; iter; iter = iter->next)
+		{
+		  Event *ev = iter->data;
+		  len += strlen (event_get_summary (ev)) + 1;
+		}
+	      /* NUL character.  */
+	      len ++;
 	    }
+
+	  char *buffer = g_malloc (len);
+	  char *p = buffer;
+
+	  p = stpcpy (p, PRE);
+	  int written = sprintf (p, "%d", g_date_get_day (&c->date));
+	  p += written > NUM_WIDTH ? NUM_WIDTH : written;
+
+	  *p = ' ';
+	  p ++;
+	      
+	  if (c->events)
+	    {
+	      GSList *iter;
+	      for (iter = c->events; iter; iter = iter->next)
+		{
+		  Event *ev = iter->data;
+		  char *t = p;
+
+		  p = stpcpy (p, event_get_summary (ev));
+		  /* Replace '\n''s with spaces.  */
+		  for (t = strchr (t, '\n'); t; t = strchr (t, '\n'))
+		    *t = ' ';
+
+		  /* Replace the \0 with a \n.  */
+		  p[0] = '\n';
+		  p ++;
+		}
+	    }
+
+	  strcpy (p, POST);
+
+	  pango_layout_set_width (pl_evt, w * PANGO_SCALE);
+	  pango_layout_set_markup (pl_evt, buffer, -1);
+	  pango_layout_get_pixel_extents (pl_evt, NULL, &pr);
+	  if (pr.height > y + h)
+	    pango_layout_set_width (pl_evt, -1);
+
+	  gtk_paint_layout (widget->style,
+			    widget->window,
+			    GTK_WIDGET_STATE (widget),
+			    FALSE,
+			    &event->area,
+			    widget,
+			    "label",
+			    x + 2, y,
+			    pl_evt);
+
+	  g_free(buffer);
 
 	  if (day == month_view->focused_day)
 	    /* Highlight this day.  */
@@ -603,7 +521,6 @@ draw_expose_event (GtkWidget *widget,
     }
 
   gdk_gc_unref (blue_gc);
-  gdk_gc_unref (cream_gc);
   gdk_gc_unref (light_gray_gc);
   gdk_gc_unref (yellow_gc);
   gdk_gc_unref (salmon_gc);
@@ -619,16 +536,16 @@ gtk_month_view_reload_events (GtkView *view)
 {
   GtkMonthView *month_view = GTK_MONTH_VIEW (view);
   time_t t = gtk_view_get_time (GTK_VIEW (month_view));
-  guint day;
   time_t start, end;
   struct tm tm_start, tm_end;
   guint days;
-  guint year, month;
+  guint year, month, day;
   guint wday;
 
   localtime_r (&t, &tm_start);
   year = tm_start.tm_year + 1900;
   month = tm_start.tm_mon;
+  day = tm_start.tm_mday;
 
   days = days_in_month (year, month);
   /* 0 => Monday.  */
@@ -638,60 +555,62 @@ gtk_month_view_reload_events (GtkView *view)
 
   month_view->weeks = (wday + days + 6) / 7;
 
-  for (day = 0; day < days; day++)
+  if (wday)
+    /* We don't start on a monday.  Find the first day.  */
     {
-      localtime_r (&t, &tm_start);
-      tm_start.tm_hour = 0;
-      tm_start.tm_min = 0;
-      tm_start.tm_sec = 0;
-      tm_start.tm_mday = day + 1;
-      tm_start.tm_isdst = -1;
+      tm_start.tm_mon --;
+      if (tm_start.tm_mon == -1)
+	{
+	  tm_start.tm_year --;
+	  tm_start.tm_mon = 12;
+	}
+
+      tm_start.tm_mday = days_in_month (tm_start.tm_year, tm_start.tm_mon)
+	- wday + 1;
+    }
+  else
+    tm_start.tm_mday = 1;
+
+  tm_start.tm_hour = 0;
+  tm_start.tm_min = 0;
+  tm_start.tm_sec = 0;
+  tm_start.tm_isdst = -1;
+
+  int i;
+  for (i = 0; i < month_view->weeks * 7; i ++)
+    {
       start = mktime (&tm_start);
 
-      localtime_r (&t, &tm_end);
+      memcpy (&tm_end, &tm_start, sizeof (tm_end));
       tm_end.tm_hour = 23;
       tm_end.tm_min = 59;
       tm_end.tm_sec = 59;
-      tm_end.tm_mday = day + 1;
       tm_end.tm_isdst = -1;
       end = mktime (&tm_end);
       
-      if (month_view->day_events[day])
-        event_list_unref (month_view->day_events[day]);
-      month_view->day_events[day]
+      if (month_view->day[i].events)
+        event_list_unref (month_view->day[i].events);
+      month_view->day[i].events
 	= g_slist_sort (event_db_list_for_period (event_db, start, end),
 			event_compare_func);
+
+      g_date_set_dmy (&month_view->day[i].date, tm_start.tm_mday,
+		      tm_start.tm_mon + 1, tm_start.tm_year + 1900);
+
+      if (tm_start.tm_mday == day && tm_start.tm_mon == month)
+        month_view->focused_day = i;
+
+      start = end + 1;
+      localtime_r (&start, &tm_start);
     }
 
-  /* Destroy any remain events.  */
-  for (; day < MAX_DAYS_IN_MONTH; day++)
-    if (month_view->day_events[day])
+  /* Destroy any remaining events.  */
+  for (; i < MAX_DAYS; i ++)
+    if (month_view->day[i].events)
       {
-	event_list_unref (month_view->day_events[day]);
-	month_view->day_events[day] = NULL;
+	event_list_unref (month_view->day[i].events);
+	month_view->day[i].events = NULL;
       }
-
-  localtime_r (&t, &tm_start);
-  for (day = 0; day < month_view->weeks * 7; day++)
-    {
-      gint rday = day - wday + 1;
-      struct render_ctl *c = &month_view->rc[day];
-      if (c->popup.events)
-        c->popup.events = NULL;
-      if (rday == tm_start.tm_mday) 
-        month_view->focused_day = day;
-
-      if (rday < 1 || rday > days)
-	c->valid = FALSE;
-      else
-        {
-          c->valid = TRUE;
-	  c->popup.day = rday;
-	  c->popup.year = year - 1900;
-	  c->popup.month = month;
-          c->popup.events = month_view->day_events[rday - 1];
-        }
-    }
 
   gtk_widget_queue_draw (month_view->draw);
 }
@@ -716,7 +635,7 @@ static gboolean
 gtk_month_view_key_press_event (GtkWidget *widget, GdkEventKey *k)
 {
   GtkMonthView *month_view = GTK_MONTH_VIEW (widget);
-  struct render_ctl *c = &month_view->rc[month_view->focused_day];
+  struct day *c = &month_view->day[month_view->focused_day];
   int i;
  
   i = 0;
@@ -731,39 +650,26 @@ gtk_month_view_key_press_event (GtkWidget *widget, GdkEventKey *k)
 
   if (i)
     {
+      struct tm tm;
+      g_date_to_struct_tm (&c->date, &tm);
       gtk_view_set_time (GTK_VIEW (month_view),
-			 time_from_day (c->popup.year, c->popup.month,
-					c->popup.day)
-			 + i * 24 * 60 * 60);
+			 mktime (&tm) + i * 24 * 60 * 60);
       return TRUE;
     }
 
   if (k->keyval == GDK_space)
     {
-      if (c->valid)
-	gtk_menu_popup (day_popup (&c->popup, TRUE),
-			NULL, NULL, NULL, NULL,
-			0, gtk_get_current_event_time());
+      gtk_menu_popup (day_popup (&c->date, c->events),
+		      NULL, NULL, NULL, NULL,
+		      0, gtk_get_current_event_time());
       return TRUE;
     }  
      
   if (k->keyval == GDK_Return)
     {
-      if (c->valid)
-        {
-	  time_t t = gtk_view_get_time (GTK_VIEW (month_view));
-          struct tm tm;
-          time_t selected_time;
-          localtime_r (&t, &tm);
-          tm.tm_year = c->popup.year;//- 1900;
-          tm.tm_mon = c->popup.month;
-          tm.tm_mday = c->popup.day;
-          tm.tm_hour = 0;
-          tm.tm_min = 0;
-          tm.tm_sec = 0;
-          selected_time = mktime (&tm);
-          set_time_and_day_view (selected_time);    
-        }
+      struct tm tm;
+      g_date_to_struct_tm (&c->date, &tm);
+      set_time_and_day_view (mktime (&tm));
       return TRUE; 
     }
   
