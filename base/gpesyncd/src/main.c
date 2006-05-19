@@ -36,13 +36,16 @@ callback_list (void *arg, int argc, char **argv, char **names)
 void
 gpesyncd_setup_databases (gpesyncd_context * ctx)
 {
-  GSList *tables = NULL, *iter;
+  GSList *tables = NULL;
   gchar *err;
   if (ctx->contact_db)
     {
       gchar *err = NULL;
       sqlite_exec (ctx->contact_db, "select max(urn) from contacts",
 		   callback_list, &tables, &err);
+      g_slist_free (tables);
+      tables = NULL;
+
       if ((err) && (!strcasecmp (err, "no such table: contacts")))
 	{
 	  fprintf (stderr, "No contacts tables found. Creating...");
@@ -74,6 +77,9 @@ gpesyncd_setup_databases (gpesyncd_context * ctx)
       gchar *err = NULL;
       sqlite_exec (ctx->event_db, "select max(uid) from calendar",
 		   callback_list, &tables, &err);
+      g_slist_free (tables);
+      tables = NULL;
+
       if ((err) && (!strcasecmp (err, "no such table: calendar")))
 	{
 	  fprintf (stderr, "No calendar tables found. Creating...");
@@ -98,6 +104,9 @@ gpesyncd_setup_databases (gpesyncd_context * ctx)
       gchar *err = NULL;
       sqlite_exec (ctx->todo_db, "select max(uid) from todo", callback_list,
 		   &tables, &err);
+      g_slist_free (tables);
+      tables = NULL;
+
       if ((err) && (!strcasecmp (err, "no such table: todo")))
 	{
 	  fprintf (stderr, "No todo tables found. Creating...");
@@ -303,7 +312,7 @@ get_next_token (gchar * str, guint * num)
   int i = 0;
   do
     {
-      g_string_append_c (string, str[i]);
+      string = g_string_append_c (string, str[i]);
       i++;
     }
   while ((str[i] != ' ') && (str[i] != '\0'));
@@ -376,6 +385,7 @@ do_command (gpesyncd_context * ctx, gchar * command)
 	  uid = atoi (uidstr);
 	  if (uid > 0)
 	    pos += uidlen + 1;
+	  g_free (uidstr);
 	}
 
       g_free (buf);
@@ -549,6 +559,7 @@ do_command (gpesyncd_context * ctx, gchar * command)
   else if (!strncasecmp (cmd, "QUIT", 4))
     {
       gpesyncd_printf (ctx, "Exiting!\n");
+      g_free (cmd);
       return FALSE;
     }
   else
@@ -923,13 +934,30 @@ main (int argc, char **argv)
   ctx->remote = 0;
   if (argc > 1)
     {
-      if (!strcasecmp (argv[1], "--remote"))
+      if (!strcasecmp (argv[1], "--help"))
+        {
+	  printf ("usage: %s [OPTION] \n\n", argv[0]);
+	  printf ("gpesyncd is a tool to import and export vcard,vevent and vtodos. When running\n");
+	  printf ("enter \"help\" for the available commands.\n\n");
+          printf ("Possible options: \n");
+	  printf (" -r, --remote        Starts gpesyncd in remote mode, which means that all\n");
+	  printf ("                     input must be entered as <nn>:<data> where <nn> is the\n");
+	  printf ("                     length of the data <data>.\n");
+	  printf ("                     Output follows the same convention.\n");
+          printf (" -d, --daemon [PORT] Starts in tcp/ip mode. Listens on port 6446 unless PORT\n");
+	  printf ("                     is specified.\n");
+
+	  exit (0);
+	}
+      else if ( (!strcasecmp (argv[1], "--remote")) 
+	|| (!strcasecmp (argv[1], "-r")) )
 	{
 	  ctx->remote = 1;
 	  remote_loop (ctx);
 	  exit (0);
 	}
-      else if (!strcmp (argv[1], "-D"))
+      else if ( (!strcasecmp (argv[1], "--daemon")) 
+	  || (!strcasecmp (argv[1], "-d")))
 	{
 	  int port = 6446;
 
@@ -944,6 +972,7 @@ main (int argc, char **argv)
   ctx->ifp = stdin;
   ctx->ofp = stdout;
 
+  printf ("gpesyncd local mode\n");
   command_loop (ctx);
 
   return 0;

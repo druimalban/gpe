@@ -1,3 +1,9 @@
+2006-05-19  Martin Felis <martin@_0nospam0_silef.de>
+
+	* ChangeLog: Changed my email adress, hoping to receive less spam in
+	the future.
+	* main.c: Fixed some memory leaks, added a --help option.
+
 2006-05-16  Florian Boor <florian@kernelconcepts.de>
 
 	* configure.ac: Remove unused gettext bits breaking builds.
