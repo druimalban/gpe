@@ -1,3 +1,8 @@
+2006-05-19  Phil Blundell  <pb@reciva.com>
+
+	* Makefile.am (INCLUDES): Remove spurious -I${includedir}.  Patch
+	from Überhacker Holger Zecke Freyther.
+
 2006-03-02  Florian Boor <florian@kernelconcepts.de>
 
 	* Release version 0.17.
