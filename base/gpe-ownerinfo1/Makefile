@@ -6,12 +6,8 @@ LINGUAS = de pt_PT
 
 MEMBERS = src/callbacks  src/interface  src/main  src/support
 
-ifeq ($(CVSBUILD),yes)
 CFLAGS += -I../libgpewidget -I../librootimage
 LDFLAGS += -L../libgpewidget -L../librootimage
-else
-CFLAGS += -I/usr/include/gpe
-endif
 LDFLAGS += -lgpewidget -lrootimage
 
 ifeq ($(GTK2),yes)

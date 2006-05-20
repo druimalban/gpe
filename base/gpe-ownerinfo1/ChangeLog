@@ -1,3 +1,7 @@
+2006-05-20  Philippe De Swert <philippedeswert@scarlet.be>
+
+	* Fix for erronous host includes
+
 2002-10-26  Colin Marquardt  <colin@marquardt-home.de>
 
 	* src/main.c (main): Use librootimage to set transparency.

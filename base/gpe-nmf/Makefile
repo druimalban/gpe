@@ -27,7 +27,6 @@ PACKAGE_CFLAGS += -I../libgpewidget
 PACKAGE_LDFLAGS += -L../libgpewidget
 BUILD = ../build
 else
-PACKAGE_CFLAGS += -I/usr/include/gpe
 BUILD = build
 endif
 PACKAGE_LDFLAGS += $(GPELIBS) $(GTKLDFLAGS) 

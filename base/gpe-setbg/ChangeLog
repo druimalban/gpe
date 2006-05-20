@@ -1,3 +1,7 @@
+2006-05-20  Philippe De Swert <philippedeswert@scarlet.be>
+
+	* Fix for erronous host includes
+
 2003-07-06  Moray Allan  <moray@sermisy.org>
 
 	* Makefile (install-program): Install gpe-default-bg.png with

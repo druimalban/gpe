@@ -22,7 +22,6 @@ CFLAGS += -I../../base/libgpewidget
 LDFLAGS += -L../../base/libgpewidget
 BUILD = ../build
 else
-CFLAGS += -I/usr/include/gpe
 BUILD = build
 endif
 LDFLAGS += -lgpewidget $(GTKLDFLAGS)

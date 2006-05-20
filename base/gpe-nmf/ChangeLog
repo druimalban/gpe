@@ -1,3 +1,7 @@
+2006-05-20  Philippe De Swert <philippedeswert@scarlet.be>
+
+	* Fix for erronous host includes
+
 2005-10-06  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * gpe-nmf.c: Apply loaded list correctly.

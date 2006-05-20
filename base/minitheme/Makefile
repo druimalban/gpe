@@ -22,7 +22,6 @@ CFLAGS += -I../libgpewidget -I../libxsettings-client -I../libxsettings
 LDFLAGS += -L../libgpewidget -L../libxsettings-client -L../libxsettings
 BUILD = ../build
 else
-CFLAGS += -I/usr/include/gpe
 BUILD = build
 endif
 LDFLAGS += -lgpewidget `pkg-config --libs gtk+-2.0` -lXsettings-client
