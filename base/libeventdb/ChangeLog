@@ -1,3 +1,9 @@
+2006-05-22  Florian Boor <florian@kernelconcepts.de>
+
+	* Release version 0.30
+	* configure.ac: Version to 0.30
+	* doc/gtk-doc.make: Allow "make dist" without gtk-doc.
+
 2006-05-15  Neal H. Walfield  <neal@gnu.org>
 
 	* test-event-list.c (do_test): Fix off by one error.
