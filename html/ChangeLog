@@ -1,3 +1,8 @@
+
+2006-05-23  Florian Boor <florian@kernelconcepts.de>
+
+	* download.phtml: Fix ftp url and OZ releases.
+
 2005-12-06  Florian Boor <florian@kernelconcepts.de>
 
 	* people.coord, images/people.png, images/people_eu.png: Add Philipp and Eric.
