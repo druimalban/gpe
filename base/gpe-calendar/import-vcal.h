@@ -1,6 +1,8 @@
 #ifndef _IMPORT_VCAL_H
 #define _IMPORT_VCAL_H
 
-int import_vcal (const gchar *filename);
+#include <gpe/event-db.h>
+
+int import_vcal (EventCalendar *ec, const gchar *filename);
 
 #endif

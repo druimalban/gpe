@@ -107,7 +107,8 @@ new_clicked (GtkWidget *widget, gpointer d)
   GtkWidget *w = calendar_edit_dialog_new (NULL);
   gtk_window_set_transient_for (GTK_WINDOW (w),
 				GTK_WINDOW (gtk_widget_get_toplevel (widget)));
-  gtk_widget_show (w);
+  gtk_dialog_run (GTK_DIALOG (w));
+  gtk_widget_destroy (w);
 }
 
 static void
@@ -167,7 +168,8 @@ button_press (GtkWidget *widget, GdkEventButton *event, gpointer user_data)
 	    (GTK_WINDOW (w),
 	     GTK_WINDOW (gtk_widget_get_toplevel (GTK_WIDGET (view))));
 
-	  gtk_widget_show (w);
+	  gtk_dialog_run (GTK_DIALOG (w));
+	  gtk_widget_destroy (w);
 	}
       else if (column == d->refresh_col)
 	;

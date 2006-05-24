@@ -72,7 +72,7 @@ extract_time (MIMEDirDateTime *dt)
 }
 
 static void
-do_import_vevent (MIMEDirVEvent *event)
+do_import_vevent (EventCalendar *ec, MIMEDirVEvent *event)
 {
   Event *ev = NULL;
   char *uid = NULL;
@@ -81,6 +81,9 @@ do_import_vevent (MIMEDirVEvent *event)
     ev = event_db_find_by_eventid (event_db, uid);
   if (! ev)
     ev = event_new (event_db, uid);
+
+  if (ec)
+    event_set_calendar (ev, ec);
 
   MIMEDirDateTime *dtstart = NULL;
   g_object_get (event, "dtstart", &dtstart, NULL);
@@ -352,7 +355,7 @@ do_import_vtodo (MIMEDirVTodo *todo)
 }
 
 static void
-do_import_vcal (MIMEDirVCal *vcal)
+do_import_vcal (EventCalendar *ec, MIMEDirVCal *vcal)
 {
   GSList *list, *iter;
     
@@ -362,7 +365,7 @@ do_import_vcal (MIMEDirVCal *vcal)
     {
       MIMEDirVEvent *vevent;
       vevent = MIMEDIR_VEVENT (iter->data);
-      do_import_vevent (vevent);
+      do_import_vevent (ec, vevent);
     }
 
   g_slist_free (list);
@@ -380,7 +383,7 @@ do_import_vcal (MIMEDirVCal *vcal)
 }
 
 int
-import_vcal (const gchar *filename)
+import_vcal (EventCalendar *ec, const gchar *filename)
 {
   MIMEDirVCal *cal = NULL;
   GError *error = NULL;
@@ -402,7 +405,7 @@ import_vcal (const gchar *filename)
       if( l->data != NULL && MIMEDIR_IS_VCAL (l->data)) 
         {
            cal = l->data;
-           do_import_vcal (cal);
+           do_import_vcal (ec, cal);
         }
       else
         result = -3;

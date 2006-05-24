@@ -1,5 +1,55 @@
 2006-05-24  Neal H. Walfield  <neal@gnu.org>
 
+	* calendar-edit-dialog.h (calendar_edit_dialog_get_calendar): New
+	declaration.
+	* calendar-edit-dialog.c (struct _CalendarEditDialog): Remove
+	field window.  Add field dialog and parent_check.
+	(struct _CalendarEditDialogClass): Remove field gtk_window_class.
+	Add field gtk_dialog_class.
+	(calendar_edit_dialog_get_type): Inherit from a GtkDialog, not a
+	GtkWindow.
+	(parent_combo_changed): New function.
+	(save_calendar_clicked): Only use D->PARENT if D->PARENT_CHECK is
+	active.  Don't destroy D.
+	(calendar_edit_dialog_init): Create D->PARENT_CHECK.
+	(calendar_edit_dialog_init): Use the dialog's native vbox and
+	action bar.  Add a response id to the save and cancel button.
+	(calendar_edit_dialog_get_calendar): New function.
+	(calendar_edit_dialog_new): If P, then make
+	CALENDAR_EDIT->PARENT_CHECK active.
+	* calendars-dialog.c (new_clicked): Don't show W.  Run W as a
+	dialog.  Destroy W on return.
+	(button_press): Likewise.
+	* event-ui.c: Include "calendar-edit-dialog.h".
+	(new_calendar_clicked): New function.
+	(build_edit_event_window): Don't set S->CALENDAR to the default
+	calendar.  Create a button and connect the "clicked" signal to
+	new_calendar_clicked.
+	* main.c (on_import_vcal) [!IS_HILDON]: Add a combo box to the
+	file dialog.  Create a button and connect the "clicked" signal to
+	new_calendar_clicked.
+
+	* import-vcal.h (import_vcal): Include <gpe/event-db.h>.
+	Take additional argument, an EventCalendar.  Update callers.
+	* import-vcal.c (do_import_vevent): Take additional argument, an
+	EventCalendar.  If EC is not NULL, then set EV's calendar to EC.
+	(do_import_vcal): Take additional argument, an EventCalendar and
+	pass it to do_import_vevent.
+	(import_vcal): Take additional argument, an EventCalendar and pass
+	it to do_import_vcal.
+	* main.c: #include "calendars-widgets.h" and
+	"calendar-edit-dialog.h".
+	(import_one_file): Take additional argument, an EventCalendar and
+	pass it to import_vcal.
+	(new_calendar_clicked): New function.
+	(on_import_vcal): When calling import_one_file, pass it the
+	selected EventCalendar.
+
+	* main.c (main): Connect EVENT_DB's "calendar-deleted" signal to
+	update_view.
+
+2006-05-24  Neal H. Walfield  <neal@gnu.org>
+
 	* Makefile.am (gpe_calendar_SOURCES): Add util.c,
 	calendar-edit-dialog.c, calendar-edit-dialog.h,
 	calendars-dialog.c, calendars-dialog.h, calendars-widgets.c,

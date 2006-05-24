@@ -27,13 +27,14 @@
 
 struct _CalendarEditDialog
 {
-  GtkWindow window;
+  GtkDialog dialog;
 
   EventCalendar *ec;
 
   GtkEntry *title;
   GtkEntry *description;
 
+  GtkWidget *parent_check;
   GtkComboBox *parent;
 
   GdkColor color;
@@ -51,7 +52,7 @@ struct _CalendarEditDialog
 
 struct _CalendarEditDialogClass
 {
-  GtkWindowClass gtk_window_class;
+  GtkDialogClass gtk_dialog_class;
 };
 
 static void calendar_edit_dialog_class_init (gpointer klass,
@@ -83,7 +84,7 @@ calendar_edit_dialog_get_type (void)
 	calendar_edit_dialog_init
       };
 
-      type = g_type_register_static (gtk_window_get_type (),
+      type = g_type_register_static (gtk_dialog_get_type (),
 				     "CalendarEditDialog", &info, 0);
     }
 
@@ -118,6 +119,13 @@ calendar_edit_dialog_finalize (GObject *object)
     g_object_unref (calendar_edit_dialog->ec);
 
   G_OBJECT_CLASS (calendar_edit_dialog_parent_class)->finalize (object);
+}
+
+static void
+parent_combo_changed (GtkComboBox *widget, gpointer user_data)
+{
+  CalendarEditDialog *d = CALENDAR_EDIT_DIALOG (user_data);
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (d->parent_check), TRUE);
 }
 
 static void
@@ -190,7 +198,9 @@ save_calendar_clicked (GtkWidget *widget, gpointer data)
 {
   CalendarEditDialog *d = CALENDAR_EDIT_DIALOG (data);
 
-  EventCalendar *parent = calendars_combo_box_get_active (d->parent);
+  EventCalendar *parent = NULL;
+  if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (d->parent_check)))
+    parent = calendars_combo_box_get_active (d->parent);
 
   int interval = units[gtk_combo_box_get_active (d->sync_interval_units)]
     / gtk_spin_button_get_value_as_int (d->sync_interval);
@@ -216,8 +226,6 @@ save_calendar_clicked (GtkWidget *widget, gpointer data)
       event_calendar_set_mode (d->ec, gtk_combo_box_get_active (d->mode));
       event_calendar_set_sync_interval (d->ec, interval);
     }
-
-  gtk_widget_destroy (GTK_WIDGET (d));
 }
 
 static void
@@ -229,17 +237,12 @@ calendar_edit_dialog_init (GTypeInstance *instance, gpointer klass)
   gtk_window_set_position (GTK_WINDOW (instance),
 			   GTK_WIN_POS_CENTER_ON_PARENT);
 
-  /* Main vbox.  */
-  GtkBox *box = GTK_BOX (gtk_vbox_new (FALSE, 0));
-  gtk_container_set_border_width (GTK_CONTAINER (box), 2);
-  gtk_container_add (GTK_CONTAINER (instance), GTK_WIDGET (box));
-  gtk_widget_show (GTK_WIDGET (box));
-
   /* A frame.  */
   GtkWidget *frame = gtk_frame_new (NULL);
   gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_NONE);
   gtk_container_set_border_width (GTK_CONTAINER (frame), 6);
-  gtk_box_pack_start (box, GTK_WIDGET (frame), TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (d)->vbox), GTK_WIDGET (frame),
+		      TRUE, TRUE, 0);
   gtk_widget_show (frame);
 
   /* Body box.  */
@@ -279,11 +282,13 @@ calendar_edit_dialog_init (GTypeInstance *instance, gpointer klass)
   gtk_box_pack_start (body, GTK_WIDGET (hbox), FALSE, FALSE, 0);
   gtk_widget_show (GTK_WIDGET (hbox));
 
-  label = gtk_label_new (_("Parent:"));
-  gtk_box_pack_start (hbox, label, FALSE, FALSE, 0);
-  gtk_widget_show (label);
+  d->parent_check = gtk_check_button_new_with_label (_("Parent:"));
+  gtk_box_pack_start (hbox, d->parent_check, FALSE, FALSE, 0);
+  gtk_widget_show (d->parent_check);
 
   d->parent = GTK_COMBO_BOX (calendars_combo_box_new ());
+  g_signal_connect (G_OBJECT (d->parent), "changed",
+		    G_CALLBACK (parent_combo_changed), d);
   gtk_widget_show (GTK_WIDGET (d->parent));
   gtk_box_pack_start (hbox, GTK_WIDGET (d->parent), FALSE, FALSE, 0);
 
@@ -311,7 +316,11 @@ calendar_edit_dialog_init (GTypeInstance *instance, gpointer klass)
   /* mode.  */
   hbox = GTK_BOX (gtk_hbox_new (FALSE, 3));
   gtk_box_pack_start (body, GTK_WIDGET (hbox), FALSE, FALSE, 0);
+  /* Show once we actually support something other than local
+     mode.  */
+#if 0
   gtk_widget_show (GTK_WIDGET (hbox));
+#endif
 
   label = gtk_label_new (_("Type:"));
   gtk_box_pack_start (hbox, label, FALSE, FALSE, 0);
@@ -325,11 +334,7 @@ calendar_edit_dialog_init (GTypeInstance *instance, gpointer klass)
   gtk_combo_box_set_active (d->mode, 0);
   g_signal_connect (d->mode, "changed",
 		    G_CALLBACK (mode_changed), d);
-  /* Show once we actually support something other than local
-     mode.  */
-#if 0
   gtk_widget_show (GTK_WIDGET (d->mode));
-#endif
   gtk_box_pack_start (hbox, GTK_WIDGET (d->mode), FALSE, FALSE, 0);
 
   /* URL.  */
@@ -374,33 +379,21 @@ calendar_edit_dialog_init (GTypeInstance *instance, gpointer klass)
   gtk_box_pack_start (d->sync_box, GTK_WIDGET (d->sync_interval_units),
 		      FALSE, FALSE, 0);
 
-  /* A separator.  */
-  GtkWidget *sep = gtk_hseparator_new ();
-  gtk_box_pack_start (box, sep, FALSE, TRUE, 0);
-  gtk_widget_show (sep);
-
-
-  /* A button box at the bottom.  */
-  hbox = GTK_BOX (gtk_hbox_new (FALSE, 0));
-  gtk_box_pack_start (box, GTK_WIDGET (hbox), FALSE, TRUE, 0);
-  gtk_widget_show (GTK_WIDGET (hbox));
-
-  GtkBox *buttons = GTK_BOX (gtk_hbox_new (TRUE, 4));
-  gtk_container_set_border_width (GTK_CONTAINER (buttons), 2);
-  gtk_box_pack_end (hbox, GTK_WIDGET (buttons), FALSE, FALSE, 0);
-  gtk_widget_show (GTK_WIDGET (buttons));
-
-  GtkWidget *button = gtk_button_new_with_label (_("Save"));
+  /* And fill the action box.  */
+  GtkWidget *button = gtk_dialog_add_button (GTK_DIALOG (d),
+					     GTK_STOCK_SAVE,
+					     GTK_RESPONSE_ACCEPT);
   g_signal_connect (G_OBJECT (button), "clicked",
                     G_CALLBACK (save_calendar_clicked), d);
-  gtk_box_pack_start (buttons, button, FALSE, TRUE, 0);
-  gtk_widget_show (button);
 
-  button = gtk_button_new_with_label (_("Cancel"));
-  g_signal_connect_swapped (G_OBJECT (button), "clicked",
-			    G_CALLBACK (gtk_widget_destroy), d);
-  gtk_box_pack_start (buttons, button, FALSE, TRUE, 0);
-  gtk_widget_show (button);
+  gtk_dialog_add_button (GTK_DIALOG (d), GTK_STOCK_CANCEL,
+			 GTK_RESPONSE_REJECT);
+}
+
+EventCalendar *
+calendar_edit_dialog_get_calendar (CalendarEditDialog *d)
+{
+  return d->ec;
 }
 
 GtkWidget *
@@ -420,6 +413,8 @@ calendar_edit_dialog_new (EventCalendar *ec)
 	{
 	  calendars_combo_box_set_active (calendar_edit->parent, p);
 	  g_object_unref (p);
+	  gtk_toggle_button_set_active
+	    (GTK_TOGGLE_BUTTON (calendar_edit->parent_check), TRUE);
 	}
 
       char *s = event_calendar_get_title (ec);

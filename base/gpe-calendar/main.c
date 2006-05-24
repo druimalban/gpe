@@ -57,6 +57,8 @@
 #include "event-list.h"
 #include "alarm-dialog.h"
 #include "calendars-dialog.h"
+#include "calendars-widgets.h"
+#include "calendar-edit-dialog.h"
 
 #include <gpe/pim-categories.h>
 
@@ -383,7 +385,7 @@ cal_view_build (GtkEventList **event_list)
       gtk_widget_show (GTK_WIDGET (sidebar));
 
       calendar = GTK_EVENT_CAL (gtk_event_cal_new ());
-      g_object_add_weak_pointer (G_OBJECT (calendar), &calendar);
+      g_object_add_weak_pointer (G_OBJECT (calendar), (gpointer *) &calendar);
       GTK_WIDGET_UNSET_FLAGS (calendar, GTK_CAN_FOCUS);
       gtk_calendar_set_display_options (GTK_CALENDAR (calendar),
 					GTK_CALENDAR_SHOW_DAY_NAMES
@@ -565,7 +567,8 @@ upcoming_view_button_clicked (GtkWidget *widget, gpointer d)
   if (! event_list)
     {
       event_list = GTK_EVENT_LIST (gtk_event_list_new ());
-      g_object_add_weak_pointer (G_OBJECT (event_list), &event_list);
+      g_object_add_weak_pointer (G_OBJECT (event_list),
+				 (gpointer *) &event_list);
       gtk_widget_show (GTK_WIDGET (event_list));
       gtk_container_add (GTK_CONTAINER (main_bin), GTK_WIDGET (event_list));
       r->parent = NULL;
@@ -694,15 +697,30 @@ edit_categories (GtkWidget *w)
 #endif /*IS_HILDON*/
 
 static int 
-import_one_file(gchar *filename)
+import_one_file (EventCalendar *ec, gchar *filename)
 {
-  int result = 0;
-    
-  result = import_vcal (filename);
-    
+  int result = import_vcal (ec, filename);
   update_view ();
-
   return result;
+}
+
+static void
+new_calendar_clicked (GtkButton *button, gpointer user_data)
+{
+  GtkWidget *w = calendar_edit_dialog_new (NULL);
+  gtk_window_set_transient_for
+    (GTK_WINDOW (w),
+     GTK_WINDOW (gtk_widget_get_toplevel (GTK_WIDGET (button))));
+
+  if (gtk_dialog_run (GTK_DIALOG (w)) == GTK_RESPONSE_ACCEPT)
+    {
+      EventCalendar *ec
+	= calendar_edit_dialog_get_calendar (CALENDAR_EDIT_DIALOG (w));
+      if (ec)
+	calendars_combo_box_set_active (user_data, ec);
+    }
+
+  gtk_widget_destroy (w);
 }
 
 static void
@@ -710,44 +728,74 @@ on_import_vcal (GtkWidget *widget, gpointer data)
 {
   GtkWidget *filesel, *feedbackdlg;
   
-#if IS_HILDON	
-  filesel = hildon_file_chooser_dialog_new(GTK_WINDOW(gtk_widget_get_toplevel(widget)), 
-                                                      GTK_FILE_CHOOSER_ACTION_OPEN);
-  gtk_file_chooser_set_select_multiple(GTK_FILE_CHOOSER(filesel), TRUE);
+#if IS_HILDON
+  filesel = hildon_file_chooser_dialog_new
+    (GTK_WINDOW (gtk_widget_get_toplevel (widget)),
+     GTK_FILE_CHOOSER_ACTION_OPEN);
+  gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (filesel), TRUE);
 #else
-  filesel = gtk_file_selection_new(_("Choose file"));
-  gtk_file_selection_set_select_multiple(GTK_FILE_SELECTION(filesel),TRUE);
-#endif	
-  if (gtk_dialog_run(GTK_DIALOG(filesel)) == GTK_RESPONSE_OK)
+  filesel = gtk_file_selection_new (_("Choose file"));
+  gtk_file_selection_set_select_multiple (GTK_FILE_SELECTION (filesel),TRUE);
+
+  gtk_window_set_transient_for (GTK_WINDOW (filesel),
+				GTK_WINDOW (main_window));
+
+  GtkBox *box = GTK_BOX (gtk_hbox_new (FALSE, 3));
+  gtk_widget_show (GTK_WIDGET (box));
+  gtk_box_pack_start (GTK_BOX (GTK_FILE_SELECTION (filesel)->main_vbox),
+		      GTK_WIDGET (box), FALSE, FALSE, 0);
+
+  GtkWidget *w = gtk_button_new_from_stock (GTK_STOCK_NEW);
+  gtk_widget_show (w);
+  gtk_box_pack_end (box, w, FALSE, FALSE, 0);
+
+  GtkWidget *combo = calendars_combo_box_new ();
+  gtk_widget_show (combo);
+  gtk_box_pack_end (box, combo, FALSE, FALSE, 0);
+
+  g_signal_connect (G_OBJECT (w), "clicked",
+		    G_CALLBACK (new_calendar_clicked), combo);
+
+  w = gtk_label_new (_("Import into calendar: "));
+  gtk_widget_show (GTK_WIDGET (w));
+  gtk_box_pack_end (box, w, FALSE, FALSE, 0);
+#endif
+
+  if (gtk_dialog_run (GTK_DIALOG (filesel)) == GTK_RESPONSE_OK)
     {
-      gchar *errstr = NULL;
-      int ec = 0, i = 0;
-#ifdef IS_HILDON
-      gchar **files = gtk_file_chooser_get_filenames(GTK_FILE_CHOOSER(filesel));
+#if IS_HILDON
+      gchar **files
+	= gtk_file_chooser_get_filenames (GTK_FILE_CHOOSER (filesel));
 #else		
       gchar **files = 
-        gtk_file_selection_get_selections(GTK_FILE_SELECTION(filesel));
+        gtk_file_selection_get_selections (GTK_FILE_SELECTION (filesel));
 #endif
       gtk_widget_hide(filesel); 
-      while (files[i])
-        {
-          if (import_one_file(files[i]) < 0) 
-            {
-              gchar *tmp;
-              if (!errstr) 
-                errstr=g_strdup("");
-              ec++;
-			  tmp = g_strdup_printf("%s\n%s",errstr,strrchr(files[i],'/')+1);
-              if (errstr) 
-                 g_free(errstr);
-              errstr = tmp;
-            }
-          i++;  
-        }
-      if (ec)
+
+      EventCalendar *cal = NULL;
+#if ! IS_HILDON
+      cal = calendars_combo_box_get_active (GTK_COMBO_BOX (combo));
+#endif
+
+      int errors = 0;
+      gchar *errstr = NULL;
+
+      int i;
+      for (i = 0; files[i]; i ++)
+	if (import_one_file (cal, files[i]) < 0) 
+	  {
+	    gchar *tmp;
+	    errors ++;
+	    tmp = g_strdup_printf ("%s\n%s", errstr ?: "",
+				   strrchr (files[i], '/') + 1);
+	    g_free (errstr);
+	    errstr = tmp;
+	  }
+
+      if (errors)
         feedbackdlg = gtk_message_dialog_new(GTK_WINDOW(gtk_widget_get_toplevel(main_window)),
           GTK_DIALOG_MODAL, GTK_MESSAGE_INFO, GTK_BUTTONS_OK, 
-          "%s %i %s\n%s",_("Import of"),ec,_("files failed:"),errstr);
+          "%s %i %s\n%s",_("Import of"),errors,_("files failed:"),errstr);
       else
         feedbackdlg = gtk_message_dialog_new(GTK_WINDOW(gtk_widget_get_toplevel(main_window)),
           GTK_DIALOG_MODAL, GTK_MESSAGE_INFO, GTK_BUTTONS_OK, 
@@ -885,7 +933,7 @@ static void
 import_file (char *ifile)
 {
   GtkWidget *dialog;
-  if (import_one_file (ifile))
+  if (import_one_file (NULL, ifile))
     dialog = gtk_message_dialog_new (NULL, 0, GTK_MESSAGE_INFO,
 				     GTK_BUTTONS_OK,
 				     _("Could not import file %s."),
@@ -1087,6 +1135,8 @@ main (int argc, char *argv[])
   /* XXX: We should be more intelligent about changes but this will at
      least work.  */
   g_signal_connect (G_OBJECT (event_db), "calendar-changed",
+		    G_CALLBACK (update_view), NULL);
+  g_signal_connect (G_OBJECT (event_db), "calendar-deleted",
 		    G_CALLBACK (update_view), NULL);
 
   if (gpe_pim_categories_init () == FALSE)

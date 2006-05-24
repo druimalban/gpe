@@ -36,6 +36,7 @@
 #include "calendars-widgets.h"
 #include "globals.h"
 #include "event-ui.h"
+#include "calendar-edit-dialog.h"
 
 struct edit_state
 {
@@ -699,6 +700,24 @@ note_date_change_task (GtkWidget *widget, struct edit_state *s)
     note_date_change (s);
 }
 
+static void
+new_calendar_clicked (GtkButton *button, gpointer user_data)
+{
+  GtkWidget *w = calendar_edit_dialog_new (NULL);
+  gtk_window_set_transient_for
+    (GTK_WINDOW (w),
+     GTK_WINDOW (gtk_widget_get_toplevel (GTK_WIDGET (button))));
+  if (gtk_dialog_run (GTK_DIALOG (w)) == GTK_RESPONSE_ACCEPT)
+    {
+      EventCalendar *ec
+	= calendar_edit_dialog_get_calendar (CALENDAR_EDIT_DIALOG (w));
+      if (ec)
+	calendars_combo_box_set_active (user_data, ec);
+    }
+
+  gtk_widget_destroy (w);
+}
+
 static GtkWidget *
 build_edit_event_window (void)
 {
@@ -939,12 +958,14 @@ build_edit_event_window (void)
   gtk_widget_show (label);
 
   s->calendar = calendars_combo_box_new ();
-  EventCalendar *d = event_db_get_default_calendar (event_db, NULL);
-  calendars_combo_box_set_active (GTK_COMBO_BOX (s->calendar), d);
-  g_object_unref (d);
   gtk_widget_show (s->calendar);
   gtk_box_pack_start (hbox, s->calendar, FALSE, FALSE, 0);
 
+  GtkWidget *w = gtk_button_new_from_stock (GTK_STOCK_NEW);
+  g_signal_connect (G_OBJECT (w), "clicked",
+		    G_CALLBACK (new_calendar_clicked), s->calendar);
+  gtk_widget_show (w);
+  gtk_box_pack_start (hbox, w, FALSE, FALSE, 0);
 
   gtk_box_pack_start (GTK_BOX (vboxappointment), startendtable, FALSE, FALSE, 0);
 

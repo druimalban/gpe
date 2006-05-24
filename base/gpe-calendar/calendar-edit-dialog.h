@@ -51,6 +51,9 @@ extern GType calendar_edit_dialog_get_type (void) G_GNUC_CONST;
 /* If EC is NULL, create a new event.  */
 extern GtkWidget *calendar_edit_dialog_new (EventCalendar *ec);
 
+/* Return the EventCalendar (if any).  */
+extern EventCalendar *calendar_edit_dialog_get_calendar (CalendarEditDialog *);
+
 G_END_DECLS
 
 #endif /* CALENDAR_EDIT_DIALOG_H  */
