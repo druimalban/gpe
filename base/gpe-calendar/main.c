@@ -56,19 +56,11 @@
 #include "event-cal.h"
 #include "event-list.h"
 #include "alarm-dialog.h"
+#include "calendars-dialog.h"
 
 #include <gpe/pim-categories.h>
 
 #include <locale.h>
-
-#define _(_x) gettext (_x)
-
-static void
-squash_pointer (gpointer data, GObject *object)
-{
-  g_assert (* (GObject **) data == object);
-  * (GObject **) data = NULL;
-}
 
 extern gboolean gpe_calendar_start_xsettings (void);
 
@@ -92,7 +84,6 @@ static gboolean display_landscape;
 EventDB *event_db;
 
 static time_t viewtime;
-static gboolean just_new = FALSE;
 
 GtkWidget *main_window;
 static GtkWidget *view_container, *toolbar;
@@ -114,115 +105,14 @@ static GtkWidget *current_view;
 static GtkDateSel *datesel;
 static GtkEventCal *calendar;
 static GtkEventList *event_list;
-static GtkWidget *day_button, *week_button, *month_button, *upcoming_button,
-  *alarm_button;
+static GtkWidget *day_button, *week_button, *month_button, *upcoming_button;
 
 static void propagate_time (void);
 
 guint week_offset;
-gboolean week_starts_monday = TRUE;
+gboolean week_starts_sunday;
 gboolean day_view_combined_times;
-static gchar collected_keys[32] = "";
-static gint ccpos;
 const gchar *TIMEFMT;
-
-static guint nr_days[] = { 31, 28, 31, 30, 31, 30, 
-			   31, 31, 30, 31, 30, 31 };
-
-guint
-day_of_week (guint year, guint month, guint day)
-{
-  guint result;
-
-  if (month < 3) 
-    {
-      month += 12;
-      --year;
-    }
-
-  result = day + (13 * month - 27)/5 + year + year/4
-    - year/100 + year/400;
-  return ((result + 6) % 7);
-}
-
-guint
-days_in_month (guint year, guint month)
-{
-  if (month == 1)
-    {
-      return ((year % 4) == 0
-	      && ((year % 100) != 0
-		  || (year % 400) == 0)) ? 29 : 28;
-    }
-
-  return nr_days[month];
-}
-
-time_t
-time_from_day (int year, int month, int day)
-{
-  struct tm tm;
-  time_t selected_time;
-  localtime_r (&viewtime, &tm);
-  tm.tm_year = year;
-  tm.tm_mon = month;
-  tm.tm_mday = day;
-  tm.tm_isdst = -1;
-  selected_time = mktime (&tm);
-  return selected_time;
-}
-
-GdkGC *
-pen_new (GtkWidget * widget, guint red, guint green, guint blue)
-{
-  GdkColormap *colormap;
-  GdkGC *pen_color_gc;
-  GdkColor pen_color;
-
-  colormap = gdk_window_get_colormap (widget->window);
-  pen_color_gc = gdk_gc_new (widget->window);
-  gdk_gc_copy (pen_color_gc, widget->style->black_gc);
-  pen_color.red = red;
-  pen_color.green = green;
-  pen_color.blue = blue;
-  gdk_colormap_alloc_color (colormap, &pen_color, FALSE, TRUE);
-  gdk_gc_set_foreground (pen_color_gc, &pen_color);
-
-  return pen_color_gc;
-}
-
-/* Call strftime() on the format and convert the result to UTF-8.  Any
-   non-% expressions in the format must be in the locale's character
-   set, since they will undergo UTF-8 conversion.  Careful with
-   translations!  */
-gchar *
-strftime_strdup_utf8_locale (const char *fmt, struct tm *tm)
-{
-  char buf[1024];
-  size_t n;
-
-  buf[0] = '\001';
-  n = strftime (buf, sizeof (buf), fmt, tm);
-  if (n == 0 && buf[0] == '\001')
-    return NULL;		/* Something went wrong */
-
-  return g_locale_to_utf8 (buf, -1, NULL, NULL, NULL);
-}
-
-/* As above but format string is UTF-8.  */
-gchar *
-strftime_strdup_utf8_utf8 (const char *fmt, struct tm *tm)
-{
-  gchar *sfmt, *sval;
-
-  sfmt = g_locale_from_utf8 (fmt, -1, NULL, NULL, NULL);
-  if (sfmt == NULL)
-    return NULL;		/* Conversion failed */
-  sval = strftime_strdup_utf8_locale (sfmt, tm);
-  g_free (sfmt);
-
-  return sval;
-}
 
 /* Schedule atd to wake us up when the next alarm goes off.  */
 static gboolean
@@ -263,7 +153,7 @@ schedule_wakeup (gboolean reload)
 static guint reload_source;
 
 static gboolean
-hand_reload (gpointer data)
+hard_reload (gpointer data)
 {
   if (calendar)
     gtk_event_cal_reload_events (calendar);
@@ -282,8 +172,10 @@ update_view (void)
   if (current_view)
     gtk_view_reload_events (GTK_VIEW (current_view));
   if (! reload_source)
-    reload_source = g_idle_add (hand_reload, 0);
+    reload_source = g_idle_add (hard_reload, 0);
 }
+
+static gboolean just_new;
 
 static gboolean
 do_reset_new(gpointer d)
@@ -292,6 +184,8 @@ do_reset_new(gpointer d)
   return FALSE;
 }
 
+static gchar collected_keys[32];
+static gint ccpos;
 
 static gboolean
 do_insert_text (GtkWidget *window)
@@ -299,11 +193,11 @@ do_insert_text (GtkWidget *window)
   GtkWidget *entry;
   
   entry = g_object_get_data(G_OBJECT(window), "default-entry");
-  if (entry)
+  if (entry && ccpos)
     {
       gtk_entry_prepend_text(GTK_ENTRY(entry), collected_keys);
       gtk_editable_set_position(GTK_EDITABLE(entry),-1);
-      memset(collected_keys, 0, sizeof(gchar) * 32);
+      memset (collected_keys, 0, ccpos);
       ccpos = 0;
     }
   return FALSE;  
@@ -320,7 +214,7 @@ new_appointment (void)
   just_new = TRUE;
   g_timeout_add(1000, do_reset_new, NULL);
   
-  appt = new_event (viewtime, 0);
+  appt = new_event (viewtime);
   g_timeout_add(500, (GSourceFunc)(do_insert_text), (gpointer)appt);
   gtk_widget_show (appt);
 }
@@ -361,6 +255,15 @@ set_today (void)
     }
   
   propagate_time ();
+}
+
+static void
+calendars_button_clicked (GtkWidget *widget, gpointer user_data)
+{
+  GtkWidget *dialog = calendars_dialog_new (NULL);
+  gtk_window_set_transient_for (GTK_WINDOW (dialog),
+				GTK_WINDOW (gtk_widget_get_toplevel (widget)));
+  gtk_widget_show (dialog);
 }
 
 static void
@@ -480,12 +383,12 @@ cal_view_build (GtkEventList **event_list)
       gtk_widget_show (GTK_WIDGET (sidebar));
 
       calendar = GTK_EVENT_CAL (gtk_event_cal_new ());
-      g_object_weak_ref (G_OBJECT (calendar), squash_pointer, &calendar);
+      g_object_add_weak_pointer (G_OBJECT (calendar), &calendar);
       GTK_WIDGET_UNSET_FLAGS (calendar, GTK_CAN_FOCUS);
       gtk_calendar_set_display_options (GTK_CALENDAR (calendar),
 					GTK_CALENDAR_SHOW_DAY_NAMES
-					| (week_starts_monday ?
-					   GTK_CALENDAR_WEEK_START_MONDAY : 0));
+					| (week_starts_sunday ?
+					   0 : GTK_CALENDAR_WEEK_START_MONDAY));
       if (display_landscape)
 	gtk_box_pack_start (GTK_BOX (sidebar), GTK_WIDGET (calendar),
 			    FALSE, FALSE, 0);
@@ -662,7 +565,7 @@ upcoming_view_button_clicked (GtkWidget *widget, gpointer d)
   if (! event_list)
     {
       event_list = GTK_EVENT_LIST (gtk_event_list_new ());
-      g_object_weak_ref (G_OBJECT (event_list), squash_pointer, &event_list);
+      g_object_add_weak_pointer (G_OBJECT (event_list), &event_list);
       gtk_widget_show (GTK_WIDGET (event_list));
       gtk_container_add (GTK_CONTAINER (main_bin), GTK_WIDGET (event_list));
       r->parent = NULL;
@@ -897,7 +800,7 @@ main_window_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *data)
     {
         if (!just_new) 
           new_appointment();
-        if (ccpos < 31) 
+        if (ccpos < sizeof (collected_keys) - 1) 
           collected_keys[ccpos] = k->string[0];
         ccpos++;
         return TRUE;
@@ -927,6 +830,7 @@ create_app_menu(HildonAppView *appview)
   GtkWidget *item_tools = gtk_menu_item_new_with_label(_("Tools"));
   GtkWidget *item_import = gtk_menu_item_new_with_label(_("Import vCal / ICS"));
   GtkWidget *item_today = gtk_menu_item_new_with_label(_("Today"));
+  GtkWidget *item_calendars = gtk_menu_item_new_with_label(_("Calendars"));
   GtkWidget *item_day = gtk_menu_item_new_with_label(_("Day"));
   GtkWidget *item_week = gtk_menu_item_new_with_label(_("Week"));
   GtkWidget *item_month = gtk_menu_item_new_with_label(_("Month"));
@@ -947,6 +851,7 @@ create_app_menu(HildonAppView *appview)
   
   gtk_menu_append(menu_event, item_add);
   gtk_menu_append(menu_view, item_today);
+  gtk_menu_append(menu_view, item_calendars);
   gtk_menu_append(menu_tools, item_import);
   gtk_menu_append(menu_view, item_day);
   gtk_menu_append(menu_view, item_week);
@@ -961,6 +866,7 @@ create_app_menu(HildonAppView *appview)
   
   g_signal_connect(G_OBJECT(item_add), "activate", G_CALLBACK(new_appointment), NULL);
   g_signal_connect(G_OBJECT(item_today), "activate", G_CALLBACK(set_today), NULL);
+  g_signal_connect(G_OBJECT(item_calendars), "activate", G_CALLBACK(calendars_button_clicked), NULL);
   g_signal_connect(G_OBJECT(item_import), "activate", G_CALLBACK(on_import_vcal), NULL);
   g_signal_connect(G_OBJECT(item_day), "activate", G_CALLBACK(menu_toggled), day_button);
   g_signal_connect(G_OBJECT(item_week), "activate", G_CALLBACK(menu_toggled), week_button);
@@ -1178,6 +1084,11 @@ main (int argc, char *argv[])
   /* And schedule the next wake up.  */
   g_idle_add ((GSourceFunc) schedule_wakeup, 0);
 
+  /* XXX: We should be more intelligent about changes but this will at
+     least work.  */
+  g_signal_connect (G_OBJECT (event_db), "calendar-changed",
+		    G_CALLBACK (update_view), NULL);
+
   if (gpe_pim_categories_init () == FALSE)
     exit (1);
 
@@ -1283,6 +1194,25 @@ main (int argc, char *argv[])
       gtk_toolbar_insert (GTK_TOOLBAR (toolbar), item, -1);
     }
 
+  /* Initialize the calendars button.  */
+  p = gpe_find_icon_scaled ("icon", 
+                            gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
+  pw = gtk_image_new_from_pixbuf (p);
+  item = gtk_tool_button_new (pw, _("Calendars"));
+  g_signal_connect (G_OBJECT(item), "clicked",
+		    G_CALLBACK(calendars_button_clicked), NULL);
+  gtk_toolbar_insert (GTK_TOOLBAR (toolbar), item, -1);
+  gtk_tooltips_set_tip (tooltips, GTK_WIDGET (item), 
+			_("Tap here to select the calendars to show."), NULL);
+  GTK_WIDGET_UNSET_FLAGS (item, GTK_CAN_FOCUS);
+
+  if (window_x > 260) 
+    {	  
+      item = gtk_separator_tool_item_new ();
+      gtk_separator_tool_item_set_draw (GTK_SEPARATOR_TOOL_ITEM(item), FALSE);
+      gtk_toolbar_insert (GTK_TOOLBAR (toolbar), item, -1);
+    }
+
   /* Initialize the day view button.  */
   p = gpe_find_icon_scaled ("day_view", 
                             gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
@@ -1360,7 +1290,6 @@ main (int argc, char *argv[])
 			_("Tap here to view alarms pending acknowledgement."),
 			NULL);
   GTK_WIDGET_UNSET_FLAGS (item, GTK_CAN_FOCUS);
-  alarm_button = GTK_WIDGET (item);
   
   if (window_x > 260)
     {	  

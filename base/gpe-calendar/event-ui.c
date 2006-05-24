@@ -33,10 +33,9 @@
 #include <gpe/pim-categories-ui.h>
 #include <gpe/gpetimesel.h>
 
+#include "calendars-widgets.h"
 #include "globals.h"
 #include "event-ui.h"
-
-#define _(_x) gettext (_x)
 
 struct edit_state
 {
@@ -48,6 +47,7 @@ struct edit_state
   GtkWidget *reminderdate, *remindertime, *remindertimebutton;
   GtkWidget *taskdate, *taskspin;
   GtkWidget *optionmenutype, *optionmenutask;
+  GtkWidget *calendar;
 
   GtkWidget *alarmbutton;
   GtkWidget *alarmspin;
@@ -348,6 +348,9 @@ click_ok (GtkWidget *widget, GtkWidget *d)
     
   event_set_recurrence_start (ev, start_t);
   event_set_duration (ev, end_t - start_t);
+
+  event_set_calendar
+    (ev, calendars_combo_box_get_active (GTK_COMBO_BOX (s->calendar)));
 
   buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (s->description));
   gtk_text_buffer_get_bounds (buf, &start, &end);
@@ -651,7 +654,7 @@ note_date_change (struct edit_state *s)
   if (s->recur_day_floating)
     {
       GtkDateCombo *c;
-      int wday, i;
+      int i;
 
       switch (s->page)
 	{
@@ -661,10 +664,13 @@ note_date_change (struct edit_state *s)
 	default: return;
 	}
       
-      wday = day_of_week (c->year, c->month + 1, c->day);
+      GDate date;
+      g_date_set_dmy (&date, c->day, c->month + 1, c->year);
+      int wday = g_date_weekday (&date);
 
       for (i = 0; i < 7; i++)
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->checkbuttonwday[i]), (i == wday) ? TRUE : FALSE);
+	gtk_toggle_button_set_active
+	  (GTK_TOGGLE_BUTTON (s->checkbuttonwday[i]), i == wday - 1);
     }
 }
 
@@ -900,10 +906,10 @@ build_edit_event_window (void)
   
   g_signal_connect (G_OBJECT (s->enddate), "changed", G_CALLBACK (sink_end_date), s);
 
-  gtk_date_combo_week_starts_monday (GTK_DATE_COMBO (s->startdate), week_starts_monday);
-  gtk_date_combo_week_starts_monday (GTK_DATE_COMBO (s->enddate), week_starts_monday);
-  gtk_date_combo_week_starts_monday (GTK_DATE_COMBO (s->reminderdate), week_starts_monday);
-  gtk_date_combo_week_starts_monday (GTK_DATE_COMBO (s->taskdate), week_starts_monday);
+  gtk_date_combo_week_starts_monday (GTK_DATE_COMBO (s->startdate), ! week_starts_sunday);
+  gtk_date_combo_week_starts_monday (GTK_DATE_COMBO (s->enddate), ! week_starts_sunday);
+  gtk_date_combo_week_starts_monday (GTK_DATE_COMBO (s->reminderdate), ! week_starts_sunday);
+  gtk_date_combo_week_starts_monday (GTK_DATE_COMBO (s->taskdate), ! week_starts_sunday);
 
   gtk_table_attach (GTK_TABLE (startendtable), startdatelabel, 0, 1, 0, 1,
                     GTK_FILL, GTK_FILL, 0, 0);
@@ -921,6 +927,24 @@ build_edit_event_window (void)
                     GTK_FILL, GTK_FILL, 0, boxspacing);
   gtk_table_attach (GTK_TABLE (startendtable), s->enddate, 3, 4, 1, 2,
                     GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
+
+
+  GtkBox *hbox = GTK_BOX (gtk_hbox_new (FALSE, 3));
+  gtk_box_pack_start (GTK_BOX (vboxappointment), GTK_WIDGET (hbox),
+		      FALSE, FALSE, 0);
+  gtk_widget_show (GTK_WIDGET (hbox));
+
+  GtkWidget *label = gtk_label_new (_("Calendar:"));
+  gtk_box_pack_start (hbox, label, FALSE, FALSE, 3);
+  gtk_widget_show (label);
+
+  s->calendar = calendars_combo_box_new ();
+  EventCalendar *d = event_db_get_default_calendar (event_db, NULL);
+  calendars_combo_box_set_active (GTK_COMBO_BOX (s->calendar), d);
+  g_object_unref (d);
+  gtk_widget_show (s->calendar);
+  gtk_box_pack_start (hbox, s->calendar, FALSE, FALSE, 0);
+
 
   gtk_box_pack_start (GTK_BOX (vboxappointment), startendtable, FALSE, FALSE, 0);
 
@@ -959,6 +983,7 @@ build_edit_event_window (void)
 
   gtk_box_pack_start (GTK_BOX (vboxtask), hboxtask1, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vboxtask), hboxtask2, FALSE, FALSE, 0);
+
 
   /* Detail table */
   detailtable       = gtk_table_new (2, 4, FALSE);
@@ -1444,7 +1469,7 @@ edit_event_window (void)
 }
 
 GtkWidget *
-new_event (time_t t, guint timesel)
+new_event (time_t t)
 {
   GtkWidget *entry, *w = edit_event_window ();
 
@@ -1485,9 +1510,12 @@ new_event (time_t t, guint timesel)
 	  
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->remindertimebutton), FALSE);
 
-      wday = day_of_week (tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday);
+      GDate date;
+      g_date_set_dmy (&date, tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900);
+      wday = g_date_weekday (&date);
       for (i = 0; i < 7; i++)
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->checkbuttonwday[i]), (i == wday) ? TRUE : FALSE);
+	gtk_toggle_button_set_active
+	  (GTK_TOGGLE_BUTTON (s->checkbuttonwday[i]), i == wday - 1);
 
       s->recur_day_floating = TRUE;
       s->end_date_floating = TRUE;
@@ -1521,14 +1549,20 @@ edit_event (Event *ev)
       gtk_window_set_title (GTK_WINDOW (w), _("Calendar: Edit event"));
 
       gtk_widget_set_sensitive (s->deletebutton, TRUE);
+      char *str = event_get_description (ev);
       gtk_text_buffer_set_text (gtk_text_view_get_buffer
 				(GTK_TEXT_VIEW (s->description)),
-				event_get_description (ev) ?: "", -1);
-      gtk_entry_set_text (GTK_ENTRY (s->summary),
-			  event_get_summary (ev) ?: "");
-      gtk_entry_set_text (GTK_ENTRY (s->location),
-			  event_get_location (ev) ?: "");
-      update_categories (w, event_get_categories (ev), s);
+				str ?: "", -1);
+      g_free (str);
+      str = event_get_summary (ev);
+      gtk_entry_set_text (GTK_ENTRY (s->summary), str ?: "");
+      g_free (str);
+      str = event_get_location (ev);
+      gtk_entry_set_text (GTK_ENTRY (s->location), str ?: "");
+      g_free (str);
+      GSList *list = event_get_categories (ev);
+      update_categories (w, list, s);
+      g_slist_free (list);
 
       time_t start = event_get_recurrence_start (ev);
       localtime_r (&start, &tm);
@@ -1557,6 +1591,11 @@ edit_event (Event *ev)
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->remindertimebutton),
 				    (!event_get_untimed (ev)));
  
+      /* Calendar.  */
+      EventCalendar *c = event_get_calendar (ev);
+      calendars_combo_box_set_active (GTK_COMBO_BOX (s->calendar), c);
+      g_object_unref (c);
+
       if (event_get_alarm (ev))
         {
           unsigned int unit = 0;	/* minutes */

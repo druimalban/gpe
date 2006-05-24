@@ -11,17 +11,18 @@
 #include <gtk/gtk.h>
 #include <time.h>
 #include <gpe/event-db.h>
+#include <libintl.h>
+
+#define _(x) dgettext(PACKAGE, x)
 
 extern EventDB *event_db;
 
 extern void update_view (void);
 
-extern guint days_in_month (guint year, guint month);
-extern gboolean week_starts_monday;
+extern gboolean week_starts_sunday;
 extern guint week_offset;
 extern gboolean day_view_combined_times;
-extern void set_time_and_day_view(time_t selected_time);
-extern time_t time_from_day(int year, int month, int day);
+extern void set_time_and_day_view (time_t selected_time);
 
 extern GdkGC *pen_new (GtkWidget *widget, guint red, guint green, guint blue);
 
@@ -29,7 +30,6 @@ extern GtkWidget *main_window;
 
 extern gchar *strftime_strdup_utf8_locale (const char *fmt, struct tm *tm);
 extern gchar *strftime_strdup_utf8_utf8 (const char *fmt, struct tm *tm);
-extern guint day_of_week(guint year, guint month, guint day);
 
 #define SECONDS_IN_DAY (24*60*60)
 
@@ -71,6 +71,3 @@ extern const gchar *TIMEFMT;
        } \
      ret; \
     })
-
-	 
-         

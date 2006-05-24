@@ -26,8 +26,7 @@
 #include "globals.h"
 #include "event-ui.h"
 #include "day_popup.h"
-
-#define _(x) gettext(x)
+#include "event-menu.h"
 
 static void
 day_clicked (GtkWidget *widget, gpointer data)
@@ -46,14 +45,7 @@ new_clicked (GtkWidget *widget, gpointer data)
   GDate *date = data;
 
   g_date_to_struct_tm (date, &tm);
-  GtkWidget *w = new_event (mktime (&tm) + 12 * 60 * 60, 1);
-  gtk_widget_show (w);
-}
-
-static void
-event_clicked (GtkWidget *widget, gpointer d)
-{
-  GtkWidget *w = edit_event (EVENT (d));
+  GtkWidget *w = new_event (mktime (&tm) + 12 * 60 * 60);
   gtk_widget_show (w);
 }
 
@@ -75,13 +67,6 @@ static void
 menu_destroy (GtkWidget *widget, gpointer d)
 {
   gtk_widget_destroy (widget);
-}
-
-static void
-squash_pointer (gpointer data, GObject *object)
-{
-  g_assert (* (GObject **) data == object);
-  * (GObject **) data = NULL;
 }
 
 static GtkWidget *bell_recur;
@@ -156,14 +141,16 @@ day_popup (const GDate *date, const GSList *events)
 	}
       char summary[60];
 
+      char *s = event_get_summary (ev);
       snprintf (summary, sizeof (summary) - 1,
-		"%s %s", timestr ? timestr : "", event_get_summary (ev));
+		"%s %s", timestr ? timestr : "", s);
+      g_free (s);
       summary[60] = 0;
       if (timestr)
 	g_free (timestr);
 
       /* Convert new lines to spaces.  */
-      char *s = summary;
+      s = summary;
       while ((s = strchr (s, '\n')))
 	*s = ' ';
 
@@ -174,8 +161,8 @@ day_popup (const GDate *date, const GSList *events)
 	    {
 	      GdkPixbuf *pixbuf = gpe_find_icon ("bell_recur");
 	      bell_recur = gtk_image_new_from_pixbuf (pixbuf);
-	      g_object_weak_ref (G_OBJECT (bell_recur), squash_pointer,
-				 &bell_recur);
+	      g_object_add_weak_pointer (G_OBJECT (bell_recur),
+					 &bell_recur);
 	    }
 	  g_object_ref (bell_recur);
 	  image = bell_recur;
@@ -186,8 +173,7 @@ day_popup (const GDate *date, const GSList *events)
 	    {
 	      GdkPixbuf *pixbuf = gpe_find_icon ("bell");
 	      bell = gtk_image_new_from_pixbuf (pixbuf);
-	      g_object_weak_ref (G_OBJECT (bell), squash_pointer,
-				 &bell);
+	      g_object_add_weak_pointer (G_OBJECT (bell), &bell);
 	    }
 	  g_object_ref (bell);
 	  image = bell;
@@ -198,8 +184,7 @@ day_popup (const GDate *date, const GSList *events)
 	    {
 	      GdkPixbuf *pixbuf = gpe_find_icon ("recur");
 	      recur = gtk_image_new_from_pixbuf (pixbuf);
-	      g_object_weak_ref (G_OBJECT (recur), squash_pointer,
-				 &recur);
+	      g_object_add_weak_pointer (G_OBJECT (recur), &recur);
 	    }
 	  g_object_ref (recur);
 	  image = recur;
@@ -215,8 +200,8 @@ day_popup (const GDate *date, const GSList *events)
       else
 	item = gtk_menu_item_new_with_label (summary);
 
-      g_signal_connect (G_OBJECT (item), "activate",
-			G_CALLBACK (event_clicked), ev);
+      gtk_menu_item_set_submenu (GTK_MENU_ITEM (item),
+				 GTK_WIDGET (event_menu_new (ev, FALSE)));
       gtk_widget_show (item);
       gtk_menu_attach (menu, item, 0, 1, row, row + 1);
 

@@ -1,3 +1,145 @@
+2006-05-24  Neal H. Walfield  <neal@gnu.org>
+
+	* Makefile.am (gpe_calendar_SOURCES): Add util.c,
+	calendar-edit-dialog.c, calendar-edit-dialog.h,
+	calendars-dialog.c, calendars-dialog.h, calendars-widgets.c,
+	calendars-widgets.h, event-menu.c and event-menu.h.
+	* calendars-dialog.c: New file.
+	* calendars-dialog.h: New file.
+	* main.c: Include "calendars-dialog.h".
+	(calendars_button_clicked): New function.
+	(create_app_menu): Create new menu item, "Calendars".
+	(main): Create new toolbar button, "Calendar".  Connect the
+	"calendar-changed" signal on EVENT_DB to update_view.
+	* calendars-widgets.c: New file.
+	* calendars-widgets.h: New file.
+	* event-ui.c: Include "calendars-widgets.h".
+	(click_ok): Set EV's calendar to the value in S->CALENDAR.
+	(struct edit_state): Add field calendar.
+	(build_edit_event_window): Create a GtkComboBox to allow the user
+	to select the calendar.
+	(edit_event): Set S->CALENDAR to EV's calendar.
+	* calendar-edit-dialog.c: New file.
+	* calendar-edit-dialog.h: New file.
+
+	* day_render.c (struct event_rect): New field BGCOLOR_GC.
+	(gtk_day_render_expose): Set EVENT_RECTANGLE->BGCOLOR_GC to the
+	containing calendar's color.  Use that as the background color.
+	(calc_events_positions): If the event is not visible, don't
+	display it.
+	(event_rect_new): Set EV_RECT->BGCOLOR_GC to NULL.
+	(event_rect_delete): Dereference EV_RECT->BGCOLOR_GC.
+	* month_view.c (draw_expose_event): Put the text in a box using
+	the event's color as the background color.  Don't paint events
+	which are not visible.
+	* week_view.c (draw_expose_event): Likewise.
+	* event-cal.c (update_cal): Don't mark the calendar if EV is not
+	visible.
+	* event-list.c (date_cell_data_func): Set RENDERER's
+	"cell-background-gdk" property to the event's color.
+	(summary_cell_data_func): Likewise.
+	(end_cell_data_func): Likewise.
+
+	* main.c (squash_pointer): Remove function.  Change users to use
+	g_object_add_weak_pointer.
+	(alarm_button): Remove variable.
+	(pen_new): Move from here...
+	* util.c (pen_new): ... to here.
+	* main.c (strftime_strdup_utf8_locale): Move from here...
+	* util.c (strftime_strdup_utf8_locale): ... to here.
+	* main.c (strftime_strdup_utf8_utf8): Move from here...
+	* util.c (strftime_strdup_utf8_utf8): ... to here.
+	* globals.h (week_starts_monday): Rename to...
+	(week_starts_sunday): ... to this and update users.
+	* main.c (week_starts_monday): Rename to...
+	(week_starts_sunday): ... to this and don't initialize.
+
+	* event-menu.h: New file.
+	* day_view.c: Don't include <gpe/pixmaps.h>, <gpe/question.h> or
+	"export-vcal.h".  Include "calendars-widgets.h" and
+	"event-menu.h".
+	(day_view_event_clicked): Just call event_menu_new to create the
+	menu.  Move the bulk of the code from here...
+	* event-menu.c (event_menu_new): ... to here.
+	* day_view.c (event_menu_destroy): Move from here...
+	* event-menu.c (event_menu_destroy): ... to here.
+	* day_view.c (delete_event_cb): Move from here...
+	* event-menu.c (delete_event_cb): ... to here.
+	* day_view.c (edit_event_cb): Move from here...
+	* event-menu.c (edit_event_cb): ... to here.
+	* day_view.c (save_cb): Move from here...
+	* event-menu.c (save_cb): ... to here.
+	* day_view.c (send_ir_cb): Move from here...
+	* event-menu.c (send_ir_cb): ... to here.
+	* day_view.c (send_bt_cb): Move from here...
+	* event-menu.c (send_bt_cb): ... to here.
+	* day_view.c (event_menu_new): Move from here...
+	* event-menu.c (event_menu_new): ... to here.
+	* day_popup.c: Include "event-menu.h".
+	(event_clicked): Remove function.
+	(squash_pointer): Remove function.
+	(day_popup): Don't connect the "activate" signal to ITEM, instead
+	create an event menu and set it as a submenu of ITEM.
+	* event-list.c: Include "event-menu.h".
+	(button_press): If the right mouse button is clicked, popup an
+	event menu.
+	(gtk_event_list_reload_events): If the event is not visible, don't
+	show it.
+
+	* event-ui.h (new_event): Don't take paramter TIMESEL.  Update
+	callers.
+	* event-ui.c (new_event): Don't take unused parameter TIMESEL.
+
+	* globals.h: Include <libintl.h>.
+	(_): Define.
+	* alarm-dialog.c (_): Don't define.
+	* day_popup.c (_): Likewise.
+	* day_render.c (_): Likewise.
+	* event-ui.c (_): Likewise.
+	* day_view.c: Don't include <libintl.h>.
+	(_): Don't define.
+	* event-list.c: Don't include <libintl.h>.
+	(_): Don't define.
+	* export-vcal.c: Include "globals.h".
+	(_): Don't define.
+	* gtkdatesel.c (_): Likewise.
+	* import-vcal.c (_): Likewise.
+	* main.c (_): Likewise.
+	* week_view.c: Don't include <libintl.h>.
+	(_): Don't define.
+
+	* globals.h (days_in_month): Don't declare.
+	(time_from_day): Remove declaration.
+	(day_of_week): Remove declaration.
+	* main.c (nr_days): Likewise.
+	(day_of_week): Remove function.
+	(days_in_month): Likewise.
+	(time_from_day): Likewise.
+	* event-cal.c (update_cal): Don't use days_in_month, use
+	g_date_get_days_in_month.
+	* gtkdatesel.c (gtk_date_sel_move_month): Likewise.
+	(year_click): Likewise.
+	(month_change): Likewise.
+	(day_key_press): Likewise.
+	* month_view.c (gtk_month_view_reload_events): Likewise.
+	* week_view.c (gtk_week_view_reload_events): Likewise.
+	* event-ui.c (note_date_change): Don't use day_of_week, use
+	g_date_set_dmy.
+	(new_event): Likewise.
+	* month_view.c (gtk_month_view_reload_events): Likewise.
+	* week_view.c (draw_expose_event): Likewise.
+
+	* alarm-dialog.c (event_get_layout): Update code to reflect that
+	event_get_summary, event_get_description and event_get_location
+	and event_get_categories now return malloced storage.
+	* day_popup.c (day_popup): Likewise.
+	* day_render.c (gtk_day_render_expose): Likewise.
+	(calc_events_positions): Likewise.
+	* event-list.c (summary_cell_data_func): Likewise.
+	* event-ui.c (edit_event): Likewise.
+	* month_view.c (draw_expose_event): Likewise.
+	* week_view.c (draw_expose_event): Likewise.
+
 2006-05-18  Neal H. Walfield  <neal@gnu.org>
 
 	* day_popup.h (struct day_popup): Remove structure.

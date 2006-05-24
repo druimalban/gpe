@@ -20,12 +20,10 @@
 #include <gdk/gdkkeysyms.h>
 #include <gtk/gtk.h>
 #include <gpe/event-db.h>
-#include <libintl.h>
 #include <stdlib.h>
 #include "globals.h"
 #include "event-list.h"
-
-#define _(x) gettext(x)
+#include "event-menu.h"
 
 #ifdef IS_HILDON
 #define ARROW_SIZE 30
@@ -201,6 +199,12 @@ date_cell_data_func (GtkTreeViewColumn *col,
 
   if (dealloc)
     g_free (buffer);
+
+  GdkColor color;
+  if (event_get_color (ev, &color))
+    g_object_set (renderer, "cell-background-gdk", &color, NULL);
+  else
+    g_object_set (renderer, "cell-background-gdk", NULL, NULL);
 }
 
 static void
@@ -213,7 +217,15 @@ summary_cell_data_func (GtkTreeViewColumn *col,
   Event *ev;
 
   gtk_tree_model_get (model, iter, COL_EVENT, &ev, -1);
-  g_object_set (renderer, "text", event_get_summary (ev), NULL);
+  char *s = event_get_summary (ev);
+  g_object_set (renderer, "text", s, NULL);
+  g_free (s);
+
+  GdkColor color;
+  if (event_get_color (ev, &color))
+    g_object_set (renderer, "cell-background-gdk", &color, NULL);
+  else
+    g_object_set (renderer, "cell-background-gdk", NULL, NULL);
 }
 
 static void
@@ -252,6 +264,12 @@ end_cell_data_func (GtkTreeViewColumn *col,
 
   if (dealloc)
     g_free (buffer);
+
+  GdkColor color;
+  if (event_get_color (ev, &color))
+    g_object_set (renderer, "cell-background-gdk", &color, NULL);
+  else
+    g_object_set (renderer, "cell-background-gdk", NULL, NULL);
 }
 
 static gboolean
@@ -266,27 +284,46 @@ button_press (GtkWidget *widget, GdkEventButton *event, gpointer user_data)
     /* We only catch single clicks.  */
     return FALSE;
 
+  if (event->button != 1 && event->button != 3)
+    return FALSE;
+
+  if (! gtk_tree_view_get_path_at_pos (view, event->x, event->y,
+				       &path, NULL, NULL, NULL))
+    /* No row at curser.  */
+    return FALSE;
+
+  model = gtk_tree_view_get_model (view);
+
+  int ret = gtk_tree_model_get_iter (model, &iter, path);
+  gtk_tree_path_free (path);
+  if (! ret)
+    return FALSE;
+
+  Event *ev;
+  gtk_tree_model_get (model, &iter, COL_EVENT, &ev, -1);
+
   if (event->button == 1)
     {
-      if (! gtk_tree_view_get_path_at_pos (view, event->x, event->y,
-					   &path, NULL, NULL, NULL))
-	/* No row at curser.  */
-	return FALSE;
-
-      model = gtk_tree_view_get_model (view);
-
-      if (gtk_tree_model_get_iter (model, &iter, path))
+      GtkTreeSelection *tree_sel = gtk_tree_view_get_selection (view);
+      GtkTreeIter sel;
+      if (gtk_tree_selection_get_selected (tree_sel, NULL, &sel))
 	{
-	  Event *ev;
+	  Event *s;
+	  gtk_tree_model_get (model, &sel, COL_EVENT, &s, -1);
 
-	  gtk_tree_model_get (model, &iter, COL_EVENT, &ev, -1);
-
-	  set_time_and_day_view (event_get_start (ev));
-
-	  /* We allow the event to propagate so that the cell is
-	     highlighted.  */
-	  return FALSE;
+	  if (ev == s)
+	    set_time_and_day_view (event_get_start (ev));
 	}
+
+      /* We allow the event to propagate so that the cell is
+	 highlighted.  */
+      return FALSE;
+    }
+  else if (event->button == 3)
+    {
+      GtkMenu *event_menu = event_menu_new (ev, TRUE);
+      gtk_menu_popup (event_menu, NULL, NULL, NULL, NULL,
+		      event->button, event->time);
     }
 
   return FALSE;
@@ -531,6 +568,9 @@ gtk_event_list_reload_events (GtkEventList *event_list)
   for (e = event_list->events; e; e = e->next)
     {
       Event *ev = e->data;
+
+      if (! event_get_visible (ev))
+	continue;
 
       /* Add a new row to the model.  */
       gtk_list_store_append (list, &iter);

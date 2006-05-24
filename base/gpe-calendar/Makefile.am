@@ -17,21 +17,26 @@ bin_PROGRAMS = gpe-calendar
 
 gpe_calendar_LDADD = $(DEPS_LIBS)
 
-gpe_calendar_SOURCES = globals.h main.c					\
+gpe_calendar_SOURCES = main.c						\
+		       util.c globals.h					\
                        day_view.c day_view.h				\
                        week_view.c week_view.h				\
                        day_render.c day_render.h			\
-					   event-ui.c event-ui.h	\
-					   month_view.c month_view.h	\
-					   day_popup.c day_popup.h	\
-					   xsettings.c			\
-					   gtkdatesel.c gtkdatesel.h	\
-					   import-vcal.c import-vcal.h	\
-					   export-vcal.c export-vcal.h	\
-			event-cal.c event-cal.h				\
-			event-list.c event-list.h			\
-			view.c view.h					\
-			alarm-dialog.c alarm-dialog.h
+		       event-ui.c event-ui.h				\
+		       month_view.c month_view.h			\
+		       day_popup.c day_popup.h				\
+		       xsettings.c					\
+		       gtkdatesel.c gtkdatesel.h			\
+		       import-vcal.c import-vcal.h			\
+		       export-vcal.c export-vcal.h			\
+		       event-cal.c event-cal.h				\
+		       event-list.c event-list.h			\
+		       view.c view.h					\
+		       alarm-dialog.c alarm-dialog.h			\
+		       calendar-edit-dialog.c calendar-edit-dialog.h	\
+		       calendars-dialog.c calendars-dialog.h		\
+		       calendars-widgets.c calendars-widgets.h		\
+		       event-menu.c event-menu.h
 
 if HILDON
 

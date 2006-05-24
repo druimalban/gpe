@@ -1,4 +1,4 @@
-/* event-list.h - Event list widget interface.
+/* event-menu.h - Event menu interface.
    Copyright (C) 2006 Neal H. Walfield <neal@walfield.org>
 
    This file is part of GPE.
@@ -17,25 +17,12 @@
    along with this program; if not, write to the Free Software
    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111, USA. */
 
-#ifndef EVENT_LIST_H
-#define EVENT_LIST_H
+#ifndef EVENT_MENU_H
+#define EVENT_MENU_H
 
-struct _GtkEventList;
-typedef struct _GtkEventList GtkEventList;
+#include <gtk/gtk.h>
+#include <gpe/event-db.h>
 
-#define GTK_EVENT_LIST(obj) \
-  GTK_CHECK_CAST (obj, gtk_event_list_get_type (), struct _GtkEventList)
-#define GTK_EVENT_LIST_CLASS(klass) \
-  GTK_CHECK_CLASS_CAST (klass, gtk_event_list_get_type (), EventListClass)
-#define GTK_IS_EVENT_LIST(obj) GTK_CHECK_TYPE (obj, gtk_event_list_get_type ())
-
-/* Return GType of a day view.  */
-extern GType gtk_event_list_get_type (void);
-
-/* Create a new day view.  */
-extern GtkWidget *gtk_event_list_new (void);
-
-/* Force LIST to reload the events from the event database.  */
-void gtk_event_list_reload_events (GtkEventList *list);
+extern GtkMenu *event_menu_new (Event *ev, gboolean show_summary);
 
 #endif

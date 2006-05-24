@@ -26,8 +26,6 @@
 #include "day_view.h"
 #include "globals.h"
 
-#define _(x) gettext(x)
-
 // #define DEBUG
 #ifdef DEBUG
 #define D(x) x
@@ -44,6 +42,7 @@ struct event_rect
   gfloat x;
   gfloat y;
   Event *event;
+  GdkGC *bgcolor_gc;
 };
 
 static struct event_rect * event_rect_new (GtkDayRender *day_render,
@@ -591,12 +590,28 @@ gtk_day_render_expose (GtkWidget *widget, GdkEventExpose *event)
 	/* Lower bound */
 	arc_size = 7;
 
+      if (! event_rectangle->bgcolor_gc)
+	/* Get the background color.  */
+	{
+	  GdkColor bgcolor;
+	  EventCalendar *ec = event_get_calendar (event_rectangle->event);
+	  if (event_calendar_get_color (ec, &bgcolor))
+	    event_rectangle->bgcolor_gc
+	      = pen_new (widget, bgcolor.red, bgcolor.green, bgcolor.blue);
+	  else
+	    {
+	      event_rectangle->bgcolor_gc = day_render->app_gc;
+	      g_object_ref (event_rectangle->bgcolor_gc);
+	    }
+	  g_object_unref (ec);
+	}
+
       /* "Flood" the rectangle.  */
       if (height > 2 * arc_size)
-	gdk_draw_rectangle (w, day_render->app_gc, TRUE,
+	gdk_draw_rectangle (w, event_rectangle->bgcolor_gc, TRUE,
 			    x, y + arc_size, width, height - 2 * arc_size);
       if (width > 2 * arc_size)
-	gdk_draw_rectangle (w, day_render->app_gc, TRUE,
+	gdk_draw_rectangle (w, event_rectangle->bgcolor_gc, TRUE,
 			    x + arc_size, y, width - 2 * arc_size, height);
 
       /* Draw the outline.  */
@@ -619,26 +634,26 @@ gtk_day_render_expose (GtkWidget *widget, GdkEventExpose *event)
       /* Draw the corners.  */
 
       /* North-west corner */
-      gdk_draw_arc (w, day_render->app_gc, TRUE,
+      gdk_draw_arc (w, event_rectangle->bgcolor_gc, TRUE,
 		    x, y, arc_size * 2, arc_size * 2, 90 * 64, 90 * 64);
       gdk_draw_arc (w, GTK_WIDGET (day_render)->style->black_gc, FALSE,
 		    x, y, arc_size * 2, arc_size * 2, 90 * 64, 90 * 64);
       /* North-east corner */
-      gdk_draw_arc (w, day_render->app_gc, TRUE,
+      gdk_draw_arc (w, event_rectangle->bgcolor_gc, TRUE,
 		    x + width - 1 - 2 * arc_size, y,
 		    arc_size * 2, arc_size * 2, 0 * 64, 90 * 64);
       gdk_draw_arc (w, GTK_WIDGET (day_render)->style->black_gc, FALSE,
 		    x + width - 1 - arc_size * 2, y,
 		    arc_size * 2, arc_size * 2, 0 * 64, 90 * 64);
       /* South-west corner */
-      gdk_draw_arc (w, day_render->app_gc, TRUE,
+      gdk_draw_arc (w, event_rectangle->bgcolor_gc, TRUE,
 		    x, y + height - 1 - 2 * arc_size,
 		    arc_size * 2, arc_size * 2, 180 * 64, 90 * 64);
       gdk_draw_arc (w, GTK_WIDGET (day_render)->style->black_gc, FALSE,
 		    x, y + height - 1 - 2 * arc_size,
 		    arc_size * 2, arc_size * 2, 180 * 64, 90 * 64);
       /* South-east corner */
-      gdk_draw_arc (w, day_render->app_gc, TRUE,
+      gdk_draw_arc (w, event_rectangle->bgcolor_gc, TRUE,
 		    x + width - 1 - 2 * arc_size, y + height - 1 - 2 * arc_size,
 		    arc_size * 2, arc_size * 2, 270 * 64, 90 * 64);
       gdk_draw_arc (w, GTK_WIDGET (day_render)->style->black_gc, FALSE,
@@ -646,9 +661,9 @@ gtk_day_render_expose (GtkWidget *widget, GdkEventExpose *event)
 		    arc_size * 2, arc_size * 2, 270 * 64, 90 * 64);	
 
       /* Write summary... */
-      const char *summary = event_get_summary (event_rectangle->event);
-      const char *location = event_get_location (event_rectangle->event);
-      const char *description = event_get_description (event_rectangle->event);
+      char *summary = event_get_summary (event_rectangle->event);
+      char *location = event_get_location (event_rectangle->event);
+      char *description = event_get_description (event_rectangle->event);
 
       char *until = NULL;
       time_t end = event_get_start (event_rectangle->event)
@@ -716,6 +731,9 @@ gtk_day_render_expose (GtkWidget *widget, GdkEventExpose *event)
 
       g_free (buffer);
       g_free (until);
+      g_free (summary);
+      g_free (description);
+      g_free (location);
 
       gtk_paint_layout (GTK_WIDGET (day_render)->style, w,
 			GTK_WIDGET_STATE (day_render),
@@ -734,7 +752,7 @@ gtk_day_render_expose (GtkWidget *widget, GdkEventExpose *event)
 	      height_pix = gdk_pixbuf_get_height (bell_pb);
     
 	      gdk_draw_pixbuf (w,
-			       day_render->app_gc,
+			       event_rectangle->bgcolor_gc,
 			       bell_pb,
 			       0, 0,
 			       x + width - width_pix - 1,
@@ -902,8 +920,11 @@ calc_events_positions (GtkDayRender *day_render)
 
   int i, j;
   GSList *a, *b;
-  for (a = day_render->events, i = 0; a; a = a->next, i ++)
+  for (a = day_render->events, i = 0; a; a = a->next)
     {
+      if (! event_get_visible (a->data))
+	continue;
+
       info[i].event = a->data;
 
       for (b = a->next, j = i + 1; b; b = b->next, j ++)
@@ -912,7 +933,10 @@ calc_events_positions (GtkDayRender *day_render)
 	    info[i].direct_overlap ++;
 	    info[j].direct_overlap ++;
 	  }
+
+      i ++;
     }
+  n = i;
 
   /* A and B overlap.  Returns TRUE if A dominates B.  An event
      dominates another if it directly overlaps with more events than
@@ -933,8 +957,9 @@ calc_events_positions (GtkDayRender *day_render)
       struct info *n = node->data;
       GNode *child;
 
-      D (printf ("%s:%d: inserting %s\n",
-		 __func__, __LINE__, event_get_summary (n->event)));
+      D (char *s = event_get_summary (n->event);
+	 printf ("%s:%d: inserting %s\n", __func__, __LINE__, s);
+	 g_free (s));
 
       child = root->children;
       while (child)
@@ -944,10 +969,12 @@ calc_events_positions (GtkDayRender *day_render)
 	  if (overlap (c->event, n->event))
 	    /* CHILD and NODE overlap.  */
 	    {
-	      D (printf ("%s:%d: %.10s overlaps with %.10s\n",
-			 __func__, __LINE__,
-			 event_get_summary (n->event),
-			 event_get_summary (c->event)));
+	      D (char *s1 = event_get_summary (n->event);
+		 char *s2 = event_get_summary (c->event);
+		 printf ("%s:%d: %.10s overlaps with %.10s\n",
+			 __func__, __LINE__, s1, s2);
+		 g_free (s1);
+		 g_free (s2));
 
 	      if (dominates (n, c))
 		/* N dominates C (and transitively, everything which C
@@ -962,12 +989,14 @@ calc_events_positions (GtkDayRender *day_render)
 		  GNode *next;
 		  do
 		    {
-		      D (printf ("%s:%d: %s (%d) dominates %s (%d)\n",
+		      D (char *s1 = event_get_summary (n->event);
+			 char *s2 = event_get_summary (c->event);
+			 printf ("%s:%d: %s (%d) dominates %s (%d)\n",
 				 __func__, __LINE__,
-				 event_get_summary (n->event),
-				 n->direct_overlap,
-				 event_get_summary (c->event),
-				 c->direct_overlap));
+				 s1, n->direct_overlap,
+				 s2, c->direct_overlap);
+			 g_free (s1);
+			 g_free (s2));
 
 		      next = child->next;
 		      g_node_unlink (child);
@@ -984,10 +1013,11 @@ calc_events_positions (GtkDayRender *day_render)
 
 		  if (next && overlap (c->event, n->event) && dominates (c, n))
 		    {
-		      D (printf ("%s:%d: and is dominated by %.10s (%d)\n",
+		      D (char *s = event_get_summary (c->event);
+			 printf ("%s:%d: and is dominated by %.10s (%d)\n",
 				 __func__, __LINE__,
-				 event_get_summary (c->event),
-				 c->direct_overlap));
+				 s, c->direct_overlap);
+			 g_free (s));
 		      g_node_unlink (node);
 		      g_node_prepend (child, node);
 		    }
@@ -995,8 +1025,9 @@ calc_events_positions (GtkDayRender *day_render)
 		}
 	      else
 		{
-		  D (printf (" continuing with %.10s as root\n",
-			     event_get_summary (c->event)));
+		  D (char *s = event_get_summary (c->event);
+		     printf (" continuing with %.10s as root\n", s);
+		     g_free (s));
 
 		  /* C dominates N.  N belongs under C.  */
 		  root = child;
@@ -1005,10 +1036,12 @@ calc_events_positions (GtkDayRender *day_render)
 	    }
 	  else if (cmp (n->event, c->event) < 0)
 	    {
-	      D (printf ("%s:%d: %.10s occurs before %.10s\n",
-			 __func__, __LINE__,
-			 event_get_summary (n->event),
-			 event_get_summary (c->event)));
+	      D (char *s1 = event_get_summary (n->event);
+		 char *s2 = event_get_summary (c->event);
+		 printf ("%s:%d: %.10s occurs before %.10s\n",
+			 __func__, __LINE__, s1, s2);
+		 g_free (s1);
+		 g_free (s2));
 	      g_node_insert_before (root, child, node);
 	      break;
 	    }
@@ -1025,12 +1058,15 @@ calc_events_positions (GtkDayRender *day_render)
       if (! child)
 	/* Occurs after any child.  */
 	{
-	  D (printf ("%s:%d: %.10s occurs after any child of %.10s\n",
-		     __func__, __LINE__,
-		     event_get_summary (n->event),
-		     root->data
-		     ? event_get_summary (((struct info *) root->data)->event)
-		     : "ROOT"));
+	  D (char *s1 = event_get_summary (n->event);
+	     char *s2 = root->data
+	       ? event_get_summary (((struct info *) root->data)->event)
+	       : "ROOT";
+	     printf ("%s:%d: %.10s occurs after any child of %.10s\n",
+		     __func__, __LINE__, s1, s2);
+	     g_free (s1);
+	     if (root->data)
+	       g_free (s2));
 	  g_node_append (root, node);
 	}
     }
@@ -1047,9 +1083,10 @@ calc_events_positions (GtkDayRender *day_render)
 	  int cols = g_node_max_height (node);
 	  gfloat width = left / cols;
 
-	  D (printf ("Event %.10s at depth=%d, x=%g, width=%g\n",
-		     event_get_summary (info->event),
-		     g_node_depth (node), 1 - left, width));
+	  D (char *s = event_get_summary (info->event);
+	     printf ("Event %.10s at depth=%d, x=%g, width=%g\n",
+		     s, g_node_depth (node), 1 - left, width);
+	     g_free (s));
 	  event_rect_new (day_render, info->event, 1 - left, width);
 
 	  left -= width;
@@ -1172,6 +1209,10 @@ event_rect_new (GtkDayRender *day_render, Event *event,
 	      ? 60 * 60 : event_get_duration (event)),
 	     day_render->date + day_render->duration);
 
+  /* The background color will be initialized in the expose
+     routine.  */
+  ev_rect->bgcolor_gc = NULL;
+
   day_render->event_rectangles
     = g_slist_prepend (day_render->event_rectangles, ev_rect);
 
@@ -1181,5 +1222,7 @@ event_rect_new (GtkDayRender *day_render, Event *event,
 static void
 event_rect_delete (struct event_rect *ev)
 {
+  if (ev->bgcolor_gc)
+    g_object_unref (ev->bgcolor_gc);
   g_free (ev);
 }

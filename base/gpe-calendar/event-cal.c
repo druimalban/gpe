@@ -149,7 +149,7 @@ update_cal (GtkCalendar *cal, gboolean force)
   start = mktime (&start_tm);
 
   end_tm = start_tm;
-  days = days_in_month (year - 1900, month);
+  days = g_date_get_days_in_month (month + 1, year - 1900);
   end_tm.tm_mday = days;
   end_tm.tm_hour = 23;
   end_tm.tm_min = 59;
@@ -165,6 +165,9 @@ update_cal (GtkCalendar *cal, gboolean force)
       time_t t;
       int start, end;
       int i;
+
+      if (! event_get_visible (ev))
+	continue;
 
       t = event_get_start (ev);
       localtime_r (&t, &tm);

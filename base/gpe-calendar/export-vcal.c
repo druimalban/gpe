@@ -22,6 +22,7 @@
 #include <fcntl.h>
 
 #include "export-vcal.h"
+#include "globals.h"
 
 #include <gpe/vevent.h>
 #include <gpe/errorbox.h>
@@ -41,8 +42,6 @@ static DBusConnection *connection;
 #include <hildon-fm/hildon-widgets/hildon-file-chooser-dialog.h>
 #endif
 
-
-#define _(x) gettext(x)
 
 static gchar *
 export_to_vcal (Event *event)

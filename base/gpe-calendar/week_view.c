@@ -9,7 +9,6 @@
  */
 
 #include <time.h>
-#include <libintl.h>
 
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
@@ -20,8 +19,6 @@
 #include "globals.h"
 #include "week_view.h"
 #include "day_popup.h"
-
-#define _(x) gettext(x)
 
 struct week_day
 {
@@ -132,7 +129,6 @@ gtk_week_view_base_class_init (gpointer klass)
 static void
 gtk_week_view_init (GTypeInstance *instance, gpointer klass)
 {
-  GtkWeekView *week_view = GTK_WEEK_VIEW (instance);
 }
 
 static void
@@ -185,7 +181,7 @@ gtk_week_view_set_time (GtkView *view, time_t current)
 
   /* Determine if we need to update the cached information.  */
   int start_of_week = n_tm.tm_yday - n_tm.tm_wday;
-  if (week_starts_monday)
+  if (! week_starts_sunday)
     {
       if (n_tm.tm_wday == 0)
 	start_of_week -= 6;
@@ -336,10 +332,10 @@ draw_expose_event (GtkWidget *widget, GdkEventExpose *event, GtkWidget *wv)
       day->top = top;
 
       /* Color the day's background appropriately.  */
-      if (week_starts_monday)
-	color = i >= 5 ? salmon_gc : yellow_gc;
-      else
+      if (week_starts_sunday)
 	color = i == 0 || i == 6 ? salmon_gc : yellow_gc;
+      else
+	color = i >= 5 ? salmon_gc : yellow_gc;
       gdk_draw_rectangle (drawable, color, TRUE,
 			  0, day->top, week_view->width,
 			  week_view->have_extents
@@ -374,20 +370,28 @@ draw_expose_event (GtkWidget *widget, GdkEventExpose *event, GtkWidget *wv)
 	{
 	  guint height = 0;
 	  Event *ev = iter->data;
-	      
+
+	  if (! event_get_visible (ev))
+	    continue;
+
 	  /* Paint the time for events which have a time stamp.  */
 	  if (! event_get_untimed (ev))
 	    {
+	      time_t t = event_get_start (ev);
+	      struct tm tm;
+	      localtime_r (&t, &tm);
+
 	      GDate date;
-	      g_date_set_time (&date, event_get_start (ev));
+	      g_date_set_dmy (&date, tm.tm_mday, tm.tm_mon + 1,
+			      tm.tm_year + 1900);
 	      
 	      /* Also, only display the time if this is the day on
 		 which the event starts.  */
 	      if (g_date_compare (&date, &day->date) == 0)
 		{
-		  char buffer[100];
-		  g_date_strftime (buffer, sizeof (buffer), TIMEFMT, &date);
+		  char *buffer = strftime_strdup_utf8_locale (TIMEFMT, &tm);
 		  pango_layout_set_text (pl_evt, buffer, -1);
+		  g_free (buffer);
 
 		  gtk_paint_layout (widget->style,
 				    widget->window,
@@ -406,8 +410,32 @@ draw_expose_event (GtkWidget *widget, GdkEventExpose *event, GtkWidget *wv)
 
 	  /* Paint the event summary.  */
 	  pango_layout_set_width (pl_evt, text_width * PANGO_SCALE);
-	  pango_layout_set_text (pl_evt, event_get_summary (ev), -1);
+	  char *s = event_get_summary (ev);
+	  pango_layout_set_text (pl_evt, s, -1);
+	  g_free (s);
 	  pango_layout_get_pixel_extents (pl_evt, NULL, &pr);
+
+	  GdkColor color;
+	  if (event_get_color (ev, &color))
+	    {
+	      GdkGC *color_gc;
+
+	      color_gc = gdk_gc_new (widget->window);
+	      gdk_gc_copy (color_gc, widget->style->black_gc);
+
+	      gdk_colormap_alloc_color (colormap, &color, FALSE, TRUE);
+	      gdk_gc_set_foreground (color_gc, &color);
+
+	      gdk_draw_rectangle (drawable, color_gc, TRUE,
+				  left + week_view->time_width, top,
+				  pr.width + 6, pr.height);
+	      gdk_draw_rectangle (drawable, black_gc, FALSE,
+				  left + week_view->time_width, top,
+				  pr.width + 6, pr.height);
+
+	      g_object_unref (color_gc);
+	    }
+
 	  gtk_paint_layout (widget->style,
 			    widget->window,
 			    GTK_WIDGET_STATE (widget),
@@ -415,7 +443,7 @@ draw_expose_event (GtkWidget *widget, GdkEventExpose *event, GtkWidget *wv)
 			    &event->area,
 			    widget,
 			    "label",
-			    left + week_view->time_width, top,
+			    left + week_view->time_width + 3, top,
 			    pl_evt);
 
 	  if (height < pr.height)
@@ -508,7 +536,7 @@ gtk_week_view_reload_events (GtkView *view)
 
   /* Determine if we need to update the cached information.  */
   int start_of_week = tm.tm_yday - tm.tm_wday;
-  if (week_starts_monday)
+  if (! week_starts_sunday)
     {
       if (tm.tm_wday == 0)
 	start_of_week -= 6;
@@ -531,8 +559,9 @@ gtk_week_view_reload_events (GtkView *view)
       else
 	start.tm_mon --;
 
-      int days = days_in_month (start.tm_year, start.tm_mon);
-      start.tm_mday = days + tm.tm_mday;
+      start.tm_mday
+	= g_date_get_days_in_month (start.tm_mon + 1,
+				    start.tm_year + 1900) + tm.tm_mday;
     }
   start.tm_mday -= (start.tm_yday - start_of_week);
 

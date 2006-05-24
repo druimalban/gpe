@@ -28,8 +28,6 @@
 
 #include "globals.h"
 
-#define _(x) dgettext(PACKAGE, x)
-
 #ifdef IS_HILDON
   #define LABEL_ADD  16
   #define ARROW_SIZE 30
@@ -124,7 +122,7 @@ gtk_date_sel_move_month (GtkDateSel *sel, int d)
           tm.tm_mon = 0;
         }
     }
-  mdays = days_in_month (tm.tm_year + 1900, tm.tm_mon);
+  mdays = g_date_get_days_in_month (tm.tm_mon + 1, tm.tm_year + 1900);
   if (tm.tm_mday > mdays)
     {
       sel->day_clamped = tm.tm_mday;
@@ -158,7 +156,7 @@ year_click (GtkWidget *w, GtkDateSel *sel)
   guint mdays;
   localtime_r (&sel->time, &tm);
   tm.tm_year += d;
-  mdays = days_in_month (tm.tm_year + 1900, tm.tm_mon);
+  mdays = g_date_get_days_in_month (tm.tm_mon + 1, tm.tm_year + 1900);
   if (tm.tm_mday > mdays)
     {
       sel->day_clamped = tm.tm_mday;
@@ -234,7 +232,7 @@ month_change (GtkComboBox *combo, GtkDateSel *sel)
 
   localtime_r (&sel->time, &tm);
   tm.tm_mon = index;
-  mdays = days_in_month (tm.tm_year + 1900, tm.tm_mon);
+  mdays = g_date_get_days_in_month (tm.tm_mon + 1, tm.tm_year + 1900);
   if (tm.tm_mday > mdays)
     {
       sel->day_clamped = tm.tm_mday;
@@ -310,7 +308,7 @@ day_key_press (GtkWidget *entry, GdkEventKey *event, GtkWidget *sel)
     index = 1;
 
   localtime_r (&GTK_DATE_SEL (sel)->time, &tm);
-  mdays = days_in_month (tm.tm_year + 1900, tm.tm_mon);
+  mdays = g_date_get_days_in_month (tm.tm_mon + 1, tm.tm_year + 1900);
   if (index > mdays)
     index = mdays;
 

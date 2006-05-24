@@ -25,8 +25,6 @@
 #include "alarm-dialog.h"
 #include "globals.h"
 
-#define _(x) gettext(x)
-
 struct _AlarmDialog
 {
   GtkWindow window;
@@ -353,17 +351,16 @@ event_get_layout (Event *ev, GtkWidget *widget, int width)
 {
   PangoLayout *pl = gtk_widget_create_pango_layout (GTK_WIDGET (widget), NULL);
 
-  char *str (const char *s)
+  char *str (char *s)
     {
       if (! s || ! *s)
 	return NULL;
 
-      char *r = g_strdup (s);
       char *p;
       /* Kill any trailing new lines.  */
-      for (p = r + strlen (r) - 1; p > r && *p == '\n'; p --)
+      for (p = s + strlen (s) - 1; p > s && *p == '\n'; p --)
 	*p = '\0';
-      return r;
+      return s;
     }
       
   char *summary = str (event_get_summary (ev));

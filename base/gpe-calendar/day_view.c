@@ -10,25 +10,22 @@
 
 #include <string.h>
 #include <time.h>
-#include <libintl.h>
 #include <locale.h>
 
 #include <gtk/gtk.h>
 #include <glib.h>
 #include <gdk/gdkkeysyms.h>
 
-#include <gpe/pixmaps.h>
 #include <gpe/event-db.h>
-#include <gpe/question.h>
 #include <gpe/spacing.h>
 #include "view.h"
 #include "event-ui.h"
 #include "globals.h"
 #include "day_view.h"
 #include "day_render.h"
-#include "export-vcal.h"
+#include "calendars-widgets.h"
+#include "event-menu.h"
 
-#define _(x) gettext(x)
 #define NUM_HOURS 24
 
 struct _GtkDayView
@@ -203,66 +200,18 @@ day_view_row_clicked (GtkWidget *widget, gint row, gpointer d)
   tm.tm_hour = row;
   tm.tm_min = 0;
 
-  w = new_event (mktime (&tm), 1);
+  w = new_event (mktime (&tm));
   gtk_widget_show (w);
 
   return FALSE;
 }
 
-static GtkMenu *event_menu_new (const char *info, Event *ev);
-
 static gboolean
 day_view_event_clicked (GtkWidget *widget, gpointer event_p, gpointer d)
 {
-  Event *event = EVENT (event_p);
-  gchar *tbuffer = NULL;
-  gchar *strstart, *strend;
-  struct tm start_tm, end_tm;
-
-  time_t start = event_get_start (event);
-  time_t end = (time_t) (start + event_get_duration (event));
-
-  localtime_r (&start, &start_tm);
-  strstart = strftime_strdup_utf8_locale (TIMEFMT, &start_tm);
-
-  if (end == start)
-    strend = 0;
-  else
-    {
-      localtime_r (&end, &end_tm);
-      strend = strftime_strdup_utf8_locale (TIMEFMT, &end_tm);
-    }
-
-  const char *summary = event_get_summary (event);
-  const char *description = event_get_description (event);
-
-  char buffer[64];
-  int l = snprintf (buffer, 64, "%s %s%s%s %s%s%s",
-		    summary,
-		    strstart, strend ? "-" : "", strend ?: "",
-		    event_get_alarm (event) ? "(A)" : "",
-		    description ? "\n" : "",
-		    description ? description : "");
-  buffer[64] = 0;
-  if (l > sizeof (buffer))
-    l = sizeof (buffer);
-  l --;
-  while (buffer[l] == '\n')
-    buffer[l --] = 0;
-    
-  g_free(strstart);
-  g_free(strend);
-  tbuffer = g_locale_to_utf8 (buffer, -1, NULL, NULL, NULL);
-
-  GtkMenu *event_menu
-    = event_menu_new (tbuffer ? tbuffer : (buffer ? buffer : ""), event);
-
+  GtkMenu *event_menu = event_menu_new (EVENT (event_p), TRUE);
   gtk_menu_popup (event_menu, NULL, NULL, NULL, NULL,
 		  0, gtk_get_current_event_time());
-
-  if (tbuffer)
-    g_free (tbuffer);
-
   return FALSE;
 }
 
@@ -437,163 +386,6 @@ sink_scroller (GtkAdjustment *adjustment, gpointer data)
   GtkDayView *day_view = GTK_DAY_VIEW (data);
   if (!day_view->scrolling)
     day_view->scroll_floating = FALSE;
-}
-
-static void
-event_menu_destroy (GtkWidget *widget, gpointer d)
-{
-  Event *ev = EVENT (d);
-  g_object_unref (ev);
-  gtk_widget_destroy (widget);
-}
-
-static void
-delete_event_cb (GtkWidget *widget, gpointer d)
-{
-  Event *ev = EVENT (d);
-
-  if (event_is_recurrence (ev))
-    {
-      if (gpe_question_ask
-	  (_
-	   ("Delete all recurring entries?\n"
-	    "(If no, delete this instance only)"),
-	   _("Question"), "question", "!gtk-no", NULL, "!gtk-yes", NULL,
-	   NULL))
-	event_remove (ev);
-      else
-	{
-	  event_add_recurrence_exception (ev, event_get_start (ev));
-	  event_flush (ev);
-	}
-    }
-  else
-    event_remove (ev);
-
-  update_view ();
-}
-
-static void
-edit_event_cb (GtkWidget *widget, gpointer d)
-{
-  GtkWidget *w = edit_event (EVENT (d));
-  gtk_widget_show (w);
-}
-
-static void
-save_cb (GtkWidget *widget, gpointer d)
-{
-  vcal_do_save (EVENT (d));
-}
-
-static void
-send_ir_cb (GtkWidget *widget, gpointer d)
-{
-  vcal_do_send_irda (EVENT (d));
-}
-
-static void
-send_bt_cb (GtkWidget *widget, gpointer d)
-{
-  vcal_do_send_bluetooth (EVENT (d));
-}
-
-static GtkMenu *
-event_menu_new (const char *info, Event *ev)
-{
-  int i = 0;
-
-  g_object_ref (ev);
-
-  GtkMenu *menu = GTK_MENU (gtk_menu_new ());
-
-  /* The event title.  */
-  if (info)
-    {
-      GtkWidget *event_menu_info = gtk_menu_item_new_with_label (info);
-      gtk_widget_show (event_menu_info);
-      gtk_menu_attach (menu, event_menu_info, 0, 1, i, i + 1);
-      i ++;
-    }
-
-  /* Create an edit button.  */
-  {
-    GtkWidget *edit;
-
-#ifdef IS_HILDON
-    edit = gtk_menu_item_new_with_label (_("Edit"));
-#else
-    edit = gtk_image_menu_item_new_from_stock (GTK_STOCK_EDIT, NULL);
-#endif
-    g_signal_connect (G_OBJECT (edit), "activate",
-		      G_CALLBACK (edit_event_cb), ev);
-    gtk_widget_show (edit);
-    gtk_menu_attach (menu, edit, 0, 1, i, i + 1);
-    i ++;
-  }
-
-  /* A delete button.  */
-  {
-    GtkWidget *delete;
-
-#ifdef IS_HILDON
-    delete = gtk_menu_item_new_with_label (_("Delete"));
-#else
-    delete = gtk_image_menu_item_new_from_stock (GTK_STOCK_DELETE, NULL);
-#endif
-    g_signal_connect (G_OBJECT (delete), "activate",
-		      G_CALLBACK (delete_event_cb), ev);
-    gtk_widget_show (delete);
-    gtk_menu_attach (menu, delete, 0, 1, i, i + 1);
-    i ++;
-  }
-
-  /* And a save button.  */
-  {
-    GtkWidget *save;
-
-#ifdef IS_HILDON
-    save = gtk_menu_item_new_with_label (_("Save"));
-#else
-    save = gtk_image_menu_item_new_from_stock (GTK_STOCK_SAVE, NULL);
-#endif
-    g_signal_connect (G_OBJECT (save), "activate",
-		      G_CALLBACK (save_cb), ev);
-    gtk_widget_show (save);
-    gtk_menu_attach (menu, save, 0, 1, i, i + 1);
-    i ++;
-  }
-
-  /* Create a Send via infra-red button if infra-red is available.  */
-  if (export_irda_available ())
-    {
-      GtkWidget *send_ir_button;
-
-      send_ir_button = gtk_menu_item_new_with_label (_("Send via infra-red"));
-      g_signal_connect (G_OBJECT (send_ir_button), "activate",
-			G_CALLBACK (send_ir_cb), ev);
-      gtk_widget_show (send_ir_button);
-      gtk_menu_attach (menu, send_ir_button, 0, 1, i, i + 1);
-      i ++;
-    }
-
-  /* Create a Send via Bluetooth button if bluetooth is available.  */
-  if (export_bluetooth_available ())
-    {
-      GtkWidget *send_bt_button;
-
-      send_bt_button = gtk_menu_item_new_with_label (_("Send via Bluetooth"));
-      g_signal_connect (G_OBJECT (send_bt_button), "activate",
-			G_CALLBACK (send_bt_cb), ev);
-      gtk_widget_show (send_bt_button);
-      gtk_menu_attach (menu, send_bt_button, 0, 1, i, i + 1);
-      i ++;
-    }
-
-  g_signal_connect (G_OBJECT (menu), "selection-done",
-		    G_CALLBACK (event_menu_destroy), ev);
-
-  return menu;
 }
 
 GtkWidget *

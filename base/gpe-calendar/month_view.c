@@ -134,7 +134,6 @@ gtk_month_view_base_class_init (gpointer klass)
 static void
 gtk_month_view_init (GTypeInstance *instance, gpointer klass)
 {
-  GtkMonthView *month_view = GTK_MONTH_VIEW (instance);
 }
 
 static void
@@ -345,7 +344,7 @@ draw_expose_event (GtkWidget *widget,
   PangoRectangle pr;
   const nl_item *days;
 
-  days = &days_of_week[week_starts_monday ? 1 : 0];
+  days = &days_of_week[week_starts_sunday ? 0 : 1];
   g_return_val_if_fail (widget != NULL, TRUE);
   g_return_val_if_fail (GTK_IS_DRAWING_AREA (widget), TRUE);
 
@@ -434,11 +433,14 @@ draw_expose_event (GtkWidget *widget,
 
 	  GdkGC *color;
 
-	  if (week_starts_monday)
-	    color = col >= 5 ? salmon_gc : yellow_gc;
-	  else
+	  if (week_starts_sunday)
 	    color = col == 0 || col == 6 ? salmon_gc : yellow_gc;
+	  else
+	    color = col >= 5 ? salmon_gc : yellow_gc;
 
+	  pango_layout_set_width (pl_evt, w * PANGO_SCALE);
+	  int trying_no_wrap = FALSE;
+	restart:
 	  gdk_draw_rectangle (drawable, color, TRUE, x, y + 1, w, h);
 
 	  /* Draw the top edge of the box.  */
@@ -448,59 +450,16 @@ draw_expose_event (GtkWidget *widget,
 	  gdk_draw_line (drawable, black_gc,
 			 x + w - 1, y + 1, x + w - 1, y + h - 1);
 
-#define PRE "<span size='small'>"
-#define POST "</span>"
-#define NUM_WIDTH 10
-	  int len = sizeof (PRE) + sizeof (POST) + NUM_WIDTH + 1;
-	  if (c->events)
-	    {
-	      GSList *iter;
-	      for (iter = c->events; iter; iter = iter->next)
-		{
-		  Event *ev = iter->data;
-		  len += strlen (event_get_summary (ev)) + 1;
-		}
-	      /* NUL character.  */
-	      len ++;
-	    }
 
-	  char *buffer = g_malloc (len);
-	  char *p = buffer;
+	  int top = y + 2;
+	  int left = x + 2;
 
-	  p = stpcpy (p, PRE);
-	  int written = sprintf (p, "%d", g_date_get_day (&c->date));
-	  p += written > NUM_WIDTH ? NUM_WIDTH : written;
+	  char buffer[30];
+	  int written = snprintf (buffer, sizeof (buffer),
+				  "<small>%d</small>",
+				  g_date_get_day (&c->date));
 
-	  *p = ' ';
-	  p ++;
-	      
-	  if (c->events)
-	    {
-	      GSList *iter;
-	      for (iter = c->events; iter; iter = iter->next)
-		{
-		  Event *ev = iter->data;
-		  char *t = p;
-
-		  p = stpcpy (p, event_get_summary (ev));
-		  /* Replace '\n''s with spaces.  */
-		  for (t = strchr (t, '\n'); t; t = strchr (t, '\n'))
-		    *t = ' ';
-
-		  /* Replace the \0 with a \n.  */
-		  p[0] = '\n';
-		  p ++;
-		}
-	    }
-
-	  strcpy (p, POST);
-
-	  pango_layout_set_width (pl_evt, w * PANGO_SCALE);
-	  pango_layout_set_markup (pl_evt, buffer, -1);
-	  pango_layout_get_pixel_extents (pl_evt, NULL, &pr);
-	  if (pr.height > y + h)
-	    pango_layout_set_width (pl_evt, -1);
-
+	  pango_layout_set_markup (pl_evt, buffer, written);
 	  gtk_paint_layout (widget->style,
 			    widget->window,
 			    GTK_WIDGET_STATE (widget),
@@ -508,10 +467,70 @@ draw_expose_event (GtkWidget *widget,
 			    &event->area,
 			    widget,
 			    "label",
-			    x + 2, y,
+			    left, top,
 			    pl_evt);
+	  pango_layout_get_pixel_extents (pl_evt, NULL, &pr);
+	  left += pr.width + 3;
 
-	  g_free(buffer);
+	  GSList *iter;
+	  for (iter = c->events; iter; iter = iter->next)
+	    {
+	      Event *ev = iter->data;
+	      if (! event_get_visible (ev))
+		continue;
+
+	      char *t = event_get_summary (ev);
+	      char *s = g_strdup_printf ("<small>%s</small>", t);
+	      g_free (t);
+	      /* Replace '\n''s with spaces.  */
+	      for (t = strchr (s, '\n'); t; t = strchr (t, '\n'))
+		*t = ' ';
+
+	      pango_layout_set_markup (pl_evt, s, -1);
+	      g_free (s);
+
+	      pango_layout_get_pixel_extents (pl_evt, NULL, &pr);
+	      if (top + pr.height > y + h && ! trying_no_wrap)
+		{
+		  trying_no_wrap = TRUE;
+		  pango_layout_set_width (pl_evt, -1);
+		  goto restart;
+		}
+
+	      GdkColor color;
+	      if (event_get_color (ev, &color))
+		{
+		  GdkGC *color_gc;
+
+		  color_gc = gdk_gc_new (widget->window);
+		  gdk_gc_copy (color_gc, widget->style->black_gc);
+
+		  gdk_colormap_alloc_color (colormap, &color, FALSE, TRUE);
+		  gdk_gc_set_foreground (color_gc, &color);
+
+		  gdk_draw_rectangle (drawable, color_gc, TRUE,
+				      left, top,
+				      MIN (pr.width + 2, w - 2), pr.height);
+		  gdk_draw_rectangle (drawable, black_gc, FALSE,
+				      left, top,
+				      MIN (pr.width + 2, w - 2), pr.height);
+
+		  g_object_unref (color_gc);
+		}
+
+	      gtk_paint_layout (widget->style,
+				widget->window,
+				GTK_WIDGET_STATE (widget),
+				FALSE,
+				&event->area,
+				widget,
+				"label",
+				left + 1, top,
+				pl_evt);
+
+	      top += pr.height + 2;
+	      left = x + 1;
+	    }
 
 	  if (day == month_view->focused_day)
 	    /* Highlight this day.  */
@@ -547,10 +566,12 @@ gtk_month_view_reload_events (GtkView *view)
   month = tm_start.tm_mon;
   day = tm_start.tm_mday;
 
-  days = days_in_month (year, month);
+  days = g_date_get_days_in_month (month + 1, year);
   /* 0 => Monday.  */
-  wday = day_of_week (year, month + 1, 1);
-  if (! week_starts_monday)
+  GDate date;
+  g_date_set_dmy (&date, 1, month + 1, year);
+  wday = g_date_weekday (&date) - 1;
+  if (week_starts_sunday)
     wday = (wday + 1) % 7;
 
   month_view->weeks = (wday + days + 6) / 7;
@@ -565,7 +586,8 @@ gtk_month_view_reload_events (GtkView *view)
 	  tm_start.tm_mon = 12;
 	}
 
-      tm_start.tm_mday = days_in_month (tm_start.tm_year, tm_start.tm_mon)
+      tm_start.tm_mday = g_date_get_days_in_month (tm_start.tm_mon + 1,
+						   tm_start.tm_year + 1900)
 	- wday + 1;
     }
   else

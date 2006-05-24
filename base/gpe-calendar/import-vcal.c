@@ -29,8 +29,6 @@
 
 #include "globals.h"
 
-#define _(x)  (x)
-
 #define TODO_DB_NAME "/.gpe/todo"
 
 static time_t
