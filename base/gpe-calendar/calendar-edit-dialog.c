@@ -129,6 +129,14 @@ parent_combo_changed (GtkComboBox *widget, gpointer user_data)
 }
 
 static void
+parent_check_toggled (GtkToggleButton *togglebutton,
+		      gpointer user_data) 
+{
+  if (! gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (togglebutton)))
+    gtk_combo_box_set_active (GTK_COMBO_BOX (user_data), -1);
+}
+
+static void
 set_color (CalendarEditDialog *d, const GdkColor *c)
 {
   d->color = *c;
@@ -287,10 +295,14 @@ calendar_edit_dialog_init (GTypeInstance *instance, gpointer klass)
   gtk_widget_show (d->parent_check);
 
   d->parent = GTK_COMBO_BOX (calendars_combo_box_new ());
+  gtk_combo_box_set_active (GTK_COMBO_BOX (d->parent), -1);
   g_signal_connect (G_OBJECT (d->parent), "changed",
 		    G_CALLBACK (parent_combo_changed), d);
   gtk_widget_show (GTK_WIDGET (d->parent));
   gtk_box_pack_start (hbox, GTK_WIDGET (d->parent), FALSE, FALSE, 0);
+
+  g_signal_connect (G_OBJECT (d->parent_check), "toggled",
+		    G_CALLBACK (parent_check_toggled), d->parent);
 
   /* Color selection.  */
   hbox = GTK_BOX (gtk_hbox_new (FALSE, 3));

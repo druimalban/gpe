@@ -1,5 +1,12 @@
 2006-05-24  Neal H. Walfield  <neal@gnu.org>
 
+	* calendar-edit-dialog.c (parent_check_toggled): New function.
+	(calendar_edit_dialog_init): Clear any selection on D->PARENT.
+	Connect D->PARENT_CHECK's "toggled" signal to
+	parent_check_toggled.
+
+2006-05-24  Neal H. Walfield  <neal@gnu.org>
+
 	* calendars-widgets.c (calendars_combo_box_new): Set the active
 	item to the default calendar.
 
