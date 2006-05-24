@@ -185,10 +185,12 @@ vevent_from_event_t (Event *event)
   g_object_set (G_OBJECT (vevent),
 		"duration", (gint) event_get_duration (event), NULL);
   g_object_set (G_OBJECT (vevent), "uid", event_get_eventid (event), NULL);
-  g_object_set (G_OBJECT (vevent),
-		"summary", event_get_summary (event), NULL);
-  g_object_set (G_OBJECT (vevent),
-		"description", event_get_description (event), NULL);
+  char *s = event_get_summary (event);
+  g_object_set (G_OBJECT (vevent), "summary", s, NULL);
+  g_free (s);
+  s = event_get_description (event);
+  g_object_set (G_OBJECT (vevent), "description", s, NULL);
+  g_free (s);
   
   /* handle recurring events */
   if (event_is_recurrence (event))

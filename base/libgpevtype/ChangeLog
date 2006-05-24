@@ -1,3 +1,9 @@
+2006-05-24  Neal H. Walfield  <neal@gnu.org>
+
+	* vevent.c (vevent_from_event_t): Update code to reflect that
+	event_get_summary, event_get_description and event_get_location
+	now return malloced storage.
+
 2006-05-23  Florian Boor  <florian@kernelconcepts.de>
 
     * Release Version 0.17.
