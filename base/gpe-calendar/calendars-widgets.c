@@ -191,6 +191,10 @@ calendars_combo_box_new (void)
 				      calendar_text_cell_data_func, combo,
 				      NULL);
 
+  EventCalendar *ec = event_db_get_default_calendar (event_db, NULL);
+  calendars_combo_box_set_active (GTK_COMBO_BOX (combo), ec);
+  g_object_unref (ec);
+
   return combo;
 }
 
@@ -654,7 +658,8 @@ calendars_tree_model (void)
 	g_critical ("%s: calendar hierarchy contains a cycle", __func__); 
     }
 
-  g_object_add_weak_pointer (G_OBJECT (tree_store), &tree_store);
+  g_object_add_weak_pointer (G_OBJECT (tree_store),
+			     (gpointer *) &tree_store);
 
   g_signal_connect (event_db,
 		    "calendar-new", G_CALLBACK (calendar_new), NULL);

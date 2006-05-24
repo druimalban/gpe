@@ -1,5 +1,10 @@
 2006-05-24  Neal H. Walfield  <neal@gnu.org>
 
+	* calendars-widgets.c (calendars_combo_box_new): Set the active
+	item to the default calendar.
+
+2006-05-24  Neal H. Walfield  <neal@gnu.org>
+
 	* calendar-edit-dialog.h (calendar_edit_dialog_get_calendar): New
 	declaration.
 	* calendar-edit-dialog.c (struct _CalendarEditDialog): Remove
