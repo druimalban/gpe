@@ -1,3 +1,172 @@
+2006-05-24  Neal H. Walfield  <neal@gnu.org>
+
+	* gpe/event-db.h (struct _GdkColor): New structure.
+	(EVENT_TYPE): Rename from this...
+	(TYPE_EVENT): ... to this.  Update users.
+	(IS_EVENT): New macro.
+	(IS_EVENT_CLASS): New macro.
+	(EVENT_GET_CLASS): New macro.
+
+	(struct _EventCalendar): New structure.
+	(EventCalendar): New typedef.
+	(TYPE_EVENT_CALENDAR): New macro.
+	(EVENT_CALENDAR): Likewise.
+	(EVENT_CALENDAR_CLASS): Likewise.
+	(IS_EVENT_CALENDAR): Likewise.
+	(IS_EVENT_CALENDAR_CLASS): Likewise.
+	(EVENT_CALENDAR_GET_CLASS): Likewise.
+	(event_calendar_get_type): New function.
+	(event_db_find_calendar_by_uid): Likewise.
+	(event_db_list_event_calendars): Likewise.
+	(event_db_get_default_calendar): Likewise.
+	(event_db_set_default_calendar): Likewise.
+	(EventCalendarNew): New typedef.
+	(EventCalendarDeleted): New typedef.
+	(EventCalendarReparented): New typedef.
+	(EventCalendarChanged): New typedef.
+	(event_calendar_new): New function.
+	(event_calendar_new_full): Likewise.
+	(event_calendar_delete): Likewise.
+	(event_calendar_get_uid): Likewise.
+	(event_calendar_set_visible): Likewise.
+	(event_calendar_valid_parent): Likewise.
+	(event_calendar_get_parent): Likewise.
+	(event_calendar_set_parent): Likewise.
+	(event_calendar_get_title): Likewise.
+	(event_calendar_set_title): Likewise.
+	(event_calendar_get_description): Likewise.
+	(event_calendar_set_description): Likewise.
+	(event_calendar_get_url): Likewise.
+	(event_calendar_set_url): Likewise.
+	(event_calendar_get_username): Likewise.
+	(event_calendar_set_username): Likewise.
+	(event_calendar_get_password): Likewise.
+	(event_calendar_set_password): Likewise.
+	(event_calendar_get_mode): Likewise.
+	(event_calendar_set_mode): Likewise.
+	(event_calendar_get_color): Likewise.
+	(event_calendar_set_color): Likewise.
+	(event_calendar_get_sync_interval): Likewise.
+	(event_calendar_set_sync_interval): Likewise.
+	(event_calendar_get_last_pull): Likewise.
+	(event_calendar_set_last_pull): Likewise.
+	(event_calendar_get_last_push): Likewise.
+	(event_calendar_set_last_push): Likewise.
+	(event_calendar_get_modification): Likewise.
+	(event_get_calendar): Likewise.
+	(event_get_color): Likewise.
+	(event_get_visible): Likewise.
+	* event-db.c: New structure.
+	(EventDBClass): Add fields calendar_new_signal, calendar_new,
+	calendar_deleted_signal, calendar_deleted,
+	calendar_reparented_signal, calendar_reparented,
+	calendar_changed_signal and calendar_changed.
+	(struct _EventDB): Add fields default_calendar and calendars.
+	(EventCalendarClass): New structure.
+	(struct _EventCalendar): New structure.
+	(struct _EventSource): Add field calendar.
+	(STAMP): Cast ev to a G_OBJECT.
+	(event_db_class_init): Initialize EDB_CLASS->CALENDAR_NEW_SIGNAL,
+	EDB_CLASS->CALENDAR_DELETED_SIGNAL,
+	EDB_CLASS->CALENDAR_REPARENTED_SIGNAL and
+	EDB_CLASS->CALENDAR_CHANGED_SIGNAL.
+	(event_db_finalize): Free EDB->CALENDARS.
+	(event_source_finalize): Free EVENT->EXCEPTIONS.
+	(event_db_make_eventid): Add a random number to the generated
+	string.
+	(event_db_new): Don't request an error message from sqlite_exec
+	when we don't use it.  Create table default_calendar and use it to
+	initialize EDB->DEFAULT_CALENDAR.  Create table calendars and use
+	it to initialize EDB->CALENDARS.
+	(event_db_new): If ARGV[0] is "calendar" then initialize
+	EV->CALENDAR.
+	(event_db_find_calendar_by_uid): New function.
+	(event_db_get_default_calendar)
+	(event_db_set_default_calendar): Likewise.
+	(event_db_list_event_calendars): Likewise.
+	(event_db_calendar_new): Likewise.
+	(event_calendar_parent_class): New variable.
+	(event_calendar_get_type): New function.
+	(event_calendar_class_init): Likewise.
+	(event_calendar_init): Likewise.
+	(event_calendar_dispose): Likewise.
+	(event_calendar_flush): Likewise.
+	(event_calendar_finalize): Likewise.
+	(event_calendar_new): Likewise.
+	(event_calendar_new_full): Likewise.
+	(event_calendar_valid_parent): Likewise.
+	(event_calendar_delete): Likewise.
+	(GET): New macro.
+	(GET_SET): Likewise.
+	(event_calendar_get_uid): New function.
+	(event_calendar_set_uid): Likewise.
+	(event_calendar_get_parent): Likewise.
+	(event_calendar_set_parent): Likewise.
+	(event_calendar_get_visible): Likewise.
+	(event_calendar_set_visible): Likewise.
+	(GET_SET_STRING): New macro.
+	(event_calendar_get_title): Likewise.
+	(event_calendar_set_title): Likewise.
+	(event_calendar_get_description): Likewise.
+	(event_calendar_set_description): Likewise.
+	(event_calendar_get_url): Likewise.
+	(event_calendar_set_url): Likewise.
+	(event_calendar_get_username): Likewise.
+	(event_calendar_set_username): Likewise.
+	(event_calendar_get_password): Likewise.
+	(event_calendar_set_password): Likewise.
+	(event_calendar_get_mode): Likewise.
+	(event_calendar_set_mode): Likewise.
+	(event_calendar_get_color): Likewise.
+	(event_calendar_set_color): Likewise.
+	(event_calendar_get_sync_interval): Likewise.
+	(event_calendar_set_sync_interval): Likewise.
+	(event_calendar_get_last_pull): Likewise.
+	(event_calendar_set_last_pull): Likewise.
+	(event_calendar_get_last_push): Likewise.
+	(event_calendar_set_last_push): Likewise.
+	(event_calendar_get_last_modified): Likewise.
+	(event_write): Save EV->CALENDAR.
+	(do_laundry): If L->DATA is an EventCalendar, flush it to disk.
+	(add_to_laundry_pile): Don't take an EventSource but a GObject
+	which is either an EventSource or an EventCalendar.
+	(event_get_calendar): New function.
+	(event_set_calendar): Likewise.
+	(event_get_color): Likewise.
+	(event_get_visible): Likewise.
+	(GET): Undef before defining.
+	(GET_SET): Likewise.
+	(GET_SET_STRING): Likewise.
+
+	* gpe/event-db.h (event_get_eventid): Change to return a malloc'd
+	string, not a const.
+	(event_get_summary): Likewise.
+	(event_get_description): Likewise.
+	(event_get_location): Likewise.
+	(event_get_categories): Change to return a new list, not a const.
+	* event-db.c (event_get_eventid): Don't return a const.  Dup the
+	string.
+	(GET_SET_STRING): Likewise.
+	(event_get_categories): Don't return a const, copy the list first.
+
+	(EventDBClass): Remove field parent_class.  Add
+	fields
+	(struct _EventClass): Remove field parent_class.
+	(struct _EventSourceClass): Likewise.
+
+	(event_acknowledge): Don't use LIVE, just return if EVENT->DEAD is
+	true.
+	(event_flush): Likewise.
+	(event_remove): Likewise.
+	(event_get_start): Don't call LIVE.
+	(GET): Likewise.
+	(GET_SET): Likewise.
+	(event_set_recurrence_start): Likewise.
+	(GET_SET_STRING): Likewise.
+	(event_add_category): Likewise.
+	(event_set_categories): Likewise.
+	(event_add_recurrence_exception): Likewise.
+
 2006-05-22  Florian Boor <florian@kernelconcepts.de>
 
 	* Release version 0.30

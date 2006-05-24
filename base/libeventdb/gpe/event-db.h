@@ -17,6 +17,9 @@
 #include <glib.h>
 #include <time.h>
 
+/* Add a forward to avoid a dependency on libgdk.  */
+struct _GdkColor;
+
 #define MON  (1 << 0)
 #define TUE  (1 << 1)
 #define WED  (1 << 2)
@@ -34,11 +37,17 @@ enum event_recurrence_type
   RECUR_YEARLY
 };
 
-#define EVENT_TYPE (event_get_type ())
+#define TYPE_EVENT (event_get_type ())
 #define EVENT(obj) \
-  (G_TYPE_CHECK_INSTANCE_CAST ((obj), EVENT_TYPE, struct _Event))
+  (G_TYPE_CHECK_INSTANCE_CAST ((obj), TYPE_EVENT, Event))
 #define EVENT_CLASS(klass) \
-  GTK_CHECK_CLASS_CAST (klass, EVENT_TYPE, struct _EventCLass)
+  (G_TYPE_CHECK_CLASS_CAST ((klass), TYPE_EVENT, EventClass))
+#define IS_EVENT(obj) \
+  (G_TYPE_CHECK_INSTANCE_TYPE ((obj), TYPE_EVENT))
+#define IS_EVENT_CLASS(klass) \
+  (G_TYPE_CHECK_CLASS_TYPE ((klass), TYPE_EVENT))
+#define EVENT_GET_CLASS(obj) \
+  (G_TYPE_INSTANCE_GET_CLASS ((obj), TYPE_EVENT, EventClass))
 
 struct _EventClass;
 typedef struct _EventClass EventClass;
@@ -47,6 +56,23 @@ struct _Event;
 typedef struct _Event Event;
 
 extern GType event_get_type (void);
+
+struct _EventCalendar;
+typedef struct _EventCalendar EventCalendar;
+
+#define TYPE_EVENT_CALENDAR (event_calendar_get_type ())
+#define EVENT_CALENDAR(obj) \
+  (G_TYPE_CHECK_INSTANCE_CAST ((obj), TYPE_EVENT_CALENDAR, EventCalendar))
+#define EVENT_CALENDAR_CLASS(klass) \
+  (G_TYPE_CHECK_CLASS_CAST ((klass), TYPE_EVENT_CALENDAR, EventCalendarClass))
+#define IS_EVENT_CALENDAR(obj) \
+  (G_TYPE_CHECK_INSTANCE_TYPE ((obj), TYPE_EVENT_CALENDAR))
+#define IS_EVENT_CALENDAR_CLASS(klass) \
+  (G_TYPE_CHECK_CLASS_TYPE ((klass), TYPE_EVENT_CALENDAR))
+#define EVENT_CALENDAR_GET_CLASS(obj) \
+  (G_TYPE_INSTANCE_GET_CLASS ((obj), TYPE_EVENT_CALENDAR, EventCalendarClass))
+
+extern GType event_calendar_get_type (void);
 
 struct _EventDB;
 typedef struct _EventDB EventDB;
@@ -70,12 +96,9 @@ extern GType event_db_get_type (void);
    goes off (but only after a call to
    event_db_list_unacknowledged_alarms).  */
 typedef void (*EventDBAlarmFiredFunc) (EventDB *, Event *);
-
+
 /* Open a new database.  */
 extern EventDB *event_db_new (const char *filename);
-
-/* Search the event database EVD for the event with the uid UID.  */
-extern Event *event_db_find_by_uid (EventDB *evd, guint uid);
 
 /* Return the event whose alarm will first go off at or after NOW.  */
 extern Event *event_db_next_alarm (EventDB *edb, time_t now);
@@ -106,6 +129,150 @@ extern Event *event_db_find_by_uid (EventDB *edb, guint uid);
    event in the database has eventid EVENTID.  */
 extern Event *event_db_find_by_eventid (EventDB *edb, const char *eventid);
 
+extern EventCalendar *event_db_find_calendar_by_uid (EventDB *edb, guint uid);
+
+/* Returns a list of the event calendars in EDB.  There will always be
+   at least one calendar.  Allocates a reference to each calendar.  It
+   is the caller's responsibility to free the list.  */
+extern GSList *event_db_list_event_calendars (EventDB *edb);
+
+/* Returns the default event calendar (calendar events are added to
+   unless explicitly overridden).  Allocates a reference.  If the
+   default calendar does not exist, it is created with the title
+   TITLE.  */
+extern EventCalendar *event_db_get_default_calendar (EventDB *edb,
+						     const char *title);
+/* Sets the default event calendar to event calendar EC.  */
+extern void event_db_set_default_calendar (EventDB *edb, EventCalendar *ec);
+
+/* Signal "calendar-new": emitted when a calendar in EDB is created.  */
+typedef void (*EventCalendarNew) (EventDB *edb, EventCalendar *ec);
+/* Signal "calendar-deleted": emitted when a calendar in EDB is
+   deleted.  */
+typedef void (*EventCalendarDeleted) (EventDB *edb, EventCalendar *ec);
+/* Signal "calendar-reparented": emitted when a calendar in EDB is
+   is reparented.  */
+typedef void (*EventCalendarReparented) (EventDB *edb, EventCalendar *ec);
+/* Signal "calendar-changed": emitted when a calendar in EDB is
+   changed.  The signal may not be emitted immediately and multiple
+   changes may be collapsed into a single signal.  */
+typedef void (*EventCalendarChanged) (EventDB *edb, EventCalendar *ec);
+
+/* Create a new calendar in eventdb EDB.  */
+extern EventCalendar *event_calendar_new (EventDB *edb);
+/* PARENT may be NULL to indicate that this is a top-level calendar.
+   (A reference to PARENT is no consumed.)  TITLE, DESCRIPTION and URL
+   may be NULL.  If COLOR is NULL then no color is associated with
+   this calendar.  */
+extern EventCalendar *event_calendar_new_full (EventDB *edb,
+					       EventCalendar *parent,
+					       gboolean visible,
+					       const char *title,
+					       const char *description,
+					       const char *url,
+					       struct _GdkColor *color,
+					       int mode,
+					       int sync_interval);
+
+/* Delete a calendar.  If DELETE_EVENTS is true then also removes the
+   events in the calendar (and any calendars EVENT_CALENDAR contains).
+   Otherwise, the NEW_PARENT is the calendar which should adopt
+   them.  */
+extern void event_calendar_delete (EventCalendar *event_calendar,
+				   gboolean delete_events,
+				   EventCalendar *new_parent);
+
+/* The event calendar's uid.  */
+extern guint event_calendar_get_uid (EventCalendar *ec)
+     __attribute__ ((pure));
+
+/* If this event calendar is visible.  */
+extern gboolean event_calendar_get_visible (EventCalendar *ec);
+extern void event_calendar_set_visible (EventCalendar *ec, gboolean visible);
+
+/* Returns TRUE if setting EC's parent to NEW_PARENT is okay
+   (i.e. does not create a create a cycle).  */
+extern gboolean event_calendar_valid_parent (EventCalendar *ec,
+					     EventCalendar *new_parent);
+
+/* The event calendar's parent.  */
+/* Returns the containing calendar's parent with a reference.  */
+extern EventCalendar *event_calendar_get_parent (EventCalendar *ec);
+/* Sets EC's parent to P.  If P is NULL then EC is a top-level
+   calendar.  Does not consume a reference to P.  */
+extern void event_calendar_set_parent (EventCalendar *ec, EventCalendar *p);
+
+/* The event calendar's title.  */
+extern char *event_calendar_get_title (EventCalendar *ec)
+     __attribute__ ((malloc));
+extern void event_calendar_set_title (EventCalendar *ec, const char *title);
+
+/* The event calendar's description.  */
+extern char *event_calendar_get_description (EventCalendar *ec)
+     __attribute__ ((malloc));
+extern void event_calendar_set_description (EventCalendar *ec,
+					    const char *description);
+
+/* The URL associated with this calendar (if any).  */
+extern char *event_calendar_get_url (EventCalendar *ev)
+     __attribute__ ((malloc));
+extern void event_calendar_set_url (EventCalendar *ec, const char *url);
+
+/* The username associated with this calendar (if any).  */
+extern char *event_calendar_get_username (EventCalendar *ev)
+     __attribute__ ((malloc));
+extern void event_calendar_set_username (EventCalendar *ec,
+					 const char *username);
+
+/* The password associated with this calendar (if any).  */
+extern char *event_calendar_get_password (EventCalendar *ev)
+     __attribute__ ((malloc));
+extern void event_calendar_set_password (EventCalendar *ec,
+					 const char *password);
+
+/* The type of synchronization: 0 means no synchronization; 1
+   indicates that this is a subscription (i.e. slave); 2 that this is
+   a publisher (i.e. master); 3 indicates that this is bidirectional
+   feed (i.e. multiple readers and multiple writers).  */
+extern int event_calendar_get_mode (EventCalendar *ec) __attribute__ ((pure));
+extern void event_calendar_set_mode (EventCalendar *ec, int mode);
+
+/* The color associated with this calendar.  */
+/* Returns TRUE if there is a color associated with this event and
+   places the color in *COLOR, FALSE otherwise.  */
+extern gboolean event_calendar_get_color (EventCalendar *ec,
+					  struct _GdkColor *color);
+/* If COLOR is NULL removes any color association with this
+   calendar.  */
+extern void event_calendar_set_color (EventCalendar *ec,
+				      const struct _GdkColor *color);
+
+/* The frequency with which this calendar should be synchronized (in
+   seconds).  */
+extern int event_calendar_get_sync_interval (EventCalendar *ec)
+     __attribute__ ((pure));
+extern void event_calendar_set_sync_interval (EventCalendar *ec,
+					      int sync_interval);
+
+/* Set by the library's user to the current time after a successful
+   pull has occured.  */
+extern time_t event_calendar_get_last_pull (EventCalendar *ec)
+     __attribute__ ((pure));
+extern void event_calendar_set_last_pull (EventCalendar *ec,
+					  time_t last_pull);
+
+/* Set by the library's user to the current time after a successful
+   push (update) has occured.  */
+extern time_t event_calendar_get_last_push (EventCalendar *ec)
+     __attribute__ ((pure));
+extern void event_calendar_set_last_push (EventCalendar *ec,
+					  time_t last_push);
+
+/* Automatically updated by libeventdb when an event or calendar in
+   the calendar changes.  */
+extern time_t event_calendar_get_modification (EventCalendar *ec)
+     __attribute__ ((pure));
+
 /* This function has a GCompareFunc type signature and can be passed
    to e.g. g_slist_sort.
 
@@ -132,12 +299,21 @@ extern gboolean event_flush (Event *ev);
 /* Remove event EV from the underlying DB and dereference it.  */
 extern gboolean event_remove (Event *ev);
 
-/* Acknowledge that EV's alarm went off.  If EV does not have an alarm
-   or it would go off in the future, does nothing.  */
-extern void event_acknowledge (Event *ev);
-
 /* g_object unref each Event * on the list and destroy the list.  */
 extern void event_list_unref (GSList *l);
+
+/* The calendar associated with EV.  */
+/* Returns a reference to the calendar.  */
+extern EventCalendar *event_get_calendar (Event *ev);
+extern void event_set_calendar (Event *ev, EventCalendar *ec);
+
+/* Finds the first calendar which contains event EV which has a color
+   and in in *COLOR and returns TRUE.  Otherwise, returns FALSE.  */
+extern gboolean event_get_color (Event *ev, struct _GdkColor *color);
+/* Determines if event EV is visible.  That is, if its containing
+   calendar the calendar containing it, etc are all visible then EV is
+   visible.  */
+extern gboolean event_get_visible (Event *ev) __attribute__ ((pure));
 
 extern time_t event_get_start (Event *ev) __attribute__ ((pure));
 
@@ -146,6 +322,10 @@ extern void event_set_duration (Event *ev, unsigned long duration);
 
 extern unsigned long event_get_alarm (Event *ev) __attribute__ ((pure));
 extern void event_set_alarm (Event *ev, unsigned long alarm);
+
+/* Acknowledge that EV's alarm went off.  If EV does not have an alarm
+   or it would go off in the future, does nothing.  */
+extern void event_acknowledge (Event *ev);
 
 /* The event's sequence number, i.e. the number of significant
    revisions.  (Normally automatically updated at each important
@@ -200,20 +380,24 @@ extern gboolean event_get_untimed (Event *ev) __attribute__ ((pure));
 extern void event_set_untimed (Event *ev, gboolean value);
 
 extern unsigned long event_get_uid (Event *ev) __attribute__ ((pure));
-extern const char *event_get_eventid (Event *ev) __attribute__ ((pure));
+/* Caller must free the returned string.  */
+extern char *event_get_eventid (Event *ev) __attribute__ ((malloc));
 
 
-extern const char *event_get_summary (Event *ev) __attribute__ ((pure));
+/* Caller must free the returned string.  */
+extern char *event_get_summary (Event *ev) __attribute__ ((malloc));
 extern void event_set_summary (Event *ev, const char *summary);
 
-extern const char *event_get_description (Event *ev) __attribute__ ((pure));
+/* Caller must free the returned string.  */
+extern char *event_get_description (Event *ev) __attribute__ ((malloc));
 extern void event_set_description (Event *ev, const char *description);
 
-extern const char *event_get_location (Event *ev) __attribute__ ((pure));
+/* Caller must free the returned string.  */
+extern char *event_get_location (Event *ev) __attribute__ ((malloc));
 extern void event_set_location (Event *ev, const char *location);
 
-extern const GSList *event_get_categories (Event *ev)
-     __attribute__ ((pure));
+/* Caller must free (g_slist_free) the returned list.  */
+extern GSList *event_get_categories (Event *ev);
 extern void event_add_category (Event *ev, int category);
 /* After calling this function, EV owns CATEGORIES.  If you need to
    continue to use CATEGORIES, pass a copy.  */
