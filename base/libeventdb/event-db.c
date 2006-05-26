@@ -1546,7 +1546,7 @@ event_list (EventSource *ev, time_t period_start, time_t period_end, int max,
 	recur_end = ev->end;
     }
   else
-    recur_end = ev->event.start + ev->duration;
+    recur_end = ev->event.start + event_get_duration (EVENT (ev));
 
   if (recur_end && recur_end <= period_start)
     /* Event finishes prior to PERIOD_START.  */
@@ -1593,7 +1593,8 @@ event_list (EventSource *ev, time_t period_start, time_t period_end, int max,
 	   count ++)
 	{
 	  if ((per_alarm && period_start <= recur_start - ev->alarm)
-	      || (! per_alarm && period_start < recur_start + ev->duration))
+	      || (! per_alarm && period_start
+		  < recur_start + event_get_duration (EVENT (ev))))
 	    /* This instance occurs during the period.  Add
 	       it to LIST...  */
 	    {
@@ -2338,13 +2339,10 @@ event_compare_func (gconstpointer a, gconstpointer b)
   if (j->start < i->start)
     return 1;
 
-  EventSource *is = RESOLVE_CLONE (i);
-  EventSource *js = RESOLVE_CLONE (j);
-  
-  if (is->duration < js->duration)
+  if (event_get_duration (i) < event_get_duration (j))
     return -1;
-  if (js->duration < is->duration)
-    return -1;
+  if (event_get_duration (j) < event_get_duration (i))
+    return 1;
   return 0;
 }
 
@@ -2727,6 +2725,31 @@ event_get_start (Event *ev)
   return ev->start;
 }
 
+unsigned long
+event_get_duration (Event *event)
+{
+  EventSource *ev = RESOLVE_CLONE (event);
+
+  if (ev->untimed && ev->duration == 0)
+    /* This is a special case: its an all day event.  */
+    return 24 * 60 * 60;
+  else
+    return ev->duration;
+}
+
+void
+event_set_duration (Event *event, unsigned long duration)
+{
+  EventSource *ev = RESOLVE_CLONE (event);
+
+  if (ev->duration == duration)
+    return;
+
+  STAMP (ev);
+
+  ev->duration = duration;
+}
+
 #undef GET
 #define GET(type, name, field) \
   type \
@@ -2744,6 +2767,9 @@ event_get_start (Event *ev)
   event_set_##name (Event *event, type value) \
   { \
     EventSource *ev = RESOLVE_CLONE (event); \
+    if (ev->field == value) \
+      return; \
+    \
     STAMP (ev); \
     if ((alarm_hazard) && ev->alarm) \
       { \
@@ -2755,7 +2781,6 @@ event_get_start (Event *ev)
       event_add_upcoming_alarms (ev); \
   }
 
-GET_SET (unsigned long, duration, duration, FALSE)
 GET_SET (unsigned long, alarm, alarm, TRUE)
 GET_SET (guint32, sequence, sequence, FALSE)
 GET_SET (enum event_recurrence_type, recurrence_type, type, TRUE)
@@ -2815,11 +2840,21 @@ event_get_eventid (Event *event) \
   event_set_##field (Event *event, const char *field) \
   { \
     EventSource *ev = RESOLVE_CLONE (event); \
-    STAMP (ev); \
+    \
     event_details (ev, TRUE); \
+    if ((ev->details->field && field \
+         && strcmp (ev->details->field, field) == 0) \
+        || (! ev->details->field && ! field)) \
+      /* Identical.  */ \
+      return; \
+    \
+    STAMP (ev); \
     if (ev->details->field) \
       free (ev->details->field); \
-    ev->details->field = g_strdup (field); \
+    if (field) \
+      ev->details->field = g_strdup (field); \
+    else \
+      ev->details->field = NULL; \
   }
 
 GET_SET_STRING(summary)

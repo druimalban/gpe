@@ -1,3 +1,13 @@
+2006-05-26  Neal H. Walfield  <neal@gnu.org>
+
+	* event-db.c (event_get_duration): If duration is 0 and the event
+	is untimed, return a duration of 24 hours.  Update all user of
+	EVENT->DURATION to use this function instead.
+
+	(GET_SET): If EVENT->FIELD is identical to VALUE then don't do
+	anything.
+	(GET_SET_STRING): Likewise for EVENT->DETAILS->FIELD and FIELD.
+
 2006-05-24  Neal H. Walfield  <neal@gnu.org>
 
 	* gpe/event-db.h (struct _GdkColor): New structure.
