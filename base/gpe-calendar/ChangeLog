@@ -1,5 +1,10 @@
 2006-05-26  Neal H. Walfield  <neal@gnu.org>
 
+	* event-menu.c (delete_event_cb): Make questions clearer.
+	(move_event_to): Call update_view.
+
+2006-05-26  Neal H. Walfield  <neal@gnu.org>
+
 	* event-ui.c (struct edit_state): Remove fields deletebutton,
 	notebooktype, reminderdate, remindertime, remindertimebutton,
 	taskdate, taskspin, optionmenutype, optionmenutask, alarmoption,

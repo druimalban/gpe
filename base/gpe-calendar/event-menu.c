@@ -37,25 +37,50 @@ delete_event_cb (GtkWidget *widget, gpointer d)
 {
   Event *ev = EVENT (d);
 
+  gboolean removed = FALSE;
+  char *summary = event_get_summary (ev);
+
   if (event_is_recurrence (ev))
     {
-      if (gpe_question_ask
-	  (_
-	   ("Delete all recurring entries?\n"
-	    "(If no, delete this instance only)"),
-	   _("Question"), "question", "!gtk-no", NULL, "!gtk-yes", NULL,
-	   NULL))
-	event_remove (ev);
-      else
+      char *s = g_strdup_printf (_("Delete all occurrences of %s?"), summary);
+      g_free (summary);
+      switch (gpe_question_ask (s,
+				_("Question"), "question",
+				_("Delete this occurrence"), "!gtk-delete",
+				_("Delete all occurrences"), "!gtk-delete",
+				"!gtk-cancel", NULL,
+				NULL))
 	{
+	case 0:
 	  event_add_recurrence_exception (ev, event_get_start (ev));
 	  event_flush (ev);
+	  removed = TRUE;
+	  break;
+	case 1:
+	  event_remove (ev);
+	  removed = TRUE;
+	  break;
+	default:
+	  break;
 	}
+      g_free (s);
     }
   else
-    event_remove (ev);
+    {
+      char *s = g_strdup_printf (_("Delete %s?"), summary);
+      g_free (summary);
+      if (gpe_question_ask (s, _("Question"), "question",
+			    "!gtk-delete", NULL, "!gtk-cancel", NULL, NULL)
+	  == 0)
+	{
+	  event_remove (ev);
+	  removed = TRUE;
+	}
+      g_free (s);
+    }
 
-  update_view ();
+  if (removed)
+    update_view ();
 }
 
 static void
@@ -81,6 +106,7 @@ move_event_to (EventCalendar *ec, gpointer user_data)
 {
   Event *ev = EVENT (user_data);
   event_set_calendar (ev, ec);
+  update_view ();
 }
 
 static void
