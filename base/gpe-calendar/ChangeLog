@@ -1,3 +1,55 @@
+2006-05-26  Neal H. Walfield  <neal@gnu.org>
+
+	* event-ui.c (struct edit_state): Remove fields deletebutton,
+	notebooktype, reminderdate, remindertime, remindertimebutton,
+	taskdate, taskspin, optionmenutype, optionmenutask, alarmoption,
+	endspin, endlabel, radiobuttonnone, radiobuttondaily,
+	radiobuttonweekly, radiobuttonmonthly, radiobuttonyearly,
+	dailybox, dailyspin, monthlybox, monthlyspin, yearlybox,
+	yearlyspin, weeklybox, weeklyspin, endspin_adj, dailyspin_adj,
+	monthlyspin_adj, yearlyspin_adj, notebookrecur and page.  Rename
+	field *notebookedit to tabs.  Add fields endafter, window,
+	all_day, alarm_units, recur_type, recur_box, increment_unit,
+	increment_unit_postfix, byday.
+	(cached_window): Remove variable.
+	(cached_window_destroy_source): Likewise.
+	(cached_edit_state): New variable.
+	(cached_edit_state_destroy_source): Likewise.
+	(destroy_user_data): Take another parameter so that it can act as
+	an argument to g_object_weak_ref.
+	(edit_event_window): Return a struct edit_state, not a GtkWidget.
+	Update users.  Update to use cached_edit_state instead of
+	cached_window and cached_edit_state_destroy_source instead of
+	cached_window_destroy_source.
+	(recur_combo_changed): New function.
+	(all_day_toggled): Likewise.
+	(set_toggle): Likewise.
+	(recalculate_sensitivities): Remove function.
+	(click_delete): Likewise.
+	(set_notebook_page): Likewise.
+	(tv_move_cursor): Likewise.
+	(note_date_change_appt): Likewise.
+	(note_date_change_reminder): Likewise.
+	(note_date_change_task): Likewise.
+	(edit_finished): Remove the window parameter and take the edit
+	state directly.  Update users.
+	(click_categories): Likewise.
+	(on_description_focus_in): Mark static.  Don't change mark.
+	(on_description_focus_out): Mark static.
+	(click_ok): Synchronize with updated struct edit_state.
+	(note_date_change): Likewise.
+	(new_event): Likewise.
+	(edit_event): Likewise.
+	(build_edit_event_window): Return a struct edit_state.  Update
+	users.  Consolidate as many widgets together as possible
+	reflecting changes in struct edit_state.  On screens with enough
+	real estate, add the alam to the main tab.  On screens with enough
+	real estate, also add the recurrence information.  On very large
+	screens, don't use scrolled windows.  Change reminders into "all
+	day" events.  Improve real estate usage and general widget layout.
+	Remove delete button.  Don't set the "edit_state" on the window.
+	Add a weak reference to S.
+
 2006-05-24  Neal H. Walfield  <neal@gnu.org>
 
 	* calendar-edit-dialog.c (parent_check_toggled): New function.
