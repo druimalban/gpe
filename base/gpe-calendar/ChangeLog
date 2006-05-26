@@ -1,5 +1,11 @@
 2006-05-26  Neal H. Walfield  <neal@gnu.org>
 
+	* main.c (main): Don't connect to day view's, weeks view's, month
+	view's and upcoming's "click" signal but their "toggled" signal.
+	Reported by Florian Boor <florian@kernelconcepts.de>.
+	
+2006-05-26  Neal H. Walfield  <neal@gnu.org>
+
 	* import-vcal.h (import_vcal): Take an array of file names, not a
 	single file.
 	* import-vcal.c: Include "calendar-edit-dialog.h" and

@@ -1149,7 +1149,7 @@ main (int argc, char *argv[])
   item = gtk_radio_tool_button_new(NULL);
   gtk_tool_button_set_label(GTK_TOOL_BUTTON(item), _("Day"));
   gtk_tool_button_set_icon_widget(GTK_TOOL_BUTTON(item), pw);
-  g_signal_connect(G_OBJECT(item), "clicked",
+  g_signal_connect(G_OBJECT(item), "toggled",
 		   G_CALLBACK (day_view_button_clicked), NULL);
   gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
   gtk_tooltips_set_tip(tooltips, GTK_WIDGET(item), 
@@ -1164,7 +1164,7 @@ main (int argc, char *argv[])
   item = gtk_radio_tool_button_new_from_widget(GTK_RADIO_TOOL_BUTTON(item));
   gtk_tool_button_set_label(GTK_TOOL_BUTTON(item), _("Week"));
   gtk_tool_button_set_icon_widget(GTK_TOOL_BUTTON(item), pw);
-  g_signal_connect(G_OBJECT(item), "clicked",
+  g_signal_connect(G_OBJECT(item), "toggled",
 		   G_CALLBACK (week_view_button_clicked), NULL);
   gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
   gtk_tooltips_set_tip(tooltips, GTK_WIDGET(item), 
@@ -1178,7 +1178,7 @@ main (int argc, char *argv[])
   item = gtk_radio_tool_button_new_from_widget(GTK_RADIO_TOOL_BUTTON(item));
   gtk_tool_button_set_label(GTK_TOOL_BUTTON(item), _("Month"));
   gtk_tool_button_set_icon_widget(GTK_TOOL_BUTTON(item), pw);
-  g_signal_connect (G_OBJECT(item), "clicked",
+  g_signal_connect (G_OBJECT(item), "toggled",
 		    G_CALLBACK (month_view_button_clicked), NULL);
   gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
   gtk_tooltips_set_tip(tooltips, GTK_WIDGET(item), 
@@ -1193,7 +1193,7 @@ main (int argc, char *argv[])
   item = gtk_radio_tool_button_new_from_widget(GTK_RADIO_TOOL_BUTTON(item));
   gtk_tool_button_set_label(GTK_TOOL_BUTTON(item), _("Upcoming"));
   gtk_tool_button_set_icon_widget(GTK_TOOL_BUTTON(item), pw);
-  g_signal_connect (G_OBJECT(item), "clicked",
+  g_signal_connect (G_OBJECT(item), "toggled",
 		    G_CALLBACK (upcoming_view_button_clicked), NULL);
   gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
   gtk_tooltips_set_tip(tooltips, GTK_WIDGET(item), 
