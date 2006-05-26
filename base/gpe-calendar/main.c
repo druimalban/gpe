@@ -18,7 +18,6 @@
 
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
-#include <libintl.h>
 
 #include <gpe/init.h>
 #include <gpe/pixmaps.h>
@@ -37,7 +36,6 @@
 #include <hildon-widgets/hildon-app.h>
 #include <hildon-widgets/hildon-appview.h>
 #include <gpe/pim-categories-ui.h>
-#include <hildon-fm/hildon-widgets/hildon-file-chooser-dialog.h>
 #include <libosso.h>
 #define APPLICATION_DBUS_SERVICE "gpe_calendar"
 #define ICON_PATH "/usr/share/icons/hicolor/26x26/hildon"
@@ -650,6 +648,12 @@ alarm_button_clicked (GtkWidget *widget, gpointer d)
   gtk_widget_show (GTK_WIDGET (alarm_dialog));
 }
 
+static void
+import_callback (GtkWidget *widget, gpointer user_data)
+{
+  import_vcal (NULL, NULL);
+}
+
 #ifdef IS_HILDON
 static void
 menu_toggled (GtkWidget *widget, gpointer data)
@@ -669,9 +673,10 @@ gpe_cal_exit (void)
 static void
 gpe_cal_fullscreen_toggle (void)
 {
-  static int fullscreen_toggle = TRUE;
-  hildon_appview_set_fullscreen(HILDON_APPVIEW(main_window), fullscreen_toggle);
-  fullscreen_toggle = !fullscreen_toggle;
+  static int not_fullscreen_toggle;
+  hildon_appview_set_fullscreen (HILDON_APPVIEW (main_window),
+				 ! not_fullscreen_toggle);
+  not_fullscreen_toggle = ! not_fullscreen_toggle;
 }
 
 static void
@@ -693,120 +698,7 @@ edit_categories (GtkWidget *w)
                                GTK_WINDOW(gtk_widget_get_toplevel(w)));
   gtk_window_set_modal(GTK_WINDOW(dialog), TRUE);
 }
-
 #endif /*IS_HILDON*/
-
-static int 
-import_one_file (EventCalendar *ec, gchar *filename)
-{
-  int result = import_vcal (ec, filename);
-  update_view ();
-  return result;
-}
-
-static void
-new_calendar_clicked (GtkButton *button, gpointer user_data)
-{
-  GtkWidget *w = calendar_edit_dialog_new (NULL);
-  gtk_window_set_transient_for
-    (GTK_WINDOW (w),
-     GTK_WINDOW (gtk_widget_get_toplevel (GTK_WIDGET (button))));
-
-  if (gtk_dialog_run (GTK_DIALOG (w)) == GTK_RESPONSE_ACCEPT)
-    {
-      EventCalendar *ec
-	= calendar_edit_dialog_get_calendar (CALENDAR_EDIT_DIALOG (w));
-      if (ec)
-	calendars_combo_box_set_active (user_data, ec);
-    }
-
-  gtk_widget_destroy (w);
-}
-
-static void
-on_import_vcal (GtkWidget *widget, gpointer data)
-{
-  GtkWidget *filesel, *feedbackdlg;
-  
-#if IS_HILDON
-  filesel = hildon_file_chooser_dialog_new
-    (GTK_WINDOW (gtk_widget_get_toplevel (widget)),
-     GTK_FILE_CHOOSER_ACTION_OPEN);
-  gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (filesel), TRUE);
-#else
-  filesel = gtk_file_selection_new (_("Choose file"));
-  gtk_file_selection_set_select_multiple (GTK_FILE_SELECTION (filesel),TRUE);
-
-  gtk_window_set_transient_for (GTK_WINDOW (filesel),
-				GTK_WINDOW (main_window));
-
-  GtkBox *box = GTK_BOX (gtk_hbox_new (FALSE, 3));
-  gtk_widget_show (GTK_WIDGET (box));
-  gtk_box_pack_start (GTK_BOX (GTK_FILE_SELECTION (filesel)->main_vbox),
-		      GTK_WIDGET (box), FALSE, FALSE, 0);
-
-  GtkWidget *w = gtk_button_new_from_stock (GTK_STOCK_NEW);
-  gtk_widget_show (w);
-  gtk_box_pack_end (box, w, FALSE, FALSE, 0);
-
-  GtkWidget *combo = calendars_combo_box_new ();
-  gtk_widget_show (combo);
-  gtk_box_pack_end (box, combo, FALSE, FALSE, 0);
-
-  g_signal_connect (G_OBJECT (w), "clicked",
-		    G_CALLBACK (new_calendar_clicked), combo);
-
-  w = gtk_label_new (_("Import into calendar: "));
-  gtk_widget_show (GTK_WIDGET (w));
-  gtk_box_pack_end (box, w, FALSE, FALSE, 0);
-#endif
-
-  if (gtk_dialog_run (GTK_DIALOG (filesel)) == GTK_RESPONSE_OK)
-    {
-#if IS_HILDON
-      gchar **files
-	= gtk_file_chooser_get_filenames (GTK_FILE_CHOOSER (filesel));
-#else		
-      gchar **files = 
-        gtk_file_selection_get_selections (GTK_FILE_SELECTION (filesel));
-#endif
-      gtk_widget_hide(filesel); 
-
-      EventCalendar *cal = NULL;
-#if ! IS_HILDON
-      cal = calendars_combo_box_get_active (GTK_COMBO_BOX (combo));
-#endif
-
-      int errors = 0;
-      gchar *errstr = NULL;
-
-      int i;
-      for (i = 0; files[i]; i ++)
-	if (import_one_file (cal, files[i]) < 0) 
-	  {
-	    gchar *tmp;
-	    errors ++;
-	    tmp = g_strdup_printf ("%s\n%s", errstr ?: "",
-				   strrchr (files[i], '/') + 1);
-	    g_free (errstr);
-	    errstr = tmp;
-	  }
-
-      if (errors)
-        feedbackdlg = gtk_message_dialog_new(GTK_WINDOW(gtk_widget_get_toplevel(main_window)),
-          GTK_DIALOG_MODAL, GTK_MESSAGE_INFO, GTK_BUTTONS_OK, 
-          "%s %i %s\n%s",_("Import of"),errors,_("files failed:"),errstr);
-      else
-        feedbackdlg = gtk_message_dialog_new(GTK_WINDOW(gtk_widget_get_toplevel(main_window)),
-          GTK_DIALOG_MODAL, GTK_MESSAGE_INFO, GTK_BUTTONS_OK, 
-          _("Import successful"));
-      gtk_dialog_run(GTK_DIALOG(feedbackdlg));
-      gtk_widget_destroy(feedbackdlg);
-    }
-  gtk_widget_destroy(filesel);
-
-  update_view ();  
-}
 
 static gboolean
 main_window_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *data)
@@ -829,7 +721,7 @@ main_window_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *data)
         break;	
         case GDK_o:
         case GDK_i:
-          on_import_vcal(widget, NULL);
+          import_vcal (NULL, NULL);
         break;	
         case GDK_t:
           set_today();
@@ -872,7 +764,6 @@ create_app_menu(HildonAppView *appview)
   GtkWidget *item_view = gtk_menu_item_new_with_label(_("View"));
   GtkWidget *item_close = gtk_menu_item_new_with_label(_("Close"));
   GtkWidget *item_add = gtk_menu_item_new_with_label(_("Add new"));
-  GtkWidget *item_delete = gtk_menu_item_new_with_label(_("Delete"));
   GtkWidget *item_catedit = gtk_menu_item_new_with_label(_("Edit categories"));
   GtkWidget *item_toolbar = gtk_check_menu_item_new_with_label(_("Show toolbar"));
   GtkWidget *item_tools = gtk_menu_item_new_with_label(_("Tools"));
@@ -883,7 +774,6 @@ create_app_menu(HildonAppView *appview)
   GtkWidget *item_week = gtk_menu_item_new_with_label(_("Week"));
   GtkWidget *item_month = gtk_menu_item_new_with_label(_("Month"));
   GtkWidget *item_upcoming = gtk_menu_item_new_with_label(_("Upcoming"));
-  GtkWidget *item_sep = gtk_separator_menu_item_new();
   GtkWidget *item_alarms = gtk_menu_item_new_with_label(_("Alarms"));
 
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(item_event), menu_event);
@@ -905,7 +795,6 @@ create_app_menu(HildonAppView *appview)
   gtk_menu_append(menu_view, item_week);
   gtk_menu_append(menu_view, item_month);
   gtk_menu_append(menu_view, item_upcoming);
-  gtk_menu_append(menu_view, item_sep);
   gtk_menu_append(menu_view, item_alarms);
   gtk_menu_append(menu_view, item_toolbar);
   gtk_menu_append(menu_categories, item_catedit);
@@ -915,7 +804,7 @@ create_app_menu(HildonAppView *appview)
   g_signal_connect(G_OBJECT(item_add), "activate", G_CALLBACK(new_appointment), NULL);
   g_signal_connect(G_OBJECT(item_today), "activate", G_CALLBACK(set_today), NULL);
   g_signal_connect(G_OBJECT(item_calendars), "activate", G_CALLBACK(calendars_button_clicked), NULL);
-  g_signal_connect(G_OBJECT(item_import), "activate", G_CALLBACK(on_import_vcal), NULL);
+  g_signal_connect(G_OBJECT(item_import), "activate", G_CALLBACK(import_callback), NULL);
   g_signal_connect(G_OBJECT(item_day), "activate", G_CALLBACK(menu_toggled), day_button);
   g_signal_connect(G_OBJECT(item_week), "activate", G_CALLBACK(menu_toggled), week_button);
   g_signal_connect(G_OBJECT(item_month), "activate", G_CALLBACK(menu_toggled), month_button);
@@ -928,24 +817,6 @@ create_app_menu(HildonAppView *appview)
   gtk_widget_show_all(GTK_WIDGET(menu_main));
 }
 #endif
-
-static void
-import_file (char *ifile)
-{
-  GtkWidget *dialog;
-  if (import_one_file (NULL, ifile))
-    dialog = gtk_message_dialog_new (NULL, 0, GTK_MESSAGE_INFO,
-				     GTK_BUTTONS_OK,
-				     _("Could not import file %s."),
-				     ifile);
-  else
-    dialog = gtk_message_dialog_new (NULL, 0, GTK_MESSAGE_INFO,
-				     GTK_BUTTONS_OK,
-				     _("File %s imported sucessfully."),
-				     ifile);
-  gtk_dialog_run (GTK_DIALOG (dialog));
-  gtk_widget_destroy (dialog);
-}
 
 /* Another instance started and has passed some state to us.  */
 static void
@@ -977,7 +848,10 @@ handoff_callback (Handoff *handoff, char *data)
 	value = NULL;
 
       if (strcmp (var, "IMPORT_FILE") == 0 && value)
-	import_file (value);
+	{
+	  const char *files[] = { value, NULL };
+	  import_vcal (NULL, files);
+	}
       else if (strcmp (var, "VIEWTIME") == 0 && value)
 	{
 	  time_t t = atoi (value);
@@ -1138,6 +1012,8 @@ main (int argc, char *argv[])
 		    G_CALLBACK (update_view), NULL);
   g_signal_connect (G_OBJECT (event_db), "calendar-deleted",
 		    G_CALLBACK (update_view), NULL);
+  g_signal_connect (G_OBJECT (event_db), "calendar-reparented",
+		    G_CALLBACK (update_view), NULL);
 
   if (gpe_pim_categories_init () == FALSE)
     exit (1);
@@ -1145,7 +1021,10 @@ main (int argc, char *argv[])
   /* Import any files specified on the command line.  */
   GSList *i;
   for (i = import_files; i; i = i->next)
-    import_file (i->data);
+    {
+      const char *files[] = { i->data, NULL };
+      import_vcal (NULL, files);
+    }
   g_slist_free (import_files);
 	
   vcal_export_init();
@@ -1234,7 +1113,7 @@ main (int argc, char *argv[])
   g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK(set_today), NULL);
   gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
   gtk_tooltips_set_tip (tooltips, GTK_WIDGET(item), 
-			_("Switch to today and stay there/return to day selecting."), NULL);
+			_("Switch to today."), NULL);
   GTK_WIDGET_UNSET_FLAGS (item, GTK_CAN_FOCUS);
     
   if (window_x > 260) 
@@ -1279,7 +1158,8 @@ main (int argc, char *argv[])
   day_button = GTK_WIDGET(item);    
     
   /* Initialize the week view button.  */
-  p = gpe_find_icon_scaled ("week_view", gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
+  p = gpe_find_icon_scaled ("week_view",
+			    gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
   pw = gtk_image_new_from_pixbuf (p);
   item = gtk_radio_tool_button_new_from_widget(GTK_RADIO_TOOL_BUTTON(item));
   gtk_tool_button_set_label(GTK_TOOL_BUTTON(item), _("Week"));
@@ -1351,7 +1231,7 @@ main (int argc, char *argv[])
   pw = gtk_image_new_from_stock(GTK_STOCK_OPEN, 
                                 gtk_toolbar_get_icon_size(GTK_TOOLBAR (toolbar)));
   item = gtk_tool_button_new(pw, _("Import"));
-  g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK(on_import_vcal), NULL);
+  g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK(import_callback), NULL);
   gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
   gtk_tooltips_set_tip(tooltips, GTK_WIDGET(item), 
                        _("Open file to import an event from it."), NULL);

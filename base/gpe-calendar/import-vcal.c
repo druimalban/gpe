@@ -28,6 +28,12 @@
 #include <gpe/event-db.h>
 
 #include "globals.h"
+#include "calendar-edit-dialog.h"
+#include "calendars-widgets.h"
+
+#ifdef IS_HILDON
+#include <hildon-fm/hildon-widgets/hildon-file-chooser-dialog.h>
+#endif
 
 #define TODO_DB_NAME "/.gpe/todo"
 
@@ -71,25 +77,38 @@ extract_time (MIMEDirDateTime *dt)
     }
 }
 
-static void
+static char *
 do_import_vevent (EventCalendar *ec, MIMEDirVEvent *event)
 {
+  char *status = NULL;
+  gboolean error = FALSE;;
+  gboolean created = FALSE;;
+
   Event *ev = NULL;
   char *uid = NULL;
   g_object_get (event, "uid", &uid, NULL);
   if (uid)
     ev = event_db_find_by_eventid (event_db, uid);
   if (! ev)
-    ev = event_new (event_db, uid);
+    {
+      created = TRUE;
+      ev = event_new (event_db, uid);
+    }
 
   if (ec)
     event_set_calendar (ev, ec);
+
+  char *summary = NULL;
+  g_object_get (event, "summary", &summary, NULL);
 
   MIMEDirDateTime *dtstart = NULL;
   g_object_get (event, "dtstart", &dtstart, NULL);
   if (! dtstart)
     {
-      g_critical ("%s: Event %s has no dtstart", __func__, uid);
+      error = TRUE;
+      status = g_strdup_printf ("Not important malformed event %s (%s):"
+				" lacks required field dtstart",
+				summary, uid);
       goto out;
     }
 
@@ -159,11 +178,8 @@ do_import_vevent (EventCalendar *ec, MIMEDirVEvent *event)
   g_list_free (categories);
 #endif
 
-  char *summary = NULL;
-  g_object_get (event, "summary", &summary, NULL);
   if (summary)
     event_set_summary (ev, summary);
-  g_free (summary);
 
   char *description = NULL;
   g_object_get (event, "description", &description, NULL);
@@ -276,10 +292,13 @@ do_import_vevent (EventCalendar *ec, MIMEDirVEvent *event)
 	  break;
 	default:
 	  {
+	    error = TRUE;
 	    char *s = mimedir_recurrence_write_to_string (recurrence);
-	    g_warning ("%s: Unhandeled recurrence type: %s", __func__, s);
+	    status = g_strdup_printf ("%s (%s) has unhandeled recurrence"
+				      " type: %s, not importing",
+				      summary, uid, s);
 	    g_free (s);
-	    break;
+	    goto out;
 	  }
 	}
       event_set_recurrence_type (ev, type);
@@ -302,7 +321,11 @@ do_import_vevent (EventCalendar *ec, MIMEDirVEvent *event)
   event_flush (ev);
  out:
   g_free (uid);
+  if (created && error)
+    event_remove (ev);
   g_object_unref (ev);
+  g_free (summary);
+  return status;
 }
 
 static void
@@ -355,64 +378,199 @@ do_import_vtodo (MIMEDirVTodo *todo)
 }
 
 static void
-do_import_vcal (EventCalendar *ec, MIMEDirVCal *vcal)
+new_calendar_clicked (GtkButton *button, gpointer user_data)
 {
-  GSList *list, *iter;
-    
-  list = mimedir_vcal_get_event_list (vcal);
-    
-  for (iter = list; iter; iter = iter->next)
+  GtkWidget *w = calendar_edit_dialog_new (NULL);
+  gtk_window_set_transient_for
+    (GTK_WINDOW (w),
+     GTK_WINDOW (gtk_widget_get_toplevel (GTK_WIDGET (button))));
+
+  if (gtk_dialog_run (GTK_DIALOG (w)) == GTK_RESPONSE_ACCEPT)
     {
-      MIMEDirVEvent *vevent;
-      vevent = MIMEDIR_VEVENT (iter->data);
-      do_import_vevent (ec, vevent);
+      EventCalendar *ec
+	= calendar_edit_dialog_get_calendar (CALENDAR_EDIT_DIALOG (w));
+      if (ec)
+	calendars_combo_box_set_active (user_data, ec);
     }
 
-  g_slist_free (list);
-
-  list = mimedir_vcal_get_todo_list (vcal);
-
-  for (iter = list; iter; iter = iter->next)
-    {
-      MIMEDirVTodo *vtodo;
-      vtodo = MIMEDIR_VTODO (iter->data);
-      do_import_vtodo (vtodo);
-    }
-
-  g_slist_free (list);
+  gtk_widget_destroy (w);
 }
 
-int
-import_vcal (EventCalendar *ec, const gchar *filename)
+void
+import_vcal (EventCalendar *ec, char **files)
 {
-  MIMEDirVCal *cal = NULL;
-  GError *error = NULL;
-  GList *callist, *l;
-  int result = 0;
-
-  callist = mimedir_vcal_read_file (filename, &error);
-
-  if (error) 
+  GtkWidget *filesel = NULL;
+  if (! files)
+    /* No files were provided, prompt for some.  */
     {
-      fprintf (stderr, "import_vcal : %s\n",
-	       error->message);
-      g_error_free (error);
-      return -1;
+#if IS_HILDON
+      filesel = hildon_file_chooser_dialog_new
+	(GTK_WINDOW (main_window), GTK_FILE_CHOOSER_ACTION_OPEN);
+      gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (filesel),
+					    TRUE);
+#else
+      filesel = gtk_file_selection_new (_("Choose file"));
+      gtk_file_selection_set_select_multiple (GTK_FILE_SELECTION (filesel),
+					      TRUE);
+#endif
+
+      gtk_window_set_transient_for (GTK_WINDOW (filesel),
+				    GTK_WINDOW (main_window));
     }
 
-  for (l = callist; l != NULL && result == 0; l = g_list_next (l))
+  GtkBox *box;
+  GtkWidget *combo;
+  if (! ec)
+    /* We need to know into which calendar we should place the events.
+       Create a widget.  */
     {
-      if( l->data != NULL && MIMEDIR_IS_VCAL (l->data)) 
-        {
-           cal = l->data;
-           do_import_vcal (ec, cal);
-        }
-      else
-        result = -3;
+      box = GTK_BOX (gtk_hbox_new (FALSE, 3));
+      gtk_widget_show (GTK_WIDGET (box));
+
+      /* We cannot integrate the calendar selection into Hildon's file
+	 chooser.  We'll prompt for the calendar afterwards with a
+	 separate dialog.  */
+#if ! IS_HILDON
+      if (! files)
+	gtk_box_pack_start (GTK_BOX (GTK_FILE_SELECTION (filesel)->main_vbox),
+			    GTK_WIDGET (box), FALSE, FALSE, 0);
+#endif
+
+      GtkWidget *w = gtk_button_new_from_stock (GTK_STOCK_NEW);
+      gtk_widget_show (w);
+      gtk_box_pack_end (box, w, FALSE, FALSE, 0);
+
+      combo = calendars_combo_box_new ();
+      gtk_widget_show (combo);
+      gtk_box_pack_end (box, combo, FALSE, FALSE, 0);
+
+      g_signal_connect (G_OBJECT (w), "clicked",
+			G_CALLBACK (new_calendar_clicked), combo);
+
+      w = gtk_label_new (_("Import into calendar: "));
+      gtk_widget_show (GTK_WIDGET (w));
+      gtk_box_pack_end (box, w, FALSE, FALSE, 0);
     }
 
-  /* Cleanup */
-  mimedir_vcal_free_list (callist);
-  
-  return result;	
+  if (! files)
+    /* Run the file chooser.  */
+    {
+      if (gtk_dialog_run (GTK_DIALOG (filesel)) != GTK_RESPONSE_OK)
+	{
+	  gtk_widget_destroy (filesel);
+	  return;
+	}
+      gtk_widget_hide (filesel); 
+
+#if IS_HILDON
+      files = gtk_file_chooser_get_filenames (GTK_FILE_CHOOSER (filesel));
+#else		
+      files = gtk_file_selection_get_selections (GTK_FILE_SELECTION (filesel));
+#endif
+    }
+
+  GtkWidget *calsel = NULL;
+  if (! ec && (! filesel || 0
+#ifdef IS_HILDON
+	       + 1
+#endif
+	       ))
+    /* Prompt for the calendar.  */
+    {
+      char *title = g_strdup_printf (_("Select Calendar for %s%s"),
+				     files[0], files[1] ? "..." : "");
+      calsel = gtk_dialog_new_with_buttons
+	(title, GTK_WINDOW (main_window),
+	 GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+	 GTK_STOCK_OK, GTK_RESPONSE_ACCEPT,
+	 GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT,
+	 0);
+      g_free (title);
+
+      gtk_box_pack_start (GTK_BOX (GTK_DIALOG (calsel)->vbox),
+			  GTK_WIDGET (box), FALSE, FALSE, 0);
+      if (gtk_dialog_run (GTK_DIALOG (calsel)) != GTK_RESPONSE_ACCEPT)
+	{
+	  gtk_widget_destroy (calsel);
+	  return;
+	}
+    }
+
+  if (! ec)
+    ec = calendars_combo_box_get_active (GTK_COMBO_BOX (combo));
+  g_object_ref (ec);
+  if (filesel)
+    gtk_widget_destroy (filesel);
+  if (calsel)
+    gtk_widget_destroy (calsel);
+
+  int errors = 0;
+  gchar *errstr = NULL;
+  int i;
+  for (i = 0; files[i]; i ++)
+    {
+      GError *error = NULL;
+      GList *callist = mimedir_vcal_read_file (files[i], &error);
+      if (error) 
+	{
+	  gchar *tmp;
+	  errors ++;
+	  tmp = g_strdup_printf ("%s%s%s: %s",
+				 errstr ?: "", errstr ? "\n" : "",
+				 error->message, files[i]);
+	  g_free (errstr);
+	  errstr = tmp;
+	  g_error_free (error);
+	  continue;
+	}
+
+      GList *l;
+      for (l = callist; l; l = l->next)
+	if (l->data && MIMEDIR_IS_VCAL (l->data)) 
+	  {
+	    MIMEDirVCal *vcal = l->data;
+
+	    GSList *list = mimedir_vcal_get_event_list (vcal);
+	    GSList *iter;
+	    for (iter = list; iter; iter = iter->next)
+	      {
+		MIMEDirVEvent *vevent = MIMEDIR_VEVENT (iter->data);
+		char *status = do_import_vevent (ec, vevent);
+		if (status)
+		  {
+		    gchar *tmp;
+		    tmp = g_strdup_printf ("%s%s%s: %s",
+					   errstr ?: "", errstr ? "\n" : "",
+					   status, files[i]);
+		    g_free (errstr);
+		    errstr = tmp;
+		    g_free (status);
+		  }
+	      }
+	    g_slist_free (list);
+
+	    list = mimedir_vcal_get_todo_list (vcal);
+	    for (iter = list; iter; iter = iter->next)
+	      {
+		MIMEDirVTodo *vtodo = MIMEDIR_VTODO (iter->data);
+		do_import_vtodo (vtodo);
+	      }
+	    g_slist_free (list);
+	  }
+
+      /* Cleanup */
+      mimedir_vcal_free_list (callist);
+    }
+
+  g_object_unref (ec);
+
+  GtkWidget *feedbackdlg = gtk_message_dialog_new
+    (GTK_WINDOW (main_window),
+     GTK_DIALOG_MODAL, GTK_MESSAGE_INFO,
+     GTK_BUTTONS_OK, errstr ?: _("Import successful"));
+
+  gtk_dialog_run (GTK_DIALOG (feedbackdlg));
+  gtk_widget_destroy (feedbackdlg);
+
+  update_view ();  
 }

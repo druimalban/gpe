@@ -1,5 +1,48 @@
 2006-05-26  Neal H. Walfield  <neal@gnu.org>
 
+	* import-vcal.h (import_vcal): Take an array of file names, not a
+	single file.
+	* import-vcal.c: Include "calendar-edit-dialog.h" and
+	"calendars-widgets.h".
+	[IS_HILDON]: Include
+	<hildon-fm/hildon-widgets/hildon-file-chooser-dialog.h>.
+	(do_import_vevent): Return a string which indicates any status
+	messages the user should see.  If we encounter a fatal error and
+	we created the event, then remove it.
+	(do_import_vcal): Integrate function into...
+	(import_vcal): ... this function.  Accept an array of file names,
+	not just a single file.
+	* main.c: Don't include <libintl.h>.
+	[IS_HILDON]: Don't include
+	<hildon-fm/hildon-widgets/hildon-file-chooser-dialog.h>.
+	(import_callback): New function.
+	(import_one_file): Remove function.
+	(import_file): Likewise.
+	(new_calendar_clicked): Move from here...
+	* import-vcal.c: ... to here.
+	* main.c (on_import_vcal): Move from here...
+	* import-vcal.c (import_vcal): ... into this function.  Only
+	present the file chooser if FILES is NULL.  Only present the
+	calendar chooser if EC is NULL.  Collect the status messages and
+	display all at once at the end.
+	* main.c (main_window_key_press_event): Call import_vcal, not
+	on_import_vcal.
+	(handoff_callback): Likewise.
+	(main): Likewise.
+	(create_app_menu): Use import_callback, not on_import_vcal.
+	(main): Likewise.
+
+	* main.c (main): Connect event_db's "calendar-reparented" signal
+	to update_view.
+
+	(create_app_menu): Remove unused variable item_delete.  Don't
+	create item_sep.
+
+	(gpe_cal_fullscreen_toggle): Invert FULLSCREEN_TOGGLE to avoid
+	initialization.
+
+2006-05-26  Neal H. Walfield  <neal@gnu.org>
+
 	* event-menu.c (delete_event_cb): Make questions clearer.
 	(move_event_to): Call update_view.
 
