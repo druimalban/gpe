@@ -311,7 +311,7 @@ freedata (GtkWidget * ignored, gpointer user_data)
 }
 
 void
-ask_user_a_file (char *path, char *prompt,
+ask_user_a_file (const char *path, char *prompt,
 		 void (*File_Selected) (char *filename, gpointer data),
 		 void (*Cancel) (gpointer data), gpointer data)
 {

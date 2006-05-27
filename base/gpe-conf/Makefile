@@ -7,9 +7,6 @@ PREFIX = /usr/local
 DESTDIR = /
 PACKAGETOOL = no
 STRIP = strip
-MACHINE = unknown
-
-CFLAGS += -MD
 
 LINGUAS = pt ro de fr cs nl sv sk ru pt_BR zh_CN vi rw sl ko
 
@@ -43,7 +40,7 @@ XLIBS = `pkg-config --libs x11`
 GPECFLAGS = `pkg-config --cflags libgpewidget`
 GPELIBS = `pkg-config --libs libgpewidget`
 
-PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS) -I. 
+PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS) -I. -Wall
 PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS) $(GTKCFLAGS) -I. $(XCFLAGS)  
 PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS) $(GTKLIBS) $(XLIBS) -lXsettings-client -lcrypt 
 
@@ -53,7 +50,7 @@ else
 PACKAGE_CFLAGS += -Os -fomit-frame-pointer
 endif
 
-PACKAGE_CFLAGS += -DVERSION=\"$(VERSION)\" -DPREFIX=\"$(PREFIX)\" -D_GNU_SOURCE -DMACHINE=\"$(MACHINE)\"
+PACKAGE_CFLAGS += -DVERSION=\"$(VERSION)\" -DPREFIX=\"$(PREFIX)\" -D_GNU_SOURCE
 PACKAGE_CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 
 
@@ -72,7 +69,6 @@ MEMBERS += sleep/main sleep/interface sleep/callbacks sleep/conf sleep/confGUI
 MEMBERS += users/interface users/callbacks  
 MEMBERS += cfgfile
 MEMBERS += gpe-admin
-MEMBERS += widgets/sp-color-slider
 MEMBERS += serial
 MEMBERS += usb
 MEMBERS += cardinfo
@@ -93,6 +89,7 @@ MEMBERS_INFO += tools/interface
 MEMBERS_INFO += battery
 MEMBERS_INFO += sysinfo
 MEMBERS_INFO += parser
+MEMBERS_INFO += device
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
@@ -174,7 +171,7 @@ install-program: all all-desktop
 
 clean:
 	rm -f $(PACKAGE) gpe-info $(OBJS) $(OBJS_INFO) *~ */*~ *.ipk *.upload.html *.asc *.desktop *.d
-	rm -f screen/*.d pcmcia/*.d sleep/*.d widgets/*.d tools/*.d users/*.d sound/*.d ipaqscreen/*.d
+	rm -f screen/*.d pcmcia/*.d sleep/*.d tools/*.d users/*.d sound/*.d ipaqscreen/*.d
 	rm -f keys/*.d
 	
 	

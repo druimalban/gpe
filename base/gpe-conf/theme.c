@@ -2,7 +2,7 @@
  * gpe-conf
  *
  * Copyright (C) 2002  Pierre TARDY <tardyp@free.fr>
- *               2003-2006 Florian Boor <florian.boor@kernelconcepts.de>
+ *               2003 - 2006 Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -14,7 +14,7 @@
 #include <string.h>
 #include <dirent.h>
 #include <ctype.h>
-#include <pwd.h>
+//#include <pwd.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <signal.h>
@@ -23,15 +23,14 @@
 #include <sys/stat.h>
 #include <gtk/gtk.h>
 #include <gdk/gdkx.h>
-#include <X11/Xcms.h>
+//#include <X11/Xcms.h>
 #include <X11/Xlib.h>
 #include <libintl.h>
 #include <time.h>
 #include "applets.h"
 #include "theme.h"
-#include "widgets/sp-color-slider.h"
-#include "widgets/color.h"
 
+#include <gpe/colordialog.h>
 #include <gpe/errorbox.h>
 #include <gpe/question.h>
 #include <gpe/spacing.h>
@@ -67,31 +66,17 @@ static struct
   GtkWidget *rbH,*rbV;
   GtkWidget *bColor1,*bColor2;
   GtkWidget *demolabel;
-  GtkWidget *spFS, *bFont, *bColorFont;
   GtkWidget *slIconSize;
   GtkWidget *slToolbarSize;
   GtkWidget *cPerformance;
+  GtkWidget *spFS, *bFont, *bColorFont;
 #endif  
 }
 self;
 
-typedef struct
-{
-  SPColorSlider *s[3];
-  GtkAdjustment *a[3];
-  GtkWidget *previewbutton;
-}
-tcsel;
-
-tcsel *csel;
-
-
-static char *matchboxpath = PREFIX "/share/themes";
+static gchar *matchboxpath = PREFIX "/share/themes";
 
 static GList *themeitems;
-static GtkWidget *colorbox;
-
-int updating = FALSE;
 
 typedef struct _mbdesktop_bg {
   int type;
@@ -107,7 +92,7 @@ typedef struct _mbdesktop_bg {
 MBDesktopBG mb_back;
 
 static void select_font_popup (GtkWidget *parent_button);
-static void on_font_size_change(GtkSpinButton *spinbutton,GtkScrollType arg1);
+static void on_font_size_change(GtkSpinButton *spinbutton, gpointer data);
 static GtkWidget *popup_menu_button_new (const gchar *stock_id);
 
 /* some init stuff related to external tools and libs */
@@ -128,7 +113,7 @@ get_terminal_fontsize(void)
 {
 	gchar *xdefaults;
 	FILE *fxdefaults;
-	int size = 9;
+	gint size = 9;
 	
 	xdefaults = g_strdup_printf("%s/%s", g_get_home_dir(), ".Xdefaults");
 	if (access(xdefaults, R_OK))
@@ -147,8 +132,8 @@ get_terminal_fontsize(void)
 	{
 		while (!feof(fxdefaults))
 		{
-			char buf[128];
-			char *p1;
+			gchar buf[128];
+			gchar *p1;
 			
 			fgets(buf, 128, fxdefaults);
 			p1 = strstr(buf, PARAM_RXVT_FONT " xft:");
@@ -169,7 +154,7 @@ get_terminal_fontsize(void)
 	return size;
 }
 
-char *
+gchar *
 get_terminal_fontname (void)
 {
 	gchar *xdefaults;
@@ -194,9 +179,9 @@ get_terminal_fontname (void)
 	{
 		while (!feof(fxdefaults))
 		{
-			char buf[128];
-			char *p1;
-			int i = 0;
+			gchar buf[128];
+			gchar *p1;
+			gint i = 0;
 			fgets(buf, 128, fxdefaults);
 			p1 = strstr(buf, PARAM_RXVT_FONT " xft:");
 			if (p1)
@@ -240,7 +225,7 @@ task_change_background_image(void)
   
 	if (gtk_dialog_run(GTK_DIALOG(filesel)) == GTK_RESPONSE_OK)
 	{
-		int ec = 0;
+		gint ec = 0;
 		const gchar *file = 
 			gtk_file_selection_get_filename (GTK_FILE_SELECTION(filesel));
 		
@@ -283,15 +268,15 @@ gboolean
 mbbg_parse_spec(MBDesktopBG *mbbg, char *spec)
 {
   XColor tmpxcol;
-  int i, mapping_cnt, spec_offset = 0, type = 0;
-  char *bg_def = NULL, *p = NULL;
+  gint i, mapping_cnt, spec_offset = 0, type = 0;
+  gchar *bg_def = NULL, *p = NULL;
   Display *dpy;
   Screen *scr;
   Colormap colormap;
   	
   struct conf_mapping_t {
-    char *name;
-    int   id;
+    gchar *name;
+    gint   id;
   } conf_mapping[] = {
     { "img-stretched:",           BG_STRETCHED_PXM  },
     { "img-tiled:",               BG_TILED_PXM      },
@@ -326,7 +311,8 @@ mbbg_parse_spec(MBDesktopBG *mbbg, char *spec)
 	  mbbg->type = BG_STRETCHED_PXM;
 	  mbbg->data.filename = strdup(spec);
 	  return True;
-	} else bg_def = spec + spec_offset;
+	} else 
+        bg_def = spec + spec_offset;
     
 
   mbbg->type = type;
@@ -372,13 +358,13 @@ mbbg_parse_spec(MBDesktopBG *mbbg, char *spec)
 
 
 void
-widget_set_color_rgb8 (GtkWidget * widget,float r, float g, float b)
+widget_set_color_rgb8 (GtkWidget * widget, gfloat r, gfloat g, gfloat b)
 {
   GtkStyle *astyle;
   GtkRcStyle *rc_style;
   GdkColor gcolor;
   GtkBin bbin;
-  float gray;
+  gfloat gray;
 
   if (!GTK_IS_BUTTON(widget))
   {
@@ -410,7 +396,6 @@ widget_set_color_rgb8 (GtkWidget * widget,float r, float g, float b)
   rc_style = gtk_rc_style_new ();
   if (astyle)
     {
-      rc_style->base[GTK_STATE_NORMAL] = gcolor;
       rc_style->fg[GTK_STATE_NORMAL] = gcolor;
       rc_style->bg[GTK_STATE_NORMAL] = gcolor;
       rc_style->color_flags[GTK_STATE_NORMAL] |= GTK_RC_FG;
@@ -420,66 +405,15 @@ widget_set_color_rgb8 (GtkWidget * widget,float r, float g, float b)
       gtk_widget_modify_style (widget, rc_style);
     }
   gtk_widget_ensure_style (widget);
+  gtk_rc_style_unref (rc_style);
 }
-
-//--------------------------
-static void
-sp_color_selector_update_sliders (SPColorSlider * csel1, guint channels)
-{
-  float r,g,b;
-  if (updating)
-    return;
-  updating = TRUE;
-  if ((channels != 3) && (channels != 2))
-    {
-      /* Update red */
-      sp_color_slider_set_colors (SP_COLOR_SLIDER (csel->s[0]),
-				  SP_RGBA32_F_COMPOSE (0.0, csel->a[1]->value,
-						       csel->a[2]->value,
-						       1.0),
-				  SP_RGBA32_F_COMPOSE (1.0, csel->a[1]->value,
-						       csel->a[2]->value,
-						       1.0));
-    }
-  if ((channels != 3) && (channels != 1))
-    {
-      /* Update green */
-      sp_color_slider_set_colors (SP_COLOR_SLIDER (csel->s[1]),
-				  SP_RGBA32_F_COMPOSE (csel->a[0]->value, 0.0,
-						       csel->a[2]->value,
-						       1.0),
-				  SP_RGBA32_F_COMPOSE (csel->a[0]->value, 1.0,
-						       csel->a[2]->value,
-						       1.0));
-    }
-  if ((channels != 1) && (channels != 2))
-    {
-      /* Update blue */
-      sp_color_slider_set_colors (SP_COLOR_SLIDER (csel->s[2]),
-				  SP_RGBA32_F_COMPOSE (csel->a[0]->value,
-						       csel->a[1]->value, 0.0,
-						       1.0),
-				  SP_RGBA32_F_COMPOSE (csel->a[0]->value,
-						       csel->a[1]->value, 1.0,
-						       1.0));
-    }
-	
-  r = csel->a[0]->value;
-  g = csel->a[1]->value;
-  b = csel->a[2]->value;
-	
-  if (GTK_WIDGET_DRAWABLE(csel->previewbutton)) widget_set_color_rgb8(csel->previewbutton,r,g,b);
-  updating = FALSE;
-}
-
-
-//#--------------------------
 
 /*******************/
 /*   init stuff    */
 /*******************/
 
-void update_enabled_widgets()
+void 
+update_enabled_widgets(void)
 {
 	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self.cDefault)))
 	{
@@ -550,89 +484,8 @@ void update_enabled_widgets()
 	}
 }
 
-GtkWidget *
-build_colorbox ()
-{
-  guint gpe_border = gpe_get_border ();
-  guint gpe_boxspacing = gpe_get_boxspacing ();
-  gchar *tstr;
-  int i;
-  GtkWidget *label, *button;
-  GtkAttachOptions table_attach_left_col_x;
-  GtkAttachOptions table_attach_left_col_y;
-  GtkAttachOptions table_attach_right_col_x;
-  GtkAttachOptions table_attach_right_col_y;
-  GtkJustification table_justify_left_col;
-  GtkJustification table_justify_right_col;
-
-  table_attach_left_col_x = GTK_FILL;
-  table_attach_left_col_y = 0;
-  table_attach_right_col_x = GTK_SHRINK | GTK_EXPAND | GTK_FILL;
-  table_attach_right_col_y = GTK_FILL;
-
-  table_justify_left_col = GTK_JUSTIFY_LEFT;
-  table_justify_right_col = GTK_JUSTIFY_RIGHT;
-
-  colorbox = gtk_table_new (3, 3, FALSE);
-  gtk_container_set_border_width (GTK_CONTAINER (colorbox), gpe_border);
-  gtk_table_set_row_spacings (GTK_TABLE (colorbox), 0);
-  gtk_table_set_col_spacings (GTK_TABLE (colorbox), gpe_boxspacing);
-  gtk_widget_show (colorbox);
-
-	button = gtk_button_new_with_label(" ");
-	csel->previewbutton = button;
-    gtk_widget_set_size_request(button,30,30+6*gpe_boxspacing);
-    gtk_table_attach (GTK_TABLE (colorbox), button, 2, 3, 0, 3,
-			(GtkAttachOptions) (table_attach_left_col_x),
-			(GtkAttachOptions) (table_attach_left_col_y), 0, 0);
-    gtk_widget_show(button);
-
-  for (i = 0; i < 3; i++)
-    {
-      label = gtk_label_new (NULL);
-      gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-      gtk_widget_show (label);
-      switch (i)
-	{
-	case 0:
-	  tstr = g_strdup_printf ("<b>%s</b>", _("Red"));
-	  gtk_label_set_markup (GTK_LABEL (label), tstr);
-	  g_free (tstr);
-	  break;
-	case 1:
-	  tstr = g_strdup_printf ("<b>%s</b>", _("Green"));
-	  gtk_label_set_markup (GTK_LABEL (label), tstr);
-	  g_free (tstr);
-	  break;
-	case 2:
-	  tstr = g_strdup_printf ("<b>%s</b>", _("Blue"));
-	  gtk_label_set_markup (GTK_LABEL (label), tstr);
-	  g_free (tstr);
-	  break;
-	}
-      gtk_table_attach (GTK_TABLE (colorbox), label, 0, 1, i, i + 1,
-			(GtkAttachOptions) (table_attach_left_col_x),
-			(GtkAttachOptions) (table_attach_left_col_y), 0, 0);
-      csel->a[i] = GTK_ADJUSTMENT(gtk_adjustment_new (0.0, 0.0, 255.0, 1.0, 1.0, 10.0));
-      label = sp_color_slider_new (csel->a[i]);
-      gtk_widget_show (label);
-      csel->s[i] = (SPColorSlider*)label;
-      g_signal_connect (G_OBJECT (csel->s[i]), "changed",
-			  G_CALLBACK (sp_color_selector_update_sliders),
-			  NULL);
-
-      sp_color_slider_set_map ((SPColorSlider*)label, NULL);
-      sp_color_slider_set_colors ((SPColorSlider*)label, 1.0, 65534.0);
-      gtk_table_attach (GTK_TABLE (colorbox), label, 1, 2, i, i + 1,
-			(GtkAttachOptions) (table_attach_left_col_x),
-			(GtkAttachOptions) (table_attach_left_col_y), 0, 0);	    
-    }
-	
-  return colorbox;
-}
-
 static void
-notify_func (const char *name,
+notify_func (const gchar *name,
 	     XSettingsAction action,
 	     XSettingsSetting * setting, void *cb_data)
 {
@@ -641,7 +494,7 @@ notify_func (const char *name,
 	
    if (strncmp (name, KEY_GTK, strlen (KEY_GTK)) == 0)
     {
-      char *p = (char *) name + strlen (KEY_GTK);
+      gchar *p = (gchar *) name + strlen (KEY_GTK);
 
  	  if (!strcmp (p, "FontName"))
 	  {
@@ -652,13 +505,14 @@ notify_func (const char *name,
            gtk_widget_modify_style (self.demolabel2, astyle);
 		   gtk_spin_button_set_value(GTK_SPIN_BUTTON(self.spFSApp),(float)pango_font_description_get_size(astyle->font_desc)/PANGO_SCALE);
 		   label = g_object_get_data (G_OBJECT (self.bFontApp), "label");
-		   gtk_label_set_text(GTK_LABEL(label),pango_font_description_get_family(astyle->font_desc));	
+		   gtk_label_set_text(GTK_LABEL(label),pango_font_description_get_family(astyle->font_desc));
+           gtk_rc_style_unref (astyle);           
 		}
 	  }
     }
    if (strncmp (name, KEY_GTK, strlen (KEY_GTK)) == 0)
     {
-      char *p = (char *) name + strlen (KEY_GTK);
+      gchar *p = (char *) name + strlen (KEY_GTK);
 #ifndef APPMGR_INTERFACE	
  	  if (!strcmp (p, "ToolbarIconSize"))
 	  {
@@ -689,7 +543,7 @@ notify_func (const char *name,
     }
    if (strncmp (name, KEY_THEME, strlen (KEY_THEME)) == 0)
     {
-      char *p = (char *) name + strlen (KEY_THEME);
+      gchar *p = (gchar *) name + strlen (KEY_THEME);
 
       if (!strcmp (p, "ThemeName"))
 	{
@@ -703,7 +557,7 @@ notify_func (const char *name,
     }
   if (strncmp (name, KEY_MATCHBOX, strlen (KEY_MATCHBOX)) == 0)
     {
-      char *p = (char *) name + strlen (KEY_MATCHBOX);
+      gchar *p = (gchar *) name + strlen (KEY_MATCHBOX);
 
       if (!strcmp (p, "Background"))
 	{
@@ -775,7 +629,7 @@ notify_func (const char *name,
 	{
 	  if (setting->type == XSETTINGS_TYPE_STRING)
 	    {
-		   char* spos = NULL;
+		   gchar* spos = NULL;
 			
            astyle = gtk_rc_style_new ();
 		   spos = strrchr(setting->data.v_string,'-'); // this should be the size divider
@@ -855,9 +709,8 @@ mb_start_xsettings (void)
 {
   Display *dpy = GDK_DISPLAY ();
 
-  client =
-    xsettings_client_new (dpy, DefaultScreen (dpy), notify_func, watch_func,
-			  NULL);
+  client = xsettings_client_new (dpy, DefaultScreen (dpy), notify_func, 
+                                 watch_func, NULL);
   if (client == NULL)
     {
       fprintf (stderr, "Cannot create XSettings client.\n");
@@ -889,48 +742,24 @@ on_matchbox_entry_changed (GtkWidget * menu, gpointer user_data)
 }
 
 void
-dialog_color_response (GtkDialog * dialog, gint response, gpointer caller)
-{
-  float r,g,b;
-  if (response == GTK_RESPONSE_ACCEPT)
-    {
-      // grab color here
-  	  r = csel->a[0]->value;
-      g = csel->a[1]->value;
-      b = csel->a[2]->value;
-      widget_set_color_rgb8(caller,r,g,b);
-    }
-
-  gtk_container_remove (GTK_CONTAINER (GTK_DIALOG (dialog)->vbox), colorbox);
-  gtk_widget_destroy (GTK_WIDGET (dialog));
-}
-
-
-void
 on_color_select (GtkWidget * widget, GdkEvent * event)
 {
-  GtkWidget *w;
   GtkStyle *astyle = gtk_widget_get_style(widget);
-	
-  w = gtk_dialog_new_with_buttons (_("Select colour"), GTK_WINDOW (mainw),
-				   GTK_DIALOG_MODAL |
-				   GTK_DIALOG_DESTROY_WITH_PARENT,
-				   GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT,
-				   GTK_STOCK_OK, GTK_RESPONSE_ACCEPT,
-				   NULL);
+  GtkWidget *dialog;
+  gchar initcol[8];
+  const gchar *newcol;
 
-  gtk_container_add (GTK_CONTAINER (GTK_DIALOG (w)->vbox), build_colorbox ());
-	
-  // pass calling widget to handler
-  g_signal_connect (G_OBJECT (w), "response",
-		    (void *) dialog_color_response, (gpointer) widget);
+  sprintf (initcol, "#%02x%02x%02x", astyle->bg[GTK_STATE_NORMAL].red / 256,
+	  astyle->bg[GTK_STATE_NORMAL].green / 256, astyle->bg[GTK_STATE_NORMAL].blue / 256);
+  dialog = gpe_color_dialog_new (GTK_WINDOW(gtk_widget_get_toplevel (widget)),
+                                 GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT, initcol);
 
-  gtk_adjustment_set_value(csel->a[0],(float)astyle->base[GTK_STATE_NORMAL].red/65534.0);
-  gtk_adjustment_set_value(csel->a[1],(float)astyle->base[GTK_STATE_NORMAL].green/65534.0);
-  gtk_adjustment_set_value(csel->a[2],(float)astyle->base[GTK_STATE_NORMAL].blue/65534.0);
-  g_signal_emit_by_name (G_OBJECT (csel->s[0]), "changed");
-
-  gtk_dialog_run (GTK_DIALOG (w));
+  if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT)
+    {
+      newcol = gpe_color_dialog_get_color_str (GPE_COLOR_DIALOG(dialog));
+  	  set_widget_color_str (widget, newcol);
+	}
+  gtk_widget_destroy (dialog);
 }
 
 
@@ -944,20 +773,21 @@ File_Selected (char *file, gpointer data)
 }
 
 void
-choose_file (GtkWidget * button, gpointer user_data)
+choose_file (GtkWidget *button, gpointer user_data)
 {
   ask_user_a_file (g_get_home_dir(), NULL, File_Selected, NULL, NULL);
 }
 
-char* get_color_from_widget(GtkWidget* w)
+gchar* 
+get_color_from_widget(GtkWidget* w)
 {
   GdkColor acolor;
   GtkStyle* astyle;
-  int r,g,b;
+  gint r,g,b;
   gchar *result;
 	
   astyle = gtk_widget_get_style (w);
-  acolor = astyle->base[GTK_STATE_NORMAL];
+  acolor = astyle->bg[GTK_STATE_NORMAL];
   r = acolor.red >> 8;
   g = acolor.green >> 8;
   b = acolor.blue >> 8;
@@ -969,10 +799,10 @@ char* get_color_from_widget(GtkWidget* w)
 void
 Theme_Save (void)
 {
-	char *confstr = NULL;
-	const char* clabel;
-	char *par1,*par2;
-	int fs;
+	gchar *confstr = NULL;
+	const gchar* clabel;
+	gchar *par1,*par2;
+	gint fs;
 	GtkWidget* label;
 	
 	xsettings_client_destroy(client);
@@ -990,7 +820,7 @@ Theme_Save (void)
 		{
 			par1 = get_color_from_widget(self.bColor1);
 			confstr = g_strdup_printf("col-solid:%s",par1);
-			free(par1);
+			g_free(par1);
 		}
 		else if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self.rbGrad)))
 		{
@@ -1000,8 +830,8 @@ Theme_Save (void)
 				confstr = g_strdup_printf("col-gradient-vertical:%s,%s",par1,par2);
 			else
 				confstr = g_strdup_printf("col-gradient-horizontal:%s,%s",par1,par2);
-			free(par1);
-			free(par2);		
+			g_free(par1);
+			g_free(par2);		
 		}
 		if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self.rbImage)))
 #endif			
@@ -1016,10 +846,10 @@ Theme_Save (void)
 			if (access(par1,R_OK))
 			{
 				gpe_error_box(_("You don't have read access to selected background image!"));
-				free(confstr);
+				g_free(confstr);
 				confstr = NULL;
 			}
-			free(par1);
+			g_free(par1);
 		}
 	
 	}
@@ -1030,14 +860,14 @@ Theme_Save (void)
 		gchar *p = g_strdup_printf (CMD_XST " write %s%s str '%s'", KEY_MATCHBOX, "Background", confstr);
 		system(p);
 		g_free(p);
-		free(confstr);
+		g_free(confstr);
 	}
 	else /* theme default - erase settings */
 	{
 		system_printf (CMD_XST " delete %s%s", KEY_MATCHBOX, "Background");
 	}
 	
-#ifndef APPMGR_INTERFACE	
+#ifndef APPMGR_INTERFACE
 	/* composite/performance setting */
 	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self.cPerformance)))
 		system_printf (CMD_XST " write %s%s str %s", KEY_MATCHBOX, "COMPOSITE", "on");
@@ -1050,15 +880,15 @@ Theme_Save (void)
 	fs = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(self.spFS));
 	confstr = g_strdup_printf(CMD_XST " write %s%s str \"%s-%i\"", KEY_MATCHBOX, "Desktop/Font", clabel, fs);
 	system(confstr);
-	free(confstr);
+	g_free(confstr);
 	confstr = g_strdup_printf(CMD_XST " write %s%s str \"%s-%i\"", KEY_MATCHBOX, "Desktop/TitleFont", clabel, fs);
 	system(confstr);
-	free(confstr);
+	g_free(confstr);
 	
 	/* desktop font colour */
 	confstr = get_color_from_widget(self.bColorFont);
 	system_printf (CMD_XST " write %s%s str %s", KEY_MATCHBOX, "Desktop/FontColor", confstr);
-	free(confstr);
+	g_free(confstr);
 #endif	
 	/* application font type and size */
 	label = g_object_get_data (G_OBJECT (self.bFontApp), "label");
@@ -1066,7 +896,7 @@ Theme_Save (void)
 	fs = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(self.spFSApp));
 	confstr = g_strdup_printf(CMD_XST " write %s%s str \"%s %i\"", KEY_GTK, "FontName", clabel,fs);
 	system(confstr);
-	free(confstr);	
+	g_free(confstr);	
 
 #ifndef APPMGR_INTERFACE	
 	/* desktop icon size */
@@ -1121,7 +951,7 @@ Theme_Build_Objects ()
   guint gpe_boxspacing = gpe_get_boxspacing ();
   gchar *tstr, *desc; 
   GtkRcStyle* astyle;
-  int isize, minsize;
+  gint isize, minsize;
 
   table_attach_left_col_x = GTK_FILL;
   table_attach_left_col_y = 0;
@@ -1131,7 +961,6 @@ Theme_Build_Objects ()
   table_justify_left_col = GTK_JUSTIFY_LEFT;
   table_justify_right_col = GTK_JUSTIFY_RIGHT;
 
-  csel = malloc (sizeof (tcsel));
   self.themename = NULL;
   
   init_tools();
@@ -1463,8 +1292,7 @@ Theme_Build_Objects ()
   gtk_table_attach (GTK_TABLE (table), label, 1, 2, 1, 2,
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), gpe_boxspacing, 0);
-  self.spFS = gtk_spin_button_new_with_range(3,20,1);
-  gtk_spin_button_set_value(GTK_SPIN_BUTTON(self.spFS),7.0);
+  self.spFS = gtk_spin_button_new_with_range(3, 20, 1);
   gtk_table_attach (GTK_TABLE (table), self.spFS, 1, 2, 2, 3,
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), gpe_boxspacing, 0);
@@ -1621,16 +1449,16 @@ Theme_Build_Objects ()
   gtk_widget_modify_style (self.demolabel2, astyle);
 #ifndef APPMGR_INTERFACE	
   gtk_widget_modify_style (self.demolabel, astyle);
-  gtk_spin_button_set_value(GTK_SPIN_BUTTON(self.spFS),(float)9.0);
   label = g_object_get_data (G_OBJECT (self.bFont), "label");
   gtk_label_set_text(GTK_LABEL(label),"Sans");	
 #endif
+  gtk_rc_style_unref (astyle);
   gtk_spin_button_set_value(GTK_SPIN_BUTTON(self.spFSApp),(float)8.0);
   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.cDefault),TRUE);
   label = g_object_get_data (G_OBJECT (self.bFontApp), "label");
   gtk_label_set_text(GTK_LABEL(label),"Sans");	
   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.cDefault),TRUE);
-   
+  
   /* icon sizes */
   minsize = (gdk_screen_height() < gdk_screen_width()) 
             ? gdk_screen_height() : gdk_screen_width();
@@ -1642,6 +1470,7 @@ Theme_Build_Objects ()
 	 isize = 48;
 #ifndef APPMGR_INTERFACE	
   gtk_range_set_value(GTK_RANGE(self.slIconSize),(float)isize);
+  gtk_spin_button_set_value(GTK_SPIN_BUTTON(self.spFS),(float)9.0);
 #endif 
   /* toolbar layout and font size */
   if (minsize > 400)
@@ -1663,8 +1492,10 @@ Theme_Build_Objects ()
   gtk_label_set_text(GTK_LABEL(label), tstr);
   
   desc = g_strdup_printf("%s %d", tstr, isize);
+  astyle = gtk_rc_style_new ();
   astyle->font_desc = pango_font_description_from_string (desc);
   gtk_widget_modify_style (self.demolabel3, astyle);
+  gtk_rc_style_unref (astyle);
   g_free(tstr);
   g_free(desc);
   
@@ -1674,14 +1505,12 @@ Theme_Build_Objects ()
   g_signal_connect (G_OBJECT (GTK_COMBO (self.cbTheme)->entry), "changed",
 		      G_CALLBACK (on_matchbox_entry_changed), NULL);
 
-/* hack to work around compositioning issue */
+  /* hack to work around compositioning issue, disabel function for now */
   gtk_widget_set_sensitive(self.cPerformance, FALSE);
   
   return notebook;
 }
 
-
-//------font stuff------------from gpe-word
 static GtkWidget *
 popup_menu_button_new (const gchar *stock_id)
 {
@@ -1732,7 +1561,7 @@ on_font_select_desk(GtkWidget * widget, gpointer style)
 	label = g_object_get_data(G_OBJECT(self.bFont),"label");
 	gtk_label_set_text(GTK_LABEL(label),pango_font_description_get_family(GTK_RC_STYLE(style)->font_desc));	
 	select_font_popup(self.bFont);
-	on_font_size_change(GTK_SPIN_BUTTON(self.spFS),GTK_SCROLL_NONE);
+	on_font_size_change(GTK_SPIN_BUTTON(self.spFS), NULL);
 }
 #endif	
 
@@ -1745,7 +1574,7 @@ on_font_select_app(GtkWidget * widget, gpointer style)
 	label = g_object_get_data(G_OBJECT(self.bFontApp),"label");
 	gtk_label_set_text(GTK_LABEL(label),pango_font_description_get_family(GTK_RC_STYLE(style)->font_desc));	
 	select_font_popup(self.bFontApp);
-	on_font_size_change(GTK_SPIN_BUTTON(self.spFSApp),GTK_SCROLL_NONE);
+	on_font_size_change(GTK_SPIN_BUTTON(self.spFSApp), NULL);
 }
 
 static void
@@ -1757,37 +1586,37 @@ on_font_select_terminal(GtkWidget * widget, gpointer style)
 	label = g_object_get_data(G_OBJECT(self.bFontTerminal),"label");
 	gtk_label_set_text(GTK_LABEL(label),pango_font_description_get_family(GTK_RC_STYLE(style)->font_desc));	
 	select_font_popup(self.bFontTerminal);
-	on_font_size_change(GTK_SPIN_BUTTON(self.spFSTerminal),GTK_SCROLL_NONE);
+	on_font_size_change(GTK_SPIN_BUTTON(self.spFSTerminal), NULL);
 }
 
 static void
-on_font_size_change(GtkSpinButton *spinbutton,GtkScrollType arg1)
+on_font_size_change(GtkSpinButton *spinbutton, gpointer data)
 {
 	GtkRcStyle *astyle = gtk_rc_style_new();
 	
 #ifndef APPMGR_INTERFACE	
 	if (GTK_WIDGET(spinbutton) == self.spFS)
 	{
-		astyle->font_desc = gtk_widget_get_style(self.demolabel)->font_desc;
+		astyle->font_desc = pango_font_description_copy (gtk_widget_get_style(self.demolabel)->font_desc);
 		pango_font_description_set_size(astyle->font_desc,gtk_spin_button_get_value_as_int(spinbutton)*PANGO_SCALE);
-	    gtk_widget_modify_style(self.demolabel,GTK_RC_STYLE(astyle));
+	    gtk_widget_modify_style(self.demolabel, astyle);
 	}
 	else 
 #endif		
 	if (GTK_WIDGET(spinbutton) == self.spFSApp) 	
 	{
-		astyle->font_desc = gtk_widget_get_style(self.demolabel2)->font_desc;
+		astyle->font_desc = pango_font_description_copy (gtk_widget_get_style(self.demolabel2)->font_desc);
 		pango_font_description_set_size(astyle->font_desc,gtk_spin_button_get_value_as_int(spinbutton)*PANGO_SCALE);
-	    gtk_widget_modify_style(self.demolabel2,GTK_RC_STYLE(astyle));
+	    gtk_widget_modify_style(self.demolabel2, astyle);
 	}
 	if (GTK_WIDGET(spinbutton) == self.spFSTerminal) 	
 	{
-		astyle->font_desc = gtk_widget_get_style(self.demolabel3)->font_desc;
+		astyle->font_desc = pango_font_description_copy (gtk_widget_get_style(self.demolabel3)->font_desc);
 		pango_font_description_set_size(astyle->font_desc,gtk_spin_button_get_value_as_int(spinbutton)*PANGO_SCALE);
-	    gtk_widget_modify_style(self.demolabel3,GTK_RC_STYLE(astyle));
+	    gtk_widget_modify_style(self.demolabel3, astyle);
 	}
 
-	g_free(astyle);
+	gtk_rc_style_unref(astyle);
 }
 
 

@@ -28,7 +28,7 @@ int file_exists (char *fn);
 GList *make_items_from_dir(char *path, char *filter);
 
 // I just want to get a file !
-void ask_user_a_file(char *path, char *prompt,
+void ask_user_a_file(const char *path, char *prompt,
 		     void (*File_Selected)(char *filename, gpointer data),
 		     void (*Cancel)(gpointer data),
 		     gpointer data);

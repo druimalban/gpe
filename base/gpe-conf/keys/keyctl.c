@@ -88,7 +88,7 @@ commands_load(void)
 	GKeyFile *cmdfile;
 	GError *err = NULL;
 	gchar **keys;
-	int i, cmdcnt;
+	guint i, cmdcnt;
 	
 	cmdfile = g_key_file_new();
 	
@@ -105,7 +105,7 @@ commands_load(void)
 	{
 		for (i=0; i < cmdcnt; i++)
 		{
-			int cnt = 0;
+			guint cnt = 0;
 			gchar **vals;
 			commands = realloc(commands, (NUM_COMMANDS+1) * sizeof(t_scommand));
 			vals = g_key_file_get_string_list (cmdfile, "Commands",
@@ -139,7 +139,7 @@ layout_load(void)
 	GKeyFile *layoutfile;
 	GError *err = NULL;
 	gchar **btndefs;
-	int i, btncnt;
+	guint i, btncnt;
 	
 	layoutfile = g_key_file_new();
 	
@@ -577,7 +577,7 @@ Keyctl_Save ()
 			gpe_error_box (_("Could not restart key handler!"));
 		break;
 		case  0: 
-			execlp(KEYLAUNCH_BIN, NULL);
+			execlp(KEYLAUNCH_BIN, KEYLAUNCH_BIN, NULL);
 			exit(0);
 		break;
 		default: 

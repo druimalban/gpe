@@ -41,4 +41,8 @@ typedef enum {
 	DEVICE_CLASS_MDE         = 0x10
 } DeviceClassID_t;
 
+DeviceID_t device_get_id (void);
+DeviceClassID_t device_get_class_id (DeviceID_t device_id);
+
+
 #endif

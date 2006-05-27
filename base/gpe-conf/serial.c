@@ -1,7 +1,7 @@
 /*
  * gpe-conf
  *
- * Copyright (C) 2003, 2004  Florian Boor <florian.boor@kernelconcepts.de>
+ * Copyright (C) 2003, 2004, 2006  Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -32,7 +32,7 @@
 #include "applets.h"
 #include "suid.h"
 #include "parser.h"
-
+#include "device.h"
 
 /* --- local types and constants --- */
 
@@ -43,11 +43,7 @@
 #define INITTAB "/etc/inittab"
 #define GPSD_CONFIG "/etc/gpsd.conf"
 
-#ifdef MACH_IPAQ
-  #define FIRST_SERIAL "/dev/ttyC0"
-#else
-  #define FIRST_SERIAL "/dev/ttyS0"
-#endif
+static gchar *FIRST_SERIAL;
 
 typedef struct
 {
@@ -74,7 +70,7 @@ t_serial_item;
 /* --- module global variables --- */
 
 static GtkWidget *notebook;
-static int gpsd_installed;
+static gint gpsd_installed;
 
 static struct
 {
@@ -87,26 +83,25 @@ static struct
 	GtkWidget *cbPort;
 } self;
 
-char *portlist[][2] = {	{"Internal Serial (RS232)", FIRST_SERIAL},
+gchar *portlist[][2] = {	{"Internal Serial (RS232)", NULL},
 	{"Bluetooth RFCOMM 0","/dev/bluetooth/rfcomm/0"},
 	{"Bluetooth RFCOMM 1","/dev/bluetooth/rfcomm/1"},
 	{"PCMCIA / CF Port 1","/dev/tts/0"},
 	{"PCMCIA / CF Port 2","/dev/tts/1"}
 	};
 
-int num_ports = sizeof(portlist) / sizeof(char*) / 2;
+gint num_ports = sizeof(portlist) / sizeof(char*) / 2;
 
 gboolean
 getty_uses_port(const gchar* port)
 {
 	gchar *content;
 	gchar **lines = NULL;
-	gint length;
 	int i = 0;
 	GError *err = NULL;
 	gboolean result = FALSE;
 
-	if (!g_file_get_contents (INITTAB, &content, &length, &err))
+	if (!g_file_get_contents (INITTAB, &content, NULL, &err))
 	{
 		fprintf (stderr, "Could not access inittab.\n");
 		return FALSE;
@@ -138,14 +133,13 @@ inittab_change_getty(gboolean turniton)
 {
 	gchar *content;
 	gchar **lines = NULL;
-	gint length;
 	FILE *fnew;
 	gint i = 0;
 	gint j = 0;
 	GError *err = NULL;
 	gboolean foundline = FALSE;
 
-	if (!g_file_get_contents (INITTAB, &content, &length, &err))
+	if (!g_file_get_contents (INITTAB, &content, NULL, &err))
 	{
 		fprintf (stderr, "Could not access inittab.\n");
 		return;
@@ -192,7 +186,7 @@ inittab_change_getty(gboolean turniton)
 	/* didn't find getty line? add it! */
 	if (!foundline && turniton)
 		fprintf(fnew, "S:2345:respawn:/sbin/getty %s 115200 vt100\n",
-		        strrchr(FIRST_SERIAL,'/')+1);
+		        strrchr(FIRST_SERIAL, '/')+1);
 	
 	fclose (fnew);
 	g_strfreev (lines);
@@ -380,13 +374,21 @@ Serial_Build_Objects (void)
 	GSList *bauds = NULL;
 	GSList *ports = NULL;
 	gchar cur_baud[10] = { "4800" };
-	gchar cur_port[33] = { FIRST_SERIAL };
+	gchar cur_port[33];
 	gint ibaud = 4800;
 	gchar etmp[10];
 	gboolean emate = FALSE;
 	gboolean getty_installed;
-	int i;
+	gint i;
 
+	if (device_get_id() == DEV_IPAQ_SA || device_get_id() == DEV_IPAQ_PXA)
+  		FIRST_SERIAL = "/dev/ttyC0";
+	else
+		FIRST_SERIAL = "/dev/ttyS0";
+
+	portlist[0][1] = FIRST_SERIAL;
+	sprintf (cur_port, FIRST_SERIAL);
+	
 	gpsd_installed = !access (GPSD_STARTUP_SCRIPT, F_OK);
 	getty_installed = !access ("/sbin/getty", F_OK);
 
@@ -408,7 +410,7 @@ Serial_Build_Objects (void)
 	bauds = g_slist_append (bauds, "115000");
 
 	for (i=0;i<num_ports;i++)
-		ports = g_slist_append (ports,portlist[i][0]);
+		ports = g_slist_append (ports, portlist[i][0]);
 	tooltips = gtk_tooltips_new ();
 
 	notebook = gtk_notebook_new ();

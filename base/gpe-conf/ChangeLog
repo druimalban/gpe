@@ -1,7 +1,14 @@
+2006-05-26	Florian Boor <florian.boor@kernelconcepts.de>
+
+	* battery.c: Fix some remaining device detection related issues.
+	* serial.c: likewise
+    * theme.c, Makefile: Eliminate old colour selection stuff.
+    * theme.c: Fix various bugs related to rc styles.
+
 2006-05-11	Florian Boor <florian.boor@kernelconcepts.de>
 
 	* battery.c: Use runtime device detection instead of compile switches.
-	* Makefile: Remove remeining bits for machine configuration.
+	* Makefile: Remove remaining bits for machine configuration.
 
 2006-05-03	Florian Boor <florian.boor@kernelconcepts.de>
 

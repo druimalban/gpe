@@ -74,21 +74,11 @@ gchar *bat_chemistries[] = {
 static GtkWidget *vbox;
 static t_infowidgets batt_int;
 static t_infowidgets batt_ext;
-static device_id = device_get_id();
+static DeviceID_t device_id = DEV_UNKNOWN;
 
-FILE *file_apm = NULL;
+static FILE *file_apm = NULL;
 
 /* local functions */
-
-/* Check if we can read battery information from iPaq HAL. */ 
-static gboolean
-have_ipaq_hal(void)
-{
-	if (access(HAL_BATTERY, R_OK))
-		return FALSE;
-	else
-		return TRUE;
-}
 
 /* 
  * Read battery information from iPaq HAL, batteries needs to 
@@ -138,6 +128,8 @@ read_ipaq_batteries(t_battery_data *batteries)
 void 
 init_device(void)
 {
+	device_id = device_get_id();
+	
 	/* then check if we have apm support available */
 	if (!access(PROC_APM, R_OK))
 		file_apm = fopen(PROC_APM, "r");
@@ -155,7 +147,7 @@ update_bat_values(gpointer data)
 	gboolean islearning = FALSE;
 
 	/* check for ipaq device and read specific data if possible */
-	if (device_id == DEVICE_IPAQ_SA || device_id == DEVICE_IPAQ_PXA)
+	if (device_id == DEV_IPAQ_SA || device_id == DEV_IPAQ_PXA)
 	{
 	
 		parse_file(PROC_BATTERY," Is learning? %*s %s",tmp);
@@ -397,7 +389,7 @@ update_bat_values(gpointer data)
 			else if (remaining > 0)
 			     	sprintf(tmp,"%s: %d min.",_("Lifetime"), remaining);
             	 else 
-            		sprintf(tmp,"");
+            		tmp[0] = 0;
 			gtk_label_set_text(GTK_LABEL(batt_int.llifetime),tmp);
 		}
 	}
@@ -416,7 +408,7 @@ update_bat_values(gpointer data)
 
 
 void
-Battery_Free_Objects ()
+Battery_Free_Objects (void)
 {
 	if (file_apm) 
 		fclose(file_apm);
