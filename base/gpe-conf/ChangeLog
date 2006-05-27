@@ -1,5 +1,7 @@
 2006-05-28	Florian Boor <florian.boor@kernelconcepts.de>
 
+    * device.*: Add functions to get device magic name and filenames with 
+                device specific suffixes.
     * device.*: Add HTC Universal.
     * widgets/*: Remove obsolete files.
     

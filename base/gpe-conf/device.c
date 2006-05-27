@@ -22,6 +22,8 @@
 
 #include "device.h"
 
+static const gchar *device_name = NULL;
+
 typedef struct
 {
 	DeviceID_t id;
@@ -116,6 +118,7 @@ device_get_id (void)
 						if (strstr (iptr, DeviceMap[dnr].pattern[pnr]))
 						{
 							id = DeviceMap[dnr].id;
+                            device_name = DeviceMap[dnr].pattern[pnr];
 							g_strfreev(strv);
 							return id;
 						}
@@ -128,6 +131,7 @@ device_get_id (void)
 			if (strstr (strv[i], "fdiv_bug"))
 			{
 				id = DEV_X86;
+                device_name = "Generic x86 PC";
 				g_strfreev(strv);
 				return id;
 			}
@@ -135,6 +139,7 @@ device_get_id (void)
 			if (strstr (strv[i], "machine"))
 			{
 				id = DEV_POWERPC;
+                device_name = "PowerPC";
 				g_strfreev(strv);
 				return id;
 			}
@@ -142,6 +147,7 @@ device_get_id (void)
 			if (strstr (strv[i], "promlib"))
 			{
 				id = DEV_SPARC;
+                device_name = "Sparc";
 				g_strfreev(strv);
 				return id;
 			}
@@ -149,6 +155,7 @@ device_get_id (void)
 			if (strstr (strv[i], ": Alpha"))
 			{
 				id = DEV_ALPHA;
+                device_name = "Alpha";
 				g_strfreev(strv);
 				return id;
 			}
@@ -172,4 +179,37 @@ device_get_class_id (DeviceID_t device_id)
 	else
 		return
 			DEVICE_CLASS_NONE;
+}
+
+const gchar *
+device_get_name (void)
+{
+    if (device_name == NULL)
+        device_get_id ();
+    
+    return device_name;        
+}
+
+gchar *
+device_get_specific_file (const gchar *basename)
+{
+    gchar *result;
+    const gchar *name = device_get_name ();
+    
+    if (name != NULL)
+    {
+        result = g_strdup_printf ("%s.%s", basename, name);
+        if (!access (result, R_OK))
+            return result;
+        g_free (result);
+    }
+    
+    result = g_strdup_printf ("%s.%d", basename, device_get_id());
+    if (!access (result, R_OK))
+        return result;
+    g_free (result);
+    
+    /* maybe add class here later */
+    
+    return NULL;
 }
