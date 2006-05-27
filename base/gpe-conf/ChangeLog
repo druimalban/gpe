@@ -1,5 +1,6 @@
 2006-05-26	Florian Boor <florian.boor@kernelconcepts.de>
 
+    * widgets/*: Remove obsolete files.
 	* battery.c: Fix some remaining device detection related issues.
 	* serial.c: likewise
     * theme.c, Makefile: Eliminate old colour selection stuff.
