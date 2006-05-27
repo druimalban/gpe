@@ -1,5 +1,7 @@
 2006-05-28	Florian Boor <florian.boor@kernelconcepts.de>
 
+    * keys/keyctl.c: Use glib types.
+                     Load platform specific configuration files from /etc/gpe.
     * device.*: Add functions to get device magic name and filenames with 
                 device specific suffixes.
     * device.*: Add HTC Universal.

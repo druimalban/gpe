@@ -32,37 +32,40 @@
 
 #include "applets.h"
 #include "keyctl.h"
+#include "device.h"
 
-static char *keylaunchrc = NULL;
-static char *bg_image = NULL;
-static int bg_x = 0, bg_y = 0;
+static gchar *keylaunchrc = NULL;
+static gchar *bg_image = NULL;
+static gint bg_x = 0, bg_y = 0;
 static gboolean menuselect = FALSE;
-static int NUM_COMMANDS = 0;
-static int NUM_BUTTONS = 0;
+static gint NUM_COMMANDS = 0;
+static gint NUM_BUTTONS = 0;
 
 #define KEYLAUNCH_BIN   PREFIX "/bin/keylaunch"
 #define FILE_COMMANDS   "/etc/gpe/key-commands"
 #define FILE_LAYOUT     "/etc/gpe/key-layout"
 #define ICON_PATH 		PREFIX "/share/pixmaps"
 
+void FileSelected (gchar *file, gpointer data);
+
 /* local types */
 
 typedef struct 
 {
-	char *symbol;
-	char *key;
-	char *modificator;
-	char *command;
-	char *title;
-	int type;
-	int x, y;
+	gchar *symbol;
+	gchar *key;
+	gchar *modificator;
+	gchar *command;
+	gchar *title;
+	gint type;
+	gint x, y;
 }
 t_buttondef;
 
 typedef struct
 {
-	char *title;
-	char *command;
+	gchar *title;
+	gchar *command;
 }
 t_scommand;
 
@@ -80,7 +83,7 @@ self;
 
 t_scommand  *commands  = NULL;
 t_buttondef *buttondefs = NULL;
-static int active_button = 0;
+static gint active_button = 0;
 
 static gboolean
 commands_load(void)
@@ -89,17 +92,24 @@ commands_load(void)
 	GError *err = NULL;
 	gchar **keys;
 	guint i, cmdcnt;
+    gchar *filename;
 	
 	cmdfile = g_key_file_new();
+    filename = device_get_specific_file (FILE_COMMANDS);
+    if (!filename)
+        filename = g_strdup (FILE_COMMANDS);
 	
-	if (!g_key_file_load_from_file (cmdfile, FILE_COMMANDS,
+	if (!g_key_file_load_from_file (cmdfile, filename,
                                     G_KEY_FILE_KEEP_COMMENTS, &err))
 	{
 		gpe_error_box(err->message);
 		g_error_free(err);
+        g_free (filename);
 		return FALSE;
 	}
 	
+    g_free (filename);
+    
 	keys = g_key_file_get_keys (cmdfile, "Commands",  &cmdcnt, &err);
 	if (keys)
 	{
@@ -140,17 +150,23 @@ layout_load(void)
 	GError *err = NULL;
 	gchar **btndefs;
 	guint i, btncnt;
+    gchar *filename;
 	
 	layoutfile = g_key_file_new();
-	
-	if (!g_key_file_load_from_file (layoutfile, FILE_LAYOUT,
+    filename = device_get_specific_file (FILE_LAYOUT);
+    if (!filename)
+        filename = g_strdup (FILE_LAYOUT);
+		
+	if (!g_key_file_load_from_file (layoutfile, filename,
                                     G_KEY_FILE_KEEP_COMMENTS, &err))
 	{
 		gpe_error_box(err->message);
 		g_error_free(err);
+        g_free (filename);
 		err = NULL;
 		return FALSE;
 	}
+    g_free (filename);
 	
 	if (g_key_file_has_group(layoutfile, "Global"))
 	{
@@ -252,17 +268,13 @@ layout_load(void)
 	return TRUE;
 }
 
-
-void FileSelected (char *file, gpointer data);
-
-
 void
-init_buttons ()
+init_buttons (void)
 {
 	FILE *fd;
-	char *buffer = NULL;
-	char *slash;
-	int i;
+	gchar *buffer = NULL;
+	gchar *slash;
+	gint i;
 	size_t len;
 #warning todo correlate read settings with defined buttons, support combinations
 	active_button = 0;
@@ -317,9 +329,9 @@ on_button_clicked (GtkButton * button, gpointer user_data)
 void
 on_button_select (GtkButton * button, gpointer user_data)
 {
-	int nr = (int)user_data;
-	int i;
-	char *bname;
+	gint nr = (gint)user_data;
+	gint i;
+	gchar *bname;
 	
 	if ((nr == active_button) ||
 		((active_button < 0) && (active_button >= NUM_BUTTONS)))
@@ -348,7 +360,7 @@ on_button_select (GtkButton * button, gpointer user_data)
 void
 on_edit_changed (GtkWidget * edit, gpointer user_data)
 {
-	int i;
+	gint i;
 	
 	if (menuselect)
 		return;
@@ -366,7 +378,7 @@ on_edit_changed (GtkWidget * edit, gpointer user_data)
 void 
 on_menu_select (GtkOptionMenu *menu,  gpointer user_data)
 {
-	int pos = gtk_option_menu_get_history(menu);
+	gint pos = gtk_option_menu_get_history(menu);
 	
 	menuselect = TRUE;	
 	if ((pos > 0) && (commands[pos].command))
@@ -378,7 +390,7 @@ on_menu_select (GtkOptionMenu *menu,  gpointer user_data)
 
 
 GtkWidget *
-Keyctl_Build_Objects ()
+Keyctl_Build_Objects (void)
 {
 	GtkWidget *vbox = gtk_vbox_new(FALSE, 0);
 	GtkWidget *layout1 = gtk_layout_new(NULL, NULL);
@@ -468,13 +480,13 @@ Keyctl_Build_Objects ()
 }
 
 
-void Keyctl_Free_Objects ();
+void Keyctl_Free_Objects (void);
 
 /* save new config, force keyctl to reload, and exit */
 void
-Keyctl_Save ()
+Keyctl_Save (void)
 {
-	int i,j;
+	gint i, j;
 	FILE *fd;
 	char *cont = NULL;
 	GError *err = NULL;
@@ -586,13 +598,13 @@ Keyctl_Save ()
 }
 
 void
-Keyctl_Restore ()
+Keyctl_Restore (void)
 {
 }
 
 
 void
-FileSelected (char *file, gpointer data)
+FileSelected (gchar *file, gpointer data)
 {
 	if (!strlen(file))
 		return;
