@@ -50,6 +50,7 @@ static DeviceMap_t DeviceMap[] = { \
 	{ DEV_SGI_INDY, { "SGI Indy" } },
 	{ DEV_SGI_INDIGO2, { "SGI Indigo2" } },
 	{ DEV_SGI_OCTANE, { "SGI IP30", "SGI Octane" } },
+	{ DEV_HTC_UNIVERSAL, { "HTC Universal" } },
 };
 
 /* Keep in sync with DeviceId_t defintion. */
@@ -81,6 +82,7 @@ static DeviceID_t IdClassVector[] =
 	DEVICE_CLASS_PC,
 	DEVICE_CLASS_PC,
 	DEVICE_CLASS_PC,
+	DEVICE_CLASS_PDA | DEVICE_CLASS_CELLPHONE,
 };
 
 DeviceID_t 

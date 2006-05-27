@@ -29,6 +29,7 @@ typedef enum
 	DEV_POWERPC,
 	DEV_SPARC,
 	DEV_ALPHA,
+    DEV_HTC_UNIVERSAL,
 	DEV_MAX
 } DeviceID_t;
 
