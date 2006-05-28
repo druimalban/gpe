@@ -341,6 +341,14 @@ static gboolean
 hour_bar_move (gpointer d)
 {
   GtkDayRender *day_render = GTK_DAY_RENDER (d);
+
+  if (day_render->rows_visible == 0)
+    /* No rows visible.  */
+    {
+      day_render->hour_bar_repaint = 0;
+      return FALSE;
+    }
+
   int top = day_render->hour_bar_pos - HOUR_BAR_HEIGHT (day_render) / 2;
   int bottom = day_render->hour_bar_pos + HOUR_BAR_HEIGHT (day_render) / 2;
 

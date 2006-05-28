@@ -1,5 +1,10 @@
 2006-05-28  Neal H. Walfield  <neal@gnu.org>
 
+	* day_render.c (hour_bar_move): If DAY_RENDER->ROWS_VISIBLE is 0,
+	just return FALSE.
+
+2006-05-28  Neal H. Walfield  <neal@gnu.org>
+
 	* calendars-widgets.c (calendar_refresh_cell_data_func): For
 	subscription, use something that looks more like a download icon.
 	For publications, use something that looks more like an upload
