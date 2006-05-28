@@ -450,8 +450,24 @@ calendar_refresh_cell_data_func (GtkCellLayout *cell_layout,
   if (! ec)
     return;
 
-  pixmap_it (cell_renderer, ec, GTK_STOCK_REFRESH,
-	     event_calendar_get_mode (ec) > 0);
+  char *image;
+  gboolean set;
+  switch (event_calendar_get_mode (ec))
+    {
+    case 1:
+      image = GTK_STOCK_GO_DOWN;
+      set = TRUE;
+      break;
+    case 2:
+      image = GTK_STOCK_GO_UP;
+      set = TRUE;
+      break;
+    default:
+      image = NULL;
+      set = FALSE;
+    }
+
+  pixmap_it (cell_renderer, ec, image, set);
 }
 
 void

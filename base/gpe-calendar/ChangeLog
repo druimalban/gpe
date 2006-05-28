@@ -1,5 +1,12 @@
 2006-05-28  Neal H. Walfield  <neal@gnu.org>
 
+	* calendars-widgets.c (calendar_refresh_cell_data_func): For
+	subscription, use something that looks more like a download icon.
+	For publications, use something that looks more like an upload
+	icon.
+
+2006-05-28  Neal H. Walfield  <neal@gnu.org>
+
 	* configure.ac (DEP_MODULES): Add libsoup-2.2.
 	* Makefile.am (gpe_calendar_SOURCES): Add
 	calendar-delete-dialog.c, calendar-delete-dialog.h,
