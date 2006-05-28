@@ -21,6 +21,7 @@
 #define CALENDARS_WIDGETS
 
 #include <gtk/gtk.h>
+#include <gpe/event-db.h>
 
 enum
 {
@@ -63,25 +64,29 @@ typedef struct _CalendarTextCellRenderer CalendarTextCellRenderer;
 
 extern GtkCellRenderer *calendar_text_cell_renderer_new (void);
 
-extern void calendar_text_cell_data_func (GtkCellLayout *cell_layout,
-					  GtkCellRenderer *cell_renderer,
-					  GtkTreeModel *model,
-					  GtkTreeIter *iter,
-					  gpointer data);
-
-extern void calendar_description_cell_data_func (GtkCellLayout *cell_layout,
-						 GtkCellRenderer
-						  *cell_renderer,
-						 GtkTreeModel *model,
-						 GtkTreeIter *iter,
-						 gpointer data);
-
 extern void calendar_visible_toggle_cell_data_func (GtkCellLayout *cell_layout,
 						    GtkCellRenderer
 						     *cell_renderer,
 						    GtkTreeModel *model,
 						    GtkTreeIter *iter,
 						    gpointer data);
+extern void calendar_text_cell_data_func (GtkCellLayout *cell_layout,
+					  GtkCellRenderer *cell_renderer,
+					  GtkTreeModel *model,
+					  GtkTreeIter *iter,
+					  gpointer data);
+extern void calendar_description_cell_data_func (GtkCellLayout *cell_layout,
+						 GtkCellRenderer
+						  *cell_renderer,
+						 GtkTreeModel *model,
+						 GtkTreeIter *iter,
+						 gpointer data);
+extern void calendar_last_update_cell_data_func (GtkCellLayout *cell_layout,
+						 GtkCellRenderer
+						  *cell_renderer,
+						 GtkTreeModel *model,
+						 GtkTreeIter *iter,
+						 gpointer data);
 extern void calendar_refresh_cell_data_func (GtkCellLayout *cell_layout,
 					     GtkCellRenderer *cell_renderer,
 					     GtkTreeModel *model,

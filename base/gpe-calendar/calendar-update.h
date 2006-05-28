@@ -1,4 +1,4 @@
-/* import-vcal.h - Import calendar interface.
+/* calendar-update.h - Calendar update interface.
    Copyright (C) 2006 Neal H. Walfield <neal@walfield.org>
 
    This file is part of GPE.
@@ -17,20 +17,21 @@
    along with this program; if not, write to the Free Software
    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111, USA. */
 
-#ifndef IMPORT_VCAL_H
-#define IMPORT_VCAL_H
+#ifndef CALENDAR_UPDATE_H
+#define CALENDAR_UPDATE_H
 
-#include <glib.h>
 #include <gpe/event-db.h>
 
-/* Import the list of files (NULL terminated) into calendars EC.
-   Either may be NULL in which case the user will be prompted.  */
-extern void import_vcal (EventCalendar *ec, const char *files[]);
+/* Gets the calendar now.  */
+extern void calendar_pull (EventCalendar *ec);
 
-/* CHANNEL should contain an iCal object.  Parse it and stuff it into
-   EC (which may not be NULL).  Returns any status messages which must
-   be freed by the caller.  */
-extern char *import_vcal_from_channel (EventCalendar *ec,
-				       GIOChannel *channel);
+/* Puts the calendar now.  */
+extern void calendar_push (EventCalendar *ec);
 
-#endif
+/* Begins watching for changes on calendars.  This function should be
+   called exactly once at start up.  This function always returns
+   FALSE.  The data function is ignored.  This is so it can be
+   directly used as an argument to g_idle_add.  */
+extern gboolean calendars_sync_start (void *data);
+
+#endif /* CALENDAR_UPDATE_H */

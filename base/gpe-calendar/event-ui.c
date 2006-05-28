@@ -165,10 +165,15 @@ click_ok (GtkWidget *widget, struct edit_state *s)
   GtkTextIter start, end;
   GtkTextBuffer *buf;
 
+  EventCalendar *ec
+    = calendars_combo_box_get_active (GTK_COMBO_BOX (s->calendar));
   if (s->ev)
-    ev = s->ev;
+    {
+      ev = s->ev;
+      event_set_calendar (ev, ec);
+    }
   else
-    ev = event_new (event_db, NULL);
+    ev = event_new (event_db, ec, NULL);
 
   memset (&tm_start, 0, sizeof (struct tm));
   tm_start.tm_year = GTK_DATE_COMBO (s->startdate)->year - 1900;
@@ -240,9 +245,6 @@ click_ok (GtkWidget *widget, struct edit_state *s)
     
   event_set_recurrence_start (ev, start_t);
   event_set_duration (ev, end_t - start_t);
-
-  event_set_calendar
-    (ev, calendars_combo_box_get_active (GTK_COMBO_BOX (s->calendar)));
 
   buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (s->description));
   gtk_text_buffer_get_bounds (buf, &start, &end);

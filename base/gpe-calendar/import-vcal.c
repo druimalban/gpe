@@ -30,6 +30,7 @@
 #include "globals.h"
 #include "calendar-edit-dialog.h"
 #include "calendars-widgets.h"
+#include "import-vcal.h"
 
 #ifdef IS_HILDON
 #include <hildon-fm/hildon-widgets/hildon-file-chooser-dialog.h>
@@ -92,10 +93,9 @@ do_import_vevent (EventCalendar *ec, MIMEDirVEvent *event)
   if (! ev)
     {
       created = TRUE;
-      ev = event_new (event_db, uid);
+      ev = event_new (event_db, ec, uid);
     }
-
-  if (ec)
+  else
     event_set_calendar (ev, ec);
 
   char *summary = NULL;
@@ -396,8 +396,68 @@ new_calendar_clicked (GtkButton *button, gpointer user_data)
   gtk_widget_destroy (w);
 }
 
+static char *
+parse_mimedir (EventCalendar *ec, GList *callist)
+{
+  char *errstr = NULL;
+
+  GList *l;
+  for (l = callist; l; l = l->next)
+    if (l->data && MIMEDIR_IS_VCAL (l->data)) 
+      {
+	MIMEDirVCal *vcal = l->data;
+
+	GSList *list = mimedir_vcal_get_event_list (vcal);
+	GSList *iter;
+	for (iter = list; iter; iter = iter->next)
+	  {
+	    MIMEDirVEvent *vevent = MIMEDIR_VEVENT (iter->data);
+	    char *status = do_import_vevent (ec, vevent);
+	    if (status)
+	      {
+		gchar *tmp;
+		tmp = g_strdup_printf ("%s%s%s",
+				       errstr ?: "", errstr ? "\n" : "",
+				       status);
+		g_free (errstr);
+		errstr = tmp;
+		g_free (status);
+	      }
+	  }
+	g_slist_free (list);
+
+	list = mimedir_vcal_get_todo_list (vcal);
+	for (iter = list; iter; iter = iter->next)
+	  {
+	    MIMEDirVTodo *vtodo = MIMEDIR_VTODO (iter->data);
+	    do_import_vtodo (vtodo);
+	  }
+	g_slist_free (list);
+      }
+
+  return errstr;
+}
+
+char *
+import_vcal_from_channel (EventCalendar *ec, GIOChannel *channel)
+{
+  GError *error = NULL;
+
+  GList *callist = mimedir_vcal_read_channel (channel, &error);
+  if (error) 
+    {
+      char *tmp = g_strdup (error->message);
+      g_error_free (error);
+      return tmp;
+    }
+
+  char *status = parse_mimedir (ec, callist);
+  mimedir_vcal_free_list (callist);
+  return status;
+}
+
 void
-import_vcal (EventCalendar *ec, char **files)
+import_vcal (EventCalendar *ec, const char *files[])
 {
   GtkWidget *filesel = NULL;
   if (! files)
@@ -517,46 +577,23 @@ import_vcal (EventCalendar *ec, char **files)
 	  errors ++;
 	  tmp = g_strdup_printf ("%s%s%s: %s",
 				 errstr ?: "", errstr ? "\n" : "",
-				 error->message, files[i]);
+				 files[i], error->message);
 	  g_free (errstr);
 	  errstr = tmp;
 	  g_error_free (error);
 	  continue;
 	}
 
-      GList *l;
-      for (l = callist; l; l = l->next)
-	if (l->data && MIMEDIR_IS_VCAL (l->data)) 
-	  {
-	    MIMEDirVCal *vcal = l->data;
-
-	    GSList *list = mimedir_vcal_get_event_list (vcal);
-	    GSList *iter;
-	    for (iter = list; iter; iter = iter->next)
-	      {
-		MIMEDirVEvent *vevent = MIMEDIR_VEVENT (iter->data);
-		char *status = do_import_vevent (ec, vevent);
-		if (status)
-		  {
-		    gchar *tmp;
-		    tmp = g_strdup_printf ("%s%s%s: %s",
-					   errstr ?: "", errstr ? "\n" : "",
-					   status, files[i]);
-		    g_free (errstr);
-		    errstr = tmp;
-		    g_free (status);
-		  }
-	      }
-	    g_slist_free (list);
-
-	    list = mimedir_vcal_get_todo_list (vcal);
-	    for (iter = list; iter; iter = iter->next)
-	      {
-		MIMEDirVTodo *vtodo = MIMEDIR_VTODO (iter->data);
-		do_import_vtodo (vtodo);
-	      }
-	    g_slist_free (list);
-	  }
+      char *status = parse_mimedir (ec, callist);
+      if (! errstr)
+	errstr = status;
+      else
+	{
+	  char *tmp = g_strjoin ("\n", errstr, status, NULL);
+	  g_free (errstr);
+	  g_free (status);
+	  errstr = tmp;
+	}
 
       /* Cleanup */
       mimedir_vcal_free_list (callist);

@@ -44,6 +44,8 @@ struct _CalendarEditDialog
 
   GtkBox *url_box;
   GtkEntry *url;
+  GtkEntry *username;
+  GtkEntry *password;
 
   GtkBox *sync_box;
   GtkSpinButton *sync_interval;
@@ -162,9 +164,7 @@ color_button_clicked (GtkWidget *widget, gpointer data)
 			    0, "white");
   gpe_color_dialog_set_color_gdk (GPE_COLOR_DIALOG (w), &d->color);
 
-  gtk_widget_show (w);
-  int result = gtk_dialog_run (GTK_DIALOG (w));
-  if (result == GTK_RESPONSE_ACCEPT)
+  if (gtk_dialog_run (GTK_DIALOG (w)) == GTK_RESPONSE_ACCEPT)
     {
       const GdkColor *c
 	= gpe_color_dialog_get_color_gdk (GPE_COLOR_DIALOG (w));
@@ -196,15 +196,19 @@ mode_changed (GtkWidget *widget, gpointer data)
 }
 
 /* Units of synchronization.  */
-static int units[] = { 24 * 60 * 60,
-		       7 * 24 * 60 * 60,
+static int units[] = { 365 * 24 * 60 * 60,
 		       30 * 24 * 60 * 60,
-		       365 * 24 * 60 * 60 };
+		       7 * 24 * 60 * 60,
+		       24 * 60 * 60,
+		       60 * 60 };
 
 static void
-save_calendar_clicked (GtkWidget *widget, gpointer data)
+response (GtkDialog *dialog, gint response_id, gpointer user_data)
 {
-  CalendarEditDialog *d = CALENDAR_EDIT_DIALOG (data);
+  if (response_id != GTK_RESPONSE_ACCEPT)
+    return;
+
+  CalendarEditDialog *d = CALENDAR_EDIT_DIALOG (dialog);
 
   EventCalendar *parent = NULL;
   if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (d->parent_check)))
@@ -234,6 +238,9 @@ save_calendar_clicked (GtkWidget *widget, gpointer data)
       event_calendar_set_mode (d->ec, gtk_combo_box_get_active (d->mode));
       event_calendar_set_sync_interval (d->ec, interval);
     }
+
+  event_calendar_set_username (d->ec, gtk_entry_get_text (d->username));
+  event_calendar_set_password (d->ec, gtk_entry_get_text (d->password));
 }
 
 static void
@@ -328,11 +335,7 @@ calendar_edit_dialog_init (GTypeInstance *instance, gpointer klass)
   /* mode.  */
   hbox = GTK_BOX (gtk_hbox_new (FALSE, 3));
   gtk_box_pack_start (body, GTK_WIDGET (hbox), FALSE, FALSE, 0);
-  /* Show once we actually support something other than local
-     mode.  */
-#if 0
   gtk_widget_show (GTK_WIDGET (hbox));
-#endif
 
   label = gtk_label_new (_("Type:"));
   gtk_box_pack_start (hbox, label, FALSE, FALSE, 0);
@@ -342,7 +345,10 @@ calendar_edit_dialog_init (GTypeInstance *instance, gpointer klass)
   gtk_combo_box_append_text (d->mode, _("Local"));
   gtk_combo_box_append_text (d->mode, _("Subscribe"));
   gtk_combo_box_append_text (d->mode, _("Publish"));
+#if 0
+  /* Uncomment as we support other modes.  */
   gtk_combo_box_append_text (d->mode, _("Synchronize"));
+#endif
   gtk_combo_box_set_active (d->mode, 0);
   g_signal_connect (d->mode, "changed",
 		    G_CALLBACK (mode_changed), d);
@@ -350,17 +356,46 @@ calendar_edit_dialog_init (GTypeInstance *instance, gpointer klass)
   gtk_box_pack_start (hbox, GTK_WIDGET (d->mode), FALSE, FALSE, 0);
 
   /* URL.  */
-  d->url_box = GTK_BOX (gtk_hbox_new (FALSE, 3));
+  d->url_box = GTK_BOX (gtk_vbox_new (FALSE, 3));
   gtk_box_pack_start (body, GTK_WIDGET (d->url_box), FALSE, FALSE, 0);
   /* Don't show initially.  */
 
+  hbox = GTK_BOX (gtk_hbox_new (FALSE, 3));
+  gtk_box_pack_start (body, GTK_WIDGET (hbox), FALSE, FALSE, 0);
+  gtk_widget_show (GTK_WIDGET (hbox));
+
   label = gtk_label_new (_("URL:"));
-  gtk_box_pack_start (d->url_box, label, FALSE, FALSE, 0);
+  gtk_box_pack_start (hbox, label, FALSE, FALSE, 0);
   gtk_widget_show (label);
 
   d->url = GTK_ENTRY (gtk_entry_new ());
-  gtk_box_pack_start (d->url_box, GTK_WIDGET (d->url), TRUE, TRUE, 0);
+  gtk_box_pack_start (hbox, GTK_WIDGET (d->url), TRUE, TRUE, 0);
   gtk_widget_show (GTK_WIDGET (d->url));
+
+  hbox = GTK_BOX (gtk_hbox_new (FALSE, 3));
+  gtk_box_pack_start (body, GTK_WIDGET (hbox), FALSE, FALSE, 0);
+  gtk_widget_show (GTK_WIDGET (hbox));
+
+  label = gtk_label_new (_("Username:"));
+  gtk_box_pack_start (hbox, label, FALSE, FALSE, 0);
+  gtk_widget_show (label);
+
+  d->username = GTK_ENTRY (gtk_entry_new ());
+  gtk_box_pack_start (hbox, GTK_WIDGET (d->username), TRUE, TRUE, 0);
+  gtk_widget_show (GTK_WIDGET (d->username));
+
+  hbox = GTK_BOX (gtk_hbox_new (FALSE, 3));
+  gtk_box_pack_start (body, GTK_WIDGET (hbox), FALSE, FALSE, 0);
+  gtk_widget_show (GTK_WIDGET (hbox));
+
+  label = gtk_label_new (_("Password:"));
+  gtk_box_pack_start (hbox, label, FALSE, FALSE, 0);
+  gtk_widget_show (label);
+
+  d->password = GTK_ENTRY (gtk_entry_new ());
+  gtk_entry_set_visibility (d->password, FALSE);
+  gtk_box_pack_start (hbox, GTK_WIDGET (d->password), TRUE, TRUE, 0);
+  gtk_widget_show (GTK_WIDGET (d->password));
 
   /* Synchronization frequency.  */
   d->sync_box = GTK_BOX (gtk_hbox_new (FALSE, 3));
@@ -392,11 +427,16 @@ calendar_edit_dialog_init (GTypeInstance *instance, gpointer klass)
 		      FALSE, FALSE, 0);
 
   /* And fill the action box.  */
-  GtkWidget *button = gtk_dialog_add_button (GTK_DIALOG (d),
-					     GTK_STOCK_SAVE,
-					     GTK_RESPONSE_ACCEPT);
-  g_signal_connect (G_OBJECT (button), "clicked",
-                    G_CALLBACK (save_calendar_clicked), d);
+  gtk_dialog_add_button (GTK_DIALOG (d), GTK_STOCK_SAVE,
+			 GTK_RESPONSE_ACCEPT);
+  /* In theory, we'd like to connect to the save button's click
+     handler.  We'd also like to allow gtk_destroy_widget to be
+     attached to this dialog.  This is a fundamental conflict as the
+     GtkDialog implementation makes the reponse signal run before any
+     normal signals.  So, we do this instead.  */
+  g_signal_connect_closure_by_id
+    ((gpointer) d, g_signal_lookup ("response", GTK_TYPE_DIALOG), 0,
+     g_cclosure_new_object (G_CALLBACK (response), G_OBJECT (d)), FALSE);
 
   gtk_dialog_add_button (GTK_DIALOG (d), GTK_STOCK_CANCEL,
 			 GTK_RESPONSE_REJECT);
@@ -447,24 +487,33 @@ calendar_edit_dialog_new (EventCalendar *ec)
       gtk_entry_set_text (calendar_edit->url, s);
       g_free (s);
 
+      s = event_calendar_get_username (ec);
+      gtk_entry_set_text (calendar_edit->username, s);
+      g_free (s);
+
+      s = event_calendar_get_password (ec);
+      gtk_entry_set_text (calendar_edit->password, s);
+      g_free (s);
+
       int interval = event_calendar_get_sync_interval (ec);
       if (interval)
 	{
 	  int i;
-	  for (i = 0; i < sizeof (units) / sizeof (units[0]); i ++)
-	    if (interval < units[i])
+	  int per;
+	  for (i = sizeof (units) / sizeof (units[0]) - 1; i >= 0; i --)
+	    if (interval == units[i] || interval <= units[i])
 	      {
-		interval /= units[i];
+		per = units[i] / interval;
 		break;
 	      }
 
-	  if (i == sizeof (units) / sizeof (units[0]))
+	  if (i == -1)
 	    {
-	      i --;
-	      interval = 1;
+	      i = 0;
+	      per = 1;
 	    }
 
-	  gtk_spin_button_set_value (calendar_edit->sync_interval, interval);
+	  gtk_spin_button_set_value (calendar_edit->sync_interval, per);
 	  gtk_combo_box_set_active (calendar_edit->sync_interval_units, i);
 	}
 

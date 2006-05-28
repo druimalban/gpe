@@ -19,11 +19,13 @@
 
 #include <gpe/event-db.h>
 #include <gpe/colordialog.h>
-#include <gpe/errorbox.h>
+#include <gpe/pixmaps.h>
 
 #include "calendars-dialog.h"
 #include "calendar-edit-dialog.h"
+#include "calendar-delete-dialog.h"
 #include "calendars-widgets.h"
+#include "calendar-update.h"
 #include "globals.h"
 
 struct _CalendarsDialog
@@ -32,9 +34,14 @@ struct _CalendarsDialog
 
   GSList *cals;
 
+  GtkScrolledWindow *scrolled_window;
+  GtkTreeView *tree_view;
+
   GtkTreeViewColumn *refresh_col;
   GtkTreeViewColumn *delete_col;
   GtkTreeViewColumn *edit_col;
+
+  guint edb_modified_signal;
 };
 
 struct _CalendarsDialogClass
@@ -77,6 +84,25 @@ calendars_dialog_get_type (void)
 }
 
 static void
+size_request (GtkWidget *widget, GtkRequisition *requisition)
+{
+  CalendarsDialog *d = CALENDARS_DIALOG (widget);
+
+  GTK_WIDGET_CLASS (calendars_dialog_parent_class)
+    ->size_request (widget, requisition);
+
+  GtkRequisition s;
+  gtk_widget_size_request (GTK_WIDGET (d->scrolled_window), &s);
+  GtkRequisition t;
+  gtk_widget_size_request (GTK_WIDGET (d->tree_view), &t);
+
+  requisition->height = MIN (gdk_screen_height () * 7 / 8,
+			     requisition->height - s.height + t.height);
+  requisition->width = MIN (gdk_screen_width () * 7 / 8,
+			    requisition->width - s.width + t.width);
+}
+
+static void
 calendars_dialog_class_init (gpointer klass, gpointer klass_data)
 {
   GObjectClass *object_class;
@@ -86,6 +112,9 @@ calendars_dialog_class_init (gpointer klass, gpointer klass_data)
   object_class = G_OBJECT_CLASS (klass);
   object_class->finalize = calendars_dialog_finalize;
   object_class->dispose = calendars_dialog_dispose;
+
+  GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
+  widget_class->size_request = size_request;
 }
 
 static void
@@ -98,6 +127,10 @@ calendars_dialog_dispose (GObject *obj)
 static void
 calendars_dialog_finalize (GObject *object)
 {
+  CalendarsDialog *c = CALENDARS_DIALOG (object);
+
+  g_signal_handler_disconnect (event_db, c->edb_modified_signal);
+
   G_OBJECT_CLASS (calendars_dialog_parent_class)->finalize (object);
 }
 
@@ -107,8 +140,44 @@ new_clicked (GtkWidget *widget, gpointer d)
   GtkWidget *w = calendar_edit_dialog_new (NULL);
   gtk_window_set_transient_for (GTK_WINDOW (w),
 				GTK_WINDOW (gtk_widget_get_toplevel (widget)));
-  gtk_dialog_run (GTK_DIALOG (w));
-  gtk_widget_destroy (w);
+  g_signal_connect (G_OBJECT (w), "response",
+		    G_CALLBACK (gtk_widget_destroy), NULL);
+  gtk_widget_show (w);
+}
+
+static void
+refresh_all_clicked (GtkWidget *widget, gpointer d)
+{
+  GSList *l = event_db_list_event_calendars (event_db);
+  GSList *i;
+  GSList *next = l;
+  while (next)
+    {
+      i = next;
+      next = next->next;
+
+      EventCalendar *ec = i->data;
+      if (event_calendar_get_mode (ec) == 1)
+	calendar_pull (ec);
+      g_object_unref (ec);
+    }
+}
+
+static void
+show_all_clicked (GtkWidget *widget, gpointer d)
+{
+  GSList *l = event_db_list_event_calendars (event_db);
+  GSList *i;
+  GSList *next = l;
+  while (next)
+    {
+      i = next;
+      next = next->next;
+
+      EventCalendar *ec = i->data;
+      event_calendar_set_visible (ec, TRUE);
+      g_object_unref (ec);
+    }
 }
 
 static void
@@ -167,98 +236,31 @@ button_press (GtkWidget *widget, GdkEventButton *event, gpointer user_data)
 	  gtk_window_set_transient_for
 	    (GTK_WINDOW (w),
 	     GTK_WINDOW (gtk_widget_get_toplevel (GTK_WIDGET (view))));
-
-	  gtk_dialog_run (GTK_DIALOG (w));
-	  gtk_widget_destroy (w);
+	  g_signal_connect (G_OBJECT (w), "response",
+			    G_CALLBACK (gtk_widget_destroy), NULL);
+	  gtk_widget_show (w);
 	}
       else if (column == d->refresh_col)
-	;
+	{
+	  switch (event_calendar_get_mode (ec))
+	    {
+	    case 1:
+	      calendar_pull (ec);
+	      break;
+	    case 2:
+	      calendar_push (ec);
+	      break;
+	    default:
+	      ;
+	    }
+	}
       else if (column == d->delete_col)
 	{
-	  char *title = event_calendar_get_title (ec);
-	  char *s = g_strdup_printf (_("Delete Calendar %s"), title);
-	  GtkDialog *d = GTK_DIALOG (gtk_dialog_new_with_buttons
-	    (s, GTK_WINDOW (gtk_widget_get_toplevel (GTK_WIDGET (view))),
-	     GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
-	     GTK_STOCK_DELETE, GTK_RESPONSE_ACCEPT,
-	     GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT,
-	     NULL));
-	  g_free (s);
-
-	  GtkWidget *frame = gtk_frame_new (NULL);
-	  gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_NONE);
-	  gtk_box_pack_start (GTK_BOX (d->vbox), frame, FALSE, FALSE, 0);
-	  gtk_widget_show (frame);
-
-	  GtkBox *vbox = GTK_BOX (gtk_vbox_new (FALSE, 4));
-	  gtk_container_add (GTK_CONTAINER (frame), GTK_WIDGET (vbox));
-	  gtk_widget_show (GTK_WIDGET (vbox));
-
-	  s = g_strdup_printf (_("What do you want to do with the events\n"
-				 "and calendars which %s contains?"),
-			       title);
-	  GtkWidget *l = gtk_label_new (s);
-	  g_free (s);
-	  gtk_box_pack_start (GTK_BOX (vbox), l, FALSE, FALSE, 0);
-	  gtk_widget_show (l);
-
-	  GtkWidget *delete_containing = gtk_radio_button_new_with_label
-	    (NULL, _("Delete containing events and calendars"));
-	  gtk_box_pack_start (GTK_BOX (vbox), delete_containing,
-			      FALSE, FALSE, 0);
-	  gtk_widget_show (delete_containing);
-
-	  GtkWidget *reparent = gtk_radio_button_new_with_label_from_widget
-	    (GTK_RADIO_BUTTON (delete_containing),
-	     _("Reparent containing events and calendars"));
-	  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (reparent), TRUE);
-	  gtk_box_pack_start (GTK_BOX (vbox), reparent, FALSE, FALSE, 0);
-	  gtk_widget_show (reparent);
-
-	  GtkWidget *w = calendars_combo_box_new ();
-	  gtk_box_pack_start (GTK_BOX (vbox), w, FALSE, FALSE, 0);
+	  GtkWidget *w = calendar_delete_dialog_new (ec);
+	  gtk_window_set_transient_for
+	    (GTK_WINDOW (w),
+	     GTK_WINDOW (gtk_widget_get_toplevel (GTK_WIDGET (view))));
 	  gtk_widget_show (w);
-
-	  EventCalendar *p = event_calendar_get_parent (ec);
-	  if (! p)
-	    p = event_db_get_default_calendar (event_db, NULL);
-	  else
-	    g_object_ref (p);
-	  calendars_combo_box_set_active (GTK_COMBO_BOX (w), p);
-	  g_object_unref (p);
-
-	  g_free (title);
-
-	  gint res = gtk_dialog_run (d);
-	  if (res == GTK_RESPONSE_ACCEPT)
-	    {
-	      if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (reparent)))
-		{
-		  EventCalendar *p = 
-		    calendars_combo_box_get_active (GTK_COMBO_BOX (w));
-
-		  if (event_calendar_valid_parent (ec, p))
-		    event_calendar_delete (ec, FALSE, p);
-		  else
-		    {
-		      char *ec_title = event_calendar_get_title (ec);
-		      char *p_title = event_calendar_get_title (p);
-
-		      gpe_error_box_fmt
-			(_("I can't make %s the new parent of %s's "
-			   "constituents as it would create a loop.\n"
-			   "Please select a calendar "
-			   "which is not a decedent of %s."),
-			 p_title, ec_title, ec_title);
-
-		      g_free (ec_title);
-		      g_free (p_title);
-		    }
-		}
-	      else
-		event_calendar_delete (ec, TRUE, NULL);
-	    }
-	  gtk_widget_destroy (GTK_WIDGET (d));
 	}
     }
 
@@ -320,6 +322,23 @@ calendars_dialog_init (GTypeInstance *instance, gpointer klass)
   gtk_toolbar_insert (GTK_TOOLBAR (toolbar), item, -1);
   gtk_widget_show (GTK_WIDGET (item));
 
+  /* Refresh all calendars.  */
+  item = gtk_tool_button_new_from_stock (GTK_STOCK_REFRESH);
+  g_signal_connect (G_OBJECT (item), "clicked",
+		    G_CALLBACK (refresh_all_clicked), NULL);
+  GTK_WIDGET_UNSET_FLAGS (item, GTK_CAN_FOCUS);
+  gtk_toolbar_insert (GTK_TOOLBAR (toolbar), item, -1);
+  gtk_widget_show (GTK_WIDGET (item));
+
+  /* Show all calendars.  */
+  item = gtk_tool_button_new_from_stock (GTK_STOCK_ZOOM_FIT);
+  gtk_tool_button_set_label (GTK_TOOL_BUTTON (item), _("Show All"));
+  g_signal_connect (G_OBJECT (item), "clicked",
+		    G_CALLBACK (show_all_clicked), NULL);
+  GTK_WIDGET_UNSET_FLAGS (item, GTK_CAN_FOCUS);
+  gtk_toolbar_insert (GTK_TOOLBAR (toolbar), item, -1);
+  gtk_widget_show (GTK_WIDGET (item));
+
 
   /* A frame.  */
   GtkWidget *frame = gtk_frame_new (NULL);
@@ -328,22 +347,25 @@ calendars_dialog_init (GTypeInstance *instance, gpointer klass)
   gtk_box_pack_start (box, GTK_WIDGET (frame), TRUE, TRUE, 0);
   gtk_widget_show (frame);
 
-  /* Body box.  */
-  GtkBox *body = GTK_BOX (gtk_vbox_new (FALSE, 2));
-  gtk_container_set_border_width (GTK_CONTAINER (body), 2);
-  gtk_container_add (GTK_CONTAINER (frame), GTK_WIDGET (body));
-  gtk_widget_show (GTK_WIDGET (body));
-
   /* The view.  */
+  GtkWidget *scrolled_window = gtk_scrolled_window_new (NULL, NULL);
+  d->scrolled_window = GTK_SCROLLED_WINDOW (scrolled_window);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window),
+				  GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+  gtk_container_add (GTK_CONTAINER (frame), GTK_WIDGET (scrolled_window));
+  gtk_widget_show (GTK_WIDGET (scrolled_window));
+
   GtkTreeModel *model = calendars_tree_model ();
   GtkTreeView *tree_view
-  = GTK_TREE_VIEW (gtk_tree_view_new_with_model (model));
+    = GTK_TREE_VIEW (gtk_tree_view_new_with_model (model));
+  d->tree_view = tree_view;
   gtk_tree_view_expand_all (tree_view);
   gtk_tree_view_set_rules_hint (tree_view, TRUE);
   gtk_tree_view_set_headers_visible (tree_view, FALSE);
   g_signal_connect (tree_view, "button-press-event",
 		    G_CALLBACK (button_press), d);
-  gtk_box_pack_start (body, GTK_WIDGET (tree_view), TRUE, TRUE, 0);
+  gtk_container_add (GTK_CONTAINER (scrolled_window),
+		     GTK_WIDGET (tree_view));
   gtk_widget_show (GTK_WIDGET (tree_view));
 
   struct sig_info *info = g_malloc (sizeof (*info));
@@ -370,7 +392,7 @@ calendars_dialog_init (GTypeInstance *instance, gpointer klass)
   col = gtk_tree_view_column_new ();
   gtk_tree_view_append_column (tree_view, col);
   renderer = calendar_text_cell_renderer_new ();
-  gtk_tree_view_column_pack_start (col, renderer, TRUE);
+  gtk_tree_view_column_pack_start (col, renderer, FALSE);
   gtk_cell_layout_set_cell_data_func (GTK_CELL_LAYOUT (col),
 				      renderer,
 				      calendar_text_cell_data_func, tree_view,
@@ -385,10 +407,19 @@ calendars_dialog_init (GTypeInstance *instance, gpointer klass)
 				      calendar_description_cell_data_func,
 				      NULL, NULL);
 
+  col = gtk_tree_view_column_new ();
+  gtk_tree_view_append_column (tree_view, col);
+  renderer = gtk_cell_renderer_text_new ();
+  gtk_tree_view_column_pack_start (col, renderer, FALSE);
+  gtk_cell_layout_set_cell_data_func (GTK_CELL_LAYOUT (col),
+				      renderer,
+				      calendar_last_update_cell_data_func,
+				      NULL, NULL);
+
   d->refresh_col = col = gtk_tree_view_column_new ();
   gtk_tree_view_append_column (tree_view, col);
   renderer = gtk_cell_renderer_pixbuf_new ();
-  gtk_tree_view_column_pack_start (col, renderer, TRUE);
+  gtk_tree_view_column_pack_start (col, renderer, FALSE);
   gtk_cell_layout_set_cell_data_func (GTK_CELL_LAYOUT (col),
 				      renderer,
 				      calendar_refresh_cell_data_func,
@@ -397,7 +428,7 @@ calendars_dialog_init (GTypeInstance *instance, gpointer klass)
   d->edit_col = col = gtk_tree_view_column_new ();
   gtk_tree_view_append_column (tree_view, col);
   renderer = gtk_cell_renderer_pixbuf_new ();
-  gtk_tree_view_column_pack_start (col, renderer, TRUE);
+  gtk_tree_view_column_pack_start (col, renderer, FALSE);
   gtk_cell_layout_set_cell_data_func (GTK_CELL_LAYOUT (col),
 				      renderer,
 				      calendar_edit_cell_data_func,
@@ -406,7 +437,7 @@ calendars_dialog_init (GTypeInstance *instance, gpointer klass)
   d->delete_col = col = gtk_tree_view_column_new ();
   gtk_tree_view_append_column (tree_view, col);
   renderer = gtk_cell_renderer_pixbuf_new ();
-  gtk_tree_view_column_pack_start (col, renderer, TRUE);
+  gtk_tree_view_column_pack_start (col, renderer, FALSE);
   gtk_cell_layout_set_cell_data_func (GTK_CELL_LAYOUT (col),
 				      renderer,
 				      calendar_delete_cell_data_func,
@@ -433,6 +464,10 @@ calendars_dialog_init (GTypeInstance *instance, gpointer klass)
 			    G_CALLBACK (gtk_widget_destroy), d);
   gtk_box_pack_start (buttons, button, FALSE, TRUE, 0);
   gtk_widget_show (button);
+
+  d->edb_modified_signal = g_signal_connect_swapped
+    (event_db, "calendar-modified",
+     G_CALLBACK (gtk_widget_queue_draw), tree_view);
 }
 
 GtkWidget *

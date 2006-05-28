@@ -20,11 +20,11 @@
 #include <unistd.h>
 #include <locale.h>
 #include <fcntl.h>
+#include <errno.h>
 
 #include "export-vcal.h"
 #include "globals.h"
 
-#include <gpe/vevent.h>
 #include <gpe/errorbox.h>
 #include <mimedir/mimedir.h>
 
@@ -42,19 +42,230 @@ static DBusConnection *connection;
 #include <hildon-fm/hildon-widgets/hildon-file-chooser-dialog.h>
 #endif
 
-
-static gchar *
-export_to_vcal (Event *event)
+static MIMEDirVEvent *
+export_event_as_vevent (Event *ev)
 {
-  MIMEDirVEvent *vevent;
-  gchar *str;
-    
-  vevent = vevent_from_event_t (event);
+  MIMEDirVEvent *event = mimedir_vevent_new ();
 
-  str = mimedir_vevent_write_to_string (vevent);
-  g_object_unref (vevent);
+  char *uid = event_get_eventid (ev);
+  g_object_set (event, "uid", uid, NULL);
+  g_free (uid);
 
-  return str;
+  time_t s = event_get_recurrence_start (ev);
+  time_t e = s + event_get_duration (ev);
+  struct tm tm;
+
+  MIMEDirDateTime *dtstart;
+  MIMEDirDateTime *dtend;
+  if (event_get_untimed (ev))
+    {
+      localtime_r (&s, &tm);
+      dtstart = mimedir_datetime_new_from_date (tm.tm_year + 1900,
+						tm.tm_mon + 1,
+						tm.tm_mday);
+      localtime_r (&e, &tm);
+      dtend = mimedir_datetime_new_from_date (tm.tm_year + 1900,
+					      tm.tm_mon + 1,
+					      tm.tm_mday);
+      mimedir_vcomponent_set_allday (MIMEDIR_VCOMPONENT (event), TRUE);
+    }
+  else
+    {
+      gmtime_r (&s, &tm);
+      dtstart = mimedir_datetime_new_from_datetime (tm.tm_year + 1900,
+						    tm.tm_mon + 1,
+						    tm.tm_mday,
+						    tm.tm_hour,
+						    tm.tm_min,
+						    tm.tm_sec);
+      dtstart->timezone = MIMEDIR_DATETIME_UTC;
+
+      gmtime_r (&e, &tm);
+      dtend = mimedir_datetime_new_from_datetime (tm.tm_year + 1900,
+						  tm.tm_mon + 1,
+						  tm.tm_mday,
+						  tm.tm_hour,
+						  tm.tm_min,
+						  tm.tm_sec);
+      dtend->timezone = MIMEDIR_DATETIME_UTC;
+    }
+
+  g_object_set (event, "dtstart", dtstart, NULL);
+  g_object_unref (dtstart);
+  g_object_set (event, "dtend", dtend, NULL);
+  g_object_unref (dtend);
+
+  int alarm = event_get_alarm (ev);
+  if (alarm)
+    g_object_set (event, "trigger", &alarm, NULL);
+
+#if 0
+  GList *categories = NULL;
+  g_object_get (event, "category-list", &categories, NULL);
+
+  GList *i;
+  for (i = categories; i; i = i->next)
+    {
+      event_add_category (ev, map category name to integer...);
+      g_free (i->data);
+    }
+  g_list_free (categories);
+#endif
+
+  char *summary = event_get_summary (ev);
+  if (summary)
+    {
+      if (*summary)
+	g_object_set (event, "summary", summary, NULL);
+      g_free (summary);
+    }
+
+  char *description = event_get_description (ev);
+  if (description)
+    {
+      if (*description)
+	g_object_set (event, "description", description, NULL);
+      g_free (description);
+    }
+
+  char *location = event_get_location (ev);
+  if (location)
+    {
+      if (*location)
+	mimedir_vcomponent_set_location (MIMEDIR_VCOMPONENT (event),
+					 location, "");
+      g_free (location);
+    }
+
+  g_object_set (event, "sequence", event_get_sequence (ev), NULL);
+
+  if (event_get_recurrence_type (ev) != RECUR_NONE)
+    {
+      MIMEDirRecurrence *recurrence = mimedir_recurrence_new ();
+
+      MIMEDirRecurrenceFrequency freq;
+      switch (event_get_recurrence_type (ev))
+	{
+	case RECUR_DAILY:
+	  freq = RECURRENCE_DAILY;
+	  break;
+	case RECUR_WEEKLY:
+	  freq = RECURRENCE_WEEKLY;
+	  break;
+	case RECUR_MONTHLY:
+	  freq = RECURRENCE_MONTHLY;
+	  break;
+	case RECUR_YEARLY:
+	  freq = RECURRENCE_YEARLY;
+	  break;
+	default:
+	  g_assert_not_reached ();
+	}
+
+      g_object_set (G_OBJECT (recurrence), "frequency", freq, NULL);
+
+      /* XXX: Add EXDATE (exceptions) when libmimedir supports it.  */
+      /* XXX: Add RDATE (BYDAY, etc.) when libmimedir supports it.  */
+
+      time_t e = event_get_recurrence_end (ev);
+      if (e)
+	{
+	  MIMEDirDateTime *until;
+	  if (event_get_untimed (ev))
+	    {
+	      struct tm tm;
+	      localtime_r (&e, &tm);
+	      until = mimedir_datetime_new_from_date (tm.tm_year + 1900,
+						      tm.tm_mon + 1,
+						      tm.tm_mday);
+	    }
+	  else
+	    {
+	      struct tm tm;
+	      gmtime_r (&e, &tm);
+	      until = mimedir_datetime_new_from_datetime (tm.tm_year + 1900,
+							  tm.tm_mon + 1,
+							  tm.tm_mday,
+							  tm.tm_hour,
+							  tm.tm_min,
+							  tm.tm_sec);
+	      until->timezone = MIMEDIR_DATETIME_UTC;
+	    }
+
+	  g_object_set (recurrence, "until", until, NULL);
+	  g_object_unref (until);
+	}
+
+      int count = event_get_recurrence_count (ev);
+      if (count)
+	g_object_set (recurrence, "count", count, NULL);
+
+      int interval = event_get_recurrence_increment (ev);
+      if (interval > 1)
+	g_object_set (recurrence, "interval", interval, NULL);
+
+      if (event_get_recurrence_type (ev) == RECUR_WEEKLY
+	  && event_get_recurrence_daymask (ev))
+	{
+	  int mask = event_get_recurrence_daymask (ev);
+	  char *s = g_strdup_printf ("%s%s%s%s%s%s%s",
+				     mask & (1 << 0) ? "MO," : "",
+				     mask & (1 << 1) ? "TU," : "",
+				     mask & (1 << 2) ? "WE," : "",
+				     mask & (1 << 3) ? "TH," : "",
+				     mask & (1 << 4) ? "FR," : "",
+				     mask & (1 << 5) ? "SA," : "",
+				     mask & (1 << 6) ? "SU," : "");
+	  /* Kill the extra comma at the end.  */
+	  s[strlen (s) - 1] = 0;
+
+	  g_object_set (event, "unit", RECURRENCE_UNIT_DAY, NULL);
+	  g_object_set (event, "units", s, NULL);
+	  g_free (s);
+	}
+
+      g_object_set (event, "recurrence", recurrence, NULL);
+      g_object_unref (recurrence);
+    }
+
+  return event;
+}
+
+char *
+export_event_as_string (Event *ev)
+{
+  MIMEDirVCal *vcal = mimedir_vcal_new ();
+
+  MIMEDirVEvent *vev = export_event_as_vevent (ev);
+  mimedir_vcal_add_component (vcal, MIMEDIR_VCOMPONENT (vev));
+  g_object_unref (vev);
+
+  char *s = mimedir_vcal_write_to_string (vcal);
+  g_object_unref (vcal);
+
+  return s;
+}
+
+char *
+export_calendar_as_string (EventCalendar *ec)
+{
+  MIMEDirVCal *vcal = mimedir_vcal_new ();
+
+  GSList *l = event_calendar_list_events (ec);
+  GSList *i;
+  for (i = l; i; i = i->next)
+    {
+      MIMEDirVEvent *vev = export_event_as_vevent (i->data);
+      g_object_unref (i->data);
+      mimedir_vcal_add_component (vcal, MIMEDIR_VCOMPONENT (vev));
+      g_object_unref (vev);
+    }
+  g_slist_free (l);
+
+  char *s = mimedir_vcal_write_to_string (vcal);
+  g_object_unref (vcal);
+
+  return s;
 }
 
 void
@@ -66,7 +277,7 @@ vcal_do_send_bluetooth (Event *event)
   DBusMessageIter iter;
   gchar *filename, *mimetype;
 
-  vcal = export_to_vcal (event);
+  vcal = export_event_as_string (event);
 
   message = dbus_message_new_method_call (BLUETOOTH_SERVICE_NAME,
 					  "/org/handhelds/gpe/bluez/OBEX",
@@ -103,7 +314,7 @@ vcal_do_send_irda (Event *event)
   DBusMessage *message;
   DBusMessageIter iter;
 
-  vcal = export_to_vcal (event);
+  vcal = export_event_as_string (event);
 
   message = dbus_message_new_method_call (IRDA_SERVICE_NAME,
 					  "/org/handhelds/gpe/irda/OBEX",
@@ -130,65 +341,104 @@ vcal_do_send_irda (Event *event)
 #endif /* USE_DBUS */
 }
 
-gboolean
-save_to_file(Event *event, const gchar *filename)
+/* THING is either an Event or EventCalendar.  */
+static gboolean
+save_to_file (GObject *thing, const gchar *filename, GError **error)
 {
-  gchar *vcal;
-  int fd;
+  char *s;
+  if (IS_EVENT (thing))
+    s = export_event_as_string (EVENT (thing));
+  else
+    s = export_calendar_as_string (EVENT_CALENDAR (thing));
+
+  FILE *f = fopen (filename, "w");
+  if (! f)
+    {
+      *error = g_error_new (G_FILE_ERROR, g_file_error_from_errno (errno),
+			    _("Opening %s"), filename);
+      goto error;
+    }
+
+  if (fwrite (s, strlen (s), 1, f) != 1)
+    {
+      *error = g_error_new (G_FILE_ERROR, g_file_error_from_errno (errno),
+			    _("Opening %s"), filename);
+      goto error;
+    }
   
-  vcal = export_to_vcal (event);
-
-  fd = open (filename, O_WRONLY | O_CREAT | O_TRUNC, 0666);
-  if (fd < 0)
-    goto error;
-
-  if (write (fd, vcal, strlen (vcal)) < strlen (vcal))
-    goto error;
-  
-  if (close (fd))
-    goto error;
-
-  g_free (vcal);
-  return FALSE;
+  fclose (f);
+  g_free (s);
+  return TRUE;
   
  error:
-  g_free (vcal);
-  return TRUE;
+  if (f)
+    fclose (f);
+  g_free (s);
+  return FALSE;
 }
 
-
-void
-vcal_do_save (Event *event)
+/* THIS is either an Event or a Calendar.  */
+static void
+save_as_dialog (GObject *thing)
 {
   GtkWidget *filesel;
   const gchar *filename;
 
+  g_object_ref (thing);
+
+  char *summary;
+  if (IS_EVENT (thing))
+    summary = event_get_summary (EVENT (thing));
+  else
+    summary = event_calendar_get_title (EVENT_CALENDAR (thing));
+
+  char *suggestion = g_strdup_printf ("%s.vcal", summary);
+  char *s = suggestion;
+  while ((s = strchr (s, ' ')))
+    *s = '_';
+
 #ifdef IS_HILDON	
   filesel = hildon_file_chooser_dialog_new(NULL, GTK_FILE_CHOOSER_ACTION_SAVE);
-  gtk_file_chooser_set_current_name(GTK_FILE_CHOOSER(filesel), "GPE.vcal");
+  gtk_file_chooser_set_current_name(GTK_FILE_CHOOSER(filesel), suggestion);
 #else
-  filesel = gtk_file_selection_new (_("Save as..."));
-  gtk_file_selection_set_filename (GTK_FILE_SELECTION (filesel), "GPE.vcal");
+  s = g_strdup_printf (_("Save %s as..."), summary);
+  filesel = gtk_file_selection_new (s);
+  gtk_file_selection_set_filename (GTK_FILE_SELECTION (filesel), suggestion);
 #endif
   
-  gtk_widget_show_all (filesel);
-  if (gtk_dialog_run(GTK_DIALOG(filesel)) == GTK_RESPONSE_OK)
+  gtk_widget_show (filesel);
+  if (gtk_dialog_run (GTK_DIALOG (filesel)) == GTK_RESPONSE_OK)
     {
 #ifdef IS_HILDON
       filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (filesel));
 #else
       filename = gtk_file_selection_get_filename (GTK_FILE_SELECTION (filesel));
 #endif
-      if (save_to_file(event, filename))
-        goto error;
+      GError *error = NULL;
+      if (! save_to_file (thing, filename, &error))
+	{
+	  gpe_error_box_fmt (_("Saving %s: %s"), summary, error->message);
+	  g_error_free (error);
+	  g_free (summary);
+	}
     }
   
+  g_free (summary);
   gtk_widget_destroy (filesel);
+  g_object_unref (thing);
   return;
+}
 
- error:
-  gtk_widget_destroy (filesel);
-  gpe_perror_box (filename);
+void
+export_event_save_as_dialog (Event *ev)
+{
+  save_as_dialog (G_OBJECT (ev));
+}
+
+void
+export_calendar_save_as_dialog (EventCalendar *ec)
+{
+  save_as_dialog (G_OBJECT (ec));
 }
 
 gboolean

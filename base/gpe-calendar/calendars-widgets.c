@@ -353,6 +353,71 @@ calendar_description_cell_data_func (GtkCellLayout *cell_layout,
 		  "cell-background-gdk", NULL, NULL);
 }
 
+void
+calendar_last_update_cell_data_func (GtkCellLayout *cell_layout,
+				     GtkCellRenderer *cell_renderer,
+				     GtkTreeModel *model,
+				     GtkTreeIter *iter,
+				     gpointer data)
+{
+  EventCalendar *ec;
+  gtk_tree_model_get (model, iter, COL_CALENDAR, &ec, -1);
+  if (! ec)
+    return;
+
+  switch (event_calendar_get_mode (ec))
+    {
+    case 0:
+    default:
+      g_object_set (cell_renderer, "text", "", NULL);
+      break;
+    case 1:
+      {
+	time_t now = time (NULL);
+	time_t t = event_calendar_get_last_pull (ec);
+	time_t diff = now - t;
+	char *s;
+	if (diff < 60 * 60)
+	  s = g_strdup_printf (_("%ld minutes ago"), diff / 60);
+	else if (diff < 2 * 24 * 60 * 60)
+	  s = g_strdup_printf (_("%ld hours ago"), diff / 60 / 60);
+	else if (diff < 14 * 24 * 60 * 60)
+	  s = g_strdup_printf (_("%ld days ago"), diff / 24 / 60 / 60);
+	else if (t == 0)
+	  s = g_strdup ("Never");
+	else
+	  {
+	    struct tm tm;
+	    localtime_r (&t, &tm);
+	    s = strftime_strdup_utf8_locale (_("%x"), &tm);
+	  }
+
+	g_object_set (cell_renderer, "text", s, NULL);
+	g_free (s);
+	break;
+      }
+    case 2:
+      {
+	time_t t = event_calendar_get_last_push (ec);
+	time_t m = event_calendar_get_last_modification (ec);
+
+	if (m <= t)
+	  g_object_set (cell_renderer, "text", _("Up to date"), NULL);
+	else
+	  g_object_set (cell_renderer, "text", _("Modified"), NULL);
+	break;
+      }
+    }
+
+  GdkColor color;
+  if (event_calendar_get_color (ec, &color))
+    g_object_set (cell_renderer,
+		  "cell-background-gdk", &color, NULL);
+  else
+    g_object_set (cell_renderer,
+		  "cell-background-gdk", NULL, NULL);
+}
+
 static void
 pixmap_it (GtkCellRenderer *cell_renderer,
 	   EventCalendar *ec,
@@ -436,7 +501,8 @@ menu_item_activated (GtkWidget *menu_item, gpointer user_data)
 
 static void
 build_menu (CalendarMenuSelected cb, gpointer user_data,
-	    GtkMenu *menu, int row, GtkTreeModel *model, GtkTreeIter *iter)
+	    GtkMenu *menu, int *row, int indent,
+	    GtkTreeModel *model, GtkTreeIter *iter)
 {
   int ret;
 
@@ -445,47 +511,29 @@ build_menu (CalendarMenuSelected cb, gpointer user_data,
       EventCalendar *ec;
       gtk_tree_model_get (model, iter, COL_CALENDAR, &ec, -1);
 
-      char *s = event_calendar_get_title (ec);
+      char *title = event_calendar_get_title (ec);
+      char *s = g_strdup_printf ("%*s%s", indent * 2, "", title);
+      g_free (title);
       GtkWidget *item = gtk_menu_item_new_with_label (s);
+      g_free (s);
       gtk_widget_show (item);
-      gtk_menu_attach (menu, item, 0, 1, row, row + 1);
-      row ++;
+      gtk_menu_attach (menu, item, 0, 1, *row, *row + 1);
+      (*row) ++;
 
       struct callback *cb_info = g_malloc (sizeof (*cb_info));
       cb_info->cb = cb;
       cb_info->ec = ec;
       cb_info->user_data = user_data;
 
+      g_signal_connect_data (G_OBJECT (item), "activate",
+			     G_CALLBACK (menu_item_activated),
+			     (gpointer) cb_info,
+			     (GClosureNotify) g_free, 0);
+
       GtkTreeIter child;
       if (gtk_tree_model_iter_children (model, &child, iter))
-	{
-	  GtkMenu *sub = GTK_MENU (gtk_menu_new ());
-	  gtk_widget_show (GTK_WIDGET (sub));
-	  gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), GTK_WIDGET (sub));
-	  
-	  item = gtk_menu_item_new_with_label (s);
-	  gtk_widget_show (GTK_WIDGET (item));
-	  gtk_menu_attach (sub, item, 0, 1, 0, 1);
-	  g_signal_connect_data (G_OBJECT (item), "activate",
-				 G_CALLBACK (menu_item_activated),
-				 (gpointer) cb_info,
-				 (GClosureNotify) g_free, 0);
-	  g_object_set_data (G_OBJECT (item), "ec", ec);
-	  g_object_set_data (G_OBJECT (item), "user_data", user_data);
+	build_menu (cb, user_data, menu, row, indent + 1, model, &child);
 
-	  item = gtk_separator_menu_item_new ();
-	  gtk_widget_show (GTK_WIDGET (item));
-	  gtk_menu_attach (sub, item, 0, 1, 1, 2);
-
-	  build_menu (cb, user_data, sub, 2, model, &child);
-	}
-      else
-	g_signal_connect_data (G_OBJECT (item), "activate",
-			       G_CALLBACK (menu_item_activated),
-			       (gpointer) cb_info,
-			       (GClosureNotify) g_free, 0);
-
-      g_free (s);
       ret = gtk_tree_model_iter_next (model, iter);
     }
   while (ret);
@@ -499,8 +547,9 @@ calendars_menu (CalendarMenuSelected cb, gpointer data)
 
   if (gtk_tree_model_get_iter_first (model, &iter))
     {
+      int row = 0;
       GtkMenu *menu = GTK_MENU (gtk_menu_new ());
-      build_menu (cb, data, menu, 0, model, &iter);
+      build_menu (cb, data, menu, &row, 0, model, &iter);
       g_object_unref (model);
       return GTK_WIDGET (menu);
     }
@@ -512,97 +561,8 @@ calendars_menu (CalendarMenuSelected cb, gpointer data)
 static GtkTreeStore *tree_store;
 
 static void
-calendar_new (EventDB *edb, EventCalendar *ec, gpointer *data)
+populate_store (GtkTreeStore *tree_store)
 {
-  if (! tree_store)
-    return;
-
-  GtkTreeModel *model = GTK_TREE_MODEL (tree_store);
-
-  /* Find the ancestry.  */
-  GSList *ancestry = NULL;
-  EventCalendar *p = ec;
-  while ((p = event_calendar_get_parent (p)))
-    ancestry = g_slist_prepend (ancestry, p);
-
-  /* Walk the tree from the top towards where the insertion needs to
-     occur.  */
-  GtkTreeIter child;
-  GtkTreeIter parent;
-  while (ancestry)
-    {
-      if (! gtk_tree_model_iter_children (model, &child, p ? &parent : NULL))
-	goto fail;
-
-      while (1)
-	{
-	  gtk_tree_model_get (model, &child, COL_CALENDAR, &p, -1);
-
-	  if (p == ancestry->data)
-	    {
-	      g_object_unref (p);
-	      ancestry = g_slist_delete_link (ancestry, ancestry);
-	      parent = child;
-	      break;
-	    }
-
-	  if (! gtk_tree_model_iter_next (model, &child))
-	    goto fail;
-	}
-    }
-
-  gtk_tree_store_append (GTK_TREE_STORE (model), &child, p ? &parent : NULL);
-  gtk_tree_store_set (GTK_TREE_STORE (model), &child, COL_CALENDAR, ec, -1);
-
-  return;
-
- fail:
-  {
-    char *s = event_calendar_get_title (ec);
-    g_critical ("%s: could not find %s in tree!", __func__, s);
-    g_free (s);
-    while (ancestry)
-      {
-	g_object_unref (ancestry->data);
-	ancestry = g_slist_delete_link (ancestry, ancestry);
-      }
-  }
-}
-
-static void
-calendar_deleted (EventDB *edb, EventCalendar *ec, gpointer *data)
-{
-  if (! tree_store)
-    return;
-
-  GtkTreeIter iter;
-  if (search (GTK_TREE_MODEL (tree_store), &iter, NULL, ec))
-    {
-      g_object_unref (ec);
-      gtk_tree_store_remove (tree_store, &iter);
-    }
-}
-
-static void
-calendar_reparented (EventDB *edb, EventCalendar *ec, gpointer *data)
-{
-  g_object_ref (ec);
-  calendar_deleted (edb, ec, data);
-  calendar_new (edb, ec, data);
-}
-
-GtkTreeModel *
-calendars_tree_model (void)
-{
-  if (tree_store)
-    {
-      g_object_ref (tree_store);
-      return GTK_TREE_MODEL (tree_store);
-    }
-
-  /* Create a new tree store.  */
-  tree_store = gtk_tree_store_new (1, G_TYPE_POINTER);
-
   GSList *l = event_db_list_event_calendars (event_db);
   int n = g_slist_length (l);
   struct info
@@ -657,6 +617,125 @@ calendars_tree_model (void)
 	/* Cycle!  */
 	g_critical ("%s: calendar hierarchy contains a cycle", __func__); 
     }
+}
+
+static void
+calendar_new (EventDB *edb, EventCalendar *ec, gpointer *data)
+{
+  if (! tree_store)
+    return;
+
+  GtkTreeModel *model = GTK_TREE_MODEL (tree_store);
+
+  /* Find the ancestry.  */
+  GSList *ancestry = NULL;
+  EventCalendar *p = ec;
+  while ((p = event_calendar_get_parent (p)))
+    ancestry = g_slist_prepend (ancestry, p);
+
+  /* Walk the tree from the top towards where the insertion needs to
+     occur.  */
+  EventCalendar *c = NULL;
+  GtkTreeIter child;
+  GtkTreeIter parent;
+  while (ancestry)
+    {
+      if (! gtk_tree_model_iter_children (model, &child, p ? &parent : NULL))
+	goto fail;
+
+      while (1)
+	{
+	  gtk_tree_model_get (model, &child, COL_CALENDAR, &c, -1);
+
+	  if (c == ancestry->data)
+	    {
+	      g_object_unref (c);
+	      ancestry = g_slist_delete_link (ancestry, ancestry);
+	      parent = child;
+	      break;
+	    }
+
+	  if (! gtk_tree_model_iter_next (model, &child))
+	    goto fail;
+	}
+    }
+
+  gtk_tree_store_append (GTK_TREE_STORE (model), &child, c ? &parent : NULL);
+  gtk_tree_store_set (GTK_TREE_STORE (model), &child, COL_CALENDAR, ec, -1);
+
+  return;
+
+ fail:
+  {
+    char *s = event_calendar_get_title (ec);
+    g_critical ("%s: could not find %s in tree!", __func__, s);
+    g_free (s);
+    while (ancestry)
+      {
+	g_object_unref (ancestry->data);
+	ancestry = g_slist_delete_link (ancestry, ancestry);
+      }
+  }
+}
+
+static void
+calendar_deleted (EventDB *edb, EventCalendar *ec, gpointer *data)
+{
+  if (! tree_store)
+    return;
+
+  GtkTreeIter iter;
+  if (search (GTK_TREE_MODEL (tree_store), &iter, NULL, ec))
+    {
+      g_object_unref (ec);
+      gtk_tree_store_remove (tree_store, &iter);
+    }
+}
+
+static void
+unref_model (GtkTreeStore *tree_store)
+{
+  gboolean deref (GtkTreeModel *model, GtkTreePath *path,
+		  GtkTreeIter *iter, gpointer data)
+    {
+      EventCalendar *ec;
+      gtk_tree_model_get (model, iter, COL_CALENDAR, &ec, -1);
+      g_object_unref (ec);
+
+      return FALSE;
+    }
+
+  gtk_tree_model_foreach (GTK_TREE_MODEL (tree_store), deref, NULL);
+}
+
+static void
+calendar_reparented (EventDB *edb, EventCalendar *ec, gpointer *data)
+{
+  if (! tree_store)
+    return;
+
+  /* We can't simply call calendar_deleted and then calendar_new: both
+     assume that EC has no children.  Trying to be smart just isn't
+     gpointer to pay: just clear the tree and rebuild it from
+     scratch.  */
+  unref_model (tree_store);
+  gtk_tree_store_clear (tree_store);
+  populate_store (tree_store);
+}
+
+GtkTreeModel *
+calendars_tree_model (void)
+{
+  if (tree_store)
+    {
+      g_object_ref (tree_store);
+      return GTK_TREE_MODEL (tree_store);
+    }
+
+  /* Create a new tree store.  */
+  tree_store = gtk_tree_store_new (1, G_TYPE_POINTER);
+
+  populate_store (tree_store);
 
   g_object_add_weak_pointer (G_OBJECT (tree_store),
 			     (gpointer *) &tree_store);

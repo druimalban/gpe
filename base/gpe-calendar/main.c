@@ -57,6 +57,7 @@
 #include "calendars-dialog.h"
 #include "calendars-widgets.h"
 #include "calendar-edit-dialog.h"
+#include "calendar-update.h"
 
 #include <gpe/pim-categories.h>
 
@@ -885,6 +886,14 @@ main (int argc, char *argv[])
   osso_context_t *osso_context;
 #endif
 
+  /* What thread?!  Yes, threads.  gpe-calendar is entirely event
+     driven.  No threads thank you very much.  But libsoup (which is
+     used to do calendar synchronization) requires threads.  FUCK!
+     But it appears to make the promise that all callbacks will be
+     executed in the main context.  At least that is how I've read the
+     documentation.  Hopefully that is correct.  */
+  g_thread_init (NULL);
+
   char *current_dir = NULL;
 
   if (g_path_is_absolute (argv[0]))
@@ -1005,6 +1014,8 @@ main (int argc, char *argv[])
   g_idle_add (alarms_process_pending, event_db);
   /* And schedule the next wake up.  */
   g_idle_add ((GSourceFunc) schedule_wakeup, 0);
+  /* And schedule the next wake up.  */
+  g_idle_add ((GSourceFunc) calendars_sync_start, 0);
 
   /* XXX: We should be more intelligent about changes but this will at
      least work.  */

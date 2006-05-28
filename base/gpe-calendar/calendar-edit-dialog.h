@@ -20,7 +20,7 @@
 #ifndef CALENDAR_EDIT_DIALOG_H
 #define CALENDAR_EDIT_DIALOG_H
 
-#include <gtk/gtkwindow.h>
+#include <gtk/gtk.h>
 #include <gpe/event-db.h>
 
 G_BEGIN_DECLS
@@ -48,10 +48,12 @@ typedef struct _CalendarEditDialogClass CalendarEditDialogClass;
 
 extern GType calendar_edit_dialog_get_type (void) G_GNUC_CONST;
 
-/* If EC is NULL, create a new event.  */
+/* If EC is NULL, create a new event.  Does not consume a reference to
+   EC.  */
 extern GtkWidget *calendar_edit_dialog_new (EventCalendar *ec);
 
-/* Return the EventCalendar (if any).  */
+/* Return the EventCalendar (if any).  Does not return a
+   reference.  */
 extern EventCalendar *calendar_edit_dialog_get_calendar (CalendarEditDialog *);
 
 G_END_DECLS

@@ -1,3 +1,129 @@
+2006-05-28  Neal H. Walfield  <neal@gnu.org>
+
+	* configure.ac (DEP_MODULES): Add libsoup-2.2.
+	* Makefile.am (gpe_calendar_SOURCES): Add
+	calendar-delete-dialog.c, calendar-delete-dialog.h,
+	calendar-update.c and calendar-update.h.
+	* calendar-update.c: New file.
+	* calendar-update.h: New file.
+	* main.c: Include "calendar-update.h".
+	(main): Call g_thread_init.  Add an idle source to call
+	calendars_sync_start.
+	* export-vcal.h (export_event_as_string): New declaration.
+	(export_calendar_as_string): Likewise.
+	(vcal_do_save): Rename from this...
+	(export_event_save_as_dialog): ... to this.
+	(export_calendar_save_as_dialog): New declaration.
+	(save_to_file): Remove declaration.
+	* export-vcal.c: Include <errno.h>.  Don't include <gpe/vevent.h>.
+	(export_event_as_vevent): New function.
+	(export_to_vcal): Rename from this...
+	(export_event_as_string): ... to this.  Don't use
+	vevent_from_event_t but export_event_as_vevent.
+	(export_calendar_as_string): New function.
+	(vcal_do_send_bluetooth): Don't use vevent_from_event_t but
+	export_event_as_vevent.
+	(vcal_do_send_irda): Likewise.
+	(save_to_file): Rewrite to handle both events and calendars.  Use
+	streams for IO, not file descriptors.  On error, fill in a GError.
+	(vcal_do_save): Rename from this...
+	(save_as_dialog): ... to this.  Take a reference to the object in
+	question.  Provide a sane title and file suggestion.  Provide a
+	more verbose error message.
+	(export_event_save_as_dialog): New function.
+	(export_calendar_save_as_dialog): New function.
+	* import-vcal.h: Include <glib.h>.
+	(import_vcal): Change declaration to return void to synchronize
+	with implementation.
+	(import_vcal_from_channel): New declaration.
+	* import-vcal.c: Include "import-vcal.h".
+	Include "import-vcal.h".
+	(parse_mimedir): New function, rip out of...
+	(import_vcal): ... this function.
+	(import_vcal_from_channel): New function.
+
+	* calendar-edit-dialog.h: Don't include <gtk/gtkwindow.h>.
+	Include <gtk/gtk.h>.
+	* calendar-edit-dialog.c (struct _CalendarEditDialog): Add new
+	fields username and password.
+	(color_button_clicked): Don't gratuitously call gtk_widget_show.
+	(response): Set the username and password for the calendar.
+	(calendar_edit_dialog_init): Show the type combo box.  Add an
+	entry for the username and password and add them to D->URL_BOX.
+	(calendar_edit_dialog_new): Set CALENDAR_EDIT->USERNAME and
+	CALENDAR_EDIT->PASSWORD.
+
+	* calendars-dialog.c: Don't include <gpe/errorbox.h>.  Include
+	<gpe/pixmaps.h>, "calendar-delete-dialog.h" and
+	"calendar-update.h".
+	(struct _CalendarsDialog): Add field edb_modified_signal.
+	(calendars_dialog_finalize): Disconnect EDB->EDB_MODIFIED_SIGNAL.
+	(calendars_dialog_init): Connect to EVENT_DB's "calendar-changed"
+	signal to queue a redraw.
+	(struct _CalendarsDialog): Add fields scrolled_window and
+	tree_view.
+	(size_request): New function.
+	(calendars_dialog_class_init): Set WIDGET_CLASS->SIZE_REQUEST to
+	SIZE_REQUEST.
+	(refresh_all_clicked): New function.
+	(show_all_clicked): Likewise.
+	(calendars_dialog_init): Add new buttons to refresh all calendars
+	and to show all calendars.  Put the tree view in a scrolled
+	window.  Add a column to show the last update.
+	(new_clicked): Don't run the dialog, just show it and connect to
+	the response signal to destroy it.
+	(button_press): Likewise.
+	(button_press): Move the code to build the delete calendar dialog
+	box from here...
+	* calendar-delete-dialog.c: ... to this new file.  Improve
+	usability of dialog by showing the number of events and calendars
+	it contains.
+	* calendar-delete-dialog.h: New file.
+	* calendars-widgets.h: Include <gpe/event-db.h>.
+	(calendar_last_update_cell_data_func): New declaration.
+	* calendars-widgets.c (calendar_last_update_cell_data_func): New
+	function.
+	(build_menu): Take new parameter, ROW.  Don't really build a
+	hierarchy: simulate one by indenting children.  Update callers.
+	(calendars_tree_model): Remove code to populate the tree store
+	from here...
+	(populate_store): ... to this new function.
+	(unref_model): New function.
+	(calendar_reparented): Don't call calendar_deleted followed by
+	calendar_new.  Empty the model and then rebuild it.
+	* event-menu.c: Include "calendar-edit-dialog.h" and
+	"calendar-delete-dialog.h".
+	(edit_calendar_cb): New function.
+	(delete_calendar_cb): New function.
+	(save_cb): Call export_event_save_as_dialog, not vcal_do_save.
+	(save_calendar_cb): New function.
+	(only_show_cb): New function.
+	(hide_cb): New function.
+	(struct info): New structure.
+	(event_menu_destroy): Update to deallocate a struct info.
+	(event_menu_new): Create a struct info and pass that as the user
+	data argument to the "selection-done" signal.  Include menu items
+	for editing the calendar from which the event stems, deleting the
+	calendar, exporting the calendar, showing only that calendar and
+	hiding that calendar.
+
+	* calendar-edit-dialog.c (save_calendar_clicked): Rename from
+	this...
+	(response): ... to this.
+	(calendar_edit_dialog_init): Don't connect to the save button's
+	"click" event but to the dialogs "response" event using a closure
+	thereby ensuring that the save button's event is triggered before
+	any user handler which may destroy the dialog.
+	Reported by Florian Boor <florian@kernelconcepts.de>.
+
+	(units): Reverse the array to match the order in the combo box.
+	(calendar_edit_dialog_new): Correct the per unit calculation.
+
+	* event-ui.c (click_ok): When creating a new event, pass the
+	calendar to event_new thereby synchronizing with the libeventdb
+	API change.
+	* import-vcal.c (do_import_vevent): Likewise.
+
 2006-05-26  Neal H. Walfield  <neal@gnu.org>
 
 	* main.c (main): Don't connect to day view's, weeks view's, month

@@ -11,7 +11,8 @@ AC_PROG_INSTALL
 
 
 DEP_MODULES="gtk+-2.0 >= 2.4 glib-2.0 >= 2.2 libgpewidget >= 0.109 libgpepimc \
-             libgpevtype >= 0.14 sqlite mimedir-1.0 libeventdb >= 0.29 libxsettings-client libhandoff"
+             libgpevtype >= 0.14 sqlite mimedir-1.0 libeventdb >= 0.29 \
+	     libxsettings-client libhandoff libsoup-2.2"
 
 # i8n stuff
 AH_TEMPLATE([GETTEXT_PACKAGE], [Package name for gettext])
