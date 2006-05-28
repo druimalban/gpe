@@ -47,6 +47,8 @@ typedef struct
   EventCalendarReparented calendar_reparented;
   guint calendar_changed_signal;
   EventCalendarChanged calendar_changed;
+  guint calendar_modified_signal;
+  EventCalendarModified calendar_modified;
   
   guint event_new_signal;
   void (*event_new) (EventDB *view, Event *event);
@@ -132,9 +134,32 @@ struct _EventCalendar
 
   gboolean modified;
   time_t last_modified;
+
+  /* True if a calendar attribute has changed which does not affect
+     how the calendar contents (e.g. color).  */
+  gboolean changed;
 };
 
-
+#define MODIFIED(_ec) \
+  do \
+    { \
+      time_t now = time (NULL); \
+      EventCalendar *_p = (_ec); \
+      do \
+        { \
+          _p->last_modified = now; \
+	  if (! _p->modified) \
+            { \
+              _p->modified = TRUE; \
+              add_to_laundry_pile (G_OBJECT (_p)); \
+            } \
+          if ((_ec) != _p) \
+            g_object_unref (_p); \
+        } \
+      while ((_p = event_calendar_get_parent (_p))); \
+    } \
+  while (0)
+       
 /**
  * struct event_details
  *
@@ -247,6 +272,9 @@ struct _EventSource
           ev->modified = TRUE; \
           add_to_laundry_pile (G_OBJECT (ev)); \
         } \
+      EventCalendar *ec = event_get_calendar (EVENT (ev)); \
+      MODIFIED (ec); \
+      g_object_unref (ec); \
     } \
   while (0)
 static void add_to_laundry_pile (GObject *e);
@@ -338,6 +366,17 @@ event_db_class_init (gpointer klass, gpointer klass_data)
 		    G_OBJECT_CLASS_TYPE (object_class),
 		    G_SIGNAL_RUN_LAST,
 		    G_STRUCT_OFFSET (EventDBClass, calendar_changed),
+		    NULL,
+		    NULL,
+		    g_cclosure_marshal_VOID__POINTER,
+		    G_TYPE_NONE,
+		    1,
+		    G_TYPE_POINTER);
+  edb_class->calendar_modified_signal
+    = g_signal_new ("calendar-modified",
+		    G_OBJECT_CLASS_TYPE (object_class),
+		    G_SIGNAL_RUN_LAST,
+		    G_STRUCT_OFFSET (EventDBClass, calendar_modified),
 		    NULL,
 		    NULL,
 		    g_cclosure_marshal_VOID__POINTER,
@@ -2166,7 +2205,7 @@ event_calendar_delete (EventCalendar *ec,
 	    if (delete_events)
 	      event_remove (EVENT (ev));
 	    else
-	      event_set_calendar (EVENT (ev), ec);
+	      event_set_calendar (EVENT (ev), new_parent);
 	  }
       }
   }
@@ -2191,7 +2230,7 @@ event_calendar_delete (EventCalendar *ec,
     return ec->name; \
   }
 
-#define GET_SET(type, name) \
+#define GET_SET(type, name, is_modification) \
   GET(type, name) \
   \
   void \
@@ -2200,7 +2239,12 @@ event_calendar_delete (EventCalendar *ec,
     if (ec->name == name) \
       return; \
     ec->name = name; \
-    ec->modified = TRUE; \
+    if (is_modification) \
+      { \
+        ec->modified = TRUE; \
+        ec->last_modified = time (NULL); \
+      } \
+    ec->changed = TRUE; \
     add_to_laundry_pile (G_OBJECT (ec)); \
   }
 
@@ -2215,6 +2259,7 @@ event_calendar_get_parent (EventCalendar *ec)
   if (! ec->parent)
     {
       ec->parent = event_db_find_calendar_by_uid (ec->edb, ec->parent_uid);
+      g_object_ref (ec->parent);
       if (! ec->parent)
 	{
 	  g_warning ("Calendar (%s) %d contains a dangling parent %d!",
@@ -2230,6 +2275,10 @@ event_calendar_get_parent (EventCalendar *ec)
 void
 event_calendar_set_parent (EventCalendar *ec, EventCalendar *p)
 {
+  if ((! p && ec->parent_uid == EVENT_CALENDAR_NO_PARENT)
+      || (p && p->uid == ec->uid))
+    return;
+
   g_return_if_fail (event_calendar_valid_parent (ec, p));
 
   if (ec->parent)
@@ -2239,7 +2288,10 @@ event_calendar_set_parent (EventCalendar *ec, EventCalendar *p)
     g_object_ref (p);
 
   ec->parent_uid = p ? p->uid : EVENT_CALENDAR_NO_PARENT;
+
   ec->modified = TRUE;
+  ec->last_modified = time (NULL);
+  ec->changed = TRUE;
   add_to_laundry_pile (G_OBJECT (ec));
 
   g_signal_emit (ec->edb,
@@ -2259,11 +2311,11 @@ event_calendar_set_visible (EventCalendar *ec, gboolean visible)
   if (ec->hidden == ! visible)
     return;
   ec->hidden = ! visible;
-  ec->modified = TRUE;
+  ec->changed = TRUE;
   add_to_laundry_pile (G_OBJECT (ec));
 }
 
-#define GET_SET_STRING(name) \
+#define GET_SET_STRING(name, is_modification) \
   char * \
   event_calendar_get_##name (EventCalendar *ec) \
   { \
@@ -2277,17 +2329,22 @@ event_calendar_set_visible (EventCalendar *ec, gboolean visible)
       return; \
     g_free (ec->name); \
     ec->name = g_strdup (name); \
-    ec->modified = TRUE; \
+    if (is_modification) \
+      { \
+        ec->modified = TRUE; \
+        ec->last_modified = time (NULL); \
+      } \
+    ec->changed = TRUE; \
     add_to_laundry_pile (G_OBJECT (ec)); \
   }
 
-GET_SET_STRING(title)
-GET_SET_STRING(description)
-GET_SET_STRING(url)
-GET_SET_STRING(username)
-GET_SET_STRING(password)
+GET_SET_STRING(title, TRUE)
+GET_SET_STRING(description, TRUE)
+GET_SET_STRING(url, TRUE)
+GET_SET_STRING(username, TRUE)
+GET_SET_STRING(password, TRUE)
 
-GET_SET(int, mode)
+GET_SET(int, mode, TRUE)
 
 gboolean
 event_calendar_get_color (EventCalendar *ec, struct _GdkColor *color)
@@ -2315,13 +2372,55 @@ event_calendar_set_color (EventCalendar *ec, const struct _GdkColor *color)
   else
     ec->has_color = FALSE;
 
+  ec->changed = TRUE;
   add_to_laundry_pile (G_OBJECT (ec));
 }
 
-GET_SET(int, sync_interval)
-GET_SET(time_t, last_pull)
-GET_SET(time_t, last_push)
-GET(time_t, last_modified)
+GET_SET(int, sync_interval, FALSE)
+GET_SET(time_t, last_pull, FALSE)
+GET_SET(time_t, last_push, FALSE)
+
+time_t
+event_calendar_get_last_modification (EventCalendar *ec)
+{
+  return ec->last_modified;
+}
+
+GSList *
+event_calendar_list_events (EventCalendar *ec)
+{
+  GSList *e = NULL;
+  GList *i;
+  for (i = ec->edb->events; i; i = i->next)
+    {
+      EventSource *ev = EVENT_SOURCE (i->data);
+      if (ev->calendar == ec->uid)
+	{
+	  g_object_ref (ev);
+	  e = g_slist_prepend (e, ev);
+	}
+    }
+
+  return e;
+}
+
+GSList *
+event_calendar_list_calendars (EventCalendar *p)
+{
+  GSList *c = NULL;
+  GSList *i;
+  for (i = p->edb->calendars; i; i = i->next)
+    {
+      EventCalendar *ec = EVENT_CALENDAR (i->data);
+      if (ec->parent_uid == p->uid)
+	{
+	  g_object_ref (ec);
+	  c = g_slist_prepend (c, ec);
+	}
+    }
+
+  return c;
+}
 
 
 #define insert_values(db, id, key, format, value)	\
@@ -2513,11 +2612,22 @@ do_laundry (gpointer data)
       else
 	{
 	  EventCalendar *e = EVENT_CALENDAR (l->data);
+
 	  if (e->modified)
-	    event_calendar_flush (e);
-	  g_signal_emit (edb,
-			 EVENT_DB_GET_CLASS (edb)->calendar_changed_signal,
-			 0, e);
+	    {
+	      g_signal_emit
+		(edb, EVENT_DB_GET_CLASS (edb)->calendar_modified_signal,
+		 0, e);
+	      e->modified = FALSE;
+	    }
+	  if (e->changed)
+	    {
+	      event_calendar_flush (e);
+	      g_signal_emit
+		(edb, EVENT_DB_GET_CLASS (edb)->calendar_changed_signal,
+		 0, e);
+	      e->changed = FALSE;
+	    }
 	  g_object_unref (e);
 	}
     }
@@ -2587,22 +2697,18 @@ event_remove (Event *event)
   return TRUE;
 }
 
-/**
- * event_new:
- *
- * Create and initialise a new #Event event structure with the event
- * id EVENTID.  If EVENTID is NULL, one is fabricated.
- *
- * Returns: A new event.
- */
 Event *
-event_new (EventDB *edb, const char *eventid)
+event_new (EventDB *edb, EventCalendar *ec, const char *eventid)
 {
   EventSource *ev = EVENT_SOURCE (g_object_new (event_source_get_type (),
 						NULL));
   gchar *err = NULL;
 
   ev->edb = edb;
+  if (ec)
+    ev->calendar = ec->uid;
+  else
+    ev->calendar = edb->default_calendar;
 
   if (sqlite_exec (edb->sqliteh, "begin transaction", NULL, NULL, &err))
     goto error_no_roll_back;

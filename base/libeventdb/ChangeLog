@@ -1,3 +1,45 @@
+2006-05-28  Neal H. Walfield  <neal@gnu.org>
+
+	* gpe/event-db.h (EventCalendarChanged): Update comment.
+	(EventCalendarModified): New typedef.
+	* event-db.c (EventDBClass): Add fields calendar_modified_signal,
+	calendar_modified and changed.
+	(MODIFIED): New marco.
+	(STAMP): Call MODIFIED on the EV's calendar.
+	(event_db_class_init): Initialize
+	EDB_CLASS->CALENDAR_MODIFIED_SIGNAL.
+	(GET_SET): Take new parameter is_modification, if true, then set
+	EC->MODIFIED.  Always set EC->CHANGED.  Update users.
+	(GET_SET_STRING): Likewise.
+	(event_calendar_set_parent): Avoid a modification if P is the EC's
+	current calendar.  Set EC->LAST_MODIFIED and EC->CHANGED.
+	(event_calendar_set_visible): Don't set EC->MODIFIED.  Set
+	EC->CHANGED.
+	(event_calendar_set_color): Set EC->CHANGED.
+	(do_laundry): If EC->MODIFIED, emit a "calendar-modified" signal.
+	If EC->CHANGED, emit a "calendar-changed" signal.
+
+	(event_calendar_delete): Don't set the EV's calendar to EC.  Set
+	it to NEW_PARENT.
+	(event_calendar_get_parent): Get a reference for EC->PARENT.
+
+	* gpe/event-db.h (event_calendar_get_modification): Rename from
+	this...
+	(event_calendar_get_last_modification): ... to this.
+	* event-db.c (event_calendar_get_last_modified): Rename from
+	this...
+	(event_calendar_get_last_modification): ... to this.
+
+	* gpe/event-db.h (event_calendar_list_events): New declaration.
+	(event_calendar_list_calendars): Likewise.
+	* event-db.c (event_calendar_list_events): New function.
+	(event_calendar_list_calendars): Likewise.
+
+	* gpe/event-db.h (event_new): Accept additional parameter, the
+	calendar into which this event should be placed.
+	* event-db.c (event_new): Expect an additional parameter, the
+	calendar to put the event in.
+
 2006-05-26  Neal H. Walfield  <neal@gnu.org>
 
 	* event-db.c (event_get_duration): If duration is 0 and the event

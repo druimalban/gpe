@@ -153,10 +153,20 @@ typedef void (*EventCalendarDeleted) (EventDB *edb, EventCalendar *ec);
 /* Signal "calendar-reparented": emitted when a calendar in EDB is
    is reparented.  */
 typedef void (*EventCalendarReparented) (EventDB *edb, EventCalendar *ec);
-/* Signal "calendar-changed": emitted when a calendar in EDB is
+/* Signal "calendar-change": emitted when any attribute of calendar
+   (EC) is changed but not the contents: compare with
+   "calendar-modified".  The signal is emitted soon after the change
+   occurs (but not immediately) thereby allowing multiple changes to
+   be collapsed into a single signal.  */
+typedef void (*EventCalendarChanged) (EventDB *edb, EventCalendar *ec);
+/* Signal "calendar-modified": emitted on each calendar (EC) when it
+   or an event or calendar it contains has a change which affects the
+   calendar as publiced (i.e. not when color or last_push is changed,
+   etc. but when e.g. the title, description, URL, user name or
+   password changes).  Hence, EC is the calendar which contained the
    changed.  The signal may not be emitted immediately and multiple
    changes may be collapsed into a single signal.  */
-typedef void (*EventCalendarChanged) (EventDB *edb, EventCalendar *ec);
+typedef void (*EventCalendarModified) (EventDB *edb, EventCalendar *ec);
 
 /* Create a new calendar in eventdb EDB.  */
 extern EventCalendar *event_calendar_new (EventDB *edb);
@@ -268,10 +278,20 @@ extern time_t event_calendar_get_last_push (EventCalendar *ec)
 extern void event_calendar_set_last_push (EventCalendar *ec,
 					  time_t last_push);
 
-/* Automatically updated by libeventdb when an event or calendar in
-   the calendar changes.  */
-extern time_t event_calendar_get_modification (EventCalendar *ec)
+/* Automatically updated by libeventdb see description of
+   "calendar-modified" above.  */
+extern time_t event_calendar_get_last_modification (EventCalendar *ec)
      __attribute__ ((pure));
+
+/* Returns the events in the calendar EC (but not any sub-calendars
+   thereof).  A reference is allocated to each event.  The caller
+   must free the returned list.  */
+extern GSList *event_calendar_list_events (EventCalendar *ec);
+
+/* Returns the calendars in calendar EC (but not any sub-calendars
+   thereof).  A reference is allocated to each event.  The caller must
+   free the returned list.  */
+extern GSList *event_calendar_list_calendars (EventCalendar *ec);
 
 /* This function has a GCompareFunc type signature and can be passed
    to e.g. g_slist_sort.
@@ -288,10 +308,11 @@ extern gint event_compare_func (gconstpointer a, gconstpointer b);
    alarm goes off before A's.  Otherwise 0.  */
 extern gint event_alarm_compare_func (gconstpointer a, gconstpointer b);
 
-/* Create a new event in database EDB.  If EVENTID is NULL, one is
-   fabricated.  If EVENTID is provided, it must be unique.  (Check
-   using event_db_get_by_eventid first.)  */
-extern Event *event_new (EventDB *edb, const char *eventid);
+/* Create a new event in database EDB in calendar EC (if NULL, then
+   the default calendar).  If EVENTID is NULL, one is fabricated.  If
+   EVENTID is provided, it must be unique.  (Check using
+   event_db_get_by_eventid first.)  */
+extern Event *event_new (EventDB *edb, EventCalendar *ec, const char *eventid);
 
 /* Flush event EV to the DB now.  */
 extern gboolean event_flush (Event *ev);
