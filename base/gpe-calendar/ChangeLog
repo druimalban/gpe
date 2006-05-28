@@ -1,5 +1,10 @@
 2006-05-28  Neal H. Walfield  <neal@gnu.org>
 
+	* export-vcal.c (save_as_dialog): Change default file extension to
+	.ics.
+
+2006-05-28  Neal H. Walfield  <neal@gnu.org>
+
 	* day_render.c (hour_bar_move): If DAY_RENDER->ROWS_VISIBLE is 0,
 	just return FALSE.
 

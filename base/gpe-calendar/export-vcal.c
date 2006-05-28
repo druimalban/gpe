@@ -392,7 +392,7 @@ save_as_dialog (GObject *thing)
   else
     summary = event_calendar_get_title (EVENT_CALENDAR (thing));
 
-  char *suggestion = g_strdup_printf ("%s.vcal", summary);
+  char *suggestion = g_strdup_printf ("%s.ics", summary);
   char *s = suggestion;
   while ((s = strchr (s, ' ')))
     *s = '_';
