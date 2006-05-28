@@ -11,7 +11,7 @@ AC_PROG_CC
 AC_PROG_LIBTOOL
 
 # depends on...
-DEP_MODULES="glib-2.0 >= 2.2 mimedir-1.0 libeventdb >= 0.29"
+DEP_MODULES="glib-2.0 >= 2.2 mimedir-1.0 libeventdb >= 0.30"
 
 PKG_CHECK_MODULES(VTYPE, $DEP_MODULES)
 

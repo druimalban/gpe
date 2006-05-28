@@ -1,3 +1,7 @@
+2006-05-28  Neal H. Walfield  <neal@gnu.org>
+
+	* configure.ac (DEP_MODULES): Demand libeventdb 0.30 or newer.
+
 2006-05-24  Neal H. Walfield  <neal@gnu.org>
 
 	* vevent.c (vevent_from_event_t): Update code to reflect that
