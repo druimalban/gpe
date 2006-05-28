@@ -576,7 +576,8 @@ calendar_modified (EventDB *edb, EventCalendar *ec, gpointer *data)
       break;
 
     case 1:
-      /* We don't care.  */
+      /* See if a refresh is needed.  */
+      refresh (NULL);
       break;
 
     case 2:

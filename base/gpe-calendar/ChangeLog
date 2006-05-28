@@ -1,5 +1,10 @@
 2006-05-28  Neal H. Walfield  <neal@gnu.org>
 
+	* calendar-update.c (calendar_modified): A modification may
+	require an update to a subscribed calendar.
+
+2006-05-28  Neal H. Walfield  <neal@gnu.org>
+
 	* export-vcal.c (save_as_dialog): Change default file extension to
 	.ics.
 
