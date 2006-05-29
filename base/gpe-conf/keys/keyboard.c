@@ -1,7 +1,7 @@
 /*
  * gpe-conf
  *
- * Copyright (C) 2005  Florian Boor <florian.boor@kernelconcepts.de>
+ * Copyright (C) 2005, 2006  Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -31,6 +31,7 @@
 
 #include "../applets.h"
 #include "../serial.h"
+#include "../device.h"
 
 #define N_(_x) (_x)
 
@@ -58,14 +59,14 @@
 
 typedef struct
 {
-	char *idstr;
-	int type;
-	char *name;
+	gchar *idstr;
+	gint type;
+	gchar *name;
 }t_keyboard;
 
 /* --- module global variables --- */
 
-int keyboard_type = KBD_TYPE_NONE;
+gint keyboard_type = KBD_TYPE_NONE;
 gchar keyboard_port[PATH_MAX] = {0};
 static GtkWidget *cbPort;
 
@@ -92,11 +93,11 @@ t_keyboard ktable[] = {
 /* --- local intelligence --- */
 
 void 
-keyboard_get_config(const char **model, const char **port)
+keyboard_get_config(const gchar **model, const gchar **port)
 {
-	const char *text;
-	int i;
-	const char* kport = NULL;
+	const gchar *text;
+	gint i;
+	const gchar* kport = NULL;
 	
 	text = gtk_entry_get_text (GTK_ENTRY(GTK_COMBO(cbPort)->entry));
 	for (i=0; i<num_ports; i++)
@@ -112,10 +113,10 @@ keyboard_get_config(const char **model, const char **port)
 	*port = keyboard_port;
 }
 
-int 
-find_kbd_type(const char *ktype)
+gint 
+find_kbd_type(const gchar *ktype)
 {
-	int i;
+	gint i;
 	
 	for (i=1; i<KBD_TYPE_MAX; i++)
 		if (strncmp(ktable[i].idstr, ktype, strlen(ktable[i].idstr)) == 0)
@@ -127,11 +128,11 @@ find_kbd_type(const char *ktype)
 
 
 void 
-parse_config(const char *path, int *kbdtype, char port[])
+parse_config(const gchar *path, gint *kbdtype, gchar *port)
 {
-char *needle;
-FILE *fd;
-char buf[PATH_MAX];
+    gchar *needle;
+    FILE *fd;
+    gchar buf[PATH_MAX];
         
 	fd = fopen(path, "r");
 	if (!fd) {
@@ -192,7 +193,7 @@ keyboard_selected(GtkWidget *tb,  GdkEventButton *event, gpointer data)
 
 /* this is run suid root apply the settings */
 void
-keyboard_save(char *type, char *port)
+keyboard_save(gchar *type, gchar *port)
 {
 	change_cfg_value (KBDD_CONFIG, "type:", type, ' ');
 	change_cfg_value (KBDD_CONFIG, "port:", port, ' ');
@@ -203,17 +204,17 @@ keyboard_save(char *type, char *port)
 /* --- gpe-conf interface --- */
 
 void
-Keyboard_Free_Objects ()
+Keyboard_Free_Objects (void)
 {
 }
 
 void
-Keyboard_Save ()
+Keyboard_Save (void)
 {
 }
 
 void
-Keyboard_Restore ()
+Keyboard_Restore (void)
 {
 }
 
@@ -226,9 +227,14 @@ Keyboard_Build_Objects (void)
 	GtkTooltips *tooltips;
 	GSList *ports = NULL;
 	GSList *keyboards = NULL;
-	int i;
+	gint i;
 	
-	parse_config(KBDD_CONFIG, &keyboard_type, &keyboard_port);
+	if (device_get_id() == DEV_IPAQ_SA || device_get_id() == DEV_IPAQ_PXA)
+  		portlist[0][1] = "/dev/ttyC0";
+	else
+		portlist[0][1] = "/dev/ttyS0";
+    
+	parse_config(KBDD_CONFIG, &keyboard_type, keyboard_port);
 	tooltips = gtk_tooltips_new ();
 	buf = g_malloc (255);
 	

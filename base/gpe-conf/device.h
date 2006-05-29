@@ -45,6 +45,7 @@ typedef enum {
 DeviceID_t device_get_id (void);
 DeviceClassID_t device_get_class_id (DeviceID_t device_id);
 const gchar *device_get_name (void);
+const gchar *device_get_domain (void);
 gchar *device_get_specific_file (const gchar *basename);
 
 

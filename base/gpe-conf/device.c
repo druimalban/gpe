@@ -23,36 +23,38 @@
 #include "device.h"
 
 static const gchar *device_name = NULL;
+static const gchar *device_domain = NULL;
 
 typedef struct
 {
 	DeviceID_t id;
 	gchar *pattern[5];
+    gchar *domain;
 } DeviceMap_t;
 
 static DeviceMap_t DeviceMap[] = { \
-	{ DEV_IPAQ_SA, { "HP iPAQ H3100", "HP iPAQ H3600", "HP iPAQ H3700", "HP iPAQ H3800" } }, \
-	{ DEV_IPAQ_PXA, {  "HP iPAQ H5400",  "HP iPAQ H2200",  "HP iPAQ HX4700" } },
-	{ DEV_SIMPAD, { "Simpad" } },
-	{ DEV_RAMSES, { "Ramses" } },
-	{ DEV_ZAURUS_COLLIE, { "Sharp-Collie", "Collie" } },
-	{ DEV_ZAURUS_POODLE, { "Poodle" } },
-	{ DEV_ZAURUS_SHEPHERED, { "SHARP Shepherd" } },
-	{ DEV_ZAURUS_HUSKY, { "SHARP Husky" } },
-	{ DEV_ZAURUS_CORGI, { "SHARP Corgi" } },
-	{ DEV_ZAURUS_SPITZ, { "SHARP Spitz" } },
-	{ DEV_ZAURUS_AKITA, { "SHARP Akita" } },
-	{ DEV_ZAURUS_BORZOI, { "SHARP Borzoi" } },
-	{ DEV_NOKIA_770, { "Generic OMAP1510/1610/1710" } },
-	{ DEV_NETBOOK_PRO, { "Psion Teklogix NetBookPro" } },
-	{ DEV_HW_INTEGRAL, { "HW 90200" } },
-	{ DEV_CELLON_8000, { "Cellon C8000 Board" } },
-	{ DEV_JOURNADA, { "HP Jornada 720", "HP Jornada 820", "HP Jornada 56X" } },
-	{ DEV_SGI_O2, { "SGI O2" } },
-	{ DEV_SGI_INDY, { "SGI Indy" } },
-	{ DEV_SGI_INDIGO2, { "SGI Indigo2" } },
-	{ DEV_SGI_OCTANE, { "SGI IP30", "SGI Octane" } },
-	{ DEV_HTC_UNIVERSAL, { "HTC Universal" } },
+	{ DEV_IPAQ_SA, { "HP iPAQ H3100", "HP iPAQ H3600", "HP iPAQ H3700", "HP iPAQ H3800" }, "ipaq" }, \
+	{ DEV_IPAQ_PXA, {  "HP iPAQ H5400",  "HP iPAQ H2200",  "HP iPAQ HX4700" }, "ipaq"},
+	{ DEV_SIMPAD, { "Simpad" }, "simpad" },
+	{ DEV_RAMSES, { "Ramses" } ,"ramses" },
+	{ DEV_ZAURUS_COLLIE, { "Sharp-Collie", "Collie" }, "zaurus-portrait" },
+	{ DEV_ZAURUS_POODLE, { "Poodle" }, "zaurus-clamshell" },
+	{ DEV_ZAURUS_SHEPHERED, { "SHARP Shepherd" }, "zaurus-clamshell" },
+	{ DEV_ZAURUS_HUSKY, { "SHARP Husky" }, "zaurus-clamshell" },
+	{ DEV_ZAURUS_CORGI, { "SHARP Corgi" }, "zaurus-clamshell" },
+	{ DEV_ZAURUS_SPITZ, { "SHARP Spitz" }, "zaurus-clamshell" },
+	{ DEV_ZAURUS_AKITA, { "SHARP Akita" }, "zaurus-clamshell" },
+	{ DEV_ZAURUS_BORZOI, { "SHARP Borzoi" }, "zaurus-clamshell" },
+	{ DEV_NOKIA_770, { "Generic OMAP1510/1610/1710" }, "nokia-tablet" },
+	{ DEV_NETBOOK_PRO, { "Psion Teklogix NetBookPro" }, "netbook" },
+	{ DEV_HW_INTEGRAL, { "HW 90200" }, "hwmde" },
+	{ DEV_CELLON_8000, { "Cellon C8000 Board" }, "small-phone" },
+	{ DEV_JOURNADA, { "HP Jornada 720", "HP Jornada 820", "HP Jornada 56X" }, "jornada" },
+	{ DEV_SGI_O2, { "SGI O2" }, "workstation" },
+	{ DEV_SGI_INDY, { "SGI Indy" }, "workstation" },
+	{ DEV_SGI_INDIGO2, { "SGI Indigo2" }, "workstation" },
+	{ DEV_SGI_OCTANE, { "SGI IP30", "SGI Octane" }, "workstation" },
+	{ DEV_HTC_UNIVERSAL, { "HTC Universal" }, "smartphone" },
 };
 
 /* Keep in sync with DeviceId_t defintion. */
@@ -62,7 +64,7 @@ static DeviceID_t IdClassVector[] =
 	DEVICE_CLASS_PDA,
 	DEVICE_CLASS_PDA,
 	DEVICE_CLASS_TABLET,
-	DEVICE_CLASS_PDA,
+	DEVICE_CLASS_MDE,
 	DEVICE_CLASS_PDA,
 	DEVICE_CLASS_PDA,
 	DEVICE_CLASS_PDA,
@@ -119,6 +121,7 @@ device_get_id (void)
 						{
 							id = DeviceMap[dnr].id;
                             device_name = DeviceMap[dnr].pattern[pnr];
+                            device_domain = DeviceMap[dnr].domain;
 							g_strfreev(strv);
 							return id;
 						}
@@ -132,6 +135,7 @@ device_get_id (void)
 			{
 				id = DEV_X86;
                 device_name = "Generic x86 PC";
+                device_domain = "workstation";
 				g_strfreev(strv);
 				return id;
 			}
@@ -140,6 +144,7 @@ device_get_id (void)
 			{
 				id = DEV_POWERPC;
                 device_name = "PowerPC";
+                device_domain = "workstation";
 				g_strfreev(strv);
 				return id;
 			}
@@ -148,6 +153,7 @@ device_get_id (void)
 			{
 				id = DEV_SPARC;
                 device_name = "Sparc";
+                device_domain = "workstation";
 				g_strfreev(strv);
 				return id;
 			}
@@ -156,6 +162,7 @@ device_get_id (void)
 			{
 				id = DEV_ALPHA;
                 device_name = "Alpha";
+                device_domain = "workstation";
 				g_strfreev(strv);
 				return id;
 			}
@@ -190,12 +197,22 @@ device_get_name (void)
     return device_name;        
 }
 
+const gchar *
+device_get_domain (void)
+{
+    if (device_domain == NULL)
+        device_get_id ();
+    
+    return device_domain;        
+}
+
 gchar *
 device_get_specific_file (const gchar *basename)
 {
     gchar *result;
     const gchar *name = device_get_name ();
     
+    /* check for a device specific file per name first */
     if (name != NULL)
     {
         result = g_strdup_printf ("%s.%s", basename, name);
@@ -204,7 +221,14 @@ device_get_specific_file (const gchar *basename)
         g_free (result);
     }
     
+    /* try device number then */
     result = g_strdup_printf ("%s.%d", basename, device_get_id());
+    if (!access (result, R_OK))
+        return result;
+    g_free (result);
+    
+    /* try device domain then */
+    result = g_strdup_printf ("%s.%s", basename, device_get_domain());
     if (!access (result, R_OK))
         return result;
     g_free (result);

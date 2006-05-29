@@ -1,3 +1,17 @@
+2006-05-30	Florian Boor <florian.boor@kernelconcepts.de>
+
+    * theme.c: Add colour helper function. Make some local functions static.
+      Remove some obsolete stuff.
+    * device.*: Introduce more general device name domains to have an
+      additional classification for devices.
+    * data/key*: Add Zaurus keyboard configuration stuff and shuffle files 
+                 around.
+    * pixmaps/c7x0-s1.png: New file
+    * Makefile: Install new data and pixmap files.
+    * applets.c: Fix two signed/unsigned warnings.
+    * keyboard.c: Use glib types, add missing initialisation of portlist.
+                  Fix warning.
+
 2006-05-28	Florian Boor <florian.boor@kernelconcepts.de>
 
     * keys/keyctl.c: Use glib types.

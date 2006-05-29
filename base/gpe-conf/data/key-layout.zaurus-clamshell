@@ -1,0 +1,81 @@
+#
+# Device depenent key layout
+# for Zaurus cxxxx series.
+#
+
+[Global]
+image = /usr/share/pixmaps/c7x0-s1.png
+offset_x = 50
+offset_y = 20
+
+[Calendar]
+title = Calendar
+symbol = gpe-calendar.png
+key = F9
+modificator = ....
+command = gpe-calendar
+xpos = 60
+ypos = 130
+
+[Contacts]
+title = Contacts
+symbol = gpe-contacts.png
+key = F10
+modificator = ....
+command = gpe-contacts
+xpos = 95
+ypos = 130
+
+[Mail]
+title = Mail
+symbol = ibutton4.png
+key = F13
+modificator = ....
+command = sylpheed
+xpos = 130
+ypos = 130
+
+[Home]
+title = Home
+symbol = ibutton5.png
+key = F12
+modificator = ....
+command = gpe-mini-browser
+xpos = 165
+ypos = 130
+
+[ZoomOut]
+title = ZoomOut
+symbol = ibutton5.png
+key = F18
+modificator = ...*
+command = gpe-mini-browser
+xpos = 60
+ypos = 10
+
+[ZoomIn]
+title = ZoomIn
+symbol = ibutton5.png
+key = F19
+modificator = ...*
+command = gpe-mini-browser
+xpos = 95
+ypos = 10
+
+[BrightnessDown]
+title = BrightnessDown
+symbol = ibutton5.png
+key = F20
+modificator = ...*
+command = gpe-mini-browser
+xpos = 130
+ypos = 10
+
+[BrightnessUp]
+title = BrightnessUp
+symbol = ibutton5.png
+key = F21
+modificator = ...*
+command = gpe-mini-browser
+xpos = 165
+ypos = 10

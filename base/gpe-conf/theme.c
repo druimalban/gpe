@@ -14,7 +14,6 @@
 #include <string.h>
 #include <dirent.h>
 #include <ctype.h>
-//#include <pwd.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <signal.h>
@@ -23,7 +22,6 @@
 #include <sys/stat.h>
 #include <gtk/gtk.h>
 #include <gdk/gdkx.h>
-//#include <X11/Xcms.h>
 #include <X11/Xlib.h>
 #include <libintl.h>
 #include <time.h>
@@ -108,7 +106,20 @@ init_tools(void)
 	/* to be extended in future */
 }
 
-int 
+static void
+set_widget_color_str (GtkWidget *widget, const gchar *colstr)
+{
+  GdkColormap *map;
+  static GdkColor colour;
+    
+  gdk_color_parse (colstr, &colour);
+  map = gdk_colormap_get_system ();
+  gdk_colormap_alloc_color (map, &colour, FALSE, TRUE);
+  gtk_widget_modify_bg (widget, GTK_STATE_NORMAL, &colour);
+  gtk_widget_modify_fg (widget, GTK_STATE_NORMAL, &colour);
+}
+
+static int 
 get_terminal_fontsize(void)
 {
 	gchar *xdefaults;
@@ -154,7 +165,7 @@ get_terminal_fontsize(void)
 	return size;
 }
 
-gchar *
+static gchar *
 get_terminal_fontname (void)
 {
 	gchar *xdefaults;
@@ -202,7 +213,7 @@ get_terminal_fontname (void)
 	return name;
 }
 
-void
+static void
 set_terminal_font(int size, const gchar *name)
 {
 	gchar *line, *xdefaults;
