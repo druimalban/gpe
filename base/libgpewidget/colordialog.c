@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2006 Florian Boor <florian@kernelconcepts.de>
+ * Copyright (C) 2006 Neal H. Walfield <neal@walfield.org>
  *
  * Derived from GtkMessageDialog
  *
@@ -35,11 +36,58 @@
 
 typedef struct _GpeColorDialogPrivate GpeColorDialogPrivate;
 
+#define BUTTON_ROWS 4
+#define BUTTON_COLS 7
+
 struct _GpeColorDialogPrivate
 {
   ColorSlider *sliders[3];
   GtkWidget   *previewbutton;
+  GtkButton   *buttons[BUTTON_ROWS * BUTTON_COLS];
+
+  const GdkColor **button_colors;
+  int button_colors_count;
 };
+
+static const GdkColor button_colors[BUTTON_ROWS * BUTTON_COLS] =
+  {
+#if 0
+    {/* Basic 3D Hilight */ .red=234*256, .green=232*256, .blue=227*256 },
+#endif
+    {/* Basic 3D Medium  */ .red=186*256, .green=181*256, .blue=171*256 },
+    {/* Basic 3D Dark    */ .red=128*256, .green=125*256, .blue=116*256 },
+    {/* 3D Shadow        */ .red=86*256,  .green=82*256,  .blue=72 *256 },
+    {/* Green Hilight    */ .red=197*256, .green=210*256, .blue=200*256 },
+    {/* Green Medium     */ .red=131*256, .green=166*256, .blue=127*256 },
+    {/* Green Dark       */ .red=93*256,  .green=117*256, .blue=85 *256 },
+    {/* Green Shadow     */ .red=68*256,  .green=86*256,  .blue=50 *256 },
+    {/* Red Hilight      */ .red=224*256, .green=182*256, .blue=175*256 },
+    {/* Red Medium       */ .red=193*256, .green=102*256, .blue=90 *256 },
+    {/* Red Dark         */ .red=136*256, .green=70*256,  .blue=49 *256 },
+    {/* Red Shadow       */ .red=102*256, .green=56*256,  .blue=34 *256 },
+    {/* Purple Hilight   */ .red=173*256, .green=167*256, .blue=200*256 },
+    {/* Purple Medium    */ .red=136*256, .green=127*256, .blue=163*256 },
+    {/* Purple Dark      */ .red=98*256,  .green=91*256,  .blue=129*256 },
+    {/* Purple Shadow    */ .red=73*256,  .green=64*256,  .blue=102*256 },
+    {/* Blue Hilight     */ .red=157*256, .green=184*256, .blue=210*256 },
+    {/* Blue Medium      */ .red=117*256, .green=144*256, .blue=174*256 },
+    {/* Blue Dark        */ .red=75*256,  .green=105*256, .blue=131*256 },
+    {/* Blue Shadow      */ .red=49*256,  .green=78*256,  .blue=108*256 },
+    {/* Face Skin Hilight*/ .red=239*256, .green=224*256, .blue=205*256 },
+    {/* Face Skin Medium */ .red=224*256, .green=195*256, .blue=158*256 },
+    {/* Face Skin Dark   */ .red=179*256, .green=145*256, .blue=105*256 },
+    {/* Face Skin Shadow */ .red=130*256, .green=102*256, .blue=71 *256 },
+    {/* Accent Red       */ .red=223*256, .green=66*256,  .blue=30 *256 },
+    {/* Accent Red Dark  */ .red=153*256, .green=0*256,   .blue=0  *256 },
+    {/* Accent Yellow    */ .red=238*256, .green=214*256, .blue=128*256 },
+    {/* Accent Yellow Dar*/ .red=209*256, .green=148*256, .blue=12 *256 },
+    {/* Accent Green     */ .red=70*256,  .green=160*256, .blue=70 *256 },
+#if 0
+    {/* Accent Green Dark*/ .red=38*256,  .green=199*256, .blue=38*256  },
+    {/* White	         */ .red=255*256, .green=255*256, .blue=255*256 },
+    {/* Black	         */ .red=0*256,   .green=0*256,   .blue=0*256   }
+#endif
+  };
 
 static void gpe_color_dialog_class_init (GpeColorDialogClass *klass);
 static void gpe_color_dialog_init       (GpeColorDialog      *dialog);
@@ -66,7 +114,7 @@ static gpointer parent_class;
 GType
 gpe_color_dialog_get_type (void)
 {
-  static GType dialog_type = 0;
+  static GType dialog_type;
 
   if (!dialog_type)
     {
@@ -133,7 +181,7 @@ gpe_color_dialog_class_init (GpeColorDialogClass *class)
   g_type_class_add_private (gobject_class, sizeof (GpeColorDialogPrivate));
 }
 
-void
+static void
 set_widget_color_str (GtkWidget *widget, const gchar *colstr)
 {
   GdkColormap *map;
@@ -146,11 +194,14 @@ set_widget_color_str (GtkWidget *widget, const gchar *colstr)
   gtk_widget_modify_fg (widget, GTK_STATE_NORMAL, &colour);
 }
 
-void
-set_widget_color_gdk (GtkWidget *widget, GdkColor color)
+static void
+set_widget_color_gdk (GtkWidget *widget, const GdkColor color)
 {
   gtk_widget_modify_bg (widget, GTK_STATE_NORMAL, &color);
-  gtk_widget_modify_fg (widget, GTK_STATE_NORMAL, &color);
+  gtk_widget_modify_bg (widget, GTK_STATE_ACTIVE, &color);
+  gtk_widget_modify_bg (widget, GTK_STATE_PRELIGHT, &color);
+  gtk_widget_modify_bg (widget, GTK_STATE_SELECTED, &color);
+  gtk_widget_modify_bg (widget, GTK_STATE_INSENSITIVE, &color);
 }
 
 static void
@@ -219,20 +270,64 @@ color_selector_update_sliders (ColorSlider *slider, gpointer data)
     }
 }
 
+static void
+color_button_clicked (GtkButton *b, GpeColorDialog *dialog)
+{
+  GpeColorDialogPrivate *priv = GPE_COLOR_DIALOG_GET_PRIVATE (dialog);
+
+  int i;
+  for (i = 0; i < BUTTON_ROWS * BUTTON_COLS; i ++)
+    if (b == priv->buttons[i])
+      break;
+
+  if (i < priv->button_colors_count)
+    gpe_color_dialog_set_color_gdk (dialog, priv->button_colors[i]);
+  else if (i < BUTTON_ROWS * BUTTON_COLS)
+    gpe_color_dialog_set_color_gdk (dialog, &button_colors[i]);
+}
+
 static GtkWidget *
 build_colorbox (GpeColorDialog *dialog, GpeColorDialogPrivate *priv)
 {
+  GtkBox *vbox;
   GtkWidget *label, *button, *slider, *preview;
   GtkWidget *colorbox;
   guint gpe_border = gpe_get_border ();
   guint gpe_boxspacing = gpe_get_boxspacing ();
   gchar *tstr = NULL;
-  gint i;
+  gint i, j;
+
+  vbox = GTK_BOX (gtk_vbox_new (FALSE, gpe_boxspacing));
+
+  colorbox = gtk_table_new (BUTTON_ROWS, BUTTON_COLS, TRUE);
+  gtk_container_set_border_width (GTK_CONTAINER (colorbox), gpe_border);
+  gtk_table_set_row_spacings (GTK_TABLE (colorbox), gpe_boxspacing);
+  gtk_table_set_col_spacings (GTK_TABLE (colorbox), gpe_boxspacing);
+  gtk_box_pack_start (vbox, colorbox, FALSE, FALSE, 0);
+  gtk_widget_show (colorbox);
+
+  for (i = 0; i < BUTTON_COLS; i ++)
+    for (j = 0; j < BUTTON_ROWS; j ++)
+      {
+	GtkButton *b;
+	b = priv->buttons[j * BUTTON_COLS + i]
+	  = GTK_BUTTON (gtk_button_new_with_label (" "));
+	set_widget_color_gdk (GTK_WIDGET (b),
+			      button_colors[j * BUTTON_COLS + i]);
+	g_signal_connect (G_OBJECT (b), "clicked",
+			  G_CALLBACK (color_button_clicked), dialog);
+	gtk_table_attach (GTK_TABLE (colorbox), GTK_WIDGET (b),
+			  i, i + 1, j, j + 1,
+			  GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
+	gtk_widget_show (GTK_WIDGET (b));
+      }
 
   colorbox = gtk_table_new (3, 3, FALSE);
   gtk_container_set_border_width (GTK_CONTAINER (colorbox), gpe_border);
   gtk_table_set_row_spacings (GTK_TABLE (colorbox), gpe_boxspacing);
   gtk_table_set_col_spacings (GTK_TABLE (colorbox), gpe_boxspacing);
+  gtk_box_pack_start (vbox, colorbox, FALSE, FALSE, 0);
+  gtk_widget_show (colorbox);
 
   button = gtk_button_new ();
   GTK_WIDGET_UNSET_FLAGS (button, GTK_CAN_FOCUS);
@@ -275,7 +370,7 @@ build_colorbox (GpeColorDialog *dialog, GpeColorDialogPrivate *priv)
                         GTK_FILL, GTK_FILL, 0, 0);
     }
     
-  return colorbox;
+  return GTK_WIDGET (vbox);
 }
 
 static void
@@ -391,6 +486,31 @@ gpe_color_dialog_set_color_gdk (GpeColorDialog *color_dialog,
   color_selector_update_sliders (priv->sliders[SLIDER_GREEN], color_dialog);
 }
 
+/**
+ * gpe_color_dialog_set_button_colors:
+ * @color_dialog: a #GpeColorDialog
+ * @colors: an array of GdkColors
+ * @count: the number of elements in that array.
+ *
+ * The GpeColorDialog presents the user with three sliders as well as
+ * 28 buttons containing default colors.  This function allows the
+ * colors of the first @count buttons to be overridden.
+ *
+ * Since: 0.113
+ **/
+void 
+gpe_color_dialog_set_button_colors (GpeColorDialog *color_dialog, 
+				    const GdkColor *colors[], gint count)
+{
+  GpeColorDialogPrivate *priv = GPE_COLOR_DIALOG_GET_PRIVATE (color_dialog);
+  priv->button_colors = colors;
+  priv->button_colors_count = count;
+
+  int i;
+  for (i = 0; i < count; i ++)
+    set_widget_color_gdk (GTK_WIDGET (priv->buttons[i]), *colors[i]);
+}
+
 static void 
 gpe_color_dialog_set_property (GObject *object, guint prop_id,
                                const GValue *value, GParamSpec *pspec)
@@ -476,7 +596,8 @@ gpe_color_dialog_new (GtkWindow *parent, GtkDialogFlags flags, const gchar *init
     gtk_dialog_set_has_separator (dialog, FALSE);
 
   gtk_window_set_title (GTK_WINDOW (dialog), _("Select colour"));
-  gpe_color_dialog_set_color_str (GPE_COLOR_DIALOG (dialog), initcolor);
+  if (initcolor)
+    gpe_color_dialog_set_color_str (GPE_COLOR_DIALOG (dialog), initcolor);
   
   return widget;
 }

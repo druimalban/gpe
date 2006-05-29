@@ -1,3 +1,18 @@
+2006-05-29  Neal H. Walfield  <neal@gnu.org>
+
+	* colordialog.c (BUTTON_ROWS): New macro.
+	(BUTTON_COLS): Likewise.
+	(struct _GpeColorDialogPrivate): Add fields button, buttons_colors
+	and button_colors_count.
+	(button_colors): New variable.
+	(set_widget_color_str): Make static.
+	(set_widget_color_gdk): Set all states.
+	(color_button_clicked): New function.
+	(build_colorbox): Add a matrix of buttons at the top of the
+	dialog.
+	(gpe_color_dialog_set_button_colors): New function.
+	(gpe_color_dialog_new): Only set INITCOLOR if not NULL.
+
 2006-05-15 Philippe De Swert <philippedeswert@scarlet.be>
 
 	* colordialog.c : fix compile warning due to missing cast
