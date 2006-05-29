@@ -1,3 +1,7 @@
+2006-05-29  Florian Boor <florian@kernelconcepts.de>
+
+	* Version 0.87 released.
+
 2006-05-25  Rene Wagner <rw@handhelds.org>
 
 	* X11/gpe-login.pre-session: Apply patch courtesy of Mika Laitio
