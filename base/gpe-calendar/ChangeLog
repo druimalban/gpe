@@ -1,5 +1,13 @@
 2006-06-06  Neal H. Walfield  <neal@gnu.org>
 
+	* event-ui.c (click_ok): Create and update the event after
+	verifying the values are valid.
+
+	(new_event): Clear the text entries S->DESCRIPTION, S->SUMMARY and
+	S->LOCATION.  Clear the categories.
+
+2006-06-06  Neal H. Walfield  <neal@gnu.org>
+
 	* calendar-edit-dialog.c (calendar_edit_dialog_init): Add the url,
 	password and username text entries to D->URL_BOX, not BODY.
 

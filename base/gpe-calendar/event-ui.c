@@ -159,21 +159,10 @@ edit_finished (struct edit_state *s)
 static void
 click_ok (GtkWidget *widget, struct edit_state *s)
 {
-  Event *ev;
   struct tm tm_start, tm_end, tm_rend;
   time_t start_t, end_t, rend_t;
   GtkTextIter start, end;
   GtkTextBuffer *buf;
-
-  EventCalendar *ec
-    = calendars_combo_box_get_active (GTK_COMBO_BOX (s->calendar));
-  if (s->ev)
-    {
-      ev = s->ev;
-      event_set_calendar (ev, ec);
-    }
-  else
-    ev = event_new (event_db, ec, NULL);
 
   memset (&tm_start, 0, sizeof (struct tm));
   tm_start.tm_year = GTK_DATE_COMBO (s->startdate)->year - 1900;
@@ -200,13 +189,10 @@ click_ok (GtkWidget *widget, struct edit_state *s)
 	 make them one second long.  */
       if (end_t == start_t)
 	end_t++;
-
-      event_set_untimed (ev, FALSE);
     }
   else
     {
       /* Reminder */
-      event_set_untimed (ev, TRUE);
       start_t = mktime (&tm_start);
       end_t = mktime (&tm_end);
     }
@@ -214,7 +200,8 @@ click_ok (GtkWidget *widget, struct edit_state *s)
   if (end_t < start_t)
     {
       gpe_error_box (_("End time must not be earlier than start time"));
-      g_object_unref (ev);
+      if (s->ev)
+	g_object_unref (s->ev);
       return;
     }
 
@@ -236,15 +223,26 @@ click_ok (GtkWidget *widget, struct edit_state *s)
       gtk_widget_destroy(dialog);
       if ((ret == GTK_RESPONSE_NO) || (ret == GTK_RESPONSE_CANCEL))
         {
-	  if (ev != s->ev)
-	    event_remove (ev);
-          g_object_unref (ev);
+	  if (s->ev)
+	    g_object_unref (s->ev);
           return;
         }
     }
-    
+
+  EventCalendar *ec
+    = calendars_combo_box_get_active (GTK_COMBO_BOX (s->calendar));
+  Event *ev;
+  if (s->ev)
+    {
+      ev = s->ev;
+      event_set_calendar (ev, ec);
+    }
+  else
+    ev = event_new (event_db, ec, NULL);
+
   event_set_recurrence_start (ev, start_t);
   event_set_duration (ev, end_t - start_t);
+  event_set_untimed (ev, gtk_toggle_button_get_active (s->all_day));
 
   buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (s->description));
   gtk_text_buffer_get_bounds (buf, &start, &end);
@@ -1161,6 +1159,12 @@ new_event (time_t t)
   gtk_window_set_title (s->window, _("Calendar: New event"));
 
   s->ev = NULL;
+
+  gtk_text_buffer_set_text
+    (gtk_text_view_get_buffer (GTK_TEXT_VIEW (s->description)), "", -1);
+  gtk_entry_set_text (GTK_ENTRY (s->summary), "");
+  gtk_entry_set_text (GTK_ENTRY (s->location), "");
+  update_categories (GTK_WIDGET (s->window), NULL, s);
 
   struct tm tm;
   localtime_r (&t, &tm);
