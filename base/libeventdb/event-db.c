@@ -51,11 +51,11 @@ typedef struct
   EventCalendarModified calendar_modified;
   
   guint event_new_signal;
-  void (*event_new) (EventDB *view, Event *event);
+  EventNew event_new;
   guint event_removed_signal;
-  void (*event_removed) (EventDB *view, Event *event);
-  guint event_changed_signal;
-  void (*event_changed) (EventDB *view, Event *event);
+  EventRemoved event_removed;
+  guint event_modified_signal;
+  EventModified event_modified;
 
   guint alarm_fired_signal;
   EventDBAlarmFiredFunc alarm_fired;
@@ -408,8 +408,8 @@ event_db_class_init (gpointer klass, gpointer klass_data)
 		    1,
 		    G_TYPE_POINTER);
 
-  edb_class->event_changed_signal
-    = g_signal_new ("event-changed",
+  edb_class->event_modified_signal
+    = g_signal_new ("event-modified",
 		    G_OBJECT_CLASS_TYPE (object_class),
 		    G_SIGNAL_RUN_LAST,
 		    G_STRUCT_OFFSET (EventDBClass, event_removed),
@@ -2582,6 +2582,10 @@ event_flush (Event *event)
 		      NULL, NULL, &err))
     goto error_and_rollback;
 
+  g_signal_emit
+    (ev->edb, EVENT_DB_GET_CLASS (ev->edb)->event_modified_signal,
+     0, ev);
+
   return TRUE;
 
  error_and_rollback:
@@ -2693,6 +2697,9 @@ event_remove (Event *event)
     }
 
   EVENT (ev)->dead = TRUE;
+  g_signal_emit (ev->edb,
+		 EVENT_DB_GET_CLASS (ev->edb)->event_removed_signal,
+		 0, ev);
 
   return TRUE;
 }
@@ -2741,6 +2748,8 @@ event_new (EventDB *edb, EventCalendar *ec, const char *eventid)
   if (event_write (ev, &err) == FALSE
       || sqlite_exec (edb->sqliteh, "commit transaction", NULL, NULL, &err))
     goto error;
+
+  g_signal_emit (edb, EVENT_DB_GET_CLASS (edb)->event_new_signal, 0, ev);
 
   return EVENT (ev);
 
@@ -2847,13 +2856,11 @@ void
 event_set_duration (Event *event, unsigned long duration)
 {
   EventSource *ev = RESOLVE_CLONE (event);
-
   if (ev->duration == duration)
     return;
 
-  STAMP (ev);
-
   ev->duration = duration;
+  STAMP (ev);
 }
 
 #undef GET
@@ -2876,7 +2883,6 @@ event_set_duration (Event *event, unsigned long duration)
     if (ev->field == value) \
       return; \
     \
-    STAMP (ev); \
     if ((alarm_hazard) && ev->alarm) \
       { \
         event_acknowledge (EVENT (ev)); \
@@ -2885,6 +2891,8 @@ event_set_duration (Event *event, unsigned long duration)
     ev->field = value; \
     if ((alarm_hazard) && ev->alarm) \
       event_add_upcoming_alarms (ev); \
+    \
+    STAMP (ev); \
   }
 
 GET_SET (unsigned long, alarm, alarm, TRUE)
@@ -2896,7 +2904,6 @@ void
 event_set_recurrence_start (Event *event, time_t start)
 {
   EventSource *ev = RESOLVE_CLONE (event);
-  STAMP (ev);
 
   if (ev->event.start == start)
     return;
@@ -2914,6 +2921,8 @@ event_set_recurrence_start (Event *event, time_t start)
   if (ev->alarm)
     /* And remove it from the upcoming alarm list.  */
     event_add_upcoming_alarms (ev);
+
+  STAMP (ev);
 }
 
 GET_SET (time_t, recurrence_end, end, TRUE)
@@ -2954,13 +2963,13 @@ event_get_eventid (Event *event) \
       /* Identical.  */ \
       return; \
     \
-    STAMP (ev); \
     if (ev->details->field) \
       free (ev->details->field); \
     if (field) \
       ev->details->field = g_strdup (field); \
     else \
       ev->details->field = NULL; \
+    STAMP (ev); \
   }
 
 GET_SET_STRING(summary)
@@ -2979,28 +2988,31 @@ void
 event_add_category (Event *event, int category)
 {
   EventSource *ev = RESOLVE_CLONE (event);
-  STAMP (ev);
   event_details (ev, TRUE);
   ev->details->categories = g_slist_prepend (ev->details->categories,
 					     (gpointer) category);
+
+  STAMP (ev);
 }
 
 void
 event_set_categories (Event *event, GSList *categories)
 {
   EventSource *ev = RESOLVE_CLONE (event);
-  STAMP (ev);
 
   event_details (ev, TRUE);
   g_slist_free (ev->details->categories);
   ev->details->categories = categories;
+
+  STAMP (ev);
 }
 
 void
 event_add_recurrence_exception (Event *event, time_t start)
 {
   EventSource *ev = RESOLVE_CLONE (event);
-  STAMP (ev);
 
   ev->exceptions = g_slist_append (ev->exceptions, (void *) start);
+
+  STAMP (ev);
 }

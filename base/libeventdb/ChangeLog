@@ -1,3 +1,22 @@
+2006-06-06  Neal H. Walfield  <neal@gnu.org>
+
+	* gpe/event-db.h (EventNew): New typedef.
+	(EventRemoved): Likewise.
+	(EventModified): Likewise.
+	* event-db.c (struct): Rename event_changed to event_modified.
+	Update users.
+	(event_flush): Emit the "event-modified" signal.
+	(event_remove): Emit the "event-removed" signal.
+	(event_new): Emit the "event-new" signal.
+
+	(event_set_duration): Call STAMP after the change.
+	(GET_SET): Likewise.
+	(event_set_recurrence_start): Likewise.
+	(GET_SET_STRING): Likewise
+	(event_add_category): Likewise.
+	(event_set_categories): Likewise.
+	(event_add_recurrence_exception): Likewise.
+
 2006-05-28  Neal H. Walfield  <neal@gnu.org>
 
 	* gpe/event-db.h (EventCalendarChanged): Update comment.

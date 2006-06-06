@@ -293,6 +293,15 @@ extern GSList *event_calendar_list_events (EventCalendar *ec);
    free the returned list.  */
 extern GSList *event_calendar_list_calendars (EventCalendar *ec);
 
+/* Signal "event-new" emitted when an event in EDB is created.  */
+typedef void (*EventNew) (EventDB *edb, Event *ev);
+/* Signal "event-removed" emitted when an event in EDB is removed.  */
+typedef void (*EventRemoved) (EventDB *edb, Event *ev);
+/* Signal "event-modified" emitted when an event in EDB is modified
+   (i.e. when any of the event_set_* functions are called and the
+   actual value is changed.  */
+typedef void (*EventModified) (EventDB *edb, Event *ev);
+
 /* This function has a GCompareFunc type signature and can be passed
    to e.g. g_slist_sort.
 
