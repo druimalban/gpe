@@ -361,7 +361,7 @@ calendar_edit_dialog_init (GTypeInstance *instance, gpointer klass)
   /* Don't show initially.  */
 
   hbox = GTK_BOX (gtk_hbox_new (FALSE, 3));
-  gtk_box_pack_start (body, GTK_WIDGET (hbox), FALSE, FALSE, 0);
+  gtk_box_pack_start (d->url_box, GTK_WIDGET (hbox), FALSE, FALSE, 0);
   gtk_widget_show (GTK_WIDGET (hbox));
 
   label = gtk_label_new (_("URL:"));
@@ -373,7 +373,7 @@ calendar_edit_dialog_init (GTypeInstance *instance, gpointer klass)
   gtk_widget_show (GTK_WIDGET (d->url));
 
   hbox = GTK_BOX (gtk_hbox_new (FALSE, 3));
-  gtk_box_pack_start (body, GTK_WIDGET (hbox), FALSE, FALSE, 0);
+  gtk_box_pack_start (d->url_box, GTK_WIDGET (hbox), FALSE, FALSE, 0);
   gtk_widget_show (GTK_WIDGET (hbox));
 
   label = gtk_label_new (_("Username:"));
@@ -385,7 +385,7 @@ calendar_edit_dialog_init (GTypeInstance *instance, gpointer klass)
   gtk_widget_show (GTK_WIDGET (d->username));
 
   hbox = GTK_BOX (gtk_hbox_new (FALSE, 3));
-  gtk_box_pack_start (body, GTK_WIDGET (hbox), FALSE, FALSE, 0);
+  gtk_box_pack_start (d->url_box, GTK_WIDGET (hbox), FALSE, FALSE, 0);
   gtk_widget_show (GTK_WIDGET (hbox));
 
   label = gtk_label_new (_("Password:"));
