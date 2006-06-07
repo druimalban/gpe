@@ -1,3 +1,8 @@
+
+2006-06-07	Florian Boor <florian.boor@kernelconcepts.de>
+
+    * Makefile: Add missing Xrandr flags and libraries.
+
 2006-05-30	Florian Boor <florian.boor@kernelconcepts.de>
 
     * theme.c: Add colour helper function. Make some local functions static.

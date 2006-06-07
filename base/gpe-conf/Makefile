@@ -35,8 +35,8 @@ endif
 
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0` 
 GTKLDFLAGS = `pkg-config --libs gtk+-2.0 gdk-2.0` 
-XCFLAGS = `pkg-config --cflags x11`
-XLIBS = `pkg-config --libs x11`
+XCFLAGS = `pkg-config --cflags x11 xrandr`
+XLIBS = `pkg-config --libs x11 xrandr`
 GPECFLAGS = `pkg-config --cflags libgpewidget`
 GPELIBS = `pkg-config --libs libgpewidget`
 
