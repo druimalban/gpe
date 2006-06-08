@@ -76,6 +76,24 @@ update_dns_server (const gchar * server)
 }
 
 void
+update_system_hostname (const gchar * system_hostname)
+{
+	FILE *fnew;
+	static gchar *file = "/etc/hostname";
+
+	fnew = fopen (file, "w");
+	if (!fnew)
+	{
+		fprintf (stderr, "Could not write to file: %s\n", file);
+		return;
+	}
+
+	fprintf (fnew, system_hostname);
+
+	fclose (fnew);
+}
+
+void
 update_time_from_net (const gchar * server)
 {
 	
@@ -307,6 +325,11 @@ suidloop (int write, int read)
 				{
 					fscanf (in, "%100s", arg2);
 					update_dns_server (arg2);
+				}
+				else if (strcmp (cmd, "HOST") == 0)  // change to another system-hostname
+				{
+					fscanf (in, "%100s", arg2);
+					update_system_hostname (arg2);
 				}
 				else if (strcmp (cmd, "SCRB") == 0)  // change frontlight brightness
 				{

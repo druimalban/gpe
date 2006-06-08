@@ -1394,6 +1394,34 @@ create_global_widgets ()
 				      5);
 	g_free (tmpval);
 
+	// system-hostname
+	gchar *content;
+	gchar **lines;
+	gint length;
+	gchar *delim;
+	gint i = 0;
+	gchar *hostfile = "/etc/hostname";
+
+	GError *err = NULL;
+
+	delim = g_strdup ("\n");
+	if (!g_file_get_contents (hostfile, &content, &length, &err))
+	{
+        	fprintf(stderr,"Could not access file: %s\n", hostfile);
+        	return NULL;
+	}
+	lines = g_strsplit (content, delim, 2048);
+	g_free (delim);
+	delim = NULL;
+	g_free (content);
+	tmpval = lines[i];
+
+	create_editable_entry_simple (ctable, "system-hostname", _("Hostname"),
+				      tmpval,
+				      _("Enter the Hostname to use for this machine"),
+				      3);
+	g_free (tmpval);
+
 	label = g_object_get_data (G_OBJECT (notebook), "nameserver");
 	gtk_widget_set_sensitive (label, have_access);
 
@@ -1550,6 +1578,17 @@ Network_Save ()
 		newval = gtk_editable_get_chars (GTK_EDITABLE (entry), 0, -1);
 		if (strlen(newval))
 			suid_exec ("SDNS", newval);
+		g_free(newval);
+	}
+
+	//save system-hostname
+	entry = g_object_get_data (G_OBJECT (notebook), "system-hostname");
+	if (entry)
+	{
+		newval = gtk_editable_get_chars (GTK_EDITABLE (entry), 0, -1);
+
+		if (strlen(newval))
+			suid_exec ("HOST", newval);
 		g_free(newval);
 	}
 }

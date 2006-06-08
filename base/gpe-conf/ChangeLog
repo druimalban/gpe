@@ -1,3 +1,6 @@
+2006-06-08	Florian Boor <florian.boor@kernelconcepts.de>
+
+    * suid.c, network.c: Apply patch to allow hostname changes. (by Patrick Steiner)
 
 2006-06-07	Florian Boor <florian.boor@kernelconcepts.de>
 
