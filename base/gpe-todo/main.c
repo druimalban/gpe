@@ -31,13 +31,8 @@
 
 #include "todo.h"
 
-#ifdef IS_HILDON
-  #define MY_PIXMAPS_DIR "/var/lib/install/usr/share/gpe-todo"
-  #define MY_PREFIX "/var/lib/install/usr"
-#else
-  #define MY_PIXMAPS_DIR PREFIX "/share/gpe-todo"
-  #define MY_PREFIX PREFIX 
-#endif
+#define MY_PIXMAPS_DIR PREFIX "/share/gpe-todo"
+#define MY_PREFIX PREFIX 
 
 static struct gpe_icon my_icons[] = {
   { "high", MY_PIXMAPS_DIR "/flag-16.png" },

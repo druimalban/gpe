@@ -1,10 +1,16 @@
+2006-06-10  Florian Boor  <florian.boor@kernelconcepts.de>
+
+	* main.c, hildon/*: Make Maemo 2.0 compatible, get rid of old crap.
+	* Makefile.am: Update to work without shipping package stuff in the
+dist archive.
+
 2006-03-07  Florian Boor  <florian.boor@kernelconcepts.de>
-    * Makefile.am: Do not ship debian package support in the
+	* Makefile.am: Do not ship debian package support in the
                    distribution because of conflicting package types.
 
 2005-11-29  Florian Boor  <florian.boor@kernelconcepts.de>
 
-    * Release version 0.55.
+	* Release version 0.55.
 
 2005-11-25  Florian Boor  <florian.boor@kernelconcepts.de>
 
