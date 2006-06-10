@@ -31,6 +31,9 @@
 #ifdef IS_HILDON
 #include "pimc-ui.h"
 #include <hildon-fm/hildon-widgets/hildon-file-chooser-dialog.h>
+#include <hildon-widgets/hildon-caption.h>
+#include <hildon-widgets/hildon-date-editor.h>
+#include <hildon-widgets/hildon-input-mode-hint.h>
 #endif
 
 void on_edit_cancel_clicked (GtkButton * button, gpointer user_data);
@@ -48,8 +51,12 @@ gboolean tv_focus_in (GtkWidget *widget,
 gboolean tv_focus_out (GtkWidget *widget,
                        GdkEventFocus *event,
                        gpointer user_data);
-void on_unknown_year_toggled (GtkToggleButton *togglebutton, gpointer user_data);
-void on_name_clicked (GtkButton *button, gpointer user_data);
+#ifdef IS_HILDON
+static void on_date_set_toggled (GtkToggleButton *togglebutton, gpointer user_data);
+#else
+static void on_unknown_year_toggled (GtkToggleButton *togglebutton, gpointer user_data);
+#endif
+static void on_name_clicked (GtkButton *button, gpointer user_data);
 
 
 /* CALLBACK : this is the filter for phone number edits */
@@ -77,13 +84,18 @@ add_tag (gchar *tag, GtkWidget *w, GtkWidget *pw)
   GSList *tags;
   g_object_set_data (G_OBJECT (w), "db-tag", tag);
 
-  tags = gtk_object_get_data (GTK_OBJECT (pw), "tag-widgets");
+  tags = g_object_steal_data (G_OBJECT (pw), "tag-widgets");
   tags = g_slist_append (tags, w);
-  g_object_set_data (G_OBJECT (pw), "tag-widgets", tags);
+  g_object_set_data_full (G_OBJECT (pw), "tag-widgets", tags, (GDestroyNotify) g_slist_free);
 }
 
+#ifdef IS_HILDON
+static void
+pop_singles (GtkWidget *vtable, GtkSizeGroup *size_group, GSList *list, GtkWidget *pw, gboolean visible, gint *pos)
+#else
 static void
 pop_singles (GtkWidget *vtable, GSList *list, GtkWidget *pw, gboolean visible, gint *pos)
+#endif
 {
   if (list)
     {
@@ -105,9 +117,18 @@ pop_singles (GtkWidget *vtable, GSList *list, GtkWidget *pw, gboolean visible, g
               g_signal_connect (G_OBJECT (w), "insert-text", 
 		         G_CALLBACK (on_phone_insert_text), NULL);
             }
+#ifdef IS_HILDON
+          if (strstr(e->tag,".WEB")
+              || strstr(e->tag,".EMAIL")
+              || strstr (e->tag, ".WWW"))
+            {
+              g_object_set (G_OBJECT (w), HILDON_AUTOCAP, FALSE, NULL);
+            }
+
+          l = hildon_caption_new (size_group, e->name, w, NULL, HILDON_CAPTION_OPTIONAL);
+#else
           l = gtk_label_new (e->name);
           gtk_misc_set_alignment(GTK_MISC(l), 1.0, 0.5);
-#ifndef IS_HILDON            
           if (!strcasecmp(e->tag, "NAME")) /* the name field on a button */
             {
               GTK_WIDGET_SET_FLAGS(w, GTK_CAN_DEFAULT);
@@ -119,6 +140,9 @@ pop_singles (GtkWidget *vtable, GSList *list, GtkWidget *pw, gboolean visible, g
             }
 #endif            
           /* if enough space: even fields right, odd fields left */
+#ifdef IS_HILDON
+          gtk_box_pack_start (GTK_BOX (vtable), l, FALSE, FALSE, 0);
+#else
           if (alt_pos && mode_large_screen)
             {
               if (l) 
@@ -156,10 +180,21 @@ pop_singles (GtkWidget *vtable, GSList *list, GtkWidget *pw, gboolean visible, g
 
                 }
             }
+#endif
           g_slist_free_1 (list);
           list = next;
           x++;
  
+#ifdef IS_HILDON
+          if (visible)
+            {
+              gtk_widget_show_all (l);
+            }
+          else
+            {
+              gtk_widget_hide (l);
+            }
+#else
           if (visible)
             {
               if (l) gtk_widget_show(l);
@@ -172,6 +207,7 @@ pop_singles (GtkWidget *vtable, GSList *list, GtkWidget *pw, gboolean visible, g
               gtk_widget_hide(w);
               if (b) gtk_widget_hide(b);
             }
+#endif
         alt_pos = !alt_pos;
         }
     }
@@ -182,6 +218,9 @@ build_children (GtkWidget *table, GSList *children, GtkWidget *pw, gboolean visi
 {
   GSList *child;
   GSList *singles = NULL;
+#ifdef IS_HILDON
+  GtkSizeGroup *size_group = gtk_size_group_new (GTK_SIZE_GROUP_HORIZONTAL);
+#endif
 
   for (child = children; child; child = child->next)
     {
@@ -193,7 +232,11 @@ build_children (GtkWidget *table, GSList *children, GtkWidget *pw, gboolean visi
         case GROUP:
           {
             gchar *markup = NULL;
+#ifdef IS_HILDON
+            pop_singles (table, size_group, singles, pw, visible, pos);            
+#else
             pop_singles (table, singles, pw, visible, pos);
+#endif
             if (e->name)
               {
                 markup = g_strdup_printf ("<b>%s</b>", e->name);
@@ -206,9 +249,13 @@ build_children (GtkWidget *table, GSList *children, GtkWidget *pw, gboolean visi
                 gtk_misc_set_alignment (GTK_MISC (w), 0, 0.5);
                 g_free (markup);
                 singles = NULL;
+#ifdef IS_HILDON
+                gtk_box_pack_start (GTK_BOX (table), w, FALSE, FALSE, 0);
+#else
                 (*pos)++;
                 gtk_table_attach(GTK_TABLE(table), w, 0, 3, *pos, *pos+1, 
                                  GTK_FILL, 0, 0, 0);
+#endif
                 if (e->hidden)
                     gtk_widget_hide(w);
               }
@@ -218,13 +265,25 @@ build_children (GtkWidget *table, GSList *children, GtkWidget *pw, gboolean visi
         break;
       
         case ITEM_MULTI_LINE:
+#ifdef IS_HILDON
+          pop_singles (table, size_group, singles, pw, visible, pos);            
+#else
           pop_singles (table, singles, pw, visible, pos);
+#endif
           singles = NULL;
           ww = gtk_text_view_new ();
+#ifdef IS_HILDON
+          w = hildon_caption_new (size_group, e->name, ww, NULL, HILDON_CAPTION_OPTIONAL);
+          if (visible)
+            gtk_widget_show_all (w);
+          else
+            gtk_widget_hide (w);
+#else
           if (visible)
             gtk_widget_show(ww);
           else
             gtk_widget_hide(ww);
+#endif
           gtk_text_view_set_editable (GTK_TEXT_VIEW (ww), TRUE);
           gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (ww), GTK_WRAP_WORD_CHAR);
           g_signal_connect(G_OBJECT(ww),"move_cursor",
@@ -239,7 +298,6 @@ build_children (GtkWidget *table, GSList *children, GtkWidget *pw, gboolean visi
           
 #ifndef IS_HILDON
           gtk_widget_set_usize (GTK_WIDGET (ww), -1, 36);
-#endif
           if (e->name)
             {
               w = gtk_label_new (e->name);
@@ -249,11 +307,16 @@ build_children (GtkWidget *table, GSList *children, GtkWidget *pw, gboolean visi
               else
                 gtk_widget_hide(w);
             }
+#endif
           (*pos)++;
+#ifdef IS_HILDON
+          gtk_box_pack_start (GTK_BOX (table), w, FALSE, FALSE, 0);
+#else
           if (e->name) gtk_table_attach(GTK_TABLE(table), w, 0, 1, *pos, *pos+1, 
                                         GTK_FILL, GTK_FILL, 0, 0);
           gtk_table_attach(GTK_TABLE(table), ww, 1, 3, *pos, *pos+1, 
                            GTK_FILL | GTK_EXPAND, GTK_FILL | GTK_EXPAND, 0, 0);
+#endif
           add_tag (e->tag, ww, pw);
         break;
       
@@ -263,6 +326,35 @@ build_children (GtkWidget *table, GSList *children, GtkWidget *pw, gboolean visi
       
         case ITEM_DATE:
         {
+#ifdef IS_HILDON
+          GtkWidget *date_set = gtk_check_button_new ();
+          GtkWidget *date_editor = hildon_date_editor_new ();
+          GtkWidget *hbox = gtk_hbox_new (FALSE, gpe_get_boxspacing ());
+          GtkWidget *caption = hildon_caption_new (size_group, e->name, hbox, NULL, HILDON_CAPTION_OPTIONAL);
+
+          gtk_box_pack_start (GTK_BOX (hbox), date_set, FALSE, FALSE, 0);
+          gtk_box_pack_start (GTK_BOX (hbox), date_editor, FALSE, FALSE, 0);
+
+          gtk_widget_set_sensitive (date_editor, FALSE);
+          g_signal_connect (G_OBJECT (date_set), "toggled", G_CALLBACK (on_date_set_toggled), date_editor);
+          g_object_set_data (G_OBJECT (date_editor), "date-set", date_set);
+
+          pop_singles (table, size_group, singles, pw, visible, pos);
+          singles = NULL;
+
+          if (visible)
+            {
+              gtk_widget_show_all (caption);
+            }
+          else
+            {
+              gtk_widget_hide (caption);
+            }
+
+          gtk_box_pack_start (GTK_BOX (table), caption, FALSE, FALSE, 0);
+
+          add_tag (e->tag, date_editor, pw);
+#else
           GtkWidget *l = gtk_label_new (e->name);
           GtkWidget *datecombo, *cbnoyear;
           pop_singles (table, singles, pw, visible, pos);
@@ -294,12 +386,18 @@ build_children (GtkWidget *table, GSList *children, GtkWidget *pw, gboolean visi
           gtk_table_attach(GTK_TABLE(table), datecombo, 1, 2, *pos, *pos+1, 0, 0, 0, 0);
           gtk_table_attach(GTK_TABLE(table), cbnoyear, 2, 3, *pos, *pos+1, 0, 0, 0, 0);
           add_tag (e->tag, datecombo, pw);
+#endif
         }
         break;
         case ITEM_IMAGE:
         {
           GtkWidget *l = NULL;
           GtkWidget *image, *btn, *sw, *vp;
+#ifdef IS_HILDON
+          pop_singles (table, size_group, singles, pw, visible, pos);            
+          singles = NULL;
+
+#else
           pop_singles (table, singles, pw, visible, pos);
           singles = NULL;
           
@@ -309,6 +407,7 @@ build_children (GtkWidget *table, GSList *children, GtkWidget *pw, gboolean visi
                gtk_misc_set_alignment (GTK_MISC (l), 0.0, 0.5);
                gtk_widget_show(l);
             }
+#endif
           btn = gtk_button_new();
           image = gtk_image_new();
           vp = gtk_viewport_new(NULL, NULL);
@@ -324,15 +423,11 @@ build_children (GtkWidget *table, GSList *children, GtkWidget *pw, gboolean visi
           g_signal_connect (G_OBJECT (btn), "clicked",
 		                    G_CALLBACK (on_edit_bt_image_clicked), image);
 #ifdef IS_HILDON
-          if (e->name)
-              gtk_widget_destroy(l);
+          l = hildon_caption_new (size_group, e->name ? e->name : _("Image"), sw, NULL, HILDON_CAPTION_OPTIONAL);
+          gtk_widget_show (l);
           gtk_widget_set_size_request(image, IMG_WIDTH, IMG_HEIGHT);
           gtk_widget_set_size_request(vp, IMG_WIDTH+10, IMG_HEIGHT+10);
-          btn = g_object_get_data(G_OBJECT(gtk_widget_get_toplevel(table)), 
-                                           "image-button");
-          gtk_table_attach_defaults(GTK_TABLE(table), sw, 2, 4, *pos, *pos+1);
-          g_signal_connect (G_OBJECT (btn), "clicked", 
-                            G_CALLBACK (on_edit_bt_image_clicked), image);
+          gtk_box_pack_start (GTK_BOX (table), l, FALSE, FALSE, 0);
 #else
           (*pos)++;
           if (e->name)
@@ -348,7 +443,11 @@ build_children (GtkWidget *table, GSList *children, GtkWidget *pw, gboolean visi
       }
     }
 
+#ifdef IS_HILDON
+  pop_singles (table, size_group, singles, pw, visible, pos);            
+#else
   pop_singles (table, singles, pw, visible, pos);
+#endif
   singles = NULL;
 }
 
@@ -396,17 +495,6 @@ edit_window_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *user_
   return FALSE;
 }
 
-#ifdef IS_HILDON
-static void
-notebook_page(GtkNotebook *notebook, GtkNotebookPage *page,
-              guint page_num, gpointer user_data)
-{
-  GtkWidget *image_button = user_data;
-  
-  gtk_widget_set_sensitive(image_button, page_num ? FALSE : TRUE);
-}
-#endif
-
 static GtkWidget*
 create_edit (void)
 {
@@ -416,9 +504,6 @@ create_edit (void)
   GtkWidget *edit_save;
   GtkWidget *edit_delete = NULL;
   GtkWidget *vbox, *action_area;
-#ifdef IS_HILDON
-  GtkWidget *edit_image;
-#endif
     
   if (mode_large_screen)
     {
@@ -428,7 +513,7 @@ create_edit (void)
                                    GTK_WINDOW(gtk_widget_get_toplevel(mainw)));
 #else
       gtk_window_set_transient_for(GTK_WINDOW(edit), GTK_WINDOW(mainw));
-#endif        
+#endif
       action_area = GTK_DIALOG (edit)->action_area;
       vbox = GTK_DIALOG (edit)->vbox;
     }
@@ -450,23 +535,20 @@ create_edit (void)
   notebook2 = gtk_notebook_new ();
   gtk_box_pack_start (GTK_BOX (vbox), notebook2, TRUE, TRUE, 0);
  
-#ifdef IS_HILDON    
+#ifdef IS_HILDON
   edit_cancel = gtk_button_new_with_label (_("Cancel"));
   edit_save = gtk_button_new_with_label (_("OK"));
-  edit_image = gtk_button_new_with_label (_("Image..."));
-  g_object_set_data(G_OBJECT(edit), "image-button", edit_image);
 #else
   if (mode_landscape || mode_large_screen)
     edit_delete = gtk_button_new_from_stock (GTK_STOCK_DELETE);
   edit_cancel = gtk_button_new_from_stock (GTK_STOCK_CANCEL);
   edit_save = gtk_button_new_from_stock (GTK_STOCK_SAVE);
-#endif  
+#endif
   
   GTK_WIDGET_SET_FLAGS (edit_save, GTK_CAN_DEFAULT);
 
 #ifdef IS_HILDON
   gtk_box_pack_start (GTK_BOX (action_area), edit_save, TRUE, FALSE, 4);
-  gtk_box_pack_start (GTK_BOX (action_area), edit_image, TRUE, FALSE, 4);
   gtk_box_pack_start (GTK_BOX (action_area), edit_cancel, TRUE, FALSE, 4);
 #else
   if (mode_landscape || mode_large_screen)
@@ -482,10 +564,7 @@ create_edit (void)
 		    G_CALLBACK (on_edit_cancel_clicked), edit);
   g_signal_connect (G_OBJECT (edit_save), "clicked",
 		    G_CALLBACK (on_edit_save_clicked), edit);
-#ifdef IS_HILDON
-  g_signal_connect (G_OBJECT (notebook2), "switch-page", 
-                    G_CALLBACK (notebook_page), edit_image);
-#endif
+
   /* Call the on_edit_window_closed_clicked function when the window is destroyed,
    * otherwise the new button gets disabled */
   g_signal_connect (G_OBJECT (edit), "delete_event",
@@ -515,7 +594,7 @@ create_edit (void)
       else
         gtk_window_set_default_size (GTK_WINDOW (edit), 240, 320);
     }
-  
+
   return edit;
 }
 
@@ -533,14 +612,20 @@ edit_window (gboolean isdialog)
     {
       edit_thing_t e = page->data;
       gint pos = 0;
+#ifdef IS_HILDON
+      GtkWidget *table = gtk_vbox_new (FALSE, gpe_get_boxspacing());
+#else
       GtkWidget *table = gtk_table_new (3, 2, FALSE);
+#endif
       GtkWidget *label = gtk_label_new (e->name);
       GtkWidget *scrolled_window = gtk_scrolled_window_new (NULL, NULL);
       GtkWidget *viewport = gtk_viewport_new(NULL, NULL);
 
       gtk_container_set_border_width (GTK_CONTAINER (table), gpe_get_border());
+#ifndef IS_HILDON
       gtk_table_set_row_spacings(GTK_TABLE(table), gpe_get_boxspacing());
       gtk_table_set_col_spacings(GTK_TABLE(table), gpe_get_boxspacing());
+#endif
 
       gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window),
                                       GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
@@ -554,10 +639,10 @@ edit_window (gboolean isdialog)
       /* add categories stuff to the last page */
       if (!page->next)
         {
-#ifdef IS_HILDON            
+#ifdef IS_HILDON
           GtkWidget *list = build_pim_categories_list();
           
-          gtk_table_attach_defaults (GTK_TABLE (table), list, 0, 2, pos, pos+1);
+          gtk_box_pack_start (GTK_BOX (table), list, TRUE, TRUE, 0);
           g_object_set_data(G_OBJECT(w), "categories", list);
 #else            
           GtkWidget *cathbox, *catbutton, *catlabel;
@@ -576,6 +661,7 @@ edit_window (gboolean isdialog)
           if (!isdialog)
             gtk_widget_show_all(cathbox);
 #endif
+	  
         }
     }
 
@@ -706,6 +792,21 @@ edit_person (struct contacts_person *p, gchar *title, gboolean isdialog)
                   gtk_editable_insert_text (GTK_EDITABLE (widget), v->value,
                           strlen (v->value), &pos);
                 }
+#ifdef IS_HILDON
+              else if (HILDON_IS_DATE_EDITOR (widget))
+                {
+                  GtkToggleButton *date_set = g_object_get_data (G_OBJECT (widget), "date-set");
+                  gtk_toggle_button_set_active (date_set, v->value != NULL);
+
+                  if (v->value)
+                    {
+                      guint year, month, day;
+                      
+                      sscanf (v->value, "%04d%02d%02d", &year, &month, &day);
+                      hildon_date_editor_set_date (HILDON_DATE_EDITOR (widget), year, month, day);
+                    }
+                }
+#else
               else if (GTK_IS_DATE_COMBO(widget))
                 {
                   if (v->value)
@@ -714,7 +815,7 @@ edit_person (struct contacts_person *p, gchar *title, gboolean isdialog)
                       GtkToggleButton *cbnoyear;
                       
                       sscanf (v->value, "%04d%02d%02d", &year, &month, &day);
-                      gtk_date_combo_set_date (GTK_DATE_COMBO (widget), year, month, day);
+                      gtk_date_combo_set_date (GTK_DATE_COMBO (widget), year, month - 1, day);
                       if (year == 0)
                         {
                           gtk_date_combo_ignore_year(GTK_DATE_COMBO(widget),TRUE);
@@ -725,6 +826,7 @@ edit_person (struct contacts_person *p, gchar *title, gboolean isdialog)
                   else
                     gtk_date_combo_clear (GTK_DATE_COMBO (widget));
                 }
+#endif
               else if (GTK_IS_IMAGE(widget))
                 {
                   if ((v->value) && !access(v->value,R_OK)) 
@@ -877,6 +979,21 @@ update_edit (struct contacts_person *p, GtkWidget *window)
                   gtk_editable_insert_text (GTK_EDITABLE (widget), v->value,
                                             strlen (v->value), &pos);
                 }
+#ifdef IS_HILDON
+              else if (HILDON_IS_DATE_EDITOR (widget))
+                {
+                  GtkToggleButton *date_set = g_object_get_data (G_OBJECT (widget), "date-set");
+                  gtk_toggle_button_set_active (date_set, v->value != NULL);
+
+                  if (v->value)
+                    {
+                      guint year, month, day;
+                      
+                      sscanf (v->value, "%04d%02d%02d", &year, &month, &day);
+                      hildon_date_editor_set_date (HILDON_DATE_EDITOR (widget), year, month, day);
+                    }
+                }
+#else
               else if (GTK_IS_DATE_COMBO(widget))
                 {
                   if (v->value)
@@ -885,7 +1002,7 @@ update_edit (struct contacts_person *p, GtkWidget *window)
                       GtkToggleButton *cbnoyear;
                       
                       sscanf (v->value, "%04d%02d%02d", &year, &month, &day);
-                      gtk_date_combo_set_date (GTK_DATE_COMBO (widget), year, month, day);
+                      gtk_date_combo_set_date (GTK_DATE_COMBO (widget), year, month - 1, day);
                       if (year == 0)
                         {
                           gtk_date_combo_ignore_year(GTK_DATE_COMBO(widget),TRUE);
@@ -896,6 +1013,7 @@ update_edit (struct contacts_person *p, GtkWidget *window)
                   else
                     gtk_date_combo_clear (GTK_DATE_COMBO (widget));
                 }
+#endif
               else if (GTK_IS_IMAGE(widget))
                 {
                   g_object_set_data(G_OBJECT(widget),"filename",v->value);
@@ -912,7 +1030,7 @@ update_edit (struct contacts_person *p, GtkWidget *window)
                     gtk_image_set_from_stock(GTK_IMAGE(widget), 
                       GTK_STOCK_MISSING_IMAGE, GTK_ICON_SIZE_BUTTON);
                 }
-              else if (GTK_IS_TEXT_VIEW(widget))
+             else if (GTK_IS_TEXT_VIEW(widget))
                 gtk_text_buffer_set_text (gtk_text_view_get_buffer (GTK_TEXT_VIEW (widget)), 
                           v->value, -1);
             }
@@ -1130,6 +1248,24 @@ on_edit_save_clicked (GtkButton * button, gpointer user_data)
       
       if (GTK_IS_EDITABLE (w))
         text = gtk_editable_get_chars (GTK_EDITABLE (w), 0, -1);
+#ifdef IS_HILDON
+      else if (HILDON_IS_DATE_EDITOR (w))
+        {
+          GtkToggleButton *date_set = g_object_get_data (G_OBJECT (w), "date-set");
+
+          if (gtk_toggle_button_get_active (date_set))
+            {
+              guint year, month, day;
+              hildon_date_editor_get_date (HILDON_DATE_EDITOR (w), &year, &month, &day);
+              snprintf (buf, sizeof (buf) - 1, "%04d%02d%02d", year, month, day);
+              text = g_strdup (buf);
+            }
+          else
+            {
+              text = NULL;
+            }
+        }
+#else
       else if (GTK_IS_DATE_COMBO(w))
         {
           GtkDateCombo *c = GTK_DATE_COMBO (w);
@@ -1137,16 +1273,17 @@ on_edit_save_clicked (GtkButton * button, gpointer user_data)
             {
               if (c->ignore_year)
                 snprintf (buf, sizeof (buf) - 1, "0000%02d%02d", 
-                  c->month, c->day);
+                  c->month + 1, c->day);
               else
                 snprintf (buf, sizeof (buf) - 1, "%04d%02d%02d", 
-                  c->year, c->month, c->day);
+                  c->year, c->month + 1, c->day);
               buf[sizeof (buf) - 1] = 0;
               text = g_strdup(buf);
             }
           else
             text = NULL;
         }
+#endif
         else if (GTK_IS_IMAGE(w))
           {
             text = g_strdup(g_object_get_data(G_OBJECT(w), "filename"));
@@ -1397,17 +1534,25 @@ tv_focus_out (GtkWidget *widget,
   return FALSE;
 }
 
-void
+#ifdef IS_HILDON
+static void
+on_date_set_toggled (GtkToggleButton *togglebutton, gpointer user_data)
+{
+  gtk_widget_set_sensitive (GTK_WIDGET (user_data), gtk_toggle_button_get_active (togglebutton));
+}
+#else
+static void
 on_unknown_year_toggled (GtkToggleButton *togglebutton, gpointer user_data)
 {
   GtkDateCombo *cb = user_data;
   
   gtk_date_combo_ignore_year(cb, gtk_toggle_button_get_active(togglebutton));
 }
+#endif
 
 /* CALLBACK */
 
-void
+static void
 on_name_clicked (GtkButton *button, gpointer user_data)
 {
   GtkWindow *edit = user_data;

@@ -53,7 +53,7 @@ AC_ARG_ENABLE(hildon,
 [  --enable-hildon         Enable Hildon GUI],
 [
 	ENABLE_HILDON=true
-	DEP_MODULES="$DEP_MODULES hildon-lgpl hildon-fm libosso"
+	DEP_MODULES="$DEP_MODULES hildon-lgpl hildon-fm hildon-libs libosso"
 ],
 [
 	ENABLE_HILDON=false

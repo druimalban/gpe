@@ -397,12 +397,12 @@ build_children (GtkWidget *vbox, GSList *children, struct contacts_person *p)
                 if (year)
                   { 
                     tm.tm_year = year - 1900;
-                    tm.tm_mon = month;
+                    tm.tm_mon = month - 1;
                     tm.tm_mday = day;
                     strftime(buf, sizeof(buf), "%x", &tm);
                   }
                 else 
-                  snprintf(buf,sizeof(buf),"%02d/%02d", month+1, day);
+                  snprintf(buf,sizeof(buf),"%02d/%02d", month, day);
                 w = gtk_label_new(buf);
                 gtk_misc_set_alignment(GTK_MISC(w), 0.0, 0.5);
                 hbox = gtk_hbox_new(FALSE, gpe_get_boxspacing());

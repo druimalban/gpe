@@ -2,7 +2,7 @@
 Encoding=UTF-8
 _Name=Contacts
 _Comment=GPE Contacts Application
-Exec=/var/lib/install@prefix@/bin/gpe-contacts
+Exec=@prefix@/bin/gpe-contacts
 Terminal=false
 Type=Application
 Icon=gpe-contacts

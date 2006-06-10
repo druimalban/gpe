@@ -74,11 +74,11 @@ gboolean scroll_delay = FALSE;
 gboolean do_wrap = FALSE;
 static osso_context_t *context = NULL;
 
-#define DEFAULT_STRUCTURE "/var/lib/install/usr/share/gpe-contacts/default-layout.xml"
-#define LARGE_STRUCTURE "/var/lib/install/usr/share/gpe-contacts/default-layout-bigscreen.xml"
+#define DEFAULT_STRUCTURE PREFIX "/share/gpe-contacts/default-layout.xml"
+#define LARGE_STRUCTURE PREFIX "/share/gpe-contacts/default-layout-bigscreen.xml"
 
 struct gpe_icon my_icons[] = {
-  {"icon", "/var/lib/install/usr/share/pixmaps/gpe-contacts.png" },
+  {"icon", PREFIX "/share/pixmaps/gpe-contacts.png" },
   {NULL, NULL}
 };
 
@@ -460,12 +460,12 @@ build_children (GtkWidget *vbox, GSList *children, struct contacts_person *p)
                 if (year)
                   { 
                     tm.tm_year = year - 1900;
-                    tm.tm_mon = month;
+                    tm.tm_mon = month - 1;
                     tm.tm_mday = day;
                     strftime(buf, sizeof(buf), "%x", &tm);
                   }
                 else 
-                  snprintf(buf,sizeof(buf),"%02d/%02d", month+1, day);
+                  snprintf(buf,sizeof(buf),"%02d/%02d", month, day);
                 w = gtk_label_new(buf);
                 gtk_misc_set_alignment(GTK_MISC(w), 0.0, 0.5);
                 hbox = gtk_hbox_new(FALSE, gpe_get_boxspacing());

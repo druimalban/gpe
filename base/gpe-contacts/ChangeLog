@@ -1,3 +1,21 @@
+2006-04-26  Jan Arne Petersen  <jpetersen@jpetersen.org>
+
+	Use some special maemo widgets in the edit dialog:
+	* configure.ac: Add hildon-libs to DEP_MODULES.
+	* editing.c (on_date_set_toggled), (pop_singles), (edit_window),
+	(edit_person), (update_edit), (create_edit), (build_children),
+	(on_edit_save_clicked): Use HildonCaption with a GtkVBox instead of
+	GtkTable, use HildonDateEditor.
+
+	* editing.c (add_tag): use g_object_set_data_full to add destroy
+	notifier.
+
+	Use ISO date in contacts database:
+	* main.c (build_children): Interpret the database value as ISO date.
+	* main-hildon.c (build_children): Likewise.
+	* editing.c (edit_person), (update_edit), (on_edit_save_clicked):
+	Convert	ISO date to GtkDateCombo format and reverse.
+
 2006-03-07  Florian Boor  <florian.boor@kernelconcepts.de>
 
 	* Makefile.am: Do not ship debian package support in the
