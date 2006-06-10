@@ -38,7 +38,7 @@ extern const gchar *TIMEFMT;
 /* Maemo's stupid application installer uses a wrong prefix, 
  * so we define the icon files here. */
 #ifdef IS_HILDON
-  #define INST_PREFIX  "/var/lib/install/usr/share/gpe/pixmaps/default/"
+  #define INST_PREFIX  "/usr/share/gpe/pixmaps/default/"
   #define DAY_ICON     INST_PREFIX "day_view.png"
   #define WEEK_ICON    INST_PREFIX "week_view.png"
   #define MONTH_ICON   INST_PREFIX "month_view.png"
@@ -46,7 +46,7 @@ extern const gchar *TIMEFMT;
   #define BELL_ICON    INST_PREFIX "bell.png"
   #define RECUR_ICON   INST_PREFIX "recur.png"
   #define BELLRECUR_ICON INST_PREFIX "bell_recur.png"
-  #define APP_ICON     "/var/lib/install/usr/share/pixmaps/gpe-calendar.png"
+  #define APP_ICON     "/usr/share/pixmaps/gpe-calendar.png"
 #else
   #define DAY_ICON       "day_view"
   #define WEEK_ICON      "week_view"
