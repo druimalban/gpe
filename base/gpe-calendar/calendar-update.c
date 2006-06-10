@@ -577,10 +577,17 @@ calendar_modified (EventDB *edb, EventCalendar *ec, gpointer *data)
 
     case 1:
       /* See if a refresh is needed.  */
+      if (! info)
+	/* Changed to this node.  */
+	info = info_new (ec);
       refresh (NULL);
       break;
 
     case 2:
+      if (! info)
+	/* Changed to this node.  */
+	info = info_new (ec);
+
       if (! info->update_at)
 	/* No update is scheduled, schedule one in UPDATE_HORIZON
 	   seconds (to allow changes to aggregate!).  */

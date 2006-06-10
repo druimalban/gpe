@@ -470,11 +470,11 @@ calendar_edit_dialog_new (EventCalendar *ec)
 	}
 
       char *s = event_calendar_get_title (ec);
-      gtk_entry_set_text (calendar_edit->title, s);
+      gtk_entry_set_text (calendar_edit->title, s ?: "");
       g_free (s);
 
       s = event_calendar_get_description (ec);
-      gtk_entry_set_text (calendar_edit->description, s);
+      gtk_entry_set_text (calendar_edit->description, s ?: "");
       g_free (s);
 
       if (event_calendar_get_color (ec, &calendar_edit->color))
@@ -484,15 +484,15 @@ calendar_edit_dialog_new (EventCalendar *ec)
 				event_calendar_get_mode (ec));
 
       s = event_calendar_get_url (ec);
-      gtk_entry_set_text (calendar_edit->url, s);
+      gtk_entry_set_text (calendar_edit->url, s ?: "");
       g_free (s);
 
       s = event_calendar_get_username (ec);
-      gtk_entry_set_text (calendar_edit->username, s);
+      gtk_entry_set_text (calendar_edit->username, s ?: "");
       g_free (s);
 
       s = event_calendar_get_password (ec);
-      gtk_entry_set_text (calendar_edit->password, s);
+      gtk_entry_set_text (calendar_edit->password, s ?: "");
       g_free (s);
 
       int interval = event_calendar_get_sync_interval (ec);

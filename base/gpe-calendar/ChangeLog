@@ -1,7 +1,15 @@
+2006-06-11  Neal H. Walfield  <neal@gnu.org>
+
+	* calendar-edit-dialog.c (calendar_edit_dialog_new): When calling
+	gtk_entry_set_text, if S is NULL, pass "" instead.
+
+	* calendar-update.c (calendar_modified): If mode is 1 or 2 and
+	INFO is NULL, create a new INFO structure.
+
 2006-06-10  Florian Boor  <florian@kernelconcepts.de>
 
-	* hildon/*.in, globals.h, Makefile.am: Change file locations to become
-compatible with Maemo 2.0.
+	* hildon/*.in, globals.h, Makefile.am: Change file locations to
+	become compatible with Maemo 2.0.
 
 2006-06-06  Neal H. Walfield  <neal@gnu.org>
 
