@@ -1,6 +1,7 @@
 2006-06-10  Florian Boor  <florian@kernelconcepts.de>
-
-    * Release version 0.7
+	
+	* Makefile.am: Copy debian files in order to build a package.
+	* Release version 0.7
 
 2006-04-21  Jan Arne Petersen <jpetersen@jpetersen.org>
 
