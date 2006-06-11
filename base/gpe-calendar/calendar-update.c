@@ -476,31 +476,32 @@ refresh (gpointer data)
       EventCalendar *ec = info->ec;
 
       time_t next_refresh;
-      switch (event_calendar_get_mode (ec))
-	{
-	case 1:
-	  next_refresh = event_calendar_get_last_pull (ec)
-	    + event_calendar_get_sync_interval (ec);
-	  break;
-	case 2:
-	  if (info->update_at)
-	    /* We are scheduled to do an update at
-	       INFO->UPDATE_AT.  */
-	    next_refresh = info->update_at;
-	  else if (event_calendar_get_last_modification (ec)
-		   > event_calendar_get_last_push (ec))
-	    /* There are changes which have not yet been uploaded and
-	       we are not yet scheduled to do an update.  */
-	    next_refresh = now;
-	  else
-	    continue;
-	  break;
-	default:
-	  continue;
-	}
 
       if (info->retry)
-	next_refresh = (MIN (info->retry, next_refresh));
+	next_refresh = info->retry;
+      else
+	switch (event_calendar_get_mode (ec))
+	  {
+	  case 1:
+	    next_refresh = event_calendar_get_last_pull (ec)
+	      + event_calendar_get_sync_interval (ec);
+	    break;
+	  case 2:
+	    if (info->update_at)
+	      /* We are scheduled to do an update at
+		 INFO->UPDATE_AT.  */
+	      next_refresh = info->update_at;
+	    else if (event_calendar_get_last_modification (ec)
+		     > event_calendar_get_last_push (ec))
+	      /* There are changes which have not yet been uploaded and
+		 we are not yet scheduled to do an update.  */
+	      next_refresh = now;
+	    else
+	      continue;
+	    break;
+	  default:
+	    continue;
+	  }
 
       if (next_refresh < now + 60)
 	{
