@@ -23,8 +23,6 @@
 #include "globals.h"
 #include "event-cal.h"
 
-#define _(x) gettext(x)
-
 struct _GtkEventCal
 {
   GtkCalendar widget;

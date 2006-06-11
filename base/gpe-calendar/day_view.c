@@ -58,10 +58,9 @@ struct _GtkDayView
 typedef struct
 {
   GtkViewClass view_class;
-  GObjectClass parent_class;
 } DayViewClass;
 
-static void gtk_day_view_base_class_init (gpointer klass);
+static void gtk_day_view_base_class_init (gpointer klass, gpointer klass_data);
 static void gtk_day_view_init (GTypeInstance *instance, gpointer klass);
 static void gtk_day_view_dispose (GObject *obj);
 static void gtk_day_view_finalize (GObject *object);
@@ -75,16 +74,16 @@ static GtkWidgetClass *parent_class;
 GType
 gtk_day_view_get_type (void)
 {
-  static GType type = 0;
+  static GType type;
 
   if (! type)
     {
       static const GTypeInfo info =
       {
 	sizeof (DayViewClass),
+	NULL,
+	NULL,
 	gtk_day_view_base_class_init,
-	NULL,
-	NULL,
 	NULL,
 	NULL,
 	sizeof (struct _GtkDayView),
@@ -100,7 +99,7 @@ gtk_day_view_get_type (void)
 }
 
 static void
-gtk_day_view_base_class_init (gpointer klass)
+gtk_day_view_base_class_init (gpointer klass, gpointer klass_data)
 {
   GObjectClass *object_class;
   GtkWidgetClass *widget_class;
@@ -123,29 +122,18 @@ gtk_day_view_base_class_init (gpointer klass)
 static void
 gtk_day_view_init (GTypeInstance *instance, gpointer klass)
 {
-  GtkDayView *day_view = GTK_DAY_VIEW (instance);
-
-  day_view->reminders = 0;
-  day_view->appointments = 0;
 }
 
 static void
 gtk_day_view_dispose (GObject *obj)
 {
-  /* Chain up to the parent class */
+  /* Chain up to the parent class.  */
   G_OBJECT_CLASS (parent_class)->dispose (obj);
 }
 
 static void
 gtk_day_view_finalize (GObject *object)
 {
-  GtkDayView *day_view;
-
-  g_return_if_fail (object);
-  g_return_if_fail (GTK_IS_DAY_VIEW (object));
-
-  day_view = (GtkDayView *) object;
-
   G_OBJECT_CLASS (parent_class)->finalize (object);
 }
 
@@ -199,6 +187,7 @@ day_view_row_clicked (GtkWidget *widget, gint row, gpointer d)
   localtime_r (&t, &tm);
   tm.tm_hour = row;
   tm.tm_min = 0;
+  tm.tm_isdst = -1;
 
   w = new_event (mktime (&tm));
   gtk_widget_show (w);
@@ -226,10 +215,10 @@ gtk_day_view_reload_events (GtkView *view)
   GSList *events, *appointments, *iter;
 
   localtime_r (&t, &vt);
-
   vt.tm_hour = 0;
   vt.tm_min = 0;
   vt.tm_sec = 0;
+  vt.tm_isdst = -1;
   start = mktime (&vt);
   end = start + 30 * 60 * 60 - 1;
 
@@ -244,18 +233,18 @@ gtk_day_view_reload_events (GtkView *view)
 	  && (start + 24 * 60 * 60
 	      <= event_get_start (ev) + event_get_duration (ev)))
 	  /* All day event or a multi-day event.  */
-	reminders = g_slist_append (reminders, ev);
+	reminders = g_slist_prepend (reminders, ev);
       else if (event_get_duration (ev) == 0
 	       && event_get_start (ev) < start + 24 * 60 * 60)
 	/* Normal reminder.  */
-	reminders = g_slist_append (reminders, ev);
+	reminders = g_slist_prepend (reminders, ev);
       else if (event_get_duration (ev) == 0
 	       || (event_get_start (ev) == start + 24 * 60 * 60
 		   && event_get_duration (ev) == 24 * 60 * 60))
 	/* An all day event or reminder which occurs tomorrow.  */
 	g_object_unref (ev);
       else
-	appointments = g_slist_append (appointments, ev);
+	appointments = g_slist_prepend (appointments, ev);
     }
 
   g_slist_free (events);

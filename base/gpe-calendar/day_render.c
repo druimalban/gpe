@@ -128,7 +128,6 @@ struct _GtkDayRender
 typedef struct
 {
   GtkDrawingAreaClass drawing_area_class;
-  GtkWidgetClass parent_class;
 
   void (* event_clicked) (GtkDayRender *day_render);
   void (* row_clicked) (GtkDayRender *day_render);
@@ -156,16 +155,16 @@ static GtkWidgetClass *parent_class;
 GType
 gtk_day_render_get_type (void)
 {
-  static GType type = 0;
+  static GType type;
 
   if (! type)
     {
       static const GTypeInfo day_render_info =
       {
 	sizeof (GtkDayRenderClass),
+	NULL,
+	NULL,
 	gtk_day_render_base_class_init,
-	NULL,
-	NULL,
 	NULL,
 	NULL,
 	sizeof (struct _GtkDayRender),
@@ -227,11 +226,6 @@ gtk_day_render_base_class_init (gpointer klass)
 static void
 gtk_day_render_init (GTypeInstance *instance, gpointer klass)
 {
-  GtkDayRender *day_render = GTK_DAY_RENDER (instance);
-
-  day_render->gray_gc = 0;
-  day_render->visible_width = 0;
-  day_render->visible_height = 0;
 }
 
 GtkWidget *

@@ -162,7 +162,7 @@ day_popup (const GDate *date, const GSList *events)
 	      GdkPixbuf *pixbuf = gpe_find_icon ("bell_recur");
 	      bell_recur = gtk_image_new_from_pixbuf (pixbuf);
 	      g_object_add_weak_pointer (G_OBJECT (bell_recur),
-					 &bell_recur);
+					 (gpointer *) &bell_recur);
 	    }
 	  g_object_ref (bell_recur);
 	  image = bell_recur;
@@ -173,7 +173,8 @@ day_popup (const GDate *date, const GSList *events)
 	    {
 	      GdkPixbuf *pixbuf = gpe_find_icon ("bell");
 	      bell = gtk_image_new_from_pixbuf (pixbuf);
-	      g_object_add_weak_pointer (G_OBJECT (bell), &bell);
+	      g_object_add_weak_pointer (G_OBJECT (bell),
+					 (gpointer *) &bell);
 	    }
 	  g_object_ref (bell);
 	  image = bell;
@@ -184,7 +185,8 @@ day_popup (const GDate *date, const GSList *events)
 	    {
 	      GdkPixbuf *pixbuf = gpe_find_icon ("recur");
 	      recur = gtk_image_new_from_pixbuf (pixbuf);
-	      g_object_add_weak_pointer (G_OBJECT (recur), &recur);
+	      g_object_add_weak_pointer (G_OBJECT (recur),
+					 (gpointer *) &recur);
 	    }
 	  g_object_ref (recur);
 	  image = recur;

@@ -1,5 +1,36 @@
 2006-06-11  Neal H. Walfield  <neal@gnu.org>
 
+	* day_popup.c (day_popup): Cast the second argument to
+	g_object_add_weak_pointer to a gpointer *.
+
+	* day_render.c (GtkDayRenderClass): Remove field parent_class.
+	(gtk_day_render_get_type): Don't explicitly initialize TYPE to 0.
+	Make gtk_day_render_base_class_init the fourth element in the
+	initializer.
+	(gtk_day_render_init): Don't initialize fields to 0.
+	* day_view.c (DayViewClass): Remove field parent_class.
+	(gtk_day_view_base_class_init): Take additional parameter,
+	KLASS_DATA.
+	(gtk_day_view_get_type): Don't explicitly initialize TYPE to 0.
+	Make gtk_day_view_base_class_init the fourth element in the
+	initializer.
+	(gtk_day_view_init): Don't initialize fields to 0.
+	(gtk_day_view_finalize): Elide extraneous checks.
+
+	(day_view_row_clicked): Set TM.TM_ISDST to -1.
+	(gtk_day_view_reload_events): Likewise.
+
+	(gtk_day_view_reload_events): Don't append events to REMINDERS and
+	APPOINTMENTS, prepend them.
+
+	* event-cal.c (_): Don't define.
+
+	* week_view.c (gtk_week_view_key_press_event): Pass D->EVENTS as
+	the second argument to day_popup.
+	(gtk_week_view_button_press_event): Likewise.
+
+2006-06-11  Neal H. Walfield  <neal@gnu.org>
+
 	* alarm-dialog.c (alarm_dialog_init): Set the window's icon to the
 	"bell" icon.
 

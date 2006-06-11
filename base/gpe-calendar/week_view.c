@@ -644,7 +644,7 @@ gtk_week_view_key_press_event (GtkWidget *widget, GdkEventKey *k)
       break;
 
     case GDK_space:
-      gtk_menu_popup (day_popup (&d->date, NULL),
+      gtk_menu_popup (day_popup (&d->date, d->events),
 		      NULL, NULL, NULL, NULL,
 		      0, gtk_get_current_event_time());
       return TRUE;
@@ -715,7 +715,7 @@ gtk_week_view_button_press_event (GtkWidget *widget, GdkEventButton *event)
 	    }
 	}
       else if (event->button == 3)
-	gtk_menu_popup (day_popup (&d->date, FALSE),
+	gtk_menu_popup (day_popup (&d->date, d->events),
 			NULL, NULL, NULL, NULL,
 			event->button, event->time);
     }
