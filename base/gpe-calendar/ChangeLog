@@ -1,5 +1,35 @@
 2006-06-11  Neal H. Walfield  <neal@gnu.org>
 
+	* alarm-dialog.c (alarm_dialog_init): Set the window's icon to the
+	"bell" icon.
+
+	* calendar-edit-dialog.c (parent_combo_changed): Only set
+	D->PARENT_CHECK active if the widget has an entry selected.
+
+	* main.c: Don't include "calendars-widgets.h" or
+	"calendar-edit-dialog.h".
+	(calendars_button_clicked): Make dialog a static.  If DIALOG is
+	not-NULL then just show it and bring it to the foreground.
+	(alarm_button_clicked): Bring ALARM_DIALOG to the foreground.
+
+	(update_view): Mark static.
+	(main): Connect EVENT_DB's "event-new", "event-removed" and
+	"event-modified" signals to call update_view.
+	* globals.h (update_view): Remove declaration.
+	* event-menu.c (delete_event_cb): Don't call update_view.
+	(move_event_to): Likewise.
+	* event-ui.c (click_ok): Likewise.
+	* import-vcal.c (import_vcal): Likewise.
+
+	* xsettings.c (push_new_changes): Change to a function callback.
+	(notify_func): Call PUSH_NEW_CHANGES rather than update_view.
+	(gpe_calendar_start_xsettings): Take new argument, PUSH_CHANGES.
+	Set PUSH_NEW_CHANGES to it.
+	* main.c (gpe_calendar_start_xsettings): Synchronize declaration.
+	(main): Pass update_view to gpe_calendar_start_xsettings.
+
+2006-06-11  Neal H. Walfield  <neal@gnu.org>
+
 	* calendar-edit-dialog.c (calendar_edit_dialog_new): When calling
 	gtk_entry_set_text, if S is NULL, pass "" instead.
 

@@ -127,7 +127,8 @@ static void
 parent_combo_changed (GtkComboBox *widget, gpointer user_data)
 {
   CalendarEditDialog *d = CALENDAR_EDIT_DIALOG (user_data);
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (d->parent_check), TRUE);
+  if (gtk_combo_box_get_active (GTK_COMBO_BOX (widget)) != -1)
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (d->parent_check), TRUE);
 }
 
 static void

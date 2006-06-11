@@ -186,6 +186,7 @@ alarm_dialog_init (GTypeInstance *instance, gpointer klass)
 		    G_CALLBACK (gtk_widget_hide_on_delete), NULL);
 
   gtk_window_set_title (window, _("Alarms"));
+  gpe_set_window_icon (window, "bell");
   gtk_window_set_position (window, GTK_WIN_POS_CENTER_ON_PARENT);
 
   /* The main vbox.  */

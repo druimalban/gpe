@@ -55,15 +55,13 @@
 #include "event-list.h"
 #include "alarm-dialog.h"
 #include "calendars-dialog.h"
-#include "calendars-widgets.h"
-#include "calendar-edit-dialog.h"
 #include "calendar-update.h"
 
 #include <gpe/pim-categories.h>
 
 #include <locale.h>
 
-extern gboolean gpe_calendar_start_xsettings (void);
+extern gboolean gpe_calendar_start_xsettings (void (*push_changes) (void));
 
 #define CALENDAR_FILE_ "/.gpe/calendar"
 #define CALENDAR_FILE \
@@ -167,7 +165,7 @@ hard_reload (gpointer data)
   return FALSE;
 }
 
-void
+static void
 update_view (void)
 {
   if (current_view)
@@ -261,10 +259,18 @@ set_today (void)
 static void
 calendars_button_clicked (GtkWidget *widget, gpointer user_data)
 {
-  GtkWidget *dialog = calendars_dialog_new (NULL);
-  gtk_window_set_transient_for (GTK_WINDOW (dialog),
-				GTK_WINDOW (gtk_widget_get_toplevel (widget)));
+  static GtkWidget *dialog;
+
+  if (! dialog)
+    {
+      dialog = calendars_dialog_new (NULL);
+      g_object_add_weak_pointer (G_OBJECT (dialog), (gpointer *) &dialog);
+      gtk_window_set_transient_for
+	(GTK_WINDOW (dialog), GTK_WINDOW (gtk_widget_get_toplevel (widget)));
+    }
+
   gtk_widget_show (dialog);
+  gtk_window_present (GTK_WINDOW (dialog));
 }
 
 static void
@@ -647,6 +653,7 @@ alarm_button_clicked (GtkWidget *widget, gpointer d)
 {
   alarm_dialog_required ();
   gtk_widget_show (GTK_WIDGET (alarm_dialog));
+  gtk_window_present (GTK_WINDOW (alarm_dialog));
 }
 
 static void
@@ -1025,6 +1032,12 @@ main (int argc, char *argv[])
 		    G_CALLBACK (update_view), NULL);
   g_signal_connect (G_OBJECT (event_db), "calendar-reparented",
 		    G_CALLBACK (update_view), NULL);
+  g_signal_connect (G_OBJECT (event_db), "event-new",
+		    G_CALLBACK (update_view), NULL);
+  g_signal_connect (G_OBJECT (event_db), "event-removed",
+		    G_CALLBACK (update_view), NULL);
+  g_signal_connect (G_OBJECT (event_db), "event-modified",
+		    G_CALLBACK (update_view), NULL);
 
   if (gpe_pim_categories_init () == FALSE)
     exit (1);
@@ -1296,7 +1309,7 @@ main (int argc, char *argv[])
   gtk_container_add (GTK_CONTAINER (main_bin), GTK_WIDGET (main_container));
   gtk_widget_show (GTK_WIDGET (main_container));
 
-  gpe_calendar_start_xsettings ();
+  gpe_calendar_start_xsettings (update_view);
 
   gtk_toggle_tool_button_set_active (GTK_TOGGLE_TOOL_BUTTON (day_button), TRUE);
   new_view (gtk_day_view_new);

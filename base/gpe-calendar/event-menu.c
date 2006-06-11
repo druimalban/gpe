@@ -90,9 +90,6 @@ delete_event_cb (GtkWidget *widget, gpointer d)
 	}
       g_free (s);
     }
-
-  if (removed)
-    update_view ();
 }
 
 static void
@@ -162,7 +159,6 @@ move_event_to (EventCalendar *ec, gpointer user_data)
 {
   Event *ev = EVENT (user_data);
   event_set_calendar (ev, ec);
-  update_view ();
 }
 
 struct info

@@ -342,7 +342,6 @@ click_ok (GtkWidget *widget, struct edit_state *s)
     }
 
   event_flush (ev);
-  update_view ();
   edit_finished (s);
 }
 

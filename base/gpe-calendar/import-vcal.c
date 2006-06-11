@@ -608,6 +608,4 @@ import_vcal (EventCalendar *ec, const char *files[])
 
   gtk_dialog_run (GTK_DIALOG (feedbackdlg));
   gtk_widget_destroy (feedbackdlg);
-
-  update_view ();  
 }

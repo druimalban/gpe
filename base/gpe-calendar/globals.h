@@ -17,8 +17,6 @@
 
 extern EventDB *event_db;
 
-extern void update_view (void);
-
 extern gboolean week_starts_sunday;
 extern guint week_offset;
 extern gboolean day_view_combined_times;

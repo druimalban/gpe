@@ -20,10 +20,8 @@
 
 #include "globals.h"
 
-#define _(x) gettext(x)
-
 static XSettingsClient *client;
-static gboolean push_new_changes;
+static void (*push_new_changes) (void);
 
 #define KEY_BASE "GPE/"
 
@@ -47,7 +45,7 @@ notify_func (const char *name, XSettingsAction action,
 	      else
 		week_offset = 0;
 	      if (push_new_changes)
-		update_view ();
+		push_new_changes ();
 	    }
 	}
       else if (!strcasecmp (p, "Calendar/day-view-combined-times"))
@@ -56,7 +54,7 @@ notify_func (const char *name, XSettingsAction action,
 	    {
 	      day_view_combined_times = setting->data.v_int ? TRUE : FALSE;
 	      if (push_new_changes)
-		update_view ();
+		push_new_changes ();
 	    }
 	}
     }
@@ -97,7 +95,7 @@ watch_func (Window window, Bool is_start, long mask,
 }
 
 gboolean
-gpe_calendar_start_xsettings (void)
+gpe_calendar_start_xsettings (void (*push_changes) (void))
 {
   Display *dpy = GDK_DISPLAY ();
 
@@ -108,7 +106,7 @@ gpe_calendar_start_xsettings (void)
       return FALSE;
     }
 
-  push_new_changes = TRUE;
+  push_new_changes = push_changes;
 
   return TRUE;
 }
