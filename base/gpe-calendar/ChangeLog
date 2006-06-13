@@ -1,3 +1,24 @@
+2006-06-13  Neal H. Walfield  <neal@gnu.org>
+
+	* event-ui.c: Don't include <sys/types.h>, <sys/stat.h>,
+	<stdio.h>, <stdlib.h>, <unistd.h>, <gpe/question.h> and
+	<gpe/gtksimplemenu.h>.  Include <stdlib.h>.
+	(struct edit_state): Rename field byday to bydayweekly and udpate
+	users.  Add field bydaymonthly and days.
+	(struct bydaymonthly): New structure.
+	(day_combo_changed): New function.
+	(bydaymonthly_new): Likewise.
+	(recur_combo_changed): If a monthly recurrence, show the monthly
+	box.  If S->DAYS is NULL, create a selector.
+	(edit_finished): Destroy S->DAYS.
+	(build_edit_event_window): Create S->BYDAYMONTHLY.
+	(click_ok): Don't unref S->EV in the case where the end time is
+	earlier than the start time.  Support byday for the monthly
+	recurrence.  Rewrite support for the weekly recurrence.
+	(edit_event): Likewise.
+	* export-vcal.c (export_event_as_vevent): Likewise.
+	* import-vcal.c (do_import_vevent): Likewise.
+
 2006-06-11  Neal H. Walfield  <neal@gnu.org>
 
 	* calendar-update.c (refresh): If INFO->RETRY is non-zero, use

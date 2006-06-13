@@ -8,12 +8,8 @@
  * 2 of the License, or (at your option) any later version.
  */
 
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
 #include <string.h>
+#include <stdlib.h>
 #include <time.h>
 #include <libintl.h>
 #include <langinfo.h>
@@ -21,12 +17,10 @@
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 
-#include <gpe/question.h>
 #include <gpe/pixmaps.h>
 #include <gpe/picturebutton.h>
 #include <gpe/gtkdatecombo.h>
 #include <gpe/errorbox.h>
-#include <gpe/gtksimplemenu.h>
 #include <gpe/event-db.h>
 #include <gpe/spacing.h>
 #include <gpe/pim-categories.h>
@@ -64,8 +58,12 @@ struct edit_state
   GtkSpinButton *increment_unit;
   GtkLabel *increment_unit_postfix;
 
-  GtkContainer *byday;
+  GtkContainer *bydayweekly;
   GtkWidget *checkbuttonwday[7];
+
+  GtkBox *bydaymonthly;
+  /* List of struct bydaymonthly *.  */
+  GSList *days;
 
   GtkWidget *radiobuttonforever, *radiobuttonendafter,
             *radiobuttonendon, *datecomboendon;
@@ -89,6 +87,73 @@ destroy_user_data (gpointer user_data, GObject *object)
   struct edit_state *s = user_data;
   g_slist_free (s->categories);
   g_free (s);
+}
+
+struct bydaymonthly
+{
+  GtkContainer *cont;
+  GtkComboBox *freq;
+  GtkComboBox *day;
+  gulong change_signal;
+};
+
+static struct bydaymonthly *bydaymonthly_new (struct edit_state *s,
+					      gboolean create_new_signal);
+
+/* A bydaymonthly combo changed.  Make a new one.  */
+static void
+day_combo_changed (GtkComboBox *combo, struct edit_state *s)
+{
+  if (gtk_combo_box_get_active (combo) == -1)
+    return;
+
+  g_signal_handlers_disconnect_by_func (combo, day_combo_changed, s);
+
+  bydaymonthly_new (s, TRUE);
+}
+
+/* Creates a bydaymonthly box.  */
+static struct bydaymonthly *
+bydaymonthly_new (struct edit_state *s, gboolean create_new_signal)
+{
+  struct bydaymonthly *bdm = g_malloc (sizeof (*bdm));
+
+  GtkBox *box = GTK_BOX (gtk_hbox_new (FALSE, 0));
+  bdm->cont = GTK_CONTAINER (box);
+  gtk_box_pack_start (s->bydaymonthly, GTK_WIDGET (box), FALSE, FALSE, 3);
+  gtk_widget_show (GTK_WIDGET (box));
+
+  GtkComboBox *combo = GTK_COMBO_BOX (gtk_combo_box_new_text ());
+  bdm->freq = combo;
+  gtk_combo_box_append_text (combo, _("Every"));
+  gtk_combo_box_append_text (combo, _("First"));
+  gtk_combo_box_append_text (combo, _("Second"));
+  gtk_combo_box_append_text (combo, _("Third"));
+  gtk_combo_box_append_text (combo, _("Fourth"));
+  gtk_combo_box_append_text (combo, _("Last"));
+  gtk_combo_box_append_text (combo, _("Second to last"));
+  gtk_combo_box_set_active (combo, 0);
+  gtk_box_pack_start (box, GTK_WIDGET (combo), FALSE, FALSE, 3);
+  gtk_widget_show (GTK_WIDGET (combo));
+
+  const nl_item days[] = { ABDAY_2, ABDAY_3, ABDAY_4, ABDAY_5,
+			   ABDAY_6, ABDAY_7, ABDAY_1 };
+
+  combo = GTK_COMBO_BOX (gtk_combo_box_new_text ());
+  bdm->day = combo;
+  int i;
+  gtk_combo_box_append_text (combo, "");
+  for (i = 0; i < 7; i ++)
+    gtk_combo_box_append_text (combo, nl_langinfo(days[i]));
+  if (create_new_signal)
+    g_signal_connect (G_OBJECT (combo), "changed",
+		      G_CALLBACK (day_combo_changed), s);
+  gtk_box_pack_start (box, GTK_WIDGET (combo), FALSE, FALSE, 3);
+  gtk_widget_show (GTK_WIDGET (combo));
+
+  s->days = g_slist_prepend (s->days, bdm);
+
+  return bdm;
 }
 
 static void
@@ -117,9 +182,19 @@ recur_combo_changed (GtkWidget *widget, struct edit_state *s)
 			    gtk_combo_box_get_active (s->recur_type) != 0);
 
   if (gtk_combo_box_get_active (s->recur_type) == 2)
-    gtk_widget_show (GTK_WIDGET (s->byday));
+    gtk_widget_show (GTK_WIDGET (s->bydayweekly));
   else
-    gtk_widget_hide (GTK_WIDGET (s->byday));
+    gtk_widget_hide (GTK_WIDGET (s->bydayweekly));
+
+  if (gtk_combo_box_get_active (s->recur_type) == 3)
+    {
+      if (! s->days)
+	bydaymonthly_new (s, TRUE);
+
+      gtk_widget_show (GTK_WIDGET (s->bydaymonthly));
+    }
+  else if (s->bydaymonthly)
+    gtk_widget_hide (GTK_WIDGET (s->bydaymonthly));
 }
 
 static guint cached_edit_state_destroy_source;
@@ -141,6 +216,15 @@ static gboolean
 edit_finished (struct edit_state *s)
 {
   gtk_widget_hide (GTK_WIDGET (s->window));
+
+  /* Free the list of days which is irrelevant for the next user.  */
+  gtk_container_foreach (GTK_CONTAINER (s->bydaymonthly),
+			 (GtkCallback) gtk_widget_destroy, NULL);
+  GSList *i;
+  for (i = s->days; i; i = i->next)
+    g_free (i->data);
+  g_slist_free (s->days);
+  s->days = NULL;
 
   if (cached_edit_state)
     gtk_widget_destroy (GTK_WIDGET (s->window));
@@ -200,8 +284,6 @@ click_ok (GtkWidget *widget, struct edit_state *s)
   if (end_t < start_t)
     {
       gpe_error_box (_("End time must not be earlier than start time"));
-      if (s->ev)
-	g_object_unref (s->ev);
       return;
     }
 
@@ -330,15 +412,51 @@ click_ok (GtkWidget *widget, struct edit_state *s)
 	}
     }
 
+  const char *days[] = { "MO", "TU", "WE", "TH", "FR", "SA", "SU" };
+
   if (recur == RECUR_WEEKLY)
     {
+      GSList *byday = NULL;
+
       int i;
-      int daymask = 0;
       for (i = 0; i < 7; i++)
 	if (gtk_toggle_button_get_active
 	    (GTK_TOGGLE_BUTTON (s->checkbuttonwday[i])))
-	  daymask |= 1 << i;
-      event_set_recurrence_daymask (ev, daymask);
+	  byday = g_slist_prepend (byday, g_strdup (days[i]));
+
+      event_set_recurrence_byday (ev, byday);
+    }
+  if (recur == RECUR_MONTHLY)
+    {
+      GSList *byday = NULL;
+      GSList *l;
+      for (l = s->days; l; l = l->next)
+	{
+	  struct bydaymonthly *bdm = l->data;
+	  int freq = gtk_combo_box_get_active (bdm->freq);
+	  int day = gtk_combo_box_get_active (bdm->day);
+	  /* The first entry is a blank.  */
+	  day --;
+
+	  if (freq < 0 || day <= 0)
+	    continue;
+
+	  if (freq == 5)
+	    /* Last.  */
+	    freq = -1;
+	  else if (freq == 6)
+	    /* Second to last.  */
+	    freq = -2;
+
+	  char *s;
+	  if (freq == 0)
+	    s = g_strdup (days[day]);
+	  else
+	    s = g_strdup_printf ("%d%s", freq, days[day]);
+	  byday = g_slist_prepend (byday, s);
+	}
+
+      event_set_recurrence_byday (ev, byday);
     }
 
   event_flush (ev);
@@ -544,8 +662,8 @@ set_toggle (GtkWidget *widget, GtkToggleButton *toggle)
 static struct edit_state *
 build_edit_event_window (void)
 {
-  static const nl_item days[] = { ABDAY_2, ABDAY_3, ABDAY_4, ABDAY_5,
-                                  ABDAY_6, ABDAY_7, ABDAY_1 };
+  const nl_item days[] = { ABDAY_2, ABDAY_3, ABDAY_4, ABDAY_5,
+			   ABDAY_6, ABDAY_7, ABDAY_1 };
   struct edit_state *s = g_malloc0 (sizeof (struct edit_state));
 
   int boxspacing = gpe_get_boxspacing () / 2;
@@ -951,9 +1069,9 @@ build_edit_event_window (void)
   gtk_box_pack_start (hbox, label, FALSE, FALSE, 0);
   gtk_widget_show (label);
 
-  /* By day.  */
+  /* By day (weekly).  */
   table = GTK_TABLE (gtk_table_new (3, 3, FALSE));
-  s->byday = GTK_CONTAINER (table);
+  s->bydayweekly = GTK_CONTAINER (table);
   gtk_box_pack_start (GTK_BOX (vbox), GTK_WIDGET (table), FALSE, FALSE, 0);
   gtk_widget_show (GTK_WIDGET (table));
 
@@ -970,42 +1088,11 @@ build_edit_event_window (void)
       gtk_widget_show (b);
     }
 
-  /* Advanced by day.  */
-#if 0
-  snprintf (buf, sizeof(buf), _("on day %d"), 5);
-  daybutton = gtk_radio_button_new_with_label (NULL, buf);
-
-  radiogroup = gtk_radio_button_group (GTK_RADIO_BUTTON (daybutton));
-  weekbutton = gtk_radio_button_new_with_label (radiogroup, _("on the"));
-
-  menu1 = gtk_menu_new ();
-  menu2 = gtk_menu_new ();
-  optionmenu1 = gtk_option_menu_new ();
-  optionmenu2 = gtk_option_menu_new ();
-
-  gtk_menu_append (GTK_MENU (menu1),
-                   gtk_menu_item_new_with_label (_("first")));
-  gtk_menu_append (GTK_MENU (menu1),
-                   gtk_menu_item_new_with_label (_("second")));
-  gtk_menu_append (GTK_MENU (menu1),
-                   gtk_menu_item_new_with_label (_("third")));
-  gtk_menu_append (GTK_MENU (menu1),
-                   gtk_menu_item_new_with_label (_("fourth")));
-  gtk_menu_append (GTK_MENU (menu1),
-                   gtk_menu_item_new_with_label (_("fifth")));
-  gtk_menu_append (GTK_MENU (menu1),
-                   gtk_menu_item_new_with_label (_("last")));
-
-  for (i = 0; i < 7; i++)
-    gtk_menu_append (GTK_MENU (menu2),
-                     gtk_menu_item_new_with_label (nl_langinfo(days[i])));
-
-  gtk_option_menu_set_menu (GTK_OPTION_MENU (optionmenu1), menu1);
-  gtk_option_menu_set_menu (GTK_OPTION_MENU (optionmenu2), menu2);
-
-  gtk_widget_set_usize (optionmenu1, 60, -1);
-  gtk_widget_set_usize (optionmenu2, 60, -1);
-#endif
+  /* By day (monthly).  */
+  s->bydaymonthly = GTK_BOX (gtk_vbox_new (FALSE, 0));
+  gtk_box_pack_start (GTK_BOX (vbox), GTK_WIDGET (s->bydaymonthly),
+		      FALSE, FALSE, 0);
+  /* Don't show it.  */
 
   /* End date.  */
 
@@ -1108,7 +1195,7 @@ build_edit_event_window (void)
 
   /* It should be initially hidden but we want it to contribute to the
      size calculation.  */
-  gtk_widget_hide (GTK_WIDGET (s->byday));
+  gtk_widget_hide (GTK_WIDGET (s->bydayweekly));
 
   gtk_widget_grab_focus (s->summary);
 
@@ -1255,12 +1342,12 @@ edit_event (Event *ev)
   calendars_combo_box_set_active (GTK_COMBO_BOX (s->calendar), c);
   g_object_unref (c);
 
+  int i;
   if (event_get_alarm (ev))
     {
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->alarmbutton), TRUE);
 
       int unit = 0;
-      int i;
       for (i = 0; i < 4; i++)
 	if ((event_get_alarm (ev) % alarm_multipliers[i]) == 0)
 	  unit = i;
@@ -1275,7 +1362,109 @@ edit_event (Event *ev)
   else
     gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->alarmbutton), FALSE);
 
-  int i = 0;
+  gtk_spin_button_set_value (s->increment_unit,
+			     event_get_recurrence_increment (ev));
+
+  for (i = 0; i < 7; i++)
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->checkbuttonwday[i]),
+				  FALSE);
+
+  if (event_get_recurrence_type (ev) == RECUR_WEEKLY)
+    {
+      GSList *byday = event_get_recurrence_byday (ev);
+      GSList *l;
+      for (l = byday; l; l = l->next)
+	{
+	  int day = -1;
+
+	  if (strcmp (l->data, "MO") == 0)
+	    day = 0;
+	  else if (strcmp (l->data, "TU") == 0)
+	    day = 1;
+	  else if (strcmp (l->data, "WE") == 0)
+	    day = 2;
+	  else if (strcmp (l->data, "TH") == 0)
+	    day = 3;
+	  else if (strcmp (l->data, "FR") == 0)
+	    day = 4;
+	  else if (strcmp (l->data, "SA") == 0)
+	    day = 5;
+	  else if (strcmp (l->data, "SU") == 0)
+	    day = 6;
+
+	  if (day == -1)
+	    {
+	      g_warning ("%s: Unable to parse %s, ignoring",
+			 __func__, (char *) l->data);
+	      continue;
+	    }
+
+	  gtk_toggle_button_set_active
+	    (GTK_TOGGLE_BUTTON (s->checkbuttonwday[day]), TRUE);
+	}
+      event_recurrence_byday_free (byday);
+
+      /* Create an extra one to allow the user to enter an additional
+	 day.  */
+      bydaymonthly_new (s, TRUE);
+    }
+
+  if (event_get_recurrence_type (ev) == RECUR_MONTHLY)
+    {
+      GSList *byday = event_get_recurrence_byday (ev);
+      GSList *l;
+      for (l = byday; l; l = l->next)
+	{
+	  char *tail;
+	  int prefix = strtol (l->data, &tail, 10);
+
+	  int day = -1;
+	  if (prefix < -2 || prefix > 4)
+	    /* XXX: We'd like to not ignore it, but... */
+	    continue;
+
+	  if (strcmp (tail, "MO") == 0)
+	    day = 0;
+	  else if (strcmp (tail, "TU") == 0)
+	    day = 1;
+	  else if (strcmp (tail, "WE") == 0)
+	    day = 2;
+	  else if (strcmp (tail, "TH") == 0)
+	    day = 3;
+	  else if (strcmp (tail, "FR") == 0)
+	    day = 4;
+	  else if (strcmp (tail, "SA") == 0)
+	    day = 5;
+	  else if (strcmp (tail, "SU") == 0)
+	    day = 6;
+
+	  if (day == -1)
+	    {
+	      g_warning ("%s: Unable to parse %s, ignoring",
+			 __func__, (char *) l->data);
+	      continue;
+	    }
+
+	  struct bydaymonthly *bdm = bydaymonthly_new (s, FALSE);
+	  if (prefix == -1)
+	    gtk_combo_box_set_active (bdm->freq, 5);
+	  else if (prefix == -2)
+	    gtk_combo_box_set_active (bdm->freq, 6);
+	  else
+	    gtk_combo_box_set_active (bdm->freq, prefix);
+
+	  /* The first entry is a blank.  */
+	  day ++;
+	  gtk_combo_box_set_active (bdm->day, day);
+	}
+      event_recurrence_byday_free (byday);
+
+      /* Create an extra one to allow the user to enter an additional
+	 day.  */
+      bydaymonthly_new (s, TRUE);
+    }
+
+  i = 0;
   switch (event_get_recurrence_type (ev))
     {
     case RECUR_NONE:
@@ -1294,22 +1483,10 @@ edit_event (Event *ev)
       i = 4;
       break;
     }
+  /* Set this after setting the monthly recurrences: we have a handler
+     set up such that when the monthly combo is activated if there are
+     no entries, then a new one is created.  */
   gtk_combo_box_set_active (s->recur_type, i);
-
-  gtk_spin_button_set_value (s->increment_unit,
-			     event_get_recurrence_increment (ev));
-
-  if (event_get_recurrence_type (ev) == RECUR_WEEKLY)
-    {
-      int daymask = event_get_recurrence_daymask (ev);
-      for (i = 0; i < 7; i ++)
-	gtk_toggle_button_set_active
-	  (GTK_TOGGLE_BUTTON (s->checkbuttonwday[i]), (daymask & (1 << i)));
-    }
-  else
-    for (i = 0; i < 7; i++)
-      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->checkbuttonwday[i]),
-				    FALSE);
 
   /* Turn all of the buttons off.  */
   gtk_toggle_button_set_active

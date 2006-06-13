@@ -204,24 +204,22 @@ export_event_as_vevent (Event *ev)
       if (interval > 1)
 	g_object_set (recurrence, "interval", interval, NULL);
 
-      if (event_get_recurrence_type (ev) == RECUR_WEEKLY
-	  && event_get_recurrence_daymask (ev))
+      GSList *byday = event_get_recurrence_byday (ev);
+      if (byday)
 	{
-	  int mask = event_get_recurrence_daymask (ev);
-	  char *s = g_strdup_printf ("%s%s%s%s%s%s%s",
-				     mask & (1 << 0) ? "MO," : "",
-				     mask & (1 << 1) ? "TU," : "",
-				     mask & (1 << 2) ? "WE," : "",
-				     mask & (1 << 3) ? "TH," : "",
-				     mask & (1 << 4) ? "FR," : "",
-				     mask & (1 << 5) ? "SA," : "",
-				     mask & (1 << 6) ? "SU," : "");
-	  /* Kill the extra comma at the end.  */
-	  s[strlen (s) - 1] = 0;
+	  char *s[g_slist_length (byday) + 1];
+	  int i;
+	  GSList *l;
+	  for (l = byday, i = 0; l; l = l->next, i ++)
+	    s[i] = byday->data;
+	  s[i] = NULL;
+
+	  char *units = g_strjoinv (",", s);
 
 	  g_object_set (event, "unit", RECURRENCE_UNIT_DAY, NULL);
 	  g_object_set (event, "units", s, NULL);
-	  g_free (s);
+	  event_recurrence_byday_free (byday);
+	  g_free (units);
 	}
 
       g_object_set (event, "recurrence", recurrence, NULL);

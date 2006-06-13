@@ -233,19 +233,27 @@ do_import_vevent (EventCalendar *ec, MIMEDirVEvent *event)
 	  break;
 	case RECURRENCE_WEEKLY:
 	  type = RECUR_WEEKLY;
+	  /* Fall through.  */
+	case RECURRENCE_MONTHLY:
+	  if (frequency == RECURRENCE_MONTHLY)
+	    type = RECUR_MONTHLY;
 
 	  int unit = 0;
 	  g_object_get (recurrence, "unit", &unit, NULL);
-	  if (unit == RECURRENCE_WEEKLY)
+	  if (unit == RECURRENCE_UNIT_DAY)
 	    {
 	      char *units;
 	      g_object_get (recurrence, "units", &units, NULL);
 
-	      int daymask = 0;
+	      GSList *byday = NULL;
 	      char *p = units;
+	      printf ("%s: %s\n", summary, units);
 	      while (p && *p)
 		{
 		  while (*p == ' ' || *p == ',')
+		    p ++;
+		  int prefix = strtol (p, &p, 10);
+		  while (*p == ' ')
 		    p ++;
 
 		  int check (char *day, int shift)
@@ -253,7 +261,18 @@ do_import_vevent (EventCalendar *ec, MIMEDirVEvent *event)
 		      if (strncmp (p, day, 2) == 0
 			  && (p[2] == ',' || p[2] == ' ' || p[2] == 0))
 			{
-			  daymask |= 1 << shift;
+			  if (prefix == 0)
+			    {
+			    byday = g_slist_prepend (byday, g_strdup (day));
+			    printf ("%s", day);
+			    }
+			  else
+			    {
+			      char *s = g_strdup_printf ("%d%s", prefix, day);
+			      byday = g_slist_prepend (byday, s);
+			      printf ("%s\n", s);
+			    }
+
 			  p += 2;
 			  return TRUE;
 			}
@@ -278,14 +297,11 @@ do_import_vevent (EventCalendar *ec, MIMEDirVEvent *event)
 		  p = strchr (p, ',');
 		}
 
-	      event_set_recurrence_daymask (ev, daymask);
+	      event_set_recurrence_byday (ev, byday);
 
 	      g_free (units);
 	    }
 
-	  break;
-	case RECURRENCE_MONTHLY:
-	  type = RECUR_MONTHLY;
 	  break;
 	case RECURRENCE_YEARLY:
 	  type = RECUR_YEARLY;
