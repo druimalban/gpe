@@ -1,3 +1,45 @@
+2006-06-13  Neal H. Walfield  <neal@gnu.org>
+
+	* gpe/event-db.h (event_set_recurrence_daymask): Remove
+	declaration.
+	(event_set_recurrence_daymask): Likewise.
+	(event_get_recurrence_byday): New declaration.
+	(event_set_recurrence_byday): Likewise.
+	(event_recurrence_byday_free): New function.
+	* event-db.c: Don't include <math.h>.  Include <errno.h>.
+	(struct _EventSource): Remove field daymask.  Add field byday.
+	(event_source_finalize): Free EVENT->BYDAY.
+	(dbinfo_callback): Make a local function to...
+	(event_db_new): ... this function.  Set the default calendar after
+	reading the list of calendars.
+	(event_db_new): Convert any "rdaymask" field to a byday
+	representation.  Read the "byday" field.  Remove any rdaymask
+	records fields.
+	(event_list): Update to understand byday in the context of a
+	month.
+	(event_write): Insert EV->BYDAY.  Don't insert "daymask".
+	(event_set_recurrence_daymask): Remove function..
+	(event_set_recurrence_daymask): Likewise.
+	(event_get_recurrence_byday): New function.
+	(event_set_recurrence_byday): Likewise.
+
+	(do_laundry): Remove EDB->LAUNDRY_BUZZER.
+	(event_db_finalize): Don't remove the EDB->LAUNDRY_BUZZER.
+	(add_to_laundry_pile): Actually save the idle source to
+	EDB->LAUNDRY_BUZZER.
+
+	(event_db_make_eventid): Only get hostname once.  If ERRNO is
+	ENAMETOOLONG, just NULL terminate the result.
+
+	(event_details): More precisely refine the search.
+
+	(days_in_month): Remove function.  Update users to use
+	g_date_get_days_in_month instead.
+
+	(event_calendar_finalize): Free EC->USERNAME and EC->PASSWORD.
+
+	(event_flush): Load the record's details.
+
 2006-06-06  Neal H. Walfield  <neal@gnu.org>
 
 	* gpe/event-db.h (EventNew): New typedef.

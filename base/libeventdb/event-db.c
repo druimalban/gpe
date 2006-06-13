@@ -14,7 +14,7 @@
 #include <string.h>
 #include <assert.h>
 #include <unistd.h>
-#include <math.h>
+#include <errno.h>
 #include <sys/stat.h>
 
 #include <libintl.h>
@@ -243,9 +243,10 @@ struct _EventSource
      recurrence type is RECUR_YEARLY then the first recurrence occurs
      INCREMENT years after the initial start.  */
   unsigned int increment;
-  /* Only meaningful when TYPE is RECUR_WEEKLY: if bit 0 is set then
-     occur on Mon, bit 1, Tue, etc.  */
-  unsigned long daymask;
+
+  /* List of strings of the form:
+     [+-]([0-9]*[1-9]|)(MO|TU|WE|TH|FR|SA|SU).  */
+  GSList *byday;
 
   /* A list of start times to exclude.  Must match the start of a
      recurrence exactly.  */
@@ -455,10 +456,7 @@ event_db_finalize (GObject *object)
   if (edb->alarm)
     g_source_remove (edb->alarm);
   if (edb->laundry_buzzer)
-    {
-      g_source_remove (edb->laundry_buzzer);
-      do_laundry (edb);
-    }
+    do_laundry (edb);
 
   {
     GSList *i;
@@ -973,10 +971,10 @@ event_source_finalize (GObject *object)
       g_free (evd);
     }
 
-  if (event->eventid)
-    g_free (event->eventid);
-
+  g_free (event->eventid);
   g_slist_free (event->exceptions);
+
+  event_recurrence_byday_free (event->byday);
 
   event_db_remove_internal (event);
 
@@ -1017,11 +1015,18 @@ event_db_make_eventid (void)
 
   static char *hostname;
   static char buffer[512];
-
-  if ((gethostname (buffer, sizeof (buffer) -1) == 0) && (buffer[0] != 0))
-    hostname = buffer;
-  else
-    hostname = "localhost";
+  if (! hostname)
+    {
+      if (gethostname (buffer, sizeof (buffer) - 1) == 0 && buffer[0])
+	hostname = buffer;
+      else if (errno == ENAMETOOLONG)
+	{
+	  buffer[sizeof (buffer)] = 0;
+	  hostname = buffer;
+	}
+      else
+	hostname = "localhost";
+    }
 
   return g_strdup_printf ("%lu.%lu%d@%s",
 			  (unsigned long) time (NULL),
@@ -1060,26 +1065,6 @@ parse_date (char *s, time_t *t, gboolean *date_only)
   return TRUE;
 }
 
-static int
-dbinfo_callback (void *arg, int argc, char **argv, char **names)
-{
-  EventDB *edb = EVENT_DB (arg);
-  if (argc == 1)
-    {
-      edb->dbversion = atoi (argv[0]);
-    }
-
-  return 0;
-}
-
-/**
- * event_db_new:
- *
- * Initialise the event database for use. Needs to be called on application
- * start before acessing events.
- *
- * Returns: EventDB * on success, NULL otherwise.
- */
 EventDB *
 event_db_new (const char *fname)
 {
@@ -1094,6 +1079,16 @@ event_db_new (const char *fname)
   sqlite_exec (edb->sqliteh,
 	       "create table calendar_dbinfo (version integer NOT NULL)",
 	       NULL, NULL, &err);
+  int dbinfo_callback (void *arg, int argc, char **argv, char **names)
+    {
+      EventDB *edb = EVENT_DB (arg);
+      if (argc == 1)
+	{
+	  edb->dbversion = atoi (argv[0]);
+	}
+
+      return 0;
+    }
   if (sqlite_exec (edb->sqliteh, "select version from calendar_dbinfo",
 		   dbinfo_callback, edb, &err))
     goto error;
@@ -1139,29 +1134,6 @@ event_db_new (const char *fname)
 	       NULL, NULL, NULL);
 
   /* Calendars.  */
-  sqlite_exec (edb->sqliteh,
-	       "create table default_calendar (default_calendar INTEGER)",
-	       NULL, NULL, NULL);
-  int default_calendar_callback (void *arg, int argc, char **argv,
-				 char **names)
-    {
-      EventDB *edb = EVENT_DB (arg);
-      if (argc == 1)
-	edb->default_calendar = atoi (argv[0]);
-
-      return 0;
-    }
-  edb->default_calendar = EVENT_CALENDAR_NO_PARENT;
-  if (sqlite_exec (edb->sqliteh,
-		   "select default_calendar from default_calendar",
-		   default_calendar_callback, edb, &err))
-    goto error;
-  if (edb->default_calendar == EVENT_CALENDAR_NO_PARENT)
-    {
-      EventCalendar *ec = event_db_get_default_calendar (edb, NULL);
-      g_object_unref (ec);
-    }
-
   sqlite_exec (edb->sqliteh,
 	       "create table calendars"
 	       " (title TEXT, description TEXT,"
@@ -1210,6 +1182,29 @@ event_db_new (const char *fname)
       return 0;
     }
 
+  sqlite_exec (edb->sqliteh,
+	       "create table default_calendar (default_calendar INTEGER)",
+	       NULL, NULL, NULL);
+  int default_calendar_callback (void *arg, int argc, char **argv,
+				 char **names)
+    {
+      EventDB *edb = EVENT_DB (arg);
+      if (argc == 1)
+	edb->default_calendar = atoi (argv[0]);
+
+      return 0;
+    }
+  edb->default_calendar = EVENT_CALENDAR_NO_PARENT;
+  if (sqlite_exec (edb->sqliteh,
+		   "select default_calendar from default_calendar",
+		   default_calendar_callback, edb, &err))
+    goto error;
+  if (edb->default_calendar == EVENT_CALENDAR_NO_PARENT)
+    {
+      EventCalendar *ec = event_db_get_default_calendar (edb, NULL);
+      g_object_unref (ec);
+    }
+
   if (sqlite_exec (edb->sqliteh,
 		   "select ROWID, title, description,"
 		   "  url, username, password,"
@@ -1224,6 +1219,8 @@ event_db_new (const char *fname)
 
   if (edb->dbversion == 1) 
     {
+      int have_daymask = FALSE;
+
       int load_data_callback (void *arg, int argc, char **argv,
 			      char **names)
 	{
@@ -1249,7 +1246,29 @@ event_db_new (const char *fname)
 	      else if (!strcasecmp (argv[0], "rincrement"))
 		ev->increment = atoi (argv[1]);
 	      else if (!strcasecmp (argv[0], "rdaymask"))
-		ev->daymask = atoi (argv[1]);
+		/* Obsolete.  */
+		{
+		  have_daymask = TRUE;
+		  int daymask = atoi (argv[1]);
+
+		  if (daymask)
+		    {
+		      const char *days[]
+			= { "MO", "TU", "WE", "TH", "FR", "SA", "SU" };
+
+		      event_details (ev, TRUE);
+		      int i;
+		      for (i = 0; i < 7; i ++)
+			if ((1 << i) & daymask)
+			  ev->byday = g_slist_prepend (ev->byday,
+						       g_strdup (days[i]));
+
+		      STAMP (ev);
+		    }
+		}
+	      else if (!strcasecmp (argv[0], "byday"))
+		ev->byday = g_slist_prepend (ev->byday,
+					     g_strdup (argv[1]));
 	      else if (!strcasecmp (argv[0], "rexceptions"))
 		{
 		  long rmtime = (long)atoi (argv[1]);
@@ -1304,6 +1323,14 @@ event_db_new (const char *fname)
       if (sqlite_exec (edb->sqliteh, "select uid from calendar_urn",
 		       uid_load_callback, edb, &err))
 	goto error;
+
+      if (have_daymask)
+	{
+	  do_laundry (edb);
+	  sqlite_exec_printf (edb->sqliteh,
+			      "delete from calendar where tag='rdaymask'", 
+			      NULL, NULL, NULL);
+	}
     }
   else if (edb->dbversion == 0)
     {
@@ -1415,7 +1442,11 @@ event_details (EventSource *ev, gboolean fill_from_disk)
     return;
 
   if (sqlite_exec_printf (ev->edb->sqliteh,
-			  "select tag,value from calendar where uid=%d",
+			  "select tag,value from calendar"
+			  " where uid=%d"
+			  "  and (tag='summary'"
+			  "       or tag='description' or tag='location'"
+			  "       or tag='modified' or tag='category')",
 			  load_details_callback, ev->details, &err, ev->uid))
     {
       gpe_error_box (err);
@@ -1506,26 +1537,6 @@ event_clone (EventSource *ev)
   return n;
 }
 
-/* Return the number of days in month MONTH in year YEAR.  */
-static guint
-days_in_month (guint year, guint month)
-{
-  static const guint nr_days[] = { 31, 28, 31, 30, 31, 30, 
-				   31, 31, 30, 31, 30, 31 };
-
-  g_assert (month <= 11);
-
-  if (month == 1)
-    {
-      return ((year % 4) == 0
-	      && ((year % 100) != 0
-		  || (year % 400) == 0)) ? 29 : 28;
-    }
-
-  return nr_days[month];
-}
-
-
 /* Interpret T as a localtime and advance it by ADVANCE days.  */
 static time_t
 time_add_days (time_t t, int advance)
@@ -1537,7 +1548,7 @@ time_add_days (time_t t, int advance)
   tm.tm_isdst = -1;
   while (advance > 0)
     {
-      days = days_in_month (tm.tm_year, tm.tm_mon);
+      days = g_date_get_days_in_month (tm.tm_mon + 1, 1900 + tm.tm_year);
       if (tm.tm_mday + advance > days)
 	{
 	  advance -= days - tm.tm_mday + 1;
@@ -1600,29 +1611,172 @@ event_list (EventSource *ev, time_t period_start, time_t period_end, int max,
 
   if (event_is_recurrence (EVENT (ev)))
     {
-      if (ev->type == RECUR_WEEKLY && ev->daymask)
-	/* This is a weekly recurrence with a day mask: find the
-	   first day which, starting with S, occurs in
-	   EV->DAYMASK.  */
+      /* Cache the representation of S.  */
+      struct tm orig;
+      localtime_r (&recur_start, &orig);
+
+      /* Days in the current month.  */
+      int days_in_month;
+
+      /* The effective daymask, 0 based.  */
+      int daymask = 0;
+
+      /* Build the daymask for the current month.  */
+      void bydaymonthly (void)
 	{
+	  struct tm start;
+	  localtime_r (&recur_start, &start);
+	  start.tm_mday = 1;
+	  start.tm_isdst = -1;
+	  time_t t = mktime (&start);
+	  localtime_r (&t, &start);
+
+	  days_in_month = g_date_get_days_in_month (start.tm_mon + 1,
+						    1900 + start.tm_year);
+	  struct tm end = start;
+	  end.tm_mday = days_in_month;
+	  end.tm_isdst = -1;
+	  t = mktime (&end);
+	  localtime_r (&t, &end);
+
+	  daymask = 0;
+	  GSList *i;
+	  for (i = ev->byday; i; i = i->next)
+	    {
+	      char *tail;
+	      int prefix = strtol (i->data, &tail, 10);
+
+	      while (*tail == ' ')
+		tail ++;
+
+	      int day = -1;
+	      if (strcmp (tail, "SU") == 0)
+		day = 0;
+	      else if (strcmp (tail, "MO") == 0)
+		day = 1;
+	      else if (strcmp (tail, "TU") == 0)
+		day = 2;
+	      else if (strcmp (tail, "WE") == 0)
+		day = 3;
+	      else if (strcmp (tail, "TH") == 0)
+		day = 4;
+	      else if (strcmp (tail, "FR") == 0)
+		day = 5;
+	      else if (strcmp (tail, "SA") == 0)
+		day = 6;
+
+	      if (day == -1)
+		continue;
+
+	      if (prefix == 0)
+		/* Every week.  */
+		{
+		  int d = day - start.tm_wday;
+		  if (d < 0)
+		    d += 7;
+		  for (; d < days_in_month; d += 7)
+		    daymask |= 1 << d;
+		}
+	      else if (prefix > 0)
+		/* From start.  */
+		{
+		  int d = day - start.tm_wday;
+		  if (d < 0)
+		    d += 7;
+		  d += 7 * (prefix - 1);
+		  if (d < days_in_month)
+		    daymask |= 1 << d;
+		}
+	      else
+		/* From end.  */
+		{
+		  int d = days_in_month - 1 + day - end.tm_wday;
+		  if (d >= days_in_month)
+		    d -= 7;
+		  d += 7 * (prefix + 1);
+		  if (d >= 0)
+		    daymask |= 1 << d;
+		}
+	    }
+	}
+
+      int increment = ev->increment > 0 ? ev->increment : 1;
+
+      if (ev->type == RECUR_MONTHLY && ev->byday)
+	{
+	  bydaymonthly ();
+
+	  struct tm tm = orig;
+	  if (daymask && ! (daymask & (1 << (orig.tm_mday - 1))))
+	    /* The start date is not included in the mask.  */
+	    {
+	      int s;
+	      if (~((1 << (orig.tm_mday - 1 + 1)) - 1) & daymask)
+		/* There is a day in this month following the
+		   start.  */
+		s = orig.tm_mday - 1 + 1;
+	      else
+		/* Advance to the first day of the next month.  */
+		{
+		  tm.tm_mday = 1;
+		  recur_start = mktime (&tm);
+
+		  int i;
+		  for (i = increment; i > 0; i --)
+		    {
+		      int d = g_date_get_days_in_month (tm.tm_mon + 1,
+							1900 + tm.tm_year);
+		      recur_start = time_add_days (recur_start, d);
+		      localtime_r (&recur_start, &tm);
+		    }
+		  bydaymonthly ();
+		  s = 0;
+		}
+
+	      int j;
+	      for (j = s; j < days_in_month; j ++)
+		if ((1 << j) & daymask)
+		  break;
+	      g_assert (j != days_in_month);
+
+	      tm.tm_mday = j + 1;
+	      recur_start = mktime (&tm);
+	    }
+	}
+      else if (ev->type == RECUR_WEEKLY && ev->byday)
+	/* This is a weekly recurrence with a byday field: find the
+	   first day which, starting with RECUR_START, occurs in
+	   DAYMASK.  */
+	{
+	  GSList *l;
+	  for (l = ev->byday; l; l = l->next)
+	    if (strcmp (l->data, "SU") == 0)
+	      daymask |= 1 << 0;
+	    else if (strcmp (l->data, "MO") == 0)
+	      daymask |= 1 << 1;
+	    else if (strcmp (l->data, "TU") == 0)
+	      daymask |= 1 << 2;
+	    else if (strcmp (l->data, "WE") == 0)
+	      daymask |= 1 << 3;
+	    else if (strcmp (l->data, "TH") == 0)
+	      daymask |= 1 << 4;
+	    else if (strcmp (l->data, "FR") == 0)
+	      daymask |= 1 << 5;
+	    else if (strcmp (l->data, "SA") == 0)
+	      daymask |= 1 << 6;
+
 	  struct tm tm;
 	  localtime_r (&recur_start, &tm);
 
 	  int i;
 	  for (i = tm.tm_wday; i < tm.tm_wday + 7; i ++)
-	    /* EV->DAYMASK is Monday based, not Sunday.  */
-	    if ((1 << ((i - 1) % 7)) & ev->daymask)
+	    if ((1 << (i % 7)) & daymask)
 	      break;
 	  if (i != tm.tm_wday)
 	    recur_start = time_add_days (recur_start, i - tm.tm_wday);
 	}
 
-      /* Cache the representation of S.  */
-      struct tm orig;
-      localtime_r (&recur_start, &orig);
-
       GSList *list = NULL;
-      int increment = ev->increment > 0 ? ev->increment : 1;
       int count;
       for (count = 0;
 	   (! period_end
@@ -1667,7 +1821,7 @@ event_list (EventSource *ev, time_t period_start, time_t period_end, int max,
 	      break;
 
 	    case RECUR_WEEKLY:
-	      if (! ev->daymask)
+	      if (! daymask)
 		/* Empty day mask, simply advance S by
 		   INCREMENT weeks.  */
 		recur_start = time_add_days (recur_start, 7 * increment);
@@ -1677,8 +1831,7 @@ event_list (EventSource *ev, time_t period_start, time_t period_end, int max,
 		  localtime_r (&recur_start, &tm);
 		  int i;
 		  for (i = tm.tm_wday + 1; i < tm.tm_wday + 1 + 7; i ++)
-		    /* EV->DAYMASK is Monday based, not Sunday.  */
-		    if ((1 << ((i - 1) % 7)) & ev->daymask)
+		    if ((1 << (i % 7)) & daymask)
 		      {
 			if ((i % 7) == orig.tm_wday)
 			  /* We wrapped a week: increment by
@@ -1697,16 +1850,53 @@ event_list (EventSource *ev, time_t period_start, time_t period_end, int max,
 
 	    case RECUR_MONTHLY:
 	      {
-		int i;
+		int s = 0;
+
 		struct tm tm;
-		for (i = increment; i > 0; i --)
+		localtime_r (&recur_start, &tm);
+
+		if (daymask
+		    /* Is there another day in this month?  */
+		    && (~((1 << (tm.tm_mday - 1 + 1)) - 1) & daymask))
+		  s = tm.tm_mday - 1 + 1;
+
+		if (! s)
+		  /* Advance by increment months.  */
 		  {
-		    localtime_r (&recur_start, &tm);
-		    recur_start
-		      = time_add_days (recur_start,
-				       days_in_month (tm.tm_year,
-						      tm.tm_mon));
+		    if (daymask)
+		      /* Start at the beginning of the month.  */
+		      {
+			tm.tm_mday = 1;
+			recur_start = mktime (&tm);
+		      }
+
+		    int i;
+		    for (i = increment; i > 0; i --)
+		      {
+			int d = g_date_get_days_in_month (tm.tm_mon + 1,
+							  1900 + tm.tm_year);
+			recur_start = time_add_days (recur_start, d);
+			localtime_r (&recur_start, &tm);
+		      }
+
+		    if (daymask)
+		      /* Recalculate the mask.  */
+		      bydaymonthly ();
 		  }
+
+		if (daymask)
+		  /* Apply the mask.  */
+		  {
+		    int j;
+		    for (j = s; j < days_in_month; j ++)
+		      if ((1 << j) & daymask)
+			break;
+		    g_assert (j != days_in_month);
+
+		    tm.tm_mday = j + 1;
+		    recur_start = mktime (&tm);
+		  }
+
 		break;
 	      }
 
@@ -1716,7 +1906,8 @@ event_list (EventSource *ev, time_t period_start, time_t period_end, int max,
 		localtime_r (&recur_start, &tm);
 		tm.tm_year += increment;
 		if (tm.tm_mon == 1 && tm.tm_mday == 29
-		    && days_in_month (tm.tm_year, tm.tm_mon) == 28)
+		    && g_date_get_days_in_month (tm.tm_mon + 1,
+						 tm.tm_year + 1900) == 28)
 		  /* XXX: If the recurrence is Feb 29th and there
 		     is no Feb 29th this year then we simply clamp
 		     to the 28th.  */
@@ -1728,7 +1919,8 @@ event_list (EventSource *ev, time_t period_start, time_t period_end, int max,
 			 supposed to recur on the 29th?  */
 		      {
 			if (orig.tm_mday == 29
-			    && days_in_month (tm.tm_year, tm.tm_mon) == 29)
+			    && g_date_get_days_in_month
+			        (tm.tm_mon + 1, tm.tm_year + 1900) == 29)
 			  /* Yes, and moreover, this year, Feb has
 			     a 29th.  */
 			  tm.tm_mday = 29;
@@ -2069,6 +2261,8 @@ event_calendar_finalize (GObject *object)
   g_free (ec->title);
   g_free (ec->description);
   g_free (ec->url);
+  g_free (ec->username);
+  g_free (ec->password);
 
   G_OBJECT_CLASS (event_calendar_parent_class)->finalize (object);
 }
@@ -2463,7 +2657,7 @@ event_write (EventSource *ev, char **err)
   char buf_start[64], buf_end[64];
   struct tm tm;
   gboolean rc = FALSE;
-  GSList *iter;
+  GSList *i;
 
   if (ev->untimed)
     localtime_r (&ev->event.start, &tm);
@@ -2497,13 +2691,15 @@ event_write (EventSource *ev, char **err)
 			    "modified", "%lu", evd->modified))
 	goto exit;
 
-      for (iter = evd->categories; iter; iter = iter->next)
-	{
-	  if (insert_values (ev->edb->sqliteh, ev->uid,
-			     "category", "%d", (int)iter->data))
-	    goto exit;
-	}
+      for (i = evd->categories; i; i = i->next)
+	if (insert_values (ev->edb->sqliteh, ev->uid,
+			   "category", "%d", (int) i->data))
+	  goto exit;
     }
+
+  for (i = ev->byday; i; i = i->next)
+    if (insert_values (ev->edb->sqliteh, ev->uid, "byday", "%q", i->data))
+      goto exit;
 
   if (insert_values (ev->edb->sqliteh, ev->uid, "duration", "%d", ev->duration)
       || insert_values (ev->edb->sqliteh, ev->uid, "start", "%q", buf_start)
@@ -2518,9 +2714,7 @@ event_write (EventSource *ev, char **err)
   if (insert_values (ev->edb->sqliteh, ev->uid, "recur", "%d", ev->type)
       || insert_values (ev->edb->sqliteh, ev->uid, "rcount", "%d", ev->count)
       || insert_values (ev->edb->sqliteh, ev->uid, "rincrement", "%d",
-			ev->increment)
-      || insert_values (ev->edb->sqliteh, ev->uid, "rdaymask", "%d",
-			ev->daymask))
+			ev->increment))
     goto exit;
 
   if (ev->exceptions)
@@ -2571,6 +2765,9 @@ event_flush (Event *event)
 
   if (sqlite_exec (ev->edb->sqliteh, "begin transaction", NULL, NULL, &err))
     goto error;
+
+  /* Make sure the details are loaded so we don't delete them.  */
+  event_details (ev, TRUE);
 
   if (sqlite_exec_printf (ev->edb->sqliteh,
 			  "delete from calendar where uid=%d", NULL,
@@ -2641,7 +2838,10 @@ do_laundry (gpointer data)
   edb->laundry_list = NULL;
 
   /* Don't run again.  */
+  if (edb->laundry_buzzer)
+    g_source_remove (edb->laundry_buzzer);
   edb->laundry_buzzer = 0;
+
   return FALSE;
 }
 
@@ -2660,7 +2860,7 @@ add_to_laundry_pile (GObject *e)
   g_object_ref (e);
   edb->laundry_list = g_slist_prepend (edb->laundry_list, e);
   if (! edb->laundry_buzzer)
-    g_idle_add (do_laundry, edb);
+    edb->laundry_buzzer = g_idle_add (do_laundry, edb);
 }
 
 /**
@@ -2928,7 +3128,6 @@ event_set_recurrence_start (Event *event, time_t start)
 GET_SET (time_t, recurrence_end, end, TRUE)
 GET_SET (guint32, recurrence_count, count, TRUE)
 GET_SET (guint32, recurrence_increment, increment, TRUE)
-GET_SET (guint64, recurrence_daymask, daymask, TRUE)
 
 GET_SET (gboolean, untimed, untimed, FALSE);
 
@@ -3003,6 +3202,34 @@ event_set_categories (Event *event, GSList *categories)
   event_details (ev, TRUE);
   g_slist_free (ev->details->categories);
   ev->details->categories = categories;
+
+  STAMP (ev);
+}
+
+GSList *
+event_get_recurrence_byday (Event *event)
+{
+  EventSource *ev = RESOLVE_CLONE (event);
+
+  GSList *list = NULL;
+  GSList *l;
+  for (l = ev->byday; l; l = l->next)
+    list = g_slist_prepend (list, strdup (l->data));
+
+  return list;
+}
+
+void
+event_set_recurrence_byday (Event *event, GSList *list)
+{
+  EventSource *ev = RESOLVE_CLONE (event);
+
+  GSList *l;
+  for (l = ev->byday; l; l = l->next)
+    g_free (l->data);
+  g_slist_free (ev->byday);
+
+  ev->byday = list;
 
   STAMP (ev);
 }

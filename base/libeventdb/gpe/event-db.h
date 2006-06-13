@@ -397,12 +397,22 @@ extern void event_set_recurrence_count (Event *ev, guint32 count);
 extern guint32 event_get_recurrence_increment (Event *ev)
      __attribute__ ((pure));
 extern void event_set_recurrence_increment (Event *ev, guint32 increment);
-     
-/* The day mask is only meaningful if TYPE is RECUR_WEEKLY: if bit 0
-   is set then occurs on Mon, bit 1, Tue, etc.  */
-extern guint64 event_get_recurrence_daymask (Event *ev)
-     __attribute__ ((pure));
-extern void event_set_recurrence_daymask (Event *ev, guint64 daymask);
+
+/* Return the byday list.  Each element is a string.  The caller must
+   free the strings and the list.  */
+extern GSList *event_get_recurrence_byday (Event *ev);
+/* Set the byday list to the list of strings of the form:
+     [+-]([0-9]*[1-9]|)(MO|TU|WE|TH|FR|SA|SU).  */
+extern void event_set_recurrence_byday (Event *event, GSList *list);
+
+static inline void
+event_recurrence_byday_free (GSList *byday)
+{
+  GSList *l;
+  for (l = byday; l; l = l->next)
+    g_free (l->data);
+  g_slist_free (byday);
+}
 
 extern void event_add_recurrence_exception (Event *ev, time_t start);
 
