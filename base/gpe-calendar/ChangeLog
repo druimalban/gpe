@@ -1,5 +1,10 @@
 2006-06-13  Neal H. Walfield  <neal@gnu.org>
 
+	* main.c (set_today): Only revert to the saved time if it was left
+	less than 5 minutes ago.
+
+2006-06-13  Neal H. Walfield  <neal@gnu.org>
+
 	* event-ui.c: Don't include <sys/types.h>, <sys/stat.h>,
 	<stdio.h>, <stdlib.h>, <unistd.h>, <gpe/question.h> and
 	<gpe/gtksimplemenu.h>.  Include <stdlib.h>.

@@ -222,6 +222,7 @@ static void
 set_today (void)
 {
   static time_t saved_time;
+  static time_t saved_time_at;
 
   if (saved_time)
     {
@@ -233,10 +234,13 @@ set_today (void)
       localtime_r (&now, &ntm);
       localtime_r (&viewtime, &vtm);
 
-      if (ntm.tm_year != vtm.tm_year || ntm.tm_yday != vtm.tm_yday)
-	/* Current view time is not today.  Go to today.  */
+      if (now - saved_time_at >= 5 * 60
+	  || (ntm.tm_year != vtm.tm_year || ntm.tm_yday != vtm.tm_yday))
+	/* The last toggle was more than five minutes ago or the
+	   current view time is not today.  Go to today.  */
 	{
 	  saved_time = viewtime;
+	  saved_time_at = now;
 	  viewtime = now;
 	}
       else
