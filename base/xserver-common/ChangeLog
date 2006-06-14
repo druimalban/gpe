@@ -1,3 +1,7 @@
+2006-06-14  Florian Boor <florian@kernelconcepts.de>
+
+	* Release version 1.10
+	* X11/Xserver: Add parameters for HTC Universal.
 
 2006-04-27  Florian Boor <florian@kernelconcepts.de>
 
