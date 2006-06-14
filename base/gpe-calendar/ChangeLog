@@ -1,5 +1,11 @@
 2006-06-14  Neal H. Walfield  <neal@gnu.org>
 
+	* day_render.c (gtk_day_render_base_class_init): Add parameter
+	KLASS_DATA.
+	(gtk_day_render_button_press): Just call g_signal_emit.
+
+2006-06-14  Neal H. Walfield  <neal@gnu.org>
+
 	* event-ui.c (build_edit_event_window): Move all day check box
 	below the summary.
 	Reported by: Benoit Norrin.

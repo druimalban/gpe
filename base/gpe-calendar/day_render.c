@@ -136,7 +136,8 @@ typedef struct
   guint row_click_signal;
 } GtkDayRenderClass;
 
-static void gtk_day_render_base_class_init (gpointer class);
+static void gtk_day_render_base_class_init (gpointer class,
+					    gpointer klass_data);
 static void gtk_day_render_init (GTypeInstance *instance, gpointer klass);
 static void gtk_day_render_dispose (GObject *object);
 static void gtk_day_render_finalize (GObject *object);
@@ -180,7 +181,7 @@ gtk_day_render_get_type (void)
 }
 
 static void
-gtk_day_render_base_class_init (gpointer klass)
+gtk_day_render_base_class_init (gpointer klass, gpointer klass_data)
 {
   GObjectClass *object_class;
   GtkWidgetClass *widget_class;
@@ -816,42 +817,17 @@ gtk_day_render_button_press (GtkWidget *widget, GdkEventButton *event)
       if ((x >= e_r->x && x <= e_r->x + e_r->width)
 	  && y >= e_r->y && y <= e_r->y + MAX (height_min, e_r->height))
 	/* Click was within E_R.  Send the appropriate signal.  */
-	{
-	  GValue args[2];
-	  GValue rv;
-
-	  args[0].g_type = 0;
-	  g_value_init (&args[0], G_TYPE_FROM_INSTANCE (G_OBJECT (widget)));
-	  g_value_set_instance (&args[0], widget);
-        
-	  args[1].g_type = 0;
-	  g_value_init (&args[1], G_TYPE_POINTER);
-	  g_value_set_pointer (&args[1], e_r->event);
-
-	  g_signal_emitv (args, drclass->event_click_signal, 0, &rv);
-	  break;
-	}
+	g_signal_emit (day_render, drclass->event_click_signal, 0,
+		       e_r->event);
     }
 
   if (! er)
     /* Click was not within an event rectangle send a canvas click
        event.  */
-    {
-      GValue args[2];
-      GValue rv;
+    g_signal_emit (day_render, drclass->row_click_signal, 0,
+		   (gint) (y * day_render->rows));
 
-      args[0].g_type = 0;
-      g_value_init (&args[0], G_TYPE_FROM_INSTANCE (G_OBJECT (widget)));
-      g_value_set_instance (&args[0], widget);
-
-      args[1].g_type = 0;
-      g_value_init (&args[1], G_TYPE_INT);
-      g_value_set_int (&args[1], (gint) (y * day_render->rows));
-
-      g_signal_emitv (args, drclass->row_click_signal, 0, &rv);
-    }
-
-  return FALSE;
+  return TRUE;
 }
 
 static void
