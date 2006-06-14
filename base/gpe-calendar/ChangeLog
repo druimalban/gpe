@@ -1,5 +1,11 @@
 2006-06-14  Neal H. Walfield  <neal@gnu.org>
 
+	* day_view.c (day_view_event_clicked): Get the current event and
+	pass that to gtk_menu_popup.
+	Reported by Tommi Komulainen.
+
+2006-06-14  Neal H. Walfield  <neal@gnu.org>
+
 	* day_render.c (gtk_day_render_button_press): Don't forget to
 	break out of the loop once we've found an event.
 

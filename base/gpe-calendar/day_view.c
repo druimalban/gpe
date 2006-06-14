@@ -199,8 +199,9 @@ static gboolean
 day_view_event_clicked (GtkWidget *widget, gpointer event_p, gpointer d)
 {
   GtkMenu *event_menu = event_menu_new (EVENT (event_p), TRUE);
+  GdkEvent *event = gtk_get_current_event ();
   gtk_menu_popup (event_menu, NULL, NULL, NULL, NULL,
-		  0, gtk_get_current_event_time());
+		  event->button.button, event->button.time);
   return FALSE;
 }
 
