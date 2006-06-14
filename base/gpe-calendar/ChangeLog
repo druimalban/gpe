@@ -1,5 +1,11 @@
 2006-06-14  Neal H. Walfield  <neal@gnu.org>
 
+	* event-ui.c (build_edit_event_window): Move all day check box
+	below the summary.
+	Reported by: Benoit Norrin.
+
+2006-06-14  Neal H. Walfield  <neal@gnu.org>
+
 	* event-ui.c (struct edit_state): Add fields alarm_page,
 	alarm_box, detail_page, detail_box, recurrence_page and
 	recurrence_box.

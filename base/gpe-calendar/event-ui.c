@@ -1180,16 +1180,6 @@ build_edit_event_window (Event *ev)
     gtk_notebook_append_page (GTK_NOTEBOOK (s->tabs),
 			      GTK_WIDGET (vbox), label);
 
-  /* Whether the event is an all day event.  */
-  s->all_day
-    = GTK_TOGGLE_BUTTON (gtk_check_button_new_with_label (_("All day event")));
-  if (s->ev)
-    gtk_toggle_button_set_active (s->all_day, event_get_untimed (s->ev));
-  g_signal_connect (G_OBJECT (s->all_day), "toggled",
-                    G_CALLBACK (all_day_toggled), s);
-  gtk_box_pack_start (vbox, GTK_WIDGET (s->all_day), FALSE, FALSE, 0);
-  gtk_widget_show (GTK_WIDGET (s->all_day));
-  
   /* The summary.  */
   GtkBox *hbox = GTK_BOX (gtk_hbox_new (FALSE, 3));
   gtk_box_pack_start (vbox, GTK_WIDGET (hbox), FALSE, FALSE, 0);
@@ -1209,6 +1199,16 @@ build_edit_event_window (Event *ev)
   gtk_box_pack_start (hbox, s->summary, TRUE, TRUE, 0);
   gtk_widget_show (GTK_WIDGET (s->summary));
 
+  /* Whether the event is an all day event.  */
+  s->all_day
+    = GTK_TOGGLE_BUTTON (gtk_check_button_new_with_label (_("All day event")));
+  if (s->ev)
+    gtk_toggle_button_set_active (s->all_day, event_get_untimed (s->ev));
+  g_signal_connect (G_OBJECT (s->all_day), "toggled",
+                    G_CALLBACK (all_day_toggled), s);
+  gtk_box_pack_start (vbox, GTK_WIDGET (s->all_day), FALSE, FALSE, 0);
+  gtk_widget_show (GTK_WIDGET (s->all_day));
+  
   /* We want the end of the labels to occur at the same horizontal
      point.  */
   GtkTable *table = GTK_TABLE (gtk_table_new (2, 2, FALSE));
