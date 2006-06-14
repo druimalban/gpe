@@ -1,3 +1,32 @@
+2006-06-14  Neal H. Walfield  <neal@gnu.org>
+
+	* event-ui.c (struct edit_state): Add fields alarm_page,
+	alarm_box, detail_page, detail_box, recurrence_page and
+	recurrence_box.
+	(destroy_user_data): Destroy S->DAYS and unref S->EV if not-NULL.
+	(cached_edit_state_destroy_source): Remove variable.
+	(cached_edit_state): Likewise.
+	(cached_edit_state_destroy): Remove function.
+	(edit_finished): Remove function.  Update callers to call
+	gtk_widget_destroy directly.
+	(click_ok): Only update fields for widgets which were actually
+	used.  Don't unref S->EV.  Save the new event to S->EV.
+	(note_date_change): Only update the buttons if they are present.
+	Reset S->RECUR_DAY_FLOATING to TRUE after the update..
+	(build_detail_page): New function which assumes the functionality
+	of build_edit_event_window, new_event and edit_event as regards
+	the construction and initialization of the detail page.
+	(build_alarm_page): Likewise for the alarm page.
+	(build_recurrence_page): Likewise for the recurrence page.  Also,
+	replace the grid of checkboxes with a list of toggle buttons.
+	(page_changed): New function.
+	(build_edit_event_window): Assume the functionality of new_event
+	and edit_event regarding the configuration of the main page.
+	Don't build the non-main pages.  Attach the "switch-page" event to
+	S->TABS.
+	(edit_event_window): Remove function.  Update callers to call
+	build_edit_event_window directly.
+
 2006-06-13  Neal H. Walfield  <neal@gnu.org>
 
 	* main.c (set_today): Only revert to the saved time if it was left
