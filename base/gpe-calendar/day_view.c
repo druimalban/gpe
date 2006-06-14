@@ -157,7 +157,7 @@ gtk_day_view_key_press_event (GtkWidget *widget, GdkEventKey *event)
 			 + 24 * 60 * 60);
       return TRUE;
     default:
-      return FALSE;
+      return GTK_WIDGET_CLASS (parent_class)->key_press_event (widget, event);
     }
 }
 

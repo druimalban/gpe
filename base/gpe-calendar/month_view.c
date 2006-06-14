@@ -67,7 +67,8 @@ typedef struct
   GObjectClass parent_class;
 } GtkMonthViewClass;
 
-static void gtk_month_view_base_class_init (gpointer klass);
+static void gtk_month_view_base_class_init (gpointer klass,
+					    gpointer klass_data);
 static void gtk_month_view_init (GTypeInstance *instance, gpointer klass);
 static void gtk_month_view_dispose (GObject *obj);
 static void gtk_month_view_finalize (GObject *object);
@@ -91,9 +92,9 @@ gtk_month_view_get_type (void)
       static const GTypeInfo info =
 	{
 	  sizeof (GtkMonthViewClass),
+	  NULL,
+	  NULL,
 	  gtk_month_view_base_class_init,
-	  NULL,
-	  NULL,
 	  NULL,
 	  NULL,
 	  sizeof (struct _GtkMonthView),
@@ -109,7 +110,7 @@ gtk_month_view_get_type (void)
 }
 
 static void
-gtk_month_view_base_class_init (gpointer klass)
+gtk_month_view_base_class_init (gpointer klass, gpointer klass_data)
 {
   GObjectClass *object_class;
   GtkWidgetClass *widget_class;
@@ -289,7 +290,7 @@ gtk_month_view_button_press_event (GtkWidget *widget, GdkEventButton *event)
   gtk_month_view_cell_at (month_view, event->x, event->y, &col, &row);
   day = col + row * 7;
   if (day < 0 || day >= 7 * month_view->weeks)
-    return FALSE;
+    goto propagate;
   c = &month_view->day[day];
 
   if (event->type == GDK_BUTTON_PRESS)
@@ -313,8 +314,9 @@ gtk_month_view_button_press_event (GtkWidget *widget, GdkEventButton *event)
 
       return TRUE;
     }
-  
-  return FALSE;
+
+ propagate:
+  return GTK_WIDGET_CLASS (parent_class)->button_press_event (widget, event);
 }
 
 /* 0, 7 are Sunday.  */
@@ -694,8 +696,8 @@ gtk_month_view_key_press_event (GtkWidget *widget, GdkEventKey *k)
       set_time_and_day_view (mktime (&tm));
       return TRUE; 
     }
-  
-  return FALSE;
+
+  return GTK_WIDGET_CLASS (parent_class)->key_press_event (widget, k);
 }
 
 GtkWidget *

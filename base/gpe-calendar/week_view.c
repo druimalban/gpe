@@ -668,7 +668,7 @@ gtk_week_view_key_press_event (GtkWidget *widget, GdkEventKey *k)
       return TRUE;
     }
   
-  return FALSE;
+  return GTK_WIDGET_CLASS (parent_class)->key_press_event (widget, k);
 }
 
 static gboolean
@@ -690,7 +690,7 @@ gtk_week_view_button_press_event (GtkWidget *widget, GdkEventButton *event)
       break;
   if (day == 7)
     /* Nothing valid... */
-    return FALSE;
+    goto propagate;
 
   d = &week_view->days[day];
   if (event->type == GDK_BUTTON_PRESS)
@@ -721,6 +721,8 @@ gtk_week_view_button_press_event (GtkWidget *widget, GdkEventButton *event)
     }
   
   return TRUE;
+ propagate:
+  return GTK_WIDGET_CLASS (parent_class)->button_press_event (widget, event);
 }
 
 GtkWidget *

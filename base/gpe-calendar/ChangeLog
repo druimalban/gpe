@@ -1,5 +1,18 @@
 2006-06-14  Neal H. Walfield  <neal@gnu.org>
 
+	* day_view.c (gtk_day_view_key_press_event): If event is
+	unhandled, chain to parent.
+	* month_view.c (gtk_month_view_button_press_event): Likewise.
+	(gtk_month_view_key_press_event): Likewise.
+	* week_view.c (gtk_week_view_key_press_event): Likewise.
+	(gtk_week_view_button_press_event): Likewise.
+
+	* month_view.c (gtk_month_view_get_type): Move
+	gtk_month_view_base_class_init to fourth position.
+	(gtk_month_view_base_class_init): Take additional parameter.
+
+2006-06-14  Neal H. Walfield  <neal@gnu.org>
+
 	* day_render.c (gtk_day_render_base_class_init): Add parameter
 	KLASS_DATA.
 	(gtk_day_render_button_press): Just call g_signal_emit.
