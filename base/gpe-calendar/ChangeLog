@@ -1,5 +1,10 @@
 2006-06-14  Neal H. Walfield  <neal@gnu.org>
 
+	* day_render.c (gtk_day_render_button_press): Don't forget to
+	break out of the loop once we've found an event.
+
+2006-06-14  Neal H. Walfield  <neal@gnu.org>
+
 	* day_view.c (gtk_day_view_key_press_event): If event is
 	unhandled, chain to parent.
 	* month_view.c (gtk_month_view_button_press_event): Likewise.

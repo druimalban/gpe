@@ -817,8 +817,11 @@ gtk_day_render_button_press (GtkWidget *widget, GdkEventButton *event)
       if ((x >= e_r->x && x <= e_r->x + e_r->width)
 	  && y >= e_r->y && y <= e_r->y + MAX (height_min, e_r->height))
 	/* Click was within E_R.  Send the appropriate signal.  */
-	g_signal_emit (day_render, drclass->event_click_signal, 0,
-		       e_r->event);
+	{
+	  g_signal_emit (day_render, drclass->event_click_signal, 0,
+			 e_r->event);
+	  break;
+	}
     }
 
   if (! er)
