@@ -358,6 +358,11 @@ calendars_dialog_init (GTypeInstance *instance, gpointer klass)
   GtkTreeModel *model = calendars_tree_model ();
   GtkTreeView *tree_view
     = GTK_TREE_VIEW (gtk_tree_view_new_with_model (model));
+  /* XXX: Ugly maemo hack.  See:
+     https://maemo.org/bugzilla/show_bug.cgi?id=538 . */
+  if (g_object_class_find_property (G_OBJECT_GET_CLASS (tree_view),
+				    "allow-checkbox-mode"))
+    g_object_set (tree_view, "allow-checkbox-mode", FALSE, NULL);
   d->tree_view = tree_view;
   gtk_tree_view_expand_all (tree_view);
   gtk_tree_view_set_rules_hint (tree_view, TRUE);
