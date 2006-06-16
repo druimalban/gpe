@@ -204,7 +204,12 @@ static void
 update_view (void)
 {
   if (current_view)
-    gtk_view_reload_events (GTK_VIEW (current_view));
+    {
+      if (GTK_IS_VIEW (current_view))
+	gtk_view_reload_events (GTK_VIEW (current_view));
+      else if (GTK_IS_EVENT_LIST (current_view))
+	gtk_event_list_reload_events (GTK_EVENT_LIST (current_view));
+    }
   if (! reload_source)
     reload_source = g_idle_add (hard_reload, 0);
 }

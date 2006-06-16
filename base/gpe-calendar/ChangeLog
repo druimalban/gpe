@@ -1,5 +1,10 @@
 2006-06-16  Neal H. Walfield  <neal@gnu.org>
 
+	* main.c (update_view): Call gtk_event_list_reload_events if
+	CURRENT_VIEW is a GtkEventList.
+
+2006-06-16  Neal H. Walfield  <neal@gnu.org>
+
 	* gtkdatesel.c (gtk_date_sel_new) [IS_HILDON]: Use a normal combo
 	box to work around hildon brokenness.
 
