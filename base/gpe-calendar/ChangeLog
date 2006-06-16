@@ -1,5 +1,12 @@
 2006-06-16  Neal H. Walfield  <neal@gnu.org>
 
+	* main.c (current_view_consider): When enabling a month view,
+	increment calendar_hidden and when disabling decrement it.  Call
+	calendar_consider.  Hide EVENT_LIST_CONTAINER when stealing the
+	event list and show it when restoring the event list.
+
+2006-06-16  Neal H. Walfield  <neal@gnu.org>
+
 	* week_view.c (GtkWeekViewClass): Remove field parent_class.
 	(gtk_week_view_base_class_init): Add parameter klass_data.
 	(gtk_week_view_get_type): Move gtk_month_view_base_class_init to

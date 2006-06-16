@@ -734,14 +734,21 @@ static gboolean
 current_view_consider (void)
 {
   if (current_view_hidden)
+    /* Disable current view.  */
     {
       if (! current_view)
+	/* Nothing to do.  */
 	return FALSE;
 
       gtk_container_remove (current_view_container, current_view);
 
       if (GTK_IS_EVENT_LIST (current_view))
 	event_list_hidden --;
+      if (GTK_IS_MONTH_VIEW (current_view))
+	calendar_hidden --;
+
+      event_list_consider ();
+      calendar_consider ();
 
       return FALSE;
     }
@@ -770,12 +777,15 @@ current_view_consider (void)
 	  break;
 	}
 
+      if (GTK_IS_MONTH_VIEW (current_view))
+	calendar_hidden --;
       if (GTK_IS_EVENT_LIST (current_view))
 	{
 	  event_list_hidden --;
 	  event_list = GTK_EVENT_LIST (current_view);
 	  gtk_widget_reparent (GTK_WIDGET (event_list),
 			       GTK_WIDGET (event_list_container));
+	  gtk_widget_show (GTK_WIDGET (event_list_container));
 	}
       else
 	gtk_container_remove (current_view_container, current_view);
@@ -794,6 +804,7 @@ current_view_consider (void)
       gtk_widget_show (GTK_WIDGET (datesel));
       break;
     case view_month_view:
+      calendar_hidden ++;
       current_view = gtk_month_view_new (viewtime);
       gtk_date_sel_set_mode (datesel, GTKDATESEL_MONTH);
       gtk_widget_show (GTK_WIDGET (datesel));
@@ -807,6 +818,7 @@ current_view_consider (void)
 				GTK_WIDGET (event_list));
 	  current_view = GTK_WIDGET (event_list);
 	  event_list = NULL;
+	  gtk_widget_hide (GTK_WIDGET (event_list_container));
 	}
       else
 	current_view = gtk_event_list_new ();
@@ -822,6 +834,7 @@ current_view_consider (void)
   gtk_widget_show (current_view);
 
   event_list_consider ();
+  calendar_consider ();
 
   return TRUE;
 }
