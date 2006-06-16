@@ -739,6 +739,17 @@ gtk_date_sel_new (GtkDateSelMode mode, time_t time)
 		    G_CALLBACK (entry_button_press), 0);
 
   e = &sel->month;
+  gtk_date_sel_set_month_style (sel, GTKDATESEL_MONTH_SHORT);
+#ifdef IS_HILDON
+  /* Fuck Hildon.  */
+  e->display = gtk_combo_box_new_text ();
+  for (i = 0; i < 12; i ++)
+    {
+      char *m = month (sel, i);
+      gtk_combo_box_append_text (GTK_COMBO_BOX (e->display), m);
+      g_free (m);
+    }
+#else
   /* Create the model.  */
   GtkListStore *list = gtk_list_store_new (1, G_TYPE_INT);
   GtkTreeIter iter;
@@ -750,8 +761,6 @@ gtk_date_sel_new (GtkDateSelMode mode, time_t time)
   e->display = gtk_combo_box_new_with_model (GTK_TREE_MODEL (list));
   g_object_unref (list);
 
-  gtk_date_sel_set_month_style (sel, GTKDATESEL_MONTH_SHORT);
-
   /* Set the renderer.  */
   GtkCellRenderer *renderer = month_cell_renderer_new ();
 
@@ -760,6 +769,8 @@ gtk_date_sel_new (GtkDateSelMode mode, time_t time)
   gtk_cell_layout_set_cell_data_func (GTK_CELL_LAYOUT (e->display),
 				      renderer,
 				      month_cell_data_func, sel, NULL);
+#endif
+
   make_field (sel, &sel->month, month_click);
 
   /* Three columns.  */

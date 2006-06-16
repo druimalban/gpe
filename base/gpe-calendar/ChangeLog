@@ -1,5 +1,10 @@
 2006-06-16  Neal H. Walfield  <neal@gnu.org>
 
+	* gtkdatesel.c (gtk_date_sel_new) [IS_HILDON]: Use a normal combo
+	box to work around hildon brokenness.
+
+2006-06-16  Neal H. Walfield  <neal@gnu.org>
+
 	* main.c (fullscreen_button) [IS_HILDON]: New variable.
 	(main_window_key_press_event) [IS_HILDON]: Don't call
 	gpe_cal_fullscreen_toggle, toggle FULLSCREEN_BUTTON
