@@ -1454,7 +1454,8 @@ main (int argc, char *argv[])
   /* Menu bar.  */
   GtkMenuShell *menu_main;
 #ifdef IS_HILDON
-  menu_main = GTK_MENU_SHELL (hildon_appview_get_menu (appview));
+  menu_main
+    = GTK_MENU_SHELL (hildon_appview_get_menu (HILDON_APPVIEW (main_appview)));
 #else
   menu_main = GTK_MENU_SHELL (gtk_menu_bar_new ());
   gtk_box_pack_start (win, GTK_WIDGET (menu_main), FALSE, FALSE, 0);
