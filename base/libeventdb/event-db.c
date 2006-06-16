@@ -1228,7 +1228,7 @@ event_db_new (const char *fname)
 	    {
 	      EventSource *ev = arg;
      
-	      if (!strcasecmp (argv[0], "start"))
+	      if (!strcmp (argv[0], "start"))
 		{
 		  gboolean untimed;
 
@@ -1237,15 +1237,15 @@ event_db_new (const char *fname)
 		  if (untimed)
 		    ev->untimed = TRUE;
 		}
-	      else if (!strcasecmp (argv[0], "eventid"))
+	      else if (!strcmp (argv[0], "eventid"))
 		ev->eventid = g_strdup (argv[1]);
-	      else if (!strcasecmp (argv[0], "rend"))
+	      else if (!strcmp (argv[0], "rend"))
 		parse_date (argv[1], &ev->end, NULL);
-	      else if (!strcasecmp (argv[0], "rcount"))
+	      else if (!strcmp (argv[0], "rcount"))
 		ev->count = atoi (argv[1]);
-	      else if (!strcasecmp (argv[0], "rincrement"))
+	      else if (!strcmp (argv[0], "rincrement"))
 		ev->increment = atoi (argv[1]);
-	      else if (!strcasecmp (argv[0], "rdaymask"))
+	      else if (!strcmp (argv[0], "rdaymask"))
 		/* Obsolete.  */
 		{
 		  have_daymask = TRUE;
@@ -1266,24 +1266,24 @@ event_db_new (const char *fname)
 		      STAMP (ev);
 		    }
 		}
-	      else if (!strcasecmp (argv[0], "byday"))
+	      else if (!strcmp (argv[0], "byday"))
 		ev->byday = g_slist_prepend (ev->byday,
 					     g_strdup (argv[1]));
-	      else if (!strcasecmp (argv[0], "rexceptions"))
+	      else if (!strcmp (argv[0], "rexceptions"))
 		{
 		  long rmtime = (long)atoi (argv[1]);
 		  ev->exceptions = g_slist_append (ev->exceptions,
 						   (void *) rmtime);
 		}
-	      else if (!strcasecmp (argv[0], "recur"))
+	      else if (!strcmp (argv[0], "recur"))
 		ev->type = atoi (argv[1]);
-	      else if (!strcasecmp (argv[0], "duration"))
+	      else if (!strcmp (argv[0], "duration"))
 		ev->duration = atoi (argv[1]);
-	      else if (!strcasecmp (argv[0], "alarm"))
+	      else if (!strcmp (argv[0], "alarm"))
 		ev->alarm = atoi (argv[1]);
-	      else if (!strcasecmp (argv[0], "sequence"))
+	      else if (!strcmp (argv[0], "sequence"))
 		ev->sequence = atoi (argv[1]);
-	      else if (!strcasecmp (argv[0], "calendar"))
+	      else if (!strcmp (argv[0], "calendar"))
 		ev->calendar = atoi (argv[1]);
 	    }
 
@@ -1402,20 +1402,20 @@ load_details_callback (void *arg, int argc, char *argv[], char **names)
   if (argc == 2)
     {
       struct event_details *evd = arg;
-      if (!strcasecmp (argv[0], "summary") && !evd->summary)
+      if (!strcmp (argv[0], "summary") && !evd->summary)
         evd->summary = g_strdup (argv[1]);
-      else if (!strcasecmp (argv[0], "description") && !evd->description)
+      else if (!strcmp (argv[0], "description") && !evd->description)
         evd->description = g_strdup (argv[1]);
-      else if (!strcasecmp (argv[0], "location") && !evd->location)
+      else if (!strcmp (argv[0], "location") && !evd->location)
         evd->location = g_strdup (argv[1]);
-      else if (!strcasecmp (argv[0], "modified"))
+      else if (!strcmp (argv[0], "modified"))
         {
           if (strchr (argv[1], '-'))
             parse_date (argv[1], &evd->modified, NULL);
           else
             evd->modified = strtoul (argv[1], NULL, 10);
         }
-      else if (!strcasecmp (argv[0], "category"))
+      else if (!strcmp (argv[0], "category"))
         evd->categories = g_slist_prepend (evd->categories,
 					   (gpointer)atoi (argv[1]));
     }
