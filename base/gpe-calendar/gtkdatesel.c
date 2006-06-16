@@ -497,25 +497,36 @@ static void
 gtk_date_sel_size_allocate (GtkWidget *widget,
 			    GtkAllocation *allocation)
 {
+  GTK_WIDGET_CLASS (parent_class)->size_allocate (widget, allocation);
+
   GtkDateSel *datesel = GTK_DATE_SEL (widget);
+  GtkRequisition req;
 
   int width = 0;
   if (datesel->mode == GTKDATESEL_WEEK)
-    width += GTK_WIDGET (datesel->week.container)->requisition.width;
+    {
+      gtk_widget_size_request (GTK_WIDGET (datesel->week.container), &req);
+      width += req.width;
+    }
   if (datesel->mode == GTKDATESEL_FULL)
-    width += GTK_WIDGET (datesel->day.container)->requisition.width;
+    {
+      gtk_widget_size_request (GTK_WIDGET (datesel->day.container), &req);
+      width += req.width;
+    }
   if (datesel->mode == GTKDATESEL_FULL
       || datesel->mode == GTKDATESEL_MONTH
       || datesel->mode == GTKDATESEL_WEEK)
-    width += GTK_WIDGET (datesel->month.container)->requisition.width;
+    {
+      gtk_widget_size_request (GTK_WIDGET (datesel->month.container), &req);
+      width += req.width;
+    }
 
-  width += GTK_WIDGET (datesel->year.container)->requisition.width;
+  gtk_widget_size_request (GTK_WIDGET (datesel->year.container), &req);
+  width += req.width;
   if (width > GTK_WIDGET (datesel)->allocation.width)
     gtk_widget_hide (datesel->year.container);
   else
     gtk_widget_show (datesel->year.container);
-
-  GTK_WIDGET_CLASS (parent_class)->size_allocate (widget, allocation);
 }
 
 #define GTK_TYPE_MONTH_CELL_RENDERER (month_cell_renderer_get_type ())

@@ -1,3 +1,66 @@
+2006-06-16  Neal H. Walfield  <neal@gnu.org>
+
+	* gtkdatesel.c (gtk_date_sel_size_allocate): Call the parent's
+	size_allocate first.  Ontain the child requisitions using
+	gtk_widget_size_request.  * main.c [! IS_HILDON]: Include
+	<gpe/pim-categories-ui.h>.  Include "calendars-widgets.h".
+	(view_container): Rename from this...
+	(current_view_container): ... to this.  Update users.
+	(toolbar): Remove global variable.
+	(main_panel): New variable.
+	(current_view_hidden): Likewise.
+	(current_view_mode): Likewise.
+	(sidebar_disabled): Likewise.
+	(sidebar_hidden): Likewise.
+	(sidebar_container): Likewise.
+	(sidebar): Likewise.
+	(calendar_disabled): Likewise.
+	(calendar_hidden): Likewise.
+	(calendar_container): Likewise.
+	(calendars_disabled): Likewise.
+	(calendars_hidden): Likewise.
+	(calendars_container): Likewise.
+	(calendars): Likewise.
+	(event_list_disabled): Likewise.
+	(event_list_hidden): Likewise.
+	(event_list_container): Likewise.
+	(week_button): Remove variable.
+	(month_button): Likewise.
+	(upcoming_button): Likewise.
+	(calendar_consider): New function.
+	(calendar_toggle): Likewise.
+	(calendars_row_inserted): Likewise.
+	(calendars_visible_toggled): Likewise.
+	(calendars_cleanup): Likewise.
+	(calendars_consider): Likewise.
+	(calendars_toggle): Likewise.
+	(struct upcoming_restore): Remove structure.
+	(upcoming_view_off): Remove function.
+	(cal_view_expire): Remove function.
+	(upcoming_view_button_clicked): Rename from this...
+	(event_list_button_clicked): ... to this.  Update users.
+	(event_list_consider): New function.
+	(event_list_toggle): Likewise.
+	(sidebar_consider): Likewise.
+	(sidebar_toggle): Likewise.
+	(current_view_consider): Likewise.
+	(new_view): Remove function.
+	(menu_toggled): Renamed from this...
+	(view_toggled): ... to this.  Always declare.
+	(gpe_cal_fullscreen_toggle): Rename from this...
+	(toggle_fullscreen): ... to this.  Make a toggle callback.  Remove
+	not_fullscreen_toggle and set full screen mode as a function of
+	the toggle.
+	(toggle_toolbar) [! IS_HILDON]: Define function.
+	(edit_categories) [! IS_HILDON]: Define function.  Correctly call
+	gpe_pim_categories_dialog.
+	(create_app_menu): Remove function and move body into...
+	(main): ... here.  Rework the menus and always display them.  Add
+	menu items for toggling the various sidebars.  Remove less
+	commonly used toolbar items to reduce clutter.  Don't display the
+	text under the tool buttons by default.  If there is room, put
+	DATESEL in the toolbar.
+
 2006-06-14  Neal H. Walfield  <neal@gnu.org>
 
 	* day_view.c (day_view_event_clicked): Get the current event and

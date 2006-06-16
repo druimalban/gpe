@@ -23,6 +23,7 @@
 #include <gpe/pixmaps.h>
 #include <gpe/errorbox.h>
 
+#include <gpe/pim-categories-ui.h>
 #include <gpe/event-db.h>
 
 #ifdef WITH_LIBSCHEDULE
@@ -35,7 +36,6 @@
 /* Hildon includes */
 #include <hildon-widgets/hildon-app.h>
 #include <hildon-widgets/hildon-appview.h>
-#include <gpe/pim-categories-ui.h>
 #include <libosso.h>
 #define APPLICATION_DBUS_SERVICE "gpe_calendar"
 #define ICON_PATH "/usr/share/icons/hicolor/26x26/hildon"
@@ -56,6 +56,7 @@
 #include "alarm-dialog.h"
 #include "calendars-dialog.h"
 #include "calendar-update.h"
+#include "calendars-widgets.h"
 
 #include <gpe/pim-categories.h>
 
@@ -84,9 +85,6 @@ EventDB *event_db;
 
 static time_t viewtime;
 
-GtkWidget *main_window;
-static GtkWidget *view_container, *toolbar;
-
 static struct gpe_icon my_icons[] = {
   { "day_view",   DAY_ICON },
   { "week_view",  WEEK_ICON },
@@ -99,12 +97,42 @@ static struct gpe_icon my_icons[] = {
   { NULL, NULL }
 };
 
-static GtkBin *main_bin;
-static GtkWidget *current_view;
+/* disabled: user doesn't want to see the control.
+
+   hidden: control not useful at the moment.  Each blocker must
+   increment the appropriate hidden by 1 and decrements it by 1 when
+   the blocking condition is cleared.  */
+GtkWidget *main_window;
 static GtkDateSel *datesel;
+static GtkContainer *main_panel;
+static int current_view_hidden;
+static GtkContainer *current_view_container;
+static enum
+  {
+    view_day_view,
+    view_week_view,
+    view_month_view,
+    view_event_list_view
+  } current_view_mode;
+static GtkWidget *current_view;
+
+static gboolean sidebar_disabled;
+static int sidebar_hidden;
+static GtkContainer *sidebar_container;
+static GtkBox *sidebar;
+static gboolean calendar_disabled;
+static int calendar_hidden;
+static GtkContainer *calendar_container;
 static GtkEventCal *calendar;
+static gboolean calendars_disabled;
+static int calendars_hidden;
+static GtkContainer *calendars_container;
+static GtkTreeView *calendars;
+static gboolean event_list_disabled;
+static int event_list_hidden;
+static GtkContainer *event_list_container;
 static GtkEventList *event_list;
-static GtkWidget *day_button, *week_button, *month_button, *upcoming_button;
+static GtkWidget *day_button;
 
 static void propagate_time (void);
 
@@ -338,94 +366,336 @@ calendar_changed (GtkWidget *cal, gpointer data)
   propagate_time ();
 }
 
-/* Build the layout for the cal view.  If *event_list is not NULL,
-   then assumes a reference to *EVENT_LIST and uses it rather than
-   creating a new one.  (If DISPLAY_TINY is true and as a result, the
-   sidebar is not displayed and *EVENT_LIST is not-NULL, then a
-   reference to *EVENT_LIST is dropped.)
+static gboolean sidebar_consider (void);
 
-     +-Datesel--------------------------------+
-     |                                        |
-     +----------------------------------------+
-     +-primary--------------------------------+
-     |+-viewcontainer----------++-sidebar----+|
-     ||+-current_view---------+||+-Calendar-+||
-     |||                      ||||          |||
-     |||                      |||+----------+||
-     |||                      |||+Event-List+||
-     |||                      ||||          |||
-     |||                      ||||          |||
-     ||+----------------------+||+----------+||
-     |+------------------------++------------+|
-     +----------------------------------------+
-  */
-static GtkWidget *
-cal_view_build (GtkEventList **event_list)
+static gboolean
+calendar_consider (void)
 {
-  GtkBox *main_container = GTK_BOX (gtk_vbox_new (FALSE, 0));
+  gboolean s = sidebar_consider ();
 
-  datesel = GTK_DATE_SEL (gtk_date_sel_new (GTKDATESEL_FULL, viewtime));
-  gtk_box_pack_start (main_container, GTK_WIDGET (datesel), FALSE, FALSE, 0);
-  g_signal_connect (G_OBJECT (datesel), "changed",
-		    G_CALLBACK (datesel_changed), NULL);
-  gtk_widget_add_events (GTK_WIDGET (datesel),
-			 GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK);
-  gtk_widget_show (GTK_WIDGET (datesel));
-
-  GtkPaned *primary
-    = GTK_PANED ((display_landscape ? &gtk_hpaned_new : &gtk_vpaned_new) ());
-  gtk_box_pack_start (main_container, GTK_WIDGET (primary), TRUE, TRUE, 0);
-  gtk_widget_show (GTK_WIDGET (primary));
-
-  view_container = gtk_vbox_new (FALSE, 0);
-  gtk_paned_pack1 (primary, GTK_WIDGET (view_container), TRUE, FALSE);
-  gtk_widget_show (GTK_WIDGET (view_container));
-
-  if (! display_tiny)
+  if (calendar_hidden || calendar_disabled || ! s)
+    /* Calendar disabled.  Destroy it.  */
     {
-      GtkWidget *sidebar;
+      if (! calendar)
+	/* Already destroyed, bye.  */
+	return FALSE;
 
-      if (display_landscape)
-	sidebar = gtk_vbox_new (FALSE, 0);
-      else
-	sidebar = gtk_hpaned_new ();
+      gtk_container_remove (calendar_container,
+			    GTK_BIN (calendar_container)->child);
+      gtk_widget_hide (GTK_WIDGET (calendar_container));
 
-      gtk_paned_pack2 (primary, GTK_WIDGET (sidebar), FALSE, TRUE);
-      gtk_widget_show (GTK_WIDGET (sidebar));
+      return FALSE;
+    }
+  else
+    /* Calendar enabled.  Create it.  */
+    {
+      if (calendar)
+	/* Already enabled, bye.  */
+	return TRUE;
+
+      gtk_widget_show (GTK_WIDGET (calendar_container));
 
       calendar = GTK_EVENT_CAL (gtk_event_cal_new ());
       g_object_add_weak_pointer (G_OBJECT (calendar), (gpointer *) &calendar);
       GTK_WIDGET_UNSET_FLAGS (calendar, GTK_CAN_FOCUS);
       gtk_calendar_set_display_options (GTK_CALENDAR (calendar),
 					GTK_CALENDAR_SHOW_DAY_NAMES
-					| (week_starts_sunday ?
-					   0 : GTK_CALENDAR_WEEK_START_MONDAY));
-      if (display_landscape)
-	gtk_box_pack_start (GTK_BOX (sidebar), GTK_WIDGET (calendar),
-			    FALSE, FALSE, 0);
-      else
-	gtk_paned_pack1 (GTK_PANED (sidebar), GTK_WIDGET (calendar),
-			 FALSE, TRUE);
-
+					| (week_starts_sunday ? 0
+					   : GTK_CALENDAR_WEEK_START_MONDAY));
       g_signal_connect (G_OBJECT (calendar),
 			"day-selected", G_CALLBACK (calendar_changed), NULL);
+      gtk_container_add (calendar_container, GTK_WIDGET (calendar));
       gtk_widget_show (GTK_WIDGET (calendar));
 
-      if (! *event_list)
-	*event_list = GTK_EVENT_LIST (gtk_event_list_new ());
-      if (display_landscape)
-	gtk_box_pack_start (GTK_BOX (sidebar), GTK_WIDGET (*event_list),
-			    TRUE, TRUE, 0);
-      else
-	gtk_paned_pack2 (GTK_PANED (sidebar), GTK_WIDGET (*event_list),
-			 TRUE, FALSE);
-      gtk_widget_set_size_request (GTK_WIDGET (*event_list), 150, 150);
-      gtk_widget_show (GTK_WIDGET (*event_list));
+      return TRUE;
     }
-  else if (*event_list)
-    g_object_unref (*event_list);
+}
 
-  return GTK_WIDGET (main_container);
+static void
+calendar_toggle (GtkCheckMenuItem *menuitem, gpointer data)
+{
+  calendar_disabled = ! gtk_check_menu_item_get_active (menuitem);
+  calendar_consider ();
+}
+
+static void
+calendars_row_inserted (GtkTreeModel *treemodel, GtkTreePath *path,
+			GtkTreeIter *iter, gpointer user_data)
+{
+  GtkTreeView *tree_view = GTK_TREE_VIEW (user_data);
+
+  gtk_tree_view_expand_to_path (tree_view, path);
+}
+
+static void
+calendars_visible_toggled (GtkCellRendererToggle *cell_renderer,
+			   gchar *p, gpointer user_data)
+{
+  GtkTreePath *path = gtk_tree_path_new_from_string (p);
+  GtkTreeModel *model = gtk_tree_view_get_model (GTK_TREE_VIEW (user_data));
+  GtkTreeIter iter;
+
+  if (gtk_tree_model_get_iter (model, &iter, path))
+    {
+      EventCalendar *ec;
+
+      gtk_tree_model_get (model, &iter, COL_CALENDAR, &ec, -1);
+      event_calendar_set_visible (ec, ! event_calendar_get_visible (ec));
+    }
+}
+
+struct sig_info
+{
+  gpointer instance;
+  gulong sig;
+};
+
+static void
+calendars_cleanup (gpointer data, GObject *tree_view)
+{
+  struct sig_info *info = data;
+  g_signal_handler_disconnect (info->instance, info->sig);
+  g_free (info);
+}
+
+static gboolean
+calendars_consider (void)
+{
+  gboolean s = sidebar_consider ();
+
+  if (calendars_hidden || calendars_disabled || ! s)
+    /* Calendars disabled.  Destroy it.  */
+    {
+      if (! calendars)
+	/* Already destroyed, bye.  */
+	return FALSE;
+
+      gtk_container_remove (calendars_container,
+			    GTK_BIN (calendars_container)->child);
+      gtk_widget_hide (GTK_WIDGET (calendars_container));
+
+      return FALSE;
+    }
+
+  /* Calendars enabled.  Create it.  */
+
+  if (calendars)
+    /* Already enabled, bye.  */
+    return TRUE;
+
+  gtk_widget_show (GTK_WIDGET (calendars_container));
+
+  GtkWidget *scrolled_window = gtk_scrolled_window_new (NULL, NULL);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window),
+				  GTK_POLICY_AUTOMATIC,
+				  GTK_POLICY_AUTOMATIC);
+  gtk_container_add (calendars_container, scrolled_window);
+  gtk_widget_show (scrolled_window);
+
+  GtkTreeModel *model = calendars_tree_model ();
+  GtkTreeView *tree_view
+    = GTK_TREE_VIEW (gtk_tree_view_new_with_model (model));
+  g_object_add_weak_pointer (G_OBJECT (tree_view), (gpointer *) &tree_view);
+  /* XXX: Ugly maemo hack.  See:
+     https://maemo.org/bugzilla/show_bug.cgi?id=538 . */
+  if (g_object_class_find_property (G_OBJECT_GET_CLASS (tree_view),
+				    "allow-checkbox-mode"))
+    g_object_set (tree_view, "allow-checkbox-mode", FALSE, NULL);
+  calendars = tree_view;
+  g_object_add_weak_pointer (G_OBJECT (calendars), (gpointer *) &calendars);
+  gtk_tree_view_expand_all (tree_view);
+  gtk_tree_view_set_rules_hint (tree_view, TRUE);
+  gtk_tree_view_set_headers_visible (tree_view, FALSE);
+  gtk_widget_set_size_request (GTK_WIDGET (tree_view), 150, 150);
+  gtk_container_add (GTK_CONTAINER (scrolled_window),
+		     GTK_WIDGET (tree_view));
+  gtk_widget_show (GTK_WIDGET (tree_view));
+
+  struct sig_info *info = g_malloc (sizeof (*info));
+  info->instance = model;
+  info->sig
+    = g_signal_connect (G_OBJECT (model), "row-inserted",
+			G_CALLBACK (calendars_row_inserted), tree_view);
+  g_object_weak_ref (G_OBJECT (tree_view),
+		     calendars_cleanup, info);
+
+  GtkTreeViewColumn *col;
+  GtkCellRenderer *renderer;
+
+  col = gtk_tree_view_column_new ();
+  gtk_tree_view_append_column (tree_view, col);
+  renderer = gtk_cell_renderer_toggle_new ();
+  g_signal_connect (G_OBJECT (renderer), "toggled",
+		    G_CALLBACK (calendars_visible_toggled), tree_view);
+  gtk_tree_view_column_pack_start (col, renderer, TRUE);
+  gtk_cell_layout_set_cell_data_func
+    (GTK_CELL_LAYOUT (col), renderer,
+     calendar_visible_toggle_cell_data_func, tree_view, NULL);
+
+  col = gtk_tree_view_column_new ();
+  gtk_tree_view_append_column (tree_view, col);
+  renderer = calendar_text_cell_renderer_new ();
+  gtk_tree_view_column_pack_start (col, renderer, FALSE);
+  gtk_cell_layout_set_cell_data_func
+    (GTK_CELL_LAYOUT (col), renderer,
+     calendar_text_cell_data_func, tree_view, NULL);
+
+  return TRUE;
+}
+
+static void
+calendars_toggle (GtkCheckMenuItem *menuitem, gpointer data)
+{
+  calendars_disabled = ! gtk_check_menu_item_get_active (menuitem);
+  calendars_consider ();
+}
+
+static gboolean
+event_list_consider (void)
+{
+  gboolean s = sidebar_consider ();
+
+  if (event_list_hidden || event_list_disabled || ! s)
+    /* Event list disabled.  Destroy it.  */
+    {
+      if (! event_list)
+	/* Already destroyed, bye.  */
+	return FALSE;
+
+      gtk_container_remove (event_list_container,
+			    GTK_BIN (event_list_container)->child);
+      gtk_widget_hide (GTK_WIDGET (event_list_container));
+
+      return FALSE;
+    }
+  else
+    /* Event list enabled.  Create it.  */
+    {
+      if (event_list)
+	/* Already enabled, bye.  */
+	return TRUE;
+
+      gtk_widget_show (GTK_WIDGET (event_list_container));
+
+      event_list = GTK_EVENT_LIST (gtk_event_list_new ());
+      g_object_add_weak_pointer (G_OBJECT (event_list),
+				 (gpointer *) &event_list);
+      gtk_widget_set_size_request (GTK_WIDGET (event_list), 150, 150);
+      gtk_widget_show (GTK_WIDGET (event_list));
+      gtk_container_add (event_list_container, GTK_WIDGET (event_list));
+      return TRUE;
+    }
+}
+
+static void
+event_list_toggle (GtkCheckMenuItem *menuitem, gpointer data)
+{
+  event_list_disabled = ! gtk_check_menu_item_get_active (menuitem);
+  event_list_consider ();
+}
+
+/* Sidebar:
+
+    +-sidebar----+
+    |+-Calendar-+|
+    ||          ||
+    |+----------+|
+    |+-Calendars+|
+    ||          ||
+    |+----------+|
+    |+-Agenda---+|
+    ||          ||
+    |+----------+|
+    +------------+ */
+static gboolean
+sidebar_consider (void)
+{
+  int empty = FALSE;
+  if ((calendar_hidden || calendar_disabled)
+      && (calendars_hidden || calendars_disabled)
+      && (event_list_hidden || event_list_disabled))
+    empty = TRUE;
+
+  if (sidebar_hidden || sidebar_disabled || empty)
+    /* Sidebar disabled.  Destroy it.  */
+    {
+      if (! sidebar)
+	/* Already destroyed, bye.  */
+	return FALSE;
+
+      gtk_container_remove (sidebar_container,
+			    GTK_BIN (sidebar_container)->child);
+      gtk_widget_hide (GTK_WIDGET (sidebar_container));
+
+      calendar_consider ();
+      calendars_consider ();
+      event_list_consider ();
+
+      return FALSE;
+    }
+  else
+    /* Sidebar enabled.  Create it.  */
+    {
+      if (sidebar)
+	/* Already enabled, bye.  */
+	return TRUE;
+
+      gtk_widget_show (GTK_WIDGET (sidebar_container));
+
+      if (display_landscape)
+	sidebar = GTK_BOX (gtk_vbox_new (FALSE, 0));
+      else
+	sidebar = GTK_BOX (gtk_hbox_new (FALSE, 0));
+      g_object_add_weak_pointer (G_OBJECT (sidebar), (gpointer *) &sidebar);
+      gtk_container_add (sidebar_container, GTK_WIDGET (sidebar));
+      gtk_widget_show (GTK_WIDGET (sidebar));
+
+      GtkPaned *pane1;
+      if (display_landscape)
+	pane1 = GTK_PANED (gtk_vpaned_new ());
+      else
+	pane1 = GTK_PANED (gtk_hpaned_new ());
+      gtk_box_pack_start (sidebar, GTK_WIDGET (pane1), TRUE, TRUE, 0);
+      gtk_widget_show (GTK_WIDGET (pane1));
+
+      GtkWidget *f = gtk_frame_new (NULL);
+      gtk_frame_set_shadow_type (GTK_FRAME (f), GTK_SHADOW_NONE);
+      calendar_container = GTK_CONTAINER (f);
+      gtk_paned_pack1 (pane1, f, FALSE, TRUE);
+
+      calendar_consider ();
+
+      GtkPaned *pane2;
+      if (display_landscape)
+	pane2 = GTK_PANED (gtk_vpaned_new ());
+      else
+	pane2 = GTK_PANED (gtk_hpaned_new ());
+      gtk_paned_pack2 (pane1, GTK_WIDGET (pane2), TRUE, TRUE);
+      gtk_widget_show (GTK_WIDGET (pane2));
+
+      f = gtk_frame_new (NULL);
+      gtk_frame_set_shadow_type (GTK_FRAME (f), GTK_SHADOW_NONE);
+      calendars_container = GTK_CONTAINER (f);
+      gtk_paned_pack1 (pane2, GTK_WIDGET (f), TRUE, TRUE);
+
+      calendars_consider ();
+
+      f = gtk_frame_new (NULL);
+      gtk_frame_set_shadow_type (GTK_FRAME (f), GTK_SHADOW_NONE);
+      event_list_container = GTK_CONTAINER (f);
+      gtk_paned_pack2 (pane2, GTK_WIDGET (f), TRUE, TRUE);
+
+      event_list_consider ();
+
+      return TRUE;
+    }
+}
+
+static void
+sidebar_toggle (GtkCheckMenuItem *menuitem, gpointer data)
+{
+  sidebar_disabled = ! gtk_check_menu_item_get_active (menuitem);
+  sidebar_consider ();
 }
 
 static void
@@ -435,19 +705,112 @@ time_changed (GtkView *view, time_t time, gpointer data)
   propagate_time ();
 }
 
-static void
-new_view (GtkWidget * (*new) (time_t time))
-{
-  if (current_view)
-    gtk_container_remove (GTK_CONTAINER (view_container), current_view);
+/* Build the layout for the cal view.
 
-  current_view = new (viewtime);
-  gtk_box_pack_start (GTK_BOX (view_container), current_view,
-		      TRUE, TRUE, 0);
-  g_signal_connect (G_OBJECT (current_view),
-		    "time-changed", G_CALLBACK (time_changed), NULL);
+     +-current_view_container-----------------+
+     |+-current_view-----------++-sidebar----+|
+     ||                        ||            ||
+     ||                        ||            ||
+     ||                        ||            ||
+     ||                        ||            ||
+     ||                        ||            ||
+     |+------------------------++------------+|
+     +----------------------------------------+
+  */
+static gboolean
+current_view_consider (void)
+{
+  if (current_view_hidden)
+    {
+      if (! current_view)
+	return FALSE;
+
+      gtk_container_remove (current_view_container, current_view);
+
+      if (GTK_IS_EVENT_LIST (current_view))
+	event_list_hidden --;
+
+      return FALSE;
+    }
+
+  gtk_widget_show (GTK_WIDGET (current_view_container));
+
+  if (current_view)
+    {
+      switch (current_view_mode)
+	{
+	case view_day_view:
+	  if (GTK_IS_DAY_VIEW (current_view))
+	    return TRUE;
+	  break;
+	case view_week_view:
+	  if (GTK_IS_WEEK_VIEW (current_view))
+	    return TRUE;
+	  break;
+	case view_month_view:
+	  if (GTK_IS_MONTH_VIEW (current_view))
+	    return TRUE;
+	  break;
+	case view_event_list_view:
+	  if (GTK_IS_EVENT_LIST (current_view))
+	    return TRUE;
+	  break;
+	}
+
+      if (GTK_IS_EVENT_LIST (current_view))
+	{
+	  event_list_hidden --;
+	  event_list = GTK_EVENT_LIST (current_view);
+	  gtk_widget_reparent (GTK_WIDGET (event_list),
+			       GTK_WIDGET (event_list_container));
+	}
+      else
+	gtk_container_remove (current_view_container, current_view);
+    }
+
+  switch (current_view_mode)
+    {
+    case view_day_view:
+      current_view = gtk_day_view_new (viewtime);
+      gtk_date_sel_set_mode (datesel, GTKDATESEL_FULL);
+      gtk_widget_show (GTK_WIDGET (datesel));
+      break;
+    case view_week_view:
+      current_view = gtk_week_view_new (viewtime);
+      gtk_date_sel_set_mode (datesel, GTKDATESEL_WEEK);
+      gtk_widget_show (GTK_WIDGET (datesel));
+      break;
+    case view_month_view:
+      current_view = gtk_month_view_new (viewtime);
+      gtk_date_sel_set_mode (datesel, GTKDATESEL_MONTH);
+      gtk_widget_show (GTK_WIDGET (datesel));
+      break;
+    case view_event_list_view:
+      event_list_hidden ++;
+      if (event_list)
+	{
+	  g_object_ref (event_list);
+	  gtk_container_remove (event_list_container,
+				GTK_WIDGET (event_list));
+	  current_view = GTK_WIDGET (event_list);
+	  event_list = NULL;
+	}
+      else
+	current_view = gtk_event_list_new ();
+      gtk_widget_hide (GTK_WIDGET (datesel));
+      break;
+    }
+
+  if (GTK_IS_VIEW (current_view))
+    g_signal_connect (G_OBJECT (current_view),
+		      "time-changed", G_CALLBACK (time_changed), NULL);
+
+  gtk_container_add (current_view_container, current_view);
   gtk_widget_show (current_view);
-  gtk_widget_grab_focus (current_view);
+
+  event_list_consider ();
+
+  return TRUE;
 }
 
 void
@@ -455,8 +818,8 @@ set_time_and_day_view (time_t selected_time)
 {
   viewtime = selected_time;
   propagate_time ();
-  gtk_toggle_tool_button_set_active (GTK_TOGGLE_TOOL_BUTTON (day_button), TRUE);
-  new_view (gtk_day_view_new);
+  gtk_toggle_tool_button_set_active (GTK_TOGGLE_TOOL_BUTTON (day_button),
+				     TRUE);
 }
 
 static void
@@ -465,10 +828,8 @@ day_view_button_clicked (GtkWidget *widget, gpointer d)
   if (! gtk_toggle_tool_button_get_active (GTK_TOGGLE_TOOL_BUTTON (widget)))
     return;
 
-  gtk_date_sel_set_mode (datesel, GTKDATESEL_FULL);
-  if (calendar)
-    gtk_widget_show (GTK_WIDGET (calendar));
-  new_view (gtk_day_view_new);
+  current_view_mode = view_day_view;
+  current_view_consider ();
 }
 
 static void
@@ -477,10 +838,8 @@ week_view_button_clicked (GtkWidget *widget, gpointer d)
   if (! gtk_toggle_tool_button_get_active (GTK_TOGGLE_TOOL_BUTTON (widget)))
     return;
 
-  gtk_date_sel_set_mode (datesel, GTKDATESEL_WEEK);
-  if (calendar)
-    gtk_widget_show (GTK_WIDGET (calendar));
-  new_view (gtk_week_view_new);
+  current_view_mode = view_week_view;
+  current_view_consider ();
 }
 
 static void
@@ -489,115 +848,18 @@ month_view_button_clicked (GtkWidget *widget, gpointer d)
   if (! gtk_toggle_tool_button_get_active (GTK_TOGGLE_TOOL_BUTTON (widget)))
     return;
 
-  gtk_date_sel_set_mode (datesel, GTKDATESEL_MONTH);
-  if (calendar)
-    gtk_widget_hide (GTK_WIDGET (calendar));
-  new_view (gtk_month_view_new);
-}
-
-
-struct upcoming_restore
-{
-  gulong upcoming_toggle_signal_id;
-  GtkWidget *cal_view;
-  guint cal_view_expire;
-  GtkWidget *parent;
-};
-
-static void
-upcoming_view_off (GtkWidget *widget, gpointer d)
-{
-  struct upcoming_restore *r = d;
-
-  /* Detach EVENT_LIST from MAIN_BIN but grab a reference as we may
-     still need it.  */
-  g_object_ref (event_list);
-  gtk_container_remove (GTK_CONTAINER (main_bin), GTK_WIDGET (event_list));
-
-  if (! r->cal_view)
-    /* The cal view has been destroyed, make a new one.  */
-    {
-      r->cal_view = cal_view_build (&event_list);
-      gtk_widget_show (r->cal_view);
-    }
-  else
-    {
-      if (r->parent)
-	/* EVENT_LIST was attached to the side bar, reattach it.  */
-	gtk_container_add (GTK_CONTAINER (r->parent), GTK_WIDGET (event_list));
-      else
-	g_object_unref (event_list);
-    }
-
-  /* Reattach the cal view to MAIN_BIN.  */
-  gtk_container_add (GTK_CONTAINER (main_bin), r->cal_view);
-
-  /* Don't run again!  */
-  g_signal_handler_disconnect (widget, r->upcoming_toggle_signal_id);
-
-  if (r->cal_view_expire)
-    /* And don't bother expiring R->CAL_VIEW anymore.  */
-    g_source_remove (r->cal_view_expire);
-
-  g_free (r);
-}
-
-static gboolean
-cal_view_expire (gpointer d)
-{
-  struct upcoming_restore *r = d;
-
-  gtk_widget_destroy (r->cal_view);
-  r->cal_view = NULL;
-
-  r->cal_view_expire = 0;
-
-  return FALSE;
+  current_view_mode = view_month_view;
+  current_view_consider ();
 }
 
 static void
-upcoming_view_button_clicked (GtkWidget *widget, gpointer d)
+event_list_button_clicked (GtkWidget *widget, gpointer d)
 {
   if (! gtk_toggle_tool_button_get_active (GTK_TOGGLE_TOOL_BUTTON (widget)))
     return;
 
-  struct upcoming_restore *r = g_malloc0 (sizeof (*r));
-
-  if (current_view)
-    {
-      gtk_container_remove (GTK_CONTAINER (view_container), current_view);
-      current_view = NULL;
-    }
-
-  r->cal_view = gtk_bin_get_child (main_bin);
-  g_object_ref (r->cal_view);
-  gtk_container_remove (GTK_CONTAINER (main_bin), r->cal_view);
-
-  if (! event_list)
-    {
-      event_list = GTK_EVENT_LIST (gtk_event_list_new ());
-      g_object_add_weak_pointer (G_OBJECT (event_list),
-				 (gpointer *) &event_list);
-      gtk_widget_show (GTK_WIDGET (event_list));
-      gtk_container_add (GTK_CONTAINER (main_bin), GTK_WIDGET (event_list));
-      r->parent = NULL;
-    }
-  else
-    {
-      r->parent = gtk_widget_get_parent (GTK_WIDGET (event_list));
-      gtk_widget_reparent (GTK_WIDGET (event_list), GTK_WIDGET (main_bin));
-    }
-
-  r->upcoming_toggle_signal_id
-    = g_signal_connect (G_OBJECT (widget), "toggled",
-			G_CALLBACK (upcoming_view_off), r);
-
-  /* Kill the cal view if we stay at the event list for more than 5
-     minutes.  */
-  r->cal_view_expire = gtk_timeout_add (5 * 60 * 60 * 1000,
-					cal_view_expire, r);
-
-  gtk_widget_grab_focus (GTK_WIDGET (event_list));
+  current_view_mode = view_event_list_view;
+  current_view_consider ();
 }
 
 static AlarmDialog *alarm_dialog;
@@ -666,13 +928,11 @@ import_callback (GtkWidget *widget, gpointer user_data)
   import_vcal (NULL, NULL);
 }
 
-#ifdef IS_HILDON
 static void
-menu_toggled (GtkWidget *widget, gpointer data)
+view_toggled (GtkWidget *widget, gpointer data)
 {
   gtk_toggle_tool_button_set_active (GTK_TOGGLE_TOOL_BUTTON (data), TRUE);
 }
-#endif
 
 static void
 gpe_cal_exit (void)
@@ -683,16 +943,15 @@ gpe_cal_exit (void)
 
 #ifdef IS_HILDON
 static void
-gpe_cal_fullscreen_toggle (void)
+toggle_fullscreen (GtkCheckMenuItem *menuitem, gpointer user_data)
 {
-  static int not_fullscreen_toggle;
   hildon_appview_set_fullscreen (HILDON_APPVIEW (main_window),
-				 ! not_fullscreen_toggle);
-  not_fullscreen_toggle = ! not_fullscreen_toggle;
+				 gtk_check_menu_item_get_active (menuitem));
 }
+#endif /*IS_HILDON*/
 
 static void
-toggle_toolbar(GtkCheckMenuItem *menuitem, gpointer user_data)
+toggle_toolbar (GtkCheckMenuItem *menuitem, GtkWidget *toolbar)
 {
   if (gtk_check_menu_item_get_active(menuitem))
     gtk_widget_show(toolbar);
@@ -705,12 +964,16 @@ edit_categories (GtkWidget *w)
 {
   GtkWidget *dialog;
 
+  /* XXX: Braindamage.  */
+#ifdef IS_HILDON
   dialog = gpe_pim_categories_dialog (NULL, FALSE, NULL, NULL);
+#else
+  dialog = gpe_pim_categories_dialog (NULL, NULL, NULL);
+#endif
   gtk_window_set_transient_for(GTK_WINDOW(dialog), 
                                GTK_WINDOW(gtk_widget_get_toplevel(w)));
   gtk_window_set_modal(GTK_WINDOW(dialog), TRUE);
 }
-#endif /*IS_HILDON*/
 
 static gboolean
 main_window_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *data)
@@ -760,75 +1023,6 @@ main_window_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *data)
     
   return FALSE;
 }
-
-#ifdef IS_HILDON
-static void
-create_app_menu(HildonAppView *appview)
-{
-  GtkMenu *menu_main = hildon_appview_get_menu(appview);
-  GtkWidget *menu_event = gtk_menu_new();
-  GtkWidget *menu_categories = gtk_menu_new();
-  GtkWidget *menu_view = gtk_menu_new();
-  GtkWidget *menu_tools = gtk_menu_new();
-    
-  GtkWidget *item_event = gtk_menu_item_new_with_label(_("Event"));
-  GtkWidget *item_categories = gtk_menu_item_new_with_label(_("Categories"));
-  GtkWidget *item_view = gtk_menu_item_new_with_label(_("View"));
-  GtkWidget *item_close = gtk_menu_item_new_with_label(_("Close"));
-  GtkWidget *item_add = gtk_menu_item_new_with_label(_("Add new"));
-  GtkWidget *item_catedit = gtk_menu_item_new_with_label(_("Edit categories"));
-  GtkWidget *item_toolbar = gtk_check_menu_item_new_with_label(_("Show toolbar"));
-  GtkWidget *item_tools = gtk_menu_item_new_with_label(_("Tools"));
-  GtkWidget *item_import = gtk_menu_item_new_with_label(_("Import vCal / ICS"));
-  GtkWidget *item_today = gtk_menu_item_new_with_label(_("Today"));
-  GtkWidget *item_calendars = gtk_menu_item_new_with_label(_("Calendars"));
-  GtkWidget *item_day = gtk_menu_item_new_with_label(_("Day"));
-  GtkWidget *item_week = gtk_menu_item_new_with_label(_("Week"));
-  GtkWidget *item_month = gtk_menu_item_new_with_label(_("Month"));
-  GtkWidget *item_upcoming = gtk_menu_item_new_with_label(_("Upcoming"));
-  GtkWidget *item_alarms = gtk_menu_item_new_with_label(_("Alarms"));
-
-  gtk_menu_item_set_submenu(GTK_MENU_ITEM(item_event), menu_event);
-  gtk_menu_item_set_submenu(GTK_MENU_ITEM(item_categories), menu_categories);
-  gtk_menu_item_set_submenu(GTK_MENU_ITEM(item_view), menu_view);
-  gtk_menu_item_set_submenu(GTK_MENU_ITEM(item_tools), menu_tools);
-
-  gtk_menu_append(menu_main, item_event);
-  gtk_menu_append(menu_main, item_categories);
-  gtk_menu_append(menu_main, item_view);
-  gtk_menu_append(menu_main, item_tools);
-  gtk_menu_append(menu_main, item_close);
-  
-  gtk_menu_append(menu_event, item_add);
-  gtk_menu_append(menu_view, item_today);
-  gtk_menu_append(menu_view, item_calendars);
-  gtk_menu_append(menu_tools, item_import);
-  gtk_menu_append(menu_view, item_day);
-  gtk_menu_append(menu_view, item_week);
-  gtk_menu_append(menu_view, item_month);
-  gtk_menu_append(menu_view, item_upcoming);
-  gtk_menu_append(menu_view, item_alarms);
-  gtk_menu_append(menu_view, item_toolbar);
-  gtk_menu_append(menu_categories, item_catedit);
-  
-  gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item_toolbar), TRUE);
-  
-  g_signal_connect(G_OBJECT(item_add), "activate", G_CALLBACK(new_appointment), NULL);
-  g_signal_connect(G_OBJECT(item_today), "activate", G_CALLBACK(set_today), NULL);
-  g_signal_connect(G_OBJECT(item_calendars), "activate", G_CALLBACK(calendars_button_clicked), NULL);
-  g_signal_connect(G_OBJECT(item_import), "activate", G_CALLBACK(import_callback), NULL);
-  g_signal_connect(G_OBJECT(item_day), "activate", G_CALLBACK(menu_toggled), day_button);
-  g_signal_connect(G_OBJECT(item_week), "activate", G_CALLBACK(menu_toggled), week_button);
-  g_signal_connect(G_OBJECT(item_month), "activate", G_CALLBACK(menu_toggled), month_button);
-  g_signal_connect(G_OBJECT(item_upcoming), "activate", G_CALLBACK(menu_toggled), upcoming_button);
-  g_signal_connect(G_OBJECT(item_alarms), "activate", G_CALLBACK(alarm_button_clicked), NULL);
-  g_signal_connect(G_OBJECT(item_toolbar), "activate", G_CALLBACK(toggle_toolbar), NULL);
-  g_signal_connect(G_OBJECT(item_catedit), "activate", G_CALLBACK(edit_categories), NULL);
-  g_signal_connect(G_OBJECT(item_close), "activate", G_CALLBACK(gpe_cal_exit), NULL);
-
-  gtk_widget_show_all(GTK_WIDGET(menu_main));
-}
-#endif
 
 /* Another instance started and has passed some state to us.  */
 static void
@@ -890,7 +1084,6 @@ main (int argc, char *argv[])
 {
   GdkPixbuf *p;
   GtkWidget *pw;
-  GtkToolItem *item;
   GtkTooltips *tooltips;    
 #ifdef IS_HILDON
   GtkWidget *app, *main_appview;
@@ -1099,13 +1292,25 @@ main (int argc, char *argv[])
   gtk_container_add (GTK_CONTAINER (main_window), GTK_WIDGET (win));
   gtk_widget_show (GTK_WIDGET (win));
 
+  /* Menu bar.  */
+  GtkMenuShell *menu_main;
+#ifdef IS_HILDON
+  menu_main = GTK_MENU_SHELL (hildon_appview_get_menu (appview));
+#else
+  menu_main = GTK_MENU_SHELL (gtk_menu_bar_new ());
+  gtk_box_pack_start (win, GTK_WIDGET (menu_main), FALSE, FALSE, 0);
+  gtk_widget_show (GTK_WIDGET (menu_main));
+#endif
 
+  /* Tool bar.  We fill it before the menu bar as the menu bar
+     requires some of its widgets.  */
   tooltips = gtk_tooltips_new ();
   gtk_tooltips_enable (tooltips);
 
-  toolbar = gtk_toolbar_new ();
+  GtkWidget *toolbar = gtk_toolbar_new ();
   gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar),
 			       GTK_ORIENTATION_HORIZONTAL);
+  gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
   GTK_WIDGET_UNSET_FLAGS (toolbar, GTK_CAN_FOCUS);
 
 #ifdef IS_HILDON
@@ -1116,46 +1321,11 @@ main (int argc, char *argv[])
   gtk_box_pack_start (GTK_BOX (win), toolbar, FALSE, FALSE, 0);
 #endif
 
-  /* Initialize new event button.  */
-  item = gtk_tool_button_new_from_stock(GTK_STOCK_NEW);
-  g_signal_connect (G_OBJECT (item), "clicked",
-		    G_CALLBACK(new_appointment), NULL);
-  gtk_toolbar_insert (GTK_TOOLBAR(toolbar), item, -1);
-  gtk_tooltips_set_tip (tooltips, GTK_WIDGET(item), 
-			_("Tap here to add a new appointment or reminder"),
-			NULL);
-  GTK_WIDGET_UNSET_FLAGS (item, GTK_CAN_FOCUS);
-
-  if (window_x > 260)
-    {	  
-      item = gtk_separator_tool_item_new ();
-      gtk_separator_tool_item_set_draw (GTK_SEPARATOR_TOOL_ITEM(item), FALSE);
-      gtk_toolbar_insert (GTK_TOOLBAR(toolbar), item, -1);
-    }
-
-  /* Initialize the "now" button.  */
-  pw = gtk_image_new_from_stock (GTK_STOCK_HOME, 
-                                 gtk_toolbar_get_icon_size
-				 (GTK_TOOLBAR (toolbar)));
-  item = gtk_tool_button_new (pw, _("Today"));
-  g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK(set_today), NULL);
-  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
-  gtk_tooltips_set_tip (tooltips, GTK_WIDGET(item), 
-			_("Switch to today."), NULL);
-  GTK_WIDGET_UNSET_FLAGS (item, GTK_CAN_FOCUS);
-    
-  if (window_x > 260) 
-    {	  
-      item = gtk_separator_tool_item_new ();
-      gtk_separator_tool_item_set_draw (GTK_SEPARATOR_TOOL_ITEM(item), FALSE);
-      gtk_toolbar_insert (GTK_TOOLBAR (toolbar), item, -1);
-    }
-
-  /* Initialize the calendars button.  */
+  /* Calendars button.  */
   p = gpe_find_icon_scaled ("icon", 
                             gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
   pw = gtk_image_new_from_pixbuf (p);
-  item = gtk_tool_button_new (pw, _("Calendars"));
+  GtkToolItem *item = gtk_tool_button_new (pw, _("Calendars"));
   g_signal_connect (G_OBJECT(item), "clicked",
 		    G_CALLBACK(calendars_button_clicked), NULL);
   gtk_toolbar_insert (GTK_TOOLBAR (toolbar), item, -1);
@@ -1174,9 +1344,10 @@ main (int argc, char *argv[])
   p = gpe_find_icon_scaled ("day_view", 
                             gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
   pw = gtk_image_new_from_pixbuf (p);
-  item = gtk_radio_tool_button_new(NULL);
-  gtk_tool_button_set_label(GTK_TOOL_BUTTON(item), _("Day"));
-  gtk_tool_button_set_icon_widget(GTK_TOOL_BUTTON(item), pw);
+  item = gtk_radio_tool_button_new (NULL);
+  gtk_tool_button_set_label (GTK_TOOL_BUTTON (item), _("Day"));
+  gtk_tool_button_set_icon_widget (GTK_TOOL_BUTTON (item), pw);
+  gtk_toggle_tool_button_set_active (GTK_TOGGLE_TOOL_BUTTON (item), TRUE);
   g_signal_connect(G_OBJECT(item), "toggled",
 		   G_CALLBACK (day_view_button_clicked), NULL);
   gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
@@ -1198,10 +1369,11 @@ main (int argc, char *argv[])
   gtk_tooltips_set_tip(tooltips, GTK_WIDGET(item), 
                        _("Tap here to select week-at-a-time view."), NULL);
   GTK_WIDGET_UNSET_FLAGS(item, GTK_CAN_FOCUS);
-  week_button = GTK_WIDGET(item);    
+  GtkWidget *week_button = GTK_WIDGET (item);    
   
   /* Initialize the month view button.  */
-  p = gpe_find_icon_scaled ("month_view", gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
+  p = gpe_find_icon_scaled ("month_view",
+			    gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
   pw = gtk_image_new_from_pixbuf (p);
   item = gtk_radio_tool_button_new_from_widget(GTK_RADIO_TOOL_BUTTON(item));
   gtk_tool_button_set_label(GTK_TOOL_BUTTON(item), _("Month"));
@@ -1212,22 +1384,22 @@ main (int argc, char *argv[])
   gtk_tooltips_set_tip(tooltips, GTK_WIDGET(item), 
                        _("Tap here to select month-at-a-time view."), NULL);
   GTK_WIDGET_UNSET_FLAGS(item, GTK_CAN_FOCUS);
-  month_button = GTK_WIDGET (item);
+  GtkWidget *month_button = GTK_WIDGET (item);
 
   /* Initialize the upcoming view button.  */
   p = gpe_find_icon_scaled ("future_view",
 			    gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
   pw = gtk_image_new_from_pixbuf (p);
   item = gtk_radio_tool_button_new_from_widget(GTK_RADIO_TOOL_BUTTON(item));
-  gtk_tool_button_set_label(GTK_TOOL_BUTTON(item), _("Upcoming"));
-  gtk_tool_button_set_icon_widget(GTK_TOOL_BUTTON(item), pw);
-  g_signal_connect (G_OBJECT(item), "toggled",
-		    G_CALLBACK (upcoming_view_button_clicked), NULL);
-  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
-  gtk_tooltips_set_tip(tooltips, GTK_WIDGET(item), 
-                       _("Tap here to select the upcoming view."), NULL);
-  GTK_WIDGET_UNSET_FLAGS(item, GTK_CAN_FOCUS);
-  upcoming_button = GTK_WIDGET (item);
+  gtk_tool_button_set_label (GTK_TOOL_BUTTON(item), _("Agenda"));
+  gtk_tool_button_set_icon_widget (GTK_TOOL_BUTTON(item), pw);
+  g_signal_connect (G_OBJECT (item), "toggled",
+		    G_CALLBACK (event_list_button_clicked), NULL);
+  gtk_toolbar_insert (GTK_TOOLBAR (toolbar), item, -1);
+  gtk_tooltips_set_tip (tooltips, GTK_WIDGET (item), 
+			_("Tap here to select the agenda."), NULL);
+  GTK_WIDGET_UNSET_FLAGS (item, GTK_CAN_FOCUS);
+  GtkWidget *event_list_button = GTK_WIDGET (item);
 
   if (window_x > 260)
     {	  
@@ -1256,42 +1428,40 @@ main (int argc, char *argv[])
       gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
     }
   
-  pw = gtk_image_new_from_stock(GTK_STOCK_OPEN, 
-                                gtk_toolbar_get_icon_size(GTK_TOOLBAR (toolbar)));
-  item = gtk_tool_button_new(pw, _("Import"));
-  g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK(import_callback), NULL);
+  /* Initialize the "now" button.  */
+  pw = gtk_image_new_from_stock (GTK_STOCK_HOME, 
+                                 gtk_toolbar_get_icon_size
+				 (GTK_TOOLBAR (toolbar)));
+  item = gtk_tool_button_new (pw, _("Today"));
+  g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK(set_today), NULL);
   gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
-  gtk_tooltips_set_tip(tooltips, GTK_WIDGET(item), 
-                       _("Open file to import an event from it."), NULL);
-  GTK_WIDGET_UNSET_FLAGS(item, GTK_CAN_FOCUS);
+  gtk_tooltips_set_tip (tooltips, GTK_WIDGET(item), 
+			_("Switch to today."), NULL);
+  GTK_WIDGET_UNSET_FLAGS (item, GTK_CAN_FOCUS);
 
-#ifdef IS_HILDON
-  pw = gtk_image_new_from_file(ICON_PATH "/qgn_list_gene_bullets.png");
-  item = gtk_tool_button_new(pw, _("Categories"));
-  g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK (edit_categories), 
-                       NULL);
-  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
-#else
-  item = gtk_separator_tool_item_new();
-  gtk_separator_tool_item_set_draw(GTK_SEPARATOR_TOOL_ITEM(item), FALSE);
-  gtk_tool_item_set_expand(item, TRUE);
-  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
 
-  item = gtk_tool_button_new_from_stock(GTK_STOCK_QUIT);
-  g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK(gpe_cal_exit), NULL);
-  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
-  gtk_tooltips_set_tip(tooltips, GTK_WIDGET(item), 
-                       _("Tap here to exit the program"), NULL);
-  GTK_WIDGET_UNSET_FLAGS(item, GTK_CAN_FOCUS);
-#endif
+  datesel = GTK_DATE_SEL (gtk_date_sel_new (GTKDATESEL_FULL, viewtime));
+  g_signal_connect (G_OBJECT (datesel), "changed",
+		    G_CALLBACK (datesel_changed), NULL);
+  gtk_widget_show (GTK_WIDGET (datesel));
+  
+  GtkRequisition toolbar_req;
+  gtk_widget_size_request (GTK_WIDGET (toolbar), &toolbar_req);
+  GtkRequisition datesel_req;
+  gtk_widget_size_request (GTK_WIDGET (toolbar), &datesel_req);
 
-/* hildon has its special menu, GPE a window icon */
-#ifdef IS_HILDON
-  create_app_menu(HILDON_APPVIEW(main_appview));
-#else
+  if (toolbar_req.width + datesel_req.width + 20 < window_x)
+    {
+      item = gtk_tool_item_new ();
+      gtk_toolbar_insert (GTK_TOOLBAR (toolbar), item, -1);
+
+      gtk_container_add (GTK_CONTAINER (item), GTK_WIDGET (datesel));
+    }
+  else
+    gtk_box_pack_start (GTK_BOX (win), GTK_WIDGET (datesel), FALSE, FALSE, 0);
+
   gpe_set_window_icon (main_window, "icon");
-#endif
-	 
+
   g_signal_connect (G_OBJECT (main_window), "key_press_event", 
 		    G_CALLBACK (main_window_key_press_event), NULL);
             
@@ -1304,20 +1474,234 @@ main (int argc, char *argv[])
 #endif
   gtk_widget_show_all (toolbar);
 
-  main_bin = GTK_BIN (gtk_frame_new (NULL));
-  gtk_frame_set_shadow_type (GTK_FRAME (main_bin), GTK_SHADOW_NONE);
-  gtk_box_pack_start (win, GTK_WIDGET (main_bin), TRUE, TRUE, 0);
-  gtk_widget_show (GTK_WIDGET (main_bin));
 
-  GtkWidget *main_container = cal_view_build (&event_list);
-  gtk_container_add (GTK_CONTAINER (main_bin), GTK_WIDGET (main_container));
-  gtk_widget_show (GTK_WIDGET (main_container));
+  /* File menu.  */
+  GtkWidget *mitem = gtk_menu_item_new_with_mnemonic (_("_File"));
+  GtkMenuShell *menu = GTK_MENU_SHELL (gtk_menu_new ());
+  gtk_menu_item_set_submenu (GTK_MENU_ITEM (mitem), GTK_WIDGET (menu));
+  gtk_menu_shell_append (menu_main, GTK_WIDGET (mitem));
+  gtk_widget_show (mitem);
+
+  /* File -> New.  */
+  mitem = gtk_image_menu_item_new_from_stock (GTK_STOCK_NEW, NULL);
+  g_signal_connect (G_OBJECT (mitem), "activate",
+		    G_CALLBACK (new_appointment), NULL);
+  gtk_menu_shell_append (menu, mitem);
+  gtk_widget_show (mitem);
+
+  /* File -> Open.  */
+  mitem = gtk_image_menu_item_new_from_stock (GTK_STOCK_OPEN, NULL);
+  g_signal_connect (G_OBJECT (mitem), "activate",
+		    G_CALLBACK (import_callback), NULL);
+  gtk_menu_shell_append (menu, mitem);
+  gtk_widget_show (mitem);
+
+  mitem = gtk_separator_menu_item_new ();
+  gtk_menu_shell_append (menu, mitem);
+  gtk_widget_show (mitem);
+
+  /* File -> Quit.  */
+  mitem = gtk_image_menu_item_new_from_stock (GTK_STOCK_QUIT, NULL);
+  g_signal_connect (G_OBJECT (mitem), "activate",
+		    G_CALLBACK (gpe_cal_exit), NULL);
+  gtk_menu_shell_append (menu, mitem);
+  gtk_widget_show (mitem);
+
+
+  /* View menu.  */
+  mitem = gtk_menu_item_new_with_mnemonic (_("_View"));
+  menu = GTK_MENU_SHELL (gtk_menu_new ());
+  gtk_menu_item_set_submenu (GTK_MENU_ITEM (mitem), GTK_WIDGET (menu));
+  gtk_menu_shell_append (menu_main, mitem);
+  gtk_widget_show (mitem);
+
+  /* View -> Today.  */
+  mitem = gtk_image_menu_item_new_with_mnemonic (_("_Today"));
+  pw = gtk_image_new_from_stock (GTK_STOCK_HOME, GTK_ICON_SIZE_MENU);
+  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (mitem), pw);
+  g_signal_connect (G_OBJECT (mitem), "activate",
+		    G_CALLBACK (set_today), NULL);
+  gtk_menu_shell_append (menu, mitem);
+  gtk_widget_show (mitem);
+
+  mitem = gtk_separator_menu_item_new ();
+  gtk_menu_shell_append (menu, mitem);
+  gtk_widget_show (mitem);
+
+  /* View -> Day.  */
+  mitem = gtk_image_menu_item_new_with_mnemonic (_("_Day"));
+  p = gpe_find_icon_scaled ("day_view", GTK_ICON_SIZE_MENU);
+  pw = gtk_image_new_from_pixbuf (p);
+  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (mitem), pw);
+  g_signal_connect (G_OBJECT (mitem), "activate",
+		    G_CALLBACK (view_toggled), day_button);
+  gtk_menu_shell_append (menu, mitem);
+  gtk_widget_show (mitem);
+
+  /* View -> Week.  */
+  mitem = gtk_image_menu_item_new_with_mnemonic (_("_Week"));
+  p = gpe_find_icon_scaled ("week_view", GTK_ICON_SIZE_MENU);
+  pw = gtk_image_new_from_pixbuf (p);
+  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (mitem), pw);
+  g_signal_connect (G_OBJECT (mitem), "activate",
+		    G_CALLBACK (view_toggled), week_button);
+  gtk_menu_shell_append (menu, mitem);
+  gtk_widget_show (mitem);
+
+  /* View -> Month.  */
+  mitem = gtk_image_menu_item_new_with_mnemonic (_("_Month"));
+  p = gpe_find_icon_scaled ("month_view", GTK_ICON_SIZE_MENU);
+  pw = gtk_image_new_from_pixbuf (p);
+  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (mitem), pw);
+  g_signal_connect (G_OBJECT (mitem), "activate",
+		    G_CALLBACK (view_toggled), month_button);
+  gtk_menu_shell_append (menu, mitem);
+  gtk_widget_show (mitem);
+
+  /* View -> Agenda.  */
+  mitem = gtk_image_menu_item_new_with_mnemonic (_("_Agenda"));
+  p = gpe_find_icon_scaled ("future_view", GTK_ICON_SIZE_MENU);
+  pw = gtk_image_new_from_pixbuf (p);
+  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (mitem), pw);
+  g_signal_connect (G_OBJECT (mitem), "activate",
+		    G_CALLBACK (view_toggled), event_list_button);
+  gtk_menu_shell_append (menu, mitem);
+  gtk_widget_show (mitem);
+
+  mitem = gtk_separator_menu_item_new ();
+  gtk_menu_shell_append (menu, mitem);
+  gtk_widget_show (mitem);
+
+  /* View -> Sidebar.  */
+  mitem = gtk_check_menu_item_new_with_mnemonic (_("_Sidebar"));
+  gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (mitem), TRUE);
+  g_signal_connect (G_OBJECT (mitem), "activate",
+		    G_CALLBACK (sidebar_toggle), NULL);
+  gtk_menu_shell_append (menu, mitem);
+  gtk_widget_show (mitem);
+
+  /* View -> Calendar.  */
+  mitem = gtk_check_menu_item_new_with_mnemonic (_("_Calendar"));
+  gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (mitem), TRUE);
+  g_signal_connect (G_OBJECT (mitem), "activate",
+		    G_CALLBACK (calendar_toggle), NULL);
+  gtk_menu_shell_append (menu, mitem);
+  gtk_widget_show (mitem);
+
+  /* View -> Selector.  */
+  mitem = gtk_check_menu_item_new_with_mnemonic (_("Calendar _Selector"));
+  gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (mitem), TRUE);
+  g_signal_connect (G_OBJECT (mitem), "activate",
+		    G_CALLBACK (calendars_toggle), NULL);
+  gtk_menu_shell_append (menu, mitem);
+  gtk_widget_show (mitem);
+
+  /* View -> Agenda.  */
+  mitem = gtk_check_menu_item_new_with_mnemonic (_("_Agenda"));
+  gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (mitem), TRUE);
+  g_signal_connect (G_OBJECT (mitem), "activate",
+		    G_CALLBACK (event_list_toggle), NULL);
+  gtk_menu_shell_append (menu, mitem);
+  gtk_widget_show (mitem);
+
+  /* Tools menu.  */
+  mitem = gtk_menu_item_new_with_mnemonic (_("_Tools"));
+  menu = GTK_MENU_SHELL (gtk_menu_new ());
+  gtk_menu_item_set_submenu (GTK_MENU_ITEM (mitem), GTK_WIDGET (menu));
+  gtk_menu_shell_append (menu_main, mitem);
+  gtk_widget_show (mitem);
+
+  /* Tools -> Calendars.  */
+  mitem = gtk_image_menu_item_new_with_mnemonic (_("_Calendars"));
+  p = gpe_find_icon_scaled ("icon", GTK_ICON_SIZE_MENU);
+  pw = gtk_image_new_from_pixbuf (p);
+  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (mitem), pw);
+  g_signal_connect (G_OBJECT (mitem), "activate",
+		    G_CALLBACK (calendars_button_clicked), NULL);
+  gtk_menu_shell_append (menu, mitem);
+  gtk_widget_show (mitem);
+
+  /* Tools -> Categories.  */
+  mitem = gtk_image_menu_item_new_with_mnemonic (_("Cate_gories"));
+#if 0
+  pw = gtk_image_new_from_file (ICON_PATH "/qgn_list_gene_bullets.png");
+  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (mitem), pw);
+#endif
+  g_signal_connect (G_OBJECT (mitem), "activate",
+		    G_CALLBACK (edit_categories), NULL);
+  gtk_menu_shell_append (menu, mitem);
+  gtk_widget_show (mitem);
+
+  /* Tools -> Alarms.  */
+  mitem = gtk_image_menu_item_new_with_mnemonic (_("_Alarms"));
+  p = gpe_find_icon_scaled ("bell", GTK_ICON_SIZE_MENU);
+  pw = gtk_image_new_from_pixbuf (p);
+  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (mitem), pw);
+  g_signal_connect (G_OBJECT (mitem), "activate",
+		    G_CALLBACK (alarm_button_clicked), NULL);
+  gtk_menu_shell_append (menu, mitem);
+  gtk_widget_show (mitem);
+
+  mitem = gtk_separator_menu_item_new ();
+  gtk_menu_shell_append (menu, mitem);
+  gtk_widget_show (mitem);
+
+  /* Tools -> Toolbar.  */
+  mitem = gtk_check_menu_item_new_with_mnemonic (_("_Toolbar"));
+  gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (mitem), TRUE);
+  g_signal_connect (G_OBJECT (mitem), "activate",
+		    G_CALLBACK (toggle_toolbar), toolbar);
+  gtk_menu_shell_append (menu, mitem);
+  gtk_widget_show (mitem);
+
+#ifdef IS_HILDON
+  /* Tools -> Full Screen.  */
+  mitem = gtk_check_menu_item_new_with_mnemonic (_("_Full Screen"));
+  g_signal_connect (G_OBJECT (mitem), "activate",
+		    G_CALLBACK (toggle_fullscreen), NULL);
+  gtk_menu_shell_append (menu, mitem);
+  gtk_widget_show (mitem);
+#endif
+
+  /* The rest of the application window.  */
+  if (display_tiny)
+    {
+      sidebar_hidden = TRUE;
+      main_panel = GTK_CONTAINER (gtk_frame_new (NULL));
+      gtk_frame_set_shadow_type (GTK_FRAME (main_panel), GTK_SHADOW_NONE);
+    }
+  else if (display_landscape)
+    main_panel = GTK_CONTAINER (gtk_hpaned_new ());
+  else
+    main_panel = GTK_CONTAINER (gtk_vpaned_new ());
+
+  gtk_box_pack_start (win, GTK_WIDGET (main_panel), TRUE, TRUE, 0);
+  gtk_widget_show (GTK_WIDGET (main_panel));
+
+  GtkWidget *f = gtk_frame_new (NULL);
+  current_view_container = GTK_CONTAINER (f);
+  gtk_frame_set_shadow_type (GTK_FRAME (f), GTK_SHADOW_NONE);
+  if (GTK_IS_PANED (main_panel))
+    gtk_paned_pack1 (GTK_PANED (main_panel), f, TRUE, FALSE);
+  else
+    gtk_container_add (main_panel, f);
+
+  if (! sidebar_hidden)
+    {
+      f = gtk_frame_new (NULL);
+      sidebar_container = GTK_CONTAINER (f);
+      gtk_frame_set_shadow_type (GTK_FRAME (f), GTK_SHADOW_NONE);
+      int d = display_landscape ? gdk_screen_width () : gdk_screen_height ();
+      int w = MAX (150, d / 6);
+      gtk_widget_set_size_request (f, display_landscape ? w : -1,
+				   display_landscape ? -1 : w);
+      gtk_paned_pack2 (GTK_PANED (main_panel), f, FALSE, TRUE);
+      sidebar_consider ();
+    }
+  
+  current_view_consider ();
 
   gpe_calendar_start_xsettings (update_view);
-
-  gtk_toggle_tool_button_set_active (GTK_TOGGLE_TOOL_BUTTON (day_button), TRUE);
-  new_view (gtk_day_view_new);
-  gtk_day_view_scroll (GTK_DAY_VIEW (current_view), TRUE);
 
   gtk_main ();
 
