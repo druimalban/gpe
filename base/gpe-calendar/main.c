@@ -509,7 +509,6 @@ calendars_consider (void)
   gtk_tree_view_expand_all (tree_view);
   gtk_tree_view_set_rules_hint (tree_view, TRUE);
   gtk_tree_view_set_headers_visible (tree_view, FALSE);
-  gtk_widget_set_size_request (GTK_WIDGET (tree_view), 150, 150);
   gtk_container_add (GTK_CONTAINER (scrolled_window),
 		     GTK_WIDGET (tree_view));
   gtk_widget_show (GTK_WIDGET (tree_view));
@@ -583,7 +582,6 @@ event_list_consider (void)
       event_list = GTK_EVENT_LIST (gtk_event_list_new ());
       g_object_add_weak_pointer (G_OBJECT (event_list),
 				 (gpointer *) &event_list);
-      gtk_widget_set_size_request (GTK_WIDGET (event_list), 150, 150);
       gtk_widget_show (GTK_WIDGET (event_list));
       gtk_container_add (event_list_container, GTK_WIDGET (event_list));
       return TRUE;
