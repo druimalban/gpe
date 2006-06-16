@@ -1054,7 +1054,7 @@ main_window_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *data)
 	/* toggle button for going full screen */
 	gtk_check_menu_item_set_active
 	  (fullscreen_button,
-	   ! gtk_check_menu_item_set_active (fullscreen_button));
+	   ! gtk_check_menu_item_get_active (fullscreen_button));
         break;	
       }
 #else
