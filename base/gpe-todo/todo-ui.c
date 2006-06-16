@@ -371,7 +371,7 @@ edit_item (struct todo_item *item, gint initial_category, GtkWindow *parent)
 
   s = build_categories_string (t);
   if (!s)
-     s = g_strdup(_("Define categories by tapping Categories button."));
+     s = g_strdup(_("Define categories by tapping the Categories button."));
   gtk_label_set_text (GTK_LABEL (label_categories), s);
   g_free (s);
      
