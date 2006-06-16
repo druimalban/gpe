@@ -73,6 +73,9 @@ extern gboolean gpe_calendar_start_xsettings (void (*push_changes) (void));
     buffer; \
    })
 
+#define CONF_FILE_ "/.gpe-calendar"
+#define CONF_FILE() g_strdup_printf ("%s" CONF_FILE_, g_get_home_dir ())
+
 /* Absolute path to the executable.  */
 static const char *gpe_calendar;
 
@@ -934,10 +937,73 @@ view_toggled (GtkWidget *widget, gpointer data)
   gtk_toggle_tool_button_set_active (GTK_TOGGLE_TOOL_BUTTON (data), TRUE);
 }
 
+/* Write the configuration file.  */
+static void
+conf_write (void)
+{
+  GKeyFile *conf = g_key_file_new ();
+  char *filename = CONF_FILE ();
+  g_key_file_load_from_file (conf, filename, G_KEY_FILE_KEEP_COMMENTS, NULL);
+  g_free (filename);
+
+  const char *mode = NULL;
+  switch (current_view_mode)
+    {
+    case view_day_view:
+      mode = "day";
+      break;
+    case view_week_view:
+      mode = "week";
+      break;
+    case view_month_view:
+      mode = "month";
+      break;
+    case view_event_list_view:
+      mode = "event list";
+      break;
+    }
+
+  if (mode)
+    g_key_file_set_string (conf, "gpe-calendar", "current-view-mode", mode);
+
+  g_key_file_set_boolean (conf, "gpe-calendar", "sidebar-disabled",
+			  sidebar_disabled);
+  g_key_file_set_boolean (conf, "gpe-calendar", "calendar-disabled",
+			  calendar_disabled);
+  g_key_file_set_boolean (conf, "gpe-calendar", "calendars-disabled",
+			  calendars_disabled);
+  g_key_file_set_boolean (conf, "gpe-calendar", "event-list-disabled",
+			  event_list_disabled);
+
+  g_key_file_set_integer (conf, "gpe-calendar", "width-width",
+			  main_window->allocation.width);
+  g_key_file_set_integer (conf, "gpe-calendar", "width-height",
+			  main_window->allocation.height);
+
+  gsize length;
+  char *data = g_key_file_to_data (conf, &length, NULL);
+  g_key_file_free (conf);
+  if (data)
+    {
+      char *filename = CONF_FILE ();
+      FILE *f = fopen (filename, "w");
+      g_free (filename);
+      if (f)
+	{
+	  fwrite (data, length, 1, f);
+	  fclose (f);
+	}
+      g_free (data);
+    }
+}
+
 static void
 gpe_cal_exit (void)
 {
   g_object_unref (event_db);
+
+  conf_write ();
+
   gtk_main_quit ();
 }
 
@@ -1076,6 +1142,7 @@ handoff_callback (Handoff *handoff, char *data)
 static char *
 handoff_serialize (Handoff *handoff)
 {
+  conf_write ();
   return g_strdup_printf ("VIEWTIME=%ld\n", viewtime);
 }
 
@@ -1263,12 +1330,101 @@ main (int argc, char *argv[])
   if (! viewtime)
     time (&viewtime);
 
-  /* Build the main window.  */
+  /* Load some defaults.  */
   guint window_x = CLAMP (gdk_screen_width () * 7 / 8, 240, 1000);
   guint window_y = CLAMP (gdk_screen_height () * 7 / 8, 310, 800);
   display_tiny = gdk_screen_width () < 300;
   display_landscape = gdk_screen_width () > gdk_screen_height ()
     && gdk_screen_width () >= 640;
+
+  /* Read the configuration file.  */
+  GKeyFile *conf = g_key_file_new ();
+  char *filename = CONF_FILE ();
+  if (g_key_file_load_from_file (conf, filename, 0, NULL))
+    {
+      char *v;
+
+      v = g_key_file_get_string (conf, "gpe-calendar",
+				 "current-view-mode", NULL);
+      if (v)
+	{
+	  if (strcmp (v, "day") == 0)
+	    current_view_mode = view_day_view;
+	  else if (strcmp (v, "week") == 0)
+	    current_view_mode = view_week_view;
+	  else if (strcmp (v, "month") == 0)
+	    current_view_mode = view_month_view;
+	  else if (strcmp (v, "event list") == 0)
+	    current_view_mode = view_event_list_view;
+
+	  g_free (v);
+	}
+
+      GError *error = NULL;
+      gboolean b;
+      b = g_key_file_get_boolean (conf, "gpe-calendar",
+				  "sidebar-disabled", &error);
+      if (error)
+	{
+	  g_error_free (error);
+	  error = NULL;
+	}
+      else
+	sidebar_disabled = b;
+
+      b = g_key_file_get_boolean (conf, "gpe-calendar",
+				  "calendar-disabled", &error);
+      if (error)
+	{
+	  g_error_free (error);
+	  error = NULL;
+	}
+      else
+	calendar_disabled = b;
+
+      b = g_key_file_get_boolean (conf, "gpe-calendar",
+				  "calendars-disabled", &error);
+      if (error)
+	{
+	  g_error_free (error);
+	  error = NULL;
+	}
+      else
+	calendars_disabled = b;
+
+      b = g_key_file_get_boolean (conf, "gpe-calendar",
+				  "event-list-disabled", &error);
+      if (error)
+	{
+	  g_error_free (error);
+	  error = NULL;
+	}
+      else
+	event_list_disabled = b;
+
+      int i;
+      i = g_key_file_get_boolean (conf, "gpe-calendar",
+				  "window-width", &error);
+      if (error)
+	{
+	  g_error_free (error);
+	  error = NULL;
+	}
+      else
+	window_x = i;
+
+      i = g_key_file_get_boolean (conf, "gpe-calendar",
+				  "window-height", &error);
+      if (error)
+	{
+	  g_error_free (error);
+	  error = NULL;
+	}
+      else
+	window_y = i;
+    }
+  g_free (filename);
+  g_key_file_free (conf);
 
 #ifdef IS_HILDON
   app = hildon_app_new();
@@ -1347,7 +1503,8 @@ main (int argc, char *argv[])
   item = gtk_radio_tool_button_new (NULL);
   gtk_tool_button_set_label (GTK_TOOL_BUTTON (item), _("Day"));
   gtk_tool_button_set_icon_widget (GTK_TOOL_BUTTON (item), pw);
-  gtk_toggle_tool_button_set_active (GTK_TOGGLE_TOOL_BUTTON (item), TRUE);
+  gtk_toggle_tool_button_set_active (GTK_TOGGLE_TOOL_BUTTON (item),
+				     current_view_mode == view_day_view);
   g_signal_connect(G_OBJECT(item), "toggled",
 		   G_CALLBACK (day_view_button_clicked), NULL);
   gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
@@ -1363,6 +1520,8 @@ main (int argc, char *argv[])
   item = gtk_radio_tool_button_new_from_widget(GTK_RADIO_TOOL_BUTTON(item));
   gtk_tool_button_set_label(GTK_TOOL_BUTTON(item), _("Week"));
   gtk_tool_button_set_icon_widget(GTK_TOOL_BUTTON(item), pw);
+  gtk_toggle_tool_button_set_active (GTK_TOGGLE_TOOL_BUTTON (item),
+				     current_view_mode == view_week_view);
   g_signal_connect(G_OBJECT(item), "toggled",
 		   G_CALLBACK (week_view_button_clicked), NULL);
   gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
@@ -1378,6 +1537,8 @@ main (int argc, char *argv[])
   item = gtk_radio_tool_button_new_from_widget(GTK_RADIO_TOOL_BUTTON(item));
   gtk_tool_button_set_label(GTK_TOOL_BUTTON(item), _("Month"));
   gtk_tool_button_set_icon_widget(GTK_TOOL_BUTTON(item), pw);
+  gtk_toggle_tool_button_set_active (GTK_TOGGLE_TOOL_BUTTON (item),
+				     current_view_mode == view_month_view);
   g_signal_connect (G_OBJECT(item), "toggled",
 		    G_CALLBACK (month_view_button_clicked), NULL);
   gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
@@ -1393,6 +1554,9 @@ main (int argc, char *argv[])
   item = gtk_radio_tool_button_new_from_widget(GTK_RADIO_TOOL_BUTTON(item));
   gtk_tool_button_set_label (GTK_TOOL_BUTTON(item), _("Agenda"));
   gtk_tool_button_set_icon_widget (GTK_TOOL_BUTTON(item), pw);
+  gtk_toggle_tool_button_set_active (GTK_TOGGLE_TOOL_BUTTON (item),
+				     current_view_mode
+				     == view_event_list_view);
   g_signal_connect (G_OBJECT (item), "toggled",
 		    G_CALLBACK (event_list_button_clicked), NULL);
   gtk_toolbar_insert (GTK_TOOLBAR (toolbar), item, -1);
@@ -1574,7 +1738,8 @@ main (int argc, char *argv[])
 
   /* View -> Sidebar.  */
   mitem = gtk_check_menu_item_new_with_mnemonic (_("_Sidebar"));
-  gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (mitem), TRUE);
+  gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (mitem),
+				  ! sidebar_disabled);
   g_signal_connect (G_OBJECT (mitem), "activate",
 		    G_CALLBACK (sidebar_toggle), NULL);
   gtk_menu_shell_append (menu, mitem);
@@ -1582,7 +1747,8 @@ main (int argc, char *argv[])
 
   /* View -> Calendar.  */
   mitem = gtk_check_menu_item_new_with_mnemonic (_("_Calendar"));
-  gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (mitem), TRUE);
+  gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (mitem),
+				  ! calendar_disabled);
   g_signal_connect (G_OBJECT (mitem), "activate",
 		    G_CALLBACK (calendar_toggle), NULL);
   gtk_menu_shell_append (menu, mitem);
@@ -1590,7 +1756,8 @@ main (int argc, char *argv[])
 
   /* View -> Selector.  */
   mitem = gtk_check_menu_item_new_with_mnemonic (_("Calendar _Selector"));
-  gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (mitem), TRUE);
+  gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (mitem),
+				  ! calendars_disabled);
   g_signal_connect (G_OBJECT (mitem), "activate",
 		    G_CALLBACK (calendars_toggle), NULL);
   gtk_menu_shell_append (menu, mitem);
@@ -1598,7 +1765,8 @@ main (int argc, char *argv[])
 
   /* View -> Agenda.  */
   mitem = gtk_check_menu_item_new_with_mnemonic (_("_Agenda"));
-  gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (mitem), TRUE);
+  gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (mitem),
+				  ! event_list_disabled);
   g_signal_connect (G_OBJECT (mitem), "activate",
 		    G_CALLBACK (event_list_toggle), NULL);
   gtk_menu_shell_append (menu, mitem);

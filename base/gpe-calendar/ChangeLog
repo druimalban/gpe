@@ -1,5 +1,14 @@
 2006-06-16  Neal H. Walfield  <neal@gnu.org>
 
+	* main.c (CONF_FILE_): New macro.
+	(CONF_FILE): Likewise.
+	(conf_write): New function.
+	(handoff_serialize): Call it.
+	(main): Load the configuration file.  Set the view appropriate
+	toggle active.
+
+2006-06-16  Neal H. Walfield  <neal@gnu.org>
+
 	* calendars-dialog.c (calendars_dialog_init): Set
 	"allow-checkbox-mode" on TREE_VIEW to FALSE.
 	See https://maemo.org/bugzilla/show_bug.cgi?id=538 .
