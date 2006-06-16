@@ -106,6 +106,9 @@ static struct gpe_icon my_icons[] = {
    increment the appropriate hidden by 1 and decrements it by 1 when
    the blocking condition is cleared.  */
 GtkWidget *main_window;
+#ifdef IS_HILDON
+GtkWidget *main_appview;
+#endif
 static GtkDateSel *datesel;
 static GtkContainer *main_panel;
 static int current_view_hidden;
@@ -1018,7 +1021,7 @@ gpe_cal_exit (void)
 static void
 toggle_fullscreen (GtkCheckMenuItem *menuitem, gpointer user_data)
 {
-  hildon_appview_set_fullscreen (HILDON_APPVIEW (main_window),
+  hildon_appview_set_fullscreen (HILDON_APPVIEW (main_appview),
 				 gtk_check_menu_item_get_active (menuitem));
 }
 #endif /*IS_HILDON*/
@@ -1162,7 +1165,6 @@ main (int argc, char *argv[])
   GtkWidget *pw;
   GtkTooltips *tooltips;    
 #ifdef IS_HILDON
-  GtkWidget *app, *main_appview;
   osso_context_t *osso_context;
 #endif
 
@@ -1441,25 +1443,27 @@ main (int argc, char *argv[])
   g_key_file_free (conf);
 
 #ifdef IS_HILDON
-  app = hildon_app_new();
-  hildon_app_set_two_part_title(HILDON_APP(app), FALSE);
-  hildon_app_set_title(HILDON_APP(app), _("Calendar"));
-  main_appview = hildon_appview_new(_("Main"));
-  hildon_app_set_appview(HILDON_APP(app), HILDON_APPVIEW(main_appview));
-  main_window = main_appview;
+  main_window = hildon_app_new ();
+  hildon_app_set_two_part_title (HILDON_APP (main_window), FALSE);
+  hildon_app_set_title (HILDON_APP (main_window), _("Calendar"));
+  main_appview = hildon_appview_new (_("Main"));
+  hildon_app_set_appview (HILDON_APP (main_window),
+			  HILDON_APPVIEW (main_appview));
 #else    
   main_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title (GTK_WINDOW (main_window), _("Calendar"));
+  gtk_window_set_default_size (GTK_WINDOW (main_window), window_x, window_y);
+#endif
   g_signal_connect (G_OBJECT (main_window), "delete-event",
                     G_CALLBACK (gpe_cal_exit), NULL);
-  gtk_window_set_default_size (GTK_WINDOW (main_window), window_x, window_y);
-
-  gtk_widget_realize (main_window);
-#endif
   gtk_widget_show (main_window);
 
   GtkBox *win = GTK_BOX (gtk_vbox_new (FALSE, 0));
+#if IS_HILDON
+  gtk_container_add (GTK_CONTAINER (main_appview), GTK_WIDGET (win));
+#else
   gtk_container_add (GTK_CONTAINER (main_window), GTK_WIDGET (win));
+#endif
   gtk_widget_show (GTK_WIDGET (win));
 
   /* Menu bar.  */
