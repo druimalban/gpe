@@ -1,5 +1,10 @@
 2006-06-16  Neal H. Walfield  <neal@gnu.org>
 
+	* main.c (main): Initially set SIDEBAR_DISABLED if the screen is
+	tiny.  Likewise for CALENDAR_DISABLED if the screen is small.
+
+2006-06-16  Neal H. Walfield  <neal@gnu.org>
+
 	* main.c (CONF_FILE_): New macro.
 	(CONF_FILE): Likewise.
 	(conf_write): New function.

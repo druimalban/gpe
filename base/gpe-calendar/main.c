@@ -1337,6 +1337,11 @@ main (int argc, char *argv[])
   display_landscape = gdk_screen_width () > gdk_screen_height ()
     && gdk_screen_width () >= 640;
 
+  if (display_tiny)
+    sidebar_disabled = TRUE;
+  if (MIN (gdk_screen_width (), gdk_screen_height ()) < 640)
+    calendar_disabled = TRUE;
+
   /* Read the configuration file.  */
   GKeyFile *conf = g_key_file_new ();
   char *filename = CONF_FILE ();
