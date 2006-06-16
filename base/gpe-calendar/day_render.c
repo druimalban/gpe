@@ -802,7 +802,7 @@ static gboolean
 gtk_day_render_button_press (GtkWidget *widget, GdkEventButton *event)
 {
   GtkDayRender *day_render = GTK_DAY_RENDER (widget);
-  gfloat x = event->x / day_render->visible_width;
+  gfloat x = (event->x - day_render->time_width) / day_render->visible_width;
   gfloat y = (event->y + day_render->offset_y) / day_render->height;
   GSList *er;
   GtkDayRenderClass *drclass

@@ -60,36 +60,31 @@ struct _GtkWeekView
 typedef struct
 {
   GtkViewClass view_class;
-  GObjectClass parent_class;
 } GtkWeekViewClass;
 
-static void gtk_week_view_base_class_init (gpointer klass);
+static void gtk_week_view_base_class_init (gpointer klass,
+					   gpointer klass_data);
 static void gtk_week_view_init (GTypeInstance *instance, gpointer klass);
 static void gtk_week_view_dispose (GObject *obj);
 static void gtk_week_view_finalize (GObject *object);
 static void gtk_week_view_set_time (GtkView *view, time_t time);
 static void gtk_week_view_reload_events (GtkView *view);
-static gboolean gtk_week_view_key_press_event (GtkWidget *widget,
-					       GdkEventKey *k);
-static gboolean gtk_week_view_button_press_event (GtkWidget *widget,
-						  GdkEventButton *event);
-
 
 static GtkWidgetClass *parent_class;
 
 GType
 gtk_week_view_get_type (void)
 {
-  static GType type = 0;
+  static GType type;
 
   if (! type)
     {
       static const GTypeInfo info =
       {
 	sizeof (GtkWeekViewClass),
+	NULL,
+	NULL,
 	gtk_week_view_base_class_init,
-	NULL,
-	NULL,
 	NULL,
 	NULL,
 	sizeof (struct _GtkWeekView),
@@ -105,10 +100,9 @@ gtk_week_view_get_type (void)
 }
 
 static void
-gtk_week_view_base_class_init (gpointer klass)
+gtk_week_view_base_class_init (gpointer klass, gpointer klass_data)
 {
   GObjectClass *object_class;
-  GtkWidgetClass *widget_class;
   GtkViewClass *view_class;
 
   parent_class = g_type_class_ref (gtk_view_get_type ());
@@ -116,10 +110,6 @@ gtk_week_view_base_class_init (gpointer klass)
   object_class = G_OBJECT_CLASS (klass);
   object_class->finalize = gtk_week_view_finalize;
   object_class->dispose = gtk_week_view_dispose;
-
-  widget_class = (GtkWidgetClass *) klass;
-  widget_class->key_press_event = gtk_week_view_key_press_event;
-  widget_class->button_press_event = gtk_week_view_button_press_event;
 
   view_class = (GtkViewClass *) klass;
   view_class->set_time = gtk_week_view_set_time;
@@ -619,9 +609,8 @@ gtk_week_view_reload_events (GtkView *view)
 }
 
 static gboolean
-gtk_week_view_key_press_event (GtkWidget *widget, GdkEventKey *k)
+key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWeekView *week_view)
 {
-  GtkWeekView *week_view = GTK_WEEK_VIEW (widget);
   struct week_day *d = &week_view->days[week_view->focused_day];
 
   int i = 0;
@@ -668,13 +657,13 @@ gtk_week_view_key_press_event (GtkWidget *widget, GdkEventKey *k)
       return TRUE;
     }
   
-  return GTK_WIDGET_CLASS (parent_class)->key_press_event (widget, k);
+  return FALSE;
 }
 
 static gboolean
-gtk_week_view_button_press_event (GtkWidget *widget, GdkEventButton *event)
+button_press_event (GtkWidget *widget, GdkEventButton *event, GtkWidget *wv)
 {
-  GtkWeekView *week_view = GTK_WEEK_VIEW (widget);
+  GtkWeekView *week_view = GTK_WEEK_VIEW (wv);
   guint y = event->y;
   int day;
   struct week_day *d;
@@ -690,7 +679,7 @@ gtk_week_view_button_press_event (GtkWidget *widget, GdkEventButton *event)
       break;
   if (day == 7)
     /* Nothing valid... */
-    goto propagate;
+    return FALSE;
 
   d = &week_view->days[day];
   if (event->type == GDK_BUTTON_PRESS)
@@ -721,8 +710,6 @@ gtk_week_view_button_press_event (GtkWidget *widget, GdkEventButton *event)
     }
   
   return TRUE;
- propagate:
-  return GTK_WIDGET_CLASS (parent_class)->button_press_event (widget, event);
 }
 
 GtkWidget *
@@ -731,7 +718,6 @@ gtk_week_view_new (time_t time)
   GtkWeekView *week_view;
 
   week_view = GTK_WEEK_VIEW (g_object_new (gtk_week_view_get_type (), NULL));
-  GTK_WIDGET_SET_FLAGS (week_view, GTK_CAN_FOCUS);
 
   /* Create the scroller.  */
   week_view->scroller = gtk_scrolled_window_new (NULL, NULL);
@@ -742,10 +728,17 @@ gtk_week_view_new (time_t time)
 
   /* Create the draw area.  */
   week_view->draw = gtk_drawing_area_new ();
+  gtk_widget_add_events (GTK_WIDGET (week_view->draw),
+			 GDK_BUTTON_PRESS_MASK | GDK_KEY_PRESS_MASK);
+  GTK_WIDGET_SET_FLAGS (week_view->draw, GTK_CAN_FOCUS);
   g_signal_connect (G_OBJECT (week_view->draw), "expose_event",
                     G_CALLBACK (draw_expose_event), week_view);
   g_signal_connect (G_OBJECT (week_view->draw), "size-allocate", 
 		    G_CALLBACK (resize), week_view);
+  g_signal_connect (G_OBJECT (week_view->draw), "button-press-event",
+		    G_CALLBACK (button_press_event), week_view);
+  g_signal_connect (G_OBJECT (week_view->draw), "key-press-event",
+		    G_CALLBACK (key_press_event), week_view);
   gtk_scrolled_window_add_with_viewport
     (GTK_SCROLLED_WINDOW (week_view->scroller), week_view->draw);
   gtk_widget_show (week_view->draw);

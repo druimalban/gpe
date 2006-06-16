@@ -1,5 +1,28 @@
 2006-06-16  Neal H. Walfield  <neal@gnu.org>
 
+	* week_view.c (GtkWeekViewClass): Remove field parent_class.
+	(gtk_week_view_base_class_init): Add parameter klass_data.
+	(gtk_week_view_get_type): Move gtk_month_view_base_class_init to
+	fourth position.
+
+	(gtk_week_view_key_press_event): Rename from this...
+	(key_press_event): ... to this.  Take additional parameter,
+	WEEK_VIEW.  Don't call parent class's handler.
+	(gtk_week_view_button_press_event): Rename from this...
+	(button_press_event): ... to this.  Take additional parameter,
+	WEEK_VIEW.  Don't call parent class's handler.
+	(gtk_week_view_base_class_init): Don't initialize
+	WIDGET_CLASS->KEY_PRESS_EVENT or WIDGET_CLASS->BUTTON_PRESS_EVENT.
+	(gtk_week_view_new): Don't make WEEK_VIEW focusable but
+	WEEK_VIEW->DRAW.  Send button press and key press events to
+	WEEK_VIEW->DRAW.  Add button_press_event to WEEK_VIEW->DRAW's
+	"button-press-event" signal.  Add key_press_event to
+	WEEK_VIEW->DRAW's "key-press-event" signal.
+	* day_render.c (gtk_day_render_button_press): Subtract
+	DAY_RENDER->TIME_WIDTH from EVENT->X.
+
+2006-06-16  Neal H. Walfield  <neal@gnu.org>
+
 	* main.c (main_appview) [IS_HILDON]: New variable.
 	(toggle_fullscreen): Use MAIN_APPVIEW, not MAIN_WINDOW.
 	(main) [IS_HILDON]: Connect MAIN_WINDOW's "delete-event" signal to
