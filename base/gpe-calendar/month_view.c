@@ -64,7 +64,6 @@ struct _GtkMonthView
 typedef struct
 {
   GtkViewClass view_class;
-  GObjectClass parent_class;
 } GtkMonthViewClass;
 
 static void gtk_month_view_base_class_init (gpointer klass,
@@ -593,7 +592,7 @@ gtk_month_view_reload_events (GtkView *view)
 
   GDate period_end = period_start;
   /* The day following the last day.  */
-  g_date_add_days (&period_end, days);
+  g_date_add_days (&period_end, month_view->weeks * 7);
 
   struct tm start_tm;
   memset (&start_tm, 0, sizeof (start_tm));

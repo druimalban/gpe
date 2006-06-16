@@ -1,5 +1,10 @@
 2006-06-16  Neal H. Walfield  <neal@gnu.org>
 
+	* month_view.c (gtk_month_view_reload_events): Correctly calculate
+	PERIOD_END.
+
+2006-06-16  Neal H. Walfield  <neal@gnu.org>
+
 	* main.c (current_view_consider): When enabling a month view,
 	increment calendar_hidden and when disabling decrement it.  Call
 	calendar_consider.  Hide EVENT_LIST_CONTAINER when stealing the
