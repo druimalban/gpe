@@ -29,6 +29,8 @@ extern GtkWidget *main_window;
 extern gchar *strftime_strdup_utf8_locale (const char *fmt, struct tm *tm);
 extern gchar *strftime_strdup_utf8_utf8 (const char *fmt, struct tm *tm);
 
+extern void g_date_set_time_t (GDate *date, time_t t);
+
 #define SECONDS_IN_DAY (24*60*60)
 
 extern const gchar *TIMEFMT;

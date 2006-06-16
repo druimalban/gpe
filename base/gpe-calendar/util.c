@@ -66,3 +66,14 @@ strftime_strdup_utf8_utf8 (const char *fmt, struct tm *tm)
 
   return sval;
 }
+
+#ifndef HAVE_g_date_set_time_t
+void         
+g_date_set_time_t (GDate *date, time_t t)
+{
+  struct tm tm;
+  localtime_r (&t, &tm);
+
+  g_date_set_dmy (date, tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900);
+}
+#endif

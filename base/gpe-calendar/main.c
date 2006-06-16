@@ -135,7 +135,11 @@ static gboolean event_list_disabled;
 static int event_list_hidden;
 static GtkContainer *event_list_container;
 static GtkEventList *event_list;
+
 static GtkWidget *day_button;
+#ifdef IS_HILDON
+static GtkCheckMenuItem *fullscreen_button;
+#endif
 
 static void propagate_time (void);
 
@@ -1046,9 +1050,11 @@ main_window_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *data)
     /* in hildon there is nothing like control, shift etc buttons */
     switch (k->keyval)
       {
-        case GDK_F6:
-        /* toggle button for going full screen */
-        gpe_cal_fullscreen_toggle();
+      case GDK_F6:
+	/* toggle button for going full screen */
+	gtk_check_menu_item_set_active
+	  (fullscreen_button,
+	   ! gtk_check_menu_item_set_active (fullscreen_button));
         break;	
       }
 #else
@@ -1833,6 +1839,7 @@ main (int argc, char *argv[])
 		    G_CALLBACK (toggle_fullscreen), NULL);
   gtk_menu_shell_append (menu, mitem);
   gtk_widget_show (mitem);
+  fullscreen_button = GTK_CHECK_MENU_ITEM (mitem);
 #endif
 
   /* The rest of the application window.  */

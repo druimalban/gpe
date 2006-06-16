@@ -1,5 +1,20 @@
 2006-06-16  Neal H. Walfield  <neal@gnu.org>
 
+	* main.c (fullscreen_button) [IS_HILDON]: New variable.
+	(main_window_key_press_event) [IS_HILDON]: Don't call
+	gpe_cal_fullscreen_toggle, toggle FULLSCREEN_BUTTON
+	(main) [IS_HILDON]: Save the full screen toggle button in
+	FULLSCREEN_BUTTON.
+	Reported by Florian Boor  <florian@kernelconcepts.de>.
+
+	* configure.ac: Check for the availability of g_date_set_time_t.
+	* globals.h (g_date_set_time_t): New declaration.
+	* util.c (g_date_set_time_t) [! HAVE_g_date_set_time_t]: New
+	function.
+	Reported by Florian Boor  <florian@kernelconcepts.de>.
+
+2006-06-16  Neal H. Walfield  <neal@gnu.org>
+
 	* main.c (main): Use MAIN_APPVIEW, not the non-existent APPVIEW.
 	Reported by Florian Boor  <florian@kernelconcepts.de>.
 	

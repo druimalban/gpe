@@ -9,7 +9,6 @@ AC_PROG_CC
 AC_STDC_HEADERS
 AC_PROG_INSTALL
 
-
 DEP_MODULES="gtk+-2.0 >= 2.4 glib-2.0 >= 2.2 libgpewidget >= 0.109 libgpepimc \
              libgpevtype >= 0.14 sqlite mimedir-1.0 libeventdb >= 0.29 \
 	     libxsettings-client libhandoff libsoup-2.2"
@@ -74,6 +73,7 @@ fi
 
 PKG_CHECK_MODULES(DEPS, $DEP_MODULES)
 
+AC_REPLACE_FUNCS([g_date_set_time_t])
 
 AC_CHECK_LIB(dbus-1, dbus_message_iter_get_basic, AC_DEFINE(HAVE_DBUS_MESSAGE_ITER_GET_BASIC, 1, [Define to 1 if you have the dbus_message_iter_get_basic() function.]))
 
