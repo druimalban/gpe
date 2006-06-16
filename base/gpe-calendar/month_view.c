@@ -557,11 +557,20 @@ gtk_month_view_reload_events (GtkView *view)
 {
   GtkMonthView *month_view = GTK_MONTH_VIEW (view);
   time_t t = gtk_view_get_time (GTK_VIEW (month_view));
-  time_t start, end;
-  struct tm tm_start, tm_end;
+  struct tm tm_start;
   guint days;
   guint year, month, day;
   guint wday;
+
+  /* Destroy outstanding events.  */
+  int i;
+  for (i = 0; i < MAX_DAYS; i ++)
+    if (month_view->day[i].events)
+      {
+	/* Destroy outstanding events.  */
+	event_list_unref (month_view->day[i].events);
+	month_view->day[i].events = NULL;
+      }
 
   localtime_r (&t, &tm_start);
   year = tm_start.tm_year + 1900;
@@ -570,9 +579,9 @@ gtk_month_view_reload_events (GtkView *view)
 
   days = g_date_get_days_in_month (month + 1, year);
   /* 0 => Monday.  */
-  GDate date;
-  g_date_set_dmy (&date, 1, month + 1, year);
-  wday = g_date_weekday (&date) - 1;
+  GDate period_start;
+  g_date_set_dmy (&period_start, 1, month + 1, year);
+  wday = g_date_weekday (&period_start) - 1;
   if (week_starts_sunday)
     wday = (wday + 1) % 7;
 
@@ -580,61 +589,81 @@ gtk_month_view_reload_events (GtkView *view)
 
   if (wday)
     /* We don't start on a monday.  Find the first day.  */
+    g_date_subtract_days (&period_start, wday);
+
+  GDate period_end = period_start;
+  /* The day following the last day.  */
+  g_date_add_days (&period_end, days);
+
+  struct tm start_tm;
+  memset (&start_tm, 0, sizeof (start_tm));
+  start_tm.tm_year = g_date_get_year (&period_start) - 1900;
+  start_tm.tm_mon = g_date_get_month (&period_start) - 1;
+  start_tm.tm_mday = g_date_get_day (&period_start);
+  start_tm.tm_isdst = -1;
+
+  struct tm end_tm;
+  memset (&end_tm, 0, sizeof (end_tm));
+  end_tm.tm_year = g_date_get_year (&period_end) - 1900;
+  end_tm.tm_mon = g_date_get_month (&period_end) - 1;
+  end_tm.tm_mday = g_date_get_day (&period_end);
+  end_tm.tm_isdst = -1;
+
+  /* Initialize the days.  */
+  GDate d;
+  for (i = 0, d = period_start;
+       i < month_view->weeks * 7;
+       i ++, g_date_add_days (&d, 1))
     {
-      tm_start.tm_mon --;
-      if (tm_start.tm_mon == -1)
-	{
-	  tm_start.tm_year --;
-	  tm_start.tm_mon = 12;
-	}
+      month_view->day[i].date = d;
 
-      tm_start.tm_mday = g_date_get_days_in_month (tm_start.tm_mon + 1,
-						   tm_start.tm_year + 1900)
-	- wday + 1;
-    }
-  else
-    tm_start.tm_mday = 1;
-
-  tm_start.tm_hour = 0;
-  tm_start.tm_min = 0;
-  tm_start.tm_sec = 0;
-  tm_start.tm_isdst = -1;
-
-  int i;
-  for (i = 0; i < month_view->weeks * 7; i ++)
-    {
-      start = mktime (&tm_start);
-
-      memcpy (&tm_end, &tm_start, sizeof (tm_end));
-      tm_end.tm_hour = 23;
-      tm_end.tm_min = 59;
-      tm_end.tm_sec = 59;
-      tm_end.tm_isdst = -1;
-      end = mktime (&tm_end);
-      
-      if (month_view->day[i].events)
-        event_list_unref (month_view->day[i].events);
-      month_view->day[i].events
-	= g_slist_sort (event_db_list_for_period (event_db, start, end),
-			event_compare_func);
-
-      g_date_set_dmy (&month_view->day[i].date, tm_start.tm_mday,
-		      tm_start.tm_mon + 1, tm_start.tm_year + 1900);
-
-      if (tm_start.tm_mday == day && tm_start.tm_mon == month)
+      if (tm_start.tm_mday == g_date_get_day (&d)
+	  && tm_start.tm_mon == g_date_get_month (&d) - 1)
         month_view->focused_day = i;
-
-      start = end + 1;
-      localtime_r (&start, &tm_start);
     }
 
-  /* Destroy any remaining events.  */
-  for (; i < MAX_DAYS; i ++)
+  /* Get the events for the period.  */
+  GSList *events
+    = event_db_list_for_period (event_db,
+				mktime (&start_tm), mktime (&end_tm) - 1);
+  events = g_slist_sort (events, event_compare_func);
+
+  /* PERIOD_END is the day after the end.  Before we want the day of
+     the end.  */
+  g_date_subtract_days (&period_end, 1);
+
+  guint period_start_day = g_date_get_julian (&period_start);
+
+  GSList *l;
+  for (l = events; l; l = l->next)
+    {
+      Event *ev = EVENT (l->data);
+
+      time_t s = event_get_start (ev);
+      GDate start;
+      g_date_set_time_t (&start, s);
+      g_date_clamp (&start, &period_start, &period_end);
+
+      time_t e = s + event_get_duration (ev) - 1;
+      GDate end;
+      g_date_set_time_t (&end, e);
+      g_date_clamp (&end, &period_start, &period_end);
+
+      for (i = g_date_get_julian (&start); i <= g_date_get_julian (&end); i ++)
+	{
+	  g_object_ref (ev);
+	  month_view->day[i - period_start_day].events
+	    = g_slist_prepend (month_view->day[i - period_start_day].events,
+			       ev);
+	}
+    }
+  event_list_unref (events);
+
+  /* Sort the lists.  */
+  for (i = 0; i < month_view->weeks * 7; i ++)
     if (month_view->day[i].events)
-      {
-	event_list_unref (month_view->day[i].events);
-	month_view->day[i].events = NULL;
-      }
+      month_view->day[i].events
+	= g_slist_sort (month_view->day[i].events, event_compare_func);
 
   gtk_widget_queue_draw (month_view->draw);
 }
