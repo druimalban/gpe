@@ -1,3 +1,19 @@
+2006-06-17  Neal H. Walfield  <neal@gnu.org>
+
+	* main.c (main) [IS_HILDON]: Disable the alarm button.
+	* gtkdatesel.c (struct _GtkDateSel): Remove field week.
+	(day_click): If in week mode, advance by a week.
+	(gtk_date_sel_move_week): Remove function.
+	(week_click): Likewise.
+	(week_update): Likewise.
+	(gtk_date_sel_set_mode): Fold week into full mode.
+	(gtk_date_sel_size_allocate): Likewise.
+	(gtk_date_sel_new): Don't create a week number label.  Set the
+	width of text entries to exactly the amount of space needed.
+	[IS_HILDON]: Brain damage is different from understood.  Update to
+	reflect current understanding, i.e. use a fixed width for the
+	combo box.
+
 2006-06-16  Neal H. Walfield  <neal@gnu.org>
 
 	* month_view.c (gtk_month_view_reload_events): Correctly calculate

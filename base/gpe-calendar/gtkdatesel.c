@@ -49,7 +49,7 @@ struct _GtkDateSel
   GtkHBox hbox;
   GtkWidget *subbox;
 
-  struct elem day, week, month, year;
+  struct elem day, month, year;
 
   gint day_clamped;
 
@@ -79,21 +79,9 @@ static void
 day_click (GtkWidget *w, GtkDateSel *sel)
 {
   int d = g_object_get_data (G_OBJECT (w), "direction") ? 1 : -1;
+  if (sel->mode == GTKDATESEL_WEEK)
+    d *= 7;
   gtk_date_sel_move_day (sel, d);
-}
-
-void
-gtk_date_sel_move_week (GtkDateSel *sel, int d)
-{
-  sel->time += d * 60 * 60 * 24 * 7;
-  g_signal_emit (G_OBJECT (sel), my_signals[0], 0);
-}
-
-static void
-week_click (GtkWidget *w, GtkDateSel *sel)
-{
-  int d = g_object_get_data (G_OBJECT (w), "direction") ? 1 : -1;
-  gtk_date_sel_move_week (sel, d);
 }
 
 void
@@ -259,21 +247,6 @@ month_update (GtkDateSel *sel, GtkWidget *combo)
   struct tm tm;
   localtime_r (&sel->time, &tm);
   gtk_combo_box_set_active (GTK_COMBO_BOX (combo), tm.tm_mon);
-}
-
-static void
-week_update (GtkDateSel *sel, GtkWidget *w)
-{
-  struct tm tm;
-  gchar *sbuf;
-  localtime_r (&sel->time, &tm);
-
-  sbuf = strftime_strdup_utf8_utf8 (_("Week %V"), &tm);
-  if (sbuf)
-    {
-      gtk_label_set_text (GTK_LABEL (w), sbuf);
-      g_free (sbuf);
-    }
 }
 
 static gboolean
@@ -462,16 +435,7 @@ gtk_date_sel_set_mode (GtkDateSel *datesel, GtkDateSelMode mode)
 {
   datesel->mode = mode;
 
-  if (mode == GTKDATESEL_WEEK)
-    /* Display the week.  */
-    {
-      gtk_widget_show (datesel->week.container);
-      week_update (datesel, datesel->week.display);
-    }
-  else
-    gtk_widget_hide (datesel->week.container);
-
-  if (mode == GTKDATESEL_FULL)
+  if (mode == GTKDATESEL_FULL || mode == GTKDATESEL_WEEK)
     /* Display the day.  */
     {
       gtk_widget_show (datesel->day.container);
@@ -503,12 +467,7 @@ gtk_date_sel_size_allocate (GtkWidget *widget,
   GtkRequisition req;
 
   int width = 0;
-  if (datesel->mode == GTKDATESEL_WEEK)
-    {
-      gtk_widget_size_request (GTK_WIDGET (datesel->week.container), &req);
-      width += req.width;
-    }
-  if (datesel->mode == GTKDATESEL_FULL)
+  if (datesel->mode == GTKDATESEL_FULL || datesel->mode == GTKDATESEL_WEEK)
     {
       gtk_widget_size_request (GTK_WIDGET (datesel->day.container), &req);
       width += req.width;
@@ -720,15 +679,9 @@ gtk_date_sel_new (GtkDateSelMode mode, time_t time)
 
   sel->subbox = gtk_hbox_new (FALSE, 0);
 
-  e = &sel->week;
-  e->display = gtk_label_new ("");
-  make_field (sel, e, week_click);
-  g_signal_connect (G_OBJECT (sel), "changed",
-		    G_CALLBACK (week_update), e->display);
-
   e = &sel->day;
   e->display = gtk_entry_new ();
-  gtk_entry_set_width_chars (GTK_ENTRY (e->display), 3);
+  gtk_entry_set_width_chars (GTK_ENTRY (e->display), 2);
   make_field (sel, e, day_click);
   g_signal_connect (G_OBJECT (sel), "changed",
 		    G_CALLBACK (day_update),
@@ -740,16 +693,7 @@ gtk_date_sel_new (GtkDateSelMode mode, time_t time)
 
   e = &sel->month;
   gtk_date_sel_set_month_style (sel, GTKDATESEL_MONTH_SHORT);
-#ifdef IS_HILDON
-  /* Fuck Hildon.  */
-  e->display = gtk_combo_box_new_text ();
-  for (i = 0; i < 12; i ++)
-    {
-      char *m = month (sel, i);
-      gtk_combo_box_append_text (GTK_COMBO_BOX (e->display), m);
-      g_free (m);
-    }
-#else
+
   /* Create the model.  */
   GtkListStore *list = gtk_list_store_new (1, G_TYPE_INT);
   GtkTreeIter iter;
@@ -769,12 +713,16 @@ gtk_date_sel_new (GtkDateSelMode mode, time_t time)
   gtk_cell_layout_set_cell_data_func (GTK_CELL_LAYOUT (e->display),
 				      renderer,
 				      month_cell_data_func, sel, NULL);
-#endif
 
   make_field (sel, &sel->month, month_click);
 
   /* Three columns.  */
   gtk_combo_box_set_wrap_width (GTK_COMBO_BOX (e->display), 3);
+
+#if IS_HILDON
+  /* Hildon brain damage.  */
+  gtk_widget_set_size_request (e->display, 70, -1);
+#endif
 
   g_signal_connect (G_OBJECT (sel), "changed", G_CALLBACK (month_update),
 		    e->display);
@@ -783,7 +731,7 @@ gtk_date_sel_new (GtkDateSelMode mode, time_t time)
 
   e = &sel->year;
   e->display = gtk_entry_new ();
-  gtk_entry_set_width_chars (GTK_ENTRY (e->display), 5);
+  gtk_entry_set_width_chars (GTK_ENTRY (e->display), 4);
   make_field (sel, e, year_click);
   g_signal_connect (G_OBJECT (sel), "changed",
 		    G_CALLBACK (year_update),
