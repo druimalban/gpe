@@ -29,7 +29,7 @@ enum
   NUM_COLS
 };
 
-extern GtkWidget *calendars_combo_box_new (void);
+extern GtkWidget *calendars_combo_box_new (EventDB *edb);
 
 /* Does not add a reference to the returned calendar.  The reference
    is valid as long as COMBO is live.  */
@@ -38,7 +38,7 @@ extern EventCalendar *calendars_combo_box_get_active (GtkComboBox *combo);
 extern void calendars_combo_box_set_active (GtkComboBox *combo,
 					    EventCalendar *ec);
 
-extern GtkTreeModel *calendars_tree_model (void);
+extern GtkTreeModel *calendars_tree_model (EventDB *edb);
 
 #define TYPE_CALENDAR_TEXT_CELL_RENDERER \
   (calendar_text_cell_renderer_get_type ())
@@ -104,6 +104,7 @@ extern void calendar_delete_cell_data_func (GtkCellLayout *cell_layout,
 					    gpointer data);
 
 typedef void (*CalendarMenuSelected) (EventCalendar *, gpointer);
-extern GtkWidget *calendars_menu (CalendarMenuSelected cb, gpointer data);
+extern GtkWidget *calendars_menu (EventDB *edb, CalendarMenuSelected cb,
+				  gpointer data);
 
 #endif /* CALENDARS_WIDGETS */

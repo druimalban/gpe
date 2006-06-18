@@ -177,9 +177,10 @@ calendar_text_cell_renderer_new (void)
 }
 
 GtkWidget *
-calendars_combo_box_new (void)
+calendars_combo_box_new (EventDB *edb)
 {
-  GtkWidget *combo = gtk_combo_box_new_with_model (calendars_tree_model ());
+  GtkWidget *combo
+    = gtk_combo_box_new_with_model (calendars_tree_model (edb));
 
   /* Set the renderer.  */
   GtkCellRenderer *renderer = calendar_text_cell_renderer_new ();
@@ -191,7 +192,7 @@ calendars_combo_box_new (void)
 				      calendar_text_cell_data_func, combo,
 				      NULL);
 
-  EventCalendar *ec = event_db_get_default_calendar (event_db, NULL);
+  EventCalendar *ec = event_db_get_default_calendar (edb, NULL);
   calendars_combo_box_set_active (GTK_COMBO_BOX (combo), ec);
   g_object_unref (ec);
 
@@ -556,9 +557,9 @@ build_menu (CalendarMenuSelected cb, gpointer user_data,
 }
 
 GtkWidget *
-calendars_menu (CalendarMenuSelected cb, gpointer data)
+calendars_menu (EventDB *edb, CalendarMenuSelected cb, gpointer data)
 {
-  GtkTreeModel *model = calendars_tree_model ();
+  GtkTreeModel *model = calendars_tree_model (edb);
   GtkTreeIter iter;
 
   if (gtk_tree_model_get_iter_first (model, &iter))
@@ -574,12 +575,10 @@ calendars_menu (CalendarMenuSelected cb, gpointer data)
   return NULL;
 }
 
-static GtkTreeStore *tree_store;
-
 static void
-populate_store (GtkTreeStore *tree_store)
+populate_store (EventDB *edb, GtkTreeStore *tree_store)
 {
-  GSList *l = event_db_list_event_calendars (event_db);
+  GSList *l = event_db_list_event_calendars (edb);
   int n = g_slist_length (l);
   struct info
   {
@@ -636,11 +635,8 @@ populate_store (GtkTreeStore *tree_store)
 }
 
 static void
-calendar_new (EventDB *edb, EventCalendar *ec, gpointer *data)
+calendar_new (EventDB *edb, EventCalendar *ec, GtkTreeStore *tree_store)
 {
-  if (! tree_store)
-    return;
-
   GtkTreeModel *model = GTK_TREE_MODEL (tree_store);
 
   /* Find the ancestry.  */
@@ -695,11 +691,8 @@ calendar_new (EventDB *edb, EventCalendar *ec, gpointer *data)
 }
 
 static void
-calendar_deleted (EventDB *edb, EventCalendar *ec, gpointer *data)
+calendar_deleted (EventDB *edb, EventCalendar *ec, GtkTreeStore *tree_store)
 {
-  if (! tree_store)
-    return;
-
   GtkTreeIter iter;
   if (search (GTK_TREE_MODEL (tree_store), &iter, NULL, ec))
     {
@@ -725,44 +718,77 @@ unref_model (GtkTreeStore *tree_store)
 }
 
 static void
-calendar_reparented (EventDB *edb, EventCalendar *ec, gpointer *data)
+calendar_reparented (EventDB *edb, EventCalendar *ec,
+		     GtkTreeStore *tree_store)
 {
-  if (! tree_store)
-    return;
-
   /* We can't simply call calendar_deleted and then calendar_new: both
      assume that EC has no children.  Trying to be smart just isn't
      gpointer to pay: just clear the tree and rebuild it from
      scratch.  */
   unref_model (tree_store);
   gtk_tree_store_clear (tree_store);
-  populate_store (tree_store);
+  populate_store (edb, tree_store);
+}
+
+struct info
+{
+  EventDB *edb;
+  GtkTreeStore *tree_store;
+
+  guint calendar_new_signal;
+  guint calendar_deleted_signal;
+  guint calendar_reparented_signal;
+};
+
+static GSList *tree_stores;
+
+static void
+info_destroy (struct info *info)
+{
+  g_assert (g_slist_find (tree_stores, info));
+  tree_stores = g_slist_remove (tree_stores, info);
+
+  g_object_unref (info->edb);
+  g_signal_handler_disconnect (info->edb, info->calendar_new_signal);
+  g_signal_handler_disconnect (info->edb, info->calendar_deleted_signal);
+  g_signal_handler_disconnect (info->edb, info->calendar_reparented_signal);
+  g_free (info);
 }
 
 GtkTreeModel *
-calendars_tree_model (void)
+calendars_tree_model (EventDB *edb)
 {
-  if (tree_store)
+  GSList *l;
+  for (l = tree_stores; l; l = l->next)
     {
-      g_object_ref (tree_store);
-      return GTK_TREE_MODEL (tree_store);
+      struct info *info = l->data;
+
+      if (info->edb == edb)
+	{
+	  g_object_ref (info->tree_store);
+	  return GTK_TREE_MODEL (info->tree_store);
+	}
     }
 
+  struct info *info = g_malloc (sizeof (*info));
+  g_object_ref (edb);
+  info->edb = edb;
+
   /* Create a new tree store.  */
-  tree_store = gtk_tree_store_new (1, G_TYPE_POINTER);
+  info->tree_store = gtk_tree_store_new (1, G_TYPE_POINTER);
+  g_object_weak_ref (G_OBJECT (info->tree_store), info_destroy, info);
 
-  populate_store (tree_store);
+  populate_store (edb, info->tree_store);
 
-  g_object_add_weak_pointer (G_OBJECT (tree_store),
-			     (gpointer *) &tree_store);
+  info->calendar_new_signal =
+    g_signal_connect (edb, "calendar-new",
+		      G_CALLBACK (calendar_new), info->tree_store);
+  info->calendar_deleted_signal =
+    g_signal_connect (edb, "calendar-deleted",
+		      G_CALLBACK (calendar_deleted), info->tree_store);
+  info->calendar_reparented_signal =
+    g_signal_connect (edb, "calendar-reparented",
+		      G_CALLBACK (calendar_reparented), info->tree_store);
 
-  g_signal_connect (event_db,
-		    "calendar-new", G_CALLBACK (calendar_new), NULL);
-  g_signal_connect (event_db,
-		    "calendar-deleted", G_CALLBACK (calendar_deleted), NULL);
-  g_signal_connect (event_db,
-		    "calendar-reparented", G_CALLBACK (calendar_reparented),
-		    NULL);
-
-  return GTK_TREE_MODEL (tree_store);
+  return GTK_TREE_MODEL (info->tree_store);
 }

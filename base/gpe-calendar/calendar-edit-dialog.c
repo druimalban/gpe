@@ -302,7 +302,7 @@ calendar_edit_dialog_init (GTypeInstance *instance, gpointer klass)
   gtk_box_pack_start (hbox, d->parent_check, FALSE, FALSE, 0);
   gtk_widget_show (d->parent_check);
 
-  d->parent = GTK_COMBO_BOX (calendars_combo_box_new ());
+  d->parent = GTK_COMBO_BOX (calendars_combo_box_new (event_db));
   gtk_combo_box_set_active (GTK_COMBO_BOX (d->parent), -1);
   g_signal_connect (G_OBJECT (d->parent), "changed",
 		    G_CALLBACK (parent_combo_changed), d);

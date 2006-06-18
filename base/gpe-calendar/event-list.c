@@ -52,12 +52,13 @@ struct _GtkEventList
   /* Time of last update.  */
   time_t date;
   struct tm tm;
+
+  EventDB *edb;
 };
 
 typedef struct
 {
   GtkTreeViewClass tree_box_class;
-  GObjectClass parent_class;
 } EventListClass;
 
 static void gtk_event_list_base_class_init (gpointer klass);
@@ -124,6 +125,9 @@ gtk_event_list_finalize (GObject *object)
   if (event_list->timeout > 0)
     /* Cancel any outstanding timeout.  */
     g_source_remove (event_list->timeout);
+
+  if (event_list->edb)
+    g_object_unref (event_list->edb);
 
   G_OBJECT_CLASS (parent_class)->finalize (object);
 }
@@ -516,8 +520,6 @@ gtk_event_list_init (GTypeInstance *instance, gpointer klass)
   gtk_tree_view_column_set_cell_data_func (col, renderer,
 					   end_cell_data_func, event_list,
 					   NULL);
-
-  gtk_event_list_reload_events (event_list);
 }
 
 void
@@ -559,7 +561,7 @@ gtk_event_list_reload_events (GtkEventList *event_list)
     * shift[gtk_combo_box_get_active (event_list->combo)];
 
   event_list->date = time (NULL);
-  event_list->events = event_db_list_for_period (event_db,
+  event_list->events = event_db_list_for_period (event_list->edb,
 						 event_list->date,
 						 event_list->date
 						 + days * 24 * 60 * 60);
@@ -618,9 +620,15 @@ gtk_event_list_reload_events (GtkEventList *event_list)
 }
 
 GtkWidget *
-gtk_event_list_new (void)
+gtk_event_list_new (EventDB *edb)
 {
   GtkWidget *widget = g_object_new (gtk_event_list_get_type (), NULL);
+  GtkEventList *el = GTK_EVENT_LIST (widget);
+
+  g_object_ref (edb);
+  el->edb = edb;
+
+  gtk_event_list_reload_events (el);
 
   return widget;
 }

@@ -1,3 +1,40 @@
+2006-06-18  Neal H. Walfield  <neal@gnu.org>
+
+	* calendars-widgets.h (calendars_combo_box_new): Take an
+	additional argument, the EventDB to use.  Update callers.
+	(calendars_tree_model): Likewise.
+	(calendars_menu): Likewise.
+	* calendars-widgets.c (calendars_combo_box_new): Take an
+	additional argument, the EventDB to use.  Use it.
+	(calendars_menu): Likewise.
+	(populate_store): Likewise.
+	(calendars_tree_model): Likewise.
+	(calendar_new): Make the third parameter is now the GtkTreeStore.
+	(calendar_deleted): Likewise.
+	(calendar_reparented): Likewise.
+	(struct info): New structure.
+	(tree_store): Remove variable.
+	(tree_stores): New variable.
+	(info_destroy): New function.
+	(calendars_tree_model): Search for the GtkTreeStore matching EDB
+	on the TREE_STORES list.  If not found, create a new struct info
+	and add that to TREE_STORES.  At a weak reference to the created
+	tree store to call INFO_DESTROY when it is destroyed.
+	* event-list.h: Include <gtk/gtk.h> and <gpe/event-db.h>.
+	(gtk_event_list_new): Take additional parameter, EDB.  Update
+	callers.
+	* event-list.c (struct _GtkEventList): Add field edb.
+	(EventListClass): Remove field parent_class.
+	(gtk_event_list_finalize): Unref EVENT_LIST->EDB if not NULL.
+	(gtk_event_list_init): Don't call gtk_event_list_reload_events.
+	(gtk_event_list_reload_events): Use EVENT_LIST->EDB, not
+	EVENT_LIST.
+	(gtk_event_list_new): Take additional parameter, EDB.  Take a
+	reference to it and save it.  Call gtk_event_list_reload_events.
+
+	* main.c (main): Show the toolbar widgets individually rather than
+	calling gtk_widget_show_all.  Remove last reference to APP.
+
 2006-06-17  Neal H. Walfield  <neal@gnu.org>
 
 	* main.c (main) [IS_HILDON]: Disable the alarm button.

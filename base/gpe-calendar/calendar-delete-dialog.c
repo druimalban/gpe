@@ -216,7 +216,7 @@ calendar_delete_dialog_set_calendar (CalendarDeleteDialog *d,
       gtk_widget_show (r);
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (r), TRUE);
 
-      GtkWidget *w = calendars_combo_box_new ();
+      GtkWidget *w = calendars_combo_box_new (event_db);
       d->reparent_combo = GTK_COMBO_BOX (w);
       gtk_box_pack_start (d->vbox, w, FALSE, FALSE, 0);
       gtk_widget_show (w);

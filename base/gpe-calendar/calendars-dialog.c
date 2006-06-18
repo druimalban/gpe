@@ -355,7 +355,7 @@ calendars_dialog_init (GTypeInstance *instance, gpointer klass)
   gtk_container_add (GTK_CONTAINER (frame), GTK_WIDGET (scrolled_window));
   gtk_widget_show (GTK_WIDGET (scrolled_window));
 
-  GtkTreeModel *model = calendars_tree_model ();
+  GtkTreeModel *model = calendars_tree_model (event_db);
   GtkTreeView *tree_view
     = GTK_TREE_VIEW (gtk_tree_view_new_with_model (model));
   /* XXX: Ugly maemo hack.  See:

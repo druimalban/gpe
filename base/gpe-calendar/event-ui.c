@@ -1305,7 +1305,7 @@ build_edit_event_window (Event *ev)
   gtk_box_pack_start (hbox, label, FALSE, FALSE, 3);
   gtk_widget_show (label);
 
-  s->calendar = calendars_combo_box_new ();
+  s->calendar = calendars_combo_box_new (event_db);
   if (s->ev)
     {
       /* Calendar.  */

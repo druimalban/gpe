@@ -516,7 +516,7 @@ import_vcal (EventCalendar *ec, const char *files[])
       gtk_widget_show (w);
       gtk_box_pack_end (box, w, FALSE, FALSE, 0);
 
-      combo = calendars_combo_box_new ();
+      combo = calendars_combo_box_new (event_db);
       gtk_widget_show (combo);
       gtk_box_pack_end (box, combo, FALSE, FALSE, 0);
 

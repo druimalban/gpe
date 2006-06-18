@@ -507,7 +507,7 @@ calendars_consider (void)
   gtk_container_add (calendars_container, scrolled_window);
   gtk_widget_show (scrolled_window);
 
-  GtkTreeModel *model = calendars_tree_model ();
+  GtkTreeModel *model = calendars_tree_model (event_db);
   GtkTreeView *tree_view
     = GTK_TREE_VIEW (gtk_tree_view_new_with_model (model));
   g_object_add_weak_pointer (G_OBJECT (tree_view), (gpointer *) &tree_view);
@@ -591,7 +591,7 @@ event_list_consider (void)
 
       gtk_widget_show (GTK_WIDGET (event_list_container));
 
-      event_list = GTK_EVENT_LIST (gtk_event_list_new ());
+      event_list = GTK_EVENT_LIST (gtk_event_list_new (event_db));
       g_object_add_weak_pointer (G_OBJECT (event_list),
 				 (gpointer *) &event_list);
       gtk_widget_show (GTK_WIDGET (event_list));
@@ -821,7 +821,7 @@ current_view_consider (void)
 	  gtk_widget_hide (GTK_WIDGET (event_list_container));
 	}
       else
-	current_view = gtk_event_list_new ();
+	current_view = gtk_event_list_new (event_db);
       gtk_widget_hide (GTK_WIDGET (datesel));
       break;
     }
@@ -1500,6 +1500,7 @@ main (int argc, char *argv[])
 			       GTK_ORIENTATION_HORIZONTAL);
   gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
   GTK_WIDGET_UNSET_FLAGS (toolbar, GTK_CAN_FOCUS);
+  gtk_widget_show (toolbar);
 
 #ifdef IS_HILDON
   hildon_appview_set_toolbar (HILDON_APPVIEW (main_appview),
@@ -1509,10 +1510,12 @@ main (int argc, char *argv[])
   gtk_box_pack_start (GTK_BOX (win), toolbar, FALSE, FALSE, 0);
 #endif
 
+
   /* Calendars button.  */
   p = gpe_find_icon_scaled ("icon", 
                             gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
   pw = gtk_image_new_from_pixbuf (p);
+  gtk_widget_show (GTK_WIDGET (pw));
   GtkToolItem *item = gtk_tool_button_new (pw, _("Calendars"));
   g_signal_connect (G_OBJECT(item), "clicked",
 		    G_CALLBACK(calendars_button_clicked), NULL);
@@ -1520,19 +1523,23 @@ main (int argc, char *argv[])
   gtk_tooltips_set_tip (tooltips, GTK_WIDGET (item), 
 			_("Tap here to select the calendars to show."), NULL);
   GTK_WIDGET_UNSET_FLAGS (item, GTK_CAN_FOCUS);
+  gtk_widget_show (GTK_WIDGET (item));
 
   if (window_x > 260) 
     {	  
       item = gtk_separator_tool_item_new ();
       gtk_separator_tool_item_set_draw (GTK_SEPARATOR_TOOL_ITEM(item), FALSE);
       gtk_toolbar_insert (GTK_TOOLBAR (toolbar), item, -1);
+      gtk_widget_show (GTK_WIDGET (item));
     }
 
   /* Initialize the day view button.  */
   p = gpe_find_icon_scaled ("day_view", 
                             gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
   pw = gtk_image_new_from_pixbuf (p);
+  gtk_widget_show (GTK_WIDGET (pw));
   item = gtk_radio_tool_button_new (NULL);
+  day_button = GTK_WIDGET(item);    
   gtk_tool_button_set_label (GTK_TOOL_BUTTON (item), _("Day"));
   gtk_tool_button_set_icon_widget (GTK_TOOL_BUTTON (item), pw);
   gtk_toggle_tool_button_set_active (GTK_TOGGLE_TOOL_BUTTON (item),
@@ -1543,12 +1550,13 @@ main (int argc, char *argv[])
   gtk_tooltips_set_tip(tooltips, GTK_WIDGET(item), 
                        _("Tap here to select day-at-a-time view."), NULL);
   GTK_WIDGET_UNSET_FLAGS(item, GTK_CAN_FOCUS);
-  day_button = GTK_WIDGET(item);    
+  gtk_widget_show (GTK_WIDGET (item));
     
   /* Initialize the week view button.  */
   p = gpe_find_icon_scaled ("week_view",
 			    gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
   pw = gtk_image_new_from_pixbuf (p);
+  gtk_widget_show (GTK_WIDGET (pw));
   item = gtk_radio_tool_button_new_from_widget(GTK_RADIO_TOOL_BUTTON(item));
   gtk_tool_button_set_label(GTK_TOOL_BUTTON(item), _("Week"));
   gtk_tool_button_set_icon_widget(GTK_TOOL_BUTTON(item), pw);
@@ -1560,12 +1568,14 @@ main (int argc, char *argv[])
   gtk_tooltips_set_tip(tooltips, GTK_WIDGET(item), 
                        _("Tap here to select week-at-a-time view."), NULL);
   GTK_WIDGET_UNSET_FLAGS(item, GTK_CAN_FOCUS);
+  gtk_widget_show (GTK_WIDGET (item));
   GtkWidget *week_button = GTK_WIDGET (item);    
   
   /* Initialize the month view button.  */
   p = gpe_find_icon_scaled ("month_view",
 			    gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
   pw = gtk_image_new_from_pixbuf (p);
+  gtk_widget_show (GTK_WIDGET (pw));
   item = gtk_radio_tool_button_new_from_widget(GTK_RADIO_TOOL_BUTTON(item));
   gtk_tool_button_set_label(GTK_TOOL_BUTTON(item), _("Month"));
   gtk_tool_button_set_icon_widget(GTK_TOOL_BUTTON(item), pw);
@@ -1577,12 +1587,14 @@ main (int argc, char *argv[])
   gtk_tooltips_set_tip(tooltips, GTK_WIDGET(item), 
                        _("Tap here to select month-at-a-time view."), NULL);
   GTK_WIDGET_UNSET_FLAGS(item, GTK_CAN_FOCUS);
+  gtk_widget_show (GTK_WIDGET (item));
   GtkWidget *month_button = GTK_WIDGET (item);
 
   /* Initialize the upcoming view button.  */
   p = gpe_find_icon_scaled ("future_view",
 			    gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
   pw = gtk_image_new_from_pixbuf (p);
+  gtk_widget_show (GTK_WIDGET (pw));
   item = gtk_radio_tool_button_new_from_widget(GTK_RADIO_TOOL_BUTTON(item));
   gtk_tool_button_set_label (GTK_TOOL_BUTTON(item), _("Agenda"));
   gtk_tool_button_set_icon_widget (GTK_TOOL_BUTTON(item), pw);
@@ -1595,6 +1607,7 @@ main (int argc, char *argv[])
   gtk_tooltips_set_tip (tooltips, GTK_WIDGET (item), 
 			_("Tap here to select the agenda."), NULL);
   GTK_WIDGET_UNSET_FLAGS (item, GTK_CAN_FOCUS);
+  gtk_widget_show (GTK_WIDGET (item));
   GtkWidget *event_list_button = GTK_WIDGET (item);
 
   if (window_x > 260)
@@ -1605,9 +1618,11 @@ main (int argc, char *argv[])
     }
   
   /* Initialize the alarm button.  */
+#ifndef IS_HILDON
   p = gpe_find_icon_scaled ("bell",
 			    gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
   pw = gtk_image_new_from_pixbuf (p);
+  gtk_widget_show (GTK_WIDGET (pw));
   item = gtk_tool_button_new (pw, _("Alarms"));
   g_signal_connect (G_OBJECT (item), "clicked",
 		    G_CALLBACK (alarm_button_clicked), NULL);
@@ -1615,6 +1630,7 @@ main (int argc, char *argv[])
   gtk_tooltips_set_tip (tooltips, GTK_WIDGET (item), 
 			_("Tap here to view alarms pending acknowledgement."),
 			NULL);
+  gtk_widget_show (GTK_WIDGET (item));
   GTK_WIDGET_UNSET_FLAGS (item, GTK_CAN_FOCUS);
   
   if (window_x > 260)
@@ -1623,17 +1639,20 @@ main (int argc, char *argv[])
       gtk_separator_tool_item_set_draw(GTK_SEPARATOR_TOOL_ITEM(item), FALSE);
       gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
     }
+#endif
   
   /* Initialize the "now" button.  */
   pw = gtk_image_new_from_stock (GTK_STOCK_HOME, 
                                  gtk_toolbar_get_icon_size
 				 (GTK_TOOLBAR (toolbar)));
+  gtk_widget_show (GTK_WIDGET (pw));
   item = gtk_tool_button_new (pw, _("Today"));
   g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK(set_today), NULL);
   gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
   gtk_tooltips_set_tip (tooltips, GTK_WIDGET(item), 
 			_("Switch to today."), NULL);
   GTK_WIDGET_UNSET_FLAGS (item, GTK_CAN_FOCUS);
+  gtk_widget_show (GTK_WIDGET (item));
 
 
   datesel = GTK_DATE_SEL (gtk_date_sel_new (GTKDATESEL_FULL, viewtime));
@@ -1650,6 +1669,7 @@ main (int argc, char *argv[])
     {
       item = gtk_tool_item_new ();
       gtk_toolbar_insert (GTK_TOOLBAR (toolbar), item, -1);
+      gtk_widget_show (GTK_WIDGET (item));
 
       gtk_container_add (GTK_CONTAINER (item), GTK_WIDGET (datesel));
     }
@@ -1664,13 +1684,6 @@ main (int argc, char *argv[])
   gtk_widget_add_events (GTK_WIDGET (main_window), 
                          GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK);
   
-#ifdef IS_HILDON
-  gtk_widget_show(app);
-  gtk_widget_show(main_appview);
-#endif
-  gtk_widget_show_all (toolbar);
-
-
   /* File menu.  */
   GtkWidget *mitem = gtk_menu_item_new_with_mnemonic (_("_File"));
   GtkMenuShell *menu = GTK_MENU_SHELL (gtk_menu_new ());

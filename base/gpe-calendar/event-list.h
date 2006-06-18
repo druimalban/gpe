@@ -20,6 +20,9 @@
 #ifndef EVENT_LIST_H
 #define EVENT_LIST_H
 
+#include <gtk/gtk.h>
+#include <gpe/event-db.h>
+
 struct _GtkEventList;
 typedef struct _GtkEventList GtkEventList;
 
@@ -33,7 +36,7 @@ typedef struct _GtkEventList GtkEventList;
 extern GType gtk_event_list_get_type (void);
 
 /* Create a new day view.  */
-extern GtkWidget *gtk_event_list_new (void);
+extern GtkWidget *gtk_event_list_new (EventDB *edb);
 
 /* Force LIST to reload the events from the event database.  */
 void gtk_event_list_reload_events (GtkEventList *list);

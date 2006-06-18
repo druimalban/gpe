@@ -372,7 +372,7 @@ event_menu_new (Event *ev, gboolean show_summary)
     }
 
   /* And a "Move to..." sub menu.  */
-  GtkWidget *calendars = calendars_menu (move_event_to, ev);
+  GtkWidget *calendars = calendars_menu (event_db, move_event_to, ev);
   if (calendars)
     {
       gtk_widget_show (calendars);
