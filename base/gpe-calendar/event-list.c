@@ -23,7 +23,6 @@
 #include <stdlib.h>
 #include "globals.h"
 #include "event-list.h"
-#include "event-menu.h"
 
 #ifdef IS_HILDON
 #define ARROW_SIZE 30
@@ -37,7 +36,7 @@ enum
   NUM_COLS
 };
 
-struct _GtkEventList
+struct _EventList
 {
   GtkVBox widget;
 
@@ -59,17 +58,23 @@ struct _GtkEventList
 typedef struct
 {
   GtkTreeViewClass tree_box_class;
+
+  guint event_clicked_signal;
+  EventListEventClicked event_clicked;
+  guint event_key_pressed_signal;
+  EventListEventKeyPressed event_key_pressed;
 } EventListClass;
 
-static void gtk_event_list_base_class_init (gpointer klass);
-static void gtk_event_list_dispose (GObject *obj);
-static void gtk_event_list_finalize (GObject *object);
-static void gtk_event_list_init (GTypeInstance *instance, gpointer klass);
+static void event_list_base_class_init (gpointer klass,
+					    gpointer klass_data);
+static void event_list_dispose (GObject *obj);
+static void event_list_finalize (GObject *object);
+static void event_list_init (GTypeInstance *instance, gpointer klass);
 
 static GtkWidgetClass *parent_class;
 
 GType
-gtk_event_list_get_type (void)
+event_list_get_type (void)
 {
   static GType type;
 
@@ -78,49 +83,76 @@ gtk_event_list_get_type (void)
       static const GTypeInfo info =
       {
 	sizeof (EventListClass),
-	gtk_event_list_base_class_init,
 	NULL,
 	NULL,
+	event_list_base_class_init,
 	NULL,
 	NULL,
-	sizeof (struct _GtkEventList),
+	sizeof (struct _EventList),
 	0,
-	gtk_event_list_init
+	event_list_init
       };
 
       type = g_type_register_static (gtk_vbox_get_type (),
-				     "GtkEventList", &info, 0);
+				     "EventList", &info, 0);
     }
 
   return type;
 }
 
 static void
-gtk_event_list_base_class_init (gpointer klass)
+event_list_base_class_init (gpointer klass, gpointer klass_data)
 {
   GObjectClass *object_class;
   GtkWidgetClass *widget_class;
+  EventListClass *event_list_class;
 
   parent_class = g_type_class_peek_parent (klass);
 
   object_class = G_OBJECT_CLASS (klass);
-  object_class->finalize = gtk_event_list_finalize;
-  object_class->dispose = gtk_event_list_dispose;
+  object_class->finalize = event_list_finalize;
+  object_class->dispose = event_list_dispose;
 
   widget_class = (GtkWidgetClass *) klass;
+
+  event_list_class = EVENT_LIST_CLASS (klass);
+  event_list_class->event_clicked_signal
+    = g_signal_new ("event-clicked",
+		    G_OBJECT_CLASS_TYPE (object_class),
+		    G_SIGNAL_RUN_LAST,
+		    G_STRUCT_OFFSET (EventListClass, event_clicked),
+		    NULL,
+		    NULL,
+		    gtk_marshal_NONE__POINTER_POINTER,
+		    G_TYPE_NONE,
+		    2,
+		    G_TYPE_POINTER,
+		    G_TYPE_POINTER);
+  event_list_class->event_key_pressed_signal
+    = g_signal_new ("event-key-pressed",
+		    G_OBJECT_CLASS_TYPE (object_class),
+		    G_SIGNAL_RUN_LAST,
+		    G_STRUCT_OFFSET (EventListClass, event_clicked),
+		    NULL,
+		    NULL,
+		    gtk_marshal_NONE__POINTER_POINTER,
+		    G_TYPE_NONE,
+		    2,
+		    G_TYPE_POINTER,
+		    G_TYPE_POINTER);
 }
 
 static void
-gtk_event_list_dispose (GObject *obj)
+event_list_dispose (GObject *obj)
 {
   /* Chain up to the parent class.  */
   G_OBJECT_CLASS (parent_class)->dispose (obj);
 }
 
 static void
-gtk_event_list_finalize (GObject *object)
+event_list_finalize (GObject *object)
 {
-  GtkEventList *event_list = GTK_EVENT_LIST (object);
+  EventList *event_list = EVENT_LIST (object);
 
   if (event_list->timeout > 0)
     /* Cancel any outstanding timeout.  */
@@ -133,7 +165,7 @@ gtk_event_list_finalize (GObject *object)
 }
 
 static char *
-time_to_string (GtkEventList *event_list, Event *ev, struct tm *tm)
+time_to_string (EventList *event_list, Event *ev, struct tm *tm)
 {
   if (is_reminder (ev))
     {
@@ -161,7 +193,7 @@ date_cell_data_func (GtkTreeViewColumn *col,
 		     GtkTreeIter *iter,
 		     gpointer el)
 {
-  GtkEventList *event_list = GTK_EVENT_LIST (el);
+  EventList *event_list = EVENT_LIST (el);
   Event *ev;
   time_t t;
   struct tm tm;
@@ -239,7 +271,7 @@ end_cell_data_func (GtkTreeViewColumn *col,
 		    GtkTreeIter *iter,
 		    gpointer el)
 {
-  GtkEventList *event_list = GTK_EVENT_LIST (el);
+  EventList *event_list = EVENT_LIST (el);
   Event *ev;
   time_t t;
   struct tm tm;
@@ -277,7 +309,8 @@ end_cell_data_func (GtkTreeViewColumn *col,
 }
 
 static gboolean
-button_press (GtkWidget *widget, GdkEventButton *event, gpointer user_data)
+button_press (GtkWidget *widget, GdkEventButton *event,
+	      EventList *event_list)
 {
   GtkTreeView *view = GTK_TREE_VIEW (widget);
   GtkTreePath *path;
@@ -315,50 +348,39 @@ button_press (GtkWidget *widget, GdkEventButton *event, gpointer user_data)
 	  Event *s;
 	  gtk_tree_model_get (model, &sel, COL_EVENT, &s, -1);
 
-	  if (ev == s)
-	    set_time_and_day_view (event_get_start (ev));
+	  if (ev != s)
+	    /* We only send the "event-clicked" event if the event is
+	       selected.  */
+	    return FALSE;
 	}
+    }
 
-      /* We allow the event to propagate so that the cell is
-	 highlighted.  */
-      return FALSE;
-    }
-  else if (event->button == 3)
-    {
-      GtkMenu *event_menu = event_menu_new (ev, TRUE);
-      gtk_menu_popup (event_menu, NULL, NULL, NULL, NULL,
-		      event->button, event->time);
-    }
+  EventListClass *event_list_class = EVENT_LIST_GET_CLASS (event_list);
+  g_signal_emit (event_list,
+		 event_list_class->event_clicked_signal,
+		 0, ev, event);
 
   return FALSE;
 }
 
 static gboolean
-key_press (GtkWidget *widget, GdkEventKey *k, gpointer d)
+key_press (GtkWidget *widget, GdkEventKey *k, EventList *event_list)
 {
   GtkTreeView *view = GTK_TREE_VIEW (widget);
 
-  switch (k->keyval)
-    {
-    case GDK_space:
-    case GDK_Return:
-      {
-	GtkTreeSelection *sel = gtk_tree_view_get_selection (view);
-	GtkTreeModel *model;
-	GtkTreeIter iter;
-	Event *ev;
+  GtkTreeSelection *sel = gtk_tree_view_get_selection (view);
+  GtkTreeModel *model;
+  GtkTreeIter iter;
+  Event *ev;
 
-	if (! gtk_tree_selection_get_selected (sel, &model, &iter))
-	  return FALSE;
+  if (! gtk_tree_selection_get_selected (sel, &model, &iter))
+    return FALSE;
 
-	gtk_tree_model_get (model, &iter, COL_EVENT, &ev, -1);
-	set_time_and_day_view (event_get_start (ev));
-	return TRUE;
-      }
+  gtk_tree_model_get (model, &iter, COL_EVENT, &ev, -1);
 
-    default:
-      break;
-    }
+  EventListClass *event_list_class = EVENT_LIST_GET_CLASS (event_list);
+  g_signal_emit (event_list, event_list_class->event_key_pressed_signal,
+		 0, ev, k);
 
   return FALSE;
 }
@@ -366,7 +388,7 @@ key_press (GtkWidget *widget, GdkEventKey *k, gpointer d)
 static void
 arrow_click (GtkWidget *w, gpointer data)
 {
-  GtkEventList *event_list = GTK_EVENT_LIST (data);
+  EventList *event_list = EVENT_LIST (data);
   int d = g_object_get_data (G_OBJECT (w), "direction") ? 1 : -1;
 
   int i = MAX (1, atoi (gtk_entry_get_text (event_list->entry)) + d);
@@ -380,15 +402,15 @@ arrow_click (GtkWidget *w, gpointer data)
 static int
 reload (GtkWidget *w, gpointer data)
 {
-  gtk_event_list_reload_events (GTK_EVENT_LIST (data));
+  event_list_reload_events (EVENT_LIST (data));
 
   return FALSE;
 }
 
 static void
-gtk_event_list_init (GTypeInstance *instance, gpointer klass)
+event_list_init (GTypeInstance *instance, gpointer klass)
 {
-  GtkEventList *event_list = GTK_EVENT_LIST (instance);
+  EventList *event_list = EVENT_LIST (instance);
   GtkTreeViewColumn *col;
   GtkCellRenderer *renderer;
 
@@ -484,9 +506,9 @@ gtk_event_list_init (GTypeInstance *instance, gpointer klass)
   gtk_widget_show (GTK_WIDGET (event_list->view));
 
   g_signal_connect (event_list->view, "button-press-event",
-		    (GCallback) button_press, NULL);
+		    (GCallback) button_press, event_list);
   g_signal_connect (event_list->view, "key_press_event",
-		    (GCallback) key_press, NULL);
+		    (GCallback) key_press, event_list);
 
   /* We don't need to waste space showing the headers.  */
   gtk_tree_view_set_headers_visible (event_list->view, FALSE);
@@ -523,7 +545,7 @@ gtk_event_list_init (GTypeInstance *instance, gpointer klass)
 }
 
 void
-gtk_event_list_reload_events (GtkEventList *event_list)
+event_list_reload_events (EventList *event_list)
 {
   GtkTreeModel *model;
   GtkListStore *list;
@@ -605,7 +627,7 @@ gtk_event_list_reload_events (GtkEventList *event_list)
 	next_reload = 1;
       event_list->timeout = g_timeout_add (next_reload * 1000,
 					   (GSourceFunc)
-					   (gtk_event_list_reload_events),
+					   (event_list_reload_events),
 					   event_list);
 
 
@@ -620,15 +642,15 @@ gtk_event_list_reload_events (GtkEventList *event_list)
 }
 
 GtkWidget *
-gtk_event_list_new (EventDB *edb)
+event_list_new (EventDB *edb)
 {
-  GtkWidget *widget = g_object_new (gtk_event_list_get_type (), NULL);
-  GtkEventList *el = GTK_EVENT_LIST (widget);
+  GtkWidget *widget = g_object_new (event_list_get_type (), NULL);
+  EventList *el = EVENT_LIST (widget);
 
   g_object_ref (edb);
   el->edb = edb;
 
-  gtk_event_list_reload_events (el);
+  event_list_reload_events (el);
 
   return widget;
 }

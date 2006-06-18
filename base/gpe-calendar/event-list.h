@@ -23,22 +23,35 @@
 #include <gtk/gtk.h>
 #include <gpe/event-db.h>
 
-struct _GtkEventList;
-typedef struct _GtkEventList GtkEventList;
+struct _EventList;
+typedef struct _EventList EventList;
 
-#define GTK_EVENT_LIST(obj) \
-  GTK_CHECK_CAST (obj, gtk_event_list_get_type (), struct _GtkEventList)
-#define GTK_EVENT_LIST_CLASS(klass) \
-  GTK_CHECK_CLASS_CAST (klass, gtk_event_list_get_type (), EventListClass)
-#define GTK_IS_EVENT_LIST(obj) GTK_CHECK_TYPE (obj, gtk_event_list_get_type ())
+#define TYPE_EVENT_LIST (event_list_get_type ())
+#define EVENT_LIST(obj) \
+  (G_TYPE_CHECK_INSTANCE_CAST ((obj), TYPE_EVENT_LIST, EventList))
+#define EVENT_LIST_CLASS(klass) \
+  (G_TYPE_CHECK_CLASS_CAST ((klass), TYPE_EVENT_LIST, EventListClass))
+#define IS_EVENT_LIST(obj) \
+  (G_TYPE_CHECK_INSTANCE_TYPE ((obj), TYPE_EVENT_LIST))
+#define IS_EVENT_LIST_CLASS(klass) \
+  (G_TYPE_CHECK_CLASS_TYPE ((klass), TYPE_EVENT_LIST))
+#define EVENT_LIST_GET_CLASS(obj) \
+  (G_TYPE_INSTANCE_GET_CLASS ((obj), TYPE_EVENT_LIST, EventListClass))
+
+/* "event-clicked" signal emitted when an event is clicked.  */
+typedef void (* EventListEventClicked) (EventList *, Event *,
+					GdkEventButton *);
+/* "event-key-pressed" signal emitted when an event is clicked.  */
+typedef void (* EventListEventKeyPressed) (EventList *, Event *,
+					   GdkEventKey *);
 
 /* Return GType of a day view.  */
-extern GType gtk_event_list_get_type (void);
+extern GType event_list_get_type (void);
 
 /* Create a new day view.  */
-extern GtkWidget *gtk_event_list_new (EventDB *edb);
+extern GtkWidget *event_list_new (EventDB *edb);
 
 /* Force LIST to reload the events from the event database.  */
-void gtk_event_list_reload_events (GtkEventList *list);
+void event_list_reload_events (EventList *list);
 
 #endif

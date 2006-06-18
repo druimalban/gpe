@@ -1,5 +1,61 @@
 2006-06-18  Neal H. Walfield  <neal@gnu.org>
 
+	* event-list.h (EventListEventClicked): New typedef.
+	(EventListEventKeyPressed): Likewise.
+	* event-list.c: Don't include "event-menu.h".
+	(EventListClass): Add fields event_clicked_signal, event_clicked,
+	event_key_pressed_signal and event_key_pressed.
+	(event_list_base_class_init): Initialize
+	EVENT_LIST_CLASS->EVENT_CLICKED_SIGNAL and
+	EVENT_LIST_CLASS->EVENT_KEY_PRESSED_SIGNAL.
+	(button_press): Don't popup a menu, signal "event-clicked".
+	(key_press): Don't set the time, signal "event-key-pressed".
+	(event_list_init): Pass EVENT_LIST to button_press and key_press.
+	* main.c: Include "event-menu.h".
+	(event_list_event_clicked): New function.
+	(event_list_event_key_pressed): Likewise.
+	(event_list_create): Likewise.
+	(event_list_consider): Don't call event_list_new, but
+	event_list_create.
+	(current_view_consider): Likewise.
+
+	(propagate_time): Only set the time on CURRENT_VIEW if it is a
+	GtkView.
+
+	* event-list.h (struct _GtkEventList): Rename from this...
+	(struct _EventList): ... to this.  Update users.
+	(GtkEventList): Rename from this...
+	(EventList): ... to this.  Update users.
+	(GTK_EVENT_LIST): Rename from this...
+	(EVENT_LIST): ... to this.  Update users.
+	(GTK_EVENT_LIST_CLASS): Rename from this...
+	(EVENT_LIST_CLASS): ... to this.  Update users.
+	(GTK_IS_EVENT_LIST): Rename from this...
+	(IS_EVENT_LIST): ... to this.  Update users.
+	(TYPE_EVENT_LIST): New marco.
+	(IS_EVENT_LIST_CLASS): Likewise.
+	(EVENT_LIST_GET_CLASS): Likewise.
+	(gtk_event_list_get_type): Rename from this...
+	(event_list_get_type): ... to this.  Update users.
+	(gtk_event_list_new): Rename from this...
+	(event_list_new): ... to this.  Update users.
+	(gtk_event_list_reload_events): Rename from this...
+	(event_list_reload_events): ... to this.  Update users.
+	* event-list.c (struct _GtkEventList): Rename from this...
+	(struct _EventList): ... to this.  Update users.
+	(gtk_event_list_base_class_init): Rename from this...
+	(event_list_base_class_init): ... to this.  Update users.
+	(gtk_event_list_dispose): Rename from this...
+	(event_list_dispose): ... to this.  Update users.
+	(gtk_event_list_finalize): Rename from this...
+	(event_list_finalize): ... to this.  Update users.
+	(gtk_event_list_init): Rename from this...
+	(event_list_init): ... to this.  Update users.
+	(event_list_get_type): Set event_list_base_class_init as the
+	fourth element, not the second.
+
+2006-06-18  Neal H. Walfield  <neal@gnu.org>
+
 	* calendars-widgets.c (calendars_tree_model): Don't forget to add
 	INFO to TREE_STORES.
 
