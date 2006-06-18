@@ -1,5 +1,10 @@
 2006-06-18  Neal H. Walfield  <neal@gnu.org>
 
+	* calendars-widgets.c (calendars_tree_model): Don't forget to add
+	INFO to TREE_STORES.
+
+2006-06-18  Neal H. Walfield  <neal@gnu.org>
+
 	* calendars-widgets.h (calendars_combo_box_new): Take an
 	additional argument, the EventDB to use.  Update callers.
 	(calendars_tree_model): Likewise.

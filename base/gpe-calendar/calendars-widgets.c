@@ -771,6 +771,7 @@ calendars_tree_model (EventDB *edb)
     }
 
   struct info *info = g_malloc (sizeof (*info));
+  tree_stores = g_slist_prepend (tree_stores, info);
   g_object_ref (edb);
   info->edb = edb;
 
