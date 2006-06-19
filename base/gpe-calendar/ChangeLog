@@ -1,3 +1,8 @@
+2006-06-19  Neal H. Walfield  <neal@gnu.org>
+
+	* export-vcal.c (export_event_as_vevent): Set "unit" and "units"
+	on RECURRENCET, not EVENT.
+
 2006-06-18  Neal H. Walfield  <neal@gnu.org>
 
 	* event-list.h (EventListEventClicked): New typedef.

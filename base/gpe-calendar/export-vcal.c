@@ -216,8 +216,8 @@ export_event_as_vevent (Event *ev)
 
 	  char *units = g_strjoinv (",", s);
 
-	  g_object_set (event, "unit", RECURRENCE_UNIT_DAY, NULL);
-	  g_object_set (event, "units", s, NULL);
+	  g_object_set (recurrence, "unit", RECURRENCE_UNIT_DAY, NULL);
+	  g_object_set (recurrence, "units", s, NULL);
 	  event_recurrence_byday_free (byday);
 	  g_free (units);
 	}
