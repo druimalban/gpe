@@ -57,6 +57,7 @@
 #include "calendars-dialog.h"
 #include "calendar-update.h"
 #include "calendars-widgets.h"
+#include "event-menu.h"
 
 #include <gpe/pim-categories.h>
 
@@ -137,7 +138,7 @@ static GtkTreeView *calendars;
 static gboolean event_list_disabled;
 static int event_list_hidden;
 static GtkContainer *event_list_container;
-static GtkEventList *event_list;
+static EventList *event_list;
 
 static GtkWidget *day_button;
 #ifdef IS_HILDON
@@ -195,7 +196,7 @@ hard_reload (gpointer data)
   if (calendar)
     gtk_event_cal_reload_events (calendar);
   if (event_list)
-    gtk_event_list_reload_events (event_list);
+    event_list_reload_events (event_list);
   schedule_wakeup (TRUE);
 
   reload_source = 0;
@@ -210,8 +211,8 @@ update_view (void)
     {
       if (GTK_IS_VIEW (current_view))
 	gtk_view_reload_events (GTK_VIEW (current_view));
-      else if (GTK_IS_EVENT_LIST (current_view))
-	gtk_event_list_reload_events (GTK_EVENT_LIST (current_view));
+      else if (IS_EVENT_LIST (current_view))
+	event_list_reload_events (EVENT_LIST (current_view));
     }
   if (! reload_source)
     reload_source = g_idle_add (hard_reload, 0);
@@ -349,7 +350,7 @@ propagate_time (void)
     gtk_date_sel_set_time (GTK_DATE_SEL (datesel), viewtime);
 
 
-  if (current_view)
+  if (current_view && GTK_IS_VIEW (current_view))
     {
       time_t t = gtk_view_get_time (GTK_VIEW (current_view));
       if (t != viewtime)
@@ -564,6 +565,46 @@ calendars_toggle (GtkCheckMenuItem *menuitem, gpointer data)
   calendars_consider ();
 }
 
+static void
+event_list_event_clicked (EventList *el, Event *ev, GdkEventButton *b,
+			  gpointer data)
+{
+  if (b->button == 1)
+    set_time_and_day_view (event_get_start (ev));
+  else if (b->button == 3)
+    {
+      GtkMenu *event_menu = event_menu_new (ev, TRUE);
+      gtk_menu_popup (event_menu, NULL, NULL, NULL, NULL,
+		      b->button, b->time);
+    }
+}
+
+static void
+event_list_event_key_pressed (EventList *el, Event *ev, GdkEventKey *k,
+			      gpointer data)
+{
+  switch (k->keyval)
+    {
+    case GDK_space:
+    case GDK_Return:
+      {
+	set_time_and_day_view (event_get_start (ev));
+      }
+    }
+}
+
+static GtkWidget *
+event_list_create (EventDB *edb)
+{
+  GtkWidget *el = event_list_new (edb);
+  g_signal_connect (el, "event-clicked",
+		    G_CALLBACK (event_list_event_clicked), NULL);
+  g_signal_connect (el, "event-key-pressed",
+		    G_CALLBACK (event_list_event_key_pressed), NULL);
+
+  return el;
+}
+
 static gboolean
 event_list_consider (void)
 {
@@ -591,7 +632,7 @@ event_list_consider (void)
 
       gtk_widget_show (GTK_WIDGET (event_list_container));
 
-      event_list = GTK_EVENT_LIST (gtk_event_list_new (event_db));
+      event_list = EVENT_LIST (event_list_create (event_db));
       g_object_add_weak_pointer (G_OBJECT (event_list),
 				 (gpointer *) &event_list);
       gtk_widget_show (GTK_WIDGET (event_list));
@@ -742,7 +783,7 @@ current_view_consider (void)
 
       gtk_container_remove (current_view_container, current_view);
 
-      if (GTK_IS_EVENT_LIST (current_view))
+      if (IS_EVENT_LIST (current_view))
 	event_list_hidden --;
       if (GTK_IS_MONTH_VIEW (current_view))
 	calendar_hidden --;
@@ -772,17 +813,17 @@ current_view_consider (void)
 	    return TRUE;
 	  break;
 	case view_event_list_view:
-	  if (GTK_IS_EVENT_LIST (current_view))
+	  if (IS_EVENT_LIST (current_view))
 	    return TRUE;
 	  break;
 	}
 
       if (GTK_IS_MONTH_VIEW (current_view))
 	calendar_hidden --;
-      if (GTK_IS_EVENT_LIST (current_view))
+      if (IS_EVENT_LIST (current_view))
 	{
 	  event_list_hidden --;
-	  event_list = GTK_EVENT_LIST (current_view);
+	  event_list = EVENT_LIST (current_view);
 	  gtk_widget_reparent (GTK_WIDGET (event_list),
 			       GTK_WIDGET (event_list_container));
 	  gtk_widget_show (GTK_WIDGET (event_list_container));
@@ -821,7 +862,7 @@ current_view_consider (void)
 	  gtk_widget_hide (GTK_WIDGET (event_list_container));
 	}
       else
-	current_view = gtk_event_list_new (event_db);
+	current_view = event_list_create (event_db);
       gtk_widget_hide (GTK_WIDGET (datesel));
       break;
     }
