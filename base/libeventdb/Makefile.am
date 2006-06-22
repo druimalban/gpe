@@ -19,6 +19,7 @@ DISTCHECK_CONFIGURE_FLAGS = --enable-gtk-doc
 # Test suite
 check_PROGRAMS = test-event-list test-recur-daily test-recur-weekly	\
 	test-recur-monthly test-alarms
+TESTS_ENVIRONMENT = /bin/sh $(srcdir)/test.sh
 TESTS = test-event-list test-recur-daily test-recur-weekly	\
 	test-recur-monthly test-alarms
 

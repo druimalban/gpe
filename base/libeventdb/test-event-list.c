@@ -27,12 +27,23 @@ int do_test (int argc, char *argv[]);
 
 static int fail;
 
+#define TIME_TO_STRING(t, buffer) \
+  ({ \
+    struct tm _tm; \
+    time_t __t = t; \
+    localtime_r (&__t, &_tm); \
+    strftime (buffer, sizeof (buffer), "%F %T", &_tm); \
+   })
+
 int
 do_test (int argc, char *argv[])
 {
   char *file;
   int fd;
-  time_t now = time (NULL);
+  /* 2006-06-20 23:59:30 UTC.  */
+  time_t start = 1150847970;
+  setenv ("TZ", "UTC", 1);
+  tzset ();
 
   /* Initialize the g_object system.  */
   g_type_init ();
@@ -45,45 +56,44 @@ do_test (int argc, char *argv[])
   if (! edb)
     error (1, 0, "evend_db_new");
 
-  Event *ev = event_new (edb, NULL);
-  event_set_recurrence_start (ev, now);
-#define D 100
-  event_set_duration (ev, D);
-  event_flush (ev);
+  Event *ev = event_new (edb, NULL, NULL);
+  event_set_recurrence_start (ev, start);
+  event_set_duration (ev, 60);
+  event_set_summary (ev, "timed event");
+  g_object_unref (ev);
+
+  ev = event_new (edb, NULL, NULL);
+  /* Starts the next day.  */
+  event_set_recurrence_start (ev, start + 30);
+  event_set_untimed (ev, TRUE);
+  /* One day.  */
+  event_set_duration (ev, 24 * 60 * 60);
+  event_set_summary (ev, "untimed event");
+  g_object_unref (ev);
 
   /* Check the bounds checking of event_db_list_for period.  An event
      should be returned if it at all occurs between START and END
-     inclusive.  EV starts at NOW and occurs until (and including) NOW
-     + 99.  */
+     inclusive.  EV starts at START and occurs until (and excluding)
+     START + 60.  */
   time_t t;
-  for (t = now - 5; t < now + D + 5; t ++)
+  for (t = start - 5; t < start + 60 + 5; t ++)
     {
-      GSList *evs = event_db_list_for_period (edb, t, t);
+      GSList *list = event_db_list_for_period (edb, t, t);
 
-      if (now <= t && t < now + D)
+      char buffer[200];
+      TIME_TO_STRING (t, buffer);
+      puts (buffer);
+
+      GSList *l;
+      list = g_slist_sort (list, event_compare_func);
+      for (l = list; l; l = l->next)
 	{
-	  if (! evs || evs->next
-	      || event_get_uid (ev) != event_get_uid (evs->data))
-	    {
-	      fail = 1;
-	      printf ("%d: evs: %p; next: %p; t: %ld; now: %ld (t - now:%ld)"
-		      " uid: %ld =? %ld\n",
-		      __LINE__, evs, evs ? evs->next : NULL, t, now, t - now,
-		      event_get_uid (ev), evs ? event_get_uid (evs->data) : 0);
-	    }
-	}
-      else
-	{
-	  if (evs)
-	    {
-	      fail = 1;
-	      printf ("%d: Unexpectedly got an event "
-		      "(t: %ld; now: %ld; t-now: %ld)\n",
-		      __LINE__, t, now, t - now);
-	    }
+	  Event *ev = EVENT (l->data);
+	  TIME_TO_STRING (event_get_start (ev), buffer);
+	  printf ("%s: %s\n", buffer, event_get_summary (ev));
 	}
 
-      event_list_unref (evs);
+      event_list_unref (list);
     }
 
   return fail;

@@ -27,13 +27,23 @@ int do_test (int argc, char *argv[]);
 
 static int fail;
 
+#define TIME_TO_STRING(t, buffer) \
+  ({ \
+    struct tm _tm; \
+    time_t __t = t; \
+    localtime_r (&__t, &_tm); \
+    strftime (buffer, sizeof (buffer), "%F", &_tm); \
+   })
+
 int
 do_test (int argc, char *argv[])
 {
   char *file;
   int fd;
   struct tm tm;
-  time_t now;
+
+  setenv ("TZ", "UTC", 1);
+  tzset ();
 
   memset (&tm, 0, sizeof (tm));
   /* January 1, 2006 at 13:00.  */
@@ -41,7 +51,7 @@ do_test (int argc, char *argv[])
   tm.tm_mon = 0;
   tm.tm_mday = 1;
   tm.tm_hour = 13;
-  now = mktime (&tm);
+  time_t start = mktime (&tm);
 
   /* Initialize the g_object system.  */
   g_type_init ();
@@ -54,81 +64,56 @@ do_test (int argc, char *argv[])
   if (! edb)
     error (1, 0, "evend_db_new");
 
-  Event *ev = event_new (edb, NULL);
-  event_set_recurrence_start (ev, now);
-#define D 100
-  event_set_duration (ev, D);
-  /* Every four months.  */
+  Event *ev = event_new (edb, NULL, NULL);
+  event_set_summary (ev, "Every four months, two instances");
+  event_set_recurrence_start (ev, start);
+  event_set_duration (ev, 60);
   event_set_recurrence_type (ev, RECUR_MONTHLY);
-#define EV_INCREMENT 4
-  event_set_recurrence_increment (ev, EV_INCREMENT);
-  /* Two instances.  */
-#define EV_COUNT 2
-  event_set_recurrence_count (ev, EV_COUNT);
-  event_flush (ev);
+  event_set_recurrence_increment (ev, 4);
+  event_set_recurrence_count (ev, 2);
+  g_object_unref (ev);
 
   /* Every month until November.  */
-  Event *ev2 = event_new (edb, NULL);
-  event_set_recurrence_start (ev2, now);
-  event_set_duration (ev2, D);
-  event_set_recurrence_type (ev2, RECUR_MONTHLY);
+  ev = event_new (edb, NULL, NULL);
   struct tm end = tm;
   end.tm_mon = 10;
-#define END mktime (&end)
-  event_set_recurrence_end (ev2, END + 1);
-  event_flush (ev2);
+  time_t e = mktime (&end) + 1;
+  char buffer[200];
+  TIME_TO_STRING (e, buffer);
+  char summary[200];
+  sprintf (summary, "Monthly until %s", buffer);
+  event_set_summary (ev, summary);
+  event_set_recurrence_start (ev, start);
+  event_set_duration (ev, 60);
+  event_set_recurrence_type (ev, RECUR_MONTHLY);
+  event_set_recurrence_end (ev, e);
+  g_object_unref (ev);
 
   int i;
-  int expected_ev2_count;
   for (i = 0; i < 12; i ++)
     {
-      tm.tm_mon = i;
-      time_t t;
-      t = mktime (&tm);
-      GSList *list = event_db_list_for_period (edb, now, t);
+      struct tm start = tm;
+      start.tm_mon = i;
+      time_t s = mktime (&start);
+      struct tm end = start;
+      end.tm_mday = 28;
+      time_t e = mktime (&end);
+      GSList *list = event_db_list_for_period (edb, s, e);
 
-      GSList *e;
-      int ev_count = 0;
-      int ev_count2 = 0;
-      for (e = list; e; e = g_slist_next (e))
-	if (event_get_uid (e->data) == event_get_uid (ev))
-	  ev_count ++;
-	else if (event_get_uid (e->data) == event_get_uid (ev2))
-	  ev_count2 ++;
-	else
-	  {
-	    fail = 1;
-	    printf ("Unknown and unexpected event with id %ld (i: %d)\n",
-		    event_get_uid (e->data), i);
-	  }
+      char buffer[200];
+      TIME_TO_STRING (s, buffer);
+      fputs (buffer, stdout);
+      fputs (" until ", stdout);
+      TIME_TO_STRING (e, buffer);
+      puts (buffer);
 
-      if (i < EV_INCREMENT * EV_COUNT && ev_count != i / EV_INCREMENT + 1)
+      GSList *l;
+      list = g_slist_sort (list, event_compare_func);
+      for (l = list; l; l = l->next)
 	{
-	  printf ("%d: Expected %d recurrences of ev but got %d (i: %d)\n",
-		  __LINE__, i / EV_INCREMENT + 1, ev_count, i);
-	  fail = 1;
-	}
-      if (i >= EV_INCREMENT * EV_COUNT && ev_count != EV_COUNT)
-	{
-	  printf ("%d: Expected %d recurrences of ev but got %d (i: %d)\n",
-		  __LINE__, EV_COUNT, ev_count, i);
-	  fail = 1;
-	}
-
-      if (t <= END)
-	expected_ev2_count = ev_count2;
-
-      if (t <= END && ev_count2 != i + 1)
-	{
-	  printf ("%d: Expected %d recurrences of ev2 but got %d (i: %d)\n",
-		  __LINE__, i + 1, ev_count2, i);
-	  fail = 1;
-	}
-      if (t >= END && ev_count2 != expected_ev2_count)
-	{
-	  printf ("%d: Expected %d recurrences of ev2 but got %d (i: %d)\n",
-		  __LINE__, expected_ev2_count, ev_count2, i);
-	  fail = 1;
+	  Event *ev = EVENT (l->data);
+	  TIME_TO_STRING (event_get_start (ev), buffer);
+	  printf ("%s: %s\n", buffer, event_get_summary (ev));
 	}
 
       event_list_unref (list);

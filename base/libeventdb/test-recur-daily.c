@@ -27,12 +27,23 @@ int do_test (int argc, char *argv[]);
 
 static int fail;
 
+#define TIME_TO_STRING(t, buffer) \
+  ({ \
+    struct tm _tm; \
+    time_t __t = t; \
+    localtime_r (&__t, &_tm); \
+    strftime (buffer, sizeof (buffer), "%F %T", &_tm); \
+   })
+
 int
 do_test (int argc, char *argv[])
 {
   char *file;
   int fd;
-  time_t now = time (NULL);
+  /* 2006-06-21 00:00:00 UTC.  */
+  time_t start = 1150848000;
+  setenv ("TZ", "UTC", 1);
+  tzset ();
 
   /* Initialize the g_object system.  */
   g_type_init ();
@@ -45,77 +56,48 @@ do_test (int argc, char *argv[])
   if (! edb)
     error (1, 0, "evend_db_new");
 
-  Event *ev = event_new (edb, NULL);
-  event_set_recurrence_start (ev, now);
-#define D 100
-  event_set_duration (ev, D);
-  /* Every other day.  */
+  /* Every other day at midnight for one minute.  10 instances.  */
+  Event *ev = event_new (edb, NULL, NULL);
+  event_set_summary (ev, "one");
+  event_set_recurrence_start (ev, start);
+  event_set_duration (ev, 60);
   event_set_recurrence_type (ev, RECUR_DAILY);
-#define INCREMENT 2
-  event_set_recurrence_increment (ev, INCREMENT);
-#define COUNT 10
-  event_set_recurrence_count (ev, COUNT);
-  event_flush (ev);
+  event_set_recurrence_increment (ev, 2);
+  event_set_recurrence_count (ev, 10);
+  g_object_unref (ev);
 
-  Event *ev2 = event_new (edb, NULL);
-  event_set_recurrence_start (ev2, now + D);
-  event_set_duration (ev2, D);
-  /* Every day until 10 days from start.  */
-  event_set_recurrence_type (ev2, RECUR_DAILY);
-#define END now + 10 * 24 * 60 * 60
-  event_set_recurrence_end (ev2, END);
-  event_flush (ev2);
+  /* Every day at 10 minutes to midnight for 10 minutes for 10
+     days.  */
+  ev = event_new (edb, NULL, NULL);
+  event_set_summary (ev, "two");
+  event_set_recurrence_start (ev, start + 24 * 60 * 60 - 10 * 60);
+  event_set_duration (ev, 10 * 60);
+  event_set_recurrence_type (ev, RECUR_DAILY);
+  event_set_recurrence_end (ev, event_get_recurrence_start (ev)
+			    + 10 * 24 * 60 * 60);
+  g_object_unref (ev);
 
   int i;
-  int expected_ev2_count;
-  for (i = 0; i < COUNT * INCREMENT * 2; i ++)
+  for (i = -5; i < 25; i ++)
     {
-      /* XXX: Day light savings time...  */
-      time_t t = now + i * 24 * 60 * 60;
-      GSList *list = event_db_list_for_period (edb, now, t);
+      time_t s = start + i * 24 * 60 * 60;
+      time_t e = s + 2 * 24 * 60 * 60 - 1;
+      GSList *list = event_db_list_for_period (edb, s, e);
 
-      GSList *e;
-      int ev_count = 0;
-      int ev_count2 = 0;
-      for (e = list; e; e = g_slist_next (e))
-	if (event_get_uid (e->data) == event_get_uid (ev))
-	  ev_count ++;
-	else if (event_get_uid (e->data) == event_get_uid (ev2))
-	  ev_count2 ++;
-	else
-	  {
-	    fail = 1;
-	    printf ("Unknown and unexpected event with id %ld (i: %d)\n",
-		    event_get_uid (e->data), i);
-	  }
+      char buffer[200];
+      TIME_TO_STRING (s, buffer);
+      fputs (buffer, stdout);
+      fputs (" until ", stdout);
+      TIME_TO_STRING (e, buffer);
+      puts (buffer);
 
-      if (i < COUNT * INCREMENT && ev_count != i / INCREMENT + 1)
+      GSList *l;
+      list = g_slist_sort (list, event_compare_func);
+      for (l = list; l; l = l->next)
 	{
-	  printf ("%d: Expected %d recurrences of ev but got %d (i: %d)\n",
-		  __LINE__, i / INCREMENT + 1, ev_count, i);
-	  fail = 1;
-	}
-      if (i >= COUNT * INCREMENT && ev_count != COUNT)
-	{
-	  printf ("%d: Expected %d recurrences of ev but got %d (i: %d)\n",
-		  __LINE__, COUNT, ev_count, i);
-	  fail = 1;
-	}
-
-      if (t <= END)
-	expected_ev2_count = ev_count2;
-
-      if (t <= END && ev_count2 != i)
-	{
-	  printf ("%d: Expected %d recurrences of ev2 but got %d (i: %d)\n",
-		  __LINE__, i, ev_count2, i);
-	  fail = 1;
-	}
-      if (t >= END && ev_count2 != expected_ev2_count)
-	{
-	  printf ("%d: Expected %d recurrences of ev2 but got %d (i: %d)\n",
-		  __LINE__, expected_ev2_count, ev_count2, i);
-	  fail = 1;
+	  Event *ev = EVENT (l->data);
+	  TIME_TO_STRING (event_get_start (ev), buffer);
+	  printf ("%s: %s\n", buffer, event_get_summary (ev));
 	}
 
       event_list_unref (list);

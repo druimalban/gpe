@@ -34,7 +34,10 @@ enum event_recurrence_type
   RECUR_DAILY,
   RECUR_WEEKLY,
   RECUR_MONTHLY,
-  RECUR_YEARLY
+  RECUR_YEARLY,
+  /* Number of items in this enum.  Only used internally and subject
+     to change if new recurrence types are added.  */
+  RECUR_COUNT
 };
 
 #define TYPE_EVENT (event_get_type ())
@@ -104,11 +107,11 @@ extern EventDB *event_db_new (const char *filename);
 extern Event *event_db_next_alarm (EventDB *edb, time_t now);
 
 /* Return the events in the event database EVD which occur between
-   START and END.  The list is not sorted.  */
+   START and END inclusive.  The list is not sorted.  */
 extern GSList *event_db_list_for_period (EventDB *evd,
 					 time_t start, time_t end);
 /* Like event_db_list but returns the events whose alarm goes off
-   between START and END.  The list is not sorted.  */
+   between START and END inclusive.  The list is not sorted.  */
 extern GSList *event_db_list_alarms_for_period (EventDB *evd,
 						time_t start, time_t end);
 /* Like event_db_list_for_period but only for untimed events
@@ -326,11 +329,16 @@ extern Event *event_new (EventDB *edb, EventCalendar *ec, const char *eventid);
 /* Flush event EV to the DB now.  */
 extern gboolean event_flush (Event *ev);
 
-/* Remove event EV from the underlying DB and dereference it.  */
+/* Remove event EV from the underlying DB.  Does not destroy the in
+   memory version nor does it deallocate a reference to EVENT.  */
 extern gboolean event_remove (Event *ev);
 
 /* g_object unref each Event * on the list and destroy the list.  */
 extern void event_list_unref (GSList *l);
+
+/* Returns the event db (without allocating a reference) in which EV
+   lives.  */
+extern EventDB *event_get_event_db (Event *ev) __attribute__ ((pure));
 
 /* The calendar associated with EV.  */
 /* Returns a reference to the calendar.  */

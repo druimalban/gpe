@@ -1,3 +1,74 @@
+2006-06-22  Neal H. Walfield  <neal@gnu.org>
+
+	* event-db.c (struct _EventDB): Remove fields dbversion and uid.
+	Change events to a GHashTable.
+	(struct event_details): Remove structure.  Move contents from
+	here...
+	(struct _EventSource): ... to here renaming field modified to
+	last_modified.  Update users.  Add field details.
+	(event_db_init): Create a hash table and save in EDB->EVENTS.
+	(event_db_finalize): Don't iterate over the now non-existent event
+	list.  Just unref the hash table.
+	(event_db_add_internal): Remove function.  Update users.
+	(event_db_remove_internal): Likewise.
+	(event_source_finalize): Remove EVENT from EV->EDB->EVENTS.
+	Dereference EV->EDB.
+	(parse_date): Take into account the seconds field if present.
+	(event_db_new): Don't load the events into core.  More elegantly
+	upgrade a verion 0 table to a version 1 table.  Add a new table,
+	events.  Upgrade a version 1 table to a version 2 table.
+	(event_load): New function.
+	(load_details_callback): Don't load the modified field.  That is
+	loaded by default.
+	(event_details): Don't look for the modified field.  Set
+	EV->DETAILS to true.
+	(event_db_find_by_uid): Just call event_load.
+	(event_db_find_by_eventid): Use an SQL statement to map the
+	eventid to a uid and then call event_db_find_by_uid.
+	(event_list): Correctly increment the week for a week recurrence.
+	(events_enumerate): New function.
+	(event_db_next_alarm): Use events_enumerate.
+	(event_db_list_for_period_internal): Likewise.
+	(event_db_set_default_calendar): Don't delete and insert, use
+	insert or replace.
+	(event_calendar_delete): Use event_calendar_list_events to list
+	the events in the calendar.  Update SQL code to new DB format.
+	(event_calendar_list_events): Query the SQL db to enumerate the
+	UIDs in EC.
+	(insert_values): Remove define.
+	(event_write): Rewrite to simplify writing and not require loading
+	the details or deleting the event first.  Include seconds when
+	writing dates.
+	(event_flush): Don't load the details.  Don't delete the event
+	first.
+	(do_laundry): Remove the buzzer and disconnect the list before
+	iterating over the events.
+	(event_remove): Update SQL code to new DB format.
+	(event_new): Take a reference to EDB.  Update SQL code to new DB
+	format.  Insert into EDB->EVENTS.
+	(event_set_calendar): If EC is NULL then use the default calendar.
+	
+	* Makefile.am (TESTS_ENVIRONMENT): New variable.  Invoke tests
+	using the test.sh script.
+	* test-event-list.c (do_test): Don't try to programmatically check
+	the results.  Just print out the events found in a deterministic
+	order.
+	* test-recur-daily.c (do_test): Likewise.
+	* test-recur-monthly.c (do_test): Likewise.
+	* test-recur-weekly.c (do_test): Likewise.
+	* test-alarms.c (do_test): Likewise and also check
+	event_db_next_alarm.
+	* test.sh: New file.
+	* test-event-list.expected: Likewise.
+	* test-recur-daily.expected: Likewise.
+	* test-recur-monthly.expected: Likewise.
+	* test-recur-weekly.expected: Likewise.
+	* test-alarms.expected: Likewise.
+	
+	* gpe/event-db.h (enum event_recurrence_type): Add RECUR_COUNT.
+	(event_get_event_db): New declaration.
+	* event-db.c (event_get_event_db): New function.
+
 2006-06-16  Neal H. Walfield  <neal@gnu.org>
 
 	* event-db.c (event_db_new): Use strcmp, not strcasecmp.

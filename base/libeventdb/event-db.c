@@ -65,15 +65,11 @@ struct _EventDB
 {
   GObject object;
 
-  unsigned long dbversion;
   sqlite *sqliteh;
 
-  GList *events;
+  GHashTable *events;
   guint default_calendar;
   GSList *calendars;
-
-  /* Largest UID which we know of.  */
-  unsigned long uid;
 
   /* A list of events that need to be flushed to backing store.  */
   GSList *laundry_list;
@@ -160,23 +156,6 @@ struct _EventCalendar
     } \
   while (0)
        
-/**
- * struct event_details
- *
- * Detail information for an event.
- */
-struct event_details
-{
-  gchar *summary;
-  gchar *description;
-  gchar *location;  
-  
-  time_t modified;
-
-  /* List of integers.  */
-  GSList *categories;
-};
-
 struct _EventClass
 {
   GObjectClass gobject_class;
@@ -217,6 +196,16 @@ struct _EventSource
 {
   Event event;
 
+  /* The EventDB to which event belongs.  */
+  EventDB *edb;
+
+  gboolean untimed;
+
+  /* If this in memory version has been modified (and thus needs to be
+     flushed to disk).  */
+  gboolean modified;
+  time_t last_modified;
+
   /* The event calendar to which this event belongs.  */
   guint calendar;
 
@@ -225,16 +214,18 @@ struct _EventSource
   unsigned long duration;	/* 0 == instantaneous */
   unsigned long alarm;		/* seconds before event */
 
+  /* iCal's FREQ property.  */
+  enum event_recurrence_type type;
+
+  /* No recurrences beyond this time.  0 means forever.  */
+  time_t end;
+
   /* Sequence number.  */
   unsigned long sequence;
 
-  struct event_details *details;
   char *eventid;
 
   /* Recurrence properties.  */
-
-  /* iCal's FREQ property.  */
-  enum event_recurrence_type type;
 
   /* The number of times this recurrence set is expanded.  0 means
      there is no limit.  */
@@ -252,14 +243,14 @@ struct _EventSource
      recurrence exactly.  */
   GSList *exceptions;
 
-  /* No recurrences beyond this time.  0 means forever.  */
-  time_t end;
+  gboolean details;
+  /* Fields below here are only valid if DETAILS is true.  */
 
-  /* The EventDB to which event belongs.  */
-  EventDB *edb;
-
-  gboolean modified;
-  gboolean untimed;
+  gchar *summary;
+  gchar *description;
+  gchar *location;  
+  /* List of integers.  */
+  GSList *categories;
 };
 
 #define LIVE(ev) (g_assert (! EVENT (ev)->dead))
@@ -267,7 +258,7 @@ struct _EventSource
   do \
     { \
       event_details (ev, TRUE); \
-      ev->details->modified = time (NULL); \
+      ev->last_modified = time (NULL); \
       if (! ev->modified) \
         { \
           ev->modified = TRUE; \
@@ -436,6 +427,9 @@ event_db_class_init (gpointer klass, gpointer klass_data)
 static void
 event_db_init (GTypeInstance *instance, gpointer klass)
 {
+  EventDB *edb = EVENT_DB (instance);
+
+  edb->events = g_hash_table_new (NULL, NULL);
 }
 
 static void
@@ -458,47 +452,31 @@ event_db_finalize (GObject *object)
   if (edb->laundry_buzzer)
     do_laundry (edb);
 
-  {
-    GSList *i;
-    GSList *next = edb->upcoming_alarms;
-    while (next)
-      {
-	i = next;
-	next = i->next;
+  GSList *i;
+  GSList *next = edb->upcoming_alarms;
+  while (next)
+    {
+      i = next;
+      next = i->next;
 
-	Event *ev = EVENT (i->data);
-	g_object_unref (ev);
-      }
-    g_slist_free (edb->upcoming_alarms);
-  }
+      Event *ev = EVENT (i->data);
+      g_object_unref (ev);
+    }
+  g_slist_free (edb->upcoming_alarms);
 
-  {
-    GList *i;
-    GList *next = edb->events;
-    while (next)
-      {
-	i = next;
-	next = i->next;
+  g_assert (g_hash_table_size (edb->events) == 0);
+  g_hash_table_unref (edb->events);
 
-	EventSource *ev = EVENT_SOURCE (i->data);
-	g_object_unref (ev);
-      }
-    g_list_free (edb->events);
-  }
+  next = edb->calendars;
+  while (next)
+    {
+      i = next;
+      next = i->next;
 
-  {
-    GSList *i;
-    GSList *next = edb->calendars;
-    while (next)
-      {
-	i = next;
-	next = i->next;
-
-	EventCalendar *ec = EVENT_CALENDAR (i->data);
-	g_object_unref (ec);
-      }
-    g_slist_free (edb->calendars);
-  }
+      EventCalendar *ec = EVENT_CALENDAR (i->data);
+      g_object_unref (ec);
+    }
+  g_slist_free (edb->calendars);
 
   sqlite_close (edb->sqliteh);
 
@@ -811,7 +789,7 @@ static GObjectClass *event_parent_class;
 GType
 event_get_type (void)
 {
-  static GType type = 0;
+  static GType type;
 
   if (! type)
     {
@@ -939,7 +917,6 @@ event_source_dispose (GObject *obj)
 
 static void event_details (EventSource *ev, gboolean fill_from_disk);
 static gboolean event_write (EventSource *, char **);
-static void event_db_remove_internal (EventSource *ev);
 
 static void
 event_source_finalize (GObject *object)
@@ -952,53 +929,39 @@ event_source_finalize (GObject *object)
       char *err;
       if (! event_write (event, &err))
 	{
-	  g_critical ("event_write: %s", err);
+	  g_critical ("%s: %s", __func__, err);
 	  free (err);
 	}
     }
 
   /* Free any details.  */
-  struct event_details *evd = event->details;
-  if (evd)
-    {
-      if (evd->description)
-	g_free (evd->description);
-      if (evd->location)
-	g_free (evd->location);
-      if (evd->summary)
-	g_free (evd->summary);
-      g_slist_free (evd->categories);
-      g_free (evd);
-    }
+  if (event->description)
+    g_free (event->description);
+  if (event->location)
+    g_free (event->location);
+  if (event->summary)
+    g_free (event->summary);
+  g_slist_free (event->categories);
 
   g_free (event->eventid);
   g_slist_free (event->exceptions);
 
   event_recurrence_byday_free (event->byday);
 
-  event_db_remove_internal (event);
+  /* EVENT may not have been inserted into the hash if we created a
+     new event and were unable to insert it into the DB.  In this
+     case, EVENT->UID will be 0.  */
+  if (event->uid)
+    {
+      gboolean removed = g_hash_table_remove (event->edb->events,
+					      (gpointer) event->uid);
+      g_assert (removed);
+    }
+
+  if (event->edb)
+    g_object_unref (event->edb);
 
   G_OBJECT_CLASS (event_parent_class)->finalize (object);
-}
-
-/* Add an event to the in-memory list */
-static void
-event_db_add_internal (EventSource *ev)
-{
-  if (ev->uid >= ev->edb->uid)
-    ev->edb->uid = ev->uid + 1;
-
-  ev->edb->events = g_list_insert_sorted (ev->edb->events, ev,
-					  event_compare_func);
-}
-
-/* Remove an event from the in-memory list */
-static void
-event_db_remove_internal (EventSource *ev)
-{
-  g_assert (g_list_find (ev->edb->events, ev));
-  ev->edb->events = g_list_remove (ev->edb->events, ev);
-  g_assert (! g_list_find (ev->edb->events, ev));
 }
 
 /* Here we create a globally unique eventid, which we
@@ -1050,6 +1013,9 @@ parse_date (char *s, time_t *t, gboolean *date_only)
     }
 
   p = strptime (p, " %H:%M", &tm);
+  if (p && *p == ':')
+    /* Seconds used to be optional.  */
+    p = strptime (p, ":%S", &tm);
 
   if (date_only)
     *date_only = (p == NULL) ? TRUE : FALSE;
@@ -1073,44 +1039,184 @@ event_db_new (const char *fname)
 
   edb->sqliteh = sqlite_open (fname, 0, &err);
   if (edb->sqliteh == NULL)
-    goto error;
+    goto error_before_transaction;
+
+  if (sqlite_exec (edb->sqliteh, "begin transaction;", NULL, NULL, &err))
+    goto error_before_transaction;
 
   /* Get the calendar db version.  */
   sqlite_exec (edb->sqliteh,
 	       "create table calendar_dbinfo (version integer NOT NULL)",
 	       NULL, NULL, &err);
+  int version = -1;
   int dbinfo_callback (void *arg, int argc, char **argv, char **names)
     {
-      EventDB *edb = EVENT_DB (arg);
       if (argc == 1)
-	{
-	  edb->dbversion = atoi (argv[0]);
-	}
+	version = atoi (argv[0]);
 
       return 0;
     }
+  /* If the calendar_dbinfo table doesn't exist then we understand
+     this to mean that this DB is uninitialized.  */
   if (sqlite_exec (edb->sqliteh, "select version from calendar_dbinfo",
-		   dbinfo_callback, edb, &err))
+		   dbinfo_callback, NULL, &err))
     goto error;
 
-  /* A verion 1 database consists of several tables: calendar_urn and
-     calendar.  */
-  sqlite_exec (edb->sqliteh,
-	       "create table calendar"
-	       " (uid integer NOT NULL, tag text, value text)",
-	       NULL, NULL, NULL);
-  sqlite_exec (edb->sqliteh,
-	       "create table calendar_urn (uid INTEGER PRIMARY KEY)",
-	       NULL, NULL, NULL);
+  if (version > 2)
+    {
+      err = g_strdup_printf
+	(_("Unable to read database file: unknown version: %d"),
+	 version);
+      goto error;
+    }
+
+  if (version < 1)
+    /* Create calendar table.  This name is actually a misnomer: it
+       actually contains the ancillary data which accompanies
+       events.  We use the name for historical reasons.  */
+    sqlite_exec (edb->sqliteh,
+		 "create table calendar"
+		 " (uid INTEGER not NULL, tag STRING, value STRING);",
+		 NULL, NULL, NULL);
+
+  if (version == 0)
+    /* Convert a version 0 DB to a verion 1 DB.  */
+    {
+      if (sqlite_exec
+	  (edb->sqliteh,
+	   /* Create calendar_urn.  */
+	   "create table calendar_urn (uid INTEGER PRIMARY KEY);"
+	   /* Populate it.  */
+	   "insert into calendar_urn select _ROWID_ from events;"
+	   /* And populate it.  */
+	   "insert into calendar "
+	   " select _ROWID_, 'start' string, start from events"
+	   " union select _ROWID_, 'duration' string, duration from events"
+	   " union select _ROWID_, 'alarm' string, alarmtime from events"
+	   " union select _ROWID_, 'summary' string, summary from events"
+	   " union select _ROWID_, 'description' string, description"
+	   "  from events;"
+	   "drop table events;"
+	   "delete from calendar_dbinfo;"
+	   "insert into calendar_dbinfo (version) values (1);",
+	   NULL, NULL, &err))
+	{
+	  char *s = g_strdup_printf
+	    ("%s: Converting a version 0 to a version 1 db: %s\n",
+	     __func__, err);
+	  g_free (err);
+	  err = s;
+	  goto error;
+	}
+      else
+	version = 1;
+    }
+
+  if (version < 2)
+    /* Create the events table.  */
+    sqlite_exec
+      (edb->sqliteh,
+       "create table events"
+       " (uid INTEGER PRIMARY KEY, start DATE, duration INTEGER, "
+       "  recur INTEGER, rend DATE, alarm INTEGER, calendar INTEGER);",
+       NULL, NULL, NULL);
+
+  if (version == 1)
+    /* Version 1 versions of the database stored some information in
+       the calendar table.  We've since rearranged this.  */
+    {
+      if (sqlite_exec
+	  (edb->sqliteh,
+	   "insert into events select * from "
+	   "(((((select uid, value from calendar where tag='start')"
+	   "    left join"
+	   "    (select uid, value from calendar where tag='duration')"
+	   "     using (uid))"
+	   "   left join"
+	   "   (select uid, value from calendar where tag='recur')"
+	   "   using (uid))"
+	   "  left join"
+	   "  (select uid, value from calendar where tag='rend') using (uid))"
+	   "  left join"
+	   " (select uid, value from calendar where tag='alarm') using (uid))"
+	   "left join"
+	   "(select uid, value from calendar where tag='calendar')"
+	   "using (uid);"
+	   "delete from calendar where tag='start'"
+	   " or tag='duration' or tag='recur' or tag='rend'"
+	   " or tag='alarm' or tag='calendar';"
+	   "drop table calendar_urn;",
+	   NULL, NULL, &err))
+	{
+	  char *s = g_strdup_printf
+	    ("%s: Converting a version 1 to a version 2 db: %s\n",
+	     __func__, err);
+	  g_free (err);
+	  err = s;
+	  goto error;
+	}
+
+      /* Convert the "rdaymask" bitmask to a "byday" list.  */
+      struct info
+      {
+	guint uid;
+	GSList *byday;
+      };
+      GSList *list = NULL;
+
+      char *days[] = { "MO", "TU", "WE", "TH", "FR", "SA", "SU" };
+
+      int callback (void *arg, int argc, char **argv, char **names)
+	{
+	  if (! argv[1])
+	    return 0;
+
+	  int daymask = atoi (argv[1]);
+	  if (! daymask)
+	    return 0;
+
+	  struct info *info = g_malloc0 (sizeof (*info));
+	  list = g_slist_prepend (list, info);
+	  info->uid = atoi (argv[0]);
+
+	  int i;
+	  for (i = 0; i < 7; i ++)
+	    if ((1 << i) & daymask)
+	      info->byday = g_slist_prepend (info->byday, days[i]);
+
+	  return 0;
+	}
+      sqlite_exec (edb->sqliteh,
+		   "select uid, value from calendar where tag='rdaymask';"
+		   "delete from calendar where tag='rdaymask'", 
+		   callback, NULL, NULL);
+
+      GSList *i;
+      for (i = list; i; i = i->next)
+	{
+	  struct info *info = i->data;
+
+	  GSList *j;
+	  for (j = info->byday; j; j = j->next)
+	    sqlite_exec_printf
+	      (edb->sqliteh,
+	       "insert into calendar values (%d, 'byday', '%q');",
+	       NULL, NULL, NULL, info->uid, j->data);
+
+	  g_free (info);
+	}
+      g_slist_free (list);
+    }
 
   /* Read EDB->ALARMS_FIRED_THROUGH.  */
   edb->alarms_fired_through = time (NULL);
-  sqlite_exec (edb->sqliteh,
-	       "create table alarms_fired_through (time INTEGER)",
-	       NULL, NULL, NULL);
+  if (version < 2)
+    sqlite_exec (edb->sqliteh,
+		 "create table alarms_fired_through (time INTEGER)",
+		 NULL, NULL, NULL);
 
   int alarms_fired_through_callback (void *arg, int argc, char **argv,
-					   char **names)
+				     char **names)
     {
       EventDB *edb = EVENT_DB (arg);
       if (argc == 1)
@@ -1126,14 +1232,43 @@ event_db_new (const char *fname)
 		   alarms_fired_through_callback, edb, &err))
     goto error;
 
+  /* Unacknowledged alarms.  */
+
   /* A table of events whose alarm fired before
      EDB->ALARMS_FIRED_THROUGH but were not yet acknowledged.  */
-  sqlite_exec (edb->sqliteh,
-	       "create table alarms_unacknowledged"
-	       " (uid INTEGER, start INTEGER NOT NULL)",
-	       NULL, NULL, NULL);
+  if (version < 2)
+    sqlite_exec (edb->sqliteh,
+		 "create table alarms_unacknowledged"
+		 " (uid INTEGER, start INTEGER NOT NULL)",
+		 NULL, NULL, NULL);
+
+
+  /* The default calendar.  */
+
+  /* This table definately exists in a version 2 DB and may exist in a
+     version 1 DB depending on the revision.  */
+  if (version < 2)
+    sqlite_exec (edb->sqliteh,
+		 "create table default_calendar (default_calendar INTEGER)",
+		 NULL, NULL, NULL);
+  int default_calendar_callback (void *arg, int argc, char **argv,
+				 char **names)
+    {
+      EventDB *edb = EVENT_DB (arg);
+      if (argc == 1)
+	edb->default_calendar = atoi (argv[0]);
+
+      return 0;
+    }
+  edb->default_calendar = EVENT_CALENDAR_NO_PARENT;
+  if (sqlite_exec (edb->sqliteh,
+		   "select default_calendar from default_calendar",
+		   default_calendar_callback, edb, &err))
+    goto error;
+
 
   /* Calendars.  */
+
   sqlite_exec (edb->sqliteh,
 	       "create table calendars"
 	       " (title TEXT, description TEXT,"
@@ -1181,30 +1316,6 @@ event_db_new (const char *fname)
 
       return 0;
     }
-
-  sqlite_exec (edb->sqliteh,
-	       "create table default_calendar (default_calendar INTEGER)",
-	       NULL, NULL, NULL);
-  int default_calendar_callback (void *arg, int argc, char **argv,
-				 char **names)
-    {
-      EventDB *edb = EVENT_DB (arg);
-      if (argc == 1)
-	edb->default_calendar = atoi (argv[0]);
-
-      return 0;
-    }
-  edb->default_calendar = EVENT_CALENDAR_NO_PARENT;
-  if (sqlite_exec (edb->sqliteh,
-		   "select default_calendar from default_calendar",
-		   default_calendar_callback, edb, &err))
-    goto error;
-  if (edb->default_calendar == EVENT_CALENDAR_NO_PARENT)
-    {
-      EventCalendar *ec = event_db_get_default_calendar (edb, NULL);
-      g_object_unref (ec);
-    }
-
   if (sqlite_exec (edb->sqliteh,
 		   "select ROWID, title, description,"
 		   "  url, username, password,"
@@ -1213,175 +1324,38 @@ event_db_new (const char *fname)
 		   "  mode, sync_interval, last_pull, last_push, last_modified"
 		   " from calendars", load_calendars_callback, NULL, &err))
     {
-      g_warning ("%s: %s", __func__, err);
+      char *s = g_strdup_printf ("%s: Reading calendars: %s",
+				 __func__, err);
       g_free (err);
-    }
-
-  if (edb->dbversion == 1) 
-    {
-      int have_daymask = FALSE;
-
-      int load_data_callback (void *arg, int argc, char **argv,
-			      char **names)
-	{
-	  if (argc == 2)
-	    {
-	      EventSource *ev = arg;
-     
-	      if (!strcmp (argv[0], "start"))
-		{
-		  gboolean untimed;
-
-		  parse_date (argv[1], &ev->event.start, &untimed);
-
-		  if (untimed)
-		    ev->untimed = TRUE;
-		}
-	      else if (!strcmp (argv[0], "eventid"))
-		ev->eventid = g_strdup (argv[1]);
-	      else if (!strcmp (argv[0], "rend"))
-		parse_date (argv[1], &ev->end, NULL);
-	      else if (!strcmp (argv[0], "rcount"))
-		ev->count = atoi (argv[1]);
-	      else if (!strcmp (argv[0], "rincrement"))
-		ev->increment = atoi (argv[1]);
-	      else if (!strcmp (argv[0], "rdaymask"))
-		/* Obsolete.  */
-		{
-		  have_daymask = TRUE;
-		  int daymask = atoi (argv[1]);
-
-		  if (daymask)
-		    {
-		      const char *days[]
-			= { "MO", "TU", "WE", "TH", "FR", "SA", "SU" };
-
-		      event_details (ev, TRUE);
-		      int i;
-		      for (i = 0; i < 7; i ++)
-			if ((1 << i) & daymask)
-			  ev->byday = g_slist_prepend (ev->byday,
-						       g_strdup (days[i]));
-
-		      STAMP (ev);
-		    }
-		}
-	      else if (!strcmp (argv[0], "byday"))
-		ev->byday = g_slist_prepend (ev->byday,
-					     g_strdup (argv[1]));
-	      else if (!strcmp (argv[0], "rexceptions"))
-		{
-		  long rmtime = (long)atoi (argv[1]);
-		  ev->exceptions = g_slist_append (ev->exceptions,
-						   (void *) rmtime);
-		}
-	      else if (!strcmp (argv[0], "recur"))
-		ev->type = atoi (argv[1]);
-	      else if (!strcmp (argv[0], "duration"))
-		ev->duration = atoi (argv[1]);
-	      else if (!strcmp (argv[0], "alarm"))
-		ev->alarm = atoi (argv[1]);
-	      else if (!strcmp (argv[0], "sequence"))
-		ev->sequence = atoi (argv[1]);
-	      else if (!strcmp (argv[0], "calendar"))
-		ev->calendar = atoi (argv[1]);
-	    }
-
-	  return 0;
-	}
-
-      int uid_load_callback (void *arg, int argc, char **argv, char **names)
-	{
-	  EventDB *edb = arg;
-
-	  if (argc == 1)
-	    {
-	      char *err;
-	      guint uid = atoi (argv[0]);
-	      EventSource *ev
-		= EVENT_SOURCE (g_object_new (event_source_get_type (), NULL));
-	      ev->edb = edb;
-	      ev->uid = uid;
-	      if (sqlite_exec_printf (edb->sqliteh,
-				      "select tag,value from calendar where uid=%d", 
-				      load_data_callback, ev, &err, uid))
-		{
-		  gpe_error_box (err);
-		  free (err);
-		  g_object_unref (ev);
-		  return 1;
-		}
-
-	      event_db_add_internal (ev);
-	      /* EDB holds a reference.  */
-	      g_object_ref (ev);
-	    }
-	  return 0;
-	}
-
-      /* Load all the records into memory.  */
-      if (sqlite_exec (edb->sqliteh, "select uid from calendar_urn",
-		       uid_load_callback, edb, &err))
-	goto error;
-
-      if (have_daymask)
-	{
-	  do_laundry (edb);
-	  sqlite_exec_printf (edb->sqliteh,
-			      "delete from calendar where tag='rdaymask'", 
-			      NULL, NULL, NULL);
-	}
-    }
-  else if (edb->dbversion == 0)
-    {
-      int load_callback0 (void *arg, int argc, char **argv, char **names)
-	{
-	  EventDB *edb = arg;
-
-	  if (argc == 7)
-	    {
-	      EventSource *ev
-		= EVENT_SOURCE (g_object_new (event_source_get_type (), NULL));
-
-	      ev->edb = edb;
-	      ev->uid = atoi (argv[0]);
-
-	      parse_date (argv[1], &ev->event.start, &ev->untimed);
-
-	      ev->duration = argv[2] ? atoi(argv[2]) : 0;
-	      ev->alarm = atoi (argv[3]);
-
-	      event_details (ev, FALSE);
-	      ev->details->summary = g_strdup (argv[5]);
-	      ev->details->description = g_strdup (argv[6]);
-
-	      event_db_add_internal (ev);
-	      /* Take a reference for EDB.  */
-	      g_object_ref (ev);
-	    }
-
-	  return 0;
-	}
-
-      sqlite_exec (edb->sqliteh,
-		   "select uid, start, duration, alarmtime, recurring, summary, description from events",
-		   load_callback0, edb, &err);
-
-      if (sqlite_exec_printf (edb->sqliteh,
-			      "insert into calendar_dbinfo (version) values (%d)", 
-			      NULL, NULL, &err, 1 /* New version.  */))
-	goto error;
-
-      edb->dbversion = 1;
-    }
-  else
-    {
-      err = g_strdup (_("Unable to read database file: unknown version."));
+      err = s;
       goto error;
     }
-    
+
+  /* If the default calendar was not set, set it now (after we've read
+     in the calendars).  */
+  if (edb->default_calendar == EVENT_CALENDAR_NO_PARENT)
+    {
+      EventCalendar *ec = event_db_get_default_calendar (edb, NULL);
+      g_object_unref (ec);
+    }
+
+  /* Update the version information as appropriate.  */
+  if (version < 2)
+    {
+      if (sqlite_exec (edb->sqliteh,
+		       "delete from calendar_dbinfo;"
+		       "insert into calendar_dbinfo (version) values (2);",
+		       NULL, NULL, &err))
+	goto error;
+    }
+
+  /* All done.  */
+  sqlite_exec (edb->sqliteh, "commit transaction;", NULL, NULL, NULL);
+
   return edb;
 error:
+  sqlite_exec (edb->sqliteh, "rollback transaction;", NULL, NULL, NULL);
+error_before_transaction:
   if (err)
     {
       gpe_error_box_fmt ("event_db_new: %s", err);
@@ -1396,28 +1370,138 @@ error:
   return NULL;
 }
 
+static EventSource *
+event_load (EventDB *edb, guint uid)
+{
+  EventSource *ev;
+
+  ev = EVENT_SOURCE (g_hash_table_lookup (edb->events, (gpointer) uid));
+  if (ev)
+    /* Already loaded, just add a reference and return it.  */
+    {
+      g_object_ref (ev);
+      return ev;
+    }
+
+  ev = EVENT_SOURCE (g_object_new (event_source_get_type (), NULL));
+  ev->edb = edb;
+  g_object_ref (edb);
+  ev->uid = uid;
+  g_hash_table_insert (edb->events, (gpointer) ev->uid, ev);
+
+  int load_callback (void *arg, int argc, char **argv, char **names)
+    {
+      g_assert (argc == 6);
+
+      EventSource *ev = EVENT_SOURCE (arg);
+
+      parse_date (argv[0], &ev->event.start, &ev->untimed);
+
+      if (argv[1])
+	ev->duration = atoi (argv[1]);
+
+      if (argv[2])
+	ev->type = atoi (argv[2]);
+      if (ev->type < 0 || ev->type >= RECUR_COUNT)
+	{
+	  g_warning ("Event %ld has unknown recurrence type %d",
+		     ev->uid, ev->type);
+	  ev->type = 0;
+	}
+
+      if (argv[3])
+	parse_date (argv[3], &ev->end, NULL);
+      if (argv[4])
+	ev->alarm = atoi (argv[4]);
+      if (argv[5])
+	ev->calendar = atoi (argv[5]);
+
+      return 0;
+    }
+
+  char *err;
+  /* Load all the records into memory.  */
+  if (sqlite_exec_printf
+      (edb->sqliteh,
+       "select start, duration, recur, rend, alarm, calendar from events"
+       " where uid=%d",
+       load_callback, ev, &err, uid))
+    {
+      g_warning ("%s:%d: Loading data for event %ld: %s",
+		 __func__, __LINE__, ev->uid, err);
+      free (err);
+      g_object_unref (ev);
+      return NULL;
+    }
+
+  int data_callback (void *arg, int argc, char **argv, char **names)
+    {
+      if (argc == 2)
+	{
+	  EventSource *ev = arg;
+     
+	  if (!strcmp (argv[0], "eventid"))
+	    ev->eventid = g_strdup (argv[1]);
+	  else if (!strcmp (argv[0], "rcount"))
+	    ev->count = atoi (argv[1]);
+	  else if (!strcmp (argv[0], "rincrement"))
+	    ev->increment = atoi (argv[1]);
+	  else if (!strcmp (argv[0], "byday"))
+	    ev->byday = g_slist_prepend (ev->byday,
+					 g_strdup (argv[1]));
+	  else if (!strcmp (argv[0], "rexceptions"))
+	    {
+	      long rmtime = (long)atoi (argv[1]);
+	      ev->exceptions = g_slist_append (ev->exceptions,
+					       (void *) rmtime);
+	    }
+	  else if (!strcmp (argv[0], "modified"))
+	    {
+	      if (strchr (argv[1], '-'))
+		parse_date (argv[1], &ev->last_modified, NULL);
+	      else
+		ev->last_modified = strtoul (argv[1], NULL, 10);
+	    }
+	  else if (!strcmp (argv[0], "sequence"))
+	    ev->sequence = atoi (argv[1]);
+	}
+
+      return 0;
+    }
+
+  if (sqlite_exec_printf
+      (edb->sqliteh,
+       "select tag, value from calendar where uid=%d"
+       " and (tag='eventid' or tag='rcount' or tag='rincrement'"
+       "      or tag='byday' or tag='rexceptions' or tag='sequence'"
+       "      or tag='modified');",
+       data_callback, ev, &err, ev->uid))
+    {
+      g_warning ("%s:%d: Loading data for event %ld: %s",
+		 __func__, __LINE__, ev->uid, err);
+      free (err);
+      g_object_unref (ev);
+      return NULL;
+    }
+
+  return ev;
+}
+
 static int
 load_details_callback (void *arg, int argc, char *argv[], char **names)
 {
   if (argc == 2)
     {
-      struct event_details *evd = arg;
-      if (!strcmp (argv[0], "summary") && !evd->summary)
-        evd->summary = g_strdup (argv[1]);
-      else if (!strcmp (argv[0], "description") && !evd->description)
-        evd->description = g_strdup (argv[1]);
-      else if (!strcmp (argv[0], "location") && !evd->location)
-        evd->location = g_strdup (argv[1]);
-      else if (!strcmp (argv[0], "modified"))
-        {
-          if (strchr (argv[1], '-'))
-            parse_date (argv[1], &evd->modified, NULL);
-          else
-            evd->modified = strtoul (argv[1], NULL, 10);
-        }
+      EventSource *ev = arg;
+      if (!strcmp (argv[0], "summary") && !ev->summary)
+        ev->summary = g_strdup (argv[1]);
+      else if (!strcmp (argv[0], "description") && !ev->description)
+        ev->description = g_strdup (argv[1]);
+      else if (!strcmp (argv[0], "location") && !ev->location)
+        ev->location = g_strdup (argv[1]);
       else if (!strcmp (argv[0], "category"))
-        evd->categories = g_slist_prepend (evd->categories,
-					   (gpointer)atoi (argv[1]));
+        ev->categories = g_slist_prepend (ev->categories,
+					  (gpointer)atoi (argv[1]));
     }
   return 0;
 }
@@ -1436,8 +1520,6 @@ event_details (EventSource *ev, gboolean fill_from_disk)
   if (ev->details)
     return;
 
-  ev->details = g_malloc0 (sizeof (struct event_details));
-
   if (! fill_from_disk)
     return;
 
@@ -1446,54 +1528,41 @@ event_details (EventSource *ev, gboolean fill_from_disk)
 			  " where uid=%d"
 			  "  and (tag='summary'"
 			  "       or tag='description' or tag='location'"
-			  "       or tag='modified' or tag='category')",
-			  load_details_callback, ev->details, &err, ev->uid))
+			  "       or tag='category')",
+			  load_details_callback, ev, &err, ev->uid))
     {
       gpe_error_box (err);
       free (err);
-      g_free (ev->details);
       return;
     }
+  ev->details = TRUE;
 }
 
 Event *
 event_db_find_by_uid (EventDB *edb, guint uid)
 {
-  GList *iter;
-    
-  for (iter = edb->events; iter; iter = g_list_next (iter))
-    {
-      EventSource *ev = iter->data;
-      
-      if (ev->uid == uid)
-	{
-	  g_object_ref (ev);
-	  return EVENT (ev);
-	}
-    }
-
-  return NULL;
+  return EVENT (event_load (edb, uid));
 }
 
 Event *
 event_db_find_by_eventid (EventDB *edb, const char *eventid)
 {
-  GList *iter;
-  
   g_return_val_if_fail (eventid, NULL);
-  
-  for (iter = edb->events; iter; iter = g_list_next (iter))
-    {
-      EventSource *ev = iter->data;
-      
-      if (ev->eventid && (strcmp (ev->eventid, eventid) == 0))
-        {
-          g_object_ref (ev);
-          return EVENT (ev);
-        }
-    }
 
-  return NULL;
+  guint uid = -1;
+  int callback (void *arg, int argc, char *argv[], char **names)
+    {
+      uid = atoi (argv[0]);
+      return 1;
+    }
+  sqlite_exec_printf (edb->sqliteh,
+		      "select uid from calendar"
+		      " where tag='eventid' and value='%q';",
+		      callback, NULL, NULL, eventid);
+  if (uid == -1)
+    return NULL;
+
+  return event_db_find_by_uid (edb, uid);
 }
 
 /**
@@ -1831,20 +1900,20 @@ event_list (EventSource *ev, time_t period_start, time_t period_end, int max,
 		  localtime_r (&recur_start, &tm);
 		  int i;
 		  for (i = tm.tm_wday + 1; i < tm.tm_wday + 1 + 7; i ++)
-		    if ((1 << (i % 7)) & daymask)
-		      {
-			if ((i % 7) == orig.tm_wday)
-			  /* We wrapped a week: increment by
-			     INCREMENT - 1 weeks as well.  */
-			  recur_start
-			    = time_add_days (recur_start,
-					     7 * (increment - 1)
-					     + i - tm.tm_wday);
-			else
+		    {
+		      if ((i % 7) == orig.tm_wday)
+			/* We wrapped a week: increment by
+			   INCREMENT - 1 weeks as well.  */
+			recur_start
+			  = time_add_days (recur_start,
+					   7 * (increment - 1));
+		      if ((1 << (i % 7)) & daymask)
+			{
 			  recur_start
 			    = time_add_days (recur_start, i - tm.tm_wday);
-			break;
-		      }
+			  break;
+			}
+		    }
 		}
 	      break;
 
@@ -1955,33 +2024,109 @@ event_list (EventSource *ev, time_t period_start, time_t period_end, int max,
     }
 }
 
+static int
+events_enumerate (EventDB *edb,
+		  time_t period_start, time_t period_end,
+		  gboolean alarms,
+		  int (*callback) (void *, int, char *[], char **),
+		  char **err)
+{
+  /* Make sure any in memory changes are flushed to disk.  */
+  do_laundry (edb);
+
+  return sqlite_exec_printf
+    (edb->sqliteh,
+     "select uid from"
+     " (select uid,"
+     /* If the event is untimed (i.e. if there is a time
+	component).  */
+     "   (case substr (start, 12, 5)"
+     "      when '' then"
+     "        '0 seconds'"
+     "      else"
+     "        'localtime'"
+     "    end)"
+     "   as LOCALTIME,"
+     /* The event's start time.  */
+     "   (case"
+     "      when %d then"
+     "        datetime (start, '-' || alarm || ' seconds')"
+     "      else"
+     "        datetime (start, '0 seconds')"
+     "    end)"
+     "    as EVENT_START,"
+     /* The end of the event.  */
+     "   (case"
+     "     when %d and recur == 0 then"
+     /* We are looking for alarms on a single shot event.  */
+     "       datetime (start, '-' || alarm || 'seconds', '1 second')"
+     "     when recur == 0 then"
+     "       datetime (start,"
+     /* For historical reasons, an untimed event which is 0 seconds
+	long is consider 24 hours long.  */
+     "                 (case duration"
+     "                   when 0 then"
+     "                     24 * 60 * 60"
+     "                   else"
+     "                     duration"
+     "                   end)"
+     "                  || ' seconds')"
+     "     else"
+     "       datetime (rend, '0 seconds')"
+     "    end)"
+     "   as EVENT_END"
+     "   from events"
+     /* Does PERIOD_START occur before the end of the event?  */
+     "   where (rend == 0 or rend ISNULL"
+     "          or datetime (%d, 'unixepoch', 'localtime')"
+     "             < datetime (EVENT_END, LOCALTIME))"
+     /* Does the event start before or at PERIOD_END?  */
+     "     and (%d == 0 or datetime (EVENT_START, LOCALTIME)"
+     "                     <= datetime (%d, 'unixepoch', 'localtime'))"
+     "     and (%d == 0 or alarm > 0));",
+     callback, NULL, err,
+     alarms ? 1 : 0, alarms ? 1 : 0,
+     period_start, period_end, period_end,
+     alarms ? 1 : 0);
+}
+
 Event *
 event_db_next_alarm (EventDB *edb, time_t now)
 {
-  GList *iter;
-  GSList *list;
   Event *next = NULL;
 
-  for (iter = edb->events; iter; iter = iter->next)
+  int callback (void *arg, int argc, char *argv[], char **names)
     {
-      list = event_list (iter->data, now, 0, 1, TRUE);
-      if (list)
+      guint uid = atoi (argv[0]);
+
+      EventSource *ev = event_load (edb, uid);
+      GSList *list = event_list (ev, now, 0, 1, TRUE);
+      g_object_unref (ev);
+      if (! list)
+	return 0;
+
+      Event *e = EVENT (list->data);
+      g_slist_free (list);
+
+      if (! next)
+	next = e;
+      else if (event_get_start (e) - event_get_alarm (e)
+	       < event_get_start (next) - event_get_alarm (next))
 	{
-	  Event *ev = list->data;
-
-	  if (! next)
-	    next = ev;
-	  else if (event_get_start (ev) - event_get_alarm (ev)
-		   < event_get_start (next) - event_get_alarm (next))
-	    {
-	      g_object_unref (next);
-	      next = ev;
-	    }
-	  else
-	    g_object_unref (ev);
-
-	  g_slist_free (list);
+	  g_object_unref (next);
+	  next = e;
 	}
+      else
+	g_object_unref (e);
+
+      return 0;
+    }
+
+  char *err;
+  if (events_enumerate (edb, now, 0, TRUE, callback, &err))
+    {
+      g_critical ("%s: %s", __func__, err);
+      g_free (err);
     }
 
   return next;
@@ -1994,29 +2139,29 @@ event_db_list_for_period_internal (EventDB *edb,
 				   gboolean alarms)
 {
   GSList *list = NULL;
-  GList *iter;
 
-  for (iter = edb->events; iter; iter = iter->next)
+  int callback (void *arg, int argc, char *argv[], char **names)
     {
-      EventSource *ev = iter->data;
+      EventSource *ev = event_load (edb, atoi (argv[0]));
       LIVE (ev);
 
       if (only_untimed && ! ev->untimed)
-	continue;
-
-      if (period_end < ev->event.start - (alarms ? ev->alarm : 0))
-	/* Event starts after PERIOD_END.  */
-	{
-	  if (alarms)
-	    continue;
-	  else
-	    /* (In which case all subsequent events start after
-	       PERIOD_END.)  */
-	    break;
-	}
+	goto out;
 
       GSList *l = event_list (ev, period_start, period_end, 0, alarms);
       list = g_slist_concat (list, l);
+
+    out:
+      g_object_unref (ev);
+      return 0;
+    }
+
+  char *err;
+  if (events_enumerate (edb, period_start, period_end, alarms,
+			callback, &err))
+    {
+      g_critical ("%s: %s", __func__, err);
+      g_free (err);
     }
 
   return list;
@@ -2108,13 +2253,10 @@ event_db_set_default_calendar (EventDB *edb, EventCalendar *ev)
   edb->default_calendar = ev->uid;
 
   char *err;
-  if (sqlite_exec_printf (edb->sqliteh,
-			  "begin transaction;"
-			  "delete from default_calendar;"
-			  "insert into default_calendar"
-			  " (default_calendar) values (%d);"
-			  "commit transaction;",
-			  NULL, NULL, &err, ev->uid))
+  if (sqlite_exec_printf
+      (edb->sqliteh,
+       "insert or replace into default_calendar values (%d);",
+       NULL, NULL, &err, ev->uid))
     {
       g_critical ("%s: %s", __func__, err);
       g_free (err);
@@ -2384,31 +2526,32 @@ event_calendar_delete (EventCalendar *ec,
   g_assert (link);
   ec->edb->calendars = g_slist_delete_link (ec->edb->calendars, link);
 
-  /* And the events.  */
-  {
-    GList *j;
-    GList *next = ec->edb->events;
-    while (next)
-      {
-	j = next;
-	next = next->next;
-
-	EventSource *ev = EVENT_SOURCE (j->data);
-	if (ev->calendar == ec->uid)
-	  {
-	    if (delete_events)
-	      event_remove (EVENT (ev));
-	    else
-	      event_set_calendar (EVENT (ev), new_parent);
-	  }
-      }
-  }
+  GSList *events = event_calendar_list_events (ec);
+  for (i = events; i; i = i->next)
+    {
+      Event *ev = EVENT (i->data);
+      if (delete_events)
+	event_remove (ev);
+      else
+	event_set_calendar (ev, new_parent);
+    }
+  event_list_unref (events);
 
   char *err;
-  if (sqlite_exec_printf (ec->edb->sqliteh,
-			  "delete from calendars where ROWID=%d;",
-			  NULL, NULL, &err, ec->uid))
+  if (sqlite_exec_printf
+      (ec->edb->sqliteh,
+       "begin transaction;"
+       /* Remove the events.  */
+       "delete from calendar where uid"
+       " in (select uid from events where calendar=%d);"
+       "delete from events where calendar=%d;"
+       /* And the calendar.  */
+       "delete from calendars where ROWID=%d;"
+       "commit transaction",
+       NULL, NULL, &err, ec->uid, ec->uid, ec->uid))
     {
+      sqlite_exec (ec->edb->sqliteh, "rollback transaction;",
+		   NULL, NULL, NULL);
       g_critical ("%s: %s", __func__, err);
       g_free (err);
     }
@@ -2583,19 +2726,20 @@ event_calendar_get_last_modification (EventCalendar *ec)
 GSList *
 event_calendar_list_events (EventCalendar *ec)
 {
-  GSList *e = NULL;
-  GList *i;
-  for (i = ec->edb->events; i; i = i->next)
-    {
-      EventSource *ev = EVENT_SOURCE (i->data);
-      if (ev->calendar == ec->uid)
-	{
-	  g_object_ref (ev);
-	  e = g_slist_prepend (e, ev);
-	}
-    }
+  GSList *list = NULL;
 
-  return e;
+  int callback (void *arg, int argc, char *argv[], char **names)
+    {
+      Event *ev = event_db_find_by_uid (ec->edb, atoi (argv[0]));
+      if (ev)
+	list = g_slist_prepend (list, ev);
+      return 0;
+    }
+  sqlite_exec_printf (ec->edb->sqliteh,
+		      "select uid from events where calendar=%d;",
+		      callback, NULL, NULL, ec->uid);
+
+  return list;
 }
 
 GSList *
@@ -2616,10 +2760,6 @@ event_calendar_list_calendars (EventCalendar *p)
   return c;
 }
 
-
-#define insert_values(db, id, key, format, value)	\
-	sqlite_exec_printf (db, "insert into calendar values (%d, '%q', '" format "')", \
-			    NULL, NULL, err, id, key, value)
 
 gint
 event_compare_func (gconstpointer a, gconstpointer b)
@@ -2654,96 +2794,84 @@ event_alarm_compare_func (gconstpointer a, gconstpointer b)
 static gboolean
 event_write (EventSource *ev, char **err)
 {
-  char buf_start[64], buf_end[64];
   struct tm tm;
-  gboolean rc = FALSE;
-  GSList *i;
 
   if (ev->untimed)
     localtime_r (&ev->event.start, &tm);
   else
     gmtime_r (&ev->event.start, &tm);
-  strftime (buf_start, sizeof (buf_start), 
-	    ev->untimed ? "%Y-%m-%d" : "%Y-%m-%d %H:%M",
-	    &tm);  
+  char start[64];
+  strftime (start, sizeof (start), 
+	    ev->untimed ? "%Y-%m-%d" : "%Y-%m-%d %T", &tm);  
 
-  if (!ev->eventid)
-    {
-      ev->eventid = event_db_make_eventid();
-#ifdef DEBUG        
-      printf ("Made new eventid: %s\n", ev->eventid);
-#endif
-    }
-  
-  struct event_details *evd = ev->details;
-  if (evd)
-    {
-      if ((evd->summary
-	   && insert_values (ev->edb->sqliteh, ev->uid,
-			     "summary", "%q", evd->summary))
-	  || (evd->description
-	      && insert_values (ev->edb->sqliteh, ev->uid,
-				"description", "%q", evd->description))
-	  || (evd->location
-	      && insert_values (ev->edb->sqliteh, ev->uid,
-				"location", "%q", evd->location))
-	  || insert_values (ev->edb->sqliteh, ev->uid,
-			    "modified", "%lu", evd->modified))
-	goto exit;
-
-      for (i = evd->categories; i; i = i->next)
-	if (insert_values (ev->edb->sqliteh, ev->uid,
-			   "category", "%d", (int) i->data))
-	  goto exit;
-    }
-
-  for (i = ev->byday; i; i = i->next)
-    if (insert_values (ev->edb->sqliteh, ev->uid, "byday", "%q", i->data))
-      goto exit;
-
-  if (insert_values (ev->edb->sqliteh, ev->uid, "duration", "%d", ev->duration)
-      || insert_values (ev->edb->sqliteh, ev->uid, "start", "%q", buf_start)
-      || insert_values (ev->edb->sqliteh, ev->uid,
-			"eventid", "%q", ev->eventid)
-      || insert_values (ev->edb->sqliteh, ev->uid,
-			"sequence", "%d", ev->sequence)
-      || insert_values (ev->edb->sqliteh, ev->uid,
-			"calendar", "%d", ev->calendar))
-    goto exit;
-
-  if (insert_values (ev->edb->sqliteh, ev->uid, "recur", "%d", ev->type)
-      || insert_values (ev->edb->sqliteh, ev->uid, "rcount", "%d", ev->count)
-      || insert_values (ev->edb->sqliteh, ev->uid, "rincrement", "%d",
-			ev->increment))
-    goto exit;
-
-  if (ev->exceptions)
-    {
-      GSList *iter;
-      for (iter = ev->exceptions; iter; iter = g_slist_next (iter))
-	if (insert_values (ev->edb->sqliteh, ev->uid, "rexceptions", "%d",
-			   (long) iter->data))
-	  goto exit;
-    }
-      	      
-  if (ev->end != 0)
+  char end[64];
+  if (! ev->end)
+    sprintf (end, "NULL");
+  else
     {
       gmtime_r (&ev->end, &tm);
-      strftime (buf_end, sizeof (buf_end), 
-                ev->untimed ? "%Y-%m-%d" : "%Y-%m-%d %H:%M",
-                &tm); 
-      if (insert_values (ev->edb->sqliteh, ev->uid, "rend", "%q", buf_end)) 
-	goto exit;
+      strftime (end, sizeof (end), 
+		ev->untimed ? "'%Y-%m-%d'" : "'%Y-%m-%d %T'", &tm); 
     }
 
+  if (sqlite_exec_printf
+      (ev->edb->sqliteh,
+       "update events set start='%q', duration=%u, recur=%d, rend=%s,"
+       "  alarm=%d, calendar=%d where uid=%u;"
+       "insert into calendar values (%d, 'eventid', '%q');"
+       "insert into calendar values (%d, 'sequence', '%d');"
+       "insert into calendar values (%d, 'rcount', '%d');"
+       "insert into calendar values (%d, 'rincrement', '%d');"
+       "insert into calendar values (%d, 'modified', '%u');",
+       NULL, NULL, err,
+       start, ev->duration, ev->type, end, ev->alarm, ev->calendar, ev->uid,
+       ev->uid, ev->eventid,
+       ev->uid, ev->sequence,
+       ev->uid, ev->count,
+       ev->uid, ev->increment,
+       ev->uid, ev->last_modified))
+    goto error;
 
-  if (insert_values (ev->edb->sqliteh, ev->uid, "alarm", "%d", ev->alarm))
-    goto exit;
+  GSList *i;
+  for (i = ev->byday; i; i = i->next)
+    if (sqlite_exec_printf
+	(ev->edb->sqliteh,
+	 "insert into calendar values (%d, 'byday', '%q');",
+	 NULL, NULL, err, ev->uid, i->data))
+      goto error;
+
+  for (i = ev->exceptions; i; i = g_slist_next (i))
+    if (sqlite_exec_printf
+	(ev->edb->sqliteh,
+	 "insert into calendar values (%d, 'rexceptions', '%ld');",
+	 NULL, NULL, err, ev->uid, (long) i->data))
+      goto error;
+
+  if (ev->details)
+    {
+      if (sqlite_exec_printf
+	  (ev->edb->sqliteh,
+	   "insert into calendar values (%d, 'summary', '%q');"
+	   "insert into calendar values (%d, 'description', '%q');"
+	   "insert into calendar values (%d, 'location', '%q');",
+	   NULL, NULL, err,
+	   ev->uid, ev->summary ?: "",
+	   ev->uid, ev->description ?: "",
+	   ev->uid, ev->location ?: ""))
+	goto error;
+
+      for (i = ev->categories; i; i = i->next)
+	if (sqlite_exec_printf
+	    (ev->edb->sqliteh,
+	     "insert into calendar values (%d, 'category', '%d');",
+	     NULL, NULL, err, ev->uid, (int) i->data))
+	  goto error;
+    }
 
   ev->modified = FALSE;
-  rc = TRUE;
-exit:
-  return rc;
+  return TRUE;
+error:
+  return FALSE;
 }
 
 /**
@@ -2766,18 +2894,15 @@ event_flush (Event *event)
   if (sqlite_exec (ev->edb->sqliteh, "begin transaction", NULL, NULL, &err))
     goto error;
 
-  /* Make sure the details are loaded so we don't delete them.  */
-  event_details (ev, TRUE);
-
-  if (sqlite_exec_printf (ev->edb->sqliteh,
-			  "delete from calendar where uid=%d", NULL,
-			  NULL, &err, ev->uid))
-    goto error;
-
-  if (event_write (ev, &err) == FALSE
-      || sqlite_exec (ev->edb->sqliteh, "commit transaction",
-		      NULL, NULL, &err))
-    goto error_and_rollback;
+  if (event_write (ev, &err))
+    sqlite_exec (ev->edb->sqliteh, "commit transaction",
+		 NULL, NULL, &err);
+  else
+    {
+      sqlite_exec (ev->edb->sqliteh, "rollback transaction",
+		   NULL, NULL, NULL);
+      goto error;
+    }
 
   g_signal_emit
     (ev->edb, EVENT_DB_GET_CLASS (ev->edb)->event_modified_signal,
@@ -2785,11 +2910,13 @@ event_flush (Event *event)
 
   return TRUE;
 
- error_and_rollback:
-  sqlite_exec (ev->edb->sqliteh, "rollback transaction", NULL, NULL, NULL);
  error:
-  gpe_error_box (err);
-  free (err);
+  if (err)
+    {
+      g_critical ("%s: %s", __func__, err);
+      gpe_error_box (err);
+      free (err);
+    }
   return FALSE;
 }
 
@@ -2801,7 +2928,15 @@ do_laundry (gpointer data)
   EventDB *edb = EVENT_DB (data);
   GSList *l;
 
-  for (l = edb->laundry_list; l; l = g_slist_next (l))
+  /* Don't run again.  */
+  if (edb->laundry_buzzer)
+    g_source_remove (edb->laundry_buzzer);
+  edb->laundry_buzzer = 0;
+
+  GSList *list = edb->laundry_list;
+  edb->laundry_list = NULL;
+
+  for (l = list; l; l = g_slist_next (l))
     {
       if (IS_EVENT_SOURCE (l->data))
 	{
@@ -2834,13 +2969,7 @@ do_laundry (gpointer data)
     }
 
   /* Destroy the list.  */
-  g_slist_free (edb->laundry_list); 
-  edb->laundry_list = NULL;
-
-  /* Don't run again.  */
-  if (edb->laundry_buzzer)
-    g_source_remove (edb->laundry_buzzer);
-  edb->laundry_buzzer = 0;
+  g_slist_free (list);
 
   return FALSE;
 }
@@ -2863,14 +2992,6 @@ add_to_laundry_pile (GObject *e)
     edb->laundry_buzzer = g_idle_add (do_laundry, edb);
 }
 
-/**
- * event_db_remove:
- * @ev: Event
- * 
- * This function removes an event from the event database. 
- * 
- * Returns: #TRUE on success, #FALSE otherwise.
- */
 gboolean
 event_remove (Event *event)
 {
@@ -2879,14 +3000,14 @@ event_remove (Event *event)
 
   EventSource *ev = RESOLVE_CLONE (event);
 
-  event_db_remove_internal (ev);
-
-  sqlite_exec_printf (ev->edb->sqliteh, "delete from calendar where uid=%d", 
-		      NULL, NULL, NULL, ev->uid);
-
-  sqlite_exec_printf (ev->edb->sqliteh,
-		      "delete from calendar_urn where uid=%d", 
-		      NULL, NULL, NULL, ev->uid);
+  if (sqlite_exec_printf (ev->edb->sqliteh,
+			  "begin transaction;"
+			  "delete from calendar where uid=%d;"
+			  "delete from events where uid=%d;"
+			  "commit transaction;",
+			  NULL, NULL, NULL, ev->uid, ev->uid))
+    sqlite_exec (ev->edb->sqliteh, "rollback transaction;",
+		 NULL, NULL, NULL);
 
   if (ev->alarm)
     {
@@ -2912,19 +3033,12 @@ event_new (EventDB *edb, EventCalendar *ec, const char *eventid)
   gchar *err = NULL;
 
   ev->edb = edb;
+  g_object_ref (edb);
   if (ec)
     ev->calendar = ec->uid;
   else
     ev->calendar = edb->default_calendar;
 
-  if (sqlite_exec (edb->sqliteh, "begin transaction", NULL, NULL, &err))
-    goto error_no_roll_back;
-
-  if (sqlite_exec (edb->sqliteh, "insert into calendar_urn values (NULL)",
-		   NULL, NULL, &err))
-    goto error;
-
-  ev->uid = sqlite_last_insert_rowid (edb->sqliteh);
   if (eventid)
     {
       Event *t = event_db_find_by_eventid (edb, eventid);
@@ -2941,9 +3055,18 @@ event_new (EventDB *edb, EventCalendar *ec, const char *eventid)
   else
     ev->eventid = event_db_make_eventid ();
 
-  event_db_add_internal (ev);
-  /* Take a reference for EDB.  */
-  g_object_ref (ev);
+  if (sqlite_exec (ev->edb->sqliteh,
+		   "begin transaction;",
+		   NULL, NULL, &err))
+    goto error_no_roll_back;
+
+  if (sqlite_exec (ev->edb->sqliteh,
+		   "insert into events (start) values (NULL);",
+		   NULL, NULL, &err))
+    goto error;
+
+  ev->uid = sqlite_last_insert_rowid (ev->edb->sqliteh);
+  g_hash_table_insert (edb->events, (gpointer) ev->uid, ev);
 
   if (event_write (ev, &err) == FALSE
       || sqlite_exec (edb->sqliteh, "commit transaction", NULL, NULL, &err))
@@ -2954,13 +3077,21 @@ event_new (EventDB *edb, EventCalendar *ec, const char *eventid)
   return EVENT (ev);
 
  error:
-  g_object_unref (ev);
   sqlite_exec (edb->sqliteh, "rollback transaction", NULL, NULL, NULL);
  error_no_roll_back:
+  g_object_unref (ev);
   gpe_error_box (err);
   g_free (err);
 
   return NULL;
+}
+
+EventDB *
+event_get_event_db (Event *e)
+{
+  EventSource *ev = RESOLVE_CLONE (e);
+
+  return ev->edb;
 }
 
 EventCalendar *
@@ -2972,7 +3103,7 @@ event_get_calendar (Event *e)
     {
       g_warning ("%s: Encountered orphaned event %s (%ld):"
 		 " being adopted by default calendar",
-		 __func__, ev->details ? ev->details->summary : "", ev->uid);
+		 __func__, ev->summary ?: "", ev->uid);
       
       ec = event_db_get_default_calendar (ev->edb, NULL);
       event_set_calendar (EVENT (ev), ec);
@@ -2989,6 +3120,8 @@ void
 event_set_calendar (Event *e, EventCalendar *ec)
 {
   EventSource *ev = RESOLVE_CLONE (e);
+  if (! ec)
+    ec = event_db_get_default_calendar (ev->edb, NULL);
   if (ev->calendar == ec->uid)
     return;
 
@@ -3115,9 +3248,7 @@ event_set_recurrence_start (Event *event, time_t start)
       /* And remove it from the upcoming alarm list.  */
       event_remove_upcoming_alarms (ev);
     }
-  event_db_remove_internal (ev);
   ev->event.start = start;
-  event_db_add_internal (ev);
   if (ev->alarm)
     /* And remove it from the upcoming alarm list.  */
     event_add_upcoming_alarms (ev);
@@ -3147,7 +3278,7 @@ event_get_eventid (Event *event) \
   { \
     EventSource *ev = RESOLVE_CLONE (event); \
     event_details (ev, TRUE); \
-    return g_strdup (ev->details->field); \
+    return g_strdup (ev->field); \
   } \
  \
   void \
@@ -3156,18 +3287,18 @@ event_get_eventid (Event *event) \
     EventSource *ev = RESOLVE_CLONE (event); \
     \
     event_details (ev, TRUE); \
-    if ((ev->details->field && field \
-         && strcmp (ev->details->field, field) == 0) \
-        || (! ev->details->field && ! field)) \
+    if ((ev->field && field \
+         && strcmp (ev->field, field) == 0) \
+        || (! ev->field && ! field)) \
       /* Identical.  */ \
       return; \
     \
-    if (ev->details->field) \
-      free (ev->details->field); \
+    if (ev->field) \
+      free (ev->field); \
     if (field) \
-      ev->details->field = g_strdup (field); \
+      ev->field = g_strdup (field); \
     else \
-      ev->details->field = NULL; \
+      ev->field = NULL; \
     STAMP (ev); \
   }
 
@@ -3180,7 +3311,7 @@ event_get_categories (Event *event)
 {
   EventSource *ev = RESOLVE_CLONE (event);
   event_details (ev, TRUE);
-  return g_slist_copy (ev->details->categories);
+  return g_slist_copy (ev->categories);
 }
 
 void
@@ -3188,8 +3319,7 @@ event_add_category (Event *event, int category)
 {
   EventSource *ev = RESOLVE_CLONE (event);
   event_details (ev, TRUE);
-  ev->details->categories = g_slist_prepend (ev->details->categories,
-					     (gpointer) category);
+  ev->categories = g_slist_prepend (ev->categories, (gpointer) category);
 
   STAMP (ev);
 }
@@ -3200,8 +3330,8 @@ event_set_categories (Event *event, GSList *categories)
   EventSource *ev = RESOLVE_CLONE (event);
 
   event_details (ev, TRUE);
-  g_slist_free (ev->details->categories);
-  ev->details->categories = categories;
+  g_slist_free (ev->categories);
+  ev->categories = categories;
 
   STAMP (ev);
 }
