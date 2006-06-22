@@ -513,99 +513,102 @@ static void
 gtk_week_view_reload_events (GtkView *view)
 {
   GtkWeekView *week_view = GTK_WEEK_VIEW (view);
-  time_t now = gtk_view_get_time (view);
-  struct tm tm;
-  guint day;
-  struct tm start;
-  PangoLayout *pl
-    = gtk_widget_create_pango_layout (GTK_WIDGET (week_view->draw), NULL);
-  PangoLayout *pl_evt
-    = gtk_widget_create_pango_layout (GTK_WIDGET (week_view->draw), NULL);
 
-  localtime_r (&now, &tm);
-
-  /* Determine if we need to update the cached information.  */
-  int start_of_week = tm.tm_yday - tm.tm_wday;
-  if (! week_starts_sunday)
+  /* Destroy any events.  */
+  int i;
+  for (i = 0; i < 7; i ++)
     {
-      if (tm.tm_wday == 0)
-	start_of_week -= 6;
-      else
-	start_of_week ++;
-    }
-
-  /* Calculate the beginning of the week being careful with respect to
-     DST.  */
-  start = tm;
-  if ((start.tm_yday - start_of_week) > start.tm_mday)
-    /* The start of the week starts last month.  */
-    {
-      if (start.tm_mon == 0)
-	/* Which also happens to be last year.  */
-	{
-	  start.tm_year --;
-	  start.tm_mon = 11;
-	}
-      else
-	start.tm_mon --;
-
-      start.tm_mday
-	= g_date_get_days_in_month (start.tm_mon + 1,
-				    start.tm_year + 1900) + tm.tm_mday;
-    }
-  start.tm_mday -= (start.tm_yday - start_of_week);
-
-  /* Load the events for each day and figure out the focused day.  */
-  week_view->focused_day = -1;
-  time_t t = mktime (&start);
-  for (day = 0; day < 7; day++)
-    {
-      struct week_day *d = &week_view->days[day];
-      struct tm start, end;
-      time_t s, e;
-
+      struct week_day *d = &week_view->days[i];
       if (d->events)
-        event_list_unref (d->events);
+	{
+	  event_list_unref (d->events);
+	  d->events = NULL;
+	}
+    }
 
-      localtime_r (&t, &start);
-      start.tm_hour = 0;
-      start.tm_min = 0;
-      start.tm_sec = 0;
-      s = mktime (&start);
+  GDate focus;
+  g_date_set_time_t (&focus, gtk_view_get_time (view));
 
-      end = start;
-      end.tm_hour = 23;
-      end.tm_min = 59;
-      end.tm_sec = 59;
-      e = mktime (&end);
+  GDate period_start = focus;
+  /* Normalize to sunday or monday as appropriate.  */
+  g_date_subtract_days (&period_start,
+			(g_date_get_weekday (&focus)
+			 - (week_starts_sunday
+			    ? G_DATE_SUNDAY : G_DATE_MONDAY)) % 7);
 
-      /* Tomorrow.  */
-      t = e + 1;
+  GDate period_end = period_start;
+  g_date_add_days (&period_end, 7);
 
-      d->events = g_slist_sort (event_db_list_for_period (event_db, s, e),
-				event_compare_func);
+  /* The julian start day.  */
+  guint period_start_day = g_date_get_julian (&period_start);
 
-      if (start.tm_mday == tm.tm_mday
-	  && start.tm_mon == tm.tm_mon
-	  && start.tm_year == tm.tm_year)
-	week_view->focused_day = day;
+  /* The focused day.  */
+  week_view->focused_day = g_date_get_julian (&focus) - period_start_day;
+  g_assert (0 <= week_view->focused_day && week_view->focused_day < 7);
+
+  for (i = 0; i < 7; i ++)
+    {
+      struct week_day *d = &week_view->days[i];
 
       if (d->banner)
         g_free (d->banner);
-      d->banner = strftime_strdup_utf8_utf8 ("<b>%a %d %B</b> ", &start);
+      g_date_set_julian (&d->date, period_start_day + i);
 
-      g_date_set_dmy (&d->date,
-		      start.tm_mday, start.tm_mon + 1, start.tm_year + 1900);
-      d->events = week_view->days[day].events;
+      struct tm tm;
+      g_date_to_struct_tm (&d->date, &tm);
+      d->banner = strftime_strdup_utf8_utf8 ("<b>%a %d %B</b> ", &tm);
     }
-  g_assert (0 <= week_view->focused_day && week_view->focused_day < 7);
+
+  struct tm period_start_tm;
+  g_date_to_struct_tm (&period_start, &period_start_tm);
+  period_start_tm.tm_isdst = -1;
+
+  struct tm period_end_tm;
+  g_date_to_struct_tm (&period_end, &period_end_tm);
+  period_end_tm.tm_isdst = -1;
+
+  /* Load the events for each day.  */
+  GSList *events
+    = event_db_list_for_period (event_db, mktime (&period_start_tm),
+				mktime (&period_end_tm) - 1);
+  GSList *l;
+  /* We need to remove one day as the code below requires an inclusive
+     period.  */
+  g_date_subtract_days (&period_end, 1);
+  for (l = events; l; l = l->next)
+    {
+      Event *ev = EVENT (l->data);
+
+      time_t s = event_get_start (ev);
+      GDate start;
+      g_date_set_time_t (&start, s);
+      g_date_clamp (&start, &period_start, &period_end);
+
+      time_t e = s + event_get_duration (ev) - 1;
+      GDate end;
+      g_date_set_time_t (&end, e);
+      g_date_clamp (&end, &period_start, &period_end);
+
+      for (i = g_date_get_julian (&start); i <= g_date_get_julian (&end); i ++)
+	{
+	  g_object_ref (ev);
+	  week_view->days[i - period_start_day].events
+	    = g_slist_prepend (week_view->days[i - period_start_day].events,
+			       ev);
+	}
+
+    }
+  event_list_unref (events);
+
+  /* Sort the lists.  */
+  for (i = 0; i < 7; i ++)
+    if (week_view->days[i].events)
+      week_view->days[i].events
+	= g_slist_sort (week_view->days[i].events, event_compare_func);
 
   week_view->have_extents = FALSE;
 
   gtk_widget_queue_draw (week_view->draw);
-
-  g_object_unref (pl);
-  g_object_unref (pl_evt);
 }
 
 static gboolean
