@@ -72,19 +72,17 @@ static void gtk_month_view_init (GTypeInstance *instance, gpointer klass);
 static void gtk_month_view_dispose (GObject *obj);
 static void gtk_month_view_finalize (GObject *object);
 static void gtk_month_view_realize (GtkWidget *);
-static void gtk_month_view_set_time (GtkView *view, time_t time);
-static void gtk_month_view_reload_events (GtkView *view);
 static gboolean gtk_month_view_key_press_event (GtkWidget *widget,
 						GdkEventKey *k);
-static gboolean gtk_month_view_button_press_event (GtkWidget *widget,
-						   GdkEventButton *event);
+static void gtk_month_view_set_time (GtkView *view, time_t time);
+static void gtk_month_view_reload_events (GtkView *view);
 
 static GtkWidgetClass *parent_class;
 
 GType
 gtk_month_view_get_type (void)
 {
-  static GType type = 0;
+  static GType type;
 
   if (! type)
     {
@@ -124,7 +122,6 @@ gtk_month_view_base_class_init (gpointer klass, gpointer klass_data)
   widget_class = GTK_WIDGET_CLASS (klass);
   widget_class->realize = gtk_month_view_realize;
   widget_class->key_press_event = gtk_month_view_key_press_event;
-  widget_class->button_press_event = gtk_month_view_button_press_event;
 
   view_class = (GtkViewClass *) klass;
   view_class->set_time = gtk_month_view_set_time;
@@ -279,17 +276,19 @@ gtk_month_view_set_time (GtkView *view, time_t current)
 }
 
 static gboolean
-gtk_month_view_button_press_event (GtkWidget *widget, GdkEventButton *event)
+button_press_event (GtkWidget *widget, GdkEventButton *event,
+		    GtkMonthView *month_view)
 {
-  GtkMonthView *month_view = GTK_MONTH_VIEW (widget);
   int col, row;
   int day;
   struct day *c;
 
+  gtk_widget_grab_focus (GTK_WIDGET (month_view));
+
   gtk_month_view_cell_at (month_view, event->x, event->y, &col, &row);
   day = col + row * 7;
   if (day < 0 || day >= 7 * month_view->weeks)
-    goto propagate;
+    return FALSE;
   c = &month_view->day[day];
 
   if (event->type == GDK_BUTTON_PRESS)
@@ -314,8 +313,7 @@ gtk_month_view_button_press_event (GtkWidget *widget, GdkEventButton *event)
       return TRUE;
     }
 
- propagate:
-  return GTK_WIDGET_CLASS (parent_class)->button_press_event (widget, event);
+  return FALSE;
 }
 
 /* 0, 7 are Sunday.  */
@@ -625,7 +623,6 @@ gtk_month_view_reload_events (GtkView *view)
   GSList *events
     = event_db_list_for_period (event_db,
 				mktime (&start_tm), mktime (&end_tm) - 1);
-  events = g_slist_sort (events, event_compare_func);
 
   /* PERIOD_END is the day after the end.  Before we want the day of
      the end.  */
@@ -737,6 +734,7 @@ gtk_month_view_new (time_t time)
   month_view = GTK_MONTH_VIEW (g_object_new (gtk_month_view_get_type (),
 					     NULL));
   GTK_WIDGET_SET_FLAGS (month_view, GTK_CAN_FOCUS);
+  gtk_widget_add_events (GTK_WIDGET (month_view), GDK_KEY_PRESS_MASK);
 
   scrolled_window = gtk_scrolled_window_new (NULL, NULL);
   gtk_box_pack_start (GTK_BOX (month_view), scrolled_window, TRUE, TRUE, 0);
@@ -745,13 +743,17 @@ gtk_month_view_new (time_t time)
   gtk_widget_show (scrolled_window);
 	  
   month_view->draw = gtk_drawing_area_new ();
-  gtk_widget_show (month_view->draw);
+  gtk_widget_add_events (GTK_WIDGET (month_view->draw),
+			 GDK_BUTTON_PRESS_MASK);
   g_signal_connect (G_OBJECT (month_view->draw), "expose_event",
                     G_CALLBACK (draw_expose_event), month_view);
-  gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolled_window),
-					 month_view->draw);
   g_signal_connect (G_OBJECT (month_view->draw), "size-allocate",
                     G_CALLBACK (resize_table), month_view);
+  g_signal_connect (G_OBJECT (month_view->draw), "button-press-event",
+		    G_CALLBACK (button_press_event), month_view);
+  gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolled_window),
+					 month_view->draw);
+  gtk_widget_show (month_view->draw);
 
   gtk_widget_set_size_request (GTK_WIDGET(month_view->draw),
 			       month_view->title_height * 7,
