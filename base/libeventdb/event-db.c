@@ -23,6 +23,11 @@
 #include <gpe/errorbox.h>
 #include <gpe/event-db.h>
 
+#include <obstack.h>
+
+#define obstack_chunk_alloc malloc
+#define obstack_chunk_free free
+
 #define _(x) gettext(x)
 
 /* The only thing we use from Gdk is the GdkColor structure.  Avoid a
@@ -1114,12 +1119,19 @@ event_db_new (const char *fname)
 
   if (version < 2)
     /* Create the events table.  */
-    sqlite_exec
-      (edb->sqliteh,
-       "create table events"
-       " (uid INTEGER PRIMARY KEY, start DATE, duration INTEGER, "
-       "  recur INTEGER, rend DATE, alarm INTEGER, calendar INTEGER);",
-       NULL, NULL, NULL);
+    {
+      sqlite_exec
+	(edb->sqliteh,
+	 "create table events"
+	 " (uid INTEGER PRIMARY KEY, start DATE, duration INTEGER, "
+	 "  recur INTEGER, rend DATE, alarm INTEGER, calendar INTEGER);",
+	 NULL, NULL, NULL);
+
+      sqlite_exec (edb->sqliteh,
+		   "create index events_enumerate_index"
+		   " on events (start, duration, recur, rend, alarm);",
+		   NULL, NULL, &err);
+    }
 
   if (version == 1)
     /* Version 1 versions of the database stored some information in
@@ -2034,8 +2046,14 @@ events_enumerate (EventDB *edb,
   /* Make sure any in memory changes are flushed to disk.  */
   do_laundry (edb);
 
-  return sqlite_exec_printf
-    (edb->sqliteh,
+  struct obstack query;
+  obstack_init (&query);
+
+#define obstack_grow_string(o, string) \
+  obstack_grow (o, string, strlen (string))
+
+  obstack_grow_string
+    (&query,
      "select uid from"
      " (select uid,"
      /* If the event is untimed (i.e. if there is a time
@@ -2046,48 +2064,103 @@ events_enumerate (EventDB *edb,
      "      else"
      "        'localtime'"
      "    end)"
-     "   as LOCALTIME,"
-     /* The event's start time.  */
-     "   (case"
-     "      when %d then"
-     "        datetime (start, '-' || alarm || ' seconds')"
-     "      else"
-     "        datetime (start, '0 seconds')"
-     "    end)"
-     "    as EVENT_START,"
-     /* The end of the event.  */
-     "   (case"
-     "     when %d and recur == 0 then"
-     /* We are looking for alarms on a single shot event.  */
-     "       datetime (start, '-' || alarm || 'seconds', '1 second')"
-     "     when recur == 0 then"
-     "       datetime (start,"
-     /* For historical reasons, an untimed event which is 0 seconds
-	long is consider 24 hours long.  */
-     "                 (case duration"
-     "                   when 0 then"
-     "                     24 * 60 * 60"
-     "                   else"
-     "                     duration"
-     "                   end)"
-     "                  || ' seconds')"
+     "   as LOCALTIME,");
+
+  /* The start of the event: only required if there is end.  */
+  if (period_end)
+    {
+      if (alarms)
+	obstack_grow_string
+	  (&query,
+	   " julianday (start, '-' || alarm || ' seconds')");
+      else
+	obstack_grow_string
+	  (&query,
+	   " julianday (start)");
+      obstack_grow_string
+	(&query,
+	 " as EVENT_START,");
+    }
+
+  /* The end of the event: always required as we always have a
+     start.  */
+  obstack_grow_string
+    (&query,
+     "  (case"
+     "     when recur == 0 then");
+  if (alarms)
+    obstack_grow_string
+      (&query,
+       /* We are looking for alarms on a single shot event.  */
+       "       julianday (start, '-' || alarm || 'seconds', '1 second')");
+  else
+    obstack_grow_string
+      (&query,
+       "       julianday (start,"
+       /* For historical reasons, an untimed event which is 0 seconds
+	  long is consider 24 hours long.  */
+       "                  (case duration"
+       "                    when 0 then"
+       "                      24 * 60 * 60"
+       "                    else"
+       "                      duration"
+       "                    end)"
+       "                   || ' seconds')");
+
+  obstack_grow_string
+    (&query,
      "     else"
-     "       datetime (rend, '0 seconds')"
+     "       julianday (rend)"
      "    end)"
-     "   as EVENT_END"
+     "   as EVENT_END");
+
+  obstack_grow_string
+    (&query,
      "   from events"
      /* Does PERIOD_START occur before the end of the event?  */
      "   where (rend == 0 or rend ISNULL"
-     "          or datetime (%d, 'unixepoch', 'localtime')"
-     "             < datetime (EVENT_END, LOCALTIME))"
-     /* Does the event start before or at PERIOD_END?  */
-     "     and (%d == 0 or datetime (EVENT_START, LOCALTIME)"
-     "                     <= datetime (%d, 'unixepoch', 'localtime'))"
-     "     and (%d == 0 or alarm > 0));",
-     callback, NULL, err,
-     alarms ? 1 : 0, alarms ? 1 : 0,
-     period_start, period_end, period_end,
-     alarms ? 1 : 0);
+     "          or julianday (");
+
+  char buffer[20];
+  sprintf (buffer, "%ld", period_start);
+  obstack_grow_string (&query, buffer);
+
+  obstack_grow_string
+    (&query,
+     ", 'unixepoch', 'localtime')"
+     "             < julianday (EVENT_END, LOCALTIME))");
+
+  if (period_end)
+    {
+      /* Does the event start before or at PERIOD_END?  */
+      obstack_grow_string
+	(&query,
+	 "     and julianday (EVENT_START, LOCALTIME)"
+	 "         <= julianday (");
+
+      sprintf (buffer, "%ld", period_end);
+      obstack_grow_string (&query, buffer);
+
+      obstack_grow_string
+	(&query,
+	 ", 'unixepoch', 'localtime')");
+    }
+
+  if (alarms)
+    obstack_grow_string
+      (&query,
+       "     and alarm > 0");
+
+  obstack_grow_string
+    (&query,
+     ");");
+  /* Add a trailing NULL.  */
+  obstack_1grow (&query, 0);
+  char *q = obstack_finish (&query);
+
+  int ret = sqlite_exec_printf (edb->sqliteh, q, callback, NULL, err);
+  obstack_free (&query, NULL);
+  return ret;
 }
 
 Event *
