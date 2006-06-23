@@ -1,3 +1,13 @@
+2006-06-23  Neal H. Walfield  <neal@gnu.org>
+
+	* event-db.c: Include <obstack.h>.
+	(obstack_chunk_alloc): Define.
+	(obstack_chunk_free): Define.
+	(event_db_new): Create an index for the events table.
+	(obstack_grow_string): Specialize the code to reduce the amount of
+	SQL to compile.  Use julian dates as intermediaries rather than
+	date strings.
+
 2006-06-22  Neal H. Walfield  <neal@gnu.org>
 
 	* event-db.c (struct _EventDB): Remove fields dbversion and uid.
