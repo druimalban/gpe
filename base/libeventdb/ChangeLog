@@ -1,5 +1,16 @@
 2006-06-23  Neal H. Walfield  <neal@gnu.org>
 
+	* event-db.c (struct _EventDB): Add fields cache_list and
+	cache_buzzer.
+	(struct _EventSource): Add field dead_time.
+	(event_db_finalize): Remove EDB->CACHE_BUZZER and clean up
+	EDB->CACHE_LIST.
+	(flush_cache): New function.
+	(event_source_toggle_ref_notify): Likewise.
+	(event_source_init): Add a toggle reference to INSTANCE.
+
+2006-06-23  Neal H. Walfield  <neal@gnu.org>
+
 	* event-db.c: Include <obstack.h>.
 	(obstack_chunk_alloc): Define.
 	(obstack_chunk_free): Define.

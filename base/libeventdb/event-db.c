@@ -81,6 +81,10 @@ struct _EventDB
   /* The idle source.  */
   guint laundry_buzzer;
 
+  /* A list of events which have no user references.  */
+  GSList *cache_list;
+  guint cache_buzzer;
+
   /* The list of events with upcoming alarms.  We hold a reference to
      each.  */
   GSList *upcoming_alarms;
@@ -210,6 +214,9 @@ struct _EventSource
      flushed to disk).  */
   gboolean modified;
   time_t last_modified;
+
+  /* When the last extant user reference was removed.  */
+  time_t dead_time;
 
   /* The event calendar to which this event belongs.  */
   guint calendar;
@@ -445,6 +452,8 @@ event_db_dispose (GObject *obj)
 }
 
 static gboolean do_laundry (gpointer data);
+static void event_source_toggle_ref_notify (gpointer data, GObject *object,
+					    gboolean is_last_ref);
 
 static void
 event_db_finalize (GObject *object)
@@ -456,6 +465,8 @@ event_db_finalize (GObject *object)
     g_source_remove (edb->alarm);
   if (edb->laundry_buzzer)
     do_laundry (edb);
+  if (edb->cache_buzzer)
+    g_source_remove (edb->cache_buzzer);
 
   GSList *i;
   GSList *next = edb->upcoming_alarms;
@@ -468,6 +479,18 @@ event_db_finalize (GObject *object)
       g_object_unref (ev);
     }
   g_slist_free (edb->upcoming_alarms);
+
+  next = edb->cache_list;
+  while (next)
+    {
+      i = next;
+      next = i->next;
+
+      Event *ev = EVENT (i->data);
+      g_object_remove_toggle_ref (G_OBJECT (ev),
+				  event_source_toggle_ref_notify, edb);
+    }
+  g_slist_free (edb->cache_list);
 
   g_assert (g_hash_table_size (edb->events) == 0);
   g_hash_table_unref (edb->events);
@@ -908,9 +931,73 @@ event_source_class_init (gpointer klass, gpointer klass_data)
   event_source_class = (EventSourceClass *) klass;
 }
 
+static gboolean
+flush_cache (gpointer data)
+{
+  EventDB *edb = EVENT_DB (data);
+  GSList *list = edb->cache_list;
+  edb->cache_list = NULL;
+
+  time_t now = time (NULL);
+  GSList *i;
+  for (i = list; i; i = i->next)
+    {
+      EventSource *ev = EVENT_SOURCE (i->data);
+      if (ev->dead_time + 60 <= now)
+	/* No new reference in the at least the last 60 seconds.  Kill
+	   it.  */
+	g_object_remove_toggle_ref (G_OBJECT (ev),
+				    event_source_toggle_ref_notify, NULL);
+      else
+	edb->cache_list = g_slist_prepend (edb->cache_list, ev);
+    }
+  g_slist_free (list);
+
+  if (! edb->cache_list)
+    /* Nothing more to do.  */
+    {
+      edb->cache_buzzer = 0;
+      return FALSE;
+    }
+  else
+    /* Still some live items.  Call back in a little while.  */
+    return TRUE;
+}
+
+static void
+event_source_toggle_ref_notify (gpointer data,
+				GObject *object,
+				gboolean is_last_ref)
+{
+  EventSource *ev = EVENT_SOURCE (object);
+
+  if (is_last_ref)
+    /* Last user reference just went away.  */
+    {
+      if (ev->modified)
+	event_flush (EVENT (ev));
+
+      time_t now = time (NULL);
+      ev->dead_time = now;
+      ev->edb->cache_list = g_slist_prepend (ev->edb->cache_list, ev);
+
+      if (! ev->edb->cache_buzzer)
+	/* In two minutes.  */
+	ev->edb->cache_buzzer = g_timeout_add (120 * 1000,
+					       flush_cache, ev->edb);
+    }
+  else
+    /* Someone just grabbed a reference.  Remove it from the kill
+       list.  */
+    ev->edb->cache_list = g_slist_remove (ev->edb->cache_list, ev);
+}
+
 static void
 event_source_init (GTypeInstance *instance, gpointer klass)
 {
+  g_object_add_toggle_ref (G_OBJECT (instance),
+			   event_source_toggle_ref_notify,
+			   NULL);
 }
 
 static void
