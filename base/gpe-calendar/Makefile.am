@@ -21,7 +21,6 @@ gpe_calendar_SOURCES = main.c						\
 		       util.c globals.h					\
                        day_view.c day_view.h				\
                        week_view.c week_view.h				\
-                       day_render.c day_render.h			\
 		       event-ui.c event-ui.h				\
 		       month_view.c month_view.h			\
 		       day_popup.c day_popup.h				\

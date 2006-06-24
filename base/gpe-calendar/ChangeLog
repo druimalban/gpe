@@ -1,3 +1,8 @@
+2006-06-24  Neal H. Walfield  <neal@gnu.org>
+
+	* Makefile.am (gpe_calendar_SOURCES): Remove day_render.h and
+	day_render.c.
+
 2006-06-23  Neal H. Walfield  <neal@gnu.org>
 
 	* day_view.h: Include <gtk/gtk.h> and <time.h>.
