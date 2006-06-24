@@ -869,6 +869,8 @@ current_view_consider (void)
   gtk_container_add (current_view_container, current_view);
   gtk_widget_show (current_view);
 
+  gtk_widget_grab_focus (current_view);
+
   event_list_consider ();
   calendar_consider ();
 

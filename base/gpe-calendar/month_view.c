@@ -296,22 +296,21 @@ button_press_event (GtkWidget *widget, GdkEventButton *event,
 
   if (event->type == GDK_BUTTON_PRESS)
     {
+      /* Select the day.  */
+      struct tm tm;
+      g_date_to_struct_tm (&c->date, &tm);
+
+      if (event->button == 1 && day == month_view->focused_day)
+	set_time_and_day_view (mktime (&tm));
+
+      /* Whatever button was pressed, give this day the focus.  */
+      gtk_view_set_time (GTK_VIEW (month_view), mktime (&tm));
+
       if (event->button == 3)
 	/* Right click.  Popup a menu.  */
 	gtk_menu_popup (day_popup (&c->date, c->events),
 			NULL, NULL, NULL, NULL,
 			event->button, event->time);
-      else if (event->button == 1)
-	/* Left click.  Select the day.  */
-	{
-	  struct tm tm;
-	  g_date_to_struct_tm (&c->date, &tm);
-
-	  if (day != month_view->focused_day)
-	    gtk_view_set_time (GTK_VIEW (month_view), mktime (&tm));
-	  else
-	    set_time_and_day_view (mktime (&tm));
-	}
 
       return TRUE;
     }
