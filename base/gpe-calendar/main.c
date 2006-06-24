@@ -801,7 +801,7 @@ current_view_consider (void)
       switch (current_view_mode)
 	{
 	case view_day_view:
-	  if (GTK_IS_DAY_VIEW (current_view))
+	  if (IS_DAY_VIEW (current_view))
 	    return TRUE;
 	  break;
 	case view_week_view:
@@ -835,7 +835,7 @@ current_view_consider (void)
   switch (current_view_mode)
     {
     case view_day_view:
-      current_view = gtk_day_view_new (viewtime);
+      current_view = day_view_new (viewtime);
       gtk_date_sel_set_mode (datesel, GTKDATESEL_FULL);
       gtk_widget_show (GTK_WIDGET (datesel));
       break;

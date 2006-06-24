@@ -11,22 +11,28 @@
 #ifndef DAY_VIEW_H
 #define DAY_VIEW_H
 
-struct _GtkDayView;
-typedef struct _GtkDayView GtkDayView;
+#include <gtk/gtk.h>
+#include <time.h>
 
-#define GTK_DAY_VIEW(obj) \
-  GTK_CHECK_CAST (obj, gtk_day_view_get_type (), struct _GtkDayView)
-#define GTK_DAY_VIEW_CLASS(klass) \
-  GTK_CHECK_CLASS_CAST (klass, gtk_day_view_get_type (), DayViewClass)
-#define GTK_IS_DAY_VIEW(obj) GTK_CHECK_TYPE (obj, gtk_day_view_get_type ())
+#define TYPE_DAY_VIEW (day_view_get_type ())
+#define DAY_VIEW(obj) \
+  (G_TYPE_CHECK_INSTANCE_CAST ((obj), TYPE_DAY_VIEW, DayView))
+#define DAY_VIEW_CLASS(klass) \
+  (G_TYPE_CHECK_CLASS_CAST ((klass), TYPE_DAY_VIEW, DayViewClass))
+#define IS_DAY_VIEW(obj) \
+  (G_TYPE_CHECK_INSTANCE_TYPE ((obj), TYPE_DAY_VIEW))
+#define IS_DAY_VIEW_CLASS(klass) \
+  (G_TYPE_CHECK_CLASS_TYPE ((klass), TYPE_DAY_VIEW))
+#define DAY_VIEW_GET_CLASS(obj) \
+  (G_TYPE_INSTANCE_GET_CLASS ((obj), TYPE_DAY_VIEW, DayViewClass))
+
+struct _DayView;
+typedef struct _DayView DayView;
 
 /* Return GType of a day view.  */
-extern GType gtk_day_view_get_type (void);
+extern GType day_view_get_type (void);
 
 /* Create a new day view.  */
-extern GtkWidget *gtk_day_view_new (time_t time);
-
-/* Scroll.  */
-extern void gtk_day_view_scroll (GtkDayView *day_view, gboolean force);
+extern GtkWidget *day_view_new (time_t time);
 
 #endif

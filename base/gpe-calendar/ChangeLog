@@ -1,3 +1,120 @@
+2006-06-23  Neal H. Walfield  <neal@gnu.org>
+
+	* day_view.h: Include <gtk/gtk.h> and <time.h>.
+	(GTK_DAY_VIEW): Rename from this...
+	(DAY_VIEW): ... to this.  Update users.
+	(GTK_DAY_VIEW_CLASS): Rename from this...
+	(DAY_VIEW_CLASS): ... to this.  Update users.
+	(GTK_IS_DAY_VIEW): Rename from this...
+	(IS_DAY_VIEW): ... to this.  Update users.
+	(TYPE_DAY_VIEW): New define.
+	(IS_DAY_VIEW_CLASS): Likewise.
+	(DAY_VIEW_GET_CLASS): Likewise.
+	(struct _GtkDayView): Rename from this...
+	(struct _DayView): ... to this.  Update users.
+	(GtkDayView): Rename from this...
+	(DayView): ... to this.  Update users.
+	(gtk_day_view_get_type): Rename from this...
+	(day_view_get_type): ... to this.  Update users.
+	(gtk_day_view_new): Rename from this...
+	(day_view_new): ... to this.  Update users.
+	(gtk_day_view_scroll): Remove declaration.
+	* day_view.c: Include <langinfo.h> and include <gpe/pixmaps.h>.
+	* day_render.c (struct event_rect): Move from here...
+	* day_view.c (struct event_rect): ... to here.  Change position
+	fields to integers which represent absolute coordinates.  Update
+	users.
+	* day_render.c (event_rect_new): Move from here...
+	* day_view.c (event_rect_new): ... to here.  Take the y and height
+	as well.  Don't do any math.  Just save them in the struct
+	event_rect.
+	* day_render.c (gtk_day_render_expose): Break this into...
+	* day_view.c (event_rect_expose, appointment_area_expose_event,
+	reminder_area_expose_event): ... these functions.
+	(appointment_area_expose_event, reminder_area_expose_event):  Call
+	reload_events_hard and update_extents if required.
+	* day_render.c (event_rect_delete): Move from here...
+	* day_view.c (event_rect_delete): ... to here.
+	(event_rect_list_free): New function.
+	(NUM_HOURS): New define.
+	(ROWS_HARD_FIRST): Likewise.
+	(ROWS_HARD): Likewise.
+	* day_render.c (struct _GtkDayRender): Fold the contents of this
+	structure...
+	* day_view.c (struct _DayView): ... into this structure.  Remove
+	fields scrolling, scroll_floating, reminders and appointments.
+	Add fields visible_width, visible_start, visible_duration,
+	events_bg_gc, pending_reload and pending_update_extents.  Rename
+	app_gc to events_bg_gc.
+	* day_render.c (gtk_day_render_new): Fold this function...
+	* day_view.c (day_view_new): ... and this function...
+	(day_view_init): ... into this function.
+	* day_render.c (gtk_day_render_finalize): Fold this function...
+	* day_view.c (day_view_finalize): ... into this function.
+	* day_render.c (calc_events_positions): Move from here...
+	* day_view.c (calc_events_positions): ... to here.  Calculate the
+	absolute positions of the event rectangles.  Return the list of
+	event rectangles.
+	(time_layout): New function.
+	* day_render.c (update_extents): Move from here...
+	* day_view.c (update_extents): ... to here.  Calculate
+	DAY_VIEW->TIME_WIDTH.  Recalculate the event rectangles.  Set
+	DAY_VIEW->PENDING_UPDATE_EXTENS to FALSE.
+	* day_render.c (size_request): Move from here...
+	* day_view.c (size_request): ... to here.  Include the border
+	pixels when calculating the minimum row height.  Queue an extent
+	update.
+	* day_render.c (configure_event): Move from here...
+	* day_view.c (configure_event): ... to here.  Don't call
+	update_extents directly, just set DAY_VIEW->PENDING_UPDATE_EXTENTS
+	to TRUE.
+	* day_render.c (hour_bar_calc): Move from here...
+	* day_view.c (hour_bar_calc): ... to here.  Update to use
+	DAY_VIEW->VISIBLE_START and DAY_VIEW->VISIBLE_DURATION.
+	* day_render.c (hour_bar_move): Move from here...
+	* day_view.c (hour_bar_move): ... to here.
+	* day_render.c (gtk_day_render_button_press): Move from here...
+	* day_view.c (button_press_event): ... to here.  Don't send any
+	signals.  Instead, fold...
+	(day_view_row_clicked): ... this function...
+	(day_view_event_clicked): ... and this function in.
+	(gtk_day_view_reload_events): Rename from this...
+	(reload_events_hard): ... to this.  Don't create GtkDayRenders,
+	but the appropriate drawing areas.
+	(scroll_to): Remove function.
+	(gtk_day_view_scroll): Likewise.
+	(sink_scroller): Likewise.
+	* day_render.h: Remove file.
+	* day_render.c: Remove file.
+
+2006-06-22  Neal H. Walfield  <neal@gnu.org>
+
+	* month_view.c (gtk_month_view_button_press_event): Rename from
+	this...
+	(button_press_event): ... to this.  Send the focus MONTH_VIEW.
+	Don't call the widget's parent's class's button press handler.
+	(gtk_month_view_base_class_init): Don't initialize
+	WIDGET_CLASS->BUTTON_PRESS_EVENT.
+	(gtk_month_view_new): Have MONTH_VIEW get key press events and be
+	focusable.  Have MONTH_VIEW->DRAW get button press events.  Attach
+	button_press_event to MONTH_VIEW->DRAW's "button-press-event"
+	signal handler.
+	* week_view.c (key_press_event): Rename from this...
+	(gtk_week_view_key_press_event): ... to this.
+	(gtk_week_view_base_class_init): Set WIDGET_CLASS->KEY_PRESS_EVENT
+	to it.
+	(button_press_event): Send the focus to WEEK_VIEW.
+	(gtk_week_view_new): Have WEEK_VIEW get key press events and be
+	focusable.  Don't have WEEK_VIEW->DRAW get key press events or be
+	focusable.  Don't set its "key-press-event" handler.
+	
+	* month_view.c (gtk_month_view_reload_events): Don't sort EVENTS.
+
+2006-06-22  Neal H. Walfield  <neal@gnu.org>
+
+	* week_view.c (gtk_week_view_reload_events): Optimize loading
+	events.
+
 2006-06-19  Neal H. Walfield  <neal@gnu.org>
 
 	* export-vcal.c (export_event_as_vevent): Set "unit" and "units"
