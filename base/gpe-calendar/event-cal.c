@@ -30,18 +30,22 @@ struct _GtkEventCal
   /* Current year and month.  */
   int year;
   int month;
+
+  gboolean pending_reload;
 };
 
 typedef struct
 {
-  GtkVBoxClass vbox_class;
-  GObjectClass parent_class;
+  GtkCalendarClass gtk_calendar_class;
 } EventCalClass;
 
-static void gtk_event_cal_base_class_init (gpointer klass);
+static void gtk_event_cal_base_class_init (gpointer klass,
+					   gpointer klass_data);
 static void gtk_event_cal_init (GTypeInstance *instance, gpointer klass);
 static void gtk_event_cal_dispose (GObject *obj);
 static void gtk_event_cal_finalize (GObject *object);
+static gboolean gtk_event_cal_expose_event (GtkWidget *widget,
+					    GdkEventExpose *event);
 static void gtk_event_cal_month_changed (GtkCalendar *cal);
 
 static GtkWidgetClass *parent_class;
@@ -56,9 +60,9 @@ gtk_event_cal_get_type (void)
       static const GTypeInfo info =
       {
 	sizeof (EventCalClass),
+	NULL,
+	NULL,
 	gtk_event_cal_base_class_init,
-	NULL,
-	NULL,
 	NULL,
 	NULL,
 	sizeof (struct _GtkEventCal),
@@ -74,19 +78,20 @@ gtk_event_cal_get_type (void)
 }
 
 static void
-gtk_event_cal_base_class_init (gpointer klass)
+gtk_event_cal_base_class_init (gpointer klass, gpointer klass_data)
 {
   GObjectClass *object_class;
   GtkWidgetClass *widget_class;
   GtkCalendarClass *calendar_class;
 
-  parent_class = g_type_class_ref (gtk_vbox_get_type ());
+  parent_class = g_type_class_ref (gtk_calendar_get_type ());
 
   object_class = G_OBJECT_CLASS (klass);
   object_class->finalize = gtk_event_cal_finalize;
   object_class->dispose = gtk_event_cal_dispose;
 
   widget_class = (GtkWidgetClass *) klass;
+  widget_class->expose_event = gtk_event_cal_expose_event;
 
   calendar_class = (GtkCalendarClass *) klass;
   calendar_class->month_changed = gtk_event_cal_month_changed;
@@ -116,7 +121,7 @@ gtk_event_cal_finalize (GObject *object)
 }
 
 static void
-update_cal (GtkCalendar *cal, gboolean force)
+update_cal (GtkCalendar *cal)
 {
   GtkEventCal *event_cal = GTK_EVENT_CAL (cal);
   unsigned int year, month, day;
@@ -128,8 +133,6 @@ update_cal (GtkCalendar *cal, gboolean force)
   GSList *e;
 
   gtk_calendar_get_date (cal, &year, &month, &day);
-  if (! force && event_cal->year == year && event_cal->month == month)
-    return;
 
   gtk_calendar_freeze (cal);
   gtk_calendar_clear_marks (cal);
@@ -186,18 +189,38 @@ update_cal (GtkCalendar *cal, gboolean force)
     }
   event_list_unref (events);
   gtk_calendar_thaw (cal);
+
+  event_cal->pending_reload = FALSE;
+}
+
+static gboolean
+gtk_event_cal_expose_event (GtkWidget *widget, GdkEventExpose *event)
+{
+  GtkEventCal *ec = GTK_EVENT_CAL (widget);
+  if (ec->pending_reload)
+    update_cal (GTK_CALENDAR (ec));
+
+  return GTK_WIDGET_CLASS (parent_class)->expose_event (widget, event);
 }
 
 static void
 gtk_event_cal_month_changed (GtkCalendar *cal)
 {
-  update_cal (cal, FALSE);
+  GtkEventCal *ec = GTK_EVENT_CAL (cal);
+  
+  unsigned int year, month, day;
+  gtk_calendar_get_date (cal, &year, &month, &day);
+  if (ec->year == year && ec->month == month)
+    return;
+
+  ec->pending_reload = TRUE;
 }
 
 void
 gtk_event_cal_reload_events (GtkEventCal *ecal)
 {
-  update_cal (GTK_CALENDAR (ecal), TRUE);
+  ecal->pending_reload = TRUE;
+  gtk_widget_queue_draw (GTK_WIDGET (ecal));
 }
 
 GtkWidget *
@@ -205,7 +228,7 @@ gtk_event_cal_new (void)
 {
   GtkWidget *widget = g_object_new (gtk_event_cal_get_type (), NULL);
 
-  update_cal (GTK_CALENDAR (widget), TRUE);
+  gtk_event_cal_reload_events (GTK_EVENT_CAL (widget));
 
   return widget;
 }

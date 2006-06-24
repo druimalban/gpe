@@ -59,6 +59,9 @@ struct _GtkMonthView
 
   /* Number of weeks in the current month.  */
   gint weeks;
+
+  /* If a event reload is pending.  */
+  gboolean pending_reload;
 };
 
 typedef struct
@@ -316,6 +319,8 @@ button_press_event (GtkWidget *widget, GdkEventButton *event,
   return FALSE;
 }
 
+static void reload_events_hard (GtkMonthView *view);
+
 /* 0, 7 are Sunday.  */
 static nl_item days_of_week[] = 
   { ABDAY_1, ABDAY_2, ABDAY_3, ABDAY_4, ABDAY_5, ABDAY_6, ABDAY_7, ABDAY_1 };
@@ -326,6 +331,9 @@ draw_expose_event (GtkWidget *widget,
 		   GtkWidget *mv)
 {
   GtkMonthView *month_view = GTK_MONTH_VIEW (mv);
+  if (month_view->pending_reload)
+    reload_events_hard (month_view);
+
   GtkDrawingArea *darea;
   GdkDrawable *drawable;
   GdkGC *black_gc;
@@ -553,6 +561,14 @@ static void
 gtk_month_view_reload_events (GtkView *view)
 {
   GtkMonthView *month_view = GTK_MONTH_VIEW (view);
+  month_view->pending_reload = TRUE;
+
+  gtk_widget_queue_draw (GTK_WIDGET (view));
+}
+
+static void
+reload_events_hard (GtkMonthView *month_view)
+{
   time_t t = gtk_view_get_time (GTK_VIEW (month_view));
   struct tm tm_start;
   guint days;
@@ -662,6 +678,8 @@ gtk_month_view_reload_events (GtkView *view)
 	= g_slist_sort (month_view->day[i].events, event_compare_func);
 
   gtk_widget_queue_draw (month_view->draw);
+
+  month_view->pending_reload = FALSE;
 }
 
 static void

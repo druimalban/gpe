@@ -53,6 +53,8 @@ struct _EventList
   struct tm tm;
 
   EventDB *edb;
+
+  gboolean pending_reload;
 };
 
 typedef struct
@@ -70,6 +72,8 @@ static void event_list_base_class_init (gpointer klass,
 static void event_list_dispose (GObject *obj);
 static void event_list_finalize (GObject *object);
 static void event_list_init (GTypeInstance *instance, gpointer klass);
+static gboolean event_list_expose_event (GtkWidget *widget,
+					 GdkEventExpose *event);
 
 static GtkWidgetClass *parent_class;
 
@@ -113,7 +117,8 @@ event_list_base_class_init (gpointer klass, gpointer klass_data)
   object_class->finalize = event_list_finalize;
   object_class->dispose = event_list_dispose;
 
-  widget_class = (GtkWidgetClass *) klass;
+  widget_class = GTK_WIDGET_CLASS (klass);
+  widget_class->expose_event = event_list_expose_event;
 
   event_list_class = EVENT_LIST_CLASS (klass);
   event_list_class->event_clicked_signal
@@ -544,8 +549,8 @@ event_list_init (GTypeInstance *instance, gpointer klass)
 					   NULL);
 }
 
-void
-event_list_reload_events (EventList *event_list)
+static void
+event_list_reload_events_hard (EventList *event_list)
 {
   GtkTreeModel *model;
   GtkListStore *list;
@@ -639,6 +644,26 @@ event_list_reload_events (EventList *event_list)
 
       localtime_r (&event_list->date, &event_list->tm);
     }
+
+  event_list->pending_reload = FALSE;
+}
+
+static gboolean
+event_list_expose_event (GtkWidget *widget, GdkEventExpose *event)
+{
+  EventList *event_list = EVENT_LIST (widget);
+
+  if (event_list->pending_reload)
+    event_list_reload_events_hard (event_list);
+
+  return GTK_WIDGET_CLASS (parent_class)->expose_event (widget, event);
+}
+
+void
+event_list_reload_events (EventList *event_list)
+{
+  event_list->pending_reload = TRUE;
+  gtk_widget_queue_draw (GTK_WIDGET (event_list));
 }
 
 GtkWidget *

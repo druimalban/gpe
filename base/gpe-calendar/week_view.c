@@ -55,6 +55,9 @@ struct _GtkWeekView
 
   /* Day with the focus.  */
   int focused_day;
+
+  /* If an event reload is pending.  */
+  gboolean pending_reload;
 };
 
 typedef struct
@@ -202,10 +205,15 @@ gtk_week_view_set_time (GtkView *view, time_t current)
   gtk_week_view_reload_events (view);
 }
 
+static void reload_events_hard (GtkWeekView *week_view);
+
 static gint
 draw_expose_event (GtkWidget *widget, GdkEventExpose *event, GtkWidget *wv)
 {
   GtkWeekView *week_view = GTK_WEEK_VIEW (wv);
+  if (week_view->pending_reload)
+    reload_events_hard (week_view);
+
   GdkDrawable *drawable = widget->window;
   GdkGC *black_gc;
   GdkGC *blue_gc;
@@ -518,8 +526,14 @@ resize (GtkWidget *widget, GtkAllocation *allocation, GtkWidget *wv)
 static void
 gtk_week_view_reload_events (GtkView *view)
 {
-  GtkWeekView *week_view = GTK_WEEK_VIEW (view);
+  GTK_WEEK_VIEW (view)->pending_reload = TRUE;
 
+  gtk_widget_queue_draw (GTK_WIDGET (view));
+}
+
+static void
+reload_events_hard (GtkWeekView *week_view)
+{
   /* Destroy any events.  */
   int i;
   for (i = 0; i < 7; i ++)
@@ -533,7 +547,7 @@ gtk_week_view_reload_events (GtkView *view)
     }
 
   GDate focus;
-  g_date_set_time_t (&focus, gtk_view_get_time (view));
+  g_date_set_time_t (&focus, gtk_view_get_time (GTK_VIEW (week_view)));
 
   GDate period_start = focus;
   /* Normalize to sunday or monday as appropriate.  */
@@ -613,6 +627,8 @@ gtk_week_view_reload_events (GtkView *view)
 	= g_slist_sort (week_view->days[i].events, event_compare_func);
 
   week_view->have_extents = FALSE;
+
+  week_view->pending_reload = FALSE;
 
   gtk_widget_queue_draw (week_view->draw);
 }

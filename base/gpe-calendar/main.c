@@ -152,10 +152,14 @@ gboolean week_starts_sunday;
 gboolean day_view_combined_times;
 const gchar *TIMEFMT;
 
+static guint reload_source;
+
 /* Schedule atd to wake us up when the next alarm goes off.  */
 static gboolean
 schedule_wakeup (gboolean reload)
 {
+  reload_source = 0;
+
 #ifdef WITH_LIBSCHEDULE
   static int broken_at;
   if (broken_at)
@@ -188,22 +192,6 @@ schedule_wakeup (gboolean reload)
   return FALSE;
 }
 
-static guint reload_source;
-
-static gboolean
-hard_reload (gpointer data)
-{
-  if (calendar)
-    gtk_event_cal_reload_events (calendar);
-  if (event_list)
-    event_list_reload_events (event_list);
-  schedule_wakeup (TRUE);
-
-  reload_source = 0;
-  /* Don't run again.  */
-  return FALSE;
-}
-
 static void
 update_view (void)
 {
@@ -214,8 +202,15 @@ update_view (void)
       else if (IS_EVENT_LIST (current_view))
 	event_list_reload_events (EVENT_LIST (current_view));
     }
+
+  if (calendar)
+    gtk_event_cal_reload_events (calendar);
+  if (event_list)
+    event_list_reload_events (event_list);
+  schedule_wakeup (TRUE);
+
   if (! reload_source)
-    reload_source = g_idle_add (hard_reload, 0);
+    reload_source = g_idle_add (schedule_wakeup, 0);
 }
 
 static gboolean just_new;

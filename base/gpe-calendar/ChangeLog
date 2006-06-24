@@ -1,5 +1,58 @@
 2006-06-24  Neal H. Walfield  <neal@gnu.org>
 
+	* main.c (schedule_wakeup): Set RELOAD_SOURCE to 0.
+	(update_view): Call gtk_event_cal_reload_events and
+	event_list_reload_events directly.  Don't add hard_reload as the
+	idle function but schedule_wakeup.
+	(hard_reload): Remove function.
+	* month_view.c (struct _GtkMonthView): New field pending_reload.
+	(draw_expose_event): If MONTH_VIEW->PENDING_RELOAD is TRUE, call
+	reload_events_hard.
+	(gtk_month_view_reload_events): Move the body of this function
+	from here...
+	(reload_events_hard): ... to this new function.  Set
+	MONTH_VIEW->PENDING_RELOAD to FALSE.
+	(gtk_month_view_reload_events): Just set
+	MONTH_VIEW->PENDING_RELOAD to TRUE and queue a redraw on VIEW.
+	* week_view.c (struct _GtkWeekView): New field pending_reload.
+	(draw_expose_event): If WEEK_VIEW->PENDING_RELOAD is TRUE, call
+	reload_events_hard.
+	(gtk_week_view_reload_events): Move the body of this function from
+	here...
+	(reload_events_hard): ... to this new function.  Set
+	WEEK_VIEW->PENDING_RELOAD to FALSE.
+	* event-list.c (struct _EventList): Add field pending_reload.
+	(event_list_expose_event): New function.
+	(event_list_base_class_init): Initialize
+	WIDGET_CLASS->EXPOSE_EVENT to event_list_expose_event.
+	(event_list_reload_events): Move body of this...
+	(event_list_reload_events_hard): ... to this new function.  Set
+	EVENT_LIST->PENDING_RELOAD to FALSE.
+	(event_list_reload_events): Set EVENT_LIST->PENDING_RELOAD to TRUE
+	and queue a redraw.
+	* event-cal.c (struct _GtkEventCal): Add field pending_reload.
+	(gtk_event_cal_expose_event): New function.
+	(gtk_event_cal_base_class_init): Initialize
+	WIDGET_CLASS->EXPOSE_EVENT with gtk_event_cal_expose_event.
+	(update_cal): Remove argument force.  Set
+	EVENT_CAL->PENDING_RELOAD to FALSE.
+	(gtk_event_cal_month_changed): Don't call update_cal.  Just set
+	EC->PENDING_RELOAD to true if appropriate.
+	(gtk_event_cal_reload_events): Set EC->PENDING_RELOAD to TRUE and
+	queue a draw.
+	(gtk_event_cal_new): Don't call update_cal.  Call
+	gtk_event_cal_reload_events.
+
+	(EventCalClass): Remove fields vbox_class and parent_class.  Add
+	field gtk_calendar_class.
+	(gtk_event_cal_get_type): Use gtk_event_cal_base_class_init as
+	fourth, not the second, initializer.
+	(gtk_event_cal_base_class_init): Take an additional parameter,
+	klass_data.  PARENT_CLASS is a GtkCalendarClass, not a
+	GtkVBoxClass.
+
+2006-06-24  Neal H. Walfield  <neal@gnu.org>
+
 	* Makefile.am (gpe_calendar_SOURCES): Remove day_render.h and
 	day_render.c.
 
