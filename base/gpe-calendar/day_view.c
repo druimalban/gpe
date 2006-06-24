@@ -1036,6 +1036,19 @@ appointment_area_expose_event (GtkWidget *widget, GdkEventExpose *event,
 		      day_view->visible_width - 1,
 		      day_view->visible_height - 1);
 
+  /* And now each row's background.  */
+  for (i = 0; i < day_view->visible_duration; i += 60 * 60)
+    {
+      int top = day_view->height * i / day_view->visible_duration;
+
+      gdk_draw_line (widget->window, day_view->events_bg_gc,
+		     0, top, day_view->time_width - 1, top);
+
+      gdk_draw_line (widget->window, day_view->hour_bg_gc,
+		     day_view->time_width, top,
+		     day_view->visible_width - 1, top);
+    }
+
   if (day_view->hour_bar_pos >= 0)
     /* Draw the hour bar.  */
     gdk_draw_rectangle (widget->window, day_view->time_gc, TRUE,
@@ -1044,29 +1057,6 @@ appointment_area_expose_event (GtkWidget *widget, GdkEventExpose *event,
 			- HOUR_BAR_HEIGHT (day_view) / 2,
 			day_view->visible_width - 1,
 			HOUR_BAR_HEIGHT (day_view) / 2);
-
-  /* And now each row's background.  */
-  for (i = 0; i < day_view->visible_duration; i += 60 * 60)
-    {
-      int top = day_view->height * i / day_view->visible_duration;
-
-      /* Draw a gray line to separate each row but don't draw over the
-	 hour bar.  */
-      if ((day_view->hour_bar_pos >= 0
-	   && ! ((day_view->hour_bar_pos - HOUR_BAR_HEIGHT (day_view) / 2
-		  <= top)
-		 && (top <= day_view->hour_bar_pos
-		     + HOUR_BAR_HEIGHT (day_view) / 2)))
-	  || day_view->hour_bar_pos == -1)
-	{
-	  gdk_draw_line (widget->window, day_view->events_bg_gc,
-			 0, top, day_view->time_width - 1, top);
-
-	  gdk_draw_line (widget->window, day_view->hour_bg_gc,
-			 day_view->time_width, top,
-			 day_view->visible_width - 1, top);
-	}
-    }
 
   /* Draw the black vertical line dividing the hour column from the
      events.  */

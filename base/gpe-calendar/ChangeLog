@@ -1,5 +1,17 @@
 2006-06-24  Neal H. Walfield  <neal@gnu.org>
 
+	* day_view.c (appointment_area_expose_event): Simplify drawing the
+	lines separating the hours.
+
+2006-06-24  Neal H. Walfield  <neal@gnu.org>
+
+	* main.c (current_view_consider): Give the CURRENT_VIEW the focus.
+	
+	* month_view.c (button_press_event): Any click transfers the
+	focus.
+
+2006-06-24  Neal H. Walfield  <neal@gnu.org>
+
 	* main.c (schedule_wakeup): Set RELOAD_SOURCE to 0.
 	(update_view): Call gtk_event_cal_reload_events and
 	event_list_reload_events directly.  Don't add hard_reload as the
