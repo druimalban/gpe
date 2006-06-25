@@ -1,5 +1,10 @@
 2006-06-26  Neal H. Walfield  <neal@gnu.org>
 
+	* hildon/gpe-calendar.desktop.in.in (Exec): Source
+	/usr/bin/connectivity_preload.sh before running.
+
+2006-06-26  Neal H. Walfield  <neal@gnu.org>
+
 	* event-list.h (event_list_set_period_box_visible): New
 	declaration.
 	* event-list.c (struct _EventList): New field period_box.
