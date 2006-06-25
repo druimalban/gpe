@@ -54,4 +54,8 @@ extern GtkWidget *event_list_new (EventDB *edb);
 /* Force LIST to reload the events from the event database.  */
 void event_list_reload_events (EventList *list);
 
+/* Shows or hides EVENT_LIST's period box.  */
+void event_list_set_period_box_visible (EventList *event_list,
+					gboolean visible);
+
 #endif

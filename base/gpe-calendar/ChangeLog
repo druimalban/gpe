@@ -1,5 +1,17 @@
 2006-06-26  Neal H. Walfield  <neal@gnu.org>
 
+	* event-list.h (event_list_set_period_box_visible): New
+	declaration.
+	* event-list.c (struct _EventList): New field period_box.
+	(event_list_set_period_box_visible): New function.
+	(event_list_init): Initialize EVENT_LIST->PERIOD_BOX.
+	* main.c (event_list_create): Set EL's period box to not be
+	visible.
+	(current_view_consider): Set the event list's period box
+	visibility appropriately.
+
+2006-06-26  Neal H. Walfield  <neal@gnu.org>
+
 	* main.c (set_title): New function.
 	(propagate_time): Call it.
 	(main): Don't set the title directly.  Call set_title instead.

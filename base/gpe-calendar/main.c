@@ -210,7 +210,7 @@ update_view (void)
   schedule_wakeup (TRUE);
 
   if (! reload_source)
-    reload_source = g_idle_add (schedule_wakeup, 0);
+    reload_source = g_idle_add ((GSourceFunc) schedule_wakeup, 0);
 }
 
 static gboolean just_new;
@@ -674,6 +674,7 @@ static GtkWidget *
 event_list_create (EventDB *edb)
 {
   GtkWidget *el = event_list_new (edb);
+  event_list_set_period_box_visible (EVENT_LIST (el), FALSE);
   g_signal_connect (el, "event-clicked",
 		    G_CALLBACK (event_list_event_clicked), NULL);
   g_signal_connect (el, "event-key-pressed",
@@ -903,6 +904,7 @@ current_view_consider (void)
 	  event_list = EVENT_LIST (current_view);
 	  gtk_widget_reparent (GTK_WIDGET (event_list),
 			       GTK_WIDGET (event_list_container));
+	  event_list_set_period_box_visible (event_list, FALSE);
 	  gtk_widget_show (GTK_WIDGET (event_list_container));
 	}
       else
@@ -940,6 +942,7 @@ current_view_consider (void)
 	}
       else
 	current_view = event_list_create (event_db);
+      event_list_set_period_box_visible (EVENT_LIST (current_view), TRUE);
       gtk_widget_hide (GTK_WIDGET (datesel));
       break;
     }

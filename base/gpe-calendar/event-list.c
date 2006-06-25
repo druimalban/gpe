@@ -43,6 +43,7 @@ struct _EventList
   GtkTreeView *view;
   GSList *events;
 
+  GtkBox *period_box;
   GtkEntry *entry;
   GtkComboBox *combo;
 
@@ -420,6 +421,7 @@ event_list_init (GTypeInstance *instance, gpointer klass)
   GtkCellRenderer *renderer;
 
   GtkBox *box = GTK_BOX (gtk_hbox_new (FALSE, 0));
+  event_list->period_box = box;
   gtk_box_pack_start (GTK_BOX (instance), GTK_WIDGET (box),
 		      FALSE, FALSE, 0);
   gtk_widget_show (GTK_WIDGET (box));
@@ -664,6 +666,15 @@ event_list_reload_events (EventList *event_list)
 {
   event_list->pending_reload = TRUE;
   gtk_widget_queue_draw (GTK_WIDGET (event_list));
+}
+
+void
+event_list_set_period_box_visible (EventList *event_list, gboolean visible)
+{
+  if (visible)
+    gtk_widget_show (GTK_WIDGET (event_list->period_box));
+  else
+    gtk_widget_hide (GTK_WIDGET (event_list->period_box));
 }
 
 GtkWidget *
