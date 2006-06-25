@@ -2028,7 +2028,7 @@ main (int argc, char *argv[])
       sidebar_container = GTK_CONTAINER (f);
       gtk_frame_set_shadow_type (GTK_FRAME (f), GTK_SHADOW_NONE);
       int d = display_landscape ? gdk_screen_width () : gdk_screen_height ();
-      int w = MAX (150, d / 6);
+      int w = MAX (200, d / 6);
       gtk_widget_set_size_request (f, display_landscape ? w : -1,
 				   display_landscape ? -1 : w);
       gtk_paned_pack2 (GTK_PANED (main_panel), f, FALSE, TRUE);
