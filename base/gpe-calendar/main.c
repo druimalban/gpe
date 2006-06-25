@@ -316,11 +316,90 @@ calendars_button_clicked (GtkWidget *widget, gpointer user_data)
   gtk_window_present (GTK_WINDOW (dialog));
 }
 
+static gboolean
+set_title (void)
+{
+  static guint set_title_source;
+
+  if (set_title_source > 0)
+    g_source_remove (set_title_source);
+
+  GDate viewing;
+  g_date_set_time_t (&viewing, viewtime);
+
+  time_t now = time (NULL);
+  GDate today;
+  g_date_set_time_t (&today, now);
+
+  char *date;
+  char temp[100];
+  GDate refresh_at;
+  g_date_clear (&refresh_at, 1);
+
+  if (g_date_get_julian (&today) - 1 == g_date_get_julian (&viewing))
+    {
+      date = _("Yesterday");
+      refresh_at = today;
+      g_date_add_days (&refresh_at, 1);
+    }
+  else if (g_date_get_julian (&today) == g_date_get_julian (&viewing))
+    {
+      date = _("Today");
+      refresh_at = today;
+      g_date_add_days (&refresh_at, 1);
+    }
+  else if (g_date_get_julian (&today) + 1 == g_date_get_julian (&viewing))
+    {
+      date = _("Tomorrow");
+      refresh_at = today;
+      g_date_add_days (&refresh_at, 1);
+    }
+  else
+    {
+      g_date_strftime (temp, sizeof (temp), "%b %e", &viewing);
+      date = temp;
+
+      if (now < viewtime)
+	{
+	  refresh_at = viewing;
+	  g_date_subtract_days (&refresh_at, 1);
+	}
+    }
+
+  if (g_date_valid (&refresh_at))
+    /* The title is relative to the current time, change it at
+       midnight.  */
+    {
+      struct tm tm;
+      g_date_to_struct_tm (&refresh_at, &tm);
+
+      set_title_source = g_timeout_add ((mktime (&tm) - now + 1) * 1000,
+					(GSourceFunc) set_title, NULL);
+    }
+
+  char buffer[200];
+  snprintf (buffer, sizeof (buffer), _("Calendar - %s"), date);
+
+#ifdef IS_HILDON
+  hildon_app_set_title (HILDON_APP (main_window), buffer);
+#else
+  gtk_window_set_title (GTK_WINDOW (main_window), buffer);
+#endif
+
+  return FALSE;
+}
+
 static void
 propagate_time (void)
 {
   unsigned int day, month, year;
   struct tm tm;
+
+  static gboolean propagating;
+
+  if (propagating)
+    return;
+  propagating = TRUE;
 
   localtime_r (&viewtime, &tm);
 
@@ -344,13 +423,16 @@ propagate_time (void)
   if (tm.tm_year != dstm.tm_year || tm.tm_yday != dstm.tm_yday)
     gtk_date_sel_set_time (GTK_DATE_SEL (datesel), viewtime);
 
-
   if (current_view && GTK_IS_VIEW (current_view))
     {
       time_t t = gtk_view_get_time (GTK_VIEW (current_view));
       if (t != viewtime)
 	gtk_view_set_time (GTK_VIEW (current_view), viewtime);
     }
+
+  set_title ();
+
+  propagating = FALSE;
 }
 
 static gboolean
@@ -1036,9 +1118,9 @@ conf_write (void)
   g_key_file_set_boolean (conf, "gpe-calendar", "event-list-disabled",
 			  event_list_disabled);
 
-  g_key_file_set_integer (conf, "gpe-calendar", "width-width",
+  g_key_file_set_integer (conf, "gpe-calendar", "window-width",
 			  main_window->allocation.width);
-  g_key_file_set_integer (conf, "gpe-calendar", "width-height",
+  g_key_file_set_integer (conf, "gpe-calendar", "window-height",
 			  main_window->allocation.height);
 
   gsize length;
@@ -1496,15 +1578,14 @@ main (int argc, char *argv[])
 #ifdef IS_HILDON
   main_window = hildon_app_new ();
   hildon_app_set_two_part_title (HILDON_APP (main_window), FALSE);
-  hildon_app_set_title (HILDON_APP (main_window), _("Calendar"));
   main_appview = hildon_appview_new (_("Main"));
   hildon_app_set_appview (HILDON_APP (main_window),
 			  HILDON_APPVIEW (main_appview));
 #else    
   main_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-  gtk_window_set_title (GTK_WINDOW (main_window), _("Calendar"));
   gtk_window_set_default_size (GTK_WINDOW (main_window), window_x, window_y);
 #endif
+  set_title ();
   g_signal_connect (G_OBJECT (main_window), "delete-event",
                     G_CALLBACK (gpe_cal_exit), NULL);
   gtk_widget_show (main_window);

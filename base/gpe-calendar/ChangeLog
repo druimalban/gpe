@@ -1,3 +1,15 @@
+2006-06-26  Neal H. Walfield  <neal@gnu.org>
+
+	* main.c (set_title): New function.
+	(propagate_time): Call it.
+	(main): Don't set the title directly.  Call set_title instead.
+
+	(propagate_time): Add a static variable.  On entry check if it is
+	TRUE.  If so, just return.  Otherwise, set to TRUE, then propagate
+	the time and then reset it to FALSE.
+
+	(conf_write): Spell "window-width" and "window-height" correctly.
+
 2006-06-24  Neal H. Walfield  <neal@gnu.org>
 
 	* day_view.c (appointment_area_expose_event): Simplify drawing the
