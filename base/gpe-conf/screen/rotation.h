@@ -1,4 +1,8 @@
+#ifndef GPE_CONF_ROTATION_H
+#define GPE_CONF_ROTATION_H
 
-int  get_rotation ();
-void set_rotation (int);
-int check_init_rotation(void);
+gint  get_rotation (void);
+void set_rotation (gint);
+gint check_init_rotation(void);
+
+#endif

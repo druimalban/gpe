@@ -1,5 +1,5 @@
-#ifndef GPE_DEVICE_H
-#define GPE_DEVICE_H
+#ifndef GPE_CONF_DEVICE_H
+#define GPE_CONF_DEVICE_H
 
 typedef enum
 {

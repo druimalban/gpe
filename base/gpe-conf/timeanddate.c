@@ -481,8 +481,6 @@ Time_Build_Objects(gboolean nonroot)
 		gpe_time_sel_set_time(GPE_TIME_SEL(self.tsel),(guint)ts.tm_hour, (guint)ts.tm_min);
 		gtk_table_attach (GTK_TABLE (table), self.tsel, 
 		                  0, 3,	3, 4, GTK_FILL,	0, 3, 0);
-		gtk_entry_set_activates_default(GTK_ENTRY(GPE_TIME_SEL(self.tsel)->hour_spin), TRUE);
-		gtk_entry_set_activates_default(GTK_ENTRY(GPE_TIME_SEL(self.tsel)->minute_spin), TRUE);
 	
 		self.catlabel3 = gtk_label_new (NULL);
 		fstr = g_strdup_printf("%s %s %s","<b>",_("Network"),"</b>");

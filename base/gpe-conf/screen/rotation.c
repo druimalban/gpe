@@ -2,7 +2,7 @@
  * gpe-conf
  *
  * Copyright (C) 2002   Moray Allan <moray@sermisy.org>,Pierre TARDY <tardyp@free.fr>
- *               2003,2004   Florian Boor <florian.boor@kernelconcepts.de>
+ *               2003 - 2006   Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,6 +18,7 @@
 #include <string.h>
 #include <libintl.h>
 
+#include <gtk/gtk.h>
 #include <X11/X.h>
 #include <X11/Xlib.h>
 #include <X11/extensions/Xrandr.h>
@@ -28,21 +29,19 @@
 
 #ifndef DISABLE_XRANDR
 
-extern char *RotationLabels;
+extern gchar *RotationLabels;
 static Display *dpy = NULL;
-static int screen;
+static gint screen;
 
-#ifdef MACH_IPAQ
-static char *xmodmaps[4]=
+static gchar *xmodmaps[4]=
   {
     "/etc/X11/xmodmap-portrait",
     "/etc/X11/xmodmap-left",
     "/etc/X11/xmodmap-invert",
     "/etc/X11/xmodmap-right"
   };
-#endif
 
-static int
+static gint
 xrr_supported (void)
 {
   int xrr_event_base, xrr_error_base;
@@ -58,7 +57,7 @@ xrr_supported (void)
 }
 
 
-int
+gint
 check_init_rotation(void)
 {
 	dpy = XOpenDisplay (NULL);
@@ -73,9 +72,10 @@ check_init_rotation(void)
 }
   
 
-int get_rotation ()
+gint 
+get_rotation (void)
 {
-	int rotation;
+	gint rotation;
 	XRRScreenConfiguration *rr_screen;
 	Rotation current_rotation;
 	
@@ -110,12 +110,13 @@ int get_rotation ()
 }
 
 
-void set_rotation (int rotation)
+void 
+set_rotation (gint rotation)
 {
 	Rotation sc_rotation;
 	XRRScreenConfiguration *scr_config;
 	Rotation current_rotation;
-	int size;
+	gint size;
 
 	if (dpy == NULL) 
 		if (!check_init_rotation()) return;
@@ -151,9 +152,8 @@ void set_rotation (int rotation)
 	
 	XRRFreeScreenConfigInfo (scr_config);
 	
-/* on ipaq rotate keypad as well */	
-#ifdef MACH_IPAQ
-    system_printf("/usr/X11R6/bin/xmodmap %s",xmodmaps[rotation]);
-#endif  
+	/* if maps are provided rotate keypad as well */
+	if (!access (xmodmaps[rotation], R_OK))
+		system_printf("xmodmap %s", xmodmaps[rotation]);
 }
 #endif
