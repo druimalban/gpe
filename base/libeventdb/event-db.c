@@ -493,7 +493,7 @@ event_db_finalize (GObject *object)
   g_slist_free (edb->cache_list);
 
   g_assert (g_hash_table_size (edb->events) == 0);
-  g_hash_table_unref (edb->events);
+  g_hash_table_destroy (edb->events);
 
   next = edb->calendars;
   while (next)
