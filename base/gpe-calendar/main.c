@@ -1463,7 +1463,7 @@ main (int argc, char *argv[])
   g_slist_free (import_files);
 	
   vcal_export_init();
-    
+
 #ifdef IS_HILDON
   /* Initialize maemo application */
   osso_context = osso_initialize(APPLICATION_DBUS_SERVICE, "0.1", TRUE, NULL);
@@ -2027,10 +2027,6 @@ main (int argc, char *argv[])
       f = gtk_frame_new (NULL);
       sidebar_container = GTK_CONTAINER (f);
       gtk_frame_set_shadow_type (GTK_FRAME (f), GTK_SHADOW_NONE);
-      int d = display_landscape ? gdk_screen_width () : gdk_screen_height ();
-      int w = MAX (200, d / 6);
-      gtk_widget_set_size_request (f, display_landscape ? w : -1,
-				   display_landscape ? -1 : w);
       gtk_paned_pack2 (GTK_PANED (main_panel), f, FALSE, TRUE);
       sidebar_consider ();
     }

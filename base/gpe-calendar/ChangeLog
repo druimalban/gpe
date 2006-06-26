@@ -1,3 +1,17 @@
+2006-06-26  Neal H. Walfield  <neal@gnu.org>
+
+	* event-list.c (struct _EventList): New fields scrolled_window,
+	narrow and char_width.
+	(event_list_size_request): New function.
+	(event_list_size_allocate): Likewise.
+	(time_to_string): If EVENT_LIST->NARROW, try to print the date and
+	time using a narrower description.
+	(event_list_init): Move creation of the period box from here...
+	(event_list_set_period_box_visible): ... to here.
+	(event_list_reload_events_hard): If EVENT_LIST->ENTRY is NULL then
+	use 14 days as the default.
+	* main.c (main): Don't provide a default width for the side bar.
+
 2006-06-25  Neal H. Walfield  <neal@gnu.org>
 
 	* main.c (main): Increase the minimum space allocated to the

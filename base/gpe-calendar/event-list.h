@@ -48,7 +48,10 @@ typedef void (* EventListEventKeyPressed) (EventList *, Event *,
 /* Return GType of a day view.  */
 extern GType event_list_get_type (void);
 
-/* Create a new day view.  */
+/* Create a new day view.  The period box (the text entry and combo
+   which allows the user to select the the time period for which
+   events should be displayed), is initially hidden.  It can be shown
+   using event_list_set_period_box_visible.  */
 extern GtkWidget *event_list_new (EventDB *edb);
 
 /* Force LIST to reload the events from the event database.  */

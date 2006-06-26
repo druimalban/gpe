@@ -40,6 +40,9 @@ struct _EventList
 {
   GtkVBox widget;
 
+  GtkWidget *scrolled_window;
+  gboolean narrow;
+  int char_width;
   GtkTreeView *view;
   GSList *events;
 
@@ -75,6 +78,10 @@ static void event_list_finalize (GObject *object);
 static void event_list_init (GTypeInstance *instance, gpointer klass);
 static gboolean event_list_expose_event (GtkWidget *widget,
 					 GdkEventExpose *event);
+static void event_list_size_request (GtkWidget *widget,
+				     GtkRequisition *requisition);
+static void event_list_size_allocate (GtkWidget *widget,
+				      GtkAllocation *allocation);
 
 static GtkWidgetClass *parent_class;
 
@@ -120,6 +127,8 @@ event_list_base_class_init (gpointer klass, gpointer klass_data)
 
   widget_class = GTK_WIDGET_CLASS (klass);
   widget_class->expose_event = event_list_expose_event;
+  widget_class->size_request = event_list_size_request;
+  widget_class->size_allocate = event_list_size_allocate;
 
   event_list_class = EVENT_LIST_CLASS (klass);
   event_list_class->event_clicked_signal
@@ -176,19 +185,27 @@ time_to_string (EventList *event_list, Event *ev, struct tm *tm)
   if (is_reminder (ev))
     {
       if (tm->tm_year == event_list->tm.tm_year)
-	return strftime_strdup_utf8_locale (_("%b %d"), tm);
+	return strftime_strdup_utf8_locale (event_list->narrow
+					    ? _("%-m/%-d")
+					    : _("%b %-d"), tm);
       else
-	return strftime_strdup_utf8_locale (_("%b %d, %y"), tm);
+	return strftime_strdup_utf8_locale (event_list->narrow
+					    ? _("%m/%d/%t")
+					    : _("%b %d, %y"), tm);
     }
   else
     {
       if (tm->tm_year == event_list->tm.tm_year
 	  && tm->tm_yday == event_list->tm.tm_yday)
-	return strftime_strdup_utf8_locale (_("%R"), tm);
+	return strftime_strdup_utf8_locale (_("%-H:%M"), tm);
       else if (tm->tm_year == event_list->tm.tm_year)
-	return strftime_strdup_utf8_locale (_("%b %d %R"), tm);
+	return strftime_strdup_utf8_locale (event_list->narrow
+					    ? _("%-m/%-d %-H:%M")
+					    : _("%b %-d %-H:%M"), tm);
       else
-	return strftime_strdup_utf8_locale (_("%b %d, %y %R"), tm);
+	return strftime_strdup_utf8_locale (event_list->narrow
+					    ? _("%-m/%-d/%y %-H:%M")
+					    : _("%b %-d, %y %-H:%M"), tm);
     }
 }
 
@@ -420,85 +437,9 @@ event_list_init (GTypeInstance *instance, gpointer klass)
   GtkTreeViewColumn *col;
   GtkCellRenderer *renderer;
 
-  GtkBox *box = GTK_BOX (gtk_hbox_new (FALSE, 0));
-  event_list->period_box = box;
-  gtk_box_pack_start (GTK_BOX (instance), GTK_WIDGET (box),
-		      FALSE, FALSE, 0);
-  gtk_widget_show (GTK_WIDGET (box));
-
-  /* To center the main widgets we put a greedy empty label at the
-     start and a second at the end.  */
-  GtkWidget *label = gtk_label_new ("");
-  gtk_widget_show (label);
-  gtk_box_pack_start (box, label, TRUE, TRUE, 0);
-
-  event_list->entry = GTK_ENTRY (gtk_entry_new ());
-  gtk_entry_set_width_chars (event_list->entry, 3);
-  gtk_entry_set_text (event_list->entry, "2");
-  g_signal_connect (G_OBJECT (event_list->entry), "changed",
-		    (GCallback) reload, event_list);
-
-  GtkWidget *arrow_l, *arrow_r, *arrow_button_l, *arrow_button_r;
-#ifdef IS_HILDON
-  arrow_l = gtk_image_new_from_stock(GTK_STOCK_GO_BACK,
-				     GTK_ICON_SIZE_SMALL_TOOLBAR);
-  arrow_r = gtk_image_new_from_stock(GTK_STOCK_GO_FORWARD,
-				     GTK_ICON_SIZE_SMALL_TOOLBAR);
-#else
-  arrow_l = gtk_arrow_new (GTK_ARROW_LEFT, GTK_SHADOW_OUT);
-  arrow_r = gtk_arrow_new (GTK_ARROW_RIGHT, GTK_SHADOW_OUT);
-#endif
-  arrow_button_l = gtk_button_new ();
-  arrow_button_r = gtk_button_new ();
-
-  gtk_widget_set_size_request (arrow_button_l, ARROW_SIZE, ARROW_SIZE);
-  gtk_widget_set_size_request (arrow_button_r, ARROW_SIZE, ARROW_SIZE);
-  GTK_WIDGET_UNSET_FLAGS (arrow_button_l, GTK_CAN_FOCUS);
-  GTK_WIDGET_UNSET_FLAGS (arrow_button_r, GTK_CAN_FOCUS);
-
-  gtk_container_add (GTK_CONTAINER (arrow_button_l), arrow_l);
-  gtk_widget_show (arrow_l);
-  gtk_container_add (GTK_CONTAINER (arrow_button_r), arrow_r);
-  gtk_widget_show (arrow_r);
-
-  gtk_button_set_relief (GTK_BUTTON (arrow_button_l), GTK_RELIEF_NONE);
-  gtk_button_set_relief (GTK_BUTTON (arrow_button_r), GTK_RELIEF_NONE);
-
-  g_object_set_data (G_OBJECT (arrow_button_l), "direction", (gpointer)0);
-  g_object_set_data (G_OBJECT (arrow_button_r), "direction", (gpointer)1);
-
-  g_signal_connect (G_OBJECT (arrow_button_l),
-		    "clicked", G_CALLBACK (arrow_click), event_list);
-  g_signal_connect (G_OBJECT (arrow_button_r),
-		    "clicked", G_CALLBACK (arrow_click), event_list);
-
-  gtk_box_pack_start (box, arrow_button_l, FALSE, FALSE, 0);
-  gtk_widget_show (arrow_button_l);
-
-  gtk_box_pack_start (box, GTK_WIDGET (event_list->entry), FALSE, FALSE, 0);
-  gtk_widget_show (GTK_WIDGET (event_list->entry));
-  gtk_box_pack_start (box, arrow_button_r, FALSE, FALSE, 0);
-  gtk_widget_show (arrow_button_r);
-
-  event_list->combo = GTK_COMBO_BOX (gtk_combo_box_new_text ());
-  gtk_combo_box_append_text (event_list->combo, _("days"));
-  gtk_combo_box_append_text (event_list->combo, _("weeks"));
-  gtk_combo_box_append_text (event_list->combo, _("months"));
-  gtk_combo_box_append_text (event_list->combo, _("years"));
-  gtk_combo_box_set_active (event_list->combo, 1);
-  g_signal_connect (G_OBJECT (event_list->combo), "changed",
-		    (GCallback) reload, event_list);
-  gtk_box_pack_start (box, GTK_WIDGET (event_list->combo), FALSE, FALSE, 0);
-  gtk_widget_show (GTK_WIDGET (event_list->combo));
-
-  /* The second greedy empty label.  */
-  label = gtk_label_new ("");
-  gtk_widget_show (label);
-  gtk_box_pack_start (box, label, TRUE, TRUE, 0);
-
-
   GtkScrolledWindow *win
     = GTK_SCROLLED_WINDOW (gtk_scrolled_window_new (NULL, NULL));
+  event_list->scrolled_window = GTK_WIDGET (win);
   gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (win),
 				       GTK_SHADOW_NONE);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (win),
@@ -584,10 +525,12 @@ event_list_reload_events_hard (EventList *event_list)
   /* Create a new list.  */
   list = gtk_list_store_new (1, G_TYPE_POINTER);
 
-  /* Get the events for the next 14 days.  */
+  /* Get the events for the indicated time period.  */
   int shift[] = { 1, 7, 31, 365 };
-  int days = MAX (1, atoi (gtk_entry_get_text (event_list->entry)))
-    * shift[gtk_combo_box_get_active (event_list->combo)];
+  int days = 14;
+  if (event_list->entry)
+    days = MAX (1, atoi (gtk_entry_get_text (event_list->entry)))
+      * shift[gtk_combo_box_get_active (event_list->combo)];
 
   event_list->date = time (NULL);
   event_list->events = event_db_list_for_period (event_list->edb,
@@ -661,6 +604,53 @@ event_list_expose_event (GtkWidget *widget, GdkEventExpose *event)
   return GTK_WIDGET_CLASS (parent_class)->expose_event (widget, event);
 }
 
+static void
+event_list_size_request (GtkWidget *widget, GtkRequisition *requisition)
+{
+  GTK_WIDGET_CLASS (parent_class)->size_request (widget, requisition);
+
+  EventList *event_list = EVENT_LIST (widget);
+
+  PangoLayout *pl = gtk_widget_create_pango_layout (widget, NULL);
+  PangoContext *context = pango_layout_get_context (pl);
+  PangoFontMetrics *metrics
+    = pango_context_get_metrics (context,
+				 widget->style->font_desc,
+				 pango_context_get_language (context));
+
+  int row_height = (pango_font_metrics_get_ascent (metrics)
+		    + pango_font_metrics_get_descent (metrics))
+    / PANGO_SCALE;
+
+  
+  /* We'd like about 6 rows of text.  */
+  requisition->height = MAX (requisition->height, row_height * 6);
+
+  int w = pango_font_metrics_get_approximate_char_width (metrics);
+  event_list->char_width = w;
+
+  /* We'd like about 24 columns but we don't want to request more than
+     25% of the screen.  */  
+  int cols = MIN (gdk_screen_width () / (w / PANGO_SCALE) / 4, 24);
+  requisition->width = MAX (requisition->width, cols * w / PANGO_SCALE);
+
+  g_object_unref (pl);
+  pango_font_metrics_unref (metrics);
+}
+
+static void
+event_list_size_allocate (GtkWidget *widget, GtkAllocation *allocation)
+{
+  EventList *event_list = EVENT_LIST (widget);
+
+  widget->allocation = *allocation;
+  gtk_widget_size_allocate (GTK_WIDGET (event_list->scrolled_window),
+			    allocation);
+
+  event_list->narrow
+    = allocation->width / (event_list->char_width / PANGO_SCALE) < 24;
+}
+
 void
 event_list_reload_events (EventList *event_list)
 {
@@ -671,10 +661,97 @@ event_list_reload_events (EventList *event_list)
 void
 event_list_set_period_box_visible (EventList *event_list, gboolean visible)
 {
-  if (visible)
-    gtk_widget_show (GTK_WIDGET (event_list->period_box));
-  else
-    gtk_widget_hide (GTK_WIDGET (event_list->period_box));
+  if (! visible)
+    {
+      if (event_list->period_box)
+	gtk_widget_hide (GTK_WIDGET (event_list->period_box));
+      return;
+    }
+
+  if (event_list->period_box)
+    {
+      gtk_widget_show (GTK_WIDGET (event_list->period_box));
+      return;
+    }
+
+  return;
+
+  /* We need to create it.  */
+  GtkBox *box = GTK_BOX (gtk_hbox_new (FALSE, 0));
+  event_list->period_box = box;
+  gtk_box_pack_start (GTK_BOX (GTK_BOX (event_list)), GTK_WIDGET (box),
+		      FALSE, FALSE, 0);
+  gtk_widget_show (GTK_WIDGET (box));
+
+  /* To center the main widgets we put a greedy empty label at the
+     start and a second at the end.  */
+  GtkWidget *label = gtk_label_new ("");
+  gtk_widget_show (label);
+  gtk_box_pack_start (box, label, TRUE, TRUE, 0);
+
+  event_list->entry = GTK_ENTRY (gtk_entry_new ());
+  gtk_entry_set_width_chars (event_list->entry, 3);
+  gtk_entry_set_text (event_list->entry, "2");
+  g_signal_connect (G_OBJECT (event_list->entry), "changed",
+		    (GCallback) reload, event_list);
+
+  GtkWidget *arrow_l, *arrow_r, *arrow_button_l, *arrow_button_r;
+#ifdef IS_HILDON
+  arrow_l = gtk_image_new_from_stock(GTK_STOCK_GO_BACK,
+				     GTK_ICON_SIZE_SMALL_TOOLBAR);
+  arrow_r = gtk_image_new_from_stock(GTK_STOCK_GO_FORWARD,
+				     GTK_ICON_SIZE_SMALL_TOOLBAR);
+#else
+  arrow_l = gtk_arrow_new (GTK_ARROW_LEFT, GTK_SHADOW_OUT);
+  arrow_r = gtk_arrow_new (GTK_ARROW_RIGHT, GTK_SHADOW_OUT);
+#endif
+  arrow_button_l = gtk_button_new ();
+  arrow_button_r = gtk_button_new ();
+
+  gtk_widget_set_size_request (arrow_button_l, ARROW_SIZE, ARROW_SIZE);
+  gtk_widget_set_size_request (arrow_button_r, ARROW_SIZE, ARROW_SIZE);
+  GTK_WIDGET_UNSET_FLAGS (arrow_button_l, GTK_CAN_FOCUS);
+  GTK_WIDGET_UNSET_FLAGS (arrow_button_r, GTK_CAN_FOCUS);
+
+  gtk_container_add (GTK_CONTAINER (arrow_button_l), arrow_l);
+  gtk_widget_show (arrow_l);
+  gtk_container_add (GTK_CONTAINER (arrow_button_r), arrow_r);
+  gtk_widget_show (arrow_r);
+
+  gtk_button_set_relief (GTK_BUTTON (arrow_button_l), GTK_RELIEF_NONE);
+  gtk_button_set_relief (GTK_BUTTON (arrow_button_r), GTK_RELIEF_NONE);
+
+  g_object_set_data (G_OBJECT (arrow_button_l), "direction", (gpointer)0);
+  g_object_set_data (G_OBJECT (arrow_button_r), "direction", (gpointer)1);
+
+  g_signal_connect (G_OBJECT (arrow_button_l),
+		    "clicked", G_CALLBACK (arrow_click), event_list);
+  g_signal_connect (G_OBJECT (arrow_button_r),
+		    "clicked", G_CALLBACK (arrow_click), event_list);
+
+  gtk_box_pack_start (box, arrow_button_l, FALSE, FALSE, 0);
+  gtk_widget_show (arrow_button_l);
+
+  gtk_box_pack_start (box, GTK_WIDGET (event_list->entry), FALSE, FALSE, 0);
+  gtk_widget_show (GTK_WIDGET (event_list->entry));
+  gtk_box_pack_start (box, arrow_button_r, FALSE, FALSE, 0);
+  gtk_widget_show (arrow_button_r);
+
+  event_list->combo = GTK_COMBO_BOX (gtk_combo_box_new_text ());
+  gtk_combo_box_append_text (event_list->combo, _("days"));
+  gtk_combo_box_append_text (event_list->combo, _("weeks"));
+  gtk_combo_box_append_text (event_list->combo, _("months"));
+  gtk_combo_box_append_text (event_list->combo, _("years"));
+  gtk_combo_box_set_active (event_list->combo, 1);
+  g_signal_connect (G_OBJECT (event_list->combo), "changed",
+		    (GCallback) reload, event_list);
+  gtk_box_pack_start (box, GTK_WIDGET (event_list->combo), FALSE, FALSE, 0);
+  gtk_widget_show (GTK_WIDGET (event_list->combo));
+
+  /* The second greedy empty label.  */
+  label = gtk_label_new ("");
+  gtk_widget_show (label);
+  gtk_box_pack_start (box, label, TRUE, TRUE, 0);
 }
 
 GtkWidget *
