@@ -1,3 +1,24 @@
+2006-06-27  Neal H. Walfield  <neal@gnu.org>
+
+	* event-db.c (SQLITE_TRY): New macro.
+	(event_db_set_alarms_fired_through): Use it.
+	(event_mark_unacknowledged): Likewise.
+	(event_acknowledge): Likewise.
+	(event_db_list_unacknowledged_alarms): Likewise.
+	(event_db_new): Likewise.
+	(event_load): Likewise.
+	(event_details): Likewise.
+	(event_db_find_by_eventid): Likewise.
+	(events_enumerate): Likewise.
+	(event_db_set_default_calendar): Likewise.
+	(event_db_calendar_new): Likewise.
+	(event_calendar_flush): Likewise.
+	(event_calendar_delete): Likewise.
+	(event_calendar_list_events): Likewise.
+	(event_flush): Likewise.
+	(event_remove): Likewise.
+	(event_new): Likewise.
+
 2006-06-25  Neal H. Walfield  <neal@gnu.org>
 
 	* event-db.c (event_db_finalize): Use g_hash_table_destroy to be

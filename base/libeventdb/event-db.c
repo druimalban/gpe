@@ -30,6 +30,29 @@
 
 #define _(x) gettext(x)
 
+/* Execute the sqlite_exec (or sqlite_exec_printf) statement.  If it
+   fails because the database or table is locked, try a few times
+   before completely failing.  */
+#define SQLITE_TRY(statement) \
+  ({ \
+    int _tries = 0; \
+    int _ret; \
+    for (;;) \
+      { \
+        _ret = statement; \
+        if ((_ret == SQLITE_BUSY || _ret == SQLITE_LOCKED) && _tries < 3) \
+  	{ \
+  	  g_main_context_iteration (NULL, FALSE); \
+  	  sleep (1); \
+  	  _tries ++; \
+  	} \
+        else \
+  	  break; \
+      } \
+    _ret; \
+  })
+
+
 /* The only thing we use from Gdk is the GdkColor structure.  Avoid a
    dependency and include it here.  */
 struct _GdkColor {
@@ -517,12 +540,11 @@ event_db_set_alarms_fired_through (EventDB *edb, time_t t)
   int err;
   char *str;
 
-  sqlite_exec (edb->sqliteh,
-	       "delete from alarms_fired_through", NULL, NULL, NULL);
-  err = sqlite_exec_printf (edb->sqliteh,
-			    "insert into alarms_fired_through"
-			    " (time) values (%d)",
-			    NULL, NULL, &str, t);
+  err = SQLITE_TRY
+    (sqlite_exec_printf
+     (edb->sqliteh,
+      "insert or replace into alarms_fired_through values (%d);",
+      NULL, NULL, &str, t));
   if (err)
     {
       g_critical ("%s: %s", __func__, str);
@@ -539,11 +561,11 @@ event_mark_unacknowledged (EventSource *ev)
   int err;
   char *str;
 
-  err = sqlite_exec_printf (ev->edb->sqliteh,
-			    "insert into alarms_unacknowledged"
-			    " (uid, start) values (%d, %d)",
-			    NULL, NULL, &str,
-			    ev->uid, ev->event.start);
+  err = SQLITE_TRY (sqlite_exec_printf (ev->edb->sqliteh,
+					"insert into alarms_unacknowledged"
+					" (uid, start) values (%d, %d)",
+					NULL, NULL, &str,
+					ev->uid, ev->event.start));
   if (err)
     {
       g_critical ("%s: %s", __func__, str);
@@ -562,11 +584,11 @@ event_acknowledge (Event *event)
   EventSource *ev = RESOLVE_CLONE (event);
   char *err;
 
-  if (sqlite_exec_printf (ev->edb->sqliteh,
-			  "delete from alarms_unacknowledged"
-			  " where uid=%d and start=%d",
-			  NULL, NULL, &err,
-			  ev->uid, ev->event.start))
+  if (SQLITE_TRY (sqlite_exec_printf (ev->edb->sqliteh,
+				      "delete from alarms_unacknowledged"
+				      " where uid=%d and start=%d",
+				      NULL, NULL, &err,
+				      ev->uid, ev->event.start)))
     {
       g_warning ("%s: removing event %ld from unacknowledged list: %s",
 		 __func__, ev->uid, err);
@@ -775,9 +797,10 @@ event_db_list_unacknowledged_alarms (EventDB *edb)
     }
 
   char *err;
-  if (sqlite_exec (edb->sqliteh,
-		   "select uid, start from alarms_unacknowledged",
-		   callback, NULL, &err))
+  if (SQLITE_TRY
+      (sqlite_exec (edb->sqliteh,
+		    "select uid, start from alarms_unacknowledged",
+		    callback, NULL, &err)))
     {
       g_warning ("%s: %s", __func__, err);
       g_free (err);
@@ -789,10 +812,11 @@ event_db_list_unacknowledged_alarms (EventDB *edb)
     {
       struct removal *r = i->data;
       char *err;
-      if (sqlite_exec_printf (edb->sqliteh,
-			      "delete from alarms_unacknowledged"
-			      " where uid=%d and start=%d",
-			      NULL, NULL, &err, r->uid, r->start))
+      if (SQLITE_TRY
+	  (sqlite_exec_printf (edb->sqliteh,
+			       "delete from alarms_unacknowledged"
+			       " where uid=%d and start=%d",
+			       NULL, NULL, &err, r->uid, r->start)))
 	{
 	  g_warning ("%s: while removing stale entry uid=%d,start=%ld, %s",
 		     __func__, r->uid, r->start, err);
@@ -1133,7 +1157,8 @@ event_db_new (const char *fname)
   if (edb->sqliteh == NULL)
     goto error_before_transaction;
 
-  if (sqlite_exec (edb->sqliteh, "begin transaction;", NULL, NULL, &err))
+  if (SQLITE_TRY
+      (sqlite_exec (edb->sqliteh, "begin transaction;", NULL, NULL, &err)))
     goto error_before_transaction;
 
   /* Get the calendar db version.  */
@@ -1520,11 +1545,12 @@ event_load (EventDB *edb, guint uid)
 
   char *err;
   /* Load all the records into memory.  */
-  if (sqlite_exec_printf
-      (edb->sqliteh,
-       "select start, duration, recur, rend, alarm, calendar from events"
-       " where uid=%d",
-       load_callback, ev, &err, uid))
+  if (SQLITE_TRY
+      (sqlite_exec_printf
+       (edb->sqliteh,
+	"select start, duration, recur, rend, alarm, calendar from events"
+	" where uid=%d",
+	load_callback, ev, &err, uid)))
     {
       g_warning ("%s:%d: Loading data for event %ld: %s",
 		 __func__, __LINE__, ev->uid, err);
@@ -1568,13 +1594,14 @@ event_load (EventDB *edb, guint uid)
       return 0;
     }
 
-  if (sqlite_exec_printf
-      (edb->sqliteh,
-       "select tag, value from calendar where uid=%d"
-       " and (tag='eventid' or tag='rcount' or tag='rincrement'"
-       "      or tag='byday' or tag='rexceptions' or tag='sequence'"
-       "      or tag='modified');",
-       data_callback, ev, &err, ev->uid))
+  if (SQLITE_TRY
+      (sqlite_exec_printf
+       (edb->sqliteh,
+	"select tag, value from calendar where uid=%d"
+	" and (tag='eventid' or tag='rcount' or tag='rincrement'"
+	"      or tag='byday' or tag='rexceptions' or tag='sequence'"
+	"      or tag='modified');",
+	data_callback, ev, &err, ev->uid)))
     {
       g_warning ("%s:%d: Loading data for event %ld: %s",
 		 __func__, __LINE__, ev->uid, err);
@@ -1622,13 +1649,14 @@ event_details (EventSource *ev, gboolean fill_from_disk)
   if (! fill_from_disk)
     return;
 
-  if (sqlite_exec_printf (ev->edb->sqliteh,
-			  "select tag,value from calendar"
-			  " where uid=%d"
-			  "  and (tag='summary'"
-			  "       or tag='description' or tag='location'"
-			  "       or tag='category')",
-			  load_details_callback, ev, &err, ev->uid))
+  if (SQLITE_TRY
+      (sqlite_exec_printf (ev->edb->sqliteh,
+			   "select tag,value from calendar"
+			   " where uid=%d"
+			   "  and (tag='summary'"
+			   "       or tag='description' or tag='location'"
+			   "       or tag='category')",
+			   load_details_callback, ev, &err, ev->uid)))
     {
       gpe_error_box (err);
       free (err);
@@ -1654,10 +1682,10 @@ event_db_find_by_eventid (EventDB *edb, const char *eventid)
       uid = atoi (argv[0]);
       return 1;
     }
-  sqlite_exec_printf (edb->sqliteh,
-		      "select uid from calendar"
-		      " where tag='eventid' and value='%q';",
-		      callback, NULL, NULL, eventid);
+  SQLITE_TRY (sqlite_exec_printf (edb->sqliteh,
+				  "select uid from calendar"
+				  " where tag='eventid' and value='%q';",
+				  callback, NULL, NULL, eventid));
   if (uid == -1)
     return NULL;
 
@@ -2245,7 +2273,8 @@ events_enumerate (EventDB *edb,
   obstack_1grow (&query, 0);
   char *q = obstack_finish (&query);
 
-  int ret = sqlite_exec_printf (edb->sqliteh, q, callback, NULL, err);
+  int ret = SQLITE_TRY (sqlite_exec_printf (edb->sqliteh, q,
+					    callback, NULL, err));
   obstack_free (&query, NULL);
   return ret;
 }
@@ -2413,10 +2442,11 @@ event_db_set_default_calendar (EventDB *edb, EventCalendar *ev)
   edb->default_calendar = ev->uid;
 
   char *err;
-  if (sqlite_exec_printf
-      (edb->sqliteh,
-       "insert or replace into default_calendar values (%d);",
-       NULL, NULL, &err, ev->uid))
+  if (SQLITE_TRY
+      (sqlite_exec_printf
+       (edb->sqliteh,
+	"insert or replace into default_calendar values (%d);",
+	NULL, NULL, &err, ev->uid)))
     {
       g_critical ("%s: %s", __func__, err);
       g_free (err);
@@ -2442,19 +2472,21 @@ static void
 event_db_calendar_new (EventCalendar *ec)
 {
   char *err;
-  if (sqlite_exec_printf (ec->edb->sqliteh,
-			  "insert into calendars values"
-			  " ('%q', '%q', '%q', '%q', '%q', %d, %d, %d, %d, %d,"
-			  "  %d, %d, %d, %d, %d, %d)",
-			  NULL, NULL, &err,
-			  ec->title ?: "", ec->description ?: "",
-			  ec->url ?: "",
-			  ec->username ?: "", ec->password ?: "",
-			  ec->parent_uid, ec->hidden,
-			  ec->has_color, ec->red, ec->green, ec->blue,
-			  ec->mode, ec->sync_interval,
-			  ec->last_pull, ec->last_push,
-			  ec->last_modified))
+  if (SQLITE_TRY
+      (sqlite_exec_printf
+       (ec->edb->sqliteh,
+	"insert into calendars values"
+	" ('%q', '%q', '%q', '%q', '%q', %d, %d, %d, %d, %d,"
+	"  %d, %d, %d, %d, %d, %d)",
+	NULL, NULL, &err,
+	ec->title ?: "", ec->description ?: "",
+	ec->url ?: "",
+	ec->username ?: "", ec->password ?: "",
+	ec->parent_uid, ec->hidden,
+	ec->has_color, ec->red, ec->green, ec->blue,
+	ec->mode, ec->sync_interval,
+	ec->last_pull, ec->last_push,
+	ec->last_modified)))
     {
       g_warning ("%s: %s", __func__, err);
       g_free (err);
@@ -2524,25 +2556,26 @@ static void
 event_calendar_flush (EventCalendar *ec)
 {
   char *err;
-  if (sqlite_exec_printf (ec->edb->sqliteh,
-			  "update calendars set"
-			  "  title='%q', description='%q',"
-			  "  url='%q', username='%q', password='%q',"
-			  "  parent=%d, hidden=%d,"
-			  "  has_color=%d, red=%d, green=%d, blue=%d,"
-			  "  mode=%d, sync_interval=%d,"
-			  "  last_pull=%d, last_push=%d,"
-			  "  last_modified=%d"
-			  " where ROWID=%d;",
-			  NULL, NULL, &err,
-			  ec->title ?: "", ec->description ?: "",
-			  ec->url ?: "", ec->username ?: "",
-			  ec->password ?: "",
-			  ec->parent_uid, ec->hidden,
-			  ec->has_color, ec->red, ec->green, ec->blue,
-			  ec->mode, ec->sync_interval,
-			  ec->last_push, ec->last_pull, ec->last_modified,
-			  ec->uid))
+  if (SQLITE_TRY
+      (sqlite_exec_printf (ec->edb->sqliteh,
+			   "update calendars set"
+			   "  title='%q', description='%q',"
+			   "  url='%q', username='%q', password='%q',"
+			   "  parent=%d, hidden=%d,"
+			   "  has_color=%d, red=%d, green=%d, blue=%d,"
+			   "  mode=%d, sync_interval=%d,"
+			   "  last_pull=%d, last_push=%d,"
+			   "  last_modified=%d"
+			   " where ROWID=%d;",
+			   NULL, NULL, &err,
+			   ec->title ?: "", ec->description ?: "",
+			   ec->url ?: "", ec->username ?: "",
+			   ec->password ?: "",
+			   ec->parent_uid, ec->hidden,
+			   ec->has_color, ec->red, ec->green, ec->blue,
+			   ec->mode, ec->sync_interval,
+			   ec->last_push, ec->last_pull, ec->last_modified,
+			   ec->uid)))
     {
       g_critical ("%s: updating %s (%d): %s", __func__,
 		  ec->description, ec->uid, err);
@@ -2698,17 +2731,18 @@ event_calendar_delete (EventCalendar *ec,
   event_list_unref (events);
 
   char *err;
-  if (sqlite_exec_printf
-      (ec->edb->sqliteh,
-       "begin transaction;"
-       /* Remove the events.  */
-       "delete from calendar where uid"
-       " in (select uid from events where calendar=%d);"
-       "delete from events where calendar=%d;"
-       /* And the calendar.  */
-       "delete from calendars where ROWID=%d;"
-       "commit transaction",
-       NULL, NULL, &err, ec->uid, ec->uid, ec->uid))
+  if (SQLITE_TRY
+      (sqlite_exec_printf
+       (ec->edb->sqliteh,
+	"begin transaction;"
+	/* Remove the events.  */
+	"delete from calendar where uid"
+	" in (select uid from events where calendar=%d);"
+	"delete from events where calendar=%d;"
+	/* And the calendar.  */
+	"delete from calendars where ROWID=%d;"
+	"commit transaction",
+	NULL, NULL, &err, ec->uid, ec->uid, ec->uid)))
     {
       sqlite_exec (ec->edb->sqliteh, "rollback transaction;",
 		   NULL, NULL, NULL);
@@ -2895,9 +2929,10 @@ event_calendar_list_events (EventCalendar *ec)
 	list = g_slist_prepend (list, ev);
       return 0;
     }
-  sqlite_exec_printf (ec->edb->sqliteh,
-		      "select uid from events where calendar=%d;",
-		      callback, NULL, NULL, ec->uid);
+  SQLITE_TRY
+    (sqlite_exec_printf (ec->edb->sqliteh,
+			 "select uid from events where calendar=%d;",
+			 callback, NULL, NULL, ec->uid));
 
   return list;
 }
@@ -3051,7 +3086,9 @@ event_flush (Event *event)
   EventSource *ev = RESOLVE_CLONE (event);
   char *err;
 
-  if (sqlite_exec (ev->edb->sqliteh, "begin transaction", NULL, NULL, &err))
+  if (SQLITE_TRY
+      (sqlite_exec
+       (ev->edb->sqliteh, "begin transaction", NULL, NULL, &err)))
     goto error;
 
   if (event_write (ev, &err))
@@ -3160,12 +3197,13 @@ event_remove (Event *event)
 
   EventSource *ev = RESOLVE_CLONE (event);
 
-  if (sqlite_exec_printf (ev->edb->sqliteh,
-			  "begin transaction;"
-			  "delete from calendar where uid=%d;"
-			  "delete from events where uid=%d;"
-			  "commit transaction;",
-			  NULL, NULL, NULL, ev->uid, ev->uid))
+  if (SQLITE_TRY
+      (sqlite_exec_printf (ev->edb->sqliteh,
+			   "begin transaction;"
+			   "delete from calendar where uid=%d;"
+			   "delete from events where uid=%d;"
+			   "commit transaction;",
+			   NULL, NULL, NULL, ev->uid, ev->uid)))
     sqlite_exec (ev->edb->sqliteh, "rollback transaction;",
 		 NULL, NULL, NULL);
 
@@ -3215,9 +3253,9 @@ event_new (EventDB *edb, EventCalendar *ec, const char *eventid)
   else
     ev->eventid = event_db_make_eventid ();
 
-  if (sqlite_exec (ev->edb->sqliteh,
-		   "begin transaction;",
-		   NULL, NULL, &err))
+  if (SQLITE_TRY (sqlite_exec (ev->edb->sqliteh,
+			       "begin transaction;",
+			       NULL, NULL, &err)))
     goto error_no_roll_back;
 
   if (sqlite_exec (ev->edb->sqliteh,
