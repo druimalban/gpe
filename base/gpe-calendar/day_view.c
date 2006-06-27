@@ -106,7 +106,7 @@ event_rect_expose (struct event_rect *er, GtkWidget *widget, GdkDrawable *w,
   /* "Flood" the rectangle.  */
   if (height > 2 * ARC_SIZE)
     gdk_draw_rectangle (w, er->bgcolor_gc, TRUE,
-			x + 1, y + 1 + top_arc,
+			x + 1, y + top_arc,
 			width - 2, height - 1 - top_arc - bottom_arc);
   if (top_arc)
     gdk_draw_rectangle (w, er->bgcolor_gc, TRUE,
@@ -892,9 +892,6 @@ update_extents (DayView *day_view)
     {
       GtkAdjustment *vadj = day_view->vadj;
 
-      printf ("%s:%d\n", __func__,
-	      (gtk_view_get_time (GTK_VIEW (day_view))
-	       - day_view->period_start) / 60 / 60);
       gtk_adjustment_set_value
 	(day_view->vadj,
 	 MIN (vadj->lower + (vadj->upper - vadj->lower) *

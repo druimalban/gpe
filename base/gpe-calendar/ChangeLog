@@ -1,5 +1,10 @@
 2006-06-27  Neal H. Walfield  <neal@gnu.org>
 
+	* day_view.c (event_rect_expose): Fix off by one error in flooding
+	event area.
+
+2006-06-27  Neal H. Walfield  <neal@gnu.org>
+
 	* day_view.c (event_rect_expose): Don't take a drawing area.  Take
 	a GtkWidget and a GdkDrawable.  Get the style from the former and
 	use the latter to drawon.
