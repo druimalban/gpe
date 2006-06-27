@@ -1,3 +1,8 @@
+2006-06-27  Florian Boor <florian.boor@kernelconcepts.de>
+
+	* pin-dbus.c: Add name lookup for pin requests. 
+	* main.c: Pack icon view into a scrolled window.
+
 2006-04-27  Phil Blundell  <pb@reciva.com>
 
 	* Version 0.53 released.

@@ -23,10 +23,18 @@
 #include <dbus/dbus-glib.h>
 
 #include <bluetooth/bluetooth.h>
+#include <bluetooth/hci.h>
+#include <bluetooth/hci_lib.h>
 
 #include "pin-ui.h"
+#include "main.h"
 
 #define WRONG_ARGS_ERROR "org.bluez.Error.WrongArgs"
+
+#define _(x) gettext (x)
+
+extern GSList *devices;
+
 
 struct pin_request_context
 {
@@ -66,6 +74,23 @@ dbus_pin_result (BluetoothPinRequest *req, gchar *result, void *user_data)
   g_free (ctx);
 
   g_object_unref (req);
+}
+
+static const gchar *
+get_name (bdaddr_t addr)
+{
+  static gchar name[255];
+  struct bt_device *bd;
+  GSList *iter;
+  gboolean found = FALSE;
+
+  for (iter = devices; iter; iter = iter->next)
+    {
+      struct bt_device *d = (struct bt_device *)iter->data;
+      if (memcmp (&d->bdaddr, &addr, sizeof (addr)) == 0)
+        return d->name;
+    }
+  return name;
 }
 
 DBusHandlerResult
@@ -136,7 +161,7 @@ bluez_pin_handle_dbus_request (DBusConnection *connection, DBusMessage *message)
   baswap (&sbdaddr, &bdaddr);
   address = batostr (&sbdaddr);
 
-  req = bluetooth_pin_request_new (out, address, NULL);
+  req = bluetooth_pin_request_new (out, address, get_name (sbdaddr));
 
   g_signal_connect (G_OBJECT (req), "result", G_CALLBACK (dbus_pin_result), ctx);
 

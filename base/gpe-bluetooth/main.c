@@ -86,7 +86,7 @@ static GtkWidget *devices_window;
 static GtkWidget *iconlist;
 static GtkWidget *radio_on_progress;
 
-static GSList *devices;
+GSList *devices;
 
 gboolean radio_is_on;
 GdkWindow *dock_window;
@@ -389,10 +389,6 @@ device_clicked (GtkWidget *widget, GdkEventButton *e, gpointer data)
 	sv->desc->popup_menu (sv, device_menu);
     }
 
-#if 0
-  g_signal_connect (G_OBJECT (device_menu), "hide", G_CALLBACK (gtk_widget_destroy), NULL);
-#endif
-
   gtk_menu_popup (GTK_MENU (device_menu), NULL, NULL, NULL, widget, 1, GDK_CURRENT_TIME);
 }
 
@@ -547,15 +543,20 @@ show_devices (void)
 {
   if (devices_window == NULL)
     {
+      GtkWidget *sw = gtk_scrolled_window_new (NULL, NULL);
+        
       devices_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 
       gtk_window_set_title (GTK_WINDOW (devices_window), _("Bluetooth devices"));
       gpe_set_window_icon (devices_window, "bt-logo");
 
       gtk_window_set_default_size (GTK_WINDOW (devices_window), 240, 240);
-
+      gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw), 
+                                      GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);        
+        
       iconlist = gpe_icon_list_view_new ();
-      gtk_container_add (GTK_CONTAINER (devices_window), iconlist);
+      gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (sw), iconlist);
+      gtk_container_add (GTK_CONTAINER (devices_window), sw);
       gpe_icon_list_view_set_embolden (GPE_ICON_LIST_VIEW (iconlist), FALSE);
 
       g_signal_connect (G_OBJECT (devices_window), "destroy", 
