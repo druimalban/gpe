@@ -25,7 +25,7 @@ bin_PROGRAMS = gpe-calendar
 gpe_calendar_LDADD = $(DEPS_LIBS) libwidgets.la
 
 gpe_calendar_SOURCES = main.c						\
-		       globals.h utils.h				\
+		       globals.h util.h					\
                        day_view.c day_view.h				\
                        week_view.c week_view.h				\
 		       event-menu.c event-menu.h			\
