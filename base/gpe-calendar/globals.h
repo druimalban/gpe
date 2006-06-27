@@ -11,9 +11,8 @@
 #include <gtk/gtk.h>
 #include <time.h>
 #include <gpe/event-db.h>
-#include <libintl.h>
 
-#define _(x) dgettext(PACKAGE, x)
+#include "util.h"
 
 extern EventDB *event_db;
 
@@ -22,14 +21,7 @@ extern guint week_offset;
 extern gboolean day_view_combined_times;
 extern void set_time_and_day_view (time_t selected_time);
 
-extern GdkGC *pen_new (GtkWidget *widget, guint red, guint green, guint blue);
-
 extern GtkWidget *main_window;
-
-extern gchar *strftime_strdup_utf8_locale (const char *fmt, struct tm *tm);
-extern gchar *strftime_strdup_utf8_utf8 (const char *fmt, struct tm *tm);
-
-extern void g_date_set_time_t (GDate *date, time_t t);
 
 #define SECONDS_IN_DAY (24*60*60)
 
@@ -46,7 +38,6 @@ extern const gchar *TIMEFMT;
   #define BELL_ICON    INST_PREFIX "bell.png"
   #define RECUR_ICON   INST_PREFIX "recur.png"
   #define BELLRECUR_ICON INST_PREFIX "bell_recur.png"
-  #define APP_ICON     "/usr/share/pixmaps/gpe-calendar.png"
 #else
   #define DAY_ICON       "day_view"
   #define WEEK_ICON      "week_view"
@@ -55,19 +46,6 @@ extern const gchar *TIMEFMT;
   #define BELL_ICON      "bell"
   #define RECUR_ICON     "recur"
   #define BELLRECUR_ICON "bell_recur"
-  #define APP_ICON       PREFIX "/share/pixmaps/gpe-calendar.png"
 #endif
+#define APP_ICON       PREFIX "/share/pixmaps/gpe-calendar.png"
 
-#define is_reminder(ev) \
-  ({ int ret = 0; \
-     if (event_get_duration (ev) == 0 && event_get_untimed (ev)) \
-       ret = 1; \
-     else if (event_get_duration (ev) == 24 * 60 * 60) \
-       { \
-         time_t s = event_get_start (ev); \
-         struct tm tm; \
-         localtime_r (&s, &tm); \
-         ret = tm.tm_hour == 0 && tm.tm_min == 0 && tm.tm_sec == 0; \
-       } \
-     ret; \
-    })

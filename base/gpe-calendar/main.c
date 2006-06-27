@@ -65,15 +65,6 @@
 
 extern gboolean gpe_calendar_start_xsettings (void (*push_changes) (void));
 
-#define CALENDAR_FILE_ "/.gpe/calendar"
-#define CALENDAR_FILE \
-  ({ \
-    const char *home = g_get_home_dir (); \
-    char *buffer = alloca (strlen (home) + strlen (CALENDAR_FILE_) + 1); \
-    sprintf (buffer, "%s" CALENDAR_FILE_, home); \
-    buffer; \
-   })
-
 #define CONF_FILE_ "/.gpe-calendar"
 #define CONF_FILE() g_strdup_printf ("%s" CONF_FILE_, g_get_home_dir ())
 
@@ -1294,6 +1285,14 @@ handoff_serialize (Handoff *handoff)
   return g_strdup_printf ("VIEWTIME=%ld\n", viewtime);
 }
 
+#ifdef IS_HILDON
+static void
+osso_top_callback (const gchar *arguments, gpointer data)
+{
+  handoff_callback (NULL, arguments);
+}
+#endif
+
 int
 main (int argc, char *argv[])
 {
@@ -1387,7 +1386,8 @@ main (int argc, char *argv[])
   if (schedule_only)
     /* No instance running but called with -s.  */
     {
-      event_db = event_db_new (CALENDAR_FILE);
+      char *filename = CALENDAR_FILE ();
+      event_db = event_db_new (filename);
       if (! event_db)
 	{
 	  g_critical ("Failed to open event database.");
@@ -1422,12 +1422,15 @@ main (int argc, char *argv[])
   textdomain (PACKAGE);
 
   /* Load the event database.  */
-  event_db = event_db_new (CALENDAR_FILE);
+  char *filename = CALENDAR_FILE ();
+  event_db = event_db_new (filename);
   if (! event_db)
     {
-      g_critical ("Failed to open event database.");
+      g_critical ("Failed to open event database: %s.", filename);
       exit (1);
     }
+  g_free (filename);
+
   /* Process the pending alarms once the system is up and running.  */
   g_idle_add (alarms_process_pending, event_db);
   /* And schedule the next wake up.  */
@@ -1471,6 +1474,8 @@ main (int argc, char *argv[])
   /* Check that initialization was ok */
   if (osso_context == NULL)
     return OSSO_ERROR;
+
+  osso_application_set_top_cb (osso_context, osso_top_callback, NULL);
 #endif
 
   /* If a display migration occurred, this may already be set.  */
@@ -1491,7 +1496,7 @@ main (int argc, char *argv[])
 
   /* Read the configuration file.  */
   GKeyFile *conf = g_key_file_new ();
-  char *filename = CONF_FILE ();
+  filename = CONF_FILE ();
   if (g_key_file_load_from_file (conf, filename, 0, NULL))
     {
       char *v;

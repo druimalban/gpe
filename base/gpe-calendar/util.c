@@ -14,6 +14,7 @@
 #include <stdlib.h>
 #include <glib.h>
 #include <gtk/gtk.h>
+#include "util.h"
 
 GdkGC *
 pen_new (GtkWidget * widget, guint red, guint green, guint blue)

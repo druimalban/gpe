@@ -1,3 +1,42 @@
+2006-06-27  Neal H. Walfield  <neal@gnu.org>
+
+	* configure.ac: Call AC_PROG_LIBTOOL.
+	* Makefile.am (noinst_LTLIBRARIES): New primary.
+	(libwidgets_la_SOURCES): Likewise.
+	(gpe_calendar_LDADD): Add libwidgets.la.
+	(gpe_calendar_SOURCES): Remove utils.c, event-list.c, event-list.h,
+	calendars-widgets.c and calendars-widgets.h.
+	(hildonhomelibdir): New primary.
+	(hildonhomelib_LTLIBRARIES): Likewise.
+	(libgpe_calendar_applet_la_SOURCES): Likewise.
+	(libgpe_calendar_applet_la_LIBADD): Likewise.
+	(hildonhomedir): Likewise.
+	(hildonhome_in_files): Likewise.
+	(hildonhome_DATA): Likewise.
+	(EXTRA_DIST): Add hildon/gpe-calendar-home.desktop.in.
+	(DISTCLEANFILES): Add gpe-calendar-home.desktop.
+	* hildon-applet.c: New file.
+	* inotify-syscalls.h: New file.
+	* main.c (osso_top_callback) [IS_HILDON]: New function.
+	(main) [IS_HILDON]: Set the top callback to it.
+
+	* globals.h: Don't include <libintl.h>.  Include "util.h".
+	(_): Move define from here...
+	* util.h (_): ... to here.
+	* globals.h (pen_new): Move declaration from here...
+	* util.h (pen_new): ... to here.
+	* globals.h (strftime_strdup_utf8_locale): Move declaration from
+	here...
+	* util.h (strftime_strdup_utf8_locale): ... to here.
+	* globals.h (strftime_strdup_utf8_utf8): Move declaration from
+	here...
+	* util.h (strftime_strdup_utf8_utf8): ... to here.
+	* globals.h (g_date_set_time_t): Move declaration from here...
+	* util.h (g_date_set_time_t): ... to here.
+	* main.c (CALENDAR_FILE): Move from here...
+	* util.h (CALENDAR_FILE): ... to here.  Allocate the string in
+	dynamic memory.  Update callers.
+
 2006-06-26  Neal H. Walfield  <neal@gnu.org>
 
 	* event-list.c (struct _EventList): New fields scrolled_window,
