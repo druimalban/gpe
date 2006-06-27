@@ -29,7 +29,7 @@ case $MACHINE in
 	"HP iPAQ HX4700")
 		xmodmap - < /etc/X11/hx4700.xmodmap
 		;;
-	"HP iPAQ H1910")
+	"HP iPAQ H1910" | "HP iPAQ H4000")
 		xmodmap - < /etc/X11/h1910.xmodmap
 		;;
 	"Asus MyPal A716")
