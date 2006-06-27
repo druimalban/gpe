@@ -67,11 +67,10 @@ event_rect_new (Event *ev, int x, int width, int y, int height)
 #define ARC_SIZE 7
 
 static void
-event_rect_expose (struct event_rect *er, GtkDrawingArea *area,
+event_rect_expose (struct event_rect *er, GtkWidget *widget, GdkDrawable *w,
 		   time_t period_start, time_t period_end)
 {
-  GdkDrawable *w = GTK_WIDGET (area)->window;
-  GtkStyle *style = GTK_WIDGET (area)->style;
+  GtkStyle *style = widget->style;
 
   int x = er->x + 1;
   int width = er->width - 2;
@@ -84,11 +83,11 @@ event_rect_expose (struct event_rect *er, GtkDrawingArea *area,
       GdkColor bgcolor;
       EventCalendar *ec = event_get_calendar (er->event);
       if (event_calendar_get_color (ec, &bgcolor))
-	er->bgcolor_gc = pen_new (GTK_WIDGET (area),
+	er->bgcolor_gc = pen_new (widget,
 				  bgcolor.red, bgcolor.green, bgcolor.blue);
       else
 	/* Light butter.  */
-	er->bgcolor_gc = pen_new (GTK_WIDGET (area),
+	er->bgcolor_gc = pen_new (widget,
 				  0xfc00, 0xe900, 0x4f00);
       g_object_unref (ec);
     }
@@ -264,8 +263,7 @@ event_rect_expose (struct event_rect *er, GtkDrawingArea *area,
   gr.height = height - 2;
   gr.x = x + 2;
 
-  PangoLayout *pl
-    = gtk_widget_create_pango_layout (GTK_WIDGET (area), NULL);
+  PangoLayout *pl = gtk_widget_create_pango_layout (widget, NULL);
   pango_layout_set_width (pl, PANGO_SCALE * gr.width);
   pango_layout_set_markup (pl, buffer, -1);
 
@@ -305,8 +303,8 @@ event_rect_expose (struct event_rect *er, GtkDrawingArea *area,
   g_free (location);
 
   gtk_paint_layout (style, w,
-		    GTK_WIDGET_STATE (area),
-		    FALSE, &gr, GTK_WIDGET (area), "label",
+		    GTK_WIDGET_STATE (widget),
+		    FALSE, &gr, widget, "label",
 		    gr.x, gr.y, pl);
 
   if (event_get_alarm (er->event))
@@ -391,11 +389,6 @@ struct _DayView
   guint duration;
   guint rows;
 
-  /* The height and width of the display window (i.e. what is
-     visible).  */
-  gint visible_width;
-  gint visible_height;
-
   /* The actual canvas size to use.  */
   gint height;
   gint width;
@@ -426,12 +419,16 @@ struct _DayView
 
   /* The appointment drawing area (if present).  */
   GtkWidget *appointment_window;
-  GtkDrawingArea *appointment_area;
+  GtkLayout *appointment_area;
+  GtkAdjustment *vadj;
 
   /* If the events need to be reloaded.  */
   gboolean pending_reload;
   /* If update_extents needs to be called.  */
   gboolean pending_update_extents;
+  /* The next extent update should also do a scroll to the current
+     time.  */
+  gboolean pending_scroll;
 };
 
 typedef struct
@@ -447,11 +444,11 @@ static void day_view_set_time (GtkView *view, time_t time);
 static void day_view_reload_events (GtkView *view);
 static gboolean day_view_key_press_event (GtkWidget *widget,
 					  GdkEventKey *event);
+static void day_view_size_allocate (GtkWidget *widget,
+				    GtkAllocation *allocation);
 
 static void size_request (GtkWidget *widget, GtkRequisition *requisition,
 			  DayView *day_view);
-static gboolean configure_event (GtkWidget *widget, GdkEventConfigure *event,
-				 DayView *day_view);
 static gboolean button_press_event (GtkWidget *widget,
 				    GdkEventButton *event,
 				    DayView *day_view);
@@ -461,6 +458,7 @@ static gboolean appointment_area_expose_event (GtkWidget *widget,
 static gboolean reminder_area_expose_event (GtkWidget *widget,
 					    GdkEventExpose *event,
 					    DayView *day_view);
+static void scrolled (GtkAdjustment *adjustment, DayView *day_view);
 
 static void reload_events_hard (DayView *day_view);
 
@@ -508,6 +506,7 @@ day_view_base_class_init (gpointer klass, gpointer klass_data)
 
   widget_class = (GtkWidgetClass *) klass;
   widget_class->key_press_event = day_view_key_press_event;
+  widget_class->size_allocate = day_view_size_allocate;
 
   view_class = (GtkViewClass *) klass;
   view_class->set_time = day_view_set_time;
@@ -524,7 +523,12 @@ day_view_init (GTypeInstance *instance, gpointer klass)
   day_view->duration = NUM_HOURS * 60 * 60;
   day_view->rows = 30;
 
-  day_view->appointment_window = gtk_scrolled_window_new (NULL, NULL);
+  day_view->vadj = GTK_ADJUSTMENT (gtk_adjustment_new (0, 0, 0, 0, 0, 0));
+  g_signal_connect (G_OBJECT (day_view->vadj), "value-changed",
+		    G_CALLBACK (scrolled), day_view);
+
+  day_view->appointment_window
+    = gtk_scrolled_window_new (NULL, day_view->vadj);
   gtk_scrolled_window_set_policy
     (GTK_SCROLLED_WINDOW (day_view->appointment_window),
      GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
@@ -532,23 +536,18 @@ day_view_init (GTypeInstance *instance, gpointer klass)
 		    TRUE, TRUE, 0);
   gtk_widget_show (day_view->appointment_window);
 
-  day_view->appointment_area = GTK_DRAWING_AREA (gtk_drawing_area_new ());
+  day_view->appointment_area
+    = GTK_LAYOUT (gtk_layout_new (NULL, day_view->vadj));
   gtk_widget_add_events (GTK_WIDGET (day_view->appointment_area),
 			 GDK_BUTTON_PRESS_MASK);
   g_signal_connect (day_view->appointment_area, "button-press-event",
 		    G_CALLBACK (button_press_event), day_view);
   g_signal_connect (day_view->appointment_area, "size-request",
 		    G_CALLBACK (size_request), day_view);
-  g_signal_connect (day_view->appointment_area, "configure-event",
-		    G_CALLBACK (configure_event), day_view);
   g_signal_connect (day_view->appointment_area, "expose-event",
 		    G_CALLBACK (appointment_area_expose_event), day_view);
-  gtk_scrolled_window_add_with_viewport
-    (GTK_SCROLLED_WINDOW (day_view->appointment_window),
-     GTK_WIDGET (day_view->appointment_area));
-  gtk_viewport_set_shadow_type
-    (GTK_VIEWPORT (GTK_WIDGET (day_view->appointment_area)->parent),
-     GTK_SHADOW_NONE);
+  gtk_container_add (GTK_CONTAINER (day_view->appointment_window),
+		     GTK_WIDGET (day_view->appointment_area));
   gtk_widget_show (GTK_WIDGET (day_view->appointment_area));
 
   day_view->pending_update_extents = TRUE;
@@ -873,13 +872,39 @@ time_layout (PangoLayout *pl, int hour)
 static void
 update_extents (DayView *day_view)
 {
-  day_view->width = day_view->visible_width;
-  day_view->height
-    = MAX (day_view->visible_height,
-	   day_view->visible_duration / 60 / 60 * day_view->row_height_min);
+  GtkWidget *canvas = GTK_BIN (day_view->appointment_window)->child;
 
-  gtk_widget_set_size_request (GTK_WIDGET (day_view->appointment_area),
-			       -1, day_view->height);
+  int width = canvas->allocation.width;
+  int height = MAX (canvas->allocation.height,
+		    day_view->visible_duration / 60 / 60
+		    * day_view->row_height_min);
+  if (width != day_view->width || height != day_view->height)
+    {
+      day_view->width = width;
+      day_view->height = height;
+
+      gtk_layout_set_size (day_view->appointment_area,
+			   day_view->width, day_view->height);
+    }
+
+
+  if (day_view->pending_scroll)
+    {
+      GtkAdjustment *vadj = day_view->vadj;
+
+      printf ("%s:%d\n", __func__,
+	      (gtk_view_get_time (GTK_VIEW (day_view))
+	       - day_view->period_start) / 60 / 60);
+      gtk_adjustment_set_value
+	(day_view->vadj,
+	 MIN (vadj->lower + (vadj->upper - vadj->lower) *
+	      (gfloat) (gtk_view_get_time (GTK_VIEW (day_view))
+			- day_view->visible_start)
+	      / day_view->visible_duration,
+	      vadj->upper - vadj->page_size));
+
+      day_view->pending_scroll = FALSE;
+    }
 
   /* Calculate DAY_VIEW->TIME_WIDTH.  */
   PangoLayout *pl
@@ -952,32 +977,8 @@ size_request (GtkWidget *widget, GtkRequisition *requisition,
   pango_font_metrics_unref (metrics);
 }
 
-static gboolean
-configure_event (GtkWidget *widget, GdkEventConfigure *event,
-		 DayView *day_view)
-{
-  gboolean update = FALSE;
-
-  if (day_view->visible_width != event->width)
-    {
-      day_view->visible_width = event->width;
-      update = TRUE;
-    }
-
-  if (day_view->visible_height != event->height)
-    {
-      day_view->visible_height = event->height;
-      update = TRUE;
-    }
-
-  if (update)
-    day_view->pending_update_extents = TRUE;
-
-  return FALSE;
-}
-
 #define HOUR_BAR_HEIGHT(dv) \
-  ((dv)->visible_height / ((dv)->visible_duration / 60 / 60))
+  ((dv)->height / ((dv)->visible_duration / 60 / 60))
 
 static gboolean hour_bar_move (gpointer d);
 
@@ -1014,7 +1015,7 @@ hour_bar_move (gpointer d)
 
   gtk_widget_queue_draw_area (GTK_WIDGET (day_view),
 			      0, top,
-			      day_view->visible_width, bottom - top + 1);
+			      day_view->width, bottom - top + 1);
 
   hour_bar_calc (day_view);
 
@@ -1026,7 +1027,7 @@ hour_bar_move (gpointer d)
 
       gtk_widget_queue_draw_area (GTK_WIDGET (day_view),
 				  0, top,
-				  day_view->visible_width, bottom - top + 1);
+				  day_view->width, bottom - top + 1);
 
       return TRUE;
     }
@@ -1050,12 +1051,14 @@ appointment_area_expose_event (GtkWidget *widget, GdkEventExpose *event,
   if (day_view->pending_update_extents)
     update_extents (day_view);
 
+  GdkDrawable *drawable = day_view->appointment_area->bin_window;
+
   if (! day_view->hour_bg_gc)
     /* Light aluminium.  */
     day_view->hour_bg_gc = pen_new (widget, 0xd300, 0xd700, 0xcf00);
 
   /* Draw the hour column's background.  */
-  gdk_draw_rectangle (widget->window, day_view->hour_bg_gc, TRUE,
+  gdk_draw_rectangle (drawable, day_view->hour_bg_gc, TRUE,
 		      0, 0,
 		      day_view->width - 1,
 		      day_view->height - 1);
@@ -1067,11 +1070,11 @@ appointment_area_expose_event (GtkWidget *widget, GdkEventExpose *event,
 	/* Chocolate.  */
 	day_view->time_gc = pen_new (widget, 0xe900, 0xb900, 0x6e00);
 
-      gdk_draw_rectangle (widget->window, day_view->time_gc, TRUE,
+      gdk_draw_rectangle (drawable, day_view->time_gc, TRUE,
 			  0,
 			  day_view->hour_bar_pos
 			  - HOUR_BAR_HEIGHT (day_view) / 2,
-			  day_view->visible_width - 1,
+			  day_view->width - 1,
 			  HOUR_BAR_HEIGHT (day_view) / 2);
     }
 
@@ -1095,7 +1098,7 @@ appointment_area_expose_event (GtkWidget *widget, GdkEventExpose *event,
       gr.y = day_view->height * i * 60 * 60 / day_view->visible_duration;
 
       gtk_paint_layout (widget->style,
-			widget->window,
+			drawable,
 			GTK_WIDGET_STATE (widget),
 			FALSE, &gr, widget, "label", gr.x, gr.y, pl);
     }
@@ -1107,43 +1110,43 @@ appointment_area_expose_event (GtkWidget *widget, GdkEventExpose *event,
     day_view->events_bg_gc = pen_new (widget, 0xee00, 0xee00, 0xec00);
 
 
-  gdk_draw_rectangle (widget->window, day_view->events_bg_gc, TRUE,
+  gdk_draw_rectangle (drawable, day_view->events_bg_gc, TRUE,
 		      day_view->time_width, 0,
-		      day_view->visible_width - 1,
-		      day_view->visible_height - 1);
+		      day_view->width - 1,
+		      day_view->height - 1);
 
   /* And now each row's background.  */
   for (i = 0; i < day_view->visible_duration; i += 60 * 60)
     {
       int top = day_view->height * i / day_view->visible_duration;
 
-      gdk_draw_line (widget->window, day_view->events_bg_gc,
+      gdk_draw_line (drawable, day_view->events_bg_gc,
 		     0, top, day_view->time_width - 1, top);
 
-      gdk_draw_line (widget->window, day_view->hour_bg_gc,
+      gdk_draw_line (drawable, day_view->hour_bg_gc,
 		     day_view->time_width, top,
-		     day_view->visible_width - 1, top);
+		     day_view->width - 1, top);
     }
 
   if (day_view->hour_bar_pos >= 0)
     /* Draw the hour bar.  */
-    gdk_draw_rectangle (widget->window, day_view->time_gc, TRUE,
+    gdk_draw_rectangle (drawable, day_view->time_gc, TRUE,
 			day_view->time_width,
 			day_view->hour_bar_pos
 			- HOUR_BAR_HEIGHT (day_view) / 2,
-			day_view->visible_width - 1,
+			day_view->width - 1,
 			HOUR_BAR_HEIGHT (day_view) / 2);
 
   /* Draw the black vertical line dividing the hour column from the
      events.  */
-  gdk_draw_line (widget->window, widget->style->black_gc,
+  gdk_draw_line (drawable, widget->style->black_gc,
 		 day_view->time_width - 1, 0,
-		 day_view->time_width - 1, day_view->visible_height - 1);
+		 day_view->time_width - 1, day_view->height - 1);
 
   /* Now, draw the events on top.  */
   GSList *l;
   for (l = day_view->appointment_rects; l; l = l->next)
-    event_rect_expose (l->data, day_view->appointment_area,
+    event_rect_expose (l->data, widget, drawable,
 		       day_view->period_start,
 		       day_view->period_start + day_view->duration);
 
@@ -1164,11 +1167,20 @@ reminder_area_expose_event (GtkWidget *widget, GdkEventExpose *event,
 
   GSList *l;
   for (l = day_view->reminder_rects; l; l = l->next)
-    event_rect_expose (l->data, day_view->reminder_area,
+    event_rect_expose (l->data, widget,
+		       GTK_WIDGET (day_view->reminder_area)->window,
 		       day_view->period_start,
 		       day_view->period_start + day_view->duration);
 
   return FALSE;
+}
+
+static void
+scrolled (GtkAdjustment *adj, DayView *day_view)
+{
+  time_t t = day_view->visible_start + day_view->visible_duration
+    * ((adj->value - adj->lower) / (adj->upper - adj->lower));
+  gtk_view_set_time (GTK_VIEW (day_view), t);
 }
 
 static gboolean
@@ -1232,6 +1244,15 @@ day_view_key_press_event (GtkWidget *widget, GdkEventKey *event)
 }
 
 static void
+day_view_size_allocate (GtkWidget *widget, GtkAllocation *allocation)
+{
+  DAY_VIEW (widget)->pending_update_extents = TRUE;
+
+  return GTK_WIDGET_CLASS (parent_class)->size_allocate (widget,
+							 allocation);
+}
+
+static void
 day_view_set_time (GtkView *view, time_t current)
 {
   time_t new = gtk_view_get_time (view);
@@ -1243,7 +1264,10 @@ day_view_set_time (GtkView *view, time_t current)
 
   if (c_tm.tm_year != n_tm.tm_year || c_tm.tm_yday != n_tm.tm_yday)
     /* Day changed.  */
-    day_view_reload_events (view);
+    {
+      day_view_reload_events (view);
+      DAY_VIEW (view)->pending_scroll = TRUE;
+    }
 }
 
 static void

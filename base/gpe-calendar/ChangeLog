@@ -1,5 +1,28 @@
 2006-06-27  Neal H. Walfield  <neal@gnu.org>
 
+	* day_view.c (event_rect_expose): Don't take a drawing area.  Take
+	a GtkWidget and a GdkDrawable.  Get the style from the former and
+	use the latter to drawon.
+	(struct _DayView): Remove fields visible_width and visible_height.
+	Update users to user width and height respectively.  Change
+	appointment_area from a GtkDrawingArea to a GtkLayout.  Add fields
+	VADJ and PENDING_SCROLL.
+	(day_view_size_allocate): New function.
+	(configure_event): Remove function.
+	(scrolled): New function.
+	(day_view_base_class_init): Set WIDGET_CLASS->SIZE_ALLOCATE to
+	DAY_VIEW_SIZE_ALLOCATE.
+	(day_view_init): Create a GtkLayout rather than a GtkDrawingArea.
+	Add it to the scrolling area directly.  Don't connect to its
+	"configure-event" signal.
+	(update_extents): Get the height and width from the layout's
+	allocation size.  If PENDING_SCROLL is TRUE, scroll the view.
+	(appointment_area_expose_event): Use
+	DAY_VIEW->APPOINTMENT_AREA->BIN_WINDOW as the GdkDrawable.
+	(day_view_set_time): Set DAY_VIEW (VIEW)->PENDING_SCROLL to TRUE.
+
+2006-06-27  Neal H. Walfield  <neal@gnu.org>
+
 	* gtkdatesel.h (gtk_date_sel_new): Take a GDate as the second
 	parameter, not a time_t.  Update users.
 	(gtk_date_sel_get_time): Remove declaration.
