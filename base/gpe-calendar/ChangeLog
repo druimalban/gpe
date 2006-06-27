@@ -1,5 +1,16 @@
 2006-06-27  Neal H. Walfield  <neal@gnu.org>
-	
+
+	* day_view.c (event_rect_expose): Draw a jagged line at the top of
+	the event if the event starts before the visible time segment.
+	Likewise at the bottom if it starts after the visible time
+	segment.
+	(update_extents): Set the size request for
+	DAY_VIEW->APPOINTMENT_AREA to DAY_VIEW->HEIGHT.
+	(reload_events_hard): Try to make at least an hour of each
+	appointment visible.
+
+2006-06-27  Neal H. Walfield  <neal@gnu.org>
+
 	* Makefile.am (gpe_calendar_SOURCES): Fix typo.
 	
 2006-06-27  Neal H. Walfield  <neal@gnu.org>

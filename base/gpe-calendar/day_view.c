@@ -93,63 +93,136 @@ event_rect_expose (struct event_rect *er, GtkDrawingArea *area,
       g_object_unref (ec);
     }
 
+  /* If the the event is completely shown then we draw a straight line
+     and some rounded corners.  Otherwise, we draw a jagged line.  */
+  int top_arc = ARC_SIZE;
+  int bottom_arc = ARC_SIZE;
+
+  if (event_get_start (er->event) < period_start)
+    top_arc = 0;
+  if (event_get_start (er->event) + event_get_duration (er->event)
+      > period_end)
+    bottom_arc = 0;
+
   /* "Flood" the rectangle.  */
   if (height > 2 * ARC_SIZE)
     gdk_draw_rectangle (w, er->bgcolor_gc, TRUE,
-			x, y + ARC_SIZE,
-			width, height - 2 * ARC_SIZE);
-  if (width > 2 * ARC_SIZE)
+			x + 1, y + 1 + top_arc,
+			width - 2, height - 1 - top_arc - bottom_arc);
+  if (top_arc)
     gdk_draw_rectangle (w, er->bgcolor_gc, TRUE,
-			x + ARC_SIZE, y,
-			width - 2 * ARC_SIZE, height);
+			x + top_arc, y + 1,
+			width - 2 * top_arc, top_arc);
+  if (bottom_arc)
+    gdk_draw_rectangle (w, er->bgcolor_gc, TRUE,
+			x + bottom_arc, y + height - bottom_arc - 1,
+			width - 2 * bottom_arc, bottom_arc);
 
-  /* Draw the outline.  */
+  /* Draw the top.  */
+  if (! top_arc)
+    {
+      /*           _ y
+	 \  /
+	  \/       _ y + 2
+      */
 
-  /* Top.  */
-  gdk_draw_line (w, style->black_gc,
-		 x + ARC_SIZE, y,
-		 x + width - 1 - ARC_SIZE, y);
-  /* Bottom.  */
-  gdk_draw_line (w, style->black_gc,
-		 x + ARC_SIZE, y + height - 1,
-		 x + width - 1 - ARC_SIZE, y + height - 1);
+      int i = x;
+      int end = x + width - 2;
+      while (i < end)
+	{
+	  int delta = MIN (end - i + 1, 2);
+	  gdk_draw_line (w, style->black_gc,
+			 i, y,
+			 i + delta, y + delta);
+	  i += 2;
+	  if (i >= end)
+	    break;
+
+	  delta = MIN (end - i + 1, 2);
+	  gdk_draw_line (w, style->black_gc,
+			 i, y + delta,
+			 i + delta, y);
+	  i += 2;
+	}
+    }
+  else
+    {
+      gdk_draw_line (w, style->black_gc,
+		     x + ARC_SIZE, y,
+		     x + width - 1 - ARC_SIZE, y);
+      /* North-west corner */
+      gdk_draw_arc (w, er->bgcolor_gc, TRUE,
+		    x, y, ARC_SIZE * 2, ARC_SIZE * 2, 90 * 64, 90 * 64);
+      gdk_draw_arc (w, style->black_gc, FALSE,
+		    x, y, ARC_SIZE * 2, ARC_SIZE * 2, 90 * 64, 90 * 64);
+      /* North-east corner */
+      gdk_draw_arc (w, er->bgcolor_gc, TRUE,
+		    x + width - 1 - 2 * ARC_SIZE, y,
+		    ARC_SIZE * 2, ARC_SIZE * 2, 0 * 64, 90 * 64);
+      gdk_draw_arc (w, style->black_gc, FALSE,
+		    x + width - 1 - ARC_SIZE * 2, y,
+		    ARC_SIZE * 2, ARC_SIZE * 2, 0 * 64, 90 * 64);
+    }
+
+  if (! bottom_arc)
+    {
+      /*           _ y + height - 2
+	 \  /
+	  \/       _ y + height
+      */
+
+      int i = x;
+      int end = x + width - 2;
+      while (i < end)
+	{
+	  int delta = MIN (end - i + 1, 2);
+	  gdk_draw_line (w, style->black_gc,
+			 i, y + height - delta,
+			 i + delta, y + height);
+	  i += 2;
+	  if (i >= end)
+	    break;
+
+	  delta = MIN (end - i + 1, 2);
+	  gdk_draw_line (w, style->black_gc,
+			 i, y + height,
+			 i + delta, y + height - delta);
+	  i += 2;
+	}
+    }
+  else
+    {
+      /* Bottom.  */
+      gdk_draw_line (w, style->black_gc,
+		     x + ARC_SIZE, y + height - 1,
+		     x + width - 1 - ARC_SIZE, y + height - 1);
+
+      /* South-west corner */
+      gdk_draw_arc (w, er->bgcolor_gc, TRUE,
+		    x, y + height - 1 - 2 * ARC_SIZE,
+		    ARC_SIZE * 2, ARC_SIZE * 2, 180 * 64, 90 * 64);
+      gdk_draw_arc (w, style->black_gc, FALSE,
+		    x, y + height - 1 - 2 * ARC_SIZE,
+		    ARC_SIZE * 2, ARC_SIZE * 2, 180 * 64, 90 * 64);
+      /* South-east corner */
+      gdk_draw_arc (w, er->bgcolor_gc, TRUE,
+		    x + width - 1 - 2 * ARC_SIZE,
+		    y + height - 1 - 2 * ARC_SIZE,
+		    ARC_SIZE * 2, ARC_SIZE * 2, 270 * 64, 90 * 64);
+      gdk_draw_arc (w, style->black_gc, FALSE,
+		    x + width - 1 - 2 * ARC_SIZE,
+		    y + height - 1 - 2 * ARC_SIZE,
+		    ARC_SIZE * 2, ARC_SIZE * 2, 270 * 64, 90 * 64);	
+    }
+
   /* Left.  */
   gdk_draw_line (w, style->black_gc,
-		 x, ARC_SIZE + y, x,
-		 y + height - 1 - ARC_SIZE);
+		 x, y + 1 + top_arc,
+		 x, y + 1 + height - 2 - bottom_arc);
   /* Right.  */
   gdk_draw_line (w, style->black_gc,
-		 x + width - 1, ARC_SIZE + y,
-		 x + width - 1, y + height - 1 - ARC_SIZE);
-
-  /* Draw the corners.  */
-
-  /* North-west corner */
-  gdk_draw_arc (w, er->bgcolor_gc, TRUE,
-		x, y, ARC_SIZE * 2, ARC_SIZE * 2, 90 * 64, 90 * 64);
-  gdk_draw_arc (w, style->black_gc, FALSE,
-		x, y, ARC_SIZE * 2, ARC_SIZE * 2, 90 * 64, 90 * 64);
-  /* North-east corner */
-  gdk_draw_arc (w, er->bgcolor_gc, TRUE,
-		x + width - 1 - 2 * ARC_SIZE, y,
-		ARC_SIZE * 2, ARC_SIZE * 2, 0 * 64, 90 * 64);
-  gdk_draw_arc (w, style->black_gc, FALSE,
-		x + width - 1 - ARC_SIZE * 2, y,
-		ARC_SIZE * 2, ARC_SIZE * 2, 0 * 64, 90 * 64);
-  /* South-west corner */
-  gdk_draw_arc (w, er->bgcolor_gc, TRUE,
-		x, y + height - 1 - 2 * ARC_SIZE,
-		ARC_SIZE * 2, ARC_SIZE * 2, 180 * 64, 90 * 64);
-  gdk_draw_arc (w, style->black_gc, FALSE,
-		x, y + height - 1 - 2 * ARC_SIZE,
-		ARC_SIZE * 2, ARC_SIZE * 2, 180 * 64, 90 * 64);
-  /* South-east corner */
-  gdk_draw_arc (w, er->bgcolor_gc, TRUE,
-		x + width - 1 - 2 * ARC_SIZE, y + height - 1 - 2 * ARC_SIZE,
-		ARC_SIZE * 2, ARC_SIZE * 2, 270 * 64, 90 * 64);
-  gdk_draw_arc (w, style->black_gc, FALSE,
-		x + width - 1 - 2 * ARC_SIZE, y + height - 1 - 2 * ARC_SIZE,
-		ARC_SIZE * 2, ARC_SIZE * 2, 270 * 64, 90 * 64);	
+		 x + width - 1, y + 1 + top_arc,
+		 x + width - 1, y + 1 + height - 2 - bottom_arc);
 
   /* Write summary... */
   char *summary = event_get_summary (er->event);
@@ -805,6 +878,9 @@ update_extents (DayView *day_view)
     = MAX (day_view->visible_height,
 	   day_view->visible_duration / 60 / 60 * day_view->row_height_min);
 
+  gtk_widget_set_size_request (GTK_WIDGET (day_view->appointment_area),
+			       -1, day_view->height);
+
   /* Calculate DAY_VIEW->TIME_WIDTH.  */
   PangoLayout *pl
     = gtk_widget_create_pango_layout (GTK_WIDGET (day_view), NULL);
@@ -1232,16 +1308,23 @@ reload_events_hard (DayView *day_view)
 	  if (day_view->period_start <= event_get_start (ev)
 	      && event_get_start (ev) < earliest)
 	    earliest = event_get_start (ev);
-	  if (event_get_start (ev) + MAX (event_get_duration (ev), 60 * 60)
-	      <= day_view->period_start + day_view->duration)
-	    latest = MAX (event_get_start (ev)
-			  + MAX (event_get_duration (ev), 60 * 60),
-			  latest);
+
+	  time_t end = event_get_start (ev)
+	    + MAX (event_get_duration (ev), 60 * 60);
+	  if (end > latest)
+	    {
+	      if (end > day_view->period_start + day_view->duration)
+		/* EV extends to the next day.  Just make sure we have
+		   at least enough space to display an hour.  */
+		latest = MAX (latest, event_get_start (ev) + 60 * 60);
+	      else
+		latest = MAX (end, latest);
+	    }
 	}
     }
 
-  g_assert (day_view->period_start <= earliest);
-  g_assert (latest <= day_view->period_start + day_view->duration);
+  earliest = MAX (earliest, day_view->period_start);
+  latest = MIN (latest, day_view->period_start + day_view->duration);
 
   day_view->visible_start = (earliest / 60 / 60) * 60 * 60;
   day_view->visible_duration
