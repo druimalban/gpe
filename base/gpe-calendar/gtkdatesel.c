@@ -53,7 +53,7 @@ struct _GtkDateSel
 
   gint day_clamped;
 
-  time_t time;
+  GDate date;
 
   GtkDateSelMode mode;
   GtkDateSelMonthStyle month_style;
@@ -65,13 +65,13 @@ struct _GtkDateSelClass
   void (* changed)      (GtkDateSel *sel);
 };
 
-static GtkHBoxClass *parent_class = NULL;
+static GtkHBoxClass *parent_class;
 
-void
+static void
 gtk_date_sel_move_day (GtkDateSel *sel, int d)
 {
-  sel->time += d * 60 * 60 * 24;
-  sel->day_clamped = -1;
+  g_date_add_days (&sel->date, d);
+  sel->day_clamped = 0;
   g_signal_emit (G_OBJECT (sel), my_signals[0], 0);
 }
 
@@ -84,48 +84,26 @@ day_click (GtkWidget *w, GtkDateSel *sel)
   gtk_date_sel_move_day (sel, d);
 }
 
-void
+static void
 gtk_date_sel_move_month (GtkDateSel *sel, int d)
 {
-  struct tm tm;
-  guint mdays;
-  localtime_r (&sel->time, &tm);
-  if (d < 0)
+  int saved_day = g_date_get_day (&sel->date);
+
+  g_date_add_months (&sel->date, d);
+  if (saved_day != g_date_get_day (&sel->date)
+      && ! sel->day_clamped)
+    sel->day_clamped = saved_day;
+  else if (sel->day_clamped)
     {
-      if (tm.tm_mon)
-        tm.tm_mon--;
-      else
-        {
-          tm.tm_year--;
-          tm.tm_mon = 11;
-        }
+      int mdays = g_date_get_days_in_month (g_date_get_month (&sel->date),
+					    g_date_get_year (&sel->date));
+      if (sel->day_clamped <= mdays)
+	{
+	  g_date_set_day (&sel->date, sel->day_clamped);
+	  sel->day_clamped = 0;
+	}
     }
-  else
-    {
-      if (tm.tm_mon < 11)
-        tm.tm_mon++;
-      else
-        {
-          tm.tm_year++;
-          tm.tm_mon = 0;
-        }
-    }
-  mdays = g_date_get_days_in_month (tm.tm_mon + 1, tm.tm_year + 1900);
-  if (tm.tm_mday > mdays)
-    {
-      sel->day_clamped = tm.tm_mday;
-      tm.tm_mday = mdays;
-    }
-  else
-    {
-      if (sel->day_clamped != -1)
-        {
-          tm.tm_mday = mdays;
-          if (tm.tm_mday > sel->day_clamped)
-            tm.tm_mday = sel->day_clamped;
-        }
-    }
-  sel->time = mktime (&tm);
+
   g_signal_emit (G_OBJECT (sel), my_signals[0], 0);
 }
 
@@ -140,66 +118,50 @@ static void
 year_click (GtkWidget *w, GtkDateSel *sel)
 {
   int d = g_object_get_data (G_OBJECT (w), "direction") ? 1 : -1;
-  struct tm tm;
-  guint mdays;
-  localtime_r (&sel->time, &tm);
-  tm.tm_year += d;
-  mdays = g_date_get_days_in_month (tm.tm_mon + 1, tm.tm_year + 1900);
-  if (tm.tm_mday > mdays)
+  g_date_add_years (&sel->date, d);
+
+  if (sel->day_clamped)
     {
-      sel->day_clamped = tm.tm_mday;
-      tm.tm_mday = mdays;
+      int mdays = g_date_get_days_in_month (g_date_get_month (&sel->date),
+					    g_date_get_year (&sel->date));
+      if (sel->day_clamped <= mdays)
+	{
+	  g_date_set_day (&sel->date, sel->day_clamped);
+	  sel->day_clamped = 0;
+	}
     }
-  else
-    {
-      if (sel->day_clamped != -1)
-        {
-          tm.tm_mday = mdays;
-          if (tm.tm_mday > sel->day_clamped)
-            tm.tm_mday = sel->day_clamped;
-        }
-    }
-  sel->time = mktime (&tm);
+
   g_signal_emit (G_OBJECT (sel), my_signals[0], 0);
 }
 
 static gboolean
-year_update (GtkWidget *sel, GtkWidget *entry)
+year_update (GtkDateSel *sel, gpointer data)
 {
-  struct tm tm;
-  gchar *year;
-
-  localtime_r (&GTK_DATE_SEL (sel)->time, &tm);
-  year = strftime_strdup_utf8_utf8 (_("%Y"), &tm);
-  if (year)
-    {
-      gtk_entry_set_text (GTK_ENTRY (entry), year);
-      g_free (year);
-    }
+  char buffer[5];
+  snprintf (buffer, sizeof (buffer), "%d", g_date_get_year (&sel->date));
+  buffer[4] = 0;
+  gtk_entry_set_text (GTK_ENTRY (sel->year.display), buffer);
 
   return FALSE;
 }
 
 static gboolean
-year_key_press (GtkWidget *entry, GdkEventKey *event, GtkWidget *sel)
+year_key_press (GtkWidget *entry, GdkEventKey *event, GtkDateSel *sel)
 {
-  int index;
-  struct tm tm;
-
   if (event->keyval != GDK_Return)
     return FALSE;
 
-  index = atoi (gtk_entry_get_text (GTK_ENTRY (entry)));
+  int year = atoi (gtk_entry_get_text (GTK_ENTRY (entry)));
+  if (year < 100)
+    /* Two digit year.  */
+    {
+      if (year < 70)
+	year = 2000 + year;
+      else
+	year = 1900 + year;
+    }
 
-  localtime_r (&GTK_DATE_SEL (sel)->time, &tm);
-
-  if (index >= 1900)
-    tm.tm_year = index - 1900;
-  else
-    /* If e.g. a two digit year, go to with 2000 + index.  */
-    tm.tm_year = 100 + index;
-
-  GTK_DATE_SEL (sel)->time = mktime (&tm);
+  g_date_set_year (&sel->date, year);
   g_signal_emit (G_OBJECT (sel), my_signals[0], 0);
 
   gtk_editable_select_region (GTK_EDITABLE (entry), 0, -1);
@@ -210,32 +172,27 @@ year_key_press (GtkWidget *entry, GdkEventKey *event, GtkWidget *sel)
 static gboolean
 month_change (GtkComboBox *combo, GtkDateSel *sel)
 {
-  int index;
-  struct tm tm;
-  guint mdays;
-
-  index = gtk_combo_box_get_active (combo);
+  int month = gtk_combo_box_get_active (combo) + 1;
   if (index < 0)
     return FALSE;
 
-  localtime_r (&sel->time, &tm);
-  tm.tm_mon = index;
-  mdays = g_date_get_days_in_month (tm.tm_mon + 1, tm.tm_year + 1900);
-  if (tm.tm_mday > mdays)
+  int day = g_date_get_day (&sel->date);
+  int year = g_date_get_year (&sel->date);
+  int mdays = g_date_get_days_in_month (month, year);
+  if (day > mdays)
     {
-      sel->day_clamped = tm.tm_mday;
-      tm.tm_mday = mdays;
+      if (! sel->day_clamped)
+	sel->day_clamped = day;
+      g_date_set_dmy (&sel->date, mdays, month, year);
     }
   else
     {
-      if (sel->day_clamped != -1)
-        {
-          tm.tm_mday = mdays;
-          if (tm.tm_mday > sel->day_clamped)
-            tm.tm_mday = sel->day_clamped;
-        }
+      if (sel->day_clamped && sel->day_clamped <= mdays)
+	day = sel->day_clamped;
+      sel->day_clamped = 0;
+      g_date_set_dmy (&sel->date, day, month, year);
     }
-  sel->time = mktime (&tm);
+
   g_signal_emit (G_OBJECT (sel), my_signals[0], 0);
 
   return FALSE;
@@ -244,9 +201,8 @@ month_change (GtkComboBox *combo, GtkDateSel *sel)
 static void
 month_update (GtkDateSel *sel, GtkWidget *combo)
 {
-  struct tm tm;
-  localtime_r (&sel->time, &tm);
-  gtk_combo_box_set_active (GTK_COMBO_BOX (combo), tm.tm_mon);
+  gtk_combo_box_set_active (GTK_COMBO_BOX (combo),
+			    g_date_get_month (&sel->date) - 1);
 }
 
 static gboolean
@@ -255,7 +211,7 @@ day_update (GtkWidget *sel, GtkWidget *entry)
   struct tm tm;
   gchar *day;
 
-  localtime_r (&GTK_DATE_SEL (sel)->time, &tm);
+  g_date_to_struct_tm (&GTK_DATE_SEL (sel)->date, &tm);
   day = strftime_strdup_utf8_utf8 (_("%d"), &tm);
   if (day)
     {
@@ -267,26 +223,19 @@ day_update (GtkWidget *sel, GtkWidget *entry)
 }
 
 static gboolean
-day_key_press (GtkWidget *entry, GdkEventKey *event, GtkWidget *sel)
+day_key_press (GtkWidget *entry, GdkEventKey *event, GtkDateSel *sel)
 {
-  int index;
-  struct tm tm;
-  guint mdays;
-
   if (event->keyval != GDK_Return)
     return FALSE;
 
-  index = atoi (gtk_entry_get_text (GTK_ENTRY (entry)));
-  if (index <= 0)
-    index = 1;
+  int day = atoi (gtk_entry_get_text (GTK_ENTRY (entry)));
+  if (day <= 0)
+    day = 1;
+  day = MIN (day,
+	     g_date_get_days_in_month (g_date_get_month (&sel->date),
+				       g_date_get_year (&sel->date)));
 
-  localtime_r (&GTK_DATE_SEL (sel)->time, &tm);
-  mdays = g_date_get_days_in_month (tm.tm_mon + 1, tm.tm_year + 1900);
-  if (index > mdays)
-    index = mdays;
-
-  tm.tm_mday = index;
-  GTK_DATE_SEL (sel)->time = mktime (&tm);
+  g_date_set_day (&sel->date, day);
   g_signal_emit (G_OBJECT (sel), my_signals[0], 0);
 
   gtk_editable_select_region (GTK_EDITABLE (entry), 0, -1);
@@ -667,15 +616,14 @@ month_cell_data_func (GtkCellLayout *cell_layout,
 }
 
 GtkWidget *
-gtk_date_sel_new (GtkDateSelMode mode, time_t time)
+gtk_date_sel_new (GtkDateSelMode mode, GDate *date)
 {
   GtkWidget *w = GTK_WIDGET (gtk_type_new (gtk_date_sel_get_type ()));
   GtkDateSel *sel = GTK_DATE_SEL (w);
   struct elem *e;
   int i;
 
-  sel->time = time;
-  sel->day_clamped = -1;
+  sel->date = *date;
 
   sel->subbox = gtk_hbox_new (FALSE, 0);
 
@@ -734,14 +682,13 @@ gtk_date_sel_new (GtkDateSelMode mode, time_t time)
   gtk_entry_set_width_chars (GTK_ENTRY (e->display), 4);
   make_field (sel, e, year_click);
   g_signal_connect (G_OBJECT (sel), "changed",
-		    G_CALLBACK (year_update),
-		    e->display);
+		    G_CALLBACK (year_update), NULL);
   g_signal_connect (G_OBJECT (e->display), "key-press-event",
 		    G_CALLBACK (year_key_press), sel);
   g_signal_connect (G_OBJECT (e->display), "button-press-event",
 		    G_CALLBACK (entry_button_press), 0);
 
-  year_update (w, e->display);
+  year_update (sel, NULL);
   gtk_widget_show (e->container);
 
   gtk_date_sel_set_mode (sel, mode);
@@ -752,33 +699,19 @@ gtk_date_sel_new (GtkDateSelMode mode, time_t time)
   return w;
 }
 
-time_t
-gtk_date_sel_get_time (GtkDateSel *sel)
+void
+gtk_date_sel_get_date (GtkDateSel *sel, GDate *date)
 {
-  return sel->time;
+  *date = sel->date;
 }
 
 void
-gtk_date_sel_set_time (GtkDateSel *sel, time_t time)
+gtk_date_sel_set_date (GtkDateSel *sel, GDate *date)
 {
-  sel->time = time;
-  g_signal_emit (G_OBJECT (sel), my_signals[0], 0);
-}
+  if (g_date_compare (&sel->date, date) == 0)
+    return;
 
-void
-gtk_date_sel_set_day (GtkDateSel *sel, int year, int month, int day)
-{
-  struct tm tm;
-  time_t selected_time;
-  localtime_r (&sel->time, &tm);
-  tm.tm_year = year;
-  tm.tm_mon = month;
-  tm.tm_mday = day;
-  tm.tm_hour = 0;
-  tm.tm_min = 0;
-  tm.tm_sec = 0;
-  selected_time = mktime (&tm);
-  sel->time = selected_time;
+  sel->date = *date;
   g_signal_emit (G_OBJECT (sel), my_signals[0], 0);
 }
 

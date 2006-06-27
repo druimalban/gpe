@@ -52,20 +52,17 @@ typedef enum
     GTKDATESEL_MONTH_ROMAN              /* xi */
   } GtkDateSelMonthStyle;
 
-GType           gtk_date_sel_get_type (void);
+extern GType gtk_date_sel_get_type (void);
 
-GtkWidget      *gtk_date_sel_new (GtkDateSelMode mode, time_t time);
+extern GtkWidget *gtk_date_sel_new (GtkDateSelMode mode, GDate *date);
 
 extern void gtk_date_sel_set_mode (GtkDateSel *datesel, GtkDateSelMode mode);
 
-time_t          gtk_date_sel_get_time (GtkDateSel *sel);
-void            gtk_date_sel_set_time (GtkDateSel *sel, time_t time);
-void            gtk_date_sel_set_month_style (GtkDateSel *sel, GtkDateSelMonthStyle style);
-void            gtk_date_sel_set_day (GtkDateSel *sel, int year, int month, int day);
+extern void gtk_date_sel_get_date (GtkDateSel *sel, GDate *date);
+extern void gtk_date_sel_set_date (GtkDateSel *sel, GDate *date);
 
-void		gtk_date_sel_move_day (GtkDateSel *sel, int d);
-void		gtk_date_sel_move_week (GtkDateSel *sel, int d);
-void		gtk_date_sel_move_month (GtkDateSel *sel, int d);
+extern void gtk_date_sel_set_month_style (GtkDateSel *sel,
+					  GtkDateSelMonthStyle style);
 
 #ifdef __cplusplus
 }

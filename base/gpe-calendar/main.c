@@ -405,14 +405,13 @@ propagate_time (void)
 	gtk_calendar_select_day (GTK_CALENDAR (calendar), tm.tm_mday);
     }
 
-  time_t ds;
-  struct tm dstm;
+  GDate date;
+  gtk_date_sel_get_date (GTK_DATE_SEL (datesel), &date);
+  GDate viewing;
+  g_date_set_time_t (&viewing, viewtime);
 
-  ds = gtk_date_sel_get_time (GTK_DATE_SEL (datesel));
-  localtime_r (&ds, &dstm);
-
-  if (tm.tm_year != dstm.tm_year || tm.tm_yday != dstm.tm_yday)
-    gtk_date_sel_set_time (GTK_DATE_SEL (datesel), viewtime);
+  if (g_date_compare (&date, &viewing) != 0)
+    gtk_date_sel_set_date (GTK_DATE_SEL (datesel), &viewing);
 
   if (current_view && GTK_IS_VIEW (current_view))
     {
@@ -429,7 +428,17 @@ propagate_time (void)
 static gboolean
 datesel_changed (GtkWidget *datesel, gpointer data)
 {
-  viewtime = gtk_date_sel_get_time (GTK_DATE_SEL (datesel));
+  GDate date;
+  gtk_date_sel_get_date (GTK_DATE_SEL (datesel), &date);
+
+  struct tm tm;
+  localtime_r (&viewtime, &tm);
+  tm.tm_year = g_date_get_year (&date) - 1900;
+  tm.tm_mon = g_date_get_month (&date) - 1;
+  tm.tm_mday = g_date_get_day (&date);
+  tm.tm_isdst = -1;
+
+  viewtime = mktime (&tm);
   propagate_time ();
 
   return FALSE;
@@ -1782,7 +1791,9 @@ main (int argc, char *argv[])
   gtk_widget_show (GTK_WIDGET (item));
 
 
-  datesel = GTK_DATE_SEL (gtk_date_sel_new (GTKDATESEL_FULL, viewtime));
+  GDate date;
+  g_date_set_time_t (&date, viewtime);
+  datesel = GTK_DATE_SEL (gtk_date_sel_new (GTKDATESEL_FULL, &date));
   g_signal_connect (G_OBJECT (datesel), "changed",
 		    G_CALLBACK (datesel_changed), NULL);
   gtk_widget_show (GTK_WIDGET (datesel));
