@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Home Applet
+Name=GPE Calendar
+X-home-applet=libgpe-calendar-applet.so
+X=20
+Y=50

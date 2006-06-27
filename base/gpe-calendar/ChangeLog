@@ -1,5 +1,9 @@
 2006-06-27  Neal H. Walfield  <neal@gnu.org>
 
+	* hildon/gpe-calendar-home.desktop.in: New file.
+
+2006-06-27  Neal H. Walfield  <neal@gnu.org>
+
 	* day_view.c (event_rect_expose): Draw a jagged line at the top of
 	the event if the event starts before the visible time segment.
 	Likewise at the bottom if it starts after the visible time
