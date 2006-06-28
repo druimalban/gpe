@@ -1,3 +1,9 @@
+2006-06-28  Neal H. Walfield  <neal@gnu.org>
+
+	* hildon/gpe-calendar.desktop.in.in (StartupWMClass): Set
+	StartupWMClass.  Works around
+	https://maemo.org/bugzilla/show_bug.cgi?id=657 .
+
 2006-06-27  Neal H. Walfield  <neal@gnu.org>
 
 	* day_view.c (event_rect_expose): Fix off by one error in flooding

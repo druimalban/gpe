@@ -11,3 +11,4 @@ X-Window-Icon-Dimmed=gpe-calendar
 X-Osso-Service=gpe_calendar
 X-HildonDesk-ShowInToolbar=true
 X-Osso-Type=application/x-executable
+StartupWMClass=gpe-calendar
