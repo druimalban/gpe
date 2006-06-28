@@ -1,5 +1,11 @@
 2006-06-28  Neal H. Walfield  <neal@gnu.org>
 
+	* hildon-applet.c (event_list_event_clicked): Add a FOCUS and a
+	trailing newline.
+	* main.c (handoff_callback): Propagate the time.
+
+2006-06-28  Neal H. Walfield  <neal@gnu.org>
+
 	* hildon/gpe-calendar.desktop.in.in (StartupWMClass): Set
 	StartupWMClass.  Works around
 	https://maemo.org/bugzilla/show_bug.cgi?id=657 .

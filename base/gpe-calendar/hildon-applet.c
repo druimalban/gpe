@@ -72,7 +72,7 @@ event_list_event_clicked (EventList *el, Event *ev, GdkEventButton *b,
     {
       char buffer[200];
       snprintf (buffer, sizeof (buffer),
-		"VIEWTIME=%ld", event_get_start (ev));
+		"VIEWTIME=%ld\nFOCUS\n", event_get_start (ev));
       osso_application_top (osso, "gpe_calendar", buffer);
     }
 }

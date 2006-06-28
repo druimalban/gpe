@@ -1276,7 +1276,10 @@ handoff_callback (Handoff *handoff, char *data)
 	{
 	  time_t t = atoi (value);
 	  if (t > 0)
-	    viewtime = t;
+	    {
+	      viewtime = t;
+	      propagate_time ();
+	    }
 	}
       else if (strcmp (var, "FOCUS") == 0)
 	gtk_window_present (GTK_WINDOW (main_window));
