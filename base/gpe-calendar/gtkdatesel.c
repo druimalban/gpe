@@ -70,7 +70,10 @@ static GtkHBoxClass *parent_class;
 static void
 gtk_date_sel_move_day (GtkDateSel *sel, int d)
 {
-  g_date_add_days (&sel->date, d);
+  if (d < 0)
+    g_date_subtract_days (&sel->date, - d);
+  else
+    g_date_add_days (&sel->date, d);
   sel->day_clamped = 0;
   g_signal_emit (G_OBJECT (sel), my_signals[0], 0);
 }
@@ -89,7 +92,11 @@ gtk_date_sel_move_month (GtkDateSel *sel, int d)
 {
   int saved_day = g_date_get_day (&sel->date);
 
-  g_date_add_months (&sel->date, d);
+  if (d < 0)
+    g_date_subtract_months (&sel->date, - d);
+  else
+    g_date_add_months (&sel->date, d);
+
   if (saved_day != g_date_get_day (&sel->date)
       && ! sel->day_clamped)
     sel->day_clamped = saved_day;
@@ -118,7 +125,10 @@ static void
 year_click (GtkWidget *w, GtkDateSel *sel)
 {
   int d = g_object_get_data (G_OBJECT (w), "direction") ? 1 : -1;
-  g_date_add_years (&sel->date, d);
+  if (d < 0)
+    g_date_subtract_years (&sel->date, - d);
+  else
+    g_date_add_years (&sel->date, d);
 
   if (sel->day_clamped)
     {

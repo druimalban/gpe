@@ -1,3 +1,11 @@
+2006-06-29  Neal H. Walfield  <neal@gnu.org>
+
+	* gtkdatesel.c (gtk_date_sel_move_day): If D is negative, use
+	g_date_subtract_days.
+	(gtk_date_sel_move_month): If D is negative, use
+	g_date_subtract_months.
+	(year_click): If D is negative, use g_date_subtract_years.
+
 2006-06-28  Neal H. Walfield  <neal@gnu.org>
 
 	* hildon-applet.c (event_list_event_clicked): Add a FOCUS and a
