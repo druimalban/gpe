@@ -18,8 +18,7 @@
    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111, USA. */
 
 #include "view.h"
-
-#define _(x) gettext(x)
+#include "util.h"
 
 static void gtk_view_class_init (gpointer klass, gpointer klass_data);
 static void gtk_view_init (GTypeInstance *instance, gpointer klass);
@@ -31,7 +30,7 @@ static GtkWidgetClass *parent_class;
 GType
 gtk_view_get_type (void)
 {
-  static GType type = 0;
+  static GType type;
 
   if (! type)
     {
@@ -90,7 +89,7 @@ gtk_view_init (GTypeInstance *instance, gpointer klass)
 {
   GtkView *view = GTK_VIEW (instance);
 
-  view->date = (time_t) -1;
+  view->time = (time_t) -1;
 }
 
 static void
@@ -116,7 +115,7 @@ gtk_view_finalize (GObject *object)
 time_t
 gtk_view_get_time (GtkView *view)
 {
-  return view->date;
+  return view->time;
 }
 
 void
@@ -124,8 +123,8 @@ gtk_view_set_time (GtkView *view, time_t time)
 {
   GtkViewClass *view_class = (GtkViewClass *) G_OBJECT_GET_CLASS (view);
 
-  time_t old = view->date;
-  view->date = time;
+  time_t old = view->time;
+  view->time = time;
 
   g_return_if_fail (view_class->set_time);
   view_class->set_time (view, old);
@@ -139,9 +138,28 @@ gtk_view_set_time (GtkView *view, time_t time)
 
   args[1].g_type = 0;
   g_value_init (&args[1], G_TYPE_ULONG);
-  g_value_set_ulong (&args[1], view->date);
+  g_value_set_ulong (&args[1], view->time);
 
   g_signal_emitv (args, view_class->time_changed_signal, 0, &rv);
+}
+
+void
+gtk_view_get_date (GtkView *view, GDate *date)
+{
+  g_date_set_time_t (date, view->time);
+}
+
+void
+gtk_view_set_date (GtkView *view, GDate *date)
+{
+  struct tm tm;
+  localtime_r (&view->time, &tm);
+  tm.tm_year = g_date_get_year (date) - 1900;
+  tm.tm_mon = g_date_get_month (date) - 1;
+  tm.tm_mday = g_date_get_day (date);
+  tm.tm_isdst = -1;
+
+  gtk_view_set_time (view, mktime (&tm));
 }
 
 void

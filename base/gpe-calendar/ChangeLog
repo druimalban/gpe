@@ -1,3 +1,14 @@
+2006-06-30  Neal H. Walfield  <neal@gnu.org>
+
+	* view.h (struct _GtkView): Rename field time to date.  Update
+	users.
+	(gtk_view_get_date): New declaration.
+	(gtk_view_set_date): Likewise.
+	* view.c: Include "util.h".
+	(_): Undef.
+	(gtk_view_get_date): New function.
+	(gtk_view_set_date): New function.
+
 2006-06-29  Neal H. Walfield  <neal@gnu.org>
 
 	* gtkdatesel.c (gtk_date_sel_move_day): If D is negative, use

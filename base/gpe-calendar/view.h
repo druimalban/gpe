@@ -26,7 +26,7 @@
 struct _GtkView
 {
   GtkVBox widget;
-  time_t date;
+  time_t time;
 };
 typedef struct _GtkView GtkView;
 
@@ -58,6 +58,14 @@ extern time_t gtk_view_get_time (GtkView *view);
 
 /* Set the time view VIEW is showing to TIME.  */
 extern void gtk_view_set_time (GtkView *view, time_t time);
+
+/* Return the date component of the time view VIEW is showing in
+   *DATE.  */
+extern void gtk_view_get_date (GtkView *view, GDate *date);
+
+/* Set the date component of the time view VIEW is showing to
+   DATE.  */
+extern void gtk_view_set_date (GtkView *view, GDate *date);
 
 /* Cause view VIEW to reread the event db.  */
 extern void gtk_view_reload_events (GtkView *view);
