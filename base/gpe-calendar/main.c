@@ -131,7 +131,7 @@ static int event_list_hidden;
 static GtkContainer *event_list_container;
 static EventList *event_list;
 
-static GtkWidget *day_button;
+static GtkWidget *day_button, *month_button;
 #ifdef IS_HILDON
 static GtkCheckMenuItem *fullscreen_button;
 #endif
@@ -1224,6 +1224,28 @@ main_window_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *data)
   if ((k->state & GDK_CONTROL_MASK) 
        || (k->state & GDK_MOD1_MASK))
     return FALSE;
+  if (k->keyval == '-'
+#if IS_HILDON
+      || k->keyval == GDK_F8
+#endif
+      )
+    /* Zoom out.  */
+    if (current_view && IS_DAY_VIEW (current_view))
+      {
+	gtk_toggle_tool_button_set_active
+	  (GTK_TOGGLE_TOOL_BUTTON (month_button), TRUE);
+	current_view_consider ();
+	month_view_set_zoom (GTK_MONTH_VIEW (current_view), -1);
+	return TRUE;
+      }
+
+  if (k->keyval == GDK_Home)
+    {
+      viewtime = time (NULL);
+      propagate_time ();
+      return TRUE;
+    }
+
   /* automatic event */
   if (k->string && isalpha(k->string[0]))
     {
@@ -1716,6 +1738,7 @@ main (int argc, char *argv[])
   pw = gtk_image_new_from_pixbuf (p);
   gtk_widget_show (GTK_WIDGET (pw));
   item = gtk_radio_tool_button_new_from_widget(GTK_RADIO_TOOL_BUTTON(item));
+  month_button = GTK_WIDGET (item);
   gtk_tool_button_set_label(GTK_TOOL_BUTTON(item), _("Month"));
   gtk_tool_button_set_icon_widget(GTK_TOOL_BUTTON(item), pw);
   gtk_toggle_tool_button_set_active (GTK_TOGGLE_TOOL_BUTTON (item),

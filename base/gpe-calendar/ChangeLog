@@ -1,5 +1,55 @@
 2006-06-30  Neal H. Walfield  <neal@gnu.org>
 
+	* month_view.h (month_view_mod_zoom_factor): New function.
+	(month_view_set_zoom): Likewise.
+	* month_view.c (struct _GtkMonthView): New fields scrolled_window,
+	hadj, vadj, last_expose, zoom_factor, char_width, char_height,
+	pending_update_extents and drag.
+	(zoom_factors): New variable.
+	(ZOOM_FACTORS): New define.
+	(gtk_month_view_init): Set MONTH_VIEW->PENDING_RELOAD to TRUE.
+	(gtk_month_view_realize): Calculate MONTH_VIEW->CHAR_WIDTH and
+	MONTH_VIEW->CHAR_HEIGHT.
+	(scroll_to_focused_day): New function.
+	(gtk_month_view_set_time): Don't change the displayed days if the
+	new day is currently displayed.
+	(button_press_event): Don't focus the day here.
+	(update_extents_hard): New function.
+	(update_extents): Likewise.
+	(draw_expose_event): Call update_extents_hard if necessary.
+	Freeze expose events while processing it.  Run any pending expose
+	events afterwards.  If any ran, just quit.  Scale the font
+	according to the amount of space available.
+	(first_day): New function.
+	(reload_events_hard): Use it.  Call scroll_to_focused_day.
+	(resize_table): Remove function.
+	(size_allocate): New function.
+	(page_flip): Likewise.
+	(motion_notify_event): Likewise.
+	(button_release_event): Likewise.
+	(month_view_mod_zoom_factor): Likewise.
+	(month_view_set_zoom): Likewise.
+	(gtk_month_view_key_press_event): Handle page up, page down and
+	zooming.
+	(gtk_month_view_new): Create the adjustments for the scrolled
+	window and save them.  Save the scrolled window in
+	MONTH_VIEW->SCROLLED_WINDOW.  Change the horizontal scrollbar
+	policy to automatical.  Call gtk_widget_set_app_paintable on
+	MONTH_VIEW->DRAW.  Propagate button 1 motion events and button
+	release events.  Connect motion_notify_event to MONTH_VIEW->DRAW's
+	"motion_notify_event" signal.  Likewise, button_release_event to
+	its "button-release-event" signal.  Don't connect to the
+	"size-allocate" signal.  Don't set MONTH_VIEW->DRAW's requested
+	size.  Connect size_allocate to the viewport's "size-allocate"
+	signal.
+	* main.c (month_button): New variable.
+	(main_window_key_press_event): If the current view is the day view
+	and the zoom out button is pressed, change to the month view.
+	If the home button is pressed, change the date to today.
+	(main): Save the month view's button in MONTH_VIEW.
+
+2006-06-30  Neal H. Walfield  <neal@gnu.org>
+
 	* view.h (struct _GtkView): Rename field time to date.  Update
 	users.
 	(gtk_view_get_date): New declaration.

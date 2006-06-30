@@ -25,4 +25,13 @@ extern GType gtk_month_view_get_type (void);
 
 extern GtkWidget *gtk_month_view_new (time_t time);
 
+/* Adjust the zoom factor by DELTA.  Larger is more zoom.  */
+extern void month_view_mod_zoom_factor (GtkMonthView *month_view, int delta);
+
+/* Set the zoom factor to VALUE.  0 is completely zoomed out (i.e. the
+   broadest view).  If value is negative, set the zoom factor to the
+   maximum zoom factor + 1 - ABS (VALUE).  */
+extern void month_view_set_zoom (GtkMonthView *month_view, int value);
+
+
 #endif
