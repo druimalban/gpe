@@ -1,7 +1,7 @@
 /*
  * gpe-info
  *
- * Copyright (C) 2004  Florian Boor <florian.boor@kernelconcepts.de>
+ * Copyright (C) 2004-2006  Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -26,7 +26,7 @@
 #include <gtk/gtk.h>
 #include <libintl.h>
 #include <locale.h>
-#include "sysinfo.h"
+#include "modules/sysinfo.h"
 
 #include <gpe/init.h>
 #include <gpe/picturebutton.h>

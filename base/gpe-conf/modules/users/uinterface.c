@@ -23,14 +23,14 @@
 
 #include <gtk/gtk.h>
 
-#include "callbacks.h"
-#include "interface.h"
+#include "ucallbacks.h"
+#include "uinterface.h"
 #include <gpe/picturebutton.h>
 #include <gpe/errorbox.h>
 #include <gpe/pixmaps.h>
 
-#include "../applets.h"
-#include "../suid.h"
+#include "../../applets.h"
+#include "../../suid.h"
 
 static gchar *listTitles[3];
 extern gboolean set_own_password;

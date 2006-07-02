@@ -13,9 +13,9 @@
 #include <gpe/picturebutton.h>
 #include <gpe/spacing.h>
 
-#include "callbacks.h"
-#include "interface.h"
-#include "../applets.h"
+#include "scallbacks.h"
+#include "sinterface.h"
+#include "../../applets.h"
 #include "../screen/brightness.h"
 #include "conf.h"
 

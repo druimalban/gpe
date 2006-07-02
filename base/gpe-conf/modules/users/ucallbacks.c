@@ -16,16 +16,16 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <libintl.h>
-
-#include "callbacks.h"
-#include "interface.h"
-#include <gpe/errorbox.h>
-#include <gpe/question.h>
-#include "../applets.h"
 #include <unistd.h>
 #include <crypt.h>
 #include <time.h>
+#include <libintl.h>
+
+#include "ucallbacks.h"
+#include "uinterface.h"
+#include <gpe/errorbox.h>
+#include <gpe/question.h>
+#include "../../applets.h"
 
 extern GtkWidget *user_list;
 gboolean set_own_password = FALSE;

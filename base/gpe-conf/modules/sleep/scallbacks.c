@@ -12,11 +12,11 @@
 
 #include <gtk/gtk.h>
 
-#include "callbacks.h"
-#include "interface.h"
+#include "scallbacks.h"
+#include "sinterface.h"
 #include "conf.h"
 #include "confGUI.h"
-#include "../applets.h"
+#include "../../applets.h"
 #include "../screen/brightness.h"
 
 extern GtkWidget *sleep_idle_spin;

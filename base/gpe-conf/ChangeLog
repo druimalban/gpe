@@ -1,3 +1,10 @@
+2006-07-02	Florian Boor <florian.boor@kernelconcepts.de>
+
+    * Autotools built makefiles.
+    * Major code structure changes:
+      Modules code moved to "modules" subdir.
+      Desktop files moved to "desktop".
+
 2006-06-24	Florian Boor <florian.boor@kernelconcepts.de>
 
 	* rotation.c: Enable rotation independent from target device. 

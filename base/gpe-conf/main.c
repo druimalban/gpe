@@ -2,7 +2,7 @@
  * gpe-conf
  *
  * Copyright (C) 2002  Pierre TARDY <tardyp@free.fr>
- *               2003 - 2005  Florian Boor <florian.boor@kernelconcepts.de>
+ *               2003 - 2006  Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -27,24 +27,23 @@
 #include <locale.h>
 #include "suid.h"
 #include "applets.h"
-#include "timeanddate.h"
+#include "modules/timeanddate.h"
 #include "appmgr_setup.h"
-#include "screen.h"
-#include "unimplemented.h"
-#include "network.h"
-#include "theme.h"
-#include "sleep.h"
-#include "ownerinfo.h"
-#include "login-setup.h"
-#include "users.h"
-#include "gpe-admin.h"
-#include "serial.h"
-#include "usb.h"
-#include "cardinfo.h"
-#include "tasks.h"
-#include "keys/keys.h"
-#include "sleep/conf.h"
-#include "sound/sound.h"
+#include "modules/screen/screen.h"
+#include "modules/network.h"
+#include "modules/theme.h"
+#include "modules/sleep/sleep.h"
+#include "modules/ownerinfo.h"
+#include "modules/login-setup.h"
+#include "modules/users/users.h"
+#include "modules/gpe-admin.h"
+#include "modules/serial.h"
+#include "modules/usb.h"
+#include "modules/cardinfo.h"
+#include "modules/tasks.h"
+#include "modules/keys/keys.h"
+#include "modules/sleep/conf.h"
+#include "modules/sound/sound.h"
 
 #include <gdk/gdkx.h>
 
@@ -91,13 +90,13 @@ struct Applet applets[]=
 		N_("Time") ,"time" ,N_("Time and Date Setup"),PREFIX "/share/pixmaps/gpe-config-time.png"},
     { &screen_Build_Objects, &screen_Free_Objects, &screen_Save, &screen_Restore,
 		N_("Screen") , "screen", N_("Screen Setup"), PREFIX "/share/pixmaps/gpe-config-screen.png"},
-    { &Keys_Build_Objects, &Unimplemented_Free_Objects, &Keys_Save, &Keys_Restore ,
+    { &Keys_Build_Objects, NULL, &Keys_Save, &Keys_Restore ,
 		N_("Keys & Buttons") ,"keys", N_("Keys and Buttons Setup"),PREFIX "/share/pixmaps/gpe-config-kbd.png"},
     { &Network_Build_Objects, &Network_Free_Objects, &Network_Save, &Network_Restore ,
 		N_("Network") ,"network",N_("Network Setup"),PREFIX "/share/pixmaps/gpe-config-network.png"},
-    { &Theme_Build_Objects, &Unimplemented_Free_Objects, &Theme_Save, &Theme_Restore ,
+    { &Theme_Build_Objects, NULL, &Theme_Save, &Theme_Restore ,
 		N_("Theme") ,"theme", N_("Look and Feel"),PREFIX "/share/pixmaps/gpe-config-theme.png"},
-    { &Sleep_Build_Objects, &Unimplemented_Free_Objects, &Sleep_Save, &Sleep_Restore ,
+    { &Sleep_Build_Objects, NULL, &Sleep_Save, &Sleep_Restore ,
 		N_("Power") ,"sleep",N_("Configure Power Saving"),PREFIX "/share/pixmaps/gpe-config-sleep.png"},
     { &Ownerinfo_Build_Objects, &Ownerinfo_Free_Objects, &Ownerinfo_Save, &Ownerinfo_Restore,
 		N_("Owner"), "ownerinfo", N_("Owner Information"),PREFIX "/share/pixmaps/gpe-config-ownerinfo.png"},
@@ -109,17 +108,17 @@ struct Applet applets[]=
 		N_("GPE") ,"admin",N_("GPE Conf Administration"),PREFIX "/share/pixmaps/gpe-config-admin.png"},
     { &Serial_Build_Objects, &Serial_Free_Objects, &Serial_Save, &Serial_Restore ,
 		N_("Serial Ports") ,"serial", N_("Serial Port Configuration"),PREFIX "/share/pixmaps/gpe-config-serial.png"},
-    { &USB_Build_Objects, &Unimplemented_Free_Objects, &USB_Save, &USB_Restore ,
+    { &USB_Build_Objects, NULL, &USB_Save, &USB_Restore ,
 		N_("USB") ,"usb", N_("USB Configuration"),PREFIX "/share/pixmaps/gpe-config-serial.png"},
-    { &Cardinfo_Build_Objects, &Cardinfo_Free_Objects, &Unimplemented_Save, &Cardinfo_Restore ,
+    { &Cardinfo_Build_Objects, &Cardinfo_Free_Objects, NULL, &Cardinfo_Restore ,
 		N_("PCMCIA/CF Cards") ,"cardinfo", N_("PCMCIA/CF Card Info and Config"),PREFIX "/share/pixmaps/gpe-config-cardinfo.png"},
     { &Sound_Build_Objects, &Sound_Free_Objects, &Sound_Save, &Sound_Restore , 
 		N_("Sound") ,"sound", N_("Sound Setup"), PREFIX "/share/pixmaps/gpe-config-sound.png"},
-    { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore ,
+    { NULL, NULL, NULL, NULL ,
 		N_("Task nameserver") ,"task_nameserver", N_("Task for changing nameserver"), PREFIX "/share/pixmaps/gpe-config-admin.png"},
-    { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore ,
+    { NULL, NULL, NULL, NULL ,
 		N_("Task sound") ,"task_sound", N_("Command line task saving/restoring sound settings."), PREFIX "/share/pixmaps/gpe-config-admin.png"},
-    { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore ,
+    { NULL, NULL, NULL, NULL ,
 		N_("Task background image") ,"task_background", N_("Only select background image."), PREFIX "/share/pixmaps/gpe-config-admin.png"}
   };
 
@@ -144,14 +143,15 @@ void Save_Callback(GtkWidget *sender)
 	  gpe_popup_infoprint(GDK_DISPLAY(), _("Settings saved"));
   while (gtk_events_pending())
 	  gtk_main_iteration_do(FALSE);
-  applets[self.cur_applet].Save();
+  if (applets[self.cur_applet].Save)
+    applets[self.cur_applet].Save();
   gtk_widget_hide(self.w);
   sleep(1);
   if(self.alone_applet)
-  {
-    gtk_main_quit();
-    exit(0);
-  }
+    {
+      gtk_main_quit();
+      exit(0);
+    }
 }
 
 
@@ -159,13 +159,14 @@ void Restore_Callback()
 {
   while (gtk_events_pending())
 	  gtk_main_iteration_do(FALSE);
-  applets[self.cur_applet].Restore();
+  
+  if (applets[self.cur_applet].Restore)
+    applets[self.cur_applet].Restore();
   gtk_widget_hide(self.w);
   sleep(1);
-  if(self.alone_applet)
+  if (self.alone_applet)
   {
     gtk_main_quit();
-    exit(0);
   }
 }
 
@@ -174,52 +175,57 @@ void item_select(int useronly, gpointer user_data)
 {
   int i = (int) user_data;
 
-  if(self.cur_applet != - 1)
+  if (self.cur_applet != - 1)
     {
-      applets[self.cur_applet].Restore(); // for the time and date
-      applets[self.cur_applet].Free_Objects();      
+      if (applets[self.cur_applet].Restore)
+        applets[self.cur_applet].Restore();
+      if (applets[self.cur_applet].Free_Objects)
+        applets[self.cur_applet].Free_Objects();      
     }
   if(self.applet)
     {
       gtk_widget_hide(self.applet);
-      gtk_container_remove(GTK_CONTAINER(self.viewport),self.applet);
+      gtk_container_remove(GTK_CONTAINER(self.viewport), self.applet);
     }
   self.cur_applet = i;
 
-  self.applet = applets[i].Build_Objects(useronly, self.toolbar);
+  if (applets[i].Build_Objects)
+    self.applet = applets[i].Build_Objects(useronly, self.toolbar);
+  else 
+	self.applet = NULL;
  
   if (self.applet)
   {
-    gtk_container_add(GTK_CONTAINER(self.viewport),self.applet);
+    gtk_container_add(GTK_CONTAINER(self.viewport), self.applet);
 	
     gtk_window_set_title(GTK_WINDOW(self.w), applets[i].frame_label);
 	
     gtk_widget_show_all(self.applet);
   
-    if(applets[self.cur_applet].Save != &Unimplemented_Save)
-    {
-      gtk_widget_show(GTK_WIDGET(self.save));
-      gtk_widget_grab_default(GTK_WIDGET(self.save));
-    }
+    if (applets[self.cur_applet].Save)
+      {
+        gtk_widget_show(GTK_WIDGET(self.save));
+        gtk_widget_grab_default(GTK_WIDGET(self.save));
+      }
     else
-    {
-      gtk_widget_hide(GTK_WIDGET(self.save));
-    }  
+      {
+        gtk_widget_hide(GTK_WIDGET(self.save));
+      }  
   
-    if(applets[self.cur_applet].Restore != &Unimplemented_Restore)
-    {
-      if(applets[self.cur_applet].Save == &Unimplemented_Save)
-	    {
-          gtk_widget_hide(GTK_WIDGET(self.cancel));
-          gtk_widget_show(GTK_WIDGET(self.dismiss));
-          gtk_widget_grab_default(GTK_WIDGET(self.dismiss));
-        }
-      else
-       {
-        gtk_widget_hide(GTK_WIDGET(self.dismiss));
-        gtk_widget_show(GTK_WIDGET(self.cancel));
-       }
-    }
+    if (applets[self.cur_applet].Restore)
+      {
+        if(!applets[self.cur_applet].Save)
+  	      {
+            gtk_widget_hide(GTK_WIDGET(self.cancel));
+            gtk_widget_show(GTK_WIDGET(self.dismiss));
+            gtk_widget_grab_default(GTK_WIDGET(self.dismiss));
+          }
+        else
+          {
+            gtk_widget_hide(GTK_WIDGET(self.dismiss));
+            gtk_widget_show(GTK_WIDGET(self.cancel));
+          }
+      }
     else
       gtk_widget_hide(GTK_WIDGET(self.cancel));
   }

@@ -8,10 +8,10 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "interface.h"
+#include "sinterface.h"
 #include "conf.h"
 #include "confGUI.h"
-#include "../applets.h"
+#include "../../applets.h"
 
 static ipaq_conf_t *ISconf;
 

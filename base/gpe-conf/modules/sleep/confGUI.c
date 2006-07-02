@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <gtk/gtk.h>
 
-#include "callbacks.h"
+#include "scallbacks.h"
 #include "conf.h"
 #include "confGUI.h"
 
