@@ -1,3 +1,11 @@
+2006-07-03	Florian Boor <florian.boor@kernelconcepts.de>
+
+	* sound.c: Use esd for playing test fle.
+	* configure.ac: Add new esd/audiofile dependency.
+	* autogen.sh: Force update of po/Makefile.in.in
+	* po/Makefile.in.in: removed
+	* po/ChangeLog: empty file
+
 2006-07-02	Florian Boor <florian.boor@kernelconcepts.de>
 
     * Autotools built makefiles.

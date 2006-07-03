@@ -9,7 +9,7 @@ AC_PROG_CC
 AC_STDC_HEADERS
 AC_PROG_INSTALL
 
-DEP_MODULES="gtk+-2.0 >= 2.4 glib-2.0 >= 2.2 libgpewidget >= 0.109 x11 xrandr libxsettings-client"
+DEP_MODULES="gtk+-2.0 >= 2.4 glib-2.0 >= 2.2 libgpewidget >= 0.109 x11 xrandr libxsettings-client audiofile esound"
 
 # i8n stuff
 AH_TEMPLATE([GETTEXT_PACKAGE], [Package name for gettext])

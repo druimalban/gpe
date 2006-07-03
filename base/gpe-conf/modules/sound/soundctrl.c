@@ -1,7 +1,7 @@
 /*
  * gpe-conf
  *
- * Copyright (C) 2004  Florian Boor <florian.boor@kernelconcepts.de>
+ * Copyright (C) 2004, 2006  Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -24,6 +24,9 @@
 #include <fcntl.h>
 #include <sys/ioctl.h>
 #include <sys/soundcard.h>
+
+#include <esd.h>
+#include <audiofile.h>
 
 #include <libintl.h>
 #define _(x) gettext(x)
@@ -51,54 +54,11 @@ static int active_channels = 0;
 static char* show_channels[] = {"vol", "pcm", "mic", "pcm2", "bass", "treble", NULL};
 
 
-/* initialize device to the settings our sample file uses */
-static int 
-init_dsp(int dsp_fd)
-{
-	int i, p;
-
-	ioctl(dsp_fd, SNDCTL_DSP_RESET, 0);
-
-	p =  16;
-	i =  ioctl(dsp_fd, SOUND_PCM_WRITE_BITS, &p);
-
-	p =  1;
-	i += ioctl(dsp_fd, SOUND_PCM_WRITE_CHANNELS, &p);
-
-	p =  44100;
-	i += ioctl(dsp_fd, SOUND_PCM_WRITE_RATE, &p);
-
-	ioctl(dsp_fd, SNDCTL_DSP_SYNC, 0);
-
-	return i;
-}
-
-
 void
 play_sample(char *filename)
 {
-	int fd_dev;
-	int fd_data = open(filename, O_RDONLY);
-	int len;
-	char buf[20000];
-
-	if (fd_data < 0)
-		return;
-	else
-		len = read(fd_data, buf, 20000);	
-	close(fd_data);
-	
-	fd_dev = open(DEVNAME_AUDIO1, O_WRONLY | O_NONBLOCK);
-	if (fd_dev < 0) fd_dev = open(DEVNAME_AUDIO2, O_WRONLY | O_NONBLOCK);
-	if (fd_dev < 0) fd_dev = open(DEVNAME_AUDIO3, O_WRONLY | O_NONBLOCK);
-		
-	if (len > 0)
-		if (fd_dev >= 0)
-		{
-			init_dsp(fd_dev);
-			write(fd_dev, buf, len);
-			close(fd_dev);
-		}
+	if (filename && strlen(filename) && !access(filename, R_OK))
+		esd_play_file( "wav", filename, 1 );
 }
 
 
@@ -289,7 +249,7 @@ sound_init(void)
 		
 	for (i = 0; i < SOUND_MIXER_NRDEVICES; i++)
 	{
-		if (/*((1 << i) & devmask)*/channel_active(i))
+		if (channel_active(i))
 		{
 			mchannels[active_channels].nr = i; /* channel number */
 			if (i) /* name and label */
