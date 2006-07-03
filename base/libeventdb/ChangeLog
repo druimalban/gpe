@@ -1,3 +1,12 @@
+2006-07-03  Neal H. Walfield  <neal@gnu.org>
+
+	* event-db.c (event_db_finalize): Flush each event on the cache
+	list and set its EV->EDB to NULL.  Don't assert that the hash
+	table is empty.
+	(event_load): Don't grab a reference to EV->EDB.
+	(event_new): Likewise.
+	(event_source_finalize): Don't release a reference to EV->EDB.
+
 2006-06-27  Neal H. Walfield  <neal@gnu.org>
 
 	* event-db.c (SQLITE_TRY): New macro.

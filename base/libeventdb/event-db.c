@@ -509,13 +509,14 @@ event_db_finalize (GObject *object)
       i = next;
       next = i->next;
 
-      Event *ev = EVENT (i->data);
+      EventSource *ev = EVENT_SOURCE (i->data);
+      event_flush (EVENT (ev));
       g_object_remove_toggle_ref (G_OBJECT (ev),
 				  event_source_toggle_ref_notify, edb);
+      ev->edb = NULL;
     }
   g_slist_free (edb->cache_list);
 
-  g_assert (g_hash_table_size (edb->events) == 0);
   g_hash_table_destroy (edb->events);
 
   next = edb->calendars;
@@ -1074,9 +1075,6 @@ event_source_finalize (GObject *object)
       g_assert (removed);
     }
 
-  if (event->edb)
-    g_object_unref (event->edb);
-
   G_OBJECT_CLASS (event_parent_class)->finalize (object);
 }
 
@@ -1509,7 +1507,6 @@ event_load (EventDB *edb, guint uid)
 
   ev = EVENT_SOURCE (g_object_new (event_source_get_type (), NULL));
   ev->edb = edb;
-  g_object_ref (edb);
   ev->uid = uid;
   g_hash_table_insert (edb->events, (gpointer) ev->uid, ev);
 
@@ -3231,7 +3228,6 @@ event_new (EventDB *edb, EventCalendar *ec, const char *eventid)
   gchar *err = NULL;
 
   ev->edb = edb;
-  g_object_ref (edb);
   if (ec)
     ev->calendar = ec->uid;
   else
