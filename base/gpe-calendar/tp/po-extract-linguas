@@ -1,0 +1,28 @@
+#! /usr/bin/env python
+
+#--Arguments:
+import sys
+
+if len(sys.argv) != 3:
+    print >> sys.stderr, "ERROR arguments are: <postats> <package>"
+    sys.exit(1)
+
+po_status_file = sys.argv[1]
+package_name   = sys.argv[2]
+
+#--Load the repository ('postats' file):
+import pickle
+dict = pickle.load( open(po_status_file) )
+
+#--Extract linguas
+linguas = []
+LINGUAS = ""
+
+for key in dict.keys():
+    if key[0] == package_name :
+        #print key, dict[key]
+        if linguas.count(key[2]) == 0:
+            linguas.append(key[2])
+            LINGUAS = LINGUAS + key[2] + " "
+
+print LINGUAS

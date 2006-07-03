@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT(gpe-calendar,0.72,gpe@handhelds.org)
+AC_INIT(gpe-calendar,0.73rc2,gpe@handhelds.org)
 
 AC_CONFIG_SRCDIR([main.c])
 AM_INIT_AUTOMAKE([foreign dist-bzip2])
@@ -27,7 +27,7 @@ AC_SUBST(gpecalendar_localedir)
 AM_GLIB_GNU_GETTEXT
 AC_PROG_INTLTOOL([0.23])
 
- dbus-glib-1
+# dbus-glib-1
 AC_MSG_CHECKING([if D-Bus support has been enabled]);
 AC_ARG_ENABLE(
   dbus,
@@ -85,6 +85,7 @@ AC_SUBST(DEPS_LIBS)
 AC_OUTPUT([
 Makefile
 po/Makefile.in
+po/Makefile
 gpe-calendar.desktop.in
 hildon/com.nokia.gpe-calendar.service
 hildon/gpe-calendar.desktop.in

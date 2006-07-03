@@ -1,3 +1,13 @@
+2006-07-03  Florian Boor  <florian@kernelconcepts.de>
+
+	* configure.ac: Set rc2 version for i18n team package.
+	* po/Makefile.in.in: Update to latest i18n needs.
+	* tp/*: New files for i18n file chaching.
+	* autogen.sh: Change to update i18n files.
+	* Makefile.am: Update, add po/gpe-calendar.pot to distribution files.
+	* po/POTFILES.in: Update to meet current files.
+	* po/*.pot po/*.po: Updated to latest version / current state.
+
 2006-06-30  Neal H. Walfield  <neal@gnu.org>
 
 	* month_view.h (month_view_mod_zoom_factor): New function.

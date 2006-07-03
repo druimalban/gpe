@@ -93,6 +93,7 @@ EXTRA_DIST = $(service_DATA) \
              intltool-extract.in \
              intltool-merge.in \
              intltool-update.in \
+             po/gpe-calendar.pot \
 			 debian/rules \
 			 debian/links \
 			 debian/control \
