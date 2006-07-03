@@ -293,6 +293,9 @@ gtk_month_view_invalidate_cell (GtkMonthView *month_view, gint cell)
 static void
 scroll_to_focused_day (GtkMonthView *month_view)
 {
+  if (! GTK_WIDGET_REALIZED (month_view))
+    return;
+
   if (month_view->zoom_factor == 0)
     return;
 
