@@ -1,3 +1,12 @@
+2006-07-03  Florian Boor  <florian.boor@kernelconcepts.de>
+
+	* Release version 0.45.
+	* Makefile.am: Some tweaks to pass distcheck and remove obsolete stuff.
+	* po/Makefile.in.in: Remove from cvs, needs to be generated.
+	* po/POTFILES.in: Update to meet latest file structure.
+	* autogen.sh: Enforce updated i18n support files.
+	* gpe-dist.am: Create new gpe-contacts.pot file before distribution.
+
 2006-04-26  Jan Arne Petersen  <jpetersen@jpetersen.org>
 
 	Use some special maemo widgets in the edit dialog:

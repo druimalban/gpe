@@ -21,12 +21,12 @@ if test "$GETTEXTIZE"; then
  echo "Creating $dr/aclocal.m4 ..."
  test -r aclocal.m4 || touch aclocal.m4
  echo "Running $GETTEXTIZE...  Ignore non-fatal messages."
- echo "no" | $GETTEXTIZE --copy
+ echo "no" | $GETTEXTIZE --copy --force
  echo "Making aclocal.m4 writable ..."
  test -r aclocal.m4 && chmod u+w aclocal.m4
 fi
 echo "Running intltoolize..."
-intltoolize --copy --automake
+intltoolize --copy --automake -f
 
 libtoolize --copy --force
 

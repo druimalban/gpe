@@ -1,11 +1,10 @@
-categories.c
 configure.c
-db.c
-edit-vcard.desktop.in
+edit-vcard.desktop.in.in
 editing.c
 export.c
 finddlg.c
-gpe-contacts.desktop.in
+gpe-contacts.desktop.in.in
 main.c
 namedetail.c
 structure.c
+hildon/gpe-contacts.desktop.in.in

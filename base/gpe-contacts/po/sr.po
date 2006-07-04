@@ -1,50 +1,18 @@
 # Serbian translation of `gpe-contacts'.
 # Copyright (C) 2005 Free Software Foundation, Inc.
 # This file is distributed under the same license as the `gpe-contacts' package.
-# Aleksandar Jelenak <jelenak@netlinkplus.net>, 2005.
+# Aleksandar Jelenak <jelenak@verizon.net>, 2005.
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-contacts 0.37\n"
+"Project-Id-Version: gpe-contacts 0.42\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-02-07 02:04+0100\n"
-"PO-Revision-Date: 2005-05-03 14:48-0400\n"
-"Last-Translator: Aleksandar Jelenak <jelenak@netlinkplus.net>\n"
+"POT-Creation-Date: 2006-07-04 01:52+0200\n"
+"PO-Revision-Date: 2005-12-11 17:46-0500\n"
+"Last-Translator: Aleksandar Jelenak <jelenak@verizon.net>\n"
 "Language-Team: Serbian <gnu@prevod.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-
-#: ../categories.c:105
-msgid "Category name must not be blank"
-msgstr "Име категорије мора бити попуњено"
-
-#: ../categories.c:115
-msgid "A category by that name already exists"
-msgstr "Истоимена категорија већ постоји"
-
-#: ../categories.c:147
-msgid "Name:"
-msgstr "Име:"
-
-#: ../categories.c:174 ../categories.c:328
-msgid "New category"
-msgstr "Нова категорија"
-
-#: ../categories.c:329
-msgid "Tap here to add a new category."
-msgstr "Лупни овде за нову категорију."
-
-#: ../categories.c:333
-msgid "Delete category"
-msgstr "Избриши категорију"
-
-#: ../categories.c:334
-msgid "Tap here to delete the selected category."
-msgstr "Лупни овде за брисање означене категорије."
-
-#: ../categories.c:401
-msgid "Select categories"
-msgstr "Изабери категорије"
 
 #. TRANSLATORS: kB = kilo bytes
 #: ../configure.c:130 ../configure.c:340
@@ -131,52 +99,40 @@ msgstr "База података"
 msgid "Contacts: Configuration"
 msgstr "Контакти: Подешавање"
 
-#: ../db.c:255
-msgid "Name"
-msgstr "Име"
-
-#: ../db.c:256
-msgid "Phone"
-msgstr "Телефон"
-
-#: ../db.c:257
-msgid "EMail"
-msgstr "Епошта"
-
-#: ../edit-vcard.desktop.in.h:1
+#: ../edit-vcard.desktop.in.in.h:1
 msgid "Edit personal vcard"
 msgstr "Уреди лични vcard"
 
-#: ../edit-vcard.desktop.in.h:2
+#: ../edit-vcard.desktop.in.in.h:2
 msgid "My VCard"
 msgstr "Мој VCard"
 
-#: ../editing.c:114 ../main.c:1346
+#: ../editing.c:135 ../main.c:1346
 msgid "Details"
 msgstr "Детаљи"
 
-#: ../editing.c:275
+#: ../editing.c:367
 msgid "no year"
 msgstr "без године"
 
-#: ../editing.c:454 ../namedetail.c:66 ../structure.c:177
+#: ../editing.c:426
+#, fuzzy
+msgid "Image"
+msgstr "Слика..."
+
+#: ../editing.c:539 ../namedetail.c:66 ../structure.c:177
 msgid "Cancel"
 msgstr "Поништи"
 
-#: ../editing.c:455 ../namedetail.c:64
+#: ../editing.c:540 ../namedetail.c:64
 msgid "OK"
-msgstr ""
+msgstr "У реду"
 
-#: ../editing.c:456
-#, fuzzy
-msgid "Image..."
-msgstr "Слика"
-
-#: ../editing.c:565 ../main.c:502 ../main.c:629
+#: ../editing.c:650 ../main.c:502 ../main.c:629
 msgid "Categories"
 msgstr "Категорије"
 
-#: ../editing.c:1294
+#: ../editing.c:1431
 msgid "Select image"
 msgstr "Изабери слику"
 
@@ -194,11 +150,12 @@ msgstr "Нађи контакте"
 msgid "Search for:"
 msgstr "Претрага за:"
 
-#: ../gpe-contacts.desktop.in.h:1 ../main.c:1282
+#: ../gpe-contacts.desktop.in.in.h:1 ../main.c:1282
+#: ../hildon/gpe-contacts.desktop.in.in.h:1
 msgid "Contacts"
 msgstr "Контакти"
 
-#: ../gpe-contacts.desktop.in.h:2
+#: ../gpe-contacts.desktop.in.in.h:2
 msgid "GPE Contacts"
 msgstr "GPE Контакти"
 
@@ -436,6 +393,44 @@ msgstr "Избриши ставку"
 #: ../structure.c:251
 msgid "Tap here to delete the selected item."
 msgstr "Лупини овде за брисање означене ставке."
+
+#: ../hildon/gpe-contacts.desktop.in.in.h:2
+#, fuzzy
+msgid "GPE Contacts Application"
+msgstr "GPE Контакти"
+
+#~ msgid "Category name must not be blank"
+#~ msgstr "Име категорије мора бити попуњено"
+
+#~ msgid "A category by that name already exists"
+#~ msgstr "Истоимена категорија већ постоји"
+
+#~ msgid "Name:"
+#~ msgstr "Име:"
+
+#~ msgid "New category"
+#~ msgstr "Нова категорија"
+
+#~ msgid "Tap here to add a new category."
+#~ msgstr "Лупни овде за нову категорију."
+
+#~ msgid "Delete category"
+#~ msgstr "Избриши категорију"
+
+#~ msgid "Tap here to delete the selected category."
+#~ msgstr "Лупни овде за брисање означене категорије."
+
+#~ msgid "Select categories"
+#~ msgstr "Изабери категорије"
+
+#~ msgid "Name"
+#~ msgstr "Име"
+
+#~ msgid "Phone"
+#~ msgstr "Телефон"
+
+#~ msgid "EMail"
+#~ msgstr "Епошта"
 
 #~ msgid "Edit"
 #~ msgstr "Уреди"

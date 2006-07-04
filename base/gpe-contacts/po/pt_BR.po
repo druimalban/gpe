@@ -8,48 +8,13 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gpe-contacts 0.12\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-02-07 02:04+0100\n"
+"POT-Creation-Date: 2006-07-04 01:52+0200\n"
 "PO-Revision-Date: 2004-09-02 19:04-0300\n"
 "Last-Translator: Marcus Moreira de Souza <marcus@frb.br>\n"
 "Language-Team: Brazilian Portuguese <ldp-br@bazar.conectiva.com.br>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-15\n"
 "Content-Transfer-Encoding: 8bit\n"
-
-#: ../categories.c:105
-msgid "Category name must not be blank"
-msgstr ""
-
-#: ../categories.c:115
-msgid "A category by that name already exists"
-msgstr ""
-
-#: ../categories.c:147
-#, fuzzy
-msgid "Name:"
-msgstr "Nome"
-
-#: ../categories.c:174 ../categories.c:328
-msgid "New category"
-msgstr "Nova categoria"
-
-#: ../categories.c:329
-#, fuzzy
-msgid "Tap here to add a new category."
-msgstr "Clique aqui para adicionar um novo contato."
-
-#: ../categories.c:333
-msgid "Delete category"
-msgstr "Apagar caregoria"
-
-#: ../categories.c:334
-msgid "Tap here to delete the selected category."
-msgstr "Clique aqui para apagar a categoria selecionada."
-
-#: ../categories.c:401
-#, fuzzy
-msgid "Select categories"
-msgstr "Todas"
 
 #. TRANSLATORS: kB = kilo bytes
 #: ../configure.c:130 ../configure.c:340
@@ -140,53 +105,41 @@ msgstr ""
 msgid "Contacts: Configuration"
 msgstr "Contatos: Configuração"
 
-#: ../db.c:255
-msgid "Name"
-msgstr "Nome"
-
-#: ../db.c:256
-msgid "Phone"
-msgstr "Telefone"
-
-#: ../db.c:257
-msgid "EMail"
-msgstr "E-mail"
-
-#: ../edit-vcard.desktop.in.h:1
+#: ../edit-vcard.desktop.in.in.h:1
 msgid "Edit personal vcard"
 msgstr ""
 
-#: ../edit-vcard.desktop.in.h:2
+#: ../edit-vcard.desktop.in.in.h:2
 msgid "My VCard"
 msgstr ""
 
-#: ../editing.c:114 ../main.c:1346
+#: ../editing.c:135 ../main.c:1346
 #, fuzzy
 msgid "Details"
 msgstr "Painel de Detalhes"
 
-#: ../editing.c:275
+#: ../editing.c:367
 msgid "no year"
 msgstr ""
 
-#: ../editing.c:454 ../namedetail.c:66 ../structure.c:177
+#: ../editing.c:426
+#, fuzzy
+msgid "Image"
+msgstr "Imagem"
+
+#: ../editing.c:539 ../namedetail.c:66 ../structure.c:177
 msgid "Cancel"
 msgstr "Cancelar"
 
-#: ../editing.c:455 ../namedetail.c:64
+#: ../editing.c:540 ../namedetail.c:64
 msgid "OK"
 msgstr ""
 
-#: ../editing.c:456
-#, fuzzy
-msgid "Image..."
-msgstr "Imagem"
-
-#: ../editing.c:565 ../main.c:502 ../main.c:629
+#: ../editing.c:650 ../main.c:502 ../main.c:629
 msgid "Categories"
 msgstr "Categorias"
 
-#: ../editing.c:1294
+#: ../editing.c:1431
 #, fuzzy
 msgid "Select image"
 msgstr "Apagar item"
@@ -206,11 +159,12 @@ msgstr "Contatos"
 msgid "Search for:"
 msgstr ""
 
-#: ../gpe-contacts.desktop.in.h:1 ../main.c:1282
+#: ../gpe-contacts.desktop.in.in.h:1 ../main.c:1282
+#: ../hildon/gpe-contacts.desktop.in.in.h:1
 msgid "Contacts"
 msgstr "Contatos"
 
-#: ../gpe-contacts.desktop.in.h:2
+#: ../gpe-contacts.desktop.in.in.h:2
 msgid "GPE Contacts"
 msgstr "Contatos GPE"
 
@@ -457,11 +411,40 @@ msgstr "Apagar item"
 msgid "Tap here to delete the selected item."
 msgstr "Clique aqui para apagar o item selecionado."
 
-#~ msgid "Edit"
-#~ msgstr "Editar"
+#: ../hildon/gpe-contacts.desktop.in.in.h:2
+#, fuzzy
+msgid "GPE Contacts Application"
+msgstr "Contatos GPE"
 
-#~ msgid "Properties"
-#~ msgstr "Propriedades"
+#, fuzzy
+#~ msgid "Name:"
+#~ msgstr "Nome"
+
+#~ msgid "New category"
+#~ msgstr "Nova categoria"
+
+#, fuzzy
+#~ msgid "Tap here to add a new category."
+#~ msgstr "Clique aqui para adicionar um novo contato."
+
+#~ msgid "Delete category"
+#~ msgstr "Apagar caregoria"
+
+#~ msgid "Tap here to delete the selected category."
+#~ msgstr "Clique aqui para apagar a categoria selecionada."
+
+#, fuzzy
+#~ msgid "Select categories"
+#~ msgstr "Todas"
+
+#~ msgid "Name"
+#~ msgstr "Nome"
+
+#~ msgid "Phone"
+#~ msgstr "Telefone"
+
+#~ msgid "EMail"
+#~ msgstr "E-mail"
 
 #~ msgid "more detailed name options"
 #~ msgstr "mais opções detalhadas de nome"
@@ -493,11 +476,17 @@ msgstr "Clique aqui para apagar o item selecionado."
 #~ msgid "Tap here to create a category."
 #~ msgstr "Clique aqui para criar uma categoria."
 
+#~ msgid "Edit"
+#~ msgstr "Editar"
+
 #~ msgid "Edit contact"
 #~ msgstr "Editar contato"
 
 #~ msgid "Delete contact"
 #~ msgstr "Apagar contato"
+
+#~ msgid "Properties"
+#~ msgstr "Propriedades"
 
 #~ msgid "ABC"
 #~ msgstr "ABC"

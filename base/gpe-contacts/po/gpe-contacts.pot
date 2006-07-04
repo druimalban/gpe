@@ -8,45 +8,13 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-02-07 02:04+0100\n"
+"POT-Creation-Date: 2006-07-04 01:58+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
-
-#: ../categories.c:105
-msgid "Category name must not be blank"
-msgstr ""
-
-#: ../categories.c:115
-msgid "A category by that name already exists"
-msgstr ""
-
-#: ../categories.c:147
-msgid "Name:"
-msgstr ""
-
-#: ../categories.c:174 ../categories.c:328
-msgid "New category"
-msgstr ""
-
-#: ../categories.c:329
-msgid "Tap here to add a new category."
-msgstr ""
-
-#: ../categories.c:333
-msgid "Delete category"
-msgstr ""
-
-#: ../categories.c:334
-msgid "Tap here to delete the selected category."
-msgstr ""
-
-#: ../categories.c:401
-msgid "Select categories"
-msgstr ""
 
 #. TRANSLATORS: kB = kilo bytes
 #: ../configure.c:130 ../configure.c:340
@@ -133,51 +101,39 @@ msgstr ""
 msgid "Contacts: Configuration"
 msgstr ""
 
-#: ../db.c:255
-msgid "Name"
-msgstr ""
-
-#: ../db.c:256
-msgid "Phone"
-msgstr ""
-
-#: ../db.c:257
-msgid "EMail"
-msgstr ""
-
-#: ../edit-vcard.desktop.in.h:1
+#: ../edit-vcard.desktop.in.in.h:1
 msgid "Edit personal vcard"
 msgstr ""
 
-#: ../edit-vcard.desktop.in.h:2
+#: ../edit-vcard.desktop.in.in.h:2
 msgid "My VCard"
 msgstr ""
 
-#: ../editing.c:114 ../main.c:1346
+#: ../editing.c:135 ../main.c:1346
 msgid "Details"
 msgstr ""
 
-#: ../editing.c:275
+#: ../editing.c:367
 msgid "no year"
 msgstr ""
 
-#: ../editing.c:454 ../namedetail.c:66 ../structure.c:177
+#: ../editing.c:426
+msgid "Image"
+msgstr ""
+
+#: ../editing.c:539 ../namedetail.c:66 ../structure.c:177
 msgid "Cancel"
 msgstr ""
 
-#: ../editing.c:455 ../namedetail.c:64
+#: ../editing.c:540 ../namedetail.c:64
 msgid "OK"
 msgstr ""
 
-#: ../editing.c:456
-msgid "Image..."
-msgstr ""
-
-#: ../editing.c:565 ../main.c:502 ../main.c:629
+#: ../editing.c:650 ../main.c:502 ../main.c:629
 msgid "Categories"
 msgstr ""
 
-#: ../editing.c:1294
+#: ../editing.c:1431
 msgid "Select image"
 msgstr ""
 
@@ -195,11 +151,12 @@ msgstr ""
 msgid "Search for:"
 msgstr ""
 
-#: ../gpe-contacts.desktop.in.h:1 ../main.c:1282
+#: ../gpe-contacts.desktop.in.in.h:1 ../main.c:1282
+#: ../hildon/gpe-contacts.desktop.in.in.h:1
 msgid "Contacts"
 msgstr ""
 
-#: ../gpe-contacts.desktop.in.h:2
+#: ../gpe-contacts.desktop.in.in.h:2
 msgid "GPE Contacts"
 msgstr ""
 
@@ -436,4 +393,8 @@ msgstr ""
 
 #: ../structure.c:251
 msgid "Tap here to delete the selected item."
+msgstr ""
+
+#: ../hildon/gpe-contacts.desktop.in.in.h:2
+msgid "GPE Contacts Application"
 msgstr ""

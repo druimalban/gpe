@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gpe-contacts-0.32\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-02-07 02:04+0100\n"
+"POT-Creation-Date: 2006-07-04 01:52+0200\n"
 "PO-Revision-Date: 2004-12-29 12:00-0500\n"
 "Last-Translator: Laurentiu Buzdugan <lbuz@rolix.org>\n"
 "Language-Team: Romanian <translation-team-ro@lists.sourceforge.net>\n"
@@ -17,44 +17,6 @@ msgstr ""
 "Content-Type: text/plain; charset=ISO-8859-2\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#: ../categories.c:105
-msgid "Category name must not be blank"
-msgstr ""
-
-#: ../categories.c:115
-msgid "A category by that name already exists"
-msgstr ""
-
-#: ../categories.c:147
-#, fuzzy
-msgid "Name:"
-msgstr "Nume"
-
-#: ../categories.c:174 ../categories.c:328
-#, fuzzy
-msgid "New category"
-msgstr "Toate categoriile"
-
-#: ../categories.c:329
-#, fuzzy
-msgid "Tap here to add a new category."
-msgstr "Apãsaþi aici pentru a adãuga o paginã."
-
-#: ../categories.c:333
-#, fuzzy
-msgid "Delete category"
-msgstr "ªterge articol"
-
-#: ../categories.c:334
-#, fuzzy
-msgid "Tap here to delete the selected category."
-msgstr "Apãsaþi aici pentru a ºterge articolul selectat."
-
-#: ../categories.c:401
-#, fuzzy
-msgid "Select categories"
-msgstr "Toate categoriile"
 
 #. TRANSLATORS: kB = kilo bytes
 #: ../configure.c:130 ../configure.c:340
@@ -142,51 +104,40 @@ msgstr "Bazã de date"
 msgid "Contacts: Configuration"
 msgstr "Contacte: Configurare"
 
-#: ../db.c:255
-msgid "Name"
-msgstr "Nume"
-
-#: ../db.c:256
-msgid "Phone"
-msgstr "Telefon"
-
-#: ../db.c:257
-msgid "EMail"
-msgstr "Email"
-
-#: ../edit-vcard.desktop.in.h:1
+#: ../edit-vcard.desktop.in.in.h:1
 msgid "Edit personal vcard"
 msgstr "Editeazã vcard-ul personal"
 
-#: ../edit-vcard.desktop.in.h:2
+#: ../edit-vcard.desktop.in.in.h:2
 msgid "My VCard"
 msgstr "VCard-ul meu"
 
-#: ../editing.c:114 ../main.c:1346
+#: ../editing.c:135 ../main.c:1346
 msgid "Details"
 msgstr "Detalii"
 
-#: ../editing.c:275
+#: ../editing.c:367
 msgid "no year"
 msgstr "nici un an"
 
-#: ../editing.c:454 ../namedetail.c:66 ../structure.c:177
+#: ../editing.c:426
+#, fuzzy
+msgid "Image"
+msgstr "Paginã"
+
+#: ../editing.c:539 ../namedetail.c:66 ../structure.c:177
 msgid "Cancel"
 msgstr "Renunþã"
 
-#: ../editing.c:455 ../namedetail.c:64
+#: ../editing.c:540 ../namedetail.c:64
 msgid "OK"
 msgstr ""
 
-#: ../editing.c:456
-msgid "Image..."
-msgstr ""
-
-#: ../editing.c:565 ../main.c:502 ../main.c:629
+#: ../editing.c:650 ../main.c:502 ../main.c:629
 msgid "Categories"
 msgstr "Categorii"
 
-#: ../editing.c:1294
+#: ../editing.c:1431
 msgid "Select image"
 msgstr "Selecteazã imagine"
 
@@ -204,11 +155,12 @@ msgstr "Gãseºte Contacte"
 msgid "Search for:"
 msgstr "Cautã:"
 
-#: ../gpe-contacts.desktop.in.h:1 ../main.c:1282
+#: ../gpe-contacts.desktop.in.in.h:1 ../main.c:1282
+#: ../hildon/gpe-contacts.desktop.in.in.h:1
 msgid "Contacts"
 msgstr "Contacte"
 
-#: ../gpe-contacts.desktop.in.h:2
+#: ../gpe-contacts.desktop.in.in.h:2
 msgid "GPE Contacts"
 msgstr "Contacte GPE"
 
@@ -446,6 +398,44 @@ msgstr "ªterge articol"
 #: ../structure.c:251
 msgid "Tap here to delete the selected item."
 msgstr "Apãsaþi aici pentru a ºterge articolul selectat."
+
+#: ../hildon/gpe-contacts.desktop.in.in.h:2
+#, fuzzy
+msgid "GPE Contacts Application"
+msgstr "Contacte GPE"
+
+#, fuzzy
+#~ msgid "Name:"
+#~ msgstr "Nume"
+
+#, fuzzy
+#~ msgid "New category"
+#~ msgstr "Toate categoriile"
+
+#, fuzzy
+#~ msgid "Tap here to add a new category."
+#~ msgstr "Apãsaþi aici pentru a adãuga o paginã."
+
+#, fuzzy
+#~ msgid "Delete category"
+#~ msgstr "ªterge articol"
+
+#, fuzzy
+#~ msgid "Tap here to delete the selected category."
+#~ msgstr "Apãsaþi aici pentru a ºterge articolul selectat."
+
+#, fuzzy
+#~ msgid "Select categories"
+#~ msgstr "Toate categoriile"
+
+#~ msgid "Name"
+#~ msgstr "Nume"
+
+#~ msgid "Phone"
+#~ msgstr "Telefon"
+
+#~ msgid "EMail"
+#~ msgstr "Email"
 
 #~ msgid "Edit"
 #~ msgstr "Editare"

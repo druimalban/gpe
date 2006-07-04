@@ -6,48 +6,13 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gpe-contacts 0.12\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-02-07 02:04+0100\n"
+"POT-Creation-Date: 2006-07-04 01:52+0200\n"
 "PO-Revision-Date: 2003-10-08 00:08+0100\n"
 "Last-Translator: Libor Klepac <elkropac@students.zcu.cz>\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-
-#: ../categories.c:105
-msgid "Category name must not be blank"
-msgstr ""
-
-#: ../categories.c:115
-msgid "A category by that name already exists"
-msgstr ""
-
-#: ../categories.c:147
-#, fuzzy
-msgid "Name:"
-msgstr "Jméno"
-
-#: ../categories.c:174 ../categories.c:328
-msgid "New category"
-msgstr "Nová skupina"
-
-#: ../categories.c:329
-#, fuzzy
-msgid "Tap here to add a new category."
-msgstr "Přidat nový kontakt."
-
-#: ../categories.c:333
-msgid "Delete category"
-msgstr "Smazat skupinu."
-
-#: ../categories.c:334
-msgid "Tap here to delete the selected category."
-msgstr "Smazat zvolenou skupinu."
-
-#: ../categories.c:401
-#, fuzzy
-msgid "Select categories"
-msgstr "Všechny skupiny"
 
 #. TRANSLATORS: kB = kilo bytes
 #: ../configure.c:130 ../configure.c:340
@@ -138,53 +103,41 @@ msgstr ""
 msgid "Contacts: Configuration"
 msgstr "Kontakty: Nastavení"
 
-#: ../db.c:255
-msgid "Name"
-msgstr "Jméno"
-
-#: ../db.c:256
-msgid "Phone"
-msgstr "Telefon"
-
-#: ../db.c:257
-msgid "EMail"
-msgstr "E-mail"
-
-#: ../edit-vcard.desktop.in.h:1
+#: ../edit-vcard.desktop.in.in.h:1
 msgid "Edit personal vcard"
 msgstr ""
 
-#: ../edit-vcard.desktop.in.h:2
+#: ../edit-vcard.desktop.in.in.h:2
 msgid "My VCard"
 msgstr ""
 
-#: ../editing.c:114 ../main.c:1346
+#: ../editing.c:135 ../main.c:1346
 #, fuzzy
 msgid "Details"
 msgstr "Panel s podrobnostmi o kontaktu"
 
-#: ../editing.c:275
+#: ../editing.c:367
 msgid "no year"
 msgstr ""
 
-#: ../editing.c:454 ../namedetail.c:66 ../structure.c:177
+#: ../editing.c:426
+#, fuzzy
+msgid "Image"
+msgstr "Obrázek"
+
+#: ../editing.c:539 ../namedetail.c:66 ../structure.c:177
 msgid "Cancel"
 msgstr "Zrušit"
 
-#: ../editing.c:455 ../namedetail.c:64
+#: ../editing.c:540 ../namedetail.c:64
 msgid "OK"
 msgstr ""
 
-#: ../editing.c:456
-#, fuzzy
-msgid "Image..."
-msgstr "Obrázek"
-
-#: ../editing.c:565 ../main.c:502 ../main.c:629
+#: ../editing.c:650 ../main.c:502 ../main.c:629
 msgid "Categories"
 msgstr "Skupiny"
 
-#: ../editing.c:1294
+#: ../editing.c:1431
 #, fuzzy
 msgid "Select image"
 msgstr "Smazat položku"
@@ -204,11 +157,12 @@ msgstr "Kontakty"
 msgid "Search for:"
 msgstr ""
 
-#: ../gpe-contacts.desktop.in.h:1 ../main.c:1282
+#: ../gpe-contacts.desktop.in.in.h:1 ../main.c:1282
+#: ../hildon/gpe-contacts.desktop.in.in.h:1
 msgid "Contacts"
 msgstr "Kontakty"
 
-#: ../gpe-contacts.desktop.in.h:2
+#: ../gpe-contacts.desktop.in.in.h:2
 msgid "GPE Contacts"
 msgstr "GPE Kontakty"
 
@@ -455,11 +409,40 @@ msgstr "Smazat položku"
 msgid "Tap here to delete the selected item."
 msgstr "Smazat položku/"
 
-#~ msgid "Edit"
-#~ msgstr "Editovat"
+#: ../hildon/gpe-contacts.desktop.in.in.h:2
+#, fuzzy
+msgid "GPE Contacts Application"
+msgstr "GPE Kontakty"
 
-#~ msgid "Properties"
-#~ msgstr "Nastavení"
+#, fuzzy
+#~ msgid "Name:"
+#~ msgstr "Jméno"
+
+#~ msgid "New category"
+#~ msgstr "Nová skupina"
+
+#, fuzzy
+#~ msgid "Tap here to add a new category."
+#~ msgstr "Přidat nový kontakt."
+
+#~ msgid "Delete category"
+#~ msgstr "Smazat skupinu."
+
+#~ msgid "Tap here to delete the selected category."
+#~ msgstr "Smazat zvolenou skupinu."
+
+#, fuzzy
+#~ msgid "Select categories"
+#~ msgstr "Všechny skupiny"
+
+#~ msgid "Name"
+#~ msgstr "Jméno"
+
+#~ msgid "Phone"
+#~ msgstr "Telefon"
+
+#~ msgid "EMail"
+#~ msgstr "E-mail"
 
 #~ msgid "more detailed name options"
 #~ msgstr "Podrobnější nastavení jména"
@@ -491,11 +474,17 @@ msgstr "Smazat položku/"
 #~ msgid "Tap here to create a category."
 #~ msgstr "Vytvořit skupinu."
 
+#~ msgid "Edit"
+#~ msgstr "Editovat"
+
 #~ msgid "Edit contact"
 #~ msgstr "Editovat kontakt"
 
 #~ msgid "Delete contact"
 #~ msgstr "Smazat kontakt"
+
+#~ msgid "Properties"
+#~ msgstr "Nastavení"
 
 #~ msgid "Error loading pixmap file: %s"
 #~ msgstr "Chyba při načítání obrázku: %s"

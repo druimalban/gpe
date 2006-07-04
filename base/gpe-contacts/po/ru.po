@@ -1,58 +1,20 @@
-# Translation of gpe-contacts-0.32.po to Russian
-# Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+# Translation of gpe-contacts-0.42.po to Russian
+# Copyright (C) 2003, 2004, 2005 Free Software Foundation, Inc.
 # This file is distributed under the same license as the gpe-contacts package.
-# Pavel Maryanov <acid_jack@ukr.net>, 2003, 2004.
+# Pavel Maryanov <acid_jack@ukr.net>, 2003, 2004, 2005.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-contacts-0.32\n"
+"Project-Id-Version: gpe-contacts 0.42\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-02-07 02:04+0100\n"
-"PO-Revision-Date: 2004-11-05 12:02+0200\n"
+"POT-Creation-Date: 2006-07-04 01:52+0200\n"
+"PO-Revision-Date: 2005-10-25 19:29+0300\n"
 "Last-Translator: Pavel Maryanov <acid_jack@ukr.net>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: KBabel 1.3\n"
-
-#: ../categories.c:105
-msgid "Category name must not be blank"
-msgstr ""
-
-#: ../categories.c:115
-msgid "A category by that name already exists"
-msgstr ""
-
-#: ../categories.c:147
-#, fuzzy
-msgid "Name:"
-msgstr "Имя"
-
-#: ../categories.c:174 ../categories.c:328
-#, fuzzy
-msgid "New category"
-msgstr "Все категории"
-
-#: ../categories.c:329
-#, fuzzy
-msgid "Tap here to add a new category."
-msgstr "Нажмите сюда, чтобы добавить страницу."
-
-#: ../categories.c:333
-#, fuzzy
-msgid "Delete category"
-msgstr "Удалить пункт"
-
-#: ../categories.c:334
-#, fuzzy
-msgid "Tap here to delete the selected category."
-msgstr "Нажмите сюда, чтобы удалить выбранный пункт."
-
-#: ../categories.c:401
-#, fuzzy
-msgid "Select categories"
-msgstr "Все категории"
+"X-Generator: KBabel 1.10.2\n"
 
 #. TRANSLATORS: kB = kilo bytes
 #: ../configure.c:130 ../configure.c:340
@@ -64,9 +26,8 @@ msgid "kB (optimised)"
 msgstr "кБ (оптимизирован)"
 
 #: ../configure.c:177
-#, fuzzy
 msgid "Detail panel:"
-msgstr "<b>Подробная панель:</b>"
+msgstr "Подробности:"
 
 #: ../configure.c:206
 msgid "NAME"
@@ -140,51 +101,40 @@ msgstr "База данных"
 msgid "Contacts: Configuration"
 msgstr "Контакты: Конфигурация"
 
-#: ../db.c:255
-msgid "Name"
-msgstr "Имя"
-
-#: ../db.c:256
-msgid "Phone"
-msgstr "Телефон"
-
-#: ../db.c:257
-msgid "EMail"
-msgstr "Эл. почта"
-
-#: ../edit-vcard.desktop.in.h:1
+#: ../edit-vcard.desktop.in.in.h:1
 msgid "Edit personal vcard"
 msgstr "Редактировать личную v-карточку"
 
-#: ../edit-vcard.desktop.in.h:2
+#: ../edit-vcard.desktop.in.in.h:2
 msgid "My VCard"
 msgstr "Моя V-карточка"
 
-#: ../editing.c:114 ../main.c:1346
+#: ../editing.c:135 ../main.c:1346
 msgid "Details"
 msgstr "Подробности"
 
-#: ../editing.c:275
+#: ../editing.c:367
 msgid "no year"
 msgstr "год не указан"
 
-#: ../editing.c:454 ../namedetail.c:66 ../structure.c:177
+#: ../editing.c:426
+#, fuzzy
+msgid "Image"
+msgstr "Изображение..."
+
+#: ../editing.c:539 ../namedetail.c:66 ../structure.c:177
 msgid "Cancel"
 msgstr "Отмена"
 
-#: ../editing.c:455 ../namedetail.c:64
+#: ../editing.c:540 ../namedetail.c:64
 msgid "OK"
-msgstr ""
+msgstr "ОК"
 
-#: ../editing.c:456
-msgid "Image..."
-msgstr ""
-
-#: ../editing.c:565 ../main.c:502 ../main.c:629
+#: ../editing.c:650 ../main.c:502 ../main.c:629
 msgid "Categories"
 msgstr "Категории"
 
-#: ../editing.c:1294
+#: ../editing.c:1431
 msgid "Select image"
 msgstr "Выбрать изображение"
 
@@ -202,11 +152,12 @@ msgstr "Найти контакт"
 msgid "Search for:"
 msgstr "Поиск:"
 
-#: ../gpe-contacts.desktop.in.h:1 ../main.c:1282
+#: ../gpe-contacts.desktop.in.in.h:1 ../main.c:1282
+#: ../hildon/gpe-contacts.desktop.in.in.h:1
 msgid "Contacts"
 msgstr "Контакты"
 
-#: ../gpe-contacts.desktop.in.h:2
+#: ../gpe-contacts.desktop.in.in.h:2
 msgid "GPE Contacts"
 msgstr "Контакты GPE"
 
@@ -242,19 +193,19 @@ msgstr "Контакт"
 
 #: ../main.c:1202
 msgid "Choose file"
-msgstr ""
+msgstr "Выбрать файл"
 
 #: ../main.c:1230
 msgid "Import of"
-msgstr ""
+msgstr "Сбой импортирования"
 
 #: ../main.c:1230
 msgid "files failed:"
-msgstr ""
+msgstr "файлов:"
 
 #: ../main.c:1234
 msgid "Import successful"
-msgstr ""
+msgstr "Импортирование прошло успешно"
 
 #: ../main.c:1299
 msgid "Tap this button to add a new contact."
@@ -282,11 +233,11 @@ msgstr "Нажмите сюда, чтобы настроить эту прогр
 
 #: ../main.c:1366
 msgid "Import"
-msgstr ""
+msgstr "Импорт"
 
 #: ../main.c:1368
 msgid "Open file to import a contact from it."
-msgstr ""
+msgstr "Открытие файла для импортирования контакта из него."
 
 #: ../main.c:1381
 msgid "Tap here to exit gpe-contacts."
@@ -304,12 +255,12 @@ msgstr "в"
 #: ../main.c:1587
 #, c-format
 msgid "Could not import file %s."
-msgstr ""
+msgstr "Невозможно импортировать файл %s."
 
 #: ../main.c:1592
 #, c-format
 msgid "File %s imported sucessfully."
-msgstr ""
+msgstr "Файл %s успешно импортирован."
 
 #: ../main.c:1618
 msgid "My Card"
@@ -415,7 +366,7 @@ msgstr "Контейнер не выбран"
 
 #: ../structure.c:150
 msgid "Tag"
-msgstr "Тэг"
+msgstr "Тег"
 
 #: ../structure.c:152
 msgid "New field"
@@ -445,11 +396,40 @@ msgstr "Удалить пункт"
 msgid "Tap here to delete the selected item."
 msgstr "Нажмите сюда, чтобы удалить выбранный пункт."
 
-#~ msgid "Edit"
-#~ msgstr "Редактировать"
+#: ../hildon/gpe-contacts.desktop.in.in.h:2
+#, fuzzy
+msgid "GPE Contacts Application"
+msgstr "Контакты GPE"
 
-#~ msgid "Properties"
-#~ msgstr "Свойства"
+#~ msgid "Category name must not be blank"
+#~ msgstr "Название категории не может быть пустым"
 
-#~ msgid "Close"
-#~ msgstr "Закрыть"
+#~ msgid "A category by that name already exists"
+#~ msgstr "Категория с таким названием уже существует"
+
+#~ msgid "Name:"
+#~ msgstr "Имя:"
+
+#~ msgid "New category"
+#~ msgstr "Новая категория"
+
+#~ msgid "Tap here to add a new category."
+#~ msgstr "Нажмите сюда, чтобы добавить новую категорию."
+
+#~ msgid "Delete category"
+#~ msgstr "Удалить категорию"
+
+#~ msgid "Tap here to delete the selected category."
+#~ msgstr "Нажмите сюда, чтобы удалить выбранную категорию."
+
+#~ msgid "Select categories"
+#~ msgstr "Выбрать категории"
+
+#~ msgid "Name"
+#~ msgstr "Имя"
+
+#~ msgid "Phone"
+#~ msgstr "Телефон"
+
+#~ msgid "EMail"
+#~ msgstr "Эл. почта"

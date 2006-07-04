@@ -6,48 +6,13 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gpe-contacts 0.12\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-02-07 02:04+0100\n"
+"POT-Creation-Date: 2006-07-04 01:52+0200\n"
 "PO-Revision-Date: 2003-11-28 23:32+0100\n"
 "Last-Translator: Hegedus Gabor <hygy@freemail.hu>\n"
 "Language-Team: Hungarian <translation-team-hu@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=iso-8859-2\n"
 "Content-Transfer-Encoding: 8bit\n"
-
-#: ../categories.c:105
-msgid "Category name must not be blank"
-msgstr ""
-
-#: ../categories.c:115
-msgid "A category by that name already exists"
-msgstr ""
-
-#: ../categories.c:147
-#, fuzzy
-msgid "Name:"
-msgstr "Név"
-
-#: ../categories.c:174 ../categories.c:328
-msgid "New category"
-msgstr "Új kategória"
-
-#: ../categories.c:329
-#, fuzzy
-msgid "Tap here to add a new category."
-msgstr "Nyomj ide új kapcsolat hozzáadásához."
-
-#: ../categories.c:333
-msgid "Delete category"
-msgstr "Kategória törlése"
-
-#: ../categories.c:334
-msgid "Tap here to delete the selected category."
-msgstr "Nyomj ide a kiválasztott kategória törléséhez."
-
-#: ../categories.c:401
-#, fuzzy
-msgid "Select categories"
-msgstr "Összes kategória"
 
 #. TRANSLATORS: kB = kilo bytes
 #: ../configure.c:130 ../configure.c:340
@@ -138,53 +103,41 @@ msgstr ""
 msgid "Contacts: Configuration"
 msgstr "Kapcsolatok: Beállítások"
 
-#: ../db.c:255
-msgid "Name"
-msgstr "Név"
-
-#: ../db.c:256
-msgid "Phone"
-msgstr "Telefon"
-
-#: ../db.c:257
-msgid "EMail"
-msgstr "EMail"
-
-#: ../edit-vcard.desktop.in.h:1
+#: ../edit-vcard.desktop.in.in.h:1
 msgid "Edit personal vcard"
 msgstr ""
 
-#: ../edit-vcard.desktop.in.h:2
+#: ../edit-vcard.desktop.in.in.h:2
 msgid "My VCard"
 msgstr ""
 
-#: ../editing.c:114 ../main.c:1346
+#: ../editing.c:135 ../main.c:1346
 #, fuzzy
 msgid "Details"
 msgstr "Részletes panel"
 
-#: ../editing.c:275
+#: ../editing.c:367
 msgid "no year"
 msgstr ""
 
-#: ../editing.c:454 ../namedetail.c:66 ../structure.c:177
+#: ../editing.c:426
+#, fuzzy
+msgid "Image"
+msgstr "Kép"
+
+#: ../editing.c:539 ../namedetail.c:66 ../structure.c:177
 msgid "Cancel"
 msgstr "Mégse"
 
-#: ../editing.c:455 ../namedetail.c:64
+#: ../editing.c:540 ../namedetail.c:64
 msgid "OK"
 msgstr ""
 
-#: ../editing.c:456
-#, fuzzy
-msgid "Image..."
-msgstr "Kép"
-
-#: ../editing.c:565 ../main.c:502 ../main.c:629
+#: ../editing.c:650 ../main.c:502 ../main.c:629
 msgid "Categories"
 msgstr "Kategóriák"
 
-#: ../editing.c:1294
+#: ../editing.c:1431
 #, fuzzy
 msgid "Select image"
 msgstr "Bejegyzés törlése"
@@ -204,11 +157,12 @@ msgstr "Kapcsolatok"
 msgid "Search for:"
 msgstr ""
 
-#: ../gpe-contacts.desktop.in.h:1 ../main.c:1282
+#: ../gpe-contacts.desktop.in.in.h:1 ../main.c:1282
+#: ../hildon/gpe-contacts.desktop.in.in.h:1
 msgid "Contacts"
 msgstr "Kapcsolatok"
 
-#: ../gpe-contacts.desktop.in.h:2
+#: ../gpe-contacts.desktop.in.in.h:2
 msgid "GPE Contacts"
 msgstr "GPE Kapcsolatok"
 
@@ -455,11 +409,40 @@ msgstr "Bejegyzés törlése"
 msgid "Tap here to delete the selected item."
 msgstr "Nyomj ide a kiválasztott bejegyzés törléséhez."
 
-#~ msgid "Edit"
-#~ msgstr "Szerkeszt"
+#: ../hildon/gpe-contacts.desktop.in.in.h:2
+#, fuzzy
+msgid "GPE Contacts Application"
+msgstr "GPE Kapcsolatok"
 
-#~ msgid "Properties"
-#~ msgstr "Tulajdonságok"
+#, fuzzy
+#~ msgid "Name:"
+#~ msgstr "Név"
+
+#~ msgid "New category"
+#~ msgstr "Új kategória"
+
+#, fuzzy
+#~ msgid "Tap here to add a new category."
+#~ msgstr "Nyomj ide új kapcsolat hozzáadásához."
+
+#~ msgid "Delete category"
+#~ msgstr "Kategória törlése"
+
+#~ msgid "Tap here to delete the selected category."
+#~ msgstr "Nyomj ide a kiválasztott kategória törléséhez."
+
+#, fuzzy
+#~ msgid "Select categories"
+#~ msgstr "Összes kategória"
+
+#~ msgid "Name"
+#~ msgstr "Név"
+
+#~ msgid "Phone"
+#~ msgstr "Telefon"
+
+#~ msgid "EMail"
+#~ msgstr "EMail"
 
 #~ msgid "more detailed name options"
 #~ msgstr "Részletesebb név opciók"
@@ -488,11 +471,17 @@ msgstr "Nyomj ide a kiválasztott bejegyzés törléséhez."
 #~ msgid "Tap here to create a category."
 #~ msgstr "Nyomj ide új kategória létrehozásához."
 
+#~ msgid "Edit"
+#~ msgstr "Szerkeszt"
+
 #~ msgid "Edit contact"
 #~ msgstr "Kapcsolat szerkesztése"
 
 #~ msgid "Delete contact"
 #~ msgstr "Kapcsolat törlése"
+
+#~ msgid "Properties"
+#~ msgstr "Tulajdonságok"
 
 #~ msgid "Error loading pixmap file: %s"
 #~ msgstr "Hiba a pixmap file betöltése közben: %s"

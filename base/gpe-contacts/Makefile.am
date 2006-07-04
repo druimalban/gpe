@@ -20,7 +20,7 @@ gpe_contacts_LDADD = $(DEPS_LIBS)
 gpe_contacts_SOURCES = main.h configure.c \
                        editing.c export.c export.h \
                        finddlg.c finddlg.h import-vcard.c import-vcard.h \
-                       namedetail.c namedetail.h old-db.c \
+                       namedetail.c namedetail.h \
                        structure.c structure.h support.c support.h \
                        proto.h
 
@@ -95,7 +95,8 @@ EXTRA_DIST = $(service_DATA) \
              hildon/gpe-contacts.png \
              intltool-extract.in \
              intltool-merge.in \
-             intltool-update.in 
+             intltool-update.in \
+             po/gpe-contacts.pot
 
 DISTCLEANFILES = intltool-extract \
                  intltool-merge \
@@ -106,7 +107,7 @@ DISTCLEANFILES = intltool-extract \
 clean-local:
 	rm -f gpe-contacts.desktop
 	rm -f edit-vcard.desktop
-	rm -f po/.intltool-merge-cache 
+	rm -f po/.intltool-merge-cache po/stamp-it
 	rm -rf autom4te.cache
 	rm -f *.d *~
 

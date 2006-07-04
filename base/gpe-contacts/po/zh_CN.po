@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gpe-contacts 0.37\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-02-07 02:04+0100\n"
+"POT-Creation-Date: 2006-07-04 01:52+0200\n"
 "PO-Revision-Date: 2005-05-04 02:33+0800\n"
 "Last-Translator: Meng Jie <zuxyhere@eastday.com>\n"
 "Language-Team: Chinese (simplified) <i18n-translation@lists.linux.net.cn>\n"
@@ -15,38 +15,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-Basepath: D:\\MSYS\\source\\gpe-contacts-0.12\n"
-
-#: ../categories.c:105
-msgid "Category name must not be blank"
-msgstr "类别名不能为空"
-
-#: ../categories.c:115
-msgid "A category by that name already exists"
-msgstr "指定名称的类别已存在"
-
-#: ../categories.c:147
-msgid "Name:"
-msgstr "姓名："
-
-#: ../categories.c:174 ../categories.c:328
-msgid "New category"
-msgstr "新建类别"
-
-#: ../categories.c:329
-msgid "Tap here to add a new category."
-msgstr "轻击此处添加新的类别。"
-
-#: ../categories.c:333
-msgid "Delete category"
-msgstr "删除类别"
-
-#: ../categories.c:334
-msgid "Tap here to delete the selected category."
-msgstr "轻击此处删除所选类别。"
-
-#: ../categories.c:401
-msgid "Select categories"
-msgstr "选择类别"
 
 #. TRANSLATORS: kB = kilo bytes
 #: ../configure.c:130 ../configure.c:340
@@ -133,51 +101,40 @@ msgstr "数据库"
 msgid "Contacts: Configuration"
 msgstr "联系人：配置"
 
-#: ../db.c:255
-msgid "Name"
-msgstr "姓名"
-
-#: ../db.c:256
-msgid "Phone"
-msgstr "电话"
-
-#: ../db.c:257
-msgid "EMail"
-msgstr "电子邮件"
-
-#: ../edit-vcard.desktop.in.h:1
+#: ../edit-vcard.desktop.in.in.h:1
 msgid "Edit personal vcard"
 msgstr "编辑个人名片"
 
-#: ../edit-vcard.desktop.in.h:2
+#: ../edit-vcard.desktop.in.in.h:2
 msgid "My VCard"
 msgstr "我的名片"
 
-#: ../editing.c:114 ../main.c:1346
+#: ../editing.c:135 ../main.c:1346
 msgid "Details"
 msgstr "详细信息"
 
-#: ../editing.c:275
+#: ../editing.c:367
 msgid "no year"
 msgstr "无年份"
 
-#: ../editing.c:454 ../namedetail.c:66 ../structure.c:177
+#: ../editing.c:426
+#, fuzzy
+msgid "Image"
+msgstr "页"
+
+#: ../editing.c:539 ../namedetail.c:66 ../structure.c:177
 msgid "Cancel"
 msgstr "取消"
 
-#: ../editing.c:455 ../namedetail.c:64
+#: ../editing.c:540 ../namedetail.c:64
 msgid "OK"
 msgstr ""
 
-#: ../editing.c:456
-msgid "Image..."
-msgstr ""
-
-#: ../editing.c:565 ../main.c:502 ../main.c:629
+#: ../editing.c:650 ../main.c:502 ../main.c:629
 msgid "Categories"
 msgstr "类别"
 
-#: ../editing.c:1294
+#: ../editing.c:1431
 msgid "Select image"
 msgstr "选择图片"
 
@@ -195,11 +152,12 @@ msgstr "查找联系人"
 msgid "Search for:"
 msgstr "寻找："
 
-#: ../gpe-contacts.desktop.in.h:1 ../main.c:1282
+#: ../gpe-contacts.desktop.in.in.h:1 ../main.c:1282
+#: ../hildon/gpe-contacts.desktop.in.in.h:1
 msgid "Contacts"
 msgstr "联系人"
 
-#: ../gpe-contacts.desktop.in.h:2
+#: ../gpe-contacts.desktop.in.in.h:2
 msgid "GPE Contacts"
 msgstr "GPE 联系人"
 
@@ -437,6 +395,44 @@ msgstr "删除项目"
 #: ../structure.c:251
 msgid "Tap here to delete the selected item."
 msgstr "轻击此处删除所选项。"
+
+#: ../hildon/gpe-contacts.desktop.in.in.h:2
+#, fuzzy
+msgid "GPE Contacts Application"
+msgstr "GPE 联系人"
+
+#~ msgid "Category name must not be blank"
+#~ msgstr "类别名不能为空"
+
+#~ msgid "A category by that name already exists"
+#~ msgstr "指定名称的类别已存在"
+
+#~ msgid "Name:"
+#~ msgstr "姓名："
+
+#~ msgid "New category"
+#~ msgstr "新建类别"
+
+#~ msgid "Tap here to add a new category."
+#~ msgstr "轻击此处添加新的类别。"
+
+#~ msgid "Delete category"
+#~ msgstr "删除类别"
+
+#~ msgid "Tap here to delete the selected category."
+#~ msgstr "轻击此处删除所选类别。"
+
+#~ msgid "Select categories"
+#~ msgstr "选择类别"
+
+#~ msgid "Name"
+#~ msgstr "姓名"
+
+#~ msgid "Phone"
+#~ msgstr "电话"
+
+#~ msgid "EMail"
+#~ msgstr "电子邮件"
 
 #~ msgid "Edit"
 #~ msgstr "编辑"

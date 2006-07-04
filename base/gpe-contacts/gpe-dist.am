@@ -1,6 +1,9 @@
 CVSTAG := $(shell echo $(PACKAGE)-$(VERSION) | tr [a-z.] [A-Z_])
 
-dist-upload: dist
+mkpot:
+	make -C po $(PACKAGE).pot
+
+dist-upload: mkpot dist
 	scp $(PACKAGE)-$(VERSION).tar.bz2 $(USER)@handhelds.org:/home/ftp/projects/gpe/source/
 
 tag:
