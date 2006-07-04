@@ -319,10 +319,11 @@ sql_append_todo(void)
 }
 
 /* this is a recursive routine that
-** loads data from DB directly into GtkTreeViews
-** reading the current node and all its children and subchildren */
+ * loads data from DB directly into GtkTreeViews
+ * reading the current node and all its children and subchildren */
 
-int load_to_treestore(void *arg, int argc, char **argv, char **names)
+int 
+load_to_treestore(void *arg, int argc, char **argv, char **names)
 {
   if (argc==5)
     {
@@ -361,16 +362,7 @@ int load_to_treestore(void *arg, int argc, char **argv, char **names)
       return 0;
     }
 }
-/*
-int initial_loading(void)
-{
-    char *err;
-    GtkTreeIter *parent = NULL;
 
-    sqlite_exec (sqliteh, "select id, description, cftime, parent, todo_id from tasks where parent=0 and todo_id is null", load_to_treestore, parent, &err);
-    free (err);
-}
-*/
 static int
 scan_log_cb (void *arg, int argc, char **argv, char **names)
 {
@@ -430,31 +422,19 @@ scan_journal_cb (void *arg, int argc, char **argv, char **names)
 void
 scan_journal (gint id)
 {
-  //GSList *iter;
-/* this is no longer necessary since the implementation of
-** recursive reading procedure... */
-/*  for (iter = t->children; iter; iter = iter->next)
+  char *err;
+  int r;
+  time_start = 0;
+
+  r = sqlite_exec_printf (sqliteh, "select time, action, info, task from log where task=%d order by time", 
+			  scan_journal_cb, &id, &err,
+			  id);
+  if (r != 0 && r != SQLITE_ABORT)
     {
-      struct task *tc = iter->data;
-
-      tc->started = FALSE;
-	  scan_journal (tc);
-    }*/
-//        {
-	  char *err;
-	  int r;
-      time_start = 0;
-
-	  r = sqlite_exec_printf (sqliteh, "select time, action, info, task from log where task=%d order by time", 
-				  scan_journal_cb, &id, &err,
-				  id);
-	  if (r != 0 && r != SQLITE_ABORT)
-	    {
-	      gpe_error_box (err);
-	      g_free (err);
-	      return;
-	    }
-//	}
+      gpe_error_box (err);
+      g_free (err);
+      return;
+    }
 }
 
 struct task *
@@ -518,22 +498,24 @@ delete_task (int idx)
     }
 }
 
-void delete_child(gpointer data, gpointer user_data)
+void 
+delete_child(gpointer data, gpointer user_data)
 {
   guint idx = (guint) data;
   delete_task(idx);
 }
 
-void delete_children (int idx)
+void 
+delete_children (int idx)
 {
   children_list = NULL;
 
   find_children (idx);
   g_slist_foreach (children_list, delete_child, NULL);
-
 }
 
-int find_children_cb (void *arg, int argc, char **argv, char **names)
+int 
+find_children_cb (void *arg, int argc, char **argv, char **names)
 {
   char *err;
 
@@ -556,7 +538,8 @@ int find_children_cb (void *arg, int argc, char **argv, char **names)
     }
 }
 
-int find_children (int idx)
+int 
+find_children (int idx)
 {
   char *err;
 
@@ -570,7 +553,8 @@ int find_children (int idx)
     }
 }
 
-void update_log (gchar *info, time_t oldtime, time_t newtime, int task, action_t action)
+void 
+update_log (gchar *info, time_t oldtime, time_t newtime, int task, action_t action)
 {
   char *err;
   
@@ -583,18 +567,3 @@ void update_log (gchar *info, time_t oldtime, time_t newtime, int task, action_t
       return;
     }
 }
-/*
-void delete_stop (time_t time, int idx)
-{
-  char *err;
-  
-  if (sqlite_exec_printf  (sqliteh,
-                          "delete from log where task=%d and time=%d",
-                          NULL, NULL, &err, idx, time))
-    {
-      gpe_error_box(err);
-      free (err);
-      return;
-    }
-}
-*/

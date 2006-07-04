@@ -1,3 +1,10 @@
+2006-07-04  Florian Boor <florian.boor@kernelconcepts.de>
+
+	* Release version 0.30
+	* sql.c: Some formating improvements, remove unused code.
+	* ui.c: Make toolbar fit on QVGA portrait screens.
+	  Some minor formating improvements.
+
 2006-05-18 Philippe De Swert <philippedeswert@scarlet.be>
 
 	* autogen.sh: added po/Makefile.in.in updating

@@ -44,46 +44,6 @@ static GtkWidget *btn_journal = NULL;
 
 GtkWidget *main_appview;
 
-/* first some procedures not strictly correlated to ui
-   but regarding the inner core functions of the program 
-
-TODO: FIX this, they are not used and do not work as is...
-gboolean 
-stop_timing_all_cb  (GtkTreeModel *model,
-                    GtkTreePath   *path,
-                    GtkTreeIter   *iter,
-                    gpointer      user_data)
-{ /*  stop any clocked in task 
-  *   not efficient, but works */
-/*
-  struct task *t;
-  t = g_malloc (sizeof (struct task));
-
-  gtk_tree_model_get (model, iter, ID, &t->id, STARTED, &t->started, -1);
-
-  if (t->started)
-  {
-    log_entry (STOP, time (NULL), t, "timesheet closing");
-    gtk_tree_store_set (GTK_TREE_STORE(model), iter, STATUS, NULL, STARTED, FALSE, ICON_STARTED, NULL, -1);
-  }
-
-  g_free(t);
-
-  return FALSE;
-}
-
-static gboolean
-exit_app (GtkWidget *w, GdkEvent *evt, gpointer user_data)
-{ /* exits the application */
-/*  GtkTreeModel *model = gtk_tree_view_get_model(user_data);
-
-  gtk_tree_model_foreach(model,stop_timing_all_cb,NULL);
-
-  return FALSE;
-}
-
-*/
-
 static void
 show_help (void)
 { /* show help */
@@ -535,10 +495,14 @@ GtkWidget * create_interface(GtkWidget *main_window)
   GdkPixbuf *p;
   GtkToolItem *new, *new_sub, *delete, *refresh, *edit, *clock_in, *clock_out, *show, *html, *quit, *back;
   GtkToolItem *sep, *sep1, *sep2, *sep3;
+  gboolean smallscreen;
 #ifdef IS_HILDON
   GtkWidget *rframe;
 #endif
 
+
+  smallscreen = gdk_screen_width() < 400 ? TRUE : FALSE;
+  
 /*  about treestore and treeview definition:
     global_task_store is a pointer at the extern global structure
     where tasks are retrieved */
@@ -690,8 +654,11 @@ GtkWidget * create_interface(GtkWidget *main_window)
     gtk_toolbar_insert (GTK_TOOLBAR(journal_toolbar), edit, 0);
   #endif
 /* separator */
-    sep1 = gtk_separator_tool_item_new();
-    gtk_toolbar_insert (GTK_TOOLBAR(main_toolbar), sep1, -1);
+  if (!smallscreen)
+    {
+      sep1 = gtk_separator_tool_item_new();
+      gtk_toolbar_insert (GTK_TOOLBAR(main_toolbar), sep1, -1);
+    }
 /* clock-in button */
   p = gpe_find_icon ("clock");
   pw = gtk_image_new_from_pixbuf (p);
@@ -703,8 +670,11 @@ GtkWidget * create_interface(GtkWidget *main_window)
   clock_out = gtk_tool_button_new (GTK_WIDGET(pw), _("Clock out"));
   gtk_toolbar_insert (GTK_TOOLBAR(main_toolbar), clock_out, -1);
 /* separator */
-  sep2 = gtk_separator_tool_item_new();
-  gtk_toolbar_insert (GTK_TOOLBAR(main_toolbar), sep2, -1);
+  if (!smallscreen)
+    {
+      sep2 = gtk_separator_tool_item_new();
+      gtk_toolbar_insert (GTK_TOOLBAR(main_toolbar), sep2, -1);
+    }
 
 #ifndef IS_HILDON
   /* other stuff only for standard GPE interface
