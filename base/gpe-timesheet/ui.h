@@ -42,7 +42,6 @@
 
 // timesheet includes
 #include "sql.h"
-#include "html.h"
 #include "journal.h"
 
 /* common variables */
@@ -56,7 +55,6 @@ static void ui_delete_task (GtkWidget *w, gpointer data);
 static void start_timing (GtkWidget *w, gpointer data);
 static void stop_timing (GtkWidget *w, gpointer data);
 void prepare_onscreen_journal (GtkTreeSelection *selection, gpointer data);
-//gboolean stop_timing_all_cb (GtkTreeModel *m, GtkTreePath *p, GtkTreeIter *i, gpointer data);
 static void toggle_toolbar(GtkCheckMenuItem *menuitem, gpointer user_data);
 
 

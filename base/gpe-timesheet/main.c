@@ -40,7 +40,6 @@
 
 // timesheet includes
 #include "sql.h"
-#include "html.h"
 #include "journal.h"
 #include "ui.h"
 #include "main.h"

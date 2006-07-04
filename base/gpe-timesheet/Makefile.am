@@ -12,7 +12,6 @@ bin_PROGRAMS = gpe-timesheet
 
 gpe_timesheet_LDADD = @DEPS_LIBS@ -lsqlite
 
-#gpe_timesheet_SOURCES = journal.c journal.h main.c main.h html.c html.h sql.c sql.h ui.c ui.h
 gpe_timesheet_SOURCES = journal.c journal.h main.c main.h sql.c sql.h ui.c ui.h
 
 if HILDON
