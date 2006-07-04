@@ -1,3 +1,6 @@
+
+SUBDIRS = doc
+
 #moduledir = @GTK_MODULES_DIR@
 
 # module_LTLIBRARIES = libcontactsdb.la

@@ -1,3 +1,10 @@
+2006-07-04  Florian Boor  <florian@kernelconcepts.de>
+
+	* Release version 0.4.
+	* configure.ac, Makefile.am, doc/*: Add documentation framework 
+	  and some basic information about libcontactsdb.
+	* Fix licensing information and include license file.
+
 2006-02-03  Florian Boor  <florian@kernelconcepts.de>
 
     * contact-db.c: Some formation improvements in various functions.

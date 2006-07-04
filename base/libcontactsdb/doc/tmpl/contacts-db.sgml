@@ -1,0 +1,320 @@
+<!-- ##### SECTION Title ##### -->
+Contacts Database
+
+<!-- ##### SECTION Short_Description ##### -->
+API description for the GPE contacts database.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+This section documents the GPE contacts database API. The current 
+implementation of the database makes use of the SQLite in-process 
+database engine for data storage.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### MACRO CONFIG_PANEL ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO CONFIG_LIST ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION db_open ##### -->
+<para>
+
+</para>
+
+@open_vcard: 
+@Returns: 
+
+
+<!-- ##### FUNCTION contacts_db_open ##### -->
+<para>
+
+</para>
+
+@open_vcard: 
+@Returns: 
+
+
+<!-- ##### FUNCTION contacts_db_close ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### STRUCT contacts_tag_value ##### -->
+<para>
+
+</para>
+
+@tag: 
+@value: 
+
+<!-- ##### FUNCTION contacts_new_tag_value ##### -->
+<para>
+
+</para>
+
+@Param1: 
+@Param2: 
+@Returns: 
+
+
+<!-- ##### FUNCTION contacts_free_tag_values ##### -->
+<para>
+
+</para>
+
+@Param1: 
+
+
+<!-- ##### FUNCTION contacts_update_tag_value ##### -->
+<para>
+
+</para>
+
+@t: 
+@value: 
+
+
+<!-- ##### STRUCT contacts_person ##### -->
+<para>
+
+</para>
+
+@id: 
+@name: 
+@family_name: 
+@company: 
+@data: 
+
+<!-- ##### FUNCTION contacts_new_person ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION contacts_commit_person ##### -->
+<para>
+
+</para>
+
+@Param1: 
+@Returns: 
+
+
+<!-- ##### FUNCTION contacts_discard_person ##### -->
+<para>
+
+</para>
+
+@Param1: 
+
+
+<!-- ##### FUNCTION contacts_db_set_data ##### -->
+<para>
+
+</para>
+
+@Param1: 
+@tag: 
+@value: 
+
+
+<!-- ##### FUNCTION contacts_db_find_tag ##### -->
+<para>
+
+</para>
+
+@p: 
+@tag: 
+@Returns: 
+
+
+<!-- ##### FUNCTION contacts_db_get_entries ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION contacts_db_get_entries_finddlg ##### -->
+<para>
+
+</para>
+
+@str: 
+@cat: 
+@Returns: 
+
+
+<!-- ##### FUNCTION contacts_db_get_entries_list ##### -->
+<para>
+
+</para>
+
+@name: 
+@cat: 
+@Returns: 
+
+
+<!-- ##### FUNCTION contacts_db_get_entries_list_filtered ##### -->
+<para>
+
+</para>
+
+@str: 
+@filter: 
+@cat: 
+@Returns: 
+
+
+<!-- ##### FUNCTION contacts_db_get_by_uid ##### -->
+<para>
+
+</para>
+
+@uid: 
+@Returns: 
+
+
+<!-- ##### FUNCTION contacts_db_delete_by_uid ##### -->
+<para>
+
+</para>
+
+@uid: 
+@Returns: 
+
+
+<!-- ##### FUNCTION contacts_db_set_multi_data ##### -->
+<para>
+
+</para>
+
+@p: 
+@tag: 
+@value: 
+
+
+<!-- ##### FUNCTION contacts_db_delete_tag ##### -->
+<para>
+
+</para>
+
+@p: 
+@tag: 
+
+
+<!-- ##### FUNCTION contacts_db_get_tag_list ##### -->
+<para>
+
+</para>
+
+@list: 
+@Returns: 
+
+
+<!-- ##### FUNCTION contacts_db_get_config_values ##### -->
+<para>
+
+</para>
+
+@group: 
+@list: 
+@Returns: 
+
+
+<!-- ##### FUNCTION contacts_db_add_config_values ##### -->
+<para>
+
+</para>
+
+@group: 
+@identifier: 
+@value: 
+
+
+<!-- ##### FUNCTION contacts_db_delete_config_values ##### -->
+<para>
+
+</para>
+
+@group: 
+@identifier: 
+
+
+<!-- ##### FUNCTION contacts_db_update_config_values ##### -->
+<para>
+
+</para>
+
+@group: 
+@identifier: 
+@value: 
+
+
+<!-- ##### FUNCTION contacts_db_get_config_tag ##### -->
+<para>
+
+</para>
+
+@group: 
+@tagname: 
+@Returns: 
+
+
+<!-- ##### FUNCTION contacts_db_free_result ##### -->
+<para>
+
+</para>
+
+@table: 
+
+
+<!-- ##### FUNCTION contacts_sort_entries ##### -->
+<para>
+
+</para>
+
+@a: 
+@b: 
+@Returns: 
+
+
+<!-- ##### FUNCTION contacts_db_compress ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION contacts_db_size ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+

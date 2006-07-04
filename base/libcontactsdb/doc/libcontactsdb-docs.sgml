@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
+               "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<book id="index" xmlns:xi="http://www.w3.org/2003/XInclude">
+  <bookinfo>
+    <title>GPE libcontactsdb Reference Manual</title>
+
+      <authorgroup>
+      <author>
+        <firstname>Florian</firstname>
+        <surname>Boor</surname>
+        <affiliation>
+          <orgname>linuxtogo.org</orgname>
+        </affiliation>
+        <authorblurb>
+          <para>
+            <email>florian@kernelconcepts.de</email>
+          </para>
+        </authorblurb>
+      </author>
+    </authorgroup>
+        <legalnotice>
+      <para>
+        This document may be distributed under the terms and
+        conditions of the Lesser General Public License, v2.1 or
+        later. (Current version is available at
+                <ulink url="http://www.gnu.org/copyleft/lesser.html"
+        type="http">http://www.gnu.org/copyleft/lesser.html</ulink> )
+      </para>
+    </legalnotice>
+
+  </bookinfo>
+
+  <abstract>
+     <para>
+        The GPE contacts library libcontactsdb is used to provide an abstract
+        storage backend for personal contact data for the GPE PIM applications.
+     </para>
+  </abstract>
+  <para>
+  </para>
+  <chapter>
+    <title>The contacts database</title>
+    <xi:include href="xml/contacts-db.xml"/>
+  </chapter>
+</book>
