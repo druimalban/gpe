@@ -1,2 +1,22 @@
 # files added by intltool-prepare
 gpe-bluetooth.desktop.in
+bnep-helper.c
+dbus.c
+dun.c
+headset.c
+lap.c
+main.c
+obexclient.c
+obexclient-dbus.c
+obex-glib.c
+obexserver.c
+obex-unknown.c
+obex-vcal.c
+obex-vcard.c
+pan.c
+pin-dbus.c
+pin-ui.c
+progress.c
+rfcomm.c
+rfcomm-helper.c
+sdp.c

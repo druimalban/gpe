@@ -64,7 +64,8 @@ EXTRA_DIST = $(desktop_DATA) \
              intltool-extract.in \
              intltool-merge.in \
              intltool-update.in \
-	     mkinstalldirs
+	     mkinstalldirs \
+	     po/gpe-bluetooth.pot
 
 DISTCLEANFILES = intltool-extract \
                  intltool-merge \
@@ -75,6 +76,7 @@ clean-local:
 	$(RM) po/.intltool-merge-cache 
 	$(RM) -r autom4te.cache
 	$(RM) *.d *~
+	$(RM) po/stamp-it
 
 include gpe-dist.am
 include gpe-tp.am

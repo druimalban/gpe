@@ -1,3 +1,11 @@
+
+2006-07-04  Florian Boor <florian.boor@kernelconcepts.de>
+
+	* Release version 0.54.
+	* Makefile.am: Minor tweak to pass distcheck.
+	* tp/*: Add smart i18n stuff.
+	* po/gpe-bluetooth.pot: Update.
+
 2006-06-27  Florian Boor <florian.boor@kernelconcepts.de>
 
 	* pin-dbus.c: Add name lookup for pin requests. 
