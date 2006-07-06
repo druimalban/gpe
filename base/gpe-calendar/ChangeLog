@@ -1,5 +1,12 @@
 2006-07-06  Neal H. Walfield  <neal@gnu.org>
 
+	* day_view.c (event_rect_expose): Set the summary to bold using a
+	PangoAttribute rather than pango markup.  Unreference PL.
+	* month_view.c (draw_expose_event): Scale the font by changing the
+	font used rather than pango markup.
+
+2006-07-06  Neal H. Walfield  <neal@gnu.org>
+
 	* month_view.c (struct _GtkMonthView): Add fields draw_cache,
 	draw_cache_expire, draw_cache_last_access, last_flip and at_edge.
 	Remove field last_motion.  Rename field page_timer to

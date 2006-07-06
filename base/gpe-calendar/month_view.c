@@ -591,6 +591,19 @@ draw_expose_event (GtkWidget *widget, GdkEventExpose *event,
   pl = gtk_widget_create_pango_layout (GTK_WIDGET (widget), NULL);
   pl_evt = gtk_widget_create_pango_layout (GTK_WIDGET (widget), NULL);
 
+  /* Scale the font appropriately.  */
+  const PangoFontDescription *orig_font
+    = pango_layout_get_font_description (pl_evt);
+  if (! orig_font)
+    {
+      PangoContext *context = pango_layout_get_context (pl_evt);
+      orig_font = pango_context_get_font_description (context);
+    }
+  PangoFontDescription *font = pango_font_description_copy (orig_font);
+  int s = CLAMP (month_view->width / 7 / 14, 8, 14) * PANGO_SCALE;
+  pango_font_description_set_size (font, s);
+  pango_layout_set_font_description (pl_evt, font);
+
   gdk_draw_rectangle (drawable, light_gray_gc, 1,
 		      0, 0, month_view->width, month_view->title_height);
 
@@ -620,8 +633,6 @@ draw_expose_event (GtkWidget *widget, GdkEventExpose *event,
   col_last = 6;
   row_last = month_view->weeks - 1;
 #endif
-
-  int font_size = CLAMP (month_view->width / 7 / 14, 8, 14) * 1024;
 
   for (row = row_start; row <= row_last; row ++)
     {
@@ -678,10 +689,9 @@ draw_expose_event (GtkWidget *widget, GdkEventExpose *event,
 
 	  char buffer[30];
 	  int written = snprintf (buffer, sizeof (buffer),
-				  "<span size='%d'>%d</span>", font_size,
-				  g_date_get_day (&c->date));
+				  "%d", g_date_get_day (&c->date));
 
-	  pango_layout_set_markup (pl_evt, buffer, written);
+	  pango_layout_set_text (pl_evt, buffer, written);
 	  gtk_paint_layout (widget->style,
 			    drawable,
 			    GTK_WIDGET_STATE (widget),
@@ -701,15 +711,13 @@ draw_expose_event (GtkWidget *widget, GdkEventExpose *event,
 	      if (! event_get_visible (ev))
 		continue;
 
-	      char *t = event_get_summary (ev);
-	      char *s = g_strdup_printf ("<span size='%d'>%s</span>",
-					 font_size, t);
-	      g_free (t);
+	      char *s = event_get_summary (ev);
 	      /* Replace '\n''s with spaces.  */
+	      char *t;
 	      for (t = strchr (s, '\n'); t; t = strchr (t, '\n'))
 		*t = ' ';
 
-	      pango_layout_set_markup (pl_evt, s, -1);
+	      pango_layout_set_text (pl_evt, s, -1);
 	      g_free (s);
 
 	      pango_layout_get_pixel_extents (pl_evt, NULL, &pr);

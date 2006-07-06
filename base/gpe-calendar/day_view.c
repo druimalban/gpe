@@ -243,7 +243,7 @@ event_rect_expose (struct event_rect *er, GtkWidget *widget, GdkDrawable *w,
   char *text (const char *loc_desc_sep)
     {
       return
-	g_strdup_printf ("<b>%s</b>%s%s%s%s%s%s",
+	g_strdup_printf ("%s%s%s%s%s%s%s",
 			 summary,
 			 (summary && summary[0]
 			  && ((location && location[0])
@@ -265,7 +265,17 @@ event_rect_expose (struct event_rect *er, GtkWidget *widget, GdkDrawable *w,
 
   PangoLayout *pl = gtk_widget_create_pango_layout (widget, NULL);
   pango_layout_set_width (pl, PANGO_SCALE * gr.width);
-  pango_layout_set_markup (pl, buffer, -1);
+  pango_layout_set_text (pl, buffer, -1);
+
+  if (summary)
+    {
+      PangoAttrList *attrs = pango_attr_list_new ();
+      PangoAttribute *bold = pango_attr_weight_new (PANGO_WEIGHT_BOLD);
+      bold->start_index = 0;
+      bold->end_index = strlen (summary);
+      pango_attr_list_insert (attrs, bold);
+      pango_layout_set_attributes (pl, attrs);
+    }
 
   PangoRectangle pr;
   pango_layout_get_pixel_extents (pl, NULL, &pr);
@@ -275,7 +285,7 @@ event_rect_expose (struct event_rect *er, GtkWidget *widget, GdkDrawable *w,
     {
       g_free (buffer);
       buffer = text ("; ");
-      pango_layout_set_markup (pl, buffer, -1);
+      pango_layout_set_text (pl, buffer, -1);
       pango_layout_get_pixel_extents (pl, NULL, &pr);
     }
   if (pr.height >= gr.height)
@@ -284,7 +294,7 @@ event_rect_expose (struct event_rect *er, GtkWidget *widget, GdkDrawable *w,
       char *p;
       for (p = strchr (buffer, '\n'); p; p = strchr (p, '\n'))
 	*p = ' ';
-      pango_layout_set_markup (pl, buffer, -1);
+      pango_layout_set_text (pl, buffer, -1);
       pango_layout_get_pixel_extents (pl, NULL, &pr);
     }
 
@@ -306,6 +316,8 @@ event_rect_expose (struct event_rect *er, GtkWidget *widget, GdkDrawable *w,
 		    GTK_WIDGET_STATE (widget),
 		    FALSE, &gr, widget, "label",
 		    gr.x, gr.y, pl);
+
+  g_object_unref (pl);
 
   if (event_get_alarm (er->event))
     {
