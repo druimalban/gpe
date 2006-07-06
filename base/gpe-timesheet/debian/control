@@ -1,5 +1,5 @@
 Source: gpe-timesheet
-Section: pim
+Section: user/pim
 Priority: optional
 Maintainer: Philippe De Swert <philippedeswert@scarlet.be>
 Build-Depends: debhelper (>= 4.0.0)

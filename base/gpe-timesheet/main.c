@@ -54,7 +54,7 @@ static struct gpe_icon my_icons[] = {
   { "clock", MY_PIXMAPS_DIR "/clock.png"},
   { "stop_clock", MY_PIXMAPS_DIR "/stop_clock.png" },
   { "tick", MY_PIXMAPS_DIR "/tick.png"},
-  { "gpe-timesheet", MY_PREFIX "/share/pixmaps/gpe-timesheet.png" },
+  { "gpe-timesheet", PREFIX "/share/pixmaps/gpe-timesheet.png" },
   { "edit", MY_PIXMAPS_DIR "/edit.png"},
   { "journal", MY_PIXMAPS_DIR "/list-view.png"},
   { "media_play", MY_PIXMAPS_DIR "/media-play.png"},

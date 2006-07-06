@@ -2,7 +2,7 @@
 Encoding=UTF-8
 _Name=Timesheet
 _Comment=GPE Time Tracker
-Exec=/var/lib/install@prefix@/bin/gpe-timesheet
+Exec=@prefix@/bin/gpe-timesheet
 Terminal=false
 Type=Application
 Icon=gpe-timesheet

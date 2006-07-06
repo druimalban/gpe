@@ -20,7 +20,7 @@ if HILDON
 desktopdir = $(datadir)/applications/hildon
 desktop_in_files = hildon/gpe-timesheet.desktop.in
 
-servicedir = $(libdir)/dbus-1.0/services
+servicedir = $(datadir)/dbus-1/services
 service_in_files = hildon/com.nokia.gpe-timesheet.service.in
 
 # we need a 26x26 icon here
