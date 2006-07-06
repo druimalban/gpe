@@ -485,6 +485,8 @@ static void reload_events_hard (GtkMonthView *view);
 static void
 update_extents_hard (GtkMonthView *month_view)
 {
+  g_assert (! month_view->pending_reload);
+
   while (month_view->pending_update_extents)
     {
       month_view->pending_update_extents = FALSE;
@@ -945,9 +947,12 @@ size_allocate (GtkWidget *widget, GtkAllocation *allocation,
 	       GtkMonthView *month_view)
 {
   month_view->pending_update_extents = TRUE;
-  /* We don't call update_extents as it will invalidate the draw area
-     and we don't actually know if the size has even changed.  */
-  update_extents_hard (month_view);
+
+  if (! month_view->pending_reload)
+    /* We don't call update_extents as it will invalidate the draw
+       area and we don't actually know if the size has even
+       changed.  */
+    update_extents_hard (month_view);
 }
 
 #define FPS 15
