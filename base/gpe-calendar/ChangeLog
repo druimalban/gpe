@@ -1,3 +1,32 @@
+2006-07-06  Neal H. Walfield  <neal@gnu.org>
+
+	* month_view.c (struct _GtkMonthView): Add fields draw_cache,
+	draw_cache_expire, draw_cache_last_access, last_flip and at_edge.
+	Remove field last_motion.  Rename field page_timer to
+	motion_timer.
+	(draw_cache_destroy): New function.
+	(draw_cache_expire): Likewise.
+	(gtk_month_view_finalize): Destroy the draw cache.
+	(gtk_month_view_cell_box): Take new parameter, color.  If not NULL
+	then fill in with the appropriate background color for this cell.
+	(gtk_month_view_invalidate_cell): Replace this function with...
+	(gtk_month_view_draw_focus): ... this one.  If there is no draw
+	cache, simply return.  Otherwise, move the focus, updating the
+	cached draw area and then queue an expose.  Update users.
+	(update_extents_hard): Destroy the draw cache.
+	(draw_expose_event): If MONTH_VIEW->DRAW_CACHE is not NULL, then
+	simply copy it to the window.  Otherwise, create it.  Update the
+	cache's access time.  Draw on the draw cache.  Call
+	gtk_month_view_draw_focus to draw the focused day.
+	(reload_events_hard): Destroy the draw cache.
+	(FPS): New macro.
+	(page_flip): Rename from this...
+	(process_motion): ... to this.  Process all scrolling here and do
+	it more intelligently.
+	(motion_notify_event): Don't process scrolling here.  Just start
+	the timer to call process_motion once every second / FPS.
+	(button_release_event): Only set the focus if no motion occured.
+
 2006-07-03  Neal H. Walfield  <neal@gnu.org>
 
 	* month_view.c (scroll_to_focused_day): If not realized, then just

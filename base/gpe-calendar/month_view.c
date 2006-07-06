@@ -34,14 +34,12 @@ struct day
 };
 
 /* A month view consists of a number of cells: 7 per row up to 6
-   columns (as that is the maximum number of weeks any week requires
+   rows (as that is the maximum number of weeks any month requires
    independent of the day it starts on.
 
    Each cell has a render control associated with it.  This render
    control is marked as valid and has the date the cell represents and
-   a pointer to the event list (if any).  The event list can also be
-   found in DAY_EVENTS.  DAY_EVENTS is indexed by the cells day in the
-   month, NOT BY THE CELL number.  */
+   a pointer to the event list (if any).  */
 struct _GtkMonthView
 {
   GtkView widget;
@@ -51,6 +49,9 @@ struct _GtkMonthView
   GtkAdjustment *vadj;
 
   GtkWidget *draw;
+  GdkPixmap *draw_cache;
+  guint draw_cache_expire;
+  time_t draw_cache_last_access;
   guint32 last_expose;
 
   /* Events attached to the day.  */
@@ -73,7 +74,7 @@ struct _GtkMonthView
   /* Number of weeks in the current month.  */
   gint weeks;
 
-  /* If a event reload is pending.  */
+  /* If an event reload is pending.  */
   gboolean pending_reload;
   gboolean pending_update_extents;
 
@@ -84,22 +85,48 @@ struct _GtkMonthView
     /* Where the drag started (relative to the root).  */
     gdouble x_origin;
     gdouble y_origin;
-    /* The location of the last "drag-motion" signal position
-       (relative to the root).  */
+    /* The location of the last processed "drag-motion" signal
+       position (relative to the root).  */
     gdouble x;
     gdouble y;
 
-    /* The time of the last motion.  */
-    guint32 last_motion;
-    gdouble page_timer;
+    gdouble motion_timer;
 
-    /* The time of the last month flip.  */
-    guint32 last_flip;
+    /* When we hit the edge.  */
+    guint32 at_edge;
   } drag;
 };
 
 static const int zoom_factors[] = { 4, 7, 12 };
 #define ZOOM_FACTORS (sizeof (zoom_factors) / sizeof (zoom_factors[0]))
+
+static void
+draw_cache_destroy (GtkMonthView *month_view)
+{
+  if (month_view->draw_cache_expire)
+    /* Remove the timer.  */
+    {
+      g_source_remove (month_view->draw_cache_expire);
+      month_view->draw_cache_expire = 0;
+    }
+
+  if (month_view->draw_cache)
+    /* Destroy the cache.  */
+    {
+      gdk_drawable_unref (month_view->draw_cache);
+      month_view->draw_cache = NULL;
+    }
+}
+
+static gboolean
+draw_cache_expire (GtkMonthView *month_view)
+{
+  if (time (NULL) - month_view->draw_cache_last_access >= 60)
+    /* The cache has not been accessed for at least a minute.  */
+    draw_cache_destroy (month_view);
+
+  return TRUE;
+}
 
 typedef struct
 {
@@ -189,6 +216,8 @@ gtk_month_view_finalize (GObject *object)
   GtkMonthView *month_view = GTK_MONTH_VIEW (object);
   gint i;
 
+  draw_cache_destroy (month_view);
+
   for (i = 0; i < MAX_DAYS; i++)
     if (month_view->day[i].events) 
       event_list_unref (month_view->day[i].events);
@@ -226,7 +255,8 @@ gtk_month_view_realize (GtkWidget *widget)
    which a non-NULL location is provided.  */
 static void
 gtk_month_view_cell_box (GtkMonthView *month_view, int col, int row,
-			 int *x, int *y, int *w, int *h)
+			 int *x, int *y, int *w, int *h,
+			 GdkGC **color)
 {
   g_assert (col >= 0);
   g_assert (col <= 7);
@@ -263,6 +293,27 @@ gtk_month_view_cell_box (GtkMonthView *month_view, int col, int row,
       *h = (row + 1) * (month_view->height - month_view->title_height)
 	/ month_view->weeks + month_view->title_height - *y;
     }
+
+  if (color)
+    {
+      GdkColor c;
+
+      *color = gdk_gc_new (month_view->draw->window);
+      gdk_gc_copy (*color, month_view->draw->style->black_gc);
+
+      if ((week_starts_sunday && (col == 0 || col == 6))
+	  || (! week_starts_sunday && col >= 5))
+	/* Weekend.  */
+	gdk_color_parse ("light salmon", &c);
+      else
+	/* Weekday.  */
+	gdk_color_parse ("palegoldenrod", &c);
+
+      GdkColormap *colormap
+	= gdk_window_get_colormap (month_view->draw->window);
+      gdk_colormap_alloc_color (colormap, &c, FALSE, TRUE);
+      gdk_gc_set_foreground (*color, &c);
+    }
 }
 
 /* Get cell at X x Y.  Return -1 if the coordinates do not name a
@@ -276,18 +327,40 @@ gtk_month_view_cell_at (GtkMonthView *month_view, int x, int y,
     / (month_view->height - month_view->title_height);
 }
 
-/* Cause a cell to be redrawn.  */
+/* Draw the focused cell.  If OLD is not -1, then erases the
+   focus. around the cell OLD.  */
 static void
-gtk_month_view_invalidate_cell (GtkMonthView *month_view, gint cell)
+gtk_month_view_draw_focus (GtkMonthView *month_view, int old)
 {
-  int col = cell % 7;
-  int row = cell / 7;
+  g_assert (old < month_view->weeks * 7);
+
+  if (! month_view->draw_cache)
+    return;
+
   int x, y, w, h;
 
-  g_assert (cell < month_view->weeks * 7);
+  if (old != -1)
+    /* Erase the old focus area.  */
+    {
+      GdkGC *bg;
+      gtk_month_view_cell_box (month_view, old % 7, old / 7,
+			       &x, &y, &w, &h, &bg);
+      gdk_draw_rectangle (month_view->draw_cache, bg, FALSE,
+			  x, y + 1, w - 2, h - 2);
+    }
 
-  gtk_month_view_cell_box (month_view, col, row, &x, &y, &w, &h);
-  gtk_widget_queue_draw_area (month_view->draw, x, y, w, h);
+  /* Draw the new focus area.  */
+  gtk_month_view_cell_box (month_view,
+			   month_view->focused_day % 7,
+			   month_view->focused_day / 7,
+			   &x, &y, &w, &h, NULL);
+  GdkGC *blue_gc = pen_new (month_view->draw, 0, 0, 0xffff);
+  gdk_draw_rectangle (month_view->draw_cache, blue_gc, FALSE,
+		      x, y + 1, w - 2, h - 2);
+  gdk_gc_unref (blue_gc);
+
+  gdk_window_invalidate_rect (GTK_WIDGET (month_view->draw)->window,
+			      NULL, FALSE);
 }
 
 static void
@@ -322,7 +395,7 @@ scroll_to_focused_day (GtkMonthView *month_view)
   int row = month_view->focused_day / 7;
   int col = month_view->focused_day % 7;
   int x, y, h, w;
-  gtk_month_view_cell_box (month_view, col, row, &x, &y, &w, &h);
+  gtk_month_view_cell_box (month_view, col, row, &x, &y, &w, &h, NULL);
 
   GtkWidget *viewport = GTK_BIN (month_view->scrolled_window)->child;
 
@@ -358,9 +431,9 @@ gtk_month_view_set_time (GtkView *view, time_t c)
       if (diff != month_view->focused_day)
 	/* But different day.  */
 	{
-	  gtk_month_view_invalidate_cell (month_view, month_view->focused_day);
+	  int old = month_view->focused_day;
 	  month_view->focused_day = diff;
-	  gtk_month_view_invalidate_cell (month_view, month_view->focused_day);
+	  gtk_month_view_draw_focus (month_view, old);
 	  scroll_to_focused_day (month_view);
 	}
     }
@@ -430,6 +503,7 @@ update_extents_hard (GtkMonthView *month_view)
 	  month_view->width = width;
 	  month_view->height = height;
 	  gtk_widget_set_size_request (month_view->draw, width, height);
+	  draw_cache_destroy (month_view);
 
 	  /* Process any size changes now.  The size renegotiation may
 	     reset MONTH_VIEW->PENDING_UPDATE_EXTENTS.  Additionally,
@@ -474,16 +548,28 @@ draw_expose_event (GtkWidget *widget, GdkEventExpose *event,
   if (month_view->last_expose != last_expose)
     return FALSE;
 
-  GtkDrawingArea *darea;
-  GdkDrawable *drawable;
+  GdkDrawable *drawable = month_view->draw_cache;
+  if (drawable)
+    goto copy_to_drawable;
+
+  if (! month_view->draw_cache_expire)
+    month_view->draw_cache_expire
+      = g_timeout_add (60 * 1000, (GSourceFunc) draw_cache_expire,
+		       month_view);
+
+  drawable = gdk_pixmap_new (widget->window,
+			     month_view->width, month_view->height, -1);
+  month_view->draw_cache = drawable;
+
+  GdkRectangle area;
+  area.x = 0;
+  area.y = 0;
+  area.width = month_view->width;
+  area.height = month_view->height;
+
   GdkGC *black_gc;
   GdkGC *gray_gc;
   GdkGC *light_gray_gc;
-  GdkGC *yellow_gc;
-  GdkGC *salmon_gc;
-  GdkGC *blue_gc;
-  GdkColor yellow;
-  GdkColor salmon;
   GdkColormap *colormap;
   gint row, col;
   PangoLayout *pl;
@@ -496,34 +582,14 @@ draw_expose_event (GtkWidget *widget, GdkEventExpose *event,
   g_return_val_if_fail (GTK_IS_DRAWING_AREA (widget), TRUE);
 
   light_gray_gc = pen_new (widget, 53040, 53040, 53040);
-  blue_gc = pen_new (widget, 0, 0, 0xffff);
 
   colormap = gdk_window_get_colormap (widget->window);
-
-  yellow_gc = gdk_gc_new (widget->window);
-  gdk_gc_copy (yellow_gc, widget->style->black_gc);
-  gdk_color_parse ("palegoldenrod", &yellow);
-  gdk_colormap_alloc_color (colormap, &yellow, FALSE, TRUE);
-  gdk_gc_set_foreground (yellow_gc, &yellow);
-
-  salmon_gc = gdk_gc_new (widget->window);
-  gdk_gc_copy (salmon_gc, widget->style->black_gc);
-  gdk_color_parse ("light salmon", &salmon);
-  gdk_colormap_alloc_color (colormap, &salmon, FALSE, TRUE);
-  gdk_gc_set_foreground (salmon_gc, &salmon);
 
   gray_gc = widget->style->bg_gc[GTK_STATE_NORMAL];
   black_gc = widget->style->black_gc;
 
   pl = gtk_widget_create_pango_layout (GTK_WIDGET (widget), NULL);
   pl_evt = gtk_widget_create_pango_layout (GTK_WIDGET (widget), NULL);
-
-  darea = GTK_DRAWING_AREA (widget);
-  drawable = widget->window;
-
-  gdk_window_clear_area (drawable, 
-			 event->area.x, event->area.y,
-			 event->area.width, event->area.height);
 
   gdk_draw_rectangle (drawable, light_gray_gc, 1,
 		      0, 0, month_view->width, month_view->title_height);
@@ -534,23 +600,35 @@ draw_expose_event (GtkWidget *widget, GdkEventExpose *event,
   int row_start, col_start;
   gtk_month_view_cell_at (month_view, event->area.x, event->area.y,
 			  &col_start, &row_start);
+#if 0
   col_start = MIN (MAX (col_start, 0), 7);
   row_start = MIN (MAX (row_start, 0), month_view->weeks - 1);
+#else
+  col_start = 0;
+  row_start = 0;
+#endif
 
   int row_last, col_last;
   gtk_month_view_cell_at (month_view,
 			  event->area.x + event->area.width,
 			  event->area.y + event->area.height,
 			  &col_last, &row_last);
+#if 0
   col_last = MIN (MAX (col_last, 0), 6);
   row_last = MIN (MAX (row_last, 0), month_view->weeks - 1);
+#else
+  col_last = 6;
+  row_last = month_view->weeks - 1;
+#endif
 
   int font_size = CLAMP (month_view->width / 7 / 14, 8, 14) * 1024;
 
   for (row = row_start; row <= row_last; row ++)
     {
       gint y, h;
-      gtk_month_view_cell_box (month_view, 0, row, NULL, &y, NULL, &h);
+
+      gtk_month_view_cell_box (month_view, 0, row,
+			       NULL, &y, NULL, &h, NULL);
 
       for (col = col_start; col <= col_last; col ++)
 	{
@@ -558,7 +636,9 @@ draw_expose_event (GtkWidget *widget, GdkEventExpose *event,
 	  struct day *c = &month_view->day[day];
 	  gint x, w;
 
-	  gtk_month_view_cell_box (month_view, col, 0, &x, NULL, &w, NULL);
+	  GdkGC *bg;
+	  gtk_month_view_cell_box (month_view, col, 0,
+				   &x, NULL, &w, NULL, &bg);
 
 	  if (row == 0)
 	    /* Draw the column's title.  */
@@ -570,27 +650,20 @@ draw_expose_event (GtkWidget *widget, GdkEventExpose *event,
 	      g_free (s);
       
 	      gtk_paint_layout (widget->style,
-				widget->window,
+				drawable,
 				GTK_WIDGET_STATE (widget),
 				FALSE,
-				&event->area,
+				&area,
 				widget,
 				"label",
 				x + (w - pr.width) / 2, 1,
 				pl);
 	    }
 
-	  GdkGC *color;
-
-	  if (week_starts_sunday)
-	    color = col == 0 || col == 6 ? salmon_gc : yellow_gc;
-	  else
-	    color = col >= 5 ? salmon_gc : yellow_gc;
-
 	  pango_layout_set_width (pl_evt, w * PANGO_SCALE);
 	  int trying_no_wrap = FALSE;
 	restart:
-	  gdk_draw_rectangle (drawable, color, TRUE, x, y + 1, w, h);
+	  gdk_draw_rectangle (drawable, bg, TRUE, x, y + 1, w, h);
 
 	  /* Draw the top edge of the box.  */
 	  gdk_draw_line (drawable, black_gc,
@@ -610,10 +683,10 @@ draw_expose_event (GtkWidget *widget, GdkEventExpose *event,
 
 	  pango_layout_set_markup (pl_evt, buffer, written);
 	  gtk_paint_layout (widget->style,
-			    widget->window,
+			    drawable,
 			    GTK_WIDGET_STATE (widget),
 			    FALSE,
-			    &event->area,
+			    &area,
 			    widget,
 			    "label",
 			    left, top,
@@ -669,10 +742,10 @@ draw_expose_event (GtkWidget *widget, GdkEventExpose *event,
 		}
 
 	      gtk_paint_layout (widget->style,
-				widget->window,
+				drawable,
 				GTK_WIDGET_STATE (widget),
 				FALSE,
-				&event->area,
+				&area,
 				widget,
 				"label",
 				left + 1, top,
@@ -682,20 +755,23 @@ draw_expose_event (GtkWidget *widget, GdkEventExpose *event,
 	      left = x + 1;
 	    }
 
-	  if (day == month_view->focused_day)
-	    /* Highlight this day.  */
-	    gdk_draw_rectangle (drawable, blue_gc, FALSE,
-				x, y + 1, w - 2, h - 2);
+	  gdk_gc_unref (bg);
 	}
     }
 
-  gdk_gc_unref (blue_gc);
+  gtk_month_view_draw_focus (month_view, -1);
+
   gdk_gc_unref (light_gray_gc);
-  gdk_gc_unref (yellow_gc);
-  gdk_gc_unref (salmon_gc);
 
   g_object_unref (pl);
   g_object_unref (pl_evt);
+
+ copy_to_drawable:
+  month_view->draw_cache_last_access = time (NULL);
+  gdk_draw_drawable (widget->window, widget->style->black_gc, drawable,
+		     event->area.x, event->area.y,
+		     event->area.x, event->area.y,
+		     event->area.width, event->area.height);
 
   return TRUE;
 }
@@ -798,7 +874,11 @@ reload_events_hard (GtkMonthView *month_view)
 
       if (tm_start.tm_mday == g_date_get_day (&d)
 	  && tm_start.tm_mon == g_date_get_month (&d) - 1)
-        month_view->focused_day = i;
+	{
+	  int old = month_view->focused_day;
+	  month_view->focused_day = i;
+	  gtk_month_view_draw_focus (month_view, old);
+	}
     }
 
   /* Get the events for the period.  */
@@ -846,6 +926,7 @@ reload_events_hard (GtkMonthView *month_view)
   month_view->pending_reload = FALSE;
   scroll_to_focused_day (month_view);
 
+  draw_cache_destroy (month_view);
   gdk_window_invalidate_rect (GTK_WIDGET (month_view->draw)->window,
 			      NULL, FALSE);
 }
@@ -861,32 +942,88 @@ size_allocate (GtkWidget *widget, GtkAllocation *allocation,
   update_extents_hard (month_view);
 }
 
+#define FPS 15
+
 /* Called periodically when the mouse is held down to continue
    scrolling.  */
 static gboolean
-page_flip (GtkMonthView *month_view)
+process_motion (GtkMonthView *month_view)
 {
   guint32 t = gdk_x11_get_server_time (month_view->draw->window);
 
-  if (month_view->drag.last_flip == 0)
-    month_view->drag.last_flip = t;
+  GtkWidget *viewport = GTK_BIN (month_view->scrolled_window)->child;
 
-  if (t - month_view->drag.last_motion >= 100)
-    /* Greater than a 100 ms since the user last moved the mouse.  If
-       the user has moved the mouse beyond the start point then do a
-       bit of scrolling.  */
+  int x, y;
+  gdk_display_get_pointer (gdk_display_get_default (), NULL, &x, &y, NULL);
+
+  int draw_x, draw_y;
+  gtk_widget_get_pointer (month_view->draw, &draw_x, &draw_y);
+
+  int viewport_x, viewport_y;
+  gtk_widget_translate_coordinates (month_view->draw, viewport,
+				    draw_x, draw_y, &viewport_x, &viewport_y);
+
+  gboolean inside
+    = viewport_x >= 0 && viewport_x < viewport->allocation.width
+    && viewport_y >= 0 && viewport_y < viewport->allocation.height;
+
+  if (inside)
+    /* The mouse is inside the viewport.  Do normal panning.  */
     {
-      int dx = month_view->drag.x_origin - month_view->drag.x;
-      int dy = month_view->drag.y_origin - month_view->drag.y;
+      /* If the mouse is inside the viewport and the mouse has moved
+	 thereby causing or keeping the draw at an edge.  */
+      gboolean bumped_edge = FALSE;
 
-      gdouble dx_share = (gdouble) (dx * dx) / (dx * dx + dy * dy);
-      gdouble dy_share = (gdouble) (dy * dy) / (dx * dx + dy * dy);
+      void scroll_by (GtkAdjustment *adj, gdouble delta, int dimension)
+	{
+	  /* Current position of scroll bar as a percentage.  */
+	  gdouble pos = (adj->value - adj->lower)
+	    / (adj->upper - adj->lower);
+	  /* New position of scroll bar as a percentage.  */
+	  gdouble new_pos = (pos * dimension + delta) / dimension *
+	    (adj->upper - adj->lower) + adj->lower;
 
-      GtkAdjustment *hadj = month_view->hadj;
-      GtkAdjustment *vadj = month_view->vadj;
+	  if (new_pos < adj->lower || new_pos > adj->upper - adj->page_size)
+	    {
+	      bumped_edge = TRUE;
+	    }
 
-      if (hadj->value <= hadj->lower && dx_share > 0.3
-	  && t - month_view->drag.last_flip > 1000)
+	  gtk_adjustment_set_value
+	    (adj, CLAMP (new_pos, adj->lower, adj->upper - adj->page_size));
+	}
+
+      scroll_by (month_view->vadj, - (y - month_view->drag.y),
+		 month_view->height);
+      scroll_by (month_view->hadj, - (x - month_view->drag.x),
+		 month_view->width);
+
+      if (bumped_edge)
+	{
+	  if (! month_view->drag.at_edge)
+	    {
+	      month_view->drag.at_edge = t;
+	      goto out;
+	    }
+	}
+      else
+	goto out;
+    }
+
+  if (! month_view->drag.at_edge)
+    month_view->drag.at_edge = t;
+
+  int dx = month_view->drag.x_origin - month_view->drag.x;
+  int dy = month_view->drag.y_origin - month_view->drag.y;
+
+  gdouble dx_share = (gdouble) (dx * dx) / (dx * dx + dy * dy);
+  gdouble dy_share = (gdouble) (dy * dy) / (dx * dx + dy * dy);
+
+  GtkAdjustment *hadj = month_view->hadj;
+  GtkAdjustment *vadj = month_view->vadj;
+
+  if (month_view->drag.at_edge && t - month_view->drag.at_edge > 1000)
+    {
+      if (hadj->value <= hadj->lower && dx_share > 0.3)
 	/* Horizontal edge: flip to the left (past).  */
 	{
 	  if (vadj->value >= vadj->upper - vadj->page_size
@@ -896,7 +1033,7 @@ page_flip (GtkMonthView *month_view)
 	  else
 	    /* Flip backwards one month.  */
 	    {
-	      month_view->drag.last_flip = t;
+	      month_view->drag.at_edge = t;
 
 	      GDate date;
 	      gtk_view_get_date (GTK_VIEW (month_view), &date);
@@ -908,10 +1045,13 @@ page_flip (GtkMonthView *month_view)
 			       MIN (month_view->focused_day / 7 * 7 + 6,
 				    weeks * 7 - 1));
 	      gtk_view_set_date (GTK_VIEW (month_view), &date);
+
+	      month_view->drag.at_edge = 0;
 	    }
+
+	  goto out;
 	}
-      else if (vadj->value <= vadj->lower && dy_share > 0.3
-	       && t - month_view->drag.last_flip > 500)
+      else if (vadj->value <= vadj->lower && dy_share > 0.3)
 	/* Vertical edge: flip up (past).  */
 	{
 	  if (hadj->value >= hadj->upper - hadj->page_size
@@ -920,7 +1060,7 @@ page_flip (GtkMonthView *month_view)
 	    ;
 	  else
 	    {
-	      month_view->drag.last_flip = t;
+	      month_view->drag.at_edge = t;
 
 	      GDate date;
 	      gtk_view_get_date (GTK_VIEW (month_view), &date);
@@ -937,14 +1077,17 @@ page_flip (GtkMonthView *month_view)
 	      if (g_date_get_month (&date) != month)
 		g_date_subtract_days (&date, 7);
 	      gtk_view_set_date (GTK_VIEW (month_view), &date);
+
+	      month_view->drag.at_edge = 0;
 	    }
+
+	  goto out;
 	}
       else if (hadj->value >= hadj->upper - hadj->page_size
-	       && dx_share > 0.3
-	       && t - month_view->drag.last_flip > 1000)
+	       && dx_share > 0.3)
 	/* Flip to the right (future).  */
 	{
-	  month_view->drag.last_flip = t;
+	  month_view->drag.at_edge = t;
 
 	  GDate date;
 	  gtk_view_get_date (GTK_VIEW (month_view), &date);
@@ -956,54 +1099,73 @@ page_flip (GtkMonthView *month_view)
 			   MIN (month_view->focused_day / 7 * 7,
 				weeks * 7 - 1));
 	  gtk_view_set_date (GTK_VIEW (month_view), &date);
+
+	  month_view->drag.at_edge = 0;
+
+	  goto out;
 	}
       else if (vadj->value >= vadj->upper - vadj->page_size
-	       && dy_share > 0.3
-	       && t - month_view->drag.last_flip > 1000)
+	       && dy_share > 0.3)
 	/* Flip down (future).  */
 	{
-	  month_view->drag.last_flip = t;
+	  month_view->drag.at_edge = t;
 
-	      GDate date;
-	      gtk_view_get_date (GTK_VIEW (month_view), &date);
+	  GDate date;
+	  gtk_view_get_date (GTK_VIEW (month_view), &date);
 
-	      int wday = g_date_get_weekday (&date);
+	  int wday = g_date_get_weekday (&date);
 
-	      /* Go to the last day of the previous month.  */
-	      g_date_set_day (&date, 1);
-	      g_date_add_months (&date, 1);
-	      int month = g_date_get_month (&date);
-	      int weeks;
-	      first_day (&date, &weeks);
-	      g_date_add_days (&date, wday - 1);
-	      if (g_date_get_month (&date) != month)
-		g_date_add_days (&date, 7);
-	      gtk_view_set_date (GTK_VIEW (month_view), &date);
-	}
-      else
-	/* Scroll a bit.  */
-	{
-	  void scroll (GtkAdjustment *adj, int diff, int dimension,
-		       gdouble share)
-	    {
-	      if (! (diff < -10 || 10 <= diff))
-		return;
+	  /* Go to the last day of the previous month.  */
+	  g_date_set_day (&date, 1);
+	  g_date_add_months (&date, 1);
+	  int month = g_date_get_month (&date);
+	  int weeks;
+	  first_day (&date, &weeks);
+	  g_date_add_days (&date, wday - 1);
+	  if (g_date_get_month (&date) != month)
+	    g_date_add_days (&date, 7);
+	  gtk_view_set_date (GTK_VIEW (month_view), &date);
 
-	      /* Scroll by 10 * share pixels.  */
-	      gdouble inc
-		= (10 * share / dimension) * (adj->upper - adj->lower);
-	      if (diff < 0)
-		inc = -inc;
+	  month_view->drag.at_edge = 0;
 
-	      gtk_adjustment_set_value
-		(adj, CLAMP (adj->value + inc,
-			     adj->lower, adj->upper - adj->page_size));
-	    }
-
-	  scroll (hadj, dx, month_view->width, dx_share);
-	  scroll (vadj, dy, month_view->height, dy_share);
+	  goto out;
 	}
     }
+  
+  if (! inside)
+    /* If we are outside the viewport then scroll a few pixels
+       automatically.  */
+    {
+      /* Scroll a bit.  */
+      void scroll (GtkAdjustment *adj, int diff, int dimension,
+		   gdouble share)
+	{
+	  if (! (diff < -10 || 10 <= diff))
+	    return;
+
+	  /* Scroll by 10 * share pixels.  */
+	  gdouble inc
+	    = ((100.0 / FPS) * share / dimension) * (adj->upper - adj->lower);
+	  if (diff < 0)
+	    inc = -inc;
+
+	  if (adj->value + inc <= adj->lower
+	      || adj->value + inc >= adj->upper - adj->page_size)
+	    month_view->drag.at_edge = t;
+
+	  gtk_adjustment_set_value
+	    (adj, CLAMP (adj->value + inc,
+			 adj->lower, adj->upper - adj->page_size));
+	}
+
+      scroll (hadj, dx, month_view->width, dx_share);
+      scroll (vadj, dy, month_view->height, dy_share);
+    }
+
+ out:
+  month_view->drag.x = x;
+  month_view->drag.y = y;
+
   return TRUE;
 }
 
@@ -1015,58 +1177,16 @@ motion_notify_event (GtkWidget *widget, GdkEventMotion *event,
     /* This is the start of a drag event.  */
     {
       month_view->drag.dragging = TRUE;
-      month_view->drag.last_flip = 0;
+      month_view->drag.at_edge = 0;
       month_view->drag.x_origin = event->x_root;
       month_view->drag.y_origin = event->y_root;
+      month_view->drag.x = event->x;
+      month_view->drag.y = event->y;
+
+      g_assert (! month_view->drag.motion_timer);
+      month_view->drag.motion_timer
+	= g_timeout_add (1000 / FPS, (GSourceFunc) process_motion, month_view);
     }
-  else
-    {
-      GtkWidget *viewport = GTK_BIN (month_view->scrolled_window)->child;
-
-      int x, y;
-      gtk_widget_translate_coordinates (month_view->draw, viewport,
-					event->x, event->y, &x, &y);
-      if (x < 0 || y < 0
-	  || x >= viewport->allocation.width
-	  || y >= viewport->allocation.height)
-	/* The mouse has gone outside of the viewport.  Do automatic
-	   scrolling.  */
-	{
-	  if (! month_view->drag.page_timer)
-	    month_view->drag.page_timer
-	      = g_timeout_add (100, (GSourceFunc) page_flip, month_view);
-	}
-      else if (month_view->drag.page_timer)
-	/* The mouse has returned inside the viewport.  Remove
-	   automatic scrolling.  */
-	{
-	  g_source_remove (month_view->drag.page_timer);
-	  month_view->drag.page_timer = 0;
-	  month_view->drag.last_flip = 0;
-	}
-
-      void scroll_by (GtkAdjustment *adj, gdouble delta, int dimension)
-	{
-	  /* Current position of scroll bar as a percentage.  */
-	  gdouble pos = (adj->value - adj->lower)
-	    / (adj->upper - adj->lower);
-	  /* New position of scroll bar as a percentage.  */
-	  gdouble new_pos = (pos * dimension + delta) / dimension;
-
-	  gtk_adjustment_set_value
-	    (adj, CLAMP (new_pos * (adj->upper - adj->lower) + adj->lower,
-			 adj->lower, adj->upper - adj->page_size));
-	}
-
-      scroll_by (month_view->vadj, - (event->y_root - month_view->drag.y),
-		 month_view->height);
-      scroll_by (month_view->hadj, - (event->x_root - month_view->drag.x),
-		 month_view->width);
-    }
-
-  month_view->drag.x = event->x_root;
-  month_view->drag.y = event->y_root;
-  month_view->drag.last_motion = event->time;
 
   return TRUE;
 }
@@ -1078,10 +1198,10 @@ button_release_event (GtkWidget *widget, GdkEventButton *event,
   gboolean was_dragging = month_view->drag.dragging;
   month_view->drag.dragging = FALSE;
 
-  if (month_view->drag.page_timer)
+  if (month_view->drag.motion_timer)
     {
-      g_source_remove (month_view->drag.page_timer);
-      month_view->drag.page_timer = 0;
+      g_source_remove (month_view->drag.motion_timer);
+      month_view->drag.motion_timer = 0;
     }
 
   int col, row;
@@ -1091,7 +1211,7 @@ button_release_event (GtkWidget *widget, GdkEventButton *event,
   if (day < 0 || day >= 7 * month_view->weeks)
     return FALSE;
 
-  if (event->button == 1)
+  if (event->button == 1 && ! was_dragging)
     {
       struct day *c = &month_view->day[day];
 
@@ -1104,12 +1224,8 @@ button_release_event (GtkWidget *widget, GdkEventButton *event,
       tm.tm_isdst = -1;
 
       if (day == month_view->focused_day)
-	{
-	  if (! was_dragging)
-	    /* The user clicked on the focused day and there was no drag
-	       motion.  Zoom to that day.  */
-	    set_time_and_day_view (mktime (&tm));
-	}
+	/* The user clicked on the focused day.  Zoom to that day.  */
+	set_time_and_day_view (mktime (&tm));
       else
 	gtk_view_set_time (GTK_VIEW (month_view), mktime (&tm));
 
