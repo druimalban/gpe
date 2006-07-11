@@ -1,3 +1,7 @@
+2006-07-11  Florian Boor <florian.boor@kernelconcepts.de>
+
+	* Fix broken desktop file.
+
 2006-07-05  Florian Boor <florian.boor@kernelconcepts.de>
 
 	* Some updates to support Maemo 2.0-
