@@ -53,8 +53,8 @@ pixmapsdir = $(datadir)/gpe-timesheet
 pixmaps_extradir = $(datadir)/pixmaps
 
 
-EXTRA_DIST = $(desktop_DATA) \
-             $(service_DATA) \
+EXTRA_DIST = gpe-timesheet.desktop.in hildon/gpe-timesheet.desktop.in \
+             hildon/com.nokia.gpe-timesheet.service.in \
              $(pixmaps_extra_DATA) \
              intltool-extract.in \
              intltool-merge.in \

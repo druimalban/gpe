@@ -1,5 +1,8 @@
 2006-07-11  Florian Boor <florian.boor@kernelconcepts.de>
 
+	* Release version 0.31
+	* Some more dist fixes: Make sure the correct files are shipped and
+	  i18n stuff gets updated.
 	* Some fixes to pass distcheck
 	* Prepare release 0.31
 	* Fix broken desktop file.
