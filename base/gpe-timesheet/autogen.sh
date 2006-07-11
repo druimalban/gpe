@@ -17,8 +17,6 @@ intltoolize --version < /dev/null > /dev/null 2>&1 || {
   DIE=1
 }
 
-aclocal $ACLOCAL_FLAGS
-
 if test "$GETTEXTIZE"; then
  echo "Creating $dr/aclocal.m4 ..."
  test -r aclocal.m4 || touch aclocal.m4
@@ -27,12 +25,12 @@ if test "$GETTEXTIZE"; then
  echo "Making aclocal.m4 writable ..."
  test -r aclocal.m4 && chmod u+w aclocal.m4
 fi
-
 echo "Running intltoolize..."
-intltoolize --copy --automake --force
+intltoolize --copy --automake
 
 libtoolize --copy --force
 
+aclocal $ACLOCAL_FLAGS
 
 automake -a $am_opt
 autoconf

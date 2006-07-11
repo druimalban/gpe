@@ -2,10 +2,10 @@
 Encoding=UTF-8
 _Name=Timesheet
 _Comment=GPE Timesheet
-Exec=gpe-todo
+Exec=gpe-timesheet
 Terminal=false
 Type=Application
-Icon=gpe-todo.png
+Icon=gpe-timesheet.png
 Categories=Application;PIM;Office;GPE;
 StartupNotify=true
 X-SingleInstance=true

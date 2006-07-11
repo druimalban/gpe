@@ -1,5 +1,7 @@
 2006-07-11  Florian Boor <florian.boor@kernelconcepts.de>
 
+	* Some fixes to pass distcheck
+	* Prepare release 0.31
 	* Fix broken desktop file.
 
 2006-07-05  Florian Boor <florian.boor@kernelconcepts.de>

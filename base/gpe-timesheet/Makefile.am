@@ -66,6 +66,7 @@ EXTRA_DIST = $(desktop_DATA) \
              debian/rules \
              debian/docs \
              debian/dirs \
+             gpe-timesheet.desktop.in.in \
              hildon/gpe-timesheet.desktop.in.in \
              hildon/com.nokia.gpe-timesheet.service.in \
              hildon/gpe-timesheet.png
