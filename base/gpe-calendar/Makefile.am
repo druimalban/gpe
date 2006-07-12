@@ -43,7 +43,8 @@ gpe_calendar_SOURCES = main.c						\
 		       calendar-delete-dialog.c				\
 		       calendar-delete-dialog.h				\
 		       calendars-dialog.c calendars-dialog.h		\
-		       calendar-update.c calendar-update.h
+		       calendar-update.c calendar-update.h		\
+		       pannedwindow.c pannedwindow.h
 
 if HILDON
 

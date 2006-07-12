@@ -1,3 +1,51 @@
+2006-07-12  Neal H. Walfield  <neal@gnu.org>
+
+	* pannedwindow.h: New file.
+	* pannedwindow.c: New file.
+	* Makefile.am (gpe_calendar_SOURCES): Add pannedwindow.h and
+	pannedwindow.c.
+	* month_view.c: Include "pannedwindow.h".
+	(struct _GtkMonthView): Remove fields last_expose,
+	scrolled_window, hadj, vadj and drag.  Add fields panned_window
+	and title_area.
+	(scroll_to_focused_day): If in do_scroll ADJ is NULL, return.
+	Correctly find the viewport.
+	(gtk_month_view_set_time): Check if the window is panning using
+	panned_window_is_panning.
+	(update_extents_hard): Correctly find the viewport.  Only scroll
+	to the focused day if the window is not panning.
+	(FPS): Don't define.
+	(process_motion): Remove function.
+	(motion_notify_event): Remove function.
+	(edge_flip): New function.
+	(button_release_event): Remove panning related code.  Use
+	panned_window_is_panning to detect if the window was panning.
+	Return TRUE if we handled the event, FALSE otherwise.
+	(gtk_month_view_new): Create a PannedWindow and add the
+	GtkDrawingArea to that.  Don't listen for GDK_BUTTON1_MOTION_MASK
+	events.  Set the viewport's shadow type to none.
+
+	(gtk_month_view_unrealize): New function.
+	(gtk_month_view_map): Likewise.
+	(gtk_month_view_unmap): Likewise.
+	(gtk_month_view_expose): Likewise.
+	(gtk_month_view_base_class_init): Assign the above new functions
+	to their appropriate slots in the class structure.
+	(gtk_month_view_realize): Create MONTH_VIEW->TITLE_AREA.
+	(update_extents): Invalidate MONTH_VIEW->TITLE_AREA.
+	(draw_expose_event): Break rendering code out of this function and
+	place it...
+	(render): ... here, in this new function.  Paint a black line at
+	the bottom of the title bar area.
+	(gtk_month_view_expose): New function.
+	(hadjustment_value_changed): New function.
+	(reload_events_hard): Pass -1 to gtk_month_view_draw_focus.
+	Invalidate MONTH_VIEW->TITLE_AREA.
+	(size_allocate): Move MONTH_VIEW->TITLE_AREA appropriately.
+
+	(button_press_event): Simply and just use gtk_view_set_date
+	instead of gtk_view_set_time.
+
 2006-07-06  Neal H. Walfield  <neal@gnu.org>
 
 	* month_view.c (size_allocate): Only call update_extents_hard if
