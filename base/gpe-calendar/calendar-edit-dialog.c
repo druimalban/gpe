@@ -1,4 +1,4 @@
-/* calendar-edit-dialog.h - Calendar edit dialog implementation.
+/* calendar-edit-dialog.c - Calendar edit dialog implementation.
    Copyright (C) 2006 Neal H. Walfield <neal@walfield.org>
 
    This file is part of GPE.
@@ -20,6 +20,7 @@
 #include <gpe/event-db.h>
 #include <gdk/gdk.h>
 #include <gpe/colordialog.h>
+#include <gpe/spacing.h>
 
 #include "calendar-edit-dialog.h"
 #include "calendars-widgets.h"
@@ -252,19 +253,25 @@ calendar_edit_dialog_init (GTypeInstance *instance, gpointer klass)
   gtk_window_set_title (GTK_WINDOW (instance), _("Calendar: New Calendar"));
   gtk_window_set_position (GTK_WINDOW (instance),
 			   GTK_WIN_POS_CENTER_ON_PARENT);
+  if (gdk_screen_width() > 400) 
+    gtk_window_set_default_size (GTK_WINDOW (instance), 360, 420);
+  else  
+    gtk_window_set_default_size (GTK_WINDOW (instance), 230, 300);
 
-  /* A frame.  */
-  GtkWidget *frame = gtk_frame_new (NULL);
-  gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_NONE);
-  gtk_container_set_border_width (GTK_CONTAINER (frame), 6);
-  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (d)->vbox), GTK_WIDGET (frame),
+  /* A scrolled window. */
+  GtkWidget *sw = gtk_scrolled_window_new (NULL, NULL);
+  gtk_container_set_border_width (GTK_CONTAINER (sw), gpe_get_border());
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw),
+                                  GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (d)->vbox), GTK_WIDGET (sw),
 		      TRUE, TRUE, 0);
-  gtk_widget_show (frame);
+  gtk_widget_show (sw);
 
   /* Body box.  */
-  GtkBox *body = GTK_BOX (gtk_vbox_new (FALSE, 2));
+  GtkBox *body = GTK_BOX (gtk_vbox_new (FALSE, gpe_get_boxspacing()));
   gtk_container_set_border_width (GTK_CONTAINER (body), 2);
-  gtk_container_add (GTK_CONTAINER (frame), GTK_WIDGET (body));
+  gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (sw), GTK_WIDGET (body));
+  gtk_viewport_set_shadow_type (GTK_VIEWPORT (GTK_WIDGET(body)->parent), GTK_SHADOW_NONE);
   gtk_widget_show (GTK_WIDGET (body));
 
   /* Title.  */

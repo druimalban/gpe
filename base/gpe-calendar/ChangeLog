@@ -1,3 +1,10 @@
+2006-07-13  Florian Boor  <florian.boor@kernelconcepts.de>
+
+	* calendar-edit-dialog.c (calendar_edit_dialog_init):
+	Some UI modifications: Set default size depending on screen size,
+	use scrolled window instead of a frame. This should improve
+	behaviour on small screens.
+
 2006-07-12  Neal H. Walfield  <neal@gnu.org>
 
 	* pannedwindow.h: New file.
