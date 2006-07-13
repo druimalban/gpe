@@ -494,7 +494,21 @@ calendar_consider (void)
 
       gtk_widget_show (GTK_WIDGET (calendar_container));
 
+      GDate viewing;
+      g_date_set_time_t (&viewing, viewtime);
+
       calendar = GTK_EVENT_CAL (gtk_event_cal_new ());
+
+      /* Set the time.  We set the day to the first as we know that is
+	 always valid.  If we set the month and the current day is not
+	 valid, GtkCalendar complains.  Pah.  */
+      gtk_calendar_select_day (GTK_CALENDAR (calendar), 1);
+      gtk_calendar_select_month (GTK_CALENDAR (calendar),
+				 g_date_get_month (&viewing),
+				 g_date_get_year (&viewing));
+      gtk_calendar_select_day (GTK_CALENDAR (calendar),
+			       g_date_get_day (&viewing));
+
       g_object_add_weak_pointer (G_OBJECT (calendar), (gpointer *) &calendar);
       GTK_WIDGET_UNSET_FLAGS (calendar, GTK_CAN_FOCUS);
       gtk_calendar_set_display_options (GTK_CALENDAR (calendar),
