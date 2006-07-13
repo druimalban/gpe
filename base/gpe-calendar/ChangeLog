@@ -1,5 +1,27 @@
 2006-07-13  Neal H. Walfield  <neal@gnu.org>
 
+	* main.c
+	(main_box): New variable.
+	(date_toolbar): Likewise.
+	(datesel_item): Likewise.
+	(main_toolbar_width): Likewise.
+	(main_toolbar): Likewise.
+	(toolbar_size_allocate): New function.
+	(main): Replace uses of the local variable win with main_box.
+	Connect toolbar_size_allocate to TOOLBAR's "size-allocate" signal.
+	Don't display an icon for the calendar manager.  Always put
+	DATESEL in a tool item and save it in DATESEL_ITEM.  Calculate the
+	desired width of the toolbar and save it in MAIN_TOOLBAR_WIDTH.
+
+	(today_button): New variable.
+	(current_view_consider): Show or hide TODAY_BUTTON as appropriate.
+	(main): Save the today button in TODAY_BUTTON.
+
+	(event_list_consider): When destroying EVENT_LIST, set it to NULL.
+	Reported by Florian Boor <florian@kernelconcepts.de>.
+
+2006-07-13  Neal H. Walfield  <neal@gnu.org>
+
 	* event-ui.c (build_edit_event_window): Always connect
 	note_time_change to S->START_TIME's "changed" signal.
 
