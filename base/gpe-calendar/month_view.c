@@ -76,6 +76,9 @@ struct _GtkMonthView
   /* If an event reload is pending.  */
   gboolean pending_reload;
   gboolean pending_update_extents;
+
+  /* Called at midnight each day.  */
+  guint day_changed;
 };
 
 static const int zoom_factors[] = { 4, 7, 12 };
@@ -278,6 +281,42 @@ gtk_month_view_unrealize (GtkWidget *widget)
   GTK_WIDGET_CLASS (parent_class)->unrealize (widget);
 }
 
+static gboolean day_changed (GtkMonthView *month_view);
+
+static void
+setup_day_changed (GtkMonthView *month_view)
+{
+  if (month_view->day_changed)
+    g_source_remove (month_view->day_changed);
+
+  time_t now = time (NULL);
+
+  GDate tomorrow;
+  g_date_set_time_t (&tomorrow, now);
+  g_date_add_days (&tomorrow, 1);
+  struct tm tm;
+  g_date_to_struct_tm (&tomorrow, &tm);
+
+  month_view->day_changed = g_timeout_add ((mktime (&tm) - now + 1) * 1000,
+					   (GSourceFunc) day_changed,
+					   month_view);
+}
+
+static gboolean
+day_changed (GtkMonthView *month_view)
+{
+  setup_day_changed (month_view);
+
+  /* This is gratuitous if the current day was not shown and the
+     current day will not be shown but it's relatively cheap so it
+     shouldn't matter.  */
+  draw_cache_destroy (month_view);
+  gdk_window_invalidate_rect (GTK_WIDGET (month_view->draw)->window,
+			      NULL, FALSE);
+
+  return FALSE;
+}
+
 static void
 gtk_month_view_map (GtkWidget *widget)
 {
@@ -287,6 +326,8 @@ gtk_month_view_map (GtkWidget *widget)
   /* Show the title area after the main window to make sure it is on
      top.  */
   gdk_window_show (month_view->title_area);
+
+  setup_day_changed (month_view);
 }
 
 static void
@@ -295,6 +336,13 @@ gtk_month_view_unmap (GtkWidget *widget)
   GtkMonthView *month_view = GTK_MONTH_VIEW (widget);
 
   gdk_window_hide (month_view->title_area);
+
+  if (month_view->day_changed)
+    {
+      g_source_remove (month_view->day_changed);
+      month_view->day_changed = 0;
+    }
+
   GTK_WIDGET_CLASS (parent_class)->unmap (widget);
 }
 
@@ -343,18 +391,35 @@ gtk_month_view_cell_box (GtkMonthView *month_view, int col, int row,
 
   if (color)
     {
-      GdkColor c;
-
       *color = gdk_gc_new (month_view->draw->window);
       gdk_gc_copy (*color, month_view->draw->style->black_gc);
 
-      if ((week_starts_sunday && (col == 0 || col == 6))
-	  || (! week_starts_sunday && col >= 5))
-	/* Weekend.  */
-	gdk_color_parse ("light salmon", &c);
+      GDate today;
+      g_date_set_time_t (&today, time (NULL));
+      GdkColor c;
+      if (g_date_compare (&today,
+			  &month_view->day[row * 7 + col].date) == 0)
+	/* Today, "lemon chiffon".  */
+	{
+	  c.red = 255 << 8;
+	  c.green = 250 << 8;
+	  c.blue = 205 << 8;
+	}
+      else if ((week_starts_sunday && (col == 0 || col == 6))
+	       || (! week_starts_sunday && col >= 5))
+	/* Weekend, "light salmon".  */
+	{
+	  c.red = 255 << 8;
+	  c.green = 160 << 8;
+	  c.blue = 122 << 8;
+	}
       else
-	/* Weekday.  */
-	gdk_color_parse ("palegoldenrod", &c);
+	/* Weekday, "palegoldenrod".  */
+	{
+	  c.red = 238 << 8;
+	  c.green = 232 << 8;
+	  c.blue = 170 << 8;
+	}
 
       GdkColormap *colormap
 	= gdk_window_get_colormap (month_view->draw->window);
@@ -381,30 +446,30 @@ gtk_month_view_draw_focus (GtkMonthView *month_view, int old)
 {
   g_assert (old < month_view->weeks * 7);
 
-  if (! month_view->draw_cache)
-    return;
-
-  int x, y, w, h;
-
-  if (old != -1)
-    /* Erase the old focus area.  */
+  if (month_view->draw_cache)
     {
-      GdkGC *bg;
-      gtk_month_view_cell_box (month_view, old % 7, old / 7,
-			       &x, &y, &w, &h, &bg);
-      gdk_draw_rectangle (month_view->draw_cache, bg, FALSE,
-			  x, y + 1, w - 2, h - 2);
-    }
+      int x, y, w, h;
 
-  /* Draw the new focus area.  */
-  gtk_month_view_cell_box (month_view,
-			   month_view->focused_day % 7,
-			   month_view->focused_day / 7,
-			   &x, &y, &w, &h, NULL);
-  GdkGC *blue_gc = pen_new (month_view->draw, 0, 0, 0xffff);
-  gdk_draw_rectangle (month_view->draw_cache, blue_gc, FALSE,
-		      x, y + 1, w - 2, h - 2);
-  gdk_gc_unref (blue_gc);
+      if (old != -1)
+	/* Erase the old focus area.  */
+	{
+	  GdkGC *bg;
+	  gtk_month_view_cell_box (month_view, old % 7, old / 7,
+				   &x, &y, &w, &h, &bg);
+	  gdk_draw_rectangle (month_view->draw_cache, bg, FALSE,
+			      x, y + 1, w - 2, h - 2);
+	}
+
+      /* Draw the new focus area.  */
+      gtk_month_view_cell_box (month_view,
+			       month_view->focused_day % 7,
+			       month_view->focused_day / 7,
+			       &x, &y, &w, &h, NULL);
+      GdkGC *blue_gc = pen_new (month_view->draw, 0, 0, 0xffff);
+      gdk_draw_rectangle (month_view->draw_cache, blue_gc, FALSE,
+			  x, y + 1, w - 2, h - 2);
+      gdk_gc_unref (blue_gc);
+    }
 
   gdk_window_invalidate_rect (GTK_WIDGET (month_view->draw)->window,
 			      NULL, FALSE);
@@ -590,7 +655,6 @@ render (GtkMonthView *month_view)
   /* Trigger any pending expose events.  If there were any, then just
      return.  */
   gdk_window_thaw_updates (month_view->draw->window);
-  gdk_window_process_updates (month_view->draw->window, FALSE);
 
   GtkWidget *widget = GTK_WIDGET (month_view);
 
@@ -677,8 +741,7 @@ render (GtkMonthView *month_view)
     }
   g_object_unref (pl);
 
-
-  /* Paint the events.  */
+  /* Paint the cells and events.  */
   gint row;
   for (row = 0; row < month_view->weeks; row ++)
     {
@@ -694,7 +757,7 @@ render (GtkMonthView *month_view)
 	  gint x, w;
 
 	  GdkGC *bg;
-	  gtk_month_view_cell_box (month_view, col, 0,
+	  gtk_month_view_cell_box (month_view, col, row,
 				   &x, NULL, &w, NULL, &bg);
 
 	  pango_layout_set_width (pl_evt, w * PANGO_SCALE);
@@ -739,14 +802,39 @@ render (GtkMonthView *month_view)
 	      if (! event_get_visible (ev))
 		continue;
 
-	      char *s = event_get_summary (ev);
+	      char *time = NULL;
+	      if (! event_get_untimed (ev))
+		{
+		  time_t s = event_get_start (ev);
+		  GDate start;
+		  g_date_set_time_t (&start, s);
+
+		  if (g_date_compare (&start, &c->date) == 0)
+		    {
+		      struct tm tm;
+		      localtime_r (&s, &tm);
+		      time = strftime_strdup_utf8_locale (_("%-H:%M"), &tm);
+		    }
+		}
+
+	      char *text;
+	      char *summary = event_get_summary (ev);
+	      if (time)
+		{
+		  text = g_strdup_printf ("%s %s", time, summary);
+		  g_free (summary);
+		  g_free (time);
+		}
+	      else
+		text = summary;
+
 	      /* Replace '\n''s with spaces.  */
 	      char *t;
-	      for (t = strchr (s, '\n'); t; t = strchr (t, '\n'))
+	      for (t = strchr (text, '\n'); t; t = strchr (t, '\n'))
 		*t = ' ';
 
-	      pango_layout_set_text (pl_evt, s, -1);
-	      g_free (s);
+	      pango_layout_set_text (pl_evt, text, -1);
+	      g_free (text);
 
 	      pango_layout_get_pixel_extents (pl_evt, NULL, &pr);
 	      if (top + pr.height > y + h && ! trying_no_wrap)
@@ -910,10 +998,6 @@ first_day (GDate *date, int *weeks)
 static void
 reload_events_hard (GtkMonthView *month_view)
 {
-  time_t t = gtk_view_get_time (GTK_VIEW (month_view));
-  struct tm tm_start;
-  guint year, month, day;
-
   /* Destroy outstanding events.  */
   int i;
   for (i = 0; i < MAX_DAYS; i ++)
@@ -924,51 +1008,34 @@ reload_events_hard (GtkMonthView *month_view)
 	month_view->day[i].events = NULL;
       }
 
-  localtime_r (&t, &tm_start);
-  year = tm_start.tm_year + 1900;
-  month = tm_start.tm_mon;
-  day = tm_start.tm_mday;
+  GDate focused_day;
+  gtk_view_get_date (GTK_VIEW (month_view), &focused_day);
 
   /* 0 => Monday.  */
-  GDate period_start;
-  g_date_set_dmy (&period_start, 1, month + 1, year);
+  GDate period_start = focused_day;
+  g_date_set_day (&period_start, 1);
   first_day (&period_start, &month_view->weeks);
 
   GDate period_end = period_start;
   /* The day following the last day.  */
   g_date_add_days (&period_end, month_view->weeks * 7);
 
-  struct tm start_tm;
-  memset (&start_tm, 0, sizeof (start_tm));
-  start_tm.tm_year = g_date_get_year (&period_start) - 1900;
-  start_tm.tm_mon = g_date_get_month (&period_start) - 1;
-  start_tm.tm_mday = g_date_get_day (&period_start);
-  start_tm.tm_isdst = -1;
-
-  struct tm end_tm;
-  memset (&end_tm, 0, sizeof (end_tm));
-  end_tm.tm_year = g_date_get_year (&period_end) - 1900;
-  end_tm.tm_mon = g_date_get_month (&period_end) - 1;
-  end_tm.tm_mday = g_date_get_day (&period_end);
-  end_tm.tm_isdst = -1;
-
   /* Initialize the days.  */
   GDate d;
   for (i = 0, d = period_start;
        i < month_view->weeks * 7;
        i ++, g_date_add_days (&d, 1))
-    {
-      month_view->day[i].date = d;
+    month_view->day[i].date = d;
 
-      if (tm_start.tm_mday == g_date_get_day (&d)
-	  && tm_start.tm_mon == g_date_get_month (&d) - 1)
-	{
-	  month_view->focused_day = i;
-	  gtk_month_view_draw_focus (month_view, -1);
-	}
-    }
+  month_view->focused_day
+    = g_date_days_between (&period_start, &focused_day);
 
   /* Get the events for the period.  */
+  struct tm start_tm;
+  g_date_to_struct_tm (&period_start, &start_tm);
+  struct tm end_tm;
+  g_date_to_struct_tm (&period_end, &end_tm);
+
   GSList *events
     = event_db_list_for_period (event_db,
 				mktime (&start_tm), mktime (&end_tm) - 1);
@@ -1020,10 +1087,9 @@ reload_events_hard (GtkMonthView *month_view)
 			      NULL, FALSE);
 }
 
-/* The viewport's size allocation.  */
 static void
-size_allocate (GtkWidget *widget, GtkAllocation *allocation,
-	       GtkMonthView *month_view)
+viewport_size_allocate (GtkWidget *widget, GtkAllocation *allocation,
+			GtkMonthView *month_view)
 {
   month_view->pending_update_extents = TRUE;
 
@@ -1250,31 +1316,29 @@ GtkWidget *
 gtk_month_view_new (time_t time)
 {
   GtkMonthView *month_view;
-  GtkWidget *panned_window;
 
   month_view = GTK_MONTH_VIEW (g_object_new (gtk_month_view_get_type (),
 					     NULL));
   GTK_WIDGET_SET_FLAGS (month_view, GTK_CAN_FOCUS);
   gtk_widget_add_events (GTK_WIDGET (month_view), GDK_KEY_PRESS_MASK);
 
-  GtkAdjustment *hadj = GTK_ADJUSTMENT (gtk_adjustment_new (0, 0, 0, 0, 0, 0));
-  GtkAdjustment *vadj = GTK_ADJUSTMENT (gtk_adjustment_new (0, 0, 0, 0, 0, 0));
-
-  panned_window = panned_window_new ();
+  GtkWidget *panned_window = panned_window_new ();
   month_view->panned_window = PANNED_WINDOW (panned_window);
   g_signal_connect (G_OBJECT (month_view->panned_window), "edge-flip",
 		    G_CALLBACK (edge_flip), month_view);
+  gtk_box_pack_start (GTK_BOX (month_view), panned_window, TRUE, TRUE, 0);
+  gtk_widget_show (panned_window);
+
   GtkScrolledWindow *scrolled_window
     = GTK_SCROLLED_WINDOW (GTK_BIN (panned_window)->child);
-  gtk_scrolled_window_set_hadjustment (scrolled_window, hadj);
-  gtk_scrolled_window_set_vadjustment (scrolled_window, vadj);
-  gtk_box_pack_start (GTK_BOX (month_view), panned_window, TRUE, TRUE, 0);
-  g_signal_connect (G_OBJECT (hadj), "value-changed",
-		    G_CALLBACK (hadjustment_value_changed), month_view);
   gtk_scrolled_window_set_policy (scrolled_window,
 				  GTK_POLICY_AUTOMATIC,
 				  GTK_POLICY_AUTOMATIC);
-  gtk_widget_show (panned_window);
+
+  GtkAdjustment *hadj = GTK_ADJUSTMENT (gtk_adjustment_new (0, 0, 0, 0, 0, 0));
+  gtk_scrolled_window_set_hadjustment (scrolled_window, hadj);
+  g_signal_connect (G_OBJECT (hadj), "value-changed",
+		    G_CALLBACK (hadjustment_value_changed), month_view);
 	  
   month_view->draw = gtk_drawing_area_new ();
   gtk_widget_set_app_paintable (month_view->draw, TRUE);
@@ -1293,7 +1357,7 @@ gtk_month_view_new (time_t time)
   GtkWidget *viewport = GTK_BIN (GTK_BIN (panned_window)->child)->child;
   gtk_viewport_set_shadow_type (GTK_VIEWPORT (viewport), GTK_SHADOW_NONE);
   g_signal_connect (G_OBJECT (viewport), "size-allocate",
-		    G_CALLBACK (size_allocate), month_view);
+		    G_CALLBACK (viewport_size_allocate), month_view);
 
   gtk_view_set_time (GTK_VIEW (month_view), time);
 

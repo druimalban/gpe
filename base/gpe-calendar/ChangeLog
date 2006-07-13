@@ -1,5 +1,78 @@
 2006-07-13  Neal H. Walfield  <neal@gnu.org>
 
+	* week_view.c (struct _GtkWeekView): Add field day_changed.
+	(map): New function.
+	(unmap): Likewise.
+	(gtk_week_view_base_class_init): Set the appropriate fields in
+	WIDGET_CLASS to the above functions.
+	(setup_day_changed): New function.
+	(day_changed): Likewise.
+	(draw_expose_event): Paint the current day "lemon chiffon".
+	* month_view.c (struct _GtkMonthView): Add field day_changed.
+	(setup_day_changed): New function.
+	(day_changed): New function.
+	(gtk_month_view_map): Call setup_day_changed.
+	(gtk_month_view_unmap): If MONTH_VIEW->DAY_CHANGED is non-zero,
+	remove the source and clear MONTH_VIEW->DAY_CHANGED.
+	(gtk_month_view_cell_box): If the cell represents the current day,
+	set the background color to "lemon chiffon".
+	(render): Don't call gdk_window_process_updates.  When fetching
+	the background color, pass the correct row.
+
+	* day_view.c: Include "pannedwindow.h".
+	(struct _DayView): Change field appointment_area from a GtkLayout *
+	to a GtkWidget *.
+	(realize): New function.
+	(button_release_event): New function
+	(day_view_size_allocate): Remove function.
+	(day_view_base_class_init): Set the appropriate fields in
+	WIDGET_CLASS to the above new functions.  Don't set
+	WIDGET_CLASS->SIZE_ALLOCATE.
+	(size_request): Remove function.
+	(viewport_size_allocate): New function.
+	(day_view_init): Make DAY_VIEW->APPOINTMENT_WINDOW a PannedWindow.
+	Make DAY_VIEW->APPOINTMENT_AREA a GtkDrawingArea.  Connect
+	button_release_event to DAY_VIEW->APPOINTMENT_AREA's
+	"button-release-event" signal.  Don't connect size_request to
+	DAY_VIEW->APPOINTMENT_AREA's "size-request" signal.  Add
+	DAY_VIEW->APPOINTMENT_AREA to the scrolled window.  Connect
+	viewport_size_allocate to the viewport's "size-allocate" signal.
+	(update_extents): Don't call gtk_layout_set_size, call
+	gtk_widget_set_size_request to set DAY_VIEW->APPOINTMENT_AREA's size.
+	(appointment_area_expose_event): Set DRAWABLE to WIDGET->WINDOW.
+	(find_event): New function.
+	(button_press_event): Use it.  If we popup a menu, return TRUE.
+	Don't display the event menu.
+	(reload_events_hard): Connect button_release_event to
+	DAY_VIEW->REMINDER_AREA's "button-release-event" signal.
+	* week_view.c: Include "pannedwindow.h".
+	(struct _GtkWeekView): Remove field scroller.  Add field
+	panned_window.
+	(button_press_event): Only process the right button click here.
+	Move the rest of the functionality...
+	(button_release_event): ... to this new function.
+	(gtk_week_view_new): Create a panned window instead of a scrolled
+	window.  Listen for GDK_BUTTON_RELEASE_MASK events on
+	WEEK_VIEW->DRAW and don't listen for GDK_KEY_PRESS_MASK events.
+	Attach button_release_event to WEEK_VIEW->DRAW's
+	"button-release-event" signal.
+
+	* week_view.c (scroll_to_focused_day): New function.
+	(gtk_week_view_set_time): Call scroll_to_focused_day if
+	appropriate.
+
+	* month_view .c (render) Preface the summary with the current
+	time.  Suggested by Koen Kooi <koen@dominion.kabel.utwente.nl>.
+
+	(gtk_month_view_draw_focus): Always invalidate
+	MONTH_VIEW->DRAW->WINDOW.
+	(reload_events_hard): Use GDate's where possible.
+	(size_allocate): Rename from this...
+	(viewport_size_allocate): ... to this.  Update users.
+	(gtk_month_view_new): Don't create the vertical adjustments.
+
+2006-07-13  Neal H. Walfield  <neal@gnu.org>
+
 	* pannedwindow.c (panned_window_finalize): Remove the weak pointer
 	reference to PRIV->ORIGINAL_WINDOW.
 	(button_press_event): If PRIV->ORIGINAL_WINDOW is non-NULL, remove

@@ -15,6 +15,7 @@
 
 #include <gpe/event-db.h>
 
+#include "pannedwindow.h"
 #include "view.h"
 #include "globals.h"
 #include "week_view.h"
@@ -43,7 +44,7 @@ struct _GtkWeekView
   gboolean have_extents;
 
   GtkWidget *draw;
-  GtkWidget *scroller;
+  PannedWindow *panned_window;
 
   /* Width required by the banners, valid if HAVE_EXTENTS is true.  */
   gint banner_width;
@@ -58,6 +59,9 @@ struct _GtkWeekView
 
   /* If an event reload is pending.  */
   gboolean pending_reload;
+
+  /* Called at midnight each day.  */
+  guint day_changed;
 };
 
 typedef struct
@@ -70,6 +74,8 @@ static void gtk_week_view_base_class_init (gpointer klass,
 static void gtk_week_view_init (GTypeInstance *instance, gpointer klass);
 static void gtk_week_view_dispose (GObject *obj);
 static void gtk_week_view_finalize (GObject *object);
+static void map (GtkWidget *widget);
+static void unmap (GtkWidget *widget);
 static gboolean gtk_week_view_key_press_event (GtkWidget *widget,
 					       GdkEventKey *k);
 static void gtk_week_view_set_time (GtkView *view, time_t time);
@@ -118,6 +124,8 @@ gtk_week_view_base_class_init (gpointer klass, gpointer klass_data)
   object_class->dispose = gtk_week_view_dispose;
 
   widget_class = GTK_WIDGET_CLASS (klass);
+  widget_class->map = map;
+  widget_class->unmap = unmap;
   widget_class->key_press_event = gtk_week_view_key_press_event;
 
   view_class = (GtkViewClass *) klass;
@@ -167,6 +175,97 @@ gtk_week_view_invalidate_day (GtkWeekView *week_view, gint i)
 			      week_view->width, day->height);
 }
 
+static gboolean day_changed (GtkWeekView *week_view);
+
+static void
+setup_day_changed (GtkWeekView *week_view)
+{
+  if (week_view->day_changed)
+    g_source_remove (week_view->day_changed);
+
+  time_t now = time (NULL);
+
+  GDate tomorrow;
+  g_date_set_time_t (&tomorrow, now);
+  g_date_add_days (&tomorrow, 1);
+  struct tm tm;
+  g_date_to_struct_tm (&tomorrow, &tm);
+
+  week_view->day_changed = g_timeout_add ((mktime (&tm) - now + 1) * 1000,
+					  (GSourceFunc) day_changed,
+					  week_view);
+}
+
+static gboolean
+day_changed (GtkWeekView *week_view)
+{
+  setup_day_changed (week_view);
+
+  gdk_window_invalidate_rect (GTK_WIDGET (week_view->draw)->window,
+			      NULL, FALSE);
+
+  return FALSE;
+}
+
+static void
+map (GtkWidget *widget)
+{
+  GtkWeekView *week_view = GTK_WEEK_VIEW (widget);
+
+  GTK_WIDGET_CLASS (parent_class)->map (widget);
+
+  setup_day_changed (week_view);
+}
+
+static void
+unmap (GtkWidget *widget)
+{
+  GtkWeekView *week_view = GTK_WEEK_VIEW (widget);
+
+  if (week_view->day_changed)
+    {
+      g_source_remove (week_view->day_changed);
+      week_view->day_changed = 0;
+    }
+
+  GTK_WIDGET_CLASS (parent_class)->unmap (widget);
+}
+
+static void
+scroll_to_focused_day (GtkWeekView *week_view)
+{
+  if (! GTK_WIDGET_REALIZED (week_view))
+    return;
+
+  GtkScrolledWindow *scrolled_window
+    = GTK_SCROLLED_WINDOW (GTK_BIN (week_view->panned_window)->child);
+  GtkAdjustment *adj
+    = gtk_scrolled_window_get_vadjustment (scrolled_window);
+  if (! adj)
+    return;
+
+  GtkWidget *viewport = GTK_BIN (scrolled_window)->child;
+
+  int top = week_view->days[week_view->focused_day].top;
+  int height = week_view->days[week_view->focused_day].height;
+
+  int v_top = week_view->draw->allocation.height
+    * adj->value / (adj->upper - adj->lower);
+  int v_height = viewport->allocation.height;
+
+  if (top < v_top + v_height / 8)
+    v_top = top - v_height / 8;
+  else if (top + height > v_top + 7 * v_height / 8)
+    v_top = top + height - v_height + v_height / 8;
+  else
+    return;
+
+  gtk_adjustment_set_value
+    (adj, CLAMP ((gdouble) v_top / week_view->draw->allocation.height
+		 * (adj->upper - adj->lower) + adj->lower,
+		 adj->lower, adj->upper - adj->page_size));
+}
+
 static void
 gtk_week_view_set_time (GtkView *view, time_t current)
 {
@@ -198,6 +297,9 @@ gtk_week_view_set_time (GtkView *view, time_t current)
 	  gtk_week_view_invalidate_day (week_view, week_view->focused_day);
 	  week_view->focused_day = n_tm.tm_yday - start_of_week;
 	  gtk_week_view_invalidate_day (week_view, week_view->focused_day);
+
+	  if (! panned_window_is_panning (week_view->panned_window))
+	    scroll_to_focused_day (week_view);
 	}
       return;
     }
@@ -216,7 +318,6 @@ draw_expose_event (GtkWidget *widget, GdkEventExpose *event, GtkWidget *wv)
 
   GdkDrawable *drawable = widget->window;
   GdkGC *black_gc;
-  GdkGC *blue_gc;
   GdkGC *yellow_gc;
   GdkGC *salmon_gc;
   GdkColor yellow;
@@ -228,7 +329,9 @@ draw_expose_event (GtkWidget *widget, GdkEventExpose *event, GtkWidget *wv)
   gboolean wide_mode = widget->allocation.width > widget->allocation.height;
   int i;
 
-  blue_gc = pen_new (widget, 0, 0, 0xffff);
+  GdkGC *blue_gc = pen_new (widget, 0, 0, 0xffff);
+  /* Today, "lemon chiffon".  */
+  GdkGC *lemon_gc = pen_new (widget, 255 << 8, 250 << 8, 205 << 8);
 
   colormap = gdk_window_get_colormap (widget->window);
   yellow_gc = gdk_gc_new (widget->window);
@@ -323,6 +426,9 @@ draw_expose_event (GtkWidget *widget, GdkEventExpose *event, GtkWidget *wv)
   if (wide_mode)
     text_width -= week_view->banner_width;
 
+  GDate today;
+  g_date_set_time_t (&today, time (NULL));
+
   /* Display each day.  */
   for (i = day_start; i <= day_end; i ++)
     {
@@ -336,7 +442,11 @@ draw_expose_event (GtkWidget *widget, GdkEventExpose *event, GtkWidget *wv)
       day->top = top;
 
       /* Color the day's background appropriately.  */
-      if (week_starts_sunday)
+      GdkColor c;
+      if (g_date_compare (&today,
+			  &week_view->days[i].date) == 0)
+	color = lemon_gc;
+      else if (week_starts_sunday)
 	color = i == 0 || i == 6 ? salmon_gc : yellow_gc;
       else
 	color = i >= 5 ? salmon_gc : yellow_gc;
@@ -687,57 +797,81 @@ gtk_week_view_key_press_event (GtkWidget *widget, GdkEventKey *k)
 }
 
 static gboolean
-button_press_event (GtkWidget *widget, GdkEventButton *event, GtkWidget *wv)
+button_press_event (GtkWidget *widget, GdkEventButton *event,
+		    GtkWeekView *week_view)
 {
-  GtkWeekView *week_view = GTK_WEEK_VIEW (wv);
-  guint y = event->y;
-  int day;
-  struct week_day *d;
+  /* Can't have pressed a button without having drawn the view at
+     least once.  */
+  g_assert (week_view->have_extents);
 
+  gtk_widget_grab_focus (GTK_WIDGET (week_view));
+
+  if (event->button == 3)
+    {
+      guint y = event->y;
+      int day;
+
+      /* Which day was clicked?  */
+      for (day = 0; day < 7; day ++)
+	if ((week_view->days[day].top <= y)
+	    && (week_view->days[day].top + week_view->days[day].height >= y))
+	  break;
+      if (day == 7)
+	/* Nothing valid... */
+	return FALSE;
+
+      struct week_day *d = &week_view->days[day];
+      gtk_menu_popup (day_popup (&d->date, d->events),
+		      NULL, NULL, NULL, NULL,
+		      event->button, event->time);
+
+      return TRUE;
+    }
+  
+  return FALSE;
+}
+
+static gboolean
+button_release_event (GtkWidget *widget, GdkEventButton *event,
+		      GtkWeekView *week_view)
+{
   gtk_widget_grab_focus (GTK_WIDGET (week_view));
 
   /* Can't have pressed a button without having drawn the view at
      least once.  */
   g_assert (week_view->have_extents);
 
-  /* Which day was clicked?  */
-  for (day = 0; day < 7; day ++)
-    if ((week_view->days[day].top <= y)
-	&& (week_view->days[day].top + week_view->days[day].height >= y))
-      break;
-  if (day == 7)
-    /* Nothing valid... */
-    return FALSE;
-
-  d = &week_view->days[day];
-  if (event->type == GDK_BUTTON_PRESS)
+  if (event->button == 1
+      && ! panned_window_is_panning (week_view->panned_window))
     {
-      if (event->button == 1)
-	{
-	  if (week_view->focused_day == day)
-	    /* This day is focused, zoom to the day view.  */
-	    {
-	      struct tm tm;
-	      g_date_to_struct_tm (&d->date, &tm);
-	      set_time_and_day_view (mktime (&tm));
-	    }
-	  else
-	    {
-	      struct tm tm;
-	      g_date_to_struct_tm (&d->date, &tm);
-	      gtk_view_set_time (GTK_VIEW (week_view), mktime (&tm));
+      guint y = event->y;
+      int day;
 
-	      /* In case the draw doesn't have the focus.  */
-	      gtk_widget_grab_focus (week_view->draw);
-	    }
+      /* Which day was clicked?  */
+      for (day = 0; day < 7; day ++)
+	if ((week_view->days[day].top <= y)
+	    && (week_view->days[day].top + week_view->days[day].height >= y))
+	  break;
+      if (day == 7)
+	/* Nothing valid... */
+	return FALSE;
+
+      if (week_view->focused_day == day)
+	/* This day is focused, zoom to the day view.  */
+	{
+	  struct tm tm;
+	  g_date_to_struct_tm (&week_view->days[day].date, &tm);
+
+	  set_time_and_day_view (mktime (&tm));
 	}
-      else if (event->button == 3)
-	gtk_menu_popup (day_popup (&d->date, d->events),
-			NULL, NULL, NULL, NULL,
-			event->button, event->time);
+      else
+	gtk_view_set_date (GTK_VIEW (week_view),
+			   &week_view->days[day].date);
+
+      return TRUE;
     }
   
-  return TRUE;
+  return FALSE;
 }
 
 GtkWidget *
@@ -749,25 +883,31 @@ gtk_week_view_new (time_t time)
   gtk_widget_add_events (GTK_WIDGET (week_view), GDK_KEY_PRESS_MASK);
   GTK_WIDGET_SET_FLAGS (week_view, GTK_CAN_FOCUS);
 
-  /* Create the scroller.  */
-  week_view->scroller = gtk_scrolled_window_new (NULL, NULL);
-  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (week_view->scroller),
+  /* Create the panned window.  */
+  week_view->panned_window = PANNED_WINDOW (panned_window_new ());
+  gtk_box_pack_start (GTK_BOX (week_view),
+		      GTK_WIDGET (week_view->panned_window),
+		      TRUE, TRUE, 0);
+  gtk_widget_show (GTK_WIDGET (week_view->panned_window));
+
+  GtkWidget *scrolled_window = GTK_BIN (week_view->panned_window)->child;
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window),
 				  GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-  gtk_box_pack_start (GTK_BOX (week_view), week_view->scroller, TRUE, TRUE, 0);
-  gtk_widget_show (week_view->scroller);
 
   /* Create the draw area.  */
   week_view->draw = gtk_drawing_area_new ();
   gtk_widget_add_events (GTK_WIDGET (week_view->draw),
-			 GDK_BUTTON_PRESS_MASK | GDK_KEY_PRESS_MASK);
+			 GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
   g_signal_connect (G_OBJECT (week_view->draw), "expose_event",
                     G_CALLBACK (draw_expose_event), week_view);
   g_signal_connect (G_OBJECT (week_view->draw), "size-allocate", 
 		    G_CALLBACK (resize), week_view);
   g_signal_connect (G_OBJECT (week_view->draw), "button-press-event",
 		    G_CALLBACK (button_press_event), week_view);
+  g_signal_connect (G_OBJECT (week_view->draw), "button-release-event",
+		    G_CALLBACK (button_release_event), week_view);
   gtk_scrolled_window_add_with_viewport
-    (GTK_SCROLLED_WINDOW (week_view->scroller), week_view->draw);
+    (GTK_SCROLLED_WINDOW (scrolled_window), week_view->draw);
   gtk_widget_show (week_view->draw);
 
   gtk_view_set_time (GTK_VIEW (week_view), time);

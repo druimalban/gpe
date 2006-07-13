@@ -27,6 +27,7 @@
 #include "day_view.h"
 #include "calendars-widgets.h"
 #include "event-menu.h"
+#include "pannedwindow.h"
 
 // #define DEBUG
 #ifdef DEBUG
@@ -431,7 +432,7 @@ struct _DayView
 
   /* The appointment drawing area (if present).  */
   GtkWidget *appointment_window;
-  GtkLayout *appointment_area;
+  GtkWidget *appointment_area;
   GtkAdjustment *vadj;
 
   /* If the events need to be reloaded.  */
@@ -452,18 +453,17 @@ static void day_view_base_class_init (gpointer klass, gpointer klass_data);
 static void day_view_init (GTypeInstance *instance, gpointer klass);
 static void day_view_dispose (GObject *obj);
 static void day_view_finalize (GObject *object);
+static void realize (GtkWidget *widget);
 static void day_view_set_time (GtkView *view, time_t time);
 static void day_view_reload_events (GtkView *view);
 static gboolean day_view_key_press_event (GtkWidget *widget,
 					  GdkEventKey *event);
-static void day_view_size_allocate (GtkWidget *widget,
-				    GtkAllocation *allocation);
-
-static void size_request (GtkWidget *widget, GtkRequisition *requisition,
-			  DayView *day_view);
 static gboolean button_press_event (GtkWidget *widget,
 				    GdkEventButton *event,
 				    DayView *day_view);
+static gboolean button_release_event (GtkWidget *widget,
+				      GdkEventButton *event,
+				      DayView *day_view);
 static gboolean appointment_area_expose_event (GtkWidget *widget,
 					       GdkEventExpose *event,
 					       DayView *day_view);
@@ -473,6 +473,7 @@ static gboolean reminder_area_expose_event (GtkWidget *widget,
 static void scrolled (GtkAdjustment *adjustment, DayView *day_view);
 
 static void reload_events_hard (DayView *day_view);
+static void update_extents (DayView *day_view);
 
 static GtkWidgetClass *parent_class;
 
@@ -516,13 +517,26 @@ day_view_base_class_init (gpointer klass, gpointer klass_data)
   object_class->finalize = day_view_finalize;
   object_class->dispose = day_view_dispose;
 
-  widget_class = (GtkWidgetClass *) klass;
+  widget_class = GTK_WIDGET_CLASS (klass);
+  widget_class->realize = realize;
   widget_class->key_press_event = day_view_key_press_event;
-  widget_class->size_allocate = day_view_size_allocate;
 
   view_class = (GtkViewClass *) klass;
   view_class->set_time = day_view_set_time;
   view_class->reload_events = day_view_reload_events;
+}
+
+static void
+viewport_size_allocate (GtkWidget *widget, GtkAllocation *allocation,
+			DayView *day_view)
+{
+  day_view->pending_update_extents = TRUE;
+
+  if (! day_view->pending_reload)
+    /* We don't call update_extents as it will invalidate the draw
+       area and we don't actually know if the size has even
+       changed.  */
+    update_extents (day_view);
 }
 
 static void
@@ -539,28 +553,34 @@ day_view_init (GTypeInstance *instance, gpointer klass)
   g_signal_connect (G_OBJECT (day_view->vadj), "value-changed",
 		    G_CALLBACK (scrolled), day_view);
 
-  day_view->appointment_window
-    = gtk_scrolled_window_new (NULL, day_view->vadj);
-  gtk_scrolled_window_set_policy
-    (GTK_SCROLLED_WINDOW (day_view->appointment_window),
-     GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+  day_view->appointment_window = panned_window_new ();
   gtk_box_pack_end (GTK_BOX (day_view), day_view->appointment_window,
 		    TRUE, TRUE, 0);
   gtk_widget_show (day_view->appointment_window);
 
-  day_view->appointment_area
-    = GTK_LAYOUT (gtk_layout_new (NULL, day_view->vadj));
-  gtk_widget_add_events (GTK_WIDGET (day_view->appointment_area),
-			 GDK_BUTTON_PRESS_MASK);
+  GtkScrolledWindow *scrolled_window
+    = GTK_SCROLLED_WINDOW (GTK_BIN (day_view->appointment_window)->child);
+  gtk_scrolled_window_set_policy
+    (scrolled_window, GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+  gtk_scrolled_window_set_vadjustment (scrolled_window, day_view->vadj);
+
+  day_view->appointment_area = gtk_drawing_area_new ();
+  gtk_widget_add_events (day_view->appointment_area,
+			 GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
+  g_signal_connect (day_view->appointment_area, "button-release-event",
+		    G_CALLBACK (button_release_event), day_view);
   g_signal_connect (day_view->appointment_area, "button-press-event",
 		    G_CALLBACK (button_press_event), day_view);
-  g_signal_connect (day_view->appointment_area, "size-request",
-		    G_CALLBACK (size_request), day_view);
   g_signal_connect (day_view->appointment_area, "expose-event",
 		    G_CALLBACK (appointment_area_expose_event), day_view);
-  gtk_container_add (GTK_CONTAINER (day_view->appointment_window),
-		     GTK_WIDGET (day_view->appointment_area));
-  gtk_widget_show (GTK_WIDGET (day_view->appointment_area));
+  gtk_scrolled_window_add_with_viewport (scrolled_window,
+					 day_view->appointment_area);
+  gtk_widget_show (day_view->appointment_area);
+
+  GtkWidget *viewport = GTK_BIN (scrolled_window)->child;
+  gtk_viewport_set_shadow_type (GTK_VIEWPORT (viewport), GTK_SHADOW_NONE);
+  g_signal_connect (G_OBJECT (viewport), "size-allocate",
+		    G_CALLBACK (viewport_size_allocate), day_view);
 
   day_view->pending_update_extents = TRUE;
 }
@@ -880,14 +900,38 @@ time_layout (PangoLayout *pl, int hour)
   g_free (buffer);
 }
 
+static void
+realize (GtkWidget *widget)
+{
+  DayView *day_view = DAY_VIEW (widget);
+
+  PangoLayout *pl
+    = gtk_widget_create_pango_layout (day_view->appointment_area, NULL);
+  PangoContext *context = pango_layout_get_context (pl);
+  PangoFontMetrics *metrics
+    = pango_context_get_metrics (context,
+				 widget->style->font_desc,
+				 pango_context_get_language (context));
+
+  day_view->row_height_min = (pango_font_metrics_get_ascent (metrics)
+			      + pango_font_metrics_get_descent (metrics))
+    / PANGO_SCALE;
+
+  g_object_unref (pl);
+  pango_font_metrics_unref (metrics);
+
+  GTK_WIDGET_CLASS (parent_class)->realize (widget);
+}
+
 /* Update the calculated extents of DAY_VIEW.  */
 static void
 update_extents (DayView *day_view)
 {
-  GtkWidget *canvas = GTK_BIN (day_view->appointment_window)->child;
+  GtkWidget *viewport
+    = GTK_BIN (GTK_BIN (day_view->appointment_window)->child)->child;
 
-  int width = canvas->allocation.width;
-  int height = MAX (canvas->allocation.height,
+  int width = viewport->allocation.width;
+  int height = MAX (viewport->allocation.height,
 		    day_view->visible_duration / 60 / 60
 		    * day_view->row_height_min);
   if (width != day_view->width || height != day_view->height)
@@ -895,24 +939,8 @@ update_extents (DayView *day_view)
       day_view->width = width;
       day_view->height = height;
 
-      gtk_layout_set_size (day_view->appointment_area,
-			   day_view->width, day_view->height);
-    }
-
-
-  if (day_view->pending_scroll)
-    {
-      GtkAdjustment *vadj = day_view->vadj;
-
-      gtk_adjustment_set_value
-	(day_view->vadj,
-	 MIN (vadj->lower + (vadj->upper - vadj->lower) *
-	      (gfloat) (gtk_view_get_time (GTK_VIEW (day_view))
-			- day_view->visible_start)
-	      / day_view->visible_duration,
-	      vadj->upper - vadj->page_size));
-
-      day_view->pending_scroll = FALSE;
+      gtk_widget_set_size_request (day_view->appointment_area,
+				   width, height);
     }
 
   /* Calculate DAY_VIEW->TIME_WIDTH.  */
@@ -951,39 +979,22 @@ update_extents (DayView *day_view)
 				       day_view->width / n,
 				       0, day_view->row_height_min));
 
-  day_view->pending_update_extents = FALSE;
-}
-
-static void
-size_request (GtkWidget *widget, GtkRequisition *requisition,
-	      DayView *day_view)
-{
-  PangoLayout *pl = gtk_widget_create_pango_layout (widget, NULL);
-  PangoContext *context = pango_layout_get_context (pl);
-  PangoFontMetrics *metrics
-    = pango_context_get_metrics (context,
-				 widget->style->font_desc,
-				 pango_context_get_language (context));
-
-  int min = (pango_font_metrics_get_ascent (metrics)
-	     + pango_font_metrics_get_descent (metrics)) / PANGO_SCALE
-    + 4 /* For border.  */;
-  if (min != day_view->row_height_min)
+  if (day_view->pending_scroll)
     {
-      day_view->row_height_min = min;
-      day_view->pending_update_extents = TRUE;
+      GtkAdjustment *vadj = day_view->vadj;
+
+      gtk_adjustment_set_value
+	(day_view->vadj,
+	 MIN (vadj->lower + (vadj->upper - vadj->lower) *
+	      (gfloat) (gtk_view_get_time (GTK_VIEW (day_view))
+			- day_view->visible_start)
+	      / day_view->visible_duration,
+	      vadj->upper - vadj->page_size));
+
+      day_view->pending_scroll = FALSE;
     }
 
-  requisition->height
-    = MAX (requisition->height, ROWS_HARD * day_view->row_height_min);
-
-  requisition->width
-    = MAX (requisition->width,
-	   pango_font_metrics_get_approximate_char_width (metrics) * 24
-	   / PANGO_SCALE);
-
-  g_object_unref (pl);
-  pango_font_metrics_unref (metrics);
+  day_view->pending_update_extents = FALSE;
 }
 
 #define HOUR_BAR_HEIGHT(dv) \
@@ -1060,7 +1071,7 @@ appointment_area_expose_event (GtkWidget *widget, GdkEventExpose *event,
   if (day_view->pending_update_extents)
     update_extents (day_view);
 
-  GdkDrawable *drawable = day_view->appointment_area->bin_window;
+  GdkDrawable *drawable = widget->window;
 
   if (! day_view->hour_bg_gc)
     /* Light aluminium.  */
@@ -1192,9 +1203,9 @@ scrolled (GtkAdjustment *adj, DayView *day_view)
   gtk_view_set_time (GTK_VIEW (day_view), t);
 }
 
-static gboolean
-button_press_event (GtkWidget *widget, GdkEventButton *event,
-		    DayView *day_view)
+static Event *
+find_event (GtkWidget *widget, GdkEventButton *event,
+	    DayView *day_view)
 {
   GSList *l;
 
@@ -1211,19 +1222,60 @@ button_press_event (GtkWidget *widget, GdkEventButton *event,
       if ((er->x <= event->x && event->x < er->x + er->width)
 	  && (er->y <= event->y && event->y < er->y + er->height))
 	/* Click was within ER, pop up a menu.  */
+	return er->event;
+    }
+
+  return NULL;
+}
+
+static gboolean
+button_press_event (GtkWidget *widget, GdkEventButton *event,
+		    DayView *day_view)
+{
+  if (event->button == 3)
+    {
+      Event *ev = find_event (widget, event, day_view);
+
+      if (ev)
 	{
-	  GtkMenu *event_menu = event_menu_new (er->event, TRUE);
+	  GtkMenu *event_menu = event_menu_new (ev, TRUE);
 	  gtk_menu_popup (event_menu, NULL, NULL, NULL, NULL,
 			  event->button, event->time);
 
-	  return FALSE;
+	  return TRUE;
 	}
     }
 
-  GtkWidget *w = new_event (day_view->visible_start
-			    + day_view->visible_duration * event->y
-			    / day_view->height);
-  gtk_widget_show (w);
+  return FALSE;
+}
+
+static gboolean
+button_release_event (GtkWidget *widget, GdkEventButton *event,
+		      DayView *day_view)
+{
+  if (panned_window_is_panning (PANNED_WINDOW (day_view->appointment_window)))
+    return FALSE;
+
+  if (event->button == 1)
+    {
+      Event *ev = find_event (widget, event, day_view);
+
+      if (ev)
+	{
+	  GtkMenu *event_menu = event_menu_new (ev, TRUE);
+	  gtk_menu_popup (event_menu, NULL, NULL, NULL, NULL,
+			  event->button, event->time);
+
+	  return TRUE;
+	}
+
+      GtkWidget *w = new_event (day_view->visible_start
+				+ day_view->visible_duration * event->y
+				/ day_view->height);
+      gtk_widget_show (w);
+
+      return TRUE;
+    }
 
   return FALSE;
 }
@@ -1250,15 +1302,6 @@ day_view_key_press_event (GtkWidget *widget, GdkEventKey *event)
     default:
       return GTK_WIDGET_CLASS (parent_class)->key_press_event (widget, event);
     }
-}
-
-static void
-day_view_size_allocate (GtkWidget *widget, GtkAllocation *allocation)
-{
-  DAY_VIEW (widget)->pending_update_extents = TRUE;
-
-  return GTK_WIDGET_CLASS (parent_class)->size_allocate (widget,
-							 allocation);
 }
 
 static void
@@ -1377,9 +1420,11 @@ reload_events_hard (DayView *day_view)
       gtk_widget_set_size_request (GTK_WIDGET (day_view->reminder_area),
 				   -1, day_view->row_height_min);
       gtk_widget_add_events (GTK_WIDGET (day_view->reminder_area),
-			     GDK_BUTTON_PRESS_MASK);
+			     GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
       g_signal_connect (day_view->reminder_area, "button-press-event",
 			G_CALLBACK (button_press_event), day_view);
+      g_signal_connect (day_view->reminder_area, "button-release-event",
+			G_CALLBACK (button_release_event), day_view);
       g_signal_connect (day_view->reminder_area, "expose-event",
 			G_CALLBACK (reminder_area_expose_event), day_view);
       gtk_box_pack_start (GTK_BOX (day_view),
