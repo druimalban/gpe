@@ -167,6 +167,10 @@ panned_window_finalize (GObject *object)
   if (priv->motion_timer)
     g_source_remove (priv->motion_timer);
 
+  if (priv->original_window)
+    g_object_remove_weak_pointer (object,
+				  (gpointer *) &priv->original_window);
+
   G_OBJECT_CLASS (parent_class)->finalize (object);
 }
 
@@ -189,10 +193,17 @@ button_press_event (GtkWidget *widget, GdkEventButton *event)
     {
       PannedWindowPrivate *priv = PANNED_WINDOW_GET_PRIVATE (widget);
 
-      g_assert (! priv->original_window);
+      if (priv->original_window)
+	{
+	  g_object_remove_weak_pointer (G_OBJECT (widget),
+					(gpointer *) &priv->original_window);
+	  priv->original_window = NULL;
+	}
+
       if (event->window != widget->window)
 	{
-	  gdk_window_ref (event->window);
+	  g_object_add_weak_pointer (G_OBJECT (widget),
+				     (gpointer *) &priv->original_window);
 	  priv->original_window = event->window;
 	}
 
@@ -233,18 +244,23 @@ button_release_event (GtkWidget *widget, GdkEventButton *event)
 	  priv->motion_timer = 0;
 	}
 
-      /* Propagate the release event.  */
       if (priv->original_window)
+	/* Propagate the button release event.  */
 	{
+	  g_object_remove_weak_pointer (G_OBJECT (widget),
+					(gpointer *) &priv->original_window);
+
 	  if (gdk_window_is_visible (priv->original_window))
 	    {
-	      GdkEvent *e = gdk_event_copy ((GdkEvent *) event);
-
-	      gdk_window_unref (e->button.window);
-	      e->button.window = priv->original_window;
-
 	      gpointer nwidget;
 	      gdk_window_get_user_data (priv->original_window, &nwidget);
+
+	      GdkEvent *e = gdk_event_copy ((GdkEvent *) event);
+
+	      g_object_unref (e->button.window);
+	      e->button.window = priv->original_window;
+	      g_object_ref (e->button.window);
+	      priv->original_window = NULL;
 
 	      int x = event->x;
 	      int y = event->y;
@@ -259,9 +275,7 @@ button_release_event (GtkWidget *widget, GdkEventButton *event)
 	      ret = gtk_main_do_event ((GdkEvent *) e);
 	    }
 	  else
-	    gdk_window_unref (priv->original_window);
-
-	  priv->original_window = NULL;
+	    priv->original_window = NULL;
 	}
 
       if (priv->panning)

@@ -1,3 +1,15 @@
+2006-07-13  Neal H. Walfield  <neal@gnu.org>
+
+	* pannedwindow.c (panned_window_finalize): Remove the weak pointer
+	reference to PRIV->ORIGINAL_WINDOW.
+	(button_press_event): If PRIV->ORIGINAL_WINDOW is non-NULL, remove
+	the weak pointer reference.  When saving to PRIV->ORIGINAL_WINDOW,
+	get a weak pointer reference.
+	(button_release_event): Drop the weak pointer reference to
+	PRIV->ORIGINAL_WINDOW.  Get a reference to PRIV->ORIGINAL_WINDOW
+	before calling gtk_main_do_event.
+	Reported by Florian Boor <florian@kernelconcepts.de>.
+
 2006-07-13  Florian Boor  <florian.boor@kernelconcepts.de>
 
 	* calendar-edit-dialog.c (calendar_edit_dialog_init):
