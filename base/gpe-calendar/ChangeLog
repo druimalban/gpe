@@ -1,5 +1,10 @@
 2006-07-13  Neal H. Walfield  <neal@gnu.org>
 
+	* week_view.c (reload_events_hard): Don't pad the day with zeros.
+	Use the abbreviated form of the month.
+
+2006-07-13  Neal H. Walfield  <neal@gnu.org>
+
 	* main.c
 	(main_box): New variable.
 	(date_toolbar): Likewise.

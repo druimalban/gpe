@@ -442,9 +442,7 @@ draw_expose_event (GtkWidget *widget, GdkEventExpose *event, GtkWidget *wv)
       day->top = top;
 
       /* Color the day's background appropriately.  */
-      GdkColor c;
-      if (g_date_compare (&today,
-			  &week_view->days[i].date) == 0)
+      if (g_date_compare (&today, &week_view->days[i].date) == 0)
 	color = lemon_gc;
       else if (week_starts_sunday)
 	color = i == 0 || i == 6 ? salmon_gc : yellow_gc;
@@ -686,7 +684,7 @@ reload_events_hard (GtkWeekView *week_view)
 
       struct tm tm;
       g_date_to_struct_tm (&d->date, &tm);
-      d->banner = strftime_strdup_utf8_utf8 ("<b>%a %d %B</b> ", &tm);
+      d->banner = strftime_strdup_utf8_utf8 ("<b>%a %-d %b</b> ", &tm);
     }
 
   struct tm period_start_tm;
