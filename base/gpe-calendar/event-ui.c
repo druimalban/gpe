@@ -628,8 +628,8 @@ note_date_change (GtkDateCombo *c, struct edit_state *s)
 	gtk_toggle_button_set_active
 	  (GTK_TOGGLE_BUTTON (s->checkbuttonwday[i]), i == wday - 1);
 
-      /* Changing the buttons--event programmatically--will cause the
-	 toggles changed signal to be emitted thereby causing the
+      /* Changing the buttons--even programmatically--will cause the
+	 toggle's changed signal to be emitted thereby causing the
 	 recur_day_floating to be set to false.  Reset it.  */
       s->recur_day_floating = TRUE;
     }
@@ -1226,6 +1226,8 @@ build_edit_event_window (Event *ev)
   gtk_widget_show (GTK_WIDGET (hbox));
 
   s->starttime = gpe_time_sel_new ();
+  g_signal_connect (G_OBJECT (s->starttime), "changed",
+		    G_CALLBACK (note_time_change), s);
   gtk_box_pack_start (hbox, s->starttime, FALSE, FALSE, 0);
   gtk_widget_show (GTK_WIDGET (s->starttime));
 
@@ -1251,8 +1253,6 @@ build_edit_event_window (Event *ev)
 			     tm.tm_hour, tm.tm_min);
       gtk_date_combo_set_date (GTK_DATE_COMBO (s->startdate),
 			       tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
-      g_signal_connect (G_OBJECT (s->starttime), "changed",
-			G_CALLBACK (note_time_change), s);
     }
 
   /* End time.  */

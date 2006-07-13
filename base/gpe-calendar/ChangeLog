@@ -1,5 +1,10 @@
 2006-07-13  Neal H. Walfield  <neal@gnu.org>
 
+	* event-ui.c (build_edit_event_window): Always connect
+	note_time_change to S->START_TIME's "changed" signal.
+
+2006-07-13  Neal H. Walfield  <neal@gnu.org>
+
 	* week_view.c (struct _GtkWeekView): Add field day_changed.
 	(map): New function.
 	(unmap): Likewise.
