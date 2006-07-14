@@ -969,15 +969,60 @@ update_extents (DayView *day_view)
 
   event_rect_list_free (day_view->reminder_rects);
   day_view->reminder_rects = NULL;
-  int n = g_slist_length (day_view->reminders);
+
+  /* Get the number of visible reminders.  */
+  int n = 0;
   GSList *l;
-  for (i = 0, l = day_view->reminders; i < n; i ++, l = l->next)
-    day_view->reminder_rects =
-      g_slist_prepend (day_view->reminder_rects,
-		       event_rect_new (EVENT (l->data),
-				       i * day_view->width / n,
-				       day_view->width / n,
-				       0, day_view->row_height_min));
+  for (l = day_view->reminders; l; l = l->next)
+    if (event_get_visible (EVENT (l->data)))
+      n ++;
+
+  if (n == 0 && day_view->reminder_area)
+    /* There are no longer any visible reminders, destroy its render
+       area.  */
+    {
+      gtk_container_remove (GTK_CONTAINER (day_view),
+			    GTK_WIDGET (day_view->reminder_area));
+      day_view->reminder_area = NULL;
+    }
+  if (n > 0 && ! day_view->reminder_area)
+    /* We have reminders but no render area.  Create one.  */
+    {
+      day_view->reminder_area = GTK_DRAWING_AREA (gtk_drawing_area_new ());
+      gtk_widget_set_size_request (GTK_WIDGET (day_view->reminder_area),
+				   -1, day_view->row_height_min);
+      gtk_widget_add_events (GTK_WIDGET (day_view->reminder_area),
+			     GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
+      g_signal_connect (day_view->reminder_area, "button-press-event",
+			G_CALLBACK (button_press_event), day_view);
+      g_signal_connect (day_view->reminder_area, "button-release-event",
+			G_CALLBACK (button_release_event), day_view);
+      g_signal_connect (day_view->reminder_area, "expose-event",
+			G_CALLBACK (reminder_area_expose_event), day_view);
+      gtk_box_pack_start (GTK_BOX (day_view),
+			  GTK_WIDGET (day_view->reminder_area),
+			  FALSE, FALSE, 0);
+      gtk_widget_show (GTK_WIDGET (day_view->reminder_area));
+    }
+
+
+  /* Now, distribute them.  */
+  if (n > 0)
+    {
+      int col = 0;
+      for (l = day_view->reminders; l; l = l->next)
+	if (event_get_visible (EVENT (l->data)))
+	  {
+	    day_view->reminder_rects =
+	      g_slist_prepend (day_view->reminder_rects,
+			       event_rect_new (EVENT (l->data),
+					       col * day_view->width / n,
+					       day_view->width / n,
+					       0, day_view->row_height_min));
+
+	    col ++;
+	  }
+    }
 
   if (day_view->pending_scroll)
     {
@@ -1405,33 +1450,6 @@ reload_events_hard (DayView *day_view)
   day_view->visible_start = (earliest / 60 / 60) * 60 * 60;
   day_view->visible_duration
     = (latest - day_view->visible_start + 60 * 60 - 1) / 60 / 60 * 60 * 60;
-
-  if (! day_view->reminders && day_view->reminder_area)
-    /* There are no longer any reminders, destroy its render area.  */
-    {
-      gtk_container_remove (GTK_CONTAINER (day_view),
-			    GTK_WIDGET (day_view->reminder_area));
-      day_view->reminder_area = NULL;
-    }
-  if (day_view->reminders && ! day_view->reminder_area)
-    /* We have reminders but no render area.  Create one.  */
-    {
-      day_view->reminder_area = GTK_DRAWING_AREA (gtk_drawing_area_new ());
-      gtk_widget_set_size_request (GTK_WIDGET (day_view->reminder_area),
-				   -1, day_view->row_height_min);
-      gtk_widget_add_events (GTK_WIDGET (day_view->reminder_area),
-			     GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
-      g_signal_connect (day_view->reminder_area, "button-press-event",
-			G_CALLBACK (button_press_event), day_view);
-      g_signal_connect (day_view->reminder_area, "button-release-event",
-			G_CALLBACK (button_release_event), day_view);
-      g_signal_connect (day_view->reminder_area, "expose-event",
-			G_CALLBACK (reminder_area_expose_event), day_view);
-      gtk_box_pack_start (GTK_BOX (day_view),
-			  GTK_WIDGET (day_view->reminder_area),
-			  FALSE, FALSE, 0);
-      gtk_widget_show (GTK_WIDGET (day_view->reminder_area));
-    }
 
   update_extents (day_view);
 

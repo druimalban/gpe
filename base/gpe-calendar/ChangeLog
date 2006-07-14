@@ -1,3 +1,10 @@
+2006-07-14  Neal H. Walfield  <neal@gnu.org>
+
+	* day_view.c (reload_events_hard): Don't make the decision about
+	whether to show the reminder area here...
+	(update_extents): ... do it here and only show those events which
+	are visible.
+
 2006-07-13  Neal H. Walfield  <neal@gnu.org>
 
 	* main.c (calendar_consider): Set the calendar to VIEWTIME.
