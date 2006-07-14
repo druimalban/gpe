@@ -1,5 +1,10 @@
 2006-07-14  Neal H. Walfield  <neal@gnu.org>
 
+	* main.c (set_title): Display the year if it is different from the
+	current year.  Make the format string eligible for translation.
+
+2006-07-14  Neal H. Walfield  <neal@gnu.org>
+
 	* day_view.c (reload_events_hard): Don't make the decision about
 	whether to show the reminder area here...
 	(update_extents): ... do it here and only show those events which
@@ -16,8 +21,7 @@
 
 2006-07-13  Neal H. Walfield  <neal@gnu.org>
 
-	* main.c
-	(main_box): New variable.
+	* main.c (main_box): New variable.
 	(date_toolbar): Likewise.
 	(datesel_item): Likewise.
 	(main_toolbar_width): Likewise.

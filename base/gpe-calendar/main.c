@@ -353,7 +353,10 @@ set_title (void)
     }
   else
     {
-      g_date_strftime (temp, sizeof (temp), "%b %e", &viewing);
+      if (g_date_get_year (&today) == g_date_get_year (&viewing))
+	g_date_strftime (temp, sizeof (temp), _("%b %e"), &viewing);
+      else
+	g_date_strftime (temp, sizeof (temp), _("%b %e, %Y"), &viewing);
       date = temp;
 
       if (now < viewtime)
