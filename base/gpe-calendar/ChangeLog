@@ -1,3 +1,10 @@
+2006-07-17  Florian Boor  <florian.boor@kernelconcepts.de>
+
+	* calendar-edit-dialog.c (calendar_edit_dialog_init):
+	Some more UI modifications: Use tables for layout and align labels right.
+    Add GtkEventBox to hold calendar color.
+    * set_color(): Apply color to box instead of button.
+    
 2006-07-14  Neal H. Walfield  <neal@gnu.org>
 
 	* main.c (set_title): Display the year if it is different from the

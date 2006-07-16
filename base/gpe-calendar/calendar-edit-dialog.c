@@ -40,15 +40,16 @@ struct _CalendarEditDialog
 
   GdkColor color;
   GtkButton *color_button;
+  GtkWidget *color_area;
 
   GtkComboBox *mode;
 
-  GtkBox *url_box;
+  GtkWidget *url_box;
   GtkEntry *url;
   GtkEntry *username;
   GtkEntry *password;
 
-  GtkBox *sync_box;
+  GtkWidget *sync_box;
   GtkSpinButton *sync_interval;
   GtkComboBox *sync_interval_units;
 };
@@ -144,15 +145,15 @@ static void
 set_color (CalendarEditDialog *d, const GdkColor *c)
 {
   d->color = *c;
-  gtk_widget_modify_bg (GTK_WIDGET (d->color_button),
+  gtk_widget_modify_bg (GTK_WIDGET (d->color_area),
 			GTK_STATE_NORMAL, c);
-  gtk_widget_modify_bg (GTK_WIDGET (d->color_button),
+  gtk_widget_modify_bg (GTK_WIDGET (d->color_area),
 			GTK_STATE_ACTIVE, c);
-  gtk_widget_modify_bg (GTK_WIDGET (d->color_button),
+  gtk_widget_modify_bg (GTK_WIDGET (d->color_area),
 			GTK_STATE_PRELIGHT, c);
-  gtk_widget_modify_bg (GTK_WIDGET (d->color_button),
+  gtk_widget_modify_bg (GTK_WIDGET (d->color_area),
 			GTK_STATE_SELECTED, c);
-  gtk_widget_modify_bg (GTK_WIDGET (d->color_button),
+  gtk_widget_modify_bg (GTK_WIDGET (d->color_area),
 			GTK_STATE_INSENSITIVE, c);
 }
 
@@ -275,38 +276,36 @@ calendar_edit_dialog_init (GTypeInstance *instance, gpointer klass)
   gtk_widget_show (GTK_WIDGET (body));
 
   /* Title.  */
-  GtkBox *hbox = GTK_BOX (gtk_hbox_new (FALSE, 3));
-  gtk_box_pack_start (body, GTK_WIDGET (hbox), FALSE, FALSE, 0);
-  gtk_widget_show (GTK_WIDGET (hbox));
+  GtkWidget *table = gtk_table_new (5, 4, FALSE);
+  gtk_table_set_col_spacings (GTK_TABLE (table), gpe_get_boxspacing());
+  gtk_table_set_row_spacings (GTK_TABLE (table), gpe_get_boxspacing());
+  gtk_box_pack_start (body, GTK_WIDGET (table), FALSE, TRUE, 0);
+  gtk_widget_show (GTK_WIDGET (table));
 
   GtkWidget *label = gtk_label_new (_("Title:"));
-  gtk_box_pack_start (hbox, label, FALSE, FALSE, 0);
+  gtk_misc_set_alignment (GTK_MISC (label), 1, 0.5);
+  gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1, GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show (label);
 
   d->title = GTK_ENTRY (gtk_entry_new ());
-  gtk_box_pack_start (hbox, GTK_WIDGET (d->title), TRUE, TRUE, 0);
+  gtk_table_attach (GTK_TABLE (table), GTK_WIDGET (d->title), 1, 3, 0, 1, 
+                    GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show (GTK_WIDGET (d->title));
 
   /* Description.  */
-  hbox = GTK_BOX (gtk_hbox_new (FALSE, 3));
-  gtk_box_pack_start (body, GTK_WIDGET (hbox), FALSE, FALSE, 0);
-  gtk_widget_show (GTK_WIDGET (hbox));
-
   label = gtk_label_new (_("Description:"));
-  gtk_box_pack_start (hbox, label, FALSE, FALSE, 0);
+  gtk_misc_set_alignment (GTK_MISC (label), 1, 0.5);
+  gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2, GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show (label);
 
   d->description = GTK_ENTRY (gtk_entry_new ());
-  gtk_box_pack_start (hbox, GTK_WIDGET (d->description), TRUE, TRUE, 0);
+  gtk_table_attach (GTK_TABLE (table), GTK_WIDGET (d->description), 1, 4, 1, 2, 
+                    GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
   gtk_widget_show (GTK_WIDGET (d->description));
 
   /* Parent.  */
-  hbox = GTK_BOX (gtk_hbox_new (FALSE, 3));
-  gtk_box_pack_start (body, GTK_WIDGET (hbox), FALSE, FALSE, 0);
-  gtk_widget_show (GTK_WIDGET (hbox));
-
   d->parent_check = gtk_check_button_new_with_label (_("Parent:"));
-  gtk_box_pack_start (hbox, d->parent_check, FALSE, FALSE, 0);
+  gtk_table_attach (GTK_TABLE (table), d->parent_check, 0, 1, 2, 3, GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show (d->parent_check);
 
   d->parent = GTK_COMBO_BOX (calendars_combo_box_new (event_db));
@@ -314,25 +313,26 @@ calendar_edit_dialog_init (GTypeInstance *instance, gpointer klass)
   g_signal_connect (G_OBJECT (d->parent), "changed",
 		    G_CALLBACK (parent_combo_changed), d);
   gtk_widget_show (GTK_WIDGET (d->parent));
-  gtk_box_pack_start (hbox, GTK_WIDGET (d->parent), FALSE, FALSE, 0);
+  gtk_table_attach (GTK_TABLE (table), GTK_WIDGET (d->parent), 1, 3, 2, 3, 
+                    GTK_FILL, GTK_FILL, 0, 0);
 
   g_signal_connect (G_OBJECT (d->parent_check), "toggled",
 		    G_CALLBACK (parent_check_toggled), d->parent);
 
   /* Color selection.  */
-  hbox = GTK_BOX (gtk_hbox_new (FALSE, 3));
-  gtk_box_pack_start (body, GTK_WIDGET (hbox), FALSE, FALSE, 0);
-  gtk_widget_show (GTK_WIDGET (hbox));
-
   label = gtk_label_new (_("Color:"));
-  gtk_box_pack_start (hbox, label, FALSE, FALSE, 0);
+  gtk_misc_set_alignment (GTK_MISC (label), 1, 0.5);
+  gtk_table_attach (GTK_TABLE (table), label, 0, 1, 3, 4, GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show (label);
   
-  d->color_button = GTK_BUTTON (gtk_button_new_with_label ("     "));
-  gtk_box_pack_start (hbox, GTK_WIDGET (d->color_button), FALSE, FALSE, 0);
+  d->color_button = GTK_BUTTON (gtk_button_new ());
+  gtk_table_attach (GTK_TABLE (table), GTK_WIDGET (d->color_button), 1, 2, 3, 4, 
+                    GTK_FILL, GTK_FILL, 0, 0);
   g_signal_connect (G_OBJECT (d->color_button), "clicked",
                     G_CALLBACK (color_button_clicked), d);
-  gtk_widget_show (GTK_WIDGET (d->color_button));
+  d->color_area = gtk_event_box_new ();
+  gtk_container_add (GTK_CONTAINER (d->color_button), d->color_area);
+  gtk_widget_show_all (GTK_WIDGET (d->color_button));
 
   /* Initially, "light blue".  */
   d->color.red = 173 * 256;
@@ -341,12 +341,9 @@ calendar_edit_dialog_init (GTypeInstance *instance, gpointer klass)
   set_color (d, &d->color);
 
   /* mode.  */
-  hbox = GTK_BOX (gtk_hbox_new (FALSE, 3));
-  gtk_box_pack_start (body, GTK_WIDGET (hbox), FALSE, FALSE, 0);
-  gtk_widget_show (GTK_WIDGET (hbox));
-
   label = gtk_label_new (_("Type:"));
-  gtk_box_pack_start (hbox, label, FALSE, FALSE, 0);
+  gtk_misc_set_alignment (GTK_MISC (label), 1, 0.5);
+  gtk_table_attach (GTK_TABLE (table), label, 0, 1, 4, 5, GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show (label);
 
   d->mode = GTK_COMBO_BOX (gtk_combo_box_new_text ());
@@ -361,57 +358,57 @@ calendar_edit_dialog_init (GTypeInstance *instance, gpointer klass)
   g_signal_connect (d->mode, "changed",
 		    G_CALLBACK (mode_changed), d);
   gtk_widget_show (GTK_WIDGET (d->mode));
-  gtk_box_pack_start (hbox, GTK_WIDGET (d->mode), FALSE, FALSE, 0);
+  gtk_table_attach (GTK_TABLE (table), GTK_WIDGET (d->mode), 1, 3, 4, 5, GTK_FILL, GTK_FILL, 0, 0);
 
   /* URL.  */
-  d->url_box = GTK_BOX (gtk_vbox_new (FALSE, 3));
-  gtk_box_pack_start (body, GTK_WIDGET (d->url_box), FALSE, FALSE, 0);
+  d->url_box = gtk_table_new (3, 3, FALSE);
+  gtk_table_set_col_spacings (GTK_TABLE (d->url_box), gpe_get_boxspacing());
+  gtk_table_set_row_spacings (GTK_TABLE (d->url_box), gpe_get_boxspacing());
+  gtk_box_pack_start (body, GTK_WIDGET (d->url_box), FALSE, TRUE, 0);
   /* Don't show initially.  */
 
-  hbox = GTK_BOX (gtk_hbox_new (FALSE, 3));
-  gtk_box_pack_start (d->url_box, GTK_WIDGET (hbox), FALSE, FALSE, 0);
-  gtk_widget_show (GTK_WIDGET (hbox));
-
   label = gtk_label_new (_("URL:"));
-  gtk_box_pack_start (hbox, label, FALSE, FALSE, 0);
+  gtk_misc_set_alignment (GTK_MISC (label), 1, 0.5);
+  gtk_table_attach (GTK_TABLE (d->url_box), label, 0, 1, 0, 1, 
+                    GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show (label);
 
   d->url = GTK_ENTRY (gtk_entry_new ());
-  gtk_box_pack_start (hbox, GTK_WIDGET (d->url), TRUE, TRUE, 0);
+  gtk_table_attach (GTK_TABLE (d->url_box), GTK_WIDGET (d->url), 1, 3, 0, 1, 
+                    GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
   gtk_widget_show (GTK_WIDGET (d->url));
 
-  hbox = GTK_BOX (gtk_hbox_new (FALSE, 3));
-  gtk_box_pack_start (d->url_box, GTK_WIDGET (hbox), FALSE, FALSE, 0);
-  gtk_widget_show (GTK_WIDGET (hbox));
-
   label = gtk_label_new (_("Username:"));
-  gtk_box_pack_start (hbox, label, FALSE, FALSE, 0);
+  gtk_misc_set_alignment (GTK_MISC (label), 1, 0.5);
+  gtk_table_attach (GTK_TABLE (d->url_box), label, 0, 1, 1, 2, GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show (label);
 
   d->username = GTK_ENTRY (gtk_entry_new ());
-  gtk_box_pack_start (hbox, GTK_WIDGET (d->username), TRUE, TRUE, 0);
+  gtk_table_attach (GTK_TABLE (d->url_box), GTK_WIDGET (d->username), 1, 2, 1, 2, 
+                    GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show (GTK_WIDGET (d->username));
 
-  hbox = GTK_BOX (gtk_hbox_new (FALSE, 3));
-  gtk_box_pack_start (d->url_box, GTK_WIDGET (hbox), FALSE, FALSE, 0);
-  gtk_widget_show (GTK_WIDGET (hbox));
-
   label = gtk_label_new (_("Password:"));
-  gtk_box_pack_start (hbox, label, FALSE, FALSE, 0);
+  gtk_misc_set_alignment (GTK_MISC (label), 1, 0.5);
+  gtk_table_attach (GTK_TABLE (d->url_box), label, 0, 1, 2, 3, GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show (label);
 
   d->password = GTK_ENTRY (gtk_entry_new ());
   gtk_entry_set_visibility (d->password, FALSE);
-  gtk_box_pack_start (hbox, GTK_WIDGET (d->password), TRUE, TRUE, 0);
+  gtk_table_attach (GTK_TABLE (d->url_box), GTK_WIDGET (d->password), 1, 2, 2, 3, 
+                    GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show (GTK_WIDGET (d->password));
 
   /* Synchronization frequency.  */
-  d->sync_box = GTK_BOX (gtk_hbox_new (FALSE, 3));
-  gtk_box_pack_start (body, GTK_WIDGET (d->sync_box), FALSE, FALSE, 0);
+  d->sync_box = gtk_table_new (3, 3, FALSE);
+  gtk_table_set_col_spacings (GTK_TABLE (d->sync_box), gpe_get_boxspacing());
+  gtk_table_set_row_spacings (GTK_TABLE (d->sync_box), gpe_get_boxspacing());
+  gtk_box_pack_start (body, GTK_WIDGET (d->sync_box), FALSE, TRUE, 0);
   /* Don't show initially.  */
 
   label = gtk_label_new (_("Update:"));
-  gtk_box_pack_start (d->sync_box, label, FALSE, FALSE, 0);
+  gtk_misc_set_alignment (GTK_MISC (label), 1, 0.5);
+  gtk_table_attach (GTK_TABLE (d->sync_box), label, 0, 1, 0, 1, GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show (label);
 
   d->sync_interval
@@ -420,8 +417,8 @@ calendar_edit_dialog_init (GTypeInstance *instance, gpointer klass)
   gtk_spin_button_set_value (d->sync_interval, 2);
   gtk_entry_set_width_chars (GTK_ENTRY (d->sync_interval), 3);
   gtk_widget_show (GTK_WIDGET (d->sync_interval));
-  gtk_box_pack_start (d->sync_box, GTK_WIDGET (d->sync_interval),
-		      FALSE, FALSE, 0);
+  gtk_table_attach (GTK_TABLE (d->sync_box), GTK_WIDGET (d->sync_interval), 1, 2, 0, 1, 
+                    GTK_FILL, GTK_FILL, 0, 0);
 
   d->sync_interval_units = GTK_COMBO_BOX (gtk_combo_box_new_text ());
   gtk_combo_box_append_text (d->sync_interval_units, _("times per year"));
@@ -431,8 +428,8 @@ calendar_edit_dialog_init (GTypeInstance *instance, gpointer klass)
   gtk_combo_box_append_text (d->sync_interval_units, _("times per hour"));
   gtk_combo_box_set_active (d->sync_interval_units, 1);
   gtk_widget_show (GTK_WIDGET (d->sync_interval_units));
-  gtk_box_pack_start (d->sync_box, GTK_WIDGET (d->sync_interval_units),
-		      FALSE, FALSE, 0);
+  gtk_table_attach (GTK_TABLE (d->sync_box), GTK_WIDGET (d->sync_interval_units), 
+                    2, 3, 0, 1, GTK_FILL, GTK_FILL, 0, 0);
 
   /* And fill the action box.  */
   gtk_dialog_add_button (GTK_DIALOG (d), GTK_STOCK_SAVE,
