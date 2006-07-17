@@ -6,7 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-conf 0.1.0-pre9\n"
-"POT-Creation-Date: 2003-09-18 17:55+0200\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2005-08-23 02:20+0200\n"
 "PO-Revision-Date: 2003-09-21 19:36+0200\n"
 "Last-Translator: Colin Marquardt <colin@marquardt-home.de>\n"
 "Language-Team: German <de@li.org>\n"
@@ -14,19 +15,179 @@ msgstr ""
 "Content-Type: text/plain; charset=iso-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: main.c:292
+#: main.c:90 timeanddate.c:542
+msgid "Time"
+msgstr "Zeit"
+
+#: main.c:90
+#, fuzzy
+msgid "Time and Date Setup"
+msgstr "Zeit & Datum"
+
+#: main.c:92
+#, fuzzy
+msgid "Screen"
+msgstr "Grün"
+
+#: main.c:92 gpe-conf-screen.desktop.in.h:1
+msgid "Screen Setup"
+msgstr "Bildschirmeinstellungen"
+
+#: main.c:94
+msgid "Keys & Buttons"
+msgstr ""
+
+#: main.c:94
+msgid "Keys and Buttons Setup"
+msgstr ""
+
+#: main.c:96 timeanddate.c:558
+msgid "Network"
+msgstr "Netzwerk"
+
+#: main.c:96 gpe-conf-network.desktop.in.h:1
+msgid "Network Setup"
+msgstr "Netzwerkeinstellungen"
+
+#: main.c:98 theme.c:1144
+msgid "Theme"
+msgstr "Theme"
+
+#: main.c:98 theme.c:1146 gpe-conf-theme.desktop.in.h:2
+msgid "Look and Feel"
+msgstr ""
+
+#: main.c:100
+#, fuzzy
+msgid "Power"
+msgstr "Provider"
+
+#: main.c:100
+#, fuzzy
+msgid "Power safe Configuration"
+msgstr "Schlaf-Konfiguration."
+
+#: main.c:102
+msgid "Owner"
+msgstr ""
+
+#: main.c:102 gpe-conf-ownerinfo.desktop.in.h:1
+msgid "Owner Information"
+msgstr "Benutzerinformation"
+
+#: main.c:104
+#, fuzzy
+msgid "Login"
+msgstr "Link"
+
+#: main.c:104 gpe-conf-login-setup.desktop.in.h:1
+msgid "Login Setup"
+msgstr "Login-Einstellungen"
+
+#: main.c:106
+#, fuzzy
+msgid "Users"
+msgstr "Benutzerzugriff"
+
+#: main.c:106
+#, fuzzy
+msgid "User Administration"
+msgstr "Administrierung des Benutzerzugriffs"
+
+#: main.c:108
+msgid "GPE"
+msgstr ""
+
+#: main.c:108
+#, fuzzy
+msgid "GPE Conf Administration"
+msgstr "Administrierung des Benutzerzugriffs"
+
+#: main.c:110 gpe-conf-serial.desktop.in.h:2
+#, fuzzy
+msgid "Serial Ports"
+msgstr "Serielle Ports"
+
+#: main.c:110
+#, fuzzy
+msgid "Serial Port Configuration"
+msgstr "Schlaf-Konfiguration."
+
+#: main.c:112
+#, fuzzy
+msgid "PCMCIA/CF Cards"
+msgstr "PC/CF-Karten"
+
+#: main.c:112
+#, fuzzy
+msgid "PCMCIA/CF Card Info and Config"
+msgstr "PC/CF-Steckplatz-Information"
+
+#: main.c:114
+msgid "Sound"
+msgstr ""
+
+#: main.c:114
+#, fuzzy
+msgid "Sound Setup"
+msgstr "Login-Einstellungen"
+
+#: main.c:116
+msgid "Task nameserver"
+msgstr ""
+
+#: main.c:116
+msgid "Task for changing nameserver"
+msgstr ""
+
+#: main.c:118
+#, fuzzy
+msgid "Task sound"
+msgstr "Hintergrund"
+
+#: main.c:118
+msgid "Command line task saving/restoring sound settings."
+msgstr ""
+
+#: main.c:120
+#, fuzzy
+msgid "Task background image"
+msgstr "Verwende Hintergrundbild für das Login."
+
+#: main.c:120
+msgid "Only select background image."
+msgstr ""
+
+#: main.c:146
+#, fuzzy
+msgid "Settings saved"
+msgstr "GPS-Einstellungen"
+
+#: main.c:162
+msgid "Aborted"
+msgstr ""
+
+#: main.c:335
+#, c-format
 msgid "'task_nameserver' needs a new (and only one) nameserver as argument.\n"
 msgstr "»task_nameserver« benötigt einen neuen (und nur eine) Nameserver als Argument.\n"
 
-#: main.c:356
+#: main.c:353
+#, fuzzy, c-format
+msgid "'task_sound' needs (s)ave/(r)estore as argument.\n"
+msgstr "»task_nameserver« benötigt einen neuen (und nur eine) Nameserver als Argument.\n"
+
+#: main.c:421
 msgid "Warning: PCMCIA init failed."
 msgstr "Warnung: PCMCIA-Initialisierung fehlgeschlagen."
 
-#: main.c:384
+#: main.c:453
+#, c-format
 msgid "This mode is disabled, please try:\n"
 msgstr "Dieser Mode ist nicht verfügbar, bitte versuchen Sie:\n"
 
-#: main.c:385
+#: main.c:454
+#, c-format
 msgid ""
 "\n"
 "gpe-conf [AppletName]\n"
@@ -36,12 +197,13 @@ msgstr ""
 "gpe-conf [AppletName]\n"
 "mit AppletName:\n"
 
-#: main.c:398
+#: main.c:470
 #, c-format
 msgid "Applet %s unknown!\n"
 msgstr "Applet %s unbekannt!\n"
 
-#: main.c:399
+#: main.c:471
+#, c-format
 msgid ""
 "\n"
 "\n"
@@ -53,11 +215,11 @@ msgstr ""
 "Verwendung: gpe-conf [AppletName]\n"
 "mit AppletName:\n"
 
-#: applets.c:349
+#: applets.c:445
 msgid "Root access"
 msgstr "Root-Zugriff"
 
-#: applets.c:359
+#: applets.c:459
 msgid ""
 "Some options are only\n"
 "accessible for user root.\n"
@@ -67,718 +229,828 @@ msgstr ""
 "für root verfügbar.\n"
 "Bitte geben Sie das Paßwort ein."
 
-#: applets.c:405 ipaqscreen/calibrate.c:34
+#: applets.c:506 screen/calibrate.c:32
 msgid "Sorry, wrong password."
-msgstr "Falsches Paßwort."
+msgstr "Falsches Paßword."
 
-#: timeanddate.c:436
+#: timeanddate.c:424
+#, fuzzy
+msgid "Time adjusted from network."
+msgstr "Hole Zeit vom Netzwerk"
+
+#: timeanddate.c:426
+#, fuzzy
+msgid "Adjusting time from network failed."
+msgstr "Hole Zeit vom Netzwerk"
+
+#: timeanddate.c:506
 msgid "Time & Date"
 msgstr "Zeit & Datum"
 
-#: timeanddate.c:452
+#: timeanddate.c:522
 msgid "Date"
 msgstr "Datum"
 
-#: timeanddate.c:466
+#: timeanddate.c:537
 msgid "Enter current date here or use button to select."
 msgstr "Aktuelles Datum hier eintragen oder auswählen."
 
-#: timeanddate.c:471
-msgid "Time"
-msgstr "Zeit"
-
-#: timeanddate.c:485
-msgid "Network"
-msgstr "Netzwerk"
-
-#: timeanddate.c:503
+#: timeanddate.c:576
 msgid "Select the timeserver to use to set the clock."
 msgstr "Wählen Sie aus, welcher Zeitserver zum Stellen der Uhrzeit verwendet wird."
 
-#: timeanddate.c:505
+#: timeanddate.c:578
 msgid "Get time from network"
 msgstr "Hole Zeit vom Netzwerk"
 
-#: timeanddate.c:512
+#: timeanddate.c:585
 msgid "If connected to the Internet, you may press this button to set the time on this device using the timeserver above."
 msgstr "Hole aktuelle Zeit vom ausgewählten Zeitserver, wenn mit dem Internet verbunden."
 
-#: timeanddate.c:517 timeanddate.c:526
+#: timeanddate.c:590 timeanddate.c:599
 msgid "Timezone"
 msgstr "Zeitzone"
 
-#: timeanddate.c:549
+#: timeanddate.c:622
 msgid "Select your current timezone here. The setting applies after the next login."
 msgstr "Wählen Sie hier ihre aktuelle Zeitzone aus. Die Einstellung wird nach dem nächsten Login wirksam."
 
-#: timeanddate.c:557
+#: timeanddate.c:630
 msgid "Daylight Saving"
 msgstr "Sommerzeit"
 
-#: timeanddate.c:564
+#: timeanddate.c:637
 msgid "Use daylight saving time"
 msgstr "Verwende Sommerzeit"
 
-#: timeanddate.c:571
+#: timeanddate.c:644
 msgid "Check this box if you want your device to handle daylight saving time for you."
 msgstr "Auswahl, ob das Gerät die Sommerzeitumstellung übernehmen soll."
 
-#: timeanddate.c:573
+#: timeanddate.c:646
 msgid "Offset:"
 msgstr "Zeitdifferenz:"
 
-#: timeanddate.c:582
+#: timeanddate.c:655
 msgid "Default"
 msgstr "Standard"
 
-#: timeanddate.c:589
+#: timeanddate.c:662
 msgid "Use default DST offset of one hour?"
 msgstr "Standard-Sommerzeitdifferenz von einer Stunde verwenden?"
 
-#: timeanddate.c:594
+#: timeanddate.c:667
 msgid "Hours"
 msgstr "Stunden"
 
-#: timeanddate.c:597
+#: timeanddate.c:670
 msgid "Select daylight saving time offset hours here."
 msgstr "Auswahl der Differenz zwischen Sommerzeit und Winterzeit, Stunden."
 
-#: timeanddate.c:602
+#: timeanddate.c:675
 msgid "Minutes"
 msgstr "Minuten"
 
-#: timeanddate.c:605
+#: timeanddate.c:678
 msgid "Select daylight saving time offset minutes here."
 msgstr "Auswahl der Differenz zwischen Sommerzeit und Winterzeit, Minuten."
 
-#: timeanddate.c:722
+#: timeanddate.c:783
 msgid "To make timezone settings take effect, you'll need to log out and log in again."
 msgstr "Um die Zeitzonen-Einstellungen zu übernehmen, müssen Sie sich erneut einloggen."
 
-#: appmgr_setup.c:189 login-setup.c:152 gpe-admin.c:86
-msgid "General"
-msgstr "Generelles"
-
-#: appmgr_setup.c:206
-msgid "Show 'All' group"
-msgstr "Zeige Gruppe »Alle«"
-
-#: appmgr_setup.c:214
-msgid "Auto-hide group labels"
-msgstr ""
-
-#: appmgr_setup.c:221
-msgid "Show 'Recent' tab"
-msgstr "Zeige Gruppe »Letzte«"
-
-#: appmgr_setup.c:228
-msgid "Do not launch at startup"
-msgstr "Nicht automatisch starten"
-
-#: appmgr_setup.c:237
-msgid "Tab View"
-msgstr "Tabellenansicht"
-
-#: appmgr_setup.c:252
-msgid "Icon"
-msgstr "Icon"
-
-#: appmgr_setup.c:256
-msgid "List"
-msgstr "Liste"
-
-#: appmgr_setup.c:265
-msgid "Changes will take effect after relog"
-msgstr "Änderungen wirksam nach erneutem Einloggen."
-
-#: ipaqscreen/main.c:68
+#: screen/main.c:74
 msgid "Portrait"
 msgstr "Hochformat"
 
-#: ipaqscreen/main.c:69
+#: screen/main.c:75
 msgid "Landscape (left)"
 msgstr "Querformat (links)"
 
-#: ipaqscreen/main.c:70
+#: screen/main.c:76
 msgid "Inverted"
 msgstr "Hochformat, kopfüber"
 
-#: ipaqscreen/main.c:71
+#: screen/main.c:77
 msgid "Landscape (right)"
 msgstr "Querformat (rechts)"
 
-#: ipaqscreen/main.c:92
+#: screen/main.c:104
 msgid "Light"
 msgstr "Licht"
 
-#: ipaqscreen/main.c:98
+#: screen/main.c:110
 msgid "Brightness"
 msgstr "Helligkeit"
 
-#: ipaqscreen/main.c:104
-msgid "State"
-msgstr "Status"
+#: screen/main.c:152
+msgid "Display"
+msgstr ""
 
-#: ipaqscreen/main.c:115
-msgid "Screensaver"
-msgstr "Bildschirmschoner"
+#: screen/main.c:156
+#, fuzzy
+msgid "Rotation"
+msgstr "Information"
 
-#: ipaqscreen/main.c:121
-msgid "Delay until start"
-msgstr "Auslöseverzögerung"
-
-#: ipaqscreen/main.c:125
-msgid "Activated"
-msgstr "Aktiviert"
-
-#: ipaqscreen/main.c:135
-msgid "Orientation"
-msgstr "Ausrichtung"
-
-#: ipaqscreen/main.c:154
+#: screen/main.c:176
 msgid "Touchscreen"
 msgstr "Touchscreen"
 
-#: ipaqscreen/main.c:158
+#: screen/main.c:180
 msgid "Calibrate"
 msgstr "Kalibrieren"
 
-#: ipaqscreen/main.c:160
-msgid "on"
-msgstr "an"
+#: screen/main.c:182
+msgid "Start"
+msgstr "Start"
 
-#: ipaqscreen/main.c:161
-msgid "off"
-msgstr "aus"
-
-#: ipaqscreen/main.c:272
-msgid "minutes"
+#: screen/main.c:304 sleep/callbacks.c:39
+#, fuzzy
+msgid "min"
 msgstr "Minuten"
 
-#: ipaqscreen/main.c:275
-msgid "seconds"
+#: screen/main.c:307 sleep/callbacks.c:42
+#, fuzzy
+msgid "sec"
 msgstr "Sekunden"
 
-#: ipaqscreen/main.c:277
-msgid "Off"
-msgstr "Aus"
-
-#: ipaqscreen/brightness.c:66 ipaqscreen/brightness.c:122
-msgid "Couldn't read screen settings!"
-msgstr "Konnte Einstellungen des Schirm nicht auslesen!"
-
-#: ipaqscreen/rotation.c:54
-msgid "Can't interpret output from xrandr!"
-msgstr "Kann xrandr-Ausgabe nicht interpretieren!"
-
-#: ipaqscreen/rotation.c:71
-msgid "Can't set rotation on an x86."
-msgstr "Kann Rotation nicht auf einem x86-Computer ausführen."
-
-#: kbd.c:146
+#: keys/kbd.c:142
 msgid "Keyboard Geometry / Layout"
 msgstr "Tastaturgeometrie/-layout"
 
-#: kbd.c:186
+#: keys/kbd.c:182
 msgid "User defined"
 msgstr "Benutzerdefiniert"
 
-#: keyboard.c:131
-msgid "Could not read keyboard definition file."
-msgstr "Fehler beim Lesen der Tastaturdefinitionsdatei."
-
-#: keyboard.c:171
-msgid "Error reading keyboard definition."
-msgstr "Fehler beim Lesen der Tastaturdefinition."
-
-#: keyboard.c:274
-msgid "External keyboard configuration. Model support packages not installed if inactive."
-msgstr "Konfiguration externer Tastaturen. Modell-Pakete sind nicht installiert, wenn inaktiv."
-
-#: keyboard.c:279
-msgid "External Keyboard Type"
-msgstr "Typ der externen Tastatur"
-
-#: keyboard.c:286
-msgid "Here you may select your external keyboard model. To install software support, connect your device to the internet and click the \"Install\" button."
-msgstr ""
-
-#: keyboard.c:307
-msgid "Click here to select this keyboard model."
-msgstr "Klicken Sie hier, um dieses Tastaturmodell auszuwählen."
-
-#: keyboard.c:314 packages.c:184 packages.c:365
-msgid "Install"
-msgstr "Installieren"
-
-#: keyboard.c:319
-msgid "Click here to install support for this keyboard."
-msgstr "Klicken Sie hier, um Unterstützung für dieses Tastaturmodell zu installieren."
-
-#: network.c:95
+#: network.c:104
 msgid "Current Config"
 msgstr "Aktuelle Konfiguration"
 
-#: network.c:174 ownerinfo.c:221
+#: network.c:233 ownerinfo.c:237
 msgid "Name:"
 msgstr "Name:"
 
-#: network.c:180
+#: network.c:239
 msgid "New Interface"
 msgstr "Neues Interface"
 
-#: network.c:187
+#: network.c:248
 msgid "This interface definition already exists!"
 msgstr "Diese Interface-Definition existiert bereits!"
 
-#: network.c:228
+#: network.c:326
 msgid "Do you want to delete this interface?"
 msgstr "Wollen sie dieses Interface löschen?"
 
-#: network.c:228 keyctl.c:162
+#: network.c:326 users/callbacks.c:138
 msgid "Question"
 msgstr "Frage"
 
-#: network.c:443
+#: network.c:575
+msgid "WiFi config"
+msgstr ""
+
+#: network.c:606
+#, c-format
+msgid "WiFi config for %s"
+msgstr ""
+
+#: network.c:618
+msgid "ESSID"
+msgstr ""
+
+#: network.c:640
+msgid "Mode"
+msgstr ""
+
+#: network.c:650
+#, fuzzy
+msgid "managed"
+msgstr "Bild"
+
+#: network.c:662
+msgid "ad-hoc"
+msgstr ""
+
+#: network.c:679
+#, fuzzy
+msgid "Channel"
+msgstr "Ändern"
+
+#: network.c:700
+msgid "WEP"
+msgstr ""
+
+#: network.c:710
+msgid "off"
+msgstr "aus"
+
+#: network.c:722
+#, fuzzy
+msgid "open"
+msgstr "an"
+
+#: network.c:734
+#, fuzzy
+msgid "restricted"
+msgstr "Gestreckt"
+
+#: network.c:750
+msgid "Key 1"
+msgstr ""
+
+#: network.c:778
+msgid "Key 2"
+msgstr ""
+
+#: network.c:806
+msgid "Key 3"
+msgstr ""
+
+#: network.c:835
+msgid "Key 4"
+msgstr ""
+
+#: network.c:1040
 msgid "Address"
 msgstr "Addresse"
 
-#: network.c:446
+#: network.c:1043
 msgid "Enter your IP address here, e.g. 192.168.1.2"
 msgstr "Tragen Sie hier ihre IP-Addresse ein, z.B. 192.168.1.2"
 
-#: network.c:448
+#: network.c:1045
 msgid "Netmask"
 msgstr "Netzmaske"
 
-#: network.c:451
+#: network.c:1048
 msgid "Enter your netmask here, e.g. 255.255.255.0 in most cases"
 msgstr "Tragen Sie hier ihre Netzmaske ein, z.B. 255.255.255.0 in den meisten Fällen"
 
-#: network.c:453
+#: network.c:1050
 msgid "Broadcast"
 msgstr "Broadcast"
 
-#: network.c:456
+#: network.c:1053
 msgid "Enter your broadcast address here, usually the same like your IP with 255 as last number."
 msgstr "Tragen Sie hier ihre Broadcast-Adresse ein, üblicherweise wie die IP mit 255 als letzter Zahl."
 
-#: network.c:458
+#: network.c:1055
 msgid "Gateway"
 msgstr "Gateway"
 
-#: network.c:461
+#: network.c:1058
 msgid "Enter the IP Address of your default gateway here."
 msgstr "Tragen Sie hier die IP-Adresse ihres Standard-Gateways ein."
 
-#: network.c:543
+#: network.c:1069 network.c:1186
+msgid "WiFi device"
+msgstr ""
+
+#: network.c:1077 network.c:1194
+#, fuzzy
+msgid "Configure"
+msgstr "Bestätigen:"
+
+#: network.c:1174
 msgid "Hostname"
 msgstr "Hostname"
 
-#: network.c:546
+#: network.c:1177
 msgid "Enter your desired hostname here. This parameter is optional."
 msgstr "Tragen Sie hier ihren gewünschten Hostnamen ein. Dieser Parameter ist optional."
 
-#: network.c:629
+#: network.c:1294
 msgid "Provider"
 msgstr "Provider"
 
-#: network.c:632
+#: network.c:1296
 msgid "Here you need to enter the name of the provider configuration to use for this interface."
 msgstr ""
 
-#: network.c:656
+#: network.c:1319
 msgid "Global Settings"
 msgstr "Globale Einstellungen"
 
-#: network.c:697
+#: network.c:1361
 msgid "Proxy"
 msgstr "Proxy"
 
-#: network.c:699
+#: network.c:1362
 msgid "If you want/need to use a proxy, enter it here. (This only applies to dillo for now.)"
 msgstr "Wenn Sie einen Proxy verwenden wollen oder müssen, tragen Sie diesen hier ein. (Im Moment nur in Dillo benutzt.)"
 
-#: network.c:704
+#: network.c:1368
 msgid "No proxy for"
 msgstr "Kein Proxy für"
 
-#: network.c:707
+#: network.c:1370
 msgid "Here you should enter your local domain for that you don't want to use a proxy."
 msgstr "Tragen Sie hier Ihre lokale Domain ein, für die Sie keinen Proxy verwenden wollen."
 
-#: network.c:716
-msgid "Use DHCP in any case (usually not needed)."
-msgstr "Verwende immer DHCP (normalerweise nicht benötigt)."
-
-#: network.c:718
-msgid "Use DHCP"
-msgstr "Verwende DHCP"
-
-#: network.c:733
-msgid "yes"
-msgstr "ja"
-
-#: network.c:744
-msgid "no"
-msgstr "nein"
-
-#: network.c:757
+#: network.c:1377
 msgid "DNS server"
 msgstr "DNS-Server"
 
-#: network.c:760
+#: network.c:1380
 msgid "Enter the IP of the DNS(name-) server to use here."
 msgstr "Tragen Sie die IP-Adresse des DNS-(Name-)Servers hier ein"
 
-#: network.c:941
+#: network.c:1551
 msgid ""
 "Here you may change the basic configuration type of your device.\n"
 "Use \"static\" for manual interface configuration, \"dhcp\" to use DHCP and \"ppp\" to make the device a point-to-point device."
 msgstr ""
 
-#: network.c:968 network.c:969
+#: network.c:1557
+msgid "Enable this option if your device is a WiFi device"
+msgstr ""
+
+#: network.c:1559
+msgid "Click to set the wireless options for this device"
+msgstr ""
+
+#: network.c:1561
+msgid "Set the mode your WiFi card should work. (managed or ad-hoc)."
+msgstr ""
+
+#: network.c:1564
+msgid "Set the enrcyption mode: off for no WEP encryption, open for open system and restricted for resticted WEP connections only."
+msgstr ""
+
+#: network.c:1569
+#, fuzzy
+msgid "Enter the essid of your WiFi network here."
+msgstr "Tragen Sie hier die IP-Adresse ihres Standard-Gateways ein."
+
+#: network.c:1572
+msgid "Enter your WEP key here in (iwconfig format), e.g.: \"s:12345\""
+msgstr ""
+
+#: network.c:1575
+msgid "Select the WEP key to use."
+msgstr ""
+
+#: network.c:1578
+msgid "Enter the channel number or frequency if needed. If not needed leave this field blank."
+msgstr ""
+
+#: network.c:1601
 msgid "Add Interface"
 msgstr "Interface hinzufügen"
 
-#: network.c:970
+#: network.c:1602
 msgid "Add a new Interface"
 msgstr "Ein neues Interface hinzufügen"
 
-#: network.c:978 network.c:979
+#: network.c:1612
 msgid "Remove Interface"
 msgstr "Interface entfernen"
 
-#: network.c:980
+#: network.c:1613
 msgid "Remove current Interface"
 msgstr "Aktuelles Interface entfernen"
 
-#: network.c:993
+#: network.c:1627
 msgid "Information"
 msgstr "Information"
 
-#: network.c:994 network.c:995
+#: network.c:1628
 msgid "Show current configuration."
 msgstr "Zeige aktuelle Konfiguration."
 
-#: network.c:1006
-msgid "Close"
-msgstr "Schließen"
-
-#: network.c:1007 network.c:1008
-msgid "Close network tool"
-msgstr "Schließe Netzwerk-Tool"
-
-#: network.c:1023
+#: network.c:1647
 msgid "Couldn't read network configuration."
 msgstr "Konnte Netzwerkkonfiguration nicht lesen."
 
-#: network.c:1032
+#: network.c:1654
 msgid "global"
 msgstr "global"
 
-#: theme.c:221 theme.c:225 theme.c:920 theme.c:940 theme.c:1036 theme.c:1042
-msgid "Color"
-msgstr "Farbe"
+#: theme.c:238
+#, fuzzy
+msgid "Choose backgound image"
+msgstr "Verwende Hintergrundbild für das Login."
 
-#: theme.c:393
+#: theme.c:252
+msgid "You are not allowed to read this file, choose another."
+msgstr ""
+
+#: theme.c:273
+msgid "Succesfully changed background image."
+msgstr ""
+
+#: theme.c:274
+msgid "Use \"Look and Feel\" setup tool to change details."
+msgstr ""
+
+#: theme.c:598
 msgid "Red"
 msgstr "Rot"
 
-#: theme.c:398
+#: theme.c:603
 msgid "Green"
 msgstr "Grün"
 
-#: theme.c:403
+#: theme.c:608
 msgid "Blue"
 msgstr "Blau"
 
-#: theme.c:654
-msgid "Select color"
+#: theme.c:918
+#, fuzzy
+msgid "Select colour"
 msgstr "Wähle Farbe"
 
-#: theme.c:680 theme.c:746
-msgid ""
-"You don't have read access\n"
-"to selected background image!"
+#: theme.c:944 theme.c:1018
+#, fuzzy
+msgid "You don't have read access to selected background image!"
 msgstr ""
 "Sie haben keine Leserechte\n"
 "für dieses Hintergrundbild!"
 
-#: theme.c:828
-msgid "Theme"
-msgstr "Theme"
-
-#: theme.c:837
+#: theme.c:1156
 msgid "Desktop Theme"
 msgstr "Desktop-Theme"
 
-#: theme.c:849
+#: theme.c:1168
 msgid "Name"
 msgstr "Name"
 
-#: theme.c:865
+#: theme.c:1185
 msgid "Icon Size"
 msgstr "Icon-Größe"
 
-#: theme.c:879
+#: theme.c:1200
+msgid "Visual Effects"
+msgstr ""
+
+#: theme.c:1206
+msgid "Enable Visual Effects"
+msgstr ""
+
+#: theme.c:1213
 msgid "Background"
 msgstr "Hintergrund"
 
-#: theme.c:890
+#: theme.c:1227 theme.c:1229
 msgid "Background Settings"
 msgstr "Hintergrundeinstellungen"
 
-#: theme.c:897
-msgid "Solid color"
+#: theme.c:1239 theme.c:1250
+#, fuzzy
+msgid "Theme Default"
+msgstr "Standard"
+
+#: theme.c:1258
+#, fuzzy
+msgid "Solid colour"
 msgstr "Einheitliche Farbe"
 
-#: theme.c:911
+#: theme.c:1272
 msgid "Horizontal"
 msgstr "Horizontal"
 
-#: theme.c:915
+#: theme.c:1276
 msgid "Vertical"
 msgstr "Vertikal"
 
-#: theme.c:931
-msgid "Color gradient"
+#: theme.c:1281 theme.c:1300 theme.c:1483 theme.c:1489
+#, fuzzy
+msgid "Colour"
+msgstr "Farbe"
+
+#: theme.c:1291
+#, fuzzy
+msgid "Colour gradient"
 msgstr "Farbverlauf"
 
-#: theme.c:951
+#: theme.c:1310
 msgid "Image"
 msgstr "Bild"
 
-#: theme.c:977
+#: theme.c:1336
 msgid "Centered"
 msgstr "Zentriert"
 
-#: theme.c:981
+#: theme.c:1340
 msgid "Tiled"
 msgstr "Gekachelt"
 
-#: theme.c:984
+#: theme.c:1343
 msgid "Stretched"
 msgstr "Gestreckt"
 
-#: theme.c:989
+#: theme.c:1350
+msgid "Toolbars"
+msgstr ""
+
+#: theme.c:1362 theme.c:1364
+msgid "Toolbar Style"
+msgstr ""
+
+#: theme.c:1373 theme.c:1402
+#, fuzzy
+msgid "Icons"
+msgstr "Icon"
+
+#: theme.c:1378 theme.c:1406
+msgid "Text"
+msgstr ""
+
+#: theme.c:1383
+msgid "Both"
+msgstr ""
+
+#: theme.c:1388
+msgid "Both H"
+msgstr ""
+
+#: theme.c:1409
+msgid "Both (icon above text)"
+msgstr ""
+
+#: theme.c:1412
+msgid "Both (icon left of text)"
+msgstr ""
+
+#: theme.c:1419
+#, fuzzy
+msgid "Toolbar Icon Size"
+msgstr "Icon-Größe"
+
+#: theme.c:1435
 msgid "Fonts"
 msgstr "Schriften"
 
-#: theme.c:998 theme.c:1018
+#: theme.c:1444 theme.c:1464
 msgid "Desktop Font"
 msgstr "Desktop-Schrift"
 
-#: theme.c:1005 theme.c:1060
+#: theme.c:1451 theme.c:1511 theme.c:1546 theme.c:1596
 msgid "Family"
 msgstr "Familie"
 
-#: theme.c:1025 theme.c:1080
+#: theme.c:1471 theme.c:1531 theme.c:1566 theme.c:1616
 msgid "Size"
 msgstr "Größe"
 
-#: theme.c:1053 theme.c:1073
+#: theme.c:1500 theme.c:1502 theme.c:1524 theme.c:1559
 msgid "Application Font"
 msgstr "Anwendungsschrift"
 
-#: keyctl.c:162
-msgid "Reset button config to default?"
-msgstr "Button-Konfiguration auf Vorgabe zuruücksetzen?"
+#: theme.c:1580
+#, fuzzy
+msgid "Terminal"
+msgstr "Vertikal"
 
-#: keyctl.c:199
-msgid "Defaults"
-msgstr "Standard"
+#: theme.c:1589
+#, fuzzy
+msgid "Font"
+msgstr "Schriften"
 
-#: keyctl.c:304
-msgid "ERROR: Can't open keylaunchrc for writing!\n"
+#: theme.c:1609
+#, fuzzy
+msgid "Terminal Font"
+msgstr "Serielle Ports"
+
+#: keys/keyctl.c:178
+msgid "Button layout file is missing a global section."
+msgstr ""
+
+#: keys/keyctl.c:549
+#, fuzzy
+msgid "Critical: Can't open keylaunchrc for writing!"
 msgstr "FEHLER: Kann keylaunchrc nicht zum Schreiben öffnen!\n"
 
-#: ownerinfo.c:201
+#: keys/keyctl.c:572
+#, fuzzy
+msgid "Could not restart key handler!"
+msgstr "Konnte PID-Datei nicht lesen"
+
+#: keys/keyctl.c:595
+msgid "The file you selected is not executable."
+msgstr ""
+
+#: ownerinfo.c:210
+#, fuzzy
+msgid "Information about the Owner"
+msgstr "Information für Steckplatz"
+
+#: ownerinfo.c:218
 msgid "Only the user 'root' is allowed to change this information"
 msgstr "Nur der Benutzer 'root' kann diese Informationen ändern"
 
-#: ownerinfo.c:236
+#: ownerinfo.c:252
 msgid "E-Mail:"
 msgstr "E-Mail:"
 
-#: ownerinfo.c:251
+#: ownerinfo.c:267
 msgid "Phone:"
 msgstr "Telefon:"
 
-#: ownerinfo.c:266
+#: ownerinfo.c:282
 msgid "Address:"
 msgstr "Adresse:"
 
-#: ownerinfo.c:292
+#: ownerinfo.c:308
 msgid "Photofile:"
 msgstr "Photodatei:"
 
-#: login-setup.c:131
-msgid "Some or all of these settings can only be changed by the user 'root'."
+#: login-setup.c:160
+#, fuzzy
+msgid "Some of these settings can only be changed by the user 'root'."
 msgstr "Einige oder alle dieser Einstellungen können nur vom Benutzer 'root' geändert werden."
 
-#: login-setup.c:167
+#: login-setup.c:183 gpe-admin.c:85
+msgid "General"
+msgstr "Generelles"
+
+#: login-setup.c:200
 msgid "Show owner information at login."
 msgstr "Zeige Eigentümerinformation beim Login."
 
-#: login-setup.c:169
-msgid "Use background image for login screen."
-msgstr "Verwende Hintergrundbild für das Login."
-
-#: login-setup.c:171
+#: login-setup.c:204
 msgid "Lock display on suspend."
 msgstr "Display beim Ausschalten sperren."
 
-#: login-setup.c:184
-msgid "Image:"
-msgstr "Bild:"
+#: login-setup.c:208
+#, fuzzy
+msgid ""
+"Lock display on suspend. \n"
+"  (needs password)"
+msgstr "Display beim Ausschalten sperren."
+
+#: login-setup.c:213
+msgid ""
+"Automatic login. \n"
+"  (without password)"
+msgstr ""
 
 # SLeep == Ruhezustand?
-#: sleep/interface.c:71
+#: sleep/interface.c:65
 msgid "Auto sleep"
 msgstr "Auto-Einschlafen"
 
-#: sleep/interface.c:81 sleep/interface.c:117
+#: sleep/interface.c:75 sleep/interface.c:106
 msgid "enabled"
 msgstr "an"
 
-#: sleep/interface.c:95
+#: sleep/interface.c:93
 msgid "sleep timeout"
 msgstr "Schlaf-Timeout"
 
-#: sleep/interface.c:98 sleep/interface.c:132
-msgid "idle(sec)"
-msgstr "Ruhe (sec)"
-
-#: sleep/interface.c:107
+#: sleep/interface.c:96
 msgid "Auto dim"
 msgstr "Auto-Abdunkeln"
 
-#: sleep/interface.c:130
+#: sleep/interface.c:123
 msgid "backlight dim timeout"
 msgstr "Timeout für Abdunkeln"
 
-#: sleep/interface.c:139
+#: sleep/interface.c:125
 msgid "Auto dim level"
 msgstr "Level für Auto-Abdunkeln"
 
-#: sleep/interface.c:157
-msgid "Auto sleep advanced controls"
+#: sleep/interface.c:145
+#, fuzzy
+msgid "Advanced Controls"
 msgstr "Auto-Schlaf, erweitert"
 
-#: sleep/interface.c:167
+#: sleep/interface.c:155
 msgid "CPU"
 msgstr "CPU"
 
-#: sleep/interface.c:174
+#: sleep/interface.c:161
 msgid "Sleep on cpu less than load"
 msgstr "Schlafen wenn CPU-Last unter"
 
-#: sleep/interface.c:185
-msgid "load"
-msgstr "Last"
+#: sleep/interface.c:165
+msgid "load below"
+msgstr ""
 
-#: sleep/interface.c:192
+#: sleep/interface.c:181
 msgid "APM"
 msgstr "APM"
 
-#: sleep/interface.c:198
+#: sleep/interface.c:187
 msgid "Sleep on AC"
 msgstr "Schlafe, wenn am Netz"
 
-#: sleep/interface.c:200
+#: sleep/interface.c:189
 msgid "probe IRQs"
 msgstr "Teste IRQs"
 
-#: sleep/interface.c:206
+#: sleep/interface.c:195
 msgid "Check IRQ activity"
 msgstr "Teste IRQ-Aktivität"
 
-#: sleep/interface.c:208
-msgid "Choose IRQs"
-msgstr "Wähle IRQs"
-
-#: users/interface.c:208
+#: users/interface.c:215
 msgid "User Name"
 msgstr "Benutzername"
 
-#: users/interface.c:209
+#: users/interface.c:216
 msgid "User Info"
 msgstr "Benutzerinfo"
 
-#: users/interface.c:211
+#: users/interface.c:217
 msgid "Home"
 msgstr "Home"
 
-#: users/interface.c:228 users/interface.c:229
+#: users/interface.c:235 users/interface.c:236
 msgid "Add user"
 msgstr "Benutzer hinzufügen"
 
-#: users/interface.c:229
+#: users/interface.c:236
 msgid "Add a new user"
 msgstr "Ein neues Benutzerkonto hinzufügen"
 
-#: users/interface.c:233 users/interface.c:234
+#: users/interface.c:240 users/interface.c:241
 msgid "Edit user"
 msgstr "Benutzer ändern"
 
-#: users/interface.c:234
+#: users/interface.c:241
 msgid "Edit existing user"
 msgstr "Ein existierendes Benutzerkonto ändern"
 
-#: users/interface.c:238 users/interface.c:239
+#: users/interface.c:245 users/interface.c:246
 msgid "Delete user"
 msgstr "Benutzer löschen"
 
-#: users/interface.c:239
+#: users/interface.c:246
 msgid "Delete existing user"
 msgstr "Ein existierendes Benutzerkonto löschen"
 
-#: users/interface.c:283
+#: users/interface.c:250
+#, fuzzy
+msgid "Password"
+msgstr "Paßwort:"
+
+#: users/interface.c:251
+#, fuzzy
+msgid "Change password"
+msgstr "Paßwort ändern"
+
+#: users/interface.c:320
 msgid "User settings"
 msgstr "Benutzerkontoeinstellungen"
 
-#: users/interface.c:297
+#: users/interface.c:334
 msgid "User Name:"
 msgstr "Benutzername:"
 
-#: users/interface.c:313
+#: users/interface.c:350
 msgid "Password:"
 msgstr "Paßwort:"
 
-#: users/interface.c:321
+#: users/interface.c:358
 msgid "User Info:"
 msgstr "Benutzerinfo:"
 
-#: users/interface.c:337
+#: users/interface.c:374
 msgid "Shell:"
 msgstr "Shell:"
 
-#: users/interface.c:356
+#: users/interface.c:393
 msgid "Home:"
 msgstr "Home:"
 
-#: users/interface.c:374
+#: users/interface.c:412
 msgid "Change"
 msgstr "Ändern"
 
-#: users/interface.c:435
+#: users/interface.c:413
+#, fuzzy
+msgid "Set"
+msgstr "Steckplatz"
+
+#: users/interface.c:478
 msgid "Change Password"
 msgstr "Paßwort ändern"
 
-#: users/interface.c:462
+#: users/interface.c:504
 msgid "Old Password:"
 msgstr "Altes Paßwort:"
 
-#: users/interface.c:469
+#: users/interface.c:511
 msgid "New Password:"
 msgstr "Neues Paßwort:"
 
-#: users/interface.c:477
+#: users/interface.c:519
 msgid "Confirm:"
 msgstr "Bestätigen:"
 
-#: users/callbacks.c:104
+#: users/callbacks.c:107
+msgid "You need at least one user account!"
+msgstr ""
+
+#: users/callbacks.c:131
+#, fuzzy
+msgid "You can't remove this user!"
+msgstr ""
+"Sie können keine Sytem-\n"
+"Benutzer löschen!"
+
+#: users/callbacks.c:136
 msgid ""
 "You can't remove\n"
 " system users!"
@@ -787,14 +1059,21 @@ msgstr ""
 "Benutzer löschen!"
 
 #: users/callbacks.c:138
+msgid ""
+"Delete user and all its data?\n"
+"This action is not revertable\n"
+"and is executed instantly."
+msgstr ""
+
+#: users/callbacks.c:173
 msgid "Please choose a user name."
 msgstr "Bitte wählen Sie einen Benutzernamen."
 
-#: users/callbacks.c:156
+#: users/callbacks.c:191
 msgid "Please choose a home directory."
 msgstr "Bitte wählen Sie ein Home-Verzeichnis."
 
-#: users/callbacks.c:217
+#: users/callbacks.c:279
 msgid ""
 "The two new pass are different!\n"
 " Please try again!"
@@ -802,7 +1081,7 @@ msgstr ""
 "Die beiden neuen Paßwörter sind verschieden!\n"
 " Bitte versuchen Sie es noch einmal."
 
-#: users/callbacks.c:220
+#: users/callbacks.c:282
 msgid ""
 "Wrong password\n"
 " Please try again!"
@@ -810,313 +1089,225 @@ msgstr ""
 "Falsches Paßwort!\n"
 " Bitte versuchen Sie es noch einmal."
 
-#: cfgfile.c:630
+#: cfgfile.c:919
 msgid "No write access to network configuration."
 msgstr "Kein Schreibzugriff auf die Netzwerkkonfiguration."
 
-#: gpe-admin.c:93
+#: gpe-admin.c:92
 msgid "Allow users to configure everything"
 msgstr "Normale Benutzer können alles konfigurieren"
 
-#: storage.c:195 storage.c:445
-msgid "System Memory"
-msgstr "Systemspeicher"
-
-#. TRANSLATORS: MB == Mega Bytes
-#: storage.c:203 storage.c:465
-msgid "Free memory"
-msgstr "Freier Speicher"
-
-#: storage.c:205 storage.c:212 storage.c:359 storage.c:370 storage.c:467
-#: storage.c:480 storage.c:581 storage.c:598
-msgid "MB"
-msgstr "MB"
-
-#: storage.c:210 storage.c:358 storage.c:478 storage.c:596
-msgid "Total:"
-msgstr "Gesamt:"
-
-#: storage.c:322 storage.c:525
-msgid "Internal Flash"
-msgstr "Interner Flash-Speicher"
-
-#: storage.c:328 storage.c:531
-msgid "MMC"
-msgstr "MMC"
-
-#: storage.c:334 storage.c:537
-msgid "Compact Flash"
-msgstr "Compact Flash"
-
-#: storage.c:340 storage.c:543
-msgid "Network Filesystem"
-msgstr "Netzwerkdateisystem"
-
-#: storage.c:360 storage.c:598
-msgid "Mounted at "
-msgstr "Eingehängt an"
-
-#: storage.c:368 storage.c:578
-msgid "Free space"
-msgstr "Freier Platz"
-
-#: storage.c:617
-msgid "Couldn't get filesystem info!"
-msgstr "Keine Dateisystem-Information verfügbar!"
-
-#: serial.c:158
-msgid "Couldn't find default runlevel!"
-msgstr "Konnte Standard-Runlevel nicht finden!"
-
-#: serial.c:289 serial.c:295
+#: serial.c:428 serial.c:434
 msgid "Simple interface to serial port configuration. Disabled components are not installed."
 msgstr "Einfache Konfiguration des seriellen Ports. Nicht verfügbare Komponenten sind nicht installiert."
 
-#: serial.c:292
+#: serial.c:431
 msgid "Port A"
 msgstr "Port A"
 
-#: serial.c:299
+#: serial.c:438
 msgid "Serial port default usage"
 msgstr "Hauptnutzung des seriellen Ports"
 
-#: serial.c:304
+#: serial.c:443
 msgid "Select desired software to use serial port here."
 msgstr "Wählen Sie die Software aus, die den seriellen Port benutzen soll."
 
-#: serial.c:307
+#: serial.c:446
 msgid "Console"
 msgstr "Konsole"
 
-#: serial.c:310
+#: serial.c:449
 msgid "This option runs console on serial port. (default)"
 msgstr "Diese Option läßt die Konsole auf dem seriellen Port laufen. (Vorgabe)"
 
-#: serial.c:316
+#: serial.c:457
 msgid "GPS Daemon"
 msgstr "GPS-Dämon"
 
-#: serial.c:320
+#: serial.c:462
+msgid "GPS Daemon (needs 'gpsd')"
+msgstr ""
+
+#: serial.c:467
 msgid "This option enables the start of GPSD, which provides data from a GPS reciver to applications."
 msgstr "Diese Option läßt GPS-Dämon gpsd laufen, welcher Daten von einem GPS-Empfänger an Anwendungen schickt."
 
-#: serial.c:327
+#: serial.c:474
 msgid "Nothing (free)"
 msgstr "Nichts (frei)"
 
-#: serial.c:330
+#: serial.c:477
 msgid "Don't start any software that uses the serial port."
 msgstr "Starte keine Software, die den seriellen Port benutzt."
 
-#: serial.c:368 serial.c:375
+#: serial.c:514 serial.c:521
 msgid "This page configures the GPS receiver software."
 msgstr "Dieser Dialog konfiguriert die Software des GPS-Empfängers."
 
-#: serial.c:372
+#: serial.c:518
 msgid "GPS Receiver"
 msgstr "GPS-Empfänger"
 
-#: serial.c:379
+#: serial.c:525
 msgid "GPS settings"
 msgstr "GPS-Einstellungen"
 
-#: serial.c:385
+#: serial.c:531
 msgid "Receiver Type"
 msgstr "Empfängertyp"
 
-#: serial.c:390
+#: serial.c:536
 msgid "NMEA"
 msgstr "NMEA"
 
-#: serial.c:395
-msgid "The GPS receiver is a sends NMEA data. (default, no need to change for most receivers)"
+#: serial.c:541
+#, fuzzy
+msgid "The GPS receiver sends NMEA data (default, no need to change for most receivers)."
 msgstr "Der GPE-Empfängers sendet NMEA-Daten. (Vorgabe, für die meisten Empfänger passend)"
 
-#: serial.c:401
+#: serial.c:547
 msgid "Earthmate"
 msgstr "Earthmate"
 
-#: serial.c:407
+#: serial.c:553
 msgid "GPS receiver is an Earthmate GPS."
 msgstr "GPS-Empfänger ist ein Earthmate GPS."
 
-#: serial.c:411
+#: serial.c:557
 msgid "Baud Rate"
 msgstr "Baudrate"
 
-#: logread.c:107
-msgid "Can't find circular buffer, is syslog running?"
-msgstr "Kann Ringpuffer nicht finden, läuft syslog?"
+#: serial.c:573
+#, fuzzy
+msgid "Serial Port"
+msgstr "Serielle Ports"
 
-#: logread.c:113
-msgid "Can't get access to circular buffer from syslogd."
-msgstr "Kann nicht auf syslogd-Ringpuffer zugreifen."
+#: cardinfo.c:103
+msgid "/_Card"
+msgstr ""
 
-#: logread.c:119
-msgid "Can't get access to semaphone(s) for circular buffer from syslogd."
-msgstr "Kann nicht auf Semaphore(n) von syslogd-Ringpuffer zugreifen."
+#: cardinfo.c:104
+msgid "/Card/_Insert"
+msgstr ""
 
-#: logread.c:144
-msgid "<empty syslog>"
-msgstr "<leeres System-Log>"
+#: cardinfo.c:105
+msgid "/Card/_Eject"
+msgstr ""
 
-#: logread.c:215 logread.c:229
-msgid "System Log"
-msgstr "System-Log"
+#: cardinfo.c:106
+msgid "/Card/_Suspend"
+msgstr ""
 
-#: logread.c:237 logread.c:251
-msgid "Session Log"
-msgstr "Session-Log"
+#: cardinfo.c:107
+msgid "/Card/_Resume"
+msgstr ""
 
-#: logread.c:257
-msgid "Could not open X session log."
-msgstr "Konnte Log der X-Session nicht öffnen."
+#: cardinfo.c:108
+msgid "/Card/_Reset"
+msgstr ""
 
-#: packages.c:67
-msgid "Removing package"
-msgstr "Deinstalliere Paket"
+#: cardinfo.c:109
+#, fuzzy
+msgid "/Card/s1"
+msgstr "PC/CF-Karten"
 
-#: packages.c:72
-msgid "Installing package"
-msgstr "Installiere Paket"
+#: cardinfo.c:110
+#, fuzzy
+msgid "/Card/_Assign Driver"
+msgstr "Treiber zuweisen"
 
-#: packages.c:151 packages.c:325
-msgid "Start"
-msgstr "Start"
+#: cardinfo.c:111
+#, fuzzy
+msgid "/Card/s2"
+msgstr "PC/CF-Karten"
 
-#: packages.c:156
-msgid "Update finished. Please check log messages for errors."
-msgstr "Update beendet. Bitte überprüfen Sie die Logmeldungen auf Fehler."
+#: cardinfo.c:112
+msgid "/Card/_Close"
+msgstr ""
 
-#: packages.c:185 packages.c:371
-msgid "Remove"
-msgstr "Deinstallieren"
+#: cardinfo.c:113
+msgid "/_Help"
+msgstr ""
 
-#: packages.c:186
-msgid "Install/Removal finished. Please check log messages for errors."
-msgstr "Installieren/deinstallieren beendet. Bitte überprüfen Sie die Logmeldungen auf Fehler."
+#: cardinfo.c:114
+msgid "/_Help/Index"
+msgstr ""
 
-#: packages.c:206
-msgid "Update using \"ipkg upgrade\" started.\n"
-msgstr "Update mittels \"ipkg upgrade\" gestartet.\n"
+#: cardinfo.c:115
+msgid "/_Help/About"
+msgstr ""
 
-#: packages.c:230 packages.c:254
-msgid "Running..."
-msgstr "Läuft..."
-
-#: packages.c:315
-msgid "Update"
-msgstr "Update"
-
-#: packages.c:320
-msgid "Update from network"
-msgstr "Update über das Netzwerk"
-
-#: packages.c:329
-msgid "Update entire system over an internet connection."
-msgstr "Update des gesamten Systems über eine Internetverbindung."
-
-#: packages.c:333 packages.c:379
-msgid "Activity log"
-msgstr "Aktivitäts-Log"
-
-#: packages.c:341
-msgid "This window shows all output from the packet manager that performs the update."
-msgstr "Dieses Fenster zeigt die gesamte Ausgabe des Paketmanagers beim Update."
-
-#: packages.c:351
-msgid "Install/Remove"
-msgstr "Installieren/Deinstallieren"
-
-#: packages.c:356
-msgid "Install/Remove a package"
-msgstr "Paket installieren/deinstallieren"
-
-#: packages.c:363
-msgid "Enter name of package to be installed here."
-msgstr "Tragen Sie den Namen des zu installierenden Pakets hier ein."
-
-#: packages.c:369
-msgid "Install a package from a configured source."
-msgstr "Paket von einer konfigurierten Quelle installieren."
-
-#: packages.c:375
-msgid "Remove the package."
-msgstr "Paket deinstallieren."
-
-#: packages.c:387
-msgid "This window shows all output from the packet manager installing the package."
-msgstr "Dieses Fenster zeigt die gesamte Ausgabe des Paketmanagers beim Installieren."
-
-#: cardinfo.c:145 cardinfo.c:833
+#: cardinfo.c:175 cardinfo.c:863
 msgid "card not recognized"
 msgstr "Karte nicht erkannt"
 
-#: cardinfo.c:247 cardinfo.c:318
+#: cardinfo.c:277 cardinfo.c:348
 msgid "Could not write to temporal config file."
 msgstr "Konnte nicht in temporäre Konfigurationsdatei schreiben."
 
-#: cardinfo.c:524
+#: cardinfo.c:554
 msgid "Could not open pidfile:"
 msgstr "Konnte PID-Datei nicht öffnen:"
 
-#: cardinfo.c:530
+#: cardinfo.c:560
 msgid "Could not read pidfile"
 msgstr "Konnte PID-Datei nicht lesen"
 
-#: cardinfo.c:534
+#: cardinfo.c:564
 msgid "Could not signal cardmgr:"
 msgstr "Konnte cardmgr kein Signal senden:"
 
-#: cardinfo.c:609
+#: cardinfo.c:639
 msgid "gpe-conf must be setuid root to use cardinfo feature."
 msgstr "gpe-conf muß »setuid root« sein, um die cardinfo-Funktion zu verwenden."
 
-#: cardinfo.c:628
+#: cardinfo.c:658
 msgid "No PCMCIA driver in '/proc/devices'"
 msgstr "Kein PCMCIA-Treiber in »/proc/devices«"
 
-#: cardinfo.c:631
+#: cardinfo.c:661
 msgid "Could not open '/proc/devices'"
 msgstr "Konnte »/proc/devices« nicht öffnen"
 
-#: cardinfo.c:643
+#: cardinfo.c:673
 msgid "No sockets found\n"
 msgstr "Keine Steckplätze gefunden\n"
 
-#: cardinfo.c:652
+#: cardinfo.c:682
 msgid "Card Services release does not match!"
 msgstr "Card Services-Release paßt nicht!"
 
-#: cardinfo.c:657
+#: cardinfo.c:687
 msgid "Could not get CS revision info!\n"
 msgstr "Keine CS-Revision-Information verfügbar!\n"
 
-#: cardinfo.c:820
+#: cardinfo.c:850
 msgid "flock(stabfile) failed"
 msgstr "flock(stabfile) fehlgeschlagen"
 
-#: cardinfo.c:839
+#: cardinfo.c:869
+#, c-format
 msgid "no driver loaded"
 msgstr "kein Treiber geladen"
 
-#: cardinfo.c:948
+#: cardinfo.c:978
 msgid "ready"
 msgstr "bereit"
 
-#: cardinfo.c:966
+#: cardinfo.c:996
 msgid "not ready"
 msgstr "nicht bereit"
 
-#: cardinfo.c:981
+#: cardinfo.c:1011
 msgid "suspended"
 msgstr "abgeschaltet"
 
-#: cardinfo.c:1173 cardinfo.c:1344 cardinfo.c:1345
+#: cardinfo.c:1203
 msgid "Assign Driver"
 msgstr "Treiber zuweisen"
 
-#: cardinfo.c:1182
+#: cardinfo.c:1212
 msgid ""
 "This dialog allows you to select/\n"
 "change the driver assignment for a\n"
@@ -1126,448 +1317,758 @@ msgstr ""
 "Treiberzuordnung für die PCMCIA/CF-Karte\n"
 "zu wählen oder zu ändern."
 
-#: cardinfo.c:1192
+#: cardinfo.c:1222
 msgid "Your current card identifies itself as:"
 msgstr "Ihre Karte identifiziert sich als:"
 
-#: cardinfo.c:1206 cardinfo.c:1212
+#: cardinfo.c:1236 cardinfo.c:1242
 msgid "Manuf. Id"
 msgstr "Hersteller-ID"
 
-#: cardinfo.c:1206 cardinfo.c:1212
+#: cardinfo.c:1236 cardinfo.c:1242
 msgid "Class"
 msgstr "Klasse"
 
-#: cardinfo.c:1285
-msgid "Insert Card"
-msgstr "Karte einstecken"
-
-#: cardinfo.c:1287
-msgid "Click here to start card insertion manually."
-msgstr "Klicken Sie hier, um das Einstecken der Karte manuell zu starten."
-
-#: cardinfo.c:1295
-msgid "Eject Card"
-msgstr "Karte auswerfen"
-
-#: cardinfo.c:1297
-msgid "Click here to eject card manually."
-msgstr "Klicken Sie hier, um die Karte manuell auszuwerfen."
-
-#: cardinfo.c:1305
-msgid "Suspend Card"
-msgstr "Karte anhalten"
-
-#: cardinfo.c:1307
-msgid "Click here to suspend current card."
-msgstr "Klicken Sie hier, um die aktuelle Karte anzuhalten."
-
-#: cardinfo.c:1315
-msgid "Resume Card"
-msgstr "Karte weiterlaufen lassen"
-
-#: cardinfo.c:1317
-msgid "Click here to resume current card."
-msgstr "Klicken Sie hier, um die aktuelle Karte weiterlaufen zu lassen."
-
-#: cardinfo.c:1325
-msgid "Reset Card"
-msgstr "Karte zurücksetzen"
-
-#: cardinfo.c:1326
-msgid "Click here to reset current card."
-msgstr "Klicken Sie hier, um die aktuelle Karte zurückzusetzen."
-
-#: cardinfo.c:1334 cardinfo.c:1335
-msgid "Reset Card Manager"
-msgstr "Card Manager zurückzusetzen"
-
-#: cardinfo.c:1337
-msgid "Click here to reset card manager. This commits all updates to pcmcia config files."
-msgstr "Klicken Sie hier um den Card Manager zurückzusetzen. Dies schreibt alle Einstellungen in die PCMCIA-Konfigurationsdateien."
-
-#: cardinfo.c:1347
-msgid "Click here to assign a driver to this card / change current driver assignment."
-msgstr "Klicken Sie hier, um die Treiberzuordnung für die Karte zu wählen oder zu ändern."
-
-#: cardinfo.c:1354 cardinfo.c:1355
-msgid "Exit applet"
-msgstr "Applet beenden"
-
-#: cardinfo.c:1364 cardinfo.c:1377
+#: cardinfo.c:1340 cardinfo.c:1353
 msgid "PC/CF card socket information."
 msgstr "PC/CF-Steckplatz-Information."
 
-#: cardinfo.c:1372
+#: cardinfo.c:1348
 msgid "Socket"
 msgstr "Steckplatz"
 
-#: cardinfo.c:1403
+#: cardinfo.c:1379
 msgid "Information for socket"
 msgstr "Information für Steckplatz"
 
-#: cardinfo.c:1412
+#: cardinfo.c:1388
 msgid "State:"
 msgstr "Status:"
 
-#: cardinfo.c:1413
+#: cardinfo.c:1389
 msgid "Device:"
 msgstr "Gerät:"
 
-#: cardinfo.c:1414
+#: cardinfo.c:1390
 msgid "Driver:"
 msgstr "Treiber:"
 
-#: cardinfo.c:1415
+#: cardinfo.c:1391
 msgid "Type:"
 msgstr "Typ:"
 
-#: cardinfo.c:1416
+#: cardinfo.c:1392
 msgid "I/O:"
 msgstr "I/O:"
 
-#: cardinfo.c:1417
+#: cardinfo.c:1393
 msgid "IRQ:"
 msgstr "IRQ:"
 
-#: cardinfo.c:1424
+#: cardinfo.c:1400
 msgid "Flags:"
 msgstr "Flags:"
 
-#: cardinfo.c:1441
+#: cardinfo.c:1417
 msgid "PCMCIA initialisation failed"
 msgstr "PCMCIA-Initialisierung fehlgeschlagen"
 
-#: tools/interface.c:288 tools/interface.c:488 tools/interface.c:504
-#: tools/interface.c:624
+#: tools/interface.c:315 tools/interface.c:515 tools/interface.c:531
+#: tools/interface.c:651
 msgid "[NONE SET]"
 msgstr "[NICHT GESETZT]"
 
-#: tools/interface.c:679 tools/interface.c:1677
+#: tools/interface.c:706 tools/interface.c:1704
 msgid "UNSPEC"
 msgstr ""
 
-#: tools/interface.c:681
+#: tools/interface.c:708
 msgid "UNIX Domain"
 msgstr "UNIX-Domain"
 
-#: tools/interface.c:684
+#: tools/interface.c:711
 msgid "DARPA Internet"
 msgstr "DARPA-Internet"
 
-#: tools/interface.c:687
+#: tools/interface.c:714
 msgid "IPv6"
 msgstr "IPv6"
 
-#: tools/interface.c:690 tools/interface.c:1698
+#: tools/interface.c:717 tools/interface.c:1725
 msgid "AMPR AX.25"
 msgstr "AMPR AX.25"
 
-#: tools/interface.c:693 tools/interface.c:1704
+#: tools/interface.c:720 tools/interface.c:1731
 msgid "AMPR NET/ROM"
 msgstr "AMPR NET/ROM"
 
-#: tools/interface.c:696
+#: tools/interface.c:723
 msgid "Novell IPX"
 msgstr "Novell IPX"
 
-#: tools/interface.c:699
+#: tools/interface.c:726
 msgid "Appletalk DDP"
 msgstr "Appletalk DDP"
 
-#: tools/interface.c:702 tools/interface.c:1739
+#: tools/interface.c:729 tools/interface.c:1766
 msgid "Econet"
 msgstr "Econet"
 
-#: tools/interface.c:705
+#: tools/interface.c:732
 msgid "CCITT X.25"
 msgstr "CCITT X.25"
 
-#: tools/interface.c:708 tools/interface.c:1701
+#: tools/interface.c:735 tools/interface.c:1728
 msgid "AMPR ROSE"
 msgstr "AMPR ROSE"
 
-#: tools/interface.c:711 tools/interface.c:1689
+#: tools/interface.c:738 tools/interface.c:1716
 msgid "Ash"
 msgstr "Ash"
 
-#: tools/interface.c:738
+#: tools/interface.c:765
+#, c-format
 msgid "Too many address family arguments.\n"
 msgstr "Zu viele Argumente für Adressfamilie.\n"
 
-#: tools/interface.c:749
+#: tools/interface.c:776
 #, c-format
 msgid "Unknown address family '%s'.\n"
 msgstr "Unbekannte Adressfamilie »%s«.\n"
 
-#: tools/interface.c:812
+#: tools/interface.c:839
+#, c-format
 msgid "Please don't supply more than one address family.\n"
 msgstr "Bitte geben Sie nur eine Adressfamilie an.\n"
 
-#: tools/interface.c:939
+#: tools/interface.c:966
+#, c-format
 msgid "No usable address families found.\n"
 msgstr "Keine benutzbaren Adressfamilien gefunden.\n"
 
-#: tools/interface.c:1009
+#: tools/interface.c:1036
 #, c-format
 msgid "Warning: no inet socket available: %s\n"
 msgstr "Warnung: kein inet-Socket verfügbar: %s\n"
 
 # !!! what is 'limited output'?
-#: tools/interface.c:1161
+#: tools/interface.c:1188
 #, fuzzy, c-format
 msgid "Warning: cannot open %s (%s). Limited output.\n"
 msgstr "Warnung: kann %s (%s) nicht öffnen. Limited output.\n"
 
-#: tools/interface.c:1404
+#: tools/interface.c:1431
 msgid "Device not found"
 msgstr "Gerät nicht gefunden"
 
-#: tools/interface.c:1408
+#: tools/interface.c:1435
 #, c-format
 msgid "%s: error fetching interface information: %s\n"
 msgstr "%s: Fehler beim Holen der Interface-Informationen: %s\n"
 
-#: tools/interface.c:1582
+#: tools/interface.c:1609
+#, c-format
 msgid "You cannot start PPP with this program.\n"
 msgstr "Sie können PPP nicht mit diesem Programm starten.\n"
 
-#: tools/interface.c:1676
+#: tools/interface.c:1703
 msgid "Local Loopback"
 msgstr "Lokales Loopback"
 
-#: tools/interface.c:1679
+#: tools/interface.c:1706
 msgid "Serial Line IP"
 msgstr ""
 
-#: tools/interface.c:1680
+#: tools/interface.c:1707
 msgid "VJ Serial Line IP"
 msgstr ""
 
-#: tools/interface.c:1681
+#: tools/interface.c:1708
 msgid "6-bit Serial Line IP"
 msgstr ""
 
-#: tools/interface.c:1682
+#: tools/interface.c:1709
 msgid "VJ 6-bit Serial Line IP"
 msgstr ""
 
-#: tools/interface.c:1683
+#: tools/interface.c:1710
 msgid "Adaptive Serial Line IP"
 msgstr ""
 
-#: tools/interface.c:1686
+#: tools/interface.c:1713
 msgid "Ethernet"
 msgstr "Ethernet"
 
-#: tools/interface.c:1692
+#: tools/interface.c:1719
 msgid "Fiber Distributed Data Interface"
 msgstr "Fiber Distributed Data Interface"
 
-#: tools/interface.c:1695
+#: tools/interface.c:1722
 msgid "HIPPI"
 msgstr "HIPPI"
 
-#: tools/interface.c:1707
+#: tools/interface.c:1734
 msgid "generic X.25"
 msgstr "Generisches X.25"
 
-#: tools/interface.c:1710
+#: tools/interface.c:1737
 msgid "IPIP Tunnel"
 msgstr "IPIP-Tunnel"
 
-#: tools/interface.c:1713
+#: tools/interface.c:1740
 msgid "Point-to-Point Protocol"
 msgstr "Point-to-Point Protocol"
 
-#: tools/interface.c:1716
+#: tools/interface.c:1743
 msgid "(Cisco)-HDLC"
 msgstr "(Cisco)-HDLC"
 
-#: tools/interface.c:1717
+#: tools/interface.c:1744
 msgid "LAPB"
 msgstr "LAPB"
 
-#: tools/interface.c:1720
+#: tools/interface.c:1747
 msgid "ARCnet"
 msgstr "ARCnet"
 
-#: tools/interface.c:1723
+#: tools/interface.c:1750
 msgid "Frame Relay DLCI"
 msgstr "Frame Relay DLCI"
 
-#: tools/interface.c:1724
+#: tools/interface.c:1751
 msgid "Frame Relay Access Device"
 msgstr "Frame Relay Access Device"
 
-#: tools/interface.c:1727
+#: tools/interface.c:1754
 msgid "IPv6-in-IPv4"
 msgstr "IPv6-in-IPv4"
 
-#: tools/interface.c:1730
+#: tools/interface.c:1757
 msgid "IrLAP"
 msgstr "IrLAP"
 
-#: tools/interface.c:1733
+#: tools/interface.c:1760
 msgid "16/4 Mbps Token Ring"
 msgstr "16/4 Mbps Token Ring"
 
-#: tools/interface.c:1735
+#: tools/interface.c:1762
 msgid "16/4 Mbps Token Ring (New)"
 msgstr "16/4 Mbps Token Ring (Neu)"
 
-#: tools/interface.c:1845
-#, c-format
-msgid ""
-"<b>Interface %s</b>\n"
-"Type: %s\n"
-msgstr ""
-"<b>Interface %s</b>\n"
-"Typ: %s\n"
+#: tools/interface.c:1875
+#, fuzzy, c-format
+msgid "Interface %s"
+msgstr "Interface hinzufügen"
 
-#: tools/interface.c:1853
-#, c-format
-msgid "HWaddr (MAC): %s\n"
-msgstr "HWaddr (MAC): %s\n"
+#: tools/interface.c:1876
+#, fuzzy, c-format
+msgid "Type: %s"
+msgstr "Typ:"
 
-#: tools/interface.c:1859
+#: tools/interface.c:1885
 #, c-format
 msgid "Media: %s"
 msgstr "Medium: %s"
 
-#: tools/interface.c:1864
+#: tools/interface.c:1890
+#, c-format
 msgid "(auto)"
 msgstr "(auto)"
 
-#: tools/interface.c:1876
+#: tools/interface.c:1902
 #, c-format
 msgid "Address: %s\n"
 msgstr "Adresse: %s\n"
 
-#: tools/interface.c:1881
+#: tools/interface.c:1907
 #, c-format
 msgid "P-t-P: %s\n"
 msgstr "P-t-P: %s\n"
 
-#: tools/interface.c:1885
+#: tools/interface.c:1911
 #, c-format
 msgid "Netmask: %s\n"
 msgstr "Netzmaske: %s\n"
 
-#: tools/interface.c:1889
+#: tools/interface.c:1915
 #, c-format
 msgid "Broadcast: %s\n"
 msgstr "Broadcast: %s\n"
 
-#: tools/interface.c:1909
+#: tools/interface.c:1927
+#, c-format
+msgid "HWaddr (MAC): %s\n"
+msgstr "HWaddr (MAC): %s\n"
+
+#: tools/interface.c:1957
 #, c-format
 msgid "IPv6 Address: %s/%d\n"
 msgstr "IPv6-Addresse: %s/%d\n"
 
-#: tools/interface.c:1913
+#: tools/interface.c:1960
+#, c-format
 msgid "Scope: "
 msgstr "Bereich: "
 
-#: tools/interface.c:1918
+#: tools/interface.c:1965
+#, c-format
 msgid "Global"
 msgstr "Global"
 
-#: tools/interface.c:1921
+#: tools/interface.c:1968
+#, c-format
 msgid "Link"
 msgstr "Link"
 
-#: tools/interface.c:1924
+#: tools/interface.c:1971
+#, c-format
 msgid "Site"
 msgstr "Site"
 
-#: tools/interface.c:1927
+#: tools/interface.c:1974
+#, c-format
 msgid "Compat"
 msgstr "Kompat"
 
-#: tools/interface.c:1930
+#: tools/interface.c:1977
+#, c-format
 msgid "Host"
 msgstr "Host"
 
-#: tools/interface.c:1933
+#: tools/interface.c:1980
+#, c-format
 msgid "Unknown"
 msgstr "Unbekannt"
 
-#: battery.c:79
-#, c-format
-msgid "could not open touchscreen device '%s'\n"
-msgstr "Konnte Touchscreen-Gerät »%s« nicht öffnen\n"
+#: sound/sound.c:250
+#, fuzzy
+msgid "Audio Settings"
+msgstr "Erweiterte Einstellungen"
 
-#: battery.c:127 battery.c:179
+#: sound/sound.c:257
+msgid "Mute Everything"
+msgstr ""
+
+#: sound/sound.c:298
+#, fuzzy
+msgid "Alarm Settings"
+msgstr "Globale Einstellungen"
+
+#: sound/sound.c:305
+msgid "Enable Alarm Sound"
+msgstr ""
+
+#: sound/sound.c:312
+msgid "Automatic Volume (rising)"
+msgstr ""
+
+#: sound/sound.c:322 sound/soundctrl.c:298
+#, fuzzy
+msgid "Volume"
+msgstr "Spannung"
+
+#: sound/sound.c:329
+msgid "Test"
+msgstr ""
+
+#: keys/keyboard.c:75
+#, fuzzy
+msgid "none"
+msgstr "nein"
+
+#: keys/keyboard.c:76
+msgid "Foldable"
+msgstr ""
+
+#: keys/keyboard.c:77
+msgid "SnapNType"
+msgstr ""
+
+#: keys/keyboard.c:78
+msgid "Stowaway"
+msgstr ""
+
+#: keys/keyboard.c:79
+msgid "StowawayXT"
+msgstr ""
+
+#: keys/keyboard.c:80
+msgid "HP Slim"
+msgstr ""
+
+#: keys/keyboard.c:81
+#, fuzzy
+msgid "Smart BT"
+msgstr "Start"
+
+#: keys/keyboard.c:82
+msgid "LIRC"
+msgstr ""
+
+#: keys/keyboard.c:83
+msgid "Belkin IR"
+msgstr ""
+
+#: keys/keyboard.c:84
+msgid "Flexis"
+msgstr ""
+
+#: keys/keyboard.c:85
+msgid "Benq Gamepad"
+msgstr ""
+
+#: keys/keyboard.c:86
+#, fuzzy
+msgid "Pocketvik"
+msgstr "Steckplatz"
+
+#: keys/keyboard.c:87
+msgid "Micro Foldaway"
+msgstr ""
+
+#: keys/keyboard.c:88
+msgid "Micro Datapad"
+msgstr ""
+
+#: keys/keyboard.c:252
+#, fuzzy
+msgid "External keyboard configuration."
+msgstr "Einstellungen der externen Tastatur"
+
+#: keys/keyboard.c:255
+#, fuzzy
+msgid "External Keyboard Port"
+msgstr "Externe Tastatur"
+
+#: keys/keyboard.c:262
+#, fuzzy
+msgid "Here you may select your external keyboard model."
+msgstr "Klicken Sie hier, um dieses Tastaturmodell auszuwählen."
+
+#: keys/keyboard.c:283
+msgid "External Keyboard Type"
+msgstr "Typ der externen Tastatur"
+
+#: keys/keys.c:79
+#, fuzzy
+msgid "Buttons"
+msgstr "Tastenkonfig"
+
+#: keys/keys.c:83
+msgid "Virtual Keyboard"
+msgstr "Virtuelle Tastatur"
+
+#: keys/keys.c:87
+msgid "External Keyboard"
+msgstr "Externe Tastatur"
+
+#: main-info.c:67
+#, c-format
+msgid "usage: gpe-info [page]\n"
+msgstr ""
+
+#: main-info.c:68
+#, c-format
+msgid "    Where page may be \"global\" (default)\n"
+msgstr ""
+
+#: main-info.c:78 gpe-conf-sysinfo.desktop.in.h:2
+#, fuzzy
+msgid "System Information"
+msgstr "Speicherinformation"
+
+#: storage.c:166 storage.c:423
+msgid "System Memory"
+msgstr "Systemspeicher"
+
+#. TRANSLATORS: MB == Mega Bytes
+#: storage.c:174 storage.c:443
+msgid "Free memory"
+msgstr "Freier Speicher"
+
+#. TRANSLATORS: MB == Mega Bytes
+#: storage.c:176 storage.c:183 storage.c:329 storage.c:340 storage.c:445
+#: storage.c:458 sysinfo.c:663 sysinfo.c:679
+msgid "MB"
+msgstr "MB"
+
+#: storage.c:181 storage.c:328 storage.c:456
+msgid "Total:"
+msgstr "Gesamt:"
+
+#: storage.c:292
+msgid "Internal Flash"
+msgstr "Interner Flash-Speicher"
+
+#: storage.c:298
+msgid "MMC"
+msgstr "MMC"
+
+#: storage.c:304
+msgid "Compact Flash"
+msgstr "Compact Flash"
+
+#: storage.c:310
+msgid "Network Filesystem"
+msgstr "Netzwerkdateisystem"
+
+#: storage.c:330
+msgid "Mounted at "
+msgstr "Eingehängt an"
+
+#: storage.c:338
+msgid "Free space"
+msgstr "Freier Platz"
+
+#: logread.c:116
+#, fuzzy
+msgid "Can't find circular buffer, is syslog running?\n"
+msgstr "Kann Ringpuffer nicht finden, läuft syslog?"
+
+#: logread.c:123
+#, fuzzy
+msgid "Can't get access to syslogd's circular buffer."
+msgstr "Kann nicht auf syslogd-Ringpuffer zugreifen."
+
+#: logread.c:130
+#, fuzzy
+msgid "Can't get access to semaphore(s) for syslogd's circular buffer."
+msgstr "Kann nicht auf Semaphore(n) von syslogd-Ringpuffer zugreifen."
+
+#: logread.c:156
+msgid "<empty syslog>"
+msgstr "<leeres System-Log>"
+
+#: logread.c:227 logread.c:243
+msgid "System Log"
+msgstr "System-Log"
+
+#: logread.c:252 logread.c:268
+msgid "Session Log"
+msgstr "Session-Log"
+
+#: logread.c:275
+#, fuzzy
+msgid "Could not open X session log.\n"
+msgstr "Konnte Log der X-Session nicht öffnen."
+
+#: battery.c:190 battery.c:251
+#, fuzzy
+msgid "unknown"
+msgstr "Unbekannt"
+
+#: battery.c:199 battery.c:259 battery.c:358
 msgid "Status: high"
 msgstr "Status: hoch"
 
-#: battery.c:130 battery.c:182
+#: battery.c:202 battery.c:262 battery.c:362
 msgid "Status: low"
 msgstr "Status: niedrig"
 
-#: battery.c:133 battery.c:185
+#: battery.c:205 battery.c:265 battery.c:366
 msgid "Status: critical"
 msgstr "Status: kritisch"
 
-#: battery.c:136 battery.c:188
+#: battery.c:208 battery.c:268 battery.c:370
 msgid "Status: charging"
 msgstr "Status: ladend"
 
-#: battery.c:139 battery.c:191
+#: battery.c:211 battery.c:271
 msgid "Status: charge main"
 msgstr ""
 
-#: battery.c:142
+#: battery.c:214
 msgid "Status: dead"
 msgstr "Status: leer"
 
-#: battery.c:145 battery.c:197
+#: battery.c:217 battery.c:277 battery.c:356
 msgid "Status: full"
 msgstr "Status: voll"
 
-#: battery.c:148 battery.c:200
+#: battery.c:220 battery.c:280
 msgid "Status: no battery"
 msgstr "Status: keine Batterie"
 
-#: battery.c:151 battery.c:203 battery.c:222
+#: battery.c:223 battery.c:283 battery.c:301 battery.c:373
 msgid "Status: unknown"
 msgstr "Status: unbekannt"
 
-#: battery.c:155 battery.c:207
+#: battery.c:228
+msgid "learning"
+msgstr ""
+
+#: battery.c:232 battery.c:287
 msgid "Voltage"
 msgstr "Spannung"
 
-#: battery.c:159 battery.c:211
+#: battery.c:236 battery.c:291 battery.c:390
 msgid "AC connected"
 msgstr "Netzteil angeschlossen"
 
-#: battery.c:161 battery.c:213
+#: battery.c:238 battery.c:293 battery.c:392
 msgid "Lifetime"
 msgstr "Verbleibend"
 
-#: battery.c:194
+#: battery.c:274
 msgid "Status: not installed"
 msgstr "Status: nicht installiert"
 
-#: battery.c:220
+#: battery.c:300
 msgid "not installed"
 msgstr "nicht installiert"
 
-#: battery.c:224
+#: battery.c:302
 msgid "Voltage: unknown"
 msgstr "Spannung: unbekannt"
 
-#: battery.c:226
+#: battery.c:303
 msgid "Lifetime: unknown"
 msgstr "Verbleibend: unbekannt"
 
-#: battery.c:265
+#: battery.c:348
+#, fuzzy
+msgid "No battery"
+msgstr "Jacket-Batterie"
+
+#: battery.c:453
 msgid "Internal battery"
 msgstr "Interne Batterie"
 
-#: battery.c:269
+#: battery.c:457
 msgid "Jacket battery"
 msgstr "Jacket-Batterie"
+
+#: sysinfo.c:236
+#, fuzzy
+msgid "ARM"
+msgstr "APM"
+
+#: sysinfo.c:239
+msgid "Intel x86 or compatible"
+msgstr ""
+
+#: sysinfo.c:240
+msgid "IBM type PC"
+msgstr ""
+
+#: sysinfo.c:243
+msgid "Mips"
+msgstr ""
+
+#: sysinfo.c:245
+msgid "Silicon Graphics Machine"
+msgstr ""
+
+#: sysinfo.c:249
+msgid "IBM Power or PowerPC"
+msgstr ""
+
+#. TRANSLATORS: "Familiar" is the name of a linux distribution.
+#: sysinfo.c:278
+#, fuzzy
+msgid "Familiar"
+msgstr "Familie"
+
+#. TRANSLATORS: "OpenEmbedded" is the name of a linux distribution.
+#: sysinfo.c:292
+msgid "OpenEmbedded"
+msgstr ""
+
+#: sysinfo.c:334 sysinfo.c:336
+#, fuzzy
+msgid "Build"
+msgstr "Gekachelt"
+
+#: sysinfo.c:438
+#, fuzzy
+msgid "Network Status"
+msgstr "Netzwerkeinstellungen"
+
+#: sysinfo.c:452 sysinfo.c:455
+#, fuzzy
+msgid "HWaddr (MAC)"
+msgstr "HWaddr (MAC): %s\n"
+
+#: sysinfo.c:466 sysinfo.c:467
+#, c-format
+msgid "Wireless"
+msgstr ""
+
+#: sysinfo.c:494
+#, fuzzy
+msgid "Default Gateway"
+msgstr "Gateway"
+
+#: sysinfo.c:537
+#, fuzzy
+msgid "System information"
+msgstr "Speicherinformation"
+
+#: sysinfo.c:547
+#, fuzzy
+msgid "Version"
+msgstr "Frage"
+
+#: sysinfo.c:579
+msgid "Distribution"
+msgstr ""
+
+#: sysinfo.c:604
+#, fuzzy
+msgid "System"
+msgstr "System-Log"
+
+#: sysinfo.c:613
+#, fuzzy
+msgid "Device information"
+msgstr "Gerät nicht gefunden"
+
+#: sysinfo.c:625
+#, fuzzy
+msgid "Device Name"
+msgstr "Gerät:"
+
+#: sysinfo.c:644
+#, fuzzy
+msgid "CPU:"
+msgstr "CPU"
+
+#: sysinfo.c:657
+msgid "RAM:"
+msgstr ""
+
+#: sysinfo.c:673
+#, fuzzy
+msgid "Storage:"
+msgstr "Status:"
+
+#: sysinfo.c:685
+msgid "Hardware"
+msgstr ""
+
+#: sysinfo.c:695
+#, fuzzy
+msgid "Battery"
+msgstr "Batterieinfo"
+
+#: sysinfo.c:702
+#, fuzzy
+msgid "Storage"
+msgstr "Speicherauslastung"
+
+#: sysinfo.c:709
+#, fuzzy
+msgid "Networks"
+msgstr "Netzwerk"
+
+#: sysinfo.c:716
+msgid "Log Display"
+msgstr ""
+
+#: gpe-conf.desktop.in.h:1
+#, fuzzy
+msgid "Control Panel"
+msgstr "Konsole"
 
 #: gpe-conf-admin.desktop.in.h:1
 msgid "User Access"
@@ -1577,14 +2078,6 @@ msgstr "Benutzerzugriff"
 msgid "User access administration"
 msgstr "Administrierung des Benutzerzugriffs"
 
-#: gpe-conf-battery.desktop.in.h:1
-msgid "Battery Info"
-msgstr "Batterieinfo"
-
-#: gpe-conf-battery.desktop.in.h:2
-msgid "Battery Information"
-msgstr "Batterieinformation"
-
 #: gpe-conf-cardinfo.desktop.in.h:1
 msgid "PC/CF Cards"
 msgstr "PC/CF-Karten"
@@ -1593,71 +2086,19 @@ msgstr "PC/CF-Karten"
 msgid "PC/CF Cards info and config"
 msgstr "PC/CF-Steckplatz-Information"
 
-#: gpe-conf-ipaqscreen.desktop.in.h:1
-msgid "Screen Setup"
-msgstr "Bildschirmeinstellungen"
+#: gpe-conf-keys.desktop.in.h:1
+msgid "Keyboard and Button Setup"
+msgstr ""
 
-#: gpe-conf-kbd.desktop.in.h:1
-msgid "Virtual Keyboard"
-msgstr "Virtuelle Tastatur"
-
-#: gpe-conf-kbd.desktop.in.h:2
-msgid "Virtual Keyboard Setup"
-msgstr "Einstellungen der virtuellen Tastatur"
-
-#: gpe-conf-keyboard.desktop.in.h:1
-msgid "External Keyboard"
-msgstr "Externe Tastatur"
-
-#: gpe-conf-keyboard.desktop.in.h:2
-msgid "External Keyboard Setup"
-msgstr "Einstellungen der externen Tastatur"
-
-#: gpe-conf-keyctl.desktop.in.h:1
-msgid "Button Config"
-msgstr "Tastenkonfig"
-
-#: gpe-conf-keyctl.desktop.in.h:2
-msgid "Button Configuration"
-msgstr "Tastenkonfiguration"
-
-#: gpe-conf-login-setup.desktop.in.h:1
-msgid "Login Setup"
-msgstr "Login-Einstellungen"
-
-#: gpe-conf-logread.desktop.in.h:1
-msgid "Accesss System Log "
-msgstr "System-Log ansehen"
-
-#: gpe-conf-logread.desktop.in.h:2
-msgid "Show Logs"
-msgstr "Logs anzeigen"
-
-#: gpe-conf-network.desktop.in.h:1
-msgid "Network Setup"
-msgstr "Netzwerkeinstellungen"
-
-#: gpe-conf-ownerinfo.desktop.in.h:1
-msgid "Owner Information"
-msgstr "Benutzerinformation"
+#: gpe-conf-keys.desktop.in.h:2
+msgid "Keys and Buttons"
+msgstr ""
 
 #: gpe-conf-ownerinfo.desktop.in.h:2
 msgid "Set Owner Information"
 msgstr "Setze Benutzerinformation"
 
-#: gpe-conf-packages.desktop.in.h:1
-msgid " Update Manager"
-msgstr "Update-Manager"
-
-#: gpe-conf-packages.desktop.in.h:2
-msgid "Update installed packages"
-msgstr "Installierte Pakete updaten"
-
 #: gpe-conf-serial.desktop.in.h:1
-msgid " Serial Ports"
-msgstr "Serielle Ports"
-
-#: gpe-conf-serial.desktop.in.h:2
 msgid "Serial Port Settings"
 msgstr "Einstellungen für serielle Ports"
 
@@ -1669,20 +2110,8 @@ msgstr "Schlafen"
 msgid "Sleep Configuration"
 msgstr "Schlaf-Konfiguration."
 
-#: gpe-conf-storage.desktop.in.h:1
-msgid "Storage Information"
-msgstr "Speicherinformation"
-
-#: gpe-conf-storage.desktop.in.h:2
-msgid "Storage Usage"
-msgstr "Speicherauslastung"
-
 #: gpe-conf-theme.desktop.in.h:1
 msgid "Global Appearance Setup"
-msgstr "Globales Aussehen"
-
-#: gpe-conf-theme.desktop.in.h:2
-msgid "Global Look"
 msgstr "Globales Aussehen"
 
 #: gpe-conf-time.desktop.in.h:1
@@ -1694,15 +2123,256 @@ msgid "Setup Date and Time"
 msgstr "Einstellung von Datum und Uhrzeit"
 
 #: gpe-conf-users.desktop.in.h:1
-msgid "Manage local Users "
+#, fuzzy
+msgid "Manage local users"
 msgstr "Lokale Benutzer administrieren"
 
 #: gpe-conf-users.desktop.in.h:2
 msgid "User Manager"
 msgstr "Benutzer-Manager"
 
-#~ msgid "Advanced Settings"
-#~ msgstr "Erweiterte Einstellungen"
+#: gpe-conf-sysinfo.desktop.in.h:1
+#, fuzzy
+msgid "System Info"
+msgstr "System-Log"
+
+#: gpe-conf-sound.desktop.in.h:1
+#, fuzzy
+msgid "Sound Settings"
+msgstr "Hintergrundeinstellungen"
+
+#: gpe-conf-sound.desktop.in.h:2
+msgid "Sound defaults and setup"
+msgstr ""
+
+#~ msgid "Show 'All' group"
+#~ msgstr "Zeige Gruppe »Alle«"
+
+#~ msgid "Show 'Recent' tab"
+#~ msgstr "Zeige Gruppe »Letzte«"
+
+#~ msgid "Do not launch at startup"
+#~ msgstr "Nicht automatisch starten"
+
+#~ msgid "Tab View"
+#~ msgstr "Tabellenansicht"
+
+#~ msgid "List"
+#~ msgstr "Liste"
+
+#~ msgid "Changes will take effect after relog"
+#~ msgstr "Änderungen wirksam nach erneutem Einloggen."
+
+#~ msgid "State"
+#~ msgstr "Status"
+
+#~ msgid "Screensaver"
+#~ msgstr "Bildschirmschoner"
+
+#~ msgid "Delay until start"
+#~ msgstr "Auslöseverzögerung"
+
+#~ msgid "Activated"
+#~ msgstr "Aktiviert"
+
+#~ msgid "Orientation"
+#~ msgstr "Ausrichtung"
+
+#~ msgid "Off"
+#~ msgstr "Aus"
+
+#~ msgid "Couldn't read screen settings!"
+#~ msgstr "Konnte Einstellungen des Schirm nicht auslesen!"
+
+#~ msgid "Can't interpret output from xrandr!"
+#~ msgstr "Kann xrandr-Ausgabe nicht interpretieren!"
+
+#~ msgid "Can't set rotation on an x86."
+#~ msgstr "Kann Rotation nicht auf einem x86-Computer ausführen."
+
+#~ msgid "Could not read keyboard definition file."
+#~ msgstr "Fehler beim Lesen der Tastaturdefinitionsdatei."
+
+#~ msgid "Error reading keyboard definition."
+#~ msgstr "Fehler beim Lesen der Tastaturdefinition."
+
+#~ msgid "External keyboard configuration. Model support packages not installed if inactive."
+#~ msgstr "Konfiguration externer Tastaturen. Modell-Pakete sind nicht installiert, wenn inaktiv."
+
+#~ msgid "Install"
+#~ msgstr "Installieren"
+
+#~ msgid "Click here to install support for this keyboard."
+#~ msgstr "Klicken Sie hier, um Unterstützung für dieses Tastaturmodell zu installieren."
+
+#~ msgid "Use DHCP in any case (usually not needed)."
+#~ msgstr "Verwende immer DHCP (normalerweise nicht benötigt)."
+
+#~ msgid "Use DHCP"
+#~ msgstr "Verwende DHCP"
+
+#~ msgid "yes"
+#~ msgstr "ja"
+
+#~ msgid "Close"
+#~ msgstr "Schließen"
+
+#~ msgid "Close network tool"
+#~ msgstr "Schließe Netzwerk-Tool"
+
+#~ msgid "Reset button config to default?"
+#~ msgstr "Button-Konfiguration auf Vorgabe zuruücksetzen?"
+
+#~ msgid "Defaults"
+#~ msgstr "Standard"
+
+#~ msgid "Image:"
+#~ msgstr "Bild:"
+
+#~ msgid "idle(sec)"
+#~ msgstr "Ruhe (sec)"
+
+#~ msgid "load"
+#~ msgstr "Last"
+
+#~ msgid "Choose IRQs"
+#~ msgstr "Wähle IRQs"
+
+#~ msgid "Couldn't get filesystem info!"
+#~ msgstr "Keine Dateisystem-Information verfügbar!"
+
+#~ msgid "Couldn't find default runlevel!"
+#~ msgstr "Konnte Standard-Runlevel nicht finden!"
+
+#~ msgid "Removing package"
+#~ msgstr "Deinstalliere Paket"
+
+#~ msgid "Installing package"
+#~ msgstr "Installiere Paket"
+
+#~ msgid "Update finished. Please check log messages for errors."
+#~ msgstr "Update beendet. Bitte überprüfen Sie die Logmeldungen auf Fehler."
+
+#~ msgid "Remove"
+#~ msgstr "Deinstallieren"
+
+#~ msgid "Install/Removal finished. Please check log messages for errors."
+#~ msgstr "Installieren/deinstallieren beendet. Bitte überprüfen Sie die Logmeldungen auf Fehler."
+
+#~ msgid "Update using \"ipkg upgrade\" started.\n"
+#~ msgstr "Update mittels \"ipkg upgrade\" gestartet.\n"
+
+#~ msgid "Running..."
+#~ msgstr "Läuft..."
+
+#~ msgid "Update"
+#~ msgstr "Update"
+
+#~ msgid "Update from network"
+#~ msgstr "Update über das Netzwerk"
+
+#~ msgid "Update entire system over an internet connection."
+#~ msgstr "Update des gesamten Systems über eine Internetverbindung."
+
+#~ msgid "Activity log"
+#~ msgstr "Aktivitäts-Log"
+
+#~ msgid "This window shows all output from the packet manager that performs the update."
+#~ msgstr "Dieses Fenster zeigt die gesamte Ausgabe des Paketmanagers beim Update."
+
+#~ msgid "Install/Remove"
+#~ msgstr "Installieren/Deinstallieren"
+
+#~ msgid "Install/Remove a package"
+#~ msgstr "Paket installieren/deinstallieren"
+
+#~ msgid "Enter name of package to be installed here."
+#~ msgstr "Tragen Sie den Namen des zu installierenden Pakets hier ein."
+
+#~ msgid "Install a package from a configured source."
+#~ msgstr "Paket von einer konfigurierten Quelle installieren."
+
+#~ msgid "Remove the package."
+#~ msgstr "Paket deinstallieren."
+
+#~ msgid "This window shows all output from the packet manager installing the package."
+#~ msgstr "Dieses Fenster zeigt die gesamte Ausgabe des Paketmanagers beim Installieren."
+
+#~ msgid "Insert Card"
+#~ msgstr "Karte einstecken"
+
+#~ msgid "Click here to start card insertion manually."
+#~ msgstr "Klicken Sie hier, um das Einstecken der Karte manuell zu starten."
+
+#~ msgid "Eject Card"
+#~ msgstr "Karte auswerfen"
+
+#~ msgid "Click here to eject card manually."
+#~ msgstr "Klicken Sie hier, um die Karte manuell auszuwerfen."
+
+#~ msgid "Suspend Card"
+#~ msgstr "Karte anhalten"
+
+#~ msgid "Click here to suspend current card."
+#~ msgstr "Klicken Sie hier, um die aktuelle Karte anzuhalten."
+
+#~ msgid "Resume Card"
+#~ msgstr "Karte weiterlaufen lassen"
+
+#~ msgid "Click here to resume current card."
+#~ msgstr "Klicken Sie hier, um die aktuelle Karte weiterlaufen zu lassen."
+
+#~ msgid "Reset Card"
+#~ msgstr "Karte zurücksetzen"
+
+#~ msgid "Click here to reset current card."
+#~ msgstr "Klicken Sie hier, um die aktuelle Karte zurückzusetzen."
+
+#~ msgid "Reset Card Manager"
+#~ msgstr "Card Manager zurückzusetzen"
+
+#~ msgid "Click here to reset card manager. This commits all updates to pcmcia config files."
+#~ msgstr "Klicken Sie hier um den Card Manager zurückzusetzen. Dies schreibt alle Einstellungen in die PCMCIA-Konfigurationsdateien."
+
+#~ msgid "Click here to assign a driver to this card / change current driver assignment."
+#~ msgstr "Klicken Sie hier, um die Treiberzuordnung für die Karte zu wählen oder zu ändern."
+
+#~ msgid "Exit applet"
+#~ msgstr "Applet beenden"
+
+#~ msgid ""
+#~ "<b>Interface %s</b>\n"
+#~ "Type: %s\n"
+#~ msgstr ""
+#~ "<b>Interface %s</b>\n"
+#~ "Typ: %s\n"
+
+#~ msgid "could not open touchscreen device '%s'\n"
+#~ msgstr "Konnte Touchscreen-Gerät »%s« nicht öffnen\n"
+
+#~ msgid "Battery Information"
+#~ msgstr "Batterieinformation"
+
+#~ msgid "Virtual Keyboard Setup"
+#~ msgstr "Einstellungen der virtuellen Tastatur"
+
+#~ msgid "Button Configuration"
+#~ msgstr "Tastenkonfiguration"
+
+#~ msgid "Accesss System Log "
+#~ msgstr "System-Log ansehen"
+
+#~ msgid "Show Logs"
+#~ msgstr "Logs anzeigen"
+
+#~ msgid " Update Manager"
+#~ msgstr "Update-Manager"
+
+#~ msgid "Update installed packages"
+#~ msgstr "Installierte Pakete updaten"
+
+#~ msgid "Global Look"
+#~ msgstr "Globales Aussehen"
 
 #~ msgid "Use advanced settings"
 #~ msgstr "Verwende erweiterte Einstellungen"

@@ -6,28 +6,188 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-conf 0.1.0-pre9\n"
-"POT-Creation-Date: 2003-09-18 17:55+0200\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2005-08-23 02:20+0200\n"
 "PO-Revision-Date: 2003-10-13 21:40+0200\n"
 "Last-Translator: Marcel Telka <marcel@telka.sk>\n"
 "Language-Team: Slovak <sk-i18n@lists.linux.sk>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Report-Msgid-Bugs-To: \n"
 
-#: main.c:292
+#: main.c:90 timeanddate.c:542
+msgid "Time"
+msgstr "Čas"
+
+#: main.c:90
+#, fuzzy
+msgid "Time and Date Setup"
+msgstr "Čas a dátum"
+
+#: main.c:92
+#, fuzzy
+msgid "Screen"
+msgstr "Zelená"
+
+#: main.c:92 gpe-conf-screen.desktop.in.h:1
+msgid "Screen Setup"
+msgstr "Nastavenie obrazovky"
+
+#: main.c:94
+msgid "Keys & Buttons"
+msgstr ""
+
+#: main.c:94
+msgid "Keys and Buttons Setup"
+msgstr ""
+
+#: main.c:96 timeanddate.c:558
+msgid "Network"
+msgstr "Sieť"
+
+#: main.c:96 gpe-conf-network.desktop.in.h:1
+msgid "Network Setup"
+msgstr "Nastavenie siete"
+
+#: main.c:98 theme.c:1144
+msgid "Theme"
+msgstr "Téma"
+
+#: main.c:98 theme.c:1146 gpe-conf-theme.desktop.in.h:2
+msgid "Look and Feel"
+msgstr ""
+
+#: main.c:100
+#, fuzzy
+msgid "Power"
+msgstr "Poskytovateľ"
+
+#: main.c:100
+#, fuzzy
+msgid "Power safe Configuration"
+msgstr "Konfigurácia uspávania"
+
+#: main.c:102
+msgid "Owner"
+msgstr ""
+
+#: main.c:102 gpe-conf-ownerinfo.desktop.in.h:1
+msgid "Owner Information"
+msgstr "Informácie o vlastníkovi"
+
+#: main.c:104
+#, fuzzy
+msgid "Login"
+msgstr "Spojenie"
+
+#: main.c:104 gpe-conf-login-setup.desktop.in.h:1
+msgid "Login Setup"
+msgstr "Nastavenie prihlásenia"
+
+#: main.c:106
+#, fuzzy
+msgid "Users"
+msgstr "Práva používateľa"
+
+#: main.c:106
+#, fuzzy
+msgid "User Administration"
+msgstr "Správa prístupových práv používateľa"
+
+#: main.c:108
+msgid "GPE"
+msgstr ""
+
+#: main.c:108
+#, fuzzy
+msgid "GPE Conf Administration"
+msgstr "Správa prístupových práv používateľa"
+
+#: main.c:110 gpe-conf-serial.desktop.in.h:2
+#, fuzzy
+msgid "Serial Ports"
+msgstr " Sériové rozhrania"
+
+#: main.c:110
+#, fuzzy
+msgid "Serial Port Configuration"
+msgstr "Konfigurácia uspávania"
+
+#: main.c:112
+#, fuzzy
+msgid "PCMCIA/CF Cards"
+msgstr "PC/CF karty"
+
+#: main.c:112
+#, fuzzy
+msgid "PCMCIA/CF Card Info and Config"
+msgstr "Informácie o PC/CF kartách a ich konfigurácia"
+
+#: main.c:114
+msgid "Sound"
+msgstr ""
+
+#: main.c:114
+#, fuzzy
+msgid "Sound Setup"
+msgstr "Nastavenie prihlásenia"
+
+#: main.c:116
+msgid "Task nameserver"
+msgstr ""
+
+#: main.c:116
+msgid "Task for changing nameserver"
+msgstr ""
+
+#: main.c:118
+#, fuzzy
+msgid "Task sound"
+msgstr "Pozadie"
+
+#: main.c:118
+msgid "Command line task saving/restoring sound settings."
+msgstr ""
+
+#: main.c:120
+#, fuzzy
+msgid "Task background image"
+msgstr "Použiť obrázok pozadia pre prihlasovaciu obrazovku."
+
+#: main.c:120
+msgid "Only select background image."
+msgstr ""
+
+#: main.c:146
+#, fuzzy
+msgid "Settings saved"
+msgstr "Nastavenia GPS"
+
+#: main.c:162
+msgid "Aborted"
+msgstr ""
+
+#: main.c:335
+#, c-format
 msgid "'task_nameserver' needs a new (and only one) nameserver as argument.\n"
 msgstr "'task_nameserver' potrebuje nový (a len jeden) menný server ako parameter.\n"
 
-#: main.c:356
+#: main.c:353
+#, fuzzy, c-format
+msgid "'task_sound' needs (s)ave/(r)estore as argument.\n"
+msgstr "'task_nameserver' potrebuje nový (a len jeden) menný server ako parameter.\n"
+
+#: main.c:421
 msgid "Warning: PCMCIA init failed."
 msgstr "Upozornenie: Inicializácia PCMCIA zlyhala."
 
-#: main.c:384
+#: main.c:453
+#, c-format
 msgid "This mode is disabled, please try:\n"
 msgstr "Tento režim je zakázaný, prosím skúste:\n"
 
-#: main.c:385
+#: main.c:454
+#, c-format
 msgid ""
 "\n"
 "gpe-conf [AppletName]\n"
@@ -37,12 +197,13 @@ msgstr ""
 "gpe-conf [NázovAppletu]\n"
 "kde NázovAppletu je z:\n"
 
-#: main.c:398
+#: main.c:470
 #, c-format
 msgid "Applet %s unknown!\n"
 msgstr "Applet %s je neznámy!\n"
 
-#: main.c:399
+#: main.c:471
+#, c-format
 msgid ""
 "\n"
 "\n"
@@ -54,11 +215,11 @@ msgstr ""
 "Použitie: gpe-conf [NázovAppletu]\n"
 "kde NázovAppletu je z:\n"
 
-#: applets.c:349
+#: applets.c:445
 msgid "Root access"
 msgstr "Administrátorský prístup"
 
-#: applets.c:359
+#: applets.c:459
 msgid ""
 "Some options are only\n"
 "accessible for user root.\n"
@@ -68,371 +229,334 @@ msgstr ""
 "prístupné len pre správcu.\n"
 "Prosím, zadajte heslo."
 
-#: applets.c:405 ipaqscreen/calibrate.c:34
+#: applets.c:506 screen/calibrate.c:32
 msgid "Sorry, wrong password."
 msgstr "Prepáčte, nesprávne heslo."
 
-#: timeanddate.c:436
+#: timeanddate.c:424
+#, fuzzy
+msgid "Time adjusted from network."
+msgstr "Získať čas zo siete"
+
+#: timeanddate.c:426
+#, fuzzy
+msgid "Adjusting time from network failed."
+msgstr "Získať čas zo siete"
+
+#: timeanddate.c:506
 msgid "Time & Date"
 msgstr "Čas a dátum"
 
-#: timeanddate.c:452
+#: timeanddate.c:522
 msgid "Date"
 msgstr "Dátum"
 
-#: timeanddate.c:466
+#: timeanddate.c:537
 msgid "Enter current date here or use button to select."
 msgstr "Zadajte sem aktuálny dátum alebo použite tlačidlo pre výber."
 
-#: timeanddate.c:471
-msgid "Time"
-msgstr "Čas"
-
-#: timeanddate.c:485
-msgid "Network"
-msgstr "Sieť"
-
-#: timeanddate.c:503
+#: timeanddate.c:576
 msgid "Select the timeserver to use to set the clock."
 msgstr "Zvoľte časový server, ktorý chcete použiť pre nastavenie hodín."
 
-#: timeanddate.c:505
+#: timeanddate.c:578
 msgid "Get time from network"
 msgstr "Získať čas zo siete"
 
-#: timeanddate.c:512
+#: timeanddate.c:585
 msgid "If connected to the Internet, you may press this button to set the time on this device using the timeserver above."
 msgstr "Ak ste pripojený k internetu, môžete stlačiť toto tlačidlo a nastaví sa čas na tomto zariadení podľa časového servera vyššie."
 
-#: timeanddate.c:517 timeanddate.c:526
+#: timeanddate.c:590 timeanddate.c:599
 msgid "Timezone"
 msgstr "Časová zóna"
 
-#: timeanddate.c:549
+#: timeanddate.c:622
 msgid "Select your current timezone here. The setting applies after the next login."
 msgstr "Tu zvoľte vaše aktuálne časové pásmo. Nastavenie sa prejaví až po nasledujúcom prihlásení."
 
-#: timeanddate.c:557
+#: timeanddate.c:630
 msgid "Daylight Saving"
 msgstr "Letný a zimný čas"
 
-#: timeanddate.c:564
+#: timeanddate.c:637
 msgid "Use daylight saving time"
 msgstr "Použiť prechod na letný a zimný čas"
 
-#: timeanddate.c:571
+#: timeanddate.c:644
 msgid "Check this box if you want your device to handle daylight saving time for you."
 msgstr "Zaškrtnite toto pole ak chcete, aby vaše zariadenie automaticky prechádzalo na letný a zimný čas."
 
-#: timeanddate.c:573
+#: timeanddate.c:646
 msgid "Offset:"
 msgstr "Posun:"
 
-#: timeanddate.c:582
+#: timeanddate.c:655
 msgid "Default"
 msgstr "Predvolený"
 
-#: timeanddate.c:589
+#: timeanddate.c:662
 msgid "Use default DST offset of one hour?"
 msgstr "Použiť štandardné posunutie letného a zimného času o jednu hodinu?"
 
-#: timeanddate.c:594
+#: timeanddate.c:667
 msgid "Hours"
 msgstr "Hodiny"
 
-#: timeanddate.c:597
+#: timeanddate.c:670
 msgid "Select daylight saving time offset hours here."
 msgstr "Tu nastavte posunutie letného času (hodiny)."
 
-#: timeanddate.c:602
+#: timeanddate.c:675
 msgid "Minutes"
 msgstr "Minúty"
 
-#: timeanddate.c:605
+#: timeanddate.c:678
 msgid "Select daylight saving time offset minutes here."
 msgstr "Tu nastavte posunutie letného času (minúty)."
 
-#: timeanddate.c:722
+#: timeanddate.c:783
 msgid "To make timezone settings take effect, you'll need to log out and log in again."
 msgstr "Aby sa zmena časovej zóny prjavila, musíte sa odhlásiť a opäť prihlásiť."
 
-#: appmgr_setup.c:189 login-setup.c:152 gpe-admin.c:86
-msgid "General"
-msgstr "Všeobecné"
-
-#: appmgr_setup.c:206
-msgid "Show 'All' group"
-msgstr "Zobraziť skupinu 'Všetky'"
-
-#: appmgr_setup.c:214
-msgid "Auto-hide group labels"
-msgstr "Automaticky skryť popisy skupín"
-
-#: appmgr_setup.c:221
-msgid "Show 'Recent' tab"
-msgstr "Zobraziť kartu 'Najnovšie'"
-
-#: appmgr_setup.c:228
-msgid "Do not launch at startup"
-msgstr "Nespustiť pri štarte"
-
-#: appmgr_setup.c:237
-msgid "Tab View"
-msgstr "Zobraziť kartu"
-
-#: appmgr_setup.c:252
-msgid "Icon"
-msgstr "Ikona"
-
-#: appmgr_setup.c:256
-msgid "List"
-msgstr "Zoznam"
-
-#: appmgr_setup.c:265
-msgid "Changes will take effect after relog"
-msgstr "Zmena sa prejaví až po odhlásení a prihlásení"
-
-#: ipaqscreen/main.c:68
+#: screen/main.c:74
 msgid "Portrait"
 msgstr "Na výšku"
 
-#: ipaqscreen/main.c:69
+#: screen/main.c:75
 msgid "Landscape (left)"
 msgstr "Na šírku (vľavo)"
 
-#: ipaqscreen/main.c:70
+#: screen/main.c:76
 msgid "Inverted"
 msgstr "Invertované"
 
-#: ipaqscreen/main.c:71
+#: screen/main.c:77
 msgid "Landscape (right)"
 msgstr "Na šírku (vpravo)"
 
-#: ipaqscreen/main.c:92
+#: screen/main.c:104
 msgid "Light"
 msgstr "Podsvietenie"
 
-#: ipaqscreen/main.c:98
+#: screen/main.c:110
 msgid "Brightness"
 msgstr "Jas"
 
-#: ipaqscreen/main.c:104
-msgid "State"
-msgstr "Stav"
+#: screen/main.c:152
+msgid "Display"
+msgstr ""
 
-#: ipaqscreen/main.c:115
-msgid "Screensaver"
-msgstr "Šetrič obrazovky"
+#: screen/main.c:156
+#, fuzzy
+msgid "Rotation"
+msgstr "Informácie"
 
-#: ipaqscreen/main.c:121
-msgid "Delay until start"
-msgstr "Počkať do štartu"
-
-#: ipaqscreen/main.c:125
-msgid "Activated"
-msgstr "Aktivované"
-
-#: ipaqscreen/main.c:135
-msgid "Orientation"
-msgstr "Orientácia"
-
-#: ipaqscreen/main.c:154
+#: screen/main.c:176
 msgid "Touchscreen"
 msgstr "Dotyková obrazovka"
 
-#: ipaqscreen/main.c:158
+#: screen/main.c:180
 msgid "Calibrate"
 msgstr "Kalibrovať"
 
-#: ipaqscreen/main.c:160
-msgid "on"
-msgstr "zapnuté"
+#: screen/main.c:182
+msgid "Start"
+msgstr "Štart"
 
-#: ipaqscreen/main.c:161
-msgid "off"
-msgstr "vypnuté"
-
-#: ipaqscreen/main.c:272
-msgid "minutes"
+#: screen/main.c:304 sleep/callbacks.c:39
+#, fuzzy
+msgid "min"
 msgstr "minúty"
 
-#: ipaqscreen/main.c:275
-msgid "seconds"
+#: screen/main.c:307 sleep/callbacks.c:42
+#, fuzzy
+msgid "sec"
 msgstr "sekundy"
 
-#: ipaqscreen/main.c:277
-msgid "Off"
-msgstr "Vypnuté"
-
-#: ipaqscreen/brightness.c:66 ipaqscreen/brightness.c:122
-msgid "Couldn't read screen settings!"
-msgstr "Nepodarilo sa prečítať nastavenia obrazovky!"
-
-#: ipaqscreen/rotation.c:54
-msgid "Can't interpret output from xrandr!"
-msgstr "Nemôžem interpretovať výstup z xrandr!"
-
-#: ipaqscreen/rotation.c:71
-msgid "Can't set rotation on an x86."
-msgstr "Nemôžem nastaviť rotáciu na x86."
-
-#: kbd.c:146
+#: keys/kbd.c:142
 msgid "Keyboard Geometry / Layout"
 msgstr "Rozmery / vzhľad klávesnice"
 
-#: kbd.c:186
+#: keys/kbd.c:182
 msgid "User defined"
 msgstr "Definované používateľom"
 
-#: keyboard.c:131
-msgid "Could not read keyboard definition file."
-msgstr "Nepodarilo sa prečítať súbor definície klávesnice."
-
-#: keyboard.c:171
-msgid "Error reading keyboard definition."
-msgstr "Chyba pri čítaní definície klávesnice."
-
-#: keyboard.c:274
-msgid "External keyboard configuration. Model support packages not installed if inactive."
-msgstr "Konfigurácia externej klávesnice. Ak je neaktívne, balík podpory modelu nie je nainštalovaný."
-
-#: keyboard.c:279
-msgid "External Keyboard Type"
-msgstr "Typ externej klávesnice"
-
-#: keyboard.c:286
-msgid "Here you may select your external keyboard model. To install software support, connect your device to the internet and click the \"Install\" button."
-msgstr "Tu si môžete zvoliť model vašej externej klávesnice. Pre nainštalovanie softvérovej podpory pripojte vaše zariadenie k internetu a kliknite na tlačidlo \"Inštalovať\"."
-
-#: keyboard.c:307
-msgid "Click here to select this keyboard model."
-msgstr "Kliknite sem pre výber tohoto modelu klávesnice."
-
-#: keyboard.c:314 packages.c:184 packages.c:365
-msgid "Install"
-msgstr "Inštalovať"
-
-#: keyboard.c:319
-msgid "Click here to install support for this keyboard."
-msgstr "Kliknite sem pre nainštalovanie podpory pre túto klávesnicu."
-
-#: network.c:95
+#: network.c:104
 msgid "Current Config"
 msgstr "Aktuálna konfigurácia"
 
-#: network.c:174 ownerinfo.c:221
+#: network.c:233 ownerinfo.c:237
 msgid "Name:"
 msgstr "Meno:"
 
-#: network.c:180
+#: network.c:239
 msgid "New Interface"
 msgstr "Nové rozhranie"
 
-#: network.c:187
+#: network.c:248
 msgid "This interface definition already exists!"
 msgstr "Táto definícia rozhrania už existuje!"
 
-#: network.c:228
+#: network.c:326
 msgid "Do you want to delete this interface?"
 msgstr "Chcete odstrániť toto rozhranie?"
 
-#: network.c:228 keyctl.c:162
+#: network.c:326 users/callbacks.c:138
 msgid "Question"
 msgstr "Otázka"
 
-#: network.c:443
+#: network.c:575
+msgid "WiFi config"
+msgstr ""
+
+#: network.c:606
+#, c-format
+msgid "WiFi config for %s"
+msgstr ""
+
+#: network.c:618
+msgid "ESSID"
+msgstr ""
+
+#: network.c:640
+msgid "Mode"
+msgstr ""
+
+#: network.c:650
+#, fuzzy
+msgid "managed"
+msgstr "Obrázok"
+
+#: network.c:662
+msgid "ad-hoc"
+msgstr ""
+
+#: network.c:679
+#, fuzzy
+msgid "Channel"
+msgstr "Zmeniť"
+
+#: network.c:700
+msgid "WEP"
+msgstr ""
+
+#: network.c:710
+msgid "off"
+msgstr "vypnuté"
+
+#: network.c:722
+#, fuzzy
+msgid "open"
+msgstr "zapnuté"
+
+#: network.c:734
+#, fuzzy
+msgid "restricted"
+msgstr "Roztiahnutý"
+
+#: network.c:750
+msgid "Key 1"
+msgstr ""
+
+#: network.c:778
+msgid "Key 2"
+msgstr ""
+
+#: network.c:806
+msgid "Key 3"
+msgstr ""
+
+#: network.c:835
+msgid "Key 4"
+msgstr ""
+
+#: network.c:1040
 msgid "Address"
 msgstr "Adresa"
 
-#: network.c:446
+#: network.c:1043
 msgid "Enter your IP address here, e.g. 192.168.1.2"
 msgstr "Zadajte sem vašu IP adresu, napr. 192.168.1.2"
 
-#: network.c:448
+#: network.c:1045
 msgid "Netmask"
 msgstr "Sieťová maska"
 
-#: network.c:451
+#: network.c:1048
 msgid "Enter your netmask here, e.g. 255.255.255.0 in most cases"
 msgstr "Zadajte sem masku vašej siete, napr. 255.255.255.0 (väčšina prípadov)"
 
-#: network.c:453
+#: network.c:1050
 msgid "Broadcast"
 msgstr "Hromadná adresa"
 
-#: network.c:456
+#: network.c:1053
 msgid "Enter your broadcast address here, usually the same like your IP with 255 as last number."
 msgstr "Sem zadajte vašu hromadnú adresu, väčšinou je rovnaká ako vaša IP adresa len namiesto posledného čísla je 255."
 
-#: network.c:458
+#: network.c:1055
 msgid "Gateway"
 msgstr "Brána"
 
-#: network.c:461
+#: network.c:1058
 msgid "Enter the IP Address of your default gateway here."
 msgstr "Zadajte sem IP adresu vašej predvolenej brány."
 
-#: network.c:543
+#: network.c:1069 network.c:1186
+msgid "WiFi device"
+msgstr ""
+
+#: network.c:1077 network.c:1194
+#, fuzzy
+msgid "Configure"
+msgstr "Potvrdiť:"
+
+#: network.c:1174
 msgid "Hostname"
 msgstr "Meno hostiteľa"
 
-#: network.c:546
+#: network.c:1177
 msgid "Enter your desired hostname here. This parameter is optional."
 msgstr "Zadajte sem vaše meno hostiteľa. Tento parameter je voliteľný."
 
-#: network.c:629
+#: network.c:1294
 msgid "Provider"
 msgstr "Poskytovateľ"
 
-#: network.c:632
+#: network.c:1296
 msgid "Here you need to enter the name of the provider configuration to use for this interface."
 msgstr "Tu potrebujete zadať meno konfigurácie poskytovateľa, ktorú použiť pre toto rozhranie."
 
-#: network.c:656
+#: network.c:1319
 msgid "Global Settings"
 msgstr "Globálne nastavenia"
 
-#: network.c:697
+#: network.c:1361
 msgid "Proxy"
 msgstr "Proxy"
 
-#: network.c:699
+#: network.c:1362
 msgid "If you want/need to use a proxy, enter it here. (This only applies to dillo for now.)"
 msgstr "Ak chcete/potrebujete používať proxy, zadajte ho sem. (Toto sa zatiaľ týka len programu dillo.)"
 
-#: network.c:704
+#: network.c:1368
 msgid "No proxy for"
 msgstr "Bez proxy na"
 
-#: network.c:707
+#: network.c:1370
 msgid "Here you should enter your local domain for that you don't want to use a proxy."
 msgstr "Tu môžete zadať vašu miestnu doménu, pre ktorú nechcete používať proxy."
 
-#: network.c:716
-msgid "Use DHCP in any case (usually not needed)."
-msgstr "Použiť DHCP v každom prípade (väčšinou nie je potrebné)."
-
-#: network.c:718
-msgid "Use DHCP"
-msgstr "Použiť DHCP"
-
-#: network.c:733
-msgid "yes"
-msgstr "áno"
-
-#: network.c:744
-msgid "no"
-msgstr "nie"
-
-#: network.c:757
+#: network.c:1377
 msgid "DNS server"
 msgstr "DNS server"
 
-#: network.c:760
+#: network.c:1380
 msgid "Enter the IP of the DNS(name-) server to use here."
 msgstr "Zadajte sem IP adresu DNS (menného) servera, ktorý chcete použiť."
 
-#: network.c:941
+#: network.c:1551
 msgid ""
 "Here you may change the basic configuration type of your device.\n"
 "Use \"static\" for manual interface configuration, \"dhcp\" to use DHCP and \"ppp\" to make the device a point-to-point device."
@@ -440,347 +564,494 @@ msgstr ""
 "Tu môžete zmeniť základnú konfiguráciu vášho zariadenia.\n"
 "Použie \"static\" pre manuálnu konfiguráciu rozhrania, \"dhcp\" pre použitie DHCP a \"ppp\" pre vytvorenie spojenia typu bod-bod."
 
-#: network.c:968 network.c:969
+#: network.c:1557
+msgid "Enable this option if your device is a WiFi device"
+msgstr ""
+
+#: network.c:1559
+msgid "Click to set the wireless options for this device"
+msgstr ""
+
+#: network.c:1561
+msgid "Set the mode your WiFi card should work. (managed or ad-hoc)."
+msgstr ""
+
+#: network.c:1564
+msgid "Set the enrcyption mode: off for no WEP encryption, open for open system and restricted for resticted WEP connections only."
+msgstr ""
+
+#: network.c:1569
+#, fuzzy
+msgid "Enter the essid of your WiFi network here."
+msgstr "Zadajte sem IP adresu vašej predvolenej brány."
+
+#: network.c:1572
+msgid "Enter your WEP key here in (iwconfig format), e.g.: \"s:12345\""
+msgstr ""
+
+#: network.c:1575
+msgid "Select the WEP key to use."
+msgstr ""
+
+#: network.c:1578
+msgid "Enter the channel number or frequency if needed. If not needed leave this field blank."
+msgstr ""
+
+#: network.c:1601
 msgid "Add Interface"
 msgstr "Pridať rozhranie"
 
-#: network.c:970
+#: network.c:1602
 msgid "Add a new Interface"
 msgstr "Pridať nové rozhranie"
 
-#: network.c:978 network.c:979
+#: network.c:1612
 msgid "Remove Interface"
 msgstr "Odstrániť rozhranie"
 
-#: network.c:980
+#: network.c:1613
 msgid "Remove current Interface"
 msgstr "Odstrániť aktuálne rozhranie"
 
-#: network.c:993
+#: network.c:1627
 msgid "Information"
 msgstr "Informácie"
 
-#: network.c:994 network.c:995
+#: network.c:1628
 msgid "Show current configuration."
 msgstr "Zobraziť aktuálnu konfiguráciu."
 
-#: network.c:1006
-msgid "Close"
-msgstr "Zatvoriť"
-
-#: network.c:1007 network.c:1008
-msgid "Close network tool"
-msgstr "Zatvoriť sieťový nástroj"
-
-#: network.c:1023
+#: network.c:1647
 msgid "Couldn't read network configuration."
 msgstr "Nepodarilo sa načítať sieťovú konfiguráciu."
 
-#: network.c:1032
+#: network.c:1654
 msgid "global"
 msgstr "globálne"
 
-#: theme.c:221 theme.c:225 theme.c:920 theme.c:940 theme.c:1036 theme.c:1042
-msgid "Color"
-msgstr "Farba"
+#: theme.c:238
+#, fuzzy
+msgid "Choose backgound image"
+msgstr "Použiť obrázok pozadia pre prihlasovaciu obrazovku."
 
-#: theme.c:393
+#: theme.c:252
+msgid "You are not allowed to read this file, choose another."
+msgstr ""
+
+#: theme.c:273
+msgid "Succesfully changed background image."
+msgstr ""
+
+#: theme.c:274
+msgid "Use \"Look and Feel\" setup tool to change details."
+msgstr ""
+
+#: theme.c:598
 msgid "Red"
 msgstr "Červená"
 
-#: theme.c:398
+#: theme.c:603
 msgid "Green"
 msgstr "Zelená"
 
-#: theme.c:403
+#: theme.c:608
 msgid "Blue"
 msgstr "Modrá"
 
-#: theme.c:654
-msgid "Select color"
+#: theme.c:918
+#, fuzzy
+msgid "Select colour"
 msgstr "Vybrať farbu"
 
-#: theme.c:680 theme.c:746
-msgid ""
-"You don't have read access\n"
-"to selected background image!"
+#: theme.c:944 theme.c:1018
+#, fuzzy
+msgid "You don't have read access to selected background image!"
 msgstr ""
 "Nemáte právo na čítanie\n"
 "k zvolenému obrázku pozadia!"
 
-#: theme.c:828
-msgid "Theme"
-msgstr "Téma"
-
-#: theme.c:837
+#: theme.c:1156
 msgid "Desktop Theme"
 msgstr "Téma pracovnej plochy"
 
-#: theme.c:849
+#: theme.c:1168
 msgid "Name"
 msgstr "Názov"
 
-#: theme.c:865
+#: theme.c:1185
 msgid "Icon Size"
 msgstr "Veľkosť ikony"
 
-#: theme.c:879
+#: theme.c:1200
+msgid "Visual Effects"
+msgstr ""
+
+#: theme.c:1206
+msgid "Enable Visual Effects"
+msgstr ""
+
+#: theme.c:1213
 msgid "Background"
 msgstr "Pozadie"
 
-#: theme.c:890
+#: theme.c:1227 theme.c:1229
 msgid "Background Settings"
 msgstr "Nastavenia pozadia"
 
-#: theme.c:897
-msgid "Solid color"
+#: theme.c:1239 theme.c:1250
+#, fuzzy
+msgid "Theme Default"
+msgstr "Predvolený"
+
+#: theme.c:1258
+#, fuzzy
+msgid "Solid colour"
 msgstr "Jednoliata farba"
 
-#: theme.c:911
+#: theme.c:1272
 msgid "Horizontal"
 msgstr "Vodorovné"
 
-#: theme.c:915
+#: theme.c:1276
 msgid "Vertical"
 msgstr "Zvislé"
 
-#: theme.c:931
-msgid "Color gradient"
+#: theme.c:1281 theme.c:1300 theme.c:1483 theme.c:1489
+#, fuzzy
+msgid "Colour"
+msgstr "Farba"
+
+#: theme.c:1291
+#, fuzzy
+msgid "Colour gradient"
 msgstr "Farebný prechod"
 
-#: theme.c:951
+#: theme.c:1310
 msgid "Image"
 msgstr "Obrázok"
 
-#: theme.c:977
+#: theme.c:1336
 msgid "Centered"
 msgstr "V strede"
 
-#: theme.c:981
+#: theme.c:1340
 msgid "Tiled"
 msgstr "Dlažba"
 
-#: theme.c:984
+#: theme.c:1343
 msgid "Stretched"
 msgstr "Roztiahnutý"
 
-#: theme.c:989
+#: theme.c:1350
+msgid "Toolbars"
+msgstr ""
+
+#: theme.c:1362 theme.c:1364
+msgid "Toolbar Style"
+msgstr ""
+
+#: theme.c:1373 theme.c:1402
+#, fuzzy
+msgid "Icons"
+msgstr "Ikona"
+
+#: theme.c:1378 theme.c:1406
+msgid "Text"
+msgstr ""
+
+#: theme.c:1383
+msgid "Both"
+msgstr ""
+
+#: theme.c:1388
+msgid "Both H"
+msgstr ""
+
+#: theme.c:1409
+msgid "Both (icon above text)"
+msgstr ""
+
+#: theme.c:1412
+msgid "Both (icon left of text)"
+msgstr ""
+
+#: theme.c:1419
+#, fuzzy
+msgid "Toolbar Icon Size"
+msgstr "Veľkosť ikony"
+
+#: theme.c:1435
 msgid "Fonts"
 msgstr "Písma"
 
-#: theme.c:998 theme.c:1018
+#: theme.c:1444 theme.c:1464
 msgid "Desktop Font"
 msgstr "Písmo pracovnej plochy"
 
-#: theme.c:1005 theme.c:1060
+#: theme.c:1451 theme.c:1511 theme.c:1546 theme.c:1596
 msgid "Family"
 msgstr "Rodina"
 
-#: theme.c:1025 theme.c:1080
+#: theme.c:1471 theme.c:1531 theme.c:1566 theme.c:1616
 msgid "Size"
 msgstr "Veľkosť"
 
-#: theme.c:1053 theme.c:1073
+#: theme.c:1500 theme.c:1502 theme.c:1524 theme.c:1559
 msgid "Application Font"
 msgstr "Písmo aplikácií"
 
-#: keyctl.c:162
-msgid "Reset button config to default?"
-msgstr "Nastaviť konfiguráciu tlačidiel na štandardnú?"
+#: theme.c:1580
+#, fuzzy
+msgid "Terminal"
+msgstr "Zvislé"
 
-#: keyctl.c:199
-msgid "Defaults"
-msgstr "Predvolené"
+#: theme.c:1589
+#, fuzzy
+msgid "Font"
+msgstr "Písma"
 
-#: keyctl.c:304
-msgid "ERROR: Can't open keylaunchrc for writing!\n"
+#: theme.c:1609
+#, fuzzy
+msgid "Terminal Font"
+msgstr " Sériové rozhrania"
+
+#: keys/keyctl.c:178
+msgid "Button layout file is missing a global section."
+msgstr ""
+
+#: keys/keyctl.c:549
+#, fuzzy
+msgid "Critical: Can't open keylaunchrc for writing!"
 msgstr "CHYBA: Nepodarilo sa otvoriť keylaunchrc pre zápis!\n"
 
-#: ownerinfo.c:201
+#: keys/keyctl.c:572
+#, fuzzy
+msgid "Could not restart key handler!"
+msgstr "Nepodarilo sa prečítať súbor s pid"
+
+#: keys/keyctl.c:595
+msgid "The file you selected is not executable."
+msgstr ""
+
+#: ownerinfo.c:210
+#, fuzzy
+msgid "Information about the Owner"
+msgstr "Informácie o zásuvke"
+
+#: ownerinfo.c:218
 msgid "Only the user 'root' is allowed to change this information"
 msgstr "Len správca môže zmeniť tieto informácie"
 
-#: ownerinfo.c:236
+#: ownerinfo.c:252
 msgid "E-Mail:"
 msgstr "E-mail:"
 
-#: ownerinfo.c:251
+#: ownerinfo.c:267
 msgid "Phone:"
 msgstr "Telefón:"
 
-#: ownerinfo.c:266
+#: ownerinfo.c:282
 msgid "Address:"
 msgstr "Adresa:"
 
-#: ownerinfo.c:292
+#: ownerinfo.c:308
 msgid "Photofile:"
 msgstr "Súbor s fotografiou:"
 
-#: login-setup.c:131
-msgid "Some or all of these settings can only be changed by the user 'root'."
+#: login-setup.c:160
+#, fuzzy
+msgid "Some of these settings can only be changed by the user 'root'."
 msgstr "Niektoré alebo všetky tieto nastavenia môže zmeniť len správca."
 
-#: login-setup.c:167
+#: login-setup.c:183 gpe-admin.c:85
+msgid "General"
+msgstr "Všeobecné"
+
+#: login-setup.c:200
 msgid "Show owner information at login."
 msgstr "Zobraziť informácie o vlastníkovi pri prihlásení."
 
-#: login-setup.c:169
-msgid "Use background image for login screen."
-msgstr "Použiť obrázok pozadia pre prihlasovaciu obrazovku."
-
-#: login-setup.c:171
+#: login-setup.c:204
 msgid "Lock display on suspend."
 msgstr "Uzamknúť obrazovku pri zaspávaní."
 
-#: login-setup.c:184
-msgid "Image:"
-msgstr "Obrázok:"
+#: login-setup.c:208
+#, fuzzy
+msgid ""
+"Lock display on suspend. \n"
+"  (needs password)"
+msgstr "Uzamknúť obrazovku pri zaspávaní."
 
-#: sleep/interface.c:71
+#: login-setup.c:213
+msgid ""
+"Automatic login. \n"
+"  (without password)"
+msgstr ""
+
+#: sleep/interface.c:65
 msgid "Auto sleep"
 msgstr "Automaticky zaspať"
 
-#: sleep/interface.c:81 sleep/interface.c:117
+#: sleep/interface.c:75 sleep/interface.c:106
 msgid "enabled"
 msgstr "povolené"
 
-#: sleep/interface.c:95
+#: sleep/interface.c:93
 msgid "sleep timeout"
 msgstr "časový limit zaspávania"
 
-#: sleep/interface.c:98 sleep/interface.c:132
-msgid "idle(sec)"
-msgstr "nečinný (s)"
-
-#: sleep/interface.c:107
+#: sleep/interface.c:96
 msgid "Auto dim"
 msgstr "Automatické stlmenie"
 
-#: sleep/interface.c:130
+#: sleep/interface.c:123
 msgid "backlight dim timeout"
 msgstr "časový limit pre stlmenie podsvietenia"
 
-#: sleep/interface.c:139
+#: sleep/interface.c:125
 msgid "Auto dim level"
 msgstr "Úroveň automatického stlmenia"
 
-#: sleep/interface.c:157
-msgid "Auto sleep advanced controls"
+#: sleep/interface.c:145
+#, fuzzy
+msgid "Advanced Controls"
 msgstr "Rozšírené ovládanie automatického zaspávania"
 
-#: sleep/interface.c:167
+#: sleep/interface.c:155
 msgid "CPU"
 msgstr "Procesor"
 
-#: sleep/interface.c:174
+#: sleep/interface.c:161
 msgid "Sleep on cpu less than load"
 msgstr "Zaspať ak má procesor menšiu záťaž ako"
 
-#: sleep/interface.c:185
-msgid "load"
-msgstr "záťaž"
+#: sleep/interface.c:165
+msgid "load below"
+msgstr ""
 
-#: sleep/interface.c:192
+#: sleep/interface.c:181
 msgid "APM"
 msgstr "APM"
 
-#: sleep/interface.c:198
+#: sleep/interface.c:187
 msgid "Sleep on AC"
 msgstr "Zaspať pri pripojenom zdroji"
 
-#: sleep/interface.c:200
+#: sleep/interface.c:189
 msgid "probe IRQs"
 msgstr "skúsiť prerušenia"
 
-#: sleep/interface.c:206
+#: sleep/interface.c:195
 msgid "Check IRQ activity"
 msgstr "Kontrolovať aktivitu prerušení"
 
-#: sleep/interface.c:208
-msgid "Choose IRQs"
-msgstr "Zvoliť prerušenia"
-
-#: users/interface.c:208
+#: users/interface.c:215
 msgid "User Name"
 msgstr "Meno používateľa"
 
-#: users/interface.c:209
+#: users/interface.c:216
 msgid "User Info"
 msgstr "Informácie o používateľovi"
 
-#: users/interface.c:211
+#: users/interface.c:217
 msgid "Home"
 msgstr "Domovský priečinok"
 
-#: users/interface.c:228 users/interface.c:229
+#: users/interface.c:235 users/interface.c:236
 msgid "Add user"
 msgstr "Pridať používateľa"
 
-#: users/interface.c:229
+#: users/interface.c:236
 msgid "Add a new user"
 msgstr "Pridať nového používateľa"
 
-#: users/interface.c:233 users/interface.c:234
+#: users/interface.c:240 users/interface.c:241
 msgid "Edit user"
 msgstr "Upraviť používateľa"
 
-#: users/interface.c:234
+#: users/interface.c:241
 msgid "Edit existing user"
 msgstr "Upraviť existujúceho používateľa"
 
-#: users/interface.c:238 users/interface.c:239
+#: users/interface.c:245 users/interface.c:246
 msgid "Delete user"
 msgstr "Odstrániť používateľa"
 
-#: users/interface.c:239
+#: users/interface.c:246
 msgid "Delete existing user"
 msgstr "Odstrániť existujúceho používateľa"
 
-#: users/interface.c:283
+#: users/interface.c:250
+#, fuzzy
+msgid "Password"
+msgstr "Heslo:"
+
+#: users/interface.c:251
+#, fuzzy
+msgid "Change password"
+msgstr "Zmeniť heslo"
+
+#: users/interface.c:320
 msgid "User settings"
 msgstr "Nastavenia používateľa"
 
-#: users/interface.c:297
+#: users/interface.c:334
 msgid "User Name:"
 msgstr "Mano používateľa:"
 
-#: users/interface.c:313
+#: users/interface.c:350
 msgid "Password:"
 msgstr "Heslo:"
 
-#: users/interface.c:321
+#: users/interface.c:358
 msgid "User Info:"
 msgstr "Informácie o používateľovi:"
 
-#: users/interface.c:337
+#: users/interface.c:374
 msgid "Shell:"
 msgstr "Prostredie:"
 
-#: users/interface.c:356
+#: users/interface.c:393
 msgid "Home:"
 msgstr "Domovský priečinok:"
 
-#: users/interface.c:374
+#: users/interface.c:412
 msgid "Change"
 msgstr "Zmeniť"
 
-#: users/interface.c:435
+#: users/interface.c:413
+#, fuzzy
+msgid "Set"
+msgstr "Zásuvka"
+
+#: users/interface.c:478
 msgid "Change Password"
 msgstr "Zmeniť heslo"
 
-#: users/interface.c:462
+#: users/interface.c:504
 msgid "Old Password:"
 msgstr "Staré heslo:"
 
-#: users/interface.c:469
+#: users/interface.c:511
 msgid "New Password:"
 msgstr "Nové heslo:"
 
-#: users/interface.c:477
+#: users/interface.c:519
 msgid "Confirm:"
 msgstr "Potvrdiť:"
 
-#: users/callbacks.c:104
+#: users/callbacks.c:107
+msgid "You need at least one user account!"
+msgstr ""
+
+#: users/callbacks.c:131
+#, fuzzy
+msgid "You can't remove this user!"
+msgstr ""
+"Nemôžete odstrániť\n"
+"systémových používateľov!"
+
+#: users/callbacks.c:136
 msgid ""
 "You can't remove\n"
 " system users!"
@@ -789,14 +1060,21 @@ msgstr ""
 "systémových používateľov!"
 
 #: users/callbacks.c:138
+msgid ""
+"Delete user and all its data?\n"
+"This action is not revertable\n"
+"and is executed instantly."
+msgstr ""
+
+#: users/callbacks.c:173
 msgid "Please choose a user name."
 msgstr "Prosím zvoľte meno používateľa."
 
-#: users/callbacks.c:156
+#: users/callbacks.c:191
 msgid "Please choose a home directory."
 msgstr "Prosím zvoľte domovský priečinok."
 
-#: users/callbacks.c:217
+#: users/callbacks.c:279
 msgid ""
 "The two new pass are different!\n"
 " Please try again!"
@@ -804,7 +1082,7 @@ msgstr ""
 "Dve nové heslá sa líšia!\n"
 " Prosím skúste znova!"
 
-#: users/callbacks.c:220
+#: users/callbacks.c:282
 msgid ""
 "Wrong password\n"
 " Please try again!"
@@ -812,313 +1090,225 @@ msgstr ""
 "Nesprávne heslo\n"
 " Prosím skúste znova!"
 
-#: cfgfile.c:630
+#: cfgfile.c:919
 msgid "No write access to network configuration."
 msgstr "Nemáte právo zapísať sieťové nastavenie."
 
-#: gpe-admin.c:93
+#: gpe-admin.c:92
 msgid "Allow users to configure everything"
 msgstr "Povoliť používateľom konfigurovať všetko"
 
-#: storage.c:195 storage.c:445
-msgid "System Memory"
-msgstr "Systémová pamäť"
-
-#. TRANSLATORS: MB == Mega Bytes
-#: storage.c:203 storage.c:465
-msgid "Free memory"
-msgstr "Voľná pamäť"
-
-#: storage.c:205 storage.c:212 storage.c:359 storage.c:370 storage.c:467
-#: storage.c:480 storage.c:581 storage.c:598
-msgid "MB"
-msgstr "MiB"
-
-#: storage.c:210 storage.c:358 storage.c:478 storage.c:596
-msgid "Total:"
-msgstr "Celkom:"
-
-#: storage.c:322 storage.c:525
-msgid "Internal Flash"
-msgstr "Interná flash pamäť"
-
-#: storage.c:328 storage.c:531
-msgid "MMC"
-msgstr "MMC"
-
-#: storage.c:334 storage.c:537
-msgid "Compact Flash"
-msgstr "CF karta"
-
-#: storage.c:340 storage.c:543
-msgid "Network Filesystem"
-msgstr "Sieťový súborový systém"
-
-#: storage.c:360 storage.c:598
-msgid "Mounted at "
-msgstr "Pripojený k "
-
-#: storage.c:368 storage.c:578
-msgid "Free space"
-msgstr "Voľné miesto"
-
-#: storage.c:617
-msgid "Couldn't get filesystem info!"
-msgstr "Nepodarilo sa získať informácie o súborovom systéme!"
-
-#: serial.c:158
-msgid "Couldn't find default runlevel!"
-msgstr "Nepodarilo sa nájsť predvolenú úroveň behu (runlevel)!"
-
-#: serial.c:289 serial.c:295
+#: serial.c:428 serial.c:434
 msgid "Simple interface to serial port configuration. Disabled components are not installed."
 msgstr "Jednoduché rozhranie pre konfiguráciu sériového rozhrania. Zakázané komponenty nie sú nainštalované."
 
-#: serial.c:292
+#: serial.c:431
 msgid "Port A"
 msgstr "Rozhranie A"
 
-#: serial.c:299
+#: serial.c:438
 msgid "Serial port default usage"
 msgstr "Štandardné použitie sériového rozhrania"
 
-#: serial.c:304
+#: serial.c:443
 msgid "Select desired software to use serial port here."
 msgstr "Tu zvoľte požadovaný softvér, ktorý má používať sériové rozhranie."
 
-#: serial.c:307
+#: serial.c:446
 msgid "Console"
 msgstr "Konzola"
 
-#: serial.c:310
+#: serial.c:449
 msgid "This option runs console on serial port. (default)"
 msgstr "Táto voľba spustí konzolu na sériovom rozhraní. (štandardné)"
 
-#: serial.c:316
+#: serial.c:457
 msgid "GPS Daemon"
 msgstr "GPS démon"
 
-#: serial.c:320
+#: serial.c:462
+msgid "GPS Daemon (needs 'gpsd')"
+msgstr ""
+
+#: serial.c:467
 msgid "This option enables the start of GPSD, which provides data from a GPS reciver to applications."
 msgstr "Táto voľba povolí spustenia démona GPSD, ktorý poskytuje údaje z GPS prijímača pre aplikácie."
 
-#: serial.c:327
+#: serial.c:474
 msgid "Nothing (free)"
 msgstr "Nič (voľné)"
 
-#: serial.c:330
+#: serial.c:477
 msgid "Don't start any software that uses the serial port."
 msgstr "Nespúšťať žiaden softvér, ktorý používa sériový rozhranie."
 
-#: serial.c:368 serial.c:375
+#: serial.c:514 serial.c:521
 msgid "This page configures the GPS receiver software."
 msgstr "Táto stránka konfiguruje softvér GPS prijímača."
 
-#: serial.c:372
+#: serial.c:518
 msgid "GPS Receiver"
 msgstr "Prijímač GPS"
 
-#: serial.c:379
+#: serial.c:525
 msgid "GPS settings"
 msgstr "Nastavenia GPS"
 
-#: serial.c:385
+#: serial.c:531
 msgid "Receiver Type"
 msgstr "Typ prijímača"
 
-#: serial.c:390
+#: serial.c:536
 msgid "NMEA"
 msgstr "NMEA"
 
-#: serial.c:395
-msgid "The GPS receiver is a sends NMEA data. (default, no need to change for most receivers)"
+#: serial.c:541
+#, fuzzy
+msgid "The GPS receiver sends NMEA data (default, no need to change for most receivers)."
 msgstr "Prijímač GPS posiela NMEA údaje. (štandardné, nie je potrebná zmena pre väčšinu prijímačov)"
 
-#: serial.c:401
+#: serial.c:547
 msgid "Earthmate"
 msgstr "Earthmate"
 
-#: serial.c:407
+#: serial.c:553
 msgid "GPS receiver is an Earthmate GPS."
 msgstr "GPS prijímač je Earthmate GPS."
 
-#: serial.c:411
+#: serial.c:557
 msgid "Baud Rate"
 msgstr "Prenosová rýchlosť"
 
-#: logread.c:107
-msgid "Can't find circular buffer, is syslog running?"
-msgstr "Nepodarilo sa nájsť kruhovú vyrovnávaciu pamäť. Je syslog spustený?"
+#: serial.c:573
+#, fuzzy
+msgid "Serial Port"
+msgstr " Sériové rozhrania"
 
-#: logread.c:113
-msgid "Can't get access to circular buffer from syslogd."
-msgstr "Nepodarilo sa získať prístup ku kruhovej vyrovnávacej pamäti zo syslogd."
+#: cardinfo.c:103
+msgid "/_Card"
+msgstr ""
 
-#: logread.c:119
-msgid "Can't get access to semaphone(s) for circular buffer from syslogd."
-msgstr "Nepodarilo sa získať prístup k semafóru/semafórom pre kruhovú vyrovnávaciu pamäť zo syslogd."
+#: cardinfo.c:104
+msgid "/Card/_Insert"
+msgstr ""
 
-#: logread.c:144
-msgid "<empty syslog>"
-msgstr "<prázdny systémový záznam>"
+#: cardinfo.c:105
+msgid "/Card/_Eject"
+msgstr ""
 
-#: logread.c:215 logread.c:229
-msgid "System Log"
-msgstr "Systémové záznamy"
+#: cardinfo.c:106
+msgid "/Card/_Suspend"
+msgstr ""
 
-#: logread.c:237 logread.c:251
-msgid "Session Log"
-msgstr "Záznamy sedenia"
+#: cardinfo.c:107
+msgid "/Card/_Resume"
+msgstr ""
 
-#: logread.c:257
-msgid "Could not open X session log."
-msgstr "Nepodarilo sa otvoriť záznamy X sedenia."
+#: cardinfo.c:108
+msgid "/Card/_Reset"
+msgstr ""
 
-#: packages.c:67
-msgid "Removing package"
-msgstr "Odstránenie balíka"
+#: cardinfo.c:109
+#, fuzzy
+msgid "/Card/s1"
+msgstr "PC/CF karty"
 
-#: packages.c:72
-msgid "Installing package"
-msgstr "Inštalovanie balíka"
+#: cardinfo.c:110
+#, fuzzy
+msgid "/Card/_Assign Driver"
+msgstr "Priradiť ovládač"
 
-#: packages.c:151 packages.c:325
-msgid "Start"
-msgstr "Štart"
+#: cardinfo.c:111
+#, fuzzy
+msgid "/Card/s2"
+msgstr "PC/CF karty"
 
-#: packages.c:156
-msgid "Update finished. Please check log messages for errors."
-msgstr "Aktualizácia ukončená. Prosím pozrite systémové záznamy, či sa nevyskytli chyby."
+#: cardinfo.c:112
+msgid "/Card/_Close"
+msgstr ""
 
-#: packages.c:185 packages.c:371
-msgid "Remove"
-msgstr "Odstrániť"
+#: cardinfo.c:113
+msgid "/_Help"
+msgstr ""
 
-#: packages.c:186
-msgid "Install/Removal finished. Please check log messages for errors."
-msgstr "Inštalácia/odstránenie ukončené. Prosím pozrite systémové záznamy, či sa nevyskytli chyby."
+#: cardinfo.c:114
+msgid "/_Help/Index"
+msgstr ""
 
-#: packages.c:206
-msgid "Update using \"ipkg upgrade\" started.\n"
-msgstr "Aktualizácia pomocou \"ipkg upgrade\" spustená.\n"
+#: cardinfo.c:115
+msgid "/_Help/About"
+msgstr ""
 
-#: packages.c:230 packages.c:254
-msgid "Running..."
-msgstr "Beží..."
-
-#: packages.c:315
-msgid "Update"
-msgstr "Aktualizácia"
-
-#: packages.c:320
-msgid "Update from network"
-msgstr "Aktualizovať zo siete"
-
-#: packages.c:329
-msgid "Update entire system over an internet connection."
-msgstr "Aktualizovať celý systém cez internetové pripojenie."
-
-#: packages.c:333 packages.c:379
-msgid "Activity log"
-msgstr "Záznam aktivity"
-
-#: packages.c:341
-msgid "This window shows all output from the packet manager that performs the update."
-msgstr "Toto okno zobrazuje všetok výstup zo správcu balíkov, ktorý robí aktualizáciu."
-
-#: packages.c:351
-msgid "Install/Remove"
-msgstr "Inštalovať/odstrániť"
-
-#: packages.c:356
-msgid "Install/Remove a package"
-msgstr "Inštalovať/odstrániť balík"
-
-#: packages.c:363
-msgid "Enter name of package to be installed here."
-msgstr "Tu zadajte názov balíka, ktorý chcete nainštalovať."
-
-#: packages.c:369
-msgid "Install a package from a configured source."
-msgstr "Nainštalovať balík z nastaveného zdroja."
-
-#: packages.c:375
-msgid "Remove the package."
-msgstr "Odstrániť balík."
-
-#: packages.c:387
-msgid "This window shows all output from the packet manager installing the package."
-msgstr "Toto okno zobrazuje všetok výstup zo správcu balíkov, ktorý inštaluje balík."
-
-#: cardinfo.c:145 cardinfo.c:833
+#: cardinfo.c:175 cardinfo.c:863
 msgid "card not recognized"
 msgstr "karta nerozpoznaná"
 
-#: cardinfo.c:247 cardinfo.c:318
+#: cardinfo.c:277 cardinfo.c:348
 msgid "Could not write to temporal config file."
 msgstr "Nepodarilo sa zapísať do dočasného konfiguračného súboru."
 
-#: cardinfo.c:524
+#: cardinfo.c:554
 msgid "Could not open pidfile:"
 msgstr "Nepodarilo sa otvoriť súbor s pid:"
 
-#: cardinfo.c:530
+#: cardinfo.c:560
 msgid "Could not read pidfile"
 msgstr "Nepodarilo sa prečítať súbor s pid"
 
-#: cardinfo.c:534
+#: cardinfo.c:564
 msgid "Could not signal cardmgr:"
 msgstr "Nepodarilo sa poslať signál správcovi kariet:"
 
-#: cardinfo.c:609
+#: cardinfo.c:639
 msgid "gpe-conf must be setuid root to use cardinfo feature."
 msgstr "gpe-conf musí mať nastavený setuid príznak, aby mohol využívať funkcie cardinfo."
 
-#: cardinfo.c:628
+#: cardinfo.c:658
 msgid "No PCMCIA driver in '/proc/devices'"
 msgstr "Chýba ovládač PCMCIA v '/proc/devices'"
 
-#: cardinfo.c:631
+#: cardinfo.c:661
 msgid "Could not open '/proc/devices'"
 msgstr "Nepodarilo sa otvoriť '/proc/devices'"
 
-#: cardinfo.c:643
+#: cardinfo.c:673
 msgid "No sockets found\n"
 msgstr "Zásuvka nebola nájdená\n"
 
-#: cardinfo.c:652
+#: cardinfo.c:682
 msgid "Card Services release does not match!"
 msgstr "Verzia Card Services sa nezhoduje!"
 
-#: cardinfo.c:657
+#: cardinfo.c:687
 msgid "Could not get CS revision info!\n"
 msgstr "Nepodarilo sa získať inromácie o revízii CS!\n"
 
-#: cardinfo.c:820
+#: cardinfo.c:850
 msgid "flock(stabfile) failed"
 msgstr "flock(stabfile) zlyhalo"
 
-#: cardinfo.c:839
+#: cardinfo.c:869
+#, c-format
 msgid "no driver loaded"
 msgstr "žiadny ovládač nie je načítaný"
 
-#: cardinfo.c:948
+#: cardinfo.c:978
 msgid "ready"
 msgstr "pripravený"
 
-#: cardinfo.c:966
+#: cardinfo.c:996
 msgid "not ready"
 msgstr "nepripravený"
 
-#: cardinfo.c:981
+#: cardinfo.c:1011
 msgid "suspended"
 msgstr "uspané"
 
-#: cardinfo.c:1173 cardinfo.c:1344 cardinfo.c:1345
+#: cardinfo.c:1203
 msgid "Assign Driver"
 msgstr "Priradiť ovládač"
 
-#: cardinfo.c:1182
+#: cardinfo.c:1212
 msgid ""
 "This dialog allows you to select/\n"
 "change the driver assignment for a\n"
@@ -1128,447 +1318,757 @@ msgstr ""
 "zvoliť/zmeniť priradenie ovládačov\n"
 "pre PCMCIA alebo CF kartu."
 
-#: cardinfo.c:1192
+#: cardinfo.c:1222
 msgid "Your current card identifies itself as:"
 msgstr "Vaša aktuálna karta sa identifikuje ako:"
 
-#: cardinfo.c:1206 cardinfo.c:1212
+#: cardinfo.c:1236 cardinfo.c:1242
 msgid "Manuf. Id"
 msgstr "Id. výrobcu"
 
-#: cardinfo.c:1206 cardinfo.c:1212
+#: cardinfo.c:1236 cardinfo.c:1242
 msgid "Class"
 msgstr "Trieda"
 
-#: cardinfo.c:1285
-msgid "Insert Card"
-msgstr "Vložiť kartu"
-
-#: cardinfo.c:1287
-msgid "Click here to start card insertion manually."
-msgstr "Kliknite sem pre začatie ručného vkladania karty."
-
-#: cardinfo.c:1295
-msgid "Eject Card"
-msgstr "Vysunúť kartu"
-
-#: cardinfo.c:1297
-msgid "Click here to eject card manually."
-msgstr "Kliknite sem pre manuálne vysunutie karty."
-
-#: cardinfo.c:1305
-msgid "Suspend Card"
-msgstr "Uspať kartu"
-
-#: cardinfo.c:1307
-msgid "Click here to suspend current card."
-msgstr "Kliknite sem pre uspanie aktuálnej karty."
-
-#: cardinfo.c:1315
-msgid "Resume Card"
-msgstr "Zobudiť kartu"
-
-#: cardinfo.c:1317
-msgid "Click here to resume current card."
-msgstr "Kliknite sem pre zobudenie aktuálnej karty."
-
-#: cardinfo.c:1325
-msgid "Reset Card"
-msgstr "Reštartovať kartu"
-
-#: cardinfo.c:1326
-msgid "Click here to reset current card."
-msgstr "Kliknite sem pre reštart aktuálnej karty."
-
-#: cardinfo.c:1334 cardinfo.c:1335
-msgid "Reset Card Manager"
-msgstr "Reštartovať správcu kariet"
-
-#: cardinfo.c:1337
-msgid "Click here to reset card manager. This commits all updates to pcmcia config files."
-msgstr "Kliknite sem pre reštart správcu kariet. Toto uloží všetky zmeny do konfiguračných súborov pcmcia."
-
-#: cardinfo.c:1347
-msgid "Click here to assign a driver to this card / change current driver assignment."
-msgstr "Kliknite sem pre priradenie / zmenu ovládača k tejto karte."
-
-#: cardinfo.c:1354 cardinfo.c:1355
-msgid "Exit applet"
-msgstr "Ukončiť applet"
-
-#: cardinfo.c:1364 cardinfo.c:1377
+#: cardinfo.c:1340 cardinfo.c:1353
 msgid "PC/CF card socket information."
 msgstr "Informácie o zásuvke pre PC/CF karty."
 
-#: cardinfo.c:1372
+#: cardinfo.c:1348
 msgid "Socket"
 msgstr "Zásuvka"
 
-#: cardinfo.c:1403
+#: cardinfo.c:1379
 msgid "Information for socket"
 msgstr "Informácie o zásuvke"
 
-#: cardinfo.c:1412
+#: cardinfo.c:1388
 msgid "State:"
 msgstr "Stav:"
 
-#: cardinfo.c:1413
+#: cardinfo.c:1389
 msgid "Device:"
 msgstr "Zariadenie:"
 
-#: cardinfo.c:1414
+#: cardinfo.c:1390
 msgid "Driver:"
 msgstr "Ovládač:"
 
-#: cardinfo.c:1415
+#: cardinfo.c:1391
 msgid "Type:"
 msgstr "Typ:"
 
-#: cardinfo.c:1416
+#: cardinfo.c:1392
 msgid "I/O:"
 msgstr "V/V:"
 
-#: cardinfo.c:1417
+#: cardinfo.c:1393
 msgid "IRQ:"
 msgstr "Prerušenie:"
 
-#: cardinfo.c:1424
+#: cardinfo.c:1400
 msgid "Flags:"
 msgstr "Príznaky:"
 
-#: cardinfo.c:1441
+#: cardinfo.c:1417
 msgid "PCMCIA initialisation failed"
 msgstr "Inicializácia PCMCIA zlyhala"
 
-#: tools/interface.c:288 tools/interface.c:488 tools/interface.c:504
-#: tools/interface.c:624
+#: tools/interface.c:315 tools/interface.c:515 tools/interface.c:531
+#: tools/interface.c:651
 msgid "[NONE SET]"
 msgstr "[NENASTAVENÉ]"
 
-#: tools/interface.c:679 tools/interface.c:1677
+#: tools/interface.c:706 tools/interface.c:1704
 msgid "UNSPEC"
 msgstr "NEZADANÉ"
 
-#: tools/interface.c:681
+#: tools/interface.c:708
 msgid "UNIX Domain"
 msgstr "Doména UNIX"
 
-#: tools/interface.c:684
+#: tools/interface.c:711
 msgid "DARPA Internet"
 msgstr "DARPA internet"
 
-#: tools/interface.c:687
+#: tools/interface.c:714
 msgid "IPv6"
 msgstr "IPv6"
 
-#: tools/interface.c:690 tools/interface.c:1698
+#: tools/interface.c:717 tools/interface.c:1725
 msgid "AMPR AX.25"
 msgstr "AMPR AX.25"
 
-#: tools/interface.c:693 tools/interface.c:1704
+#: tools/interface.c:720 tools/interface.c:1731
 msgid "AMPR NET/ROM"
 msgstr "AMPR NET/ROM"
 
-#: tools/interface.c:696
+#: tools/interface.c:723
 msgid "Novell IPX"
 msgstr "Novell IPX"
 
-#: tools/interface.c:699
+#: tools/interface.c:726
 msgid "Appletalk DDP"
 msgstr "Appletalk DDP"
 
-#: tools/interface.c:702 tools/interface.c:1739
+#: tools/interface.c:729 tools/interface.c:1766
 msgid "Econet"
 msgstr "Econet"
 
-#: tools/interface.c:705
+#: tools/interface.c:732
 msgid "CCITT X.25"
 msgstr "CCITT X.25"
 
-#: tools/interface.c:708 tools/interface.c:1701
+#: tools/interface.c:735 tools/interface.c:1728
 msgid "AMPR ROSE"
 msgstr "AMPR ROSE"
 
-#: tools/interface.c:711 tools/interface.c:1689
+#: tools/interface.c:738 tools/interface.c:1716
 msgid "Ash"
 msgstr "Ash"
 
-#: tools/interface.c:738
+#: tools/interface.c:765
+#, c-format
 msgid "Too many address family arguments.\n"
 msgstr "Príliš veľa parametrov rodiny adries.\n"
 
-#: tools/interface.c:749
+#: tools/interface.c:776
 #, c-format
 msgid "Unknown address family '%s'.\n"
 msgstr "Neznáma rodina adries '%s'.\n"
 
-#: tools/interface.c:812
+#: tools/interface.c:839
+#, c-format
 msgid "Please don't supply more than one address family.\n"
 msgstr "Prosím nezadávajte viac ako jednu rodinu adries.\n"
 
-#: tools/interface.c:939
+#: tools/interface.c:966
+#, c-format
 msgid "No usable address families found.\n"
 msgstr "Neboli nájdené žiadne použiteľné rodiny adries.\n"
 
-#: tools/interface.c:1009
+#: tools/interface.c:1036
 #, c-format
 msgid "Warning: no inet socket available: %s\n"
 msgstr "Upozornenie: žiadna zásuvka inet nie je dostupná: %s\n"
 
-#: tools/interface.c:1161
+#: tools/interface.c:1188
 #, c-format
 msgid "Warning: cannot open %s (%s). Limited output.\n"
 msgstr "Upozornenie: nepodarilo sa otvoriť %s (%s). Obmedzený výstup.\n"
 
-#: tools/interface.c:1404
+#: tools/interface.c:1431
 msgid "Device not found"
 msgstr "Zariadenie nebolo nájdené"
 
-#: tools/interface.c:1408
+#: tools/interface.c:1435
 #, c-format
 msgid "%s: error fetching interface information: %s\n"
 msgstr "%s: chyba pri získavaní informácií o rozhraní: %s\n"
 
-#: tools/interface.c:1582
+#: tools/interface.c:1609
+#, c-format
 msgid "You cannot start PPP with this program.\n"
 msgstr "Nemôžete spustiť PPP pomocou tohoto programu.\n"
 
-#: tools/interface.c:1676
+#: tools/interface.c:1703
 msgid "Local Loopback"
 msgstr "Miestne spätnoväzobné rozhranie"
 
-#: tools/interface.c:1679
+#: tools/interface.c:1706
 msgid "Serial Line IP"
 msgstr "Sériová linka IP"
 
-#: tools/interface.c:1680
+#: tools/interface.c:1707
 msgid "VJ Serial Line IP"
 msgstr "VJ sériová linka IP"
 
-#: tools/interface.c:1681
+#: tools/interface.c:1708
 msgid "6-bit Serial Line IP"
 msgstr "6 bitová sériová linka IP"
 
-#: tools/interface.c:1682
+#: tools/interface.c:1709
 msgid "VJ 6-bit Serial Line IP"
 msgstr "VJ 6 bitová sériová linka IP"
 
-#: tools/interface.c:1683
+#: tools/interface.c:1710
 msgid "Adaptive Serial Line IP"
 msgstr "Prispôsobivá sériová linka IP"
 
-#: tools/interface.c:1686
+#: tools/interface.c:1713
 msgid "Ethernet"
 msgstr "Ethernet"
 
-#: tools/interface.c:1692
+#: tools/interface.c:1719
 msgid "Fiber Distributed Data Interface"
 msgstr "Rozhranie pre vláknom distribuované údaje"
 
-#: tools/interface.c:1695
+#: tools/interface.c:1722
 msgid "HIPPI"
 msgstr "HIPPI"
 
-#: tools/interface.c:1707
+#: tools/interface.c:1734
 msgid "generic X.25"
 msgstr "všeobecné X.25"
 
-#: tools/interface.c:1710
+#: tools/interface.c:1737
 msgid "IPIP Tunnel"
 msgstr "IPIP tunel"
 
-#: tools/interface.c:1713
+#: tools/interface.c:1740
 msgid "Point-to-Point Protocol"
 msgstr "Protokol bod-bod"
 
-#: tools/interface.c:1716
+#: tools/interface.c:1743
 msgid "(Cisco)-HDLC"
 msgstr "(Cisco)-HDLC"
 
-#: tools/interface.c:1717
+#: tools/interface.c:1744
 msgid "LAPB"
 msgstr "LAPB"
 
-#: tools/interface.c:1720
+#: tools/interface.c:1747
 msgid "ARCnet"
 msgstr "ARCnet"
 
-#: tools/interface.c:1723
+#: tools/interface.c:1750
 msgid "Frame Relay DLCI"
 msgstr "Frame Relay DLCI"
 
-#: tools/interface.c:1724
+#: tools/interface.c:1751
 msgid "Frame Relay Access Device"
 msgstr "Prístupové zariadenie Frame Relay"
 
-#: tools/interface.c:1727
+#: tools/interface.c:1754
 msgid "IPv6-in-IPv4"
 msgstr "IPv6-v-IPv4"
 
-#: tools/interface.c:1730
+#: tools/interface.c:1757
 msgid "IrLAP"
 msgstr "IrLAP"
 
-#: tools/interface.c:1733
+#: tools/interface.c:1760
 msgid "16/4 Mbps Token Ring"
 msgstr "16/4 Mbps Token Ring"
 
-#: tools/interface.c:1735
+#: tools/interface.c:1762
 msgid "16/4 Mbps Token Ring (New)"
 msgstr "16/4 Mbps Token Ring (nové)"
 
-#: tools/interface.c:1845
-#, c-format
-msgid ""
-"<b>Interface %s</b>\n"
-"Type: %s\n"
-msgstr ""
-"<b>Rozhranie %s</b>\n"
-"Typ: %s\n"
+#: tools/interface.c:1875
+#, fuzzy, c-format
+msgid "Interface %s"
+msgstr "Pridať rozhranie"
 
-#: tools/interface.c:1853
-#, c-format
-msgid "HWaddr (MAC): %s\n"
-msgstr "MAC adresa: %s\n"
+#: tools/interface.c:1876
+#, fuzzy, c-format
+msgid "Type: %s"
+msgstr "Typ:"
 
-#: tools/interface.c:1859
+#: tools/interface.c:1885
 #, c-format
 msgid "Media: %s"
 msgstr "Médium: %s"
 
-#: tools/interface.c:1864
+#: tools/interface.c:1890
+#, c-format
 msgid "(auto)"
 msgstr "(automatické)"
 
-#: tools/interface.c:1876
+#: tools/interface.c:1902
 #, c-format
 msgid "Address: %s\n"
 msgstr "Adresa: %s\n"
 
-#: tools/interface.c:1881
+#: tools/interface.c:1907
 #, c-format
 msgid "P-t-P: %s\n"
 msgstr "Bod-bod: %s\n"
 
-#: tools/interface.c:1885
+#: tools/interface.c:1911
 #, c-format
 msgid "Netmask: %s\n"
 msgstr "Sieťová maska: %s\n"
 
-#: tools/interface.c:1889
+#: tools/interface.c:1915
 #, c-format
 msgid "Broadcast: %s\n"
 msgstr "Hromadná adresa: %s\n"
 
-#: tools/interface.c:1909
+#: tools/interface.c:1927
+#, c-format
+msgid "HWaddr (MAC): %s\n"
+msgstr "MAC adresa: %s\n"
+
+#: tools/interface.c:1957
 #, c-format
 msgid "IPv6 Address: %s/%d\n"
 msgstr "IPv6 adresa: %s/%d\n"
 
-#: tools/interface.c:1913
+#: tools/interface.c:1960
+#, c-format
 msgid "Scope: "
 msgstr "Oblasť: "
 
-#: tools/interface.c:1918
+#: tools/interface.c:1965
+#, c-format
 msgid "Global"
 msgstr "Globálne"
 
-#: tools/interface.c:1921
+#: tools/interface.c:1968
+#, c-format
 msgid "Link"
 msgstr "Spojenie"
 
-#: tools/interface.c:1924
+#: tools/interface.c:1971
+#, c-format
 msgid "Site"
 msgstr "Miesto"
 
-#: tools/interface.c:1927
+#: tools/interface.c:1974
+#, c-format
 msgid "Compat"
 msgstr "Kompat"
 
-#: tools/interface.c:1930
+#: tools/interface.c:1977
+#, c-format
 msgid "Host"
 msgstr "Hostiteľ"
 
-#: tools/interface.c:1933
+#: tools/interface.c:1980
+#, c-format
 msgid "Unknown"
 msgstr "Neznámy"
 
-#: battery.c:79
-#, c-format
-msgid "could not open touchscreen device '%s'\n"
-msgstr "nepodarilo sa otvoriť zariadenie dotykovej obrazovky '%s'\n"
+#: sound/sound.c:250
+#, fuzzy
+msgid "Audio Settings"
+msgstr "Globálne nastavenia"
 
-#: battery.c:127 battery.c:179
+#: sound/sound.c:257
+msgid "Mute Everything"
+msgstr ""
+
+#: sound/sound.c:298
+#, fuzzy
+msgid "Alarm Settings"
+msgstr "Globálne nastavenia"
+
+#: sound/sound.c:305
+msgid "Enable Alarm Sound"
+msgstr ""
+
+#: sound/sound.c:312
+msgid "Automatic Volume (rising)"
+msgstr ""
+
+#: sound/sound.c:322 sound/soundctrl.c:298
+#, fuzzy
+msgid "Volume"
+msgstr "Napätie"
+
+#: sound/sound.c:329
+msgid "Test"
+msgstr ""
+
+#: keys/keyboard.c:75
+#, fuzzy
+msgid "none"
+msgstr "nie"
+
+#: keys/keyboard.c:76
+msgid "Foldable"
+msgstr ""
+
+#: keys/keyboard.c:77
+msgid "SnapNType"
+msgstr ""
+
+#: keys/keyboard.c:78
+msgid "Stowaway"
+msgstr ""
+
+#: keys/keyboard.c:79
+msgid "StowawayXT"
+msgstr ""
+
+#: keys/keyboard.c:80
+msgid "HP Slim"
+msgstr ""
+
+#: keys/keyboard.c:81
+#, fuzzy
+msgid "Smart BT"
+msgstr "Štart"
+
+#: keys/keyboard.c:82
+msgid "LIRC"
+msgstr ""
+
+#: keys/keyboard.c:83
+msgid "Belkin IR"
+msgstr ""
+
+#: keys/keyboard.c:84
+msgid "Flexis"
+msgstr ""
+
+#: keys/keyboard.c:85
+msgid "Benq Gamepad"
+msgstr ""
+
+#: keys/keyboard.c:86
+#, fuzzy
+msgid "Pocketvik"
+msgstr "Zásuvka"
+
+#: keys/keyboard.c:87
+msgid "Micro Foldaway"
+msgstr ""
+
+#: keys/keyboard.c:88
+msgid "Micro Datapad"
+msgstr ""
+
+#: keys/keyboard.c:252
+#, fuzzy
+msgid "External keyboard configuration."
+msgstr "Nastavenie externej klávesnice"
+
+#: keys/keyboard.c:255
+#, fuzzy
+msgid "External Keyboard Port"
+msgstr "Externá klávesnice"
+
+#: keys/keyboard.c:262
+#, fuzzy
+msgid "Here you may select your external keyboard model."
+msgstr "Kliknite sem pre výber tohoto modelu klávesnice."
+
+#: keys/keyboard.c:283
+msgid "External Keyboard Type"
+msgstr "Typ externej klávesnice"
+
+#: keys/keys.c:79
+#, fuzzy
+msgid "Buttons"
+msgstr "Konfigurácia tlačidiel"
+
+#: keys/keys.c:83
+msgid "Virtual Keyboard"
+msgstr "Virtuálna klávesnice"
+
+#: keys/keys.c:87
+msgid "External Keyboard"
+msgstr "Externá klávesnice"
+
+#: main-info.c:67
+#, c-format
+msgid "usage: gpe-info [page]\n"
+msgstr ""
+
+#: main-info.c:68
+#, c-format
+msgid "    Where page may be \"global\" (default)\n"
+msgstr ""
+
+#: main-info.c:78 gpe-conf-sysinfo.desktop.in.h:2
+#, fuzzy
+msgid "System Information"
+msgstr "Uložiť informácie"
+
+#: storage.c:166 storage.c:423
+msgid "System Memory"
+msgstr "Systémová pamäť"
+
+#. TRANSLATORS: MB == Mega Bytes
+#: storage.c:174 storage.c:443
+msgid "Free memory"
+msgstr "Voľná pamäť"
+
+#. TRANSLATORS: MB == Mega Bytes
+#: storage.c:176 storage.c:183 storage.c:329 storage.c:340 storage.c:445
+#: storage.c:458 sysinfo.c:663 sysinfo.c:679
+msgid "MB"
+msgstr "MiB"
+
+#: storage.c:181 storage.c:328 storage.c:456
+msgid "Total:"
+msgstr "Celkom:"
+
+#: storage.c:292
+msgid "Internal Flash"
+msgstr "Interná flash pamäť"
+
+#: storage.c:298
+msgid "MMC"
+msgstr "MMC"
+
+#: storage.c:304
+msgid "Compact Flash"
+msgstr "CF karta"
+
+#: storage.c:310
+msgid "Network Filesystem"
+msgstr "Sieťový súborový systém"
+
+#: storage.c:330
+msgid "Mounted at "
+msgstr "Pripojený k "
+
+#: storage.c:338
+msgid "Free space"
+msgstr "Voľné miesto"
+
+#: logread.c:116
+#, fuzzy
+msgid "Can't find circular buffer, is syslog running?\n"
+msgstr "Nepodarilo sa nájsť kruhovú vyrovnávaciu pamäť. Je syslog spustený?"
+
+#: logread.c:123
+#, fuzzy
+msgid "Can't get access to syslogd's circular buffer."
+msgstr "Nepodarilo sa získať prístup ku kruhovej vyrovnávacej pamäti zo syslogd."
+
+#: logread.c:130
+#, fuzzy
+msgid "Can't get access to semaphore(s) for syslogd's circular buffer."
+msgstr "Nepodarilo sa získať prístup k semafóru/semafórom pre kruhovú vyrovnávaciu pamäť zo syslogd."
+
+#: logread.c:156
+msgid "<empty syslog>"
+msgstr "<prázdny systémový záznam>"
+
+#: logread.c:227 logread.c:243
+msgid "System Log"
+msgstr "Systémové záznamy"
+
+#: logread.c:252 logread.c:268
+msgid "Session Log"
+msgstr "Záznamy sedenia"
+
+#: logread.c:275
+#, fuzzy
+msgid "Could not open X session log.\n"
+msgstr "Nepodarilo sa otvoriť záznamy X sedenia."
+
+#: battery.c:190 battery.c:251
+#, fuzzy
+msgid "unknown"
+msgstr "Neznámy"
+
+#: battery.c:199 battery.c:259 battery.c:358
 msgid "Status: high"
 msgstr "Stav: vysoký"
 
-#: battery.c:130 battery.c:182
+#: battery.c:202 battery.c:262 battery.c:362
 msgid "Status: low"
 msgstr "Stav: nízky"
 
-#: battery.c:133 battery.c:185
+#: battery.c:205 battery.c:265 battery.c:366
 msgid "Status: critical"
 msgstr "Stav: kritický"
 
-#: battery.c:136 battery.c:188
+#: battery.c:208 battery.c:268 battery.c:370
 msgid "Status: charging"
 msgstr "Stav: nabíjanie"
 
-#: battery.c:139 battery.c:191
+#: battery.c:211 battery.c:271
 msgid "Status: charge main"
 msgstr "Stav: plné nabitie"
 
-#: battery.c:142
+#: battery.c:214
 msgid "Status: dead"
 msgstr "Stav: nefunguje"
 
-#: battery.c:145 battery.c:197
+#: battery.c:217 battery.c:277 battery.c:356
 msgid "Status: full"
 msgstr "Stav: plný"
 
-#: battery.c:148 battery.c:200
+#: battery.c:220 battery.c:280
 msgid "Status: no battery"
 msgstr "Stav: bez batérie"
 
-#: battery.c:151 battery.c:203 battery.c:222
+#: battery.c:223 battery.c:283 battery.c:301 battery.c:373
 msgid "Status: unknown"
 msgstr "Stav: neznámy"
 
-#: battery.c:155 battery.c:207
+#: battery.c:228
+msgid "learning"
+msgstr ""
+
+#: battery.c:232 battery.c:287
 msgid "Voltage"
 msgstr "Napätie"
 
-#: battery.c:159 battery.c:211
+#: battery.c:236 battery.c:291 battery.c:390
 msgid "AC connected"
 msgstr "Zdroj pripojený"
 
-#: battery.c:161 battery.c:213
+#: battery.c:238 battery.c:293 battery.c:392
 msgid "Lifetime"
 msgstr "Životnosť"
 
-#: battery.c:194
+#: battery.c:274
 msgid "Status: not installed"
 msgstr "Stav: nenainštalované"
 
-#: battery.c:220
+#: battery.c:300
 msgid "not installed"
 msgstr "nenainštalované"
 
-#: battery.c:224
+#: battery.c:302
 msgid "Voltage: unknown"
 msgstr "Napätie: neznáme"
 
-#: battery.c:226
+#: battery.c:303
 msgid "Lifetime: unknown"
 msgstr "Životnosť: neznáma"
 
-#: battery.c:265
+#: battery.c:348
+#, fuzzy
+msgid "No battery"
+msgstr "Doplnková batéria"
+
+#: battery.c:453
 msgid "Internal battery"
 msgstr "Zabudovaná batéria"
 
-#: battery.c:269
+#: battery.c:457
 msgid "Jacket battery"
 msgstr "Doplnková batéria"
+
+#: sysinfo.c:236
+#, fuzzy
+msgid "ARM"
+msgstr "APM"
+
+#: sysinfo.c:239
+msgid "Intel x86 or compatible"
+msgstr ""
+
+#: sysinfo.c:240
+msgid "IBM type PC"
+msgstr ""
+
+#: sysinfo.c:243
+msgid "Mips"
+msgstr ""
+
+#: sysinfo.c:245
+msgid "Silicon Graphics Machine"
+msgstr ""
+
+#: sysinfo.c:249
+msgid "IBM Power or PowerPC"
+msgstr ""
+
+#. TRANSLATORS: "Familiar" is the name of a linux distribution.
+#: sysinfo.c:278
+#, fuzzy
+msgid "Familiar"
+msgstr "Rodina"
+
+#. TRANSLATORS: "OpenEmbedded" is the name of a linux distribution.
+#: sysinfo.c:292
+msgid "OpenEmbedded"
+msgstr ""
+
+#: sysinfo.c:334 sysinfo.c:336
+#, fuzzy
+msgid "Build"
+msgstr "Dlažba"
+
+#: sysinfo.c:438
+#, fuzzy
+msgid "Network Status"
+msgstr "Nastavenie siete"
+
+#: sysinfo.c:452 sysinfo.c:455
+#, fuzzy
+msgid "HWaddr (MAC)"
+msgstr "MAC adresa: %s\n"
+
+#: sysinfo.c:466 sysinfo.c:467
+#, c-format
+msgid "Wireless"
+msgstr ""
+
+#: sysinfo.c:494
+#, fuzzy
+msgid "Default Gateway"
+msgstr "Brána"
+
+#: sysinfo.c:537
+#, fuzzy
+msgid "System information"
+msgstr "Uložiť informácie"
+
+#: sysinfo.c:547
+#, fuzzy
+msgid "Version"
+msgstr "Otázka"
+
+#: sysinfo.c:579
+msgid "Distribution"
+msgstr ""
+
+#: sysinfo.c:604
+#, fuzzy
+msgid "System"
+msgstr "Systémové záznamy"
+
+#: sysinfo.c:613
+#, fuzzy
+msgid "Device information"
+msgstr "Zariadenie nebolo nájdené"
+
+#: sysinfo.c:625
+#, fuzzy
+msgid "Device Name"
+msgstr "Zariadenie:"
+
+#: sysinfo.c:644
+#, fuzzy
+msgid "CPU:"
+msgstr "Procesor"
+
+#: sysinfo.c:657
+msgid "RAM:"
+msgstr ""
+
+#: sysinfo.c:673
+#, fuzzy
+msgid "Storage:"
+msgstr "Stav:"
+
+#: sysinfo.c:685
+msgid "Hardware"
+msgstr ""
+
+#: sysinfo.c:695
+#, fuzzy
+msgid "Battery"
+msgstr "Informácie o batérii"
+
+#: sysinfo.c:702
+#, fuzzy
+msgid "Storage"
+msgstr "Použitie ukladacieho priestoru"
+
+#: sysinfo.c:709
+#, fuzzy
+msgid "Networks"
+msgstr "Sieť"
+
+#: sysinfo.c:716
+msgid "Log Display"
+msgstr ""
+
+#: gpe-conf.desktop.in.h:1
+#, fuzzy
+msgid "Control Panel"
+msgstr "Konzola"
 
 #: gpe-conf-admin.desktop.in.h:1
 msgid "User Access"
@@ -1578,14 +2078,6 @@ msgstr "Práva používateľa"
 msgid "User access administration"
 msgstr "Správa prístupových práv používateľa"
 
-#: gpe-conf-battery.desktop.in.h:1
-msgid "Battery Info"
-msgstr "Informácie o batérii"
-
-#: gpe-conf-battery.desktop.in.h:2
-msgid "Battery Information"
-msgstr "Informácie o batérii"
-
 #: gpe-conf-cardinfo.desktop.in.h:1
 msgid "PC/CF Cards"
 msgstr "PC/CF karty"
@@ -1594,71 +2086,19 @@ msgstr "PC/CF karty"
 msgid "PC/CF Cards info and config"
 msgstr "Informácie o PC/CF kartách a ich konfigurácia"
 
-#: gpe-conf-ipaqscreen.desktop.in.h:1
-msgid "Screen Setup"
-msgstr "Nastavenie obrazovky"
+#: gpe-conf-keys.desktop.in.h:1
+msgid "Keyboard and Button Setup"
+msgstr ""
 
-#: gpe-conf-kbd.desktop.in.h:1
-msgid "Virtual Keyboard"
-msgstr "Virtuálna klávesnice"
-
-#: gpe-conf-kbd.desktop.in.h:2
-msgid "Virtual Keyboard Setup"
-msgstr "Nastavenie virtuálnej klávesnice"
-
-#: gpe-conf-keyboard.desktop.in.h:1
-msgid "External Keyboard"
-msgstr "Externá klávesnice"
-
-#: gpe-conf-keyboard.desktop.in.h:2
-msgid "External Keyboard Setup"
-msgstr "Nastavenie externej klávesnice"
-
-#: gpe-conf-keyctl.desktop.in.h:1
-msgid "Button Config"
-msgstr "Konfigurácia tlačidiel"
-
-#: gpe-conf-keyctl.desktop.in.h:2
-msgid "Button Configuration"
-msgstr "Konfigurácia tlačidiel"
-
-#: gpe-conf-login-setup.desktop.in.h:1
-msgid "Login Setup"
-msgstr "Nastavenie prihlásenia"
-
-#: gpe-conf-logread.desktop.in.h:1
-msgid "Accesss System Log "
-msgstr "Prístup k systémovým záznamom "
-
-#: gpe-conf-logread.desktop.in.h:2
-msgid "Show Logs"
-msgstr "Zobraziť záznamy"
-
-#: gpe-conf-network.desktop.in.h:1
-msgid "Network Setup"
-msgstr "Nastavenie siete"
-
-#: gpe-conf-ownerinfo.desktop.in.h:1
-msgid "Owner Information"
-msgstr "Informácie o vlastníkovi"
+#: gpe-conf-keys.desktop.in.h:2
+msgid "Keys and Buttons"
+msgstr ""
 
 #: gpe-conf-ownerinfo.desktop.in.h:2
 msgid "Set Owner Information"
 msgstr "Nastaviť informácie o vlastníkovi"
 
-#: gpe-conf-packages.desktop.in.h:1
-msgid " Update Manager"
-msgstr " Správca aktualizácií"
-
-#: gpe-conf-packages.desktop.in.h:2
-msgid "Update installed packages"
-msgstr "Aktualizovať nainštalované balíky"
-
 #: gpe-conf-serial.desktop.in.h:1
-msgid " Serial Ports"
-msgstr " Sériové rozhrania"
-
-#: gpe-conf-serial.desktop.in.h:2
 msgid "Serial Port Settings"
 msgstr "Nastavenia sériového rozhrania"
 
@@ -1670,21 +2110,9 @@ msgstr "Konfigurácia uspávania"
 msgid "Sleep Configuration"
 msgstr "Konfigurácia uspávania"
 
-#: gpe-conf-storage.desktop.in.h:1
-msgid "Storage Information"
-msgstr "Uložiť informácie"
-
-#: gpe-conf-storage.desktop.in.h:2
-msgid "Storage Usage"
-msgstr "Použitie ukladacieho priestoru"
-
 #: gpe-conf-theme.desktop.in.h:1
 msgid "Global Appearance Setup"
 msgstr "Nastavenie globálneho vzhľadu"
-
-#: gpe-conf-theme.desktop.in.h:2
-msgid "Global Look"
-msgstr "Globálny vzhľad"
 
 #: gpe-conf-time.desktop.in.h:1
 msgid "Date/Time Setup"
@@ -1695,9 +2123,259 @@ msgid "Setup Date and Time"
 msgstr "Nastavenie dátumu a času"
 
 #: gpe-conf-users.desktop.in.h:1
-msgid "Manage local Users "
+#, fuzzy
+msgid "Manage local users"
 msgstr "Spravovať miestnych používateľov "
 
 #: gpe-conf-users.desktop.in.h:2
 msgid "User Manager"
 msgstr "Správca používateľov"
+
+#: gpe-conf-sysinfo.desktop.in.h:1
+#, fuzzy
+msgid "System Info"
+msgstr "Systémové záznamy"
+
+#: gpe-conf-sound.desktop.in.h:1
+#, fuzzy
+msgid "Sound Settings"
+msgstr "Nastavenia pozadia"
+
+#: gpe-conf-sound.desktop.in.h:2
+msgid "Sound defaults and setup"
+msgstr ""
+
+#~ msgid "Show 'All' group"
+#~ msgstr "Zobraziť skupinu 'Všetky'"
+
+#~ msgid "Auto-hide group labels"
+#~ msgstr "Automaticky skryť popisy skupín"
+
+#~ msgid "Show 'Recent' tab"
+#~ msgstr "Zobraziť kartu 'Najnovšie'"
+
+#~ msgid "Do not launch at startup"
+#~ msgstr "Nespustiť pri štarte"
+
+#~ msgid "Tab View"
+#~ msgstr "Zobraziť kartu"
+
+#~ msgid "List"
+#~ msgstr "Zoznam"
+
+#~ msgid "Changes will take effect after relog"
+#~ msgstr "Zmena sa prejaví až po odhlásení a prihlásení"
+
+#~ msgid "State"
+#~ msgstr "Stav"
+
+#~ msgid "Screensaver"
+#~ msgstr "Šetrič obrazovky"
+
+#~ msgid "Delay until start"
+#~ msgstr "Počkať do štartu"
+
+#~ msgid "Activated"
+#~ msgstr "Aktivované"
+
+#~ msgid "Orientation"
+#~ msgstr "Orientácia"
+
+#~ msgid "Off"
+#~ msgstr "Vypnuté"
+
+#~ msgid "Couldn't read screen settings!"
+#~ msgstr "Nepodarilo sa prečítať nastavenia obrazovky!"
+
+#~ msgid "Can't interpret output from xrandr!"
+#~ msgstr "Nemôžem interpretovať výstup z xrandr!"
+
+#~ msgid "Can't set rotation on an x86."
+#~ msgstr "Nemôžem nastaviť rotáciu na x86."
+
+#~ msgid "Could not read keyboard definition file."
+#~ msgstr "Nepodarilo sa prečítať súbor definície klávesnice."
+
+#~ msgid "Error reading keyboard definition."
+#~ msgstr "Chyba pri čítaní definície klávesnice."
+
+#~ msgid "External keyboard configuration. Model support packages not installed if inactive."
+#~ msgstr "Konfigurácia externej klávesnice. Ak je neaktívne, balík podpory modelu nie je nainštalovaný."
+
+#~ msgid "Here you may select your external keyboard model. To install software support, connect your device to the internet and click the \"Install\" button."
+#~ msgstr "Tu si môžete zvoliť model vašej externej klávesnice. Pre nainštalovanie softvérovej podpory pripojte vaše zariadenie k internetu a kliknite na tlačidlo \"Inštalovať\"."
+
+#~ msgid "Install"
+#~ msgstr "Inštalovať"
+
+#~ msgid "Click here to install support for this keyboard."
+#~ msgstr "Kliknite sem pre nainštalovanie podpory pre túto klávesnicu."
+
+#~ msgid "Use DHCP in any case (usually not needed)."
+#~ msgstr "Použiť DHCP v každom prípade (väčšinou nie je potrebné)."
+
+#~ msgid "Use DHCP"
+#~ msgstr "Použiť DHCP"
+
+#~ msgid "yes"
+#~ msgstr "áno"
+
+#~ msgid "Close"
+#~ msgstr "Zatvoriť"
+
+#~ msgid "Close network tool"
+#~ msgstr "Zatvoriť sieťový nástroj"
+
+#~ msgid "Reset button config to default?"
+#~ msgstr "Nastaviť konfiguráciu tlačidiel na štandardnú?"
+
+#~ msgid "Defaults"
+#~ msgstr "Predvolené"
+
+#~ msgid "Image:"
+#~ msgstr "Obrázok:"
+
+#~ msgid "idle(sec)"
+#~ msgstr "nečinný (s)"
+
+#~ msgid "load"
+#~ msgstr "záťaž"
+
+#~ msgid "Choose IRQs"
+#~ msgstr "Zvoliť prerušenia"
+
+#~ msgid "Couldn't get filesystem info!"
+#~ msgstr "Nepodarilo sa získať informácie o súborovom systéme!"
+
+#~ msgid "Couldn't find default runlevel!"
+#~ msgstr "Nepodarilo sa nájsť predvolenú úroveň behu (runlevel)!"
+
+#~ msgid "Removing package"
+#~ msgstr "Odstránenie balíka"
+
+#~ msgid "Installing package"
+#~ msgstr "Inštalovanie balíka"
+
+#~ msgid "Update finished. Please check log messages for errors."
+#~ msgstr "Aktualizácia ukončená. Prosím pozrite systémové záznamy, či sa nevyskytli chyby."
+
+#~ msgid "Remove"
+#~ msgstr "Odstrániť"
+
+#~ msgid "Install/Removal finished. Please check log messages for errors."
+#~ msgstr "Inštalácia/odstránenie ukončené. Prosím pozrite systémové záznamy, či sa nevyskytli chyby."
+
+#~ msgid "Update using \"ipkg upgrade\" started.\n"
+#~ msgstr "Aktualizácia pomocou \"ipkg upgrade\" spustená.\n"
+
+#~ msgid "Running..."
+#~ msgstr "Beží..."
+
+#~ msgid "Update"
+#~ msgstr "Aktualizácia"
+
+#~ msgid "Update from network"
+#~ msgstr "Aktualizovať zo siete"
+
+#~ msgid "Update entire system over an internet connection."
+#~ msgstr "Aktualizovať celý systém cez internetové pripojenie."
+
+#~ msgid "Activity log"
+#~ msgstr "Záznam aktivity"
+
+#~ msgid "This window shows all output from the packet manager that performs the update."
+#~ msgstr "Toto okno zobrazuje všetok výstup zo správcu balíkov, ktorý robí aktualizáciu."
+
+#~ msgid "Install/Remove"
+#~ msgstr "Inštalovať/odstrániť"
+
+#~ msgid "Install/Remove a package"
+#~ msgstr "Inštalovať/odstrániť balík"
+
+#~ msgid "Enter name of package to be installed here."
+#~ msgstr "Tu zadajte názov balíka, ktorý chcete nainštalovať."
+
+#~ msgid "Install a package from a configured source."
+#~ msgstr "Nainštalovať balík z nastaveného zdroja."
+
+#~ msgid "Remove the package."
+#~ msgstr "Odstrániť balík."
+
+#~ msgid "This window shows all output from the packet manager installing the package."
+#~ msgstr "Toto okno zobrazuje všetok výstup zo správcu balíkov, ktorý inštaluje balík."
+
+#~ msgid "Insert Card"
+#~ msgstr "Vložiť kartu"
+
+#~ msgid "Click here to start card insertion manually."
+#~ msgstr "Kliknite sem pre začatie ručného vkladania karty."
+
+#~ msgid "Eject Card"
+#~ msgstr "Vysunúť kartu"
+
+#~ msgid "Click here to eject card manually."
+#~ msgstr "Kliknite sem pre manuálne vysunutie karty."
+
+#~ msgid "Suspend Card"
+#~ msgstr "Uspať kartu"
+
+#~ msgid "Click here to suspend current card."
+#~ msgstr "Kliknite sem pre uspanie aktuálnej karty."
+
+#~ msgid "Resume Card"
+#~ msgstr "Zobudiť kartu"
+
+#~ msgid "Click here to resume current card."
+#~ msgstr "Kliknite sem pre zobudenie aktuálnej karty."
+
+#~ msgid "Reset Card"
+#~ msgstr "Reštartovať kartu"
+
+#~ msgid "Click here to reset current card."
+#~ msgstr "Kliknite sem pre reštart aktuálnej karty."
+
+#~ msgid "Reset Card Manager"
+#~ msgstr "Reštartovať správcu kariet"
+
+#~ msgid "Click here to reset card manager. This commits all updates to pcmcia config files."
+#~ msgstr "Kliknite sem pre reštart správcu kariet. Toto uloží všetky zmeny do konfiguračných súborov pcmcia."
+
+#~ msgid "Click here to assign a driver to this card / change current driver assignment."
+#~ msgstr "Kliknite sem pre priradenie / zmenu ovládača k tejto karte."
+
+#~ msgid "Exit applet"
+#~ msgstr "Ukončiť applet"
+
+#~ msgid ""
+#~ "<b>Interface %s</b>\n"
+#~ "Type: %s\n"
+#~ msgstr ""
+#~ "<b>Rozhranie %s</b>\n"
+#~ "Typ: %s\n"
+
+#~ msgid "could not open touchscreen device '%s'\n"
+#~ msgstr "nepodarilo sa otvoriť zariadenie dotykovej obrazovky '%s'\n"
+
+#~ msgid "Battery Information"
+#~ msgstr "Informácie o batérii"
+
+#~ msgid "Virtual Keyboard Setup"
+#~ msgstr "Nastavenie virtuálnej klávesnice"
+
+#~ msgid "Button Configuration"
+#~ msgstr "Konfigurácia tlačidiel"
+
+#~ msgid "Accesss System Log "
+#~ msgstr "Prístup k systémovým záznamom "
+
+#~ msgid "Show Logs"
+#~ msgstr "Zobraziť záznamy"
+
+#~ msgid " Update Manager"
+#~ msgstr " Správca aktualizácií"
+
+#~ msgid "Update installed packages"
+#~ msgstr "Aktualizovať nainštalované balíky"
+
+#~ msgid "Global Look"
+#~ msgstr "Globálny vzhľad"

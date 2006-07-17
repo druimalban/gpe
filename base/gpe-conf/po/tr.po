@@ -1,0 +1,2376 @@
+# translation of gpe-conf-0.1.21.tr.po to Turkish
+# Copyright (C) 2005 Free Software Foundation, Inc.
+# This file is distributed under the same license as the gpe-conf package.
+# Merve Macit <merve_macit@yahoo.com>, 2004.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-conf 0.1.21\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2004-10-31 22:33+0100\n"
+"PO-Revision-Date: 2005-03-21 06:37+0200\n"
+"Last-Translator: Merve Macit <merve_macit@yahoo.com>\n"
+"Language-Team: Turkish <gnu-tr-u12a@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.9.1\n"
+
+#: main.c:335
+#, fuzzy, c-format
+msgid "'task_nameserver' needs a new (and only one) nameserver as argument.\n"
+msgstr "'task_nameserver' arguman olarak yeni (ve sadece bir) adsunucusuna ihtiyaç duyuyor.\n"
+
+#: main.c:353
+#, fuzzy, c-format
+msgid "'task_sound' needs (s)ave/(r)estore as argument.\n"
+msgstr "'task_nameserver' arguman olarak yeni (ve sadece bir) adsunucusuna ihtiyaç duyuyor.\n"
+
+#: main.c:421
+#, fuzzy
+msgid "Warning: PCMCIA init failed."
+msgstr "Uyarı: PCMCIA ilklendirilmesi başarısız oldu."
+
+#: main.c:453
+#, fuzzy, c-format
+msgid "This mode is disabled, please try:\n"
+msgstr "Bu kip geçersizdir,lütfen bunu deneyin:\n"
+
+#: main.c:454
+#, fuzzy, c-format
+msgid ""
+"\n"
+"gpe-conf [AppletName]\n"
+"where AppletName is in:\n"
+msgstr ""
+"\n"
+"gpe-conf (Java Uygulamacığı Adı)\n"
+"Java Uygulamacığı Adının bulunduğu:\n"
+
+#: main.c:470
+#, fuzzy, c-format
+msgid "Applet %s unknown!\n"
+msgstr "Java Uygulamacığı %s bilinmiyor!\n"
+
+#: main.c:471
+#, fuzzy, c-format
+msgid ""
+"\n"
+"\n"
+"Usage: gpe-conf [AppletName]\n"
+"where AppletName is in:\n"
+msgstr ""
+"\n"
+"\n"
+"Kullanım: gpe-conf (Java Uygulamacığı Adı)\n"
+"Java Kullanıcı Adının bulunduğu:\n"
+
+#: applets.c:356
+#, fuzzy
+msgid "Root access"
+msgstr "Kök erişimi"
+
+#: applets.c:370
+#, fuzzy
+msgid ""
+"Some options are only\n"
+"accessible for user root.\n"
+"Please enter password."
+msgstr ""
+"Bazı seçenekler sadece\n"
+"kullanıcı kök erişimine açıktır.\n"
+"Lütfen şifreyi girin."
+
+#: applets.c:417 screen/calibrate.c:32
+#, fuzzy
+msgid "Sorry, wrong password."
+msgstr "Üzgünüm, yanlış şifre."
+
+#: timeanddate.c:424
+#, fuzzy
+msgid "Time adjusted from network."
+msgstr "Saati ağdan al"
+
+#: timeanddate.c:426
+#, fuzzy
+msgid "Adjusting time from network failed."
+msgstr "Saati ağdan al"
+
+#: timeanddate.c:506
+#, fuzzy
+msgid "Time & Date"
+msgstr "Zaman&Tarih"
+
+#: timeanddate.c:522
+#, fuzzy
+msgid "Date"
+msgstr "Tarih"
+
+#: timeanddate.c:536
+#, fuzzy
+msgid "Enter current date here or use button to select."
+msgstr "Geçerli tarihi buraya gir veya seçmek için düğmeyi kullan."
+
+#: timeanddate.c:541
+#, fuzzy
+msgid "Time"
+msgstr "Zaman"
+
+#: timeanddate.c:555
+#, fuzzy
+msgid "Network"
+msgstr "Ağ"
+
+#: timeanddate.c:573
+#, fuzzy
+msgid "Select the timeserver to use to set the clock."
+msgstr "Saati ayarlamak için kullanılacak zaman sunucusunu seç."
+
+#: timeanddate.c:575
+#, fuzzy
+msgid "Get time from network"
+msgstr "Saati ağdan al"
+
+#: timeanddate.c:582
+#, fuzzy
+msgid "If connected to the Internet, you may press this button to set the time on this device using the timeserver above."
+msgstr "Eğer internete bağlıysan,yukarıdaki zaman sunucusunu kullanarak bu aygıt üzerinde zaman ayarı yapmak için bu düğmeye basabilirsin."
+
+#: timeanddate.c:587 timeanddate.c:596
+#, fuzzy
+msgid "Timezone"
+msgstr "Saat Dilimi"
+
+#: timeanddate.c:619
+#, fuzzy
+msgid "Select your current timezone here. The setting applies after the next login."
+msgstr "Geçerli saat dilimini seç. Ayarlar sonraki oturumdan sonra uygulanır."
+
+#: timeanddate.c:627
+#, fuzzy
+msgid "Daylight Saving"
+msgstr "Yaz Saati Uygulaması "
+
+#: timeanddate.c:634
+#, fuzzy
+msgid "Use daylight saving time"
+msgstr "Yaz saati uygulamasını kullan"
+
+#: timeanddate.c:641
+#, fuzzy
+msgid "Check this box if you want your device to handle daylight saving time for you."
+msgstr "Aygıtınızın yaz saati uygulamasını senin için idare etmesini  istiyorsan, bu kutuyu kontrol et."
+
+#: timeanddate.c:643
+#, fuzzy
+msgid "Offset:"
+msgstr "Göreli konum:"
+
+#: timeanddate.c:652
+#, fuzzy
+msgid "Default"
+msgstr "Öntanımlı"
+
+#: timeanddate.c:659
+#, fuzzy
+msgid "Use default DST offset of one hour?"
+msgstr "Bir saatlik öntanımlı DST göreli konum kullan?"
+
+#: timeanddate.c:664
+#, fuzzy
+msgid "Hours"
+msgstr "Saat"
+
+#: timeanddate.c:667
+#, fuzzy
+msgid "Select daylight saving time offset hours here."
+msgstr "Burada yaz saati göreli konum saatlerini seç."
+
+#: timeanddate.c:672
+#, fuzzy
+msgid "Minutes"
+msgstr "Dakika"
+
+#: timeanddate.c:675
+#, fuzzy
+msgid "Select daylight saving time offset minutes here."
+msgstr "Burada yaz saati göreli konum dakikalarını seç."
+
+#: timeanddate.c:780
+#, fuzzy
+msgid "To make timezone settings take effect,you'll need to log out and log in again."
+msgstr "Saat dilimi ayarlarının yürürlüğe girmesi için, oturumu kapatman ve tekrar açman gerekecek."
+
+#: screen/main.c:74
+#, fuzzy
+msgid "Portrait"
+msgstr "Dikey"
+
+#: screen/main.c:75
+#, fuzzy
+msgid "Landscape (left)"
+msgstr "Yatay(sol)"
+
+#: screen/main.c:76
+#, fuzzy
+msgid "Inverted"
+msgstr "Ters"
+
+#: screen/main.c:77
+#, fuzzy
+msgid "Landscape (right)"
+msgstr "Yatay (sağ)"
+
+#: screen/main.c:104
+#, fuzzy
+msgid "Light"
+msgstr "Işık"
+
+#: screen/main.c:110
+#, fuzzy
+msgid "Brightness"
+msgstr "Parlaklık"
+
+#: screen/main.c:152
+#, fuzzy
+msgid "Display"
+msgstr "Gösterme"
+
+#: screen/main.c:156
+#, fuzzy
+msgid "Rotation"
+msgstr "Bilgi"
+
+#: screen/main.c:176
+#, fuzzy
+msgid "Touchscreen"
+msgstr "Dokunmaya Duyarlı Ekran"
+
+#: screen/main.c:180
+#, fuzzy
+msgid "Calibrate"
+msgstr "Ayarla"
+
+#: screen/main.c:182
+#, fuzzy
+msgid "Start"
+msgstr "Başlat"
+
+#: screen/main.c:304 sleep/callbacks.c:47
+#, fuzzy
+msgid "min"
+msgstr "dk"
+
+#: screen/main.c:307 sleep/callbacks.c:50
+#, fuzzy
+msgid "sec"
+msgstr "sn"
+
+#: kbd.c:146
+#, fuzzy
+msgid "Keyboard Geometry / Layout"
+msgstr "Klavye Geometrisi / Düzeni"
+
+#: kbd.c:186
+#, fuzzy
+msgid "User defined"
+msgstr "Kullanıcı tanımlı"
+
+#: network.c:106
+#, fuzzy
+msgid "Current Config"
+msgstr "Geçerli Yapılandırma"
+
+#: network.c:235 ownerinfo.c:237
+#, fuzzy
+msgid "Name:"
+msgstr "İsim:"
+
+#: network.c:241
+#, fuzzy
+msgid "New Interface"
+msgstr "Yeni Arayüz"
+
+#: network.c:250
+#, fuzzy
+msgid "This interface definition already exists!"
+msgstr "Bu arayüz tanımı zaten var!"
+
+#: network.c:324
+#, fuzzy
+msgid "Do you want to delete this interface?"
+msgstr "Bu arayüzü silmek istiyor musun?"
+
+#: network.c:324 keyctl.c:230 users/callbacks.c:115
+#, fuzzy
+msgid "Question"
+msgstr "Soru"
+
+#: network.c:570
+msgid "WiFi config"
+msgstr ""
+
+#: network.c:600
+#, c-format
+msgid "<b>WiFi config for %s</b>"
+msgstr ""
+
+#: network.c:610
+msgid "ESSID"
+msgstr ""
+
+#: network.c:632
+#, fuzzy
+msgid "Mode"
+msgstr "Kip"
+
+#: network.c:642
+#, fuzzy
+msgid "managed"
+msgstr "Görev Yöneticisi"
+
+#: network.c:654
+msgid "ad-hoc"
+msgstr ""
+
+#: network.c:671
+#, fuzzy
+msgid "Channel"
+msgstr "Kanal"
+
+#: network.c:693
+msgid "WEP"
+msgstr ""
+
+#: network.c:703
+#, fuzzy
+msgid "off"
+msgstr "kapalı"
+
+#: network.c:715
+#, fuzzy
+msgid "open"
+msgstr "açık"
+
+#: network.c:727
+#, fuzzy
+msgid "restricted"
+msgstr "Uzat"
+
+#: network.c:743
+msgid "Key 1"
+msgstr ""
+
+#: network.c:771
+msgid "Key 2"
+msgstr ""
+
+#: network.c:799
+msgid "Key 3"
+msgstr ""
+
+#: network.c:828
+msgid "Key 4"
+msgstr ""
+
+#: network.c:1030
+#, fuzzy
+msgid "Address"
+msgstr "Adres"
+
+#: network.c:1033
+#, fuzzy
+msgid "Enter your IP address here, e.g. 192.168.1.2"
+msgstr "IP adresini, örneğin 129.168.1.2 buraya gir"
+
+#: network.c:1035
+#, fuzzy
+msgid "Netmask"
+msgstr "Netmask"
+
+#: network.c:1038
+#, fuzzy
+msgid "Enter your netmask here, e.g. 255.255.255.0 in most cases"
+msgstr "Netmaskını buraya gir, örneğin çoğu durumda 255.255.255.0"
+
+#: network.c:1040
+#, fuzzy
+msgid "Broadcast"
+msgstr "Yayın"
+
+#: network.c:1043
+#, fuzzy
+msgid "Enter your broadcast address here, usually the same like your IP with 255 as last number."
+msgstr "Son rakamları 255 olan IP'n ile genellikle aynı olan yayın adresini buraya gir."
+
+#: network.c:1045
+#, fuzzy
+msgid "Gateway"
+msgstr "Ağ Geçidi"
+
+#: network.c:1048
+#, fuzzy
+msgid "Enter the IP Address of your default gateway here."
+msgstr "Öntanımlı ağ geçidi IP Adresini buraya gir."
+
+#: network.c:1059 network.c:1176
+msgid "WiFi device"
+msgstr ""
+
+#: network.c:1067 network.c:1184
+#, fuzzy
+msgid "Configure"
+msgstr "Yapılandır"
+
+#: network.c:1164
+#, fuzzy
+msgid "Hostname"
+msgstr "Ana Bilgisayar Adı"
+
+#: network.c:1167
+#, fuzzy
+msgid "Enter your desired hostname here. This parameter is optional."
+msgstr "İstenilen bilgisayar adını gir. Bu parametre seçmelidir."
+
+#: network.c:1284
+#, fuzzy
+msgid "Provider"
+msgstr "Sağlayıcı"
+
+#: network.c:1286
+#, fuzzy
+msgid "Here you need to enter the name of the provider configuration to use for this interface."
+msgstr "Arayüz için kullanacağın sağlayıcı yapılandırmasının adını buraya girmelisin."
+
+#: network.c:1309
+#, fuzzy
+msgid "Global Settings"
+msgstr "Genel Ayarlar"
+
+#: network.c:1350
+#, fuzzy
+msgid "Proxy"
+msgstr "Vekil"
+
+#: network.c:1351
+#, fuzzy
+msgid "If you want/need to use a proxy, enter it here. (This only applies to dillo for now.)"
+msgstr "Bir vekil kullanmak istiyorsan/gerekiyorsa, onu buraya gir. (Bu dillo'ya sadeceşimdi uygulanır.)  "
+
+#: network.c:1357
+#, fuzzy
+msgid "No proxy for"
+msgstr "...için vekil yok"
+
+#: network.c:1359
+#, fuzzy
+msgid "Here you should enter your local domain for that you don't want to use a proxy."
+msgstr "Bir vekil kullanmak istemiyorsan buraya yerel etki alanını girmelisin."
+
+#: network.c:1366
+#, fuzzy
+msgid "DNS server"
+msgstr "DNS sunucusu"
+
+#: network.c:1369
+#, fuzzy
+msgid "Enter the IP of the DNS(name-) server to use here."
+msgstr "Burada kullanmak için DNS(isim-) sunucusu IP'sini gir."
+
+#: network.c:1540
+#, fuzzy
+msgid ""
+"Here you may change the basic configuration type of your device.\n"
+"Use \"static\" for manual interface configuration, \"dhcp\" to use DHCP and \"ppp\" to make the device a point-to-point device."
+msgstr ""
+"Burada aygıtının temel yapılandırma türünü değiştirebilirsin.\n"
+"Elle arayüz yapılandırması için  \"static\" , DHCP kullanımı için \"dhcp\" veaygıtı noktalar arası aygıt haline getirmek için \"ppp\" yi kullan."
+
+#: network.c:1546
+msgid "Enable this option if your device is a WiFi device"
+msgstr ""
+
+#: network.c:1548
+msgid "Click to set the wireless options for this device"
+msgstr ""
+
+#: network.c:1550
+msgid "Set the mode your WiFi card should work. (managed or ad-hoc)."
+msgstr ""
+
+#: network.c:1553
+msgid "Set the enrcyption mode: off for no WEP encryption, open for open system and restricted for resticted WEP connections only."
+msgstr ""
+
+#: network.c:1558
+#, fuzzy
+msgid "Enter the essid of your WiFi network here."
+msgstr "Öntanımlı ağ geçidi IP Adresini buraya gir."
+
+#: network.c:1561
+msgid "Enter your WEP key here in (iwconfig format), e.g.: \"s:12345\""
+msgstr ""
+
+#: network.c:1564
+msgid "Select the WEP key to use."
+msgstr ""
+
+#: network.c:1567
+msgid "Enter the channel number or frequency if needed. If not needed leave this field blank."
+msgstr ""
+
+#: network.c:1590
+#, fuzzy
+msgid "Add Interface"
+msgstr "Arayüz ekle"
+
+#: network.c:1591
+#, fuzzy
+msgid "Add a new Interface"
+msgstr "Yeni bir arayüz ekle"
+
+#: network.c:1601
+#, fuzzy
+msgid "Remove Interface"
+msgstr "Arayüzü kaldır"
+
+#: network.c:1602
+#, fuzzy
+msgid "Remove current Interface"
+msgstr "Geçerli arayüzü kaldır"
+
+#: network.c:1616
+#, fuzzy
+msgid "Information"
+msgstr "Bilgi"
+
+#: network.c:1617
+#, fuzzy
+msgid "Show current configuration."
+msgstr "Geçerli yapılandırmayı göster."
+
+#: network.c:1635
+#, fuzzy
+msgid "Couldn't read network configuration."
+msgstr "Ağ yapılandırması okunamadı."
+
+#: network.c:1642
+#, fuzzy
+msgid "global"
+msgstr "küresel"
+
+#: theme.c:140
+#, fuzzy
+msgid "Choose backgound image"
+msgstr "Oturum ekranı için artalan imgesi kullan."
+
+#: theme.c:154
+msgid "You are not allowed to read this file, choose another."
+msgstr ""
+
+#: theme.c:175
+msgid "Succesfully changed background image."
+msgstr ""
+
+#: theme.c:176
+msgid "Use \"Look and Feel\" setup tool to change details."
+msgstr ""
+
+#: theme.c:500
+#, fuzzy
+msgid "Red"
+msgstr "Kırmızı"
+
+#: theme.c:505
+#, fuzzy
+msgid "Green"
+msgstr "Yeşil"
+
+#: theme.c:510
+#, fuzzy
+msgid "Blue"
+msgstr "Mavi"
+
+#: theme.c:820
+#, fuzzy
+msgid "Select colour"
+msgstr "Renk seçin"
+
+#: theme.c:846 theme.c:920
+#, fuzzy
+msgid "You don't have read access to selected background image!"
+msgstr "Seçilmiş artalan imgesine erişimi okumamışsın! "
+
+#: theme.c:1040
+#, fuzzy
+msgid "Theme"
+msgstr "Konu"
+
+#: theme.c:1042 gpe-conf-theme.desktop.in.h:2
+#, fuzzy
+msgid "Look and Feel"
+msgstr "Bak ve hisset"
+
+#: theme.c:1052
+#, fuzzy
+msgid "Desktop Theme"
+msgstr "Masaüstü Uygulaması"
+
+#: theme.c:1064
+#, fuzzy
+msgid "Name"
+msgstr "İsim"
+
+#: theme.c:1081
+#, fuzzy
+msgid "Icon Size"
+msgstr "İkon Boyutu"
+
+#: theme.c:1096
+#, fuzzy
+msgid "Visual Effects"
+msgstr "Görsel Efektler"
+
+#: theme.c:1102
+#, fuzzy
+msgid "Enable Visual Effects"
+msgstr "Görsel Efektleri Etkinleştir"
+
+#: theme.c:1109
+#, fuzzy
+msgid "Background"
+msgstr "Arkaplan"
+
+#: theme.c:1123 theme.c:1125
+#, fuzzy
+msgid "Background Settings"
+msgstr "Artalan Ayarları"
+
+#: theme.c:1135 theme.c:1146
+#, fuzzy
+msgid "Theme Default"
+msgstr "Öntanımlı Uygulama"
+
+#: theme.c:1154
+#, fuzzy
+msgid "Solid colour"
+msgstr "Katı renk"
+
+#: theme.c:1168
+#, fuzzy
+msgid "Horizontal"
+msgstr "Yatay"
+
+#: theme.c:1172
+#, fuzzy
+msgid "Vertical"
+msgstr "Dikey"
+
+#: theme.c:1177 theme.c:1196 theme.c:1379 theme.c:1385
+#, fuzzy
+msgid "Colour"
+msgstr "Renk"
+
+#: theme.c:1187
+#, fuzzy
+msgid "Colour gradient"
+msgstr "Gradient renk"
+
+#: theme.c:1206
+#, fuzzy
+msgid "Image"
+msgstr "Resim"
+
+#: theme.c:1232
+#, fuzzy
+msgid "Centered"
+msgstr "Ortala"
+
+#: theme.c:1236
+#, fuzzy
+msgid "Tiled"
+msgstr "Döşe"
+
+#: theme.c:1239
+#, fuzzy
+msgid "Stretched"
+msgstr "Uzat"
+
+#: theme.c:1246
+msgid "Toolbars"
+msgstr ""
+
+#: theme.c:1258 theme.c:1260
+#, fuzzy
+msgid "Toolbar Style"
+msgstr "Araç Çubuğu İkon Boyutu"
+
+#: theme.c:1269 theme.c:1298
+#, fuzzy
+msgid "Icons"
+msgstr "İkon"
+
+#: theme.c:1274 theme.c:1302
+#, fuzzy
+msgid "Text"
+msgstr "Metin"
+
+#: theme.c:1279
+msgid "Both"
+msgstr ""
+
+#: theme.c:1284
+msgid "Both H"
+msgstr ""
+
+#: theme.c:1305
+msgid "Both (icon above text)"
+msgstr ""
+
+#: theme.c:1308
+msgid "Both (icon left of text)"
+msgstr ""
+
+#: theme.c:1315
+#, fuzzy
+msgid "Toolbar Icon Size"
+msgstr "Araç Çubuğu İkon Boyutu"
+
+#: theme.c:1331
+#, fuzzy
+msgid "Fonts"
+msgstr "Yazıtipleri"
+
+#: theme.c:1340 theme.c:1360
+#, fuzzy
+msgid "Desktop Font"
+msgstr "Masaüstü Yazı Tipi "
+
+#: theme.c:1347 theme.c:1407 theme.c:1442
+#, fuzzy
+msgid "Family"
+msgstr "Aile"
+
+#: theme.c:1367 theme.c:1427 theme.c:1462
+#, fuzzy
+msgid "Size"
+msgstr "Büyüklük"
+
+#: theme.c:1396 theme.c:1398 theme.c:1420 theme.c:1455
+#, fuzzy
+msgid "Application Font"
+msgstr "Uygulama Yazı Tipi"
+
+#: keyctl.c:230
+#, fuzzy
+msgid "Reset button config to default?"
+msgstr "Reset'e basınca fabrika ayarlarına geri dön?"
+
+#: keyctl.c:248
+#, fuzzy
+msgid "User Defined"
+msgstr "Kullanıcı Tanımlı"
+
+#: keyctl.c:249
+#, fuzzy
+msgid "Record Memo"
+msgstr "Kayıt belleği"
+
+#: keyctl.c:250
+#, fuzzy
+msgid "Calendar"
+msgstr "Takvim"
+
+#: keyctl.c:251
+#, fuzzy
+msgid "Contacts"
+msgstr "Bağlantılar"
+
+#: keyctl.c:252
+#, fuzzy
+msgid "Taskmanager"
+msgstr "Görev Yöneticisi"
+
+#: keyctl.c:253
+#, fuzzy
+msgid "Audio Player"
+msgstr "Ses Çalar"
+
+#: keyctl.c:254
+#, fuzzy
+msgid "Web Browser"
+msgstr "Web Gözatıcısı"
+
+#: keyctl.c:255
+#, fuzzy
+msgid "To-do List"
+msgstr "To-do Listesi"
+
+#: keyctl.c:256
+#, fuzzy
+msgid "Toggle Desktop"
+msgstr "Masaüstünü Değiştir"
+
+#: keyctl.c:277
+#, fuzzy
+msgid "Defaults"
+msgstr "Varsayılanlar"
+
+#: keyctl.c:442
+#, fuzzy
+msgid "Critical: Can't open keylaunchrc for writing!\n"
+msgstr "Kritik: Keylaunchrc yazma için açılamaz!\n"
+
+#: keyctl.c:464
+#, fuzzy
+msgid "Could not restart key handler!\n"
+msgstr "Anahtar işleyici yeniden başlatılamadı!\n"
+
+#: keyctl.c:486
+#, fuzzy
+msgid "The file you selected is not executable."
+msgstr "Seçtiğin dosya çalışmıyor."
+
+#: ownerinfo.c:210
+#, fuzzy
+msgid "Information about the Owner"
+msgstr "<b>Sahip hakkında bilgi</b>"
+
+#: ownerinfo.c:218
+#, fuzzy
+msgid "Only the user 'root' is allowed to change this information"
+msgstr "Bu bilgiyi sadece kullanıcı 'kök' değiştirebilir."
+
+#: ownerinfo.c:252
+#, fuzzy
+msgid "E-Mail:"
+msgstr "E-Posta:"
+
+#: ownerinfo.c:267
+#, fuzzy
+msgid "Phone:"
+msgstr "Telefon:"
+
+#: ownerinfo.c:282
+#, fuzzy
+msgid "Address:"
+msgstr "Adres:"
+
+#: ownerinfo.c:308
+#, fuzzy
+msgid "Photofile:"
+msgstr "Fotoğraf dosyası:"
+
+#: login-setup.c:118
+#, fuzzy
+msgid "Some of these settings can only be changed by the user 'root'."
+msgstr "Bu ayarlardan bazıları veya hepsi sadece kullanıcı 'kök' tarafından değiştirilebilir."
+
+#: login-setup.c:141 gpe-admin.c:86
+#, fuzzy
+msgid "General"
+msgstr "Genel"
+
+#: login-setup.c:158
+#, fuzzy
+msgid "Show owner information at login."
+msgstr "Kullanıcı bilgilerini girişte göster."
+
+#: login-setup.c:162
+#, fuzzy
+msgid "Lock display on suspend."
+msgstr "Askıya alınan görüntüyü kilitle."
+
+#: login-setup.c:166
+#, fuzzy
+msgid ""
+"Lock display on suspend. \n"
+"  (needs password)"
+msgstr "Askıya alınan görüntüyü kilitle."
+
+#: sleep/interface.c:67
+#, fuzzy
+msgid "Auto sleep"
+msgstr "Otomatik kapanma"
+
+#: sleep/interface.c:77 sleep/interface.c:116
+#, fuzzy
+msgid "enabled"
+msgstr "etkin"
+
+#: sleep/interface.c:95
+#, fuzzy
+msgid "sleep timeout"
+msgstr "uyku modu zamanaşımı"
+
+#: sleep/interface.c:106
+#, fuzzy
+msgid "Auto dim"
+msgstr "Özdevimli karartma"
+
+#: sleep/interface.c:133
+#, fuzzy
+msgid "backlight dim timeout"
+msgstr "arkadan karartma zaman aşımı"
+
+#: sleep/interface.c:142
+#, fuzzy
+msgid "Auto dim level"
+msgstr "Özdevimli karartma seviyesi"
+
+#: sleep/interface.c:162
+#, fuzzy
+msgid "Advanced Controls"
+msgstr "Otomatik kapanma gelişmiş denetimleri"
+
+#: sleep/interface.c:172
+#, fuzzy
+msgid "CPU"
+msgstr "CPU"
+
+#: sleep/interface.c:178
+#, fuzzy
+msgid "Sleep on cpu less than load"
+msgstr "Yükleme esnasındaki uyku modu süresi cpudan daha uzun olsun "
+
+#: sleep/interface.c:182
+msgid "load below"
+msgstr ""
+
+#: sleep/interface.c:198
+#, fuzzy
+msgid "APM"
+msgstr "APM"
+
+#: sleep/interface.c:204
+#, fuzzy
+msgid "Sleep on AC"
+msgstr "ACde uyku modunda ol"
+
+#: sleep/interface.c:206
+#, fuzzy
+msgid "probe IRQs"
+msgstr "probe  IRQs"
+
+#: sleep/interface.c:212
+#, fuzzy
+msgid "Check IRQ activity"
+msgstr "IRQ faaliyetini kontrol et."
+
+#: sleep/callbacks.c:59
+msgid "%"
+msgstr ""
+
+#: users/interface.c:215
+#, fuzzy
+msgid "User Name"
+msgstr "Kullanıcı Adı"
+
+#: users/interface.c:216
+#, fuzzy
+msgid "User Info"
+msgstr "Kullanıcı Bilgisi"
+
+#: users/interface.c:217
+#, fuzzy
+msgid "Home"
+msgstr "Ev"
+
+#: users/interface.c:235 users/interface.c:236
+#, fuzzy
+msgid "Add user"
+msgstr "Kullanıcı ekle"
+
+#: users/interface.c:236
+#, fuzzy
+msgid "Add a new user"
+msgstr "Yeni bir kullanıcı ekle"
+
+#: users/interface.c:240 users/interface.c:241
+#, fuzzy
+msgid "Edit user"
+msgstr "Kullanıcıyı düzenle"
+
+#: users/interface.c:241
+#, fuzzy
+msgid "Edit existing user"
+msgstr "Varolan kullanıcıyı düzenle"
+
+#: users/interface.c:245 users/interface.c:246
+#, fuzzy
+msgid "Delete user"
+msgstr "Kullanıcıyı sil"
+
+#: users/interface.c:246
+#, fuzzy
+msgid "Delete existing user"
+msgstr "Varolan kullanıcıyı sil"
+
+#: users/interface.c:250
+#, fuzzy
+msgid "Password"
+msgstr "Şifre:"
+
+#: users/interface.c:251
+#, fuzzy
+msgid "Change password"
+msgstr "Parola Değiştir"
+
+#: users/interface.c:320
+#, fuzzy
+msgid "User settings"
+msgstr "Kullanıcı ayarları"
+
+#: users/interface.c:334
+#, fuzzy
+msgid "User Name:"
+msgstr "Kullanıcı Adı:"
+
+#: users/interface.c:350
+#, fuzzy
+msgid "Password:"
+msgstr "Parola:"
+
+#: users/interface.c:358
+#, fuzzy
+msgid "User Info:"
+msgstr "Kullanıcı bilgisi:"
+
+#: users/interface.c:374
+#, fuzzy
+msgid "Shell:"
+msgstr "Kabuk:"
+
+#: users/interface.c:393
+#, fuzzy
+msgid "Home:"
+msgstr "Ekran Başı:"
+
+#: users/interface.c:412
+#, fuzzy
+msgid "Change"
+msgstr "Değiştir"
+
+#: users/interface.c:413
+#, fuzzy
+msgid "Set"
+msgstr "İmlensin mi?"
+
+#: users/interface.c:478
+#, fuzzy
+msgid "Change Password"
+msgstr "Parola Değiştir"
+
+#: users/interface.c:504
+#, fuzzy
+msgid "Old Password:"
+msgstr "Eski Şifre:"
+
+#: users/interface.c:511
+#, fuzzy
+msgid "New Password:"
+msgstr "Yeni Şifre:"
+
+#: users/interface.c:519
+#, fuzzy
+msgid "Confirm:"
+msgstr "Onayla:"
+
+#: users/callbacks.c:113
+#, fuzzy
+msgid ""
+"You can't remove\n"
+" system users!"
+msgstr ""
+"Sistem kullanıcılarını \n"
+"çıkaramazsın!"
+
+#: users/callbacks.c:115
+msgid ""
+"Delete user and all its data?\n"
+"This action is not revertable\n"
+"and is executed instantly."
+msgstr ""
+
+#: users/callbacks.c:151
+#, fuzzy
+msgid "Please choose a user name."
+msgstr "Lütfen bir kullanıcı adı seçin."
+
+#: users/callbacks.c:169
+#, fuzzy
+msgid "Please choose a home directory."
+msgstr "Lütfen bir ana dizin seçin."
+
+#: users/callbacks.c:256
+#, fuzzy
+msgid ""
+"The two new pass are different!\n"
+" Please try again!"
+msgstr ""
+"İki yeni şifre farklı!\n"
+"Lütfen tekrar deneyin!"
+
+#: users/callbacks.c:259
+#, fuzzy
+msgid ""
+"Wrong password\n"
+" Please try again!"
+msgstr ""
+"Yanlış şifre\n"
+"Lütfen tekrar deneyin!"
+
+#: cfgfile.c:891
+#, fuzzy
+msgid "No write access to network configuration."
+msgstr "Ağ yapılandırmaya yazma erişimi yok."
+
+#: gpe-admin.c:93
+#, fuzzy
+msgid "Allow users to configure everything"
+msgstr "Kullanıcıların herşeyi yapılandırmasına izin ver"
+
+#: serial.c:428 serial.c:434
+#, fuzzy
+msgid "Simple interface to serial port configuration. Disabled components are not installed."
+msgstr "Seri bağlantı noktası yapılandırmasına basit arayüz. Edilgenleştirilmiş bileşenler yüklü değil."
+
+#: serial.c:431
+#, fuzzy
+msgid "Port A"
+msgstr "A Bağlantı Noktası"
+
+#: serial.c:438
+#, fuzzy
+msgid "Serial port default usage"
+msgstr "Seri bağlantı noktası öntanımlı kullanımı"
+
+#: serial.c:443
+#, fuzzy
+msgid "Select desired software to use serial port here."
+msgstr "Burada seri bağlantı noktasını kullanmak için istenilen yazılımı seçin."
+
+#: serial.c:446
+#, fuzzy
+msgid "Console"
+msgstr "Konsol"
+
+#: serial.c:449
+#, fuzzy
+msgid "This option runs console on serial port. (default)"
+msgstr "Bu seçenek konsolu seri bağlantı noktasında çalıştırır. (öntanımlı)"
+
+#: serial.c:457
+#, fuzzy
+msgid "GPS Daemon"
+msgstr "GPS Daemon"
+
+#: serial.c:462
+msgid "GPS Daemon (needs 'gpsd')"
+msgstr ""
+
+#: serial.c:467
+#, fuzzy
+msgid "This option enables the start of GPSD, which provides data from a GPS reciver to applications."
+msgstr "Bu seçenek GPS alıcısından uygulamalara veri sağlayan GSPD'yi başlatır."
+
+#: serial.c:474
+#, fuzzy
+msgid "Nothing (free)"
+msgstr "Hiçbir şey (boş)"
+
+#: serial.c:477
+#, fuzzy
+msgid "Don't start any software that uses the serial port."
+msgstr "Seri bağlantı noktasını kullanan herhangi bir yazılım başlatmayın."
+
+#: serial.c:514 serial.c:521
+#, fuzzy
+msgid "This page configures the GPS receiver software."
+msgstr "Bu sayfa GPS alıcı yazılımı başlatır."
+
+#: serial.c:518
+#, fuzzy
+msgid "GPS Receiver"
+msgstr "GPS Alıcısı"
+
+#: serial.c:525
+#, fuzzy
+msgid "GPS settings"
+msgstr "GPS ayarları"
+
+#: serial.c:531
+#, fuzzy
+msgid "Receiver Type"
+msgstr "Alıcı Türü"
+
+#: serial.c:536
+#, fuzzy
+msgid "NMEA"
+msgstr "NMEA"
+
+#: serial.c:541
+#, fuzzy
+msgid "The GPS receiver sends NMEA data (default, no need to change for most receivers)."
+msgstr "GPS alıcısı NMEA verisi yollar (öntanımlı, çoğu alıcının değiştirmesine gerek yoktur)."
+
+#: serial.c:547
+#, fuzzy
+msgid "Earthmate"
+msgstr "Earthmate"
+
+#: serial.c:553
+#, fuzzy
+msgid "GPS receiver is an Earthmate GPS."
+msgstr "GPS alıcısı bir Earhmate GPS'dir."
+
+#: serial.c:557
+#, fuzzy
+msgid "Baud Rate"
+msgstr "Baud Hızı"
+
+#: serial.c:573
+#, fuzzy
+msgid "Serial Port"
+msgstr "Seri Bağlantı Noktası"
+
+#: cardinfo.c:105
+#, fuzzy
+msgid "/_Card"
+msgstr "/_Kart"
+
+#: cardinfo.c:106
+#, fuzzy
+msgid "/Card/_Insert"
+msgstr "/Kart/_Sok"
+
+#: cardinfo.c:107
+#, fuzzy
+msgid "/Card/_Eject"
+msgstr "/Kart/_Çıkart"
+
+#: cardinfo.c:108
+#, fuzzy
+msgid "/Card/_Suspend"
+msgstr "/Kart/_Askıya Al"
+
+#: cardinfo.c:109
+#, fuzzy
+msgid "/Card/_Resume"
+msgstr "/Kart/_Yeniden başlat"
+
+#: cardinfo.c:110
+#, fuzzy
+msgid "/Card/_Reset"
+msgstr "/Kart/_Sıfırla"
+
+#: cardinfo.c:111
+#, fuzzy
+msgid "/Card/s1"
+msgstr "/Kart/s1"
+
+#: cardinfo.c:112
+#, fuzzy
+msgid "/Card/_Assign Driver"
+msgstr "/Kart/_Sürücü Ata"
+
+#: cardinfo.c:113
+#, fuzzy
+msgid "/Card/s2"
+msgstr "/Kart/s2"
+
+#: cardinfo.c:114
+#, fuzzy
+msgid "/Card/_Close"
+msgstr "/Kart/_Kapat"
+
+#: cardinfo.c:115
+#, fuzzy
+msgid "/_Help"
+msgstr "/_Yardım"
+
+#: cardinfo.c:116
+#, fuzzy
+msgid "/_Help/Index"
+msgstr "/_Yardım/Dizin"
+
+#: cardinfo.c:117
+#, fuzzy
+msgid "/_Help/About"
+msgstr "/_Yardım/Hakkında"
+
+#: cardinfo.c:177 cardinfo.c:865
+#, fuzzy
+msgid "card not recognized"
+msgstr "Kart tanınmıyor"
+
+#: cardinfo.c:279 cardinfo.c:350
+#, fuzzy
+msgid "Could not write to temporal config file."
+msgstr "Geçici yapılandırma dosyasına yazılamadı."
+
+#: cardinfo.c:556
+#, fuzzy
+msgid "Could not open pidfile:"
+msgstr "kök dosya açılamadı:"
+
+#: cardinfo.c:562
+#, fuzzy
+msgid "Could not read pidfile"
+msgstr "kök dosya okunamadı"
+
+#: cardinfo.c:566
+#, fuzzy
+msgid "Could not signal cardmgr:"
+msgstr "Cardmgr işaret edilemedi:"
+
+#: cardinfo.c:641
+#, fuzzy
+msgid "gpe-conf must be setuid root to use cardinfo feature."
+msgstr "Kart bilgisi özelliklerini kullanabilmek için gpe-conf setuid kök olmalı."
+
+#: cardinfo.c:660
+#, fuzzy
+msgid "No PCMCIA driver in '/proc/devices'"
+msgstr "'/proc/devices'da PCMCIA sürücüsü yok."
+
+#: cardinfo.c:663
+#, fuzzy
+msgid "Could not open '/proc/devices'"
+msgstr "'/proc/devices' açılamadı."
+
+#: cardinfo.c:675
+#, fuzzy
+msgid "No sockets found\n"
+msgstr "Hiç soket bulunmadı\n"
+
+#: cardinfo.c:684
+#, fuzzy
+msgid "Card Services release does not match!"
+msgstr "Kart Servisi yeni sürümle karşılaştırılamıyor!"
+
+#: cardinfo.c:689
+#, fuzzy
+msgid "Could not get CS revision info!\n"
+msgstr "CS düzeltme bilgisi alınamadı!\n"
+
+#: cardinfo.c:852
+#, fuzzy
+msgid "flock(stabfile) failed"
+msgstr "flock(stabfile) başarısız oldu"
+
+#: cardinfo.c:871
+#, fuzzy, c-format
+msgid "no driver loaded"
+msgstr "sürücü yüklü değil"
+
+#: cardinfo.c:980
+#, fuzzy
+msgid "ready"
+msgstr "hazır"
+
+#: cardinfo.c:998
+#, fuzzy
+msgid "not ready"
+msgstr "hazır değil"
+
+#: cardinfo.c:1013
+#, fuzzy
+msgid "suspended"
+msgstr "askıya alındı"
+
+#: cardinfo.c:1205
+#, fuzzy
+msgid "Assign Driver"
+msgstr "Sürücü Ata"
+
+#: cardinfo.c:1214
+#, fuzzy
+msgid ""
+"This dialog allows you to select/\n"
+"change the driver assignment for a\n"
+"PCMCIA or CF card."
+msgstr ""
+"Bu ileti bir PCMCIA veya CF kartı için\n"
+"sürücü atamasını değiştirmene/seçmene\n"
+"izin verir."
+
+#: cardinfo.c:1224
+#, fuzzy
+msgid "Your current card identifies itself as:"
+msgstr "Geçerli kartın kendisini şöyle tanımlıyor:"
+
+#: cardinfo.c:1238 cardinfo.c:1244
+#, fuzzy
+msgid "Manuf. Id"
+msgstr "Manuf. Id"
+
+#: cardinfo.c:1238 cardinfo.c:1244
+#, fuzzy
+msgid "Class"
+msgstr "Sınıf"
+
+#: cardinfo.c:1342 cardinfo.c:1355
+#, fuzzy
+msgid "PC/CF card socket information."
+msgstr "PC/CF kart soket bilgisi"
+
+#: cardinfo.c:1350
+#, fuzzy
+msgid "Socket"
+msgstr "Soket"
+
+#: cardinfo.c:1381
+#, fuzzy
+msgid "Information for socket"
+msgstr "Soket Bilgisi"
+
+#: cardinfo.c:1390
+#, fuzzy
+msgid "State:"
+msgstr "Durum:"
+
+#: cardinfo.c:1391
+#, fuzzy
+msgid "Device:"
+msgstr "Aygıt:"
+
+#: cardinfo.c:1392
+#, fuzzy
+msgid "Driver:"
+msgstr "Sürücü:"
+
+#: cardinfo.c:1393
+#, fuzzy
+msgid "Type:"
+msgstr "Tip:"
+
+#: cardinfo.c:1394
+#, fuzzy
+msgid "I/O:"
+msgstr "I/O:"
+
+#: cardinfo.c:1395
+#, fuzzy
+msgid "IRQ:"
+msgstr "IRQ:"
+
+#: cardinfo.c:1402
+#, fuzzy
+msgid "Flags:"
+msgstr "Seçenekler:"
+
+#: cardinfo.c:1419
+#, fuzzy
+msgid "PCMCIA initialisation failed"
+msgstr "PCMCIA ilklendirilmesi başarısız oldu."
+
+#: tools/interface.c:315 tools/interface.c:515 tools/interface.c:531
+#: tools/interface.c:651
+#, fuzzy
+msgid "[NONE SET]"
+msgstr "( HİÇBİRİ AYARLANMAMIŞ)"
+
+#: tools/interface.c:706 tools/interface.c:1704
+#, fuzzy
+msgid "UNSPEC"
+msgstr "UNSPEC"
+
+#: tools/interface.c:708
+#, fuzzy
+msgid "UNIX Domain"
+msgstr "UNIX "
+
+#: tools/interface.c:711
+#, fuzzy
+msgid "DARPA Internet"
+msgstr "DARPA İnternet"
+
+#: tools/interface.c:714
+#, fuzzy
+msgid "IPv6"
+msgstr "IPv6"
+
+#: tools/interface.c:717 tools/interface.c:1725
+#, fuzzy
+msgid "AMPR AX.25"
+msgstr "AMPR AX.25"
+
+#: tools/interface.c:720 tools/interface.c:1731
+#, fuzzy
+msgid "AMPR NET/ROM"
+msgstr "AMPR NET/ROM"
+
+#: tools/interface.c:723
+#, fuzzy
+msgid "Novell IPX"
+msgstr "Novell IPX"
+
+#: tools/interface.c:726
+#, fuzzy
+msgid "Appletalk DDP"
+msgstr "Appletalk DDP"
+
+#: tools/interface.c:729 tools/interface.c:1766
+#, fuzzy
+msgid "Econet"
+msgstr "Econet"
+
+#: tools/interface.c:732
+#, fuzzy
+msgid "CCITT X.25"
+msgstr "CCITT X.25"
+
+#: tools/interface.c:735 tools/interface.c:1728
+#, fuzzy
+msgid "AMPR ROSE"
+msgstr "AMPR ROSE"
+
+#: tools/interface.c:738 tools/interface.c:1716
+#, fuzzy
+msgid "Ash"
+msgstr "Ash"
+
+#: tools/interface.c:765
+#, fuzzy, c-format
+msgid "Too many address family arguments.\n"
+msgstr "Çok fazla adres ailesi argumanı.\n"
+
+#: tools/interface.c:776
+#, fuzzy, c-format
+msgid "Unknown address family '%s'.\n"
+msgstr "Bilinmeyen adres ailesi '%s'.\n"
+
+#: tools/interface.c:839
+#, fuzzy, c-format
+msgid "Please don't supply more than one address family.\n"
+msgstr "Lütfen birden fazla adres ailesi tedarik etmeyiin.\n"
+
+#: tools/interface.c:966
+#, fuzzy, c-format
+msgid "No usable address families found.\n"
+msgstr "Kullanılabilir adres ailesi bulunamadı.\n"
+
+#: tools/interface.c:1036
+#, fuzzy, c-format
+msgid "Warning: no inet socket available: %s\n"
+msgstr "Uyarı: inet soket bulunamadı: %s\n"
+
+#: tools/interface.c:1188
+#, fuzzy, c-format
+msgid "Warning: cannot open %s (%s). Limited output.\n"
+msgstr "Uyarı: açamıyor %s (%s). Sınırlı çıktı.\n"
+
+#: tools/interface.c:1431
+#, fuzzy
+msgid "Device not found"
+msgstr "Aygıt bulunamadı"
+
+#: tools/interface.c:1435
+#, fuzzy, c-format
+msgid "%s: error fetching interface information: %s\n"
+msgstr "%s: hataya yol açan arayüz bilgisi: %s\n"
+
+#: tools/interface.c:1609
+#, fuzzy, c-format
+msgid "You cannot start PPP with this program.\n"
+msgstr "PPP'yi bu programla başlatamazsın.\n"
+
+#: tools/interface.c:1703
+#, fuzzy
+msgid "Local Loopback"
+msgstr "Yerel Döngü Sınaması"
+
+#: tools/interface.c:1706
+#, fuzzy
+msgid "Serial Line IP"
+msgstr "Ser Hat İnternet Protokolü (SLIP)"
+
+#: tools/interface.c:1707
+#, fuzzy
+msgid "VJ Serial Line IP"
+msgstr "VJ SLIP"
+
+#: tools/interface.c:1708
+#, fuzzy
+msgid "6-bit Serial Line IP"
+msgstr "6 bitlik SLIP"
+
+#: tools/interface.c:1709
+#, fuzzy
+msgid "VJ 6-bit Serial Line IP"
+msgstr "VJ 6 bitlik SLIP"
+
+#: tools/interface.c:1710
+#, fuzzy
+msgid "Adaptive Serial Line IP"
+msgstr "Uyarlanır SLIP"
+
+#: tools/interface.c:1713
+#, fuzzy
+msgid "Ethernet"
+msgstr "Eternet"
+
+#: tools/interface.c:1719
+#, fuzzy
+msgid "Fiber Distributed Data Interface"
+msgstr "Fiber Dağıtılmış Veri Arayüzü"
+
+#: tools/interface.c:1722
+#, fuzzy
+msgid "HIPPI"
+msgstr "HIPPI"
+
+#: tools/interface.c:1734
+#, fuzzy
+msgid "generic X.25"
+msgstr "soysal X.25"
+
+#: tools/interface.c:1737
+#, fuzzy
+msgid "IPIP Tunnel"
+msgstr "IPIP Tunnel"
+
+#: tools/interface.c:1740
+#, fuzzy
+msgid "Point-to-Point Protocol"
+msgstr "Noktalar Arası İletişim Kuralı"
+
+#: tools/interface.c:1743
+#, fuzzy
+msgid "(Cisco)-HDLC"
+msgstr "(Cisco]-HDLC"
+
+#: tools/interface.c:1744
+#, fuzzy
+msgid "LAPB"
+msgstr "LAPB"
+
+#: tools/interface.c:1747
+#, fuzzy
+msgid "ARCnet"
+msgstr "ARCnet"
+
+#: tools/interface.c:1750
+#, fuzzy
+msgid "Frame Relay DLCI"
+msgstr "Frame Relay DLCI"
+
+#: tools/interface.c:1751
+#, fuzzy
+msgid "Frame Relay Access Device"
+msgstr "Frame Relay Erişim Aygıtı"
+
+#: tools/interface.c:1754
+#, fuzzy
+msgid "IPv6-in-IPv4"
+msgstr "IPv6-in-IPv4"
+
+#: tools/interface.c:1757
+#, fuzzy
+msgid "IrLAP"
+msgstr "IrLAP"
+
+#: tools/interface.c:1760
+#, fuzzy
+msgid "16/4 Mbps Token Ring"
+msgstr "16/4 Mbps Andaçlı Halka"
+
+#: tools/interface.c:1762
+#, fuzzy
+msgid "16/4 Mbps Token Ring (New)"
+msgstr "16/4 Mbps Andaçlı Halka (Yeni)"
+
+#: tools/interface.c:1871
+#, fuzzy, c-format
+msgid ""
+"<b>Interface %s</b>\n"
+"Type: %s\n"
+msgstr ""
+"<b>Arayüz %s</b>\n"
+"Tür: %s\n"
+
+#: tools/interface.c:1877
+#, fuzzy, c-format
+msgid "Media: %s"
+msgstr "Ortam: %s"
+
+#: tools/interface.c:1882
+#, fuzzy, c-format
+msgid "(auto)"
+msgstr "(özdevimli)"
+
+#: tools/interface.c:1894
+#, fuzzy, c-format
+msgid "Address: %s\n"
+msgstr "Adres:\t\t%s\n"
+
+#: tools/interface.c:1899
+#, fuzzy, c-format
+msgid "P-t-P: %s\n"
+msgstr "P-t-P:\t\t%s\n"
+
+#: tools/interface.c:1903
+#, fuzzy, c-format
+msgid "Netmask: %s\n"
+msgstr "Netmask:\t\t%s\n"
+
+#: tools/interface.c:1907
+#, fuzzy, c-format
+msgid "Broadcast: %s\n"
+msgstr "Yayın:\t%s\n"
+
+#: tools/interface.c:1919
+#, fuzzy, c-format
+msgid "HWaddr (MAC): %s\n"
+msgstr "HWaddr (MAC): %s\n"
+
+#: tools/interface.c:1949
+#, fuzzy, c-format
+msgid "IPv6 Address: %s/%d\n"
+msgstr "IPv6 Adres: %s/%d\n"
+
+#: tools/interface.c:1952
+#, fuzzy, c-format
+msgid "Scope: "
+msgstr "Kapsam:"
+
+#: tools/interface.c:1957
+#, fuzzy, c-format
+msgid "Global"
+msgstr "Küresel"
+
+#: tools/interface.c:1960
+#, fuzzy, c-format
+msgid "Link"
+msgstr "Bağ"
+
+#: tools/interface.c:1963
+#, fuzzy, c-format
+msgid "Site"
+msgstr "Site"
+
+#: tools/interface.c:1966
+#, fuzzy, c-format
+msgid "Compat"
+msgstr "Compat"
+
+#: tools/interface.c:1969
+#, fuzzy, c-format
+msgid "Host"
+msgstr "Bilgisayar"
+
+#: tools/interface.c:1972
+#, fuzzy, c-format
+msgid "Unknown"
+msgstr "Bilinmeyen"
+
+#: sound/sound.c:252
+#, fuzzy
+msgid "Audio Settings"
+msgstr "Genel Ayarlar"
+
+#: sound/sound.c:259
+msgid "Mute Everything"
+msgstr ""
+
+#: sound/sound.c:300
+#, fuzzy
+msgid "Alarm Settings"
+msgstr "Genel Ayarlar"
+
+#: sound/sound.c:307
+msgid "Enable Alarm Sound"
+msgstr ""
+
+#: sound/sound.c:314
+msgid "Automatic Volume (rising)"
+msgstr ""
+
+#: sound/sound.c:324 sound/soundctrl.c:283
+#, fuzzy
+msgid "Volume"
+msgstr "Ses"
+
+#: sound/sound.c:331
+msgid "Test"
+msgstr ""
+
+#: main-info.c:67
+#, fuzzy, c-format
+msgid "usage: gpe-info [page]\n"
+msgstr "kullanım: gpe-info (sayfa)\n"
+
+#: main-info.c:68
+#, fuzzy, c-format
+msgid "    Where page may be \"global\" (default)\n"
+msgstr "    Sayfanın \"global\" [öntanımlı) olabileceği yerde\n"
+
+#: main-info.c:78 gpe-conf-sysinfo.desktop.in.h:2
+#, fuzzy
+msgid "System Information"
+msgstr "Sistem Bilgisi"
+
+#: storage.c:167 storage.c:424
+#, fuzzy
+msgid "System Memory"
+msgstr "Sistem Belleği"
+
+#  TRANSLATORS: MB == Mega Bytes
+#. TRANSLATORS: MB == Mega Bytes
+#: storage.c:175 storage.c:444
+#, fuzzy
+msgid "Free memory"
+msgstr "Boş Bellek"
+
+#. TRANSLATORS: MB == Mega Bytes
+#: storage.c:177 storage.c:184 storage.c:330 storage.c:341 storage.c:446
+#: storage.c:459 sysinfo.c:664 sysinfo.c:680
+#, fuzzy
+msgid "MB"
+msgstr "Megabayt"
+
+#: storage.c:182 storage.c:329 storage.c:457
+#, fuzzy
+msgid "Total:"
+msgstr "Toplam:"
+
+#: storage.c:293
+#, fuzzy
+msgid "Internal Flash"
+msgstr "Internal Flash"
+
+#: storage.c:299
+#, fuzzy
+msgid "MMC"
+msgstr "MMC"
+
+#: storage.c:305
+#, fuzzy
+msgid "Compact Flash"
+msgstr "Compact Flash"
+
+#: storage.c:311
+#, fuzzy
+msgid "Network Filesystem"
+msgstr "Ağ Dosya Sistemi"
+
+#: storage.c:331
+#, fuzzy
+msgid "Mounted at "
+msgstr "Monte edilmiş"
+
+#: storage.c:339
+#, fuzzy
+msgid "Free space"
+msgstr "Boş alan"
+
+#: logread.c:116
+#, fuzzy
+msgid "Can't find circular buffer, is syslog running?\n"
+msgstr "Çevrimsel arabellek bulunamıyor, sistem günlüğü çalışıyor mu?"
+
+#: logread.c:123
+#, fuzzy
+msgid "Can't get access to syslogd's circular buffer."
+msgstr "Sistem günlüğünün çevrimsel arabelleğine erişim sağlanamıyor."
+
+#: logread.c:130
+#, fuzzy
+msgid "Can't get access to semaphore(s) for syslogd's circular buffer."
+msgstr "Sistem günlüğünün çevrimsel arabelleği için gerekli semafor(lara) erişim sağlanamadı."
+
+#: logread.c:156
+#, fuzzy
+msgid "<empty syslog>"
+msgstr "<boş sistem günlüğü>"
+
+#: logread.c:227 logread.c:243
+#, fuzzy
+msgid "System Log"
+msgstr "Sistem Günlüğü"
+
+#: logread.c:252 logread.c:268
+#, fuzzy
+msgid "Session Log"
+msgstr "Oturum Günlüğü"
+
+#: logread.c:275
+#, fuzzy
+msgid "Could not open X session log.\n"
+msgstr "X oturum günlüğü açılamıyor."
+
+#: battery.c:86
+#, fuzzy, c-format
+msgid "could not open touchscreen device '%s'\n"
+msgstr "Dokunmaya duyarlı ekran aygıtı açılamıyor ' %s'\n"
+
+#: battery.c:143 battery.c:200 battery.c:319
+#, fuzzy
+msgid "Status: high"
+msgstr "Durum: yüksek"
+
+#: battery.c:146 battery.c:203 battery.c:323
+#, fuzzy
+msgid "Status: low"
+msgstr "Durum: alçak"
+
+#: battery.c:149 battery.c:206 battery.c:327
+#, fuzzy
+msgid "Status: critical"
+msgstr "Durum: kritik"
+
+#: battery.c:152 battery.c:209 battery.c:331
+#, fuzzy
+msgid "Status: charging"
+msgstr "Durum: yükleme"
+
+#: battery.c:155 battery.c:212
+#, fuzzy
+msgid "Status: charge main"
+msgstr "Durum: yüklü"
+
+#: battery.c:158
+#, fuzzy
+msgid "Status: dead"
+msgstr "Durum: gerilimsiz"
+
+#: battery.c:161 battery.c:218 battery.c:317
+#, fuzzy
+msgid "Status: full"
+msgstr "Durum: dolu"
+
+#: battery.c:164 battery.c:221
+#, fuzzy
+msgid "Status: no battery"
+msgstr "Durum: pilsiz"
+
+#: battery.c:167 battery.c:224 battery.c:243 battery.c:334
+#, fuzzy
+msgid "Status: unknown"
+msgstr "Durum: bilinmiyor"
+
+#: battery.c:172
+#, fuzzy
+msgid "learning"
+msgstr "öğrenme"
+
+#: battery.c:176 battery.c:228
+#, fuzzy
+msgid "Voltage"
+msgstr "Gerilim"
+
+#: battery.c:180 battery.c:232 battery.c:348
+#, fuzzy
+msgid "AC connected"
+msgstr "AC bağlantılı"
+
+#: battery.c:182 battery.c:234 battery.c:350
+#, fuzzy
+msgid "Lifetime"
+msgstr "Ömür"
+
+#: battery.c:215
+#, fuzzy
+msgid "Status: not installed"
+msgstr "Durum: yüklenmedi"
+
+#: battery.c:241
+#, fuzzy
+msgid "not installed"
+msgstr "yüklenmedi"
+
+#: battery.c:245
+#, fuzzy
+msgid "Voltage: unknown"
+msgstr "Gerilim: bilinmiyor"
+
+#: battery.c:247
+#, fuzzy
+msgid "Lifetime: unknown"
+msgstr "Ömür: bilinmiyor"
+
+#: battery.c:309
+#, fuzzy
+msgid "No battery"
+msgstr "Batarya"
+
+#: battery.c:409
+#, fuzzy
+msgid "Internal battery"
+msgstr "Internal battery"
+
+#: battery.c:413
+#, fuzzy
+msgid "Jacket battery"
+msgstr "Jacket battery"
+
+#  TRANSLATORS: MB == Mega Bytes
+#: sysinfo.c:237
+#, fuzzy
+msgid "ARM"
+msgstr "Rasgele Erişimli Bellek (RAM)"
+
+#: sysinfo.c:240
+msgid "Intel x86 or compatible"
+msgstr ""
+
+#: sysinfo.c:241
+msgid "IBM type PC"
+msgstr ""
+
+#: sysinfo.c:244
+msgid "Mips"
+msgstr ""
+
+#: sysinfo.c:246
+msgid "Silicon Graphics Machine"
+msgstr ""
+
+#: sysinfo.c:250
+msgid "IBM Power or PowerPC"
+msgstr ""
+
+#. TRANSLATORS: "Familiar" is the name of a linux distribution.
+#: sysinfo.c:279
+#, fuzzy
+msgid "Familiar"
+msgstr "Aile"
+
+#. TRANSLATORS: "Familiar" is the name of a linux distribution.
+#: sysinfo.c:293
+msgid "OpenEmbedded"
+msgstr ""
+
+#: sysinfo.c:335 sysinfo.c:337
+#, fuzzy
+msgid "Build"
+msgstr "Döşe"
+
+#: sysinfo.c:439
+#, fuzzy
+msgid "Network Status"
+msgstr "Ağ Durumu"
+
+#: sysinfo.c:453 sysinfo.c:456
+#, fuzzy
+msgid "HWaddr (MAC)"
+msgstr "HWaddr (MAC)"
+
+#: sysinfo.c:467 sysinfo.c:468
+#, fuzzy, c-format
+msgid "Wireless"
+msgstr "Kablosuz"
+
+#: sysinfo.c:495
+#, fuzzy
+msgid "Default Gateway"
+msgstr "Öntanımlı Ağ geçidi"
+
+#: sysinfo.c:538
+#, fuzzy
+msgid "System information"
+msgstr "Sistem Bilgisi"
+
+#: sysinfo.c:548
+#, fuzzy
+msgid "Version"
+msgstr "Sürüm"
+
+#: sysinfo.c:580
+msgid "Distribution"
+msgstr ""
+
+#: sysinfo.c:605
+#, fuzzy
+msgid "System"
+msgstr "Sistem"
+
+#: sysinfo.c:614
+#, fuzzy
+msgid "Device information"
+msgstr "Aygıt Bilgisi"
+
+#: sysinfo.c:626
+#, fuzzy
+msgid "Device Name"
+msgstr "Aygıt"
+
+#: sysinfo.c:645
+#, fuzzy
+msgid "CPU:"
+msgstr "CPU"
+
+#  TRANSLATORS: MB == Mega Bytes
+#: sysinfo.c:658
+#, fuzzy
+msgid "RAM:"
+msgstr "Rasgele Erişimli Bellek (RAM)"
+
+#: sysinfo.c:674
+#, fuzzy
+msgid "Storage:"
+msgstr "Bellek"
+
+#: sysinfo.c:686
+#, fuzzy
+msgid "Hardware"
+msgstr "Donanım"
+
+#: sysinfo.c:696
+#, fuzzy
+msgid "Battery"
+msgstr "Batarya"
+
+#: sysinfo.c:703
+#, fuzzy
+msgid "Storage"
+msgstr "Bellek Ortamları"
+
+#: sysinfo.c:710
+#, fuzzy
+msgid "Networks"
+msgstr "Ağlar"
+
+#: sysinfo.c:717
+msgid "Log Display"
+msgstr ""
+
+#: gpe-conf.desktop.in.h:1
+#, fuzzy
+msgid "Control Panel"
+msgstr "Konsol"
+
+#: gpe-conf-admin.desktop.in.h:1
+#, fuzzy
+msgid "User Access"
+msgstr "Kullanıcı erişimi"
+
+#: gpe-conf-admin.desktop.in.h:2
+#, fuzzy
+msgid "User access administration"
+msgstr "Kullanıcı erişim yönetimi"
+
+#: gpe-conf-cardinfo.desktop.in.h:1
+#, fuzzy
+msgid "PC/CF Cards"
+msgstr "PC/CF Kartları"
+
+#: gpe-conf-cardinfo.desktop.in.h:2
+#, fuzzy
+msgid "PC/CF Cards info and config"
+msgstr "PC/CF Kartları bilgi ve yapılandırması"
+
+#: gpe-conf-screen.desktop.in.h:1
+#, fuzzy
+msgid "Screen Setup"
+msgstr "Ekran Kurulumu"
+
+#: gpe-conf-kbd.desktop.in.h:1
+#, fuzzy
+msgid "Virtual Keyboard"
+msgstr "Sanal Klavye"
+
+#: gpe-conf-kbd.desktop.in.h:2
+#, fuzzy
+msgid "Virtual Keyboard Setup"
+msgstr "Sanal Klavye Kurulumu"
+
+#: gpe-conf-keyctl.desktop.in.h:1
+#, fuzzy
+msgid "Button Config"
+msgstr "Düğme yapılandırması"
+
+#: gpe-conf-keyctl.desktop.in.h:2
+#, fuzzy
+msgid "Button Configuration"
+msgstr "Düğme yapılandırması"
+
+#: gpe-conf-login-setup.desktop.in.h:1
+#, fuzzy
+msgid "Login Setup"
+msgstr "Oturum Kurulumu"
+
+#: gpe-conf-network.desktop.in.h:1
+#, fuzzy
+msgid "Network Setup"
+msgstr "Ağ Kurulumu"
+
+#: gpe-conf-ownerinfo.desktop.in.h:1
+#, fuzzy
+msgid "Owner Information"
+msgstr "Sahip Bilgisi"
+
+#: gpe-conf-ownerinfo.desktop.in.h:2
+#, fuzzy
+msgid "Set Owner Information"
+msgstr "Sahip bilgisini belirle."
+
+#: gpe-conf-serial.desktop.in.h:1
+#, fuzzy
+msgid "Serial Port Settings"
+msgstr "Seri Bağlantı Noktası Ayarları"
+
+#: gpe-conf-serial.desktop.in.h:2
+#, fuzzy
+msgid "Serial Ports"
+msgstr "Seri Bağlantı Noktaları"
+
+#: gpe-conf-sleep.desktop.in.h:1
+#, fuzzy
+msgid "Sleep Config"
+msgstr "Uyku Yapılandırıcı"
+
+#: gpe-conf-sleep.desktop.in.h:2
+#, fuzzy
+msgid "Sleep Configuration"
+msgstr "Uyku  Yapılandırıcı"
+
+#: gpe-conf-theme.desktop.in.h:1
+#, fuzzy
+msgid "Global Appearance Setup"
+msgstr "Global Görünüm Kurulumu"
+
+#: gpe-conf-time.desktop.in.h:1
+#, fuzzy
+msgid "Date/Time Setup"
+msgstr "Tarih/Saat Kurulumu"
+
+#: gpe-conf-time.desktop.in.h:2
+#, fuzzy
+msgid "Setup Date and Time"
+msgstr "Tarih ve Saati Kur"
+
+#: gpe-conf-users.desktop.in.h:1
+#, fuzzy
+msgid "Manage local users"
+msgstr "Yerel kullancıları yönet"
+
+#: gpe-conf-users.desktop.in.h:2
+#, fuzzy
+msgid "User Manager"
+msgstr "Kullanıcı Yöneticisi"
+
+#: gpe-conf-sysinfo.desktop.in.h:1
+#, fuzzy
+msgid "System Info"
+msgstr "Sistem Bilgisi"
+
+#: gpe-conf-sound.desktop.in.h:1
+#, fuzzy
+msgid "Sound Settings"
+msgstr "Artalan Ayarları"
+
+#: gpe-conf-sound.desktop.in.h:2
+msgid "Sound defaults and setup"
+msgstr ""
+
+#, fuzzy
+#~ msgid "Show 'All' group"
+#~ msgstr "'All' grubu göster."
+
+#, fuzzy
+#~ msgid "Auto-hide group labels"
+#~ msgstr "Auto-hide grup etiketleri"
+
+#, fuzzy
+#~ msgid "Show 'Recent' tab"
+#~ msgstr "'Recent' sekmeyi göster."
+
+#, fuzzy
+#~ msgid "Do not launch at startup"
+#~ msgstr "Başlangıçta açma"
+
+#, fuzzy
+#~ msgid "Tab View"
+#~ msgstr "Sekme Görünümü"
+
+#, fuzzy
+#~ msgid "List"
+#~ msgstr "Liste"
+
+#, fuzzy
+#~ msgid "Changes will take effect after relog"
+#~ msgstr "Değişiklikler oturum tekrar açıldığında etkin duruma gelir"
+
+#, fuzzy
+#~ msgid "Screensaver"
+#~ msgstr "Ekran Koruyucu"
+
+#, fuzzy
+#~ msgid "Delay until start"
+#~ msgstr "Başlata kadar geciktir"
+
+#, fuzzy
+#~ msgid "Orientation"
+#~ msgstr "Yönelim"
+
+#, fuzzy
+#~ msgid "Couldn't read screen settings!"
+#~ msgstr "Ekran ayarlarını okuyamıyor!"
+
+#, fuzzy
+#~ msgid "Can't interpret output from xrandr!"
+#~ msgstr "xrandr'dan çıktı yorumlanamaz!"
+
+#, fuzzy
+#~ msgid "Can't set rotation on an x86."
+#~ msgstr "x86 formatına çevrilemiyor."
+
+#, fuzzy
+#~ msgid "Use DHCP in any case (usually not needed)."
+#~ msgstr "DHCP'yi herhangi bir durum için kullan ( genellikle gerekmez )."
+
+#, fuzzy
+#~ msgid "Use DHCP"
+#~ msgstr "DHCP kullan"
+
+#, fuzzy
+#~ msgid "yes"
+#~ msgstr "evet"
+
+#, fuzzy
+#~ msgid "no"
+#~ msgstr "hayır"
+
+#, fuzzy
+#~ msgid "Close"
+#~ msgstr "Kapat"
+
+#, fuzzy
+#~ msgid "Close network tool"
+#~ msgstr "Ağ aracını kapat"
+
+#  TRANSLATORS: Please ignore the tags <>
+#, fuzzy
+#~ msgid "<b>General</b>"
+#~ msgstr "Genel"
+
+#, fuzzy
+#~ msgid "Image:"
+#~ msgstr "İmge:"
+
+#, fuzzy
+#~ msgid "idle(sec)"
+#~ msgstr "boşta(sn)"
+
+#, fuzzy
+#~ msgid "load"
+#~ msgstr "yükleme"
+
+#, fuzzy
+#~ msgid "Couldn't find default runlevel!"
+#~ msgstr "Öntanımlı runlevel bulunamadı!"
+
+#, fuzzy
+#~ msgid "Familiar Version"
+#~ msgstr "Bildik Sürüm"
+
+#  TRANSLATORS: MB == Mega Bytes
+#, fuzzy
+#~ msgid "Flash"
+#~ msgstr "Flash"
+
+#, fuzzy
+#~ msgid "Syslog"
+#~ msgstr "Sistem Günlüğü"
