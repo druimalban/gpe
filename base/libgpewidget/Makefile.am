@@ -59,7 +59,7 @@ EXTRA_DIST = $(pixmap_DATA) \
              mkinstalldirs \
              hildon/gpe.conf
 
-DISTCLEANFILES = intltool-extract intltool-merge intltool-update po/.intltool-merge-cache *.d autom4te.cache
+DISTCLEANFILES = intltool-extract intltool-merge intltool-update po/.intltool-merge-cache *.d autom4te.cache ./po/stamp-it
 
 deb: dist
 	-mkdir $(top_builddir)/debian-build

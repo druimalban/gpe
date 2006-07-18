@@ -1,5 +1,8 @@
 2006-07-17  Florian Boor <florian@kernelconcepts.de>
 
+	* Release version 0.113
+	* Makefile.am: Add po/stamp-it to DISTCLEANFILES to make distcheck
+          happy.
 	* doc/tmpl/*: Some updates to cover new widgets and some automated
                       stuff.
 	* gpetimesel.c (gpe_time_sel_init): Fix wrap behaviour to make 
