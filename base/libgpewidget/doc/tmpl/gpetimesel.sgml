@@ -33,6 +33,11 @@ for a time value and an extra button which opens a time selection popup.
 @popup: 
 @clock: 
 @changing_time: 
+@hour_edit: 
+@minute_edit: 
+@p_hbox: 
+@dragging: 
+@editing: 
 
 <!-- ##### STRUCT GpeTimeSelClass ##### -->
 <!--

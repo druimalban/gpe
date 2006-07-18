@@ -1,3 +1,82 @@
+<!-- ##### SECTION ./tmpl/color-slider.sgml:Long_Description ##### -->
+<para>
+This widget is mostly used for colour selectors to achieve a compact
+repestation of what will the impact of adjusting a slider to the resulting 
+colour.
+</para>
+
+
+<!-- ##### SECTION ./tmpl/color-slider.sgml:See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/color-slider.sgml:Short_Description ##### -->
+A slider widget with coloured background.
+
+
+<!-- ##### SECTION ./tmpl/color-slider.sgml:Stability_Level ##### -->
+
+
+
+<!-- ##### SECTION ./tmpl/color-slider.sgml:Title ##### -->
+Color Slider
+
+
+<!-- ##### SECTION ./tmpl/colordialog.sgml:Long_Description ##### -->
+<para>
+The GPE Colour selection dialog is a smal and fast dialog to select 
+free defineable RGB colour values. In contrast to #GtkColorDialog it 
+is much faster and simpler to fit the needs of mobile devices.
+</para>
+
+
+<!-- ##### SECTION ./tmpl/colordialog.sgml:See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/colordialog.sgml:Short_Description ##### -->
+The GPE Colour selection dialog
+
+
+<!-- ##### SECTION ./tmpl/colordialog.sgml:Stability_Level ##### -->
+
+
+
+<!-- ##### SECTION ./tmpl/colordialog.sgml:Title ##### -->
+Color Dialog
+
+
+<!-- ##### MACRO COLOR_F_TO_U ##### -->
+<para>
+
+</para>
+
+@v: 
+
+<!-- ##### MACRO COLOR_SLIDER ##### -->
+<para>
+
+</para>
+
+@o: 
+
+<!-- ##### MACRO COLOR_SLIDER_CLASS ##### -->
+<para>
+
+</para>
+
+@k: 
+
+<!-- ##### MACRO COL_STR_LEN ##### -->
+<para>
+Maximum length of the colour description string.
+</para>
+
+
 <!-- ##### STRUCT ColorSlider ##### -->
 <para>
 
@@ -17,11 +96,168 @@
 @map: 
 @priv: 
 
+<!-- ##### STRUCT ColorSliderPrivate ##### -->
+<para>
+
+</para>
+
+@dispose_has_run: 
+
 <!-- ##### STRUCT GpeColorDialog ##### -->
 <para>
 The widget struct has no public members which should accessed directly.
 </para>
 
+
+<!-- ##### MACRO IS_COLOR_SLIDER ##### -->
+<para>
+
+</para>
+
+@o: 
+
+<!-- ##### MACRO IS_COLOR_SLIDER_CLASS ##### -->
+<para>
+
+</para>
+
+@k: 
+
+<!-- ##### MACRO RGBA32_F_COMPOSE ##### -->
+<para>
+
+</para>
+
+@r: 
+@g: 
+@b: 
+@a: 
+
+<!-- ##### MACRO RGBA32_U_COMPOSE ##### -->
+<para>
+
+</para>
+
+@r: 
+@g: 
+@b: 
+@a: 
+
+<!-- ##### MACRO TYPE_COLOR_SLIDER ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION color_slider_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+<!-- ##### FUNCTION color_slider_new ##### -->
+<para>
+
+</para>
+
+@adjustment: 
+@Returns: 
+
+<!-- ##### FUNCTION color_slider_set_adjustment ##### -->
+<para>
+
+</para>
+
+@slider: 
+@adjustment: 
+
+<!-- ##### FUNCTION color_slider_set_background ##### -->
+<para>
+
+</para>
+
+@slider: 
+@dark: 
+@light: 
+@size: 
+
+<!-- ##### FUNCTION color_slider_set_colors ##### -->
+<para>
+
+</para>
+
+@slider: 
+@start: 
+@end: 
+
+<!-- ##### FUNCTION color_slider_set_map ##### -->
+<para>
+
+</para>
+
+@slider: 
+@map: 
+
+<!-- ##### FUNCTION gpe_clock_face_set_border ##### -->
+<para>
+
+</para>
+
+@clock: 
+@border: 
+
+<!-- ##### FUNCTION gpe_color_dialog_get_color_gdk ##### -->
+<para>
+
+</para>
+
+@color_dialog: 
+@Returns: 
+
+<!-- ##### FUNCTION gpe_color_dialog_get_color_str ##### -->
+<para>
+
+</para>
+
+@color_dialog: 
+@Returns: 
+
+<!-- ##### FUNCTION gpe_color_dialog_new ##### -->
+<para>
+
+</para>
+
+@parent: 
+@flags: 
+@initcolor: 
+@Returns: 
+
+<!-- ##### FUNCTION gpe_color_dialog_set_color_gdk ##### -->
+<para>
+
+</para>
+
+@color_dialog: 
+@new_color: 
+
+<!-- ##### FUNCTION gpe_color_dialog_set_color_str ##### -->
+<para>
+
+</para>
+
+@color_dialog: 
+@colordesc: 
+
+<!-- ##### FUNCTION gpe_find_icon_scaled_free ##### -->
+<para>
+
+</para>
+
+@name: 
+@width: 
+@height: 
+@Returns: 
 
 <!-- ##### FUNCTION gpe_render_icon ##### -->
 <para>
@@ -35,6 +271,13 @@ The widget struct has no public members which should accessed directly.
 
 =======
 >>>>>>> 1.4
+
+<!-- ##### FUNCTION gpe_set_theme ##### -->
+<para>
+
+</para>
+
+@theme_name: 
 
 <!-- ##### FUNCTION gtk_gpe_pixmap_get ##### -->
 <para>

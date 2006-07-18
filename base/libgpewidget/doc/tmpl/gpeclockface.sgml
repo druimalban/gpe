@@ -118,15 +118,6 @@ Change the width of clock hands.
 @width: New with in pixels.
 
 
-<!-- ##### FUNCTION gpe_clock_face_set_border ##### -->
-<para>
-
-</para>
-
-@clock: 
-@border: 
-
-
 <!-- ##### FUNCTION gpe_clock_face_get_shape ##### -->
 <para>
 Returns the shape mask of the given clockface widget. This is used to set up 
