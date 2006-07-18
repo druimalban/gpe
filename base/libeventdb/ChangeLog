@@ -1,3 +1,25 @@
+2006-07-18  Neal H. Walfield  <neal@gnu.org>
+
+	* event-db.c (event_db_new): Move rows from the calendar table to
+	the event table.  Bump format version to 3.
+	(event_load.callback): Move function from here...
+	(event_load_callback): ... to here.  Load additional rows.
+	(event_load): Just use event_load_callback.
+	(load_details_callback): Also load the sequence number.
+	(event_db_find_by_eventid): Search for the eventid in the events
+	table.
+	(events_enumerate): Change the callback argument to only pass an
+	EventSource *.  Update users.  Select all columns, not just the
+	uid.  Load the event and then call the callback function.
+	(event_write): Convert the byday list into a string.  Likewise for
+	the exception list.  Save eventid, rcount, rincrement, modified,
+	byday and rexceptions in the event table, not the calendar table.
+	Only save the sequence number if EV->DETAILS is TRUE.  Remove any
+	records in the calendar table with EV->UID.
+	(GET): Take additional argument, details.  Load EV's details from
+	disk if TRUE.  Update users.
+	(GET_SET): Likewise.
+
 2006-07-03  Neal H. Walfield  <neal@gnu.org>
 
 	* event-db.c (event_db_finalize): Flush each event on the cache
