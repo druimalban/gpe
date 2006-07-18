@@ -507,7 +507,7 @@ calendar_consider (void)
 	 valid, GtkCalendar complains.  Pah.  */
       gtk_calendar_select_day (GTK_CALENDAR (calendar), 1);
       gtk_calendar_select_month (GTK_CALENDAR (calendar),
-				 g_date_get_month (&viewing),
+				 g_date_get_month (&viewing) - 1,
 				 g_date_get_year (&viewing));
       gtk_calendar_select_day (GTK_CALENDAR (calendar),
 			       g_date_get_day (&viewing));
