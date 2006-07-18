@@ -1,5 +1,8 @@
 2006-07-18  Florian Boor <florian@kernelconcepts.de>
 
+    * Makefile.am: Add library to infoprint dependency to make parallel builds 
+      work again.
+    * gpetimesel.c (gpe_time_sel_init): Make sizing depend on screen size. 
 	* COPYING.LIB: Add license file.
 
 2006-07-17  Florian Boor <florian@kernelconcepts.de>

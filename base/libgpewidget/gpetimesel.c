@@ -637,7 +637,8 @@ gpe_time_sel_init (GpeTimeSel *sel)
     = gtk_combo_box_entry_new_with_model (GTK_TREE_MODEL (hour_model), 0);
   if (hour_model_deref)
     g_object_unref (hour_model);
-  gtk_combo_box_set_wrap_width (GTK_COMBO_BOX (sel->hour_edit), 8);
+  gtk_combo_box_set_wrap_width (GTK_COMBO_BOX (sel->hour_edit), 
+                                (gdk_screen_width() >= 400) ? 12 : 6);
   gtk_entry_set_width_chars (GTK_ENTRY (GTK_BIN (sel->hour_edit)->child), 3);
   gtk_entry_set_max_length (GTK_ENTRY (GTK_BIN (sel->hour_edit)->child), 2);
   gtk_entry_set_alignment (GTK_ENTRY (GTK_BIN (sel->hour_edit)->child), 1);
