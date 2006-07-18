@@ -1,3 +1,7 @@
+2006-07-18  Florian Boor <florian@kernelconcepts.de>
+
+	* COPYING.LIB: Add license file.
+
 2006-07-17  Florian Boor <florian@kernelconcepts.de>
 
 	* Release version 0.113
