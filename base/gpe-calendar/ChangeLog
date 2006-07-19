@@ -1,3 +1,8 @@
+2006-07-17  Florian Boor  <florian.boor@kernelconcepts.de>
+
+	* calendar-edit-dialog.c (calendar_edit_dialog_init): Set default sizes
+    a little bit cleverer. 
+    
 2006-07-18  Neal H. Walfield  <neal@gnu.org>
 
 	* main.c (calendar_consider): Correctly set CALENDAR's month.

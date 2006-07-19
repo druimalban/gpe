@@ -254,8 +254,8 @@ calendar_edit_dialog_init (GTypeInstance *instance, gpointer klass)
   gtk_window_set_title (GTK_WINDOW (instance), _("Calendar: New Calendar"));
   gtk_window_set_position (GTK_WINDOW (instance),
 			   GTK_WIN_POS_CENTER_ON_PARENT);
-  if (gdk_screen_width() > 400) 
-    gtk_window_set_default_size (GTK_WINDOW (instance), 360, 420);
+  if (gdk_screen_width() > 440) 
+    gtk_window_set_default_size (GTK_WINDOW (instance), 420, 360);
   else  
     gtk_window_set_default_size (GTK_WINDOW (instance), 230, 300);
 
