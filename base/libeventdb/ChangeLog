@@ -1,3 +1,8 @@
+2006-07-19  Neal H. Walfield  <neal@gnu.org>
+
+	* event-db.c (event_load_callback): Add exceptions to
+	EV->EXCEPTIONS, not EV->BYDAY.
+
 2006-07-18  Neal H. Walfield  <neal@gnu.org>
 
 	* event-db.c (event_db_new): Move rows from the calendar table to

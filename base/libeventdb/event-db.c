@@ -1667,7 +1667,7 @@ event_load_callback (void *arg, int argc, char **argv, char **names)
   while (p)
     {
       long rmtime = (long)atoi (p);
-      ev->exceptions = g_slist_prepend (ev->byday, (void *) rmtime);
+      ev->exceptions = g_slist_prepend (ev->exceptions, (void *) rmtime);
 
       p = strchr (p, ',');
       if (p)
@@ -3688,7 +3688,7 @@ event_get_recurrence_byday (Event *event)
   GSList *list = NULL;
   GSList *l;
   for (l = ev->byday; l; l = l->next)
-    list = g_slist_prepend (list, strdup (l->data));
+    list = g_slist_prepend (list, g_strdup (l->data));
 
   return list;
 }
