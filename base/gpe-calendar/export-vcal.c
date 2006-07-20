@@ -494,3 +494,18 @@ vcal_export_init (void)
     dbus_connection_setup_with_g_main (connection, NULL);
 #endif /* USE_DBUS */
 }
+
+gboolean
+export_calendar_to_file (EventCalendar *ec, const gchar *filename)
+{
+    GError *err = NULL;
+    
+    g_return_val_if_fail (filename && G_IS_OBJECT (ec), FALSE);
+    save_to_file (G_OBJECT (ec), filename, &err);
+    if (err)
+      {
+        g_error_free (err);
+        return FALSE;
+      }
+    return TRUE;
+}

@@ -190,6 +190,25 @@ schedule_wakeup (gboolean reload)
 }
 
 static void
+export_calendars (EventDB *edb, const gchar *prefix)
+{
+  GSList *calendars = event_db_list_event_calendars (edb);
+  GSList *iter;
+
+  if (!prefix)
+      prefix = "gpe-calendar";
+    
+  for (iter = calendars; iter; iter = iter->next)
+    {
+        EventCalendar *ec = iter->data;
+        gchar *mirrorfile = 
+            g_strdup_printf ("%s_%s.ics", prefix, event_calendar_get_title (ec));
+        export_calendar_to_file (ec, mirrorfile);
+        g_free (mirrorfile);
+    }
+}
+
+static void
 update_view (void)
 {
   if (current_view)
@@ -1331,6 +1350,10 @@ handoff_callback (Handoff *handoff, char *data)
 	      propagate_time ();
 	    }
 	}
+    else if (strcmp (var, "EXPORT") == 0 && value)
+	{
+	  export_calendars (event_db, value);
+	}
       else if (strcmp (var, "FOCUS") == 0)
 	gtk_window_present (GTK_WINDOW (main_window));
       else
@@ -1405,6 +1428,19 @@ toolbar_size_allocate (GtkWidget *widget, GtkAllocation *allocation,
     }
 }
 
+static void
+show_help_and_exit (void)
+{
+  g_print ("\nUsage: gpe-calendar [-h] [-s] [-i <file>] [-x <prefix>]\n\n");
+  g_print ("-h          : Show this help\n");
+  g_print ("-s          : Schedule and exit\n");
+  g_print ("-i <file>   : Import a given file to the database.\n");
+  g_print ("-e <prefix> : Write calendars from database to ics files using the given prefix.\n\n");
+  g_print ("Without command line option the GUI is launched or an already running GUI is activated.\n\n");
+    
+  exit (EXIT_SUCCESS);
+}
+
 int
 main (int argc, char *argv[])
 {
@@ -1442,29 +1478,39 @@ main (int argc, char *argv[])
   gboolean schedule_only=FALSE;
   char *state = NULL;
   GSList *import_files = NULL;
+  gboolean export_only = FALSE;
+  gchar *export_prefix = NULL;
 
   int option_letter;
   extern char *optarg;
-  while ((option_letter = getopt (argc, argv, "s:e:i:")) != -1)
+  while ((option_letter = getopt (argc, argv, "s:e:i:h")) != -1)
     {
+      if (option_letter == 'h')
+        show_help_and_exit ();
       if (option_letter == 's')
-	schedule_only = TRUE;
+        schedule_only = TRUE;
+      if (option_letter == 'e')
+        {
+          export_only = TRUE;
+          export_prefix = optarg ? g_strdup (optarg) : NULL;
+          state = g_strdup_printf ("EXPORT=%s", optarg);
+        }
       else if (option_letter == 'i')
-	{
-	  if (! current_dir)
-	    current_dir = g_get_current_dir ();
-
-	  char *s
-	    = g_strdup_printf ("%s%sIMPORT_FILE=%s%s%s",
-			       state ?: "", state ? "\n" : "",
-			       *optarg == '/' ? "" : current_dir,
-			       *optarg == '/' ? "" : G_DIR_SEPARATOR_S,
-			       optarg);
-	  g_free (state);
-	  state = s;
-
-	  import_files = g_slist_append (import_files, optarg);
-	}
+        {
+          if (! current_dir)
+            current_dir = g_get_current_dir ();
+    
+          char *s
+            = g_strdup_printf ("%s%sIMPORT_FILE=%s%s%s",
+                       state ?: "", state ? "\n" : "",
+                       *optarg == '/' ? "" : current_dir,
+                       *optarg == '/' ? "" : G_DIR_SEPARATOR_S,
+                       optarg);
+          g_free (state);
+          state = s;
+    
+          import_files = g_slist_append (import_files, optarg);
+        }
     }
 
   if (current_dir)
@@ -1509,6 +1555,23 @@ main (int argc, char *argv[])
       schedule_wakeup (1);
       exit (EXIT_SUCCESS);
     }
+    
+  if (export_only)
+    /* No instance running but called with -s.  */
+    {
+      gchar *filename = CALENDAR_FILE ();
+      event_db = event_db_new (filename);
+      if (! event_db)
+        {
+	      g_critical ("Failed to open event database.");
+	      exit (1);
+	    }
+
+      vcal_export_init();
+      export_calendars (event_db, export_prefix);
+      exit (EXIT_SUCCESS);
+    }
+    
   g_free (state);
 
   /* Start gpe-calendar.  */

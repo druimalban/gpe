@@ -1,7 +1,15 @@
 2006-07-17  Florian Boor  <florian.boor@kernelconcepts.de>
 
+	* main.c (main): Add command line switch to provide help on options.
+	(show_help_and_exit): New function.
+	Add export function (-e) for whole calendars.
+	(export_calendars): New function.
+	(handoff_callback): Add "EXPORT" command.
+	(main): Likewise
+	* export-vcal.c/h (export_calendar_to_file): New function.
+    
 	* calendar-edit-dialog.c (calendar_edit_dialog_init): Set default sizes
-    a little bit cleverer. 
+	a little bit cleverer. 
     
 2006-07-18  Neal H. Walfield  <neal@gnu.org>
 

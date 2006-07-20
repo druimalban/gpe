@@ -25,4 +25,6 @@ extern void export_calendar_save_as_dialog (EventCalendar *event);
 void vcal_export_init (void);
 gboolean export_bluetooth_available (void);
 gboolean export_irda_available (void);
+
+gboolean export_calendar_to_file (EventCalendar *ec, const gchar *filename);
 #endif
