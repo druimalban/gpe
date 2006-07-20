@@ -189,6 +189,23 @@ schedule_wakeup (gboolean reload)
   return FALSE;
 }
 
+
+static void
+fixup_name (gchar *name)
+{
+    gint i;
+    
+    for (i = 0; i < strlen (name); i++)
+      {
+          if (name[i] == '/') 
+            name[i] = '_';
+          if (name[i] == '?') 
+            name[i] = '_';
+          if (name[i] == '*') 
+            name[i] = '_';
+      }  
+}
+
 static void
 export_calendars (EventDB *edb, const gchar *prefix)
 {
@@ -201,11 +218,16 @@ export_calendars (EventDB *edb, const gchar *prefix)
   for (iter = calendars; iter; iter = iter->next)
     {
         EventCalendar *ec = iter->data;
-        gchar *mirrorfile = 
-            g_strdup_printf ("%s_%s.ics", prefix, event_calendar_get_title (ec));
+        gchar *calendar_name = event_calendar_get_title (ec);
+        gchar *mirrorfile;
+
+        fixup_name (calendar_name);        
+        mirrorfile = g_strdup_printf ("%s_%s.ics", prefix, calendar_name);
         export_calendar_to_file (ec, mirrorfile);
+        g_free (calendar_name);
         g_free (mirrorfile);
     }
+  g_slist_free (calendars);
 }
 
 static void
@@ -1431,7 +1453,7 @@ toolbar_size_allocate (GtkWidget *widget, GtkAllocation *allocation,
 static void
 show_help_and_exit (void)
 {
-  g_print ("\nUsage: gpe-calendar [-h] [-s] [-i <file>] [-x <prefix>]\n\n");
+  g_print ("\nUsage: gpe-calendar [-h] [-s] [-i <file>] [-e <prefix>]\n\n");
   g_print ("-h          : Show this help\n");
   g_print ("-s          : Schedule and exit\n");
   g_print ("-i <file>   : Import a given file to the database.\n");
@@ -1491,8 +1513,17 @@ main (int argc, char *argv[])
         schedule_only = TRUE;
       if (option_letter == 'e')
         {
+          if (export_only) 
+              continue;
           export_only = TRUE;
-          export_prefix = optarg ? g_strdup (optarg) : NULL;
+          export_prefix = g_strdup (optarg);
+          char *s
+            = g_strdup_printf ("%s%sEXPORT=%s",
+                       state ?: "", state ? "\n" : "",
+                       optarg);
+          g_free (state);
+          state = s;
+            
           state = g_strdup_printf ("EXPORT=%s", optarg);
         }
       else if (option_letter == 'i')

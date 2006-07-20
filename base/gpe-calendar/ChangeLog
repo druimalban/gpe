@@ -1,3 +1,10 @@
+2006-07-18  Florian Boor  <florian.boor@kernelconcepts.de>
+	* main.c (main): Set status correctly.
+	  (fixup_name): New function.
+	* main.c (export_calendars): Free calendar list, free names and escape
+          some bad chars in calendar names.
+	(show_help_and_exit): Fix typo.
+
 2006-07-17  Florian Boor  <florian.boor@kernelconcepts.de>
 
 	* main.c (main): Add command line switch to provide help on options.
