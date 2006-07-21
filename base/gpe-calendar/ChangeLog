@@ -1,4 +1,13 @@
+2006-07-21  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * pannedwindow.c (motion_notify_event): Do not start panning on the
+      first motion event, start a a minimum distance (15px for now).
+      (button_release_event): Reset distance status.
+      (toplevel): Add status flag "consider_panning" to private struct, 
+      define constant for minimum distance, add myself to copyright list.
+
 2006-07-18  Florian Boor  <florian.boor@kernelconcepts.de>
+
 	* main.c (main): Set status correctly.
 	  (fixup_name): New function.
 	* main.c (export_calendars): Free calendar list, free names and escape

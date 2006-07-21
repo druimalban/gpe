@@ -1304,7 +1304,7 @@ button_release_event (GtkWidget *widget, GdkEventButton *event,
   if (event->button == 1)
     {
       Event *ev = find_event (widget, event, day_view);
-
+        
       if (ev)
 	{
 	  GtkMenu *event_menu = event_menu_new (ev, TRUE);

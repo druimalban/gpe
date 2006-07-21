@@ -1,5 +1,6 @@
 /* pannedwindow.c - Panned window implementation.
    Copyright (C) 2006 Neal H. Walfield <neal@walfield.org>
+   Copyright (C) 2006 Florian Boor <florian@kernelconcepts.de>
 
    This file is part of GPE.
 
@@ -27,6 +28,8 @@
 
 typedef struct _PannedWindowPrivate PannedWindowPrivate;
 
+#define MIN_PANNING_DISTANCE  15
+
 #define PANNED_WINDOW_GET_PRIVATE(obj) \
   (G_TYPE_INSTANCE_GET_PRIVATE ((obj), TYPE_PANNED_WINDOW, \
                                 PannedWindowPrivate))
@@ -40,6 +43,9 @@ struct _PannedWindowPrivate
 
   /* Whether we are currently panning.  */
   gboolean panning;
+
+  /* Panning might start but minimum distance isn't reached. */
+  gboolean consider_panning;
 
   /* Where the drag started (relative to the root).  */
   gdouble x_origin;
@@ -143,9 +149,9 @@ panned_window_init (GTypeInstance *instance, gpointer klass)
 {
   gtk_event_box_set_visible_window (GTK_EVENT_BOX (instance), TRUE);
   gtk_widget_add_events (GTK_WIDGET (instance),
-GDK_POINTER_MOTION_HINT_MASK |
-			 GDK_BUTTON1_MOTION_MASK
-			 | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
+                          GDK_POINTER_MOTION_HINT_MASK 
+                         | GDK_BUTTON1_MOTION_MASK
+			             | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
 
   GtkWidget *scrolled_window = gtk_scrolled_window_new (NULL, NULL);
   gtk_container_add (GTK_CONTAINER (instance), scrolled_window);
@@ -185,6 +191,7 @@ panned_window_is_panning (PannedWindow *pw)
 static gboolean
 button_press_event (GtkWidget *widget, GdkEventButton *event)
 {
+
   if (GTK_WIDGET_CLASS (parent_class)->button_press_event
       && GTK_WIDGET_CLASS (parent_class)->button_press_event (widget, event))
     return TRUE;
@@ -236,7 +243,8 @@ button_release_event (GtkWidget *widget, GdkEventButton *event)
 	 in the motion event.  */
       gdk_display_pointer_ungrab (gtk_widget_get_display (widget),
 				  event->time);
-
+      priv->consider_panning = FALSE;
+        
       if (priv->panning)
 	{
 	  priv->consider_motion = FALSE;
@@ -279,7 +287,7 @@ button_release_event (GtkWidget *widget, GdkEventButton *event)
 	}
 
       if (priv->panning)
-	priv->panning = FALSE;
+        priv->panning = FALSE;
 
       return ret;
     }
@@ -477,24 +485,57 @@ static gboolean
 motion_notify_event (GtkWidget *widget, GdkEventMotion *event)
 {
   gboolean res = FALSE;
+    
   if (GTK_WIDGET_CLASS (parent_class)->motion_notify_event)
     res = GTK_WIDGET_CLASS (parent_class)
       ->motion_notify_event (widget, event);
 
   PannedWindowPrivate *priv = PANNED_WINDOW_GET_PRIVATE (widget);
-  if (priv->consider_motion && ! priv->panning)
+  
+  if (priv->consider_motion && ! priv->consider_panning)
     /* This is the start of a drag event.  */
     {
-      priv->panning = TRUE;
+      priv->consider_panning = TRUE;
       priv->at_edge = 0;
       priv->x = priv->x_origin = event->x_root;
       priv->y = priv->y_origin = event->y_root;
 
-      g_assert (! priv->motion_timer);
-      priv->motion_timer
-	= g_timeout_add (1000 / FPS, (GSourceFunc) process_motion, widget);
-
       return TRUE;
+    }
+  if (priv->consider_panning && !priv->panning)
+    {
+      priv->x = event->x_root;
+      priv->y = event->y_root;
+        
+      if (event->x_root < priv->x_origin)
+        {
+          if ((priv->x_origin - event->x_root) > MIN_PANNING_DISTANCE)
+              priv->panning = TRUE;
+        }
+      else
+        {
+          if ((event->x_root - priv->x_origin) > MIN_PANNING_DISTANCE)
+              priv->panning = TRUE;
+        }
+            
+      if (event->y_root < priv->y_origin)
+        {
+          if ((priv->y_origin - event->y_root) > MIN_PANNING_DISTANCE)
+              priv->panning = TRUE;
+        }
+      else
+        {
+          if ((event->y_root - priv->y_origin) > MIN_PANNING_DISTANCE)
+              priv->panning = TRUE;
+        }
+      
+      if (priv->panning)
+        {          
+          g_assert (! priv->motion_timer);
+          priv->motion_timer
+                 = g_timeout_add (1000 / FPS, (GSourceFunc) process_motion, widget);
+          return TRUE;
+        }
     }
 
   return res;
