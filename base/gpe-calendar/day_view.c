@@ -915,7 +915,7 @@ realize (GtkWidget *widget)
 
   day_view->row_height_min = (pango_font_metrics_get_ascent (metrics)
 			      + pango_font_metrics_get_descent (metrics))
-    / PANGO_SCALE;
+    / PANGO_SCALE + 4;
 
   g_object_unref (pl);
   pango_font_metrics_unref (metrics);

@@ -1,5 +1,10 @@
 2006-07-23  Neal H. Walfield  <neal@gnu.org>
 
+	* day_view.c (realize): Include the border height when calculating
+	DAY_VIEW->ROW_HEIGHT_MIN.
+
+2006-07-23  Neal H. Walfield  <neal@gnu.org>
+
 	* day_view.c (reload_events_hard): If the event ends prior to the
 	visible start, try to show at least an hour of the end.
 
