@@ -247,18 +247,13 @@ click_ok (GtkWidget *widget, struct edit_state *s)
 			     (guint *) &tm_end.tm_min);
 
       start_t = mktime (&tm_start);
-      end_t = mktime (&tm_end);
-
-      /* Zero length appointments would be confused with reminders, so
-	 make them one second long.  */
-      if (end_t == start_t)
-	end_t++;
+      end_t = mktime (&tm_end) + 1;
     }
   else
     /* All day event.  */
     {
       start_t = mktime (&tm_start);
-      end_t = mktime (&tm_end);
+      end_t = mktime (&tm_end) + 24 * 60 * 60;
     }
 
   if (end_t < start_t)
@@ -1284,6 +1279,10 @@ build_edit_event_window (Event *ev)
     {
       struct tm tm;
       time_t end = start + event_get_duration (s->ev);
+      if (event_get_untimed (s->ev))
+	end -= 24 * 60 * 60;
+      else
+	end --;
       localtime_r (&end, &tm);
       gpe_time_sel_set_time (GPE_TIME_SEL (s->endtime), tm.tm_hour, tm.tm_min);
       gtk_notebook_set_page (GTK_NOTEBOOK (s->tabs), 0);

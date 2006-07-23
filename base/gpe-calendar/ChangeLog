@@ -1,17 +1,28 @@
+2006-07-23  Neal H. Walfield  <neal@gnu.org>
+
+	* event-ui.c (click_ok): Correctly calculate the event's duration.
+	(build_edit_event_window): Correctly calcualte the event's end
+	time.
+	* day_popup.c (day_popup): Likewise.
+	* event-list.c (date_cell_data_func): Likewise.
+	* event-menu.c (event_menu_new): Likewise.  Format the time more
+	appropriately.
+
 2006-07-21  Florian Boor  <florian.boor@kernelconcepts.de>
 
-    * pannedwindow.c (motion_notify_event): Do not start panning on the
-      first motion event, start a a minimum distance (15px for now).
-      (button_release_event): Reset distance status.
-      (toplevel): Add status flag "consider_panning" to private struct, 
-      define constant for minimum distance, add myself to copyright list.
+	* pannedwindow.c (motion_notify_event): Do not start panning on
+	the first motion event, start after a minimum distance (15px for now).
+	(button_release_event): Reset distance status.
+	(toplevel): Add status flag "consider_panning" to private struct,
+	define constant for minimum distance, add myself to copyright
+	list.
 
 2006-07-18  Florian Boor  <florian.boor@kernelconcepts.de>
 
 	* main.c (main): Set status correctly.
-	  (fixup_name): New function.
-	* main.c (export_calendars): Free calendar list, free names and escape
-          some bad chars in calendar names.
+	(fixup_name): New function.
+	(export_calendars): Free calendar list, free names and escape some
+	bad chars in calendar names.
 	(show_help_and_exit): Fix typo.
 
 2006-07-17  Florian Boor  <florian.boor@kernelconcepts.de>

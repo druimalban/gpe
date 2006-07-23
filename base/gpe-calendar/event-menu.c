@@ -201,16 +201,42 @@ event_menu_new (Event *ev, gboolean show_summary)
 
       time_t start = event_get_start (ev);
       localtime_r (&start, &start_tm);
-      char *strstart = strftime_strdup_utf8_locale (TIMEFMT, &start_tm);
+
+      char *strstart;
+      if (event_get_untimed (ev))
+	strstart = strftime_strdup_utf8_locale (_("%B %d"), &start_tm);
+      else
+	strstart = strftime_strdup_utf8_locale (_("%B %d, %-H:%M"), &start_tm);
 
       time_t end = start + event_get_duration (ev);
+      if (event_get_untimed (ev))
+	end -= 24 * 60 * 60;
+      else
+	end --;
+
       gchar *strend;
       if (end == start)
 	strend = 0;
       else
 	{
 	  localtime_r (&end, &end_tm);
-	  strend = strftime_strdup_utf8_locale (TIMEFMT, &end_tm);
+	  if (event_get_untimed (ev))
+	    {
+	      if (start_tm.tm_mon == end_tm.tm_mon
+		  && start_tm.tm_year == end_tm.tm_year)
+		strstart = strftime_strdup_utf8_locale (_("%d"), &end_tm);
+	      else
+		strstart = strftime_strdup_utf8_locale (_("%B %d"), &end_tm);
+	    }
+	  else
+	    {
+	      if (start_tm.tm_yday == end_tm.tm_yday
+		  && start_tm.tm_year == end_tm.tm_year)
+		strend = strftime_strdup_utf8_locale (_("%-H:%M"), &end_tm);
+	      else
+		strend = strftime_strdup_utf8_locale (_("%B %d, %-H:%M"),
+						      &end_tm);
+	    }
 	}
 
       char buffer[64];

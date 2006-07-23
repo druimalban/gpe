@@ -244,6 +244,10 @@ date_cell_data_func (GtkTreeViewColumn *col,
 	/* Starts in the past.  */
 	{
 	  time_t end = event_get_start (ev) + event_get_duration (ev);
+	  if (event_get_untimed (ev))
+	    end -= 24 * 60 * 60;
+	  else
+	    end --;
 
 	  localtime_r (&end, &tm);
 	  char *t = time_to_string (event_list, ev, &tm);
