@@ -1,5 +1,10 @@
 2006-07-23  Neal H. Walfield  <neal@gnu.org>
 
+	* event-menu.c (event_menu_new): Assign the end time to STREND.
+	Use %b, not %B for displaying the month name.
+
+2006-07-23  Neal H. Walfield  <neal@gnu.org>
+
 	* day_view.c (realize): Include the border height when calculating
 	DAY_VIEW->ROW_HEIGHT_MIN.
 

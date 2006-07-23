@@ -204,9 +204,9 @@ event_menu_new (Event *ev, gboolean show_summary)
 
       char *strstart;
       if (event_get_untimed (ev))
-	strstart = strftime_strdup_utf8_locale (_("%B %d"), &start_tm);
+	strstart = strftime_strdup_utf8_locale (_("%b %d"), &start_tm);
       else
-	strstart = strftime_strdup_utf8_locale (_("%B %d, %-H:%M"), &start_tm);
+	strstart = strftime_strdup_utf8_locale (_("%b %d, %-H:%M"), &start_tm);
 
       time_t end = start + event_get_duration (ev);
       if (event_get_untimed (ev))
@@ -224,9 +224,9 @@ event_menu_new (Event *ev, gboolean show_summary)
 	    {
 	      if (start_tm.tm_mon == end_tm.tm_mon
 		  && start_tm.tm_year == end_tm.tm_year)
-		strstart = strftime_strdup_utf8_locale (_("%d"), &end_tm);
+		strend = strftime_strdup_utf8_locale (_("%d"), &end_tm);
 	      else
-		strstart = strftime_strdup_utf8_locale (_("%B %d"), &end_tm);
+		strend = strftime_strdup_utf8_locale (_("%b %d"), &end_tm);
 	    }
 	  else
 	    {
@@ -234,7 +234,7 @@ event_menu_new (Event *ev, gboolean show_summary)
 		  && start_tm.tm_year == end_tm.tm_year)
 		strend = strftime_strdup_utf8_locale (_("%-H:%M"), &end_tm);
 	      else
-		strend = strftime_strdup_utf8_locale (_("%B %d, %-H:%M"),
+		strend = strftime_strdup_utf8_locale (_("%b %d, %-H:%M"),
 						      &end_tm);
 	    }
 	}
