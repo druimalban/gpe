@@ -128,9 +128,9 @@ day_popup (const GDate *date, const GSList *events)
 	    {
 	      time_t e = event_get_start (ev) + event_get_duration (ev);
 	      if (event_get_untimed (ev))
-		end -= 24 * 60 * 60;
+		e -= 24 * 60 * 60;
 	      else
-		end --;
+		e --;
 
 	      GDate end;
 	      g_date_set_time (&end, e);
