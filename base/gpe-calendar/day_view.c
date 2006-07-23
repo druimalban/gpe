@@ -1428,7 +1428,22 @@ reload_events_hard (DayView *day_view)
 
 	  if (day_view->period_start <= event_get_start (ev)
 	      && event_get_start (ev) < earliest)
+	    /* Of the events we've seen which start on this day, this
+	       event starts the earliest.
+
+	       We don't include events that start in the prior to
+	       DAY_VIEW->PERIOD_START: we have to show that the start
+	       prior to the viewable time period (i.e. prior to
+	       midnight) and they only make the area unnecessarily
+	       long adding little value.  */
 	    earliest = event_get_start (ev);
+	  else if (event_get_start (ev) + event_get_duration (ev) - 60 * 60
+		   < earliest)
+	    /* The event starts prior to this time period and ends
+	       prior to the earliest event.  Show at least an hour of
+	       the end.  */
+	    earliest = event_get_start (ev) + event_get_duration (ev) - 1
+	      - 60 * 60;
 
 	  time_t end = event_get_start (ev)
 	    + MAX (event_get_duration (ev), 60 * 60);

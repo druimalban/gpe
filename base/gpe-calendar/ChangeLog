@@ -1,5 +1,10 @@
 2006-07-23  Neal H. Walfield  <neal@gnu.org>
 
+	* day_view.c (reload_events_hard): If the event ends prior to the
+	visible start, try to show at least an hour of the end.
+
+2006-07-23  Neal H. Walfield  <neal@gnu.org>
+
 	* event-ui.c (click_ok): Correctly calculate the event's duration.
 	(build_edit_event_window): Correctly calcualte the event's end
 	time.
