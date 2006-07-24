@@ -1,3 +1,11 @@
+2006-07-18  Florian Boor  <florian.boor@kernelconcepts.de>
+
+	* main.c (main): Add new command line options. Some minor cleanups.
+    (show_help_and_exit): Add command line help for new switches.
+    (delete_event): New function.
+    (flush_deleted_events): New function.
+	(handoff_callback): Add "DELETE" command.
+
 2006-07-23  Neal H. Walfield  <neal@gnu.org>
 
 	* event-menu.c (event_menu_new): Assign the end time to STREND.

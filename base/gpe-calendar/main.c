@@ -189,7 +189,6 @@ schedule_wakeup (gboolean reload)
   return FALSE;
 }
 
-
 static void
 fixup_name (gchar *name)
 {
@@ -217,15 +216,51 @@ export_calendars (EventDB *edb, const gchar *prefix)
     
   for (iter = calendars; iter; iter = iter->next)
     {
-        EventCalendar *ec = iter->data;
-        gchar *calendar_name = event_calendar_get_title (ec);
-        gchar *mirrorfile;
+      EventCalendar *ec = iter->data;
+      gchar *calendar_name = event_calendar_get_title (ec);
+      gchar *mirrorfile;
 
-        fixup_name (calendar_name);        
-        mirrorfile = g_strdup_printf ("%s_%s.ics", prefix, calendar_name);
-        export_calendar_to_file (ec, mirrorfile);
-        g_free (calendar_name);
-        g_free (mirrorfile);
+      fixup_name (calendar_name);        
+      mirrorfile = g_strdup_printf ("%s_%s.ics", prefix, calendar_name);
+      export_calendar_to_file (ec, mirrorfile);
+      g_free (calendar_name);
+      g_free (mirrorfile);
+    }
+  g_slist_free (calendars);
+}
+
+static gboolean
+delete_event (gchar *id)
+{
+  Event *ev;
+    
+  ev = event_db_find_by_eventid (event_db, id);
+  if (!ev)
+    return FALSE;
+
+  return event_remove (ev);
+}
+
+static void
+flush_deleted_events (const gchar *calname)
+{
+  GSList *calendars = event_db_list_event_calendars (event_db);
+  GSList *iter;
+
+  for (iter = calendars; iter; iter = iter->next)
+    {
+      EventCalendar *ec = iter->data;
+      gchar *calendar_name = event_calendar_get_title (ec);
+
+      if (calname != NULL)
+        {
+          if (!strcmp (calname, calendar_name)) 
+            event_calendar_flush_deleted (ec);
+        }          
+      else
+         event_calendar_flush_deleted (ec);
+        
+      g_free (calendar_name);
     }
   g_slist_free (calendars);
 }
@@ -1373,13 +1408,13 @@ handoff_callback (Handoff *handoff, char *data)
 	    }
 	}
     else if (strcmp (var, "EXPORT") == 0 && value)
-	{
 	  export_calendars (event_db, value);
-	}
-      else if (strcmp (var, "FOCUS") == 0)
-	gtk_window_present (GTK_WINDOW (main_window));
-      else
-	g_warning ("%s: Unknown command: %s", __func__, var);
+    else if (strcmp (var, "DELETE") == 0 && value)
+	  delete_event (value);
+    else if (strcmp (var, "FOCUS") == 0)
+      gtk_window_present (GTK_WINDOW (main_window));
+    else
+	  g_warning ("%s: Unknown command: %s", __func__, var);
     }
 }
 
@@ -1453,10 +1488,13 @@ toolbar_size_allocate (GtkWidget *widget, GtkAllocation *allocation,
 static void
 show_help_and_exit (void)
 {
-  g_print ("\nUsage: gpe-calendar [-h] [-s] [-i <file>] [-e <prefix>]\n\n");
+  g_print ("\nUsage: gpe-calendar [-hs] -f [<calendar>] [-i <file>] [-e <prefix>] [-d <id>] [-D <file>]\n\n");
   g_print ("-h          : Show this help\n");
   g_print ("-s          : Schedule and exit\n");
+  g_print ("-f          : Flush list of deleted events. If a calendar name is given only the events of this calendar are flushed.\n");
+  g_print ("-d <id>     : Delete an event with the given id.\n");
   g_print ("-i <file>   : Import a given file to the database.\n");
+  g_print ("-D <file>   : Write list of deleted events to a given file.\n");
   g_print ("-e <prefix> : Write calendars from database to ics files using the given prefix.\n\n");
   g_print ("Without command line option the GUI is launched or an already running GUI is activated.\n\n");
     
@@ -1502,15 +1540,25 @@ main (int argc, char *argv[])
   GSList *import_files = NULL;
   gboolean export_only = FALSE;
   gchar *export_prefix = NULL;
+  gboolean delete_only = FALSE;
+  gchar *delete_id = NULL;
+  gboolean flush_deleted_only = FALSE;
+  gchar *flush_deleted_calname = NULL;
 
   int option_letter;
   extern char *optarg;
-  while ((option_letter = getopt (argc, argv, "s:e:i:h")) != -1)
+  while ((option_letter = getopt (argc, argv, "s:e:i:hd:f::D:")) != -1)
     {
       if (option_letter == 'h')
         show_help_and_exit ();
       if (option_letter == 's')
         schedule_only = TRUE;
+      if (option_letter == 'f')
+        {
+          flush_deleted_only = TRUE;
+          if (optarg)
+            flush_deleted_calname = g_strdup (optarg);
+        }
       if (option_letter == 'e')
         {
           if (export_only) 
@@ -1523,8 +1571,19 @@ main (int argc, char *argv[])
                        optarg);
           g_free (state);
           state = s;
-            
-          state = g_strdup_printf ("EXPORT=%s", optarg);
+        }
+      if (option_letter == 'd')
+        {
+          if (delete_only) 
+              continue;
+          delete_only = TRUE;
+          delete_id = g_strdup (optarg);
+          char *s
+            = g_strdup_printf ("%s%sDELETE=%s",
+                       state ?: "", state ? "\n" : "",
+                       optarg);
+          g_free (state);
+          state = s;
         }
       else if (option_letter == 'i')
         {
@@ -1572,34 +1631,48 @@ main (int argc, char *argv[])
 		       schedule_only ? FALSE : TRUE,
 		       handoff_serialize, NULL))
     exit (EXIT_SUCCESS);
-  if (schedule_only)
-    /* No instance running but called with -s.  */
+  
+
+
+  if (schedule_only || export_only || delete_only || flush_deleted_only )
     {
       char *filename = CALENDAR_FILE ();
       event_db = event_db_new (filename);
       if (! event_db)
-	{
-	  g_critical ("Failed to open event database.");
-	  exit (1);
-	}
-
+        {
+          g_critical ("Failed to open event database.");
+          exit (1);
+        }
+    }
+    
+  /* No instance running but called with -s. */
+  if (schedule_only)
+    {      
       schedule_wakeup (1);
       exit (EXIT_SUCCESS);
     }
     
+  /* No instance running but called with -e. */
   if (export_only)
-    /* No instance running but called with -s.  */
     {
-      gchar *filename = CALENDAR_FILE ();
-      event_db = event_db_new (filename);
-      if (! event_db)
-        {
-	      g_critical ("Failed to open event database.");
-	      exit (1);
-	    }
-
       vcal_export_init();
       export_calendars (event_db, export_prefix);
+      exit (EXIT_SUCCESS);
+    }
+    
+  /* No instance running but called with -d. */
+  if (delete_only)
+    {
+      if (delete_event (delete_id))
+        exit (EXIT_SUCCESS);
+      else
+        exit (EXIT_FAILURE);
+    }
+    
+  /* Called with -f. */
+  if (flush_deleted_only)
+    {      
+      flush_deleted_events (flush_deleted_calname);
       exit (EXIT_SUCCESS);
     }
     
