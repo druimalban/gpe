@@ -1,3 +1,14 @@
+2006-07-24  Florian Boor <florian.boor@kernelconcepts.de>
+
+    * event-db.c (event_db_new): Introduce version 4 database, create
+    table for deleted events.
+    (event_load_deleted_callback): New function.
+    (event_load_deleted): New function.
+    (event_calendar_list_deleted): New method.
+    (event_calendar_flush_deleted): New method.
+    (event_remove): Add record to deleted event table. Return FALSE on failure.
+    * event-db.h: Add new methods.
+
 2006-07-19  Neal H. Walfield  <neal@gnu.org>
 
 	* event-db.c (event_load_callback): Add exceptions to

@@ -291,6 +291,14 @@ extern time_t event_calendar_get_last_modification (EventCalendar *ec)
    must free the returned list.  */
 extern GSList *event_calendar_list_events (EventCalendar *ec);
 
+/* Returns a list of deleted events in the given calendar. 
+   the returned list needs to be freed after use. */
+extern GSList *event_calendar_list_deleted (EventCalendar *ec);
+
+/* Clean the list of deleted events. */
+extern void event_calendar_flush_deleted (EventCalendar *ec);
+
+
 /* Returns the calendars in calendar EC (but not any sub-calendars
    thereof).  A reference is allocated to each event.  The caller must
    free the returned list.  */

@@ -1167,7 +1167,7 @@ event_db_new (const char *fname)
   int dbinfo_callback (void *arg, int argc, char **argv, char **names)
     {
       if (argc == 1)
-	version = atoi (argv[0]);
+        version = atoi (argv[0]);
 
       return 0;
     }
@@ -1202,7 +1202,7 @@ event_db_new (const char *fname)
 	goto error;
     }
 
-  if (version > 3)
+  if (version > 4)
     {
       err = g_strdup_printf
 	(_("Unable to read database file: unknown version: %d"),
@@ -1560,13 +1560,20 @@ event_db_new (const char *fname)
       EventCalendar *ec = event_db_get_default_calendar (edb, NULL);
       g_object_unref (ec);
     }
+    
+  if (version < 4)
+    sqlite_exec (edb->sqliteh,
+		 "create table events_deleted"
+		 " (uid INTEGER, eventid STRING NOT NULL, calendar INTEGER);",
+		 NULL, NULL, NULL);
+    
 
   /* Update the version information as appropriate.  */
-  if (version < 3)
+  if (version < 4)
     {
       if (sqlite_exec (edb->sqliteh,
 		       "delete from calendar_dbinfo;"
-		       "insert into calendar_dbinfo (version) values (3);",
+		       "insert into calendar_dbinfo (version) values (4);",
 		       NULL, NULL, &err))
 	goto error;
     }
@@ -1703,6 +1710,48 @@ event_load (EventDB *edb, guint uid)
 	event_load_callback, ev, &err, uid)))
     {
       g_warning ("%s:%d: Loading data for event %ld: %s",
+		 __func__, __LINE__, ev->uid, err);
+      free (err);
+      g_object_unref (ev);
+      return NULL;
+    }
+
+  return ev;
+}
+
+static int
+event_load_deleted_callback (void *arg, int argc, char **argv, char **names)
+{
+  EventSource *ev = EVENT_SOURCE (arg);
+    
+  if (argc < 2)
+    {
+      g_printerr ("Unexpected result, refuling to load.\n");
+      return 1;
+    }
+  
+  ev->eventid = g_strdup (argv[0]);
+  ev->calendar = atoi (argv[1]);
+    
+  return 0;
+}
+
+static EventSource *
+event_load_deleted (EventDB *edb, guint uid)
+{
+  EventSource *ev;
+
+  ev = EVENT_SOURCE (g_object_new (event_source_get_type (), NULL));
+  ev->edb = edb;
+  ev->uid = uid;
+
+  char *err;
+  if (SQLITE_TRY
+      (sqlite_exec_printf (edb->sqliteh,
+	         "select eventid, calendar from events_deleted where uid=%d",
+	         event_load_deleted_callback, ev, &err, uid)))
+    {
+      g_warning ("%s:%d: Loading deleted event %ld: %s",
 		 __func__, __LINE__, ev->uid, err);
       free (err);
       g_object_unref (ev);
@@ -3055,12 +3104,43 @@ event_calendar_list_events (EventCalendar *ec)
     {
       Event *ev = event_db_find_by_uid (ec->edb, atoi (argv[0]));
       if (ev)
-	list = g_slist_prepend (list, ev);
+        list = g_slist_prepend (list, ev);
       return 0;
     }
   SQLITE_TRY
     (sqlite_exec_printf (ec->edb->sqliteh,
 			 "select uid from events where calendar=%d;",
+			 callback, NULL, NULL, ec->uid));
+
+  return list;
+}
+
+/**
+ * event_calendar_list_deleted:
+ * @ec: An #EventCalendar
+ *
+ * Retrieve a list of deleted events since the last event_calendar_flush_deleted()
+ * call. The events contain a very basic set of information only and should 
+ * be used to indicate wether a particular event was deleted or not only.
+ * The returned list of events needs to be freed by the caller.
+ *
+ * Returns: A list of events.
+ */
+GSList *
+event_calendar_list_deleted (EventCalendar *ec)
+{
+  GSList *list = NULL;
+
+  int callback (void *arg, int argc, char *argv[], char **names)
+    {
+      Event *ev = EVENT(event_load_deleted (ec->edb, atoi (argv[0])));
+      if (ev)
+        list = g_slist_prepend (list, ev);
+      return 0;
+    }
+  SQLITE_TRY
+    (sqlite_exec_printf (ec->edb->sqliteh,
+			 "select uid from events_deleted where calendar=%d;",
 			 callback, NULL, NULL, ec->uid));
 
   return list;
@@ -3075,15 +3155,22 @@ event_calendar_list_calendars (EventCalendar *p)
     {
       EventCalendar *ec = EVENT_CALENDAR (i->data);
       if (ec->parent_uid == p->uid)
-	{
-	  g_object_ref (ec);
-	  c = g_slist_prepend (c, ec);
-	}
+        {
+          g_object_ref (ec);
+          c = g_slist_prepend (c, ec);
+        }
     }
 
   return c;
 }
 
+void 
+event_calendar_flush_deleted (EventCalendar *ec)
+{
+   SQLITE_TRY (sqlite_exec_printf (ec->edb->sqliteh,
+			     "delete from events_deleted where calendar=%d;",
+			     NULL, NULL, NULL, ec->uid));
+}
 
 gint
 event_compare_func (gconstpointer a, gconstpointer b)
@@ -3343,12 +3430,17 @@ event_remove (Event *event)
   if (SQLITE_TRY
       (sqlite_exec_printf (ev->edb->sqliteh,
 			   "begin transaction;"
+               "insert into events_deleted values ('%d', '%q', '%d');"
 			   "delete from calendar where uid=%d;"
 			   "delete from events where uid=%d;"
 			   "commit transaction;",
-			   NULL, NULL, NULL, ev->uid, ev->uid)))
-    sqlite_exec (ev->edb->sqliteh, "rollback transaction;",
-		 NULL, NULL, NULL);
+			   NULL, NULL, NULL, ev->uid, ev->eventid, ev->calendar, 
+               ev->uid, ev->uid)))
+    {
+      sqlite_exec (ev->edb->sqliteh, "rollback transaction;",
+		           NULL, NULL, NULL);
+      return FALSE;
+    }
 
   if (ev->alarm)
     {
