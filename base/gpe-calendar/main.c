@@ -1476,7 +1476,10 @@ handoff_callback (Handoff *handoff, char *data)
           {
             calendar [0] = 0;
             calendar++;
-	        export_calendars (event_db, file, calendar);
+            if (strlen (calendar))
+              export_calendars (event_db, file, calendar);
+            else
+	          export_calendars (event_db, file, NULL);
           }
         else
           {
@@ -1488,14 +1491,17 @@ handoff_callback (Handoff *handoff, char *data)
     else if (strcmp (var, "LIST_DELETED") == 0 && value)
       {
         gchar *calendar, *file;
-        
+
         file = value;
         calendar = strstr (value, "*");
         if (calendar)
           {
             calendar [0] = 0;
             calendar++;
-	        save_deleted_events (file, calendar);
+            if (strlen (calendar))
+                save_deleted_events (file, calendar);
+            else
+  	            save_deleted_events (file, NULL);
           }
         else
           {
@@ -1662,14 +1668,10 @@ main (int argc, char *argv[])
         }
       if (option_letter == 'D')
         {
+          if (list_deleted_only)
+              continue;
           list_deleted_only = TRUE;
           delete_list_file = g_strdup (optarg);
-          char *s
-            = g_strdup_printf ("%s%sLIST_DELETED=%s",
-                       state ?: "", state ? "\n" : "",
-                       optarg);
-          g_free (state);
-          state = s;
         }
       if (option_letter == 'd')
         {
@@ -1718,11 +1720,20 @@ main (int argc, char *argv[])
       char *s
         = g_strdup_printf ("%s%sEXPORT=%s*%s",
                    state ?: "", state ? "\n" : "",
-                   export_file, selected_calendar);
+                   export_file, selected_calendar ? selected_calendar : "" );
       g_free (state);
       state = s;
     }
-
+  if (list_deleted_only)
+    {
+      char *s
+        = g_strdup_printf ("%s%sLIST_DELETED=%s*%s",
+                   state ?: "", state ? "\n" : "",
+                   delete_list_file, selected_calendar ? selected_calendar : "");
+      g_free (state);
+      state = s;
+    }
+    
   /* See if there is another instance of gpe-calendar already running.
      If so, try to handoff any arguments and exit.  Otherwise, take
      over.  */

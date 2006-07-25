@@ -514,26 +514,26 @@ gboolean
 export_list_to_file (GSList *things, const gchar *filename)
 {
   GSList *iter;
-  gchar *s = NULL, *t;
-    
+  gchar *s = NULL;
+  gint n, i = 0;
+
+  g_return_val_if_fail (things, TRUE); /* nothing to do */
+  
+  n = g_slist_length (things);
+  gchar *whole[n+1];
+  
+  whole[n] = NULL;
+  
   for (iter = things; iter; iter = iter->next)
     {
       GObject *thing = iter->data;
       if (IS_EVENT (thing))
-        t = export_event_as_string (EVENT (thing));
+        whole[i] = export_event_as_string (EVENT (thing));
       else
-        t = export_calendar_as_string (EVENT_CALENDAR (thing));
-      if (t)
-        {
-          gchar *v;
-            
-          v = g_strconcat (s ? s : "", "\n", t, NULL);
-          if (s)
-              g_free (s);
-          s = v;
-          g_free (t);
-        }
+        whole[i] = export_calendar_as_string (EVENT_CALENDAR (thing));
+      i++;
     }
+  s = g_strjoinv ("\n", whole);
     
   FILE *f = fopen (filename, "w");
   if (! f)

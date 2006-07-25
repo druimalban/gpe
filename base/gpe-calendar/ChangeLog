@@ -1,5 +1,10 @@
 2006-07-25  Florian Boor  <florian.boor@kernelconcepts.de>
 
+    * export-vcal.c (export_list_to_file): Improve like suggested by Neal.
+    * main.c (handoff_callback), (main): Fix command parameter handling.
+
+2006-07-25  Florian Boor  <florian.boor@kernelconcepts.de>
+
     * export-vcal.c/h (export_list_to_file): New function.
     * main.c (export_calendars): Allow exporting to a single file.
     (flush_deleted_events): Make use if new functions and report failure.
