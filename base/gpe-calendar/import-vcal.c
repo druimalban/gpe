@@ -473,29 +473,31 @@ import_vcal_from_channel (EventCalendar *ec, GIOChannel *channel)
 }
 
 void
-import_vcal (EventCalendar *ec, const char *files[])
+import_vcal (EventCalendar *ec, const char *files[], gboolean use_gui)
 {
+  GtkBox *box;
+  GtkWidget *combo;
   GtkWidget *filesel = NULL;
+
+  if (!use_gui && (!files || !ec)) 
+      return;
+      
   if (! files)
     /* No files were provided, prompt for some.  */
     {
 #if IS_HILDON
-      filesel = hildon_file_chooser_dialog_new
-	(GTK_WINDOW (main_window), GTK_FILE_CHOOSER_ACTION_OPEN);
-      gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (filesel),
-					    TRUE);
+      filesel = hildon_file_chooser_dialog_new (GTK_WINDOW (main_window), 
+                        GTK_FILE_CHOOSER_ACTION_OPEN);
+      gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (filesel), TRUE);
 #else
       filesel = gtk_file_selection_new (_("Choose file"));
-      gtk_file_selection_set_select_multiple (GTK_FILE_SELECTION (filesel),
-					      TRUE);
+      gtk_file_selection_set_select_multiple (GTK_FILE_SELECTION (filesel), TRUE);
 #endif
 
-      gtk_window_set_transient_for (GTK_WINDOW (filesel),
-				    GTK_WINDOW (main_window));
+      gtk_window_set_transient_for (GTK_WINDOW (filesel), 
+            GTK_WINDOW (main_window));
     }
 
-  GtkBox *box;
-  GtkWidget *combo;
   if (! ec)
     /* We need to know into which calendar we should place the events.
        Create a widget.  */
@@ -508,7 +510,7 @@ import_vcal (EventCalendar *ec, const char *files[])
 	 separate dialog.  */
 #if ! IS_HILDON
       if (! files)
-	gtk_box_pack_start (GTK_BOX (GTK_FILE_SELECTION (filesel)->main_vbox),
+         gtk_box_pack_start (GTK_BOX (GTK_FILE_SELECTION (filesel)->main_vbox),
 			    GTK_WIDGET (box), FALSE, FALSE, 0);
 #endif
 
@@ -566,10 +568,10 @@ import_vcal (EventCalendar *ec, const char *files[])
       gtk_box_pack_start (GTK_BOX (GTK_DIALOG (calsel)->vbox),
 			  GTK_WIDGET (box), FALSE, FALSE, 0);
       if (gtk_dialog_run (GTK_DIALOG (calsel)) != GTK_RESPONSE_ACCEPT)
-	{
-	  gtk_widget_destroy (calsel);
-	  return;
-	}
+        {
+          gtk_widget_destroy (calsel);
+          return;
+        }
     }
 
   if (! ec)
@@ -588,28 +590,28 @@ import_vcal (EventCalendar *ec, const char *files[])
       GError *error = NULL;
       GList *callist = mimedir_vcal_read_file (files[i], &error);
       if (error) 
-	{
-	  gchar *tmp;
-	  errors ++;
-	  tmp = g_strdup_printf ("%s%s%s: %s",
-				 errstr ?: "", errstr ? "\n" : "",
-				 files[i], error->message);
-	  g_free (errstr);
-	  errstr = tmp;
-	  g_error_free (error);
-	  continue;
-	}
+        {
+          gchar *tmp;
+          errors ++;
+          tmp = g_strdup_printf ("%s%s%s: %s",
+                     errstr ?: "", errstr ? "\n" : "",
+                     files[i], error->message);
+          g_free (errstr);
+          errstr = tmp;
+          g_error_free (error);
+          continue;
+        }
 
       char *status = parse_mimedir (ec, callist);
       if (! errstr)
-	errstr = status;
+        errstr = status;
       else
-	{
-	  char *tmp = g_strjoin ("\n", errstr, status, NULL);
-	  g_free (errstr);
-	  g_free (status);
-	  errstr = tmp;
-	}
+        {
+          char *tmp = g_strjoin ("\n", errstr, status, NULL);
+          g_free (errstr);
+          g_free (status);
+          errstr = tmp;
+        }
 
       /* Cleanup */
       mimedir_vcal_free_list (callist);
@@ -617,11 +619,18 @@ import_vcal (EventCalendar *ec, const char *files[])
 
   g_object_unref (ec);
 
-  GtkWidget *feedbackdlg = gtk_message_dialog_new
-    (GTK_WINDOW (main_window),
-     GTK_DIALOG_MODAL, GTK_MESSAGE_INFO,
-     GTK_BUTTONS_OK, errstr ?: _("Import successful"));
-
-  gtk_dialog_run (GTK_DIALOG (feedbackdlg));
-  gtk_widget_destroy (feedbackdlg);
+  if (use_gui)
+    {
+      GtkWidget *feedbackdlg = gtk_message_dialog_new
+        (GTK_WINDOW (main_window),
+         GTK_DIALOG_MODAL, GTK_MESSAGE_INFO,
+         GTK_BUTTONS_OK, errstr ?: _("Import successful"));
+    
+      gtk_dialog_run (GTK_DIALOG (feedbackdlg));
+      gtk_widget_destroy (feedbackdlg);
+    }
+  else
+   {
+      g_printerr ("%s\n", errstr ?: _("Import successful"));
+   }
 }

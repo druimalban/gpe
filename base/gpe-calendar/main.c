@@ -191,19 +191,23 @@ schedule_wakeup (gboolean reload)
 }
 
 static void
-fixup_name (gchar *name)
+import_file_list (GSList *import_files, const gchar *selected_calendar)
 {
-    gint i;
-    
-    for (i = 0; i < strlen (name); i++)
-      {
-          if (name[i] == '/') 
-            name[i] = '_';
-          if (name[i] == '?') 
-            name[i] = '_';
-          if (name[i] == '*') 
-            name[i] = '_';
-      }  
+  GSList *i;
+  EventCalendar *ec = NULL;
+
+  if (selected_calendar) 
+      event_db_find_calendar_by_name (event_db, selected_calendar);
+  if (! ec)
+      ec = event_db_get_default_calendar(event_db, selected_calendar);
+  
+  for (i = import_files; i; i = i->next)
+    {
+      const char *files[] = { i->data, NULL };
+      
+      import_vcal (ec, files, FALSE);
+    }
+  g_object_unref (ec);
 }
 
 static gboolean
@@ -1296,7 +1300,7 @@ alarm_button_clicked (GtkWidget *widget, gpointer d)
 static void
 import_callback (GtkWidget *widget, gpointer user_data)
 {
-  import_vcal (NULL, NULL);
+  import_vcal (NULL, NULL, TRUE);
 }
 
 static void
@@ -1432,7 +1436,7 @@ main_window_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *data)
         break;	
         case GDK_o:
         case GDK_i:
-          import_vcal (NULL, NULL);
+          import_vcal (NULL, NULL, TRUE);
         break;	
         case GDK_t:
           set_today();
@@ -1514,7 +1518,26 @@ handoff_callback (Handoff *handoff, char *data)
       if (strcmp (var, "IMPORT_FILE") == 0 && value)
         {
           const char *files[] = { value, NULL };
-          import_vcal (NULL, files);
+          gchar *calendar;
+          EventCalendar *ec;
+
+          calendar = strstr (value, "*");
+          if (calendar)
+            {
+              calendar [0] = 0;
+              calendar++;
+              ec = event_db_find_calendar_by_name (event_db, calendar);
+              if (! ec)
+                ec = event_db_get_default_calendar(event_db, strlen(calendar) ? calendar : NULL);
+              import_vcal (ec, files, TRUE);
+              g_object_unref (ec);
+            }
+          else
+            {
+              ec = event_db_get_default_calendar(event_db, NULL);
+              import_vcal (ec, files, TRUE);
+              g_object_unref (ec);
+            }
         }
       else if (strcmp (var, "VIEWTIME") == 0 && value)
         {
@@ -1650,9 +1673,11 @@ show_help_and_exit (void)
   g_print ("-h          : Show this help\n");
   g_print ("-s          : Schedule and exit\n");
   g_print ("-d <id>     : Delete an event with the given id.\n");
-  g_print ("-C          : List defined calendar names. If no file is given the list is written to stdout.\n");
+  g_print ("-C          : List defined calendar names.\n");
+  g_print ("              If no file is given the list is written to stdout.\n");
   g_print ("-c <name>   : Specify a calendar for the actions below.\n");
-  g_print ("-f          : Flush list of deleted events. If a calendar name is given only the events of this \ncalendar are flushed.\n");
+  g_print ("-f          : Flush list of deleted events. If a calendar name\n");
+  g_print ("              is given only the events of this calendar are flushed.\n");
   g_print ("-i <file>   : Import a given file (to the specified calendar if set).\n");
   g_print ("-D <file>   : Write list of deleted events in a calendar to a given file.\n");
   g_print ("-e <file>   : Write calendar from database to ics file using the given filename.\n");
@@ -1767,19 +1792,29 @@ main (int argc, char *argv[])
           if (! current_dir)
             current_dir = g_get_current_dir ();
     
-          char *s
-            = g_strdup_printf ("%s%sIMPORT_FILE=%s%s%s",
-                       state ?: "", state ? "\n" : "",
-                       *optarg == '/' ? "" : current_dir,
-                       *optarg == '/' ? "" : G_DIR_SEPARATOR_S,
-                       optarg);
-          g_free (state);
-          state = s;
-    
           import_files = g_slist_append (import_files, optarg);
         }
     }
 
+    if (import_files)
+      {
+          GSList *iter;
+          
+          for (iter = import_files; iter; iter = iter->next)
+            {
+              gchar *file = iter->data; 
+              gchar *s
+                = g_strdup_printf ("%s%sIMPORT_FILE=%s%s%s%s%s",
+                           state ?: "", state ? "\n" : "",
+                           *file == '/' ? "" : current_dir,
+                           *file == '/' ? "" : G_DIR_SEPARATOR_S,
+                           file, selected_calendar ? "*" : "", 
+                           selected_calendar ? selected_calendar : "" );
+              g_free (state);
+              state = s;
+            }
+      }
+    
   if (current_dir)
     g_free (current_dir);
 
@@ -1966,13 +2001,12 @@ main (int argc, char *argv[])
     exit (1);
 
   /* Import any files specified on the command line.  */
-  GSList *i;
-  for (i = import_files; i; i = i->next)
+  if (import_files)
     {
-      const char *files[] = { i->data, NULL };
-      import_vcal (NULL, files);
+      import_file_list (import_files, selected_calendar);
+      g_slist_free (import_files);
+      exit (EXIT_SUCCESS);
     }
-  g_slist_free (import_files);
 	
   vcal_export_init();
 
@@ -2307,37 +2341,55 @@ main (int argc, char *argv[])
             
   gtk_widget_add_events (GTK_WIDGET (main_window), 
                          GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK);
-  
+
+#ifndef IS_HILDON    
   /* File menu.  */
   GtkWidget *mitem = gtk_menu_item_new_with_mnemonic (_("_File"));
   GtkMenuShell *menu = GTK_MENU_SHELL (gtk_menu_new ());
   gtk_menu_item_set_submenu (GTK_MENU_ITEM (mitem), GTK_WIDGET (menu));
   gtk_menu_shell_append (menu_main, GTK_WIDGET (mitem));
   gtk_widget_show (mitem);
-
+#endif
+    
   /* File -> New.  */
   mitem = gtk_image_menu_item_new_from_stock (GTK_STOCK_NEW, NULL);
   g_signal_connect (G_OBJECT (mitem), "activate",
 		    G_CALLBACK (new_appointment), NULL);
-  gtk_menu_shell_append (menu, mitem);
   gtk_widget_show (mitem);
+#ifdef IS_HILDON            
+  gtk_menu_shell_append (menu_main, mitem);
+#else
+  gtk_menu_shell_append (menu, mitem);
+#endif
 
   /* File -> Open.  */
   mitem = gtk_image_menu_item_new_from_stock (GTK_STOCK_OPEN, NULL);
   g_signal_connect (G_OBJECT (mitem), "activate",
 		    G_CALLBACK (import_callback), NULL);
-  gtk_menu_shell_append (menu, mitem);
   gtk_widget_show (mitem);
+#ifdef IS_HILDON            
+  gtk_menu_shell_append (menu_main, mitem);
+#else
+  gtk_menu_shell_append (menu, mitem);
+#endif
 
   mitem = gtk_separator_menu_item_new ();
-  gtk_menu_shell_append (menu, mitem);
   gtk_widget_show (mitem);
+#ifdef IS_HILDON            
+  gtk_menu_shell_append (menu_main, mitem);
+#else
+  gtk_menu_shell_append (menu, mitem);
+#endif
 
   /* File -> Quit.  */
+#ifdef IS_HILDON
+  GtkMenuItem *quit_item = mitem = gtk_menu_item_new_with_label (_("Close"));
+ #else
   mitem = gtk_image_menu_item_new_from_stock (GTK_STOCK_QUIT, NULL);
+  gtk_menu_shell_append (menu, mitem);
+#endif
   g_signal_connect (G_OBJECT (mitem), "activate",
 		    G_CALLBACK (gpe_cal_exit), NULL);
-  gtk_menu_shell_append (menu, mitem);
   gtk_widget_show (mitem);
 
 
@@ -2499,6 +2551,9 @@ main (int argc, char *argv[])
   gtk_menu_shell_append (menu, mitem);
   gtk_widget_show (mitem);
   fullscreen_button = GTK_CHECK_MENU_ITEM (mitem);
+  
+  /* Finally attach close item. */
+  gtk_menu_shell_append (menu_main, quit_item);
 #endif
 
   /* The rest of the application window.  */

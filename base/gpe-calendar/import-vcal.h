@@ -25,7 +25,7 @@
 
 /* Import the list of files (NULL terminated) into calendars EC.
    Either may be NULL in which case the user will be prompted.  */
-extern void import_vcal (EventCalendar *ec, const char *files[]);
+extern void import_vcal (EventCalendar *ec, const char *files[], gboolean use_gui);
 
 /* CHANNEL should contain an iCal object.  Parse it and stuff it into
    EC (which may not be NULL).  Returns any status messages which must
