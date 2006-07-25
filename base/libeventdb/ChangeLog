@@ -1,6 +1,7 @@
 2006-07-25  Florian Boor <florian.boor@kernelconcepts.de>
 
-    event-db.c (event_calendar_list_deleted): Increment db reference.
+    * event-db.c (event_calendar_list_deleted): Increment db reference.
+    (event_remove): Use negative ids for the deleted table.
 
 2006-07-24  Florian Boor <florian.boor@kernelconcepts.de>
 

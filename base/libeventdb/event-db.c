@@ -3438,7 +3438,7 @@ event_remove (Event *event)
 			   "delete from calendar where uid=%d;"
 			   "delete from events where uid=%d;"
 			   "commit transaction;",
-			   NULL, NULL, NULL, ev->uid, ev->eventid, ev->calendar, 
+			   NULL, NULL, NULL, (-1) * ev->uid, ev->eventid, ev->calendar, 
                ev->uid, ev->uid)))
     {
       sqlite_exec (ev->edb->sqliteh, "rollback transaction;",
