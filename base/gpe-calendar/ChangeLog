@@ -1,8 +1,14 @@
 2006-07-25  Florian Boor  <florian.boor@kernelconcepts.de>
 
-    * export-vcal.c (export_list_to_file): Improve like suggested by Neal.
+    * export-vcal.c (export_list_to_file): Improve like suggested by Neal. 
+      Free string vectors. Print error messages.
+    (vcal_do_send_bluetooth): fix warning.
     * main.c (handoff_callback), (main): Fix command parameter handling.
-
+      Add new command.
+    (flush_deleted_events): remove unused code. 
+    (list_calendars): new function.
+    (show_help_and_exit): Update to reflect new commands.
+    
 2006-07-25  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * export-vcal.c/h (export_list_to_file): New function.

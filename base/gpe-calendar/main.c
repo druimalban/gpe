@@ -15,6 +15,7 @@
 #include <getopt.h>
 #include <string.h>
 #include <ctype.h>
+#include <errno.h>
 
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
@@ -273,15 +274,73 @@ flush_deleted_events (const gchar *calname)
       for (iter = calendars; iter; iter = iter->next)
         {
           EventCalendar *ec = iter->data;
-          gchar *calendar_name = event_calendar_get_title (ec);
-    
           event_calendar_flush_deleted (ec);
-          g_free (calendar_name);
         }
       g_slist_free (calendars);
   }
   return TRUE;
 }
+
+static gboolean
+list_calendars (const gchar *filename)
+{
+  GSList *calendars;
+  GSList *iter;
+  gint i = 0;
+  gint n;
+  gchar *s;
+
+  calendars = event_db_list_event_calendars (event_db);
+    
+  if (!calendars)
+    return TRUE;
+  
+  n = g_slist_length (calendars);
+  gchar **list = g_malloc0 (n + 1);
+  
+  for (iter = calendars; iter; iter = iter->next)
+    {
+      EventCalendar *ec = iter->data;
+
+      list[i] = event_calendar_get_title (ec);
+      i++;
+    }
+  g_slist_free (calendars);
+
+  s = g_strjoinv ("\n", list);
+  g_strfreev (list);
+  
+  if (filename)
+    {
+      FILE *f = fopen (filename, "w");
+      if (! f)
+        {
+          g_printerr ("Opening %s: %s", filename, strerror (errno));
+          goto error;
+        }
+    
+      if (fwrite (s, strlen (s), 1, f) != 1)
+        {
+          g_printerr ("Writing to %s: %s", filename, strerror (errno));
+          goto error;
+        }
+      
+      fclose (f);
+      g_free (s);
+      return TRUE;
+      
+     error:
+      if (f)
+        fclose (f);
+      g_free (s);
+      return FALSE;
+    }
+  else
+    g_print ("%s\n", s);
+    
+  return TRUE;
+}
+
 
 static gboolean
 save_deleted_events (const gchar *filename, const gchar *calendarname)
@@ -1508,6 +1567,8 @@ handoff_callback (Handoff *handoff, char *data)
 	        save_deleted_events (file, NULL);
           }
       }
+    else if (strcmp (var, "LIST_CALENDARS") == 0)
+      list_calendars (value);
     else if (strcmp (var, "FOCUS") == 0)
       gtk_window_present (GTK_WINDOW (main_window));
     else
@@ -1585,13 +1646,13 @@ toolbar_size_allocate (GtkWidget *widget, GtkAllocation *allocation,
 static void
 show_help_and_exit (void)
 {
-  g_print ("\nUsage: gpe-calendar [-hsfC] [-c <calendar>] [-i <file>] [-e <file>] [-d <id>] [-D <file>]\n\n");
+  g_print ("\nUsage: gpe-calendar [-hsf] -C [<file>] [-c <calendar>] [-i <file>] [-e <file>] [-d <id>] [-D <file>]\n\n");
   g_print ("-h          : Show this help\n");
   g_print ("-s          : Schedule and exit\n");
   g_print ("-d <id>     : Delete an event with the given id.\n");
-  g_print ("-C          : List defined calendar names.\n");
+  g_print ("-C          : List defined calendar names. If no file is given the list is written to stdout.\n");
   g_print ("-c <name>   : Specify a calendar for the actions below.\n");
-  g_print ("-f          : Flush list of deleted events. If a calendar name is given only the events of this calendar are flushed.\n");
+  g_print ("-f          : Flush list of deleted events. If a calendar name is given only the events of this \ncalendar are flushed.\n");
   g_print ("-i <file>   : Import a given file (to the specified calendar if set).\n");
   g_print ("-D <file>   : Write list of deleted events in a calendar to a given file.\n");
   g_print ("-e <file>   : Write calendar from database to ics file using the given filename.\n");
@@ -1643,13 +1704,14 @@ main (int argc, char *argv[])
   gchar *delete_id = NULL;
   gboolean flush_deleted_only = FALSE;
   gboolean list_calendars_only = FALSE;
+  gchar *calendar_list_file = NULL;
   gchar *delete_list_file = NULL;
   gboolean list_deleted_only = FALSE;
   gchar *selected_calendar = NULL; /* make this a list */
 
   int option_letter;
   extern char *optarg;
-  while ((option_letter = getopt (argc, argv, "c:s:e:i:hd:fD:C")) != -1)
+  while ((option_letter = getopt (argc, argv, "c:s:e:i:hd:fD:C::")) != -1)
     {
       if (option_letter == 'c')
         selected_calendar = g_strdup (optarg);
@@ -1659,6 +1721,20 @@ main (int argc, char *argv[])
         schedule_only = TRUE;
       if (option_letter == 'f')
         flush_deleted_only = TRUE;
+      if (option_letter == 'C')
+        {
+          list_calendars_only = TRUE;
+          if (optarg)
+            {
+              calendar_list_file = g_strdup (optarg);
+              char *s
+                = g_strdup_printf ("%s%sLIST_CALENDARS=%s",
+                            state ?: "", state ? "\n" : "",
+                           optarg);
+              g_free (state);
+              state = s;
+            }
+        }
       if (option_letter == 'e')
         {
           if (export_only) /* only one so far */
@@ -1708,7 +1784,7 @@ main (int argc, char *argv[])
     g_free (current_dir);
 
   if (!schedule_only && !export_only && !delete_only 
-      && !flush_deleted_only && !list_deleted_only)
+      && !flush_deleted_only && !list_deleted_only && !list_calendars_only)
     {
       char *s = g_strdup_printf ("%s%sFOCUS", state ?: "", state ? "\n" : "");
       g_free (state);
@@ -1724,6 +1800,16 @@ main (int argc, char *argv[])
       g_free (state);
       state = s;
     }
+  if (list_deleted_only)
+    {
+      char *s
+        = g_strdup_printf ("%s%sLIST_DELETED=%s*%s",
+                   state ?: "", state ? "\n" : "",
+                   delete_list_file, selected_calendar ? selected_calendar : "");
+      g_free (state);
+      state = s;
+    }
+    
   if (list_deleted_only)
     {
       char *s
@@ -1756,7 +1842,7 @@ main (int argc, char *argv[])
 
 
   if (schedule_only || export_only || delete_only || flush_deleted_only 
-      || list_deleted_only)
+      || list_deleted_only || list_calendars_only)
     {
       char *filename = CALENDAR_FILE ();
       event_db = event_db_new (filename);
@@ -1797,6 +1883,15 @@ main (int argc, char *argv[])
   if (list_deleted_only)
     {
       if (save_deleted_events (delete_list_file, selected_calendar))
+        exit (EXIT_SUCCESS);
+      else
+        exit (EXIT_FAILURE);
+    }
+    
+  /* No instance running but called with -C. */
+  if (list_calendars_only)
+    {
+      if (list_calendars (calendar_list_file))
         exit (EXIT_SUCCESS);
       else
         exit (EXIT_FAILURE);

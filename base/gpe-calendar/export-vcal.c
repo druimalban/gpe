@@ -272,9 +272,10 @@ vcal_do_send_bluetooth (Event *event)
 #ifdef USE_DBUS
   gchar *vcal;
   DBusMessage *message;
-  DBusMessageIter iter;
   gchar *filename, *mimetype;
-
+#ifndef HAVE_DBUS_MESSAGE_ITER_GET_BASIC
+  DBusMessageIter iter;
+#endif
   vcal = export_event_as_string (event);
 
   message = dbus_message_new_method_call (BLUETOOTH_SERVICE_NAME,
@@ -520,9 +521,7 @@ export_list_to_file (GSList *things, const gchar *filename)
   g_return_val_if_fail (things, TRUE); /* nothing to do */
   
   n = g_slist_length (things);
-  gchar *whole[n+1];
-  
-  whole[n] = NULL;
+  gchar **whole = g_malloc0 (n + 1);
   
   for (iter = things; iter; iter = iter->next)
     {
@@ -534,17 +533,18 @@ export_list_to_file (GSList *things, const gchar *filename)
       i++;
     }
   s = g_strjoinv ("\n", whole);
+  g_strfreev (whole);
     
   FILE *f = fopen (filename, "w");
   if (! f)
     {
-      g_printerr ("Opening %s", filename);
+      g_printerr ("Opening %s: %s", filename, strerror (errno));
       goto error;
     }
 
   if (fwrite (s, strlen (s), 1, f) != 1)
     {
-      g_printerr ("Writing to %s", filename);
+      g_printerr ("Writing to %s: %s", filename, strerror (errno));
       goto error;
     }
   
