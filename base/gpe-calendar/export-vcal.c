@@ -509,3 +509,52 @@ export_calendar_to_file (EventCalendar *ec, const gchar *filename)
       }
     return TRUE;
 }
+
+gboolean 
+export_list_to_file (GSList *things, const gchar *filename)
+{
+  GSList *iter;
+  gchar *s = NULL, *t;
+    
+  for (iter = things; iter; iter = iter->next)
+    {
+      GObject *thing = iter->data;
+      if (IS_EVENT (thing))
+        t = export_event_as_string (EVENT (thing));
+      else
+        t = export_calendar_as_string (EVENT_CALENDAR (thing));
+      if (t)
+        {
+          gchar *v;
+            
+          v = g_strconcat (s ? s : "", "\n", t, NULL);
+          if (s)
+              g_free (s);
+          s = v;
+          g_free (t);
+        }
+    }
+    
+  FILE *f = fopen (filename, "w");
+  if (! f)
+    {
+      g_printerr ("Opening %s", filename);
+      goto error;
+    }
+
+  if (fwrite (s, strlen (s), 1, f) != 1)
+    {
+      g_printerr ("Writing to %s", filename);
+      goto error;
+    }
+  
+  fclose (f);
+  g_free (s);
+  return TRUE;
+  
+ error:
+  if (f)
+    fclose (f);
+  g_free (s);
+  return FALSE;
+}

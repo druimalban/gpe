@@ -1,3 +1,14 @@
+2006-07-25  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * export-vcal.c/h (export_list_to_file): New function.
+    * main.c (export_calendars): Allow exporting to a single file.
+    (flush_deleted_events): Make use if new functions and report failure.
+    (save_deleted_events): New function.
+    (show_help_and_exit): Add new command line switches.
+    (main): Parse new options.
+    (handoff_callback): Support new options/commands.
+    Some formating corrections.
+
 2006-07-18  Florian Boor  <florian.boor@kernelconcepts.de>
 
 	* main.c (main): Add new command line options. Some minor cleanups.

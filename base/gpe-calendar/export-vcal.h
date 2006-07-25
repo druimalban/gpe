@@ -27,4 +27,5 @@ gboolean export_bluetooth_available (void);
 gboolean export_irda_available (void);
 
 gboolean export_calendar_to_file (EventCalendar *ec, const gchar *filename);
+gboolean export_list_to_file (GSList *things, const gchar *filename);
 #endif

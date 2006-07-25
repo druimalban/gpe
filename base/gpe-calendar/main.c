@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2001, 2002, 2003, 2006 Philip Blundell <philb@gnu.org>
  * Hildon adaption 2005 by Matthias Steinbauer <matthias@steinbauer.org>
- * Toolbar new API conversion 2005 by Florian Boor <florian@kernelconcepts.de>
+ * Copyright 2005, 2006 by Florian Boor <florian@kernelconcepts.de>
  * Copyright (C) 2006 Neal H. Walfield <neal@walfield.org>
  *
  * This program is free software; you can redistribute it and/or
@@ -205,28 +205,36 @@ fixup_name (gchar *name)
       }  
 }
 
-static void
-export_calendars (EventDB *edb, const gchar *prefix)
+static gboolean
+export_calendars (EventDB *edb, const gchar *filename, const gchar *name)
 {
-  GSList *calendars = event_db_list_event_calendars (edb);
-  GSList *iter;
+  GSList *calendars;
 
-  if (!prefix)
-      prefix = "gpe-calendar";
+  if (!filename)
+      filename = "/tmp/gpe-calendar.ics";
     
-  for (iter = calendars; iter; iter = iter->next)
+  if (name)
     {
-      EventCalendar *ec = iter->data;
-      gchar *calendar_name = event_calendar_get_title (ec);
-      gchar *mirrorfile;
-
-      fixup_name (calendar_name);        
-      mirrorfile = g_strdup_printf ("%s_%s.ics", prefix, calendar_name);
-      export_calendar_to_file (ec, mirrorfile);
-      g_free (calendar_name);
-      g_free (mirrorfile);
+        EventCalendar *ec = event_db_find_calendar_by_name (edb, name);
+        
+        if (ec)
+          {
+            export_calendar_to_file (ec, filename);
+            g_object_unref (ec);
+          }
+        else
+          return FALSE;
     }
-  g_slist_free (calendars);
+  else
+    {
+      gboolean result;
+      calendars = event_db_list_event_calendars (edb);
+      result = export_list_to_file (calendars, filename);
+      g_slist_free (calendars);
+      return result;
+    }
+    
+  return TRUE;
 }
 
 static gboolean
@@ -241,28 +249,79 @@ delete_event (gchar *id)
   return event_remove (ev);
 }
 
-static void
+static gboolean
 flush_deleted_events (const gchar *calname)
 {
-  GSList *calendars = event_db_list_event_calendars (event_db);
+  GSList *calendars;
   GSList *iter;
 
-  for (iter = calendars; iter; iter = iter->next)
+  if (calname)
     {
-      EventCalendar *ec = iter->data;
-      gchar *calendar_name = event_calendar_get_title (ec);
-
-      if (calname != NULL)
+      EventCalendar *ec = event_db_find_calendar_by_name (event_db, calname);
+      
+      if (ec)
         {
-          if (!strcmp (calname, calendar_name)) 
-            event_calendar_flush_deleted (ec);
-        }          
-      else
-         event_calendar_flush_deleted (ec);
-        
-      g_free (calendar_name);
+          event_calendar_flush_deleted (ec);
+          g_object_unref (ec);
+          return TRUE;
+        }
+      return FALSE;
     }
-  g_slist_free (calendars);
+  else
+    {      
+      calendars = event_db_list_event_calendars (event_db);
+      for (iter = calendars; iter; iter = iter->next)
+        {
+          EventCalendar *ec = iter->data;
+          gchar *calendar_name = event_calendar_get_title (ec);
+    
+          event_calendar_flush_deleted (ec);
+          g_free (calendar_name);
+        }
+      g_slist_free (calendars);
+  }
+  return TRUE;
+}
+
+static gboolean
+save_deleted_events (const gchar *filename, const gchar *calendarname)
+{
+  GSList *calendars;
+  GSList *iter;
+  GSList *events = NULL;
+  gboolean result = TRUE;
+
+  if (calendarname)
+    {
+      EventCalendar *ec = event_db_find_calendar_by_name (event_db, calendarname);
+      
+      if (ec)
+        {
+          events = event_calendar_list_deleted (ec);
+          g_object_unref (ec);
+        }
+      else  
+        return FALSE;
+    }
+  else
+    {      
+      calendars = event_db_list_event_calendars (event_db);
+      for (iter = calendars; iter; iter = iter->next)
+        {
+          EventCalendar *ec = iter->data;
+    
+          events = g_slist_concat (events, event_calendar_list_deleted (ec));
+        }
+      g_slist_free (calendars);
+    }
+    
+  if (events) 
+    {
+      result = export_list_to_file (events, filename);
+      g_slist_free (events);
+    }
+      
+  return result;
 }
 
 static void
@@ -962,9 +1021,9 @@ current_view_consider (void)
       gtk_container_remove (current_view_container, current_view);
 
       if (IS_EVENT_LIST (current_view))
-	event_list_hidden --;
+        event_list_hidden --;
       if (GTK_IS_MONTH_VIEW (current_view))
-	calendar_hidden --;
+        calendar_hidden --;
 
       event_list_consider ();
       calendar_consider ();
@@ -977,38 +1036,38 @@ current_view_consider (void)
   if (current_view)
     {
       switch (current_view_mode)
-	{
-	case view_day_view:
-	  if (IS_DAY_VIEW (current_view))
-	    return TRUE;
-	  break;
-	case view_week_view:
-	  if (GTK_IS_WEEK_VIEW (current_view))
-	    return TRUE;
-	  break;
-	case view_month_view:
-	  if (GTK_IS_MONTH_VIEW (current_view))
-	    return TRUE;
-	  break;
-	case view_event_list_view:
-	  if (IS_EVENT_LIST (current_view))
-	    return TRUE;
-	  break;
-	}
+        {
+        case view_day_view:
+          if (IS_DAY_VIEW (current_view))
+            return TRUE;
+          break;
+        case view_week_view:
+          if (GTK_IS_WEEK_VIEW (current_view))
+            return TRUE;
+          break;
+        case view_month_view:
+          if (GTK_IS_MONTH_VIEW (current_view))
+            return TRUE;
+          break;
+        case view_event_list_view:
+          if (IS_EVENT_LIST (current_view))
+            return TRUE;
+          break;
+        }
 
       if (GTK_IS_MONTH_VIEW (current_view))
-	calendar_hidden --;
+        calendar_hidden --;
       if (IS_EVENT_LIST (current_view))
-	{
-	  event_list_hidden --;
-	  event_list = EVENT_LIST (current_view);
-	  gtk_widget_reparent (GTK_WIDGET (event_list),
-			       GTK_WIDGET (event_list_container));
-	  event_list_set_period_box_visible (event_list, FALSE);
-	  gtk_widget_show (GTK_WIDGET (event_list_container));
-	}
+        {
+          event_list_hidden --;
+          event_list = EVENT_LIST (current_view);
+          gtk_widget_reparent (GTK_WIDGET (event_list),
+                       GTK_WIDGET (event_list_container));
+          event_list_set_period_box_visible (event_list, FALSE);
+          gtk_widget_show (GTK_WIDGET (event_list_container));
+        }
       else
-	gtk_container_remove (current_view_container, current_view);
+        gtk_container_remove (current_view_container, current_view);
     }
 
   switch (current_view_mode)
@@ -1035,16 +1094,16 @@ current_view_consider (void)
     case view_event_list_view:
       event_list_hidden ++;
       if (event_list)
-	{
-	  g_object_ref (event_list);
-	  gtk_container_remove (event_list_container,
-				GTK_WIDGET (event_list));
-	  current_view = GTK_WIDGET (event_list);
-	  event_list = NULL;
-	  gtk_widget_hide (GTK_WIDGET (event_list_container));
-	}
+        {
+          g_object_ref (event_list);
+          gtk_container_remove (event_list_container,
+                    GTK_WIDGET (event_list));
+          current_view = GTK_WIDGET (event_list);
+          event_list = NULL;
+          gtk_widget_hide (GTK_WIDGET (event_list_container));
+        }
       else
-	current_view = event_list_create (event_db);
+        current_view = event_list_create (event_db);
       event_list_set_period_box_visible (EVENT_LIST (current_view), TRUE);
       gtk_widget_hide (GTK_WIDGET (datesel));
       gtk_widget_hide (today_button);
@@ -1375,42 +1434,74 @@ handoff_callback (Handoff *handoff, char *data)
 
       char *end = strchr (line, '\n');
       if (! end)
-	{
-	  end = line + strlen (line);
-	  line = 0;
-	}
+        {
+          end = line + strlen (line);
+          line = 0;
+        }
       else
-	line = end + 1;
+        line = end + 1;
       *end = 0;
 
       char *equal = strchr (var, '=');
       if (equal)
-	*equal = 0;
+        *equal = 0;
 
       char *value;
       if (equal)
-	value = equal + 1;
+        value = equal + 1;
       else
-	value = NULL;
+        value = NULL;
 
       if (strcmp (var, "IMPORT_FILE") == 0 && value)
-	{
-	  const char *files[] = { value, NULL };
-	  import_vcal (NULL, files);
-	}
+        {
+          const char *files[] = { value, NULL };
+          import_vcal (NULL, files);
+        }
       else if (strcmp (var, "VIEWTIME") == 0 && value)
-	{
-	  time_t t = atoi (value);
-	  if (t > 0)
-	    {
-	      viewtime = t;
-	      propagate_time ();
-	    }
-	}
+        {
+          time_t t = atoi (value);
+          if (t > 0)
+            {
+              viewtime = t;
+              propagate_time ();
+            }
+        }
     else if (strcmp (var, "EXPORT") == 0 && value)
-	  export_calendars (event_db, value);
+      {
+        gchar *calendar, *file;
+        
+        file = value;
+        calendar = strstr (value, "*");
+        if (calendar)
+          {
+            calendar [0] = 0;
+            calendar++;
+	        export_calendars (event_db, file, calendar);
+          }
+        else
+          {
+	        export_calendars (event_db, file, NULL);
+          }
+      }
     else if (strcmp (var, "DELETE") == 0 && value)
 	  delete_event (value);
+    else if (strcmp (var, "LIST_DELETED") == 0 && value)
+      {
+        gchar *calendar, *file;
+        
+        file = value;
+        calendar = strstr (value, "*");
+        if (calendar)
+          {
+            calendar [0] = 0;
+            calendar++;
+	        save_deleted_events (file, calendar);
+          }
+        else
+          {
+	        save_deleted_events (file, NULL);
+          }
+      }
     else if (strcmp (var, "FOCUS") == 0)
       gtk_window_present (GTK_WINDOW (main_window));
     else
@@ -1488,16 +1579,18 @@ toolbar_size_allocate (GtkWidget *widget, GtkAllocation *allocation,
 static void
 show_help_and_exit (void)
 {
-  g_print ("\nUsage: gpe-calendar [-hs] -f [<calendar>] [-i <file>] [-e <prefix>] [-d <id>] [-D <file>]\n\n");
+  g_print ("\nUsage: gpe-calendar [-hsfC] [-c <calendar>] [-i <file>] [-e <file>] [-d <id>] [-D <file>]\n\n");
   g_print ("-h          : Show this help\n");
   g_print ("-s          : Schedule and exit\n");
-  g_print ("-f          : Flush list of deleted events. If a calendar name is given only the events of this calendar are flushed.\n");
   g_print ("-d <id>     : Delete an event with the given id.\n");
-  g_print ("-i <file>   : Import a given file to the database.\n");
-  g_print ("-D <file>   : Write list of deleted events to a given file.\n");
-  g_print ("-e <prefix> : Write calendars from database to ics files using the given prefix.\n\n");
-  g_print ("Without command line option the GUI is launched or an already running GUI is activated.\n\n");
-    
+  g_print ("-C          : List defined calendar names.\n");
+  g_print ("-c <name>   : Specify a calendar for the actions below.\n");
+  g_print ("-f          : Flush list of deleted events. If a calendar name is given only the events of this calendar are flushed.\n");
+  g_print ("-i <file>   : Import a given file (to the specified calendar if set).\n");
+  g_print ("-D <file>   : Write list of deleted events in a calendar to a given file.\n");
+  g_print ("-e <file>   : Write calendar from database to ics file using the given filename.\n");
+  g_print ("              If no calendar is selected the given filename is treated as a prefix.\n\n");
+  g_print ("Without command line option the GUI is launched or an already running GUI is activated.\n\n");    
   exit (EXIT_SUCCESS);
 }
 
@@ -1535,38 +1628,44 @@ main (int argc, char *argv[])
   g_type_init ();
 
   /* Parse the arguments.  */
-  gboolean schedule_only=FALSE;
-  char *state = NULL;
+  gboolean schedule_only = FALSE;
+  gchar *state = NULL;
   GSList *import_files = NULL;
   gboolean export_only = FALSE;
-  gchar *export_prefix = NULL;
+  gchar *export_file = NULL; /* make this a list */
   gboolean delete_only = FALSE;
   gchar *delete_id = NULL;
   gboolean flush_deleted_only = FALSE;
-  gchar *flush_deleted_calname = NULL;
+  gboolean list_calendars_only = FALSE;
+  gchar *delete_list_file = NULL;
+  gboolean list_deleted_only = FALSE;
+  gchar *selected_calendar = NULL; /* make this a list */
 
   int option_letter;
   extern char *optarg;
-  while ((option_letter = getopt (argc, argv, "s:e:i:hd:f::D:")) != -1)
+  while ((option_letter = getopt (argc, argv, "c:s:e:i:hd:fD:C")) != -1)
     {
+      if (option_letter == 'c')
+        selected_calendar = g_strdup (optarg);
       if (option_letter == 'h')
         show_help_and_exit ();
       if (option_letter == 's')
         schedule_only = TRUE;
       if (option_letter == 'f')
-        {
-          flush_deleted_only = TRUE;
-          if (optarg)
-            flush_deleted_calname = g_strdup (optarg);
-        }
+        flush_deleted_only = TRUE;
       if (option_letter == 'e')
         {
-          if (export_only) 
+          if (export_only) /* only one so far */
               continue;
           export_only = TRUE;
-          export_prefix = g_strdup (optarg);
+          export_file = g_strdup (optarg);
+        }
+      if (option_letter == 'D')
+        {
+          list_deleted_only = TRUE;
+          delete_list_file = g_strdup (optarg);
           char *s
-            = g_strdup_printf ("%s%sEXPORT=%s",
+            = g_strdup_printf ("%s%sLIST_DELETED=%s",
                        state ?: "", state ? "\n" : "",
                        optarg);
           g_free (state);
@@ -1574,7 +1673,7 @@ main (int argc, char *argv[])
         }
       if (option_letter == 'd')
         {
-          if (delete_only) 
+          if (delete_only) /* only one so far */
               continue;
           delete_only = TRUE;
           delete_id = g_strdup (optarg);
@@ -1606,9 +1705,20 @@ main (int argc, char *argv[])
   if (current_dir)
     g_free (current_dir);
 
-  if (! schedule_only)
+  if (!schedule_only && !export_only && !delete_only 
+      && !flush_deleted_only && !list_deleted_only)
     {
       char *s = g_strdup_printf ("%s%sFOCUS", state ?: "", state ? "\n" : "");
+      g_free (state);
+      state = s;
+    }
+
+  if (export_only)
+    {
+      char *s
+        = g_strdup_printf ("%s%sEXPORT=%s*%s",
+                   state ?: "", state ? "\n" : "",
+                   export_file, selected_calendar);
       g_free (state);
       state = s;
     }
@@ -1634,7 +1744,8 @@ main (int argc, char *argv[])
   
 
 
-  if (schedule_only || export_only || delete_only || flush_deleted_only )
+  if (schedule_only || export_only || delete_only || flush_deleted_only 
+      || list_deleted_only)
     {
       char *filename = CALENDAR_FILE ();
       event_db = event_db_new (filename);
@@ -1656,8 +1767,10 @@ main (int argc, char *argv[])
   if (export_only)
     {
       vcal_export_init();
-      export_calendars (event_db, export_prefix);
-      exit (EXIT_SUCCESS);
+      if (export_calendars (event_db, export_file, selected_calendar))
+        exit (EXIT_SUCCESS);
+      else
+        exit (EXIT_FAILURE);
     }
     
   /* No instance running but called with -d. */
@@ -1669,11 +1782,22 @@ main (int argc, char *argv[])
         exit (EXIT_FAILURE);
     }
     
+  /* No instance running but called with -D. */
+  if (list_deleted_only)
+    {
+      if (save_deleted_events (delete_list_file, selected_calendar))
+        exit (EXIT_SUCCESS);
+      else
+        exit (EXIT_FAILURE);
+    }
+    
   /* Called with -f. */
   if (flush_deleted_only)
     {      
-      flush_deleted_events (flush_deleted_calname);
-      exit (EXIT_SUCCESS);
+      if (flush_deleted_events (selected_calendar))
+        exit (EXIT_SUCCESS);
+      else
+        exit (EXIT_FAILURE);
     }
     
   g_free (state);
