@@ -2342,10 +2342,12 @@ main (int argc, char *argv[])
   gtk_widget_add_events (GTK_WIDGET (main_window), 
                          GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK);
 
-#ifndef IS_HILDON    
+  GtkWidget *mitem;
+  GtkMenuShell *menu;
+#ifndef IS_HILDON 
   /* File menu.  */
-  GtkWidget *mitem = gtk_menu_item_new_with_mnemonic (_("_File"));
-  GtkMenuShell *menu = GTK_MENU_SHELL (gtk_menu_new ());
+  menu = GTK_MENU_SHELL (gtk_menu_new ());
+  mitem = gtk_menu_item_new_with_mnemonic (_("_File"));
   gtk_menu_item_set_submenu (GTK_MENU_ITEM (mitem), GTK_WIDGET (menu));
   gtk_menu_shell_append (menu_main, GTK_WIDGET (mitem));
   gtk_widget_show (mitem);
@@ -2383,7 +2385,7 @@ main (int argc, char *argv[])
 
   /* File -> Quit.  */
 #ifdef IS_HILDON
-  GtkMenuItem *quit_item = mitem = gtk_menu_item_new_with_label (_("Close"));
+  GtkWidget *quit_item = mitem = gtk_menu_item_new_with_label (_("Close"));
  #else
   mitem = gtk_image_menu_item_new_from_stock (GTK_STOCK_QUIT, NULL);
   gtk_menu_shell_append (menu, mitem);
