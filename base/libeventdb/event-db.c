@@ -3133,6 +3133,7 @@ event_calendar_list_deleted (EventCalendar *ec)
       if (argc != 3) 
           return 0;
       ev = EVENT_SOURCE (g_object_new (event_source_get_type (), NULL));
+      g_object_ref (ec->edb);
       ev->edb = ec->edb;
       ev->uid = atoi (argv[0]);
       ev->eventid = g_strdup (argv[1]);
