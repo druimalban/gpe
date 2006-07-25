@@ -1719,47 +1719,6 @@ event_load (EventDB *edb, guint uid)
   return ev;
 }
 
-static int
-event_load_deleted_callback (void *arg, int argc, char **argv, char **names)
-{
-  EventSource *ev = EVENT_SOURCE (arg);
-    
-  if (argc < 2)
-    {
-      g_printerr ("Unexpected result, refuling to load.\n");
-      return 1;
-    }
-  
-  ev->eventid = g_strdup (argv[0]);
-  ev->calendar = atoi (argv[1]);
-    
-  return 0;
-}
-
-static EventSource *
-event_load_deleted (EventDB *edb, guint uid)
-{
-  EventSource *ev;
-
-  ev = EVENT_SOURCE (g_object_new (event_source_get_type (), NULL));
-  ev->edb = edb;
-  ev->uid = uid;
-
-  char *err;
-  if (SQLITE_TRY
-      (sqlite_exec_printf (edb->sqliteh,
-	         "select eventid, calendar from events_deleted where uid=%d",
-	         event_load_deleted_callback, ev, &err, uid)))
-    {
-      g_warning ("%s:%d: Loading deleted event %ld: %s",
-		 __func__, __LINE__, ev->uid, err);
-      free (err);
-      g_object_unref (ev);
-      return NULL;
-    }
-
-  return ev;
-}
 
 static int
 load_details_callback (void *arg, int argc, char *argv[], char **names)
@@ -2594,6 +2553,42 @@ event_db_find_calendar_by_uid (EventDB *edb, guint uid)
   return NULL;
 }
 
+/**
+ * event_db_find_calendar_by_name:
+ * @edb: Event database
+ * @name: Calendar name
+ *
+ * Get a desired calendar by name.
+ * 
+ * Returns: An #EventCalendar object or NULL if not found.
+ */
+EventCalendar *
+event_db_find_calendar_by_name (EventDB *edb, const gchar *name)
+{
+  GSList *iter;
+
+  g_return_val_if_fail (name, NULL);
+    
+  for (iter = edb->calendars; iter; iter = iter->next)
+    {
+      EventCalendar *ec = iter->data;
+      gboolean found = FALSE;
+      gchar *calendar_name = event_calendar_get_title (ec);
+      
+      if (!strcmp (calendar_name, name))
+          found = TRUE;
+      g_free (calendar_name);
+      
+      if (found)
+        { 
+          g_object_ref (ec);
+          return ec;
+        }
+    }
+
+  return NULL;
+}
+
 EventCalendar *
 event_db_get_default_calendar (EventDB *edb, const char *title)
 {
@@ -3133,14 +3128,22 @@ event_calendar_list_deleted (EventCalendar *ec)
 
   int callback (void *arg, int argc, char *argv[], char **names)
     {
-      Event *ev = EVENT(event_load_deleted (ec->edb, atoi (argv[0])));
-      if (ev)
-        list = g_slist_prepend (list, ev);
+      EventSource *ev;
+      
+      if (argc != 3) 
+          return 0;
+      ev = EVENT_SOURCE (g_object_new (event_source_get_type (), NULL));
+      ev->edb = ec->edb;
+      ev->uid = atoi (argv[0]);
+      ev->eventid = g_strdup (argv[1]);
+      ev->calendar = atoi (argv[2]);
+
+      list = g_slist_prepend (list, ev);
       return 0;
     }
   SQLITE_TRY
     (sqlite_exec_printf (ec->edb->sqliteh,
-			 "select uid from events_deleted where calendar=%d;",
+			 "select uid, eventid, calendar from events_deleted where calendar=%d;",
 			 callback, NULL, NULL, ec->uid));
 
   return list;

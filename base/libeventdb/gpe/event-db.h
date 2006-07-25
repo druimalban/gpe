@@ -134,6 +134,8 @@ extern Event *event_db_find_by_eventid (EventDB *edb, const char *eventid);
 
 extern EventCalendar *event_db_find_calendar_by_uid (EventDB *edb, guint uid);
 
+extern EventCalendar *event_db_find_calendar_by_name (EventDB *edb, const gchar *name);
+
 /* Returns a list of the event calendars in EDB.  There will always be
    at least one calendar.  Allocates a reference to each calendar.  It
    is the caller's responsibility to free the list.  */
