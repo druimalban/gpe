@@ -2351,42 +2351,39 @@ main (int argc, char *argv[])
 
   GtkWidget *mitem;
   GtkMenuShell *menu;
-#ifndef IS_HILDON 
+
   /* File menu.  */
   menu = GTK_MENU_SHELL (gtk_menu_new ());
   mitem = gtk_menu_item_new_with_mnemonic (_("_File"));
   gtk_menu_item_set_submenu (GTK_MENU_ITEM (mitem), GTK_WIDGET (menu));
   gtk_menu_shell_append (menu_main, GTK_WIDGET (mitem));
   gtk_widget_show (mitem);
-#endif
     
   /* File -> New.  */
+#ifdef IS_HILDON
+  mitem = gtk_menu_item_new_with_label (_("New"));
+#else
   mitem = gtk_image_menu_item_new_from_stock (GTK_STOCK_NEW, NULL);
+#endif  
   g_signal_connect (G_OBJECT (mitem), "activate",
 		    G_CALLBACK (new_appointment), NULL);
   gtk_widget_show (mitem);
-#ifdef IS_HILDON            
-  gtk_menu_shell_append (menu_main, mitem);
-#else
   gtk_menu_shell_append (menu, mitem);
-#endif
 
   /* File -> Open.  */
+#ifdef IS_HILDON
+  mitem = gtk_menu_item_new_with_label (_("Import"));
+#else
   mitem = gtk_image_menu_item_new_from_stock (GTK_STOCK_OPEN, NULL);
+#endif
   g_signal_connect (G_OBJECT (mitem), "activate",
 		    G_CALLBACK (import_callback), NULL);
   gtk_widget_show (mitem);
-#ifdef IS_HILDON            
-  gtk_menu_shell_append (menu_main, mitem);
-#else
   gtk_menu_shell_append (menu, mitem);
-#endif
 
+#ifndef IS_HILDON            
   mitem = gtk_separator_menu_item_new ();
   gtk_widget_show (mitem);
-#ifdef IS_HILDON            
-  gtk_menu_shell_append (menu_main, mitem);
-#else
   gtk_menu_shell_append (menu, mitem);
 #endif
 
