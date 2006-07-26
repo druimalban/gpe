@@ -1,3 +1,11 @@
+2006-07-26  Florian Boor <florian.boor@kernelconcepts.de>
+
+    * event-db.c (event_remove): Don't insert uid, the database will care 
+    about this.
+    (event_db_new): Make uid in events_deleted primary key.
+    (event_calendar_list_deleted): Make uid negative to avoid conficts with
+    uids from main table.
+
 2006-07-25  Florian Boor <florian.boor@kernelconcepts.de>
 
     * event-db.c (event_calendar_list_deleted): Increment db reference.

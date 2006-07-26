@@ -1564,7 +1564,7 @@ event_db_new (const char *fname)
   if (version < 4)
     sqlite_exec (edb->sqliteh,
 		 "create table events_deleted"
-		 " (uid INTEGER, eventid STRING NOT NULL, calendar INTEGER);",
+		 " (uid INTEGER PRIMARY KEY, eventid STRING NOT NULL, calendar INTEGER);",
 		 NULL, NULL, NULL);
     
 
@@ -3135,7 +3135,7 @@ event_calendar_list_deleted (EventCalendar *ec)
       ev = EVENT_SOURCE (g_object_new (event_source_get_type (), NULL));
       g_object_ref (ec->edb);
       ev->edb = ec->edb;
-      ev->uid = atoi (argv[0]);
+      ev->uid = (-1) * atoi (argv[0]);
       ev->eventid = g_strdup (argv[1]);
       ev->calendar = atoi (argv[2]);
 
@@ -3434,11 +3434,11 @@ event_remove (Event *event)
   if (SQLITE_TRY
       (sqlite_exec_printf (ev->edb->sqliteh,
 			   "begin transaction;"
-               "insert into events_deleted values ('%d', '%q', '%d');"
+               "insert into events_deleted (eventid, calendar) values ('%q', '%d');"
 			   "delete from calendar where uid=%d;"
 			   "delete from events where uid=%d;"
 			   "commit transaction;",
-			   NULL, NULL, NULL, (-1) * ev->uid, ev->eventid, ev->calendar, 
+			   NULL, NULL, NULL, ev->eventid, ev->calendar, 
                ev->uid, ev->uid)))
     {
       sqlite_exec (ev->edb->sqliteh, "rollback transaction;",
