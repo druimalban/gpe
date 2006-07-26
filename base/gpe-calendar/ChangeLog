@@ -1,5 +1,7 @@
 2006-07-26  Florian Boor  <florian.boor@kernelconcepts.de>
 
+    * main.c, export-vcal.c: (save_to_file), (export_list_to_file), 
+    (list_calendars): Fix some == vs. != issues.
     * export-vcal.c (export_list_to_file): Fix memory allocation.
     Replace fwrite by fputs.
     (save_to_file): Replace fwrite by fputs.

@@ -358,7 +358,7 @@ save_to_file (GObject *thing, const gchar *filename, GError **error)
       goto error;
     }
 
-  if (fputs(s, f) != EOF)
+  if (fputs(s, f) == EOF)
     {
       *error = g_error_new (G_FILE_ERROR, g_file_error_from_errno (errno),
 			    _("Writing to %s"), filename);
@@ -542,7 +542,7 @@ export_list_to_file (GSList *things, const gchar *filename)
       goto error;
     }
 
-  if (fputs(s, f) != EOF)
+  if (fputs(s, f) == EOF)
     {
       g_printerr ("Writing to %s: %s", filename, strerror (errno));
       goto error;

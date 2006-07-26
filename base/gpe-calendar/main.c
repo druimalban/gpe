@@ -329,7 +329,7 @@ list_calendars (const gchar *filename)
           goto error;
         }
     
-      if (fputs(s, f) != EOF)
+      if (fputs(s, f) == EOF)
         {
           g_printerr ("Writing to %s: %s", filename, strerror (errno));
           goto error;
