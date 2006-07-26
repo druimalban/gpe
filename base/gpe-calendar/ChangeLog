@@ -1,8 +1,16 @@
 2006-07-26  Florian Boor  <florian.boor@kernelconcepts.de>
 
-    import-vcal.c/h (import_vcal): Add parameter, make import work 
+    * export-vcal.c (export_list_to_file): Fix memory allocation.
+    Replace fwrite by fputs.
+    (save_to_file): Replace fwrite by fputs.
+    * main.c (import_file_list): Call import_vcal() only once.
+    Save returned EventCalendar in ec.
+    
+2006-07-26  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * import-vcal.c/h (import_vcal): Add parameter, make import work 
     without GUI feedback.
-    main.c (import_file_list): New function.
+    * main.c (import_file_list): New function.
     Update (import_vcal) calls to separate GUI from command line use.
     (main), (handoff_callback): Some structure changes to support calendar 
     selection for import.

@@ -194,19 +194,25 @@ static void
 import_file_list (GSList *import_files, const gchar *selected_calendar)
 {
   GSList *i;
+  gint n = g_slist_length (import_files);
+  gchar *files[n+1];
+  
   EventCalendar *ec = NULL;
 
   if (selected_calendar) 
-      event_db_find_calendar_by_name (event_db, selected_calendar);
+      ec = event_db_find_calendar_by_name (event_db, selected_calendar);
   if (! ec)
-      ec = event_db_get_default_calendar(event_db, selected_calendar);
+      ec = event_db_get_default_calendar (event_db, selected_calendar);
   
+  files[n] = NULL;  
   for (i = import_files; i; i = i->next)
     {
-      const char *files[] = { i->data, NULL };
-      
-      import_vcal (ec, files, FALSE);
+      n--;
+      files[n] = i->data;
     }
+   
+  import_vcal (ec, files, FALSE);
+    
   g_object_unref (ec);
 }
 
@@ -300,7 +306,7 @@ list_calendars (const gchar *filename)
     return TRUE;
   
   n = g_slist_length (calendars);
-  gchar **list = g_malloc0 (n + 1);
+  gchar **list = g_malloc0 ((n + 1) * sizeof (gchar *));
   
   for (iter = calendars; iter; iter = iter->next)
     {
@@ -323,7 +329,7 @@ list_calendars (const gchar *filename)
           goto error;
         }
     
-      if (fwrite (s, strlen (s), 1, f) != 1)
+      if (fputs(s, f) != EOF)
         {
           g_printerr ("Writing to %s: %s", filename, strerror (errno));
           goto error;
@@ -341,7 +347,8 @@ list_calendars (const gchar *filename)
     }
   else
     g_print ("%s\n", s);
-    
+  g_free (s);
+  
   return TRUE;
 }
 
@@ -1521,7 +1528,7 @@ handoff_callback (Handoff *handoff, char *data)
           gchar *calendar;
           EventCalendar *ec;
 
-          calendar = strstr (value, "*");
+          calendar = strchr (value, '*');
           if (calendar)
             {
               calendar [0] = 0;
@@ -1553,7 +1560,7 @@ handoff_callback (Handoff *handoff, char *data)
         gchar *calendar, *file;
         
         file = value;
-        calendar = strstr (value, "*");
+        calendar = strchr (value, '*');
         if (calendar)
           {
             calendar [0] = 0;
@@ -1575,7 +1582,7 @@ handoff_callback (Handoff *handoff, char *data)
         gchar *calendar, *file;
 
         file = value;
-        calendar = strstr (value, "*");
+        calendar = strchr (value, '*');
         if (calendar)
           {
             calendar [0] = 0;

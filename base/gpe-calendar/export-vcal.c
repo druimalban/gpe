@@ -358,10 +358,10 @@ save_to_file (GObject *thing, const gchar *filename, GError **error)
       goto error;
     }
 
-  if (fwrite (s, strlen (s), 1, f) != 1)
+  if (fputs(s, f) != EOF)
     {
       *error = g_error_new (G_FILE_ERROR, g_file_error_from_errno (errno),
-			    _("Opening %s"), filename);
+			    _("Writing to %s"), filename);
       goto error;
     }
   
@@ -521,7 +521,7 @@ export_list_to_file (GSList *things, const gchar *filename)
   g_return_val_if_fail (things, TRUE); /* nothing to do */
   
   n = g_slist_length (things);
-  gchar **whole = g_malloc0 (n + 1);
+  gchar **whole = g_malloc0 ((n + 1) * sizeof (gchar *));
   
   for (iter = things; iter; iter = iter->next)
     {
@@ -542,7 +542,7 @@ export_list_to_file (GSList *things, const gchar *filename)
       goto error;
     }
 
-  if (fwrite (s, strlen (s), 1, f) != 1)
+  if (fputs(s, f) != EOF)
     {
       g_printerr ("Writing to %s: %s", filename, strerror (errno));
       goto error;
