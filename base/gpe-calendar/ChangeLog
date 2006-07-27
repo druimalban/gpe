@@ -1,5 +1,10 @@
 2006-07-27  Florian Boor  <florian.boor@kernelconcepts.de>
 
+    * event-ui.c (toplevel): Declare GtkWidget* istead of GtkSpinButton*.
+    * (build_recurrence_page): Don't cast number editors.
+
+2006-07-27  Florian Boor  <florian.boor@kernelconcepts.de>
+
     * Event editor rework for maemo:
     event-ui.c (toplevel): Add hildon widget includes.
     (click_ok): Use hildon editor widgets for maemo.

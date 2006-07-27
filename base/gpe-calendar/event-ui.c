@@ -75,7 +75,7 @@ struct edit_state
 
   GtkContainer *recur_box;
 
-  GtkSpinButton *increment_unit;
+  GtkWidget *increment_unit;
   GtkLabel *increment_unit_postfix;
 
   GtkContainer *bydayweekly;
@@ -87,7 +87,7 @@ struct edit_state
 
   GtkWidget *radiobuttonforever, *radiobuttonendafter,
             *radiobuttonendon, *datecomboendon;
-  GtkSpinButton *endafter;
+  GtkWidget *endafter;
 
   /* The event we are editing.  If NULL then creating a new event.  */
   Event *ev;
@@ -1018,7 +1018,7 @@ build_recurrence_page (struct edit_state *s)
     gtk_spin_button_set_value (s->increment_unit,
 			       event_get_recurrence_increment (s->ev));
 #endif
-  s->increment_unit = GTK_SPIN_BUTTON (spin);
+  s->increment_unit = spin;
   gtk_box_pack_start (hbox, spin, FALSE, FALSE, 0);
   gtk_widget_show (spin);
 
@@ -1192,7 +1192,7 @@ build_recurrence_page (struct edit_state *s)
     g_signal_connect (G_OBJECT (spin), "changed",
 		      G_CALLBACK (set_toggle), button);
 #endif
-    s->endafter = GTK_SPIN_BUTTON (spin);
+    s->endafter = spin;
     gtk_box_pack_start (GTK_BOX (hbox), spin, FALSE, FALSE, 0);
     gtk_widget_show (spin);
 
