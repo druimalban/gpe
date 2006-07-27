@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006 Philip Blundell <philb@gnu.org>
  * Copyright (C) 2006 Neal H. Walfield <neal@walfield.org>
+ * Copyright (C) 2005, 2006 Florian Boor <fb@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -31,6 +32,13 @@
 #include "globals.h"
 #include "event-ui.h"
 #include "calendar-edit-dialog.h"
+
+#ifdef IS_HILDON
+#include <hildon-widgets/hildon-number-editor.h>
+#include <hildon-widgets/hildon-time-editor.h>
+#include <hildon-widgets/hildon-date-editor.h>
+#include <hildon-widgets/hildon-note.h>
+#endif
 
 struct edit_state
 {
@@ -225,27 +233,50 @@ click_ok (GtkWidget *widget, struct edit_state *s)
   GtkTextIter start, end;
 
   memset (&tm_start, 0, sizeof (struct tm));
+#ifdef IS_HILDON
+  hildon_date_editor_get_date (HILDON_DATE_EDITOR (s->startdate), 
+                  (guint *) &tm_start.tm_year, (guint *) &tm_start.tm_mon, 
+                  (guint *) &tm_start.tm_mday);
+  tm_start.tm_year -= 1900;
+#else
   tm_start.tm_year = GTK_DATE_COMBO (s->startdate)->year - 1900;
   tm_start.tm_mon = GTK_DATE_COMBO (s->startdate)->month;
   tm_start.tm_mday = GTK_DATE_COMBO (s->startdate)->day;
+#endif
   tm_start.tm_isdst = -1;
 
   memset (&tm_end, 0, sizeof (struct tm));
+#ifdef IS_HILDON
+  hildon_date_editor_get_date (HILDON_DATE_EDITOR (s->enddate), 
+                  &tm_end.tm_year, &tm_end.tm_mon, &tm_end.tm_mday);
+  tm_end.tm_year -= 1900;
+#else
   tm_end.tm_year = GTK_DATE_COMBO (s->enddate)->year - 1900;
   tm_end.tm_mon = GTK_DATE_COMBO (s->enddate)->month;
   tm_end.tm_mday = GTK_DATE_COMBO (s->enddate)->day;
+#endif
   tm_end.tm_isdst = -1;
 
   if (! gtk_toggle_button_get_active (s->all_day))
     /* Appointment */
     {
+#ifdef IS_HILDON
+      guint sec;
+      hildon_time_editor_get_time (HILDON_TIME_EDITOR (s->starttime), 
+                                   (guint *) &tm_start.tm_hour,
+			                       (guint *) &tm_start.tm_min, &sec);
+
+      hildon_time_editor_get_time (HILDON_TIME_EDITOR (s->endtime), 
+                                   (guint *) &tm_end.tm_hour,
+			                       (guint *) &tm_end.tm_min, &sec);
+#else        
       gpe_time_sel_get_time (GPE_TIME_SEL (s->starttime),
 			     (guint *) &tm_start.tm_hour,
 			     (guint *) &tm_start.tm_min);
       gpe_time_sel_get_time (GPE_TIME_SEL (s->endtime),
 			     (guint *) &tm_end.tm_hour,
 			     (guint *) &tm_end.tm_min);
-
+#endif
       start_t = mktime (&tm_start);
       end_t = mktime (&tm_end) + 1;
     }
@@ -329,10 +360,15 @@ click_ok (GtkWidget *widget, struct edit_state *s)
     {
       if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->alarmbutton)))
 	{
-	  int mi = gtk_combo_box_get_active (s->alarm_units);
-	  event_set_alarm (ev, alarm_multipliers[mi]
-			   * gtk_spin_button_get_value_as_int
-			   (GTK_SPIN_BUTTON (s->alarmspin)));
+	  gint mi = gtk_combo_box_get_active (s->alarm_units);
+#ifdef IS_HILDON
+      gint as = 
+         hildon_number_editor_get_value (HILDON_NUMBER_EDITOR (s->alarmspin));
+#else
+	  gint as = 
+         gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (s->alarmspin));
+#endif        
+	  event_set_alarm (ev, alarm_multipliers[mi] * as);
 	}
       else
 	event_set_alarm (ev, 0);
@@ -360,12 +396,18 @@ click_ok (GtkWidget *widget, struct edit_state *s)
 	  break;
 	}
 
-      event_set_recurrence_type (ev, recur);
-      if (recur != RECUR_NONE)
-	{
-	  event_set_recurrence_increment
-	    (ev, gtk_spin_button_get_value_as_int (s->increment_unit));
-
+    event_set_recurrence_type (ev, recur);
+    if (recur != RECUR_NONE)
+      {
+#ifdef IS_HILDON
+        gint iu =
+            hildon_number_editor_get_value (
+                           HILDON_NUMBER_EDITOR (s->increment_unit));
+#else
+        gint iu = 
+             gtk_spin_button_get_value_as_int (s->increment_unit);
+#endif
+      event_set_recurrence_increment (ev, iu);
 	  if (gtk_toggle_button_get_active
 	      (GTK_TOGGLE_BUTTON (s->radiobuttonforever)))
 	    {
@@ -375,9 +417,14 @@ click_ok (GtkWidget *widget, struct edit_state *s)
 	  else if (gtk_toggle_button_get_active
 		   (GTK_TOGGLE_BUTTON (s->radiobuttonendafter)))
 	    {
-	      event_set_recurrence_count
-		(ev, gtk_spin_button_get_value_as_int (s->endafter));
-	      event_set_recurrence_end (ev, 0);
+#ifdef IS_HILDON
+          gint ea = hildon_number_editor_get_value 
+                               (HILDON_NUMBER_EDITOR (s->endafter));
+#else            
+	      gint ea = gtk_spin_button_get_value_as_int (s->endafter);
+#endif
+	      event_set_recurrence_count (ev, ea);
+          event_set_recurrence_end (ev, 0);
 	    }
 
 	  else if (gtk_toggle_button_get_active
@@ -385,15 +432,24 @@ click_ok (GtkWidget *widget, struct edit_state *s)
 	    {
 	      memset (&tm_rend, 0, sizeof (struct tm));
 
-	      tm_rend.tm_year
-		= GTK_DATE_COMBO (s->datecomboendon)->year - 1900;
+#ifdef IS_HILDON
+          hildon_date_editor_get_date (HILDON_DATE_EDITOR (s->datecomboendon),
+                     (guint *) &tm_rend.tm_year, 
+                     (guint *) &tm_rend.tm_mon, (guint *)&tm_rend.tm_mday);
+          tm_rend.tm_year -= 1900;
+          guint sec;
+          hildon_time_editor_get_time (HILDON_TIME_EDITOR (s->endtime), 
+                                   (guint *) &tm_rend.tm_hour,
+			                       (guint *) &tm_rend.tm_min, &sec);
+#else        
+	      tm_rend.tm_year = GTK_DATE_COMBO (s->datecomboendon)->year - 1900;
 	      tm_rend.tm_mon = GTK_DATE_COMBO (s->datecomboendon)->month;
 	      tm_rend.tm_mday = GTK_DATE_COMBO (s->datecomboendon)->day;
-	      tm_rend.tm_isdst = -1;
 	      gpe_time_sel_get_time (GPE_TIME_SEL (s->endtime),
 				     (guint *)&tm_rend.tm_hour,
 				     (guint *)&tm_rend.tm_min);
-
+#endif
+	      tm_rend.tm_isdst = -1;
 	      rend_t = mktime (&tm_rend);
 
 	      event_set_recurrence_count (ev, 0);
@@ -582,13 +638,70 @@ sink_end_time (GtkWidget *widget, struct edit_state *s)
   s->end_time_floating = FALSE;
 }
 
+#ifdef IS_HILDON
+static void
+note_time_change (GtkWidget *widget, struct edit_state *s)
+{
+  guint hour, minute, sec;
+    
+  hildon_time_editor_get_time (HILDON_TIME_EDITOR (widget), 
+                               &hour, &minute, &sec); 
+    
+  if (s->end_time_floating)
+    {
+      struct tm tm;
+      memset (&tm, 0, sizeof (struct tm));
+      hildon_date_editor_get_date (HILDON_DATE_EDITOR (s->startdate),
+                                   (guint *) &tm.tm_year, 
+                                   (guint *) &tm.tm_mon, (guint *) &tm.tm_mday);
+      tm.tm_year -= 1900;
+      tm.tm_hour = hour;
+      tm.tm_min = minute;
+      tm.tm_isdst = -1;
+      time_t t = mktime (&tm) + 60 * 60;
+      localtime_r (&t, &tm);
+
+      hildon_date_editor_set_date (HILDON_DATE_EDITOR (s->enddate),
+			       tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
+
+      hildon_time_editor_set_time (HILDON_TIME_EDITOR (s->endtime), 
+                                   tm.tm_hour, tm.tm_min, 0);
+    }
+}
+
+static void
+note_date_change (HildonDateEditor *c, GdkEventFocus *event, struct edit_state *s)
+{
+  if (s->recur_day_floating && s->checkbuttonwday[0])
+    {
+      GDate date;
+      guint day, month, year;
+        
+      hildon_date_editor_get_date (c, &year, &month, &day);
+      g_date_set_dmy (&date, day, month + 1, year);
+      int wday = g_date_weekday (&date);
+
+      int i;
+      for (i = 0; i < 7; i++)
+          gtk_toggle_button_set_active
+	         (GTK_TOGGLE_BUTTON (s->checkbuttonwday[i]), i == wday - 1);
+
+      /* Changing the buttons--even programmatically--will cause the
+	 toggle's changed signal to be emitted thereby causing the
+	 recur_day_floating to be set to false.  Reset it.  */
+      s->recur_day_floating = TRUE;
+    }
+}
+
+#else
+
 static void
 note_time_change (GtkWidget *widget, struct edit_state *s)
 {
   guint hour, minute;
 
   gpe_time_sel_get_time (GPE_TIME_SEL (widget), &hour, &minute);
-
+    
   if (s->end_time_floating)
     {
       struct tm tm;
@@ -629,6 +742,7 @@ note_date_change (GtkDateCombo *c, struct edit_state *s)
       s->recur_day_floating = TRUE;
     }
 }
+#endif
 
 static void
 new_calendar_clicked (GtkButton *button, gpointer user_data)
@@ -648,6 +762,14 @@ new_calendar_clicked (GtkButton *button, gpointer user_data)
   gtk_widget_destroy (w);
 }
 
+#ifdef IS_HILDON
+static void
+set_toggle_focus (GtkWidget *widget, GdkEventFocus *ev, GtkToggleButton *toggle)
+{
+  gtk_toggle_button_set_active (toggle, TRUE);
+}
+#endif
+
 static void
 set_toggle (GtkWidget *widget, GtkToggleButton *toggle)
 {
@@ -663,8 +785,8 @@ build_detail_page (struct edit_state *s)
   gtk_widget_show (GTK_WIDGET (vbox));
 
   GtkTable *table = GTK_TABLE (gtk_table_new (2, 3, FALSE));
-  gtk_table_set_col_spacings (table, 3);
-  gtk_table_set_row_spacings (table, 3);
+  gtk_table_set_col_spacings (table, gpe_get_boxspacing());
+  gtk_table_set_row_spacings (table, gpe_get_boxspacing());
   gtk_box_pack_start (vbox, GTK_WIDGET (table), FALSE, FALSE, 0);
   gtk_widget_show (GTK_WIDGET (table));
   
@@ -716,7 +838,7 @@ build_detail_page (struct edit_state *s)
   gtk_widget_show (label);
 
   GtkWidget *frame = gtk_frame_new (NULL);
-  gtk_box_pack_start (vbox, frame, TRUE, TRUE, 3);
+  gtk_box_pack_start (vbox, frame, TRUE, TRUE, gpe_get_boxspacing());
   gtk_widget_show (frame);
 
   GtkWidget *scrolled_window = gtk_scrolled_window_new (NULL, NULL);
@@ -752,7 +874,7 @@ build_alarm_page (struct edit_state *s)
   GtkBox *vbox = s->alarm_box;
   gtk_widget_show (GTK_WIDGET (vbox));
 
-  GtkBox *hbox = GTK_BOX (gtk_hbox_new (FALSE, 3));
+  GtkBox *hbox = GTK_BOX (gtk_hbox_new (FALSE, gpe_get_boxspacing()));
   gtk_box_pack_start (vbox, GTK_WIDGET (hbox), FALSE, FALSE, 0);
   gtk_widget_show (GTK_WIDGET (hbox));
 
@@ -760,13 +882,20 @@ build_alarm_page (struct edit_state *s)
   gtk_box_pack_start (hbox, s->alarmbutton, FALSE, FALSE, 0);
   gtk_widget_show (s->alarmbutton);
 
+#ifdef IS_HILDON
+  GtkWidget *spin = hildon_number_editor_new (1, 999);
+  g_signal_connect (G_OBJECT (spin), "focus-in-event",
+		    G_CALLBACK (set_toggle_focus), s->alarmbutton);
+#else    
   GtkWidget *spin = gtk_spin_button_new_with_range (1, 1000, 1);
-  s->alarmspin = spin;
   gtk_spin_button_set_numeric (GTK_SPIN_BUTTON (spin), TRUE);
   gtk_spin_button_set_digits (GTK_SPIN_BUTTON (spin), 0);
   g_signal_connect (G_OBJECT (spin), "value-changed",
 		    G_CALLBACK (set_toggle), s->alarmbutton);
-  gtk_box_pack_start (hbox, spin, FALSE, FALSE, 0);
+#endif
+    
+  s->alarmspin = spin;
+  gtk_box_pack_start (hbox, spin, FALSE, TRUE, 0);
   gtk_widget_show (spin);
 
   s->alarm_units = GTK_COMBO_BOX (gtk_combo_box_new_text ());
@@ -777,11 +906,15 @@ build_alarm_page (struct edit_state *s)
   gtk_combo_box_set_active (s->alarm_units, 1);
   g_signal_connect (G_OBJECT (s->alarm_units), "changed",
 		    G_CALLBACK (set_toggle), s->alarmbutton);
-  gtk_box_pack_start (hbox, GTK_WIDGET (s->alarm_units), FALSE, FALSE, 0);
+  gtk_box_pack_start (hbox, GTK_WIDGET (s->alarm_units), FALSE, TRUE, 0);
   gtk_widget_show (GTK_WIDGET (s->alarm_units));
+#ifdef IS_HILDON
+  gtk_widget_set_size_request (GTK_WIDGET(s->alarm_units), 110, -1);
+#endif
 
   GtkWidget *label = gtk_label_new (_("before event"));
-  gtk_box_pack_start (hbox, label, FALSE, FALSE, 0);
+  gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+  gtk_box_pack_start (hbox, label, TRUE, TRUE, 0);
   gtk_widget_show (label);
 
   if (s->ev && event_get_alarm (s->ev))
@@ -791,14 +924,18 @@ build_alarm_page (struct edit_state *s)
       int i;
       int unit = 0;
       for (i = 0; i < 4; i++)
-	if ((event_get_alarm (s->ev) % alarm_multipliers[i]) == 0)
-	  unit = i;
-	else
-	  break;
-	  
-      gtk_spin_button_set_value
-	(GTK_SPIN_BUTTON (s->alarmspin),
-	 event_get_alarm (s->ev) / alarm_multipliers[unit]);
+      if ((event_get_alarm (s->ev) % alarm_multipliers[i]) == 0)
+        unit = i;
+      else
+        break;
+
+#ifdef IS_HILDON
+      hildon_number_editor_set_value (HILDON_NUMBER_EDITOR (s->alarmspin),
+                event_get_alarm (s->ev) / alarm_multipliers[unit]);
+#else
+      gtk_spin_button_set_value	(GTK_SPIN_BUTTON (s->alarmspin),
+	            event_get_alarm (s->ev) / alarm_multipliers[unit]);
+#endif      
       gtk_combo_box_set_active (s->alarm_units, unit);
     }
   else
@@ -813,7 +950,7 @@ build_recurrence_page (struct edit_state *s)
   GtkBox *vbox = s->recurrence_box;
   gtk_widget_show (GTK_WIDGET (vbox));
 
-  GtkBox *hbox = GTK_BOX (gtk_hbox_new (FALSE, 3));
+  GtkBox *hbox = GTK_BOX (gtk_hbox_new (FALSE, gpe_get_boxspacing()));
   gtk_box_pack_start (vbox, GTK_WIDGET (hbox), FALSE, FALSE, 0);
   gtk_widget_show (GTK_WIDGET (hbox));
 
@@ -868,13 +1005,20 @@ build_recurrence_page (struct edit_state *s)
   gtk_box_pack_start (hbox, label, FALSE, FALSE, 0);
   gtk_widget_show (label);
 
+#ifdef IS_HILDON
+  GtkWidget *spin = hildon_number_editor_new (1, 1000);
+  if (s->ev)
+    hildon_number_editor_set_value (HILDON_NUMBER_EDITOR (s->increment_unit),
+			       event_get_recurrence_increment (s->ev));
+#else
   GtkWidget *spin = gtk_spin_button_new_with_range (1, 1000, 1);
-  s->increment_unit = GTK_SPIN_BUTTON (spin);
   gtk_spin_button_set_numeric (GTK_SPIN_BUTTON (spin), TRUE);
   gtk_spin_button_set_digits (GTK_SPIN_BUTTON (spin), 0);
   if (s->ev)
     gtk_spin_button_set_value (s->increment_unit,
 			       event_get_recurrence_increment (s->ev));
+#endif
+  s->increment_unit = GTK_SPIN_BUTTON (spin);
   gtk_box_pack_start (hbox, spin, FALSE, FALSE, 0);
   gtk_widget_show (spin);
 
@@ -943,8 +1087,11 @@ build_recurrence_page (struct edit_state *s)
       gtk_widget_show (GTK_WIDGET (hbox));
     }
   else
+#ifdef IS_HILDON      
+    note_date_change (HILDON_DATE_EDITOR (s->startdate), NULL, s);
+#else
     note_date_change (GTK_DATE_COMBO (s->startdate), s);
-
+#endif
   /* By day (monthly).  */
   s->bydaymonthly = GTK_BOX (gtk_vbox_new (FALSE, 0));
   gtk_box_pack_start (GTK_BOX (vbox), GTK_WIDGET (s->bydaymonthly),
@@ -1008,13 +1155,13 @@ build_recurrence_page (struct edit_state *s)
 
   /* End date.  */
 
-  GtkWidget *frame = gtk_frame_new (_("End Date"));
+  GtkWidget *frame = gtk_frame_new (NULL);
   gtk_box_pack_start (vbox, frame, FALSE, FALSE, 0);
   gtk_widget_show (frame);
 
   GtkWidget *button;
   {
-    GtkBox *vbox = GTK_BOX (gtk_vbox_new (FALSE, 3));
+    GtkBox *vbox = GTK_BOX (gtk_vbox_new (FALSE, gpe_get_boxspacing()));
     gtk_container_add (GTK_CONTAINER (frame), GTK_WIDGET (vbox));
     gtk_widget_show (GTK_WIDGET (vbox));
 
@@ -1026,7 +1173,7 @@ build_recurrence_page (struct edit_state *s)
     gtk_widget_show (button);
 
     /* end after radio button */
-    hbox = GTK_BOX (gtk_hbox_new (FALSE, 3));
+    hbox = GTK_BOX (gtk_hbox_new (FALSE, gpe_get_boxspacing()));
     gtk_box_pack_start (vbox, GTK_WIDGET (hbox), FALSE, FALSE, 0);
     gtk_widget_show (GTK_WIDGET (hbox));
 
@@ -1036,10 +1183,16 @@ build_recurrence_page (struct edit_state *s)
     gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, FALSE, 0);
     gtk_widget_show (button);
 
+#ifdef IS_HILDON
+    spin = hildon_number_editor_new (1, 1000);
+    g_signal_connect (G_OBJECT (spin), "focus-in-event",
+		      G_CALLBACK (set_toggle_focus), button);
+#else
     spin = gtk_spin_button_new_with_range (1, 1000, 1);
-    s->endafter = GTK_SPIN_BUTTON (spin);
     g_signal_connect (G_OBJECT (spin), "changed",
 		      G_CALLBACK (set_toggle), button);
+#endif
+    s->endafter = GTK_SPIN_BUTTON (spin);
     gtk_box_pack_start (GTK_BOX (hbox), spin, FALSE, FALSE, 0);
     gtk_widget_show (spin);
 
@@ -1048,7 +1201,7 @@ build_recurrence_page (struct edit_state *s)
     gtk_widget_show (label);
 
     /* End on.  */
-    hbox = GTK_BOX (gtk_hbox_new (FALSE, 3));
+    hbox = GTK_BOX (gtk_hbox_new (FALSE, gpe_get_boxspacing()));
     gtk_box_pack_start (vbox, GTK_WIDGET (hbox), FALSE, FALSE, 0);
     gtk_widget_show (GTK_WIDGET (hbox));
 
@@ -1058,9 +1211,13 @@ build_recurrence_page (struct edit_state *s)
     gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, FALSE, 0);
     gtk_widget_show (button);
 
+#ifdef IS_HILDON
+    s->datecomboendon = hildon_date_editor_new();
+#else
     s->datecomboendon = gtk_date_combo_new ();
     g_signal_connect (G_OBJECT (s->datecomboendon), "changed",
 		      G_CALLBACK (set_toggle), button);
+#endif
     gtk_box_pack_start (GTK_BOX (hbox), s->datecomboendon, FALSE, FALSE, 0);
     gtk_widget_show (s->datecomboendon);
   }
@@ -1079,15 +1236,27 @@ build_recurrence_page (struct edit_state *s)
 	gtk_toggle_button_set_active
 	  (GTK_TOGGLE_BUTTON (s->radiobuttonforever), TRUE);
 
+#ifdef IS_HILDON
       if (end)
-	{
-	  struct tm tm;
-	  localtime_r (&end, &tm);
-	  gtk_date_combo_set_date (GTK_DATE_COMBO (s->datecomboendon),
-				   tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
-	}
+        {
+          struct tm tm;
+          localtime_r (&end, &tm);
+          hildon_date_editor_set_date (HILDON_DATE_EDITOR (s->datecomboendon), 
+                                       tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
+        }
+      hildon_number_editor_set_value (HILDON_NUMBER_EDITOR (s->endafter),
+				 event_get_recurrence_count (s->ev));
+#else
+      if (end)
+        {
+          struct tm tm;
+          localtime_r (&end, &tm);
+          gtk_date_combo_set_date (GTK_DATE_COMBO (s->datecomboendon),
+                       tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
+        }
       gtk_spin_button_set_value (GTK_SPIN_BUTTON (s->endafter),
 				 event_get_recurrence_count (s->ev));
+#endif        
     }
 }
 
@@ -1136,7 +1305,7 @@ build_edit_event_window (Event *ev)
       gtk_window_set_modal (GTK_WINDOW(window), TRUE);
     }
 
-  GtkBox *window_box = GTK_BOX (gtk_vbox_new (FALSE, 3));
+  GtkBox *window_box = GTK_BOX (gtk_vbox_new (FALSE, boxspacing * 2));
   gtk_container_add (GTK_CONTAINER (window), GTK_WIDGET (window_box));
   gtk_widget_show (GTK_WIDGET (window_box));
 
@@ -1148,7 +1317,7 @@ build_edit_event_window (Event *ev)
   GtkWidget *label = gtk_label_new (_("Event"));
   gtk_widget_show (label);
 
-  GtkWidget *scrolled_window;
+  GtkWidget *scrolled_window = NULL;
   if (! large)
     {
       scrolled_window = gtk_scrolled_window_new (NULL, NULL);
@@ -1159,7 +1328,7 @@ build_edit_event_window (Event *ev)
       gtk_widget_show (scrolled_window);
     }
 
-  GtkBox *vbox = GTK_BOX (gtk_vbox_new (FALSE, 3));
+  GtkBox *vbox = GTK_BOX (gtk_vbox_new (FALSE, gpe_get_boxspacing()));
   GtkBox *main_box = vbox;
   gtk_container_set_border_width (GTK_CONTAINER (vbox), border);
   gtk_widget_show (GTK_WIDGET (vbox));
@@ -1207,22 +1376,29 @@ build_edit_event_window (Event *ev)
   /* We want the end of the labels to occur at the same horizontal
      point.  */
   GtkTable *table = GTK_TABLE (gtk_table_new (2, 2, FALSE));
+  gtk_table_set_col_spacings (table, gpe_get_boxspacing());
+  gtk_table_set_row_spacings (table, gpe_get_boxspacing());
   gtk_box_pack_start (vbox, GTK_WIDGET (table), FALSE, FALSE, 0);
   gtk_widget_show (GTK_WIDGET (table));
 
   /* Start time.  */
   label = gtk_label_new (_("Start:"));
-  gtk_table_attach (table, label, 0, 1, 0, 1, GTK_SHRINK, 0, 0, 0);
+  gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+  gtk_table_attach (table, label, 0, 1, 0, 1, GTK_FILL, 0, 0, 0);
   gtk_widget_show (GTK_WIDGET (label));
 
-  hbox = GTK_BOX (gtk_hbox_new (FALSE, 3));
+  hbox = GTK_BOX (gtk_hbox_new (FALSE, gpe_get_boxspacing()));
   gtk_table_attach (table, GTK_WIDGET (hbox), 1, 2, 0, 1,
-		    GTK_EXPAND|GTK_FILL, 0, 0, 0);
+		    GTK_FILL, 0, 0, 0);
   gtk_widget_show (GTK_WIDGET (hbox));
 
+#ifdef IS_HILDON
+  s->starttime = hildon_time_editor_new ();
+#else
   s->starttime = gpe_time_sel_new ();
   g_signal_connect (G_OBJECT (s->starttime), "changed",
 		    G_CALLBACK (note_time_change), s);
+#endif
   gtk_box_pack_start (hbox, s->starttime, FALSE, FALSE, 0);
   gtk_widget_show (GTK_WIDGET (s->starttime));
 
@@ -1230,11 +1406,17 @@ build_edit_event_window (Event *ev)
   gtk_box_pack_start (hbox, label, FALSE, FALSE, 0);
   gtk_widget_show (GTK_WIDGET (label));
 
+#ifdef IS_HILDON
+  s->startdate = hildon_date_editor_new ();
+  g_signal_connect (G_OBJECT (s->startdate), "focus-out-event",
+		    G_CALLBACK (note_date_change), s);
+#else
   s->startdate = gtk_date_combo_new ();
   gtk_date_combo_week_starts_monday (GTK_DATE_COMBO (s->startdate),
 				     ! week_starts_sunday);
   g_signal_connect (G_OBJECT (s->startdate), "changed",
 		    G_CALLBACK (note_date_change), s);
+#endif
   gtk_box_pack_start (hbox, s->startdate, FALSE, FALSE, 0);
   gtk_widget_show (GTK_WIDGET (s->startdate));
 
@@ -1244,24 +1426,35 @@ build_edit_event_window (Event *ev)
       struct tm tm;
       start = event_get_recurrence_start (s->ev);
       localtime_r (&start, &tm);
+#ifdef IS_HILDON
+      hildon_time_editor_set_time (HILDON_TIME_EDITOR (s->starttime),
+			     tm.tm_hour, tm.tm_min, 0);
+      hildon_date_editor_set_date (HILDON_DATE_EDITOR (s->startdate),
+			       tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
+#else
       gpe_time_sel_set_time (GPE_TIME_SEL (s->starttime),
 			     tm.tm_hour, tm.tm_min);
       gtk_date_combo_set_date (GTK_DATE_COMBO (s->startdate),
 			       tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
+#endif
     }
 
   /* End time.  */
   label = gtk_label_new (_("End:"));
-  gtk_table_attach (table, label, 0, 1, 1, 2,
-		    GTK_SHRINK, 0, 0, 0);
+  gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+  gtk_table_attach (table, label, 0, 1, 1, 2, GTK_FILL, 0, 0, 0);
   gtk_widget_show (GTK_WIDGET (label));
 
-  hbox = GTK_BOX (gtk_hbox_new (FALSE, 3));
+  hbox = GTK_BOX (gtk_hbox_new (FALSE, gpe_get_boxspacing()));
   gtk_table_attach (table, GTK_WIDGET (hbox), 1, 2, 1, 2,
-		    GTK_EXPAND|GTK_FILL, 0, 0, 0);
+		    GTK_EXPAND | GTK_FILL, 0, 0, 0);
   gtk_widget_show (GTK_WIDGET (hbox));
 
+#ifdef IS_HILDON
+  s->endtime = hildon_time_editor_new ();
+#else
   s->endtime = gpe_time_sel_new ();
+#endif
   gtk_box_pack_start (hbox, s->endtime, FALSE, FALSE, 0);
   gtk_widget_show (GTK_WIDGET (s->endtime));
 
@@ -1269,9 +1462,13 @@ build_edit_event_window (Event *ev)
   gtk_box_pack_start (hbox, label, FALSE, FALSE, 0);
   gtk_widget_show (GTK_WIDGET (label));
 
+#ifdef IS_HILDON
+  s->enddate = hildon_date_editor_new ();
+#else
   s->enddate = gtk_date_combo_new ();
   gtk_date_combo_week_starts_monday (GTK_DATE_COMBO (s->enddate),
 				     ! week_starts_sunday);
+#endif
   gtk_box_pack_start (hbox, s->enddate, FALSE, FALSE, 0);
   gtk_widget_show (GTK_WIDGET (s->enddate));
 
@@ -1280,28 +1477,34 @@ build_edit_event_window (Event *ev)
       struct tm tm;
       time_t end = start + event_get_duration (s->ev);
       if (event_get_untimed (s->ev))
-	end -= 24 * 60 * 60;
+        end -= 24 * 60 * 60;
       else
-	end --;
+        end --;
       localtime_r (&end, &tm);
-      gpe_time_sel_set_time (GPE_TIME_SEL (s->endtime), tm.tm_hour, tm.tm_min);
-      gtk_notebook_set_page (GTK_NOTEBOOK (s->tabs), 0);
-      gtk_date_combo_set_date (GTK_DATE_COMBO (s->enddate),
+#ifdef IS_HILDON
+      hildon_time_editor_set_time (HILDON_TIME_EDITOR (s->endtime), 
+                                   tm.tm_hour, tm.tm_min, 0);
+      hildon_date_editor_set_date (HILDON_DATE_EDITOR (s->enddate),
 			       tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
+#else
+      gpe_time_sel_set_time (GPE_TIME_SEL (s->endtime), tm.tm_hour, tm.tm_min);
+      g_signal_connect (G_OBJECT (s->endtime), "changed",
+		    G_CALLBACK (sink_end_time), s);
+      gtk_date_combo_set_date (GTK_DATE_COMBO (s->enddate),
+ 			tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
+      g_signal_connect (G_OBJECT (s->enddate), "changed",
+	        G_CALLBACK (sink_end_date), s);
+#endif
+      gtk_notebook_set_page (GTK_NOTEBOOK (s->tabs), 0);
     }
 
-  g_signal_connect (G_OBJECT (s->endtime), "changed",
-		    G_CALLBACK (sink_end_time), s);
-  g_signal_connect (G_OBJECT (s->enddate), "changed",
-		    G_CALLBACK (sink_end_date), s);
-
   /* The calendar combo box.  */
-  hbox = GTK_BOX (gtk_hbox_new (FALSE, 3));
+  hbox = GTK_BOX (gtk_hbox_new (FALSE, gpe_get_boxspacing()));
   gtk_box_pack_start (vbox, GTK_WIDGET (hbox), FALSE, FALSE, 0);
   gtk_widget_show (GTK_WIDGET (hbox));
 
   label = gtk_label_new (_("Calendar:"));
-  gtk_box_pack_start (hbox, label, FALSE, FALSE, 3);
+  gtk_box_pack_start (hbox, label, FALSE, FALSE, 0);
   gtk_widget_show (label);
 
   s->calendar = calendars_combo_box_new (event_db);
@@ -1337,14 +1540,14 @@ build_edit_event_window (Event *ev)
       gtk_widget_show (scrolled_window);
     }
 
-  s->detail_box = vbox = GTK_BOX (gtk_vbox_new (FALSE, 3));
+  s->detail_box = vbox = GTK_BOX (gtk_vbox_new (FALSE, gpe_get_boxspacing()));
   gtk_container_set_border_width (GTK_CONTAINER (vbox), border);
   gtk_widget_show (GTK_WIDGET (s->detail_box));
 
   if (! large)
     {
       gtk_scrolled_window_add_with_viewport
-	(GTK_SCROLLED_WINDOW (scrolled_window), GTK_WIDGET (vbox));
+             (GTK_SCROLLED_WINDOW (scrolled_window), GTK_WIDGET (vbox));
       gtk_viewport_set_shadow_type (GTK_VIEWPORT(GTK_WIDGET (vbox)->parent),
 				    GTK_SHADOW_NONE);
     }
@@ -1413,7 +1616,7 @@ build_edit_event_window (Event *ev)
 	  gtk_widget_show (scrolled_window);
 	}
 
-      s->recurrence_box = vbox = GTK_BOX (gtk_vbox_new (FALSE, 3));
+      s->recurrence_box = vbox = GTK_BOX (gtk_vbox_new (FALSE, gpe_get_boxspacing()));
       gtk_container_set_border_width (GTK_CONTAINER (vbox), border);
       gtk_widget_show (GTK_WIDGET (vbox));
 
@@ -1438,7 +1641,12 @@ build_edit_event_window (Event *ev)
 
 
   /* Button box.  */
-  GtkBox *button_box = hbox = GTK_BOX (gtk_hbox_new (FALSE, 3));
+#ifdef IS_HILDON
+  GtkBox *button_box = hbox = GTK_BOX (gtk_hbutton_box_new ());
+  gtk_box_set_spacing (GTK_BOX (button_box), gpe_get_boxspacing());
+#else
+  GtkBox *button_box = hbox = GTK_BOX (gtk_hbox_new (FALSE, 0);
+#endif
   gtk_box_pack_start (GTK_BOX (window_box), GTK_WIDGET (hbox),
 		      FALSE, FALSE, 0);
   gtk_widget_show (GTK_WIDGET (hbox));
@@ -1451,7 +1659,7 @@ build_edit_event_window (Event *ev)
 #endif
   g_signal_connect_swapped (G_OBJECT (button), "clicked",
                             G_CALLBACK (gtk_widget_destroy), s->window);
-  gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, FALSE, boxspacing);
+  gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, TRUE, boxspacing);
   gtk_widget_show (button);
 
 #ifdef IS_HILDON
@@ -1461,7 +1669,7 @@ build_edit_event_window (Event *ev)
 #endif
   g_signal_connect (G_OBJECT (button), "clicked",
                     G_CALLBACK (click_ok), s);
-  gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, FALSE, boxspacing);
+  gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, TRUE, boxspacing);
   gtk_widget_show (button);
 
 
@@ -1486,7 +1694,8 @@ build_edit_event_window (Event *ev)
   g_signal_connect (G_OBJECT (window), "key_press_event", 
 		            G_CALLBACK (event_ui_key_press_event), s);
   gtk_widget_add_events (GTK_WIDGET (window), 
-                         GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK);
+                         GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK
+                         | GDK_FOCUS_CHANGE_MASK);
   
   GTK_WIDGET_SET_FLAGS (s->summary, GTK_CAN_DEFAULT);
   gtk_widget_grab_default (s->summary);
@@ -1508,16 +1717,37 @@ new_event (time_t t)
 
   gtk_window_set_title (s->window, _("Calendar: New event"));
 
+  /* 15min steps */
+  if ((t % 900) < 450)
+      t -= (t % 900);
+  else
+      t += (900 - (t % 900));
+  
   struct tm tm;
   localtime_r (&t, &tm);
+#ifdef IS_HILDON
+  hildon_time_editor_set_time (HILDON_TIME_EDITOR (s->starttime), 
+                               tm.tm_hour, tm.tm_min, 0);
+  hildon_date_editor_set_date (HILDON_DATE_EDITOR (s->startdate),
+			   tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
+#else
   gpe_time_sel_set_time (GPE_TIME_SEL (s->starttime), tm.tm_hour, tm.tm_min);
   gtk_date_combo_set_date (GTK_DATE_COMBO (s->startdate),
 			   tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
+#endif
+  
   t += 60 * 60;
   localtime_r (&t, &tm);
+#ifdef IS_HILDON
+  hildon_time_editor_set_time (HILDON_TIME_EDITOR (s->endtime), 
+                               tm.tm_hour, tm.tm_min, 0);
+  hildon_date_editor_set_date (HILDON_DATE_EDITOR (s->enddate),
+			   tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
+#else
   gpe_time_sel_set_time (GPE_TIME_SEL (s->endtime), tm.tm_hour, tm.tm_min);
   gtk_date_combo_set_date (GTK_DATE_COMBO (s->enddate),
 			   tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
+#endif
 
   s->recur_day_floating = TRUE;
   s->end_date_floating = TRUE;

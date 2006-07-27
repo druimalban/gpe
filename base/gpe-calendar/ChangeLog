@@ -1,3 +1,20 @@
+2006-07-27  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * Event editor rework for maemo:
+    event-ui.c (toplevel): Add hildon widget includes.
+    (click_ok): Use hildon editor widgets for maemo.
+    (note_time_change): Two versions maemo/gtk.
+    (set_toggle_focus): Likewise.
+    (build_detail_page): Use GPE boxspacing instead of constants.
+    (build_alarm_page): Likewise.
+    (build_alarm_page): Use hildon editor widgets for maemo.
+    (build_recurrence_page): Use GPE boxspacing and hildon widgets. Drop frame 
+    label, looks better and is not that important.
+    (build_edit_event_window): GPE boxspacings and initialize variable to
+    get rid of compiler warning. Use hildon widgets.  Some minor packaging
+    and alignment changes.
+    (new_event): Round minutes to full 15. use hildon widgets.
+    
 2006-07-26  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * main.c (main): Menu layout improvements (Maemo).

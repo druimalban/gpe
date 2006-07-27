@@ -1298,6 +1298,7 @@ static gboolean
 button_release_event (GtkWidget *widget, GdkEventButton *event,
 		      DayView *day_view)
 {
+    
   if (panned_window_is_panning (PANNED_WINDOW (day_view->appointment_window)))
     return FALSE;
 
@@ -1313,10 +1314,10 @@ button_release_event (GtkWidget *widget, GdkEventButton *event,
 
 	  return TRUE;
 	}
-
-      GtkWidget *w = new_event (day_view->visible_start
-				+ day_view->visible_duration * event->y
-				/ day_view->height);
+      
+      GtkWidget *w = new_event (day_view->visible_start 
+                                + day_view->visible_duration 
+                                * event->y / day_view->height);
       gtk_widget_show (w);
 
       return TRUE;
