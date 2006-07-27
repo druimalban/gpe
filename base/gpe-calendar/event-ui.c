@@ -1645,7 +1645,7 @@ build_edit_event_window (Event *ev)
   GtkBox *button_box = hbox = GTK_BOX (gtk_hbutton_box_new ());
   gtk_box_set_spacing (GTK_BOX (button_box), gpe_get_boxspacing());
 #else
-  GtkBox *button_box = hbox = GTK_BOX (gtk_hbox_new (FALSE, 0);
+  GtkBox *button_box = hbox = GTK_BOX (gtk_hbox_new (FALSE, 0));
 #endif
   gtk_box_pack_start (GTK_BOX (window_box), GTK_WIDGET (hbox),
 		      FALSE, FALSE, 0);

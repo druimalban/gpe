@@ -1,5 +1,6 @@
 2006-07-27  Florian Boor  <florian.boor@kernelconcepts.de>
 
+    * (build_edit_event_window): Fix typo.
     * event-ui.c (toplevel): Declare GtkWidget* istead of GtkSpinButton*.
     * (build_recurrence_page): Don't cast number editors.
 
