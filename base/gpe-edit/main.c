@@ -27,8 +27,6 @@
 #include <gpe/question.h>
 #include <gpe/spacing.h>
 
-#include <libdisplaymigration/displaymigration.h>
-
 #define WINDOW_NAME "Editor"
 #define _(_x) gettext (_x)
 
@@ -268,6 +266,25 @@ static void
 select_open_file (void)
 {
   file_selector = gtk_file_selection_new (_("Open File ..."));
+  
+  if(filename != NULL)
+  {
+    gchar *dir, *dir_with_sep;
+    gint path_len;
+
+    dir = g_path_get_dirname(filename);
+    path_len = strlen(dir);
+    dir_with_sep = (gchar *) g_malloc(path_len+2);
+    
+    strncpy(dir_with_sep, dir, path_len);
+    dir_with_sep[path_len] = G_DIR_SEPARATOR;
+    dir_with_sep[path_len+1] = '\0';
+    
+    gtk_file_selection_set_filename(GTK_FILE_SELECTION(file_selector), dir_with_sep);
+    
+    g_free(dir_with_sep);
+    g_free(dir);    
+  }
 
   gtk_signal_connect_object (GTK_OBJECT (GTK_FILE_SELECTION(file_selector)->ok_button),
 			     "clicked", GTK_SIGNAL_FUNC (open_file_from_filesel), NULL);
@@ -631,10 +648,6 @@ main (int argc, char *argv[])
   gtk_widget_set_usize (GTK_WIDGET (main_window), window_x, window_y);
   g_signal_connect (GTK_OBJECT (main_window), "delete-event",
 		      GTK_SIGNAL_FUNC (ask_save_before_exit), NULL);
-
-  displaymigration_init ();
-
-  displaymigration_mark_window (main_window);
 
   gtk_widget_realize (main_window);
 

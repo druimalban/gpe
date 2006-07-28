@@ -1,6 +1,14 @@
+2006-07-28  Florian Boor <florian.boor@kernelconcepts.de>
+
+	* Release Version 0.31
+	* main.c: Apply patch to remeber last path by 
+          Martin Thierer <thierer@web.de> 
+	* Makefile, main.c: Remove use of libdisplaymigration.
+	* Update translations.
+
 2005-06-27  Florian Boor <florian.boor@kernelconcepts.de>
 
-	* Releas Version 0.30
+	* Release Version 0.30
 
 2005-06-09  Philippe De Swert <philippedeswert@scarlet.be>
 

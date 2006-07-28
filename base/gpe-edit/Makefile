@@ -2,7 +2,7 @@ PREFIX = /usr/local
 PACKAGE = gpe-edit
 DEBUG = no
 CVSBUILD = yes
-VERSION = 0.30
+VERSION = 0.31
 
 MEMBERS = main
 #FIXME: ('de' is not on TP?)
@@ -13,12 +13,6 @@ HELPFILE = doc/gpe-edit.html
 PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS)
 PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS)
 PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS)
-
-ifeq ($(CVSBUILD),yes)
-PACKAGE_CFLAGS += -I../libdisplaymigration
-PACKAGE_LDFLAGS += -L../libdisplaymigration
-endif
-PACKAGE_LDFLAGS += -ldisplaymigration
 
 DEPS = $(patsubst %,%.d,$(MEMBERS))
 OBJS = $(patsubst %,%.o,$(MEMBERS))
