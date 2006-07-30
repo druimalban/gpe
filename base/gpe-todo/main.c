@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2002, 2003, 2004 Philip Blundell <philb@gnu.org>
- * Maemo support and UI update 2005 Florian Boor <florian@kernelconcepts.de>
+ * Copyright (C) 2005, 2006 Florian Boor <florian@kernelconcepts.de>
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -16,8 +16,8 @@
 
 /* Hildon includes */
 #ifdef IS_HILDON
-#include <hildon-widgets/hildon-app.h>
-#include <hildon-widgets/hildon-appview.h>
+#include <hildon-widgets/hildon-program.h>
+#include <hildon-widgets/hildon-window.h>
 #include <libosso.h>
 
 #define OSSO_SERVICE_NAME "gpe_todo"
@@ -55,14 +55,14 @@ extern GtkWidget *top_level (GtkWidget *window);
 
 #ifdef IS_HILDON
 
-GtkWidget *main_appview;  
-
-static void osso_top_callback (const gchar* arguments, gpointer ptr)
+static void 
+osso_top_callback (const gchar* arguments, gpointer ptr)
 {
     GtkWindow *window = ptr;
 
     gtk_window_present (GTK_WINDOW (window));
 }
+
 #endif
 
 static void
@@ -70,7 +70,7 @@ open_window (void)
 {
   GtkWidget *top;
 #ifdef IS_HILDON
-  GtkWidget *app;
+  HildonProgram *app;
   osso_context_t *context;
 #endif
     
@@ -78,17 +78,12 @@ open_window (void)
   mode_landscape = (gdk_screen_width() > gdk_screen_height());
     
 #ifdef IS_HILDON
-  app = hildon_app_new();
-  hildon_app_set_two_part_title(HILDON_APP(app), TRUE);
-  hildon_app_set_title (HILDON_APP(app), _("ToDo"));
-  main_appview = hildon_appview_new (_("List"));
-  hildon_app_set_appview (HILDON_APP(app), HILDON_APPVIEW(main_appview));
-  window = app;
-  gtk_widget_show_all (app);
-  gtk_widget_show_all (main_appview);
-	
-  top = top_level (window);
-  gtk_container_add (GTK_CONTAINER (main_appview), top);
+  app = HILDON_PROGRAM ( hildon_program_get_instance () );
+  g_set_application_name ( _("ToDo") );
+  window = hildon_window_new();
+  gtk_window_set_title (GTK_WINDOW (window), _("List"));
+  hildon_program_add_window (app, HILDON_WINDOW (window));
+  gtk_widget_show_all (window);
 	
   /* tell osso we are here or it will kill us */
   context = osso_initialize (OSSO_SERVICE_NAME, VERSION, TRUE, NULL);
@@ -96,12 +91,13 @@ open_window (void)
   osso_application_set_top_cb(context, osso_top_callback, ( gpointer )app);
 #else
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-  gtk_window_set_default_size (GTK_WINDOW (window), 240, 320);
+  gtk_window_set_default_size (GTK_WINDOW (window), 320, 400);
   gtk_window_set_title (GTK_WINDOW (window), _("To-do list"));
   gpe_set_window_icon (window, "icon");
+#endif
+
   top = top_level (window);
   gtk_container_add (GTK_CONTAINER (window), top);
-#endif
 
   g_signal_connect (G_OBJECT (window), "delete-event",
 		    G_CALLBACK (gtk_main_quit), NULL);

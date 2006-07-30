@@ -1,3 +1,9 @@
+2006-07-29  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * main.c, list-ui.c: Update to HildonProgram / HildonWindow. Fullscreen
+      operation support.
+    * configure.ac: Version to 0.56
+
 2006-06-10  Florian Boor  <florian.boor@kernelconcepts.de>
 
 	* main.c, hildon/*: Make Maemo 2.0 compatible, get rid of old crap.

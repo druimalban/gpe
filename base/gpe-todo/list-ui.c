@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2002, 2003, 2004 Philip Blundell <philb@gnu.org>
- * maemo suppoar and UI updtes 2005 Florian Boor <florian@kernelconcepts.de>
+ * Copyright (C) 2005, 2006 Florian Boor <florian@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -15,6 +15,7 @@
 #include <stdio.h>
 
 #include <gtk/gtk.h>
+#include <gdk/gdkkeysyms.h>
 
 #include <gpe/pixmaps.h>
 #include <gpe/errorbox.h>
@@ -25,7 +26,7 @@
 /* Hildon includes */
 #ifdef IS_HILDON
 
-#include <hildon-widgets/hildon-app.h>
+#include <hildon-widgets/hildon-program.h>
 #include <gpe/pim-categories-ui.h>
 
 #define ICON_PATH "/usr/share/icons/hicolor/26x26/hildon"
@@ -48,6 +49,7 @@ GdkPixbuf *tick_icon, *no_tick_icon, *bar_icon, *dot_icon, *high_icon;
 static struct todo_item *current_menu_item;
 extern GtkWidget *window;
 static GtkWidget *toolbar;
+static GtkWidget *fullscreen_control;
 
 
 static gchar *
@@ -520,15 +522,21 @@ edit_categories (GtkWidget *w)
                                GTK_WINDOW(gtk_widget_get_toplevel(w)));
   gtk_window_set_modal(GTK_WINDOW(dialog), TRUE);
 }
-#endif
 
+static void
+toggle_fullscreen (GtkCheckMenuItem *menuitem, gpointer user_data)
+{
+  if (gtk_check_menu_item_get_active (menuitem))
+    gtk_window_fullscreen (GTK_WINDOW (window));
+  else
+    gtk_window_unfullscreen (GTK_WINDOW (window));
+}
 
-#ifdef IS_HILDON
 /* create hildon application main menu */
 static void
-create_app_menu(HildonAppView *appview)
+create_app_menu(HildonWindow *window)
 {
-  GtkMenu *menu_main = hildon_appview_get_menu(appview);    
+  GtkMenu *menu_main = GTK_MENU (gtk_menu_new());
   GtkWidget *menu_items = gtk_menu_new();
   GtkWidget *menu_categories = gtk_menu_new();
   GtkWidget *menu_view = gtk_menu_new();
@@ -543,12 +551,14 @@ create_app_menu(HildonAppView *appview)
   GtkWidget *item_add = gtk_menu_item_new_with_label(_("Add new"));
   GtkWidget *item_catedit = gtk_menu_item_new_with_label(_("Edit categories"));
   GtkWidget *item_toolbar = gtk_check_menu_item_new_with_label(_("Show toolbar"));
+  GtkWidget *item_fullscreen = gtk_check_menu_item_new_with_label(_("Fullscreen"));
   GtkWidget *item_delete = gtk_menu_item_new_with_label(_("Delete completed items"));
   GtkWidget *item_move = gtk_menu_item_new_with_label(_("Move completed items to the end"));
 
   gtk_menu_append (GTK_MENU(menu_items), item_open);
   gtk_menu_append (GTK_MENU(menu_items), item_add);
   gtk_menu_append (GTK_MENU(menu_categories), item_catedit);
+  gtk_menu_append (GTK_MENU(menu_view), item_fullscreen);
   gtk_menu_append (GTK_MENU(menu_view), item_toolbar);
   gtk_menu_append (GTK_MENU(menu_tools), item_delete);
   gtk_menu_append (GTK_MENU(menu_tools), item_move);
@@ -563,19 +573,36 @@ create_app_menu(HildonAppView *appview)
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(item_tools), menu_tools);
 
   gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item_toolbar), TRUE);
+  gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item_fullscreen), FALSE);
 
   g_signal_connect(G_OBJECT(item_add), "activate", G_CALLBACK(new_todo_item), NULL);
   g_signal_connect(G_OBJECT(item_open), "activate", G_CALLBACK(item_do_edit), NULL);
   g_signal_connect(G_OBJECT(item_catedit), "activate", G_CALLBACK(edit_categories), NULL);
+  g_signal_connect(G_OBJECT(item_fullscreen), "activate", G_CALLBACK(toggle_fullscreen), NULL);
   g_signal_connect(G_OBJECT(item_toolbar), "activate", G_CALLBACK(toggle_toolbar), NULL);
   g_signal_connect(G_OBJECT(item_delete), "activate", G_CALLBACK(delete_completed_items), NULL);
   g_signal_connect(G_OBJECT(item_move), "activate", G_CALLBACK(refresh_items), NULL);
   g_signal_connect(G_OBJECT(item_close), "activate", G_CALLBACK(gtk_main_quit), NULL);
 
-  gtk_widget_show_all (GTK_WIDGET(menu_main));  
+  gtk_widget_show_all (GTK_WIDGET(menu_main));
+  fullscreen_control = item_fullscreen;
+  hildon_window_set_menu (HILDON_WINDOW (window), menu_main);
 }
 #endif
 
+static gboolean
+window_key_press_event (GtkWidget *window, GdkEventKey *k, GtkWidget *data)
+{
+    switch (k->keyval)
+      {
+#ifdef IS_HILDON
+      case GDK_F6:
+        gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (fullscreen_control), 
+             !gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (fullscreen_control)));
+        break;
+#endif
+      }
+}
 
 static GtkItemFactoryEntry menu_items[] =
 {
@@ -639,7 +666,7 @@ top_level (GtkWidget *window)
   gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
   
 #ifdef IS_HILDON
-  create_app_menu (HILDON_APPVIEW(main_appview));
+  create_app_menu (HILDON_WINDOW (window));
   
   w = gtk_image_new_from_file(ICON_PATH "/qgn_toolb_gene_refresh.png");
   item = gtk_tool_button_new(w, _("Refresh"));
@@ -656,7 +683,7 @@ top_level (GtkWidget *window)
       gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
     }
     
-  hildon_appview_set_toolbar(HILDON_APPVIEW(main_appview), GTK_TOOLBAR(toolbar));
+  hildon_window_add_toolbar(HILDON_WINDOW(window), GTK_TOOLBAR(toolbar));
 #else
   /* Insert refresh button if we have enough space */
   if (mode_landscape || large_screen)
@@ -755,12 +782,14 @@ top_level (GtkWidget *window)
         renderer = gtk_cell_renderer_text_new ();
         col = gtk_tree_view_column_new_with_attributes (_("Due Date"), renderer,
                                                         "text", COL_DUE,
-                                                        "strikethrough", COL_STRIKETHROUGH, NULL);
+                                                        "strikethrough", 
+                                                        COL_STRIKETHROUGH, NULL);
         gtk_tree_view_insert_column (GTK_TREE_VIEW (list_view), col, -1);
         renderer = gtk_cell_renderer_text_new ();
         col = gtk_tree_view_column_new_with_attributes (_("Category"), renderer,
                                                         "text", COL_CATEGORY,
-                                                        "strikethrough", COL_STRIKETHROUGH, NULL);
+                                                        "strikethrough", 
+                                                        COL_STRIKETHROUGH, NULL);
         gtk_tree_view_insert_column (GTK_TREE_VIEW (list_view), col, -1);        
       }
     gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (list_view), TRUE);
@@ -771,7 +800,9 @@ top_level (GtkWidget *window)
                     G_CALLBACK (button_press_event), NULL);
   g_signal_connect (G_OBJECT (list_view), "button_release_event", 
                     G_CALLBACK (button_release_event), NULL);
-  
+  g_signal_connect (G_OBJECT (window), "key-press-event", 
+                    G_CALLBACK (window_key_press_event), NULL);
+
   gtk_container_add (GTK_CONTAINER (scrolled), list_view);
 
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled),
