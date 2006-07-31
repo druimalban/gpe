@@ -1,3 +1,9 @@
+2006-07-31  Florian Boor <florian@kernelconcepts.de>
+
+    * Makefile.am: Add new components.
+    * colorrenderer.c: New file.
+    * gpe/colorrenderer.h: New file.
+
 2006-07-18  Florian Boor <florian@kernelconcepts.de>
 
     * Makefile.am: Add library to infoprint dependency to make parallel builds 

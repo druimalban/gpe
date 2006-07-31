@@ -27,7 +27,8 @@ libgpewidget_la_SOURCES = gtkdatecombo.c errorbox.c init.c pixmaps.c smallbox.c 
 						  gpeiconlistitem.c gpeclockface.c \
 						  gpewindowlist.c gpehelp.c gpeiconlistview.c \
 						  gpewindowbits.c infoprint.c gpedialog.c \
-                          color-slider.c colordialog.c link-warning.h
+                          color-slider.c colordialog.c link-warning.h \
+                          gpeiconview.c colorrenderer.c
                           
 libgpewidget_la_LDFLAGS = @GPEWIDGET_LIBS@ -version-info 1:0:0
 
@@ -38,7 +39,8 @@ gpeinclude_HEADERS = gpe/init.h gpe/errorbox.h gpe/smallbox.h gpe/pixmaps.h gpe/
 					 gpe/gtksimplemenu.h gpe/gpewindowlist.h gpe/tray.h gpe/popup.h \
 					 gpe/gpeiconlistview.h gpe/gpeclockface.h gpe/gpeiconlistitem.h \
 					 gpe/infoprint.h gpe/gpetimesel.h gpe/gpehelp.h gpe/popup_menu.h \
-					 gpe/gpedialog.h gpe/color-slider.h gpe/colordialog.h
+					 gpe/gpedialog.h gpe/color-slider.h gpe/colordialog.h \
+					 gpe/gpeiconview.h gpe/colorrenderer.h
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libgpewidget.pc
