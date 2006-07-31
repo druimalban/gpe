@@ -1,5 +1,7 @@
 2006-07-31  Florian Boor  <florian.boor@kernelconcepts.de>
 
+    * Release version 0.56
+    * Update dependencies
     * autogen.sh: Create empty po/Changelog.
     * configure.ac: Add libgpepimc to dependencies.
     * list-ui.c, todo.h: Add category colour row.
