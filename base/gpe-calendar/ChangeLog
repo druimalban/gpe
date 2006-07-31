@@ -1,3 +1,8 @@
+2006-07-31  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * event-ui.c (click_ok), (datesel_changed): Adjust month to avoid beeing 
+      one month ahead.
+
 2006-07-27  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * (build_edit_event_window): Fix typo.

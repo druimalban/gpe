@@ -238,6 +238,7 @@ click_ok (GtkWidget *widget, struct edit_state *s)
                   (guint *) &tm_start.tm_year, (guint *) &tm_start.tm_mon, 
                   (guint *) &tm_start.tm_mday);
   tm_start.tm_year -= 1900;
+  tm_start.tm_mon -= 1;
 #else
   tm_start.tm_year = GTK_DATE_COMBO (s->startdate)->year - 1900;
   tm_start.tm_mon = GTK_DATE_COMBO (s->startdate)->month;
@@ -250,6 +251,7 @@ click_ok (GtkWidget *widget, struct edit_state *s)
   hildon_date_editor_get_date (HILDON_DATE_EDITOR (s->enddate), 
                   &tm_end.tm_year, &tm_end.tm_mon, &tm_end.tm_mday);
   tm_end.tm_year -= 1900;
+  tm_end.tm_mon -= 1;
 #else
   tm_end.tm_year = GTK_DATE_COMBO (s->enddate)->year - 1900;
   tm_end.tm_mon = GTK_DATE_COMBO (s->enddate)->month;
@@ -437,6 +439,7 @@ click_ok (GtkWidget *widget, struct edit_state *s)
                      (guint *) &tm_rend.tm_year, 
                      (guint *) &tm_rend.tm_mon, (guint *)&tm_rend.tm_mday);
           tm_rend.tm_year -= 1900;
+          tm_rend.tm_mon -= 1;
           guint sec;
           hildon_time_editor_get_time (HILDON_TIME_EDITOR (s->endtime), 
                                    (guint *) &tm_rend.tm_hour,
@@ -655,6 +658,7 @@ note_time_change (GtkWidget *widget, struct edit_state *s)
                                    (guint *) &tm.tm_year, 
                                    (guint *) &tm.tm_mon, (guint *) &tm.tm_mday);
       tm.tm_year -= 1900;
+      tm.tm_mon -= 1;
       tm.tm_hour = hour;
       tm.tm_min = minute;
       tm.tm_isdst = -1;
@@ -678,7 +682,7 @@ note_date_change (HildonDateEditor *c, GdkEventFocus *event, struct edit_state *
       guint day, month, year;
         
       hildon_date_editor_get_date (c, &year, &month, &day);
-      g_date_set_dmy (&date, day, month + 1, year);
+      g_date_set_dmy (&date, day, month, year);
       int wday = g_date_weekday (&date);
 
       int i;
