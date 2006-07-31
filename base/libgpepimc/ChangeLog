@@ -1,5 +1,6 @@
 2006-07-31  Florian Boor  <florian@kernelconcepts.de>
 
+    * Release version 0.8
     * db.c (gpe_pim_category_new), (load_one): Fix memory allocation bug.
       Use more glib types.
     * autogen.sh: Create po/ChangeLog autotools insists to have.
