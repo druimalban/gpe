@@ -666,7 +666,7 @@ note_time_change (GtkWidget *widget, struct edit_state *s)
       localtime_r (&t, &tm);
 
       hildon_date_editor_set_date (HILDON_DATE_EDITOR (s->enddate),
-			       tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
+			       tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday);
 
       hildon_time_editor_set_time (HILDON_TIME_EDITOR (s->endtime), 
                                    tm.tm_hour, tm.tm_min, 0);
@@ -1246,7 +1246,7 @@ build_recurrence_page (struct edit_state *s)
           struct tm tm;
           localtime_r (&end, &tm);
           hildon_date_editor_set_date (HILDON_DATE_EDITOR (s->datecomboendon), 
-                                       tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
+                                       tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday);
         }
       hildon_number_editor_set_value (HILDON_NUMBER_EDITOR (s->endafter),
 				 event_get_recurrence_count (s->ev));
@@ -1434,7 +1434,7 @@ build_edit_event_window (Event *ev)
       hildon_time_editor_set_time (HILDON_TIME_EDITOR (s->starttime),
 			     tm.tm_hour, tm.tm_min, 0);
       hildon_date_editor_set_date (HILDON_DATE_EDITOR (s->startdate),
-			       tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
+			       tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday);
 #else
       gpe_time_sel_set_time (GPE_TIME_SEL (s->starttime),
 			     tm.tm_hour, tm.tm_min);
@@ -1489,7 +1489,7 @@ build_edit_event_window (Event *ev)
       hildon_time_editor_set_time (HILDON_TIME_EDITOR (s->endtime), 
                                    tm.tm_hour, tm.tm_min, 0);
       hildon_date_editor_set_date (HILDON_DATE_EDITOR (s->enddate),
-			       tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
+			       tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday);
 #else
       gpe_time_sel_set_time (GPE_TIME_SEL (s->endtime), tm.tm_hour, tm.tm_min);
       g_signal_connect (G_OBJECT (s->endtime), "changed",
@@ -1733,7 +1733,7 @@ new_event (time_t t)
   hildon_time_editor_set_time (HILDON_TIME_EDITOR (s->starttime), 
                                tm.tm_hour, tm.tm_min, 0);
   hildon_date_editor_set_date (HILDON_DATE_EDITOR (s->startdate),
-			   tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
+			   tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday);
 #else
   gpe_time_sel_set_time (GPE_TIME_SEL (s->starttime), tm.tm_hour, tm.tm_min);
   gtk_date_combo_set_date (GTK_DATE_COMBO (s->startdate),
@@ -1746,7 +1746,7 @@ new_event (time_t t)
   hildon_time_editor_set_time (HILDON_TIME_EDITOR (s->endtime), 
                                tm.tm_hour, tm.tm_min, 0);
   hildon_date_editor_set_date (HILDON_DATE_EDITOR (s->enddate),
-			   tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
+			   tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday);
 #else
   gpe_time_sel_set_time (GPE_TIME_SEL (s->endtime), tm.tm_hour, tm.tm_min);
   gtk_date_combo_set_date (GTK_DATE_COMBO (s->enddate),

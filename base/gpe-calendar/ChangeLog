@@ -1,5 +1,7 @@
 2006-07-31  Florian Boor  <florian.boor@kernelconcepts.de>
 
+    * event-ui.c (note_time_change), (build_recurrence_page), (new_event):
+      Adjust months.
     * event-ui.c (click_ok), (datesel_changed): Adjust month to avoid beeing 
       one month ahead.
 
