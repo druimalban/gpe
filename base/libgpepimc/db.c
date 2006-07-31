@@ -45,7 +45,7 @@ load_one (void *arg, int argc, char **argv, char **names)
   if (argc == 3)
     {
       GSList **list = (GSList **) arg;
-      struct gpe_pim_category *c = g_malloc0 (sizeof (*c));
+      struct gpe_pim_category *c = g_malloc0 (sizeof (c));
 
       c->id = atoi (argv[0]);
       c->name = g_strdup (argv[1]);
@@ -61,7 +61,7 @@ load_one (void *arg, int argc, char **argv, char **names)
 static void
 check_table_update (void)
 {
-  int r;
+  gint r;
   gchar *err = NULL;
   GSList *entries = NULL, *iter = NULL;
 
@@ -114,10 +114,10 @@ check_table_update (void)
 gboolean 
 gpe_pim_categories_init (void)
 {
-  char *err;
-  char *buf;
+  gchar *err;
+  gchar *buf;
   size_t len;
-  char *home = getenv ("HOME");
+  gchar *home = getenv ("HOME");
   if (home == NULL)
     home = "";
   
@@ -202,8 +202,8 @@ gpe_pim_category_colour (gint id)
 gboolean
 gpe_pim_category_new (const gchar *name, gint *id)
 {
-  char *err;
-  int r;
+  gchar *err;
+  gint r;
   struct gpe_pim_category *c;
   
   r = sqlite_exec_printf (db, "insert into category values (NULL, '%q', NULL)",
@@ -217,7 +217,7 @@ gpe_pim_category_new (const gchar *name, gint *id)
   
   *id = sqlite_last_insert_rowid (db);
 
-  c = g_malloc0 (sizeof (*c));
+  c = g_malloc0 (sizeof (c));
 
   c->id = *id;
   c->name = g_strdup (name);
