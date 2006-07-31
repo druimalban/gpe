@@ -1,5 +1,6 @@
 2006-07-31  Florian Boor <florian@kernelconcepts.de>
 
+    * Makefile.am: Remove accidentally added test stuff.
     * Makefile.am: Add new components.
     * colorrenderer.c: New file.
     * gpe/colorrenderer.h: New file.
