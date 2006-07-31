@@ -40,6 +40,7 @@ enum
     COL_CATEGORY,
     COL_PRIORITY,
     COL_PRIORITY_TEXT,
+    COL_COLORS,
     NUM_COLUMNS
 };
 

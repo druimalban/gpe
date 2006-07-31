@@ -22,6 +22,7 @@
 #include <gpe/picturebutton.h>
 #include <gpe/question.h>
 #include <gpe/pim-categories.h>
+#include <gpe/colorrenderer.h>
 
 /* Hildon includes */
 #ifdef IS_HILDON
@@ -51,7 +52,6 @@ extern GtkWidget *window;
 static GtkWidget *toolbar;
 static GtkWidget *fullscreen_control;
 
-
 static gchar *
 build_categories_string (struct todo_item *item)
 {
@@ -61,13 +61,13 @@ build_categories_string (struct todo_item *item)
   for (iter = item->categories; iter; iter = iter->next)
     {
       const gchar *cat;
-      cat = gpe_pim_category_name ((int)iter->data);
+      cat = gpe_pim_category_name ((gint)iter->data);
 
       if (cat)
         {
           if (s)
             {
-              char *ns = g_strdup_printf ("%s, %s", s, cat);
+              gchar *ns = g_strdup_printf ("%s, %s", s, cat);
               g_free (s);
               s = ns;
             }
@@ -77,6 +77,34 @@ build_categories_string (struct todo_item *item)
     }
 
   return s;
+}
+
+static GArray *
+build_categories_color_array (struct todo_item *item)
+{
+  GArray *result = NULL;
+  GSList *iter;
+
+  for (iter = item->categories; iter; iter = iter->next)
+    {
+      const gchar *col;
+      col = gpe_pim_category_colour ((gint)iter->data);
+
+      if (col)
+        {
+			GdkColor color;
+			if (!result)
+				result = g_array_new (TRUE, TRUE, sizeof (GdkColor));
+			if (gdk_color_parse (col, &color) 
+				&& gdk_colormap_alloc_color (gdk_colormap_get_system (),
+                                             &color, FALSE, TRUE ))
+			  {
+				  g_array_append_val (result, color);
+			  }
+	    }
+    }
+
+  return result;
 }
 
 static void
@@ -207,7 +235,7 @@ delete_completed_items (GtkWidget *w, gpointer user_data)
           struct todo_item *i = iter->data;
           gboolean complete;
         
-          complete = (i->state == COMPLETED) ? TRUE : FALSE;
+          complete = ((i->state == COMPLETED) || (i->state == ABANDONED)) ? TRUE : FALSE;
         
           if (complete && (selected_category == -1 ||
             g_slist_find (i->categories, (gpointer)selected_category)))
@@ -351,6 +379,7 @@ refresh_items (void)
   GSList *list, *iter;
   GdkPixbuf *sicon;
   gchar *categories;
+  GArray *colors;
 
   gtk_list_store_clear (list_store);
 
@@ -362,7 +391,7 @@ refresh_items (void)
     {
       struct todo_item *i = iter->data;
       if (selected_category == -1
-	  || g_slist_find (i->categories, (gpointer)selected_category))
+          || g_slist_find (i->categories, (gpointer)selected_category))
         {
           GtkTreeIter iter;
           gboolean complete;
@@ -408,6 +437,7 @@ refresh_items (void)
             }
             
           categories = build_categories_string(i);
+          colors = build_categories_color_array(i);
             
           gtk_list_store_append (list_store, &iter);
     
@@ -420,6 +450,7 @@ refresh_items (void)
                               COL_PRIORITY_TEXT, state_map[i->state].string,
                               COL_DUE, time,
                               COL_CATEGORY, categories,
+							  COL_COLORS, colors,
                               -1);
           if (categories)
               g_free(categories);
@@ -736,7 +767,8 @@ top_level (GtkWidget *window)
                                    G_TYPE_STRING, 
                                    G_TYPE_STRING, 
                                    GDK_TYPE_PIXBUF,
-                                   G_TYPE_STRING);
+                                   G_TYPE_STRING, 
+								   G_TYPE_POINTER);
   list_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (list_store));
 
   {
@@ -783,14 +815,23 @@ top_level (GtkWidget *window)
         col = gtk_tree_view_column_new_with_attributes (_("Due Date"), renderer,
                                                         "text", COL_DUE,
                                                         "strikethrough", 
-                                                        COL_STRIKETHROUGH, NULL);
+		                                                COL_STRIKETHROUGH, NULL);
         gtk_tree_view_insert_column (GTK_TREE_VIEW (list_view), col, -1);
+      }
+      
+    renderer = cell_renderer_color_new ();
+    col = gtk_tree_view_column_new_with_attributes (_("C"), renderer,
+                                                    "colorlist", COL_COLORS, NULL);
+    gtk_tree_view_insert_column (GTK_TREE_VIEW (list_view), col, -1);
+          
+    if (large_screen)
+      {
         renderer = gtk_cell_renderer_text_new ();
         col = gtk_tree_view_column_new_with_attributes (_("Category"), renderer,
                                                         "text", COL_CATEGORY,
-                                                        "strikethrough", 
-                                                        COL_STRIKETHROUGH, NULL);
-        gtk_tree_view_insert_column (GTK_TREE_VIEW (list_view), col, -1);        
+                                                        "strikethrough", COL_STRIKETHROUGH, NULL);
+        gtk_tree_view_insert_column (GTK_TREE_VIEW (list_view), col, -1);
+
       }
     gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (list_view), TRUE);
     gtk_tree_view_set_reorderable (GTK_TREE_VIEW (list_view), FALSE);
@@ -802,7 +843,7 @@ top_level (GtkWidget *window)
                     G_CALLBACK (button_release_event), NULL);
   g_signal_connect (G_OBJECT (window), "key-press-event", 
                     G_CALLBACK (window_key_press_event), NULL);
-
+  
   gtk_container_add (GTK_CONTAINER (scrolled), list_view);
 
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled),

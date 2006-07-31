@@ -1,3 +1,10 @@
+2006-07-31  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * autogen.sh: Create empty po/Changelog.
+    * configure.ac: Add libgpepimc to dependencies.
+    * list-ui.c, todo.h: Add category colour row.
+    * po/Makefile.in.in: removed.
+
 2006-07-29  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * main.c, list-ui.c: Update to HildonProgram / HildonWindow. Fullscreen

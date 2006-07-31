@@ -2,6 +2,8 @@
 PKG_NAME="gpe-todo"
 GETTEXTIZE="glib-gettextize"
 
+touch po/ChangeLog
+
 $GETTEXTIZE --version < /dev/null > /dev/null 2>&1
 if test $? -ne 0; then
   echo
