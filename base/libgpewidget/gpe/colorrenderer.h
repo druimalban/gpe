@@ -1,5 +1,5 @@
 /*
- * Copyright (C) Florian Boor <florian.boor@kernelconcepts.de>
+ * Copyright (C) 2006 Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
