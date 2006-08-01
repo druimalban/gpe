@@ -385,6 +385,19 @@ spin_button_output (GtkSpinButton *spin_button)
 }
 
 static void
+popup_destroyed (GtkWidget *popup, gpointer userdata)
+{
+  GpeTimeSel *sel	= userdata;
+	
+  if (sel->popup)
+    {
+      sel->popup = NULL;
+      sel->hour_adj = NULL;
+      sel->minute_adj = NULL;
+    }
+}
+
+static void
 do_popup (GtkWidget *button, GpeTimeSel *sel)
 {
   if (sel->popup)
@@ -530,6 +543,8 @@ do_popup (GtkWidget *button, GpeTimeSel *sel)
 			NULL, NULL, GDK_CURRENT_TIME);
 
       gtk_grab_add (sel->popup);
+	  g_signal_connect (G_OBJECT (sel->popup), "destroy", 
+	                    G_CALLBACK (popup_destroyed), sel);
     }
 }
 

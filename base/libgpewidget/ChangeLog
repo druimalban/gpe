@@ -1,3 +1,9 @@
+2006-08-02  Florian Boor <florian@kernelconcepts.de>
+
+    * gpetimesel.c (do_popup): Handle destruction in callback, fixes
+      critical warnings.
+      (popup_destroyed): New function.
+
 2006-07-31  Florian Boor <florian@kernelconcepts.de>
 
     * gpe/colorrenderer.h: Add copyright date.
