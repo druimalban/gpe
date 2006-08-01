@@ -1,3 +1,8 @@
+2006-08-02	Florian Boor <florian.boor@kernelconcepts.de>
+
+	* Push version number.
+	* Makefile.am, main.c: Some bugfixes and cleanups.
+
 2006-07-03	Florian Boor <florian.boor@kernelconcepts.de>
 
 	* sound.c: Use esd for playing test fle.

@@ -34,10 +34,9 @@ gpe_conf_SOURCES = main.c applets.c parser.c suid.c misc.c \
                 modules/tasks.c \
                 modules/sound/sound.c modules/sound/soundctrl.c \
                 modules/sound/alarmctrl.c \
-                device.c
-
-gpe_conf_NOINSTHEADERS = main.h applets.h parser.h suid.h misc.h \
-                modules/timeanddate.h \
+                device.c \
+                applets.h parser.h suid.h misc.h \
+                modules/timeanddate.h modules/timezones.h \
                 modules/screen/screen.h modules/screen/brightness.h  \
                 modules/screen/rotation.h modules/screen/calibrate.h \
                 modules/screen/callbacks.h modules/screen/xset.h \
@@ -47,10 +46,10 @@ gpe_conf_NOINSTHEADERS = main.h applets.h parser.h suid.h misc.h \
                 modules/theme.h \
                 modules/ownerinfo.h \
                 modules/login-setup.h \
-                modules/slep/sleep.h modules/sleep/sinterface.h \
+                modules/sleep/sleep.h modules/sleep/sinterface.h \
                 modules/sleep/scallbacks.h modules/sleep/conf.h modules/sleep/confGUI.h \
                 modules/users/uinterface.h modules/users/ucallbacks.h \
-                modules/users/passwd.h \
+                modules/users/passwd.h modules/users/users.h \
                 modules/cfgfile.h \
                 modules/gpe-admin.h \
                 modules/serial.h \
@@ -58,7 +57,7 @@ gpe_conf_NOINSTHEADERS = main.h applets.h parser.h suid.h misc.h \
                 modules/cardinfo.h \
                 tools/interface.h \
                 modules/tasks.h \
-                modules/sound/sound modules/sound/soundctrl.h \
+                modules/sound/sound.h modules/sound/soundctrl.h \
                 modules/sound/alarmctrl.h \
                 device.h
 
@@ -70,10 +69,7 @@ gpe_info_SOURCES = \
                modules/battery.c \
                modules/sysinfo.c \
                parser.c \
-               device.c
-
-gpe_info_NOINSTHEADERS = \
-               main-info.h \
+               device.c \
                modules/storage.h \
                modules/logread.h \
                tools/interface.h \

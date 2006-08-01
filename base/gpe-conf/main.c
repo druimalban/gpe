@@ -28,7 +28,6 @@
 #include "suid.h"
 #include "applets.h"
 #include "modules/timeanddate.h"
-#include "appmgr_setup.h"
 #include "modules/screen/screen.h"
 #include "modules/network.h"
 #include "modules/theme.h"
