@@ -1,5 +1,6 @@
 2006-08-02	Florian Boor <florian.boor@kernelconcepts.de>
 
+	* modules/sleep/sleep.c: Fix filenames.
 	* Push version number.
 	* Makefile.am, main.c: Some bugfixes and cleanups.
 
