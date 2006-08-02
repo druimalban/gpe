@@ -1,5 +1,7 @@
 2006-08-02	Florian Boor <florian.boor@kernelconcepts.de>
-
+	
+	* Release version 0.2.0
+	* Remove unused files.
 	* Makefile.am: Add some missing files. Fix packaged files.
 	* po/POTFILES.in: Update file names and locations.
 	* modules/sleep/sleep.c: Fix filenames.

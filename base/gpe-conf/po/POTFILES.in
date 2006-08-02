@@ -1,5 +1,4 @@
 applets.c
-appmgr_setup.c
 modules/battery.c
 modules/cfgfile.c
 main-info.c
