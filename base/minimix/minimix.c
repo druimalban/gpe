@@ -2,7 +2,7 @@
  * minimix -- volume control
  *
  * Copyright (c) 2002, 2003, 2004 Phil Blundell
- *               2005 Rene Wagner
+ *               2005, 2006 Rene Wagner
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -39,7 +39,13 @@ GtkWidget *window, *slider;
 GtkWidget *icon;
 gint icon_size;
 gboolean configure_done = FALSE;
+
+#ifdef ENABLE_POLLING
 guint timeout;
+#endif /* ENABLE_POLLING */
+
+guint render_idle_source;
+gboolean render_idle_scheduled = FALSE;
 
 int mixerfd;
 
@@ -87,9 +93,11 @@ refresh (int level)
       current_vol_icon = vol_icons[level < SLIDER_MAX ? level / (SLIDER_MAX / (NUM_VOL_ICONS - 1)) + 1 : VOL_ICON_MAX];
     }
 
+#ifdef ENABLE_POLLING
   /* avoid loops... */
   if (level != gtk_adjustment_get_value (adj))
     gtk_adjustment_set_value (adj, level);
+#endif /* ENABLE_POLLING */
 }
 
 void
@@ -106,6 +114,7 @@ render_icon ()
   gtk_image_set_from_pixbuf(GTK_IMAGE(icon), dbuf);
 }
 
+#ifdef ENABLE_POLLING
 gboolean
 timeout_cb (gpointer data)
 {
@@ -118,6 +127,16 @@ timeout_cb (gpointer data)
 
   return TRUE;
 }
+#endif /* ENABLE_POLLING */
+
+gboolean
+render_when_idle (gpointer data)
+{
+  render_icon();
+  render_idle_scheduled = FALSE;
+
+  return FALSE;
+}
 
 void
 value_changed (GtkAdjustment *adj)
@@ -129,7 +148,13 @@ value_changed (GtkAdjustment *adj)
   refresh (value);
 
   if (configure_done && current_vol_icon != old_icon)
-    render_icon ();
+    {
+      if (G_UNLIKELY (render_idle_scheduled))
+        g_source_remove (render_idle_source);
+      else
+        render_idle_scheduled = TRUE;
+      render_idle_source = g_idle_add(render_when_idle, NULL);
+    }
 
   value |= (value << 8);
   ioctl (mixerfd, SOUND_MIXER_WRITE_VOLUME, &value);
@@ -282,9 +307,12 @@ main (int argc, char **argv)
   gtk_widget_add_events (slider_window, GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
 
   refresh (read_volume_level ());
+
+#ifdef ENABLE_POLLING
   timeout = g_timeout_add (200,
                            (GSourceFunc) timeout_cb,
                            NULL);
+#endif /* ENABLE_POLLING */
 
   gtk_widget_show_all (box);
 

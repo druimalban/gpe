@@ -1,3 +1,8 @@
+2006-08-02 19:19  Rene Wagner <rw@handhelds.org>
+	* minimix.c: don't poll unless ENABLE_POLLING is defined and do
+	  the icon rendering outside a callback. corresponding configure
+	  flag still to be added.
+
 2005-09-19 17:39  Rene Wagner <rw@handhelds.org>
 	* ChangeLog: add cvs2cl generated ChangeLog
 
