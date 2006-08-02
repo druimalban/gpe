@@ -1,3 +1,9 @@
+2006-08-02  Colin Marquardt  <colin@marquardt-home.de>
+
+	* Makefile (LINGUAS): Add ja.
+
+	* po/ja.po: New Japanese translation courtesy Takeshi HAMASAKI.
+
 2006-04-02  Colin Marquardt  <colin@marquardt-home.de>
 
 	* Makefile (LINGUAS): Add ko.

@@ -5,7 +5,7 @@ DEBUG = no
 CVSBUILD = yes
 ENABLE_NLS = yes
 
-LINGUAS = de hu id pt pt_BR fr zh_TW ro sv nl sk cs ru sr es zh_CN vi fi tr sl ko
+LINGUAS = de hu id pt pt_BR fr zh_TW ro sv nl sk cs ru sr es zh_CN vi fi tr sl ko ja
 
 LIB_TARGET = libgpe-ownerinfo.a
 LIB_MEMBERS = $(PACKAGE)

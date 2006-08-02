@@ -1,0 +1,64 @@
+# Japanese translations for gpe-ownerinfo package
+# gpe-ownerinfo パッケージに対する英訳.
+# Copyright (C) 2006 THE gpe-ownerinfo'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the gpe-ownerinfo package.
+# Takeshi HAMASAKI <hma@syd.odn.ne.jp>, 2006.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-ownerinfo 0.22\n"
+"POT-Creation-Date: 2003-10-10 00:14+0200\n"
+"PO-Revision-Date: 2006-07-25 14:31+0900\n"
+"Last-Translator: Takeshi HAMASAKI <hma@syd.odn.ne.jp>\n"
+"Language-Team: Japanese <translation-team-ja@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: main.c:83 main.c:112
+msgid "GPE Owner Info"
+msgstr "GPE 所有者情報"
+
+#: main.c:85
+msgid "Valid options:\n"
+msgstr "使用できるオプション:\n"
+
+#: main.c:86
+msgid "   -g GEOMETRY  window geometry (default: 240x100+0+220)\n"
+msgstr "   -g GEOMETRY  ウィンドウの配置とサイズ (デフォルト: 240x100+0+220)\n"
+
+#: main.c:87
+msgid "   -k           always keep window on top (override redirect)\n"
+msgstr "   -k           常にウィンドウを一番上に表示 (リダイレクトを取り消す)\n"
+
+#: main.c:88
+msgid "   -h           this help text\n"
+msgstr "   -h           このヘルプ\n"
+
+#. TRANSLATORS: only a short word will look good
+#. here.  If the word is shorter than 5 letters,
+#. please fill it up with spaces.
+#: gpe-ownerinfo.c:326
+msgid "Owner"
+msgstr "所有者"
+
+#: gpe-ownerinfo.c:356
+msgid "GPE User"
+msgstr "GPE ユーザー"
+
+#. TRANSLATORS: you should make sure to not use a 'fantasy' domain
+#. which might actually exist (maybe in the future). You can
+#. replace the 'nobody' though, or use '@example.org' (see RFC 2606)
+#: gpe-ownerinfo.c:360
+msgid "nobody@localhost.localdomain"
+msgstr "nobody@localhost.localdomain"
+
+#: gpe-ownerinfo.c:361
+msgid "+99 (9999) 999-9999"
+msgstr "+99 (9999) 999-9999"
+
+#. TRANSLATORS: the translations below should match 'Owner
+#. Information' (in gpe-conf) and 'Settings' (in mbdesktop)
+#: gpe-ownerinfo.c:364
+msgid "Configurable with <i>Owner Information</i> under <i>Settings</i>."
+msgstr "<i>設定</i> の中の <i>所有者情報</i> から変更できます。"
