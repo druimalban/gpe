@@ -269,6 +269,7 @@ cell_renderer_color_render (GtkCellRenderer *cell,
       gdk_draw_rectangle (GDK_DRAWABLE (window), gc, TRUE, 
                           i * colwidth + cell_area->x, cell_area->y + 1, 
                           colwidth, cell_area->height);
+      g_object_unref (gc);
     }
 }
 

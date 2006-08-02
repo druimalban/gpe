@@ -1,5 +1,6 @@
 2006-08-02  Florian Boor <florian@kernelconcepts.de>
 
+    * colorrenderer.c: Fix memory hole.
     * gpetimesel.c (do_popup): Handle destruction in callback, fixes
       critical warnings.
       (popup_destroyed): New function.
