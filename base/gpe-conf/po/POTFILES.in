@@ -1,7 +1,7 @@
 applets.c
 appmgr_setup.c
-battery.c
-cfgfile.c
+modules/battery.c
+modules/cfgfile.c
 main-info.c
 main.c
 misc.c
@@ -21,8 +21,8 @@ modules/storage.c
 modules/serial.c
 modules/cardinfo.c
 modules/gpe-admin.c
-modules/users/callbacks.c
-modules/users/interface.c
+modules/users/ucallbacks.c
+modules/users/uinterface.c
 modules/users/passwd.c
 modules/sound/alarmctrl.c
 modules/sound/sound.c
@@ -38,11 +38,11 @@ modules/screen/main.c
 modules/screen/rotation.c
 modules/screen/xset.c
 modules/network.c
-modules/sleep/callbacks.c
+modules/sleep/scallbacks.c
 modules/sleep/conf.c
 modules/sleep/confGUI.c
-modules/sleep/interface.c
-modules/sleep/main.c
+modules/sleep/sinterface.c
+modules/sleep/sleep.c
 desktop/gpe-conf-admin.desktop.in
 desktop/gpe-conf-cardinfo.desktop.in
 desktop/gpe-conf.desktop.in

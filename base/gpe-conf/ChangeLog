@@ -1,5 +1,7 @@
 2006-08-02	Florian Boor <florian.boor@kernelconcepts.de>
 
+	* Makefile.am: Add some missing files. Fix packaged files.
+	* po/POTFILES.in: Update file names and locations.
 	* modules/sleep/sleep.c: Fix filenames.
 	* Push version number.
 	* Makefile.am, main.c: Some bugfixes and cleanups.

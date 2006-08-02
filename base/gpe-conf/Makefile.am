@@ -10,6 +10,10 @@ INCLUDES = $(DEPS_CFLAGS) -I$(top_srcdir)/gpe -I$(top_srcdir) -I$(top_srcdir)/mo
 #LDFLAGS = -pg
 #INCLUDES = $(INCLUDES) -pg
 
+pcmcia_headers = pcmcia/version.h pcmcia/cs_types.h \
+                 pcmcia/cs.h pcmcia/cistpl.h pcmcia/ds.h \
+                 pcmcia/bulkmem.h pcmcia/driver_ops.h
+
 gpe_conf_SOURCES = main.c applets.c parser.c suid.c misc.c \
                 modules/timeanddate.c \
                 modules/screen/screen.c modules/screen/brightness.c  \
@@ -59,7 +63,8 @@ gpe_conf_SOURCES = main.c applets.c parser.c suid.c misc.c \
                 modules/tasks.h \
                 modules/sound/sound.h modules/sound/soundctrl.h \
                 modules/sound/alarmctrl.h \
-                device.h
+                device.h \
+                $(pcmcia_headers)
 
 gpe_info_SOURCES = \
                main-info.c \
@@ -157,7 +162,7 @@ EXTRA_DIST = $(sysgpe_DATA) \
              $(pixmaps_DATA) \
              $(xscripts_SCRIPTS) \
              $(appfiles_DATA) \
-             $(desktop_DATA) \
+             $(desktop_in_files) \
              intltool-extract.in \
              intltool-merge.in \
              intltool-update.in
