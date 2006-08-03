@@ -1,3 +1,10 @@
+2006-08-04  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * main.c: Categories display for small screens.
+    * main-hildon.c (create_app_menu), (create_main): Upgrade to new Hildon API.
+    (toggle_fullscreen): New function
+    (window_key_press_event): Toggle fullscreen on F6.
+
 2006-08-03  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * main.c: Some improvement.

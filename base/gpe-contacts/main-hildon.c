@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2001, 2002, 2003, 2004 Philip Blundell <philb@gnu.org>
- * Hildon adaption 2005 by Florian Boor <florian.boor@kernelconcepts.de>
+ * Copyright (C) 2005, 2006 by Florian Boor <florian.boor@kernelconcepts.de>
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -34,17 +34,18 @@
 #include <gpe/picturebutton.h>
 #include <gpe/spacing.h>
 
+#include <gpe/contacts-db.h>
+
 /* Hildon includes */
-#include <hildon-widgets/hildon-app.h>
-#include <hildon-widgets/hildon-appview.h>
-#include <gpe/pim-categories-ui.h>
-#include <hildon-fm/hildon-widgets/hildon-file-chooser-dialog.h>
+#include <hildon-widgets/hildon-program.h>
+#include <hildon-widgets/hildon-window.h>
+#include <hildon-widgets/hildon-file-chooser-dialog.h>
 
 #include <libosso.h>
+#include <gpe/pim-categories-ui.h>
 
 
 #include "support.h"
-#include <gpe/contacts-db.h>
 #include "structure.h"
 #include "proto.h"
 #include "main.h"
@@ -59,19 +60,20 @@
 #define SERVICE_VERSION VERSION
 
 
-GtkWidget *categories_smenu;
+static GtkWidget *categories_smenu;
 GtkWidget *mainw;
-GtkListStore *list_store, *filter_store;
-GtkWidget *list_view, *filter_view;
-GtkWidget *search_entry;
-GtkWidget *popup_menu;
-GtkWidget *bluetooth_menu_item;
-GtkWidget *irda_menu_item;
+static GtkListStore *list_store, *filter_store;
+static GtkWidget *list_view, *filter_view;
+static GtkWidget *search_entry;
+static GtkWidget *popup_menu;
+static GtkWidget *bluetooth_menu_item;
+static GtkWidget *irda_menu_item;
+static GtkWidget *fullscreen_control;
 guint menu_uid;
 gboolean mode_landscape;
 gboolean mode_large_screen;
-gboolean scroll_delay = FALSE;
-gboolean do_wrap = FALSE;
+static gboolean scroll_delay = FALSE;
+static gboolean do_wrap = FALSE;
 static osso_context_t *context = NULL;
 
 #define DEFAULT_STRUCTURE PREFIX "/share/gpe-contacts/default-layout.xml"
@@ -99,8 +101,17 @@ t_filter filter[]= {
   {"...", NULL},
 };
 
-int num_filter = sizeof(filter) / sizeof(t_filter);
-int current_filter = 0;
+gint num_filter = sizeof(filter) / sizeof(t_filter);
+gint current_filter = 0;
+
+static void
+toggle_fullscreen (GtkCheckMenuItem *menuitem, gpointer user_data)
+{
+  if (gtk_check_menu_item_get_active (menuitem))
+    gtk_window_fullscreen (GTK_WINDOW (mainw));
+  else
+    gtk_window_unfullscreen (GTK_WINDOW (mainw));
+}
 
 static void 
 populate_filter(void)
@@ -1095,6 +1106,10 @@ window_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkTreeView *tree)
     {
       edit_contact(NULL, NULL);
     }
+  /* toggle fullscreen */
+  if (k->keyval == GDK_F6)
+        gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (fullscreen_control), 
+             !gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (fullscreen_control)));
   
   /* automatic search */
   if (!k->state && k->string && isalpha(k->string[0]))
@@ -1337,9 +1352,9 @@ edit_categories (GtkWidget *w)
 
 /* create hildon application main menu */
 static void
-create_app_menu(HildonAppView *appview)
+create_app_menu(HildonWindow *window)
 {
-  GtkMenu *menu_main = hildon_appview_get_menu(appview);    
+  GtkMenu   *menu_main = GTK_MENU (gtk_menu_new());
   GtkWidget *menu_contacts = gtk_menu_new();
   GtkWidget *menu_categories = gtk_menu_new();
   GtkWidget *menu_view = gtk_menu_new();
@@ -1353,6 +1368,7 @@ create_app_menu(HildonAppView *appview)
   GtkWidget *item_add = gtk_menu_item_new_with_label(_("Add new"));
   GtkWidget *item_delete = gtk_menu_item_new_with_label(_("Delete"));
   GtkWidget *item_catedit = gtk_menu_item_new_with_label(_("Edit categories"));
+  GtkWidget *item_fullscreen = gtk_check_menu_item_new_with_label(_("Fullscreen"));
   GtkWidget *item_toolbar = gtk_check_menu_item_new_with_label(_("Show toolbar"));
   GtkWidget *item_tools = gtk_menu_item_new_with_label(_("Tools"));
   GtkWidget *item_import = gtk_menu_item_new_with_label(_("Import VCard"));
@@ -1361,6 +1377,7 @@ create_app_menu(HildonAppView *appview)
   gtk_menu_append (GTK_MENU(menu_contacts), item_add);
   gtk_menu_append (GTK_MENU(menu_contacts), item_delete);
   gtk_menu_append (GTK_MENU(menu_categories), item_catedit);
+  gtk_menu_append (GTK_MENU(menu_view), item_fullscreen);
   gtk_menu_append (GTK_MENU(menu_view), item_toolbar);
   gtk_menu_append (menu_main, item_contacts);
   gtk_menu_append (menu_main, item_categories);
@@ -1373,17 +1390,21 @@ create_app_menu(HildonAppView *appview)
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(item_view), menu_view);
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(item_tools), menu_tools);
   
+  gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item_fullscreen), FALSE);
   gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item_toolbar), TRUE);
 
   g_signal_connect(G_OBJECT(item_add), "activate", G_CALLBACK(new_contact), NULL);
   g_signal_connect(G_OBJECT(item_open), "activate", G_CALLBACK(edit_contact), NULL);
   g_signal_connect(G_OBJECT(item_catedit), "activate", G_CALLBACK(edit_categories), NULL);
+  g_signal_connect(G_OBJECT(item_fullscreen), "activate", G_CALLBACK(toggle_fullscreen), NULL);
   g_signal_connect(G_OBJECT(item_toolbar), "activate", G_CALLBACK(toggle_toolbar), NULL);
   g_signal_connect(G_OBJECT(item_delete), "activate", G_CALLBACK(delete_contact), NULL);
   g_signal_connect(G_OBJECT(item_import), "activate", G_CALLBACK(on_import_vcard), NULL);
   g_signal_connect(G_OBJECT(item_close), "activate", G_CALLBACK(gtk_main_quit), NULL);
 
   gtk_widget_show_all (GTK_WIDGET(menu_main));  
+  fullscreen_control = item_fullscreen;
+  hildon_window_set_menu (HILDON_WINDOW (window), menu_main);
 }
 #endif
 
@@ -1406,9 +1427,9 @@ create_main (gboolean edit_structure)
   GtkWidget *lStatus = NULL;
   gint size_x, size_y;
 	
-  GtkWidget *app, *w;
-  GtkWidget *main_appview;
+  GtkWidget *w;
   GtkToolItem *item;
+  HildonProgram *app;
 
   /* screen layout detection */
   size_x = gdk_screen_width();
@@ -1419,15 +1440,14 @@ create_main (gboolean edit_structure)
   if (size_y < 320) size_y = 320;
 
   /* main application and appview */
-  app = hildon_app_new();
-  hildon_app_set_two_part_title(HILDON_APP(app), FALSE);
-  hildon_app_set_title (HILDON_APP(app), _("Contacts"));
-  main_appview = hildon_appview_new (_("Main"));
-  hildon_app_set_appview (HILDON_APP(app), HILDON_APPVIEW(main_appview));
-  main_window = main_appview;
-  create_app_menu (HILDON_APPVIEW(main_appview));
-  gtk_widget_show_all (app);
-  gtk_widget_show_all (main_appview);
+  app = HILDON_PROGRAM ( hildon_program_get_instance () );
+  g_set_application_name ( _("Contacts") );
+  main_window = hildon_window_new();
+  gtk_window_set_title (GTK_WINDOW (main_window), _("Main"));
+  hildon_program_add_window (app, HILDON_WINDOW (main_window));
+  gtk_widget_show_all (main_window);
+
+  create_app_menu (HILDON_WINDOW(main_window));
   
   vbox1 = gtk_vbox_new (FALSE, gpe_get_boxspacing());
   gtk_container_add (GTK_CONTAINER (main_window), vbox1);
@@ -1437,7 +1457,7 @@ create_main (gboolean edit_structure)
 			       GTK_ORIENTATION_HORIZONTAL);
 
   /* toolbar */
-  hildon_appview_set_toolbar(HILDON_APPVIEW(main_appview), GTK_TOOLBAR(toolbar));
+  hildon_window_add_toolbar(HILDON_WINDOW(main_window), GTK_TOOLBAR(toolbar));
   
   /* buttons left */
   w = gtk_image_new_from_file(ICON_PATH "/qgn_list_gene_unknown_file.png");
