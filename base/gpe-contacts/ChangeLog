@@ -1,5 +1,6 @@
 2006-08-03  Florian Boor  <florian.boor@kernelconcepts.de>
 
+    * main.c: Some improvement.
     * main.c: Initial category colour display support.
     * editing.c: Make (get_categories_list) public.
 

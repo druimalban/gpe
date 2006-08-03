@@ -58,8 +58,8 @@ gboolean mode_large_screen;
 gboolean scroll_delay = FALSE;
 gboolean do_wrap = FALSE;
 
-#define CAT_DISPLAY_HEIGHT 20
-#define CAT_DISPLAY_WIDTH  20
+#define CAT_DISPLAY_HEIGHT 12
+#define CAT_DISPLAY_WIDTH  12
 #define DEFAULT_STRUCTURE PREFIX "/share/gpe-contacts/default-layout.xml"
 #define LARGE_STRUCTURE PREFIX "/share/gpe-contacts/default-layout-bigscreen.xml"
 
@@ -547,28 +547,23 @@ show_details (struct contacts_person *p)
           if (cat_display)
             {
               GArray *catcolours = build_categories_color_array(p);
+              GArray *c_old = g_object_get_data (G_OBJECT (cat_display), "catcolours");
               if (catcolours)
                 {
-                  gint i;
-                  gint colwidth = CAT_DISPLAY_WIDTH / catcolours->len;
-                  
-                  for (i = 0; i < catcolours->len; i++)
-                    {
-                      static GdkColor color;
-                      GdkGC *gc = gdk_gc_new (GDK_DRAWABLE (cat_display->window));
-                        
-                      color = g_array_index (catcolours, GdkColor, i);
-                      gdk_gc_set_foreground (gc, &color);
-                      gdk_draw_rectangle (GDK_DRAWABLE (cat_display->window), gc, TRUE, 
-                                          i * colwidth, 0, 
-                                          colwidth, CAT_DISPLAY_HEIGHT);
-                      g_object_unref (gc);
-                      gtk_widget_show (cat_display);
-                    }
-                  g_array_free (catcolours, FALSE);
+                
+                  if (c_old)
+                    g_array_free (c_old, FALSE);
+                
+                  g_object_set_data (G_OBJECT (cat_display), "catcolours", catcolours);
+                  gtk_widget_show (cat_display);
+                  gtk_widget_queue_draw (cat_display);
                 }
               else
                 {
+                  g_object_set_data (G_OBJECT (cat_display), "catcolours", NULL);
+                  if (c_old)
+                    g_array_free (c_old, FALSE);
+                  gtk_widget_set_size_request (cat_display, 0, -1);
                   gtk_widget_hide (cat_display);
                 }
             }
@@ -1217,6 +1212,36 @@ list_button_release_event (GtkWidget *widget, GdkEventButton *b, GtkListStore *l
   return FALSE;
 }
 
+gboolean
+cat_display_expose (GtkWidget *cat_display, GdkEventExpose *event, gpointer data)
+{
+  GArray *catcolours = g_object_get_data (G_OBJECT (cat_display), "catcolours");
+  GtkWidget *framelabel = g_object_get_data (G_OBJECT (cat_display), "label");
+  gint i;
+  gint height = 1;
+
+  if (!catcolours)
+    return FALSE;
+  
+  height = framelabel->allocation.height;
+  
+  gtk_widget_set_size_request (cat_display, 
+                               height * catcolours->len + 3, height);
+
+  for (i = 0; i < catcolours->len; i++)
+    {
+      static GdkColor color;
+      GdkGC *gc = gdk_gc_new (GDK_DRAWABLE (cat_display->window));
+      color = g_array_index (catcolours, GdkColor, i);
+      gdk_gc_set_foreground (gc, &color);
+      gdk_draw_arc (GDK_DRAWABLE(cat_display->window), gc, TRUE, i * height, 1,
+                    height - 2, height - 2, 0, 23040);
+      g_object_unref (gc);
+    }
+
+  return TRUE;
+}
+
 static GtkItemFactoryEntry popup_items[] =
 {
   { "/Edit",		    NULL, menu_do_edit,           0, "<Item>" },
@@ -1512,10 +1537,6 @@ create_main (gboolean edit_structure)
       gtk_misc_set_alignment(GTK_MISC(lStatus), 1.0, 0.5);
       gtk_box_pack_end (GTK_BOX (hbox3), lStatus, FALSE, FALSE, 3);
     }
-  cat_display = gtk_event_box_new ();
-  gtk_widget_set_size_request (cat_display, CAT_DISPLAY_WIDTH, CAT_DISPLAY_HEIGHT);
-  gtk_box_pack_end (GTK_BOX (hbox3), cat_display, FALSE, FALSE, 3);
-  g_object_set_data (G_OBJECT(main_window), "cat_display", cat_display);
     
   /** find and categories section **/
   label83 = gtk_label_new (_("Find:"));
@@ -1561,8 +1582,22 @@ create_main (gboolean edit_structure)
 
   
   /** detail section **/
-  pDetail = gtk_frame_new (_("Contact"));
+  GtkWidget *framebox = gtk_hbox_new (FALSE, gpe_get_boxspacing());
+  GtkWidget *framelabel = gtk_label_new (_("Contact"));
+  cat_display = gtk_drawing_area_new ();
   
+  gtk_widget_set_size_request (cat_display, 0, CAT_DISPLAY_HEIGHT);
+  gtk_box_pack_start (GTK_BOX (framebox), framelabel, FALSE, TRUE, 0);
+  gtk_box_pack_end (GTK_BOX (framebox), cat_display, FALSE, FALSE, 0);
+  g_object_set_data (G_OBJECT(cat_display), "label", framelabel);
+  g_object_set_data (G_OBJECT(main_window), "cat_display", cat_display);
+  g_signal_connect (G_OBJECT (cat_display), "expose_event",  
+                    G_CALLBACK (cat_display_expose), NULL);
+
+  pDetail = gtk_frame_new (NULL);
+  gtk_frame_set_label_widget (GTK_FRAME (pDetail), framebox);
+
+
   if (mode_landscape)
     {
       gtk_container_set_border_width(GTK_CONTAINER(pDetail), gpe_get_border());
