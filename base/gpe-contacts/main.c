@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2001, 2002, 2003, 2004 Philip Blundell <philb@gnu.org>
- *               2004, 2005 Florian Boor <florian@kernelconcepts.de>
+ *               2004, 2005, 2006 Florian Boor <florian@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -58,6 +58,8 @@ gboolean mode_large_screen;
 gboolean scroll_delay = FALSE;
 gboolean do_wrap = FALSE;
 
+#define CAT_DISPLAY_HEIGHT 20
+#define CAT_DISPLAY_WIDTH  20
 #define DEFAULT_STRUCTURE PREFIX "/share/gpe-contacts/default-layout.xml"
 #define LARGE_STRUCTURE PREFIX "/share/gpe-contacts/default-layout-bigscreen.xml"
 
@@ -455,6 +457,39 @@ build_children (GtkWidget *vbox, GSList *children, struct contacts_person *p)
   return result;
 }
 
+static GArray *
+build_categories_color_array (struct contacts_person *p)
+{
+  GArray *result = NULL;
+  GSList *iter, *categories;
+  
+  categories = get_categories_list (p);
+  
+  for (iter = categories; iter; iter = iter->next)
+    {
+      const gchar *col;
+      col = gpe_pim_category_colour ((gint)iter->data);
+
+      if (col)
+        {
+			GdkColor color;
+			if (!result)
+				result = g_array_new (TRUE, TRUE, sizeof (GdkColor));
+			if (gdk_color_parse (col, &color) 
+				&& gdk_colormap_alloc_color (gdk_colormap_get_system (),
+                                             &color, FALSE, TRUE ))
+			  {
+				  g_array_append_val (result, color);
+			  }
+	    }
+    }
+    
+  if (categories)
+    g_slist_free (categories);
+  
+  return result;
+}
+
 static int
 show_details (struct contacts_person *p)
 {
@@ -485,6 +520,8 @@ show_details (struct contacts_person *p)
       if (p != NULL) /* add contact data */
         {
           GtkWidget *vbox = gtk_vbox_new(FALSE, gpe_get_boxspacing());
+          GtkWidget *cat_display = 
+                       g_object_get_data (G_OBJECT(mainw), "cat_display");
           gchar *catstring = build_categories_string(p);
         
           gtk_table_attach(GTK_TABLE(table), vbox, 0, 1, 0, 1, 
@@ -506,6 +543,34 @@ show_details (struct contacts_person *p)
               gtk_table_attach(GTK_TABLE(table), label, 0, 1, 1, 2, 
                                GTK_FILL, GTK_FILL, 0, 0);
               g_free(text);
+            }
+          if (cat_display)
+            {
+              GArray *catcolours = build_categories_color_array(p);
+              if (catcolours)
+                {
+                  gint i;
+                  gint colwidth = CAT_DISPLAY_WIDTH / catcolours->len;
+                  
+                  for (i = 0; i < catcolours->len; i++)
+                    {
+                      static GdkColor color;
+                      GdkGC *gc = gdk_gc_new (GDK_DRAWABLE (cat_display->window));
+                        
+                      color = g_array_index (catcolours, GdkColor, i);
+                      gdk_gc_set_foreground (gc, &color);
+                      gdk_draw_rectangle (GDK_DRAWABLE (cat_display->window), gc, TRUE, 
+                                          i * colwidth, 0, 
+                                          colwidth, CAT_DISPLAY_HEIGHT);
+                      g_object_unref (gc);
+                      gtk_widget_show (cat_display);
+                    }
+                  g_array_free (catcolours, FALSE);
+                }
+              else
+                {
+                  gtk_widget_hide (cat_display);
+                }
             }
         }
       else  /* just add some feedback */
@@ -649,11 +714,13 @@ selection_made (GtkTreeSelection *sel, GObject *o)
   struct contacts_person *p;
   GtkTreeModel *model;
   GtkWidget *edit_button, *delete_button, *new_button, *details_button;
+  GtkWidget *cat_display;
 
   edit_button = g_object_get_data (o, "edit-button");
   delete_button = g_object_get_data (o, "delete-button");
   new_button = g_object_get_data (o, "new-button");
   details_button = g_object_get_data (o, "details-button");
+  cat_display = g_object_get_data (G_OBJECT(mainw), "cat_display");
   
   if (gtk_tree_selection_get_selected (sel, &model, &iter))
     {
@@ -667,6 +734,7 @@ selection_made (GtkTreeSelection *sel, GObject *o)
       gtk_widget_set_sensitive (delete_button, TRUE);
       if (!mode_landscape)
         gtk_widget_set_sensitive (details_button, TRUE);
+      gtk_widget_show (cat_display);
     }
   else
     {
@@ -674,6 +742,7 @@ selection_made (GtkTreeSelection *sel, GObject *o)
       gtk_widget_set_sensitive (delete_button, FALSE);
       if (!mode_landscape)
         gtk_widget_set_sensitive (details_button, FALSE);
+      gtk_widget_hide (cat_display);
     }
 	/* restore after edit/new */
     gtk_widget_set_sensitive (new_button, TRUE);
@@ -916,9 +985,9 @@ void
 list_view_cursor_changed (GtkTreeView *treeview, gpointer user_data)
 {
   GtkWidget *lStatus = user_data;
-  int pos;
-  int count =
-      gtk_tree_model_iter_n_children(GTK_TREE_MODEL(list_store), NULL);
+  gint pos;
+  gint count =
+       gtk_tree_model_iter_n_children(GTK_TREE_MODEL(list_store), NULL);
   GtkTreePath *path;
   
   if (lStatus)
@@ -1257,6 +1326,7 @@ create_main (gboolean edit_structure)
   GtkTreeSelection *tree_sel;
   GtkWidget *scrolled_window;
   GtkWidget *lStatus = NULL;
+  GtkWidget *cat_display = NULL;
   GtkTooltips *tooltips;
   gint size_x, size_y;
 
@@ -1442,6 +1512,10 @@ create_main (gboolean edit_structure)
       gtk_misc_set_alignment(GTK_MISC(lStatus), 1.0, 0.5);
       gtk_box_pack_end (GTK_BOX (hbox3), lStatus, FALSE, FALSE, 3);
     }
+  cat_display = gtk_event_box_new ();
+  gtk_widget_set_size_request (cat_display, CAT_DISPLAY_WIDTH, CAT_DISPLAY_HEIGHT);
+  gtk_box_pack_end (GTK_BOX (hbox3), cat_display, FALSE, FALSE, 3);
+  g_object_set_data (G_OBJECT(main_window), "cat_display", cat_display);
     
   /** find and categories section **/
   label83 = gtk_label_new (_("Find:"));

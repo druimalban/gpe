@@ -668,7 +668,7 @@ edit_window (gboolean isdialog)
   return w;
 }
 
-static GSList *
+GSList *
 get_categories_list (struct contacts_person *p)
 {
   GSList *iter;

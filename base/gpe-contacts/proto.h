@@ -7,5 +7,6 @@ extern void edit_person (struct contacts_person *p, gchar *title, gboolean isdia
 extern void load_panel_config ();
 extern void update_edit (struct contacts_person *p, GtkWidget *w);
 extern gchar *build_categories_string (struct contacts_person *p);
+extern GSList *get_categories_list (struct contacts_person *p);
 
 #endif
