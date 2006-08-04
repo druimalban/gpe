@@ -1575,6 +1575,8 @@ handoff_callback (Handoff *handoff, char *data)
 	        export_calendars (event_db, file, NULL);
           }
       }
+    else if (strcmp (var, "FLUSH") == 0)
+      flush_deleted_events (value);
     else if (strcmp (var, "DELETE") == 0 && value)
 	  delete_event (value);
     else if (strcmp (var, "LIST_DELETED") == 0 && value)
@@ -1752,7 +1754,12 @@ main (int argc, char *argv[])
       if (option_letter == 's')
         schedule_only = TRUE;
       if (option_letter == 'f')
-        flush_deleted_only = TRUE;
+        {
+          char *s = g_strdup_printf ("%s%sFLUSH", state ?: "", state ? "\n" : "");
+          g_free (state);
+          state = s;
+          flush_deleted_only = TRUE;
+        }
       if (option_letter == 'C')
         {
           list_calendars_only = TRUE;

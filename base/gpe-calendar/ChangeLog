@@ -1,3 +1,7 @@
+2006-08-04  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * main.c (handoff_callback), (main): Allow flushing via handoff.
+
 2006-07-31  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * event-ui.c (note_time_change), (build_recurrence_page), (new_event):
