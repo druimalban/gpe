@@ -1,5 +1,7 @@
 2006-08-04  Florian Boor  <florian.boor@kernelconcepts.de>
 
+    * export-vcal.c (export_event_as_vevent): Do not set "sequence", 
+      libmimedir does not allow this.
     * main.c (handoff_callback), (main): Allow flushing via handoff.
 
 2006-07-31  Florian Boor  <florian.boor@kernelconcepts.de>
