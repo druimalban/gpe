@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT(gpe-contacts,0.45,gpe@handhelds.org)
+AC_INIT(gpe-contacts,0.46,gpe@handhelds.org)
 
 AC_CONFIG_SRCDIR([main.c])
 AM_CONFIG_HEADER(config.h)

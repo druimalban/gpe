@@ -1,5 +1,6 @@
 2006-08-04  Florian Boor  <florian.boor@kernelconcepts.de>
 
+    * Release version 0.46
     * main-hildon.c: Some minor ui fixes.
     * editing.c (build_categories_string): Coloured underline for categories.
     * main.c: Categories display for small screens.
