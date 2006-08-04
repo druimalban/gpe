@@ -56,7 +56,15 @@ static const char *contacts_schema4_str =
   "create table contacts_config (id INTEGER PRIMARY KEY,	cgroup INTEGER NOT NULL, cidentifier TEXT NOT NULL, cvalue TEXT);";
 
 
-
+/**
+ * contacts_new_person:
+ *
+ * Allocates and initializes a new #contacts_person data structure.
+ * The returend value needs to be destroyed with #contacts_discard_person.
+ * 
+ * Returns: A new allocated contacts_person structure.
+ *
+ */
 inline struct contacts_person *
 contacts_new_person (void)
 {
@@ -247,6 +255,19 @@ contacts_db_check_tags (void)
     }
 }
 
+/**
+ * contacts_db_open:
+ * @open_vcard: Wether to open the personal vCard database.
+ * 
+ * Open and initalise the contacts database. This also performs
+ * an up-to-date check and if necessary a database update.
+ * If you open your personal vCard database you access the databse
+ * file that contains the personal vCard(s) used by other tools.
+ *
+ * This API is likely to change soon.
+ *
+ * Returns: 0 on success, error code otherwise.
+ */
 int
 contacts_db_open (gboolean open_vcard)
 {
@@ -290,6 +311,13 @@ contacts_db_open (gboolean open_vcard)
   return 0;
 }
 
+/**
+ * contacts_db_close:
+ * 
+ * Close the contacts database.
+ * 
+ * Returns: 0 on success
+ */
 int
 contacts_db_close (void)
 {
