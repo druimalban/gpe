@@ -1536,7 +1536,7 @@ create_main (gboolean edit_structure)
   filter_window = gtk_scrolled_window_new (NULL, NULL);
   gtk_widget_set_size_request(filter_window, 60, -1);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (filter_window), 
-                                  GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+                                  GTK_POLICY_NEVER, GTK_POLICY_NEVER);
   filter_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (filter_store));
   gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (filter_view), FALSE);
   filter_sel = gtk_tree_view_get_selection (GTK_TREE_VIEW (filter_view));
@@ -1656,7 +1656,8 @@ create_main (gboolean edit_structure)
     }
   tabDetail = gtk_table_new (1, 2, FALSE);
   gtk_table_set_col_spacings(GTK_TABLE(tabDetail), gpe_get_boxspacing());
-  gtk_container_set_border_width(GTK_CONTAINER(tabDetail), 0);
+  gtk_table_set_row_spacings(GTK_TABLE(tabDetail), gpe_get_boxspacing());
+  gtk_container_set_border_width(GTK_CONTAINER(tabDetail), gpe_get_border() / 2);
   if (mode_large_screen)
     {
       GtkWidget *vport;
@@ -1666,7 +1667,7 @@ create_main (gboolean edit_structure)
                                      GTK_POLICY_AUTOMATIC);
       vport = gtk_viewport_new(NULL, NULL);
       gtk_viewport_set_shadow_type(GTK_VIEWPORT(vport), GTK_SHADOW_NONE);
-      gtk_container_add(GTK_CONTAINER(vport), tabDetail);
+      gtk_container_add(GTK_CONTAINER (vport), tabDetail);
       gtk_container_add (GTK_CONTAINER (scrolled_window), vport);
       gtk_container_add (GTK_CONTAINER (pDetail), scrolled_window);
     }
