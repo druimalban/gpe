@@ -700,19 +700,26 @@ build_categories_string (struct contacts_person *p)
   for (iter = list; iter; iter = iter->next)
     {
       const gchar *cat;
-      cat = gpe_pim_category_name ((int)iter->data);
-
+      const gchar *col;
+      cat = gpe_pim_category_name ((gint)iter->data);
+      col = gpe_pim_category_colour ((gint)iter->data);
+        
       if (cat)
-	{
-	  if (s)
-	    {
-	      char *ns = g_strdup_printf ("%s, %s", s, cat);
-	      g_free (s);
-	      s = ns;
-	    }
-	  else
-	    s = g_strdup (cat);
-	}
+        {
+          if (s)
+            {
+              gchar *ns = 
+                col ? g_strdup_printf ("%s, <span underline=\"single\" "\
+                                       "underline_color=\"%s\">%s</span>", s, col, cat) 
+                    : g_strdup_printf ("%s, %s", s, cat);
+              g_free (s);
+              s = ns;
+            }
+          else
+              s = col ? g_strdup_printf ("<span underline=\"single\" "\
+                                         "underline_color=\"%s\">%s</span>", col, cat) 
+                    : g_strdup (cat);
+        }
     }
 
   g_slist_free (list);
