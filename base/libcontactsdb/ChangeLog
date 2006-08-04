@@ -1,6 +1,8 @@
 2006-08-04  Florian Boor  <florian@kernelconcepts.de>
 
-	* contacts-db.c: Add soem documentation.
+	* Release version 0.5
+	* contacts-db.c: Add some documentation.
+	  Fix SQL statements and typo.
 
 2006-07-04  Florian Boor  <florian@kernelconcepts.de>
 

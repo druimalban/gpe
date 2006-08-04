@@ -47,7 +47,7 @@ extern void contacts_db_migrate_old_categories (sqlite * db);
 static const char *contacts_schema_str =
   "create table contacts (urn INTEGER NOT NULL, tag TEXT NOT NULL, value TEXT NOT NULL);";
 
-/* entry data for identification and absic information */
+/* entry data for identification and basic information */
 static const char *contacts_schema2_str =
   "create table contacts_urn (urn INTEGER PRIMARY KEY, name TEXT, family_name TEXT, company TEXT);";
 
@@ -470,8 +470,11 @@ contacts_db_get_entries_list (const gchar * name, const gchar * cat)
   else
     {
       r = sqlite_exec_printf (contacts_db, 
-                 "select urn, name, family_name, company from contacts where tag = 'CATEGORY' "
-                 "and value = '%q%%' and urn IN "
+                 "select contacts_urn.urn, contacts_urn.name, "
+                 "contacts_urn.family_name, contacts_urn.company "
+                 "from contacts_urn, contacts where contacts.urn = contacts_urn.urn "
+                 "and contacts.tag = 'CATEGORY' "
+                 "and contacts.value = '%q' and contacts_urn.urn IN "
                  "(select distinct urn from contacts where "
                  "(tag = 'NAME' or tag = 'GIVEN_NAME' "
                  "or tag = 'FAMILY_NAME' or tag = 'COMPANY')"
@@ -594,7 +597,7 @@ contacts_db_get_entries_list_filtered (const gchar * str,
                 "select contacts_urn.urn, contacts_urn.name, contacts_urn.family_name, contacts_urn.company "
                 "from contacts_urn, contacts where contacts_urn.urn = contacts.urn "
                 "and contacts.tag = 'CATEGORY' and contacts.value like '%q%%' and "
-                "(contacts_urn.family_name like '%c%%') and " 
+                "(contacts_urn.family_name like '%c%%') or " 
                 "(contacts_urn.family_name like '%c%%' or contacts_urn.family_name like '%c%%')",
                 contacts_read_one_entry, &list, &err, cat, filter[0], filter[1], filter[2]);
     }
@@ -604,7 +607,7 @@ contacts_db_get_entries_list_filtered (const gchar * str,
                 "select contacts_urn.urn, contacts_urn.name, contacts_urn.family_name, contacts_urn.company "
                 "from contacts_urn, contacts where contacts_urn.urn = contacts.urn "
                 "and contacts.tag = 'CATEGORY' and contacts.value like '%%%q%%' and "
-                "(contacts_urn.family_name like '%c%%') and "
+                "(contacts_urn.family_name like '%c%%') or "
                 "(contacts_urn.family_name like '%c%%' or contacts_urn.family_name like '%c%%')",
                 contacts_read_one_entry, &list, &err, cat, str, filter[0], filter[1], filter[2]);
     }
