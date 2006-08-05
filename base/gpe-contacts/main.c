@@ -514,7 +514,7 @@ show_details (struct contacts_person *p)
         {
         
           if (c_old)
-            g_array_free (c_old, FALSE);
+            g_array_free (c_old, TRUE);
         
           g_object_set_data (G_OBJECT (cat_display), "catcolours", catcolours);
           gtk_widget_show (cat_display);
@@ -524,7 +524,7 @@ show_details (struct contacts_person *p)
         {
           g_object_set_data (G_OBJECT (cat_display), "catcolours", NULL);
           if (c_old)
-            g_array_free (c_old, FALSE);
+            g_array_free (c_old, TRUE);
           gtk_widget_set_size_request (cat_display, 0, -1);
           gtk_widget_hide (cat_display);
         }

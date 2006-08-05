@@ -1,3 +1,7 @@
+2006-08-05  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * main.c (show_details): Fix memory leak.
+    
 2006-08-04  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * Release version 0.46
