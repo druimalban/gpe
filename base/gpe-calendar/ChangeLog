@@ -1,3 +1,9 @@
+
+2006-08-07  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * export-vcal.c (export_event_as_vevent): Revert last change, fixed
+      libmimedir.
+
 2006-08-04  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * export-vcal.c (export_event_as_vevent): Do not set "sequence", 

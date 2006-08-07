@@ -136,6 +136,8 @@ export_event_as_vevent (Event *ev)
 					 location, "");
       g_free (location);
     }
+    
+  g_object_set (event, "sequence", event_get_sequence (ev), NULL);
 
   if (event_get_recurrence_type (ev) != RECUR_NONE)
     {
