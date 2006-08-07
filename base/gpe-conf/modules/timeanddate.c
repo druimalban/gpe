@@ -178,7 +178,7 @@ get_current_tz(void)
 	{
 		g_printerr ("Could not read timezone file (%s), using default.\n", err->message);
 		g_error_free (err);
-		result = g_strdup ("Europe/Vienna");
+		result = g_strdup ("Europe/Berlin");
 	}
 	return result;  
 }
@@ -541,7 +541,7 @@ Time_Build_Objects(gboolean nonroot)
 	if (selTimezoneAreaIndx == -1)
 	{
 		g_free(fstr);
-		fstr = g_strdup("Europe/Vienna");
+		fstr = g_strdup("Europe/Berlin");
 		selTimezoneAreaIndx	= getTimezoneAreaIndexByTimezoneName(fstr);
 	}
 	if (selTimezoneAreaIndx == -1)

@@ -1,5 +1,7 @@
 2006-08-07	Florian Boor <florian.boor@kernelconcepts.de>
     
+    * timeanddate.c: Default to "Europe/Berlin", Vienna is not in the default 
+      zoneinfo package.
     * timeanddate.c: Some fixes and cleanups in timezone code.
 
 2006-08-02	Florian Boor <florian.boor@kernelconcepts.de>
