@@ -178,7 +178,7 @@ get_current_tz(void)
 	{
 		g_printerr ("Could not read timezone file (%s), using default.\n", err->message);
 		g_error_free (err);
-		result = g_strdup ("UTC");
+		result = g_strdup ("Europe/Vienna");
 	}
 	return result;  
 }
@@ -327,10 +327,12 @@ gint getTimezoneAreaIndexByTimezoneName(gchar *tzNameParam)
 	gboolean	curFound = FALSE;
 	gchar		*searchname;
 
-	searchname = strstr (tzNameParam, "/") + 1;
-	
-	if ((gint)searchname == 1)
-		searchname = tzNameParam;
+	searchname = strstr (tzNameParam, "/");
+    
+    if (!searchname)
+ 		searchname = tzNameParam;
+    else
+        searchname++;
 
 	while (timezoneNameArray[idx] != NULL) 
 	{
@@ -533,16 +535,13 @@ Time_Build_Objects(gboolean nonroot)
 	                  0, 4, 0, 1, GTK_FILL, GTK_FILL, 0, 0);
 			
 	// timezone area combobox
-	fstr	= g_strdup(get_current_tz());
-   	if ((fstr == NULL) || (strlen(fstr) <= 0))
-   	{
-     	fstr	= g_strdup("UTC");
-   	}
+	fstr = get_current_tz();
+    
 	selTimezoneAreaIndx	= getTimezoneAreaIndexByTimezoneName(fstr);
 	if (selTimezoneAreaIndx == -1)
 	{
 		g_free(fstr);
-		fstr = g_strdup("Europe/Helsinki");
+		fstr = g_strdup("Europe/Vienna");
 		selTimezoneAreaIndx	= getTimezoneAreaIndexByTimezoneName(fstr);
 	}
 	if (selTimezoneAreaIndx == -1)
