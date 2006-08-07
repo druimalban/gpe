@@ -365,6 +365,8 @@ extern gboolean event_get_visible (Event *ev) __attribute__ ((pure));
 
 extern time_t event_get_start (Event *ev) __attribute__ ((pure));
 
+extern time_t event_get_last_modification (Event *event) __attribute__ ((pure));
+
 extern unsigned long event_get_duration (Event *ev) __attribute__ ((pure));
 extern void event_set_duration (Event *ev, unsigned long duration);
 

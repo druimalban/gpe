@@ -3609,6 +3609,14 @@ event_get_start (Event *ev)
   return ev->start;
 }
 
+time_t
+event_get_last_modification (Event *event)
+{
+  EventSource *ev = RESOLVE_CLONE (event);
+    
+  return ev->last_modified;
+}
+
 unsigned long
 event_get_duration (Event *event)
 {
