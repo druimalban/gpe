@@ -1,6 +1,7 @@
 
 2006-08-07  Florian Boor  <florian.boor@kernelconcepts.de>
 
+    * export-vcal.c (export_event_as_vevent): Set modification time.
     * export-vcal.c (export_event_as_vevent): Revert last change, fixed
       libmimedir.
 

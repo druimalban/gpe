@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Philip Blundell <philb@gnu.org>
- *               2005 Florian Boor <florian@kernelconcepts.de> 
+ *               2005, 2006 Florian Boor <florian@kernelconcepts.de> 
  * Copyright (C) 2006 Neal H. Walfield <neal@walfield.org>
  *
  * This program is free software; you can redistribute it and/or
@@ -95,6 +95,13 @@ export_event_as_vevent (Event *ev)
   g_object_set (event, "dtend", dtend, NULL);
   g_object_unref (dtend);
 
+  time_t last_modification = event_get_last_modification (ev);
+  MIMEDirDateTime *dmod;
+
+  dmod = mimedir_datetime_new_from_time_t (last_modification);
+  g_object_set (event, "last-modified", dmod, NULL);
+  g_object_unref (dmod);
+	
   int alarm = event_get_alarm (ev);
   if (alarm)
     g_object_set (event, "trigger", &alarm, NULL);
@@ -136,8 +143,6 @@ export_event_as_vevent (Event *ev)
 					 location, "");
       g_free (location);
     }
-    
-  g_object_set (event, "sequence", event_get_sequence (ev), NULL);
 
   if (event_get_recurrence_type (ev) != RECUR_NONE)
     {
