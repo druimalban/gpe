@@ -5,7 +5,7 @@
 <!--#set var="authoremail" value="philb@gnu.org"-->
 <!--#include virtual="/includes/head.shtml"-->
 
-<table cellpadding="12" cellspacing="12" border="12" width="90%" bgcolor="#EEEEEE">
+<table cellpadding="12" cellspacing="12" border="12" width="100%" bgcolor="#EEEEEE">
 <tr>
   <td colspan="3"><h2>Subprojects: GPE-What</h2></td>
 </tr>
