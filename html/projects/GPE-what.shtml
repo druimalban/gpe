@@ -30,9 +30,22 @@
 </tr>
 <tr>
   <td><b>Status</b></td>
-  <td>The source code can be found in <A href="../cvs.shtml">CVS</A>,
-    module <b>gpe-what</b>.  Precompiled binaries for ARM PDAs are available
-    in the Familiar <A href="http://familiar.handhelds.org/familiar/feeds/unstable/">unstable feed</A>.
+  <td>
+    <p>
+      The source code can be found in <A href="../cvs.shtml">CVS</A>,
+      module <b>base/gpe-what</b>.  
+	</p>
+	<p>
+	  Distributions known to ship <i>gpe-what</i> are:
+	  <ul>
+	  	  <li><a href="http://familiar.handhelds.org">Familiar</a>
+          <li><a href="http://www.openzaurus.org">OpenZaurus</a>
+		  <li><a href="http://www.angstroem-distribution.org">Angstroem</a>
+     </ul>
+	</p>
+	<p>
+	  <i>gpe-what</i> is distributed under the <a href="http://www.gnu.org/licenses/gpl.html#SEC1">GPL</a>.
+	</p>
   </td>
 </tr>
 <tr>

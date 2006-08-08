@@ -1,61 +1,80 @@
 
-<!--#set var="addtitle" value="App Manager"-->
-<!--#set var="pagename" value="appmgr"-->
-<!--#set var="author" value="Nils Faerber"-->
-<!--#set var="authoremail" value="nils@handhelds.org"-->
+<!--#set var="addtitle" value="Application Manager"-->
+<!--#set var="pagename" value="An application launcher"-->
+<!--#set var="author" value="Florian Boor"-->
+<!--#set var="authoremail" value="florian.boor@kernelconcepts.de"-->
 <!--#include virtual="/includes/head.shtml"-->
 
-<H1><font color="red">Note: This application is no longer part of the base package, as it has been replaced by mbdesktop</font></h1>
-<H2>Coordinator</H2>
-<P>
-The coordinator for this sub-project is Robert Mibus (<A
-HREF="mailto:mibus@bigpond.com">mibus@bigpond.com</A>). If you want to contribute to
-this project, please contact him directly.
-</P>
+<table cellpadding="12" cellspacing="12" border="12" width="100%" bgcolor="#EEEEEE">
+<tr>
+  <td colspan="3"><h2>Subprojects: GPE-Appmgr</h2>
+  <i><!--#echo var="pagename"--></i></td>
+</tr>
+<tr>
+  <td><b>Function</b></td>
+  <td>
+  <p>
+  The application manager is the main window of the PDA. 
+  It allows to start-up applications and offers a kind of start-menu. 
+  Any application that a user should be able to access should also be available 
+  through the application manager. Every application has to provide a name and 
+  an icon to be displayed. Applications are sorted into different categories so 
+  that finding them is easier. This is done by using 'tabs', much like those 
+  in dialog boxes in many GUIs. 
+  </p>
+  <p>
+  GPE-Appmgr uses freedesktop.org-style desktop files like known from Gnome
+  and KDE. It is able to deal with single- and multi instance applications 
+  as well as different screen sizes. The screenshot shows it in a mode used
+  for devices with screens of 640x480 pixels and above.
+  </p>
 
-<H2>Function</H2>
-<P>
-The application manager is the main window of the PDA. It allows to start-up
-applications and offers a kind of start-menu. Any application that a user
-should be able to access should also be available through the application
-manager. Every application has to provide a name and an icon to be displayed.
-Applications are sorted into different categories so that finding them is
-easier.
-This is done by using 'tabs', much like those in dialog boxes in many GUIs.
-There is a small list of recently-used items in appmgr &gt;= 0.07, which is
-yet to be released. For both, see the screenshot below.
-</P>
-<P>
-For certain application it is necessary that they can only be started once,
-for example the address application. The address application itself should
-handle anything that a user could want from multiple instances of the
-application. On the old Psions for example I used to have several address
-applications running for different address databases: Home, Work, Private,
-etc. The application itself could handle this by offering proper categories.
-</P>
+  </td>
+  <td rowspan="3"><img src="../images/gpe-appmgr.png" border="0" alt="Screenshot"></td>
+</tr>
+<tr>
+  <td><b>Coordinator</b></td>
+  <td>
+  The coordinators for this sub-project are Robert Mibus (<a HREF="mailto:mibus@bigpond.com">mibus@bigpond.com</a>). 
+  and Philip Blundell (<a HREF="mailto:philb@gnu.org">philb@gnu.org</a>). 
+  If you want to contribute to this project, please contact the coordinators or 
+  the <a HREF="mailto:gpe@handhelds.org">GPE mailinglist</a>. 
+  </td>
+  </td>
+</tr>
+<tr>
+  <td><b>Status</b></td>
+  <td>
+    <p>
+      The source code can be found in <A href="../cvs.shtml">CVS</A>,
+      module <b>base/gpe-appmgr</b>.  
+	</p>
+	<p>
+	  Distributions known to ship <i>GPE-Appmgr</i> are:
+	  <ul>
+	  	  <li><a href="http://familiar.handhelds.org">Familiar</a>
+     </ul>
+	</p>
+	<p>
+	  <i>GPE-Appmgr</i> is distributed under the <a href="http://www.gnu.org/licenses/gpl.html#SEC1">GPL</a>.
+	</p>
+  </td>
+</tr>
+<tr>
+  <td colspan="3">
+    <p>
+    </p>
+  </td>
+</tr>
+<tr>
+  <td><b>Project History</b></td>
+  <td>
+     <ul>
+	   <li>Started 2002 by Robert Mibus</li>
+	 </ul>
+  </td>
+</tr>
+</table>
 
-<H3>Screenshot</H3>
-<P>
-<IMG SRC="../images/gpe-appmgr.png" alt="GPE-Appmgr in action">
-</P>
 
-<H3>FAQ</H3>
-<H2>Why don't I have many programs in the list?</H2>
-<P>
-Programs are only listed if they have icons included in their package.
-GPE applications will show up whenever appropriate, but non-GPE software may
-not show up. If you think it should show up, try asking the developer of the
-software to supply an icon and tell the menu to show it. For more information
-on this, email me at mibus@bigpond.com.
-</P>
-<H3>Anything else...</H3>
-<P>
-I sometimes make notes of what's happening with appmgr at <a href="http://www.handhelds.org/~mibus/">my hh.org page</a>, feel free to look around.
-</P>
-<P>
-gpe-appmgr is in the GPE CVS, in the module "base/gpe-appmgr".
-</P>
-<P>
-If you have any questions or comments, email me!
-</P>
 <!--#include virtual="/includes/foot.shtml"-->

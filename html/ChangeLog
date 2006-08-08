@@ -1,3 +1,10 @@
+2006-08-09  Florian Boor <florian@kernelconcepts.de>
+
+	* projects/index.phtml: Add more libraries and links to documentation.
+        * projects/GPE-what.shtml: Some more improvements.
+	* projects/GPE-Appmgr.shtml: Rework
+	* projects/prototype.shtml: New file - prototype for projects html.
+
 2006-08-08  Florian Boor <florian@kernelconcepts.de>
 
 	* projects/index.phtml: Start application list update.
