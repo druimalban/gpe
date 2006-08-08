@@ -1,6 +1,8 @@
 2006-08-08  Florian Boor <florian@kernelconcepts.de>
 
 	* projects/index.phtml: Start application list update.
+        * projects/GPE-what.shtml: First draft.
+        * images/gpe-what.png: New screenshot.
 
 2006-05-23  Florian Boor <florian@kernelconcepts.de>
 

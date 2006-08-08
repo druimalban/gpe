@@ -5,41 +5,50 @@
 <!--#set var="authoremail" value="philb@gnu.org"-->
 <!--#include virtual="/includes/head.shtml"-->
 
-<H2>Coordinator</H2>
-<p>
-    The coordinator for this sub-project is Philip Blundell
-    (<a HREF="mailto:philb@gnu.org">philb@gnu.org</a>) . If you want to 
-    contribute to this project, please contact him directly.
-  </p>
-
-<H2>Function</H2>
-<P>
-    The GPE user interface is heavily icon-oriented, and it's not always
+<table cellpadding="12" cellspacing="12" border="12" width="90%" bgcolor="#EEEEEE">
+<tr>
+  <td colspan="3"><h2>Subprojects: GPE-What</h2></td>
+</tr>
+<tr>
+  <td><b>Function</b></td>
+  <td> The GPE user interface is heavily icon-oriented, and it's not always
     completely obvious what the exact effect of each button is going to
     be. On a desktop system this would be dealt with by "mouse-over"
-    tooltips, but these don't really work when your pointing device is a
+    tooltips, but these do not really work when your pointing device is a
     stylus.
-</P>
-
-<P>
-    GPE-what implements a modal help system for the GPE environment.
-    It provides a "help" icon in the dock panel.  When this icon is
-    clicked, the system enters "help mode"; normal UI is suspended,
-    and the next mouse click selects the widget for which help is
-    wanted.  The help text, if available, is displayed in a small
-    pop-up bubble.
-</P>
-
-<H2>Status</H2>
-<P>
-    The source code can be found in <A href="../cvs.shtml">CVS</A>,
+  </td>
+  <td rowspan="3"><img src="../images/gpe-what.png" border="0" name="GPE-What" alt="Screenshot"></td>
+</tr>
+<tr>
+  <td><b>Coordinator</b></td>
+  <td>The coordinator for this sub-project is Philip Blundell
+    (<a HREF="mailto:philb@gnu.org">philb@gnu.org</a>). If you want to 
+    contribute to this project, please contact him directly. 
+  </td>
+</tr>
+<tr>
+  <td><b>Status</b></td>
+  <td>The source code can be found in <A href="../cvs.shtml">CVS</A>,
     module <b>gpe-what</b>.  Precompiled binaries for ARM PDAs are available
     in the Familiar <A href="http://familiar.handhelds.org/familiar/feeds/unstable/">unstable feed</A>.
-</P>
+  </td>
+</tr>
+<tr>
+  <td colspan="3">
+    <p>
+      GPE-what implements a modal help system for the GPE environment.
+      It provides a "help" icon in the dock panel.
+    </p>
+    <p>
+        When this icon is clicked, the system enters "help mode"; normal UI is suspended,
+        and the next mouse click selects the widget for which help is
+        wanted. The help text, if available, is displayed in a small
+        pop-up bubble. This mechanism much much more useful for touchscreen use compared to
+        the "mouse-over" tooltips known from a desktop PC.
+    </p>
+  </td>
+</tr>
+</table>
 
-<H2>Screenshot</H2>
-<P>
-<IMG SRC="/images/gpe-what.png" ALT="[gpe-what screenshot]">
-</P>
 
 <!--#include virtual="/includes/foot.shtml"-->
