@@ -1,38 +1,129 @@
 <?php
 $addtitle="Projects";
 $pagename="projects";
-$author="Nils Faerber";
-$authoremail="nils@handhelds.org";
+$author="Florian Boor";
+$authoremail="florian@linuxtogo.org";
 
 include ("../includes/head.php");
 ?>
 
+<p>This page is currently restructured...</p>
+
 <h2>Base software/libraries</h2>
-<ul> 
-<LI> <A HREF="http://www.gtk.org">GTK+ widget toolkit</A> (not maintained by the GPE project)
-<LI> <A HREF="http://www.sqlite.org">SQLite database engine</A> (not maintained by the GPE project)
-<LI> <A HREF="libgpewidget.shtml">libgpewidget</A>
-<!--<LI> <A HREF="libgpevtype.shtml">libgpevtype</A>
-<LI> <A HREF="libgpepimc.shtml">libgpepimc</A>
--->
-</UL>
+
+<table width="80%" bgcolor="EEEEEE">
+<tr bgcolor="#AAAAFF">
+<td>Component</td>
+<td>Description</td>
+<td>Documentation</td>
+</tr>
+<tr>
+<td><A HREF="http://www.gtk.org">GTK</A></td>
+<td>GTK+ widget toolkit</td>
+<td></td>
+</tr>
+<tr>
+<td><A HREF="http://www.sqlite.org">SQLite</A></td>
+<td>SQLite database engine</td>
+<td></td>
+</tr>
+<tr>
+<td><A HREF="http://www.x.org">X11</A></td>
+<td>X window system</td>
+<td></td>
+</tr>
+<tr>
+<td><A HREF="libgpewidget.shtml">libgpewidget</A></td>
+<td>GPE base library for GUI applications</td>
+<td></td>
+</tr>
+<tr>
+<td><A HREF="libgpepimc.shtml">libgpepimc</A></td>
+<td>GPE category library</td>
+<td></td>
+</tr>
+<tr>
+<td><A HREF="libcontactsdb.shtml">libcontactsdb</A></td>
+<td>GPE contacts data library backend.</td>
+<td></td>
+</tr>
+<tr>
+<td><A HREF="gpe-confd.shtml">gpe-confd</A></td>
+<td>GPE configuration settings daemon.</td>
+<td></td>
+</tr>
+</table>
 
 <h2>Applications</h2>
- 	<UL>
-	<LI> <A HREF="GPE-address.shtml">Contacts Manager</A>
-	<LI> <A HREF="GPE-alarms.shtml">Alarm clock</A>
-	<LI> <A HREF="GPE-appmgr.shtml">Application Manager</A> (outdated)
-	<LI> <A HREF="GPE-calendar.shtml">Calendar</A>
-	<LI> <A HREF="GPE-today.shtml">Daily summary</A>
-	<LI> <A HREF="GPE-games.shtml">Games</A>
-	<LI> <A HREF="GPE-mail.shtml">Mail client</A> (deprecated)
-	<LI> <A HREF="GPE-media.shtml">NMF Media player</A>
-	<LI> <A HREF="GPE-notebook.shtml">Sketchbook</A>
-	<LI> <A HREF="GPE-time-tracker.shtml">Time Tracker</A>
-	<LI> <A HREF="GPE-todo.shtml">Todo List</A>
-	<LI> <A HREF="GPE-soundbite.shtml">Voice Memo Recorder</A>
-	<LI> ... and for sure many more to come
-</UL>
+
+<table width="80%" bgcolor="EEEEEE">
+<tr bgcolor="#AAAAFF">
+<td>Component</td>
+<td>Description</td>
+<td>Documentation</td>
+</tr>
+<tr>
+<td><A HREF="GPE-appmgr.shtml">Application Manager</A></td>
+<td>An application launcher and desktop. </td>
+<td></td>
+</tr>
+<tr>
+<td><A HREF="GPE-address.shtml">GPE-Contacts</A></td>
+<td>Contacts Manager</td>
+<td></td>
+</tr>
+<tr>
+<td><A HREF="GPE-calendar.shtml">GPE-Calendar</A></td>
+<td>The calendar application</td>
+<td></td>
+</tr>
+<tr>
+<td><A HREF="GPE-alarms.shtml">GPE-Clock</A></td>
+<td>An alarm clock applet</td>
+<td></td>
+</tr>
+<tr>
+<td><A HREF="GPE-games.shtml">GPE Games</A></td>
+<td>A small collection of tiny games.</td>
+<td></td>
+</tr>
+<tr>
+<td><A HREF="GPE-media.shtml">GPE-NMF</A></td>
+<td>An easy to use media player.</td>
+<td>(not really maintained)</td>
+</tr>
+<tr>
+<td><A HREF="GPE-mini-browser.shtml">GPE-Mini-Browser</A></td>
+<td>A compact web browser application.</td>
+<td></td>
+</tr>
+<tr>
+<td><A HREF="GPE-notebook.shtml">GPE-Sketchbook</A></td>
+<td>Create notes and sketches.</td>
+<td></td>
+</tr>
+<tr>
+<td><A HREF="GPE-soundbite.shtml">GPE-Soundbite</A></td>
+<td>A voice memo tool.</td>
+<td></td>
+</tr>
+<tr>
+<td><A HREF="GPE-today.shtml">GPE-Today</A></td>
+<td>A daily summary.</td>
+<td>(not really maintained)</td>
+</tr>
+<tr>
+<td><A HREF="GPE-todo.shtml">GPE-ToDo</A></td>
+<td>A task list manager.</td>
+<td></td>
+</tr>
+<tr>
+<td><A HREF="GPE-time-tracker.shtml">GPE-Timesheet</A></td>
+<td>Track time spend on tasks.</td>
+<td></td>
+</tr>
+</table>
+
 
 <h2>Utilities</h2>
 <UL>
@@ -41,6 +132,8 @@ include ("../includes/head.php");
 	<LI> <A HREF="GPE-login.shtml">Multi-user Login</A>
 	<LI> <A HREF="GPE-setup.shtml">Configuration Tools</A>
 </UL>
+ gpe-beam, gpe-bluetooth, minilite, gpe-mininet, gpesyncd, gpe-what, 
+	gpe-watch, gpe-mixer, gpe-aerial, gpe-buttonbox, gpe-irc, gpe-shield, gpe-su, gpe-taskmanager
 
 
 <p>
