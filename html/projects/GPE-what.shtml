@@ -1,21 +1,23 @@
 
 <!--#set var="addtitle" value="Interactive help"-->
 <!--#set var="pagename" value="gpe-what"-->
-<!--#set var="author" value="Phil Blundell"-->
-<!--#set var="authoremail" value="philb@gnu.org"-->
+<!--#set var="author" value="Florian Boor"-->
+<!--#set var="authoremail" value="florian.boor@kernelconcepts.de"-->
 <!--#include virtual="/includes/head.shtml"-->
 
 <table cellpadding="12" cellspacing="12" border="12" width="100%" bgcolor="#EEEEEE">
 <tr>
-  <td colspan="3"><h2>Subprojects: GPE-What</h2></td>
+  <td colspan="3"><h2>Subprojects: GPE-What</h2>
+  <i>Interactive Help</i></td>
 </tr>
 <tr>
   <td><b>Function</b></td>
-  <td> The GPE user interface is heavily icon-oriented, and it's not always
+  <td> 
+    The GPE user interface is heavily icon-oriented, and it is not always
     completely obvious what the exact effect of each button is going to
     be. On a desktop system this would be dealt with by "mouse-over"
     tooltips, but these do not really work when your pointing device is a
-    stylus.
+    stylus. GPE-What provides an alternative mechanism for interactive help.
   </td>
   <td rowspan="3"><img src="../images/gpe-what.png" border="0" name="GPE-What" alt="Screenshot"></td>
 </tr>
