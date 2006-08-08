@@ -14,9 +14,7 @@
 
 #include <glib-object.h>
 #include <glib.h>
-#include <sqlite.h>
-#include "event-db.h"
-#include "event-cal.h" 
+#include "gpe/event-db.h"
 
 /* An Event is actually a hollow skeleton.  All of the data is held in
    the referenced EventSource (which is derived from an Event).  */
@@ -129,15 +127,6 @@ struct _EventSource
 extern GSList *event_list (EventSource *ev,
 			   time_t period_start, time_t period_end, int max,
 			   gboolean per_alarm)
-     __attribute__ ((visibility ("hidden")));
-
-/* Return the event with uid UID in event database EDB from backing
-   store or NULL if none exists.  */
-extern EventSource *event_load (EventDB *edb, guint uid)
-     __attribute__ ((visibility ("hidden")));
-
-extern int event_load_callback (void *arg, int argc, char **argv,
-				char **names)
      __attribute__ ((visibility ("hidden")));
 
 #define LIVE(ev) (g_assert (! EVENT (ev)->dead))

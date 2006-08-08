@@ -13,7 +13,7 @@
 #define EVENT_CAL_H
 
 #include <glib-object.h>
-#include "event-db.h"
+#include "gpe/event-db.h"
 
 typedef struct
 {

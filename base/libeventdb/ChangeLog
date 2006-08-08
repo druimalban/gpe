@@ -1,5 +1,121 @@
 2006-08-08  Neal H. Walfield  <neal@gnu.org>
 
+	* sqlite.c: New file.
+	* Makefile.am (libeventdb_la_SOURCES): Add sqlite.c.
+	* event-db.h: Don't include <sqlite.h>.  Include "event-cal.h" and
+	"event.h".
+	(events_enumerate_t): New typedef.
+	(eventid_to_uid_t): Likewise.
+	(set_default_calendar_t): Likewise.
+	(event_new_t): Likewise.
+	(event_load_t): Likewise.
+	(event_load_details_t): Likewise.
+	(event_flush_t): Likewise.
+	(event_remove_t): Likewise.
+	(list_unacknowledged_alarms_t): Likewise.
+	(event_mark_unacknowledged_t): Likewise.
+	(event_mark_acknowledged_t): Likewise.
+	(acknowledge_alarms_through_t): Likewise.
+	(event_calendar_new_t): Likewise.
+	(event_calendar_flush_t): Likewise.
+	(event_calendar_delete_t): Likewise.
+	(event_calendar_list_events_t): Likewise.
+	(event_calendar_list_deleted_t): Likewise.
+	(event_calendar_flush_deleted_t): Likewise.
+	(EventDBClass): Add fields events_enumerate, eventid_to_uid,
+	set_default_calendar, event_new, event_load, event_load_details,
+	event_flush, event_remove, list_unacknowledged_alarms,
+	event_mark_unacknowledged, event_mark_acknowledged,
+	acknowledge_alarms_through, event_calendar_new,
+	event_calendar_flush, event_calendar_delete,
+	event_calendar_list_events, event_calendar_list_deleted and
+	event_calendar_flush_deleted.  Rename field event_new to
+	event_new_func and update users.
+	(struct _EventDB): Remove field sqliteh.
+	(SQLITE_TRY): Move define from here...
+	* sqlite.c (SQLITE_TRY): ... to here.
+	* event-cal.h: Don't include "event-db.h".  Include
+	"gpe/event-db.h".
+	* event-cal.c (event_calendar_flush): Move sql code from here...
+	* sqlite.c (do_event_calendar_flush): ... to here.
+	* event-cal.c (event_db_calendar_new): Move from here...
+	* sqlite.c (do_event_calendar_new): ... to here.
+	* event-cal.c (event_calendar_new): Call event_db_calendar_new
+	indirectly via EC->EDB->EVENT_CALENDAR_NEW.
+	(event_calendar_new_full): Likewise.
+	* event-cal.c (event_calendar_delete): Move sql code from here...
+	* sqlite.c (do_event_calendar_delete): ... to here.
+	* event-cal.c (event_calendar_list_events): Move sql code from
+	here...
+	* sqlite.c (do_event_calendar_list_events): ... to here.
+	* event-cal.c (event_calendar_list_deleted): Move sql code from
+	here...
+	* sqlite.c (do_event_calendar_list_deleted): ... to here.
+	* event-cal.c (event_calendar_flush_deleted): Move sql code from
+	here...
+	* sqlite.c (do_event_calendar_flush_deleted): ... to here.
+	* event-db.c: Don't include <sqlite.h>, <unistd.h> or <obstack.h>.
+	(obstack_chunk_alloc): Don't define.
+	(obstack_chunk_free): Likewise.
+	(event_db_finalize): Don't close EDB->SQLITEH.
+	(event_db_set_alarms_fired_through): Move sql code from
+	here...
+	* sqlite.c (acknowledge_alarms_through): ... to here.
+	* event-db.c (event_mark_unacknowledged): Move from here...
+	* sqlite.c (do_event_mark_unacknowledged): ... to here.
+	* event-db.c (buzzer): Call event_mark_unacknowledged indirectly
+	via EV->EDB->EVENT_MARK_UNACKNOWLEDGED.
+	* event-db.c (event_db_list_unacknowledged_alarms): Move sqlite
+	code from here...
+	* sqlite.c (do_list_unacknowledged_alarms): ... to here.
+	* event-db.c (events_enumerate): Move sql code from here...
+	* sqlite.c (do_events_enumerate): ... to here.
+	* event-db.c (event_db_new): Move from here...
+	* sqlite.c (event_db_new): ... to here.
+	* event-db.c (event_load): Move sql code from here...
+	* sqlite.c (do_event_load): ... to here.
+	* event-db.c (event_db_find_by_eventid): Move sql code from here...
+	* sqlite.c (do_eventid_to_uid): ... to here.
+	* event-db.c (event_db_set_default_calendar): Move sql code from
+	here...
+	* sqlite.c (do_set_default_calendar): ... to here.
+	* event.h: Don't include <sqlite.h>, "event-db.h" or
+	"event-cal.h".  Include "gpe/event-db.h".
+	(event_load): Remove declaration.
+	(event_load_callback): Likewise.
+	* event.c: Include <unistd.h>.
+	(event_init): Don't initialize fields to 0.
+	(event_finalize): Don't set EVENT->DEAD.
+	(event_source_finalize): Don't call event_write.  Call
+	EV->EDB->EVENT_FLUSH.
+	(event_flush): Likewise.
+	(event_flush): Move from here...
+	* sqlite.c (do_event_flush): ... to here.
+	* event.c (event_remove): Move sql code from here...
+	* sqlite.c (do_event_remove): ... to here.
+	* event.c (event_new): Move sql code from here...
+	* sqlite.c (do_event_new): ... to here.
+	* event.c (event_acknowledge): Move sql code from here...
+	* sqlite.c (do_event_mark_acknowledged): ... to here.
+	* event.c (parse_date): Move from here...
+	* sqlite.c (parse_date): ... to here.
+	* event.c (event_load_callback): Move from here...
+	* sqlite.c (event_load_callback): ... to here.
+	* event.c (event_load): Move from here...
+	* sqlite.c (do_event_load): ... to here.
+	* event.c (load_details_callback): Move this...
+	(event_details): ... and the sql code from here...
+	* sqlite.c (do_event_load_details): ... to here.
+
+	* test-eventid.c: New file.
+	* test-eventid.expected: Likewise.
+	* Makefile.am (check_PROGRAMS): Add test-eventid.
+	(TESTS): Add test-eventid.
+	(test_eventid_SOURCES): New primary.
+	(test_eventid_LDADD): Likewise.
+
+2006-08-08  Neal H. Walfield  <neal@gnu.org>
+
 	* event-cal.c: New file.
 	* event-cal.h: Likewise.
 	* event-db.h: Likewise.

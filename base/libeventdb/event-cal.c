@@ -88,33 +88,7 @@ event_calendar_dispose (GObject *obj)
 void
 event_calendar_flush (EventCalendar *ec)
 {
-  char *err;
-  if (SQLITE_TRY
-      (sqlite_exec_printf (ec->edb->sqliteh,
-			   "update calendars set"
-			   "  title='%q', description='%q',"
-			   "  url='%q', username='%q', password='%q',"
-			   "  parent=%d, hidden=%d,"
-			   "  has_color=%d, red=%d, green=%d, blue=%d,"
-			   "  mode=%d, sync_interval=%d,"
-			   "  last_pull=%d, last_push=%d,"
-			   "  last_modified=%d"
-			   " where ROWID=%d;",
-			   NULL, NULL, &err,
-			   ec->title ?: "", ec->description ?: "",
-			   ec->url ?: "", ec->username ?: "",
-			   ec->password ?: "",
-			   ec->parent_uid, ec->hidden,
-			   ec->has_color, ec->red, ec->green, ec->blue,
-			   ec->mode, ec->sync_interval,
-			   ec->last_push, ec->last_pull, ec->last_modified,
-			   ec->uid)))
-    {
-      g_critical ("%s: updating %s (%d): %s", __func__,
-		  ec->description, ec->uid, err);
-      g_free (err);
-    }
-
+  EVENT_DB_GET_CLASS (ec->edb)->event_calendar_flush (ec);
   ec->modified = FALSE;
 }
 
@@ -135,33 +109,6 @@ event_calendar_finalize (GObject *object)
   G_OBJECT_CLASS (event_calendar_parent_class)->finalize (object);
 }
 
-static void
-event_db_calendar_new (EventCalendar *ec)
-{
-  char *err;
-  if (SQLITE_TRY
-      (sqlite_exec_printf
-       (ec->edb->sqliteh,
-	"insert into calendars values"
-	" ('%q', '%q', '%q', '%q', '%q', %d, %d, %d, %d, %d,"
-	"  %d, %d, %d, %d, %d, %d)",
-	NULL, NULL, &err,
-	ec->title ?: "", ec->description ?: "",
-	ec->url ?: "",
-	ec->username ?: "", ec->password ?: "",
-	ec->parent_uid, ec->hidden,
-	ec->has_color, ec->red, ec->green, ec->blue,
-	ec->mode, ec->sync_interval,
-	ec->last_pull, ec->last_push,
-	ec->last_modified)))
-    {
-      g_warning ("%s: %s", __func__, err);
-      g_free (err);
-    }
-
-  ec->uid = sqlite_last_insert_rowid (ec->edb->sqliteh);
-}
-
 EventCalendar *
 event_calendar_new (EventDB *edb)
 {
@@ -169,7 +116,7 @@ event_calendar_new (EventDB *edb)
 						    NULL));
 
   ec->edb = edb;
-  event_db_calendar_new (ec);
+  EVENT_DB_GET_CLASS (ec->edb)->event_calendar_new (ec);
 
   g_object_ref (ec);
   edb->calendars = g_slist_prepend (edb->calendars, ec);
@@ -221,7 +168,7 @@ event_calendar_new_full (EventDB *edb,
   ec->mode = mode;
   ec->sync_interval = sync_interval;
 
-  event_db_calendar_new (ec);
+  EVENT_DB_GET_CLASS (ec->edb)->event_calendar_new (ec);
 
   g_object_ref (ec);
   edb->calendars = g_slist_prepend (edb->calendars, ec);
@@ -290,25 +237,7 @@ event_calendar_delete (EventCalendar *ec,
     }
   event_list_unref (events);
 
-  char *err;
-  if (SQLITE_TRY
-      (sqlite_exec_printf
-       (ec->edb->sqliteh,
-	"begin transaction;"
-	/* Remove the events.  */
-	"delete from calendar where uid"
-	" in (select uid from events where calendar=%d);"
-	"delete from events where calendar=%d;"
-	/* And the calendar.  */
-	"delete from calendars where ROWID=%d;"
-	"commit transaction",
-	NULL, NULL, &err, ec->uid, ec->uid, ec->uid)))
-    {
-      sqlite_exec (ec->edb->sqliteh, "rollback transaction;",
-		   NULL, NULL, NULL);
-      g_critical ("%s: %s", __func__, err);
-      g_free (err);
-    }
+  EVENT_DB_GET_CLASS (ec->edb)->event_calendar_delete (ec);
 
   g_signal_emit (ec->edb,
 		 EVENT_DB_GET_CLASS (ec->edb)->calendar_deleted_signal, 0, ec);
@@ -480,21 +409,7 @@ event_calendar_get_last_modification (EventCalendar *ec)
 GSList *
 event_calendar_list_events (EventCalendar *ec)
 {
-  GSList *list = NULL;
-
-  int callback (void *arg, int argc, char *argv[], char **names)
-    {
-      Event *ev = event_db_find_by_uid (ec->edb, atoi (argv[0]));
-      if (ev)
-	list = g_slist_prepend (list, ev);
-      return 0;
-    }
-  SQLITE_TRY
-    (sqlite_exec_printf (ec->edb->sqliteh,
-			 "select uid from events where calendar=%d;",
-			 callback, NULL, NULL, ec->uid));
-
-  return list;
+  return EVENT_DB_GET_CLASS (ec->edb)->event_calendar_list_events (ec);
 }
 
 GSList *
@@ -518,37 +433,11 @@ event_calendar_list_calendars (EventCalendar *p)
 GSList *
 event_calendar_list_deleted (EventCalendar *ec)
 {
-  GSList *list = NULL;
-
-  int callback (void *arg, int argc, char *argv[], char **names)
-    {
-      EventSource *ev;
-      
-      if (argc != 3) 
-          return 0;
-      ev = EVENT_SOURCE (g_object_new (event_source_get_type (), NULL));
-      g_object_ref (ec->edb);
-      ev->edb = ec->edb;
-      ev->uid = (-1) * atoi (argv[0]);
-      ev->eventid = g_strdup (argv[1]);
-      ev->calendar = atoi (argv[2]);
-      ev->event.dead = 1;
-
-      list = g_slist_prepend (list, ev);
-      return 0;
-    }
-  SQLITE_TRY
-    (sqlite_exec_printf (ec->edb->sqliteh,
-			 "select uid, eventid, calendar from events_deleted where calendar=%d;",
-			 callback, NULL, NULL, ec->uid));
-
-  return list;
+  return EVENT_DB_GET_CLASS (ec->edb)->event_calendar_list_deleted (ec);
 }
 
 void 
 event_calendar_flush_deleted (EventCalendar *ec)
 {
-   SQLITE_TRY (sqlite_exec_printf (ec->edb->sqliteh,
-			     "delete from events_deleted where calendar=%d;",
-			     NULL, NULL, NULL, ec->uid));
+  return EVENT_DB_GET_CLASS (ec->edb)->event_calendar_flush_deleted (ec);
 }
