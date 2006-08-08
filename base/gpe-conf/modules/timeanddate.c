@@ -263,11 +263,18 @@ do_tabchange (GtkNotebook * notebook,
 gchar * 
 getSelectedTimezoneText (void)
 {
+	GtkTreeIter	curZoneIter;
 	gint		curIndex;
 	gint		curAreaIndex;
 	gchar		*retVal = NULL;
 	
-	curAreaIndex	= gtk_combo_box_get_active(GTK_COMBO_BOX(self.timezoneArea));
+	if (gtk_combo_box_get_active_iter(GTK_COMBO_BOX(self.timezoneArea), &curZoneIter))
+    {
+        GtkTreeModel    *timezoneAreaModel;
+        timezoneAreaModel = gtk_combo_box_get_model(GTK_COMBO_BOX(self.timezoneArea));
+        gtk_tree_model_get(timezoneAreaModel, &curZoneIter, COL_VIEW_ID, &curAreaIndex, -1);
+    }
+    
 	curIndex	= gtk_combo_box_get_active(GTK_COMBO_BOX(self.timezone));
 	if ((curAreaIndex > -1) && (curIndex > -1))
 	{
@@ -281,15 +288,21 @@ void
 timezonearea_combo_changed(GtkComboBox *widget, gpointer user_data)
 {
 	GtkListStore	*timezoneModel;
-	GtkTreeIter	timezoneIter;
-	gint		curIndex;
+	GtkTreeIter	timezoneIter, curZoneIter;
+	gint		curIndex = -1;
 	gchar		**tzPointer;
 	guint		idx;
 
-	curIndex	= gtk_combo_box_get_active(GTK_COMBO_BOX(self.timezoneArea));
-	if (curIndex > -1)
+	if (gtk_combo_box_get_active_iter(GTK_COMBO_BOX(self.timezoneArea), &curZoneIter))
+    {
+        GtkTreeModel    *timezoneAreaModel;
+        timezoneAreaModel = gtk_combo_box_get_model(GTK_COMBO_BOX(self.timezoneArea));
+        gtk_tree_model_get(timezoneAreaModel, &curZoneIter, COL_VIEW_ID, &curIndex, -1);
+    }
+    
+ 	if (curIndex > -1)
 	{
-		timezoneModel		= (GtkListStore *)gtk_combo_box_get_model(GTK_COMBO_BOX(self.timezone));
+		timezoneModel = (GtkListStore *)gtk_combo_box_get_model(GTK_COMBO_BOX(self.timezone));
 		/* clear previous timezone texts */
 		gtk_list_store_clear(timezoneModel);
 		
@@ -324,6 +337,7 @@ gint getTimezoneAreaIndexByTimezoneName(gchar *tzNameParam)
 	gchar		**tzAreasPointer;
 	guint		i = 0;
 	gchar		*searchname;
+    gint        retval = 0;
 
 	searchname = strstr (tzNameParam, "/");
     
@@ -331,7 +345,7 @@ gint getTimezoneAreaIndexByTimezoneName(gchar *tzNameParam)
  		searchname = tzNameParam;
     else
         searchname++;
-
+    
 	while (timezoneNameArray[i] != NULL) 
 	{
 		tzAreasPointer	= timezoneAreaArray[i];
@@ -340,11 +354,13 @@ gint getTimezoneAreaIndexByTimezoneName(gchar *tzNameParam)
 		{
    			if (strstr(tzAreasPointer[j], searchname)) 
 			{
-				return i;
+				return retval;
    			}
 			j++;
 		}
-		i++;
+		if (j) /* count areas with zones only */
+            retval++;
+        i++;
 	}
 	return -1;
 }
@@ -357,7 +373,7 @@ getTimezoneIndexByTimezoneAreaIndexAndTimezoneName(guint tzAreaIndexParam, gchar
 {
 	gint	retVal = -1;
 	gchar	**tzAreasPointer;
-	guint	idx = 0;
+	guint	idx = 0, name_pos = 0, i = 0;
 	gchar	*searchname;
 
 	searchname = strstr (tzNameParam, "/");
@@ -367,9 +383,19 @@ getTimezoneIndexByTimezoneAreaIndexAndTimezoneName(guint tzAreaIndexParam, gchar
     else
 		searchname = tzNameParam;
 	
+    while (i <= tzAreaIndexParam)
+    {
+        if (timezoneAreaArray[name_pos])
+            i++;
+        if (i > tzAreaIndexParam)
+            break;
+        name_pos++;
+    }
+ 
+
 	if (tzAreaIndexParam >= 0)
 	{
-    		tzAreasPointer	= timezoneAreaArray[tzAreaIndexParam];
+    		tzAreasPointer	= timezoneAreaArray[name_pos];
     		while (tzAreasPointer && (tzAreasPointer[idx] != NULL))
 			{
     			if (strstr(tzAreasPointer[idx], searchname)) 
@@ -380,6 +406,7 @@ getTimezoneIndexByTimezoneAreaIndexAndTimezoneName(guint tzAreaIndexParam, gchar
 				idx++;
 			}
 	}
+    
 	return retVal;
 }
 
@@ -555,11 +582,14 @@ Time_Build_Objects(gboolean nonroot)
 	idx	= 0;
 	while (timezoneNameArray[idx] != NULL) 
 	{
-    	gtk_list_store_append(timezoneAreaModel, &timezoneAreaIter);
-	   	gtk_list_store_set(timezoneAreaModel, &timezoneAreaIter,
-               			COL_VIEW_ID, idx,
-                       	COL_VIEW_NAME, timezoneNameArray[idx], -1);
-		idx++;
+        if (timezoneAreaArray[idx])
+        {
+    	    gtk_list_store_append(timezoneAreaModel, &timezoneAreaIter);
+	   	    gtk_list_store_set(timezoneAreaModel, &timezoneAreaIter,
+                   			COL_VIEW_ID, idx,
+                        	COL_VIEW_NAME, timezoneNameArray[idx], -1);
+        }    
+        idx++;
 	}
 	label = gtk_label_new(_("Area"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
@@ -610,6 +640,7 @@ Time_Build_Objects(gboolean nonroot)
 	                      _("Select your current timezone here. The setting applies after the next login."), NULL);
 	gtk_table_attach (GTK_TABLE (table), self.timezone,
 	                  1, 2, 2, 3, GTK_FILL | GTK_EXPAND, 0, 0, 0);
+    
 	gtk_combo_box_set_active(GTK_COMBO_BOX (self.timezone), selTimezoneIndx);
 	
 	g_signal_connect_after (G_OBJECT (notebook), "switch-page",
