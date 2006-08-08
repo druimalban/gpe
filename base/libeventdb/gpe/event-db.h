@@ -8,8 +8,8 @@
  * 2 of the License, or (at your option) any later version.
  */
 
-#ifndef EVENT_DB_H
-#define EVENT_DB_H
+#ifndef GPE_EVENT_DB_H
+#define GPE_EVENT_DB_H
 
 #define SECONDS_IN_DAY (24*60*60)
 
@@ -134,7 +134,17 @@ extern Event *event_db_find_by_eventid (EventDB *edb, const char *eventid);
 
 extern EventCalendar *event_db_find_calendar_by_uid (EventDB *edb, guint uid);
 
-extern EventCalendar *event_db_find_calendar_by_name (EventDB *edb, const gchar *name);
+/**
+ * event_db_find_calendar_by_name:
+ * @edb: Event database
+ * @name: Calendar name
+ *
+ * Get a desired calendar by name.
+ * 
+ * Returns: An #EventCalendar object or NULL if not found.
+ */
+extern EventCalendar *event_db_find_calendar_by_name (EventDB *edb,
+						      const gchar *name);
 
 /* Returns a list of the event calendars in EDB.  There will always be
    at least one calendar.  Allocates a reference to each calendar.  It
@@ -293,8 +303,18 @@ extern time_t event_calendar_get_last_modification (EventCalendar *ec)
    must free the returned list.  */
 extern GSList *event_calendar_list_events (EventCalendar *ec);
 
-/* Returns a list of deleted events in the given calendar. 
-   the returned list needs to be freed after use. */
+/**
+ * event_calendar_list_deleted:
+ * @ec: An #EventCalendar
+ *
+ * Retrieve a list of deleted events since the last
+ * event_calendar_flush_deleted() call. The events contain a very
+ * basic set of information only and should be used to indicate wether
+ * a particular event was deleted or not only.  The returned list of
+ * events needs to be freed by the caller.
+ *
+ * Returns: A list of events.
+ */
 extern GSList *event_calendar_list_deleted (EventCalendar *ec);
 
 /* Clean the list of deleted events. */
@@ -343,7 +363,12 @@ extern gboolean event_flush (Event *ev);
    memory version nor does it deallocate a reference to EVENT.  */
 extern gboolean event_remove (Event *ev);
 
-/* g_object unref each Event * on the list and destroy the list.  */
+/**
+ * event_list_unref:
+ * @l: Event list
+ *
+ * g_object_unref each Event * on the list and destroy the list.
+ */
 extern void event_list_unref (GSList *l);
 
 /* Returns the event db (without allocating a reference) in which EV
@@ -365,8 +390,9 @@ extern gboolean event_get_visible (Event *ev) __attribute__ ((pure));
 
 extern time_t event_get_start (Event *ev) __attribute__ ((pure));
 
-extern time_t event_get_last_modification (Event *event) __attribute__ ((pure));
-
+/* The duration of an event in seconds.  Taking the start time and
+   adding the duration yields the second after which the event
+   ends.  */
 extern unsigned long event_get_duration (Event *ev) __attribute__ ((pure));
 extern void event_set_duration (Event *ev, unsigned long duration);
 
@@ -382,6 +408,9 @@ extern void event_acknowledge (Event *ev);
    change to the event, e.g. change of start, end, location, etc.)  */
 extern guint32 event_get_sequence (Event *ev) __attribute__ ((pure));
 extern void event_set_sequence (Event *ev, guint32 sequence);
+
+extern time_t event_get_last_modification (Event *event)
+     __attribute__ ((pure));
 
 /* Recurrence type.  */
 extern enum event_recurrence_type event_get_recurrence_type (Event *ev)

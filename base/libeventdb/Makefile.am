@@ -6,7 +6,13 @@ AM_CPPFLAGS = @EVENTDB_CFLAGS@ -D_XOPEN_SOURCE -DPACKAGE_LOCALE_DIR=\"@datadir@/
 
 libeventdb_la_LDFLAGS = @EVENTDB_LIBS@ -version-info 1:0:0
 
-libeventdb_la_SOURCES = event-db.c gpe/event-db.h
+libeventdb_la_SOURCES = gpe/event-db.h		\
+              event-cal.c			\
+              event-cal.h			\
+              event-db.c			\
+              event-db.h			\
+              event.c				\
+              event.h
 
 gpeincludedir = $(includedir)/gpe
 gpeinclude_HEADERS = gpe/event-db.h

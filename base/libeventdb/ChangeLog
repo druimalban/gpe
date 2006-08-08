@@ -1,3 +1,13 @@
+2006-08-08  Neal H. Walfield  <neal@gnu.org>
+
+	* event-cal.c: New file.
+	* event-cal.h: Likewise.
+	* event-db.h: Likewise.
+	* event.c: Likewise.
+	* event.h: Likewise.
+	* event-db.c: Redistribute code across the new files.
+	* gpe/event-db.h: Add comments.
+
 2006-08-07  Florian Boor <florian.boor@kernelconcepts.de>
 
     * evend_db.c/h (event_get_last_modification): New function.
