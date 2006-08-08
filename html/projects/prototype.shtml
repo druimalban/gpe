@@ -1,0 +1,61 @@
+
+<!--#set var="addtitle" value="Title"-->
+<!--#set var="pagename" value=""-->
+<!--#set var="author" value="GPE Hacker"-->
+<!--#set var="authoremail" value="gpe@handhelds.org"-->
+<!--#include virtual="/includes/head.shtml"-->
+
+<table cellpadding="12" cellspacing="12" border="12" width="100%" bgcolor="#EEEEEE">
+<tr>
+  <td colspan="3"><h2>Subprojects: @App</h2>
+  <i><!--#echo var="pagename"--></i></td>
+</tr>
+<tr>
+  <td><b>Function</b></td>
+  <td> 
+  </td>
+  <td rowspan="3"><img src="../images/@.png" border="0" alt="Screenshot"></td>
+</tr>
+<tr>
+  <td><b>Coordinator</b></td>
+  <td>
+  </td>
+</tr>
+<tr>
+  <td><b>Status</b></td>
+  <td>
+    <p>
+      The source code can be found in <A href="../cvs.shtml">CVS</A>,
+      module <b>@</b>.  
+	</p>
+	<p>
+	  Distributions known to ship <i>@</i> are:
+	  <ul>
+	  	  <li><a href="http://familiar.handhelds.org">Familiar</a>
+          <li><a href="http://www.openzaurus.org">OpenZaurus</a>
+		  <li><a href="http://www.angstroem-distribution.org">Angstroem</a>
+     </ul>
+	</p>
+	<p>
+	  <i>@</i> is distributed under the <a href="http://www.gnu.org/licenses/gpl.html#SEC1">GPL</a>.
+	</p>
+  </td>
+</tr>
+<tr>
+  <td colspan="3">
+    <p>
+    </p>
+  </td>
+</tr>
+<tr>
+  <td><b>Project History</b></td>
+  <td>
+     <ul>
+	   <li></li>
+	 </ul>
+  </td>
+</tr>
+</table>
+
+
+<!--#include virtual="/includes/foot.shtml"-->
