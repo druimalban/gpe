@@ -597,15 +597,15 @@ Time_Build_Objects(gboolean nonroot)
 	                                     G_TYPE_INT, G_TYPE_STRING);
 	idx			= 0;
 	timezoneAreasPointer	= timezoneAreaArray[selTimezoneAreaIndx];
-	while(*timezoneAreasPointer != NULL) 
-	{
-		gtk_list_store_append(timezoneModel, &timezoneIter);
-		gtk_list_store_set(timezoneModel, &timezoneIter,
-					COL_VIEW_ID, idx,
-					COL_VIEW_NAME, *timezoneAreasPointer, -1);
-		timezoneAreasPointer++;
-		idx++;
-	}
+    if (timezoneAreasPointer)
+        while(timezoneAreasPointer[idx] != NULL) 
+    	{
+    		gtk_list_store_append(timezoneModel, &timezoneIter);
+    		gtk_list_store_set(timezoneModel, &timezoneIter,
+    					COL_VIEW_ID, idx,
+    					COL_VIEW_NAME, timezoneAreasPointer[idx], -1);
+    		idx++;
+    	}
 	self.timezone	= gtk_combo_box_new_with_model(GTK_TREE_MODEL(timezoneModel));
 	timezoneRend	= gtk_cell_renderer_text_new();
 	gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(self.timezone),

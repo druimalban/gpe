@@ -1,3 +1,8 @@
+
+2006-08-08	Florian Boor <florian.boor@kernelconcepts.de>
+
+	* timeanddate.c: Some cleanups and sanity check.
+
 2006-08-07	Florian Boor <florian.boor@kernelconcepts.de>
     
     * timeanddate.c: Default to "Europe/Berlin", Vienna is not in the default 
