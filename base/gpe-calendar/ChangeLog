@@ -1,3 +1,12 @@
+2006-08-08  Neal H. Walfield  <neal@gnu.org>
+
+	* calendar-update.c (struct info): Add field busy.
+	(pushed): Set INFO->BUSY to FALSE.
+	(pulled): Likewise.
+	(calendar_push_internal): Set INFO->BUSY to TRUE.
+	(calendar_pull_internal): Set INFO->BUSY to TRUE.
+	(refresh): Only synchronize if INFO->BUSY is FALSE.  Refresh at
+	most once every 10 seconds.
 
 2006-08-07  Florian Boor  <florian.boor@kernelconcepts.de>
 

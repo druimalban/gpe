@@ -237,6 +237,9 @@ struct info
 #define RETRY_FLOOR 60
 #define RETRY_CEILING 24 * 60 * 60
   int last_retry_inc;
+
+  /* If this calendar is currently sync'ing.  */
+  gboolean busy;
 };
 
 static GSList *calendars;
@@ -317,6 +320,7 @@ pushed (SoupMessage *msg, gpointer data)
     }
 
   g_object_unref (info->ec);
+  info->busy = FALSE;
 }
 
 static gboolean
@@ -350,6 +354,8 @@ build_message (SoupSession **session, SoupMessage **msg,
 static void
 calendar_push_internal (struct info *info)
 {
+  info->busy = TRUE;
+
   SoupSession *session;
   SoupMessage *msg;
 
@@ -423,11 +429,14 @@ pulled (SoupMessage *msg, gpointer data)
       g_free (status);
     }
   g_object_unref (info->ec);
+  info->busy = FALSE;
 }
 
 static void
 calendar_pull_internal (struct info *info)
 {
+  info->busy = TRUE;
+
   SoupSession *session;
   SoupMessage *msg;
 
@@ -503,7 +512,7 @@ refresh (gpointer data)
 	    continue;
 	  }
 
-      if (next_refresh < now + 60)
+      if (! info->busy && next_refresh < now + 60)
 	{
 	  char *title = event_calendar_get_title (ec);
 	  printf ("Updating %s\n", title);
@@ -531,7 +540,7 @@ refresh (gpointer data)
   if (have_refresh)
     {
       guint next_update = MIN (G_MAXUINT / 1000 - 1, earliest_refresh - now);
-      refresh_source = g_timeout_add (next_update * 1000,
+      refresh_source = g_timeout_add (MAX (10000, next_update * 1000),
 				      refresh, NULL);
     }
 
