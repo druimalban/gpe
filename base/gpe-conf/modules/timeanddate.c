@@ -295,16 +295,16 @@ timezonearea_combo_changed(GtkComboBox *widget, gpointer user_data)
 		
 		/* add new timezone texts */
 		idx			= 0;
-		tzPointer	= timezoneAreaArray[curIndex];		
-		while(*tzPointer != NULL) {
-       			gtk_list_store_append(timezoneModel, &timezoneIter);
-				gtk_list_store_set(timezoneModel, &timezoneIter,
-					COL_VIEW_ID, idx,
-					COL_VIEW_NAME, *tzPointer,
-					-1);
-			tzPointer++;
-			idx++;
-		}
+		tzPointer	= timezoneAreaArray[curIndex];
+        if (tzPointer)
+	    	while(tzPointer[idx] != NULL) {
+       	    		gtk_list_store_append(timezoneModel, &timezoneIter);
+		    		gtk_list_store_set(timezoneModel, &timezoneIter,
+		    			COL_VIEW_ID, idx,
+		    			COL_VIEW_NAME, tzPointer[idx],
+		    			-1);
+		    	idx++;
+		    }
 		/* select first from the list by default */
 		gtk_combo_box_set_active(GTK_COMBO_BOX (self.timezone), 0);
 	}	
@@ -321,10 +321,8 @@ timezonearea_combo_changed(GtkComboBox *widget, gpointer user_data)
 */
 gint getTimezoneAreaIndexByTimezoneName(gchar *tzNameParam)
 {
-	gint		retVal = -1;
 	gchar		**tzAreasPointer;
-	guint		idx = 0;
-	gboolean	curFound = FALSE;
+	guint		i = 0;
 	gchar		*searchname;
 
 	searchname = strstr (tzNameParam, "/");
@@ -334,26 +332,21 @@ gint getTimezoneAreaIndexByTimezoneName(gchar *tzNameParam)
     else
         searchname++;
 
-	while (timezoneNameArray[idx] != NULL) 
+	while (timezoneNameArray[i] != NULL) 
 	{
-		tzAreasPointer	= timezoneAreaArray[idx];
-    	while (tzAreasPointer && (*tzAreasPointer != NULL)) 
+		tzAreasPointer	= timezoneAreaArray[i];
+        guint j = 0;
+    	while (tzAreasPointer && (tzAreasPointer[j] != NULL)) 
 		{
-   			if (strstr(*tzAreasPointer, searchname)) 
+   			if (strstr(tzAreasPointer[j], searchname)) 
 			{
-				retVal = idx;
-   				curFound = TRUE;
-   				break;
+				return i;
    			}
-			tzAreasPointer++;
+			j++;
 		}
-		if (curFound == TRUE)
-		{
-			break;
-		}
-		idx++;
+		i++;
 	}
-	return retVal;
+	return -1;
 }
 
 /**
@@ -367,22 +360,23 @@ getTimezoneIndexByTimezoneAreaIndexAndTimezoneName(guint tzAreaIndexParam, gchar
 	guint	idx = 0;
 	gchar	*searchname;
 
-	searchname = strstr (tzNameParam, "/") + 1;
+	searchname = strstr (tzNameParam, "/");
 	
-	if ((gint)searchname == 1)
+	if (searchname)
+        searchname++;
+    else
 		searchname = tzNameParam;
 	
 	if (tzAreaIndexParam >= 0)
 	{
     		tzAreasPointer	= timezoneAreaArray[tzAreaIndexParam];
-    		while (tzAreasPointer && (*tzAreasPointer != NULL))
+    		while (tzAreasPointer && (tzAreasPointer[idx] != NULL))
 			{
-    			if (strstr(*tzAreasPointer, searchname)) 
+    			if (strstr(tzAreasPointer[idx], searchname)) 
 				{
     				retVal	= idx;
     				break;
     			}
-				tzAreasPointer++;
 				idx++;
 			}
 	}
