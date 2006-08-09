@@ -1,5 +1,6 @@
 2006-08-09	Florian Boor <florian.boor@kernelconcepts.de>
 
+    * timeanddate.c: Finish rewrite.
 	* timeanddate.c: Renamed and rewrote some functions.
 
 2006-08-08	Florian Boor <florian.boor@kernelconcepts.de>

@@ -330,7 +330,7 @@ timezonearea_combo_changed(GtkComboBox *widget, gpointer user_data)
 gint 
 get_timezone_area_index (const gchar *tzNameParam)
 {
-	guint		i = 0;
+	gint		i = 0;
 	gchar		*searchname, *pos;
     gint        retval = -1;
 
@@ -350,23 +350,41 @@ get_timezone_area_index (const gchar *tzNameParam)
         i++;
 	}
     g_free (searchname);
+ 
 	return retval;
 }
+
+gint 
+area_index_to_selector_index (gint i)
+{
+	gint j, retval = i;
+ 
+    for (j = 0; j <= i; j++)
+	{
+        if (!timezoneAreaArray[j])
+            retval--;
+	}
+    
+	return retval;
+}
+
 
 /**
 * If timezone is not found from the timezone area, -1 is returned.
 */
 gint 
-get_timezone_index (guint tzAreaIndexParam, gchar *tzNameParam)
+get_timezone_index (gint tzAreaIndexParam, gchar *tzNameParam)
 {
 	gint	retVal = -1;
 	gchar	**tzAreasPointer;
-	guint	idx = 0;
+	gint	idx = 0;
 	gchar	*searchname;
 
-	if ((tzAreaIndexParam < 0) || (tzAreaIndexParam > timezoneAreaArray_len))
+	if ((tzAreaIndexParam < 0) 
+        || (tzAreaIndexParam > timezoneAreaArray_len)
+        || !tzNameParam)
         return retVal;
-        
+
 	searchname = strstr (tzNameParam, "/");
 	
 	if (searchname)
@@ -531,7 +549,7 @@ Time_Build_Objects(gboolean nonroot)
 	gtk_table_attach (GTK_TABLE (table), self.catlabel4, 
 	                  0, 4, 0, 1, GTK_FILL, GTK_FILL, 0, 0);
 			
-	// timezone area combobox
+	/* timezone area combobox */
 	fstr = get_current_tz();
     
 	selTimezoneAreaIndx	= get_timezone_area_index (fstr);
@@ -576,14 +594,15 @@ Time_Build_Objects(gboolean nonroot)
 	self.timezoneArea	= gtk_combo_box_new_with_model(GTK_TREE_MODEL(timezoneAreaModel));
 	timezoneAreaRend	= gtk_cell_renderer_text_new();
 	gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(self.timezoneArea), 
-				timezoneAreaRend, 
-				TRUE);
+				timezoneAreaRend, TRUE);
 	gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT(self.timezoneArea), 
-				timezoneAreaRend,
-               			"text", COL_VIEW_NAME,
-               			NULL);
-	gtk_combo_box_set_active(GTK_COMBO_BOX (self.timezoneArea), selTimezoneAreaIndx);
-	gtk_tooltips_set_tip(tooltips, self.timezoneArea, _("Select your current timezone area here. The setting applies after the next login."), NULL);
+				timezoneAreaRend,"text", COL_VIEW_NAME,	NULL);
+    
+	gtk_combo_box_set_active(GTK_COMBO_BOX (self.timezoneArea), 
+                             area_index_to_selector_index (selTimezoneAreaIndx));
+	gtk_tooltips_set_tip(tooltips, self.timezoneArea, 
+                         _("Select your current timezone area here. "\
+                           "The setting applies after the next login."), NULL);
 	gtk_table_attach (GTK_TABLE (table), self.timezoneArea, 
 	                  1, 2, 1, 2, GTK_FILL | GTK_EXPAND, 0, 0, 0);
 	g_signal_connect(G_OBJECT(GTK_COMBO_BOX(self.timezoneArea)), "changed",
@@ -593,7 +612,7 @@ Time_Build_Objects(gboolean nonroot)
 	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
 	gtk_table_attach (GTK_TABLE (table), label,	0, 1, 2, 3,	GTK_FILL | GTK_EXPAND, 
 	                  0, 0, 0);
-	// timezone combobox
+	/* timezone combobox */
 	timezoneModel	= gtk_list_store_new(N_VIEW_COLUMNS,
 	                                     G_TYPE_INT, G_TYPE_STRING);
 	idx			= 0;
@@ -614,12 +633,14 @@ Time_Build_Objects(gboolean nonroot)
 	gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT(self.timezone),
 	                               timezoneRend, "text", COL_VIEW_NAME, NULL);	
 	gtk_tooltips_set_tip (tooltips, self.timezone, 
-	                      _("Select your current timezone here. The setting applies after the next login."), NULL);
+	                      _("Select your current timezone here. "\
+                            "The setting applies after the next login."), NULL);
 	gtk_table_attach (GTK_TABLE (table), self.timezone,
 	                  1, 2, 2, 3, GTK_FILL | GTK_EXPAND, 0, 0, 0);
     
 	gtk_combo_box_set_active(GTK_COMBO_BOX (self.timezone), selTimezoneIndx);
-	
+
+ 
 	g_signal_connect_after (G_OBJECT (notebook), "switch-page",
 				G_CALLBACK (do_tabchange), NULL);
 	gtk_widget_show_all(notebook);
