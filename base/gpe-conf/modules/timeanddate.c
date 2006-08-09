@@ -324,58 +324,49 @@ timezonearea_combo_changed(GtkComboBox *widget, gpointer user_data)
 }
 
 /*
-* Method for finding timezone area index by using timezone name as a key.
-* Method could be optimized by only searching from "Other" area and
-* if not found from there then comparing the timezone area names with the start part of the
-* timezone area name. But this method is not done very often and this way it was easier to implement
-* for me so...
-*
-* If area is not found -1 is returned.
-*/
-gint getTimezoneAreaIndexByTimezoneName(gchar *tzNameParam)
+ * Find area name index from name string.
+ * If area is not found -1 is returned.
+ */
+gint 
+get_timezone_area_index (const gchar *tzNameParam)
 {
-	gchar		**tzAreasPointer;
 	guint		i = 0;
-	gchar		*searchname;
-    gint        retval = 0;
+	gchar		*searchname, *pos;
+    gint        retval = -1;
 
-	searchname = strstr (tzNameParam, "/");
     
-    if (!searchname)
- 		searchname = tzNameParam;
-    else
-        searchname++;
+	searchname = g_strdup (tzNameParam);
+    pos = strchr (searchname, '/');
+    if (pos)
+        pos[0] = 0;        
     
 	while (timezoneNameArray[i] != NULL) 
 	{
-		tzAreasPointer	= timezoneAreaArray[i];
-        guint j = 0;
-    	while (tzAreasPointer && (tzAreasPointer[j] != NULL)) 
-		{
-   			if (strstr(tzAreasPointer[j], searchname)) 
-			{
-				return retval;
-   			}
-			j++;
-		}
-		if (j) /* count areas with zones only */
-            retval++;
+        if (!strcmp (timezoneNameArray[i], searchname))
+        {
+            retval = i;
+            break;
+        }
         i++;
 	}
-	return -1;
+    g_free (searchname);
+	return retval;
 }
 
 /**
 * If timezone is not found from the timezone area, -1 is returned.
 */
 gint 
-getTimezoneIndexByTimezoneAreaIndexAndTimezoneName(guint tzAreaIndexParam, gchar *tzNameParam)
+get_timezone_index (guint tzAreaIndexParam, gchar *tzNameParam)
 {
 	gint	retVal = -1;
 	gchar	**tzAreasPointer;
-	guint	idx = 0, name_pos = 0, i = 0;
+	guint	idx = 0;
 	gchar	*searchname;
 
+	if ((tzAreaIndexParam < 0) || (tzAreaIndexParam > timezoneAreaArray_len))
+        return retVal;
+        
 	searchname = strstr (tzNameParam, "/");
 	
 	if (searchname)
@@ -383,29 +374,14 @@ getTimezoneIndexByTimezoneAreaIndexAndTimezoneName(guint tzAreaIndexParam, gchar
     else
 		searchname = tzNameParam;
 	
-    while (i <= tzAreaIndexParam)
+    tzAreasPointer = timezoneAreaArray[tzAreaIndexParam];
+    
+    while (tzAreasPointer[idx] != NULL)
     {
-        if (timezoneAreaArray[name_pos])
-            i++;
-        if (i > tzAreaIndexParam)
-            break;
-        name_pos++;
+	    if (!strcmp(tzAreasPointer[idx], searchname))
+            return idx;
+        idx++;
     }
- 
-
-	if (tzAreaIndexParam >= 0)
-	{
-    		tzAreasPointer	= timezoneAreaArray[name_pos];
-    		while (tzAreasPointer && (tzAreasPointer[idx] != NULL))
-			{
-    			if (strstr(tzAreasPointer[idx], searchname)) 
-				{
-    				retVal	= idx;
-    				break;
-    			}
-				idx++;
-			}
-	}
     
 	return retVal;
 }
@@ -558,12 +534,13 @@ Time_Build_Objects(gboolean nonroot)
 	// timezone area combobox
 	fstr = get_current_tz();
     
-	selTimezoneAreaIndx	= getTimezoneAreaIndexByTimezoneName(fstr);
+	selTimezoneAreaIndx	= get_timezone_area_index (fstr);
+
 	if (selTimezoneAreaIndx == -1)
 	{
 		g_free(fstr);
 		fstr = g_strdup("Europe/Berlin");
-		selTimezoneAreaIndx	= getTimezoneAreaIndexByTimezoneName(fstr);
+		selTimezoneAreaIndx	= get_timezone_area_index (fstr);
 	}
 	if (selTimezoneAreaIndx == -1)
 	{
@@ -572,7 +549,7 @@ Time_Build_Objects(gboolean nonroot)
 	}
 	else
 	{
-		selTimezoneIndx	= getTimezoneIndexByTimezoneAreaIndexAndTimezoneName(selTimezoneAreaIndx, fstr);
+		selTimezoneIndx	= get_timezone_index (selTimezoneAreaIndx, fstr);
 	}
 	g_free(fstr);
 	
