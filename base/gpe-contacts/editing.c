@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2002, 2003, 2004 Philip Blundell <philb@gnu.org>
- * Hildon adaption 2005 Florian Boor <florian@kernelconcepts.de>
+ * Copyright (C) 2005, 2006 Florian Boor <florian@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -748,7 +748,7 @@ update_categories_list (GtkWidget *ui, GSList *selected, GtkWidget *edit)
 #ifndef IS_HILDON
   str = build_categories_string (p);
   w = lookup_widget (edit, "categories-label");
-  gtk_label_set_text (GTK_LABEL (w), str);
+  gtk_label_set_markup (GTK_LABEL (w), str);
   g_free (str);
 #endif
 }
@@ -862,7 +862,7 @@ edit_person (struct contacts_person *p, gchar *title, gboolean isdialog)
       /* display categories */  
       str = build_categories_string (p);
       catlabel = lookup_widget (window, "categories-label");
-      gtk_label_set_text (GTK_LABEL (catlabel), str);
+      gtk_label_set_markup (GTK_LABEL (catlabel), str);
       g_free (str);
 #endif        
     }

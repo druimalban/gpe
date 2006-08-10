@@ -1,3 +1,7 @@
+2006-08-11  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * editing.c: Fix category display.
+
 2006-08-05  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * main.c (show_details): Fix memory leak.
