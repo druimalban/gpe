@@ -1,5 +1,6 @@
 2006-08-11	Florian Boor <florian.boor@kernelconcepts.de>
 
+	* Release version 0.2.2.
 	* serial.c, serial.h, keyboard.c: Improve testing for serial port.
 
 2006-08-10	Florian Boor <florian.boor@kernelconcepts.de>
