@@ -1,3 +1,7 @@
+2006-08-10  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * main.c (main): Set absolute path for local files.
+
 2006-08-08  Neal H. Walfield  <neal@gnu.org>
 
 	* calendar-update.c (struct info): Add field busy.

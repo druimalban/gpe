@@ -1767,12 +1767,16 @@ main (int argc, char *argv[])
             {
               calendar_list_file = g_strdup (optarg);
               char *s
-                = g_strdup_printf ("%s%sLIST_CALENDARS=%s",
+                = g_strdup_printf ("%s%sLIST_CALENDARS=%s%s%s",
                             state ?: "", state ? "\n" : "",
+                            *optarg == '/' ? "" : current_dir,
+                            *optarg == '/' ? "" : G_DIR_SEPARATOR_S,
                            optarg);
               g_free (state);
               state = s;
             }
+          if (! current_dir)
+            current_dir = g_get_current_dir ();
         }
       if (option_letter == 'e')
         {
@@ -1780,6 +1784,8 @@ main (int argc, char *argv[])
               continue;
           export_only = TRUE;
           export_file = g_strdup (optarg);
+          if (! current_dir)
+            current_dir = g_get_current_dir ();
         }
       if (option_letter == 'D')
         {
@@ -1787,6 +1793,8 @@ main (int argc, char *argv[])
               continue;
           list_deleted_only = TRUE;
           delete_list_file = g_strdup (optarg);
+          if (! current_dir)
+            current_dir = g_get_current_dir ();
         }
       if (option_letter == 'd')
         {
@@ -1829,9 +1837,6 @@ main (int argc, char *argv[])
             }
       }
     
-  if (current_dir)
-    g_free (current_dir);
-
   if (!schedule_only && !export_only && !delete_only 
       && !flush_deleted_only && !list_deleted_only && !list_calendars_only)
     {
@@ -1843,8 +1848,10 @@ main (int argc, char *argv[])
   if (export_only)
     {
       char *s
-        = g_strdup_printf ("%s%sEXPORT=%s*%s",
+        = g_strdup_printf ("%s%sEXPORT=%s%s%s*%s",
                    state ?: "", state ? "\n" : "",
+                   *export_file == '/' ? "" : current_dir,
+                   *export_file == '/' ? "" : G_DIR_SEPARATOR_S,
                    export_file, selected_calendar ? selected_calendar : "" );
       g_free (state);
       state = s;
@@ -1852,23 +1859,19 @@ main (int argc, char *argv[])
   if (list_deleted_only)
     {
       char *s
-        = g_strdup_printf ("%s%sLIST_DELETED=%s*%s",
+        = g_strdup_printf ("%s%sLIST_DELETED=%s%s%s*%s",
                    state ?: "", state ? "\n" : "",
+                   *delete_list_file == '/' ? "" : current_dir,
+                   *delete_list_file == '/' ? "" : G_DIR_SEPARATOR_S,
                    delete_list_file, selected_calendar ? selected_calendar : "");
       g_free (state);
       state = s;
     }
     
-  if (list_deleted_only)
-    {
-      char *s
-        = g_strdup_printf ("%s%sLIST_DELETED=%s*%s",
-                   state ?: "", state ? "\n" : "",
-                   delete_list_file, selected_calendar ? selected_calendar : "");
-      g_free (state);
-      state = s;
-    }
     
+  if (current_dir)
+    g_free (current_dir);
+  
   /* See if there is another instance of gpe-calendar already running.
      If so, try to handoff any arguments and exit.  Otherwise, take
      over.  */
