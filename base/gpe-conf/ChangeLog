@@ -1,3 +1,7 @@
+2006-08-11	Florian Boor <florian.boor@kernelconcepts.de>
+
+	* serial.c, serial.h, keyboard.c: Improve testing for serial port.
+
 2006-08-10	Florian Boor <florian.boor@kernelconcepts.de>
 
     * device.c: Fix typo, add some fallback values.

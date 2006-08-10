@@ -250,18 +250,11 @@ assign_serial_port (t_serial_assignment type)
 }
 
 /* identifies what is using the serial port */
-int
+gint
 get_serial_port_assignment ()
 {
-	//int runlevel;
-	int result = SA_NONE;
+	gint result = SA_NONE;
 
-/*	if (parse_pipe ("/sbin/runlevel ", "%*s %d", &runlevel))
-	{
-		gpe_error_box (_("Couldn't identify current runlevel!"));
-		runlevel = 0;
-	}
-*/
 	/* S:2345:respawn:/sbin/getty ttyS0 115200 vt100 */
 	if (getty_uses_port(FIRST_SERIAL))
 			result = SA_CONSOLE;
@@ -291,13 +284,6 @@ update_gpsd_settings (char *baud, int emate, char* port)
 }
 
 
-gint
-serial_get_items (gchar * file)
-{
-	return 0;
-}
-
-
 GtkWidget *
 serial_create_device_interface (const gchar * infile, gchar ** iname)
 {
@@ -308,12 +294,12 @@ serial_create_device_interface (const gchar * infile, gchar ** iname)
 /* --- gpe-conf interface --- */
 
 void
-Serial_Free_Objects ()
+Serial_Free_Objects (void)
 {
 }
 
 void
-Serial_Save ()
+Serial_Save (void)
 {
 	char *tmp;
 	const char *text;
@@ -359,9 +345,27 @@ Serial_Save ()
 }
 
 void
-Serial_Restore ()
+Serial_Restore (void)
 {
 
+}
+
+const gchar *
+get_first_serial_port (void)
+{
+	const gchar *result;
+
+	if (device_get_id() == DEV_IPAQ_SA || device_get_id() == DEV_IPAQ_PXA)
+  		result = "/dev/ttyC0";
+	else
+		result = "/dev/ttyS0";
+
+	/* Not Familiar? Maybe in a different location? */
+	if (access (result, F_OK))
+		if (!access ("/dev/tts/0", F_OK))
+			result = "/dev/tts/0";
+
+	return result;
 }
 
 GtkWidget *
@@ -382,10 +386,8 @@ Serial_Build_Objects (void)
 	gboolean getty_installed;
 	gint i;
 
-	if (device_get_id() == DEV_IPAQ_SA || device_get_id() == DEV_IPAQ_PXA)
-  		FIRST_SERIAL = "/dev/ttyC0";
-	else
-		FIRST_SERIAL = "/dev/ttyS0";
+
+	FIRST_SERIAL = get_first_serial_port ();
 
 	portlist[0][1] = FIRST_SERIAL;
 	sprintf (cur_port, FIRST_SERIAL);

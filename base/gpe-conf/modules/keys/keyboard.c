@@ -228,11 +228,8 @@ Keyboard_Build_Objects (void)
 	GSList *ports = NULL;
 	GSList *keyboards = NULL;
 	gint i;
-	
-	if (device_get_id() == DEV_IPAQ_SA || device_get_id() == DEV_IPAQ_PXA)
-  		portlist[0][1] = "/dev/ttyC0";
-	else
-		portlist[0][1] = "/dev/ttyS0";
+
+  	portlist[0][1] = get_first_serial_port();
     
 	parse_config(KBDD_CONFIG, &keyboard_type, keyboard_port);
 	tooltips = gtk_tooltips_new ();

@@ -10,6 +10,7 @@ t_serial_assignment;
 
 void assign_serial_port(t_serial_assignment type);
 void update_gpsd_settings (char *baud, int emate, char* port);
+const gchar *get_first_serial_port (void);
 
 GtkWidget *Serial_Build_Objects();
 void Serial_Free_Objects();
