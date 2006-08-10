@@ -334,10 +334,9 @@ scr_dest_changed (GtkWidget *widget, gpointer data)
     {
       GtkWidget *icon = gtk_image_new_from_stock (GTK_STOCK_JUMP_TO, GTK_ICON_SIZE_BUTTON);
 
-      g_object_set (mainDlg->ok_button, "use-stock", FALSE);
-      g_object_set (mainDlg->ok_button, "use-underline", TRUE);
-      g_object_set (mainDlg->ok_button, "label", "_Upload");
-      g_object_set (mainDlg->ok_button, "image", GTK_WIDGET (icon));
+      gtk_button_set_use_stock (mainDlg->ok_button, FALSE);
+      gtk_button_set_label (mainDlg->ok_button, "_Upload");
+      gtk_button_set_image (mainDlg->ok_button, icon);
 
       gtk_widget_set_sensitive (GTK_WIDGET (mainDlg->entry), FALSE);
       gtk_widget_set_sensitive (GTK_WIDGET (mainDlg->browse_button), FALSE);
@@ -347,10 +346,9 @@ scr_dest_changed (GtkWidget *widget, gpointer data)
       GtkWidget *icon = gtk_image_new_from_stock (GTK_STOCK_SAVE, GTK_ICON_SIZE_BUTTON);
 
       /* for some odd reason use-stock doesn't have any effect. set the image manually...*/
-      g_object_set (mainDlg->ok_button, "use-stock", TRUE);
-      g_object_set (mainDlg->ok_button, "use-underline", TRUE);
-      g_object_set (mainDlg->ok_button, "label", GTK_STOCK_SAVE);
-      g_object_set (mainDlg->ok_button, "image", GTK_WIDGET (icon));
+      gtk_button_set_label (mainDlg->ok_button, GTK_STOCK_SAVE);
+      gtk_button_set_use_stock (mainDlg->ok_button, TRUE);
+      gtk_button_set_image (mainDlg->ok_button, icon);
 
       gtk_widget_set_sensitive (GTK_WIDGET (mainDlg->entry), TRUE);
       gtk_widget_set_sensitive (GTK_WIDGET (mainDlg->browse_button), TRUE);
