@@ -1,0 +1,83 @@
+
+<!--#set var="addtitle" value="GPE-Contacts"-->
+<!--#set var="pagename" value="The contact manager"-->
+<!--#set var="author" value="Florian Boor"-->
+<!--#set var="authoremail" value="fb@kernelconcepts.de"-->
+<!--#include virtual="/includes/head.shtml"-->
+
+<table cellpadding="12" cellspacing="12" border="12" width="100%" bgcolor="#EEEEEE">
+<tr>
+  <td colspan="3"><h2>Subprojects: GPE-Contacts</h2>
+  <i><!--#echo var="pagename"--></i></td>
+</tr>
+<tr>
+  <td><b>Function</b></td>
+  <td> GPE-Contacts is a simple but flexible personbal contacts manager. 
+  It stores contact details such as addresses and is able to categorize them. 
+  It has a very scalable user interface supporting a wide variety of 
+  target devices. GPE-Contacts uses DBUS to connect to 
+  service provider applications (GPE-Beam and GPE-Bluetooth) to provide 
+  IrDA (IrOBEX) and Bluetooth (BtOBEX) support for beaming them in vCard format.
+  </td>
+  <td rowspan="3"><img src="../images/gpe-contacts.png" border="0" alt="Screenshot"></td>
+</tr>
+<tr>
+  <td><b>Coordinators</b></td>
+  <td>
+  The coordinators for this sub-project are Philip Blundell 
+  (<a HREF="mailto:philb@gnu.org">philb@gnu.org</a>) and Florian Boor
+  (<a HREF="mailto:fb@kernelconcepts.de">fb@kernelconcepts.de</a>)
+  If you want to contribute to this project, please contact the coordinators or 
+  the <a HREF="mailto:gpe@handhelds.org">GPE mailinglist</a>. 
+  </td>
+</tr>
+<tr>
+  <td><b>Status</b></td>
+  <td>
+    <p>
+	  The application is considered to be stable and is maintained actively.
+      The source code can be found in <A href="../cvs.shtml">CVS</A>,
+      module <b>base/gpe-contacts</b>.  
+	</p>
+	<p>
+	  Distributions known to ship <i>GPE-Contacts</i> are:
+	  <ul>
+	  	  <li><a href="http://www.debian.org">Debian</a>
+	  	  <li><a href="http://www.ubuntulinux.org">Ubuntu</a>
+	  	  <li><a href="http://familiar.handhelds.org">Familiar</a>
+          <li><a href="http://www.openzaurus.org">OpenZaurus</a>
+		  <li><a href="http://www.angstroem-distribution.org">Angstroem</a>
+     </ul>
+	</p>
+	<p>
+	  <i>GPE-Contacts</i> is distributed under the 
+	     <a href="http://www.gnu.org/licenses/gpl.html#SEC1">GPL</a>.
+	</p>
+  </td>
+</tr>
+<tr>
+  <td colspan="3">
+    <p>
+	Apart from the scalable user interface GPE-Contacts makes use of a very
+	flexible database design provided by libcontactsdb. The fields a contact consists
+	of can be modified by an XML description without modifications to the 
+	application itself. Major parts of the user interface can be controlled
+	by a keyboard (if present). The import of vCard files is possible from the 
+	command line and from the graphical user interface.
+    </p>
+  </td>
+</tr>
+<tr>
+  <td><b>Project History</b></td>
+  <td>
+     <ul>
+	   <li>Started 2001 by Tom Vogt</li>
+	   <li>Developed and maintained by Philip Blundell since 2002</li>
+	   <li>Developed by Florian Boor since 2002</li>
+	 </ul>
+  </td>
+</tr>
+</table>
+
+
+<!--#include virtual="/includes/foot.shtml"-->
