@@ -1,3 +1,12 @@
+2006-08-10	Florian Boor <florian.boor@kernelconcepts.de>
+
+    * device.c: Fix typo, add some fallback values.
+    * serial.c: Allow serial port settings to "none".
+    * data/key-commands: merge to a single file.
+    * timanddate.c: Improve text.
+    * keyboard.c: Add proper insitialisation and some minor fixes.
+    * kbd.c: Properly disable if no valid configuration is present.
+
 2006-08-09	Florian Boor <florian.boor@kernelconcepts.de>
 
 	* Release version 0.2.1

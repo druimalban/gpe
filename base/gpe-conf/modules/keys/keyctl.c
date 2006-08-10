@@ -2,7 +2,7 @@
  * gpe-conf
  *
  * Copyright (C) 2002  Pierre TARDY <tardyp@free.fr>
- *	             2003, 2005  Florian Boor <florian.boor@kernelconcepts.de>
+ *	             2003, 2005, 2006  Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -73,6 +73,7 @@ t_scommand;
 
 static struct
 {
+    gboolean active;
 	GtkWidget **buttons;
 	GdkPixbuf *p;
 	GtkWidget *edit;
@@ -102,7 +103,7 @@ commands_load(void)
 	if (!g_key_file_load_from_file (cmdfile, filename,
                                     G_KEY_FILE_KEEP_COMMENTS, &err))
 	{
-		gpe_error_box(err->message);
+		g_printerr ("%s\n", err->message);
 		g_error_free(err);
         g_free (filename);
 		return FALSE;
@@ -160,7 +161,7 @@ layout_load(void)
 	if (!g_key_file_load_from_file (layoutfile, filename,
                                     G_KEY_FILE_KEEP_COMMENTS, &err))
 	{
-		gpe_error_box(err->message);
+		g_printerr ("%s\n", err->message);
 		g_error_free(err);
         g_free (filename);
 		err = NULL;
@@ -398,12 +399,25 @@ Keyctl_Build_Objects (void)
 	GtkWidget *bFile = gtk_button_new_from_stock(GTK_STOCK_OPEN);
 	GtkWidget *table = gtk_table_new(3, 2, FALSE);
 	GtkWidget *cmenu = gtk_menu_new();
-	int i;
+	gint i;
 
-	self.buttons = NULL;	
+	self.buttons = NULL;
 	commands_load();
-	layout_load();
-	
+    
+	if (!layout_load()) /* configuration available for current device? */
+      {
+          GtkWidget *label;
+          
+          label = gtk_label_new (_("No button configuration available for this device."));
+          gtk_label_set_line_wrap (GTK_LABEL(label), TRUE);
+          gtk_label_set_justify (GTK_LABEL(label), GTK_JUSTIFY_CENTER);
+          self.active = FALSE;
+          
+          return label;
+      }
+      
+    self.active = TRUE;
+      
 	gtk_menu_set_screen(GTK_MENU(cmenu), NULL);
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scroll),
 	                               GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
@@ -494,6 +508,9 @@ Keyctl_Save (void)
 	gsize len = 0;
 	pid_t p_kl;
 
+    if (!self.active) /* anything to do? */
+        return;
+    
 	/* get current edit value */
 	g_free(buttondefs[active_button].command);
 	buttondefs[active_button].command = 

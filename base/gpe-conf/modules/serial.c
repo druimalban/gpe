@@ -87,10 +87,11 @@ gchar *portlist[][2] = {	{"Internal Serial (RS232)", NULL},
 	{"Bluetooth RFCOMM 0","/dev/bluetooth/rfcomm/0"},
 	{"Bluetooth RFCOMM 1","/dev/bluetooth/rfcomm/1"},
 	{"PCMCIA / CF Port 1","/dev/tts/0"},
-	{"PCMCIA / CF Port 2","/dev/tts/1"}
+	{"PCMCIA / CF Port 2","/dev/tts/1"},
+	{"none","/dev/null"}
 	};
 
-gint num_ports = sizeof(portlist) / sizeof(char*) / 2;
+gint num_ports = sizeof(portlist) / sizeof(gchar*) / 2;
 
 gboolean
 getty_uses_port(const gchar* port)

@@ -67,7 +67,7 @@ typedef struct
 /* --- module global variables --- */
 
 gint keyboard_type = KBD_TYPE_NONE;
-gchar keyboard_port[PATH_MAX] = {0};
+gchar keyboard_port[PATH_MAX] = "none";
 static GtkWidget *cbPort;
 
 /* TRANSLATORS: Keyboard names below are brand names, 
@@ -118,11 +118,11 @@ find_kbd_type(const gchar *ktype)
 {
 	gint i;
 	
-	for (i=1; i<KBD_TYPE_MAX; i++)
+	for (i=0; i<KBD_TYPE_MAX; i++)
 		if (strncmp(ktable[i].idstr, ktype, strlen(ktable[i].idstr)) == 0)
 			return ktable[i].type;
 
-	fprintf(stderr, "unrecognised keyboard type %s\n", ktype);
+	fprintf(stderr, "Unrecognised keyboard type \"%s\".\n", ktype);
 	return KBD_TYPE_NONE;
 }
 
@@ -269,8 +269,10 @@ Keyboard_Build_Objects (void)
 	                      NULL);
 						  
 	/* port selector */
+
 	for (i=0; i<num_ports; i++)
 		ports = g_slist_append(ports, portlist[i][0]);
+
 	cbPort = gtk_combo_new ();
 	gtk_combo_set_popdown_strings(GTK_COMBO(cbPort), (GList *)ports);
 	gtk_table_attach(GTK_TABLE(table), cbPort, 0, 2, 1, 2,

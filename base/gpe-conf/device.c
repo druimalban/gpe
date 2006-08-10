@@ -103,7 +103,7 @@ device_get_id (void)
 		return id;
 	
 	/* get device info from /proc/cpuinfo, only ARM and MIPS for now */
-	if (g_file_get_contents("/dev/cpuinfo", &str, &len, NULL))
+	if (g_file_get_contents("/proc/cpuinfo", &str, &len, NULL))
 	{
 		strv = g_strsplit(str, "\n", 128);
 		g_free(str);
@@ -172,6 +172,8 @@ device_get_id (void)
 		g_strfreev(strv);
 	}
 	
+    device_name = "Unknown Device";
+    device_domain = "unknown";
 	id = DEV_UNKNOWN;
 
 	return id;
@@ -228,6 +230,7 @@ device_get_specific_file (const gchar *basename)
     g_free (result);
     
     /* try device domain then */
+    
     result = g_strdup_printf ("%s.%s", basename, device_get_domain());
     if (!access (result, R_OK))
         return result;

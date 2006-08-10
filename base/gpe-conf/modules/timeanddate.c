@@ -602,7 +602,7 @@ Time_Build_Objects(gboolean nonroot)
                              area_index_to_selector_index (selTimezoneAreaIndx));
 	gtk_tooltips_set_tip(tooltips, self.timezoneArea, 
                          _("Select your current timezone area here. "\
-                           "The setting applies after the next login."), NULL);
+                           "The setting will apply after the next login."), NULL);
 	gtk_table_attach (GTK_TABLE (table), self.timezoneArea, 
 	                  1, 2, 1, 2, GTK_FILL | GTK_EXPAND, 0, 0, 0);
 	g_signal_connect(G_OBJECT(GTK_COMBO_BOX(self.timezoneArea)), "changed",

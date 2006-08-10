@@ -150,9 +150,8 @@ pixmaps_DATA = pixmaps/gpe-config-apm.png \
 
 sysgpedir = $(sysconfdir)/gpe
 sysgpe_DATA = familiar/gpe-config.conf \
-              data/key-commands.ipaq \
+              data/key-commands \
               data/key-layout.ipaq \
-              data/key-commands.zaurus-clamshell \
               data/key-layout.zaurus-clamshell
 
 appfilesdir = $(datadir)/gpe-conf
