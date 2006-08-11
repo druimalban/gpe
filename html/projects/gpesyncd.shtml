@@ -1,0 +1,80 @@
+
+<!--#set var="addtitle" value="gpesyncd"-->
+<!--#set var="pagename" value=""-->
+<!--#set var="author" value="Martin Felis"-->
+<!--#set var="authoremail" value="martin@silef.de"-->
+<!--#include virtual="/includes/head.shtml"-->
+
+<table cellpadding="12" cellspacing="12" border="12" width="100%" bgcolor="#EEEEEE">
+<tr>
+  <td colspan="3"><h2>Subprojects: @App</h2>
+  <i><!--#echo var="pagename"--></i></td>
+</tr>
+<tr>
+  <td><b>Function</b></td>
+  <td>
+    To synchronise PIM data the gpesyncd acts as an agent to transform VCARDS,
+    VEVENTS, VTODOS and iCals to the apropriate format in the SQLite database
+    and vice versa.
+  </td>
+  <td rowspan="3"><img src="../images/@.png" border="0" alt="Screenshot"></td>
+</tr>
+<tr>
+  <td><b>Coordinator (s)</b></td>
+  <td>
+    The coordinator for this project is Martin Felis
+    (<a href="mailto:martin@silef.de">martin@silef.de</a>). If you want to 
+    contribute to this project, please contact him directly. 
+  </td>
+</tr>
+<tr>
+  <td><b>Status</b></td>
+  <td>
+    <p>
+      The source code can be found in <A href="../cvs.shtml">CVS</A>,
+      module <b>@</b>.  
+	</p>
+	<p>
+	  Distributions known to ship <i>@</i> are:
+	  <ul>
+	  	  <li><a href="http://familiar.handhelds.org">Familiar</a>
+          <li><a href="http://www.openzaurus.org">OpenZaurus</a>
+		  <li><a href="http://www.angstroem-distribution.org">Angstroem</a>
+     </ul>
+	</p>
+	<p>
+	  <i>@</i> is distributed under the <a href="http://www.gnu.org/licenses/gpl.html#SEC1">GPL</a>.
+	</p>
+  </td>
+</tr>
+<tr>
+  <td colspan="3">
+    <p>
+        gpesyncd is used to export and import PIM data either to stdout or
+	over tcp/ip.
+    </p>
+    <p>
+        The gpesyncd can also be seen as a frontend to the libgpevtype which
+	does all the conversion. Through this new fields in the PIM data can
+	easily be added for ex- and importing and the results are the same
+	as with exporting from gpe-calendar, gpe-todo etc.
+    </p>
+    <p>
+        You can also use it as a command line tool to access all the PIM data.
+        Simply run <code>gpesyncd --help</code> or enter <code>HELP</code> after
+        starting it.
+    </p>
+  </td>
+</tr>
+<tr>
+  <td><b>Project History</b></td>
+  <td>
+     <ul>
+       <li>Started 2005 by Martin Felis</li> 
+     </ul>
+  </td>
+</tr>
+</table>
+
+
+<!--#include virtual="/includes/foot.shtml"-->

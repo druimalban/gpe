@@ -1,3 +1,8 @@
+2006-08-11  Martin Felis <martin@silef.de>
+
+	* projects/gpesyncd.html:
+	  Add a new page about gpesyncd.
+
 2006-08-11  Florian Boor <florian@kernelconcepts.de>
 
 	* projects/index.phtml, proejcts/GPE-Contacts.shtml:
