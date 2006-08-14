@@ -1,0 +1,9 @@
+bg.c
+configurator.c
+dbg.c
+ev.c
+gtkbar.c
+gtkbgbox.c
+misc.c
+panel.c
+plugin.c

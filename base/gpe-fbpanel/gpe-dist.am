@@ -1,0 +1,15 @@
+CVSTAG := $(shell echo $(PACKAGE)-$(VERSION) | tr [a-z.] [A-Z_])
+
+mkpot:
+	make -C po $(PACKAGE).pot
+
+dist-upload: mkpot dist
+	scp $(PACKAGE)-$(VERSION).tar.bz2 $(USER)@handhelds.org:/home/ftp/projects/gpe/source/
+
+tag:
+	cvs tag $(CVSTAG)
+
+retag:
+	cvs tag -F $(CVSTAG)
+
+source: tag dist-upload
