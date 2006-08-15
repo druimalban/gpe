@@ -9,4 +9,4 @@ LDADD = @DEPS_LIBS@
 libsystray_la_LIBADD = @DEPS_LIBS@
 libsystray_la_SOURCES = eggmarshalers.c eggmarshalers.h\
                         eggtraymanager.c \
-                        fixedtip.c main.c
+                        fixedtip.c systray.c

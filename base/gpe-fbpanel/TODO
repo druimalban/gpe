@@ -1,9 +1,10 @@
 glib config file
-session file support
+restore session: wait for startup 
+session configuration, add/remove
 plugin packaging and positioning
 install pixmap files
 window list -> menu
-tray messages
+tray messages (should work)
 external configurator
 remove unused code
 code cleanups

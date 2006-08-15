@@ -19,6 +19,7 @@
 #include "misc.h"
 #include "bg.h"
 #include "gtkbgbox.h"
+#include "systray/systray.h"
 
 #include "dbg.h"
 
@@ -55,6 +56,49 @@ panel_del_wm_strut(panel *p)
 }
 */
 
+static void
+panel_restore_session (void)
+{
+  gchar *sessionfile, *sfcontent, **sflines;
+  gint i = 0;
+  tray *tr = NULL;
+  GList *iter;
+    
+  for (iter = p->plugins; iter; iter=iter->next)
+    {
+      plugin *p = iter->data;
+      if (!strcmp (p->class->type, "tray"))
+        {
+          tr = p->priv;
+          break;
+        }
+    }
+    
+  sessionfile = g_strconcat (g_get_home_dir(), "/.matchbox/mbdock.session", NULL);
+  
+  if (g_file_get_contents (sessionfile, &sfcontent, NULL, NULL))
+    {
+      sflines = g_strsplit (sfcontent, "\n", 100);
+      g_free (sfcontent);
+      
+      while (sflines[i])
+        {
+          if (strlen (sflines[i]))
+            {
+              g_spawn_command_line_async (sflines[i], NULL);
+            }
+          else
+            {
+              sleep (1);
+              tr->pack_start = FALSE;
+            }
+            
+          i++;
+        }
+        
+      g_strfreev (sflines);
+    }
+}
 
 static void
 panel_set_wm_strut(panel *p)
@@ -274,7 +318,7 @@ panel_start_gui(panel *p)
 
     // main toplevel window
     p->topgwin =  gtk_window_new(GTK_WINDOW_TOPLEVEL);
-    gtk_container_set_border_width(GTK_CONTAINER(p->topgwin), 0);
+    gtk_container_set_border_width(GTK_CONTAINER(p->topgwin), 1);
     gtk_window_set_resizable(GTK_WINDOW(p->topgwin), FALSE);
     gtk_window_set_wmclass(GTK_WINDOW(p->topgwin), "panel", "gpe-fbpanel");
     gtk_window_set_title(GTK_WINDOW(p->topgwin), "panel");
@@ -582,6 +626,9 @@ panel_start(panel *p, FILE *fp)
     }
     gtk_widget_show_all(p->topgwin);
     print_wmdata(p);
+    
+    panel_restore_session ();
+    
     RET(1);
 }
 
@@ -620,7 +667,7 @@ void
 usage()
 {
     ENTER;
-    printf("fbpanel %s - lightweight GTK2+ panel for UNIX desktops\n", version);
+    printf("gpe-fbpanel %s - lightweight GTK2+ panel for UNIX devices based on fbpanel\n", version);
     printf("Command line options:\n");
     printf(" --help      -- print this help and exit\n");
     printf(" --version   -- print version and exit\n");

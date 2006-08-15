@@ -44,7 +44,7 @@
 
 #include "dbg.h"
 
-#define MENU_ICON_SIZE 16
+static  gint MENU_ICON_SIZE = 16;
 #define GPE_VFOLDERS PREFIX "/share/gpe/vfolders"
 #define MATCHBOX_VFOLDERS PREFIX "/usr/share/matchbox/vfolders"
 
@@ -82,7 +82,7 @@ typedef struct {
     gboolean single_instance;
 } t_application;
 
-static GSList *actions = NULL;
+static GList *actions = NULL;
 
 /* Callback used to track the startup status of applications. */
 static void
@@ -365,7 +365,7 @@ add_application (const gchar *filename)
           if (strstr (cat, "Action"))
             {
                 app = new_application_from_desktop (p);
-                actions = g_slist_append (actions, app);
+                actions = g_list_append (actions, app);
             }
                   
           g_free (cat);
@@ -524,8 +524,8 @@ build_menu(plugin *p)
   item = gtk_event_box_new();
   gtk_container_set_border_width(GTK_CONTAINER(item), 0);
   
-  m->iconsize = MENU_ICON_SIZE;
-  icon = gtk_image_new_from_pixbuf(gpe_find_icon_scaled_free ("gpe-logo", m->iconsize, m->iconsize));
+  icon = gtk_image_new_from_pixbuf(
+            gpe_find_icon_scaled_free ("gpe-logo", m->paneliconsize, m->paneliconsize));
   gtk_widget_show(icon);
   gtk_container_add (GTK_CONTAINER (item), icon);
   gtk_container_add (GTK_CONTAINER (m->box), item);
@@ -590,7 +590,11 @@ menu_constructor(plugin *p)
     else
         m->paneliconsize = p->panel->aw
             - 2* GTK_WIDGET(p->panel->box)->style->xthickness;
-    m->iconsize = 16;       
+    
+    m->iconsize = m->paneliconsize * 2 / 3;
+    if (m->iconsize < 16)
+        m->iconsize = 16;
+    MENU_ICON_SIZE = m->iconsize;
 
     m->box = gtk_hbox_new(FALSE, 0);
     gtk_container_set_border_width(GTK_CONTAINER(m->box), 0);

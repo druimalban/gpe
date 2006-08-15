@@ -4,6 +4,7 @@
 
 #include <X11/Xmu/WinUtil.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
+#include <gpe/spacing.h>
 
 #include "panel.h"
 #include "misc.h"
@@ -11,34 +12,23 @@
 #include "bg.h"
 #include "gtkbgbox.h"
 
-
+#include "systray.h"
 #include "eggtraymanager.h"
 #include "fixedtip.h"
 
-
-//#define DEBUG
 #include "dbg.h"
-
-
-typedef struct {
-    GtkWidget *mainw;
-    plugin *plug;
-    GtkWidget *box;
-    /////
-    EggTrayManager *tray_manager;
-    
-} tray;
-
-//static void run_gtktray(tray *tr);
-
 
 
 static void
 tray_added (EggTrayManager *manager, GtkWidget *icon, void *data)
 {
-    GtkWidget *box = (GtkWidget *)data;
-
-    gtk_box_pack_end (GTK_BOX (box), icon, FALSE, FALSE, 0);
+    tray *tr = (tray*)data;
+    
+    if (tr->pack_start)
+      gtk_box_pack_start (GTK_BOX (tr->box), icon, FALSE, TRUE, 0);
+    else
+      gtk_box_pack_end (GTK_BOX (tr->box), icon, FALSE, TRUE, 0);
+    
     gtk_widget_show (icon);
 }
 
@@ -53,7 +43,7 @@ message_sent (EggTrayManager *manager, GtkWidget *icon, const char *text, glong 
               void *data)
 {
     /* FIXME multihead */
-    int x, y;
+    gint x, y;
     
     gdk_window_get_origin (icon->window, &x, &y);
   
@@ -92,7 +82,7 @@ tray_constructor(plugin *p)
     line s;
     tray *tr;
     GdkScreen *screen;
-    GtkWidget *frame;
+    GtkWidget *spacer;
     
     ENTER;
     s.len = 256;
@@ -106,17 +96,18 @@ tray_constructor(plugin *p)
     g_return_val_if_fail(tr != NULL, 0);
     p->priv = tr;
     tr->plug = p;
+    tr->pack_start = TRUE;
 
-    frame = gtk_frame_new(NULL);
-    gtk_container_set_border_width(GTK_CONTAINER(frame), 0);
-    gtk_frame_set_shadow_type(GTK_FRAME(frame), GTK_SHADOW_NONE);
-    gtk_container_add(GTK_CONTAINER(p->pwid), frame);    
-    tr->box = p->panel->my_box_new(FALSE, 2);
-    gtk_container_add(GTK_CONTAINER(frame), tr->box);
+    tr->box = p->panel->my_box_new(FALSE, gpe_get_boxspacing());
+    gtk_container_add(GTK_CONTAINER(p->pwid), tr->box);    
+    
     
     gtk_bgbox_set_background(p->pwid, BG_STYLE, 0, 0);
     gtk_container_set_border_width(GTK_CONTAINER(p->pwid), 0);
     screen = gtk_widget_get_screen (GTK_WIDGET (p->panel->topgwin));
+    
+    spacer = p->panel->my_box_new (FALSE, 0);
+    gtk_box_pack_end (GTK_BOX (tr->box), spacer, TRUE, TRUE, 0);
     
     if (egg_tray_manager_check_running(screen)) {
         tr->tray_manager = NULL;
@@ -128,7 +119,7 @@ tray_constructor(plugin *p)
         g_printerr ("tray: System tray didn't get the system tray manager selection\n");
     
     g_signal_connect (tr->tray_manager, "tray_icon_added",
-          G_CALLBACK (tray_added), tr->box);
+          G_CALLBACK (tray_added), tr);
     g_signal_connect (tr->tray_manager, "tray_icon_removed",
           G_CALLBACK (tray_removed), tr->box);
     g_signal_connect (tr->tray_manager, "message_sent",
@@ -136,7 +127,7 @@ tray_constructor(plugin *p)
     g_signal_connect (tr->tray_manager, "message_cancelled",
           G_CALLBACK (message_cancelled), tr->box);
     
-    gtk_widget_show_all(frame);
+    gtk_widget_show_all(tr->box);
     RET(1);
 
 }
@@ -148,8 +139,8 @@ plugin_class tray_plugin_class = {
 
     type : "tray",
     name : "tray",
-    version: "1.0",
-    description : "Old KDE/GNOME Tray",
+    version: "1.2",
+    description : "X Tray/Notification area",
 
     constructor : tray_constructor,
     destructor  : tray_destructor,
