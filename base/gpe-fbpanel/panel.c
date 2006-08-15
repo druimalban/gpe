@@ -9,12 +9,18 @@
 #include <locale.h>
 #include <string.h>
 #include <signal.h>
+#include <libintl.h>
+
+#include <gpe/init.h>
+#include <gpe/pixmaps.h>
 
 #include "plugin.h"
 #include "panel.h"
 #include "misc.h"
 #include "bg.h"
 #include "gtkbgbox.h"
+
+#include "dbg.h"
 
 static gchar *cfgfile = NULL;
 static gchar version[] = VERSION;
@@ -23,8 +29,12 @@ gchar *cprofile = "default";
 int config = 0;
 FbEv *fbev;
 
-//#define DEBUG
-#include "dbg.h"
+struct gpe_icon my_icons[] = 
+{
+  { "gpe-logo", PREFIX "/share/gpe/pixmaps/gpe-logo.png"},
+  {NULL, NULL}
+};
+
 
 int log_level;
 
@@ -679,7 +689,7 @@ sig_usr(int signum)
 }
 
 int
-main(int argc, char *argv[], char *env[])
+main(int argc, char *argv[])
 {
     int i;
     int quit = 0;
@@ -687,12 +697,22 @@ main(int argc, char *argv[], char *env[])
     FILE *pfp; /* current profile FP */
     
     ENTER;
-    setlocale(LC_CTYPE, "");
-    gtk_set_locale();
-    gtk_init(&argc, &argv);
+    
+    if (gpe_application_init (&argc, &argv) == FALSE)
+      exit (1);
+  
+    setlocale (LC_ALL, "");
+    bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
+    bind_textdomain_codeset (PACKAGE, "UTF-8");
+    textdomain (PACKAGE);
+
+    gpe_load_icons (my_icons);    
+    
     XSetLocaleModifiers("");
     XSetErrorHandler((XErrorHandler) handle_error);
+  
     resolve_atoms();
+  
     for (i = 1; i < argc; i++) {
         if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--help")) {
             usage();
@@ -726,7 +746,9 @@ main(int argc, char *argv[], char *env[])
             exit(1);
         }
     }
+    
     signal(SIGUSR1, sig_usr);
+    
     do {
         if (!(pfp = open_profile(cprofile)))
             exit(1);

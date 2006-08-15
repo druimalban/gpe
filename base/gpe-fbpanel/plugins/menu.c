@@ -1,8 +1,40 @@
+/*
+ * gpe-fbpanel
+ *
+ * A panel for GPE based on fbpanel
+ * 
+ * (c) Florian Boor <fb@kernelconcepts.de> 2006
+ * 
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * 
+ *  Application launcher menu.
+ */
+
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
+#include <dirent.h>
+#include <libintl.h>
 
-#include <gdk-pixbuf/gdk-pixbuf.h>
-#include <glib.h>
+#include <gtk/gtk.h>
+#include <gdk/gdkx.h>
+#include <gpe/spacing.h>
+#include <gpe/infoprint.h>
+#include <gpe/launch.h>
+#include <gpe/desktop_file.h>
+#include <gpe/pixmaps.h>
 
 #include "panel.h"
 #include "misc.h"
@@ -12,6 +44,14 @@
 
 #include "dbg.h"
 
+#define MENU_ICON_SIZE 16
+#define GPE_VFOLDERS PREFIX "/share/gpe/vfolders"
+#define MATCHBOX_VFOLDERS PREFIX "/usr/share/matchbox/vfolders"
+
+#define _(x) gettext(x)
+
+static GList *folderlist = NULL;
+
 typedef struct {
     GtkTooltips *tips;
     GtkWidget *menu, *box, *bg, *label;
@@ -19,6 +59,353 @@ typedef struct {
     gint iconsize, paneliconsize;
     GSList *files;
 } menup;
+
+/* Data type for application folder/tab encapsulation. */
+typedef struct {
+    gchar *name;          /* name / label */
+    gchar *iconname;      /* icon filename */
+    gchar *category;      /* matching category, maybe wants to be extended to multiple */
+    GtkWidget *icon;      /* icon widget */
+    GtkWidget *menu;      /* associated submenu */
+    GSList *applications;
+} t_folder;
+
+static t_folder *default_folder = NULL;
+
+typedef struct {
+    gchar *name;          /* name / label */
+    gchar *iconname;      /* icon filename */
+    gchar *exec;          /* executable */
+    GtkWidget *icon;      /* icon widget */
+    gboolean needs_terminal;
+    gboolean startup_notify;
+    gboolean single_instance;
+} t_application;
+
+static GSList *actions = NULL;
+
+/* Callback used to track the startup status of applications. */
+static void
+launch_status_callback (enum launch_status status, void *data)
+{
+   
+  switch (status)
+    {
+    case LAUNCH_STARTING:
+      {
+    	break;
+      }
+
+    case LAUNCH_COMPLETE:
+    case LAUNCH_FAILED:
+      {
+      }
+      break;
+    }
+}
+
+
+/* Start an application honoring single instance applications and notification. */
+static void
+run_application (GtkWidget *widget, gpointer user_data)
+{
+  t_application *app = (t_application*)user_data;
+  gchar *s;
+  Window w;
+  gboolean single_instance = app->single_instance;
+  gboolean startup_notify = app->startup_notify;
+  gchar *text;
+  Display *dpy = GDK_DISPLAY();
+    
+  if (app->name == NULL) 
+    app->name = g_strdup (app->exec);
+
+  text = g_strdup_printf ("%s %s", _("Starting"), app->name);
+  gpe_popup_infoprint (dpy, text);
+  g_free (text);
+
+  /* Can't have single instance without startup notification */
+  if (!startup_notify)
+    single_instance = FALSE;
+
+  /* i guess we can do that safely */
+  s = strstr (app->exec, "%U");
+  if (!s)
+    s = strstr (app->exec, "%f");
+  if (s)
+    *s = 0;
+  
+  if (!single_instance)
+    {
+      gpe_launch_program_with_callback (dpy, app->exec, app->name, startup_notify, 
+					launch_status_callback, app);
+      return;
+    }
+
+  w = gpe_launch_get_window_for_binary (dpy, app->exec);
+  if (w)
+    {
+      gpe_launch_activate_window (dpy, w);
+    }
+  else
+    {
+      if (! gpe_launch_startup_is_pending (dpy, app->exec))
+        {
+          /* Actually run the program */
+          gpe_launch_program_with_callback (dpy, app->exec, app->name, TRUE,
+                                            launch_status_callback, app);
+        }
+    }
+}
+
+
+/* Create a new application folder widget from its desktop description. */
+static t_folder*
+new_folder_from_desktop (GnomeDesktopFile *g)
+{
+  t_folder *result = g_malloc0 (sizeof(t_folder));
+  gchar *str;
+  GdkPixbuf *pbuf, *iconbuf;
+  
+  gnome_desktop_file_get_string (g, NULL, "Name", &str);
+  if (!str)
+    {
+      g_free (result);
+      return NULL;
+    }
+  result->name = str;
+  gnome_desktop_file_get_string (g, NULL, "Match", &str);
+  result->category = str;
+  if (!str)
+    {
+        g_free (result->name);
+        g_free (result);
+        return NULL;        
+    }
+  gnome_desktop_file_get_string (g, NULL, "Icon", &str);
+  result->iconname = str;
+  
+  str = g_strdup_printf ("%s/%s", GPE_PIXMAPS_DIR, result->iconname);
+  pbuf = gdk_pixbuf_new_from_file (str, NULL);
+  if (pbuf)
+    {
+      iconbuf = gdk_pixbuf_scale_simple (pbuf, MENU_ICON_SIZE, 
+                                         MENU_ICON_SIZE, GDK_INTERP_BILINEAR);
+      result->icon = gtk_image_new_from_pixbuf (iconbuf);
+    
+      g_object_unref (pbuf);
+      g_object_unref (iconbuf);
+    }
+  if (str)
+    g_free (str);
+ 
+  /* is this our default folder? */
+  if (!strcmp("Other", result->category))
+      default_folder = result;
+    
+  return result;
+}
+
+/* Create a new allpication data set from its desktop description and add this
+ * to the list. */
+t_application *
+new_application_from_desktop (GnomeDesktopFile *g)
+{
+  gchar *name, *icon, *exec;
+  gboolean terminal;
+  gboolean startup;
+  gboolean single = TRUE;
+  gboolean bv;
+  GdkPixbuf *ibuf;
+  t_application *app = g_malloc0 (sizeof(t_application));
+  
+    
+  gnome_desktop_file_get_string (g, NULL, "Name", &name);
+  gnome_desktop_file_get_string (g, NULL, "Icon", &icon);
+  gnome_desktop_file_get_string (g, NULL, "Exec", &exec);
+  if (gnome_desktop_file_get_boolean (g, NULL, "Terminal", &terminal) == FALSE)
+      terminal = FALSE;
+  if (gnome_desktop_file_get_boolean (g, NULL, "StartupNotify", &startup) == FALSE)
+      startup = TRUE;
+  if (gnome_desktop_file_get_boolean (g, NULL, "SingleInstance", &bv) && (bv == FALSE))
+      single = FALSE;
+  if (gnome_desktop_file_get_boolean (g, NULL, "X-SingleInstance", &bv) && (bv == FALSE))
+      single = FALSE;
+
+  ibuf = load_icon_scaled (icon, MENU_ICON_SIZE);
+/*  if (!ibuf)
+    {
+      ibuf = gpe_find_icon ("applauncher");
+      ibuf = gdk_pixbuf_scale_simple (ibuf, MENU_ICON_SIZE, 
+                                      MENU_ICON_SIZE, GDK_INTERP_BILINEAR);
+    }
+*/
+
+  app->name = name;
+  app->iconname = icon;
+  app->exec = exec;
+  app->needs_terminal = terminal;
+  app->startup_notify = startup;
+  app->single_instance = single;
+  
+  if (ibuf) 
+    {
+      app->icon = gtk_image_new_from_pixbuf (ibuf);
+      g_object_unref (ibuf);
+    }
+    
+  return app;
+}
+
+/* Load all available desktop descriptions of folders. */
+static GList*
+load_folder_list (const gchar *path)
+{
+  DIR *dir;
+  struct dirent *entry;
+  GList *result = NULL;
+  t_folder *new_folder;
+
+  dir = opendir (path);
+  if (dir)
+    {
+      while ((entry = readdir (dir)))
+      {
+	  char *temp;
+	  GnomeDesktopFile *p;
+	  GError *err = NULL;
+	  
+	  if (entry->d_name[0] == '.')
+	    continue;
+	
+      temp = g_strdup_printf ("%s/%s", path, entry->d_name);
+	  p = gnome_desktop_file_load (temp, &err);
+	  if (p)
+	    {
+	      gchar *type;
+	      gnome_desktop_file_get_string (p, NULL, "Type", &type);
+
+	      if (type == NULL || strcmp (type, "Directory"))
+              gnome_desktop_file_free (p);
+	      else
+            {
+              new_folder = new_folder_from_desktop (p);
+              if (new_folder)
+                result = g_list_append (result, new_folder);
+              gnome_desktop_file_free (p);
+            }
+
+	      if (type)
+             g_free (type);
+        }
+	  else
+	    fprintf (stderr, "Couldn't load \"%s\": %s\n", temp, err->message);
+
+	  if (err)
+	    g_error_free (err);
+
+	  g_free (temp);
+    }
+    closedir (dir);
+  }
+  return result;
+}
+
+
+/* Add a new application description to a folder */
+static void
+add_application (const gchar *filename)
+{
+  GnomeDesktopFile *p;
+  GError *err = NULL;
+  p = gnome_desktop_file_load (filename, &err);
+  if (p)
+  {
+      gchar *type;
+      gnome_desktop_file_get_string (p, NULL, "Type", &type);
+
+      if (type == NULL || strcmp (type, "Application"))
+          gnome_desktop_file_free (p);
+      else
+      {
+          GList *iter;
+          gchar *cat;              
+          t_application *app;
+          GtkWidget *item;
+          
+          gnome_desktop_file_get_string (p, NULL, "Categories", &cat);
+          for (iter = folderlist; iter; iter = iter->next)
+          {
+              t_folder *folder = iter->data;
+              if (cat && strstr(cat, folder->category))
+              {
+                  app = new_application_from_desktop (p);
+                  folder->applications = g_slist_prepend (folder->applications, app);
+                  item = gtk_image_menu_item_new_with_label (app->name);
+                  g_signal_connect (G_OBJECT(item), "activate", 
+                                    G_CALLBACK(run_application), (gpointer)app);
+                  if (app->icon)
+                      gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM(item), app->icon);
+                  gtk_menu_append (GTK_MENU_SHELL(folder->menu), item);
+                  break;
+              }
+          }
+          if ((iter == NULL) && (default_folder != NULL)) /* no folder found */
+            {
+                app = new_application_from_desktop (p);
+                default_folder->applications = 
+                      g_slist_prepend (default_folder->applications, app);
+                item = gtk_image_menu_item_new_with_label (app->name);
+                g_signal_connect (G_OBJECT(item), "activate", 
+                                  G_CALLBACK(run_application), (gpointer)app);
+                if (app->icon)
+                    gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM(item), app->icon);
+                gtk_menu_append (GTK_MENU(default_folder->menu), item);
+            }
+          if (strstr (cat, "Action"))
+            {
+                app = new_application_from_desktop (p);
+                actions = g_slist_append (actions, app);
+            }
+                  
+          g_free (cat);
+          gnome_desktop_file_free (p);
+       }
+       if (type)
+           g_free (type);
+  }
+  else
+     fprintf (stderr, "Couldn't load \"%s\": %s\n", filename, err->message);
+
+  if (err)
+     g_error_free (err);
+}
+
+/* Load all available application descriptions. */
+static void
+load_application_list (const gchar *path)
+{
+  DIR *dir;
+  struct dirent *entry;
+
+  dir = opendir (path);
+  if (dir)
+  {
+      while ((entry = readdir (dir)))
+      {
+        char *temp;	  
+	  
+        if (entry->d_name[0] == '.')
+          continue;
+	
+        temp = g_strdup_printf ("%s/%s", path, entry->d_name);
+        add_application (temp);
+        g_free (temp);
+      }
+    closedir (dir);
+  }
+}
+
 
 static void
 menu_destructor(plugin *p)
@@ -30,30 +417,6 @@ menu_destructor(plugin *p)
     gtk_widget_destroy(m->menu);
     gtk_widget_destroy(m->box);
     g_free(m);
-    RET();
-}
-
-static void
-spawn_app(GtkWidget *widget, gpointer data)
-{
-    GError *error = NULL;
-
-    ENTER;    
-    if (data) {
-        if (! g_spawn_command_line_async(data, &error) ) {
-            ERR("can't spawn %s\nError is %s\n", (char *)data, error->message);
-            g_error_free (error);
-        }
-    }
-    RET();
-}
-
-
-static void
-run_command(GtkWidget *widget, void (*cmd)(void))
-{
-    ENTER;    
-    cmd();
     RET();
 }
 
@@ -136,201 +499,79 @@ make_button(plugin *p, gchar *fname, gchar *name, GtkWidget *menu)
     RET(m->bg);
 }
    
-
-static GtkWidget *
-read_item(plugin *p)
-{
-    line s;
-    gchar *name, *fname, *action;
-    GtkWidget *item;
-    menup *m = (menup *)p->priv;
-    void (*cmd)(void);
-    
-    ENTER;
-    s.len = 256;
-    name = fname = action = 0;
-    cmd = NULL;
-    while (get_line(p->fp, &s) != LINE_BLOCK_END) {
-        if (s.type == LINE_VAR) {
-            if (!g_ascii_strcasecmp(s.t[0], "image")) 
-                fname = expand_tilda(s.t[1]);
-            else if (!g_ascii_strcasecmp(s.t[0], "name"))
-                name = g_strdup(s.t[1]);
-            else if (!g_ascii_strcasecmp(s.t[0], "action"))
-                action = g_strdup(s.t[1]);
-            else if (!g_ascii_strcasecmp(s.t[0], "command")) {
-                command *tmp;
-                
-                for (tmp = commands; tmp->name; tmp++) {
-                    if (!g_ascii_strcasecmp(s.t[1], tmp->name)) {
-                        cmd = tmp->cmd;
-                        break;
-                    }
-                }
-            } else {
-                ERR( "menu/item: unknown var %s\n", s.t[0]);
-                goto error;
-            }
-        } 
-    }
-    /* menu button */
-    item = gtk_image_menu_item_new_with_label(name ? name : "");
-    gtk_container_set_border_width(GTK_CONTAINER(item), 0);
-    if (name)
-        g_free(name);
-    if (fname) {
-        GtkWidget *img;
-        
-        img = gtk_image_new_from_file_scaled(fname, m->iconsize, m->iconsize, TRUE);
-        gtk_widget_show(img);
-        gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item), img);
-        g_free(fname);
-    }
-    if (cmd) {
-        g_signal_connect(G_OBJECT(item), "activate", (GCallback)run_command, cmd);
-    } else if (action) {
-        g_signal_connect(G_OBJECT(item), "activate", (GCallback)spawn_app, action);
-    }
-    RET(item);
-
- error:
-    g_free(fname);
-    g_free(name);
-    g_free(action);
-    RET(NULL);
-}
-
-static GtkWidget *
-read_separator(plugin *p)
-{
-    line s;
-
-    ENTER;
-    s.len = 256;
-    while (get_line(p->fp, &s) != LINE_BLOCK_END) {
-        ERR("menu: error - separator can not have paramteres\n");
-        RET(NULL);
-    }
-    RET(gtk_separator_menu_item_new());
-}
-
 static void
-read_include(plugin *p)
+new_application_menu (GtkWidget *main_menu, t_folder *folder)
 {
-    gchar *name;
-    line s;
-    menup *m = (menup *)p->priv;
-    FILE *fp;
+    GtkWidget *item;
+
+    folder->menu = gtk_menu_new();
     
-    ENTER;
-    s.len = 256;
-    name = NULL;
-    while (get_line(p->fp, &s) != LINE_BLOCK_END) {
-        if (s.type == LINE_VAR) {
-            if (!g_ascii_strcasecmp(s.t[0], "name")) 
-                name = expand_tilda(s.t[1]);
-            else  {
-                ERR( "menu/include: unknown var %s\n", s.t[0]);
-                RET();
-            }
-        }
-    }
-    if ((fp = fopen(name, "r"))) {
-        LOG(LOG_INFO, "Including %s\n", name);
-        m->files = g_slist_prepend(m->files, p->fp);
-        p->fp = fp;
-    } else {
-        ERR("Can't include %s\n", name);
-    }
-    if (name) g_free(name);    
-    RET();
+    item = gtk_image_menu_item_new_with_label (folder->name);
+    gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), folder->icon);
+    gtk_menu_append (main_menu, item);
+    gtk_menu_item_set_submenu (GTK_MENU_ITEM(item), folder->menu);
 }
 
-static GtkWidget *
-read_submenu(plugin *p, gboolean as_item)
+void
+build_menu(plugin *p)
 {
-    line s;
-    GtkWidget *mi, *menu;
-    gchar name[256], *fname;
-    menup *m = (menup *)p->priv;
-
+  GList *iter;
+  GtkWidget *item;
+  GtkWidget *icon;
+  menup *m = p->priv;
+  const gchar *folders = NULL;
     
-    ENTER;
-    s.len = 256;
-    menu = gtk_menu_new ();
-    gtk_container_set_border_width(GTK_CONTAINER(menu), 0);
+  item = gtk_event_box_new();
+  gtk_container_set_border_width(GTK_CONTAINER(item), 0);
   
-    fname = 0;
-    name[0] = 0;
-    while (get_line(p->fp, &s) != LINE_BLOCK_END) {       
-        if (s.type == LINE_BLOCK_START) {
-            mi = NULL;
-            if (!g_ascii_strcasecmp(s.t[0], "item")) {
-                mi = read_item(p);
-            } else if (!g_ascii_strcasecmp(s.t[0], "separator")) {
-                mi = read_separator(p);
-            } else if (!g_ascii_strcasecmp(s.t[0], "menu")) {
-                mi = read_submenu(p, TRUE);
-            } else if (!g_ascii_strcasecmp(s.t[0], "include")) {
-                read_include(p);
-                continue;
-            } else {
-                ERR("menu: unknown block %s\n", s.t[0]);
-                goto error;
-            }
-            if (!mi) {
-                ERR("menu: can't create menu item\n");
-                goto error;
-            }
-            gtk_widget_show(mi);
-            gtk_menu_shell_append (GTK_MENU_SHELL (menu), mi);
-        } else if (s.type == LINE_VAR) {
-            if (!g_ascii_strcasecmp(s.t[0], "image")) 
-                fname = expand_tilda(s.t[1]);
-            else if (!g_ascii_strcasecmp(s.t[0], "name"))
-                strcpy(name, s.t[1]);
-            else {
-                ERR("menu: unknown var %s\n", s.t[0]);
-                goto error;
-            }
-        } else if (s.type == LINE_NONE) {
-            if (m->files) {
-                fclose(p->fp);
-                p->fp = m->files->data;
-                m->files = g_slist_delete_link(m->files, m->files);
-            }
-        }  else {
-            ERR("menu: illegal in this context %s\n", s.str);
-            goto error;
-        }
-    }
-    if (as_item) {
-        mi = gtk_image_menu_item_new_with_label(name ? name : "");
-        if (fname) {
-            GtkWidget *img;
-            img = gtk_image_new_from_file_scaled(fname, m->iconsize, m->iconsize, TRUE);
-            gtk_widget_show(img);
-            gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(mi), img);
-            g_free(fname);
-        }
-        gtk_menu_item_set_submenu (GTK_MENU_ITEM (mi), menu);
-        RET(mi);
-    } else {
-        mi = make_button(p, fname, name, menu);
-        if (fname)
-            g_free(fname);
-        RET(mi);
+  m->iconsize = MENU_ICON_SIZE;
+  icon = gtk_image_new_from_pixbuf(gpe_find_icon_scaled_free ("gpe-logo", m->iconsize, m->iconsize));
+  gtk_widget_show(icon);
+  gtk_container_add (GTK_CONTAINER (item), icon);
+  gtk_container_add (GTK_CONTAINER (m->box), item);
+    
+  m->menu = gtk_menu_new ();
+  gtk_menu_attach_to_widget (GTK_MENU (m->menu), item, NULL);
+  
+  g_signal_connect (G_OBJECT(item), "button-press-event", 
+                    G_CALLBACK (my_button_pressed), m->menu);
+  g_object_set_data(G_OBJECT(item), "plugin", p);
+  
+  if (!access (MATCHBOX_VFOLDERS, R_OK))
+      folders = MATCHBOX_VFOLDERS;
+  else
+    if (!access (GPE_VFOLDERS, R_OK))
+        folders = GPE_VFOLDERS;
+  
+  folderlist = load_folder_list (folders);
+    
+  for (iter = folderlist; iter; iter = iter->next)
+    {
+       t_folder *folder = (t_folder*) iter->data;
+        
+       new_application_menu (m->menu, folder);
     }
     
- error:
-    // FIXME: we need to recursivly destroy all child menus and their items
-    gtk_widget_destroy(menu);
-    g_free(fname);
-    g_free(name);
-    RET(NULL);
+  load_application_list (PREFIX "/share/applications");
+
+  for (iter = actions; iter; iter = iter->next)
+    {
+        t_application *app = iter->data;
+        
+        item = gtk_image_menu_item_new_with_label (app->name);
+        g_signal_connect (G_OBJECT(item), "activate", 
+                          G_CALLBACK(run_application), (gpointer)app);
+        if (app->icon)
+          gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM(item), app->icon);
+        gtk_menu_append (GTK_MENU(m->menu), item);
+    }
+    
+  /* initialize startup notification */
+  gpe_launch_install_filter ();
+  gpe_launch_monitor_display (GDK_DISPLAY());
+    
+  gtk_widget_show_all (m->menu);
 }
-
-
 
 
 static int
@@ -355,15 +596,9 @@ menu_constructor(plugin *p)
     gtk_container_set_border_width(GTK_CONTAINER(m->box), 0);
     gtk_container_add(GTK_CONTAINER(p->pwid), m->box);
 
-    if (!read_submenu(p, FALSE)) {
-        ERR("menu: plugin init failed\n");
-        goto error;
-    }
+    build_menu (p);
+    
     RET(1);
-
- error:
-    menu_destructor(p);
-    RET(0);
 }
 
 
@@ -373,7 +608,7 @@ plugin_class menu_plugin_class = {
 
     type : "menu",
     name : "menu",
-    version: "1.0",
+    version: "2.0",
     description : "Provide Menu",
 
     constructor : menu_constructor,

@@ -725,6 +725,35 @@ gtk_image_new_from_file_scaled(const gchar *file, gint width,
     RET(img);
 }
 
+/* Load a named icon and scale it to the designated size. */
+GdkPixbuf*
+load_icon_scaled (const gchar *iconname, gint size)
+{
+  GdkPixbuf *pbuf, *result;
+  gchar *str;
+    
+  if (iconname && strstr(iconname, ".png"))
+      str = g_strdup_printf ("%s/%s", GPE_PIXMAPS_DIR, iconname);
+  else
+      str = g_strdup_printf ("%s/%s.png", GPE_PIXMAPS_DIR, iconname);
+      
+  pbuf = gdk_pixbuf_new_from_file (str, NULL);
+  if (!pbuf)
+    {
+      g_free (str);
+      str = g_strdup_printf ("%s/%s", PREFIX "/share/pixmaps", iconname);
+      pbuf = gdk_pixbuf_new_from_file (str, NULL);
+    }
+  if (pbuf != NULL)
+      result = gdk_pixbuf_scale_simple (pbuf, size, size, GDK_INTERP_BILINEAR);
+  else
+      result = NULL;
+  
+  g_object_unref (pbuf);
+  g_free (str);
+  
+  return result;
+}
 
 void
 get_button_spacing(GtkRequisition *req, GtkContainer *parent, gchar *name)

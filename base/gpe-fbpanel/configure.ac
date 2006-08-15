@@ -11,7 +11,7 @@ AC_STDC_HEADERS
 AC_PROG_INSTALL
 AC_PROG_LIBTOOL
 
-DEP_MODULES="gtk+-2.0 >= 2.6 glib-2.0 >= 2.2 x11"
+DEP_MODULES="gtk+-2.0 >= 2.6 glib-2.0 >= 2.2 x11 libgpewidget libgpelaunch"
 PKG_CHECK_MODULES(DEPS, $DEP_MODULES)
 
 # i8n stuff

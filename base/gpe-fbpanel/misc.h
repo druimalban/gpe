@@ -9,6 +9,8 @@
 
 #include "panel.h"
 
+#define GPE_PIXMAPS_DIR PREFIX "/share/gpe/pixmaps/default"
+
 enum { LINE_NONE, LINE_BLOCK_START, LINE_BLOCK_END, LINE_VAR };
 
 typedef struct {
@@ -60,4 +62,5 @@ GtkWidget *fb_button_new_from_file(gchar *fname, int width, int height, guint hi
       gboolean keep_ratio);
 GtkWidget *fb_button_new_from_file_with_label(gchar *fname, int width, int height,
       guint hicolor, gboolean keep_ratio, gchar *label);
+GdkPixbuf *load_icon_scaled (const gchar *iconname, gint size);
 #endif
