@@ -18,16 +18,21 @@
 
 #include "dbg.h"
 
+void 
+tray_add_widget (tray *tr, GtkWidget *widget)
+{
+   gtk_box_pack_start (GTK_BOX (tr->startbox), widget, TRUE, TRUE, 0);
+}
 
 static void
 tray_added (EggTrayManager *manager, GtkWidget *icon, void *data)
 {
     tray *tr = (tray*)data;
-    
+
     if (tr->pack_start)
-      gtk_box_pack_start (GTK_BOX (tr->box), icon, FALSE, TRUE, 0);
+      gtk_box_pack_start (GTK_BOX (tr->startbox), icon, FALSE, TRUE, 0);
     else
-      gtk_box_pack_end (GTK_BOX (tr->box), icon, FALSE, TRUE, 0);
+      gtk_box_pack_start (GTK_BOX (tr->endbox), icon, FALSE, TRUE, 0);
     
     gtk_widget_show (icon);
 }
@@ -54,7 +59,7 @@ static void
 message_cancelled (EggTrayManager *manager, GtkWidget *icon, glong id,
                    void *data)
 {
-  
+  fixed_tip_hide();
 }
 
 
@@ -82,7 +87,7 @@ tray_constructor(plugin *p)
     line s;
     tray *tr;
     GdkScreen *screen;
-    GtkWidget *spacer;
+    GtkWidget *box;
     
     ENTER;
     s.len = 256;
@@ -90,7 +95,6 @@ tray_constructor(plugin *p)
         ERR("tray: illegal in this context %s\n", s.str);
         RET(0);
     }
-
     
     tr = g_new0(tray, 1);
     g_return_val_if_fail(tr != NULL, 0);
@@ -98,16 +102,16 @@ tray_constructor(plugin *p)
     tr->plug = p;
     tr->pack_start = TRUE;
 
-    tr->box = p->panel->my_box_new(FALSE, gpe_get_boxspacing());
-    gtk_container_add(GTK_CONTAINER(p->pwid), tr->box);    
-    
+    box = p->panel->my_box_new(FALSE, 0);
+    tr->startbox = p->panel->my_box_new(FALSE, gpe_get_boxspacing());
+    tr->endbox = p->panel->my_box_new(FALSE, gpe_get_boxspacing());
+    gtk_box_pack_start(GTK_BOX (box), tr->startbox, TRUE, TRUE, 0);
+    gtk_box_pack_end (GTK_BOX (box), tr->endbox, FALSE, FALSE, 0);
+    gtk_container_add(GTK_CONTAINER(p->pwid), box);
     
     gtk_bgbox_set_background(p->pwid, BG_STYLE, 0, 0);
     gtk_container_set_border_width(GTK_CONTAINER(p->pwid), 0);
     screen = gtk_widget_get_screen (GTK_WIDGET (p->panel->topgwin));
-    
-    spacer = p->panel->my_box_new (FALSE, 0);
-    gtk_box_pack_end (GTK_BOX (tr->box), spacer, TRUE, TRUE, 0);
     
     if (egg_tray_manager_check_running(screen)) {
         tr->tray_manager = NULL;
@@ -121,13 +125,13 @@ tray_constructor(plugin *p)
     g_signal_connect (tr->tray_manager, "tray_icon_added",
           G_CALLBACK (tray_added), tr);
     g_signal_connect (tr->tray_manager, "tray_icon_removed",
-          G_CALLBACK (tray_removed), tr->box);
+          G_CALLBACK (tray_removed), NULL);
     g_signal_connect (tr->tray_manager, "message_sent",
-          G_CALLBACK (message_sent), tr->box);
+          G_CALLBACK (message_sent), NULL);
     g_signal_connect (tr->tray_manager, "message_cancelled",
-          G_CALLBACK (message_cancelled), tr->box);
+          G_CALLBACK (message_cancelled), NULL);
     
-    gtk_widget_show_all(tr->box);
+    gtk_widget_show_all(box);
     RET(1);
 
 }

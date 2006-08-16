@@ -11,13 +11,13 @@ extern "C"
 typedef struct {
     GtkWidget *mainw;
     plugin *plug;
-    GtkWidget *box;
+    GtkWidget *startbox;
+    GtkWidget *endbox;
     gboolean pack_start;
-    /////
     EggTrayManager *tray_manager;
-    
 } tray;
 
+void tray_add_widget (tray *tr, GtkWidget *widget);
 
 #ifdef __cplusplus
 }

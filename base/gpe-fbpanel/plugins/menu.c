@@ -566,10 +566,6 @@ build_menu(plugin *p)
         gtk_menu_append (GTK_MENU(m->menu), item);
     }
     
-  /* initialize startup notification */
-  gpe_launch_install_filter ();
-  gpe_launch_monitor_display (GDK_DISPLAY());
-    
   gtk_widget_show_all (m->menu);
 }
 

@@ -1,5 +1,27 @@
-
-
+/*
+ * gpe-fbpanel
+ *
+ * A panel for GPE based on fbpanel
+ * 
+ * (C) 2005 Anatoly Asviyan <aanatoly@users.sf.net>
+ * (C) 2006 Florian Boor <fb@kernelconcepts.de>
+ *  
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * 
+ *  Panel main module.
+ */
 #include <stdlib.h>
 #include <stdio.h>
 #include <sys/types.h>
@@ -9,10 +31,13 @@
 #include <locale.h>
 #include <string.h>
 #include <signal.h>
+#include <ctype.h>
 #include <libintl.h>
 
+#include <gdk/gdkx.h>
 #include <gpe/init.h>
 #include <gpe/pixmaps.h>
+#include <gpe/launch.h>
 
 #include "plugin.h"
 #include "panel.h"
@@ -43,18 +68,74 @@ FILE *pconf; // plugin part of profile file
 
 panel *p;
 
-
-/****************************************************
- *         panel's handlers for WM events           *
- ****************************************************/
-/*
-static void
-panel_del_wm_strut(panel *p)
+typedef struct 
 {
-    XDeleteProperty(GDK_DISPLAY(), p->topxwin, a_NET_WM_STRUT);
-    XDeleteProperty(GDK_DISPLAY(), p->topxwin, a_NET_WM_STRUT_PARTIAL);
+  gint pos;
+  gchar **apps;
+  tray *tr;
+}t_sessionstatus;
+
+static void run_application (gchar *exec, t_sessionstatus *session);
+
+static gboolean
+is_command (const gchar *line)
+{
+   if (isblank(line[0])) 
+       return FALSE;
+   if (line[0] == '\n' || line[0] == 0) 
+       return FALSE;
+   if (line[0] == '#') 
+       return FALSE;
+   return TRUE;
 }
-*/
+
+static void
+dock_complete (EggTrayManager *manager, GtkWidget *icon, gpointer data)
+{
+  t_sessionstatus *session = (t_sessionstatus*)data;
+
+  printf("finshed %i\n", session->pos);
+  if (!session->apps)
+      return;
+  
+  session->pos++;
+  
+  if (session->apps[session->pos])
+    {
+      if (!is_command(session->apps[session->pos]) && session->tr->pack_start)
+        {
+           GtkWidget *spacer;
+           session->tr->pack_start = FALSE;
+           session->pos++;
+        }
+        
+        if (!session->apps[session->pos] 
+            || !is_command(session->apps[session->pos]))
+          {
+            g_strfreev (session->apps);
+            session->apps = NULL;
+            return;
+          }
+        run_application (session->apps[session->pos], session);
+    }
+  else
+    {
+      g_strfreev (session->apps);
+      session->apps = NULL;
+    }
+}
+
+static void
+run_application (gchar *exec, t_sessionstatus *session)
+{
+  Display *dpy = GDK_DISPLAY();
+    
+  if (! gpe_launch_startup_is_pending (dpy, exec))
+    {
+      gpe_launch_program_with_callback (dpy, exec, exec, FALSE,
+                                        NULL, (gpointer)session);
+    }
+}
 
 static void
 panel_restore_session (void)
@@ -63,6 +144,7 @@ panel_restore_session (void)
   gint i = 0;
   tray *tr = NULL;
   GList *iter;
+  t_sessionstatus *session;
     
   for (iter = p->plugins; iter; iter=iter->next)
     {
@@ -80,25 +162,28 @@ panel_restore_session (void)
     {
       sflines = g_strsplit (sfcontent, "\n", 100);
       g_free (sfcontent);
+      g_free (sessionfile);
       
-      while (sflines[i])
+      while (sflines[i] && !is_command(sflines[i]))
+        i++;
+      if ((sflines[i]) && is_command (sflines[i]))
         {
-          if (strlen (sflines[i]))
-            {
-              g_spawn_command_line_async (sflines[i], NULL);
-            }
-          else
-            {
-              sleep (1);
-              tr->pack_start = FALSE;
-            }
-            
-          i++;
+          session = g_malloc0 (sizeof(t_sessionstatus));
+          session->apps = sflines;
+          session->pos = i;
+          session->tr = tr;
+          g_signal_connect (tr->tray_manager, "tray_icon_added",
+                            G_CALLBACK (dock_complete), session);
+          run_application (sflines[i], session);
         }
-        
-      g_strfreev (sflines);
+      else
+        g_strfreev (sflines);
     }
 }
+
+/****************************************************
+ *         panel's handlers for WM events           *
+ ****************************************************/
 
 static void
 panel_set_wm_strut(panel *p)
@@ -316,8 +401,10 @@ panel_start_gui(panel *p)
     
     ENTER;
 
-    // main toplevel window
+    /* main toplevel window */
     p->topgwin =  gtk_window_new(GTK_WINDOW_TOPLEVEL);
+    gtk_widget_add_events (p->topgwin, GDK_KEY_PRESS_MASK);
+    gtk_widget_add_events (p->topgwin, GDK_STRUCTURE_MASK);
     gtk_container_set_border_width(GTK_CONTAINER(p->topgwin), 1);
     gtk_window_set_resizable(GTK_WINDOW(p->topgwin), FALSE);
     gtk_window_set_wmclass(GTK_WINDOW(p->topgwin), "panel", "gpe-fbpanel");
@@ -757,9 +844,13 @@ main(int argc, char *argv[])
     
     XSetLocaleModifiers("");
     XSetErrorHandler((XErrorHandler) handle_error);
-  
+ 
     resolve_atoms();
-  
+
+    /* initialize startup notification */
+    gpe_launch_install_filter ();
+    gpe_launch_monitor_display (GDK_DISPLAY());
+    
     for (i = 1; i < argc; i++) {
         if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--help")) {
             usage();
@@ -795,6 +886,9 @@ main(int argc, char *argv[])
     }
     
     signal(SIGUSR1, sig_usr);
+    
+    /* keep process table clean */
+    signal (SIGCHLD, SIG_IGN);
     
     do {
         if (!(pfp = open_profile(cprofile)))
