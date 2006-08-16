@@ -217,4 +217,5 @@ gpe_system_tray_dock (GdkWindow *window)
   gdk_window_add_filter (GDK_ROOT_PARENT (), filter, (gpointer)win);
 
   find_tray (dpy, win);
+  gdk_notify_startup_complete();
 }

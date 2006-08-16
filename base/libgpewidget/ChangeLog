@@ -1,3 +1,9 @@
+
+2006-08-16  Florian Boor <florian@kernelconcepts.de>
+
+    * tray.c (gpe_system_tray_dock): Call gdk_notify_startup_complete()
+      to make startup notification for dock applications work.
+
 2006-08-02  Florian Boor <florian@kernelconcepts.de>
 
     * colorrenderer.c: Fix memory hole.
