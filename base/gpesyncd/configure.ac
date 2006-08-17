@@ -10,7 +10,6 @@ AC_PROG_CXX
 
 DEP_MODULES="glib-2.0 mimedir-1.0 libgpevtype sqlite gobject-2.0 gthread-2.0 gmodule-2.0"
 
-AM_GLIB_GNU_GETTEXT
 AC_PROG_LIBTOOL
 
 PKG_CHECK_MODULES(DEPS, $DEP_MODULES)
