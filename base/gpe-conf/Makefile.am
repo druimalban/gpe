@@ -175,6 +175,9 @@ clean-local:
 	rm -rf autom4te.cache
 	rm -f *.d *~
 
+install-data-hook:
+	chmod u+s $(DESTDIR)$(bindir)/gpe-conf                
+
 deb: dist
 	-mkdir $(top_builddir)/debian-build
 	cd $(top_builddir)/debian-build && tar xzf $(top_builddir)/../$(PACKAGE)-$(VERSION).tar.gz

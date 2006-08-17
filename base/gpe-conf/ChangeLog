@@ -1,3 +1,7 @@
+2006-08-17	Florian Boor <florian.boor@kernelconcepts.de>
+
+	* Install gpe-conf suid.
+
 2006-08-11	Florian Boor <florian.boor@kernelconcepts.de>
 
 	* Release version 0.2.2.
