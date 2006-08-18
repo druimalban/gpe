@@ -1,0 +1,25 @@
+In order to build this software you'll need:
+    * libgpe
+    * libsoup
+    * gtk+-2
+    * gstreamer-0.10
+    * sqlite3
+
+
+Files are structured as follows:
+    * stream.{h,c} contain the basic routines for opening the files,
+        finding if they are supported and read theis metadata.
+    * playlist.{h,c} implement the PlayList object, which handles al the
+        streams, as well as loading and saving the user's playlist. It uses
+        the gobject signal system to communicate with the streams as well as
+        with the user interface.
+    * lyrics,{h,c} have the code for downloading the lyrics and saving it to
+        a database.
+    * lastfm.{h,c} take care of sending the information on the played files to
+        last.fm. You need to manually trigger the submission for now. This will
+        be made automatic when NetworkManager is integrated into GPE.
+    * utils.{h,c} include some utility functions for strings and tree views.
+    * interface.{h,c} contain the code for initilizing the interface.
+    * callbacks.{h,c} is where all the callbacks for the interface are written.
+    * config.{h,c} handle the configuration files.
+    * main.c only calls the initilization routines for every component.

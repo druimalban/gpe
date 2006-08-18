@@ -1,0 +1,15 @@
+src/callbacks.c
+src/config.c
+src/interface.c
+src/main.c
+src/playlist.c
+src/slots.c
+src/stream.c
+src/utils.c
+src/callbacks.h
+src/config.h
+src/interface.h
+src/playlist.h
+src/starling.h
+src/stream.h
+src/utils.h

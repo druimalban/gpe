@@ -1,0 +1,53 @@
+AC_INIT(starling, 0.1,[skyhusker@handhelds.org])
+AC_CONFIG_SRCDIR([src/main.c])
+AM_INIT_AUTOMAKE([foreign dist-bzip2])
+AC_PROG_INSTALL
+AC_PROG_CC
+AC_LANG(C)
+
+dnl i18n stuff
+ALL_LINGUAS=""
+starling_localedir='${prefix}/${DATADIRNAME}/locale'
+AC_SUBST(starling_localedir)
+AM_GLIB_GNU_GETTEXT
+AC_PROG_INTLTOOL([0.23])
+
+
+dnl Check for GTK+
+PKG_CHECK_MODULES(GTK, gtk+-2.0)
+AC_SUBST(GTK_CFLAGS)
+AC_SUBST(GTK_LIBS)
+
+dnl glib-genmarshal
+GLIB_GENMARSHAL=`$PKG_CONFIG --variable=glib_genmarshal glib-2.0`
+AC_SUBST(GLIB_GENMARSHAL)
+
+dnl Check for gstreamer
+PKG_CHECK_MODULES(GSTREAMER, gstreamer-0.10)
+AC_SUBST(GSTREAMER_CFLAGS)
+AC_SUBST(GSTREAMER_LIBS)
+
+dnl Check for SQLite
+PKG_CHECK_MODULES(SQLITE, sqlite3 >= 3.3)
+AC_SUBST(SQLITE_CFLAGS)
+AC_SUBST(SQLITE_LIBS)
+
+dnl Check for LibSoup
+PKG_CHECK_MODULES(LIBSOUP, libsoup-2.2 >= 2.2.94)
+AC_SUBST(LIBSOUP_CFLAGS)
+AC_SUBST(LIBSOUP_LIBS)
+
+dnl Check for GPE
+PKG_CHECK_MODULES(GPE, libgpewidget >= 0.102)
+AC_SUBST(GPE_CFLAGS)
+AC_SUBST(GPE_LIBS)
+
+dnl Generate the output files.
+AC_CONFIG_FILES([
+po/Makefile.in
+Makefile
+data/Makefile
+data/starling.desktop
+src/Makefile
+])
+AC_OUTPUT
