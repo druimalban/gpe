@@ -1,3 +1,8 @@
+2006-08-18  Martin Felis <martin@_0nospam0_silef.de>
+
+	* INSTALL, autogen.sh: Simplified the build process.
+	* AUTHORS, COPYING, NEWS: Added.
+
 2006-05-19  Martin Felis <martin@_0nospam0_silef.de>
 
 	* ChangeLog: Changed my email adress, hoping to receive less spam in

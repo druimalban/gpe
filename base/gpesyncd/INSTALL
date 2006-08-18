@@ -1,10 +1,4 @@
 Just run:
 
-aclocal
-gettextize --force
-intltoolize --force
-libtoolize --force
-autoheader
-automake --add-missing
-autoconf
+./autogen.sh
 ./configure
