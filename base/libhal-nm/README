@@ -1,0 +1,7 @@
+libhal-nm
+
+  libhal-nm is library which implements small portions of the "big" libhal API
+used by GNOME NetworkManager (http://www.gnome.org/projects/NetworkManager/).
+This is required to in order to get NetworkManager working on systems with 2.4.x
+kernels, found in many production environments as well as for instance in PDAs. 
+

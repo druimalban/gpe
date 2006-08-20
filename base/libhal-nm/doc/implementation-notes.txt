@@ -1,0 +1,42 @@
+Modularised libhal-nm design: 
+
+  The whole libhal-nm is split into frontend part which should act as an drop-in
+replacement of libhal and backend, which consists of zero (probably not wanted
+state) or more modules. The backend takes care about all the devices found in
+tree, searching by capability or by properties etc. The modules is what provides
+any kind of informations about device.
+
+  1. What do the modules care about?
+
+  The descrption above implies that a modules and a device reported by it are
+quite tightly bound together. The general rule is that exactly one modules
+provides all informations about specific device (UDI). Making two modules, from
+which each takes care about different set of properties is therefore not 
+allowed. Also, no two modules shall provide devices with the same capability.
+
+  To speed up lookup of module, to which the device belongs, each UDI contains
+is first part unique numeric ID of module and a device name as a second part, 
+eg. '123/eth0' .
+
+  2. Backend lifecycle
+
+  Backends are currently linked statically to the library. After library
+initialization, entry functions of all backends (backendname_main) are called to
+perform global initialization and backend registration.
+
+  Backend registration requires BackendIface structure filled with proper
+values. This structure, after using it for the registration, SHALL NOT BE
+RELEASED (freed etc.). Idealy, structure is both allocated staticaly and filled
+in at compilation time.
+
+  After registration, backend should be fully capable of servicing all requests.
+
+  When shutting down libhal-nm context, the library should deinitialize the
+devices, although this is not yet implemented.
+
+  3. Known bugs and limitations
+
+  - the API supports just simple querying, but not the libhal callbacks.
+  - there is no way for getting notified about changes in hardware - everything
+    has to be pre-cached, polled every request, or handled in separate thread.
+

@@ -1,0 +1,107 @@
+All libhal calls are from NetworkManager daemon, what we need is to implement
+the libhal API usd by NetworkManager - it is enough to use just simple
+replacements for what does NM really need. Below there is a list of actually
+required functions
+
+Dump of grep libhal * in NetworkManager/src:
+NetworkManager.c:#include <libhal.h>
+NetworkManager.c:static char *nm_get_device_interface_from_hal (LibHalContext *ctx, const char *udi)
+NetworkManager.c:   if (libhal_device_property_exists (ctx, udi, "net.interface", NULL))
+NetworkManager.c:           if (libhal_device_property_exists (ctx, udi, "info.category", NULL))
+NetworkManager.c:                   char *category = libhal_device_get_property_string (ctx, udi, "info.category", NULL);
+NetworkManager.c:                           char *temp = libhal_device_get_property_string (ctx, udi, "net.interface", NULL);
+NetworkManager.c:                           libhal_free_string (temp);
+NetworkManager.c:                   libhal_free_string (category);
+NetworkManager.c:static void nm_hal_mainloop_integration (LibHalContext *ctx, DBusConnection * dbus_connection)
+NetworkManager.c:static void nm_hal_device_added (LibHalContext *ctx, const char *udi)
+NetworkManager.c:   NMData  *data = (NMData *)libhal_ctx_get_user_data (ctx);
+NetworkManager.c:static void nm_hal_device_removed (LibHalContext *ctx, const char *udi)
+NetworkManager.c:   NMData  *data = (NMData *)libhal_ctx_get_user_data (ctx);
+NetworkManager.c:static void nm_hal_device_new_capability (LibHalContext *ctx, const char *udi, const char *capability)
+NetworkManager.c:   NMData  *data = (NMData *)libhal_ctx_get_user_data (ctx);
+NetworkManager.c:   net_devices = libhal_find_device_by_capability (data->hal_ctx, "net", &num_net_devices, &error);
+NetworkManager.c:   libhal_free_string_array (net_devices);
+NetworkManager.c: * Create data structure used in callbacks from libhal.
+NetworkManager.c:static LibHalContext *nm_get_hal_ctx (NMData *data)
+NetworkManager.c:   LibHalContext * ctx = NULL;
+NetworkManager.c:   /* Initialize libhal.  We get a connection to the hal daemon here. */
+NetworkManager.c:   if ((ctx = libhal_ctx_new()) == NULL)
+NetworkManager.c:           nm_error ("libhal_ctx_new() failed, exiting...");
+NetworkManager.c:   libhal_ctx_set_dbus_connection (ctx, data->dbus_connection);
+NetworkManager.c:   if(!libhal_ctx_init (ctx, &error))
+NetworkManager.c:           nm_error ("libhal_ctx_init() failed: %s\n"
+NetworkManager.c:           libhal_ctx_free (ctx);
+NetworkManager.c:   libhal_ctx_set_user_data (ctx, data);
+NetworkManager.c:   libhal_ctx_set_device_added (ctx, nm_hal_device_added);
+NetworkManager.c:   libhal_ctx_set_device_removed (ctx, nm_hal_device_removed);
+NetworkManager.c:   libhal_ctx_set_device_new_capability (ctx, nm_hal_device_new_capability);
+NetworkManager.c:   libhal_device_property_watch_all (ctx, &error);
+NetworkManager.c:           nm_error ("libhal_device_property_watch_all(): %s", error.message);
+NetworkManager.c:           libhal_ctx_free (ctx);
+NetworkManager.c:           libhal_ctx_shutdown (data->hal_ctx, &error);
+NetworkManager.c:                   nm_warning ("libhal shutdown failed - %s", error.message);
+NetworkManager.c:           libhal_ctx_free (data->hal_ctx);
+nm-device.c:discover_device_type (LibHalContext *ctx, const char *udi)
+nm-device.c:        if (libhal_device_property_exists (ctx, udi, "info.category", NULL))
+nm-device.c:                category = libhal_device_get_property_string(ctx, udi, "info.category", NULL);
+nm-device.c:nm_get_device_driver_name (LibHalContext *ctx, const char *udi)
+nm-device.c:        physdev_udi = libhal_device_get_property_string (ctx, udi, "net.physical_device", NULL);
+nm-device.c:        if (physdev_udi && libhal_device_property_exists (ctx, physdev_udi, "info.linux.driver", NULL))
+nm-device.c:                char *drv = libhal_device_get_property_string (ctx, physdev_udi, "info.linux.driver", NULL);
+nm-device-802-3-ethernet.c: if (    libhal_device_property_exists (app_data->hal_ctx, udi, "usb.interface.class", NULL)
+nm-device-802-3-ethernet.c:         && (usb_test = libhal_device_get_property_string (app_data->hal_ctx, udi, "usb.interface.class", NULL)))
+nm-device-802-3-ethernet.c:         libhal_free_string (usb_test);
+NetworkManagerMain.h:#include <libhal.h>
+NetworkManagerMain.h:       LibHalContext *         hal_ctx;
+
+just in case this had changed, md5sum is dc0ff78de2717198d065f08f55a40216 .
+Below there are calls interesting for us:
+
+libhal_device_property_exists (ctx, udi, "net.interface", NULL)
+libhal_device_property_exists (ctx, udi, "info.category", NULL)
+libhal_device_get_property_string (ctx, udi, "info.category", NULL)
+libhal_free_string (temp)
+libhal_ctx_get_user_data (ctx)
+libhal_find_device_by_capability (data->hal_ctx, "net", &num_net_devices, &error)
+libhal_free_string_array (net_devices)
+libhal_ctx_new()
+libhal_ctx_init (ctx, &error)
+libhal_ctx_set_dbus_connection (ctx, data->dbus_connection)
+libhal_ctx_free (ctx)
+libhal_ctx_set_user_data (ctx, data)
+libhal_ctx_set_device_added (ctx, nm_hal_device_added)
+libhal_ctx_set_device_removed (ctx, nm_hal_device_removed)
+libhal_ctx_set_device_new_capability (ctx, nm_hal_device_new_capability)
+libhal_device_property_watch_all (ctx, &error)
+libhal_ctx_shutdown (data->hal_ctx, &error)
+libhal_device_get_property_string (ctx, udi, "net.physical_device", NULL)
+libhal_device_property_exists (ctx, physdev_udi, "info.linux.driver", NULL)
+libhal_device_property_exists (app_data->hal_ctx, udi, "usb.interface.class", NULL)
+libhal_device_get_property_string (app_data->hal_ctx, udi, "usb.interface.class", NULL)
+
+So, summarized, we have to implement following functions:
+libhal_ctx_new()
+libhal_ctx_init (ctx, &error)
+libhal_ctx_set_dbus_connection (ctx, data->dbus_connection)
+
+libhal_ctx_get_user_data (ctx)
+libhal_ctx_set_user_data (ctx, data)
+libhal_ctx_set_device_added (ctx, nm_hal_device_added)
+libhal_ctx_set_device_removed (ctx, nm_hal_device_removed)
+libhal_ctx_set_device_new_capability (ctx, nm_hal_device_new_capability)
+libhal_device_property_watch_all (ctx, &error)
+
+libhal_find_device_by_capability (data->hal_ctx, "net", &num_net_devices, &error)
+libhal_device_property_exists (ctx, udi, "some.property", NULL)
+libhal_device_get_property_string (ctx, udi, "some.property", NULL)
+
+libhal_ctx_free (ctx)
+libhal_ctx_shutdown (data->hal_ctx, &error)
+
+libhal_free_string (str)
+libhal_free_string_array (stra)
+
+... and properties: net, net.physical_device, info.linux.driver,
+usb.interface.class, net.interface, info.category
+
+

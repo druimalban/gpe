@@ -1,0 +1,16 @@
+2006-06-26  Milan Plzik  <mmp@handhelds.org>
+
+* libhal.h: Put fractions of libhal API inside
+
+* libhal.c: Implementation of fuctions from libhal.h
+
+* libhal-nm-backend.h: Designed private API to be used by libhal.c
+
+* libhal-nm-backend.c: Implemented private API from header file.
+
+
+2006-06-27  Milan Plzik  <mmp@handhelds.org>
+
+* libhal.c: Calls libhal_nm_backend_exit on libhal_ctx_shutdown
+
+* libhal_nm_backend.c: libhal_nm_backend_exit frees global allocated data
