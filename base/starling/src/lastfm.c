@@ -237,6 +237,10 @@ got_submission_response (SoupMessage *msg, gpointer arg)
     /* If we reach this point, we're done with the submission */
     lastfm_show_count (GTK_LABEL (data->label), lastfm_count());
     
+    g_free (data->md5response);
+    g_free (data->post_uri);
+    g_free (data->username);
+    g_free (data->passwd);
     g_free (data);
     g_strfreev (lines);
 }
