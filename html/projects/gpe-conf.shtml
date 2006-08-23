@@ -1,0 +1,113 @@
+
+<!--#set var="addtitle" value="GPE Configuration Tools"-->
+<!--#set var="pagename" value="GPE Configuration Tools"-->
+<!--#set var="appname" value="GPE-Conf"-->
+<!--#set var="author" value="Florian Boor"-->
+<!--#set var="authoremail" value="florian@linuxtogo.org"-->
+<!--#include virtual="/includes/head.shtml"-->
+
+<table cellpadding="12" cellspacing="12" border="12" width="100%" bgcolor="#EEEEEE">
+<tr>
+  <td colspan="3"><h2>Subprojects: <!--#echo var="appname"--></h2>
+  <i><!--#echo var="pagename"--></i></td>
+</tr>
+<tr>
+  <td><b>Function</b></td>
+  <td> 
+    <p>
+    GPE-Conf is a set of configuration tools to perfor the basic configuration
+    tasks on a mobile device. It is designed to expose all necessary 
+    settings in an easy to use and low intrusive way. It is even able to 
+    set up some tasks that are subject of more advanced use of a device such
+    as serial port usage and multi user setups.
+    </p>
+    <p>
+    The GPE-Conf package contains another small tool - <i>GPE-Info</i> to 
+    provide information about the device and it current status as well.
+    </p>
+  </td>
+  <td rowspan="3"><img src="../images/gpe-conf.png" border="0" alt="Screenshot"></td>
+</tr>
+<tr>
+  <td><b>Coordinator(s)</b></td>
+  <td>
+    The coordinator for this sub-project is 
+    Florian Boor (<a HREF="mailto:florian@linuxtogo.org">florian@linuxtogo.org</a>). 
+    If you want to contribute to this project, please contact him
+    or the GPE mailinglist.
+  </td>
+</tr>
+<tr>
+  <td><b>Status</b></td>
+  <td>
+    <p>
+      GPE-Conf is stable for production use and actively maintained and 
+      developed. Areas that want improvement include UI usability and a proper 
+      backend design.
+    </p>
+    <p>
+      The source code can be found in <A href="../cvs.shtml">CVS</A>,
+      module <b>base/gpe-conf</b>.  
+	</p>
+	<p>
+	  Distributions known to ship <i><!--#echo var="appname"--></i> are:
+	  <ul>
+	  	  <li><a href="http://familiar.handhelds.org">Familiar</a>
+          <li><a href="http://www.openzaurus.org">OpenZaurus</a>
+		  <li><a href="http://www.angstrom-distribution.org">Angstrom</a>
+     </ul>
+	</p>
+	<p>
+	  <i><!--#echo var="appname"--></i> is distributed under the <a href="http://www.gnu.org/licenses/gpl.html#SEC1">GPL</a>.
+	</p>
+  </td>
+</tr>
+<tr>
+  <td colspan="3">
+    <p>
+      It currently includes the following applets:
+      <UL>
+        <LI> Date and time
+        <LI> Display setings like brightness and calibration
+        <LI> GUI style and theme selection
+        <LI> Power management / auto sleep
+        <LI> Network settings
+        <LI> Button mapping, virtual- and external keyboards
+        <LI> Login settings
+        <LI> Owner information
+        <LI> PCMCIA/CF card information and driver assignment (deprecated)
+        <LI> Serial port assignment
+        <LI> Sound settings
+        <LI> USB port settings
+        <LI> User manager
+      </UL>
+
+    </p>
+    <p>    
+       The GPE-Conf frontends usually run width normal user provileges while
+       tasks that require root permissions are performed by a separate process.
+       It allows privileged users to make all settings exposed by GPE-Conf
+       available to all users. It uses an IPC communication mechanism for 
+       the communication between frontends and backend.       
+    </p>
+  </td>
+</tr>
+<tr>
+  <td><b>Project History</b></td>
+  <td>
+     <ul>
+	   <li>2002 Project started by Pierre Tardy</li>
+       <li>2003 Maintained by Florian Boor</li>
+	 </ul>
+  </td>
+</tr>
+</table>
+<table cellpadding="12" cellspacing="12" border="12" width="100%" bgcolor="#EEEEEE">
+<tr>
+  <td><b>Additional screenshots</b><br><br>Look and Feel applet, GPE-Info</td>
+  <td><center><img src="../images/gpe-conf2.png" border="0" alt="Screenshot"></center></td>
+  <td><center><img src="../images/gpe-info.png" border="0" alt="Screenshot"></center></td>
+</tr>
+</table>
+
+<!--#include virtual="/includes/foot.shtml"-->
