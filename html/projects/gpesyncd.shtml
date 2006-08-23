@@ -1,26 +1,26 @@
 
 <!--#set var="addtitle" value="gpesyncd"-->
-<!--#set var="pagename" value=""-->
+<!--#set var="pagename" value="Sync access for PIM data "-->
 <!--#set var="author" value="Martin Felis"-->
 <!--#set var="authoremail" value="martin@silef.de"-->
 <!--#include virtual="/includes/head.shtml"-->
 
 <table cellpadding="12" cellspacing="12" border="12" width="100%" bgcolor="#EEEEEE">
 <tr>
-  <td colspan="3"><h2>Subprojects: @App</h2>
+  <td colspan="3"><h2>Subprojects: gpesyncd</h2>
   <i><!--#echo var="pagename"--></i></td>
 </tr>
 <tr>
   <td><b>Function</b></td>
   <td>
-    To synchronise PIM data the gpesyncd acts as an agent to transform VCARDS,
-    VEVENTS, VTODOS and iCals to the apropriate format in the SQLite database
+    To synchronise PIM data the gpesyncd acts as an agent to transform vCards,
+    vEvents, vTtodo and iCals to the apropriate format in the SQLite database
     and vice versa.
   </td>
-  <td rowspan="3"><img src="../images/@.png" border="0" alt="Screenshot"></td>
+  <td rowspan="3"></td>
 </tr>
 <tr>
-  <td><b>Coordinator (s)</b></td>
+  <td><b>Coordinator(s)</b></td>
   <td>
     The coordinator for this project is Martin Felis
     (<a href="mailto:martin@silef.de">martin@silef.de</a>). If you want to 
@@ -32,18 +32,18 @@
   <td>
     <p>
       The source code can be found in <A href="../cvs.shtml">CVS</A>,
-      module <b>@</b>.  
+      module <b>base/gpesyncd</b>.  
 	</p>
 	<p>
-	  Distributions known to ship <i>@</i> are:
+	  Distributions known to ship <i>gpesyncd</i> are:
 	  <ul>
 	  	  <li><a href="http://familiar.handhelds.org">Familiar</a>
           <li><a href="http://www.openzaurus.org">OpenZaurus</a>
-		  <li><a href="http://www.angstroem-distribution.org">Angstroem</a>
+		  <li><a href="http://www.angstrom-distribution.org">Angstrom</a>
      </ul>
 	</p>
 	<p>
-	  <i>@</i> is distributed under the <a href="http://www.gnu.org/licenses/gpl.html#SEC1">GPL</a>.
+	  <i>gpesyncd</i> is distributed under the <a href="http://www.gnu.org/licenses/gpl.html#SEC1">GPL</a>.
 	</p>
   </td>
 </tr>

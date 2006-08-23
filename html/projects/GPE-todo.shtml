@@ -1,39 +1,87 @@
-
 <!--#set var="addtitle" value="Todo List"-->
-<!--#set var="pagename" value="todo"-->
+<!--#set var="pagename" value="Keep track of thing you need to do..."-->
 <!--#set var="author" value="Florian Boor"-->
 <!--#set var="authoremail" value="florian@handhelds.org"-->
 <!--#include virtual="/includes/head.shtml"-->
 
-<H2>Coordinator</H2>
-<p>
-The coordinator for this sub-project is Philip Blundell
-(<a HREF="mailto:philb@gnu.org">philb@gnu.org</a>) . If you want to 
-contribute to this project, please contact him directly.
-</p>
+<table cellpadding="12" cellspacing="12" border="12" width="100%" bgcolor="#EEEEEE">
+<tr>
+  <td colspan="3"><h2>Subprojects: GPE-Todo</h2>
+  <i><!--#echo var="pagename"--></i></td>
+</tr>
+<tr>
+  <td><b>Function</b></td>
+  <td> 
+    The function of GPE-Todo is to provide a prety simple list of outstanding tasks
+    You can assign one or more categories to a task to have flexible control about
+    the topic all the items belong to. 
+    In addition to this each item can be assigned a priority and a date by 
+    which it must be completed.
+  </td>
+  <td rowspan="3"><img src="../images/gpe-todo.png" border="0" alt="Screenshot"></td>
+</tr>
+<tr>
+  <td><b>Coordinator(s)</b></td>
+  <td>
+    The coordinators for this sub-project are Philip Blundell
+    (<a HREF="mailto:philb@gnu.org">philb@gnu.org</a>) and 
+    Florian Boor (<a HREF="mailto:florian@linuxtogo.org">florian@linuxtogo.org</a>). 
+    If you want to contribute to this project, please contact the coordinators
+    or the GPE mailinglist.
+  </td>
+</tr>
+<tr>
+  <td><b>Status</b></td>
+  <td>
+    <p>
+      GPE-Todo is stable for production use and actively maintained and 
+      developed.
+    </p>
+    <p>
+      The source code can be found in <A href="../cvs.shtml">CVS</A>,
+      module <b>base/gpe-todo</b>.  
+	</p>
+	<p>
+	  Distributions known to ship <i>gpe-todo</i> are:
+	  <ul>
+	  	  <li><a href="http://www.debian.org">Debian</a>
+	  	  <li><a href="http://www.ubuntulinux.org">Ubuntu</a>
+	  	  <li><a href="http://familiar.handhelds.org">Familiar</a>
+          <li><a href="http://www.openzaurus.org">OpenZaurus</a>
+		  <li><a href="http://www.angstrom-distribution.org">Angstrom</a>
+     </ul>
+	</p>
+	<p>
+	  <i>GPE-Todo</i> is distributed under the <a href="http://www.gnu.org/licenses/gpl.html#SEC1">GPL</a>.
+	</p>
+  </td>
+</tr>
+<tr>
+  <td colspan="3">
+    <p>
+      GPE-Todo makes use of the GPE PIM data category library (libgpepimc)
+      and therefore shares its categories with other PIM applications such
+      as GPE-Contacts. It is able to display colours assigned to categories 
+      in the todo item list.
+    </p>
+    <p>
+      The application uses SQLite for data storage using libtododb which
+      offers a simple API for managing todo items from different applications.
+      GPE-Timesheet is able to work with these items as well.
+    </p>
+  </td>
+</tr>
+<tr>
+  <td><b>Project History</b></td>
+  <td>
+     <ul>
+	   <li>2002 GPE-Todo started by Philip Blundell</li>
+       <li>2002 GTK 2.x support and SQLite backend</li>
+       <li>2004 Split database backend to separate package</li>
+       <li>2005 Support for Maemo software environment</li>
+	 </ul>
+  </td>
+</tr>
+</table>
 
-<H2>Function</H2>
-<P>
-This is fairly straightforward.  The program keeps track of outstanding 
-tasks, arranged in one or more distinct lists (e.g. one for work and one
-for personal items).  Each item can be assigned a priority and a date by 
-which it must be completed.
-</P>
-
-<H2>Status</H2>
-<P>
-The source code can be found in <A href="../cvs.shtml">CVS</A>,
-module <b>gpe-todo</b>.  Precompiled binaries for iPAQ are available
-in the Familiar <A href="http://familiar.handhelds.org/familiar/feeds/unstable/">unstable feed</A>.
-<br>
-GPE-Todo is included in current Familiar releases as well as in Debian Sid.
-</P>
-
-<H2>Screenshot</H2>
-<P>
-GPE-Todo active in a HP iPAQ.
-<CENTER>
-<IMG SRC="/images/gpe-todo.png" ALT="gpe-todo">
-</CENTER>
-</P>
 <!--#include virtual="/includes/foot.shtml"-->

@@ -1,37 +1,70 @@
 
-<!--#set var="addtitle" value="Bluetooth PIN manager"-->
-<!--#set var="pagename" value="bluez-pin"-->
-<!--#set var="author" value="Phil Blundell"-->
-<!--#set var="authoremail" value="philb@gnu.org"-->
+-<!--#set var="pagename" value="Bluetooth PIN manager"-->
+-<!--#set var="addtitle" value="bluez-pin"-->
+-<!--#set var="author" value="Phil Blundell"-->
+-<!--#set var="authoremail" value="philb@gnu.org"-->
 <!--#include virtual="/includes/head.shtml"-->
 
-<H2>Coordinator</H2>
-<p>
-The coordinator for this sub-project is Philip Blundell
-(<a HREF="mailto:philb@gnu.org">philb@gnu.org</a>) . If you want to 
-contribute to this project, please contact him directly.
-</p>
+<table cellpadding="12" cellspacing="12" border="12" width="100%" bgcolor="#EEEEEE">
+<tr>
+  <td colspan="3"><h2>Subprojects: bluez-pin</h2>
+  <i><!--#echo var="pagename"--></i></td>
+</tr>
+<tr>
+  <td><b>Function</b></td>
+  <td> 
+    This is a very simple program which takes care of the PIN numbers used
+    to pair Bluetooth devices.  When a PIN is required for either an
+    incoming or outgoing connection, it pops up a window to allow the code
+    to be entered.  PINs can optionally be saved in a persistent database,
+    for use with dumb devices (e.g. my Nokia 6210) that are unable to
+    remember pairing information across sessions.
+  </td>
+  <td rowspan="3"><img src="../images/bluez-pin.png" border="0" alt="Screenshot"></td>
+</tr>
+<tr>
+  <td><b>Coordinator (s)</b></td>
+  <td>
+    The coordinator for this sub-project is Philip Blundell
+    (<a HREF="mailto:philb@gnu.org">philb@gnu.org</a>) . If you want to 
+    contribute to this project, please contact him directly.
+  </td>
+</tr>
+<tr>
+  <td><b>Status</b></td>
+  <td>
+    <p>
+      The source code can be found in <A href="../cvs.shtml">CVS</A>,
+      module <b>base/bluez-pin</b>.  
+	</p>
+	<p>
+	  Distributions known to ship <i>bluez-pin</i> are:
+	  <ul>
+	  	  <li><a href="http://familiar.handhelds.org">Familiar</a>
+          <li><a href="http://www.openzaurus.org">OpenZaurus</a>
+		  <li><a href="http://www.angstrom-distribution.org">Angstrom</a>
+     </ul>
+	</p>
+	<p>
+	  <i>bluez-pin</i> is distributed under the <a href="http://www.gnu.org/licenses/gpl.html#SEC1">GPL</a>.
+	</p>
+  </td>
+</tr>
+<tr>
+  <td colspan="3">
+    <p>
+    </p>
+  </td>
+</tr>
+<tr>
+  <td><b>Project History</b></td>
+  <td>
+     <ul>
+	   <li>Started 2003 by Philip Blundell</li>
+	 </ul>
+  </td>
+</tr>
+</table>
 
-<H2>Function</H2>
-<P>
-This is a very simple program which takes care of the PIN numbers used
-to pair Bluetooth devices.  When a PIN is required for either an
-incoming or outgoing connection, it pops up a window to allow the code
-to be entered.  PINs can optionally be saved in a persistent database,
-for use with dumb devices (e.g. my Nokia 6210) that are unable to
-remember pairing information across sessions.
-</P>
-
-<H2>Status</H2>
-<P>
-The source code can be found in <A href="../cvs.shtml">CVS</A>,
-module <b>bluez-pin</b>.  Precompiled binaries for iPAQ are available
-in the Familiar <A href="http://familiar.handhelds.org/familiar/feeds/unstable/">unstable feed</A>.
-</P>
-
-<H2>Screenshot</H2>
-<P>
-<IMG SRC="../images/bluez-pin.png">
-</P>
 
 <!--#include virtual="/includes/foot.shtml"-->
