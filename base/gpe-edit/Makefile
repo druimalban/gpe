@@ -2,7 +2,7 @@ PREFIX = /usr/local
 PACKAGE = gpe-edit
 DEBUG = no
 CVSBUILD = yes
-VERSION = 0.31
+VERSION = 0.32
 
 MEMBERS = main
 #FIXME: ('de' is not on TP?)

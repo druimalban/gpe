@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2001, 2002 Damien Tanner <dctanner@magenet.com>
+ * Copyright (C) 2004, 2006 Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -22,20 +23,22 @@
 
 #include <gpe/init.h>
 #include <gpe/errorbox.h>
+#include <gpe/gpedialog.h>
 #include <gpe/pixmaps.h>
 #include <gpe/picturebutton.h>
 #include <gpe/question.h>
 #include <gpe/spacing.h>
+#include <gpe/gpehelp.h>
 
 #define WINDOW_NAME "Editor"
 #define _(_x) gettext (_x)
 
 gchar *filename = NULL;
-int file_modified = 0;
-int search_replace_open = 0;
-int last_found = 0;
+gint file_modified = 0;
+gint search_replace_open = 0;
+gint last_found = 0;
 gboolean utf8_mode;
-const char *appname = "gpe-edit";
+const gchar *appname = "gpe-edit";
 
 GtkWidget *main_window;
 GtkWidget *text_area;
@@ -68,7 +71,7 @@ static void
 show_help (void)
 {
         gboolean test;
-        char *topic = NULL;
+        gchar *topic = NULL;
 
         test = gpe_show_help(appname, topic);
         if (test == TRUE)
@@ -427,7 +430,7 @@ do_find_string (GtkWidget *widget)
 
   if (!found)
     {
-      gpe_error_box (_("Text not found"));
+      gpe_info_dialog (_("Text not found"));
       last_found = 0;
     }
   else
@@ -612,7 +615,7 @@ main (int argc, char *argv[])
 {
   GtkWidget *vbox, *toolbar, *scroll;
   GtkTooltips *tooltips;
-  GtkWidget *toolbar_icon;
+  GtkToolItem *item;
   GtkTextBuffer *buf;
   gint window_x, window_y;
 
@@ -671,58 +674,83 @@ main (int argc, char *argv[])
   g_signal_connect (G_OBJECT (buf), "changed",
 		      GTK_SIGNAL_FUNC (text_changed), NULL);
 
-  toolbar_icon = gtk_image_new_from_stock (GTK_STOCK_NEW, GTK_ICON_SIZE_SMALL_TOOLBAR);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("New"), 
-			   _("New document"), _("New document"), toolbar_icon, GTK_SIGNAL_FUNC(new_file), NULL);
+  item = gtk_tool_button_new_from_stock (GTK_STOCK_NEW);
+  gtk_tooltips_set_tip (tooltips, GTK_WIDGET (item), _("New document"), NULL);
+  g_signal_connect (G_OBJECT (item), "clicked", G_CALLBACK (new_file), NULL);
+  gtk_toolbar_insert (GTK_TOOLBAR (toolbar), item, -1);
 
-  toolbar_icon = gtk_image_new_from_stock (GTK_STOCK_OPEN, GTK_ICON_SIZE_SMALL_TOOLBAR);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Open"), 
-			   _("Open file"), _("Open file"), toolbar_icon, select_open_file, NULL);
+  item = gtk_tool_button_new_from_stock (GTK_STOCK_OPEN);
+  gtk_tooltips_set_tip (tooltips, GTK_WIDGET (item), _("Open file"), NULL);
+  g_signal_connect (G_OBJECT (item), "clicked", G_CALLBACK (select_open_file), NULL);
+  gtk_toolbar_insert (GTK_TOOLBAR (toolbar), item, -1);
 
-  toolbar_icon = gtk_image_new_from_stock (GTK_STOCK_SAVE, GTK_ICON_SIZE_SMALL_TOOLBAR);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Save"), 
-			   _("Save current file"), _("Save current file"), toolbar_icon, save_file, NULL);
+  item = gtk_tool_button_new_from_stock (GTK_STOCK_SAVE);
+  gtk_tooltips_set_tip (tooltips, GTK_WIDGET (item), _("Save current file"), NULL);
+  g_signal_connect (G_OBJECT (item), "clicked", G_CALLBACK (save_file), NULL);
+  gtk_toolbar_insert (GTK_TOOLBAR (toolbar), item, -1);
 
-  toolbar_icon = gtk_image_new_from_stock (GTK_STOCK_SAVE_AS, GTK_ICON_SIZE_SMALL_TOOLBAR);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Save as"), 
-			   _("Save current file as"), _("Save current file as"), toolbar_icon, select_save_file_as, NULL);
+  item = gtk_tool_button_new_from_stock (GTK_STOCK_SAVE_AS);
+  gtk_tooltips_set_tip (tooltips, GTK_WIDGET (item), _("Save current file as"), NULL);
+  g_signal_connect (G_OBJECT (item), "clicked", G_CALLBACK (select_save_file_as), NULL);
+  gtk_toolbar_insert (GTK_TOOLBAR (toolbar), item, -1);
 
-  gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
+  if (window_x > 260)
+    {
+      item = gtk_separator_tool_item_new ();
+      gtk_separator_tool_item_set_draw (GTK_SEPARATOR_TOOL_ITEM (item), FALSE);
+      gtk_toolbar_insert (GTK_TOOLBAR (toolbar), item, -1);
+    }
+  item = gtk_tool_button_new_from_stock (GTK_STOCK_FIND);
+  gtk_tooltips_set_tip (tooltips, GTK_WIDGET (item), _("Search text for a string"), NULL);
+  g_signal_connect (G_OBJECT (item), "clicked", G_CALLBACK (search_string), vbox);
+  gtk_toolbar_insert (GTK_TOOLBAR (toolbar), item, -1);
 
-  toolbar_icon = gtk_image_new_from_stock (GTK_STOCK_FIND, GTK_ICON_SIZE_SMALL_TOOLBAR);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Search"), 
-			   _("Search text for a string"), _("Search text for a string"), toolbar_icon, GTK_SIGNAL_FUNC(search_string), vbox);
 
-  toolbar_icon = gtk_image_new_from_stock (GTK_STOCK_FIND_AND_REPLACE, GTK_ICON_SIZE_SMALL_TOOLBAR);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Replace"), 
-			   _("Replace a string"), _("Replace a string"), toolbar_icon, GTK_SIGNAL_FUNC(replace_string), vbox);
+  item = gtk_tool_button_new_from_stock (GTK_STOCK_FIND_AND_REPLACE);
+  gtk_tooltips_set_tip (tooltips, GTK_WIDGET (item), _("Replace a string"), NULL);
+  g_signal_connect (G_OBJECT (item), "clicked", G_CALLBACK (replace_string), vbox);
+  gtk_toolbar_insert (GTK_TOOLBAR (toolbar), item, -1);
+
 
   if(gpe_check_for_help(appname) == NULL )
-	  gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
+    {
+      item = gtk_separator_tool_item_new ();
+      gtk_separator_tool_item_set_draw (GTK_SEPARATOR_TOOL_ITEM (item), FALSE);
+      gtk_tool_item_set_expand (item, TRUE);
+      gtk_toolbar_insert (GTK_TOOLBAR (toolbar), item, -1);
+    }
 
-  toolbar_icon = gtk_image_new_from_stock (GTK_STOCK_COPY, GTK_ICON_SIZE_SMALL_TOOLBAR);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Copy"), 
-			   _("Copy selected, paste is possible by tap&hold"), _("Copy selected, paste is possible by tap&hold"), toolbar_icon, copy_selection, vbox);
- 
+  item = gtk_tool_button_new_from_stock (GTK_STOCK_COPY);
+  gtk_tooltips_set_tip (tooltips, GTK_WIDGET (item), 
+                        _("Copy selected, paste is possible by tap&hold"), NULL);
+  g_signal_connect (G_OBJECT (item), "clicked", G_CALLBACK (copy_selection), vbox);
+  gtk_toolbar_insert (GTK_TOOLBAR (toolbar), item, -1);
+    
+    
   /* add another icon if we screen is large */
   if (window_x > 260)
     {
-      toolbar_icon = gtk_image_new_from_stock (GTK_STOCK_PASTE, GTK_ICON_SIZE_SMALL_TOOLBAR);
-      gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Paste"), 
-			   _("Paste from clipboard"), _("Paste from clipboard"), toolbar_icon, paste_clipboard, vbox);
+      item = gtk_tool_button_new_from_stock (GTK_STOCK_PASTE);
+      gtk_tooltips_set_tip (tooltips, GTK_WIDGET (item), 
+                            _("Paste from clipboard"), NULL);
+      g_signal_connect (G_OBJECT (item), "clicked", G_CALLBACK (paste_clipboard), vbox);
+      gtk_toolbar_insert (GTK_TOOLBAR (toolbar), item, -1);
 	}			   
 
   if(gpe_check_for_help(appname) != NULL)
 	{
-	  toolbar_icon = gtk_image_new_from_stock (GTK_STOCK_HELP, GTK_ICON_SIZE_SMALL_TOOLBAR);
-	  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Help"),
-                                       _("Get help"), _("Get help"), toolbar_icon, show_help, vbox); 
+      item = gtk_tool_button_new_from_stock (GTK_STOCK_HELP);
+      gtk_tooltips_set_tip (tooltips, GTK_WIDGET (item), _("Get help"), NULL);
+      g_signal_connect (G_OBJECT (item), "clicked", G_CALLBACK (show_help), NULL);
+      gtk_toolbar_insert (GTK_TOOLBAR (toolbar), item, -1);
 	}
   
 
-  toolbar_icon = gtk_image_new_from_stock (GTK_STOCK_QUIT, GTK_ICON_SIZE_SMALL_TOOLBAR);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Quit"), 
-			   _("Exit gpe-edit"), _("Exit gpe-edit"), toolbar_icon, ask_save_before_exit, vbox);
+  item = gtk_tool_button_new_from_stock (GTK_STOCK_QUIT);
+  gtk_tooltips_set_tip (tooltips, GTK_WIDGET (item), 
+                        _("Exit gpe-edit"), NULL);
+  g_signal_connect (G_OBJECT (item), "clicked", G_CALLBACK (ask_save_before_exit), vbox);
+  gtk_toolbar_insert (GTK_TOOLBAR (toolbar), item, -1);
 
   gtk_container_add (GTK_CONTAINER (main_window), GTK_WIDGET (vbox));
   gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, FALSE, 0);
@@ -734,11 +762,7 @@ main (int argc, char *argv[])
 
   gpe_set_window_icon (main_window, "icon");
 
-  gtk_widget_show (main_window);
-  gtk_widget_show (vbox);
-  gtk_widget_show (toolbar);
-  gtk_widget_show (scroll);
-  gtk_widget_show (text_area);
+  gtk_widget_show_all (main_window);
 
   if (argc > 1)
   {

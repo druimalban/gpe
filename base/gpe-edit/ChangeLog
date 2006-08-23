@@ -1,3 +1,10 @@
+2006-08-23  Florian Boor <florian.boor@kernelconcepts.de>
+
+    * Release Version 0.32
+	* main.c: Use glib types.
+      Convert toolbar to new API.
+      Make info box from error message if a string is not found.
+
 2006-07-28  Florian Boor <florian.boor@kernelconcepts.de>
 
 	* Release Version 0.31
