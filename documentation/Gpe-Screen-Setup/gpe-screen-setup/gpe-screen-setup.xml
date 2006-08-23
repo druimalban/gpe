@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+"http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<article>
+<articleinfo>
+	<title>Gpe-Screen-Setup</title>
+</articleinfo>
+<sect1>
+	<title>Using the Application</title>
+<para>
+Here you can ajust the backlight settings and screen orientation.
+<itemizedlist>
+<listitem><para>Bightness: Drag the slider to ajust the current brightness of the screen. (0-100)</para></listitem>
+<listitem><para>Touchscreen: Press this button to re-callibrate your screen.</para></listitem>
+</itemizedlist>
+There are four different screen orientations available:
+<orderedlist>
+<listitem><para>Portrait, or 'normal' orentation. The menu bar is at the base of the screen and the title bar on top.</para></listitem>
+<listitem><para>Landscape-Left. The menu bar is at the top of the screen and the title bar is at the left.</para></listitem>
+<listitem><para>Inverted. The menu bar is at the top of the screen and the title bar at the base.</para></listitem>
+<listitem><para>Landscape-Right. The menu bar is at the bottom of the screen and the title bar on the right.</para></listitem>
+</orderedlist>
+<tip><title>Quick Tip</title>
+<para>
+You can also re-callibrate your screen by pressing the record button at the login screen. (May not be available on all handhelds)
+</para>
+</tip>
+<note><title>Feature</title>
+<para>
+Orientation can be adjusted on the fly, no reboot of the handheld is neccesarry.
+</para>
+</note>
+</para>
+</sect1>
+</article>

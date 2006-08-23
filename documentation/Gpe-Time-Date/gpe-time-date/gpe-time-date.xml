@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+"http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<article>
+<articleinfo>
+	<title>Gpe-Time-Date</title>
+</articleinfo>
+<sect1>
+	<title>Using the Application</title>
+<para>
+To set the time:
+<itemizedlist>
+<listitem><para> To set the date tap on the calendar icon and use the arrows to find the desired month/year. Then tap on the day.</para></listitem>
+<listitem><para>To set the time tap on the clock. Use your stylus to tap and hold on the hour/minute pointers. Drag both pointers untill they are at the desired time.</para></listitem>
+<listitem><para>To set your timezone tap on the timezone tab and than select your zone from the drop down box.</para></listitem>
+<listitem><para>You can also manually/automaticaly set daylight savings by checking the 'Use daylight savings time' box.</para></listitem>
+</itemizedlist>
+<note><para>You can set the time using the input boxes aswell.</para></note>
+<note><para>Timezone settings do not take effect untill you log in and out again.</para></note>
+<tip><para>Rotate the hour pointer one full rotation around the clock to go into the 13-24 hour range, or vice-versa.</para></tip>
+</para>
+</sect1>
+</article>

@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+"http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<article>
+<articleinfo>
+	<title>Gpe-Button-Config</title>
+</articleinfo>
+<mediaobject><imageobject><imagedata fileref="gpebanner.png" format="PNG"/></imageobject></mediaobject>
+<sect1>
+	<title>Accessing the Program</title>
+<para>
+Gpe-Button-Config is accessable from the settings folder in the keys and buttons application under the Buttons Tab.
+<figure>
+	<title>GPE Settings Folder</title>
+<mediaobject><imageobject><imagedata fileref="settingsfolder.png" format="PNG"/></imageobject></mediaobject>
+</figure>
+<figure>
+	<title>Main Application Screen</title>
+<mediaobject><imageobject><imagedata fileref="mainappscreen.png" format="PNG"/></imageobject></mediaobject>
+</figure>
+</para>
+</sect1>
+<sect1>
+	<title>Using the Application</title>
+<para>
+Here you can change the function of your buttons:
+<itemizedlist>
+<listitem><para>Tap on the corresponding button for your device. You can then:</para></listitem>
+<listitem><para>Select the desired option from the drop down list.</para></listitem>
+<listitem><para>Type in your own custom command.</para></listitem>
+<listitem><para>Open an application to run.</para></listitem>
+</itemizedlist>
+<figure>
+	<title>Drop Down List</title>
+<mediaobject><imageobject><imagedata fileref="dropdownlist.png" format="PNG"/></imageobject></mediaobject>
+</figure>
+<figure>
+	<title>Opening an Application</title>
+<mediaobject><imageobject><imagedata fileref="openapp.png" format="PNG"/></imageobject></mediaobject>
+</figure>
+<note><title>Important Note</title>
+<para>
+Functionality and layout will vary from device to device.
+</para>
+</note>
+</para>
+</sect1>
+</article>

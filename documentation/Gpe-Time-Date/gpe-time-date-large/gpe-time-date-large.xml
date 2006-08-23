@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+"http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<article>
+<articleinfo>
+	<title>Gpe-Time-Date</title>
+</articleinfo>
+<mediaobject><imageobject><imagedata fileref="gpebanner.png" format="PNG"/></imageobject></mediaobject>
+<sect1>
+	<title>Accessing the Program</title>
+<para>
+Gpe-Time-Date is accessable in the settings folder. To access it tap on the time/date setup icon.
+<figure>
+	<title>GPE Settings Folder</title>
+<mediaobject><imageobject><imagedata fileref="settingsfolder.png" format="PNG"/></imageobject></mediaobject>
+</figure>
+<figure>
+	<title>Main Application Screen</title>
+<mediaobject><imageobject><imagedata fileref="mainappscreen.png" format="PNG"/></imageobject></mediaobject>
+</figure>
+</para>
+</sect1>
+<sect1>
+	<title>Using the Application</title>
+<para>
+To set the time:
+<itemizedlist>
+<listitem><para> To set the date tap on the calendar icon and use the arrows to find the desired month/year. Then tap on the day.</para></listitem>
+<listitem><para>To set the time tap on the clock. Use your stylus to tap and hold on the hour/minute pointers. Drag both pointers untill they are at the desired time.</para></listitem>
+<listitem><para>To set your timezone tap on the timezone tab and than select your zone from the drop down box.</para></listitem>
+<listitem><para>You can also manually/automaticaly set daylight savings by checking the 'Use daylight savings time' box.</para></listitem>
+</itemizedlist>
+<note><para>You can set the time using the input boxes aswell.</para></note>
+<note><para>Timezone settings do not take effect untill you log in and out again.</para></note>
+<tip><para>Rotate the hour pointer one full rotation around the clock to go into the 13-24 hour range, or vice-versa.</para></tip>
+<figure>
+	<title>Setting The Date</title>
+<mediaobject><imageobject><imagedata fileref="setdate.png" format="PNG"/></imageobject></mediaobject>
+</figure>
+<figure>
+	<title>Setting the Time</title>
+<mediaobject><imageobject><imagedata fileref="settime.png" format="PNG"/></imageobject></mediaobject>
+</figure>
+<figure>
+	<title>Setting the Timezone</title>
+<mediaobject><imageobject><imagedata fileref="settimezone.png" format="PNG"/></imageobject></mediaobject>
+</figure>
+<figure>
+	<title>Network Clock Sync</title>
+<mediaobject><imageobject><imagedata fileref="netclocksync.png" format="PNG"/></imageobject></mediaobject>
+</figure>
+</para>
+</sect1>
+</article>

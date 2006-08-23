@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+"http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<article>
+<articleinfo>
+	<title>Gpe-User-Manager</title>
+</articleinfo>
+<sect1>
+	<title>Icon Explanations</title>
+<para>
+<itemizedlist>
+<listitem><mediaobject><imageobject><imagedata fileref="blankpage.png" format="PNG"/></imageobject></mediaobject><literallayout>Creates a new user.</literallayout></listitem>
+<listitem><mediaobject><imageobject><imagedata fileref="properties.png" format="PNG"/></imageobject></mediaobject><literallayout>Ajust the selected users settings.</literallayout></listitem>
+<listitem><mediaobject><imageobject><imagedata fileref="delete.png" format="PNG"/></imageobject></mediaobject><literallayout>Delete a selected user.</literallayout></listitem>
+<listitem><mediaobject><imageobject><imagedata fileref="passchange.png" format="PNG"/></imageobject></mediaobject><literallayout>Change the selected users password.</literallayout></listitem>
+</itemizedlist>
+</para>
+</sect1>
+<sect1>
+	<title>Create a new user</title>
+<para>
+<mediaobject><imageobject><imagedata fileref="blankpage.png" format="PNG"/></imageobject></mediaobject>
+<orderedlist>
+<listitem><para>To create a new user tap on the blank page icon (above)</para></listitem>
+<listitem><para>Fill in the following information:</para></listitem>
+<listitem><para>User Name: This is the name you will use to login to your handheld.</para></listitem>
+<listitem><para>Password: Enter your desired password. </para></listitem>
+<listitem><para>User Info: Enter in your real name.</para></listitem>
+<listitem><para>Shell: Select your desired shell for use with your account.</para></listitem>
+<listitem><para>Home: Enter the desired home directory.</para></listitem>
+<listitem><para>Tap "ok" to create the user.</para></listitem>
+</orderedlist>
+</para>
+</sect1>
+<sect1>
+	<title>Editing an Existing User</title>
+<para>
+<mediaobject><imageobject><imagedata fileref="properties.png" format="PNG"/></imageobject></mediaobject>
+To edit an existing user:
+<itemizedlist>
+<listitem><para>Tap on the desired user.</para></listitem>
+<listitem><para>Tap on the properties icon.</para></listitem>
+<listitem><para>Make your modifications.</para></listitem>
+<listitem><para>Tap "ok" to save your changes.</para></listitem>
+</itemizedlist>
+</para>
+</sect1>
+<sect1>
+	<title>Changing the Password</title>
+<para>
+To quickly change the password of a user:
+<itemizedlist>
+<listitem><para>Tap on the selected user.</para></listitem>
+<listitem><para>Tap on the padlock icon.</para></listitem>
+<listitem><para>Fill in the fields.</para></listitem>
+<listitem><para>Tap "ok" to save your changes.</para></listitem>
+</itemizedlist>
+</para>
+</sect1>
+<sect1>
+	<title>Deleting a User</title>
+<para>
+To delete a user:
+<itemizedlist>
+<listitem><para>Tap on the desired user.</para></listitem>
+<listitem><para>Tap on the trash can icon.</para></listitem>
+<listitem><para>Select "ok" to confirm your decision.</para></listitem>
+</itemizedlist>
+</para>
+</sect1>
+</article>

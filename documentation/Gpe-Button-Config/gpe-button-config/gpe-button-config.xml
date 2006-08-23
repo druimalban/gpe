@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+"http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<article>
+<articleinfo>
+	<title>Gpe-Button-Config</title>
+</articleinfo>
+<sect1>
+	<title>Using the Application</title>
+<para>
+Here you can change the function of your buttons:
+<itemizedlist>
+<listitem><para>Tap on the corresponding button for your device. You can then:</para></listitem>
+<listitem><para>Select the desired option from the drop down list.</para></listitem>
+<listitem><para>Type in your own custom command.</para></listitem>
+<listitem><para>Open an application to run.</para></listitem>
+</itemizedlist>
+<note><title>Important Note</title>
+<para>
+Functionality and layout will vary from device to device.
+</para>
+</note>
+</para>
+</sect1>
+</article>
