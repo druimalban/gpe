@@ -1,5 +1,5 @@
 PACKAGE = gpe-beam
-VERSION = 0.2.8
+VERSION = 0.2.9
 CVSBUILD = yes
 DEBUG = no
 INSTALL = install
