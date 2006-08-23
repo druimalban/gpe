@@ -24,12 +24,11 @@ Gpe-Timetracker is accessable in the main application screen. To access it tap o
 	<title>Icon Explanations</title>
 <para>
 <itemizedlist>
-<listitem><mediaobject><imageobject><imagedata fileref="blankpage.png" format="PNG"/></imageobject></mediaobject><literallayout>Blank Page Icon - Create a new item to track.</literallayout></listitem>
-<listitem><mediaobject><imageobject><imagedata fileref="delete.png" format="PNG"/></imageobject></mediaobject><literallayout>Trash Icon - Delete a selected item.</literallayout></listitem>
-<listitem><mediaobject><imageobject><imagedata fileref="edit.png" format="PNG"/></imageobject></mediaobject><literallayout>Edit Icon - Enter in notes pertaining to the task.</literallayout></listitem>
-<listitem><mediaobject><imageobject><imagedata fileref="clock.png" format="PNG"/></imageobject></mediaobject><literallayout>Green Clock - Clock in.</literallayout></listitem>
-<listitem><mediaobject><imageobject><imagedata fileref="stop_clock.png" format="PNG"/></imageobject></mediaobject><literallayout>Red Clock - Clock out.</literallayout></listitem>
-<listitem><mediaobject><imageobject><imagedata fileref="list-view.png" format="PNG"/></imageobject></mediaobject><literallayout>Journal - Show the logged info.</literallayout></listitem>
+<listitem><mediaobject><imageobject><imagedata fileref="blankpage.png" format="PNG"/></imageobject></mediaobject><literallayout>Create a new item to track.</literallayout></listitem>
+<listitem><mediaobject><imageobject><imagedata fileref="delete.png" format="PNG"/></imageobject></mediaobject><literallayout>Delete a selected item.</literallayout></listitem>
+<listitem><mediaobject><imageobject><imagedata fileref="clock.png" format="PNG"/></imageobject></mediaobject><literallayout>Clock in.</literallayout></listitem>
+<listitem><mediaobject><imageobject><imagedata fileref="stop_clock.png" format="PNG"/></imageobject></mediaobject><literallayout>Clock out.</literallayout></listitem>
+<listitem><mediaobject><imageobject><imagedata fileref="list-view.png" format="PNG"/></imageobject></mediaobject><literallayout>Show the logged info.</literallayout></listitem>
 </itemizedlist>
 </para>
 </sect1>

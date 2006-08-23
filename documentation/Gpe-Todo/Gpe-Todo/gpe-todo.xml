@@ -9,9 +9,9 @@
 	<title>Icon Explanations</title>
 <para>
 <itemizedlist>
-<listitem><mediaobject><imageobject><imagedata fileref="blankpage.png" format="PNG"/></imageobject></mediaobject><literallayout>Blank Page Icon - Create a new task or category.</literallayout></listitem>
-<listitem><mediaobject><imageobject><imagedata fileref="delete.png" format="PNG"/></imageobject></mediaobject><literallayout>Trash Icon - Delete a selected task or category.</literallayout></listitem>
-<listitem><mediaobject><imageobject><imagedata fileref="quit.png" format="PNG"/></imageobject></mediaobject><literallayout>Door Icon - Exit The Application</literallayout></listitem>
+<listitem><mediaobject><imageobject><imagedata fileref="blankpage.png" format="PNG"/></imageobject></mediaobject><literallayout>Create a new task or category.</literallayout></listitem>
+<listitem><mediaobject><imageobject><imagedata fileref="delete.png" format="PNG"/></imageobject></mediaobject><literallayout>Delete a selected task or category.</literallayout></listitem>
+<listitem><mediaobject><imageobject><imagedata fileref="quit.png" format="PNG"/></imageobject></mediaobject><literallayout>Exit The Application</literallayout></listitem>
 </itemizedlist>
 </para>
 </sect1>
@@ -22,8 +22,8 @@ To create a new item tap on the blank page icon (See icon list above). You can t
 <orderedlist>
 <listitem><para>The summary is a short description of the task.</para></listitem>
 <listitem><para>If the item had a due date you can tap the box next to 'Due:' and select the desired date by taping on the calendar icon and then using the arrows to find your date.</para></listitem>
-<listitem><para>Below is the progress box, you can change this to Not Started, In progress, Completed, or Abandoned.</para></listitem>
-<listitem><para>If the item is of different priority you can change that by tapping on the box right of 'Pri:' to low, standard, or high.</para></listitem>
+<listitem><para>Below is the priority box, you can change this to low, standard, or high.</para></listitem>
+<listitem><para>Next is the Status option, you can change that to Not started, In progress, Completed, or Abandoned.</para></listitem>
 <listitem><para>When you tap on the categories button you can create new categories your task might fall under. This is usefull if you want to sort tasks by category in the main screen.</para></listitem>
 <listitem><para>If you don't find a previous category you can use or like you can then tap on the blank page icon and enter in a new category using an input method.</para></listitem>
 <listitem><para>To select a catogory tap on the box next to it, if you want to delete it tap on the category and then tap on the the trash icon (See icon list above).</para></listitem>

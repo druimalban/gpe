@@ -27,7 +27,9 @@ Gpe Contacts is accessable in the main application screen. To access it tap on t
 <listitem><mediaobject><imageobject><imagedata fileref="blankpage.png" format="PNG"/></imageobject></mediaobject><literallayout>Creates a new contact card.</literallayout></listitem>
 <listitem><mediaobject><imageobject><imagedata fileref="edit.png" format="PNG"/></imageobject></mediaobject><literallayout>Select a contact and than tap this icon to edit the contact.</literallayout></listitem>
 <listitem><mediaobject><imageobject><imagedata fileref="delete.png" format="PNG"/></imageobject></mediaobject><literallayout>Select a contact and than tap this icon to delete the contact.</literallayout></listitem>
+<listitem><mediaobject><imageobject><imagedata fileref="summary.png" format="PNG"/></imageobject></mediaobject><literallayout>Displays a quick summary of teh selected contact.</literallayout></listitem>
 <listitem><mediaobject><imageobject><imagedata fileref="properties.png" format="PNG"/></imageobject></mediaobject><literallayout>Ajust the properties of the Gpe-Contacts application.</literallayout></listitem>
+<listitem><mediaobject><imageobject><imagedata fileref="open.png" format="PNG"/></imageobject></mediaobject><literallayout>Import a selected contact card.</literallayout></listitem>
 <listitem><mediaobject><imageobject><imagedata fileref="quit.png" format="PNG"/></imageobject></mediaobject><literallayout>Exit The Application.</literallayout></listitem>
 </itemizedlist>
 </para>
@@ -37,28 +39,36 @@ Gpe Contacts is accessable in the main application screen. To access it tap on t
 <para>
 <mediaobject><imageobject><imagedata fileref="blankpage.png" format="PNG"/></imageobject></mediaobject>
 <orderedlist>
-<listitem><para>To create a new contact tap on the blank page icon. (see icon directly above)</para></listitem>
-<listitem><para>Under the personal tab you can enter the contacts name, summary, birthday, an image of the contact, and any categories the contact may fall under (See changing the program configuration). Tap in the area and enter your information using an input method, such as the on screen keyboard.</para></listitem>
-<listitem><para>To add the contacts birthday tap on the calendar icon and use the directional arrows to select the month and year. Tap on the day to display the date in the birthday section.</para></listitem>
-<listitem><para>Under the location tab you can enter many means of contacting the person, such as E-mail or mobile phone. Use the scroll bar on the right to enter in work information below the home information.</para></listitem>
-<listitem><para>Under the notes tab you can add whatever you like about the contact.</para></listitem>
+<listitem><para>To create a new contact tap on the blank page icon.</para></listitem>
+<listitem><para>Under the work tab you can enter in all relative contact information for the individuals work.</para></listitem>
+<listitem><para>Under the work tab you can enter in all relative contact information for the individuals home.</para></listitem>
+<listitem><para>Under the other tab you can add the individuals birthday and photograph.</para></listitem>
+<listitem><para>Under the notes tab you can add whatever you like about the contact as well defining cagegories..</para></listitem>
 <listitem><para>Tap "Save" to save your contact.</para></listitem>
 </orderedlist>
 <figure>
 	<title>New Contact</title>
-<mediaobject><imageobject><imagedata fileref="editcontact.png" format="PNG"/></imageobject></mediaobject>
+<mediaobject><imageobject><imagedata fileref="newcontact.png" format="PNG"/></imageobject></mediaobject>
 </figure>
 <figure>
-	<title>Filling in the Info</title>
-<mediaobject><imageobject><imagedata fileref="dateselect.png" format="PNG"/></imageobject></mediaobject>
+	<title>Advanced Name Details</title>
+<mediaobject><imageobject><imagedata fileref="advancenamedetails.png" format="PNG"/></imageobject></mediaobject>
 </figure>
 <figure>
-	<title>Locations Tab</title>
-<mediaobject><imageobject><imagedata fileref="locationstab.png" format="PNG"/></imageobject></mediaobject>
+	<title>Home Tab</title>
+<mediaobject><imageobject><imagedata fileref="hometab.png" format="PNG"/></imageobject></mediaobject>
+</figure>
+<figure>
+	<title>Other Tab</title>
+<mediaobject><imageobject><imagedata fileref="othertab.png" format="PNG"/></imageobject></mediaobject>
 </figure>
 <figure>
 	<title>Notes Tab</title>
-<mediaobject><imageobject><imagedata fileref="makingnote.png" format="PNG"/></imageobject></mediaobject>
+<mediaobject><imageobject><imagedata fileref="notestab.png" format="PNG"/></imageobject></mediaobject>
+</figure>
+<figure>
+	<title>New Category</title>
+<mediaobject><imageobject><imagedata fileref="newcategory.png" format="PNG"/></imageobject></mediaobject>
 </figure>
 </para>
 </sect1>
@@ -76,6 +86,29 @@ This Function is in the main application screen
 </para>
 </sect1>
 <sect1>
+	<title>Other Features</title>
+<para>
+<itemizedlist>
+<listitem><para>To edit a contact, select it than tap on the edit icon.</para></listitem>
+<listitem><para>To delete a contact, select it than tap on the delete icon.</para></listitem>
+<listitem><para>To view a quick full summary, tap on the contact than the summary icon.</para></listitem>
+<listitem><para>To import a contact, tap on the folder icon.</para></listitem>
+</itemizedlist>
+<figure>
+	<title>Full Summary</title>
+<mediaobject><imageobject><imagedata fileref="fullsummary.png" format="PNG"/></imageobject></mediaobject>
+</figure>
+<figure>
+	<title>Delete Contact</title>
+<mediaobject><imageobject><imagedata fileref="deletecontact.png" format="PNG"/></imageobject></mediaobject>
+</figure>
+<figure>
+	<title>Import a Contact</title>
+<mediaobject><imageobject><imagedata fileref="importcontact.png" format="PNG"/></imageobject></mediaobject>
+</figure>
+</para>
+</sect1>
+<sect1>
 	<title>Changing the program configuration</title>
 <para>
 <mediaobject><imageobject><imagedata fileref="properties.png" format="PNG"/></imageobject></mediaobject>
@@ -85,19 +118,20 @@ The program configuration menu can be found by tapping the properties icon (see 
 <listitem><para>Create a new group for that selected tab.</para></listitem>
 <listitem><para>Create a new field of input for the selected tab.</para></listitem>
 <listitem><para>Delete the selected tab/field.</para></listitem>
+<listitem><para>Optimize the database</para></listitem>
 </itemizedlist>
 Under the Categories tab you can create a category for your contact to fall under, as mentioned in "creating a new contact".
 <figure>
-	<title>Editing the Layout</title>
-<mediaobject><imageobject><imagedata fileref="editlayout.png" format="PNG"/></imageobject></mediaobject>
+	<title>Editing Layout Tab</title>
+<mediaobject><imageobject><imagedata fileref="editinglayouttab.png" format="PNG"/></imageobject></mediaobject>
 </figure>
 <figure>
-	<title>Changing the Setup</title>
-<mediaobject><imageobject><imagedata fileref="editsetup.png" format="PNG"/></imageobject></mediaobject>
+	<title>Setup Tab</title>
+<mediaobject><imageobject><imagedata fileref="setuptab.png" format="PNG"/></imageobject></mediaobject>
 </figure>
 <figure>
-	<title>End Result</title>
-<mediaobject><imageobject><imagedata fileref="endresult.png" format="PNG"/></imageobject></mediaobject>
+	<title>Database Tab</title>
+<mediaobject><imageobject><imagedata fileref="databasetab.png" format="PNG"/></imageobject></mediaobject>
 </figure>
 </para>
 </sect1>

@@ -9,9 +9,9 @@
 <sect1>
 	<title>Accessing the Program</title>
 <para>
-Gpe-Virtual-Keyboard is accessable from the settings folder.
+Gpe-Virtual-Keyboard is accessable from the settings folder in the keys and buttons application under the Virtural Keyboard Tab.
 <figure>
-	<title>GPE Utilities Folder</title>
+	<title>GPE Settings Folder</title>
 <mediaobject><imageobject><imagedata fileref="settingsfolder.png" format="PNG"/></imageobject></mediaobject>
 </figure>
 <figure>
