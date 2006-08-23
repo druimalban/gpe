@@ -5,7 +5,7 @@ CVSBUILD = yes
 VERSION = 0.25
 MIME_PIXMAPS = `cd pixmaps/document-icons && ls *.png`
 
-LINGUAS = es sl sv vi
+LINGUAS = es sl sv vi ko ja
 
 MEMBERS = main bluetooth guitools fileops
 
