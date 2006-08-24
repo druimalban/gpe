@@ -1,0 +1,74 @@
+
+<!--#set var="addtitle" value="GPE Editor"-->
+<!--#set var="pagename" value="Editing files"-->
+<!--#echo var="appname" value="gpe-edit"-->
+<!--#set var="author" value="Florian Boor"-->
+<!--#set var="authoremail" value="florian@linuxtogo.org"-->
+<!--#include virtual="/includes/head.shtml"-->
+
+<table cellpadding="12" cellspacing="12" border="12" width="100%" bgcolor="#EEEEEE">
+<tr>
+  <td colspan="3"><h2>Subprojects: <!--#echo var="appname"--></h2>
+  <i><!--#echo var="pagename"--></i></td>
+</tr>
+<tr>
+  <td><b>Function</b></td>
+  <td>
+    GPE-Edit is a simple text editor for GPE. It supports editing single 
+	text files and has functions for text search and replace. It supports UTF8
+	encoded files and is the first application supporting the GPE help interface.
+  </td>
+  <td rowspan="3"><img src="../images/gpe-edit.png" border="0" alt="Screenshot"></td>
+</tr>
+<tr>
+  <td><b>Coordinator(s)</b></td>
+  <td>
+    The coordinators for this sub-project are Philip Blundell
+    (<a HREF="mailto:philb@gnu.org">philb@gnu.org</a>) and 
+    Florian Boor (<a HREF="mailto:florian@linuxtogo.org">florian@linuxtogo.org</a>). 
+    If you want to contribute to this project, please contact the coordinators
+    or the GPE mailinglist.
+  </td>
+</tr>
+<tr>
+  <td><b>Status</b></td>
+  <td>
+    <p>
+	  GPE-Todo is stable for production use and actively maintained.
+    </p>
+    <p>
+      The source code can be found in <A href="../cvs.shtml">CVS</A>,
+      module <b>base/gpe-edit</b>.  
+	</p>
+	<p>
+	  Distributions known to ship <i><!--#echo var="appname"--></i> are:
+	  <ul>
+	  	  <li><a href="http://familiar.handhelds.org">Familiar</a>
+          <li><a href="http://www.openzaurus.org">OpenZaurus</a>
+		  <li><a href="http://www.angstrom-distribution.org">Angstrom</a>
+     </ul>
+	</p>
+	<p>
+	  <i><!--#echo var="appname"--></i> is distributed under the <a href="http://www.gnu.org/licenses/gpl.html#SEC1">GPL</a>.
+	</p>
+  </td>
+</tr>
+<tr>
+  <td colspan="3">
+    <p>
+	  
+    </p>
+  </td>
+</tr>
+<tr>
+  <td><b>Project History</b></td>
+  <td>
+     <ul>
+	   <li>2002: Project started Damien Tanner</li>
+	   <li></li>
+	 </ul>
+  </td>
+</tr>
+</table>
+
+<!--#include virtual="/includes/foot.shtml"-->
