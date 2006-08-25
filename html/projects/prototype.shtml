@@ -1,7 +1,7 @@
 
 <!--#set var="addtitle" value="Title"-->
 <!--#set var="pagename" value=""-->
-<!--#echo var="appname" value=""-->
+<!--#set var="appname" value=""-->
 <!--#set var="author" value="GPE Hacker"-->
 <!--#set var="authoremail" value="gpe@handhelds.org"-->
 <!--#include virtual="/includes/head.shtml"-->

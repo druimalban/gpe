@@ -1,7 +1,7 @@
 
 <!--#set var="addtitle" value="GPE Editor"-->
 <!--#set var="pagename" value="Editing files"-->
-<!--#echo var="appname" value="gpe-edit"-->
+<!--#set var="appname" value="gpe-edit"-->
 <!--#set var="author" value="Florian Boor"-->
 <!--#set var="authoremail" value="florian@linuxtogo.org"-->
 <!--#include virtual="/includes/head.shtml"-->
