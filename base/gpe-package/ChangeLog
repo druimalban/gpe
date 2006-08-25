@@ -1,3 +1,7 @@
+
+2006-08-25 Florian Boor <florian.boor@kernelconcepts.de>
+        * Makefile. po/ja.po  Add Japanese translation.
+
 2005-10-15 Florian Boor <florian.boor@kernelconcepts.de>
         * Makefile. po/vi.po po/sv.po: Add Swedish and Vietnamese
           translations.
