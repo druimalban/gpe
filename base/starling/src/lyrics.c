@@ -12,7 +12,7 @@
 
 #include <string.h>
 
-#include <sqlite3.h>
+#include <sqlite.h>
 
 #include <glib/gstrfuncs.h>
 #include <glib/gstdio.h>
@@ -25,10 +25,12 @@
 #include "lyrics.h"
 #include "utils.h"
 
-static sqlite3 *db = NULL;
+static sqlite *db = NULL;
 static provider_t provider = PROVIDER_LYRCAR;
 
-#define TABLE_CREATION "CREATE TABLE IF NOT EXISTS lyrics " \
+#define TABLE_NAME "lyrics"
+
+#define TABLE_CREATION "CREATE TABLE " TABLE_NAME " " \
                          "(uri TEXT PRIMARY KEY, content TEXT, " \
                         "time DATE);"
 #define SELECT_STATEMENT "SELECT content FROM lyrics WHERE " \
@@ -41,36 +43,43 @@ lyrics_init (void)
 {
     gchar *dbpath;
     gchar *error;
-    sqlite3_stmt *stmt;
+    sqlite_vm *vm;
     gint ret;
 
     dbpath = g_strdup_printf ("%s/%s/%s", g_get_home_dir(), CONFIGDIR,
             "starling.db");
 
-    ret = sqlite3_open (dbpath, &db);
+    db = sqlite_open (dbpath, 0, NULL);
 
     g_free (dbpath);
 
-    if (SQLITE_OK != ret) {
+    if (!db) {
         g_fprintf (stderr, "Cannot open the database,"
                     "lyrics won't be cached\n");
-        sqlite3_close (db);
-
-        db = NULL;
-
         return FALSE;
     }
 
-    sqlite3_prepare (db, TABLE_CREATION, -1, &stmt, NULL);
+    if (!has_db_table (db, TABLE_NAME)) {
+        ret = sqlite_compile (db, TABLE_CREATION, NULL, &vm, NULL);
 
-    ret = sqlite3_step (stmt);
+        ret = sqlite_step (vm, NULL, NULL, NULL);
 
-    sqlite3_finalize (stmt); 
+        sqlite_finalize (vm, NULL); 
                     
-    if (SQLITE_DONE != ret)
-        return FALSE;
+        if (SQLITE_DONE != ret) {
+            return FALSE;
+        }
+    }
 
     return TRUE;
+}
+
+void
+lyrics_finalize (void)
+{
+    g_return_if_fail (db != NULL);
+
+    sqlite_close (db);
 }
 
 void
@@ -88,33 +97,28 @@ lyrics_get_provider (void)
 gchar *
 lyrics_select (const gchar *uri)
 {
-    sqlite3_stmt *stmt;
-    gchar *content;
+    sqlite_vm *vm;
     gchar *retval;
     gint ret;
+    const gchar **sqlout;
 
     if (!db) {
         return NULL;
     }
 
-    sqlite3_prepare (db, SELECT_STATEMENT, -1, &stmt, NULL);
+    sqlite_compile (db, SELECT_STATEMENT, NULL, &vm, NULL);
 
-    sqlite3_bind_text (stmt, 1, uri, -1, NULL);
+    sqlite_bind (vm, 1, uri, -1, FALSE);
 
-    ret = sqlite3_step (stmt);
+    ret = sqlite_step (vm, NULL, &sqlout, NULL);
     
     if (ret != SQLITE_ROW) {
-        sqlite3_finalize (stmt);
+        sqlite_finalize (vm, NULL);
         return NULL;
     }
 
-    /* Definitely, this can't be freed */
-    content = (gchar*) sqlite3_column_text (stmt, 0);
-
-
-    sqlite3_finalize (stmt);
-
-    retval = g_locale_to_utf8 (content, -1, NULL, NULL, NULL);
+    retval = g_strdup (sqlout[0]);
+    sqlite_finalize (vm, NULL);
 
     return retval;
 }
@@ -220,37 +224,33 @@ lyrics_display_with_uri (const gchar *uri, GtkTextView *view)
 void
 lyrics_store (const gchar *uri, const gchar *text)
 {
-    sqlite3_stmt *stmt;
+    sqlite_vm *vm;
     gint ret;
-    gchar *locale_text;
 
     if (!db) {
         return;
     }
 
-    sqlite3_prepare (db, STORE_STATEMENT, -1, &stmt, NULL);
+    sqlite_compile (db, STORE_STATEMENT, NULL, &vm, NULL);
 
-    ret = sqlite3_bind_text (stmt, 1, uri, -1, NULL);
+    ret = sqlite_bind (vm, 1, uri, -1, FALSE);
     if (ret) {
         return;
     }
 
-    locale_text = g_locale_from_utf8 (text, -1, NULL, NULL, NULL);
+    ret = sqlite_bind (vm, 2, text, -1, FALSE);
 
-    ret = sqlite3_bind_text (stmt, 2, locale_text, -1, NULL);
-
-    g_free (locale_text);
     if (ret) {
         return;
     }
 
-    ret = sqlite3_step (stmt);
-
+    ret = sqlite_step (vm, NULL, NULL, NULL);
+    
     if (ret != SQLITE_DONE) {
         printf("Error storing lyrics: %d\n", ret);
     }
 
-    sqlite3_finalize (stmt);
+    sqlite_finalize (vm, NULL);
 }
 
 gchar *

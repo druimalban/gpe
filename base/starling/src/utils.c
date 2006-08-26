@@ -18,6 +18,9 @@
 #include "starling.h"
 #include "utils.h"
 
+#define CHECK_TBL_STATEMENT "SELECT name FROM sqlite_master WHERE " \
+                        " type='table' AND name=?;"
+
 gint
 gtk_tree_view_get_position (GtkTreeView *view)
 {
@@ -93,3 +96,35 @@ escape_spaces (gchar *orig)
     return retval;
 }
 
+gboolean
+has_db_table (sqlite *db, const gchar *name)
+{
+    sqlite_vm *vm;
+    gint ret;
+
+    g_return_val_if_fail (db != NULL, FALSE);
+
+    sqlite_compile (db, CHECK_TBL_STATEMENT, NULL, &vm, NULL);
+
+    sqlite_bind (vm, 1, name, -1, 0);
+
+    ret = sqlite_step (vm, NULL, NULL, NULL);
+
+    sqlite_finalize (vm, NULL);
+
+    if (SQLITE_ROW == ret) {
+        return TRUE;
+    }
+
+    return FALSE;
+}
+
+gint
+sqlite_bind_int (sqlite_vm *vm, gint index, gint value)
+{
+    gchar s[128];
+
+    snprintf (s, sizeof (s), "%d", value);
+
+    return sqlite_bind (vm, index, s, -1, TRUE);
+}

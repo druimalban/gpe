@@ -12,7 +12,7 @@
 
 #include <string.h>
 
-#include <sqlite3.h>
+#include <sqlite.h>
 
 #include <gtk/gtklabel.h>
 
@@ -23,22 +23,23 @@
 #include "config.h"
 #include "md5.h"
 
-#define CREATE_STATEMENT "CREATE TABLE IF NOT EXISTS lastfm " \
-                        "(id INTEGER PRIMARY KEY AUTOINCREMENT, " \
-                        "artist VARCHAR(50), " \
+#define TABLE_NAME "lastfm"
+
+#define CREATE_STATEMENT "CREATE TABLE " TABLE_NAME " " \
+                        "(artist VARCHAR(50), " \
                         "title VARCHAR(50), " \
                         "length INT, time DATE);"
-#define COUNT_STATEMENT "SELECT COUNT(id) FROM lastfm;"
+#define COUNT_STATEMENT "SELECT COUNT(rowid) FROM lastfm;"
 
 #define LASTFM_MAX_ITEMS_PER_SUBMISSION 10
 
-#define SELECT_STATEMENT "SELECT id, artist, title, length, time " \
+#define SELECT_STATEMENT "SELECT rowid, artist, title, length, time " \
                         "FROM lastfm LIMIT 10;"
 
 #define STORE_STATEMENT "INSERT INTO lastfm (artist, title, length, " \
                         "time) VALUES (?, ?, ?, DATETIME('NOW'));"
 
-#define DELETE_STATEMENT "DELETE FROM lastfm WHERE id <= ?;"
+#define DELETE_STATEMENT "DELETE FROM lastfm WHERE rowid <= ?;"
 
 #define HANDSHAKE_URI "http://post.audioscrobbler.com/" \
                         "?hs=true&p=1.1&c=gpe&v=0.1&u=%s"
@@ -57,7 +58,7 @@ typedef struct {
     GString *str;
 } lastfm_helper_data;
 
-static sqlite3 *db = NULL;
+static sqlite *db = NULL;
 
 static gint last_id_sent = 0;
 
@@ -83,53 +84,49 @@ lastfm_show_count (GtkLabel *label, gint count)
 static void
 lastfm_delete_by_id (gint id)
 {
-    sqlite3_stmt *stmt;
+    sqlite_vm *vm;
     gint ret;
 
     g_return_if_fail (db != NULL);
 
-    sqlite3_prepare (db, DELETE_STATEMENT, -1, &stmt, NULL);
-    sqlite3_bind_int (stmt, 1, id);
+    sqlite_compile (db, DELETE_STATEMENT, NULL, &vm, NULL);
+    sqlite_bind_int (vm, 1, id);
 
-    ret = sqlite3_step (stmt);
+    ret = sqlite_step (vm, NULL, NULL, NULL);
 
     if (ret != SQLITE_DONE) {
         g_warning ("Error removing track %d from the queue.\n", id);
     }
 
-    sqlite3_finalize (stmt);
+    sqlite_finalize (vm, NULL);
 }
 
 gboolean
 lastfm_init (Starling *st)
 {
     gchar *dbpath;
-    sqlite3_stmt *stmt;
+    sqlite_vm *vm;
     gint ret;
 
     dbpath = g_strdup_printf ("%s/%s/%s", g_get_home_dir(), CONFIGDIR,
             "starling.db");
 
-    ret = sqlite3_open (dbpath, &db);
+    db = sqlite_open (dbpath, 0, NULL);
 
     g_free (dbpath);
 
-    if (ret != SQLITE_OK) {
-        sqlite3_close (db);
+    g_return_val_if_fail (db != NULL, FALSE);
 
-        db = NULL;
+    if (!has_db_table (db, TABLE_NAME)) {
+        sqlite_compile (db, CREATE_STATEMENT, NULL, &vm, NULL);
 
-        return FALSE;
-    }
-    
-    sqlite3_prepare (db, CREATE_STATEMENT, -1, &stmt, NULL);
+        ret = sqlite_step (vm, NULL, NULL, NULL);
 
-    ret = sqlite3_step (stmt);
-
-    sqlite3_finalize (stmt); 
+        sqlite_finalize (vm, NULL); 
                     
-    if (SQLITE_DONE != ret)
-        return FALSE;
+        if (SQLITE_DONE != ret)
+            return FALSE;
+    }
 
     lastfm_show_count (GTK_LABEL (st->web_count), lastfm_count());
 
@@ -140,19 +137,20 @@ lastfm_init (Starling *st)
 void
 lastfm_enqueue (const gchar *artist, const gchar *title, gint length, Starling *st)
 {
-    sqlite3_stmt *stmt;
+    sqlite_vm *vm;
     gint ret;
 
     g_return_if_fail (artist && title && db);
 
-    sqlite3_prepare (db, STORE_STATEMENT, -1, &stmt, NULL);
-    sqlite3_bind_text (stmt, 1, artist, -1, NULL);
-    sqlite3_bind_text (stmt, 2, title, -1, NULL);
-    sqlite3_bind_int (stmt, 3, length);
+    sqlite_compile (db, STORE_STATEMENT, NULL, &vm, NULL);
+    sqlite_bind (vm, 1, artist, -1, 0);
+    sqlite_bind (vm, 2, title, -1, 0);
+    sqlite_bind_int (vm, 3, length);
 
-    sqlite3_step (stmt);
+    ret = sqlite_step (vm, NULL, NULL, NULL);
+    /* XXX: Check ret */
 
-    sqlite3_finalize (stmt);
+    sqlite_finalize (vm, NULL);
     
     lastfm_show_count (GTK_LABEL (st->web_count), lastfm_count());
 }
@@ -160,19 +158,20 @@ lastfm_enqueue (const gchar *artist, const gchar *title, gint length, Starling *
 gint
 lastfm_count (void)
 {
-    sqlite3_stmt *stmt;
+    sqlite_vm *vm;
     gint ret;
+    const gchar **sqlout;
     gint count;
 
     g_return_val_if_fail (db != NULL, 0);
 
-    sqlite3_prepare (db, COUNT_STATEMENT, -1, &stmt, NULL);
+    sqlite_compile (db, COUNT_STATEMENT, NULL, &vm, NULL);
 
-    sqlite3_step (stmt);
+    sqlite_step (vm, NULL, &sqlout, NULL);
 
-    count = sqlite3_column_int (stmt, 0);
+    count = atoi (sqlout[0]);
 
-    sqlite3_finalize (stmt);
+    sqlite_finalize (vm, NULL);
 
     return count;
 }
@@ -263,7 +262,7 @@ lastfm_submit_real (lastfm_data *data)
     g_string_append (str, auth);
     g_free (auth);
 
-    sqlite3_exec (db, SELECT_STATEMENT, lastfm_submit_real_helper, d, NULL);
+    sqlite_exec (db, SELECT_STATEMENT, lastfm_submit_real_helper, d, NULL);
 
     g_free (d);
 
