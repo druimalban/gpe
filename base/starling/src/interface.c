@@ -37,25 +37,32 @@
 
 #define BUTTONSIZE 32
 
-#define button_init(widget, stock, container) \
-    do { \
-        widget = gtk_button_new(); \
-        gtk_container_add (GTK_CONTAINER (widget), \
-        gtk_image_new_from_stock (stock, GTK_ICON_SIZE_SMALL_TOOLBAR)); \
-        gtk_widget_set_size_request (widget, -1, BUTTONSIZE); \
-        gtk_box_pack_start (GTK_BOX (container), widget, TRUE, TRUE, 0); \
-    } while(0)
+static void
+create_button (GtkWidget **button, const gchar *stock, GtkWidget *box)
+{
+    GtkWidget *pix;
 
+    *button = gtk_button_new ();
+    pix = gtk_image_new_from_stock (stock, GTK_ICON_SIZE_SMALL_TOOLBAR);
 
-#define label_init(label, attrs) \
-    do { \
-        label = gtk_label_new (g_strdup (" ")); \
-        gtk_misc_set_alignment (GTK_MISC (label), 0.1, 0.5); \
-        if (attrs) \
-            gtk_label_set_attributes (GTK_LABEL (label), attrs); \
-    } while(0)
+    gtk_container_add (GTK_CONTAINER (*button), pix);
+
+    gtk_widget_set_size_request (*button, -1, BUTTONSIZE);
+
+    gtk_box_pack_start (GTK_BOX (box), *button, TRUE, TRUE, 1);
+}
+
+static void
+create_label (GtkWidget **label, PangoAttrList *attrs)
+{
+    *label = gtk_label_new ("");
     
+    gtk_misc_set_alignment (GTK_MISC (*label), 0.1, 0.5);
 
+    if (attrs) {
+        gtk_label_set_attributes (GTK_LABEL (*label), attrs);
+    }
+}
 
 void
 player_init (Starling *st)
@@ -92,9 +99,9 @@ interface_init (Starling *st)
     GTK_WIDGET_UNSET_FLAGS (st->scale, GTK_CAN_FOCUS);
     
     p_button_box = gtk_hbox_new (TRUE, 0);
-    button_init (st->prev, GTK_STOCK_MEDIA_PREVIOUS, p_button_box);
-    button_init (st->playpause, GTK_STOCK_MEDIA_PLAY, p_button_box);
-    button_init (st->next, GTK_STOCK_MEDIA_NEXT, p_button_box);
+    create_button (&st->prev, GTK_STOCK_MEDIA_PREVIOUS, p_button_box);
+    create_button (&st->playpause, GTK_STOCK_MEDIA_PLAY, p_button_box);
+    create_button (&st->next, GTK_STOCK_MEDIA_NEXT, p_button_box);
     
     hbox = gtk_hbox_new (FALSE, 0);
     gtk_box_pack_start (GTK_BOX (hbox), p_button_box, FALSE, FALSE, 0);
@@ -110,15 +117,15 @@ interface_init (Starling *st)
     attrs = pango_attr_list_new ();
     attribute = pango_attr_weight_new (PANGO_WEIGHT_BOLD);
     pango_attr_list_insert (attrs, attribute);
-    label_init (st->artist, attrs);
+    create_label (&st->artist, attrs);
     gtk_label_set_text (GTK_LABEL (st->artist), _("Not playing"));
     
     attrs = pango_attr_list_new ();
     attribute = pango_attr_style_new (PANGO_STYLE_OBLIQUE);
     pango_attr_list_insert (attrs, attribute);
-    label_init (st->title, attrs);
+    create_label (&st->title, attrs);
     
-    label_init (st->time, NULL);
+    create_label (&st->time, NULL);
     
     gtk_box_pack_start (GTK_BOX (vbox), st->artist, FALSE, FALSE, 0);
     gtk_box_pack_start (GTK_BOX (vbox), st->title, FALSE, FALSE, 0);
@@ -157,18 +164,18 @@ interface_init (Starling *st)
     gtk_container_add (GTK_CONTAINER (vbox), scrolled);
     
     l_button_box = gtk_hbox_new (TRUE, 0);
-    button_init (st->add, GTK_STOCK_ADD, l_button_box);
-    button_init (st->remove, GTK_STOCK_REMOVE, l_button_box);
+    create_button (&st->add, GTK_STOCK_ADD, l_button_box);
+    create_button (&st->remove, GTK_STOCK_REMOVE, l_button_box);
     separator = gtk_vseparator_new();
     gtk_box_pack_start (GTK_BOX (l_button_box), separator, FALSE, FALSE, 0);
     
-    button_init (st->up, GTK_STOCK_GO_UP, l_button_box);
-    button_init (st->down, GTK_STOCK_GO_DOWN, l_button_box);
+    create_button (&st->up, GTK_STOCK_GO_UP, l_button_box);
+    create_button (&st->down, GTK_STOCK_GO_DOWN, l_button_box);
     separator = gtk_vseparator_new();
     gtk_box_pack_start (GTK_BOX (l_button_box), separator, FALSE, FALSE, 0);
     
-    button_init (st->clear, GTK_STOCK_NEW, l_button_box);
-    button_init (st->save, GTK_STOCK_SAVE_AS, l_button_box);
+    create_button (&st->clear, GTK_STOCK_NEW, l_button_box);
+    create_button (&st->save, GTK_STOCK_SAVE_AS, l_button_box);
     
     gtk_box_pack_start (GTK_BOX (vbox), l_button_box, FALSE, FALSE, 0);
     
