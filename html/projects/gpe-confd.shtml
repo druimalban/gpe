@@ -1,0 +1,80 @@
+
+<!--#set var="addtitle" value="gpe-confd"-->
+<!--#set var="pagename" value="Persistent GUI configuration storage "-->
+<!--#set var="author" value="Florian Boor"-->
+<!--#set var="authoremail" value="florian@linuxtogo.org"-->
+<!--#include virtual="/includes/head.shtml"-->
+
+<table cellpadding="12" cellspacing="12" border="12" width="100%" bgcolor="#EEEEEE">
+<tr>
+  <td colspan="3"><h2>Subprojects: gpe-confd</h2>
+  <i><!--#echo var="pagename"--></i></td>
+</tr>
+<tr>
+  <td><b>Function</b></td>
+  <td>
+    The purpose of <i>gpe-confd</i> is to provide a persistent storage backend
+	for Xsettings. Most of the global user interface related settings such as
+	theme and font sizes are made using the Xsettings mechanism.
+  </td>
+  <td rowspan="3"></td>
+</tr>
+<tr>
+  <td><b>Coordinator(s)</b></td>
+  <td>The coordinator for this sub-project is Philip Blundell
+    (<a HREF="mailto:philb@gnu.org">philb@gnu.org</a>). If you want to 
+    contribute to this project, please contact him directly. 
+  </td>
+</tr>
+<tr>
+  <td><b>Status</b></td>
+  <td>
+    <p>
+	  <i>gpe-confd</i> is actively maintained and stable for daily use.
+	</p>
+    <p>
+      The source code can be found in <A href="../cvs.shtml">CVS</A>,
+      module <b>base/gpe-confd</b>.  
+	</p>
+	<p>
+	  Distributions known to ship <i>gpe-confd</i> are:
+	  <ul>
+	  	  <li><a href="http://familiar.handhelds.org">Familiar</a>
+          <li><a href="http://www.openzaurus.org">OpenZaurus</a>
+		  <li><a href="http://www.angstrom-distribution.org">Angstrom</a>
+     </ul>
+	</p>
+	<p>
+	  <i>gpe-confd</i> is distributed under the <a href="http://www.gnu.org/licenses/gpl.html#SEC1">GPL</a>.
+	</p>
+  </td>
+</tr>
+<tr>
+  <td><b>Technical</b></td>
+  <td colspan="2">
+    <p>
+	  <i>gpe-confd</i> retrieves settings from the X server and stores them 
+	  in a SQLite database. The settings from the database are restored 
+	  to the X server whenever <i>gpe-confd</i> is launched. Setting changes 
+	  are saved in the database automatically without that the process that 
+	  makes the setting needs to be aware of this. Deleted Xsetting values
+	  are deleted from the database as well.
+    </p>
+    <p>
+	  The command line tool <i>xst</i> can be used to display and modify 
+	  Xsetting values.
+    </p>
+  </td>
+</tr>
+<tr>
+  <td><b>Project History</b></td>
+  <td>
+     <ul>
+       <li>Started 2002 by Philip Blundell</li> 
+     </ul>
+  </td>
+</tr>
+</table>
+
+
+<!--#include virtual="/includes/foot.shtml"-->

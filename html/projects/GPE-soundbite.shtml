@@ -1,33 +1,80 @@
+
+<!--#set var="appname" value="gpe-soundbite"-->
 <!--#set var="addtitle" value="Voice Memo Recorder"-->
 <!--#set var="pagename" value="soundbite"-->
 <!--#set var="author" value="Phil Blundell"-->
 <!--#set var="authoremail" value="philb@gnu.org"-->
 <!--#include virtual="/includes/head.shtml"-->
 
-<H2>Function</H2>
-<P>
-This program allows short voice messages to be recorded and played
-back through the PDA's internal audio system.  The <B>libgsm</B> codec
-library is used to compress the data for storage.
-</P>
-<P>
-It would be nice if this was integrated
-with other programs (e.g. gpe-todo), so that audio notes can easily be
-associated with the other data they're relevant to.
-</P>
-<P>
-Obviously, on
-the iPAQ, the record button should start and stop recording.  
-</P>
-
-<H2>Status</H2>
-<P>
-<A HREF="mailto:moray@handhelds.org">Moray Allan</a> is currently
-developing this module.
-
-<H2>Screenshot</H2>
-<P>
-<IMG SRC="/images/gpe-soundbite.png" ALT="gpe-soundbite">
-</P>
+<table cellpadding="12" cellspacing="12" border="12" width="100%" bgcolor="#EEEEEE">
+<tr>
+  <td colspan="3"><h2>Subprojects: <!--#echo var="appname"--></h2>
+  <i><!--#echo var="pagename"--></i></td>
+</tr>
+<tr>
+  <td><b>Function</b></td>
+  <td> 
+	<P>
+	  This program allows short voice messages to be recorded and played
+	  back through the PDA's internal audio system.  The <B>libgsm</B> codec
+	  library is used to compress the data for storage.
+	</P>
+	<P>
+      Obviously, on the iPAQ, the record button should start and stop recording.  
+	</P>
+  </td>
+  <td rowspan="3"><img src="../images/<!--#echo var="appname"-->.png" border="0" alt="Screenshot"></td>
+</tr>
+<tr>
+  <td><b>Coordinator(s)</b></td>
+  <td>
+    <A HREF="mailto:moray@handhelds.org">Moray Allan</a> is currently
+    maintaing this module. If you want to contribute please contact the 
+    maintainer or the GPE mailinglist.
+  </td>
+</tr>
+<tr>
+  <td><b>Status</b></td>
+  <td>
+    <p>
+      The source code can be found in <A href="../cvs.shtml">CVS</A>,
+      module <b>base/<!--#echo var="appname"--></b>.  
+	</p>
+	<p>
+	  Distributions known to ship <i><!--#echo var="appname"--></i> are:
+	  <ul>
+	  	  <li><a href="http://familiar.handhelds.org">Familiar</a>
+          <li><a href="http://www.openzaurus.org">OpenZaurus</a>
+		  <li><a href="http://www.angstrom-distribution.org">Angstrom</a>
+     </ul>
+	</p>
+	<p>
+	  <i><!--#echo var="appname"--></i> is distributed under the <a href="http://www.gnu.org/licenses/gpl.html#SEC1">GPL</a>.
+	</p>
+  </td>
+</tr>
+<tr>
+  <td><b>Technical</b></td>
+  <td colspan="2">
+    <p>
+      The used GSM encoder/decoder library allows a very space efficient 
+      and low CPU power consuming record and playback of voice notes.
+    </p>
+    <p>
+	  It would be nice if this was integrated with other programs (e.g. gpe-todo), 
+      so that audio notes can easily be associated with the other data they're relevant to.
+    </p>
+  </td>
+</tr>
+<tr>
+  <td><b>Project History</b></td>
+  <td colspan="2">
+     <ul>
+	   <li>2002 Project started by Philip Blundell</li>
+       <li>2002 Developed by Moray Allan</li>
+	 </ul>
+  </td>
+</tr>
+</table>
 
 <!--#include virtual="/includes/foot.shtml"-->

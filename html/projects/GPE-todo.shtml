@@ -16,7 +16,8 @@
     You can assign one or more categories to a task to have flexible control about
     the topic all the items belong to. 
     In addition to this each item can be assigned a priority and a date by 
-    which it must be completed.
+    which it must be completed. The application supports both plain GTK and the Maemo 
+	software environments.
   </td>
   <td rowspan="3"><img src="../images/gpe-todo.png" border="0" alt="Screenshot"></td>
 </tr>
@@ -57,7 +58,8 @@
   </td>
 </tr>
 <tr>
-  <td colspan="3">
+  <td><b>Technical</b></td>
+  <td colspan="2">
     <p>
       GPE-Todo makes use of the GPE PIM data category library (libgpepimc)
       and therefore shares its categories with other PIM applications such
@@ -73,7 +75,7 @@
 </tr>
 <tr>
   <td><b>Project History</b></td>
-  <td>
+  <td colspan="2">
      <ul>
 	   <li>2002 GPE-Todo started by Philip Blundell</li>
        <li>2002 GTK 2.x support and SQLite backend</li>

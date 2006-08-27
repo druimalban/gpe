@@ -1,7 +1,7 @@
 
-<!--#set var="addtitle" value="GPE Editor"-->
-<!--#set var="pagename" value="Editing files"-->
-<!--#set var="appname" value="gpe-edit"-->
+<!--#set var="addtitle" value="Gallery"-->
+<!--#set var="pagename" value="GPE's tiny image gallery"-->
+<!--#set var="appname" value="gpe-gallery"-->
 <!--#set var="author" value="Florian Boor"-->
 <!--#set var="authoremail" value="florian@linuxtogo.org"-->
 <!--#include virtual="/includes/head.shtml"-->
@@ -13,18 +13,18 @@
 </tr>
 <tr>
   <td><b>Function</b></td>
-  <td>
-    GPE-Edit is a simple text editor for GPE. It supports editing single 
-	text files and has functions for text search and replace. It supports UTF8
-	encoded files and is the first application supporting the GPE help interface.
+  <td> 
+    <i>gpe-gallery</i> is a small application for viewing images. It is intended
+	to show small and medium sized images and is able to display a slide show and
+	to perform several simple operations with the images.
   </td>
-  <td rowspan="3"><img src="../images/gpe-edit.png" border="0" alt="Screenshot"></td>
+  <td rowspan="3"><img src="../images/gpe-gallery.png" border="0" alt="Screenshot"></td>
 </tr>
 <tr>
   <td><b>Coordinator(s)</b></td>
   <td>
     The coordinators for this sub-project are Philip Blundell
-    (<a HREF="mailto:philb@gnu.org">philb@gnu.org</a>) and 
+    (<a HREF="mailto:pb@reciva.com">pb@reciva.com</a>) and 
     Florian Boor (<a HREF="mailto:florian@linuxtogo.org">florian@linuxtogo.org</a>). 
     If you want to contribute to this project, please contact the coordinators
     or the GPE mailinglist.
@@ -34,11 +34,11 @@
   <td><b>Status</b></td>
   <td>
     <p>
-	  GPE-Edit is stable for production use and actively maintained.
-    </p>
+	  <i>gpe-gallery</i> is stable but would like to get updated a little bit.
+	</p>
     <p>
       The source code can be found in <A href="../cvs.shtml">CVS</A>,
-      module <b>base/gpe-edit</b>.  
+      module <b>base/<!--#echo var="appname"--></b>.  
 	</p>
 	<p>
 	  Distributions known to ship <i><!--#echo var="appname"--></i> are:
@@ -54,18 +54,21 @@
   </td>
 </tr>
 <tr>
-  <td colspan="3">
+  <td><b>Technical</b></td>
+  <td colspan="2">
     <p>
-	  
+	  <i>gpe-gallery</i> makes use of GTK and GDK image handling functions. 
+	  The ability to load a particulat graphic file format depends on the 
+	  available gdk-pixbuf loader plugins.
     </p>
   </td>
 </tr>
 <tr>
   <td><b>Project History</b></td>
-  <td>
+  <td colspan="2">
      <ul>
-	   <li>2002: Project started Damien Tanner</li>
-	   <li></li>
+	   <li>2001 Project started by Damien Tanner</li>
+	   <li>2004-2005 Improved and maintained by Philip Blundell and Florian Boor</li>
 	 </ul>
   </td>
 </tr>

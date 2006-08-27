@@ -1,0 +1,88 @@
+
+<!--#set var="addtitle" value="Filemanager"-->
+<!--#set var="pagename" value="Manage files with GPE"-->
+<!--#set var="appname" value="gpe-filemanager"-->
+<!--#set var="author" value="Florian Boor"-->
+<!--#set var="authoremail" value="florian.boor@linuxtogo.org"-->
+<!--#include virtual="/includes/head.shtml"-->
+
+<table cellpadding="12" cellspacing="12" border="12" width="100%" bgcolor="#EEEEEE">
+<tr>
+  <td colspan="3"><h2>Subprojects: <!--#echo var="appname"--></h2>
+  <i><!--#echo var="pagename"--></i></td>
+</tr>
+<tr>
+  <td><b>Function</b></td>
+  <td>
+    <i>gpe-filemanager</i> is a simple file manager for GPE. It is able 
+	to perform the basic file operations such as copy, delete and move as 
+	well as launching applications using the MIME-type of files to determine
+	the correct handler application for a file. It makes use of the DBus 
+	services provided by gpe-bluetooth and gpe-beam to transmit files 
+	via Bluetooth or IrDa.
+  </td>
+  <td rowspan="3"><img src="../images/gpe-filemanager.png" border="0" alt="Screenshot"></td>
+</tr>
+<tr>
+  <td><b>Coordinator(s)</b></td>
+  <td>
+    The coordinators for this sub-project are Damien Tanner
+    (<a HREF="mailto:dctanner@magenet.com">dctanner@magenet.com</a>) and 
+    Florian Boor (<a HREF="mailto:florian@linuxtogo.org">florian@linuxtogo.org</a>). 
+    If you want to contribute to this project, please contact the coordinators
+    or the GPE mailinglist.
+  </td>
+</tr>
+<tr>
+  <td><b>Status</b></td>
+  <td>
+    <p>
+	  gpe-filemanager is stable for production use and actively maintained.
+    </p>
+    <p>
+      The source code can be found in <A href="../cvs.shtml">CVS</A>,
+      module <b>base/<!--#echo var="appname"--></b>.  
+	</p>
+	<p>
+	  Distributions known to ship <i><!--#echo var="appname"--></i> are:
+	  <ul>
+	  	  <li><a href="http://familiar.handhelds.org">Familiar</a>
+          <li><a href="http://www.openzaurus.org">OpenZaurus</a>
+		  <li><a href="http://www.angstrom-distribution.org">Angstrom</a>
+     </ul>
+	</p>
+	<p>
+	  <i><!--#echo var="appname"--></i> is distributed under the <a href="http://www.gnu.org/licenses/gpl.html#SEC1">GPL</a>.
+	</p>
+  </td>
+</tr>
+<tr>
+  <td><b>Technical</b></td>
+  <td colspan="2">
+    <p>
+       gpe-filemanager makes use of the gnome virtual filesystem. This layer
+       allows the application to access a set of very powerful file access
+	   functions as well as a variety of filesystem backends. This makes it 
+	   possible to access remote files through network connections such as
+	   FTP, SMB or SSH. It implements freedesktop.org specified mime type 
+	   identification and application selection so that gpe-filemanager
+	   is able to launch applications associated to a certain file type. <br>
+	   The user interface is designed to scale from small portrait mode PDA 
+	   displays (QVGA, 240x320) up to resolutions typical for web pads and 
+       notebooks.	   
+    </p>
+  </td>
+</tr>
+<tr>
+  <td><b>Project History</b></td>
+  <td colspan="2">
+     <ul>
+	   <li>2001 gpe-filemanager started by Damien Tanner</li>
+	   <li>2003 switched to gnome-vfs as filesystem backend.</li>
+	   <li>2004 Major function enhancements and usability improvements.</li>
+	 </ul>
+  </td>
+</tr>
+</table>
+
+<!--#include virtual="/includes/foot.shtml"-->

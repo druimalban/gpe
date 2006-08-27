@@ -15,7 +15,10 @@ is a common standard.
 
 <H2>Status</H2>
 <P>
-The easiest/fastest way to enter and retrieve information on devices with a touchscreen is sketches. So gpe-sketchbook is the first stone of the GPE notebook. GPE notebook should later integrate voice notes for devices with microphone/speaker (see the <a href="GPE-soundbite.shtml">gpe-soundbite</a> project), and also simple text notes.
+The easiest/fastest way to enter and retrieve information on devices with a touchscreen is sketches. 
+So gpe-sketchbook is the first stone of the GPE notebook. 
+GPE notebook should later integrate voice notes for devices with microphone/speaker
+(see the <a href="GPE-soundbite.shtml">gpe-soundbite</a> project), and also simple text notes.
 <P/>
 <P>
 The source code can be found in <A href="../cvs.shtml">CVS</A>,
@@ -38,4 +41,3 @@ The coordinator for the gpe-sketchbook sub-project is Luc Pionchon (<a HREF="mai
 </P>
 
 <!--#include virtual="/includes/foot.shtml"-->
-

@@ -48,7 +48,8 @@
   </td>
 </tr>
 <tr>
-  <td colspan="3">
+  <td><b>Technical</b></td>
+  <td colspan="2">
     <p>
         gpesyncd is used to export and import PIM data either to stdout or
 	over tcp/ip.

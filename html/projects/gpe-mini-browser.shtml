@@ -1,0 +1,80 @@
+
+<!--#set var="addtitle" value="Mini Browser"-->
+<!--#set var="pagename" value="A small web browser"-->
+<!--#set var="appname" value="gpe-mini-browser"-->
+<!--#set var="author" value="Florian Boor"-->
+<!--#set var="authoremail" value="florian.boor@linuxtogo.org"-->
+<!--#include virtual="/includes/head.shtml"-->
+
+<table cellpadding="12" cellspacing="12" border="12" width="100%" bgcolor="#EEEEEE">
+<tr>
+  <td colspan="3"><h2>Subprojects: <!--#echo var="appname"--></h2>
+  <i><!--#echo var="pagename"--></i></td>
+</tr>
+<tr>
+  <td><b>Function</b></td>
+  <td>
+    <i>gpe-mini-browser</i> is a small web browser with a low memory and flash
+	footprint. It is designed to be used on devices with small screens and 
+	limited resources. Apart from plain HTML it supports Java Script and
+	stylesheets. The application supports both plain GTK and the Maemo 
+	software environments.
+  </td>
+  <td rowspan="3"><img src="../images/<!--#echo var="appname"-->.png" border="0" alt="Screenshot"></td>
+</tr>
+<tr>
+  <td><b>Coordinator(s)</b></td>
+  <td>
+    The coordinator for this sub-project is Philippe De Swert
+    (<a HREF="mailto:philippedeswert@scarlet.be">philippedeswert@scarlet.be</a>). 
+    If you want to contribute to this project, please contact the coordinator.
+  </td>
+</tr>
+<tr>
+  <td><b>Status</b></td>
+  <td>
+    <p>
+	  <i>gpe-mini-browser</i> is quite stable and ready to use but sufferes from
+	  some bugs in the rendering libraries it uses.
+	</p>
+    <p>
+      The source code can be found in <A href="../cvs.shtml">CVS</A>,
+      module <b>base/<!--#echo var="appname"--></b>.  
+	</p>
+	<p>
+	  Distributions known to ship <i><!--#echo var="appname"--></i> are:
+	  <ul>
+	  	  <li><a href="http://familiar.handhelds.org">Familiar</a>
+          <li><a href="http://www.openzaurus.org">OpenZaurus</a>
+		  <li><a href="http://www.angstrom-distribution.org">Angstrom</a>
+     </ul>
+	</p>
+	<p>
+	  <i><!--#echo var="appname"--></i> is distributed under the <a href="http://www.gnu.org/licenses/gpl.html#SEC1">GPL</a>.
+	</p>
+  </td>
+</tr>
+<tr>
+  <td><b>Technical</b></td>
+  <td colspan="2">
+    <p>
+	  <i>gpe-mini-browser</i> makes use of the GtkWebcore project libraries.
+      This is a port of the Apple Webcore (based on KHTML) to GTK. There are 
+	  corrently some known open issues with these libraries like broken cookies 
+	  and missing SSL support. The major advantage of these libraries are 
+	  their very low footprint and good rendering quality. They are easy to
+	  use in GTK applications and can be used for multiple purposes in GPE.
+    </p>
+  </td>
+</tr>
+<tr>
+  <td><b>Project History</b></td>
+  <td colspan="2">
+     <ul>
+	   <li>2005 Project started by Philippe de Swert</li>
+	 </ul>
+  </td>
+</tr>
+</table>
+
+<!--#include virtual="/includes/foot.shtml"-->
