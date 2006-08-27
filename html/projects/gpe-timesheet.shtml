@@ -1,0 +1,84 @@
+
+<!--#set var="addtitle" value="Time Tracker"-->
+<!--#set var="pagename" value="Spending time"-->
+<!--#set var="appname" value="gpe-timesheet"-->
+<!--#set var="author" value="Florian Boor"-->
+<!--#set var="authoremail" value="florian@linuxtogo.org"-->
+<!--#include virtual="/includes/head.shtml"-->
+
+<table cellpadding="12" cellspacing="12" border="12" width="100%" bgcolor="#EEEEEE">
+<tr>
+  <td colspan="3"><h2>Subprojects: <!--#echo var="appname"--></h2>
+  <i><!--#echo var="pagename"--></i></td>
+</tr>
+<tr>
+  <td><b>Function</b></td>
+  <td>
+    <i>gpe-timesheet</i> is used to keep a list of tasks and track the time 
+	spent on them. These taks can contain sub-tasks and as an option gpe-timesheet
+	allows to use the tasks from gpe-todo as well. It provides a journal view
+	displaying the tracked data and summarizing times. Sime some other PIM 
+	application gpe-timesheet supports the Maemo software environment.
+  </td>
+  <td rowspan="3"><img src="../images/<!--#echo var="appname"-->.png" border="0" alt="Screenshot"></td>
+</tr>
+<tr>
+  <td><b>Coordinator(s)</b></td>
+  <td>
+    The coordinators for this sub-project are Philip Blundell
+    (<a HREF="mailto:philb@gnu.org">philb@gnu.org</a>) and 
+    Philippe De Swert (<a HREF="mailto:philippedeswert@scarlet.be">philippedeswert@scarlet.be</a>). 
+    If you want to contribute to this project, please contact the coordinators
+    or the GPE mailinglist.
+  </td>
+</tr>
+<tr>
+  <td><b>Status</b></td>
+  <td>
+    <p>
+      The application should be stable and working but lacks some intensive 
+      testing.
+	</p>
+    <p>
+      The source code can be found in <A href="../cvs.shtml">CVS</A>,
+      module <b>base/<!--#echo var="appname"--></b>.
+	</p>
+	<p>
+	  Distributions known to ship <i><!--#echo var="appname"--></i> are:
+	  <ul>
+	  	  <li><a href="http://familiar.handhelds.org">Familiar</a>
+          <li><a href="http://www.openzaurus.org">OpenZaurus</a>
+		  <li><a href="http://www.angstrom-distribution.org">Angstrom</a>
+     </ul>
+	</p>
+	<p>
+	  <i><!--#echo var="appname"--></i> is distributed under the <a href="http://www.gnu.org/licenses/gpl.html#SEC1">GPL</a>.
+	</p>
+  </td>
+</tr>
+<tr>
+  <td><b>Technical</b></td>
+  <td colspan="2">
+    <p>
+	  Like the other PIM applications gpe-timesheet makes use of a SQLite database 
+	  to store data but it does not have a library for abstracting the data 
+	  backend. Latest versions do not call an external application to display
+	  the journal anymore.
+    </p>
+  </td>
+</tr>
+<tr>
+  <td><b>Project History</b></td>
+  <td colspan="2">
+     <ul>
+	   <li>2002 Project started by Philip Blundell</li>
+	   <li>2002 - 2003 Developed by Philip Blundell</li>
+	   <li>2004 Developed by Florian Boor</li>
+	   <li>2005 Developed by Philippe De Swert</li>
+	   <li>2006 Maemo port and major improvements by Michele Giorgini</li>
+	 </ul>
+  </td>
+</tr>
+</table>
+
+<!--#include virtual="/includes/foot.shtml"-->
