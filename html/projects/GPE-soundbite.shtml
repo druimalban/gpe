@@ -1,7 +1,7 @@
 
 <!--#set var="appname" value="gpe-soundbite"-->
 <!--#set var="addtitle" value="Voice Memo Recorder"-->
-<!--#set var="pagename" value="soundbite"-->
+<!--#set var="pagename" value="Recording voice memos"-->
 <!--#set var="author" value="Phil Blundell"-->
 <!--#set var="authoremail" value="philb@gnu.org"-->
 <!--#include virtual="/includes/head.shtml"-->
@@ -70,7 +70,7 @@
   <td><b>Project History</b></td>
   <td colspan="2">
      <ul>
-	   <li>2002 Project started by Philip Blundell</li>
+       <li>2002 Project started by Philip Blundell</li>
        <li>2002 Developed by Moray Allan</li>
 	 </ul>
   </td>
