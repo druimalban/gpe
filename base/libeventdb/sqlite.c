@@ -214,8 +214,15 @@ event_load_callback (void *arg, int argc, char **argv, char **names)
       char *end = strchr (p, ',');
       char *token;
       if (end)
-	token = g_strdup_printf ("%*s", end - p, p);
+	/* Copy up to the comma.  */
+	{
+	  int len = end - p;
+	  token = g_malloc (len + 1);
+	  memcpy (token, p, len);
+	  token[len] = 0;
+	}
       else
+	/* This is the last segment, just copy it.  */
 	token = g_strdup (p);
       ev->byday = g_slist_prepend (ev->byday, token);
 

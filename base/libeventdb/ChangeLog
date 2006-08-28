@@ -1,5 +1,11 @@
 2006-08-28  Neal H. Walfield  <neal@gnu.org>
 
+	* sqlite.c (event_load_callback): Correctly copy the day of the
+	week specification.
+	Reported by Joseph J. McCarthy <mccarthy@engrng.pitt.edu>.
+
+2006-08-28  Neal H. Walfield  <neal@gnu.org>
+
 	* Makefile.am (check_PROGRAMS): Add test-recur-weekly-2.
 	(TESTS): Likewise.
 	(test_recur_weekly_2_SOURCES): New.
