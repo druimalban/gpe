@@ -33,6 +33,11 @@ PACKAGE_CFLAGS += -DIPKG_LIB  `pkg-config --cflags libipkg`
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0 gdk-pixbuf-2.0 libipkg` 
 GTKLDFLAGS = `pkg-config --libs gtk+-2.0 gdk-2.0 gdk-pixbuf-2.0`
 
+ifneq ($(PCRE), )
+CFLAGS += `pkg-config --cflags libpcre` -DENABLE_PCRE
+LDFLAGS += `pkg-config --libs libpcre`
+endif
+
 PACKAGE_CFLAGS += $(GPECFLAGS) $(GTKCFLAGS) $(STANDARD_CFLAGS) 
 PACKAGE_LDFLAGS += $(GPELIBS) $(GTKLIBS) $(STANDARD_LDFLAGS) `pkg-config --libs libipkg`
 

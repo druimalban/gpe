@@ -1,3 +1,7 @@
+2006-08-25 Alberto García Hierro <skyhusker@handhelds.org>
+
+	* Makefile, interface.c: Add name based filtering with
+		optional lipcre support.
 
 2006-08-25 Florian Boor <florian.boor@kernelconcepts.de>
         * Makefile. po/ja.po  Add Japanese translation.
