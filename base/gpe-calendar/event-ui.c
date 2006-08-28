@@ -1019,7 +1019,7 @@ build_recurrence_page (struct edit_state *s)
   gtk_spin_button_set_numeric (GTK_SPIN_BUTTON (spin), TRUE);
   gtk_spin_button_set_digits (GTK_SPIN_BUTTON (spin), 0);
   if (s->ev)
-    gtk_spin_button_set_value (s->increment_unit,
+    gtk_spin_button_set_value (spin,
 			       event_get_recurrence_increment (s->ev));
 #endif
   s->increment_unit = spin;

@@ -1,3 +1,8 @@
+2006-08-28  Neal H. Walfield  <neal@gnu.org>
+
+	* event-ui.c (build_recurrence_page): Don't use S->INCREMENT_UNIT
+	before it is initialized.  Use SPIN instead.
+
 2006-08-10  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * main.c (main): Set absolute path for local files.
