@@ -1,5 +1,9 @@
 2006-08-28  Neal H. Walfield  <neal@gnu.org>
 
+	* TODO: New file.
+
+2006-08-28  Neal H. Walfield  <neal@gnu.org>
+
 	* event-ui.c (build_recurrence_page): Don't use S->INCREMENT_UNIT
 	before it is initialized.  Use SPIN instead.
 

@@ -1,0 +1,48 @@
+!!! means very important and is a release blocker
+
+- Change the popup menus so that instead of having:
+
+    edit - event
+         + calendar
+    delete - event
+           + calendar
+
+  we have:
+
+    edit
+    delete
+    calendar - edit
+             + delete
+
+  !!!
+
+- After editing an event, the changes are sometimes not immediately
+  propagated. !!!
+- Zooming from week view (plus to day view and minus to month view)
+- Day of week for event editor
+- Edge flipping (see pannedwindow.h) for week and month view
+- Scrolling for day and week view using arrow keys
+- Popup menu for calendar selector (delete, sync now, ...)
+- Do not display "until TIME" in the day view but START-END !!!
+- In the event list don't show the end time if there is not enough
+  room
+- agenda is not showing duration combo in the large agenda view ??? !!!
+- agenda listens for button press event, not button release event. !!!
+- create one hour event, change to all day: day view is corrupt !!!
+- In the week and month views, if the event span multiple days, draw
+  it with jaggies, just like in the day view.
+- in the month view, the first event in a day is shifted right but the
+  width for formatting is not appropriately reduced.  Fix this.
+
+libeventdb Specific:
+
+- return GErrors in libeventdb--don't include libgpewidget
+- change the setters to return a boolean.  if the value has really
+  changed then return TRUE.  Use this (in gpe-calendar) when updating
+  events to report how many events have changed, etc.
+
+Maemo Specific:
+
+- Tap and hold -> right click (maemo)
+- Provide an option to set whether the agenda respects the visibility
+  of calendars (required for hildon home applet) (maemo).
