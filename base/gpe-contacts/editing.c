@@ -329,6 +329,7 @@ build_children (GtkWidget *table, GSList *children, GtkWidget *pw, gboolean visi
 #ifdef IS_HILDON
           GtkWidget *date_set = gtk_check_button_new ();
           GtkWidget *date_editor = hildon_date_editor_new ();
+          g_object_set(G_OBJECT(date_editor), "min-year", 1900, NULL );
           GtkWidget *hbox = gtk_hbox_new (FALSE, gpe_get_boxspacing ());
           GtkWidget *caption = hildon_caption_new (size_group, e->name, hbox, NULL, HILDON_CAPTION_OPTIONAL);
 
