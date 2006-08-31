@@ -1,5 +1,6 @@
 #include <gtk/gtk.h>
 #include <bluetooth/sdp.h>
+#include <bluetooth/sdp_lib.h>
 
 struct bt_device
 {
