@@ -1,3 +1,8 @@
+2006-08-31  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * event-menu.c (event_menu_new): Change menu structure to make event 
+      functions easier to access. Seperate translatable strings from markup.
+
 2006-08-28  Neal H. Walfield  <neal@gnu.org>
 
 	* TODO: New file.

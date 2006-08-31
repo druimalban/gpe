@@ -281,31 +281,11 @@ event_menu_new (Event *ev, gboolean show_summary)
 #else
   edit = gtk_image_menu_item_new_from_stock (GTK_STOCK_EDIT, NULL);
 #endif
+  g_signal_connect (G_OBJECT (edit), "activate",
+		    G_CALLBACK (edit_event_cb), ev);
   gtk_widget_show (edit);
   gtk_menu_attach (menu, edit, 0, 1, i, i + 1);
   i ++;
-
-  GtkMenu *sub = GTK_MENU (gtk_menu_new ());
-  gtk_menu_item_set_submenu (GTK_MENU_ITEM (edit), GTK_WIDGET (sub));
-  gtk_widget_show (GTK_WIDGET (sub));
-  
-  int j = 0;
-  item = gtk_menu_item_new_with_label (_("Edit Event"));
-  g_signal_connect (G_OBJECT (item), "activate",
-		    G_CALLBACK (edit_event_cb), ev);
-  gtk_widget_show (item);
-  gtk_menu_attach (sub, item, 0, 1, j, j + 1);
-  j ++;
-
-  item = gtk_menu_item_new_with_label ("");
-  s = g_strdup_printf (_("Edit <i>%s</i>"), title);
-  gtk_label_set_markup (GTK_LABEL (GTK_BIN (item)->child), s);
-  g_free (s);
-  g_signal_connect (G_OBJECT (item), "activate",
-		    G_CALLBACK (edit_calendar_cb), ec);
-  gtk_widget_show (item);
-  gtk_menu_attach (sub, item, 0, 1, j, j + 1);
-  j ++;
 
   /* And a save button.  */
 #ifdef IS_HILDON
@@ -314,30 +294,10 @@ event_menu_new (Event *ev, gboolean show_summary)
   item = gtk_image_menu_item_new_from_stock (GTK_STOCK_DELETE, NULL);
 #endif
   gtk_widget_show (item);
-  gtk_menu_attach (menu, item, 0, 1, i, i + 1);
-  i ++;
-
-  sub = GTK_MENU (gtk_menu_new ());
-  gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), GTK_WIDGET (sub));
-  gtk_widget_show (GTK_WIDGET (sub));
-  
-  j = 0;
-  item = gtk_menu_item_new_with_label (_("Delete Event"));
   g_signal_connect (G_OBJECT (item), "activate",
 		    G_CALLBACK (delete_event_cb), ev);
-  gtk_widget_show (item);
-  gtk_menu_attach (sub, item, 0, 1, j, j + 1);
-  j ++;
-
-  item = gtk_menu_item_new_with_label ("");
-  s = g_strdup_printf (_("Delete <i>%s</i>"), title);
-  gtk_label_set_markup (GTK_LABEL (GTK_BIN (item)->child), s);
-  g_free (s);
-  g_signal_connect (G_OBJECT (item), "activate",
-		    G_CALLBACK (delete_calendar_cb), ec);
-  gtk_widget_show (item);
-  gtk_menu_attach (sub, item, 0, 1, j, j + 1);
-  j ++;
+  gtk_menu_attach (menu, item, 0, 1, i, i + 1);
+  i ++;
 
   /* And a save button.  */
 #ifdef IS_HILDON
@@ -346,30 +306,10 @@ event_menu_new (Event *ev, gboolean show_summary)
   item = gtk_image_menu_item_new_from_stock (GTK_STOCK_SAVE, NULL);
 #endif
   gtk_widget_show (item);
-  gtk_menu_attach (menu, item, 0, 1, i, i + 1);
-  i ++;
-
-  sub = GTK_MENU (gtk_menu_new ());
-  gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), GTK_WIDGET (sub));
-  gtk_widget_show (GTK_WIDGET (sub));
-  
-  j = 0;
-  item = gtk_menu_item_new_with_label (_("Save Event"));
   g_signal_connect (G_OBJECT (item), "activate",
 		    G_CALLBACK (save_cb), ev);
-  gtk_widget_show (item);
-  gtk_menu_attach (sub, item, 0, 1, j, j + 1);
-  j ++;
-
-  item = gtk_menu_item_new_with_label ("");
-  s = g_strdup_printf (_("Save <i>%s</i>"), title);
-  gtk_label_set_markup (GTK_LABEL (GTK_BIN (item)->child), s);
-  g_free (s);
-  g_signal_connect (G_OBJECT (item), "activate",
-		    G_CALLBACK (save_calendar_cb), ec);
-  gtk_widget_show (item);
-  gtk_menu_attach (sub, item, 0, 1, j, j + 1);
-  j ++;
+  gtk_menu_attach (menu, item, 0, 1, i, i + 1);
+  i ++;
 
   /* Create a Send via infra-red button if infra-red is available.  */
   if (export_irda_available ())
@@ -404,34 +344,77 @@ event_menu_new (Event *ev, gboolean show_summary)
       gtk_widget_show (calendars);
 
       GtkWidget *item
-	= gtk_menu_item_new_with_label (_("Move to Calendar..."));
+          = gtk_menu_item_new_with_label (_("Move to Calendar..."));
       gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), calendars);
       gtk_menu_attach (menu, item, 0, 1, i, i + 1);
       gtk_widget_show (item);
       i ++;
     }
 
+  
+  /* Calendar sub menu */
+  gint j = 0;
+  item = gtk_menu_item_new_with_label (_("Calendar"));
+  gtk_widget_show (item);
+  gtk_menu_attach (menu, item, 0, 1, i, i + 1);
+  i ++;
+
+  GtkMenu *sub = GTK_MENU (gtk_menu_new ());
+  gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), GTK_WIDGET (sub));
+  gtk_widget_show (GTK_WIDGET (sub));
+  
+  j = 0;
+  item = gtk_menu_item_new_with_label ("");
+  s = g_strdup_printf ("%s <i>%s</i>", _("Edit"), title);
+  gtk_label_set_markup (GTK_LABEL (GTK_BIN (item)->child), s);
+  g_free (s);
+  g_signal_connect (G_OBJECT (item), "activate",
+		    G_CALLBACK (edit_calendar_cb), ec);
+  gtk_widget_show (item);
+  gtk_menu_attach (sub, item, 0, 1, j, j + 1);
+  j ++;
+    
+  item = gtk_menu_item_new_with_label ("");
+  s = g_strdup_printf ("%s <i>%s</i>",_("Save as"), title);
+  gtk_label_set_markup (GTK_LABEL (GTK_BIN (item)->child), s);
+  g_free (s);
+  g_signal_connect (G_OBJECT (item), "activate",
+		    G_CALLBACK (save_calendar_cb), ec);
+  gtk_widget_show (item);
+  gtk_menu_attach (sub, item, 0, 1, j, j + 1);
+  j ++;
+    
+  item = gtk_menu_item_new_with_label ("");
+  s = g_strdup_printf ("%s <i>%s</i>", _("Delete"), title);
+  gtk_label_set_markup (GTK_LABEL (GTK_BIN (item)->child), s);
+  g_free (s);
+  g_signal_connect (G_OBJECT (item), "activate",
+		    G_CALLBACK (delete_calendar_cb), ec);
+  gtk_widget_show (item);
+  gtk_menu_attach (sub, item, 0, 1, j, j + 1);
+  j ++;
+    
   /* Only show this calendar.  */
   item = gtk_menu_item_new_with_label ("");
-  s = g_strdup_printf (_("Only Show <i>%s</i>"), title);
+  s = g_strdup_printf ("%s <i>%s</i>", _("Only Show"), title);
   gtk_label_set_markup (GTK_LABEL (GTK_BIN (item)->child), s);
   g_free (s);
   g_signal_connect (G_OBJECT (item), "activate",
 		    G_CALLBACK (only_show_cb), ec);
   gtk_widget_show (item);
-  gtk_menu_attach (menu, item, 0, 1, i, i + 1);
-  i ++;
+  gtk_menu_attach (sub, item, 0, 1, j, j + 1);
+  j ++;
 
   /* Hide calendar.  */
   item = gtk_menu_item_new_with_label ("");
-  s = g_strdup_printf (_("Hide <i>%s</i>"), title);
+  s = g_strdup_printf ("%s <i>%s</i>", _("Hide"), title);
   gtk_label_set_markup (GTK_LABEL (GTK_BIN (item)->child), s);
   g_free (s);
   g_signal_connect (G_OBJECT (item), "activate",
 		    G_CALLBACK (hide_cb), ec);
   gtk_widget_show (item);
-  gtk_menu_attach (menu, item, 0, 1, i, i + 1);
-  i ++;
+  gtk_menu_attach (sub, item, 0, 1, j, j + 1);
+  j ++;
 
   g_signal_connect (G_OBJECT (menu), "selection-done",
 		    G_CALLBACK (event_menu_destroy), info);
@@ -440,4 +423,3 @@ event_menu_new (Event *ev, gboolean show_summary)
  
   return menu;
 }
-
