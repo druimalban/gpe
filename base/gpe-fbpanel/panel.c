@@ -94,7 +94,6 @@ dock_complete (EggTrayManager *manager, GtkWidget *icon, gpointer data)
 {
   t_sessionstatus *session = (t_sessionstatus*)data;
 
-  printf("finshed %i\n", session->pos);
   if (!session->apps)
       return;
   
@@ -105,6 +104,9 @@ dock_complete (EggTrayManager *manager, GtkWidget *icon, gpointer data)
       if (!is_command(session->apps[session->pos]) && session->tr->pack_start)
         {
            GtkWidget *spacer;
+           spacer = gtk_event_box_new();
+           gtk_widget_show (spacer);
+           tray_add_widget (session->tr, spacer);
            session->tr->pack_start = FALSE;
            session->pos++;
         }
@@ -319,10 +321,7 @@ panel_delete_event(GtkWidget * widget, GdkEvent * event, gpointer data)
 static gint
 panel_destroy_event(GtkWidget * widget, GdkEvent * event, gpointer data)
 {
-    //panel *p = (panel *) data;
-
     ENTER2;  
-    //if (!p->self_destroy)
     gtk_main_quit();
     RET(FALSE);
 }
@@ -444,7 +443,7 @@ panel_start_gui(panel *p)
 
     p->box = p->my_box_new(FALSE, p->spacing); 
     gtk_container_set_border_width(GTK_CONTAINER(p->box), 0);
-    gtk_box_pack_start(GTK_BOX(p->lbox), p->box, FALSE, TRUE, 0);
+    gtk_box_pack_start(GTK_BOX(p->lbox), p->box, TRUE, TRUE, 0);
     gtk_widget_show(p->box);
       
     p->topxwin = GDK_WINDOW_XWINDOW(GTK_WIDGET(p->topgwin)->window);

@@ -21,7 +21,7 @@
 void 
 tray_add_widget (tray *tr, GtkWidget *widget)
 {
-   gtk_box_pack_start (GTK_BOX (tr->startbox), widget, TRUE, TRUE, 0);
+   gtk_box_pack_start (GTK_BOX (tr->box), widget, TRUE, TRUE, 0);
 }
 
 static void
@@ -30,9 +30,9 @@ tray_added (EggTrayManager *manager, GtkWidget *icon, void *data)
     tray *tr = (tray*)data;
 
     if (tr->pack_start)
-      gtk_box_pack_start (GTK_BOX (tr->startbox), icon, FALSE, TRUE, 0);
+      gtk_box_pack_start (GTK_BOX (tr->box), icon, FALSE, TRUE, 0);
     else
-      gtk_box_pack_start (GTK_BOX (tr->endbox), icon, FALSE, TRUE, 0);
+      gtk_box_pack_start (GTK_BOX (tr->box), icon, FALSE, TRUE, 0);
     
     gtk_widget_show (icon);
 }
@@ -103,10 +103,8 @@ tray_constructor(plugin *p)
     tr->pack_start = TRUE;
 
     box = p->panel->my_box_new(FALSE, 0);
-    tr->startbox = p->panel->my_box_new(FALSE, gpe_get_boxspacing());
-    tr->endbox = p->panel->my_box_new(FALSE, gpe_get_boxspacing());
-    gtk_box_pack_start(GTK_BOX (box), tr->startbox, TRUE, TRUE, 0);
-    gtk_box_pack_end (GTK_BOX (box), tr->endbox, FALSE, FALSE, 0);
+    tr->box = p->panel->my_box_new(FALSE, gpe_get_boxspacing());
+    gtk_box_pack_start(GTK_BOX (box), tr->box, TRUE, TRUE, 0);
     gtk_container_add(GTK_CONTAINER(p->pwid), box);
     
     gtk_bgbox_set_background(p->pwid, BG_STYLE, 0, 0);

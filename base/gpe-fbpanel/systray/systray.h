@@ -11,8 +11,7 @@ extern "C"
 typedef struct {
     GtkWidget *mainw;
     plugin *plug;
-    GtkWidget *startbox;
-    GtkWidget *endbox;
+    GtkWidget *box;
     gboolean pack_start;
     EggTrayManager *tray_manager;
 } tray;
