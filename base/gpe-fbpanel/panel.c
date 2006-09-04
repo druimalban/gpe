@@ -75,6 +75,8 @@ typedef struct
   tray *tr;
 }t_sessionstatus;
 
+
+
 static void run_application (gchar *exec, t_sessionstatus *session);
 
 static gboolean
@@ -347,7 +349,6 @@ static gint
 panel_size_alloc(GtkWidget *widget, GtkAllocation *a, panel *p)
 {
     ENTER;
-    DBG("installed alloc: size (%d, %d). pos (%d, %d)\n", aa->width, aa->height, aa->x, aa->y);
     DBG("suggested alloc: size (%d, %d). pos (%d, %d)\n", a->width, a->height, a->x, a->y);
     DBG("prev pref alloc: size (%d, %d). pos (%d, %d)\n", p->aw, p->ah, p->ax, p->ay);
     if (p->widthtype == WIDTH_REQUEST)
@@ -490,7 +491,7 @@ panel_start_gui(panel *p)
     gdk_window_move_resize(p->topgwin->window, p->ax, p->ay, p->aw, p->ah);
     if (p->setstrut)
         panel_set_wm_strut(p);
-  
+
     RET();
 }
 
@@ -821,6 +822,14 @@ sig_usr(int signum)
     gtk_main_quit();
 }
 
+static void
+sig_term(int signum)
+{
+    panel_stop(p);
+    gtk_main_quit();
+    exit(0);
+}
+
 int
 main(int argc, char *argv[])
 {
@@ -888,6 +897,10 @@ main(int argc, char *argv[])
     
     /* keep process table clean */
     signal (SIGCHLD, SIG_IGN);
+    
+    /* clean shutdown */
+    signal (SIGTERM, sig_term);
+    signal (SIGINT, sig_term);
     
     do {
         if (!(pfp = open_profile(cprofile)))

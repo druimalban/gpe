@@ -1,10 +1,14 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <libintl.h>
 
+#include <gtk/gtk.h>
 #include <X11/Xmu/WinUtil.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
 #include <gpe/spacing.h>
+#include <gpe/popup.h>
+#include <gpe/launch.h>
 
 #include "panel.h"
 #include "misc.h"
@@ -17,6 +21,8 @@
 #include "fixedtip.h"
 
 #include "dbg.h"
+
+#define _(x) gettext(x)
 
 void 
 tray_add_widget (tray *tr, GtkWidget *widget)
@@ -62,14 +68,24 @@ message_cancelled (EggTrayManager *manager, GtkWidget *icon, glong id,
   fixed_tip_hide();
 }
 
-
+static void
+save_tray_session (GtkWidget *dock)
+{
+  GList *children = gtk_container_get_children (GTK_CONTAINER (dock));
+  GList *iter;
+	
+  for (iter = children; iter; iter=iter->next)
+    {
+    }
+}
 
 static void
 tray_destructor(plugin *p)
 {
     tray *tr = (tray *)p->priv;
-
+    
     ENTER;
+    save_tray_session (tr->box);
     /* Make sure we drop the manager selection */
     if (tr->tray_manager)
         g_object_unref (G_OBJECT (tr->tray_manager));
@@ -78,8 +94,20 @@ tray_destructor(plugin *p)
     RET();
 }
 
+static gboolean
+tray_button_press (GtkWidget *box, GdkEventButton *b, gpointer user_data)
+{
+  tray *tr = user_data;
     
+  if (b->button == 1)
+    {
+       gtk_menu_popup (GTK_MENU (tr->context_menu),
+                       NULL, NULL, gpe_popup_menu_position, box, 1, b->time);
+       return TRUE;
+    }
 
+  return FALSE;
+}
 
 static int
 tray_constructor(plugin *p)
@@ -87,7 +115,7 @@ tray_constructor(plugin *p)
     line s;
     tray *tr;
     GdkScreen *screen;
-    GtkWidget *box;
+    GtkWidget *box, *item, *tray_apps_menu;
     
     ENTER;
     s.len = 256;
@@ -130,6 +158,29 @@ tray_constructor(plugin *p)
           G_CALLBACK (message_cancelled), NULL);
     
     gtk_widget_show_all(box);
+    
+    /* context menu */
+    tr->context_menu = gtk_menu_new ();
+    item = gtk_image_menu_item_new_from_stock (GTK_STOCK_ADD, NULL);
+    gtk_menu_attach (GTK_MENU (tr->context_menu), item, 0, 1, 0, 1);
+    
+    tray_apps_menu = g_object_get_data (G_OBJECT (p->pwid->parent), 
+                                        "tray-apps-menu");
+    if (tray_apps_menu)
+      gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), tray_apps_menu);
+    item = gtk_image_menu_item_new_from_stock (GTK_STOCK_REMOVE, NULL);
+    gtk_menu_attach (GTK_MENU (tr->context_menu), item, 0, 1, 1, 2);
+    item = gtk_separator_menu_item_new ();
+    gtk_menu_attach (GTK_MENU (tr->context_menu), item, 0, 1, 2, 3);
+    item = gtk_image_menu_item_new_with_label (_("Hide"));
+    gtk_menu_attach (GTK_MENU (tr->context_menu), item, 0, 1, 3, 4);
+    
+    gtk_menu_attach_to_widget (GTK_MENU(tr->context_menu), tr->box, NULL);
+    g_signal_connect (tr->box, "button-press-event", 
+          G_CALLBACK (tray_button_press), tr);
+    
+    gtk_widget_show_all (tr->context_menu);
+
     RET(1);
 
 }

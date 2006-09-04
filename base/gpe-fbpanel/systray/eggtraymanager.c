@@ -73,15 +73,15 @@ egg_tray_manager_get_type (void)
     {
       static const GTypeInfo our_info =
       {
-	sizeof (EggTrayManagerClass),
-	(GBaseInitFunc) NULL,
-	(GBaseFinalizeFunc) NULL,
-	(GClassInitFunc) egg_tray_manager_class_init,
-	NULL, /* class_finalize */
-	NULL, /* class_data */
-	sizeof (EggTrayManager),
-	0,    /* n_preallocs */
-	(GInstanceInitFunc) egg_tray_manager_init
+        sizeof (EggTrayManagerClass),
+        (GBaseInitFunc) NULL,
+        (GBaseFinalizeFunc) NULL,
+        (GClassInitFunc) egg_tray_manager_class_init,
+        NULL, /* class_finalize */
+        NULL, /* class_data */
+        sizeof (EggTrayManager),
+        0,    /* n_preallocs */
+        (GInstanceInitFunc) egg_tray_manager_init
       };
 
       our_type = g_type_register_static (G_TYPE_OBJECT, "EggTrayManager", &our_info, 0);
@@ -276,8 +276,7 @@ egg_tray_manager_handle_message_data (EggTrayManager       *manager,
 		  g_signal_emit (manager, manager_signals[MESSAGE_SENT], 0,
 				 socket, msg->str, msg->id, msg->timeout);
 		}
-	      manager->messages = g_list_remove_link (manager->messages,
-						      p);
+	      manager->messages = g_list_remove_link (manager->messages, p);
 	      
 	      pending_message_free (msg);
 	    }

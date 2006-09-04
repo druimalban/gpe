@@ -12,6 +12,7 @@ typedef struct {
     GtkWidget *mainw;
     plugin *plug;
     GtkWidget *box;
+    GtkWidget *context_menu;      /* context menu for the panel */
     gboolean pack_start;
     EggTrayManager *tray_manager;
 } tray;

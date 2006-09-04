@@ -71,6 +71,7 @@ typedef struct {
 } t_folder;
 
 static t_folder *default_folder = NULL;
+static t_folder *panel_folder = NULL;
 
 typedef struct {
     gchar *name;          /* name / label */
@@ -233,13 +234,6 @@ new_application_from_desktop (GnomeDesktopFile *g)
       single = FALSE;
 
   ibuf = load_icon_scaled (icon, MENU_ICON_SIZE);
-/*  if (!ibuf)
-    {
-      ibuf = gpe_find_icon ("applauncher");
-      ibuf = gdk_pixbuf_scale_simple (ibuf, MENU_ICON_SIZE, 
-                                      MENU_ICON_SIZE, GDK_INTERP_BILINEAR);
-    }
-*/
 
   app->name = name;
   app->iconname = icon;
@@ -318,27 +312,32 @@ add_application (const gchar *filename)
 {
   GnomeDesktopFile *p;
   GError *err = NULL;
+    
   p = gnome_desktop_file_load (filename, &err);
   if (p)
   {
       gchar *type;
+      t_application *app;
+      GtkWidget *item;
+      
       gnome_desktop_file_get_string (p, NULL, "Type", &type);
 
-      if (type == NULL || strcmp (type, "Application"))
+      if (type == NULL)
+        {
           gnome_desktop_file_free (p);
-      else
-      {
+        }
+      else 
+      if (!strcmp (type, "Application"))
+        {
           GList *iter;
           gchar *cat;              
-          t_application *app;
-          GtkWidget *item;
           
           gnome_desktop_file_get_string (p, NULL, "Categories", &cat);
           for (iter = folderlist; iter; iter = iter->next)
-          {
+            {
               t_folder *folder = iter->data;
               if (cat && strstr(cat, folder->category))
-              {
+                {
                   app = new_application_from_desktop (p);
                   folder->applications = g_slist_prepend (folder->applications, app);
                   item = gtk_image_menu_item_new_with_label (app->name);
@@ -348,8 +347,8 @@ add_application (const gchar *filename)
                       gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM(item), app->icon);
                   gtk_menu_append (GTK_MENU_SHELL(folder->menu), item);
                   break;
-              }
-          }
+                }
+            }
           if ((iter == NULL) && (default_folder != NULL)) /* no folder found */
             {
                 app = new_application_from_desktop (p);
@@ -371,6 +370,23 @@ add_application (const gchar *filename)
           g_free (cat);
           gnome_desktop_file_free (p);
        }
+     else 
+     if (!strcmp (type, "PanelApp"))
+       {
+          if (!panel_folder->menu)
+            {
+              panel_folder->menu = gtk_menu_new();
+            }
+          app = new_application_from_desktop (p);
+          panel_folder->applications = g_slist_prepend (panel_folder->applications, app);
+          item = gtk_image_menu_item_new_with_label (app->name);
+          g_signal_connect (G_OBJECT(item), "activate", 
+                            G_CALLBACK(run_application), (gpointer)app);
+          if (app->icon)
+             gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM(item), app->icon);
+          gtk_menu_append (GTK_MENU_SHELL(panel_folder->menu), item);
+       }
+       
        if (type)
            g_free (type);
   }
@@ -544,6 +560,7 @@ build_menu(plugin *p)
         folders = GPE_VFOLDERS;
   
   folderlist = load_folder_list (folders);
+  panel_folder = g_malloc0 (sizeof(t_folder));
     
   for (iter = folderlist; iter; iter = iter->next)
     {
@@ -597,6 +614,9 @@ menu_constructor(plugin *p)
     gtk_container_add(GTK_CONTAINER(p->pwid), m->box);
 
     build_menu (p);
+    
+    g_object_set_data (G_OBJECT(p->pwid->parent), "tray-apps-menu", 
+                       panel_folder->menu);
     
     RET(1);
 }
