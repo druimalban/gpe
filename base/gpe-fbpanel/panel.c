@@ -480,17 +480,9 @@ panel_parse_global(panel *p, FILE *fp)
     if (p->widthtype == WIDTH_PERCENT && p->width > 100)
         p->width = 100;
     p->heighttype = HEIGHT_PIXEL;
-    if (p->heighttype == HEIGHT_PIXEL) {
-        if (p->height < PANEL_HEIGHT_MIN)
-            p->height = PANEL_HEIGHT_MIN;
-        else if (p->height > PANEL_HEIGHT_MAX)
-            p->height = PANEL_HEIGHT_MAX;
-    }
     p->curdesk = get_net_current_desktop();
     p->desknum = get_net_number_of_desktops();
     p->workarea = get_xaproperty (GDK_ROOT_WINDOW(), a_NET_WORKAREA, XA_CARDINAL, &p->wa_len);
-    print_wmdata(p);
-    panel_start_gui(p);
     RET(1);
 }
 
@@ -599,7 +591,7 @@ panel_start(panel *p, FILE *fp)
     p->widthtype = WIDTH_PERCENT;
     p->width = 100;
     p->heighttype = HEIGHT_PIXEL;
-    p->height = PANEL_HEIGHT_DEFAULT;
+    p->height = -1;
     p->setdocktype = 1;
     p->setstrut = 1;
     p->transparent = 0;
@@ -614,6 +606,33 @@ panel_start(panel *p, FILE *fp)
     if (!panel_parse_global(p, fp))
         RET(0);
 
+    if (p->height == -1) /* hight not set? calculate a clever one */
+      {
+        gint size;
+          
+        if (p->edge == EDGE_BOTTOM || p->edge == EDGE_TOP)
+          size = gdk_screen_height ();
+        else
+          size = gdk_screen_width ();
+        
+        if (size < 400) 
+            p->height = 20;
+        else
+            p->height = 36;
+      }
+    else
+      {
+        if (p->heighttype == HEIGHT_PIXEL) {
+            if (p->height < PANEL_HEIGHT_MIN)
+                p->height = PANEL_HEIGHT_MIN;
+            else if (p->height > PANEL_HEIGHT_MAX)
+                p->height = PANEL_HEIGHT_MAX;
+        }
+      }
+    
+    print_wmdata(p);
+    panel_start_gui(p);
+      
     if (!(pconf = tmpfile())) {
         ERR("can't open temporary file\n");
         RET(0);
@@ -631,6 +650,7 @@ panel_start(panel *p, FILE *fp)
         if (!panel_parse_plugin(p, fp)) 
             RET(0);
     }
+        
     gtk_widget_show_all(p->topgwin);
     print_wmdata(p);
     

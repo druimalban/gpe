@@ -100,7 +100,6 @@ Global {
     widthtype = percent
     width = 100
     heighttype = pixel
-    height = 20
 }
 
 
