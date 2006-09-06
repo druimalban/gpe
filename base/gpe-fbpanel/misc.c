@@ -749,7 +749,8 @@ load_icon_scaled (const gchar *iconname, gint size)
   else
       result = NULL;
   
-  g_object_unref (pbuf);
+  if (pbuf)
+      g_object_unref (pbuf);
   g_free (str);
   
   return result;
