@@ -214,7 +214,6 @@ egg_tray_manager_handle_dock_request (EggTrayManager       *manager,
    */
   window = g_new (Window, 1);
   *window = xevent->data.l[2];
-      
   g_object_set_data_full (G_OBJECT (socket),
 			  "egg-tray-child-window",
 			  window, g_free);

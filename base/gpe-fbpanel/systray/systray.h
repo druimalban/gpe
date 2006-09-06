@@ -18,6 +18,8 @@ typedef struct {
 } tray;
 
 void tray_add_widget (tray *tr, GtkWidget *widget);
+void tray_save_session (tray *tr);
+void tray_restore_session (tray *tr);
 
 #ifdef __cplusplus
 }

@@ -386,6 +386,10 @@ add_application (const gchar *filename)
              gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM(item), app->icon);
           gtk_menu_append (GTK_MENU_SHELL(panel_folder->menu), item);
        }
+     else
+       {
+         gnome_desktop_file_free (p);
+       }
        
        if (type)
            g_free (type);

@@ -2,6 +2,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <libintl.h>
+#include <ctype.h>
 
 #include <gtk/gtk.h>
 #include <X11/Xmu/WinUtil.h>
@@ -23,6 +24,175 @@
 #include "dbg.h"
 
 #define _(x) gettext(x)
+
+typedef struct 
+{
+  gint pos;
+  gchar **apps;
+  tray *tr;
+}t_sessionstatus;
+
+static void run_application (gchar *exec, t_sessionstatus *session);
+
+
+void
+tray_save_session (tray *tr)
+{
+  GList *children = gtk_container_get_children (GTK_CONTAINER (tr->box));
+  GList *iter;
+  gchar *sessiondata = NULL;
+  gchar *sessionfile = NULL;
+
+  for (iter = children; iter; iter=iter->next)
+    {
+        GObject *socket = iter->data;
+        Window *w = g_object_get_data (socket, "egg-tray-child-window");
+        int cli_argc = 0;
+        char **cli_argv = NULL;
+        
+        if (w)
+          {
+            if (XGetCommand(GDK_DISPLAY(), *w, &cli_argv, &cli_argc))
+              {
+                gchar *commandline = g_strdup (cli_argv[0]);
+                gchar *tp;
+                gint i;
+                 
+                for (i = 1; i < cli_argc; i++)
+                  {
+                    tp = g_strjoin (" ", commandline, cli_argv[i], NULL);
+                    g_free (commandline);
+                    commandline = tp;
+                  }
+                XFreeStringList(cli_argv);
+                  
+                tp = g_strjoin (sessiondata ? "\n" : "", 
+                                sessiondata ? sessiondata : "",
+                                commandline, NULL);
+                g_free (sessiondata);
+                sessiondata = tp;
+                g_free (commandline);
+              }
+            else
+              {
+                g_printerr ("failed to get command %i\n", cli_argc);
+              }
+          }
+        else /* separator widget */
+          {
+            gchar *tp;
+            tp = g_strjoin ("", sessiondata, "\n", NULL);
+            g_free (sessiondata);
+            sessiondata = tp;
+          }
+    }
+    
+  sessionfile = g_strconcat (g_get_home_dir(), "/.matchbox/mbdock.session", NULL);
+  if (!g_file_set_contents (sessionfile, sessiondata, -1, NULL))
+      g_printerr ("Unable to write to %s", sessionfile);
+  
+  g_free (sessionfile);
+  g_free (sessiondata);
+}
+
+static gboolean
+is_command (const gchar *line)
+{
+   if (isblank(line[0])) 
+       return FALSE;
+   if (line[0] == '\n' || line[0] == 0) 
+       return FALSE;
+   if (line[0] == '#') 
+       return FALSE;
+   return TRUE;
+}
+
+static void
+dock_complete (EggTrayManager *manager, GtkWidget *icon, gpointer data)
+{
+  t_sessionstatus *session = (t_sessionstatus*)data;
+
+  if (!session->apps)
+      goto save;
+  
+  session->pos++;
+  
+  if (session->apps[session->pos])
+    {
+      if (!is_command(session->apps[session->pos]) && session->tr->pack_start)
+        {
+           GtkWidget *spacer;
+           spacer = gtk_event_box_new();
+           gtk_widget_show (spacer);
+           tray_add_widget (session->tr, spacer);
+           session->tr->pack_start = FALSE;
+           session->pos++;
+        }
+        
+        if (!session->apps[session->pos] 
+            || !is_command(session->apps[session->pos]))
+          {
+            g_strfreev (session->apps);
+            session->apps = NULL;
+            goto save;
+          }
+        run_application (session->apps[session->pos], session);
+    }
+  else
+    {
+      g_strfreev (session->apps);
+      session->apps = NULL;
+      goto save;
+    }
+  return;
+    
+save:    
+    tray_save_session(session->tr);
+}
+
+static void
+run_application (gchar *exec, t_sessionstatus *session)
+{
+  Display *dpy = GDK_DISPLAY();
+    
+  if (! gpe_launch_startup_is_pending (dpy, exec))
+    {
+      gpe_launch_program_with_callback (dpy, exec, exec, FALSE,
+                                        NULL, (gpointer)session);
+    }
+}
+
+void
+tray_restore_session (tray *tr)
+{
+  gchar *sessionfile, *sfcontent, **sflines;
+  gint i = 0;
+  t_sessionstatus *session;
+        
+  sessionfile = g_strconcat (g_get_home_dir(), "/.matchbox/mbdock.session", NULL);
+  
+  if (g_file_get_contents (sessionfile, &sfcontent, NULL, NULL))
+    {
+      sflines = g_strsplit (sfcontent, "\n", 100);
+      g_free (sfcontent);
+      g_free (sessionfile);
+      
+      while (sflines[i] && !is_command(sflines[i]))
+        i++;
+      if ((sflines[i]) && is_command (sflines[i]))
+        {
+          session = g_malloc0 (sizeof(t_sessionstatus));
+          session->apps = sflines;
+          session->pos = i;
+          session->tr = tr;
+          g_signal_connect (tr->tray_manager, "tray_icon_added",
+                            G_CALLBACK (dock_complete), session);
+          run_application (sflines[i], session);
+        }
+      else
+        g_strfreev (sflines);
+    }
+}
 
 void 
 tray_add_widget (tray *tr, GtkWidget *widget)
@@ -46,7 +216,9 @@ tray_added (EggTrayManager *manager, GtkWidget *icon, void *data)
 static void
 tray_removed (EggTrayManager *manager, GtkWidget *icon, void *data)
 {
-
+  tray *tr = (tray*)data;
+    
+  tray_save_session (tr); 
 }
 
 static void
@@ -69,23 +241,11 @@ message_cancelled (EggTrayManager *manager, GtkWidget *icon, glong id,
 }
 
 static void
-save_tray_session (GtkWidget *dock)
-{
-  GList *children = gtk_container_get_children (GTK_CONTAINER (dock));
-  GList *iter;
-	
-  for (iter = children; iter; iter=iter->next)
-    {
-    }
-}
-
-static void
 tray_destructor(plugin *p)
 {
     tray *tr = (tray *)p->priv;
     
     ENTER;
-    save_tray_session (tr->box);
     /* Make sure we drop the manager selection */
     if (tr->tray_manager)
         g_object_unref (G_OBJECT (tr->tray_manager));
@@ -151,7 +311,7 @@ tray_constructor(plugin *p)
     g_signal_connect (tr->tray_manager, "tray_icon_added",
           G_CALLBACK (tray_added), tr);
     g_signal_connect (tr->tray_manager, "tray_icon_removed",
-          G_CALLBACK (tray_removed), NULL);
+          G_CALLBACK (tray_removed), tr);
     g_signal_connect (tr->tray_manager, "message_sent",
           G_CALLBACK (message_sent), NULL);
     g_signal_connect (tr->tray_manager, "message_cancelled",

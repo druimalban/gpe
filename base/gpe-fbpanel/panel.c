@@ -68,88 +68,12 @@ FILE *pconf; // plugin part of profile file
 
 panel *p;
 
-typedef struct 
-{
-  gint pos;
-  gchar **apps;
-  tray *tr;
-}t_sessionstatus;
-
-
-
-static void run_application (gchar *exec, t_sessionstatus *session);
-
-static gboolean
-is_command (const gchar *line)
-{
-   if (isblank(line[0])) 
-       return FALSE;
-   if (line[0] == '\n' || line[0] == 0) 
-       return FALSE;
-   if (line[0] == '#') 
-       return FALSE;
-   return TRUE;
-}
 
 static void
-dock_complete (EggTrayManager *manager, GtkWidget *icon, gpointer data)
+panel_save_session (void)
 {
-  t_sessionstatus *session = (t_sessionstatus*)data;
-
-  if (!session->apps)
-      return;
-  
-  session->pos++;
-  
-  if (session->apps[session->pos])
-    {
-      if (!is_command(session->apps[session->pos]) && session->tr->pack_start)
-        {
-           GtkWidget *spacer;
-           spacer = gtk_event_box_new();
-           gtk_widget_show (spacer);
-           tray_add_widget (session->tr, spacer);
-           session->tr->pack_start = FALSE;
-           session->pos++;
-        }
-        
-        if (!session->apps[session->pos] 
-            || !is_command(session->apps[session->pos]))
-          {
-            g_strfreev (session->apps);
-            session->apps = NULL;
-            return;
-          }
-        run_application (session->apps[session->pos], session);
-    }
-  else
-    {
-      g_strfreev (session->apps);
-      session->apps = NULL;
-    }
-}
-
-static void
-run_application (gchar *exec, t_sessionstatus *session)
-{
-  Display *dpy = GDK_DISPLAY();
-    
-  if (! gpe_launch_startup_is_pending (dpy, exec))
-    {
-      gpe_launch_program_with_callback (dpy, exec, exec, FALSE,
-                                        NULL, (gpointer)session);
-    }
-}
-
-static void
-panel_restore_session (void)
-{
-  gchar *sessionfile, *sfcontent, **sflines;
-  gint i = 0;
   tray *tr = NULL;
   GList *iter;
-  t_sessionstatus *session;
-    
   for (iter = p->plugins; iter; iter=iter->next)
     {
       plugin *p = iter->data;
@@ -159,30 +83,26 @@ panel_restore_session (void)
           break;
         }
     }
-    
-  sessionfile = g_strconcat (g_get_home_dir(), "/.matchbox/mbdock.session", NULL);
-  
-  if (g_file_get_contents (sessionfile, &sfcontent, NULL, NULL))
+  if (tr)
+    tray_save_session (tr);
+}
+
+static void
+panel_restore_session (void)
+{
+  tray *tr = NULL;
+  GList *iter;
+  for (iter = p->plugins; iter; iter=iter->next)
     {
-      sflines = g_strsplit (sfcontent, "\n", 100);
-      g_free (sfcontent);
-      g_free (sessionfile);
-      
-      while (sflines[i] && !is_command(sflines[i]))
-        i++;
-      if ((sflines[i]) && is_command (sflines[i]))
+      plugin *p = iter->data;
+      if (!strcmp (p->class->type, "tray"))
         {
-          session = g_malloc0 (sizeof(t_sessionstatus));
-          session->apps = sflines;
-          session->pos = i;
-          session->tr = tr;
-          g_signal_connect (tr->tray_manager, "tray_icon_added",
-                            G_CALLBACK (dock_complete), session);
-          run_application (sflines[i], session);
+          tr = p->priv;
+          break;
         }
-      else
-        g_strfreev (sflines);
     }
+  if (tr)
+    tray_restore_session (tr);
 }
 
 /****************************************************
@@ -825,7 +745,6 @@ sig_usr(int signum)
 static void
 sig_term(int signum)
 {
-    panel_stop(p);
     gtk_main_quit();
     exit(0);
 }
