@@ -96,7 +96,7 @@ Global {
 
     edge = bottom
     align = left
-    margin = 0
+    margin = 2
     widthtype = percent
     width = 100
     heighttype = pixel

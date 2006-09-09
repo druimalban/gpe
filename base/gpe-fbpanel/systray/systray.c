@@ -5,11 +5,13 @@
 #include <ctype.h>
 
 #include <gtk/gtk.h>
+#include <gdk/gdkx.h>
 #include <X11/Xmu/WinUtil.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
 #include <gpe/spacing.h>
 #include <gpe/popup.h>
 #include <gpe/launch.h>
+#include <gpe/gpewindowlist.h>
 
 #include "panel.h"
 #include "misc.h"
@@ -93,6 +95,7 @@ tray_save_session (tray *tr)
   
   g_free (sessionfile);
   g_free (sessiondata);
+  g_list_free (children);
 }
 
 static gboolean
@@ -269,6 +272,74 @@ tray_button_press (GtkWidget *box, GdkEventButton *b, gpointer user_data)
   return FALSE;
 }
 
+static void
+kill_window_activate (GtkMenuItem *menuitem, gpointer user_data)
+{
+  Window *w = user_data;
+    
+  if (w && *w)
+      XKillClient (GDK_DISPLAY(), *w);
+}
+
+static void
+remove_menu_activate (GtkMenuItem *menuitem, gpointer user_data)
+{
+  tray *tr = user_data;
+  GdkPixbuf *icon, *sicon;
+  gchar *name;
+  GtkWidget *appimage;
+  Display *dpy = GDK_DISPLAY();
+  GList *children;
+  GList *iter;
+  gint menuiconsize;
+
+  if  (tr->plug->panel->orientation == ORIENT_HORIZ) 
+        menuiconsize = tr->plug->panel->ah
+            - 2 * GTK_WIDGET(tr->plug->panel->box)->style->ythickness;
+    else
+        menuiconsize = tr->plug->panel->aw
+            - 2 * GTK_WIDGET(tr->plug->panel->box)->style->xthickness;
+  
+  /* get current menu items and destroy them if necessary */
+  children = gtk_container_get_children (GTK_CONTAINER (tr->remove_menu));
+  for (iter = children; iter; iter=iter->next)
+    gtk_container_remove (GTK_CONTAINER (tr->remove_menu), GTK_WIDGET (iter->data));
+  
+  /* get all docked application sockets */
+  children = gtk_container_get_children (GTK_CONTAINER (tr->box));
+    
+  for (iter = children; iter; iter=iter->next)
+    {
+      GObject *socket = iter->data;
+      Window *w = g_object_get_data (socket, "egg-tray-child-window");
+      GtkWidget *item;
+        
+      if (w == NULL)
+          continue;
+      name = gpe_get_window_name (dpy, *w);
+      if (name == NULL)
+          continue;
+      icon = gpe_get_window_icon (dpy, *w);
+      item = gtk_image_menu_item_new_with_label (name);
+      if (icon)
+        {
+          sicon = gdk_pixbuf_scale_simple (icon, menuiconsize, menuiconsize, 
+                                           GDK_INTERP_BILINEAR);
+          appimage = gtk_image_new_from_pixbuf (sicon);
+          gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), appimage);
+          g_object_unref (icon);
+          g_object_unref (sicon);
+        }
+      gtk_menu_shell_append (GTK_MENU_SHELL (tr->remove_menu), item);
+      g_signal_connect (G_OBJECT (item), "activate", 
+                        G_CALLBACK (kill_window_activate), w);
+      g_free (name);
+    }
+  gtk_widget_show_all (tr->remove_menu);
+  if (children)
+      g_list_free (children);
+}
+
 static int
 tray_constructor(plugin *p)
 {
@@ -323,13 +394,19 @@ tray_constructor(plugin *p)
     tr->context_menu = gtk_menu_new ();
     item = gtk_image_menu_item_new_from_stock (GTK_STOCK_ADD, NULL);
     gtk_menu_attach (GTK_MENU (tr->context_menu), item, 0, 1, 0, 1);
-    
+     
     tray_apps_menu = g_object_get_data (G_OBJECT (p->pwid->parent), 
                                         "tray-apps-menu");
     if (tray_apps_menu)
       gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), tray_apps_menu);
+    
+    tr->remove_menu = gtk_menu_new ();
+    
     item = gtk_image_menu_item_new_from_stock (GTK_STOCK_REMOVE, NULL);
     gtk_menu_attach (GTK_MENU (tr->context_menu), item, 0, 1, 1, 2);
+    gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), tr->remove_menu);
+    g_signal_connect (G_OBJECT (item), "activate",
+                      G_CALLBACK (remove_menu_activate), tr);
     item = gtk_separator_menu_item_new ();
     gtk_menu_attach (GTK_MENU (tr->context_menu), item, 0, 1, 2, 3);
     item = gtk_image_menu_item_new_with_label (_("Hide"));
@@ -340,7 +417,7 @@ tray_constructor(plugin *p)
           G_CALLBACK (tray_button_press), tr);
     
     gtk_widget_show_all (tr->context_menu);
-
+    
     RET(1);
 
 }
