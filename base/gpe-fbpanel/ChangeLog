@@ -1,0 +1,19 @@
+2006-09-13  Florian Boor <fb@kernelconcepts.de>
+
+	* Set minimum size of dock area if no application is docked to enable menu.
+	* Merge in most of the upstream fbpanel 4.5 updates.
+	* Add .cvsignore.
+	* Add forgotten ChangeLog
+
+2006-08-15  Florian Boor <fb@kernelconcepts.de>
+
+	* Initial checkin of an autotooled and modified version of fbpanel.
+	  - Some cleanups and removal of not necessary files.
+	  - Removed no longer needed icons.
+	  - Improved packing and neutral look of dock area.
+	  - Don't build test and image plugins.
+	  - Create i18n framework
+	  - Add GPE specific packing bits.
+	  - Include original CREDITS and CHANGELOG.
+	  - Check TODO for a list of open tasks before this piece of code 
+            starts to become usable.

@@ -195,8 +195,8 @@ fb_bg_get_xroot_pix_for_win(FbBg *bg, GtkWidget *widget)
     Window dummy;
     Pixmap bgpix;
     GdkPixmap *gbgpix;
-    int  width, height ;
-    int  border, depth, x, y ;
+    guint  width, height, border, depth;
+    int  x, y;
 
     ENTER;
     win =  GDK_WINDOW_XWINDOW(widget->window); 

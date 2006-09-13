@@ -541,11 +541,11 @@ egg_tray_manager_get_child_title (EggTrayManager *manager,
   Window *child_window;
   Atom utf8_string, atom, type;
   int result;
-  char *retval;
+  gchar *val, *retval;
   int format;
   gulong nitems;
   gulong bytes_after;
-  guchar *val;
+  guchar *tmp;
 
   g_return_val_if_fail (EGG_IS_TRAY_MANAGER (manager), NULL);
   g_return_val_if_fail (GTK_IS_SOCKET (child), NULL);
@@ -564,8 +564,8 @@ egg_tray_manager_get_child_title (EggTrayManager *manager,
 			       0, G_MAXLONG,
 			       False, utf8_string,
 			       &type, &format, &nitems,
-			       &bytes_after, (guchar **)&val);
-  
+			       &bytes_after, &tmp);
+  val = (gchar *) tmp;
   if (gdk_error_trap_pop () || result != Success)
     return NULL;
 

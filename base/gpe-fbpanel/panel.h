@@ -54,7 +54,7 @@ typedef struct {
     
     int desknum;
     int curdesk;
-    unsigned int *workarea;
+    guint32 *workarea;
     int wa_len;
 
     int plug_num;
@@ -112,6 +112,7 @@ extern Atom a_NET_CURRENT_DESKTOP;
 extern Atom a_NET_DESKTOP_NAMES;
 extern Atom a_NET_ACTIVE_WINDOW;
 extern Atom a_NET_CLOSE_WINDOW;
+extern Atom a_NET_SUPPORTED;
 extern Atom a_NET_WM_STATE;
 extern Atom a_NET_WM_STATE_SKIP_TASKBAR;
 extern Atom a_NET_WM_STATE_SKIP_PAGER;
@@ -135,6 +136,7 @@ extern Atom a_NET_WM_WINDOW_TYPE_NORMAL;
           
 extern Atom a_NET_WM_DESKTOP;
 extern Atom a_NET_WM_NAME;
+extern Atom a_NET_WM_VISIBLE_NAME;
 extern Atom a_NET_WM_STRUT;
 extern Atom a_NET_WM_STRUT_PARTIAL;
 extern Atom a_NET_WM_ICON;

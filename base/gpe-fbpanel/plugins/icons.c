@@ -115,8 +115,10 @@ get_dicon_maybe(icons *ics, task *tk)
     
     hints = (XWMHints *) get_xaproperty (tk->win, XA_WM_HINTS, XA_WM_HINTS, 0);
     if (hints) {
-        if ((hints->flags & IconPixmapHint) || (hints->flags & IconMaskHint))
+        if ((hints->flags & IconPixmapHint) || (hints->flags & IconMaskHint)) {
+            XFree (hints);
             RET(NULL);
+        }
         XFree (hints);
     }
     RET(ics->dicon);
@@ -158,18 +160,11 @@ pixbuf2argb (GdkPixbuf *pixbuf, int *size)
     *size = 0;
     width = gdk_pixbuf_get_width (pixbuf);
     height = gdk_pixbuf_get_height (pixbuf);
-      
-    *size += 2 + width * height;
-
-    data = g_malloc (*size * sizeof (gulong));
-
-    p = data;
-      
-    width = gdk_pixbuf_get_width (pixbuf);
-    height = gdk_pixbuf_get_height (pixbuf);
     stride = gdk_pixbuf_get_rowstride (pixbuf);
     n_channels = gdk_pixbuf_get_n_channels (pixbuf);
     
+    *size += 2 + width * height;
+    p = data = g_malloc (*size * sizeof (gulong));
     *p++ = width;
     *p++ = height;
     

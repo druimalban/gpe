@@ -28,11 +28,11 @@ static pair wincmd_pair [] = {
 
 
 static void
-toggle_shaded(wincmd *wc, unsigned long action)
+toggle_shaded(wincmd *wc, guint32 action)
 {
     Window *win = NULL;
     int num, i;
-    unsigned long tmp2, dno;
+    guint32 tmp2, dno;
     net_wm_window_type nwwt;
     
     ENTER;
@@ -75,11 +75,11 @@ toggle_shaded(wincmd *wc, unsigned long action)
 
 
 static void
-toggle_iconify(wincmd *wc, unsigned long action)
+toggle_iconify(wincmd *wc, guint32 action)
 {
     Window *win = NULL;
     int num, i;
-    unsigned long tmp2, dno;
+    guint32 tmp2, dno;
     net_wm_window_type nwwt;
     
     ENTER;

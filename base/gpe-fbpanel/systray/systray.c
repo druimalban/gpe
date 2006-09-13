@@ -214,6 +214,12 @@ tray_added (EggTrayManager *manager, GtkWidget *icon, void *data)
       gtk_box_pack_start (GTK_BOX (tr->box), icon, FALSE, TRUE, 0);
     
     gtk_widget_show (icon);
+	
+	/* we have a client - drop minimum size */
+    if (!tr->icon_num) {
+       gtk_widget_set_size_request (tr->box, -1, -1);
+    }
+    tr->icon_num++;
 }
 
 static void
@@ -221,7 +227,15 @@ tray_removed (EggTrayManager *manager, GtkWidget *icon, void *data)
 {
   tray *tr = (tray*)data;
     
-  tray_save_session (tr); 
+  tray_save_session (tr);
+
+  tr->icon_num--;
+
+  /* last dock app exited - make sure we have a minimum size */
+  if (!tr->icon_num) {
+       gtk_widget_set_size_request(tr->box, 16, -1);
+  }
+
 }
 
 static void
@@ -363,6 +377,7 @@ tray_constructor(plugin *p)
 
     box = p->panel->my_box_new(FALSE, 0);
     tr->box = p->panel->my_box_new(FALSE, gpe_get_boxspacing());
+	gtk_widget_set_size_request (tr->box, 16, -1);
     gtk_box_pack_start(GTK_BOX (box), tr->box, TRUE, TRUE, 0);
     gtk_container_add(GTK_CONTAINER(p->pwid), box);
     

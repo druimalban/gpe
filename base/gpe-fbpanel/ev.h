@@ -56,6 +56,7 @@ typedef struct _FbEv      FbEv;
 enum {
     EV_CURRENT_DESKTOP,
     EV_NUMBER_OF_DESKTOPS,
+    EV_DESKTOP_NAMES,
     EV_ACTIVE_WINDOW,
     EV_CLIENT_LIST_STACKING,
     EV_CLIENT_LIST,

@@ -45,6 +45,7 @@ struct _FbEvClass {
     void (*current_desktop)(FbEv *ev, gpointer p);
     void (*active_window)(FbEv *ev, gpointer p);
     void (*number_of_desktops)(FbEv *ev, gpointer p);
+    void (*desktop_names)(FbEv *ev, gpointer p);
     void (*client_list)(FbEv *ev, gpointer p);
     void (*client_list_stacking)(FbEv *ev, gpointer p);
 };
@@ -54,6 +55,7 @@ struct _FbEv {
 
     int current_desktop;
     int number_of_desktops;
+    char **desktop_names;
     Window active_window;
     Window *client_list;
     Window *client_list_stacking;
@@ -72,6 +74,7 @@ static void fb_ev_finalize (GObject *object);
 static void ev_current_desktop(FbEv *ev, gpointer p);
 static void ev_active_window(FbEv *ev, gpointer p);
 static void ev_number_of_desktops(FbEv *ev, gpointer p);
+static void ev_desktop_names(FbEv *ev, gpointer p);
 static void ev_client_list(FbEv *ev, gpointer p);
 static void ev_client_list_stacking(FbEv *ev, gpointer p);
 
@@ -126,6 +129,14 @@ fb_ev_class_init (FbEvClass *klass)
               NULL, NULL,
               g_cclosure_marshal_VOID__VOID,
               G_TYPE_NONE, 0);
+    signals [EV_DESKTOP_NAMES] = 
+        g_signal_new ("desktop_names",
+              G_OBJECT_CLASS_TYPE (object_class),
+              G_SIGNAL_RUN_FIRST,
+              G_STRUCT_OFFSET (FbEvClass, desktop_names),
+              NULL, NULL,
+              g_cclosure_marshal_VOID__VOID,
+              G_TYPE_NONE, 0);
     signals [EV_ACTIVE_WINDOW] = 
         g_signal_new ("active_window",
               G_OBJECT_CLASS_TYPE (object_class),
@@ -155,6 +166,7 @@ fb_ev_class_init (FbEvClass *klass)
     klass->current_desktop = ev_current_desktop;
     klass->active_window = ev_active_window;
     klass->number_of_desktops = ev_number_of_desktops;
+    klass->desktop_names = ev_desktop_names;
     klass->client_list = ev_client_list;
     klass->client_list_stacking = ev_client_list_stacking;
 }
@@ -219,6 +231,16 @@ ev_number_of_desktops(FbEv *ev, gpointer p)
 }
 
 static void
+ev_desktop_names(FbEv *ev, gpointer p)
+{
+    ENTER;
+    if (ev->desktop_names) {
+        g_strfreev (ev->desktop_names);
+        ev->desktop_names = NULL;
+    }
+    RET();
+}
+static void
 ev_client_list(FbEv *ev, gpointer p)
 {
     ENTER;
@@ -245,7 +267,7 @@ fb_ev_current_desktop(FbEv *ev)
 {
     ENTER;
     if (ev->current_desktop == -1) {
-        unsigned long *data;
+        guint32 *data;
 
         data = get_xaproperty (GDK_ROOT_WINDOW(), a_NET_CURRENT_DESKTOP, XA_CARDINAL, 0);
         if (data) {
@@ -257,10 +279,22 @@ fb_ev_current_desktop(FbEv *ev)
     RET(ev->current_desktop);
 }
         
-int fb_ev_number_of_desktops(FbEv *ev)
+int
+fb_ev_number_of_desktops(FbEv *ev)
 {
     ENTER;
-    RET(1);
+     if (ev->number_of_desktops == -1) {
+        guint32 *data;
+
+        data = get_xaproperty (GDK_ROOT_WINDOW(), a_NET_NUMBER_OF_DESKTOPS, XA_CARDINAL, 0);
+        if (data) {
+            ev->number_of_desktops = *data;
+            XFree (data);
+        } else
+            ev->number_of_desktops = 0;              
+    }
+    RET(ev->number_of_desktops);
+
 }
 
 Window fb_ev_active_window(FbEv *ev);

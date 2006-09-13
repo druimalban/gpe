@@ -16,6 +16,7 @@ typedef struct {
     GtkWidget *remove_menu;
     gboolean pack_start;
     EggTrayManager *tray_manager;
+	gint icon_num;
 } tray;
 
 void tray_add_widget (tray *tr, GtkWidget *widget);

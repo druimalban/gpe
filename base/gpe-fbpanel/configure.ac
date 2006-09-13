@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT(gpe-fbpanel,4.4,gpe@handhelds.org)
+AC_INIT(gpe-fbpanel,4.5,gpe@handhelds.org)
 
 AC_CONFIG_SRCDIR([panel.c])
 AM_CONFIG_HEADER(config.h)

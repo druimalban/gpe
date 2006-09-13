@@ -104,8 +104,8 @@ drag_data_received_cb (GtkWidget        *widget,
         RET();
     if (info == TARGET_URILIST) {
         DBG("uri drag received: info=%d len=%d data=%s\n", info, sd->length, sd->data);
-        s = sd->data;
-        end = sd->data + sd->length;
+        s = (gchar *)sd->data;
+        end = s + sd->length;
         str = g_strdup(b->action);
         while (s < end) {
             while (s < end && g_ascii_isspace(*s))

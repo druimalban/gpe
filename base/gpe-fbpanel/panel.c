@@ -112,7 +112,7 @@ panel_restore_session (void)
 static void
 panel_set_wm_strut(panel *p)
 {
-    unsigned long data[12] = { 0 };
+    gulong data[12] = { 0 };
     int i = 4;
 
     ENTER;
@@ -205,10 +205,13 @@ panel_event_filter(GdkXEvent *xevent, GdkEvent *event, panel *p)
             DBG("A_NET_NUMBER_OF_DESKTOPS\n");
             p->desknum = get_net_number_of_desktops();
             fb_ev_trigger(fbev, EV_NUMBER_OF_DESKTOPS);
+	} else if (at == a_NET_DESKTOP_NAMES) {
+            DBG("A_NET_DESKTOP_NAMES\n");
+            fb_ev_trigger(fbev, EV_DESKTOP_NAMES);
 	} else if (at == a_NET_ACTIVE_WINDOW) {
             DBG("A_NET_ACTIVE_WINDOW\n");
             fb_ev_trigger(fbev, EV_ACTIVE_WINDOW);
-        } else if (at == a_NET_CLIENT_LIST_STACKING) {
+        }else if (at == a_NET_CLIENT_LIST_STACKING) {
             DBG("A_NET_CLIENT_LIST_STACKING\n");
             fb_ev_trigger(fbev, EV_CLIENT_LIST_STACKING);
         } else if (at == a_XROOTPMAP_ID) {
@@ -316,7 +319,7 @@ panel_start_gui(panel *p)
 {
     Atom state[3];
     XWMHints wmhints;
-    unsigned int val;
+    guint32 val;
  
     
     ENTER;
@@ -597,7 +600,7 @@ panel_start(panel *p, FILE *fp)
     p->transparent = 0;
     p->alpha = 127;
     p->tintcolor = 0xFFFFFFFF;
-    p->spacing = 1;
+    p->spacing = 0;
     fbev = fb_ev_new();
     if ((get_line(fp, &s) != LINE_BLOCK_START) || g_ascii_strcasecmp(s.t[0], "Global")) {
         ERR( "fbpanel: config file must start from Global section\n");

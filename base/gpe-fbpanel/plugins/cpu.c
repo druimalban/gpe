@@ -159,7 +159,7 @@ cpu_constructor(plugin *p)
 
  
     c->da = gtk_drawing_area_new();
-    gtk_widget_set_size_request(c->da, 40, 30);
+    gtk_widget_set_size_request(c->da, 40, 20);
 
     gtk_widget_show(c->da);
 

@@ -44,7 +44,8 @@ extern panel *p;
 /* managed window: all related info that wm holds about its managed windows */
 typedef struct task {
     Window win;
-    int x, y, w, h;
+    int x, y;
+    guint w, h;
     gint refcount;
     guint stacking;
     guint desktop;
@@ -135,7 +136,8 @@ static void
 task_get_sizepos(task *t)
 {
     Window root, junkwin;
-    int dummy, rx, ry;
+    int rx, ry;
+    guint dummy;
     XWindowAttributes win_attributes;
     
     ENTER;
@@ -178,8 +180,9 @@ task_update_pix(task *t, desk *d)
     x = (gfloat)t->x * d->scalew;
     y = (gfloat)t->y * d->scaleh;
     w = (gfloat)t->w * d->scalew;
-    h = (t->nws.shaded) ? 2 : (gfloat)t->h * d->scaleh;
-    if (w < 2 || h < 2)
+    //h = (gfloat)t->h * d->scaleh;
+    h = (t->nws.shaded) ? 3 : (gfloat)t->h * d->scaleh;
+    if (w < 3 || h < 3)
         RET();
     widget = GTK_WIDGET(d->da);
     gdk_draw_rectangle (d->pix, 
