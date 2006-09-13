@@ -1,7 +1,8 @@
 #ifndef _FEEDEDIT_H
 #define _FEEDEDIT_H
 
-GtkWidget *create_feed_edit(void);
+GtkWidget *create_feed_edit(GtkWidget *toolbar);
+void feed_edit_set_active (gboolean active);
 
 typedef enum
 {

@@ -1023,6 +1023,13 @@ return (gtk_item_factory_get_widget (itemfactory, "<main>"));
 }
 
 
+static void 
+on_select_page (GtkNotebook *notebook, GtkNotebookPage *pp, 
+                gint page, gpointer user_data) 
+{
+  feed_edit_set_active ((page == 2) ? TRUE : FALSE);
+}
+
 
 /* --- create mainform --- */
 
@@ -1080,14 +1087,8 @@ char *tmp;
 			   
 	sep = gtk_separator_tool_item_new();
 	gtk_separator_tool_item_set_draw(GTK_SEPARATOR_TOOL_ITEM(sep), FALSE);
-	gtk_tool_item_set_expand(GTK_TOOL_ITEM(sep), TRUE);
 	gtk_toolbar_insert(GTK_TOOLBAR(toolbar), GTK_TOOL_ITEM(sep), -1);
-  
-	bExit = gtk_tool_button_new_from_stock(GTK_STOCK_QUIT);
-	gtk_toolbar_insert(GTK_TOOLBAR(toolbar), GTK_TOOL_ITEM(bExit), -1);
-	g_signal_connect(G_OBJECT(bExit), "clicked", 
-	                 G_CALLBACK(do_safe_exit), NULL);
-			   
+     
 	gtk_box_pack_start(GTK_BOX(vbox),toolbar, FALSE, TRUE, 0);
 
 	/* notebook */
@@ -1177,9 +1178,25 @@ char *tmp;
 	gtk_box_pack_start(GTK_BOX(vbox),cur,TRUE,TRUE,0);	
 
 	cur = gtk_label_new(_("Feeds"));
-	gtk_notebook_append_page(GTK_NOTEBOOK(notebook), create_feed_edit(), cur);
+	gtk_notebook_append_page(GTK_NOTEBOOK(notebook), create_feed_edit(toolbar), cur);
+	
+	g_signal_connect (G_OBJECT (notebook), "switch-page", 
+	                  G_CALLBACK (on_select_page), NULL);
 
 	g_signal_connect(G_OBJECT (fMain), "destroy", gtk_main_quit, NULL);
-  
+ 
+    /* remaining toolbar contents */
+   	sep = gtk_separator_tool_item_new();
+	gtk_separator_tool_item_set_draw(GTK_SEPARATOR_TOOL_ITEM(sep), FALSE);
+	gtk_tool_item_set_expand(GTK_TOOL_ITEM(sep), TRUE);
+	gtk_toolbar_insert(GTK_TOOLBAR(toolbar), GTK_TOOL_ITEM(sep), -1);
+	
+	bExit = gtk_tool_button_new_from_stock(GTK_STOCK_QUIT);
+	gtk_toolbar_insert(GTK_TOOLBAR(toolbar), GTK_TOOL_ITEM(bExit), -1);
+	g_signal_connect(G_OBJECT(bExit), "clicked", 
+	                 G_CALLBACK(do_safe_exit), NULL);
+
+
 	gtk_widget_show_all(fMain);
+    feed_edit_set_active (FALSE);
 }

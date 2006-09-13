@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2004, 2005  Florian Boor <florian.boor@kernelconcepts.de>
+ *  Copyright (C) 2004, 2005, 2006  Florian Boor <florian.boor@kernelconcepts.de>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -39,6 +39,23 @@
 extern GtkWidget *fMain;
 static GtkListStore *feedstore;
 static GtkToolItem *bAdd, *bRemove, *bEdit;
+
+void
+feed_edit_set_active (gboolean active)
+{
+	if (active)
+	  {
+		  gtk_widget_show (GTK_WIDGET (bAdd));
+		  gtk_widget_show (GTK_WIDGET (bRemove));
+		  gtk_widget_show (GTK_WIDGET (bEdit));
+	  }
+	else
+	  {
+		  gtk_widget_hide (GTK_WIDGET (bAdd));
+		  gtk_widget_hide (GTK_WIDGET (bRemove));
+		  gtk_widget_hide (GTK_WIDGET (bEdit));
+	  }
+}
 
 gboolean 
 write_feed(GtkTreeModel *model, GtkTreePath *path,
@@ -294,10 +311,9 @@ list_select_row (GtkTreeView *treeview, gpointer data)
 }
 
 GtkWidget *
-create_feed_edit(void)
+create_feed_edit(GtkWidget *toolbar)
 {
 GtkWidget *vbox = gtk_vbox_new(FALSE, gpe_get_boxspacing());
-GtkWidget *toolbar = gtk_toolbar_new();
 GtkWidget *label = gtk_label_new(NULL);
 GtkCellRenderer *renderer;
 GtkTreeViewColumn *column;
@@ -318,9 +334,6 @@ gchar *ts;
 	gtk_misc_set_alignment(GTK_MISC(label), 0.0, 0.5);
 	gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, TRUE, 0);
 	
-	gtk_toolbar_set_style(GTK_TOOLBAR(toolbar), GTK_TOOLBAR_ICONS);
-	gtk_toolbar_set_orientation(GTK_TOOLBAR(toolbar), GTK_ORIENTATION_HORIZONTAL);
-	
 	bAdd = gtk_tool_button_new_from_stock(GTK_STOCK_ADD);
 	g_signal_connect(G_OBJECT(bAdd), "clicked", G_CALLBACK(on_add_feed), 
 	                 treeview);
@@ -336,8 +349,6 @@ gchar *ts;
 	                 treeview);
 	gtk_toolbar_insert(GTK_TOOLBAR(toolbar), bEdit, -1);
 
-	gtk_box_pack_start(GTK_BOX(vbox), toolbar, FALSE, TRUE, 0);
-	
 	gtk_tree_view_set_rules_hint (GTK_TREE_VIEW(treeview),TRUE);
 	sw = gtk_scrolled_window_new(NULL, NULL);
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(sw), 

@@ -1,3 +1,7 @@
+2006-09-13 Florian Boor <florian.boor@kernelconcepts.de>
+
+	* interface.c, feededit.*: Merge toolbars.
+
 2006-08-25 Alberto García Hierro <skyhusker@handhelds.org>
 
 	* Makefile, interface.c: Add name based filtering with
