@@ -1,0 +1,80 @@
+
+<!--#set var="addtitle" value="Package Manager"-->
+<!--#set var="pagename" value="Frontend for IPKG"-->
+<!--#set var="appname" value="gpe-package"-->
+<!--#set var="author" value="Florian Boor"-->
+<!--#set var="authoremail" value="florian@linuxtogo.org"-->
+<!--#include virtual="/includes/head.shtml"-->
+
+<table cellpadding="12" cellspacing="12" border="12" width="100%" bgcolor="#EEEEEE">
+<tr>
+  <td colspan="3"><h2>Subprojects: <!--#echo var="appname"--></h2>
+  <i><!--#echo var="pagename"--></i></td>
+</tr>
+<tr>
+  <td><b>Function</b></td>
+  <td>
+    <i>gpe-package</i> is a graphical fronted for the IPKG package manager. 
+    It is used to install and remove software and language support packages.
+  </td>
+  <td rowspan="3"><img src="../images/<!--#echo var="appname"-->.png" border="0" alt="Screenshot"></td>
+</tr>
+<tr>
+  <td><b>Coordinator(s)</b></td>
+  <td>
+    The coordinator for this sub-project is 
+    Florian Boor (<a HREF="mailto:florian@linuxtogo.org">florian@linuxtogo.org</a>). 
+    If you want to contribute to this project, please contact him
+    or the GPE mailinglist.
+  </td>
+</tr>
+<tr>
+  <td><b>Status</b></td>
+  <td>
+    <p>
+      <i>gpe-package</i> basically works but could need some improvement 
+      of the user interface and enhanced testing.
+    </p>
+    <p>
+      The source code can be found in <A href="../cvs.shtml">CVS</A>,
+      module <b>base/<!--#echo var="appname"--></b>.  
+	</p>
+	<p>
+	  Distributions known to ship <i><!--#echo var="appname"--></i> are:
+	  <ul>
+	  	  <li><a href="http://familiar.handhelds.org">Familiar</a>
+          <li><a href="http://www.openzaurus.org">OpenZaurus</a>
+		  <li><a href="http://www.angstrom-distribution.org">Angstrom</a>
+     </ul>
+	</p>
+	<p>
+	  <i><!--#echo var="appname"--></i> is distributed under the <a href="http://www.gnu.org/licenses/gpl.html#SEC1">GPL</a>.
+	</p>
+  </td>
+</tr>
+<tr>
+  <td><b>Technical</b></td>
+  <td colspan="2">
+    <p>
+      The application is based on <i>libipkg</i> which is a very simple 
+      library encapsulation for the IPKG package manager. The high latency
+      for all package operations is caused by the fact that the package status 
+      database is parsed for every operation. Improving libipkg behaviour would 
+      fix this issue.<br>
+      Even if installed setuid root gpe-package forks a user interface process
+      which drops its privileges.      
+    </p>
+  </td>
+</tr>
+<tr>
+  <td><b>Project History</b></td>
+  <td colspan="2">
+     <ul>
+	   <li>2003: Project started by Florian Boor</li>
+       <li>2005: Feed editor</li>
+	 </ul>
+  </td>
+</tr>
+</table>
+
+<!--#include virtual="/includes/foot.shtml"-->
