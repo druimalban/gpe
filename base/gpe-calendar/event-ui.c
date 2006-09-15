@@ -995,13 +995,13 @@ build_recurrence_page (struct edit_state *s)
   g_signal_connect (G_OBJECT (combo), "changed",
                     G_CALLBACK (recur_combo_changed), s);
 
-  s->recur_box = GTK_CONTAINER (gtk_vbox_new (FALSE, 3));
+  s->recur_box = GTK_CONTAINER (gtk_vbox_new (FALSE, gpe_get_boxspacing()));
   gtk_box_pack_start (vbox, GTK_WIDGET (s->recur_box), FALSE, FALSE, 0);
   gtk_widget_show (GTK_WIDGET (s->recur_box));
   vbox = GTK_BOX (s->recur_box);
 
   /* Every.  */
-  hbox = GTK_BOX (gtk_hbox_new (FALSE, 3));
+  hbox = GTK_BOX (gtk_hbox_new (FALSE, gpe_get_boxspacing()));
   gtk_box_pack_start (vbox, GTK_WIDGET (hbox), FALSE, FALSE, 0);
   gtk_widget_show (GTK_WIDGET (hbox));
 
@@ -1650,6 +1650,8 @@ build_edit_event_window (Event *ev)
   gtk_box_set_spacing (GTK_BOX (button_box), gpe_get_boxspacing());
 #else
   GtkBox *button_box = hbox = GTK_BOX (gtk_hbox_new (FALSE, 0));
+  if (gdk_screen_height () > 320)
+    gtk_container_set_border_width (GTK_CONTAINER (hbox), gpe_get_border() / 2);
 #endif
   gtk_box_pack_start (GTK_BOX (window_box), GTK_WIDGET (hbox),
 		      FALSE, FALSE, 0);
@@ -1658,24 +1660,25 @@ build_edit_event_window (Event *ev)
   GtkWidget *button;
 #ifdef IS_HILDON
   button = gtk_button_new_with_label (_("Cancel"));
-#else
-  button = gtk_button_new_from_stock (GTK_STOCK_CANCEL);
-#endif
+  gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, TRUE, boxspacing);
   g_signal_connect_swapped (G_OBJECT (button), "clicked",
                             G_CALLBACK (gtk_widget_destroy), s->window);
-  gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, TRUE, boxspacing);
-  gtk_widget_show (button);
-
-#ifdef IS_HILDON
   button = gtk_button_new_with_label (_("Save"));
-#else
-  button = gtk_button_new_from_stock (GTK_STOCK_SAVE);
-#endif
+  gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, TRUE, boxspacing);
   g_signal_connect (G_OBJECT (button), "clicked",
                     G_CALLBACK (click_ok), s);
+#else
+  button = gtk_button_new_from_stock (GTK_STOCK_SAVE);
   gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, TRUE, boxspacing);
-  gtk_widget_show (button);
+  g_signal_connect (G_OBJECT (button), "clicked",
+                    G_CALLBACK (click_ok), s);
+  button = gtk_button_new_from_stock (GTK_STOCK_CANCEL);
+  gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, TRUE, boxspacing);
+  g_signal_connect_swapped (G_OBJECT (button), "clicked",
+                            G_CALLBACK (gtk_widget_destroy), s->window);
+#endif
 
+  gtk_widget_show_all (hbox);
 
   /* Misc.  */
   if (! large)

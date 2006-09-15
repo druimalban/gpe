@@ -229,16 +229,29 @@ event_rect_expose (struct event_rect *er, GtkWidget *widget, GdkDrawable *w,
   char *location = event_get_location (er->event);
   char *description = event_get_description (er->event);
 
-  time_t end = event_get_start (er->event) + event_get_duration (er->event);
-  struct tm tm;
-  localtime_r (&end, &tm);
-  char *until = NULL;
+  time_t start = event_get_start (er->event);
+  time_t end = start + event_get_duration (er->event);
+  struct tm tm_start, tm_end;
+  localtime_r (&start, &tm_start);
+  localtime_r (&end, &tm_end);
+  gchar *until = NULL;
   if (! event_get_untimed (er->event))
     {
+      gchar *ts_start, *ts_end;
+        
       if (end > period_end)
-	until = strftime_strdup_utf8_locale (_("Until %b %d"), &tm);
+        ts_end = strftime_strdup_utf8_locale ("%b %d", &tm_end);
       else
-	until = g_strdup_printf (_("Until %d:%02d"), tm.tm_hour, tm.tm_min);
+        ts_end = g_strdup_printf ("%d:%02d", tm_end.tm_hour, tm_end.tm_min);
+      
+      if (start < period_start)
+        ts_start = strftime_strdup_utf8_locale ("%b %d,", &tm_start);
+      else
+        ts_start = g_strdup_printf ("%d:%02d,", tm_start.tm_hour, tm_start.tm_min);
+
+      until = g_strjoin (" ", _("Start"), ts_start, _("ends"), ts_end, NULL);
+      g_free (ts_start);
+      g_free (ts_end);
     }
 
   char *text (const char *loc_desc_sep)
