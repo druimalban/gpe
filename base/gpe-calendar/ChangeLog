@@ -1,5 +1,6 @@
 2006-09-16  Florian Boor  <florian.boor@kernelconcepts.de>
 
+    * TODO: Mark some tasks as done.
     * day_view.c (event_rect_expose): Display start and end times.
     * event-ui.c (build_edit_event_window): Fix button order and border.
       (build_recurrence_page): Use GPE spacing functions instead of constant.
