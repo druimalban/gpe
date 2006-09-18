@@ -1,3 +1,7 @@
+2006-09-19  Florian Boor  <florian@kernelconcepts.de>
+
+	* contacts-db.c: Add more documentation.
+
 2006-08-04  Florian Boor  <florian@kernelconcepts.de>
 
 	* Release version 0.5

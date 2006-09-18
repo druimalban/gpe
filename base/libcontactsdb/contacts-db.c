@@ -351,6 +351,13 @@ contacts_free_tag_values (GSList * list)
   g_slist_free (list);
 }
 
+/** 
+ * contacts_update_tag_value:
+ * @t: Tag-value struct
+ * @value: New value
+ *
+ * Update a tag-value pair with a new string value.
+ */
 void
 contacts_update_tag_value (struct contacts_tag_value *t, gchar * value)
 {
@@ -358,6 +365,12 @@ contacts_update_tag_value (struct contacts_tag_value *t, gchar * value)
   t->value = value;
 }
 
+/** 
+ * contacts_discard_person:
+ * @p: person struct
+ * 
+ * Frees all memory allocated by a person struct.
+ */
 void
 contacts_discard_person (struct contacts_person *p)
 {
@@ -368,6 +381,14 @@ contacts_discard_person (struct contacts_person *p)
   g_free (p);
 }
 
+/** 
+ * contacts_new_person_id:
+ * @id: Return pointer for the new id.
+ *
+ * Create a new person identifier.
+ * 
+ * Returns: #TRUE on success, #FALSE otherwise.
+ */
 gboolean
 contacts_new_person_id (guint * id)
 {
@@ -419,6 +440,14 @@ contacts_read_one_entry (void *arg, int argc, char **argv, char **names)
   return 0;
 }
 
+/** 
+ * contacts_db_get_entries:
+ *
+ * Retrieve all entries from the contacts database.
+ *
+ * Returns: A GSList of new allocated person structs on success. NULL on failure
+ * or if the database is empty.
+ */ 
 GSList *
 contacts_db_get_entries (void)
 {
@@ -439,6 +468,22 @@ contacts_db_get_entries (void)
   return list;
 }
 
+/** 
+ * contacts_db_get_entries_list:
+ * @name: Name search criterion
+ * @cat: Category pattern
+ *
+ * Retrieve entries from the contacts database matching certain criteria:
+ * If @name is given some basic fields (name, family_name, company) are 
+ * searched if they contain the string given by @name. If @name is NULL, 
+ * this parameter is ignored.
+ * The @cat parameter can be used to specify a category to cut down the 
+ * result on entries of the given category. Like @name this parameter is
+ * ignored if set to #NULL.
+ *
+ * Returns: A GSList of new allocated person structs on success. NULL on failure
+ * or if no person matches the given criteria.
+ */ 
 GSList *
 contacts_db_get_entries_list (const gchar * name, const gchar * cat)
 {
@@ -492,7 +537,17 @@ contacts_db_get_entries_list (const gchar * name, const gchar * cat)
   return list;
 }
 
-
+/** 
+ * contacts_db_get_entries_finddlg:
+ * @str: Pattern
+ * @cat: Category pattern
+ *
+ * Works like contacts_db_get_entries_list but all data fields are searched 
+ * for the pattern in @str.
+ *
+ * Returns: A GSList of new allocated person structs on success. NULL on failure
+ * or if no person matches the given criteria.
+ */ 
 GSList *
 contacts_db_get_entries_finddlg (const gchar * str, const gchar * cat)
 {
