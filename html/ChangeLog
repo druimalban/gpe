@@ -1,3 +1,9 @@
+
+2006-09-19  Florian Boor <florian@kernelconcepts.de>
+	
+	* documentation.phtml: Some cleanup and polishing. Add links to
+          compiled docbook documentation.
+
 2006-08-27  Florian Boor <florian@kernelconcepts.de>
 
 	* Additional projects documentation (gpe-mini-browser, gpe-confd,
