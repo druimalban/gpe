@@ -132,12 +132,14 @@ general_sql_start (void)
     {
       gpe_error_box (err);
       free (err);
+      g_free (buf);
       return -1;
     }
 
   if (general_rows == 0)
     add_default_sql_tags ();
 
+  g_free (buf);
   return 0;
 }
 

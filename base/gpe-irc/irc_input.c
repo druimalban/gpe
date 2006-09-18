@@ -21,7 +21,6 @@ static int predicted_word_cycle;
 static int word_pos = 0;
 static int entry_insert_text_connection_id;
 
-static int dictionary_size;
 static GtkListStore *irc_input_quick_list_store = NULL;
 static GtkListStore *irc_input_smiley_store = NULL;
 static char *quick_list_filename;
@@ -30,7 +29,7 @@ static char *smiley_list_filename;
 /*
  * oh I feel sooo dirty ;)
  *
- * The function is called from and idle timer, a hack to make the irc_input_entry scroll to the right
+ * The function is called from an idle timer, a hack to make the irc_input_entry scroll to the right
  * if a word completes outside of the entry. It's called first to scroll to the right, then called 
  * right after to put the cursor back where it was.
  *
@@ -40,12 +39,9 @@ static char *smiley_list_filename;
 gboolean
 i_feel_dirty (gpointer data)
 {
-
-
   gtk_editable_set_position (GTK_EDITABLE (irc_input_entry), (int) data + 1);
 
   return FALSE;
-
 }
 
 
@@ -53,8 +49,7 @@ void
 irc_input_predict_word ()
 {
 
-  int i, j, k, last_pos, current_pos, old_pos;
-  char current_char;
+  int current_pos, old_pos;
 
   old_pos = current_pos =
     gtk_editable_get_position (GTK_EDITABLE (irc_input_entry));
@@ -295,10 +290,6 @@ gboolean
 irc_input_entry_key_press (GtkWidget * widget, GdkEventKey * event,
                            gpointer data)
 {
-
-  int current_pos;
-
-
   if (event->keyval == GDK_Tab)
     {
 
@@ -326,7 +317,6 @@ irc_input_entry_key_press (GtkWidget * widget, GdkEventKey * event,
 
 
   return FALSE;
-
 }
 
 /*
@@ -345,7 +335,6 @@ input_popup_create_list_from_file (char *filename)
   FILE *file;
   char buffer[100];
   int i;
-  GList *return_list = NULL;
 
   if ((file = fopen (filename, "r")) == NULL)
     {
@@ -433,8 +422,7 @@ input_popup (GtkListStore * store)
   GtkWidget *popup_list;
   GtkTreeViewColumn *column;
   GtkCellRenderer *renderer;
-  GtkTreeSelection *select;
-  int x_pos, y_pos, x_temp, y_temp, dummy;
+  int x_pos, y_pos;
 
   popup_window = gtk_window_new (GTK_WINDOW_POPUP);
   //gtk_window_set_modal( GTK_WINDOW( popup_window ), TRUE );

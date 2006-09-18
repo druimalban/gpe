@@ -473,7 +473,23 @@ new_connection (GtkWidget * parent, GtkWidget * parent_window)
 
   gtk_widget_destroy (parent_window);
 
-  irc_server_connect (server);
+  if (!irc_server_connect (server))
+    {
+     server->connected = FALSE;
+     g_hash_table_destroy (server->channel);
+     servers = g_list_remove (servers, (gconstpointer) server);
+     if (servers != NULL)
+       button_clicked (((IRCServer *) servers->data)->button);
+     else
+      {
+       selected_server = NULL;
+       selected_channel = NULL;
+       selected_button = NULL;
+      }
+     gtk_widget_destroy (server->button);
+     g_free (server);
+    }
+	
 }
 
 void

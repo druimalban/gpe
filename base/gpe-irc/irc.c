@@ -22,6 +22,8 @@
 #include "irc.h"
 #include "irc_parse.h"
 
+#include "gpe/errorbox.h"
+
 #define SERVICE "ircd"
 
 static GError *gerr = NULL;
@@ -56,7 +58,7 @@ irc_server_send (IRCServer * server, gchar * command, const gchar * param)
 
   if (server)
     {
-      str = g_strdup_printf ("%s %s\n", command, param);
+      str = g_strdup_printf ("%s %s", command, param);
 
 #ifdef DEBUG
       printf ("Sending [%s]\n", str);
@@ -173,9 +175,9 @@ irc_quit (IRCServer * server, const gchar * reason)
 
   str = g_strdup_printf (":%s", reason);
   ret = irc_server_send (server, "QUIT", str);
-  g_free (str);
   //g_io_channel_shutdown (server->io_channel, FALSE, NULL);
   //g_io_channel_unref (server->io_channel);
+  g_free (str);
   return ret;
 }
 
@@ -289,6 +291,7 @@ irc_server_connect (IRCServer * server)
   if (getaddrinfo (server->name, SERVICE, NULL, &address) != 0)
     {
       printf ("Unable to obtain info about %s\n", server->name);
+      gpe_error_box("Unable to connect!");
       return FALSE;
     }
 
@@ -332,7 +335,8 @@ irc_server_connect (IRCServer * server)
         }
     }
 
-  printf ("Uname to connect.\n");
+  printf ("Unable to connect.\n");
+  gpe_error_box("Unable to connect!");
   return FALSE;
 }
 

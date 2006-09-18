@@ -1,3 +1,12 @@
+2006-09-17 Philippe De Swert <philippedeswert@scarlet.be>
+
+	* dictionary.c : remove unused variables
+	* general_config.c : fix warning and use black as default colour, make sure buf gets freed
+	* irc.c : show error box when connecting to server fails
+	* irc_input.c : remove unused variables
+	* main.c : immediately remove server context if connection fails -> otherwise segfaults occur
+	* quick_list : remove obsolete and useless PaxAnima reference
+
 2005-08-06  Phil Blundell  <pb@reciva.com>
 
 	* Makefile (install-program): Use $(STRIP).
@@ -36,8 +45,8 @@
 	  (dictionary_new): allocate dictionary hash. remove redundant
 	  setting of NULL for ->list.
 	* irc.c: (handle_gerr) new function to handle logging and freeing of
-          gerror messages (freeing here is probably bogus).
-          (irc_server_send) return false if g_io_channel_write_chars()
+	  gerror messages (freeing here is probably bogus).
+	  (irc_server_send) return false if g_io_channel_write_chars()
 	  returned an error.
 	  (irc_server_hup) shutdown the channel. Not sure if we should unref
 	  it too, documentation suggests returning false should be enough to 

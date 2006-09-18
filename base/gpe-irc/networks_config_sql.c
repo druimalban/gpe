@@ -269,6 +269,7 @@ networks_sql_start (void)
     {
       gpe_error_box (err);
       free (err);
+      g_free (buf);
       return -1;
     }
   if (sqlite_exec (sqliteh, "select uid,name,port,network from servers",
@@ -276,12 +277,14 @@ networks_sql_start (void)
     {
       gpe_error_box (err);
       free (err);
+      g_free (buf);
       return -1;
     }
 
   if (rows == 0)
     add_default_sql_networks ();
 
+  g_free (buf);
   return 0;
 }
 

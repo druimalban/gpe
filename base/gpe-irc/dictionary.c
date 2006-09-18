@@ -53,7 +53,6 @@ dictionary_destroy (Dictionary * dict)
 {
 
   GList *node;
-  GList *old;
 
   if (dict == NULL)
     return;
@@ -234,8 +233,7 @@ dictionary_load (Dictionary * dict, char *filename)
 {
 
   FILE *file;
-  char current_char, lookup_index;
-  int i, size;
+  int i;
   char buffer[100];
 
   if ((file = fopen (filename, "r")) == NULL)
@@ -289,7 +287,7 @@ dictionary_predict_word (Dictionary * dict, char *word)
 {
 
   GList *node;
-  int i, j, k, last_pos, current_pos, old_pos, size;
+  int j, last_pos, size;
   char current_char;
   char *current_word;
 

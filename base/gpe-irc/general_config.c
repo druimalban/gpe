@@ -49,6 +49,9 @@ get_from_sql (gchar * tag_name)
     return 5;
   if (strcmp (value, "italic") == 0)
     return 6;
+  /* return black by default */
+  else
+    return 0;
 }
 
 static void

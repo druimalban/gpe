@@ -1,8 +1,8 @@
 PREFIX = /usr/local
 PACKAGE = gpe-irc
 VERSION = 0.08
-DEBUG = yes
-CVSBUILD = yes
+DEBUG = no
+CVSBUILD = no
 
 ifeq ($(DEBUG),yes)
 CFLAGS += -O2 -g -DDEBUG
