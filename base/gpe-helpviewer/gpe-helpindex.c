@@ -29,9 +29,6 @@
 #include <fcntl.h>
 
 #include <gtk/gtk.h>
-#include <gdk-pixbuf/gdk-pixbuf.h>
-
-#include <gdk/gdk.h>
 
 #include <glib.h>
 #include <glib/gkeyfile.h>
@@ -52,6 +49,7 @@ main (int argc, char *argv[])
   if (html <= 0)
     {
       printf ("file could not be opened or created!\n");
+      g_key_file_free(config);
       exit (1);
     }
   if (argc == 2)
@@ -81,9 +79,13 @@ main (int argc, char *argv[])
 	}
       fprintf (html, "</HTML>");
       fclose (html);
+      g_key_file_free(config);
+      exit(0);
     }
   else
     {
-      printf ("please specify  correct config file on the command line!\n");
+      printf ("PARSE ERROR : please specify the  correct config file on the command line!\n");
+      g_key_file_free(config);
+      exit(1);
     }
 }
