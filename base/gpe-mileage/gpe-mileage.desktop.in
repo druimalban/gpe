@@ -1,9 +1,0 @@
-[Desktop Entry]
-Name=Mileage Calculator
-Comment=Keep track of your car's fuel consumption
-Exec=gpe-mileage
-Terminal=0                                       
-Type=Application
-Icon=gpe-mileage.png
-Categories=Application;Utility;GPE
-StartupNotify=True
