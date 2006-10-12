@@ -24,11 +24,11 @@
 <h1> GPE: <?php echo $addtitle; ?></h1>
 </td>
 <td halign="right">
-<a href="http://handhelds.org">
-<img src="http://www.handhelds.org/images/handheld_icon_white.jpg" alt="[The handhelds.org Logo] > handhelds.org">
+<a href="http://www.linuxtogo.org">
+<img src="/images/logo-w.png" alt="[The linuxtogo.org Logo] > linuxtogo.org">
 </a>
 </td>
 </tr>
 </table>
-<?php include("/home/gpe/website/html/includes/menu.php"); ?>
+<?php include("http://gpe.linuxtogo.org/includes/menu.php"); ?>
 <hr>

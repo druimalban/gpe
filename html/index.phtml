@@ -7,9 +7,11 @@ $authoremail="gpe-web@marquardt-home.de";
 include ("includes/head.php");
 ?>
 
+<h2>About GPE</h2>
+
 <p>
 The GPE Palmtop Environment provides a user interface environment for 
-palmtop/handheld computers running the GNU/Linux or any other UNIX-like 
+palmtop / handheld computers running the GNU/Linux or any other UNIX-like 
 operating system. 
 </p>
 
@@ -18,7 +20,7 @@ GPE is not a single piece of software, but an entire environment of components
 which make it possible to use your GNU/Linux handheld for standard tasks such 
 as Personal Information Management (PIM), network access and multimedia 
 and various other purposes. Apart from its main focus to provide a GUI 
-environment for palmtop/handheld computers it is useful on all sorts of mobile
+environment for palmtop / handheld computers it is useful on all sorts of mobile
 devices with only limited resources.
 </p>
 
@@ -43,6 +45,8 @@ libraries using the <a href="http://www.gnu.org/licenses/lgpl.html">LGPL</a>.
 Those allow for the most free usability of the GPE system.
 </p>
 
-<?php include ("gpe-news.php"); ?>
-
+<h2>News</h2>
+<p>
+<?php include ("rss2html.php"); ?>
+</p>
 <?php include ("includes/foot.php"); ?>

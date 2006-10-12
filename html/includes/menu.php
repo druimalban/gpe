@@ -20,7 +20,7 @@ function menu_entry($page, $title, $link,$thispage)
  &middot;
 <?php menu_entry("documentation", "Documentation", "/documentation.phtml", $pagename); ?>
  &middot;
-<A href="http://handhelds.org/~gpe/gallery/">Screenshots</A>
+<A href="/gallery/gallery/">Screenshots</A>
  &middot;
 <?php menu_entry("download", "Download", "/download.phtml", $pagename); ?>
  &middot;
