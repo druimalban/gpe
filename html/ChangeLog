@@ -1,5 +1,6 @@
 2006-10-12  Florian Boor <florian@kernelconcepts.de>
-
+	
+	* documentation.phtml: Add link to compiled docbook user manual.
 	* Update to LinuxToGo location, add rss conversion template
 	  and new site logo. Change index to fit new needs.
 
