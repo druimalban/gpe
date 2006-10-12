@@ -24,11 +24,11 @@ function menu_entry($page, $title, $link,$thispage)
  &middot;
 <?php menu_entry("download", "Download", "/download.phtml", $pagename); ?>
  &middot;
-<?php menu_entry("contact", "Mailing list/IRC", "/contact.phtml", $pagename); ?>
+<?php menu_entry("contact", "Contact us", "/contact.phtml", $pagename); ?>
  &middot;
-<A href="http://handhelds.org/bugzilla/">Bugs</A>
+<A href="http://bugs.linuxtogo.org">Bugs</A>
  &middot;
-<?php menu_entry("cvs", "CVS", "/cvs.phtml", $pagename); ?>
+<?php menu_entry("svn", "Subversion", "/svn.phtml", $pagename); ?>
  &middot;
 <?php menu_entry("linkres", "Links/Resources", "/linkres.phtml", $pagename); ?>
 

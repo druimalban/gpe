@@ -1,3 +1,9 @@
+2006-10-13  Florian Boor <florian@kernelconcepts.de>
+
+	* cvs.phtml: Rename to svn.phtml and update to new locations, 
+	  names and modern standards. 
+	* Update menu
+
 2006-10-12  Florian Boor <florian@kernelconcepts.de>
 	
 	* documentation.phtml: Add link to compiled docbook user manual.

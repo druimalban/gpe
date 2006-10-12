@@ -1,47 +1,38 @@
 <?php
-$addtitle="CVS";
-$pagename="cvs";
+$addtitle="Subversion";
+$pagename="svn";
 $author="Colin Marquardt";
 $authoremail="gpe-web@marquardt-home.de";
 
 include ("includes/head.php");
 ?>
 
-<H2>Accessing the GPE CVS repository</H2>
+<H2>Accessing the GPE Subversion repository</H2>
 <p>
 In short, if you are not (yet?) a developer, you do the following to get an initial copy of the GPE sources:
    <pre>
-      $ cd gpe_cvs
-      $ export CVSROOT=:pserver:anoncvs@cvs.handhelds.org:/cvs
-      $ cvs login
-      Logging in to :pserver:anoncvs@cvs.handhelds.org:2401/cvs
-      CVS Password: anoncvs
-      $ cvs checkout gpe
+	svn checkout svn://projects.linuxtogo.org/svn/gpe/trunk gpe_svn
    </pre>
 You only have to do this once. The next time you want to update
 your copy of the sources, do:
    <pre>
-      $ cd gpe_cvs
-      $ cvs update
+      $ cd gpe_svn
+      $ svn update
    </pre>
 
 <P>
-If you are interested in what is going on in GPE CVS check out our
- <A HREF="http://handhelds.org:8080/gpe/">CVSTrac site</a>.
-</P>
+    For more details about accessing the Subversion repository 
+    take a look at the <a href="http://projects.linuxtogo.org/scm/?group_id=21">
+    GForge SCM page.
+</P> 
+
 
 <P>
-For a more detailed description about how to use handhelds.org CVS, please see
-<a href="http://www.handhelds.org/handhelds-faq/development.html#USING-CVS">
-here</a>.
+You can examine the SVN repository directly 
+<A href="http://projects.linuxtogo.org/plugins/scmsvn/viewcvs.php/?root=gpe">here</A>.
 </P>
 
-<P>
-You can examine the CVS repository directly 
-<A HREF="http://cvs.handhelds.org/cgi-bin/viewcvs.cgi/gpe/">here</A>.
-</P>
-
-<H2>Building GPE CVS applications</H2>
+<H2>Building GPE applications from SVN</H2>
 <p>
 There is no easy recipe for building GPE applications for the ARM
 architecture yet. For a start, check the 
@@ -50,7 +41,7 @@ wiki page</A>.
 However, GPE can be built like any other application for your
 desktop.
 
-A makefile in 'gpe_cvs/base' helps you build (most of) GPE:
+A makefile in 'gpe_svn/base' helps you build (most of) GPE:
 
    <pre>
       $ make -f Makefile.gpe DESTDIR=`pwd`/tmp-install install
@@ -66,22 +57,20 @@ below packages (-dev or -devel according to your distribution):
 <li>libsqlite-dev (<a href="http://www.sqlite.org/download.html">sources</a>),
 <li>dbus-1-dev, dbus-glib-1-dev
 (<a href="http://freedesktop.org/Software/dbus/releases/">sources</a>),
-<li>libmimedir (sources: use <a href="http://handhelds.org/~pb/libmimedir-20040225.tar.gz">
-http://handhelds.org/~pb/libmimedir-20040225.tar.gz</a>,
-or pull the sources from
+<li>libmimedir (sources: use the sources from
 <a href="http://developer.gnome.org/tools/cvs.html">GNOME's CVS</a>),
 <li>libbluetooth1-dev, libsdp2-dev (sources: bluez-libs from the
 <a href="http://www.bluez.org/download.html">BlueZ</a> project),
-<li>libgmp3-dev (<a href="http://www.swox.com/gmp/#DOWNLOAD">sources</a>),
-<li>libsasl2-dev (<a href="http://asg.web.cmu.edu/cyrus/download/">sources</a>).
 </ul>
 
-So do the following before you attempt to compile one of the GPE
+So build <i>libgpewidget</i> before you attempt to compile one of the GPE
 applications:
 
    <pre>
-      $ cd gpe_cvs/base
+      $ cd gpe_svn/base
       $ cd libgpewidget
+      $ ./autogen.sh
+      $ ./configure
       $ make
       $ make install
       $ cd ../gpe-icons
