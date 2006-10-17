@@ -6,7 +6,7 @@
 CONTROL = `if test -e familiar/control1; then echo control1; else echo control; fi`
 
 # URL to source tarball
-SOURCE = ftp://gpe.handhelds.org/projects/gpe/source/$(PACKAGE)-$(VERSION).tar.gz
+SOURCE = http://gpe.linuxtogo.org/download/source/$(PACKAGE)-$(VERSION).tar.gz
 
 # can change this to e.g. /var/tmp/deb
 DEB_PATH = ../deb
@@ -46,7 +46,7 @@ dist: check-source clean dist-prep
 	$(MAKE) printinfo
 
 dist-upload: dist
-	scp ../$(PACKAGE)-$(VERSION).tar.gz $(USER)@handhelds.org:/home/ftp/projects/gpe/source/
+	scp ../$(PACKAGE)-$(VERSION).tar.gz $(USER)@linuxtogo.org:/media/data/projects/gpe/source/
 
 dist-prep:
 ipkg-prep:

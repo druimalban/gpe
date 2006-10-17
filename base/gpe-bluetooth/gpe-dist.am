@@ -1,7 +1,7 @@
 CVSTAG := $(shell echo $(PACKAGE)-$(VERSION) | tr [a-z.] [A-Z_])
 
 dist-upload: distcheck
-	scp $(PACKAGE)-$(VERSION).tar.bz2 $(USER)@handhelds.org:/home/ftp/projects/gpe/source/
+	scp $(PACKAGE)-$(VERSION).tar.bz2 $(USER)@linuxtogo.org:/media/data/projects/gpe/source/
 
 tag:
 	@cd $(srcdir) && if cvs update -p -r$(CVSTAG) >/dev/null 2>&1; then echo "** Tag $(CVSTAG) already exists."; echo "** Use \"make retag\" if you really want to move this tag."; exit 1; fi
