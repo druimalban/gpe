@@ -1,5 +1,6 @@
 2006-10-17  Florian Boor <fb@kernelconcepts.de>
 
+	* Release version 1.0
 	* Update release stuff to build bzip2 compressed archives and
 	  use new upload location.
 
