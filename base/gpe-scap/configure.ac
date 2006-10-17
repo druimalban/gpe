@@ -2,7 +2,7 @@ AC_INIT([GPE Screenshot], [1.0], [gpe-list@linuxtogo.org], [gpe-scap])
 
 AC_CONFIG_SRCDIR([src/gpe-scap.c])
 AM_CONFIG_HEADER(config.h)
-AM_INIT_AUTOMAKE
+AM_INIT_AUTOMAKE(dist-bzip2)
 AM_MAINTAINER_MODE
 
 AC_PROG_CC
