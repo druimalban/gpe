@@ -16,8 +16,18 @@
 #include <glib/gtypes.h>
 #include <gtk/gtktextview.h>
 
+struct _Provider
+{
+    gchar * (*cook) (const gchar *, const gchar *);
+    gchar * (*parse) (SoupMessage *);
+};
+
+typedef struct _Provider Provider;
+
 typedef enum {
-    PROVIDER_LYRCAR
+    PROVIDER_LYRCAR,
+    PROVIDER_LYRICWIKI,
+    PROVIDER_INVALID
 } provider_t;
 
 gboolean lyrics_init (void);
