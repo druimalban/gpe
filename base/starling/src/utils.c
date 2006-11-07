@@ -74,7 +74,7 @@ pretty_stream_name (Stream *stream)
 }
 
 gchar *
-escape_spaces (gchar *orig)
+escape_spaces (const gchar *orig, const gchar *replace)
 {
     GString *str;
     gchar *retval;
@@ -84,7 +84,7 @@ escape_spaces (gchar *orig)
 
     for(ii = 0; ii < strlen (orig); ii++) {
         if (orig[ii] == ' ')
-            g_string_append (str, "%20");
+            g_string_append (str, replace);
         else
             g_string_append_c (str, orig[ii]);
     }

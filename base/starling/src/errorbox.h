@@ -10,28 +10,13 @@
  * 2 of the License, or (at your option) any later version.
  */
 
-#ifndef CONFIG_H
-#define CONFIG_H
+#ifndef ERRORBOX_H
+#define ERRORBOX_H
 
 #include <glib/gtypes.h>
 
-#include "starling.h"
+void starling_error_box (const gchar *text);
 
-#ifdef ENABLE_GPE
-#   define CONFIGDIR ".gpe/starling"
-#else
-#   define CONFIGDIR ".starling"
-#endif
-
-#define CONFIG_PL "starling.m3u"
-#define CONFIG_FILE "starlingrc"
-
-void config_init (Starling *st);
-
-void config_load (Starling *st);
-
-void config_save (Starling *st);
-
-void config_store_lastm (const gchar *user, const gchar *passwd, Starling *st);
+void starling_error_box_fmt (const gchar *fmt, ...);
 
 #endif

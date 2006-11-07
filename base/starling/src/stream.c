@@ -23,10 +23,7 @@
 #include <gst/gstbus.h>
 #include <gst/gstutils.h>
 
-#ifndef DISABLE_GPE
-#include <gpe/errorbox.h>
-#endif
-
+#include "errorbox.h"
 #include "stream.h"
 
 
@@ -142,13 +139,8 @@ stream_init (GTypeInstance *instance, gpointer g_class)
     priv->decodebin = gst_element_factory_make ("decodebin", "decodebin");
     
     if (!GST_IS_ELEMENT (priv->decodebin)) {
-    #ifndef DISABLE_GPE
-        gpe_error_box ("Decodebin could not be initialized. Please check your"
+        starling_error_box ("Decodebin could not be initialized. Please check your"
                         " GStreamer installation\n");
-    #else
-        g_printf (stderr, "Decodebin could not be initialized. Please check your"
-                        " GStreamer installation\n");
-    #endif
         /* This is a fatal error. PlayList relies on playbin for playing
          * which relies on decodebin for decoding, so decodebin support
          * is mandatory.

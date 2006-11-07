@@ -12,7 +12,9 @@
 
 #include <gtk/gtkmain.h>
 
-#include <gpe/init.h>
+#ifdef ENABLE_GPE
+#   include <gpe/init.h>
+#endif
 
 #include "callbacks.h"
 #include "config.h"
@@ -26,7 +28,11 @@ int main(int argc, char *argv[])
     bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
     textdomain (PACKAGE);
     
+#ifdef ENABLE_GPE
     gpe_application_init (&argc, &argv);
+#else
+    gtk_init (&argc, &argv);
+#endif
 
     play_list_init (&argc, &argv);
     

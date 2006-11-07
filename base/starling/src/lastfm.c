@@ -16,12 +16,11 @@
 
 #include <gtk/gtklabel.h>
 
-#include <gpe/errorbox.h>
-
 #include <libsoup/soup.h>
 
 #include "config.h"
 #include "md5.h"
+#include "errorbox.h"
 
 #define TABLE_NAME "lastfm"
 
@@ -128,7 +127,7 @@ lastfm_init (Starling *st)
             return FALSE;
     }
 
-    lastfm_show_count (GTK_LABEL (st->web_count), lastfm_count());
+    //lastfm_show_count (GTK_LABEL (st->web_count), lastfm_count());
 
     return TRUE;
 }
@@ -227,9 +226,9 @@ got_submission_response (SoupMessage *msg, gpointer arg)
             return;
         } 
     } else if (g_str_equal (command, "BADAUTH")) {
-        gpe_error_box (_("Your last.fm password is wrong."));
+        starling_error_box (_("Your last.fm password is wrong."));
     } else { /* command is FAILED <reason> */
-        gpe_error_box_fmt (_("The submission failed with the "
+        starling_error_box_fmt (_("The submission failed with the "
                 "following reason: %s."), strstr (command, " "));
     }
 

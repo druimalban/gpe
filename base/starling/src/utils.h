@@ -26,7 +26,7 @@ gboolean gtk_tree_model_get_iter_from_int (GtkTreeModel *model,
 
 gchar * pretty_stream_name (Stream *stream);
 
-gchar *escape_spaces (gchar *orig);
+gchar *escape_spaces (const gchar *orig, const gchar *replace);
 
 gboolean has_db_table (sqlite *db, const gchar *name);
 
