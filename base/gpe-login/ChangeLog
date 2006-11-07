@@ -1,3 +1,8 @@
+2006-11-07  Florian Boor <florian@kernelconcepts.de>
+
+	* X11/gpe-login.pre-session: Apply patch courtesy of Mika Laitio
+          to set permissions for h6300 suspend support.
+
 2006-05-29  Florian Boor <florian@kernelconcepts.de>
 
 	* Version 0.87 released.

@@ -48,6 +48,11 @@ if [ -e /dev/touchscreen/0 ]; then
 chown $USER /dev/touchscreen/0
 fi
 
+# suspend (iPAQ h6300)#
+if [ -e /sys/power/state ]; then
+chown $USER /sys/power/state
+chmod u+rw /sys/power/state
+fi
 
 # screen light control #
 
