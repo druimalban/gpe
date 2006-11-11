@@ -17,6 +17,9 @@ case $MACHINE in
 				;;
 			esac
 		;;				
+	"SHARP Poodle")
+		xmodmap - < /etc/X11/poodle.xmodmap
+		;;
         "Sharp-Collie")
                 xmodmap - < /etc/X11/collie.xmodmap
                 ;;

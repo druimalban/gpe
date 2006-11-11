@@ -1,0 +1,25 @@
+keycode 37 = Control_L
+keycode 64 = Alt_L
+
+
+keycode 50 = Shift_L
+keycode 62 = Shift_R
+keycode 75 = Mode_switch
+
+
+
+clear control
+clear shift
+clear lock
+clear mod4
+clear mod1
+
+add control = Control_L
+add shift = Shift_L Shift_R
+add lock = Caps_Lock
+
+! This is AltGr
+add mod4 = Mode_switch
+
+add mod1 = Alt_L
+

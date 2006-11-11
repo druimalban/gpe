@@ -1,6 +1,10 @@
 2006-11-11  Florian Boor <florian@kernelconcepts.de>
 
 	* Release version 1.11
+	* X11/Xinit.d/30xTs_Calibrate: Apply patch to restart zaurusd and
+          devmand after calibration.
+	* Add Poodle modmap (from OE).
+	* Add support for w100 X server.
 	* X11/Xsession: Apply patch to fix environment setup contributed 
           by Koen Kooi.
 

@@ -2,4 +2,13 @@
 
 if [ ! -f /etc/pointercal ]; then
     /usr/bin/run-calibrate.sh
+    
+    if [ -x /etc/init.d/zaurusd ]; then
+    	/etc/init.d/zaurusd stop
+	/etc/init.d/zaurusd start
+    fi
+    if [ -x /etc/init.d/devmand ]; then
+    	/etc/init.d/devmand stop
+	/etc/init.d/devmand start
+    fi
 fi
