@@ -1,3 +1,9 @@
+2006-11-11  Florian Boor <florian@kernelconcepts.de>
+
+	* Release version 1.11
+	* X11/Xsession: Apply patch to fix environment setup contributed 
+          by Koen Kooi.
+
 2006-11-07  Florian Boor <florian@kernelconcepts.de>
 
 	* X11/Xinit.d/12keymap: Fix typo causing h6300 keymap fault.
