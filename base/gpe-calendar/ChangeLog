@@ -1,3 +1,8 @@
+2006-11-14  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * main.c (set_title): Apply patch by Matt Reimer to show day of week in
+      title.
+
 2006-09-16  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * TODO: Mark some tasks as done.
