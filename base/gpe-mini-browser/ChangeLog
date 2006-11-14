@@ -4,6 +4,7 @@ v0.20 - Jyväskylä release ???? - Philippe De Swert
 * Improve user warnings for web-page loading errors
 * localisation fixes
 * Update INSTALL instructions
+* Added C.po to fix build errors when no locale is set
 
 
 v0.19 - New Year release - 10/01/2006 - Philippe De Swert
