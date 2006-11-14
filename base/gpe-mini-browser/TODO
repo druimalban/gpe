@@ -10,6 +10,7 @@ TODO:
 * bookmarks integration with gpe-contacts
 * strip -s gpe-mini-browser on install
 * Put applicationb specific info in the install file (document --disable-bookmarks and --enable-hildon)
+* Split main header file to better represent the functions available in the files
 
 DONE:
 

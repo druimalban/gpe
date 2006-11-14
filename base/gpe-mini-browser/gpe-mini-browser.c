@@ -136,7 +136,8 @@ main (int argc, char *argv[])
   html = webi_new ();
   webi_set_emit_internal_status (WEBI (html), TRUE);
 
-  set_default_settings (WEBI (html), &s);
+  /* set settings to default */
+  set_settings (WEBI (html), &s, DEFAULT);
 
   /* set rendering mode depending on screen size (when working in gtk-webcore) 
      if(width <=320)

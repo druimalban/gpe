@@ -30,9 +30,18 @@
 #include <gdk-pixbuf/gdk-pixbuf.h>
 #include <webi.h>
 
+
+#include <string.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+
 #include <gdk/gdk.h>
 
 #include <glib.h>
+#include <glib/gkeyfile.h>
 #include <gpe/init.h>
 #include <gpe/errorbox.h>
 #include <gpe/question.h>
@@ -51,7 +60,7 @@
 //#define DEBUG /* uncomment this if you want debug output*/
 
 void
-set_default_settings (Webi * html, WebiSettings * ks)
+set_settings (Webi * html, WebiSettings * ks, int deflt)
 {
   const gchar *http_proxy;
 #ifndef HILDON
@@ -80,7 +89,6 @@ set_default_settings (Webi * html, WebiSettings * ks)
 
   webi_set_settings (WEBI (html), ks);
 }
-
 
 /*==============================================*/
 

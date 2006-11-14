@@ -233,8 +233,11 @@ void stop_reload_func (GtkWidget *reload, GtkWidget *html);
 		    see: misc-calls.c
 *******************************************************/
 
-/* (re)set the settings to sane defaults for small screens */
-void set_default_settings(Webi *html, WebiSettings *ks);
+#define DEFAULT 1
+#define CUSTOM 0
+
+/* set the settings (with DEFAULT to defaults for small screens) */
+void set_settings(Webi *html, WebiSettings *ks, int deflt);
 /* zoom in (basically making text size bigger)*/
 void zoom_in(GtkWidget * zoom_in, gpointer *data);
 /* zoom out (basically decreasing text size)*/
