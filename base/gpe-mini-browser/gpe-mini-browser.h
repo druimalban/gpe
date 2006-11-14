@@ -233,15 +233,6 @@ void stop_reload_func (GtkWidget *reload, GtkWidget *html);
 		    see: misc-calls.c
 *******************************************************/
 
-#define DEFAULT 1
-#define CUSTOM 0
-
-/* set the settings (with DEFAULT to defaults for small screens) */
-void set_settings(Webi *html, WebiSettings *ks, int deflt);
-/* zoom in (basically making text size bigger)*/
-void zoom_in(GtkWidget * zoom_in, gpointer *data);
-/* zoom out (basically decreasing text size)*/
-void zoom_out(GtkWidget * zoom_out, gpointer *data);
 /* delete one or several bookmarks */
 void delete_bookmarks (GtkWidget *button, gpointer *data);
 /* open bookmark and close the bookmark window */
@@ -289,3 +280,25 @@ int get_bookmark_home (char *home);
 int return_bookmark_home (void *home, int argc, char **argv, char **columnNames);
 /* sets the selected bookmark as home */
 int set_bookmark_home (char *selected);
+
+
+/******************************************************
+	            settings handling 
+		    see: settings.c
+*******************************************************/
+
+/* set the settings to some sane  defaults for small screens */
+void set_default_settings(Webi *html, WebiSettings *ks);
+/* load settings from file and apply */
+void set_settings_from_file(Webi *html, WebiSettings *ks);
+/* zoom in (basically making text size bigger)*/
+void zoom_in(GtkWidget * zoom_in, gpointer *data);
+/* zoom out (basically decreasing text size)*/
+void zoom_out(GtkWidget * zoom_out, gpointer *data);
+/* write current settings to file to be able to restore them later */
+int write_settings_to_file(WebiSettings *ks);
+/* save settings on exit */
+void save_settings_on_quit(GtkWidget *app, WebiSettings *ks);
+
+
+

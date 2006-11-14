@@ -174,8 +174,8 @@ home_func (GtkWidget * home, GtkWidget * html)
   char *homepage = NULL;
 
   homepage = malloc (sizeof (char) * 60);
-  strncpy (homepage, "gpe.handhelds.org", 18);
-
+  strncpy (homepage, "gpe.linuxtogo.org", 18);
+                         
   start_db ();
 
   if (!get_bookmark_home (homepage))

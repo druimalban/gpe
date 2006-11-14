@@ -11,6 +11,7 @@ TODO:
 * strip -s gpe-mini-browser on install
 * Put applicationb specific info in the install file (document --disable-bookmarks and --enable-hildon)
 * Split main header file to better represent the functions available in the files
+* Move all created file to ~./gpe/gpe-mini-browser instead of ~./gpe
 
 DONE:
 

@@ -43,7 +43,7 @@
 
 //#define DEBUG /* uncomment for debug info */
 
-int set_no_home(void);
+inline int set_no_home(void);
 
 static sqlite *db = NULL;
 
@@ -216,7 +216,7 @@ set_bookmark_home (char *selected)
 
 }
 
-int
+inline int
 set_no_home(void)
 {
  char *err;

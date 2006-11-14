@@ -41,7 +41,6 @@
 #include <gdk/gdk.h>
 
 #include <glib.h>
-#include <glib/gkeyfile.h>
 #include <gpe/init.h>
 #include <gpe/errorbox.h>
 #include <gpe/question.h>
@@ -59,66 +58,6 @@
 
 //#define DEBUG /* uncomment this if you want debug output*/
 
-void
-set_settings (Webi * html, WebiSettings * ks, int deflt)
-{
-  const gchar *http_proxy;
-#ifndef HILDON
-  ks->default_font_size = 11;
-  ks->default_fixed_font_size = 11;
-#else
-  ks->default_font_size = 14;
-  ks->default_fixed_font_size = 14;
-#endif
-  ks->minimum_font_size = 7;
-  ks->serif_font_family = "serif";
-  ks->sans_serif_font_family = "sans";
-  ks->fixed_font_family = "sans";
-  ks->standard_font_family = "sans";
-  ks->autoload_images = 1;
-  ks->javascript_enabled = 1;
-
-  http_proxy = g_getenv ("http_proxy");
-  if (!http_proxy)
-    http_proxy = g_getenv ("HTTP_PROXY");
-  if (!http_proxy)
-    {
-      http_proxy = "";
-    }
-  ks->http_proxy = g_strdup (http_proxy);
-
-  webi_set_settings (WEBI (html), ks);
-}
-
-/*==============================================*/
-
-void
-zoom_in (GtkWidget * zoom_in, gpointer * data)
-{
-  struct zoom_data *zoom;
-  WebiSettings *set;
-
-  zoom = (struct zoom_data *) data;
-  set = zoom->settings;
-  set->default_font_size++;
-  set->default_fixed_font_size++;
-  webi_set_settings (WEBI (zoom->html), set);
-}
-
-void
-zoom_out (GtkWidget * zoom_out, gpointer * data)
-{
-  struct zoom_data *zoom;
-  WebiSettings *set;
-
-  zoom = (struct zoom_data *) data;
-  set = zoom->settings;
-  set->default_font_size--;
-  set->default_fixed_font_size--;
-  webi_set_settings (WEBI (zoom->html), set);
-}
-
-/*==============================================*/
 #ifndef NOBOOKMARKS
 void
 delete_bookmarks (GtkWidget * button, gpointer * data)

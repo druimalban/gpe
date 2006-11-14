@@ -2,9 +2,9 @@ SUBDIRS = po
 
 bin_PROGRAMS = gpe-mini-browser
 
-gpe_mini_browser_SOURCES = interface-calls.c loading-calls.c gpe-mini-browser.h misc-calls.c
+gpe_mini_browser_SOURCES = interface-calls.c loading-calls.c gpe-mini-browser.h misc-calls.c settings.c
 
-CFLAGS = -Os -Wall -g
+CFLAGS = -Os -Wall -g 
 
 if HILDON
 gpe_mini_browser_SOURCES += hildon-mini-browser.c
@@ -41,6 +41,20 @@ EXTRA_DIST = $(pixmaps_DATA) \
 DISTCLEANFILES = intltool-extract \
                  intltool-merge \
                  intltool-update
+
+MAINTAINERCLEANFILES = configure \
+		       Makefile.in \
+                       depcomp \
+		       config.guess \
+		       config.sub \
+		       ltmain.sh \
+		       intltool-extract.in \
+		       intltool-update.in \
+		       autom4te.cache \
+		       intltool-merge.in \
+		       missing \
+		       aclocal.m4 \
+		       install-sh
 
 clean-local:
 	rm -f gpe-mini-browser.desktop

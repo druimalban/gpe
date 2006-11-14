@@ -70,7 +70,6 @@ main (int argc, char *argv[])
   static struct status_data status;
   static struct fullscreen_info fsinfo;
   int opt;
-
   WebiSettings s = { 0, };
 
   gpe_application_init (&argc, &argv);
@@ -137,7 +136,7 @@ main (int argc, char *argv[])
   webi_set_emit_internal_status (WEBI (html), TRUE);
 
   /* set settings to default */
-  set_settings (WEBI (html), &s, DEFAULT);
+  set_default_settings (WEBI (html), &s);
 
   /* set rendering mode depending on screen size (when working in gtk-webcore) 
      if(width <=320)
@@ -269,6 +268,9 @@ main (int argc, char *argv[])
   /* save completion list when we exit the program */
   g_signal_connect (GTK_OBJECT (app), "destroy",
 		    G_CALLBACK (save_completion), NULL);
+  /* save settings on exit */
+  g_signal_connect (GTK_OBJECT (app), "destroy",
+		    G_CALLBACK (save_settings_on_quit), &s);
 
   /* 
      DEBUG CODE!
