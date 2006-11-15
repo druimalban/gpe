@@ -1,6 +1,5 @@
 TODO:
 
-* config file to keep zoom/font settings and bookmarks
 * support multiple windows
 * improve progressbar display
 * some sort of status indication if clicking on links with infoprint or equivalent
@@ -9,9 +8,8 @@ TODO:
 * Download file option (wget ?)
 * bookmarks integration with gpe-contacts
 * strip -s gpe-mini-browser on install
-* Put applicationb specific info in the install file (document --disable-bookmarks and --enable-hildon)
 * Split main header file to better represent the functions available in the files
-* Move all created file to ~./gpe/gpe-mini-browser instead of ~./gpe
+* Create NOWRITE option
 
 DONE:
 
@@ -34,6 +32,8 @@ DONE:
 * history (special case of bookmarks)
 * default optimisation for size and use -Wall to identify possible problems
 * ability to set home page from bookmarks
+* Move all created file to ~/.gpe/gpe-mini-browser instead of ~/.gpe
+* Put application specific info in the install file (document --disable-bookmarks and --enable-hildon)
 
 POSTPONED / PARTIALLY DONE:
 
@@ -42,3 +42,4 @@ POSTPONED / PARTIALLY DONE:
 * cookie support. Working cookie support is in. However gtk-webcore does not handle
   them gracefully yet.
 * history management (clean up history, button to remove it, avoid doubles)
+* config file to keep zoom/font settings and bookmarks

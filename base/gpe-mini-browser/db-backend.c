@@ -39,8 +39,6 @@
 
 #include "gpe-mini-browser.h"
 
-#define DB_NAME "/.gpe/bookmarks"
-
 //#define DEBUG /* uncomment for debug info */
 
 inline int set_no_home(void);

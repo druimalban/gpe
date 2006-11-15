@@ -144,14 +144,21 @@ write_settings_to_file(WebiSettings *ks)
   GKeyFile *settingsfile;
   gchar *output;
   FILE *outfile;
-  char *filename = getenv ("HOME");
+  char *filename = NULL;
+  const char *home = getenv ("HOME");
 
   /* check if we can get the users home dir and create the file */
-  if (filename != NULL)
-    strcat(filename, "/.gpe/gpe-mini-browser.conf"); 
+  if (home != NULL)
+  {
+    size_t len = strlen(home) + strlen(CONF_NAME);
+    filename = malloc(len+1);
+    strncpy(filename, home, len);
+    strcat(filename, CONF_NAME); 
+  }
   else
   {
    gpe_error_box(_("Could not save settings! Make sure HOME is set in your environment"));    
+   free(filename);
    return(1);
   }
   outfile = fopen(filename, "w+");
@@ -171,6 +178,7 @@ write_settings_to_file(WebiSettings *ks)
   output = g_key_file_to_data(settingsfile,NULL, NULL);
   fprintf(outfile, output);
   fclose(outfile);
+  free(filename);
   g_key_file_free(settingsfile);
   return(0);
 }

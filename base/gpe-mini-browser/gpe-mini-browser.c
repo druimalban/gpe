@@ -30,6 +30,8 @@
 #include <stdlib.h>
 #include <stddef.h>
 #include <getopt.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 
 #include <gtk/gtk.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
@@ -271,6 +273,21 @@ main (int argc, char *argv[])
   /* save settings on exit */
   g_signal_connect (GTK_OBJECT (app), "destroy",
 		    G_CALLBACK (save_settings_on_quit), &s);
+
+  /* create preferences/bookmarks/history etc keeping directory */
+  const char *home = getenv("HOME");
+  if (home != NULL)
+    {
+     size_t len = strlen (home) + strlen ("/.gpe/gpe-mini-browser") + 1;
+     char *dirname = g_malloc (len);
+     strncpy (dirname, home, len -1);
+     strcat(dirname, "/.gpe/gpe-mini-browser");
+     if(access(dirname, F_OK) < 0) 
+       {
+        mkdir(dirname, 0700);
+       }
+     free(dirname);
+    }
 
   /* 
      DEBUG CODE!

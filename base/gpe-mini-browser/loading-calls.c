@@ -60,7 +60,7 @@ fetch_url (const gchar * url, GtkWidget * html)
 	{
 	  cut = cut + 3;
 	}
-      if (access (cut, F_OK))
+      if (access (cut, F_OK) < 0)
 	{
 #ifdef DEBUG
 	  fprintf (stderr, "Could not open %s\n", url);

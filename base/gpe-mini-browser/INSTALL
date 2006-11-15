@@ -134,9 +134,6 @@ operates.
      Enable the alternative Hildon GUI for use as a Maemo application.
 
 '--disable-bookmarks'   
-     Disable bookmarks and forget about sqlite dependency. This also 
-     makes sure that gpe-mini-browser does not write out anything, so 
-     you can use it in an non-writable environment.
-
+     Disable bookmarks and forget about sqlite dependency. 
 
 `configure' also accepts some other, not widely useful, options.

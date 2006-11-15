@@ -5,6 +5,7 @@ v0.20 - Jyväskylä release ???? - Philippe De Swert
 * localisation fixes
 * Update INSTALL instructions
 * Added C.po to fix build errors when no locale is set
+* Moved gpe-mini-browser created files to ~/.gpe/gpe-mini-browser to avoid cluttering ~/.gpe
 
 
 v0.19 - New Year release - 10/01/2006 - Philippe De Swert
