@@ -212,7 +212,7 @@ activate_statusbar (Webi * html, WebiLoadStatus * status,
   /* test if an error occured */
   if (status->status == WEBI_LOADING_ERROR)
     {
-      gpe_error_box (_("An error occured loading the webpage! Check your connection."));
+      gpe_error_box (_("An error occured loading the webpage! Check your connection or proxy settings."));
     }
 
   /* copied from the reference implementation of osb-browser, needs to be improved for this app */

@@ -289,10 +289,16 @@ int set_bookmark_home (char *selected);
 		    see: settings.c
 *******************************************************/
 
+/* gets the proxy from the environment and set it */
+void set_proxy(Webi *html, WebiSettings *ks);
 /* set the settings to some sane  defaults for small screens */
 void set_default_settings(Webi *html, WebiSettings *ks);
-/* load settings from file and apply */
-void set_settings_from_file(Webi *html, WebiSettings *ks);
+/* load settings from file and apply 
+ * @param html the current html widget
+ * @param ks the settings struct for the current widget
+ * @return 1 on failure, 0 on success
+ */
+int parse_settings_file(Webi *html, WebiSettings * ks);
 /* zoom in (basically making text size bigger)*/
 void zoom_in(GtkWidget * zoom_in, gpointer *data);
 /* zoom out (basically decreasing text size)*/

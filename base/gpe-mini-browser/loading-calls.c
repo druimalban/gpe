@@ -76,7 +76,8 @@ fetch_url (const gchar * url, GtkWidget * html)
 
   if (!strcmp (url, "about:"))
     {
-      gpe_info_dialog (_("GPE mini-browser v0.19\n\nHTML engine : Gtk-webcore \n(http://gtk-webcore.sourceforge.net)\n\nCopyright (c) Philippe De Swert\n<philippedeswert@scarlet.be>\n"));
+      gpe_info_dialog (_
+		       ("GPE mini-browser v0.19\n\nHTML engine : Gtk-webcore \n(http://gtk-webcore.sourceforge.net)\n\nCopyright (c) Philippe De Swert\n<philippedeswert@scarlet.be>\n"));
     }
 
 
@@ -175,7 +176,7 @@ home_func (GtkWidget * home, GtkWidget * html)
 
   homepage = malloc (sizeof (char) * 60);
   strncpy (homepage, "gpe.linuxtogo.org", 18);
-                         
+
   start_db ();
 
   if (!get_bookmark_home (homepage))

@@ -61,30 +61,31 @@ osso_top_callback (const gchar * arguments, gpointer ptr)
 }
 
 static gboolean
-main_window_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *data)
+main_window_key_press_event (GtkWidget * widget, GdkEventKey * k,
+			     GtkWidget * data)
 {
-    switch (k->keyval)
-      {
-       case GDK_F6:
-       		 /* toggle button for going full screen */
-      		 set_fullscreen(widget, (gpointer *)data);	       
-		 return TRUE;
+  switch (k->keyval)
+    {
+    case GDK_F6:
+      /* toggle button for going full screen */
+      set_fullscreen (widget, (gpointer *) data);
+      return TRUE;
 #if 0
-       case GDK_F7:
-		 /* zoom in */
-		 gtk_button_clicked (GTK_BUTTON(zoom_in_button));
-		 return TRUE;
-       case GDK_F8:
-       		/* zoom out */
-       		gtk_button_clicked (GTK_BUTTON(zoom_out_button));
-		return TRUE;
+    case GDK_F7:
+      /* zoom in */
+      gtk_button_clicked (GTK_BUTTON (zoom_in_button));
+      return TRUE;
+    case GDK_F8:
+      /* zoom out */
+      gtk_button_clicked (GTK_BUTTON (zoom_out_button));
+      return TRUE;
 #endif
-       default:
-	 	return FALSE;	 
-       
-      }
-    /* we should not get here */
-    return FALSE;
+    default:
+      return FALSE;
+
+    }
+  /* we should not get here */
+  return FALSE;
 }
 
 int
@@ -240,7 +241,7 @@ main (int argc, char *argv[])
   urlbox = show_big_screen_interface (WEBI (html), toolbar, &s);
 
   /* separator to make a clearer distinction between urlbar and website in Maemo */
-  GtkWidget *hseparator = gtk_hseparator_new();
+  GtkWidget *hseparator = gtk_hseparator_new ();
 
   /* fill in fullscreen info */
   fsinfo.app = GTK_WIDGET (mainview);
@@ -281,10 +282,10 @@ main (int argc, char *argv[])
 		    G_CALLBACK (set_fullscreen), &fsinfo);
 
   g_signal_connect (G_OBJECT (app), "key_press_event",
-                    G_CALLBACK (main_window_key_press_event), &fsinfo);
+		    G_CALLBACK (main_window_key_press_event), &fsinfo);
 
   gtk_widget_add_events (GTK_WIDGET (app),
-                         GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK);
+			 GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK);
 
 #ifndef NOBOOKMARKS
   g_signal_connect (GTK_OBJECT (bookmarks_button), "clicked",
@@ -292,15 +293,15 @@ main (int argc, char *argv[])
 #endif
 
   g_signal_connect (GTK_OBJECT (history_button), "clicked",
-                    G_CALLBACK (show_history), html);
+		    G_CALLBACK (show_history), html);
 
- /* save completion list when we exit the program */
+  /* save completion list when we exit the program */
   g_signal_connect (GTK_OBJECT (app), "destroy",
-                    G_CALLBACK (save_completion), NULL);
+		    G_CALLBACK (save_completion), NULL);
   /* save settings on exit */
   g_signal_connect (GTK_OBJECT (app), "destroy",
 		    G_CALLBACK (save_settings_on_quit), &s);
-    
+
 //  gtk_toolbar_set_icon_size(GTK_TOOLBAR(toolbar), GTK_ICON_SIZE_SMALL_TOOLBAR);
 //  toolbar size seems to be the same, icons are clearer
 

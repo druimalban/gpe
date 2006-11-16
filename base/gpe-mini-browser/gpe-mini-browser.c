@@ -137,8 +137,10 @@ main (int argc, char *argv[])
   html = webi_new ();
   webi_set_emit_internal_status (WEBI (html), TRUE);
 
-  /* set settings to default */
-  set_default_settings (WEBI (html), &s);
+  /* get+set proxy and set settings to default if there are no previous ones*/
+  set_proxy(WEBI (html), &s); 
+  if(parse_settings_file(WEBI (html), &s))
+  	set_default_settings (WEBI (html), &s);
 
   /* set rendering mode depending on screen size (when working in gtk-webcore) 
      if(width <=320)
@@ -193,7 +195,7 @@ main (int argc, char *argv[])
   gtk_tool_button_set_label (GTK_TOOL_BUTTON (bookmarks_button),
 			     _("Bookmarks"));
   gtk_toolbar_insert (GTK_TOOLBAR (toolbar), bookmarks_button, -1);
- 
+
 #endif
 
   /* only show full Url bar if the screen is bigger than 240x320 | 320x240 */
@@ -275,18 +277,18 @@ main (int argc, char *argv[])
 		    G_CALLBACK (save_settings_on_quit), &s);
 
   /* create preferences/bookmarks/history etc keeping directory */
-  const char *home = getenv("HOME");
+  const char *home = getenv ("HOME");
   if (home != NULL)
     {
-     size_t len = strlen (home) + strlen ("/.gpe/gpe-mini-browser") + 1;
-     char *dirname = g_malloc (len);
-     strncpy (dirname, home, len -1);
-     strcat(dirname, "/.gpe/gpe-mini-browser");
-     if(access(dirname, F_OK) < 0) 
-       {
-        mkdir(dirname, 0700);
-       }
-     free(dirname);
+      size_t len = strlen (home) + strlen ("/.gpe/gpe-mini-browser") + 1;
+      char *dirname = g_malloc (len);
+      strncpy (dirname, home, len - 1);
+      strcat (dirname, "/.gpe/gpe-mini-browser");
+      if (access (dirname, F_OK) < 0)
+	{
+	  mkdir (dirname, 0700);
+	}
+      free (dirname);
     }
 
   /* 

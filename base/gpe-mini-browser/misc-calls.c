@@ -55,11 +55,9 @@
 #include <hildon-widgets/hildon-appview.h>
 #include <libosso.h>
 #endif /*HILDON*/
-
 //#define DEBUG /* uncomment this if you want debug output*/
-
 #ifndef NOBOOKMARKS
-void
+  void
 delete_bookmarks (GtkWidget * button, gpointer * data)
 {
   if (gpe_question_ask
@@ -331,7 +329,7 @@ set_fullscreen (GtkWidget * button, gpointer * fullscreen_info)
     {
 #ifdef HILDON
       hildon_appview_set_fullscreen (HILDON_APPVIEW (info->app), TRUE);
-#else      
+#else
       gtk_window_fullscreen (GTK_WINDOW (info->app));
 #endif
       fullscreen = 1;
@@ -367,8 +365,8 @@ set_fullscreen (GtkWidget * button, gpointer * fullscreen_info)
       gtk_widget_destroy (GTK_WIDGET (fullscreen_popup));
       gtk_widget_show_all (info->toolbar);
       if (!urlbar_hidden)
-	      if (info->urlbox) 
-		gtk_widget_show_all (info->urlbox);
+	if (info->urlbox)
+	  gtk_widget_show_all (info->urlbox);
       fullscreen = 0;
       totalscreen = 0;
     }
@@ -376,7 +374,8 @@ set_fullscreen (GtkWidget * button, gpointer * fullscreen_info)
 
 /*==============================================*/
 
-void set_as_homepage (GtkWidget *button, gpointer *data)
+void
+set_as_homepage (GtkWidget * button, gpointer * data)
 {
   struct tree_action *open_data;
   GtkTreeSelection *selection;
@@ -397,16 +396,15 @@ void set_as_homepage (GtkWidget *button, gpointer *data)
 #ifdef DEBUG
       printf ("The *new* home url = %s\n", url);
 #endif
-      info = g_string_new("The new home url is \0");
-      info = g_string_append(info, url);
-      gpe_info_dialog(info->str);
-      set_bookmark_home(url);
+      info = g_string_new ("The new home url is \0");
+      info = g_string_append (info, url);
+      gpe_info_dialog (info->str);
+      set_bookmark_home (url);
       g_free (url);
-      g_string_free(info, TRUE);
+      g_string_free (info, TRUE);
     }
   else
     {
       gpe_error_box (_("No bookmark selected!"));
     }
 }
-

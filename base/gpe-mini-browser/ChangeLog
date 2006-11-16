@@ -6,6 +6,7 @@ v0.20 - Jyväskylä release ???? - Philippe De Swert
 * Update INSTALL instructions
 * Added C.po to fix build errors when no locale is set
 * Moved gpe-mini-browser created files to ~/.gpe/gpe-mini-browser to avoid cluttering ~/.gpe
+* Added support for saving session preferences. Config saved in  ~/.gpe/gpe-mini-browser/gpe-mini-browser.conf
 
 
 v0.19 - New Year release - 10/01/2006 - Philippe De Swert

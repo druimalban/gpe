@@ -56,27 +56,15 @@
 #include <hildon-widgets/hildon-appview.h>
 #include <libosso.h>
 #endif /*HILDON*/
-
 //#define DEBUG /* uncomment this if you want debug output*/
 
-void
-set_default_settings (Webi * html, WebiSettings * ks)
+char * get_conf_file(void);
+
+/*==============================================*/
+
+void set_proxy(Webi * html, WebiSettings * ks)
 {
   const gchar *http_proxy;
-#ifndef HILDON
-  ks->default_font_size = 11;
-  ks->default_fixed_font_size = 11;
-#else
-  ks->default_font_size = 14;
-  ks->default_fixed_font_size = 14;
-#endif
-  ks->minimum_font_size = 7;
-  ks->serif_font_family = "serif";
-  ks->sans_serif_font_family = "sans";
-  ks->fixed_font_family = "sans";
-  ks->standard_font_family = "sans";
-  ks->autoload_images = 1;
-  ks->javascript_enabled = 1;
 
   http_proxy = g_getenv ("http_proxy");
   if (!http_proxy)
@@ -92,10 +80,25 @@ set_default_settings (Webi * html, WebiSettings * ks)
 
 /*==============================================*/
 
-void 
-set_settings_from_file (Webi * html, WebiSettings * ks)
+void
+set_default_settings (Webi * html, WebiSettings * ks)
 {
- 
+#ifndef HILDON
+  ks->default_font_size = 11;
+  ks->default_fixed_font_size = 11;
+#else
+  ks->default_font_size = 14;
+  ks->default_fixed_font_size = 14;
+#endif
+  ks->minimum_font_size = 7;
+  ks->serif_font_family = "serif";
+  ks->sans_serif_font_family = "sans";
+  ks->fixed_font_family = "sans";
+  ks->standard_font_family = "sans";
+  ks->autoload_images = 1;
+  ks->javascript_enabled = 1;
+
+  webi_set_settings (WEBI (html), ks);
 }
 
 /*==============================================*/
@@ -130,63 +133,130 @@ zoom_out (GtkWidget * zoom_out, gpointer * data)
 
 /*==============================================*/
 
-int							
-parse_settings_file(WebiSettings *ks)
+int
+parse_settings_file (Webi *html, WebiSettings * ks)
 {
-  return(0);
+  GKeyFile *settingsfile;
+  gboolean test;
+  gchar **keys;
+  char *filename = NULL;
+
+  filename = get_conf_file();
+  if(filename == 0)
+    {
+      gpe_error_box (_("Could not save settings! Make sure HOME is set in your environment"));
+      free (filename);
+      return 1;
+    }
+  settingsfile = g_key_file_new();
+  test = g_key_file_load_from_file(settingsfile, filename, G_KEY_FILE_NONE, NULL);
+  free(filename);
+  if(!test)
+      return 1;
+  keys = g_key_file_get_keys (settingsfile, "Config", NULL, NULL);
+  while (*keys != NULL)
+    {
+      if(!strcmp(*keys, "Proxy"))
+      {
+       /* first check if the proxy has been set from the environment, if not use the
+	  one from the config file */
+       if(!strcmp(ks->http_proxy, ""))
+	{
+       	 ks->http_proxy = g_key_file_get_string(settingsfile, "Config", *keys, NULL);
+	}
+       goto loopend;
+      }
+      if(!strcmp(*keys, "AutoImageLoading"))
+      {
+       ks->autoload_images = g_key_file_get_integer(settingsfile, "Config", *keys, NULL);
+       goto loopend;
+      }
+      if(!strcmp(*keys, "Javascript"))
+      {
+       ks->javascript_enabled = g_key_file_get_integer(settingsfile, "Config", *keys, NULL);
+       goto loopend;
+      }
+      if(!strcmp(*keys, "Fontsize"))
+      {
+        ks->default_font_size = g_key_file_get_integer(settingsfile, "Config", *keys, NULL);
+        ks->default_fixed_font_size = g_key_file_get_integer(settingsfile, "Config", *keys, NULL);
+      }
+loopend:      ++keys;
+    } 
+  webi_set_settings (WEBI (html), ks);
+  return 0;
 }
 
 /*==============================================*/
 
-int 
-write_settings_to_file(WebiSettings *ks)
+int
+write_settings_to_file (WebiSettings * ks)
 {
   GKeyFile *settingsfile;
   gchar *output;
   FILE *outfile;
+  char *filename = NULL;
+ 
+  filename = get_conf_file();
+  if(filename == 0)
+    {
+      gpe_error_box (_
+		     ("Could not save settings! Make sure HOME is set in your environment"));
+      free (filename);
+      return 1;
+    }
+  outfile = fopen (filename, "w+");
+  if (outfile <= 0)
+    {
+      gpe_error_box (_("Could not write file!"));
+      free (filename);
+      return 1;
+    }
+
+  settingsfile = g_key_file_new ();
+  g_key_file_set_string (settingsfile, "Config", "Proxy", ks->http_proxy);
+  g_key_file_set_integer (settingsfile, "Config", "AutoImageLoading",
+			  ks->autoload_images);
+  g_key_file_set_integer (settingsfile, "Config", "Javascript",
+			  ks->javascript_enabled);
+  g_key_file_set_integer (settingsfile, "Config", "Fontsize",
+			  ks->default_font_size);
+
+  output = g_key_file_to_data (settingsfile, NULL, NULL);
+  fprintf (outfile, output);
+  fclose (outfile);
+  free (filename);
+  g_key_file_free (settingsfile);
+  return 0;
+}
+
+/*==============================================*/
+
+void
+save_settings_on_quit (GtkWidget * app, WebiSettings * ks)
+{
+  write_settings_to_file (ks);
+}
+
+/*==============================================*/
+  
+char * get_conf_file(void)
+{
   char *filename = NULL;
   const char *home = getenv ("HOME");
 
   /* check if we can get the users home dir and create the file */
   if (home != NULL)
   {
-    size_t len = strlen(home) + strlen(CONF_NAME);
-    filename = malloc(len+1);
-    strncpy(filename, home, len);
-    strcat(filename, CONF_NAME); 
+    size_t len = strlen (home) + strlen (CONF_NAME);
+    filename = malloc (len + 1);
+    strncpy (filename, home, len);
+    strcat (filename, CONF_NAME);
+    return filename;
   }
   else
   {
-   gpe_error_box(_("Could not save settings! Make sure HOME is set in your environment"));    
-   free(filename);
-   return(1);
+    free(filename);
+    return 0;
   }
-  outfile = fopen(filename, "w+");
-  if(outfile <= 0)
-  {
-   gpe_error_box(_("Could not write file!"));
-   free(filename);
-   return(1);
-  }
-
-  settingsfile = g_key_file_new();
-  g_key_file_set_string(settingsfile, "Config", "Proxy", ks->http_proxy);
-  g_key_file_set_integer(settingsfile, "Config", "AutoImageLoading", ks->default_font_size);
-  g_key_file_set_integer(settingsfile, "Config", "Javascript", ks->javascript_enabled);
-  g_key_file_set_integer(settingsfile, "Config", "fontsize", ks->default_font_size);
-
-  output = g_key_file_to_data(settingsfile,NULL, NULL);
-  fprintf(outfile, output);
-  fclose(outfile);
-  free(filename);
-  g_key_file_free(settingsfile);
-  return(0);
-}
-
-/*==============================================*/
-
-void
-save_settings_on_quit(GtkWidget *app, WebiSettings *ks)
-{
-  write_settings_to_file(ks);
 }

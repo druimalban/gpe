@@ -41,7 +41,7 @@
 
 //#define DEBUG /* uncomment for debug info */
 
-inline int set_no_home(void);
+inline int set_no_home (void);
 
 static sqlite *db = NULL;
 
@@ -148,7 +148,8 @@ refresh_or_load_db (GtkWidget * tree)
 {
   char *err;
 
-  if (sqlite_exec (db, "select bookmark from bookmarks", load_db_data, tree, &err))
+  if (sqlite_exec
+      (db, "select bookmark from bookmarks", load_db_data, tree, &err))
     {
       g_free (err);
       return 1;
@@ -164,15 +165,17 @@ get_bookmark_home (char *home)
 {
   char *err;
 
-  if (sqlite_exec (db, "select * from bookmarks where home=1", return_bookmark_home, home, &err))
+  if (sqlite_exec
+      (db, "select * from bookmarks where home=1", return_bookmark_home, home,
+       &err))
     {
-      printf("query failed!\n");
+      printf ("query failed!\n");
       g_free (err);
       return 1;
     }
 
   g_free (err);
-   
+
   return 0;
 }
 
@@ -181,16 +184,16 @@ return_bookmark_home (void *home, int argc, char **argv, char **columnNames)
 {
   int n;
 
-  if( *argv != NULL )
+  if (*argv != NULL)
     {
-      n = strlen(*argv);
-      if(n > 60)
+      n = strlen (*argv);
+      if (n > 60)
 	return 1;
-      strncpy((char *)home, *argv, n+1);
+      strncpy ((char *) home, *argv, n + 1);
       return 0;
     }
   else
-      return 1;
+    return 1;
 }
 
 int
@@ -198,15 +201,17 @@ set_bookmark_home (char *selected)
 {
   char *err;
 
-  if(set_no_home())
-      return 1;
-  if (sqlite_exec_printf (db, "update bookmarks set home=('1') where bookmark='%s'", NULL, NULL, &err, selected))
+  if (set_no_home ())
+    return 1;
+  if (sqlite_exec_printf
+      (db, "update bookmarks set home=('1') where bookmark='%s'", NULL, NULL,
+       &err, selected))
     {
       g_free (err);
       return 1;
     }
 #ifdef DEBUG
-  printf("the new homepage %s has been set !\n", selected);
+  printf ("the new homepage %s has been set !\n", selected);
 #endif
   g_free (err);
 
@@ -215,11 +220,12 @@ set_bookmark_home (char *selected)
 }
 
 inline int
-set_no_home(void)
+set_no_home (void)
 {
- char *err;
+  char *err;
 
- if (sqlite_exec_printf (db, "update bookmarks set home=('0') where home=1", NULL, NULL, &err))
+  if (sqlite_exec_printf
+      (db, "update bookmarks set home=('0') where home=1", NULL, NULL, &err))
     {
       g_free (err);
       return 1;
