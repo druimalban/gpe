@@ -3,7 +3,7 @@
 <!--#set var="pagename" value=""-->
 <!--#set var="appname" value=""-->
 <!--#set var="author" value="GPE Hacker"-->
-<!--#set var="authoremail" value="gpe@handhelds.org"-->
+<!--#set var="authoremail" value="gpe-list@linuxtogo.org"-->
 <!--#include virtual="/includes/head.shtml"-->
 
 <table cellpadding="12" cellspacing="12" border="12" width="100%" bgcolor="#EEEEEE">

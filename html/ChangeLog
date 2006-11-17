@@ -1,3 +1,8 @@
+2006-11-17  Florian Boor <florian@kernelconcepts.de>
+
+	* projects/*: remove obsolete files and change mailinglist
+          to the new one.
+
 2006-11-09  Florian Boor <florian@kernelconcepts.de>
 
 	* Fix link and add information about how to join the project.
