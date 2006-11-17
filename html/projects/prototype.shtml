@@ -26,7 +26,7 @@
   <td><b>Status</b></td>
   <td>
     <p>
-      The source code can be found in <A href="../svn.shtml">SVN</A>,
+      The source code can be found in <A href="../svn.phtml">SVN</A>,
       module <b>base/<!--#echo var="appname"--></b>.  
 	</p>
 	<p>

@@ -25,7 +25,7 @@ as XML files.</P>
 
 <H2>Status</H2>
 <P>
-The source code can be found in <A href="../svn.shtml">SVN</A>, module
+The source code can be found in <A href="../svn.phtml">SVN</A>, module
 <B>gpe-nmf</B>.  Precompiled binaries for iPAQ are available in
 the Familiar <A href="http://familiar.handhelds.org/familiar/feeds/unstable/">unstable feed</A>.
 

@@ -46,7 +46,7 @@
       backend design.
     </p>
     <p>
-      The source code can be found in <A href="../svn.shtml">SVN</A>,
+      The source code can be found in <A href="../svn.phtml">SVN</A>,
       module <b>base/gpe-conf</b>.  
 	</p>
 	<p>

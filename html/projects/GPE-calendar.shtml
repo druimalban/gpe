@@ -34,7 +34,7 @@ The application is stable and functional for daily use. It makes use of a set of
 the user interface has basic support for the Hildon UI used for the Nokia 770.
 </p>
 <P>
-The source code can be found in <A href="../svn.shtml">SVN</A>, module
+The source code can be found in <A href="../svn.phtml">SVN</A>, module
 <B>gpe-calendar</B>.  Precompiled binaries for iPAQ are available in
 the Familiar <A href="http://familiar.handhelds.org/familiar/feeds/unstable/">unstable feed</A>.
 

@@ -67,7 +67,7 @@ Two modes are provided:
 
 <H2>Status</H2>
 <P>
-The source code can be found in <A href="../svn.shtml">SVN</A>,
+The source code can be found in <A href="../svn.phtml">SVN</A>,
 module <b>gpe-login</b>.  Precompiled binaries for ARM PDAs are available
 in the Familiar <A href="http://familiar.handhelds.org/familiar/feeds/unstable/">unstable feed</A>.
 (Packages gpe-login and gpe-dm)
