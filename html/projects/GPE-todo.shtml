@@ -2,7 +2,7 @@
 <!--#set var="pagename" value="Keep track of thing you need to do..."-->
 <!--#set var="author" value="Florian Boor"-->
 <!--#set var="authoremail" value="florian@handhelds.org"-->
-<!--#include virtual="/includes/head.shtml"-->
+<!--#include virtual="/includes/head.php"-->
 
 <table cellpadding="12" cellspacing="12" border="12" width="100%" bgcolor="#EEEEEE">
 <tr>

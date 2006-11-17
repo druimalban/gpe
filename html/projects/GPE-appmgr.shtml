@@ -3,7 +3,7 @@
 <!--#set var="pagename" value="An application launcher"-->
 <!--#set var="author" value="Florian Boor"-->
 <!--#set var="authoremail" value="florian.boor@kernelconcepts.de"-->
-<!--#include virtual="/includes/head.shtml"-->
+<!--#include virtual="/includes/head.php"-->
 
 <table cellpadding="12" cellspacing="12" border="12" width="100%" bgcolor="#EEEEEE">
 <tr>

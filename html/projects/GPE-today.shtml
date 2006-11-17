@@ -2,7 +2,7 @@
 <!--#set var="pagename" value="today"-->
 <!--#set var="author" value="Phil Blundell"-->
 <!--#set var="authoremail" value="philb@gnu.org"-->
-<!--#include virtual="/includes/head.shtml"-->
+<!--#include virtual="/includes/head.php"-->
 
 <H2>Coordinator</H2>
 <P>

@@ -2,7 +2,7 @@
 <!--#set var="pagename" value="games"-->
 <!--#set var="author" value="Phil Blundell"-->
 <!--#set var="authoremail" value="pb@handhelds.org"-->
-<!--#include virtual="/includes/head.shtml"-->
+<!--#include virtual="/includes/head.php"-->
 
 <H2>Function</H2>
 

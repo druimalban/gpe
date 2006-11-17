@@ -3,7 +3,7 @@
 <!--#set var="pagename" value="notebook"-->
 <!--#set var="author" value="Nils Faerber"-->
 <!--#set var="authoremail" value="nils@handhelds.org"-->
-<!--#include virtual="/includes/head.shtml"-->
+<!--#include virtual="/includes/head.php"-->
 
 <H2>Function</H2>
 <P>

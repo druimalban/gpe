@@ -3,7 +3,7 @@
 <!--#set var="pagename" value="mail client"-->
 <!--#set var="author" value="Erez Doron"-->
 <!--#set var="authoremail" value="erez@savan.com"-->
-<!--#include virtual="/includes/head.shtml"-->
+<!--#include virtual="/includes/head.php"-->
 
 <CENTER><IMG SRC="/images/gpe-mail1.png" ALT="this is what it could look like">
 <IMG SRC="/images/gpe-mail2.png" ALT="this is what it could look like"></CENTER>
