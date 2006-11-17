@@ -1,5 +1,6 @@
 2006-11-17  Florian Boor <florian@kernelconcepts.de>
 
+	* linkres.phtml: Update Nils email address, update some links.
 	* projects/*: remove obsolete files and change mailinglist
           to the new one.
           Update CVS->SVN
