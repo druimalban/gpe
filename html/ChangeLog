@@ -2,6 +2,7 @@
 
 	* projects/*: remove obsolete files and change mailinglist
           to the new one.
+          Update CVS->SVN
 
 2006-11-09  Florian Boor <florian@kernelconcepts.de>
 

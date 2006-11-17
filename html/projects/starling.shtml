@@ -36,7 +36,7 @@
     <p><i>Starling</i> is still under development but expected to be 
 	stable and included in the distributions soon.</p>
     <p>
-      The source code can be found in <A href="../cvs.shtml">CVS</A>,
+      The source code can be found in <A href="../svn.shtml">SVN</A>,
       module <b>base/<!--#echo var="appname"--></b>.  
 	</p>
 	<p>
