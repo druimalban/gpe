@@ -261,7 +261,7 @@
 			<widget class="GtkRadioButton" id="radiobutton2">
 			  <property name="visible">True</property>
 			  <property name="can_focus">True</property>
-			  <property name="label" translatable="yes">Upload to http://handhelds.org/scap</property>
+			  <property name="label" translatable="yes">Upload to http://scap.linuxtogo.org</property>
 			  <property name="use_underline">True</property>
 			  <property name="relief">GTK_RELIEF_NORMAL</property>
 			  <property name="focus_on_click">True</property>

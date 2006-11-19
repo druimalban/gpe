@@ -1,5 +1,6 @@
-/* GPE Screenshot
+/* GPE SCAP
  * Copyright (C) 2005  Rene Wagner <rw@handhelds.org>
+ * Copyright (C) 2006  Florian Boor <florian@linuxtogo.org>
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

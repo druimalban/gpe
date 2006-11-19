@@ -29,6 +29,7 @@
 
 #define SCR_SCALING_FACTOR 0.4
 #define MAX_SCREENSHOTS 1000
+#define UPLOAD_URI "http://scap.linuxtogo.org/tickle.php"
 
 enum
 {
@@ -191,7 +192,7 @@ scr_async_upload (gpointer data)
   GError *error = NULL;
   gboolean upload_successful;
 
-  upload_successful = scr_shot_upload (mainDlg->shot, "www.handhelds.org/scap/capture.cgi", &mainDlg->upload_response, &mainDlg->upload_error);
+  upload_successful = scr_shot_upload (mainDlg->shot, UPLOAD_URI, &mainDlg->upload_response, &mainDlg->upload_error);
   
   if (upload_successful)
     g_idle_add (scr_upload_done, data);

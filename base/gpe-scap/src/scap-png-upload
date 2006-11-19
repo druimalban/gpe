@@ -1,12 +1,55 @@
 #!/bin/sh
 
-MODEL="PNG"
-test -e /etc/scap.conf && USER=`cat /etc/scap.conf`
-#RES="1024x768"
-(echo "POST /scap/capture.cgi?$MODEL+$USER+$RES HTTP/1.1"
- echo -n Content-length:
- cat $1 | wc -c
- echo "Content-Type: image/gif"
- echo "Host: www.handhelds.org"
- echo ""
- cat $1) | nc www.handhelds.org 80
+MODEL="PC"
+TEXT="Description"
+SEP="------------------------------a35015e71ac8"
+
+HDR="POST /tickle.php HTTP/1.1
+Host: scap.linuxtogo.org
+Accept: */*
+Content-type: multipart/form-data; boundary=$SEP
+Content-Length: "
+
+CMD="
+--$SEP
+Content-Disposition: form-data; name=\"model\"
+
+$MODEL
+--$SEP
+Content-Disposition: form-data; name=\"text\"
+
+$TEXT
+--$SEP
+Content-Disposition: form-data; name=\"key\"
+
+secret
+--$SEP
+Content-Disposition: form-data; name=\"file\"; filename=\"/none.png\"
+Content-Type: image/png
+Content-Transfer-Encoding: binary
+
+"
+
+TAIL="
+
+--$SEP
+Content-Disposition: form-data; name=\"submit\"
+
+Upload
+--$SEP--
+"
+
+L1=`cat $1 | wc -c`
+L2=${#CMD}
+L3=${#TAIL}
+
+
+let "LEN=$L2+$L1+$L3"
+
+HDR+="$LEN
+"
+
+echo -n "$HDR""$CMD" > /tmp/post
+cat $1 >> /tmp/post
+echo -n "$TAIL" >> /tmp/post 
+cat /tmp/post | nc scap.linuxtogo.org 80
