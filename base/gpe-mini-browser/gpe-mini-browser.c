@@ -235,11 +235,9 @@ main (int argc, char *argv[])
   separator3 = gtk_separator_tool_item_new ();
   gtk_tool_item_set_homogeneous (separator3, FALSE);
   gtk_toolbar_insert (GTK_TOOLBAR (toolbar), separator3, -1);
+
   /* add zoom to small-screen interface */
-  if ((width < 320) || (height < 320))
-    {
-      add_zoom_buttons (WEBI (html), toolbar, &s);
-    }
+  add_zoom_buttons (WEBI (html), toolbar, &s);
 
   history_button = gtk_tool_button_new_from_stock (GTK_STOCK_HARDDISK);
   gtk_tool_item_set_homogeneous (history_button, FALSE);
