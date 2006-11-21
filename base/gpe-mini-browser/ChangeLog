@@ -7,7 +7,8 @@ v0.20 - Satyr release - Philippe De Swert
 * Added C.po to fix build errors when no locale is set
 * Moved gpe-mini-browser created files to ~/.gpe/gpe-mini-browser to avoid cluttering ~/.gpe
 * Added support for saving session preferences. Config saved in  ~/.gpe/gpe-mini-browser/gpe-mini-browser.conf
-
+* Configuration screen for preferences editing
+* Updated .po files to reflect the extra configuration strings
 
 v0.19 - New Year release - 10/01/2006 - Philippe De Swert
 

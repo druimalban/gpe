@@ -10,7 +10,6 @@ TODO:
 * strip -s gpe-mini-browser on install
 * Split main header file to better represent the functions available in the files
 * Create NOWRITE option
-* creat configuration sceen, accessible trough a config: url
 
 DONE:
 
@@ -36,6 +35,7 @@ DONE:
 * Move all created file to ~/.gpe/gpe-mini-browser instead of ~/.gpe
 * Put application specific info in the install file (document --disable-bookmarks and --enable-hildon)
 * config file to keep zoom/font settings 
+* create configuration screen
 
 POSTPONED / PARTIALLY DONE:
 

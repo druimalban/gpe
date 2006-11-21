@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gpe-mini-browser 0.19\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-04-30 14:46+0300\n"
+"POT-Creation-Date: 2006-11-21 23:51+0200\n"
 "PO-Revision-Date: 2006-04-30 14:46+0300\n"
 "Last-Translator: Philippe De Swert <philippedeswert@scarlet.be>\n"
 "Language-Team: none\n"
@@ -23,34 +23,36 @@ msgstr "surf op het internet"
 msgid "Mini Web Browser"
 msgstr "Mini internet browser"
 
-#: ../hildon-mini-browser.c:128 ../gpe-mini-browser.c:88
+#: ../hildon-mini-browser.c:129
 #, c-format
-msgid "GPE-mini-browser version 0.19. (C)2005, Philippe De Swert\n"
-msgstr "GPE-mini-browser version 0.19. (C)2005, Philippe De Swert\n"
+msgid "GPE-mini-browser version 0.20. (C)2005, Philippe De Swert\n"
+msgstr "GPE-mini-browser version 0.20. (C)2005, Philippe De Swert\n"
 
-#: ../hildon-mini-browser.c:134 ../gpe-mini-browser.c:94
+#: ../hildon-mini-browser.c:135 ../gpe-mini-browser.c:95
 #, c-format
 msgid ""
 "GPE-mini-browser, basic web browser application. (c)2005, Philippe De Swert\n"
-msgstr "GPE-mini-browser, kleine en lichte internet browser. (c)2005, Philippe De Swert\n"
+msgstr ""
+"GPE-mini-browser, kleine en lichte internet browser. (c)2005, Philippe De "
+"Swert\n"
 
-#: ../hildon-mini-browser.c:135 ../gpe-mini-browser.c:95
+#: ../hildon-mini-browser.c:136 ../gpe-mini-browser.c:96
 #, c-format
 msgid "Usage: gpe-mini-browser <URL>\n"
 msgstr "Gebruik: gpe-mini-browser <URL>\n"
 
-#: ../hildon-mini-browser.c:136 ../gpe-mini-browser.c:96
+#: ../hildon-mini-browser.c:137 ../gpe-mini-browser.c:97
 #, c-format
 msgid "Use -v for version info.\n"
 msgstr "Gebruik -v om het versienummer te bekomen.\n"
 
-#: ../hildon-mini-browser.c:232 ../gpe-mini-browser.c:192
-#: ../interface-calls.c:448 ../interface-calls.c:507
+#: ../hildon-mini-browser.c:233 ../gpe-mini-browser.c:196
+#: ../interface-calls.c:454 ../interface-calls.c:513
 msgid "Bookmarks"
 msgstr "Bookmarks"
 
-#: ../hildon-mini-browser.c:264 ../gpe-mini-browser.c:242
-#: ../interface-calls.c:638 ../interface-calls.c:673
+#: ../hildon-mini-browser.c:265 ../gpe-mini-browser.c:246
+#: ../interface-calls.c:644 ../interface-calls.c:679
 msgid "History"
 msgstr "Geschiedenis"
 
@@ -58,9 +60,9 @@ msgstr "Geschiedenis"
 msgid "Could not open file"
 msgstr "Kan het bestand niet openen"
 
-#: ../loading-calls.c:79
+#: ../loading-calls.c:80
 msgid ""
-"GPE mini-browser v0.19\n"
+"GPE mini-browser v0.20\n"
 "\n"
 "HTML engine : Gtk-webcore \n"
 "(http://gtk-webcore.sourceforge.net)\n"
@@ -69,7 +71,12 @@ msgid ""
 "<philippedeswert@scarlet.be>\n"
 msgstr ""
 
-#: ../gpe-mini-browser.c:227
+#: ../gpe-mini-browser.c:89
+#, fuzzy, c-format
+msgid "GPE-mini-browser version 0.20. (C)2005, Philippe De Swert\n"
+msgstr "GPE-mini-browser version 0.19. (C)2005, Philippe De Swert\n"
+
+#: ../gpe-mini-browser.c:231
 msgid "Fullscreen"
 msgstr "Volledig scherm"
 
@@ -86,53 +93,69 @@ msgid "loading"
 msgstr "Laden"
 
 #: ../interface-calls.c:215
-msgid "An error occured loading the webpage! Check your connection."
+#, fuzzy
+msgid ""
+"An error occured loading the webpage! Check your connection or proxy "
+"settings."
 msgstr "Er is een fout opgetreden tijdens het laden! Controleer je verbinding."
 
-#: ../interface-calls.c:293 ../interface-calls.c:425
+#: ../interface-calls.c:293 ../interface-calls.c:431
 msgid "Hide Url"
 msgstr "Verberg het adres"
 
-#: ../interface-calls.c:362
+#: ../interface-calls.c:368
 msgid " Url:"
 msgstr "Url:"
 
-#: ../interface-calls.c:414
+#: ../interface-calls.c:420
 msgid "Show Url"
 msgstr "Toon de Url"
 
-#: ../interface-calls.c:564
+#: ../interface-calls.c:570
 msgid "Add a bookmark"
 msgstr "Voeg een bookmark toe"
 
-#: ../interface-calls.c:572
+#: ../interface-calls.c:578
 msgid "Add current web page"
 msgstr "Voeg de huidige web pagina toe"
 
-#: ../interface-calls.c:578
+#: ../interface-calls.c:584
 msgid "Add new :"
 msgstr "Voeg een nieuwe pagina toe"
 
-#: ../interface-calls.c:684
+#: ../interface-calls.c:690
 msgid "Clear"
 msgstr ""
 
-#: ../misc-calls.c:119
+#: ../misc-calls.c:64
 msgid "Really delete this bookmark or category?"
 msgstr "Bent U zeker dat U deze bookmark wil verwijderen?"
 
-#: ../misc-calls.c:140
+#: ../misc-calls.c:85
 msgid "error removing bookmark from db!\n"
 msgstr "Fout bij het verwijderen van de bookmark in de database!\n"
 
-#: ../misc-calls.c:180 ../misc-calls.c:462
+#: ../misc-calls.c:125 ../misc-calls.c:408
 msgid "No bookmark selected!"
 msgstr "Geen bookmark geselectioneerd"
 
-#: ../misc-calls.c:229
+#: ../misc-calls.c:174
 msgid "Error accessing db!\n"
 msgstr "Fout bij het aanspreken van de database!\n"
 
-#: ../misc-calls.c:235
+#: ../misc-calls.c:180
 msgid "No url filled in!\n"
 msgstr "Geen adres ingegeven!\n"
+
+#: ../settings.c:147 ../settings.c:204
+msgid "Could not save settings! Make sure HOME is set in your environment"
+msgstr "Kan configuratie niet opslaan! Verzeker U ervan dat $HOME juist geconfigureerd is."
+
+#: ../settings.c:211
+#, fuzzy
+msgid "Could not write file!"
+msgstr "Kan het bestand niet openen"
+
+#: ../settings.c:289
+msgid "Configuration"
+msgstr "Configuratie"

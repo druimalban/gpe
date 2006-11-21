@@ -1,5 +1,5 @@
 /*
- * gpe-mini-browser v0.19
+ * gpe-mini-browser v0.20
  *
  * Basic web browser based on gtk-webcore 
  *
@@ -61,7 +61,7 @@ main (int argc, char *argv[])
   GtkWidget *html, *app, *contentbox;	/* html engine, application window, content box of application window */
   GtkWidget *toolbar, *urlbox = NULL;	/* toolbar, url entry box (big screen) */
   GtkToolItem *back_button, *forward_button, *home_button,
-    *fullscreen_button, *url_button = NULL, *history_button; //, *config_button;
+    *fullscreen_button, *url_button = NULL, *history_button; 
 #ifndef NOBOOKMARKS
   GtkToolItem *bookmarks_button, *separator;
 #endif /* NOBOOKMARKS */
@@ -86,7 +86,7 @@ main (int argc, char *argv[])
 	case 'v':
 	  printf
 	    (_
-	     ("GPE-mini-browser version 0.19. (C)2005, Philippe De Swert\n"));
+	     ("GPE-mini-browser version 0.20. (C)2005, Philippe De Swert\n"));
 	  exit (0);
 
 	default:
@@ -245,12 +245,7 @@ main (int argc, char *argv[])
   gtk_tool_item_set_homogeneous (history_button, FALSE);
   gtk_tool_button_set_label (GTK_TOOL_BUTTON (history_button), _("History"));
   gtk_toolbar_insert (GTK_TOOLBAR (toolbar), history_button, -1);
- /* 
-  config_button = gtk_tool_button_new_from_stock (GTK_STOCK_PREFERENCES);
-  gtk_tool_item_set_homogeneous (config_button, FALSE);
-  gtk_tool_button_set_label (GTK_TOOL_BUTTON (config_button), _("Settings"));
-  gtk_toolbar_insert (GTK_TOOLBAR (toolbar), config_button, -1);
-*/
+
   /* connect all button signals */
   g_signal_connect (GTK_OBJECT (back_button), "clicked",
 		    G_CALLBACK (back_func), html);

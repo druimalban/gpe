@@ -1,5 +1,5 @@
 /*
- * gpe-mini-browser v0.19
+ * gpe-mini-browser v0.20
  *
  * Basic web browser based on gtk-webcore 
  * 
@@ -77,7 +77,7 @@ fetch_url (const gchar * url, GtkWidget * html)
   if (!strcmp (url, "about:"))
     {
       gpe_info_dialog (_
-		       ("GPE mini-browser v0.19\n\nHTML engine : Gtk-webcore \n(http://gtk-webcore.sourceforge.net)\n\nCopyright (c) Philippe De Swert\n<philippedeswert@scarlet.be>\n"));
+		       ("GPE mini-browser v0.20\n\nHTML engine : Gtk-webcore \n(http://gtk-webcore.sourceforge.net)\n\nCopyright (c) Philippe De Swert\n<philippedeswert@scarlet.be>\n"));
     }
 
 

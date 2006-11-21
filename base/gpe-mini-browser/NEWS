@@ -1,3 +1,12 @@
+21/11/2006
+
+* release 0.20 - Satyr - Dedicated to Nóra, my wonderful girlfriend -
+* added configuration/preferences management
+* build and localisation fixes
+* move all created file to ~/.gpe/gpe-mini-browser instead of ~/.gpe
+* put application specific info in the install file (document --disable-bookmarks and --enable-hildon)
+* details as always in the Changelog
+
 10/01/2006
 
 * release 0.19 - Happy New Year - Because I had so much fun this New Year and met some wonderful people

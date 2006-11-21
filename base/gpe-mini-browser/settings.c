@@ -1,13 +1,15 @@
 /*
- * gpe-mini-browser v0.19
+ * gpe-mini-browser v0.20
  *
  * Basic web browser based on gtk-webcore 
  * 
- * Misc calls.
+ * All functions related to settings and configuration.
  *
  * Copyright (c) 2005 Philippe De Swert
  *
  * Contact : philippedeswert@scarlet.be
+ * 
+ * Honours : To Satyricon's "King" for positive energy
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -358,9 +360,9 @@ show_configuration_panel(GtkWidget *window, gpointer *data)
  		    G_CALLBACK (toggle_javascript), info->settings);
   g_signal_connect (GTK_OBJECT (img_load_select), "toggled", 
  		    G_CALLBACK (toggle_images), info->settings);
-  g_signal_connect (GTK_OBJECT (font_box), "activate",
+  g_signal_connect (GTK_OBJECT (font_box), "changed",
 		    G_CALLBACK (set_font_size), info->settings);
-  g_signal_connect (GTK_OBJECT (proxy_box), "activate",
+  g_signal_connect (GTK_OBJECT (proxy_box), "changed",
 		    G_CALLBACK (set_proxy_config), info->settings);
 
   
@@ -398,5 +400,6 @@ void set_font_size (GtkEntry * entry, WebiSettings * ks)
 
 void set_proxy_config (GtkEntry * entry, WebiSettings * ks)
 {
-  strcpy((char *)ks->http_proxy, gtk_entry_get_text(entry));
+  g_free((gpointer *)ks->http_proxy);
+  ks->http_proxy = g_strdup(gtk_entry_get_text(entry));
 }
