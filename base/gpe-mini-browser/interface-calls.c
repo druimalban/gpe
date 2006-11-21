@@ -318,7 +318,7 @@ void
 add_zoom_buttons (Webi * html, GtkWidget * toolbar, WebiSettings * set)
 {
 
-  GtkToolItem *zoom_in_button, *zoom_out_button, *sep;
+  GtkToolItem *zoom_in_button, *zoom_out_button, *sep, *config_button;
 
 
 /* fill in the data needed for the zoom functionality */
@@ -341,12 +341,18 @@ add_zoom_buttons (Webi * html, GtkWidget * toolbar, WebiSettings * set)
   gtk_tool_item_set_homogeneous (sep, FALSE);
   gtk_toolbar_insert (GTK_TOOLBAR (toolbar), sep, -1);
 
+  config_button = gtk_tool_button_new_from_stock (GTK_STOCK_PREFERENCES);
+  gtk_tool_item_set_homogeneous (config_button, FALSE);
+  gtk_toolbar_insert (GTK_TOOLBAR (toolbar), config_button, -1);
+
+
   /* add button callbacks */
   g_signal_connect (GTK_OBJECT (zoom_in_button), "clicked",
 		    G_CALLBACK (zoom_in), &zoom);
   g_signal_connect (GTK_OBJECT (zoom_out_button), "clicked",
 		    G_CALLBACK (zoom_out), &zoom);
-
+  g_signal_connect (GTK_OBJECT (config_button), "clicked",
+		    G_CALLBACK (show_configuration_panel), &zoom);
 }
 
 /* ======================================================== */

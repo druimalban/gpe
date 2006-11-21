@@ -232,11 +232,21 @@ write_settings_to_file (WebiSettings * ks)
 
 /*==============================================*/
 
-void
-save_settings_on_quit (GtkWidget * app, WebiSettings * ks)
+void save_settings(GtkWidget * app, WebiSettings * ks)
 {
   write_settings_to_file (ks);
 }
+
+/*==============================================*/
+
+void apply_settings(GtkWidget * app, gpointer * data)
+{
+  struct zoom_data *info;
+
+  info = (struct zoom_data *)data;
+  webi_set_settings(info->html, info->settings);
+}
+
 
 /*==============================================*/
   
@@ -259,4 +269,134 @@ char * get_conf_file(void)
     free(filename);
     return 0;
   }
+}
+
+/*==============================================*/
+
+void
+show_configuration_panel(GtkWidget *window, gpointer *data)
+{
+  GtkWidget *config_window, *content_box_left, *content_box_right, *hbox1, *hbox2, *vbox1;  /* main window */
+  GtkWidget *proxy_box, *font_box; /* entry boxes */
+  GtkWidget *javascript_select, *img_load_select; /* toggle buttons */
+  GtkWidget *proxy_label, *font_label; /*labels */
+  GtkWidget *apply, *cancel;
+  struct zoom_data *info;
+
+  info = (struct zoom_data *)data;
+  config_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+  gtk_window_set_modal (GTK_WINDOW(config_window), TRUE);
+  gtk_window_set_title (GTK_WINDOW(config_window), _("Configuration"));
+  
+  gtk_window_set_type_hint (GTK_WINDOW (config_window),
+                            GDK_WINDOW_TYPE_HINT_DIALOG);
+  gtk_window_set_decorated (GTK_WINDOW (config_window), TRUE);
+
+  /* content boxes to pack labels and entries */
+  content_box_left = gtk_vbox_new (FALSE, 0);
+  content_box_right = gtk_vbox_new (FALSE, 0);
+  hbox1 = gtk_hbox_new (FALSE, 0);
+  hbox2 = gtk_hbox_new (FALSE, 0);
+  vbox1 = gtk_vbox_new (FALSE, 0);
+
+  /* content of the left box */
+  proxy_label = gtk_label_new("proxy server:");
+  font_label = gtk_label_new("fontsize:");
+
+  /* content of the right box */
+  proxy_box = gtk_entry_new ();
+  gtk_entry_set_text(GTK_ENTRY(proxy_box), info->settings->http_proxy);
+  font_box = gtk_entry_new();
+  char temp[4];
+  snprintf(temp, 4, "%g",info->settings->default_font_size);
+  gtk_entry_set_text(GTK_ENTRY(font_box), temp);
+   
+  /* check buttons for images and javascript */
+  javascript_select = gtk_check_button_new_with_label("enable javascript");
+  img_load_select = gtk_check_button_new_with_label("load images");
+  /* set check buttons according to the current status */
+  if(info->settings->javascript_enabled)
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(javascript_select), TRUE);
+  if(info->settings->autoload_images)
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(img_load_select), TRUE);
+
+  /* Cancel and apply buttons */
+  apply = gtk_button_new_from_stock (GTK_STOCK_APPLY);
+  cancel = gtk_button_new_from_stock (GTK_STOCK_CANCEL);
+
+  /* pack the boxes */
+  gtk_box_pack_start(GTK_BOX(content_box_left), proxy_label, TRUE, FALSE, 0);
+  gtk_box_pack_start(GTK_BOX(content_box_left), font_label, TRUE, FALSE, 0);
+
+  gtk_box_pack_start(GTK_BOX(content_box_right), proxy_box, FALSE, FALSE, 0);
+  gtk_box_pack_start(GTK_BOX(content_box_right), font_box, FALSE, FALSE, 0);
+
+  gtk_box_pack_start(GTK_BOX(hbox1), content_box_left, FALSE, FALSE, 0); 
+  gtk_box_pack_start(GTK_BOX(hbox1), content_box_right, FALSE, FALSE, 0); 
+  
+  gtk_box_pack_start(GTK_BOX(hbox2), GTK_WIDGET(cancel), FALSE, FALSE, 0);
+  gtk_box_pack_start(GTK_BOX(hbox2), GTK_WIDGET(apply), FALSE, FALSE, 0);
+
+  gtk_box_pack_start(GTK_BOX(vbox1), hbox1, FALSE, FALSE, 0); 
+  gtk_box_pack_start(GTK_BOX(vbox1), javascript_select, FALSE, FALSE, 0);
+  gtk_box_pack_start(GTK_BOX(vbox1), img_load_select, FALSE, FALSE, 0);
+  gtk_box_pack_start(GTK_BOX(vbox1), hbox2, TRUE, FALSE, 0);
+
+  gtk_container_add(GTK_CONTAINER(config_window), GTK_WIDGET(vbox1));
+  
+  /* connect signals do nothing on destroy as it is considered to be 
+     the same as cancelling */
+  g_signal_connect (GTK_OBJECT (apply), "clicked",
+                    G_CALLBACK (apply_settings), info);
+  g_signal_connect (GTK_OBJECT (apply), "clicked",
+                    G_CALLBACK (save_settings), info->settings);
+  g_signal_connect (GTK_OBJECT (apply), "clicked",
+                    G_CALLBACK (destroy_window), config_window);
+  g_signal_connect (GTK_OBJECT (cancel), "clicked",
+                    G_CALLBACK (destroy_window), config_window);
+  g_signal_connect (GTK_OBJECT (javascript_select), "toggled", 
+ 		    G_CALLBACK (toggle_javascript), info->settings);
+  g_signal_connect (GTK_OBJECT (img_load_select), "toggled", 
+ 		    G_CALLBACK (toggle_images), info->settings);
+  g_signal_connect (GTK_OBJECT (font_box), "activate",
+		    G_CALLBACK (set_font_size), info->settings);
+  g_signal_connect (GTK_OBJECT (proxy_box), "activate",
+		    G_CALLBACK (set_proxy_config), info->settings);
+
+  
+  gtk_widget_show_all(config_window);
+}
+
+/*==============================================*/
+
+void toggle_javascript (GtkWidget * button, WebiSettings * ks)
+{
+  gboolean value;
+
+  value = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(button));
+  ks->javascript_enabled = value;
+}
+
+/*==============================================*/
+
+void toggle_images (GtkWidget * button, WebiSettings * ks)
+{
+  gboolean value;
+
+  value = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(button));
+  ks->autoload_images = value;
+}
+
+/*==============================================*/
+
+void set_font_size (GtkEntry * entry, WebiSettings * ks)
+{
+  ks->default_font_size = atoi(gtk_entry_get_text(entry));
+}
+
+/*==============================================*/
+
+void set_proxy_config (GtkEntry * entry, WebiSettings * ks)
+{
+  strcpy((char *)ks->http_proxy, gtk_entry_get_text(entry));
 }

@@ -61,7 +61,7 @@ main (int argc, char *argv[])
   GtkWidget *html, *app, *contentbox;	/* html engine, application window, content box of application window */
   GtkWidget *toolbar, *urlbox = NULL;	/* toolbar, url entry box (big screen) */
   GtkToolItem *back_button, *forward_button, *home_button,
-    *fullscreen_button, *url_button = NULL, *history_button;
+    *fullscreen_button, *url_button = NULL, *history_button; //, *config_button;
 #ifndef NOBOOKMARKS
   GtkToolItem *bookmarks_button, *separator;
 #endif /* NOBOOKMARKS */
@@ -245,8 +245,12 @@ main (int argc, char *argv[])
   gtk_tool_item_set_homogeneous (history_button, FALSE);
   gtk_tool_button_set_label (GTK_TOOL_BUTTON (history_button), _("History"));
   gtk_toolbar_insert (GTK_TOOLBAR (toolbar), history_button, -1);
-
-
+ /* 
+  config_button = gtk_tool_button_new_from_stock (GTK_STOCK_PREFERENCES);
+  gtk_tool_item_set_homogeneous (config_button, FALSE);
+  gtk_tool_button_set_label (GTK_TOOL_BUTTON (config_button), _("Settings"));
+  gtk_toolbar_insert (GTK_TOOLBAR (toolbar), config_button, -1);
+*/
   /* connect all button signals */
   g_signal_connect (GTK_OBJECT (back_button), "clicked",
 		    G_CALLBACK (back_func), html);
@@ -274,7 +278,7 @@ main (int argc, char *argv[])
 		    G_CALLBACK (save_completion), NULL);
   /* save settings on exit */
   g_signal_connect (GTK_OBJECT (app), "destroy",
-		    G_CALLBACK (save_settings_on_quit), &s);
+		    G_CALLBACK (save_settings), &s);
 
   /* create preferences/bookmarks/history etc keeping directory */
   const char *home = getenv ("HOME");

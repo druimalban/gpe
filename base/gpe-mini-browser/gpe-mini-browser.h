@@ -306,7 +306,14 @@ void zoom_out(GtkWidget * zoom_out, gpointer *data);
 /* write current settings to file to be able to restore them later */
 int write_settings_to_file(WebiSettings *ks);
 /* save settings on exit */
-void save_settings_on_quit(GtkWidget *app, WebiSettings *ks);
-
-
+void save_settings(GtkWidget *app, WebiSettings *ks);
+/* apply settings */
+void apply_settings(GtkWidget * app, gpointer * data);
+/* show configuration window */
+void show_configuration_panel(GtkWidget *window, gpointer *data);
+/* callbacks for the configuration window */
+void toggle_javascript (GtkWidget * button, WebiSettings * ks);
+void toggle_images (GtkWidget * button, WebiSettings * ks);
+void set_font_size (GtkEntry * entry, WebiSettings * ks);
+void set_proxy_config (GtkEntry * entry, WebiSettings * ks);
 
