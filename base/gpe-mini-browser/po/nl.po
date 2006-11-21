@@ -23,19 +23,6 @@ msgstr "surf op het internet"
 msgid "Mini Web Browser"
 msgstr "Mini internet browser"
 
-#: ../hildon-mini-browser.c:129
-#, c-format
-msgid "GPE-mini-browser version 0.20. (C)2005, Philippe De Swert\n"
-msgstr "GPE-mini-browser version 0.20. (C)2005, Philippe De Swert\n"
-
-#: ../hildon-mini-browser.c:135 ../gpe-mini-browser.c:95
-#, c-format
-msgid ""
-"GPE-mini-browser, basic web browser application. (c)2005, Philippe De Swert\n"
-msgstr ""
-"GPE-mini-browser, kleine en lichte internet browser. (c)2005, Philippe De "
-"Swert\n"
-
 #: ../hildon-mini-browser.c:136 ../gpe-mini-browser.c:96
 #, c-format
 msgid "Usage: gpe-mini-browser <URL>\n"
@@ -72,7 +59,6 @@ msgid ""
 msgstr ""
 
 #: ../gpe-mini-browser.c:89
-#, fuzzy, c-format
 msgid "GPE-mini-browser version 0.20. (C)2005, Philippe De Swert\n"
 msgstr "GPE-mini-browser version 0.19. (C)2005, Philippe De Swert\n"
 
