@@ -23,6 +23,22 @@
   <td rowspan="3"><img src="../images/<!--#echo var="appname"-->.png" border="0" alt="Screenshot"></td>
 </tr>
 <tr>
+  <td><b>Features</b></td>
+  <td>
+    <i>gpe-mini-browser has:</i> 
+    <ul>
+    <li> javascript and css support
+    <li> bookmarks and history
+    <li> several screen modes (normal mode, fullscreen with toolbar, fullscreen)
+    <li> a big screen and small screen interface
+    <li> settings management
+    <li> zooming (only text however)
+    <li> url entry completion to avoid re-typing non-bookmarked urls
+    </ul>
+  </td>
+  <td rowspan="3"><img src="../images/<!--#echo var="appname"-->.png" border="0" alt="Screenshot"></td>
+</tr>
+<tr>
   <td><b>Coordinator(s)</b></td>
   <td>
     The coordinator for this sub-project is Philippe De Swert
