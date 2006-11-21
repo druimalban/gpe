@@ -69,11 +69,6 @@ msgid ""
 "<philippedeswert@scarlet.be>\n"
 msgstr ""
 
-#: ../gpe-mini-browser.c:89
-#, fuzzy, c-format
-msgid "GPE-mini-browser version 0.20. (C)2005, Philippe De Swert\n"
-msgstr "GPE-mini-browser version 0.19. (C)2005, Philippe De Swert\n"
-
 #: ../gpe-mini-browser.c:231
 msgid "Fullscreen"
 msgstr "Plein ecran"
