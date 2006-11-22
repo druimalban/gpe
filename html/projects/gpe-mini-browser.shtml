@@ -36,7 +36,6 @@
     <li> url entry completion to avoid re-typing non-bookmarked urls
     </ul>
   </td>
-  <td rowspan="3"><img src="../images/<!--#echo var="appname"-->.png" border="0" alt="Screenshot"></td>
 </tr>
 <tr>
   <td><b>Coordinator(s)</b></td>
