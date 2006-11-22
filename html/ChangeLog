@@ -1,3 +1,8 @@
+
+2006-11-22  Florian Boor <florian@kernelconcepts.de>
+
+	* index.phtml: Add more motivations.
+
 2006-11-17  Florian Boor <florian@kernelconcepts.de>
 
 	* linkres.phtml: Update Nils email address, update some links.
