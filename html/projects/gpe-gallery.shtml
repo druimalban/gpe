@@ -37,7 +37,7 @@
 	  <i>gpe-gallery</i> is stable but would like to get updated a little bit.
 	</p>
     <p>
-      The source code can be found in <A href="../svn.phtml">SVN</A>,
+      The source code can be found in <A href="../download.phtml">SVN</A>,
       module <b>base/<!--#echo var="appname"--></b>.  
 	</p>
 	<p>
