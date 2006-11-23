@@ -1,7 +1,7 @@
 <?php
   if (empty($author)) {
     $author = "GPE Hackers";
-    $authoremail = "gpe@handhelds.org";
+    $authoremail = "gpe-list@linuxtogo.org";
   }
 ?>
 
@@ -14,21 +14,24 @@
 <LINK REL="shortcut icon" HREF="/images/favicon.png" TYPE="image/png">
 </HEAD>
 <BODY>
-<table border=0 width="100%">
+<div id="website">
+<div id="header"><table border="0" width="100%">
 <tr>
-<td width=70>
-<a href="http://gpe.handhelds.org">
+<td width="60" height="64">
+<a href="http://gpe.linuxtogo.org">
 <img src="/images/gpe-logo2.png" alt="[The GPE Logo] > gpe.handhelds.org">
 </td>
-<td width="*" valign="middle">
+<td width="*" valign="middle" height="64" halign="middle">
 <h1> GPE: <?php echo $addtitle; ?></h1>
 </td>
 <td halign="right">
 <a href="http://www.linuxtogo.org">
-<img src="/images/logo-w.png" alt="[The linuxtogo.org Logo] > linuxtogo.org">
+<img src="/images/logo-w.png" alt="[The linuxtogo.org Logo]> linuxtogo.org">
 </a>
 </td>
 </tr>
 </table>
+</div>
 <?php include("http://gpe.linuxtogo.org/includes/menu.php"); ?>
 <hr>
+<div id="content">

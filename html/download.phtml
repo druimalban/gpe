@@ -1,5 +1,5 @@
 <?php
-$addtitle="Download";
+$addtitle="Obtaining GPE";
 $pagename="download";
 
 include ("includes/head.php");
@@ -51,17 +51,84 @@ in the <a href="http://openembedded.org/">OpenEmbedded</a> build system.
 There is still some help needed to improve GPE adaption to several hardware platforms, 
 so do not hestitate to contact us if you want to work on porting GPE to a particular
 device.
-
 </p>
 
 
 <h2>Source</h2>
+<h3>Releases</h3>
 <p>
-The latest development sources for GPE components can be found in the
-<a href="/svn.phtml">GPE SVN</a> archive. 
-
-Tarballs are being collected at
+Release tar archives are being collected at
 <a href="http://gpe.linuxtogo.org/download/source/">http://gpe.linuxtogo.org/download/source/</a>.
 </p>
+
+<H3>Accessing the GPE Subversion repository</H3>
+<p>
+In short, if you are not (yet?) a developer, you do the following to get an initial copy of the GPE sources:
+   <pre>
+	svn checkout svn://projects.linuxtogo.org/svn/gpe/trunk gpe_svn
+   </pre>
+You only have to do this once. The next time you want to update
+your copy of the sources, do:
+   <pre>
+      $ cd gpe_svn
+      $ svn update
+   </pre>
+
+<P>
+    For more details about accessing the Subversion repository 
+    take a look at the <a href="http://projects.linuxtogo.org/scm/?group_id=21">
+    GForge SCM page</a>.
+</P> 
+
+
+<P>
+You can examine the SVN repository directly 
+<A href="http://projects.linuxtogo.org/plugins/scmsvn/viewcvs.php/?root=gpe">here</A>.
+</P>
+
+<H3>Building GPE applications from SVN</H3>
+<p>
+There is no easy recipe for building GPE applications for the ARM
+architecture yet. For a start, check the 
+<A HREF="http://www.handhelds.org/moin/moin.cgi/GpeCrossCompilation">GpeCrossCompilation
+wiki page</A>.
+However, GPE can be built like any other application for your
+desktop.
+
+A makefile in 'gpe_svn/base' helps you build (most of) GPE:
+
+   <pre>
+      $ make -f Makefile.gpe DESTDIR=`pwd`/tmp-install install
+   </pre>
+
+make 3.80 or later is required, version 3.79.1 has been seen to not work.
+
+If this doesn't work for you: prerequisites for building GPE
+applications are libgpewidget and gpe-icons. Depending on
+the applications that you build, you may also need the
+below packages (-dev or -devel according to your distribution):
+<ul>
+<li>libsqlite-dev (<a href="http://www.sqlite.org/download.html">sources</a>),
+<li>dbus-1, dbus-glib-1-dev
+(<a href="http://freedesktop.org/Software/dbus/releases/">sources</a>),
+<li>libmimedir, libsoup (sources: use the sources from
+<a href="http://developer.gnome.org/tools/cvs.html">GNOME's CVS</a>),
+<li>libbluetooth, libsdp2 (sources: bluez-libs from the
+<a href="http://www.bluez.org/download.html">BlueZ</a> project),
+</ul>
+
+So build <i>libgpewidget</i> before you attempt to compile one of the GPE
+applications:
+
+   <pre>
+      $ cd gpe_svn/base
+      $ cd libgpewidget
+      $ ./autogen.sh
+      $ ./configure
+      $ make
+      $ make install
+      $ cd ../gpe-icons
+      $ make install
+   </pre>
 
 <?php include ("includes/foot.php"); ?>

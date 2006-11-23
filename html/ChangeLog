@@ -1,3 +1,10 @@
+2006-11-23  Florian Boor <florian@kernelconcepts.de>
+
+	* css/style.css: Add some more modern CSS love.
+	* include/*: Some minor design improvements.
+	* include/menu.php, svn.phtml, download.phtml:
+	Merge svn and download pages.
+	* template.html: Minor design improvement.
 
 2006-11-22  Florian Boor <florian@kernelconcepts.de>
 

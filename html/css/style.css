@@ -6,6 +6,22 @@ body {
 	font-family:	Bitstream Vera Sans, Vera Sans, Georgia, Verdana, Geneva, Helvetica, Arial, sans-serif;
 }
 
+h2 {
+	margin-top:10px;
+	margin-left:-00px;
+	text-indent:10px;
+	background-color:#F0F0F0;
+}
+
+h3 {
+	margin-top:8pt;
+	margin-bottom:8pt;
+	text-indent:10px;
+	border:0px darkblue;
+	background-color:#F0F0F0;
+}
+
+
 p,li {
 	line-height:	120%
 }
@@ -42,6 +58,7 @@ hr {
 div.menu {
 	margin-top:	6pt;
 	margin-bottom:	2pt;
+	margin-left:	0pt;
 }
 
 div.footer {
@@ -50,42 +67,44 @@ div.footer {
 	margin-bottom:	2pt;
 }
 
-/* Style Sheet originally created for the following:			*/
-/* Theme Name: Geeklog Squeaky-Clean (v1.0)						*/
-/* Portal package: Geeklog 1.3.5								*/
-/* Theme Developer: Simon Lord (slord@mac.com)					*/
-/* Theme Code Copyright (c) 2002 by Simon Lord, 				*/
-/* reproduction is permitted providing author credits remain.	*/
-/* Creation Date: 04/02/2002									*/
-/* Modification Date: 24/04/2002								*/
-/* ------------------------------------------------------------ */
-/* Original Geeklog Styles (possibly modified for this theme)	*/
+.menu li {
+	display: inline;
+	list-style-type: dots;
+	padding:0;
+	margin:1pt;
+	font-size:small;
+}
 
-.storytitle 		{ background: #DDDDDD; font-size: 12px; font-weight: bold;  font-family: verdana, arial, sans-serif; }
-.storybyline 		{ color: gray;  font-size: 10px; font-weight: bold;  font-family: verdana, arial, sans-serif; }
-.storyunderline		{ background: #000000;  }
-.warning 			{ color: red;  font-size: 12px; font-weight: bold;  font-family: verdana, arial, sans-serif; }
-.warningsmall 		{ color: red;  font-size: 10px; font-family: verdana, arial, sans-serif; }
-.commentbar1 		{ color: white;  background: #000000;  font-size: 12px; font-family: verdana, arial, sans-serif; }
-.commentbar2 		{ background: #DDDDDD; font-size: 12px; font-family: verdana, arial, sans-serif; }
-.commentbar3 		{ color: black;  background: #DDDDDD;  font-size: 10px; font-family: verdana, arial, sans-serif; }
-.commenttitle 		{ font-size: 12px; font-weight: bold;  background: #DDDDDD;  font-family: verdana, arial, sans-serif; }
-.cal_day 			{ font-size: 14px; font-weight: bold; }
-.cal_nullday 		{ background: #EEEEEE; }
-.cal_oldday 		{ background: #DDDDDD; }
-.cal_today 			{ background: #fceead; }
-.weekview_caltitle 	{ background: #DDDDDD; font-weight: bold; font-size: 14px; }
-.weekview_curday 	{ background: yellow; }
-.weekview_offday 	{ background: #DDDDDD; }
-.weekview_dayformat { font-weight: bold; }
-.weekview_addevent 	{ font-size: 9px; }
-.weekview_daterange { font-size: 16px; font-weight: bold; }
-.dayview_times 		{ font-weight: bold; text-align: center; }
-.dayview_datecol 	{ font-weight: bold; background: #DDDDDD; font-size: 16px; }
-.dayview_quickaddtitle 		{ font-weight: bold; background: #DDDDDD; font-size: 14px; }
-.box				{ color: #000; scrollbar-face-color: #0066FF; scrollbar-highlight-color: #00ccff; scrollbar-shadow-color: #003366; scrollbar-track-color: #003366  }
+.menu li a {
+	display: inline;
+	background-color:#F0F0F0;
+	padding-left: 10px;
+	padding-right: 10px;
+	border:1px solid #B0B0B0;
+	text-decoration:none;
+	font-weight:bold;
+}
 
+.menu li a:hover {
+	display: inline;
+	background-color:#A0D0A0 !important;
+	border:1px solid blue;
+}
 
+.menu li a:active,#active {
+	display: inline;
+	cursor:default;
+	background-color:lightblue !important;
+}
+
+.menu li a:visited {
+	display: inline;
+	background-color:#F0F0F0;
+}
+
+.menu ul {
+	border: 2;
+} 
 /* Custom theme styles */
 
 body				{ background-color: #ffffff; }
