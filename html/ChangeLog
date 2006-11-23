@@ -1,5 +1,6 @@
 2006-11-23  Florian Boor <florian@kernelconcepts.de>
 
+	* linkres.phtml: Update links to point to new wiki.
 	* css/style.css: Add some more modern CSS love.
 	* include/*: Some minor design improvements.
 	* include/menu.php, svn.phtml, download.phtml:
