@@ -1,3 +1,8 @@
+
+2006-11-24  Florian Boor <florian@kernelconcepts.de>
+
+	* style.css: Improve news display.
+
 2006-11-23  Florian Boor <florian@kernelconcepts.de>
 
 	* linkres.phtml: Update links to point to new wiki.
