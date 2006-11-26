@@ -21,6 +21,7 @@ enum { POS_NONE, POS_START, POS_END };
 #define PANEL_HEIGHT_DEFAULT  26
 #define PANEL_HEIGHT_MAX      200
 #define PANEL_HEIGHT_MIN      16
+#define PANEL_HEIGHT_HIDDEN   4
 
 
 typedef struct {
@@ -50,6 +51,7 @@ typedef struct {
     int setdocktype : 1;
     int setstrut : 1;
     int transparent : 1;
+    int hidden : 1;
     int spacing;
     
     int desknum;
@@ -148,5 +150,9 @@ extern int verbose;
 extern FbEv *fbev;
 
 #define FBPANEL_WIN(win)  gdk_window_lookup(win)
+
+void panel_hide (panel *p);
+void panel_unhide (panel *p);
+
 
 #endif

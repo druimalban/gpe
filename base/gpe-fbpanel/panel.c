@@ -309,6 +309,38 @@ panel_configure_event (GtkWidget *widget, GdkEventConfigure *e, panel *p)
     
 }
 
+static gboolean
+panel_button_press (GtkWidget *widget, GdkEventButton *b, panel *p)
+{
+  if (G_LIKELY(b->button == 1) && (p->hidden))
+    {
+      panel_unhide (p);
+      return TRUE;
+    }
+
+  return FALSE;
+}
+
+void
+panel_hide (panel *p)
+{
+  gtk_widget_hide (p->bbox);
+  
+  if (p->orientation == ORIENT_HORIZ)
+      gtk_widget_set_size_request (p->topgwin, -1, PANEL_HEIGHT_HIDDEN);
+  else
+      gtk_widget_set_size_request (p->topgwin, PANEL_HEIGHT_HIDDEN, -1);
+  p->hidden = TRUE;
+}
+
+void
+panel_unhide (panel *p)
+{  
+  gtk_widget_set_size_request (p->topgwin, p->aw, p->ah);
+      
+  gtk_widget_show (p->bbox);
+  p->hidden = FALSE;
+}
 
 /****************************************************
  *         panel creation                           *
@@ -317,17 +349,11 @@ panel_configure_event (GtkWidget *widget, GdkEventConfigure *e, panel *p)
 void
 panel_start_gui(panel *p)
 {
-    Atom state[3];
-    XWMHints wmhints;
     guint32 val;
  
-    
-    ENTER;
-
     /* main toplevel window */
-    p->topgwin =  gtk_window_new(GTK_WINDOW_TOPLEVEL);
-    gtk_widget_add_events (p->topgwin, GDK_KEY_PRESS_MASK);
-    gtk_widget_add_events (p->topgwin, GDK_STRUCTURE_MASK);
+    p->topgwin =  gtk_window_new (GTK_WINDOW_TOPLEVEL);
+    gtk_widget_add_events (p->topgwin, GDK_KEY_PRESS_MASK | GDK_BUTTON_PRESS_MASK | GDK_STRUCTURE_MASK);
     gtk_container_set_border_width(GTK_CONTAINER(p->topgwin), 1);
     gtk_window_set_resizable(GTK_WINDOW(p->topgwin), FALSE);
     gtk_window_set_wmclass(GTK_WINDOW(p->topgwin), "panel", "gpe-fbpanel");
@@ -340,16 +366,18 @@ panel_start_gui(panel *p)
     g_signal_connect(G_OBJECT(p->topgwin), "destroy-event",
           G_CALLBACK(panel_destroy_event), p);
     g_signal_connect (G_OBJECT (p->topgwin), "size-request",
-          (GCallback) panel_size_req, p);
+          G_CALLBACK(panel_size_req), p);
     g_signal_connect (G_OBJECT (p->topgwin), "size-allocate",
-          (GCallback) panel_size_alloc, p);
+          G_CALLBACK(panel_size_alloc), p);
     g_signal_connect (G_OBJECT (p->topgwin), "configure-event",
-          (GCallback) panel_configure_event, p);
+          G_CALLBACK(panel_configure_event), p);
+    g_signal_connect (G_OBJECT (p->topgwin), "button-press-event",
+          G_CALLBACK(panel_button_press), p);
      
     gtk_widget_realize(p->topgwin);
     gtk_widget_set_app_paintable(p->topgwin, TRUE);
     
-    // background box all over toplevel
+    /* background box all over toplevel */
     p->bbox = gtk_bgbox_new();
     gtk_container_add(GTK_CONTAINER(p->topgwin), p->bbox);
     gtk_widget_show(p->bbox);
@@ -359,7 +387,7 @@ panel_start_gui(panel *p)
         gtk_bgbox_set_background(p->bbox, BG_ROOT, p->tintcolor, p->alpha);        
     }
 
-    // main layout manager as a single child of background widget box
+    /* main layout manager as a single child of background widget box */
     p->lbox = p->my_box_new(FALSE, 0);
     gtk_container_set_border_width(GTK_CONTAINER(p->lbox), 0);
     gtk_container_add(GTK_CONTAINER(p->bbox), p->lbox);
@@ -371,24 +399,13 @@ panel_start_gui(panel *p)
     gtk_widget_show(p->box);
       
     p->topxwin = GDK_WINDOW_XWINDOW(GTK_WIDGET(p->topgwin)->window);
-    DBG("topxwin = %x\n", p->topxwin);
 
     /* the settings that should be done before window is mapped */
-    wmhints.flags = InputHint;
-    wmhints.input = 0;
-    XSetWMHints (GDK_DISPLAY(), p->topxwin, &wmhints); 
-#define WIN_HINTS_SKIP_FOCUS      (1<<0)	/* "alt-tab" skips this win */
-    val = WIN_HINTS_SKIP_FOCUS;
-    XChangeProperty(GDK_DISPLAY(), p->topxwin,
-          XInternAtom(GDK_DISPLAY(), "_WIN_HINTS", False), XA_CARDINAL, 32,
-          PropModeReplace, (unsigned char *) &val, 1);
-
-    if (p->setdocktype) {
-        state[0] = a_NET_WM_WINDOW_TYPE_DOCK;
-        XChangeProperty(GDK_DISPLAY(), p->topxwin, a_NET_WM_WINDOW_TYPE, XA_ATOM,
-              32, PropModeReplace, (unsigned char *) state, 1);
-    }
-
+    gtk_window_stick (GTK_WINDOW(p->topgwin));
+    gdk_window_set_type_hint (p->topgwin->window, GDK_WINDOW_TYPE_HINT_DOCK);
+    gdk_window_set_skip_taskbar_hint (p->topgwin->window, TRUE);
+    gdk_window_set_skip_pager_hint (p->topgwin->window, TRUE);
+    
     /* window mapping point */
     gtk_widget_show_all(p->topgwin);
 
@@ -396,16 +413,11 @@ panel_start_gui(panel *p)
 
     /* send it to running wm */
     Xclimsg(p->topxwin, a_NET_WM_DESKTOP, 0xFFFFFFFF, 0, 0, 0, 0);
+    
     /* and assign it ourself just for case when wm is not running */
     val = 0xFFFFFFFF;
     XChangeProperty(GDK_DISPLAY(), p->topxwin, a_NET_WM_DESKTOP, XA_CARDINAL, 32,
           PropModeReplace, (unsigned char *) &val, 1);
-
-    state[0] = a_NET_WM_STATE_SKIP_PAGER;
-    state[1] = a_NET_WM_STATE_SKIP_TASKBAR;
-    state[2] = a_NET_WM_STATE_STICKY;
-    XChangeProperty(GDK_DISPLAY(), p->topxwin, a_NET_WM_STATE, XA_ATOM,
-          32, PropModeReplace, (unsigned char *) state, 3);
 
     XSelectInput (GDK_DISPLAY(), GDK_ROOT_WINDOW(), PropertyChangeMask);
     gdk_window_add_filter(gdk_get_default_root_window (), (GdkFilterFunc)panel_event_filter, p);
@@ -414,8 +426,6 @@ panel_start_gui(panel *p)
     gdk_window_move_resize(p->topgwin->window, p->ax, p->ay, p->aw, p->ah);
     if (p->setstrut)
         panel_set_wm_strut(p);
-
-    RET();
 }
 
 static int
@@ -601,6 +611,7 @@ panel_start(panel *p, FILE *fp)
     p->alpha = 127;
     p->tintcolor = 0xFFFFFFFF;
     p->spacing = 0;
+    
     fbev = fb_ev_new();
     if ((get_line(fp, &s) != LINE_BLOCK_START) || g_ascii_strcasecmp(s.t[0], "Global")) {
         ERR( "fbpanel: config file must start from Global section\n");

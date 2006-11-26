@@ -153,7 +153,7 @@ wincmd_destructor(plugin *p)
         g_object_unref(wc->mask);
     if (wc->pix)
         g_object_unref(wc->pix);
-    //gtk_widget_destroy(wc->tips);
+        
     g_free(wc);
     RET();
 }

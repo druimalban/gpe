@@ -1,12 +1,15 @@
 glib config file
 restore session: wait for startup (done)
-session configuration, add/remove
-plugin packaging and positioning
+session configuration, add/remove (done)
+plugin packaging and positioning (done)
 install pixmap files
 window list/running apps -> menu
 external configurator
 remove unused code
-code cleanups
+code cleanup
 consistent icon sizes
 depend on folder package
 cleanup of menu plugin
+fix wincmd plugin behaviour on mouse over
+make sure session is saved correctly (done)
+dock area needs to expand itself (done)

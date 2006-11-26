@@ -1,3 +1,15 @@
+2006-11-26  Florian Boor <fb@kernelconcepts.de>
+
+	* systray.c: Improve session management to work with arbitary docked apps.
+	  Make sure the dock area is always expanded even if the session does
+	  not contain a spacer.
+	  Add copyright header.
+	* menu.c: Remove unused code.
+	* panel.c: Use GTK/GDK functions for some window setup.
+	  Implement panel hiding.
+	* systray.c: Likewise
+	  
+
 2006-09-13  Florian Boor <fb@kernelconcepts.de>
 
 	* Set minimum size of dock area if no application is docked to enable menu.

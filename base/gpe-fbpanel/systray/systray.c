@@ -1,3 +1,27 @@
+/*
+ * gpe-fbpanel
+ *
+ * A panel for GPE based on fbpanel
+ * 
+ * (C) 2005 Anatoly Asviyan <aanatoly@users.sf.net>
+ * (C) 2006 Florian Boor <fb@kernelconcepts.de>
+ *  
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * 
+ *  Xembed systray / notification area module with session management.
+ */
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
@@ -110,26 +134,38 @@ is_command (const gchar *line)
    return TRUE;
 }
 
+void
+tray_add_spacer (tray *tr)
+{
+  GtkWidget *spacer;
+  
+  spacer = gtk_event_box_new();
+  gtk_widget_show (spacer);
+  tray_add_widget (tr, spacer);
+  tr->pack_start = FALSE;
+}
+
+/* Triggered as soon as a new client is docked, if the session contains
+ * more applications the next in the list is launched.*/
 static void
 dock_complete (EggTrayManager *manager, GtkWidget *icon, gpointer data)
 {
   t_sessionstatus *session = (t_sessionstatus*)data;
 
-  if (!session->apps)
-      goto save;
-  
+  if (session->apps == NULL)
+    {
+      if (session->tr->pack_start)
+          tray_add_spacer(session->tr);
+      return;
+    }
   session->pos++;
   
   if (session->apps[session->pos])
     {
       if (!is_command(session->apps[session->pos]) && session->tr->pack_start)
         {
-           GtkWidget *spacer;
-           spacer = gtk_event_box_new();
-           gtk_widget_show (spacer);
-           tray_add_widget (session->tr, spacer);
-           session->tr->pack_start = FALSE;
-           session->pos++;
+          tray_add_spacer (session->tr);
+          session->pos++;
         }
         
         if (!session->apps[session->pos] 
@@ -137,7 +173,9 @@ dock_complete (EggTrayManager *manager, GtkWidget *icon, gpointer data)
           {
             g_strfreev (session->apps);
             session->apps = NULL;
-            goto save;
+            if (session->tr->pack_start)
+              tray_add_spacer(session->tr);
+            return;
           }
         run_application (session->apps[session->pos], session);
     }
@@ -145,12 +183,11 @@ dock_complete (EggTrayManager *manager, GtkWidget *icon, gpointer data)
     {
       g_strfreev (session->apps);
       session->apps = NULL;
-      goto save;
+      if (session->tr->pack_start)
+          tray_add_spacer(session->tr);
     }
-  return;
     
-save:    
-    tray_save_session(session->tr);
+  return;
 }
 
 static void
@@ -199,27 +236,24 @@ tray_restore_session (tray *tr)
 
 void 
 tray_add_widget (tray *tr, GtkWidget *widget)
-{
-   gtk_box_pack_start (GTK_BOX (tr->box), widget, TRUE, TRUE, 0);
+{ 
+  gtk_box_pack_start (GTK_BOX (tr->box), widget, TRUE, TRUE, 0);
 }
 
 static void
 tray_added (EggTrayManager *manager, GtkWidget *icon, void *data)
 {
-    tray *tr = (tray*)data;
-
-    if (tr->pack_start)
+  tray *tr = (tray*)data;
+  
+  if (tr->pack_start)
       gtk_box_pack_start (GTK_BOX (tr->box), icon, FALSE, TRUE, 0);
-    else
+  else
       gtk_box_pack_start (GTK_BOX (tr->box), icon, FALSE, TRUE, 0);
     
-    gtk_widget_show (icon);
+  gtk_widget_show (icon);
+  tray_save_session(tr);
 	
-	/* we have a client - drop minimum size */
-    if (!tr->icon_num) {
-       gtk_widget_set_size_request (tr->box, -1, -1);
-    }
-    tr->icon_num++;
+  tr->icon_num++;
 }
 
 static void
@@ -354,6 +388,13 @@ remove_menu_activate (GtkMenuItem *menuitem, gpointer user_data)
       g_list_free (children);
 }
 
+static void
+hide_menu_activate (GtkMenuItem *menuitem, gpointer user_data)
+{
+  panel *p = user_data;
+  panel_hide (p);
+}
+
 static int
 tray_constructor(plugin *p)
 {
@@ -426,6 +467,8 @@ tray_constructor(plugin *p)
     gtk_menu_attach (GTK_MENU (tr->context_menu), item, 0, 1, 2, 3);
     item = gtk_image_menu_item_new_with_label (_("Hide"));
     gtk_menu_attach (GTK_MENU (tr->context_menu), item, 0, 1, 3, 4);
+    g_signal_connect (G_OBJECT (item), "activate",
+                      G_CALLBACK (hide_menu_activate), p->panel);
     
     gtk_menu_attach_to_widget (GTK_MENU(tr->context_menu), tr->box, NULL);
     g_signal_connect (tr->box, "button-press-event", 

@@ -487,38 +487,6 @@ my_button_pressed(GtkWidget *widget, GdkEventButton *event, GtkMenu *menu)
     RET(TRUE);
 }
 
-
-static GtkWidget *
-make_button(plugin *p, gchar *fname, gchar *name, GtkWidget *menu)
-{
-    int w, h;
-    menup *m;
-    
-    ENTER;
-    m = (menup *)p->priv;
-    m->menu = menu;
-    if (p->panel->orientation == ORIENT_HORIZ) {
-        w = 10000;
-        h = p->panel->ah;
-    } else {
-        w = p->panel->aw;
-        h = 10000;
-    }
-    m->bg = fb_button_new_from_file_with_label(fname, w, h, 0xFF0000, TRUE,
-          (p->panel->orientation == ORIENT_HORIZ ? name : NULL));
-    gtk_widget_show(m->bg);  
-    gtk_box_pack_start(GTK_BOX(m->box), m->bg, FALSE, FALSE, 0);
-    if (p->panel->transparent) 
-        gtk_bgbox_set_background(m->bg, BG_ROOT, p->panel->tintcolor, p->panel->alpha);
-    
-
-    m->handler_id = g_signal_connect (G_OBJECT (m->bg), "button-press-event",
-          G_CALLBACK (my_button_pressed), menu);
-    g_object_set_data(G_OBJECT(m->bg), "plugin", p);
-   
-    RET(m->bg);
-}
-   
 static void
 new_application_menu (GtkWidget *main_menu, t_folder *folder)
 {
