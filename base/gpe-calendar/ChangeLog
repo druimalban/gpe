@@ -1,3 +1,8 @@
+2006-11-27  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * export-vcal.c (export_event_as_string): Fix export of daily recurring
+      events. Contributed by Graham Cobb <g+gpe@cobb.uk.net>, fixes #3
+
 2006-11-14  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * main.c (set_title): Apply patch by Matt Reimer to show day of week in

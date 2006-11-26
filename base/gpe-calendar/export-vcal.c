@@ -216,13 +216,13 @@ export_event_as_vevent (Event *ev)
 	  int i;
 	  GSList *l;
 	  for (l = byday, i = 0; l; l = l->next, i ++)
-	    s[i] = byday->data;
+	    s[i] = l->data;
 	  s[i] = NULL;
 
 	  char *units = g_strjoinv (",", s);
 
 	  g_object_set (recurrence, "unit", RECURRENCE_UNIT_DAY, NULL);
-	  g_object_set (recurrence, "units", s, NULL);
+	  g_object_set (recurrence, "units", units, NULL);
 	  event_recurrence_byday_free (byday);
 	  g_free (units);
 	}
