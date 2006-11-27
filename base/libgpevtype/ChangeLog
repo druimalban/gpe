@@ -1,3 +1,8 @@
+2006-11-27  Florian Boor  <florian@kernelconcepts.de>
+
+	* vtodo.c: Apply patch by Graham Cobb <g+gpe@cobb.uk.net> to handle due dates 
+	  in vTodo files. Fixes #4
+
 2006-05-28  Neal H. Walfield  <neal@gnu.org>
 
 	* configure.ac (DEP_MODULES): Demand libeventdb 0.30 or newer.

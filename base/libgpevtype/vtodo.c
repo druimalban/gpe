@@ -184,5 +184,17 @@ vtodo_to_tags (MIMEDirVTodo *vtodo)
       t++;
     }
 
+  /* DUE */
+  MIMEDirDateTime *date;
+  g_object_get (G_OBJECT (vtodo), "due", &date, NULL);
+  if (date) {
+    char d_buf[32];
+    struct tm tm;
+    mimedir_datetime_get_struct_tm(date, &tm);
+    strftime (d_buf, sizeof (d_buf), "%F", &tm);
+    data = gpe_tag_list_prepend (data, "due", g_strdup (d_buf));
+  }
+
+
   return data;
 }
