@@ -33,6 +33,9 @@
 #include <gpe/vcard.h>
 #include <gpe/vevent.h>
 #include <gpe/vtodo.h>
+#include <gpe/contacts-db.h>
+#include <gpe/event-db.h>
+#include <gpe/todo-db.h>
 
 #define _GNU_SOURCE
 
@@ -53,10 +56,9 @@ typedef struct
   FILE *ifp, *ofp;
   int socket;
   int remote;
-  
-  sqlite *contact_db;
-  sqlite *event_db;
-  sqlite *todo_db;
+
+  EventDB *event_db;
+  GSList *event_calendars;
 
   GString *result;
 
@@ -65,6 +67,8 @@ typedef struct
 
 #include "import.h"
 #include "export.h"
+
+extern void free_object_list(GSList *);
 
 gpesyncd_context *gpesyncd_context_new (char *err);
 
@@ -77,5 +81,14 @@ gboolean do_command (gpesyncd_context * ctx, gchar * command);
 void command_loop (gpesyncd_context * ctx);
 
 int remote_loop (gpesyncd_context * ctx);
+
+extern char *
+do_import_vevent (EventDB *event_db, EventCalendar *ec, MIMEDirVEvent *event, Event **new_ev);
+
+extern MIMEDirVEvent *
+export_event_as_vevent (Event *ev);
+
+GSList *todo_db_item_to_tags (struct todo_item *t);
+struct todo_item *todo_db_find_item_by_id(guint uid);
 
 #endif /* GPESYNCD_H */

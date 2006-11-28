@@ -1,3 +1,10 @@
+2006-11-28  Florian Boor <florian@kernelconcepts.de>
+
+	* Apply major patch by Graham Cobb <graham@cobb.uk.net> including 
+	  several major updates to work with latest PIM libraries and
+	  fixing a major number of bugs. It uses a similar import/export
+	  code like gpe-calendar as well.
+
 2006-08-18  Martin Felis <martin@_0nospam0_silef.de>
 
 	* INSTALL, autogen.sh: Simplified the build process.

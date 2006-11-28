@@ -12,13 +12,25 @@
 
 #include "gpesyncd.h"
 
-gboolean add_item (gpesyncd_context * ctx, guint * uid, gchar * type,
+gboolean add_contact (gpesyncd_context * ctx, guint * uid,
+		   gchar * data, guint * modified, GError ** error);
+gboolean add_event (gpesyncd_context * ctx, guint * uid,
+		   gchar * data, guint * modified, GError ** error);
+gboolean add_todo (gpesyncd_context * ctx, guint * uid,
 		   gchar * data, guint * modified, GError ** error);
 
-gboolean modify_item (gpesyncd_context * ctx, guint uid, gchar * type,
+gboolean modify_contact (gpesyncd_context * ctx, guint uid,
+		      gchar * data, guint * modified, GError ** error);
+gboolean modify_event (gpesyncd_context * ctx, guint uid,
+		      gchar * data, guint * modified, GError ** error);
+gboolean modify_todo (gpesyncd_context * ctx, guint uid,
 		      gchar * data, guint * modified, GError ** error);
 
-gboolean del_item (gpesyncd_context * ctx, guint uid, gchar * type,
+gboolean del_contact (gpesyncd_context * ctx, guint uid,
+		   GError ** error);
+gboolean del_event (gpesyncd_context * ctx, guint uid,
+		   GError ** error);
+gboolean del_todo (gpesyncd_context * ctx, guint uid,
 		   GError ** error);
 
 #endif /* IMPORT_H */

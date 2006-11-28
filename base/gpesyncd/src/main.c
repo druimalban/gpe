@@ -1,5 +1,6 @@
 /*
  *  Copyright (C) 2005 Martin Felis <martin@silef.de>
+ *  Copyright (C) 2006 Graham Cobb <g+gpe@cobb.uk.net>
  *  
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
@@ -15,15 +16,18 @@
 
 int verbose = 0;
 
-int
-callback_list (void *arg, int argc, char **argv, char **names)
-{
-  GSList **tables = (GSList **) arg;
-  int i;
-  for (i = 0; i < argc; i++)
-    *tables = g_slist_append (*tables, argv[i]);
+/* Free slist containing pointers to objects */
+extern void free_object_list(GSList *list) {
+  GSList *i;
 
-  return 0;
+  /* Empty list ? */
+  if (!list) return;
+
+  for (i=list; i; i = g_slist_next(i)) {
+    g_object_unref(i->data);
+  }
+  g_slist_free(list);
+
 }
 
 /*! \brief Initializes the databases
@@ -36,96 +40,25 @@ callback_list (void *arg, int argc, char **argv, char **names)
 void
 gpesyncd_setup_databases (gpesyncd_context * ctx)
 {
-  GSList *tables = NULL;
-  gchar *err;
-  if (ctx->contact_db)
-    {
-      gchar *err = NULL;
-      sqlite_exec (ctx->contact_db, "select max(urn) from contacts",
-		   callback_list, &tables, &err);
-      g_slist_free (tables);
-      tables = NULL;
+  if (contacts_db_open(FALSE)) {
+    fprintf(stderr, "Could not open contacts database.\n");
+  }
 
-      if ((err) && (!strcasecmp (err, "no such table: contacts")))
-	{
-	  fprintf (stderr, "No contacts tables found. Creating...");
-	  sqlite_exec (ctx->contact_db,
-		       "create table contacts (urn INTEGER NOT NULL, tag TEXT NOT NULL, value TEXT NOT NULL)",
-		       0, 0, 0);
-	  sqlite_exec (ctx->contact_db,
-		       "create table contacts_config (id INTEGER PRIMARY KEY,   cgroup INTEGER NOT NULL, cidentifier TEXT NOT NULL, cvalue TEXT)",
-		       0, 0, 0);
-	  sqlite_exec (ctx->contact_db,
-		       "INSERT INTO contacts_config VALUES(1,0,'Name','NAME')",
-		       0, 0, 0);
-	  sqlite_exec (ctx->contact_db,
-		       "INSERT INTO contacts_config VALUES(2,0,'Phone','HOME.TELEPHONE')",
-		       0, 0, 0);
-	  sqlite_exec (ctx->contact_db,
-		       "INSERT INTO contacts_config VALUES(3,0,'EMail','HOME.EMAIL')",
-		       0, 0, 0);
-	  sqlite_exec (ctx->contact_db,
-		       "create table contacts_urn (urn INTEGER PRIMARY KEY, name TEXT, family_name TEXT, company TEXT)",
-		       0, 0, 0);
-	  fprintf (stderr, " done.\n");
-	  g_free (err);
-	  err = NULL;
-	}
-    }
-  if (ctx->event_db)
-    {
-      gchar *err = NULL;
-      sqlite_exec (ctx->event_db, "select max(uid) from calendar",
-		   callback_list, &tables, &err);
-      g_slist_free (tables);
-      tables = NULL;
+  GString *filename = g_string_new(g_get_home_dir());
+  g_string_append(filename, "/.gpe/calendar");
+  ctx->event_db = event_db_new (filename->str);
+  g_string_free(filename, TRUE);
+  if (!ctx->event_db) {
+    fprintf(stderr, "Could not open calendar database.\n");
+  }
 
-      if ((err) && (!strcasecmp (err, "no such table: calendar")))
-	{
-	  fprintf (stderr, "No calendar tables found. Creating...");
-	  sqlite_exec (ctx->event_db,
-		       "create table calendar (uid INTEGER NOT NULL, tag TEXT NOT NULL, value TEXT)",
-		       0, 0, 0);
-	  sqlite_exec (ctx->event_db,
-		       "create table calendar_dbinfo (version integer NOT NULL)",
-		       0, 0, 0);
-	  sqlite_exec (ctx->event_db, "INSERT INTO calendar_dbinfo VALUES(1)",
-		       0, 0, 0);
-	  sqlite_exec (ctx->event_db,
-		       "create table calendar_urn (uid INTEGER PRIMARY KEY)",
-		       0, 0, 0);
-	  fprintf (stderr, " done.\n");
-	  g_free (err);
-	  err = NULL;
-	}
-    }
-  if (ctx->todo_db)
-    {
-      gchar *err = NULL;
-      sqlite_exec (ctx->todo_db, "select max(uid) from todo", callback_list,
-		   &tables, &err);
-      g_slist_free (tables);
-      tables = NULL;
+  /* Get the calendars */
+  ctx->event_calendars = event_db_list_event_calendars (ctx->event_db);
 
-      if ((err) && (!strcasecmp (err, "no such table: todo")))
-	{
-	  fprintf (stderr, "No todo tables found. Creating...");
-	  sqlite_exec (ctx->todo_db,
-		       "create table todo (uid INTEGER NOT NULL, tag TEXT NOT NULL, value TEXT)",
-		       0, 0, 0);
-	  sqlite_exec (ctx->todo_db,
-		       "create table todo_dbinfo (version integer NOT NULL)",
-		       0, 0, 0);
-	  sqlite_exec (ctx->todo_db, "INSERT INTO todo_dbinfo VALUES(1)", 0,
-		       0, 0);
-	  sqlite_exec (ctx->todo_db,
-		       "create table todo_urn (uid INTEGER PRIMARY KEY)", 0,
-		       0, 0);
-	  fprintf (stderr, " done.\n");
-	  g_free (err);
-	  err = NULL;
-	}
-    }
+  if (todo_db_start()) {
+    fprintf(stderr, "Could not open todo database.\n");
+  }
+
 }
 
 /*! \brief Checks whether an ip is allowed to connect or not
@@ -200,41 +133,9 @@ gpesyncd_context_new (char *err)
   ctx->ifp = NULL;
   ctx->ofp = NULL;
   ctx->socket = 0;
-
-  len = strlen (home) + strlen ("/./gpe/calendar") + 1;
-  buf = g_malloc0 (len);
-
-  sprintf (buf, "%s%s", home, "/.gpe/calendar");
-  ctx->event_db = sqlite_open (buf, 0, &err);
-  if (verbose)
-    fprintf (stderr, "Opening: %s\n", buf);
-  if (!ctx->event_db)
-    {
-      g_free (buf);
-      return NULL;
-    }
-  sprintf (buf, "%s%s", home, "/.gpe/contacts");
-  if (verbose)
-    fprintf (stderr, "Opening: %s\n", buf);
-  ctx->contact_db = sqlite_open (buf, 0, &err);
-  if (!ctx->contact_db)
-    {
-      g_free (buf);
-      return NULL;
-    }
-  sprintf (buf, "%s%s", home, "/.gpe/todo");
-  if (verbose)
-    fprintf (stderr, "Opening: %s\n", buf);
-  ctx->todo_db = sqlite_open (buf, 0, &err);
-  if (!ctx->todo_db)
-    {
-      g_free (buf);
-      return NULL;
-    }
+  ctx->event_calendars = NULL;
 
   ctx->result = g_string_new ("");
-
-  g_free (buf);
 
   return ctx;
 }
@@ -246,12 +147,17 @@ gpesyncd_context_free (gpesyncd_context * ctx)
 {
   if (ctx)
     {
-      if (ctx->contact_db)
-	sqlite_close (ctx->contact_db);
-      if (ctx->event_db)
-	sqlite_close (ctx->event_db);
-      if (ctx->todo_db)
-	sqlite_close (ctx->todo_db);
+      /* Contacts DB */
+      contacts_db_close();
+
+      /* Events DB */
+      free_object_list(ctx->event_calendars);
+      ctx->event_calendars = NULL;
+      g_object_unref(ctx->event_db);
+      ctx->event_db = 0;
+
+      /* Todo DB */
+      todo_db_stop();
 
       if (ctx->ifp)
 	fclose (ctx->ifp);
@@ -446,14 +352,14 @@ do_command (gpesyncd_context * ctx, gchar * command)
 	{
 	case GPE_DB_TYPE_VCARD:
 	  cmd_result =
-	    add_item (ctx, &uid, "contacts", data, &modified, &error);
+	    add_contact (ctx, &uid, data, &modified, &error);
 	  break;
 	case GPE_DB_TYPE_VEVENT:
 	  cmd_result =
-	    add_item (ctx, &uid, "calendar", data, &modified, &error);
+	    add_event (ctx, &uid, data, &modified, &error);
 	  break;
 	case GPE_DB_TYPE_VTODO:
-	  cmd_result = add_item (ctx, &uid, "todo", data, &modified, &error);
+	  cmd_result = add_todo (ctx, &uid, data, &modified, &error);
 	  break;
 	default:
 	  g_string_append (ctx->result, "Error: wrong type\n");
@@ -473,15 +379,15 @@ do_command (gpesyncd_context * ctx, gchar * command)
 	{
 	case GPE_DB_TYPE_VCARD:
 	  cmd_result =
-	    modify_item (ctx, uid, "contacts", data, &modified, &error);
+	    add_contact (ctx, &uid, data, &modified, &error);
 	  break;
 	case GPE_DB_TYPE_VEVENT:
 	  cmd_result =
-	    modify_item (ctx, uid, "calendar", data, &modified, &error);
+	    add_event (ctx, &uid, data, &modified, &error);
 	  break;
 	case GPE_DB_TYPE_VTODO:
 	  cmd_result =
-	    modify_item (ctx, uid, "todo", data, &modified, &error);
+	    add_todo (ctx, &uid, data, &modified, &error);
 	  break;
 	default:
 	  g_string_append (ctx->result, "Error: wrong type\n");
@@ -498,13 +404,13 @@ do_command (gpesyncd_context * ctx, gchar * command)
       switch (type)
 	{
 	case GPE_DB_TYPE_VCARD:
-	  cmd_result = del_item (ctx, uid, "contacts", &error);
+	  cmd_result = del_contact (ctx, uid, &error);
 	  break;
 	case GPE_DB_TYPE_VEVENT:
-	  cmd_result = del_item (ctx, uid, "calendar", &error);
+	  cmd_result = del_event (ctx, uid, &error);
 	  break;
 	case GPE_DB_TYPE_VTODO:
-	  cmd_result = del_item (ctx, uid, "todo", &error);
+	  cmd_result = del_todo (ctx, uid, &error);
 	  break;
 	default:
 	  g_string_append (ctx->result, "Error: wrong type\n");
@@ -558,7 +464,17 @@ do_command (gpesyncd_context * ctx, gchar * command)
     }
   else if (!strncasecmp (cmd, "QUIT", 4))
     {
+      gchar *err;
       gpesyncd_printf (ctx, "Exiting!\n");
+      fprintf (stderr, "Compressing contacts database...");
+      err=contacts_db_compress();
+      if (err) {
+	fprintf (stderr, "failed\n");
+	g_free(err);
+      } else {
+	fprintf (stderr, "succeeded\n");
+      }
+      fprintf (stderr, "Contacts DB size = %d\n",contacts_db_size());
       g_free (cmd);
       return FALSE;
     }
@@ -919,17 +835,24 @@ int
 main (int argc, char **argv)
 {
   gchar *err = NULL;
-  gpesyncd_context *ctx = gpesyncd_context_new (err);
 
-  gpesyncd_setup_databases (ctx);
+#ifdef USE_VARTMP
+  /* Set the temporary file directory to something useful on the 770
+     Note that setting TMPDIR, TMP or TEMP will still override this */
+  setenv("TEMP", "/var/tmp", 0);
+#endif
 
   g_type_init ();
+
+  gpesyncd_context *ctx = gpesyncd_context_new (err);
 
   if (!ctx)
     {
       fprintf (stderr, "Error initializing gpesyncd: %s\n", err);
       return -1;
     }
+
+ gpesyncd_setup_databases (ctx);
 
   ctx->remote = 0;
   if (argc > 1)

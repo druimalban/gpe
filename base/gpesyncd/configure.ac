@@ -1,4 +1,4 @@
-AC_INIT(gpesyncd,0.1,martin@silef.de)
+AC_INIT(gpesyncd,2.0,g+gpe@cobb.uk.net)
 AC_CONFIG_SRCDIR([src/main.c])
 AC_CONFIG_HEADER(config.h)
 AM_INIT_AUTOMAKE
@@ -8,13 +8,25 @@ AC_PROG_CC
 AC_HEADER_STDC
 AC_PROG_CXX
 
-DEP_MODULES="glib-2.0 mimedir-1.0 libgpevtype sqlite gobject-2.0 gthread-2.0 gmodule-2.0"
+DEP_MODULES="glib-2.0 mimedir-1.0 libgpevtype sqlite gobject-2.0 gthread-2.0 gmodule-2.0 libcontactsdb libeventdb libtododb"
 
 AC_PROG_LIBTOOL
 
 PKG_CHECK_MODULES(DEPS, $DEP_MODULES)
 AC_SUBST(DEPS_FLAGS)
 AC_SUBST(DEPS_FLAGS)
+
+AC_ARG_ENABLE(vartmp,
+[[  --enable-vartmp         Use /var/tmp instead of /tmp for temporary files [default=yes]]],
+[
+        use_vartmp=$enableval
+],
+[
+        use_vartmp=yes
+])
+if test "x$use_vartmp" = xyes ; then
+AC_DEFINE(USE_VARTMP,1,[Use /var/tmp for temporary files])
+fi
 
 AC_OUTPUT([
 Makefile

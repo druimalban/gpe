@@ -8,8 +8,10 @@ EXTRA_DIST = \
 gpesyncd_SOURCES = \
 	export.c \
 	main.c \
-	import.c
-	
+	import.c \
+	export-vcal.c \
+	import-vcal.c
+
 gpesyncd_LDADD = $(DEPS_LIBS)
 
 bin_PROGRAMS = gpesyncd
