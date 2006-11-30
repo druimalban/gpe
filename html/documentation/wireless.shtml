@@ -2,7 +2,7 @@
 <!--#set var="pagename" value="wireless"-->
 <!--#set var="author" value="Colin Marquardt"-->
 <!--#set var="authoremail" value="gpe-web@marquardt-home.de"-->
-<!--#include virtual="../includes/head.shtml"-->
+<!--#include virtual="../includes/head.php"-->
 
 <p>
   There are a few scenarios with wireless networking with GPE in

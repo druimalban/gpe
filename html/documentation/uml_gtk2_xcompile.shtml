@@ -2,7 +2,7 @@
 <!--#set var="pagename" value="uml_gtk2_xcompile"-->
 <!--#set var="author" value="Colin Marquardt"-->
 <!--#set var="authoremail" value="gpe-web@marquardt-home.de"-->
-<!--#include virtual="../includes/head.shtml"-->
+<!--#include virtual="../includes/head.php"-->
 
 <p>The file "<a 
 href="http://handhelds.org/~luis/gtk2-arm-cross.ext2.bz2">gtk2-arm-cross.ext2.bz2</a>" 

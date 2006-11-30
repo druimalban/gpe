@@ -3,7 +3,7 @@
 <!--#set var="pagename" value="libgpewidget"-->
 <!--#set var="author" value="Damien Tanner"-->
 <!--#set var="authoremail" value="dctanner@handhelds.org"-->
-<!--#include virtual="../includes/head.shtml"-->
+<!--#include virtual="../includes/head.php"-->
 
 <h1>Libgpewidget API Documentation</h1>
 <p>
