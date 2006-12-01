@@ -1,0 +1,8 @@
+[Desktop Entry]
+Encoding=UTF-8
+_Name=Sync Applet
+_Comment=Syncronisation control panel applet.
+Exec=gpe-synctool
+Type=PanelApp
+Icon=@prefix@/share/gpe/pixmaps/default/opensync.png
+Categories=Panel;Utility;GPE;
