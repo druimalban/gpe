@@ -1,9 +1,9 @@
 /*
  * gpe-synctool
  *
- * Application launcher for GPE Phone Edition.
+ * Synchronisation tool for gpesyncd.
  * 
- * (c) kernel concepts 2006
+ * (c) Florian Boor  <florian@linuxtogo.org>
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
