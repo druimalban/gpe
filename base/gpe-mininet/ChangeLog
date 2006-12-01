@@ -1,3 +1,9 @@
+
+2006-12-01	Florian Boor <florian.boor@kernelconcepts.de>
+
+	* gpe-mininet.desktop.in.in: Change to get prefix in.
+	* autogen.sh: new file
+
 2006-01-18		Florian Boor <florian.boor@kernelconcepts.de>
 
 	* Release Version 0.7
