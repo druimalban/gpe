@@ -18,9 +18,11 @@
  * Dock applet and application control.
  */
 #include <stdio.h>
+#include <stdlib.h>
 #include <libintl.h>
 #include <locale.h>
-#include <ctype.h>
+#include <unistd.h>
+#include <signal.h>
 
 #include <gtk/gtk.h>
 #include <gdk/gdkx.h>
@@ -34,12 +36,16 @@
 
 #define _(x) gettext(x)
 
-#define COMMAND_DAEMON_START "gpesyncd -d"
-#define COMMAND_CONFIG "gpe-conf sync"
+#define DAEMON_DEFAULT_PORT  6446
+#define COMMAND_DAEMON_START "gpesyncd -D"
+#define COMMAND_APP          "gpe-conf"
+#define COMMAND_CONFIG       COMMAND_APP " sync"  
 
 
 struct gpe_icon my_icons[] = {
   {"gpe-synctool", "opensync"},
+  {"sync-on",      "opensync"},
+  {"sync-off",     "opensync"},
   {NULL}
 };
 
@@ -54,6 +60,7 @@ static GtkWidget *window;
 static GtkWidget *menu;
 static GtkWidget *icon;
 
+static sync_active = FALSE;
 
 static void
 update_icon (gint size)
@@ -64,10 +71,7 @@ update_icon (gint size)
   if (size <= 0)
     size = gdk_pixbuf_get_width (gtk_image_get_pixbuf (GTK_IMAGE (icon)));
 
-  if (size > 16)
-    sbuf = gpe_find_icon (net_is_on ? "sync-on-48" : "sync-off-48");
-  else
-    sbuf = gpe_find_icon (net_is_on ? "sync-on" : "sync-off");
+  sbuf = gpe_find_icon (sync_active ? "sync-on" : "sync-off");
   dbuf = gdk_pixbuf_scale_simple (sbuf, size, size, GDK_INTERP_HYPER);
   gdk_pixbuf_render_pixmap_and_mask (dbuf, NULL, &bitmap, 64);
   gtk_widget_shape_combine_mask (GTK_WIDGET (window), NULL, 1, 0);
@@ -85,13 +89,26 @@ cancel_message (gpointer data)
   return FALSE;
 }
 
-
 static void
-app_shutdown ()
+sync_daemon_stop (void)
 {
-  gtk_main_quit ();
+
 }
 
+static void
+sync_daemon_start (void)
+{
+
+}
+
+static void
+do_sync_toggle (GtkCheckMenuItem *item, gpointer userdata)
+{
+  if (gtk_check_menu_item_get_active (item))
+    sync_daemon_start ();
+  else
+    sync_daemon_stop ();
+}
 
 static void
 do_sync_config (void)
@@ -104,6 +121,15 @@ do_sync_config (void)
       g_printerr ("Err gpe-synctool: %s\n", err->message);
       g_error_free (err);
     }
+}
+
+static void
+app_shutdown (void)
+{
+  if (sync_active) 
+    sync_daemon_stop();
+    
+  gtk_main_quit ();
 }
 
 static void
@@ -141,6 +167,7 @@ int
 main (int argc, char *argv[])
 {
   Display *dpy;
+  GtkWidget *menu_toggle;
   GtkWidget *menu_remove;
   GtkWidget *menu_config;
   GtkTooltips *tooltips;
@@ -163,24 +190,28 @@ main (int argc, char *argv[])
   signal (SIGTERM, sigterm_handler);
 
   menu = gtk_menu_new ();
+  menu_toggle = gtk_check_menu_item_new_with_label (_("Enable sync access"));
   menu_config = gtk_menu_item_new_with_label (_("Configure Syncing"));
   menu_remove = gtk_menu_item_new_with_label (_("Remove from dock"));
 
+  g_signal_connect (G_OBJECT (menu_toggle), "activate",
+		    G_CALLBACK (do_sync_toggle), NULL);
   g_signal_connect (G_OBJECT (menu_config), "activate",
 		    G_CALLBACK (do_sync_config), NULL);
   g_signal_connect (G_OBJECT (menu_remove), "activate",
 		    G_CALLBACK (app_shutdown), NULL);
 
-  gtk_widget_show (menu_config);
-  gtk_widget_show (menu_remove);
 
+  gtk_menu_append (GTK_MENU (menu), menu_toggle);
   gtk_menu_append (GTK_MENU (menu), menu_config);
   gtk_menu_append (GTK_MENU (menu), menu_remove);
 
+  gtk_widget_show_all (menu);
+  
   if (gpe_load_icons (my_icons) == FALSE)
     exit (1);
 
-  icon = gtk_image_new_from_pixbuf (gpe_find_icon (net_is_on ? "sync-on" :
+  icon = gtk_image_new_from_pixbuf (gpe_find_icon (sync_active ? "sync-on" :
 						   "sync-off"));
   gtk_misc_set_alignment (GTK_MISC (icon), 0, 0);
   gtk_widget_show (icon);

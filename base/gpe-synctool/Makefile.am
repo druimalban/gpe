@@ -4,11 +4,11 @@ INCLUDES = $(DEPS_CFLAGS) -I$(top_srcdir)/gpe -I$(top_srcdir) \
            -DPREFIX=\"@prefix@\" -D_GNU_SOURCE \
            -DPACKAGE_LOCALE_DIR=\"@gpesynctool_localedir@\"
 
-bin_PROGRAMS = gpe-mininet
+bin_PROGRAMS = gpe-synctool
 
-gpe_mininet_LDADD = @DEPS_LIBS@
+gpe_synctool_LDADD = @DEPS_LIBS@
 
-gpe_mininet_SOURCES = main.c
+gpe_synctool_SOURCES = main.c
 
 desktopdir = $(datadir)/applications
 desktop_in_files = gpe-synctool.desktop.in
