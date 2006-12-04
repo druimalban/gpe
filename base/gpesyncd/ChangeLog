@@ -1,9 +1,25 @@
 2006-11-28  Florian Boor <florian@kernelconcepts.de>
 
-	* Apply major patch by Graham Cobb <graham@cobb.uk.net> including 
+	* Apply major patch by Graham Cobb <g+gpe@cobb.uk.net> including 
 	  several major updates to work with latest PIM libraries and
 	  fixing a major number of bugs. It uses a similar import/export
-	  code like gpe-calendar as well.
+	  code like gpe-calendar as well:
+	* import-vcal.c, import-vcal.h, export-vcal.c, export-vcal.h:
+	  import/export code from gpe-calendar added.
+	* import.h: replace add/modify/del_item with add/modify/del_contact/event/todo.
+	* import.c: replace add/modify/del_item with add/modify/del_contact/event/todo;
+	  remove direct sql access and replace with calls to libcontactsdb
+	  libeventdb libtododb.
+	* export.h: add todo_db_item_to_tags, todo_db_find_item_by_id.
+	* export.c: add todo_db_item_to_tags, todo_db_find_item_by_id;
+	  remove direct sql access and replace with calls to libcontactsdb
+	  libeventdb libtododb.
+	* gpesyncd.h, main.c: remove direct sql access and replace with 
+	  calls to libcontactsdb libeventdb libtododb;
+	  replace calls to add/modify/del_item with add/modify/del_contact/event/todo.
+	* configure.ac: add references to libcontactsdb libeventdb libtododb;
+	  add --enable-vartmp option for configure.
+	* Makefile.am: add export-vcal.c, import-vcal.c
 
 2006-08-18  Martin Felis <martin@_0nospam0_silef.de>
 
