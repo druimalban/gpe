@@ -233,6 +233,7 @@ popup_box (const gchar *text, gint length, gint x, gint y, gint type)
   
   gtk_window_set_default_size (GTK_WINDOW (popup), width, height);
   gtk_window_set_decorated (GTK_WINDOW (popup), FALSE);
+  gtk_window_set_type_hint (GTK_WINDOW (popup), GDK_WINDOW_TYPE_HINT_MENU);
   gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
   gtk_container_set_border_width (GTK_CONTAINER (box), spacing);
     

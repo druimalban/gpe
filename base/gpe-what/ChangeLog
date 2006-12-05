@@ -1,3 +1,6 @@
+2006-12-05  Florian Boor  <florian@kernelconcepts.de>
+
+	* gpe-what.c (popup_box): Set type hint of popup window.
 
 2006-04-18  Florian Boor  <florian@kernelconcepts.de>
 
