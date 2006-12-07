@@ -1,3 +1,5 @@
 Rxvt*scrollBar_right: true
 Rxvt*font: xft:Mono:pixelsize=9
+Rxvt*foreground: white
+Rxvt*background: black
 Xft.dpi: 100
