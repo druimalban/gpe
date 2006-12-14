@@ -1386,6 +1386,12 @@ gpe_cal_exit (void)
   gtk_main_quit ();
 }
 
+static void
+gpe_cal_iconify (void)
+{
+  gtk_window_iconify(main_window);
+}
+
 #ifdef IS_HILDON
 static void
 toggle_fullscreen (GtkCheckMenuItem *menuitem, gpointer user_data)
@@ -1449,7 +1455,7 @@ main_window_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *data)
           set_today();
         break;	
         case GDK_q:
-          gpe_cal_exit();
+          gpe_cal_iconify();
         break;	
       }
 #endif /*IS_HILDON*/
@@ -2155,7 +2161,7 @@ main (int argc, char *argv[])
 #endif
   set_title ();
   g_signal_connect (G_OBJECT (main_window), "delete-event",
-                    G_CALLBACK (gpe_cal_exit), NULL);
+                    G_CALLBACK (gpe_cal_iconify), NULL);
   gtk_widget_show (main_window);
 
   main_box = GTK_BOX (gtk_vbox_new (FALSE, 0));
@@ -2396,6 +2402,13 @@ main (int argc, char *argv[])
   gtk_widget_show (mitem);
   gtk_menu_shell_append (menu, mitem);
 #endif
+
+  /* File -> Minimize.  */
+  mitem = gtk_image_menu_item_new_from_stock (GTK_STOCK_CLOSE, NULL);
+  gtk_menu_shell_append (menu, mitem);
+  g_signal_connect (G_OBJECT (mitem), "activate",
+		    G_CALLBACK (gpe_cal_iconify), NULL);
+  gtk_widget_show (mitem);
 
   /* File -> Quit.  */
 #ifdef IS_HILDON

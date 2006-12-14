@@ -165,7 +165,7 @@ cancel_alarm_uid(guint alarm_uid)
   
   sqlite_exec_printf (sqliteh, "delete from alarms where alarm_uid=%d", 
 		      NULL, NULL, NULL, alarm_uid);
-  sprintf(erase_at, "/usr/bin/atrm %d", alarm_uid);
+  sprintf(erase_at, "/usr/bin/atrm %d  2>&1", alarm_uid);
   ret_val = system(erase_at);
   if (ret_val == 0) return TRUE;
   else return FALSE;

@@ -434,7 +434,7 @@ buzzer (gpointer data)
       if (start - alarm <= now)
 	{
 	  /* Mark it as unacknowledged.  */
-	  EVENT_DB_CLASS (ev->edb)->event_mark_unacknowledged (i->data);
+	  EVENT_DB_GET_CLASS (ev->edb)->event_mark_unacknowledged (i->data);
 
 	  /* And signal the user a signal.  */
 	  GValue args[2];

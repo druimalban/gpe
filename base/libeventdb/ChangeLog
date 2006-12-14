@@ -1,3 +1,8 @@
+2006-12-14  Joe McCarthy <mccarthy@granular.che.pitt.edu>
+
+        * event-db.c (buzzer): Change EVENT_DB_CLASS to EVENT_DB_GET_CLASS to
+	fix crashing with unacknowledged alarms.
+			
 2006-08-28  Neal H. Walfield  <neal@gnu.org>
 
 	* sqlite.c (event_load_callback): Correctly copy the day of the

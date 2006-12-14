@@ -1,3 +1,7 @@
+2006-12-14  Joseph J. McCarthy <mccarthy@granular.pitt.edu>
+
+	* main.c: change behavior of "close" to iconify (to aid in alarm handling)	 
+
 2006-11-27  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * export-vcal.c (export_event_as_string): Fix export of daily recurring
