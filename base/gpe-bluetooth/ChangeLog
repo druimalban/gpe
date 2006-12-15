@@ -1,3 +1,7 @@
+2006-12-15  Florian Boor <florian.boor@kernelconcepts.de>
+
+	* configure.ac, po/sv.po: Add Swedish translation.
+
 2006-08-31  Florian Boor <florian.boor@kernelconcepts.de>
 
 	* main.h: Build fix (missing include). (by Philipp Zabel)

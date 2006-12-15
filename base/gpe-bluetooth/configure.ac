@@ -17,7 +17,7 @@ AH_TEMPLATE([GETTEXT_PACKAGE], [Package name for gettext])
 GETTEXT_PACKAGE=$PACKAGE
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE")
 AC_SUBST(GETTEXT_PACKAGE)
-ALL_LINGUAS=""
+ALL_LINGUAS="sv"
 
 gpebluetooth_localedir='${prefix}/${DATADIRNAME}/locale'
 AC_SUBST(gpebluetooth_localedir)

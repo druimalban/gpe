@@ -1,0 +1,276 @@
+# Swedish translation for gpe-bluetooth.
+# Copyright (C) 2006 Free Software Foundation
+# This file is distributed under the same license as the gpe-bluetooth package.
+# Daniel Nylander <po@danielnylander.se>, 2006.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-bluetooth\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2006-07-04 16:19+0200\n"
+"PO-Revision-Date: 2006-12-13 13:03+0100\n"
+"Last-Translator: Daniel Nylander <po@danielnylander.se>\n"
+"Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../gpe-bluetooth.desktop.in.h:1
+#: ../main.c:720
+msgid "Bluetooth control"
+msgstr "Blåtandskontroll"
+
+#: ../gpe-bluetooth.desktop.in.h:2
+msgid "Panel based Bluetooth control"
+msgstr "Panelbaserad blåtandskontroll"
+
+#: ../dbus.c:117
+#: ../dbus.c:147
+#, c-format
+msgid "Failed to request name: %s"
+msgstr "Misslyckades med att fråga efter namn: %s"
+
+#: ../dbus.c:119
+#: ../dbus.c:149
+#, c-format
+msgid "Failed to acquire service: %s"
+msgstr "Misslyckades med att ta över tjänst: %s"
+
+#: ../dbus.c:126
+#, c-format
+msgid "Failed to open connection to system message bus: %s"
+msgstr "Misslyckades med att öppna anslutning till systemmeddelandebussen: %s"
+
+#: ../dbus.c:156
+#, c-format
+msgid "Failed to open connection to session message bus: %s"
+msgstr "Misslyckades med att öppna anslutning till sessionsmeddelandebussen: %s"
+
+#: ../headset.c:108
+#: ../lap.c:109
+#: ../pan.c:317
+#, c-format
+msgid "Connecting to %s"
+msgstr "Ansluter till %s"
+
+#: ../headset.c:127
+#: ../lap.c:128
+#: ../pan.c:336
+msgid "Connection failed\n"
+msgstr "Anslutning misslyckades\n"
+
+#: ../headset.c:148
+#, c-format
+msgid "HEADSET connection to %s lost"
+msgstr "HEADSET-anslutning till %s förlorades"
+
+#: ../headset.c:164
+#, c-format
+msgid "HEADSET connection to %s re-established"
+msgstr "HEADSET-anslutning till %s återetablerades"
+
+#: ../headset.c:201
+msgid "Disconnect HEADSET"
+msgstr "Koppla från HEADSET"
+
+#: ../headset.c:206
+msgid "Connect HEADSET"
+msgstr "Anslut HEADSET"
+
+#: ../lap.c:149
+#, c-format
+msgid "LAP connection to %s lost"
+msgstr "LAP-anslutning till %s förlorades"
+
+#: ../lap.c:165
+#, c-format
+msgid "LAP connection to %s re-established"
+msgstr "LAP-anslutning till %s återetablerades"
+
+#: ../lap.c:202
+msgid "Disconnect LAP"
+msgstr "Koppla från LAP"
+
+#: ../lap.c:207
+msgid "Connect LAP"
+msgstr "Anslut LAP"
+
+#: ../main.c:203
+msgid "No kernel support for Bluetooth"
+msgstr "Inget stöd i kärnan för blåtand"
+
+#: ../main.c:220
+msgid "Couldn't exec "
+msgstr "Kunde inte köra "
+
+#: ../main.c:224
+msgid "Energising radio"
+msgstr "Startar upp radio"
+
+#: ../main.c:339
+msgid "Device information"
+msgstr "Enhetsinformation"
+
+#: ../main.c:379
+msgid "Details ..."
+msgstr "Detaljer ..."
+
+#: ../main.c:436
+#: ../obexclient.c:379
+msgid "Scanning for devices"
+msgstr "Söker efter enheter"
+
+#: ../main.c:447
+#: ../obexclient.c:391
+msgid "Inquiry failed"
+msgstr "Förfrågan misslyckades"
+
+#: ../main.c:455
+#: ../obexclient.c:399
+msgid "HCI device open failed"
+msgstr "Öppning av HCI-enhet misslyckades"
+
+#: ../main.c:482
+#: ../obexclient.c:420
+msgid "unknown"
+msgstr "okänt"
+
+#: ../main.c:504
+msgid "Retrieving service information"
+msgstr "Tar emot tjänsteinformation"
+
+#: ../main.c:550
+msgid "Bluetooth devices"
+msgstr "Blåtandsenheter"
+
+#: ../main.c:571
+msgid "Unable to scan for devices"
+msgstr "Kunde inte söka efter enheter"
+
+#: ../main.c:608
+msgid "hciattach died unexpectedly"
+msgstr "hciattach dog oväntat"
+
+#: ../main.c:619
+msgid "Radio startup failed"
+msgstr "Radiouppstart misslyckades"
+
+#: ../main.c:727
+msgid "Switch radio on"
+msgstr "Slå på radio"
+
+#: ../main.c:728
+msgid "Switch radio off"
+msgstr "Slå av radio"
+
+#: ../main.c:729
+msgid "Devices..."
+msgstr "Enheter..."
+
+#: ../main.c:748
+msgid "Remove from panel"
+msgstr "Ta bort från panel"
+
+#: ../main.c:763
+msgid ""
+"This is the Bluetooth control.\n"
+"Tap here to turn the radio on and off, or to see a list of Bluetooth devices."
+msgstr ""
+"Det här är Blåtandskontrollen.\n"
+"Klicka här för att slå radion på eller av, eller för att se en lista över blåtandsenheter."
+
+#: ../obexclient.c:158
+msgid "Sending data"
+msgstr "Skickar data"
+
+#: ../obexclient.c:228
+msgid "Connecting"
+msgstr "Ansluter"
+
+#: ../obexclient.c:235
+msgid "Selected device lacks OBEX support"
+msgstr "Vald enhet saknar OBEX-stöd"
+
+#: ../obexclient.c:243
+msgid "Unable to create OBEX object"
+msgstr "Kunde inte skapa OBEX-objekt"
+
+#: ../obexclient.c:250
+msgid "Unable to connect"
+msgstr "Kunde inte ansluta"
+
+#: ../obexclient.c:314
+msgid "No destination selected"
+msgstr "Inget mål valt"
+
+#: ../obexclient.c:478
+msgid "Select destination"
+msgstr "Välj mål"
+
+#: ../obexclient.c:623
+msgid "Send my vCard"
+msgstr "Skicka mitt vCard"
+
+#: ../obexserver.c:266
+msgid "Couldn't register OBEX service"
+msgstr "Kunde inte registrera OBEX-tjänst"
+
+#: ../obex-unknown.c:60
+#, c-format
+msgid "Received a file '%s' (%d bytes).  Save it?"
+msgstr "Tog emot filen \"%s\" (%d byte).  Spara den?"
+
+#: ../obex-unknown.c:60
+msgid "<no name>"
+msgstr "<inget namn>"
+
+#: ../obex-unknown.c:78
+msgid "Save as ..."
+msgstr "Spara som ..."
+
+#: ../obex-vcal.c:187
+msgid "Received a calendar entry.  Import it?"
+msgstr "Tog emot ett kalenderinlägg.  Importera det?"
+
+#: ../obex-vcard.c:142
+#, c-format
+msgid "Received a business card for %s.  Import it?"
+msgstr "Tog emot ett visitkort för %s.  Importera det?"
+
+#: ../pan.c:359
+#, c-format
+msgid "PAN connection to %s lost: %s"
+msgstr "PAN-anslutning till %s förlorades: %s"
+
+#: ../pan.c:363
+#, c-format
+msgid "PAN connection to %s lost"
+msgstr "PAN-anslutning till %s förlorades"
+
+#: ../pan.c:379
+#, c-format
+msgid "PAN connection to %s re-established"
+msgstr "PAN-anslutning till %s återetablerad"
+
+#: ../pan.c:415
+msgid "Disconnect PAN"
+msgstr "Koppla från PAN"
+
+#: ../pan.c:420
+msgid "Connect PAN"
+msgstr "Anslut PAN"
+
+#: ../pin-ui.c:155
+msgid "Bluetooth PIN"
+msgstr "PIN-kod för blåtand"
+
+#: ../pin-ui.c:166
+#, c-format
+msgid "Outgoing connection to %s"
+msgstr "Utgående anslutning till %s"
+
+#: ../pin-ui.c:167
+#, c-format
+msgid "Incoming connection from %s"
+msgstr "Inkommande anslutning från %s"
+
