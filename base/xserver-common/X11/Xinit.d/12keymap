@@ -26,20 +26,12 @@ case $MACHINE in
 	"Simpad")
 		xmodmap - < /etc/X11/simpad.xmodmap
 		;;
-	"HP iPAQ H2200")
-		xmodmap - < /etc/X11/h2200.xmodmap
-		;;
-	"HP iPAQ HX4700")
-		xmodmap - < /etc/X11/hx4700.xmodmap
-		;;
-	"HP iPAQ H1910" | "HP iPAQ H4000")
-		xmodmap - < /etc/X11/h1910.xmodmap
-		;;
-	"Asus MyPal A716")
-		xmodmap - < /etc/X11/a716.xmodmap
-		;;
 	"HP iPAQ h6300")
 		xmodmap - < /etc/X11/h6300.xmodmap
+		;;
+	# All the rest of keyboardless PDA machines use common buttonmap
+	"HP iPAQ"* | "Asus MyPal"*)
+		xmodmap - < /etc/X11/keyboardless.xmodmap
 		;;
 esac
 
