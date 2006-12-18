@@ -26,7 +26,7 @@
 #include "utils.h"
 
 static sqlite *db = NULL;
-static provider_t current_provider = PROVIDER_LYRICWIKI;
+static provider_t current_provider = PROVIDER_LYRCAR;
 
 #define TABLE_NAME "lyrics"
 
@@ -68,25 +68,23 @@ lyrcar_parse (SoupMessage *msg)
     gchar *pos;
 
     lines = g_strsplit (msg->response.body, "\n", 4096);
-    /* XXX: This is for lyrc.com.ar. This needs reworking when
-     * new providers are added.
-     */
 
     /* First line */
-    pos = strstr (lines[110], "</font><br>");
+    pos = strstr (lines[129], "</script></td></tr></table>");
     
     if (!pos) {
         /* This is an error page, no lyrics */
         return NULL;
     }
 
-    pos += 11; /* strlen("</font><br>) */
+    pos += 27; /* strlen("</script></td></tr></table>") */
     str = g_string_new ("");
     g_string_append_len (str, pos, strlen (pos) - 7);
     g_string_append (str, "\n"); 
 
-    /* Lyrics start at line 111 */
-    for (ii = 111; lines[ii]; ii++) {
+    /* Lyrics start at line 130 */
+    for (ii = 130; lines[ii]; ii++) {
+    	/* Lyrics end with <p> */
         if ((pos = strstr (lines[ii], "<p>"))) {
             g_string_append_len (str, lines[ii], pos - lines[ii]);
             break;
@@ -131,8 +129,6 @@ lyricwiki_parse (SoupMessage *msg)
     GString *str;
     gint ii;
     gint pos;
-
-    //write (0, msg->response.body, msg->response.length);
 
     lines = g_strsplit (msg->response.body, "\n", 4096);
 
@@ -290,6 +286,8 @@ got_lyrics (SoupMessage *msg, gpointer view)
     const gchar *uri;
     gchar *lyrics = NULL;
 
+    //write (0, msg->response.body, msg->response.length);
+
     if (SOUP_STATUS_IS_SUCCESSFUL (msg->status_code))
         lyrics = providers[current_provider].parse (msg);
 
@@ -365,7 +363,7 @@ lyrics_store (const gchar *uri, const gchar *text)
 gchar *
 lyrics_cook_uri (const gchar *artist, const gchar *title)
 {
-    if (current_provider >= PROVIDER_INVALID)
+    if (current_provider >= PROVIDER_INVALID || !artist || !title)
         return NULL;
 
     return providers[current_provider].cook (artist, title);
