@@ -37,7 +37,7 @@
 gchar *
 get_device_model (void)
 {
-  gchar *result;
+  gchar *result = NULL;
   struct utsname uinfo;
   gchar **strv;
   gint i = 0;
@@ -62,6 +62,8 @@ get_device_model (void)
         }
       g_strfreev (strv);
     }
+  if (result)
+    return result;
 #ifdef __arm__
   result = g_strdup_printf ("%s,%s",_("ARM"), uinfo.machine);
 #endif
