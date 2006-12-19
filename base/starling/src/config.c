@@ -24,6 +24,7 @@
 #include "config.h"
 
 #define KEYVERSION "version"
+#define KEYRANDOM "random"
 #define KEYLOADPLAYLIST "load-playlist"
 #define KEYLASTPATH "last-path"
 #define KEYSINK "sink"
@@ -32,6 +33,7 @@
 
 /* default values */
 #define DEFKEYVERSION 1
+#define DEFKEYRANDOM FALSE
 #define DEFKEYLOADPLAYLIST TRUE
 #define DEFKEYLASTPATH ""
 #define DEFKEYSINK "esdsink"
@@ -74,6 +76,10 @@ config_init (Starling *st)
             g_key_file_set_integer (st->keyfile, GROUP,
                     KEYVERSION, DEFKEYVERSION);
         }
+        if (!g_key_file_has_key (st->keyfile, GROUP, KEYRANDOM, NULL)) {
+            g_key_file_set_boolean (st->keyfile, GROUP,
+                    KEYRANDOM, DEFKEYRANDOM);
+        }
         
         if (!g_key_file_has_key (st->keyfile, GROUP, KEYLOADPLAYLIST, NULL)) {
             g_key_file_set_boolean (st->keyfile, GROUP,
@@ -104,6 +110,11 @@ config_load (Starling *st)
 
     value = g_key_file_get_string (st->keyfile, GROUP, KEYSINK, NULL);
     play_list_set_sink (st->pl, value);
+
+    if (g_key_file_get_boolean (st->keyfile, GROUP, KEYRANDOM, NULL)) {
+    	gtk_toggle_button_set_active (st->random, TRUE);
+    }
+
 
     if (g_key_file_has_key (st->keyfile, GROUP, KEYLFMUSER, NULL)) {
         value = g_key_file_get_string (st->keyfile, GROUP, KEYLFMUSER, NULL);
@@ -143,6 +154,7 @@ config_save (Starling *st)
     gchar *path;
     gchar *data;
     gsize length;
+    gboolean random;
     
     path = g_strdup_printf ("%s/%s/%s", g_get_home_dir(), 
             CONFIGDIR, CONFIG_PL);
@@ -153,6 +165,9 @@ config_save (Starling *st)
 
     /* Grab settings from memory */
     g_key_file_set_string (st->keyfile, GROUP, KEYLASTPATH, st->fs_last_path);
+    
+    random = gtk_toggle_button_get_active (st->random);
+    g_key_file_set_boolean (st->keyfile, GROUP, KEYRANDOM, random); 
 
     data = g_key_file_to_data (st->keyfile, &length, NULL);
 

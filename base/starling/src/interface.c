@@ -68,9 +68,6 @@ void
 player_init (Starling *st)
 {
     st->pl = play_list_new ();
-
-    play_list_set_random (st->pl, TRUE);
-    //play_list_set_sink (st->pl, "esdsink");
 }
 
 void
