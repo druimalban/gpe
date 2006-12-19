@@ -63,7 +63,7 @@ get_device_model (void)
       g_strfreev (strv);
     }
 #ifdef __arm__
-  result = g_strdup (_("ARM, %s"), uinfo.machine);
+  result = g_strdup_printf ("%s,%s",_("ARM"), uinfo.machine);
 #endif
 #ifdef __i386__
   result =

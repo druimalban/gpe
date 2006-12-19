@@ -1,4 +1,4 @@
-AC_INIT([GPE Screenshot], [1.1], [gpe-list@linuxtogo.org], [gpe-scap])
+AC_INIT([GPE Screenshot], [1.2], [gpe-list@linuxtogo.org], [gpe-scap])
 
 AC_CONFIG_SRCDIR([src/gpe-scap.c])
 AM_CONFIG_HEADER(config.h)
