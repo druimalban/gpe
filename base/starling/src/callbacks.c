@@ -414,6 +414,12 @@ playlist_swap_cb (PlayList *pl, gint left, gint right, Starling *st)
             &iterright, right);
    
     gtk_list_store_swap (st->store, &iterleft, &iterright);
+
+    if (st->bolded == left) {
+    	st->bolded = right;
+    } else if (st->bolded == right) {
+        st->bolded = left;
+    }
 }
 
 static void

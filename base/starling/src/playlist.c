@@ -437,7 +437,7 @@ play_list_remove_pos (PlayList *self, gint pos)
         g_signal_emit (self, 
                     PLAY_LIST_GET_CLASS (self)->deleted_stream_signal_id,
                     0, STREAM (cur->data), pos);
-        priv->tracks = g_list_remove (priv->tracks, cur);
+        priv->tracks = g_list_remove (priv->tracks, cur->data);
     }
 }
 
@@ -456,6 +456,12 @@ play_list_swap_pos (PlayList *self, gint left, gint right)
 
     l->data = r->data;
     r->data = tmp;
+
+    if (priv->current == left) {
+        priv->current = right;
+    } else if (priv->current == right) {
+        priv->current = left;
+    }
 
     g_signal_emit (self, PLAY_LIST_GET_CLASS (self)->swap_signal_id,
                     0, left, right);
