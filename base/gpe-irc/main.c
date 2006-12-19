@@ -396,11 +396,11 @@ join_channel (IRCServer * server, const gchar * channel_name)
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
       gtk_box_pack_start (GTK_BOX (main_button_hbox), button, FALSE, FALSE,
                           0);
-      g_object_set_data (GTK_OBJECT (button), "type",
+      g_object_set_data (G_OBJECT(button), "type",
                            (gpointer) IRC_CHANNEL);
-      g_object_set_data (GTK_OBJECT (button), "IRCChannel",
+      g_object_set_data (G_OBJECT(button), "IRCChannel",
                            (gpointer) channel);
-      g_signal_connect (GTK_OBJECT (button), "clicked",
+      g_signal_connect (G_OBJECT(button), "clicked",
                         G_CALLBACK (button_clicked), NULL);
       gtk_widget_show (button);
 
@@ -460,8 +460,8 @@ new_connection (GtkWidget * parent, GtkWidget * parent_window)
   button = gtk_toggle_button_new_with_label (server->name);
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
   gtk_box_pack_start (GTK_BOX (main_button_hbox), button, FALSE, FALSE, 0);
-  g_object_set_data (GTK_OBJECT (button), "type", (gpointer) IRC_SERVER);
-  g_object_set_data (GTK_OBJECT (button), "IRCServer", (gpointer) server);
+  g_object_set_data (G_OBJECT(button), "type", (gpointer) IRC_SERVER);
+  g_object_set_data (G_OBJECT(button), "IRCServer", (gpointer) server);
   g_signal_connect (GTK_OBJECT (button), "clicked",
                     G_CALLBACK (button_clicked), NULL);
   gtk_widget_show (button);

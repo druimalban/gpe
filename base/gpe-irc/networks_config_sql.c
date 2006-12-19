@@ -201,6 +201,8 @@ find_network (gconstpointer a, gconstpointer b)
     return 0;
   if (sql_net->id > n)
     return 1;
+  else
+    return 0;
 }
 
 static int

@@ -500,7 +500,7 @@ irc_input_smiley_button_clicked (GtkWidget * widget, gpointer data)
 
       popup_window = input_popup (irc_input_smiley_store);
       g_object_add_weak_pointer (G_OBJECT (popup_window),
-                                 (gpointer *) & popup_window);
+                                 (gpointer *) &popup_window);
 
     }
 
