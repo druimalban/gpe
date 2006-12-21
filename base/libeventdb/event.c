@@ -241,22 +241,19 @@ event_flush (Event *event)
   EventSource *ev = RESOLVE_CLONE (event);
 
   char *err;
-  if (EVENT_DB_GET_CLASS (ev->edb)->event_flush (ev, &err))
-    goto error;
+  if (! EVENT_DB_GET_CLASS (ev->edb)->event_flush (ev, &err))
+    {
+      g_critical ("%s: %s", __func__, err ? err : "Unknown error");
+      gpe_error_box (err);
+      free (err);
+
+      return FALSE;
+    }
 
   g_signal_emit
     (ev->edb, EVENT_DB_GET_CLASS (ev->edb)->event_modified_signal, 0, ev);
 
   return TRUE;
-
- error:
-  if (err)
-    {
-      g_critical ("%s: %s", __func__, err);
-      gpe_error_box (err);
-      free (err);
-    }
-  return FALSE;
 }
 
 /* Remove any instantiations of EV's source from the upcoming alarm
