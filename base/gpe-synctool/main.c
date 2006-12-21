@@ -3,7 +3,7 @@
  *
  * Synchronisation tool for gpesyncd.
  * 
- * (c) Florian Boor  <florian@linuxtogo.org>
+ * (c) 2006 Florian Boor  <florian@linuxtogo.org>
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
