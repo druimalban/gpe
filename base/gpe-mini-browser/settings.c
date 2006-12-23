@@ -208,7 +208,7 @@ write_settings_to_file (WebiSettings * ks)
       return 1;
     }
   outfile = fopen (filename, "w+");
-  if (outfile <= 0)
+  if (outfile == NULL)
     {
       gpe_error_box (_("Could not write file!"));
       free (filename);
@@ -284,6 +284,7 @@ show_configuration_panel(GtkWidget *window, gpointer *data)
   GtkWidget *proxy_label, *font_label; /*labels */
   GtkWidget *apply, *cancel;
   struct zoom_data *info;
+  char temp[4];
 
   info = (struct zoom_data *)data;
   config_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
@@ -309,7 +310,6 @@ show_configuration_panel(GtkWidget *window, gpointer *data)
   proxy_box = gtk_entry_new ();
   gtk_entry_set_text(GTK_ENTRY(proxy_box), info->settings->http_proxy);
   font_box = gtk_entry_new();
-  char temp[4];
   snprintf(temp, 4, "%g",info->settings->default_font_size);
   gtk_entry_set_text(GTK_ENTRY(font_box), temp);
    

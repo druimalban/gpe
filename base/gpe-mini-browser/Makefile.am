@@ -4,7 +4,7 @@ bin_PROGRAMS = gpe-mini-browser
 
 gpe_mini_browser_SOURCES = interface-calls.c loading-calls.c gpe-mini-browser.h misc-calls.c settings.c
 
-CFLAGS = -Os -Wall -g 
+CFLAGS = -Os -Wall -g -pedantic -std=c99
 
 if HILDON
 gpe_mini_browser_SOURCES += hildon-mini-browser.c

@@ -26,7 +26,7 @@ msgstr ""
 
 #: ../hildon-mini-browser.c:128 ../gpe-mini-browser.c:88
 #, c-format
-msgid "GPE-mini-browser version 0.19. (C)2005, Philippe De Swert\n"
+msgid "GPE-mini-browser version 0.20. (C)2005, Philippe De Swert\n"
 msgstr ""
 
 #: ../hildon-mini-browser.c:134 ../gpe-mini-browser.c:94
@@ -61,7 +61,7 @@ msgstr ""
 
 #: ../loading-calls.c:79
 msgid ""
-"GPE mini-browser v0.19\n"
+"GPE mini-browser v0.20\n"
 "\n"
 "HTML engine : Gtk-webcore \n"
 "(http://gtk-webcore.sourceforge.net)\n"

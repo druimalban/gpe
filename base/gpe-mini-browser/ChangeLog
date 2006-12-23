@@ -1,14 +1,16 @@
-v0.20 - Satyr release - Philippe De Swert
+v0.20 - Satyr release - 22/12/2006 - Philippe De Swert
 
-* small typo fixes in documentation and code comments
+* Small typo fixes in documentation and code comments
 * Improve user warnings for web-page loading errors
-* localisation fixes
+* Localisation fixes
 * Update INSTALL instructions
 * Added C.po to fix build errors when no locale is set
 * Moved gpe-mini-browser created files to ~/.gpe/gpe-mini-browser to avoid cluttering ~/.gpe
 * Added support for saving session preferences. Config saved in  ~/.gpe/gpe-mini-browser/gpe-mini-browser.conf
 * Configuration screen for preferences editing
 * Updated .po files to reflect the extra configuration strings
+* Stricter compilation flags (added -pedantic -std=c99)
+* Tested and up-to-date Maemo version
 
 v0.19 - New Year release - 10/01/2006 - Philippe De Swert
 

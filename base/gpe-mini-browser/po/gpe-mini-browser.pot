@@ -26,7 +26,7 @@ msgstr ""
 
 #: ../hildon-mini-browser.c:129
 #, c-format
-msgid "GPE-mini-browser version 0.19. (C)2005, Philippe De Swert\n"
+msgid "GPE-mini-browser version 0.20. (C)2005, Philippe De Swert\n"
 msgstr ""
 
 #: ../hildon-mini-browser.c:135 ../gpe-mini-browser.c:95
