@@ -10,6 +10,7 @@ v0.20 - Satyr release - 22/12/2006 - Philippe De Swert
 * Configuration screen for preferences editing
 * Updated .po files to reflect the extra configuration strings
 * Stricter compilation flags (added -pedantic -std=c99)
+* Use of backspace as back button added
 * Tested and up-to-date Maemo version
 
 v0.19 - New Year release - 10/01/2006 - Philippe De Swert

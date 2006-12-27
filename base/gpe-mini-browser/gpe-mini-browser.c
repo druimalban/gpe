@@ -34,10 +34,11 @@
 #include <sys/types.h>
 
 #include <gtk/gtk.h>
-#include <gdk-pixbuf/gdk-pixbuf.h>
-#include <webi.h>
-
 #include <gdk/gdk.h>
+#include <gdk-pixbuf/gdk-pixbuf.h>
+#include <gdk/gdkkeysyms.h>
+
+#include <webi.h>
 
 #include <glib.h>
 #include <gpe/init.h>
@@ -54,6 +55,24 @@ struct gpe_icon my_icons[] = {
   {"gpe-mini-browser-icon", PREFIX "/share/pixmaps/gpe-mini-browser.png"},
   {NULL, NULL}
 };
+
+static gboolean
+main_window_key_press_event (GtkWidget * widget, GdkEventKey * k,
+                             GtkWidget * data)
+{
+  switch (k->keyval)
+    {
+    case GDK_BackSpace:
+      back_func(widget, data);      
+      return TRUE;
+    default:
+      return FALSE;
+
+    }
+  /* we should not get here */
+  return FALSE;
+}
+
 
 int
 main (int argc, char *argv[])
@@ -265,6 +284,9 @@ main (int argc, char *argv[])
 #endif
   g_signal_connect (GTK_OBJECT (history_button), "clicked",
 		    G_CALLBACK (show_history), html);
+
+  g_signal_connect (G_OBJECT (app), "key_press_event",
+                    G_CALLBACK (main_window_key_press_event), html);
 
   /* save completion list when we exit the program */
   g_signal_connect (GTK_OBJECT (app), "destroy",
