@@ -1,3 +1,8 @@
+2006-12-28  Neal H. Walfield  <neal@gnu.org>
+
+	* po: New directory.
+	* autogen.sh: Just use autoreconf and intltoolize.
+
 2006-12-21  Neal H. Walfield  <neal@gnu.org>
 
 	* event.c (event_flush): Jump to the error handling if an error
