@@ -15,6 +15,7 @@
 #include <stdio.h>
 #include <gpe/errorbox.h>
 #include <libintl.h>
+#include <string.h>
 
 #define _(x) gettext(x)
 

@@ -1,5 +1,9 @@
 2006-12-28  Neal H. Walfield  <neal@gnu.org>
 
+	* event-db.c: Include <string.h>.
+
+2006-12-28  Neal H. Walfield  <neal@gnu.org>
+
 	* po: New directory.
 	* autogen.sh: Just use autoreconf and intltoolize.
 
