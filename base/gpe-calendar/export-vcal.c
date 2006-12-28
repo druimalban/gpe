@@ -42,7 +42,7 @@ static DBusConnection *connection;
 #include <hildon-fm/hildon-widgets/hildon-file-chooser-dialog.h>
 #endif
 
-static MIMEDirVEvent *
+MIMEDirVEvent *
 export_event_as_vevent (Event *ev)
 {
   MIMEDirVEvent *event = mimedir_vevent_new ();
@@ -104,7 +104,30 @@ export_event_as_vevent (Event *ev)
 	
   int alarm = event_get_alarm (ev);
   if (alarm)
-    g_object_set (event, "trigger", &alarm, NULL);
+    /* Add a display alarm and an audio alarm.  */
+    {
+      MIMEDirVAlarm *valarm;
+      GList *list = NULL;
+
+      valarm = mimedir_valarm_new (MIMEDIR_VALARM_DISPLAY);
+      g_object_set (valarm, "action", "DISPLAY", NULL);
+      g_object_set (valarm, "trigger", alarm, NULL);
+      list = g_list_prepend (list, valarm);
+
+      /* XXX: Adding two alarms confuses some systems, assume the
+	 display alarm is enough. */
+#if 0
+      valarm = mimedir_valarm_new (MIMEDIR_VALARM_AUDIO);
+      g_object_set (valarm, "action", "AUDIO", NULL);
+      g_object_set (valarm, "trigger", alarm, NULL);
+      list = g_list_prepend (list, valarm);
+#endif
+
+      /* Add the valarms to the vevent.  As there is no
+	 "mimedir_vcomponent_add_alarm_list" function, we replace the
+	 whole list using mimedir_vcomponent_set_alarm_list.  */
+      mimedir_vcomponent_set_alarm_list (MIMEDIR_VCOMPONENT (event), list);
+    }
 
 #if 0
   GList *categories = NULL;

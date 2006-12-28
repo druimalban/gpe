@@ -1,5 +1,12 @@
 2006-12-28  Neal H. Walfield  <neal@gnu.org>
 
+	* export-vcal.h: Include <mimedir/mimedir-vevent.h>.
+	(export_event_as_vevent): New prototype.
+	* export-vcal.c (export_event_as_vevent): Correctly export the
+	alarm (by Graham Cobb <g+gpe@cobb.uk.net>).
+
+2006-12-28  Neal H. Walfield  <neal@gnu.org>
+
 	* import-vcal.h: Include <mimedir/mimedir-vevent.h>.
 	(import_vevent): New prototype.
 	(import_vcal): Drop paramter USE_GUI.  Return status messages in a
