@@ -190,6 +190,30 @@ schedule_wakeup (gboolean reload)
   return FALSE;
 }
 
+/* This is just a wrapper for import_vcal which displays the results
+   to the user.  */
+static void
+do_import_vcal (EventCalendar *ec, const char *files[])
+{
+  GError *error = NULL;
+  int res = import_vcal (ec, files, &error);
+
+  if (! res && ! error)
+    /* Abort.  */
+    return;
+
+  GtkWidget *feedbackdlg = gtk_message_dialog_new
+    (GTK_WINDOW (main_window),
+     GTK_DIALOG_MODAL, GTK_MESSAGE_INFO,
+     GTK_BUTTONS_OK, error ? error->message : _("Import successful"));
+
+  if (error)
+    g_error_free (error);
+    
+  gtk_dialog_run (GTK_DIALOG (feedbackdlg));
+  gtk_widget_destroy (feedbackdlg);
+}
+
 static void
 import_file_list (GSList *import_files, const gchar *selected_calendar)
 {
@@ -210,9 +234,14 @@ import_file_list (GSList *import_files, const gchar *selected_calendar)
       n--;
       files[n] = i->data;
     }
-   
-  import_vcal (ec, files, FALSE);
-    
+
+  GError *error = NULL;
+  if (! import_vcal (ec, files, &error) && error)
+    {
+      fprintf (stderr, "%s", error->message);
+      g_error_free (error);
+    }
+
   g_object_unref (ec);
 }
 
@@ -1307,7 +1336,7 @@ alarm_button_clicked (GtkWidget *widget, gpointer d)
 static void
 import_callback (GtkWidget *widget, gpointer user_data)
 {
-  import_vcal (NULL, NULL, TRUE);
+  do_import_vcal (NULL, NULL);
 }
 
 static void
@@ -1389,7 +1418,7 @@ gpe_cal_exit (void)
 static void
 gpe_cal_iconify (void)
 {
-  gtk_window_iconify(main_window);
+  gtk_window_iconify (GTK_WINDOW (main_window));
 }
 
 #ifdef IS_HILDON
@@ -1449,7 +1478,7 @@ main_window_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *data)
         break;	
         case GDK_o:
         case GDK_i:
-          import_vcal (NULL, NULL, TRUE);
+          do_import_vcal (NULL, NULL);
         break;	
         case GDK_t:
           set_today();
@@ -1542,13 +1571,13 @@ handoff_callback (Handoff *handoff, char *data)
               ec = event_db_find_calendar_by_name (event_db, calendar);
               if (! ec)
                 ec = event_db_get_default_calendar(event_db, strlen(calendar) ? calendar : NULL);
-              import_vcal (ec, files, TRUE);
+              do_import_vcal (ec, files);
               g_object_unref (ec);
             }
           else
             {
               ec = event_db_get_default_calendar(event_db, NULL);
-              import_vcal (ec, files, TRUE);
+              do_import_vcal (ec, files);
               g_object_unref (ec);
             }
         }

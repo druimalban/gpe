@@ -1,6 +1,37 @@
 2006-12-28  Neal H. Walfield  <neal@gnu.org>
 
-	* autogen.sh: Just use autoreconf.
+	* import-vcal.h: Include <mimedir/mimedir-vevent.h>.
+	(import_vevent): New prototype.
+	(import_vcal): Drop paramter USE_GUI.  Return status messages in a
+	GError.
+	(import_vcal_from_channel): Likewise.
+	(import_vcal_from_channel): Likewise.
+	* import-vcal.c: Don't include <gpe/errorbox.h> or
+	<gpe/question.h>.  Include <mimedir/mimedir-valarm.h>.
+	(ERROR_DOMAIN): Define.
+	(import_vevent): Rename from do_import_vevent.  Export.  Save
+	error messages in the passed GError.  Return the event in NEW_EV.
+	Correctly handle alarm triggers (by Graham Cobb
+	<g+gpe@cobb.uk.net>).  Remove debugging output.
+	(do_import_vtodo): Return whether the import succeeded.  Return
+	any error messages in *ERROR.
+	(parse_mimedir): Save error messages in the passed GError.
+	(import_vcal_from_channel): Save error messages in the passed
+	GError, indicate whether the import succeeded.
+	(import_vcal): Likewise.  Don't use the variable USE_GUI.
+
+	* main.c (do_import_vcal): New function.
+	(import_callback): Use it.
+	(main_window_key_press_event): Likewise.
+	(handoff_callback): Likewise.
+	(import_file_list): Report any error message to stderr.
+	(gpe_cal_iconify): Properly cast MAIN_WINDOW.
+	* calendar-update.c (pulled): Update to new
+	import_vcal_from_channel interface.
+
+2006-12-28  Neal H. Walfield  <neal@gnu.org>
+
+	* autogen.sh: Just use autoreconf and intltoolize.
 
 2006-12-14  Joseph J. McCarthy <mccarthy@granular.pitt.edu>
 

@@ -8,6 +8,8 @@
  * 2 of the License, or (at your option) any later version.
  */
 
+#define ERROR_DOMAIN() g_quark_from_static_string ("gpevtype")
+
 #include <sys/types.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -17,10 +19,9 @@
 #include <string.h>
 
 #include <gtk/gtk.h>
-#include <gpe/errorbox.h>
-#include <gpe/question.h>
 
 #include <mimedir/mimedir-vcal.h>
+#include <mimedir/mimedir-valarm.h>
 
 #include <sqlite.h>
 #include <gpe/vevent.h>
@@ -78,10 +79,12 @@ extract_time (MIMEDirDateTime *dt)
     }
 }
 
-static char *
-do_import_vevent (EventCalendar *ec, MIMEDirVEvent *event)
+gboolean
+import_vevent (EventCalendar *ec, MIMEDirVEvent *event, Event **new_ev,
+	       GError **gerror)
 {
-  char *status = NULL;
+  EventDB *event_db = event_calendar_get_event_db (ec);
+
   gboolean error = FALSE;;
   gboolean created = FALSE;;
 
@@ -106,9 +109,10 @@ do_import_vevent (EventCalendar *ec, MIMEDirVEvent *event)
   if (! dtstart)
     {
       error = TRUE;
-      status = g_strdup_printf ("Not important malformed event %s (%s):"
-				" lacks required field dtstart",
-				summary, uid);
+      g_set_error (gerror, ERROR_DOMAIN (), 0,
+		   "Not important malformed event %s (%s):"
+		   " lacks required field dtstart",
+		   summary, uid);
       goto out;
     }
 
@@ -146,24 +150,55 @@ do_import_vevent (EventCalendar *ec, MIMEDirVEvent *event)
 	end = start;
     }
 
-  int trigger;
-  g_object_get (event, "trigger", &trigger, NULL);
-  if (trigger)
+
+  /* Handle alarms, if any */
+  const GList *alarm_list, *l;
+
+  /* Get the alarm list.
+
+     Note the comments in mimedri-vcomponent.c: the list must not be modified
+     by the caller and the MIMEDirVAlarm objects in the list must be
+     g_object_ref()'ed when they are to be used by the caller. */
+  alarm_list = mimedir_vcomponent_get_alarm_list (MIMEDIR_VCOMPONENT (event));
+
+  /* XXX: A VEvent can have multiple alarms but we only support a
+     single alarm.  Take the earliest and hope for the best.  */
+  int trigger_min = INT_MAX;
+  for (l = alarm_list; l; l = g_list_next (l))
     {
-      gboolean trigger_end;
-      int alarm;
+      MIMEDirVAlarm *valarm = MIMEDIR_VALARM (l->data);
 
-      g_object_get (event, "trigger-end", &trigger_end, NULL);
-      if (trigger_end)
-	alarm = end - trigger;
-      else
-	alarm = start - trigger;
+      int trigger;
+      g_object_get (valarm, "trigger", &trigger, NULL);
+      if (trigger)
+	{
+	  int alarm;
+	  gboolean trigger_end;
 
-      if (alarm < 0)
-	alarm = 1;
+	  g_object_get (valarm, "trigger-end", &trigger_end, NULL);
+	  if (trigger_end)
+	    alarm = end - trigger;
+	  else
+	    alarm = start - trigger;
 	
-      event_set_alarm (ev, alarm);
+	  if (alarm < 0)
+	    alarm = 1;
+
+	  trigger_min = MIN (alarm, trigger_min);
+	}
+
+      MIMEDirDateTime *triggerdt = NULL;
+      g_object_get (valarm, "trigger-datetime", &triggerdt, NULL);
+      if (triggerdt)
+	{
+	  trigger_min = MIN (extract_time (triggerdt), trigger_min);
+	  g_object_unref (triggerdt);
+	}
     }
+
+  if (trigger_min != INT_MAX)
+    /* Set the alarm.  */
+    event_set_alarm (ev, trigger_min);
 
 #if 0
   GList *categories = NULL;
@@ -247,7 +282,6 @@ do_import_vevent (EventCalendar *ec, MIMEDirVEvent *event)
 
 	      GSList *byday = NULL;
 	      char *p = units;
-	      printf ("%s: %s\n", summary, units);
 	      while (p && *p)
 		{
 		  while (*p == ' ' || *p == ',')
@@ -262,15 +296,11 @@ do_import_vevent (EventCalendar *ec, MIMEDirVEvent *event)
 			  && (p[2] == ',' || p[2] == ' ' || p[2] == 0))
 			{
 			  if (prefix == 0)
-			    {
 			    byday = g_slist_prepend (byday, g_strdup (day));
-			    printf ("%s", day);
-			    }
 			  else
 			    {
 			      char *s = g_strdup_printf ("%d%s", prefix, day);
 			      byday = g_slist_prepend (byday, s);
-			      printf ("%s\n", s);
 			    }
 
 			  p += 2;
@@ -310,9 +340,10 @@ do_import_vevent (EventCalendar *ec, MIMEDirVEvent *event)
 	  {
 	    error = TRUE;
 	    char *s = mimedir_recurrence_write_to_string (recurrence);
-	    status = g_strdup_printf ("%s (%s) has unhandeled recurrence"
-				      " type: %s, not importing",
-				      summary, uid, s);
+	    g_set_error (gerror, ERROR_DOMAIN (), 0,
+			 "%s (%s) has unhandeled recurrence"
+			 " type: %s, not importing",
+			 summary, uid, s);
 	    g_free (s);
 	    goto out;
 	  }
@@ -337,15 +368,24 @@ do_import_vevent (EventCalendar *ec, MIMEDirVEvent *event)
   event_flush (ev);
  out:
   g_free (uid);
+
+  if (! error && new_ev)
+    /* Return the new event to the caller.  */
+    {
+      *new_ev = ev;
+      g_object_ref (ev);
+    }
+
   if (created && error)
     event_remove (ev);
   g_object_unref (ev);
   g_free (summary);
-  return status;
+
+  return ! error;
 }
 
-static void
-do_import_vtodo (MIMEDirVTodo *todo)
+static gboolean
+do_import_vtodo (MIMEDirVTodo *todo, GError **error)
 {
   sqlite *db;
   GSList *tags, *i;
@@ -363,17 +403,17 @@ do_import_vtodo (MIMEDirVTodo *todo)
 
   if (db == NULL)
     {
-      gpe_error_box (err);
+      g_set_error (error, ERROR_DOMAIN (), 0, err);
       free (err);
-      return;
+      return FALSE;
     }
  
   if (sqlite_exec (db, "insert into todo_urn values (NULL)", NULL, NULL, &err) != SQLITE_OK)
     {
-      gpe_error_box (err);
+      g_set_error (error, ERROR_DOMAIN (), 0, err);
       free (err);
       sqlite_close (db);
-      return;
+      return FALSE;
     }
 
   id = sqlite_last_insert_rowid (db);
@@ -391,6 +431,8 @@ do_import_vtodo (MIMEDirVTodo *todo)
   gpe_tag_list_free (tags);
 
   sqlite_close (db);
+
+  return TRUE;
 }
 
 static void
@@ -412,10 +454,21 @@ new_calendar_clicked (GtkButton *button, gpointer user_data)
   gtk_widget_destroy (w);
 }
 
-static char *
-parse_mimedir (EventCalendar *ec, GList *callist)
+gboolean
+parse_mimedir (EventCalendar *ec, GList *callist, GError **error)
 {
-  char *errstr = NULL;
+  char *err_str = NULL;
+
+  void add_message (GError *error)
+    {
+      gchar *tmp;
+      tmp = g_strdup_printf ("%s%s%s",
+			     err_str ?: "", err_str ? "\n" : "",
+			     error->message);
+      g_free (err_str);
+      err_str = tmp;
+      g_error_free (error);
+    }
 
   GList *l;
   for (l = callist; l; l = l->next)
@@ -428,17 +481,12 @@ parse_mimedir (EventCalendar *ec, GList *callist)
 	for (iter = list; iter; iter = iter->next)
 	  {
 	    MIMEDirVEvent *vevent = MIMEDIR_VEVENT (iter->data);
-	    char *status = do_import_vevent (ec, vevent);
-	    if (status)
-	      {
-		gchar *tmp;
-		tmp = g_strdup_printf ("%s%s%s",
-				       errstr ?: "", errstr ? "\n" : "",
-				       status);
-		g_free (errstr);
-		errstr = tmp;
-		g_free (status);
-	      }
+
+	    /* We collapse error messages into a single error message
+	       as it can't be handled programatically anyway.  */
+	    GError *import_error = NULL;
+	    if (! import_vevent (ec, vevent, NULL, &import_error))
+	      add_message (import_error);
 	  }
 	g_slist_free (list);
 
@@ -446,42 +494,43 @@ parse_mimedir (EventCalendar *ec, GList *callist)
 	for (iter = list; iter; iter = iter->next)
 	  {
 	    MIMEDirVTodo *vtodo = MIMEDIR_VTODO (iter->data);
-	    do_import_vtodo (vtodo);
+
+	    GError *import_error = NULL;
+	    if (! do_import_vtodo (vtodo, &import_error))
+	      add_message (import_error);
 	  }
 	g_slist_free (list);
       }
 
-  return errstr;
-}
-
-char *
-import_vcal_from_channel (EventCalendar *ec, GIOChannel *channel)
-{
-  GError *error = NULL;
-
-  GList *callist = mimedir_vcal_read_channel (channel, &error);
-  if (error) 
+  if (err_str)
     {
-      char *tmp = g_strdup (error->message);
-      g_error_free (error);
-      return tmp;
+      g_set_error (error, ERROR_DOMAIN (), 0, err_str);
+      g_free (err_str);
+      return FALSE;
     }
-
-  char *status = parse_mimedir (ec, callist);
-  mimedir_vcal_free_list (callist);
-  return status;
+  return TRUE;
 }
 
-void
-import_vcal (EventCalendar *ec, const char *files[], gboolean use_gui)
+gboolean
+import_vcal_from_channel (EventCalendar *ec, GIOChannel *channel,
+			  GError **error)
+{
+  GList *callist = mimedir_vcal_read_channel (channel, error);
+  if (! callist)
+    return FALSE;
+
+  gboolean result = parse_mimedir (ec, callist, error);
+  mimedir_vcal_free_list (callist);
+  return result;
+}
+
+gboolean
+import_vcal (EventCalendar *ec, const char *files[], GError **gerror)
 {
   GtkBox *box;
   GtkWidget *combo;
   GtkWidget *filesel = NULL;
 
-  if (!use_gui && (!files || !ec)) 
-      return;
-      
   if (! files)
     /* No files were provided, prompt for some.  */
     {
@@ -536,7 +585,7 @@ import_vcal (EventCalendar *ec, const char *files[], gboolean use_gui)
       if (gtk_dialog_run (GTK_DIALOG (filesel)) != GTK_RESPONSE_OK)
 	{
 	  gtk_widget_destroy (filesel);
-	  return;
+	  return FALSE;
 	}
       gtk_widget_hide (filesel); 
 
@@ -570,7 +619,7 @@ import_vcal (EventCalendar *ec, const char *files[], gboolean use_gui)
       if (gtk_dialog_run (GTK_DIALOG (calsel)) != GTK_RESPONSE_ACCEPT)
         {
           gtk_widget_destroy (calsel);
-          return;
+          return FALSE;
         }
     }
 
@@ -594,24 +643,27 @@ import_vcal (EventCalendar *ec, const char *files[], gboolean use_gui)
           gchar *tmp;
           errors ++;
           tmp = g_strdup_printf ("%s%s%s: %s",
-                     errstr ?: "", errstr ? "\n" : "",
-                     files[i], error->message);
+				 errstr ?: "", errstr ? "\n" : "",
+				 files[i], error->message);
           g_free (errstr);
           errstr = tmp;
           g_error_free (error);
           continue;
         }
 
-      char *status = parse_mimedir (ec, callist);
-      if (! errstr)
-        errstr = status;
-      else
-        {
-          char *tmp = g_strjoin ("\n", errstr, status, NULL);
-          g_free (errstr);
-          g_free (status);
-          errstr = tmp;
-        }
+      if (! parse_mimedir (ec, callist, &error))
+	{
+	  if (! errstr)
+	    errstr = g_strdup (error->message);
+	  else
+	    {
+	      char *tmp = g_strjoin ("\n", errstr, error->message, NULL);
+	      g_free (errstr);
+	      errstr = tmp;
+	    }
+
+	  g_error_free (error);
+	}
 
       /* Cleanup */
       mimedir_vcal_free_list (callist);
@@ -619,18 +671,5 @@ import_vcal (EventCalendar *ec, const char *files[], gboolean use_gui)
 
   g_object_unref (ec);
 
-  if (use_gui)
-    {
-      GtkWidget *feedbackdlg = gtk_message_dialog_new
-        (GTK_WINDOW (main_window),
-         GTK_DIALOG_MODAL, GTK_MESSAGE_INFO,
-         GTK_BUTTONS_OK, errstr ?: _("Import successful"));
-    
-      gtk_dialog_run (GTK_DIALOG (feedbackdlg));
-      gtk_widget_destroy (feedbackdlg);
-    }
-  else
-   {
-      g_printerr ("%s\n", errstr ?: _("Import successful"));
-   }
+  return !!errors;
 }

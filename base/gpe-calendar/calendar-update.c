@@ -406,27 +406,31 @@ pulled (SoupMessage *msg, gpointer data)
     {
       GIOChannel *channel = g_io_channel_from_buffer (msg->response.body,
 						      msg->response.length);
-      char *status = import_vcal_from_channel (info->ec, channel);
+      GError *error = NULL;
+      int err = import_vcal_from_channel (info->ec, channel, &error);
       g_io_channel_unref (channel);
 
-      if (status && *status)
+      if (err)
 	{
 	  if (info->last_internal_code != BAD_PARSE)
 	    {
 	      char *title = event_calendar_get_title (info->ec);
-	      show_info ("Error updating calendar %s: %s.", title, status);
+	      show_info ("Error updating calendar %s: %s.", title,
+			 error->message);
 	      g_free (title);
 	      info->last_internal_code = BAD_PARSE;
 	    }
 	  need_retry (info);
 	}
-      if (! status)
+      if (! err)
 	{
 	  event_calendar_set_last_pull (info->ec, time (NULL));
 	  info->last_status_code = 0;
 	  info->last_internal_code = 0;
 	}
-      g_free (status);
+
+      if (error)
+	g_error_free (error);
     }
   g_object_unref (info->ec);
   info->busy = FALSE;
