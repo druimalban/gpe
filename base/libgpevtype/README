@@ -1,0 +1,7 @@
+This library facilitates converting between three representations of
+iCalendar objects (RFC 2445): as strings, as libmimedir objects and as
+GPE's internal representation (cf. libeventdb, libtodo and
+libcontact).
+
+This library is, thus, intended for use in importing and exporting
+iCalendar objects.
