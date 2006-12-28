@@ -109,6 +109,13 @@ event_calendar_finalize (GObject *object)
   G_OBJECT_CLASS (event_calendar_parent_class)->finalize (object);
 }
 
+
+EventDB *
+event_calendar_get_event_db (EventCalendar *ec)
+{
+  return ec->edb;
+}
+
 EventCalendar *
 event_calendar_new (EventDB *edb)
 {

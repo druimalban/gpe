@@ -183,6 +183,11 @@ typedef void (*EventCalendarChanged) (EventDB *edb, EventCalendar *ec);
    changes may be collapsed into a single signal.  */
 typedef void (*EventCalendarModified) (EventDB *edb, EventCalendar *ec);
 
+/* Returns the event db (without allocating a reference) in which EC
+   lives.  */
+extern EventDB *event_calendar_get_event_db (EventCalendar *ev)
+     __attribute__ ((pure));
+
 /* Create a new calendar in eventdb EDB.  */
 extern EventCalendar *event_calendar_new (EventDB *edb);
 /* PARENT may be NULL to indicate that this is a top-level calendar.
