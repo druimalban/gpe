@@ -1,4 +1,4 @@
-#!/bin/sh
-# Run this to generate all the initial makefiles, etc.
+intltoolize --copy --automake --force
 
-autoreconf -i && ./configure "$@"
+autoreconf -f -i -s
+

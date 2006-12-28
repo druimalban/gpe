@@ -1,6 +1,4 @@
-libtoolize --copy --force
+intltoolize --copy --automake --force
 
-aclocal $ACLOCAL_FLAGS
+autoreconf -f -i -s
 
-automake -a $am_opt
-autoconf

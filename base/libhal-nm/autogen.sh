@@ -1,4 +1,4 @@
-#!/bin/sh
-aclocal && autoheader && autoconf 
-libtoolize -c -f
-automake -ac
+intltoolize --copy --automake --force
+
+autoreconf -f -i -s
+
