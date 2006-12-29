@@ -85,17 +85,6 @@ GSList *todo_db_item_to_tags (struct todo_item *t) {
   return tags;
 }
 
-struct todo_item *todo_db_find_item_by_id(guint uid) {
-  GSList *todo_list = todo_db_get_items_list(), *i;
-
-  for (i=todo_list; i; i=g_slist_next(i)) {
-    struct todo_item *t = i->data;
-    if (t->id == uid) return t;
-  }
-
-  return NULL;
-}
-
 gchar *
 get_todo (gpesyncd_context * ctx, guint uid, GError ** error)
 {

@@ -432,3 +432,19 @@ todo_db_delete_item (struct todo_item *i)
 
   todo_db_destroy_item (i);
 }
+
+struct todo_item *
+todo_db_find_item_by_id (guint uid)
+{
+  GSList *todo_list = todo_db_get_items_list ();
+  GSList *i;
+
+  for (i = todo_list; i; i = g_slist_next (i))
+    {
+      struct todo_item *t = i->data;
+      if (t->id == uid)
+	return t;
+    }
+
+  return NULL;
+}

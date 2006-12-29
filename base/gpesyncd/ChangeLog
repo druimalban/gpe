@@ -1,5 +1,10 @@
 2006-12-29  Neal H. Walfield  <neal@gnu.org>
 
+	* src/export.c (todo_db_find_item_by_id): Move from here...
+	* ../libtododb/todo-db.c: ... to here.
+
+2006-12-29  Neal H. Walfield  <neal@gnu.org>
+
 	* configure.ac: Call AC_GNU_SOURCE.  Require at least version 0.2
 	of libgpevtype.
 	* src/Makefile.am (gpesyncd_SOURCES): Remove export-vcal.c and

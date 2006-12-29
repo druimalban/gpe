@@ -79,4 +79,8 @@ extern int todo_db_start (void);
 extern void todo_db_stop (void);
 extern int todo_db_refresh (void);
 
+/** Find the item with uid UID returning it or returning NULL if none
+    is found.  */
+extern struct todo_item *todo_db_find_item_by_id (guint uid);
+
 #endif
