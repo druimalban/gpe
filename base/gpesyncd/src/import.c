@@ -1,6 +1,7 @@
 /*
  *  Copyright (C) 2005 Martin Felis <martin@silef.de>
  *  Copyright (C) 2006 Graham Cobb <g+gpe@cobb.uk.net>
+ *  Copyright (C) 2006 Neal H. Walfield <neal@walfield.org>
  *  
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
@@ -8,6 +9,7 @@
  *  2 of the License, or (at your option) any later version.
  */
 
+#include <time.h>
 #include "gpesyncd.h"
 
 gchar *
@@ -114,7 +116,6 @@ gboolean
 add_event (gpesyncd_context * ctx, guint *uid, gchar * data,
 	  guint * modified, GError ** error)
 {
-  GSList *tags = NULL;
   GError *convert_error = NULL;
   Event *ev;
 
@@ -123,7 +124,7 @@ add_event (gpesyncd_context * ctx, guint *uid, gchar * data,
   mimedir_profile_parse (profile, data, &convert_error);
   if (convert_error)
     {
-      *error = convert_error;
+      g_propagate_error (error, convert_error);
       return FALSE;
     }
 
@@ -132,7 +133,7 @@ add_event (gpesyncd_context * ctx, guint *uid, gchar * data,
   g_object_unref (profile);
   if (convert_error)
     {
-      *error = convert_error;
+      g_propagate_error (error, convert_error);
       return FALSE;
     }
 
@@ -142,16 +143,17 @@ add_event (gpesyncd_context * ctx, guint *uid, gchar * data,
   MIMEDirVEvent *vevent = events->data;
 
   EventCalendar *ec = event_db_get_default_calendar(ctx->event_db, NULL);
-  char *err = do_import_vevent(ctx->event_db, ec, vevent, &ev);
+
+  int res = event_import_from_vevent (ec, vevent, &ev, error);
+
   g_object_unref(ec);
-  // BUG: mimedir_vcal_get_event_list does not increment ref count: g_object_unref (vevent);
+  // BUG: mimedir_vcal_get_event_list does not increment ref count:
+  // g_object_unref (vevent);
   g_slist_free (events);
   g_object_unref (vcal);
 
-  if (err) {
-    g_set_error(error, 0, 212, err);
+  if (! res)
     return FALSE;
-  }
 
   /* Get the UID and the modification time */
   *modified = event_get_last_modification(ev);

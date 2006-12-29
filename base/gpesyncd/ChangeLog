@@ -1,3 +1,18 @@
+2006-12-29  Neal H. Walfield  <neal@gnu.org>
+
+	* configure.ac: Call AC_GNU_SOURCE.  Require at least version 0.2
+	of libgpevtype.
+	* src/Makefile.am (gpesyncd_SOURCES): Remove export-vcal.c and
+	import-vcal.c.
+	* src/export.c (get_event): Call event_export_as_vevent, not
+	export_event_as_vevent.
+	* src/import.c: Include <time.h>.  Call event_import_from_vevent,
+	not do_import_vevent.  Fix error handling.
+	* src/import-vcal.c: Remove file.
+	* src/import-vcal.h: Likewise.
+	* src/export-vcal.c: Likewise.
+	* src/export-vcal.h: Likewise.
+
 2006-11-28  Florian Boor <florian@kernelconcepts.de>
 
 	* Apply major patch by Graham Cobb <g+gpe@cobb.uk.net> including 

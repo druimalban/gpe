@@ -49,7 +49,7 @@ get_event (gpesyncd_context * ctx, guint uid, GError ** error)
 
   MIMEDirVCal *vcal = mimedir_vcal_new ();
 
-  MIMEDirVEvent *vevent = export_event_as_vevent(ev);
+  MIMEDirVEvent *vevent = event_export_as_vevent(ev);
   g_object_unref(ev);
 
   mimedir_vcal_add_component (vcal, (MIMEDirVComponent *) vevent);

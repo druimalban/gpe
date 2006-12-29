@@ -8,9 +8,7 @@ EXTRA_DIST = \
 gpesyncd_SOURCES = \
 	export.c \
 	main.c \
-	import.c \
-	export-vcal.c \
-	import-vcal.c
+	import.c
 
 gpesyncd_LDADD = $(DEPS_LIBS)
 
