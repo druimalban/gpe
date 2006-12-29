@@ -416,7 +416,15 @@ event_calendar_get_last_modification (EventCalendar *ec)
 GSList *
 event_calendar_list_events (EventCalendar *ec)
 {
-  return EVENT_DB_GET_CLASS (ec->edb)->event_calendar_list_events (ec);
+  return EVENT_DB_GET_CLASS (ec->edb)->event_calendar_list_events (ec, 0, 0);
+}
+
+GSList *
+event_calendar_list_events_modified_between (EventCalendar *ec,
+					     time_t start, time_t end)
+{
+  return
+    EVENT_DB_GET_CLASS (ec->edb)->event_calendar_list_events (ec, start, end);
 }
 
 GSList *

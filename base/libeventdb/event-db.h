@@ -75,8 +75,13 @@ typedef void (*event_calendar_flush_t) (EventCalendar *ec);
    has already taken care that no dangling references are left
    around.  */
 typedef void (*event_calendar_delete_t) (EventCalendar *ec);
-/* List the events in the calendar EC.  */
-typedef GSList *(*event_calendar_list_events_t) (EventCalendar *ec);
+/* List the events in the calendar EC.  If MODIFIED_AFTER is non-zero,
+   limit to those events which have been modified on or after
+   MODIFIED_AFTER.  If MODIFIED_BEFORE is non-zero, limit to those
+   events which have been modified on or before MODIFIED_BEFORE.  */
+typedef GSList *(*event_calendar_list_events_t) (EventCalendar *ec,
+						 time_t modified_after,
+						 time_t modified_before);
 /* List the deleted events in the calendar EC.  NB: Deleted events
    have EV->DEAD set to true.  */
 typedef GSList *(*event_calendar_list_deleted_t) (EventCalendar *ec);

@@ -114,8 +114,8 @@ extern GSList *event_db_list_for_period (EventDB *evd,
    between START and END inclusive.  The list is not sorted.  */
 extern GSList *event_db_list_alarms_for_period (EventDB *evd,
 						time_t start, time_t end);
-/* Like event_db_list_for_period but only for untimed events
-   (i.e. which with a 0 length duration).  The list is not sorted.  */
+/* Like event_db_list_for_period but only for untimed events (i.e.,
+   those with a 0 length duration).  The list is not sorted.  */
 extern GSList *event_db_untimed_list_for_period (EventDB *evd,
 						 time_t start, time_t end);
 
@@ -307,6 +307,16 @@ extern time_t event_calendar_get_last_modification (EventCalendar *ec)
    thereof).  A reference is allocated to each event.  The caller
    must free the returned list.  */
 extern GSList *event_calendar_list_events (EventCalendar *ec);
+
+/* Returns the events in the calendar EC (but not any sub-calendars
+   thereof).  If START is non-zero, then limited to only those events
+   modified on or after START.  If END is non-zero, then limited to
+   only those events modified at or before END.  A reference is
+   allocated to each event.  The caller must free the returned
+   list.  */
+extern GSList *event_calendar_list_events_modified_between (EventCalendar *ec,
+							    time_t start,
+							    time_t end);
 
 /**
  * event_calendar_list_deleted:

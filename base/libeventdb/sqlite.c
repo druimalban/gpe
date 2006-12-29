@@ -870,7 +870,7 @@ do_event_calendar_delete (EventCalendar *ec)
 }
 
 static GSList *
-do_event_calendar_list_events (EventCalendar *ec)
+do_event_calendar_list_events (EventCalendar *ec, time_t start, time_t end)
 {
   GSList *list = NULL;
 
@@ -881,10 +881,33 @@ do_event_calendar_list_events (EventCalendar *ec)
 	list = g_slist_prepend (list, ev);
       return 0;
     }
+
+  char *query = "select uid from events where calendar=%d";
+  if (start || end)
+    {
+      char *s = NULL;
+      if (start)
+	s = g_strdup_printf (" and %ld <= modified", start);
+
+      char *e = NULL;
+      if (end)
+	s = g_strdup_printf (" and modified <= %ld", end);
+
+      query = g_strdup_printf ("%s%s%s", query, start ? s : "", end ? e : "");
+
+      if (start)
+	g_free (s);
+      if (end)
+	g_free (e);
+    }
+
   SQLITE_TRY
     (sqlite_exec_printf (SQLITE_DB (ec->edb)->sqliteh,
-			 "select uid from events where calendar=%d;",
+			 query /* ... %d ... */,
 			 callback, NULL, NULL, ec->uid));
+
+  if (start || end)
+    g_free (query);
 
   return list;
 }
