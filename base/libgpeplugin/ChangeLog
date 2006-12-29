@@ -1,3 +1,6 @@
+2006-12-29 Philippe De Swert <philippedeswert@scarlet.be>
+	* plugin_test.c : fix warnings
+
 2006-03-25 Florian Boor <florian.boor@kernelconcepts.de>
 
 	* doc/*, Makefile.am, configure.ac: Add documentation framework.

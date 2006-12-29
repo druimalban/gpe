@@ -285,7 +285,7 @@ main (int argc, char *argv[])
   g_signal_connect (GTK_OBJECT (history_button), "clicked",
 		    G_CALLBACK (show_history), html);
 
-  g_signal_connect (G_OBJECT (app), "key_press_event",
+  g_signal_connect (G_OBJECT (html), "key_press_event",
                     G_CALLBACK (main_window_key_press_event), html);
 
   /* save completion list when we exit the program */

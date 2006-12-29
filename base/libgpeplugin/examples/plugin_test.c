@@ -19,10 +19,10 @@ void render_body()
 	
 }
 
-int 
+int
 main( int argc , char *argv[])
 {
-	GtkWidget *main_window, *button, *hbox, *gc, *gc2;
+	GtkWidget *main_window, *button, *hbox;
 	GTimer *t;	
 	gdouble secs;
 	
@@ -44,7 +44,7 @@ main( int argc , char *argv[])
 	c = plugin_load_from_file("./todo_plugin.so");		/*todo plugin */
 	d = plugin_load_from_file("./calendar_plugin.so");
 	
-	gtk_window_set_default_size (main_window, 200,200);	
+	gtk_window_set_default_size (GTK_WINDOW(main_window), 200,200);	
 	plugin_add_to_box(a, "Vbox1");
 	//plugin_add_to_box(b, "Hbox2" );
 	plugin_add_to_box(c, "Hbox3");

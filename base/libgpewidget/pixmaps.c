@@ -50,7 +50,7 @@ static const gchar *default_theme_dir = GPE_THEME_LOCATION "default";
 
 static gchar *theme_dir = NULL;
 
-void 
+void
 gpe_icon_free_dynamic (struct gpe_icon *p)
 {
   if (p->pixbuf)
@@ -186,7 +186,7 @@ gpe_load_icons (struct gpe_icon *p)
           ok = FALSE;
         }
 
-      g_datalist_set_data_full (&pbdata, p->shortname, p, gpe_icon_free_dynamic);
+      g_datalist_set_data_full (&pbdata, p->shortname, p, (GDestroyNotify)gpe_icon_free_dynamic);
       p++;
     }
 
@@ -206,7 +206,7 @@ gpe_try_find_icon (const gchar *name, gchar **error)
          p = g_malloc (sizeof (struct gpe_icon));
          p->shortname = g_strdup (name);
          p->pixbuf = buf;
-         g_datalist_set_data_full (&pbdata, p->shortname, p, gpe_icon_free_dynamic);
+         g_datalist_set_data_full (&pbdata, p->shortname, p,(GDestroyNotify)gpe_icon_free_dynamic);
        }
     }
   

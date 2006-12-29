@@ -181,6 +181,7 @@ gpe_color_dialog_class_init (GpeColorDialogClass *class)
   g_type_class_add_private (gobject_class, sizeof (GpeColorDialogPrivate));
 }
 
+#if UNUSED
 static void
 set_widget_color_str (GtkWidget *widget, const gchar *colstr)
 {
@@ -193,6 +194,7 @@ set_widget_color_str (GtkWidget *widget, const gchar *colstr)
   gtk_widget_modify_bg (widget, GTK_STATE_NORMAL, &colour);
   gtk_widget_modify_fg (widget, GTK_STATE_NORMAL, &colour);
 }
+#endif /*UNUSED*/
 
 static void
 set_widget_color_gdk (GtkWidget *widget, const GdkColor color)
