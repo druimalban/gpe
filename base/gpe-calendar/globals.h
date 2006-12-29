@@ -14,6 +14,8 @@
 
 #include "util.h"
 
+#define ERROR_DOMAIN() g_quark_from_static_string ("gpe-calendar")
+
 extern EventDB *event_db;
 
 extern gboolean week_starts_sunday;

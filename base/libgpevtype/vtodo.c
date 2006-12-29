@@ -1,5 +1,6 @@
-/*
+/* vtodo.c: Implementation of todo import and export functionality.
  * Copyright (C) 2004 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2006 Neal H. Walfield <neal@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -7,26 +8,25 @@
  * the License, or (at your option) any later version.
  */
 
+/* XXX: This needs some serious love.  First of all, libtodo-db needs
+   an overhaul.  We shouldn't be directly manipulating the DB but
+   letting libtodo-db do that.  */
+
+#include <time.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <glib.h>
-#include <libintl.h>
 #include <assert.h>
 
+#include <sqlite.h>
+
 #include <mimedir/mimedir-vtodo.h>
-#include <gpe/vtodo.h>
+#include <gpe/todo-db.h>
 
-#define _(x) gettext (x)
+#include "priv.h"
 
-/* this is from todo-db.h for status mapping */
-typedef enum
-{
-  NOT_STARTED,
-  IN_PROGRESS,
-  COMPLETED,
-  ABANDONED
-} item_state;
+#define TODO_DB_NAME "/.gpe/todo"
 
 struct tag_map
 {
@@ -198,3 +198,56 @@ vtodo_to_tags (MIMEDirVTodo *vtodo)
 
   return data;
 }
+
+gboolean
+todo_import_from_vtodo (MIMEDirVTodo *todo, GError **error)
+{
+  sqlite *db;
+  GSList *tags, *i;
+  char *buf;
+  const gchar *home;
+  char *err = NULL;
+  int id;
+
+  home = g_get_home_dir ();
+  
+  buf = g_strdup_printf ("%s%s", home, TODO_DB_NAME);
+
+  db = sqlite_open (buf, 0, &err);
+  g_free (buf);
+
+  if (db == NULL)
+    {
+      g_set_error (error, ERROR_DOMAIN (), 0, err);
+      free (err);
+      return FALSE;
+    }
+ 
+  if (sqlite_exec (db, "insert into todo_urn values (NULL)",
+		   NULL, NULL, &err) != SQLITE_OK)
+    {
+      g_set_error (error, ERROR_DOMAIN (), 0, err);
+      free (err);
+      sqlite_close (db);
+      return FALSE;
+    }
+
+  id = sqlite_last_insert_rowid (db);
+
+  tags = vtodo_to_tags (todo);
+
+  for (i = tags; i; i = i->next)
+    {
+      gpe_tag_pair *t = i->data;
+
+      sqlite_exec_printf (db, "insert into todo values ('%d', '%q', '%q')", NULL, NULL, NULL,
+			  id, t->tag, t->value);
+    }
+  
+  gpe_tag_list_free (tags);
+
+  sqlite_close (db);
+
+  return TRUE;
+}
+

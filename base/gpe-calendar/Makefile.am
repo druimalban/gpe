@@ -34,8 +34,6 @@ gpe_calendar_SOURCES = main.c						\
 		       day_popup.c day_popup.h				\
 		       xsettings.c					\
 		       gtkdatesel.c gtkdatesel.h			\
-		       import-vcal.c import-vcal.h			\
-		       export-vcal.c export-vcal.h			\
 		       event-cal.c event-cal.h				\
 		       view.c view.h					\
 		       alarm-dialog.c alarm-dialog.h			\
@@ -44,7 +42,8 @@ gpe_calendar_SOURCES = main.c						\
 		       calendar-delete-dialog.h				\
 		       calendars-dialog.c calendars-dialog.h		\
 		       calendar-update.c calendar-update.h		\
-		       pannedwindow.c pannedwindow.h
+		       pannedwindow.c pannedwindow.h			\
+		       import-export.c import-export.h
 
 if HILDON
 

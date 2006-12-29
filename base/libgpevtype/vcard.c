@@ -11,12 +11,9 @@
 #include <string.h>
 #include <stdlib.h>
 #include <glib.h>
-#include <libintl.h>
 #include <assert.h>
 
-#include <gpe/vcard.h>
-
-#define _(x) gettext (x)
+#include "priv.h"
 
 struct tag_map
 {

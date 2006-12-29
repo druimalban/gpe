@@ -26,6 +26,7 @@
 
 #include <gpe/pim-categories-ui.h>
 #include <gpe/event-db.h>
+#include <gpe/vcal.h>
 
 #ifdef WITH_LIBSCHEDULE
 #include <gpe/schedule.h>
@@ -49,8 +50,6 @@
 #include "day_view.h"
 #include "week_view.h"
 #include "month_view.h"
-#include "import-vcal.h"
-#include "export-vcal.h"
 #include "gtkdatesel.h"
 #include "event-cal.h"
 #include "event-list.h"
@@ -59,6 +58,7 @@
 #include "calendar-update.h"
 #include "calendars-widgets.h"
 #include "event-menu.h"
+#include "import-export.h"
 
 #include <gpe/pim-categories.h>
 
@@ -190,30 +190,6 @@ schedule_wakeup (gboolean reload)
   return FALSE;
 }
 
-/* This is just a wrapper for import_vcal which displays the results
-   to the user.  */
-static void
-do_import_vcal (EventCalendar *ec, const char *files[])
-{
-  GError *error = NULL;
-  int res = import_vcal (ec, files, &error);
-
-  if (! res && ! error)
-    /* Abort.  */
-    return;
-
-  GtkWidget *feedbackdlg = gtk_message_dialog_new
-    (GTK_WINDOW (main_window),
-     GTK_DIALOG_MODAL, GTK_MESSAGE_INFO,
-     GTK_BUTTONS_OK, error ? error->message : _("Import successful"));
-
-  if (error)
-    g_error_free (error);
-    
-  gtk_dialog_run (GTK_DIALOG (feedbackdlg));
-  gtk_widget_destroy (feedbackdlg);
-}
-
 static void
 import_file_list (GSList *import_files, const gchar *selected_calendar)
 {
@@ -236,7 +212,7 @@ import_file_list (GSList *import_files, const gchar *selected_calendar)
     }
 
   GError *error = NULL;
-  if (! import_vcal (ec, files, &error) && error)
+  if (! cal_import_from_files (ec, files, &error) && error)
     {
       fprintf (stderr, "%s", error->message);
       g_error_free (error);
@@ -259,7 +235,7 @@ export_calendars (EventDB *edb, const gchar *filename, const gchar *name)
         
         if (ec)
           {
-            export_calendar_to_file (ec, filename);
+            cal_export_to_file (ec, filename, NULL);
             g_object_unref (ec);
           }
         else
@@ -269,7 +245,7 @@ export_calendars (EventDB *edb, const gchar *filename, const gchar *name)
     {
       gboolean result;
       calendars = event_db_list_event_calendars (edb);
-      result = export_list_to_file (calendars, filename);
+      result = list_export_to_file (calendars, filename, NULL);
       g_slist_free (calendars);
       return result;
     }
@@ -416,7 +392,7 @@ save_deleted_events (const gchar *filename, const gchar *calendarname)
     
   if (events) 
     {
-      result = export_list_to_file (events, filename);
+      result = list_export_to_file (events, filename, NULL);
       g_slist_free (events);
     }
       
@@ -1336,7 +1312,7 @@ alarm_button_clicked (GtkWidget *widget, gpointer d)
 static void
 import_callback (GtkWidget *widget, gpointer user_data)
 {
-  do_import_vcal (NULL, NULL);
+  cal_import_dialog (NULL, NULL);
 }
 
 static void
@@ -1478,7 +1454,7 @@ main_window_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *data)
         break;	
         case GDK_o:
         case GDK_i:
-          do_import_vcal (NULL, NULL);
+          cal_import_dialog (NULL, NULL);
         break;	
         case GDK_t:
           set_today();
@@ -1571,15 +1547,11 @@ handoff_callback (Handoff *handoff, char *data)
               ec = event_db_find_calendar_by_name (event_db, calendar);
               if (! ec)
                 ec = event_db_get_default_calendar(event_db, strlen(calendar) ? calendar : NULL);
-              do_import_vcal (ec, files);
-              g_object_unref (ec);
-            }
+	    }
           else
-            {
-              ec = event_db_get_default_calendar(event_db, NULL);
-              do_import_vcal (ec, files);
-              g_object_unref (ec);
-            }
+	    ec = event_db_get_default_calendar(event_db, NULL);
+	  cal_import_from_files (ec, files, NULL);
+	  g_object_unref (ec);
         }
       else if (strcmp (var, "VIEWTIME") == 0 && value)
         {
@@ -1950,7 +1922,6 @@ main (int argc, char *argv[])
   /* No instance running but called with -e. */
   if (export_only)
     {
-      vcal_export_init();
       if (export_calendars (event_db, export_file, selected_calendar))
         exit (EXIT_SUCCESS);
       else
@@ -2060,8 +2031,6 @@ main (int argc, char *argv[])
       exit (EXIT_SUCCESS);
     }
 	
-  vcal_export_init();
-
 #ifdef IS_HILDON
   /* Initialize maemo application */
   osso_context = osso_initialize(APPLICATION_DBUS_SERVICE, "0.1", TRUE, NULL);

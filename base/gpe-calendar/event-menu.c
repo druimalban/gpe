@@ -21,7 +21,7 @@
 #include <gpe/pixmaps.h>
 #include "event-menu.h"
 #include "globals.h"
-#include "export-vcal.h"
+#include "import-export.h"
 #include "event-ui.h"
 #include "calendars-widgets.h"
 #include "calendar-edit-dialog.h"
@@ -106,13 +106,13 @@ delete_calendar_cb (GtkWidget *widget, gpointer d)
 static void
 save_cb (GtkWidget *widget, gpointer d)
 {
-  export_event_save_as_dialog (EVENT (d));
+  event_export_dialog (EVENT (d));
 }
 
 static void
 save_calendar_cb (GtkWidget *widget, gpointer d)
 {
-  export_calendar_save_as_dialog (EVENT_CALENDAR (d));
+  cal_export_dialog (EVENT_CALENDAR (d));
 }
 
 static void

@@ -1,3 +1,43 @@
+2006-12-29  Neal H. Walfield  <neal@gnu.org>
+
+	* configure.ac: Depend on libgpevtype >= 0.2.
+	* Makefile.am (gpe_calendar_SOURCES): Remove import-vcal.c,
+	import-vcal.h, export-vcal.c and export-vcal.h.  Add
+	import-export.c and import-export.h.
+	* import-vcal.h: Remove file.
+	* import-vcal.c: Likewise.
+	* export-vcal.h: Likewise.
+	* export-vcal.c: Likewise.
+	* globals.h (ERROR_DOMAIN): Define.
+	* import-export.h: New file.
+	* import-export.c: New file.
+	(new_calendar_clicked): Move here from import-vcal.c.
+	(cal_import_from_files): Move import_vcal here from import-vcal.c.
+	Update callers.
+	(save_as_dialog): Move here from export-vcal.c.
+	(event_export_dialog): Move export_event_save_as_dialog here from
+	export-vcal.c.  Update callers.
+	(cal_export_dialog): Move export_calendar_save_as_dialog here from
+	export-vcal.c.  Update callers.
+	(dbus_init): New function deprecating vcal_export_init.  Update
+	callers.
+	(export_bluetooth_available): Move here from export-vcal.c.
+	(export_irda_available): Likewise.
+	(vcal_do_send_bluetooth): Likewise.
+	(vcal_do_send_irda): Likewise.
+	* main.c: Include <gpe/vcal.h> and "import-export.h". Don't
+	include "import-vcal.h" or "export-vcal.h".
+	(do_import_vcal): Move from here...
+	* import-export.c (cal_import_dialog): ... to here.
+	* event-menu.c: Include "import-export.h".  Don't include
+	"export-vcal.h".
+	* calendar-update.c: Include <gpe/vtype.h>.  Don't include
+	"import-vcal.h" or "export-vcal.h".
+	(calendar_push_internal): Don't use export_calendar_as_string, but
+	cal_export_as_string.
+	(pulled): Don't use import_vcal_from_channel, but
+	cal_import_from_channel.
+
 2006-12-28  Neal H. Walfield  <neal@gnu.org>
 
 	* export-vcal.h: Include <mimedir/mimedir-vevent.h>.

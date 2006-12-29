@@ -1,349 +1,599 @@
 /*
  * Copyright (C) 2004 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2006 Neal H. Walfield <neal@walfield.org>
  *
  * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public License
- * as published by the Free Software Foundation; either version 2 of
- * the License, or (at your option) any later version.
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version
+ * 2 of the License, or (at your option) any later version.
  */
 
-#include <stdio.h>
-#include <string.h>
+#include <sys/types.h>
 #include <stdlib.h>
-#include <glib.h>
+#include <unistd.h>
+#include <stdio.h>
 #include <libintl.h>
-#include <assert.h>
+#include <errno.h>
+#include <string.h>
 
-#include <gpe/vevent.h>
-#include <gpe/event-db.h>
+#include <mimedir/mimedir-vcal.h>
+#include <mimedir/mimedir-valarm.h>
+#include <mimedir/mimedir-vevent.h>
 
-struct tag_map
+#include "priv.h"
+
+static time_t
+extract_time (MIMEDirDateTime *dt)
 {
-  GType type;
-  gchar *tag;
-  gchar *vc;
-};
-
-static struct tag_map map[] = {
-  {G_TYPE_STRING, "summary", NULL},
-  {G_TYPE_STRING, "description", NULL},
-  {G_TYPE_STRING, "eventid", "uid"},
-  {G_TYPE_INT, "sequence", NULL},
-  {G_TYPE_INT, "duration", NULL},
-  {G_TYPE_INVALID, NULL, NULL}
-};
-
-static struct tag_map rec_map[] = {
-  {G_TYPE_INT, "recur", "frequency"},
-  {G_TYPE_INT, "rcount", "count"},
-  {G_TYPE_INT, "rincrement", "unit"},
-  {G_TYPE_INVALID, NULL, NULL}
-};
-
-static gint freq_map[] = { RECUR_NONE, RECUR_NONE, RECUR_NONE, RECUR_NONE, 
-                           RECUR_DAILY, RECUR_WEEKLY, RECUR_MONTHLY, 
-                           RECUR_YEARLY };
-  
-static gboolean
-parse_date (const char *s, struct tm *tm, gboolean * date_only)
-{
-  char *p;
-
-  memset (tm, 0, sizeof (*tm));
-
-  p = strptime (s, "%Y-%m-%d", tm);
-  if (p == NULL)
-    return FALSE;
-
-  p = strptime (p, " %H:%M", tm);
-
-  if (date_only)
-    *date_only = (p == NULL) ? TRUE : FALSE;
-
-  return TRUE;
-}
-
-static gboolean
-vevent_interpret_tag (MIMEDirVEvent * event, const char *tag,
-		      const char *value)
-{
-  struct tag_map *t = &map[0];
-  while (t->tag)
-    {
-      if (!strcasecmp (t->tag, tag))
-        {
-          if (t->type == G_TYPE_STRING)
-            g_object_set (G_OBJECT (event), t->vc ? t->vc : t->tag, value,
-                  NULL);
-          else if (t->type == G_TYPE_INT)
-            g_object_set (G_OBJECT (event), t->vc ? t->vc : t->tag,
-                  atoi (value), NULL);
-          else
-            abort ();
-          return TRUE;
-        }
-      t++;
-    }
-
-  if (!strcasecmp (tag, "start"))
-    {
-      struct tm tm;
-      gboolean date_only;
-
-      if (parse_date (value, &tm, &date_only))
-        {
-          MIMEDirDateTime *date;
-    
-          date =
-            mimedir_datetime_new_from_date (tm.tm_year + 1900, tm.tm_mon + 1,
-                            tm.tm_mday);
-          if (!date_only)
-            {
-              mimedir_datetime_set_time (date, tm.tm_hour, tm.tm_min,
-                         tm.tm_sec);
-              date->timezone = MIMEDIR_DATETIME_UTC;
-            }
-    
-          g_object_set (G_OBJECT (event), "dtstart", date, NULL);
-        }
-      else
-        fprintf (stderr, "couldn't parse date '%s'\n", value);
-
-      return TRUE;
-    }
-    
-  if (!strcasecmp (tag, "modified"))
-    {
-      MIMEDirDateTime *date;
-
-      date = mimedir_datetime_new_from_time_t (atoi (value));
-      g_object_set (G_OBJECT (event), "last-modified", date, NULL);
-
-      return TRUE;
-    }
-    
-  /* handle recurring events */
-  t = &rec_map[0];
-  while (t->tag)
-    {
-      if (!strcasecmp (t->tag, tag))
-        {
-          MIMEDirRecurrence *rec = mimedir_vcomponent_get_recurrence((MIMEDirVComponent*)event);
-         
-          if (rec == NULL)
-            {
-              rec = mimedir_recurrence_new();
-              mimedir_vcomponent_set_recurrence((MIMEDirVComponent*)event, rec);
-            } 
-          if (t->type == G_TYPE_STRING)
-            g_object_set (G_OBJECT (rec), t->vc ? t->vc : t->tag, value,
-                  NULL);
-          else if (t->type == G_TYPE_INT)
-            g_object_set (G_OBJECT (rec), t->vc ? t->vc : t->tag,
-                  atoi (value), NULL);
-          else
-            abort ();
-          return TRUE;
-        }
-      t++;
-    }
-    
-  return FALSE;
-}
-
-MIMEDirVEvent *
-vevent_from_event_t (Event *event)
-{
-  MIMEDirVEvent *vevent;
-  time_t t;
   struct tm tm;
-          
-  if (!event) 
-    return NULL;
-  
-  vevent = mimedir_vevent_new ();
-  
-  /* start time */
-  t = event_get_start (event);
-  if (localtime_r (&t, &tm))
+  memset (&tm, 0, sizeof (tm));
+
+  tm.tm_year = dt->year - 1900;
+  tm.tm_mon = dt->month - 1;
+  tm.tm_mday = dt->day;
+
+  if ((dt->flags & MIMEDIR_DATETIME_TIME))
     {
-      MIMEDirDateTime *date;
+      tm.tm_hour = dt->hour;
+      tm.tm_min = dt->minute;
+      tm.tm_sec = dt->second;
+    }
 
-      date =
-        mimedir_datetime_new_from_date (tm.tm_year + 1900, tm.tm_mon + 1,
-                        tm.tm_mday);
+  /* Get mktime to figure out if dst is in effect during this time or
+     not.  */
+  tm.tm_isdst = -1;
 
-      g_object_set (G_OBJECT (vevent), "dtstart", date, NULL);
+  if ((dt->flags & MIMEDIR_DATETIME_TIME) == 0)
+    /* Untimed: return the start of the day in the local time time zone
+       in UTC.  */
+    return mktime (&tm);
+  else if (dt->timezone == MIMEDIR_DATETIME_NOTZ)
+    /* No time zone: return this time in the local time zone in
+       UTC.  */
+    return mktime (&tm);
+  else
+    /* The time is in UTC or the time zone relative to UTC is
+       provided.  */
+    {
+      time_t t = timegm (&tm);
+      if (dt->timezone != MIMEDIR_DATETIME_UTC)
+	t += dt->timezone;
+      return t;
+    }
+}
+
+gboolean
+event_import_from_vevent (EventCalendar *ec, MIMEDirVEvent *event,
+			  Event **new_ev,
+			  GError **gerror)
+{
+  EventDB *event_db = event_calendar_get_event_db (ec);
+
+  gboolean error = FALSE;;
+  gboolean created = FALSE;;
+
+  Event *ev = NULL;
+  char *uid = NULL;
+  g_object_get (event, "uid", &uid, NULL);
+  if (uid)
+    ev = event_db_find_by_eventid (event_db, uid);
+  if (! ev)
+    {
+      created = TRUE;
+      ev = event_new (event_db, ec, uid);
+    }
+  else
+    event_set_calendar (ev, ec);
+
+  char *summary = NULL;
+  g_object_get (event, "summary", &summary, NULL);
+
+  MIMEDirDateTime *dtstart = NULL;
+  g_object_get (event, "dtstart", &dtstart, NULL);
+  if (! dtstart)
+    {
+      error = TRUE;
+      g_set_error (gerror, ERROR_DOMAIN (), 0,
+		   "Not important malformed event %s (%s):"
+		   " lacks required field dtstart",
+		   summary, uid);
+      goto out;
+    }
+
+  time_t start = extract_time (dtstart);
+  event_set_recurrence_start (ev, start);
+  event_set_untimed (ev, (dtstart->flags & MIMEDIR_DATETIME_TIME) == 0);
+  g_object_unref (dtstart);
+
+#if 0
+  /* XXX: What should we do if the event is marked as an all day
+     event?  */
+  mimedir_vcomponent_get_allday (MIMEDIR_VCOMPONENT (event));
+#endif
+
+  MIMEDirDateTime *dtend = NULL;
+  g_object_get (event, "dtend", &dtend, NULL);
+  time_t end;
+  if (dtend)
+    {
+      end = extract_time (dtend);
+      event_set_duration (ev, end - start);
+      g_object_unref (dtend);
     }
   else
     {
-      g_object_unref(vevent);
-      return NULL;
+      int duration;
+      g_object_get (event, "duration", &duration, NULL);
+
+      if (duration)
+	{
+	  event_set_duration (ev, duration);
+	  end = start + duration;
+	}
+      else
+	end = start;
     }
 
-  /* retrieve data and fill fields */    
-  g_object_set (G_OBJECT (vevent),
-		"duration", (gint) event_get_duration (event), NULL);
-  g_object_set (G_OBJECT (vevent), "uid", event_get_eventid (event), NULL);
-  char *s = event_get_summary (event);
-  g_object_set (G_OBJECT (vevent), "summary", s, NULL);
-  g_free (s);
-  s = event_get_description (event);
-  g_object_set (G_OBJECT (vevent), "description", s, NULL);
-  g_free (s);
-  
-  /* handle recurring events */
-  if (event_is_recurrence (event))
-    {
-      MIMEDirRecurrence *rec = mimedir_recurrence_new();
-      mimedir_vcomponent_set_recurrence((MIMEDirVComponent*)vevent, rec);
-      g_object_set (G_OBJECT (rec),
-		    /* hack, known offset */
-		    "frequency", event_get_recurrence_type (event) + 3, NULL);
-      g_object_set (G_OBJECT (rec),
-		    "count", event_get_recurrence_count (event), NULL);
-      g_object_set (G_OBJECT (rec),
-		    "unit", event_get_recurrence_increment (event), NULL);
 
-      time_t end = event_get_recurrence_end (event);
-      if (end)
-        if (localtime_r(&end, &tm))
-          {
-            MIMEDirDateTime *date;
-    
-            date =
-              mimedir_datetime_new_from_date (tm.tm_year + 1900, tm.tm_mon + 1,
-                            tm.tm_mday);
-    
-            g_object_set (G_OBJECT (rec), "until", date, NULL);
-          }
-      }
-  return vevent;
+  /* Handle alarms, if any */
+  const GList *alarm_list, *l;
+
+  /* Get the alarm list.
+
+     Note the comments in mimedri-vcomponent.c: the list must not be modified
+     by the caller and the MIMEDirVAlarm objects in the list must be
+     g_object_ref()'ed when they are to be used by the caller. */
+  alarm_list = mimedir_vcomponent_get_alarm_list (MIMEDIR_VCOMPONENT (event));
+
+  /* XXX: A VEvent can have multiple alarms but we only support a
+     single alarm.  Take the earliest and hope for the best.  */
+  int trigger_min = INT_MAX;
+  for (l = alarm_list; l; l = g_list_next (l))
+    {
+      MIMEDirVAlarm *valarm = MIMEDIR_VALARM (l->data);
+
+      int trigger;
+      g_object_get (valarm, "trigger", &trigger, NULL);
+      if (trigger)
+	{
+	  int alarm;
+	  gboolean trigger_end;
+
+	  g_object_get (valarm, "trigger-end", &trigger_end, NULL);
+	  if (trigger_end)
+	    alarm = end - trigger;
+	  else
+	    alarm = start - trigger;
+	
+	  if (alarm < 0)
+	    alarm = 1;
+
+	  trigger_min = MIN (alarm, trigger_min);
+	}
+
+      MIMEDirDateTime *triggerdt = NULL;
+      g_object_get (valarm, "trigger-datetime", &triggerdt, NULL);
+      if (triggerdt)
+	{
+	  trigger_min = MIN (extract_time (triggerdt), trigger_min);
+	  g_object_unref (triggerdt);
+	}
+    }
+
+  if (trigger_min != INT_MAX)
+    /* Set the alarm.  */
+    event_set_alarm (ev, trigger_min);
+
+#if 0
+  GList *categories = NULL;
+  g_object_get (event, "category-list", &categories, NULL);
+
+  GList *i;
+  for (i = categories; i; i = i->next)
+    {
+      event_add_category (ev, map category name to integer...);
+      g_free (i->data);
+    }
+  g_list_free (categories);
+#endif
+
+  if (summary)
+    event_set_summary (ev, summary);
+
+  char *description = NULL;
+  g_object_get (event, "description", &description, NULL);
+  if (description)
+    event_set_description (ev, description);
+  g_free (description);
+
+  const char *location_uri;
+  const char *location
+    = mimedir_vcomponent_get_location (MIMEDIR_VCOMPONENT (event),
+				       &location_uri);
+  if (location && location_uri)
+    {
+      char *s = NULL;
+      s = g_strdup_printf ("%s\n%s", location, location_uri);
+      event_set_location (ev, s);
+      g_free (s);
+    }
+  else if (location)
+    event_set_location (ev, location);
+  else if (location_uri)
+    event_set_location (ev, location_uri);
+
+  int sequence;
+  g_object_get (event, "sequence", &sequence, NULL);
+  event_set_sequence (ev, sequence);
+
+  MIMEDirRecurrence *recurrence
+    = mimedir_vcomponent_get_recurrence (MIMEDIR_VCOMPONENT (event));
+  if (recurrence)
+    {
+      /* XXX: Add EXDATE (exceptions) when libmimedir supports it.  */
+      /* XXX: Add RDATE (BYDAY, etc.) when libmimedir supports it.  */
+
+      MIMEDirDateTime *until = NULL;
+      g_object_get (recurrence, "until", &until, NULL);
+      if (until)
+	{
+	  mimedir_datetime_to_utc (until);
+	  event_set_recurrence_end (ev, mimedir_datetime_get_time_t (until));
+	}
+
+      int frequency = 0;
+      g_object_get (recurrence, "frequency", &frequency, NULL);
+
+      enum event_recurrence_type type = RECUR_NONE;
+      switch (frequency)
+	{
+	case RECURRENCE_DAILY:
+	  type = RECUR_DAILY;
+	  break;
+	case RECURRENCE_WEEKLY:
+	  type = RECUR_WEEKLY;
+	  /* Fall through.  */
+	case RECURRENCE_MONTHLY:
+	  if (frequency == RECURRENCE_MONTHLY)
+	    type = RECUR_MONTHLY;
+
+	  int unit = 0;
+	  g_object_get (recurrence, "unit", &unit, NULL);
+	  if (unit == RECURRENCE_UNIT_DAY)
+	    {
+	      char *units;
+	      g_object_get (recurrence, "units", &units, NULL);
+
+	      GSList *byday = NULL;
+	      char *p = units;
+	      while (p && *p)
+		{
+		  while (*p == ' ' || *p == ',')
+		    p ++;
+		  int prefix = strtol (p, &p, 10);
+		  while (*p == ' ')
+		    p ++;
+
+		  int check (char *day, int shift)
+		    {
+		      if (strncmp (p, day, 2) == 0
+			  && (p[2] == ',' || p[2] == ' ' || p[2] == 0))
+			{
+			  if (prefix == 0)
+			    byday = g_slist_prepend (byday, g_strdup (day));
+			  else
+			    {
+			      char *s = g_strdup_printf ("%d%s", prefix, day);
+			      byday = g_slist_prepend (byday, s);
+			    }
+
+			  p += 2;
+			  return TRUE;
+			}
+		      return FALSE;
+		    }
+
+		  if (check ("MO", 0))
+		    continue;
+		  if (check ("TU", 1))
+		    continue;
+		  if (check ("WE", 2))
+		    continue;
+		  if (check ("TH", 3))
+		    continue;
+		  if (check ("FR", 4))
+		    continue;
+		  if (check ("SA", 5))
+		    continue;
+		  if (check ("SU", 6))
+		    continue;
+		  /* Invalid character?  */
+		  p = strchr (p, ',');
+		}
+
+	      event_set_recurrence_byday (ev, byday);
+
+	      g_free (units);
+	    }
+
+	  break;
+	case RECURRENCE_YEARLY:
+	  type = RECUR_YEARLY;
+	  break;
+	default:
+	  {
+	    error = TRUE;
+	    char *s = mimedir_recurrence_write_to_string (recurrence);
+	    g_set_error (gerror, ERROR_DOMAIN (), 0,
+			 "%s (%s) has unhandeled recurrence"
+			 " type: %s, not importing",
+			 summary, uid, s);
+	    g_free (s);
+	    goto out;
+	  }
+	}
+      event_set_recurrence_type (ev, type);
+
+      int count = 0;
+      g_object_get (recurrence, "count", &count, NULL);
+      event_set_recurrence_count (ev, count);
+
+      int interval = 0;
+      g_object_get (recurrence, "interval", &interval, NULL);
+      if (interval)
+	event_set_recurrence_increment (ev, interval);
+
+      if (until)
+	g_object_unref (until);
+
+      /* We don't own a reference to recurrence, don't unref it.  */
+    }
+
+  event_flush (ev);
+ out:
+  g_free (uid);
+
+  if (! error && new_ev)
+    /* Return the new event to the caller.  */
+    {
+      *new_ev = ev;
+      g_object_ref (ev);
+    }
+
+  if (created && error)
+    event_remove (ev);
+  g_object_unref (ev);
+  g_free (summary);
+
+  return ! error;
 }
 
 MIMEDirVEvent *
-vevent_from_tags (GSList * tags)
+event_export_as_vevent (Event *ev)
 {
-  MIMEDirVEvent *vevent = mimedir_vevent_new ();
+  MIMEDirVEvent *event = mimedir_vevent_new ();
 
-  while (tags)
+  char *uid = event_get_eventid (ev);
+  g_object_set (event, "uid", uid, NULL);
+  g_free (uid);
+
+  time_t s = event_get_recurrence_start (ev);
+  time_t e = s + event_get_duration (ev);
+  struct tm tm;
+
+  MIMEDirDateTime *dtstart;
+  MIMEDirDateTime *dtend;
+  if (event_get_untimed (ev))
     {
-      gpe_tag_pair *p = tags->data;
+      localtime_r (&s, &tm);
+      dtstart = mimedir_datetime_new_from_date (tm.tm_year + 1900,
+						tm.tm_mon + 1,
+						tm.tm_mday);
+      localtime_r (&e, &tm);
+      dtend = mimedir_datetime_new_from_date (tm.tm_year + 1900,
+					      tm.tm_mon + 1,
+					      tm.tm_mday);
+      mimedir_vcomponent_set_allday (MIMEDIR_VCOMPONENT (event), TRUE);
+    }
+  else
+    {
+      gmtime_r (&s, &tm);
+      dtstart = mimedir_datetime_new_from_datetime (tm.tm_year + 1900,
+						    tm.tm_mon + 1,
+						    tm.tm_mday,
+						    tm.tm_hour,
+						    tm.tm_min,
+						    tm.tm_sec);
+      dtstart->timezone = MIMEDIR_DATETIME_UTC;
 
-      vevent_interpret_tag (vevent, p->tag, p->value);
-
-      tags = tags->next;
+      gmtime_r (&e, &tm);
+      dtend = mimedir_datetime_new_from_datetime (tm.tm_year + 1900,
+						  tm.tm_mon + 1,
+						  tm.tm_mday,
+						  tm.tm_hour,
+						  tm.tm_min,
+						  tm.tm_sec);
+      dtend->timezone = MIMEDIR_DATETIME_UTC;
     }
 
-  return vevent;
+  g_object_set (event, "dtstart", dtstart, NULL);
+  g_object_unref (dtstart);
+  g_object_set (event, "dtend", dtend, NULL);
+  g_object_unref (dtend);
+
+  time_t last_modification = event_get_last_modification (ev);
+  MIMEDirDateTime *dmod;
+
+  dmod = mimedir_datetime_new_from_time_t (last_modification);
+  g_object_set (event, "last-modified", dmod, NULL);
+  g_object_unref (dmod);
+	
+  int alarm = event_get_alarm (ev);
+  if (alarm)
+    /* Add a display alarm and an audio alarm.  */
+    {
+      MIMEDirVAlarm *valarm;
+      GList *list = NULL;
+
+      valarm = mimedir_valarm_new (MIMEDIR_VALARM_DISPLAY);
+      g_object_set (valarm, "action", "DISPLAY", NULL);
+      g_object_set (valarm, "trigger", alarm, NULL);
+      list = g_list_prepend (list, valarm);
+
+      /* XXX: Adding two alarms confuses some systems, assume the
+	 display alarm is enough. */
+#if 0
+      valarm = mimedir_valarm_new (MIMEDIR_VALARM_AUDIO);
+      g_object_set (valarm, "action", "AUDIO", NULL);
+      g_object_set (valarm, "trigger", alarm, NULL);
+      list = g_list_prepend (list, valarm);
+#endif
+
+      /* Add the valarms to the vevent.  As there is no
+	 "mimedir_vcomponent_add_alarm_list" function, we replace the
+	 whole list using mimedir_vcomponent_set_alarm_list.  */
+      mimedir_vcomponent_set_alarm_list (MIMEDIR_VCOMPONENT (event), list);
+    }
+
+#if 0
+  GList *categories = NULL;
+  g_object_get (event, "category-list", &categories, NULL);
+
+  GList *i;
+  for (i = categories; i; i = i->next)
+    {
+      event_add_category (ev, map category name to integer...);
+      g_free (i->data);
+    }
+  g_list_free (categories);
+#endif
+
+  char *summary = event_get_summary (ev);
+  if (summary)
+    {
+      if (*summary)
+	g_object_set (event, "summary", summary, NULL);
+      g_free (summary);
+    }
+
+  char *description = event_get_description (ev);
+  if (description)
+    {
+      if (*description)
+	g_object_set (event, "description", description, NULL);
+      g_free (description);
+    }
+
+  char *location = event_get_location (ev);
+  if (location)
+    {
+      if (*location)
+	mimedir_vcomponent_set_location (MIMEDIR_VCOMPONENT (event),
+					 location, "");
+      g_free (location);
+    }
+
+  if (event_get_recurrence_type (ev) != RECUR_NONE)
+    {
+      MIMEDirRecurrence *recurrence = mimedir_recurrence_new ();
+
+      MIMEDirRecurrenceFrequency freq;
+      switch (event_get_recurrence_type (ev))
+	{
+	case RECUR_DAILY:
+	  freq = RECURRENCE_DAILY;
+	  break;
+	case RECUR_WEEKLY:
+	  freq = RECURRENCE_WEEKLY;
+	  break;
+	case RECUR_MONTHLY:
+	  freq = RECURRENCE_MONTHLY;
+	  break;
+	case RECUR_YEARLY:
+	  freq = RECURRENCE_YEARLY;
+	  break;
+	default:
+	  g_assert_not_reached ();
+	}
+
+      g_object_set (G_OBJECT (recurrence), "frequency", freq, NULL);
+
+      /* XXX: Add EXDATE (exceptions) when libmimedir supports it.  */
+      /* XXX: Add RDATE (BYDAY, etc.) when libmimedir supports it.  */
+
+      time_t e = event_get_recurrence_end (ev);
+      if (e)
+	{
+	  MIMEDirDateTime *until;
+	  if (event_get_untimed (ev))
+	    {
+	      struct tm tm;
+	      localtime_r (&e, &tm);
+	      until = mimedir_datetime_new_from_date (tm.tm_year + 1900,
+						      tm.tm_mon + 1,
+						      tm.tm_mday);
+	    }
+	  else
+	    {
+	      struct tm tm;
+	      gmtime_r (&e, &tm);
+	      until = mimedir_datetime_new_from_datetime (tm.tm_year + 1900,
+							  tm.tm_mon + 1,
+							  tm.tm_mday,
+							  tm.tm_hour,
+							  tm.tm_min,
+							  tm.tm_sec);
+	      until->timezone = MIMEDIR_DATETIME_UTC;
+	    }
+
+	  g_object_set (recurrence, "until", until, NULL);
+	  g_object_unref (until);
+	}
+
+      int count = event_get_recurrence_count (ev);
+      if (count)
+	g_object_set (recurrence, "count", count, NULL);
+
+      int interval = event_get_recurrence_increment (ev);
+      if (interval > 1)
+	g_object_set (recurrence, "interval", interval, NULL);
+
+      GSList *byday = event_get_recurrence_byday (ev);
+      if (byday)
+	{
+	  char *s[g_slist_length (byday) + 1];
+	  int i;
+	  GSList *l;
+	  for (l = byday, i = 0; l; l = l->next, i ++)
+	    s[i] = l->data;
+	  s[i] = NULL;
+
+	  char *units = g_strjoinv (",", s);
+
+	  g_object_set (recurrence, "unit", RECURRENCE_UNIT_DAY, NULL);
+	  g_object_set (recurrence, "units", units, NULL);
+	  event_recurrence_byday_free (byday);
+	  g_free (units);
+	}
+
+      g_object_set (event, "recurrence", recurrence, NULL);
+      g_object_unref (recurrence);
+    }
+
+  return event;
 }
 
-GSList *
-vevent_to_tags (MIMEDirVEvent * vevent)
+char *
+event_export_as_string (Event *ev)
 {
-  GSList *data = NULL;
-  struct tag_map *t = &map[0];
-  MIMEDirDateTime *date;
-  MIMEDirRecurrence *rec = NULL;
+  MIMEDirVCal *vcal = mimedir_vcal_new ();
 
-  while (t->tag)
-    {
-      if (t->type == G_TYPE_STRING)
-        {
-          gchar *value;
-    
-          g_object_get (G_OBJECT (vevent), t->vc ? t->vc : t->tag, &value,
-                NULL);
-    
-          if (value)
-            data = gpe_tag_list_prepend (data, t->tag, g_strstrip (value));
-        }
-      else if (t->type == G_TYPE_INT)
-        {
-          gint value;
-    
-          g_object_get (G_OBJECT (vevent), t->vc ? t->vc : t->tag, &value,
-                NULL);
-    
-          if (value != 0)
-            data =
-              gpe_tag_list_prepend (data, t->tag,
-                        g_strdup_printf ("%d", value));
-        }
-      else
-        abort ();
+  MIMEDirVEvent *vev = event_export_as_vevent (ev);
+  mimedir_vcal_add_component (vcal, MIMEDIR_VCOMPONENT (vev));
+  g_object_unref (vev);
 
-      t++;
-    }
+  char *s = mimedir_vcal_write_to_string (vcal);
+  g_object_unref (vcal);
 
-  g_object_get (G_OBJECT (vevent), "dtstart", &date, NULL);
-  if (date)
-    {
-      gchar buf[256];
-      MIMEDirDateTime *end_date;
-      time_t start_t, end_t;
-
-      mimedir_datetime_to_utc (date);
-
-      data =
-    	gpe_tag_list_prepend (data, "start",
-                              mimedir_datetime_to_string (date));
-
-      g_object_get (G_OBJECT (vevent), "dtend", &end_date, NULL);
-      if (end_date)
-        {
-          unsigned int duration;
-    
-          start_t = mimedir_datetime_get_time_t (date);
-          end_t = mimedir_datetime_get_time_t (end_date);
-    
-          duration = end_t - start_t;
-          sprintf (buf, "%d", duration);
-          data = gpe_tag_list_prepend (data, "duration", g_strdup (buf));
-        }
-    }
-    
-  g_object_get (G_OBJECT (vevent), "recurrence", &rec, NULL);
-  if (rec)
-    {
-      struct tag_map *t = &rec_map[0];
-    
-      while (t->tag)
-        {
-            if (t->type == G_TYPE_INT)
-            {
-              gint value;
-        
-              g_object_get (G_OBJECT (rec), t->vc ? t->vc : t->tag, &value,
-                    NULL);
-        
-              if (!strcmp(t->tag, "recur") && (value <= RECUR_YEARLY) && (value > 0))
-                  value = freq_map[value];
-              
-              if (value != 0)
-                {
-                  data =
-                    gpe_tag_list_prepend (data, t->tag,
-                                          g_strdup_printf ("%d", value));
-                }
-            }
-          else
-            abort ();
-    
-          t++;
-        }
-
-      g_object_get (G_OBJECT (rec), "until", &date, NULL);
-      if (date)
-        {
-          mimedir_datetime_to_utc (date);
-    
-          data =
-            gpe_tag_list_prepend (data, "rend",
-                                  mimedir_datetime_to_string (date));
-        }
-        
-    }
-
-  return data;
+  return s;
 }

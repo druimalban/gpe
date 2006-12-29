@@ -20,9 +20,8 @@
 #include <gtk/gtk.h>
 #include <string.h>
 #include <libsoup/soup.h>
+#include <gpe/vtype.h>
 #include "calendar-update.h"
-#include "import-vcal.h"
-#include "export-vcal.h"
 #include "globals.h"
 
 /* So, libmimedir can read from either files or from GIOChannels.  We
@@ -364,7 +363,7 @@ calendar_push_internal (struct info *info)
 
   g_object_ref (info->ec);
 
-  char *s = export_calendar_as_string (info->ec);
+  char *s = cal_export_as_string (info->ec);
   soup_message_set_request (msg, "text/calendar",
 			    SOUP_BUFFER_SYSTEM_OWNED, s, strlen (s));
 
@@ -407,7 +406,7 @@ pulled (SoupMessage *msg, gpointer data)
       GIOChannel *channel = g_io_channel_from_buffer (msg->response.body,
 						      msg->response.length);
       GError *error = NULL;
-      int err = import_vcal_from_channel (info->ec, channel, &error);
+      int err = cal_import_from_channel (info->ec, channel, &error);
       g_io_channel_unref (channel);
 
       if (err)

@@ -1,3 +1,58 @@
+2006-12-29  Neal H. Walfield  <neal@gnu.org>
+
+	* configure.ac: Bump version to 0.2.
+	Call AC_GNU_SOURCE.  Add dependency on libtododb.
+	* Makefile.am (INCLUDES): Rename from this...
+	(AM_CPPFLAGS): ... to this.
+	(libgpevtype_la_LDFLAGS): New variable, add versioning.
+	(libgpevtype_la_SOURCES): Add priv.h and vcal.c.
+	(gpeinclude_HEADERS): Add gpe/vtype.h and gpe/vcal.h.
+	(DISTCHECK_CONFIGURE_FLAGS): New variable.
+	* priv.h: New file.
+	* gpe/vtype.h: New file.
+	* gpe/vcal.h: New file.
+	* vcal.c: New file.
+	(cal_import_from_channel): Move import_vcal_from_event here from
+	../gpe-calendar/import-vcal.c.
+	(cal_import_from_vmimedir): Move import_vcal here from
+	../gpe-calendar/import-vcal.c.
+	(cal_export_as_string): Move export_calendar_as_string here from
+	../gpe-calendar/export-vcal.c.
+	(save_to_file): Move here from ../gpe-calendar/export-vcal.c.
+	(cal_export_to_file): Move export_calendar_to_file here from
+	../gpe-calendar/export-vcal.c.
+	(event_export_to_file): New function.
+	(list_export_to_file): Move export_list_to_file here from
+	../gpe-calendar/export-vcal.c.
+	* gpe/vevent.h (event_import_from_vevent): New prototype.
+	(event_export_as_vevent): Likewise.
+	(event_export_as_string): Likewise.
+	(event_export_to_file): Likewise.
+	(vcal_do_send_bluetooth): Likewise.
+	(vcal_do_send_irda): Likewise.
+	(vevent_from_tags): Remove prototype.
+	(vevent_from_event_t): Likewise.
+	(vevent_to_tags): Likewise.
+	* vevent.c: Remove file contents.
+	(extract_time): Move here from ../gpe-calendar/import-vcal.c.
+	(event_import_from_vevent): Move import_vevent here from
+	../gpe-calendar/import-vcal.c.
+	(event_export_as_vevent): Move export_event_as_vevent here from
+	../gpe-calendar/export-vcal.c.
+	(event_export_as_string): Move export_event_as_string here from
+	../gpe-calendar/export-vcal.c.
+	* gpe/vtodo.h (todo_import_from_vtodo): New prototype.
+	* vtodo.c: Include <time.h>, <sqlite.h>, <gpe/todo-db.h> and
+	"priv.h".  Don't include <libintl.h> or <gpe/vtodo.h>.
+	(_): Don't define.
+	(item_state): Don't define, get definition from <gpe/todo-db.h>.
+	(TODO_DB_NAME): Define.
+	(todo_import_from_vtodo): Import from
+	../gpe-calendar/import-vcal.c.
+	* vcard.c: Don't include <libintl.h>, <gpe/vcard.h>.  Include
+	"priv.h".
+	(_): Don't define.
+	
 2006-12-28  Neal H. Walfield  <neal@gnu.org>
 
 	* README: New file.
