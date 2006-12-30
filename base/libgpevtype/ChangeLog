@@ -1,5 +1,10 @@
 2006-12-30  Neal H. Walfield  <neal@gnu.org>
 
+	* gpe/vtype.h (GPE_TYPE_H): Check for this...
+	(GPE_VEVNT_H): ... not this.
+
+2006-12-30  Neal H. Walfield  <neal@gnu.org>
+
 	* configure.ac: Change version to 0.20.
 
 2006-12-29  Neal H. Walfield  <neal@gnu.org>

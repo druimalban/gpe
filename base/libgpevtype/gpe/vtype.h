@@ -17,8 +17,8 @@
    along with this program; if not, write to the Free Software
    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111, USA. */
 
-#ifndef GPE_VEVENT_H
-#define GPE_VEVENT_H
+#ifndef GPE_TYPE_H
+#define GPE_TYPE_H
 
 #include <gpe/vcal.h>
 #include <gpe/vevent.h>
