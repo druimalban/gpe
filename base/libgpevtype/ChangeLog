@@ -1,3 +1,7 @@
+2006-12-30  Neal H. Walfield  <neal@gnu.org>
+
+	* configure.ac: Change version to 0.20.
+
 2006-12-29  Neal H. Walfield  <neal@gnu.org>
 
 	* configure.ac: Bump version to 0.2.
