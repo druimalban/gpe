@@ -13,7 +13,7 @@ function menu_entry($page, $title, $link,$thispage)
 
 <div class="menu" align="center">
 <ul class="menu">
-<?php menu_entry("home", "Home/News", "/", $pagename);?>
+<?php menu_entry("home", "Home", "/", $pagename);?>
  &middot;
 <?php menu_entry("projects", "Projects", "/projects/", $pagename); ?>
  &middot;
@@ -23,9 +23,11 @@ function menu_entry($page, $title, $link,$thispage)
  &middot;
 <?php menu_entry("download", "Download", "/download.phtml", $pagename); ?>
  &middot;
-<?php menu_entry("contact", "Contact&nbsp;us", "/contact.phtml", $pagename); ?>
+<?php menu_entry("contact", "Contact", "/contact.phtml", $pagename); ?>
  &middot;
 <li><A href="http://bugs.linuxtogo.org">Bugs</A></li>
+ &middot;
+<li><A href="http://projects.linuxtogo.org/projects/gpe/">Development</a>
  &middot;
 <?php menu_entry("linkres", "Resources", "/linkres.phtml", $pagename); ?>
 </ul>
