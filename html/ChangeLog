@@ -1,5 +1,9 @@
 2007-01-02  Neal H. Walfield  <neal@gnu.org>
 
+	* projects/GPE-calendar.shtml: Improve text.
+
+2007-01-02  Neal H. Walfield  <neal@gnu.org>
+
 	* images/gpe-in-use.jpg: New file.
 	* index.phtml: Use it and improve text.
 	* includes/menu.php: Add development link and shorten some titles.

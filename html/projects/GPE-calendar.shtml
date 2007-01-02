@@ -5,38 +5,39 @@
 <!--#set var="authoremail" value="nils@handhelds.org"-->
 <!--#include virtual="/includes/head.php"-->
 
-<H2>Coordinator</H2>
-<P>
-The coordinator for this sub-project is Philip Blundell
-(<A HREF="mailto:philb@gnu.org">philb@gnu.org</A>) . If you want to 
-contribute to this project, please contact him directly.
-</P>
+<H2>Overview</H2>
 
-<H2>Function</H2>
-<P>
-This is very obvious. The calendar stores and manages scheduled events.
-Special functionality included is support for
-<UL>
-<LI> Entries without due-time, just a note for a particular day.
-<LI> Recurring events with options for daily, workdays, weekends, monthly,
-yearly (birthdays or other anniversaries)
-<LI> Different view modes to give the user a good overview.
-<LI> Mimedir (vCal, iCal) data import.
-</UL>
-</P>
-<P>
-Future enhancements will include event export and beaming entries via IrDA/Bluetooth OBEX in vCalendar format.
-</P>
+<P>GPE Calendar stores and manages scheduled events.  A number of
+views are available including an day, week and month overview as well
+as a summary of upcoming events.  Events can be placed in a calendar
+and basic support for synchronization (specifically, downloading
+iCalendar files, .ics, using http or webdav and uploading using
+webdav) is included.  It is also possible to beam entries via IrDA and
+Bluetooth.  GPE Calendar includes support for recurring events,
+all-day events and the ability to associate an alarm with an
+event.</P>
 
 <H2>Status</H2>
-<p>
-The application is stable and functional for daily use. It makes use of a set of libraries and external tools such as <b>atd</b> and <b>gpe-announce</b>. The user interface is scalable and supports screens from small PDA portrait displays up to common PC screen sizes. Apart from GPE
-the user interface has basic support for the Hildon UI used for the Nokia 770.
-</p>
-<P>
-The source code can be found in <A href="../download.phtml">SVN</A>, module
-<B>gpe-calendar</B>.  Precompiled binaries for iPAQ are available in
-the Familiar <A href="http://familiar.handhelds.org/familiar/feeds/unstable/">unstable feed</A>.
+
+<p>GPE Calendar is stable and functional for daily use.  The user
+interface is scalable and supports screens from small PDA portrait
+displays up to common PC screen sizes.  Apart from GPE, GPE Calendar
+has been ported to the Hildon UI framework used on the Nokia 770.</p>
+
+<P>The source code can be found in <A href="../download.phtml">SVN</A>, module
+<B>gpe-calendar</B>.  Precompiled binaries are available for iPAQ in
+the Familiar <A
+href="http://familiar.handhelds.org/familiar/feeds/unstable/">unstable
+feed</A> and for the <a
+href="http://maemo.org/maemowiki/ApplicationCatalog2006#head-4e95f76331e779cd8277eb663de6ef73a88c90ec">Nokia
+770</a>.
+
+<p>Additional information can be found in the <a
+href="http://www.linuxtogo.org/gowiki/GpeProject">wiki</a>.  Inquiries
+regarding GPE Calendar should be made to <a
+href="http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/gpe-list">gpe-list@linuxtogo.org</a>.
+Please file bugs and feature requests in our <a
+href="http://bugs.linuxtogo.org/">bugzilla</a>.
 
 
 <H2>User interface</H2>
