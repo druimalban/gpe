@@ -1,3 +1,9 @@
+2007-01-02  Florian Boor <florian@kernelconcepts.de>
+
+	* images/gpe-scap.png: New file
+	  projects/gpe-scap.shtml: likewise
+	* projects/index.phtml: Link gpe-scap.shtml
+
 2007-01-02  Neal H. Walfield  <neal@gnu.org>
 
 	* projects/index.phtml: Reorder for top-down processing.
