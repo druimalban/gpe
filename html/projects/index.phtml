@@ -7,72 +7,20 @@ $authoremail="florian@linuxtogo.org";
 include ("../includes/head.php");
 ?>
 
-<p>This page is currently restructured...</p>
+<h2>Architecture - how things play together</h2>
 
-<h2>Base software/libraries</h2>
+<p>This depiction of GPE's architecture should provide a basic
+impression of how the various software components play.</p>
 
-<table width="80%" bgcolor="EEEEEE">
-<tr bgcolor="#AAAAFF">
-<td>Component</td>
-<td>Description</td>
-<td>Documentation</td>
-</tr>
-<tr>
-<td><A HREF="http://www.gtk.org">GTK</A></td>
-<td>GTK+ widget toolkit (not part of GPE)</td>
-<td><a href="http://gtk.org/api/">API Reference(s)</a>  <a href="http://gtk.org/tutorial/">Tutorial</a></td>
-</tr>
-<tr>
-<td><A HREF="http://www.sqlite.org">SQLite</A></td>
-<td>SQLite database engine (not part of GPE)</td>
-<td><a href="http://sqlite.org/c_interface.html">2.x API Reference</a>  <a href="http://sqlite.org/lang.html">Supported SQL Language</a></td>
-</tr>
-<tr>
-<td><A HREF="http://www.x.org">X11</A></td>
-<td>X window system (not part of GPE)</td>
-<td></td>
-</tr>
-<tr>
-<td>libgpewidget</td>
-<td>GPE base library for GUI applications</td>
-<td><a HREF="http://www.kernelconcepts.de/~fuchs/gpe/doc/libgpewidget/index.html">API Reference</a></td>
-</tr>
-<tr>
-<td>libgpepimc</td>
-<td>GPE category library</td>
-<td><a HREF="http://www.kernelconcepts.de/~fuchs/gpe/doc/libgpepimc/index.html">API Reference</a></td>
-</tr>
-<tr>
-<td>libcontactsdb</td>
-<td>GPE contacts data library backend.</td>
-<td></td>
-</tr>
-<tr>
-<td>libeventdb</td>
-<td>Calendar event data library backend.</td>
-<td><a HREF="http://www.kernelconcepts.de/~fuchs/gpe/doc/libeventdb/index.html">API Reference</a> (needs updates)</td>
-</tr>
-<tr>
-<td>libmimedir</td>
-<td>Mimedir data (vCard,vTodo,iCal) handling library. (not part of GPE)</td>
-<td><a HREF="http://www.kernelconcepts.de/~fuchs/gpe/doc/libmimedir/index.html">API Reference</a></td>
-</tr>
-<tr>
-<td>libschedule</td>
-<td>An event scheduler library for AT.</td>
-<td><a HREF="http://www.kernelconcepts.de/~fuchs/gpe/doc/libschedule/index.html">API Reference</a></td>
-</tr>
-<tr>
-<td><A HREF="gpe-confd.shtml">gpe-confd</A></td>
-<td>GPE configuration settings daemon.</td>
-<td></td>
-</tr>
-<tr>
-<td><A HREF="gpesyncd.shtml">gpesyncd</A></td>
-<td>PIM data syncronisation daemon.</td>
-<td></td>
-</tr>
-</table>
+<p>This architecture is not static and it is possible to extend it for
+special needs or to reduce it in the case that some parts are not used
+on a particular hardware platform.</p>
+
+<img src="../images/gpe-arch.png">
+
+<p>
+See the Wiki page <A href="http://handhelds.org/moin/moin.cgi/GpeThingsTodo">GpeThingsToDo</A> for a list of things that particularly need attention.
+</p>
 
 <h2>Applications</h2>
 
@@ -264,21 +212,69 @@ include ("../includes/head.php");
 </tr>
 </table>
 
-<h2>The Architecture - how things play together</h2>
-<p>
-The GPE architecture overview can give you a basic impression how 
-pieces of software and core technologies play together and sum up to 
-a comprehensive software stack. <br>
-This architecture is not static, its possible to extend it for special 
-needs or to reduce it in the case that some parts are not used on a 
-particular hardware platform.
-</p>
+<h2>Base software/libraries</h2>
 
-<img src="../images/gpe-arch.png">
-
-
-<p>
-See the Wiki page <A href="http://handhelds.org/moin/moin.cgi/GpeThingsTodo">GpeThingsToDo</A> for a list of things that particularly need attention.
-</p>
+<table width="80%" bgcolor="EEEEEE">
+<tr bgcolor="#AAAAFF">
+<td>Component</td>
+<td>Description</td>
+<td>Documentation</td>
+</tr>
+<tr>
+<td><A HREF="http://www.gtk.org">GTK</A></td>
+<td>GTK+ widget toolkit (not part of GPE)</td>
+<td><a href="http://gtk.org/api/">API Reference(s)</a>  <a href="http://gtk.org/tutorial/">Tutorial</a></td>
+</tr>
+<tr>
+<td><A HREF="http://www.sqlite.org">SQLite</A></td>
+<td>SQLite database engine (not part of GPE)</td>
+<td><a href="http://sqlite.org/c_interface.html">2.x API Reference</a>  <a href="http://sqlite.org/lang.html">Supported SQL Language</a></td>
+</tr>
+<tr>
+<td><A HREF="http://www.x.org">X11</A></td>
+<td>X window system (not part of GPE)</td>
+<td></td>
+</tr>
+<tr>
+<td>libgpewidget</td>
+<td>GPE base library for GUI applications</td>
+<td><a HREF="http://www.kernelconcepts.de/~fuchs/gpe/doc/libgpewidget/index.html">API Reference</a></td>
+</tr>
+<tr>
+<td>libgpepimc</td>
+<td>GPE category library</td>
+<td><a HREF="http://www.kernelconcepts.de/~fuchs/gpe/doc/libgpepimc/index.html">API Reference</a></td>
+</tr>
+<tr>
+<td>libcontactsdb</td>
+<td>GPE contacts data library backend.</td>
+<td></td>
+</tr>
+<tr>
+<td>libeventdb</td>
+<td>Calendar event data library backend.</td>
+<td><a HREF="http://www.kernelconcepts.de/~fuchs/gpe/doc/libeventdb/index.html">API Reference</a> (needs updates)</td>
+</tr>
+<tr>
+<td>libmimedir</td>
+<td>Mimedir data (vCard,vTodo,iCal) handling library. (not part of GPE)</td>
+<td><a HREF="http://www.kernelconcepts.de/~fuchs/gpe/doc/libmimedir/index.html">API Reference</a></td>
+</tr>
+<tr>
+<td>libschedule</td>
+<td>An event scheduler library for AT.</td>
+<td><a HREF="http://www.kernelconcepts.de/~fuchs/gpe/doc/libschedule/index.html">API Reference</a></td>
+</tr>
+<tr>
+<td><A HREF="gpe-confd.shtml">gpe-confd</A></td>
+<td>GPE configuration settings daemon.</td>
+<td></td>
+</tr>
+<tr>
+<td><A HREF="gpesyncd.shtml">gpesyncd</A></td>
+<td>PIM data syncronisation daemon.</td>
+<td></td>
+</tr>
+</table>
 
 <?php include ("../includes/foot.php"); ?>

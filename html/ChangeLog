@@ -1,5 +1,9 @@
 2007-01-02  Neal H. Walfield  <neal@gnu.org>
 
+	* projects/index.phtml: Reorder for top-down processing.
+
+2007-01-02  Neal H. Walfield  <neal@gnu.org>
+
 	* projects/GPE-calendar.shtml: Improve text.
 
 2007-01-02  Neal H. Walfield  <neal@gnu.org>
