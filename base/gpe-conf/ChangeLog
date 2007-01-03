@@ -1,3 +1,8 @@
+2007-01-03	Florian Boor <florian.boor@kernelconcepts.de>
+
+	* Fix segfault and add new device (Eten G500) contributed by 
+          Pierre Hebert.
+
 2006-08-17	Florian Boor <florian.boor@kernelconcepts.de>
 
 	* Install gpe-conf suid.

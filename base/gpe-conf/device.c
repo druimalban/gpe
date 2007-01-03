@@ -55,6 +55,7 @@ static DeviceMap_t DeviceMap[] = { \
 	{ DEV_SGI_INDIGO2, { "SGI Indigo2" }, "workstation" },
 	{ DEV_SGI_OCTANE, { "SGI IP30", "SGI Octane" }, "workstation" },
 	{ DEV_HTC_UNIVERSAL, { "HTC Universal" }, "smartphone" },
+	{ DEV_ETEN_G500, { "Eten G500" }, "smartphone" },
 };
 
 /* Keep in sync with DeviceId_t defintion. */
@@ -112,7 +113,7 @@ device_get_id (void)
 			if ((iptr = strstr(strv[i], "Hardware")) 
 			     || (iptr = strstr(strv[i], "system type")))
 			{
-				for (dnr = 0; dnr < (DEV_MAX - 2); dnr++)
+				for (dnr = 0; dnr < sizeof(DeviceMap)/sizeof(*DeviceMap); dnr++)
 				{
 					pnr = 0;
 					while (DeviceMap[dnr].pattern[pnr])
