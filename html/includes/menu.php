@@ -19,8 +19,6 @@ function menu_entry($page, $title, $link,$thispage)
  &middot;
 <?php menu_entry("documentation", "Documentation", "/documentation.phtml", $pagename); ?>
  &middot;
-<li><A href="/gallery/gallery/">Screenshots</A></li>
- &middot;
 <?php menu_entry("download", "Download", "/download.phtml", $pagename); ?>
  &middot;
 <?php menu_entry("contact", "Contact", "/contact.phtml", $pagename); ?>

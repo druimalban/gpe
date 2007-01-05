@@ -1,3 +1,8 @@
+2007-01-05  Florian Boor <florian@kernelconcepts.de>
+
+	* index.phtml, includes/menu.php: Move screenshot link
+	  from menu to index.
+
 2007-01-02  Florian Boor <florian@kernelconcepts.de>
 
 	* images/gpe-scap.png: New file
