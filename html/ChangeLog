@@ -1,5 +1,7 @@
 2007-01-05  Florian Boor <florian@kernelconcepts.de>
 
+	* images/gpe-watch.png, projects/gpe-watch.shtml: new files
+	* index.phtml: Add link to project page.
 	* index.phtml, includes/menu.php: Move screenshot link
 	  from menu to index.
 
