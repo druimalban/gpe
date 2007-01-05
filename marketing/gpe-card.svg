@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 <svg
-   xmlns:xml="http://www.w3.org/XML/1998/namespace"
    xmlns:dc="http://purl.org/dc/elements/1.1/"
    xmlns:cc="http://web.resource.org/cc/"
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
@@ -13,7 +12,7 @@
    height="50mm"
    id="svg1291"
    sodipodi:version="0.32"
-   inkscape:version="0.41"
+   inkscape:version="0.43"
    sodipodi:docbase="/home/fuchs/Projekte/gpe/gpe/marketing"
    sodipodi:docname="gpe-card.svg">
   <defs
@@ -25,26 +24,22 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.2000000"
-     inkscape:cx="160.00000"
-     inkscape:cy="90.000000"
+     inkscape:zoom="1.2"
+     inkscape:cx="160"
+     inkscape:cy="90"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
-     inkscape:window-width="640"
-     inkscape:window-height="538"
+     inkscape:window-width="890"
+     inkscape:window-height="553"
      inkscape:window-x="192"
      inkscape:window-y="333" />
   <metadata
      id="metadata4">
-    <rdf:RDF
-       id="RDF5">
+    <rdf:RDF>
       <cc:Work
-         rdf:about=""
-         id="Work6">
-        <dc:format
-           id="format7">image/svg+xml</dc:format>
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
         <dc:type
-           id="type9"
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
       </cc:Work>
     </rdf:RDF>
@@ -112,15 +107,15 @@
          y="104.48789">Member</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:12.000000;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;color:#000000;fill:#000000;fill-opacity:1.0000000;fill-rule:nonzero;stroke:none;stroke-width:1.0000000px;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4.0000000;stroke-dashoffset:0.0000000;stroke-opacity:1.0000000;marker:none;marker-start:none;marker-mid:none;marker-end:none;visibility:visible;display:inline;overflow:visible;font-family:Bitstream Vera Sans;letter-spacing:normal;text-anchor:start;writing-mode:lr-tb"
+       style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;letter-spacing:normal;writing-mode:lr-tb;text-anchor:start;color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;font-family:Bitstream Vera Sans"
        x="129.99998"
        y="141.33203"
        id="text1382"><tspan
          sodipodi:role="line"
          id="tspan1384"
-         style="stroke-dashoffset:0.0000000;marker:none;marker-start:none;marker-mid:none;marker-end:none"
+         style="marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-dashoffset:0"
          x="129.99998"
-         y="141.33203">&lt;member@handhelds.org&gt;</tspan></text>
+         y="141.33203">&lt;member@linuxtogo.org&gt;</tspan></text>
     <path
        style="fill:none;fill-opacity:0.75000000;fill-rule:evenodd;stroke:#000000;stroke-width:1.0000000px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000"
        d="M 9.1666663,29.665360 L 9.1666667,7.9986928 L 100.83333,7.9986928 L 100.00000,7.9986928 L 100.00000,7.9986928"
