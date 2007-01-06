@@ -1,8 +1,0 @@
-line 2: identifier (len = 1): a
-line 2: identifier (len = 1): b
-line 3: literal definitions at end:
-
-%{ literal code %%} a b
-
-%{embedded EOF
-

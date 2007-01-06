@@ -1,5 +1,0 @@
-#!/bin/sh
-
-update-alternatives --remove ilasm /usr/bin/ilasm.pnet
-
-#DEBHELPER#

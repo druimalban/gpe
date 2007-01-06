@@ -1,9 +1,0 @@
-v0.2.0: Initial version
-- re-wrote protocol using my own XDR (rfc1832) parser/writer code
-  (rather than a handwritten version) 
-- implemented basic server driver (one sqlite* per thread atm)
-- hacked out some of the printf code from sqlite and incorperated it: 
-  a bit ropey i admit, but it kind of works.
-- quickly hacked sqlite shell to make it work as usqldsh
-
-

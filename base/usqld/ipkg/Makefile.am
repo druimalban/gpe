@@ -1,1 +1,0 @@
-EXTRA_DIST=rules control.in

@@ -1,8 +1,0 @@
-Package:usqld
-Version:@VERSION@
-Architecture:arm
-Depends:libc6,sqlite
-Maintainer: Owen Cliffe <occ@handhelds.org>
-Description: uSQLD is a small sql daemon for embeded devices. 
-Priority: Optional
-Section:misc
