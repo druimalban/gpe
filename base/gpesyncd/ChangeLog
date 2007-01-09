@@ -1,3 +1,12 @@
+2007-01-09  Graham Cobb <g+gpe@cobb.uk.net>
+
+	* src/main.c: fix calls to printf to stop problems with text
+	containing "%".
+	* src/gpesyncd.h: include config.h, do not define _GNU_SOURCE explicitly (makes
+	--enable-vartmp configure option work which fixes "no space" error on Maemo)
+	* configure.ac: Depend on version 0.11 or greater of libtododb and
+	0.31 or greater of libeventdb.
+
 2006-12-30  Neal H. Walfield  <neal@gnu.org>
 
 	* configure.ac: Depend on version 0.20 or greater of libgpevtype.

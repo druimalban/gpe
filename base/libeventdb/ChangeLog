@@ -1,3 +1,8 @@
+2007-01-09  Graham Cobb <g+gpe@cobb.uk.net>
+
+	* Increment version to 0.31 so gpesyncd can depend on new 
+	event_calendar_get_event_db function
+
 2006-12-29  Neal H. Walfield  <neal@gnu.org>
 
 	* gpe/event-db.h (event_calendar_list_events_modified_between):

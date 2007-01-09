@@ -1,6 +1,6 @@
 /*
  *  Copyright (C) 2005 Martin Felis <martin@silef.de>
- *  Copyright (C) 2006 Graham Cobb <g+gpe@cobb.uk.net>
+ *  Copyright (C) 2006, 2007 Graham Cobb <g+gpe@cobb.uk.net>
  *  
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
@@ -199,7 +199,7 @@ gpesyncd_printf (gpesyncd_context * ctx, char *format, ...)
       fflush (ctx->ofp);
     }
   else
-    printf (buf);
+    puts (buf);
 
   g_free (buf);
 }
@@ -507,7 +507,7 @@ do_command (gpesyncd_context * ctx, gchar * command)
     }
 
   if (!ctx->socket)
-    gpesyncd_printf (ctx, ctx->result->str);
+    gpesyncd_printf (ctx, "%s", ctx->result->str);
 
   return TRUE;
 }
@@ -852,7 +852,7 @@ main (int argc, char **argv)
       return -1;
     }
 
- gpesyncd_setup_databases (ctx);
+  gpesyncd_setup_databases (ctx);
 
   ctx->remote = 0;
   if (argc > 1)

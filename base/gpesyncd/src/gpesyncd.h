@@ -10,6 +10,8 @@
 #ifndef GPESYNCD_H
 #define GPESYNCD_H
 
+#include <config.h>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -36,8 +38,6 @@
 #include <gpe/contacts-db.h>
 #include <gpe/event-db.h>
 #include <gpe/todo-db.h>
-
-#define _GNU_SOURCE
 
 #define BUFFER_LEN 25 
 
