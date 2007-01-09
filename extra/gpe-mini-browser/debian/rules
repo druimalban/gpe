@@ -23,7 +23,7 @@ ifeq (,$(findstring nostrip,$(DEB_BUILD_OPTIONS)))
 	INSTALL_PROGRAM += -s
 endif
 
-configure:  
+configure.stamp:  
 	sh autogen.sh
 
 	touch configure.stamp
@@ -50,15 +50,7 @@ clean:
 	rm -f build-stamp 
 
 	# Add here commands to clean up after the build process.
-	-$(MAKE) distclean
-ifneq "$(wildcard /usr/share/misc/config.sub)" ""
-	cp -f /usr/share/misc/config.sub config.sub
-endif
-ifneq "$(wildcard /usr/share/misc/config.guess)" ""
-	cp -f /usr/share/misc/config.guess config.guess
-endif
-
-
+	-$(MAKE) clean
 	dh_clean 
 
 install: build
@@ -69,11 +61,6 @@ install: build
 
 	# Add here commands to install the package into debian/gpe-mini-browser.
 	$(MAKE) install DESTDIR=$(CURDIR)/debian/gpe-mini-browser
-	install -d $(CURDIR)/debian/gpe-mini-browser/usr/share/applications/hildon
-	install -m 644 hildon/gpe-mini-browser.desktop $(CURDIR)/debian/gpe-mini-browser/usr/share/applications/hildon/gpe-mini-browser.desktop
-	install -d $(CURDIR)/debian/gpe-mini-browser/usr/share/pixmaps
-	install -m 644 gpe-mini-browser.png $(CURDIR)/debian/gpe-mini-browser/usr/share/pixmaps/gpe-mini-browser.png
-
 
 # Build architecture-independent files here.
 binary-indep: build install
