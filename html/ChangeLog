@@ -1,3 +1,8 @@
+2007-01-09  Florian Boor <florian@kernelconcepts.de>
+
+	* linkres.phtml: Add links to MKPhone, Gomunicator, FBReader and
+	  Tinymail.
+
 2007-01-05  Florian Boor <florian@kernelconcepts.de>
 
 	* images/gpe-watch.png, projects/gpe-watch.shtml: new files
