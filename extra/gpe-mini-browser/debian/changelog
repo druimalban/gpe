@@ -1,25 +1,31 @@
+gpe-mini-browser (0.20-1) unstable; urgency=low
+
+  * Initial release
+
+ -- Philippe De Swert <philippedeswert@scarlet.be>  Sat, 15 Apr 2006 04:19:39 +0300
+
 gpe-mini-browser (0.18-1) unstable; urgency=low
 
   * several minor bugfixes
   * user selectable home page
 
- -- Philippe De Swert <philippedeswert@scarlet.be> Wed, 30 Nov 2005 21:43:45 +0200 
+ -- Philippe De Swert <philippedeswert@scarlet.be>  Wed, 30 Nov 2005 21:43:45 +0200 
 
 gpe-mini-browser (0.17-1) unstable; urgency=low
 
   * maemo/Hildon fixes
   * extra fullscreen mode
 
- -- Philippe De Swert <philippedeswert@scarlet.be> Mon, 17 Oct 2005 22:46:32 +0200
+ -- Philippe De Swert <philippedeswert@scarlet.be>  Mon, 17 Oct 2005 22:46:32 +0200
 
-gpe-mini-browser (0.16-1) unstable; urgency=low
+gpe-mini-browser (0.16-1) unstable; urgency=low 
 
   * Improved version with bookmarks, fullscreen mode, url bar hiding,
     auto-completion,....
  
  -- Philippe De Swert <philippedeswert@scarlet.be>  Sun, 18 Sep 2005 14:17:34 +0200
 
-gpe-mini-browser (0.15-1) unstable; urgency=low
+gpe-mini-browser (0.15-1) unstable; urgency=low 
 
   * Initial Release.
 
