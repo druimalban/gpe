@@ -142,6 +142,16 @@ add_event (gpesyncd_context * ctx, guint *uid, gchar * data,
   GSList *events = mimedir_vcal_get_event_list (vcal);
   MIMEDirVEvent *vevent = events->data;
 
+  /* If this is a modify, rather than an add,
+     we need to set the VEVENT UID so it will overwrite the existing event */
+  if ( (*uid != 0)
+      && (ev = event_db_find_by_uid(ctx->event_db, *uid)) ) {
+    char *evuid = event_get_eventid (ev);
+    g_object_set (vevent, "uid", evuid, NULL);
+    g_free (evuid);
+    g_object_unref(ev);
+  }
+
   EventCalendar *ec = event_db_get_default_calendar(ctx->event_db, NULL);
 
   int res = event_import_from_vevent (ec, vevent, &ev, error);

@@ -1,3 +1,7 @@
+2007-01-10  Graham Cobb <g+gpe@cobb.uk.net>
+	
+	* src/import.c: make add_event correctly handle modify operations
+
 2007-01-09  Graham Cobb <g+gpe@cobb.uk.net>
 
 	* src/main.c: fix calls to printf to stop problems with text
