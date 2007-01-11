@@ -1,3 +1,8 @@
+2007-01-11	Florian Boor <florian.boor@kernelconcepts.de>
+
+	* Release version 0.2.3
+	* HACKING: Add device improvement info and minor fixes.
+
 2007-01-03	Florian Boor <florian.boor@kernelconcepts.de>
 
 	* Fix segfault and add new device (Eten G500) contributed by 

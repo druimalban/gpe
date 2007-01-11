@@ -3,18 +3,17 @@ You are welcome to participate at gpe and gpe-conf.
 -> Who is who?
    I want to help with gpe-conf, have a patch or want to ask questions.
    - Current maintainer is Florian Boor <florian.boor@kernelconcepts.de>,
-     open discussion may be done at GPE mailinglist (gpe@handhelds.org) or
+     open discussion may be done at GPE mailinglist (gpe-list@linuxtogo.org) or
 	 in #gpe on freenode.net.
 
 
 -> What is missing?
 
+* Replace hardcoded device list.
 * Adaption to other hardware platforms than iPAQ. 
   - Button configuration files for several platforms.
 
-
 * Add config wizzard to network config tool.
-* Change date/time setup tool to use timezone definition files.
 * Add translation support to definition files.
 
 * Introduce an easy to use API for applications to retrieve settings instantly.
@@ -23,7 +22,6 @@ You are welcome to participate at gpe and gpe-conf.
 -> Here are some instruction to add a new module (Applet) to gpe-conf.
 
 * An applet should provide at least one function:
-
 
   GtkWidget *AppletName_Build_Objects();
 
