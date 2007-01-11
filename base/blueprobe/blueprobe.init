@@ -28,7 +28,7 @@ else
   case `module_id` in
     "HP iPAQ H2200")
 	BLUETOOTH=yes
-	PORT=/dev/tts/3
+	PORT=/dev/ttyS3
 	SPEED=921600
 	PROBE=no
 	RADIO_VER=`h2200_radio_version`
@@ -68,7 +68,8 @@ else
     "HP iPAQ HX4700")
 	BLUETOOTH=yes
 	PORT=/dev/ttyS1
-	SPEED=115200
+	SCRIPT=/etc/bluetooth/TIInit_3.2.26.bts
+	SPEED='`[ -f "$BLUETOOTH_SCRIPT" ] && echo 921600 || echo 115200`'
 	PROTO=texas
 	PROBE=no
 	;;
@@ -93,6 +94,15 @@ else
 	PROTO=bcsp
 	PROBE=no
 	;;
+    "HTC Universal")
+	BLUETOOTH=yes
+	PORT=/dev/ttyS1
+	SCRIPT=/etc/bluetooth/TIInit_3.2.26.bts
+	SPEED='`[ -f "$BLUETOOTH_SCRIPT" ] && echo 921600 || echo 115200`'
+	PROTO=texas
+	PROBE=no
+	;;
+                                             	
     *)
 	BLUETOOTH=no
         ;;
@@ -111,6 +121,9 @@ else
   echo "BLUETOOTH=$BLUETOOTH" >/etc/sysconfig/bluetooth
   if [ $BLUETOOTH = "yes" ]; then
     echo "BLUETOOTH_PORT=$PORT" >>/etc/sysconfig/bluetooth
+    if [ "$SCRIPT" != "" ]; then
+      echo "BLUETOOTH_SCRIPT=$SCRIPT" >>/etc/sysconfig/bluetooth
+    fi
     echo "BLUETOOTH_SPEED=$SPEED" >>/etc/sysconfig/bluetooth
     echo "BLUETOOTH_PROTOCOL=$PROTO" >>/etc/sysconfig/bluetooth
   fi

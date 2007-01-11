@@ -1,6 +1,11 @@
 2007-01-11  Florian Boor  <fb@kernelconcepts.de>
-	
+
+	* Release 0.18	
 	* blueprobe.init: Apply patch by Koen Kooi to improve reliability.
+	* blueprobe.init: Apply three additional patches from OE to
+	  - Fix iPAQ H2200
+	  - Improve support for HX4700
+	  - Add support for HTC Universal
 
 2006-01-29  Phil Blundell  <pb@reciva.com>
 
