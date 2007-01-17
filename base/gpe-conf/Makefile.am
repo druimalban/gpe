@@ -155,7 +155,8 @@ sysgpe_DATA = familiar/gpe-config.conf \
               data/key-layout.zaurus-clamshell
 
 appfilesdir = $(datadir)/gpe-conf
-appfiles_DATA = data/activate.wav
+appfiles_DATA = data/activate.wav \
+                data/deviceinfo
 
 EXTRA_DIST = $(sysgpe_DATA) \
              $(pixmaps_DATA) \

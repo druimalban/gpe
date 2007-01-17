@@ -31,6 +31,7 @@ typedef enum
 	DEV_ALPHA,
 	DEV_HTC_UNIVERSAL,
 	DEV_ETEN_G500,
+	DEV_HW_SKEYEPADXSL,
 	DEV_MAX
 } DeviceID_t;
 

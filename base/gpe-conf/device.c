@@ -22,15 +22,22 @@
 
 #include "device.h"
 
+#define DEVICE_FILE PREFIX "/share/gpe-conf/deviceinfo"
+
 static const gchar *device_name = NULL;
 static const gchar *device_domain = NULL;
+static Device_t *device_map = NULL;
 
 typedef struct
 {
 	DeviceID_t id;
-	gchar *pattern[5];
-    gchar *domain;
-} DeviceMap_t;
+	gchar **pattern;
+	gchar *name;
+	gchar *model;
+	gchar *manufacturer;
+    gchar *type; /* was domain */
+	gint features;
+} Device_t;
 
 static DeviceMap_t DeviceMap[] = { \
 	{ DEV_IPAQ_SA, { "HP iPAQ H3100", "HP iPAQ H3600", "HP iPAQ H3700", "HP iPAQ H3800" }, "ipaq" }, \
@@ -56,6 +63,7 @@ static DeviceMap_t DeviceMap[] = { \
 	{ DEV_SGI_OCTANE, { "SGI IP30", "SGI Octane" }, "workstation" },
 	{ DEV_HTC_UNIVERSAL, { "HTC Universal" }, "smartphone" },
 	{ DEV_ETEN_G500, { "Eten G500" }, "smartphone" },
+	{ DEV_HW_SKEYEPADXSL, { "HW90350" }, "hwmde" },
 };
 
 /* Keep in sync with DeviceId_t defintion. */
@@ -88,7 +96,56 @@ static DeviceID_t IdClassVector[] =
 	DEVICE_CLASS_PC,
 	DEVICE_CLASS_PC,
 	DEVICE_CLASS_PDA | DEVICE_CLASS_CELLPHONE,
+	DEVICE_CLASS_TABLET,
 };
+
+static gboolean
+devices_load(void)
+{
+	GKeyFile *devicefile;
+	GError *err = NULL;
+	gchar **devices;
+	guint i, devcnt;
+	
+	devicefile = g_key_file_new();
+	
+	if (!g_key_file_load_from_file (devicefile, DEVICE_FILE,
+                                    G_KEY_FILE_NONE, &err))
+	{
+		g_printerr ("%s\n", err->message);
+		g_error_free(err);
+		return FALSE;
+	}
+	
+	devices = g_key_file_get_keys (devicefile, "Devices",  &devcnt, &err);
+	if (devices)
+	{
+		device_map = g_malloc0 (sizeof(Device_t) * devcnt);
+
+		for (i=0; i < devcnt; i++)
+		{
+			Device_t *dev = device_map[i];
+			
+			dev->pattern = g_key_file_get_string_list (devicefile, "Pattern",
+                                                      devices[i], NULL, NULL);
+			dev->id = g_key_file_get_integer (devicefile, "ID",
+                                                      devices[i], NULL, NULL);
+			dev->name = g_key_file_get_string (devicefile, "Name",
+                                                      devices[i], NULL, NULL);
+			dev->model = g_key_file_get_string (devicefile, "Model",
+                                                      devices[i], NULL, NULL);
+			dev->type = g_key_file_get_string (devicefile, "Type",
+                                                      devices[i], NULL, NULL);
+			dev->manufacturer = g_key_file_get_string (devicefile, "Manufacturer",
+                                                      devices[i], NULL, NULL);
+			dev->features = g_key_file_get_integer (devicefile, "Features",
+                                                      devices[i], NULL, NULL);
+		}
+		g_strfreev(devices);
+	}
+	return TRUE;
+}
+
 
 DeviceID_t 
 device_get_id (void)

@@ -1,7 +1,7 @@
 /*
  * gpe-conf
  *
- * Copyright (C) 2003 - 2005  Florian Boor <florian.boor@kernelconcepts.de>
+ * Copyright (C) 2003 - 2005, 2006, 2007  Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -41,6 +41,7 @@
 #include "battery.h"
 #include "tools/interface.h"
 #include "logread.h"
+#include "device.h"
 
 /* local definitions */
 #define MODEL_INFO 		"/proc/hal/model"
@@ -63,20 +64,9 @@
 
 #define strpos(a,b) (strstr(a,b)-a)
 
-/* local types and structs */
-typedef enum
-{
-	M_IPAQ,
-	M_SIMPAD,
-	M_ZAURUS,
-	M_N770,
-	M_OTHER
-}
-t_mach;
 
 typedef struct 
 {
-	t_mach mach;
 	char *model;
 	char *cpu;
 	int ram;
@@ -88,7 +78,7 @@ t_deviceinfo;
 /* local functions */
 
 int
-get_flash_size()
+get_flash_size (void)
 {
 	gchar **strv;
 	guint len = 0;
@@ -160,18 +150,10 @@ get_flash_size()
 
 
 t_deviceinfo 
-get_device_info()
+get_device_info(void)
 {
 	t_deviceinfo result;
 	struct utsname uinfo;
-#ifdef __arm__	
-	gchar **strv;
-	guint len = 0;
-	GError *err = NULL;
-	gint i = 0;
-	gchar *str = NULL;
-#endif	
-	result.mach = M_OTHER;
 	result.model = NULL;
 	result.cpu = NULL;
 	result.ram = 0;
@@ -179,88 +161,10 @@ get_device_info()
 
 	uname(&uinfo);
 	
-#ifdef __arm__
-	/* check mach type and model */
-	if (!access(P_IPAQ,F_OK))
-	{
-		result.mach = M_IPAQ;
-		if (g_file_get_contents(P_IPAQ,&result.model,&len,&err))
-			g_strstrip(result.model);
-	}
+	result.model = g_strdup (device_get_name());
 	
-	/* get cpu info, only ARM for now */
-	if (g_file_get_contents(P_CPUINFO,&str,&len,&err))
-	{
-		strv = g_strsplit(str,"\n",128);
-		g_free(str);
-		result.cpu = g_strdup(strchr(strv[0],':')+1);
-		g_strstrip(result.cpu);
-		while (strv[i])
-		{
-			if (strstr(strv[i],"Hardware"))
-			{
-				result.model = g_strdup(strchr(strv[i],':')+1);
-				g_strstrip(result.model);
-				if (strstr(strv[i],"Collie"))
-				{
-					result.mach = M_ZAURUS;
-					g_free(result.model);
-					result.model = g_strdup("Sharp Zaurus (Collie)");
-				}
-				if (strstr(strv[i],"Husky"))
-				{
-					result.mach = M_ZAURUS;
-					g_free(result.model);
-					result.model = g_strdup("Sharp Zaurus (Husky)");
-				}
-				if (strstr(strv[i],"Poodle"))
-				{
-					result.mach = M_ZAURUS;
-					g_free(result.model);
-					result.model = g_strdup("Sharp Zaurus (Poodle)");
-				}
-				if (strstr(strv[i],"Shepherd"))
-				{
-					result.mach = M_ZAURUS;
-					g_free(result.model);
-					result.model = g_strdup("Sharp Zaurus (Shepherd)");
-				}
-				if (strstr(strv[i],"OMAP1510/1610/1710"))
-				{
-					result.mach = M_N770;
-					g_free(result.model);
-					result.model = g_strdup("Nokia 770");
-				}
-				if (strstr(strv[i],"Siemens"))
-				{
-					result.mach = M_SIMPAD;
-				}
-				break;
-			}
-			i++;
-		}
-		g_strfreev(strv);
-	}
-#else
-#ifdef __arm__
-	result.cpu = g_strdup(_("ARM"));
-#endif
-#ifdef __i386__
-	result.cpu = g_strdup(_("Intel x86 or compatible"));
-	result.model = g_strdup_printf("%s, %s", _("IBM type PC"), uinfo.machine);
-#endif
-#ifdef __mips__
-	result.cpu = g_strdup(_("Mips"));
-	#ifdef __sgi__
-		result.model = g_strdup(_("Silicon Graphics Machine"));
-	#endif
-#endif
-#ifdef _POWER
-	result.cpu = g_strdup(_("IBM Power or PowerPC"));
-#endif
 	if (!result.model)
 		result.model = g_strdup_printf("%s", uinfo.machine);
-#endif
 	
 	/* memory and flash size */
 	
