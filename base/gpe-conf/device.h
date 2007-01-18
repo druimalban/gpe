@@ -42,12 +42,12 @@ typedef enum {
 	DEVICE_CLASS_TABLET      = 0x04,
 	DEVICE_CLASS_CELLPHONE   = 0x08,
 	DEVICE_CLASS_MDE         = 0x10
-} DeviceClassID_t;
+} DeviceFeatureID_t;
 
 DeviceID_t device_get_id (void);
-DeviceClassID_t device_get_class_id (DeviceID_t device_id);
+DeviceFeatureID_t device_get_features (DeviceID_t device_id);
 const gchar *device_get_name (void);
-const gchar *device_get_domain (void);
+const gchar *device_get_type (void);
 gchar *device_get_specific_file (const gchar *basename);
 
 

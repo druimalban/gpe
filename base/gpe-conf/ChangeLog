@@ -1,3 +1,7 @@
+2007-01-18	Florian Boor <florian.boor@kernelconcepts.de>
+	* device.c, devive.h: Make things basically work.
+	* data/deviceinfo: Add a few entries.
+
 2007-01-17	Florian Boor <florian.boor@kernelconcepts.de>
 
 	* sysinfo.c: Get device info from device code.

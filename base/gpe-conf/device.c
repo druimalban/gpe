@@ -1,7 +1,7 @@
 /*
  * gpe-conf
  *
- * Copyright (C) 2006  Florian Boor <florian.boor@kernelconcepts.de>
+ * Copyright (C) 2006,2007  Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -23,11 +23,6 @@
 #include "device.h"
 
 #define DEVICE_FILE PREFIX "/share/gpe-conf/deviceinfo"
-
-static const gchar *device_name = NULL;
-static const gchar *device_domain = NULL;
-static Device_t *device_map = NULL;
-
 typedef struct
 {
 	DeviceID_t id;
@@ -35,10 +30,14 @@ typedef struct
 	gchar *name;
 	gchar *model;
 	gchar *manufacturer;
-    gchar *type; /* was domain */
+    gchar *type; /* was type */
 	gint features;
 } Device_t;
 
+static gint local_device = -1;
+static Device_t *DeviceMap = NULL;
+
+/*
 static DeviceMap_t DeviceMap[] = { \
 	{ DEV_IPAQ_SA, { "HP iPAQ H3100", "HP iPAQ H3600", "HP iPAQ H3700", "HP iPAQ H3800" }, "ipaq" }, \
 	{ DEV_IPAQ_PXA, {  "HP iPAQ H5400",  "HP iPAQ H2200",  "HP iPAQ HX4700" }, "ipaq"},
@@ -65,7 +64,7 @@ static DeviceMap_t DeviceMap[] = { \
 	{ DEV_ETEN_G500, { "Eten G500" }, "smartphone" },
 	{ DEV_HW_SKEYEPADXSL, { "HW90350" }, "hwmde" },
 };
-
+*/
 /* Keep in sync with DeviceId_t defintion. */
 static DeviceID_t IdClassVector[] = 
 {
@@ -120,26 +119,26 @@ devices_load(void)
 	devices = g_key_file_get_keys (devicefile, "Devices",  &devcnt, &err);
 	if (devices)
 	{
-		device_map = g_malloc0 (sizeof(Device_t) * devcnt);
+		DeviceMap = g_malloc0 (sizeof(Device_t) * (devcnt + 1));
 
 		for (i=0; i < devcnt; i++)
 		{
-			Device_t *dev = device_map[i];
+			Device_t dev = DeviceMap[i];
 			
-			dev->pattern = g_key_file_get_string_list (devicefile, "Pattern",
+			dev.pattern = g_key_file_get_string_list (devicefile, "Pattern",
                                                       devices[i], NULL, NULL);
-			dev->id = g_key_file_get_integer (devicefile, "ID",
-                                                      devices[i], NULL, NULL);
-			dev->name = g_key_file_get_string (devicefile, "Name",
-                                                      devices[i], NULL, NULL);
-			dev->model = g_key_file_get_string (devicefile, "Model",
-                                                      devices[i], NULL, NULL);
-			dev->type = g_key_file_get_string (devicefile, "Type",
-                                                      devices[i], NULL, NULL);
-			dev->manufacturer = g_key_file_get_string (devicefile, "Manufacturer",
-                                                      devices[i], NULL, NULL);
-			dev->features = g_key_file_get_integer (devicefile, "Features",
-                                                      devices[i], NULL, NULL);
+			dev.id = g_key_file_get_integer (devicefile, "ID",
+                                                      devices[i], NULL);
+			dev.name = g_key_file_get_string (devicefile, "Name",
+                                                      devices[i], NULL);
+			dev.model = g_key_file_get_string (devicefile, "Model",
+                                                      devices[i], NULL);
+			dev.type = g_key_file_get_string (devicefile, "Type",
+                                                      devices[i], NULL);
+			dev.manufacturer = g_key_file_get_string (devicefile, "Manufacturer",
+                                                      devices[i], NULL);
+			dev.features = g_key_file_get_integer (devicefile, "Features",
+                                                      devices[i], NULL);
 		}
 		g_strfreev(devices);
 	}
@@ -160,6 +159,9 @@ device_get_id (void)
 	if (id != -1)
 		return id;
 	
+	if (DeviceMap == NULL)
+		devices_load ();
+	
 	/* get device info from /proc/cpuinfo, only ARM and MIPS for now */
 	if (g_file_get_contents("/proc/cpuinfo", &str, &len, NULL))
 	{
@@ -173,14 +175,14 @@ device_get_id (void)
 				for (dnr = 0; dnr < sizeof(DeviceMap)/sizeof(*DeviceMap); dnr++)
 				{
 					pnr = 0;
-					while (DeviceMap[dnr].pattern[pnr])
+					while ((DeviceMap[dnr].pattern) && (DeviceMap[dnr].pattern[pnr]))
 					{
 						if (strstr (iptr, DeviceMap[dnr].pattern[pnr]))
 						{
 							id = DeviceMap[dnr].id;
-                            device_name = DeviceMap[dnr].pattern[pnr];
-                            device_domain = DeviceMap[dnr].domain;
-							g_strfreev(strv);
+							local_device = dnr;
+							if (DeviceMap[dnr].name == NULL)
+								DeviceMap[dnr].name = g_strdup(DeviceMap[dnr].pattern[pnr]);
 							return id;
 						}
 						else
@@ -189,11 +191,11 @@ device_get_id (void)
 				}
 			}
 			
-			if (strstr (strv[i], "fdiv_bug"))
+/*			if (strstr (strv[i], "fdiv_bug"))
 			{
 				id = DEV_X86;
                 device_name = "Generic x86 PC";
-                device_domain = "workstation";
+                device_type = "workstation";
 				g_strfreev(strv);
 				return id;
 			}
@@ -202,7 +204,7 @@ device_get_id (void)
 			{
 				id = DEV_POWERPC;
                 device_name = "PowerPC";
-                device_domain = "workstation";
+                device_type = "workstation";
 				g_strfreev(strv);
 				return id;
 			}
@@ -211,7 +213,7 @@ device_get_id (void)
 			{
 				id = DEV_SPARC;
                 device_name = "Sparc";
-                device_domain = "workstation";
+                device_type = "workstation";
 				g_strfreev(strv);
 				return id;
 			}
@@ -220,25 +222,26 @@ device_get_id (void)
 			{
 				id = DEV_ALPHA;
                 device_name = "Alpha";
-                device_domain = "workstation";
+                device_type = "workstation";
 				g_strfreev(strv);
 				return id;
 			}
-			
+*/			
 			i++;
 		}
 		g_strfreev(strv);
 	}
 	
-    device_name = "Unknown Device";
-    device_domain = "unknown";
+  //  device_name = "Unknown Device";
+  //  device_type = "unknown";
 	id = DEV_UNKNOWN;
+	local_device = 0;
 
 	return id;
 }
 
-DeviceClassID_t
-device_get_class_id (DeviceID_t device_id)
+DeviceFeatureID_t
+device_get_features (DeviceID_t device_id)
 {
 	if ((device_id >= 0) && (device_id < DEV_MAX))
 		return 
@@ -251,19 +254,19 @@ device_get_class_id (DeviceID_t device_id)
 const gchar *
 device_get_name (void)
 {
-    if (device_name == NULL)
+    if (local_device == -1)
         device_get_id ();
     
-    return device_name;        
+    return DeviceMap[local_device].name;
 }
 
 const gchar *
-device_get_domain (void)
+device_get_type (void)
 {
-    if (device_domain == NULL)
+    if (local_device == -1)
         device_get_id ();
     
-    return device_domain;        
+    return DeviceMap[local_device].type;
 }
 
 gchar *
@@ -287,9 +290,9 @@ device_get_specific_file (const gchar *basename)
         return result;
     g_free (result);
     
-    /* try device domain then */
+    /* try device type then */
     
-    result = g_strdup_printf ("%s.%s", basename, device_get_domain());
+    result = g_strdup_printf ("%s.%s", basename, device_get_type());
     if (!access (result, R_OK))
         return result;
     g_free (result);

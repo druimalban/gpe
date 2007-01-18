@@ -1,0 +1,25 @@
+# Keep devices.h in sync with this file
+
+[Devices]
+
+#dummy entry
+[none]
+ID = 0
+
+[Strongarm iPAQ]
+ID = 1
+Pattern = "HP iPAQ H3100", "HP iPAQ H3600", "HP iPAQ H3700", "HP iPAQ H3800"
+Name = "iPAQ"
+Model = "SA"
+Type = "ipaq"
+Manufacturer = HP
+Features = 0x01
+
+[Strongarm iPAQ]
+ID = 2
+Pattern =  "HP iPAQ H5400",  "HP iPAQ H2200",  "HP iPAQ HX4700"
+Name = "iPAQ"
+Model = "PXA"
+Type = "ipaq"
+Manufacturer = HP
+Features = 0x01
