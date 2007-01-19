@@ -1,7 +1,7 @@
 /*
  * gpe-conf
  *
- * Copyright (C) 2006,2007  Florian Boor <florian.boor@kernelconcepts.de>
+ * Copyright (C) 2006, 2007  Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -37,34 +37,6 @@ typedef struct
 static gint local_device = -1;
 static Device_t *DeviceMap = NULL;
 
-/*
-static DeviceMap_t DeviceMap[] = { \
-	{ DEV_IPAQ_SA, { "HP iPAQ H3100", "HP iPAQ H3600", "HP iPAQ H3700", "HP iPAQ H3800" }, "ipaq" }, \
-	{ DEV_IPAQ_PXA, {  "HP iPAQ H5400",  "HP iPAQ H2200",  "HP iPAQ HX4700" }, "ipaq"},
-	{ DEV_SIMPAD, { "Simpad" }, "simpad" },
-	{ DEV_RAMSES, { "Ramses" } ,"ramses" },
-	{ DEV_ZAURUS_COLLIE, { "Sharp-Collie", "Collie" }, "zaurus-portrait" },
-	{ DEV_ZAURUS_POODLE, { "Poodle" }, "zaurus-clamshell" },
-	{ DEV_ZAURUS_SHEPHERED, { "SHARP Shepherd" }, "zaurus-clamshell" },
-	{ DEV_ZAURUS_HUSKY, { "SHARP Husky" }, "zaurus-clamshell" },
-	{ DEV_ZAURUS_CORGI, { "SHARP Corgi" }, "zaurus-clamshell" },
-	{ DEV_ZAURUS_SPITZ, { "SHARP Spitz" }, "zaurus-clamshell" },
-	{ DEV_ZAURUS_AKITA, { "SHARP Akita" }, "zaurus-clamshell" },
-	{ DEV_ZAURUS_BORZOI, { "SHARP Borzoi" }, "zaurus-clamshell" },
-	{ DEV_NOKIA_770, { "Generic OMAP1510/1610/1710" }, "nokia-tablet" },
-	{ DEV_NETBOOK_PRO, { "Psion Teklogix NetBookPro" }, "netbook" },
-	{ DEV_HW_INTEGRAL, { "HW 90200" }, "hwmde" },
-	{ DEV_CELLON_8000, { "Cellon C8000 Board" }, "small-phone" },
-	{ DEV_JOURNADA, { "HP Jornada 720", "HP Jornada 820", "HP Jornada 56X" }, "jornada" },
-	{ DEV_SGI_O2, { "SGI O2" }, "workstation" },
-	{ DEV_SGI_INDY, { "SGI Indy" }, "workstation" },
-	{ DEV_SGI_INDIGO2, { "SGI Indigo2" }, "workstation" },
-	{ DEV_SGI_OCTANE, { "SGI IP30", "SGI Octane" }, "workstation" },
-	{ DEV_HTC_UNIVERSAL, { "HTC Universal" }, "smartphone" },
-	{ DEV_ETEN_G500, { "Eten G500" }, "smartphone" },
-	{ DEV_HW_SKEYEPADXSL, { "HW90350" }, "hwmde" },
-};
-*/
 /* Keep in sync with DeviceId_t defintion. */
 static DeviceID_t IdClassVector[] = 
 {
@@ -190,25 +162,25 @@ device_get_id (void)
 					}
 				}
 			}
-			
-/*			if (strstr (strv[i], "fdiv_bug"))
-			{
-				id = DEV_X86;
-                device_name = "Generic x86 PC";
-                device_type = "workstation";
+			else 
+				if (strstr (strv[i], "fdiv_bug"))
+				{
+					id = DEV_X86;
+       		         device_name = "Generic x86 PC";
+       	    	     device_type = "workstation";
+					g_strfreev(strv);
+					return id;
+				}
+				else 
+				if (strstr (strv[i], "machine"))
+				{
+					id = DEV_POWERPC;
+            	    device_name = "PowerPC";
+            	   	 device_type = "workstation";
 				g_strfreev(strv);
 				return id;
 			}
-			
-			if (strstr (strv[i], "machine"))
-			{
-				id = DEV_POWERPC;
-                device_name = "PowerPC";
-                device_type = "workstation";
-				g_strfreev(strv);
-				return id;
-			}
-			
+			else
 			if (strstr (strv[i], "promlib"))
 			{
 				id = DEV_SPARC;
@@ -217,7 +189,7 @@ device_get_id (void)
 				g_strfreev(strv);
 				return id;
 			}
-			
+			else
 			if (strstr (strv[i], ": Alpha"))
 			{
 				id = DEV_ALPHA;
@@ -226,7 +198,7 @@ device_get_id (void)
 				g_strfreev(strv);
 				return id;
 			}
-*/			
+			
 			i++;
 		}
 		g_strfreev(strv);

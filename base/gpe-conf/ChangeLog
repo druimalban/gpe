@@ -1,3 +1,6 @@
+2007-01-19	Florian Boor <florian.boor@kernelconcepts.de>
+	* data/deviceinfo: Add more entries.
+
 2007-01-18	Florian Boor <florian.boor@kernelconcepts.de>
 	* device.c, devive.h: Make things basically work.
 	* data/deviceinfo: Add a few entries.
