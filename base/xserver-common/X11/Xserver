@@ -17,6 +17,9 @@ fi
 if [ -f /usr/bin/Xw100 ]; then
   XSERVER=Xw100
 fi
+if [ -f /usr/bin/Xvesa ]; then
+  XSERVER=Xvesa
+fi
 
 . /etc/profile
 
@@ -73,7 +76,10 @@ case `module_id` in
 	"Cellon C8000 Board")
 		ARGS="$ARGS -dpi 100 -screen 240x320,10,1" ;;
 	"HTC Universal")
-		ARGS="$ARGS -dpi 100 -screen 480x640@270" ;;		
+		ARGS="$ARGS -dpi 100 -screen 480x640@270" ;;
+	# This is a fallback for PCs
+	"")
+		ARGS="$ARGS -dpi 100 -mode 0x012e"
 esac
 
 exec $XSERVER $ARGS $*
