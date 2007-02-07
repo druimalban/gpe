@@ -41,13 +41,63 @@
 
 /*** Generic defines ***/
 struct html_render_settings {
-			    };
+  gboolean javascript_enabled;
+  gboolean java_enabled;
+  gboolean plugins_enabled;
+  gboolean autoload_images;
+  int minimum_font_size;
+  int default_font_size;
+  int  default_fixed_font_size;
+#if NEEDED
+  const gchar *default_text_encoding;
+  const gchar *serif_font_family;
+  const gchar *sans_serif_font_family;
+  const gchar *fixed_font_family;
+  const gchar *standard_font_family;
+  const gchar *cursive_font_family;
+  const gchar *fantasy_font_family;
+#endif /* NEEDED */
+  const gchar *user_agent_string;
+  const gchar* http_proxy;
+};
+
+/* possible status code */
+typedef enum {
+	LOADING_STARTED,
+	LOADING,
+	LOADING_COMPLETE,
+	LOAD_ERROR
+} render_state;
+
+/* will be passed when a status change signal is emitted */
+struct html_render_status {
+  /* Status of the loading process. */
+  render_state state;
+  /* Number of files to download */
+  int files;
+  /* Number of files with Content-Length set*/
+  int fileswithsize;
+  /* Number of files received */
+  int ready;
+  /* Bytes to get from the resource */
+  int size;
+  /* Bytes received from the resource */
+  int recieved;
+  /* Total size of the resources including those that didn't have
+      Content-Length set. */
+  int totalsize;
+  /* Bytes received total. */
+  int totalrecieved
+  /* Error or status strings */
+  const gchar *statusmessage;
+}
 
 /*** Create usable widget which shows the rendered page for easy embedding ***/
 GtkWidget *html_render_widget_new(void)
 {
  /* webi_new already returns a GtkWidget 
  TODO: Find out how to handle the signals
+ TODO: Javascript callback handling
  */
  return webi_new();
 }
@@ -63,13 +113,37 @@ void html_render_emit_internal_status(GtkWidget *renderer, gboolean enable)
 	webi_set_emit_internal_status (WEBI (html), FALSE);
 }
 
+/* get the current widget status (if supported! Returns NULL if not.) */
+struct html_render_status * html_render_get_status(GtkWidget renderer)
+{
+ /* not implemented */
+ return NULL;
+}
+
 /* set settings like fontsize, proxy, javascript, plugins,  ... */
 int html_render_set_settings(GtkWidget *renderer, struct html_render_settings *settings)
 {
  /* TODO: settings conversion if necessary */
  webi_set_settings(WEBI(renderer), settings);
  /* assume that the settings get applied */
- return 1;
+ return 0;
+}
+
+/* set user agent string (could also be used for user agent spoofing (0 = succes)*/
+int html_render_set_user_agent_string(GtkWidget *renderer, const gchar *user_agent)
+{
+ WebiSettings settings;
+
+ strcpy(settings->user_agent_string, user_agent);
+ webi_set_settings(WEBI(renderer), &settings);
+ /* assume success */
+ return 0;
+}
+
+/* get user agent string */
+const gchar * html_render_get_user_agent(GtkWidget *renderer)
+{
+ return const gchar* webi_get_engine_user_agent_string ();
 }
 
 /* enable special rendering modes (for small screens) */
@@ -88,6 +162,15 @@ void html_render_set_small_screen_mode(GtkWidget *renderer, gboolean enable)
  else
 	webi_set_device_type(WEBI(renderer), WEBI_DEVICE_TYPE_SCREEN);
 } 
+
+/* get current rendering mode (TRUE for small screen, FALSE for big screen */
+gboolean html_render_get_screen_mode(GtkWidget *renderer)
+{
+ if( webi_get_device_type(WEBI(renderer)))
+	return TRUE;
+ else
+	return FALSE;
+}
 
 
 /*** url loading/handling ***/
@@ -140,4 +223,5 @@ const gchar * html_render_get_url(GtkWidget *renderer)
  return webi_get_location(WEBI(renderer));
 }
 
-/*** TODO:Javascript call handling ***/
+
+
