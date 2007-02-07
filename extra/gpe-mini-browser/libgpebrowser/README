@@ -1,0 +1,6 @@
+This is still in a drafting stage and is probably not useful for anybody yet.
+And yes there is a relatively big resemblance to the gtk-webcore handling of things,
+as this is meant to abstract it out of gpe-mini-browser, so we can use better 
+rendering libraries in the future. Or switch easily.
+
+Comments welcome.
