@@ -114,7 +114,7 @@ void html_render_emit_internal_status(GtkWidget *renderer, gboolean enable)
 }
 
 /* get the current widget status (if supported! Returns NULL if not.) */
-struct html_render_status * html_render_get_status(GtkWidget renderer)
+struct html_render_status * html_render_get_status(GtkWidget *renderer)
 {
  /* not implemented */
  return NULL;
@@ -223,5 +223,17 @@ const gchar * html_render_get_url(GtkWidget *renderer)
  return webi_get_location(WEBI(renderer));
 }
 
+/* find text in the renderer 
+ * case_sensitive TRUE for case-sensitive search
+ * down TRUE for downward searching 
+ * returns TRUE on succes */
+gboolean html_render_find(GtkWidget *renderer, const gchar *text, gboolean case_sensitive, gboolean down)
+{
+ return webi_find (WEBI(renderer), text, case_sensitive, dir_down);
+}
 
-
+/* get the currently selected text */
+const gchar * html_render_get_selected_text(GtkWidget *renderer)
+{
+ return webi_get_current_selection_as_text(WEBI(renderer));
+}
