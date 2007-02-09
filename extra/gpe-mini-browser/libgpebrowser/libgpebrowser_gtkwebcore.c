@@ -36,61 +36,10 @@
 
 #include <glib.h>
 
+#include <libgpebrowser.h>
+
 /*** gtk-webcore specific includes ***/
 #include <webi.h>
-
-/*** Generic defines ***/
-struct html_render_settings {
-  gboolean javascript_enabled;
-  gboolean java_enabled;
-  gboolean plugins_enabled;
-  gboolean autoload_images;
-  int minimum_font_size;
-  int default_font_size;
-  int  default_fixed_font_size;
-#if NEEDED
-  const gchar *default_text_encoding;
-  const gchar *serif_font_family;
-  const gchar *sans_serif_font_family;
-  const gchar *fixed_font_family;
-  const gchar *standard_font_family;
-  const gchar *cursive_font_family;
-  const gchar *fantasy_font_family;
-#endif /* NEEDED */
-  const gchar *user_agent_string;
-  const gchar* http_proxy;
-};
-
-/* possible status code */
-typedef enum {
-	LOADING_STARTED,
-	LOADING,
-	LOADING_COMPLETE,
-	LOAD_ERROR
-} render_state;
-
-/* will be passed when a status change signal is emitted */
-struct html_render_status {
-  /* Status of the loading process. */
-  render_state state;
-  /* Number of files to download */
-  int files;
-  /* Number of files with Content-Length set*/
-  int fileswithsize;
-  /* Number of files received */
-  int ready;
-  /* Bytes to get from the resource */
-  int size;
-  /* Bytes received from the resource */
-  int recieved;
-  /* Total size of the resources including those that didn't have
-      Content-Length set. */
-  int totalsize;
-  /* Bytes received total. */
-  int totalrecieved
-  /* Error or status strings */
-  const gchar *statusmessage;
-}
 
 /*** Create usable widget which shows the rendered page for easy embedding ***/
 GtkWidget *html_render_widget_new(void)
