@@ -65,6 +65,9 @@ main (int argc, char *argv[])
   if (fd < 0) 
     fd = try_open ("/dev/touchscreen/ucb1x00");
 
+  if (fd < 0) 
+    fd = try_open ("/dev/ts");
+
   if (fd < 0)
     {
       DIR *d;
@@ -135,9 +138,9 @@ main (int argc, char *argv[])
 
       XCloseDisplay (dpy);
       if (access("/usr/bin/xrdb", X_OK))
-        system ("echo \"Matchbox.cursor: no\nXcursor.theme: fully-transparent\" | /usr/X11R6/bin/xrdb -nocpp -merge");
+        system ("echo \"Matchbox.cursor: no\nXcursor.theme: xcursor-transparent\" | /usr/X11R6/bin/xrdb -nocpp -merge");
       else
-        system ("echo \"Matchbox.cursor: no\nXcursor.theme: fully-transparent\" | /usr/bin/xrdb -nocpp -merge");
+        system ("echo \"Matchbox.cursor: no\nXcursor.theme: xcursor-transparent\" | /usr/bin/xrdb -nocpp -merge");
     }
       
   exit (0);
