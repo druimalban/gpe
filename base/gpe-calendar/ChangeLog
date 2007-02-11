@@ -1,5 +1,12 @@
 2007-02-11  Neal H. Walfield  <neal@gnu.org>
 
+	* event-list.c (button_press): Rename from this...
+	(button_release): ... to this.  Catch release events.
+	(event_list_init): Connect to event_list->view's
+	"button-release-event".
+
+2007-02-11  Neal H. Walfield  <neal@gnu.org>
+
 	* event-list.c (event_list_init): Pack WIN at the end of
 	EVENT_LIST, not the beginning.
 	(event_list_size_request): Call the parent class's size_request
@@ -8,7 +15,7 @@
 	(event_list_size_allocate): Don't set ALLOCATION directly; call
 	the parent class's size_allocate method.
 	(event_list_reload_events): Only queue a draw on
-	EvENT_LIST->SCROLLED_WINDOW.
+	EVENT_LIST->SCROLLED_WINDOW.
 	(event_list_set_period_box_visible): Don't return before creating
 	the widget.
 

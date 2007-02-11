@@ -336,16 +336,15 @@ end_cell_data_func (GtkTreeViewColumn *col,
 }
 
 static gboolean
-button_press (GtkWidget *widget, GdkEventButton *event,
-	      EventList *event_list)
+button_release (GtkWidget *widget, GdkEventButton *event,
+		EventList *event_list)
 {
   GtkTreeView *view = GTK_TREE_VIEW (widget);
   GtkTreePath *path;
   GtkTreeModel *model;
   GtkTreeIter iter;
 
-  if (event->type != GDK_BUTTON_PRESS)
-    /* We only catch single clicks.  */
+  if (event->type != GDK_BUTTON_RELEASE)
     return FALSE;
 
   if (event->button != 1 && event->button != 3)
@@ -457,8 +456,8 @@ event_list_init (GTypeInstance *instance, gpointer klass)
 		     GTK_WIDGET (event_list->view));
   gtk_widget_show (GTK_WIDGET (event_list->view));
 
-  g_signal_connect (event_list->view, "button-press-event",
-		    (GCallback) button_press, event_list);
+  g_signal_connect (event_list->view, "button-release-event",
+		    (GCallback) button_release, event_list);
   g_signal_connect (event_list->view, "key_press_event",
 		    (GCallback) key_press, event_list);
 
