@@ -1,21 +1,5 @@
 !!! means very important and is a release blocker
 
-- Change the popup menus so that instead of having:
-
-    edit - event
-         + calendar
-    delete - event
-           + calendar
-
-  we have:
-
-    edit
-    delete
-    calendar - edit
-             + delete
-
-  !!! (done)
-
 - After editing an event, the changes are sometimes not immediately
   propagated. !!!
 - Zooming from week view (plus to day view and minus to month view)
