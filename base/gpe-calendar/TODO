@@ -25,7 +25,6 @@
 - Popup menu for calendar selector (delete, sync now, ...)
 - In the event list don't show the end time if there is not enough
   room
-- agenda is not showing duration combo in the large agenda view ??? !!!
 - agenda listens for button press event, not button release event. !!!
 - create one hour event, change to all day: day view is corrupt !!!
 - In the week and month views, if the event span multiple days, draw

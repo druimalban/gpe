@@ -1,5 +1,19 @@
 2007-02-11  Neal H. Walfield  <neal@gnu.org>
 
+	* event-list.c (event_list_init): Pack WIN at the end of
+	EVENT_LIST, not the beginning.
+	(event_list_size_request): Call the parent class's size_request
+	method at the end.  Don't set REQUISITION, call
+	gtk_widget_set_size_request on EVENT_LIST->SCROLLED_WINDOW.
+	(event_list_size_allocate): Don't set ALLOCATION directly; call
+	the parent class's size_allocate method.
+	(event_list_reload_events): Only queue a draw on
+	EvENT_LIST->SCROLLED_WINDOW.
+	(event_list_set_period_box_visible): Don't return before creating
+	the widget.
+
+2007-02-11  Neal H. Walfield  <neal@gnu.org>
+
 	* day_view.c (event_rect_expose): Change the way in which the
 	period of an event is displayed.
 

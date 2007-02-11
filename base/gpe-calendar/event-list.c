@@ -1,5 +1,5 @@
 /* event-list.c - Event list widget implementation.
-   Copyright (C) 2006 Neal H. Walfield <neal@walfield.org>
+   Copyright (C) 2006, 2007 Neal H. Walfield <neal@walfield.org>
 
    This file is part of GPE.
 
@@ -448,7 +448,7 @@ event_list_init (GTypeInstance *instance, gpointer klass)
 				       GTK_SHADOW_NONE);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (win),
 				  GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-  gtk_box_pack_start (GTK_BOX (instance), GTK_WIDGET (win), TRUE, TRUE, 0);
+  gtk_box_pack_end (GTK_BOX (instance), GTK_WIDGET (win), TRUE, TRUE, 0);
   gtk_widget_show (GTK_WIDGET (win));
 
   event_list->view = GTK_TREE_VIEW (gtk_tree_view_new ());
@@ -611,8 +611,6 @@ event_list_expose_event (GtkWidget *widget, GdkEventExpose *event)
 static void
 event_list_size_request (GtkWidget *widget, GtkRequisition *requisition)
 {
-  GTK_WIDGET_CLASS (parent_class)->size_request (widget, requisition);
-
   EventList *event_list = EVENT_LIST (widget);
 
   PangoLayout *pl = gtk_widget_create_pango_layout (widget, NULL);
@@ -627,19 +625,20 @@ event_list_size_request (GtkWidget *widget, GtkRequisition *requisition)
     / PANGO_SCALE;
 
   
-  /* We'd like about 6 rows of text.  */
-  requisition->height = MAX (requisition->height, row_height * 6);
+  int cw = pango_font_metrics_get_approximate_char_width (metrics);
+  event_list->char_width = cw;
 
-  int w = pango_font_metrics_get_approximate_char_width (metrics);
-  event_list->char_width = w;
-
-  /* We'd like about 24 columns but we don't want to request more than
-     25% of the screen.  */  
-  int cols = MIN (gdk_screen_width () / (w / PANGO_SCALE) / 4, 24);
-  requisition->width = MAX (requisition->width, cols * w / PANGO_SCALE);
+  /* We'd like about 6 rows of text and 24 columns but we don't want
+     to request more than 25% of the screen.  */  
+  int cols = MIN (gdk_screen_width () / (cw / PANGO_SCALE) / 4, 24);
+  gtk_widget_set_size_request (event_list->scrolled_window,
+			       cols * cw / PANGO_SCALE,
+			       row_height * 6);
 
   g_object_unref (pl);
   pango_font_metrics_unref (metrics);
+
+  GTK_WIDGET_CLASS (parent_class)->size_request (widget, requisition);
 }
 
 static void
@@ -647,9 +646,7 @@ event_list_size_allocate (GtkWidget *widget, GtkAllocation *allocation)
 {
   EventList *event_list = EVENT_LIST (widget);
 
-  widget->allocation = *allocation;
-  gtk_widget_size_allocate (GTK_WIDGET (event_list->scrolled_window),
-			    allocation);
+  GTK_WIDGET_CLASS (parent_class)->size_allocate (widget, allocation);
 
   event_list->narrow
     = allocation->width / (event_list->char_width / PANGO_SCALE) < 24;
@@ -659,7 +656,7 @@ void
 event_list_reload_events (EventList *event_list)
 {
   event_list->pending_reload = TRUE;
-  gtk_widget_queue_draw (GTK_WIDGET (event_list));
+  gtk_widget_queue_draw (GTK_WIDGET (event_list->scrolled_window));
 }
 
 void
@@ -678,12 +675,10 @@ event_list_set_period_box_visible (EventList *event_list, gboolean visible)
       return;
     }
 
-  return;
-
   /* We need to create it.  */
   GtkBox *box = GTK_BOX (gtk_hbox_new (FALSE, 0));
   event_list->period_box = box;
-  gtk_box_pack_start (GTK_BOX (GTK_BOX (event_list)), GTK_WIDGET (box),
+  gtk_box_pack_start (GTK_BOX (event_list), GTK_WIDGET (box),
 		      FALSE, FALSE, 0);
   gtk_widget_show (GTK_WIDGET (box));
 
