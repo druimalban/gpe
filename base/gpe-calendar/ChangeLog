@@ -1,3 +1,9 @@
+2007-02-12  Neal H. Walfield  <neal@gnu.org>
+
+	* gpe-calendar.desktop.in.in (X-home-applet-resizable): Add field.
+	(X-home-applet-minwidth): Likewise.
+	(X-home-applet-minheight): Likewise.
+
 2007-02-11  Neal H. Walfield  <neal@gnu.org>
 
 	* event-list.c (button_press): Rename from this...

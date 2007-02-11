@@ -9,3 +9,6 @@ Icon=gpe-calendar.png
 Categories=Application;PIM;GPE;
 StartupNotify=true
 SingleInstance=true
+X-home-applet-resizable=XY
+X-home-applet-minwidth=200
+X-home-applet-minheight=40
