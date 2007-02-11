@@ -23,7 +23,6 @@
 - Edge flipping (see pannedwindow.h) for week and month view
 - Scrolling for day and week view using arrow keys
 - Popup menu for calendar selector (delete, sync now, ...)
-- Do not display "until TIME" in the day view but START-END !!! (done)
 - In the event list don't show the end time if there is not enough
   room
 - agenda is not showing duration combo in the large agenda view ??? !!!

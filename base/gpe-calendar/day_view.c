@@ -247,9 +247,10 @@ event_rect_expose (struct event_rect *er, GtkWidget *widget, GdkDrawable *w,
       if (start < period_start)
         ts_start = strftime_strdup_utf8_locale ("%b %d,", &tm_start);
       else
-        ts_start = g_strdup_printf ("%d:%02d,", tm_start.tm_hour, tm_start.tm_min);
+        ts_start = g_strdup_printf ("%d:%02d,",
+				    tm_start.tm_hour, tm_start.tm_min);
 
-      until = g_strjoin (" ", _("Start"), ts_start, _("ends"), ts_end, NULL);
+      until = g_strjoin (ts_start, _(" - "), ts_end, NULL);
       g_free (ts_start);
       g_free (ts_end);
     }
