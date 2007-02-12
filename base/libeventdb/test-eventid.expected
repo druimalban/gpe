@@ -1,2 +1,3 @@
 lookup: timed event
 did not create event with duplicate eventid!
+non-existent eventid returned nothing
