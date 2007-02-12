@@ -1,5 +1,5 @@
 /* test-eventid.c - Test eventid lookup.
-   Copyright (C) 2006 Neal H. Walfield <neal@walfield.org>
+   Copyright (C) 2006, 2007 Neal H. Walfield <neal@walfield.org>
 
    This file is part of GPE.
 
@@ -73,6 +73,21 @@ do_test (int argc, char *argv[])
     printf ("created event with duplicate eventid!\n");
   else
     printf ("did not create event with duplicate eventid!\n");
+
+  /* Change the eventid to an non-existent event.  */
+  if (eventid[0] == 'a')
+    eventid[0] = 'b';
+  else
+    eventid[0] = 'a';
+
+  ev = event_db_find_by_eventid (edb, eventid);
+  if (ev)
+    {
+      printf ("non-existent eventid returned an event!\n");
+      g_object_unref (ev);
+    }
+  else
+    printf ("non-existent eventid returned nothing\n");
 
   return fail;
 }
