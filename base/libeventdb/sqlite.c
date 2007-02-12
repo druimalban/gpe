@@ -1065,9 +1065,9 @@ sqlite_db_finalize (GObject *object)
 {
   SqliteDB *db = SQLITE_DB (object);
 
-  sqlite_close (db->sqliteh);
-
   G_OBJECT_CLASS (sqlite_db_parent_class)->finalize (object);
+
+  sqlite_close (db->sqliteh);
 }
 
 EventDB *

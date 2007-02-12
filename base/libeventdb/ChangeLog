@@ -1,5 +1,13 @@
 2007-02-12  Neal H. Walfield  <neal@gnu.org>
 
+	Closes #6.
+	* event-db.c (event_db_finalize): Pass NULL as the data parameter
+	to g_object_remove_toggle_ref.
+	* sqlite.c (sqlite_db_finalize): Call finalize after the parent
+	class's.
+
+2007-02-12  Neal H. Walfield  <neal@gnu.org>
+
 	Closes #5.
 	* event-db.h (event_load_t): Change return type from void to
 	gboolean.

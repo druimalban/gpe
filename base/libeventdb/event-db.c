@@ -360,7 +360,7 @@ event_db_finalize (GObject *object)
       EventSource *ev = EVENT_SOURCE (i->data);
       event_flush (EVENT (ev));
       g_object_remove_toggle_ref (G_OBJECT (ev),
-				  event_source_toggle_ref_notify, edb);
+				  event_source_toggle_ref_notify, NULL);
       ev->edb = NULL;
     }
   g_slist_free (edb->cache_list);
