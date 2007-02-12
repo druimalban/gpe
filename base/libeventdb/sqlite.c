@@ -20,7 +20,6 @@
 #include <glib-object.h>
 #include <glib.h>
 #include <gpe/errorbox.h>
-#include <sqlite.h>
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
@@ -34,6 +33,39 @@
 #define obstack_chunk_free free
 
 #include "event-db.h"
+
+#include <sqlite.h>
+
+/* The code is written using sqlite function names but they are
+   relatively easily mapped to sqlite3 function names.  */
+// #define USE_SQLITE3
+#ifdef USE_SQLITE3
+
+#include <sqlite3.h>
+
+#define sqlite sqlite3
+#define sqlite_close sqlite3_close
+#define sqlite_exec sqlite3_exec
+#define sqlite_exec_printf(handle_, query_, cb_, cookie_, err_, args_...) \
+  ({ char *q_ = sqlite3_mprintf (query_ , ## args_); \
+     int ret_ = sqlite3_exec (handle_, q_, cb_, cookie_, err_); \
+     sqlite3_free (q_); \
+     ret_; })
+#define sqlite_last_insert_rowid sqlite3_last_insert_rowid
+#define sqlite_create_aggregate(handle_, name_, args_, step_, final_, \
+                                cookie_) \
+  sqlite3_create_function (handle_, name_, args_, SQLITE_UTF8, cookie_, \
+                           NULL, step_, final_);
+#define sqlite_aggregate_context sqlite3_aggregate_context
+#define sqlite_func sqlite3_context
+#define sqlite_set_result_string(context_, str_, count) \
+  sqlite3_result_text (context_, strdup (str_), count, free)
+
+#else /* USE_SQLITE3 */
+
+#define sqlite3_value const char 
+
+#endif
 
 /* Execute the sqlite_exec (or sqlite_exec_printf) statement.  If it
    fails because the database or table is locked, try a few times
@@ -1014,10 +1046,20 @@ EventDB *
 event_db_new (const char *fname)
 {
   EventDB *edb = EVENT_DB (g_object_new (TYPE_SQLITE_DB, NULL));
-  char *err;
+  char *err = NULL;
 
+#ifdef USE_SQLITE3
+  int e = sqlite3_open (fname, &SQLITE_DB (edb)->sqliteh);
+  if (e)
+    {
+      err = g_strdup (sqlite3_errmsg (SQLITE_DB (edb)->sqliteh));
+      sqlite3_close (SQLITE_DB (edb)->sqliteh);
+      SQLITE_DB (edb)->sqliteh = NULL;
+    }
+#else
   SQLITE_DB (edb)->sqliteh = sqlite_open (fname, 0, &err);
-  if (SQLITE_DB (edb)->sqliteh == NULL)
+#endif
+  if (err)
     goto error_before_transaction;
 
   if (SQLITE_TRY
@@ -1039,9 +1081,18 @@ event_db_new (const char *fname)
     }
   /* If the calendar_dbinfo table doesn't exist then we understand
      this to mean that this DB is uninitialized.  */
-  if (sqlite_exec (SQLITE_DB (edb)->sqliteh, "select version from calendar_dbinfo",
-		   dbinfo_callback, NULL, &err))
+  int e = sqlite_exec (SQLITE_DB (edb)->sqliteh,
+		       "select version from calendar_dbinfo",
+		       dbinfo_callback, NULL, &err);
+#ifdef USE_SQLITE3
+  /* The database may be in SQLITE2 format.  Try to convert it.  */
+
+  if (e)
     goto error;
+#else
+  if (e)
+    goto error;
+#endif
 
   if (version == 2)
     /* Databases with this version come from a relatively widely
@@ -1120,8 +1171,10 @@ event_db_new (const char *fname)
 
   /* Add an SQL convenience aggregate function, cat, which assembles a
      comma separated list of values.  */
-  void cat_step (sqlite_func *context, int argc, const char **argv)
+  void cat_step (sqlite_func *context, int argc, sqlite3_value **argv_)
     {
+      char **argv = (char **) argv_;
+
       if (! argv[0])
 	/* Ignore NULL values.  */
 	return;
