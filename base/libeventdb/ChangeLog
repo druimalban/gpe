@@ -1,5 +1,20 @@
 2007-02-12  Neal H. Walfield  <neal@gnu.org>
 
+	Closes #5.
+	* event-db.h (event_load_t): Change return type from void to
+	gboolean.
+	* event-db.c (event_load): If event does not exist, return NULL.
+	* sqlite.c (do_event_load): Return a boolean.  If no row is
+	returned, return FALSE, otherwise, TRUE.
+	* Makefile.am (check_PROGRAMS): Add test-find-by-uid.
+	(TESTS): Likwise.
+	(test_find_by_uid_SOURCES): New.
+	(test_find_by_uid_LDADD): Likewise.
+	(test-find-by-uid.c): New file.
+	(test-find-by-uid.expected): Likewise.
+
+2007-02-12  Neal H. Walfield  <neal@gnu.org>
+
 	* test-eventid.c (do_test): Check that if event_db_find_by_eventid
 	is passed an eventid corresponding to a non-existent event, that
 	NULL is returned.

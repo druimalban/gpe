@@ -42,10 +42,11 @@ typedef void (*set_default_calendar_t) (EventDB *edb, EventCalendar *ec);
    allocated UID in EV->UID.  */
 typedef gboolean (*event_new_t) (EventSource *ev, char **error);
 /* Load event EV's basic data (i.e. not necessarily its details) from
-   backing store.  EV->UID is valid.  */
-typedef void (*event_load_t) (EventSource *ev);
+   backing store.  EV->UID is valid.  Returns FALSE if no such event
+   exists.  */
+typedef gboolean (*event_load_t) (EventSource *ev);
 /* Load the event's details from backing store.  event_load has
-   already been called.  */
+   already been called successfully.  */
 typedef void (*event_load_details_t) (EventSource *ev);
 /* Flush the event to backing store.  If an error occurs, FALSE should
    be returned and an error may be reported in *ERR which the client

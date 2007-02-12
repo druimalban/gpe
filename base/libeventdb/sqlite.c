@@ -1,5 +1,5 @@
 /* sqlite.c - SQLITE backend.
-   Copyright (C) 2006 Neal H. Walfield <neal@walfield.org>
+   Copyright (C) 2006, 2007 Neal H. Walfield <neal@walfield.org>
 
    This file is part of GPE.
 
@@ -487,19 +487,47 @@ do_event_new (EventSource *ev, char **err)
   return FALSE;
 }
 
-static void
+static gboolean
 do_event_load (EventSource *ev)
 {
   char *err;
-  if (SQLITE_TRY
-      (sqlite_exec_printf
-       (SQLITE_DB (ev->edb)->sqliteh, "select * from events where uid=%d",
-	event_load_callback, ev, &err, ev->uid)))
+
+  char *q = sqlite_mprintf ("select * from events where uid=%d", ev->uid);
+
+  sqlite_vm *stmt;
+  const char *tail = NULL;
+  if (sqlite_compile (SQLITE_DB (ev->edb)->sqliteh, q, &tail, &stmt,
+		      &err))
     {
       g_warning ("%s:%d: Loading data for event %ld: %s",
 		 __func__, __LINE__, ev->uid, err);
-      free (err);
+      sqlite_freemem (err);
+      sqlite_freemem (q);
+      return FALSE;
     }
+
+  g_assert (tail == NULL || *tail == '\0');
+  sqlite_freemem (q);
+
+  gboolean found = FALSE;
+  int argc;
+  char **argv;
+  char **names;
+  if (SQLITE_TRY (sqlite_step (stmt, &argc, &argv, &names)) == SQLITE_ROW)
+    {
+      found = TRUE;
+      event_load_callback (ev, argc, argv, names);
+    }
+
+  if (sqlite_finalize (stmt, &err))
+    {
+      g_warning ("%s:%d: Loading data for event %ld: %s",
+		 __func__, __LINE__, ev->uid, err);
+      sqlite_freemem (err);
+      return FALSE;
+    }
+
+  return found;
 }
 
 static void

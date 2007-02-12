@@ -1,7 +1,7 @@
 /* event-db.c: Event DB implementation.
  * Copyright (C) 2002, 2006 Philip Blundell <philb@gnu.org>
  *               2006, Florian Boor <florian@kernelconcepts.de>
- * Copyright (C) 2006 Neal H. Walfield <neal@walfield.org>
+ * Copyright (C) 2006, 2007 Neal H. Walfield <neal@walfield.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -549,11 +549,17 @@ event_load (EventDB *edb, guint uid)
   ev = EVENT_SOURCE (g_object_new (event_source_get_type (), NULL));
   ev->edb = edb;
   ev->uid = uid;
-  g_hash_table_insert (edb->events, (gpointer) ev->uid, ev);
 
-  EVENT_DB_GET_CLASS (edb)->event_load (ev);
-
-  return ev;
+  if (EVENT_DB_GET_CLASS (edb)->event_load (ev))
+    {
+      g_hash_table_insert (edb->events, (gpointer) ev->uid, ev);
+      return ev;
+    }
+  else
+    {
+      g_object_unref (ev);
+      return NULL;
+    }
 }
 
 Event *
