@@ -341,7 +341,11 @@ event_calendar_delete (EventCalendar *ec,
     add_to_laundry_pile (G_OBJECT (ec)); \
   }
 
-GET(guint, uid)
+guint
+event_calendar_get_uid (EventCalendar *ec)
+{
+  return ec->uid;
+}
 
 EventCalendar *
 event_calendar_get_parent (EventCalendar *ec, GError **error)

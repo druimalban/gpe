@@ -241,7 +241,7 @@ extern void event_calendar_delete (EventCalendar *event_calendar,
 				   GError **error);
 
 /* The event calendar's uid.  */
-extern guint event_calendar_get_uid (EventCalendar *ec, GError **error)
+extern guint event_calendar_get_uid (EventCalendar *ec)
      __attribute__ ((pure));
 
 /* If this event calendar is visible.  */

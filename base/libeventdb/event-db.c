@@ -704,16 +704,10 @@ event_db_find_calendar_by_uid (EventDB *edb, guint uid, GError **error)
 
   for (i = edb->calendars; i; i = i->next)
     {
-      GError *e = NULL;
-      if (event_calendar_get_uid (EVENT_CALENDAR (i->data), &e) == uid)
+      if (event_calendar_get_uid (EVENT_CALENDAR (i->data)) == uid)
 	{
 	  g_object_ref (i->data);
 	  return i->data;
-	}
-      if (e)
-	{
-	  SIGNAL_ERROR_GERROR (edb, error, e);
-	  return NULL;
 	}
     }
 
