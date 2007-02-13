@@ -114,6 +114,12 @@ check_table_update (void)
 gboolean 
 gpe_pim_categories_init (void)
 {
+  static int run_once;
+
+  if (run_once)
+    return TRUE;
+  run_once = TRUE;
+
   gchar *err;
   gchar *buf;
   size_t len;
