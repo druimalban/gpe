@@ -395,6 +395,12 @@ event_db_finalize (GObject *object)
   G_OBJECT_CLASS (event_db_parent_class)->finalize (object);
 }
 
+void
+event_db_error_punt (EventDB *edb, GError *error)
+{
+  SIGNAL_ERROR_GERROR (edb, NULL, error);
+}
+
 static void
 event_db_set_alarms_fired_through (EventDB *edb, time_t t, GError **error)
 {

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2002 Philip Blundell <philb@gnu.org>
- * Copyright (C) 2006 Neal H. Walfield <neal@walfield.org>
+ * Copyright (C) 2006, 2007 Neal H. Walfield <neal@walfield.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -101,8 +101,18 @@ extern GType event_db_get_type (void);
 typedef void (*EventDBAlarmFiredFunc) (EventDB *, Event *);
 
 /** Nearly all functions return a GError.  If this GError is NULL,
-    i.e., ignored, then this signal is sent.  */
+    i.e., ignored, then the "error" is sent on the corresponding
+    EventDB *.  */
 typedef void (*EventDBError) (EventDB *, const char *);
+
+/**
+  event_db_error_punt
+
+  Propagates an error via the "error" signal.  Useful if you accepted
+  an error but now don't want to propagate it via the function call
+  chain.  Does not free ERROR.
+ */
+extern void event_db_error_punt (EventDB *edb, GError *error);
 
 /* Open a new database.  */
 extern EventDB *event_db_new (const char *filename, GError **error);
