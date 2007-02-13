@@ -1,4 +1,8 @@
 2007-02-13  Neal H. Walfield  <neal@gnu.org>
+	
+	* import-export.c (save_as_dialog): Use SUMMARY.
+
+2007-02-13  Neal H. Walfield  <neal@gnu.org>
 
 	* alarm-dialog.c: Update to libeventdb's new API.
 	* calendar-delete-dialog.c: Likewise.

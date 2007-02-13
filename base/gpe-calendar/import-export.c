@@ -255,7 +255,7 @@ save_as_dialog (GObject *thing)
     summary = event_calendar_get_title (EVENT_CALENDAR (thing), NULL);
 
   char *suggestion = g_strdup_printf ("%s.ics",
-				      summary && *summary ?: "calendar");
+				      summary && *summary ? summary : "calendar");
   char *s = suggestion;
   while ((s = strchr (s, ' ')))
     *s = '_';
