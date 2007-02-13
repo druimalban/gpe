@@ -1,7 +1,13 @@
 !!! means very important and is a release blocker
 
+
+I can't reproduce these problems anymore:
+
 - After editing an event, the changes are sometimes not immediately
   propagated. !!!
+- create one hour event, change to all day: day view is corrupt !!!
+
+
 - Zooming from week view (plus to day view and minus to month view)
 - Day of week for event editor
 - Edge flipping (see pannedwindow.h) for week and month view
@@ -9,15 +15,16 @@
 - Popup menu for calendar selector (delete, sync now, ...)
 - In the event list don't show the end time if there is not enough
   room
-- create one hour event, change to all day: day view is corrupt !!!
 - In the week and month views, if the event span multiple days, draw
   it with jaggies, just like in the day view.
 - in the month view, the first event in a day is shifted right but the
   width for formatting is not appropriately reduced.  Fix this.
+- Make sure that when the time is displayed, the format used respects
+  the locale.  In particular, day view events appear to be hard coded
+  to use 24 hour time.
 
 libeventdb Specific:
 
-- return GErrors in libeventdb--don't include libgpewidget
 - change the setters to return a boolean.  if the value has really
   changed then return TRUE.  Use this (in gpe-calendar) when updating
   events to report how many events have changed, etc.
@@ -25,5 +32,3 @@ libeventdb Specific:
 Maemo Specific:
 
 - Tap and hold -> right click (maemo)
-- Provide an option to set whether the agenda respects the visibility
-  of calendars (required for hildon home applet) (maemo).
