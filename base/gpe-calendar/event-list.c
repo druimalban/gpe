@@ -45,6 +45,9 @@ struct _EventList
   int char_width;
   GtkTreeView *view;
   GSList *events;
+  /* Whether to ignore the visibility of calendars and to just show
+     all the events.  */
+  gboolean show_all;
 
   GtkBox *period_box;
   GtkEntry *entry;
@@ -547,7 +550,7 @@ event_list_reload_events_hard (EventList *event_list)
     {
       Event *ev = e->data;
 
-      if (! event_get_visible (ev, NULL))
+      if (! event_list->show_all && ! event_get_visible (ev, NULL))
 	continue;
 
       /* Add a new row to the model.  */
@@ -657,6 +660,15 @@ event_list_reload_events (EventList *event_list)
 {
   event_list->pending_reload = TRUE;
   gtk_widget_queue_draw (GTK_WIDGET (event_list->scrolled_window));
+}
+
+void
+event_list_set_show_all (EventList *event_list, gboolean show_all)
+{
+  if (event_list->show_all == show_all)
+    return;
+  event_list->show_all = show_all;
+  event_list_reload_events (event_list);
 }
 
 void

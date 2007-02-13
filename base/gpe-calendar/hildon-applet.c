@@ -89,11 +89,13 @@ hildon_home_applet_lib_initialize (void *state_data,
     return NULL;
 
   char *filename = CALENDAR_FILE ();
-  event_db = event_db_new (filename);
+  GError *e = NULL;
+  event_db = event_db_new (filename, &e);
   if (! event_db)
     {
-      g_critical ("Failed to open %s", filename);
+      g_critical ("Failed to open %s: %s", filename, e->message);
       g_free (filename);
+      g_error_free (e);
       return NULL;
     }
 
@@ -127,6 +129,7 @@ hildon_home_applet_lib_initialize (void *state_data,
 
   event_list = EVENT_LIST (event_list_new (event_db));
   event_list_set_period_box_visible (event_list, FALSE);
+  event_list_set_show_all (event_list, TRUE);
   g_signal_connect (event_list, "event-clicked",
 		    G_CALLBACK (event_list_event_clicked), NULL);
   gtk_widget_show (GTK_WIDGET (event_list));

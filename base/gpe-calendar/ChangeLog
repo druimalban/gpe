@@ -1,5 +1,15 @@
 2007-02-13  Neal H. Walfield  <neal@gnu.org>
 
+	* event-list.h (event_list_set_show_all): New prototype.
+	* event-list.c (event_list_set_show_all): New function.
+	* hildon-applet.c (hildon_home_applet_lib_initialize): Make all
+	events visible.
+
+	* hildon-applet.c (hildon_home_applet_lib_initialize): Update to
+	new libeventdb API.
+
+2007-02-13  Neal H. Walfield  <neal@gnu.org>
+
 	* day_popup.c (day_popup): Reuse Pixbufs, not GtkImages.
 
 2007-02-13  Neal H. Walfield  <neal@gnu.org>

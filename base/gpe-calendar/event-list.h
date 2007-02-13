@@ -1,5 +1,5 @@
 /* event-list.h - Event list widget interface.
-   Copyright (C) 2006 Neal H. Walfield <neal@walfield.org>
+   Copyright (C) 2006, 2007 Neal H. Walfield <neal@walfield.org>
 
    This file is part of GPE.
 
@@ -62,10 +62,14 @@ enum event_list_columns
 extern GtkWidget *event_list_new (EventDB *edb /*, int column*/);
 
 /* Force LIST to reload the events from the event database.  */
-void event_list_reload_events (EventList *list);
+extern void event_list_reload_events (EventList *list);
+
+/* Whether to respect the visibility of events.  */
+extern void event_list_set_show_all (EventList *event_list,
+				     gboolean show_all);
 
 /* Shows or hides EVENT_LIST's period box.  */
-void event_list_set_period_box_visible (EventList *event_list,
-					gboolean visible);
+extern void event_list_set_period_box_visible (EventList *event_list,
+					       gboolean visible);
 
 #endif
