@@ -1,5 +1,9 @@
 2007-02-13  Neal H. Walfield  <neal@gnu.org>
 
+	* calendar-update.c (build_message): Check *MSG, not MSG.
+
+2007-02-13  Neal H. Walfield  <neal@gnu.org>
+
 	Closes #1768 (handhelds.org).
 	* main.c (main): Call osso_initialize earlier.
 

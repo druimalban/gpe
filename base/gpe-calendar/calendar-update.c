@@ -332,7 +332,7 @@ build_message (SoupSession **session, SoupMessage **msg,
 
   char *url = event_calendar_get_url (info->ec, NULL);
   *msg = soup_message_new (method, url);
-  if (! msg)
+  if (! *msg)
     {
       if (info->last_internal_code != BAD_URL)
 	{
