@@ -1,5 +1,10 @@
 2007-02-13  Neal H. Walfield  <neal@gnu.org>
 
+	* configure.ac: Bump to version 0.9.  Depend on libeventdb 0.9 or
+	greater and libgpevtype 0.5 or greater.  Update email address.
+
+2007-02-13  Neal H. Walfield  <neal@gnu.org>
+
 	* event-list.h (event_list_set_show_all): New prototype.
 	* event-list.c (event_list_set_show_all): New function.
 	* hildon-applet.c (hildon_home_applet_lib_initialize): Make all
