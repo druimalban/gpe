@@ -1,5 +1,11 @@
 2007-02-13  Neal H. Walfield  <neal@gnu.org>
 
+	* event.c (event_remove): Return success.
+	* gpe/event-db.h (event_remove): Return a boolean indicating
+	success.
+	
+2007-02-13  Neal H. Walfield  <neal@gnu.org>
+
 	Closes #14.
 	* configure.ac: Remove libgpewidget dependency.  Add gobject-2.0
 	dependency.

@@ -417,8 +417,10 @@ extern Event *event_new (EventDB *edb, EventCalendar *ec,
 extern gboolean event_flush (Event *ev, GError **error);
 
 /* Remove event EV from the underlying DB.  Does not destroy the in
-   memory version nor does it deallocate a reference to EVENT.  */
-extern void event_remove (Event *ev, GError **error);
+   memory version nor does it deallocate a reference to EVENT.
+   Returns success.  (If EV was already removed, also returns
+   TRUE.)  */
+extern gboolean event_remove (Event *ev, GError **error);
 
 /**
  * event_list_unref:

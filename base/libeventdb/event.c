@@ -262,11 +262,11 @@ event_remove_upcoming_alarms (EventSource *ev)
     }
 }
 
-void
+gboolean
 event_remove (Event *event, GError **error)
 {
   if (event->dead)
-    return;
+    return TRUE;
 
   EventSource *ev = RESOLVE_CLONE (event);
 
@@ -288,7 +288,7 @@ event_remove (Event *event, GError **error)
       if (alarm_e)
 	g_error_free (alarm_e);
       SIGNAL_ERROR_GERROR (ev->edb, error, e);
-      return;
+      return FALSE;
     }
 
   EVENT (ev)->dead = TRUE;
@@ -298,6 +298,8 @@ event_remove (Event *event, GError **error)
 
   if (alarm_e)
     SIGNAL_ERROR_GERROR (ev->edb, error, alarm_e);
+
+  return TRUE;
 }
 
 Event *
