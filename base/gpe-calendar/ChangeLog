@@ -1,5 +1,9 @@
 2007-02-13  Neal H. Walfield  <neal@gnu.org>
 
+	* day_popup.c (day_popup): Reuse Pixbufs, not GtkImages.
+
+2007-02-13  Neal H. Walfield  <neal@gnu.org>
+
 	* calendar-update.c (build_message): Check *MSG, not MSG.
 
 2007-02-13  Neal H. Walfield  <neal@gnu.org>

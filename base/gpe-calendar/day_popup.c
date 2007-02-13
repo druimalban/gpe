@@ -69,10 +69,6 @@ menu_destroy (GtkWidget *widget, gpointer d)
   gtk_widget_destroy (widget);
 }
 
-static GtkWidget *bell_recur;
-static GtkWidget *bell;
-static GtkWidget *recur;
-
 GtkMenu *
 day_popup (const GDate *date, const GSList *events)
 {
@@ -159,50 +155,39 @@ day_popup (const GDate *date, const GSList *events)
       while ((s = strchr (s, '\n')))
 	*s = ' ';
 
-      GtkWidget *image = NULL;
+      /* We cache the pixbuf but we don't take our own reference as we
+	 are not given one by gpe_find_icon and as
+	 gtk_image_new_from_pixbuf takes it's own.  */
+      GdkPixbuf *pixbuf = NULL;
       if ((event_get_alarm (ev)) && event_is_recurrence (ev))
 	{
+	  static GdkPixbuf *bell_recur;
 	  if (! bell_recur)
-	    {
-	      GdkPixbuf *pixbuf = gpe_find_icon ("bell_recur");
-	      bell_recur = gtk_image_new_from_pixbuf (pixbuf);
-	      g_object_add_weak_pointer (G_OBJECT (bell_recur),
-					 (gpointer *) &bell_recur);
-	    }
-	  g_object_ref (bell_recur);
-	  image = bell_recur;
+	    bell_recur = gpe_find_icon ("bell_recur");
+	  pixbuf = bell_recur;
 	}
       else if (event_get_alarm (ev))
 	{
+	  static GdkPixbuf *bell;
 	  if (! bell)
-	    {
-	      GdkPixbuf *pixbuf = gpe_find_icon ("bell");
-	      bell = gtk_image_new_from_pixbuf (pixbuf);
-	      g_object_add_weak_pointer (G_OBJECT (bell),
-					 (gpointer *) &bell);
-	    }
-	  g_object_ref (bell);
-	  image = bell;
+	    g_object_add_weak_pointer (G_OBJECT (bell),
+				       (gpointer *) &bell);
+	  pixbuf = bell;
 	}
       else if (event_is_recurrence (ev))
 	{
+	  static GdkPixbuf *recur;
 	  if (! recur)
-	    {
-	      GdkPixbuf *pixbuf = gpe_find_icon ("recur");
-	      recur = gtk_image_new_from_pixbuf (pixbuf);
-	      g_object_add_weak_pointer (G_OBJECT (recur),
-					 (gpointer *) &recur);
-	    }
-	  g_object_ref (recur);
-	  image = recur;
+	    recur = gpe_find_icon ("recur");
+	  pixbuf = recur;
 	}
 
       GtkWidget *item;
-      if (image)
+      if (pixbuf)
 	{
 	  item = gtk_image_menu_item_new_with_label (summary);
 	  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item),
-					 image);
+					 gtk_image_new_from_pixbuf (pixbuf));
 	}
       else
 	item = gtk_menu_item_new_with_label (summary);
