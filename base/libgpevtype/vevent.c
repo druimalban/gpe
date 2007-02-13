@@ -76,14 +76,29 @@ event_import_from_vevent (EventCalendar *ec, MIMEDirVEvent *event,
   char *uid = NULL;
   g_object_get (event, "uid", &uid, NULL);
   if (uid)
-    ev = event_db_find_by_eventid (event_db, uid);
+    {
+      GError *e = NULL;
+      ev = event_db_find_by_eventid (event_db, uid, &e);
+      if (e)
+	{
+	  ERROR_PROPAGATE (gerror, e);
+	  return FALSE;
+	}
+    }
   if (! ev)
     {
+      GError *e = NULL;
+      ev = event_new (event_db, ec, uid, &e);
+      if (e)
+	{
+	  ERROR_PROPAGATE (gerror, e);
+	  return FALSE;
+	}
+
       created = TRUE;
-      ev = event_new (event_db, ec, uid);
     }
   else
-    event_set_calendar (ev, ec);
+    event_set_calendar (ev, ec, NULL);
 
   char *summary = NULL;
   g_object_get (event, "summary", &summary, NULL);
@@ -101,8 +116,8 @@ event_import_from_vevent (EventCalendar *ec, MIMEDirVEvent *event,
     }
 
   time_t start = extract_time (dtstart);
-  event_set_recurrence_start (ev, start);
-  event_set_untimed (ev, (dtstart->flags & MIMEDIR_DATETIME_TIME) == 0);
+  event_set_recurrence_start (ev, start, NULL);
+  event_set_untimed (ev, (dtstart->flags & MIMEDIR_DATETIME_TIME) == 0, NULL);
   g_object_unref (dtstart);
 
 #if 0
@@ -117,7 +132,7 @@ event_import_from_vevent (EventCalendar *ec, MIMEDirVEvent *event,
   if (dtend)
     {
       end = extract_time (dtend);
-      event_set_duration (ev, end - start);
+      event_set_duration (ev, end - start, NULL);
       g_object_unref (dtend);
     }
   else
@@ -127,7 +142,7 @@ event_import_from_vevent (EventCalendar *ec, MIMEDirVEvent *event,
 
       if (duration)
 	{
-	  event_set_duration (ev, duration);
+	  event_set_duration (ev, duration, NULL);
 	  end = start + duration;
 	}
       else
@@ -182,7 +197,7 @@ event_import_from_vevent (EventCalendar *ec, MIMEDirVEvent *event,
 
   if (trigger_min != INT_MAX)
     /* Set the alarm.  */
-    event_set_alarm (ev, trigger_min);
+    event_set_alarm (ev, trigger_min, NULL);
 
 #if 0
   GList *categories = NULL;
@@ -198,12 +213,12 @@ event_import_from_vevent (EventCalendar *ec, MIMEDirVEvent *event,
 #endif
 
   if (summary)
-    event_set_summary (ev, summary);
+    event_set_summary (ev, summary, NULL);
 
   char *description = NULL;
   g_object_get (event, "description", &description, NULL);
   if (description)
-    event_set_description (ev, description);
+    event_set_description (ev, description, NULL);
   g_free (description);
 
   const char *location_uri;
@@ -214,17 +229,17 @@ event_import_from_vevent (EventCalendar *ec, MIMEDirVEvent *event,
     {
       char *s = NULL;
       s = g_strdup_printf ("%s\n%s", location, location_uri);
-      event_set_location (ev, s);
+      event_set_location (ev, s, NULL);
       g_free (s);
     }
   else if (location)
-    event_set_location (ev, location);
+    event_set_location (ev, location, NULL);
   else if (location_uri)
-    event_set_location (ev, location_uri);
+    event_set_location (ev, location_uri, NULL);
 
   int sequence;
   g_object_get (event, "sequence", &sequence, NULL);
-  event_set_sequence (ev, sequence);
+  event_set_sequence (ev, sequence, NULL);
 
   MIMEDirRecurrence *recurrence
     = mimedir_vcomponent_get_recurrence (MIMEDIR_VCOMPONENT (event));
@@ -238,7 +253,8 @@ event_import_from_vevent (EventCalendar *ec, MIMEDirVEvent *event,
       if (until)
 	{
 	  mimedir_datetime_to_utc (until);
-	  event_set_recurrence_end (ev, mimedir_datetime_get_time_t (until));
+	  event_set_recurrence_end (ev, mimedir_datetime_get_time_t (until),
+				    NULL);
 	}
 
       int frequency = 0;
@@ -311,7 +327,7 @@ event_import_from_vevent (EventCalendar *ec, MIMEDirVEvent *event,
 		  p = strchr (p, ',');
 		}
 
-	      event_set_recurrence_byday (ev, byday);
+	      event_set_recurrence_byday (ev, byday, NULL);
 
 	      g_free (units);
 	    }
@@ -332,16 +348,16 @@ event_import_from_vevent (EventCalendar *ec, MIMEDirVEvent *event,
 	    goto out;
 	  }
 	}
-      event_set_recurrence_type (ev, type);
+      event_set_recurrence_type (ev, type, NULL);
 
       int count = 0;
       g_object_get (recurrence, "count", &count, NULL);
-      event_set_recurrence_count (ev, count);
+      event_set_recurrence_count (ev, count, NULL);
 
       int interval = 0;
       g_object_get (recurrence, "interval", &interval, NULL);
       if (interval)
-	event_set_recurrence_increment (ev, interval);
+	event_set_recurrence_increment (ev, interval, NULL);
 
       if (until)
 	g_object_unref (until);
@@ -349,7 +365,6 @@ event_import_from_vevent (EventCalendar *ec, MIMEDirVEvent *event,
       /* We don't own a reference to recurrence, don't unref it.  */
     }
 
-  event_flush (ev);
  out:
   g_free (uid);
 
@@ -361,7 +376,7 @@ event_import_from_vevent (EventCalendar *ec, MIMEDirVEvent *event,
     }
 
   if (created && error)
-    event_remove (ev);
+    event_remove (ev, NULL);
   g_object_unref (ev);
   g_free (summary);
 
@@ -373,7 +388,7 @@ event_export_as_vevent (Event *ev)
 {
   MIMEDirVEvent *event = mimedir_vevent_new ();
 
-  char *uid = event_get_eventid (ev);
+  char *uid = event_get_eventid (ev, NULL);
   g_object_set (event, "uid", uid, NULL);
   g_free (uid);
 
@@ -468,7 +483,7 @@ event_export_as_vevent (Event *ev)
   g_list_free (categories);
 #endif
 
-  char *summary = event_get_summary (ev);
+  char *summary = event_get_summary (ev, NULL);
   if (summary)
     {
       if (*summary)
@@ -476,7 +491,7 @@ event_export_as_vevent (Event *ev)
       g_free (summary);
     }
 
-  char *description = event_get_description (ev);
+  char *description = event_get_description (ev, NULL);
   if (description)
     {
       if (*description)
@@ -484,7 +499,7 @@ event_export_as_vevent (Event *ev)
       g_free (description);
     }
 
-  char *location = event_get_location (ev);
+  char *location = event_get_location (ev, NULL);
   if (location)
     {
       if (*location)
@@ -558,7 +573,7 @@ event_export_as_vevent (Event *ev)
       if (interval > 1)
 	g_object_set (recurrence, "interval", interval, NULL);
 
-      GSList *byday = event_get_recurrence_byday (ev);
+      GSList *byday = event_get_recurrence_byday (ev, NULL);
       if (byday)
 	{
 	  char *s[g_slist_length (byday) + 1];

@@ -97,7 +97,7 @@ cal_export_as_string (EventCalendar *ec)
 {
   MIMEDirVCal *vcal = mimedir_vcal_new ();
 
-  GSList *l = event_calendar_list_events (ec);
+  GSList *l = event_calendar_list_events (ec, NULL);
   GSList *i;
   for (i = l; i; i = i->next)
     {
