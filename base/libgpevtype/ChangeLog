@@ -1,5 +1,10 @@
 2007-02-13  Neal H. Walfield  <neal@gnu.org>
 
+	* configure.ac: Change version to 0.50 and depend on libeventdb
+	version 0.90 or greater.
+
+2007-02-13  Neal H. Walfield  <neal@gnu.org>
+
 	* configure.ac: Update email address.
 
 2007-02-13  Neal H. Walfield  <neal@gnu.org>
