@@ -857,7 +857,8 @@ do_event_mark_unacknowledged (EventSource *ev, GError **error)
   char *str;
 
   err = SQLITE_TRY (sqlite_exec_printf (SQLITE_DB (ev->edb)->sqliteh,
-					"insert into alarms_unacknowledged"
+					"insert or replace"
+					" into alarms_unacknowledged"
 					" (uid, start) values (%d, %d)",
 					NULL, NULL, &str,
 					ev->uid, ev->event.start));
