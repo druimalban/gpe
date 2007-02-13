@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT(gpe-calendar,0.9,gpe-list@linuxtogo.org)
+AC_INIT(gpe-calendar,0.90,gpe-list@linuxtogo.org)
 
 AC_CONFIG_SRCDIR([main.c])
 AM_INIT_AUTOMAKE([foreign dist-bzip2])
@@ -11,7 +11,7 @@ AC_PROG_INSTALL
 AC_PROG_LIBTOOL
 
 DEP_MODULES="gtk+-2.0 >= 2.4 glib-2.0 >= 2.2 libgpewidget >= 0.109 libgpepimc \
-             libgpevtype >= 0.5 libeventdb >= 0.9 \
+             libgpevtype >= 0.50 libeventdb >= 0.90 \
 	     libxsettings-client libhandoff libsoup-2.2"
 
 # i8n stuff

@@ -1,5 +1,10 @@
 2007-02-13  Neal H. Walfield  <neal@gnu.org>
 
+	* configure.ac: Change to version 0.90.  Depend on libeventdb 0.90
+	or greater and libgpevtype 0.50 or greater.
+
+2007-02-13  Neal H. Walfield  <neal@gnu.org>
+
 	* configure.ac: Bump to version 0.9.  Depend on libeventdb 0.9 or
 	greater and libgpevtype 0.5 or greater.  Update email address.
 
