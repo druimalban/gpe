@@ -1,6 +1,6 @@
 2007-02-13  Neal H. Walfield  <neal@gnu.org>
 
-	Closes #1792 (handhelds.org).
+	Closes #1768 (handhelds.org).
 	* main.c (main): Call osso_initialize earlier.
 
 2007-02-13  Neal H. Walfield  <neal@gnu.org>
