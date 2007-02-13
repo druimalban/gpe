@@ -170,8 +170,7 @@ day_popup (const GDate *date, const GSList *events)
 	{
 	  static GdkPixbuf *bell;
 	  if (! bell)
-	    g_object_add_weak_pointer (G_OBJECT (bell),
-				       (gpointer *) &bell);
+	    bell = gpe_find_icon ("bell");
 	  pixbuf = bell;
 	}
       else if (event_is_recurrence (ev))
