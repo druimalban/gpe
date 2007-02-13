@@ -52,39 +52,47 @@ do_test (int argc, char *argv[])
   /* event_db_new will open it itself.  */
   close (fd);
 
-  EventDB *edb = event_db_new (file);
+  GError *err = NULL;
+  EventDB *edb = event_db_new (file, &err);
   if (! edb)
-    error (1, 0, "evend_db_new");
+    error (1, 0, "evend_db_new: %s", err->message);
+
+  void edb_error (EventDB *edb, const char *error)
+    {
+      puts (error);
+    }
+  g_signal_connect (G_OBJECT (edb),
+		    "error", G_CALLBACK (edb_error), NULL);
 
   /* Every four weeks, ten occurrences.  */
-  Event *ev = event_new (edb, NULL, NULL);
-  event_set_summary (ev, "every 4 weeks, 10 occurrences");
-  event_set_recurrence_start (ev, start);
-  event_set_duration (ev, 60);
-  event_set_recurrence_type (ev, RECUR_WEEKLY);
-  event_set_recurrence_increment (ev, 4);
-  event_set_recurrence_count (ev, 10);
+  Event *ev = event_new (edb, NULL, NULL, NULL);
+  event_set_summary (ev, "every 4 weeks, 10 occurrences", NULL);
+  event_set_recurrence_start (ev, start, NULL);
+  event_set_duration (ev, 60, NULL);
+  event_set_recurrence_type (ev, RECUR_WEEKLY, NULL);
+  event_set_recurrence_increment (ev, 4, NULL);
+  event_set_recurrence_count (ev, 10, NULL);
   g_object_unref (ev);
 
   /* Every 3 weeks until 10 weeks from START.  */
-  ev = event_new (edb, NULL, NULL);
+  ev = event_new (edb, NULL, NULL, NULL);
   char buffer[200];
   time_t e = start + 10 * 7 * 24 * 60 * 60;
   TIME_TO_STRING (e, buffer);
   char summary[200];
   sprintf (summary, "untimed, S,M,F every 3 weeks until %s", buffer);
-  event_set_summary (ev, summary);
-  event_set_recurrence_start (ev, start);
-  event_set_untimed (ev, TRUE);
-  event_set_duration (ev, 0);
-  event_set_recurrence_type (ev, RECUR_WEEKLY);
-  event_set_recurrence_increment (ev, 3);
-  event_set_recurrence_end (ev, e);
+  event_set_summary (ev, summary, NULL);
+  event_set_recurrence_start (ev, start, NULL);
+  event_set_untimed (ev, TRUE, NULL);
+  event_set_duration (ev, 0, NULL);
+  event_set_recurrence_type (ev, RECUR_WEEKLY, NULL);
+  event_set_recurrence_increment (ev, 3, NULL);
+  event_set_recurrence_end (ev, e, NULL);
   /* But only sundays, mondays and fridays.  */
   GSList *byday = g_slist_prepend (NULL, g_strdup ("SU"));
   byday = g_slist_prepend (byday, g_strdup ("MO"));
   byday = g_slist_prepend (byday, g_strdup ("FR"));
-  event_set_recurrence_byday (ev, byday);
+  event_set_recurrence_byday (ev, byday, NULL);
   g_object_unref (ev);
 
   int i;
@@ -93,7 +101,7 @@ do_test (int argc, char *argv[])
       time_t s = start + i * 7 * 24 * 60 * 60;
       time_t e = s + 7 * 24 * 60 * 60 - 1;
 
-      GSList *list = event_db_list_for_period (edb, s, e);
+      GSList *list = event_db_list_for_period (edb, s, e, NULL);
 
       char buffer[200];
       TIME_TO_STRING (s, buffer);
@@ -109,7 +117,7 @@ do_test (int argc, char *argv[])
 	{
 	  Event *ev = EVENT (l->data);
 	  TIME_TO_STRING (event_get_start (ev), buffer);
-	  printf ("%s: %s\n", buffer, event_get_summary (ev));
+	  printf ("%s: %s\n", buffer, event_get_summary (ev, NULL));
 	}
 
       event_list_unref (list);

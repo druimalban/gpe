@@ -35,6 +35,12 @@ static int fail;
     strftime (buffer, sizeof (buffer), "%F %T", &_tm); \
    })
 
+static void
+edb_error (EventDB *edb, const char *error)
+{
+  puts (error);
+}
+
 int
 do_test (int argc, char *argv[])
 {
@@ -52,23 +58,27 @@ do_test (int argc, char *argv[])
   /* event_db_new will open it itself.  */
   close (fd);
 
-  EventDB *edb = event_db_new (file);
+  GError *err = NULL;
+  EventDB *edb = event_db_new (file, &err);
   if (! edb)
-    error (1, 0, "evend_db_new");
+    error (1, 0, "evend_db_new: %s", err->message);
 
-  Event *ev = event_new (edb, NULL, NULL);
-  event_set_recurrence_start (ev, start);
-  event_set_duration (ev, 60);
-  event_set_summary (ev, "timed event");
+  g_signal_connect (G_OBJECT (edb),
+		    "error", G_CALLBACK (edb_error), NULL);
+
+  Event *ev = event_new (edb, NULL, NULL, NULL);
+  event_set_recurrence_start (ev, start, NULL);
+  event_set_duration (ev, 60, NULL);
+  event_set_summary (ev, "timed event", NULL);
   g_object_unref (ev);
 
-  ev = event_new (edb, NULL, NULL);
+  ev = event_new (edb, NULL, NULL, NULL);
   /* Starts the next day.  */
-  event_set_recurrence_start (ev, start + 30);
-  event_set_untimed (ev, TRUE);
+  event_set_recurrence_start (ev, start + 30, NULL);
+  event_set_untimed (ev, TRUE, NULL);
   /* One day.  */
-  event_set_duration (ev, 24 * 60 * 60);
-  event_set_summary (ev, "untimed event");
+  event_set_duration (ev, 24 * 60 * 60, NULL);
+  event_set_summary (ev, "untimed event", NULL);
   g_object_unref (ev);
 
   /* Check the bounds checking of event_db_list_for period.  An event
@@ -78,7 +88,7 @@ do_test (int argc, char *argv[])
   time_t t;
   for (t = start - 5; t < start + 60 + 5; t ++)
     {
-      GSList *list = event_db_list_for_period (edb, t, t);
+      GSList *list = event_db_list_for_period (edb, t, t, NULL);
 
       char buffer[200];
       TIME_TO_STRING (t, buffer);
@@ -90,7 +100,7 @@ do_test (int argc, char *argv[])
 	{
 	  Event *ev = EVENT (l->data);
 	  TIME_TO_STRING (event_get_start (ev), buffer);
-	  printf ("%s: %s\n", buffer, event_get_summary (ev));
+	  printf ("%s: %s\n", buffer, event_get_summary (ev, NULL));
 	}
 
       event_list_unref (list);

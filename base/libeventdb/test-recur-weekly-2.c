@@ -52,23 +52,31 @@ do_test (int argc, char *argv[])
   /* event_db_new will open it itself.  */
   close (fd);
 
-  EventDB *edb = event_db_new (file);
+  GError *err = NULL;
+  EventDB *edb = event_db_new (file, &err);
   if (! edb)
-    error (1, 0, "evend_db_new");
+    error (1, 0, "evend_db_new: %s", err->message);
+
+  void edb_error (EventDB *edb, const char *error)
+    {
+      puts (error);
+    }
+  g_signal_connect (G_OBJECT (edb),
+		    "error", G_CALLBACK (edb_error), NULL);
 
   /* Every four weeks, ten occurrences.  */
-  Event *ev = event_new (edb, NULL, NULL);
-  event_set_summary (ev, "MTWF, 8 occurrences");
+  Event *ev = event_new (edb, NULL, NULL, NULL);
+  event_set_summary (ev, "MTWF, 8 occurrences", NULL);
   /* At 14:00.  */
-  event_set_recurrence_start (ev, start + 14 * 60 * 60);
-  event_set_duration (ev, 60 * 60);
-  event_set_recurrence_type (ev, RECUR_WEEKLY);
-  event_set_recurrence_count (ev, 8);
+  event_set_recurrence_start (ev, start + 14 * 60 * 60, NULL);
+  event_set_duration (ev, 60 * 60, NULL);
+  event_set_recurrence_type (ev, RECUR_WEEKLY, NULL);
+  event_set_recurrence_count (ev, 8, NULL);
   GSList *byday = g_slist_prepend (NULL, g_strdup ("MO"));
   byday = g_slist_prepend (byday, g_strdup ("TU"));
   byday = g_slist_prepend (byday, g_strdup ("WE"));
   byday = g_slist_prepend (byday, g_strdup ("FR"));
-  event_set_recurrence_byday (ev, byday);
+  event_set_recurrence_byday (ev, byday, NULL);
   g_object_unref (ev);
   
   int i;
@@ -77,7 +85,7 @@ do_test (int argc, char *argv[])
       time_t s = start + i * 24 * 60 * 60;
       time_t e = s + 24 * 60 * 60 - 1;
 
-      GSList *list = event_db_list_for_period (edb, s, e);
+      GSList *list = event_db_list_for_period (edb, s, e, NULL);
 
       printf ("For day %i: ", i);
       char buffer[200];
@@ -91,7 +99,7 @@ do_test (int argc, char *argv[])
 	{
 	  Event *ev = EVENT (l->data);
 	  TIME_TO_STRING (event_get_start (ev), buffer);
-	  printf ("%s: %s\n", buffer, event_get_summary (ev));
+	  printf ("%s: %s\n", buffer, event_get_summary (ev, NULL));
 	}
 
       event_list_unref (list);
@@ -100,7 +108,7 @@ do_test (int argc, char *argv[])
   time_t s = start;
   time_t e = s + 30 * 24 * 60 * 60 - 1;
 
-  GSList *list = event_db_list_for_period (edb, s, e);
+  GSList *list = event_db_list_for_period (edb, s, e, NULL);
 
   fputs ("For next 30 days starting at ", stdout);
   char buffer[200];
@@ -114,7 +122,7 @@ do_test (int argc, char *argv[])
     {
       Event *ev = EVENT (l->data);
       TIME_TO_STRING (event_get_start (ev), buffer);
-      printf ("%s: %s\n", buffer, event_get_summary (ev));
+      printf ("%s: %s\n", buffer, event_get_summary (ev, NULL));
     }
 
   event_list_unref (list);

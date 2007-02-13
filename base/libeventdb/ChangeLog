@@ -1,3 +1,28 @@
+2007-02-13  Neal H. Walfield  <neal@gnu.org>
+
+	Closes #14.
+	* event-cal.c: Change functions to use GErrors.
+	* event-cal.c: Likewise.
+	* event-cal.h: Likewise.
+	* event-db.c: Likewise.
+	* event-db.h: Likewise.
+	* event.c: Likewise.
+	* event.h: Likewise.
+	* gpe/event-db.h: Likewise.
+	* sqlite.c: Likewise.
+	* alarms.c: Update to new API.
+	* event-list.c: Likewise.
+	* eventid.c: Likewise.
+	* find-by-uid.c: Likewise.
+	* recur-daily.c: Likewise.
+	* recur-monthly.c: Likewise.
+	* recur-weekly-2.c: Likewise.
+	* recur-weekly.c: Likewise.
+	* test-eventid.expected: Update.
+
+	* event.h (STAMP): Don't unnecessarily call event_details.
+	* event.c (event_get_color): Unref EC.
+
 2007-02-12  Neal H. Walfield  <neal@gnu.org>
 
 	Closes #6.

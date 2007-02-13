@@ -126,25 +126,25 @@ struct _EventSource
    PERIOD_START and PERIOD_END are returned.  */
 extern GSList *event_list (EventSource *ev,
 			   time_t period_start, time_t period_end, int max,
-			   gboolean per_alarm)
+			   gboolean per_alarm,
+			   GError **error)
      __attribute__ ((visibility ("hidden")));
 
 #define LIVE(ev) (g_assert (! EVENT (ev)->dead))
 
 /* Marks the event as well as the calendar in which lives as
    modified.  */
-#define STAMP(ev) \
+#define STAMP(ev, error) \
   do \
     { \
-      event_details (ev, TRUE); \
       ev->last_modified = time (NULL); \
       if (! ev->modified) \
         { \
           ev->modified = TRUE; \
           add_to_laundry_pile (G_OBJECT (ev)); \
         } \
-      EventCalendar *ec = event_get_calendar (EVENT (ev)); \
-      MODIFIED (ec); \
+      EventCalendar *ec = event_get_calendar (EVENT (ev), error); \
+      MODIFIED (ec, error); \
       g_object_unref (ec); \
     } \
   while (0)

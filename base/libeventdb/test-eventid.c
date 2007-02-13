@@ -44,31 +44,39 @@ do_test (int argc, char *argv[])
   /* event_db_new will open it itself.  */
   close (fd);
 
-  EventDB *edb = event_db_new (file);
+  GError *err = NULL;
+  EventDB *edb = event_db_new (file, &err);
   if (! edb)
-    error (1, 0, "evend_db_new");
+    error (1, 0, "evend_db_new: %s", err->message);
 
-  Event *ev = event_new (edb, NULL, NULL);
-  event_set_recurrence_start (ev, start);
-  event_set_duration (ev, 60);
-  event_set_summary (ev, "timed event");
+  void edb_error (EventDB *edb, const char *error)
+    {
+      puts (error);
+    }
+  g_signal_connect (G_OBJECT (edb),
+		    "error", G_CALLBACK (edb_error), NULL);
+
+  Event *ev = event_new (edb, NULL, NULL, NULL);
+  event_set_recurrence_start (ev, start, NULL);
+  event_set_duration (ev, 60, NULL);
+  event_set_summary (ev, "timed event", NULL);
   g_object_unref (ev);
 
-  char *eventid = event_get_eventid (ev);
+  char *eventid = event_get_eventid (ev, NULL);
   g_object_unref (ev);
 
-  ev = event_db_find_by_eventid (edb, eventid);
+  ev = event_db_find_by_eventid (edb, eventid, NULL);
   if (! ev)
     printf ("lookup found nothing\n");
   else
     {
-      char *summary = event_get_summary (ev);
+      char *summary = event_get_summary (ev, NULL);
       printf ("lookup: %s\n", summary);
       g_free (summary);
     }
   g_object_unref (ev);
 
-  ev = event_new (edb, NULL, eventid);
+  ev = event_new (edb, NULL, eventid, NULL);
   if (ev)
     printf ("created event with duplicate eventid!\n");
   else
@@ -80,7 +88,7 @@ do_test (int argc, char *argv[])
   else
     eventid[0] = 'a';
 
-  ev = event_db_find_by_eventid (edb, eventid);
+  ev = event_db_find_by_eventid (edb, eventid, NULL);
   if (ev)
     {
       printf ("non-existent eventid returned an event!\n");

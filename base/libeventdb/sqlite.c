@@ -19,7 +19,6 @@
 
 #include <glib-object.h>
 #include <glib.h>
-#include <gpe/errorbox.h>
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
@@ -279,12 +278,12 @@ event_load_callback (void *arg, int argc, char **argv, char **names)
   return 0;
 }
 
-static int
+static void
 do_events_enumerate (EventDB *edb,
 		     time_t period_start, time_t period_end,
 		     gboolean alarms,
 		     int (*cb) (EventSource *ev),
-		     char **err)
+		     GError **error)
 {
   struct obstack query;
   obstack_init (&query);
@@ -421,14 +420,19 @@ do_events_enumerate (EventDB *edb,
       return cb (ev);
     }
 
-  int ret = SQLITE_TRY (sqlite_exec_printf (SQLITE_DB (edb)->sqliteh, q,
-					    callback, NULL, err));
+  char *err_str;
+  SQLITE_TRY (sqlite_exec_printf (SQLITE_DB (edb)->sqliteh, q,
+				  callback, NULL, &err_str));
   obstack_free (&query, NULL);
-  return ret;
+  if (err_str)
+    {
+      SIGNAL_ERROR (edb, error, err_str);
+      sqlite_freemem (err_str);
+    }
 }
 
 static void
-do_set_default_calendar (EventDB *edb, EventCalendar *ec)
+do_set_default_calendar (EventDB *edb, EventCalendar *ec, GError **error)
 {
   char *err;
   if (SQLITE_TRY
@@ -437,13 +441,13 @@ do_set_default_calendar (EventDB *edb, EventCalendar *ec)
 	"insert or replace into default_calendar values (%d);",
 	NULL, NULL, &err, ec->uid)))
     {
-      g_critical ("%s: %s", __func__, err);
-      g_free (err);
+      SIGNAL_ERROR (edb, error, err);
+      sqlite_freemem (err);
     }
 }
 
 static gint
-do_eventid_to_uid (EventDB *edb, const char *eventid)
+do_eventid_to_uid (EventDB *edb, const char *eventid, GError **error)
 {
   guint uid = 0;
   int callback (void *arg, int argc, char *argv[], char **names)
@@ -451,31 +455,39 @@ do_eventid_to_uid (EventDB *edb, const char *eventid)
       uid = atoi (argv[0]);
       return 1;
     }
+  char *err = NULL;
   SQLITE_TRY (sqlite_exec_printf (SQLITE_DB (edb)->sqliteh,
 				  "select uid from events"
 				  " where eventid='%q';",
-				  callback, NULL, NULL, eventid));
+				  callback, NULL, &err, eventid));
+  if (err)
+    {
+      SIGNAL_ERROR (edb, error, err);
+      sqlite_freemem (err);
+      return 0;
+    }
 
   return uid;
 }
 
 static gboolean
-do_event_new (EventSource *ev, char **err)
+do_event_new (EventSource *ev, GError **error)
 {
+  char *err;
   if (SQLITE_TRY (sqlite_exec (SQLITE_DB (ev->edb)->sqliteh,
 			       "begin transaction;",
-			       NULL, NULL, err)))
-    return FALSE;
+			       NULL, NULL, &err)))
+    goto error_pretransaction;
 
   if (sqlite_exec (SQLITE_DB (ev->edb)->sqliteh,
 		   "insert into events (start) values (NULL);",
-		   NULL, NULL, err))
+		   NULL, NULL, &err))
     goto error;
 
   int uid = sqlite_last_insert_rowid (SQLITE_DB (ev->edb)->sqliteh);
 
   if (sqlite_exec (SQLITE_DB (ev->edb)->sqliteh, "commit transaction",
-		   NULL, NULL, err))
+		   NULL, NULL, &err))
     goto error;
 
   ev->uid = uid;
@@ -484,11 +496,14 @@ do_event_new (EventSource *ev, char **err)
  error:
   sqlite_exec (SQLITE_DB (ev->edb)->sqliteh, "rollback transaction",
 	       NULL, NULL, NULL);
+ error_pretransaction:
+  SIGNAL_ERROR (ev->edb, error, err);
+  sqlite_freemem (err);
   return FALSE;
 }
 
 static gboolean
-do_event_load (EventSource *ev)
+do_event_load (EventSource *ev, GError **error)
 {
   char *err;
 
@@ -499,8 +514,8 @@ do_event_load (EventSource *ev)
   if (sqlite_compile (SQLITE_DB (ev->edb)->sqliteh, q, &tail, &stmt,
 		      &err))
     {
-      g_warning ("%s:%d: Loading data for event %ld: %s",
-		 __func__, __LINE__, ev->uid, err);
+      SIGNAL_ERROR (ev->edb, error, 
+		    "Loading data for event %ld: %s", ev->uid, err);
       sqlite_freemem (err);
       sqlite_freemem (q);
       return FALSE;
@@ -521,8 +536,8 @@ do_event_load (EventSource *ev)
 
   if (sqlite_finalize (stmt, &err))
     {
-      g_warning ("%s:%d: Loading data for event %ld: %s",
-		 __func__, __LINE__, ev->uid, err);
+      SIGNAL_ERROR (ev->edb, error, 
+		    "Loading data for event %ld: %s", ev->uid, err);
       sqlite_freemem (err);
       return FALSE;
     }
@@ -531,7 +546,7 @@ do_event_load (EventSource *ev)
 }
 
 static void
-do_event_load_details (EventSource *ev)
+do_event_load_details (EventSource *ev, GError **error)
 {
   int callback (void *arg, int argc, char *argv[], char **names)
     {
@@ -563,20 +578,21 @@ do_event_load_details (EventSource *ev)
 			   "              'category', 'sequence')",
 			   callback, ev, &err, ev->uid)))
     {
-      gpe_error_box (err);
-      free (err);
+      SIGNAL_ERROR (ev->edb, error, err);
+      sqlite_freemem (err);
       return;
     }
 }
 
 static gboolean
-do_event_flush (EventSource *ev, char **err)
+do_event_flush (EventSource *ev, GError **error)
 {
+  char *err;
   struct tm tm;
 
   if (SQLITE_TRY
       (sqlite_exec
-       (SQLITE_DB (ev->edb)->sqliteh, "begin transaction", NULL, NULL, err)))
+       (SQLITE_DB (ev->edb)->sqliteh, "begin transaction", NULL, NULL, &err)))
     goto error;
 
   if (ev->untimed)
@@ -633,7 +649,7 @@ do_event_flush (EventSource *ev, char **err)
        "  alarm=%d, calendar=%d, eventid='%q', rcount=%d,"
        "  rincrement=%d, modified=%u, byday='%q', rexceptions='%q'"
        " where uid=%u;",
-       NULL, NULL, err,
+       NULL, NULL, &err,
        start, ev->duration, ev->type, end, ev->alarm, ev->calendar,
        ev->eventid, ev->count, ev->increment, ev->last_modified,
        byday, exceptions, ev->uid))
@@ -648,7 +664,7 @@ do_event_flush (EventSource *ev, char **err)
 	   "insert or replace into calendar values (%d, 'summary', '%q');"
 	   "insert or replace into calendar values (%d, 'description', '%q');"
 	   "insert or replace into calendar values (%d, 'location', '%q');",
-	   NULL, NULL, err,
+	   NULL, NULL, &err,
 	   ev->uid,
 	   ev->uid, ev->sequence,
 	   ev->uid, ev->summary ?: "",
@@ -661,12 +677,12 @@ do_event_flush (EventSource *ev, char **err)
 	if (sqlite_exec_printf
 	    (SQLITE_DB (ev->edb)->sqliteh,
 	     "insert into calendar values (%d, 'category', '%d');",
-	     NULL, NULL, err, ev->uid, (int) i->data))
+	     NULL, NULL, &err, ev->uid, (int) i->data))
 	  goto error;
     }
 
   if (sqlite_exec (SQLITE_DB (ev->edb)->sqliteh, "commit transaction",
-		   NULL, NULL, err))
+		   NULL, NULL, &err))
     goto error;
 
   ev->modified = FALSE;
@@ -675,12 +691,18 @@ do_event_flush (EventSource *ev, char **err)
 error:
   sqlite_exec (SQLITE_DB (ev->edb)->sqliteh, "rollback transaction",
 	       NULL, NULL, NULL);
+
+  g_assert (err);
+  SIGNAL_ERROR (ev->edb, error, err);
+  sqlite_freemem (err);
+
   return FALSE;
 }
 
 static void
-do_event_remove (EventSource *ev)
+do_event_remove (EventSource *ev, GError **error)
 {
+  char *err;
   if (SQLITE_TRY
       (sqlite_exec_printf (SQLITE_DB (ev->edb)->sqliteh,
 			   "begin transaction;"
@@ -689,14 +711,18 @@ do_event_remove (EventSource *ev)
 			   "delete from calendar where uid=%d;"
 			   "delete from events where uid=%d;"
 			   "commit transaction;",
-			   NULL, NULL, NULL, ev->eventid, ev->calendar,
+			   NULL, NULL, &err, ev->eventid, ev->calendar,
 			   ev->uid, ev->uid)))
-    sqlite_exec (SQLITE_DB (ev->edb)->sqliteh, "rollback transaction;",
-		 NULL, NULL, NULL);
+    {
+      sqlite_exec (SQLITE_DB (ev->edb)->sqliteh, "rollback transaction;",
+		   NULL, NULL, NULL);
+      SIGNAL_ERROR (ev->edb, error, err);
+      sqlite_freemem (err);
+    }
 }
 
 static GSList *
-do_list_unacknowledged_alarms (EventDB *edb)
+do_list_unacknowledged_alarms (EventDB *edb, GError **error)
 {
   GSList *list = NULL;
 
@@ -710,6 +736,8 @@ do_list_unacknowledged_alarms (EventDB *edb)
   };
   GSList *removals = NULL;
 
+  GError *e = NULL;
+
   int callback (void *arg, int argc, char **argv, char **names)
     {
       if (argc != 2)
@@ -721,7 +749,12 @@ do_list_unacknowledged_alarms (EventDB *edb)
       unsigned int uid = atoi (argv[0]);
       time_t t = atoi (argv[1]);
 
-      EventSource *ev = EVENT_SOURCE (event_db_find_by_uid (edb, uid));
+      EventSource *ev = EVENT_SOURCE (event_db_find_by_uid (edb, uid, &e));
+      if (e)
+	{
+	  g_assert (! ev);
+	  return 1;
+	}
       if (! ev)
 	{
 	  g_warning ("%s: event %s not found", __func__, argv[0]);
@@ -735,7 +768,13 @@ do_list_unacknowledged_alarms (EventDB *edb)
 	  goto remove;
 	}
 
-      GSList *l = event_list (ev, t, t, 0, FALSE);
+      GSList *l = event_list (ev, t, t, 0, FALSE, &e);
+      g_object_unref (ev);
+      if (e)
+	{
+	  g_assert (! l);
+	  return 1;
+	}
       if (! l)
 	{
 	  g_warning ("%s: no instance of event %s at %s",
@@ -763,13 +802,29 @@ do_list_unacknowledged_alarms (EventDB *edb)
     }
 
   char *err;
-  if (SQLITE_TRY
-      (sqlite_exec (SQLITE_DB (edb)->sqliteh,
-		    "select uid, start from alarms_unacknowledged",
-		    callback, NULL, &err)))
+  int res = SQLITE_TRY
+    (sqlite_exec (SQLITE_DB (edb)->sqliteh,
+		  "select uid, start from alarms_unacknowledged",
+		  callback, NULL, &err));
+  int abort = 0;
+  if (e)
     {
-      g_warning ("%s: %s", __func__, err);
-      g_free (err);
+      abort = 1;
+
+      SIGNAL_ERROR_GERROR (edb, error, e);
+
+      g_slist_free (list);
+      list = NULL;
+    }
+  if (res && res != SQLITE_ABORT)
+    {
+      abort = 1;
+
+      SIGNAL_ERROR (edb, error, err);
+      sqlite_freemem (err);
+
+      g_slist_free (list);
+      list = NULL;
     }
 
   /* Kill any stale entries.  */
@@ -778,7 +833,7 @@ do_list_unacknowledged_alarms (EventDB *edb)
     {
       struct removal *r = i->data;
       char *err;
-      if (SQLITE_TRY
+      if (! abort && SQLITE_TRY
 	  (sqlite_exec_printf (SQLITE_DB (edb)->sqliteh,
 			       "delete from alarms_unacknowledged"
 			       " where uid=%d and start=%d",
@@ -796,7 +851,7 @@ do_list_unacknowledged_alarms (EventDB *edb)
 }
 
 static void
-do_event_mark_unacknowledged (EventSource *ev)
+do_event_mark_unacknowledged (EventSource *ev, GError **error)
 {
   int err;
   char *str;
@@ -808,13 +863,13 @@ do_event_mark_unacknowledged (EventSource *ev)
 					ev->uid, ev->event.start));
   if (err)
     {
-      g_critical ("%s: %s", __func__, str);
-      g_free (str);
+      SIGNAL_ERROR (ev->edb, error, str);
+      sqlite_freemem (str);
     }
 }
 
 static void
-do_event_mark_acknowledged (EventSource *ev)
+do_event_mark_acknowledged (EventSource *ev, GError **error)
 {
   char *err;
   if (SQLITE_TRY (sqlite_exec_printf (SQLITE_DB (ev->edb)->sqliteh,
@@ -823,14 +878,15 @@ do_event_mark_acknowledged (EventSource *ev)
 				      NULL, NULL, &err,
 				      ev->uid, ev->event.start)))
     {
-      g_warning ("%s: removing event %ld from unacknowledged list: %s",
-		 __func__, ev->uid, err);
-      g_free (err);
+      SIGNAL_ERROR (ev->edb, error, 
+		    "removing event %ld from unacknowledged list: %s",
+		    ev->uid, err);
+      sqlite_freemem (err);
     }
 }
 
 static void
-do_acknowledge_alarms_through (EventDB *edb, time_t t)
+do_acknowledge_alarms_through (EventDB *edb, time_t t, GError **error)
 {
   int err;
   char *str;
@@ -842,13 +898,13 @@ do_acknowledge_alarms_through (EventDB *edb, time_t t)
       NULL, NULL, &str, t));
   if (err)
     {
-      g_critical ("%s: %s", __func__, str);
-      g_free (str);
+      SIGNAL_ERROR (edb, error, str);
+      sqlite_freemem (str);
     }
 }
 
 static void
-do_event_calendar_new (EventCalendar *ec)
+do_event_calendar_new (EventCalendar *ec, GError **error)
 {
   char *err;
   if (SQLITE_TRY
@@ -867,15 +923,16 @@ do_event_calendar_new (EventCalendar *ec)
 	ec->last_pull, ec->last_push,
 	ec->last_modified)))
     {
-      g_warning ("%s: %s", __func__, err);
-      g_free (err);
+      SIGNAL_ERROR (ec->edb, error, err);
+      sqlite_freemem (err);
+      return;
     }
 
   ec->uid = sqlite_last_insert_rowid (SQLITE_DB (ec->edb)->sqliteh);
 }
 
 static void
-do_event_calendar_flush (EventCalendar *ec)
+do_event_calendar_flush (EventCalendar *ec, GError **error)
 {
   char *err;
   if (SQLITE_TRY
@@ -899,14 +956,15 @@ do_event_calendar_flush (EventCalendar *ec)
 			   ec->last_push, ec->last_pull, ec->last_modified,
 			   ec->uid)))
     {
-      g_critical ("%s: updating %s (%d): %s", __func__,
-		  ec->description, ec->uid, err);
-      g_free (err);
+      SIGNAL_ERROR (ec->edb, error,
+		    "updating %s (%d): %s",
+		    ec->description, ec->uid, err);
+      sqlite_freemem (err);
     }
 }
 
 static void
-do_event_calendar_delete (EventCalendar *ec)
+do_event_calendar_delete (EventCalendar *ec, GError **error)
 {
   char *err;
   if (SQLITE_TRY
@@ -924,19 +982,28 @@ do_event_calendar_delete (EventCalendar *ec)
     {
       sqlite_exec (SQLITE_DB (ec->edb)->sqliteh, "rollback transaction;",
 		   NULL, NULL, NULL);
-      g_critical ("%s: %s", __func__, err);
-      g_free (err);
+      SIGNAL_ERROR (ec->edb, error, err);
+      sqlite_freemem (err);
     }
 }
 
 static GSList *
-do_event_calendar_list_events (EventCalendar *ec, time_t start, time_t end)
+do_event_calendar_list_events (EventCalendar *ec, time_t start, time_t end,
+			       GError **error)
 {
   GSList *list = NULL;
 
   int callback (void *arg, int argc, char *argv[], char **names)
     {
-      Event *ev = event_db_find_by_uid (ec->edb, atoi (argv[0]));
+      GError *e = NULL;
+      Event *ev = event_db_find_by_uid (ec->edb, atoi (argv[0]), &e);
+      if (e)
+	{
+	  g_assert (! ev);
+	  SIGNAL_ERROR_GERROR (ec->edb, error, e);
+	  return 1;
+	}
+
       if (ev)
 	list = g_slist_prepend (list, ev);
       return 0;
@@ -961,19 +1028,33 @@ do_event_calendar_list_events (EventCalendar *ec, time_t start, time_t end)
 	g_free (e);
     }
 
+  char *err = NULL;
   SQLITE_TRY
     (sqlite_exec_printf (SQLITE_DB (ec->edb)->sqliteh,
 			 query /* ... %d ... */,
-			 callback, NULL, NULL, ec->uid));
-
+			 callback, NULL, &err, ec->uid));
   if (start || end)
     g_free (query);
+
+  if (error)
+    {
+      g_slist_free (list);
+      if (err)
+	sqlite_freemem (err);
+      return NULL;
+    }
+  if (err)
+    {
+      SIGNAL_ERROR (ec->edb, error, err);
+      g_slist_free (list);
+      return NULL;
+    }
 
   return list;
 }
 
 static GSList *
-do_event_calendar_list_deleted (EventCalendar *ec)
+do_event_calendar_list_deleted (EventCalendar *ec, GError **error)
 {
   GSList *list = NULL;
 
@@ -994,22 +1075,36 @@ do_event_calendar_list_deleted (EventCalendar *ec)
       list = g_slist_prepend (list, ev);
       return 0;
     }
+  char *err = NULL;
   SQLITE_TRY
     (sqlite_exec_printf (SQLITE_DB (ec->edb)->sqliteh,
 			 "select uid, eventid, calendar"
 			 " from events_deleted where calendar=%d;",
-			 callback, NULL, NULL, ec->uid));
+			 callback, NULL, &err, ec->uid));
+  if (err)
+    {
+      SIGNAL_ERROR (ec->edb, error, err);
+      sqlite_freemem (err);
+      g_slist_free (list);
+      return NULL;
+    }
 
   return list;
 }
 
 static void 
-do_event_calendar_flush_deleted (EventCalendar *ec)
+do_event_calendar_flush_deleted (EventCalendar *ec, GError **error)
 {
-   SQLITE_TRY
-     (sqlite_exec_printf (SQLITE_DB (ec->edb)->sqliteh,
-			  "delete from events_deleted where calendar=%d;",
-			  NULL, NULL, NULL, ec->uid));
+  char *err = NULL;
+  SQLITE_TRY
+    (sqlite_exec_printf (SQLITE_DB (ec->edb)->sqliteh,
+			 "delete from events_deleted where calendar=%d;",
+			 NULL, NULL, &err, ec->uid));
+  if (err)
+    {
+      SIGNAL_ERROR (ec->edb, error, err);
+      sqlite_freemem (err);
+    }
 }
 
 static void
@@ -1071,7 +1166,7 @@ sqlite_db_finalize (GObject *object)
 }
 
 EventDB *
-event_db_new (const char *fname)
+event_db_new (const char *fname, GError **error)
 {
   EventDB *edb = EVENT_DB (g_object_new (TYPE_SQLITE_DB, NULL));
   char *err = NULL;
@@ -1505,7 +1600,9 @@ event_db_new (const char *fname)
      in the calendars).  */
   if (edb->default_calendar == EVENT_CALENDAR_NO_PARENT)
     {
-      EventCalendar *ec = event_db_get_default_calendar (edb, NULL);
+      EventCalendar *ec = event_db_get_default_calendar (edb, NULL, error);
+      if (! ec)
+	goto error;
       g_object_unref (ec);
     }
     
@@ -1537,7 +1634,7 @@ event_db_new (const char *fname)
  error_before_transaction:
   if (err)
     {
-      gpe_error_box_fmt ("event_db_new: %s", err);
+      SIGNAL_ERROR (edb, error, err);
       free (err);
     }
 

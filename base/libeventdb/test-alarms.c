@@ -52,9 +52,17 @@ do_test (int argc, char *argv[])
   /* event_db_new will open it itself.  */
   close (fd);
 
-  EventDB *edb = event_db_new (file);
+  GError *err = NULL;
+  EventDB *edb = event_db_new (file, &err);
   if (! edb)
-    error (1, 0, "evend_db_new");
+    error (1, 0, "evend_db_new: %s", err->message);
+
+  void edb_error (EventDB *edb, const char *error)
+    {
+      puts (error);
+    }
+  g_signal_connect (G_OBJECT (edb),
+		    "error", G_CALLBACK (edb_error), NULL);
 
   /* One hour.  */
 #define INTERVAL 60 * 60
@@ -62,28 +70,28 @@ do_test (int argc, char *argv[])
 #define ALARM 10 * 60
 
   /* One time event -- no alarm.  */
-  Event *ev = event_new (edb, NULL, NULL);
-  event_set_summary (ev, "no alarm");
-  event_set_recurrence_start (ev, start);
-  event_set_duration (ev, 60);
+  Event *ev = event_new (edb, NULL, NULL, NULL);
+  event_set_summary (ev, "no alarm", NULL);
+  event_set_recurrence_start (ev, start, NULL);
+  event_set_duration (ev, 60, NULL);
   g_object_unref (ev);
 
   /* One time event -- alarm.  */
-  ev = event_new (edb, NULL, NULL);
-  event_set_summary (ev, "once at 7:10");
-  event_set_recurrence_start (ev, start + ALARM);
-  event_set_duration (ev, 60);
-  event_set_alarm (ev, ALARM);
+  ev = event_new (edb, NULL, NULL, NULL);
+  event_set_summary (ev, "once at 7:10", NULL);
+  event_set_recurrence_start (ev, start + ALARM, NULL);
+  event_set_duration (ev, 60, NULL);
+  event_set_alarm (ev, ALARM, NULL);
   g_object_unref (ev);
 
   /* Daily event -- alarm.  */
-  ev = event_new (edb, NULL, NULL);
-  event_set_summary (ev, "daily at 7, twice");
-  event_set_recurrence_start (ev, start);
-  event_set_duration (ev, 1);
-  event_set_alarm (ev, ALARM);
-  event_set_recurrence_type (ev, RECUR_DAILY);
-  event_set_recurrence_count (ev, 2);
+  ev = event_new (edb, NULL, NULL, NULL);
+  event_set_summary (ev, "daily at 7, twice", NULL);
+  event_set_recurrence_start (ev, start, NULL);
+  event_set_duration (ev, 1, NULL);
+  event_set_alarm (ev, ALARM, NULL);
+  event_set_recurrence_type (ev, RECUR_DAILY, NULL);
+  event_set_recurrence_count (ev, 2, NULL);
   g_object_unref (ev);
 
   int i;
@@ -97,12 +105,12 @@ do_test (int argc, char *argv[])
       TIME_TO_STRING (s, buffer);
       printf ("%s", buffer);
 
-      Event *ev = event_db_next_alarm (edb, s);
+      Event *ev = event_db_next_alarm (edb, s, NULL);
       if (! ev)
 	printf (" none\n");
       else
 	{
-	  printf (" %s at ", event_get_summary (ev));
+	  printf (" %s at ", event_get_summary (ev, NULL));
 	  TIME_TO_STRING (event_get_start (ev) - event_get_alarm (ev),
 			  buffer);
 	  printf ("%s\n", buffer);
@@ -111,7 +119,7 @@ do_test (int argc, char *argv[])
 	}
 
       GSList *list
-	= event_db_list_alarms_for_period (edb, s, e);
+	= event_db_list_alarms_for_period (edb, s, e, NULL);
 
       TIME_TO_STRING (s, buffer);
       fputs (buffer, stdout);
@@ -125,7 +133,7 @@ do_test (int argc, char *argv[])
 	{
 	  Event *ev = EVENT (l->data);
 	  TIME_TO_STRING (event_get_start (ev), buffer);
-	  printf ("%s: %s\n", buffer, event_get_summary (ev));
+	  printf ("%s: %s\n", buffer, event_get_summary (ev, NULL));
 	}
 
       event_list_unref (list);

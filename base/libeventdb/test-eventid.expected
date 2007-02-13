@@ -1,3 +1,4 @@
 lookup: timed event
+event_new: Attempted to add event with an eventid which is already present in the database.
 did not create event with duplicate eventid!
 non-existent eventid returned nothing

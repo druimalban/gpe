@@ -71,6 +71,17 @@ event_db_class_init (gpointer klass, gpointer klass_data)
   object_class->dispose = event_db_dispose;
 
   edb_class = (EventDBClass *) klass;
+  edb_class->error_signal
+    = g_signal_new ("error",
+		    G_OBJECT_CLASS_TYPE (object_class),
+		    G_SIGNAL_RUN_LAST,
+		    G_STRUCT_OFFSET (EventDBClass, error),
+		    NULL,
+		    NULL,
+		    g_cclosure_marshal_VOID__POINTER,
+		    G_TYPE_NONE,
+		    1,
+		    G_TYPE_POINTER);
   edb_class->calendar_new_signal
     = g_signal_new ("calendar-new",
 		    G_OBJECT_CLASS_TYPE (object_class),
@@ -236,7 +247,8 @@ event_source_toggle_ref_notify (gpointer data,
     /* Last user reference just went away.  */
     {
       if (ev->modified)
-	event_flush (EVENT (ev));
+	/* XXX: How to propagate any error correctly?  */
+	event_flush (EVENT (ev), NULL);
 
       time_t now = time (NULL);
       ev->dead_time = now;
@@ -279,7 +291,8 @@ do_laundry (gpointer data)
 	{
 	  EventSource *e = EVENT_SOURCE (l->data);
 	  if (e->modified)
-	    event_flush (EVENT (e));
+	    /* XXX: How to propagate any error correctly?  */
+	    event_flush (EVENT (e), NULL);
 	  g_object_unref (e);
 	}
       else
@@ -295,7 +308,8 @@ do_laundry (gpointer data)
 	    }
 	  if (e->changed)
 	    {
-	      event_calendar_flush (e);
+	      /* XXX: How to propagate any error correctly?  */
+	      event_calendar_flush (e, NULL);
 	      g_signal_emit
 		(edb, EVENT_DB_GET_CLASS (edb)->calendar_changed_signal,
 		 0, e);
@@ -358,7 +372,8 @@ event_db_finalize (GObject *object)
       next = i->next;
 
       EventSource *ev = EVENT_SOURCE (i->data);
-      event_flush (EVENT (ev));
+      /* XXX: How to propagate any error correctly?  */
+      event_flush (EVENT (ev), NULL);
       g_object_remove_toggle_ref (G_OBJECT (ev),
 				  event_source_toggle_ref_notify, NULL);
       ev->edb = NULL;
@@ -382,9 +397,15 @@ event_db_finalize (GObject *object)
 }
 
 static void
-event_db_set_alarms_fired_through (EventDB *edb, time_t t)
+event_db_set_alarms_fired_through (EventDB *edb, time_t t, GError **error)
 {
-  EVENT_DB_GET_CLASS (edb)->acknowledge_alarms_through (edb, t);
+  GError *e = NULL;
+  EVENT_DB_GET_CLASS (edb)->acknowledge_alarms_through (edb, t, &e);
+  if (e)
+    {
+      SIGNAL_ERROR_GERROR (edb, error, e);
+      return;
+    }
 
   edb->alarms_fired_through = t;
 }
@@ -392,6 +413,8 @@ event_db_set_alarms_fired_through (EventDB *edb, time_t t)
 gboolean
 buzzer (gpointer data)
 {
+  /* XXX: How to propagate any error correctly?  */
+
   EventDB *edb = EVENT_DB (data);
 
   time_t now = time (NULL);
@@ -410,14 +433,20 @@ buzzer (gpointer data)
     {
       /* Get the alarms since EDB->ALARMS_FIRED_THROUGH and
 	 until EDB_PERIOD_END.  */
+      GError *e = NULL;
       edb->upcoming_alarms
 	= event_db_list_alarms_for_period (edb,
 					   edb->alarms_fired_through + 1,
-					   edb->period_end);
-      edb->period_end = now + PERIOD_LENGTH;
+					   edb->period_end, &e);
+      if (e)
+	SIGNAL_ERROR_GERROR (edb, NULL, e);
+      else
+	{
+	  edb->period_end = now + PERIOD_LENGTH;
 
-      /* And advance alarms_fired_through to NOW.  */
-      event_db_set_alarms_fired_through (edb, now);
+	  /* And advance alarms_fired_through to NOW.  */
+	  event_db_set_alarms_fired_through (edb, now, NULL);
+	}
     }
 
   GSList *next = edb->upcoming_alarms;
@@ -435,7 +464,8 @@ buzzer (gpointer data)
       if (start - alarm <= now)
 	{
 	  /* Mark it as unacknowledged.  */
-	  EVENT_DB_GET_CLASS (ev->edb)->event_mark_unacknowledged (i->data);
+	  EVENT_DB_GET_CLASS (ev->edb)->event_mark_unacknowledged (i->data,
+								   NULL);
 
 	  /* And signal the user a signal.  */
 	  GValue args[2];
@@ -471,36 +501,41 @@ buzzer (gpointer data)
 }
 
 GSList *
-event_db_list_unacknowledged_alarms (EventDB *edb)
+event_db_list_unacknowledged_alarms (EventDB *edb, GError **error)
 {
-  GSList *list = EVENT_DB_GET_CLASS (edb)->list_unacknowledged_alarms (edb);
+  GSList *list = EVENT_DB_GET_CLASS (edb)->list_unacknowledged_alarms (edb,
+								       error);
   buzzer (edb);
   return list;
 }
 
-static int
+static void
 events_enumerate (EventDB *edb,
 		  time_t period_start, time_t period_end,
 		  gboolean alarms,
 		  int (*cb) (EventSource *ev),
-		  char **err)
+		  GError **error)
 {
   /* Make sure any in memory changes are flushed to disk.  */
   do_laundry (edb);
 
-  return EVENT_DB_GET_CLASS (edb)->events_enumerate
-    (edb, period_start, period_end, alarms, cb, err);
+  EVENT_DB_GET_CLASS (edb)->events_enumerate
+    (edb, period_start, period_end, alarms, cb, error);
 }
 
 Event *
-event_db_next_alarm (EventDB *edb, time_t now)
+event_db_next_alarm (EventDB *edb, time_t now, GError **error)
 {
   Event *next = NULL;
 
+  GError *e = NULL;
+
   int callback (EventSource *ev)
     {
-      GSList *list = event_list (ev, now, 0, 1, TRUE);
+      GSList *list = event_list (ev, now, 0, 1, TRUE, &e);
       g_object_unref (ev);
+      if (e)
+	return 1;
       if (! list)
 	return 0;
 
@@ -521,11 +556,13 @@ event_db_next_alarm (EventDB *edb, time_t now)
       return 0;
     }
 
-  char *err;
-  if (events_enumerate (edb, now, 0, TRUE, callback, &err))
+  events_enumerate (edb, now, 0, TRUE, callback, &e);
+  if (e)
     {
-      g_critical ("%s: %s", __func__, err);
-      g_free (err);
+      SIGNAL_ERROR_GERROR (edb, error, e);
+
+      g_object_unref (next);
+      return NULL;
     }
 
   return next;
@@ -534,7 +571,7 @@ event_db_next_alarm (EventDB *edb, time_t now)
 /* Return the event with uid UID in event database EDB from backing
    store or NULL if none exists.  */
 static EventSource *
-event_load (EventDB *edb, guint uid)
+event_load (EventDB *edb, guint uid, GError **error)
 {
   EventSource *ev;
 
@@ -550,7 +587,15 @@ event_load (EventDB *edb, guint uid)
   ev->edb = edb;
   ev->uid = uid;
 
-  if (EVENT_DB_GET_CLASS (edb)->event_load (ev))
+  GError *e = NULL;
+  int exists = EVENT_DB_GET_CLASS (edb)->event_load (ev, &e);
+  if (e)
+    {
+      SIGNAL_ERROR_GERROR (edb, error, e);
+      g_object_unref (ev);
+      return NULL;
+    }
+  if (exists)
     {
       g_hash_table_insert (edb->events, (gpointer) ev->uid, ev);
       return ev;
@@ -563,30 +608,36 @@ event_load (EventDB *edb, guint uid)
 }
 
 Event *
-event_db_find_by_uid (EventDB *edb, guint uid)
+event_db_find_by_uid (EventDB *edb, guint uid, GError **error)
 {
-  return EVENT (event_load (edb, uid));
+  EventSource *ev = event_load (edb, uid, error);
+  if (! ev)
+    return NULL;
+  else
+    return EVENT (ev);
 }
 
 Event *
-event_db_find_by_eventid (EventDB *edb, const char *eventid)
+event_db_find_by_eventid (EventDB *edb, const char *eventid, GError **error)
 {
   g_return_val_if_fail (eventid, NULL);
 
-  int uid = EVENT_DB_GET_CLASS (edb)->eventid_to_uid (edb, eventid);
+  int uid = EVENT_DB_GET_CLASS (edb)->eventid_to_uid (edb, eventid, error);
   if (uid == 0)
     return NULL;
 
-  return event_db_find_by_uid (edb, uid);
+  return event_db_find_by_uid (edb, uid, error);
 }
 
 static GSList *
 event_db_list_for_period_internal (EventDB *edb,
 				   time_t period_start, time_t period_end,
 				   gboolean only_untimed, 
-				   gboolean alarms)
+				   gboolean alarms,
+				   GError **error)
 {
   GSList *list = NULL;
+  GError *e = NULL;
 
   int callback (EventSource *ev)
     {
@@ -595,60 +646,78 @@ event_db_list_for_period_internal (EventDB *edb,
       if (only_untimed && ! ev->untimed)
 	goto out;
 
-      GSList *l = event_list (ev, period_start, period_end, 0, alarms);
-      list = g_slist_concat (list, l);
+      GSList *l = event_list (ev, period_start, period_end, 0, alarms, &e);
+      if (e)
+	g_assert (! l);
+      else
+	list = g_slist_concat (list, l);
 
     out:
       g_object_unref (ev);
-      return 0;
+      return e ? 1 : 0;
     }
 
-  char *err;
-  if (events_enumerate (edb, period_start, period_end, alarms,
-			callback, &err))
+  events_enumerate (edb, period_start, period_end, alarms, callback, &e);
+  if (e)
     {
-      g_critical ("%s: %s", __func__, err);
-      g_free (err);
+      SIGNAL_ERROR_GERROR (edb, error, e);
+      g_slist_free (list);
+      return NULL;
     }
 
   return list;
 }
 
 GSList *
-event_db_list_for_period (EventDB *edb, time_t start, time_t end)
+event_db_list_for_period (EventDB *edb, time_t start, time_t end,
+			  GError **error)
 {
-  return event_db_list_for_period_internal (edb, start, end, FALSE, FALSE);
+  return event_db_list_for_period_internal (edb, start, end, FALSE, FALSE,
+					    error);
 }
 
 GSList *
-event_db_list_alarms_for_period (EventDB *edb, time_t start, time_t end)
+event_db_list_alarms_for_period (EventDB *edb, time_t start, time_t end,
+				 GError **error)
 {
-  return event_db_list_for_period_internal (edb, start, end, FALSE, TRUE);
+  return event_db_list_for_period_internal (edb, start, end, FALSE, TRUE,
+					    error);
 }
 
 GSList *
-event_db_untimed_list_for_period (EventDB *edb, time_t start, time_t end)
+event_db_untimed_list_for_period (EventDB *edb, time_t start, time_t end,
+				  GError **error)
 {
-  return event_db_list_for_period_internal (edb, start, end, TRUE, FALSE);
+  return event_db_list_for_period_internal (edb, start, end, TRUE, FALSE,
+					    error);
 }
 
 EventCalendar *
-event_db_find_calendar_by_uid (EventDB *edb, guint uid)
+event_db_find_calendar_by_uid (EventDB *edb, guint uid, GError **error)
 {
   GSList *i;
 
   for (i = edb->calendars; i; i = i->next)
-    if (event_calendar_get_uid (EVENT_CALENDAR (i->data)) == uid)
-      {
-	g_object_ref (i->data);
-	return i->data;
-      }
+    {
+      GError *e = NULL;
+      if (event_calendar_get_uid (EVENT_CALENDAR (i->data), &e) == uid)
+	{
+	  g_object_ref (i->data);
+	  return i->data;
+	}
+      if (e)
+	{
+	  SIGNAL_ERROR_GERROR (edb, error, e);
+	  return NULL;
+	}
+    }
 
   return NULL;
 }
 
 EventCalendar *
-event_db_find_calendar_by_name (EventDB *edb, const gchar *name)
+event_db_find_calendar_by_name (EventDB *edb, const gchar *name,
+				GError **error)
 {
   g_return_val_if_fail (name, NULL);
     
@@ -657,9 +726,11 @@ event_db_find_calendar_by_name (EventDB *edb, const gchar *name)
     {
       EventCalendar *ec = iter->data;
       gboolean found = FALSE;
-      gchar *calendar_name = event_calendar_get_title (ec);
-      
-      if (!strcmp (calendar_name, name))
+      gchar *calendar_name = event_calendar_get_title (ec, error);
+      if (! calendar_name)
+	return NULL;
+
+      if (strcmp (calendar_name, name) == 0)
 	found = TRUE;
       g_free (calendar_name);
       
@@ -674,40 +745,51 @@ event_db_find_calendar_by_name (EventDB *edb, const gchar *name)
 }
 
 EventCalendar *
-event_db_get_default_calendar (EventDB *edb, const char *title)
+event_db_get_default_calendar (EventDB *edb, const char *title,
+			       GError **error)
 {
+  GError *e = NULL;
   EventCalendar *ec
-    = event_db_find_calendar_by_uid (edb, edb->default_calendar);
+    = event_db_find_calendar_by_uid (edb, edb->default_calendar, &e);
+  if (e)
+    {
+      SIGNAL_ERROR_GERROR (edb, error, e);
+      return NULL;
+    }
+
   if (! ec)
     {
       /* There is no calendar associated with the default calendar id,
 	 create it.  */
       ec = event_calendar_new_full (edb, NULL, TRUE, title ?: _("My Calendar"),
-				    NULL, NULL, NULL, 0, 0);
-      event_db_set_default_calendar (edb, ec);
+				    NULL, NULL, NULL, 0, 0, error);
+      if (ec)
+	event_db_set_default_calendar (edb, ec, error);
     }
 
   return ec;
 }
 
 void
-event_db_set_default_calendar (EventDB *edb, EventCalendar *ec)
+event_db_set_default_calendar (EventDB *edb, EventCalendar *ec,
+			       GError **error)
 {
   if (ec->uid == edb->default_calendar)
     return;
 
   edb->default_calendar = ec->uid;
 
-  return EVENT_DB_GET_CLASS (ec->edb)->set_default_calendar (edb, ec);
+  EVENT_DB_GET_CLASS (ec->edb)->set_default_calendar (edb, ec, error);
 }
 
 GSList *
-event_db_list_event_calendars (EventDB *edb)
+event_db_list_event_calendars (EventDB *edb, GError **error)
 {
   GSList *l = g_slist_copy (edb->calendars);
   if (! l)
     /* Default calendar doesn't exit.  Create it.  */
-    return g_slist_prepend (NULL, event_db_get_default_calendar (edb, NULL));
+    return g_slist_prepend (NULL,
+			    event_db_get_default_calendar (edb, NULL, error));
 
   GSList *i;
   for (i = l; i; i = i->next)

@@ -61,10 +61,10 @@ struct _EventCalendar
 };
 
 /* Flush any changes to EV to backing store immediately.  */
-void event_calendar_flush (EventCalendar *ec)
+void event_calendar_flush (EventCalendar *ec, GError **error)
      __attribute__ ((visibility ("hidden")));
 
-#define MODIFIED(_ec) \
+#define MODIFIED(_ec, error) \
   do \
     { \
       time_t now = time (NULL); \
@@ -80,7 +80,7 @@ void event_calendar_flush (EventCalendar *ec)
           if ((_ec) != _p) \
             g_object_unref (_p); \
         } \
-      while ((_p = event_calendar_get_parent (_p))); \
+      while ((_p = event_calendar_get_parent (_p, error))); \
     } \
   while (0)
        

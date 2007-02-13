@@ -44,11 +44,19 @@ do_test (int argc, char *argv[])
   /* event_db_new will open it itself.  */
   close (fd);
 
-  EventDB *edb = event_db_new (file);
+  GError *err = NULL;
+  EventDB *edb = event_db_new (file, &err);
   if (! edb)
-    error (1, 0, "evend_db_new");
+    error (1, 0, "evend_db_new: %s", err->message);
 
-  Event *ev = event_db_find_by_uid (edb, 1);
+  void edb_error (EventDB *edb, const char *error)
+    {
+      puts (error);
+    }
+  g_signal_connect (G_OBJECT (edb),
+		    "error", G_CALLBACK (edb_error), NULL);
+
+  Event *ev = event_db_find_by_uid (edb, 1, NULL);
   if (ev)
     {
       printf ("non-existent uid returned an event!\n");

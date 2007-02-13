@@ -163,18 +163,12 @@ static gboolean event_write (EventSource *ev, char **err);
 static void
 event_source_finalize (GObject *object)
 {
-  EventSource *ev = EVENT_SOURCE (object);
+  EventSource *ev = RESOLVE_CLONE (EVENT (object));
 
   if (ev->modified)
     /* Flush to disk.  */
-    {
-      char *err;
-      if (! EVENT_DB_GET_CLASS (ev->edb)->event_flush (ev, &err))
-	{
-	  g_critical ("%s: %s", __func__, err ?: "unknown error");
-	  g_free (err);
-	}
-    }
+    /* XXX: Can this error be propagated better?  */
+    EVENT_DB_GET_CLASS (ev->edb)->event_flush (ev, NULL);
 
   /* Free any details.  */
   if (ev->description)
@@ -233,22 +227,15 @@ event_alarm_compare_func (gconstpointer a, gconstpointer b)
 }
 
 gboolean
-event_flush (Event *event)
+event_flush (Event *event, GError **error)
 {
   if (event->dead)
     return TRUE;
 
   EventSource *ev = RESOLVE_CLONE (event);
 
-  char *err;
-  if (! EVENT_DB_GET_CLASS (ev->edb)->event_flush (ev, &err))
-    {
-      g_critical ("%s: %s", __func__, err ? err : "Unknown error");
-      gpe_error_box (err);
-      free (err);
-
-      return FALSE;
-    }
+  if (! EVENT_DB_GET_CLASS (ev->edb)->event_flush (ev, error))
+    return FALSE;
 
   g_signal_emit
     (ev->edb, EVENT_DB_GET_CLASS (ev->edb)->event_modified_signal, 0, ev);
@@ -278,34 +265,47 @@ event_remove_upcoming_alarms (EventSource *ev)
     }
 }
 
-gboolean
-event_remove (Event *event)
+void
+event_remove (Event *event, GError **error)
 {
   if (event->dead)
-    return TRUE;
+    return;
 
   EventSource *ev = RESOLVE_CLONE (event);
 
+  /* Do our best to remove the event.  */
+  GError *alarm_e = NULL;
   if (ev->alarm)
     {
       /* If the event was unacknowledged, acknowledge it now.  */
-      event_acknowledge (EVENT (ev));
+      event_acknowledge (EVENT (ev), &alarm_e);
       /* And remove it from the upcoming alarm list.  */
-      event_remove_upcoming_alarms (ev);
+      if (! alarm_e)
+	event_remove_upcoming_alarms (ev);
     }
 
-  EVENT_DB_GET_CLASS (ev->edb)->event_remove (ev);
+  GError *e = NULL;
+  EVENT_DB_GET_CLASS (ev->edb)->event_remove (ev, &e);
+  if (e)
+    {
+      if (alarm_e)
+	g_error_free (alarm_e);
+      SIGNAL_ERROR_GERROR (ev->edb, error, e);
+      return;
+    }
 
   EVENT (ev)->dead = TRUE;
   g_signal_emit (ev->edb,
 		 EVENT_DB_GET_CLASS (ev->edb)->event_removed_signal,
 		 0, ev);
 
-  return TRUE;
+  if (alarm_e)
+    SIGNAL_ERROR_GERROR (ev->edb, error, alarm_e);
 }
 
 Event *
-event_new (EventDB *edb, EventCalendar *ec, const char *eventid)
+event_new (EventDB *edb, EventCalendar *ec, const char *eventid,
+	   GError **error)
 {
   EventSource *ev = EVENT_SOURCE (g_object_new (event_source_get_type (),
 						NULL));
@@ -318,11 +318,19 @@ event_new (EventDB *edb, EventCalendar *ec, const char *eventid)
 
   if (eventid)
     {
-      Event *t = event_db_find_by_eventid (edb, eventid);
+      GError *e = NULL;
+      Event *t = event_db_find_by_eventid (edb, eventid, &e);
+      if (e)
+	{
+	  SIGNAL_ERROR_GERROR (edb, error, e);
+	  g_object_unref (ev);
+	  return NULL;
+	}
       if (t)
 	{
-	  g_critical ("Attempted to add event with an eventid "
-		      "which is already present in the database.");
+	  SIGNAL_ERROR (edb, error,
+			"Attempted to add event with an eventid "
+			"which is already present in the database.");
 	  g_object_unref (t);
 	  return NULL;
 	}
@@ -359,8 +367,7 @@ event_new (EventDB *edb, EventCalendar *ec, const char *eventid)
 				     hostname);
     }
 
-  char *err;
-  if (! EVENT_DB_GET_CLASS (edb)->event_new (ev, &err))
+  if (! EVENT_DB_GET_CLASS (edb)->event_new (ev, error))
     goto error;
 
   g_hash_table_insert (edb->events, (gpointer) ev->uid, ev);
@@ -371,33 +378,31 @@ event_new (EventDB *edb, EventCalendar *ec, const char *eventid)
 
  error:
   g_object_unref (ev);
-  gpe_error_box (err);
-  g_free (err);
 
   return NULL;
 }
 
 void
-event_acknowledge (Event *event)
+event_acknowledge (Event *event, GError **error)
 {
   if (event->dead)
     return;
 
   EventSource *ev = RESOLVE_CLONE (event);
-  EVENT_DB_GET_CLASS (ev->edb)->event_mark_acknowledged (ev);
+  EVENT_DB_GET_CLASS (ev->edb)->event_mark_acknowledged (ev, error);
 }
 
 /* EV is new or has recently changed: check to see if it has an alarm
    which will go off in the near future.  */
 static void
-event_add_upcoming_alarms (EventSource *ev)
+event_add_upcoming_alarms (EventSource *ev, GError **error)
 {
   if (! ev->edb->alarm)
     /* Alarms have not yet been activated.  */
     return;
 
   time_t now = time (NULL);
-  GSList *list = event_list (ev, now, ev->edb->period_end, 0, TRUE);
+  GSList *list = event_list (ev, now, ev->edb->period_end, 0, TRUE, error);
   if (! list)
     return;
 
@@ -413,7 +418,7 @@ event_add_upcoming_alarms (EventSource *ev)
 
 /* Makes sure that #ev's details structure is in core.  */
 static void
-event_details (EventSource *ev, gboolean fill_from_disk)
+event_details (EventSource *ev, gboolean fill_from_disk, GError **error)
 {
   if (ev->details)
     return;
@@ -421,7 +426,13 @@ event_details (EventSource *ev, gboolean fill_from_disk)
   if (! fill_from_disk)
     return;
 
-  EVENT_DB_GET_CLASS (ev->edb)->event_load_details (ev);
+  GError *e = NULL;
+  EVENT_DB_GET_CLASS (ev->edb)->event_load_details (ev, &e);
+  if (e)
+    {
+      SIGNAL_ERROR_GERROR (ev->edb, error, e);
+      return;
+    }
 
   ev->details = TRUE;
 }
@@ -496,7 +507,7 @@ time_add_days (time_t t, int advance)
 
 GSList *
 event_list (EventSource *ev, time_t period_start, time_t period_end, int max,
-	    gboolean per_alarm)
+	    gboolean per_alarm, GError **error)
 {
   int event_count = 0;
 
@@ -884,18 +895,39 @@ event_get_event_db (Event *e)
 }
 
 EventCalendar *
-event_get_calendar (Event *e)
+event_get_calendar (Event *event, GError **error)
 {
-  EventSource *ev = RESOLVE_CLONE (e);
-  EventCalendar *ec = event_db_find_calendar_by_uid (ev->edb, ev->calendar);
+  EventSource *ev = RESOLVE_CLONE (event);
+
+  GError *e = NULL;
+  EventCalendar *ec
+    = event_db_find_calendar_by_uid (ev->edb, ev->calendar, &e);
+  if (e)
+    {
+      SIGNAL_ERROR_GERROR (ev->edb, error, e);
+      return NULL;
+    }
   if (! ec)
     {
       g_warning ("%s: Encountered orphaned event %s (%ld):"
 		 " being adopted by default calendar",
 		 __func__, ev->summary ?: "", ev->uid);
       
-      ec = event_db_get_default_calendar (ev->edb, NULL);
-      event_set_calendar (EVENT (ev), ec);
+      ec = event_db_get_default_calendar (ev->edb, NULL, &e);
+      if (e)
+	{
+	  SIGNAL_ERROR_GERROR (ev->edb, error, e);
+	  return NULL;
+	}
+
+      event_set_calendar (EVENT (ev), ec, &e);
+      if (e)
+	{
+	  SIGNAL_ERROR_GERROR (ev->edb, error, e);
+	  g_object_unref (ec);
+	  return NULL;
+	}
+
       return ec;
     }
   else
@@ -906,30 +938,58 @@ event_get_calendar (Event *e)
 }
 
 void
-event_set_calendar (Event *e, EventCalendar *ec)
+event_set_calendar (Event *event, EventCalendar *ec, GError **error)
 {
-  EventSource *ev = RESOLVE_CLONE (e);
+  EventSource *ev = RESOLVE_CLONE (event);
   if (! ec)
-    ec = event_db_get_default_calendar (ev->edb, NULL);
+    {
+      GError *e = NULL;
+      ec = event_db_get_default_calendar (ev->edb, NULL, &e);
+      if (e)
+	{
+	  SIGNAL_ERROR_GERROR (ev->edb, error, e);
+	  return;
+	}
+    }
+
   if (ev->calendar == ec->uid)
     return;
 
   ev->calendar = ec->uid;
-  STAMP (ev); 
+  STAMP (ev, error); 
 }
 
 gboolean
-event_get_color (Event *ev, struct _GdkColor *color)
+event_get_color (Event *event, struct _GdkColor *color, GError **error)
 {
-  EventCalendar *ec = event_get_calendar (ev);
+  EventSource *ev = RESOLVE_CLONE (event);
+
+  GError *e = NULL;
+  EventCalendar *ec = event_get_calendar (event, &e);
+  if (e)
+    {
+      SIGNAL_ERROR_GERROR (ev->edb, error, e);
+      return FALSE;
+    }
+
   do
     {
-      int ret = event_calendar_get_color (ec, color);
+      int ret = event_calendar_get_color (ec, color, &e);
       g_object_unref (ec);
+      if (e)
+	{
+	  SIGNAL_ERROR_GERROR (ev->edb, error, e);
+	  return FALSE;
+	}
       if (ret)
 	return ret;
 
-      ec = event_calendar_get_parent (ec);
+      ec = event_calendar_get_parent (ec, &e);
+      if (e)
+	{
+	  SIGNAL_ERROR_GERROR (ev->edb, error, e);
+	  return FALSE;
+	}
     }
   while (ec);
 
@@ -937,17 +997,37 @@ event_get_color (Event *ev, struct _GdkColor *color)
 }
 
 gboolean
-event_get_visible (Event *ev)
+event_get_visible (Event *event, GError **error)
 {
-  EventCalendar *ec = event_get_calendar (ev);
+  EventSource *ev = RESOLVE_CLONE (event);
+
+  GError *e = NULL;
+  EventCalendar *ec = event_get_calendar (event, &e);
+  if (e)
+    {
+      SIGNAL_ERROR_GERROR (ev->edb, error, e);
+      /* The better default is to show the event on error.  */
+      return TRUE;
+    }
+
   do
     {
-      int v = event_calendar_get_visible (ec);
+      int v = event_calendar_get_visible (ec, &e);
       g_object_unref (ec);
+      if (e)
+	{
+	  SIGNAL_ERROR_GERROR (ev->edb, error, e);
+	  return TRUE;
+	}
       if (! v)
 	return FALSE;
 
-      ec = event_calendar_get_parent (ec);
+      ec = event_calendar_get_parent (ec, &e);
+      if (e)
+	{
+	  SIGNAL_ERROR_GERROR (ev->edb, error, e);
+	  return TRUE;
+	}
     }
   while (ec);
 
@@ -975,58 +1055,101 @@ event_get_duration (Event *event)
 }
 
 void
-event_set_duration (Event *event, unsigned long duration)
+event_set_duration (Event *event, unsigned long duration, GError **error)
 {
   EventSource *ev = RESOLVE_CLONE (event);
   if (ev->duration == duration)
     return;
 
   ev->duration = duration;
-  STAMP (ev);
+  STAMP (ev, error);
 }
 
-#define GET(type, name, field, detail) \
+#define GET(type, name, field) \
   type \
   event_get_##name (Event *event) \
   { \
     EventSource *ev = RESOLVE_CLONE (event); \
-    if (detail) \
-      event_details (ev, TRUE); \
     return ev->field; \
   }
 
-#define GET_SET(type, name, field, alarm_hazard, detail) \
-  GET (type, name, field, detail) \
-  \
-  void \
-  event_set_##name (Event *event, type value) \
+#define GET_ERROR(type, name, field, detail) \
+  type \
+  event_get_##name (Event *event, GError **error) \
   { \
     EventSource *ev = RESOLVE_CLONE (event); \
     if (detail) \
-      event_details (ev, TRUE); \
+      { \
+        GError *e = NULL; \
+        event_details (ev, TRUE, &e); \
+        if (e) \
+          { \
+            SIGNAL_ERROR_GERROR (ev->edb, error, e); \
+            return 0; \
+          } \
+      } \
+    return ev->field; \
+  }
+
+#define SET(type, name, field, alarm_hazard, detail) \
+  void \
+  event_set_##name (Event *event, type value, GError **error) \
+  { \
+    EventSource *ev = RESOLVE_CLONE (event); \
+    if (detail) \
+      { \
+        GError *e = NULL; \
+        event_details (ev, TRUE, &e); \
+        if (e) \
+          { \
+            SIGNAL_ERROR_GERROR (ev->edb, error, e); \
+            return; \
+          } \
+      } \
+    \
     if (ev->field == value) \
       return; \
     \
     if ((alarm_hazard) && ev->alarm) \
       { \
-        event_acknowledge (EVENT (ev)); \
+        GError *e = NULL; \
+        event_acknowledge (EVENT (ev), &e); \
+        if (e) \
+          { \
+            SIGNAL_ERROR_GERROR (ev->edb, error, e); \
+            return; \
+          } \
         event_remove_upcoming_alarms (ev); \
       } \
     ev->field = value; \
-    if ((alarm_hazard) && ev->alarm) \
-      event_add_upcoming_alarms (ev); \
     \
-    STAMP (ev); \
+    GError *e = NULL; \
+    if ((alarm_hazard) && ev->alarm) \
+      event_add_upcoming_alarms (ev, &e); \
+    \
+    STAMP (ev, error); \
+    if (! error && e) \
+      SIGNAL_ERROR_GERROR (ev->edb, error, e); \
+    else if (e) \
+      g_error_free (e); \
   }
 
-GET(time_t, last_modification, last_modified, FALSE)
+#define GET_SET(type, name, field, alarm_hazard, detail) \
+  GET (type, name, field) \
+  SET (type, name, field, alarm_hazard, detail)
+
+#define GET_ERROR_SET(type, name, field, alarm_hazard, detail) \
+  GET_ERROR (type, name, field, detail) \
+  SET (type, name, field, alarm_hazard, detail)
+
+GET(time_t, last_modification, last_modified)
 GET_SET (unsigned long, alarm, alarm, TRUE, FALSE)
-GET_SET (guint32, sequence, sequence, FALSE, TRUE)
+GET_ERROR_SET (guint32, sequence, sequence, FALSE, TRUE)
 GET_SET (enum event_recurrence_type, recurrence_type, type, TRUE, FALSE)
-GET (time_t, recurrence_start, event.start, FALSE)
+GET (time_t, recurrence_start, event.start)
 
 void
-event_set_recurrence_start (Event *event, time_t start)
+event_set_recurrence_start (Event *event, time_t start, GError **error)
 {
   EventSource *ev = RESOLVE_CLONE (event);
 
@@ -1036,16 +1159,18 @@ event_set_recurrence_start (Event *event, time_t start)
   if (ev->alarm)
     {
       /* If the event was unacknowledged, acknowledge it now.  */
-      event_acknowledge (EVENT (ev));
+      GError *e = NULL;
+      event_acknowledge (EVENT (ev), &e);
+
       /* And remove it from the upcoming alarm list.  */
       event_remove_upcoming_alarms (ev);
     }
   ev->event.start = start;
   if (ev->alarm)
     /* And remove it from the upcoming alarm list.  */
-    event_add_upcoming_alarms (ev);
+    event_add_upcoming_alarms (ev, error);
 
-  STAMP (ev);
+  STAMP (ev, error);
 }
 
 GET_SET (time_t, recurrence_end, end, TRUE, FALSE)
@@ -1054,10 +1179,10 @@ GET_SET (guint32, recurrence_increment, increment, TRUE, FALSE)
 
 GET_SET (gboolean, untimed, untimed, FALSE, FALSE);
 
-GET (unsigned long, uid, uid, FALSE)
+GET (unsigned long, uid, uid)
 
 char *
-event_get_eventid (Event *event) \
+event_get_eventid (Event *event, GError **error) \
 {
   EventSource *ev = RESOLVE_CLONE (event);
   return g_strdup (ev->eventid);
@@ -1065,19 +1190,32 @@ event_get_eventid (Event *event) \
 
 #define GET_SET_STRING(field) \
   char * \
-  event_get_##field (Event *event) \
+  event_get_##field (Event *event, GError **error) \
   { \
     EventSource *ev = RESOLVE_CLONE (event); \
-    event_details (ev, TRUE); \
+    GError *e = NULL; \
+    event_details (ev, TRUE, &e); \
+    if (e) \
+      { \
+        SIGNAL_ERROR_GERROR (ev->edb, error, e); \
+        return NULL; \
+      } \
     return g_strdup (ev->field); \
   } \
  \
   void \
-  event_set_##field (Event *event, const char *field) \
+  event_set_##field (Event *event, const char *field, GError **error) \
   { \
     EventSource *ev = RESOLVE_CLONE (event); \
     \
-    event_details (ev, TRUE); \
+    GError *e = NULL; \
+    event_details (ev, TRUE, &e); \
+    if (e) \
+      { \
+        SIGNAL_ERROR_GERROR (ev->edb, error, e); \
+        return; \
+      } \
+    \
     if ((ev->field && field \
          && strcmp (ev->field, field) == 0) \
         || (! ev->field && ! field)) \
@@ -1090,7 +1228,7 @@ event_get_eventid (Event *event) \
       ev->field = g_strdup (field); \
     else \
       ev->field = NULL; \
-    STAMP (ev); \
+    STAMP (ev, error); \
   }
 
 GET_SET_STRING(summary)
@@ -1098,37 +1236,54 @@ GET_SET_STRING(location)
 GET_SET_STRING(description)
 
 GSList *
-event_get_categories (Event *event)
+event_get_categories (Event *event, GError **error)
 {
   EventSource *ev = RESOLVE_CLONE (event);
-  event_details (ev, TRUE);
+  event_details (ev, TRUE, error);
+  /* If we failed to load the details, EV->CATEGORIES will be
+     NULL.  */
   return g_slist_copy (ev->categories);
 }
 
 void
-event_add_category (Event *event, int category)
+event_add_category (Event *event, int category, GError **error)
 {
   EventSource *ev = RESOLVE_CLONE (event);
-  event_details (ev, TRUE);
+
+  GError *e = NULL;
+  event_details (ev, TRUE, &e);
+  if (e)
+    {
+      SIGNAL_ERROR_GERROR (ev->edb, error, e);
+      return;
+    }
+
   ev->categories = g_slist_prepend (ev->categories, (gpointer) category);
 
-  STAMP (ev);
+  STAMP (ev, error);
 }
 
 void
-event_set_categories (Event *event, GSList *categories)
+event_set_categories (Event *event, GSList *categories, GError **error)
 {
   EventSource *ev = RESOLVE_CLONE (event);
 
-  event_details (ev, TRUE);
+  GError *e = NULL;
+  event_details (ev, TRUE, &e);
+  if (e)
+    {
+      SIGNAL_ERROR_GERROR (ev->edb, error, e);
+      return;
+    }
+
   g_slist_free (ev->categories);
   ev->categories = categories;
 
-  STAMP (ev);
+  STAMP (ev, error);
 }
 
 GSList *
-event_get_recurrence_byday (Event *event)
+event_get_recurrence_byday (Event *event, GError **error)
 {
   EventSource *ev = RESOLVE_CLONE (event);
 
@@ -1141,7 +1296,7 @@ event_get_recurrence_byday (Event *event)
 }
 
 void
-event_set_recurrence_byday (Event *event, GSList *list)
+event_set_recurrence_byday (Event *event, GSList *list, GError **error)
 {
   EventSource *ev = RESOLVE_CLONE (event);
 
@@ -1152,15 +1307,15 @@ event_set_recurrence_byday (Event *event, GSList *list)
 
   ev->byday = list;
 
-  STAMP (ev);
+  STAMP (ev, error);
 }
 
 void
-event_add_recurrence_exception (Event *event, time_t start)
+event_add_recurrence_exception (Event *event, time_t start, GError **error)
 {
   EventSource *ev = RESOLVE_CLONE (event);
 
   ev->exceptions = g_slist_append (ev->exceptions, (void *) start);
 
-  STAMP (ev);
+  STAMP (ev, error);
 }

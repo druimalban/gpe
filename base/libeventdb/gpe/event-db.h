@@ -100,39 +100,51 @@ extern GType event_db_get_type (void);
    event_db_list_unacknowledged_alarms).  */
 typedef void (*EventDBAlarmFiredFunc) (EventDB *, Event *);
 
+/** Nearly all functions return a GError.  If this GError is NULL,
+    i.e., ignored, then this signal is sent.  */
+typedef void (*EventDBError) (EventDB *, const char *);
+
 /* Open a new database.  */
-extern EventDB *event_db_new (const char *filename);
+extern EventDB *event_db_new (const char *filename, GError **error);
 
 /* Return the event whose alarm will first go off at or after NOW.  */
-extern Event *event_db_next_alarm (EventDB *edb, time_t now);
+extern Event *event_db_next_alarm (EventDB *edb, time_t now,
+				   GError **error);
 
 /* Return the events in the event database EVD which occur between
    START and END inclusive.  The list is not sorted.  */
 extern GSList *event_db_list_for_period (EventDB *evd,
-					 time_t start, time_t end);
+					 time_t start, time_t end,
+					 GError **error);
 /* Like event_db_list but returns the events whose alarm goes off
    between START and END inclusive.  The list is not sorted.  */
 extern GSList *event_db_list_alarms_for_period (EventDB *evd,
-						time_t start, time_t end);
+						time_t start, time_t end,
+						GError **error);
 /* Like event_db_list_for_period but only for untimed events (i.e.,
    those with a 0 length duration).  The list is not sorted.  */
 extern GSList *event_db_untimed_list_for_period (EventDB *evd,
-						 time_t start, time_t end);
+						 time_t start, time_t end,
+						 GError **error);
 
 /* Returns the list of unacknowledged events since EDB was last shut
    down and turns on the "alarm-fire" event.  The list is not sorted.
    Only call this function once at start up after having connected to
    the "alarm-fire" signal.  */
-extern GSList *event_db_list_unacknowledged_alarms (EventDB *edb);
+extern GSList *event_db_list_unacknowledged_alarms (EventDB *edb,
+						    GError **error);
 
 /* Look up an event by its uid.  Returns the event or NULL if no event
    in the database has uid UID.  */
-extern Event *event_db_find_by_uid (EventDB *edb, guint uid);
+extern Event *event_db_find_by_uid (EventDB *edb, guint uid,
+				    GError **error);
 /* Look up an event by its eventid.  Returns the event or NULL if no
    event in the database has eventid EVENTID.  */
-extern Event *event_db_find_by_eventid (EventDB *edb, const char *eventid);
+extern Event *event_db_find_by_eventid (EventDB *edb, const char *eventid,
+					GError **error);
 
-extern EventCalendar *event_db_find_calendar_by_uid (EventDB *edb, guint uid);
+extern EventCalendar *event_db_find_calendar_by_uid (EventDB *edb, guint uid,
+						     GError **error);
 
 /**
  * event_db_find_calendar_by_name:
@@ -144,21 +156,25 @@ extern EventCalendar *event_db_find_calendar_by_uid (EventDB *edb, guint uid);
  * Returns: An #EventCalendar object or NULL if not found.
  */
 extern EventCalendar *event_db_find_calendar_by_name (EventDB *edb,
-						      const gchar *name);
+						      const gchar *name,
+						      GError **error);
 
 /* Returns a list of the event calendars in EDB.  There will always be
    at least one calendar.  Allocates a reference to each calendar.  It
    is the caller's responsibility to free the list.  */
-extern GSList *event_db_list_event_calendars (EventDB *edb);
+extern GSList *event_db_list_event_calendars (EventDB *edb,
+					      GError **error);
 
 /* Returns the default event calendar (calendar events are added to
    unless explicitly overridden).  Allocates a reference.  If the
    default calendar does not exist, it is created with the title
    TITLE.  */
 extern EventCalendar *event_db_get_default_calendar (EventDB *edb,
-						     const char *title);
+						     const char *title,
+						     GError **error);
 /* Sets the default event calendar to event calendar EC.  */
-extern void event_db_set_default_calendar (EventDB *edb, EventCalendar *ec);
+extern void event_db_set_default_calendar (EventDB *edb, EventCalendar *ec,
+					   GError **error);
 
 /* Signal "calendar-new": emitted when a calendar in EDB is created.  */
 typedef void (*EventCalendarNew) (EventDB *edb, EventCalendar *ec);
@@ -189,7 +205,7 @@ extern EventDB *event_calendar_get_event_db (EventCalendar *ev)
      __attribute__ ((pure));
 
 /* Create a new calendar in eventdb EDB.  */
-extern EventCalendar *event_calendar_new (EventDB *edb);
+extern EventCalendar *event_calendar_new (EventDB *edb, GError **error);
 /* PARENT may be NULL to indicate that this is a top-level calendar.
    (A reference to PARENT is no consumed.)  TITLE, DESCRIPTION and URL
    may be NULL.  If COLOR is NULL then no color is associated with
@@ -202,7 +218,8 @@ extern EventCalendar *event_calendar_new_full (EventDB *edb,
 					       const char *url,
 					       struct _GdkColor *color,
 					       int mode,
-					       int sync_interval);
+					       int sync_interval,
+					       GError **error);
 
 /* Delete a calendar.  If DELETE_EVENTS is true then also removes the
    events in the calendar (and any calendars EVENT_CALENDAR contains).
@@ -210,103 +227,125 @@ extern EventCalendar *event_calendar_new_full (EventDB *edb,
    them.  */
 extern void event_calendar_delete (EventCalendar *event_calendar,
 				   gboolean delete_events,
-				   EventCalendar *new_parent);
+				   EventCalendar *new_parent,
+				   GError **error);
 
 /* The event calendar's uid.  */
-extern guint event_calendar_get_uid (EventCalendar *ec)
+extern guint event_calendar_get_uid (EventCalendar *ec, GError **error)
      __attribute__ ((pure));
 
 /* If this event calendar is visible.  */
-extern gboolean event_calendar_get_visible (EventCalendar *ec);
-extern void event_calendar_set_visible (EventCalendar *ec, gboolean visible);
+extern gboolean event_calendar_get_visible (EventCalendar *ec, GError **error);
+extern void event_calendar_set_visible (EventCalendar *ec, gboolean visible,
+					GError **error);
 
 /* Returns TRUE if setting EC's parent to NEW_PARENT is okay
    (i.e. does not create a create a cycle).  */
 extern gboolean event_calendar_valid_parent (EventCalendar *ec,
-					     EventCalendar *new_parent);
+					     EventCalendar *new_parent,
+					     GError **error);
 
 /* The event calendar's parent.  */
 /* Returns the containing calendar's parent with a reference.  */
-extern EventCalendar *event_calendar_get_parent (EventCalendar *ec);
+extern EventCalendar *event_calendar_get_parent (EventCalendar *ec,
+						 GError **error);
 /* Sets EC's parent to P.  If P is NULL then EC is a top-level
    calendar.  Does not consume a reference to P.  */
-extern void event_calendar_set_parent (EventCalendar *ec, EventCalendar *p);
+extern void event_calendar_set_parent (EventCalendar *ec, EventCalendar *p,
+				       GError **error);
 
 /* The event calendar's title.  */
-extern char *event_calendar_get_title (EventCalendar *ec)
+extern char *event_calendar_get_title (EventCalendar *ec, GError **error)
      __attribute__ ((malloc));
-extern void event_calendar_set_title (EventCalendar *ec, const char *title);
+extern void event_calendar_set_title (EventCalendar *ec, const char *title,
+				      GError **error);
 
 /* The event calendar's description.  */
-extern char *event_calendar_get_description (EventCalendar *ec)
+extern char *event_calendar_get_description (EventCalendar *ec, GError **error)
      __attribute__ ((malloc));
 extern void event_calendar_set_description (EventCalendar *ec,
-					    const char *description);
+					    const char *description,
+					    GError **error);
 
 /* The URL associated with this calendar (if any).  */
-extern char *event_calendar_get_url (EventCalendar *ev)
+extern char *event_calendar_get_url (EventCalendar *ev, GError **error)
      __attribute__ ((malloc));
-extern void event_calendar_set_url (EventCalendar *ec, const char *url);
+extern void event_calendar_set_url (EventCalendar *ec, const char *url,
+				    GError **error);
 
 /* The username associated with this calendar (if any).  */
-extern char *event_calendar_get_username (EventCalendar *ev)
+extern char *event_calendar_get_username (EventCalendar *ev, GError **error)
      __attribute__ ((malloc));
 extern void event_calendar_set_username (EventCalendar *ec,
-					 const char *username);
+					 const char *username,
+					 GError **error);
 
 /* The password associated with this calendar (if any).  */
-extern char *event_calendar_get_password (EventCalendar *ev)
+extern char *event_calendar_get_password (EventCalendar *ev, GError **error)
      __attribute__ ((malloc));
 extern void event_calendar_set_password (EventCalendar *ec,
-					 const char *password);
+					 const char *password,
+					 GError **error);
 
 /* The type of synchronization: 0 means no synchronization; 1
    indicates that this is a subscription (i.e. slave); 2 that this is
    a publisher (i.e. master); 3 indicates that this is bidirectional
    feed (i.e. multiple readers and multiple writers).  */
-extern int event_calendar_get_mode (EventCalendar *ec) __attribute__ ((pure));
-extern void event_calendar_set_mode (EventCalendar *ec, int mode);
+extern int event_calendar_get_mode (EventCalendar *ec, GError **error)
+     __attribute__ ((pure));
+extern void event_calendar_set_mode (EventCalendar *ec, int mode,
+				     GError **error);
 
 /* The color associated with this calendar.  */
 /* Returns TRUE if there is a color associated with this event and
    places the color in *COLOR, FALSE otherwise.  */
 extern gboolean event_calendar_get_color (EventCalendar *ec,
-					  struct _GdkColor *color);
+					  struct _GdkColor *color,
+					  GError **error);
 /* If COLOR is NULL removes any color association with this
    calendar.  */
 extern void event_calendar_set_color (EventCalendar *ec,
-				      const struct _GdkColor *color);
+				      const struct _GdkColor *color,
+				      GError **error);
 
 /* The frequency with which this calendar should be synchronized (in
    seconds).  */
-extern int event_calendar_get_sync_interval (EventCalendar *ec)
+extern int event_calendar_get_sync_interval (EventCalendar *ec,
+					     GError **error)
      __attribute__ ((pure));
 extern void event_calendar_set_sync_interval (EventCalendar *ec,
-					      int sync_interval);
+					      int sync_interval,
+					      GError **error);
 
 /* Set by the library's user to the current time after a successful
    pull has occured.  */
-extern time_t event_calendar_get_last_pull (EventCalendar *ec)
+extern time_t event_calendar_get_last_pull (EventCalendar *ec,
+					    GError **error)
      __attribute__ ((pure));
 extern void event_calendar_set_last_pull (EventCalendar *ec,
-					  time_t last_pull);
+					  time_t last_pull,
+					  GError **error);
 
 /* Set by the library's user to the current time after a successful
    push (update) has occured.  */
-extern time_t event_calendar_get_last_push (EventCalendar *ec)
+extern time_t event_calendar_get_last_push (EventCalendar *ec,
+					    GError **error)
      __attribute__ ((pure));
 extern void event_calendar_set_last_push (EventCalendar *ec,
-					  time_t last_push);
+					  time_t last_push,
+					  GError **error);
 
 /* Automatically updated by libeventdb see description of
    "calendar-modified" above.  */
-extern time_t event_calendar_get_last_modification (EventCalendar *ec)
+extern time_t event_calendar_get_last_modification (EventCalendar *ec,
+						    GError **error)
      __attribute__ ((pure));
 
 /* Returns the events in the calendar EC (but not any sub-calendars
    thereof).  A reference is allocated to each event.  The caller
    must free the returned list.  */
-extern GSList *event_calendar_list_events (EventCalendar *ec);
+extern GSList *event_calendar_list_events (EventCalendar *ec,
+					   GError **error);
 
 /* Returns the events in the calendar EC (but not any sub-calendars
    thereof).  If START is non-zero, then limited to only those events
@@ -316,7 +355,8 @@ extern GSList *event_calendar_list_events (EventCalendar *ec);
    list.  */
 extern GSList *event_calendar_list_events_modified_between (EventCalendar *ec,
 							    time_t start,
-							    time_t end);
+							    time_t end,
+							    GError **error);
 
 /**
  * event_calendar_list_deleted:
@@ -330,16 +370,17 @@ extern GSList *event_calendar_list_events_modified_between (EventCalendar *ec,
  *
  * Returns: A list of events.
  */
-extern GSList *event_calendar_list_deleted (EventCalendar *ec);
+extern GSList *event_calendar_list_deleted (EventCalendar *ec, GError **error);
 
 /* Clean the list of deleted events. */
-extern void event_calendar_flush_deleted (EventCalendar *ec);
+extern void event_calendar_flush_deleted (EventCalendar *ec, GError **error);
 
 
 /* Returns the calendars in calendar EC (but not any sub-calendars
    thereof).  A reference is allocated to each event.  The caller must
    free the returned list.  */
-extern GSList *event_calendar_list_calendars (EventCalendar *ec);
+extern GSList *event_calendar_list_calendars (EventCalendar *ec,
+					      GError **error);
 
 /* Signal "event-new" emitted when an event in EDB is created.  */
 typedef void (*EventNew) (EventDB *edb, Event *ev);
@@ -369,14 +410,15 @@ extern gint event_alarm_compare_func (gconstpointer a, gconstpointer b);
    the default calendar).  If EVENTID is NULL, one is fabricated.  If
    EVENTID is provided, it must be unique.  (Check using
    event_db_get_by_eventid first.)  */
-extern Event *event_new (EventDB *edb, EventCalendar *ec, const char *eventid);
+extern Event *event_new (EventDB *edb, EventCalendar *ec,
+			 const char *eventid, GError **error);
 
 /* Flush event EV to the DB now.  */
-extern gboolean event_flush (Event *ev);
+extern gboolean event_flush (Event *ev, GError **error);
 
 /* Remove event EV from the underlying DB.  Does not destroy the in
    memory version nor does it deallocate a reference to EVENT.  */
-extern gboolean event_remove (Event *ev);
+extern void event_remove (Event *ev, GError **error);
 
 /**
  * event_list_unref:
@@ -392,46 +434,48 @@ extern EventDB *event_get_event_db (Event *ev) __attribute__ ((pure));
 
 /* The calendar associated with EV.  */
 /* Returns a reference to the calendar.  */
-extern EventCalendar *event_get_calendar (Event *ev);
-extern void event_set_calendar (Event *ev, EventCalendar *ec);
+extern EventCalendar *event_get_calendar (Event *ev, GError **error);
+extern void event_set_calendar (Event *ev, EventCalendar *ec,
+				GError **error);
 
 /* Finds the first calendar which contains event EV which has a color
    and in in *COLOR and returns TRUE.  Otherwise, returns FALSE.  */
-extern gboolean event_get_color (Event *ev, struct _GdkColor *color);
+extern gboolean event_get_color (Event *ev, struct _GdkColor *color,
+				 GError **error);
 /* Determines if event EV is visible.  That is, if its containing
    calendar the calendar containing it, etc are all visible then EV is
    visible.  */
-extern gboolean event_get_visible (Event *ev) __attribute__ ((pure));
+extern gboolean event_get_visible (Event *ev, GError **error)
+     __attribute__ ((pure));
 
 extern time_t event_get_start (Event *ev) __attribute__ ((pure));
 
 /* The duration of an event in seconds.  Taking the start time and
    adding the duration yields the second after which the event
    ends.  */
-extern unsigned long event_get_duration (Event *ev) __attribute__ ((pure));
-extern void event_set_duration (Event *ev, unsigned long duration);
+extern unsigned long event_get_duration (Event *ev)
+     __attribute__ ((pure));
+extern void event_set_duration (Event *ev, unsigned long duration,
+				GError **error);
 
 extern unsigned long event_get_alarm (Event *ev) __attribute__ ((pure));
-extern void event_set_alarm (Event *ev, unsigned long alarm);
+extern void event_set_alarm (Event *ev, unsigned long alarm,
+			     GError **error);
 
 /* Acknowledge that EV's alarm went off.  If EV does not have an alarm
    or it would go off in the future, does nothing.  */
-extern void event_acknowledge (Event *ev);
+extern void event_acknowledge (Event *ev, GError **error);
 
 /* The event's sequence number, i.e. the number of significant
    revisions.  (Normally automatically updated at each important
    change to the event, e.g. change of start, end, location, etc.)  */
-extern guint32 event_get_sequence (Event *ev) __attribute__ ((pure));
-extern void event_set_sequence (Event *ev, guint32 sequence);
+extern guint32 event_get_sequence (Event *ev, GError **error)
+     __attribute__ ((pure));
+extern void event_set_sequence (Event *ev, guint32 sequence,
+				GError **error);
 
 extern time_t event_get_last_modification (Event *event)
      __attribute__ ((pure));
-
-/* Recurrence type.  */
-extern enum event_recurrence_type event_get_recurrence_type (Event *ev)
-     __attribute__ ((pure));
-extern void event_set_recurrence_type (Event *ev,
-				       enum event_recurrence_type type);
 
 /* Type of recurrence.  */
 #define event_is_recurrence(ev) \
@@ -439,35 +483,39 @@ extern void event_set_recurrence_type (Event *ev,
 extern enum event_recurrence_type event_get_recurrence_type (Event *ev)
      __attribute__ ((pure));
 extern void event_set_recurrence_type (Event *ev,
-				       enum event_recurrence_type type);
+				       enum event_recurrence_type type,
+				       GError **error);
 
 /* Start of the recurrence set.  */
 extern time_t event_get_recurrence_start (Event *ev) __attribute__ ((pure));
-extern void event_set_recurrence_start (Event *ev, time_t start);
+extern void event_set_recurrence_start (Event *ev, time_t start,
+					GError **error);
 
 /* End of the recurrence set.  */
 extern time_t event_get_recurrence_end (Event *ev) __attribute__ ((pure));
-extern void event_set_recurrence_end (Event *ev, time_t end);
+extern void event_set_recurrence_end (Event *ev, time_t end, GError **error);
 
 /* Number of times the recurrence is expanded.  If 0, then this not
    does constrain the number of recurrences.  */
-extern guint32 event_get_recurrence_count (Event *ev)
-     __attribute__ ((pure));
-extern void event_set_recurrence_count (Event *ev, guint32 count);
+extern guint32 event_get_recurrence_count (Event *ev) __attribute__ ((pure));
+extern void event_set_recurrence_count (Event *ev, guint32 count,
+					GError **error);
 
 /* iCal's interval property: the number of units to skip.  If the
    recurrence type is RECUR_YEARLY then the first recurrence occurs
    INCREMENT years after the initial start.  */
 extern guint32 event_get_recurrence_increment (Event *ev)
      __attribute__ ((pure));
-extern void event_set_recurrence_increment (Event *ev, guint32 increment);
+extern void event_set_recurrence_increment (Event *ev, guint32 increment,
+					    GError **error);
 
 /* Return the byday list.  Each element is a string.  The caller must
    free the strings and the list.  */
-extern GSList *event_get_recurrence_byday (Event *ev);
+extern GSList *event_get_recurrence_byday (Event *ev, GError **error);
 /* Set the byday list to the list of strings of the form:
      [+-]([0-9]*[1-9]|)(MO|TU|WE|TH|FR|SA|SU).  */
-extern void event_set_recurrence_byday (Event *event, GSList *list);
+extern void event_set_recurrence_byday (Event *event, GSList *list,
+					GError **error);
 
 static inline void
 event_recurrence_byday_free (GSList *byday)
@@ -478,33 +526,42 @@ event_recurrence_byday_free (GSList *byday)
   g_slist_free (byday);
 }
 
-extern void event_add_recurrence_exception (Event *ev, time_t start);
+extern void event_add_recurrence_exception (Event *ev, time_t start,
+					    GError **error);
 
 extern gboolean event_get_untimed (Event *ev) __attribute__ ((pure));
-extern void event_set_untimed (Event *ev, gboolean value);
+extern void event_set_untimed (Event *ev, gboolean value, GError **error);
 
 extern unsigned long event_get_uid (Event *ev) __attribute__ ((pure));
 /* Caller must free the returned string.  */
-extern char *event_get_eventid (Event *ev) __attribute__ ((malloc));
+extern char *event_get_eventid (Event *ev, GError **error)
+     __attribute__ ((malloc));
 
 
 /* Caller must free the returned string.  */
-extern char *event_get_summary (Event *ev) __attribute__ ((malloc));
-extern void event_set_summary (Event *ev, const char *summary);
+extern char *event_get_summary (Event *ev, GError **error)
+     __attribute__ ((malloc));
+extern void event_set_summary (Event *ev, const char *summary,
+			       GError **error);
 
 /* Caller must free the returned string.  */
-extern char *event_get_description (Event *ev) __attribute__ ((malloc));
-extern void event_set_description (Event *ev, const char *description);
+extern char *event_get_description (Event *ev, GError **error)
+     __attribute__ ((malloc));
+extern void event_set_description (Event *ev, const char *description,
+				   GError **error);
 
 /* Caller must free the returned string.  */
-extern char *event_get_location (Event *ev) __attribute__ ((malloc));
-extern void event_set_location (Event *ev, const char *location);
+extern char *event_get_location (Event *ev, GError **error)
+     __attribute__ ((malloc));
+extern void event_set_location (Event *ev, const char *location,
+				GError **error);
 
 /* Caller must free (g_slist_free) the returned list.  */
-extern GSList *event_get_categories (Event *ev);
-extern void event_add_category (Event *ev, int category);
+extern GSList *event_get_categories (Event *ev, GError **error);
+extern void event_add_category (Event *ev, int category, GError **error);
 /* After calling this function, EV owns CATEGORIES.  If you need to
    continue to use CATEGORIES, pass a copy.  */
-extern void event_set_categories (Event *ev, GSList *categories);
+extern void event_set_categories (Event *ev, GSList *categories,
+				  GError **error);
 
 #endif

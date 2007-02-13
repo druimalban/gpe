@@ -52,29 +52,37 @@ do_test (int argc, char *argv[])
   /* event_db_new will open it itself.  */
   close (fd);
 
-  EventDB *edb = event_db_new (file);
+  GError *err = NULL;
+  EventDB *edb = event_db_new (file, &err);
   if (! edb)
-    error (1, 0, "evend_db_new");
+    error (1, 0, "evend_db_new: %s", err->message);
+
+  void edb_error (EventDB *edb, const char *error)
+    {
+      puts (error);
+    }
+  g_signal_connect (G_OBJECT (edb),
+		    "error", G_CALLBACK (edb_error), NULL);
 
   /* Every other day at midnight for one minute.  10 instances.  */
-  Event *ev = event_new (edb, NULL, NULL);
-  event_set_summary (ev, "one");
-  event_set_recurrence_start (ev, start);
-  event_set_duration (ev, 60);
-  event_set_recurrence_type (ev, RECUR_DAILY);
-  event_set_recurrence_increment (ev, 2);
-  event_set_recurrence_count (ev, 10);
+  Event *ev = event_new (edb, NULL, NULL, NULL);
+  event_set_summary (ev, "one", NULL);
+  event_set_recurrence_start (ev, start, NULL);
+  event_set_duration (ev, 60, NULL);
+  event_set_recurrence_type (ev, RECUR_DAILY, NULL);
+  event_set_recurrence_increment (ev, 2, NULL);
+  event_set_recurrence_count (ev, 10, NULL);
   g_object_unref (ev);
 
   /* Every day at 10 minutes to midnight for 10 minutes for 10
      days.  */
-  ev = event_new (edb, NULL, NULL);
-  event_set_summary (ev, "two");
-  event_set_recurrence_start (ev, start + 24 * 60 * 60 - 10 * 60);
-  event_set_duration (ev, 10 * 60);
-  event_set_recurrence_type (ev, RECUR_DAILY);
+  ev = event_new (edb, NULL, NULL, NULL);
+  event_set_summary (ev, "two", NULL);
+  event_set_recurrence_start (ev, start + 24 * 60 * 60 - 10 * 60, NULL);
+  event_set_duration (ev, 10 * 60, NULL);
+  event_set_recurrence_type (ev, RECUR_DAILY, NULL);
   event_set_recurrence_end (ev, event_get_recurrence_start (ev)
-			    + 10 * 24 * 60 * 60);
+			    + 10 * 24 * 60 * 60, NULL);
   g_object_unref (ev);
 
   int i;
@@ -82,7 +90,7 @@ do_test (int argc, char *argv[])
     {
       time_t s = start + i * 24 * 60 * 60;
       time_t e = s + 2 * 24 * 60 * 60 - 1;
-      GSList *list = event_db_list_for_period (edb, s, e);
+      GSList *list = event_db_list_for_period (edb, s, e, NULL);
 
       char buffer[200];
       TIME_TO_STRING (s, buffer);
@@ -97,7 +105,7 @@ do_test (int argc, char *argv[])
 	{
 	  Event *ev = EVENT (l->data);
 	  TIME_TO_STRING (event_get_start (ev), buffer);
-	  printf ("%s: %s\n", buffer, event_get_summary (ev));
+	  printf ("%s: %s\n", buffer, event_get_summary (ev, NULL));
 	}
 
       event_list_unref (list);

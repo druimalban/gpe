@@ -19,75 +19,116 @@
 #include "event-cal.h"
 #include "event.h"
 
+#define ERROR_DOMAIN() g_quark_from_static_string ("libeventdb")
+/* If an error occurs and the passed GError is NULL, we propagate
+   error by emitting a signal on EDB.  This must be used instead of
+   g_set_error.  */
+#define SIGNAL_ERROR(edb, gerror, args , ...) \
+  do \
+    { \
+      char *__e = g_strdup_printf (args, ##__VA_ARGS__); \
+      if (gerror) \
+        g_set_error (gerror, ERROR_DOMAIN (), 0, \
+                     "%s: %s", __func__, __e); \
+      else \
+        { \
+          char *buffer = g_strdup_printf ("%s: %s", __func__, __e); \
+          g_signal_emit \
+            (edb, EVENT_DB_GET_CLASS (edb)->error_signal, 0, buffer); \
+          g_free (buffer); \
+        } \
+      g_free (__e); \
+    } \
+  while (0)
+#define SIGNAL_ERROR_GERROR(edb, dest, src) \
+  do \
+    { \
+      if ((dest)) \
+        g_propagate_error ((dest), (src)); \
+      else \
+        { \
+          char *buffer = g_strdup_printf ("%s:%s", __func__, (src)->message); \
+          g_error_free ((src)); \
+          g_signal_emit \
+            ((edb), EVENT_DB_GET_CLASS (edb)->error_signal, 0, buffer); \
+          g_free (buffer); \
+        } \
+    } \
+  while (0)
+
 /* Enumerate the events in the event database EDB which MAY occur
    between (PERIOD_START and PERIOD_END].  If ALARMS is true, returns
    those events which have an alarm which MAY go off between
    PERIOD_START and PERIOD_END.  Calls CB on each event until CB
    returns a non-zero value.  A reference to EV is allocated and the
-   callback function must consume it.  If an error occurs, a non-zero
-   result is returned.  If ERR is not NULL, a string describing the
-   error may be returned in *ERR which the caller shall free.  */
-typedef int (*events_enumerate_t) (EventDB *edb,
-				   time_t period_start, time_t period_end,
-				   gboolean alarms,
-				   int (*cb) (EventSource *ev),
-				   char **err);
+   callback function must consume it.  */
+typedef void (*events_enumerate_t) (EventDB *edb,
+				    time_t period_start, time_t period_end,
+				    gboolean alarms,
+				    int (*cb) (EventSource *ev),
+				    GError **error);
 /* Returns the event with the event id EVENTID or NULL if there is no
    such event.  */
-typedef int (*eventid_to_uid_t) (EventDB *edb, const char *eventid);
+typedef int (*eventid_to_uid_t) (EventDB *edb, const char *eventid,
+				 GError **error);
 /* Set the default calendar to EC.  */
-typedef void (*set_default_calendar_t) (EventDB *edb, EventCalendar *ec);
+typedef void (*set_default_calendar_t) (EventDB *edb, EventCalendar *ec,
+					GError **error);
 
 /* Create a new event on backing store.  EV is uninitialized; save the
    allocated UID in EV->UID.  */
-typedef gboolean (*event_new_t) (EventSource *ev, char **error);
+typedef gboolean (*event_new_t) (EventSource *ev, GError **error);
 /* Load event EV's basic data (i.e. not necessarily its details) from
    backing store.  EV->UID is valid.  Returns FALSE if no such event
    exists.  */
-typedef gboolean (*event_load_t) (EventSource *ev);
+typedef gboolean (*event_load_t) (EventSource *ev, GError **error);
 /* Load the event's details from backing store.  event_load has
    already been called successfully.  */
-typedef void (*event_load_details_t) (EventSource *ev);
+typedef void (*event_load_details_t) (EventSource *ev, GError **error);
 /* Flush the event to backing store.  If an error occurs, FALSE should
    be returned and an error may be reported in *ERR which the client
    must free using g_free.  */
-typedef gboolean (*event_flush_t) (EventSource *ev, char **err);
+typedef gboolean (*event_flush_t) (EventSource *ev, GError **error);
 /* Mark the event EV as removed (i.e. deleted).  */
-typedef void (*event_remove_t) (EventSource *ev);
+typedef void (*event_remove_t) (EventSource *ev, GError **error);
 
 /* List the events which have alarms which have not yet been
    acknowledged.  */
-typedef GSList *(*list_unacknowledged_alarms_t) (EventDB *edb);
+typedef GSList *(*list_unacknowledged_alarms_t) (EventDB *edb, GError **error);
 /* Mark EV's alarm as having fired but yet not been acknowledged.  */
-typedef void (*event_mark_unacknowledged_t) (EventSource *ev);
+typedef void (*event_mark_unacknowledged_t) (EventSource *ev, GError **error);
 /* Mark EV's alarm as having been acknowledged.  */
-typedef void (*event_mark_acknowledged_t) (EventSource *ev);
+typedef void (*event_mark_acknowledged_t) (EventSource *ev, GError **error);
 /* Mark all alarms having fired through T as having been
    acknowledged.  */
-typedef void (*acknowledge_alarms_through_t) (EventDB *edb, time_t t);
+typedef void (*acknowledge_alarms_through_t) (EventDB *edb, time_t t,
+					      GError **error);
 
 /* Create a new calendar on the backing store using EC as the
    template.  Must initialize EC->UID to an identifier unique to the
    backing store.  */
-typedef void (*event_calendar_new_t) (EventCalendar *ec);
+typedef void (*event_calendar_new_t) (EventCalendar *ec, GError **error);
 /* Flush the calendar to backing store.  */
-typedef void (*event_calendar_flush_t) (EventCalendar *ec);
+typedef void (*event_calendar_flush_t) (EventCalendar *ec, GError **error);
 /* Delete the calendar from the backing store.  The generic framework
    has already taken care that no dangling references are left
    around.  */
-typedef void (*event_calendar_delete_t) (EventCalendar *ec);
+typedef void (*event_calendar_delete_t) (EventCalendar *ec, GError **error);
 /* List the events in the calendar EC.  If MODIFIED_AFTER is non-zero,
    limit to those events which have been modified on or after
    MODIFIED_AFTER.  If MODIFIED_BEFORE is non-zero, limit to those
    events which have been modified on or before MODIFIED_BEFORE.  */
 typedef GSList *(*event_calendar_list_events_t) (EventCalendar *ec,
 						 time_t modified_after,
-						 time_t modified_before);
+						 time_t modified_before,
+						 GError **error);
 /* List the deleted events in the calendar EC.  NB: Deleted events
    have EV->DEAD set to true.  */
-typedef GSList *(*event_calendar_list_deleted_t) (EventCalendar *ec);
+typedef GSList *(*event_calendar_list_deleted_t) (EventCalendar *ec,
+						  GError **error);
 /* Flush any deleted events from EC.  */
-typedef void (*event_calendar_flush_deleted_t) (EventCalendar *ec);
+typedef void (*event_calendar_flush_deleted_t) (EventCalendar *ec,
+						GError **error);
 
 typedef struct
 {
@@ -116,6 +157,9 @@ typedef struct
   event_calendar_flush_deleted_t event_calendar_flush_deleted;
 
   /* Signals.  */
+  guint error_signal;
+  EventDBError error;
+
   guint calendar_new_signal;
   EventCalendarNew calendar_new;
   guint calendar_deleted_signal;

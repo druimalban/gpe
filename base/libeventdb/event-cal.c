@@ -86,10 +86,14 @@ event_calendar_dispose (GObject *obj)
 }
 
 void
-event_calendar_flush (EventCalendar *ec)
+event_calendar_flush (EventCalendar *ec, GError **error)
 {
-  EVENT_DB_GET_CLASS (ec->edb)->event_calendar_flush (ec);
-  ec->modified = FALSE;
+  GError *e = NULL;
+  EVENT_DB_GET_CLASS (ec->edb)->event_calendar_flush (ec, &e);
+  if (e)
+    SIGNAL_ERROR_GERROR (ec->edb, error, e);
+  else
+    ec->modified = FALSE;
 }
 
 static void
@@ -117,13 +121,21 @@ event_calendar_get_event_db (EventCalendar *ec)
 }
 
 EventCalendar *
-event_calendar_new (EventDB *edb)
+event_calendar_new (EventDB *edb, GError **error)
 {
   EventCalendar *ec = EVENT_CALENDAR (g_object_new (event_calendar_get_type (),
 						    NULL));
 
   ec->edb = edb;
-  EVENT_DB_GET_CLASS (ec->edb)->event_calendar_new (ec);
+
+  GError *e = NULL;
+  EVENT_DB_GET_CLASS (ec->edb)->event_calendar_new (ec, &e);
+  if (e)
+    {
+      SIGNAL_ERROR_GERROR (edb, error, e);
+      g_object_unref (ec);
+      return NULL;
+    }
 
   g_object_ref (ec);
   edb->calendars = g_slist_prepend (edb->calendars, ec);
@@ -142,7 +154,8 @@ event_calendar_new_full (EventDB *edb,
 			 const char *url,
 			 struct _GdkColor *color,
 			 int mode,
-			 int sync_interval)
+			 int sync_interval,
+			 GError **error)
 {
   g_return_val_if_fail (mode >= 0, NULL);
   g_return_val_if_fail (mode <= 4, NULL);
@@ -175,7 +188,14 @@ event_calendar_new_full (EventDB *edb,
   ec->mode = mode;
   ec->sync_interval = sync_interval;
 
-  EVENT_DB_GET_CLASS (ec->edb)->event_calendar_new (ec);
+  GError *e = NULL;
+  EVENT_DB_GET_CLASS (ec->edb)->event_calendar_new (ec, &e);
+  if (e)
+    {
+      SIGNAL_ERROR_GERROR (ec->edb, error, e);
+      g_object_unref (ec);
+      return NULL;
+    }
 
   g_object_ref (ec);
   edb->calendars = g_slist_prepend (edb->calendars, ec);
@@ -186,23 +206,46 @@ event_calendar_new_full (EventDB *edb,
 }
 
 gboolean
-event_calendar_valid_parent (EventCalendar *ec, EventCalendar *new_parent)
+event_calendar_valid_parent (EventCalendar *ec, EventCalendar *new_parent,
+			     GError **error)
 {
   EventCalendar *i;
-  for (i = new_parent; i; i = event_calendar_get_parent (i))
-    if (i == ec)
+  GError *e = NULL;
+
+  g_object_ref (new_parent);
+  for (i = new_parent; i; i = event_calendar_get_parent (i, &e))
+    {
+      g_object_unref (i);
+      /* Even though we just dropped our reference to I, the following
+	 is still valid as we don't dereference I, we only use its
+	 address.  */
+      if (i == ec)
+	return FALSE;
+    }
+
+  if (e)
+    {
+      SIGNAL_ERROR_GERROR (ec->edb, error, e);
       return FALSE;
+    }
   return TRUE;
 }
 
 void
 event_calendar_delete (EventCalendar *ec,
 		       gboolean delete_events,
-		       EventCalendar *new_parent)
+		       EventCalendar *new_parent,
+		       GError **error)
 {
-  if (! delete_events && ! event_calendar_valid_parent (ec, new_parent))
+  GError *e = NULL;
+  if (! delete_events && ! event_calendar_valid_parent (ec, new_parent, &e))
     {
-      g_critical ("%s: I refuse to create a cycle.", __func__);
+      if (e)
+	SIGNAL_ERROR_GERROR (ec->edb, error, e);
+      else
+	SIGNAL_ERROR (ec->edb, error,
+		      "Setting selected calendar as new parent would "
+		      "create a cycle, refusing.");
       return;
     }
 
@@ -224,27 +267,50 @@ event_calendar_delete (EventCalendar *ec,
       if (c->parent_uid == ec->uid)
 	{
 	  if (delete_events)
-	    event_calendar_delete (c, TRUE, 0);
+	    event_calendar_delete (c, TRUE, 0, &e);
 	  else
-	    event_calendar_set_parent (c, new_parent);
+	    event_calendar_set_parent (c, new_parent, &e);
+
+	  if (e)
+	    {
+	      SIGNAL_ERROR_GERROR (ec->edb, error, e);
+	      return;
+	    }
 	}
     }
 
   g_assert (link);
   ec->edb->calendars = g_slist_delete_link (ec->edb->calendars, link);
 
-  GSList *events = event_calendar_list_events (ec);
+  GSList *events = event_calendar_list_events (ec, &e);
+  if (e)
+    {
+      SIGNAL_ERROR_GERROR (ec->edb, error, e);
+      return;
+    }
+
   for (i = events; i; i = i->next)
     {
       Event *ev = EVENT (i->data);
       if (delete_events)
-	event_remove (ev);
+	event_remove (ev, &e);
       else
-	event_set_calendar (ev, new_parent);
+	event_set_calendar (ev, new_parent, &e);
+
+      if (e)
+	{
+	  SIGNAL_ERROR_GERROR (ec->edb, error, e);
+	  return;
+	}
     }
   event_list_unref (events);
 
-  EVENT_DB_GET_CLASS (ec->edb)->event_calendar_delete (ec);
+  EVENT_DB_GET_CLASS (ec->edb)->event_calendar_delete (ec, &e);
+  if (e)
+    {
+      SIGNAL_ERROR_GERROR (ec->edb, error, e);
+      return;
+    }
 
   g_signal_emit (ec->edb,
 		 EVENT_DB_GET_CLASS (ec->edb)->calendar_deleted_signal, 0, ec);
@@ -252,7 +318,7 @@ event_calendar_delete (EventCalendar *ec,
 
 #define GET(type, name) \
   type \
-  event_calendar_get_##name (EventCalendar *ec) \
+  event_calendar_get_##name (EventCalendar *ec, GError **error) \
   { \
     return ec->name; \
   }
@@ -261,7 +327,7 @@ event_calendar_delete (EventCalendar *ec,
   GET(type, name) \
   \
   void \
-  event_calendar_set_##name (EventCalendar *ec, type name) \
+  event_calendar_set_##name (EventCalendar *ec, type name, GError **error) \
   { \
     if (ec->name == name) \
       return; \
@@ -278,21 +344,31 @@ event_calendar_delete (EventCalendar *ec,
 GET(guint, uid)
 
 EventCalendar *
-event_calendar_get_parent (EventCalendar *ec)
+event_calendar_get_parent (EventCalendar *ec, GError **error)
 {
   if (ec->parent_uid == EVENT_CALENDAR_NO_PARENT)
     return NULL;
 
   if (! ec->parent)
     {
-      ec->parent = event_db_find_calendar_by_uid (ec->edb, ec->parent_uid);
-      g_object_ref (ec->parent);
+      GError *e = NULL;
+
+      ec->parent = event_db_find_calendar_by_uid (ec->edb, ec->parent_uid,
+						  &e);
+      if (e)
+	{
+	  g_assert (! ec->parent);
+	  SIGNAL_ERROR_GERROR (ec->edb, error, e);
+	  return NULL;
+	}
+
       if (! ec->parent)
 	{
-	  g_warning ("Calendar (%s) %d contains a dangling parent %d!",
+	  g_warning ("Calendar (%s) %d contains a dangling parent uid %d!",
 		     ec->description, ec->uid, ec->parent_uid);
 	  return NULL;
 	}
+      g_object_ref (ec->parent);
     }
 
   g_object_ref (ec->parent);
@@ -300,13 +376,14 @@ event_calendar_get_parent (EventCalendar *ec)
 }
 
 void
-event_calendar_set_parent (EventCalendar *ec, EventCalendar *p)
+event_calendar_set_parent (EventCalendar *ec, EventCalendar *p,
+			   GError **error)
 {
   if ((! p && ec->parent_uid == EVENT_CALENDAR_NO_PARENT)
       || (p && p->uid == ec->uid))
     return;
 
-  g_return_if_fail (event_calendar_valid_parent (ec, p));
+  g_return_if_fail (event_calendar_valid_parent (ec, p, error));
 
   if (ec->parent)
     g_object_unref (ec->parent);
@@ -327,13 +404,14 @@ event_calendar_set_parent (EventCalendar *ec, EventCalendar *p)
 }
 
 gboolean
-event_calendar_get_visible (EventCalendar *ec)
+event_calendar_get_visible (EventCalendar *ec, GError **error)
 {
   return ! ec->hidden;
 }
 
 void
-event_calendar_set_visible (EventCalendar *ec, gboolean visible)
+event_calendar_set_visible (EventCalendar *ec, gboolean visible,
+			    GError **error)
 {
   if (ec->hidden == ! visible)
     return;
@@ -344,13 +422,14 @@ event_calendar_set_visible (EventCalendar *ec, gboolean visible)
 
 #define GET_SET_STRING(name, is_modification) \
   char * \
-  event_calendar_get_##name (EventCalendar *ec) \
+  event_calendar_get_##name (EventCalendar *ec, GError **error) \
   { \
     return g_strdup (ec->name); \
   } \
   \
   void \
-  event_calendar_set_##name (EventCalendar *ec, const char *name) \
+  event_calendar_set_##name (EventCalendar *ec, const char *name, \
+                             GError **error) \
   { \
     if (ec->name && strcmp (ec->name, name) == 0) \
       return; \
@@ -374,7 +453,8 @@ GET_SET_STRING(password, TRUE)
 GET_SET(int, mode, TRUE)
 
 gboolean
-event_calendar_get_color (EventCalendar *ec, struct _GdkColor *color)
+event_calendar_get_color (EventCalendar *ec, struct _GdkColor *color,
+			  GError **error)
 {
   if (! ec->has_color)
     return FALSE;
@@ -387,7 +467,8 @@ event_calendar_get_color (EventCalendar *ec, struct _GdkColor *color)
 }
 
 void
-event_calendar_set_color (EventCalendar *ec, const struct _GdkColor *color)
+event_calendar_set_color (EventCalendar *ec, const struct _GdkColor *color,
+			  GError **error)
 {
   if (color)
     {
@@ -408,27 +489,30 @@ GET_SET(time_t, last_pull, FALSE)
 GET_SET(time_t, last_push, FALSE)
 
 time_t
-event_calendar_get_last_modification (EventCalendar *ec)
+event_calendar_get_last_modification (EventCalendar *ec, GError **error)
 {
   return ec->last_modified;
 }
 
 GSList *
-event_calendar_list_events (EventCalendar *ec)
+event_calendar_list_events (EventCalendar *ec, GError **error)
 {
-  return EVENT_DB_GET_CLASS (ec->edb)->event_calendar_list_events (ec, 0, 0);
+  return EVENT_DB_GET_CLASS (ec->edb)->event_calendar_list_events (ec, 0, 0,
+								   error);
 }
 
 GSList *
 event_calendar_list_events_modified_between (EventCalendar *ec,
-					     time_t start, time_t end)
+					     time_t start, time_t end,
+					     GError **error)
 {
   return
-    EVENT_DB_GET_CLASS (ec->edb)->event_calendar_list_events (ec, start, end);
+    EVENT_DB_GET_CLASS (ec->edb)->event_calendar_list_events (ec, start, end,
+							      error);
 }
 
 GSList *
-event_calendar_list_calendars (EventCalendar *p)
+event_calendar_list_calendars (EventCalendar *p, GError **error)
 {
   GSList *c = NULL;
   GSList *i;
@@ -446,13 +530,14 @@ event_calendar_list_calendars (EventCalendar *p)
 }
 
 GSList *
-event_calendar_list_deleted (EventCalendar *ec)
+event_calendar_list_deleted (EventCalendar *ec, GError **error)
 {
-  return EVENT_DB_GET_CLASS (ec->edb)->event_calendar_list_deleted (ec);
+  return EVENT_DB_GET_CLASS (ec->edb)->event_calendar_list_deleted (ec,
+								    error);
 }
 
 void 
-event_calendar_flush_deleted (EventCalendar *ec)
+event_calendar_flush_deleted (EventCalendar *ec, GError **error)
 {
-  return EVENT_DB_GET_CLASS (ec->edb)->event_calendar_flush_deleted (ec);
+  EVENT_DB_GET_CLASS (ec->edb)->event_calendar_flush_deleted (ec, error);
 }
