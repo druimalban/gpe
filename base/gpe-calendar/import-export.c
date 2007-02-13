@@ -1,5 +1,5 @@
 /* import-export.c - Import and export functionality.
-   Copyright (C) 2006 Neal H. Walfield <neal@walfield.org>
+   Copyright (C) 2006, 2007 Neal H. Walfield <neal@walfield.org>
 
    This file is part of GPE.
 
@@ -250,11 +250,12 @@ save_as_dialog (GObject *thing)
 
   char *summary;
   if (IS_EVENT (thing))
-    summary = event_get_summary (EVENT (thing));
+    summary = event_get_summary (EVENT (thing), NULL);
   else
-    summary = event_calendar_get_title (EVENT_CALENDAR (thing));
+    summary = event_calendar_get_title (EVENT_CALENDAR (thing), NULL);
 
-  char *suggestion = g_strdup_printf ("%s.ics", summary);
+  char *suggestion = g_strdup_printf ("%s.ics",
+				      summary && *summary ?: "calendar");
   char *s = suggestion;
   while ((s = strchr (s, ' ')))
     *s = '_';

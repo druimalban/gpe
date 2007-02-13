@@ -1,5 +1,5 @@
 /* calendars-widgets.c - Calendars widgets implementation.
-   Copyright (C) 2006 Neal H. Walfield <neal@walfield.org>
+   Copyright (C) 2006, 2007 Neal H. Walfield <neal@walfield.org>
 
    This file is part of GPE.
 
@@ -192,9 +192,12 @@ calendars_combo_box_new (EventDB *edb)
 				      calendar_text_cell_data_func, combo,
 				      NULL);
 
-  EventCalendar *ec = event_db_get_default_calendar (edb, NULL);
-  calendars_combo_box_set_active (GTK_COMBO_BOX (combo), ec);
-  g_object_unref (ec);
+  EventCalendar *ec = event_db_get_default_calendar (edb, NULL, NULL);
+  if (ec)
+    {
+      calendars_combo_box_set_active (GTK_COMBO_BOX (combo), ec);
+      g_object_unref (ec);
+    }
 
   return combo;
 }
@@ -270,13 +273,13 @@ calendar_visible_toggle_cell_data_func (GtkCellLayout *cell_layout,
     return;
 
   g_object_set (cell_renderer,
-		"active", event_calendar_get_visible (ec), NULL);
+		"active", event_calendar_get_visible (ec, NULL), NULL);
 
   if (data && GTK_IS_TREE_VIEW (data))
     /* XXX: This looks really back in a combo box.  */
     {
       GdkColor color;
-      if (event_calendar_get_color (ec, &color))
+      if (event_calendar_get_color (ec, &color, NULL))
 	g_object_set (cell_renderer,
 		      "cell-background-gdk", &color, NULL);
       else
@@ -301,7 +304,7 @@ calendar_text_cell_data_func (GtkCellLayout *cell_layout,
     return;
 
   g_free (renderer->text);
-  renderer->text = event_calendar_get_title (ec);
+  renderer->text = event_calendar_get_title (ec, NULL);
 
   if (data && GTK_IS_COMBO_BOX (data))
     {
@@ -320,7 +323,7 @@ calendar_text_cell_data_func (GtkCellLayout *cell_layout,
     /* XXX: This looks really bad in a combo box.  */
     {
       GdkColor color;
-      if (event_calendar_get_color (ec, &color))
+      if (event_calendar_get_color (ec, &color, NULL))
 	g_object_set (cell_renderer,
 		      "cell-background-gdk", &color, NULL);
       else
@@ -341,12 +344,12 @@ calendar_description_cell_data_func (GtkCellLayout *cell_layout,
   if (! ec)
     return;
 
-  char *s = event_calendar_get_description (ec);
+  char *s = event_calendar_get_description (ec, NULL);
   g_object_set (cell_renderer, "text", s, NULL);
   g_free (s);
 
   GdkColor color;
-  if (event_calendar_get_color (ec, &color))
+  if (event_calendar_get_color (ec, &color, NULL))
     g_object_set (cell_renderer,
 		  "cell-background-gdk", &color, NULL);
   else
@@ -366,7 +369,7 @@ calendar_last_update_cell_data_func (GtkCellLayout *cell_layout,
   if (! ec)
     return;
 
-  switch (event_calendar_get_mode (ec))
+  switch (event_calendar_get_mode (ec, NULL))
     {
     case 0:
     default:
@@ -375,7 +378,7 @@ calendar_last_update_cell_data_func (GtkCellLayout *cell_layout,
     case 1:
       {
 	time_t now = time (NULL);
-	time_t t = event_calendar_get_last_pull (ec);
+	time_t t = event_calendar_get_last_pull (ec, NULL);
 	time_t diff = now - t;
 	char *s;
 	if (diff < 60 * 60)
@@ -399,8 +402,8 @@ calendar_last_update_cell_data_func (GtkCellLayout *cell_layout,
       }
     case 2:
       {
-	time_t t = event_calendar_get_last_push (ec);
-	time_t m = event_calendar_get_last_modification (ec);
+	time_t t = event_calendar_get_last_push (ec, NULL);
+	time_t m = event_calendar_get_last_modification (ec, NULL);
 
 	if (m <= t)
 	  g_object_set (cell_renderer, "text", _("Up to date"), NULL);
@@ -411,7 +414,7 @@ calendar_last_update_cell_data_func (GtkCellLayout *cell_layout,
     }
 
   GdkColor color;
-  if (event_calendar_get_color (ec, &color))
+  if (event_calendar_get_color (ec, &color, NULL))
     g_object_set (cell_renderer,
 		  "cell-background-gdk", &color, NULL);
   else
@@ -431,7 +434,7 @@ pixmap_it (GtkCellRenderer *cell_renderer,
     g_object_set (cell_renderer, "stock-id", NULL, NULL);
 
   GdkColor color;
-  if (event_calendar_get_color (ec, &color))
+  if (event_calendar_get_color (ec, &color, NULL))
     g_object_set (cell_renderer,
 		  "cell-background-gdk", &color, NULL);
   else
@@ -453,7 +456,7 @@ calendar_refresh_cell_data_func (GtkCellLayout *cell_layout,
 
   char *image;
   gboolean set;
-  switch (event_calendar_get_mode (ec))
+  switch (event_calendar_get_mode (ec, NULL))
     {
     case 1:
       image = GTK_STOCK_GO_DOWN;
@@ -528,7 +531,7 @@ build_menu (CalendarMenuSelected cb, gpointer user_data,
       EventCalendar *ec;
       gtk_tree_model_get (model, iter, COL_CALENDAR, &ec, -1);
 
-      char *title = event_calendar_get_title (ec);
+      char *title = event_calendar_get_title (ec, NULL);
       char *s = g_strdup_printf ("%*s%s", indent * 2, "", title);
       g_free (title);
       GtkWidget *item = gtk_menu_item_new_with_label (s);
@@ -578,7 +581,7 @@ calendars_menu (EventDB *edb, CalendarMenuSelected cb, gpointer data)
 static void
 populate_store (EventDB *edb, GtkTreeStore *tree_store)
 {
-  GSList *l = event_db_list_event_calendars (edb);
+  GSList *l = event_db_list_event_calendars (edb, NULL);
   int n = g_slist_length (l);
   struct info
   {
@@ -595,7 +598,7 @@ populate_store (EventDB *edb, GtkTreeStore *tree_store)
   for (i = 0, a = l; i < n; i ++, a = a->next)
     {
       info[i].ec = a->data;
-      info[i].ecp = event_calendar_get_parent (a->data);
+      info[i].ecp = event_calendar_get_parent (a->data, NULL);
       if (! info[i].ecp)
 	{
 	  gtk_tree_store_insert (tree_store, &info[i].iter, NULL, 0);
@@ -642,7 +645,7 @@ calendar_new (EventDB *edb, EventCalendar *ec, GtkTreeStore *tree_store)
   /* Find the ancestry.  */
   GSList *ancestry = NULL;
   EventCalendar *p = ec;
-  while ((p = event_calendar_get_parent (p)))
+  while ((p = event_calendar_get_parent (p, NULL)))
     ancestry = g_slist_prepend (ancestry, p);
 
   /* Walk the tree from the top towards where the insertion needs to
@@ -679,7 +682,7 @@ calendar_new (EventDB *edb, EventCalendar *ec, GtkTreeStore *tree_store)
 
  fail:
   {
-    char *s = event_calendar_get_title (ec);
+    char *s = event_calendar_get_title (ec, NULL);
     g_critical ("%s: could not find %s in tree!", __func__, s);
     g_free (s);
     while (ancestry)
@@ -777,7 +780,8 @@ calendars_tree_model (EventDB *edb)
 
   /* Create a new tree store.  */
   info->tree_store = gtk_tree_store_new (1, G_TYPE_POINTER);
-  g_object_weak_ref (G_OBJECT (info->tree_store), info_destroy, info);
+  g_object_weak_ref (G_OBJECT (info->tree_store),
+		     (GWeakNotify) info_destroy, info);
 
   populate_store (edb, info->tree_store);
 

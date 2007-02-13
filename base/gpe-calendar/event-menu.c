@@ -1,5 +1,5 @@
 /* event-menu.c - Event menu implementation.
-   Copyright (C) 2006 Neal H. Walfield <neal@walfield.org>
+   Copyright (C) 2006, 2007 Neal H. Walfield <neal@walfield.org>
 
    This file is part of GPE.
 
@@ -49,12 +49,12 @@ delete_event_cb (GtkWidget *widget, gpointer d)
 {
   Event *ev = EVENT (d);
 
-  gboolean removed = FALSE;
-  char *summary = event_get_summary (ev);
+  char *summary = event_get_summary (ev, NULL);
 
   if (event_is_recurrence (ev))
     {
-      char *s = g_strdup_printf (_("Delete all occurrences of %s?"), summary);
+      char *s = g_strdup_printf (_("Delete all occurrences of %s?"),
+				 summary ?: "");
       g_free (summary);
       switch (gpe_question_ask (s,
 				_("Question"), "question",
@@ -64,13 +64,11 @@ delete_event_cb (GtkWidget *widget, gpointer d)
 				NULL))
 	{
 	case 0:
-	  event_add_recurrence_exception (ev, event_get_start (ev));
-	  event_flush (ev);
-	  removed = TRUE;
+	  event_add_recurrence_exception (ev, event_get_start (ev), NULL);
+	  event_flush (ev, NULL);
 	  break;
 	case 1:
-	  event_remove (ev);
-	  removed = TRUE;
+	  event_remove (ev, NULL);
 	  break;
 	default:
 	  break;
@@ -79,15 +77,12 @@ delete_event_cb (GtkWidget *widget, gpointer d)
     }
   else
     {
-      char *s = g_strdup_printf (_("Delete %s?"), summary);
+      char *s = g_strdup_printf (_("Delete %s?"), summary ?: "");
       g_free (summary);
       if (gpe_question_ask (s, _("Question"), "question",
 			    "!gtk-delete", NULL, "!gtk-cancel", NULL, NULL)
 	  == 0)
-	{
-	  event_remove (ev);
-	  removed = TRUE;
-	}
+	event_remove (ev, NULL);
       g_free (s);
     }
 }
@@ -118,20 +113,20 @@ save_calendar_cb (GtkWidget *widget, gpointer d)
 static void
 only_show_cb (GtkWidget *widget, EventCalendar *ec)
 {
-  GSList *l = event_db_list_event_calendars (event_db);
+  GSList *l = event_db_list_event_calendars (event_db, NULL);
   GSList *i;
   for (i = l; i; i = i->next)
     {
       if (event_calendar_get_uid (i->data) != event_calendar_get_uid (ec))
-	event_calendar_set_visible (i->data, FALSE);
+	event_calendar_set_visible (i->data, FALSE, NULL);
       g_object_unref (i->data);
     }
   g_slist_free (l);
 
-  EventCalendar *p = event_calendar_get_parent (ec);
+  EventCalendar *p = event_calendar_get_parent (ec, NULL);
   while (p)
     {
-      event_calendar_set_visible (p, TRUE);
+      event_calendar_set_visible (p, TRUE, NULL);
       g_object_unref (p);
     }
 }
@@ -139,7 +134,7 @@ only_show_cb (GtkWidget *widget, EventCalendar *ec)
 static void
 hide_cb (GtkWidget *widget, gpointer d)
 {
-  event_calendar_set_visible (EVENT_CALENDAR (d), FALSE);
+  event_calendar_set_visible (EVENT_CALENDAR (d), FALSE, NULL);
 }
 
 static void
@@ -158,7 +153,7 @@ static void
 move_event_to (EventCalendar *ec, gpointer user_data)
 {
   Event *ev = EVENT (user_data);
-  event_set_calendar (ev, ec);
+  event_set_calendar (ev, ec, NULL);
 }
 
 struct info
@@ -185,9 +180,9 @@ event_menu_new (Event *ev, gboolean show_summary)
   info->ev = ev;
   g_object_ref (ev);
 
-  EventCalendar *ec = event_get_calendar (ev);
+  EventCalendar *ec = event_get_calendar (ev, NULL);
   info->ec = ec;
-  char *title = event_calendar_get_title (ec);
+  char *title = event_calendar_get_title (ec, NULL);
   char *s;
 
   GtkMenu *menu = GTK_MENU (gtk_menu_new ());
@@ -240,10 +235,10 @@ event_menu_new (Event *ev, gboolean show_summary)
 	}
 
       char buffer[64];
-      char *summary = event_get_summary (ev);
-      char *description = event_get_description (ev);
+      char *summary = event_get_summary (ev, NULL);
+      char *description = event_get_description (ev, NULL);
       int l = snprintf (buffer, 64, "%s %s%s%s %s%s%s",
-			summary,
+			summary ?: "",
 			strstart, strend ? "-" : "", strend ?: "",
 			event_get_alarm (ev) ? "(A)" : "",
 			description ? "\n" : "",

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006 Philip Blundell <philb@gnu.org>
- * Copyright (C) 2006 Neal H. Walfield <neal@walfield.org>
+ * Copyright (C) 2006, 2007 Neal H. Walfield <neal@walfield.org>
  * Copyright (C) 2005, 2006 Florian Boor <fb@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
@@ -321,14 +321,14 @@ click_ok (GtkWidget *widget, struct edit_state *s)
   if (s->ev)
     {
       ev = s->ev;
-      event_set_calendar (ev, ec);
+      event_set_calendar (ev, ec, NULL);
     }
   else
-    s->ev = ev = event_new (event_db, ec, NULL);
+    s->ev = ev = event_new (event_db, ec, NULL, NULL);
 
-  event_set_recurrence_start (ev, start_t);
-  event_set_duration (ev, end_t - start_t);
-  event_set_untimed (ev, gtk_toggle_button_get_active (s->all_day));
+  event_set_recurrence_start (ev, start_t, NULL);
+  event_set_duration (ev, end_t - start_t, NULL);
+  event_set_untimed (ev, gtk_toggle_button_get_active (s->all_day), NULL);
 
   if (s->description)
     {
@@ -337,26 +337,26 @@ click_ok (GtkWidget *widget, struct edit_state *s)
       buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (s->description));
       gtk_text_buffer_get_bounds (buf, &start, &end);
       char *text = gtk_text_buffer_get_text (buf, &start, &end, FALSE);
-      event_set_description (ev, text);
+      event_set_description (ev, text, NULL);
       g_free (text);
     }
 
   if (s->summary)
     {
       char *text = gtk_editable_get_chars (GTK_EDITABLE (s->summary), 0, -1);
-      event_set_summary (ev, text);
+      event_set_summary (ev, text, NULL);
       g_free (text);
     }
 
   if (s->location)
     {
       char *text = gtk_editable_get_chars (GTK_EDITABLE (s->location), 0, -1);
-      event_set_location (ev, text);
+      event_set_location (ev, text, NULL);
       g_free (text);
     }
 
   if (s->categories)
-    event_set_categories (ev, g_slist_copy (s->categories));
+    event_set_categories (ev, g_slist_copy (s->categories), NULL);
 
   if (s->alarmbutton)
     {
@@ -370,10 +370,10 @@ click_ok (GtkWidget *widget, struct edit_state *s)
 	  gint as = 
          gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (s->alarmspin));
 #endif        
-	  event_set_alarm (ev, alarm_multipliers[mi] * as);
+	  event_set_alarm (ev, alarm_multipliers[mi] * as, NULL);
 	}
       else
-	event_set_alarm (ev, 0);
+	event_set_alarm (ev, 0, NULL);
     }
 
   if (s->recur_type)
@@ -398,35 +398,37 @@ click_ok (GtkWidget *widget, struct edit_state *s)
 	  break;
 	}
 
-    event_set_recurrence_type (ev, recur);
+    event_set_recurrence_type (ev, recur, NULL);
     if (recur != RECUR_NONE)
       {
+	int iu;
 #ifdef IS_HILDON
-        gint iu =
-            hildon_number_editor_get_value (
-                           HILDON_NUMBER_EDITOR (s->increment_unit));
+        iu = hildon_number_editor_get_value
+	  (HILDON_NUMBER_EDITOR (s->increment_unit));
 #else
-        gint iu = 
-             gtk_spin_button_get_value_as_int (s->increment_unit);
+        iu = gtk_spin_button_get_value_as_int
+	  (GTK_SPIN_BUTTON (s->increment_unit));
 #endif
-      event_set_recurrence_increment (ev, iu);
+      event_set_recurrence_increment (ev, iu, NULL);
 	  if (gtk_toggle_button_get_active
 	      (GTK_TOGGLE_BUTTON (s->radiobuttonforever)))
 	    {
-	      event_set_recurrence_count (ev, 0);
-	      event_set_recurrence_end (ev, 0);
+	      event_set_recurrence_count (ev, 0, NULL);
+	      event_set_recurrence_end (ev, 0, NULL);
 	    }
 	  else if (gtk_toggle_button_get_active
 		   (GTK_TOGGLE_BUTTON (s->radiobuttonendafter)))
 	    {
+	      int ea;
 #ifdef IS_HILDON
-          gint ea = hildon_number_editor_get_value 
-                               (HILDON_NUMBER_EDITOR (s->endafter));
+	      ea = hildon_number_editor_get_value 
+		(HILDON_NUMBER_EDITOR (s->endafter));
 #else            
-	      gint ea = gtk_spin_button_get_value_as_int (s->endafter);
+	      ea = gtk_spin_button_get_value_as_int
+		(GTK_SPIN_BUTTON (s->endafter));
 #endif
-	      event_set_recurrence_count (ev, ea);
-          event_set_recurrence_end (ev, 0);
+	      event_set_recurrence_count (ev, ea, NULL);
+	      event_set_recurrence_end (ev, 0, NULL);
 	    }
 
 	  else if (gtk_toggle_button_get_active
@@ -455,8 +457,8 @@ click_ok (GtkWidget *widget, struct edit_state *s)
 	      tm_rend.tm_isdst = -1;
 	      rend_t = mktime (&tm_rend);
 
-	      event_set_recurrence_count (ev, 0);
-	      event_set_recurrence_end (ev, rend_t);
+	      event_set_recurrence_count (ev, 0, NULL);
+	      event_set_recurrence_end (ev, rend_t, NULL);
 	    }
 	}
 
@@ -472,7 +474,7 @@ click_ok (GtkWidget *widget, struct edit_state *s)
 		(GTK_TOGGLE_BUTTON (s->checkbuttonwday[i])))
 	      byday = g_slist_prepend (byday, g_strdup (days[i]));
 
-	  event_set_recurrence_byday (ev, byday);
+	  event_set_recurrence_byday (ev, byday, NULL);
 	}
       if (recur == RECUR_MONTHLY)
 	{
@@ -504,11 +506,11 @@ click_ok (GtkWidget *widget, struct edit_state *s)
 	      byday = g_slist_prepend (byday, s);
 	    }
 
-	  event_set_recurrence_byday (ev, byday);
+	  event_set_recurrence_byday (ev, byday, NULL);
 	}
     }
 
-  event_flush (ev);
+  event_flush (ev, NULL);
   gtk_widget_destroy (GTK_WIDGET (s->window));
 }
 
@@ -804,7 +806,7 @@ build_detail_page (struct edit_state *s)
   s->location = gtk_entry_new ();
   if (s->ev)
     {
-      char *str = event_get_location (s->ev);
+      char *str = event_get_location (s->ev, NULL);
       gtk_entry_set_text (GTK_ENTRY (s->location), str ?: "");
       g_free (str);
     }
@@ -826,7 +828,7 @@ build_detail_page (struct edit_state *s)
   gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);  
   if (s->ev)
     {
-      GSList *list = event_get_categories (s->ev);
+      GSList *list = event_get_categories (s->ev, NULL);
       update_categories (GTK_WIDGET (s->window), list, s);
       g_slist_free (list);
     }
@@ -856,7 +858,7 @@ build_detail_page (struct edit_state *s)
   gtk_text_view_set_editable (GTK_TEXT_VIEW (s->description), TRUE);
   if (s->ev)
     {
-      char *str = event_get_description (s->ev);
+      char *str = event_get_description (s->ev, NULL);
       gtk_text_buffer_set_text (gtk_text_view_get_buffer
 				(GTK_TEXT_VIEW (s->description)),
 				str ?: "", -1);
@@ -1019,7 +1021,7 @@ build_recurrence_page (struct edit_state *s)
   gtk_spin_button_set_numeric (GTK_SPIN_BUTTON (spin), TRUE);
   gtk_spin_button_set_digits (GTK_SPIN_BUTTON (spin), 0);
   if (s->ev)
-    gtk_spin_button_set_value (spin,
+    gtk_spin_button_set_value (GTK_SPIN_BUTTON (spin),
 			       event_get_recurrence_increment (s->ev));
 #endif
   s->increment_unit = spin;
@@ -1055,7 +1057,7 @@ build_recurrence_page (struct edit_state *s)
     }
   if (s->ev && event_get_recurrence_type (s->ev) == RECUR_WEEKLY)
     {
-      GSList *byday = event_get_recurrence_byday (s->ev);
+      GSList *byday = event_get_recurrence_byday (s->ev, NULL);
       GSList *l;
       for (l = byday; l; l = l->next)
 	{
@@ -1104,7 +1106,7 @@ build_recurrence_page (struct edit_state *s)
 
   if (s->ev && event_get_recurrence_type (s->ev) == RECUR_MONTHLY)
     {
-      GSList *byday = event_get_recurrence_byday (s->ev);
+      GSList *byday = event_get_recurrence_byday (s->ev, NULL);
       GSList *l;
       for (l = byday; l; l = l->next)
 	{
@@ -1360,7 +1362,7 @@ build_edit_event_window (Event *ev)
   s->summary = gtk_entry_new ();
   if (s->ev)
     {
-      char *str = event_get_summary (s->ev);
+      char *str = event_get_summary (s->ev, NULL);
       gtk_entry_set_text (GTK_ENTRY (s->summary), str ?: "");
       g_free (str);
     }
@@ -1515,9 +1517,12 @@ build_edit_event_window (Event *ev)
   if (s->ev)
     {
       /* Calendar.  */
-      EventCalendar *c = event_get_calendar (ev);
-      calendars_combo_box_set_active (GTK_COMBO_BOX (s->calendar), c);
-      g_object_unref (c);
+      EventCalendar *c = event_get_calendar (ev, NULL);
+      if (c)
+	{
+	  calendars_combo_box_set_active (GTK_COMBO_BOX (s->calendar), c);
+	  g_object_unref (c);
+	}
     }
 
   gtk_widget_show (s->calendar);

@@ -1,5 +1,5 @@
 /* calendars-dialog.h - Calendars dialog implementation.
-   Copyright (C) 2006 Neal H. Walfield <neal@walfield.org>
+   Copyright (C) 2006, 2007 Neal H. Walfield <neal@walfield.org>
 
    This file is part of GPE.
 
@@ -148,7 +148,7 @@ new_clicked (GtkWidget *widget, gpointer d)
 static void
 refresh_all_clicked (GtkWidget *widget, gpointer d)
 {
-  GSList *l = event_db_list_event_calendars (event_db);
+  GSList *l = event_db_list_event_calendars (event_db, NULL);
   GSList *i;
   GSList *next = l;
   while (next)
@@ -157,7 +157,7 @@ refresh_all_clicked (GtkWidget *widget, gpointer d)
       next = next->next;
 
       EventCalendar *ec = i->data;
-      if (event_calendar_get_mode (ec) == 1)
+      if (event_calendar_get_mode (ec, NULL) == 1)
 	calendar_pull (ec);
       g_object_unref (ec);
     }
@@ -166,7 +166,7 @@ refresh_all_clicked (GtkWidget *widget, gpointer d)
 static void
 show_all_clicked (GtkWidget *widget, gpointer d)
 {
-  GSList *l = event_db_list_event_calendars (event_db);
+  GSList *l = event_db_list_event_calendars (event_db, NULL);
   GSList *i;
   GSList *next = l;
   while (next)
@@ -175,7 +175,7 @@ show_all_clicked (GtkWidget *widget, gpointer d)
       next = next->next;
 
       EventCalendar *ec = i->data;
-      event_calendar_set_visible (ec, TRUE);
+      event_calendar_set_visible (ec, TRUE, NULL);
       g_object_unref (ec);
     }
 }
@@ -193,7 +193,8 @@ visible_toggled (GtkCellRendererToggle *cell_renderer,
       EventCalendar *ec;
 
       gtk_tree_model_get (model, &iter, COL_CALENDAR, &ec, -1);
-      event_calendar_set_visible (ec, ! event_calendar_get_visible (ec));
+      event_calendar_set_visible
+	(ec, ! event_calendar_get_visible (ec, NULL), NULL);
     }
 }
 
@@ -242,7 +243,7 @@ button_press (GtkWidget *widget, GdkEventButton *event, gpointer user_data)
 	}
       else if (column == d->refresh_col)
 	{
-	  switch (event_calendar_get_mode (ec))
+	  switch (event_calendar_get_mode (ec, NULL))
 	    {
 	    case 1:
 	      calendar_pull (ec);

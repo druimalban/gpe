@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2002, 2003, 2006 Philip Blundell <philb@gnu.org>
- * Copyright (C) 2006 Neal H. Walfield <neal@gnu.org>
+ * Copyright (C) 2006, 2007 Neal H. Walfield <neal@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -146,9 +146,9 @@ day_popup (const GDate *date, const GSList *events)
 	}
       char summary[60];
 
-      char *s = event_get_summary (ev);
+      char *s = event_get_summary (ev, NULL);
       snprintf (summary, sizeof (summary) - 1,
-		"%s %s", timestr ? timestr : "", s);
+		"%s %s", timestr ? timestr : "", s ?: "");
       g_free (s);
       summary[60] = 0;
       if (timestr)

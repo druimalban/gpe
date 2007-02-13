@@ -1,5 +1,5 @@
 /* event-cal.c - Event calendar widget implementation.
-   Copyright (C) 2006 Neal H. Walfield <neal@walfield.org>
+   Copyright (C) 2006, 2007 Neal H. Walfield <neal@walfield.org>
 
    This file is part of GPE.
 
@@ -157,7 +157,7 @@ update_cal (GtkCalendar *cal)
   end_tm.tm_sec = 59;
   end = mktime (&end_tm);
 
-  events = event_db_list_for_period (event_db, start, end);
+  events = event_db_list_for_period (event_db, start, end, NULL);
 
   for (e = events; e; e = e->next)
     {
@@ -167,7 +167,7 @@ update_cal (GtkCalendar *cal)
       int start, end;
       int i;
 
-      if (! event_get_visible (ev))
+      if (! event_get_visible (ev, NULL))
 	continue;
 
       t = event_get_start (ev);

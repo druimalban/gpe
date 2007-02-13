@@ -1,5 +1,5 @@
 /* calendar-update.c - Calendar update implementation.
-   Copyright (C) 2006 Neal H. Walfield <neal@walfield.org>
+   Copyright (C) 2006, 2007 Neal H. Walfield <neal@walfield.org>
 
    This file is part of GPE.
 
@@ -196,8 +196,8 @@ authenticate (SoupSession *session, SoupMessage *msg,
 	      char **username, char **password, gpointer user_data) 
 {
   EventCalendar *ec = EVENT_CALENDAR (user_data);
-  *username = event_calendar_get_username (ec);
-  *password = event_calendar_get_password (ec);
+  *username = event_calendar_get_username (ec, NULL);
+  *password = event_calendar_get_password (ec, NULL);
 }
 
 enum
@@ -303,7 +303,7 @@ pushed (SoupMessage *msg, gpointer data)
     {
       if (msg->status_code != info->last_status_code)
 	{
-	  char *url = event_calendar_get_url (info->ec);
+	  char *url = event_calendar_get_url (info->ec, NULL);
 	  show_info ("%s: %d %s", url, msg->status_code, msg->reason_phrase);
 	  g_free (url);
 	  info->last_status_code = msg->status_code;
@@ -312,7 +312,7 @@ pushed (SoupMessage *msg, gpointer data)
     }
   else
     {
-      event_calendar_set_last_push (info->ec, time (NULL));
+      event_calendar_set_last_push (info->ec, time (NULL), NULL);
       info->update_at = 0;
       info->last_status_code = 0;
       info->last_internal_code = 0;
@@ -330,13 +330,13 @@ build_message (SoupSession **session, SoupMessage **msg,
   g_signal_connect (G_OBJECT (*session), "authenticate",
 		    G_CALLBACK (authenticate), info->ec);
 
-  char *url = event_calendar_get_url (info->ec);
+  char *url = event_calendar_get_url (info->ec, NULL);
   *msg = soup_message_new (method, url);
   if (! msg)
     {
       if (info->last_internal_code != BAD_URL)
 	{
-	  char *title = event_calendar_get_title (info->ec);
+	  char *title = event_calendar_get_title (info->ec, NULL);
 	  show_info ("%s: Invalid URL: %s", title, url);
 	  g_free (title);
 	}
@@ -373,7 +373,7 @@ calendar_push_internal (struct info *info)
 void
 calendar_push (EventCalendar *ec)
 {
-  g_return_if_fail (event_calendar_get_mode (ec) == 2);
+  g_return_if_fail (event_calendar_get_mode (ec, NULL) == 2);
 
   struct info *info = info_find (ec, TRUE);
   /* This was user initiated.  If there is an error, show the user
@@ -394,7 +394,7 @@ pulled (SoupMessage *msg, gpointer data)
     {
       if (msg->status_code != info->last_status_code)
 	{
-	  char *url = event_calendar_get_url (info->ec);
+	  char *url = event_calendar_get_url (info->ec, NULL);
 	  show_info ("%s: %d %s", url, msg->status_code, msg->reason_phrase);
 	  g_free (url);
 	  info->last_status_code = msg->status_code;
@@ -413,7 +413,7 @@ pulled (SoupMessage *msg, gpointer data)
 	{
 	  if (info->last_internal_code != BAD_PARSE)
 	    {
-	      char *title = event_calendar_get_title (info->ec);
+	      char *title = event_calendar_get_title (info->ec, NULL);
 	      show_info ("Error updating calendar %s: %s.", title,
 			 error->message);
 	      g_free (title);
@@ -423,7 +423,7 @@ pulled (SoupMessage *msg, gpointer data)
 	}
       if (! err)
 	{
-	  event_calendar_set_last_pull (info->ec, time (NULL));
+	  event_calendar_set_last_pull (info->ec, time (NULL), NULL);
 	  info->last_status_code = 0;
 	  info->last_internal_code = 0;
 	}
@@ -453,7 +453,7 @@ calendar_pull_internal (struct info *info)
 void
 calendar_pull (EventCalendar *ec)
 {
-  g_return_if_fail (event_calendar_get_mode (ec) == 1);
+  g_return_if_fail (event_calendar_get_mode (ec, NULL) == 1);
 
   struct info *info = info_find (ec, TRUE);
   /* This was user initiated.  If there is an error, show the user
@@ -492,19 +492,19 @@ refresh (gpointer data)
       if (info->retry)
 	next_refresh = info->retry;
       else
-	switch (event_calendar_get_mode (ec))
+	switch (event_calendar_get_mode (ec, NULL))
 	  {
 	  case 1:
-	    next_refresh = event_calendar_get_last_pull (ec)
-	      + event_calendar_get_sync_interval (ec);
+	    next_refresh = event_calendar_get_last_pull (ec, NULL)
+	      + event_calendar_get_sync_interval (ec, NULL);
 	    break;
 	  case 2:
 	    if (info->update_at)
 	      /* We are scheduled to do an update at
 		 INFO->UPDATE_AT.  */
 	      next_refresh = info->update_at;
-	    else if (event_calendar_get_last_modification (ec)
-		     > event_calendar_get_last_push (ec))
+	    else if (event_calendar_get_last_modification (ec, NULL)
+		     > event_calendar_get_last_push (ec, NULL))
 	      /* There are changes which have not yet been uploaded and
 		 we are not yet scheduled to do an update.  */
 	      next_refresh = now;
@@ -517,16 +517,17 @@ refresh (gpointer data)
 
       if (! info->busy && next_refresh < now + 60)
 	{
-	  char *title = event_calendar_get_title (ec);
+	  char *title = event_calendar_get_title (ec, NULL);
 	  printf ("Updating %s\n", title);
 	  g_free (title);
 
-	  if (event_calendar_get_mode (ec) == 1)
+	  if (event_calendar_get_mode (ec, NULL) == 1)
 	    calendar_pull_internal (info);
 	  else
 	    calendar_push_internal (info);
 
-	  next_refresh = MAX (now + event_calendar_get_sync_interval (ec),
+	  next_refresh = MAX (now
+			      + event_calendar_get_sync_interval (ec, NULL),
 			      /* Not more than once per minute!  */
 			      now + 60);
 	}
@@ -553,8 +554,8 @@ refresh (gpointer data)
 static void
 calendar_new (EventDB *edb, EventCalendar *ec, gpointer *data)
 {
-  if (event_calendar_get_mode (ec) == 1
-      || event_calendar_get_mode (ec) == 2)
+  if (event_calendar_get_mode (ec, NULL) == 1
+      || event_calendar_get_mode (ec, NULL) == 2)
     info_new (ec);
 }
 
@@ -580,7 +581,7 @@ calendar_modified (EventDB *edb, EventCalendar *ec, gpointer *data)
 {
   struct info *info = info_find (ec, FALSE);
 
-  switch (event_calendar_get_mode (ec))
+  switch (event_calendar_get_mode (ec, NULL))
     {
     case 0:
       if (info)
@@ -626,14 +627,14 @@ calendars_sync_start (void *data)
 {
   g_assert (! calendars);
 
-  GSList *l = event_db_list_event_calendars (event_db);
+  GSList *l = event_db_list_event_calendars (event_db, NULL);
   GSList *i;
   for (i = l; i; i = i->next)
     {
       EventCalendar *ec = EVENT_CALENDAR (i->data);
 
-      if (event_calendar_get_mode (ec) == 1
-	  || event_calendar_get_mode (ec) == 2)
+      if (event_calendar_get_mode (ec, NULL) == 1
+	  || event_calendar_get_mode (ec, NULL) == 2)
 	info_new (ec);
       else
 	g_object_unref (ec);

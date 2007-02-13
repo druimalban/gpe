@@ -264,7 +264,7 @@ date_cell_data_func (GtkTreeViewColumn *col,
     g_free (buffer);
 
   GdkColor color;
-  if (event_get_color (ev, &color))
+  if (event_get_color (ev, &color, NULL))
     g_object_set (renderer, "cell-background-gdk", &color, NULL);
   else
     g_object_set (renderer, "cell-background-gdk", NULL, NULL);
@@ -280,12 +280,12 @@ summary_cell_data_func (GtkTreeViewColumn *col,
   Event *ev;
 
   gtk_tree_model_get (model, iter, COL_EVENT, &ev, -1);
-  char *s = event_get_summary (ev);
-  g_object_set (renderer, "text", s, NULL);
+  char *s = event_get_summary (ev, NULL);
+  g_object_set (renderer, "text", s ?: "", NULL);
   g_free (s);
 
   GdkColor color;
-  if (event_get_color (ev, &color))
+  if (event_get_color (ev, &color, NULL))
     g_object_set (renderer, "cell-background-gdk", &color, NULL);
   else
     g_object_set (renderer, "cell-background-gdk", NULL, NULL);
@@ -329,7 +329,7 @@ end_cell_data_func (GtkTreeViewColumn *col,
     g_free (buffer);
 
   GdkColor color;
-  if (event_get_color (ev, &color))
+  if (event_get_color (ev, &color, NULL))
     g_object_set (renderer, "cell-background-gdk", &color, NULL);
   else
     g_object_set (renderer, "cell-background-gdk", NULL, NULL);
@@ -539,14 +539,15 @@ event_list_reload_events_hard (EventList *event_list)
   event_list->events = event_db_list_for_period (event_list->edb,
 						 event_list->date,
 						 event_list->date
-						 + days * 24 * 60 * 60);
+						 + days * 24 * 60 * 60,
+						 NULL);
   event_list->events = g_slist_sort (event_list->events, event_compare_func);
   time_t next_reload = event_list->date + 2 * 24 * 60 * 60;
   for (e = event_list->events; e; e = e->next)
     {
       Event *ev = e->data;
 
-      if (! event_get_visible (ev))
+      if (! event_get_visible (ev, NULL))
 	continue;
 
       /* Add a new row to the model.  */

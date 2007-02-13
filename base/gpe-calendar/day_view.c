@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2001, 2002, 2004, 2005, 2006 Philip Blundell <philb@gnu.org>
- * Copyright (C) 2006 Neal H. Walfield <neal@walfield.org>
+ * Copyright (C) 2006, 2007 Neal H. Walfield <neal@walfield.org>
  * Copyright (C) 2004 Luca De Cicco <ldecicco@gmx.net> 
  *
  * This program is free software; you can redistribute it and/or
@@ -82,15 +82,16 @@ event_rect_expose (struct event_rect *er, GtkWidget *widget, GdkDrawable *w,
     /* Get the background color.  */
     {
       GdkColor bgcolor;
-      EventCalendar *ec = event_get_calendar (er->event);
-      if (event_calendar_get_color (ec, &bgcolor))
+      EventCalendar *ec = event_get_calendar (er->event, NULL);
+      if (ec && event_calendar_get_color (ec, &bgcolor, NULL))
 	er->bgcolor_gc = pen_new (widget,
 				  bgcolor.red, bgcolor.green, bgcolor.blue);
       else
 	/* Light butter.  */
 	er->bgcolor_gc = pen_new (widget,
 				  0xfc00, 0xe900, 0x4f00);
-      g_object_unref (ec);
+      if (ec)
+	g_object_unref (ec);
     }
 
   /* If the the event is completely shown then we draw a straight line
@@ -225,9 +226,9 @@ event_rect_expose (struct event_rect *er, GtkWidget *widget, GdkDrawable *w,
 		 x + width - 1, y + 1 + height - 2 - bottom_arc);
 
   /* Write summary... */
-  char *summary = event_get_summary (er->event);
-  char *location = event_get_location (er->event);
-  char *description = event_get_description (er->event);
+  char *summary = event_get_summary (er->event, NULL);
+  char *location = event_get_location (er->event, NULL);
+  char *description = event_get_description (er->event, NULL);
 
   time_t start = event_get_start (er->event);
   time_t end = start + event_get_duration (er->event);
@@ -679,7 +680,7 @@ calc_events_positions (DayView *day_view, GSList *events)
   GSList *a, *b;
   for (a = events, i = 0; a; a = a->next)
     {
-      if (! event_get_visible (a->data))
+      if (! event_get_visible (a->data, NULL))
 	continue;
 
       info[i].event = a->data;
@@ -988,7 +989,7 @@ update_extents (DayView *day_view)
   int n = 0;
   GSList *l;
   for (l = day_view->reminders; l; l = l->next)
-    if (event_get_visible (EVENT (l->data)))
+    if (event_get_visible (EVENT (l->data), NULL))
       n ++;
 
   if (n == 0 && day_view->reminder_area)
@@ -1025,7 +1026,7 @@ update_extents (DayView *day_view)
     {
       int col = 0;
       for (l = day_view->reminders; l; l = l->next)
-	if (event_get_visible (EVENT (l->data)))
+	if (event_get_visible (EVENT (l->data), NULL))
 	  {
 	    day_view->reminder_rects =
 	      g_slist_prepend (day_view->reminder_rects,
@@ -1415,7 +1416,7 @@ reload_events_hard (DayView *day_view)
   time_t latest = day_view->period_start
     + (ROWS_HARD_FIRST + ROWS_HARD) * 60 * 60;
 
-  GSList *events = event_db_list_for_period (event_db, start, end);
+  GSList *events = event_db_list_for_period (event_db, start, end, NULL);
   GSList *iter;
   for (iter = events; iter; iter = iter->next)
     {

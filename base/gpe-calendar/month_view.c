@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2001, 2002, 2003, 2004, 2005 Philip Blundell <philb@gnu.org>
- * Copyright (C) 2006 Neal H. Walfield <neal@walfield.org>
+ * Copyright (C) 2006, 2007 Neal H. Walfield <neal@walfield.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -799,7 +799,7 @@ render (GtkMonthView *month_view)
 	  for (iter = c->events; iter; iter = iter->next)
 	    {
 	      Event *ev = iter->data;
-	      if (! event_get_visible (ev))
+	      if (! event_get_visible (ev, NULL))
 		continue;
 
 	      char *time = NULL;
@@ -818,10 +818,10 @@ render (GtkMonthView *month_view)
 		}
 
 	      char *text;
-	      char *summary = event_get_summary (ev);
+	      char *summary = event_get_summary (ev, NULL);
 	      if (time)
 		{
-		  text = g_strdup_printf ("%s %s", time, summary);
+		  text = g_strdup_printf ("%s %s", time, summary ?: "");
 		  g_free (summary);
 		  g_free (time);
 		}
@@ -845,7 +845,7 @@ render (GtkMonthView *month_view)
 		}
 
 	      GdkColor color;
-	      if (event_get_color (ev, &color))
+	      if (event_get_color (ev, &color, NULL))
 		{
 		  GdkGC *color_gc;
 
@@ -1038,7 +1038,8 @@ reload_events_hard (GtkMonthView *month_view)
 
   GSList *events
     = event_db_list_for_period (event_db,
-				mktime (&start_tm), mktime (&end_tm) - 1);
+				mktime (&start_tm), mktime (&end_tm) - 1,
+				NULL);
 
   /* PERIOD_END is the day after the end.  Before we want the day of
      the end.  */

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2001, 2002, 2004, 2005, 2006 Philip Blundell <philb@gnu.org>
- * Copyright (C) 2006 Neal H. Walfield <neal@walfield.org>
+ * Copyright (C) 2006, 2007 Neal H. Walfield <neal@walfield.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -483,7 +483,7 @@ draw_expose_event (GtkWidget *widget, GdkEventExpose *event, GtkWidget *wv)
 	  guint height = 0;
 	  Event *ev = iter->data;
 
-	  if (! event_get_visible (ev))
+	  if (! event_get_visible (ev, NULL))
 	    continue;
 
 	  /* Paint the time for events which have a time stamp.  */
@@ -522,13 +522,13 @@ draw_expose_event (GtkWidget *widget, GdkEventExpose *event, GtkWidget *wv)
 
 	  /* Paint the event summary.  */
 	  pango_layout_set_width (pl_evt, text_width * PANGO_SCALE);
-	  char *s = event_get_summary (ev);
-	  pango_layout_set_text (pl_evt, s, -1);
+	  char *s = event_get_summary (ev, NULL);
+	  pango_layout_set_text (pl_evt, s ?: "", -1);
 	  g_free (s);
 	  pango_layout_get_pixel_extents (pl_evt, NULL, &pr);
 
 	  GdkColor color;
-	  if (event_get_color (ev, &color))
+	  if (event_get_color (ev, &color, NULL))
 	    {
 	      GdkGC *color_gc;
 
@@ -698,7 +698,7 @@ reload_events_hard (GtkWeekView *week_view)
   /* Load the events for each day.  */
   GSList *events
     = event_db_list_for_period (event_db, mktime (&period_start_tm),
-				mktime (&period_end_tm) - 1);
+				mktime (&period_end_tm) - 1, NULL);
   GSList *l;
   /* We need to remove one day as the code below requires an inclusive
      period.  */

@@ -1,3 +1,28 @@
+2007-02-13  Neal H. Walfield  <neal@gnu.org>
+
+	* alarm-dialog.c: Update to libeventdb's new API.
+	* calendar-delete-dialog.c: Likewise.
+	* calendar-edit-dialog.c: Likewise.
+	* calendar-update.c: Likewise.
+	* calendars-dialog.c: Likewise.
+	* calendars-widgets.c: Likewise.
+	* day_popup.c: Likewise.
+	* day_view.c: Likewise.
+	* event-cal.c: Likewise.
+	* event-list.c: Likewise.
+	* event-menu.c: Likewise.
+	* event-ui.c: Likewise.
+	* import-export.c: Likewise.
+	* main.c: Likewise.
+	* month_view.c: Likewise.
+	* week_view.c: Likewise.
+
+	* calendar-delete-dialog.c (calendar_delete_dialog_set_calendar):
+	Don't get an unnecessary reference to P.
+	* calendars-widgets.c (calendars_tree_model): Correctly cast
+	info_destroy.
+	* event-ui.c (build_recurrence_page): Correctly case SPIN.
+
 2007-02-12  Neal H. Walfield  <neal@gnu.org>
 
 	* day_view.c (event_rect_expose): Use g_strconcat, not g_strjoin.

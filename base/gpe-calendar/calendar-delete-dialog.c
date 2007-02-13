@@ -1,5 +1,5 @@
 /* calendar-delete-dialog.h - Calendar delete dialog implementation.
-   Copyright (C) 2006 Neal H. Walfield <neal@walfield.org>
+   Copyright (C) 2006, 2007 Neal H. Walfield <neal@walfield.org>
 
    This file is part of GPE.
 
@@ -120,15 +120,15 @@ delete_clicked (GtkButton *button, gpointer user_data)
       EventCalendar *p = 
 	calendars_combo_box_get_active (GTK_COMBO_BOX (d->reparent_combo));
 
-      if (event_calendar_valid_parent (d->ec, p))
+      if (event_calendar_valid_parent (d->ec, p, NULL))
 	{
-	  event_calendar_delete (d->ec, FALSE, p);
+	  event_calendar_delete (d->ec, FALSE, p, NULL);
 	  gtk_widget_destroy (GTK_WIDGET (d));
 	}
       else
 	{
-	  char *ec_title = event_calendar_get_title (d->ec);
-	  char *p_title = event_calendar_get_title (p);
+	  char *ec_title = event_calendar_get_title (d->ec, NULL);
+	  char *p_title = event_calendar_get_title (p, NULL);
 
 	  gpe_error_box_fmt
 	    (_(" %s cannot be the new parent of %s's "
@@ -144,7 +144,7 @@ delete_clicked (GtkButton *button, gpointer user_data)
     }
   else
     {
-      event_calendar_delete (d->ec, TRUE, NULL);
+      event_calendar_delete (d->ec, TRUE, NULL, NULL);
       gtk_widget_destroy (GTK_WIDGET (d));
     }
 }
@@ -167,13 +167,13 @@ calendar_delete_dialog_set_calendar (CalendarDeleteDialog *d,
 		      FALSE, FALSE, 0);
   gtk_widget_show (GTK_WIDGET (d->vbox));
   
-  char *title = event_calendar_get_title (ec);
+  char *title = event_calendar_get_title (ec, NULL);
   char *s = g_strdup_printf (_("Delete Calendar %s"), title);
   gtk_window_set_title (GTK_WINDOW (d), s);
   g_free (s);
 
-  GSList *cals = event_calendar_list_calendars (ec);
-  GSList *events = event_calendar_list_events (ec);
+  GSList *cals = event_calendar_list_calendars (ec, NULL);
+  GSList *events = event_calendar_list_events (ec, NULL);
   s = g_strdup_printf ("<i>%s</i> contains %d calendars and %d events",
 		       title, g_slist_length (cals),
 		       g_slist_length (events));
@@ -221,13 +221,14 @@ calendar_delete_dialog_set_calendar (CalendarDeleteDialog *d,
       gtk_box_pack_start (d->vbox, w, FALSE, FALSE, 0);
       gtk_widget_show (w);
 
-      EventCalendar *p = event_calendar_get_parent (ec);
+      EventCalendar *p = event_calendar_get_parent (ec, NULL);
       if (! p)
-	p = event_db_get_default_calendar (event_db, NULL);
-      else
-	g_object_ref (p);
-      calendars_combo_box_set_active (GTK_COMBO_BOX (w), p);
-      g_object_unref (p);
+	p = event_db_get_default_calendar (event_db, NULL, NULL);
+      if (p)
+	{
+	  calendars_combo_box_set_active (GTK_COMBO_BOX (w), p);
+	  g_object_unref (p);
+	}
     }
   else
     {

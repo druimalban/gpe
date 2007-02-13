@@ -1,8 +1,8 @@
 /*
  * Copyright (C) 2001, 2002, 2003, 2006 Philip Blundell <philb@gnu.org>
- * Hildon adaption 2005 by Matthias Steinbauer <matthias@steinbauer.org>
- * Copyright 2005, 2006 by Florian Boor <florian@kernelconcepts.de>
- * Copyright (C) 2006 Neal H. Walfield <neal@walfield.org>
+ * Hildon adaption (C) 2005 Matthias Steinbauer <matthias@steinbauer.org>
+ * Copyright (C) 2005, 2006 Florian Boor <florian@kernelconcepts.de>
+ * Copyright (C) 2006, 2007 Neal H. Walfield <neal@walfield.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -171,7 +171,7 @@ schedule_wakeup (gboolean reload)
   if (uid)
     schedule_cancel_alarm (uid, wakeup);
 
-  Event *ev = event_db_next_alarm (event_db, time (NULL));
+  Event *ev = event_db_next_alarm (event_db, time (NULL), NULL);
   if (ev)
     {
       char *action = g_strdup_printf ("%s -s 0", gpe_calendar);
@@ -200,9 +200,11 @@ import_file_list (GSList *import_files, const gchar *selected_calendar)
   EventCalendar *ec = NULL;
 
   if (selected_calendar) 
-      ec = event_db_find_calendar_by_name (event_db, selected_calendar);
+      ec = event_db_find_calendar_by_name (event_db, selected_calendar,
+					   NULL);
   if (! ec)
-      ec = event_db_get_default_calendar (event_db, selected_calendar);
+      ec = event_db_get_default_calendar (event_db, selected_calendar,
+					  NULL);
   
   files[n] = NULL;  
   for (i = import_files; i; i = i->next)
@@ -231,7 +233,7 @@ export_calendars (EventDB *edb, const gchar *filename, const gchar *name)
     
   if (name)
     {
-        EventCalendar *ec = event_db_find_calendar_by_name (edb, name);
+        EventCalendar *ec = event_db_find_calendar_by_name (edb, name, NULL);
         
         if (ec)
           {
@@ -244,7 +246,7 @@ export_calendars (EventDB *edb, const gchar *filename, const gchar *name)
   else
     {
       gboolean result;
-      calendars = event_db_list_event_calendars (edb);
+      calendars = event_db_list_event_calendars (edb, NULL);
       result = list_export_to_file (calendars, filename, NULL);
       g_slist_free (calendars);
       return result;
@@ -258,11 +260,11 @@ delete_event (gchar *id)
 {
   Event *ev;
     
-  ev = event_db_find_by_eventid (event_db, id);
+  ev = event_db_find_by_eventid (event_db, id, NULL);
   if (!ev)
     return FALSE;
 
-  return event_remove (ev);
+  return event_remove (ev, NULL);
 }
 
 static gboolean
@@ -273,23 +275,26 @@ flush_deleted_events (const gchar *calname)
 
   if (calname)
     {
-      EventCalendar *ec = event_db_find_calendar_by_name (event_db, calname);
-      
+      EventCalendar *ec = event_db_find_calendar_by_name (event_db, calname,
+							  NULL);
       if (ec)
         {
-          event_calendar_flush_deleted (ec);
+	  GError *err = NULL;
+          event_calendar_flush_deleted (ec, &err);
           g_object_unref (ec);
-          return TRUE;
+	  if (err)
+	    event_db_error_punt (event_db, err);
+          return ! err;
         }
       return FALSE;
     }
   else
     {      
-      calendars = event_db_list_event_calendars (event_db);
+      calendars = event_db_list_event_calendars (event_db, NULL);
       for (iter = calendars; iter; iter = iter->next)
         {
           EventCalendar *ec = iter->data;
-          event_calendar_flush_deleted (ec);
+          event_calendar_flush_deleted (ec, NULL);
         }
       g_slist_free (calendars);
   }
@@ -305,7 +310,7 @@ list_calendars (const gchar *filename)
   gint n;
   gchar *s;
 
-  calendars = event_db_list_event_calendars (event_db);
+  calendars = event_db_list_event_calendars (event_db, NULL);
     
   if (!calendars)
     return TRUE;
@@ -317,7 +322,7 @@ list_calendars (const gchar *filename)
     {
       EventCalendar *ec = iter->data;
 
-      list[i] = event_calendar_get_title (ec);
+      list[i] = event_calendar_get_title (ec, NULL);
       i++;
     }
   g_slist_free (calendars);
@@ -368,11 +373,12 @@ save_deleted_events (const gchar *filename, const gchar *calendarname)
 
   if (calendarname)
     {
-      EventCalendar *ec = event_db_find_calendar_by_name (event_db, calendarname);
+      EventCalendar *ec
+	= event_db_find_calendar_by_name (event_db, calendarname, NULL);
       
       if (ec)
         {
-          events = event_calendar_list_deleted (ec);
+          events = event_calendar_list_deleted (ec, NULL);
           g_object_unref (ec);
         }
       else  
@@ -380,12 +386,13 @@ save_deleted_events (const gchar *filename, const gchar *calendarname)
     }
   else
     {      
-      calendars = event_db_list_event_calendars (event_db);
+      calendars = event_db_list_event_calendars (event_db, NULL);
       for (iter = calendars; iter; iter = iter->next)
         {
           EventCalendar *ec = iter->data;
     
-          events = g_slist_concat (events, event_calendar_list_deleted (ec));
+          events = g_slist_concat (events,
+				   event_calendar_list_deleted (ec, NULL));
         }
       g_slist_free (calendars);
     }
@@ -766,7 +773,8 @@ calendars_visible_toggled (GtkCellRendererToggle *cell_renderer,
       EventCalendar *ec;
 
       gtk_tree_model_get (model, &iter, COL_CALENDAR, &ec, -1);
-      event_calendar_set_visible (ec, ! event_calendar_get_visible (ec));
+      event_calendar_set_visible (ec, ! event_calendar_get_visible (ec, NULL),
+				  NULL);
     }
 }
 
@@ -1290,7 +1298,7 @@ alarms_process_pending (gpointer data)
 
   g_signal_connect (G_OBJECT (event_db), "alarm-fired",
                     G_CALLBACK (alarm_fired), NULL);
-  GSList *list = event_db_list_unacknowledged_alarms (event_db);
+  GSList *list = event_db_list_unacknowledged_alarms (event_db, NULL);
   list = g_slist_sort (list, event_alarm_compare_func);
   GSList *i;
   for (i = list; i; i = g_slist_next (i))
@@ -1544,12 +1552,13 @@ handoff_callback (Handoff *handoff, char *data)
             {
               calendar [0] = 0;
               calendar++;
-              ec = event_db_find_calendar_by_name (event_db, calendar);
+              ec = event_db_find_calendar_by_name (event_db, calendar, NULL);
               if (! ec)
-                ec = event_db_get_default_calendar(event_db, strlen(calendar) ? calendar : NULL);
+                ec = event_db_get_default_calendar
+		  (event_db, *calendar ? calendar : NULL, NULL);
 	    }
           else
-	    ec = event_db_get_default_calendar(event_db, NULL);
+	    ec = event_db_get_default_calendar (event_db, NULL, NULL);
 	  cal_import_from_files (ec, files, NULL);
 	  g_object_unref (ec);
         }
@@ -1904,12 +1913,21 @@ main (int argc, char *argv[])
       || list_deleted_only || list_calendars_only)
     {
       char *filename = CALENDAR_FILE ();
-      event_db = event_db_new (filename);
+      GError *e = NULL;
+      event_db = event_db_new (filename, &e);
       if (! event_db)
         {
-          g_critical ("Failed to open event database.");
+          fprintf (stderr, "Failed to open event database: %s",
+		   e->message);
           exit (1);
         }
+
+      void simple_error_output (EventDB *edb, char *err)
+	{
+	  fprintf (stderr, "%s\n", err);
+	}
+      g_signal_connect (G_OBJECT (event_db),
+			"error", G_CALLBACK (simple_error_output), NULL);
     }
     
   /* No instance running but called with -s. */
@@ -1990,13 +2008,22 @@ main (int argc, char *argv[])
 
   /* Load the event database.  */
   char *filename = CALENDAR_FILE ();
-  event_db = event_db_new (filename);
+  GError *e = NULL;
+  event_db = event_db_new (filename, &e);
   if (! event_db)
     {
-      g_critical ("Failed to open event database: %s.", filename);
+      gpe_error_box_fmt ("Failed to open %s: %s", filename, e->message);
       exit (1);
     }
   g_free (filename);
+
+  void gui_error_output (EventDB *edb, char *err)
+    {
+      gpe_error_box (e->message);
+      fprintf (stderr, "%s\n", err);
+    }
+  g_signal_connect (G_OBJECT (event_db),
+		    "error", G_CALLBACK (gui_error_output), NULL);
 
   /* Process the pending alarms once the system is up and running.  */
   g_idle_add (alarms_process_pending, event_db);

@@ -1,5 +1,5 @@
 /* alarms.c - Alarm Dialogue Implementation.
-   Copyright (C) 2006 Neal H. Walfield <neal@walfield.org>
+   Copyright (C) 2006, 2007 Neal H. Walfield <neal@walfield.org>
 
    This file is part of GPE.
 
@@ -340,7 +340,7 @@ ack_event_clicked (GtkWidget *button, gpointer d)
   data->alarm_dialog->events = g_list_remove (data->alarm_dialog->events, d);
   gtk_container_remove (GTK_CONTAINER (data->alarm_dialog->event_container),
 			data->container);
-  event_acknowledge (data->event);
+  event_acknowledge (data->event, NULL);
   g_object_unref (data->event);
   g_free (data);
 
@@ -364,9 +364,9 @@ event_get_layout (Event *ev, GtkWidget *widget, int width)
       return s;
     }
       
-  char *summary = str (event_get_summary (ev));
-  char *description = str (event_get_description (ev));
-  char *location = str (event_get_location (ev));
+  char *summary = str (event_get_summary (ev, NULL));
+  char *description = str (event_get_description (ev, NULL));
+  char *location = str (event_get_location (ev, NULL));
   char *buffer
     = g_strdup_printf (_("%s%s%s%s%s%s%s%s"),
 		       summary ? _("<b>Summary</b>: ") : "",

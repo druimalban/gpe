@@ -1,5 +1,5 @@
 /* calendar-edit-dialog.c - Calendar edit dialog implementation.
-   Copyright (C) 2006 Neal H. Walfield <neal@walfield.org>
+   Copyright (C) 2006, 2007 Neal H. Walfield <neal@walfield.org>
 
    This file is part of GPE.
 
@@ -228,22 +228,26 @@ response (GtkDialog *dialog, gint response_id, gpointer user_data)
 				       gtk_entry_get_text (d->url),
 				       &d->color,
 				       gtk_combo_box_get_active (d->mode),
-				       interval);
+				       interval, NULL);
     }
   else
     {
-      event_calendar_set_parent (d->ec, parent);
-      event_calendar_set_title (d->ec, gtk_entry_get_text (d->title));
+      event_calendar_set_parent (d->ec, parent, NULL);
+      event_calendar_set_title (d->ec, gtk_entry_get_text (d->title), NULL);
       event_calendar_set_description (d->ec,
-				      gtk_entry_get_text (d->description));
-      event_calendar_set_url (d->ec, gtk_entry_get_text (d->url));
-      event_calendar_set_color (d->ec, &d->color);
-      event_calendar_set_mode (d->ec, gtk_combo_box_get_active (d->mode));
-      event_calendar_set_sync_interval (d->ec, interval);
+				      gtk_entry_get_text (d->description),
+				      NULL);
+      event_calendar_set_url (d->ec, gtk_entry_get_text (d->url), NULL);
+      event_calendar_set_color (d->ec, &d->color, NULL);
+      event_calendar_set_mode (d->ec, gtk_combo_box_get_active (d->mode),
+			       NULL);
+      event_calendar_set_sync_interval (d->ec, interval, NULL);
     }
 
-  event_calendar_set_username (d->ec, gtk_entry_get_text (d->username));
-  event_calendar_set_password (d->ec, gtk_entry_get_text (d->password));
+  event_calendar_set_username (d->ec, gtk_entry_get_text (d->username),
+			       NULL);
+  event_calendar_set_password (d->ec, gtk_entry_get_text (d->password),
+			       NULL);
 }
 
 static void
@@ -465,7 +469,7 @@ calendar_edit_dialog_new (EventCalendar *ec)
       calendar_edit->ec = ec;
       g_object_ref (ec);
 
-      EventCalendar *p = event_calendar_get_parent (ec);
+      EventCalendar *p = event_calendar_get_parent (ec, NULL);
       if (p)
 	{
 	  calendars_combo_box_set_active (calendar_edit->parent, p);
@@ -474,33 +478,33 @@ calendar_edit_dialog_new (EventCalendar *ec)
 	    (GTK_TOGGLE_BUTTON (calendar_edit->parent_check), TRUE);
 	}
 
-      char *s = event_calendar_get_title (ec);
+      char *s = event_calendar_get_title (ec, NULL);
       gtk_entry_set_text (calendar_edit->title, s ?: "");
       g_free (s);
 
-      s = event_calendar_get_description (ec);
+      s = event_calendar_get_description (ec, NULL);
       gtk_entry_set_text (calendar_edit->description, s ?: "");
       g_free (s);
 
-      if (event_calendar_get_color (ec, &calendar_edit->color))
+      if (event_calendar_get_color (ec, &calendar_edit->color, NULL))
 	set_color (calendar_edit, &calendar_edit->color);
 
       gtk_combo_box_set_active (calendar_edit->mode,
-				event_calendar_get_mode (ec));
+				event_calendar_get_mode (ec, NULL));
 
-      s = event_calendar_get_url (ec);
+      s = event_calendar_get_url (ec, NULL);
       gtk_entry_set_text (calendar_edit->url, s ?: "");
       g_free (s);
 
-      s = event_calendar_get_username (ec);
+      s = event_calendar_get_username (ec, NULL);
       gtk_entry_set_text (calendar_edit->username, s ?: "");
       g_free (s);
 
-      s = event_calendar_get_password (ec);
+      s = event_calendar_get_password (ec, NULL);
       gtk_entry_set_text (calendar_edit->password, s ?: "");
       g_free (s);
 
-      int interval = event_calendar_get_sync_interval (ec);
+      int interval = event_calendar_get_sync_interval (ec, NULL);
       if (interval)
 	{
 	  int i;
