@@ -406,10 +406,10 @@ pulled (SoupMessage *msg, gpointer data)
       GIOChannel *channel = g_io_channel_from_buffer (msg->response.body,
 						      msg->response.length);
       GError *error = NULL;
-      int err = cal_import_from_channel (info->ec, channel, &error);
+      int res = cal_import_from_channel (info->ec, channel, &error);
       g_io_channel_unref (channel);
 
-      if (err)
+      if (! res)
 	{
 	  if (info->last_internal_code != BAD_PARSE)
 	    {
@@ -421,7 +421,7 @@ pulled (SoupMessage *msg, gpointer data)
 	    }
 	  need_retry (info);
 	}
-      if (! err)
+      if (res)
 	{
 	  event_calendar_set_last_pull (info->ec, time (NULL), NULL);
 	  info->last_status_code = 0;
