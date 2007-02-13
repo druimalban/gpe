@@ -1,5 +1,9 @@
 2007-02-13  Neal H. Walfield  <neal@gnu.org>
 
+	* gpe/event-db.h (event_db_error_punt): Fix documentation.
+
+2007-02-13  Neal H. Walfield  <neal@gnu.org>
+
 	* gpe/event-db.h (event_db_error_punt): New prototype.
 	* event-db.c (event_db_error_punt): New function.
 

@@ -110,7 +110,7 @@ typedef void (*EventDBError) (EventDB *, const char *);
 
   Propagates an error via the "error" signal.  Useful if you accepted
   an error but now don't want to propagate it via the function call
-  chain.  Does not free ERROR.
+  chain.  Frees ERROR.
  */
 extern void event_db_error_punt (EventDB *edb, GError *error);
 
