@@ -1,5 +1,15 @@
 2007-02-13  Neal H. Walfield  <neal@gnu.org>
 
+	* gpe/vcal.h (cal_import_from_channel): Update documentation to
+	reflect the actual meaning of the return code.
+	(cal_import_from_vmimedir): Likewise.
+	(cal_export_to_file): Likewise.
+	(list_export_to_file): Likewise.
+	* gpe/vevent.h (event_import_from_vevent): Likewise.
+	(event_export_to_file): Likewise.
+
+2007-02-13  Neal H. Walfield  <neal@gnu.org>
+
 	* priv.h (ERROR_PROPAGATE): New macro.
 	* vcal.c (cal_export_as_string): Update to libeventdb's API
 	change.

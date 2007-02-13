@@ -26,7 +26,7 @@
 
 /* Import the event EVENT into the calendar EC.  If no error occured
    and NEW_EV is not NULL, return the event in *NEW_EV.  Returns
-   whether the import was successful.  */
+   whether the function executed successfully.  */
 extern gboolean event_import_from_vevent (EventCalendar *ec,
 					  MIMEDirVEvent *event,
 					  Event **new_ev, GError **error);
@@ -39,7 +39,8 @@ extern MIMEDirVEvent *event_export_as_vevent (Event *ev);
    string using g_free.  */
 extern char *event_export_as_string (Event *ev);
 
-/* Exports the event EV to the file named by FILENAME.  */
+/* Exports the event EV to the file named by FILENAME.  Returns
+   whether the function executed successfully.  */
 extern gboolean event_export_to_file (Event *ev, const gchar *filename,
 				      GError **error);
 

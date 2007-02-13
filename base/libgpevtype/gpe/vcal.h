@@ -24,14 +24,14 @@
 #include <gpe/event-db.h>
 
 /* Import the calendar contained in CHANNEL.  Parse it and stuff it
-   into EC (which may not be NULL).  Returns whether an error occured
-   during import.  */
+   into EC (which may not be NULL).  Returns whether the function
+   executed successfully.  */
 extern gboolean cal_import_from_channel (EventCalendar *ec,
 					 GIOChannel *channel,
 					 GError **error);
 
 /* Import the list of VComponents, CALLIST, into calendar EC.  Returns
-   whether an error occurred during import.  */
+   whether the function executed successfully.  */
 extern gboolean cal_import_from_vmimedir (EventCalendar *ec,
 					  GList *callist,
 					  GError **error);
@@ -42,13 +42,14 @@ extern gboolean cal_import_from_vmimedir (EventCalendar *ec,
    returned string using g_free.  */
 extern char *cal_export_as_string (EventCalendar *ec);
 
-/* Exports the calendar EC to the file named by FILENAME.  */
+/* Exports the calendar EC to the file named by FILENAME.  Returns
+   whether an error occurred during import.  */
 extern gboolean cal_export_to_file (EventCalendar *ec,
 				    const gchar *filename,
 				    GError **error);
 
 /* Exports the list of Events and EventCalendars to the file named by
-   FILENAME.  */
+   FILENAME.  Returns whether an error occurred during import.  */
 extern gboolean list_export_to_file (GSList *things, const gchar *filename,
 				     GError **error);
 
