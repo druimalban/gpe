@@ -1,5 +1,10 @@
 2007-02-13  Neal H. Walfield  <neal@gnu.org>
 
+	Closes #1792 (handhelds.org).
+	* main.c (main): Call osso_initialize earlier.
+
+2007-02-13  Neal H. Walfield  <neal@gnu.org>
+
 	Closes #1794 (handhelds.org).
 	* calendar-update.c (pulled): Correct error logic.
 

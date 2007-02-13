@@ -1992,6 +1992,17 @@ main (int argc, char *argv[])
   if (gpe_load_icons (my_icons) == FALSE)
     exit (1);
 
+#ifdef IS_HILDON
+  /* Initialize maemo application */
+  osso_context = osso_initialize(APPLICATION_DBUS_SERVICE, "0.1", TRUE, NULL);
+
+  /* Check that initialization was ok */
+  if (osso_context == NULL)
+    return OSSO_ERROR;
+
+  osso_application_set_top_cb (osso_context, osso_top_callback, NULL);
+#endif
+
   /* Set the TIMEFMT.  */
 
   gchar timebuf[3];
@@ -2058,17 +2069,6 @@ main (int argc, char *argv[])
       exit (EXIT_SUCCESS);
     }
 	
-#ifdef IS_HILDON
-  /* Initialize maemo application */
-  osso_context = osso_initialize(APPLICATION_DBUS_SERVICE, "0.1", TRUE, NULL);
-
-  /* Check that initialization was ok */
-  if (osso_context == NULL)
-    return OSSO_ERROR;
-
-  osso_application_set_top_cb (osso_context, osso_top_callback, NULL);
-#endif
-
   /* If a display migration occurred, this may already be set.  */
   if (! viewtime)
     time (&viewtime);
