@@ -11,7 +11,6 @@
 
 #include <glib-object.h>
 #include <glib.h>
-#include <gpe/errorbox.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -157,8 +156,6 @@ event_source_dispose (GObject *obj)
   /* Chain up to the parent class */
   G_OBJECT_CLASS (event_source_parent_class)->dispose (obj);
 }
-
-static gboolean event_write (EventSource *ev, char **err);
 
 static void
 event_source_finalize (GObject *object)

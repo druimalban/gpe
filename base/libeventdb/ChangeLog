@@ -1,6 +1,8 @@
 2007-02-13  Neal H. Walfield  <neal@gnu.org>
 
 	Closes #14.
+	* configure.ac: Remove libgpewidget dependency.  Add gobject-2.0
+	dependency.
 	* event-cal.c: Change functions to use GErrors.
 	* event-cal.c: Likewise.
 	* event-cal.h: Likewise.
@@ -10,6 +12,8 @@
 	* event.h: Likewise.
 	* gpe/event-db.h: Likewise.
 	* sqlite.c: Likewise.
+	* event-db.c: Don't include <gpe/errorbox.h>.
+	* event.c: Likewise.
 	* alarms.c: Update to new API.
 	* event-list.c: Likewise.
 	* eventid.c: Likewise.

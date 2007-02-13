@@ -13,7 +13,6 @@
 #include <glib.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <gpe/errorbox.h>
 #include <libintl.h>
 #include <string.h>
 
