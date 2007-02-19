@@ -8,7 +8,7 @@ Section: libs
 Package: libtododb-dev
 Section: libdev
 Architecture: any
-Depends: libtododb0 (= ${Source-Version}) libgpewidget-dev libgpepimc-dev
+Depends: libtododb0 (= ${Source-Version}), libgpewidget-dev, libgpepimc-dev
 Description: GPE ToDo database API library (development files)
  This library provides an API interface for accessing ToDo data used in 
  GPE PIM applications.
@@ -18,7 +18,7 @@ Description: GPE ToDo database API library (development files)
 Package: libtododb0
 Section: libs
 Architecture: any
-Depends: maemo libgpepimc0
+Depends: libgpepimc0
 Description: GPE ToDo database API library
  This library provides an API interface for accessing ToDo data used in 
  GPE PIM applications.
