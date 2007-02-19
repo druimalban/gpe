@@ -9,7 +9,7 @@
  */
 
 #ifndef CALLBACKS_H
-#define cALLBACKS_H
+#define CALLBACKS_H
 
 #include "starling.h"
 

@@ -8,6 +8,7 @@
  * 2 of the License, or (at your option) any later version.
  */
 
+#include <locale.h>
 #include <gst/gst.h>
 
 #include <gtk/gtkmain.h>

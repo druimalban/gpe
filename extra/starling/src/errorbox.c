@@ -10,6 +10,7 @@
  * 2 of the License, or (at your option) any later version.
  */
 
+#include <stdio.h>
 #include <stdarg.h>
 
 #ifdef ENABLE_GPE
