@@ -1,0 +1,402 @@
+# translation of fi.po to suomi
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Asmo Koskinen <asmo.koskinen@arkki.info>, 2007.
+msgid ""
+msgstr ""
+"Project-Id-Version: fi\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2006-07-04 01:58+0200\n"
+"PO-Revision-Date: 2007-02-12 09:39+0200\n"
+"Last-Translator: Asmo Koskinen <asmo.koskinen@arkki.info>\n"
+"Language-Team: suomi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
+"Plural-Forms:  nplurals=2; plural=(n != 1);\n"
+
+#. TRANSLATORS: kB = kilo bytes
+#: ../configure.c:130 ../configure.c:340
+msgid "Current size:"
+msgstr "Nykyinen koko:"
+
+#: ../configure.c:131
+msgid "kB (optimised)"
+msgstr "kt (optimoitu)"
+
+#: ../configure.c:177
+msgid "Detail panel:"
+msgstr "Yksityiskohdat:"
+
+#: ../configure.c:206
+msgid "NAME"
+msgstr "NIMI"
+
+#: ../configure.c:216
+msgid "Add"
+msgstr "Lisää"
+
+#: ../configure.c:223
+msgid "Remove"
+msgstr "Poista"
+
+#: ../configure.c:245
+msgid "Label"
+msgstr "Nimilappu"
+
+#: ../configure.c:250
+msgid "Data item"
+msgstr "Tietoa"
+
+#: ../configure.c:294
+msgid "Screen Layout"
+msgstr "Näytön asettelu"
+
+#: ../configure.c:300
+msgid "List position"
+msgstr "Listan asema"
+
+#: ../configure.c:303
+msgid "left"
+msgstr "vasen"
+
+#: ../configure.c:305
+msgid "right"
+msgstr "oikea"
+
+#: ../configure.c:333
+msgid "Database Size"
+msgstr "Tietokannan koko"
+
+#: ../configure.c:340
+msgid "kB"
+msgstr "kt"
+
+#: ../configure.c:345
+msgid "Actions"
+msgstr "Toiminnot"
+
+#: ../configure.c:352
+msgid "Optimise database"
+msgstr "Optimoi tietokantaa"
+
+#: ../configure.c:355
+msgid "Run"
+msgstr "Suorita"
+
+#: ../configure.c:461
+msgid "Editing Layout"
+msgstr "Muokkaa asettelua"
+
+#: ../configure.c:463
+msgid "Setup"
+msgstr "Asennus"
+
+#: ../configure.c:464
+msgid "Database"
+msgstr "Tietokanta"
+
+#: ../configure.c:496
+msgid "Contacts: Configuration"
+msgstr "Yhteystiedot: määritykset"
+
+#: ../edit-vcard.desktop.in.in.h:1
+msgid "Edit personal vcard"
+msgstr "Muokkaa henkilökohtaisia VCard-tietoja"
+
+#: ../edit-vcard.desktop.in.in.h:2
+msgid "My VCard"
+msgstr "VCard-tietoni"
+
+#: ../editing.c:135 ../main.c:1346
+msgid "Details"
+msgstr "Yksityiskohdat"
+
+#: ../editing.c:367
+msgid "no year"
+msgstr "ei vuotta"
+
+#: ../editing.c:426
+msgid "Image"
+msgstr "Kuva"
+
+#: ../editing.c:539 ../namedetail.c:66 ../structure.c:177
+msgid "Cancel"
+msgstr "Peruuta"
+
+#: ../editing.c:540 ../namedetail.c:64
+msgid "OK"
+msgstr "OK"
+
+#: ../editing.c:650 ../main.c:502 ../main.c:629
+msgid "Categories"
+msgstr "Luokat"
+
+#: ../editing.c:1431
+msgid "Select image"
+msgstr "Valitse kuva"
+
+#: ../export.c:190
+msgid "Save as..."
+msgstr "Tallenna nimellä..."
+
+#. create dialog window
+#: ../finddlg.c:37
+msgid "Find Contacts"
+msgstr "Etsi yhteystietoja"
+
+#. supply action area
+#: ../finddlg.c:49
+msgid "Search for:"
+msgstr "Etsi:"
+
+#: ../gpe-contacts.desktop.in.in.h:1 ../main.c:1282
+#: ../hildon/gpe-contacts.desktop.in.in.h:1
+msgid "Contacts"
+msgstr "Yhteystiedot"
+
+#: ../gpe-contacts.desktop.in.in.h:2
+msgid "GPE Contacts"
+msgstr "GPE-yhteystiedot"
+
+#: ../main.c:77 ../main.c:179
+msgid "Edit Contact"
+msgstr "Muokkaa yhteystietoa"
+
+#: ../main.c:83 ../main.c:195
+msgid "Really delete this contact?"
+msgstr "Haluatko todella poistaa tämän yhteystiedon?"
+
+#: ../main.c:83 ../main.c:195 ../structure.c:176
+msgid "Confirm"
+msgstr "Vahvista"
+
+#: ../main.c:135
+msgid "All categories"
+msgstr "Kaikki luokat"
+
+#: ../main.c:157
+msgid "New Contact"
+msgstr "Uusi yhteystieto"
+
+#: ../main.c:513
+msgid "No contact selected."
+msgstr "Yhtään yhteystietoa ei ole valittu."
+
+#. create and set up dialog
+#. * detail section *
+#: ../main.c:585 ../main.c:1418 ../main.c:1490
+msgid "Contact"
+msgstr "Yhteystieto"
+
+#: ../main.c:1202
+msgid "Choose file"
+msgstr "Valitse tiedosto"
+
+#: ../main.c:1230
+msgid "Import of"
+msgstr "Tuonti"
+
+#: ../main.c:1230
+msgid "files failed:"
+msgstr "epäonnistuneet tiedostot:"
+
+#: ../main.c:1234
+msgid "Import successful"
+msgstr "Tuonti onnistui"
+
+#: ../main.c:1299
+msgid "Tap this button to add a new contact."
+msgstr "Napauta tästä lisätäksesi uuden yhteystiedon."
+
+#: ../main.c:1308
+msgid "Tap here to edit the selected contact."
+msgstr "Napauta tästä muokataksesi valittua yhteystietoa."
+
+#: ../main.c:1318
+msgid "Tap here to delete the selected contact."
+msgstr "Napauta tästä poistaaksesi valitun yhteystiedon."
+
+#: ../main.c:1338
+msgid "Find a contact by searching for any data."
+msgstr "Etsi yhteystietoja millä tahansa tiedolla."
+
+#: ../main.c:1348
+msgid "Tap here to show contacts details."
+msgstr "Napauta tästä nähdäksesi yksityiskohdat yhteystiedoista."
+
+#: ../main.c:1358
+msgid "Tap here to configure this program."
+msgstr "Napauta tästä muokataksesi tätä ohjelmaa."
+
+#: ../main.c:1366
+msgid "Import"
+msgstr "Tuo"
+
+#: ../main.c:1368
+msgid "Open file to import a contact from it."
+msgstr "Avaa tiedosto tuodaksesi yhteystiedot siitä."
+
+#: ../main.c:1381
+msgid "Tap here to exit gpe-contacts."
+msgstr "Napauta tästä poistuaksesi GPE-yhteystiedoista."
+
+#. * find and categories section *
+#: ../main.c:1447
+msgid "Find:"
+msgstr "Etsi:"
+
+#: ../main.c:1454
+msgid "in"
+msgstr "sisään"
+
+#: ../main.c:1587
+#, c-format
+msgid "Could not import file %s."
+msgstr "Tiedostoa %s ei voitu tuoda."
+
+#: ../main.c:1592
+#, c-format
+msgid "File %s imported sucessfully."
+msgstr "Tiedosto %s tuotiin onnistuneesti."
+
+#: ../main.c:1618
+msgid "My Card"
+msgstr "Korttini"
+
+#: ../main.c:1621
+msgid "Saving vcard failed"
+msgstr "VCard-tietojen tallennus epäonnistui"
+
+#. TRANSLATORS: These abbreviations are a list of common titles used in a name
+#: ../namedetail.c:30
+msgid "Dr."
+msgstr "toht."
+
+#: ../namedetail.c:30
+msgid "Miss"
+msgstr "neiti"
+
+#: ../namedetail.c:30
+msgid "Mr."
+msgstr "herra"
+
+#: ../namedetail.c:30
+msgid "Mrs."
+msgstr "rouva"
+
+#: ../namedetail.c:30
+msgid "Ms."
+msgstr "Ms."
+
+#: ../namedetail.c:30
+msgid "Prof."
+msgstr "prof."
+
+#: ../namedetail.c:30
+msgid "Sir"
+msgstr "Sir"
+
+#. TRANSLATORS: This is a list of common name suffixes
+#: ../namedetail.c:32
+msgid "Jr."
+msgstr "Jr."
+
+#: ../namedetail.c:32
+msgid "Esq."
+msgstr "Esq."
+
+#: ../namedetail.c:32
+msgid "Sr."
+msgstr "Sr."
+
+#: ../namedetail.c:32
+msgid "I"
+msgstr "I"
+
+#: ../namedetail.c:32
+msgid "II"
+msgstr "II"
+
+#: ../namedetail.c:32
+msgid "III"
+msgstr "III"
+
+#: ../namedetail.c:62 ../namedetail.c:69
+msgid "Edit Name Details"
+msgstr "Muokkaa nimen yksityiskohtia"
+
+#: ../namedetail.c:97
+msgid "First name:"
+msgstr "Etunimi:"
+
+#: ../namedetail.c:98
+msgid "Middle name:"
+msgstr "Toinen etunimi:"
+
+#: ../namedetail.c:99
+msgid "Last name:"
+msgstr "Sukunimi:"
+
+#: ../namedetail.c:100
+msgid "Suffix:"
+msgstr "Jälkiliite:"
+
+#: ../namedetail.c:101
+msgid "Title:"
+msgstr "Otsikko:"
+
+#: ../structure.c:105 ../structure.c:235
+msgid "New page"
+msgstr "Uusi sivu"
+
+#: ../structure.c:105 ../structure.c:124 ../structure.c:149
+msgid "Title"
+msgstr "Otsikko"
+
+#: ../structure.c:124
+msgid "New group"
+msgstr "Uusi ryhmä"
+
+#: ../structure.c:136 ../structure.c:166
+msgid "No container selected"
+msgstr "Mitään sisältöjä ei ole valittu"
+
+#: ../structure.c:150
+msgid "Tag"
+msgstr "Lappu"
+
+#: ../structure.c:152
+msgid "New field"
+msgstr "Uusi kenttä"
+
+#: ../structure.c:176
+msgid "Really delete this field?"
+msgstr "Haluatko todella poistaa tämän kentän?"
+
+#: ../structure.c:177
+msgid "Delete"
+msgstr "Poista"
+
+#: ../structure.c:234
+msgid "Page"
+msgstr "Sivu"
+
+#: ../structure.c:235
+msgid "Tap here to add a page."
+msgstr "Napauta tästä lisätäksesi sivun."
+
+#: ../structure.c:251
+msgid "Delete item"
+msgstr "Poista kohta"
+
+#: ../structure.c:251
+msgid "Tap here to delete the selected item."
+msgstr "Napauta tästä poistaaksesi valittu kohta."
+
+#: ../hildon/gpe-contacts.desktop.in.in.h:2
+msgid "GPE Contacts Application"
+msgstr "GPE-yhteystiedot-sovellus"
+
