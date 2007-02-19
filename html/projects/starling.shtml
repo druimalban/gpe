@@ -37,7 +37,7 @@
 	stable and included in the distributions soon.</p>
     <p>
       The source code can be found in <A href="../download.phtml">SVN</A>,
-      module <b>base/<!--#echo var="appname"--></b>.  
+      module <b>extra/<!--#echo var="appname"--></b>.  
 	</p>
 	<p>
 	  Distributions known to ship <i><!--#echo var="appname"--></i> are:
