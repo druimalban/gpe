@@ -79,7 +79,7 @@ case `module_id` in
 		ARGS="$ARGS -dpi 100 -screen 480x640@270" ;;
 	# This is a fallback for PCs
 	"")
-		ARGS="$ARGS -dpi 100 -mode 0x012e"
+		ARGS="$ARGS -dpi 100 -mode 0x0117"
 esac
 
 exec $XSERVER $ARGS $*
