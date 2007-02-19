@@ -1,205 +1,266 @@
 # Keep devices.h in sync with this file
 
-[Devices]
-
 #dummy entry
 [none]
 ID = 0
 
 [Strongarm iPAQ]
 ID = 1
-Pattern = "HP iPAQ H3100", "HP iPAQ H3600", "HP iPAQ H3700", "HP iPAQ H3800"
-Name = "iPAQ"
-Model = "SA"
-Type = "ipaq"
-Manufacturer = "HP"
+Pattern = HP iPAQ H3100;HP iPAQ H3600;HP iPAQ H3700;HP iPAQ H3800
+Name = iPAQ
+Model = SA
+Type = ipaq
+Manufacturer = HP
 Features = 0x01
 
 [Xscale iPAQ]
 ID = 2
-Pattern =  "HP iPAQ H5400",  "HP iPAQ H2200",  "HP iPAQ HX4700"
-Name = "iPAQ"
-Model = "PXA"
-Type = "ipaq"
-Manufacturer = "HP"
+Pattern =  HP iPAQ H5400;HP iPAQ H2200;HP iPAQ HX4700
+Name = iPAQ
+Model = PXA
+Type = ipaq
+Manufacturer = HP
 Features = 0x01
 
 [Simpad]
 ID = 3
-Pattern =  "Simpad"
-Name = "Simpad"
-Model = "SL4 or CL4"
-Type = "simpad"
-Manufacturer = "Siemens"
+Pattern = Simpad
+Name = Simpad
+Model = SL4 or CL4
+Type = simpad
+Manufacturer = Siemens
 Features = 0x04
 
 [Ramses]
 ID = 4
-Pattern =  "Ramses"
+Pattern = Ramses
 Name =
-Model = ""
-Type = "ramses"
-Manufacturer = ""
+Model = 
+Type = ramses
+Manufacturer =
 Features = 0x10
 
 [Collie]
 ID = 5
-Pattern =  "Sharp-Collie", "Collie"
-Name = "Zaurus"
-Model = "Collie"
-Type = "zaurus-portrait"
-Manufacturer = "Sharp"
+Pattern = Sharp-Collie;Collie
+Name = Zaurus
+Model = Collie
+Type = zaurus-portrait
+Manufacturer = Sharp
 Features = 0x01
 
 [Poodle]
 ID = 6
-Pattern =  "Poodle"
-Name = "Zaurus"
-Model = "Poodle"
-Type = "zaurus-clamshell"
-Manufacturer = "Sharp"
+Pattern = Poodle
+Name = Zaurus
+Model = Poodle
+Type = zaurus-clamshell
+Manufacturer = Sharp
 Features = 0x01
 
 [SHARP Shepherd]
 ID = 7
-Pattern =  "SHARP Shepherd"
-Name = "Zaurus"
-Model = "Shepherd"
-Type = "zaurus-clamshell"
-Manufacturer = "Sharp"
+Pattern = SHARP Shepherd
+Name = Zaurus
+Model = Shepherd
+Type = zaurus-clamshell
+Manufacturer = Sharp
 Features = 0x01
 
 [SHARP Husky]
 ID = 8
-Pattern =  "SHARP Husky"
-Name = "Zaurus"
-Model = "Husky"
-Type = "zaurus-clamshell"
-Manufacturer = "Sharp"
+Pattern = SHARP Husky
+Name = Zaurus
+Model = Husky
+Type = zaurus-clamshell
+Manufacturer = Sharp
 Features = 0x01
 
 [SHARP Akita]
 ID = 9
-Pattern =  "SHARP Akita"
-Name = "Zaurus"
-Model = "Akita"
-Type = "zaurus-clamshell"
-Manufacturer = "Sharp"
+Pattern = SHARP Akita
+Name = Zaurus
+Model = Akita
+Type = zaurus-clamshell
+Manufacturer = Sharp
 Features = 0x01
 
 [SHARP Spitz]
 ID = 10
-Pattern =  "SHARP Spitz"
-Name = "Zaurus"
-Model = "Spitz"
-Type = "zaurus-clamshell"
-Manufacturer = "Sharp"
+Pattern = SHARP Spitz
+Name = Zaurus
+Model = Spitz
+Type = zaurus-clamshell
+Manufacturer = Sharp
 Features = 0x01
 
 [SHARP Corgi]
 ID = 11
-Pattern =  "SHARP Corgi"
-Name = "Zaurus"
-Model = "Corgi"
-Type = "zaurus-clamshell"
-Manufacturer = "Sharp"
+Pattern = SHARP Corgi
+Name = Zaurus
+Model = Corgi
+Type = zaurus-clamshell
+Manufacturer = Sharp
 Features = 0x01
 
 [SHARP Porzoi]
 ID = 12
-Pattern =  "SHARP Borzoi"
-Name = "Zaurus"
-Model = "Borzoi"
-Type = "zaurus-clamshell"
-Manufacturer = "Sharp"
+Pattern =  SHARP Borzoi
+Name = Zaurus
+Model = Borzoi
+Type = zaurus-clamshell
+Manufacturer = Sharp
 Features = 0x01
 
 [Nokia 770]
 ID = 13
-Pattern =  "Generic OMAP1510/1610/1710"
-Name = "770"
-Model = ""
-Type = "nokia-tablet"
-Manufacturer = "Nokia"
+Pattern = Generic OMAP1510/1610/1710
+Name = 770
+Model =
+Type = nokia-tablet
+Manufacturer = Nokia
 Features = 0x04
 
 [Netbook Pro]
 ID = 14
-Pattern =  "Psion Teklogix NetBookPro"
-Name = "Netbook Pro"
-Model = ""
-Type = "netbook"
-Manufacturer = "Psion Teklogix"
+Pattern = Psion Teklogix NetBookPro
+Name = Netbook Pro
+Model =
+Type = netbook
+Manufacturer = Psion Teklogix
 Features = 0x01
 
 [Integral]
 ID = 15
-Pattern = "HW 90200"
-Name = "skeye.integral"
-Model = ""
-Type = "hwmde"
-Manufacturer = "Höft & Wessel"
+Pattern = HW 90200
+Name = skeye.integral
+Model =
+Type = hwmde
+Manufacturer = Höft & Wessel
 Features = 0x10
 
 [C8000]
 ID = 16
-Pattern =  "Cellon C8000 Board"
-Name = "Cellon C800 based phone"
-Model = ""
-Type = ""
-Manufacturer = "small-phone"
+Pattern = Cellon C8000 Board
+Name = Cellon C800 based phone
+Model =
+Type =
+Manufacturer = small-phone
 Features = 0x08
 
 [Jornada]
 ID = 17
-Pattern =  "HP Jornada 720", "HP Jornada 820", "HP Jornada 56X"
+Pattern = HP Jornada 720;HP Jornada 820;HP Jornada 56X
 Name =
 Model =
-Type = "jornada"
-Manufacturer = ""
+Type = jornada
+Manufacturer =
 Features = 0x01
 
-[SGI Workstations]
+[SGI O2]
 ID = 18
-Pattern = "SGI O2", "SGI Indy", "SGI Indigo2"
-Name =
-Model = ""
-Type = "workstation"
-Manufacturer = "Silicon Graphics"
+Pattern = SGI O2
+Name = SGI O2
+Model =
+Type = workstation
+Manufacturer = Silicon Graphics
+Features = 0x02
+
+[SGI Indy]
+ID = 19
+Pattern = SGI Indy
+Name = SGI Indy
+Model =
+Type = workstation
+Manufacturer = Silicon Graphics
+Features = 0x02
+
+[SGI Indigo2]
+ID = 20
+Pattern = SGI Indigo2
+Name = SGI Indigo2
+Model =
+Type = workstation
+Manufacturer = Silicon Graphics
 Features = 0x02
 
 [Octane]
-ID = 19
-Pattern = "SGI IP30", "SGI Octane"
-Name = "SGI Octane"
-Model = ""
-Type = "workstation"
-Manufacturer = "Silicon Graphics"
+ID = 21
+Pattern = SGI IP30;SGI Octane
+Name = SGI Octane
+Model =
+Type = workstation
+Manufacturer = Silicon Graphics
+Features = 0x02
+
+[X86 PC]
+ID = 22
+Pattern =
+Name = X86 PC compatible
+Model =
+Type = workstation
+Manufacturer =
+Features = 0x02
+
+[PowerPC]
+ID = 23
+Pattern =
+Name = PowerPC
+Model =
+Type = workstation
+Manufacturer =
+Features = 0x02
+
+[Sparc]
+ID = 24
+Pattern =
+Name = Sparc
+Model =
+Type = workstation
+Manufacturer =
+Features = 0x02
+
+[Alpha]
+ID = 25
+Pattern =
+Name = Alpha
+Model =
+Type = workstation
+Manufacturer =
 Features = 0x02
 
 [Universal]
-ID = 20
-Pattern =  "HTC Universal"
+ID = 26
+Pattern = HTC Universal
 Name =
 Model =
-Type = "smartphone"
-Manufacturer = "HTC"
+Type = smartphone
+Manufacturer = HTC
 Features = 0x09
 
 [Eten G500]
-ID = 21
-Pattern =  "Eten G500"
+ID = 27
+Pattern = Eten G500
 Name =
 Model =
-Type = "smartphone"
-Manufacturer = "HTC"
+Type = smartphone
+Manufacturer = HTC
 Features = 0x08
 
 [SkeyepadXSL]
-ID = 22
-Pattern =  "HW90350"
-Name = "skeye.pad XSL"
+ID = 28
+Pattern =  HW90350
+Name = skeye.pad XSL
 Model =
-Type = "pad"
-Manufacturer = "Höft&Wessel"
+Type = pad
+Manufacturer = Höft&Wessel
+Features = 0x04
+
+[Nokia N800]
+ID = 29
+Pattern =  Nokia N800
+Name = N800
+Model =
+Type = nokia-tablet
+Manufacturer = Nokia
 Features = 0x04

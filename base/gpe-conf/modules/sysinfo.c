@@ -68,7 +68,7 @@
 typedef struct 
 {
 	char *model;
-	char *cpu;
+	char *manufacturer;
 	int ram;
 	int flash;
 }
@@ -155,13 +155,14 @@ get_device_info(void)
 	t_deviceinfo result;
 	struct utsname uinfo;
 	result.model = NULL;
-	result.cpu = NULL;
+	result.manufacturer = NULL;
 	result.ram = 0;
 	result.flash = 0;
 
 	uname(&uinfo);
 	
-	result.model = g_strdup (device_get_name());
+	result.model = g_strdup (device_get_name ());
+	result.manufacturer = g_strdup (device_get_manufacturer ());
 	
 	if (!result.model)
 		result.model = g_strdup_printf("%s", uinfo.machine);
@@ -581,11 +582,11 @@ Sysinfo_Build_Objects (int whichtab)
 	
 	/* CPU */	
 	tw = gtk_label_new(NULL);
-	gtk_label_set_markup(GTK_LABEL(tw),_("CPU:"));
+	gtk_label_set_markup(GTK_LABEL(tw), _("Manufacturer:"));
 	gtk_misc_set_alignment(GTK_MISC(tw),0.0,0.2);
 	gtk_table_attach(GTK_TABLE(table),tw,0,1,5,6,GTK_FILL, GTK_FILL,2,0);
 	tw = gtk_label_new(NULL);
-	ts = g_strdup_printf("%s",devinfo.cpu);
+	ts = g_strdup_printf("%s", devinfo.manufacturer ? devinfo.manufacturer : "");
 	gtk_label_set_markup(GTK_LABEL(tw),ts);
 	gtk_misc_set_alignment(GTK_MISC(tw),0.0,0.2);
 	g_free(ts);

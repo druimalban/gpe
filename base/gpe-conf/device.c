@@ -23,6 +23,7 @@
 #include "device.h"
 
 #define DEVICE_FILE PREFIX "/share/gpe-conf/deviceinfo"
+
 typedef struct
 {
 	DeviceID_t id;
@@ -30,45 +31,45 @@ typedef struct
 	gchar *name;
 	gchar *model;
 	gchar *manufacturer;
-    gchar *type; /* was type */
+	gchar *type;
 	gint features;
 } Device_t;
 
-static gint local_device = -1;
+static gint local_device_id = -1;
+static Device_t local_device;
 static Device_t *DeviceMap = NULL;
+static gint maplen = 0;
 
-/* Keep in sync with DeviceId_t defintion. */
-static DeviceID_t IdClassVector[] = 
+static void
+device_copy (Device_t *src, Device_t *dst)
 {
-	DEVICE_CLASS_NONE,
-	DEVICE_CLASS_PDA,
-	DEVICE_CLASS_PDA,
-	DEVICE_CLASS_TABLET,
-	DEVICE_CLASS_MDE,
-	DEVICE_CLASS_PDA,
-	DEVICE_CLASS_PDA,
-	DEVICE_CLASS_PDA,
-	DEVICE_CLASS_PDA,
-	DEVICE_CLASS_PDA,
-	DEVICE_CLASS_PDA,
-	DEVICE_CLASS_PDA,
-	DEVICE_CLASS_TABLET,
-	DEVICE_CLASS_MDE,
-	DEVICE_CLASS_MDE,
-	DEVICE_CLASS_CELLPHONE,
-	DEVICE_CLASS_TABLET,
-	DEVICE_CLASS_PDA,
-	DEVICE_CLASS_PC,
-	DEVICE_CLASS_PC,
-	DEVICE_CLASS_PC,
-	DEVICE_CLASS_PC,
-	DEVICE_CLASS_PC,
-	DEVICE_CLASS_PC,
-	DEVICE_CLASS_PC,
-	DEVICE_CLASS_PC,
-	DEVICE_CLASS_PDA | DEVICE_CLASS_CELLPHONE,
-	DEVICE_CLASS_TABLET,
-};
+	dst->id = src->id;
+	if (src->name) dst->name = g_strdup (src->name);
+	if (src->model) dst->model = g_strdup (src->model);
+	if (src->type) dst->type = g_strdup (src->type);
+	if (src->manufacturer) dst->manufacturer = g_strdup (src->manufacturer);
+	dst->features = src->features;
+}
+
+static void
+devices_free (void)
+{
+	gint i;
+	
+	for (i=0; i < maplen; i++)
+	{
+		Device_t dev = DeviceMap[i];
+		
+		if (dev.pattern) g_strfreev (dev.pattern);
+		if (dev.name) g_free (dev.name);
+		if (dev.model) g_free (dev.model);
+		if (dev.type) g_free (dev.type);
+		if (dev.manufacturer) g_free (dev.manufacturer);
+	}
+	
+	g_free (DeviceMap);
+	DeviceMap = NULL;
+}
 
 static gboolean
 devices_load(void)
@@ -88,32 +89,35 @@ devices_load(void)
 		return FALSE;
 	}
 	
-	devices = g_key_file_get_keys (devicefile, "Devices",  &devcnt, &err);
+	devices = g_key_file_get_groups (devicefile, &devcnt);
+
 	if (devices)
 	{
 		DeviceMap = g_malloc0 (sizeof(Device_t) * (devcnt + 1));
-
+	
 		for (i=0; i < devcnt; i++)
 		{
-			Device_t dev = DeviceMap[i];
+			Device_t *dev = &DeviceMap[i];
 			
-			dev.pattern = g_key_file_get_string_list (devicefile, "Pattern",
-                                                      devices[i], NULL, NULL);
-			dev.id = g_key_file_get_integer (devicefile, "ID",
-                                                      devices[i], NULL);
-			dev.name = g_key_file_get_string (devicefile, "Name",
-                                                      devices[i], NULL);
-			dev.model = g_key_file_get_string (devicefile, "Model",
-                                                      devices[i], NULL);
-			dev.type = g_key_file_get_string (devicefile, "Type",
-                                                      devices[i], NULL);
-			dev.manufacturer = g_key_file_get_string (devicefile, "Manufacturer",
-                                                      devices[i], NULL);
-			dev.features = g_key_file_get_integer (devicefile, "Features",
-                                                      devices[i], NULL);
+			dev->pattern = g_key_file_get_string_list (devicefile, devices[i], 
+			                                          "Pattern", NULL, NULL);
+			dev->id = g_key_file_get_integer (devicefile, devices[i], 
+			                                 "ID", NULL);
+			dev->name = g_key_file_get_string (devicefile, devices[i], 
+			                                  "Name", NULL);
+			dev->model = g_key_file_get_string (devicefile, devices[i], 
+			                                   "Model", NULL);
+			dev->type = g_key_file_get_string (devicefile, devices[i], 
+			                                  "Type", NULL);
+			dev->manufacturer = g_key_file_get_string (devicefile, devices[i],
+			                                          "Manufacturer", NULL);
+			dev->features = g_key_file_get_integer (devicefile, devices[i], 
+			                                       "Features", NULL);
 		}
 		g_strfreev(devices);
+		maplen = devcnt;
 	}
+
 	return TRUE;
 }
 
@@ -122,7 +126,7 @@ DeviceID_t
 device_get_id (void)
 {
 	static gint id = -1;
-	gchar **strv;
+	gchar **strv = NULL;
 	guint len = 0;
 	gint i = 0;
 	gint dnr, pnr;
@@ -134,7 +138,7 @@ device_get_id (void)
 	if (DeviceMap == NULL)
 		devices_load ();
 	
-	/* get device info from /proc/cpuinfo, only ARM and MIPS for now */
+	/* get device info from /proc/cpuinfo */
 	if (g_file_get_contents("/proc/cpuinfo", &str, &len, NULL))
 	{
 		strv = g_strsplit(str, "\n", 128);
@@ -144,18 +148,18 @@ device_get_id (void)
 			if ((iptr = strstr(strv[i], "Hardware")) 
 			     || (iptr = strstr(strv[i], "system type")))
 			{
-				for (dnr = 0; dnr < sizeof(DeviceMap)/sizeof(*DeviceMap); dnr++)
+				for (dnr = 0; dnr < maplen; dnr++)
 				{
 					pnr = 0;
-					while ((DeviceMap[dnr].pattern) && (DeviceMap[dnr].pattern[pnr]))
+		                	while ((DeviceMap[dnr].pattern) && (DeviceMap[dnr].pattern[pnr]))
 					{
 						if (strstr (iptr, DeviceMap[dnr].pattern[pnr]))
 						{
 							id = DeviceMap[dnr].id;
-							local_device = dnr;
 							if (DeviceMap[dnr].name == NULL)
 								DeviceMap[dnr].name = g_strdup(DeviceMap[dnr].pattern[pnr]);
-							return id;
+							device_copy (&DeviceMap[dnr], &local_device);
+							goto out;
 						}
 						else
 							pnr++;
@@ -163,82 +167,97 @@ device_get_id (void)
 				}
 			}
 			else 
-				if (strstr (strv[i], "fdiv_bug"))
-				{
-					id = DEV_X86;
-       		         device_name = "Generic x86 PC";
-       	    	     device_type = "workstation";
-					g_strfreev(strv);
-					return id;
-				}
+			if (strstr (strv[i], "fdiv_bug"))
+			{
+				id = DEV_X86;
+				if (id < maplen)
+					device_copy (&DeviceMap[id], &local_device);
+				else  
+					g_printerr ("Device data not available.");
+				goto out;
+			}
+			else 
+			if (strstr (strv[i], "machine"))
+			{
+				id = DEV_POWERPC;
+				if (id < maplen)
+					device_copy (&DeviceMap[id], &local_device);
 				else 
-				if (strstr (strv[i], "machine"))
-				{
-					id = DEV_POWERPC;
-            	    device_name = "PowerPC";
-            	   	 device_type = "workstation";
-				g_strfreev(strv);
-				return id;
+					g_printerr ("Device data not available.");
+				goto out;
 			}
 			else
 			if (strstr (strv[i], "promlib"))
 			{
 				id = DEV_SPARC;
-                device_name = "Sparc";
-                device_type = "workstation";
-				g_strfreev(strv);
-				return id;
+				if (id < maplen)
+					device_copy (&DeviceMap[id], &local_device);
+				else 
+					g_printerr ("Device data not available.");
+				goto out;
 			}
 			else
 			if (strstr (strv[i], ": Alpha"))
 			{
 				id = DEV_ALPHA;
-                device_name = "Alpha";
-                device_type = "workstation";
-				g_strfreev(strv);
-				return id;
+				if (id < maplen)
+					device_copy (&DeviceMap[id], &local_device);
+				else 
+					g_printerr ("Device data not available.");
+				goto out;
 			}
 			
 			i++;
 		}
-		g_strfreev(strv);
 	}
 	
-  //  device_name = "Unknown Device";
-  //  device_type = "unknown";
 	id = DEV_UNKNOWN;
-	local_device = 0;
+	local_device.name = g_strdup(_("Unknown Device"));
+
+out: 
+printf("f %s\n", local_device.name);
+	local_device_id = id;
+	if (strv) 
+		g_strfreev(strv);
+	devices_free ();
 
 	return id;
 }
 
 DeviceFeatureID_t
-device_get_features (DeviceID_t device_id)
+device_get_features (void)
 {
-	if ((device_id >= 0) && (device_id < DEV_MAX))
-		return 
-			IdClassVector [device_id];
-	else
-		return
-			DEVICE_CLASS_NONE;
+	if (local_device_id < 0)
+		device_get_id();
+	
+	return local_device.features;
 }
 
 const gchar *
 device_get_name (void)
 {
-    if (local_device == -1)
-        device_get_id ();
-    
-    return DeviceMap[local_device].name;
+	if (local_device_id < 0)
+		device_get_id();
+	
+	return local_device.name;
 }
 
 const gchar *
 device_get_type (void)
 {
-    if (local_device == -1)
-        device_get_id ();
-    
-    return DeviceMap[local_device].type;
+	if (local_device_id < 0)
+		device_get_id();
+	
+	return local_device.type;
+}
+
+const gchar *
+device_get_manufacturer (void)
+{
+	if (local_device_id < 0)
+		device_get_id();
+	
+	return local_device.manufacturer;
 }
 
 gchar *
