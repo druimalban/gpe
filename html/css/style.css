@@ -16,7 +16,7 @@ h2 {
 h3 {
 	margin-top:8pt;
 	margin-bottom:8pt;
-	text-indent:0px;
+	text-indent:10px;
 	border:0px darkblue;
 	background-color:#F0F0F0;
 	padding-left: 10;
@@ -26,7 +26,10 @@ h3 {
 
 p,li {
 	line-height:	120%
+	text-indent:	10px;
 }
+
+
 
 th {
 	text-align:	left;
