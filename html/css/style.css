@@ -23,10 +23,12 @@ h3 {
 	padding-right: 10;
 }
 
+p {
+	text-indent:	10px;
+
 
 p,li {
 	line-height:	120%
-	text-indent:	10px;
 }
 
 
