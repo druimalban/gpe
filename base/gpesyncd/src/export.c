@@ -31,7 +31,7 @@ get_contact (gpesyncd_context * ctx, guint uid, GError ** error)
 gchar *
 get_event (gpesyncd_context * ctx, guint uid, GError ** error)
 {
-  Event *ev = event_db_find_by_uid(ctx->event_db, uid);
+  Event *ev = event_db_find_by_uid(ctx->event_db, uid, NULL);
 
   if (!ev) {
       g_set_error (error, 0, 102, "No event data returned");
@@ -167,7 +167,7 @@ get_event_uid_list (gpesyncd_context * ctx, GError ** error)
 
   /* Load the events from each calendar */
   for (i = ctx->event_calendars; i; i = g_slist_next(i)) {
-    GSList *iter, *event_list = event_calendar_list_events(i->data);
+    GSList *iter, *event_list = event_calendar_list_events(i->data, NULL);
 
     for (iter = event_list; iter; iter = g_slist_next (iter))
       {

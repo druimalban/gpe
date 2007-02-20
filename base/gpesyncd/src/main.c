@@ -46,14 +46,14 @@ gpesyncd_setup_databases (gpesyncd_context * ctx)
 
   GString *filename = g_string_new(g_get_home_dir());
   g_string_append(filename, "/.gpe/calendar");
-  ctx->event_db = event_db_new (filename->str);
+  ctx->event_db = event_db_new (filename->str, NULL);
   g_string_free(filename, TRUE);
   if (!ctx->event_db) {
     fprintf(stderr, "Could not open calendar database.\n");
   }
 
   /* Get the calendars */
-  ctx->event_calendars = event_db_list_event_calendars (ctx->event_db);
+  ctx->event_calendars = event_db_list_event_calendars (ctx->event_db, NULL);
 
   if (todo_db_start()) {
     fprintf(stderr, "Could not open todo database.\n");

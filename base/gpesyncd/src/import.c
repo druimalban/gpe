@@ -145,14 +145,14 @@ add_event (gpesyncd_context * ctx, guint *uid, gchar * data,
   /* If this is a modify, rather than an add,
      we need to set the VEVENT UID so it will overwrite the existing event */
   if ( (*uid != 0)
-      && (ev = event_db_find_by_uid(ctx->event_db, *uid)) ) {
-    char *evuid = event_get_eventid (ev);
+      && (ev = event_db_find_by_uid(ctx->event_db, *uid, NULL)) ) {
+    char *evuid = event_get_eventid (ev, NULL);
     g_object_set (vevent, "uid", evuid, NULL);
     g_free (evuid);
     g_object_unref(ev);
   }
 
-  EventCalendar *ec = event_db_get_default_calendar(ctx->event_db, NULL);
+  EventCalendar *ec = event_db_get_default_calendar(ctx->event_db, NULL, NULL);
 
   int res = event_import_from_vevent (ec, vevent, &ev, error);
 
@@ -300,13 +300,11 @@ del_contact (gpesyncd_context * ctx, guint uid, GError ** error)
 gboolean
 del_event (gpesyncd_context * ctx, guint uid, GError ** error)
 {
-  Event *ev = event_db_find_by_uid(ctx->event_db, uid);
+  Event *ev = event_db_find_by_uid(ctx->event_db, uid, error);
   if (!ev) {
-    g_set_error (error, 0, 232, "No item found\n");
     return FALSE;
   }
-  if (!event_remove(ev)) {
-    g_set_error (error, 0, 232, "Could not remove event\n");
+  if (!event_remove(ev, error)) {
     return FALSE;
   }
 
