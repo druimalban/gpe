@@ -24,8 +24,8 @@ h3 {
 }
 
 p {
-	text-indent:	10px;
-
+	margin-left:	10px;
+}
 
 p,li {
 	line-height:	120%
