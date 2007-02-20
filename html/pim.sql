@@ -4,7 +4,7 @@
 --
 -- composed from a number of discussions on the GPE list
 -- by Owen Cliffe <occ@cs.bath.ac.uk> 25/3/2002
--- discussion should take place on the GPE list <gpe@handhelds.org>
+-- discussion should take place on the GPE list <gpe-list@linuxtogo.org>
 
 -- NB this schema does not include elements required for 
 -- Syncing, these will be added later
