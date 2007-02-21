@@ -1,0 +1,8 @@
+Change the play list back end to cache recently used records rather
+than always rereading data from the data base.
+
+Implement play_list_save_m3u (in playlist.c).
+
+Enable basic filtering by e.g. artist, album, search terms, etc.
+
+Add a play queue: drag elements to play queue to queue them.
