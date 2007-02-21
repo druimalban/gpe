@@ -2219,11 +2219,11 @@ main (int argc, char *argv[])
   main_toolbar = toolbar;
   gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar),
 			       GTK_ORIENTATION_HORIZONTAL);
-  gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
   GTK_WIDGET_UNSET_FLAGS (toolbar, GTK_CAN_FOCUS);
   gtk_widget_show (toolbar);
 
 #ifdef IS_HILDON
+  gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
   hildon_appview_set_toolbar (HILDON_APPVIEW (main_appview),
 			      GTK_TOOLBAR (toolbar));
   gtk_widget_show_all (main_appview);
