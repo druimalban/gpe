@@ -1,0 +1,5 @@
+Save the play list in an sqlite DB rather than rebuilding it each time
+the application is started.  (Contributed by Neal H. Walfield.)
+
+Change the play list to implement the GtkTreeModel interface.
+(Contributed by Neal H. Walfield.)

@@ -39,7 +39,6 @@ struct _Starling {
     GtkWidget *scale;
     gboolean scale_pressed;
     GtkWidget *treeview;
-    GtkListStore *store;
     GtkWidget *random;
     GtkWidget *up;
     GtkWidget *down;

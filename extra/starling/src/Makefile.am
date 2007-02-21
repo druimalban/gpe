@@ -1,6 +1,6 @@
 bin_PROGRAMS = starling
 starling_SOURCES = callbacks.c interface.c main.c \
-		utils.c playlist.c stream.c config.c \
+		utils.c playlist.c config.c \
 		lyrics.c lastfm.c md5.c errorbox.c
 
 nodist_starling_SOURCES = marshal.c
@@ -15,7 +15,7 @@ starling_LDADD = @GTK_LIBS@ @GSTREAMER_LIBS@ @GPE_LIBS@ -lgstaudio-0.10 \
 BUILT_SOURCES = marshal.h marshal.c
 
 noinst_HEADERS = starling.h callbacks.h interface.h \
-		utils.h playlist.h stream.h config.h \
+		utils.h playlist.h config.h \
 		lyrics.h lastfm.h md5.h errorbox.h
 
 nodist_noinst_HEADERS = marshal.h

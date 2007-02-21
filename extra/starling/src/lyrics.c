@@ -60,7 +60,6 @@ lyrcar_cook (const gchar *artist, const gchar *title)
 static gchar *
 lyrcar_parse (SoupMessage *msg)
 {
-    const gchar *uri;
     gchar *retval;
     gchar **lines;
     GString *str;
@@ -121,14 +120,12 @@ lyricwiki_cook (const gchar *artist, const gchar *title)
 static gchar *
 lyricwiki_parse (SoupMessage *msg)
 {
-    const gchar *uri;
     const gchar *delim = "<div id=\"lyric\">";
     gchar **lines;
     gchar *line;
     gchar *retval;
     GString *str;
     gint ii;
-    gint pos;
 
     lines = g_strsplit (msg->response.body, "\n", 4096);
 
@@ -176,7 +173,6 @@ gboolean
 lyrics_init (void)
 {
     gchar *dbpath;
-    gchar *error;
     sqlite_vm *vm;
     gint ret;
 

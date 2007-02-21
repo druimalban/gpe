@@ -13,16 +13,6 @@
 
 #include "starling.h"
 
-enum { 
-    COL_TITLE,
-    /* COL_TIME, */
-    COL_FONT_WEIGHT,
-    COL_POINTER,
-    COL_NUMCOLS
-};
-
-void player_init (Starling *st);
-
 void interface_init (Starling *st);
 
 #endif

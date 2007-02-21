@@ -55,25 +55,6 @@ gtk_tree_model_get_iter_from_int (GtkTreeModel *model,
 }
 
 gchar *
-pretty_stream_name (Stream *stream)
-{
-    gchar *name;
-    const gchar *artist;
-    const gchar *title;
-    
-    artist = stream_get_tag (stream, GST_TAG_ARTIST);
-    title = stream_get_tag (stream, GST_TAG_TITLE);
-    
-    if (artist && title) {
-        name = g_strdup_printf ("%s - %s", artist, title);
-    } else {
-        name = g_strdup (g_basename (stream->uri));
-    }
-
-    return name;
-}
-
-gchar *
 escape_spaces (const gchar *orig, const gchar *replace)
 {
     GString *str;

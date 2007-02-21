@@ -10,17 +10,9 @@
 
 #include <string.h>
 
-#include <gtk/gtkfilesel.h>
-#include <gtk/gtktogglebutton.h>
-#include <gtk/gtkrange.h>
-#include <gtk/gtktreeview.h>
-#include <gtk/gtkmain.h>
-#include <gtk/gtkdialog.h>
-#include <gtk/gtkentry.h>
-#include <gtk/gtklabel.h>
-#include <gtk/gtkstock.h>
-#include <gtk/gtktextview.h>
+#include <gtk/gtk.h>
 
+#include "errorbox.h"
 #include "starling.h"
 #include "playlist.h"
 #include "interface.h"
@@ -46,7 +38,17 @@ fs_accept_cb (GtkWidget *w, Starling *st)
     files = gtk_file_selection_get_selections (GTK_FILE_SELECTION (st->fs));
 
     for ( i = 0; files[i]; i++)
-        play_list_add_recursive (st->pl, files[i]);
+      {
+	GError *error = NULL;
+        play_list_add_recursive (st->pl, files[i], -1, &error);
+	if (error)
+	  {
+	    g_warning ("Reading %s: %s", files[i], error->message);
+	    starling_error_box_fmt ("Reading %s: %s",
+				    files[i], error->message);
+	    g_error_free (error);
+	  }
+      }
     g_strfreev (files);
     
     path = (gchar*) gtk_file_selection_get_filename (GTK_FILE_SELECTION (st->fs));
@@ -93,10 +95,9 @@ playlist_add_cb (GtkWidget *w, Starling *st)
 static void
 playlist_remove_cb (GtkWidget *w, Starling *st)
 {
-    gint pos;
-
-    pos = gtk_tree_view_get_position (GTK_TREE_VIEW (st->treeview));
-    play_list_remove_pos (st->pl, pos);
+  int pos = gtk_tree_view_get_position (GTK_TREE_VIEW (st->treeview));
+  if (pos >= 0)
+    play_list_remove (st->pl, pos);
 }
 
 static void
@@ -188,23 +189,21 @@ playlist_save_cb (GtkWidget *w, Starling *st)
 
 static void
 playlist_activated_cb (GtkTreeView *view, GtkTreePath *path,
-        GtkTreeViewColumn *col, Starling *st)
+		       GtkTreeViewColumn *col, Starling *st)
 {
-    gint *pos;
+  gint *pos;
 
-    pos = gtk_tree_path_get_indices (path);
+  pos = gtk_tree_path_get_indices (path);
 
-    play_list_set_current (st->pl, *pos);
-    play_list_set_state (st->pl, GST_STATE_PLAYING);
+  play_list_goto (st->pl, *pos);
 }
 
 static void
 set_random_cb (GtkWidget *w, Starling *st)
 {
-    gboolean value;
-
-    value = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (st->random));
-    play_list_set_random (st->pl, value);
+  gboolean value
+    = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (st->random));
+  play_list_set_random (st->pl, value);
 }
 
 static void
@@ -222,15 +221,7 @@ playlist_prev_cb (GtkWidget *w, Starling *st)
 static void
 playlist_playpause_cb (GtkWidget *w, Starling *st)
 {
-    GstState state;
-
-    state = play_list_get_last_state (st->pl);
-    if (GST_STATE_PLAYING == state) {
-        play_list_set_state (st->pl, GST_STATE_PAUSED);
-    }
-    else {
-        play_list_set_state (st->pl, GST_STATE_PLAYING);
-    }
+  play_list_play_pause_toggle (st->pl);
 }
 
 static gboolean
@@ -238,7 +229,6 @@ scale_button_released_cb (GtkRange *range, GdkEventButton *event,
         Starling *st)
 {
     gint percent;
-    gint64 duration;
     GstFormat fmt = GST_FORMAT_TIME;
 
     if (st->current_length < 0) {
@@ -275,9 +265,6 @@ scale_update_cb (Starling *st)
     gint total_seconds;
     gint position_seconds;
     gchar *timelabel;
-    Stream *stream;
-    const gchar *artist;
-    const gchar *title;
 
     if (st->current_length < 0) {
         play_list_query_duration (st->pl, &fmt, &st->current_length, -1);
@@ -303,192 +290,77 @@ scale_update_cb (Starling *st)
     }
 
     if (G_UNLIKELY (!st->enqueued && total_seconds > 30 && 
-        (position_seconds > 240 || position_seconds * 2 >= total_seconds))) {
-            st->enqueued = TRUE;
-            stream = play_list_get_stream (st->pl, -1);
-            artist = stream_get_tag (stream, GST_TAG_ARTIST);
-            title = stream_get_tag (stream, GST_TAG_TITLE);
-            lastfm_enqueue (artist, title, total_seconds, st);
+        (position_seconds > 240 || position_seconds * 2 >= total_seconds)))
+      {
+	char *artist;
+	char *title;
+	play_list_get_info (st->pl, -1,
+			    NULL, NULL, &artist, &title, NULL, NULL);
+
+	st->enqueued = TRUE;
+	lastfm_enqueue (artist, title, total_seconds, st);
+
+	g_free (artist);
+	g_free (title);
     }
 
     return TRUE;
 }
 
 static void
-new_tag_cb (Stream *stream, const gchar *key, gpointer data)
-{
-
-    Starling *st = (Starling*) data;
-    const gchar *value;
-    gchar *display_name = NULL;
-    GtkTreeIter iter;
-    Stream *current;
-    gboolean valid;
-    GValue gval = { 0, };
-
-    if (g_ascii_strcasecmp (key, GST_TAG_ARTIST) == 0) {
-        if ((value = stream_get_tag (stream, GST_TAG_TITLE))) {
-            display_name = g_strdup_printf ("%s - %s", 
-                            stream_get_tag (stream, GST_TAG_ARTIST),
-                            value);
-        }
-    }
-    
-    if (g_ascii_strcasecmp (key, GST_TAG_TITLE) == 0) {
-        if ((value = stream_get_tag (stream, GST_TAG_ARTIST))) {
-            display_name = g_strdup_printf ("%s - %s", 
-                            value,
-                            stream_get_tag (stream, GST_TAG_TITLE));
-        }
-    }
-
-    if (display_name) {
-        valid = gtk_tree_model_get_iter_first (GTK_TREE_MODEL (st->store),
-                                                &iter);
-        while (valid) {
-            gtk_tree_model_get (GTK_TREE_MODEL (st->store), &iter, 
-                                COL_POINTER, &current, -1);
-            if (current == stream) {
-                g_value_init (&gval, G_TYPE_STRING);
-                g_value_set_string (&gval, display_name);
-                gtk_list_store_set_value (st->store, &iter, COL_TITLE, &gval);
-                g_free (display_name);
-                break;
-            }
-            valid = gtk_tree_model_iter_next (GTK_TREE_MODEL (st->store),
-                                                &iter);
-        }
-    }
-
-}
-
-static void
-new_stream_cb (PlayList *pl, Stream *stream, gint pos, Starling *st)
-{
-    GtkTreeIter iter;
-    gchar *display_name;
-    
-    display_name = pretty_stream_name (stream);
-
-    gtk_list_store_insert (st->store, &iter, pos);
-    gtk_list_store_set (st->store, &iter, 
-                        COL_TITLE, display_name, 
-                        COL_FONT_WEIGHT, PANGO_WEIGHT_NORMAL, 
-                        COL_POINTER, stream,
-                        -1);
-
-    g_free (display_name);
-
-    g_signal_connect (G_OBJECT (stream), "new-tag",
-                        G_CALLBACK (new_tag_cb), st);
-}
-
-static void
-deleted_stream_cb (PlayList *pl, Stream *stream, gint pos, Starling *st)
-{
-    GtkTreeIter iter;
-    gboolean ret;
-
-    ret = gtk_tree_model_get_iter_from_int (GTK_TREE_MODEL (st->store),
-            &iter, pos);
-
-    if (ret)
-        gtk_list_store_remove (st->store, &iter);
-}
-
-static void
-playlist_cleared_cb (PlayList *pl, Starling *st)
-{
-    gtk_list_store_clear (st->store);
-}
-
-static void
-playlist_swap_cb (PlayList *pl, gint left, gint right, Starling *st)
-{
-    GtkTreeIter iterleft;
-    GtkTreeIter iterright;
-
-    gtk_tree_model_get_iter_from_int (GTK_TREE_MODEL (st->store),
-            &iterleft, left);
-    gtk_tree_model_get_iter_from_int (GTK_TREE_MODEL (st->store),
-            &iterright, right);
-   
-    gtk_list_store_swap (st->store, &iterleft, &iterright);
-
-    if (st->bolded == left) {
-    	st->bolded = right;
-    } else if (st->bolded == right) {
-        st->bolded = left;
-    }
-}
-
-static void
-playlist_bold_item (Starling *st, gint pos)
-{
-    GtkTreeIter iter;
-        
-    if (G_LIKELY (st->bolded >= 0)) {
-        gtk_tree_model_get_iter_from_int (GTK_TREE_MODEL (st->store), 
-                &iter, st->bolded);
-        gtk_list_store_set (st->store, &iter, COL_FONT_WEIGHT, 
-                PANGO_WEIGHT_NORMAL, -1); 
-    }
-
-    if (G_LIKELY (pos >= 0)) {
-        gtk_tree_model_get_iter_from_int (GTK_TREE_MODEL (st->store), 
-                &iter, pos);
-        gtk_list_store_set (st->store, &iter, COL_FONT_WEIGHT, 
-                PANGO_WEIGHT_BOLD, -1); 
-        
-        st->bolded = pos;
-    } else {
-        st->bolded = -1;
-    }
-}
-
-static void
 playlist_state_changed_cb (PlayList *pl, const GstState state, Starling *st)
 {
-    GtkWidget *pix;
-    const gchar *stock;
-    gint pos;
-    Stream *stream;
-    const gchar *artist;
-    const gchar *title;
+  GtkWidget *pix;
+  const gchar *stock;
+  gint pos;
 
-    pos = play_list_get_current (pl);
-    //g_debug ("Current item: %d\n", pos);
+  pos = play_list_get_current (pl);
+  //g_debug ("Current item: %d\n", pos);
 
-    if (GST_STATE_PLAYING == state) {
-        stream = play_list_get_stream (pl, -1);
-        artist = stream_get_tag (stream, GST_TAG_ARTIST);
-        title = stream_get_tag (stream, GST_TAG_TITLE);
+  if (GST_STATE_PLAYING == state)
+    {
+      char *artist;
+      char *title;
+      char *uri;
 
-        //if (st->last_state != GST_STATE_PAUSED) {
-        if (!st->has_lyrics) {
-            st->has_lyrics = TRUE;
-            lyrics_display (artist, title, GTK_TEXT_VIEW (st->textview));
-        }
-        stock = GTK_STOCK_MEDIA_PAUSE;
-        playlist_bold_item (st, pos);
+      play_list_get_info (pl, -1, &uri, NULL, &artist, &title, NULL, NULL);
+
+      //if (st->last_state != GST_STATE_PAUSED) {
+      if (!st->has_lyrics) {
+	st->has_lyrics = TRUE;
+	lyrics_display (artist, title, GTK_TEXT_VIEW (st->textview));
+      }
+      stock = GTK_STOCK_MEDIA_PAUSE;
+
+      // playlist_bold_item (st, pos);
         
-        gtk_label_set_text (GTK_LABEL (st->artist), artist);
-        gtk_label_set_text (GTK_LABEL (st->title), title);
-    } else {
-        if (GST_STATE_READY >= state) {
-            st->current_length = -1;
-            st->has_lyrics = FALSE;
-            st->enqueued = FALSE;
-        }
+      gtk_label_set_text (GTK_LABEL (st->artist), artist ?: "unknown");
+      g_free (artist);
+      
+      if (title)
+	gtk_label_set_text (GTK_LABEL (st->title), title);
+      else if (uri)
+	gtk_label_set_text (GTK_LABEL (st->title),
+			    uri ? strrchr (uri, '/') + 1 : uri);
+      g_free (title);
+      g_free (uri);
+    }
+  else
+    {
+      if (GST_STATE_READY >= state) {
+	st->current_length = -1;
+	st->has_lyrics = FALSE;
+	st->enqueued = FALSE;
+      }
             
-        stock = GTK_STOCK_MEDIA_PLAY;
+      stock = GTK_STOCK_MEDIA_PLAY;
     }
     
-    pix = gtk_bin_get_child (GTK_BIN (st->playpause));
-    gtk_widget_destroy (pix);
-    pix = gtk_image_new_from_stock (stock, GTK_ICON_SIZE_SMALL_TOOLBAR);
-    gtk_container_add (GTK_CONTAINER (st->playpause), pix);
-    gtk_widget_show (pix);
+  pix = gtk_bin_get_child (GTK_BIN (st->playpause));
+  gtk_widget_destroy (pix);
+  pix = gtk_image_new_from_stock (stock, GTK_ICON_SIZE_SMALL_TOOLBAR);
+  gtk_container_add (GTK_CONTAINER (st->playpause), pix);
+  gtk_widget_show (pix);
 }
 
 static void
@@ -569,18 +441,6 @@ callbacks_setup (Starling *st)
     g_signal_connect (G_OBJECT (st->treeview), "row-activated",
             G_CALLBACK (playlist_activated_cb), st);
 
-    g_signal_connect (G_OBJECT (st->pl), "new-stream",
-            G_CALLBACK (new_stream_cb), st);
-    
-    g_signal_connect (G_OBJECT (st->pl), "deleted-stream",
-            G_CALLBACK (deleted_stream_cb), st);
-    
-    g_signal_connect (G_OBJECT (st->pl), "cleared",
-            G_CALLBACK (playlist_cleared_cb), st);
-    
-    g_signal_connect (G_OBJECT (st->pl), "swap",
-            G_CALLBACK (playlist_swap_cb), st);
-    
     g_signal_connect (G_OBJECT (st->pl), "eos",
             G_CALLBACK (playlist_eos_cb), st);
     

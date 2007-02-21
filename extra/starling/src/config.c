@@ -25,7 +25,6 @@
 
 #define KEYVERSION "version"
 #define KEYRANDOM "random"
-#define KEYLOADPLAYLIST "load-playlist"
 #define KEYLASTPATH "last-path"
 #define KEYSINK "sink"
 #define KEYLFMUSER "lastfm-user"
@@ -34,7 +33,6 @@
 /* default values */
 #define DEFKEYVERSION 1
 #define DEFKEYRANDOM FALSE
-#define DEFKEYLOADPLAYLIST TRUE
 #define DEFKEYLASTPATH ""
 #define DEFKEYSINK "esdsink"
 
@@ -64,8 +62,6 @@ config_init (Starling *st)
     if (!g_key_file_load_from_file (st->keyfile, path, 0, NULL)) {
         g_key_file_set_integer (st->keyfile, GROUP,
                 KEYVERSION, 1);
-        g_key_file_set_boolean (st->keyfile, GROUP,
-                KEYLOADPLAYLIST, TRUE);
         g_key_file_set_string (st->keyfile, GROUP,
                 KEYLASTPATH, "");
         g_key_file_set_string (st->keyfile, GROUP,
@@ -81,10 +77,6 @@ config_init (Starling *st)
                     KEYRANDOM, DEFKEYRANDOM);
         }
         
-        if (!g_key_file_has_key (st->keyfile, GROUP, KEYLOADPLAYLIST, NULL)) {
-            g_key_file_set_boolean (st->keyfile, GROUP,
-                    KEYLOADPLAYLIST, DEFKEYLOADPLAYLIST);
-        }
         if (!g_key_file_has_key (st->keyfile, GROUP, KEYLASTPATH, NULL)) {
             g_key_file_set_string (st->keyfile, GROUP,
                     KEYLASTPATH, DEFKEYLASTPATH);
@@ -127,17 +119,6 @@ config_load (Starling *st)
     }
 
     g_free (value);
-
-    /* Don't care for errors, config_init() should take care of them */
-    if (g_key_file_get_boolean (st->keyfile, GROUP, KEYLOADPLAYLIST, NULL)) {
-        path = g_strdup_printf ("%s/%s/%s", g_get_home_dir(), 
-                CONFIGDIR, CONFIG_PL);
-
-        if (g_access (path, R_OK) == 0)
-            play_list_add_m3u (st->pl, path);
-
-        g_free (path);
-    }
 
     path = g_key_file_get_string (st->keyfile, GROUP, KEYLASTPATH, NULL);
 

@@ -1,4 +1,5 @@
 /*
+ * Copyright 2007 Neal H. Walfield <neal@walfield.org>
  * Copyright (C) 2006 Alberto García Hierro
  *      <skyhusker@handhelds.org>
  *
@@ -16,8 +17,6 @@
 #include <gst/gstelement.h>
 #include <gst/gstformat.h>
 
-#include "stream.h"
-
 typedef struct _PlayList PlayList;
 typedef struct _PlayListClass PlayListClass;
 
@@ -27,10 +26,6 @@ typedef struct _PlayListClass PlayListClass;
 #define IS_PLAY_LIST(obj)            (G_TYPE_CHECK_INSTANCE_TYPE ((obj), PLAY_LIST_TYPE))
 #define IS_PLAY_LIST_CLASS(klass)   (G_TYPE_CHECK_CLASS_TYPE ((klass), PLAY_LIST_TYPE))
 #define PLAY_LIST_GET_CLASS(obj)    (G_TYPE_INSTANCE_GET_CLASS ((obj), PLAY_LIST_TYPE, PlayListClass))
-
-struct _PlayList {
-    GObject parent;
-};
 
 struct _PlayListClass {
     GObjectClass parent;
@@ -42,58 +37,146 @@ struct _PlayListClass {
     guint eos_signal_id;
 };
 
+extern GType play_list_get_type (void);
 
-GType play_list_get_type (void);
+/** A PLAY_LIST implements the GtkTreeModel interface.  The following
+   are the columns which it provides.  */
+enum
+  {
+    PL_COL_INDEX,
+    PL_COL_SOURCE,
+    PL_COL_UID,
+    PL_COL_ARTIST,
+    PL_COL_TITLE,
+    PL_COL_ALBUM,
+    PL_COL_DURATION,
+    PL_COL_COUNT
+  };
 
-void play_list_init (int *argc, char **argv[]);
+/** play_list_open:
 
-PlayList * play_list_new (void);
+  Create a playlist associated with file FILE.  Any error is returned
+  in ERROR.  */
+extern PlayList *play_list_open (const char *file, GError **error);
 
-void play_list_set_random (PlayList *self, gboolean random);
+extern gboolean play_list_set_sink (PlayList *self, const gchar *sink);
 
-gboolean play_list_get_random (PlayList *self);
+extern void play_list_set_random (PlayList *self, gboolean random);
 
-void play_list_remove_pos (PlayList *self, gint pos);
+extern gboolean play_list_get_random (PlayList *self);
 
-void play_list_swap_pos (PlayList *Self, gint left, gint right);
+/** play_list_count:
 
-gint play_list_length (PlayList *self);
+  Returns the number of entries in the playlist.  */
+extern gint play_list_count (PlayList *pl) __attribute__ ((pure));
 
-void play_list_clear (PlayList *self);
+/** play_list_play:
 
-void play_list_set_state (PlayList *self, GstState state);
+  Start the playlist PL playing.  Returns TRUE if starting to play the
+  current entry was successful.  */
+extern gboolean play_list_play (PlayList *pl);
 
-GstState play_list_get_last_state (PlayList *self);
+/** play_list_pause:
 
-gint play_list_get_current (PlayList *self);
+  Pause the playlist PL.  */
+extern void play_list_pause (PlayList *pl);
 
-void play_list_set_current (PlayList *self, gint pos);
+/** play_list_pause:
 
-void play_list_next (PlayList *self);
+  Pause the player if playing otherwise, starting playing.  */
+extern void play_list_play_pause_toggle (PlayList *pl);
 
-void play_list_prev (PlayList *self);
+extern gboolean play_list_playing (PlayList *pl);
 
-gboolean play_list_seek (PlayList *self, GstFormat format, gint64 pos);
+extern gint play_list_get_current (PlayList *self);
 
-gboolean play_list_query_position (PlayList *self, GstFormat *fmt, gint64 *pos);
+/** play_list_goto:
 
-gboolean play_list_query_duration (PlayList *self, GstFormat *fmt, gint64 *pos, gint n);
+  Start playing at the entry at position POS.  */
+extern void play_list_goto (PlayList *pl, gint pos);
 
-gboolean play_list_add_uri (PlayList *self, const gchar *uri, gint pos);
+/** play_list_next:
 
-void play_list_add_file (PlayList *self, const gchar *path);
+  Play the next entry.  If in random mode, selects a random entry.  */
+extern void play_list_next (PlayList *self);
 
-void play_list_add_m3u (PlayList *self, const gchar *path);
+/** play_list_prev:
 
-void play_list_save_m3u (PlayList *self, const gchar *path);
+  Play the previous entry.  If in random mode, selects a random
+  entry.  */
+extern void play_list_prev (PlayList *pl);
 
-void play_list_add_recursive (PlayList *self, const gchar *path);
+extern gboolean play_list_seek (PlayList *self, GstFormat format, gint64 pos);
 
-void play_list_dump (PlayList *self);
+extern gboolean play_list_query_position (PlayList *self, GstFormat *fmt,
+					  gint64 *pos);
 
-gboolean play_list_set_sink (PlayList *self, const gchar *sink);
+extern gboolean play_list_query_duration (PlayList *self, GstFormat *fmt,
+					  gint64 *pos, gint n);
 
-Stream * play_list_get_stream (PlayList *self, gint pos);
+/** play_list_add_m3u:
+
+  Add M3U file FILE to playlist PL at position INDEX.  If INDEX is -1,
+  then entries are appended to PL.  Any error is returned in ERROR.
+  Returns the number of entries added to PL.
+ */
+extern int play_list_add_m3u (PlayList *self, const gchar *file, gint index,
+			      GError **error);
+
+/** play_list_add_uri:
+
+  Add URI to playlist PL at position INDEX.  If INDEX is -1, then URI
+  is appended to PL.  Any error is returned in ERROR.
+ */
+extern void play_list_add_uri (PlayList *pl, const gchar *uri, gint index,
+			       GError **error);
+
+/** play_list_add_file:
+
+  Add FILE to playlist PL at position INDEX.  If INDEX is -1, then
+  FILE is appended to PL.  Any error is returned in ERROR.
+ */
+extern void play_list_add_file (PlayList *self, const gchar *file,
+				gint index, GError **error);
+
+/** play_list_add_recursive:
+
+  Add files under PATH to playlist PL at position INDEX.  If INDEX is
+  -1, then entries are appended to PL.  Any error is returned in
+  ERROR.  Returns the number of entries added to PL.
+ */
+extern int play_list_add_recursive (PlayList *pl, const gchar *path,
+				    int index, GError **error);
+
+extern void play_list_save_m3u (PlayList *self, const gchar *path);
+
+/** play_list_swap_pos:
+
+  Swap the positions of entries LEFT and RIGHT in playlist PL.  */
+extern void play_list_swap_pos (PlayList *pl, gint left, gint right);
+
+/** play_list_remove:
+
+  Remove the entry in playlist PL at position POS.  */
+extern void play_list_remove (PlayList *pl, gint pos);
+
+/** play_list_clear:
+
+  Empty the play list.  Use carefully.  */
+extern void play_list_clear (PlayList *pl);
+
+/**
+  play_list_get_info:
+
+  Returns the information regarding entry INDEX in playlist PL.  If
+  INDEX is -1, information regarding the currently selected entry is
+  returned.  Any of SOURCE, UID, ARIST, TITLE, ALBUM, DURATION may be
+  NULL to indicate don't cares.  The caller must free the returned
+  strings.  */
+extern void play_list_get_info (PlayList *pl, gint index,
+				char **source, char **uid,
+				char **artist, char **title, char **album,
+				int *duration);
 
 #endif
 

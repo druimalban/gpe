@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2006 Alberto García Hierro
  *      <skyhusker@handhelds.org>
+ * Copyright (C) 2007 Neal H. Walfield <neal@walfield.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -9,28 +10,14 @@
  */
 
 #include <stdlib.h>
+#include <string.h>
 
 #include <glib/gerror.h>
 #include <glib/gstrfuncs.h>
 
 #include <pango/pango-attributes.h>
 
-#include <gtk/gtkwindow.h>
-#include <gtk/gtkstock.h>
-#include <gtk/gtkhscale.h>
-#include <gtk/gtkcellrenderertext.h>
-#include <gtk/gtkscrolledwindow.h>
-#include <gtk/gtklabel.h>
-#include <gtk/gtkhbox.h>
-#include <gtk/gtkvbox.h>
-#include <gtk/gtkcheckbutton.h>
-#include <gtk/gtkvseparator.h>
-#include <gtk/gtkhseparator.h>
-#include <gtk/gtkalignment.h>
-#include <gtk/gtktreeview.h>
-#include <gtk/gtknotebook.h>
-#include <gtk/gtktextview.h>
-#include <gtk/gtkentry.h>
+#include <gtk/gtk.h>
 
 #include "interface.h"
 #include "callbacks.h"
@@ -64,10 +51,65 @@ create_label (GtkWidget **label, PangoAttrList *attrs)
     }
 }
 
-void
-player_init (Starling *st)
+static void
+title_data_func (GtkCellLayout *cell_layout,
+		 GtkCellRenderer *cell_renderer,
+		 GtkTreeModel *model,
+		 GtkTreeIter *iter,
+		 gpointer data)
 {
-    st->pl = play_list_new ();
+  char *artist;
+  char *title;
+  char *buffer = NULL;
+  gtk_tree_model_get (model, iter, PL_COL_TITLE, &buffer,
+		      PL_COL_ARTIST, &artist, -1);
+  if (buffer)
+    title = buffer;
+  else
+    /* Try to show the last three path components as the directory
+       structure is often artist/album/file.  */
+    {
+      gtk_tree_model_get (model, iter, PL_COL_SOURCE, &buffer, -1);
+      if (buffer)
+	{
+	  char *slashes[3];
+	  int i = 0;
+	  char *t = strchr (buffer, '/');
+	  do
+	    {
+	      while (t[1] == '/')
+		t ++;
+	      slashes[(i ++) % 3] = t;
+	    }
+	  while ((t = strchr (t + 1, '/')));
+
+	  if (i >= 3)
+	    title = slashes[(i - 3) % 3] + 1;
+	  else if (i)
+	    title = slashes[0] + 1;
+	  else
+	    title = buffer;
+	}
+      else
+	title = "unknown";
+    }
+
+  if (artist)
+    {
+      char *t = g_strdup_printf ("%s - %s", artist, title);
+      g_free (buffer);
+      title = buffer = t;
+    }
+
+  g_object_set (cell_renderer, "text", title, NULL);
+  g_free (buffer);
+
+  int uid;
+  gtk_tree_model_get (model, iter, PL_COL_INDEX, &uid, -1);
+  g_object_set (cell_renderer,
+		"cell-background-set",
+		uid == play_list_get_current (PLAY_LIST (model)),
+		NULL);
 }
 
 void
@@ -83,7 +125,6 @@ interface_init (Starling *st)
     GtkWidget *separator;
     GtkWidget *label;
     GtkCellRenderer *renderer;
-    GtkTreeViewColumn *column;
     GtkWidget *scrolled;
     PangoAttribute *attribute;
     PangoAttrList *attrs;
@@ -134,28 +175,24 @@ interface_init (Starling *st)
     separator = gtk_hseparator_new ();
     gtk_box_pack_start (GTK_BOX (vbox), separator, FALSE, FALSE, 3);
     
-    st->store = gtk_list_store_new (COL_NUMCOLS, G_TYPE_STRING, 
-                                    G_TYPE_INT, G_TYPE_POINTER);
-    st->treeview = gtk_tree_view_new_with_model (GTK_TREE_MODEL (st->store));
-    g_object_unref (st->store);
-    
+    st->treeview = gtk_tree_view_new_with_model (GTK_TREE_MODEL (st->pl));
     gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (st->treeview), FALSE);
     gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (st->treeview), TRUE);
-    renderer = gtk_cell_renderer_text_new ();
-    //g_object_set(renderer, "weight", PANGO_WEIGHT_BOLD, "weight-set", FALSE, NULL);
-    gtk_tree_view_insert_column_with_attributes ( GTK_TREE_VIEW ( st->treeview ),
-                -1, _( "Title" ), renderer, "text", COL_TITLE, NULL);
-    /* XXX
-    gtk_tree_view_insert_column_with_attributes ( GTK_TREE_VIEW ( st->treeview ),
-                20, _( "Length" ), renderer, "text", COL_TIME, NULL);
-    */
-    
-    column = gtk_tree_view_get_column (GTK_TREE_VIEW (st->treeview), COL_TITLE);
-    gtk_tree_view_column_add_attribute (column, renderer, "weight", COL_FONT_WEIGHT);
 
+    GtkTreeViewColumn *col = gtk_tree_view_column_new ();
+    gtk_tree_view_append_column (GTK_TREE_VIEW (st->treeview), col);
+    renderer = gtk_cell_renderer_text_new ();
+    g_object_set (renderer, "cell-background", "gray", NULL);
+    gtk_tree_view_column_pack_start (col, renderer, FALSE);
+    gtk_cell_layout_set_cell_data_func (GTK_CELL_LAYOUT (col),
+					renderer,
+					title_data_func,
+					NULL, NULL);
+    
     scrolled = gtk_scrolled_window_new (NULL, NULL);
     gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled),
-            GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+				    GTK_POLICY_AUTOMATIC,
+				    GTK_POLICY_AUTOMATIC);
     
     gtk_container_add (GTK_CONTAINER (scrolled), st->treeview);
     gtk_container_add (GTK_CONTAINER (vbox), scrolled);

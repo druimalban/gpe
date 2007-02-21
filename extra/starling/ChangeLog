@@ -1,0 +1,65 @@
+2007-02-22  Neal H. Walfield  <neal@gnu.org>
+
+	* src/playlist.h: Rewrite.
+	* src/playlist.c: Rewrite to make PlayList implement GtkTreeModel
+	and, rather than keep everything in memory, use an sqlite DB as
+	its backend.
+	* src/stream.h: Remove file.
+	* src/stream.c: Likewise.
+	* src/Makefile.am (starling_SOURCES): Remove stream.c.
+	(noinst_HEADERS): Remove stream.h.
+	* src/callbacks.c: Don't include <gtk/gtkfilesel.h>,
+	<gtk/gtktogglebutton.h>, <gtk/gtkrange.h>, <gtk/gtktreeview.h>,
+	<gtk/gtkmain.h>, <gtk/gtkdialog.h>, <gtk/gtkentry.h>,
+	<gtk/gtklabel.h>, <gtk/gtkstock.h> or <gtk/gtktextview.h>.
+	Include <gtk/gtk.h> and "errorbox.h".
+	(fs_accept_cb): Report errors.
+	(playlist_remove_cb): Only remove selected rows.
+	(playlist_activated_cb): Use play_list_goto.
+	(playlist_playpause_cb): Use play_list_play_pause_toggle.
+	(scale_update_cb): Use play_list_get_info.
+	(new_tag_cb): Remove function.
+	(new_stream_cb): Likewise.
+	(deleted_stream_cb): Likewise.
+	(playlist_cleared_cb): Likewise.
+	(playlist_swap_cb): Likewise.
+	(playlist_bold_item): Likewise.
+	(callbacks_setup): Don't listen for the "new-stream",
+	"deleted-stream", "cleared" or "swap" signals on ST->PL.
+	* src/config.c (KEYLOADPLAYLIST): Don't define.
+	(DEFKEYLOADPLAYLIST): Likewise.
+	(config_init): Don't set the KEYLOADPLAYLIST group.
+	(config_load): Don't read the KEYLOADPLAYLIST group.
+	* src/interface.h: Don't enumerate columns.
+	(player_init): Don't declare.
+	* src/interface.c Don't include <gtk/gtkwindow.h>,
+	<gtk/gtkstock.h>, <gtk/gtkhscale.h>, <gtk/gtkcellrenderertext.h>,
+	<gtk/gtkscrolledwindow.h>, <gtk/gtklabel.h>, <gtk/gtkhbox.h>,
+	<gtk/gtkvbox.h>, <gtk/gtkcheckbutton.h>, <gtk/gtkvseparator.h>,
+	<gtk/gtkhseparator.h>, <gtk/gtkalignment.h>, <gtk/gtktreeview.h>,
+	<gtk/gtknotebook.h>, <gtk/gtktextview.h> or <gtk/gtkentry.h>.
+	Include <string.h> and <gtk/gtk.h>.
+	(title_data_func): New function.
+	(interface_init): Use ST->PL as the tree view.  Use
+	title_data_func to render the cells.
+	(player_init): Move from here...
+	* src/main.c (main): ... into this function.  Use it before
+	calling interface_init.
+	Include "starling.h".
+	* src/utils.h: Don't include "stream.h".
+	(pretty_stream_name): Remove prototype.
+	* src/utils.c (escape_spaces): Remove function.
+
+	* NEWS: New file.
+
+2007-02-19  Neal H. Walfield  <neal@gnu.org>
+
+	* configure.in: Check for gstreamer-plugins-base-0.10.
+
+	* src/main.c: Include <locale.h>.
+
+	* src/errorbox.c: Include <stdio.h>.
+
+	* src/callbacks.h (CALLBACKS_H): It's CALLBACKS_H, not
+	cALLBACKS_H.
+
