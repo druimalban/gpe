@@ -1,3 +1,8 @@
+2007-02-21  Florian Boor <florian.boor@kernelconcepts.de>
+
+	* rfcomm-helper.c: Fix warning
+	* obex-vcal.c: Make use of the new libgpevtype API and features.
+
 2006-12-15  Florian Boor <florian.boor@kernelconcepts.de>
 
 	* configure.ac, po/sv.po: Add Swedish translation.
@@ -159,4 +164,3 @@
 
 	* Makefile.am (install-exec-hook): New.
 	(bin_PROGRAMS): Remove bnep-helper, rfcomm-helper.
-	

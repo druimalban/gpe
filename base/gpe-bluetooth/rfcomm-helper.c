@@ -22,7 +22,8 @@ rfcomm_create_tty (int sk, char *tty, int size)
 {
   struct sockaddr_rc sa;
   struct stat st;
-  int id, alen;
+  int id;
+  uint alen;
 
   struct rfcomm_dev_req req = 
     {
