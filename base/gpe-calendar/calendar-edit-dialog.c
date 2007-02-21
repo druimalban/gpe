@@ -436,6 +436,9 @@ calendar_edit_dialog_init (GTypeInstance *instance, gpointer klass)
                     2, 3, 0, 1, GTK_FILL, GTK_FILL, 0, 0);
 
   /* And fill the action box.  */
+  gtk_dialog_add_button (GTK_DIALOG (d), GTK_STOCK_CANCEL,
+			 GTK_RESPONSE_REJECT);
+
   gtk_dialog_add_button (GTK_DIALOG (d), GTK_STOCK_SAVE,
 			 GTK_RESPONSE_ACCEPT);
   /* In theory, we'd like to connect to the save button's click
@@ -446,9 +449,6 @@ calendar_edit_dialog_init (GTypeInstance *instance, gpointer klass)
   g_signal_connect_closure_by_id
     ((gpointer) d, g_signal_lookup ("response", GTK_TYPE_DIALOG), 0,
      g_cclosure_new_object (G_CALLBACK (response), G_OBJECT (d)), FALSE);
-
-  gtk_dialog_add_button (GTK_DIALOG (d), GTK_STOCK_CANCEL,
-			 GTK_RESPONSE_REJECT);
 }
 
 EventCalendar *
