@@ -81,7 +81,13 @@ extern gboolean play_list_play (PlayList *pl);
   Pause the playlist PL.  */
 extern void play_list_pause (PlayList *pl);
 
-/** play_list_pause:
+/** play_list_unpause:
+
+  Unpause the playlist PL.  Unlike play_list_play, this does not start
+  from the beginning of the current entry.  */
+extern void play_list_unpause (PlayList *pl);
+
+/** play_list_play_pause_toggle:
 
   Pause the player if playing otherwise, starting playing.  */
 extern void play_list_play_pause_toggle (PlayList *pl);

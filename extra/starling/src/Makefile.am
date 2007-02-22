@@ -1,10 +1,10 @@
 bin_PROGRAMS = starling
 
 starling_LDADD = $(DEPS_LIBS)
-starling_SOURCES = callbacks.c interface.c main.c \
+starling_SOURCES = callbacks.c main.c \
 		utils.c playlist.c config.c \
 		lyrics.c lastfm.c md5.c errorbox.c
-		starling.h callbacks.h interface.h \
+		starling.h callbacks.h \
 		utils.h playlist.h config.h \
 		lyrics.h lastfm.h md5.h errorbox.h
 

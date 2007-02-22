@@ -15,6 +15,7 @@
 
 #include <glib/gtypes.h>
 #include <gtk/gtktextview.h>
+#include <libsoup/soup.h>
 
 struct _Provider
 {

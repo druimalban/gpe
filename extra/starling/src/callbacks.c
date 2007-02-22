@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2006 Alberto García Hierro
  *      <skyhusker@handhelds.org>
+ * Copyright (C) 2007 Neal H. Walfield <neal@walfield.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -103,22 +104,17 @@ playlist_remove_cb (GtkWidget *w, Starling *st)
 static void
 playlist_move_up_cb (GtkWidget *w, Starling *st)
 {
-    gint pos;
-
-    pos = gtk_tree_view_get_position (GTK_TREE_VIEW (st->treeview));
-    
-    /* PlayList itself checks for out of bounds errors */
-    play_list_swap_pos (st->pl, pos, pos - 1);
+    int pos = gtk_tree_view_get_position (GTK_TREE_VIEW (st->treeview));
+    if (pos > 0)
+      play_list_swap_pos (st->pl, pos, pos - 1);
 }
 
 static void
 playlist_move_down_cb (GtkWidget *w, Starling *st)
 {
-    gint pos;
-
-    pos = gtk_tree_view_get_position (GTK_TREE_VIEW (st->treeview));
-
-    play_list_swap_pos (st->pl, pos, pos + 1);
+    int pos = gtk_tree_view_get_position (GTK_TREE_VIEW (st->treeview));
+    if (pos + 1 < play_list_count (st->pl))
+      play_list_swap_pos (st->pl, pos, pos + 1);
 }
 
 static void
@@ -201,8 +197,8 @@ playlist_activated_cb (GtkTreeView *view, GtkTreePath *path,
 static void
 set_random_cb (GtkWidget *w, Starling *st)
 {
-  gboolean value
-    = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (st->random));
+  gboolean value = gtk_toggle_tool_button_get_active
+    (GTK_TOGGLE_TOOL_BUTTON (st->random));
   play_list_set_random (st->pl, value);
 }
 
@@ -221,7 +217,11 @@ playlist_prev_cb (GtkWidget *w, Starling *st)
 static void
 playlist_playpause_cb (GtkWidget *w, Starling *st)
 {
-  play_list_play_pause_toggle (st->pl);
+
+  if (gtk_toggle_tool_button_get_active (GTK_TOGGLE_TOOL_BUTTON (w)))
+    play_list_unpause (st->pl);
+  else
+    play_list_pause (st->pl);
 }
 
 static gboolean
@@ -264,11 +264,18 @@ scale_update_cb (Starling *st)
     gfloat percent;
     gint total_seconds;
     gint position_seconds;
-    gchar *timelabel;
 
-    if (st->current_length < 0) {
-        play_list_query_duration (st->pl, &fmt, &st->current_length, -1);
-    }
+    if (st->current_length < 0)
+      {
+	if (! play_list_query_duration (st->pl, &fmt, &st->current_length, -1))
+	  return TRUE;
+
+	total_seconds = st->current_length / 1e9;
+	char *d = g_strdup_printf ("%d:%02d",
+				   total_seconds / 60, total_seconds % 60);
+	gtk_label_set_text (GTK_LABEL (st->duration), d);
+	g_free (d);
+      }
 
     play_list_query_position (st->pl, &fmt, &position);
 
@@ -277,13 +284,10 @@ scale_update_cb (Starling *st)
     total_seconds = st->current_length / 1e9;
     position_seconds = (total_seconds / 100.0) * percent;
 
-    timelabel = g_strdup_printf ("%d:%02d/%d:%02d",
-            position_seconds / 60, position_seconds % 60,
-            total_seconds / 60, total_seconds % 60);
-
-    gtk_label_set_text (GTK_LABEL (st->time), timelabel);
-    
-    g_free (timelabel);
+    char *p = g_strdup_printf ("%d:%02d",
+			       position_seconds / 60, position_seconds % 60);
+    gtk_label_set_text (GTK_LABEL (st->position), p);
+    g_free (p);
 
     if (!st->scale_pressed && percent <= 100) {
         gtk_range_set_value (GTK_RANGE (st->scale), percent);
@@ -310,15 +314,13 @@ scale_update_cb (Starling *st)
 static void
 playlist_state_changed_cb (PlayList *pl, const GstState state, Starling *st)
 {
-  GtkWidget *pix;
-  const gchar *stock;
-  gint pos;
-
-  pos = play_list_get_current (pl);
-  //g_debug ("Current item: %d\n", pos);
-
   if (GST_STATE_PLAYING == state)
     {
+      if (! gtk_toggle_tool_button_get_active
+	  (GTK_TOGGLE_TOOL_BUTTON (st->playpause)))
+	gtk_toggle_tool_button_set_active
+	  (GTK_TOGGLE_TOOL_BUTTON (st->playpause), TRUE);
+
       char *artist;
       char *title;
       char *uri;
@@ -326,47 +328,44 @@ playlist_state_changed_cb (PlayList *pl, const GstState state, Starling *st)
       play_list_get_info (pl, -1, &uri, NULL, &artist, &title, NULL, NULL);
 
       //if (st->last_state != GST_STATE_PAUSED) {
-      if (!st->has_lyrics) {
+      if (!st->has_lyrics && artist && title) {
 	st->has_lyrics = TRUE;
 	lyrics_display (artist, title, GTK_TEXT_VIEW (st->textview));
       }
-      stock = GTK_STOCK_MEDIA_PAUSE;
 
-      // playlist_bold_item (st, pos);
-        
-      gtk_label_set_text (GTK_LABEL (st->artist), artist ?: "unknown");
+      if (! title && uri)
+	title = g_strdup (uri ? strrchr (uri, '/') + 1 : uri);
+
+      char *t;
+      if (artist)
+	t = g_strdup_printf ("%s - %s", artist, title ?: "unknown");
+      else
+	t = g_strdup (title ?: "unknown");
+
       g_free (artist);
-      
-      if (title)
-	gtk_label_set_text (GTK_LABEL (st->title), title);
-      else if (uri)
-	gtk_label_set_text (GTK_LABEL (st->title),
-			    uri ? strrchr (uri, '/') + 1 : uri);
       g_free (title);
       g_free (uri);
+
+      gtk_label_set_text (GTK_LABEL (st->title), t);
+      g_free (t);
+
+      st->current_length = -1;
+      st->has_lyrics = FALSE;
+      st->enqueued = FALSE;
     }
-  else
+  else if (state == GST_STATE_PAUSED || state == GST_STATE_NULL)
     {
-      if (GST_STATE_READY >= state) {
-	st->current_length = -1;
-	st->has_lyrics = FALSE;
-	st->enqueued = FALSE;
-      }
-            
-      stock = GTK_STOCK_MEDIA_PLAY;
+      if (gtk_toggle_tool_button_get_active
+	  (GTK_TOGGLE_TOOL_BUTTON (st->playpause)))
+	gtk_toggle_tool_button_set_active
+	  (GTK_TOGGLE_TOOL_BUTTON (st->playpause), FALSE);
     }
-    
-  pix = gtk_bin_get_child (GTK_BIN (st->playpause));
-  gtk_widget_destroy (pix);
-  pix = gtk_image_new_from_stock (stock, GTK_ICON_SIZE_SMALL_TOOLBAR);
-  gtk_container_add (GTK_CONTAINER (st->playpause), pix);
-  gtk_widget_show (pix);
 }
 
 static void
 playlist_eos_cb (PlayList *pl, Starling *st)
 {
-    play_list_next (pl);
+  play_list_next (pl);
 }
 
 static void
@@ -420,7 +419,7 @@ callbacks_setup (Starling *st)
     g_signal_connect (G_OBJECT (st->next), "clicked",
             G_CALLBACK (playlist_next_cb), st);
 
-    g_signal_connect (G_OBJECT (st->playpause), "clicked",
+    g_signal_connect (G_OBJECT (st->playpause), "toggled",
             G_CALLBACK (playlist_playpause_cb), st);
 
     g_signal_connect (G_OBJECT (st->clear), "clicked",

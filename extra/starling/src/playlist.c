@@ -49,6 +49,8 @@ struct _PlayList {
 
   sqlite *sqliteh;
   GstElement *playbin;
+  GstState last_state;
+
   int random;
   /* Position in the playlist.  */
   int position;
@@ -110,7 +112,6 @@ play_list_init (PlayList *pl)
       gst_init_init = 1;
     }
 
-  pl->position = -1;
   pl->count = -1;
 }
 
@@ -232,7 +233,6 @@ static gboolean
 play_list_bus_cb (GstBus *bus, GstMessage *message, gpointer data)
 {
     PlayList *pl = PLAY_LIST (data);
-    GstState newstate;
 
     switch (GST_MESSAGE_TYPE (message))
       {
@@ -252,11 +252,20 @@ play_list_bus_cb (GstBus *bus, GstMessage *message, gpointer data)
 	}
 
       case GST_MESSAGE_STATE_CHANGED:
-	gst_message_parse_state_changed (message, NULL, &newstate, NULL);
-	// g_debug ("State changed to %d\n", newstate);
-	g_signal_emit (pl, 
-		       PLAY_LIST_GET_CLASS (pl)->state_changed_signal_id,
-		       0, newstate);
+	if (GST_MESSAGE_SRC (message) == pl->playbin)
+	  {
+	    GstState state, pending;
+	    gst_message_parse_state_changed (message, NULL, &state, &pending);
+
+	    if (pending == GST_STATE_VOID_PENDING)
+	      {
+		pl->last_state = state;
+
+		g_signal_emit
+		  (pl, PLAY_LIST_GET_CLASS (pl)->state_changed_signal_id,
+		   0, state);
+	      }
+	  }
 	break;
 
       case GST_MESSAGE_EOS:
@@ -514,7 +523,20 @@ play_list_play (PlayList *pl)
 void
 play_list_pause (PlayList *pl)
 {
-  gst_element_set_state (pl->playbin, GST_STATE_PAUSED);
+  if (pl->last_state == GST_STATE_PLAYING && pl->playbin)
+    gst_element_set_state (pl->playbin, GST_STATE_PAUSED);
+}
+
+void
+play_list_unpause (PlayList *pl)
+{
+  if (pl->playbin)
+    {
+      if (pl->last_state != GST_STATE_PLAYING)
+	gst_element_set_state (pl->playbin, GST_STATE_PLAYING);
+    }
+  else
+    play_list_play (pl);
 }
 
 void
@@ -639,6 +661,9 @@ play_list_prev (PlayList *pl)
 gboolean
 play_list_seek (PlayList *pl, GstFormat format, gint64 pos)
 {
+  if (! pl->playbin)
+    return TRUE;
+
   return gst_element_seek (GST_ELEMENT (pl->playbin), 1.0, format,
 			   GST_SEEK_FLAG_FLUSH, GST_SEEK_TYPE_SET,
 			   pos, GST_SEEK_TYPE_NONE, GST_CLOCK_TIME_NONE);
@@ -659,10 +684,7 @@ gboolean
 play_list_query_duration (PlayList *pl, GstFormat *fmt, gint64 *pos, gint n)
 {
   if (! pl->playbin)
-    {
-      *pos = 0;
-      return TRUE;
-    }
+    return FALSE;
   return gst_element_query_duration (pl->playbin, fmt, pos);
 }
 

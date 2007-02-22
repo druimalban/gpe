@@ -1,5 +1,64 @@
 2007-02-22  Neal H. Walfield  <neal@gnu.org>
 
+	* src/Makefile.am (starling_SOURCES): Remove interface.c and
+	interface.h.
+	* src/interface.h: Remove file.
+	* src/interface.c: Remove file and move contents...
+	* src/main.c: ... into this file.
+	[IS_HILDON]: Include <hildon-widgets/hildon-app.h>,
+	<hildon-widgets/hildon-appview.h> and <libosso.h>.
+	[IS_HILDON] (APPLICATION_DBUS_SERVICE): Define.
+	[IS_HILDON] (main): Initialize osso.  Use basic Hildon widgets
+	where appropriate.  Use a toolbar for the previous, play/pause,
+	next and random buttons.  Update users.  Likewise for the position
+	scale.  Split ST->TIME into ST->POSITION and ST->DURATION.  Join
+	the artist and title labels.
+	* src/starling.h: Don't include <gtk/gtkwidget.h> or
+	<gtk/gtkliststore.h>.  Include <gtk/gtk.h>.  Remove field time,
+	add fields position and duration.  Remove field artist and bolded.
+	* src/config.c (config_save): Get the random mode correctly.
+	* src/callbacks.c (playlist_state_changed_cb): Don't change the
+	play/pause button's image.  Update the play/pause buttons state as
+	required.  Render the title correctly.
+
+	* src/playlist.h (play_list_unpause): New prototype.
+	* src/playlist.c (play_list_unpause): New function.
+	* src/callbacks.c (playlist_playpause_cb): Don't just toggle the
+	state; call either play_list_unpause or play_list_pause as a
+	function of the button's state.
+	
+	* src/playlist.c (play_list_init): Don't initialize PL->POSITION
+	to -1.
+	(play_list_bus_cb): Only emit the changed signal if we have
+	reached the target state.
+	(play_list_seek): Ignore request if no stream is loaded.
+	(play_list_query_duration): Don't return success if we haven't
+	loaded a stream.
+	(struct _PlayList): Add field last_state.
+	(play_list_pause): If already playing, do nothing.
+	(play_list_unpause): If already paused, do nothing.
+	(play_list_bus_cb): Save state in PL->LAST_STATE.
+
+	* src/callbacks.c (playlist_move_up_cb): Check that the swap is
+	valid.
+	(playlist_move_down_cb): Likewise.
+	(scale_update_cb): If we fail to get the duration, just return.
+	(playlist_state_changed_cb): If ARTIST or TITLE is NULL, don't
+	fetch the lyrics.  On a new song, reset ST->CURRENT_LENGTH,
+	ST->HAS_LYRICS and ST->ENQUEUED.
+
+	* src/lastfm.h: Include "starling.h", not "startling.h".
+
+	* src/lyrics.h: Include <libsoup/soup.h>.
+
+	* src/config.c (KEY_WIDTH): New define.
+	(KEY_HEIGHT): Likewise.
+	(config_load): Correctly free memory.  Restore the size of the
+	main window.
+	(config_save): Save the size of the main window.
+
+2007-02-22  Neal H. Walfield  <neal@gnu.org>
+
 	* configure.in (starling_localedir): Don't use this.
 	(PACKAGE_LOCALE_DIR): ... use this.
 	(ENABLE_HILDON, IS_HILDON): Define according to whether we detect

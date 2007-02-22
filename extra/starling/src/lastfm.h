@@ -15,7 +15,7 @@
 
 #include <glib/gtypes.h>
 
-#include "startling.h"
+#include "starling.h"
 
 gboolean lastfm_init (Starling *st);
 

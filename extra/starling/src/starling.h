@@ -14,8 +14,7 @@
 #include <glib/gtypes.h>
 #include <glib/gkeyfile.h>
 
-#include <gtk/gtkwidget.h>
-#include <gtk/gtkliststore.h>
+#include <gtk/gtk.h>
 
 #include <libintl.h>
 #define _(String)   String
@@ -29,9 +28,9 @@ typedef struct _Starling Starling;
 struct _Starling {
     GtkWidget *notebook;
     GtkWidget *window;
-    GtkWidget *artist;
     GtkWidget *title;
-    GtkWidget *time;
+  GtkLabel *position;
+  GtkLabel *duration;
     GtkWidget *playpause;
     GtkWidget *stop;
     GtkWidget *next;
@@ -53,7 +52,6 @@ struct _Starling {
     GtkWidget *webpasswd_entry;
     GtkWidget *web_submit;
     GtkWidget *web_count;
-    gint bolded;
     PlayList *pl;
     gboolean has_lyrics;
     GKeyFile *keyfile;
