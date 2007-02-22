@@ -604,6 +604,9 @@ play_list_goto (PlayList *pl, gint n)
 static gint
 play_list_random_next (PlayList *pl)
 {
+  if (play_list_count (pl) == 0)
+    return 0;
+
   static int rand_init;
   if (! rand_init)
     {

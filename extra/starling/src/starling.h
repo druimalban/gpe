@@ -26,25 +26,16 @@
 typedef struct _Starling Starling;
 
 struct _Starling {
-    GtkWidget *notebook;
     GtkWidget *window;
     GtkWidget *title;
   GtkLabel *position;
   GtkLabel *duration;
     GtkWidget *playpause;
-    GtkWidget *stop;
-    GtkWidget *next;
-    GtkWidget *prev;
     GtkWidget *scale;
     gboolean scale_pressed;
+  GtkScrolledWindow *treeview_window;
     GtkWidget *treeview;
     GtkWidget *random;
-    GtkWidget *up;
-    GtkWidget *down;
-    GtkWidget *add;
-    GtkWidget *clear;
-    GtkWidget *save;
-    GtkWidget *remove;
     GtkWidget *fs;
     gchar *fs_last_path;
     GtkWidget *textview;
@@ -57,6 +48,9 @@ struct _Starling {
     GKeyFile *keyfile;
     gint64 current_length;
     gboolean enqueued;
+#ifdef IS_HILDON
+  GtkCheckMenuItem *fullscreen;
+#endif
 };
 
 #endif

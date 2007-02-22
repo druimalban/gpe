@@ -14,13 +14,14 @@
 #include <gst/gst.h>
 
 #include "starling.h"
-#include "callbacks.h"
 #include "config.h"
 #include "lastfm.h"
 #include "errorbox.h"
 #include "lyrics.h"
+#include "utils.h"
 
 #include <gtk/gtk.h>
+#include <gdk/gdkkeysyms.h>
 
 #ifdef ENABLE_GPE
 #   include <gpe/init.h>
@@ -37,19 +38,455 @@
 #define BUTTONSIZE 32
 
 static void
-create_button (GtkWidget **button, const gchar *stock, GtkWidget *box)
+scroll_to_current (Starling *st)
 {
-    GtkWidget *pix;
+  int count = play_list_count (st->pl);
+  if (count == 0)
+    return;
 
-    *button = gtk_button_new ();
-    pix = gtk_image_new_from_stock (stock, GTK_ICON_SIZE_SMALL_TOOLBAR);
-
-    gtk_container_add (GTK_CONTAINER (*button), pix);
-
-    gtk_widget_set_size_request (*button, -1, BUTTONSIZE);
-
-    gtk_box_pack_start (GTK_BOX (box), *button, TRUE, TRUE, 1);
+  GtkAdjustment *vadj
+    = GTK_ADJUSTMENT (gtk_scrolled_window_get_vadjustment
+		      (st->treeview_window));
+  int pos = play_list_get_current (st->pl);
+  gtk_adjustment_set_value
+    (vadj,
+     ((gdouble) (pos) / count) * (vadj->upper - vadj->lower)
+     - vadj->page_size / 2 + vadj->lower);
 }
+
+
+static void
+fs_cancel_cb (GtkWidget *w, Starling *st)
+{
+    gtk_widget_destroy (st->fs);
+}
+
+static void
+fs_accept_cb (GtkWidget *w, Starling *st)
+{
+
+    gchar *path;
+    gchar *tmp;
+    gchar **files;
+    gint i;
+
+    gtk_widget_hide (st->fs);
+    files = gtk_file_selection_get_selections (GTK_FILE_SELECTION (st->fs));
+
+    for ( i = 0; files[i]; i++)
+      {
+	GError *error = NULL;
+        play_list_add_recursive (st->pl, files[i], -1, &error);
+	if (error)
+	  {
+	    g_warning ("Reading %s: %s", files[i], error->message);
+	    starling_error_box_fmt ("Reading %s: %s",
+				    files[i], error->message);
+	    g_error_free (error);
+	  }
+      }
+    g_strfreev (files);
+    
+    path = (gchar*) gtk_file_selection_get_filename (GTK_FILE_SELECTION (st->fs));
+
+    if (st->fs_last_path) 
+        g_free (st->fs_last_path);
+    
+    if (g_file_test (path, G_FILE_TEST_IS_DIR)) {
+        st->fs_last_path = g_strdup_printf ("%s/", path);
+    }
+    else {
+        tmp = g_path_get_dirname (path);
+        st->fs_last_path = g_strdup_printf ("%s/", tmp);
+        g_free (tmp);
+    }
+
+    gtk_widget_destroy (st->fs);
+
+}
+
+static void
+playlist_add_cb (GtkWidget *w, Starling *st)
+{
+    if (st->fs)
+        return;
+
+    st->fs = gtk_file_selection_new (_("Select File/Directory"));
+    gtk_file_selection_set_select_multiple (GTK_FILE_SELECTION (st->fs),
+            TRUE);
+    if (st->fs_last_path)
+        gtk_file_selection_set_filename (GTK_FILE_SELECTION (st->fs),
+                st->fs_last_path);
+    
+    g_signal_connect (G_OBJECT (GTK_FILE_SELECTION (st->fs)->cancel_button),
+            "clicked", G_CALLBACK (fs_cancel_cb), st);
+    g_signal_connect (G_OBJECT (GTK_FILE_SELECTION (st->fs)->ok_button),
+            "clicked", G_CALLBACK (fs_accept_cb), st);
+    g_signal_connect (G_OBJECT (st->fs), "destroy",
+            G_CALLBACK (gtk_widget_destroyed), &st->fs);
+    
+    gtk_widget_show (st->fs);
+}
+
+static void
+do_quit (Starling *st)
+{
+  const gchar *user;
+  const gchar *passwd;
+
+  user = gtk_entry_get_text (GTK_ENTRY (st->webuser_entry));
+  passwd = gtk_entry_get_text (GTK_ENTRY (st->webpasswd_entry));
+  config_store_lastfm (user, passwd, st); 
+  config_save (st);
+  gtk_main_quit();
+}
+
+static void
+starling_x_quit (GtkWidget *w, GdkEvent *e, Starling *st)
+{
+  do_quit (st);
+}
+
+static void
+starling_menu_quit (GtkWidget *w, Starling *st)
+{
+  do_quit (st);
+}
+
+static void
+set_random_cb (GtkWidget *w, Starling *st)
+{
+  gboolean value = gtk_check_menu_item_get_active
+    (GTK_CHECK_MENU_ITEM (st->random));
+  play_list_set_random (st->pl, value);
+}
+
+static void
+playlist_remove_cb (GtkWidget *w, Starling *st)
+{
+  int pos = gtk_tree_view_get_position (GTK_TREE_VIEW (st->treeview));
+  if (pos >= 0)
+    play_list_remove (st->pl, pos);
+}
+
+static void
+playlist_clear_cb (GtkWidget *w, Starling *st)
+{   
+    play_list_clear (st->pl);
+}
+
+#ifdef IS_HILDON
+static void
+toggle_fullscreen (GtkCheckMenuItem *menuitem, gpointer user_data)
+{
+  hildon_appview_set_fullscreen (HILDON_APPVIEW (user_data),
+				 gtk_check_menu_item_get_active (menuitem));
+}
+#endif /*IS_HILDON*/
+
+#if 0
+static void
+playlist_move_up_cb (GtkWidget *w, Starling *st)
+{
+    int pos = gtk_tree_view_get_position (GTK_TREE_VIEW (st->treeview));
+    if (pos > 0)
+      play_list_swap_pos (st->pl, pos, pos - 1);
+}
+
+static void
+playlist_move_down_cb (GtkWidget *w, Starling *st)
+{
+    int pos = gtk_tree_view_get_position (GTK_TREE_VIEW (st->treeview));
+    if (pos + 1 < play_list_count (st->pl))
+      play_list_swap_pos (st->pl, pos, pos + 1);
+}
+
+static void
+playlist_save_helper_cb (GtkWidget *dialog, gint response, gpointer data)
+{
+    Starling *st = (Starling*) data;
+    GList *list;
+    GtkEntry *entry = NULL;
+    const gchar *path;
+
+    if (GTK_RESPONSE_OK == response) {
+        list = gtk_container_get_children (GTK_CONTAINER (
+                GTK_DIALOG (dialog)->vbox));
+
+        for ( ; list; list = list->next) {
+            if (GTK_IS_ENTRY (list->data)) {
+                entry = GTK_ENTRY (list->data);
+                break;
+            }
+        }
+
+        if (!entry) {
+            return;
+        }
+
+        path = gtk_entry_get_text (entry);
+        if (g_str_has_suffix (path, ".m3u")) {
+            play_list_save_m3u (st->pl, path);
+        } else {
+            GString *string = g_string_new (path);
+            string = g_string_append (string, ".m3u");
+            play_list_save_m3u (st->pl, string->str);
+            g_string_free (string, TRUE);
+        }
+    }
+
+    gtk_widget_destroy (dialog);
+}
+
+static void
+playlist_save_cb (GtkWidget *w, Starling *st)
+{
+    GtkWidget *dialog;
+    GtkWidget *entry;
+
+    dialog = gtk_dialog_new_with_buttons (_("Filename:"), 
+                                        GTK_WINDOW (st->window),
+                                        GTK_DIALOG_DESTROY_WITH_PARENT,
+                                        GTK_STOCK_OK,
+                                        GTK_RESPONSE_OK,
+                                        GTK_STOCK_CANCEL,
+                                        GTK_RESPONSE_CANCEL,
+                                        NULL);
+    entry = gtk_entry_new ();
+
+    g_signal_connect (G_OBJECT (dialog), "response", 
+                G_CALLBACK (playlist_save_helper_cb), st);
+
+    gtk_container_add (GTK_CONTAINER (GTK_DIALOG(dialog)->vbox), entry);
+    gtk_widget_show_all (dialog);
+}
+#endif
+
+static void
+playlist_activated_cb (GtkTreeView *view, GtkTreePath *path,
+		       GtkTreeViewColumn *col, Starling *st)
+{
+  gint *pos;
+
+  pos = gtk_tree_path_get_indices (path);
+
+  play_list_goto (st->pl, *pos);
+}
+
+static void
+playlist_next_cb (GtkWidget *w, Starling *st)
+{
+  play_list_next (st->pl);
+  scroll_to_current (st);  
+}
+
+static void
+playlist_prev_cb (GtkWidget *w, Starling *st)
+{
+  play_list_prev (st->pl);
+  scroll_to_current (st);  
+}
+
+static void
+playlist_playpause_cb (GtkWidget *w, Starling *st)
+{
+
+  if (gtk_toggle_tool_button_get_active (GTK_TOGGLE_TOOL_BUTTON (w)))
+    play_list_unpause (st->pl);
+  else
+    play_list_pause (st->pl);
+}
+
+static gboolean
+scale_button_released_cb (GtkRange *range, GdkEventButton *event,
+        Starling *st)
+{
+    gint percent;
+    GstFormat fmt = GST_FORMAT_TIME;
+
+    if (st->current_length < 0) {
+        play_list_query_duration (st->pl, &fmt, &st->current_length, -1);
+    }
+
+    percent = gtk_range_get_value (range);
+    play_list_seek (st->pl, GST_FORMAT_TIME, 
+            (st->current_length / 100) * percent);
+    
+    st->scale_pressed = FALSE;
+    
+    return FALSE;
+}
+
+static gboolean
+scale_button_pressed_cb (GtkRange *range, GdkEventButton *event,
+        Starling *st)
+{
+    st->scale_pressed = TRUE;
+    /* Avoid sending the track if the user seeks */
+    // Commented for testing
+    //st->enqueued = FALSE;
+    
+    return FALSE;
+}
+
+static gboolean
+scale_update_cb (Starling *st)
+{
+    GstFormat fmt = GST_FORMAT_TIME;
+    gint64 position;
+    gfloat percent;
+    gint total_seconds;
+    gint position_seconds;
+
+    if (st->current_length < 0)
+      {
+	if (! play_list_query_duration (st->pl, &fmt, &st->current_length, -1))
+	  return TRUE;
+
+	total_seconds = st->current_length / 1e9;
+	char *d = g_strdup_printf ("%d:%02d",
+				   total_seconds / 60, total_seconds % 60);
+	gtk_label_set_text (GTK_LABEL (st->duration), d);
+	g_free (d);
+      }
+
+    play_list_query_position (st->pl, &fmt, &position);
+
+    percent = (((gfloat) (position)) / st->current_length) * 100; 
+
+    total_seconds = st->current_length / 1e9;
+    position_seconds = (total_seconds / 100.0) * percent;
+
+    char *p = g_strdup_printf ("%d:%02d",
+			       position_seconds / 60, position_seconds % 60);
+    gtk_label_set_text (GTK_LABEL (st->position), p);
+    g_free (p);
+
+    if (!st->scale_pressed && percent <= 100) {
+        gtk_range_set_value (GTK_RANGE (st->scale), percent);
+    }
+
+    if (G_UNLIKELY (!st->enqueued && total_seconds > 30 && 
+        (position_seconds > 240 || position_seconds * 2 >= total_seconds)))
+      {
+	char *artist;
+	char *title;
+	play_list_get_info (st->pl, -1,
+			    NULL, NULL, &artist, &title, NULL, NULL);
+
+	st->enqueued = TRUE;
+	lastfm_enqueue (artist, title, total_seconds, st);
+
+	g_free (artist);
+	g_free (title);
+    }
+
+    return TRUE;
+}
+
+static void
+playlist_state_changed_cb (PlayList *pl, const GstState state, Starling *st)
+{
+  if (GST_STATE_PLAYING == state)
+    {
+      if (! gtk_toggle_tool_button_get_active
+	  (GTK_TOGGLE_TOOL_BUTTON (st->playpause)))
+	gtk_toggle_tool_button_set_active
+	  (GTK_TOGGLE_TOOL_BUTTON (st->playpause), TRUE);
+
+      char *artist;
+      char *title;
+      char *uri;
+
+      play_list_get_info (pl, -1, &uri, NULL, &artist, &title, NULL, NULL);
+
+      //if (st->last_state != GST_STATE_PAUSED) {
+      if (!st->has_lyrics && artist && title) {
+	st->has_lyrics = TRUE;
+	lyrics_display (artist, title, GTK_TEXT_VIEW (st->textview));
+      }
+
+      if (! title && uri)
+	title = g_strdup (uri ? strrchr (uri, '/') + 1 : uri);
+
+      char *t;
+      if (artist)
+	t = g_strdup_printf ("%s - %s", artist, title ?: "unknown");
+      else
+	t = g_strdup (title ?: "unknown");
+
+      g_free (artist);
+      g_free (title);
+      g_free (uri);
+
+      gtk_label_set_text (GTK_LABEL (st->title), t);
+
+      char *title_bar = g_strdup_printf ("Starling - %s", t);
+#ifdef IS_HILDON
+      hildon_app_set_title (HILDON_APP (st->window), title_bar);
+#else
+      gtk_window_set_title (GTK_WINDOW (st->window), title_bar);
+#endif
+      g_free (t);
+      g_free (title_bar);
+
+      st->current_length = -1;
+      st->has_lyrics = FALSE;
+      st->enqueued = FALSE;
+    }
+  else if (state == GST_STATE_PAUSED || state == GST_STATE_NULL)
+    {
+      if (gtk_toggle_tool_button_get_active
+	  (GTK_TOGGLE_TOOL_BUTTON (st->playpause)))
+	gtk_toggle_tool_button_set_active
+	  (GTK_TOGGLE_TOOL_BUTTON (st->playpause), FALSE);
+    }
+}
+
+static void
+playlist_eos_cb (PlayList *pl, Starling *st)
+{
+  play_list_next (pl);
+}
+
+static void
+lastfm_submit_cb (GtkWidget *w, Starling *st)
+{
+    const gchar *username;
+    const gchar *passwd;
+
+    username = gtk_entry_get_text (GTK_ENTRY (st->webuser_entry));
+    passwd = gtk_entry_get_text (GTK_ENTRY (st->webpasswd_entry));
+
+    if (username && passwd && strlen (username) && strlen (passwd))
+        lastfm_submit (username, passwd, st);
+}
+
+static int
+key_press_event (GtkWidget *widget, GdkEventKey *k, Starling *st)
+{
+  /* in hildon there is nothing like control, shift etc buttons */
+  switch (k->keyval)
+    {
+#ifdef IS_HILDON
+    case GDK_F6:
+      /* toggle button for going full screen */
+      gtk_check_menu_item_set_active
+	(st->fullscreen, ! gtk_check_menu_item_get_active (st->fullscreen));
+      return TRUE;
+#endif
+
+    case GDK_F7:
+      playlist_next_cb (NULL, st);
+      return TRUE;
+    case GDK_F8:
+      playlist_next_cb (NULL, st);
+      return TRUE;
+    }
+
+  return FALSE;
+}
+
 
 static void
 title_data_func (GtkCellLayout *cell_layout,
@@ -121,7 +558,7 @@ main(int argc, char *argv[])
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
   textdomain (PACKAGE);
-    
+
 #ifdef ENABLE_GPE
   gpe_application_init (&argc, &argv);
 #else
@@ -132,11 +569,14 @@ main(int argc, char *argv[])
   osso_context_t *osso_context;
 
   /* Initialize maemo application */
-  osso_context = osso_initialize(APPLICATION_DBUS_SERVICE, "0.1", TRUE, NULL);
+  osso_context = osso_initialize(APPLICATION_DBUS_SERVICE, "1.0", TRUE, NULL);
 
   /* Check that initialization was ok */
   if (osso_context == NULL)
-    return OSSO_ERROR;
+    {
+      g_critical ("Failed to initialize OSSO context!");
+      return OSSO_ERROR;
+    }
 #endif
 
   const char *home = g_get_home_dir ();
@@ -153,34 +593,149 @@ main(int argc, char *argv[])
       exit (1);
     }
 
+  g_signal_connect (G_OBJECT (st->pl), "eos",
+		    G_CALLBACK (playlist_eos_cb), st);
+  g_signal_connect (G_OBJECT (st->pl), "state-changed",
+		    G_CALLBACK (playlist_state_changed_cb), st);
+    
   /* Build the GUI.  */
-  GtkWidget *l_button_box = NULL;
   GtkWidget *hbox1 = NULL;
   GtkWidget *hbox2 = NULL;
   GtkWidget *vbox = NULL;
-  GtkWidget *separator = NULL;
   GtkWidget *label = NULL;
   GtkCellRenderer *renderer = NULL;
   GtkWidget *scrolled = NULL;
-    
+
 #ifdef IS_HILDON
   st->window = hildon_app_new ();
   hildon_app_set_two_part_title (HILDON_APP (st->window), FALSE);
   GtkWidget *main_appview = hildon_appview_new (_("Main"));
   hildon_app_set_appview (HILDON_APP (st->window),
 			  HILDON_APPVIEW (main_appview));
+
+  hildon_app_set_title (HILDON_APP (st->window), "Starling");
 #else    
   st->window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-#endif
-
   gtk_window_set_title (GTK_WINDOW (st->window), "Starling");
-    
+#endif
+  g_signal_connect (G_OBJECT (st->window), "delete-event", 
+		    G_CALLBACK (starling_x_quit), st);
+
   GtkBox *main_box = GTK_BOX (gtk_vbox_new (FALSE, 5));
 #if IS_HILDON
   gtk_container_add (GTK_CONTAINER (main_appview), GTK_WIDGET (main_box));
 #else
   gtk_container_add (GTK_CONTAINER (st->window), GTK_WIDGET (main_box));
 #endif
+
+  g_signal_connect (G_OBJECT (st->window), "key_press_event", 
+		    G_CALLBACK (key_press_event), st);
+
+
+  /* Menu bar.  */
+  GtkMenuShell *menu_main;
+#ifdef IS_HILDON
+  menu_main
+    = GTK_MENU_SHELL (hildon_appview_get_menu (HILDON_APPVIEW (main_appview)));
+#else
+  menu_main = GTK_MENU_SHELL (gtk_menu_bar_new ());
+  gtk_box_pack_start (main_box, GTK_WIDGET (menu_main), FALSE, FALSE, 0);
+  gtk_widget_show (GTK_WIDGET (menu_main));
+#endif
+
+  GtkMenuShell *menu;
+  GtkWidget *mitem;
+
+  /* File menu.  */
+  menu = GTK_MENU_SHELL (gtk_menu_new ());
+  mitem = gtk_menu_item_new_with_mnemonic (_("_File"));
+  gtk_menu_item_set_submenu (GTK_MENU_ITEM (mitem), GTK_WIDGET (menu));
+  gtk_menu_shell_append (menu_main, GTK_WIDGET (mitem));
+  gtk_widget_show (mitem);
+    
+  /* File -> Open.  */
+#ifdef IS_HILDON
+  mitem = gtk_menu_item_new_with_label (_("Import"));
+#else
+  mitem = gtk_image_menu_item_new_from_stock (GTK_STOCK_OPEN, NULL);
+#endif
+  g_signal_connect (G_OBJECT (mitem), "activate",
+		    G_CALLBACK (playlist_add_cb), st);
+  gtk_widget_show (mitem);
+  gtk_menu_shell_append (menu, mitem);
+
+  /* File -> Quit.  */
+#ifdef IS_HILDON
+  GtkWidget *quit_item = mitem = gtk_menu_item_new_with_label (_("Close"));
+#else
+  mitem = gtk_image_menu_item_new_from_stock (GTK_STOCK_QUIT, NULL);
+#endif
+  g_signal_connect (G_OBJECT (mitem), "activate",
+		    G_CALLBACK (starling_menu_quit), st);
+  gtk_widget_show (mitem);
+#ifndef IS_HILDON
+  /* Don't append this to the file menu in hildon but the main menu
+     (which we do at the very end).  */
+  gtk_menu_shell_append (menu, mitem);
+#endif
+
+
+  /* Options menu.  */
+  menu = GTK_MENU_SHELL (gtk_menu_new ());
+  mitem = gtk_menu_item_new_with_mnemonic (_("_Options"));
+  gtk_menu_item_set_submenu (GTK_MENU_ITEM (mitem), GTK_WIDGET (menu));
+  gtk_menu_shell_append (menu_main, GTK_WIDGET (mitem));
+  gtk_widget_show (mitem);
+    
+  /* Options -> Random.  */
+  st->random = gtk_check_menu_item_new_with_mnemonic (_("_Random"));
+  g_signal_connect (G_OBJECT (st->random), "toggled",
+		    G_CALLBACK (set_random_cb), st);
+  gtk_widget_show (st->random);
+  gtk_menu_shell_append (menu, st->random);
+
+  mitem = gtk_separator_menu_item_new ();
+  gtk_menu_shell_append (menu, mitem);
+  gtk_widget_show (mitem);
+
+  /* Options -> Remove selected.  */
+  mitem = gtk_menu_item_new_with_mnemonic (_("Remove Selecte_d"));
+  g_signal_connect (G_OBJECT (mitem), "activate",
+		    G_CALLBACK (playlist_remove_cb), st);
+  gtk_widget_show (mitem);
+  gtk_menu_shell_append (menu, mitem);
+
+  /* Options -> Clear all.  */
+  mitem = gtk_menu_item_new_with_mnemonic (_("_Clear all"));
+  g_signal_connect (G_OBJECT (mitem), "activate",
+		    G_CALLBACK (playlist_clear_cb), st);
+  gtk_widget_show (mitem);
+  gtk_menu_shell_append (menu, mitem);
+
+#ifdef IS_HILDON
+  mitem = gtk_separator_menu_item_new ();
+  gtk_menu_shell_append (menu, mitem);
+  gtk_widget_show (mitem);
+
+  /* Options -> Full Screen.  */
+  mitem = gtk_check_menu_item_new_with_mnemonic (_("_Full Screen"));
+  st->fullscreen = mitem;
+  g_signal_connect (G_OBJECT (mitem), "activate",
+		    G_CALLBACK (toggle_fullscreen), main_appview);
+  gtk_menu_shell_append (menu, mitem);
+  gtk_widget_show (mitem);
+#endif
+
+#ifdef IS_HILDON
+  /* Finally attach close item. */
+  mitem = gtk_separator_menu_item_new ();
+  gtk_menu_shell_append (menu_main, mitem);
+  gtk_widget_show (mitem);
+
+  gtk_menu_shell_append (menu_main, quit_item);
+#endif
+
+
 
   /* The toolbar.  */
   GtkWidget *toolbar = gtk_toolbar_new ();
@@ -201,23 +756,21 @@ main(int argc, char *argv[])
   /* Previous button.  */
   GtkToolItem *item;
   item = gtk_tool_button_new_from_stock (GTK_STOCK_MEDIA_PREVIOUS);
-  st->prev = GTK_WIDGET (item);
+  g_signal_connect (G_OBJECT (item), "clicked",
+		    G_CALLBACK (playlist_prev_cb), st);
   gtk_toolbar_insert (GTK_TOOLBAR (toolbar), item, -1);
 
   /* Play/pause.  */
   item = gtk_toggle_tool_button_new_from_stock (GTK_STOCK_MEDIA_PLAY);
   st->playpause = GTK_WIDGET (item);
+  g_signal_connect (G_OBJECT (st->playpause), "toggled",
+		    G_CALLBACK (playlist_playpause_cb), st);
   gtk_toolbar_insert (GTK_TOOLBAR (toolbar), item, -1);
 
   /* Next.  */
   item = gtk_tool_button_new_from_stock (GTK_STOCK_MEDIA_NEXT);
-  st->next = GTK_WIDGET (item);
-  gtk_toolbar_insert (GTK_TOOLBAR (toolbar), item, -1);
-
-  /* Random.  */
-  /* XXX Need a more appropriate image.  */
-  item = gtk_toggle_tool_button_new_from_stock (GTK_STOCK_REFRESH);
-  st->random = GTK_WIDGET (item);
+  g_signal_connect (G_OBJECT (item), "clicked",
+		    G_CALLBACK (playlist_next_cb), st);
   gtk_toolbar_insert (GTK_TOOLBAR (toolbar), item, -1);
 
   /* Scale.  */
@@ -236,6 +789,11 @@ main(int argc, char *argv[])
 
   st->scale = gtk_hscale_new_with_range (0, 100, 1);
   gtk_scale_set_draw_value (GTK_SCALE (st->scale), FALSE);
+  g_signal_connect (G_OBJECT (st->scale), "button-release-event", 
+		    G_CALLBACK (scale_button_released_cb), st);
+  g_signal_connect (G_OBJECT (st->scale), "button-press-event",
+		    G_CALLBACK (scale_button_pressed_cb), st);
+  g_timeout_add (1000, (GSourceFunc) scale_update_cb, st);
   gtk_box_pack_start (GTK_BOX (hbox), GTK_WIDGET (st->scale),
 		      TRUE, TRUE, 0);
     
@@ -247,13 +805,33 @@ main(int argc, char *argv[])
 
   vbox = gtk_vbox_new (FALSE, 5);
 
+
+  /* Stuff the title label in an hbox to prevent it from being
+     centered.  */
+  hbox = GTK_BOX (gtk_hbox_new (FALSE, 5));
+  gtk_box_pack_start (GTK_BOX (vbox), GTK_WIDGET (hbox), FALSE, FALSE, 0);
+  gtk_widget_show (GTK_WIDGET (hbox));
+
   st->title = gtk_label_new (_("Not playing"));
-  gtk_misc_set_alignment (GTK_MISC (st->duration), 0.0, 0.5);
-  gtk_box_pack_start (GTK_BOX (vbox), st->title, FALSE, FALSE, 0);
+  gtk_misc_set_alignment (GTK_MISC (st->title), 0, 0.5);
+  gtk_box_pack_start (hbox, st->title, TRUE, TRUE, 0);
+
+  /* Jump to the currently playing song.  */
+  GtkWidget *jump_to = gtk_button_new ();
+  gtk_button_set_image (GTK_BUTTON (jump_to),
+			gtk_image_new_from_stock (GTK_STOCK_JUMP_TO,
+						  GTK_ICON_SIZE_BUTTON));
+  g_signal_connect_swapped (G_OBJECT (jump_to), "clicked",
+			    G_CALLBACK (scroll_to_current), st);
+  gtk_box_pack_start (hbox, jump_to, FALSE, FALSE, 0);
 
   st->treeview = gtk_tree_view_new_with_model (GTK_TREE_MODEL (st->pl));
+  g_signal_connect (G_OBJECT (st->treeview), "row-activated",
+		    G_CALLBACK (playlist_activated_cb), st);
   gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (st->treeview), FALSE);
   gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (st->treeview), TRUE);
+
+  gtk_widget_grab_focus (GTK_WIDGET (st->treeview));
 
   GtkTreeViewColumn *col = gtk_tree_view_column_new ();
   gtk_tree_view_append_column (GTK_TREE_VIEW (st->treeview), col);
@@ -266,6 +844,7 @@ main(int argc, char *argv[])
 				      NULL, NULL);
     
   scrolled = gtk_scrolled_window_new (NULL, NULL);
+  st->treeview_window = GTK_SCROLLED_WINDOW (scrolled);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled),
 				  GTK_POLICY_AUTOMATIC,
 				  GTK_POLICY_AUTOMATIC);
@@ -273,27 +852,28 @@ main(int argc, char *argv[])
   gtk_container_add (GTK_CONTAINER (scrolled), st->treeview);
   gtk_container_add (GTK_CONTAINER (vbox), scrolled);
     
-  l_button_box = gtk_hbox_new (TRUE, 0);
-  create_button (&st->add, GTK_STOCK_ADD, l_button_box);
-  create_button (&st->remove, GTK_STOCK_REMOVE, l_button_box);
-  separator = gtk_vseparator_new();
-  gtk_box_pack_start (GTK_BOX (l_button_box), separator, FALSE, FALSE, 0);
-    
+  /* XXX: These are currently disable.  Up and down are pretty
+     useless.  We'd rather have drag and drog (and multi-select).
+     Save as is broken (see playlist.c).  */
+#if 0
   create_button (&st->up, GTK_STOCK_GO_UP, l_button_box);
+  g_signal_connect (G_OBJECT (st->up), "clicked",
+		    G_CALLBACK (playlist_move_up_cb), st);
+  
   create_button (&st->down, GTK_STOCK_GO_DOWN, l_button_box);
-  separator = gtk_vseparator_new();
-  gtk_box_pack_start (GTK_BOX (l_button_box), separator, FALSE, FALSE, 0);
+  g_signal_connect (G_OBJECT (st->down), "clicked",
+		    G_CALLBACK (playlist_move_down_cb), st);
     
-  create_button (&st->clear, GTK_STOCK_NEW, l_button_box);
   create_button (&st->save, GTK_STOCK_SAVE_AS, l_button_box);
+  g_signal_connect (G_OBJECT (st->save), "clicked",
+		    G_CALLBACK (playlist_save_cb), st);
+#endif
     
-  gtk_box_pack_start (GTK_BOX (vbox), l_button_box, FALSE, FALSE, 0);
-    
-  st->notebook = gtk_notebook_new ();
-  gtk_notebook_append_page (GTK_NOTEBOOK (st->notebook), vbox,
+  GtkWidget *notebook = gtk_notebook_new ();
+  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), vbox,
 			    gtk_label_new (_("Player")));
 
-  gtk_container_add (GTK_CONTAINER (main_box), GTK_WIDGET (st->notebook));
+  gtk_container_add (GTK_CONTAINER (main_box), GTK_WIDGET (notebook));
 
   /* Lyrics tab */
 
@@ -310,7 +890,7 @@ main(int argc, char *argv[])
 
   gtk_box_pack_start (GTK_BOX (vbox), scrolled, TRUE, TRUE, 3);
 
-  gtk_notebook_append_page (GTK_NOTEBOOK (st->notebook), vbox,
+  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), vbox,
 			    gtk_label_new (_("Lyrics")));
 
   /* Web services tab (for now, last.fm) */
@@ -340,10 +920,12 @@ main(int argc, char *argv[])
 
   st->web_count = gtk_label_new ("");
   st->web_submit = gtk_button_new_with_label (_("Submit"));
+  g_signal_connect (G_OBJECT (st->web_submit), "clicked",
+		    G_CALLBACK (lastfm_submit_cb), st);
   gtk_box_pack_start (GTK_BOX (vbox), st->web_count, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), st->web_submit, FALSE, FALSE, 0);
     
-  gtk_notebook_append_page (GTK_NOTEBOOK (st->notebook), vbox,
+  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), vbox,
 			    gtk_label_new (_("last.fm")));
 
 
@@ -359,8 +941,6 @@ main(int argc, char *argv[])
     st->has_lyrics = FALSE;
     st->enqueued = FALSE;
     
-    callbacks_setup (st);
-
     lyrics_init ();
 
     lastfm_init (st);

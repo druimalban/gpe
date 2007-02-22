@@ -29,7 +29,7 @@ GLIB_GENMARSHAL=`$PKG_CONFIG --variable=glib_genmarshal glib-2.0`
 AC_SUBST(GLIB_GENMARSHAL)
 
 # Whether to build for Hildon.
-AC_CHECK_FUNC([osso_initialize],
+AC_CHECK_LIB([osso], [osso_initialize],
 	[AC_MSG_NOTICE([building for Hildon])
 	 AC_DEFINE([IS_HILDON], [1], [Define to 1 to integrate with Hildon])
 	 ENABLE_HILDON=true
@@ -49,5 +49,8 @@ Makefile
 data/Makefile
 data/starling.desktop
 src/Makefile
+hildon/starling.desktop
+hildon/com.nokia.starling.service
+hildon/Makefile
 ])
 AC_OUTPUT

@@ -1,0 +1,13 @@
+[Desktop Entry]
+Encoding=UTF-8
+Version=1.0
+Type=Application
+Name=Audio player
+Comment=Starling
+Exec=@prefix@/starling
+Terminal=false
+Icon=bass
+X-HildonDesk-ShowInToolbar=true
+X-Osso-Type=application/x-executable
+X-Osso-Service=starling
+StartupWMClass=starling

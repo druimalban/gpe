@@ -1,3 +1,5 @@
+Port to the Hildon (maemo) framework.  (Contributed by Neal H. Walfield.)
+
 Save the play list in an sqlite DB rather than rebuilding it each time
 the application is started.  (Contributed by Neal H. Walfield.)
 

@@ -108,7 +108,7 @@ config_load (Starling *st)
     g_free (value);
 
     if (g_key_file_get_boolean (st->keyfile, GROUP, KEYRANDOM, NULL)) {
-      gtk_toggle_tool_button_set_active (GTK_TOGGLE_TOOL_BUTTON (st->random), TRUE);
+      gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (st->random), TRUE);
     }
 
 
@@ -166,8 +166,10 @@ config_save (Starling *st)
     g_free (path);
 
     /* Grab settings from memory */
-    g_key_file_set_string (st->keyfile, GROUP, KEYLASTPATH, st->fs_last_path);
-    
+    if (st->fs_last_path)
+      g_key_file_set_string (st->keyfile, GROUP, KEYLASTPATH,
+			     st->fs_last_path);
+
     g_key_file_set_boolean (st->keyfile, GROUP, KEYRANDOM,
 			    play_list_get_random (st->pl)); 
 

@@ -1,5 +1,40 @@
 2007-02-22  Neal H. Walfield  <neal@gnu.org>
 
+	* configure.in: Use AC_CHECK_LIB, not AC_CHECK_FUNC, to check for
+	hildon.  Generate hildon/starling.desktop
+	hildon/com.nokia.starling.service hildon/Makefile.
+	* Makefile.am [HILDON] (SUBDIRS): Add hildon.
+	* hildon/Makefile.am: New file.
+	* hildon/com.nokia.starling.service.in: Likewise.
+	* hildon/starling.desktop.in: Likewise.
+
+	* src/callbacks.h: Remove file.
+	* src/callbacks.c: Remove file and move contents...
+	* src/main.c: ... to this file.  Don't include include
+	"callbacks.h".  Include "utils.h" and <gdk/gdkkeysyms.h>.
+	(scroll_to_current): New function.
+	(key_press_event): Likewise.
+	(main): Change open, random, remove selected and clear all to the
+	menu.  Add a quit menu entry.  Display the title and artist in the
+	title bar.  Add a jump to button to the right of the title and
+	artist display.
+	(playlist_next_cb): Scroll to the new entry.
+	(playlist_prev_cb): Likewise.
+	* src/Makefile.am (starling_SOURCES): Remove callbacks.h and
+	callbacks.c.
+	* src/starling.h (struct _Starling): Remove files notebook, stop,
+	next, prev, up, down, add, clear, save and remove.  Add field
+	treeview_window.
+	[IS_HILDON] (struct _Starling): Add field fullscreen.
+
+	* src/config.c (config_save): Only save ST->FS_LAST_PATH if
+	non-NULL.
+
+	* src/playlist.c (play_list_random_next): If empty, immediately
+	return 0.
+
+2007-02-22  Neal H. Walfield  <neal@gnu.org>
+
 	* src/main.c: Don't include "interface.h".
 	* src/callbacks.c: Likewise.
 	
