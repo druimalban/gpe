@@ -1,5 +1,12 @@
 2007-02-22  Neal H. Walfield  <neal@gnu.org>
 
+	* debian/changelog: New file.
+	* debian/compat: New file.
+	* debian/control: New file.
+	* debian/rules: New file.
+
+2007-02-22  Neal H. Walfield  <neal@gnu.org>
+
 	* configure.in: Determine GLIB_GENMARSHAL after checking for
 	pkg-config.
 
