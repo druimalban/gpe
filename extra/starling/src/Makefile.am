@@ -3,7 +3,7 @@ bin_PROGRAMS = starling
 starling_LDADD = $(DEPS_LIBS)
 starling_SOURCES = main.c \
 		utils.c playlist.c config.c \
-		lyrics.c lastfm.c md5.c errorbox.c
+		lyrics.c lastfm.c md5.c errorbox.c \
 		starling.h \
 		utils.h playlist.h config.h \
 		lyrics.h lastfm.h md5.h errorbox.h

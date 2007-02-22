@@ -24,10 +24,6 @@ if test "x"$gpe = "xyes"; then
   AC_DEFINE([ENABLE_GPE], [1], [Define to 1 to enable GPE widgets])
 fi
 
-dnl glib-genmarshal
-GLIB_GENMARSHAL=`$PKG_CONFIG --variable=glib_genmarshal glib-2.0`
-AC_SUBST(GLIB_GENMARSHAL)
-
 # Whether to build for Hildon.
 AC_CHECK_LIB([osso], [osso_initialize],
 	[AC_MSG_NOTICE([building for Hildon])
@@ -41,6 +37,10 @@ AM_CONDITIONAL(HILDON, test x$ENABLE_HILDON = xtrue)
 PKG_CHECK_MODULES(DEPS, $DEP_MODULES)
 AC_SUBST(DEPS_CFLAGS)
 AC_SUBST(DEPS_LIBS)
+
+dnl glib-genmarshal
+GLIB_GENMARSHAL=`$PKG_CONFIG --variable=glib_genmarshal glib-2.0`
+AC_SUBST(GLIB_GENMARSHAL)
 
 dnl Generate the output files.
 AC_CONFIG_FILES([
