@@ -1,5 +1,9 @@
 2007-02-22  Neal H. Walfield  <neal@gnu.org>
 
+	* hildon/Makefile.am (install-data-hook): Respect $(DESTDIR).
+
+2007-02-22  Neal H. Walfield  <neal@gnu.org>
+
 	* configure.in: Use AC_CHECK_LIB, not AC_CHECK_FUNC, to check for
 	hildon.  Generate hildon/starling.desktop
 	hildon/com.nokia.starling.service hildon/Makefile.
