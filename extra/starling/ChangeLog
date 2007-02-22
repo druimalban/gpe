@@ -1,5 +1,28 @@
 2007-02-22  Neal H. Walfield  <neal@gnu.org>
 
+	* configure.in (starling_localedir): Don't use this.
+	(PACKAGE_LOCALE_DIR): ... use this.
+	(ENABLE_HILDON, IS_HILDON): Define according to whether we detect
+	hildon.
+	(GTK_CFLAGS): Don't AC_SUBST.
+	(SQLITE_CFLAGS): Likewise.
+	(LIBSOUP_CFLAGS): Likewise.
+	(GPE_CFLAGS): Likewise.
+	(DEPS_CFLAGS): AC_SUBST instead.
+	(GTK_LIBS): Don't AC_SUBST.
+	(SQLITE_LIBS): Likewise.
+	(LIBSOUP_LIBS): Likewise.
+	(GPE_LIBS): Likewise.
+	(DEPS_LIBS): AC_SUBST instead.
+	* src/Makefile.am (starling_LDADD): New variable.
+	(noinst_HEADERS): Fold this...
+	(starling_SOURCES): ... into this.
+	(INCLUDES): Define.
+	(starling_CFLAGS): Don't define.
+	(starling_LDADD): Change to just $(DEPS_LIBS).
+
+2007-02-22  Neal H. Walfield  <neal@gnu.org>
+
 	* src/playlist.h: Rewrite.
 	* src/playlist.c: Rewrite to make PlayList implement GtkTreeModel
 	and, rather than keep everything in memory, use an sqlite DB as

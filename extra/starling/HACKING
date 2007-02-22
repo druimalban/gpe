@@ -3,12 +3,10 @@ In order to build this software you'll need:
     * libsoup
     * gtk+-2
     * gstreamer-0.10
-    * sqlite3
+    * sqlite
 
 
 Files are structured as follows:
-    * stream.{h,c} contain the basic routines for opening the files,
-        finding if they are supported and read theis metadata.
     * playlist.{h,c} implement the PlayList object, which handles al the
         streams, as well as loading and saving the user's playlist. It uses
         the gobject signal system to communicate with the streams as well as
