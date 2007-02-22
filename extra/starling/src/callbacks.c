@@ -16,7 +16,6 @@
 #include "errorbox.h"
 #include "starling.h"
 #include "playlist.h"
-#include "interface.h"
 #include "config.h"
 #include "utils.h"
 

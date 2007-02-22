@@ -1,5 +1,10 @@
 2007-02-22  Neal H. Walfield  <neal@gnu.org>
 
+	* src/main.c: Don't include "interface.h".
+	* src/callbacks.c: Likewise.
+	
+2007-02-22  Neal H. Walfield  <neal@gnu.org>
+
 	* src/Makefile.am (starling_SOURCES): Remove interface.c and
 	interface.h.
 	* src/interface.h: Remove file.

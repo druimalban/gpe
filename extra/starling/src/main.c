@@ -16,7 +16,6 @@
 #include "starling.h"
 #include "callbacks.h"
 #include "config.h"
-#include "interface.h"
 #include "lastfm.h"
 #include "errorbox.h"
 #include "lyrics.h"
