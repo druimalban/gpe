@@ -20,6 +20,7 @@
 #include "lyrics.h"
 #include "utils.h"
 
+#include <glib.h>
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 
@@ -580,7 +581,12 @@ main(int argc, char *argv[])
 #endif
 
   const char *home = g_get_home_dir ();
-  char *file = g_strdup_printf ("%s/.gpe/playlist", home);
+  char *dir = g_strdup_printf ("%s/.starling", home);
+  /* We don't check the error here because either it already exists
+     (which isn'treally an error), or we could created it and this
+     error will be caught below.  */
+  g_mkdir (dir, 0755);
+  char *file = g_strdup_printf ("%s/.starling/playlist", home);
 
   GError *err = NULL;
   st->pl = play_list_open (file, &err);

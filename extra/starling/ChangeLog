@@ -1,5 +1,11 @@
 2007-02-23  Neal H. Walfield  <neal@gnu.org>
 
+	* src/main.c: Include <glib.h>.
+	(main): Put the playlist in ~/.starling, not ~/.gpe.  Ensure this
+	directory exists.
+
+2007-02-23  Neal H. Walfield  <neal@gnu.org>
+
 	* src/errorbox.c (starling_error_box): It's GTK_BUTTONS_OK, not
 	GTK_RESPONSE_OK.
 
