@@ -36,7 +36,7 @@ starling_error_box (const gchar *text)
 
     dialog = gtk_message_dialog_new (NULL, GTK_DIALOG_MODAL,
                                 GTK_MESSAGE_ERROR,
-                                GTK_RESPONSE_OK, text);
+                                GTK_BUTTONS_OK, text);
 
     gtk_dialog_run (GTK_DIALOG (dialog));
     

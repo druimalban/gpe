@@ -1,3 +1,8 @@
+2007-02-23  Neal H. Walfield  <neal@gnu.org>
+
+	* src/errorbox.c (starling_error_box): It's GTK_BUTTONS_OK, not
+	GTK_RESPONSE_OK.
+
 2007-02-22  Neal H. Walfield  <neal@gnu.org>
 
 	* debian/changelog: New file.
