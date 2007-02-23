@@ -3,5 +3,5 @@ Name=Media Player
 Exec=@prefix@/bin/starling
 Terminal=0
 Type=Application
-Icon=gpe-terminal.png
+Icon=bass.png
 Categories=Utility;GPE

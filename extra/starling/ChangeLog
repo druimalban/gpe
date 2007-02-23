@@ -1,5 +1,37 @@
 2007-02-23  Neal H. Walfield  <neal@gnu.org>
 
+	* src/main.c: Include
+	<hildon-fm/hildon-widgets/hildon-file-chooser-dialog.h>.
+	(fs_cancel_cb): Remove function.
+	(fs_accept_cb): Remove function.  Move body from here...
+	(playlist_add_cb): ... to here.  Port to Maemo.
+
+	(key_press_event) [IS_HILDON]: Make fullscreen button a play/pause
+	button.  Map F8 to previous.
+
+	* src/playlist.c [IS_HILDON]: Add field source.
+	(play_list_play): Move playbin creation from here...
+	(playbin_ensure): ... to this new function.
+	[IS_HILDON]: Don't use a playbin but our own "special" pipeline.
+	(play_list_set_sink) [IS_HILDON]: Don't do anything.
+	[! IS_HILDON]: Ensure PL->PLAYBIN is valid.
+	[IS_HILDON]: Set the "location" property on PL->SOURCE.
+
+	(meta_data_reader): Don't reference PL.  Decode into a fakesink.
+	Unref the bus.
+
+	(play_list_bus_cb): Correctly case PL->PLAYBIN to a GST_OBJECT.
+
+	* data/Makefile.am (desktop_DATA): Don't install starling.desktop
+	on hildon.
+	(pixmapdir): New variable.
+	(pixmap_DATA): Likewise.
+	(EXTRA_DIST): Add bass.png.
+	* data/bass.png: New file, stolen from gpe-icons/default/bass.png.
+	* data/starling.desktop.in (Icon): Change to bass.png.
+
+2007-02-23  Neal H. Walfield  <neal@gnu.org>
+
 	* configure.in: Don't require libsoup-2.2 version 2.2.94 or
 	greater; just depend on libsoup-2.2.
 

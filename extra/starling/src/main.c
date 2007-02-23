@@ -32,6 +32,7 @@
 /* Hildon includes */
 #include <hildon-widgets/hildon-app.h>
 #include <hildon-widgets/hildon-appview.h>
+#include <hildon-fm/hildon-widgets/hildon-file-chooser-dialog.h>
 #include <libosso.h>
 #define APPLICATION_DBUS_SERVICE "starling"
 #endif
@@ -57,24 +58,42 @@ scroll_to_current (Starling *st)
 
 
 static void
-fs_cancel_cb (GtkWidget *w, Starling *st)
+playlist_add_cb (GtkWidget *w, Starling *st)
 {
-    gtk_widget_destroy (st->fs);
-}
+    if (st->fs)
+        return;
 
-static void
-fs_accept_cb (GtkWidget *w, Starling *st)
-{
+#if IS_HILDON
+    st->fs = hildon_file_chooser_dialog_new
+      (GTK_WINDOW (st->window), GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER);
+    gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (st->fs), TRUE);
+#else
+    st->fs = gtk_file_selection_new (_("Select Files or Directories"));
+    gtk_file_selection_set_select_multiple (GTK_FILE_SELECTION (st->fs), TRUE);
+    gtk_window_set_transient_for (GTK_WINDOW (st->fs), 
+				  GTK_WINDOW (st->window));
 
-    gchar *path;
-    gchar *tmp;
-    gchar **files;
-    gint i;
+    if (st->fs_last_path)
+        gtk_file_selection_set_filename (GTK_FILE_SELECTION (st->fs),
+					 st->fs_last_path);
+#endif
 
-    gtk_widget_hide (st->fs);
+    if (gtk_dialog_run (GTK_DIALOG (st->fs)) != GTK_RESPONSE_OK)
+      {
+	gtk_widget_destroy (st->fs);
+	return;
+      }
+    gtk_widget_hide (st->fs); 
+
+    char **files;
+#if IS_HILDON
+    files = gtk_file_chooser_get_filenames (GTK_FILE_CHOOSER (st->fs));
+#else		
     files = gtk_file_selection_get_selections (GTK_FILE_SELECTION (st->fs));
+#endif
 
-    for ( i = 0; files[i]; i++)
+    int i;
+    for (i = 0; files[i]; i++)
       {
 	GError *error = NULL;
         play_list_add_recursive (st->pl, files[i], -1, &error);
@@ -88,45 +107,24 @@ fs_accept_cb (GtkWidget *w, Starling *st)
       }
     g_strfreev (files);
     
-    path = (gchar*) gtk_file_selection_get_filename (GTK_FILE_SELECTION (st->fs));
+#ifndef IS_HILDON
+    char *path
+      = (gchar*) gtk_file_selection_get_filename (GTK_FILE_SELECTION (st->fs));
 
     if (st->fs_last_path) 
         g_free (st->fs_last_path);
     
-    if (g_file_test (path, G_FILE_TEST_IS_DIR)) {
+    if (g_file_test (path, G_FILE_TEST_IS_DIR))
         st->fs_last_path = g_strdup_printf ("%s/", path);
-    }
-    else {
-        tmp = g_path_get_dirname (path);
+    else
+      {
+        char *tmp = g_path_get_dirname (path);
         st->fs_last_path = g_strdup_printf ("%s/", tmp);
         g_free (tmp);
-    }
+      }
+#endif
 
     gtk_widget_destroy (st->fs);
-
-}
-
-static void
-playlist_add_cb (GtkWidget *w, Starling *st)
-{
-    if (st->fs)
-        return;
-
-    st->fs = gtk_file_selection_new (_("Select File/Directory"));
-    gtk_file_selection_set_select_multiple (GTK_FILE_SELECTION (st->fs),
-            TRUE);
-    if (st->fs_last_path)
-        gtk_file_selection_set_filename (GTK_FILE_SELECTION (st->fs),
-                st->fs_last_path);
-    
-    g_signal_connect (G_OBJECT (GTK_FILE_SELECTION (st->fs)->cancel_button),
-            "clicked", G_CALLBACK (fs_cancel_cb), st);
-    g_signal_connect (G_OBJECT (GTK_FILE_SELECTION (st->fs)->ok_button),
-            "clicked", G_CALLBACK (fs_accept_cb), st);
-    g_signal_connect (G_OBJECT (st->fs), "destroy",
-            G_CALLBACK (gtk_widget_destroyed), &st->fs);
-    
-    gtk_widget_show (st->fs);
 }
 
 static void
@@ -471,9 +469,14 @@ key_press_event (GtkWidget *widget, GdkEventKey *k, Starling *st)
     {
 #ifdef IS_HILDON
     case GDK_F6:
+#if 0
       /* toggle button for going full screen */
       gtk_check_menu_item_set_active
 	(st->fullscreen, ! gtk_check_menu_item_get_active (st->fullscreen));
+#endif
+      /* Make full screen a play/pause button.  */
+      gtk_toggle_tool_button_set_active
+	(st->playpause, ! gtk_toggle_tool_button_get_active (st->playpause));
       return TRUE;
 #endif
 
@@ -481,7 +484,7 @@ key_press_event (GtkWidget *widget, GdkEventKey *k, Starling *st)
       playlist_next_cb (NULL, st);
       return TRUE;
     case GDK_F8:
-      playlist_next_cb (NULL, st);
+      playlist_prev_cb (NULL, st);
       return TRUE;
     }
 

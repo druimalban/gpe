@@ -49,6 +49,9 @@ struct _PlayList {
 
   sqlite *sqliteh;
   GstElement *playbin;
+#ifdef IS_HILDON
+  GstElement *source;
+#endif
   GstState last_state;
 
   int random;
@@ -252,7 +255,7 @@ play_list_bus_cb (GstBus *bus, GstMessage *message, gpointer data)
 	}
 
       case GST_MESSAGE_STATE_CHANGED:
-	if (GST_MESSAGE_SRC (message) == pl->playbin)
+	if (GST_MESSAGE_SRC (message) == GST_OBJECT (pl->playbin))
 	  {
 	    GstState state, pending;
 	    gst_message_parse_state_changed (message, NULL, &state, &pending);
@@ -420,14 +423,41 @@ play_list_open (const char *file, GError **error)
   return NULL;
 }
 
+static void
+playbin_ensure (PlayList *pl)
+{
+  if (! pl->playbin)
+    {
+#ifdef IS_HILDON
+      /* Evil, evil, evil, evil.  playbin is broken on the 770.  */
+      pl->playbin = gst_pipeline_new ("playbin");
+      pl->source = gst_element_factory_make ("gnomevfssrc", "source");
+      GstElement *sink = gst_element_factory_make ("dspmp3sink", "sink");
+
+      gst_bin_add_many (GST_BIN (pl->playbin), pl->source, sink, NULL);
+      gst_element_link_many (pl->source, sink, NULL);
+#else
+      pl->playbin = gst_element_factory_make ("playbin", "player");
+#endif
+      GstBus *bus = gst_pipeline_get_bus (GST_PIPELINE (pl->playbin));
+      gst_bus_add_watch (bus, play_list_bus_cb, pl);
+      gst_object_unref (bus);
+    }
+}
+
 gboolean
 play_list_set_sink (PlayList *pl, const gchar *sink)
 {
+  /* See above comment about how evil maemo is.  */
+#ifndef IS_HILDON
   GstElement *audiosink = gst_element_factory_make (sink, "sink");
   if (! audiosink)
     return FALSE;
 
+  playbin_ensure (pl);
+
   g_object_set (G_OBJECT (pl->playbin), "audio-sink", audiosink, NULL);
+#endif
   return TRUE;
 }
 
@@ -476,12 +506,7 @@ play_list_count (PlayList *pl)
 gboolean
 play_list_play (PlayList *pl)
 {
-  if (! pl->playbin)
-    {
-      pl->playbin = gst_element_factory_make ("playbin", "player");
-      gst_bus_add_watch (gst_pipeline_get_bus (GST_PIPELINE (pl->playbin)),
-			 play_list_bus_cb, pl);
-    }
+  playbin_ensure (pl);
 
   char *source = NULL;
   int callback (void *arg, int argc, char **argv, char **names)
@@ -507,7 +532,11 @@ play_list_play (PlayList *pl)
     }
 
   gst_element_set_state (pl->playbin, GST_STATE_NULL);
+#ifdef IS_HILDON
+  g_object_set (G_OBJECT (pl->source), "location", source, NULL);
+#else
   g_object_set (G_OBJECT (pl->playbin), "uri", source, NULL);
+#endif
   GstStateChangeReturn res = gst_element_set_state (pl->playbin,
 						    GST_STATE_PLAYING);
   if (res == GST_STATE_CHANGE_FAILURE)
@@ -705,9 +734,6 @@ meta_data_reader (gpointer data)
 {
   PlayList *pl = PLAY_LIST (data);
 
-  /* Grab a ref as we call the main loop.  */
-  gst_object_ref (pl);
-
   GstElement *pipeline = NULL;
   GstElement *src;
 
@@ -729,13 +755,17 @@ meta_data_reader (gpointer data)
 
       if (! pipeline)
 	{
+	  /* We read the data from a file, send it to decodebin which
+	     selects the appropriate decoder and then send the result
+	     to /dev/null.  */
 	  pipeline = gst_pipeline_new ("meta_data_pipeline");
 	  src = gst_element_factory_make ("filesrc", "filesrc");
 	  GstElement *decodebin = gst_element_factory_make ("decodebin",
 							    "decodebin");
-	  gst_bin_add_many (GST_BIN (pipeline), src, decodebin, NULL);
+	  GstElement *sink = gst_element_factory_make ("fakesink", "sink");
 
-	  gst_element_link (src, decodebin);
+	  gst_bin_add_many (GST_BIN (pipeline), src, decodebin, sink, NULL);
+	  gst_element_link_many (src, decodebin, sink, NULL);
 	}
 
       gst_element_set_state (pipeline, GST_STATE_NULL);
@@ -754,21 +784,28 @@ meta_data_reader (gpointer data)
 	  continue;
 	}
 
-      GstMessage *msg = gst_bus_poll
-	(gst_pipeline_get_bus (GST_PIPELINE (pipeline)),
-	 GST_MESSAGE_EOS | GST_MESSAGE_ERROR | GST_MESSAGE_TAG,
-	 /* Wait about two seconds.  */ 2 * 1000 * 1000 * 1000);
+      GstBus *bus = gst_pipeline_get_bus (GST_PIPELINE (pipeline));
+      GstMessage *msg = gst_bus_poll (bus,
+				      GST_MESSAGE_EOS | GST_MESSAGE_ERROR
+				      | GST_MESSAGE_TAG,
+				      /* Wait about two seconds.  */
+				      2 * 1000 * 1000 * 1000);
+      gst_object_unref (bus);
       if (msg && GST_MESSAGE_TYPE (msg) == GST_MESSAGE_TAG)
 	parse_tags (pl, msg, uid);
 
       g_free (uid);
     }
 
+  pl->meta_data_reader = 0;
+
+  GstStateChangeReturn res = gst_element_set_state (pipeline,
+						    GST_STATE_NULL);
+  if (res == GST_STATE_CHANGE_FAILURE)
+    g_warning ("Failed to put pipeline in NULL state.");
   if (pipeline)
     gst_object_unref (pipeline);
 
-  pl->meta_data_reader = 0;
-  gst_object_unref (pl);
   return FALSE;
 }
 
