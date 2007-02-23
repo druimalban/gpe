@@ -2,10 +2,10 @@ Source: starling
 Section: X11
 Priority: optional
 Maintainer: Florian Boor <florian.boor@kernelconcepts.de>
-Build-Depends: debhelper (>= 4.0.0)
+Build-Depends: debhelper (>= 4.0.0), libgtk2.0-dev, libgstreamer0.10-dev, libsqlite0-dev, libsoup2.2-dev, libgpewidget-dev
 Standards-Version: 3.6.0
 
 Package: starling
 Architecture: any
-Depends: libgtk2.0-0, libgstreamer0.10-0, gstreamer0.10-plugins-base, sqlite, libsoup2.2-8, libgpewidget1, ${shlibs:Depends}
+Depends: libgtk2.0-0, libgstreamer0.10-0, gstreamer0.10-plugins-base, libsqlite0, libsoup2.2-8, libgpewidget1, ${shlibs:Depends}
 Description: GPE's audio player.

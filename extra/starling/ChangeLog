@@ -1,5 +1,25 @@
 2007-02-23  Neal H. Walfield  <neal@gnu.org>
 
+	* configure.in: Don't require libsoup-2.2 version 2.2.94 or
+	greater; just depend on libsoup-2.2.
+
+	* Makefile.am (EXTRA_DIST): Add debian/changelog, debian/compat,
+	debian/control and debian/rules.
+
+	* debian/compat: Change it to 4.
+
+	* debian/control (Build-Depends): Add it.
+	(Depends): Correctly enumerate them.
+
+	* hildon/Makefile.am (install-data-hook): Make
+	$(DESTDIR)/etc/others-menu if it doesn't exist.
+
+	* hildon/com.nokia.starling.service.in (Exec): It's
+	@prefix@/bin/starling, not @prefix@/starling.
+	* hildon/starling.desktop.in (Exec): Likewise.
+
+2007-02-23  Neal H. Walfield  <neal@gnu.org>
+
 	* src/main.c: Include <glib.h>.
 	(main): Put the playlist in ~/.starling, not ~/.gpe.  Ensure this
 	directory exists.

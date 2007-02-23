@@ -1,3 +1,3 @@
 [D-BUS Service]
 Name=com.nokia.starling
-Exec=@prefix@/starling
+Exec=@prefix@/bin/starling

@@ -6,7 +6,8 @@ endif
 EXTRA_DIST = intltool-extract.in \
              intltool-merge.in \
              intltool-update.in \
-	     HACKING TODO
+	     HACKING TODO \
+	     debian/changelog debian/compat debian/control debian/rules
 
 DISTCLEANFILES = intltool-extract \
 		intltool-merge \
