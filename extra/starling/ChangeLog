@@ -1,3 +1,16 @@
+2007-02-24  Neal H. Walfield  <neal@gnu.org>
+
+	* src/main.c (playlist_add_cb): Use a file chooser.  Take an
+	additional argument to determine whether to choose a file or a
+	directory.
+	(playlist_add_file_cb): New function.
+	(playlist_add_directory_cb): New function.
+	(main): Don't provide just an import menu item.  Provide both
+	import file and an import directory items.
+	[IS_HILDON]: Don't display a file menu.  Just add the menu items
+	to the main menu.
+	* src/starling.h: Remove field fs.
+
 2007-02-23  Neal H. Walfield  <neal@gnu.org>
 
 	* src/main.c: Include

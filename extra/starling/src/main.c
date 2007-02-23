@@ -58,73 +58,70 @@ scroll_to_current (Starling *st)
 
 
 static void
-playlist_add_cb (GtkWidget *w, Starling *st)
+playlist_add_cb (GtkWidget *w, Starling *st, GtkFileChooserAction action)
 {
-    if (st->fs)
-        return;
+  GtkWidget *fc;
 
 #if IS_HILDON
-    st->fs = hildon_file_chooser_dialog_new
-      (GTK_WINDOW (st->window), GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER);
-    gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (st->fs), TRUE);
+    fc = hildon_file_chooser_dialog_new
+      (GTK_WINDOW (st->window), action);
 #else
-    st->fs = gtk_file_selection_new (_("Select Files or Directories"));
-    gtk_file_selection_set_select_multiple (GTK_FILE_SELECTION (st->fs), TRUE);
-    gtk_window_set_transient_for (GTK_WINDOW (st->fs), 
-				  GTK_WINDOW (st->window));
-
-    if (st->fs_last_path)
-        gtk_file_selection_set_filename (GTK_FILE_SELECTION (st->fs),
-					 st->fs_last_path);
+    fc =  gtk_file_chooser_dialog_new
+      (_("Select Files or Directories"), GTK_WINDOW (st->window),
+       action,
+       GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+       GTK_STOCK_OPEN, GTK_RESPONSE_OK, NULL);
 #endif
 
-    if (gtk_dialog_run (GTK_DIALOG (st->fs)) != GTK_RESPONSE_OK)
+    gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (fc), TRUE);
+    if (st->fs_last_path)
+        gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (fc),
+					     st->fs_last_path);
+
+    if (gtk_dialog_run (GTK_DIALOG (fc)) != GTK_RESPONSE_OK)
       {
-	gtk_widget_destroy (st->fs);
+	gtk_widget_destroy (fc);
 	return;
       }
-    gtk_widget_hide (st->fs); 
+    gtk_widget_hide (fc); 
 
-    char **files;
-#if IS_HILDON
-    files = gtk_file_chooser_get_filenames (GTK_FILE_CHOOSER (st->fs));
-#else		
-    files = gtk_file_selection_get_selections (GTK_FILE_SELECTION (st->fs));
-#endif
-
-    int i;
-    for (i = 0; files[i]; i++)
+    GSList *files = gtk_file_chooser_get_filenames (GTK_FILE_CHOOSER (fc));
+    GSList *i;
+    for (i = files; i; i = g_slist_next (i))
       {
 	GError *error = NULL;
-        play_list_add_recursive (st->pl, files[i], -1, &error);
+	char *file = i->data;
+        play_list_add_recursive (st->pl, file, -1, &error);
 	if (error)
 	  {
-	    g_warning ("Reading %s: %s", files[i], error->message);
+	    g_warning ("Reading %s: %s", file, error->message);
 	    starling_error_box_fmt ("Reading %s: %s",
-				    files[i], error->message);
+				    file, error->message);
 	    g_error_free (error);
 	  }
+	g_free (file);
       }
-    g_strfreev (files);
-    
-#ifndef IS_HILDON
-    char *path
-      = (gchar*) gtk_file_selection_get_filename (GTK_FILE_SELECTION (st->fs));
+    g_slist_free (files);
+
 
     if (st->fs_last_path) 
-        g_free (st->fs_last_path);
-    
-    if (g_file_test (path, G_FILE_TEST_IS_DIR))
-        st->fs_last_path = g_strdup_printf ("%s/", path);
-    else
-      {
-        char *tmp = g_path_get_dirname (path);
-        st->fs_last_path = g_strdup_printf ("%s/", tmp);
-        g_free (tmp);
-      }
-#endif
+      g_free (st->fs_last_path);
+    st->fs_last_path
+      = gtk_file_chooser_get_current_folder (GTK_FILE_CHOOSER (fc));
 
-    gtk_widget_destroy (st->fs);
+    gtk_widget_destroy (fc);
+}
+
+static void
+playlist_add_file_cb (GtkWidget *w, Starling *st)
+{
+  playlist_add_cb (w, st, GTK_FILE_CHOOSER_ACTION_OPEN);
+}
+
+static void
+playlist_add_directory_cb (GtkWidget *w, Starling *st)
+{
+  playlist_add_cb (w, st, GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER);
 }
 
 static void
@@ -655,23 +652,36 @@ main(int argc, char *argv[])
   GtkMenuShell *menu;
   GtkWidget *mitem;
 
+#ifndef IS_HILDON
   /* File menu.  */
   menu = GTK_MENU_SHELL (gtk_menu_new ());
   mitem = gtk_menu_item_new_with_mnemonic (_("_File"));
   gtk_menu_item_set_submenu (GTK_MENU_ITEM (mitem), GTK_WIDGET (menu));
   gtk_menu_shell_append (menu_main, GTK_WIDGET (mitem));
   gtk_widget_show (mitem);
+#endif
     
   /* File -> Open.  */
-#ifdef IS_HILDON
-  mitem = gtk_menu_item_new_with_label (_("Import"));
-#else
-  mitem = gtk_image_menu_item_new_from_stock (GTK_STOCK_OPEN, NULL);
-#endif
+  mitem = gtk_menu_item_new_with_mnemonic (_("Import _File"));
   g_signal_connect (G_OBJECT (mitem), "activate",
-		    G_CALLBACK (playlist_add_cb), st);
+		    G_CALLBACK (playlist_add_file_cb), st);
   gtk_widget_show (mitem);
+#ifdef IS_HILDON
+  gtk_menu_shell_append (menu_main, mitem);
+#else
   gtk_menu_shell_append (menu, mitem);
+#endif
+
+  /* File -> Open directory.  */
+  mitem = gtk_menu_item_new_with_mnemonic (_("Import _Directory"));
+  g_signal_connect (G_OBJECT (mitem), "activate",
+		    G_CALLBACK (playlist_add_directory_cb), st);
+  gtk_widget_show (mitem);
+#ifdef IS_HILDON
+  gtk_menu_shell_append (menu_main, mitem);
+#else
+  gtk_menu_shell_append (menu, mitem);
+#endif
 
   /* File -> Quit.  */
 #ifdef IS_HILDON
@@ -943,7 +953,6 @@ main(int argc, char *argv[])
     st->scale_pressed = FALSE;
 
     /* Just make sure */
-    st->fs = NULL;
     st->fs_last_path = NULL;
 
     st->current_length = -1;

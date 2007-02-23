@@ -36,7 +36,6 @@ struct _Starling {
   GtkScrolledWindow *treeview_window;
     GtkWidget *treeview;
     GtkWidget *random;
-    GtkWidget *fs;
     gchar *fs_last_path;
     GtkWidget *textview;
     GtkWidget *webuser_entry;
