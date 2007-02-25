@@ -1,3 +1,16 @@
+2007-02-25  Neal H. Walfield  <neal@gnu.org>
+
+	* src/playlist.c (meta_data_reader): If possible, just set to
+	GST_STATE_PAUSED to get the stream tags.  Break out of the loop
+	once we reach our target state.
+
+	(play_list_add_recursive): More aggressively yield.  Don't
+	consider m3u files.
+
+	* src/main.c (playlist_state_changed_cb): Simplify.
+	(main): Call the quite menu item "Quit", not close.  Make the
+	label containing the currently playing song ellipsizable.
+
 2007-02-24  Neal H. Walfield  <neal@gnu.org>
 
 	* src/main.c (playlist_add_cb): Use a file chooser.  Take an

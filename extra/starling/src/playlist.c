@@ -736,6 +736,22 @@ meta_data_reader (gpointer data)
 
   GstElement *pipeline = NULL;
   GstElement *src;
+  GstBus *bus;
+
+  /* 200702 - NHW
+
+     A streamer's tags are typically delivered before we reach the
+     PAUSED state.  Thus, we just need to wait until the paused state
+     is reached.  Unfortunately, there is a bug in the oggdemuxer such
+     that if the stream is immediately changed to the NULL state, we
+     get a crash.  It is scheduled to be fix in 0.10.12.  We can work
+     around it be going to the PLAY.  The tradeoff is that it is a bit
+     more expensive.  */
+  guint major, minor, micro, nano;
+  gst_version (&major, &minor, &micro, &nano);
+  GstState target_state = GST_STATE_PAUSED;
+  if (major == 0 && minor < 12)
+    target_state = GST_STATE_PLAYING;
 
   while (! g_queue_is_empty (pl->meta_data_reader_pending))
     {
@@ -766,9 +782,10 @@ meta_data_reader (gpointer data)
 
 	  gst_bin_add_many (GST_BIN (pipeline), src, decodebin, sink, NULL);
 	  gst_element_link_many (src, decodebin, sink, NULL);
+
+	  bus = gst_pipeline_get_bus (GST_PIPELINE (pipeline));
 	}
 
-      gst_element_set_state (pipeline, GST_STATE_NULL);
 #define FILE_PREFIX "file://"
       g_assert (strlen (source) > sizeof (FILE_PREFIX) - 1);
       g_object_set (G_OBJECT (src),
@@ -776,7 +793,7 @@ meta_data_reader (gpointer data)
       g_free (source);
 
       GstStateChangeReturn res = gst_element_set_state (pipeline,
-							GST_STATE_PLAYING);
+							target_state);
       if (res == GST_STATE_CHANGE_FAILURE)
 	{
 	  g_warning ("Failed to play %s", uid);
@@ -784,27 +801,60 @@ meta_data_reader (gpointer data)
 	  continue;
 	}
 
-      GstBus *bus = gst_pipeline_get_bus (GST_PIPELINE (pipeline));
-      GstMessage *msg = gst_bus_poll (bus,
-				      GST_MESSAGE_EOS | GST_MESSAGE_ERROR
-				      | GST_MESSAGE_TAG,
-				      /* Wait about two seconds.  */
-				      2 * 1000 * 1000 * 1000);
-      gst_object_unref (bus);
-      if (msg && GST_MESSAGE_TYPE (msg) == GST_MESSAGE_TAG)
-	parse_tags (pl, msg, uid);
+      int c = 0;
+      for (;;)
+	{
+	  c ++;
+	  GstMessage *msg = gst_bus_poll (bus,
+					  GST_MESSAGE_EOS | GST_MESSAGE_ERROR
+					  | GST_MESSAGE_TAG
+					  | GST_MESSAGE_STATE_CHANGED,
+					  /* Wait about two seconds.  */
+					  2 * 1000 * 1000 * 1000);
+	  if (! msg)
+	    break;
 
+	  switch (GST_MESSAGE_TYPE (msg))
+	    {
+	    case GST_MESSAGE_TAG:
+	      parse_tags (pl, msg, uid);
+	      continue;
+
+	    case GST_MESSAGE_STATE_CHANGED:
+	      /* Once we've reached the paused state, for most
+		 formats, most of the time, all tags will have been
+		 reported.  (The exception is essentially streams--but
+		 we are only looking at files anyways so this should
+		 be relatively rare.)  */
+	      {
+		GstState state, pending;
+		gst_message_parse_state_changed (msg, NULL, &state, &pending);
+		if (! (pending == GST_STATE_VOID_PENDING
+		       && state == target_state))
+		  continue;
+	      }
+	      break;
+
+	    default:
+	      break;
+	    }
+
+	  break;
+	}
+
+      res = gst_element_set_state (pipeline, GST_STATE_NULL);
+      if (res == GST_STATE_CHANGE_FAILURE)
+	g_warning ("Failed to put pipeline in NULL state.");
       g_free (uid);
     }
 
   pl->meta_data_reader = 0;
 
-  GstStateChangeReturn res = gst_element_set_state (pipeline,
-						    GST_STATE_NULL);
-  if (res == GST_STATE_CHANGE_FAILURE)
-    g_warning ("Failed to put pipeline in NULL state.");
   if (pipeline)
-    gst_object_unref (pipeline);
+    {
+      gst_object_unref (pipeline);
+      gst_object_unref (bus);
+    }
 
   return FALSE;
 }
@@ -990,12 +1040,10 @@ int
 play_list_add_recursive (PlayList *pl, const gchar *path, int pos,
 			 GError **error)
 {
+  int count = 0;
   GDir *dir = g_dir_open (path, 0, NULL);
   if (dir)
     {
-      int count = 0;
-      int last_idle = 0;
-
       const char *file;
       while ((file = g_dir_read_name (dir)))
 	{
@@ -1011,13 +1059,9 @@ play_list_add_recursive (PlayList *pl, const gchar *path, int pos,
 	      break;
 	    }
 
-	  if (count - last_idle > 10)
-	    /* We've done some (arbitrary) amount of work.  Invoke the
-	       main loop.  */
-	    {
-	      g_main_context_iteration (NULL, FALSE);
-	      last_idle = count;
-	    }
+	  /* We really want this to be a background job.  Invoke the
+	     main loop.  */
+	  g_main_context_iteration (NULL, FALSE);
 	}
         
       g_dir_close (dir);
@@ -1025,7 +1069,9 @@ play_list_add_recursive (PlayList *pl, const gchar *path, int pos,
     }
     
   if (g_str_has_suffix (path, ".m3u"))
-    return play_list_add_m3u (pl, path, pos, error);
+    /* Ignore m3u files: we will normally get the files simply by
+       recursing.  */
+    return 0;
 
   play_list_add_file (pl, path, pos, error);
   return 1;

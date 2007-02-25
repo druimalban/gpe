@@ -390,11 +390,17 @@ playlist_state_changed_cb (PlayList *pl, const GstState state, Starling *st)
 	gtk_toggle_tool_button_set_active
 	  (GTK_TOGGLE_TOOL_BUTTON (st->playpause), TRUE);
 
-      char *artist;
-      char *title;
-      char *uri;
+      char *artist_buffer;
+      char *title_buffer;
+      char *uri_buffer;
 
-      play_list_get_info (pl, -1, &uri, NULL, &artist, &title, NULL, NULL);
+      play_list_get_info (pl, -1, &uri_buffer, NULL,
+			  &artist_buffer, &title_buffer, NULL, NULL);
+      char *uri = uri_buffer;
+      if (! uri)
+	uri = "unknown";
+      char *artist = artist_buffer;
+      char *title = title_buffer;
 
       //if (st->last_state != GST_STATE_PAUSED) {
       if (!st->has_lyrics && artist && title) {
@@ -402,29 +408,37 @@ playlist_state_changed_cb (PlayList *pl, const GstState state, Starling *st)
 	lyrics_display (artist, title, GTK_TEXT_VIEW (st->textview));
       }
 
-      if (! title && uri)
-	title = g_strdup (uri ? strrchr (uri, '/') + 1 : uri);
+      if (! title)
+	{
+	  title = strrchr (uri, '/');
+	  if (! title)
+	    title = uri;
+	  else
+	    title ++;
+	}
 
-      char *t;
+#define STARLING "Starling: "
+      char *title_bar;
       if (artist)
-	t = g_strdup_printf ("%s - %s", artist, title ?: "unknown");
+	title_bar = g_strdup_printf (_("%s %s - %s"),
+				     _(STARLING),
+				     artist, title);
       else
-	t = g_strdup (title ?: "unknown");
+	title_bar = g_strdup_printf (_("%s %s"), _(STARLING), title);
 
-      g_free (artist);
-      g_free (title);
-      g_free (uri);
+      gtk_label_set_text (GTK_LABEL (st->title),
+			  title_bar
+			  + sizeof (STARLING) - 1 /* NULL */ + 1 /* ' ' */);
 
-      gtk_label_set_text (GTK_LABEL (st->title), t);
-
-      char *title_bar = g_strdup_printf ("Starling - %s", t);
 #ifdef IS_HILDON
       hildon_app_set_title (HILDON_APP (st->window), title_bar);
 #else
       gtk_window_set_title (GTK_WINDOW (st->window), title_bar);
 #endif
-      g_free (t);
       g_free (title_bar);
+      g_free (artist_buffer);
+      g_free (title_buffer);
+      g_free (uri_buffer);
 
       st->current_length = -1;
       st->has_lyrics = FALSE;
@@ -685,7 +699,7 @@ main(int argc, char *argv[])
 
   /* File -> Quit.  */
 #ifdef IS_HILDON
-  GtkWidget *quit_item = mitem = gtk_menu_item_new_with_label (_("Close"));
+  GtkWidget *quit_item = mitem = gtk_menu_item_new_with_mnemonic (_("Quit"));
 #else
   mitem = gtk_image_menu_item_new_from_stock (GTK_STOCK_QUIT, NULL);
 #endif
@@ -833,6 +847,7 @@ main(int argc, char *argv[])
 
   st->title = gtk_label_new (_("Not playing"));
   gtk_misc_set_alignment (GTK_MISC (st->title), 0, 0.5);
+  gtk_label_set_ellipsize (GTK_LABEL (st->title), PANGO_ELLIPSIZE_END);
   gtk_box_pack_start (hbox, st->title, TRUE, TRUE, 0);
 
   /* Jump to the currently playing song.  */
