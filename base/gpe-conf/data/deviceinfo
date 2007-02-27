@@ -258,9 +258,18 @@ Features = 0x04
 
 [Nokia N800]
 ID = 29
-Pattern =  Nokia N800
+Pattern = Nokia N800
 Name = N800
 Model =
 Type = nokia-tablet
 Manufacturer = Nokia
 Features = 0x04
+
+[Axim X50/X51(v)]                                                                                                                                                                          
+ID = 30                                                                                                                                                                                    
+Pattern = Dell Axim X50/X51(v)                                                                                                                                                             
+Name = Axim X50/X51(v)                                                                                                                                                                     
+Model =                                                                                                                                                                                    
+Type = axim                                                                                                                                                                                
+Manufacturer = Dell                                                                                                                                                                        
+Features = 0x01
