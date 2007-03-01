@@ -178,7 +178,7 @@ clean-local:
 
 install-data-hook:
 	chmod u+s $(DESTDIR)$(bindir)/gpe-conf                
-	cd $(DESTDIR)/$(xscriptsdir) && mv soundsettings.sh S30soundsettings
+	cd $(DESTDIR)/$(xscriptsdir) && mv soundsettings.sh 30soundsettings
 
 deb: dist
 	-mkdir $(top_builddir)/debian-build
