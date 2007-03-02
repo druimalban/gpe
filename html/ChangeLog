@@ -1,4 +1,9 @@
+2007-03-02  Florian Boor <florian@kernelconcepts.de>
+
+	* include/head.php: Get rid of another evil line.
+
 2007-02-20  Florian Boor <florian@kernelconcepts.de>
+
 	
 	* index.phtml: Add primary links with icons.
 	* Get rid of many outdated links and obsolete references.

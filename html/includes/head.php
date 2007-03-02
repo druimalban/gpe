@@ -19,7 +19,7 @@
 <tr>
 <td width="60" height="64">
 <a href="http://gpe.linuxtogo.org">
-<img src="/images/gpe-logo2.png" alt="[The GPE Logo] > gpe.handhelds.org">
+<img src="/images/gpe-logo2.png" alt="[The GPE Logo] > gpe.linuxtogo.org">
 </td>
 <td width="*" valign="middle" height="64" halign="middle">
 <h1> GPE: <?php echo $addtitle; ?></h1>
