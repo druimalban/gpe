@@ -3,7 +3,7 @@
  *
  * Copyright (C) 2002 Moray Allan <moray@sermisy.org>, 
  *   Pierre TARDY <tardyp@free.fr>
- * Copyright (C) 2004 Florian Boor <florian.boor@kernelconcepts.de>
+ * Copyright (C) 2004, 2007 Florian Boor <florian.boor@kernelconcepts.de>
  * 
  *
  * This program is free software; you can redistribute it and/or
@@ -89,7 +89,7 @@ static gchar *SYS_BRIGHTNESS = NULL;
 static gchar *SYS_MAXBRIGHTNESS = NULL;
 static gchar *SYS_POWER = NULL;
 
-/* wrong sysclass path on Nokia 770 */
+/* uncommon sysclass path on Nokia 770 */
 #define SYSCLASS_770 	"/sys/devices/platform/omapfb/panel/"
 
 static t_platform platform = P_NONE;
@@ -167,51 +167,88 @@ detect_platform(void)
 }
 
 void 
-init_light(void)
+backlight_init(void)
 {
 	platform = detect_platform();
 }
 
 
-int 
-sysfs_set_level(int level)
+void 
+sysclass_set_power(gboolean power)
 {
-  FILE *f_light;
-  FILE *f_max;
-  gint val, maxlevel;
-  
-  if ( level > 255 ) level = 255;
-  if ( level < 1 ) level = 1;
+  FILE *f_power;
 
-  f_max = fopen(SYS_MAXBRIGHTNESS, "r");
-  if (f_max != NULL)
+  f_power = fopen(SYS_POWER, "w");
+  if (f_power != NULL)
   {
-  	fscanf(f_max,"%d", &maxlevel);
-  	fclose(f_max);
+    fprintf(f_power,"%d\n",  power ? SYS_STATE_ON : SYS_STATE_OFF);
+  	fclose(f_power);
   }
-  val = ( level == 1 ) ? 1 : ( level * maxlevel ) / 255;
-  if (val > maxlevel)
-  {
-	  val = maxlevel;
-  }
-  f_light = fopen(SYS_BRIGHTNESS, "w");
-  if (f_light != NULL)
-  {
-    fprintf(f_light,"%d\n", val);
-  	fclose(f_light);
-  }
-  else
-	  return -1;
-  
-  f_light = fopen(SYS_POWER, "w");
-  if (f_light != NULL)
-  {
-    fprintf(f_light,"%d\n",  level ? SYS_STATE_ON : SYS_STATE_OFF);
-  	fclose(f_light);
-  }
-  
-  return level;
 }
+
+
+void
+ipaq_set_power(gboolean power)
+{
+	int light_fd;
+	struct h3600_ts_backlight bl;
+	
+	light_fd = open (TS_DEV, O_RDONLY);
+	if (light_fd > 0) 
+	{
+		bl.brightness = (unsigned char)ipaq_get_level();
+	
+		if (power)
+			bl.power = FLITE_PWR_ON;
+		else
+			bl.power = FLITE_PWR_OFF;
+	
+		if (ioctl (light_fd, TS_SET_BACKLIGHT, &bl) != 0)
+			g_warning ("Changing backlight power state failed.\n");
+		
+		close(light_fd);
+	}
+}
+
+gboolean 
+sysclass_get_power(void)
+{
+  FILE *f_power;
+  gint value = SYS_STATE_ON;
+  
+  f_power = fopen(SYS_BRIGHTNESS, "r");
+  if (f_power != NULL)
+  {
+  	fscanf(f_power,"%i", &value);
+  	fclose(f_power);
+	  
+	return (value == SYS_STATE_ON) ? TRUE : FALSE;
+  }
+  return TRUE; /* we default to have backlight on */
+}  
+
+gboolean
+ipaq_get_power(void)
+{
+	int light_fd;
+	struct h3600_ts_backlight bl;
+
+	light_fd = open (TS_DEV, O_RDONLY);
+	if (light_fd > 0) {
+ 		if (ioctl (light_fd, TS_GET_BACKLIGHT, &bl) != 0)
+		{
+			close(light_fd);
+    		return TRUE; /* in case of failure we assume to have backlight on */
+		}
+  		else
+		{
+			close(light_fd);
+    		return (bl.power == FLITE_PWR_ON) ? TRUE : FALSE;
+		}
+	}
+	return TRUE;
+}
+
 
 gint 
 sysclass_set_level(gint level)
@@ -525,7 +562,7 @@ integral_get_level(void)
 
 
 void 
-set_brightness (gint brightness)
+backlight_set_brightness (gint brightness)
 {
 	if (brightness < 0)
 		brightness = 0;
@@ -533,7 +570,7 @@ set_brightness (gint brightness)
 		brightness = 255;
 	
 	if (platform == P_NONE)
-		init_light();
+		backlight_init();
 	
 	switch (platform)
 	{
@@ -569,11 +606,11 @@ set_brightness (gint brightness)
 
 
 gint 
-get_brightness (void)
+backlight_get_brightness (void)
 {
 	
 	if (platform == P_NONE)
-		init_light();
+		backlight_init();
 	
 	switch (platform)
 	{
@@ -607,4 +644,46 @@ get_brightness (void)
 	break;
 	}
   return 0;
+}
+
+gboolean
+backlight_get_power (void)
+{
+	if (platform == P_NONE)
+		backlight_init();
+	
+	switch (platform)
+	{
+	case P_IPAQ:
+		return ipaq_get_power();
+	break;
+	case P_SYSCLASS:
+	case P_SYSCLASS_770:
+		return sysclass_get_power();
+	break;	
+	default:
+		return TRUE;
+	break;
+	}
+}
+
+void
+backlight_set_power (gboolean power)
+{
+	if (platform == P_NONE)
+		backlight_init();
+	
+	switch (platform)
+	{
+	case P_IPAQ:
+		ipaq_set_power(power);
+	break;
+	case P_SYSCLASS:
+	case P_SYSCLASS_770:
+		return sysclass_set_power(power);
+	break;	
+	default:
+		return;
+	break;
+	}
 }

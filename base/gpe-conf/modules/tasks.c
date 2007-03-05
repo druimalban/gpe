@@ -21,6 +21,7 @@
 #include "tasks.h"
 #include "applets.h"
 #include "sound/soundctrl.h"
+#include "screen/brightness.h"
 
 /* change primary nameserver in resolv.conf */
 void 
@@ -54,4 +55,37 @@ task_sound(char *action)
 	}
 	else
 		fprintf(stderr, "Invalid argument given\n");
+}
+
+void 
+task_backlight(char *par1, char *par2)
+{
+	char buf[4];
+	
+	if (par1 == NULL && par2 == NULL) /* print current setting */
+	{
+		g_print("%s %d\n", backlight_get_power() ? "on" : "off", 
+	             backlight_get_brightness());
+		return;
+	}
+	if (par2) /* in this case: power, level */
+	{
+		snprintf (buf, 4, "%d", atoi (par2));
+		suid_exec ("SCRP", strcasecmp (par1, "on") ? "0" : "1");
+		suid_exec ("SCRB", buf);
+		return;
+	}
+	
+	/* default: just one setting */
+	if (!strcasecmp(par1, "off")) 
+		suid_exec ("SCRP", "0");
+	else if (!strcasecmp(par1, "on")) 
+		suid_exec ("SCRP", "1");
+	else if (!strcasecmp(par1, "toggle"))
+		suid_exec ("SCRP", !backlight_get_power() ? "1" : "0");
+	else {
+		suid_exec ("SCRP", "1");
+		snprintf (buf, 4, "%d", atoi (par1));
+		suid_exec ("SCRB", buf);
+	}
 }

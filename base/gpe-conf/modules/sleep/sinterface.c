@@ -51,7 +51,7 @@ create_GPE_Config_Sleep (ipaq_conf_t *ISconf)
 
   int blVal;
   
-  blVal = get_brightness();
+  blVal = backlight_get_brightness();
   
   tooltips = gtk_tooltips_new ();
 

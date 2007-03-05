@@ -251,7 +251,7 @@ on_dim_scale_focus_out_event            (GtkWidget       *widget,
                                         GdkEventFocus   *event,
                                         gpointer         user_data)
 {
-  set_brightness((int)user_data);
+  backlight_set_brightness((int)user_data);
   return FALSE;
 }
 

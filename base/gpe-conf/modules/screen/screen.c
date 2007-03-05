@@ -84,7 +84,7 @@ GtkWidget *screen_Build_Objects()
   table_justify_left_col = GTK_JUSTIFY_LEFT;
   table_justify_right_col = GTK_JUSTIFY_RIGHT;
 
-  init_light();
+  backlight_init();
 
 
   ss_sec = xset_get_ss_sec();
@@ -111,41 +111,11 @@ GtkWidget *screen_Build_Objects()
   gtk_label_set_markup (GTK_LABEL (self.brightnessl), tstr);
   g_free(tstr);
   
-  adjLight = gtk_adjustment_new ( (gfloat) get_brightness () / 2.55, 0, 100, 0, 0, 0);
+  adjLight = gtk_adjustment_new ( (gfloat) backlight_get_brightness () / 2.55, 0, 100, 0, 0, 0);
   self.brightness = gtk_hscale_new(GTK_ADJUSTMENT (adjLight));
   gtk_scale_set_value_pos (GTK_SCALE (self.brightness), GTK_POS_TOP);
   gtk_scale_set_digits (GTK_SCALE (self.brightness), 0);
-/*
-  self.screensaverl = gtk_label_new(NULL);
-  gtk_misc_set_alignment(GTK_MISC(self.screensaverl),0.0,0.5);
-  tstr = g_strdup_printf ("<b>%s</b>", _("Screensaver"));
-  gtk_label_set_markup (GTK_LABEL (self.screensaverl), tstr);
-  g_free(tstr);
   
-  self.screensaverl2 = gtk_label_new(NULL);
-  gtk_misc_set_alignment(GTK_MISC(self.screensaverl2),0.0,0.5);
-  tstr = g_strdup_printf ("%s", _("Delay until start"));
-  gtk_label_set_markup (GTK_LABEL (self.screensaverl2), tstr);
-  g_free(tstr);
-
-  self.screensaverl3 = gtk_label_new(NULL);
-  gtk_misc_set_alignment(GTK_MISC(self.screensaverl3),0.0,0.5);
-  tstr = g_strdup_printf ("%s", _("State"));
-  gtk_label_set_markup (GTK_LABEL (self.screensaverl3), tstr);
-  g_free(tstr);
-  
-  self.screensaverbt1 = gtk_radio_button_new_with_label (NULL,_("on"));
-  self.screensaverbt2 = 
-    gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(self.screensaverbt1),_("off"));
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (self.screensaverbt1), ss_sec ? TRUE : FALSE);
-  //why is this necessary?!?!?
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (self.screensaverbt2), !ss_sec ? TRUE : FALSE);
-
-  self.adjSaver = gtk_adjustment_new ( ss_sec ? log((float)ss_sec)*2.8208 : 0, 2, 20, 0, 0, 0);
-  self.screensaver = GTK_WIDGET(gtk_hscale_new(GTK_ADJUSTMENT (self.adjSaver)));
-  gtk_scale_set_digits (GTK_SCALE (self.screensaver), 2);
-  gtk_scale_set_draw_value (GTK_SCALE (self.screensaver), TRUE);
-*/
 #ifndef DISABLE_XRANDR
   self.displayl = gtk_label_new(NULL);
   gtk_misc_set_alignment(GTK_MISC(self.displayl),0.0,0.5);
@@ -262,7 +232,7 @@ GtkWidget *screen_Build_Objects()
                     G_CALLBACK (on_calibrate_button_clicked),
                     NULL);
   
-  initval.brightness = get_brightness();
+  initval.brightness = backlight_get_brightness();
 #ifndef DISABLE_XRANDR
   initval.orientation = get_rotation();
 #endif    
@@ -332,7 +302,7 @@ void screen_Save()
 
 void screen_Restore()
 {
-  set_brightness(initval.brightness);
+  backlight_set_brightness(initval.brightness);
 #ifndef DISABLE_XRANDR	
   set_rotation(initval.orientation);
 #endif	

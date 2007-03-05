@@ -112,6 +112,9 @@ desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
 xscriptsdir = $(sysconfdir)/X11/Xsession.d
 xscripts_SCRIPTS = modules/sound/soundsettings.sh
 
+wrapperscriptsdir = $(bindir)
+wrapperscripts_SCRIPTS = scripts/bl
+
 pixmapsdir = $(datadir)/pixmaps
 
 pixmaps_DATA = pixmaps/gpe-config-apm.png \

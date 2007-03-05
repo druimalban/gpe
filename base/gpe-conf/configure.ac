@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT(gpe-conf,0.2.4,gpe-list@linuxtogo.org)
+AC_INIT(gpe-conf,0.2.5,gpe-list@linuxtogo.org)
 
 AC_CONFIG_SRCDIR([main.c])
 AM_INIT_AUTOMAKE([foreign dist-bzip2])

@@ -32,7 +32,7 @@ gint
 on_light_check(gpointer adj)
 {
 	gtk_adjustment_set_value(GTK_RANGE(self.brightness)->adjustment,
-		(gfloat) get_brightness() / 2.55);
+		(gfloat) backlight_get_brightness() / 2.55);
  	return TRUE;	
 }
 
@@ -43,7 +43,7 @@ on_brightness_hscale_draw              (GtkObject       *adjustment,
 {
 	char val[10];
 	snprintf(val,9,"%d",(int) (GTK_ADJUSTMENT(adjustment)->value * 2.55));
-	suid_exec("SCRB",val);
+	suid_exec("SCRB", val);
 }
 
 void

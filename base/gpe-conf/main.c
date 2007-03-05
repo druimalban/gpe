@@ -118,7 +118,9 @@ struct Applet applets[]=
     { NULL, NULL, NULL, NULL ,
 		N_("Task sound") ,"task_sound", N_("Command line task saving/restoring sound settings."), PREFIX "/share/pixmaps/gpe-config-admin.png"},
     { NULL, NULL, NULL, NULL ,
-		N_("Task background image") ,"task_background", N_("Only select background image."), PREFIX "/share/pixmaps/gpe-config-admin.png"}
+		N_("Task background image") ,"task_background", N_("Only select background image."), PREFIX "/share/pixmaps/gpe-config-admin.png"},
+    { NULL, NULL, NULL, NULL ,
+		N_("Task backlight setting") ,"task_backlight", N_("Change backlight power and brightness."), PREFIX "/share/pixmaps/gpe-config-admin.png"}
   };
 
 struct gpe_icon my_icons[] = {
@@ -312,7 +314,8 @@ void make_container()
 }
 
 
-void main_one(int argc, char **argv,int applet)
+void 
+main_one (int argc, char **argv,int applet)
 {
   int handled = FALSE;
   gboolean special_flag = FALSE; /* Don't change to suid mode or similar. */  
@@ -322,6 +325,20 @@ void main_one(int argc, char **argv,int applet)
   self.applet = NULL;
 
   my_icons[count_icons - 1].filename = applets[applet].icon_file;
+
+  if (!strcmp(argv[1],"task_backlight"))
+  {
+	  handled = TRUE;
+	  if (argc == 2)
+		  task_backlight(NULL, NULL);
+	  else if (argc == 3)
+		  task_backlight(argv[2], NULL);
+	  else	if (argc == 4)
+		task_backlight(argv[2], argv[3]);
+	  else
+		  fprintf(stderr,_("'task_backlight' supports zero, one and two arguments.\n"));
+	  exit(0);
+  }
 	
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);

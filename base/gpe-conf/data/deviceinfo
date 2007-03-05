@@ -265,11 +265,20 @@ Type = nokia-tablet
 Manufacturer = Nokia
 Features = 0x04
 
-[Axim X50/X51(v)]                                                                                                                                                                          
-ID = 30                                                                                                                                                                                    
-Pattern = Dell Axim X50/X51(v)                                                                                                                                                             
-Name = Axim X50/X51(v)                                                                                                                                                                     
-Model =                                                                                                                                                                                    
-Type = axim                                                                                                                                                                                
-Manufacturer = Dell                                                                                                                                                                        
+[Axim X50/X51(v)]
+ID = 30
+Pattern = Dell Axim X50/X51(v)
+Name = Axim X50/X51(v)
+Model =  
+Type = axim
+Manufacturer = Dell
+Features = 0x01
+
+[Palm TX] 
+ID = 31
+Pattern = Palm TX
+Name = Palm TX
+Model =
+Type = palm
+Manufacturer = Palm
 Features = 0x01

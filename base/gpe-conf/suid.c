@@ -2,7 +2,7 @@
  * gpe-conf
  *
  * Copyright (C) 2002  Pierre TARDY <tardyp@free.fr>
- *               2003 - 2005  Florian Boor <florian.boor@kernelconcepts.de>
+ *               2003 - 2005, 2007  Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -57,7 +57,13 @@ int check_user_access (const char *cmd);
 void
 update_screen_brightness (int br)
 {
-	set_brightness (br);
+	backlight_set_brightness (br);
+}
+
+void
+update_screen_power (int power)
+{
+	backlight_set_power (power ? TRUE : FALSE);
 }
 
 #ifndef DISABLE_XRANDR
@@ -197,6 +203,8 @@ check_user_access (const char *cmd)
 		return TRUE;
 	if (!strcmp (cmd, "SCRB"))
 		return TRUE;
+	if (!strcmp (cmd, "SCRP"))
+		return TRUE;
 	if (!strcmp (cmd, "SCRL"))
 		return TRUE;
 
@@ -331,10 +339,15 @@ suidloop (int write, int read)
 					fscanf (in, "%100s", arg2);
 					update_system_hostname (arg2);
 				}
-				else if (strcmp (cmd, "SCRB") == 0)  // change frontlight brightness
+				else if (strcmp (cmd, "SCRB") == 0)  // change light brightness
 				{
 					fscanf (in, "%d", &numarg);
 					update_screen_brightness (numarg);
+				}
+				else if (strcmp (cmd, "SCRP") == 0)  // change light power
+				{
+					fscanf (in, "%d", &numarg);
+					update_screen_power (numarg);
 				}
 #ifndef DISABLE_XRANDR
 				else if (strcmp (cmd, "SCRR") == 0)  // rotate screen
