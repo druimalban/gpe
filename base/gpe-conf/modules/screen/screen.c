@@ -3,7 +3,7 @@
  *
  * Copyright (C) 2002  Pierre TARDY <tardyp@free.fr>, 
  *   Moray Allan <moray@sermisy.org>
- *               2003, 2004  Florian Boor <florian.boor@kernelconcepts.de>
+ *               2003, 2004, 2007  Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -45,7 +45,6 @@ static struct
 	int screensaver;
 }initval;
 
-// type moved to callbacks.h
 tself self;
 
 gchar* change_screen_saver_label (GtkScale *scale, gdouble sec);
@@ -57,8 +56,6 @@ GtkWidget *screen_Build_Objects()
   guint i;
   int ss_sec;
   gchar *tstr;
-/*  GtkWidget* hbox;
-*/	
   guint gpe_boxspacing = gpe_get_boxspacing ();
   guint gpe_border     = gpe_get_border ();
 
@@ -71,10 +68,20 @@ GtkWidget *screen_Build_Objects()
   
   GtkObject* adjLight;
 
-  RotationLabels[0] = _("Portrait");
-  RotationLabels[1] = _("Landscape (left)");
+  if (gdk_screen_height() > gdk_screen_width()) /* portrait or landscape display */
+    {
+      RotationLabels[0] = _("Portrait");
+      RotationLabels[1] = _("Landscape (left)");
+      RotationLabels[3] = _("Landscape (right)");
+    }
+  else
+    {
+      RotationLabels[0] = _("Landscape");
+      RotationLabels[1] = _("Portrait (left)");
+      RotationLabels[3] = _("Portrait (right)");
+    }
+	
   RotationLabels[2] = _("Inverted");
-  RotationLabels[3] = _("Landscape (right)");
   
   table_attach_left_col_x = GTK_FILL; 
   table_attach_left_col_y = 0;

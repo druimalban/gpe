@@ -2,7 +2,7 @@
  * gpe-conf
  *
  * Copyright (C) 2002   Moray Allan <moray@sermisy.org>,Pierre TARDY <tardyp@free.fr>
- *               2003 - 2006   Florian Boor <florian.boor@kernelconcepts.de>
+ *               2003 - 2006, 2007   Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License

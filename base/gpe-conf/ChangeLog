@@ -1,5 +1,7 @@
 2007-03-05	Florian Boor <florian.boor@kernelconcepts.de>
 
+	* screen.c: Adjust rotation labels depending on screen geometry.
+	* modules/screen/main.c: remove
 	* brightness.*: Implement backlight power switch for iPAQ and Sysfs.
 	* brightness.*: Rename backlight functions.
 	* deviceinfo: Add Palm TX
