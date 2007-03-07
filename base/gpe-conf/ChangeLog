@@ -1,3 +1,7 @@
+2007-03-07	Florian Boor <florian.boor@kernelconcepts.de>
+
+	* deviceinfo: Add Neo1973
+
 2007-03-05	Florian Boor <florian.boor@kernelconcepts.de>
 
 	* screen.c: Adjust rotation labels depending on screen geometry.
@@ -6,7 +10,7 @@
 	* brightness.*: Rename backlight functions.
 	* deviceinfo: Add Palm TX
 	* scripts/bl: New file
-	* Makefile.am: Install bl
+	* Makefile.am: Install bl 
 	* main.c, suid.c, tasks.c: Implement backlight task.
 	* configure.ac: Version to 0.2.5
 	* screen.c, screen/callbacks.c, sleep/scallbacks.c, sleep/sinterface.c: 

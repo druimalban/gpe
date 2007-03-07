@@ -282,3 +282,12 @@ Model =
 Type = palm
 Manufacturer = Palm
 Features = 0x01
+
+[NEO1973] 
+ID = 32
+Pattern = GTA01
+Name = Neo 1973
+Model =
+Type = smartphone
+Manufacturer = FIC
+Features = 0x08
