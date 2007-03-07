@@ -77,6 +77,9 @@ case `module_id` in
 		ARGS="$ARGS -dpi 100 -screen 240x320,10,1" ;;
 	"HTC Universal")
 		ARGS="$ARGS -dpi 100 -screen 480x640@270" ;;
+	"GTA01")
+         #we set 100 dpi for the time being, should the -dpi 285
+		ARGS="$ARGS -dpi 100 -screen 480x640" ;;
 	# This is a fallback for PCs
 	"")
 		ARGS="$ARGS -dpi 100 -mode 0x0117"
