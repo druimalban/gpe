@@ -1,5 +1,6 @@
 2007-03-07  Florian Boor <florian@kernelconcepts.de>
 
+	* Release 1.15
 	* X11/Xserver: Add support for FIC NEO1973.
 
 2007-02-19  Florian Boor <florian@kernelconcepts.de>
