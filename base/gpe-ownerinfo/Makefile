@@ -40,7 +40,7 @@ all: $(PACKAGE) all-mo
 
 $(LIB_TARGET): $(LIB_OBJS)
 	rm -f $@
-	ar cq $@ $^
+	$(AR) cq $@ $^
 
 $(PACKAGE): $(OBJS) $(LIB_TARGET)
 	$(CC) -o $@ $^ $(LDFLAGS) $(PACKAGE_LDFLAGS) -L. -lgpe-ownerinfo

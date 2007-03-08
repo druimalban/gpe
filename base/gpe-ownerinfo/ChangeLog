@@ -1,3 +1,7 @@
+2007-03-09  Florian Boor <florian@kernelconcepts.de>
+
+	* Makefile: Change hardcoded ar to $(AR)
+
 2006-08-02  Colin Marquardt  <colin@marquardt-home.de>
 
 	* Makefile (LINGUAS): Add ja.
