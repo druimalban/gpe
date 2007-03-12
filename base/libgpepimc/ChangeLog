@@ -1,3 +1,7 @@
+2007-03-12  Graham Cobb <g+gpe@cobb.uk.net>
+
+	* debian/rules: uncomment invocation of dh_makeshlibs
+
 2007-02-19  Graham Cobb <g+gpe@cobb.uk.net>
 
 	* debian/control: fix typo (missing comma in Depends:)
