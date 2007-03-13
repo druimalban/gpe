@@ -1,3 +1,7 @@
+2007-03-13  Graham Cobb  <g+gpe@cobb.uk.net>
+
+    * debian/control: fix Depends: to use shlibs
+
 2006-07-31  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * Release version 0.56
