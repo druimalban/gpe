@@ -17,7 +17,7 @@ Description: GPE library to convert PIM data from/to mimedir data (development f
 
 Package: libgpevtype0
 Section: libs
-Architecture: any
+Architecture: ${shlibs:Depends}, ${misc:Depends}
 Depends: maemo
 Description: GPE library to convert PIM data from/to mimedir data (development files).
  Libmimedir provides GPE access to PIM data in mimedir (VCard/VCal/VTodo) format
