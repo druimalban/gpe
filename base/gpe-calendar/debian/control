@@ -7,5 +7,5 @@ Standards-Version: 3.6.0
 
 Package: gpe-calendar
 Architecture: any
-Depends: maemo
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: This is a calendar application for GPE

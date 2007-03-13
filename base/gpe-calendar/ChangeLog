@@ -1,3 +1,7 @@
+2007-03-13  Graham Cobb <g+gpe@cobb.uk.net>
+
+	* debian/control: fix Depends: to use shlibs
+
 2007-02-21  Florian Boor <florian.boor@kernelconcepts.de>
 
 	* main.c (main): Set toolbar style in Maemo only.
