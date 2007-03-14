@@ -8,15 +8,15 @@ Standards-Version: 3.5.2
 Package: libxsettings-client-dev
 Section: libdevel
 Architecture: any
-Depends: libxsettings-client0 (= ${Source-Version}), maemo
+Depends: libxsettings-client0 (= ${Source-Version})
 Description: Development files for libxsettings-client
  This package contains headers and other files required to compile
- software using the GPE scheduling library.
+ software using the Xsettings library.
 
 Package: libxsettings-client0
 Section: libs
 Architecture: any
-Depends: maemo
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description:  Library providing utility functions for the Xsettings protocol.
   This library is used for applications making use of the Xsettings 
   configuration setting propagation protocol.

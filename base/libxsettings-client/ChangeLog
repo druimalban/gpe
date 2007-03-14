@@ -1,3 +1,7 @@
+2007-03-14  Graham Cobb  <g+gpe@cobb.uk.net>
+
+	* debian/control: Correct dependencies and description
+
 2006-05-19  Phil Blundell  <pb@reciva.com>
 
 	* Makefile.am (INCLUDES): Remove spurious -I${includedir}.  Patch
