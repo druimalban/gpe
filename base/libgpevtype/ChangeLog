@@ -1,3 +1,7 @@
+2007-03-14  Graham Cobb  <g+gpe@cobb.uk.net>
+
+	* debian/control: correct yesterday's change! oops
+
 2007-03-13  Graham Cobb <g+gpe@cobb.uk.net>
 
 	* debian/control: fix Depends clause to use shlibs
