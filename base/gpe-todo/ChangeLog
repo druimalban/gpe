@@ -1,3 +1,7 @@
+2007-03-15  Graham Cobb  <g+gpe@cobb.uk.net>
+
+    * debian/control: add gpe-icons to dependencies
+
 2007-03-13  Graham Cobb  <g+gpe@cobb.uk.net>
 
     * debian/control: fix Depends: to use shlibs

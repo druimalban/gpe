@@ -7,5 +7,5 @@ Standards-Version: 3.6.0
 
 Package: gpe-contacts
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}
+Depends: gpe-icons, ${shlibs:Depends}, ${misc:Depends}
 Description: This is a contacts application for GPE
