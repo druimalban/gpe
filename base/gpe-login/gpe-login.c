@@ -988,37 +988,31 @@ locale_parse_line (char *p)
 
 /*
  * In order to filter not installed locales we check if the locale
- * directory is present in the filesystem. On most large distributions 
- * we have all the locale stuff in place but not generated, in this case
- * this guss will fail, but in Familiar and similar distribution this 
- * assumption is correct.
+ * directory is present in the filesystem. Currently we check for the 
+ * directory with the exact name and with the .utf8 extension only.
+ * This is expected to work in most environments.
  */
-
 gboolean
 locale_install_check(const char* locale)
 {
     gboolean result = FALSE;
-    char *dir = g_strdup_printf(PREFIX "/share/locale/%s", locale);
+    char *dir = g_strdup_printf(PREFIX "/lib/locale/%s", locale);
 
     /* check for equal locale */    
     if (!access(dir, F_OK))
         result = TRUE;
 
-    /* If we have a locale of the type xx_XX check if xx exists. */
-    if (strstr(locale, "_"))
+    /* check for the .utf8 type directory */
+    if (strstr(locale, ".UTF-8"))
       {
         int l1, l2, lm;
-        char *lp = g_strdup(strstr(locale, "_"));
-        char *cu = strstr(dir, "_");
-        l1 = strlen(locale) - strlen(lp);
-        l2 = strlen(lp) - 1;
-        lm = MAX(l1, l2);
+        char *cu = strstr(locale, ".UTF-8");
+        cu [0] = 0;
+        char *dir_alt = g_strconcat (PREFIX "/lib/locale/", locale, ".utf8", NULL);
         
-        cu[0] = 0; /* cu is the location of the "_" in dir, we cut off dir */
-        if ((!strncasecmp(locale, (char*)(lp+1), lm))
-            && (!access(dir, F_OK)))
+        if (!access(dir_alt, F_OK))
           result = TRUE;
-        g_free(lp);
+        g_free(dir_alt);
       }
     g_free(dir);
       
@@ -1083,7 +1077,7 @@ locale_get_files (void)
 
   if (stat(GPE_LOCALE_ALIAS,&st))
     {
-      perror("locale_get_files: could not stat, tryinf fallback");
+      perror("locale_get_files: could not stat, trying fallback");
       fallback = TRUE;
       if (stat(GPE_LOCALE_ALIAS_FALLBACK, &st))
         {
@@ -1174,7 +1168,7 @@ set_current_locale (GtkWidget * widget, gpointer data)
 
 /* Initialise locale handling and build the language drop-down menu */
 static void
-build_language_menu ()
+build_language_menu (void)
 {
   GtkWidget *m = gtk_menu_new ();
   locale_item_t *c_locale, *item;

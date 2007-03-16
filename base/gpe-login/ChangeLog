@@ -1,3 +1,8 @@
+2007-03-16  Florian Boor <florian@kernelconcepts.de>
+
+	* Version 0.88 released.
+	* Update locale checking code. Some minor fixes.
+
 2006-11-07  Florian Boor <florian@kernelconcepts.de>
 
 	* X11/gpe-login.pre-session: Apply patch courtesy of Mika Laitio
