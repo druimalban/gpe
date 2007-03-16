@@ -3,7 +3,7 @@ PACKAGE = gpe-login
 CVSBUILD = yes
 VERSION = 0.88
 DEBUG = no
-LINGUAS = 
+LINGUAS = "cs ja fr ko sr vi zh_TW de nl ro sk sv wa es hu pt_BR ru sl tr zh_CN rw"
 
 CONTROL_GPE_LOGIN = control1
 

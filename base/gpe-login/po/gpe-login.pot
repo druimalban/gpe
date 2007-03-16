@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-01-14 22:23+0000\n"
+"POT-Creation-Date: 2007-03-16 16:36+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,47 +16,47 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: gpe-login.c:499 gpe-login.c:579
+#: gpe-login.c:524 gpe-login.c:604
 msgid "Login incorrect"
 msgstr ""
 
-#: gpe-login.c:632 gpe-login.c:714
+#: gpe-login.c:657 gpe-login.c:739
 msgid "Passwords don't match"
 msgstr ""
 
-#: gpe-login.c:641 gpe-login.c:723
+#: gpe-login.c:666 gpe-login.c:748
 msgid "Empty password not allowed"
 msgstr ""
 
-#: gpe-login.c:703
+#: gpe-login.c:728
 msgid "User already exists"
 msgstr ""
 
-#: gpe-login.c:1317
+#: gpe-login.c:1336
 msgid "Holding down the stylus for greater than"
 msgstr ""
 
-#: gpe-login.c:1318
+#: gpe-login.c:1337
 msgid "5 seconds"
 msgstr ""
 
-#: gpe-login.c:1319
+#: gpe-login.c:1338
 msgid ", or holding"
 msgstr ""
 
-#: gpe-login.c:1320
+#: gpe-login.c:1339
 msgid "record"
 msgstr ""
 
-#: gpe-login.c:1321
+#: gpe-login.c:1340
 msgid ", recalibrates the touchscreen."
 msgstr ""
 
-#: gpe-login.c:1343
+#: gpe-login.c:1362
 msgid "System setup"
 msgstr ""
 
-#: gpe-login.c:1348
+#: gpe-login.c:1367
 msgid ""
 "Please choose a password for the\n"
 "<i>root</i> account.\n"
@@ -65,43 +65,43 @@ msgid ""
 "system administration.\n"
 msgstr ""
 
-#: gpe-login.c:1349 gpe-login.c:1416 gpe-login.c:1874
+#: gpe-login.c:1368 gpe-login.c:1435 gpe-login.c:1901
 msgid "Password"
 msgstr ""
 
-#: gpe-login.c:1350
+#: gpe-login.c:1369
 msgid "Confirm"
 msgstr ""
 
-#: gpe-login.c:1414 gpe-login.c:1851
+#: gpe-login.c:1433 gpe-login.c:1878
 msgid "Username"
 msgstr ""
 
-#: gpe-login.c:1415
+#: gpe-login.c:1434
 msgid "Full name"
 msgstr ""
 
-#: gpe-login.c:1417
+#: gpe-login.c:1436
 msgid "Confirm password"
 msgstr ""
 
-#: gpe-login.c:1418 gpe-login.c:1888
+#: gpe-login.c:1437 gpe-login.c:1915
 msgid "Language"
 msgstr ""
 
-#: gpe-login.c:1482
+#: gpe-login.c:1501
 msgid "New user details"
 msgstr ""
 
 #. TRANSLATORS: please replace this with your own Pango language code:
-#: gpe-login.c:1585
+#: gpe-login.c:1604
 msgid "en"
 msgstr ""
 
-#: gpe-login.c:1847
+#: gpe-login.c:1874
 msgid "Screen locked"
 msgstr ""
 
-#: gpe-login.c:1909
+#: gpe-login.c:1936
 msgid "Enter password with hard keys"
 msgstr ""
