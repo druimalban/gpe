@@ -164,6 +164,7 @@ appfiles_DATA = data/activate.wav \
 EXTRA_DIST = $(sysgpe_DATA) \
              $(pixmaps_DATA) \
              $(xscripts_SCRIPTS) \
+             $(wrapperscripts_SCRIPTS) \
              $(appfiles_DATA) \
              $(desktop_in_files) \
              intltool-extract.in \
