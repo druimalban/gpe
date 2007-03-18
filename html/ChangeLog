@@ -1,3 +1,7 @@
+2007-03-18  Florian Boor <florian@kernelconcepts.de>
+
+	* index.phtml: Restore some lost information.
+
 2007-03-02  Florian Boor <florian@kernelconcepts.de>
 
 	* include/head.php: Get rid of another evil line.
