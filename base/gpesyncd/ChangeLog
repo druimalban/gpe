@@ -1,3 +1,8 @@
+2007-03-21  Graham Cobb <g+gpe@cobb.uk.net>
+
+	* src/export.c, src/import.c, src/main.c: eliminate
+	compilation warnings
+	
 2007-02-20  Graham Cobb <g+gpe@cobb.uk.net>
 
 	* src/import.c, src/main.c, src/export.c: apply interim fixes
