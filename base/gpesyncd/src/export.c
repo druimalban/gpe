@@ -1,6 +1,6 @@
 /*
  *  Copyright (C) 2005 Martin Felis <martin@silef.de>
- *  Copyright (C) 2006 Graham Cobb <g+gpe@cobb.uk.net>
+ *  Copyright (C) 2006, 2007 Graham Cobb <g+gpe@cobb.uk.net>
  *  
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
@@ -184,7 +184,7 @@ get_event_uid_list (gpesyncd_context * ctx, GError ** error)
 	  uid_list = g_slist_append(uid_list, GUINT_TO_POINTER(uid));
 
 	  modtime = event_get_last_modification(e);
-	  g_string_printf (uid_modified, "%d:%d", uid, modtime);
+	  g_string_printf (uid_modified, "%lu:%lu", uid, (unsigned long)modtime);
 
 	  /* Add to return list */
 	  return_list = g_slist_append(return_list, g_strdup (uid_modified->str));

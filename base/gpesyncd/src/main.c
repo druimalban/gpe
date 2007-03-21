@@ -126,9 +126,6 @@ gpesyncd_context_new (char *err)
       return NULL;
     }
   gpesyncd_context *ctx = g_malloc0 (sizeof (gpesyncd_context));
-  const char *home = getenv ("HOME");
-  char *buf;
-  size_t len;
 
   ctx->ifp = NULL;
   ctx->ofp = NULL;
@@ -321,7 +318,7 @@ do_command (gpesyncd_context * ctx, gchar * command)
   if ((!strcasecmp (cmd, "GET")) && (type != GPE_DB_TYPE_UNKNOWN)
       && (uid > 0))
     {
-      gchar *get_result;
+      gchar *get_result = NULL;
       switch (type)
 	{
 	case GPE_DB_TYPE_VCARD:
@@ -669,14 +666,13 @@ daemon_loop (gpesyncd_context * ctx)
 {
   gint n, sent_bytes;
   gchar buffer[BUFFER_LEN];
-  gchar *result;
   GString *command;
 
   bzero (buffer, BUFFER_LEN);
 
   command = g_string_new ("");
 
-  while (n = read (ctx->socket, buffer, BUFFER_LEN - 1))
+  while ((n = read (ctx->socket, buffer, BUFFER_LEN - 1)))
     {
       if (n < 0)
 	perror ("reading from socket");
@@ -723,7 +719,7 @@ sigchld_handler (int s)
 int
 setup_daemon (gpesyncd_context * ctx, int port)
 {
-  int sockfd, new_fd, n, doquit;
+  int sockfd, new_fd, doquit;
   struct sockaddr_in daemon_addr;
   struct sockaddr_in client_addr;
   socklen_t sin_size;

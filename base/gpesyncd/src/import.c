@@ -9,6 +9,12 @@
  *  2 of the License, or (at your option) any later version.
  */
 
+/* We need to define __USE_XOPEN to get strptime defined.
+   Maybe there is a better way to do this from configure? */
+#ifndef __USE_XOPEN
+#define __USE_XOPEN
+#endif
+
 #include <time.h>
 #include "gpesyncd.h"
 
