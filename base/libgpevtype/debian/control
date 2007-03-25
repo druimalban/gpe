@@ -8,7 +8,7 @@ Section: libs
 Package: libgpevtype-dev
 Section: libdev
 Architecture: any
-Depends: libgpevtype0 (= ${Source-Version}), libgtk2.0-dev, libmimedir-gnome0-dev
+Depends: libgpevtype0 (= ${Source-Version}), libgtk2.0-dev, libmimedir-gnome-dev
 Description: GPE library to convert PIM data from/to mimedir data (development files).
  Libmimedir provides GPE access to PIM data in mimedir (VCard/VCal/VTodo) format
  and supports exporting GPE PIM data to mimedir files. This package 
