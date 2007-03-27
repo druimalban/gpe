@@ -1,5 +1,6 @@
 2007-03-28		Florian Boor <florian.boor@kernelconcepts.de>
 
+	* Release 0.3.0
 	* Use autotools for building
 	* main.c: Some minor fixes, use scanning mechanism per default.
 

@@ -1,7 +1,7 @@
 dnl Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT(gpe-aerial,0.2.13,gpe-list@linuxtogo.org)
+AC_INIT(gpe-aerial,0.3.0,gpe-list@linuxtogo.org)
 AC_CONFIG_SRCDIR([main.c])
 AM_INIT_AUTOMAKE([foreign dist-bzip2])
 
