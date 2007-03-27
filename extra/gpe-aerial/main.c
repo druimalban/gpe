@@ -1,5 +1,5 @@
 /*
- * gpe-aerial (c) 2003 - 2006 Florian Boor <florian.boor@kernelconcepts.de>
+ * gpe-aerial (c) 2003 - 2006, 2007 Florian Boor <florian.boor@kernelconcepts.de>
  *
  * Basic applet skeleton taken from gpe-bluetooth (see below)
  *
@@ -91,7 +91,7 @@ static GtkWidget *icon;
 
 static pid_t scanner_pid;
 static int sock;
-static psconfig_t cfg = { 0, "eth0", DT_ORINOCO, 40000, 0 ,0, FALSE,
+static psconfig_t cfg = { 0, "eth0", DT_SCAN, 40000, 0 ,0, FALSE,
 		"/tmp/spotkoord.txt", "/tmp/psdump.pcap", FALSE, 0};
 static netinfo_t **netlist = NULL;
 static int netcount = 0;
@@ -354,7 +354,7 @@ send_command (command_t cmd, int par)
 
 
 static int
-fork_scanner ()
+fork_scanner (void)
 {
 	GError *err = NULL;
 	if (!g_spawn_command_line_async (SCANNER_EXEC " -q", &err))
@@ -945,7 +945,7 @@ clicked (GtkWidget * w, GdkEventButton * ev)
 
 
 static void
-aerial_shutdown ()
+aerial_shutdown (void)
 {
 	/* inform scanner */
 	if (scanner_pid)

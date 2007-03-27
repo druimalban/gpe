@@ -1,3 +1,8 @@
+2007-03-28		Florian Boor <florian.boor@kernelconcepts.de>
+
+	* Use autotools for building
+	* main.c: Some minor fixes, use scanning mechanism per default.
+
 2006-01-22		Florian Boor <florian.boor@kernelconcepts.de>
 
 	* main.c: Use glib function to fork scanner. Add menu separator. Slow down 
