@@ -58,7 +58,6 @@ EXTRA_DIST = $(pixmap_DATA) \
              intltool-extract.in \
              intltool-merge.in \
              intltool-update.in \
-             libtool-cross.patch \
              mkinstalldirs \
              hildon/gpe.conf
 
