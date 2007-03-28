@@ -1,3 +1,8 @@
+2007-03-28      Florian Boor <florian.boor@kernelconcepts.de>
+
+        * brightness.c: Apply patch by Manuel Teira to fix display power reading.
+        Fixes #42 
+
 2007-03-16      Florian Boor <florian.boor@kernelconcepts.de>
 
         * Release version 0.2.5

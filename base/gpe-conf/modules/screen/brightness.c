@@ -216,7 +216,7 @@ sysclass_get_power(void)
   FILE *f_power;
   gint value = SYS_STATE_ON;
   
-  f_power = fopen(SYS_BRIGHTNESS, "r");
+  f_power = fopen(SYS_POWER, "r");
   if (f_power != NULL)
   {
   	fscanf(f_power,"%i", &value);
