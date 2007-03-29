@@ -196,8 +196,10 @@ event_import_from_vevent (EventCalendar *ec, MIMEDirVEvent *event,
     }
 
   if (trigger_min != INT_MAX)
-    /* Set the alarm.  */
-    event_set_alarm (ev, trigger_min, NULL);
+    /* Set the alarm.  
+       (Note that, unlike VEVENT triggers, the alarm is positive
+        if the alarm is before the start) */
+    event_set_alarm (ev, start - trigger_min, NULL);
 
 #if 0
   GList *categories = NULL;
@@ -452,7 +454,7 @@ event_export_as_vevent (Event *ev)
 
       valarm = mimedir_valarm_new (MIMEDIR_VALARM_DISPLAY);
       g_object_set (valarm, "action", "DISPLAY", NULL);
-      g_object_set (valarm, "trigger", alarm, NULL);
+      g_object_set (valarm, "trigger", -alarm, NULL);
       list = g_list_prepend (list, valarm);
 
       /* XXX: Adding two alarms confuses some systems, assume the
@@ -460,7 +462,7 @@ event_export_as_vevent (Event *ev)
 #if 0
       valarm = mimedir_valarm_new (MIMEDIR_VALARM_AUDIO);
       g_object_set (valarm, "action", "AUDIO", NULL);
-      g_object_set (valarm, "trigger", alarm, NULL);
+      g_object_set (valarm, "trigger", -alarm, NULL);
       list = g_list_prepend (list, valarm);
 #endif
 
