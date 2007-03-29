@@ -176,9 +176,9 @@ event_import_from_vevent (EventCalendar *ec, MIMEDirVEvent *event,
 
 	  g_object_get (valarm, "trigger-end", &trigger_end, NULL);
 	  if (trigger_end)
-	    alarm = end - trigger;
+	    alarm = end + trigger;
 	  else
-	    alarm = start - trigger;
+	    alarm = start + trigger;
 	
 	  if (alarm < 0)
 	    alarm = 1;

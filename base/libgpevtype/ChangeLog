@@ -1,3 +1,7 @@
+2007-03-29  Graham Cobb  <g+770@cobb.uk.net>
+
+	* vevent.c (event_import_from_vevent): fix alarm trigger calculation
+
 2007-03-25  Graham Cobb  <g+gpe@cobb.uk.net>
 
 	* debian/control: change dependency on libmimedir-gnome0-dev to
