@@ -144,7 +144,7 @@ static void
 print_component (MIMEDirVComponent *component)
 {
 	gchar *s, *summary, *categories, *uid;
-	guint priority, seq;
+	guint priority, seq, duration;
 	MIMEDirDateTime *dtstart, *dtend, *due;
 	MIMEDirRecurrence *recur;
 
@@ -161,6 +161,7 @@ print_component (MIMEDirVComponent *component)
 
 		      "dtstart",    &dtstart,
 		      "dtend",      &dtend,
+		      "duration",   &duration,
 		      "due",        &due,
 		      "recurrence", &recur,
 
@@ -206,6 +207,9 @@ print_component (MIMEDirVComponent *component)
 			g_free (s);
 
 		}
+	}
+	if (duration) {
+		printf (_("  Duration: %ds\n"), duration);
 	}
 	if (due && mimedir_datetime_is_valid (due)) {
 		s = mimedir_datetime_to_string (due);

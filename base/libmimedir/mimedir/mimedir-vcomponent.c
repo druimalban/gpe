@@ -905,6 +905,7 @@ mimedir_vcomponent_get_value_duration (MIMEDirAttribute *attr, GError **error)
 	const gchar *s;
 	gint duration = 0;
 	gboolean neg = FALSE;
+	gboolean dur_week = FALSE;
 
 	g_return_val_if_fail (error == NULL || *error == NULL, 0);
 
@@ -936,57 +937,61 @@ mimedir_vcomponent_get_value_duration (MIMEDirAttribute *attr, GError **error)
 
 		if (s[0] == 'D' || s[0] == 'd')
 			duration = num * SECS_PER_DAY;
-		else if (s[0] == 'W' || s[0] == 'w')
+		else if (s[0] == 'W' || s[0] == 'w') {
 			duration = num * SECS_PER_WEEK;
-		else {
+			dur_week = TRUE;
+		} else {
 			g_set_error (error, MIMEDIR_ATTRIBUTE_ERROR, MIMEDIR_ATTRIBUTE_ERROR_INVALID_FORMAT, MIMEDIR_ATTRIBUTE_ERROR_INVALID_FORMAT_STR, "DURATION", name);
 			return 0;
 		}
 		s++;
 	}
 
-	if (s[0] == 'T' || s[0] == 't') {
+	if ((s[0] == 'T' || s[0] == 't') && !dur_week) {
+	  /* Parse a dur-time */
 		GError *err = NULL;
 		guint num;
 
 		s++;
 
+		/* Must begin with a number */
 		num = mimedir_vcomponent_parse_number (name, "DURATION", &s, &err);
 		if (err) {
 			g_propagate_error (error, err);
 			return 0;
 		}
-		if (s[0] != 'H') {
-			g_set_error (error, MIMEDIR_ATTRIBUTE_ERROR, MIMEDIR_ATTRIBUTE_ERROR_INVALID_FORMAT, MIMEDIR_ATTRIBUTE_ERROR_INVALID_FORMAT_STR, "DURATION", name);
-			return 0;
-		}
-		s++;
-		duration += num * SECS_PER_HOUR;
+		/* Is it dur-hour? */
+		if (s[0] == 'H') {
+		  s++;
+		  duration += num * SECS_PER_HOUR;
 
-		if (s[0]) {
+		  /* Got dur-hour, any more? */
+		  if (s[0]) {
 			num = mimedir_vcomponent_parse_number (name, "DURATION", &s, &err);
 			if (err) {
 				g_propagate_error (error, err);
 				return 0;
 			}
-			if (s[0] != 'M') {
-				g_set_error (error, MIMEDIR_ATTRIBUTE_ERROR, MIMEDIR_ATTRIBUTE_ERROR_INVALID_FORMAT, MIMEDIR_ATTRIBUTE_ERROR_INVALID_FORMAT_STR, "DURATION", name);
-				return 0;
-			}
+		  }
+		}
+
+		/* Is it dur-minute? */
+		if (s[0] == 'M') {
 			s++;
 			duration += num * SECS_PER_MINUTE;
-		}
 
-		if (s[0]) {
-			num = mimedir_vcomponent_parse_number (name, "DURATION", &s, &err);
-			if (err) {
+			/* Got dur-minute, any more? */
+			if (s[0]) {
+			  num = mimedir_vcomponent_parse_number (name, "DURATION", &s, &err);
+			  if (err) {
 				g_propagate_error (error, err);
 				return 0;
+			  }
 			}
-			if (s[0] != 'S') {
-				g_set_error (error, MIMEDIR_ATTRIBUTE_ERROR, MIMEDIR_ATTRIBUTE_ERROR_INVALID_FORMAT, MIMEDIR_ATTRIBUTE_ERROR_INVALID_FORMAT_STR, "DURATION", name);
-				return 0;
-			}
+		}
+
+		/* Is it dur-second? */
+		if (s[0] == 'S') {
 			s++;
 			duration += num;
 		}

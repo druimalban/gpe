@@ -1,3 +1,10 @@
+2007-03-20  Graham Cobb  <g+770@cobb.uk.net>
+
+	* README.gpe: Create README.gpe to describe this component
+	* libmimedir-0.4.0-duration-wkst.patch (from OE but rewritten):
+	add WKST and fix DURATION parsing
+	This fixes GPE bug 7	
+
 2006-12-19  Pema Geyleg  <pgeyleg@gmail.com>
 
 	* configure.in: Added 'dz' to ALL_LINGUAS

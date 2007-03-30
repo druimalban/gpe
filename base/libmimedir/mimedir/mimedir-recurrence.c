@@ -56,7 +56,8 @@ enum {
 	PROP_COUNT,
 	PROP_INTERVAL,
 	PROP_UNIT,
-	PROP_UNITLIST
+	PROP_UNITLIST,
+	PROP_WKST
 };
 
 struct _MIMEDirRecurrencePriv {
@@ -67,6 +68,7 @@ struct _MIMEDirRecurrencePriv {
 
 	MIMEDirRecurrenceUnit	unit;
 	gchar			*units;
+	guint8			wkst;
 };
 
 static GObjectClass *parent_class = NULL;
@@ -167,6 +169,50 @@ string_to_unit (const gchar *s)
 		return -1;
 }
 
+static const gchar *
+weekday_to_string (GDateWeekday weekday)
+{
+	switch (weekday) {
+	case G_DATE_MONDAY:
+		return "MO";
+	case G_DATE_TUESDAY:
+		return "TU";
+	case G_DATE_WEDNESDAY:
+		return "WE";
+	case G_DATE_THURSDAY:
+		return "TH";
+	case G_DATE_FRIDAY:
+		return "FR";
+	case G_DATE_SATURDAY:
+		return "SA";
+	case G_DATE_SUNDAY:
+		return "SU";
+	default:
+		g_return_val_if_reached (NULL);
+	}
+}
+
+static GDateWeekday
+string_to_weekday (const gchar *s)
+{
+	if (strcmp (s, "MO") == 0)
+		return G_DATE_MONDAY;
+	else if (strcmp (s, "TU") == 0)
+		return G_DATE_TUESDAY;
+	else if (strcmp (s, "WE") == 0)
+		return G_DATE_WEDNESDAY;
+	else if (strcmp (s, "TH") == 0)
+		return G_DATE_THURSDAY;
+	else if (strcmp (s, "FR") == 0)
+		return G_DATE_FRIDAY;
+	else if (strcmp (s, "SA") == 0)
+		return G_DATE_SATURDAY;
+	else if (strcmp (s, "SU") == 0)
+		return G_DATE_SUNDAY;
+	else
+		return G_DATE_BAD_WEEKDAY;
+}
+
 /*
  * Class and Object Management
  */
@@ -261,6 +307,14 @@ mimedir_recurrence_class_init (MIMEDirRecurrenceClass *klass)
 				     NULL,
 				     G_PARAM_READWRITE);
 	g_object_class_install_property (gobject_class, PROP_UNITLIST, pspec);
+	pspec = g_param_spec_uint ("wkst",
+				   _("Workweek start"),
+				   _("The day on which the workweek starts"),
+				   G_DATE_BAD_WEEKDAY,
+				   G_DATE_SUNDAY,
+				   G_DATE_BAD_WEEKDAY,
+				   G_PARAM_READWRITE);
+	g_object_class_install_property (gobject_class, PROP_WKST, pspec);
 }
 
 
@@ -273,6 +327,7 @@ mimedir_recurrence_init (MIMEDirRecurrence *recurrence)
 	recurrence->priv = g_new0 (MIMEDirRecurrencePriv, 1);
 	recurrence->priv->freq = RECURRENCE_DAILY;
 	recurrence->priv->unit = RECURRENCE_UNIT_NONE;
+	recurrence->priv->wkst = G_DATE_BAD_WEEKDAY;
 }
 
 
@@ -335,6 +390,9 @@ mimedir_recurrence_set_property (GObject          *object,
 	case PROP_UNITLIST:
 		mimedir_utils_set_property_string (&priv->units, value);
 		break;
+	case PROP_WKST:
+		priv->wkst = g_value_get_uint (value);
+		break;
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
 		break;
@@ -374,6 +432,9 @@ mimedir_recurrence_get_property (GObject          *object,
 		break;
 	case PROP_UNITLIST:
 		g_value_set_string (value, priv->units);
+		break;
+	case PROP_WKST:
+		g_value_set_uint (value, priv->wkst);
 		break;
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
@@ -512,6 +573,17 @@ mimedir_recurrence_parse (MIMEDirRecurrence *recurrence, MIMEDirAttribute *attr,
 			g_object_set (G_OBJECT (recurrence), "unit", unit, NULL);
 			g_object_set (G_OBJECT (recurrence), "units", value, NULL);
 		}
+		else if (!strcasecmp (name, "WKST")) {
+			GDateWeekday weekday;
+
+			weekday = string_to_weekday (value);
+			if (!g_date_valid_weekday (weekday)) {
+				ret = FALSE;
+				break;
+			}
+
+			g_object_set (G_OBJECT (recurrence), "wkst", weekday, NULL);
+		}
 		else {
 			ret = FALSE;
 			break;
@@ -569,6 +641,12 @@ mimedir_recurrence_write_to_string (MIMEDirRecurrence *recurrence)
 		const gchar *unit;
 		unit = unit_to_string (priv->unit);
 		g_string_append_printf (string, ";%s=%s", unit, priv->units);
+	}
+
+	if (g_date_valid_weekday (priv->wkst)) {
+		const gchar *weekday;
+		weekday = weekday_to_string (priv->wkst);
+		g_string_append_printf (string, ";WKST=%s", weekday);
 	}
 
 	return g_string_free (string, FALSE);
