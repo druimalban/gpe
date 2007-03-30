@@ -565,6 +565,9 @@ escape (const gchar *text, GError **error)
 
 	for (; text[0] != '\0'; text++) {
 		switch (text[0]) {
+		case ';':
+			g_string_append (string, "\\;");
+			break;
 		case ',':
 			g_string_append (string, "\\,");
 			break;

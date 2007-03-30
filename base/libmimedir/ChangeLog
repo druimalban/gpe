@@ -1,5 +1,10 @@
 2007-03-29  Graham Cobb  <g+770@cobb.uk.net>
 
+	* mimedir/mimedir-attribute.c (escape): escape semi-colons
+	This fixes GPE bug 36.
+
+2007-03-29  Graham Cobb  <g+770@cobb.uk.net>
+
 	* mimedir/mimedir-vcomponent.c (mimedir_vcomponent_read_from_profile):
 	add support for VALARM component.
 	This fixes GPE bug 10.
