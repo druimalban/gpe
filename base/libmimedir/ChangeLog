@@ -1,5 +1,11 @@
 2007-03-28  Graham Cobb  <g+770@cobb.uk.net>
 
+	* mimedir-vcomponent.c (mimedir_vcomponent_class_init): make Trigger property read/write
+	  This fixes GPE bug 9
+	(mimedir_vcomponent_parse_attribute): fix crash parsing TRIGGER attribute
+
+2007-03-28  Graham Cobb  <g+770@cobb.uk.net>
+
 	* mimedir-vcal.c (mimedir_vcal_get_event_list): add reference for returned objects
 	* mimedir-vcal.c (mimedir_vcal_get_todo_list): add reference for returned objects
 	  Fixes GPE bug 8

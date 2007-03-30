@@ -419,7 +419,7 @@ mimedir_vcomponent_class_init (MIMEDirVComponentClass *klass)
 				  _("Trigger"),
 				  _("Trigger"),
 				  G_MININT, G_MAXINT, 0,
-				  G_PARAM_READABLE);
+				  G_PARAM_READWRITE);
 	g_object_class_install_property (gobject_class, PROP_TRIGGER, pspec);
 	pspec = g_param_spec_object ("trigger-datetime",
 				     _("Trigger date/time"),
@@ -1891,7 +1891,7 @@ mimedir_vcomponent_parse_attribute (MIMEDirVComponent *vcomponent, MIMEDirAttrib
 			}
 
 			par = mimedir_attribute_get_parameter_value (attr, "RELATED");
-			if (!g_ascii_strcasecmp (par, "END"))
+			if (par && !g_ascii_strcasecmp (par, "END"))
 				priv->trigger_end = TRUE;
 		}
 	}
