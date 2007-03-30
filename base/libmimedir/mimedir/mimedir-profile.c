@@ -589,11 +589,13 @@ mimedir_profile_write_to_string (MIMEDirProfile *profile)
 	if (!mimedir_profile_write_to_channel (profile, channel, &error)) {
 		g_free (tmpname);
 		g_io_channel_unref (channel);
+		close(fd);
 		g_warning (error->message);
 		g_error_free (error);
 		return g_strdup ("");
 	}
 	g_io_channel_unref (channel);
+	close(fd);
 
 	if (!g_file_get_contents (tmpname, &buffer, NULL, &error)) {
 		g_free (tmpname);
@@ -602,6 +604,7 @@ mimedir_profile_write_to_string (MIMEDirProfile *profile)
 		return g_strdup ("");
 	}
 
+	g_unlink(tmpname);
 	g_free (tmpname);
 
 	return buffer;
