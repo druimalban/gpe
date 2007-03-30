@@ -1010,7 +1010,10 @@ mimedir_vcal_get_event_list (MIMEDirVCal *vcal)
 
 	for (item = vcal->priv->components; item != NULL; item = g_list_next (item)) {
 		if (MIMEDIR_IS_VEVENT (item->data))
+		  {
+			g_object_ref(item->data);
 			list = g_slist_append (list, item->data);
+		  }
 	}
 
 	return list;
@@ -1036,7 +1039,10 @@ mimedir_vcal_get_todo_list (MIMEDirVCal *vcal)
 
 	for (item = vcal->priv->components; item != NULL; item = g_list_next (item)) {
 		if (MIMEDIR_IS_VTODO (item->data))
+		  {
+			g_object_ref (item->data);
 			list = g_slist_append (list, item->data);
+		  }
 	}
 
 	return list;

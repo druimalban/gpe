@@ -1,3 +1,9 @@
+2007-03-28  Graham Cobb  <g+770@cobb.uk.net>
+
+	* mimedir-vcal.c (mimedir_vcal_get_event_list): add reference for returned objects
+	* mimedir-vcal.c (mimedir_vcal_get_todo_list): add reference for returned objects
+	  Fixes GPE bug 8
+
 2007-03-21  Graham Cobb  <g+770@cobb.uk.net>
 
 	* mimedir/mimedir-profile.c: close file descriptors and unlink temporary files
