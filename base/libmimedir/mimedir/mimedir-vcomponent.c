@@ -1,5 +1,6 @@
 /* RFC 2445 iCal Component Object
  * Copyright (C) 2002-2005  Sebastian Rittau <srittau@jroger.in-berlin.de>
+ * Copyright (C) 2007  Graham Cobb <g+770@cobb.uk.net>
  *
  * $Id: mimedir-vcomponent.c 247 2005-11-26 15:40:20Z srittau $
  *
@@ -1878,11 +1879,10 @@ mimedir_vcomponent_parse_attribute (MIMEDirVComponent *vcomponent, MIMEDirAttrib
 
 		par = mimedir_attribute_get_parameter_value (attr, "VALUE");
 		if (par && !g_ascii_strcasecmp (par, "DATE-TIME")) {
+			/* Note: RFC says that is DATE-TIME is specified, value must be in UTC */
 			priv->trigger_dt = mimedir_attribute_get_value_datetime (attr, error);
 			if (!priv->trigger_dt)
 				return FALSE;
-
-			/* FIXME: honor tz parameter */
 		} else {
 			priv->trigger = mimedir_vcomponent_get_value_duration (attr, &err);
 			if (err) {
@@ -2234,7 +2234,7 @@ gboolean
 mimedir_vcomponent_read_from_profile (MIMEDirVComponent *vcomponent, MIMEDirProfile *profile, GError **error)
 {
 	MIMEDirVComponentPriv *priv;
-	GSList *attrs;
+	GSList *attrs, *components;
 
 	g_return_val_if_fail (vcomponent != NULL, FALSE);
 	g_return_val_if_fail (MIMEDIR_IS_VCOMPONENT (vcomponent), FALSE);
@@ -2256,7 +2256,31 @@ mimedir_vcomponent_read_from_profile (MIMEDirVComponent *vcomponent, MIMEDirProf
 			return FALSE;
 	}
 
-	/* FIXME: read sub-profiles (vAlarms) */
+	/* Read sub-profiles (vAlarms) */
+	components = mimedir_profile_get_subprofiles (profile);
+
+	for (; components != NULL; components = g_slist_next (components)) {
+		MIMEDirProfile *profile;
+		gchar *name;
+
+		profile = MIMEDIR_PROFILE (components->data);
+
+		g_object_get (G_OBJECT (profile), "name", &name, NULL);
+
+		if (!g_ascii_strcasecmp (name, "VALARM")) {
+			MIMEDirVAlarm *alarm;
+
+			alarm = mimedir_valarm_new_from_profile (profile, error);
+			if (!alarm) {
+				g_free (name);
+				return FALSE;
+			}
+
+			priv->alarms = g_list_prepend(priv->alarms, alarm);
+		}
+
+		g_free (name);
+	}
 
 	/* Validity checks */
 

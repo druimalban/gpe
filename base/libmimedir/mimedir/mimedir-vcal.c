@@ -769,18 +769,6 @@ mimedir_vcal_read_from_profile (MIMEDirVCal *vcal, MIMEDirProfile *profile, GErr
 			priv->components = g_list_append (priv->components, tz);
 		}
 
-		else if (!g_ascii_strcasecmp (name, "VALARM")) {
-			MIMEDirVAlarm *alarm;
-
-			alarm = mimedir_valarm_new_from_profile (profile, error);
-			if (!alarm) {
-				g_free (name);
-				return FALSE;
-			}
-
-			priv->components = g_list_append (priv->components, alarm);
-		}
-
 		g_free (name);
 	}
 

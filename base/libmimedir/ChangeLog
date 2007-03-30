@@ -1,3 +1,12 @@
+2007-03-29  Graham Cobb  <g+770@cobb.uk.net>
+
+	* mimedir/mimedir-vcomponent.c (mimedir_vcomponent_read_from_profile):
+	add support for VALARM component.
+	This fixes GPE bug 10.
+	* mimedir/mimedir-vcal.c (mimedir_vcal_read_from_profile): remove
+	support for standalone VALARM element (VALARM within a VEVENT/VTODO
+	is handled in mimedir-vcomponent.c)
+
 2007-03-28  Graham Cobb  <g+770@cobb.uk.net>
 
 	* mimedir-vcomponent.c (mimedir_vcomponent_class_init): make Trigger property read/write
