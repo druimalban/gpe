@@ -1,5 +1,9 @@
 2007-03-20  Graham Cobb  <g+770@cobb.uk.net>
 
+	* mimedir-write-sequence.patch (from OE): make sequence attribute read-write
+
+2007-03-20  Graham Cobb  <g+770@cobb.uk.net>
+
 	* README.gpe: Create README.gpe to describe this component
 	* libmimedir-0.4.0-duration-wkst.patch (from OE but rewritten):
 	add WKST and fix DURATION parsing

@@ -456,7 +456,7 @@ mimedir_vcomponent_class_init (MIMEDirVComponentClass *klass)
 				   _("Sequence"),
 				   _("Sequence number"),
 				   0, G_MAXINT, 0,
-				   G_PARAM_READABLE);
+				   G_PARAM_READWRITE);
 	g_object_class_install_property (gobject_class, PROP_SEQ, pspec);
 }
 
@@ -684,6 +684,9 @@ mimedir_vcomponent_set_property (GObject	*object,
 		g_object_ref (G_OBJECT (priv->last_modified));
 		break;
 	}
+	case PROP_SEQ:
+		priv->sequence = g_value_get_uint (value);
+	break;
 
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
